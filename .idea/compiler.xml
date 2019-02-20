@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="CompilerConfiguration">
+    <annotationProcessing>
+      <profile default="true" name="Default" enabled="true" />
+      <profile name="Maven default annotation processors profile" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <module name="calsim-gui" />
+        <module name="eppt-app" />
+        <module name="eppt-branding" />
+        <module name="eppt-core" />
+        <module name="eppt-nbui" />
+        <module name="eppt-quickresults" />
+        <module name="eppt-scenario" />
+        <module name="maven-archiver" />
+        <module name="vista" />
+      </profile>
+    </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="eppt-callite" target="1.5" />
+      <module name="maven-archiver" target="1.5" />
+      <module name="maven-archiver (1)" target="1.5" />
+      <module name="maven-archiver (2)" target="1.5" />
+    </bytecodeTargetLevel>
+  </component>
+</project>

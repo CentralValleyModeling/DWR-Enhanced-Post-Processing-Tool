@@ -1,0 +1,148 @@
+
+<!doctype html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html><head><title>Python: module vdiff</title>
+</head><body bgcolor="#f0f0f8">
+
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="heading">
+<tr bgcolor="#7799ee">
+<td valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial">&nbsp;<br><big><big><strong>vdiff</strong></big></big></font></td
+><td align=right valign=bottom
+><font color="#ffffff" face="helvetica, arial"><a href=".">index</a><br><a href="file:u:\git\dsm2-vista\vista\lib\lib\vdiff.py">u:\git\dsm2-vista\vista\lib\lib\vdiff.py</a></font></td></tr></table>
+    <p></p>
+<p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#aa55cc">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#fffff" face="helvetica, arial"><big><strong>Modules</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#aa55cc"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><table width="100%" summary="list"><tr><td width="25%" valign=top><a href="logging.html">logging</a><br>
+<a href="re.html">re</a><br>
+</td><td width="25%" valign=top><a href="string.html">string</a><br>
+<a href="vutils.html">vutils</a><br>
+</td><td width="25%" valign=top><a href="xyz.html">xyz</a><br>
+</td><td width="25%" valign=top></td></tr></table></td></tr></table><p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ee77aa">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Classes</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#ee77aa"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><dl>
+<dt><font face="helvetica, arial"><a href="java.lang.html#Object">java.lang.Object</a>(<a href="__builtin__.html#object">__builtin__.object</a>)
+</font></dt><dd>
+<dl>
+<dt><font face="helvetica, arial">org.python.modules.jarray
+</font></dt></dl>
+</dd>
+</dl>
+ <strong>jarray</strong> = &lt;type 'org.python.modules.jarray'&gt;</td></tr></table><p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#eeaa77">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Functions</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#eeaa77"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><dl><dt><a name="-amplitude_avg"><strong>amplitude_avg</strong></a>(ds)</dt><dd><tt>get&nbsp;the&nbsp;average&nbsp;amplitude&nbsp;for&nbsp;time&nbsp;series&nbsp;ds</tt></dd></dl>
+ <dl><dt><a name="-amplitude_maxmin"><strong>amplitude_maxmin</strong></a>(ds)</dt><dd><tt>get&nbsp;the&nbsp;amplitude&nbsp;by&nbsp;max-min&nbsp;for&nbsp;time&nbsp;series&nbsp;ds</tt></dd></dl>
+ <dl><dt><a name="-chk_two_ds"><strong>chk_two_ds</strong></a>(ref1, ref2, tw, time_interval<font color="#909090">=None</font>)</dt></dl>
+ <dl><dt><a name="-daily_perc_rmse"><strong>daily_perc_rmse</strong></a>(ref1, ref2, amplitude<font color="#909090">=&lt;function amplitude_maxmin at 0xb&gt;</font>)</dt><dd><tt>return&nbsp;the&nbsp;daily&nbsp;root&nbsp;mean&nbsp;square&nbsp;error&nbsp;of&nbsp;percentage&nbsp;difference&nbsp;from&nbsp;two&nbsp;references</tt></dd></dl>
+ <dl><dt><a name="-daily_rmse"><strong>daily_rmse</strong></a>(ref1, ref2)</dt><dd><tt>return&nbsp;the&nbsp;daily&nbsp;root&nbsp;mean&nbsp;square&nbsp;error&nbsp;from&nbsp;two&nbsp;references</tt></dd></dl>
+ <dl><dt><a name="-dss_ts_diff_metric"><strong>dss_ts_diff_metric</strong></a>(dss_file1, dss_file2, difference_metric<font color="#909090">=&lt;function rmse at 0xc&gt;</font>, tw_string<font color="#909090">=None</font>, c_part<font color="#909090">=None</font>, save_dss<font color="#909090">=None</font>, diff_dssfile<font color="#909090">=None</font>)</dt><dd><tt><a href="#-dss_ts_diff_metric">dss_ts_diff_metric</a>(dss_file1,dss_file2,difference_metric=rmse,tw_string=None)<br>
+-&nbsp;This&nbsp;function&nbsp;computes&nbsp;the&nbsp;difference&nbsp;between&nbsp;two&nbsp;DSS&nbsp;file&nbsp;(dss_file2&nbsp;-&nbsp;dss_file1)<br>
+-&nbsp;Arguments:<br>
+&nbsp;&nbsp;dss_file1&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;first&nbsp;DSS&nbsp;file&nbsp;name&nbsp;<br>
+&nbsp;&nbsp;dss_file2&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;second&nbsp;DSS&nbsp;file&nbsp;name<br>
+&nbsp;&nbsp;difference_metric&nbsp;method&nbsp;used&nbsp;to&nbsp;compute&nbsp;the&nbsp;measure&nbsp;of&nbsp;difference&nbsp;between&nbsp;two&nbsp;time&nbsp;series<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;rmse:&nbsp;root&nbsp;mean&nbsp;square&nbsp;error<br>
+&nbsp;&nbsp;tw_string&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;time&nbsp;window<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;If&nbsp;not&nbsp;specified,&nbsp;the&nbsp;default&nbsp;window&nbsp;is&nbsp;obtained&nbsp;from&nbsp;dss_file1.<br>
+&nbsp;&nbsp;c_part&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;filter&nbsp;for&nbsp;PART&nbsp;C&nbsp;in&nbsp;the&nbsp;dss&nbsp;file&nbsp;(e.g.'FLOW','STAGE','EC')<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;If&nbsp;not&nbsp;specified,&nbsp;it&nbsp;returns&nbsp;all&nbsp;available&nbsp;time&nbsp;series<br>
+&nbsp;&nbsp;save_dss&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;If&nbsp;you&nbsp;plan&nbsp;to&nbsp;save&nbsp;the&nbsp;difference&nbsp;to&nbsp;a&nbsp;DSS&nbsp;file,&nbsp;put&nbsp;'y';&nbsp;otherwise,&nbsp;leave&nbsp;it&nbsp;blank&nbsp;from&nbsp;this&nbsp;point&nbsp;on.<br>
+&nbsp;&nbsp;diff_dssfile&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;If&nbsp;you&nbsp;put&nbsp;'y'&nbsp;for&nbsp;save_dss,&nbsp;specify&nbsp;the&nbsp;output&nbsp;file&nbsp;name&nbsp;here.&nbsp;&nbsp;<br>
+-&nbsp;Return&nbsp;value:<br>
+&nbsp;&nbsp;An&nbsp;associated&nbsp;array&nbsp;that&nbsp;contains&nbsp;information&nbsp;of&nbsp;the&nbsp;difference&nbsp;measure&nbsp;<br>
+&nbsp;&nbsp;and&nbsp;its&nbsp;corresponding&nbsp;pathname</tt></dd></dl>
+ <dl><dt><a name="-get_metric_xy"><strong>get_metric_xy</strong></a>(metric, hydro_echo_file, gis_inp_file, output_file)</dt><dd><tt><a href="#-get_metric_xy">get_metric_xy</a>(metric,hydro_echo_file,gis_inp_file,output_file)<br>
+-&nbsp;This&nbsp;function&nbsp;is&nbsp;used&nbsp;to&nbsp;retrieve&nbsp;the&nbsp;lat/lng&nbsp;information&nbsp;for&nbsp;the&nbsp;metric&nbsp;computed&nbsp;<br>
+&nbsp;&nbsp;from&nbsp;dss_ts_diff_metric.<br>
+-&nbsp;Arguments:<br>
+&nbsp;&nbsp;metric&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;metric&nbsp;obtained&nbsp;from&nbsp;<a href="#-dss_ts_diff_metric">dss_ts_diff_metric</a>()<br>
+&nbsp;&nbsp;hydro_echo_file&nbsp;&nbsp;hydro&nbsp;echo&nbsp;file&nbsp;from&nbsp;DSM&nbsp;input&nbsp;<br>
+&nbsp;&nbsp;gis_inp_file&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;gis&nbsp;input&nbsp;file&nbsp;downloaded&nbsp;from&nbsp;DSM2&nbsp;Grid&nbsp;Map&nbsp;interface<br>
+&nbsp;&nbsp;output_file&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;output&nbsp;file&nbsp;path&nbsp;and&nbsp;name<br>
+-&nbsp;Return:<br>
+&nbsp;&nbsp;A&nbsp;text&nbsp;file&nbsp;and&nbsp;the&nbsp;channels&nbsp;that&nbsp;cannot&nbsp;retrieve&nbsp;a&nbsp;location<br>
+-&nbsp;Usage&nbsp;Example:<br>
+&nbsp;&nbsp;<a href="#-get_metric_xy">get_metric_xy</a>(ms,'D:\DSM2-SensTest\hydro_echo.inp','D:\DSM2-SensTest\gis.inp','D:\DSM2-SensTest\metric_xy.txt')</tt></dd></dl>
+ <dl><dt><a name="-get_name_from_path"><strong>get_name_from_path</strong></a>(pathname)</dt></dl>
+ <dl><dt><a name="-get_sign"><strong>get_sign</strong></a>(num)</dt></dl>
+ <dl><dt><a name="-if_id_not_exist"><strong>if_id_not_exist</strong></a>(id, exist_arr)</dt></dl>
+ <dl><dt><a name="-perc_rmse"><strong>perc_rmse</strong></a>(ref1, ref2, tw<font color="#909090">=None</font>, time_interval<font color="#909090">=None</font>, amplitude<font color="#909090">=&lt;function amplitude_maxmin at 0xb&gt;</font>)</dt><dd><tt>return&nbsp;the&nbsp;root&nbsp;mean&nbsp;square&nbsp;error&nbsp;of&nbsp;percentage&nbsp;difference&nbsp;from&nbsp;two&nbsp;references</tt></dd></dl>
+ <dl><dt><a name="-ref2ds"><strong>ref2ds</strong></a>(ref, tw<font color="#909090">=None</font>, time_interval<font color="#909090">=None</font>)</dt></dl>
+ <dl><dt><a name="-rmse"><strong>rmse</strong></a>(ref1, ref2, tw<font color="#909090">=None</font>, time_interval<font color="#909090">=None</font>)</dt><dd><tt>return&nbsp;the&nbsp;root&nbsp;mean&nbsp;square&nbsp;error&nbsp;from&nbsp;two&nbsp;references</tt></dd></dl>
+ <dl><dt><a name="-rmse_discrete_tws"><strong>rmse_discrete_tws</strong></a>(ref1, ref2, tw_arr, percentage, amplitude<font color="#909090">=&lt;function amplitude_maxmin at 0xb&gt;</font>)</dt><dd><tt>return&nbsp;RMSE&nbsp;for&nbsp;specified&nbsp;discrete&nbsp;time&nbsp;windows<br>
+set&nbsp;percentage&nbsp;=&nbsp;0&nbsp;to&nbsp;obtain&nbsp;percentage&nbsp;RMS&nbsp;Diff;&nbsp;otherwise,&nbsp;returns&nbsp;RMS&nbsp;Diff</tt></dd></dl>
+ <dl><dt><a name="-save_metric2txt"><strong>save_metric2txt</strong></a>(metric, output_file)</dt></dl>
+ <dl><dt><a name="-segm_sqrt"><strong>segm_sqrt</strong></a>(ref1, ref2, tw<font color="#909090">=None</font>, time_interval<font color="#909090">=None</font>)</dt></dl>
+</td></tr></table><p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#55aa55">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Data</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#55aa55"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><strong>MAXYEAR</strong> = 9999<br>
+<strong>MINYEAR</strong> = 1<br>
+<strong>TF</strong> = vista.time.TimeFactory@f8ae79<br>
+<strong>TestDefaultTime</strong> = None<br>
+<strong>TestDefaultTimeInterval</strong> = None<br>
+<strong>acos</strong> = &lt;java function acos 0xd&gt;<br>
+<strong>asin</strong> = &lt;java function asin 0xe&gt;<br>
+<strong>atan</strong> = &lt;java function atan 0xf&gt;<br>
+<strong>atan2</strong> = &lt;java function atan2 0x10&gt;<br>
+<strong>calculator</strong> = &lt;java package gov.ca.dsm2.input.model.calculator 0x11&gt;<br>
+<strong>ceil</strong> = &lt;java function ceil 0x12&gt;<br>
+<strong>classDictInit</strong> = &lt;java function classDictInit 0x13&gt;<br>
+<strong>cmap</strong> = {'black': java.awt.Color[r=0,g=0,b=0], 'blue': java.awt.Color[r=0,g=0,b=255], 'cyan': java.awt.Color[r=0,g=255,b=255], 'green': java.awt.Color[r=0,g=255,b=0], 'magenta': java.awt.Color[r=255,g=0,b=255], 'orange': java.awt.Color[r=255,g=200,b=0], 'red': java.awt.Color[r=255,g=0,b=0], 'yellow': java.awt.Color[r=255,g=255,b=0]}<br>
+<strong>cos</strong> = &lt;java function cos 0x14&gt;<br>
+<strong>cosh</strong> = &lt;java function cosh 0x15&gt;<br>
+<strong>degrees</strong> = &lt;java function degrees 0x16&gt;<br>
+<strong>diff</strong> = &lt;java package gov.ca.dsm2.input.model.diff 0x17&gt;<br>
+<strong>display</strong> = 1<br>
+<strong>e</strong> = 2.718281828459045<br>
+<strong>equals</strong> = &lt;java function equals 0x18&gt;<br>
+<strong>exp</strong> = &lt;java function exp 0x19&gt;<br>
+<strong>fabs</strong> = &lt;java function fabs 0x1a&gt;<br>
+<strong>floor</strong> = &lt;java function floor 0x1b&gt;<br>
+<strong>fmod</strong> = &lt;java function fmod 0x1c&gt;<br>
+<strong>frexp</strong> = &lt;java function frexp 0x1d&gt;<br>
+<strong>getClass</strong> = &lt;java function getClass 0x1e&gt;<br>
+<strong>hashCode</strong> = &lt;java function hashCode 0x1f&gt;<br>
+<strong>hypot</strong> = &lt;java function hypot 0x20&gt;<br>
+<strong>ldexp</strong> = &lt;java function ldexp 0x21&gt;<br>
+<strong>log</strong> = &lt;java function log 0x22&gt;<br>
+<strong>log10</strong> = &lt;java function log10 0x23&gt;<br>
+<strong>modf</strong> = &lt;java function modf 0x24&gt;<br>
+<strong>notify</strong> = &lt;java function notify 0x25&gt;<br>
+<strong>notifyAll</strong> = &lt;java function notifyAll 0x26&gt;<br>
+<strong>pi</strong> = 3.141592653589793<br>
+<strong>pow</strong> = &lt;java function pow 0x27&gt;<br>
+<strong>pp_map</strong> = {'a': 0, 'b': 1, 'c': 2, 'f': 5}<br>
+<strong>radians</strong> = &lt;java function radians 0x28&gt;<br>
+<strong>sin</strong> = &lt;java function sin 0x29&gt;<br>
+<strong>sinh</strong> = &lt;java function sinh 0x2a&gt;<br>
+<strong>sqrt</strong> = &lt;java function sqrt 0x2b&gt;<br>
+<strong>symMap</strong> = {'circle': CircleSymbol (CircleSymbol), 'circle-filled': CircleSymbol (CircleSymbol), 'cross': Symbol (Symbol), 'hour-glass': Symbol (Symbol), 'hour-glass-filled': Symbol (Symbol), 'square': Symbol (Symbol), 'square-filled': Symbol (Symbol), 'triangle': Symbol (Symbol), 'triangle-filled': Symbol (Symbol)}<br>
+<strong>sys</strong> = &lt;module 'sys' (built-in)&gt;<br>
+<strong>tan</strong> = &lt;java function tan 0x2c&gt;<br>
+<strong>tanh</strong> = &lt;java function tanh 0x2d&gt;<br>
+<strong>test</strong> = &lt;java package vista.db.hdf5.test 0x2e&gt;<br>
+<strong>tk</strong> = sun.awt.windows.WToolkit@13d4c49<br>
+<strong>toString</strong> = &lt;java function toString 0x2f&gt;<br>
+<strong>vh</strong> = None<br>
+<strong>wait</strong> = &lt;java function wait 0x30&gt;<br>
+<strong>zeros</strong> = &lt;java function zeros 0x31&gt;</td></tr></table>
+</body></html>

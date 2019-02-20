@@ -1,0 +1,332 @@
+<body> <html>
+<center><h1>VPlotter Extensibility</h1></center>
+<p>
+VPlotter is written in jpython (vscript). This allows VPlotter to 
+use java or python functions as well as all the vista library functions
+</p>
+<p>
+This is a class on VPlotter and not much effort is spent on vscript/Jpython.
+Interested user's may either look up my previous classes on vscript or
+go to www.jpython.org.
+</p>
+<p>
+The time series manipulation functionality can be extended via scripts
+using some of the patterns given below. There is a lot more that can be
+done and most of those capabilities are documented at the web site
+http://wwwdelmod.water.ca.gov
+</p>
+<h2>A referesher into python</h2>
+<ul>
+<li>Writing functions</li>
+	<p>
+	  Functions start with the word def followed by function name and the
+	  arguments in parentheses
+	</p>
+	<pre>
+def myfunc():
+  print "my func"
+      </pre>
+	<p>
+	  Note how python uses indentation levels to define what is a
+	  block of code.This is an important difference and as one
+	  gets used to it, its actually makes for neater programming.
+	</p>
+	<pre>
+def myfunc(arg1,arg2):
+  print arg1,arg2
+  return arg1,arg2
+	</pre>
+	<p>
+	  passing in arguments and returning arguments is a breeze as
+	  one can see from the code above.
+	</p>
+<li>Packaging functions in modules</li>
+	<p>
+	  Once you get a bunch of related functions in a fiile you
+	  would want to use them. If the file name ends with .py and 
+	  the file exists on sys.path python can load it simply with 
+	  the following command
+	</p>
+	<pre>
+import all_my_funcs # get all the functions from all_my_funcs.py file
+all_my_funcs.myfunc() # calls function myfunc in all_my_funcs.py file
+	</pre>
+	<p>
+	  The sys.path variable can be modified at runtime to search
+	  for the .py files in new places. Here's how
+	</p>
+	<pre>
+import sys
+print sys.path
+sys.path.append('/my_home_dir/xdir')
+sys.path.append('d:/java/myfuncs')
+print sys.path
+	</pre>
+	<p>
+	  The above lines of code show the old sys.path variable and
+	  the new sys.path variable. The two paths that have been
+	  added to sys.path are used to search for the .py files that
+	  are mentioned in the import statments.
+	</p>
+	<li>Objects, methods and fields</li>
+	<p>
+	  Python is object oriented and supports objects. Objects can
+	  have functions called methods and/or variables called
+	  fields.
+	  <pre>
+from vista.set import RegularTimeSeries
+rts = RegularTimeSeries('','01jan1990 0100', '1hour', [1,2,3])
+print rts.getTimeWindow() # method getTimeWindow in rts object
+	  </pre>
+<li>Some commonly used modules from python</li>
+	<ul>
+	  <li>sys module</li>
+	<pre>
+import sys
+print sys.path
+sys.exit()
+	</pre>
+	<li>string module</li>
+	<p> All the string manipulation functions are here</p>
+	<pre>
+import string
+string.find(str,'abc')
+string.split(str,',')
+string.join(['a','b'],',')
+	</pre>
+	<li>os module</li>
+	<p>Calling external executables</p>
+	<pre>
+import os
+os.system('dir')
+	</pre>
+	<li>jarray</li>
+	<p>Java array access. </p>
+	<pre>
+import jarray
+jarray.zeros(50,'d') # an array of lenght 50 of zeros
+jarray.array([1,2,3],'d') # creates an array from the given list
+	</pre>
+      </ul>
+<li>Python: JPython</li>
+	<p>
+	  Python is quite an extensive language, however it is easy to
+	  get started in it. More detailed documentation can be found
+	  at www.jpython.org or www.python.org
+	</p>
+</ul>
+	<h3>Vista Functions</h3>
+<p> Vista functions are documented in javadoc generated
+	documentation and in source code. Any one with Java
+	  background can browse the source code fairly easily
+	  Checkout http://wwwdelmod.water.ca.gov for vista documentation.
+</p>
+
+<ul text="Some commonly used modules from Vista">
+	  <li><h3>vutils module</h3></li>
+	  <p>
+	  This is the main module for most of the generally available
+	  functions in vista.
+	  </p>
+	  <li><h3>Time Manipulation Functions</h3></li>
+	  <p>
+	  Time manipulation functions are documented in vista.time
+	  package of vista. The three main types of objects are Time,
+	  TimeInterval and TimeWindow. 
+	  </p>
+	<p>
+	  Easy creating functions are available in the form of time,
+	  timeinterval and timewindow  in the vutils module. The time 
+	  function returns a object of type vista.time.Time, timeinterval
+	  a object of type vista.time.TimeInterval and timewindow an
+	  object of type vista.time.TimeWindow. One can consult the
+	  vista.time package for more details on methods of these objects.
+	</p>
+	  <pre>
+import vutils
+from vutils import time, timeinterval, timewindow
+t1 = time('01apr1990 0100') # creates a time object
+str_t1 = str(t1) # returns a string representation of this object
+t2 = t1 + '1day' # t2 is now 1day ahead of t1
+t2 = t1 + timeinterval('1day') # t2 is now 1day ahead of t1
+twx = timewindow('01apr1990 0100 - 02apr1990 0100') # timewindow object
+print twx.getStartTime() # the start time object
+print twx.getEndTime() # the end time object
+print t1.getExactNumberOfIntervalsTo(t2,timeinterval('1hour'))
+print t1.getTimeInMinutes() # prints julian time since midnight dec 31, 1899
+	</pre>
+	  <li><h3>Time Series Set package</h3></li>
+	<p>
+	  The set package contains the functions that make up the time
+	  series set definitions and other data manipulation functions
+	</p>
+<p>
+The two main kinds of objects are RegularTimeSeries and IrregularTimeSeries.
+Both of these kinds of objects can be created by arrays of data and/or time.
+</p>
+	<pre>
+from vista.set import Constants, RegularTimeSeries, IrregularTimeSeries
+print Constants.MISSING_VALUE # The missing value = -901.0 as defined
+print Constants.DEFAULT_FLAG_FILTER # Filter's out missing,reject & questionable
+print Constants.DEFAULT_FILTER # Filter's out missing values
+from vista.set import SetUtils
+SetUtils.createYArray(rts) # returns a y value array from the given rts's values
+</pre>
+<li><h3>Iterators</h3></li>
+<p>
+Data is retrieved and saved to using this interface to time series data. 
+A common way of accessing data efficiently in these objects is to use the
+iterator. An iterator is like a marker that moves over the data returning
+the element that it is currently pointing to. The iterator is of type
+vista.set.DataSetIterator.  
+</p>
+<pre>
+iterator = rts.getIterator()
+while not iterator.atEnd():
+  print iterator.getElement()
+  iterator.advance()
+	</pre>
+<p>
+<li><h3>DataSetElement</h3></li>
+The getElement() method of the iterator object returns a 
+vista.set.DataSetElement which is usually a more specialized
+vista.set.TimeTuple object for the TimeSeries data sets.
+This element object contains a getX() method for time in julian minutes,
+a getY() method for the data value at that time and a getFlag() method
+for returning the flag value
+</p>
+<p>
+The getXString() method of the element returns a string in the form
+ddMMMyyyy HHmm for the time value of the data value, the getYString()
+returns a string representing the data value at that point and the
+getFlagString() method returns a string representation of the flag
+which is usually the type of flag (MISSING or REJECT or QUESTIONABLE or 
+GOOD ) followed by the name of user who last set the flag.
+</p>
+<pre>
+element = iterator.getElement()
+print element.getX(),element.getY(), element.getFlag()
+print element.getXString(), element.getYString(), element.getFlagString()
+</pre>
+<li><h3>Creating regular time series</h3></li>
+<p>
+Usually a new y value array is created for a RegularTimeSeries and filled
+with the appropriate values. This array along with the start time and 
+time interval is used to create a  time series object that can then 
+be used to manipulate the object with vplotter or vista.
+</p>
+<pre>
+import jarray
+yarray = jarray.zeros(50,'d') # create an array of lenght of 50 of zeros
+# The above array type is double. Look up www.jpython.org for more info.
+yarray2 = [] # creates an array whose size can be changed
+yarray2.append(0.5) # add the value of 0.5 to the end of the array
+yarray[0] = 1.0 # set the value at index 0 to 1.0
+yarray2[0] = 1.5 # set the value of index 0 to 1.5
+</pre>
+<pre>
+>>> rts = RegularTimeSeries('/dsm2/ndo/flow///mydata/','31JAN1990 2400','1mon',[1,2,3])
+</pre>
+<p>
+creating a repeating time series of 1,2,3
+</p>
+<pre>
+>>> rts = RegularTimeSeries('','31JAN1990 2400','1mon',[1,2,3]*50)
+</pre>
+<li><h3>Filters</h3></li>
+<p>
+Filters are another useful class of objects. The most general view
+of such types of objects is the vista.set.ElementFilter. This object
+has one method isAcceptable(dse) that returns true if dse is acceptable
+and false otherwise.The commonly used filters are Constants.DEFAULT_FLAG_FILTER and Constants.DEFAULT_FILTER
+</p>
+<pre>
+element = iterator.getElement()
+filter = Constants.DEFAULT_FLAG_FILTER
+print filter.isAcceptable(element)
+if filter.isAcceptable(element):
+  print 'Element ', element, ' is acceptable'
+else:
+  print 'Element ', element, ' is NOT acceptable'
+</pre>
+<li><h3> <h3>examining a time series </h3></h3></li>
+<ol>
+<li><h3> Simple loop with print statment</h3></li>
+<pre>
+def myfunc(rts):
+  iterator = rts.getIterator()
+  while not iterator.atEnd():
+    print iterator.getElement()
+    iterator.advance()
+</pre>
+<li><h3>Loop with checking for good elements</h3></li>
+<pre>
+# documentation at wwwdelmod.water.ca.gov or with vista package
+import vutils
+from vutils import Constants
+def myfunc(rts):
+  filter = Constants.DEFAULT_FLAG_FILTER
+  iterator = rts.getIterator()
+  while not iterator.atEnd():
+    el = iterator.getElement()
+    if filter.isAcceptable(el):
+      print el.getXString()
+      print el.getYString()
+      print el.getFlagString()
+      print el.getX()
+      print el.getY()
+      print el.getFlag()
+    else:
+      print 'missing'
+#
+</pre>
+<li><h3>Loop while creating new array</h3></li>
+<pre>
+# documentation in www.jpython.org and www.python.org
+import jarray,math
+# documentation at wwwdelmod.water.ca.gov or with vista package
+import vutils
+from vutils import Constants, RegularTimeSeries
+def myfunc(rts):
+  # create a double array of length = length or regular time series
+  xarray = jarray.zeros(len(rts),'d')
+  filter=Constants.DEFAULT_FLAG_FILTER
+  iterator = rts.getIterator()
+  count=0
+  while not iterator.atEnd():
+    element = iterator.getElement()
+    if filter.isAcceptable(element):
+      xarray[count] = math.sin(element.getY())
+    else:
+      xarray[count] = Constants.MISSING_VALUE
+    count=count+1
+    iterator.advance()
+  return RegularTimeSeries('',str(rts.getStartTime()),\
+                           str(rts.getTimeInterval()),\
+                           xarray)
+#
+</pre>
+</ol>
+	<p>
+	  Documentation for vista's components is quite extensive in
+	  HTML. Source code is available as well. This allows one to
+	  browse and understand the libraries while experimenting with
+	  VISTA. 
+	</p>
+	<p>
+	  Java functions are available via jpython and hence any java
+	  function may be  called using jpython. Moreover all the
+	  standard modules of python are available. This means one has
+	  access to libraries of two well supported, well documented
+	  and extensively used languages. 
+	</p>
+	<p>
+	  Infact this is one way of improving performance. Scripts in
+	  general will be slower than say compiled Java bytecode. Thus
+	  scripts that need improved performance because the size of the
+	  problem is large could be rewritten in Java and then
+	  the compiled code could be called from this script giving
+	  the performance of a compiled language with the flexibility
+	  of the script 
+	</p>
+</ul>

@@ -1,0 +1,85 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<HTML>
+<HEAD>
+<TITLE>
+Compare_inp
+</TITLE>
+<LINK REL ="stylesheet" TYPE="text/css" HREF="../stylesheet.css" TITLE="Style">
+<NOSCRIPT>
+</NOSCRIPT>
+</HEAD>
+<BODY BGCOLOR="white">
+<HR>
+<TABLE BORDER="0" WIDTH="80%" CELLPADDING="1" CELLSPACING="0" SUMMARY="">
+<TR>
+<TD BGCOLOR="white" CLASS="NavBarCell2"><FONT SIZE="-2">
+  <A HREF="../index.html?compare_inp/compare_inp.html" target="_top"><B>FRAMES</B></A>  &nbsp;
+&nbsp;<A HREF="compare_inp.html" target="_top"><B>NO FRAMES</B></A>  &nbsp;
+</FONT></TD>
+</TR>
+</TABLE>
+<CENTER><H1>Compare_inp</H1></CENTER>
+<TABLE BORDER="1" WIDTH="80%" CELLPADDING="3" CELLSPACING="0" SUMMARY="" align=center>
+ <TR BGCOLOR="#CCCCFF" CLASS="TableHeadingColor">
+  <TH ALIGN="left"><FONT SIZE="+2" ><B><a name="intro">Introduction</a></B></FONT></TH>
+ </TR>
+ <TR BGCOLOR="white" CLASS="TableRowColor">
+  <TD>
+   <p>
+   DSM2 input files are isolated in different places based on input categories and properties. DSM2 summaries all the input files and gather them into one single echo file. Hence, input comparison can be easily done by using text difference tools since DSM2 echo files are in text format. Those types of tools usually precisely point out where the differences are. However, it tends to return redundant differences that come from extra space, tabs, and lines. DSM2 modifier particularly causes the most redundancies since it is a variable globally replaced and differs from one scenario to another. Also, it only points out which lines have been changed but not tables, such as channel, reservoir or cross section. The input comparison tool developed here reads DSM2 input files and prints out summary table which shows the number of additional records in either study as well as the number of modified records. The details are presented and grouped by table properties. The tool filters out the changes from DSM2 modifier and shows the actual changes between two files. 
+   </p>
+  </TD>
+ </TR>
+ <TR BGCOLOR="#CCCCFF" CLASS="TableHeadingColor">
+  <TH ALIGN="left"><FONT SIZE="+2" ><B><a name="setup">Setup</a></B></FONT></TH>
+ </TR>
+ <TR BGCOLOR="white" CLASS="TableRowColor">
+  <TD>
+   <p>
+   <img src="images/img0.JPG"><br><br>
+   Input comparison tool can be launched by typing “compare_inp” in command prompt window. <br>
+   <SPAN style="background-color:black;color:white">&emsp;C:\Documents and Settings\user>compare_inp &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;</SPAN> <br><br>
+   There will be a pop-up GUI. There are four inputs required to generate the report. They are echo file 1, echo file 2, html page output directory and output html filename. Once they are all assigned, click on “Create HTML Report” and the report will be generated and pop up. <br>
+   <img src="images/img1.JPG"><br><br>
+   </p>
+  </TD>
+ </TR>
+ <TR BGCOLOR="#CCCCFF" CLASS="TableHeadingColor">
+  <TH ALIGN="left"><FONT SIZE="+2" ><B><a name="ex">Examples</a></B></FONT></TH>
+ </TR>
+ <TR BGCOLOR="white" CLASS="TableRowColor">
+  <TD> 
+   <p>
+   A sample input comparison report is shown as below. On top of the page, there is a summary table which points out how many extra records in echo file 1, 
+   how many extra records in echo file 2, and how many modifications between two echo files by each category. <br>
+   <img src="images/img2.JPG"><br><br>
+   Using reservoir for example, there is one extra record in echo file 1, one extra record in echo file 2 and four modifications have been made. <br>
+   <img src="images/img3.JPG"><br><br>
+   The details can be seen by clicking on the “RESERVOIR” hyperlink in the summary table or scroll down the page. 
+   The reservoir table can be expanded by clicking the icon at the upper left corner. Vice versa, the table can be collapsed.<br>
+   <img src="images/img4.JPG"><br><br>
+   In the reservoir example, since “NAME” is unique and no repeats for all the entries, it is straightforward to say what are additions and which entries have been changed. However, while looking at the case in Figure X-6, there are repeating entries in the first column RES_NAME; for some other cases, the repeating entries are not only shown in first but also second column. It is thus better to highlight them as blocks than trying getting an unrealistic one-to-one relation.<br>
+   <img src="images/img5.JPG"><br><br>
+   </p>
+  </TD>
+ </TR>
+ <TR BGCOLOR="#CCCCFF" CLASS="TableHeadingColor">
+  <TH ALIGN="left"><FONT SIZE="+2" ><B><a name="faq">FAQ</a></B></FONT></TH>
+ </TR>
+ <TR BGCOLOR="white" CLASS="TableRowColor">
+  <TD>
+   <p>
+   </pk>
+  </TD>
+ </TR>
+</TABLE>
+<HR>
+<table align=center><tr><td><img src="../DWR_Logo_Lt.gif" width="50px"></td><td><CENTER>
+<A href="http://www.water.ca.gov/conditions.html" class="content">Conditions of Use</A> &nbsp;|&nbsp;
+<A href="http://www.water.ca.gov/privacy.html" class="content">Privacy Policy</A> &nbsp;|&nbsp;
+<A href="mailto:minyu@water.ca.gov?subject=Compare_DSS" class="content">Contact Us</A><BR>
+<span class="footer">&copy; 2011&nbsp;State of California.
+</CENTER></td></tr>
+</table>
+</BODY>
+</HTML>

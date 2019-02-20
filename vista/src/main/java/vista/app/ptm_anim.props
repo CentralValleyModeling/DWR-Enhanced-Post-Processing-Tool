@@ -1,0 +1,5 @@
+network.file=/home/aqua/nsandhu/java/vista/app/net.data
+animation.file=/delta7/sanjaya/hydro/2b_bh/ptm-output-files/anim.bin
+flux.file=/home/aqua/nsandhu/java/vista/app/fluxInfo.data
+label.file=/home/aqua/nsandhu/java/vista/app/labels.data
+animation.delay=300

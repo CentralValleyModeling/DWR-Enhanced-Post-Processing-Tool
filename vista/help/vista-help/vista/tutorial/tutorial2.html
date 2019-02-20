@@ -1,0 +1,103 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
+<HTML>
+<HEAD>
+	<TITLE></TITLE>
+	<META NAME="GENERATOR" CONTENT="StarOffice/5.1 (Win32)">
+	<META NAME="AUTHOR" CONTENT="NS ">
+	<META NAME="CREATED" CONTENT="20000405;12454216">
+	<META NAME="CHANGEDBY" CONTENT="NS ">
+	<META NAME="CHANGED" CONTENT="20000405;14374769">
+</HEAD>
+<BODY>
+<P ALIGN=CENTER><FONT COLOR="#800000"><FONT SIZE=4 STYLE="font-size: 16pt">Vista
+Tutorial : Beginner's Guide</FONT></FONT></P>
+<P ALIGN=CENTER><FONT COLOR="#800000"><FONT SIZE=4 STYLE="font-size: 16pt">Chapter
+2</FONT></FONT></P>
+<P ALIGN=CENTER><IMG SRC="svbh5bh6.jpg" NAME="Graphic1" ALIGN=RIGHT WIDTH=719 HEIGHT=594 BORDER=0><BR CLEAR=RIGHT><BR><BR>
+</P>
+	<P><FONT COLOR="#b84700"><FONT SIZE=4 STYLE="font-size: 16pt">Sorting</FONT></FONT></P>
+	<P><FONT COLOR="#000000"><FONT SIZE=4>In the Group Frame click on
+	the table headers labeled A-F to sort alphabetically by those names.
+	Clicking again toggles between ascending and descending orders. All
+	sorting is stable and thus clicking on B part followed by C part
+	ensures that for the same C part the B part sort order will be
+	honored.</FONT></FONT></P>
+	<P></P>
+	<P><FONT COLOR="#b84700"><FONT SIZE=4 STYLE="font-size: 16pt">Filtering</FONT></FONT></P>
+	<P><FONT SIZE=4><FONT COLOR="#000000">In the Group Frame go to the
+	section &quot;Filter&quot;. Enter regular expressions ( or just
+	plain old characters ) for any but atleast one of the parts A-F.
+	Then click on the &quot;Enter&quot; key to either select or reject
+	the matching data set names. One can also enter a regular expression
+	for the Pathname Filter field in the same section. This filters on
+	the entire pathname as opposed to the parts which filter based on
+	part name matches.</FONT></FONT></P>
+	<P><FONT COLOR="#b84700"><FONT SIZE=4 STYLE="font-size: 16pt">Time
+	Series Arithmetic</FONT></FONT></P>
+	<P><FONT COLOR="#000000"><FONT SIZE=4>In the Group Frame go to the
+	section &quot;Math&quot;.  Select the &quot;Math&quot; tab. Click on
+	one of the pathnames in the table to select it. Then click on the
+	operation such as +,-,* and / buttons in the Math section. Then
+	click on another pathname followed by clicking on the &quot;=&quot;
+	button in the Math section. This will create a new pathname next to
+	the selected pathname. This is a new data set that is the result of
+	the operation -&gt; First selection (&quot;+&quot; or &quot;-&quot;
+	or &quot;*&quot; or &quot;/&quot;) second selection. The new
+	pathname only exists in memory and needs to be explicitly saved to a
+	dss file.</FONT></FONT></P>
+	<P><FONT COLOR="#000000"><FONT SIZE=4>To use a number as one of the
+	operands select the checkbox &quot;Use Number&quot; in the Math
+	section. Then enter the number for the operation. The select the
+	pathname and click the operation to be performed on it. This will
+	create a new pathname next to the selected one which is the result
+	of that operation</FONT></FONT></P>
+	<P><FONT COLOR="#000000"><FONT SIZE=4>Complex operations can be
+	built by operating on two pathnames or a pathname and a number at a
+	time multiple number of times.</FONT></FONT></P>
+	<P><FONT COLOR="#b84700"><FONT SIZE=4 STYLE="font-size: 16pt">Setting
+	Time Window</FONT></FONT></P>
+	<P><FONT COLOR="#000000"><FONT SIZE=4>In the Group Frame go to the
+	bottom of the window where there is a &quot;Set TimeWindow:&quot;
+	followed by a textfield where a phrase may be entered. First select
+	the item or items in the table for which you want to set the time
+	window. The enter a time window in the following format:-</FONT></FONT></P>
+		<P><FONT COLOR="#000000"><FONT SIZE=4>ddMMMyyyy Hhmm - ddMMMyyyy
+		Hhmm</FONT></FONT></P>
+		<P><FONT COLOR="#000000"><FONT SIZE=4>where dd is day's e.g. 02</FONT></FONT></P>
+		<P><FONT COLOR="#000000"><FONT SIZE=4>where MMM is month, e.g. JAN</FONT></FONT></P>
+		<P><FONT COLOR="#000000"><FONT SIZE=4>where yyyy is year, e.g. 1980</FONT></FONT></P>
+		<P><FONT COLOR="#000000"><FONT SIZE=4>An example would be:
+		01JAN1994 0300 - 09JUN1996 2400</FONT></FONT></P>
+	<P><FONT COLOR="#b84700"><FONT SIZE=4 STYLE="font-size: 16pt">Time
+	Series Operations</FONT></FONT></P>
+	<P><FONT COLOR="#000000"><FONT SIZE=4>These operations are scattered
+	in the Math Panel under the &quot;Period Ops&quot;,&quot;Filling&quot;
+	and &quot;Averaging&quot; tabs.</FONT></FONT></P>
+	<P><FONT COLOR="#000000"><FONT SIZE=4>Merging: Select the
+	pathnames to be merged. Also reorder the references in the order of
+	merging from top to bottom with top being given the highest
+	priority. Reordering may be done by holding the shift button when
+	dragging a row to the appropriate position. Then press the &quot;Merge
+	References&quot; button in the Math Section,  &quot;Period Ops&quot;
+	tab. This will create a merged pathname which contains the first
+	acceptable value from the selected pathnames in their priority
+	ordering.</FONT></FONT></P>
+	<P><FONT COLOR="#000000"><FONT SIZE=4>Period Averaging, Maximum
+	and Minimum: Select the pathnames to be period averaged. Select the
+	&quot;Period Ops&quot; tab in the Math section of the Group Frame.
+	Select from the rightmost combobox an appropriate time interval to
+	which period averaging is required. Also select the appropriate type
+	of period operation from the next left combobox and  then click on
+	the &quot;Do Operation&quot; button. This will create new
+	pathname(s) which will be the period average of the pathnames
+	selected.</FONT></FONT></P>
+	<P><FONT COLOR="#000000"><FONT SIZE=4>Moving Average: Select the
+	pathname to be moving averaged. Select the &quot;Averaging&quot; tab
+	in the Math section. Input an integer value for the number of next
+	points to be included in the forward length and the number of
+	previous points to be included in the backward length fields. Then
+	click the &quot;Do Average&quot; button. This will create a new
+	pathname with the moving average.</FONT></FONT></P>
+</OL>
+</BODY>
+</HTML>

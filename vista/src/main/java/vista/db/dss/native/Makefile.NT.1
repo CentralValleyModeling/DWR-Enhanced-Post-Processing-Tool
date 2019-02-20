@@ -1,0 +1,86 @@
+# DSM2 makefile for NT
+# Usage (from DOS shell): nmake /f Makefile.DVF-NT
+JDKHOME=c:\Program Files\Java\jdk1.6.0_14
+VSHOME=C:\Program Files\Microsoft Visual Studio 9.0
+INTEL_HOME=C:\Program Files\Intel\Compiler\11.1\035
+#
+FOR = "C:\Program Files\Intel\Compiler\11.1\035\bin\ia32\ifort.exe"
+LINKER = link.exe
+CURRENT_DIR = d:\dev\wk-vista\vista\src\vista\db\dss\native
+INSTALL_DIR = d:\Programs\vista
+FTP_DIR = g:\IEP\DSM2\source\VISTA
+
+SOURCES1=\
+dssLocal.f
+
+SOURCES= $(SOURCES1)
+OBJECTS1=$(SOURCES1:.f=.obj)
+
+CSRCS=\
+vista_db_dss_DSSDataReader.c vista_db_dss_DSSDataWriter.c
+COBJS=$(CSRCS:.c=.obj)
+
+VSLIB="$(VSHOME)\lib"
+VCLIB="$(VSHOME)\VC\lib"
+INTELLIB="$(INTEL_HOME)\Lib\ia32"
+LIBDSS=d:\dev\wk-vista\vista\lib\heclib_vs9.lib
+#LIBDSS=d:\dev\delta\trunk\lib\heclib_vs9.lib
+#c:\site\heclib\heclib50\heclib50.lib
+#c:\site\heclib\heclib42\Release\Heclib42.lib
+
+MEMBERS=$(OBJECTS1)
+
+LINK_FLAGS = /nologo /subsystem:console /incremental:no /machine:I386 /debug /debugtype:both /pdb:none 
+#/stack:4000000
+LINK_FLAGS = /nologo /subsystem:console /incremental:no /machine:I386 
+#/stack:4000000
+COMMON_FLAGS = /extend_source:132 /compile_only /nologo /fpscomp:libs
+#FFLAGS=$(COMMON_FLAGS) \
+# /noaltparam /debug:full /optimize:0 /check:bounds /check:overflow \
+# /warn:argument_checking /iface:cvf
+#/iface:default
+#/iface:cvf
+#/iface:mixed_str_len_arg
+FFLAGS=$(COMMON_FLAGS) /noaltparam /debug:none /optimize:4
+#/iface:mixed_str_len_arg # optimize
+
+CC="$(VSHOME)\VC\bin\cl.exe"
+COPTFLAGS=/Gz
+#/Ot 
+#/G4 /GD
+CDBGFLAGS= #/Zi
+CPPFLAGS= $(COPTFLAGS) $(CDBGFLAGS) /I"$(JDKHOME)\include" /I"$(JDKHOME)\include\win32" /TP /c
+DLL=DSS.dll
+
+$(DLL): clean $(OBJECT) $(LIBDSS) $(OBJECTS1) $(COBJS)
+	$(LINKER) $(LINK_FLAGS) /dll /OUT:$@ \
+	$(OBJECT) $(OBJECTS1) $(COBJS) D:\dev\delta\trunk\third_party\heclib_vs2008\heclib_c\release_static\heclib_c_vs9.lib \
+	$(LIBDSS) \
+	/NODEFAULTLIB:libcd \
+	/NODEFAULTLIB:libcmt \
+	/NODEFAULTLIB:libcmtd \
+	/LIBPATH:$(VSLIB) \
+	/LIBPATH:$(VCLIB) \
+	/LIBPATH:$(INTELLIB) \
+	kernel32.lib user32.lib gdi32.lib winspool.lib \
+	comdlg32.lib advapi32.lib shell32.lib ole32.lib \
+	oleaut32.lib uuid.lib odbc32.lib odbccp32.lib \
+	libifcoremt.lib libifportmd.lib libirc.lib libcmt.lib ifconsol.lib
+
+clean:  FORCE
+	erase *.lib *.exp *.obj
+#	erase $(DLL) $(OBJECT) $(OBJECTS1)
+	
+install: $(DLL)
+	copy $(DLL) $(INSTALL_DIR)
+
+ftp: $(DLL)
+	copy $(DLL) $(FTP_DIR)
+
+.c.obj:
+	$(CC) $(CPPFLAGS) $*.c
+
+.f.obj:
+	$(FOR) $(FFLAGS) $*.f
+FORCE:
+	
