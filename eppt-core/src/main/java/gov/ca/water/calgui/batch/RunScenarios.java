@@ -8,6 +8,9 @@
 package gov.ca.water.calgui.batch;
 //! Creates and executes batch files using multiple threads
 
+import gov.ca.water.calgui.bus_service.impl.ModelRunSvcImpl;
+import org.apache.log4j.Logger;
+
 import java.io.IOException;
 import java.util.ArrayList;
 
@@ -17,6 +20,7 @@ import java.util.ArrayList;
  */
 public class RunScenarios
 {
+    private static final Logger LOG = Logger.getLogger(ModelRunSvcImpl.class.getName());
 
 	public RunScenarios()
 	{
@@ -34,8 +38,7 @@ public class RunScenarios
 		}
 		catch(Exception ex)
 		{
-			// TODO Auto-generated catch block
-			ex.printStackTrace();
+            LOG.error(ex.getMessage());
 		}
 	}
 

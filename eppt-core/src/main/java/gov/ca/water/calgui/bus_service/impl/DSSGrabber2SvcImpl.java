@@ -9,11 +9,6 @@ package gov.ca.water.calgui.bus_service.impl;
 
 //! Variant on DSSGrabber1BO for MTS (multiple time series)
 
-import java.util.Arrays;
-import java.util.Calendar;
-import java.util.Vector;
-import javax.swing.*;
-
 import calsim.app.DerivedTimeSeries;
 import calsim.app.MultipleTimeSeries;
 import gov.ca.water.calgui.bo.GUILinks3BO;
@@ -22,11 +17,15 @@ import gov.ca.water.calgui.bus_service.ISeedDataSvc;
 import gov.ca.water.calgui.constant.Constant;
 import gov.ca.water.calgui.tech_service.IErrorHandlingSvc;
 import gov.ca.water.calgui.tech_service.impl.ErrorHandlingSvcImpl;
+import hec.heclib.util.HecTime;
+import hec.io.TimeSeriesContainer;
 import org.apache.log4j.Logger;
 import org.swixml.SwingEngine;
 
-import hec.heclib.util.HecTime;
-import hec.io.TimeSeriesContainer;
+import javax.swing.*;
+import java.util.Arrays;
+import java.util.Calendar;
+import java.util.Vector;
 
 /**
  * Class to grab (generate) DSS time series BASED ON DTS list for a set of
@@ -523,7 +522,7 @@ public class DSSGrabber2SvcImpl extends DSSGrabber1SvcImpl
 	}
 
 	/**
-	 * Variant of getDifferenceSeries to work with MTS (multiple time series)
+     * Variant of getDifferenceSeriesWithMultipleTimeSeries to work with MTS (multiple time series)
 	 *
 	 * @param timeSeriesResults array of arrays of HEC TimeSeriesContainer objects, each
 	 *                          representing a set of results for a scenario. Base is in
@@ -532,7 +531,7 @@ public class DSSGrabber2SvcImpl extends DSSGrabber1SvcImpl
 	 * than timeSeriesResult. Position [0] contains difference [1]-[0],
 	 * position [1] contains difference [2]-[0], ...
 	 */
-	public TimeSeriesContainer[][] getDifferenceSeries(TimeSeriesContainer[][] timeSeriesResults)
+    public TimeSeriesContainer[][] getDifferenceSeriesWithMultipleTimeSeries(TimeSeriesContainer[][] timeSeriesResults)
 	{
 
 		try
@@ -669,12 +668,12 @@ public class DSSGrabber2SvcImpl extends DSSGrabber1SvcImpl
 	}
 
 	/**
-	 * Variant of getExceedanceSeries for mts
+     * Variant of getExceedanceSeriesWithMultipleTimeSeries for mts
 	 *
 	 * @param timeSeriesResults
 	 * @return
 	 */
-	public TimeSeriesContainer[][][] getExceedanceSeries(TimeSeriesContainer[][] timeSeriesResults)
+    public TimeSeriesContainer[][][] getExceedanceSeriesWithMultipleTimeSeries(TimeSeriesContainer[][] timeSeriesResults)
 	{
 
 		try
@@ -787,14 +786,14 @@ public class DSSGrabber2SvcImpl extends DSSGrabber1SvcImpl
 	}
 
 	/**
-	 * Variant of getExceedanceSeriesD that works with MTS files
+     * Variant of getExceedanceSeriesDWithMultipleTimeSeries that works with MTS files
 	 * <p>
 	 * Should be recombinable with other exceedance methods.
 	 *
 	 * @param timeSeriesResults
 	 * @return
 	 */
-	public TimeSeriesContainer[][][] getExceedanceSeriesD(TimeSeriesContainer[][] timeSeriesResults)
+    public TimeSeriesContainer[][][] getExceedanceSeriesDWithMultipleTimeSeries(TimeSeriesContainer[][] timeSeriesResults)
 	{
 
 		try

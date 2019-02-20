@@ -7,29 +7,6 @@
 
 package gov.ca.water.calgui.bus_service.impl;
 
-import java.awt.Component;
-import java.awt.Container;
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.nio.file.Files;
-import java.nio.file.NoSuchFileException;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.nio.file.StandardOpenOption;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Calendar;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.NoSuchElementException;
-import java.util.Set;
-import javax.swing.*;
-import javax.swing.text.JTextComponent;
-
 import gov.ca.water.calgui.bo.CalLiteGUIException;
 import gov.ca.water.calgui.bo.DataTableModel;
 import gov.ca.water.calgui.bo.GUILinks2BO;
@@ -47,6 +24,14 @@ import org.apache.log4j.Logger;
 import org.swixml.SwingEngine;
 import org.swixml.XScrollPane;
 import wrimsv2.evaluator.TimeOperation;
+
+import javax.swing.*;
+import javax.swing.text.JTextComponent;
+import java.awt.*;
+import java.io.*;
+import java.nio.file.*;
+import java.util.List;
+import java.util.*;
 
 /**
  * This is the class for handling the cls file and saving the data.
@@ -377,10 +362,11 @@ public final class ScenarioSvcImpl implements IScenarioSvc
 	{
 		List<String> tableStrList = fileSystemSvc
 				.getFileDataForTables(Constant.MODEL_W2_WRESL_LOOKUP_DIR + tableName + Constant.TABLE_EXT);
-		String header = null;
+		Optional<String> header = Optional.empty();
 		try
 		{
-			header = tableStrList.stream().filter(obj -> obj.contains(Constant.HEADERS)).findFirst().get();
+
+			header = tableStrList.stream().filter(obj -> obj.contains(Constant.HEADERS)).findFirst();
 		}
 		catch(NoSuchElementException ex)
 		{
@@ -389,11 +375,16 @@ public final class ScenarioSvcImpl implements IScenarioSvc
 							+ "The Header is missing or not been formatted correctly in the table." + Constant.NEW_LINE,
 					ex);
 		}
-		String[] da = header.split(Constant.OLD_DELIMITER);
-		String[] headers = new String[da.length - 1];
-		for(int i = 0; i < headers.length; i++)
+		String[] headers = new String[0];
+		if (header.isPresent())
 		{
-			headers[i] = da[i + 1];
+			String[] da = header.get().split(Constant.OLD_DELIMITER);
+
+			headers = new String[da.length - 1];
+			for (int i = 0; i < headers.length; i++)
+			{
+				headers[i] = da[i + 1];
+			}
 		}
 		return headers;
 	}
@@ -1132,21 +1123,7 @@ public final class ScenarioSvcImpl implements IScenarioSvc
 							if(!gUILinks2BO.getRegID().equals("n/a"))
 							{
 								int rID = Integer.parseInt(gUILinks2BO.getRegID());
-								if(tableName.equals("GUI_RPAsOtherRegs.table")
-										&& !gUILinks2BO.getTableID().equals(Constant.N_A))
-								{
-
-									// Special case for tables under Other regs:
-									// Option = 1 for default
-									// Option = 2 for user-defined
-
-									option = String.valueOf(this.regulationoptions[rID]);
-
-								}
-								else
-								{
-									option = String.valueOf(this.regulationoptions[rID]);
-								}
+								option = String.valueOf(this.regulationoptions[rID]);
 							}
 						}
 						else

@@ -7,13 +7,6 @@
 
 package gov.ca.water.calgui.presentation;
 
-import java.awt.*;
-import java.util.Date;
-import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-import javax.swing.*;
-
 import calsim.app.DerivedTimeSeries;
 import calsim.app.MultipleTimeSeries;
 import gov.ca.water.calgui.bo.RBListItemBO;
@@ -22,23 +15,22 @@ import gov.ca.water.calgui.bus_service.IDSSGrabber1Svc;
 import gov.ca.water.calgui.bus_service.impl.DSSGrabber1SvcImpl;
 import gov.ca.water.calgui.bus_service.impl.DSSGrabber2SvcImpl;
 import gov.ca.water.calgui.constant.Constant;
-import gov.ca.water.calgui.presentation.display.BoxPlotChartPanel;
-import gov.ca.water.calgui.presentation.display.BoxPlotChartPanel2;
-import gov.ca.water.calgui.presentation.display.ChartPanel1;
-import gov.ca.water.calgui.presentation.display.ChartPanel2;
-import gov.ca.water.calgui.presentation.display.MonthlyTablePanel;
-import gov.ca.water.calgui.presentation.display.MonthlyTablePanel2;
-import gov.ca.water.calgui.presentation.display.SummaryTablePanel;
-import gov.ca.water.calgui.presentation.display.SummaryTablePanel2;
+import gov.ca.water.calgui.presentation.display.*;
 import gov.ca.water.calgui.tech_service.IDialogSvc;
 import gov.ca.water.calgui.tech_service.IErrorHandlingSvc;
 import gov.ca.water.calgui.tech_service.impl.DialogSvcImpl;
 import gov.ca.water.calgui.tech_service.impl.ErrorHandlingSvcImpl;
+import hec.io.TimeSeriesContainer;
 import org.apache.log4j.Logger;
 import org.jfree.data.time.Month;
 import org.swixml.SwingEngine;
 
-import hec.io.TimeSeriesContainer;
+import javax.swing.*;
+import java.awt.*;
+import java.util.Date;
+import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * DisplayFrame class provides a frame for showing charts.
@@ -244,14 +236,7 @@ public class DisplayFrame
 					TimeSeriesContainer[] primary_Results = dssGrabber.getPrimarySeries(locationNames[i]);
 					TimeSeriesContainer[] secondary_Results = dssGrabber.getSecondarySeries();
 
-					if(isCFS == true)
-					{
-						dssGrabber.calcTAFforCFS(primary_Results, secondary_Results);
-					}
-					else
-					{
-						dssGrabber.calcTAFforCFS(primary_Results, secondary_Results);
-					}
+					dssGrabber.calcTAFforCFS(primary_Results, secondary_Results);
 
 					TimeSeriesContainer[] diff_Results = dssGrabber.getDifferenceSeries(primary_Results);
 					TimeSeriesContainer[][] exc_Results = dssGrabber.getExceedanceSeries(primary_Results);
@@ -842,18 +827,11 @@ public class DisplayFrame
 					results[i] = dssGrabber.getMultipleTimeSeries(i);
 				}
 
-				if(isCFS == true)
-				{
-					dssGrabber.calcTAFforCFS(results);
-				}
-				else
-				{
-					dssGrabber.calcTAFforCFS(results);
-				}
+				dssGrabber.calcTAFforCFS(results);
 
-				TimeSeriesContainer[][] diff_Results = dssGrabber.getDifferenceSeries(results);
-				TimeSeriesContainer[][][] exc_Results = dssGrabber.getExceedanceSeries(results);
-				TimeSeriesContainer[][][] dexc_Results = dssGrabber.getExceedanceSeriesD(results);
+				TimeSeriesContainer[][] diff_Results = dssGrabber.getDifferenceSeriesWithMultipleTimeSeries(results);
+				TimeSeriesContainer[][][] exc_Results = dssGrabber.getExceedanceSeriesWithMultipleTimeSeries(results);
+				TimeSeriesContainer[][][] dexc_Results = dssGrabber.getExceedanceSeriesDWithMultipleTimeSeries(results);
 
 				if(doSummaryTable)
 				{
@@ -1016,14 +994,7 @@ public class DisplayFrame
 				TimeSeriesContainer[] primary_Results = dssGrabber.getPrimarySeries("DUMMY");
 				TimeSeriesContainer[] secondary_Results = dssGrabber.getSecondarySeries();
 
-				if(isCFS == true)
-				{
-					dssGrabber.calcTAFforCFS(primary_Results, secondary_Results);
-				}
-				else
-				{
-					dssGrabber.calcTAFforCFS(primary_Results, secondary_Results);
-				}
+				dssGrabber.calcTAFforCFS(primary_Results, secondary_Results);
 
 				TimeSeriesContainer[] diff_Results = dssGrabber.getDifferenceSeries(primary_Results);
 				TimeSeriesContainer[][] exc_Results = dssGrabber.getExceedanceSeries(primary_Results);

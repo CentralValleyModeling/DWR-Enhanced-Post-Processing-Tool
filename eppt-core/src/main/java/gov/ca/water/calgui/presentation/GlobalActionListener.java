@@ -7,24 +7,6 @@
 
 package gov.ca.water.calgui.presentation;
 
-import java.awt.Component;
-import java.awt.HeadlessException;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.io.BufferedReader;
-import java.io.ByteArrayInputStream;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import javax.swing.*;
-import javax.swing.border.TitledBorder;
-import javax.swing.filechooser.FileNameExtensionFilter;
-
 import calsim.app.Project;
 import calsim.gui.DtsTreeModel;
 import calsim.gui.DtsTreePanel;
@@ -56,6 +38,19 @@ import gov.ca.water.calgui.tech_service.impl.ErrorHandlingSvcImpl;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.log4j.Logger;
 import org.swixml.SwingEngine;
+
+import javax.swing.*;
+import javax.swing.border.TitledBorder;
+import javax.swing.filechooser.FileNameExtensionFilter;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * This class is for Listening all the action events(Button click) which are
@@ -806,22 +801,6 @@ public class GlobalActionListener implements ActionListener
 				|| ((JTextField) swingEngine.find("tfReportFILE2")).getText().isEmpty()
 				|| ((JTextField) swingEngine.find("tfReportFILE3")).getText().isEmpty())
 		{
-			// JOptionPane.showMessageDialog(swingEngine.find(Constant.MAIN_FRAME_NAME),
-			// "You must specify the source DSS files and the output PDF file",
-			// "Error", JOptionPane.ERROR_MESSAGE);
-			// ImageIcon icon = new
-			// ImageIcon(getClass().getResource("/images/CalLiteIcon.png"));
-			// Object[] options = { "OK" };
-			// JOptionPane optionPane = new JOptionPane("You must specify the
-			// source DSS files and the output PDF file",
-			// JOptionPane.ERROR_MESSAGE, JOptionPane.OK_OPTION, null, options,
-			// options[0]);
-			// JDialog dialog =
-			// optionPane.createDialog(swingEngine.find(Constant.MAIN_FRAME_NAME),
-			// "CalLite");
-			// dialog.setIconImage(icon.getImage());
-			// dialog.setResizable(false);
-			// dialog.setVisible(true);
 			dialogSvc.getOK("You must specify the source DSS files and the output PDF file", JOptionPane.ERROR_MESSAGE);
 		}
 		else
@@ -830,32 +809,33 @@ public class GlobalActionListener implements ActionListener
 					((JTextField) swingEngine.find("tfTemplateFILE")).getToolTipText());
 				BufferedReader br = new BufferedReader(new InputStreamReader(fin)))
 			{
+
 				// Create an inputstream from template file;
 				// Open the template file
 				String theText = br.readLine() + "\n";
 				theText = theText + br.readLine() + "\n";
 				theText = theText + br.readLine() + "\n";
-				br.readLine();
-				theText = theText + "FILE_BASE\t" + ((JTextField) swingEngine.find("tfReportFILE1")).getToolTipText()
+                String skipLine = br.readLine();
+                theText = theText + "FILE_BASE\t" + ((JTextField) swingEngine.find("tfReportFILE1")).getToolTipText()
 						+ "\n";
-				br.readLine();
+                skipLine = br.readLine();
 				theText = theText + "NAME_BASE\t\"" + ((JTextField) swingEngine.find("tfReportNAME1")).getText()
 						+ "\"\n";
-				br.readLine();
+                skipLine = br.readLine();
 				theText = theText + "FILE_ALT\t" + ((JTextField) swingEngine.find("tfReportFILE2")).getToolTipText()
 						+ "\n";
-				br.readLine();
+                skipLine = br.readLine();
 				theText = theText + "NAME_ALT\t\"" + ((JTextField) swingEngine.find("tfReportNAME2")).getText()
 						+ "\"\n";
-				br.readLine();
+                skipLine = br.readLine();
 				theText = theText + "OUTFILE\t" + ((JTextField) swingEngine.find("tfReportFILE3")).getToolTipText()
 						+ "\n";
-				br.readLine();
+                skipLine = br.readLine();
 				theText = theText + "NOTE\t\"" + ((JTextArea) swingEngine.find("taReportNOTES")).getText() + "\"\n";
-				br.readLine();
+                skipLine = br.readLine();
 				theText = theText + "ASSUMPTIONS\t\"" + ((JTextArea) swingEngine.find("taReportASSUMPTIONS")).getText()
 						+ "\"\n";
-				br.readLine();
+                skipLine = br.readLine();
 				theText = theText + "MODELER\t\"" + ((JTextField) swingEngine.find("tfReportMODELER")).getText()
 						+ "\"\n";
 
@@ -864,11 +844,10 @@ public class GlobalActionListener implements ActionListener
 
 				String aLine = br.readLine();
 				while(aLine != null)
-				{
-					theText = theText + aLine + "\n";
-					aLine = br.readLine();
-				}
-				br.close();
+                {
+                    theText = theText + aLine + "\n";
+                    aLine = br.readLine();
+                }
 				theText = theText + "\n";
 				ByteArrayInputStream bs = new ByteArrayInputStream(theText.getBytes());
 				try

@@ -7,19 +7,6 @@
 
 package gov.ca.water.calgui.presentation;
 
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.TimeZone;
-import java.util.logging.Logger;
-import javax.swing.*;
-
 import gov.ca.dsm2.input.parser.InputTable;
 import gov.ca.dsm2.input.parser.Parser;
 import gov.ca.dsm2.input.parser.Tables;
@@ -30,21 +17,18 @@ import gov.ca.water.calgui.tech_service.impl.ErrorHandlingSvcImpl;
 import org.swixml.SwingEngine;
 import vista.db.dss.DSSUtil;
 import vista.report.TSMath;
-import vista.set.Constants;
-import vista.set.DataReference;
-import vista.set.DataSetElement;
-import vista.set.ElementFilter;
-import vista.set.ElementFilterIterator;
-import vista.set.Group;
-import vista.set.MultiIterator;
-import vista.set.Pathname;
-import vista.set.RegularTimeSeries;
-import vista.set.Stats;
-import vista.set.TimeSeries;
+import vista.set.*;
 import vista.time.SubTimeFormat;
 import vista.time.Time;
 import vista.time.TimeFactory;
 import vista.time.TimeWindow;
+
+import javax.swing.*;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.*;
+import java.util.logging.Logger;
 
 /**
  * Generates a report based on the template file instructions
@@ -66,7 +50,6 @@ public class Report extends SwingWorker<Void, String>
 	 */
 	private String outputFilename;
 	private boolean isInitialized = false;
-	//static final Logger LOG = Logger.getLogger("callite.report");
 	private ArrayList<ArrayList<String>> twValues;
 	private ArrayList<PathnameMap> pathnameMaps;
 	private HashMap<String, String> scalars;
@@ -132,8 +115,7 @@ public class Report extends SwingWorker<Void, String>
 		}
 		catch(IOException e)
 		{
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			LOG.fine(e.getMessage());
 		}
 		return;
 
@@ -179,17 +161,17 @@ public class Report extends SwingWorker<Void, String>
 			String var_name = pathnameMappingTable.getValue(i, "VARIABLE");
 			var_name = var_name.replace("\"", "");
 			PathnameMap path_map = new PathnameMap(var_name);
-			path_map.report_type = pathnameMappingTable.getValue(i, "REPORT_TYPE").toLowerCase();
-			path_map.pathBase = pathnameMappingTable.getValue(i, "PATH_BASE");
-			path_map.pathAlt = pathnameMappingTable.getValue(i, "PATH_ALT");
-			path_map.var_category = pathnameMappingTable.getValue(i, "VAR_CATEGORY");
-			path_map.row_type = pathnameMappingTable.getValue(i, "ROW_TYPE");
-			if((path_map.pathAlt == null) || (path_map.pathAlt.length() == 0))
+			path_map._report_type = pathnameMappingTable.getValue(i, "REPORT_TYPE").toLowerCase();
+			path_map._pathBase = pathnameMappingTable.getValue(i, "PATH_BASE");
+			path_map._pathAlt = pathnameMappingTable.getValue(i, "PATH_ALT");
+			path_map._var_category = pathnameMappingTable.getValue(i, "VAR_CATEGORY");
+			path_map._row_type = pathnameMappingTable.getValue(i, "ROW_TYPE");
+			if ((path_map._pathAlt == null) || (path_map._pathAlt.length() == 0))
 			{
-				path_map.pathAlt = path_map.pathBase;
+				path_map._pathAlt = path_map._pathBase;
 			}
 			path_map.plot = pathnameMappingTable.getValue(i, "PLOT").equalsIgnoreCase("Y");
-			path_map.units = pathnameMappingTable.getValue(i, "UNIT");
+			path_map._units = pathnameMappingTable.getValue(i, "UNIT");
 			pathnameMaps.add(path_map);
 		}
 		InputTable timeWindowTable = tables.getTableNamed("TIME_PERIODS");
@@ -242,22 +224,22 @@ public class Report extends SwingWorker<Void, String>
 			}
 
 			LOG.fine("Working on index: " + dataIndex);
-			if((pathMap.pathAlt == null) || (pathMap.pathAlt == ""))
+			if ((pathMap._pathAlt == null) || (pathMap._pathAlt == ""))
 			{
-				pathMap.pathAlt = pathMap.pathBase;
+				pathMap._pathAlt = pathMap._pathBase;
 			}
 			boolean calculate_dts = false;
-			if(pathMap.var_category.equals("HEADER"))
+			if (pathMap._var_category.equals("HEADER"))
 			{
 				LOG.fine("Inserting header");
 				continue;
 			}
-			if(pathMap.report_type.endsWith("_post"))
+			if (pathMap._report_type.endsWith("_post"))
 			{
 				calculate_dts = true;
 			}
-			DataReference refBase = getReference(dssGroupBase, pathMap.pathBase, calculate_dts, pathnameMaps, 1);
-			DataReference refAlt = getReference(dssGroupAlt, pathMap.pathAlt, calculate_dts, pathnameMaps, 2);
+			DataReference refBase = getReference(dssGroupBase, pathMap._pathBase, calculate_dts, pathnameMaps, 1);
+			DataReference refAlt = getReference(dssGroupAlt, pathMap._pathAlt, calculate_dts, pathnameMaps, 2);
 			if((refBase == null) || (refAlt == null))
 			{
 				continue;
@@ -267,12 +249,12 @@ public class Report extends SwingWorker<Void, String>
 			String[] series_name = new String[]{scalars.get("NAME_ALT"), scalars.get("NAME_BASE")};
 			// String[] series_name = new String[] { scalars.get("NAME_BASE"),
 			// scalars.get("NAME_ALT") };
-			if(pathMap.units.equals("CFS2TAF"))
+			if (pathMap._units.equals("CFS2TAF"))
 			{
 				TSMath.cfs2taf((RegularTimeSeries) refBase.getData());
 				TSMath.cfs2taf((RegularTimeSeries) refAlt.getData());
 			}
-			else if(pathMap.units.equals("TAF2CFS"))
+			else if (pathMap._units.equals("TAF2CFS"))
 			{
 				TSMath.taf2cfs((RegularTimeSeries) refBase.getData());
 				TSMath.taf2cfs((RegularTimeSeries) refAlt.getData());
@@ -281,37 +263,37 @@ public class Report extends SwingWorker<Void, String>
 			String data_type = getType(refBase, refAlt);
 			if(pathMap.plot)
 			{
-				if(pathMap.report_type.startsWith("average"))
+				if (pathMap._report_type.startsWith("average"))
 				{
 					generatePlot(buildDataArray(refAlt, refBase, tw), dataIndex,
-							"Average " + pathMap.var_name.replace("\"", ""), series_name,
+							"Average " + pathMap._var_name.replace("\"", ""), series_name,
 							data_type + "(" + data_units + ")", "Time", PlotType.TIME_SERIES);
 				}
-				else if(pathMap.report_type.startsWith("exceedance"))
+				else if (pathMap._report_type.startsWith("exceedance"))
 				{
-					generatePlot(buildExceedanceArray(refAlt, refBase, pathMap.var_category == "S_SEPT", tw), dataIndex,
+					generatePlot(buildExceedanceArray(refAlt, refBase, pathMap._var_category == "S_SEPT", tw), dataIndex,
 							getExceedancePlotTitle(pathMap), series_name, data_type + "(" + data_units + ")",
 							"Percent at or above", PlotType.EXCEEDANCE);
 				}
-				else if(pathMap.report_type.startsWith("avg_excd"))
+				else if (pathMap._report_type.startsWith("avg_excd"))
 				{
 					generatePlot(buildDataArray(refAlt, refBase, tw), dataIndex,
-							"Average " + pathMap.var_name.replace("\"", ""), series_name,
+							"Average " + pathMap._var_name.replace("\"", ""), series_name,
 							data_type + "(" + data_units + ")", "Time", PlotType.TIME_SERIES);
-					generatePlot(buildExceedanceArray(refAlt, refBase, pathMap.var_category == "S_SEPT", tw), dataIndex,
+					generatePlot(buildExceedanceArray(refAlt, refBase, pathMap._var_category == "S_SEPT", tw), dataIndex,
 							getExceedancePlotTitle(pathMap), series_name, data_type + "(" + data_units + ")",
 							"Percent at or above", PlotType.EXCEEDANCE);
 				}
-				else if(pathMap.report_type.startsWith("timeseries"))
+				else if (pathMap._report_type.startsWith("timeseries"))
 				{
 					generatePlot(buildDataArray(refAlt, refBase, tw), dataIndex,
-							"Average " + pathMap.var_name.replace("\"", ""), series_name,
+							"Average " + pathMap._var_name.replace("\"", ""), series_name,
 							data_type + "(" + data_units + ")", "Time", PlotType.TIME_SERIES);
 				}
-				else if(pathMap.report_type.equals("alloc"))
+				else if (pathMap._report_type.equals("alloc"))
 				{
 					generatePlot(buildExceedanceArray(refAlt, refBase, true, tw), dataIndex,
-							"Exceedance " + pathMap.var_name.replace("\"", ""), series_name, "Allocation (%)",
+							"Exceedance " + pathMap._var_name.replace("\"", ""), series_name, "Allocation (%)",
 							"Probability", PlotType.EXCEEDANCE);
 				}
 			}
@@ -372,25 +354,25 @@ public class Report extends SwingWorker<Void, String>
 				publish("Processing dataset " + dataIndex + " of " + pathnameMaps.size());
 			}
 
-			if(!categoryList.contains(pathMap.var_category))
+			if (!categoryList.contains(pathMap._var_category))
 			{
 				continue;
 			}
 			ArrayList<String> rowData = new ArrayList<String>();
-			rowData.add(pathMap.var_name);
+			rowData.add(pathMap._var_name);
 			boolean calculate_dts = false;
-			if(pathMap.report_type.toLowerCase().endsWith("_post"))
+			if (pathMap._report_type.toLowerCase().endsWith("_post"))
 			{
 				calculate_dts = true;
 			}
 			DataReference refBase = null, refAlt = null;
-			if(!pathMap.pathBase.equalsIgnoreCase("ignore"))
+			if (!pathMap._pathBase.equalsIgnoreCase("ignore"))
 			{
-				refBase = getReference(dssGroupBase, pathMap.pathBase, calculate_dts, pathnameMaps, 1);
+				refBase = getReference(dssGroupBase, pathMap._pathBase, calculate_dts, pathnameMaps, 1);
 			}
-			if(!pathMap.pathAlt.equalsIgnoreCase("ignore"))
+			if (!pathMap._pathAlt.equalsIgnoreCase("ignore"))
 			{
-				refAlt = getReference(dssGroupAlt, pathMap.pathAlt, calculate_dts, pathnameMaps, 2);
+				refAlt = getReference(dssGroupAlt, pathMap._pathAlt, calculate_dts, pathnameMaps, 2);
 			}
 			for(TimeWindow tw : timewindows)
 			{
@@ -430,7 +412,7 @@ public class Report extends SwingWorker<Void, String>
 					rowData.add(formatDoubleValue(pctDiff));
 				}
 			}
-			if("B".equals(pathMap.row_type))
+			if ("B".equals(pathMap._row_type))
 			{
 				if(!firstDataRow)
 				{
@@ -485,7 +467,7 @@ public class Report extends SwingWorker<Void, String>
 	private ArrayList<double[]> buildDataArray(DataReference ref1, DataReference ref2, TimeWindow tw)
 	{
 		ArrayList<double[]> dlist = new ArrayList<double[]>();
-		if((ref1 == null) && (ref2 == null))
+		if ((ref1 == null) || (ref2 == null))
 		{
 			return dlist;
 		}
@@ -766,8 +748,8 @@ public class Report extends SwingWorker<Void, String>
 
 	public String getExceedancePlotTitle(PathnameMap path_map)
 	{
-		String title = "Exceedance " + path_map.var_name.replace("\"", "");
-		if(path_map.var_category.equals("S_SEPT"))
+		String title = "Exceedance " + path_map._var_name.replace("\"", "");
+		if (path_map._var_category.equals("S_SEPT"))
 		{
 			title = title + " (Sept)";
 		}
@@ -870,18 +852,18 @@ public class Report extends SwingWorker<Void, String>
 
 	public static class PathnameMap
 	{
-		public String var_category;
-		public String var_name;
-		String report_type;
-		String pathBase;
-		String pathAlt;
-		String row_type;
-		String units;
+		String _report_type;
+		String _pathBase;
+		String _pathAlt;
+		String _row_type;
+		String _units;
+		private String _var_category;
+		private String _var_name;
 		boolean plot;
 
 		public PathnameMap(String var_name)
 		{
-			this.var_name = var_name;
+			this._var_name = var_name;
 		}
 	}
 

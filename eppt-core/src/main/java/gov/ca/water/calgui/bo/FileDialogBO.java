@@ -9,24 +9,6 @@ package gov.ca.water.calgui.bo;
 
 //! Custom file chooser for selection of different CalLite file types
 
-import java.awt.Component;
-import java.awt.Container;
-import java.awt.HeadlessException;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.util.HashMap;
-import java.util.Map;
-import javax.swing.*;
-import javax.swing.event.ListDataEvent;
-import javax.swing.event.ListDataListener;
-
 import gov.ca.water.calgui.bus_service.impl.XMLParsingSvcImpl;
 import gov.ca.water.calgui.constant.Constant;
 import gov.ca.water.calgui.presentation.WRIMSGUILinks;
@@ -34,6 +16,18 @@ import gov.ca.water.calgui.tech_service.IErrorHandlingSvc;
 import gov.ca.water.calgui.tech_service.impl.ErrorHandlingSvcImpl;
 import org.apache.log4j.Logger;
 import org.swixml.SwingEngine;
+
+import javax.swing.*;
+import javax.swing.event.ListDataEvent;
+import javax.swing.event.ListDataListener;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.io.*;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Supports selection of different types of CalLite files from customized
@@ -44,10 +38,10 @@ import org.swixml.SwingEngine;
 public class FileDialogBO implements ActionListener
 {
 
-	private static Logger LOG = Logger.getLogger(FileDialogBO.class.getName());
-	public DefaultListModel lmScenNames;
-	public JFileChooser fc = new JFileChooser2();
-	public int dialogRC;
+	private static final Logger LOG = Logger.getLogger(FileDialogBO.class.getName());
+	private DefaultListModel lmScenNames;
+	private JFileChooser fc = new JFileChooser2();
+	private int dialogRC;
 	JList theList;
 	JLabel theLabel;
 	JTextField theTextField;
@@ -59,19 +53,6 @@ public class FileDialogBO implements ActionListener
 	private SwingEngine swingEngine = XMLParsingSvcImpl.getXMLParsingSvcImplInstance().getSwingEngine();
 	private IErrorHandlingSvc errorHandlingSvc = new ErrorHandlingSvcImpl();
 
-	/**
-	 * Basic constructor for use with DSS files. Result is appended to aList.
-	 *
-	 * @param aList  - JList containing selected DSS files.
-	 * @param aLabel - not currently used
-	 */
-	public FileDialogBO(JList aList, JLabel aLabel)
-	{
-		theLabel = aLabel;
-		theFileExt = "DSS";
-		theTextField = null;
-		setup(aList);
-	}
 
 	/**
 	 * Constructor for use with DSS files, result is appended to list and placed
@@ -105,44 +86,6 @@ public class FileDialogBO implements ActionListener
 	}
 
 	/**
-	 * Constructor for use with arbitrary files, result is appended to list and
-	 * placed in textfield.
-	 *
-	 * @param aList
-	 * @param aTextField
-	 * @param aFileExt
-	 * @param isMultiple
-	 */
-	public FileDialogBO(JList aList, JTextField aTextField, String aFileExt, boolean isMultiple)
-	{
-		theLabel = null;
-		theTextField = aTextField;
-		theFileExt = aFileExt;
-		theMultipleFlag = isMultiple;
-		setup(aList);
-	}
-
-	/**
-	 * Constructor used for DSS files, result is appended to list, radiobuttons
-	 * are enabled when list length greater than 1
-	 *
-	 * @param aList
-	 * @param aLabel
-	 * @param rdb1
-	 * @param rdb2
-	 */
-	public FileDialogBO(JList aList, JLabel aLabel, JRadioButton rdb1, JRadioButton rdb2, boolean isMultiple)
-	{
-		theLabel = aLabel;
-		theFileExt = "DSS";
-		theTextField = null;
-		setup(aList);
-		rdbopt1 = rdb1;
-		rdbopt2 = rdb2;
-		theMultipleFlag = isMultiple;
-	}
-
-	/**
 	 * Constructor used for DSS files, result is appended to list, radiobuttons
 	 * are enabled when list length greater than 1, button is enabled when list
 	 * is not empty;
@@ -164,6 +107,36 @@ public class FileDialogBO implements ActionListener
 		rdbopt2 = rdb2;
 		btn1 = btn;
 		theMultipleFlag = isMultiple;
+	}
+
+	public DefaultListModel getLmScenNames()
+	{
+		return lmScenNames;
+	}
+
+	public void setLmScenNames(DefaultListModel lmScenNames)
+	{
+		this.lmScenNames = lmScenNames;
+	}
+
+	public JFileChooser getFc()
+	{
+		return fc;
+	}
+
+	public void setFc(JFileChooser fc)
+	{
+		this.fc = fc;
+	}
+
+	public int getDialogRC()
+	{
+		return dialogRC;
+	}
+
+	public void setDialogRC(int dialogRC)
+	{
+		this.dialogRC = dialogRC;
 	}
 
 	/**
@@ -346,22 +319,17 @@ public class FileDialogBO implements ActionListener
 					if(rc == 0)
 					{
 						file = fc.getSelectedFile();
-						if(theFileExt.equals("PDF") && !file.getName().toLowerCase().endsWith(".pdf"))
+						if ("PDF".equals(theFileExt) && !file.getName().toLowerCase().endsWith(".pdf"))
 						{
 							file = new File(file.getPath() + ".PDF");
 						}
-						if(theFileExt.equals("CLS") && !file.getName().toLowerCase().endsWith(".cls"))
+						if ("CLS".equals(theFileExt) && !file.getName().toLowerCase().endsWith(".cls"))
 						{
 							file = new File(file.getPath() + ".CLS");
 						}
 						if(theList != null)
 						{
 							addFileToList(file);
-						}
-						else if(theLabel != null)
-						{
-							// theLabel.setText(file.getName());
-							// theLabel.setToolTipText(file.getPath());
 						}
 						else if(theTextField != null)
 						{
@@ -546,7 +514,7 @@ public class FileDialogBO implements ActionListener
 	{
 		private static final long serialVersionUID = -150877374751505363L;
 
-		public boolean toolTipFlag = false;
+		private boolean toolTipFlag = false;
 
 		private Component findJList(Component comp)
 		{
@@ -574,7 +542,10 @@ public class FileDialogBO implements ActionListener
 		public int showOpenDialog(Component c)
 		{
 			JList myList = (JList) findJList(this);
-			myList.setCellRenderer(new FileNameRenderer(this));
+			if (myList != null)
+			{
+				myList.setCellRenderer(new FileNameRenderer(this));
+			}
 			toolTipFlag = false;
 			return super.showOpenDialog(c);
 		}

@@ -7,17 +7,6 @@
 
 package gov.ca.water.calgui.bus_service.impl;
 
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Properties;
-import javax.swing.*;
-
 import gov.ca.water.calgui.bus_service.IModelRunSvc;
 import gov.ca.water.calgui.constant.Constant;
 import gov.ca.water.calgui.tech_service.IDialogSvc;
@@ -28,6 +17,13 @@ import org.apache.commons.io.FilenameUtils;
 import org.apache.log4j.Logger;
 import org.swixml.SwingEngine;
 
+import javax.swing.*;
+import java.io.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Properties;
+
 /**
  * This class will handle the batch run.
  *
@@ -37,9 +33,9 @@ public final class ModelRunSvcImpl implements IModelRunSvc
 {
 
 	private static final Logger LOG = Logger.getLogger(ModelRunSvcImpl.class.getName());
-	public static int simultaneousRuns;
+	private static int SIMULTANEOUS_RUNS;
 	private static SwingEngine swingEngine = XMLParsingSvcImpl.getXMLParsingSvcImplInstance().getSwingEngine();
-	private Properties properties = new Properties();
+	private Properties _properties = new Properties();
 	private int wsdiIterations;
 	private IErrorHandlingSvc errorHandlingSvc = new ErrorHandlingSvcImpl();
 	private IDialogSvc dialogSvc = DialogSvcImpl.getDialogSvcInstance();
@@ -48,13 +44,23 @@ public final class ModelRunSvcImpl implements IModelRunSvc
 	{
 		try
 		{
-			properties.load(ModelRunSvcImpl.class.getClassLoader().getResourceAsStream("callite-gui.properties"));
-			wsdiIterations = Integer.parseInt(properties.getProperty("wsidi.iterations"));
+			_properties.load(ModelRunSvcImpl.class.getClassLoader().getResourceAsStream("callite-gui._properties"));
+			wsdiIterations = Integer.parseInt(_properties.getProperty("wsidi.iterations"));
 		}
 		catch(Exception ex)
 		{
-			LOG.error("Problem loading properties. " + ex.getMessage(), ex);
+			LOG.error("Problem loading _properties. " + ex.getMessage(), ex);
 		}
+	}
+
+	public static int getSimultaneousRuns()
+	{
+		return SIMULTANEOUS_RUNS;
+	}
+
+	public static void setSimultaneousRuns(int simultaneousRuns)
+	{
+		SIMULTANEOUS_RUNS = simultaneousRuns;
 	}
 
 	/**
@@ -177,21 +183,6 @@ public final class ModelRunSvcImpl implements IModelRunSvc
 		{
 			if(scenarioNamesList.size() > 1)
 			{
-				// JOptionPane.showMessageDialog(swingEngine.find(Constant.MAIN_FRAME_NAME),
-				// "WSIDI generation only allowed for a single hydroclimate
-				// realization.");
-				// ImageIcon icon = new
-				// ImageIcon(getClass().getResource("/images/CalLiteIcon.png"));
-				// Object[] options = { "OK" };
-				// JOptionPane optionPane = new JOptionPane("WSIDI generation
-				// only allowed for a single hydroclimate realization.",
-				// JOptionPane.ERROR_MESSAGE, JOptionPane.OK_OPTION, null,
-				// options, options[0]);
-				// JDialog dialog =
-				// optionPane.createDialog(swingEngine.find(Constant.MAIN_FRAME_NAME),"CalLite");
-				// dialog.setIconImage(icon.getImage());
-				// dialog.setResizable(false);
-				// dialog.setVisible(true);
 				dialogSvc.getOK("WSIDI generation only allowed for a single hydroclimate realization.",
 						JOptionPane.ERROR_MESSAGE);
 			}
@@ -204,9 +195,9 @@ public final class ModelRunSvcImpl implements IModelRunSvc
 		else
 		{
 			// how many simultaneous run?
-			int numberOfSimultaneousRun = simultaneousRuns;
+			int numberOfSimultaneousRun = SIMULTANEOUS_RUNS;
 			// how many sub batch files?
-			int numberOfSubBatch = (int) Math.ceil((float) scenarioNamesList.size() / numberOfSimultaneousRun);
+			int numberOfSubBatch = (int) Math.ceil((double) scenarioNamesList.size() / numberOfSimultaneousRun);
 			// sub batch file name array
 			String[] subBatchFileNameArray = new String[numberOfSubBatch];
 			for(int j = 0; j < numberOfSubBatch; j++)
@@ -360,7 +351,11 @@ public final class ModelRunSvcImpl implements IModelRunSvc
 	private void deleteBatchFile()
 	{
 		File batchFile = new File(System.getProperty("user.dir"), "CalLite_w2.bat");
-		batchFile.delete();
+		boolean result = batchFile.delete();
+		if (!result)
+		{
+			LOG.error("Unable to delete batch file: " + batchFile.getAbsolutePath());
+		}
 	}
 
 	/**

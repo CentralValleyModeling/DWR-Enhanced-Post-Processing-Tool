@@ -8,9 +8,6 @@
 package gov.ca.water.calgui.batch;
 //! Creates and executes a single batch file for one run
 
-import java.io.IOException;
-import java.util.Calendar;
-
 import org.antlr.runtime.RecognitionException;
 import org.apache.log4j.Logger;
 import wrimsv2.commondata.wresldata.StudyDataSet;
@@ -20,6 +17,9 @@ import wrimsv2.components.PreRunModel;
 import wrimsv2.evaluator.PreEvaluator;
 import wrimsv2.wreslparser.elements.StudyUtils;
 
+import java.io.IOException;
+import java.util.Calendar;
+
 /**
  * This class is used to run a single study of the wrimsv2 class.
  */
@@ -27,7 +27,7 @@ public class Singleton
 {
 	private static final Logger LOG = Logger.getLogger(Singleton.class.getName());
 
-	public Singleton(String[] args)
+    private Singleton(String[] args)
 	{
 		runStudy(args);
 	}
@@ -52,10 +52,6 @@ public class Singleton
 				new PreEvaluator(sds);
 				new PreRunModel(sds);
 				cb.generateStudyFile();
-				// ExecutorService es = Executors.newCachedThreadPool();
-				// es.execute(new ProgressUpdate("test", ControlData.startYear,
-				// ControlData.startMonth, ControlData.endYear,
-				// ControlData.endMonth));
 				cb.runModel(sds);
 				long endTimeInMillis = Calendar.getInstance().getTimeInMillis();
 				int runPeriod = (int) (endTimeInMillis - startTimeInMillis);
@@ -70,11 +66,11 @@ public class Singleton
 		}
 		catch(RecognitionException ex)
 		{
-			ex.printStackTrace();
+            LOG.error(ex.getMessage());
 		}
 		catch(IOException ex)
 		{
-			ex.printStackTrace();
+            LOG.error(ex.getMessage());
 		}
 		System.exit(0);
 	}

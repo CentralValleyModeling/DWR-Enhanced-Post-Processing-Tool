@@ -9,22 +9,8 @@ package gov.ca.water.calgui.bus_service.impl;
 
 //! Base DSS file access service
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Calendar;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Properties;
-import java.util.Scanner;
-import java.util.Vector;
-import javax.swing.*;
-
 import calsim.app.Project;
 import gov.ca.water.calgui.bo.GUILinks3BO;
-import gov.ca.water.calgui.bo.RBListItemBO;
 import gov.ca.water.calgui.bo.ResultUtilsBO;
 import gov.ca.water.calgui.bus_service.IDSSGrabber1Svc;
 import gov.ca.water.calgui.bus_service.ISeedDataSvc;
@@ -33,12 +19,17 @@ import gov.ca.water.calgui.tech_service.IDialogSvc;
 import gov.ca.water.calgui.tech_service.IErrorHandlingSvc;
 import gov.ca.water.calgui.tech_service.impl.DialogSvcImpl;
 import gov.ca.water.calgui.tech_service.impl.ErrorHandlingSvcImpl;
-import org.apache.log4j.Logger;
-import org.swixml.SwingEngine;
-
 import hec.heclib.dss.HecDss;
 import hec.heclib.util.HecTime;
 import hec.io.TimeSeriesContainer;
+import org.apache.log4j.Logger;
+import org.swixml.SwingEngine;
+
+import javax.swing.*;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.util.*;
 
 /**
  * Class to grab (load) DSS time series for a set of scenarios passed in a
@@ -984,7 +975,7 @@ public class DSSGrabber1SvcImpl implements IDSSGrabber1Svc
 	 * (non-Javadoc)
 	 *
 	 * @see
-	 * gov.ca.water.calgui.bus_service.impl.IDSSGrabber1Svc#getDifferenceSeries(
+     * gov.ca.water.calgui.bus_service.impl.IDSSGrabber1Svc#getDifferenceSeriesWithMultipleTimeSeries(
 	 * hec.io.TimeSeriesContainer[])
 	 */
 	@Override
@@ -1300,7 +1291,7 @@ public class DSSGrabber1SvcImpl implements IDSSGrabber1Svc
 	 * (non-Javadoc)
 	 *
 	 * @see
-	 * gov.ca.water.calgui.bus_service.impl.IDSSGrabber1Svc#getExceedanceSeries(
+     * gov.ca.water.calgui.bus_service.impl.IDSSGrabber1Svc#getExceedanceSeriesWithMultipleTimeSeries(
 	 * hec.io.TimeSeriesContainer[])
 	 */
 	@Override
@@ -1414,7 +1405,7 @@ public class DSSGrabber1SvcImpl implements IDSSGrabber1Svc
 	 * (non-Javadoc)
 	 *
 	 * @see
-	 * gov.ca.water.calgui.bus_service.impl.IDSSGrabber1Svc#getExceedanceSeriesD
+     * gov.ca.water.calgui.bus_service.impl.IDSSGrabber1Svc#getExceedanceSeriesDWithMultipleTimeSeries
 	 * (hec.io.TimeSeriesContainer[])
 	 */
 	@Override
@@ -1422,10 +1413,10 @@ public class DSSGrabber1SvcImpl implements IDSSGrabber1Svc
 	{
 
 		/*
-		 * Copy of getExceedanceSeries to handle "exceedance of differences"
+         * Copy of getExceedanceSeriesWithMultipleTimeSeries to handle "exceedance of differences"
 		 *
 		 * Calculates difference of annual TAFs to get proper results for [12];
-		 * should be recombined with getExceedanceSeries
+         * should be recombined with getExceedanceSeriesWithMultipleTimeSeries
 		 */
 
 		try
