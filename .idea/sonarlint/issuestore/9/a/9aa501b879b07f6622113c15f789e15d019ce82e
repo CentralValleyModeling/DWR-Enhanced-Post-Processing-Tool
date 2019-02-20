@@ -1,0 +1,166 @@
+
+a
+AWj4t1x66y6P2ydRWD8Osquid:S2129ø"!Remove this "Integer" constructor(áÛªÄıÿÿÿÿ2adam8Ø§ÉÅ-
+
+AWj4t1x66y6P2ydRWD7esquid:S001160"NRename this field "ts" to match the regular expression '^_[a-z][a-zA-Z0-9]*$'.(åùë¿ûÿÿÿÿ2adam8Ø§ÉÅ-
+…
+AWj4t1x66y6P2ydRWD8Gsquid:S2674"JCheck the return value of the "read" call to see how many bytes were read.(¬Öº2adam8Ø§ÉÅ-
+Œ
+AWj46K1V6y6P2ydRWJ7Ssquid:S37762"RRefactor this method to reduce its Cognitive Complexity from 41 to the 15 allowed.(ÌŒòÛ2adam8€û•Ç-
+’
+AWj46K1V6y6P2ydRWJ7Osquid:S00117İ"QRename this local variable to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(¾ü¿ñÿÿÿÿÿ2adam8€û•Ç-
+„
+AWj4t1x66y6P2ydRWD7nsquid:TrailingCommentCheck#"6Move this trailing comment on the previous empty line.(Çåº”ûÿÿÿÿ2adam8Ø§ÉÅ-
+
+AWj4t1x66y6P2ydRWD7zsquid:TrailingCommentCheck4"6Move this trailing comment on the previous empty line.(Äœ°†2adam8Ø§ÉÅ-
+^
+AWj46K1V6y6P2ydRWJ7Psquid:S2131j"Use "Integer.toString" instead.(ÀÉñÍûÿÿÿÿ2adam8€û•Ç-
+¡
+AWj46K1V6y6P2ydRWJ7R
+squid:S1382"hThis method has 111 lines, which is greater than the 75 lines authorized. Split it into smaller methods.(ÌŒòÛ2adam8€û•Ç-
+‚
+AWj4t1x66y6P2ydRWD7Tsquid:S00112¤"FDefine and throw a dedicated exception instead of using a generic one.(†ËãÁ2adam8Ø§ÉÅ-
+
+AWj4t1x66y6P2ydRWD7csquid:S00116,"ORename this field "sty" to match the regular expression '^_[a-z][a-zA-Z0-9]*$'.(ú‚—Ìûÿÿÿÿ2adam8Ø§ÉÅ-
+y
+AWj4t1x66y6P2ydRWD7Ysquid:S1155ÿ">Use isEmpty() to check whether the collection is empty or not.(Üæ¥Ö2adam8Ø§ÉÅ-
+…
+AWj4t1x66y6P2ydRWD8Zsquid:TrailingCommentCheckØ"6Move this trailing comment on the previous empty line.(Õüé•ÿÿÿÿÿ2adam8Ø§ÉÅ-
+o
+AWj46K1V6y6P2ydRWJ7Esquid:S1066¦"/Merge this if statement with the enclosing one.(÷°éÓùÿÿÿÿ2adam8€û•Ç-
+†
+AWj46K1V6y6P2ydRWJ7esquid:S3027"FPut single-quotes around '-' to use the faster "indexOf(char)" method.(ÑÅ¨şÿÿÿÿ2adam8€û•Ç-
+
+AWj46K1V6y6P2ydRWJ7gsquid:S1142×"MReduce the number of returns of this method 3, down to the maximum allowed 2.(Ô•èåûÿÿÿÿ2adam8€û•Ç-
+e
+AWj46K1V6y6P2ydRWJ7Isquid:S1166º"%Either log or rethrow this exception.(äí¯ÿÿÿÿÿ2adam8€û•Ç-
+w
+AWj46K1V6y6P2ydRWJ7C
+squid:S864Z"9Add parentheses to make the operator precedence explicit.(ÖğÆÿÿÿÿÿ2adam8€û•Ç-
+d
+AWj46K1V6y6P2ydRWJ7Fsquid:S1166<"%Either log or rethrow this exception.(Ä§’æùÿÿÿÿ2adam8€û•Ç-
+r
+AWj46K1V6y6P2ydRWJ7U
+squid:S106I"9Replace this use of System.out or System.err by a logger.(»¦ûö2adam8€û•Ç-
+h
+AWj46K1V6y6P2ydRWJ7hsquid:S1172"(Remove this unused method parameter "i".(™ıÚîüÿÿÿÿ2adam8€û•Ç-
+x
+AWj4t1x66y6P2ydRWD8a
+squid:S106İ"9Replace this use of System.out or System.err by a logger.(©şêÜúÿÿÿÿ2adam8Ø§ÉÅ-
+
+AWj4t1x66y6P2ydRWD7Ssquid:S00112>"FDefine and throw a dedicated exception instead of using a generic one.(†ËãÁ2adam8Ø§ÉÅ-
+e
+AWj46K1V6y6P2ydRWJ7Hsquid:S1166Û"%Either log or rethrow this exception.(É˜Ùúÿÿÿÿ2adam8€û•Ç-
+e
+AWj46K1V6y6P2ydRWJ7Msquid:S1166Å"%Either log or rethrow this exception.(¸Üõ€şÿÿÿÿ2adam8€û•Ç-
+s
+AWj46K1V6y6P2ydRWJ7d
+squid:S106¬"9Replace this use of System.out or System.err by a logger.(ŒÊÅ¹2adam8€û•Ç-
+€
+AWj4t1x66y6P2ydRWD8nsquid:TrailingCommentCheck°"6Move this trailing comment on the previous empty line.(É©í2adam8Ø§ÉÅ-
+‹
+AWj4t1x66y6P2ydRWD8xsquid:CommentedOutCodeLine—"<This block of commented-out lines of code should be removed.(”ò®Òúÿÿÿÿ2adam8Ø§ÉÅ-
+`
+AWj46K1V6y6P2ydRWJ7Jsquid:S1166‰"%Either log or rethrow this exception.(Çß¬ç2adam8€û•Ç-
+½
+AWj46K1V6y6P2ydRWJ7Xsquid:S1158j"~Call the static method Integer.toString(...) instead of instantiating a temporary object to perform this to string conversion.(ÀÉñÍûÿÿÿÿ2adam8€û•Ç-
+r
+AWj46K1V6y6P2ydRWJ7W
+squid:S106`"9Replace this use of System.out or System.err by a logger.(Œ–Œ2adam8€û•Ç-
+`
+AWj46K1V6y6P2ydRWJ7Ysquid:S2129j"!Remove this "Integer" constructor(ÀÉñÍûÿÿÿÿ2adam8€û•Ç-
+a
+AWj4t1x66y6P2ydRWD8ksquid:S2129¦"!Remove this "Integer" constructor(•¡šÁøÿÿÿÿ2adam8Ø§ÉÅ-
+…
+AWj4t1x66y6P2ydRWD8Nsquid:TrailingCommentCheck½"6Move this trailing comment on the previous empty line.(öñá¬üÿÿÿÿ2adam8Ø§ÉÅ-
+}
+AWj46K1V6y6P2ydRWJ7jsquid:UnusedPrivateMethod™"/Remove this unused private "trimOutput" method.(ş‹ÿÿÿÿÿ2adam8€û•Ç-
+x
+AWj4t1x66y6P2ydRWD70squid:S21305"9Use "Integer.parseInt" for this string-to-int conversion.( ¢—şÿÿÿÿ2adam8Ø§ÉÅ-
+€
+AWj4t1x66y6P2ydRWD8Msquid:TrailingCommentCheck¹"6Move this trailing comment on the previous empty line.(îØä2adam8Ø§ÉÅ-
+
+AWj4t1x66y6P2ydRWD74squid:TrailingCommentCheckF"6Move this trailing comment on the previous empty line.(–òşî2adam8Ø§ÉÅ-
+w
+AWj46K1V6y6P2ydRWJ7Z
+squid:S106n"9Replace this use of System.out or System.err by a logger.(ç×áŞúÿÿÿÿ2adam8€û•Ç-
+Š
+AWj4t1x66y6P2ydRWD8Qsquid:S1132Œ"JMove the "1MON" string literal on the left side of this string comparison.(ÕÌÖªüÿÿÿÿ2adam8Ø§ÉÅ-
+€
+AWj4t1x66y6P2ydRWD8msquid:TrailingCommentCheck¼"6Move this trailing comment on the previous empty line.(É©í2adam8Ø§ÉÅ-
+
+AWj4t1x66y6P2ydRWD7lsquid:TrailingCommentCheck*"6Move this trailing comment on the previous empty line.(‚¼¿ 2adam8Ø§ÉÅ-
+Z
+AWj4t1x66y6P2ydRWD7Xsquid:S2131›"Use "Integer.toString" instead.(Ñı‹2adam8Ø§ÉÅ-
+•
+AWj4t1x66y6P2ydRWD7bsquid:S00116+"URename this field "initIndex" to match the regular expression '^_[a-z][a-zA-Z0-9]*$'.(»¦Îîşÿÿÿÿ2adam8Ø§ÉÅ-
+z
+AWj46K1V6y6P2ydRWJ7c
+squid:S899š";Do something with the "boolean" value returned by "delete".(ßÒ¡¢úÿÿÿÿ2adam8€û•Ç-
+€
+AWj4t1x66y6P2ydRWD8lsquid:TrailingCommentCheckÇ"6Move this trailing comment on the previous empty line.(É©í2adam8Ø§ÉÅ-
+`
+AWj4t1x66y6P2ydRWD77squid:S2129L"!Remove this "Boolean" constructor(¹˜Î•øÿÿÿÿ2adam8Ø§ÉÅ-
+e
+AWj46K1V6y6P2ydRWJ7Lsquid:S1166„"%Either log or rethrow this exception.(äí¯ÿÿÿÿÿ2adam8€û•Ç-
+‡
+AWj46K1V6y6P2ydRWJ7Nsquid:S00112¡"FDefine and throw a dedicated exception instead of using a generic one.(¤ˆû„üÿÿÿÿ2adam8€û•Ç-
+ˆ
+AWj46K1V6y6P2ydRWJ7fsquid:S1142™"MReduce the number of returns of this method 6, down to the maximum allowed 2.(´÷…À2adam8€û•Ç-
+y
+AWj4t1x66y6P2ydRWD73
+squid:S899D";Do something with the "boolean" value returned by "delete".(ğü›¡ıÿÿÿÿ2adam8Ø§ÉÅ-
+‰
+AWj4t1x66y6P2ydRWD7dsquid:S00116-"NRename this field "wm" to match the regular expression '^_[a-z][a-zA-Z0-9]*$'.(†¡±Ô2adam8Ø§ÉÅ-
+
+AWj4t1x66y6P2ydRWD7fsquid:S00116$"TRename this field "position" to match the regular expression '^_[a-z][a-zA-Z0-9]*$'.(—€Ê2adam8Ø§ÉÅ-
+`
+AWj46K1V6y6P2ydRWJ7Ksquid:S1166®"%Either log or rethrow this exception.(Çß¬ç2adam8€û•Ç-
+
+AWj4t1x66y6P2ydRWD8fsquid:S1215‘"TDon't try to be smarter than the JVM, remove this call to run the garbage collector.(Ì°¬“2adam8Ø§ÉÅ-
+Æ
+AWj46K1V6y6P2ydRWJ7i%squid:RedundantThrowsDeclarationCheck¡"lRemove the declaration of thrown exception 'java.lang.Exception', as it cannot be thrown from method's body.(¤ˆû„üÿÿÿÿ2adam8€û•Ç-
+
+AWj4t1x66y6P2ydRWD7msquid:TrailingCommentCheck/"6Move this trailing comment on the previous empty line.(šªÆï2adam8Ø§ÉÅ-
+«
+AWj46K1V6y6P2ydRWJ7Qsquid:S1448"lclass "StudyWrapper" has 36 methods, which is greater than the 35 authorized. Split it into smaller classes.(ÜŸ±ãıÿÿÿÿ2adam8€û•Ç-
+Š
+AWj4t1x66y6P2ydRWD7isquid:S00116'"ORename this field "ndv" to match the regular expression '^_[a-z][a-zA-Z0-9]*$'.(Ê¾‰¥2adam8Ø§ÉÅ-
+
+AWj4t1x66y6P2ydRWD7jsquid:S1149""VReplace the synchronized class "Hashtable" by an unsynchronized one such as "HashMap".(Äîšß2adam8Ø§ÉÅ-
+Š
+AWj4t1x66y6P2ydRWD7_squid:S3027f"KPut single-quotes around '\\' to use the faster "lastIndexOf(char)" method.(Ÿ™®óÿÿÿÿÿ2adam8Ø§ÉÅ-
+\
+AWj4t1x66y6P2ydRWD8Ssquid:S2129›"!Remove this "Integer" constructor(Ñı‹2adam8Ø§ÉÅ-
+[
+AWj4t1x66y6P2ydRWD76squid:S2129K"!Remove this "Boolean" constructor(Ù¶¢2adam8Ø§ÉÅ-
+‰
+AWj46K1V6y6P2ydRWJ7bsquid:S4042š"IUse "java.nio.Files#delete" here for better messages on error conditions.(ßÒ¡¢úÿÿÿÿ2adam8€û•Ç-
+¹
+AWj4t1x66y6P2ydRWD8Rsquid:S1158›"~Call the static method Integer.toString(...) instead of instantiating a temporary object to perform this to string conversion.(Ñı‹2adam8Ø§ÉÅ-
+a
+AWj4t1x66y6P2ydRWD8Psquid:S2129ı"!Remove this "Integer" constructor(µö›Åşÿÿÿÿ2adam8Ø§ÉÅ-
+o
+AWj46K1V6y6P2ydRWJ7Dsquid:S1066‰"/Merge this if statement with the enclosing one.(îş„Õüÿÿÿÿ2adam8€û•Ç-
+‹
+AWj4t1x66y6P2ydRWD8vsquid:S3027À"KPut single-quotes around '\\' to use the faster "lastIndexOf(char)" method.(äÁÜ¬ÿÿÿÿÿ2adam8Ø§ÉÅ-
+”
+AWj4t1x66y6P2ydRWD7hsquid:S00116&"TRename this field "numyears" to match the regular expression '^_[a-z][a-zA-Z0-9]*$'.(ºúúıÿÿÿÿ2adam8Ø§ÉÅ-
+ˆ
+AWj4t1x66y6P2ydRWD72squid:S4042D"IUse "java.nio.Files#delete" here for better messages on error conditions.(ğü›¡ıÿÿÿÿ2adam8Ø§ÉÅ-
+w
+AWj46K1V6y6P2ydRWJ7a
+squid:S106y"9Replace this use of System.out or System.err by a logger.(ô½áÀøÿÿÿÿ2adam8€û•Ç-
+f
+AWj46K1V6y6P2ydRWJ7Tsquid:S11722",Remove this unused method parameter "debug".(ÌŒòÛ2adam8€û•Ç-
+e
+AWj46K1V6y6P2ydRWJ7Gsquid:S1166¢"%Either log or rethrow this exception.(Ä§’æùÿÿÿÿ2adam8€û•Ç-
+ 
+AWj4t1x66y6P2ydRWD7ksquid:S1149Ä"eReplace the synchronized class "Vector" by an unsynchronized one such as "ArrayList" or "LinkedList".(ú«·2adam8Ø§ÉÅ-
+–
+AWj4t1x66y6P2ydRWD7gsquid:S00116%"VRename this field "posperiods" to match the regular expression '^_[a-z][a-zA-Z0-9]*$'.(«³Âİıÿÿÿÿ2adam8Ø§ÉÅ-
+“
+AWj4t1x66y6P2ydRWD7asquid:S00116*"XRename this field "calsimLibDir" to match the regular expression '^_[a-z][a-zA-Z0-9]*$'.(‚¼¿ 2adam8Ø§ÉÅ-
+r
+AWj46K1V6y6P2ydRWJ7V
+squid:S106V"9Replace this use of System.out or System.err by a logger.(–¾°™2adam8€û•Ç-

@@ -1,0 +1,93 @@
+
+<!doctype html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html><head><title>Python: module hecutils</title>
+</head><body bgcolor="#f0f0f8">
+
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="heading">
+<tr bgcolor="#7799ee">
+<td valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial">&nbsp;<br><big><big><strong>hecutils</strong></big></big></font></td
+><td align=right valign=bottom
+><font color="#ffffff" face="helvetica, arial"><a href=".">index</a><br><a href="file:u:\git\dsm2-vista\vista\lib\lib\hecutils.py">u:\git\dsm2-vista\vista\lib\lib\hecutils.py</a></font></td></tr></table>
+    <p></p>
+<p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#aa55cc">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#fffff" face="helvetica, arial"><big><strong>Modules</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#aa55cc"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><table width="100%" summary="list"><tr><td width="25%" valign=top><a href="string.html">string</a><br>
+</td><td width="25%" valign=top></td><td width="25%" valign=top></td><td width="25%" valign=top></td></tr></table></td></tr></table><p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ee77aa">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Classes</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#ee77aa"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><dl>
+<dt><font face="helvetica, arial"><a href="java.lang.html#Object">java.lang.Object</a>(<a href="__builtin__.html#object">__builtin__.object</a>)
+</font></dt><dd>
+<dl>
+<dt><font face="helvetica, arial">org.python.modules.math
+</font></dt></dl>
+</dd>
+</dl>
+ <strong>math</strong> = &lt;type 'org.python.modules.math'&gt;</td></tr></table><p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#eeaa77">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Functions</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#eeaa77"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><dl><dt><a name="-arrange_plots"><strong>arrange_plots</strong></a>(regplot, plotm, plotd)</dt><dd><tt>arranges&nbsp;the&nbsp;plots&nbsp;in&nbsp;a&nbsp;certain&nbsp;order,&nbsp;<br>
+regplot&nbsp;and&nbsp;plotm&nbsp;in&nbsp;first&nbsp;row&nbsp;next&nbsp;to&nbsp;each&nbsp;other<br>
+plotd&nbsp;in&nbsp;second&nbsp;row</tt></dd></dl>
+ <dl><dt><a name="-calculate_rms"><strong>calculate_rms</strong></a>(run, obs)</dt></dl>
+ <dl><dt><a name="-calculate_weighted_rms"><strong>calculate_weighted_rms</strong></a>(weights<font color="#909090">=None</font>)</dt><dd><tt>calculate&nbsp;the&nbsp;weighted&nbsp;rms&nbsp;(if&nbsp;weights&nbsp;not&nbsp;given&nbsp;assumed&nbsp;to&nbsp;be&nbsp;equal&nbsp;to&nbsp;1)</tt></dd></dl>
+ <dl><dt><a name="-close_dss"><strong>close_dss</strong></a>(dss)</dt><dd><tt>Takes&nbsp;a&nbsp;handle&nbsp;and&nbsp;closes&nbsp;it</tt></dd></dl>
+ <dl><dt><a name="-create_path_pattern"><strong>create_path_pattern</strong></a>(pathstr)</dt><dd><tt>Creates&nbsp;a&nbsp;pattern&nbsp;string&nbsp;for&nbsp;the&nbsp;get_matching&nbsp;function&nbsp;of&nbsp;the&nbsp;form&nbsp;[part&nbsp;letter&nbsp;A|B|C|D|E|F]=&lt;string&nbsp;to&nbsp;match&gt;&nbsp;[space]<br>
+from&nbsp;a&nbsp;pathstr&nbsp;of&nbsp;the&nbsp;format&nbsp;[/[part&nbsp;string&nbsp;to&nbsp;match|&nbsp;empty]&nbsp;repeated&nbsp;for&nbsp;A-F<br>
+E.g.&nbsp;/OBS/MTZ/STAGE/1HOUR//SENSOR-36/&nbsp;would&nbsp;be&nbsp;transformed&nbsp;to&nbsp;A=OBS&nbsp;B=MTZ&nbsp;C=STAGE&nbsp;D=1HOUR&nbsp;F=SENSOR-36.&nbsp;Note&nbsp;that&nbsp;E&nbsp;part&nbsp;is&nbsp;skipped&nbsp;as&nbsp;it&nbsp;is&nbsp;empty</tt></dd></dl>
+ <dl><dt><a name="-create_regression_line"><strong>create_regression_line</strong></a>(drun, dobs, legend)</dt></dl>
+ <dl><dt><a name="-get_matching"><strong>get_matching</strong></a>(dss, pattern)</dt><dd><tt>Takes&nbsp;a&nbsp;dss&nbsp;handle&nbsp;and<br>
+a&nbsp;pattern&nbsp;in&nbsp;format&nbsp;of&nbsp;"([part&nbsp;letter&nbsp;(A|B|C|D|E|F)]=&lt;string&nbsp;to&nbsp;match&gt;&nbsp;[space])*"<br>
+e.g.<br>
+<a href="#-get_matching">get_matching</a>(obs,'A=OBS&nbsp;C=MTZ&nbsp;E=15MIN')<br>
+&nbsp;<br>
+Fails&nbsp;by&nbsp;return&nbsp;None&nbsp;and&nbsp;printing&nbsp;message&nbsp;of&nbsp;failure.</tt></dd></dl>
+ <dl><dt><a name="-newPlot"><strong>newPlot</strong></a>(title)</dt><dd><tt>Creates&nbsp;a&nbsp;blank&nbsp;plot&nbsp;window&nbsp;with&nbsp;title</tt></dd></dl>
+ <dl><dt><a name="-open_dss"><strong>open_dss</strong></a>(dssfile)</dt><dd><tt>opens&nbsp;a&nbsp;dss&nbsp;files&nbsp;only&nbsp;if&nbsp;it&nbsp;exists,&nbsp;else&nbsp;fails</tt></dd></dl>
+ <dl><dt><a name="-plot"><strong>plot</strong></a>(data, title)</dt><dd><tt>Takes&nbsp;an&nbsp;array&nbsp;of&nbsp;data&nbsp;and&nbsp;a&nbsp;title&nbsp;and&nbsp;displays&nbsp;a&nbsp;plot&nbsp;(HECDssVue&nbsp;style)</tt></dd></dl>
+ <dl><dt><a name="-removeToolbar"><strong>removeToolbar</strong></a>(panel)</dt></dl>
+ <dl><dt><a name="-save_as_png"><strong>save_as_png</strong></a>(p, filename)</dt><dd><tt>saves&nbsp;plot&nbsp;window&nbsp;(G2Dialog)&nbsp;created&nbsp;by&nbsp;<a href="#-newPlot">newPlot</a>(title)&nbsp;method&nbsp;as&nbsp;a&nbsp;png&nbsp;graphics&nbsp;file</tt></dd></dl>
+ <dl><dt><a name="-save_plots_to_images"><strong>save_plots_to_images</strong></a>(mainPanel, imageFileName, imageDir<font color="#909090">='z:/temp'</font>)</dt><dd><tt>Saves&nbsp;the&nbsp;panel&nbsp;used&nbsp;to&nbsp;draw&nbsp;plots&nbsp;to&nbsp;images</tt></dd></dl>
+ <dl><dt><a name="-scatter_plot"><strong>scatter_plot</strong></a>(dobsm, drun1m, drun2m, title, legend1, legend2)</dt></dl>
+ <dl><dt><a name="-set_working_timewindow"><strong>set_working_timewindow</strong></a>(dss, stime, etime)</dt><dd><tt>Takes&nbsp;a&nbsp;dss&nbsp;handle&nbsp;(previously&nbsp;opened&nbsp;by&nbsp;call&nbsp;to&nbsp;open_dss&nbsp;and&nbsp;<br>
+a&nbsp;time&nbsp;window&nbsp;defined&nbsp;by&nbsp;strings&nbsp;in&nbsp;ddMMMyyyy&nbsp;HHmm&nbsp;format&nbsp;(start&nbsp;time&nbsp;and&nbsp;end&nbsp;time)</tt></dd></dl>
+ <dl><dt><a name="-show_plot_in_frame"><strong>show_plot_in_frame</strong></a>(mainPanel)</dt><dd><tt>embeds&nbsp;panel&nbsp;containing&nbsp;plots&nbsp;in&nbsp;a&nbsp;closable&nbsp;frame<br>
+clears&nbsp;the&nbsp;panel&nbsp;background&nbsp;to&nbsp;white</tt></dd></dl>
+ <dl><dt><a name="-ts_add"><strong>ts_add</strong></a>(data)</dt></dl>
+ <dl><dt><a name="-ts_normalize"><strong>ts_normalize</strong></a>(data)</dt><dd><tt>Normalize&nbsp;time&nbsp;series&nbsp;by&nbsp;dividing&nbsp;by&nbsp;data's&nbsp;mean</tt></dd></dl>
+ <dl><dt><a name="-ts_period_operation"><strong>ts_period_operation</strong></a>(data, interval<font color="#909090">='1DAY'</font>, operation_type<font color="#909090">='AVE'</font>)</dt><dd><tt>transforms&nbsp;the&nbsp;time&nbsp;series&nbsp;using&nbsp;a&nbsp;period&nbsp;operation&nbsp;with<br>
+given&nbsp;interval&nbsp;(1DAY&nbsp;(default),&nbsp;1HOUR,&nbsp;etc)&nbsp;and<br>
+given&nbsp;operation&nbsp;type&nbsp;(AVE&nbsp;(default),&nbsp;MAX,&nbsp;MIN)</tt></dd></dl>
+ <dl><dt><a name="-ts_plot"><strong>ts_plot</strong></a>(data1, data2<font color="#909090">=None</font>, data3<font color="#909090">=None</font>, title<font color="#909090">=''</font>, legend1<font color="#909090">=''</font>, legend2<font color="#909090">=''</font>, legend3<font color="#909090">=''</font>)</dt></dl>
+</td></tr></table><p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#55aa55">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Data</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#55aa55"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><strong>border</strong> = &lt;java package javax.swing.border 0x1&gt;<br>
+<strong>colorchooser</strong> = &lt;java package javax.swing.colorchooser 0x2&gt;<br>
+<strong>event</strong> = &lt;java package javax.swing.event 0x3&gt;<br>
+<strong>filechooser</strong> = &lt;java package javax.swing.filechooser 0x4&gt;<br>
+<strong>java</strong> = &lt;java package java 0x5&gt;<br>
+<strong>plaf</strong> = &lt;java package javax.swing.plaf 0x6&gt;<br>
+<strong>table</strong> = &lt;java package javax.swing.table 0x7&gt;<br>
+<strong>text</strong> = &lt;java package javax.swing.text 0x8&gt;<br>
+<strong>tree</strong> = &lt;java package javax.swing.tree 0x9&gt;<br>
+<strong>undo</strong> = &lt;java package javax.swing.undo 0xa&gt;</td></tr></table>
+</body></html>

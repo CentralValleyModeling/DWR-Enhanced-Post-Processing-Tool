@@ -1,0 +1,138 @@
+
+“
+AWj4t12E6y6P2ydRWEXDsquid:S00116"SRename this field "bufline" to match the regular expression '^_[a-z][a-zA-Z0-9]*$'.(Ó÷‹âıÿÿÿÿ2adam8Ø§ÉÅ-
+’
+AWj4t12E6y6P2ydRWEXKsquid:S00116""RRename this field "buffer" to match the regular expression '^_[a-z][a-zA-Z0-9]*$'.(ûŒêµúÿÿÿÿ2adam8Ø§ÉÅ-
+‡
+AWj4t12E6y6P2ydRWEWu
+squid:S881š"HExtract this increment or decrement operator into a dedicated statement.( ç´úÿÿÿÿ2adam8Ø§ÉÅ-
+
+AWj4t12E6y6P2ydRWEXWsquid:S00100w"NRename this method name to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(ËºÈŒüÿÿÿÿ2adam8Ø§ÉÅ-
+e
+AWj46K9Z6y6P2ydRWJ_rsquid:S2333"%"final" is redundant in this context.(‰­ƒ¡şÿÿÿÿ2adam8€û•Ç-
+d
+AWj4t12E6y6P2ydRWEWysquid:S2333w"%"final" is redundant in this context.(ËºÈŒüÿÿÿÿ2adam8Ø§ÉÅ-
+
+AWj4t12E6y6P2ydRWEXGsquid:S00116"PRename this field "line" to match the regular expression '^_[a-z][a-zA-Z0-9]*$'.(¡ô¤Èøÿÿÿÿ2adam8Ø§ÉÅ-
+•
+AWj4t12E6y6P2ydRWEXNsquid:S00115"ZRename this constant name to match the regular expression '^[A-Z][A-Z0-9]*(_[A-Z0-9]+)*$'.(÷İÕ·2adam8Ø§ÉÅ-
+e
+AWj46K9Z6y6P2ydRWJ_ssquid:S2333“"%"final" is redundant in this context.(íå§üÿÿÿÿ2adam8€û•Ç-
+_
+AWj4t12E6y6P2ydRWEXTsquid:S1181l"%Catch Exception instead of Throwable.(Ñ´¯2adam8Ø§ÉÅ-
+V
+AWj4t12E6y6P2ydRWEXUsquid:S3626¦"Remove this redundant jump.(ûÁİ…2adam8Ø§ÉÅ-
+u
+AWj46K9Z6y6P2ydRWJ_xsquid:S1133‰"5Do not forget to remove this deprecated code someday.(éÑË„ÿÿÿÿÿ2adam8€û•Ç-
+•
+AWj4t12E6y6P2ydRWEXAsquid:S00116"URename this field "available" to match the regular expression '^_[a-z][a-zA-Z0-9]*$'.(ôªÈ›úÿÿÿÿ2adam8Ø§ÉÅ-
+Š
+AWj4t12E6y6P2ydRWEXbsquid:S00100¬"NRename this method name to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(•–“ß2adam8Ø§ÉÅ-
+‰
+AWj4t12E6y6P2ydRWEXQsquid:S00100E"NRename this method name to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(Á­ëÓ2adam8Ø§ÉÅ-
+Š
+AWj4t12E6y6P2ydRWEXesquid:S00100Å"NRename this method name to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(ÿşóÜ2adam8Ø§ÉÅ-
+
+AWj4t12E6y6P2ydRWEWr
+squid:S881ï"HExtract this increment or decrement operator into a dedicated statement.(Üéº2adam8Ø§ÉÅ-
+Š
+AWj4t12E6y6P2ydRWEXXsquid:S00100´"NRename this method name to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(ÉÇœÍ2adam8Ø§ÉÅ-
+“
+AWj4t12E6y6P2ydRWEW_squid:S00116"SRename this field "bufsize" to match the regular expression '^_[a-z][a-zA-Z0-9]*$'.(ËÑ•ãÿÿÿÿÿ2adam8Ø§ÉÅ-
+i
+AWj4t12E6y6P2ydRWEWlsquid:S1314İ")Use decimal values instead of octal ones.(ş§É’ÿÿÿÿÿ2adam8Ø§ÉÅ-
+‡
+AWj4t12E6y6P2ydRWEWw
+squid:S881"HExtract this increment or decrement operator into a dedicated statement.(Õı¬ûÿÿÿÿ2adam8Ø§ÉÅ-
+‡
+AWj4t12E6y6P2ydRWEWt
+squid:S881—"HExtract this increment or decrement operator into a dedicated statement.(Õı¬ûÿÿÿÿ2adam8Ø§ÉÅ-
+p
+AWj4t12E6y6P2ydRWEXdsquid:S1172:"1Remove this unused method parameter "buffersize".(ÅñúÇÿÿÿÿÿ2adam8Ø§ÉÅ-
+e
+AWj4t12E6y6P2ydRWEW-squid:S2333Ş"%"final" is redundant in this context.(óù úÿÿÿÿ2adam8Ø§ÉÅ-
+š
+AWj4t12E6y6P2ydRWEXLsquid:S00116#"ZRename this field "maxNextCharInd" to match the regular expression '^_[a-z][a-zA-Z0-9]*$'.(¥ıëÌûÿÿÿÿ2adam8Ø§ÉÅ-
+e
+AWj46K9Z6y6P2ydRWJ_qsquid:S2333‰"%"final" is redundant in this context.(éÑË„ÿÿÿÿÿ2adam8€û•Ç-
+`
+AWj46K9Z6y6P2ydRWJ_psquid:S2333ÿ"%"final" is redundant in this context.(¼›ïá2adam8€û•Ç-
+`
+AWj4t12E6y6P2ydRWEW1squid:S2333ç"%"final" is redundant in this context.(İ…ù…2adam8Ø§ÉÅ-
+’
+AWj4t12E6y6P2ydRWEXFsquid:S00116"RRename this field "column" to match the regular expression '^_[a-z][a-zA-Z0-9]*$'.(ª€øàûÿÿÿÿ2adam8Ø§ÉÅ-
+“
+AWj4t12E6y6P2ydRWEXIsquid:S00116"XRename this field "prevCharIsLF" to match the regular expression '^_[a-z][a-zA-Z0-9]*$'.(…¨±2adam8Ø§ÉÅ-
+
+AWj4t12E6y6P2ydRWEXhsquid:S00100Ñ"NRename this method name to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(Ñ²êãşÿÿÿÿ2adam8Ø§ÉÅ-
+_
+AWj4t12E6y6P2ydRWEWxsquid:S2333E"%"final" is redundant in this context.(Á­ëÓ2adam8Ø§ÉÅ-
+–
+AWj4t12E6y6P2ydRWEXBsquid:S00116"VRename this field "tokenBegin" to match the regular expression '^_[a-z][a-zA-Z0-9]*$'.(É–†Ûùÿÿÿÿ2adam8Ø§ÉÅ-
+‚
+AWj4t12E6y6P2ydRWEWs
+squid:S881Œ"HExtract this increment or decrement operator into a dedicated statement.(îê¸Ğ2adam8Ø§ÉÅ-
+—
+AWj4t12E6y6P2ydRWEXJsquid:S00116 "WRename this field "inputStream" to match the regular expression '^_[a-z][a-zA-Z0-9]*$'.(ˆµíšøÿÿÿÿ2adam8Ø§ÉÅ-
+_
+AWj4t12E6y6P2ydRWEXlsquid:S1659ˆ"Declare "j" on a separate line.(ãäÚ‘üÿÿÿÿ2adam8Ø§ÉÅ-
+_
+AWj4t12E6y6P2ydRWEXksquid:S1659ˆ"Declare "k" on a separate line.(ãäÚ‘üÿÿÿÿ2adam8Ø§ÉÅ-
+Š
+AWj4t12E6y6P2ydRWEXgsquid:S00100Ë"NRename this method name to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(ÿşóÜ2adam8Ø§ÉÅ-
+
+AWj4t12E6y6P2ydRWEXEsquid:S00116"URename this field "bufcolumn" to match the regular expression '^_[a-z][a-zA-Z0-9]*$'.(±Áè2adam8Ø§ÉÅ-
+‚
+AWj4t12E6y6P2ydRWEWj$squid:AssignmentInSubExpressionCheck¦".Extract the assignment out of this expression.(Ÿ»Èİ2adam8Ø§ÉÅ-
+p
+AWj46K9Z6y6P2ydRWJ_wsquid:S1133ÿ"5Do not forget to remove this deprecated code someday.(¼›ïá2adam8€û•Ç-
+e
+AWj4t12E6y6P2ydRWEW9squid:S2333Ñ"%"final" is redundant in this context.(Ñ²êãşÿÿÿÿ2adam8Ø§ÉÅ-
+
+AWj4t12E6y6P2ydRWEXCsquid:S00116"RRename this field "bufpos" to match the regular expression '^_[a-z][a-zA-Z0-9]*$'.(âëË2adam8Ø§ÉÅ-
+‚
+AWj4t12E6y6P2ydRWEWk$squid:AssignmentInSubExpressionCheckœ".Extract the assignment out of this expression.(‘õšğ2adam8Ø§ÉÅ-
+
+AWj4t12E6y6P2ydRWEXjsquid:S00100ğ"NRename this method name to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(âÿÃûÿÿÿÿ2adam8Ø§ÉÅ-
+‘
+AWj4t12E6y6P2ydRWEXMsquid:S00116$"QRename this field "inBuf" to match the regular expression '^_[a-z][a-zA-Z0-9]*$'.(Õ‚ö•øÿÿÿÿ2adam8Ø§ÉÅ-
+`
+AWj46K9Z6y6P2ydRWJ_usquid:S2333"%"final" is redundant in this context.(šËÆë2adam8€û•Ç-
+e
+AWj4t12E6y6P2ydRWEW0squid:S2333½"%"final" is redundant in this context.(»ËÃŠÿÿÿÿÿ2adam8Ø§ÉÅ-
+`
+AWj46K9Z6y6P2ydRWJ_vsquid:S2333¢"%"final" is redundant in this context.(öâïº2adam8€û•Ç-
+‚
+AWj4t12E6y6P2ydRWEWq
+squid:S881ì"HExtract this increment or decrement operator into a dedicated statement.(Œ£ƒÌ2adam8Ø§ÉÅ-
+_
+AWj4t12E6y6P2ydRWEWosquid:S1166l"%Either log or rethrow this exception.(Ñ´¯2adam8Ø§ÉÅ-
+`
+AWj4t12E6y6P2ydRWEWzsquid:S2333´"%"final" is redundant in this context.(ÉÇœÍ2adam8Ø§ÉÅ-
+‚
+AWj4t12E6y6P2ydRWEWv
+squid:S881œ"HExtract this increment or decrement operator into a dedicated statement.(‘õšğ2adam8Ø§ÉÅ-
+_
+AWj46K9Z6y6P2ydRWJ_tsquid:S2333˜"%"final" is redundant in this context.(úó´I2adam8€û•Ç-
+†
+AWj4t12E6y6P2ydRWEWpsquid:S00112n"FDefine and throw a dedicated exception instead of using a generic one.(½¾‡Ïùÿÿÿÿ2adam8Ø§ÉÅ-
+‡
+AWj4t12E6y6P2ydRWEWnsquid:S00101"MRename this class name to match the regular expression '^[A-Z][a-zA-Z0-9]*$'.(ÚŸù]2adam8Ø§ÉÅ-
+
+AWj4t12E6y6P2ydRWEXYsquid:S00100½"NRename this method name to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(»ËÃŠÿÿÿÿÿ2adam8Ø§ÉÅ-
+Š
+AWj4t12E6y6P2ydRWEXcsquid:S00100¿"NRename this method name to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(•–“ß2adam8Ø§ÉÅ-
+“
+AWj4t12E6y6P2ydRWEXHsquid:S00116"XRename this field "prevCharIsCR" to match the regular expression '^_[a-z][a-zA-Z0-9]*$'.(ûÙÛĞ2adam8Ø§ÉÅ-
+h
+AWj4t12E6y6P2ydRWEXmsquid:S1659‰"(Declare "columnDiff" on a separate line.(ÙşÙúÿÿÿÿ2adam8Ø§ÉÅ-
+q
+AWj4t12E6y6P2ydRWEXfsquid:S1172Æ"1Remove this unused method parameter "buffersize".(ÅñúÇÿÿÿÿÿ2adam8Ø§ÉÅ-
+‘
+AWj4t12E6y6P2ydRWEXVsquid:S3776w"RRefactor this method to reduce its Cognitive Complexity from 16 to the 15 allowed.(ËºÈŒüÿÿÿÿ2adam8Ø§ÉÅ-
+‚
+AWj4t12E6y6P2ydRWEWi$squid:AssignmentInSubExpressionCheckì".Extract the assignment out of this expression.(Œ£ƒÌ2adam8Ø§ÉÅ-
+
+AWj4t12E6y6P2ydRWEXisquid:S00100Ş"NRename this method name to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(óù úÿÿÿÿ2adam8Ø§ÉÅ-
+£
+AWj4t12E6y6P2ydRWEWm"squid:ClassVariableVisibilityCheck"RMake bufpos a static final constant or non-public and provide accessors if needed.(âëË2adam8Ø§ÉÅ-

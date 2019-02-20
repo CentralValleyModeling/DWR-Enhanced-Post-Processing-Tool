@@ -1,0 +1,298 @@
+
+†
+AWj4t1g06y6P2ydRWCw8squid:CommentedOutCodeLineŒ"<This block of commented-out lines of code should be removed.(ã‘Àÿ2adam8Ø§ÉÅ-
+Ž
+AWj46KgG6y6P2ydRWJvJsquid:S1132É"NMove the "60-20-20" string literal on the left side of this string comparison.(Àÿ÷±ýÿÿÿÿ2adam8€û•Ç-
+t
+AWj46KgG6y6P2ydRWJvEsquid:S2221Ô"4Catch a list of specific exception subtypes instead.(´‚¤–øÿÿÿÿ2adam8€û•Ç-
+†
+AWj4t1g06y6P2ydRWCvmsquid:S3027¡
+"FPut single-quotes around '.' to use the faster "indexOf(char)" method.(Œ­¶‰ýÿÿÿÿ2adam8Ø§ÉÅ-
+…
+AWj4t1g06y6P2ydRWCuksquid:TrailingCommentCheckØ"6Move this trailing comment on the previous empty line.(¾»¼ýÿÿÿÿ2adam8Ø§ÉÅ-
+’
+AWj4t1g06y6P2ydRWCuNsquid:S1450:"XRemove the "_oldUnits" field and declare it as a local variable in the relevant methods.(“’»È2adam8Ø§ÉÅ-
+x
+AWj4t1g06y6P2ydRWCvq
+squid:S106Ï
+"9Replace this use of System.out or System.err by a logger.(¾¹¼Åýÿÿÿÿ2adam8Ø§ÉÅ-
+v
+AWj4t1g06y6P2ydRWCwXsquid:S2696í"6Make the enclosing method "static" or remove this set.(ÌºÚüùÿÿÿÿ2adam8Ø§ÉÅ-
+h
+AWj46KgG6y6P2ydRWJuqsquid:S1604”"(Make this anonymous inner class a lambda(çóæúÿÿÿÿ2adam8€û•Ç-
+€
+AWj4t1g06y6P2ydRWCwhsquid:TrailingCommentCheckì"6Move this trailing comment on the previous empty line.(ŸÆáç2adam8Ø§ÉÅ-
+a
+AWj4t1g06y6P2ydRWCuIsquid:S1659<"'Declare "_viewMenu" on a separate line.(ŠÆÄÕ2adam8Ø§ÉÅ-
+„
+AWj4t1g06y6P2ydRWCw3squid:CommentedOutCodeLine]"<This block of commented-out lines of code should be removed.(ò™–2adam8Ø§ÉÅ-
+x
+AWj4t1g06y6P2ydRWCwF
+squid:S106î"9Replace this use of System.out or System.err by a logger.(™¡¯úÿÿÿÿ2adam8Ø§ÉÅ-
+x
+AWj4t1g06y6P2ydRWCug
+squid:S106ô"9Replace this use of System.out or System.err by a logger.(áà¸¾ûÿÿÿÿ2adam8Ø§ÉÅ-
+†
+AWj4t1g06y6P2ydRWCwosquid:CommentedOutCodeLineù"<This block of commented-out lines of code should be removed.(ž»¨2adam8Ø§ÉÅ-
+ª
+AWj46KgG6y6P2ydRWJu7squid:S1448+"kclass "MainMenuBar" has 58 methods, which is greater than the 35 authorized. Split it into smaller classes.(•åªËùÿÿÿÿ2adam8€û•Ç-
+€
+AWj4t1g06y6P2ydRWCussquid:TrailingCommentCheck¢"6Move this trailing comment on the previous empty line.(¼¦§²2adam8Ø§ÉÅ-
+¡
+AWj46KgG6y6P2ydRWJu-
+squid:S138Æ"gThis method has 78 lines, which is greater than the 75 lines authorized. Split it into smaller methods.(ÐØ¢î2adam8€û•Ç-
+h
+AWj46KgG6y6P2ydRWJuwsquid:S1604´"(Make this anonymous inner class a lambda(åˆÿšùÿÿÿÿ2adam8€û•Ç-
+s
+AWj4t1g06y6P2ydRWCwI
+squid:S106¤"9Replace this use of System.out or System.err by a logger.(ýº“2adam8Ø§ÉÅ-
+y
+AWj4t1g06y6P2ydRWCvCsquid:S2130Ü"9Use "Integer.parseInt" for this string-to-int conversion.(÷åÆ´ùÿÿÿÿ2adam8Ø§ÉÅ-
+a
+AWj4t1g06y6P2ydRWCuFsquid:S1659<"'Declare "_helpMenu" on a separate line.(ŠÆÄÕ2adam8Ø§ÉÅ-
+v
+AWj4t1g06y6P2ydRWCwNsquid:S2696À"6Make the enclosing method "static" or remove this set.(ó¼þ½ÿÿÿÿÿ2adam8Ø§ÉÅ-
+d
+AWj4t1g06y6P2ydRWCwJsquid:S1125¾")Remove the literal "false" boolean value.(Ûõá£2adam8Ø§ÉÅ-
+†
+AWj4t1g06y6P2ydRWCw2squid:CommentedOutCodeLine†"<This block of commented-out lines of code should be removed.(”º’Û2adam8Ø§ÉÅ-
+e
+AWj46KgG6y6P2ydRWJudsquid:S1166ò"%Either log or rethrow this exception.(äÃÁçøÿÿÿÿ2adam8€û•Ç-
+jsquid:CommentedOutCodeLine±"<This block of commented-out lines of code should be removed.(ÿ× ¦8Ø§ÉÅ-
+x
+AWj4t1g06y6P2ydRWCvt
+squid:S106ò
+"9Replace this use of System.out or System.err by a logger.(ß¿´úÿÿÿÿ2adam8Ø§ÉÅ-
+q
+AWj4t1g06y6P2ydRWCvMsquid:S2696Ç"6Make the enclosing method "static" or remove this set.(‡Þ³ß2adam8Ø§ÉÅ-
+V
+AWj4t1g06y6P2ydRWCwRsquid:S3626‹"Remove this redundant jump.(ûÁÝ…2adam8Ø§ÉÅ-
+‹
+AWj4t1g06y6P2ydRWCw6squid:CommentedOutCodeLine¡"<This block of commented-out lines of code should be removed.(ÆüŽœúÿÿÿÿ2adam8Ø§ÉÅ-
+c
+AWj46KgG6y6P2ydRWJumsquid:S1604ç"(Make this anonymous inner class a lambda(½·Á’2adam8€û•Ç-
+t
+AWj46KgG6y6P2ydRWJvQsquid:S2221•"4Catch a list of specific exception subtypes instead.(¼Ôîàùÿÿÿÿ2adam8€û•Ç-
+f
+AWj4t1g06y6P2ydRWCuDsquid:S16599",Declare "_graphviewitem" on a separate line.(ÑÔ¡2adam8Ø§ÉÅ-
+a
+AWj4t1g06y6P2ydRWCuGsquid:S1659<"'Declare "_editMenu" on a separate line.(ŠÆÄÕ2adam8Ø§ÉÅ-
+q
+AWj4t1g06y6P2ydRWCvcsquid:S2696Ÿ"6Make the enclosing method "static" or remove this set.(»ð«2adam8Ø§ÉÅ-
+
+AWj4t1g06y6P2ydRWCt7squid:S00117½"QRename this local variable to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(šÝÓ½2adam8Ø§ÉÅ-
+…
+AWj4t1g06y6P2ydRWCv_squid:S3027²"KPut single-quotes around '\\' to use the faster "lastIndexOf(char)" method.(þêÆ,2adam8Ø§ÉÅ-
+
+AWj4t1g06y6P2ydRWCt_squid:S00104"]This file has 1,556 lines, which is greater than 750 authorized. Split it into smaller files.2adam8Ø§ÉÅ-
+†
+AWj4t1g06y6P2ydRWCwzsquid:CommentedOutCodeLineÄ"<This block of commented-out lines of code should be removed.(­¼þ‚2adam8Ø§ÉÅ-
+c
+AWj46KgG6y6P2ydRWJu0squid:S1604Â"(Make this anonymous inner class a lambda(ØãÊñ2adam8€û•Ç-
+h
+AWj46KgG6y6P2ydRWJunsquid:S1604ÿ"(Make this anonymous inner class a lambda(Ø¶àÝüÿÿÿÿ2adam8€û•Ç-
+’
+AWj4t1g06y6P2ydRWCt9squid:S00117®"QRename this local variable to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(Èñ ¢úÿÿÿÿ2adam8Ø§ÉÅ-
+d
+AWj4t1g06y6P2ydRWCwMsquid:S1125§")Remove the literal "false" boolean value.(Ûõá£2adam8Ø§ÉÅ-
+h
+AWj46KgG6y6P2ydRWJursquid:S1604Ï"(Make this anonymous inner class a lambda(¸è¬Óûÿÿÿÿ2adam8€û•Ç-
+”
+AWj4t1g06y6P2ydRWCuMsquid:S30082"URename this field "_mainPanel" to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(ßéË™ûÿÿÿÿ2adam8Ø§ÉÅ-
+s
+AWj4t1g06y6P2ydRWCwL
+squid:S106»"9Replace this use of System.out or System.err by a logger.(ÑåÈÎ2adam8Ø§ÉÅ-
+h
+AWj46KgG6y6P2ydRWJu1squid:S1604É"(Make this anonymous inner class a lambda(ãÓ“ýÿÿÿÿ2adam8€û•Ç-
+v
+AWj4t1g06y6P2ydRWCvXsquid:S2696„"6Make the enclosing method "static" or remove this set.(µôþÿÿÿÿ2adam8Ø§ÉÅ-
+Xsquid:S2221ò"4Catch a list of specific exception subtypes instead.(äÃÁçøÿÿÿÿ8ÝöùÑ-
+dsquid:TrailingCommentCheckÉ"6Move this trailing comment on the previous empty line.(¼¦§²8Ø§ÉÅ-
+`
+AWj4t1g06y6P2ydRWCuBsquid:S16598"&Declare "_compare" on a separate line.(âÜø2adam8Ø§ÉÅ-
+…
+AWj4t1g06y6P2ydRWCwCsquid:TrailingCommentCheck¼"6Move this trailing comment on the previous empty line.(á»¯§ÿÿÿÿÿ2adam8Ø§ÉÅ-
+h
+AWj46KgG6y6P2ydRWJupsquid:S1604™"(Make this anonymous inner class a lambda(‹á¬Ÿùÿÿÿÿ2adam8€û•Ç-
+c
+AWj46KgG6y6P2ydRWJussquid:S1604ã"(Make this anonymous inner class a lambda(ƒÏí±2adam8€û•Ç-
+…
+AWj46KgG6y6P2ydRWJvVsquid:S1132û"JMove the "Base" string literal on the left side of this string comparison.(ÄÞ³ù2adam8€û•Ç-
+‰
+AWj46KgG6y6P2ydRWJvIsquid:S1132Ä"NMove the "40-30-30" string literal on the left side of this string comparison.(Òïáú2adam8€û•Ç-
+q
+AWj4t1g06y6P2ydRWCwfsquid:S2696þ"6Make the enclosing method "static" or remove this set.(„´€«2adam8Ø§ÉÅ-
+q
+AWj4t1g06y6P2ydRWCvSsquid:S2696Ñ"6Make the enclosing method "static" or remove this set.( °Ùè2adam8Ø§ÉÅ-
+†
+AWj4t1g06y6P2ydRWCwmsquid:CommentedOutCodeLineµ"<This block of commented-out lines of code should be removed.(ô¡¹2adam8Ø§ÉÅ-
+…
+AWj4t1g06y6P2ydRWCvfsquid:TrailingCommentCheckˆ	"6Move this trailing comment on the previous empty line.(ø¯áÿÿÿÿÿ2adam8Ø§ÉÅ-
+q
+AWj4t1g06y6P2ydRWCvIsquid:S2696Ì"6Make the enclosing method "static" or remove this set.( °Ùè2adam8Ø§ÉÅ-
+‹
+AWj46KgG6y6P2ydRWJvUsquid:S1132ñ"PMove the "Difference" string literal on the left side of this string comparison.(’ÅÊã2adam8€û•Ç-
+ 
+AWj4t1g06y6P2ydRWCubsquid:S1149É"eReplace the synchronized class "Vector" by an unsynchronized one such as "ArrayList" or "LinkedList".(–ä´2adam8Ø§ÉÅ-
+d
+AWj4t1g06y6P2ydRWCwPsquid:S1125Õ")Remove the literal "false" boolean value.(Ûõá£2adam8Ø§ÉÅ-
+v
+AWj4t1g06y6P2ydRWCwbsquid:S2696ô"6Make the enclosing method "static" or remove this set.(“Êý©ýÿÿÿÿ2adam8Ø§ÉÅ-
+g
+AWj4t1g06y6P2ydRWCuEsquid:S16599"-Declare "_mtableviewitem" on a separate line.(ÑÔ¡2adam8Ø§ÉÅ-
+v
+AWj4t1g06y6P2ydRWCvesquid:S2696¡"6Make the enclosing method "static" or remove this set.(µôþÿÿÿÿ2adam8Ø§ÉÅ-
+e
+AWj46KgG6y6P2ydRWJuesquid:S1166÷"%Either log or rethrow this exception.(óÓ·Èøÿÿÿÿ2adam8€û•Ç-
+œ
+AWj46KgG6y6P2ydRWJuasquid:S1188÷"\Reduce this anonymous class number of lines from 22 to at most 20, or make it a named class.(åˆÿšùÿÿÿÿ2adam8€û•Ç-
+Ÿ
+AWj4t1g06y6P2ydRWCuasquid:S1149¿"eReplace the synchronized class "Vector" by an unsynchronized one such as "ArrayList" or "LinkedList".(Æè¬2adam8Ø§ÉÅ-
+j
+AWj46KgG6y6P2ydRWJvCsquid:S00108¢")Either remove or fill this block of code.(ÒÌâ–øÿÿÿÿ2adam8€û•Ç-
+s
+AWj4t1g06y6P2ydRWCwO
+squid:S106Ò"9Replace this use of System.out or System.err by a logger.(öàž·2adam8Ø§ÉÅ-
+e
+AWj46KgG6y6P2ydRWJuksquid:S1166Ô"%Either log or rethrow this exception.(´‚¤–øÿÿÿÿ2adam8€û•Ç-
+v
+AWj4t1g06y6P2ydRWCwesquid:S2696ý"6Make the enclosing method "static" or remove this set.(Ì¨‡«ùÿÿÿÿ2adam8Ø§ÉÅ-
+s
+AWj4t1g06y6P2ydRWCwg
+squid:S106¢"9Replace this use of System.out or System.err by a logger.(Ø‰œê2adam8Ø§ÉÅ-
+…
+AWj4t1g06y6P2ydRWCwpsquid:CommentedOutCodeLineƒ"<This block of commented-out lines of code should be removed.(¥ªx2adam8Ø§ÉÅ-
+v
+AWj4t1g06y6P2ydRWCvRsquid:S2696Ð"6Make the enclosing method "static" or remove this set.(¤ûèøÿÿÿÿ2adam8Ø§ÉÅ-
+v
+AWj4t1g06y6P2ydRWCwasquid:S2696ó"6Make the enclosing method "static" or remove this set.(Ì¨‡«ùÿÿÿÿ2adam8Ø§ÉÅ-
+¡
+AWj46KgG6y6P2ydRWJu_
+squid:S138Þ"gThis method has 78 lines, which is greater than the 75 lines authorized. Split it into smaller methods.(îýó2adam8€û•Ç-
+’
+AWj4t1g06y6P2ydRWCt8squid:S00117­"QRename this local variable to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(ÌüØÙùÿÿÿÿ2adam8Ø§ÉÅ-
+b
+AWj4t1g06y6P2ydRWCuHsquid:S1659<"(Declare "_debugMenu" on a separate line.(ŠÆÄÕ2adam8Ø§ÉÅ-
+ˆ
+AWj46KgG6y6P2ydRWJvTsquid:S1132ë"MMove the "Compare" string literal on the left side of this string comparison.(ÀŒíá2adam8€û•Ç-
+r
+AWj4t1g06y6P2ydRWCvx
+squid:S106—"9Replace this use of System.out or System.err by a logger.(€Ë²:2adam8Ø§ÉÅ-
+Œ
+AWj46KgG6y6P2ydRWJvHsquid:S1132¿"LMove the "Normal" string literal on the left side of this string comparison.(í†ìñüÿÿÿÿ2adam8€û•Ç-
+t
+AWj46KgG6y6P2ydRWJvDsquid:S2221†"4Catch a list of specific exception subtypes instead.(´‚¤–øÿÿÿÿ2adam8€û•Ç-
+…
+AWj4t1g06y6P2ydRWCvpsquid:TrailingCommentCheck‹"6Move this trailing comment on the previous empty line.(’¸…þÿÿÿÿ2adam8Ø§ÉÅ-
+Zsquid:S2696Ž	"6Make the enclosing method "static" or remove this set.(Ýüƒ¸þÿÿÿÿ8ÝöùÑ-
+isquid:TrailingCommentCheck¾
+"6Move this trailing comment on the previous empty line.(›“Š¦þÿÿÿÿ8Ø§ÉÅ-
+‡
+AWj46KgG6y6P2ydRWJvSsquid:S1132é"MMove the "Compare" string literal on the left side of this string comparison.(Û³ò.2adam8€û•Ç-
+h
+AWj46KgG6y6P2ydRWJulsquid:S1604œ"(Make this anonymous inner class a lambda(çóüÚþÿÿÿÿ2adam8€û•Ç-
+V
+AWj4t1g06y6P2ydRWCuisquid:S3626¨"Remove this redundant jump.(ûÁÝ…2adam8Ø§ÉÅ-
+s
+AWj4t1g06y6P2ydRWCuh
+squid:S106ù"9Replace this use of System.out or System.err by a logger.(¸±—•2adam8Ø§ÉÅ-
+‹
+AWj4t1g06y6P2ydRWCw0squid:CommentedOutCodeLineÚ"<This block of commented-out lines of code should be removed.(¥Øº³üÿÿÿÿ2adam8Ø§ÉÅ-
+x
+AWj4t1g06y6P2ydRWCwD
+squid:S106Ï"9Replace this use of System.out or System.err by a logger.(šÝÔÒýÿÿÿÿ2adam8Ø§ÉÅ-
+†
+AWj4t1g06y6P2ydRWCwlsquid:CommentedOutCodeLineÀ"<This block of commented-out lines of code should be removed.(°Ðì€2adam8Ø§ÉÅ-
+j
+AWj46KgG6y6P2ydRWJvBsquid:S00108ˆ")Either remove or fill this block of code.(ÒÌâ–øÿÿÿÿ2adam8€û•Ç-
+v
+AWj4t1g06y6P2ydRWCvHsquid:S2696Á"6Make the enclosing method "static" or remove this set.(¤ûèøÿÿÿÿ2adam8Ø§ÉÅ-
+
+AWj46KgG6y6P2ydRWJvGsquid:S1871Ï"MThis branch's code block is the same as the block for the branch on line 960.(ÒÌâ–øÿÿÿÿ2adam8€û•Ç-
+Ž
+AWj46KgG6y6P2ydRWJvKsquid:S1132‚"SMove the "Calendar Year" string literal on the left side of this string comparison.(êÚéß2adam8€û•Ç-
+‹
+AWj4t1g06y6P2ydRWCw5squid:CommentedOutCodeLineÃ"<This block of commented-out lines of code should be removed.(ÆüŽœúÿÿÿÿ2adam8Ø§ÉÅ-
+m
+AWj4t1g06y6P2ydRWCvhsquid:S1135Á	"2Complete the task associated to this TODO comment.(ú–žæ2adam8Ø§ÉÅ-
+…
+AWj4t1g06y6P2ydRWCv6squid:S3027Œ"KPut single-quotes around '\\' to use the faster "lastIndexOf(char)" method.(þêÆ,2adam8Ø§ÉÅ-
+v
+AWj4t1g06y6P2ydRWCwQsquid:S2696×"6Make the enclosing method "static" or remove this set.(œô–òýÿÿÿÿ2adam8Ø§ÉÅ-
+c
+AWj46KgG6y6P2ydRWJu2squid:S1604å"(Make this anonymous inner class a lambda(êÅã×2adam8€û•Ç-
+c
+AWj46KgG6y6P2ydRWJu4squid:S1604ó"(Make this anonymous inner class a lambda(ÈÉ¸2adam8€û•Ç-
+‹
+AWj4t1g06y6P2ydRWCwksquid:CommentedOutCodeLine§"<This block of commented-out lines of code should be removed.(Ù”üÓúÿÿÿÿ2adam8Ø§ÉÅ-
+c
+AWj46KgG6y6P2ydRWJuzsquid:S1604»"(Make this anonymous inner class a lambda(ð”Éã2adam8€û•Ç-
+—
+AWj46KgG6y6P2ydRWJuYsquid:S1188ç"\Reduce this anonymous class number of lines from 23 to at most 20, or make it a named class.(½·Á’2adam8€û•Ç-
+p
+AWj4t1g06y6P2ydRWCvYsquid:S2696…"6Make the enclosing method "static" or remove this set.(¶üô72adam8Ø§ÉÅ-
+f
+AWj4t1g06y6P2ydRWCucsquid:S3010D"'Remove this assignment of "_mainPanel".(’á¶¿ùÿÿÿÿ2adam8Ø§ÉÅ-
+Zsquid:S2696¦	"6Make the enclosing method "static" or remove this set.(É§˜“þÿÿÿÿ8µ¸ûÑ-
+e
+AWj46KgG6y6P2ydRWJufsquid:S1166‡"%Either log or rethrow this exception.(“–†ÿÿÿÿÿ2adam8€û•Ç-
+t
+AWj46KgG6y6P2ydRWJvFsquid:S2221ï"4Catch a list of specific exception subtypes instead.(´‚¤–øÿÿÿÿ2adam8€û•Ç-
+p
+AWj4t1g06y6P2ydRWCvbsquid:S2696Š"6Make the enclosing method "static" or remove this set.(¶üô72adam8Ø§ÉÅ-
+e
+AWj46KgG6y6P2ydRWJujsquid:S1166ï"%Either log or rethrow this exception.(´‚¤–øÿÿÿÿ2adam8€û•Ç-
+t
+AWj46KgG6y6P2ydRWJu9squid:S1172O":Remove this unused method parameter "calLiteGUIMainPanel".(‹ÐŽý2adam8€û•Ç-
+x
+AWj4t1g06y6P2ydRWCvi
+squid:S106Ù	"9Replace this use of System.out or System.err by a logger.(ãô¿âúÿÿÿÿ2adam8Ø§ÉÅ-
+]
+AWj4t1g06y6P2ydRWCuCsquid:S16598"#Declare "_diff" on a separate line.(âÜø2adam8Ø§ÉÅ-
+v
+AWj4t1g06y6P2ydRWCvPsquid:S2696Ë"6Make the enclosing method "static" or remove this set.(›’¦‘úÿÿÿÿ2adam8Ø§ÉÅ-
+…
+AWj4t1g06y6P2ydRWCwBsquid:TrailingCommentCheckº"6Move this trailing comment on the previous empty line.(¢“†–üÿÿÿÿ2adam8Ø§ÉÅ-
+c
+AWj46KgG6y6P2ydRWJu3squid:S1604ì"(Make this anonymous inner class a lambda(ñÔÊ¼2adam8€û•Ç-
+v
+AWj4t1g06y6P2ydRWCvLsquid:S2696Æ"6Make the enclosing method "static" or remove this set.(¤ûèøÿÿÿÿ2adam8Ø§ÉÅ-
+‹
+AWj46KgG6y6P2ydRWJvLsquid:S1132‡"PMove the "Water Year" string literal on the left side of this string comparison.(­ÖŒ®2adam8€û•Ç-
+‹
+AWj4t1g06y6P2ydRWCw7squid:CommentedOutCodeLineó"<This block of commented-out lines of code should be removed.(ÚÍ­›ÿÿÿÿÿ2adam8Ø§ÉÅ-
+e
+AWj46KgG6y6P2ydRWJugsquid:S1166¡"%Either log or rethrow this exception.(“–†ÿÿÿÿÿ2adam8€û•Ç-
+q
+AWj4t1g06y6P2ydRWCvasquid:S2696‰"6Make the enclosing method "static" or remove this set.(ÂÞíø2adam8Ø§ÉÅ-
+c
+AWj4t1g06y6P2ydRWCt-squid:S1148ú"#Use a logger to log this exception.(ÍÂ†Ûÿÿÿÿÿ2adam8Ø§ÉÅ-
+†
+AWj4t1g06y6P2ydRWCv8squid:S3027”"FPut single-quotes around '.' to use the faster "indexOf(char)" method.(ÖóèÎþÿÿÿÿ2adam8Ø§ÉÅ-
+e
+AWj46KgG6y6P2ydRWJuhsquid:S1166”"%Either log or rethrow this exception.(“–†ÿÿÿÿÿ2adam8€û•Ç-
+q
+AWj4t1g06y6P2ydRWCvQsquid:S2696Â"6Make the enclosing method "static" or remove this set.( °Ùè2adam8Ø§ÉÅ-
+Š
+AWj46KgG6y6P2ydRWJvRsquid:S1132é"PMove the "Difference" string literal on the left side of this string comparison.(Û³ò.2adam8€û•Ç-
+œ
+AWj46KgG6y6P2ydRWJuZsquid:S1188´"\Reduce this anonymous class number of lines from 32 to at most 20, or make it a named class.(åˆÿšùÿÿÿÿ2adam8€û•Ç-
+h
+AWj46KgG6y6P2ydRWJuxsquid:S1604÷"(Make this anonymous inner class a lambda(åˆÿšùÿÿÿÿ2adam8€û•Ç-
+j
+AWj46KgG6y6P2ydRWJvAsquid:S00108•")Either remove or fill this block of code.(ÒÌâ–øÿÿÿÿ2adam8€û•Ç-
+q
+AWj4t1g06y6P2ydRWCwYsquid:S2696î"6Make the enclosing method "static" or remove this set.(„´€«2adam8Ø§ÉÅ-
+e
+AWj46KgG6y6P2ydRWJuisquid:S1166†"%Either log or rethrow this exception.(´‚¤–øÿÿÿÿ2adam8€û•Ç-
+q
+AWj4t1g06y6P2ydRWCwKsquid:S2696©"6Make the enclosing method "static" or remove this set.(÷ƒÂ€2adam8Ø§ÉÅ-
+c
+AWj46KgG6y6P2ydRWJuosquid:S1604Œ"(Make this anonymous inner class a lambda(†Õ©°2adam8€û•Ç-
+y
+AWj4t1g06y6P2ydRWCvDsquid:S2130ð"9Use "Integer.parseInt" for this string-to-int conversion.(¶ää“ùÿÿÿÿ2adam8Ø§ÉÅ-
+v
+AWj4t1g06y6P2ydRWCvdsquid:S2696 "6Make the enclosing method "static" or remove this set.(ËÒÜ¡üÿÿÿÿ2adam8Ø§ÉÅ-
+€
+AWj4t1g06y6P2ydRWCvosquid:TrailingCommentCheck¼
+"6Move this trailing comment on the previous empty line.(Æ°Á2adam8Ø§ÉÅ-

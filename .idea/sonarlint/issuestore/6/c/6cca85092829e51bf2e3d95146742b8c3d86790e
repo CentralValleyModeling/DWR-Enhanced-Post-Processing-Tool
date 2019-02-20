@@ -1,0 +1,253 @@
+
+’
+AWj4t1zn6y6P2ydRWEHRsquid:S00116;"WRename this field "demandColor" to match the regular expression '^_[a-z][a-zA-Z0-9]*$'.(´Öªä2adam8Ø§ÉÅ-
+b
+AWj4t1zn6y6P2ydRWEHCsquid:S16592"#Declare "_ymin" on a separate line.(âÈ­àÿÿÿÿÿ2adam8Ø§ÉÅ-
+~
+AWj46K7r6y6P2ydRWJ-Lsquid:S1155Ÿ">Use isEmpty() to check whether the collection is empty or not.(À‰­ºûÿÿÿÿ2adam8€û•Ç-
+
+AWj46K7r6y6P2ydRWJ-ssquid:S3776û"RRefactor this method to reduce its Cognitive Complexity from 19 to the 15 allowed.(ßàÒˆ2adam8€û•Ç-
+a
+AWj4t1zn6y6P2ydRWEHn
+squid:S818{"#Upper-case this literal "f" suffix.(†Êöùÿÿÿÿ2adam8Ø§ÉÅ-
+§
+AWj4t1zn6y6P2ydRWEGx"squid:ClassVariableVisibilityCheck2"QMake _ymin a static final constant or non-public and provide accessors if needed.(âÈ­àÿÿÿÿÿ2adam8Ø§ÉÅ-
+€
+AWj46K7r6y6P2ydRWJ-Wsquid:S3027ª"FPut single-quotes around '#' to use the faster "indexOf(char)" method.(©¶Ì$2adam8€û•Ç-
+€
+AWj46K7r6y6P2ydRWJ-Rsquid:S3027m"FPut single-quotes around 'F' to use the faster "indexOf(char)" method.(î½ÓÎ2adam8€û•Ç-
+g
+AWj4t1zn6y6P2ydRWEHKsquid:S1659D"-Declare "_arcSymbolArray" on a separate line.(¬ÚÛò2adam8Ø§ÉÅ-
+c
+AWj4t1zn6y6P2ydRWEG_squid:S16591"$Declare "HIDDEN" on a separate line.(¾¨Æ¼úÿÿÿÿ2adam8Ø§ÉÅ-
+§
+AWj4t1zn6y6P2ydRWEGy"squid:ClassVariableVisibilityCheck2"QMake _ymax a static final constant or non-public and provide accessors if needed.(âÈ­àÿÿÿÿÿ2adam8Ø§ÉÅ-
+§
+AWj4t1zn6y6P2ydRWEGz"squid:ClassVariableVisibilityCheck2"QMake _xmin a static final constant or non-public and provide accessors if needed.(âÈ­àÿÿÿÿÿ2adam8Ø§ÉÅ-
+•
+AWj4t1zn6y6P2ydRWEHVsquid:S00116?"ZRename this field "nodeLabelColor" to match the regular expression '^_[a-z][a-zA-Z0-9]*$'.(”ÿìè2adam8Ø§ÉÅ-
+’
+AWj46K7r6y6P2ydRWJ-H
+squid:S135a"YReduce the total number of break and continue statements in this loop to use at most one.(úàáÖ2adam8€û•Ç-
+
+AWj4t1zn6y6P2ydRWEHasquid:S1149C"VReplace the synchronized class "Hashtable" by an unsynchronized one such as "HashMap".(ûÇ†á2adam8Ø§ÉÅ-
+
+AWj46K7r6y6P2ydRWJ-Usquid:S3776‘"RRefactor this method to reduce its Cognitive Complexity from 60 to the 15 allowed.(Ô‰îë2adam8€û•Ç-
+“
+AWj4t1zn6y6P2ydRWEHTsquid:S00116="XRename this field "storageColor" to match the regular expression '^_[a-z][a-zA-Z0-9]*$'.(¡Ô¹2adam8Ø§ÉÅ-
+e
+AWj4t1zn6y6P2ydRWEG-squid:S16591"&Declare "JUNCTION" on a separate line.(¾¨Æ¼úÿÿÿÿ2adam8Ø§ÉÅ-
+b
+AWj4t1zn6y6P2ydRWEHAsquid:S16592"#Declare "_xmin" on a separate line.(âÈ­àÿÿÿÿÿ2adam8Ø§ÉÅ-
+j
+AWj46K7r6y6P2ydRWJ-msquid:S00108—")Either remove or fill this block of code.(ÒÌâ–øÿÿÿÿ2adam8€û•Ç-
+’
+AWj4t1zn6y6P2ydRWEHQsquid:S00116:"WRename this field "inflowColor" to match the regular expression '^_[a-z][a-zA-Z0-9]*$'.(åÂŠÉ2adam8Ø§ÉÅ-
+‚
+AWj4t1zn6y6P2ydRWEG4squid:S00112é"FDefine and throw a dedicated exception instead of using a generic one.(Ä±„2adam8Ø§ÉÅ-
+{
+AWj4t1zn6y6P2ydRWEIKsquid:S2130ø";Use "Float.parseFloat" for this string-to-float conversion.(¾øØ¥ûÿÿÿÿ2adam8Ø§ÉÅ-
+c
+AWj4t1zn6y6P2ydRWEHFsquid:S1659;")Declare "demandColor" on a separate line.(´Öªä2adam8Ø§ÉÅ-
+a
+AWj46K7r6y6P2ydRWJ-hsquid:S1168¡"&Return an empty array instead of null.(¥¹ï2adam8€û•Ç-
+s
+AWj4t1zn6y6P2ydRWEIb
+squid:S106ö"9Replace this use of System.out or System.err by a logger.(­­2adam8Ø§ÉÅ-
+b
+AWj4t1zn6y6P2ydRWEHBsquid:S16592"#Declare "_ymax" on a separate line.(âÈ­àÿÿÿÿÿ2adam8Ø§ÉÅ-
+f
+AWj4t1zn6y6P2ydRWEGnsquid:S2164{"'Use a "double" or "BigDecimal" instead.(†Êöùÿÿÿÿ2adam8Ø§ÉÅ-
+s
+AWj4t1zn6y6P2ydRWEH5
+squid:S106½"9Replace this use of System.out or System.err by a logger.(Ã´öÂ2adam8Ø§ÉÅ-
+Š
+AWj46K7r6y6P2ydRWJ-osquid:S1132Ã"JMove the "flow" string literal on the left side of this string comparison.(¯Ô˜Êşÿÿÿÿ2adam8€û•Ç-
+c
+AWj4t1zn6y6P2ydRWEHEsquid:S1659:")Declare "inflowColor" on a separate line.(åÂŠÉ2adam8Ø§ÉÅ-
+{
+AWj4t1zn6y6P2ydRWEIJsquid:S2130ø";Use "Float.parseFloat" for this string-to-float conversion.(¾øØ¥ûÿÿÿÿ2adam8Ø§ÉÅ-
+x
+AWj46K7r6y6P2ydRWJ-d
+squid:S106Û"9Replace this use of System.out or System.err by a logger.(°İûÿÿÿÿ2adam8€û•Ç-
+b
+AWj4t1zn6y6P2ydRWEHp
+squid:S818„"#Upper-case this literal "f" suffix.(¿“œ…üÿÿÿÿ2adam8Ø§ÉÅ-
+‡
+AWj46K7r6y6P2ydRWJ-psquid:S1132Ç"LMove the "return" string literal on the left side of this string comparison.(±Ö•Ô2adam8€û•Ç-
+[
+AWj4t1zn6y6P2ydRWEIisquid:S1659Ê" Declare "y2" on a separate line.(ğÄºÊ2adam8Ø§ÉÅ-
+
+AWj4t1zn6y6P2ydRWEHbsquid:S1149C"VReplace the synchronized class "Hashtable" by an unsynchronized one such as "HashMap".(ûÇ†á2adam8Ø§ÉÅ-
+…
+AWj46K7r6y6P2ydRWJ-Xsquid:TrailingCommentCheck¬"6Move this trailing comment on the previous empty line.(ÈÏ²üÿÿÿÿ2adam8€û•Ç-
+§
+AWj4t1zn6y6P2ydRWEG0"squid:ClassVariableVisibilityCheck2"QMake _xmax a static final constant or non-public and provide accessors if needed.(âÈ­àÿÿÿÿÿ2adam8Ø§ÉÅ-
+
+AWj46K7r6y6P2ydRWJ-fsquid:S3027¢"FPut single-quotes around 'X' to use the faster "indexOf(char)" method.(‡Ú¿ô2adam8€û•Ç-
+š
+AWj4t1zn6y6P2ydRWEHWsquid:S00116@"ZRename this field "flowLabelColor" to match the regular expression '^_[a-z][a-zA-Z0-9]*$'.(Õù­™ûÿÿÿÿ2adam8Ø§ÉÅ-
+
+AWj46K7r6y6P2ydRWJ-usquid:S3776¡"RRefactor this method to reduce its Cognitive Complexity from 17 to the 15 allowed.(Â†«û2adam8€û•Ç-
+Œ
+AWj4t1zn6y6P2ydRWEHMsquid:S001165"QRename this field "DEBUG" to match the regular expression '^_[a-z][a-zA-Z0-9]*$'.(œô©2adam8Ø§ÉÅ-
+Š
+AWj4t1zn6y6P2ydRWEJPsquid:S00116ã"NRename this field "ge" to match the regular expression '^_[a-z][a-zA-Z0-9]*$'.(ÃØ€û2adam8Ø§ÉÅ-
+c
+AWj4t1zn6y6P2ydRWEG8squid:S1148ı"#Use a logger to log this exception.(€ÉÔ…ıÿÿÿÿ2adam8Ø§ÉÅ-
+a
+AWj4t1zn6y6P2ydRWEHIsquid:S1659>"'Declare "nodeColor" on a separate line.(ßÙÈ¤2adam8Ø§ÉÅ-
+Œ
+AWj4t1zn6y6P2ydRWEHNsquid:S001163"QRename this field "width" to match the regular expression '^_[a-z][a-zA-Z0-9]*$'.(ï„‡µ2adam8Ø§ÉÅ-
+
+AWj4t1zn6y6P2ydRWEG7squid:S00117µ"QRename this local variable to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(—Ü„ú2adam8Ø§ÉÅ-
+{
+AWj4t1zn6y6P2ydRWEI5squid:S1854…";Remove this useless assignment to local variable "symType".(ŞŒıüüÿÿÿÿ2adam8Ø§ÉÅ-
+’
+AWj4t1zn6y6P2ydRWEG6squid:S00117ı"QRename this local variable to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(ÄˆæÜüÿÿÿÿ2adam8Ø§ÉÅ-
+h
+AWj4t1zn6y6P2ydRWEHGsquid:S1659<")Declare "returnColor" on a separate line.(ÄÏŸûüÿÿÿÿ2adam8Ø§ÉÅ-
+e
+AWj4t1zn6y6P2ydRWEHJsquid:S1659C"+Declare "_arcSymbolMap" on a separate line.(ûÇ†á2adam8Ø§ÉÅ-
+ 
+AWj4t1zn6y6P2ydRWEHesquid:S1149"eReplace the synchronized class "Vector" by an unsynchronized one such as "ArrayList" or "LinkedList".(¼•·2adam8Ø§ÉÅ-
+w
+AWj46K7r6y6P2ydRWJ-Q
+squid:S106h"9Replace this use of System.out or System.err by a logger.(ù°îÅüÿÿÿÿ2adam8€û•Ç-
+
+AWj4t1zn6y6P2ydRWEHUsquid:S00116>"URename this field "nodeColor" to match the regular expression '^_[a-z][a-zA-Z0-9]*$'.(ßÙÈ¤2adam8Ø§ÉÅ-
+
+AWj4t1zn6y6P2ydRWEH3squid:S3027º"FPut single-quotes around '=' to use the faster "indexOf(char)" method.(—Á×Ğ2adam8Ø§ÉÅ-
+
+AWj46K7r6y6P2ydRWJ-ksquid:S3027Ç"FPut single-quotes around 'X' to use the faster "indexOf(char)" method.(‡Ú¿ô2adam8€û•Ç-
+˜
+AWj4t1zn6y6P2ydRWEJRsquid:S00116ä"WRename this field "anchorPoint" to match the regular expression '^_[a-z][a-zA-Z0-9]*$'.(œ‘Šµøÿÿÿÿ2adam8Ø§ÉÅ-
+Œ
+AWj46K7r6y6P2ydRWJ-nsquid:S1132¿"LMove the "inflow" string literal on the left side of this string comparison.(¶ê¶¥ıÿÿÿÿ2adam8€û•Ç-
+h
+AWj4t1zn6y6P2ydRWEJOsquid:S1659ä"(Declare "otherPoint" on a separate line.(œ‘Šµøÿÿÿÿ2adam8Ø§ÉÅ-
+g
+AWj4t1zn6y6P2ydRWEGpsquid:S2164„"'Use a "double" or "BigDecimal" instead.(¿“œ…üÿÿÿÿ2adam8Ø§ÉÅ-
+†
+AWj4t1zn6y6P2ydRWEIGsquid:S3027æ"FPut single-quotes around ',' to use the faster "indexOf(char)" method.(ïÇÍÜÿÿÿÿÿ2adam8Ø§ÉÅ-
+
+AWj46K7r6y6P2ydRWJ-tsquid:S3027Å"FPut single-quotes around 'X' to use the faster "indexOf(char)" method.(‡Ú¿ô2adam8€û•Ç-
+^
+AWj4t1zn6y6P2ydRWEHDsquid:S16593"$Declare "height" on a separate line.(ï„‡µ2adam8Ø§ÉÅ-
+‹
+AWj4t1zn6y6P2ydRWEJSsquid:S00116å"ORename this field "ref" to match the regular expression '^_[a-z][a-zA-Z0-9]*$'.(­÷ßŠ2adam8Ø§ÉÅ-
+ˆ
+AWj46K7r6y6P2ydRWJ-jsquid:S1142ñ"MReduce the number of returns of this method 4, down to the maximum allowed 2.(ĞáÒ³2adam8€û•Ç-
+e
+AWj46K7r6y6P2ydRWJ-Jsquid:S1166û"%Either log or rethrow this exception.(¼Ôîàùÿÿÿÿ2adam8€û•Ç-
+…
+AWj46K7r6y6P2ydRWJ-Psquid:S3027d"FPut single-quotes around '_' to use the faster "indexOf(char)" method.(µœ£Âøÿÿÿÿ2adam8€û•Ç-
+x
+AWj4t1zn6y6P2ydRWEJB
+squid:S106«"9Replace this use of System.out or System.err by a logger.(ã¡æñúÿÿÿÿ2adam8Ø§ÉÅ-
+†
+AWj4t1zn6y6P2ydRWEJTsquid:CommentedOutCodeLineõ"<This block of commented-out lines of code should be removed.(»Ì¿2adam8Ø§ÉÅ-
+Œ
+AWj46K7r6y6P2ydRWJ-Osquid:S3776Z"RRefactor this method to reduce its Cognitive Complexity from 23 to the 15 allowed.(¶¦Ş¥2adam8€û•Ç-
+s
+AWj4t1zn6y6P2ydRWEIV
+squid:S106°"9Replace this use of System.out or System.err by a logger.(­­2adam8Ø§ÉÅ-
+¢
+AWj46K7r6y6P2ydRWJ-T
+squid:S138‘"hThis method has 107 lines, which is greater than the 75 lines authorized. Split it into smaller methods.(Ô‰îë2adam8€û•Ç-
+[
+AWj4t1zn6y6P2ydRWEJGsquid:S1659À" Declare "y2" on a separate line.(ğÄºÊ2adam8Ø§ÉÅ-
+x
+AWj4t1zn6y6P2ydRWEIt
+squid:S106ª"9Replace this use of System.out or System.err by a logger.(ã¡æñúÿÿÿÿ2adam8Ø§ÉÅ-
+[
+AWj4t1zn6y6P2ydRWEIhsquid:S1659à" Declare "y2" on a separate line.(ğÄºÊ2adam8Ø§ÉÅ-
+¢
+AWj4t1zn6y6P2ydRWEG1"squid:ClassVariableVisibilityCheck3"QMake width a static final constant or non-public and provide accessors if needed.(ï„‡µ2adam8Ø§ÉÅ-
+[
+AWj4t1zn6y6P2ydRWEIesquid:S1659Ñ" Declare "y2" on a separate line.(ğÄºÊ2adam8Ø§ÉÅ-
+x
+AWj46K7r6y6P2ydRWJ-b
+squid:S106Ñ"9Replace this use of System.out or System.err by a logger.(Ç·¥şÿÿÿÿ2adam8€û•Ç-
+a
+AWj46K7r6y6P2ydRWJ-isquid:S1168ò"&Return an empty array instead of null.(¥¹ï2adam8€û•Ç-
+•
+AWj4t1zn6y6P2ydRWEHPsquid:S001169"URename this field "flowColor" to match the regular expression '^_[a-z][a-zA-Z0-9]*$'.(á©Öåùÿÿÿÿ2adam8Ø§ÉÅ-
+…
+AWj4t1zn6y6P2ydRWEIEsquid:TrailingCommentCheckà"6Move this trailing comment on the previous empty line.(¡¶¯Îúÿÿÿÿ2adam8Ø§ÉÅ-
+—
+AWj4t1zn6y6P2ydRWEJQsquid:S00116ä"VRename this field "otherPoint" to match the regular expression '^_[a-z][a-zA-Z0-9]*$'.(œ‘Šµøÿÿÿÿ2adam8Ø§ÉÅ-
+£
+AWj4t1zn6y6P2ydRWEG2"squid:ClassVariableVisibilityCheck3"RMake height a static final constant or non-public and provide accessors if needed.(ï„‡µ2adam8Ø§ÉÅ-
+a
+AWj46K7r6y6P2ydRWJ-lsquid:S1168÷"&Return an empty array instead of null.(¥¹ï2adam8€û•Ç-
+‡
+AWj4t1zn6y6P2ydRWEG5squid:S00112ø"FDefine and throw a dedicated exception instead of using a generic one.(ÒÅïüÿÿÿÿ2adam8Ø§ÉÅ-
+x
+AWj4t1zn6y6P2ydRWEJN
+squid:S106´"9Replace this use of System.out or System.err by a logger.(àñ’îùÿÿÿÿ2adam8Ø§ÉÅ-
+d
+AWj4t1zn6y6P2ydRWEHHsquid:S1659="*Declare "storageColor" on a separate line.(¡Ô¹2adam8Ø§ÉÅ-
+Œ
+AWj46K7r6y6P2ydRWJ-qsquid:S1132Ë"LMove the "demand" string literal on the left side of this string comparison.(Ç¨óÙùÿÿÿÿ2adam8€û•Ç-
+
+AWj4t1zn6y6P2ydRWEHXsquid:S00116A"TRename this field "lineFont" to match the regular expression '^_[a-z][a-zA-Z0-9]*$'.(ÜŒÉ2adam8Ø§ÉÅ-
+t
+AWj46K7r6y6P2ydRWJ-Vsquid:S2221û"4Catch a list of specific exception subtypes instead.(¼Ôîàùÿÿÿÿ2adam8€û•Ç-
+
+AWj46K7r6y6P2ydRWJ-Msquid:S00104"[This file has 762 lines, which is greater than 750 authorized. Split it into smaller files.2adam8€û•Ç-
+…
+AWj46K7r6y6P2ydRWJ-Ysquid:TrailingCommentCheck°"6Move this trailing comment on the previous empty line.(ä®‘Íÿÿÿÿÿ2adam8€û•Ç-
+™
+AWj46K7r6y6P2ydRWJ-Nsquid:S1820/"ZRefactor this class so it has no more than 20 fields, rather than the 27 it currently has.(êÛ åúÿÿÿÿ2adam8€û•Ç-
+
+AWj4t1zn6y6P2ydRWEHYsquid:S00116B"SRename this field "symFont" to match the regular expression '^_[a-z][a-zA-Z0-9]*$'.(µˆ±2adam8Ø§ÉÅ-
+w
+AWj46K7r6y6P2ydRWJ-S
+squid:S106q"9Replace this use of System.out or System.err by a logger.(ù°îÅüÿÿÿÿ2adam8€û•Ç-
+¡
+AWj46K7r6y6P2ydRWJ-r
+squid:S138û"gThis method has 96 lines, which is greater than the 75 lines authorized. Split it into smaller methods.(ßàÒˆ2adam8€û•Ç-
+Ÿ
+AWj4t1zn6y6P2ydRWEHdsquid:S1149D"eReplace the synchronized class "Vector" by an unsynchronized one such as "ArrayList" or "LinkedList".(¬ÚÛò2adam8Ø§ÉÅ-
+{
+AWj46K7r6y6P2ydRWJ-esquid:S2130ì";Use "Float.parseFloat" for this string-to-float conversion.(¾ÅØùÿÿÿÿ2adam8€û•Ç-
+’
+AWj46K7r6y6P2ydRWJ-I
+squid:S135¢"YReduce the total number of break and continue statements in this loop to use at most one.(¤èÄ72adam8€û•Ç-
+x
+AWj46K7r6y6P2ydRWJ-Z
+squid:S106Å"9Replace this use of System.out or System.err by a logger.(„Ó±âûÿÿÿÿ2adam8€û•Ç-
+†
+AWj4t1zn6y6P2ydRWEIFsquid:S3027å"FPut single-quotes around '=' to use the faster "indexOf(char)" method.(™’Çøÿÿÿÿ2adam8Ø§ÉÅ-
+[
+AWj4t1zn6y6P2ydRWEJHsquid:S1659Â" Declare "y2" on a separate line.(ğÄºÊ2adam8Ø§ÉÅ-
+
+AWj4t1zn6y6P2ydRWEHOsquid:S001163"RRename this field "height" to match the regular expression '^_[a-z][a-zA-Z0-9]*$'.(ï„‡µ2adam8Ø§ÉÅ-
+a
+AWj4t1zn6y6P2ydRWEIWsquid:S1168ÿ"&Return an empty array instead of null.(¥¹ï2adam8Ø§ÉÅ-
+Ÿ
+AWj4t1zn6y6P2ydRWEHcsquid:S1149D"eReplace the synchronized class "Vector" by an unsynchronized one such as "ArrayList" or "LinkedList".(¬ÚÛò2adam8Ø§ÉÅ-
+s
+AWj4t1zn6y6P2ydRWEJM
+squid:S106°"9Replace this use of System.out or System.err by a logger.(¦ÏíÍ2adam8Ø§ÉÅ-
+
+AWj4t1zn6y6P2ydRWEH6squid:S3027Â"FPut single-quotes around ',' to use the faster "indexOf(char)" method.(©Ò€Ï2adam8Ø§ÉÅ-
+f
+AWj4t1zn6y6P2ydRWEHLsquid:S1659E"'Declare "_enumNode" on a separate line.( §–«ıÿÿÿÿ2adam8Ø§ÉÅ-
+—
+AWj4t1zn6y6P2ydRWEHSsquid:S00116<"WRename this field "returnColor" to match the regular expression '^_[a-z][a-zA-Z0-9]*$'.(ÄÏŸûüÿÿÿÿ2adam8Ø§ÉÅ-
+[
+AWj4t1zn6y6P2ydRWEJDsquid:S1659Ô" Declare "y2" on a separate line.(ğÄºÊ2adam8Ø§ÉÅ-
+
+AWj46K7r6y6P2ydRWJ-gsquid:S1206Æ"PThis class overrides "equals()" and should therefore also override "hashCode()".(¶’ùÿÿÿÿ2adam8€û•Ç-
+a
+AWj4t1zn6y6P2ydRWEIcsquid:S1168±"&Return an empty array instead of null.(¥¹ï2adam8Ø§ÉÅ-
+{
+AWj4t1zn6y6P2ydRWEIHsquid:S2130ë";Use "Float.parseFloat" for this string-to-float conversion.(æ²ü´ùÿÿÿÿ2adam8Ø§ÉÅ-
+Ksquid:S2164…"'Use a "double" or "BigDecimal" instead.(óÔì–øÿÿÿÿ8Ø§ÉÅ-
+Esquid:S2164|"'Use a "double" or "BigDecimal" instead.(ßÚ±´8Ø§ÉÅ-
+F
+squid:S818…"#Upper-case this literal "f" suffix.(óÔì–øÿÿÿÿ8Ø§ÉÅ-
+@
+squid:S818|"#Upper-case this literal "f" suffix.(ßÚ±´8Ø§ÉÅ-

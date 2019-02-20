@@ -1,0 +1,206 @@
+
+]
+AWj4t1VG6y6P2ydRWBd2squid:S1659C"#Declare "_dv4g" on a separate line.(¶½È¢2adam8Ø§ÉÅ-
+a
+AWj46KZg6y6P2ydRWJqwsquid:S1168÷"&Return an empty array instead of null.(¥¹ï2adam8€û•Ç-
+°
+AWj4t1VG6y6P2ydRWBdZsquid:S13199"qThe type of the "_svList" object should be an interface such as "Map" rather than the implementation "Hashtable".(èüéõøÿÿÿÿ2adam8Ø§ÉÅ-
+]
+AWj4t1VG6y6P2ydRWBeGsquid:S1659;"#Declare "_fdir" on a separate line.(‚ÿ–«2adam8Ø§ÉÅ-
+]
+AWj4t1VG6y6P2ydRWBdzsquid:S1659C"#Declare "_sv4g" on a separate line.(¶½È¢2adam8Ø§ÉÅ-
+¯
+AWj46KZg6y6P2ydRWJqWsquid:S1319‘"oThe return type of this method should be an interface such as "Map" rather than the implementation "Hashtable".(ÉŒ£Ëüÿÿÿÿ2adam8€û•Ç-
+
+AWj46KZg6y6P2ydRWJqqsquid:S1142ö"MReduce the number of returns of this method 3, down to the maximum allowed 2.(î¾‹¼úÿÿÿÿ2adam8€û•Ç-
+±
+AWj4t1VG6y6P2ydRWBdasquid:S13199"rThe type of the "_mtsList" object should be an interface such as "Map" rather than the implementation "Hashtable".(èüéõøÿÿÿÿ2adam8Ø§ÉÅ-
+¯
+AWj46KZg6y6P2ydRWJqYsquid:S1319"oThe return type of this method should be an interface such as "Map" rather than the implementation "Hashtable".(İä¼şıÿÿÿÿ2adam8€û•Ç-
+©
+AWj4t1VG6y6P2ydRWBdh"squid:ClassVariableVisibilityCheck9"SMake _svList a static final constant or non-public and provide accessors if needed.(èüéõøÿÿÿÿ2adam8Ø§ÉÅ-
+¢
+AWj46KZg6y6P2ydRWJqz
+squid:S138˜"hThis method has 121 lines, which is greater than the 75 lines authorized. Split it into smaller methods.(¦³ÈÓ2adam8€û•Ç-
+©
+AWj4t1VG6y6P2ydRWBdi"squid:ClassVariableVisibilityCheck9"SMake _dvList a static final constant or non-public and provide accessors if needed.(èüéõøÿÿÿÿ2adam8Ø§ÉÅ-
+•
+AWj4t1VG6y6P2ydRWBeUsquid:S11499"VReplace the synchronized class "Hashtable" by an unsynchronized one such as "HashMap".(èüéõøÿÿÿÿ2adam8Ø§ÉÅ-
+s
+AWj4t1VG6y6P2ydRWBfA
+squid:S106…"9Replace this use of System.out or System.err by a logger.(Îã­Ã2adam8Ø§ÉÅ-
+x
+AWj4t1VG6y6P2ydRWBaj
+squid:S864¢	"9Add parentheses to make the operator precedence explicit.(¢îÈóúÿÿÿÿ2adam8Ø§ÉÅ-
+j
+AWj4t1VG6y6P2ydRWBcssquid:S14444"+Make this "public static DEBUG" field final(îéÒ¡ÿÿÿÿÿ2adam8Ø§ÉÅ-
+e
+AWj46KZg6y6P2ydRWJqbsquid:S1166³"%Either log or rethrow this exception.(¼Ôîàùÿÿÿÿ2adam8€û•Ç-
+X
+AWj4t1VG6y6P2ydRWBeZsquid:S1659u"Declare "c" on a separate line.(©ª‘2adam8Ø§ÉÅ-
+]
+AWj4t1VG6y6P2ydRWBdxsquid:S1659C"#Declare "_dv2g" on a separate line.(¶½È¢2adam8Ø§ÉÅ-
+‚
+AWj4t1VG6y6P2ydRWBdssquid:S00112Ä"FDefine and throw a dedicated exception instead of using a generic one.(†ËãÁ2adam8Ø§ÉÅ-
+]
+AWj4t1VG6y6P2ydRWBd1squid:S1659C"#Declare "_sv2g" on a separate line.(¶½È¢2adam8Ø§ÉÅ-
+x
+AWj46KZg6y6P2ydRWJqp
+squid:S106Œ"9Replace this use of System.out or System.err by a logger.(şÍÌ³úÿÿÿÿ2adam8€û•Ç-
+Ÿ
+AWj4t1VG6y6P2ydRWBeQsquid:S1149Ò"eReplace the synchronized class "Vector" by an unsynchronized one such as "ArrayList" or "LinkedList".(Æè¬2adam8Ø§ÉÅ-
+t
+AWj4t1VG6y6P2ydRWBfIsquid:S2130§"9Use "Integer.parseInt" for this string-to-int conversion.(Éôª¹2adam8Ø§ÉÅ-
+]
+AWj4t1VG6y6P2ydRWBeFsquid:S1659I"#Declare "_name" on a separate line.(ñ §ú2adam8Ø§ÉÅ-
+‚
+AWj4t1VG6y6P2ydRWBdrsquid:S00112µ"FDefine and throw a dedicated exception instead of using a generic one.(…Ûáˆ2adam8Ø§ÉÅ-
+‹
+AWj4t1VG6y6P2ydRWBfUsquid:CommentedOutCodeLine·"<This block of commented-out lines of code should be removed.(¡èÜåüÿÿÿÿ2adam8Ø§ÉÅ-
+t
+AWj46KZg6y6P2ydRWJq1squid:S2221Î"4Catch a list of specific exception subtypes instead.(¼Ôîàùÿÿÿÿ2adam8€û•Ç-
+]
+AWj4t1VG6y6P2ydRWBd9squid:S1659D"#Declare "_dv2f" on a separate line.(¯¨õš2adam8Ø§ÉÅ-
+•
+AWj4t1VG6y6P2ydRWBeTsquid:S11499"VReplace the synchronized class "Hashtable" by an unsynchronized one such as "HashMap".(èüéõøÿÿÿÿ2adam8Ø§ÉÅ-
+†
+AWj4t1VG6y6P2ydRWBfYsquid:CommentedOutCodeLineû"<This block of commented-out lines of code should be removed.(¿Öé£2adam8Ø§ÉÅ-
+
+AWj4t1VG6y6P2ydRWBeJsquid:S30084"PRename this field "DEBUG" to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(îéÒ¡ÿÿÿÿÿ2adam8Ø§ÉÅ-
+c
+AWj4t1VG6y6P2ydRWBeBsquid:S1659G")Declare "_study1Name" on a separate line.(±ú½Ö2adam8Ø§ÉÅ-
+‹
+AWj4t1VG6y6P2ydRWBfWsquid:CommentedOutCodeLineÙ"<This block of commented-out lines of code should be removed.(¡èÜåüÿÿÿÿ2adam8Ø§ÉÅ-
+±
+AWj4t1VG6y6P2ydRWBdbsquid:S13199"rThe type of the "_dtsList" object should be an interface such as "Map" rather than the implementation "Hashtable".(èüéõøÿÿÿÿ2adam8Ø§ÉÅ-
+x
+AWj4t1VG6y6P2ydRWBe8
+squid:S106Ã"9Replace this use of System.out or System.err by a logger.(ÿš¾ìøÿÿÿÿ2adam8Ø§ÉÅ-
+–
+AWj4t1VG6y6P2ydRWBdesquid:S1488¼"[Immediately return this expression instead of assigning it to the temporary variable "mts".(Ü¾ÖĞ2adam8Ø§ÉÅ-
+e
+AWj4t1VG6y6P2ydRWBd4squid:S16599"&Declare "_mtsList" on a separate line.(èüéõøÿÿÿÿ2adam8Ø§ÉÅ-
+«
+AWj46KZg6y6P2ydRWJqZsquid:S1319¢"kThe type of the "h" object should be an interface such as "Map" rather than the implementation "Hashtable".(Ñœû”üÿÿÿÿ2adam8€û•Ç-
+„
+AWj46KZg6y6P2ydRWJqasquid:S2583±"DChange this condition so that it does not always evaluate to "false"(ƒç¥µüÿÿÿÿ2adam8€û•Ç-
+~
+AWj46KZg6y6P2ydRWJqfsquid:S1155Ó">Use isEmpty() to check whether the collection is empty or not.(æ¾»Ìşÿÿÿÿ2adam8€û•Ç-
+d
+AWj4t1VG6y6P2ydRWBd3squid:S16599"%Declare "_svList" on a separate line.(èüéõøÿÿÿÿ2adam8Ø§ÉÅ-
+a
+AWj46KZg6y6P2ydRWJqrsquid:S1168®"&Return an empty array instead of null.(¥¹ï2adam8€û•Ç-
+]
+AWj4t1VG6y6P2ydRWBd0squid:S1659C"#Declare "_sv3g" on a separate line.(¶½È¢2adam8Ø§ÉÅ-
+a
+AWj4t1VG6y6P2ydRWBeEsquid:S1659I"'Declare "_filename" on a separate line.(ñ §ú2adam8Ø§ÉÅ-
+]
+AWj4t1VG6y6P2ydRWBd6squid:S1659D"#Declare "_sv2f" on a separate line.(¯¨õš2adam8Ø§ÉÅ-
+™
+AWj46KZg6y6P2ydRWJqksquid:S18202"ZRefactor this class so it has no more than 20 fields, rather than the 41 it currently has.(á©Éùÿÿÿÿ2adam8€û•Ç-
+x
+AWj46KZg6y6P2ydRWJqs
+squid:S106³"9Replace this use of System.out or System.err by a logger.(ı·‡‘øÿÿÿÿ2adam8€û•Ç-
+e
+AWj46KZg6y6P2ydRWJqesquid:S1166Î"%Either log or rethrow this exception.(¼Ôîàùÿÿÿÿ2adam8€û•Ç-
+a
+AWj46KZg6y6P2ydRWJqvsquid:S1168ã"&Return an empty array instead of null.(¥¹ï2adam8€û•Ç-
+]
+AWj4t1VG6y6P2ydRWBd_squid:S1659D"#Declare "_sv4f" on a separate line.(¯¨õš2adam8Ø§ÉÅ-
+s
+AWj4t1VG6y6P2ydRWBe6
+squid:S106Â"9Replace this use of System.out or System.err by a logger.(Ö¡Êÿ2adam8Ø§ÉÅ-
+–
+AWj46KZg6y6P2ydRWJqnsquid:S1149"VReplace the synchronized class "Hashtable" by an unsynchronized one such as "HashMap".(İä¼şıÿÿÿÿ2adam8€û•Ç-
+–
+AWj46KZg6y6P2ydRWJqosquid:S1149¢"VReplace the synchronized class "Hashtable" by an unsynchronized one such as "HashMap".(Ñœû”üÿÿÿÿ2adam8€û•Ç-
+†
+AWj4t1VG6y6P2ydRWBfasquid:CommentedOutCodeLine‰"<This block of commented-out lines of code should be removed.(ŞÁÖˆ2adam8Ø§ÉÅ-
+‹
+AWj4t1VG6y6P2ydRWBfZsquid:CommentedOutCodeLineŒ"<This block of commented-out lines of code should be removed.(ûæšùÿÿÿÿ2adam8Ø§ÉÅ-
+
+AWj46KZg6y6P2ydRWJqhsquid:S00104"[This file has 832 lines, which is greater than 750 authorized. Split it into smaller files.2adam8€û•Ç-
+‹
+AWj4t1VG6y6P2ydRWBfTsquid:CommentedOutCodeLine¦"<This block of commented-out lines of code should be removed.(šãóĞıÿÿÿÿ2adam8Ø§ÉÅ-
+]
+AWj4t1VG6y6P2ydRWBdysquid:S1659C"#Declare "_dv3g" on a separate line.(¶½È¢2adam8Ø§ÉÅ-
+‹
+AWj4t1VG6y6P2ydRWBfXsquid:CommentedOutCodeLineê"<This block of commented-out lines of code should be removed.(¾Š°ıÿÿÿÿ2adam8Ø§ÉÅ-
+t
+AWj4t1VG6y6P2ydRWBcrsquid:S1191"5Use classes from the Java API instead of Sun classes.(Ûş¯úøÿÿÿÿ2adam8Ø§ÉÅ-
+•
+AWj4t1VG6y6P2ydRWBeVsquid:S11499"VReplace the synchronized class "Hashtable" by an unsynchronized one such as "HashMap".(èüéõøÿÿÿÿ2adam8Ø§ÉÅ-
+ª
+AWj4t1VG6y6P2ydRWBdg"squid:ClassVariableVisibilityCheck9"TMake _dtsList a static final constant or non-public and provide accessors if needed.(èüéõøÿÿÿÿ2adam8Ø§ÉÅ-
+ª
+AWj4t1VG6y6P2ydRWBdj"squid:ClassVariableVisibilityCheck9"TMake _mtsList a static final constant or non-public and provide accessors if needed.(èüéõøÿÿÿÿ2adam8Ø§ÉÅ-
+t
+AWj46KZg6y6P2ydRWJqysquid:S2221³"4Catch a list of specific exception subtypes instead.(¼Ôîàùÿÿÿÿ2adam8€û•Ç-
+†
+AWj4t1VG6y6P2ydRWBfVsquid:CommentedOutCodeLineÈ"<This block of commented-out lines of code should be removed.(ÏÇ¤2adam8Ø§ÉÅ-
+•
+AWj4t1VG6y6P2ydRWBeSsquid:S11499"VReplace the synchronized class "Hashtable" by an unsynchronized one such as "HashMap".(èüéõøÿÿÿÿ2adam8Ø§ÉÅ-
+]
+AWj4t1VG6y6P2ydRWBd7squid:S1659D"#Declare "_dv4f" on a separate line.(¯¨õš2adam8Ø§ÉÅ-
+a
+AWj4t1VG6y6P2ydRWBeIsquid:S1659>""Declare "_bdv" on a separate line.(âñ¾Äıÿÿÿÿ2adam8Ø§ÉÅ-
+X
+AWj4t1VG6y6P2ydRWBeXsquid:S1659_"Declare "c" on a separate line.(©ª‘2adam8Ø§ÉÅ-
+x
+AWj4t1VG6y6P2ydRWBef
+squid:S106ò"9Replace this use of System.out or System.err by a logger.(ÎÍ‡½úÿÿÿÿ2adam8Ø§ÉÅ-
+…
+AWj4t1VG6y6P2ydRWBe7squid:TrailingCommentCheckÁ"6Move this trailing comment on the previous empty line.(«üšüÿÿÿÿ2adam8Ø§ÉÅ-
+a
+AWj46KZg6y6P2ydRWJqxsquid:S1168Š"&Return an empty array instead of null.(¥¹ï2adam8€û•Ç-
+]
+AWj4t1VG6y6P2ydRWBeAsquid:S1659D"#Declare "_dv3f" on a separate line.(¯¨õš2adam8Ø§ÉÅ-
+d
+AWj4t1VG6y6P2ydRWBeHsquid:S1659>"%Declare "_bparts" on a separate line.(âñ¾Äıÿÿÿÿ2adam8Ø§ÉÅ-
+~
+AWj46KZg6y6P2ydRWJqgsquid:S1155Ü">Use isEmpty() to check whether the collection is empty or not.(…¿•ıÿÿÿÿ2adam8€û•Ç-
+‹
+AWj4t1VG6y6P2ydRWBfbsquid:CommentedOutCodeLineÁ	"<This block of commented-out lines of code should be removed.(“ óÁıÿÿÿÿ2adam8Ø§ÉÅ-
+°
+AWj4t1VG6y6P2ydRWBdcsquid:S13199"qThe type of the "_dvList" object should be an interface such as "Map" rather than the implementation "Hashtable".(èüéõøÿÿÿÿ2adam8Ø§ÉÅ-
+\
+AWj4t1VG6y6P2ydRWBdwsquid:S1659C""Declare "_dvg" on a separate line.(¶½È¢2adam8Ø§ÉÅ-
+e
+AWj46KZg6y6P2ydRWJqcsquid:S1166¿"%Either log or rethrow this exception.(Ä§’æùÿÿÿÿ2adam8€û•Ç-
+~
+AWj46KZg6y6P2ydRWJqisquid:S20572"?Add a "static final long serialVersionUID" field to this class.(á©Éùÿÿÿÿ2adam8€û•Ç-
+d
+AWj4t1VG6y6P2ydRWBd5squid:S16599"%Declare "_dvList" on a separate line.(èüéõøÿÿÿÿ2adam8Ø§ÉÅ-
+\
+AWj4t1VG6y6P2ydRWBd8squid:S1659D""Declare "_dvf" on a separate line.(¯¨õš2adam8Ø§ÉÅ-
+§
+AWj4t1VG6y6P2ydRWBdf"squid:ClassVariableVisibilityCheck4"QMake DEBUG a static final constant or non-public and provide accessors if needed.(îéÒ¡ÿÿÿÿÿ2adam8Ø§ÉÅ-
+c
+AWj4t1VG6y6P2ydRWBeDsquid:S1659G")Declare "_study2Name" on a separate line.(±ú½Ö2adam8Ø§ÉÅ-
+c
+AWj4t1VG6y6P2ydRWBeCsquid:S1659G")Declare "_study3Name" on a separate line.(±ú½Ö2adam8Ø§ÉÅ-
+a
+AWj46KZg6y6P2ydRWJqtsquid:S1168·"&Return an empty array instead of null.(¥¹ï2adam8€û•Ç-
+¯
+AWj46KZg6y6P2ydRWJqXsquid:S1319—"oThe return type of this method should be an interface such as "Map" rather than the implementation "Hashtable".(øšİœşÿÿÿÿ2adam8€û•Ç-
+
+AWj46KZg6y6P2ydRWJq0squid:S3776˜"RRefactor this method to reduce its Cognitive Complexity from 46 to the 15 allowed.(¦³ÈÓ2adam8€û•Ç-
+‹
+AWj4t1VG6y6P2ydRWBfQsquid:S3027	"KPut single-quotes around '\\' to use the faster "lastIndexOf(char)" method.(›´±ºùÿÿÿÿ2adam8Ø§ÉÅ-
+†
+AWj4t1VG6y6P2ydRWBfSsquid:CommentedOutCodeLine•"<This block of commented-out lines of code should be removed.(’Ğöş2adam8Ø§ÉÅ-
+¦
+AWj46KZg6y6P2ydRWJqjsquid:S14482"gclass "Project" has 83 methods, which is greater than the 35 authorized. Split it into smaller classes.(á©Éùÿÿÿÿ2adam8€û•Ç-
+ 
+AWj4t1VG6y6P2ydRWBeRsquid:S1149Û"eReplace the synchronized class "Vector" by an unsynchronized one such as "ArrayList" or "LinkedList".(–ä´2adam8Ø§ÉÅ-
+e
+AWj46KZg6y6P2ydRWJqdsquid:S1166ƒ"%Either log or rethrow this exception.(¼Ôîàùÿÿÿÿ2adam8€û•Ç-
+]
+AWj4t1VG6y6P2ydRWBd-squid:S1659D"#Declare "_sv3f" on a separate line.(¯¨õš2adam8Ø§ÉÅ-
+–
+AWj46KZg6y6P2ydRWJqlsquid:S1149‘"VReplace the synchronized class "Hashtable" by an unsynchronized one such as "HashMap".(ÉŒ£Ëüÿÿÿÿ2adam8€û•Ç-
+–
+AWj46KZg6y6P2ydRWJqmsquid:S1149—"VReplace the synchronized class "Hashtable" by an unsynchronized one such as "HashMap".(øšİœşÿÿÿÿ2adam8€û•Ç-
+ˆ
+AWj46KZg6y6P2ydRWJqusquid:S1142ª"MReduce the number of returns of this method 3, down to the maximum allowed 2.(¥Ÿø2adam8€û•Ç-
+Xsquid:S2221ƒ"4Catch a list of specific exception subtypes instead.(¼Ôîàùÿÿÿÿ8ŠŒ”Ñ-

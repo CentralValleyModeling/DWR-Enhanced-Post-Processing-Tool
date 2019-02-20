@@ -1,0 +1,32 @@
+<!--
+  ~ Copyright (c) 2019
+  ~ California Department of Water Resources
+  ~ All Rights Reserved.  DWR PROPRIETARY/CONFIDENTIAL.
+  ~ Source may not be released without written approval from DWR
+  -->
+
+<HTML>
+<HEAD>
+    <META CONTENT="text/html; charset=windows-1252" HTTP-EQUIV="Content-Type">
+    <META CONTENT="Microsoft Word 97" NAME="Generator">
+    <TITLE>short</TITLE>
+    <META CONTENT="C:\Program Files\Microsoft Office\Office\html.dot" NAME="Template">
+</HEAD>
+<BODY LINK="#0000ff" VLINK="#800080">
+<FONT face="Times">
+    <B><U><FONT SIZE=4><P>Goal Statement: Short Form</P></B></U></FONT>
+<P>There is a even more concise form for expressing traditional LP constraints. Omit all tags except the goal tag and
+    specify a comparison expression using &lt;, &gt;, or =. This is the preferred method for specifying constraints
+    without associated conditions or penalties.</P>
+</FONT>
+<pre>
+<b>goal</b> <I>tagname </I>{
+     <I>expr1 </I><B>&lt;</B> | <B>=</B> | <B>&gt; </B><I>expr2</I>
+}
+</pre>
+<FONT face="Times"><B><U>Example:</U></B></FONT>
+<pre>
+goal tracyLessThanAllow { D418 < TracyMaxAllow}
+</pre>
+</BODY>
+</HTML>

@@ -1,0 +1,1777 @@
+
+†
+AWj46K_W6y6P2ydRWKBmsquid:S1301ò"KReplace this "switch" statement by "if" statements to increase readability.(×ü³2adam8€û•Ç-
+“
+AWj46K_W6y6P2ydRWKCqsquid:ModifiersOrderCheckõ"EReorder the modifiers to comply with the Java Language Specification.(ÌÃ›µıÿÿÿÿ2adam8€û•Ç-
+
+AWj46K_W6y6P2ydRWKEVsquid:S00100®"NRename this method name to match the regular expression '^[a-z][a-zA-Z0-9]*$'.( í¦¾ÿÿÿÿÿ2adam8€û•Ç-
+
+AWj46K_W6y6P2ydRWKDZsquid:S3776‰"RRefactor this method to reduce its Cognitive Complexity from 25 to the 15 allowed.(ç”ºò2adam8€û•Ç-
+•
+AWj4t13C6y6P2ydRWElMsquid:S00116Ò"YRename this field "jj_lasttokens" to match the regular expression '^_[a-z][a-zA-Z0-9]*$'.(ä»ÛÃ2adam8Ø§ÉÅ-
+
+AWj46K_W6y6P2ydRWKHKsquid:S1126û#"AReplace this if-then-else statement by a single return statement.(õÖÕÑùÿÿÿÿ2adam8€û•Ç-
+
+AWj46K_l6y6P2ydRWKHYsquid:S00100©$"NRename this method name to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(·±Î—øÿÿÿÿ2adam8€û•Ç-
+p
+AWj4t13C6y6P2ydRWEvlsquid:S1854ç"6Remove this useless assignment to local variable "id".(äÌ?2adam8Ø§ÉÅ-
+\
+AWj46K_W6y6P2ydRWKESsquid:S2129ö"!Remove this "Integer" constructor(¨¢å2adam8€û•Ç-
+y
+AWj4t13C6y6P2ydRWEnwsquid:S2130¡"9Use "Integer.parseInt" for this string-to-int conversion.(±´‹¸ûÿÿÿÿ2adam8Ø§ÉÅ-
+m
+AWj46K_W6y6P2ydRWKAwsquid:S1199¦
+"-Extract this nested code block into a method.(ÒÌâ–øÿÿÿÿ2adam8€û•Ç-
+…
+AWj4t13C6y6P2ydRWEnMsquid:TrailingCommentCheck£"6Move this trailing comment on the previous empty line.(²¤Îûÿÿÿÿ2adam8Ø§ÉÅ-
+‚
+AWj4t13C6y6P2ydRWEim$squid:AssignmentInSubExpressionCheckÜ".Extract the assignment out of this expression.(äÍö¥2adam8Ø§ÉÅ-
+o
+AWj46K_W6y6P2ydRWKDKsquid:S1821˜"4Refactor the code to eliminate this nested "switch".(×ü³2adam8€û•Ç-
+”
+AWj4t13C6y6P2ydRWEk-squid:S00116Â"XRename this field "lookingAhead" to match the regular expression '^_[a-z][a-zA-Z0-9]*$'.(éŒ¡2adam8Ø§ÉÅ-
+y
+AWj4t13C6y6P2ydRWEndsquid:S2130µ"9Use "Integer.parseInt" for this string-to-int conversion.(¿¢ˆûÿÿÿÿ2adam8Ø§ÉÅ-
+\
+AWj4t13C6y6P2ydRWEkusquid:S1170¼"!Make this final field static too.(È›ğÃ2adam8Ø§ÉÅ-
+™
+AWj4t13C6y6P2ydRWElssquid:S1149²"_Replace the synchronized class "StringBuffer" by an unsynchronized one such as "StringBuilder".(áã£q2adam8Ø§ÉÅ-
+‰
+AWj46K_W6y6P2ydRWKDYsquid:S1132æ"IMove the "dll" string literal on the left side of this string comparison.(Ìßê†şÿÿÿÿ2adam8€û•Ç-
+a
+AWj4t13C6y6P2ydRWEtHsquid:S1659·"!Declare "end" on a separate line.(üÓ‹ûÿÿÿÿ2adam8Ø§ÉÅ-
+
+AWj4t13C6y6P2ydRWElFsquid:S00116½"TRename this field "jj_la1_3" to match the regular expression '^_[a-z][a-zA-Z0-9]*$'.(­¾Ò°2adam8Ø§ÉÅ-
+’
+AWj46K_W6y6P2ydRWKFJsquid:S3776Í"RRefactor this method to reduce its Cognitive Complexity from 20 to the 15 allowed.(Ïùş—şÿÿÿÿ2adam8€û•Ç-
+a
+AWj4t13C6y6P2ydRWEpnsquid:S1075İ"&Remove this hard-coded path-delimiter.(¿³‘2adam8Ø§ÉÅ-
+o
+AWj46K_W6y6P2ydRWKAYsquid:S1066è"/Merge this if statement with the enclosing one.(¢¼ÃÁüÿÿÿÿ2adam8€û•Ç-
+m
+AWj46K_W6y6P2ydRWKA7squid:S1199•"-Extract this nested code block into a method.(ÒÌâ–øÿÿÿÿ2adam8€û•Ç-
+”
+AWj4t13C6y6P2ydRWEk1squid:S00116Ç"XRename this field "condIsAlways" to match the regular expression '^_[a-z][a-zA-Z0-9]*$'.(Ó¤ë2adam8Ø§ÉÅ-
+š
+AWj4t13C6y6P2ydRWElJsquid:S00116Ï"YRename this field "jj_expentries" to match the regular expression '^_[a-z][a-zA-Z0-9]*$'.(÷é¼¼ÿÿÿÿÿ2adam8Ø§ÉÅ-
+i
+AWj4t13C6y6P2ydRWEuJsquid:S1125İ")Remove the literal "false" boolean value.(¡–»şÿÿÿÿ2adam8Ø§ÉÅ-
+
+AWj46K_W6y6P2ydRWKGnsquid:S00100û!"NRename this method name to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(½ò°µüÿÿÿÿ2adam8€û•Ç-
+x
+AWj4t13C6y6P2ydRWEvksquid:S1854è"8Remove this useless assignment to local variable "size".(Û…øÿÿÿÿ2adam8Ø§ÉÅ-
+Š
+AWj46K_W6y6P2ydRWKCysquid:S00100õ"NRename this method name to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(—é¢ê2adam8€û•Ç-
+
+AWj4t13C6y6P2ydRWEmQsquid:TrailingCommentCheck."6Move this trailing comment on the previous empty line.(ß“Æ2adam8Ø§ÉÅ-
+m
+AWj46K_W6y6P2ydRWKBBsquid:S1199‡"-Extract this nested code block into a method.(ÒÌâ–øÿÿÿÿ2adam8€û•Ç-
+Ÿ
+AWj4t13C6y6P2ydRWEl2squid:S1149·"_Replace the synchronized class "StringBuffer" by an unsynchronized one such as "StringBuilder".(üÓ‹ûÿÿÿÿ2adam8Ø§ÉÅ-
+
+AWj4t13C6y6P2ydRWEz7squid:ModifiersOrderCheck¾"EReorder the modifiers to comply with the Java Language Specification.(üÒ¦D2adam8Ø§ÉÅ-
+Š
+AWj4t13C6y6P2ydRWEoB squid:LabelsShouldNotBeUsedCheck";Refactor the code to remove this label and the need for it.(Àé„X2adam8Ø§ÉÅ-
+“
+AWj46K_W6y6P2ydRWKFIsquid:ModifiersOrderCheck¢"EReorder the modifiers to comply with the Java Language Specification.(ô–×üÿÿÿÿ2adam8€û•Ç-
+
+AWj4t13C6y6P2ydRWElSsquid:S11498"VReplace the synchronized class "Hashtable" by an unsynchronized one such as "HashMap".(æ×ÖŸ2adam8Ø§ÉÅ-
+“
+AWj46K_W6y6P2ydRWKF9squid:ModifiersOrderCheck "EReorder the modifiers to comply with the Java Language Specification.(›Ü¼·ûÿÿÿÿ2adam8€û•Ç-
+m
+AWj46K_W6y6P2ydRWKA4squid:S1199Û"-Extract this nested code block into a method.(ÒÌâ–øÿÿÿÿ2adam8€û•Ç-
+†
+AWj46K_W6y6P2ydRWKBTsquid:S1301é"KReplace this "switch" statement by "if" statements to increase readability.(×ü³2adam8€û•Ç-
+
+AWj46K_W6y6P2ydRWKC4squid:S00100Ğ	"NRename this method name to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(ù‰¾áşÿÿÿÿ2adam8€û•Ç-
+“
+AWj46K_W6y6P2ydRWKF3squid:ModifiersOrderCheckƒ "EReorder the modifiers to comply with the Java Language Specification.(ø£©€øÿÿÿÿ2adam8€û•Ç-
+“
+AWj46K_W6y6P2ydRWKEtsquid:ModifiersOrderCheck¼"EReorder the modifiers to comply with the Java Language Specification.(†’Ñ«úÿÿÿÿ2adam8€û•Ç-
+“
+AWj46K_W6y6P2ydRWKGosquid:ModifiersOrderCheckû!"EReorder the modifiers to comply with the Java Language Specification.(½ò°µüÿÿÿÿ2adam8€û•Ç-
+§
+AWj46K_W6y6P2ydRWKEJ
+squid:S138Ğ"hThis method has 115 lines, which is greater than the 75 lines authorized. Split it into smaller methods.(ÆäÔ‡úÿÿÿÿ2adam8€û•Ç-
+¦
+AWj4t13C6y6P2ydRWEp1squid:S1151´"kReduce this switch case number of lines from 16 to at most 10, for example by extracting code into methods.(«ïÙ2adam8Ø§ÉÅ-
+d
+AWj4t13C6y6P2ydRWEnlsquid:S1659ñ"$Declare "endDay" on a separate line.(ÍÙÖøÿÿÿÿÿ2adam8Ø§ÉÅ-
+j
+AWj46K_W6y6P2ydRWKAbsquid:S1066ê"/Merge this if statement with the enclosing one.(è¦È„2adam8€û•Ç-
+
+AWj4t13C6y6P2ydRWElEsquid:S00116¼"TRename this field "jj_la1_2" to match the regular expression '^_[a-z][a-zA-Z0-9]*$'.(È›ğÃ2adam8Ø§ÉÅ-
+“
+AWj46K_W6y6P2ydRWKEIsquid:ModifiersOrderCheck¦"EReorder the modifiers to comply with the Java Language Specification.(À±…àüÿÿÿÿ2adam8€û•Ç-
+y
+AWj4t13C6y6P2ydRWEn4squid:S2130ô"9Use "Integer.parseInt" for this string-to-int conversion.(êĞ‡äûÿÿÿÿ2adam8Ø§ÉÅ-
+
+AWj46K_W6y6P2ydRWKEPsquid:S00100Ë"NRename this method name to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(ƒ°Á¢şÿÿÿÿ2adam8€û•Ç-
+Š
+AWj46K_W6y6P2ydRWKE7squid:S00100‘"NRename this method name to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(çêî2adam8€û•Ç-
+Š
+AWj46K_W6y6P2ydRWKDIsquid:S00100"NRename this method name to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(˜Êı…2adam8€û•Ç-
+“
+AWj46K_W6y6P2ydRWKHGsquid:ModifiersOrderCheck†#"EReorder the modifiers to comply with the Java Language Specification.(ÍÄ¡ïüÿÿÿÿ2adam8€û•Ç-
+
+AWj46K_W6y6P2ydRWKFKsquid:S00100Í"NRename this method name to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(Ïùş—şÿÿÿÿ2adam8€û•Ç-
+Š
+AWj46K_W6y6P2ydRWKD7squid:S00100„"NRename this method name to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(êüãÊ2adam8€û•Ç-
+†
+AWj46K_W6y6P2ydRWKBgsquid:S1301ó"KReplace this "switch" statement by "if" statements to increase readability.(×ü³2adam8€û•Ç-
+
+AWj4t13C6y6P2ydRWEkfsquid:S3008@"^Rename this field "_currentOrderString" to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(ãôÒÓûÿÿÿÿ2adam8Ø§ÉÅ-
+“
+AWj46K_W6y6P2ydRWKFdsquid:ModifiersOrderCheck¨"EReorder the modifiers to comply with the Java Language Specification.(‰«Ô‚ûÿÿÿÿ2adam8€û•Ç-
+“
+AWj4t13C6y6P2ydRWEz3squid:ModifiersOrderCheckº"EReorder the modifiers to comply with the Java Language Specification.(ÄÓÚ­üÿÿÿÿ2adam8Ø§ÉÅ-
+“
+AWj46K_W6y6P2ydRWKEUsquid:ModifiersOrderCheckÿ"EReorder the modifiers to comply with the Java Language Specification.(­Ì÷íøÿÿÿÿ2adam8€û•Ç-
+“
+AWj46K_l6y6P2ydRWKH8squid:ModifiersOrderCheck´&"EReorder the modifiers to comply with the Java Language Specification.(­Šİúûÿÿÿÿ2adam8€û•Ç-
+
+AWj46K_W6y6P2ydRWKF_squid:ModifiersOrderCheck§ "EReorder the modifiers to comply with the Java Language Specification.(À°ó2adam8€û•Ç-
+£
+AWj4t13C6y6P2ydRWEjg"squid:ClassVariableVisibilityCheckÁ"QMake token a static final constant or non-public and provide accessors if needed.(ºˆÜà2adam8Ø§ÉÅ-
+†
+AWj46K_W6y6P2ydRWKBUsquid:S1301 "KReplace this "switch" statement by "if" statements to increase readability.(×ü³2adam8€û•Ç-
+
+AWj4t13C6y6P2ydRWEte squid:LabelsShouldNotBeUsedCheck£";Refactor the code to remove this label and the need for it.(öŞ†’ùÿÿÿÿ2adam8Ø§ÉÅ-
+Œ
+AWj46K_W6y6P2ydRWKDpsquid:S3776Ò"RRefactor this method to reduce its Cognitive Complexity from 19 to the 15 allowed.(Úğœ]2adam8€û•Ç-
+
+AWj46K_W6y6P2ydRWKGMsquid:S1126ì "AReplace this if-then-else statement by a single return statement.(õÖÕÑùÿÿÿÿ2adam8€û•Ç-
+\
+AWj4t13C6y6P2ydRWEtUsquid:S1659…"!Declare "end" on a separate line.(õ–¡2adam8Ø§ÉÅ-
+j
+AWj46K_W6y6P2ydRWKAksquid:S1066ä"/Merge this if statement with the enclosing one.(è¦È„2adam8€û•Ç-
+‚
+AWj4t13C6y6P2ydRWEij$squid:AssignmentInSubExpressionCheck´".Extract the assignment out of this expression.(á¬ú2adam8Ø§ÉÅ-
+j
+AWj46K_W6y6P2ydRWKAdsquid:S1066È"/Merge this if statement with the enclosing one.(è¦È„2adam8€û•Ç-
+Æ
+AWj46K_W6y6P2ydRWKCi%squid:RedundantThrowsDeclarationCheck±"lRemove the declaration of thrown exception 'java.io.IOException', as it cannot be thrown from method's body.(¬èÖÌüÿÿÿÿ2adam8€û•Ç-
+t
+AWj4t13C6y6P2ydRWEn5squid:S2130É"9Use "Integer.parseInt" for this string-to-int conversion.(Ó¶ñÔ2adam8Ø§ÉÅ-
+i
+AWj4t13C6y6P2ydRWEmesquid:S1659œ")Declare "weightsFile" on a separate line.(÷§Ô‹úÿÿÿÿ2adam8Ø§ÉÅ-
+
+AWj46K_W6y6P2ydRWKDdsquid:S00100Ò"NRename this method name to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(¯ôƒüÿÿÿÿ2adam8€û•Ç-
+
+AWj46K_l6y6P2ydRWKHhsquid:ModifiersOrderCheckÃ$"EReorder the modifiers to comply with the Java Language Specification.(íÛ™Ò2adam8€û•Ç-
+…
+AWj4t13C6y6P2ydRWEsusquid:TrailingCommentCheckà"6Move this trailing comment on the previous empty line.(ğõõ…ıÿÿÿÿ2adam8Ø§ÉÅ-
+
+AWj4t13C6y6P2ydRWEonsquid:TrailingCommentCheckû	"6Move this trailing comment on the previous empty line.(íÒy2adam8Ø§ÉÅ-
+j
+AWj46K_W6y6P2ydRWKAXsquid:S1066À"/Merge this if statement with the enclosing one.(è¦È„2adam8€û•Ç-
+’
+AWj46K_W6y6P2ydRWKDtsquid:S3776–"RRefactor this method to reduce its Cognitive Complexity from 27 to the 15 allowed.(à—¹¨üÿÿÿÿ2adam8€û•Ç-
+¦
+AWj46K_W6y6P2ydRWKEB
+squid:S138Ñ"gThis method has 78 lines, which is greater than the 75 lines authorized. Split it into smaller methods.(—È¡Øùÿÿÿÿ2adam8€û•Ç-
+e
+AWj46K_W6y6P2ydRWKBysquid:S1166¤
+"%Either log or rethrow this exception.(¼Ôîàùÿÿÿÿ2adam8€û•Ç-
+‰
+AWj46K_W6y6P2ydRWKD_squid:S00100§"NRename this method name to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(ı§ a2adam8€û•Ç-
+
+AWj46K_W6y6P2ydRWKDlsquid:ModifiersOrderCheck©"EReorder the modifiers to comply with the Java Language Specification.(ß’¿2adam8€û•Ç-
+“
+AWj46K_l6y6P2ydRWKICsquid:ModifiersOrderCheck«'"EReorder the modifiers to comply with the Java Language Specification.(Ñî–Æøÿÿÿÿ2adam8€û•Ç-
+†
+AWj46K_W6y6P2ydRWKBWsquid:S1301ß"KReplace this "switch" statement by "if" statements to increase readability.(×ü³2adam8€û•Ç-
+b
+AWj4t13C6y6P2ydRWE1Csquid:S1481ã"'Remove this unused "sb" local variable.(í…Ò‰2adam8Ø§ÉÅ-
+u
+AWj46K_W6y6P2ydRWKBosquid:S1141‰"5Extract this nested try block into a separate method.(ç£êúÿÿÿÿ2adam8€û•Ç-
+n
+AWj46K_W6y6P2ydRWKB4squid:S1942#"4Replace this fully qualified name with "PrintWriter"(ïóú2adam8€û•Ç-
+†
+AWj46K_W6y6P2ydRWKBYsquid:S1301¢"KReplace this "switch" statement by "if" statements to increase readability.(×ü³2adam8€û•Ç-
+t
+AWj46K_W6y6P2ydRWKC2squid:S2221Á	"4Catch a list of specific exception subtypes instead.(¼Ôîàùÿÿÿÿ2adam8€û•Ç-
+‚
+AWj46K_W6y6P2ydRWKB3
+squid:S881Ú%"HExtract this increment or decrement operator into a dedicated statement.(èæ®¾2adam8€û•Ç-
+
+AWj46K_W6y6P2ydRWKCxsquid:S3776õ"RRefactor this method to reduce its Cognitive Complexity from 16 to the 15 allowed.(—é¢ê2adam8€û•Ç-
+“
+AWj46K_W6y6P2ydRWKEwsquid:ModifiersOrderCheckŠ"EReorder the modifiers to comply with the Java Language Specification.(Æà×¥ÿÿÿÿÿ2adam8€û•Ç-
+ˆ
+AWj46K_l6y6P2ydRWKHTsquid:S1142$"MReduce the number of returns of this method 3, down to the maximum allowed 2.(ŒÖÍ2adam8€û•Ç-
+
+AWj4t13C6y6P2ydRWEk5squid:S00116Á"QRename this field "jj_nt" to match the regular expression '^_[a-z][a-zA-Z0-9]*$'.(ºˆÜà2adam8Ø§ÉÅ-
+Š
+AWj46K_l6y6P2ydRWKH1squid:S00100Ë%"NRename this method name to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(°ı‡•2adam8€û•Ç-
+z
+AWj4t13C6y6P2ydRWE07squid:S1481½":Remove this unused "globalStateReportFile" local variable.(Àµ÷™şÿÿÿÿ2adam8Ø§ÉÅ-
+
+AWj46K_W6y6P2ydRWKDbsquid:ModifiersOrderCheck‰"EReorder the modifiers to comply with the Java Language Specification.(ç”ºò2adam8€û•Ç-
+o
+AWj4t13C6y6P2ydRWEiGsquid:S1444""5Make this "public static _lastFileParsed" field final(È‡ˆ±2adam8Ø§ÉÅ-
+‚
+AWj46K_W6y6P2ydRWKBH$squid:AssignmentInSubExpressionCheckÎ%".Extract the assignment out of this expression.(Öñ¼ğ2adam8€û•Ç-
+
+AWj46K_W6y6P2ydRWKGSsquid:S00100€!"NRename this method name to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(ö¤Âöüÿÿÿÿ2adam8€û•Ç-
+š
+AWj46K_W6y6P2ydRWKCDsquid:S4144ÿ$"ZUpdate this method so that its implementation is not identical to "jj_3R_23" on line 4389.(·Ç„¸úÿÿÿÿ2adam8€û•Ç-
+
+AWj46K_W6y6P2ydRWKE-squid:ModifiersOrderCheck "EReorder the modifiers to comply with the Java Language Specification.(«ëºÛ2adam8€û•Ç-
+™
+AWj4t13C6y6P2ydRWEk2squid:S00116À"XRename this field "token_source" to match the regular expression '^_[a-z][a-zA-Z0-9]*$'.(èòì¹ÿÿÿÿÿ2adam8Ø§ÉÅ-
+š
+AWj46K_W6y6P2ydRWKCdsquid:S1149Â"_Replace the synchronized class "StringBuffer" by an unsynchronized one such as "StringBuilder".(šÏŒî2adam8€û•Ç-
+o
+AWj46K_W6y6P2ydRWKEdsquid:S1821î"4Refactor the code to eliminate this nested "switch".(×ü³2adam8€û•Ç-
+Y
+AWj4t13C6y6P2ydRWEnWsquid:S2129ï"Remove this "Long" constructor(‰ä—æ2adam8Ø§ÉÅ-
+m
+AWj46K_W6y6P2ydRWKBAsquid:S1199ú"-Extract this nested code block into a method.(ÒÌâ–øÿÿÿÿ2adam8€û•Ç-
+
+AWj46K_W6y6P2ydRWKHOsquid:S1126ˆ$"AReplace this if-then-else statement by a single return statement.(õÖÕÑùÿÿÿÿ2adam8€û•Ç-
+“
+AWj46K_l6y6P2ydRWKH4squid:ModifiersOrderCheckñ%"EReorder the modifiers to comply with the Java Language Specification.( õäøüÿÿÿÿ2adam8€û•Ç-
+y
+AWj4t13C6y6P2ydRWEnrsquid:S2130Í"9Use "Integer.parseInt" for this string-to-int conversion.(±Ö•Óûÿÿÿÿ2adam8Ø§ÉÅ-
+’
+AWj4t13C6y6P2ydRWEklsquid:S3008¸"RRename this field "_writer" to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(ØÅÈŞıÿÿÿÿ2adam8Ø§ÉÅ-
+
+AWj46K_l6y6P2ydRWKHpsquid:S00100ÿ$"NRename this method name to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(·Ç„¸úÿÿÿÿ2adam8€û•Ç-
+€
+AWj4t13C6y6P2ydRWErdsquid:TrailingCommentCheck‰"6Move this trailing comment on the previous empty line.(®¬€2adam8Ø§ÉÅ-
+
+AWj4t13C6y6P2ydRWEmOsquid:TrailingCommentCheck+"6Move this trailing comment on the previous empty line.(û¹İ¥2adam8Ø§ÉÅ-
+•
+AWj4t13C6y6P2ydRWElDsquid:S00116»"TRename this field "jj_la1_1" to match the regular expression '^_[a-z][a-zA-Z0-9]*$'.(ëƒÓğÿÿÿÿÿ2adam8Ø§ÉÅ-
+
+AWj46K_W6y6P2ydRWKGZsquid:S1126½!"AReplace this if-then-else statement by a single return statement.(õÖÕÑùÿÿÿÿ2adam8€û•Ç-
+
+AWj46K_W6y6P2ydRWKGtsquid:S1126""AReplace this if-then-else statement by a single return statement.(õÖÕÑùÿÿÿÿ2adam8€û•Ç-
+a
+AWj4t13C6y6P2ydRWEnssquid:S1659"&Declare "endMonth" on a separate line.(™‘¾³2adam8Ø§ÉÅ-
+
+AWj46K_l6y6P2ydRWKHvsquid:S1126’%"AReplace this if-then-else statement by a single return statement.(õÖÕÑùÿÿÿÿ2adam8€û•Ç-
+‚
+AWj4t13C6y6P2ydRWEii$squid:AssignmentInSubExpressionCheckÃ".Extract the assignment out of this expression.(á¬ú2adam8Ø§ÉÅ-
+ 
+AWj46K_W6y6P2ydRWKCt
+squid:S138¢"gThis method has 78 lines, which is greater than the 75 lines authorized. Split it into smaller methods.(ËúN2adam8€û•Ç-
+Ÿ
+AWj46K_W6y6P2ydRWKCZsquid:S1149ƒ"_Replace the synchronized class "StringBuffer" by an unsynchronized one such as "StringBuilder".(¹Ï·åùÿÿÿÿ2adam8€û•Ç-
+“
+AWj46K_W6y6P2ydRWKGYsquid:ModifiersOrderCheck•!"EReorder the modifiers to comply with the Java Language Specification.(™Õñìÿÿÿÿÿ2adam8€û•Ç-
+†
+AWj4t13C6y6P2ydRWE1Xsquid:CommentedOutCodeLineš"<This block of commented-out lines of code should be removed.(‚¹¦£2adam8Ø§ÉÅ-
+
+AWj46K_W6y6P2ydRWKGPsquid:ModifiersOrderCheckó "EReorder the modifiers to comply with the Java Language Specification.(‡ÃÚ2adam8€û•Ç-
+Š
+AWj46K_W6y6P2ydRWKF6squid:S00100• "NRename this method name to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(¦ë’‘2adam8€û•Ç-
+†
+AWj46K_W6y6P2ydRWKBMsquid:S1301”"KReplace this "switch" statement by "if" statements to increase readability.(×ü³2adam8€û•Ç-
+£
+AWj4t13C6y6P2ydRWEjh"squid:ClassVariableVisibilityCheckÁ"QMake jj_nt a static final constant or non-public and provide accessors if needed.(ºˆÜà2adam8Ø§ÉÅ-
+†
+AWj46K_W6y6P2ydRWKBNsquid:S1301 "KReplace this "switch" statement by "if" statements to increase readability.(×ü³2adam8€û•Ç-
+
+AWj4t13C6y6P2ydRWEmSsquid:TrailingCommentCheck2"6Move this trailing comment on the previous empty line.(é†À±2adam8Ø§ÉÅ-
+Ÿ
+AWj46K_W6y6P2ydRWKCfsquid:S1149ú"_Replace the synchronized class "StringBuffer" by an unsynchronized one such as "StringBuilder".(ıôšÍÿÿÿÿÿ2adam8€û•Ç-
+š
+AWj46K_W6y6P2ydRWKCasquid:S1149‘"_Replace the synchronized class "StringBuffer" by an unsynchronized one such as "StringBuilder".(çêî2adam8€û•Ç-
+Š
+AWj46K_W6y6P2ydRWKDnsquid:S00100°"NRename this method name to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(Àê2adam8€û•Ç-
+“
+AWj46K_l6y6P2ydRWKHusquid:ModifiersOrderCheckŒ%"EReorder the modifiers to comply with the Java Language Specification.(§ËÖÖøÿÿÿÿ2adam8€û•Ç-
+…
+AWj4t13C6y6P2ydRWEsVsquid:TrailingCommentCheckÜ"6Move this trailing comment on the previous empty line.(º•Ú¼şÿÿÿÿ2adam8Ø§ÉÅ-
+†
+AWj46K_W6y6P2ydRWKBlsquid:S1301ô"KReplace this "switch" statement by "if" statements to increase readability.(×ü³2adam8€û•Ç-
+—
+AWj4t13C6y6P2ydRWEk7squid:S00116É"VRename this field "jj_lastpos" to match the regular expression '^_[a-z][a-zA-Z0-9]*$'.(úíá¢ùÿÿÿÿ2adam8Ø§ÉÅ-
+“
+AWj46K_W6y6P2ydRWKFNsquid:ModifiersOrderCheck†"EReorder the modifiers to comply with the Java Language Specification.(Öæüÿÿÿÿ2adam8€û•Ç-
+“
+AWj46K_l6y6P2ydRWKIGsquid:ModifiersOrderCheck³'"EReorder the modifiers to comply with the Java Language Specification.(ÃÃ¨òşÿÿÿÿ2adam8€û•Ç-
+¦
+AWj4t13C6y6P2ydRWEuHsquid:S1151Ç"kReduce this switch case number of lines from 72 to at most 10, for example by extracting code into methods.(•İ2adam8Ø§ÉÅ-
+r
+AWj4t13C6y6P2ydRWEvhsquid:S1854ë"7Remove this useless assignment to local variable "end".(İÏË¯2adam8Ø§ÉÅ-
+
+AWj4t13C6y6P2ydRWEin$squid:AssignmentInSubExpressionCheck¥".Extract the assignment out of this expression.(Ò¹²-2adam8Ø§ÉÅ-
+`
+AWj4t13C6y6P2ydRWEnusquid:S1659"%Declare "endYear" on a separate line.(™‘¾³2adam8Ø§ÉÅ-
+“
+AWj46K_W6y6P2ydRWKF5squid:ModifiersOrderCheckŒ "EReorder the modifiers to comply with the Java Language Specification.(­óİ…şÿÿÿÿ2adam8€û•Ç-
+ˆ
+AWj46K_W6y6P2ydRWKGysquid:S1142¥""MReduce the number of returns of this method 3, down to the maximum allowed 2.(Ë÷È2adam8€û•Ç-
+‰
+AWj46K_W6y6P2ydRWKE1squid:S00100Û"NRename this method name to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(ÁòÔ:2adam8€û•Ç-
+…
+AWj4t13C6y6P2ydRWErhsquid:TrailingCommentCheck›"6Move this trailing comment on the previous empty line.(éîË’øÿÿÿÿ2adam8Ø§ÉÅ-
+Ÿ
+AWj6W89a6y6P2ydRWLttsquid:S3008³"_Rename this field "_hideProgressDetails" to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(°Å¶şÿÿÿÿ2adam8Ğ¥éÒ-
+‡
+AWj46K_W6y6P2ydRWKB0squid:S00112¹	"FDefine and throw a dedicated exception instead of using a generic one.(Ê“Åıÿÿÿÿ2adam8€û•Ç-
+…
+AWj4t13C6y6P2ydRWEmwsquid:TrailingCommentCheck¨"6Move this trailing comment on the previous empty line.(Î²àÜùÿÿÿÿ2adam8Ø§ÉÅ-
+€
+AWj4t13C6y6P2ydRWErjsquid:TrailingCommentCheck"6Move this trailing comment on the previous empty line.(ûÛ½ê2adam8Ø§ÉÅ-
+†
+AWj46K_W6y6P2ydRWKBesquid:S1301Î"KReplace this "switch" statement by "if" statements to increase readability.(×ü³2adam8€û•Ç-
+ˆ
+AWj46K_W6y6P2ydRWKGNsquid:S1142Ş "MReduce the number of returns of this method 5, down to the maximum allowed 2.(°úÂ‡2adam8€û•Ç-
+i
+AWj4t13C6y6P2ydRWEkYsquid:S1659%"*Declare "localDefines" on a separate line.(ÆÌôéıÿÿÿÿ2adam8Ø§ÉÅ-
+Ÿ
+AWj4t13C6y6P2ydRWEl3squid:S1149·"_Replace the synchronized class "StringBuffer" by an unsynchronized one such as "StringBuilder".(üÓ‹ûÿÿÿÿ2adam8Ø§ÉÅ-
+
+AWj46K_W6y6P2ydRWKD-squid:ModifiersOrderCheck•"EReorder the modifiers to comply with the Java Language Specification.(î•ùß2adam8€û•Ç-
+
+AWj4t13C6y6P2ydRWEnRsquid:S1215ª"TDon't try to be smarter than the JVM, remove this call to run the garbage collector.(†ğí«2adam8Ø§ÉÅ-
+t
+AWj4t13C6y6P2ydRWEnpsquid:S2130õ"9Use "Integer.parseInt" for this string-to-int conversion.(Ó¶ñÔ2adam8Ø§ÉÅ-
+`
+AWj4t13C6y6P2ydRWEqTsquid:S1659²"&Declare "oa_value" on a separate line.(áã£q2adam8Ø§ÉÅ-
+
+AWj46K_l6y6P2ydRWKH7squid:S00100´&"NRename this method name to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(­Šİúûÿÿÿÿ2adam8€û•Ç-
+Š
+AWj46K_W6y6P2ydRWKDfsquid:S00100î"NRename this method name to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(€‹¯2adam8€û•Ç-
+š
+AWj46K_W6y6P2ydRWKCNsquid:S1149©"_Replace the synchronized class "StringBuffer" by an unsynchronized one such as "StringBuilder".(ß’¿2adam8€û•Ç-
+€
+AWj4t13C6y6P2ydRWEsKsquid:TrailingCommentCheck¤"6Move this trailing comment on the previous empty line.(‡§î°2adam8Ø§ÉÅ-
+š
+AWj46K_W6y6P2ydRWKCYsquid:S1149ô"_Replace the synchronized class "StringBuffer" by an unsynchronized one such as "StringBuilder".(œ—¹…2adam8€û•Ç-
+‡
+AWj4t13C6y6P2ydRWEiy$squid:AssignmentInSubExpressionCheckõ".Extract the assignment out of this expression.(œ·½ôûÿÿÿÿ2adam8Ø§ÉÅ-
+b
+AWj4t13C6y6P2ydRWEp3squid:S1219ª"'Remove this misleading "label_5" label.(º¥è2adam8Ø§ÉÅ-
+m
+AWj46K_W6y6P2ydRWKA8squid:S1199ù"-Extract this nested code block into a method.(ÒÌâ–øÿÿÿÿ2adam8€û•Ç-
+Œ
+AWj4t13C6y6P2ydRWEkJsquid:S00103»"KSplit this 613 characters long line (which is greater than 200 authorized).(ëƒÓğÿÿÿÿÿ2adam8Ø§ÉÅ-
+
+AWj4t13C6y6P2ydRWEnSsquid:TrailingCommentCheck¼"6Move this trailing comment on the previous empty line.(×ô2adam8Ø§ÉÅ-
+¦
+AWj4t13C6y6P2ydRWEsNsquid:S1151Á"kReduce this switch case number of lines from 16 to at most 10, for example by extracting code into methods.(«ïÙ2adam8Ø§ÉÅ-
+i
+AWj46K_W6y6P2ydRWKFrsquid:S1125ø")Remove the literal "false" boolean value.(Ù°ƒ©øÿÿÿÿ2adam8€û•Ç-
+‹
+AWj4t13C6y6P2ydRWE1Usquid:CommentedOutCodeLineÔ"<This block of commented-out lines of code should be removed.(ÿÍ”•ùÿÿÿÿ2adam8Ø§ÉÅ-
+j
+AWj46K_W6y6P2ydRWKAesquid:S1066¼"/Merge this if statement with the enclosing one.(è¦È„2adam8€û•Ç-
+‡
+AWj4t13C6y6P2ydRWEjwsquid:S00112ù"FDefine and throw a dedicated exception instead of using a generic one.(­È²èşÿÿÿÿ2adam8Ø§ÉÅ-
+Œ
+AWj4t13C6y6P2ydRWEjzsquid:S00117²"QRename this local variable to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(áã£q2adam8Ø§ÉÅ-
+y
+AWj4t13C6y6P2ydRWEn9squid:S2130Î"9Use "Integer.parseInt" for this string-to-int conversion.(Êá€ÿÿÿÿÿ2adam8Ø§ÉÅ-
+t
+AWj46K_W6y6P2ydRWKC1squid:S2221¤
+"4Catch a list of specific exception subtypes instead.(¼Ôîàùÿÿÿÿ2adam8€û•Ç-
+™
+AWj4t13C6y6P2ydRWEkbsquid:S3008%"ZRename this field "_controlDefines" to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(ÆÌôéıÿÿÿÿ2adam8Ø§ÉÅ-
+š
+AWj46K_W6y6P2ydRWKCBsquid:S4144©$"ZUpdate this method so that its implementation is not identical to "jj_3R_26" on line 4135.(·±Î—øÿÿÿÿ2adam8€û•Ç-
+\
+AWj4t13C6y6P2ydRWEpJsquid:S2129"!Remove this "Integer" constructor(—ĞÀå2adam8Ø§ÉÅ-
+
+AWj46K_W6y6P2ydRWKEvsquid:S00100Š"NRename this method name to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(Æà×¥ÿÿÿÿÿ2adam8€û•Ç-
+a
+AWj4t13C6y6P2ydRWEkRsquid:S1659#"'Declare "externals" on a separate line.(ïóú2adam8Ø§ÉÅ-
+“
+AWj46K_W6y6P2ydRWKEWsquid:ModifiersOrderCheck®"EReorder the modifiers to comply with the Java Language Specification.( í¦¾ÿÿÿÿÿ2adam8€û•Ç-
+
+AWj4t13C6y6P2ydRWEv8 squid:LabelsShouldNotBeUsedCheckÂ";Refactor the code to remove this label and the need for it.(ó˜‰ßşÿÿÿÿ2adam8Ø§ÉÅ-
+†
+AWj4t13C6y6P2ydRWE1Vsquid:CommentedOutCodeLine›"<This block of commented-out lines of code should be removed.(³ß€¨2adam8Ø§ÉÅ-
+m
+AWj46K_W6y6P2ydRWKA5squid:S1199ï"-Extract this nested code block into a method.(ÒÌâ–øÿÿÿÿ2adam8€û•Ç-
+_
+AWj4t13C6y6P2ydRWEkPsquid:S1659#"%Declare "weights" on a separate line.(ïóú2adam8Ø§ÉÅ-
+a
+AWj4t13C6y6P2ydRWEpqsquid:S1075è"&Remove this hard-coded path-delimiter.(èâé2adam8Ø§ÉÅ-
+
+AWj46K_W6y6P2ydRWKGssquid:ModifiersOrderCheck""EReorder the modifiers to comply with the Java Language Specification.(··•!2adam8€û•Ç-
+j
+AWj46K_W6y6P2ydRWKArsquid:S1066°"/Merge this if statement with the enclosing one.(è¦È„2adam8€û•Ç-
+‹
+AWj4t13C6y6P2ydRWE1Osquid:CommentedOutCodeLineæ"<This block of commented-out lines of code should be removed.(ÜÅşıÿÿÿÿ2adam8Ø§ÉÅ-
+˜
+AWj4t13C6y6P2ydRWElKsquid:S00116Ğ"WRename this field "jj_expentry" to match the regular expression '^_[a-z][a-zA-Z0-9]*$'.(—°­‡ıÿÿÿÿ2adam8Ø§ÉÅ-
+Š
+AWj46K_W6y6P2ydRWKE9squid:S00100 "NRename this method name to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(«ëºÛ2adam8€û•Ç-
+€
+AWj4t13C6y6P2ydRWEmWsquid:TrailingCommentCheck¿"6Move this trailing comment on the previous empty line.(…¢Ê¦2adam8Ø§ÉÅ-
+˜
+AWj4t13C6y6P2ydRWEkgsquid:S3008A"^Rename this field "_currentIncludeFile" to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(¨ÚÇÜ2adam8Ø§ÉÅ-
+‚
+AWj4t13C6y6P2ydRWEiu$squid:AssignmentInSubExpressionCheckÁ".Extract the assignment out of this expression.(»­º2adam8Ø§ÉÅ-
+
+AWj4t13C6y6P2ydRWEpC squid:LabelsShouldNotBeUsedCheckú
+";Refactor the code to remove this label and the need for it.(¦ßùûÿÿÿÿ2adam8Ø§ÉÅ-
+
+AWj46K_W6y6P2ydRWKGQsquid:S1126ù "AReplace this if-then-else statement by a single return statement.(õÖÕÑùÿÿÿÿ2adam8€û•Ç-
+
+AWj46K_W6y6P2ydRWKC6squid:S3776ƒ
+"RRefactor this method to reduce its Cognitive Complexity from 16 to the 15 allowed.(Â¬˜ƒ2adam8€û•Ç-
+ 
+AWj46K_W6y6P2ydRWKFl
+squid:S138ø"gThis method has 95 lines, which is greater than the 75 lines authorized. Split it into smaller methods.(ì¯m2adam8€û•Ç-
+š
+AWj46K_W6y6P2ydRWKCSsquid:S1149Ô"_Replace the synchronized class "StringBuffer" by an unsynchronized one such as "StringBuilder".(€ş¿¹2adam8€û•Ç-
+c
+AWj4t13C6y6P2ydRWEqlsquid:S1659˜"#Declare "bpart" on a separate line.(ĞÊ¶ƒÿÿÿÿÿ2adam8Ø§ÉÅ-
+’
+AWj46K_W6y6P2ydRWKEasquid:S3776è"RRefactor this method to reduce its Cognitive Complexity from 22 to the 15 allowed.(Á‡ö‘şÿÿÿÿ2adam8€û•Ç-
+
+AWj46K_W6y6P2ydRWKGdsquid:S1126Ò!"AReplace this if-then-else statement by a single return statement.(õÖÕÑùÿÿÿÿ2adam8€û•Ç-
+’
+AWj46K_W6y6P2ydRWKEmsquid:S3776è"RRefactor this method to reduce its Cognitive Complexity from 24 to the 15 allowed.(ç²ÙÕûÿÿÿÿ2adam8€û•Ç-
+
+AWj46K_W6y6P2ydRWKFvsquid:S3776á"RRefactor this method to reduce its Cognitive Complexity from 43 to the 15 allowed.(œàÉÎ2adam8€û•Ç-
+‹
+AWj4t13C6y6P2ydRWE1Ysquid:CommentedOutCodeLineŸ"<This block of commented-out lines of code should be removed.(÷¤¨‘ùÿÿÿÿ2adam8Ø§ÉÅ-
+‡
+AWj46K_W6y6P2ydRWKB2squid:S00112©
+"FDefine and throw a dedicated exception instead of using a generic one.(Ê“Åıÿÿÿÿ2adam8€û•Ç-
+\
+AWj4t13C6y6P2ydRWEkvsquid:S1170½"!Make this final field static too.(­¾Ò°2adam8Ø§ÉÅ-
+
+AWj46K_l6y6P2ydRWKHisquid:S1126É$"AReplace this if-then-else statement by a single return statement.(õÖÕÑùÿÿÿÿ2adam8€û•Ç-
+a
+AWj4t13C6y6P2ydRWEtIsquid:S1659·"!Declare "beg" on a separate line.(üÓ‹ûÿÿÿÿ2adam8Ø§ÉÅ-
+m
+AWj46K_W6y6P2ydRWKBCsquid:S1199"-Extract this nested code block into a method.(ÒÌâ–øÿÿÿÿ2adam8€û•Ç-
+†
+AWj46K_W6y6P2ydRWKBLsquid:S1301ş
+"KReplace this "switch" statement by "if" statements to increase readability.(×ü³2adam8€û•Ç-
+
+AWj46K_W6y6P2ydRWKEDsquid:S00100Ñ"NRename this method name to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(—È¡Øùÿÿÿÿ2adam8€û•Ç-
+
+AWj46K_W6y6P2ydRWKDosquid:ModifiersOrderCheck°"EReorder the modifiers to comply with the Java Language Specification.(Àê2adam8€û•Ç-
+
+AWj46K_W6y6P2ydRWKELsquid:S00100Ğ"NRename this method name to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(ÆäÔ‡úÿÿÿÿ2adam8€û•Ç-
+‹
+AWj4t13C6y6P2ydRWErF squid:LabelsShouldNotBeUsedCheckå";Refactor the code to remove this label and the need for it.(–åÜÆ2adam8Ø§ÉÅ-
+y
+AWj46K_W6y6P2ydRWKD0squid:S1854ó"9Remove this useless assignment to local variable "units".(çÉƒ®øÿÿÿÿ2adam8€û•Ç-
+Š
+AWj46K_W6y6P2ydRWKFFsquid:S00100Š"NRename this method name to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(øË‰2adam8€û•Ç-
+Š
+AWj46K_W6y6P2ydRWKE_squid:S00100·"NRename this method name to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(Ç‹ÅÂ2adam8€û•Ç-
+o
+AWj46K_W6y6P2ydRWKEXsquid:S1821È"4Refactor the code to eliminate this nested "switch".(×ü³2adam8€û•Ç-
+’
+AWj46K_W6y6P2ydRWKEKsquid:S3776Ğ"RRefactor this method to reduce its Cognitive Complexity from 26 to the 15 allowed.(ÆäÔ‡úÿÿÿÿ2adam8€û•Ç-
+š
+AWj4t13C6y6P2ydRWEmCsquid:S1149ß"_Replace the synchronized class "StringBuffer" by an unsynchronized one such as "StringBuilder".(í‹³û2adam8Ø§ÉÅ-
+
+AWj46K_W6y6P2ydRWKD5squid:S00100ã"NRename this method name to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(È÷ú‡øÿÿÿÿ2adam8€û•Ç-
+^
+AWj4t13C6y6P2ydRWEkZsquid:S1659Á"#Declare "jj_nt" on a separate line.(ºˆÜà2adam8Ø§ÉÅ-
+ˆ
+AWj46K_W6y6P2ydRWKGmsquid:S1142î!"MReduce the number of returns of this method 3, down to the maximum allowed 2.(ş¬õ2adam8€û•Ç-
+
+AWj46K_W6y6P2ydRWKGEsquid:S1126Â "AReplace this if-then-else statement by a single return statement.(õÖÕÑùÿÿÿÿ2adam8€û•Ç-
+
+AWj46K_W6y6P2ydRWKHMsquid:S00100‚$"NRename this method name to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(íê‹ıÿÿÿÿ2adam8€û•Ç-
+“
+AWj46K_l6y6P2ydRWKHdsquid:ModifiersOrderCheck¶$"EReorder the modifiers to comply with the Java Language Specification.(ôÀÑ¤ùÿÿÿÿ2adam8€û•Ç-
+§
+AWj46K_W6y6P2ydRWKDx
+squid:S138ï"hThis method has 104 lines, which is greater than the 75 lines authorized. Split it into smaller methods.(«ã÷ƒşÿÿÿÿ2adam8€û•Ç-
+Æ
+AWj46K_W6y6P2ydRWKCk%squid:RedundantThrowsDeclarationCheckÍ"lRemove the declaration of thrown exception 'java.io.IOException', as it cannot be thrown from method's body.(•ŸŒ´üÿÿÿÿ2adam8€û•Ç-
+‡
+AWj4t13C6y6P2ydRWEis$squid:AssignmentInSubExpressionCheckÇ".Extract the assignment out of this expression.(Öß¥×ıÿÿÿÿ2adam8Ø§ÉÅ-
+—
+AWj4t13C6y6P2ydRWEk8squid:S00116É"VRename this field "jj_scanpos" to match the regular expression '^_[a-z][a-zA-Z0-9]*$'.(úíá¢ùÿÿÿÿ2adam8Ø§ÉÅ-
+
+AWj46K_W6y6P2ydRWKGpsquid:S1126‰""AReplace this if-then-else statement by a single return statement.(õÖÕÑùÿÿÿÿ2adam8€û•Ç-
+
+AWj46K_l6y6P2ydRWKHmsquid:ModifiersOrderCheckĞ$"EReorder the modifiers to comply with the Java Language Specification.(½ê©ë2adam8€û•Ç-
+†
+AWj46K_W6y6P2ydRWKBKsquid:S1301‰
+"KReplace this "switch" statement by "if" statements to increase readability.(×ü³2adam8€û•Ç-
+
+AWj46K_W6y6P2ydRWKG2squid:S1142²""MReduce the number of returns of this method 5, down to the maximum allowed 2.(‹İçíşÿÿÿÿ2adam8€û•Ç-
+j
+AWj46K_W6y6P2ydRWKAfsquid:S1066Ö"/Merge this if statement with the enclosing one.(è¦È„2adam8€û•Ç-
+w
+AWj4t13C6y6P2ydRWEvisquid:S1854ê"7Remove this useless assignment to local variable "beg".(Ğ´ÛÖûÿÿÿÿ2adam8Ø§ÉÅ-
+“
+AWj4t13C6y6P2ydRWElBsquid:S00116¹"RRename this field "jj_la1" to match the regular expression '^_[a-z][a-zA-Z0-9]*$'.(ıºçİùÿÿÿÿ2adam8Ø§ÉÅ-
+j
+AWj4t13C6y6P2ydRWEkXsquid:S1659$"+Declare "globalDssInit" on a separate line.(••÷Êÿÿÿÿÿ2adam8Ø§ÉÅ-
+
+AWj46K_l6y6P2ydRWKHxsquid:S00100™%"NRename this method name to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(‰Ÿ’âûÿÿÿÿ2adam8€û•Ç-
+[
+AWj4t13C6y6P2ydRWEvysquid:S1659ä" Declare "id" on a separate line.(š„ì‘2adam8Ø§ÉÅ-
+v
+AWj4t13C6y6P2ydRWEv4squid:S2696Í"6Make the enclosing method "static" or remove this set.(Ãâ¶Œûÿÿÿÿ2adam8Ø§ÉÅ-
+
+AWj46K_W6y6P2ydRWKDHsquid:S3776"RRefactor this method to reduce its Cognitive Complexity from 17 to the 15 allowed.(˜Êı…2adam8€û•Ç-
+
+AWj46K_l6y6P2ydRWKHbsquid:S1142©$"MReduce the number of returns of this method 3, down to the maximum allowed 2.(·±Î—øÿÿÿÿ2adam8€û•Ç-
+d
+AWj4t13C6y6P2ydRWE1Dsquid:S1481ä")Remove this unused "expr" local variable.(š„ì‘2adam8Ø§ÉÅ-
+‹
+AWj4t13C6y6P2ydRWE1Nsquid:CommentedOutCodeLineÓ"<This block of commented-out lines of code should be removed.(ÁğÒâûÿÿÿÿ2adam8Ø§ÉÅ-
+†
+AWj4t13C6y6P2ydRWE1Rsquid:CommentedOutCodeLine™"<This block of commented-out lines of code should be removed.(«ÎÕ2adam8Ø§ÉÅ-
+…
+AWj4t13C6y6P2ydRWEmssquid:TrailingCommentCheck¤"6Move this trailing comment on the previous empty line.(£±Ï›øÿÿÿÿ2adam8Ø§ÉÅ-
+
+AWj46K_W6y6P2ydRWKFPsquid:S3776°"RRefactor this method to reduce its Cognitive Complexity from 44 to the 15 allowed.(¥ÙéÛ2adam8€û•Ç-
+w
+AWj4t13C6y6P2ydRWEpGsquid:S1854"<Remove this useless assignment to local variable "gp_level".(—ĞÀå2adam8Ø§ÉÅ-
+€
+AWj46K_W6y6P2ydRWKEGsquid:TrailingCommentCheck–"6Move this trailing comment on the previous empty line.(û˜†2adam8€û•Ç-
+“
+AWj46K_W6y6P2ydRWKCssquid:ModifiersOrderCheckÿ"EReorder the modifiers to comply with the Java Language Specification.(—âĞÃùÿÿÿÿ2adam8€û•Ç-
+•
+AWj4t13C6y6P2ydRWElQsquid:S11496"VReplace the synchronized class "Hashtable" by an unsynchronized one such as "HashMap".(ŠŒÈÕøÿÿÿÿ2adam8Ø§ÉÅ-
+g
+AWj46K_W6y6P2ydRWKBGsquid:S1444!"-Make this "public static version" field final(¿£š2adam8€û•Ç-
+c
+AWj4t13C6y6P2ydRWEs4squid:S1219Œ"(Remove this misleading "label_10" label.(ù»à2adam8Ø§ÉÅ-
+m
+AWj46K_W6y6P2ydRWKA3squid:S1199é"-Extract this nested code block into a method.(ÒÌâ–øÿÿÿÿ2adam8€û•Ç-
+‡
+AWj4t13C6y6P2ydRWEi1$squid:AssignmentInSubExpressionCheck¸&".Extract the assignment out of this expression.(ÍİÎııÿÿÿÿ2adam8Ø§ÉÅ-
+
+AWj46K_W6y6P2ydRWKGVsquid:S1142€!"MReduce the number of returns of this method 5, down to the maximum allowed 2.(ö¤Âöüÿÿÿÿ2adam8€û•Ç-
+
+AWj4t13C6y6P2ydRWEqU squid:LabelsShouldNotBeUsedCheck·";Refactor the code to remove this label and the need for it.(âé·Îøÿÿÿÿ2adam8Ø§ÉÅ-
+Š
+AWj46K_W6y6P2ydRWKGfsquid:S00100Ù!"NRename this method name to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(×ûÊ¾2adam8€û•Ç-
+¦
+AWj4t13C6y6P2ydRWEtAsquid:S1151Š"kReduce this switch case number of lines from 36 to at most 10, for example by extracting code into methods.(¬­º³2adam8Ø§ÉÅ-
+o
+AWj46K_W6y6P2ydRWKFzsquid:S1821°"4Refactor the code to eliminate this nested "switch".(×ü³2adam8€û•Ç-
+…
+AWj4t13C6y6P2ydRWEmrsquid:TrailingCommentCheck£"6Move this trailing comment on the previous empty line.(“á®úÿÿÿÿ2adam8Ø§ÉÅ-
+“
+AWj46K_W6y6P2ydRWKD6squid:ModifiersOrderCheckã"EReorder the modifiers to comply with the Java Language Specification.(È÷ú‡øÿÿÿÿ2adam8€û•Ç-
+e
+AWj46K_W6y6P2ydRWKBwsquid:S1166´	"%Either log or rethrow this exception.(¼Ôîàùÿÿÿÿ2adam8€û•Ç-
+’
+AWj46K_W6y6P2ydRWKECsquid:S3776Ñ"RRefactor this method to reduce its Cognitive Complexity from 24 to the 15 allowed.(—È¡Øùÿÿÿÿ2adam8€û•Ç-
+Á
+AWj46K_W6y6P2ydRWKCh%squid:RedundantThrowsDeclarationCheck"lRemove the declaration of thrown exception 'java.io.IOException', as it cannot be thrown from method's body.(ÃĞü2adam8€û•Ç-
+“
+AWj46K_W6y6P2ydRWKG0squid:ModifiersOrderCheck²""EReorder the modifiers to comply with the Java Language Specification.(‹İçíşÿÿÿÿ2adam8€û•Ç-
+‹
+AWj4t13C6y6P2ydRWE1bsquid:CommentedOutCodeLineš"<This block of commented-out lines of code should be removed.(²¬İØùÿÿÿÿ2adam8Ø§ÉÅ-
+o
+AWj46K_W6y6P2ydRWKB_squid:S1942Ï"/Replace this fully qualified name with "Vector"(÷é¼¼ÿÿÿÿÿ2adam8€û•Ç-
+“
+AWj4t13C6y6P2ydRWEz4squid:ModifiersOrderCheck»"EReorder the modifiers to comply with the Java Language Specification.(ëƒÓğÿÿÿÿÿ2adam8Ø§ÉÅ-
+™
+AWj46K_W6y6P2ydRWKCQsquid:S1149Ò"_Replace the synchronized class "StringBuffer" by an unsynchronized one such as "StringBuilder".(Úğœ]2adam8€û•Ç-
+f
+AWj4t13C6y6P2ydRWEnmsquid:S1659ñ"&Declare "begMonth" on a separate line.(ÍÙÖøÿÿÿÿÿ2adam8Ø§ÉÅ-
+…
+AWj4t13C6y6P2ydRWErksquid:TrailingCommentCheck"6Move this trailing comment on the previous empty line.(Ú„¾«úÿÿÿÿ2adam8Ø§ÉÅ-
+v
+AWj46K_W6y6P2ydRWKC_squid:S2696¯
+"6Make the enclosing method "static" or remove this set.(öí™¯üÿÿÿÿ2adam8€û•Ç-
+†
+AWj46K_W6y6P2ydRWKBQsquid:S1301Ù"KReplace this "switch" statement by "if" statements to increase readability.(×ü³2adam8€û•Ç-
+f
+AWj4t13C6y6P2ydRWEpssquid:S1075ø"&Remove this hard-coded path-delimiter.(×¬Ñïûÿÿÿÿ2adam8Ø§ÉÅ-
+
+AWj46K_W6y6P2ydRWKHHsquid:S1142†#"NReduce the number of returns of this method 14, down to the maximum allowed 2.(ÍÄ¡ïüÿÿÿÿ2adam8€û•Ç-
+†
+AWj46K_W6y6P2ydRWKBVsquid:S1301¬"KReplace this "switch" statement by "if" statements to increase readability.(×ü³2adam8€û•Ç-
+m
+AWj46K_W6y6P2ydRWKA2squid:S1199ó"-Extract this nested code block into a method.(ÒÌâ–øÿÿÿÿ2adam8€û•Ç-
+e
+AWj46K_W6y6P2ydRWKBtsquid:S1166±"%Either log or rethrow this exception.(äí¯ÿÿÿÿÿ2adam8€û•Ç-
+
+AWj46K_l6y6P2ydRWKH2squid:ModifiersOrderCheckË%"EReorder the modifiers to comply with the Java Language Specification.(°ı‡•2adam8€û•Ç-
+o
+AWj46K_W6y6P2ydRWKEusquid:S1821ã"4Refactor the code to eliminate this nested "switch".(×ü³2adam8€û•Ç-
+š
+AWj4t13C6y6P2ydRWElfsquid:S1149Ô"_Replace the synchronized class "StringBuffer" by an unsynchronized one such as "StringBuilder".(Âªª­2adam8Ø§ÉÅ-
+’
+AWj4t13C6y6P2ydRWEj1squid:S00117Ó"QRename this local variable to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(Ë£é¦ùÿÿÿÿ2adam8Ø§ÉÅ-
+Š
+AWj46K_W6y6P2ydRWKDksquid:S00100©"NRename this method name to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(ß’¿2adam8€û•Ç-
+
+AWj46K_W6y6P2ydRWKGwsquid:ModifiersOrderCheck¥""EReorder the modifiers to comply with the Java Language Specification.(Ë÷È2adam8€û•Ç-
+\
+AWj4t13C6y6P2ydRWEtPsquid:S1659“"!Declare "end" on a separate line.(õ–¡2adam8Ø§ÉÅ-
+ˆ
+AWj46K_W6y6P2ydRWKGJsquid:S1142É "MReduce the number of returns of this method 5, down to the maximum allowed 2.(£‰øß2adam8€û•Ç-
+v
+AWj4t13C6y6P2ydRWEo-squid:S1854ë
+"6Remove this useless assignment to local variable "id".(»–Ûâüÿÿÿÿ2adam8Ø§ÉÅ-
+Š
+AWj46K_l6y6P2ydRWKHgsquid:S00100Ã$"NRename this method name to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(íÛ™Ò2adam8€û•Ç-
+
+AWj4t13C6y6P2ydRWEmNsquid:TrailingCommentCheck*"6Move this trailing comment on the previous empty line.(»Ã ¬2adam8Ø§ÉÅ-
+
+AWj46K_W6y6P2ydRWKD8squid:ModifiersOrderCheck„"EReorder the modifiers to comply with the Java Language Specification.(êüãÊ2adam8€û•Ç-
+‡
+AWj4t13C6y6P2ydRWEkKsquid:S00103¼"KSplit this 708 characters long line (which is greater than 200 authorized).(È›ğÃ2adam8Ø§ÉÅ-
+
+AWj46K_W6y6P2ydRWKGgsquid:ModifiersOrderCheckÙ!"EReorder the modifiers to comply with the Java Language Specification.(×ûÊ¾2adam8€û•Ç-
+s
+AWj46K_W6y6P2ydRWKB6squid:S1942%"4Replace this fully qualified name with "PrintWriter"(ÆÌôéıÿÿÿÿ2adam8€û•Ç-
+€
+AWj46K_W6y6P2ydRWKFTsquid:TrailingCommentCheckã"6Move this trailing comment on the previous empty line.(Ó©¥2adam8€û•Ç-
+†
+AWj46K_W6y6P2ydRWKFisquid:S1132Ï"KMove the "'TAF'" string literal on the left side of this string comparison.(‘³¯2adam8€û•Ç-
+“
+AWj46K_l6y6P2ydRWKH5squid:ModifiersOrderCheck”&"EReorder the modifiers to comply with the Java Language Specification.(¤Ê×úüÿÿÿÿ2adam8€û•Ç-
+‹
+AWj4t13C6y6P2ydRWE1Ssquid:CommentedOutCodeLine’"<This block of commented-out lines of code should be removed.(ÒÌâ–øÿÿÿÿ2adam8Ø§ÉÅ-
+Ÿ
+AWj4t13C6y6P2ydRWElbsquid:S1149˜"_Replace the synchronized class "StringBuffer" by an unsynchronized one such as "StringBuilder".(‹ª¹œıÿÿÿÿ2adam8Ø§ÉÅ-
+t
+AWj4t13C6y6P2ydRWEnhsquid:S2130Ï"9Use "Integer.parseInt" for this string-to-int conversion.(–„¯®2adam8Ø§ÉÅ-
+
+AWj46K_W6y6P2ydRWKDUsquid:S00100š"NRename this method name to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(õ¶’éşÿÿÿÿ2adam8€û•Ç-
+
+AWj46K_W6y6P2ydRWKGXsquid:S00100•!"NRename this method name to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(™Õñìÿÿÿÿÿ2adam8€û•Ç-
+ˆ
+AWj46K_l6y6P2ydRWKHosquid:S1142Ğ$"MReduce the number of returns of this method 8, down to the maximum allowed 2.(½ê©ë2adam8€û•Ç-
+‚
+AWj4t13C6y6P2ydRWEil$squid:AssignmentInSubExpressionCheckÃ".Extract the assignment out of this expression.(á¬ú2adam8Ø§ÉÅ-
+Ÿ
+AWj4t13C6y6P2ydRWElcsquid:S1149š"_Replace the synchronized class "StringBuffer" by an unsynchronized one such as "StringBuilder".(ıôšÍÿÿÿÿÿ2adam8Ø§ÉÅ-
+f
+AWj4t13C6y6P2ydRWEn1squid:S1659Å"&Declare "endMonth" on a separate line.(™´ñ°üÿÿÿÿ2adam8Ø§ÉÅ-
+“
+AWj46K_W6y6P2ydRWKEZsquid:ModifiersOrderCheckÕ"EReorder the modifiers to comply with the Java Language Specification.(õ™á ùÿÿÿÿ2adam8€û•Ç-
+†
+AWj46K_W6y6P2ydRWKFasquid:S1132ÿ"KMove the "'TAF'" string literal on the left side of this string comparison.(‘³¯2adam8€û•Ç-
+
+AWj4t13C6y6P2ydRWElAsquid:S00116Ì"RRename this field "jj_gen" to match the regular expression '^_[a-z][a-zA-Z0-9]*$'.(¥‡”2adam8Ø§ÉÅ-
+–
+AWj4t13C6y6P2ydRWElNsquid:S00116Ó"URename this field "jj_endpos" to match the regular expression '^_[a-z][a-zA-Z0-9]*$'.(ÏÉ¸Íüÿÿÿÿ2adam8Ø§ÉÅ-
+v
+AWj4t13C6y6P2ydRWEo9squid:S1854è
+"6Remove this useless assignment to local variable "id".(óÜÿÿÿÿÿÿ2adam8Ø§ÉÅ-
+Š
+AWj46K_W6y6P2ydRWKE3squid:S00100ô"NRename this method name to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(œ—¹…2adam8€û•Ç-
+j
+AWj46K_W6y6P2ydRWKApsquid:S1066œ"/Merge this if statement with the enclosing one.(è¦È„2adam8€û•Ç-
+f
+AWj4t13C6y6P2ydRWEn0squid:S1659Å"&Declare "begMonth" on a separate line.(™´ñ°üÿÿÿÿ2adam8Ø§ÉÅ-
+i
+AWj4t13C6y6P2ydRWEmfsquid:S1659œ")Declare "definesFile" on a separate line.(÷§Ô‹úÿÿÿÿ2adam8Ø§ÉÅ-
+y
+AWj4t13C6y6P2ydRWEnosquid:S2130È"9Use "Integer.parseInt" for this string-to-int conversion.(êĞ‡äûÿÿÿÿ2adam8Ø§ÉÅ-
+†
+AWj46K_W6y6P2ydRWKBnsquid:S1301È"KReplace this "switch" statement by "if" statements to increase readability.(×ü³2adam8€û•Ç-
+“
+AWj46K_W6y6P2ydRWKDGsquid:ModifiersOrderChecká
+"EReorder the modifiers to comply with the Java Language Specification.(ïÒÊ‡ıÿÿÿÿ2adam8€û•Ç-
+š
+AWj4t13C6y6P2ydRWElosquid:S1149¯"_Replace the synchronized class "StringBuffer" by an unsynchronized one such as "StringBuilder".(Ã´ùŠ2adam8Ø§ÉÅ-
+j
+AWj46K_W6y6P2ydRWKCmsquid:S00108’")Either remove or fill this block of code.(ÒÌâ–øÿÿÿÿ2adam8€û•Ç-
+q
+AWj4t13C6y6P2ydRWEvmsquid:S1854ã"6Remove this useless assignment to local variable "sb".(í…Ò‰2adam8Ø§ÉÅ-
+
+AWj46K_W6y6P2ydRWKG1squid:S1126À""AReplace this if-then-else statement by a single return statement.(õÖÕÑùÿÿÿÿ2adam8€û•Ç-
+
+AWj46K_l6y6P2ydRWKHSsquid:S1126•$"AReplace this if-then-else statement by a single return statement.(õÖÕÑùÿÿÿÿ2adam8€û•Ç-
+
+AWj46K_l6y6P2ydRWKHasquid:S1126¯$"AReplace this if-then-else statement by a single return statement.(õÖÕÑùÿÿÿÿ2adam8€û•Ç-
+€
+AWj4t13C6y6P2ydRWEmdsquid:TrailingCommentCheckÃ"6Move this trailing comment on the previous empty line.(ÑØÓ2adam8Ø§ÉÅ-
+“
+AWj46K_l6y6P2ydRWKHqsquid:ModifiersOrderCheckÿ$"EReorder the modifiers to comply with the Java Language Specification.(·Ç„¸úÿÿÿÿ2adam8€û•Ç-
+‹
+AWj46K_W6y6P2ydRWKFfsquid:S1132Ë"KMove the "'TAF'" string literal on the left side of this string comparison.(ıÇÓüøÿÿÿÿ2adam8€û•Ç-
+
+AWj46K_W6y6P2ydRWKE8squid:ModifiersOrderCheck‘"EReorder the modifiers to comply with the Java Language Specification.(çêî2adam8€û•Ç-
+‡
+AWj4t13C6y6P2ydRWEkD
+squid:S881Å"HExtract this increment or decrement operator into a dedicated statement.(ÊÈÅİüÿÿÿÿ2adam8Ø§ÉÅ-
+z
+AWj4t13C6y6P2ydRWEm2
+squid:S899Ã";Do something with the "boolean" value returned by "delete".(Áü§Ëûÿÿÿÿ2adam8Ø§ÉÅ-
+€
+AWj4t13C6y6P2ydRWEoOsquid:TrailingCommentCheckå"6Move this trailing comment on the previous empty line.(¡»ºº2adam8Ø§ÉÅ-
+Ÿ
+AWj4t13C6y6P2ydRWElXsquid:S1149Ì"_Replace the synchronized class "StringBuffer" by an unsynchronized one such as "StringBuilder".(’Ñåùşÿÿÿÿ2adam8Ø§ÉÅ-
+
+AWj46K_W6y6P2ydRWKFqsquid:ModifiersOrderCheckÜ"EReorder the modifiers to comply with the Java Language Specification.(½â•ß2adam8€û•Ç-
+Š
+AWj46K_l6y6P2ydRWKHUsquid:S00100œ$"NRename this method name to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(‚Öïî2adam8€û•Ç-
+‰
+AWj4t13C6y6P2ydRWEm1squid:S4042Ã"IUse "java.nio.Files#delete" here for better messages on error conditions.(Áü§Ëûÿÿÿÿ2adam8Ø§ÉÅ-
+€
+AWj4t13C6y6P2ydRWEnCsquid:TrailingCommentCheckû"6Move this trailing comment on the previous empty line.(ÙÒ´2adam8Ø§ÉÅ-
+h
+AWj4t13C6y6P2ydRWE0-squid:S1481"-Remove this unused "gp_level" local variable.(—ĞÀå2adam8Ø§ÉÅ-
+€
+AWj4t13C6y6P2ydRWEsJsquid:TrailingCommentCheck£"6Move this trailing comment on the previous empty line.(­¡ÜÃ2adam8Ø§ÉÅ-
+
+AWj46K_W6y6P2ydRWKHJsquid:ModifiersOrderCheckí#"EReorder the modifiers to comply with the Java Language Specification.(à¤“ı2adam8€û•Ç-
+o
+AWj46K_W6y6P2ydRWKFysquid:S1821ö"4Refactor the code to eliminate this nested "switch".(×ü³2adam8€û•Ç-
+n
+AWj46K_W6y6P2ydRWKB9squid:S1942Ò&"4Replace this fully qualified name with "Enumeration"(˜¸Ş2adam8€û•Ç-
+†
+AWj46K_W6y6P2ydRWKBisquid:S1301¾"KReplace this "switch" statement by "if" statements to increase readability.(×ü³2adam8€û•Ç-
+o
+AWj4t13C6y6P2ydRWEmksquid:S1659½"/Declare "globalDefinesFile" on a separate line.(Àµ÷™şÿÿÿÿ2adam8Ø§ÉÅ-
+
+AWj46K_W6y6P2ydRWKF8squid:S00100 "NRename this method name to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(›Ü¼·ûÿÿÿÿ2adam8€û•Ç-
+“
+AWj46K_W6y6P2ydRWKDNsquid:ModifiersOrderCheckØ"EReorder the modifiers to comply with the Java Language Specification.(ªüæúÿÿÿÿ2adam8€û•Ç-
+a
+AWj4t13C6y6P2ydRWEntsquid:S1659"&Declare "begMonth" on a separate line.(™‘¾³2adam8Ø§ÉÅ-
+
+AWj46K_W6y6P2ydRWKFGsquid:ModifiersOrderCheckŠ"EReorder the modifiers to comply with the Java Language Specification.(øË‰2adam8€û•Ç-
+
+AWj4t13C6y6P2ydRWEz6squid:ModifiersOrderCheck½"EReorder the modifiers to comply with the Java Language Specification.(­¾Ò°2adam8Ø§ÉÅ-
+i
+AWj4t13C6y6P2ydRWE08squid:S1481£")Remove this unused "byt1" local variable.(²¤Îûÿÿÿÿ2adam8Ø§ÉÅ-
+‰
+AWj46K_W6y6P2ydRWKDqsquid:S00100Ò"NRename this method name to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(Úğœ]2adam8€û•Ç-
+f
+AWj4t13C6y6P2ydRWE1Esquid:S1068Ë",Remove this unused "jj_semLA" private field.(ÂÃëh2adam8Ø§ÉÅ-
+‰
+AWj46K_W6y6P2ydRWKDRsquid:S1132è"IMove the "OBJ" string literal on the left side of this string comparison.(¢¼ÃÁüÿÿÿÿ2adam8€û•Ç-
+…
+AWj46K_W6y6P2ydRWKCnsquid:TrailingCommentCheck¢"6Move this trailing comment on the previous empty line.(Ö—óøÿÿÿÿ2adam8€û•Ç-
+†
+AWj4t13C6y6P2ydRWE1Isquid:CommentedOutCodeLine¨"<This block of commented-out lines of code should be removed.(ó½ôØ2adam8Ø§ÉÅ-
+ˆ
+AWj46K_W6y6P2ydRWKGBsquid:S1142§ "MReduce the number of returns of this method 3, down to the maximum allowed 2.(À°ó2adam8€û•Ç-
+…
+AWj4t13C6y6P2ydRWEp0squid:TrailingCommentCheck™"6Move this trailing comment on the previous empty line.(¯ŠÀ÷øÿÿÿÿ2adam8Ø§ÉÅ-
+…
+AWj4t13C6y6P2ydRWE1Fsquid:CommentedOutCodeLine
+"<This block of commented-out lines of code should be removed.(‡©Õ†2adam8Ø§ÉÅ-
+ˆ
+AWj46K_W6y6P2ydRWKGisquid:S1142Ù!"MReduce the number of returns of this method 5, down to the maximum allowed 2.(×ûÊ¾2adam8€û•Ç-
+…
+AWj4t13C6y6P2ydRWEuMsquid:TrailingCommentChecká"6Move this trailing comment on the previous empty line.(µõ‡Œúÿÿÿÿ2adam8Ø§ÉÅ-
+’
+AWj46K_l6y6P2ydRWKH9squid:S3776À&"RRefactor this method to reduce its Cognitive Complexity from 27 to the 15 allowed.(óŞÕÿÿÿÿÿ2adam8€û•Ç-
+
+AWj46K_l6y6P2ydRWKIEsquid:ModifiersOrderCheck¯'"EReorder the modifiers to comply with the Java Language Specification.(¾å×2adam8€û•Ç-
+
+AWj46K_W6y6P2ydRWKGqsquid:S1142û!"MReduce the number of returns of this method 5, down to the maximum allowed 2.(½ò°µüÿÿÿÿ2adam8€û•Ç-
+‰
+AWj46K_W6y6P2ydRWKCusquid:S00100¢"NRename this method name to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(ËúN2adam8€û•Ç-
+…
+AWj46K_W6y6P2ydRWKFjsquid:TrailingCommentCheckã"6Move this trailing comment on the previous empty line.(…×•Êøÿÿÿÿ2adam8€û•Ç-
+”
+AWj46K_W6y6P2ydRWKCIsquid:S1820"ZRefactor this class so it has no more than 20 fields, rather than the 74 it currently has.(ş¸Ò‚2adam8€û•Ç-
+j
+AWj46K_W6y6P2ydRWKAlsquid:S1066Í"/Merge this if statement with the enclosing one.(è¦È„2adam8€û•Ç-
+
+AWj46K_W6y6P2ydRWKEnsquid:S00100è"NRename this method name to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(ç²ÙÕûÿÿÿÿ2adam8€û•Ç-
+
+AWj46K_l6y6P2ydRWKH0squid:S3776Ë%"RRefactor this method to reduce its Cognitive Complexity from 17 to the 15 allowed.(°ı‡•2adam8€û•Ç-
+o
+AWj46K_W6y6P2ydRWKENsquid:S1821Ü"4Refactor the code to eliminate this nested "switch".(×ü³2adam8€û•Ç-
+
+AWj46K_W6y6P2ydRWKEYsquid:S00100Õ"NRename this method name to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(õ™á ùÿÿÿÿ2adam8€û•Ç-
+€
+AWj4t13C6y6P2ydRWEmtsquid:TrailingCommentCheck¥"6Move this trailing comment on the previous empty line.(Öœ¿2adam8Ø§ÉÅ-
+
+AWj4t13C6y6P2ydRWEmVsquid:TrailingCommentCheck""6Move this trailing comment on the previous empty line.(È‡ˆ±2adam8Ø§ÉÅ-
+…
+AWj4t13C6y6P2ydRWEmqsquid:TrailingCommentCheck¢"6Move this trailing comment on the previous empty line.(“·åÀüÿÿÿÿ2adam8Ø§ÉÅ-
+
+AWj46K_W6y6P2ydRWKF2squid:S00100ƒ "NRename this method name to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(ø£©€øÿÿÿÿ2adam8€û•Ç-
+¬
+AWj4t13C6y6P2ydRWEjd"squid:ClassVariableVisibilityCheck""[Make _lastFileParsed a static final constant or non-public and provide accessors if needed.(È‡ˆ±2adam8Ø§ÉÅ-
+Š
+AWj46K_l6y6P2ydRWKIDsquid:S00100¯'"NRename this method name to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(¾å×2adam8€û•Ç-
+†
+AWj4t13C6y6P2ydRWE1Psquid:CommentedOutCodeLineë"<This block of commented-out lines of code should be removed.(±ğÈæ2adam8Ø§ÉÅ-
+‡
+AWj46K_W6y6P2ydRWKBI$squid:AssignmentInSubExpressionCheckì&".Extract the assignment out of this expression.(ºÆâÄûÿÿÿÿ2adam8€û•Ç-
+a
+AWj4t13C6y6P2ydRWEposquid:S1075İ"&Remove this hard-coded path-delimiter.(¿³‘2adam8Ø§ÉÅ-
+
+AWj4t13C6y6P2ydRWEk9squid:S00116Ê"QRename this field "jj_la" to match the regular expression '^_[a-z][a-zA-Z0-9]*$'.(Ïâ°Ê2adam8Ø§ÉÅ-
+¦
+AWj46K_W6y6P2ydRWKDs
+squid:S138–"gThis method has 81 lines, which is greater than the 75 lines authorized. Split it into smaller methods.(à—¹¨üÿÿÿÿ2adam8€û•Ç-
+y
+AWj4t13C6y6P2ydRWEn7squid:S2130÷"9Use "Integer.parseInt" for this string-to-int conversion.(¥‘™ ùÿÿÿÿ2adam8Ø§ÉÅ-
+o
+AWj4t13C6y6P2ydRWEmjsquid:S1659½"/Declare "globalDssInitFile" on a separate line.(Àµ÷™şÿÿÿÿ2adam8Ø§ÉÅ-
+¢
+AWj46K_W6y6P2ydRWKFO
+squid:S138°"hThis method has 112 lines, which is greater than the 75 lines authorized. Split it into smaller methods.(¥ÙéÛ2adam8€û•Ç-
+†
+AWj46K_W6y6P2ydRWKBdsquid:S1301Ø"KReplace this "switch" statement by "if" statements to increase readability.(×ü³2adam8€û•Ç-
+a
+AWj4t13C6y6P2ydRWEprsquid:S1075è"&Remove this hard-coded path-delimiter.(èâé2adam8Ø§ÉÅ-
+…
+AWj4t13C6y6P2ydRWEmasquid:TrailingCommentCheck¸"6Move this trailing comment on the previous empty line.(ØÅÈŞıÿÿÿÿ2adam8Ø§ÉÅ-
+o
+AWj46K_W6y6P2ydRWKEpsquid:S1821"4Refactor the code to eliminate this nested "switch".(×ü³2adam8€û•Ç-
+
+AWj46K_W6y6P2ydRWKFcsquid:S00100¨"NRename this method name to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(‰«Ô‚ûÿÿÿÿ2adam8€û•Ç-
+“
+AWj46K_l6y6P2ydRWKHZsquid:ModifiersOrderCheck©$"EReorder the modifiers to comply with the Java Language Specification.(·±Î—øÿÿÿÿ2adam8€û•Ç-
+
+AWj46K_W6y6P2ydRWKDEsquid:ModifiersOrderCheckÄ
+"EReorder the modifiers to comply with the Java Language Specification.(–öÌó2adam8€û•Ç-
+
+AWj46K_l6y6P2ydRWKHVsquid:ModifiersOrderCheckœ$"EReorder the modifiers to comply with the Java Language Specification.(‚Öïî2adam8€û•Ç-
+š
+AWj46K_W6y6P2ydRWKCOsquid:S1149°"_Replace the synchronized class "StringBuffer" by an unsynchronized one such as "StringBuilder".(Àê2adam8€û•Ç-
+
+AWj46K_W6y6P2ydRWKDgsquid:ModifiersOrderCheckî"EReorder the modifiers to comply with the Java Language Specification.(€‹¯2adam8€û•Ç-
+„
+AWj4t13C6y6P2ydRWEmRsquid:TrailingCommentCheck/"6Move this trailing comment on the previous empty line.(¤®„±ıÿÿÿÿ2adam8Ø§ÉÅ-
+
+AWj4t13C6y6P2ydRWEmpsquid:TrailingCommentCheck¡"6Move this trailing comment on the previous empty line.(ÇÚ».2adam8Ø§ÉÅ-
+v
+AWj46K_W6y6P2ydRWKDAsquid:S2696³
+"6Make the enclosing method "static" or remove this set.(³Ò¶®ÿÿÿÿÿ2adam8€û•Ç-
+“
+AWj46K_W6y6P2ydRWKEMsquid:ModifiersOrderCheckĞ"EReorder the modifiers to comply with the Java Language Specification.(ÆäÔ‡úÿÿÿÿ2adam8€û•Ç-
+…
+AWj46K_W6y6P2ydRWKD3squid:TrailingCommentCheckˆ"6Move this trailing comment on the previous empty line.(ÇüÓàøÿÿÿÿ2adam8€û•Ç-
+
+AWj46K_W6y6P2ydRWKE5squid:S00100ƒ"NRename this method name to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(¹Ï·åùÿÿÿÿ2adam8€û•Ç-
+
+AWj46K_l6y6P2ydRWKHssquid:S1142ÿ$"MReduce the number of returns of this method 3, down to the maximum allowed 2.(·Ç„¸úÿÿÿÿ2adam8€û•Ç-
+¢
+AWj46K_W6y6P2ydRWKDi
+squid:S138©"hThis method has 127 lines, which is greater than the 75 lines authorized. Split it into smaller methods.(ß’¿2adam8€û•Ç-
+“
+AWj46K_W6y6P2ydRWKG8squid:ModifiersOrderCheckÜ""EReorder the modifiers to comply with the Java Language Specification.(ÒÊù£üÿÿÿÿ2adam8€û•Ç-
+`
+AWj46K_W6y6P2ydRWKBusquid:S1166¿"%Either log or rethrow this exception.(ŠŒ¹2adam8€û•Ç-
+Š
+AWj46K_W6y6P2ydRWKDasquid:S00100‰"NRename this method name to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(ç”ºò2adam8€û•Ç-
+«
+AWj4t13C6y6P2ydRWErysquid:S1151–"kReduce this switch case number of lines from 16 to at most 10, for example by extracting code into methods.(Áş¼ªıÿÿÿÿ2adam8Ø§ÉÅ-
+
+AWj4t13C6y6P2ydRWEtk squid:LabelsShouldNotBeUsedCheckÅ";Refactor the code to remove this label and the need for it.(¢—Ëúşÿÿÿÿ2adam8Ø§ÉÅ-
+“
+AWj46K_W6y6P2ydRWKFLsquid:ModifiersOrderCheckÍ"EReorder the modifiers to comply with the Java Language Specification.(Ïùş—şÿÿÿÿ2adam8€û•Ç-
+‹
+AWj4t13C6y6P2ydRWE1Qsquid:CommentedOutCodeLine´"<This block of commented-out lines of code should be removed.(×³óÑıÿÿÿÿ2adam8Ø§ÉÅ-
+…
+AWj46K_W6y6P2ydRWKFesquid:TrailingCommentCheckÉ"6Move this trailing comment on the previous empty line.(çÇã­ıÿÿÿÿ2adam8€û•Ç-
+m
+AWj46K_W6y6P2ydRWKAzsquid:S1199‘"-Extract this nested code block into a method.(ÒÌâ–øÿÿÿÿ2adam8€û•Ç-
+
+AWj46K_W6y6P2ydRWKHPsquid:S1142‚$"MReduce the number of returns of this method 3, down to the maximum allowed 2.(íê‹ıÿÿÿÿ2adam8€û•Ç-
+r
+AWj46K_W6y6P2ydRWKBrsquid:S2589¦"7Remove this expression which always evaluates to "true"(Ê¿–´2adam8€û•Ç-
+“
+AWj4t13C6y6P2ydRWEk6squid:S00116È"RRename this field "jj_ntk" to match the regular expression '^_[a-z][a-zA-Z0-9]*$'.(ôÄ©Áúÿÿÿÿ2adam8Ø§ÉÅ-
+‡
+AWj46K_W6y6P2ydRWKGusquid:S1142""MReduce the number of returns of this method 5, down to the maximum allowed 2.(··•!2adam8€û•Ç-
+v
+AWj4t13C6y6P2ydRWEnJsquid:S2696–"6Make the enclosing method "static" or remove this set.(¥ıµ™şÿÿÿÿ2adam8Ø§ÉÅ-
+j
+AWj46K_W6y6P2ydRWKAisquid:S1066Œ"/Merge this if statement with the enclosing one.(è¦È„2adam8€û•Ç-
+ˆ
+AWj46K_W6y6P2ydRWKHLsquid:S1142í#"MReduce the number of returns of this method 5, down to the maximum allowed 2.(à¤“ı2adam8€û•Ç-
+‹
+AWj4t13C6y6P2ydRWEtz squid:LabelsShouldNotBeUsedCheck¨";Refactor the code to remove this label and the need for it.(õîÍË2adam8Ø§ÉÅ-
+o
+AWj4t13C6y6P2ydRWEmmsquid:S1659¾"4Declare "globalExternalsLibFile" on a separate line.(öÕÎ½2adam8Ø§ÉÅ-
+“
+AWj46K_W6y6P2ydRWKGTsquid:ModifiersOrderCheck€!"EReorder the modifiers to comply with the Java Language Specification.(ö¤Âöüÿÿÿÿ2adam8€û•Ç-
+’
+AWj46K_W6y6P2ydRWKFbsquid:S3776¨"RRefactor this method to reduce its Cognitive Complexity from 19 to the 15 allowed.(‰«Ô‚ûÿÿÿÿ2adam8€û•Ç-
+Š
+AWj46K_W6y6P2ydRWKGbsquid:S00100Ä!"NRename this method name to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(Òõ›é2adam8€û•Ç-
+j
+AWj46K_W6y6P2ydRWKAgsquid:S1066ê"/Merge this if statement with the enclosing one.(è¦È„2adam8€û•Ç-
+—
+AWj4t13C6y6P2ydRWEk0squid:S00116Å"[Rename this field "parserInputPath" to match the regular expression '^_[a-z][a-zA-Z0-9]*$'.(¯Ÿê’2adam8Ø§ÉÅ-
+
+AWj46K_W6y6P2ydRWKGcsquid:ModifiersOrderCheckÄ!"EReorder the modifiers to comply with the Java Language Specification.(Òõ›é2adam8€û•Ç-
+
+AWj46K_W6y6P2ydRWKDJsquid:ModifiersOrderCheck"EReorder the modifiers to comply with the Java Language Specification.(˜Êı…2adam8€û•Ç-
+Ÿ
+AWj46K_W6y6P2ydRWKCJsquid:S1149Ê"_Replace the synchronized class "StringBuffer" by an unsynchronized one such as "StringBuilder".(ÁÂÿêüÿÿÿÿ2adam8€û•Ç-
+†
+AWj46K_W6y6P2ydRWKBfsquid:S1301»"KReplace this "switch" statement by "if" statements to increase readability.(×ü³2adam8€û•Ç-
+]
+AWj4t13C6y6P2ydRWEvwsquid:S1659ä""Declare "size" on a separate line.(š„ì‘2adam8Ø§ÉÅ-
+t
+AWj46K_W6y6P2ydRWKC3squid:S2221´	"4Catch a list of specific exception subtypes instead.(¼Ôîàùÿÿÿÿ2adam8€û•Ç-
+q
+AWj4t13C6y6P2ydRWEoXsquid:S2696	"6Make the enclosing method "static" or remove this set.(ÿ®Ğ¥2adam8Ø§ÉÅ-
+x
+AWj4t13C6y6P2ydRWEvgsquid:S1854ì"8Remove this useless assignment to local variable "step".(Ä‰œ˜ÿÿÿÿÿ2adam8Ø§ÉÅ-
+t
+AWj46K_W6y6P2ydRWKB8squid:S1942ü"4Replace this fully qualified name with "PrintWriter"(¯Ûì‘úÿÿÿÿ2adam8€û•Ç-
+V
+AWj4t13C6y6P2ydRWEm4squid:S3626î"Remove this redundant jump.(ûÁİ…2adam8Ø§ÉÅ-
+†
+AWj4t13C6y6P2ydRWE1dsquid:CommentedOutCodeLine¨"<This block of commented-out lines of code should be removed.(«½ªÓ2adam8Ø§ÉÅ-
+
+AWj4t13C6y6P2ydRWElUsquid:S1149:"VReplace the synchronized class "Hashtable" by an unsynchronized one such as "HashMap".(ğ–ÈÓ2adam8Ø§ÉÅ-
+‡
+AWj4t13C6y6P2ydRWEjxsquid:S00112´"FDefine and throw a dedicated exception instead of using a generic one.(­È²èşÿÿÿÿ2adam8Ø§ÉÅ-
+g
+AWj4t13C6y6P2ydRWEsPsquid:S1219µ"'Remove this misleading "label_9" label.(“¬š–ûÿÿÿÿ2adam8Ø§ÉÅ-
+v
+AWj4t13C6y6P2ydRWEpPsquid:S2696™"6Make the enclosing method "static" or remove this set.(‚º„ıûÿÿÿÿ2adam8Ø§ÉÅ-
+
+AWj46K_W6y6P2ydRWKFCsquid:ModifiersOrderCheckÂ"EReorder the modifiers to comply with the Java Language Specification.(šÏŒî2adam8€û•Ç-
+
+AWj46K_W6y6P2ydRWKGxsquid:S1126«""AReplace this if-then-else statement by a single return statement.(õÖÕÑùÿÿÿÿ2adam8€û•Ç-
+
+AWj46K_W6y6P2ydRWKDzsquid:S00100ï"NRename this method name to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(«ã÷ƒşÿÿÿÿ2adam8€û•Ç-
+“
+AWj46K_W6y6P2ydRWKEEsquid:ModifiersOrderCheckÑ"EReorder the modifiers to comply with the Java Language Specification.(—È¡Øùÿÿÿÿ2adam8€û•Ç-
+€
+AWj4t13C6y6P2ydRWEsXsquid:TrailingCommentChecká"6Move this trailing comment on the previous empty line.(—°“É2adam8Ø§ÉÅ-
+t
+AWj46K_W6y6P2ydRWKB7squid:S1942³"4Replace this fully qualified name with "PrintWriter"(öÁ•ïûÿÿÿÿ2adam8€û•Ç-
+…
+AWj4t13C6y6P2ydRWEmusquid:TrailingCommentCheck¦"6Move this trailing comment on the previous empty line.(û·û·ıÿÿÿÿ2adam8Ø§ÉÅ-
+†
+AWj46K_W6y6P2ydRWKBksquid:S1301Ë"KReplace this "switch" statement by "if" statements to increase readability.(×ü³2adam8€û•Ç-
+
+AWj46K_W6y6P2ydRWKE4squid:ModifiersOrderCheckô"EReorder the modifiers to comply with the Java Language Specification.(œ—¹…2adam8€û•Ç-
+
+AWj46K_W6y6P2ydRWKF7squid:ModifiersOrderCheck• "EReorder the modifiers to comply with the Java Language Specification.(¦ë’‘2adam8€û•Ç-
+Ÿ
+AWj4t13C6y6P2ydRWEldsquid:S1149©"_Replace the synchronized class "StringBuffer" by an unsynchronized one such as "StringBuilder".(ıôšÍÿÿÿÿÿ2adam8Ø§ÉÅ-
+y
+AWj4t13C6y6P2ydRWEnisquid:S2130Ğ"9Use "Integer.parseInt" for this string-to-int conversion.(­İƒŒûÿÿÿÿ2adam8Ø§ÉÅ-
+†
+AWj46K_W6y6P2ydRWKBZsquid:S1301Ç"KReplace this "switch" statement by "if" statements to increase readability.(×ü³2adam8€û•Ç-
+o
+AWj46K_W6y6P2ydRWKAZsquid:S1066ø"/Merge this if statement with the enclosing one.(¢¼ÃÁüÿÿÿÿ2adam8€û•Ç-
+e
+AWj4t13C6y6P2ydRWEn3squid:S1659Å"%Declare "endYear" on a separate line.(™´ñ°üÿÿÿÿ2adam8Ø§ÉÅ-
+”
+AWj4t13C6y6P2ydRWEkcsquid:S3008""ZRename this field "_lastFileParsed" to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(È‡ˆ±2adam8Ø§ÉÅ-
+V
+AWj4t13C6y6P2ydRWEmysquid:S3626Æ"Remove this redundant jump.(ûÁİ…2adam8Ø§ÉÅ-
+š
+AWj4t13C6y6P2ydRWEmDsquid:S1149«"_Replace the synchronized class "StringBuffer" by an unsynchronized one such as "StringBuilder".(í‹³û2adam8Ø§ÉÅ-
+€
+AWj4t13C6y6P2ydRWEnNsquid:TrailingCommentCheck¥"6Move this trailing comment on the previous empty line.(ğ×¤›2adam8Ø§ÉÅ-
+…
+AWj46K_W6y6P2ydRWKFUsquid:TrailingCommentCheckğ"6Move this trailing comment on the previous empty line.(éÔ¸ÿÿÿÿÿ2adam8€û•Ç-
+ˆ
+AWj46K_l6y6P2ydRWKHjsquid:S1142Ã$"MReduce the number of returns of this method 3, down to the maximum allowed 2.(íÛ™Ò2adam8€û•Ç-
+…
+AWj4t13C6y6P2ydRWEsIsquid:TrailingCommentCheck¢"6Move this trailing comment on the previous empty line.(ÚÁßÿÿÿÿÿ2adam8Ø§ÉÅ-
+
+AWj46K_W6y6P2ydRWKG3squid:S00100Ç""NRename this method name to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(œËˆ°úÿÿÿÿ2adam8€û•Ç-
+
+AWj4t13C6y6P2ydRWEkMsquid:S00104"]This file has 4,497 lines, which is greater than 750 authorized. Split it into smaller files.2adam8Ø§ÉÅ-
+\
+AWj4t13C6y6P2ydRWEvxsquid:S1659ä"!Declare "end" on a separate line.(š„ì‘2adam8Ø§ÉÅ-
+š
+AWj4t13C6y6P2ydRWEmFsquid:S1149²"_Replace the synchronized class "StringBuffer" by an unsynchronized one such as "StringBuilder".(í‹³û2adam8Ø§ÉÅ-
+
+AWj46K_W6y6P2ydRWKFssquid:S00100¥"NRename this method name to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(ïâºÉüÿÿÿÿ2adam8€û•Ç-
+m
+AWj46K_W6y6P2ydRWKA_squid:S1199ì"-Extract this nested code block into a method.(ÒÌâ–øÿÿÿÿ2adam8€û•Ç-
+«
+AWj4t13C6y6P2ydRWEphsquid:S1151¥"kReduce this switch case number of lines from 35 to at most 10, for example by extracting code into methods.(İ–Ò˜ÿÿÿÿÿ2adam8Ø§ÉÅ-
+
+AWj46K_W6y6P2ydRWKFAsquid:ModifiersOrderCheck·"EReorder the modifiers to comply with the Java Language Specification.(Ç‹ÅÂ2adam8€û•Ç-
+†
+AWj46K_W6y6P2ydRWKBSsquid:S1301º"KReplace this "switch" statement by "if" statements to increase readability.(×ü³2adam8€û•Ç-
+
+AWj46K_W6y6P2ydRWKEisquid:S00100³"NRename this method name to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(öÁ•ïûÿÿÿÿ2adam8€û•Ç-
+Š
+AWj46K_W6y6P2ydRWKF-squid:S00100§ "NRename this method name to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(À°ó2adam8€û•Ç-
+’
+AWj46K_W6y6P2ydRWKEOsquid:S3776Ë"RRefactor this method to reduce its Cognitive Complexity from 17 to the 15 allowed.(ƒ°Á¢şÿÿÿÿ2adam8€û•Ç-
+
+AWj46K_l6y6P2ydRWKHWsquid:S1126¢$"AReplace this if-then-else statement by a single return statement.(õÖÕÑùÿÿÿÿ2adam8€û•Ç-
+‹
+AWj46K_W6y6P2ydRWKFgsquid:S1132Ë"KMove the "'CFS'" string literal on the left side of this string comparison.(ıÇÓüøÿÿÿÿ2adam8€û•Ç-
+ª
+AWj4t13C6y6P2ydRWEje"squid:ClassVariableVisibilityCheck¿"XMake includeLevel a static final constant or non-public and provide accessors if needed.(…¢Ê¦2adam8Ø§ÉÅ-
+
+AWj46K_l6y6P2ydRWKHRsquid:ModifiersOrderCheck$"EReorder the modifiers to comply with the Java Language Specification.(ŒÖÍ2adam8€û•Ç-
+Ÿ
+AWj4t13C6y6P2ydRWEljsquid:S1149ó"_Replace the synchronized class "StringBuffer" by an unsynchronized one such as "StringBuilder".(±Ì›˜ùÿÿÿÿ2adam8Ø§ÉÅ-
+
+AWj4t13C6y6P2ydRWEnOsquid:S1215½"TDon't try to be smarter than the JVM, remove this call to run the garbage collector.(†ğí«2adam8Ø§ÉÅ-
+’
+AWj46K_W6y6P2ydRWKDysquid:S3776ï"RRefactor this method to reduce its Cognitive Complexity from 32 to the 15 allowed.(«ã÷ƒşÿÿÿÿ2adam8€û•Ç-
+
+AWj4t13C6y6P2ydRWE02squid:S00116è'"ORename this field "gen" to match the regular expression '^_[a-z][a-zA-Z0-9]*$'.(ÊªÄ´øÿÿÿÿ2adam8Ø§ÉÅ-
+Œ
+AWj46K_W6y6P2ydRWKEksquid:S1132Ş"LMove the "ALWAYS" string literal on the left side of this string comparison.(à°İçûÿÿÿÿ2adam8€û•Ç-
+
+AWj4t13C6y6P2ydRWEmUsquid:TrailingCommentCheck4"6Move this trailing comment on the previous empty line.(´Ûµş2adam8Ø§ÉÅ-
+
+AWj4t13C6y6P2ydRWEk4squid:S00116Á"QRename this field "token" to match the regular expression '^_[a-z][a-zA-Z0-9]*$'.(ºˆÜà2adam8Ø§ÉÅ-
+j
+AWj46K_W6y6P2ydRWKAjsquid:S1066ƒ"/Merge this if statement with the enclosing one.(è¦È„2adam8€û•Ç-
+‡
+AWj4t13C6y6P2ydRWEkF
+squid:S881­"HExtract this increment or decrement operator into a dedicated statement.(ÊÈÅİüÿÿÿÿ2adam8Ø§ÉÅ-
+Š
+AWj46K_l6y6P2ydRWKHlsquid:S00100Ğ$"NRename this method name to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(½ê©ë2adam8€û•Ç-
+
+AWj46K_W6y6P2ydRWKGHsquid:ModifiersOrderCheckÉ "EReorder the modifiers to comply with the Java Language Specification.(£‰øß2adam8€û•Ç-
+
+AWj46K_W6y6P2ydRWKDMsquid:S00100Ø"NRename this method name to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(ªüæúÿÿÿÿ2adam8€û•Ç-
+f
+AWj4t13C6y6P2ydRWEptsquid:S1075ø"&Remove this hard-coded path-delimiter.(×¬Ñïûÿÿÿÿ2adam8Ø§ÉÅ-
+\
+AWj46K_W6y6P2ydRWKERsquid:S2129ì"!Remove this "Integer" constructor(É©Í2adam8€û•Ç-
+
+AWj46K_l6y6P2ydRWKIFsquid:S00100³'"NRename this method name to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(ÃÃ¨òşÿÿÿÿ2adam8€û•Ç-
+
+AWj46K_l6y6P2ydRWKH3squid:S00100ñ%"NRename this method name to match the regular expression '^[a-z][a-zA-Z0-9]*$'.( õäøüÿÿÿÿ2adam8€û•Ç-
+•
+AWj4t13C6y6P2ydRWElTsquid:S11499"VReplace the synchronized class "Hashtable" by an unsynchronized one such as "HashMap".(Õ¹æ†ÿÿÿÿÿ2adam8Ø§ÉÅ-
+Š
+AWj4t13C6y6P2ydRWE1Gsquid:CommentedOutCodeLine'"<This block of commented-out lines of code should be removed.(¦ó¾øúÿÿÿÿ2adam8Ø§ÉÅ-
+†
+AWj46K_W6y6P2ydRWKBjsquid:S1301¦"KReplace this "switch" statement by "if" statements to increase readability.(×ü³2adam8€û•Ç-
+
+AWj4t13C6y6P2ydRWEz5squid:ModifiersOrderCheck¼"EReorder the modifiers to comply with the Java Language Specification.(È›ğÃ2adam8Ø§ÉÅ-
+t
+AWj4t13C6y6P2ydRWEn6squid:S2130Ê"9Use "Integer.parseInt" for this string-to-int conversion.(™Êßñ2adam8Ø§ÉÅ-
+f
+AWj4t13C6y6P2ydRWEsUsquid:S1659Ù"&Declare "lessthan" on a separate line.(’ôÀçûÿÿÿÿ2adam8Ø§ÉÅ-
+v
+AWj4t13C6y6P2ydRWEpQsquid:S2696­"6Make the enclosing method "static" or remove this set.(Ãâ¶Œûÿÿÿÿ2adam8Ø§ÉÅ-
+
+AWj46K_W6y6P2ydRWKG5squid:S1126Õ""AReplace this if-then-else statement by a single return statement.(õÖÕÑùÿÿÿÿ2adam8€û•Ç-
+|
+AWj4t13C6y6P2ydRWErssquid:S1854Ó"<Remove this useless assignment to local variable "gp_level".(Ë£é¦ùÿÿÿÿ2adam8Ø§ÉÅ-
+m
+AWj46K_W6y6P2ydRWKBDsquid:S1199™"-Extract this nested code block into a method.(ÒÌâ–øÿÿÿÿ2adam8€û•Ç-
+€
+AWj4t13C6y6P2ydRWEsWsquid:TrailingCommentCheckà"6Move this trailing comment on the previous empty line.(”Ò×Ì2adam8Ø§ÉÅ-
+
+AWj4t13C6y6P2ydRWEio$squid:AssignmentInSubExpressionCheckß".Extract the assignment out of this expression.(Îí²2adam8Ø§ÉÅ-
+ˆ
+AWj46K_l6y6P2ydRWKHXsquid:S1142œ$"MReduce the number of returns of this method 3, down to the maximum allowed 2.(‚Öïî2adam8€û•Ç-
+
+AWj46K_W6y6P2ydRWKEHsquid:S00100¦"NRename this method name to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(À±…àüÿÿÿÿ2adam8€û•Ç-
+
+AWj46K_W6y6P2ydRWKFHsquid:S00100¢"NRename this method name to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(ô–×üÿÿÿÿ2adam8€û•Ç-
+
+AWj46K_l6y6P2ydRWKIIsquid:ModifiersOrderCheckÕ'"EReorder the modifiers to comply with the Java Language Specification.(ìšùˆ2adam8€û•Ç-
+e
+AWj4t13C6y6P2ydRWEkQsquid:S1659#"+Declare "globalDefines" on a separate line.(ïóú2adam8Ø§ÉÅ-
+™
+AWj4t13C6y6P2ydRWElrsquid:S1149²"_Replace the synchronized class "StringBuffer" by an unsynchronized one such as "StringBuilder".(áã£q2adam8Ø§ÉÅ-
+s
+AWj4t13C6y6P2ydRWEmlsquid:S1659½"3Declare "globalStateReportFile" on a separate line.(Àµ÷™şÿÿÿÿ2adam8Ø§ÉÅ-
+j
+AWj46K_W6y6P2ydRWKAnsquid:S1066ş"/Merge this if statement with the enclosing one.(è¦È„2adam8€û•Ç-
+
+AWj4t13C6y6P2ydRWEk_squid:S00116Ë"TRename this field "jj_semLA" to match the regular expression '^_[a-z][a-zA-Z0-9]*$'.(ÂÃëh2adam8Ø§ÉÅ-
+Œ
+AWj4t13C6y6P2ydRWEj0squid:S00117²"QRename this local variable to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(áã£q2adam8Ø§ÉÅ-
+
+AWj46K_l6y6P2ydRWKHesquid:S1126¼$"AReplace this if-then-else statement by a single return statement.(õÖÕÑùÿÿÿÿ2adam8€û•Ç-
+†
+AWj4t13C6y6P2ydRWE1Lsquid:CommentedOutCodeLineÏ"<This block of commented-out lines of code should be removed.(ù–¢¡2adam8Ø§ÉÅ-
+«
+AWj4t13C6y6P2ydRWEowsquid:S1151Ğ"kReduce this switch case number of lines from 31 to at most 10, for example by extracting code into methods.(Áş¼ªıÿÿÿÿ2adam8Ø§ÉÅ-
+
+AWj46K_W6y6P2ydRWKDrsquid:ModifiersOrderCheckÒ"EReorder the modifiers to comply with the Java Language Specification.(Úğœ]2adam8€û•Ç-
+
+AWj46K_l6y6P2ydRWKIBsquid:S00100«'"NRename this method name to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(Ñî–Æøÿÿÿÿ2adam8€û•Ç-
+m
+AWj46K_W6y6P2ydRWKA0squid:S1199"-Extract this nested code block into a method.(ÒÌâ–øÿÿÿÿ2adam8€û•Ç-
+«
+AWj4t13C6y6P2ydRWEvzsquid:S1151‹
+"kReduce this switch case number of lines from 16 to at most 10, for example by extracting code into methods.(Áş¼ªıÿÿÿÿ2adam8Ø§ÉÅ-
+^
+AWj4t13C6y6P2ydRWEoIsquid:S1659¤"#Declare "model" on a separate line.(ÙÃİ˜2adam8Ø§ÉÅ-
+¤
+AWj46K_W6y6P2ydRWKBq"squid:ClassVariableVisibilityCheck!"SMake version a static final constant or non-public and provide accessors if needed.(¿£š2adam8€û•Ç-
+Š
+AWj46K_W6y6P2ydRWKGvsquid:S00100¥""NRename this method name to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(Ë÷È2adam8€û•Ç-
+†
+AWj46K_W6y6P2ydRWKBasquid:S1301Ñ"KReplace this "switch" statement by "if" statements to increase readability.(×ü³2adam8€û•Ç-
+€
+AWj4t13C6y6P2ydRWEmxsquid:TrailingCommentCheck©"6Move this trailing comment on the previous empty line.(ªÚ­½2adam8Ø§ÉÅ-
+
+AWj46K_W6y6P2ydRWKExsquid:S00100´"NRename this method name to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(İ¦Ş¶ùÿÿÿÿ2adam8€û•Ç-
+‡
+AWj46K_W6y6P2ydRWKBzsquid:S00112§	"FDefine and throw a dedicated exception instead of using a generic one.(˜ûŞÄûÿÿÿÿ2adam8€û•Ç-
+†
+AWj4t13C6y6P2ydRWE1Ksquid:CommentedOutCodeLineŒ"<This block of commented-out lines of code should be removed.(¤§ë¼2adam8Ø§ÉÅ-
+o
+AWj4t13C6y6P2ydRWEkWsquid:S1659$"0Declare "globalExternalsLib" on a separate line.(••÷Êÿÿÿÿÿ2adam8Ø§ÉÅ-
+o
+AWj46K_W6y6P2ydRWKEesquid:S1821€"4Refactor the code to eliminate this nested "switch".(×ü³2adam8€û•Ç-
+š
+AWj46K_W6y6P2ydRWKCcsquid:S1149·"_Replace the synchronized class "StringBuffer" by an unsynchronized one such as "StringBuilder".(Ç‹ÅÂ2adam8€û•Ç-
+
+AWj46K_W6y6P2ydRWKCrsquid:S00100ÿ"NRename this method name to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(—âĞÃùÿÿÿÿ2adam8€û•Ç-
+Š
+AWj4t13C6y6P2ydRWErn squid:LabelsShouldNotBeUsedCheck½";Refactor the code to remove this label and the need for it.(ÇïñR2adam8Ø§ÉÅ-
+…
+AWj4t13C6y6P2ydRWEuKsquid:TrailingCommentCheckß"6Move this trailing comment on the previous empty line.(ç¬ãÉüÿÿÿÿ2adam8Ø§ÉÅ-
+m
+AWj46K_W6y6P2ydRWKBEsquid:S1199Â"-Extract this nested code block into a method.(ÒÌâ–øÿÿÿÿ2adam8€û•Ç-
+§
+AWj46K_W6y6P2ydRWKDS
+squid:S138š"hThis method has 102 lines, which is greater than the 75 lines authorized. Split it into smaller methods.(õ¶’éşÿÿÿÿ2adam8€û•Ç-
+
+AWj46K_W6y6P2ydRWKGksquid:ModifiersOrderCheckî!"EReorder the modifiers to comply with the Java Language Specification.(ş¬õ2adam8€û•Ç-
+
+AWj46K_W6y6P2ydRWKHAsquid:ModifiersOrderCheckñ""EReorder the modifiers to comply with the Java Language Specification.(¤ò­¼2adam8€û•Ç-
+m
+AWj46K_W6y6P2ydRWKAusquid:S1199¶	"-Extract this nested code block into a method.(ÒÌâ–øÿÿÿÿ2adam8€û•Ç-
+ª
+AWj4t13C6y6P2ydRWEji"squid:ClassVariableVisibilityCheckÂ"XMake lookingAhead a static final constant or non-public and provide accessors if needed.(éŒ¡2adam8Ø§ÉÅ-
+„
+AWj4t13C6y6P2ydRWEmTsquid:TrailingCommentCheck3"6Move this trailing comment on the previous empty line.(âºéìúÿÿÿÿ2adam8Ø§ÉÅ-
+l
+AWj4t13C6y6P2ydRWEmnsquid:S1659¾"1Declare "globalExternalsFile" on a separate line.(öÕÎ½2adam8Ø§ÉÅ-
+v
+AWj46K_W6y6P2ydRWKDCsquid:S2696½
+"6Make the enclosing method "static" or remove this set.(öí™¯üÿÿÿÿ2adam8€û•Ç-
+‘
+AWj4t13C6y6P2ydRWElHsquid:S00116Í"URename this field "jj_rescan" to match the regular expression '^_[a-z][a-zA-Z0-9]*$'.(½›‰2adam8Ø§ÉÅ-
+ˆ
+AWj46K_W6y6P2ydRWKGesquid:S1142Ä!"MReduce the number of returns of this method 5, down to the maximum allowed 2.(Òõ›é2adam8€û•Ç-
+o
+AWj46K_W6y6P2ydRWKEfsquid:S1821ó"4Refactor the code to eliminate this nested "switch".(×ü³2adam8€û•Ç-
+’
+AWj4t13C6y6P2ydRWEkesquid:S3008?"XRename this field "_currentOrder" to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(›Ç”¿2adam8Ø§ÉÅ-
+j
+AWj46K_W6y6P2ydRWKAhsquid:S1066ô"/Merge this if statement with the enclosing one.(è¦È„2adam8€û•Ç-
+
+AWj46K_W6y6P2ydRWKGDsquid:ModifiersOrderCheck´ "EReorder the modifiers to comply with the Java Language Specification.(…â¥…2adam8€û•Ç-
+…
+AWj46K_W6y6P2ydRWKFVsquid:TrailingCommentCheckõ"6Move this trailing comment on the previous empty line.(‘¢Ñûÿÿÿÿ2adam8€û•Ç-
+Ÿ
+AWj4t13C6y6P2ydRWEl4squid:S1149·"_Replace the synchronized class "StringBuffer" by an unsynchronized one such as "StringBuilder".(üÓ‹ûÿÿÿÿ2adam8Ø§ÉÅ-
+b
+AWj4t13C6y6P2ydRWE09squid:S1481ã
+"'Remove this unused "id" local variable.(öòš2adam8Ø§ÉÅ-
+
+AWj46K_W6y6P2ydRWKGasquid:S1142•!"MReduce the number of returns of this method 8, down to the maximum allowed 2.(™Õñìÿÿÿÿÿ2adam8€û•Ç-
+€
+AWj4t13C6y6P2ydRWEsHsquid:TrailingCommentCheck¡"6Move this trailing comment on the previous empty line.(éÁ»¤2adam8Ø§ÉÅ-
+n
+AWj46K_W6y6P2ydRWKCjsquid:S1172±".Remove this unused method parameter "ncycles".(¬èÖÌüÿÿÿÿ2adam8€û•Ç-
+“
+AWj46K_W6y6P2ydRWKDvsquid:ModifiersOrderCheck–"EReorder the modifiers to comply with the Java Language Specification.(à—¹¨üÿÿÿÿ2adam8€û•Ç-
+
+AWj4t13C6y6P2ydRWEsQ squid:LabelsShouldNotBeUsedCheckµ";Refactor the code to remove this label and the need for it.(“¬š–ûÿÿÿÿ2adam8Ø§ÉÅ-
+s
+AWj46K_W6y6P2ydRWKB5squid:S1942$"4Replace this fully qualified name with "PrintWriter"(••÷Êÿÿÿÿÿ2adam8€û•Ç-
+Ÿ
+AWj4t13C6y6P2ydRWElwsquid:S1149"_Replace the synchronized class "StringBuffer" by an unsynchronized one such as "StringBuilder".(ıôšÍÿÿÿÿÿ2adam8Ø§ÉÅ-
+
+AWj46K_l6y6P2ydRWKHtsquid:S00100Œ%"NRename this method name to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(§ËÖÖøÿÿÿÿ2adam8€û•Ç-
+”
+AWj4t13C6y6P2ydRWEkzsquid:S00116¿"XRename this field "includeLevel" to match the regular expression '^_[a-z][a-zA-Z0-9]*$'.(…¢Ê¦2adam8Ø§ÉÅ-
+
+AWj4t13C6y6P2ydRWErWsquid:TrailingCommentCheckÕ"6Move this trailing comment on the previous empty line.(à„éj2adam8Ø§ÉÅ-
+s
+AWj4t13C6y6P2ydRWEvfsquid:S1854í"8Remove this useless assignment to local variable "expr".(é¤‚’2adam8Ø§ÉÅ-
+Š
+AWj46K_W6y6P2ydRWKGGsquid:S00100É "NRename this method name to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(£‰øß2adam8€û•Ç-
+j
+AWj46K_W6y6P2ydRWKAssquid:S1066ñ"/Merge this if statement with the enclosing one.(è¦È„2adam8€û•Ç-
+‹
+AWj4t13C6y6P2ydRWE04squid:S00116ê'"ORename this field "arg" to match the regular expression '^_[a-z][a-zA-Z0-9]*$'.(üÇ‘³2adam8Ø§ÉÅ-
+j
+AWj46K_W6y6P2ydRWKAWsquid:S1066’	"/Merge this if statement with the enclosing one.(è¦È„2adam8€û•Ç-
+m
+AWj46K_W6y6P2ydRWKAxsquid:S1199ê"-Extract this nested code block into a method.(ÒÌâ–øÿÿÿÿ2adam8€û•Ç-
+†
+AWj46K_W6y6P2ydRWKBbsquid:S1301İ"KReplace this "switch" statement by "if" statements to increase readability.(×ü³2adam8€û•Ç-
+Á
+AWj46K_W6y6P2ydRWKCGsquid:S1186«'"€Add a nested comment explaining why this method is empty, throw an UnsupportedOperationException or complete the implementation.(Ñî–Æøÿÿÿÿ2adam8€û•Ç-
+†
+AWj4t13C6y6P2ydRWE1Tsquid:CommentedOutCodeLine¯	"<This block of commented-out lines of code should be removed.(¼¨¼Ç2adam8Ø§ÉÅ-
+Š
+AWj46K_W6y6P2ydRWKFQsquid:S00100°"NRename this method name to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(¥ÙéÛ2adam8€û•Ç-
+a
+AWj4t13C6y6P2ydRWEktsquid:S1170»"!Make this final field static too.(ëƒÓğÿÿÿÿÿ2adam8Ø§ÉÅ-
+d
+AWj4t13C6y6P2ydRWEnfsquid:S1659Ì"$Declare "endDay" on a separate line.(—¼ÏŒøÿÿÿÿ2adam8Ø§ÉÅ-
+
+AWj46K_W6y6P2ydRWKETsquid:S00100ÿ"NRename this method name to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(­Ì÷íøÿÿÿÿ2adam8€û•Ç-
+`
+AWj4t13C6y6P2ydRWEvvsquid:S1659ä"%Declare "counter" on a separate line.(š„ì‘2adam8Ø§ÉÅ-
+‹
+AWj46K_W6y6P2ydRWKEzsquid:S1132¼"KMove the "month" string literal on the left side of this string comparison.(¯¢•ıÿÿÿÿ2adam8€û•Ç-
+…
+AWj4t13C6y6P2ydRWEmosquid:TrailingCommentCheck "6Move this trailing comment on the previous empty line.(¤óŸÑûÿÿÿÿ2adam8Ø§ÉÅ-
+¥
+AWj4t13C6y6P2ydRWEqKsquid:S1151Û"kReduce this switch case number of lines from 39 to at most 10, for example by extracting code into methods.(• ¸A2adam8Ø§ÉÅ-
+
+AWj46K_l6y6P2ydRWKHksquid:S3776Ğ$"RRefactor this method to reduce its Cognitive Complexity from 24 to the 15 allowed.(½ê©ë2adam8€û•Ç-
+†
+AWj46K_W6y6P2ydRWKBhsquid:S1301€"KReplace this "switch" statement by "if" statements to increase readability.(×ü³2adam8€û•Ç-
+„
+AWj4t13C6y6P2ydRWEmMsquid:TrailingCommentCheck)"6Move this trailing comment on the previous empty line.(úÑ‹ïúÿÿÿÿ2adam8Ø§ÉÅ-
+t
+AWj4t13C6y6P2ydRWEnysquid:S2130¤"9Use "Integer.parseInt" for this string-to-int conversion.(¬®2adam8Ø§ÉÅ-
+€
+AWj4t13C6y6P2ydRWEq8squid:TrailingCommentCheckü"6Move this trailing comment on the previous empty line.(®¬€2adam8Ø§ÉÅ-
+“
+AWj46K_W6y6P2ydRWKF1squid:ModifiersOrderCheckü"EReorder the modifiers to comply with the Java Language Specification.(¯Ûì‘úÿÿÿÿ2adam8€û•Ç-
+“
+AWj46K_W6y6P2ydRWKE6squid:ModifiersOrderCheckƒ"EReorder the modifiers to comply with the Java Language Specification.(¹Ï·åùÿÿÿÿ2adam8€û•Ç-
+“
+AWj46K_W6y6P2ydRWKHNsquid:ModifiersOrderCheck‚$"EReorder the modifiers to comply with the Java Language Specification.(íê‹ıÿÿÿÿ2adam8€û•Ç-
+
+AWj46K_W6y6P2ydRWKGUsquid:S1126!"AReplace this if-then-else statement by a single return statement.(õÖÕÑùÿÿÿÿ2adam8€û•Ç-
+Š
+AWj46K_l6y6P2ydRWKHysquid:S00100ª%"NRename this method name to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(Ã´…2adam8€û•Ç-
+Š
+AWj46K_W6y6P2ydRWKFBsquid:S00100Â"NRename this method name to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(šÏŒî2adam8€û•Ç-
+“
+AWj46K_W6y6P2ydRWKC5squid:ModifiersOrderCheckĞ	"EReorder the modifiers to comply with the Java Language Specification.(ù‰¾áşÿÿÿÿ2adam8€û•Ç-
+š
+AWj4t13C6y6P2ydRWEmIsquid:S1149Ü"_Replace the synchronized class "StringBuffer" by an unsynchronized one such as "StringBuilder".(í…Ò‰2adam8Ø§ÉÅ-
+‹
+AWj4t13C6y6P2ydRWE1Jsquid:CommentedOutCodeLineÌ"<This block of commented-out lines of code should be removed.(¦€ç–úÿÿÿÿ2adam8Ø§ÉÅ-
+\
+AWj4t13C6y6P2ydRWEvtsquid:S1659ä"!Declare "beg" on a separate line.(š„ì‘2adam8Ø§ÉÅ-
+¦
+AWj46K_W6y6P2ydRWKCAsquid:S1448"lclass "WreslParser" has 137 methods, which is greater than the 35 authorized. Split it into smaller classes.(ş¸Ò‚2adam8€û•Ç-
+m
+AWj46K_W6y6P2ydRWKA1squid:S1199”"-Extract this nested code block into a method.(ÒÌâ–øÿÿÿÿ2adam8€û•Ç-
+y
+AWj4t13C6y6P2ydRWEn8squid:S2130ø"9Use "Integer.parseInt" for this string-to-int conversion.(±Ö•Óûÿÿÿÿ2adam8Ø§ÉÅ-
+¢
+AWj46K_W6y6P2ydRWKFu
+squid:S138á"hThis method has 144 lines, which is greater than the 75 lines authorized. Split it into smaller methods.(œàÉÎ2adam8€û•Ç-
+
+AWj46K_l6y6P2ydRWKHfsquid:S1142¶$"MReduce the number of returns of this method 3, down to the maximum allowed 2.(ôÀÑ¤ùÿÿÿÿ2adam8€û•Ç-
+
+AWj46K_W6y6P2ydRWKFxsquid:ModifiersOrderChecká"EReorder the modifiers to comply with the Java Language Specification.(œàÉÎ2adam8€û•Ç-
+g
+AWj4t13C6y6P2ydRWE1Bsquid:S1481à"'Remove this unused "ts" local variable.(úğ—Üÿÿÿÿÿ2adam8Ø§ÉÅ-
+‚
+AWj4t13C6y6P2ydRWEit$squid:AssignmentInSubExpressionCheck¦".Extract the assignment out of this expression.(øÀÀ™2adam8Ø§ÉÅ-
+‰
+AWj46K_W6y6P2ydRWKFmsquid:S00100ø"NRename this method name to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(ì¯m2adam8€û•Ç-
+|
+AWj4t13C6y6P2ydRWEtFsquid:S1854¶"<Remove this useless assignment to local variable "varToken".(íŠè®üÿÿÿÿ2adam8Ø§ÉÅ-
+^
+AWj4t13C6y6P2ydRWEnYsquid:S2129‚"Remove this "Long" constructor(ùï…ûÿÿÿÿ2adam8Ø§ÉÅ-
+ 
+AWj46K_W6y6P2ydRWKCLsquid:S1149€"eReplace the synchronized class "Vector" by an unsynchronized one such as "ArrayList" or "LinkedList".(¯ë÷Õ2adam8€û•Ç-
+o
+AWj46K_W6y6P2ydRWKDmsquid:S1821ß"4Refactor the code to eliminate this nested "switch".(×ü³2adam8€û•Ç-
+o
+AWj46K_W6y6P2ydRWKFSsquid:S1821È"4Refactor the code to eliminate this nested "switch".(×ü³2adam8€û•Ç-
+‹
+AWj46K_W6y6P2ydRWKFXsquid:S1132û"KMove the "'TAF'" string literal on the left side of this string comparison.(ıÇÓüøÿÿÿÿ2adam8€û•Ç-
+†
+AWj4t13C6y6P2ydRWE1csquid:CommentedOutCodeLineù"<This block of commented-out lines of code should be removed.(á¯î»2adam8Ø§ÉÅ-
+š
+AWj4t13C6y6P2ydRWEllsquid:S1149¬"_Replace the synchronized class "StringBuffer" by an unsynchronized one such as "StringBuilder".(ã“¾Á2adam8Ø§ÉÅ-
+‹
+AWj4t13C6y6P2ydRWE1Hsquid:CommentedOutCodeLine¡"<This block of commented-out lines of code should be removed.(øúÌ¿ıÿÿÿÿ2adam8Ø§ÉÅ-
+u
+AWj4t13C6y6P2ydRWE06squid:S1481œ"5Remove this unused "localDefinesFile" local variable.(÷§Ô‹úÿÿÿÿ2adam8Ø§ÉÅ-
+Š
+AWj46K_W6y6P2ydRWKFwsquid:S00100á"NRename this method name to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(œàÉÎ2adam8€û•Ç-
+Œ
+AWj4t13C6y6P2ydRWE05squid:S00116ë'"PRename this field "next" to match the regular expression '^_[a-z][a-zA-Z0-9]*$'.(ıùœ2adam8Ø§ÉÅ-
+u
+AWj4t13C6y6P2ydRWEnHsquid:S2274":Remove this call to "wait" or move it into a "while" loop.(‚Ä¿‘2adam8Ø§ÉÅ-
+†
+AWj46K_W6y6P2ydRWKBJsquid:S1301Ò"KReplace this "switch" statement by "if" statements to increase readability.(×ü³2adam8€û•Ç-
+†
+AWj46K_W6y6P2ydRWKBRsquid:S1301†"KReplace this "switch" statement by "if" statements to increase readability.(×ü³2adam8€û•Ç-
+o
+AWj46K_W6y6P2ydRWKDcsquid:S1821»"4Refactor the code to eliminate this nested "switch".(×ü³2adam8€û•Ç-
+Š
+AWj46K_W6y6P2ydRWKEgsquid:S00100˜"NRename this method name to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(ŸìõÀ2adam8€û•Ç-
+`
+AWj46K_W6y6P2ydRWKBssquid:S1166­"%Either log or rethrow this exception.(ŠŒ¹2adam8€û•Ç-
+t
+AWj4t13C6y6P2ydRWEnvsquid:S2130 "9Use "Integer.parseInt" for this string-to-int conversion.(÷ªç‰2adam8Ø§ÉÅ-
+†
+AWj4t13C6y6P2ydRWE1esquid:CommentedOutCodeLineµ"<This block of commented-out lines of code should be removed.(ƒî»ò2adam8Ø§ÉÅ-
+r
+AWj46K_W6y6P2ydRWKD1squid:S1854ò"8Remove this useless assignment to local variable "kind".(“—º'2adam8€û•Ç-
+€
+AWj4t13C6y6P2ydRWErgsquid:TrailingCommentCheckš"6Move this trailing comment on the previous empty line.(éÁ»¤2adam8Ø§ÉÅ-
+\
+AWj4t13C6y6P2ydRWEtZsquid:S1659ö"!Declare "end" on a separate line.(õ–¡2adam8Ø§ÉÅ-
+n
+AWj4t13C6y6P2ydRWEmgsquid:S1659œ".Declare "localDefinesFile" on a separate line.(÷§Ô‹úÿÿÿÿ2adam8Ø§ÉÅ-
+
+AWj46K_W6y6P2ydRWKFosquid:S3776Ü"RRefactor this method to reduce its Cognitive Complexity from 17 to the 15 allowed.(½â•ß2adam8€û•Ç-
+—
+AWj4t13C6y6P2ydRWEk3squid:S00116Ä"[Rename this field "jj_input_stream" to match the regular expression '^_[a-z][a-zA-Z0-9]*$'.(¤‡Ğ2adam8Ø§ÉÅ-
+‡
+AWj4t13C6y6P2ydRWEix$squid:AssignmentInSubExpressionCheckÁ".Extract the assignment out of this expression.(³öüåøÿÿÿÿ2adam8Ø§ÉÅ-
+
+AWj46K_W6y6P2ydRWKDusquid:S00100–"NRename this method name to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(à—¹¨üÿÿÿÿ2adam8€û•Ç-
+“
+AWj46K_W6y6P2ydRWKEcsquid:ModifiersOrderCheckè"EReorder the modifiers to comply with the Java Language Specification.(Á‡ö‘şÿÿÿÿ2adam8€û•Ç-
+“
+AWj46K_l6y6P2ydRWKIAsquid:ModifiersOrderCheckñ&"EReorder the modifiers to comply with the Java Language Specification.(‡“ÿÉùÿÿÿÿ2adam8€û•Ç-
+f
+AWj4t13C6y6P2ydRWEnasquid:S1659±"&Declare "endMonth" on a separate line.(Ïèë”øÿÿÿÿ2adam8Ø§ÉÅ-
+‹
+AWj4t13C6y6P2ydRWE1asquid:CommentedOutCodeLine"<This block of commented-out lines of code should be removed.(¬Íº¾ùÿÿÿÿ2adam8Ø§ÉÅ-
+•
+AWj46K_W6y6P2ydRWKCCsquid:S4144Ã$"ZUpdate this method so that its implementation is not identical to "jj_3R_20" on line 4211.(íÛ™Ò2adam8€û•Ç-
+
+AWj46K_W6y6P2ydRWKCvsquid:ModifiersOrderCheck¢"EReorder the modifiers to comply with the Java Language Specification.(ËúN2adam8€û•Ç-
+m
+AWj46K_W6y6P2ydRWKAysquid:S1199ú"-Extract this nested code block into a method.(ÒÌâ–øÿÿÿÿ2adam8€û•Ç-
+€
+AWj4t13C6y6P2ydRWErisquid:TrailingCommentCheckœ"6Move this trailing comment on the previous empty line.(îÈÖ2adam8Ø§ÉÅ-
+o
+AWj46K_W6y6P2ydRWKEqsquid:S1821˜"4Refactor the code to eliminate this nested "switch".(×ü³2adam8€û•Ç-
+¦
+AWj4t13C6y6P2ydRWEs0squid:S1151á"kReduce this switch case number of lines from 29 to at most 10, for example by extracting code into methods.(¬­º³2adam8Ø§ÉÅ-
+m
+AWj46K_W6y6P2ydRWKAtsquid:S1199¤	"-Extract this nested code block into a method.(ÒÌâ–øÿÿÿÿ2adam8€û•Ç-
+“
+AWj46K_W6y6P2ydRWKEosquid:ModifiersOrderCheckè"EReorder the modifiers to comply with the Java Language Specification.(ç²ÙÕûÿÿÿÿ2adam8€û•Ç-
+j
+AWj46K_W6y6P2ydRWKAqsquid:S1066£"/Merge this if statement with the enclosing one.(è¦È„2adam8€û•Ç-
+
+AWj46K_W6y6P2ydRWKGhsquid:S1126ç!"AReplace this if-then-else statement by a single return statement.(õÖÕÑùÿÿÿÿ2adam8€û•Ç-
+«
+AWj4t13C6y6P2ydRWEpKsquid:S1151Ú"kReduce this switch case number of lines from 16 to at most 10, for example by extracting code into methods.(Áş¼ªıÿÿÿÿ2adam8Ø§ÉÅ-
+†
+AWj4t13C6y6P2ydRWE1Wsquid:CommentedOutCodeLine¤"<This block of commented-out lines of code should be removed.(Š¢ù”2adam8Ø§ÉÅ-
+†
+AWj4t13C6y6P2ydRWE1Msquid:CommentedOutCodeLineÑ"<This block of commented-out lines of code should be removed.(£ş†2adam8Ø§ÉÅ-
+ˆ
+AWj46K_W6y6P2ydRWKGFsquid:S1142´ "MReduce the number of returns of this method 5, down to the maximum allowed 2.(…â¥…2adam8€û•Ç-
+
+AWj46K_W6y6P2ydRWKFnsquid:ModifiersOrderCheckø"EReorder the modifiers to comply with the Java Language Specification.(ì¯m2adam8€û•Ç-
+“
+AWj46K_W6y6P2ydRWKDesquid:ModifiersOrderCheckÒ"EReorder the modifiers to comply with the Java Language Specification.(¯ôƒüÿÿÿÿ2adam8€û•Ç-
+Ÿ
+AWj46K_W6y6P2ydRWKCWsquid:S1149´"_Replace the synchronized class "StringBuffer" by an unsynchronized one such as "StringBuilder".(İ¦Ş¶ùÿÿÿÿ2adam8€û•Ç-
+‚
+AWj4t13C6y6P2ydRWEir$squid:AssignmentInSubExpressionCheckÅ".Extract the assignment out of this expression.(´œÎË2adam8Ø§ÉÅ-
+b
+AWj4t13C6y6P2ydRWEpksquid:S1219§"'Remove this misleading "label_4" label.(˜¹›‡2adam8Ø§ÉÅ-
+¦
+AWj46K_W6y6P2ydRWKEl
+squid:S138è"gThis method has 77 lines, which is greater than the 75 lines authorized. Split it into smaller methods.(ç²ÙÕûÿÿÿÿ2adam8€û•Ç-
+e
+AWj4t13C6y6P2ydRWEnzsquid:S1659Å"%Declare "begYear" on a separate line.(™´ñ°üÿÿÿÿ2adam8Ø§ÉÅ-
+e
+AWj46K_W6y6P2ydRWKBxsquid:S1166Á	"%Either log or rethrow this exception.(¼Ôîàùÿÿÿÿ2adam8€û•Ç-
+d
+AWj4t13C6y6P2ydRWEkSsquid:S1659#"*Declare "externalsLib" on a separate line.(ïóú2adam8Ø§ÉÅ-
+Š
+AWj46K_W6y6P2ydRWKGjsquid:S00100î!"NRename this method name to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(ş¬õ2adam8€û•Ç-
+o
+AWj46K_W6y6P2ydRWKC9squid:S1821
+"4Refactor the code to eliminate this nested "switch".(×ü³2adam8€û•Ç-
+Š
+AWj46K_W6y6P2ydRWKGOsquid:S00100ó "NRename this method name to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(‡ÃÚ2adam8€û•Ç-
+š
+AWj46K_W6y6P2ydRWKCbsquid:S1149 "_Replace the synchronized class "StringBuffer" by an unsynchronized one such as "StringBuilder".(«ëºÛ2adam8€û•Ç-
+
+AWj46K_W6y6P2ydRWKF0squid:S00100ü"NRename this method name to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(¯Ûì‘úÿÿÿÿ2adam8€û•Ç-
+š
+AWj4t13C6y6P2ydRWElisquid:S1149ò"_Replace the synchronized class "StringBuffer" by an unsynchronized one such as "StringBuilder".(¯ûİ2adam8Ø§ÉÅ-
+™
+AWj46K_W6y6P2ydRWKCRsquid:S1149Ò"_Replace the synchronized class "StringBuffer" by an unsynchronized one such as "StringBuilder".(Úğœ]2adam8€û•Ç-
+v
+AWj4t13C6y6P2ydRWEvjsquid:S1854é";Remove this useless assignment to local variable "counter".(ÿ‰İ2adam8Ø§ÉÅ-
+«
+AWj4t13C6y6P2ydRWEr-squid:S1151ô"kReduce this switch case number of lines from 16 to at most 10, for example by extracting code into methods.(Áş¼ªıÿÿÿÿ2adam8Ø§ÉÅ-
+¦
+AWj46K_W6y6P2ydRWKDOsquid:S1151ä"kReduce this switch case number of lines from 15 to at most 10, for example by extracting code into methods.(—òà°2adam8€û•Ç-
+
+AWj46K_W6y6P2ydRWKGzsquid:S00100²""NRename this method name to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(‹İçíşÿÿÿÿ2adam8€û•Ç-
+Š
+AWj46K_l6y6P2ydRWKHQsquid:S00100$"NRename this method name to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(ŒÖÍ2adam8€û•Ç-
+_
+AWj4t13C6y6P2ydRWEtysquid:S1659¥"Declare "b" on a separate line.(áÔìÍşÿÿÿÿ2adam8Ø§ÉÅ-
+Ÿ
+AWj4t13C6y6P2ydRWElesquid:S1149Æ"_Replace the synchronized class "StringBuffer" by an unsynchronized one such as "StringBuilder".(ıôšÍÿÿÿÿÿ2adam8Ø§ÉÅ-
+š
+AWj4t13C6y6P2ydRWEmHsquid:S1149ã"_Replace the synchronized class "StringBuffer" by an unsynchronized one such as "StringBuilder".(í…Ò‰2adam8Ø§ÉÅ-
+‡
+AWj4t13C6y6P2ydRWEi0$squid:AssignmentInSubExpressionCheck¸&".Extract the assignment out of this expression.(ÍİÎııÿÿÿÿ2adam8Ø§ÉÅ-
+…
+AWj46K_W6y6P2ydRWKDwsquid:TrailingCommentCheckÄ"6Move this trailing comment on the previous empty line.(ÇüÓàøÿÿÿÿ2adam8€û•Ç-
+m
+AWj46K_W6y6P2ydRWKAvsquid:S1199Ä	"-Extract this nested code block into a method.(ÒÌâ–øÿÿÿÿ2adam8€û•Ç-
+†
+AWj46K_W6y6P2ydRWKBcsquid:S1301Á"KReplace this "switch" statement by "if" statements to increase readability.(×ü³2adam8€û•Ç-
+v
+AWj4t13C6y6P2ydRWEv3squid:S2696É"6Make the enclosing method "static" or remove this set.(‚º„ıûÿÿÿÿ2adam8Ø§ÉÅ-
+
+AWj46K_W6y6P2ydRWKGIsquid:S1126× "AReplace this if-then-else statement by a single return statement.(õÖÕÑùÿÿÿÿ2adam8€û•Ç-
+h
+AWj4t13C6y6P2ydRWEv7squid:S1219Â"(Remove this misleading "label_15" label.(ó˜‰ßşÿÿÿÿ2adam8Ø§ÉÅ-
+
+AWj46K_W6y6P2ydRWKG7squid:S00100Ü""NRename this method name to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(ÒÊù£üÿÿÿÿ2adam8€û•Ç-
+’
+AWj46K_W6y6P2ydRWKGWsquid:S3776•!"RRefactor this method to reduce its Cognitive Complexity from 24 to the 15 allowed.(™Õñìÿÿÿÿÿ2adam8€û•Ç-
+
+AWj46K_l6y6P2ydRWKHnsquid:S1126ø$"AReplace this if-then-else statement by a single return statement.(õÖÕÑùÿÿÿÿ2adam8€û•Ç-
+t
+AWj4t13C6y6P2ydRWEncsquid:S2130´"9Use "Integer.parseInt" for this string-to-int conversion.(×ü–2adam8Ø§ÉÅ-
+m
+AWj46K_W6y6P2ydRWKA-squid:S1199Ú"-Extract this nested code block into a method.(ÒÌâ–øÿÿÿÿ2adam8€û•Ç-
+m
+AWj46K_W6y6P2ydRWKBFsquid:S1199Ğ"-Extract this nested code block into a method.(ÒÌâ–øÿÿÿÿ2adam8€û•Ç-
+q
+AWj46K_W6y6P2ydRWKC0squid:S2696˜	"6Make the enclosing method "static" or remove this set.(ÎÂ»É2adam8€û•Ç-
+’
+AWj4t13C6y6P2ydRWEkdsquid:S3008>"XRename this field "_currentModel" to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(¼¯ Ë2adam8Ø§ÉÅ-
+o
+AWj46K_W6y6P2ydRWKB-squid:S1942Ï"/Replace this fully qualified name with "Vector"(÷é¼¼ÿÿÿÿÿ2adam8€û•Ç-
+ˆ
+AWj46K_W6y6P2ydRWKGRsquid:S1142ó "MReduce the number of returns of this method 3, down to the maximum allowed 2.(‡ÃÚ2adam8€û•Ç-
+•
+AWj4t13C6y6P2ydRWElVsquid:S1149;"VReplace the synchronized class "Hashtable" by an unsynchronized one such as "HashMap".(òİş‘ıÿÿÿÿ2adam8Ø§ÉÅ-
+¦
+AWj4t13C6y6P2ydRWEq9squid:S1151Ÿ"kReduce this switch case number of lines from 12 to at most 10, for example by extracting code into methods.(—òà°2adam8Ø§ÉÅ-
+]
+AWj4t13C6y6P2ydRWEvssquid:S1659ä""Declare "expr" on a separate line.(š„ì‘2adam8Ø§ÉÅ-
+y
+AWj4t13C6y6P2ydRWEnxsquid:S2130£"9Use "Integer.parseInt" for this string-to-int conversion.(¼ïËşÿÿÿÿ2adam8Ø§ÉÅ-
+‰
+AWj46K_W6y6P2ydRWKE0squid:S1132À"IMove the "day" string literal on the left side of this string comparison.(§ŸÑ­ÿÿÿÿÿ2adam8€û•Ç-
+
+AWj46K_W6y6P2ydRWKGAsquid:S1126­ "AReplace this if-then-else statement by a single return statement.(õÖÕÑùÿÿÿÿ2adam8€û•Ç-
+‡
+AWj4t13C6y6P2ydRWEkE
+squid:S881¸"HExtract this increment or decrement operator into a dedicated statement.(÷¦Ãÿÿÿÿÿ2adam8Ø§ÉÅ-
+
+AWj46K_W6y6P2ydRWKHFsquid:S00100†#"NRename this method name to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(ÍÄ¡ïüÿÿÿÿ2adam8€û•Ç-
+j
+AWj46K_W6y6P2ydRWKAmsquid:S1066Õ"/Merge this if statement with the enclosing one.(è¦È„2adam8€û•Ç-
+m
+AWj46K_W6y6P2ydRWKA6squid:S1199¨"-Extract this nested code block into a method.(ÒÌâ–øÿÿÿÿ2adam8€û•Ç-
+”
+AWj4t13C6y6P2ydRWElLsquid:S00116Ñ"SRename this field "jj_kind" to match the regular expression '^_[a-z][a-zA-Z0-9]*$'.(é¬Ääûÿÿÿÿ2adam8Ø§ÉÅ-
+Š
+AWj46K_W6y6P2ydRWKHIsquid:S00100í#"NRename this method name to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(à¤“ı2adam8€û•Ç-
+_
+AWj4t13C6y6P2ydRWEqJsquid:S1659«"$Declare "result" on a separate line.(ôË²ª2adam8Ø§ÉÅ-
+“
+AWj46K_W6y6P2ydRWKFtsquid:ModifiersOrderCheck¥"EReorder the modifiers to comply with the Java Language Specification.(ïâºÉüÿÿÿÿ2adam8€û•Ç-
+•
+AWj4t13C6y6P2ydRWElRsquid:S11497"VReplace the synchronized class "Hashtable" by an unsynchronized one such as "HashMap".(Ñş“ıùÿÿÿÿ2adam8Ø§ÉÅ-
+‚
+AWj4t13C6y6P2ydRWEiq$squid:AssignmentInSubExpressionCheckº".Extract the assignment out of this expression.(ÛÆò2adam8Ø§ÉÅ-
+¼
+AWj46K_W6y6P2ydRWKCHsquid:S1186¯'"€Add a nested comment explaining why this method is empty, throw an UnsupportedOperationException or complete the implementation.(¾å×2adam8€û•Ç-
+‹
+AWj4t13C6y6P2ydRWEs5 squid:LabelsShouldNotBeUsedCheckŒ";Refactor the code to remove this label and the need for it.(ù»à2adam8Ø§ÉÅ-
+š
+AWj46K_W6y6P2ydRWKCEsquid:S4144Œ%"ZUpdate this method so that its implementation is not identical to "jj_3R_25" on line 4610.(§ËÖÖøÿÿÿÿ2adam8€û•Ç-
+§
+AWj46K_W6y6P2ydRWKHD
+squid:S138†#"hThis method has 101 lines, which is greater than the 75 lines authorized. Split it into smaller methods.(ÍÄ¡ïüÿÿÿÿ2adam8€û•Ç-
+†
+AWj4t13C6y6P2ydRWE1fsquid:CommentedOutCodeLine¸"<This block of commented-out lines of code should be removed.(÷®óş2adam8Ø§ÉÅ-
+‹
+AWj4t13C6y6P2ydRWE1Zsquid:CommentedOutCodeLineÁ"<This block of commented-out lines of code should be removed.(ÁÜâïûÿÿÿÿ2adam8Ø§ÉÅ-
+j
+AWj4t13C6y6P2ydRWE0_squid:S1481³"*Remove this unused "comma" local variable.(°ıøêüÿÿÿÿ2adam8Ø§ÉÅ-
+Š
+AWj46K_W6y6P2ydRWKGCsquid:S00100´ "NRename this method name to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(…â¥…2adam8€û•Ç-
+‹
+AWj4t13C6y6P2ydRWEp4 squid:LabelsShouldNotBeUsedCheckª";Refactor the code to remove this label and the need for it.(º¥è2adam8Ø§ÉÅ-
+–
+AWj4t13C6y6P2ydRWEkhsquid:S3008B"WRename this field "_fileIsLocal" to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(éŒïïùÿÿÿÿ2adam8Ø§ÉÅ-
+š
+AWj4t13C6y6P2ydRWEmAsquid:S1149ş"_Replace the synchronized class "StringBuffer" by an unsynchronized one such as "StringBuilder".(í…Ò‰2adam8Ø§ÉÅ-
+v
+AWj4t13C6y6P2ydRWEo_squid:S1854î
+"6Remove this useless assignment to local variable "id".(İÂ€€ıÿÿÿÿ2adam8Ø§ÉÅ-
+l
+AWj4t13C6y6P2ydRWEkVsquid:S1659$"-Declare "globalExternals" on a separate line.(••÷Êÿÿÿÿÿ2adam8Ø§ÉÅ-
+Ÿ
+AWj4t13C6y6P2ydRWElhsquid:S1149ñ"_Replace the synchronized class "StringBuffer" by an unsynchronized one such as "StringBuilder".(Ôú•èúÿÿÿÿ2adam8Ø§ÉÅ-
+f
+AWj4t13C6y6P2ydRWEnnsquid:S1659ñ"&Declare "endMonth" on a separate line.(ÍÙÖøÿÿÿÿÿ2adam8Ø§ÉÅ-
+Š
+AWj46K_W6y6P2ydRWKD9squid:S00100•"NRename this method name to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(î•ùß2adam8€û•Ç-
+’
+AWj46K_W6y6P2ydRWKDTsquid:S3776š"RRefactor this method to reduce its Cognitive Complexity from 49 to the 15 allowed.(õ¶’éşÿÿÿÿ2adam8€û•Ç-
+“
+AWj46K_l6y6P2ydRWKH6squid:ModifiersOrderCheck£&"EReorder the modifiers to comply with the Java Language Specification.(ú±×ÿÿÿÿÿ2adam8€û•Ç-
+š
+AWj46K_W6y6P2ydRWKCKsquid:S1149Ô"_Replace the synchronized class "StringBuffer" by an unsynchronized one such as "StringBuilder".(©¸…Ñ2adam8€û•Ç-
+€
+AWj4t13C6y6P2ydRWEpysquid:TrailingCommentCheckŒ"6Move this trailing comment on the previous empty line.(ôïç2adam8Ø§ÉÅ-
+“
+AWj46K_W6y6P2ydRWKEQsquid:ModifiersOrderCheckË"EReorder the modifiers to comply with the Java Language Specification.(ƒ°Á¢şÿÿÿÿ2adam8€û•Ç-
+€
+AWj46K_W6y6P2ydRWKCosquid:TrailingCommentCheck®"6Move this trailing comment on the previous empty line.(Ãîú2adam8€û•Ç-
+™
+AWj46K_W6y6P2ydRWKCXsquid:S1149Û"_Replace the synchronized class "StringBuffer" by an unsynchronized one such as "StringBuilder".(ÁòÔ:2adam8€û•Ç-
+
+AWj46K_W6y6P2ydRWKE2squid:ModifiersOrderCheckÛ"EReorder the modifiers to comply with the Java Language Specification.(ÁòÔ:2adam8€û•Ç-
+q
+AWj46K_W6y6P2ydRWKDBsquid:S2696µ
+"6Make the enclosing method "static" or remove this set.(Áı¼§2adam8€û•Ç-
+
+AWj4t13C6y6P2ydRWEjysquid:S00117"QRename this local variable to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(—ĞÀå2adam8Ø§ÉÅ-
+ 
+AWj4t13C6y6P2ydRWElasquid:S1149ƒ"eReplace the synchronized class "Vector" by an unsynchronized one such as "ArrayList" or "LinkedList".(ü²ùÌ2adam8Ø§ÉÅ-
+€
+AWj4t13C6y6P2ydRWEmvsquid:TrailingCommentCheck§"6Move this trailing comment on the previous empty line.(†©º‹2adam8Ø§ÉÅ-
+t
+AWj46K_W6y6P2ydRWKC-squid:S2221¢	"4Catch a list of specific exception subtypes instead.(¼Ôîàùÿÿÿÿ2adam8€û•Ç-
+
+AWj4t13C6y6P2ydRWElIsquid:S00116Î"QRename this field "jj_gc" to match the regular expression '^_[a-z][a-zA-Z0-9]*$'.(½Ûß2adam8Ø§ÉÅ-
+†
+AWj46K_W6y6P2ydRWKFhsquid:S1132Ï"KMove the "'CFS'" string literal on the left side of this string comparison.(‘³¯2adam8€û•Ç-
+‡
+AWj4t13C6y6P2ydRWEkH
+squid:S881È&"HExtract this increment or decrement operator into a dedicated statement.(›Àä£øÿÿÿÿ2adam8Ø§ÉÅ-
+‚
+AWj4t13C6y6P2ydRWEik$squid:AssignmentInSubExpressionCheck´".Extract the assignment out of this expression.(á¬ú2adam8Ø§ÉÅ-
+¦
+AWj4t13C6y6P2ydRWEsbsquid:S1151í"kReduce this switch case number of lines from 34 to at most 10, for example by extracting code into methods.(ôŸˆ÷2adam8Ø§ÉÅ-
+Ÿ
+AWj4t13C6y6P2ydRWElmsquid:S1149­"_Replace the synchronized class "StringBuffer" by an unsynchronized one such as "StringBuilder".(Õ˜¤İÿÿÿÿÿ2adam8Ø§ÉÅ-
+
+AWj46K_W6y6P2ydRWKFMsquid:S00100†"NRename this method name to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(Öæüÿÿÿÿ2adam8€û•Ç-
+]
+AWj4t13C6y6P2ydRWEvusquid:S1659ä""Declare "step" on a separate line.(š„ì‘2adam8Ø§ÉÅ-
+“
+AWj46K_W6y6P2ydRWKDVsquid:ModifiersOrderCheckš"EReorder the modifiers to comply with the Java Language Specification.(õ¶’éşÿÿÿÿ2adam8€û•Ç-
+’
+AWj46K_l6y6P2ydRWKH_squid:S3776ñ&"RRefactor this method to reduce its Cognitive Complexity from 28 to the 15 allowed.(‡“ÿÉùÿÿÿÿ2adam8€û•Ç-
+
+AWj46K_W6y6P2ydRWKEssquid:S00100¼"NRename this method name to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(†’Ñ«úÿÿÿÿ2adam8€û•Ç-
+Š
+AWj46K_W6y6P2ydRWKGKsquid:S00100Ş "NRename this method name to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(°úÂ‡2adam8€û•Ç-
+‰
+AWj46K_W6y6P2ydRWKDQsquid:S1132ø"IMove the "OBJ" string literal on the left side of this string comparison.(¢¼ÃÁüÿÿÿÿ2adam8€û•Ç-
+
+AWj4t13C6y6P2ydRWE03squid:S00116é'"QRename this field "first" to match the regular expression '^_[a-z][a-zA-Z0-9]*$'.(õ¨¿¸2adam8Ø§ÉÅ-
+
+AWj46K_l6y6P2ydRWKHrsquid:S1126…%"AReplace this if-then-else statement by a single return statement.(õÖÕÑùÿÿÿÿ2adam8€û•Ç-
+…
+AWj46K_W6y6P2ydRWKEFsquid:TrailingCommentCheckû"6Move this trailing comment on the previous empty line.(ÇüÓàøÿÿÿÿ2adam8€û•Ç-
+†
+AWj46K_W6y6P2ydRWKClsquid:S2142‘"FEither re-interrupt this method or rethrow the "InterruptedException".(–ÛËçÿÿÿÿÿ2adam8€û•Ç-
+
+AWj46K_W6y6P2ydRWKGLsquid:ModifiersOrderCheckŞ "EReorder the modifiers to comply with the Java Language Specification.(°úÂ‡2adam8€û•Ç-
+Ÿ
+AWj4t13C6y6P2ydRWElysquid:S1149ò"_Replace the synchronized class "StringBuffer" by an unsynchronized one such as "StringBuilder".(ıôšÍÿÿÿÿÿ2adam8Ø§ÉÅ-
+o
+AWj46K_W6y6P2ydRWKDXsquid:S1821µ"4Refactor the code to eliminate this nested "switch".(×ü³2adam8€û•Ç-
+¦
+AWj46K_W6y6P2ydRWKDPsquid:S1151ô"kReduce this switch case number of lines from 15 to at most 10, for example by extracting code into methods.(ÚÀŞş2adam8€û•Ç-
+m
+AWj46K_W6y6P2ydRWKA9squid:S1199Š"-Extract this nested code block into a method.(ÒÌâ–øÿÿÿÿ2adam8€û•Ç-
+
+AWj46K_W6y6P2ydRWKGlsquid:S1126ô!"AReplace this if-then-else statement by a single return statement.(õÖÕÑùÿÿÿÿ2adam8€û•Ç-
+o
+AWj46K_W6y6P2ydRWKDWsquid:S1821ª"4Refactor the code to eliminate this nested "switch".(×ü³2adam8€û•Ç-
+ˆ
+AWj46K_W6y6P2ydRWKHCsquid:S1142ñ""MReduce the number of returns of this method 5, down to the maximum allowed 2.(¤ò­¼2adam8€û•Ç-
+a
+AWj4t13C6y6P2ydRWErxsquid:S2129Ó"!Remove this "Integer" constructor(Ë£é¦ùÿÿÿÿ2adam8Ø§ÉÅ-
+_
+AWj4t13C6y6P2ydRWEkTsquid:S1659#"%Declare "dssInit" on a separate line.(ïóú2adam8Ø§ÉÅ-
+
+AWj46K_l6y6P2ydRWKHcsquid:S00100¶$"NRename this method name to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(ôÀÑ¤ùÿÿÿÿ2adam8€û•Ç-
+†
+AWj46K_W6y6P2ydRWKBOsquid:S1301°"KReplace this "switch" statement by "if" statements to increase readability.(×ü³2adam8€û•Ç-
+“
+AWj46K_W6y6P2ydRWKD2squid:ModifiersOrderCheckï"EReorder the modifiers to comply with the Java Language Specification.(«ã÷ƒşÿÿÿÿ2adam8€û•Ç-
+
+AWj46K_W6y6P2ydRWKG-squid:S1142Ü""MReduce the number of returns of this method 5, down to the maximum allowed 2.(ÒÊù£üÿÿÿÿ2adam8€û•Ç-
+Š
+AWj46K_W6y6P2ydRWKG_squid:S00100ñ""NRename this method name to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(¤ò­¼2adam8€û•Ç-
+c
+AWj4t13C6y6P2ydRWEqmsquid:S1659˜"#Declare "units" on a separate line.(ĞÊ¶ƒÿÿÿÿÿ2adam8Ø§ÉÅ-
+
+AWj46K_W6y6P2ydRWKFEsquid:ModifiersOrderCheckÙ"EReorder the modifiers to comply with the Java Language Specification.(ñ§¿µ2adam8€û•Ç-
+Ÿ
+AWj46K_W6y6P2ydRWKCVsquid:S1149Š"_Replace the synchronized class "StringBuffer" by an unsynchronized one such as "StringBuilder".(Æà×¥ÿÿÿÿÿ2adam8€û•Ç-
+
+AWj46K_l6y6P2ydRWKHwsquid:S1142Œ%"MReduce the number of returns of this method 3, down to the maximum allowed 2.(§ËÖÖøÿÿÿÿ2adam8€û•Ç-
+
+AWj4t13C6y6P2ydRWEiv$squid:AssignmentInSubExpressionCheckë".Extract the assignment out of this expression.(èü·v2adam8Ø§ÉÅ-
+s
+AWj4t13C6y6P2ydRWEoh
+squid:S106Ã	"9Replace this use of System.out or System.err by a logger.(Îã­Ã2adam8Ø§ÉÅ-
+‡
+AWj4t13C6y6P2ydRWEkLsquid:S00103½"KSplit this 487 characters long line (which is greater than 200 authorized).(­¾Ò°2adam8Ø§ÉÅ-
+o
+AWj46K_W6y6P2ydRWKD4squid:S1821¢"4Refactor the code to eliminate this nested "switch".(×ü³2adam8€û•Ç-
+’
+AWj46K_W6y6P2ydRWKDLsquid:S3776Ø"RRefactor this method to reduce its Cognitive Complexity from 22 to the 15 allowed.(ªüæúÿÿÿÿ2adam8€û•Ç-
+Œ
+AWj4t13C6y6P2ydRWEjXsquid:S2095»"LUse try-with-resources or close this "BufferedReader" in a "finally" clause.(çêÒùÿÿÿÿ2adam8Ø§ÉÅ-
+•
+AWj6W89a6y6P2ydRWLtusquid:S3008µ"ZRename this field "_parseFileDelay" to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(û”º2adam8Ğ¥éÒ-
+“
+AWj46K_W6y6P2ydRWKEysquid:ModifiersOrderCheck´"EReorder the modifiers to comply with the Java Language Specification.(İ¦Ş¶ùÿÿÿÿ2adam8€û•Ç-
+“
+AWj46K_W6y6P2ydRWKG4squid:ModifiersOrderCheckÇ""EReorder the modifiers to comply with the Java Language Specification.(œËˆ°úÿÿÿÿ2adam8€û•Ç-
+Š
+AWj46K_W6y6P2ydRWKFpsquid:S00100Ü"NRename this method name to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(½â•ß2adam8€û•Ç-
+€
+AWj4t13C6y6P2ydRWEuLsquid:TrailingCommentCheckà"6Move this trailing comment on the previous empty line.(”Ø½2adam8Ø§ÉÅ-
+
+AWj46K_W6y6P2ydRWKDjsquid:S3776©"RRefactor this method to reduce its Cognitive Complexity from 29 to the 15 allowed.(ß’¿2adam8€û•Ç-
+š
+AWj46K_W6y6P2ydRWKCMsquid:S1149î"_Replace the synchronized class "StringBuffer" by an unsynchronized one such as "StringBuilder".(€‹¯2adam8€û•Ç-
+Ÿ
+AWj46K_W6y6P2ydRWKCgsquid:S1149¥"_Replace the synchronized class "StringBuffer" by an unsynchronized one such as "StringBuilder".(ïâºÉüÿÿÿÿ2adam8€û•Ç-
+‚
+AWj4t13C6y6P2ydRWEiw$squid:AssignmentInSubExpressionCheck™".Extract the assignment out of this expression.(áë±¹2adam8Ø§ÉÅ-
+e
+AWj46K_W6y6P2ydRWKBvsquid:S1166¢	"%Either log or rethrow this exception.(¼Ôîàùÿÿÿÿ2adam8€û•Ç-
+“
+AWj4t13C6y6P2ydRWEz2squid:ModifiersOrderCheck¹"EReorder the modifiers to comply with the Java Language Specification.(ıºçİùÿÿÿÿ2adam8Ø§ÉÅ-
+v
+AWj4t13C6y6P2ydRWEpAsquid:S1854ñ
+"6Remove this useless assignment to local variable "id".(ß–Øşÿÿÿÿ2adam8Ø§ÉÅ-
+’
+AWj46K_W6y6P2ydRWKErsquid:S3776¼"RRefactor this method to reduce its Cognitive Complexity from 17 to the 15 allowed.(†’Ñ«úÿÿÿÿ2adam8€û•Ç-
+…
+AWj46K_W6y6P2ydRWKFksquid:TrailingCommentCheckç"6Move this trailing comment on the previous empty line.(ûÌâ²ıÿÿÿÿ2adam8€û•Ç-
+…
+AWj4t13C6y6P2ydRWErfsquid:TrailingCommentCheck™"6Move this trailing comment on the previous empty line.(êøšøÿÿÿÿ2adam8Ø§ÉÅ-
+Ÿ
+AWj4t13C6y6P2ydRWElnsquid:S1149®"_Replace the synchronized class "StringBuffer" by an unsynchronized one such as "StringBuilder".(‘Û³ñøÿÿÿÿ2adam8Ø§ÉÅ-
+Š
+AWj46K_W6y6P2ydRWKFDsquid:S00100Ù"NRename this method name to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(ñ§¿µ2adam8€û•Ç-
+
+AWj46K_W6y6P2ydRWKDFsquid:S00100á
+"NRename this method name to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(ïÒÊ‡ıÿÿÿÿ2adam8€û•Ç-
+
+AWj46K_l6y6P2ydRWKH-squid:S00100À&"NRename this method name to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(óŞÕÿÿÿÿÿ2adam8€û•Ç-
+‹
+AWj4t13C6y6P2ydRWEpl squid:LabelsShouldNotBeUsedCheck§";Refactor the code to remove this label and the need for it.(˜¹›‡2adam8Ø§ÉÅ-
+d
+AWj4t13C6y6P2ydRWEn2squid:S1659Å"$Declare "endDay" on a separate line.(™´ñ°üÿÿÿÿ2adam8Ø§ÉÅ-
+‚
+AWj4t13C6y6P2ydRWEi2$squid:AssignmentInSubExpressionCheck¼&".Extract the assignment out of this expression.(œæì2adam8Ø§ÉÅ-
+
+AWj4t13C6y6P2ydRWEip$squid:AssignmentInSubExpressionCheckß".Extract the assignment out of this expression.(Îí²2adam8Ø§ÉÅ-
+j
+AWj46K_W6y6P2ydRWKAcsquid:S1066ú"/Merge this if statement with the enclosing one.(è¦È„2adam8€û•Ç-
+†
+AWj46K_W6y6P2ydRWKFZsquid:S1132ÿ"KMove the "'CFS'" string literal on the left side of this string comparison.(‘³¯2adam8€û•Ç-
+†
+AWj46K_W6y6P2ydRWKBXsquid:S1301"KReplace this "switch" statement by "if" statements to increase readability.(×ü³2adam8€û•Ç-
+•
+AWj4t13C6y6P2ydRWElCsquid:S00116º"TRename this field "jj_la1_0" to match the regular expression '^_[a-z][a-zA-Z0-9]*$'.(ÄÓÚ­üÿÿÿÿ2adam8Ø§ÉÅ-
+
+AWj4t13C6y6P2ydRWElPsquid:S11495"VReplace the synchronized class "Hashtable" by an unsynchronized one such as "HashMap".(Š´Âö2adam8Ø§ÉÅ-
+—
+AWj6W89a6y6P2ydRWLtrsquid:S3008¯"\Rename this field "_localDefinesFile" to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(øñäõ2adam8Ğ¥éÒ-
+
+AWj46K_W6y6P2ydRWKEhsquid:ModifiersOrderCheck˜"EReorder the modifiers to comply with the Java Language Specification.(ŸìõÀ2adam8€û•Ç-
+_
+AWj4t13C6y6P2ydRWEkUsquid:S1659#"%Declare "defines" on a separate line.(ïóú2adam8Ø§ÉÅ-
+u
+AWj46K_W6y6P2ydRWKBpsquid:S1141¡"5Extract this nested try block into a separate method.(ç£êúÿÿÿÿ2adam8€û•Ç-
+š
+AWj46K_W6y6P2ydRWKCesquid:S1149Š"_Replace the synchronized class "StringBuffer" by an unsynchronized one such as "StringBuilder".(øË‰2adam8€û•Ç-
+…
+AWj4t13C6y6P2ydRWEuesquid:TrailingCommentCheck”"6Move this trailing comment on the previous empty line.(™™ûµüÿÿÿÿ2adam8Ø§ÉÅ-
+Š
+AWj46K_l6y6P2ydRWKHzsquid:S00100»%"NRename this method name to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(’×Ûğ2adam8€û•Ç-
+
+AWj4t13C6y6P2ydRWEq5squid:TrailingCommentCheck‚"6Move this trailing comment on the previous empty line.(—÷/2adam8Ø§ÉÅ-
+„
+AWj4t13C6y6P2ydRWEmPsquid:TrailingCommentCheck-"6Move this trailing comment on the previous empty line.(¢Ç‘ûÿÿÿÿ2adam8Ø§ÉÅ-
+
+AWj46K_W6y6P2ydRWKHBsquid:S1126ÿ""AReplace this if-then-else statement by a single return statement.(õÖÕÑùÿÿÿÿ2adam8€û•Ç-
+j
+AWj46K_W6y6P2ydRWKAasquid:S1066ß"/Merge this if statement with the enclosing one.(è¦È„2adam8€û•Ç-
+…
+AWj46K_W6y6P2ydRWKDhsquid:TrailingCommentCheck™"6Move this trailing comment on the previous empty line.(â’‹¾ıÿÿÿÿ2adam8€û•Ç-
+
+AWj46K_W6y6P2ydRWKEbsquid:S00100è"NRename this method name to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(Á‡ö‘şÿÿÿÿ2adam8€û•Ç-
+“
+AWj46K_W6y6P2ydRWKEjsquid:ModifiersOrderCheck³"EReorder the modifiers to comply with the Java Language Specification.(öÁ•ïûÿÿÿÿ2adam8€û•Ç-
+…
+AWj46K_W6y6P2ydRWKFWsquid:TrailingCommentCheckù"6Move this trailing comment on the previous empty line.(çÇã­ıÿÿÿÿ2adam8€û•Ç-
+Š
+AWj46K_l6y6P2ydRWKIHsquid:S00100Õ'"NRename this method name to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(ìšùˆ2adam8€û•Ç-
+‰
+AWj46K_W6y6P2ydRWKGrsquid:S00100""NRename this method name to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(··•!2adam8€û•Ç-
+¡
+AWj46K_W6y6P2ydRWKCw
+squid:S138õ"gThis method has 85 lines, which is greater than the 75 lines authorized. Split it into smaller methods.(—é¢ê2adam8€û•Ç-
+
+AWj4t13C6y6P2ydRWElGsquid:S00116¾"URename this field "jj_2_rtns" to match the regular expression '^_[a-z][a-zA-Z0-9]*$'.(üÒ¦D2adam8Ø§ÉÅ-
+Œ
+AWj4t13C6y6P2ydRWEkIsquid:S00103º"KSplit this 560 characters long line (which is greater than 200 authorized).(ÄÓÚ­üÿÿÿÿ2adam8Ø§ÉÅ-
+¦
+AWj4t13C6y6P2ydRWEsdsquid:S1151ğ"kReduce this switch case number of lines from 12 to at most 10, for example by extracting code into methods.(ôŸˆ÷2adam8Ø§ÉÅ-
+«
+AWj4t13C6y6P2ydRWEsesquid:S1151ı"kReduce this switch case number of lines from 12 to at most 10, for example by extracting code into methods.(³˜Ä·ıÿÿÿÿ2adam8Ø§ÉÅ-
+¯
+AWj4t13C6y6P2ydRWEjf"squid:ClassVariableVisibilityCheckÀ"XMake token_source a static final constant or non-public and provide accessors if needed.(èòì¹ÿÿÿÿÿ2adam8Ø§ÉÅ-
+¥
+AWj4t13C6y6P2ydRWEmJsquid:S1149Ï"eReplace the synchronized class "Vector" by an unsynchronized one such as "ArrayList" or "LinkedList".(÷é¼¼ÿÿÿÿÿ2adam8Ø§ÉÅ-
+Ÿ
+AWj46K_W6y6P2ydRWKCUsquid:S1149¼"_Replace the synchronized class "StringBuffer" by an unsynchronized one such as "StringBuilder".(†’Ñ«úÿÿÿÿ2adam8€û•Ç-
+
+AWj4t13C6y6P2ydRWEt5 squid:LabelsShouldNotBeUsedCheckÒ";Refactor the code to remove this label and the need for it.(ñÛ´ïüÿÿÿÿ2adam8Ø§ÉÅ-
+m
+AWj4t13C6y6P2ydRWE1Asquid:S1481Ó"-Remove this unused "gp_level" local variable.(Ë£é¦ùÿÿÿÿ2adam8Ø§ÉÅ-
+
+AWj46K_W6y6P2ydRWKCzsquid:ModifiersOrderCheckõ"EReorder the modifiers to comply with the Java Language Specification.(—é¢ê2adam8€û•Ç-
+‹
+AWj46K_W6y6P2ydRWKFYsquid:S1132û"KMove the "'CFS'" string literal on the left side of this string comparison.(ıÇÓüøÿÿÿÿ2adam8€û•Ç-
+
+AWj46K_W6y6P2ydRWKFRsquid:ModifiersOrderCheck°"EReorder the modifiers to comply with the Java Language Specification.(¥ÙéÛ2adam8€û•Ç-
+Ÿ
+AWj46K_W6y6P2ydRWKCTsquid:S1149ê"_Replace the synchronized class "StringBuffer" by an unsynchronized one such as "StringBuilder".(ıôšÍÿÿÿÿÿ2adam8€û•Ç-
+¦
+AWj4t13C6y6P2ydRWEv5squid:S1151©"kReduce this switch case number of lines from 16 to at most 10, for example by extracting code into methods.(«ïÙ2adam8Ø§ÉÅ-
+
+AWj46K_W6y6P2ydRWKG6squid:S1142Ç""MReduce the number of returns of this method 5, down to the maximum allowed 2.(œËˆ°úÿÿÿÿ2adam8€û•Ç-
+š
+AWj46K_W6y6P2ydRWKCPsquid:S1149°"_Replace the synchronized class "StringBuffer" by an unsynchronized one such as "StringBuilder".(Àê2adam8€û•Ç-
+j
+AWj46K_W6y6P2ydRWKCpsquid:S2093ƒ"*Change this "try" to a try-with-resources.(ç£êúÿÿÿÿ2adam8€û•Ç-
+˜
+AWj6W89a6y6P2ydRWLtssquid:S3008±"XRename this field "_hideWarnings" to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(ìöÏàüÿÿÿÿ2adam8Ğ¥éÒ-
+
+AWj46K_W6y6P2ydRWKEAsquid:ModifiersOrderCheck§"EReorder the modifiers to comply with the Java Language Specification.(ı§ a2adam8€û•Ç-
+
+AWj4t13C6y6P2ydRWEol squid:LabelsShouldNotBeUsedCheckÒ	";Refactor the code to remove this label and the need for it.(Ï½Ó«ùÿÿÿÿ2adam8Ø§ÉÅ-
+v
+AWj4t13C6y6P2ydRWEoYsquid:S2696—	"6Make the enclosing method "static" or remove this set.(À‡İ‘ùÿÿÿÿ2adam8Ø§ÉÅ-
+h
+AWj4t13C6y6P2ydRWEkasquid:S1659É"(Declare "jj_lastpos" on a separate line.(úíá¢ùÿÿÿÿ2adam8Ø§ÉÅ-
+y
+AWj4t13C6y6P2ydRWEnqsquid:S2130Ì"9Use "Integer.parseInt" for this string-to-int conversion.(¥‘™ ùÿÿÿÿ2adam8Ø§ÉÅ-
+a
+AWj4t13C6y6P2ydRWEkssquid:S1170º"!Make this final field static too.(ÄÓÚ­üÿÿÿÿ2adam8Ø§ÉÅ-
+
+AWj46K_W6y6P2ydRWKF4squid:S00100Œ "NRename this method name to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(­óİ…şÿÿÿÿ2adam8€û•Ç-
+j
+AWj46K_W6y6P2ydRWKAosquid:S1066å"/Merge this if statement with the enclosing one.(è¦È„2adam8€û•Ç-
+‡
+AWj46K_W6y6P2ydRWKB1squid:S00112Ç	"FDefine and throw a dedicated exception instead of using a generic one.(Ê“Åıÿÿÿÿ2adam8€û•Ç-
+†
+AWj46K_W6y6P2ydRWKBPsquid:S1301"KReplace this "switch" statement by "if" statements to increase readability.(×ü³2adam8€û•Ç-
+Š
+AWj46K_W6y6P2ydRWKDDsquid:S00100Ä
+"NRename this method name to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(–öÌó2adam8€û•Ç-
+“
+AWj46K_W6y6P2ydRWKHEsquid:S3776†#"SRefactor this method to reduce its Cognitive Complexity from 113 to the 15 allowed.(ÍÄ¡ïüÿÿÿÿ2adam8€û•Ç-
+
+AWj46K_W6y6P2ydRWKG9squid:S1126ê""AReplace this if-then-else statement by a single return statement.(õÖÕÑùÿÿÿÿ2adam8€û•Ç-

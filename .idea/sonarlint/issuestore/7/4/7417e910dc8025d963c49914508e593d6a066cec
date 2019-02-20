@@ -1,0 +1,67 @@
+
+s
+AWj4t1_l6y6P2ydRWFgD
+squid:S106Å"9Replace this use of System.out or System.err by a logger.(¡ñç©2adam8Ø§ÉÅ-
+s
+AWj4t1_l6y6P2ydRWFf3squid:S1611W"4Remove the parentheses around the "compId" parameter(‘‰ı“şÿÿÿÿ2adam8Ø§ÉÅ-
+’
+AWj4t1_l6y6P2ydRWFfpsquid:S00116*"WRename this field "swingEngine" to match the regular expression '^_[a-z][a-zA-Z0-9]*$'.(‹Î¿ã2adam8Ø§ÉÅ-
+
+AWj4t1_l6y6P2ydRWFf-squid:S1132"FMove the "" string literal on the left side of this string comparison.(œ Ğˆ2adam8Ø§ÉÅ-
+†
+AWj4t1_l6y6P2ydRWFf_squid:S1132‘"FMove the "" string literal on the left side of this string comparison.(¢…¸Ÿøÿÿÿÿ2adam8Ø§ÉÅ-
+n
+AWj4t1_l6y6P2ydRWFf9squid:S1611†"4Remove the parentheses around the "compId" parameter(ûÔ®"2adam8Ø§ÉÅ-
+k
+AWj4t1_l6y6P2ydRWFgGsquid:S1611™"0Remove the parentheses around the "id" parameter(ÈÔ¸‡2adam8Ø§ÉÅ-
+“
+AWj4t1_l6y6P2ydRWFfwsquid:S001161"XRename this field "jCheckBoxIDs" to match the regular expression '^_[a-z][a-zA-Z0-9]*$'.(üÛ‘2adam8Ø§ÉÅ-
+i
+AWj46LQM6y6P2ydRWKM7squid:S1066ç"/Merge this if statement with the enclosing one.(®İˆh2adam8€û•Ç-
+“
+AWj4t1_l6y6P2ydRWFfssquid:S00116-"YRename this field "compNameIdMap" to match the regular expression '^_[a-z][a-zA-Z0-9]*$'.(äÃç]2adam8Ø§ÉÅ-
+™
+AWj4t1_l6y6P2ydRWFfusquid:S00116/"YRename this field "jTextFieldIds" to match the regular expression '^_[a-z][a-zA-Z0-9]*$'.(óö¥—øÿÿÿÿ2adam8Ø§ÉÅ-
+©
+AWj4t1_l6y6P2ydRWFfvsquid:S001160"iRename this field "jTextFieldIdsForLinkedSliders" to match the regular expression '^_[a-z][a-zA-Z0-9]*$'.(ä¿¹şÿÿÿÿ2adam8Ø§ÉÅ-
+†
+AWj4t1_l6y6P2ydRWFgHsquid:CommentedOutCodeLine–"<This block of commented-out lines of code should be removed.(ûò˜2adam8Ø§ÉÅ-
+™
+AWj4t1_l6y6P2ydRWFfqsquid:S00116+"YRename this field "fileSystemSvc" to match the regular expression '^_[a-z][a-zA-Z0-9]*$'.(¬ãñİÿÿÿÿÿ2adam8Ø§ÉÅ-
+s
+AWj4t1_l6y6P2ydRWFf7squid:S1611q"4Remove the parentheses around the "compId" parameter(–İšÿÿÿÿÿ2adam8Ø§ÉÅ-
+t
+AWj4t1_l6y6P2ydRWFgBsquid:S1611¡"4Remove the parentheses around the "compId" parameter(ÍÜ şÿÿÿÿ2adam8Ø§ÉÅ-
+”
+AWj4t1_l6y6P2ydRWFgCsquid:S2293Ä"YReplace the type specification in this constructor call with the diamond operator ("<>").(ûı‡‰2adam8Ø§ÉÅ-
+†
+AWj4t1_l6y6P2ydRWFgIsquid:CommentedOutCodeLine˜"<This block of commented-out lines of code should be removed.(Å˜¼³2adam8Ø§ÉÅ-
+s
+AWj4t1_l6y6P2ydRWFf8squid:S1611z"4Remove the parentheses around the "compId" parameter(šÒ»úÿÿÿÿ2adam8Ø§ÉÅ-
+—
+AWj4t1_l6y6P2ydRWFfrsquid:S00116,"\Rename this field "errorHandlingSvc" to match the regular expression '^_[a-z][a-zA-Z0-9]*$'.(–§ÄÛ2adam8Ø§ÉÅ-
+¡
+AWj46LQM6y6P2ydRWKM8
+squid:S1388"hThis method has 102 lines, which is greater than the 75 lines authorized. Split it into smaller methods.(¹¿Äì2adam8€û•Ç-
+w
+AWj4t1_l6y6P2ydRWFf5
+squid:S106]"9Replace this use of System.out or System.err by a logger.(Šô†Êøÿÿÿÿ2adam8Ø§ÉÅ-
+ 
+AWj4t1_l6y6P2ydRWFftsquid:S00116."`Rename this field "newUserDefinedTables" to match the regular expression '^_[a-z][a-zA-Z0-9]*$'.(ıšÒŸùÿÿÿÿ2adam8Ø§ÉÅ-
+”
+AWj4t1_l6y6P2ydRWFgEsquid:S2293Ø"YReplace the type specification in this constructor call with the diamond operator ("<>").(ûı‡‰2adam8Ø§ÉÅ-
+i
+AWj46LQM6y6P2ydRWKM6squid:S1066c"/Merge this if statement with the enclosing one.(Ãã‡ä2adam8€û•Ç-
+“
+AWj4t1_l6y6P2ydRWFf0squid:S2293="YReplace the type specification in this constructor call with the diamond operator ("<>").(»Î…¬2adam8Ø§ÉÅ-
+
+AWj4t1_l6y6P2ydRWFfxsquid:TrailingCommentCheck1"6Move this trailing comment on the previous empty line.(üÛ‘2adam8Ø§ÉÅ-
+s
+AWj4t1_l6y6P2ydRWFf6squid:S1611j"4Remove the parentheses around the "compId" parameter(‘‰ı“şÿÿÿÿ2adam8Ø§ÉÅ-
+Œ
+AWj46LQM6y6P2ydRWKM9squid:S37768"RRefactor this method to reduce its Cognitive Complexity from 31 to the 15 allowed.(¹¿Äì2adam8€û•Ç-
+o
+AWj4t1_l6y6P2ydRWFgAsquid:S1611˜"4Remove the parentheses around the "compId" parameter(³Œ¿÷2adam8Ø§ÉÅ-
+x
+AWj4t1_l6y6P2ydRWFgF
+squid:S106ê"9Replace this use of System.out or System.err by a logger.(ÙşœÒûÿÿÿÿ2adam8Ø§ÉÅ-

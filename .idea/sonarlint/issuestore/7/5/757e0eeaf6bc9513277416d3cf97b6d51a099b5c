@@ -1,0 +1,42 @@
+
+‹
+AWj4t1_G6y6P2ydRWFdBsquid:CommentedOutCodeLine¸"<This block of commented-out lines of code should be removed.(ş‰îÿÿÿÿÿ2adam8Ø§ÉÅ-
+—
+AWj4t1_G6y6P2ydRWFcusquid:S00116,"\Rename this field "errorHandlingSvc" to match the regular expression '^_[a-z][a-zA-Z0-9]*$'.(Ø¡³ı2adam8Ø§ÉÅ-
+s
+AWj46LKV6y6P2ydRWKLzsquid:S2589Ÿ"8Remove this expression which always evaluates to "false"(‘œ—¨2adam8€û•Ç-
+_
+AWj46LKV6y6P2ydRWKL0squid:S1166y"%Either log or rethrow this exception.(Ñ´¯2adam8€û•Ç-
+š
+AWj4t1_G6y6P2ydRWFctsquid:S00116+"ZRename this field "wsdiIterations" to match the regular expression '^_[a-z][a-zA-Z0-9]*$'.(î„ñòüÿÿÿÿ2adam8Ø§ÉÅ-
+‹
+AWj4t1_G6y6P2ydRWFdAsquid:CommentedOutCodeLine¶"<This block of commented-out lines of code should be removed.(¯Ë±—şÿÿÿÿ2adam8Ø§ÉÅ-
+„
+AWj4t1_G6y6P2ydRWFc7squid:S4042â"IUse "java.nio.Files#delete" here for better messages on error conditions.(ê©àÅ2adam8Ø§ÉÅ-
+”
+AWj4t1_G6y6P2ydRWFc_squid:S2293‰"YReplace the type specification in this constructor call with the diamond operator ("<>").(·ú›÷2adam8Ø§ÉÅ-
+b
+AWj4t1_G6y6P2ydRWFcmsquid:S2164Ñ"'Use a "double" or "BigDecimal" instead.(“›Åâ2adam8Ø§ÉÅ-
+–
+AWj4t1_G6y6P2ydRWFcssquid:S00116*"VRename this field "properties" to match the regular expression '^_[a-z][a-zA-Z0-9]*$'.(—ïéÕüÿÿÿÿ2adam8Ø§ÉÅ-
+
+AWj4t1_G6y6P2ydRWFcvsquid:S00116-"URename this field "dialogSvc" to match the regular expression '^_[a-z][a-zA-Z0-9]*$'.(Ğı‘¸2adam8Ø§ÉÅ-
+u
+AWj4t1_G6y6P2ydRWFcnsquid:S1444("6Make this "public static simultaneousRuns" field final(½Êûûÿÿÿÿ2adam8Ø§ÉÅ-
+ƒ
+AWj4t1_G6y6P2ydRWFc8squid:S4042ë"IUse "java.nio.Files#delete" here for better messages on error conditions.(áŞ¡w2adam8Ø§ÉÅ-
+†
+AWj4t1_G6y6P2ydRWFdDsquid:CommentedOutCodeLine¿"<This block of commented-out lines of code should be removed.(Ï¡ÁÛ2adam8Ø§ÉÅ-
+_
+AWj46LKV6y6P2ydRWKL2squid:S1181y"%Catch Exception instead of Throwable.(Ñ´¯2adam8€û•Ç-
+™
+AWj4t1_G6y6P2ydRWFc0squid:S2293Ù"YReplace the type specification in this constructor call with the diamond operator ("<>").(Ô÷¹¹ûÿÿÿÿ2adam8Ø§ÉÅ-
+†
+AWj4t1_G6y6P2ydRWFdCsquid:CommentedOutCodeLine½"<This block of commented-out lines of code should be removed.(õçŒŒ2adam8Ø§ÉÅ-
+²
+AWj4t1_G6y6P2ydRWFcp"squid:ClassVariableVisibilityCheck("\Make simultaneousRuns a static final constant or non-public and provide accessors if needed.(½Êûûÿÿÿÿ2adam8Ø§ÉÅ-
+s
+AWj46LKV6y6P2ydRWKL1squid:S22216"4Catch a list of specific exception subtypes instead.(´‚¤–øÿÿÿÿ2adam8€û•Ç-
+t
+AWj4t1_G6y6P2ydRWFc9
+squid:S899ë";Do something with the "boolean" value returned by "delete".(áŞ¡w2adam8Ø§ÉÅ-

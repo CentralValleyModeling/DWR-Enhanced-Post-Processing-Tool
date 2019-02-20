@@ -1,0 +1,44 @@
+<!doctype html public "-//w3c//dtd html 4.0 transitional//en">
+<html>
+<head>
+   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+   <meta name="GENERATOR" content="Mozilla/4.5 [en] (X11; U; SunOS 5.6 sun4u) [Netscape]">
+</head>
+<body>
+<u><font size=+1>Retrieving data by defining a DTS:</font></u>
+<br>&nbsp;&nbsp;&nbsp; Click on the DTS|New menu item. This should open
+a table in a new frame. The table is used to define operations between
+existing data sets in the model run.
+<br>&nbsp;&nbsp;&nbsp; There is textfield at the top of the table with
+some name. Edit the name to suit your desire. You will be warned about
+conflicts with existing names. Let us enter Exports in that field
+<br>&nbsp;&nbsp;&nbsp; The first column is the operator column. A user
+can select one of +,-,/,* operations. The operation is always between the
+result of the previous rows and the row on which the operation is present.
+The first row's operation column is ignored.
+<br>&nbsp;&nbsp;&nbsp; Select + from the first column, DVAR from the third
+column, B Part colum set to D59 and C part set to FLOW
+<br>So the first row looks like:
+<br>&nbsp;&nbsp; +,&nbsp;&nbsp; , DVAR, D59, FLOW
+<br>&nbsp;&nbsp;&nbsp; Select Edit|Add Row. This should add a row to the
+table. Set the second row to look like
+<br>&nbsp;&nbsp;&nbsp; +,&nbsp; , DVAR, D86, FLOW
+<p>&nbsp;&nbsp;&nbsp; To save this DTS select Table|Save item and save
+to a file with .csv extension.
+<br>&nbsp;&nbsp;&nbsp; To retrieve data for this operation select Table|Retrieve.
+This should display the types that have been previously selected
+<br>&nbsp;&nbsp;&nbsp; A user can select a data set from the other columns
+in the table. The DerivedTimeSeries column is used to select from one of
+previously defined DTS's. If this is not selected then the user can choose
+using a bpart and cpart and the type of variable ( decision or state )
+from the last 3 columns.
+<br>&nbsp;&nbsp;&nbsp; To save time we have defined exports.csv and inflows.csv.
+This time to get these definitions into the current project select DTS|Open.
+Then choose the appropriate DTS (csv) file. This should display in a table
+from which one can then retrieve the data or edit them further.
+<br>&nbsp;&nbsp;&nbsp; Also open eiratio.csv DTS file using the above procedure.
+This should demonstrate how previous definitions can be used in the operations
+that are defined between the time series.
+<br>&nbsp;
+</body>
+</html>

@@ -1,0 +1,184 @@
+
+‚
+AWj46LRq6y6P2ydRWKNwsquid:HiddenFieldCheck¦"7Rename "dtm" which hides the field declared at line 69.(áùùÿÿÿÿ2adam8€û•Ç-
+«
+AWj4t2BD6y6P2ydRWFsGsquid:S1151¤"kReduce this switch case number of lines from 26 to at most 10, for example by extracting code into methods.(Û®‡øÿÿÿÿ2adam8Ø§ÉÅ-
+‹
+AWj4t2BD6y6P2ydRWFs1squid:CommentedOutCodeLineŒ"<This block of commented-out lines of code should be removed.(ş‰îÿÿÿÿÿ2adam8Ø§ÉÅ-
+‹
+AWj4t2BD6y6P2ydRWFs9squid:CommentedOutCodeLineè"<This block of commented-out lines of code should be removed.(ş‰îÿÿÿÿÿ2adam8Ø§ÉÅ-
+’
+AWj4t2BD6y6P2ydRWFr1squid:S00116H"WRename this field "scenarioSvc" to match the regular expression '^_[a-z][a-zA-Z0-9]*$'.(Ò®¶—2adam8Ø§ÉÅ-
+Œ
+AWj46LRq6y6P2ydRWKNvsquid:S1132g"MMove the "DEFAULT" string literal on the left side of this string comparison.(¦æ’Òúÿÿÿÿ2adam8€û•Ç-
+“
+AWj4t2BD6y6P2ydRWFr-squid:S00116Q"XRename this field "lstScenarios" to match the regular expression '^_[a-z][a-zA-Z0-9]*$'.(œÓ‘Ğ2adam8Ø§ÉÅ-
+•
+AWj4t2BD6y6P2ydRWFrysquid:S1450Q"[Remove the "lstScenarios" field and declare it as a local variable in the relevant methods.(œÓ‘Ğ2adam8Ø§ÉÅ-
+’
+AWj4t2BD6y6P2ydRWFr5squid:S00116L"WRename this field "seedDataSvc" to match the regular expression '^_[a-z][a-zA-Z0-9]*$'.(ëÈ¹½2adam8Ø§ÉÅ-
+‹
+AWj4t2BD6y6P2ydRWFsxsquid:CommentedOutCodeLineù"<This block of commented-out lines of code should be removed.(ş‰îÿÿÿÿÿ2adam8Ø§ÉÅ-
+‹
+AWj4t2BD6y6P2ydRWFs5squid:CommentedOutCodeLineÎ"<This block of commented-out lines of code should be removed.(·³Ø‘şÿÿÿÿ2adam8Ø§ÉÅ-
+†
+AWj4t2BD6y6P2ydRWFtDsquid:CommentedOutCodeLineä"<This block of commented-out lines of code should be removed.(öĞÆ´2adam8Ø§ÉÅ-
+¥
+AWj46LRq6y6P2ydRWKNtsquid:S1151ò"kReduce this switch case number of lines from 15 to at most 10, for example by extracting code into methods.(Õäš2adam8€û•Ç-
+‹
+AWj4t2BD6y6P2ydRWFstsquid:CommentedOutCodeLineÜ"<This block of commented-out lines of code should be removed.(ş‰îÿÿÿÿÿ2adam8Ø§ÉÅ-
+«
+AWj4t2BD6y6P2ydRWFsFsquid:S1151‡"kReduce this switch case number of lines from 35 to at most 10, for example by extracting code into methods.(úÓÅºûÿÿÿÿ2adam8Ø§ÉÅ-
+‡
+AWj4t2BD6y6P2ydRWFsesquid:S2677É"LUse or store the value returned from "readLine" instead of throwing it away.(™¸¡2adam8Ø§ÉÅ-
+†
+AWj4t2BD6y6P2ydRWFsrsquid:CommentedOutCodeLineœ"<This block of commented-out lines of code should be removed.(æÖú2adam8Ø§ÉÅ-
+‹
+AWj4t2BD6y6P2ydRWFtGsquid:CommentedOutCodeLine²"<This block of commented-out lines of code should be removed.(¸’ìäıÿÿÿÿ2adam8Ø§ÉÅ-
+‹
+AWj4t2BD6y6P2ydRWFspsquid:CommentedOutCodeLine’"<This block of commented-out lines of code should be removed.(ş‰îÿÿÿÿÿ2adam8Ø§ÉÅ-
+
+AWj4t2BD6y6P2ydRWFrwsquid:S1157f"cReplace these toUpperCase()/toLowerCase() and equals() calls with a single equalsIgnoreCase() call.(‘¤şÇ2adam8Ø§ÉÅ-
+‹
+AWj4t2BD6y6P2ydRWFtIsquid:CommentedOutCodeLineÁ"<This block of commented-out lines of code should be removed.(ˆ«°†ıÿÿÿÿ2adam8Ø§ÉÅ-
+†
+AWj4t2BD6y6P2ydRWFtCsquid:CommentedOutCodeLine"<This block of commented-out lines of code should be removed.(æÖú2adam8Ø§ÉÅ-
+–
+AWj4t2BD6y6P2ydRWFr_squid:S00116R"VRename this field "lstReports" to match the regular expression '^_[a-z][a-zA-Z0-9]*$'.(ü„¿üÿÿÿÿ2adam8Ø§ÉÅ-
+‡
+AWj4t2BD6y6P2ydRWFsfsquid:S2677Ì"LUse or store the value returned from "readLine" instead of throwing it away.(™¸¡2adam8Ø§ÉÅ-
+…
+AWj4t2BD6y6P2ydRWFsosquid:CommentedOutCodeLines"<This block of commented-out lines of code should be removed.(Ï¡ÁÛ2adam8Ø§ÉÅ-
+
+AWj46LRq6y6P2ydRWKNlsquid:S1157É"cReplace these toUpperCase()/toLowerCase() and equals() calls with a single equalsIgnoreCase() call.(‹¾²Œ2adam8€û•Ç-
+\
+AWj4t2BD6y6P2ydRWFqasquid:S1643à"Use a StringBuilder instead.(”ñªúÿÿÿÿ2adam8Ø§ÉÅ-
+—
+AWj4t2BD6y6P2ydRWFr4squid:S00116K"WRename this field "swingEngine" to match the regular expression '^_[a-z][a-zA-Z0-9]*$'.(å½¯àùÿÿÿÿ2adam8Ø§ÉÅ-
+‹
+AWj4t2BD6y6P2ydRWFs4squid:CommentedOutCodeLineı"<This block of commented-out lines of code should be removed.(’ğÕÂüÿÿÿÿ2adam8Ø§ÉÅ-
+†
+AWj4t2BD6y6P2ydRWFs7squid:CommentedOutCodeLineØ"<This block of commented-out lines of code should be removed.(õçŒŒ2adam8Ø§ÉÅ-
+‹
+AWj4t2BD6y6P2ydRWFsssquid:CommentedOutCodeLineÚ"<This block of commented-out lines of code should be removed.(ö—üƒıÿÿÿÿ2adam8Ø§ÉÅ-
+‡
+AWj4t2BD6y6P2ydRWFsksquid:S2677Ú"LUse or store the value returned from "readLine" instead of throwing it away.(™¸¡2adam8Ø§ÉÅ-
+
+AWj4t2BD6y6P2ydRWFr2squid:S00116I"TRename this field "auditSvc" to match the regular expression '^_[a-z][a-zA-Z0-9]*$'.(ˆ¹ë¢2adam8Ø§ÉÅ-
+†
+AWj4t2BD6y6P2ydRWFtEsquid:CommentedOutCodeLine«"<This block of commented-out lines of code should be removed.(Äƒ˜Æ2adam8Ø§ÉÅ-
+†
+AWj4t2BD6y6P2ydRWFs8squid:CommentedOutCodeLineÛ"<This block of commented-out lines of code should be removed.(æÖú2adam8Ø§ÉÅ-
+†
+AWj4t2BD6y6P2ydRWFszsquid:CommentedOutCodeLine€"<This block of commented-out lines of code should be removed.(æÖú2adam8Ø§ÉÅ-
+¥
+AWj46LRq6y6P2ydRWKNqsquid:S1151e"kReduce this switch case number of lines from 12 to at most 10, for example by extracting code into methods.(…«í2adam8€û•Ç-
+Š
+AWj4t2BD6y6P2ydRWFsmsquid:CommentedOutCodeLinek"<This block of commented-out lines of code should be removed.(ş‰îÿÿÿÿÿ2adam8Ø§ÉÅ-
+‹
+AWj4t2BD6y6P2ydRWFs-squid:CommentedOutCodeLineï"<This block of commented-out lines of code should be removed.(·ûäĞıÿÿÿÿ2adam8Ø§ÉÅ-
+‹
+AWj4t2BD6y6P2ydRWFtFsquid:CommentedOutCodeLine­"<This block of commented-out lines of code should be removed.(ş‰îÿÿÿÿÿ2adam8Ø§ÉÅ-
+‡
+AWj4t2BD6y6P2ydRWFshsquid:S2677Ò"LUse or store the value returned from "readLine" instead of throwing it away.(™¸¡2adam8Ø§ÉÅ-
+†
+AWj4t2BD6y6P2ydRWFsvsquid:CommentedOutCodeLineã"<This block of commented-out lines of code should be removed.(æÖú2adam8Ø§ÉÅ-
+—
+AWj4t2BD6y6P2ydRWFr8squid:S00116O"\Rename this field "errorHandlingSvc" to match the regular expression '^_[a-z][a-zA-Z0-9]*$'.(Ø¡³ı2adam8Ø§ÉÅ-
+o
+AWj46LRq6y6P2ydRWKNfsquid:S1066İ"/Merge this if statement with the enclosing one.(ì›È³øÿÿÿÿ2adam8€û•Ç-
+†
+AWj46LRq6y6P2ydRWKNisquid:S1301–"KReplace this "switch" statement by "if" statements to increase readability.(ªÑ·Ë2adam8€û•Ç-
+†
+AWj4t2BD6y6P2ydRWFtHsquid:CommentedOutCodeLineµ"<This block of commented-out lines of code should be removed.(æÖú2adam8Ø§ÉÅ-
+\
+AWj4t2BD6y6P2ydRWFqbsquid:S1643ä"Use a StringBuilder instead.(ª³Ûœüÿÿÿÿ2adam8Ø§ÉÅ-
+o
+AWj46LRq6y6P2ydRWKNusquid:S1821£"4Refactor the code to eliminate this nested "switch".(ªÑ·Ë2adam8€û•Ç-
+†
+AWj4t2BD6y6P2ydRWFs_squid:CommentedOutCodeLineò"<This block of commented-out lines of code should be removed.(æÖú2adam8Ø§ÉÅ-
+†
+AWj4t2BD6y6P2ydRWFtBsquid:CommentedOutCodeLineŒ"<This block of commented-out lines of code should be removed.(úØë2adam8Ø§ÉÅ-
+\
+AWj4t2BD6y6P2ydRWFqZsquid:S1643ß"Use a StringBuilder instead.(‘ğçïıÿÿÿÿ2adam8Ø§ÉÅ-
+š
+AWj4t2BD6y6P2ydRWFr0squid:S00116G"ZRename this field "allButtonsDele" to match the regular expression '^_[a-z][a-zA-Z0-9]*$'.(ÎşË¥øÿÿÿÿ2adam8Ø§ÉÅ-
+o
+AWj4t2BD6y6P2ydRWFsCsquid:S1854b"6Remove this useless assignment to local variable "pf".(ú‰2adam8Ø§ÉÅ-
+‹
+AWj4t2BD6y6P2ydRWFsusquid:CommentedOutCodeLineà"<This block of commented-out lines of code should be removed.(å¢ƒşÿÿÿÿ2adam8Ø§ÉÅ-
+‹
+AWj4t2BD6y6P2ydRWFtAsquid:CommentedOutCodeLine†"<This block of commented-out lines of code should be removed.(ş‰îÿÿÿÿÿ2adam8Ø§ÉÅ-
+i
+AWj46LRq6y6P2ydRWKNgsquid:S1066„"/Merge this if statement with the enclosing one.(²¸[2adam8€û•Ç-
+u
+AWj46LRq6y6P2ydRWKNjsquid:S1141´"5Extract this nested try block into a separate method.(ç£êúÿÿÿÿ2adam8€û•Ç-
+†
+AWj4t2BD6y6P2ydRWFsqsquid:CommentedOutCodeLine™"<This block of commented-out lines of code should be removed.(ÔË×‰2adam8Ø§ÉÅ-
+
+AWj4t2BD6y6P2ydRWFr7squid:S00116N"^Rename this field "verifyControlsDele" to match the regular expression '^_[a-z][a-zA-Z0-9]*$'.(Šäğüÿÿÿÿ2adam8Ø§ÉÅ-
+
+AWj6fAyy6y6P2ydRWLuRsquid:S4087ç"bRemove this "close" call; closing the resource is handled automatically by the try-with-resources.(µÖ€’2adam8°÷êÓ-
+‡
+AWj4t2BD6y6P2ydRWFsgsquid:S2677Ï"LUse or store the value returned from "readLine" instead of throwing it away.(™¸¡2adam8Ø§ÉÅ-
+¤
+AWj4t2BD6y6P2ydRWFrnsquid:S4165±"dRemove this useless assignment; "doLoad" already holds the assigned value along all execution paths.(ÉğÉêÿÿÿÿÿ2adam8Ø§ÉÅ-
+
+AWj4t2BD6y6P2ydRWFr6squid:S00116M"URename this field "dialogSvc" to match the regular expression '^_[a-z][a-zA-Z0-9]*$'.(Ğı‘¸2adam8Ø§ÉÅ-
+u
+AWj46LRq6y6P2ydRWKNksquid:S1141ê"5Extract this nested try block into a separate method.(ç£êúÿÿÿÿ2adam8€û•Ç-
+†
+AWj46LRq6y6P2ydRWKNhsquid:S1301ù"KReplace this "switch" statement by "if" statements to increase readability.(ªÑ·Ë2adam8€û•Ç-
+—
+AWj4t2BD6y6P2ydRWFr3squid:S00116J"WRename this field "modelRunSvc" to match the regular expression '^_[a-z][a-zA-Z0-9]*$'.(àƒ±ƒúÿÿÿÿ2adam8Ø§ÉÅ-
+’
+AWj46LRq6y6P2ydRWKNysquid:S3776µ"RRefactor this method to reduce its Cognitive Complexity from 26 to the 15 allowed.(šøİšùÿÿÿÿ2adam8€û•Ç-
+…
+AWj4t2BD6y6P2ydRWFsKsquid:TrailingCommentCheck‰"6Move this trailing comment on the previous empty line.(òÔ¦¿ûÿÿÿÿ2adam8Ø§ÉÅ-
+‹
+AWj4t2BD6y6P2ydRWFsysquid:CommentedOutCodeLineı"<This block of commented-out lines of code should be removed.(å¢ƒşÿÿÿÿ2adam8Ø§ÉÅ-
+‡
+AWj4t2BD6y6P2ydRWFsjsquid:S2677×"LUse or store the value returned from "readLine" instead of throwing it away.(™¸¡2adam8Ø§ÉÅ-
+‹
+AWj4t2BD6y6P2ydRWFs0squid:CommentedOutCodeLineŠ"<This block of commented-out lines of code should be removed.(ö—üƒıÿÿÿÿ2adam8Ø§ÉÅ-
+‡
+AWj4t2BD6y6P2ydRWFsisquid:S2677Õ"LUse or store the value returned from "readLine" instead of throwing it away.(™¸¡2adam8Ø§ÉÅ-
+…
+AWj4t2BD6y6P2ydRWFsnsquid:CommentedOutCodeLineq"<This block of commented-out lines of code should be removed.(õçŒŒ2adam8Ø§ÉÅ-
+‹
+AWj4t2BD6y6P2ydRWFswsquid:CommentedOutCodeLine÷"<This block of commented-out lines of code should be removed.(ö—üƒıÿÿÿÿ2adam8Ø§ÉÅ-
+«
+AWj46LRq6y6P2ydRWKNrsquid:S1151ê"kReduce this switch case number of lines from 13 to at most 10, for example by extracting code into methods.(¿È¬õøÿÿÿÿ2adam8€û•Ç-
+w
+AWj46LRq6y6P2ydRWKNosquid:S1854¥"7Remove this useless assignment to local variable "dtp".(Ôíô‰ûÿÿÿÿ2adam8€û•Ç-
+‹
+AWj4t2BD6y6P2ydRWFsQsquid:HiddenFieldCheck¥"@Rename "scenarioDele" which hides the field declared at line 70.(¸÷úâøÿÿÿÿ2adam8Ø§ÉÅ-
+¦
+AWj46LRq6y6P2ydRWKNm
+squid:S138V"hThis method has 269 lines, which is greater than the 75 lines authorized. Split it into smaller methods.(ÜÔ‡¹şÿÿÿÿ2adam8€û•Ç-
+«
+AWj46LRq6y6P2ydRWKNssquid:S1151Õ"kReduce this switch case number of lines from 13 to at most 10, for example by extracting code into methods.(•óùäùÿÿÿÿ2adam8€û•Ç-
+‹
+AWj4t2BD6y6P2ydRWFs6squid:CommentedOutCodeLineÑ"<This block of commented-out lines of code should be removed.(ş‰îÿÿÿÿÿ2adam8Ø§ÉÅ-
+Ÿ
+AWj4t2BD6y6P2ydRWFr9squid:S00116P"_Rename this field "applyDynamicConDele" to match the regular expression '^_[a-z][a-zA-Z0-9]*$'.(¶Á±Òúÿÿÿÿ2adam8Ø§ÉÅ-
+ˆ
+AWj46LRq6y6P2ydRWKNxsquid:S1142Â"MReduce the number of returns of this method 5, down to the maximum allowed 2.( Àµ’2adam8€û•Ç-
+‘
+AWj46LRq6y6P2ydRWKNnsquid:S3776V"RRefactor this method to reduce its Cognitive Complexity from 41 to the 15 allowed.(ÜÔ‡¹şÿÿÿÿ2adam8€û•Ç-
+Z
+AWj4t2BD6y6P2ydRWFrvsquid:S00113"'Add a new line at the end of this file.2adam8Ø§ÉÅ-
+†
+AWj4t2BD6y6P2ydRWFs3squid:CommentedOutCodeLine“"<This block of commented-out lines of code should be removed.(æÖú2adam8Ø§ÉÅ-
+|
+AWj46LRq6y6P2ydRWKNpsquid:S1479]"BReduce the number of non-empty switch cases from 42 to at most 30.(‹äÿ¼2adam8€û•Ç-
+‡
+AWj4t2BD6y6P2ydRWFsdsquid:S2677Æ"LUse or store the value returned from "readLine" instead of throwing it away.(™¸¡2adam8Ø§ÉÅ-
+‹
+AWj4t2BD6y6P2ydRWFs2squid:CommentedOutCodeLine"<This block of commented-out lines of code should be removed.(å¢ƒşÿÿÿÿ2adam8Ø§ÉÅ-
+’
+AWj4t2BD6y6P2ydRWFrzsquid:S00116F"XRename this field "scenarioDele" to match the regular expression '^_[a-z][a-zA-Z0-9]*$'.(®ÂÎj2adam8Ø§ÉÅ-
+Xsquid:S2221â"4Catch a list of specific exception subtypes instead.(¼Ôîàùÿÿÿÿ8øÅÙÓ-
+Xsquid:S2221´"4Catch a list of specific exception subtypes instead.(¼Ôîàùÿÿÿÿ8øÅÙÓ-
+Xsquid:S2221™"4Catch a list of specific exception subtypes instead.(¼Ôîàùÿÿÿÿ8øÅÙÓ-
+Xsquid:S2221ë"4Catch a list of specific exception subtypes instead.(¼Ôîàùÿÿÿÿ8øÅÙÓ-

@@ -1,0 +1,74 @@
+	VSCRIPT: A scripting language extension for VISTA
+
+INTRODUCTION TO SCRIPTING:
+
+Graphical User Interface's (GUI's) are excellent as an introduction to
+doing a task. This helps to get one initiated but when one starts
+doing complicated, conditional-based, repititive tasks, GUI's either
+cannot do them or it is extremely time-consuming and tedious to do
+so.
+
+	Scripting is the process of writing small scripts ( 1-2 pages
+long ) which do a simple task. Scripting is not limited to command
+line but can also manipulate or create graphical components such as
+plots. Scripting automates tasks and makes them repeatable. This makes
+the work done by an individual easily transferrable to future persons
+who encounter similar tasks. This helps create a body of reusable code
+with more ease than traditional programming.
+
+	Furthermore scripting is interactive, ie. users can try
+out various commands like the ones above by typing them line by line
+on the command interpreter or pasting the entire set of lines at the
+interpreter. The interpreter then executes those lines and waits for
+further commands. This is again of great use as one can experiment
+with various scenarios and then write those that worked into a script
+file for reuse.
+
+	Scripting could be used for :-
+
+- a tool for model/data comparisions
+- a tool for model/model incremental analysis
+- a tool for dynamic documentation
+- a tool for checking model run sanity
+- a tool for automated data quality checking/flag setting with rules 
+
+INTRODUCTION TO VSCRIPT:
+
+	VISTA (VISualization Tool and Analyzer) is a GUI that was
+developed by DWR. VISTA was described in the June 1998 Annual
+Report. The purpose of VISTA is to provide time-series data retrieval,
+management, manipulation and visualization.
+
+	VSCRIPT is a scripting language extension for VISTA. It allows
+a user to write simple scripts using VISTA's functionality. VSCRIPT is
+now an integral part of VISTA's distribution.
+
+	The underlying language of VSCRIPT is Python. This a mature
+and stable scripting language which is very close in syntax to the
+underlying language of VISTA ( i.e. Java). VSCRIPT is an extension
+based on JPython ( Java version of Python which is available from 
+www.jpython.org ). VISTA and VSCRIPT and its documentation are
+available from 
+http://wwwdelmod.water.ca.gov/docs/dsm2/vista
+
+	Python is well documented and has a large user
+community. JPython taps into the power and libraries of two languages
+Java and Python to give the user desired flexibility and power.
+
+FUTURE DIRECTIONS
+
+	1. Documentation:
+		There are a number of modules available in VISTA to
+manipulate and display data. In order to use this functionality the
+user needs to be informed. For this purpose there will be VSCRIPT
+classes in the future. Furthermore documentation of sample scripts and
+VISTA functionality will be improved.
+
+	2. Library of scripts for common tasks
+		Certain data processing tasks are repeated by users in
+the course of doing various studies. The aim of scripting is to make
+them repeatable. Furthermore if the task is generally useful enough it
+becomes useful enough to parametrize the script in terms of arguments
+required to do the task so that the script can be customized by future
+users faced with similar tasks. A scripting library for commonly used
+scripts will be documented and expanded upon in the future.

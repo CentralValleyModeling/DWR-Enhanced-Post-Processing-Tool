@@ -1,0 +1,73 @@
+
+‰
+AWj46KXj6y6P2ydRWJpLsquid:S1132”"IMove the "NOV" string literal on the left side of this string comparison.(‚€îÍüÿÿÿÿ2adam8€û•Ç-
+
+AWj46KXj6y6P2ydRWJpEsquid:S3776ª"RRefactor this method to reduce its Cognitive Complexity from 35 to the 15 allowed.(··™2adam8€û•Ç-
+¡
+AWj46KXj6y6P2ydRWJpN
+squid:S138á"gThis method has 82 lines, which is greater than the 75 lines authorized. Split it into smaller methods.(ÕˆŞä2adam8€û•Ç-
+‡
+AWj46KXj6y6P2ydRWJpBsquid:S00112š"FDefine and throw a dedicated exception instead of using a generic one.(Æµ‘şÿÿÿÿ2adam8€û•Ç-
+`
+AWj4t1Zf6y6P2ydRWB-5squid:S1659æ" Declare "ey" on a separate line.(ÎœÊãıÿÿÿÿ2adam8Ø§ÉÅ-
+„
+AWj46KXj6y6P2ydRWJpQsquid:S1132ë"IMove the "NOV" string literal on the left side of this string comparison.(Ÿ·Ôö2adam8€û•Ç-
+’
+AWj46KXj6y6P2ydRWJo-
+squid:S135–"YReduce the total number of break and continue statements in this loop to use at most one.(¤èÄ72adam8€û•Ç-
+¢
+AWj46KXj6y6P2ydRWJpD
+squid:S138ª"hThis method has 190 lines, which is greater than the 75 lines authorized. Split it into smaller methods.(··™2adam8€û•Ç-
+˜
+AWj46KXj6y6P2ydRWJo_
+squid:S135©"YReduce the total number of break and continue statements in this loop to use at most one.(µÓü¨ÿÿÿÿÿ2adam8€û•Ç-
+
+AWj46KXj6y6P2ydRWJpFsquid:S1132¼"MMove the "STORAGE" string literal on the left side of this string comparison.(êÈßùÿÿÿÿ2adam8€û•Ç-
+Œ
+AWj46KXj6y6P2ydRWJpIsquid:S3776à"RRefactor this method to reduce its Cognitive Complexity from 20 to the 15 allowed.(§úâ_2adam8€û•Ç-
+€
+AWj4t1Zf6y6P2ydRWB-6squid:TrailingCommentCheckî"6Move this trailing comment on the previous empty line.(¸Ş¢ã2adam8Ø§ÉÅ-
+
+AWj46KXj6y6P2ydRWJpOsquid:S3776á"RRefactor this method to reduce its Cognitive Complexity from 30 to the 15 allowed.(ÕˆŞä2adam8€û•Ç-
+ˆ
+AWj46KXj6y6P2ydRWJpTsquid:S1142á"MReduce the number of returns of this method 6, down to the maximum allowed 2.(ÕˆŞä2adam8€û•Ç-
+€
+AWj46KXj6y6P2ydRWJpSsquid:TrailingCommentCheck"6Move this trailing comment on the previous empty line.(éàƒİ2adam8€û•Ç-
+]
+AWj4t1Zf6y6P2ydRWB_Esquid:S1659¤""Declare "smin" on a separate line.(²ÈÆ2adam8Ø§ÉÅ-
+o
+AWj46KXj6y6P2ydRWJo9squid:S1066”"/Merge this if statement with the enclosing one.(‚€îÍüÿÿÿÿ2adam8€û•Ç-
+…
+AWj46KXj6y6P2ydRWJpGsquid:TrailingCommentCheckÀ"6Move this trailing comment on the previous empty line.(š÷¹Îüÿÿÿÿ2adam8€û•Ç-
+]
+AWj4t1Zf6y6P2ydRWB-v
+squid:S818ö"#Upper-case this literal "f" suffix.(ğ‚­Ç2adam8Ø§ÉÅ-
+ˆ
+AWj46KXj6y6P2ydRWJpHsquid:S1142Í"MReduce the number of returns of this method 3, down to the maximum allowed 2.(ûÒÜ2adam8€û•Ç-
+‰
+AWj46KXj6y6P2ydRWJpKsquid:S1132”"IMove the "OCT" string literal on the left side of this string comparison.(‚€îÍüÿÿÿÿ2adam8€û•Ç-
+g
+AWj4t1Zf6y6P2ydRWB_Hsquid:S1659§",Declare "waterYearStyle" on a separate line.(ùÇÓã2adam8Ø§ÉÅ-
+
+AWj46KXj6y6P2ydRWJpCsquid:S00117•"QRename this local variable to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(èÍ¤€2adam8€û•Ç-
+„
+AWj46KXj6y6P2ydRWJpRsquid:S1132ë"IMove the "OCT" string literal on the left side of this string comparison.(Ÿ·Ôö2adam8€û•Ç-
+‰
+AWj46KXj6y6P2ydRWJpMsquid:S1132”"IMove the "DEC" string literal on the left side of this string comparison.(‚€îÍüÿÿÿÿ2adam8€û•Ç-
+’
+AWj46KXj6y6P2ydRWJpA
+squid:S135¸"YReduce the total number of break and continue statements in this loop to use at most one.(¤èÄ72adam8€û•Ç-
+s
+AWj46KXj6y6P2ydRWJo8
+squid:S864ë"9Add parentheses to make the operator precedence explicit.(Ÿ·Ôö2adam8€û•Ç-
+…
+AWj4t1Zf6y6P2ydRWB-msquid:TrailingCommentCheckÉ"6Move this trailing comment on the previous empty line.(š°×Ûıÿÿÿÿ2adam8Ø§ÉÅ-
+b
+AWj4t1Zf6y6P2ydRWB_Fsquid:S1659¥""Declare "smax" on a separate line.(ë•›§şÿÿÿÿ2adam8Ø§ÉÅ-
+`
+AWj4t1Zf6y6P2ydRWB_Gsquid:S1659¦"%Declare "sheader" on a separate line.(÷ş½µ2adam8Ø§ÉÅ-
+osquid:CommentedOutCodeLineÉ"<This block of commented-out lines of code should be removed.(š°×Ûıÿÿÿÿ8õƒóĞ-
+…
+AWj4t1Zf6y6P2ydRWB-lsquid:TrailingCommentCheckÅ"6Move this trailing comment on the previous empty line.(ôöõïøÿÿÿÿ2adam8Ø§ÉÅ-
+„
+AWj46KXj6y6P2ydRWJpPsquid:S1132ë"IMove the "DEC" string literal on the left side of this string comparison.(Ÿ·Ôö2adam8€û•Ç-

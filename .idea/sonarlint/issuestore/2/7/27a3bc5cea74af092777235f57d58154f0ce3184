@@ -1,0 +1,117 @@
+
+d
+AWj46Keo6y6P2ydRWJtvsquid:S1125π")Remove the literal "false" boolean value.(ö¡–í2adam8Ä˚ï«è-
+É
+AWj4t1fW6y6P2ydRWChesquid:S4042Ò"IUse "java.nio.Files#delete" here for better messages on error conditions.(ü•ë|2adam8ÿß…≈è-
+Ü
+AWj4t1fW6y6P2ydRWChrsquid:CommentedOutCodeLineé"<This block of commented-out lines of code should be removed.(öîÇ¶2adam8ÿß…≈è-
+Ñ
+AWj4t1fW6y6P2ydRWCgtsquid:TrailingCommentCheckn"6Move this trailing comment on the previous empty line.(íöœÔ˙ˇˇˇˇ2adam8ÿß…≈è-
+é
+AWj4t1fW6y6P2ydRWCglsquid:S30087"TRename this field "_studyTab" to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(∞¯ÆÌ2adam8ÿß…≈è-
+Å
+AWj4t1fW6y6P2ydRWChZsquid:S3027œ"FPut single-quotes around ':' to use the faster "indexOf(char)" method.(Áƒ˙–2adam8ÿß…≈è-
+
+AWj4t1fW6y6P2ydRWChIsquid:TrailingCommentCheckß"6Move this trailing comment on the previous empty line.(ΩŸñ2adam8ÿß…≈è-
+x
+AWj4t1fW6y6P2ydRWChK
+squid:S106∑"9Replace this use of System.out or System.err by a logger.(—¿≥˙¯ˇˇˇˇ2adam8ÿß…≈è-
+t
+AWj46Keo6y6P2ydRWJtlsquid:S2221ì"4Catch a list of specific exception subtypes instead.(º‘Ó‡˘ˇˇˇˇ2adam8Ä˚ï«è-
+i
+AWj46Keo6y6P2ydRWJttsquid:S1125∏")Remove the literal "false" boolean value.(Ä≤ù”˚ˇˇˇˇ2adam8Ä˚ï«è-
+e
+AWj46Keo6y6P2ydRWJtisquid:S1166‰"%Either log or rethrow this exception.( ‹ π˛ˇˇˇˇ2adam8Ä˚ï«è-
+ã
+AWj4t1fW6y6P2ydRWChpsquid:CommentedOutCodeLineÆ"<This block of commented-out lines of code should be removed.(“≤Ç“˙ˇˇˇˇ2adam8ÿß…≈è-
+\
+AWj46Keo6y6P2ydRWJtgsquid:S1643‡"Use a StringBuilder instead.(¸›•Ã¯ˇˇˇˇ2adam8Ä˚ï«è-
+y
+AWj4t1fW6y6P2ydRWCg8squid:S3400ß"9Remove this method and declare a constant for this value.(Í€∏™˚ˇˇˇˇ2adam8ÿß…≈è-
+Ü
+AWj4t1fW6y6P2ydRWCghsquid:S00112x"FDefine and throw a dedicated exception instead of using a generic one.(πæù‰¸ˇˇˇˇ2adam8ÿß…≈è-
+Ç
+AWj4t1fW6y6P2ydRWChjsquid:S3027˛"GPut single-quotes around '\n' to use the faster "indexOf(char)" method.(˙πÓÜ2adam8ÿß…≈è-
+}
+AWj46Keo6y6P2ydRWJtosquid:S1126¶"BReplace this if-then-else statement by a single method invocation.(Ω¯îΩ2adam8Ä˚ï«è-
+é
+AWj4t1fW6y6P2ydRWCgksquid:S30086"TRename this field "_panelCLG" to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(»ªãØ2adam8ÿß…≈è-
+ë
+AWj4t1fW6y6P2ydRWCgnsquid:S30089"WRename this field "_statusPanel" to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(ÿå◊Á2adam8ÿß…≈è-
+Ö
+AWj4t1fW6y6P2ydRWChmsquid:CommentedOutCodeLineô"<This block of commented-out lines of code should be removed.(§˘πf2adam8ÿß…≈è-
+Ü
+AWj4t1fW6y6P2ydRWChosquid:CommentedOutCodeLine®"<This block of commented-out lines of code should be removed.(›‹¶2adam8ÿß…≈è-
+y
+AWj46Keo6y6P2ydRWJtjsquid:S11184":Add a private constructor to hide the implicit public one.(»‡ù˙¯ˇˇˇˇ2adam8Ä˚ï«è-
+s
+AWj46Keo6y6P2ydRWJtpsquid:S2221z"4Catch a list of specific exception subtypes instead.(º‘Ó‡˘ˇˇˇˇ2adam8Ä˚ï«è-
+j
+AWj46Keo6y6P2ydRWJtksquid:S00108´")Either remove or fill this block of code.(“Ã‚ñ¯ˇˇˇˇ2adam8Ä˚ï«è-
+Ñ
+AWj4t1fW6y6P2ydRWCgusquid:TrailingCommentChecko"6Move this trailing comment on the previous empty line.(´Ù…∞˙ˇˇˇˇ2adam8ÿß…≈è-
+x
+AWj4t1fW6y6P2ydRWChD
+squid:S106È"9Replace this use of System.out or System.err by a logger.(÷˛ıÄ˘ˇˇˇˇ2adam8ÿß…≈è-
+i
+AWj46Keo6y6P2ydRWJtmsquid:S1172ì".Remove this unused method parameter "tabName".(…ﬁ€¥2adam8Ä˚ï«è-
+Å
+AWj46Keo6y6P2ydRWJtwsquid:S2142È"FEither re-interrupt this method or rethrow the "InterruptedException".(ÎùΩÙ2adam8Ä˚ï«è-
+ç
+AWj46Keo6y6P2ydRWJtqsquid:S1142º"MReduce the number of returns of this method 3, down to the maximum allowed 2.(äì√æ˛ˇˇˇˇ2adam8Ä˚ï«è-
+\
+AWj4t1fW6y6P2ydRWCfIsquid:S1643Û"Use a StringBuilder instead.(¯‹Ä˘˛ˇˇˇˇ2adam8ÿß…≈è-
+x
+AWj4t1fW6y6P2ydRWChb
+squid:S106⁄"9Replace this use of System.out or System.err by a logger.(Òó∏Ω˙ˇˇˇˇ2adam8ÿß…≈è-
+i
+AWj46Keo6y6P2ydRWJtrsquid:S00108N")Either remove or fill this block of code.(“Ã‚ñ¯ˇˇˇˇ2adam8Ä˚ï«è-
+j
+AWj46Keo6y6P2ydRWJtssquid:S00108ç")Either remove or fill this block of code.(“Ã‚ñ¯ˇˇˇˇ2adam8Ä˚ï«è-
+
+AWj4t1fW6y6P2ydRWChFsquid:TrailingCommentCheckâ"6Move this trailing comment on the previous empty line.(ΩŸñ2adam8ÿß…≈è-
+Ä
+AWj4t1fW6y6P2ydRWChTsquid:TrailingCommentCheckó"6Move this trailing comment on the previous empty line.(◊Ì¨Ü2adam8ÿß…≈è-
+x
+AWj4t1fW6y6P2ydRWCha
+squid:S106ﬂ"9Replace this use of System.out or System.err by a logger.(Òó∏Ω˙ˇˇˇˇ2adam8ÿß…≈è-
+ä
+AWj4t1fW6y6P2ydRWChksquid:CommentedOutCodeLine*"<This block of commented-out lines of code should be removed.(ïôÕ…˝ˇˇˇˇ2adam8ÿß…≈è-
+ï
+AWj46Keo6y6P2ydRWJtnsquid:S3923†"[Remove this conditional structure or edit its code blocks so that they're not all the same.(‡”d2adam8Ä˚ï«è-
+s
+AWj4t1fW6y6P2ydRWChc
+squid:S106Ê"9Replace this use of System.out or System.err by a logger.(øœÈ»2adam8ÿß…≈è-
+i
+AWj46Keo6y6P2ydRWJtusquid:S1125∏")Remove the literal "false" boolean value.(Ä≤ù”˚ˇˇˇˇ2adam8Ä˚ï«è-
+Å
+AWj46Keo6y6P2ydRWJtxsquid:S3027Õ"FPut single-quotes around ':' to use the faster "indexOf(char)" method.(ØƒÕÒ2adam8Ä˚ï«è-
+ç
+AWj4t1fW6y6P2ydRWCgjsquid:S00117Ü"QRename this local variable to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(äº´–2adam8ÿß…≈è-
+Ü
+AWj4t1fW6y6P2ydRWChqsquid:CommentedOutCodeLineÖ"<This block of commented-out lines of code should be removed.(îÓ„•2adam8ÿß…≈è-
+ê
+AWj4t1fW6y6P2ydRWCgmsquid:S30088"QRename this field "_panel" to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(¸ñÔÄˇˇˇˇˇ2adam8ÿß…≈è-
+à
+AWj46Keo6y6P2ydRWJtzsquid:S1142∑"MReduce the number of returns of this method 3, down to the maximum allowed 2.(Ω”–‚2adam8Ä˚ï«è-
+ã
+AWj4t1fW6y6P2ydRWChnsquid:CommentedOutCodeLine¢"<This block of commented-out lines of code should be removed.(∞ù∞Ä¯ˇˇˇˇ2adam8ÿß…≈è-
+x
+AWj4t1fW6y6P2ydRWChd
+squid:S106Î"9Replace this use of System.out or System.err by a logger.(†·‡Ç¯ˇˇˇˇ2adam8ÿß…≈è-
+ë
+AWj4t1fW6y6P2ydRWCgosquid:S3008:"RRename this field "_status" to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(Æ“ﬂÎˇˇˇˇˇ2adam8ÿß…≈è-
+t
+AWj4t1fW6y6P2ydRWChf
+squid:S899Ò";Do something with the "boolean" value returned by "delete".(ü•ë|2adam8ÿß…≈è-
+x
+AWj4t1fW6y6P2ydRWChC
+squid:S106Ó"9Replace this use of System.out or System.err by a logger.(÷˛ıÄ˘ˇˇˇˇ2adam8ÿß…≈è-
+d
+AWj46Keo6y6P2ydRWJthsquid:S1166M"%Either log or rethrow this exception.(º‘Ó‡˘ˇˇˇˇ2adam8Ä˚ï«è-
+ã
+AWj4t1fW6y6P2ydRWChssquid:CommentedOutCodeLineë"<This block of commented-out lines of code should be removed.(Èÿª⁄˚ˇˇˇˇ2adam8ÿß…≈è-
+á
+AWj4t1fW6y6P2ydRWCgisquid:S00112É"FDefine and throw a dedicated exception instead of using a generic one.(‰ÔΩ—¯ˇˇˇˇ2adam8ÿß…≈è-
+Wsquid:S2221M"4Catch a list of specific exception subtypes instead.(º‘Ó‡˘ˇˇˇˇ8æµÜ”è-
+Xsquid:S2221¡"4Catch a list of specific exception subtypes instead.(º‘Ó‡˘ˇˇˇˇ8Ä˚ï«è-

@@ -1,0 +1,53 @@
+
+osquid:CommentedOutCodeLineÝ"<This block of commented-out lines of code should be removed.(çÿ­Ýüÿÿÿÿ8µéÑ-
+usquid:S00116ª"PRename this field "type" to match the regular expression '^_[a-z][a-zA-Z0-9]*$'.(¢ñØßüÿÿÿÿ8µéÑ-
+jsquid:CommentedOutCodeLine¢"<This block of commented-out lines of code should be removed.(¹Æ§Ã8µéÑ-
+Zsquid:S2696õ"6Make the enclosing method "static" or remove this set.(§Á¿¼ÿÿÿÿÿ8µéÑ-
+[
+AWj4t1e36y6P2ydRWCdfsquid:S3010Z""Remove this assignment of "_year".(Æ Û2adam8Ø§ÉÅ-
+Ž
+AWj4t1e36y6P2ydRWCdXsquid:S00116M"NRename this field "yl" to match the regular expression '^_[a-z][a-zA-Z0-9]*$'.(¦±Ð™þÿÿÿÿ2adam8Ø§ÉÅ-
+isquid:S1132‘"JMove the "1MON" string literal on the left side of this string comparison.(’³ßÛ8µéÑ-
+dsquid:TrailingCommentCheckÍ"6Move this trailing comment on the previous empty line.(ý–©º8Ø§ÉÅ-
+^
+AWj4t1e36y6P2ydRWCdJsquid:S1659F"%Declare "_numSeq" on a separate line.(Ë±¢g2adam8Ø§ÉÅ-
+]
+AWj4t1e36y6P2ydRWCdesquid:S3010Y"#Remove this assignment of "_month".(³¢éŽ2adam8Ø§ÉÅ-
+vsquid:S3776ƒ"RRefactor this method to reduce its Cognitive Complexity from 33 to the 15 allowed.(Ë¶¥¶ùÿÿÿÿ8µéÑ-
+‰
+AWj4t1e36y6P2ydRWCdQsquid:S3008@"PRename this field "_year" to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(è†±02adam8Ø§ÉÅ-
+dsquid:TrailingCommentCheckÓ"6Move this trailing comment on the previous empty line.(àþÕÃ8µéÑ-
+Lsquid:S1604Ä"(Make this anonymous inner class a lambda(ç£ ”úÿÿÿÿ8µéÑ-
+isquid:TrailingCommentCheckÊ"6Move this trailing comment on the previous empty line.(£€üÿÿÿÿ8Ø§ÉÅ-
+isquid:TrailingCommentCheckÉ"6Move this trailing comment on the previous empty line.(–Ü¼ãÿÿÿÿÿ8µéÑ-
+k$squid:AssignmentInSubExpressionCheck".Extract the assignment out of this expression.(Å«Ìœýÿÿÿÿ8Ø§ÉÅ-
+isquid:S1132Ž"JMove the "1MON" string literal on the left side of this string comparison.(®çÜÐ8µéÑ-
+Zsquid:S2696"6Make the enclosing method "static" or remove this set.(µýßþÿÿÿÿ8Ø§ÉÅ-
+dsquid:TrailingCommentCheckÏ"6Move this trailing comment on the previous empty line.(Òƒ±Ä8µéÑ-
+Š
+AWj4t1e36y6P2ydRWCdPsquid:S3008@"QRename this field "_month" to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(è†±02adam8Ø§ÉÅ-
+Zsquid:S2696ø"6Make the enclosing method "static" or remove this set.(œ©·’þÿÿÿÿ8µéÑ-
+isquid:S1132Ú"JMove the "1MON" string literal on the left side of this string comparison.(’³ßÛ8µéÑ-
+_
+AWj4t1e36y6P2ydRWCdKsquid:S1659M" Declare "yl" on a separate line.(¦±Ð™þÿÿÿÿ2adam8Ø§ÉÅ-
+isquid:TrailingCommentCheckÌ"6Move this trailing comment on the previous empty line.(þ°·Ãùÿÿÿÿ8Ø§ÉÅ-
+Ž
+AWj4t1e36y6P2ydRWCdYsquid:S00116M"NRename this field "ml" to match the regular expression '^_[a-z][a-zA-Z0-9]*$'.(¦±Ð™þÿÿÿÿ2adam8Ø§ÉÅ-
+Ž
+AWj4t1e36y6P2ydRWCdRsquid:S3008A"TRename this field "_timeStep" to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(¢ÉÖ˜2adam8Ø§ÉÅ-
+isquid:TrailingCommentCheckÑ"6Move this trailing comment on the previous empty line.(êðõ¡üÿÿÿÿ8µéÑ-
+Zsquid:S2696”"6Make the enclosing method "static" or remove this set.(ÂŒýÅøÿÿÿÿ8µéÑ-
+osquid:CommentedOutCodeLineó"<This block of commented-out lines of code should be removed.(õž‹øÿÿÿÿ8µéÑ-
+\
+AWj4t1e36y6P2ydRWCdLsquid:S1659@"#Declare "_year" on a separate line.(è†±02adam8Ø§ÉÅ-
+isquid:TrailingCommentCheckË"6Move this trailing comment on the previous empty line.(ÔÑ²”ÿÿÿÿÿ8µéÑ-
+isquid:TrailingCommentCheckÒ"6Move this trailing comment on the previous empty line.(õ• ªøÿÿÿÿ8µéÑ-
+ˆ
+AWj4t1e36y6P2ydRWCdWsquid:S00116L"NRename this field "dl" to match the regular expression '^_[a-z][a-zA-Z0-9]*$'.(ýâàS2adam8Ø§ÉÅ-
+b
+AWj4t1e36y6P2ydRWCdIsquid:S1659E"(Declare "_entryText" on a separate line.(´£Žò2adam8Ø§ÉÅ-
+jsquid:CommentedOutCodeLineâ"<This block of commented-out lines of code should be removed.(½¶×Ø8µéÑ-
+k$squid:AssignmentInSubExpressionCheck’".Extract the assignment out of this expression.(ÛÆåÒøÿÿÿÿ8µéÑ-
+–
+AWj4t1e36y6P2ydRWCdOsquid:S3008="WRename this field "_numberSteps" to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(ùï‰Žûÿÿÿÿ2adam8Ø§ÉÅ-
+k$squid:AssignmentInSubExpressionCheckœ".Extract the assignment out of this expression.(üùÔ¤ùÿÿÿÿ8µéÑ-

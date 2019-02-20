@@ -1,0 +1,56 @@
+
+s
+AWj46KcM6y6P2ydRWJrr
+squid:S106î"9Replace this use of System.out or System.err by a logger.(ÎĞ¯2adam8€û•Ç-
+¦
+AWj46KcM6y6P2ydRWJrq
+squid:S138¬"gThis method has 96 lines, which is greater than the 75 lines authorized. Split it into smaller methods.(©Ï×÷ûÿÿÿÿ2adam8€û•Ç-
+t
+AWj46KcM6y6P2ydRWJr4squid:S2221î"4Catch a list of specific exception subtypes instead.(¼Ôîàùÿÿÿÿ2adam8€û•Ç-
+s
+AWj46KcM6y6P2ydRWJrs
+squid:S106Ó"9Replace this use of System.out or System.err by a logger.(ñ´‘—2adam8€û•Ç-
+t
+AWj46KcM6y6P2ydRWJr1squid:S2221º"4Catch a list of specific exception subtypes instead.(¼Ôîàùÿÿÿÿ2adam8€û•Ç-
+
+AWj4t1c66y6P2ydRWCPIsquid:TrailingCommentCheckx"6Move this trailing comment on the previous empty line.(€¥¨×2adam8Ø§ÉÅ-
+l
+AWj4t1c66y6P2ydRWCPHsquid:S1135m"2Complete the task associated to this TODO comment.(ÁäÏ¢2adam8Ø§ÉÅ-
+
+AWj4t1c66y6P2ydRWCPGsquid:TrailingCommentCheckm"6Move this trailing comment on the previous empty line.(ÁäÏ¢2adam8Ø§ÉÅ-
+x
+AWj46KcM6y6P2ydRWJr2
+squid:S106Ç"9Replace this use of System.out or System.err by a logger.(¯¨‡İşÿÿÿÿ2adam8€û•Ç-
+x
+AWj46KcM6y6P2ydRWJrt
+squid:S106"9Replace this use of System.out or System.err by a logger.(õè€ ıÿÿÿÿ2adam8€û•Ç-
+x
+AWj46KcM6y6P2ydRWJr3
+squid:S106ë"9Replace this use of System.out or System.err by a logger.(ë÷‹Ûÿÿÿÿÿ2adam8€û•Ç-
+x
+AWj46KcM6y6P2ydRWJr0
+squid:S106•"9Replace this use of System.out or System.err by a logger.(õè€ ıÿÿÿÿ2adam8€û•Ç-
+s
+AWj4t1c66y6P2ydRWCP5
+squid:S106²"9Replace this use of System.out or System.err by a logger.(ùºÉ‰2adam8Ø§ÉÅ-
+x
+AWj46KcM6y6P2ydRWJrw
+squid:S106½"9Replace this use of System.out or System.err by a logger.(·ÎĞ®ûÿÿÿÿ2adam8€û•Ç-
+s
+AWj46KcM6y6P2ydRWJrp
+squid:S106™"9Replace this use of System.out or System.err by a logger.(¸Ãã—2adam8€û•Ç-
+
+AWj46KcM6y6P2ydRWJrusquid:S3776™"RRefactor this method to reduce its Cognitive Complexity from 22 to the 15 allowed.(ùÿ²Œ2adam8€û•Ç-
+x
+AWj46KcM6y6P2ydRWJrv
+squid:S106Ÿ"9Replace this use of System.out or System.err by a logger.(·ÎĞ®ûÿÿÿÿ2adam8€û•Ç-
+s
+AWj46KcM6y6P2ydRWJry
+squid:S106â"9Replace this use of System.out or System.err by a logger.(ÎĞ¯2adam8€û•Ç-
+vsquid:S1450O"SRemove the "_dtm" field and declare it as a local variable in the relevant methods.(”ÿÅùúÿÿÿÿ8Äï•Ñ-
+Xsquid:S2221ù"4Catch a list of specific exception subtypes instead.(¼Ôîàùÿÿÿÿ8€û•Ç-
+\
+squid:S106Å"9Replace this use of System.out or System.err by a logger.(óÉ¶¬úÿÿÿÿ8€û•Ç-
+W
+squid:S106Ø"9Replace this use of System.out or System.err by a logger.(ï™äÍ8€û•Ç-
+vsquid:S1450P"SRemove the "_mtm" field and declare it as a local variable in the relevant methods.(Åôııÿÿÿÿ8Äï•Ñ-

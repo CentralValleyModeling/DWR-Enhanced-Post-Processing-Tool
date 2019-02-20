@@ -1,0 +1,201 @@
+
+…
+AWj4t1k-6y6P2ydRWDNcsquid:TrailingCommentCheck·"6Move this trailing comment on the previous empty line.(ıü˜ëÿÿÿÿÿ2adam8Ø§ÉÅ-
+
+AWj4t1k-6y6P2ydRWDM-squid:TrailingCommentChecko"6Move this trailing comment on the previous empty line.(îØä2adam8Ø§ÉÅ-
+c
+AWj46Knb6y6P2ydRWJyisquid:S1604Ÿ"(Make this anonymous inner class a lambda(¢íÎ2adam8€û•Ç-
+k
+AWj4t1k-6y6P2ydRWDMasquid:S14442",Make this "public static output" field final(¸ÇÀ‹üÿÿÿÿ2adam8Ø§ÉÅ-
+q
+AWj4t1k-6y6P2ydRWDNMsquid:S2696ç"6Make the enclosing method "static" or remove this set.(Ç¬äÔ2adam8Ø§ÉÅ-
+s
+AWj4t1k-6y6P2ydRWDOa
+squid:S106å"9Replace this use of System.out or System.err by a logger.(Æ‡¾Ï2adam8Ø§ÉÅ-
+e
+AWj46Knb6y6P2ydRWJyasquid:S1166Ï"%Either log or rethrow this exception.(É˜Ùúÿÿÿÿ2adam8€û•Ç-
+Z
+AWj46Knb6y6P2ydRWJyjsquid:S2131ã"Use "Integer.toString" instead.(¯—ıÒ2adam8€û•Ç-
+a
+AWj4t1k-6y6P2ydRWDNCsquid:S2129"!Remove this "Integer" constructor(Ô®¢¦şÿÿÿÿ2adam8Ø§ÉÅ-
+§
+AWj4t1k-6y6P2ydRWDMq"squid:ClassVariableVisibilityCheck1"QMake DEBUG a static final constant or non-public and provide accessors if needed.(îéÒ¡ÿÿÿÿÿ2adam8Ø§ÉÅ-
+j
+AWj46Knb6y6P2ydRWJyYsquid:S1066ò"/Merge this if statement with the enclosing one.(ë¶Ë2adam8€û•Ç-
+a
+AWj4t1k-6y6P2ydRWDOVsquid:S2129Ú"!Remove this "Boolean" constructor(Â‰Ãàøÿÿÿÿ2adam8Ø§ÉÅ-
+‡
+AWj46Knb6y6P2ydRWJy4squid:S1142¡"MReduce the number of returns of this method 6, down to the maximum allowed 2.(»ƒÃ!2adam8€û•Ç-
+\
+AWj4t1k-6y6P2ydRWDNYsquid:S2129œ"!Remove this "Integer" constructor(ó˜…2adam8Ø§ÉÅ-
+…
+AWj4t1k-6y6P2ydRWDNBsquid:TrailingCommentCheck"6Move this trailing comment on the previous empty line.(ì®¥€şÿÿÿÿ2adam8Ø§ÉÅ-
+…
+AWj46Knb6y6P2ydRWJy5squid:S1132©"JMove the "NONE" string literal on the left side of this string comparison.(‚™2adam8€û•Ç-
+‹
+AWj4t1k-6y6P2ydRWDO6squid:CommentedOutCodeLineŠ"<This block of commented-out lines of code should be removed.(Ó¸¸Õøÿÿÿÿ2adam8Ø§ÉÅ-
+i
+AWj46Knb6y6P2ydRWJy0squid:S1125²")Remove the literal "false" boolean value.(¡ëûøÿÿÿÿ2adam8€û•Ç-
+b
+AWj46Knb6y6P2ydRWJyhsquid:S1604”"(Make this anonymous inner class a lambda(ÎæÄO2adam8€û•Ç-
+b
+AWj46Knb6y6P2ydRWJyxsquid:S1125ç"(Remove the literal "true" boolean value.(ö±ÖT2adam8€û•Ç-
+ 
+AWj4t1k-6y6P2ydRWDM6squid:S1149¸"eReplace the synchronized class "Vector" by an unsynchronized one such as "ArrayList" or "LinkedList".(ú«·2adam8Ø§ÉÅ-
+Ÿ
+AWj4t1k-6y6P2ydRWDM5squid:S1149•"eReplace the synchronized class "Vector" by an unsynchronized one such as "ArrayList" or "LinkedList".(¼®Ñj2adam8Ø§ÉÅ-
+‹
+AWj4t1k-6y6P2ydRWDOSsquid:S3027»"KPut single-quotes around '\\' to use the faster "lastIndexOf(char)" method.(Èçñèûÿÿÿÿ2adam8Ø§ÉÅ-
+a
+AWj4t1k-6y6P2ydRWDOWsquid:S2129Ş"!Remove this "Integer" constructor(•îîäøÿÿÿÿ2adam8Ø§ÉÅ-
+s
+AWj46Knb6y6P2ydRWJy3
+squid:S106‚"9Replace this use of System.out or System.err by a logger.(ÆÀûı2adam8€û•Ç-
+
+AWj4t1k-6y6P2ydRWDOosquid:ModifiersOrderCheck0"EReorder the modifiers to comply with the Java Language Specification.(†â…2adam8Ø§ÉÅ-
+
+AWj4t1k-6y6P2ydRWDOpsquid:TrailingCommentCheckD"6Move this trailing comment on the previous empty line.(§§Òæ2adam8Ø§ÉÅ-
+
+AWj46Knb6y6P2ydRWJypsquid:S1142Î"MReduce the number of returns of this method 3, down to the maximum allowed 2.(îüÆıÿÿÿÿ2adam8€û•Ç-
+†
+AWj46Knb6y6P2ydRWJymsquid:S3027”"FPut single-quotes around '-' to use the faster "indexOf(char)" method.(¹ˆªÿÿÿÿÿ2adam8€û•Ç-
+†
+AWj4t1k-6y6P2ydRWDO2squid:CommentedOutCodeLine¹"<This block of commented-out lines of code should be removed.(Ñ°‡ç2adam8Ø§ÉÅ-
+‹
+AWj4t1k-6y6P2ydRWDO5squid:CommentedOutCodeLineß"<This block of commented-out lines of code should be removed.(Âİôëûÿÿÿÿ2adam8Ø§ÉÅ-
+„
+AWj4t1k-6y6P2ydRWDOlsquid:TrailingCommentCheck>"6Move this trailing comment on the previous empty line.(”Åø”şÿÿÿÿ2adam8Ø§ÉÅ-
+u
+AWj4t1k-6y6P2ydRWDM_squid:S2696u"6Make the enclosing method "static" or remove this set.(öñá¬üÿÿÿÿ2adam8Ø§ÉÅ-
+
+AWj4t1k-6y6P2ydRWDNQsquid:S1215ƒ"TDon't try to be smarter than the JVM, remove this call to run the garbage collector.(Ì°¬“2adam8Ø§ÉÅ-
+
+AWj4t1k-6y6P2ydRWDOmsquid:TrailingCommentCheckA"6Move this trailing comment on the previous empty line.(‡íáÑ2adam8Ø§ÉÅ-
+\
+AWj46Knb6y6P2ydRWJy2squid:S2129ã"!Remove this "Integer" constructor(¯—ıÒ2adam8€û•Ç-
+`
+AWj4t1k-6y6P2ydRWDOCsquid:S2129î" Remove this "Double" constructor(ÌâŠ¨ùÿÿÿÿ2adam8Ø§ÉÅ-
+`
+AWj46Knb6y6P2ydRWJydsquid:S1166¤"%Either log or rethrow this exception.(Çß¬ç2adam8€û•Ç-
+s
+AWj4t1k-6y6P2ydRWDON
+squid:S106£"9Replace this use of System.out or System.err by a logger.(Ó÷¤µ2adam8Ø§ÉÅ-
+V
+AWj4t1k-6y6P2ydRWDNmsquid:S3626·"Remove this redundant jump.(ûÁİ…2adam8Ø§ÉÅ-
+i
+AWj46Knb6y6P2ydRWJyssquid:S1125š")Remove the literal "false" boolean value.(¡ëûøÿÿÿÿ2adam8€û•Ç-
+e
+AWj46Knb6y6P2ydRWJybsquid:S1166ö"%Either log or rethrow this exception.(äí¯ÿÿÿÿÿ2adam8€û•Ç-
+…
+AWj4t1k-6y6P2ydRWDOusquid:CommentedOutCodeLinen"<This block of commented-out lines of code should be removed.(Óáû2adam8Ø§ÉÅ-
+¨
+AWj4t1k-6y6P2ydRWDMr"squid:ClassVariableVisibilityCheck2"RMake output a static final constant or non-public and provide accessors if needed.(¸ÇÀ‹üÿÿÿÿ2adam8Ø§ÉÅ-
+x
+AWj4t1k-6y6P2ydRWDNu
+squid:S106¯"9Replace this use of System.out or System.err by a logger.(ÛÍ¡ûÿÿÿÿ2adam8Ø§ÉÅ-
+
+AWj4t1k-6y6P2ydRWDNfsquid:S1215Æ"TDon't try to be smarter than the JVM, remove this call to run the garbage collector.(Ì°¬“2adam8Ø§ÉÅ-
+ˆ
+AWj46Knb6y6P2ydRWJyysquid:S1142¾"MReduce the number of returns of this method 8, down to the maximum allowed 2.(Îšñ³2adam8€û•Ç-
+h
+AWj4t1k-6y6P2ydRWDOgsquid:S1125°"(Remove the literal "true" boolean value.(Õ­İÌÿÿÿÿÿ2adam8Ø§ÉÅ-
+Œ
+AWj46Knb6y6P2ydRWJyzsquid:S3776¡"RRefactor this method to reduce its Cognitive Complexity from 29 to the 15 allowed.(»ƒÃ!2adam8€û•Ç-
+…
+AWj4t1k-6y6P2ydRWDOssquid:CommentedOutCodeLine""<This block of commented-out lines of code should be removed.(–½¿2adam8Ø§ÉÅ-
+€
+AWj4t1k-6y6P2ydRWDNZsquid:TrailingCommentCheck½"6Move this trailing comment on the previous empty line.(£òÔ¥2adam8Ø§ÉÅ-
+q
+AWj4t1k-6y6P2ydRWDOOsquid:S2696¤"6Make the enclosing method "static" or remove this set.( é»½2adam8Ø§ÉÅ-
+…
+AWj4t1k-6y6P2ydRWDOvsquid:CommentedOutCodeLinep"<This block of commented-out lines of code should be removed.(«ò†2adam8Ø§ÉÅ-
+‹
+AWj4t1k-6y6P2ydRWDO3squid:CommentedOutCodeLine½"<This block of commented-out lines of code should be removed.(‰ªàúÿÿÿÿ2adam8Ø§ÉÅ-
+
+AWj4t1k-6y6P2ydRWDOqsquid:TrailingCommentCheck0"6Move this trailing comment on the previous empty line.(†â…2adam8Ø§ÉÅ-
+…
+AWj46Knb6y6P2ydRWJyqsquid:TrailingCommentCheckğ"6Move this trailing comment on the previous empty line.(æ¯şÿÿÿÿ2adam8€û•Ç-
+x
+AWj4t1k-6y6P2ydRWDN7
+squid:S106À"9Replace this use of System.out or System.err by a logger.(ßú¹úÿÿÿÿ2adam8Ø§ÉÅ-
+¹
+AWj46Knb6y6P2ydRWJy1squid:S1158ã"~Call the static method Integer.toString(...) instead of instantiating a temporary object to perform this to string conversion.(¯—ıÒ2adam8€û•Ç-
+…
+AWj4t1k-6y6P2ydRWDNesquid:TrailingCommentCheckÂ"6Move this trailing comment on the previous empty line.(ıü˜ëÿÿÿÿÿ2adam8Ø§ÉÅ-
+x
+AWj4t1k-6y6P2ydRWDOD
+squid:S106‹"9Replace this use of System.out or System.err by a logger.(´‹¹öşÿÿÿÿ2adam8Ø§ÉÅ-
+…
+AWj4t1k-6y6P2ydRWDOwsquid:CommentedOutCodeLinet"<This block of commented-out lines of code should be removed.(èıß2adam8Ø§ÉÅ-
+x
+AWj4t1k-6y6P2ydRWDNF
+squid:S106Ñ"9Replace this use of System.out or System.err by a logger.(©şêÜúÿÿÿÿ2adam8Ø§ÉÅ-
+…
+AWj46Knb6y6P2ydRWJylsquid:TrailingCommentCheck’"6Move this trailing comment on the previous empty line.(æ¯şÿÿÿÿ2adam8€û•Ç-
+
+AWj46Knb6y6P2ydRWJyvsquid:S3776¾"RRefactor this method to reduce its Cognitive Complexity from 22 to the 15 allowed.(Îšñ³2adam8€û•Ç-
+e
+AWj46Knb6y6P2ydRWJyZsquid:S1166¬"%Either log or rethrow this exception.(É˜Ùúÿÿÿÿ2adam8€û•Ç-
+j
+AWj4t1k-6y6P2ydRWDMZsquid:S14441"+Make this "public static DEBUG" field final(îéÒ¡ÿÿÿÿÿ2adam8Ø§ÉÅ-
+c
+AWj4t1k-6y6P2ydRWDOhsquid:S1125´"(Remove the literal "true" boolean value.(½äúÃ2adam8Ø§ÉÅ-
+…
+AWj4t1k-6y6P2ydRWDO0squid:CommentedOutCodeLine˜"<This block of commented-out lines of code should be removed.(½ËÙ[2adam8Ø§ÉÅ-
+†
+AWj4t1k-6y6P2ydRWDO1squid:CommentedOutCodeLine¯"<This block of commented-out lines of code should be removed.(ŒÊš®2adam8Ø§ÉÅ-
+i
+AWj46Knb6y6P2ydRWJywsquid:S1125Ä")Remove the literal "false" boolean value.(¡ëûøÿÿÿÿ2adam8€û•Ç-
+e
+AWj46Knb6y6P2ydRWJyfsquid:S1166¹"%Either log or rethrow this exception.(¸Üõ€şÿÿÿÿ2adam8€û•Ç-
+e
+AWj46Knb6y6P2ydRWJyesquid:S1166¯"%Either log or rethrow this exception.(äí¯ÿÿÿÿÿ2adam8€û•Ç-
+‡
+AWj46Knb6y6P2ydRWJytsquid:S1142•"MReduce the number of returns of this method 5, down to the maximum allowed 2.(‘÷Õx2adam8€û•Ç-
+z
+AWj4t1k-6y6P2ydRWDNysquid:S1854î":Remove this useless assignment to local variable "wsimax".(ÌâŠ¨ùÿÿÿÿ2adam8Ø§ÉÅ-
+…
+AWj4t1k-6y6P2ydRWDNasquid:TrailingCommentCheck­"6Move this trailing comment on the previous empty line.(ıü˜ëÿÿÿÿÿ2adam8Ø§ÉÅ-
+…
+AWj46Knb6y6P2ydRWJyrsquid:TrailingCommentCheck‚"6Move this trailing comment on the previous empty line.(æ¯şÿÿÿÿ2adam8€û•Ç-
+¡
+AWj46Knb6y6P2ydRWJyu
+squid:S138¾"gThis method has 89 lines, which is greater than the 75 lines authorized. Split it into smaller methods.(Îšñ³2adam8€û•Ç-
+†
+AWj4t1k-6y6P2ydRWDOysquid:CommentedOutCodeLineâ"<This block of commented-out lines of code should be removed.(ƒÌª2adam8Ø§ÉÅ-
+€
+AWj4t1k-6y6P2ydRWDNbsquid:TrailingCommentCheck³"6Move this trailing comment on the previous empty line.(£òÔ¥2adam8Ø§ÉÅ-
+
+AWj46Knb6y6P2ydRWJynsquid:S1142‹"MReduce the number of returns of this method 6, down to the maximum allowed 2.(èæ¹¹üÿÿÿÿ2adam8€û•Ç-
+s
+AWj4t1k-6y6P2ydRWDNt
+squid:S106¨"9Replace this use of System.out or System.err by a logger.(ÍïÔ2adam8Ø§ÉÅ-
+`
+AWj46Knb6y6P2ydRWJycsquid:S1166û"%Either log or rethrow this exception.(Çß¬ç2adam8€û•Ç-
+p
+AWj4t1k-6y6P2ydRWDM9squid:S2696o"6Make the enclosing method "static" or remove this set.(îØä2adam8Ø§ÉÅ-
+Š
+AWj4t1k-6y6P2ydRWDO7squid:CommentedOutCodeLine3"<This block of commented-out lines of code should be removed.(ÑÈÍØşÿÿÿÿ2adam8Ø§ÉÅ-
+~
+AWj46Knb6y6P2ydRWJyksquid:S1155ñ">Use isEmpty() to check whether the collection is empty or not.( ¨¹¹ûÿÿÿÿ2adam8€û•Ç-
+…
+AWj4t1k-6y6P2ydRWDOzsquid:CommentedOutCodeLineÂ"<This block of commented-out lines of code should be removed.(½ËÙ[2adam8Ø§ÉÅ-
+€
+AWj4t1k-6y6P2ydRWDNdsquid:TrailingCommentCheck©"6Move this trailing comment on the previous empty line.(£òÔ¥2adam8Ø§ÉÅ-
+…
+AWj4t1k-6y6P2ydRWDOxsquid:CommentedOutCodeLinev"<This block of commented-out lines of code should be removed.(«ò†2adam8Ø§ÉÅ-
+…
+AWj46Knb6y6P2ydRWJyosquid:TrailingCommentCheckÓ"6Move this trailing comment on the previous empty line.(æ¯şÿÿÿÿ2adam8€û•Ç-
+†
+AWj4t1k-6y6P2ydRWDO4squid:CommentedOutCodeLineİ"<This block of commented-out lines of code should be removed.(şöˆÑ2adam8Ø§ÉÅ-
+„
+AWj4t1k-6y6P2ydRWDNAsquid:TrailingCommentChecku"6Move this trailing comment on the previous empty line.(öñá¬üÿÿÿÿ2adam8Ø§ÉÅ-
+„
+AWj4t1k-6y6P2ydRWDOnsquid:TrailingCommentCheckB"6Move this trailing comment on the previous empty line.(˜¸ñ‘ıÿÿÿÿ2adam8Ø§ÉÅ-
+x
+AWj4t1k-6y6P2ydRWDNI
+squid:S106®"9Replace this use of System.out or System.err by a logger.(©şêÜúÿÿÿÿ2adam8Ø§ÉÅ-
+
+AWj4t1k-6y6P2ydRWDM4squid:S30081"PRename this field "DEBUG" to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(îéÒ¡ÿÿÿÿÿ2adam8Ø§ÉÅ-
+h
+AWj46Knb6y6P2ydRWJygsquid:S1604"(Make this anonymous inner class a lambda(³¼Á°úÿÿÿÿ2adam8€û•Ç-

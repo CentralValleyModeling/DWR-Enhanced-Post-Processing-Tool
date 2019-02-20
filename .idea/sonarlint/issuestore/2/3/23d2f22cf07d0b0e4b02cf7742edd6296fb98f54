@@ -1,0 +1,122 @@
+
+‘
+AWj46LVk6y6P2ydRWKP_squid:S00117t"QRename this local variable to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(¶‘‰šüÿÿÿÿ2adam8€û•Ç-
+‘
+AWj46LVk6y6P2ydRWKQAsquid:S00117|"QRename this local variable to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(¿Èºªüÿÿÿÿ2adam8€û•Ç-
+‹
+AWj4t2In6y6P2ydRWGIlsquid:CommentedOutCodeLineé"<This block of commented-out lines of code should be removed.( µ¯Çüÿÿÿÿ2adam8Ø§ÉÅ-
+r
+AWj4t2In6y6P2ydRWGIgsquid:S1135š"2Complete the task associated to this TODO comment.(» æÿÿÿÿÿ2adam8Ø§ÉÅ-
+ 
+AWj46LVk6y6P2ydRWKQUsquid:S1149»"eReplace the synchronized class "Vector" by an unsynchronized one such as "ArrayList" or "LinkedList".(¯­º¼2adam8€û•Ç-
+ 
+AWj46LVk6y6P2ydRWKQMsquid:S1149»"eReplace the synchronized class "Vector" by an unsynchronized one such as "ArrayList" or "LinkedList".(¯­º¼2adam8€û•Ç-
+
+AWj46LVk6y6P2ydRWKP7squid:S00107{"AConstructor has 8 parameters, which is greater than 7 authorized.(¶Úíüÿÿÿÿ2adam8€û•Ç-
+ˆ
+AWj46LVk6y6P2ydRWKQDsquid:S00116L"MRename this field "n" to match the regular expression '^_[a-z][a-zA-Z0-9]*$'.(óù·é2adam8€û•Ç-
+’
+AWj46LVk6y6P2ydRWKQRsquid:S3776Ë"RRefactor this method to reduce its Cognitive Complexity from 50 to the 15 allowed.(µë¢úÿÿÿÿ2adam8€û•Ç-
+‘
+AWj46LVk6y6P2ydRWKP8squid:S00117\"QRename this local variable to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(¶Óµ‚úÿÿÿÿ2adam8€û•Ç-
+`
+AWj4t2In6y6P2ydRWGHWsquid:S1170I"!Make this final field static too.(Ó÷°éøÿÿÿÿ2adam8Ø§ÉÅ-
+”
+AWj4t2In6y6P2ydRWGIJsquid:S2293Œ"YReplace the type specification in this constructor call with the diamond operator ("<>").(úæ§‚2adam8Ø§ÉÅ-
+Ÿ
+AWj4t2In6y6P2ydRWGHqsquid:S1149¸"eReplace the synchronized class "Vector" by an unsynchronized one such as "ArrayList" or "LinkedList".(ÍÏ:2adam8Ø§ÉÅ-
+”
+AWj4t2In6y6P2ydRWGINsquid:S2293œ"YReplace the type specification in this constructor call with the diamond operator ("<>").(½äæÄ2adam8Ø§ÉÅ-
+†
+AWj4t2In6y6P2ydRWGIWsquid:S1132Ù"FMove the "" string literal on the left side of this string comparison.(ÎÇÏïûÿÿÿÿ2adam8Ø§ÉÅ-
+‰
+AWj4t2In6y6P2ydRWGIKsquid:S1132"IMove the "CFS" string literal on the left side of this string comparison.(Ó•¥¢ûÿÿÿÿ2adam8Ø§ÉÅ-
+š
+AWj4t2In6y6P2ydRWGHpsquid:S1149×"_Replace the synchronized class "StringBuffer" by an unsynchronized one such as "StringBuilder".(ñüË³2adam8Ø§ÉÅ-
+ 
+AWj4t2In6y6P2ydRWGHrsquid:S1149¹"eReplace the synchronized class "Vector" by an unsynchronized one such as "ArrayList" or "LinkedList".(Úšº¢2adam8Ø§ÉÅ-
+Ÿ
+AWj4t2In6y6P2ydRWGIcsquid:S1149¸"eReplace the synchronized class "Vector" by an unsynchronized one such as "ArrayList" or "LinkedList".(ÍÏ:2adam8Ø§ÉÅ-
+r
+AWj4t2In6y6P2ydRWGGK
+squid:S864ì"9Add parentheses to make the operator precedence explicit.(ƒŠó2adam8Ø§ÉÅ-
+Ÿ
+AWj4t2In6y6P2ydRWGHosquid:S1149Y"eReplace the synchronized class "Vector" by an unsynchronized one such as "ArrayList" or "LinkedList".(ü„¾‡2adam8Ø§ÉÅ-
+‹
+AWj46LVk6y6P2ydRWKP9squid:S00117d"QRename this local variable to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(èì”62adam8€û•Ç-
+[
+AWj4t2In6y6P2ydRWGHXsquid:S1170J"!Make this final field static too.(šøçÖ2adam8Ø§ÉÅ-
+r
+AWj4t2In6y6P2ydRWGIhsquid:S1135“"2Complete the task associated to this TODO comment.(» æÿÿÿÿÿ2adam8Ø§ÉÅ-
+
+AWj4t2In6y6P2ydRWGIQsquid:TrailingCommentCheckê"6Move this trailing comment on the previous empty line.(È°û2adam8Ø§ÉÅ-
+’
+AWj46LVk6y6P2ydRWKQPsquid:S3776{"SRefactor this method to reduce its Cognitive Complexity from 257 to the 15 allowed.(¶Úíüÿÿÿÿ2adam8€û•Ç-
+‘
+AWj4t2In6y6P2ydRWGHlsquid:S00116J"VRename this field "CELL_BREAK" to match the regular expression '^_[a-z][a-zA-Z0-9]*$'.(šøçÖ2adam8Ø§ÉÅ-
+¸
+AWj4t2In6y6P2ydRWGICsquid:S3366Š"xMake sure the use of "this" doesn't expose partially-constructed instances of this class in multi-threaded environments.(Ç€„ùÿÿÿÿ2adam8Ø§ÉÅ-
+r
+AWj4t2In6y6P2ydRWGIYsquid:S1135Í"2Complete the task associated to this TODO comment.(» æÿÿÿÿÿ2adam8Ø§ÉÅ-
+r
+AWj4t2In6y6P2ydRWGGL
+squid:S864í"9Add parentheses to make the operator precedence explicit.(½®Ú2adam8Ø§ÉÅ-
+r
+AWj4t2In6y6P2ydRWGIjsquid:S1135­"2Complete the task associated to this TODO comment.(» æÿÿÿÿÿ2adam8Ø§ÉÅ-
+c
+AWj46LVk6y6P2ydRWKQQsquid:S1172·"(Remove this unused method parameter "m".(‹áÄ…2adam8€û•Ç-
+†
+AWj4t2In6y6P2ydRWGIVsquid:S1132ì"FMove the "" string literal on the left side of this string comparison.(ÎÇÏïûÿÿÿÿ2adam8Ø§ÉÅ-
+s
+AWj4t2In6y6P2ydRWGGM
+squid:S864î"9Add parentheses to make the operator precedence explicit.(±€é¤2adam8Ø§ÉÅ-
+ 
+AWj4t2In6y6P2ydRWGIdsquid:S1149¹"eReplace the synchronized class "Vector" by an unsynchronized one such as "ArrayList" or "LinkedList".(Úšº¢2adam8Ø§ÉÅ-
+Š
+AWj4t2In6y6P2ydRWGIksquid:CommentedOutCodeLine""<This block of commented-out lines of code should be removed.(º¼Ïèşÿÿÿÿ2adam8Ø§ÉÅ-
+†
+AWj4t2In6y6P2ydRWGImsquid:CommentedOutCodeLineŸ"<This block of commented-out lines of code should be removed.(ÎãÏŠ2adam8Ø§ÉÅ-
+¸
+AWj4t2In6y6P2ydRWGIDsquid:S3366Œ"xMake sure the use of "this" doesn't expose partially-constructed instances of this class in multi-threaded environments.(Ç€„ùÿÿÿÿ2adam8Ø§ÉÅ-
+
+AWj4t2In6y6P2ydRWGHnsquid:S00116Y"SRename this field "columns" to match the regular expression '^_[a-z][a-zA-Z0-9]*$'.(ü„¾‡2adam8Ø§ÉÅ-
+“
+AWj4t2In6y6P2ydRWGIbsquid:S00116¹"WRename this field "columnNames" to match the regular expression '^_[a-z][a-zA-Z0-9]*$'.(Úšº¢2adam8Ø§ÉÅ-
+‘
+AWj4t2In6y6P2ydRWGHisquid:S00116U"QRename this field "panel" to match the regular expression '^_[a-z][a-zA-Z0-9]*$'.(ÔÇ’Çüÿÿÿÿ2adam8Ø§ÉÅ-
+‰
+AWj4t2In6y6P2ydRWGILsquid:S1132"IMove the "CFS" string literal on the left side of this string comparison.(ÁéĞ½ıÿÿÿÿ2adam8Ø§ÉÅ-
+–
+AWj4t2In6y6P2ydRWGHksquid:S00116I"VRename this field "LINE_BREAK" to match the regular expression '^_[a-z][a-zA-Z0-9]*$'.(Ó÷°éøÿÿÿÿ2adam8Ø§ÉÅ-
+‘
+AWj46LVk6y6P2ydRWKP-squid:S00117l"QRename this local variable to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(²«åüÿÿÿÿ2adam8€û•Ç-
+j
+AWj46LVk6y6P2ydRWKP6squid:S1066Õ"/Merge this if statement with the enclosing one.(İšÂ¿2adam8€û•Ç-
+–
+AWj4t2In6y6P2ydRWGHjsquid:S00116X"VRename this field "scrollPane" to match the regular expression '^_[a-z][a-zA-Z0-9]*$'.(‰ÒõÖúÿÿÿÿ2adam8Ø§ÉÅ-
+¦
+AWj46LVk6y6P2ydRWKQO
+squid:S138{"hThis method has 340 lines, which is greater than the 75 lines authorized. Split it into smaller methods.(¶Úíüÿÿÿÿ2adam8€û•Ç-
+x
+AWj4t2In6y6P2ydRWGGJ
+squid:S864å"9Add parentheses to make the operator precedence explicit.(²îëªùÿÿÿÿ2adam8Ø§ÉÅ-
+³
+AWj4t2In6y6P2ydRWGIBsquid:S3366"xMake sure the use of "this" doesn't expose partially-constructed instances of this class in multi-threaded environments.(ƒàŞ”2adam8Ø§ÉÅ-
+˜
+AWj46LVk6y6P2ydRWKQSsquid:S2972±"XReduce this class from 51 to the maximum allowed 40 or externalize it in a public class.(‘øç–øÿÿÿÿ2adam8€û•Ç-
+r
+AWj4t2In6y6P2ydRWGIisquid:S1135¡"2Complete the task associated to this TODO comment.(» æÿÿÿÿÿ2adam8Ø§ÉÅ-
+‹
+AWj4t2In6y6P2ydRWGIasquid:S00116¸"PRename this field "data" to match the regular expression '^_[a-z][a-zA-Z0-9]*$'.(ÍÏ:2adam8Ø§ÉÅ-
+m
+AWj4t2In6y6P2ydRWGIOsquid:S1135Ã"2Complete the task associated to this TODO comment.(úµªº2adam8Ø§ÉÅ-
+•
+AWj4t2In6y6P2ydRWGHmsquid:S00116K"URename this field "CLIPBOARD" to match the regular expression '^_[a-z][a-zA-Z0-9]*$'.(²ÏÚ¹üÿÿÿÿ2adam8Ø§ÉÅ-
+ 
+AWj46LVk6y6P2ydRWKQNsquid:S1149»"eReplace the synchronized class "Vector" by an unsynchronized one such as "ArrayList" or "LinkedList".(¯­º¼2adam8€û•Ç-
+†
+AWj4t2In6y6P2ydRWGInsquid:CommentedOutCodeLineğ"<This block of commented-out lines of code should be removed.(Êşÿò2adam8Ø§ÉÅ-
+ 
+AWj46LVk6y6P2ydRWKQTsquid:S1149»"eReplace the synchronized class "Vector" by an unsynchronized one such as "ArrayList" or "LinkedList".(¯­º¼2adam8€û•Ç-
+‘
+AWj46LVk6y6P2ydRWKQBsquid:S00117|"QRename this local variable to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(¿Èºªüÿÿÿÿ2adam8€û•Ç-

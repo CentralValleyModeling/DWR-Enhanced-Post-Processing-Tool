@@ -1,0 +1,211 @@
+
+i
+AWj46Kda6y6P2ydRWJtdsquid:S1172Ä".Remove this unused method parameter "dirname".(ú“ùö2adam8€û•Ç-
+
+AWj4t1dp6y6P2ydRWCV8squid:S00104"]This file has 1,511 lines, which is greater than 750 authorized. Split it into smaller files.2adam8Ø§ÉÅ-
+`
+AWj4t1dp6y6P2ydRWCV9squid:S1659v"&Declare "oldpaste" on a separate line.(Ö¤–á2adam8Ø§ÉÅ-
+ 
+AWj4t1dp6y6P2ydRWCWfsquid:S1149´"eReplace the synchronized class "Vector" by an unsynchronized one such as "ArrayList" or "LinkedList".( “ğ2adam8Ø§ÉÅ-
+c
+AWj4t1dp6y6P2ydRWCZcsquid:S1659Ç"#Declare "curel" on a separate line.(ÑœşÓøÿÿÿÿ2adam8Ø§ÉÅ-
+e
+AWj4t1dp6y6P2ydRWCZZsquid:S1659Æ"%Declare "curnode" on a separate line.(…¾Ñ»üÿÿÿÿ2adam8Ø§ÉÅ-
+d
+AWj4t1dp6y6P2ydRWCZdsquid:S1659É"$Declare "curlvl" on a separate line.(ÍÃ¯Øûÿÿÿÿ2adam8Ø§ÉÅ-
+j
+AWj46Kda6y6P2ydRWJtXsquid:S00108Ø	")Either remove or fill this block of code.(ÒÌâ–øÿÿÿÿ2adam8€û•Ç-
+“
+AWj46Kda6y6P2ydRWJsY
+squid:S135µ
+"YReduce the total number of break and continue statements in this loop to use at most one.(“£ÄÏ2adam8€û•Ç-
+y
+AWj4t1dp6y6P2ydRWCXTsquid:S1854ƒ"9Remove this useless assignment to local variable "name1".(°éÒ©ÿÿÿÿÿ2adam8Ø§ÉÅ-
+¢
+AWj46Kda6y6P2ydRWJtb
+squid:S138Ä"hThis method has 127 lines, which is greater than the 75 lines authorized. Split it into smaller methods.(ú“ùö2adam8€û•Ç-
+s
+AWj4t1dp6y6P2ydRWCXs
+squid:S106§"9Replace this use of System.out or System.err by a logger.(è×•ç2adam8Ø§ÉÅ-
+c
+AWj46Kda6y6P2ydRWJsmsquid:S1604›"(Make this anonymous inner class a lambda(íâ—ã2adam8€û•Ç-
+…
+AWj4t1dp6y6P2ydRWCYmsquid:TrailingCommentCheck„	"6Move this trailing comment on the previous empty line.(¯Ã ‡øÿÿÿÿ2adam8Ø§ÉÅ-
+›
+AWj46Kda6y6P2ydRWJsTsquid:S1188"\Reduce this anonymous class number of lines from 65 to at most 20, or make it a named class.(¾˜œşÿÿÿÿ2adam8€û•Ç-
+o
+AWj46Kda6y6P2ydRWJsWsquid:S1066°"/Merge this if statement with the enclosing one.(—‚ï•üÿÿÿÿ2adam8€û•Ç-
+¥
+AWj46Kda6y6P2ydRWJsvsquid:S1149×"eReplace the synchronized class "Vector" by an unsynchronized one such as "ArrayList" or "LinkedList".(Î”Âğıÿÿÿÿ2adam8€û•Ç-
+¦
+AWj46Kda6y6P2ydRWJsqsquid:S14480"lclass "DtsTreeModel" has 47 methods, which is greater than the 35 authorized. Split it into smaller classes.(êâ£Ú2adam8€û•Ç-
+j
+AWj46Kda6y6P2ydRWJtTsquid:S00108¢	")Either remove or fill this block of code.(ÒÌâ–øÿÿÿÿ2adam8€û•Ç-
+j
+AWj46Kda6y6P2ydRWJtUsquid:S00108¥	")Either remove or fill this block of code.(ÒÌâ–øÿÿÿÿ2adam8€û•Ç-
+e
+AWj46Kda6y6P2ydRWJsfsquid:S1166¤	"%Either log or rethrow this exception.(Ä§’æùÿÿÿÿ2adam8€û•Ç-
+~
+AWj6M2RD6y6P2ydRWLqnsquid:S1188K"DReduce this lambda expression number of lines from 43 to at most 20.(ò¯Êä2adam8˜ıÇÑ-
+
+AWj46Kda6y6P2ydRWJtKsquid:S00100…"NRename this method name to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(·§Ğ…ıÿÿÿÿ2adam8€û•Ç-
+e
+AWj46Kda6y6P2ydRWJsbsquid:S1166”"%Either log or rethrow this exception.(Ä§’æùÿÿÿÿ2adam8€û•Ç-
+…
+AWj4t1dp6y6P2ydRWCYlsquid:TrailingCommentCheck†	"6Move this trailing comment on the previous empty line.(„ïŸßùÿÿÿÿ2adam8Ø§ÉÅ-
+
+AWj46Kda6y6P2ydRWJtasquid:S3776÷	"RRefactor this method to reduce its Cognitive Complexity from 87 to the 15 allowed.(°­°í2adam8€û•Ç-
+ 
+AWj46Kda6y6P2ydRWJs-
+squid:S138ğ"gThis method has 95 lines, which is greater than the 75 lines authorized. Split it into smaller methods.(ò³ã2adam8€û•Ç-
+¤
+AWj6M2RD6y6P2ydRWLqpsquid:S11496"eReplace the synchronized class "Vector" by an unsynchronized one such as "ArrayList" or "LinkedList".(€ÓÈ¦ÿÿÿÿÿ2adam8˜ıÇÑ-
+
+AWj46Kda6y6P2ydRWJtcsquid:S3776Ä"RRefactor this method to reduce its Cognitive Complexity from 20 to the 15 allowed.(ú“ùö2adam8€û•Ç-
+e
+AWj46Kda6y6P2ydRWJsesquid:S1166¡	"%Either log or rethrow this exception.(Í¼·§üÿÿÿÿ2adam8€û•Ç-
+s
+AWj4t1dp6y6P2ydRWCXo
+squid:S106‰"9Replace this use of System.out or System.err by a logger.(Îã­Ã2adam8Ø§ÉÅ-
+Š
+AWj46Kda6y6P2ydRWJtQsquid:S00100ê"NRename this method name to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(ÉèËÅ2adam8€û•Ç-
+†
+AWj46Kda6y6P2ydRWJtSsquid:S2147Ú	"FCombine this catch with the one at line 1239, which has the same body.(Ä§’æùÿÿÿÿ2adam8€û•Ç-
+
+AWj4t1dp6y6P2ydRWCWasquid:S00116v"SRename this field "oldname" to match the regular expression '^_[a-z][a-zA-Z0-9]*$'.(Ö¤–á2adam8Ø§ÉÅ-
+e
+AWj46Kda6y6P2ydRWJscsquid:S1166±"%Either log or rethrow this exception.(Ä§’æùÿÿÿÿ2adam8€û•Ç-
+v
+AWj4t1dp6y6P2ydRWCXzsquid:S2696‰"6Make the enclosing method "static" or remove this set.(›õ‘µúÿÿÿÿ2adam8Ø§ÉÅ-
+e
+AWj46Kda6y6P2ydRWJshsquid:S1166Ú	"%Either log or rethrow this exception.(Ä§’æùÿÿÿÿ2adam8€û•Ç-
+t
+AWj46Kda6y6P2ydRWJtGsquid:S2221È"4Catch a list of specific exception subtypes instead.(¼Ôîàùÿÿÿÿ2adam8€û•Ç-
+`
+AWj4t1dp6y6P2ydRWCZCsquid:S1659û	"%Declare "childel" on a separate line.(ØúÅë2adam8Ø§ÉÅ-
+c
+AWj4t1dp6y6P2ydRWCV3squid:S1148ï"#Use a logger to log this exception.(€ÉÔ…ıÿÿÿÿ2adam8Ø§ÉÅ-
+e
+AWj46Kda6y6P2ydRWJsdsquid:S1166‡"%Either log or rethrow this exception.(¼Ôîàùÿÿÿÿ2adam8€û•Ç-
+£
+AWj46Kda6y6P2ydRWJsnsquid:S1157İ"cReplace these toUpperCase()/toLowerCase() and equals() calls with a single equalsIgnoreCase() call.(†î¼–øÿÿÿÿ2adam8€û•Ç-
+¤
+AWj6M2RD6y6P2ydRWLqosquid:S11495"eReplace the synchronized class "Vector" by an unsynchronized one such as "ArrayList" or "LinkedList".(èÀû‚øÿÿÿÿ2adam8˜ıÇÑ-
+Œ
+AWj46Kda6y6P2ydRWJs_squid:S3776ğ"RRefactor this method to reduce its Cognitive Complexity from 42 to the 15 allowed.(ò³ã2adam8€û•Ç-
+€
+AWj4t1dp6y6P2ydRWCYnsquid:TrailingCommentCheck–	"6Move this trailing comment on the previous empty line.(šÌİô2adam8Ø§ÉÅ-
+j
+AWj46Kda6y6P2ydRWJtYsquid:S00108Û	")Either remove or fill this block of code.(ÒÌâ–øÿÿÿÿ2adam8€û•Ç-
+g
+AWj6M2RD6y6P2ydRWLqqsquid:S1659ü	"'Declare "childnode" on a separate line.(ÇªÜ øÿÿÿÿ2adam8˜ıÇÑ-
+s
+AWj4t1dp6y6P2ydRWCZm
+squid:S106»"9Replace this use of System.out or System.err by a logger.(Îã­Ã2adam8Ø§ÉÅ-
+t
+AWj46Kda6y6P2ydRWJsQsquid:S1191#"5Use classes from the Java API instead of Sun classes.(Ûş¯úøÿÿÿÿ2adam8€û•Ç-
+t
+AWj46Kda6y6P2ydRWJtIsquid:S2221î"4Catch a list of specific exception subtypes instead.(¼Ôîàùÿÿÿÿ2adam8€û•Ç-
+¢
+AWj46Kda6y6P2ydRWJtZ
+squid:S138÷	"hThis method has 164 lines, which is greater than the 75 lines authorized. Split it into smaller methods.(°­°í2adam8€û•Ç-
+x
+AWj4t1dp6y6P2ydRWCWq
+squid:S106"9Replace this use of System.out or System.err by a logger.(ªÏı¸ùÿÿÿÿ2adam8Ø§ÉÅ-
+…
+AWj4t1dp6y6P2ydRWCYksquid:TrailingCommentCheck”	"6Move this trailing comment on the previous empty line.(¯Ã ‡øÿÿÿÿ2adam8Ø§ÉÅ-
+v
+AWj4t1dp6y6P2ydRWCX2squid:S2696§"6Make the enclosing method "static" or remove this set.(›õ‘µúÿÿÿÿ2adam8Ø§ÉÅ-
+e
+AWj46Kda6y6P2ydRWJsisquid:S1166¾"%Either log or rethrow this exception.(“–†ÿÿÿÿÿ2adam8€û•Ç-
+—
+AWj46Kda6y6P2ydRWJsUsquid:S1188›"\Reduce this anonymous class number of lines from 28 to at most 20, or make it a named class.(íâ—ã2adam8€û•Ç-
+_
+AWj46Kda6y6P2ydRWJsXsquid:S1696Š"$Avoid catching NullPointerException.(…È½¼2adam8€û•Ç-
+¼
+AWj46Kda6y6P2ydRWJsysquid:S1186¸"€Add a nested comment explaining why this method is empty, throw an UnsupportedOperationException or complete the implementation.(‡åıÔ2adam8€û•Ç-
+‘
+AWj46Kda6y6P2ydRWJsxsquid:S3776y"RRefactor this method to reduce its Cognitive Complexity from 18 to the 15 allowed.(à®Ôóşÿÿÿÿ2adam8€û•Ç-
+j
+AWj46Kda6y6P2ydRWJs6squid:S00108²")Either remove or fill this block of code.(ÒÌâ–øÿÿÿÿ2adam8€û•Ç-
+t
+AWj46Kda6y6P2ydRWJtPsquid:S2221İ"4Catch a list of specific exception subtypes instead.(¼Ôîàùÿÿÿÿ2adam8€û•Ç-
+
+AWj4t1dp6y6P2ydRWCWcsquid:S00116w"SRename this field "isMerge" to match the regular expression '^_[a-z][a-zA-Z0-9]*$'.(§ïƒŒ2adam8Ø§ÉÅ-
+o
+AWj46Kda6y6P2ydRWJsVsquid:S1066“"/Merge this if statement with the enclosing one.(š° ƒûÿÿÿÿ2adam8€û•Ç-
+“
+AWj4t1dp6y6P2ydRWCWZsquid:S00116J"SRename this field "newfile" to match the regular expression '^_[a-z][a-zA-Z0-9]*$'.(ÿ³‡ñüÿÿÿÿ2adam8Ø§ÉÅ-
+`
+AWj46Kda6y6P2ydRWJsasquid:S1166Š"%Either log or rethrow this exception.(…È½¼2adam8€û•Ç-
+¼
+AWj46Kda6y6P2ydRWJszsquid:S1186¼"€Add a nested comment explaining why this method is empty, throw an UnsupportedOperationException or complete the implementation.(Áïüõ2adam8€û•Ç-
+c
+AWj4t1dp6y6P2ydRWCV2squid:S1148½"#Use a logger to log this exception.(€ÉÔ…ıÿÿÿÿ2adam8Ø§ÉÅ-
+
+AWj46Kda6y6P2ydRWJtRsquid:S00100³"NRename this method name to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(Ê£ï³ùÿÿÿÿ2adam8€û•Ç-
+
+AWj46Kda6y6P2ydRWJs7squid:S1142Æ"MReduce the number of returns of this method 3, down to the maximum allowed 2.(º£Û·úÿÿÿÿ2adam8€û•Ç-
+^
+AWj4t1dp6y6P2ydRWCXXsquid:S1659‚"#Declare "name1" on a separate line.(”ƒ2adam8Ø§ÉÅ-
+t
+AWj46Kda6y6P2ydRWJtCsquid:S2221‡"4Catch a list of specific exception subtypes instead.(¼Ôîàùÿÿÿÿ2adam8€û•Ç-
+t
+AWj46Kda6y6P2ydRWJtNsquid:S2221»"4Catch a list of specific exception subtypes instead.(¼Ôîàùÿÿÿÿ2adam8€û•Ç-
+j
+AWj46Kda6y6P2ydRWJs1squid:S00108‹")Either remove or fill this block of code.(ÒÌâ–øÿÿÿÿ2adam8€û•Ç-
+Š
+AWj46Kda6y6P2ydRWJtOsquid:S00100É"NRename this method name to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(µøª§2adam8€û•Ç-
+e
+AWj4t1dp6y6P2ydRWCZasquid:S1659Æ"%Declare "prvnode" on a separate line.(…¾Ñ»üÿÿÿÿ2adam8Ø§ÉÅ-
+|
+AWj4t1dp6y6P2ydRWCZUsquid:S1854Ô"<Remove this useless assignment to local variable "parentel".(†§şÿÿÿÿ2adam8Ø§ÉÅ-
+Å
+AWj46Kda6y6P2ydRWJsRsquid:S1862Í"„This branch can not be reached because the condition duplicates a previous condition in the same sequence of "if/else if" statements(Ûîø£ÿÿÿÿÿ2adam8€û•Ç-
+e
+AWj46Kda6y6P2ydRWJsgsquid:S1166×	"%Either log or rethrow this exception.(Í¼·§üÿÿÿÿ2adam8€û•Ç-
+¥
+AWj46Kda6y6P2ydRWJsusquid:S1149Ò"eReplace the synchronized class "Vector" by an unsynchronized one such as "ArrayList" or "LinkedList".(×Î—Úÿÿÿÿÿ2adam8€û•Ç-
+¼
+AWj46Kda6y6P2ydRWJs0squid:S1186À"€Add a nested comment explaining why this method is empty, throw an UnsupportedOperationException or complete the implementation.(‘øâ2adam8€û•Ç-
+’
+AWj46Kda6y6P2ydRWJtDsquid:S3776"RRefactor this method to reduce its Cognitive Complexity from 21 to the 15 allowed.(ò³™§øÿÿÿÿ2adam8€û•Ç-
+„
+AWj4t1dp6y6P2ydRWCW9squid:S3027ğ"JPut single-quotes around '.' to use the faster "lastIndexOf(char)" method.(Øü¨~2adam8Ø§ÉÅ-
+w
+AWj4t1dp6y6P2ydRWCZVsquid:S1854"<Remove this useless assignment to local variable "parentel".(÷ÛüÜ2adam8Ø§ÉÅ-
+}
+AWj46Kda6y6P2ydRWJtesquid:S1126ÿ"BReplace this if-then-else statement by a single method invocation.(­˜¼¹2adam8€û•Ç-
+j
+AWj46Kda6y6P2ydRWJs5squid:S00108•")Either remove or fill this block of code.(ÒÌâ–øÿÿÿÿ2adam8€û•Ç-
+†
+AWj4t1dp6y6P2ydRWCZ6squid:CommentedOutCodeLine "<This block of commented-out lines of code should be removed.(Ïèø´2adam8Ø§ÉÅ-
+c
+AWj4t1dp6y6P2ydRWCV4squid:S1148§"#Use a logger to log this exception.(€ÉÔ…ıÿÿÿÿ2adam8Ø§ÉÅ-
+†
+AWj46Kda6y6P2ydRWJtWsquid:S2147¤	"FCombine this catch with the one at line 1185, which has the same body.(Ä§’æùÿÿÿÿ2adam8€û•Ç-
+£
+AWj46Kda6y6P2ydRWJsosquid:S1157ş"cReplace these toUpperCase()/toLowerCase() and equals() calls with a single equalsIgnoreCase() call.(†î¼–øÿÿÿÿ2adam8€û•Ç-
+
+AWj46Kda6y6P2ydRWJspsquid:S1157¼"cReplace these toUpperCase()/toLowerCase() and equals() calls with a single equalsIgnoreCase() call.(İ£Ë2adam8€û•Ç-
+
+AWj4t1dp6y6P2ydRWCWbsquid:S00116v"TRename this field "oldpaste" to match the regular expression '^_[a-z][a-zA-Z0-9]*$'.(Ö¤–á2adam8Ø§ÉÅ-
+v
+AWj4t1dp6y6P2ydRWCYdsquid:S2696£"6Make the enclosing method "static" or remove this set.(›õ‘µúÿÿÿÿ2adam8Ø§ÉÅ-
+v
+AWj4t1dp6y6P2ydRWCYVsquid:S2696ë"6Make the enclosing method "static" or remove this set.(›õ‘µúÿÿÿÿ2adam8Ø§ÉÅ-
+”
+AWj46Kda6y6P2ydRWJstsquid:S18200"ZRefactor this class so it has no more than 20 fields, rather than the 27 it currently has.(êâ£Ú2adam8€û•Ç-
+c
+AWj4t1dp6y6P2ydRWCZbsquid:S1659Ç"#Declare "prvel" on a separate line.(ÑœşÓøÿÿÿÿ2adam8Ø§ÉÅ-
+ 
+AWj4t1dp6y6P2ydRWCWesquid:S1149«"eReplace the synchronized class "Vector" by an unsynchronized one such as "ArrayList" or "LinkedList".(¬ä÷£2adam8Ø§ÉÅ-
+r
+AWj4t1dp6y6P2ydRWCWr
+squid:S106"9Replace this use of System.out or System.err by a logger.(¸­…2adam8Ø§ÉÅ-
+r
+AWj46Kda6y6P2ydRWJsZsquid:S2589”"7Remove this expression which always evaluates to "true"(«Œè°2adam8€û•Ç-
+
+AWj46Kda6y6P2ydRWJtLsquid:S00100’"NRename this method name to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(Ü¹¹Úÿÿÿÿÿ2adam8€û•Ç-
+Xsquid:S2221¥"4Catch a list of specific exception subtypes instead.(¼Ôîàùÿÿÿÿ8€û•Ç-
+Xsquid:S2221í"4Catch a list of specific exception subtypes instead.(¼Ôîàùÿÿÿÿ8€û•Ç-

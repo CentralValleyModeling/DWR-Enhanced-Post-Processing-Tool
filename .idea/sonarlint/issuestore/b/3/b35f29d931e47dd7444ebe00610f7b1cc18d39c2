@@ -1,0 +1,681 @@
+
+s
+AWj46KVm6y6P2ydRWJn4
+squid:S106§"9Replace this use of System.out or System.err by a logger.(ÆÀûı2adam8€û•Ç-
+h
+AWj4t1YR6y6P2ydRWB09squid:S1444»".Make this "public static comp3num" field final(âÜ²42adam8Ø§ÉÅ-
+†
+AWj4t1YR6y6P2ydRWB8msquid:CommentedOutCodeLineé"<This block of commented-out lines of code should be removed.(òÃ›¼2adam8Ø§ÉÅ-
+
+AWj46KVm6y6P2ydRWJnwsquid:S1142É	"MReduce the number of returns of this method 4, down to the maximum allowed 2.(Û¿ÿÕüÿÿÿÿ2adam8€û•Ç-
+
+AWj46KVm6y6P2ydRWJn2squid:S1142ë"MReduce the number of returns of this method 4, down to the maximum allowed 2.(ÿŸºıÿÿÿÿ2adam8€û•Ç-
+
+AWj4t1YR6y6P2ydRWB1esquid:S2583Ü"DChange this condition so that it does not always evaluate to "false"(¾•“™2adam8Ø§ÉÅ-
+e
+AWj46KVm6y6P2ydRWJnAsquid:S1166â"%Either log or rethrow this exception.(ûİÌùúÿÿÿÿ2adam8€û•Ç-
+t
+AWj46KVm6y6P2ydRWJoXsquid:S2221œ"4Catch a list of specific exception subtypes instead.(¼Ôîàùÿÿÿÿ2adam8€û•Ç-
+e
+AWj4t1YR6y6P2ydRWB0ysquid:S1444›"*Make this "public static BASE" field final(——ˆã2adam8Ø§ÉÅ-
+…
+AWj4t1YR6y6P2ydRWB8psquid:CommentedOutCodeLineÑ"<This block of commented-out lines of code should be removed.(­û¼N2adam8Ø§ÉÅ-
+|
+AWj4t1YR6y6P2ydRWB76squid:S2130ª"AUse "Boolean.parseBoolean" for this string-to-boolean conversion.(¼ƒ³ï2adam8Ø§ÉÅ-
+‡
+AWj46KVm6y6P2ydRWJnHsquid:S00112›"FDefine and throw a dedicated exception instead of using a generic one.(ùÁùÿÿÿÿ2adam8€û•Ç-
+±
+AWj4t1YR6y6P2ydRWB1r"squid:ClassVariableVisibilityCheckk"[Make plotComparitive a static final constant or non-public and provide accessors if needed.(˜Úãğùÿÿÿÿ2adam8Ø§ÉÅ-
+‚
+AWj46KVm6y6P2ydRWJnR
+squid:S881›"HExtract this increment or decrement operator into a dedicated statement.(œÓ³ô2adam8€û•Ç-
+‰
+AWj4t1YR6y6P2ydRWB6rsquid:S1132ø"IMove the "TAF" string literal on the left side of this string comparison.(ñÃ¥òùÿÿÿÿ2adam8Ø§ÉÅ-
+‘
+AWj4t1YR6y6P2ydRWB3Rsquid:S3008s"WRename this field "_isWaterYear" to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(¢äˆƒ2adam8Ø§ÉÅ-
+
+AWj46KVm6y6P2ydRWJoLsquid:S3776Ù"RRefactor this method to reduce its Cognitive Complexity from 17 to the 15 allowed.(£¯°İ2adam8€û•Ç-
+‡
+AWj46KVm6y6P2ydRWJnGsquid:S00112ø"FDefine and throw a dedicated exception instead of using a generic one.(«½ÈÊøÿÿÿÿ2adam8€û•Ç-
+s
+AWj4t1YR6y6P2ydRWB7T
+squid:S106¼"9Replace this use of System.out or System.err by a logger.(•™´û2adam8Ø§ÉÅ-
+†
+AWj4t1YR6y6P2ydRWB8csquid:CommentedOutCodeLineØ"<This block of commented-out lines of code should be removed.(ÈëÊ2adam8Ø§ÉÅ-
+a
+AWj4t1YR6y6P2ydRWB5psquid:S1075ä"&Remove this hard-coded path-delimiter.(¾à˜­2adam8Ø§ÉÅ-
+œ
+AWj4t1YR6y6P2ydRWB3esquid:S3008Ã"\Rename this field "DEFAULT_PLOT_SIZE" to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(ŸÖºòøÿÿÿÿ2adam8Ø§ÉÅ-
+l
+AWj4t1YR6y6P2ydRWB01squid:S1444§",Make this "public static baseOn" field final(˜„šáÿÿÿÿÿ2adam8Ø§ÉÅ-
+j
+AWj46KVm6y6P2ydRWJn1squid:S00108©")Either remove or fill this block of code.(ÒÌâ–øÿÿÿÿ2adam8€û•Ç-
+j
+AWj4t1YR6y6P2ydRWB0zsquid:S1444Ÿ"*Make this "public static COMP" field final(Ş”Àûÿÿÿÿ2adam8Ø§ÉÅ-
+†
+AWj4t1YR6y6P2ydRWB8Usquid:CommentedOutCodeLineÃ"<This block of commented-out lines of code should be removed.(„§ñ£2adam8Ø§ÉÅ-
+ˆ
+AWj46KVm6y6P2ydRWJnlsquid:S1142·"MReduce the number of returns of this method 3, down to the maximum allowed 2.(ç”ç¢2adam8€û•Ç-
+
+AWj46KVm6y6P2ydRWJnssquid:S1142ÿ"MReduce the number of returns of this method 5, down to the maximum allowed 2.(ª¶ñ³üÿÿÿÿ2adam8€û•Ç-
+`
+AWj4t1YR6y6P2ydRWB3Nsquid:S1659Æ"%Declare "_cparts" on a separate line.(Î®æò2adam8Ø§ÉÅ-
+o
+AWj46KVm6y6P2ydRWJngsquid:S2221"4Catch a list of specific exception subtypes instead.(Ü‹…É2adam8€û•Ç-
+‘
+AWj4t1YR6y6P2ydRWB37squid:S1149Ù"VReplace the synchronized class "Hashtable" by an unsynchronized one such as "HashMap".(¹ıò2adam8Ø§ÉÅ-
+V
+AWj4t1YR6y6P2ydRWB7psquid:S3626"Remove this redundant jump.(ÉŠ©ƒ2adam8Ø§ÉÅ-
+›
+AWj4t1YR6y6P2ydRWB1fsquid:S1488²"[Immediately return this expression instead of assigning it to the temporary variable "ref".(°Õñüÿÿÿÿ2adam8Ø§ÉÅ-
+Z
+AWj4t1YR6y6P2ydRWB25squid:S2131¢"Use "Integer.toString" instead.(İ™ğ¿2adam8Ø§ÉÅ-
+…
+AWj4t1YR6y6P2ydRWB40squid:TrailingCommentCheck–"6Move this trailing comment on the previous empty line.(öì™¡øÿÿÿÿ2adam8Ø§ÉÅ-
+e
+AWj46KVm6y6P2ydRWJm_squid:S1166›"%Either log or rethrow this exception.(‘Ê¢øÿÿÿÿ2adam8€û•Ç-
+–
+AWj4t1YR6y6P2ydRWB3xsquid:S3008È"VRename this field "MT_60_20_20" to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(í£Îİøÿÿÿÿ2adam8Ø§ÉÅ-
+ˆ
+AWj46KVm6y6P2ydRWJoNsquid:S1142Ù"MReduce the number of returns of this method 3, down to the maximum allowed 2.(£¯°İ2adam8€û•Ç-
+p
+AWj4t1YR6y6P2ydRWB0jsquid:S1444_"6Make this "public static viewMonthlyTable" field final(ü½á¯2adam8Ø§ÉÅ-
+ª
+AWj4t1YR6y6P2ydRWB10"squid:ClassVariableVisibilityCheck"YMake isDvarsFilter a static final constant or non-public and provide accessors if needed.(šá†K2adam8Ø§ÉÅ-
+x
+AWj4t1YR6y6P2ydRWB4H
+squid:S106ğ"9Replace this use of System.out or System.err by a logger.(ïù¯¯ûÿÿÿÿ2adam8Ø§ÉÅ-
+‡
+AWj46KVm6y6P2ydRWJnosquid:S1132‚"GMove the "+" string literal on the left side of this string comparison.(µõ‚îüÿÿÿÿ2adam8€û•Ç-
+a
+AWj4t1YR6y6P2ydRWB63squid:S1168õ"&Return an empty array instead of null.(¥¹ï2adam8Ø§ÉÅ-
+‹
+AWj4t1YR6y6P2ydRWB8Vsquid:CommentedOutCodeLineä"<This block of commented-out lines of code should be removed.(úÉŒÊıÿÿÿÿ2adam8Ø§ÉÅ-
+‡
+AWj46KVm6y6P2ydRWJnQ
+squid:S881—"HExtract this increment or decrement operator into a dedicated statement.(ú¢¬‘øÿÿÿÿ2adam8€û•Ç-
+e
+AWj46KVm6y6P2ydRWJm9squid:S1166Á"%Either log or rethrow this exception.(¼Ôîàùÿÿÿÿ2adam8€û•Ç-
+‹
+AWj4t1YR6y6P2ydRWB3qsquid:S3008ß"PRename this field "_sv2g" to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(ÊÅ±2adam8Ø§ÉÅ-
+†
+AWj4t1YR6y6P2ydRWB8Rsquid:CommentedOutCodeLineœ"<This block of commented-out lines of code should be removed.(ışÔÚ2adam8Ø§ÉÅ-
+—
+AWj4t1YR6y6P2ydRWB3Tsquid:S3008{"XRename this field "_isStartMonth" to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(ÉĞÓ¡şÿÿÿÿ2adam8Ø§ÉÅ-
+v
+AWj4t1YR6y6P2ydRWB43squid:S1854Â"6Remove this useless assignment to local variable "fr".(˜ºüûÿÿÿÿ2adam8Ø§ÉÅ-
+
+AWj46KVm6y6P2ydRWJoasquid:S1142Ë"MReduce the number of returns of this method 3, down to the maximum allowed 2.(ËÙïÇüÿÿÿÿ2adam8€û•Ç-
+
+AWj46KVm6y6P2ydRWJnmsquid:S1142ş"MReduce the number of returns of this method 4, down to the maximum allowed 2.(»’úüÿÿÿÿÿ2adam8€û•Ç-
+t
+AWj46KVm6y6P2ydRWJoWsquid:S2221ş"4Catch a list of specific exception subtypes instead.(¼Ôîàùÿÿÿÿ2adam8€û•Ç-
+s
+AWj46KVm6y6P2ydRWJn9
+squid:S106®"9Replace this use of System.out or System.err by a logger.(ÿµî§2adam8€û•Ç-
+a
+AWj4t1YR6y6P2ydRWB7hsquid:S1168¯"&Return an empty array instead of null.(¥¹ï2adam8Ø§ÉÅ-
+y
+AWj4t1YR6y6P2ydRWB3Esquid:S1155‰
+">Use isEmpty() to check whether the collection is empty or not.(İ›î‡2adam8Ø§ÉÅ-
+`
+AWj4t1YR6y6P2ydRWB3Isquid:S1659»"&Declare "comp2num" on a separate line.(âÜ²42adam8Ø§ÉÅ-
+‹
+AWj4t1YR6y6P2ydRWB3psquid:S3008ß"PRename this field "_sv1g" to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(ÊÅ±2adam8Ø§ÉÅ-
+š
+AWj4t1YR6y6P2ydRWB3gsquid:S3008Å"ZRename this field "DEFAULT_MT_SIZE" to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(Ğ”†Áşÿÿÿÿ2adam8Ø§ÉÅ-
+‡
+AWj46KVm6y6P2ydRWJnqsquid:S1132Š"GMove the "*" string literal on the left side of this string comparison.(úõä¤ûÿÿÿÿ2adam8€û•Ç-
+
+AWj4t1YR6y6P2ydRWB3Ssquid:S3008w"VRename this field "_startMonth" to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(âÎÎâ2adam8Ø§ÉÅ-
+s
+AWj4t1YR6y6P2ydRWB7P
+squid:S106¬"9Replace this use of System.out or System.err by a logger.(«“ı³2adam8Ø§ÉÅ-
+©
+AWj4t1YR6y6P2ydRWB1t"squid:ClassVariableVisibilityChecks"XMake _isWaterYear a static final constant or non-public and provide accessors if needed.(¢äˆƒ2adam8Ø§ÉÅ-
+s
+AWj4t1YR6y6P2ydRWB0ssquid:S1444ƒ"3Make this "public static _show40_30_30" field final(Äœÿøÿÿÿÿ2adam8Ø§ÉÅ-
+‡
+AWj4t1YR6y6P2ydRWB2gsquid:S00112Ä"FDefine and throw a dedicated exception instead of using a generic one.(Ø­ˆÿÿÿÿÿ2adam8Ø§ÉÅ-
+‚
+AWj46KVm6y6P2ydRWJnJsquid:S00112‹"FDefine and throw a dedicated exception instead of using a generic one.(´œÃú2adam8€û•Ç-
+
+AWj46KVm6y6P2ydRWJoFsquid:S3776Ó"RRefactor this method to reduce its Cognitive Complexity from 52 to the 15 allowed.(®“õõ2adam8€û•Ç-
+a
+AWj4t1YR6y6P2ydRWB6hsquid:S1168ê"&Return an empty array instead of null.(¥¹ï2adam8Ø§ÉÅ-
+‡
+AWj46KVm6y6P2ydRWJoUsquid:S1142ä"MReduce the number of returns of this method 5, down to the maximum allowed 2.(¦ıŒg2adam8€û•Ç-
+s
+AWj4t1YR6y6P2ydRWB0nsquid:S1444o"4Make this "public static plotDifference" field final(õ©‚ƒıÿÿÿÿ2adam8Ø§ÉÅ-
+x
+AWj4t1YR6y6P2ydRWB5J
+squid:S106¶"9Replace this use of System.out or System.err by a logger.(…È¿’ÿÿÿÿÿ2adam8Ø§ÉÅ-
+‚
+AWj46KVm6y6P2ydRWJnIsquid:S00112º"FDefine and throw a dedicated exception instead of using a generic one.(ŠÏ©Œ2adam8€û•Ç-
+a
+AWj4t1YR6y6P2ydRWB4psquid:S1168Û"&Return an empty array instead of null.(¥¹ï2adam8Ø§ÉÅ-
+†
+AWj4t1YR6y6P2ydRWB8Wsquid:CommentedOutCodeLineë"<This block of commented-out lines of code should be removed.(„îÑ›2adam8Ø§ÉÅ-
+
+AWj4t1YR6y6P2ydRWB3Gsquid:S00104"]This file has 1,846 lines, which is greater than 750 authorized. Split it into smaller files.2adam8Ø§ÉÅ-
+x
+AWj4t1YR6y6P2ydRWB4T
+squid:S106×"9Replace this use of System.out or System.err by a logger.(ñâíùÿÿÿÿ2adam8Ø§ÉÅ-
+a
+AWj4t1YR6y6P2ydRWB6Osquid:S1168å"&Return an empty array instead of null.(¥¹ï2adam8Ø§ÉÅ-
+m
+AWj4t1YR6y6P2ydRWB0vsquid:S1444"3Make this "public static isDvarsFilter" field final(šá†K2adam8Ø§ÉÅ-
+ª
+AWj4t1YR6y6P2ydRWB18"squid:ClassVariableVisibilityCheck¯"SMake comp2On a static final constant or non-public and provide accessors if needed.(›ª”ñûÿÿÿÿ2adam8Ø§ÉÅ-
+¥
+AWj4t1YR6y6P2ydRWB19"squid:ClassVariableVisibilityCheck³"SMake comp3On a static final constant or non-public and provide accessors if needed.(â’€Ş2adam8Ø§ÉÅ-
+ˆ
+AWj46KVm6y6P2ydRWJntsquid:S1142"MReduce the number of returns of this method 5, down to the maximum allowed 2.(ù»²Ê2adam8€û•Ç-
+¹
+AWj4t1YR6y6P2ydRWB7Nsquid:S1158§"~Call the static method Integer.toString(...) instead of instantiating a temporary object to perform this to string conversion.(Î¬Ê2adam8Ø§ÉÅ-
+˜
+AWj4t1YR6y6P2ydRWB3Vsquid:S3008ƒ"XRename this field "_show40_30_30" to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(Äœÿøÿÿÿÿ2adam8Ø§ÉÅ-
+a
+AWj4t1YR6y6P2ydRWB6esquid:S1168‚"&Return an empty array instead of null.(¥¹ï2adam8Ø§ÉÅ-
+Œ
+AWj46KVm6y6P2ydRWJoRsquid:S3776ä"RRefactor this method to reduce its Cognitive Complexity from 25 to the 15 allowed.(¦ıŒg2adam8€û•Ç-
+ˆ
+AWj46KVm6y6P2ydRWJoZsquid:S1142…"MReduce the number of returns of this method 3, down to the maximum allowed 2.(­ı­˜2adam8€û•Ç-
+†
+AWj4t1YR6y6P2ydRWB8Ssquid:CommentedOutCodeLine¯"<This block of commented-out lines of code should be removed.(¾İÔˆ2adam8Ø§ÉÅ-
+‰
+AWj4t1YR6y6P2ydRWB3Ysquid:S3008“"NRename this field "CFS" to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(Óã¸ú2adam8Ø§ÉÅ-
+m
+AWj4t1YR6y6P2ydRWB02squid:S1444«"-Make this "public static comp1On" field final(áÑ‰Õùÿÿÿÿ2adam8Ø§ÉÅ-
+a
+AWj4t1YR6y6P2ydRWB7Bsquid:S1168ô"&Return an empty array instead of null.(¥¹ï2adam8Ø§ÉÅ-
+¥
+AWj4t1YR6y6P2ydRWB3-squid:S1149¦"eReplace the synchronized class "Vector" by an unsynchronized one such as "ArrayList" or "LinkedList".(Õ¿°şÿÿÿÿ2adam8Ø§ÉÅ-
+r
+AWj4t1YR6y6P2ydRWB0rsquid:S1444"3Make this "public static _show60_20_20" field final(Ãîä¶ıÿÿÿÿ2adam8Ø§ÉÅ-
+¹
+AWj46KVm6y6P2ydRWJn7squid:S1158¨"~Call the static method Integer.toString(...) instead of instantiating a temporary object to perform this to string conversion.(æãÇ¦2adam8€û•Ç-
+t
+AWj46KVm6y6P2ydRWJnisquid:S2221Á"4Catch a list of specific exception subtypes instead.(¼Ôîàùÿÿÿÿ2adam8€û•Ç-
+†
+AWj4t1YR6y6P2ydRWB8bsquid:CommentedOutCodeLineş"<This block of commented-out lines of code should be removed.(ïÅä‰2adam8Ø§ÉÅ-
+
+AWj4t1YR6y6P2ydRWB3msquid:S3008Â"TRename this field "_mtsFiles" to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(Ë¯°Š2adam8Ø§ÉÅ-
+l
+AWj4t1YR6y6P2ydRWB0osquid:S1444s"2Make this "public static _isWaterYear" field final(¢äˆƒ2adam8Ø§ÉÅ-
+e
+AWj46KVm6y6P2ydRWJm8squid:S1166Õ"%Either log or rethrow this exception.(¼Ôîàùÿÿÿÿ2adam8€û•Ç-
+
+AWj46KVm6y6P2ydRWJn0squid:S3776½
+"RRefactor this method to reduce its Cognitive Complexity from 20 to the 15 allowed.(é½±í2adam8€û•Ç-
+¥
+AWj4t1YR6y6P2ydRWB39squid:S1149ø	"eReplace the synchronized class "Vector" by an unsynchronized one such as "ArrayList" or "LinkedList".(”Äë¾ÿÿÿÿÿ2adam8Ø§ÉÅ-
+˜
+AWj4t1YR6y6P2ydRWB3fsquid:S3008Ä"]Rename this field "DEFAULT_TABLE_SIZE" to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(½ÿ´Ì2adam8Ø§ÉÅ-
+§
+AWj4t1YR6y6P2ydRWB1h"squid:ClassVariableVisibilityCheckI"QMake DEBUG a static final constant or non-public and provide accessors if needed.(îéÒ¡ÿÿÿÿÿ2adam8Ø§ÉÅ-
+e
+AWj46KVm6y6P2ydRWJm-squid:S1166•"%Either log or rethrow this exception.(‘Ê¢øÿÿÿÿ2adam8€û•Ç-
+
+AWj4t1YR6y6P2ydRWB4hsquid:S1132Å"FMove the "" string literal on the left side of this string comparison.(¹ğÈ2adam8Ø§ÉÅ-
+§
+AWj4t1YR6y6P2ydRWB1z"squid:ClassVariableVisibilityCheck‹"PMake DVAR a static final constant or non-public and provide accessors if needed.(€‘ãûûÿÿÿÿ2adam8Ø§ÉÅ-
+a
+AWj4t1YR6y6P2ydRWB7ysquid:S1168ø"&Return an empty array instead of null.(¥¹ï2adam8Ø§ÉÅ-
+s
+AWj46KVm6y6P2ydRWJnf
+squid:S106¢"9Replace this use of System.out or System.err by a logger.(¹·õÑ2adam8€û•Ç-
+a
+AWj4t1YR6y6P2ydRWB7gsquid:S1168"&Return an empty array instead of null.(¥¹ï2adam8Ø§ÉÅ-
+t
+AWj46KVm6y6P2ydRWJoSsquid:S1854Ÿ"9Remove this useless assignment to local variable "count".(ÃæÏõ2adam8€û•Ç-
+
+AWj4t1YR6y6P2ydRWB77squid:S2130«"AUse "Boolean.parseBoolean" for this string-to-boolean conversion.(€©ÉÈüÿÿÿÿ2adam8Ø§ÉÅ-
+u
+AWj46KVm6y6P2ydRWJm3squid:S1141—"5Extract this nested try block into a separate method.(ç£êúÿÿÿÿ2adam8€û•Ç-
+‡
+AWj4t1YR6y6P2ydRWB2asquid:S00112Á"FDefine and throw a dedicated exception instead of using a generic one.(¬¶»”şÿÿÿÿ2adam8Ø§ÉÅ-
+`
+AWj4t1YR6y6P2ydRWB5usquid:S1075ß"&Remove this hard-coded path-delimiter.(¯•“,2adam8Ø§ÉÅ-
+‰
+AWj4t1YR6y6P2ydRWB6qsquid:S1132÷"IMove the "CFS" string literal on the left side of this string comparison.(´…‚úÿÿÿÿ2adam8Ø§ÉÅ-
+s
+AWj46KVm6y6P2ydRWJoA
+squid:S106Û"9Replace this use of System.out or System.err by a logger.(İ¾àç2adam8€û•Ç-
+€
+AWj46KVm6y6P2ydRWJobsquid:UnusedPrivateMethod¶"7Remove this unused private "changeUnknownToTAF" method.(ğ¸Æ¬2adam8€û•Ç-
+¨
+AWj4t1YR6y6P2ydRWB1p"squid:ClassVariableVisibilityCheckc"RMake useCFS a static final constant or non-public and provide accessors if needed.(øŠœéúÿÿÿÿ2adam8Ø§ÉÅ-
+c
+AWj4t1YR6y6P2ydRWB2wsquid:S1148ñ"#Use a logger to log this exception.(€ÉÔ…ıÿÿÿÿ2adam8Ø§ÉÅ-
+a
+AWj4t1YR6y6P2ydRWB7Jsquid:S1168™"&Return an empty array instead of null.(¥¹ï2adam8Ø§ÉÅ-
+
+AWj4t1YR6y6P2ydRWB3jsquid:S3008Ø"SRename this field "_dtsList" to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(ôíÎµ2adam8Ø§ÉÅ-
+†
+AWj4t1YR6y6P2ydRWB8esquid:CommentedOutCodeLineí"<This block of commented-out lines of code should be removed.(ö©ïê2adam8Ø§ÉÅ-
+a
+AWj4t1YR6y6P2ydRWB7Csquid:S1168Ş"&Return an empty array instead of null.(¥¹ï2adam8Ø§ÉÅ-
+
+AWj46KVm6y6P2ydRWJnnsquid:S1142å"MReduce the number of returns of this method 4, down to the maximum allowed 2.(ã¬ıòúÿÿÿÿ2adam8€û•Ç-
+
+AWj46KVm6y6P2ydRWJnvsquid:S1142Û"MReduce the number of returns of this method 6, down to the maximum allowed 2.(Öé€øÿÿÿÿ2adam8€û•Ç-
+‹
+AWj4t1YR6y6P2ydRWB8fsquid:CommentedOutCodeLineô"<This block of commented-out lines of code should be removed.(Ö„†Úúÿÿÿÿ2adam8Ø§ÉÅ-
+
+AWj4t1YR6y6P2ydRWB3csquid:S3008£"ORename this field "DIFF" to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(ŠõÌœşÿÿÿÿ2adam8Ø§ÉÅ-
+j
+AWj4t1YR6y6P2ydRWB00squid:S1444£"*Make this "public static DIFF" field final(ŠõÌœşÿÿÿÿ2adam8Ø§ÉÅ-
+
+AWj4t1YR6y6P2ydRWB3Osquid:S3008I"PRename this field "DEBUG" to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(îéÒ¡ÿÿÿÿÿ2adam8Ø§ÉÅ-
+s
+AWj4t1YR6y6P2ydRWB4g
+squid:S106¿"9Replace this use of System.out or System.err by a logger.(´ãÔ¾2adam8Ø§ÉÅ-
+`
+AWj4t1YR6y6P2ydRWB3Jsquid:S1659»"&Declare "comp3num" on a separate line.(âÜ²42adam8Ø§ÉÅ-
+r
+AWj4t1YR6y6P2ydRWB0qsquid:S1444{"3Make this "public static _isStartMonth" field final(ÉĞÓ¡şÿÿÿÿ2adam8Ø§ÉÅ-
+g
+AWj4t1YR6y6P2ydRWB08squid:S1444»"-Make this "public static basenum" field final(âÜ²42adam8Ø§ÉÅ-
+‡
+AWj4t1YR6y6P2ydRWB2dsquid:S00112¿"FDefine and throw a dedicated exception instead of using a generic one.(ï‹úŸıÿÿÿÿ2adam8Ø§ÉÅ-
+‹
+AWj4t1YR6y6P2ydRWB8Psquid:CommentedOutCodeLineİ"<This block of commented-out lines of code should be removed.(Ø„ú÷úÿÿÿÿ2adam8Ø§ÉÅ-
+‡
+AWj4t1YR6y6P2ydRWB2tsquid:S00112ü"FDefine and throw a dedicated exception instead of using a generic one.(¾‚×¥ıÿÿÿÿ2adam8Ø§ÉÅ-
+r
+AWj46KVm6y6P2ydRWJn_
+squid:S106Ì"9Replace this use of System.out or System.err by a logger.(¸¾2adam8€û•Ç-
+§
+AWj4t1YR6y6P2ydRWB14"squid:ClassVariableVisibilityCheckŸ"PMake COMP a static final constant or non-public and provide accessors if needed.(Ş”Àûÿÿÿÿ2adam8Ø§ÉÅ-
+¡
+AWj46KVm6y6P2ydRWJoE
+squid:S138Ó"gThis method has 91 lines, which is greater than the 75 lines authorized. Split it into smaller methods.(®“õõ2adam8€û•Ç-
+‚
+AWj46KVm6y6P2ydRWJnP
+squid:S881†"HExtract this increment or decrement operator into a dedicated statement.(†·µ2adam8€û•Ç-
+¹
+AWj4t1YR6y6P2ydRWB6lsquid:S1158¢"~Call the static method Integer.toString(...) instead of instantiating a temporary object to perform this to string conversion.(İ™ğ¿2adam8Ø§ÉÅ-
+j
+AWj4t1YR6y6P2ydRWB0tsquid:S1444‡"*Make this "public static SVAR" field final(·˜’“ıÿÿÿÿ2adam8Ø§ÉÅ-
+‚
+AWj46KVm6y6P2ydRWJnO
+squid:S881‚"HExtract this increment or decrement operator into a dedicated statement.(ÓŸ¥Ú2adam8€û•Ç-
+y
+AWj4t1YR6y6P2ydRWB3Dsquid:S1155à	">Use isEmpty() to check whether the collection is empty or not.(İ›î‡2adam8Ø§ÉÅ-
+j
+AWj4t1YR6y6P2ydRWB0csquid:S1444I"+Make this "public static DEBUG" field final(îéÒ¡ÿÿÿÿÿ2adam8Ø§ÉÅ-
+
+AWj4t1YR6y6P2ydRWB3Xsquid:S3008‹"ORename this field "DVAR" to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(€‘ãûûÿÿÿÿ2adam8Ø§ÉÅ-
+Š
+AWj4t1YR6y6P2ydRWB3asquid:S3008›"ORename this field "BASE" to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(——ˆã2adam8Ø§ÉÅ-
+a
+AWj4t1YR6y6P2ydRWB5qsquid:S1075ã"&Remove this hard-coded path-delimiter.(Å”¶¡2adam8Ø§ÉÅ-
+°
+AWj4t1YR6y6P2ydRWB1s"squid:ClassVariableVisibilityChecko"ZMake plotDifference a static final constant or non-public and provide accessors if needed.(õ©‚ƒıÿÿÿÿ2adam8Ø§ÉÅ-
+
+AWj46KVm6y6P2ydRWJn3squid:S3776 "RRefactor this method to reduce its Cognitive Complexity from 29 to the 15 allowed.(¸šÂ2adam8€û•Ç-
+p
+AWj46KVm6y6P2ydRWJoJsquid:S1854º"5Remove this useless assignment to local variable "j".(¯ÀÚè2adam8€û•Ç-
+t
+AWj46KVm6y6P2ydRWJoMsquid:S1854†"9Remove this useless assignment to local variable "count".(†·µ2adam8€û•Ç-
+
+AWj4t1YR6y6P2ydRWB3tsquid:S3008Æ"RRename this field "_cparts" to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(Î®æò2adam8Ø§ÉÅ-
+k
+AWj4t1YR6y6P2ydRWB0ksquid:S1444c",Make this "public static useCFS" field final(øŠœéúÿÿÿÿ2adam8Ø§ÉÅ-
+
+AWj4t1YR6y6P2ydRWB3Wsquid:S3008‡"ORename this field "SVAR" to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(·˜’“ıÿÿÿÿ2adam8Ø§ÉÅ-
+p
+AWj4t1YR6y6P2ydRWB6vsquid:S1854¼"5Remove this useless assignment to local variable "j".(´™ß×2adam8Ø§ÉÅ-
+‹
+AWj4t1YR6y6P2ydRWB3osquid:S3008ß"PRename this field "_dv1g" to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(ÊÅ±2adam8Ø§ÉÅ-
+s
+AWj46KVm6y6P2ydRWJnh
+squid:S106µ"9Replace this use of System.out or System.err by a logger.(Òõ2adam8€û•Ç-
+t
+AWj46KVm6y6P2ydRWJndsquid:S2221Õ"4Catch a list of specific exception subtypes instead.(¼Ôîàùÿÿÿÿ2adam8€û•Ç-
+¹
+AWj46KVm6y6P2ydRWJn5squid:S1158¨"~Call the static method Integer.toString(...) instead of instantiating a temporary object to perform this to string conversion.(æãÇ¦2adam8€û•Ç-
+°
+AWj4t1YR6y6P2ydRWB1x"squid:ClassVariableVisibilityCheckƒ"YMake _show40_30_30 a static final constant or non-public and provide accessors if needed.(Äœÿøÿÿÿÿ2adam8Ø§ÉÅ-
+e
+AWj46KVm6y6P2ydRWJm5squid:S1166¬"%Either log or rethrow this exception.(¼Ôîàùÿÿÿÿ2adam8€û•Ç-
+‚
+AWj46KVm6y6P2ydRWJnS
+squid:S881Ÿ"HExtract this increment or decrement operator into a dedicated statement.(ÃæÏõ2adam8€û•Ç-
+¥
+AWj4t1YR6y6P2ydRWB2C"squid:ClassVariableVisibilityCheck»"TMake comp3num a static final constant or non-public and provide accessors if needed.(âÜ²42adam8Ø§ÉÅ-
+‚
+AWj46KVm6y6P2ydRWJnLsquid:S00112"FDefine and throw a dedicated exception instead of using a generic one.(ÜØ¹Ì2adam8€û•Ç-
+ˆ
+AWj46KVm6y6P2ydRWJoGsquid:S1142Ó"MReduce the number of returns of this method 5, down to the maximum allowed 2.(®“õõ2adam8€û•Ç-
+x
+AWj4t1YR6y6P2ydRWB6s
+squid:S106…"9Replace this use of System.out or System.err by a logger.(è“Íûÿÿÿÿ2adam8Ø§ÉÅ-
+
+AWj4t1YR6y6P2ydRWB78squid:S2130¬"AUse "Boolean.parseBoolean" for this string-to-boolean conversion.(ïÿ¦úÿÿÿÿ2adam8Ø§ÉÅ-
+^
+AWj4t1YR6y6P2ydRWB3Msquid:S1659ß"#Declare "_dv2g" on a separate line.(ÊÅ±2adam8Ø§ÉÅ-
+a
+AWj4t1YR6y6P2ydRWB6Qsquid:S1168£"&Return an empty array instead of null.(¥¹ï2adam8Ø§ÉÅ-
+†
+AWj4t1YR6y6P2ydRWB8Xsquid:CommentedOutCodeLine¢	"<This block of commented-out lines of code should be removed.(Ïèø´2adam8Ø§ÉÅ-
+‹
+AWj4t1YR6y6P2ydRWB8jsquid:CommentedOutCodeLine”"<This block of commented-out lines of code should be removed.(ÂÉıÿÿÿÿ2adam8Ø§ÉÅ-
+‹
+AWj4t1YR6y6P2ydRWB8Zsquid:CommentedOutCodeLineĞ
+"<This block of commented-out lines of code should be removed.(ª‘¾¼şÿÿÿÿ2adam8Ø§ÉÅ-
+’
+AWj46KVm6y6P2ydRWJm2
+squid:S135‹"YReduce the total number of break and continue statements in this loop to use at most one.(¤èÄ72adam8€û•Ç-
+`
+AWj46KVm6y6P2ydRWJm7squid:S1166"%Either log or rethrow this exception.(Ü‹…É2adam8€û•Ç-
+‚
+AWj4t1YR6y6P2ydRWB2ksquid:S00112î"FDefine and throw a dedicated exception instead of using a generic one.(ÿõ¤—2adam8Ø§ÉÅ-
+¥
+AWj4t1YR6y6P2ydRWB2B"squid:ClassVariableVisibilityCheck»"TMake comp2num a static final constant or non-public and provide accessors if needed.(âÜ²42adam8Ø§ÉÅ-
+a
+AWj4t1YR6y6P2ydRWB7Lsquid:S1168ğ"&Return an empty array instead of null.(¥¹ï2adam8Ø§ÉÅ-
+\
+AWj46KVm6y6P2ydRWJn8squid:S2129¨"!Remove this "Integer" constructor(æãÇ¦2adam8€û•Ç-
+`
+AWj4t1YR6y6P2ydRWB5tsquid:S1075à"&Remove this hard-coded path-delimiter.(ÁÁ2adam8Ø§ÉÅ-
+†
+AWj4t1YR6y6P2ydRWB8isquid:CommentedOutCodeLine…"<This block of commented-out lines of code should be removed.(ı“û2adam8Ø§ÉÅ-
+©
+AWj4t1YR6y6P2ydRWB16"squid:ClassVariableVisibilityCheck§"RMake baseOn a static final constant or non-public and provide accessors if needed.(˜„šáÿÿÿÿÿ2adam8Ø§ÉÅ-
+a
+AWj4t1YR6y6P2ydRWB5nsquid:S1075±"&Remove this hard-coded path-delimiter.(¿Ğê2adam8Ø§ÉÅ-
+
+AWj46KVm6y6P2ydRWJnksquid:S1132"FMove the "" string literal on the left side of this string comparison.(ÃµÉí2adam8€û•Ç-
+
+AWj4t1YR6y6P2ydRWB3bsquid:S3008Ÿ"ORename this field "COMP" to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(Ş”Àûÿÿÿÿ2adam8Ø§ÉÅ-
+¥
+AWj4t1YR6y6P2ydRWB38squid:S1149Ï	"eReplace the synchronized class "Vector" by an unsynchronized one such as "ArrayList" or "LinkedList".(”Äë¾ÿÿÿÿÿ2adam8Ø§ÉÅ-
+¢
+AWj4t1YR6y6P2ydRWB13"squid:ClassVariableVisibilityCheck›"PMake BASE a static final constant or non-public and provide accessors if needed.(——ˆã2adam8Ø§ÉÅ-
+t
+AWj4t1YR6y6P2ydRWB0msquid:S1444k"5Make this "public static plotComparitive" field final(˜Úãğùÿÿÿÿ2adam8Ø§ÉÅ-
+ˆ
+AWj46KVm6y6P2ydRWJoHsquid:S1132¼"MMove the "UNKNOWN" string literal on the left side of this string comparison.(Ó•‡2adam8€û•Ç-
+±
+AWj4t1YR6y6P2ydRWB1-"squid:ClassVariableVisibilityCheck·"_Make DEFAULT_TIME_WINDOW a static final constant or non-public and provide accessors if needed.(Ìôµï2adam8Ø§ÉÅ-
+k
+AWj4t1YR6y6P2ydRWB0psquid:S1444w"1Make this "public static _startMonth" field final(âÎÎâ2adam8Ø§ÉÅ-
+‡
+AWj4t1YR6y6P2ydRWB2psquid:S00112Ş"FDefine and throw a dedicated exception instead of using a generic one.(¾‚×¥ıÿÿÿÿ2adam8Ø§ÉÅ-
+¯
+AWj4t1YR6y6P2ydRWB1w"squid:ClassVariableVisibilityCheck"YMake _show60_20_20 a static final constant or non-public and provide accessors if needed.(Ãîä¶ıÿÿÿÿ2adam8Ø§ÉÅ-
+†
+AWj4t1YR6y6P2ydRWB8Ysquid:CommentedOutCodeLine¶	"<This block of commented-out lines of code should be removed.(İÕÉ2adam8Ø§ÉÅ-
+
+AWj46KVm6y6P2ydRWJoCsquid:S3776ì"RRefactor this method to reduce its Cognitive Complexity from 57 to the 15 allowed.(´ÌÚ¯2adam8€û•Ç-
+j
+AWj46KVm6y6P2ydRWJoVsquid:S1172©"*Remove this unused method parameter "prj".(¦—›„şÿÿÿÿ2adam8€û•Ç-
+…
+AWj4t1YR6y6P2ydRWB4wsquid:TrailingCommentCheckñ"6Move this trailing comment on the previous empty line.(öì™¡øÿÿÿÿ2adam8Ø§ÉÅ-
+‰
+AWj4t1YR6y6P2ydRWB3Zsquid:S3008—"NRename this field "TAF" to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(ï²©ú2adam8Ø§ÉÅ-
+¦
+AWj4t1YR6y6P2ydRWB2D"squid:ClassVariableVisibilityCheck¿"TMake nperiods a static final constant or non-public and provide accessors if needed.(ìôÅ«2adam8Ø§ÉÅ-
+a
+AWj4t1YR6y6P2ydRWB5osquid:S1075±"&Remove this hard-coded path-delimiter.(¿Ğê2adam8Ø§ÉÅ-
+‹
+AWj4t1YR6y6P2ydRWB8Tsquid:CommentedOutCodeLineß"<This block of commented-out lines of code should be removed.(–íÖÁşÿÿÿÿ2adam8Ø§ÉÅ-
+x
+AWj46KVm6y6P2ydRWJnx
+squid:S106“
+"9Replace this use of System.out or System.err by a logger.(Ú¯îÃüÿÿÿÿ2adam8€û•Ç-
+‡
+AWj4t1YR6y6P2ydRWB2fsquid:S00112Â
+"FDefine and throw a dedicated exception instead of using a generic one.(ï‹úŸıÿÿÿÿ2adam8Ø§ÉÅ-
+‡
+AWj4t1YR6y6P2ydRWB2Zsquid:S00112¥"FDefine and throw a dedicated exception instead of using a generic one.(¬¶»”şÿÿÿÿ2adam8Ø§ÉÅ-
+a
+AWj4t1YR6y6P2ydRWB5Vsquid:S1168¥"&Return an empty array instead of null.(¥¹ï2adam8Ø§ÉÅ-
+s
+AWj4t1YR6y6P2ydRWB4G
+squid:S106ï"9Replace this use of System.out or System.err by a logger.(¸Ñ¤†2adam8Ø§ÉÅ-
+¤
+AWj4t1YR6y6P2ydRWB1_"squid:ClassVariableVisibilityCheck»"SMake basenum a static final constant or non-public and provide accessors if needed.(âÜ²42adam8Ø§ÉÅ-
+¥
+AWj4t1YR6y6P2ydRWB3_squid:S1149©"eReplace the synchronized class "Vector" by an unsynchronized one such as "ArrayList" or "LinkedList".(Õ¿°şÿÿÿÿ2adam8Ø§ÉÅ-
+Z
+AWj4t1YR6y6P2ydRWB26squid:S2131§"Use "Integer.toString" instead.(Î¬Ê2adam8Ø§ÉÅ-
+‹
+AWj4t1YR6y6P2ydRWB8hsquid:CommentedOutCodeLineû"<This block of commented-out lines of code should be removed.(²µÙ§úÿÿÿÿ2adam8Ø§ÉÅ-
+d
+AWj4t1YR6y6P2ydRWB0xsquid:S1444—")Make this "public static TAF" field final(ï²©ú2adam8Ø§ÉÅ-
+e
+AWj46KVm6y6P2ydRWJm4squid:S1166œ"%Either log or rethrow this exception.(¼Ôîàùÿÿÿÿ2adam8€û•Ç-
+\
+AWj4t1YR6y6P2ydRWB6msquid:S2129¢"!Remove this "Integer" constructor(İ™ğ¿2adam8Ø§ÉÅ-
+a
+AWj46KVm6y6P2ydRWJoYsquid:S1168š"&Return an empty array instead of null.(¥¹ï2adam8€û•Ç-
+‡
+AWj4t1YR6y6P2ydRWB2esquid:S00112Ç
+"FDefine and throw a dedicated exception instead of using a generic one.(Ø­ˆÿÿÿÿÿ2adam8Ø§ÉÅ-
+§
+AWj4t1YR6y6P2ydRWB15"squid:ClassVariableVisibilityCheck£"PMake DIFF a static final constant or non-public and provide accessors if needed.(ŠõÌœşÿÿÿÿ2adam8Ø§ÉÅ-
+
+AWj4t1YR6y6P2ydRWB3ksquid:S3008Ù"SRename this field "_mtsList" to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(¹ıò2adam8Ø§ÉÅ-
+s
+AWj4t1YR6y6P2ydRWB4j
+squid:S106Ë"9Replace this use of System.out or System.err by a logger.(€¨©2adam8Ø§ÉÅ-
+e
+AWj46KVm6y6P2ydRWJnDsquid:S1166´"%Either log or rethrow this exception.(‘Ê¢øÿÿÿÿ2adam8€û•Ç-
+ˆ
+AWj46KVm6y6P2ydRWJoDsquid:S1142ì"MReduce the number of returns of this method 5, down to the maximum allowed 2.(´ÌÚ¯2adam8€û•Ç-
+‹
+AWj4t1YR6y6P2ydRWB8gsquid:CommentedOutCodeLineì"<This block of commented-out lines of code should be removed.(™÷íøÿÿÿÿ2adam8Ø§ÉÅ-
+‡
+AWj46KVm6y6P2ydRWJnMsquid:S00112"FDefine and throw a dedicated exception instead of using a generic one.(¾‚×¥ıÿÿÿÿ2adam8€û•Ç-
+e
+AWj46KVm6y6P2ydRWJnFsquid:S1166í"%Either log or rethrow this exception.(¼Ôîàùÿÿÿÿ2adam8€û•Ç-
+c
+AWj4t1YR6y6P2ydRWB2vsquid:S1148®"#Use a logger to log this exception.(€ÉÔ…ıÿÿÿÿ2adam8Ø§ÉÅ-
+a
+AWj4t1YR6y6P2ydRWB5rsquid:S1075â"&Remove this hard-coded path-delimiter.(óƒññ2adam8Ø§ÉÅ-
+\
+AWj46KVm6y6P2ydRWJn6squid:S2129¨"!Remove this "Integer" constructor(æãÇ¦2adam8€û•Ç-
+t
+AWj46KVm6y6P2ydRWJncsquid:S2221¬"4Catch a list of specific exception subtypes instead.(¼Ôîàùÿÿÿÿ2adam8€û•Ç-
+™
+AWj4t1YR6y6P2ydRWB3dsquid:S3008·"^Rename this field "DEFAULT_TIME_WINDOW" to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(Ìôµï2adam8Ø§ÉÅ-
+i
+AWj4t1YR6y6P2ydRWB0-squid:S1444¿".Make this "public static nperiods" field final(ìôÅ«2adam8Ø§ÉÅ-
+’
+AWj46KVm6y6P2ydRWJnjsquid:S3776÷"RRefactor this method to reduce its Cognitive Complexity from 19 to the 15 allowed.(ÇøØÒøÿÿÿÿ2adam8€û•Ç-
+‹
+AWj4t1YR6y6P2ydRWB3rsquid:S3008ß"PRename this field "_dv2g" to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(ÊÅ±2adam8Ø§ÉÅ-
+h
+AWj4t1YR6y6P2ydRWB07squid:S1444»".Make this "public static comp1num" field final(âÜ²42adam8Ø§ÉÅ-
+¡
+AWj46KVm6y6P2ydRWJoB
+squid:S138ì"gThis method has 95 lines, which is greater than the 75 lines authorized. Split it into smaller methods.(´ÌÚ¯2adam8€û•Ç-
+‡
+AWj46KVm6y6P2ydRWJnN
+squid:S881ş"HExtract this increment or decrement operator into a dedicated statement.(ƒöÄ½ıÿÿÿÿ2adam8€û•Ç-
+Z
+AWj46KVm6y6P2ydRWJnUsquid:S2131¨"Use "Integer.toString" instead.(æãÇ¦2adam8€û•Ç-
+‡
+AWj46KVm6y6P2ydRWJnpsquid:S1132†"GMove the "-" string literal on the left side of this string comparison.(°Î©¢ùÿÿÿÿ2adam8€û•Ç-
+¡
+AWj46KVm6y6P2ydRWJoO
+squid:S138"gThis method has 80 lines, which is greater than the 75 lines authorized. Split it into smaller methods.(‰èıÄ2adam8€û•Ç-
+x
+AWj4t1YR6y6P2ydRWB7U
+squid:S106½"9Replace this use of System.out or System.err by a logger.(—õ‘×øÿÿÿÿ2adam8Ø§ÉÅ-
+t
+AWj4t1YR6y6P2ydRWB05squid:S1444·"9Make this "public static DEFAULT_TIME_WINDOW" field final(Ìôµï2adam8Ø§ÉÅ-
+
+AWj46KVm6y6P2ydRWJnusquid:S1142¾"MReduce the number of returns of this method 3, down to the maximum allowed 2.(Áïûÿÿÿÿ2adam8€û•Ç-
+
+AWj46KVm6y6P2ydRWJoPsquid:S3776"RRefactor this method to reduce its Cognitive Complexity from 49 to the 15 allowed.(‰èıÄ2adam8€û•Ç-
+…
+AWj4t1YR6y6P2ydRWB4Dsquid:TrailingCommentCheckİ"6Move this trailing comment on the previous empty line.(Ø„ú÷úÿÿÿÿ2adam8Ø§ÉÅ-
+
+AWj4t1YR6y6P2ydRWB6Tsquid:TrailingCommentCheck"6Move this trailing comment on the previous empty line.(ŞÑÊ^2adam8Ø§ÉÅ-
+‚
+AWj46KVm6y6P2ydRWJnKsquid:S00112¡"FDefine and throw a dedicated exception instead of using a generic one.(ÛÂè2adam8€û•Ç-
+’
+AWj46KVm6y6P2ydRWJoIsquid:S3776Œ"RRefactor this method to reduce its Cognitive Complexity from 30 to the 15 allowed.(îÚÒ°ûÿÿÿÿ2adam8€û•Ç-
+†
+AWj4t1YR6y6P2ydRWB8Qsquid:CommentedOutCodeLine"<This block of commented-out lines of code should be removed.(Ïèø´2adam8Ø§ÉÅ-
+†
+AWj4t1YR6y6P2ydRWB8lsquid:CommentedOutCodeLineÒ"<This block of commented-out lines of code should be removed.(ë¤¨§2adam8Ø§ÉÅ-
+”
+AWj4t1YR6y6P2ydRWB3lsquid:S3008İ"TRename this field "_dtsFiles" to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(Ø„ú÷úÿÿÿÿ2adam8Ø§ÉÅ-
+¯
+AWj4t1YR6y6P2ydRWB1v"squid:ClassVariableVisibilityCheck{"YMake _isStartMonth a static final constant or non-public and provide accessors if needed.(ÉĞÓ¡şÿÿÿÿ2adam8Ø§ÉÅ-
+¡
+AWj4t1YR6y6P2ydRWB12"squid:ClassVariableVisibilityCheck—"OMake TAF a static final constant or non-public and provide accessors if needed.(ï²©ú2adam8Ø§ÉÅ-
+‡
+AWj4t1YR6y6P2ydRWB2csquid:S00112µ
+"FDefine and throw a dedicated exception instead of using a generic one.(‹Ü·¾üÿÿÿÿ2adam8Ø§ÉÅ-
+t
+AWj4t1YR6y6P2ydRWB5esquid:S1854
+"9Remove this useless assignment to local variable "cpart".(½ÂÒ¨2adam8Ø§ÉÅ-
+^
+AWj4t1YR6y6P2ydRWB3Lsquid:S1659ß"#Declare "_sv2g" on a separate line.(ÊÅ±2adam8Ø§ÉÅ-
+¡
+AWj4t1YR6y6P2ydRWB11"squid:ClassVariableVisibilityCheck“"OMake CFS a static final constant or non-public and provide accessors if needed.(Óã¸ú2adam8Ø§ÉÅ-
+a
+AWj4t1YR6y6P2ydRWB5ssquid:S1075á"&Remove this hard-coded path-delimiter.(—œÓË2adam8Ø§ÉÅ-
+s
+AWj4t1YR6y6P2ydRWB8N
+squid:S106€"9Replace this use of System.out or System.err by a logger.(Îã­Ã2adam8Ø§ÉÅ-
+‹
+AWj4t1YR6y6P2ydRWB8asquid:CommentedOutCodeLine„"<This block of commented-out lines of code should be removed.(‡÷Øûÿÿÿÿ2adam8Ø§ÉÅ-
+e
+AWj46KVm6y6P2ydRWJnCsquid:S1166ƒ"%Either log or rethrow this exception.(‘Ê¢øÿÿÿÿ2adam8€û•Ç-
+ª
+AWj4t1YR6y6P2ydRWB17"squid:ClassVariableVisibilityCheck«"SMake comp1On a static final constant or non-public and provide accessors if needed.(áÑ‰Õùÿÿÿÿ2adam8Ø§ÉÅ-
+a
+AWj46KVm6y6P2ydRWJoTsquid:S1168ß"&Return an empty array instead of null.(¥¹ï2adam8€û•Ç-
+­
+AWj4t1YR6y6P2ydRWB1o"squid:ClassVariableVisibilityCheck_"\Make viewMonthlyTable a static final constant or non-public and provide accessors if needed.(ü½á¯2adam8Ø§ÉÅ-
+e
+AWj46KVm6y6P2ydRWJnBsquid:S1166…"%Either log or rethrow this exception.(‘Ê¢øÿÿÿÿ2adam8€û•Ç-
+`
+AWj4t1YR6y6P2ydRWB3Hsquid:S1659»"&Declare "comp1num" on a separate line.(âÜ²42adam8Ø§ÉÅ-
+d
+AWj4t1YR6y6P2ydRWB0wsquid:S1444“")Make this "public static CFS" field final(Óã¸ú2adam8Ø§ÉÅ-
+`
+AWj46KVm6y6P2ydRWJm6squid:S1166±"%Either log or rethrow this exception.(Ü‹…É2adam8€û•Ç-
+^
+AWj4t1YR6y6P2ydRWB3Ksquid:S1659ß"#Declare "_sv1g" on a separate line.(ÊÅ±2adam8Ø§ÉÅ-
+‹
+AWj4t1YR6y6P2ydRWB8dsquid:CommentedOutCodeLineâ"<This block of commented-out lines of code should be removed.(•µ‰Éúÿÿÿÿ2adam8Ø§ÉÅ-
+–
+AWj46KVm6y6P2ydRWJnWsquid:S3008Ê"VRename this field "_stringComp" to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(ªà±Üûÿÿÿÿ2adam8€û•Ç-
+‡
+AWj4t1YR6y6P2ydRWB2bsquid:S00112Ò"FDefine and throw a dedicated exception instead of using a generic one.(¬¶»”şÿÿÿÿ2adam8Ø§ÉÅ-
+†
+AWj4t1YR6y6P2ydRWB4fsquid:S1132¸"FMove the "" string literal on the left side of this string comparison.(õˆ•÷øÿÿÿÿ2adam8Ø§ÉÅ-
+x
+AWj46KVm6y6P2ydRWJn-
+squid:S106½"9Replace this use of System.out or System.err by a logger.(°Ú“€ıÿÿÿÿ2adam8€û•Ç-
+…
+AWj4t1YR6y6P2ydRWB6Usquid:TrailingCommentCheck’"6Move this trailing comment on the previous empty line.(…°‹ñıÿÿÿÿ2adam8Ø§ÉÅ-
+j
+AWj4t1YR6y6P2ydRWB0usquid:S1444‹"*Make this "public static DVAR" field final(€‘ãûûÿÿÿÿ2adam8Ø§ÉÅ-
+{
+AWj4t1YR6y6P2ydRWB75squid:S2130§"AUse "Boolean.parseBoolean" for this string-to-boolean conversion.(Æñ]2adam8Ø§ÉÅ-
+
+AWj4t1YR6y6P2ydRWB3ssquid:S3008à"NRename this field "_tw" to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(¸É›úÿÿÿÿ2adam8Ø§ÉÅ-
+§
+AWj4t1YR6y6P2ydRWB1y"squid:ClassVariableVisibilityCheck‡"PMake SVAR a static final constant or non-public and provide accessors if needed.(·˜’“ıÿÿÿÿ2adam8Ø§ÉÅ-
+‘
+AWj4t1YR6y6P2ydRWB3wsquid:S3008Ç"VRename this field "MT_40_30_30" to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(ı¿‘2adam8Ø§ÉÅ-
+
+AWj4t1YR6y6P2ydRWB3usquid:S3008Æ"RRename this field "_bparts" to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(Î®æò2adam8Ø§ÉÅ-
+
+AWj4t1YR6y6P2ydRWB3vsquid:S3008Ì"SRename this field "_mapping" to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(Íµ³52adam8Ø§ÉÅ-
+•
+AWj4t1YR6y6P2ydRWB3hsquid:S3008Ğ"ZRename this field "_currentProject" to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(š¦«è2adam8Ø§ÉÅ-
+‘
+AWj4t1YR6y6P2ydRWB36squid:S1149Ø"VReplace the synchronized class "Hashtable" by an unsynchronized one such as "HashMap".(ôíÎµ2adam8Ø§ÉÅ-
+¢
+AWj46KVm6y6P2ydRWJnz
+squid:S138½
+"hThis method has 102 lines, which is greater than the 75 lines authorized. Split it into smaller methods.(é½±í2adam8€û•Ç-
+‹
+AWj4t1YR6y6P2ydRWB8nsquid:CommentedOutCodeLine¨"<This block of commented-out lines of code should be removed.(«“Ü™ıÿÿÿÿ2adam8Ø§ÉÅ-
+‡
+AWj4t1YR6y6P2ydRWB2rsquid:S00112"FDefine and throw a dedicated exception instead of using a generic one.(…øĞ˜ûÿÿÿÿ2adam8Ø§ÉÅ-
+‚
+AWj4t1YR6y6P2ydRWB2ssquid:S00112ç"FDefine and throw a dedicated exception instead of using a generic one.(ÌéêÆ2adam8Ø§ÉÅ-
+`
+AWj4t1YR6y6P2ydRWB5vsquid:S1075Ş"&Remove this hard-coded path-delimiter.(»2adam8Ø§ÉÅ-
+—
+AWj4t1YR6y6P2ydRWB3Usquid:S3008"XRename this field "_show60_20_20" to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(Ãîä¶ıÿÿÿÿ2adam8Ø§ÉÅ-
+‚
+AWj4t1YR6y6P2ydRWB2usquid:S00112Õ"FDefine and throw a dedicated exception instead of using a generic one.(ÌéêÆ2adam8Ø§ÉÅ-
+s
+AWj4t1YR6y6P2ydRWB7M
+squid:S106§"9Replace this use of System.out or System.err by a logger.(Î¬Ê2adam8Ø§ÉÅ-
+‹
+AWj4t1YR6y6P2ydRWB8ksquid:CommentedOutCodeLine«"<This block of commented-out lines of code should be removed.(¬İ‹Èıÿÿÿÿ2adam8Ø§ÉÅ-
+h
+AWj4t1YR6y6P2ydRWB04squid:S1444³"-Make this "public static comp3On" field final(â’€Ş2adam8Ø§ÉÅ-
+h
+AWj4t1YR6y6P2ydRWB06squid:S1444»".Make this "public static comp2num" field final(âÜ²42adam8Ø§ÉÅ-
+m
+AWj4t1YR6y6P2ydRWB03squid:S1444¯"-Make this "public static comp2On" field final(›ª”ñûÿÿÿÿ2adam8Ø§ÉÅ-
+Z
+AWj46KVm6y6P2ydRWJnTsquid:S2131¨"Use "Integer.toString" instead.(æãÇ¦2adam8€û•Ç-
+˜
+AWj4t1YR6y6P2ydRWB3isquid:S3008Ô"XRename this field "_currentStudy" to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(®àÀıùÿÿÿÿ2adam8Ø§ÉÅ-
+¨
+AWj4t1YR6y6P2ydRWB1u"squid:ClassVariableVisibilityCheckw"WMake _startMonth a static final constant or non-public and provide accessors if needed.(âÎÎâ2adam8Ø§ÉÅ-
+
+AWj46KVm6y6P2ydRWJnrsquid:S1132"GMove the "/" string literal on the left side of this string comparison.(Æ¯şH2adam8€û•Ç-
+¥
+AWj4t1YR6y6P2ydRWB2A"squid:ClassVariableVisibilityCheck»"TMake comp1num a static final constant or non-public and provide accessors if needed.(âÜ²42adam8Ø§ÉÅ-
+a
+AWj4t1YR6y6P2ydRWB7Vsquid:S1168´	"&Return an empty array instead of null.(¥¹ï2adam8Ø§ÉÅ-
+
+AWj46KVm6y6P2ydRWJoKsquid:S1142Œ"MReduce the number of returns of this method 4, down to the maximum allowed 2.(îÚÒ°ûÿÿÿÿ2adam8€û•Ç-
+\
+AWj4t1YR6y6P2ydRWB7Osquid:S2129§"!Remove this "Integer" constructor(Î¬Ê2adam8Ø§ÉÅ-
+o
+AWj46KVm6y6P2ydRWJnesquid:S2221±"4Catch a list of specific exception subtypes instead.(Ü‹…É2adam8€û•Ç-
+ˆ
+AWj46KVm6y6P2ydRWJoQsquid:S1142"MReduce the number of returns of this method 6, down to the maximum allowed 2.(‰èıÄ2adam8€û•Ç-
+ˆ
+AWj46KVm6y6P2ydRWJnysquid:S1142ò	"MReduce the number of returns of this method 4, down to the maximum allowed 2.(“™´ì2adam8€û•Ç-
+
+AWj4t1YR6y6P2ydRWB71squid:S3027ÿ"FPut single-quotes around '-' to use the faster "indexOf(char)" method.(óŞ¢ğ2adam8Ø§ÉÅ-
+…
+AWj4t1YR6y6P2ydRWB5Msquid:TrailingCommentCheckÆ"6Move this trailing comment on the previous empty line.(Ğ–Êşÿÿÿÿ2adam8Ø§ÉÅ-
+s
+AWj4t1YR6y6P2ydRWB4t
+squid:S106Ã"9Replace this use of System.out or System.err by a logger.(ØşÿÌ2adam8Ø§ÉÅ-
+e
+AWj46KVm6y6P2ydRWJnEsquid:S1166ş"%Either log or rethrow this exception.(¼Ôîàùÿÿÿÿ2adam8€û•Ç-
+xsquid:S3008M"URename this field "VIEW_GRAPH" to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(Ûòêİûÿÿÿÿ8í‡ÅĞ-
+"squid:ClassVariableVisibilityCheckQ"VMake VIEW_TABLE a static final constant or non-public and provide accessors if needed.(ìÈğÃúÿÿÿÿ8í‡ÅĞ-
+Ssquid:S1444Q"0Make this "public static VIEW_TABLE" field final(ìÈğÃúÿÿÿÿ8í‡ÅĞ-
+ksquid:S00112°"FDefine and throw a dedicated exception instead of using a generic one.(æúïÔşÿÿÿÿ8Ø§ÉÅ-
+esquid:S00112Ú"FDefine and throw a dedicated exception instead of using a generic one.(¢Ì‡8í‡ÅĞ-
+"squid:ClassVariableVisibilityCheckg"\Make USE_STORED_UNITS a static final constant or non-public and provide accessors if needed.(Ñ‘ºZ8í‡ÅĞ-
+"squid:ClassVariableVisibilityCheck["YMake NUM_YEARS_MAX a static final constant or non-public and provide accessors if needed.(ËËæ©8í‡ÅĞ-
+vsquid:S3008W"SRename this field "POSITION" to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(±ñÔÿÿÿÿÿ8í‡ÅĞ-
+xsquid:S3008Q"URename this field "VIEW_TABLE" to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(ìÈğÃúÿÿÿÿ8í‡ÅĞ-
+xsquid:S3008Y"URename this field "NUM_LEVELS" to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(ˆÇÙ‘ÿÿÿÿÿ8í‡ÅĞ-
+_squid:S2130¥"AUse "Boolean.parseBoolean" for this string-to-boolean conversion.(à–œt8Ø§ÉÅ-
+wsquid:S3008U"TRename this field "RES_TABLE" to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(¡›Œ¡úÿÿÿÿ8í‡ÅĞ-
+"squid:ClassVariableVisibilityCheckM"VMake VIEW_GRAPH a static final constant or non-public and provide accessors if needed.(Ûòêİûÿÿÿÿ8í‡ÅĞ-
+Qsquid:S1444W".Make this "public static POSITION" field final(±ñÔÿÿÿÿÿ8í‡ÅĞ-
+Ssquid:S1444M"0Make this "public static VIEW_GRAPH" field final(Ûòêİûÿÿÿÿ8í‡ÅĞ-
+vsquid:S3008["XRename this field "NUM_YEARS_MAX" to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(ËËæ©8í‡ÅĞ-
+Ssquid:S1444g"6Make this "public static USE_STORED_UNITS" field final(Ñ‘ºZ8í‡ÅĞ-
+Jsquid:S1068Æ"+Remove this unused "_cparts" private field.(Î®æò8ôæÜĞ-
+"squid:ClassVariableVisibilityCheckW"TMake POSITION a static final constant or non-public and provide accessors if needed.(±ñÔÿÿÿÿÿ8í‡ÅĞ-
+‹squid:S1448G"hclass "AppUtils" has 68 methods, which is greater than the 35 authorized. Split it into smaller classes.(ığï¥øÿÿÿÿ8í‡ÅĞ-
+Xsquid:S2221í"4Catch a list of specific exception subtypes instead.(¼Ôîàùÿÿÿÿ8€û•Ç-
+Qsquid:S1444["3Make this "public static NUM_YEARS_MAX" field final(ËËæ©8í‡ÅĞ-
+esquid:S2130¦"AUse "Boolean.parseBoolean" for this string-to-boolean conversion.(è­Œåüÿÿÿÿ8Ø§ÉÅ-
+xsquid:S3008g"[Rename this field "USE_STORED_UNITS" to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(Ñ‘ºZ8í‡ÅĞ-
+}squid:S1820G"ZRefactor this class so it has no more than 20 fields, rather than the 55 it currently has.(ığï¥øÿÿÿÿ8í‡ÅĞ-

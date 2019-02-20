@@ -1,0 +1,59 @@
+
+V
+AWj4t1776y6P2ydRWFIRsquid:S3626º"Remove this redundant jump.(ûÁİ…2adam8Ø§ÉÅ-
+:squid:S3626Û"Remove this redundant jump.(ûÁİ…8¨²ØÓ-
+n
+AWj46LG66y6P2ydRWKJ_squid:S29740"4Make this class "final" or add a public constructor.(˜ÿæä2adam8€û•Ç-
+c
+AWj46LG66y6P2ydRWKKCsquid:S1125”"(Remove the literal "true" boolean value.(‡™–Ÿ2adam8€û•Ç-
+¥
+AWj46LG66y6P2ydRWKKBsquid:S1149À"eReplace the synchronized class "Vector" by an unsynchronized one such as "ArrayList" or "LinkedList".(ÀŞé•úÿÿÿÿ2adam8€û•Ç-
+t
+AWj46LG66y6P2ydRWKKEsquid:S2221š"4Catch a list of specific exception subtypes instead.(¼Ôîàùÿÿÿÿ2adam8€û•Ç-
+e
+AWj46LG66y6P2ydRWKJ8squid:S1166²"%Either log or rethrow this exception.(“–†ÿÿÿÿÿ2adam8€û•Ç-
+Xsquid:S2221Ï"4Catch a list of specific exception subtypes instead.(öŞÉúÿÿÿÿ8®§­Ó-
+”
+AWj4t1776y6P2ydRWFIPsquid:S2293ˆ"YReplace the type specification in this constructor call with the diamond operator ("<>").(¿ùğ×2adam8Ø§ÉÅ-
+
+AWj46LG66y6P2ydRWKKHsquid:S3776Û"RRefactor this method to reduce its Cognitive Complexity from 41 to the 15 allowed.(°˜ÿ–2adam8€û•Ç-
+‰
+AWj4t1776y6P2ydRWFIUsquid:S00100v"NRename this method name to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(É¡Ì2adam8Ø§ÉÅ-
+t
+AWj46LG66y6P2ydRWKKIsquid:S2221ı"4Catch a list of specific exception subtypes instead.(¼Ôîàùÿÿÿÿ2adam8€û•Ç-
+e
+AWj46LG66y6P2ydRWKJ9squid:S1166ı"%Either log or rethrow this exception.(¼Ôîàùÿÿÿÿ2adam8€û•Ç-
+b
+AWj46LG66y6P2ydRWKKFsquid:S1125}"(Remove the literal "true" boolean value.(‡™–Ÿ2adam8€û•Ç-
+€
+AWj46LG66y6P2ydRWKKMsquid:TrailingCommentCheck³"6Move this trailing comment on the previous empty line.(¿¦§û2adam8€û•Ç-
+“
+AWj4t1776y6P2ydRWFIJsquid:S2293¦"YReplace the type specification in this constructor call with the diamond operator ("<>").(ú—ÿ:2adam8Ø§ÉÅ-
+Isquid:S1166·"%Either log or rethrow this exception.(Š‚óÎùÿÿÿÿ8¨²ØÓ-
+e
+AWj46LG66y6P2ydRWKJ6squid:S1166Ï"%Either log or rethrow this exception.(öŞÉúÿÿÿÿ2adam8€û•Ç-
+ 
+AWj46LG66y6P2ydRWKKAsquid:S1149¾"eReplace the synchronized class "Vector" by an unsynchronized one such as "ArrayList" or "LinkedList".(æ²õ—2adam8€û•Ç-
+ˆ
+AWj4t1776y6P2ydRWFINsquid:S1132ò"HMove the "OK" string literal on the left side of this string comparison.(âÒØĞÿÿÿÿÿ2adam8Ø§ÉÅ-
+„
+AWj46LG66y6P2ydRWKKKsquid:S1132‘"IMove the "spn" string literal on the left side of this string comparison.(â‹¸»2adam8€û•Ç-
+
+AWj46LG66y6P2ydRWKKJsquid:S3776"RRefactor this method to reduce its Cognitive Complexity from 19 to the 15 allowed.(¯ãÇ2adam8€û•Ç-
+Ÿ
+AWj4t1776y6P2ydRWFIFsquid:S1149¦"eReplace the synchronized class "Vector" by an unsynchronized one such as "ArrayList" or "LinkedList".(ú—ÿ:2adam8Ø§ÉÅ-
+w
+AWj4t1776y6P2ydRWFH-squid:S00107v"<Method has 8 parameters, which is greater than 7 authorized.(É¡Ì2adam8Ø§ÉÅ-
+squid:S4087¯"bRemove this "close" call; closing the resource is handled automatically by the try-with-resources.(¢ÔïÌ8¦¡ØÓ-
+‹
+AWj46LG66y6P2ydRWKKLsquid:S1132®"QMove the "tabbedpane1" string literal on the left side of this string comparison.(ÄİÇn2adam8€û•Ç-
+Ysquid:S1141£"5Extract this nested try block into a separate method.(ç£êúÿÿÿÿ8¦¡ØÓ-
+˜
+AWj4t1776y6P2ydRWFIIsquid:S2293G"YReplace the type specification in this constructor call with the diamond operator ("<>").(°êè ùÿÿÿÿ2adam8Ø§ÉÅ-
+‘
+AWj4t1776y6P2ydRWFIEsquid:S001169"VRename this field "fdDSSFiles" to match the regular expression '^_[a-z][a-zA-Z0-9]*$'.(Ìé‹¹2adam8Ø§ÉÅ-
+Š
+AWj46LG66y6P2ydRWKKDsquid:S00100‹"NRename this method name to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(ğÁ‘Â2adam8€û•Ç-
+¡
+AWj46LG66y6P2ydRWKKG
+squid:S138Û"gThis method has 96 lines, which is greater than the 75 lines authorized. Split it into smaller methods.(°˜ÿ–2adam8€û•Ç-

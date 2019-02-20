@@ -1,0 +1,117 @@
+
+w
+AWj4t1iC6y6P2ydRWC2T
+squid:S106["9Replace this use of System.out or System.err by a logger.(—µ±Ãúÿÿÿÿ2adam8Ø§ÉÅ-
+“
+AWj46Kle6y6P2ydRWJxhsquid:S3008/"TRename this field "_messages" to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(–Ä„Ëüÿÿÿÿ2adam8€û•Ç-
+x
+AWj4t1iC6y6P2ydRWC1n
+squid:S106"9Replace this use of System.out or System.err by a logger.(Ôß—ûÿÿÿÿ2adam8Ø§ÉÅ-
+§
+AWj46Kle6y6P2ydRWJxr
+squid:S138”"hThis method has 243 lines, which is greater than the 75 lines authorized. Split it into smaller methods.(¥·ø×ÿÿÿÿÿ2adam8€û•Ç-
+s
+AWj4t1iC6y6P2ydRWC1y
+squid:S106Ó"9Replace this use of System.out or System.err by a logger.(¡ê¼ğ2adam8Ø§ÉÅ-
+x
+AWj4t1iC6y6P2ydRWC18
+squid:S106ù"9Replace this use of System.out or System.err by a logger.(‡îßµûÿÿÿÿ2adam8Ø§ÉÅ-
+s
+AWj4t1iC6y6P2ydRWC1k
+squid:S106 "9Replace this use of System.out or System.err by a logger.(úî²¶2adam8Ø§ÉÅ-
+
+AWj46Kle6y6P2ydRWJxusquid:S3776Ê"RRefactor this method to reduce its Cognitive Complexity from 27 to the 15 allowed.(êÛÚâ2adam8€û•Ç-
+gsquid:S1188="DReduce this lambda expression number of lines from 34 to at most 20.(ûÿš„øÿÿÿÿ8¯Ó„Ò-
+–
+AWj46Kle6y6P2ydRWJxssquid:S3923©"[Remove this conditional structure or edit its code blocks so that they're not all the same.(ŞóŒ¶2adam8€û•Ç-
+x
+AWj4t1iC6y6P2ydRWC1v
+squid:S106À"9Replace this use of System.out or System.err by a logger.(‡†ºÚÿÿÿÿÿ2adam8Ø§ÉÅ-
+v
+AWj4t1iC6y6P2ydRWC16squid:S2696ğ"6Make the enclosing method "static" or remove this set.(ÂËÓ×şÿÿÿÿ2adam8Ø§ÉÅ-
+s
+AWj4t1iC6y6P2ydRWC1p
+squid:S106„"9Replace this use of System.out or System.err by a logger.(úî²¶2adam8Ø§ÉÅ-
+s
+AWj4t1iC6y6P2ydRWC1u
+squid:S106’"9Replace this use of System.out or System.err by a logger.(úî²¶2adam8Ø§ÉÅ-
+¤
+AWj4t1hz6y6P2ydRWC1Usquid:S1149k"eReplace the synchronized class "Vector" by an unsynchronized one such as "ArrayList" or "LinkedList".(ëßšÈıÿÿÿÿ2adam8Ø§ÉÅ-
+v
+AWj4t1iC6y6P2ydRWC11squid:S2696İ"6Make the enclosing method "static" or remove this set.(åı±Èúÿÿÿÿ2adam8Ø§ÉÅ-
+q
+AWj4t1iC6y6P2ydRWC1_squid:S2696ƒ"6Make the enclosing method "static" or remove this set.(èñ®æ2adam8Ø§ÉÅ-
+v
+AWj4t1iC6y6P2ydRWC14squid:S2696è"6Make the enclosing method "static" or remove this set.(˜ñ—ùÿÿÿÿ2adam8Ø§ÉÅ-
+q
+AWj4t1iC6y6P2ydRWC1msquid:S2696ş"6Make the enclosing method "static" or remove this set.(„´€«2adam8Ø§ÉÅ-
+x
+AWj4t1iC6y6P2ydRWC1e
+squid:S106Ó"9Replace this use of System.out or System.err by a logger.(×é–Šúÿÿÿÿ2adam8Ø§ÉÅ-
+r
+AWj4t1iC6y6P2ydRWC2L
+squid:S106K"9Replace this use of System.out or System.err by a logger.(’ú›—2adam8Ø§ÉÅ-
+v
+AWj4t1hz6y6P2ydRWC1Ysquid:S2696"6Make the enclosing method "static" or remove this set.(±‹¢úÿÿÿÿ2adam8Ø§ÉÅ-
+v
+AWj4t1iC6y6P2ydRWC1lsquid:S2696‹"6Make the enclosing method "static" or remove this set.(ÌºÚüùÿÿÿÿ2adam8Ø§ÉÅ-
+q
+AWj4t1iC6y6P2ydRWC1hsquid:S2696Œ"6Make the enclosing method "static" or remove this set.(„´€«2adam8Ø§ÉÅ-
+v
+AWj4t1iC6y6P2ydRWC1zsquid:S2696Õ"6Make the enclosing method "static" or remove this set.(Ï˜ şÿÿÿÿ2adam8Ø§ÉÅ-
+x
+AWj4t1hz6y6P2ydRWCyr
+squid:S864‚"9Add parentheses to make the operator precedence explicit.(¦üèòüÿÿÿÿ2adam8Ø§ÉÅ-
+v
+AWj4t1iC6y6P2ydRWC1gsquid:S2696™"6Make the enclosing method "static" or remove this set.(Ì¨‡«ùÿÿÿÿ2adam8Ø§ÉÅ-
+x
+AWj4t1iC6y6P2ydRWC1t
+squid:S106Ÿ"9Replace this use of System.out or System.err by a logger.(¢ƒ´øÿÿÿÿ2adam8Ø§ÉÅ-
+
+AWj46Kle6y6P2ydRWJxvsquid:S1142¤"MReduce the number of returns of this method 3, down to the maximum allowed 2.(¶£µÀúÿÿÿÿ2adam8€û•Ç-
+x
+AWj4t1iC6y6P2ydRWC1i
+squid:S106‚"9Replace this use of System.out or System.err by a logger.(„Îè¯şÿÿÿÿ2adam8Ø§ÉÅ-
+Š
+AWj4t1iC6y6P2ydRWC2Ysquid:CommentedOutCodeLine"<This block of commented-out lines of code should be removed.(´•²íşÿÿÿÿ2adam8Ø§ÉÅ-
+v
+AWj4t1iC6y6P2ydRWC1qsquid:S2696ı"6Make the enclosing method "static" or remove this set.(Ì¨‡«ùÿÿÿÿ2adam8Ø§ÉÅ-
+s
+AWj4t1iC6y6P2ydRWC1s
+squid:S106î"9Replace this use of System.out or System.err by a logger.(Ô®ÉŞ2adam8Ø§ÉÅ-
+v
+AWj4t1iC6y6P2ydRWC1bsquid:S2696´"6Make the enclosing method "static" or remove this set.(Â«–Ùùÿÿÿÿ2adam8Ø§ÉÅ-
+x
+AWj4t1iC6y6P2ydRWC1o
+squid:S106‘"9Replace this use of System.out or System.err by a logger.(¢ƒ´øÿÿÿÿ2adam8Ø§ÉÅ-
+¥
+AWj46Kle6y6P2ydRWJxisquid:S1448""lclass "MessagePanel" has 37 methods, which is greater than the 35 authorized. Split it into smaller classes.(šä´2adam8€û•Ç-
+“
+AWj46Kle6y6P2ydRWJxlsquid:S1820""ZRefactor this class so it has no more than 20 fields, rather than the 29 it currently has.(šä´2adam8€û•Ç-
+x
+AWj4t1iC6y6P2ydRWC1j
+squid:S106ƒ"9Replace this use of System.out or System.err by a logger.(¢ƒ´øÿÿÿÿ2adam8Ø§ÉÅ-
+w
+AWj4t1iC6y6P2ydRWC2H
+squid:S106C"9Replace this use of System.out or System.err by a logger.(“–õÅùÿÿÿÿ2adam8Ø§ÉÅ-
+v
+AWj4t1iC6y6P2ydRWC19squid:S2696û"6Make the enclosing method "static" or remove this set.(ö×ñªúÿÿÿÿ2adam8Ø§ÉÅ-
+r
+AWj4t1iC6y6P2ydRWC13
+squid:S106æ"9Replace this use of System.out or System.err by a logger.(æåË2adam8Ø§ÉÅ-
+W
+squid:S106"9Replace this use of System.out or System.err by a logger.(êÀè¼8Ü—Ò-
+w
+AWj4t1iC6y6P2ydRWC2P
+squid:S106S"9Replace this use of System.out or System.err by a logger.(êªÃıúÿÿÿÿ2adam8Ø§ÉÅ-
+s
+AWj4t1iC6y6P2ydRWC10
+squid:S106Û"9Replace this use of System.out or System.err by a logger.(¸º£ø2adam8Ø§ÉÅ-
+s
+AWj4t1iC6y6P2ydRWC1-
+squid:S106"9Replace this use of System.out or System.err by a logger.(‰ÎÉ2adam8Ø§ÉÅ-
+v
+AWj4t1iC6y6P2ydRWC1rsquid:S2696š"6Make the enclosing method "static" or remove this set.(“Êı©ıÿÿÿÿ2adam8Ø§ÉÅ-
+s
+AWj4t1iC6y6P2ydRWC1f
+squid:S106Ş"9Replace this use of System.out or System.err by a logger.(”É˜é2adam8Ø§ÉÅ-

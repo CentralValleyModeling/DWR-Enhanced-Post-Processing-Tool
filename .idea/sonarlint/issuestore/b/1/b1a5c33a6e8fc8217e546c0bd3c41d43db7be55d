@@ -1,0 +1,104 @@
+
+•
+AWj4t17M6y6P2ydRWFE7squid:S00116Ü"TRename this field "theOwner" to match the regular expression '^_[a-z][a-zA-Z0-9]*$'.(“¢²áùÿÿÿÿ2adam8Ø§ÉÅ-
+®
+AWj4t17M6y6P2ydRWFEG"squid:ClassVariableVisibilityCheck¥"WMake toolTipFlag a static final constant or non-public and provide accessors if needed.(Ñ·‰´ÿÿÿÿÿ2adam8Ø§ÉÅ-
+’
+AWj4t17M6y6P2ydRWFE-squid:S3776å"RRefactor this method to reduce its Cognitive Complexity from 17 to the 15 allowed.(è”ˆ±şÿÿÿÿ2adam8Ø§ÉÅ-
+„
+AWj4t17M6y6P2ydRWFEjsquid:S1132Ã"IMove the "CLS" string literal on the left side of this string comparison.(Ò³ğ´2adam8Ø§ÉÅ-
+t
+AWj46LF86y6P2ydRWKJnsquid:S2221‰"4Catch a list of specific exception subtypes instead.(¼Ôîàùÿÿÿÿ2adam8€û•Ç-
+
+AWj46LF86y6P2ydRWKJtsquid:S1132¶"VMove the "btnClearScenario" string literal on the left side of this string comparison.(»êÂp2adam8€û•Ç-
+o
+AWj46LF86y6P2ydRWKJgsquid:S1066÷"/Merge this if statement with the enclosing one.(°ß¾¹øÿÿÿÿ2adam8€û•Ç-
+t
+AWj46LF86y6P2ydRWKJzsquid:S2974×"4Make this class "final" or add a public constructor.(úëóüûÿÿÿÿ2adam8€û•Ç-
+
+AWj46LF86y6P2ydRWKJssquid:S1132œ"TMove the "btnDelScenario" string literal on the left side of this string comparison.(áÓª2adam8€û•Ç-
+V
+AWj4t17M6y6P2ydRWFEnsquid:S3626ı"Remove this redundant jump.(ûÁİ…2adam8Ø§ÉÅ-
+\
+AWj46LF86y6P2ydRWKJhsquid:S2694Ì"!Make this a "static" inner class.(€Í–2adam8€û•Ç-
+˜
+AWj46LF86y6P2ydRWKJ0squid:S2972×"XReduce this class from 54 to the maximum allowed 40 or externalize it in a public class.(úëóüûÿÿÿÿ2adam8€û•Ç-
+
+AWj4t17M6y6P2ydRWFELsquid:S3008/"NRename this field "LOG" to match the regular expression '^[a-z][a-zA-Z0-9]*$'.( ã‡¡øÿÿÿÿ2adam8Ø§ÉÅ-
+—
+AWj4t17M6y6P2ydRWFEMsquid:S001160"WRename this field "lmScenNames" to match the regular expression '^_[a-z][a-zA-Z0-9]*$'.(á­³²ûÿÿÿÿ2adam8Ø§ÉÅ-
+ˆ
+AWj46LF86y6P2ydRWKJ1squid:S1142§"MReduce the number of returns of this method 3, down to the maximum allowed 2.(Óù²ò2adam8€û•Ç-
+…
+AWj4t17M6y6P2ydRWFFEsquid:CommentedOutCodeLineë"<This block of commented-out lines of code should be removed.(Şò³B2adam8Ø§ÉÅ-
+‰
+AWj46LF86y6P2ydRWKJvsquid:S1132á"IMove the "CLS" string literal on the left side of this string comparison.(Ş€Á·üÿÿÿÿ2adam8€û•Ç-
+’
+AWj46LF86y6P2ydRWKJrsquid:S3776’"RRefactor this method to reduce its Cognitive Complexity from 58 to the 15 allowed.(µë¢úÿÿÿÿ2adam8€û•Ç-
+
+AWj4t17M6y6P2ydRWFERsquid:S001164"TRename this field "theLabel" to match the regular expression '^_[a-z][a-zA-Z0-9]*$'.(­æá¶2adam8Ø§ÉÅ-
+„
+AWj46LF86y6P2ydRWKJosquid:S1132µ"IMove the "DSS" string literal on the left side of this string comparison.(´»¸2adam8€û•Ç-
+„
+AWj4t17M6y6P2ydRWFEksquid:S1132Ã"IMove the "PDF" string literal on the left side of this string comparison.(Ò³ğ´2adam8Ø§ÉÅ-
+Á
+AWj46LF86y6P2ydRWKJysquid:S1186¯"€Add a nested comment explaining why this method is empty, throw an UnsupportedOperationException or complete the implementation.(éÚÊ‘úÿÿÿÿ2adam8€û•Ç-
+‘
+AWj4t17M6y6P2ydRWFEUsquid:S001167"VRename this field "theFileExt" to match the regular expression '^_[a-z][a-zA-Z0-9]*$'.(í½ìÍ2adam8Ø§ÉÅ-
+ˆ
+AWj4t17M6y6P2ydRWFEIsquid:S2259İ"HA "NullPointerException" could be thrown; "theFileExt" is nullable here.(Ø³¢öùÿÿÿÿ2adam8Ø§ÉÅ-
+
+AWj4t17M6y6P2ydRWFEHsquid:S2259Á"DA "NullPointerException" could be thrown; "myList" is nullable here.(åº•2adam8Ø§ÉÅ-
+˜
+AWj4t17M6y6P2ydRWFE8squid:S00116İ"WRename this field "theToolTips" to match the regular expression '^_[a-z][a-zA-Z0-9]*$'.(øÛ˜ùÿÿÿÿ2adam8Ø§ÉÅ-
+—
+AWj4t17M6y6P2ydRWFEXsquid:S00116<"\Rename this field "errorHandlingSvc" to match the regular expression '^_[a-z][a-zA-Z0-9]*$'.(Ø¡³ı2adam8Ø§ÉÅ-
+™
+AWj4t17M6y6P2ydRWFE9squid:S2293İ"YReplace the type specification in this constructor call with the diamond operator ("<>").(øÛ˜ùÿÿÿÿ2adam8Ø§ÉÅ-
+­
+AWj4t17M6y6P2ydRWFED"squid:ClassVariableVisibilityCheck0"WMake lmScenNames a static final constant or non-public and provide accessors if needed.(á­³²ûÿÿÿÿ2adam8Ø§ÉÅ-
+§
+AWj46LF86y6P2ydRWKJq
+squid:S138’"hThis method has 101 lines, which is greater than the 75 lines authorized. Split it into smaller methods.(µë¢úÿÿÿÿ2adam8€û•Ç-
+‰
+AWj4t17M6y6P2ydRWFEwsquid:S1132Ö"IMove the "DSS" string literal on the left side of this string comparison.(‡—öÿÿÿÿÿ2adam8Ø§ÉÅ-
+j
+AWj4t17M6y6P2ydRWFEBsquid:S1312/"+Make the "LOG" logger private static final.( ã‡¡øÿÿÿÿ2adam8Ø§ÉÅ-
+“
+AWj46LF86y6P2ydRWKJksquid:S001169"SRename this field "rdbopt2" to match the regular expression '^_[a-z][a-zA-Z0-9]*$'.(´»€şÿÿÿÿ2adam8€û•Ç-
+ª
+AWj4t17M6y6P2ydRWFEF"squid:ClassVariableVisibilityCheck2"TMake dialogRC a static final constant or non-public and provide accessors if needed.(ßÒ›ôüÿÿÿÿ2adam8Ø§ÉÅ-
+–
+AWj4t17M6y6P2ydRWFETsquid:S001166"[Rename this field "theMultipleFlag" to match the regular expression '^_[a-z][a-zA-Z0-9]*$'.(²â Ñ2adam8Ø§ÉÅ-
+‹
+AWj46LF86y6P2ydRWKJlsquid:S00116:"PRename this field "btn1" to match the regular expression '^_[a-z][a-zA-Z0-9]*$'.(ë¼–®2adam8€û•Ç-
+
+AWj4t17M6y6P2ydRWFENsquid:S001161"NRename this field "fc" to match the regular expression '^_[a-z][a-zA-Z0-9]*$'.(“ëÑ£øÿÿÿÿ2adam8Ø§ÉÅ-
+…
+AWj4t17M6y6P2ydRWFFAsquid:TrailingCommentCheckˆ"6Move this trailing comment on the previous empty line.(£Æª¹øÿÿÿÿ2adam8Ø§ÉÅ-
+…
+AWj46LF86y6P2ydRWKJpsquid:S1132º"JMove the "DSS2" string literal on the left side of this string comparison.(¤Óå2adam8€û•Ç-
+˜
+AWj4t17M6y6P2ydRWFFCsquid:S00116¥"WRename this field "toolTipFlag" to match the regular expression '^_[a-z][a-zA-Z0-9]*$'.(Ñ·‰´ÿÿÿÿÿ2adam8Ø§ÉÅ-
+”
+AWj4t17M6y6P2ydRWFEOsquid:S001162"TRename this field "dialogRC" to match the regular expression '^_[a-z][a-zA-Z0-9]*$'.(ßÒ›ôüÿÿÿÿ2adam8Ø§ÉÅ-
+_
+AWj46LF86y6P2ydRWKJisquid:S1166€"%Either log or rethrow this exception.(²ÒşA2adam8€û•Ç-
+t
+AWj46LF86y6P2ydRWKJwsquid:S2221"4Catch a list of specific exception subtypes instead.(¼Ôîàùÿÿÿÿ2adam8€û•Ç-
+—
+AWj4t17M6y6P2ydRWFEPsquid:S00116;"WRename this field "swingEngine" to match the regular expression '^_[a-z][a-zA-Z0-9]*$'.(å½¯àùÿÿÿÿ2adam8Ø§ÉÅ-
+—
+AWj46LF86y6P2ydRWKJfsquid:S1188Ü"\Reduce this anonymous class number of lines from 30 to at most 20, or make it a named class.(ÈÑØÍ2adam8€û•Ç-
+¤
+AWj4t17M6y6P2ydRWFEE"squid:ClassVariableVisibilityCheck1"NMake fc a static final constant or non-public and provide accessors if needed.(“ëÑ£øÿÿÿÿ2adam8Ø§ÉÅ-
+
+AWj46LF86y6P2ydRWKJmsquid:S3776®"RRefactor this method to reduce its Cognitive Complexity from 28 to the 15 allowed.(¾´×ª2adam8€û•Ç-
+‰
+AWj4t17M6y6P2ydRWFExsquid:S1132İ"IMove the "PDF" string literal on the left side of this string comparison.(Ø³¢öùÿÿÿÿ2adam8Ø§ÉÅ-
+“
+AWj4t17M6y6P2ydRWFESsquid:S001165"XRename this field "theTextField" to match the regular expression '^_[a-z][a-zA-Z0-9]*$'.(ŠºÃê2adam8Ø§ÉÅ-
+
+AWj4t17M6y6P2ydRWFEQsquid:S001163"SRename this field "theList" to match the regular expression '^_[a-z][a-zA-Z0-9]*$'.(Ëöøì2adam8Ø§ÉÅ-
+“
+AWj46LF86y6P2ydRWKJjsquid:S001168"SRename this field "rdbopt1" to match the regular expression '^_[a-z][a-zA-Z0-9]*$'.(¡Œ³ÿıÿÿÿÿ2adam8€û•Ç-

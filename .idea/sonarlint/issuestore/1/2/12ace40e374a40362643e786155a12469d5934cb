@@ -1,0 +1,93 @@
+
+‰
+AWj46LKF6y6P2ydRWKLnsquid:S00100Ó"NRename this method name to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(èØ®#2adam8€û•Ç-
+¢
+AWj46LKF6y6P2ydRWKLj
+squid:S138Ì"hThis method has 111 lines, which is greater than the 75 lines authorized. Split it into smaller methods.(èã¸Ç2adam8€û•Ç-
+q
+AWj4t1-m6y6P2ydRWFZwsquid:S1135X"2Complete the task associated to this TODO comment.(ĞĞ–µøÿÿÿÿ2adam8Ø§ÉÅ-
+™
+AWj46LKF6y6P2ydRWKLwsquid:S2177"^Rename this method or correct the type of the argument(s) to override the parent class method.(ä‚ƒû2adam8€û•Ç-
+„
+AWj4t1-m6y6P2ydRWFZ3squid:S1695Ÿ"DThrow some other exception here, such as "IllegalArgumentException".(é˜î§ùÿÿÿÿ2adam8Ø§ÉÅ-
+’
+AWj46LKF6y6P2ydRWKLvsquid:S3776¥"RRefactor this method to reduce its Cognitive Complexity from 92 to the 15 allowed.(¢”æ²ÿÿÿÿÿ2adam8€û•Ç-
+Š
+AWj4t1-m6y6P2ydRWFZlsquid:S00116:"ORename this field "dts" to match the regular expression '^_[a-z][a-zA-Z0-9]*$'.(‰’ƒÊ2adam8Ø§ÉÅ-
+t
+AWj46LKF6y6P2ydRWKLfsquid:S2221Œ"4Catch a list of specific exception subtypes instead.(¼Ôîàùÿÿÿÿ2adam8€û•Ç-
+a
+AWj4t1-m6y6P2ydRWFalsquid:S1168’"&Return an empty array instead of null.(¥¹ï2adam8Ø§ÉÅ-
+Š
+AWj4t1-m6y6P2ydRWFZmsquid:S00116;"ORename this field "mts" to match the regular expression '^_[a-z][a-zA-Z0-9]*$'.(ÒÙÈû2adam8Ø§ÉÅ-
+„
+AWj4t1-m6y6P2ydRWFZ-squid:S1695…"DThrow some other exception here, such as "IllegalArgumentException".(é˜î§ùÿÿÿÿ2adam8Ø§ÉÅ-
+™
+AWj46LKF6y6P2ydRWKLqsquid:S2177—"^Rename this method or correct the type of the argument(s) to override the parent class method.(Ñ…ÓÜ2adam8€û•Ç-
+¢
+AWj46LKF6y6P2ydRWKLx
+squid:S138"hThis method has 101 lines, which is greater than the 75 lines authorized. Split it into smaller methods.(ä‚ƒû2adam8€û•Ç-
+’
+AWj46LKF6y6P2ydRWKLgsquid:S3776–"RRefactor this method to reduce its Cognitive Complexity from 27 to the 15 allowed.(´Å²…üÿÿÿÿ2adam8€û•Ç-
+—
+AWj4t1-m6y6P2ydRWFZksquid:S00116>"WRename this field "swingEngine" to match the regular expression '^_[a-z][a-zA-Z0-9]*$'.(å½¯àùÿÿÿÿ2adam8Ø§ÉÅ-
+v
+AWj4t1-m6y6P2ydRWFZssquid:S1854w"<Remove this useless assignment to local variable "lookupID".(¼‘ºĞ2adam8Ø§ÉÅ-
+Š
+AWj46LKF6y6P2ydRWKLpsquid:S1132æ"JMove the "DVAR" string literal on the left side of this string comparison.(´á»üÿÿÿÿ2adam8€û•Ç-
+ˆ
+AWj4t1-m6y6P2ydRWFZdsquid:S30089"NRename this field "LOG" to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(„š‚±2adam8Ø§ÉÅ-
+e
+AWj4t1-m6y6P2ydRWFZYsquid:S13129"+Make the "LOG" logger private static final.(„š‚±2adam8Ø§ÉÅ-
+Š
+AWj46LKF6y6P2ydRWKLlsquid:S00100Ì"NRename this method name to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(èã¸Ç2adam8€û•Ç-
+§
+AWj46LKF6y6P2ydRWKLu
+squid:S138¥"hThis method has 101 lines, which is greater than the 75 lines authorized. Split it into smaller methods.(¢”æ²ÿÿÿÿÿ2adam8€û•Ç-
+Š
+AWj46LKF6y6P2ydRWKLmsquid:S1132ã"JMove the "DVAR" string literal on the left side of this string comparison.(¬”â‹ûÿÿÿÿ2adam8€û•Ç-
+ 
+AWj4t1-m6y6P2ydRWFZrsquid:S1149Ñ"eReplace the synchronized class "Vector" by an unsynchronized one such as "ArrayList" or "LinkedList".(ŒšÏ2adam8Ø§ÉÅ-
+a
+AWj4t1-m6y6P2ydRWFZ7squid:S1168ù"&Return an empty array instead of null.(¥¹ï2adam8Ø§ÉÅ-
+r
+AWj4t1-m6y6P2ydRWFZ5squid:S1135«"2Complete the task associated to this TODO comment.(¦Ò¾ûÿÿÿÿ2adam8Ø§ÉÅ-
+’
+AWj46LKF6y6P2ydRWKLisquid:S3776ü"RRefactor this method to reduce its Cognitive Complexity from 18 to the 15 allowed.(Øÿ³ºûÿÿÿÿ2adam8€û•Ç-
+„
+AWj46LKF6y6P2ydRWKLssquid:S1132Ô"IMove the "CFS" string literal on the left side of this string comparison.(´Š÷2adam8€û•Ç-
+a
+AWj4t1-m6y6P2ydRWFabsquid:S1168É"&Return an empty array instead of null.(¥¹ï2adam8Ø§ÉÅ-
+’
+AWj46LKF6y6P2ydRWKLrsquid:S3776»"RRefactor this method to reduce its Cognitive Complexity from 46 to the 15 allowed.(È°ã üÿÿÿÿ2adam8€û•Ç-
+
+AWj46LKF6y6P2ydRWKLysquid:S3776"RRefactor this method to reduce its Cognitive Complexity from 74 to the 15 allowed.(ä‚ƒû2adam8€û•Ç-
+t
+AWj46LKF6y6P2ydRWKLesquid:S1161S":Add the "@Override" annotation above this method signature(ˆ¾»Ô2adam8€û•Ç-
+z
+AWj46LKF6y6P2ydRWKLhsquid:S1161–":Add the "@Override" annotation above this method signature(´Å²…üÿÿÿÿ2adam8€û•Ç-
+
+AWj46LKF6y6P2ydRWKLosquid:S1132Ù"FMove the "" string literal on the left side of this string comparison.(²şÈ–2adam8€û•Ç-
+—
+AWj4t1-m6y6P2ydRWFZjsquid:S00116="\Rename this field "errorHandlingSvc" to match the regular expression '^_[a-z][a-zA-Z0-9]*$'.(Ø¡³ı2adam8Ø§ÉÅ-
+x
+AWj4t1-m6y6P2ydRWFX5
+squid:S864ç"9Add parentheses to make the operator precedence explicit.(Ã¿ùÿÿÿÿÿ2adam8Ø§ÉÅ-
+
+AWj46LKF6y6P2ydRWKLtsquid:S2177¥"^Rename this method or correct the type of the argument(s) to override the parent class method.(¢”æ²ÿÿÿÿÿ2adam8€û•Ç-
+€
+AWj4t1-m6y6P2ydRWFaksquid:TrailingCommentCheckç"6Move this trailing comment on the previous empty line.(Ûö Ş2adam8Ø§ÉÅ-
+a
+AWj4t1-m6y6P2ydRWFaAsquid:S1168’"&Return an empty array instead of null.(¥¹ï2adam8Ø§ÉÅ-
+
+AWj46LKF6y6P2ydRWKLksquid:S3776Ì"RRefactor this method to reduce its Cognitive Complexity from 73 to the 15 allowed.(èã¸Ç2adam8€û•Ç-
+’
+AWj4t1-m6y6P2ydRWFZisquid:S00116<"WRename this field "seedDataSvc" to match the regular expression '^_[a-z][a-zA-Z0-9]*$'.(ëÈ¹½2adam8Ø§ÉÅ-
+Xsquid:S2221Ã"4Catch a list of specific exception subtypes instead.(¼Ôîàùÿÿÿÿ8„šÀÓ-
+Xsquid:S2221‡"4Catch a list of specific exception subtypes instead.(¼Ôîàùÿÿÿÿ8€û•Ç-
+Xsquid:S2221Š"4Catch a list of specific exception subtypes instead.(¼Ôîàùÿÿÿÿ8€û•Ç-
+Xsquid:S2221­"4Catch a list of specific exception subtypes instead.(¼Ôîàùÿÿÿÿ8„šÀÓ-
+Xsquid:S2221É"4Catch a list of specific exception subtypes instead.(¼Ôîàùÿÿÿÿ8„šÀÓ-
+Xsquid:S2221Œ"4Catch a list of specific exception subtypes instead.(¼Ôîàùÿÿÿÿ8„šÀÓ-
+Xsquid:S2221„"4Catch a list of specific exception subtypes instead.(¼Ôîàùÿÿÿÿ8„šÀÓ-
+Xsquid:S2221ó"4Catch a list of specific exception subtypes instead.(¼Ôîàùÿÿÿÿ8„šÀÓ-

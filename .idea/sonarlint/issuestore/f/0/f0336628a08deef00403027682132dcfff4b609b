@@ -1,0 +1,305 @@
+
+–
+AWj4t1-H6y6P2ydRWFVysquid:S00116U"VRename this field "annualTAFs" to match the regular expression '^_[a-z][a-zA-Z0-9]*$'.(±øâ¶ıÿÿÿÿ2adam8Ø§ÉÅ-
+
+AWj4t1-H6y6P2ydRWFVjsquid:S00116]"URename this field "dialogSvc" to match the regular expression '^_[a-z][a-zA-Z0-9]*$'.(Ğı‘¸2adam8Ø§ÉÅ-
+
+AWj4t1-H6y6P2ydRWFW1squid:S1132"UMove the "S_MLRTN/STORAGE" string literal on the left side of this string comparison.(Ó´ïá2adam8Ø§ÉÅ-
+a
+AWj4t1-H6y6P2ydRWFX1squid:S1168„"&Return an empty array instead of null.(¥¹ï2adam8Ø§ÉÅ-
+ 
+AWj4t1-H6y6P2ydRWFV8squid:S1149Ä"eReplace the synchronized class "Vector" by an unsynchronized one such as "ArrayList" or "LinkedList".(“´™2adam8Ø§ÉÅ-
+†
+AWj4t1-H6y6P2ydRWFX3squid:CommentedOutCodeLine“"<This block of commented-out lines of code should be removed.(¸¬şó2adam8Ø§ÉÅ-
+Œ
+AWj46LJW6y6P2ydRWKK_squid:UselessImportCheck"@Remove this unused import 'gov.ca.water.calgui.bo.RBListItemBO'.(Š¤Àøûÿÿÿÿ2adam8€û•Ç-
+¡
+AWj46LJW6y6P2ydRWKLb
+squid:S138"gThis method has 97 lines, which is greater than the 75 lines authorized. Split it into smaller methods.(˜‹İ2adam8€û•Ç-
+
+AWj46LJW6y6P2ydRWKLcsquid:S3776"RRefactor this method to reduce its Cognitive Complexity from 61 to the 15 allowed.(˜‹İ2adam8€û•Ç-
+e
+AWj46LJW6y6P2ydRWKK7squid:S1166¬"%Either log or rethrow this exception.(É˜Ùúÿÿÿÿ2adam8€û•Ç-
+…
+AWj4t1-H6y6P2ydRWFWLsquid:TrailingCommentCheck®"6Move this trailing comment on the previous empty line.(Ú‘“‚úÿÿÿÿ2adam8Ø§ÉÅ-
+
+AWj4t1-H6y6P2ydRWFXVsquid:TrailingCommentCheckü"6Move this trailing comment on the previous empty line.(òñ˜42adam8Ø§ÉÅ-
+
+AWj4t1-H6y6P2ydRWFVusquid:S00116Q"SRename this field "endTime" to match the regular expression '^_[a-z][a-zA-Z0-9]*$'.(Ü‰Éø2adam8Ø§ÉÅ-
+—
+AWj4t1-H6y6P2ydRWFVhsquid:S00116["WRename this field "swingEngine" to match the regular expression '^_[a-z][a-zA-Z0-9]*$'.(å½¯àùÿÿÿÿ2adam8Ø§ÉÅ-
+…
+AWj4t1-H6y6P2ydRWFWMsquid:S3027Ş"JPut single-quotes around '.' to use the faster "lastIndexOf(char)" method.(õ¥‹Ê2adam8Ø§ÉÅ-
+…
+AWj4t1-H6y6P2ydRWFX0squid:TrailingCommentCheckÛ"6Move this trailing comment on the previous empty line.(•Ôš¼şÿÿÿÿ2adam8Ø§ÉÅ-
+e
+AWj46LJW6y6P2ydRWKK5squid:S1166¶"%Either log or rethrow this exception.(üè¤™úÿÿÿÿ2adam8€û•Ç-
+
+AWj46LJW6y6P2ydRWKLasquid:S3776›
+"RRefactor this method to reduce its Cognitive Complexity from 56 to the 15 allowed.(óı±¥2adam8€û•Ç-
+˜
+AWj4t1-H6y6P2ydRWFWFsquid:S2293_"YReplace the type specification in this constructor call with the diamond operator ("<>").(ı¥¶Öøÿÿÿÿ2adam8Ø§ÉÅ-
+s
+AWj4t1-H6y6P2ydRWFSy
+squid:S864²"9Add parentheses to make the operator precedence explicit.(³àö2adam8Ø§ÉÅ-
+r
+AWj4t1-H6y6P2ydRWFXOsquid:S1135Ç"2Complete the task associated to this TODO comment.(Ç—ÓÂûÿÿÿÿ2adam8Ø§ÉÅ-
+r
+AWj4t1-H6y6P2ydRWFXbsquid:S1135Ü"2Complete the task associated to this TODO comment.(¦Ò¾ûÿÿÿÿ2adam8Ø§ÉÅ-
+˜
+AWj4t1-H6y6P2ydRWFW0squid:S1132"]Move the "C_STANRIPN/FLOW-CHANNEL" string literal on the left side of this string comparison.(Ó´ïá2adam8Ø§ÉÅ-
+¡
+AWj46LJW6y6P2ydRWKLZ
+squid:S138›
+"gThis method has 91 lines, which is greater than the 75 lines authorized. Split it into smaller methods.(óı±¥2adam8€û•Ç-
+j
+AWj4t1-H6y6P2ydRWFVSsquid:S1312F"+Make the "LOG" logger private static final.(ìıóüÿÿÿÿ2adam8Ø§ÉÅ-
+–
+AWj4t1-H6y6P2ydRWFV5squid:S00116`"VRename this field "properties" to match the regular expression '^_[a-z][a-zA-Z0-9]*$'.(—ïéÕüÿÿÿÿ2adam8Ø§ÉÅ-
+†
+AWj46LJW6y6P2ydRWKLEsquid:S1132Ç"FMove the "" string literal on the left side of this string comparison.(µÑ„œúÿÿÿÿ2adam8€û•Ç-
+œ
+AWj4t1-H6y6P2ydRWFXAsquid:S1132—"\Move the "D_MDRCNL/FLOW-DELIVERY" string literal on the left side of this string comparison.(»ª¦¢ûÿÿÿÿ2adam8Ø§ÉÅ-
+
+AWj4t1-H6y6P2ydRWFWDsquid:TrailingCommentCheckR"6Move this trailing comment on the previous empty line.(Ñ¦†2adam8Ø§ÉÅ-
+x
+AWj4t1-H6y6P2ydRWFSz
+squid:S864´"9Add parentheses to make the operator precedence explicit.(ƒËª¬úÿÿÿÿ2adam8Ø§ÉÅ-
+‘
+AWj4t1-H6y6P2ydRWFVosquid:S00116K"QRename this field "title" to match the regular expression '^_[a-z][a-zA-Z0-9]*$'.(Òıºıÿÿÿÿ2adam8Ø§ÉÅ-
+s
+AWj46LJW6y6P2ydRWKLBsquid:S2221k"4Catch a list of specific exception subtypes instead.(¼Ôîàùÿÿÿÿ2adam8€û•Ç-
+¢
+AWj46LJW6y6P2ydRWKLG
+squid:S138³"hThis method has 188 lines, which is greater than the 75 lines authorized. Split it into smaller methods.(Üµ¡×2adam8€û•Ç-
+•
+AWj4t1-H6y6P2ydRWFW4squid:S1132"ZMove the "C_SJRMS/FLOW-CHANNEL" string literal on the left side of this string comparison.(Àı…’2adam8Ø§ÉÅ-
+‰
+AWj46LJW6y6P2ydRWKLYsquid:S1132¾	"IMove the "TAF" string literal on the left side of this string comparison.(›êÚıÿÿÿÿ2adam8€û•Ç-
+s
+AWj4t1-H6y6P2ydRWFWgsquid:S4248Í"3Refactor this code to use a "static final" Pattern.(ÔÉŞùûÿÿÿÿ2adam8Ø§ÉÅ-
+’
+AWj4t1-H6y6P2ydRWFVpsquid:S00116L"RRename this field "yLabel" to match the regular expression '^_[a-z][a-zA-Z0-9]*$'.(İ·ñ¡ùÿÿÿÿ2adam8Ø§ÉÅ-
+†
+AWj46LJW6y6P2ydRWKLFsquid:S1132ğ"FMove the "" string literal on the left side of this string comparison.(Å¶Ù¿ÿÿÿÿÿ2adam8€û•Ç-
+
+AWj4t1-H6y6P2ydRWFW_squid:S1132–"]Move the "D_MERCED2/FLOW-DELIVERY" string literal on the left side of this string comparison.(Ÿú£Ìşÿÿÿÿ2adam8Ø§ÉÅ-
+ˆ
+AWj46LJW6y6P2ydRWKLIsquid:S1132ñ"MMove the "LOOKUP/" string literal on the left side of this string comparison.(Ñª«ã2adam8€û•Ç-
+„
+AWj4t1-H6y6P2ydRWFV-squid:TrailingCommentCheckL"6Move this trailing comment on the previous empty line.(İ·ñ¡ùÿÿÿÿ2adam8Ø§ÉÅ-
+™
+AWj4t1-H6y6P2ydRWFW6squid:S1132‘"^Move the "D_STANGDWN/FLOW-DELIVERY" string literal on the left side of this string comparison.(¢œ™î2adam8Ø§ÉÅ-
+’
+AWj4t1-H6y6P2ydRWFVcsquid:S00117Â"QRename this local variable to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(ã•¤®ûÿÿÿÿ2adam8Ø§ÉÅ-
+”
+AWj46LJW6y6P2ydRWKLAsquid:S1820A"ZRefactor this class so it has no more than 20 fields, rather than the 27 it currently has.(‘±üß2adam8€û•Ç-
+›
+AWj4t1-H6y6P2ydRWFW9squid:S1132”"[Move the "D_TUOL2/FLOW-DELIVERY" string literal on the left side of this string comparison.(õ¯Ê½úÿÿÿÿ2adam8Ø§ÉÅ-
+–
+AWj4t1-H6y6P2ydRWFXJsquid:S1132¬"[Move the "D408_OR/FLOW-DELIVERY" string literal on the left side of this string comparison.(‡”î¯2adam8Ø§ÉÅ-
+
+AWj4t1-H6y6P2ydRWFVesquid:S00104"]This file has 1,080 lines, which is greater than 750 authorized. Split it into smaller files.2adam8Ø§ÉÅ-
+y
+AWj4t1-H6y6P2ydRWFWKsquid:S2130«"9Use "Integer.parseInt" for this string-to-int conversion.(Ù†ü—şÿÿÿÿ2adam8Ø§ÉÅ-
+‘
+AWj4t1-H6y6P2ydRWFV0squid:S00116W"VRename this field "annualCFSs" to match the regular expression '^_[a-z][a-zA-Z0-9]*$'.( ¶§«2adam8Ø§ÉÅ-
+
+AWj46LJW6y6P2ydRWKLMsquid:S1132®"TMove the "WQ420/SALINITY" string literal on the left side of this string comparison.(åÚ 2adam8€û•Ç-
+…
+AWj46LJW6y6P2ydRWKLOsquid:TrailingCommentCheckó"6Move this trailing comment on the previous empty line.(Ş³„ïüÿÿÿÿ2adam8€û•Ç-
+Š
+AWj4t1-H6y6P2ydRWFWdsquid:S1132±"JMove the "true" string literal on the left side of this string comparison.(íõ¡Úşÿÿÿÿ2adam8Ø§ÉÅ-
+•
+AWj4t1-H6y6P2ydRWFWxsquid:S1132‹"UMove the "S_MELON/STORAGE" string literal on the left side of this string comparison.(«¤šèüÿÿÿÿ2adam8Ø§ÉÅ-
+„
+AWj4t1-H6y6P2ydRWFWEsquid:TrailingCommentCheckT"6Move this trailing comment on the previous empty line.(˜™êúÿÿÿÿ2adam8Ø§ÉÅ-
+–
+AWj46LJW6y6P2ydRWKLJsquid:S1132˜"[Move the "D_FKCNL/FLOW-DELIVERY" string literal on the left side of this string comparison.(¶ÆšÅ2adam8€û•Ç-
+Š
+AWj4t1-H6y6P2ydRWFWhsquid:S1132Ù"JMove the "true" string literal on the left side of this string comparison.(Œ» ßùÿÿÿÿ2adam8Ø§ÉÅ-
+—
+AWj4t1-H6y6P2ydRWFW2squid:S1132"\Move the "C_MERCED2/FLOW-CHANNEL" string literal on the left side of this string comparison.(á®’†2adam8Ø§ÉÅ-
+s
+AWj4t1-H6y6P2ydRWFSw
+squid:S864¬"9Add parentheses to make the operator precedence explicit.(³àö2adam8Ø§ÉÅ-
+
+AWj4t1-H6y6P2ydRWFVvsquid:S00116R"SRename this field "startWY" to match the regular expression '^_[a-z][a-zA-Z0-9]*$'.(Ñ¦†2adam8Ø§ÉÅ-
+
+AWj4t1-H6y6P2ydRWFV4squid:S00116_"]Rename this field "missingDSSRecords" to match the regular expression '^_[a-z][a-zA-Z0-9]*$'.(ı¥¶Öøÿÿÿÿ2adam8Ø§ÉÅ-
+r
+AWj4t1-H6y6P2ydRWFWssquid:S1135ì"2Complete the task associated to this TODO comment.(¸¥Ç¼ÿÿÿÿÿ2adam8Ø§ÉÅ-
+•
+AWj4t1-H6y6P2ydRWFWzsquid:S1132Œ"UMove the "S_PEDRO/STORAGE" string literal on the left side of this string comparison.(Ğáéòúÿÿÿÿ2adam8Ø§ÉÅ-
+…
+AWj4t1-H6y6P2ydRWFXQsquid:TrailingCommentCheckä"6Move this trailing comment on the previous empty line.(†ş·ˆûÿÿÿÿ2adam8Ø§ÉÅ-
+”
+AWj4t1-H6y6P2ydRWFVlsquid:S00116H"TRename this field "baseName" to match the regular expression '^_[a-z][a-zA-Z0-9]*$'.(Ü¡Œ¿ùÿÿÿÿ2adam8Ø§ÉÅ-
+•
+AWj4t1-H6y6P2ydRWFVzsquid:S00116V"ZRename this field "annualTAFsDiff" to match the regular expression '^_[a-z][a-zA-Z0-9]*$'.(ä§Ã2adam8Ø§ÉÅ-
+†
+AWj46LJW6y6P2ydRWKLSsquid:S1132¶"FMove the "" string literal on the left side of this string comparison.(ÜºøËüÿÿÿÿ2adam8€û•Ç-
+˜
+AWj4t1-H6y6P2ydRWFXHsquid:S1132ª"XMove the "WQ408_RS_/SALINITY" string literal on the left side of this string comparison.(Âµ¬òıÿÿÿÿ2adam8Ø§ÉÅ-
+š
+AWj4t1-H6y6P2ydRWFVmsquid:S00116I"ZRename this field "primaryDSSName" to match the regular expression '^_[a-z][a-zA-Z0-9]*$'.(ë³€ùÿÿÿÿ2adam8Ø§ÉÅ-
+
+AWj4t1-H6y6P2ydRWFVqsquid:S00116M"RRename this field "sLabel" to match the regular expression '^_[a-z][a-zA-Z0-9]*$'.(Åõíƒ2adam8Ø§ÉÅ-
+r
+AWj4t1-H6y6P2ydRWFWrsquid:S1135Â"2Complete the task associated to this TODO comment.(Â¯Ò«úÿÿÿÿ2adam8Ø§ÉÅ-
+•
+AWj4t1-H6y6P2ydRWFWysquid:S1132Œ"UMove the "S_MCLRE/STORAGE" string literal on the left side of this string comparison.(Ğáéòúÿÿÿÿ2adam8Ø§ÉÅ-
+˜
+AWj46LJW6y6P2ydRWKLLsquid:S1132¡"XMove the "CH_EC_STD/SALINITY" string literal on the left side of this string comparison.(Ÿˆãİùÿÿÿÿ2adam8€û•Ç-
+‘
+AWj4t1-H6y6P2ydRWFVrsquid:S00116N"QRename this field "isCFS" to match the regular expression '^_[a-z][a-zA-Z0-9]*$'.(èÍ–şÿÿÿÿ2adam8Ø§ÉÅ-
+—
+AWj4t1-H6y6P2ydRWFVisquid:S00116\"\Rename this field "errorHandlingSvc" to match the regular expression '^_[a-z][a-zA-Z0-9]*$'.(Ø¡³ı2adam8Ø§ÉÅ-
+’
+AWj46LJW6y6P2ydRWKLQsquid:S3776Ç"RRefactor this method to reduce its Cognitive Complexity from 27 to the 15 allowed.(´Å²…üÿÿÿÿ2adam8€û•Ç-
+s
+AWj4t1-H6y6P2ydRWFWksquid:S4248ö"3Refactor this code to use a "static final" Pattern.(ÔÉŞùûÿÿÿÿ2adam8Ø§ÉÅ-
+’
+AWj4t1-H6y6P2ydRWFVgsquid:S00116Z"WRename this field "seedDataSvc" to match the regular expression '^_[a-z][a-zA-Z0-9]*$'.(ëÈ¹½2adam8Ø§ÉÅ-
+x
+AWj4t1-H6y6P2ydRWFWv
+squid:S106„"9Replace this use of System.out or System.err by a logger.(Š³¬ıÿÿÿÿ2adam8Ø§ÉÅ-
+e
+AWj46LJW6y6P2ydRWKK8squid:S1166Ô"%Either log or rethrow this exception.(É˜Ùúÿÿÿÿ2adam8€û•Ç-
+r
+AWj4t1-H6y6P2ydRWFWusquid:S1135"2Complete the task associated to this TODO comment.(Ç—ÓÂûÿÿÿÿ2adam8Ø§ÉÅ-
+“
+AWj4t1-H6y6P2ydRWFXFsquid:S1132©"XMove the "WQ408_OR_/SALINITY" string literal on the left side of this string comparison.(ÿÅö2adam8Ø§ÉÅ-
+
+AWj4t1-H6y6P2ydRWFWCsquid:TrailingCommentCheckP"6Move this trailing comment on the previous empty line.(Ç¨ü¯2adam8Ø§ÉÅ-
+x
+AWj4t1-H6y6P2ydRWFSx
+squid:S864®"9Add parentheses to make the operator precedence explicit.(Ú‘“‚úÿÿÿÿ2adam8Ø§ÉÅ-
+e
+AWj46LJW6y6P2ydRWKK-squid:S1166"%Either log or rethrow this exception.(¼Ôîàùÿÿÿÿ2adam8€û•Ç-
+r
+AWj46LJW6y6P2ydRWKLPsquid:S1135ó"2Complete the task associated to this TODO comment.(Ş³„ïüÿÿÿÿ2adam8€û•Ç-
+
+AWj46LJW6y6P2ydRWKLUsquid:S3776÷"RRefactor this method to reduce its Cognitive Complexity from 58 to the 15 allowed.(âõ¬ë2adam8€û•Ç-
+e
+AWj46LJW6y6P2ydRWKK6squid:S1166»"%Either log or rethrow this exception.(¼Ôîàùÿÿÿÿ2adam8€û•Ç-
+¦
+AWj46LJW6y6P2ydRWKLW
+squid:S138¥	"gThis method has 86 lines, which is greater than the 75 lines authorized. Split it into smaller methods.(½Ú…¢úÿÿÿÿ2adam8€û•Ç-
+x
+AWj4t1-H6y6P2ydRWFS2
+squid:S864Ï	"9Add parentheses to make the operator precedence explicit.(Ã¿ùÿÿÿÿÿ2adam8Ø§ÉÅ-
+„
+AWj4t1-H6y6P2ydRWFV9squid:TrailingCommentCheckK"6Move this trailing comment on the previous empty line.(Òıºıÿÿÿÿ2adam8Ø§ÉÅ-
+’
+AWj46LJW6y6P2ydRWKLXsquid:S3776¥	"RRefactor this method to reduce its Cognitive Complexity from 58 to the 15 allowed.(½Ú…¢úÿÿÿÿ2adam8€û•Ç-
+˜
+AWj4t1-H6y6P2ydRWFW-squid:S1132•"]Move the "D_MERCED1/FLOW-DELIVERY" string literal on the left side of this string comparison.(É¦Õı2adam8Ø§ÉÅ-
+x
+AWj4t1-H6y6P2ydRWFS0
+squid:S864¡"9Add parentheses to make the operator precedence explicit.(Ã¿ùÿÿÿÿÿ2adam8Ø§ÉÅ-
+
+AWj4t1-H6y6P2ydRWFV_squid:TrailingCommentCheckM"6Move this trailing comment on the previous empty line.(Åõíƒ2adam8Ø§ÉÅ-
+w
+AWj4t1-H6y6P2ydRWFWNsquid:S1854"<Remove this useless assignment to local variable "lookupID".(¼‘ºĞ2adam8Ø§ÉÅ-
+›
+AWj4t1-H6y6P2ydRWFVUsquid:S1488Ş"`Immediately return this expression instead of assigning it to the temporary variable "fileName".(õ¥‹Ê2adam8Ø§ÉÅ-
+˜
+AWj4t1-H6y6P2ydRWFVksquid:S00116G"XRename this field "lstScenarios" to match the regular expression '^_[a-z][a-zA-Z0-9]*$'.(ş•öİøÿÿÿÿ2adam8Ø§ÉÅ-
+”
+AWj4t1-H6y6P2ydRWFV3squid:S00116^"YRename this field "stopOnMissing" to match the regular expression '^_[a-z][a-zA-Z0-9]*$'.(­•™İ2adam8Ø§ÉÅ-
+¡
+AWj46LJW6y6P2ydRWKLT
+squid:S138÷"gThis method has 86 lines, which is greater than the 75 lines authorized. Split it into smaller methods.(âõ¬ë2adam8€û•Ç-
+„
+AWj4t1-H6y6P2ydRWFWAsquid:TrailingCommentCheckN"6Move this trailing comment on the previous empty line.(èÍ–şÿÿÿÿ2adam8Ø§ÉÅ-
+”
+AWj4t1-H6y6P2ydRWFW3squid:S1132"YMove the "C_TUOL/FLOW-CHANNEL" string literal on the left side of this string comparison.(á®’†2adam8Ø§ÉÅ-
+
+AWj4t1-H6y6P2ydRWFV2squid:S00116Y"SRename this field "project" to match the regular expression '^_[a-z][a-zA-Z0-9]*$'.(ÓŒ¥Z2adam8Ø§ÉÅ-
+
+AWj46LJW6y6P2ydRWKLHsquid:S3776³"RRefactor this method to reduce its Cognitive Complexity from 78 to the 15 allowed.(Üµ¡×2adam8€û•Ç-
+’
+AWj4t1-H6y6P2ydRWFXEsquid:S1132¨"RMove the "S422/STORAGE" string literal on the left side of this string comparison.(ˆ¡Îºşÿÿÿÿ2adam8Ø§ÉÅ-
+“
+AWj4t1-H6y6P2ydRWFXKsquid:S1132¬"XMove the "D420/FLOW-DELIVERY" string literal on the left side of this string comparison.(‡”î¯2adam8Ø§ÉÅ-
+•
+AWj46LJW6y6P2ydRWKLNsquid:S1132®"[Move the "D408_RS/FLOW-DELIVERY" string literal on the left side of this string comparison.(åÚ 2adam8€û•Ç-
+š
+AWj4t1-H6y6P2ydRWFV1squid:S00116X"ZRename this field "annualCFSsDiff" to match the regular expression '^_[a-z][a-zA-Z0-9]*$'.(˜—Èíşÿÿÿÿ2adam8Ø§ÉÅ-
+
+AWj4t1-H6y6P2ydRWFVtsquid:S00116P"URename this field "startTime" to match the regular expression '^_[a-z][a-zA-Z0-9]*$'.(Ç¨ü¯2adam8Ø§ÉÅ-
+d
+AWj46LJW6y6P2ydRWKK4squid:S1166k"%Either log or rethrow this exception.(¼Ôîàùÿÿÿÿ2adam8€û•Ç-
+x
+AWj4t1-H6y6P2ydRWFS3
+squid:S864û	"9Add parentheses to make the operator precedence explicit.(Ã¿ùÿÿÿÿÿ2adam8Ø§ÉÅ-
+
+AWj4t1-H6y6P2ydRWFVdsquid:S00117ë"QRename this local variable to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(È·Óê2adam8Ø§ÉÅ-
+
+AWj4t1-H6y6P2ydRWFVfsquid:S3008F"NRename this field "LOG" to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(ìıóüÿÿÿÿ2adam8Ø§ÉÅ-
+ 
+AWj4t1-H6y6P2ydRWFV7squid:S1149”"eReplace the synchronized class "Vector" by an unsynchronized one such as "ArrayList" or "LinkedList".(“´™2adam8Ø§ÉÅ-
+a
+AWj4t1-H6y6P2ydRWFXtsquid:S1168‚"&Return an empty array instead of null.(¥¹ï2adam8Ø§ÉÅ-
+„
+AWj46LJW6y6P2ydRWKLVsquid:S1132"IMove the "CFS" string literal on the left side of this string comparison.(´Š÷2adam8€û•Ç-
+•
+AWj4t1-H6y6P2ydRWFVxsquid:S00116T"URename this field "scenarios" to match the regular expression '^_[a-z][a-zA-Z0-9]*$'.(˜™êúÿÿÿÿ2adam8Ø§ÉÅ-
+
+AWj46LJW6y6P2ydRWKLCsquid:S3776¦"RRefactor this method to reduce its Cognitive Complexity from 19 to the 15 allowed.(ƒ·µ…2adam8€û•Ç-
+™
+AWj4t1-H6y6P2ydRWFVssquid:S00116O"YRename this field "originalUnits" to match the regular expression '^_[a-z][a-zA-Z0-9]*$'.(ÍÓÜõûÿÿÿÿ2adam8Ø§ÉÅ-
+…
+AWj4t1-H6y6P2ydRWFXRsquid:TrailingCommentCheckê"6Move this trailing comment on the previous empty line.(Œ™áìøÿÿÿÿ2adam8Ø§ÉÅ-
+…
+AWj4t1-H6y6P2ydRWFXSsquid:TrailingCommentCheckğ"6Move this trailing comment on the previous empty line.(ÆÙ²úÿÿÿÿ2adam8Ø§ÉÅ-
+†
+AWj46LJW6y6P2ydRWKLDsquid:S1132Ÿ"FMove the "" string literal on the left side of this string comparison.(Ãù‰üÿÿÿÿ2adam8€û•Ç-
+†
+AWj4t1-H6y6P2ydRWFX2squid:CommentedOutCodeLineÊ"<This block of commented-out lines of code should be removed.(¶½ûÌ2adam8Ø§ÉÅ-
+s
+AWj4t1-H6y6P2ydRWFWcsquid:S4248¥"3Refactor this code to use a "static final" Pattern.(ÔÉŞùûÿÿÿÿ2adam8Ø§ÉÅ-
+œ
+AWj4t1-H6y6P2ydRWFVnsquid:S00116J"\Rename this field "secondaryDSSName" to match the regular expression '^_[a-z][a-zA-Z0-9]*$'.(Ì§§úıÿÿÿÿ2adam8Ø§ÉÅ-
+e
+AWj46LJW6y6P2ydRWKK9squid:S1166ı"%Either log or rethrow this exception.(É˜Ùúÿÿÿÿ2adam8€û•Ç-
+‘
+AWj4t1-H6y6P2ydRWFVwsquid:S00116S"QRename this field "endWY" to match the regular expression '^_[a-z][a-zA-Z0-9]*$'.(şÂŸ§üÿÿÿÿ2adam8Ø§ÉÅ-
+•
+AWj4t1-H6y6P2ydRWFW7squid:S1132’"ZMove the "D_TUOL/FLOW-DELIVERY" string literal on the left side of this string comparison.(ßÁ´¤2adam8Ø§ÉÅ-
+“
+AWj4t1-H6y6P2ydRWFXGsquid:S1132©"XMove the "WQ408_VC_/SALINITY" string literal on the left side of this string comparison.(ÿÅö2adam8Ø§ÉÅ-
+„
+AWj4t1-H6y6P2ydRWFWBsquid:TrailingCommentCheckO"6Move this trailing comment on the previous empty line.(ÍÓÜõûÿÿÿÿ2adam8Ø§ÉÅ-
+x
+AWj4t1-H6y6P2ydRWFS1
+squid:S864Í"9Add parentheses to make the operator precedence explicit.(Ã¿ùÿÿÿÿÿ2adam8Ø§ÉÅ-
+
+AWj4t1-H6y6P2ydRWFW5squid:S1132"^Move the "D_STANRIPN/FLOW-DELIVERY" string literal on the left side of this string comparison.(ÜˆÊìúÿÿÿÿ2adam8Ø§ÉÅ-
+š
+AWj4t1-H6y6P2ydRWFXIsquid:S1132«"_Move the "C422_FILL_CC/FLOW-CHANNEL" string literal on the left side of this string comparison.(ÀŞ÷ó2adam8Ø§ÉÅ-
+{
+AWj4t1-H6y6P2ydRWFWpsquid:S1854Ì";Remove this useless assignment to local variable "result2".(˜€Äİÿÿÿÿÿ2adam8Ø§ÉÅ-
+˜
+AWj46LJW6y6P2ydRWKLKsquid:S1132¡"XMove the "AN_EC_STD/SALINITY" string literal on the left side of this string comparison.(Ÿˆãİùÿÿÿÿ2adam8€û•Ç-
+Š
+AWj46LJW6y6P2ydRWKLRsquid:S1132¶"JMove the "null" string literal on the left side of this string comparison.(ÜºøËüÿÿÿÿ2adam8€û•Ç-
+„
+AWj4t1-H6y6P2ydRWFWlsquid:S1132‚"JMove the "true" string literal on the left side of this string comparison.(…’ÁO2adam8Ø§ÉÅ-
+a
+AWj4t1-H6y6P2ydRWFXgsquid:S1168¸"&Return an empty array instead of null.(¥¹ï2adam8Ø§ÉÅ-
+–
+AWj4t1-H6y6P2ydRWFXLsquid:S1132­"[Move the "D408_VC/FLOW-DELIVERY" string literal on the left side of this string comparison.(Áê‘2adam8Ø§ÉÅ-
+—
+AWj4t1-H6y6P2ydRWFW8squid:S1132“"\Move the "D_TUOL1B/FLOW-DELIVERY" string literal on the left side of this string comparison.(ÍÄ±Ù2adam8Ø§ÉÅ-
+„
+AWj4t1-H6y6P2ydRWFXZsquid:S1695Ğ"DThrow some other exception here, such as "IllegalArgumentException".(é˜î§ùÿÿÿÿ2adam8Ø§ÉÅ-
+Xsquid:S2221ü
+"4Catch a list of specific exception subtypes instead.(¼Ôîàùÿÿÿÿ8ÜœÖŸ-
+Xsquid:S2221‹
+"4Catch a list of specific exception subtypes instead.(¼Ôîàùÿÿÿÿ8ÜœÖŸ-
+Xsquid:S2221ş"4Catch a list of specific exception subtypes instead.(¼Ôîàùÿÿÿÿ8ÜœÖŸ-
+Xsquid:S2221İ"4Catch a list of specific exception subtypes instead.(¼Ôîàùÿÿÿÿ8ÜœÖŸ-
+Xsquid:S2221»"4Catch a list of specific exception subtypes instead.(¼Ôîàùÿÿÿÿ8ÜœÖŸ-
+Xsquid:S2221¢"4Catch a list of specific exception subtypes instead.(¼Ôîàùÿÿÿÿ8ÜœÖŸ-

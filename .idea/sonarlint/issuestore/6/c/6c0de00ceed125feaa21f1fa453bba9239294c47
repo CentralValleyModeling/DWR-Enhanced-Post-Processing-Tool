@@ -1,0 +1,159 @@
+
+r
+AWj4t2I36y6P2ydRWGIr
+squid:S864á"9Add parentheses to make the operator precedence explicit.(½®Ú2adam8Ø§ÉÅ-
+‰
+AWj46LWT6y6P2ydRWKQksquid:S00116T"NRename this field "xx" to match the regular expression '^_[a-z][a-zA-Z0-9]*$'.(™ùØŸ2adam8€û•Ç-
+
+AWj46LWT6y6P2ydRWKQusquid:S3776j"SRefactor this method to reduce its Cognitive Complexity from 286 to the 15 allowed.(‰à•·2adam8€û•Ç-
+Š
+AWj4t2I36y6P2ydRWGKwsquid:CommentedOutCodeLine#"<This block of commented-out lines of code should be removed.(º¼Ïèşÿÿÿÿ2adam8Ø§ÉÅ-
+†
+AWj4t2I36y6P2ydRWGK-squid:CommentedOutCodeLine”"<This block of commented-out lines of code should be removed.(ÎãÏŠ2adam8Ø§ÉÅ-
+‹
+AWj4t2I36y6P2ydRWGK2squid:CommentedOutCodeLineı"<This block of commented-out lines of code should be removed.(éØ»Úûÿÿÿÿ2adam8Ø§ÉÅ-
+Ÿ
+AWj4t2I36y6P2ydRWGJ-squid:S1149²"eReplace the synchronized class "Vector" by an unsynchronized one such as "ArrayList" or "LinkedList".(ÍÏ:2adam8Ø§ÉÅ-
+³
+AWj4t2I36y6P2ydRWGKOsquid:S3366×"xMake sure the use of "this" doesn't expose partially-constructed instances of this class in multi-threaded environments.(ƒàŞ”2adam8Ø§ÉÅ-
+
+AWj4t2I36y6P2ydRWGKesquid:TrailingCommentCheckß"6Move this trailing comment on the previous empty line.(È°û2adam8Ø§ÉÅ-
+†
+AWj4t2I36y6P2ydRWGKxsquid:CommentedOutCodeLineğ"<This block of commented-out lines of code should be removed.(Àì¾‡2adam8Ø§ÉÅ-
+r
+AWj4t2I36y6P2ydRWGKssquid:S1135”"2Complete the task associated to this TODO comment.(» æÿÿÿÿÿ2adam8Ø§ÉÅ-
+ 
+AWj46LWT6y6P2ydRWKQrsquid:S1149µ"eReplace the synchronized class "Vector" by an unsynchronized one such as "ArrayList" or "LinkedList".(¯­º¼2adam8€û•Ç-
+”
+AWj4t2I36y6P2ydRWGKbsquid:S2293"YReplace the type specification in this constructor call with the diamond operator ("<>").(½äæÄ2adam8Ø§ÉÅ-
+‹
+AWj4t2I36y6P2ydRWGKzsquid:CommentedOutCodeLineô"<This block of commented-out lines of code should be removed.(éØ»Úûÿÿÿÿ2adam8Ø§ÉÅ-
+r
+AWj4t2I36y6P2ydRWGKtsquid:S1135"2Complete the task associated to this TODO comment.(» æÿÿÿÿÿ2adam8Ø§ÉÅ-
+Ÿ
+AWj4t2I36y6P2ydRWGKosquid:S1149²"eReplace the synchronized class "Vector" by an unsynchronized one such as "ArrayList" or "LinkedList".(ÍÏ:2adam8Ø§ÉÅ-
+†
+AWj4t2I36y6P2ydRWGKisquid:S1132È"FMove the "" string literal on the left side of this string comparison.(ùÃ¼Öÿÿÿÿÿ2adam8Ø§ÉÅ-
+…
+AWj4t2I36y6P2ydRWGKysquid:CommentedOutCodeLineò"<This block of commented-out lines of code should be removed.(»ªûo2adam8Ø§ÉÅ-
+Š
+AWj46LWT6y6P2ydRWKQlsquid:S00116U"ORename this field "avg" to match the regular expression '^_[a-z][a-zA-Z0-9]*$'.(­‹Ô2adam8€û•Ç-
+ 
+AWj4t2I36y6P2ydRWGJ_squid:S1149³"eReplace the synchronized class "Vector" by an unsynchronized one such as "ArrayList" or "LinkedList".(Úšº¢2adam8Ø§ÉÅ-
+j
+AWj46LWT6y6P2ydRWKQcsquid:S1066Ï"/Merge this if statement with the enclosing one.(İšÂ¿2adam8€û•Ç-
+r
+AWj4t2I36y6P2ydRWGIq
+squid:S864à"9Add parentheses to make the operator precedence explicit.(ƒŠó2adam8Ø§ÉÅ-
+•
+AWj4t2I36y6P2ydRWGJ6squid:S00116Q"URename this field "CLIPBOARD" to match the regular expression '^_[a-z][a-zA-Z0-9]*$'.(²ÏÚ¹üÿÿÿÿ2adam8Ø§ÉÅ-
+
+AWj46LWT6y6P2ydRWKQosquid:S00116X"ORename this field "max" to match the regular expression '^_[a-z][a-zA-Z0-9]*$'.(çÎƒƒÿÿÿÿÿ2adam8€û•Ç-
+‘
+AWj4t2I36y6P2ydRWGJ5squid:S00116P"VRename this field "CELL_BREAK" to match the regular expression '^_[a-z][a-zA-Z0-9]*$'.(šøçÖ2adam8Ø§ÉÅ-
+`
+AWj4t2I36y6P2ydRWGJqsquid:S1170O"!Make this final field static too.(Ó÷°éøÿÿÿÿ2adam8Ø§ÉÅ-
+ 
+AWj46LWT6y6P2ydRWKQ0squid:S1149µ"eReplace the synchronized class "Vector" by an unsynchronized one such as "ArrayList" or "LinkedList".(¯­º¼2adam8€û•Ç-
+m
+AWj4t2I36y6P2ydRWGKcsquid:S1135¸"2Complete the task associated to this TODO comment.(úµªº2adam8Ø§ÉÅ-
+’
+AWj46LWT6y6P2ydRWKQxsquid:S3776Å"RRefactor this method to reduce its Cognitive Complexity from 50 to the 15 allowed.(µë¢úÿÿÿÿ2adam8€û•Ç-
+|
+AWj46LWT6y6P2ydRWKQdsquid:S00107j"AConstructor has 9 parameters, which is greater than 7 authorized.(‰à•·2adam8€û•Ç-
+˜
+AWj46LWT6y6P2ydRWKQysquid:S2972«"XReduce this class from 51 to the maximum allowed 40 or externalize it in a public class.(‘øç–øÿÿÿÿ2adam8€û•Ç-
+x
+AWj4t2I36y6P2ydRWGIp
+squid:S864Ù"9Add parentheses to make the operator precedence explicit.(²îëªùÿÿÿÿ2adam8Ø§ÉÅ-
+‹
+AWj4t2I36y6P2ydRWGK8squid:CommentedOutCodeLine"<This block of commented-out lines of code should be removed.(éØ»Úûÿÿÿÿ2adam8Ø§ÉÅ-
+“
+AWj4t2I36y6P2ydRWGKnsquid:S00116³"WRename this field "columnNames" to match the regular expression '^_[a-z][a-zA-Z0-9]*$'.(Úšº¢2adam8Ø§ÉÅ-
+Š
+AWj46LWT6y6P2ydRWKQpsquid:S00116Y"ORename this field "med" to match the regular expression '^_[a-z][a-zA-Z0-9]*$'.(àè‡2adam8€û•Ç-
+
+AWj4t2I36y6P2ydRWGJ7squid:S00116_"SRename this field "columns" to match the regular expression '^_[a-z][a-zA-Z0-9]*$'.(ü„¾‡2adam8Ø§ÉÅ-
+¡
+AWj46LWT6y6P2ydRWKQt
+squid:S138j"hThis method has 312 lines, which is greater than the 75 lines authorized. Split it into smaller methods.(‰à•·2adam8€û•Ç-
+f
+AWj46LWT6y6P2ydRWKQvsquid:S1172k",Remove this unused method parameter "sName".(è÷‘Ç2adam8€û•Ç-
+ 
+AWj4t2I36y6P2ydRWGKpsquid:S1149³"eReplace the synchronized class "Vector" by an unsynchronized one such as "ArrayList" or "LinkedList".(Úšº¢2adam8Ø§ÉÅ-
+¸
+AWj4t2I36y6P2ydRWGKPsquid:S3366à"xMake sure the use of "this" doesn't expose partially-constructed instances of this class in multi-threaded environments.(Ç€„ùÿÿÿÿ2adam8Ø§ÉÅ-
+‘
+AWj46LWT6y6P2ydRWKQfsquid:S00117l"QRename this local variable to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(¹®öÊıÿÿÿÿ2adam8€û•Ç-
+‹
+AWj4t2I36y6P2ydRWGK3squid:CommentedOutCodeLine‚"<This block of commented-out lines of code should be removed.(†±¼–ıÿÿÿÿ2adam8Ø§ÉÅ-
+y
+AWj46LWT6y6P2ydRWKQgsquid:S1155´">Use isEmpty() to check whether the collection is empty or not.(ÀÊØ©2adam8€û•Ç-
+–
+AWj4t2I36y6P2ydRWGJ3squid:S00116^"VRename this field "scrollPane" to match the regular expression '^_[a-z][a-zA-Z0-9]*$'.(‰ÒõÖúÿÿÿÿ2adam8Ø§ÉÅ-
+c
+AWj46LWT6y6P2ydRWKQwsquid:S1172±"(Remove this unused method parameter "m".(‹áÄ…2adam8€û•Ç-
+r
+AWj4t2I36y6P2ydRWGKksquid:S1135Ç"2Complete the task associated to this TODO comment.(» æÿÿÿÿÿ2adam8Ø§ÉÅ-
+ 
+AWj46LWT6y6P2ydRWKQzsquid:S1149µ"eReplace the synchronized class "Vector" by an unsynchronized one such as "ArrayList" or "LinkedList".(¯­º¼2adam8€û•Ç-
+[
+AWj4t2I36y6P2ydRWGJrsquid:S1170P"!Make this final field static too.(šøçÖ2adam8Ø§ÉÅ-
+‹
+AWj4t2I36y6P2ydRWGK9squid:CommentedOutCodeLineİ"<This block of commented-out lines of code should be removed.( µ¯Çüÿÿÿÿ2adam8Ø§ÉÅ-
+‹
+AWj4t2I36y6P2ydRWGK0squid:CommentedOutCodeLineù"<This block of commented-out lines of code should be removed.(øµÎ—şÿÿÿÿ2adam8Ø§ÉÅ-
+š
+AWj4t2I36y6P2ydRWGJ9squid:S1149Ñ"_Replace the synchronized class "StringBuffer" by an unsynchronized one such as "StringBuilder".(ñüË³2adam8Ø§ÉÅ-
+¸
+AWj4t2I36y6P2ydRWGKQsquid:S3366â"xMake sure the use of "this" doesn't expose partially-constructed instances of this class in multi-threaded environments.(Ç€„ùÿÿÿÿ2adam8Ø§ÉÅ-
+
+AWj46LWT6y6P2ydRWKQmsquid:S00116V"PRename this field "sdev" to match the regular expression '^_[a-z][a-zA-Z0-9]*$'.(úıüßùÿÿÿÿ2adam8€û•Ç-
+…
+AWj4t2I36y6P2ydRWGK4squid:CommentedOutCodeLine„"<This block of commented-out lines of code should be removed.(ŞÒï2adam8Ø§ÉÅ-
+”
+AWj4t2I36y6P2ydRWGKXsquid:S2293‚"YReplace the type specification in this constructor call with the diamond operator ("<>").(úæ§‚2adam8Ø§ÉÅ-
+Ÿ
+AWj4t2I36y6P2ydRWGJ8squid:S1149_"eReplace the synchronized class "Vector" by an unsynchronized one such as "ArrayList" or "LinkedList".(ü„¾‡2adam8Ø§ÉÅ-
+Œ
+AWj46LWT6y6P2ydRWKQesquid:S00117k"QRename this local variable to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(è÷‘Ç2adam8€û•Ç-
+s
+AWj4t2I36y6P2ydRWGIs
+squid:S864â"9Add parentheses to make the operator precedence explicit.(±€é¤2adam8Ø§ÉÅ-
+‘
+AWj4t2I36y6P2ydRWGJ2squid:S00116["QRename this field "panel" to match the regular expression '^_[a-z][a-zA-Z0-9]*$'.(ÔÇ’Çüÿÿÿÿ2adam8Ø§ÉÅ-
+…
+AWj4t2I36y6P2ydRWGK1squid:CommentedOutCodeLineû"<This block of commented-out lines of code should be removed.(èÕù2adam8Ø§ÉÅ-
+ 
+AWj46LWT6y6P2ydRWKQssquid:S1149µ"eReplace the synchronized class "Vector" by an unsynchronized one such as "ArrayList" or "LinkedList".(¯­º¼2adam8€û•Ç-
+‹
+AWj4t2I36y6P2ydRWGK5squid:CommentedOutCodeLine†"<This block of commented-out lines of code should be removed.(éØ»Úûÿÿÿÿ2adam8Ø§ÉÅ-
+‰
+AWj4t2I36y6P2ydRWGKYsquid:S1132“"IMove the "CFS" string literal on the left side of this string comparison.(Ó•¥¢ûÿÿÿÿ2adam8Ø§ÉÅ-
+‰
+AWj4t2I36y6P2ydRWGKZsquid:S1132”"IMove the "CFS" string literal on the left side of this string comparison.(ÁéĞ½ıÿÿÿÿ2adam8Ø§ÉÅ-
+‰
+AWj46LWT6y6P2ydRWKQnsquid:S00116W"ORename this field "min" to match the regular expression '^_[a-z][a-zA-Z0-9]*$'.(ÍµY2adam8€û•Ç-
+r
+AWj4t2I36y6P2ydRWGKvsquid:S1135§"2Complete the task associated to this TODO comment.(» æÿÿÿÿÿ2adam8Ø§ÉÅ-
+l
+AWj4t2I36y6P2ydRWGKNsquid:S1135d"2Complete the task associated to this TODO comment.(‡î©²2adam8Ø§ÉÅ-
+‹
+AWj4t2I36y6P2ydRWGKmsquid:S00116²"PRename this field "data" to match the regular expression '^_[a-z][a-zA-Z0-9]*$'.(ÍÏ:2adam8Ø§ÉÅ-
+†
+AWj4t2I36y6P2ydRWGK_squid:CommentedOutCodeLineê"<This block of commented-out lines of code should be removed.(Êşÿò2adam8Ø§ÉÅ-
+†
+AWj4t2I36y6P2ydRWGK7squid:CommentedOutCodeLine"<This block of commented-out lines of code should be removed.(³Ğ‘°2adam8Ø§ÉÅ-
+ˆ
+AWj46LWT6y6P2ydRWKQisquid:S00116R"MRename this field "n" to match the regular expression '^_[a-z][a-zA-Z0-9]*$'.(óù·é2adam8€û•Ç-
+–
+AWj4t2I36y6P2ydRWGJ4squid:S00116O"VRename this field "LINE_BREAK" to match the regular expression '^_[a-z][a-zA-Z0-9]*$'.(Ó÷°éøÿÿÿÿ2adam8Ø§ÉÅ-
+r
+AWj4t2I36y6P2ydRWGKusquid:S1135›"2Complete the task associated to this TODO comment.(» æÿÿÿÿÿ2adam8Ø§ÉÅ-
+s
+AWj4t2I36y6P2ydRWGIt
+squid:S864É"9Add parentheses to make the operator precedence explicit.(ëâÜÁ2adam8Ø§ÉÅ-
+
+AWj46LWT6y6P2ydRWKQqsquid:S00116Z"PRename this field "medx" to match the regular expression '^_[a-z][a-zA-Z0-9]*$'.(†ˆøíÿÿÿÿÿ2adam8€û•Ç-
+‹
+AWj4t2I36y6P2ydRWGK6squid:CommentedOutCodeLine‹"<This block of commented-out lines of code should be removed.(íŠôşÿÿÿÿ2adam8Ø§ÉÅ-

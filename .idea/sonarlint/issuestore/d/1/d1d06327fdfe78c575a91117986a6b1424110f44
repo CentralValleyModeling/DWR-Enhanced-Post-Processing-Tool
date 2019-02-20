@@ -1,0 +1,161 @@
+
+q
+AWj4t1mc6y6P2ydRWDXO
+squid:S106J"9Replace this use of System.out or System.err by a logger.(ÆĞt2adam8Ø§ÉÅ-
+
+AWj46Kq16y6P2ydRWJ0ssquid:S1132¿"FMove the "" string literal on the left side of this string comparison.(¨ÿéû2adam8€û•Ç-
+c
+AWj4t1mc6y6P2ydRWDXSsquid:S1659[")Declare "storageNode" on a separate line.(Ü°ï×2adam8Ø§ÉÅ-
+¡
+AWj46Kq16y6P2ydRWJ0l
+squid:S1383"hThis method has 171 lines, which is greater than the 75 lines authorized. Split it into smaller methods.(Ìà‚à2adam8€û•Ç-
+e
+AWj4t1mc6y6P2ydRWDWxsquid:S1659""+Declare "_storageNodes" on a separate line.(á…Ãë2adam8Ø§ÉÅ-
+a
+AWj4t1mc6y6P2ydRWDX_squid:S2129­"!Remove this "Integer" constructor(ÍÖûÖüÿÿÿÿ2adam8Ø§ÉÅ-
+
+AWj4t1mc6y6P2ydRWDXlsquid:S1132¾"FMove the "" string literal on the left side of this string comparison.(’µŠ±2adam8Ø§ÉÅ-
+x
+AWj4t1mc6y6P2ydRWDXA
+squid:S106º"9Replace this use of System.out or System.err by a logger.(©Õ–½úÿÿÿÿ2adam8Ø§ÉÅ-
+…
+AWj4t1mc6y6P2ydRWDXZsquid:TrailingCommentCheck®"6Move this trailing comment on the previous empty line.(Ğ¼Ïûÿÿÿÿ2adam8Ø§ÉÅ-
+†
+AWj46Kq16y6P2ydRWJ0vsquid:S1132Ó"FMove the "" string literal on the left side of this string comparison.(ä¾‹Çıÿÿÿÿ2adam8€û•Ç-
+
+AWj4t1mc6y6P2ydRWDW3squid:S1149#"VReplace the synchronized class "Hashtable" by an unsynchronized one such as "HashMap".(Ë¬˜2adam8Ø§ÉÅ-
+w
+AWj4t1mc6y6P2ydRWDXN
+squid:S106I"9Replace this use of System.out or System.err by a logger.(²¢¬Üÿÿÿÿÿ2adam8Ø§ÉÅ-
+‘
+AWj4t1mc6y6P2ydRWDWh
+squid:S135S"YReduce the total number of break and continue statements in this loop to use at most one.(¤èÄ72adam8Ø§ÉÅ-
+q
+AWj46Kq16y6P2ydRWJ0n
+squid:S106^"9Replace this use of System.out or System.err by a logger.(ÆĞt2adam8€û•Ç-
+†
+AWj4t1mc6y6P2ydRWDXUsquid:S1132f"GMove the "," string literal on the left side of this string comparison.(¥ÁÊæüÿÿÿÿ2adam8Ø§ÉÅ-
+_
+AWj46Kq16y6P2ydRWJ0dsquid:S1166q"%Either log or rethrow this exception.(ÍÌŒ 2adam8€û•Ç-
+`
+AWj46Kq16y6P2ydRWJ0fsquid:S1166¡"%Either log or rethrow this exception.(ÍÌŒ 2adam8€û•Ç-
+r
+AWj46Kq16y6P2ydRWJ0o
+squid:S106y"9Replace this use of System.out or System.err by a logger.(ÓÈç‰2adam8€û•Ç-
+†
+AWj4t1mc6y6P2ydRWDXksquid:S1132½"FMove the "" string literal on the left side of this string comparison.(³…½¡øÿÿÿÿ2adam8Ø§ÉÅ-
+x
+AWj46Kq16y6P2ydRWJ0q
+squid:S106©"9Replace this use of System.out or System.err by a logger.(×åÊûşÿÿÿÿ2adam8€û•Ç-
+j
+AWj4t1mc6y6P2ydRWDWasquid:S1444 "+Make this "public static DEBUG" field final(îéÒ¡ÿÿÿÿÿ2adam8Ø§ÉÅ-
+
+AWj4t1mc6y6P2ydRWDWksquid:S2259Ğ"AA "NullPointerException" could be thrown; "arc" is nullable here.(€ª¶Œşÿÿÿÿ2adam8Ø§ÉÅ-
+s
+AWj4t1mc6y6P2ydRWDXB
+squid:S106À"9Replace this use of System.out or System.err by a logger.(äÍöÁ2adam8Ø§ÉÅ-
+‡
+AWj46Kq16y6P2ydRWJ0isquid:S00112µ"FDefine and throw a dedicated exception instead of using a generic one.(Ù¢Ãüÿÿÿÿ2adam8€û•Ç-
+s
+AWj46Kq16y6P2ydRWJ0p
+squid:S106‘"9Replace this use of System.out or System.err by a logger.(©³Á¿2adam8€û•Ç-
+†
+AWj4t1mc6y6P2ydRWDYEsquid:CommentedOutCodeLineÿ"<This block of commented-out lines of code should be removed.(ô§´ˆ2adam8Ø§ÉÅ-
+x
+AWj46Kq16y6P2ydRWJ0u
+squid:S106Ï"9Replace this use of System.out or System.err by a logger.(„è³ÿÿÿÿÿ2adam8€û•Ç-
+‡
+AWj4t1mc6y6P2ydRWDXcsquid:S1132®"GMove the "," string literal on the left side of this string comparison.(Ğ¼Ïûÿÿÿÿ2adam8Ø§ÉÅ-
+‡
+AWj4t1mc6y6P2ydRWDXgsquid:S1132–"GMove the "," string literal on the left side of this string comparison.(Ğ¼Ïûÿÿÿÿ2adam8Ø§ÉÅ-
+t
+AWj46Kq16y6P2ydRWJ0zsquid:S2221¸"4Catch a list of specific exception subtypes instead.(¼Ôîàùÿÿÿÿ2adam8€û•Ç-
+b
+AWj4t1mc6y6P2ydRWDWysquid:S1659#"(Declare "_nodesDict" on a separate line.(Ë¬˜2adam8Ø§ÉÅ-
+y
+AWj46Kq16y6P2ydRWJ0ksquid:S2057"?Add a "static final long serialVersionUID" field to this class.(èŞˆó2adam8€û•Ç-
+„
+AWj4t1mc6y6P2ydRWDXhsquid:TrailingCommentCheck~"6Move this trailing comment on the previous empty line.(Ğ¼Ïûÿÿÿÿ2adam8Ø§ÉÅ-
+†
+AWj46Kq16y6P2ydRWJ0tsquid:S1132Ë"FMove the "" string literal on the left side of this string comparison.(’‰ä¹ıÿÿÿÿ2adam8€û•Ç-
+¾
+AWj4t1mc6y6P2ydRWDX-squid:S1158­"~Call the static method Integer.toString(...) instead of instantiating a temporary object to perform this to string conversion.(ÍÖûÖüÿÿÿÿ2adam8Ø§ÉÅ-
+†
+AWj46Kq16y6P2ydRWJ0wsquid:S1132×"FMove the "" string literal on the left side of this string comparison.(ù£ÀÑûÿÿÿÿ2adam8€û•Ç-
+e
+AWj46Kq16y6P2ydRWJ0hsquid:S1166¸"%Either log or rethrow this exception.(¼Ôîàùÿÿÿÿ2adam8€û•Ç-
+†
+AWj4t1mc6y6P2ydRWDXjsquid:S1132¼"FMove the "" string literal on the left side of this string comparison.(½ã®ìûÿÿÿÿ2adam8Ø§ÉÅ-
+ƒ
+AWj4t1mc6y6P2ydRWDWlsquid:S2259î"CA "NullPointerException" could be thrown; "uarcs" is nullable here.(Ò±âÊÿÿÿÿÿ2adam8Ø§ÉÅ-
+Ÿ
+AWj4t1mc6y6P2ydRWDW2squid:S1149""eReplace the synchronized class "Vector" by an unsynchronized one such as "ArrayList" or "LinkedList".(á…Ãë2adam8Ø§ÉÅ-
+^
+AWj4t1mc6y6P2ydRWDXRsquid:S1659["$Declare "arcsIn" on a separate line.(Ü°ï×2adam8Ø§ÉÅ-
+Ÿ
+AWj4t1mc6y6P2ydRWDW1squid:S1149""eReplace the synchronized class "Vector" by an unsynchronized one such as "ArrayList" or "LinkedList".(á…Ãë2adam8Ø§ÉÅ-
+`
+AWj4t1mc6y6P2ydRWDXwsquid:S1659Ş" Declare "di" on a separate line.(ê’š²øÿÿÿÿ2adam8Ø§ÉÅ-
+_
+AWj4t1mc6y6P2ydRWDXQsquid:S1659["%Declare "arcsOut" on a separate line.(Ü°ï×2adam8Ø§ÉÅ-
+e
+AWj46Kq16y6P2ydRWJ0gsquid:S1166…"%Either log or rethrow this exception.(Ä§’æùÿÿÿÿ2adam8€û•Ç-
+x
+AWj46Kq16y6P2ydRWJ0r
+squid:S106¹"9Replace this use of System.out or System.err by a logger.(ßÇğ³üÿÿÿÿ2adam8€û•Ç-
+’
+AWj46Kq16y6P2ydRWJ0c
+squid:S135š"YReduce the total number of break and continue statements in this loop to use at most one.(¤èÄ72adam8€û•Ç-
+’
+AWj46Kq16y6P2ydRWJ0ysquid:S3776"RRefactor this method to reduce its Cognitive Complexity from 16 to the 15 allowed.(¶æüûÿÿÿÿ2adam8€û•Ç-
+
+AWj46Kq16y6P2ydRWJ01squid:S1871Ç"MThis branch's code block is the same as the block for the branch on line 440.(ÒÌâ–øÿÿÿÿ2adam8€û•Ç-
+„
+AWj4t1mc6y6P2ydRWDXVsquid:TrailingCommentCheckf"6Move this trailing comment on the previous empty line.(¥ÁÊæüÿÿÿÿ2adam8Ø§ÉÅ-
+†
+AWj4t1mc6y6P2ydRWDXYsquid:S1132~"GMove the "," string literal on the left side of this string comparison.(Ğ¼Ïûÿÿÿÿ2adam8Ø§ÉÅ-
+x
+AWj4t1mc6y6P2ydRWDXs
+squid:S106ä"9Replace this use of System.out or System.err by a logger.(ÉÄ¯çøÿÿÿÿ2adam8Ø§ÉÅ-
+s
+AWj4t1mc6y6P2ydRWDW9
+squid:S106«"9Replace this use of System.out or System.err by a logger.(”¨÷á2adam8Ø§ÉÅ-
+…
+AWj4t1mc6y6P2ydRWDXdsquid:TrailingCommentCheck–"6Move this trailing comment on the previous empty line.(Ğ¼Ïûÿÿÿÿ2adam8Ø§ÉÅ-
+r
+AWj46Kq16y6P2ydRWJ02squid:S1172‰"2Remove this unused method parameter "storageNode".(ŸçÕ«ÿÿÿÿÿ2adam8€û•Ç-
+†
+AWj46Kq16y6P2ydRWJ0xsquid:S1132Û"FMove the "" string literal on the left side of this string comparison.(Õ÷‚¾şÿÿÿÿ2adam8€û•Ç-
+‘
+AWj46Kq16y6P2ydRWJ0b
+squid:S135;"YReduce the total number of break and continue statements in this loop to use at most one.(¤èÄ72adam8€û•Ç-
+~
+AWj4t1mc6y6P2ydRWDWmsquid:S2259÷"CA "NullPointerException" could be thrown; "darcs" is nullable here.(óŸê®2adam8Ø§ÉÅ-
+
+AWj4t1mc6y6P2ydRWDWzsquid:S3008 "PRename this field "DEBUG" to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(îéÒ¡ÿÿÿÿÿ2adam8Ø§ÉÅ-
+‡
+AWj4t1mc6y6P2ydRWDWtsquid:S00112Ç"FDefine and throw a dedicated exception instead of using a generic one.(«À¶óÿÿÿÿÿ2adam8Ø§ÉÅ-
+c
+AWj4t1mc6y6P2ydRWDWusquid:S1148ˆ"#Use a logger to log this exception.(Ú¸ÿÿÿÿÿ2adam8Ø§ÉÅ-
+
+AWj46Kq16y6P2ydRWJ00squid:S3776Ì"RRefactor this method to reduce its Cognitive Complexity from 30 to the 15 allowed.(Ú¦„¤2adam8€û•Ç-
+‹
+AWj4t1mc6y6P2ydRWDYFsquid:CommentedOutCodeLine‚"<This block of commented-out lines of code should be removed.(ûƒ§·ùÿÿÿÿ2adam8Ø§ÉÅ-
+§
+AWj4t1mc6y6P2ydRWDWj"squid:ClassVariableVisibilityCheck "QMake DEBUG a static final constant or non-public and provide accessors if needed.(îéÒ¡ÿÿÿÿÿ2adam8Ø§ÉÅ-
+_
+AWj4t1mc6y6P2ydRWDWvsquid:S2131­"Use "Integer.toString" instead.(ÍÖûÖüÿÿÿÿ2adam8Ø§ÉÅ-
+`
+AWj46Kq16y6P2ydRWJ0esquid:S1166‰"%Either log or rethrow this exception.(ÍÌŒ 2adam8€û•Ç-
+
+AWj46Kq16y6P2ydRWJ0msquid:S37763"SRefactor this method to reduce its Cognitive Complexity from 100 to the 15 allowed.(Ìà‚à2adam8€û•Ç-
+x
+AWj4t1mc6y6P2ydRWDW8
+squid:S106¤"9Replace this use of System.out or System.err by a logger.(¢¥¬úşÿÿÿÿ2adam8Ø§ÉÅ-
+
+AWj4t1mc6y6P2ydRWDW4squid:S1149#"VReplace the synchronized class "Hashtable" by an unsynchronized one such as "HashMap".(Ë¬˜2adam8Ø§ÉÅ-
+–
+AWj4t1mc6y6P2ydRWDW0squid:S3008!"]Rename this field "NUM_STORAGE_LEVELS" to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(å´¢M2adam8Ø§ÉÅ-
+x
+AWj4t1mc6y6P2ydRWDYD
+squid:S106‡"9Replace this use of System.out or System.err by a logger.(ïë¥ÿÿÿÿÿ2adam8Ø§ÉÅ-

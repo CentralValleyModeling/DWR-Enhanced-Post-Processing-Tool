@@ -1,0 +1,163 @@
+
+w
+AWj4t1_l6y6P2ydRWFjDsquid:S3655ÿ"7Call "Optional#isPresent()" before accessing the value.(ä¤şÿÿÿÿ2adam8Ø§ÉÅ-
+w
+AWj4t1_l6y6P2ydRWFjCsquid:S3655ú	"7Call "Optional#isPresent()" before accessing the value.(”ì™ øÿÿÿÿ2adam8Ø§ÉÅ-
+m
+AWj4t1_l6y6P2ydRWFk0squid:S1135ê	"2Complete the task associated to this TODO comment.(ôÅûİ2adam8Ø§ÉÅ-
+˜
+AWj4t1_l6y6P2ydRWFkTsquid:S1132¿"XMove the "perc_UnimparedFlow" string literal on the left side of this string comparison.(ÿ’ÉÁÿÿÿÿÿ2adam8Ø§ÉÅ-
+š
+AWj4t1_l6y6P2ydRWFjOsquid:S1149í	"_Replace the synchronized class "StringBuffer" by an unsynchronized one such as "StringBuilder".(í…Ò‰2adam8Ø§ÉÅ-
+n
+AWj4t1_l6y6P2ydRWFj1squid:S4248ç"3Refactor this code to use a "static final" Pattern.(÷Ï¢Æ2adam8Ø§ÉÅ-
+›
+AWj4t1_l6y6P2ydRWFkssquid:S3923ï"[Remove this conditional structure or edit its code blocks so that they're not all the same.(ŸÅèøüÿÿÿÿ2adam8Ø§ÉÅ-
+o
+AWj46LK06y6P2ydRWKMIsquid:S1066à	"/Merge this if statement with the enclosing one.(ê¢ˆıÿÿÿÿ2adam8€û•Ç-
+n
+AWj46LK06y6P2ydRWKMbsquid:S4248³"3Refactor this code to use a "static final" Pattern.(Œ¬‡Œ2adam8€û•Ç-
+s
+AWj4t1_l6y6P2ydRWFjwsquid:S4248²"3Refactor this code to use a "static final" Pattern.(ì¾—íüÿÿÿÿ2adam8Ø§ÉÅ-
+†
+AWj4t1_l6y6P2ydRWFk-squid:CommentedOutCodeLineÉ"<This block of commented-out lines of code should be removed.(¹¹é¹2adam8Ø§ÉÅ-
+l
+AWj4t1_l6y6P2ydRWFk1squid:S1602î	",Remove useless curly braces around statement(ñÂà®ûÿÿÿÿ2adam8Ø§ÉÅ-
+‹
+AWj4t1_l6y6P2ydRWFlAsquid:CommentedOutCodeLineÿ
+"<This block of commented-out lines of code should be removed.(Ã½¡ÿÿÿÿÿ2adam8Ø§ÉÅ-
+š
+AWj46LK06y6P2ydRWKMTsquid:S1149¸
+"_Replace the synchronized class "StringBuffer" by an unsynchronized one such as "StringBuilder".(è“©2adam8€û•Ç-
+®
+AWj46LK06y6P2ydRWKMOsquid:S14488"oclass "ScenarioSvcImpl" has 36 methods, which is greater than the 35 authorized. Split it into smaller classes.(‡©¤Ûÿÿÿÿÿ2adam8€û•Ç-
+
+AWj4t1_l6y6P2ydRWFjHsquid:S00104"]This file has 1,098 lines, which is greater than 750 authorized. Split it into smaller files.2adam8Ø§ÉÅ-
+‹
+AWj4t1_l6y6P2ydRWFk9squid:CommentedOutCodeLine¾"<This block of commented-out lines of code should be removed.(â›Ÿ£úÿÿÿÿ2adam8Ø§ÉÅ-
+˜
+AWj46LK06y6P2ydRWKMK
+squid:S135"YReduce the total number of break and continue statements in this loop to use at most one.(ú¦¥Òşÿÿÿÿ2adam8€û•Ç-
+™
+AWj4t1_l6y6P2ydRWFjhsquid:S2293¿"YReplace the type specification in this constructor call with the diamond operator ("<>").(šÀ®šùÿÿÿÿ2adam8Ø§ÉÅ-
+™
+AWj4t1_l6y6P2ydRWFjKsquid:S00116="YRename this field "fileSystemSvc" to match the regular expression '^_[a-z][a-zA-Z0-9]*$'.(ş³Ü±úÿÿÿÿ2adam8Ø§ÉÅ-
+w
+AWj4t1_l6y6P2ydRWFk2squid:S1611î	"7Remove the parentheses around the "panelName" parameter(ñÂà®ûÿÿÿÿ2adam8Ø§ÉÅ-
+`
+AWj46LK06y6P2ydRWKMNsquid:S1166ì
+"%Either log or rethrow this exception.(“Üİá2adam8€û•Ç-
+’
+AWj46LK06y6P2ydRWKMZsquid:S1132µ"RMove the "gui_x2active" string literal on the left side of this string comparison.(÷ªƒÕüÿÿÿÿ2adam8€û•Ç-
+`
+AWj46LK06y6P2ydRWKMMsquid:S1166€
+"%Either log or rethrow this exception.(€‰×Î2adam8€û•Ç-
+w
+AWj46LK06y6P2ydRWKMLsquid:S2589¿"7Remove this expression which always evaluates to "true"(¾ˆ«şÿÿÿÿ2adam8€û•Ç-
+”
+AWj4t1_l6y6P2ydRWFjisquid:S2293À"YReplace the type specification in this constructor call with the diamond operator ("<>").(Æ¹äŞ2adam8Ø§ÉÅ-
+s
+AWj4t1_l6y6P2ydRWFj5squid:S4248œ"3Refactor this code to use a "static final" Pattern.(é«ìƒüÿÿÿÿ2adam8Ø§ÉÅ-
+s
+AWj4t1_l6y6P2ydRWFjzsquid:S4248á"3Refactor this code to use a "static final" Pattern.(Ï­·øıÿÿÿÿ2adam8Ø§ÉÅ-
+¢
+AWj4t1_l6y6P2ydRWFkB
+squid:S138ì"hThis method has 209 lines, which is greater than the 75 lines authorized. Split it into smaller methods.(¥‘Ùì2adam8Ø§ÉÅ-
+Š
+AWj46LK06y6P2ydRWKMdsquid:S1132Ä"OMove the "gui_EIsjr" string literal on the left side of this string comparison.(—×Ô‡2adam8€û•Ç-
+†
+AWj4t1_l6y6P2ydRWFklsquid:S1132Î"FMove the "" string literal on the left side of this string comparison.(ÚÏê¾ÿÿÿÿÿ2adam8Ø§ÉÅ-
+€
+AWj46LK06y6P2ydRWKMisquid:TrailingCommentCheck•	"6Move this trailing comment on the previous empty line.(¨«ø‘2adam8€û•Ç-
+‹
+AWj4t1_l6y6P2ydRWFk_squid:CommentedOutCodeLineû
+"<This block of commented-out lines of code should be removed.(ñ¥ùšøÿÿÿÿ2adam8Ø§ÉÅ-
+\
+AWj4t1_l6y6P2ydRWFgKsquid:S1643§
+"Use a StringBuilder instead.(úûË¥øÿÿÿÿ2adam8Ø§ÉÅ-
+§
+AWj4t1_l6y6P2ydRWFke
+squid:S138¥"hThis method has 114 lines, which is greater than the 75 lines authorized. Split it into smaller methods.(Â×ó‰ûÿÿÿÿ2adam8Ø§ÉÅ-
+\
+AWj46LK06y6P2ydRWKMHsquid:S1643ª
+"Use a StringBuilder instead.(ØØÍ°ıÿÿÿÿ2adam8€û•Ç-
+”
+AWj4t1_l6y6P2ydRWFkzsquid:S2293Ñ	"YReplace the type specification in this constructor call with the diamond operator ("<>").(¨™’²2adam8Ø§ÉÅ-
+W
+AWj46LK06y6P2ydRWKMGsquid:S1643Œ
+"Use a StringBuilder instead.(¬âºÂ2adam8€û•Ç-
+•
+AWj4t1_l6y6P2ydRWFjNsquid:S00116@"URename this field "isCLSFlag" to match the regular expression '^_[a-z][a-zA-Z0-9]*$'.(Ø†§çùÿÿÿÿ2adam8Ø§ÉÅ-
+‚
+AWj46LK06y6P2ydRWKMVsquid:S1132¡"GMove the "9" string literal on the left side of this string comparison.(Œ›Â2adam8€û•Ç-
+
+AWj46LK06y6P2ydRWKMYsquid:S1132¯"GMove the "5" string literal on the left side of this string comparison.(¢Ãê 2adam8€û•Ç-
+š
+AWj4t1_l6y6P2ydRWFjXsquid:S1149¿"_Replace the synchronized class "StringBuffer" by an unsynchronized one such as "StringBuilder".(Ï²É2adam8Ø§ÉÅ-
+Œ
+AWj46LK06y6P2ydRWKMasquid:S3776˜"RRefactor this method to reduce its Cognitive Complexity from 21 to the 15 allowed.(õÇ72adam8€û•Ç-
+\
+AWj4t1_l6y6P2ydRWFgMsquid:S1643¬
+"Use a StringBuilder instead.(ÅÎõøÿÿÿÿ2adam8Ø§ÉÅ-
+q
+AWj4t1_l6y6P2ydRWFkNsquid:S1172·"6Remove this unused method parameter "guiLinks2BOList".(·Êñ2adam8Ø§ÉÅ-
+o
+AWj46LK06y6P2ydRWKMfsquid:S2864Ğ"4Iterate over the "entrySet" instead of the "keySet".(Šº÷ã2adam8€û•Ç-
+“
+AWj4t1_l6y6P2ydRWFkgsquid:S2293¨"YReplace the type specification in this constructor call with the diamond operator ("<>").(Œ÷Æ2adam8Ø§ÉÅ-
+”
+AWj4t1_l6y6P2ydRWFkisquid:S2293²"YReplace the type specification in this constructor call with the diamond operator ("<>").(Ë¯ËÄ2adam8Ø§ÉÅ-
+„
+AWj46LK06y6P2ydRWKMhsquid:S1132ì"IMove the "n/a" string literal on the left side of this string comparison.(êÿ¥–2adam8€û•Ç-
+š
+AWj4t1_l6y6P2ydRWFjMsquid:S00116?"_Rename this field "userDefinedTableMap" to match the regular expression '^_[a-z][a-zA-Z0-9]*$'.(‰á«Ë2adam8Ø§ÉÅ-
+
+AWj4t1_l6y6P2ydRWFktsquid:S1132ï"]Move the "GUI_RPAsOtherRegs.table" string literal on the left side of this string comparison.(ŸÅèøüÿÿÿÿ2adam8Ø§ÉÅ-
+˜
+AWj4t1_l6y6P2ydRWFjLsquid:S00116>"]Rename this field "regulationoptions" to match the regular expression '^_[a-z][a-zA-Z0-9]*$'.(¥Áâõ2adam8Ø§ÉÅ-
+‚
+AWj46LK06y6P2ydRWKMXsquid:S1132¡"GMove the "5" string literal on the left side of this string comparison.(Œ›Â2adam8€û•Ç-
+›
+AWj46LK06y6P2ydRWKMesquid:S1132È"[Move the "gui_x2active|gui_x2km" string literal on the left side of this string comparison.(‹¦½ıÿÿÿÿ2adam8€û•Ç-
+—
+AWj4t1_l6y6P2ydRWFjJsquid:S00116<"\Rename this field "errorHandlingSvc" to match the regular expression '^_[a-z][a-zA-Z0-9]*$'.(Ø¡³ı2adam8Ø§ÉÅ-
+™
+AWj4t1_l6y6P2ydRWFkJsquid:S2293¨"YReplace the type specification in this constructor call with the diamond operator ("<>").(ÈŞÁºıÿÿÿÿ2adam8Ø§ÉÅ-
+Z
+AWj4t1_l6y6P2ydRWFjGsquid:S00113"'Add a new line at the end of this file.2adam8Ø§ÉÅ-
+t
+AWj46LK06y6P2ydRWKMgsquid:S2864»"4Iterate over the "entrySet" instead of the "keySet".(ş¹ç»úÿÿÿÿ2adam8€û•Ç-
+s
+AWj4t1_l6y6P2ydRWFjosquid:S4248Ÿ"3Refactor this code to use a "static final" Pattern.(ÂòÂïùÿÿÿÿ2adam8Ø§ÉÅ-
+’
+AWj4t1_l6y6P2ydRWFkfsquid:S3776¥"RRefactor this method to reduce its Cognitive Complexity from 67 to the 15 allowed.(Â×ó‰ûÿÿÿÿ2adam8Ø§ÉÅ-
+n
+AWj4t1_l6y6P2ydRWFjjsquid:S4248Å"3Refactor this code to use a "static final" Pattern.(’Ö2adam8Ø§ÉÅ-
+š
+AWj4t1_l6y6P2ydRWFjYsquid:S1149ú"_Replace the synchronized class "StringBuffer" by an unsynchronized one such as "StringBuilder".(í…Ò‰2adam8Ø§ÉÅ-
+ƒ
+AWj46LK06y6P2ydRWKMWsquid:S1132¡"HMove the "10" string literal on the left side of this string comparison.(Œ›Â2adam8€û•Ç-
+’
+AWj46LK06y6P2ydRWKMUsquid:S3776˜"RRefactor this method to reduce its Cognitive Complexity from 16 to the 15 allowed.(±¿Ëÿÿÿÿÿ2adam8€û•Ç-
+“
+AWj4t1_l6y6P2ydRWFjasquid:S2293?"YReplace the type specification in this constructor call with the diamond operator ("<>").(‰á«Ë2adam8Ø§ÉÅ-
+“
+AWj4t1_l6y6P2ydRWFkMsquid:S2293_"YReplace the type specification in this constructor call with the diamond operator ("<>").(·ú›÷2adam8Ø§ÉÅ-
+n
+AWj4t1_l6y6P2ydRWFj0squid:S4248ã"3Refactor this code to use a "static final" Pattern.(‘“‰â2adam8Ø§ÉÅ-
+s
+AWj4t1_l6y6P2ydRWFj3squid:S4248ˆ"3Refactor this code to use a "static final" Pattern.( Üì‰şÿÿÿÿ2adam8Ø§ÉÅ-
+t
+AWj46LK06y6P2ydRWKMcsquid:S2864º"4Iterate over the "entrySet" instead of the "keySet".(Æ§úìıÿÿÿÿ2adam8€û•Ç-
+”
+AWj4t1_l6y6P2ydRWFjfsquid:S2293¼"YReplace the type specification in this constructor call with the diamond operator ("<>").(¼ê£Ï2adam8Ø§ÉÅ-
+‘
+AWj4t1_l6y6P2ydRWFkSsquid:S1132¾"VMove the "gui_xchanneldays" string literal on the left side of this string comparison.(ÔˆÍ˜2adam8Ø§ÉÅ-
+s
+AWj4t1_l6y6P2ydRWFkcsquid:S4248ş"3Refactor this code to use a "static final" Pattern.(„—±èÿÿÿÿÿ2adam8Ø§ÉÅ-
+™
+AWj4t1_l6y6P2ydRWFjgsquid:S2293½"YReplace the type specification in this constructor call with the diamond operator ("<>").(çÀÔåşÿÿÿÿ2adam8Ø§ÉÅ-
+Œ
+AWj4t1_l6y6P2ydRWFkRsquid:S1132¾"QMove the "gui_EIRatio" string literal on the left side of this string comparison.(ÔˆÍ˜2adam8Ø§ÉÅ-
+
+AWj4t1_l6y6P2ydRWFkysquid:S3776Î	"RRefactor this method to reduce its Cognitive Complexity from 35 to the 15 allowed.(ïÕ¹š2adam8Ø§ÉÅ-

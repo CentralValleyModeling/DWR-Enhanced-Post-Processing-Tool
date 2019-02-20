@@ -1,0 +1,28 @@
+
+
+AWj4t1kf6y6P2ydRWDIgsquid:S1149"VReplace the synchronized class "Hashtable" by an unsynchronized one such as "HashMap".(†óÏ2adam8Ø§ÉÅ-
+s
+AWj4t1kf6y6P2ydRWDI4
+squid:S106ê"9Replace this use of System.out or System.err by a logger.(º§©š2adam8Ø§ÉÅ-
+‘
+AWj46KpY6y6P2ydRWJz9squid:S2301¤"QProvide multiple methods instead of using "on" to determine which action to take.(øóñ†ÿÿÿÿÿ2adam8€û•Ç-
+s
+AWj4t1kf6y6P2ydRWDI6
+squid:S106î"9Replace this use of System.out or System.err by a logger.(ˆÿºõ2adam8Ø§ÉÅ-
+¦
+AWj46KpY6y6P2ydRWJz8
+squid:S138,"hThis method has 147 lines, which is greater than the 75 lines authorized. Split it into smaller methods.(£æüêüÿÿÿÿ2adam8€û•Ç-
+s
+AWj4t1kf6y6P2ydRWDI1
+squid:S106Õ"9Replace this use of System.out or System.err by a logger.(à×şô2adam8Ø§ÉÅ-
+s
+AWj4t1kf6y6P2ydRWDI5
+squid:S106í"9Replace this use of System.out or System.err by a logger.(ù¥£±2adam8Ø§ÉÅ-
+v
+AWj4t1kf6y6P2ydRWDI2squid:S2696Ö"6Make the enclosing method "static" or remove this set.(à·øŒùÿÿÿÿ2adam8Ø§ÉÅ-
+}
+AWj46KpY6y6P2ydRWJz-squid:S1126Ê"BReplace this if-then-else statement by a single method invocation.(Áıä•2adam8€û•Ç-
+s
+AWj4t1kf6y6P2ydRWDI3
+squid:S106Ø"9Replace this use of System.out or System.err by a logger.(º§©š2adam8Ø§ÉÅ-
+Xsquid:S2130Ô"9Use "Integer.parseInt" for this string-to-int conversion.(Ù¯ùû8ÙÜ¨Ò-

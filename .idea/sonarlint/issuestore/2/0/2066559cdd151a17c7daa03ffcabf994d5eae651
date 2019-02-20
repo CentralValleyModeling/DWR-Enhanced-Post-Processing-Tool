@@ -1,0 +1,229 @@
+
+“
+AWj46KfH6y6P2ydRWJuOsquid:S2301Ò"SProvide multiple methods instead of using "warn" to determine which action to take.(ò³™§øÿÿÿÿ2adam8€û•Ç-
+”
+AWj4t1f26y6P2ydRWCmAsquid:S00116<"TRename this field "editnode" to match the regular expression '^_[a-z][a-zA-Z0-9]*$'.(‡”¬üÿÿÿÿ2adam8Ø§ÉÅ-
+
+AWj4t1f26y6P2ydRWCl9squid:S001169"SRename this field "addnode" to match the regular expression '^_[a-z][a-zA-Z0-9]*$'.(ñ§¥†2adam8Ø§ÉÅ-
+\
+AWj4t1f26y6P2ydRWCmwsquid:S2129¡"!Remove this "Integer" constructor(¥’è“2adam8Ø§ÉÅ-
+
+AWj4t1f26y6P2ydRWCmFsquid:S00116c"PRename this field "path" to match the regular expression '^_[a-z][a-zA-Z0-9]*$'.(›¥‘·ıÿÿÿÿ2adam8Ø§ÉÅ-
+Á
+AWj46KfH6y6P2ydRWJuDsquid:S1186ƒ"€Add a nested comment explaining why this method is empty, throw an UnsupportedOperationException or complete the implementation.(²Š˜¼ÿÿÿÿÿ2adam8€û•Ç-
+t
+AWj46KfH6y6P2ydRWJt0squid:S1191"5Use classes from the Java API instead of Sun classes.(Ûş¯úøÿÿÿÿ2adam8€û•Ç-
+x
+AWj4t1f26y6P2ydRWCmz
+squid:S106ª"9Replace this use of System.out or System.err by a logger.(æ–İ€ÿÿÿÿÿ2adam8Ø§ÉÅ-
+e
+AWj46KfH6y6P2ydRWJt8squid:S1166¡"%Either log or rethrow this exception.(Í¼·§üÿÿÿÿ2adam8€û•Ç-
+¼
+AWj46KfH6y6P2ydRWJuMsquid:S1186À"€Add a nested comment explaining why this method is empty, throw an UnsupportedOperationException or complete the implementation.(‘øâ2adam8€û•Ç-
+Á
+AWj46KfH6y6P2ydRWJuEsquid:S1186¤"€Add a nested comment explaining why this method is empty, throw an UnsupportedOperationException or complete the implementation.(‘É±ºùÿÿÿÿ2adam8€û•Ç-
+s
+AWj4t1f26y6P2ydRWCnt
+squid:S106à"9Replace this use of System.out or System.err by a logger.(Îã­Ã2adam8Ø§ÉÅ-
+j
+AWj46KfH6y6P2ydRWJuNsquid:S00108²")Either remove or fill this block of code.(ÒÌâ–øÿÿÿÿ2adam8€û•Ç-
+Š
+AWj4t1f26y6P2ydRWCnwsquid:CommentedOutCodeLine	"<This block of commented-out lines of code should be removed.(´•²íşÿÿÿÿ2adam8Ø§ÉÅ-
+‹
+AWj4t1f26y6P2ydRWCl7squid:S001167"PRename this field "prop" to match the regular expression '^_[a-z][a-zA-Z0-9]*$'.(õ•şú2adam8Ø§ÉÅ-
+y
+AWj4t1f26y6P2ydRWCmrsquid:S1854"9Remove this useless assignment to local variable "name1".(°éÒ©ÿÿÿÿÿ2adam8Ø§ÉÅ-
+a
+AWj4t1f26y6P2ydRWCnTsquid:S2129Ø"!Remove this "Integer" constructor(ƒøÆâûÿÿÿÿ2adam8Ø§ÉÅ-
+e
+AWj4t1f26y6P2ydRWCnlsquid:S1659­"%Declare "prvnode" on a separate line.(…¾Ñ»üÿÿÿÿ2adam8Ø§ÉÅ-
+s
+AWj4t1f26y6P2ydRWCmpsquid:S1854ä"8Remove this useless assignment to local variable "node".(¤³çæ2adam8Ø§ÉÅ-
+
+AWj46KfH6y6P2ydRWJuHsquid:S00116h"NRename this field "al" to match the regular expression '^_[a-z][a-zA-Z0-9]*$'.(åˆÿšùÿÿÿÿ2adam8€û•Ç-
+—
+AWj46KfH6y6P2ydRWJuJsquid:S2972h"XReduce this class from 46 to the maximum allowed 40 or externalize it in a public class.(åˆÿšùÿÿÿÿ2adam8€û•Ç-
+‰
+AWj4t1f26y6P2ydRWClysquid:S001164"NRename this field "n6" to match the regular expression '^_[a-z][a-zA-Z0-9]*$'.(ÇŒÊ‡2adam8Ø§ÉÅ-
+›
+AWj46KfH6y6P2ydRWJt1squid:S1188h"\Reduce this anonymous class number of lines from 46 to at most 20, or make it a named class.(åˆÿšùÿÿÿÿ2adam8€û•Ç-
+‰
+AWj4t1f26y6P2ydRWCl4squid:S001164"NRename this field "n5" to match the regular expression '^_[a-z][a-zA-Z0-9]*$'.(ÇŒÊ‡2adam8Ø§ÉÅ-
+“
+AWj46KfH6y6P2ydRWJuGsquid:S00116f"SRename this field "picpath" to match the regular expression '^_[a-z][a-zA-Z0-9]*$'.(·ğÃêûÿÿÿÿ2adam8€û•Ç-
+–
+AWj4t1f26y6P2ydRWCl-squid:S00116:"VRename this field "deletenode" to match the regular expression '^_[a-z][a-zA-Z0-9]*$'.(Õ•Òÿıÿÿÿÿ2adam8Ø§ÉÅ-
+s
+AWj4t1f26y6P2ydRWCmj
+squid:S106¹"9Replace this use of System.out or System.err by a logger.(®ê‰ç2adam8Ø§ÉÅ-
+a
+AWj4t1f26y6P2ydRWCnWsquid:S2129Å"!Remove this "Integer" constructor(ƒøÆâûÿÿÿÿ2adam8Ø§ÉÅ-
+d
+AWj4t1f26y6P2ydRWCnnsquid:S1659²"$Declare "curlvl" on a separate line.(ÍÃ¯Øûÿÿÿÿ2adam8Ø§ÉÅ-
+V
+AWj4t1f26y6P2ydRWCmnsquid:S3626‰"Remove this redundant jump.(ûÁİ…2adam8Ø§ÉÅ-
+e
+AWj46KfH6y6P2ydRWJt-squid:S1166Ş"%Either log or rethrow this exception.(¼Ôîàùÿÿÿÿ2adam8€û•Ç-
+Z
+AWj4t1f26y6P2ydRWCllsquid:S16594" Declare "n7" on a separate line.(ÇŒÊ‡2adam8Ø§ÉÅ-
+s
+AWj4t1f26y6P2ydRWCm6
+squid:S106î"9Replace this use of System.out or System.err by a logger.(§çà2adam8Ø§ÉÅ-
+r
+AWj46KfH6y6P2ydRWJt6squid:S2589á"7Remove this expression which always evaluates to "true"(«Œè°2adam8€û•Ç-
+
+AWj46KfH6y6P2ydRWJuWsquid:S00100¤"NRename this method name to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(‘É±ºùÿÿÿÿ2adam8€û•Ç-
+‹
+AWj4t1f26y6P2ydRWCn0squid:CommentedOutCodeLine®"<This block of commented-out lines of code should be removed.(¾›¨”ùÿÿÿÿ2adam8Ø§ÉÅ-
+Z
+AWj4t1f26y6P2ydRWClksquid:S16594" Declare "n5" on a separate line.(ÇŒÊ‡2adam8Ø§ÉÅ-
+†
+AWj4t1f26y6P2ydRWCn2squid:CommentedOutCodeLineë"<This block of commented-out lines of code should be removed.(±Ò‚Ï2adam8Ø§ÉÅ-
+…
+AWj46KfH6y6P2ydRWJuQsquid:S2147¤"ECombine this catch with the one at line 545, which has the same body.(Ä§’æùÿÿÿÿ2adam8€û•Ç-
+Z
+AWj4t1f26y6P2ydRWClmsquid:S16594" Declare "n2" on a separate line.(ÇŒÊ‡2adam8Ø§ÉÅ-
+˜
+AWj4t1f26y6P2ydRWClvsquid:S00116/"XRename this field "ELEMENT_TYPE" to match the regular expression '^_[a-z][a-zA-Z0-9]*$'.(ÄÿêŠıÿÿÿÿ2adam8Ø§ÉÅ-
+‹
+AWj4t1f26y6P2ydRWCn6squid:CommentedOutCodeLineç"<This block of commented-out lines of code should be removed.(êĞ„½ûÿÿÿÿ2adam8Ø§ÉÅ-
+e
+AWj4t1f26y6P2ydRWCnmsquid:S1659­"%Declare "curnode" on a separate line.(…¾Ñ»üÿÿÿÿ2adam8Ø§ÉÅ-
+a
+AWj4t1f26y6P2ydRWCnSsquid:S2129ö"!Remove this "Integer" constructor(ƒøÆâûÿÿÿÿ2adam8Ø§ÉÅ-
+†
+AWj4t1f26y6P2ydRWCn1squid:CommentedOutCodeLine²"<This block of commented-out lines of code should be removed.(×Æê2adam8Ø§ÉÅ-
+‹
+AWj4t1f26y6P2ydRWCmJsquid:S00116g"QRename this field "paste" to match the regular expression '^_[a-z][a-zA-Z0-9]*$'.(ÁøÎa2adam8Ø§ÉÅ-
+†
+AWj4t1f26y6P2ydRWCn7squid:CommentedOutCodeLineÜ"<This block of commented-out lines of code should be removed.(„¥î§2adam8Ø§ÉÅ-
+e
+AWj46KfH6y6P2ydRWJt_squid:S1166ì"%Either log or rethrow this exception.(É˜Ùúÿÿÿÿ2adam8€û•Ç-
+Z
+AWj4t1f26y6P2ydRWClisquid:S16594" Declare "n3" on a separate line.(ÇŒÊ‡2adam8Ø§ÉÅ-
+„
+AWj4t1f26y6P2ydRWCnxsquid:CommentedOutCodeLine""<This block of commented-out lines of code should be removed.(È«¯l2adam8Ø§ÉÅ-
+•
+AWj4t1f26y6P2ydRWCl_squid:S00116;"URename this field "addfolder" to match the regular expression '^_[a-z][a-zA-Z0-9]*$'.(—äœÍşÿÿÿÿ2adam8Ø§ÉÅ-
+
+AWj4t1f26y6P2ydRWCmDsquid:S00116a"URename this field "pastenode" to match the regular expression '^_[a-z][a-zA-Z0-9]*$'.(ÓÊ‹È2adam8Ø§ÉÅ-
+
+AWj4t1f26y6P2ydRWCmCsquid:S00116`"TRename this field "copynode" to match the regular expression '^_[a-z][a-zA-Z0-9]*$'.(çÆÕá2adam8Ø§ÉÅ-
+b
+AWj4t1f26y6P2ydRWCnOsquid:S1659²"'Declare "childnode" on a separate line.(×Æê2adam8Ø§ÉÅ-
+Z
+AWj4t1f26y6P2ydRWCljsquid:S16594" Declare "n6" on a separate line.(ÇŒÊ‡2adam8Ø§ÉÅ-
+r
+AWj4t1f26y6P2ydRWCmR
+squid:S106µ"9Replace this use of System.out or System.err by a logger.(¸­…2adam8Ø§ÉÅ-
+–
+AWj4t1f26y6P2ydRWClwsquid:S001161"VRename this field "copiednode" to match the regular expression '^_[a-z][a-zA-Z0-9]*$'.(éò²—şÿÿÿÿ2adam8Ø§ÉÅ-
+”
+AWj46KfH6y6P2ydRWJuFsquid:S00116e"TRename this field "childtag" to match the regular expression '^_[a-z][a-zA-Z0-9]*$'.(¿õ´šüÿÿÿÿ2adam8€û•Ç-
+§
+AWj46KfH6y6P2ydRWJuT
+squid:S138¬"hThis method has 164 lines, which is greater than the 75 lines authorized. Split it into smaller methods.(º–—½üÿÿÿÿ2adam8€û•Ç-
+V
+AWj4t1f26y6P2ydRWCm7squid:S3626å"Remove this redundant jump.(ûÁİ…2adam8Ø§ÉÅ-
+
+AWj4t1f26y6P2ydRWCmBsquid:S00116_"SRename this field "cutnode" to match the regular expression '^_[a-z][a-zA-Z0-9]*$'.(ÑÃÛÆ2adam8Ø§ÉÅ-
+‹
+AWj4t1f26y6P2ydRWCmEsquid:S00116b"PRename this field "save" to match the regular expression '^_[a-z][a-zA-Z0-9]*$'.(ı‰•°2adam8Ø§ÉÅ-
+‰
+AWj4t1f26y6P2ydRWCl3squid:S001164"NRename this field "n3" to match the regular expression '^_[a-z][a-zA-Z0-9]*$'.(ÇŒÊ‡2adam8Ø§ÉÅ-
+€
+AWj4t1f26y6P2ydRWCnPsquid:TrailingCommentCheck²"6Move this trailing comment on the previous empty line.(×Æê2adam8Ø§ÉÅ-
+”
+AWj46KfH6y6P2ydRWJuIsquid:S1820,"ZRefactor this class so it has no more than 20 fields, rather than the 29 it currently has.(ëÉøô2adam8€û•Ç-
+‹
+AWj4t1f26y6P2ydRWCn5squid:CommentedOutCodeLine½"<This block of commented-out lines of code should be removed.(ÉÜÔğúÿÿÿÿ2adam8Ø§ÉÅ-
+’
+AWj4t1f26y6P2ydRWCl8squid:S001168"RRename this field "rename" to match the regular expression '^_[a-z][a-zA-Z0-9]*$'.(İÃŞµúÿÿÿÿ2adam8Ø§ÉÅ-
+‰
+AWj4t1f26y6P2ydRWCl2squid:S001164"NRename this field "n4" to match the regular expression '^_[a-z][a-zA-Z0-9]*$'.(ÇŒÊ‡2adam8Ø§ÉÅ-
+e
+AWj46KfH6y6P2ydRWJt9squid:S1166¤"%Either log or rethrow this exception.(Ä§’æùÿÿÿÿ2adam8€û•Ç-
+`
+AWj46KfH6y6P2ydRWJuAsquid:S1166ñ"%Either log or rethrow this exception.(–Å·¾2adam8€û•Ç-
+j
+AWj46KfH6y6P2ydRWJuRsquid:S00108¥")Either remove or fill this block of code.(ÒÌâ–øÿÿÿÿ2adam8€û•Ç-
+•
+AWj4t1f26y6P2ydRWCl5squid:S001165"URename this field "nodepopup" to match the regular expression '^_[a-z][a-zA-Z0-9]*$'.(Şˆõüÿÿÿÿ2adam8Ø§ÉÅ-
+Z
+AWj4t1f26y6P2ydRWClnsquid:S16594" Declare "n4" on a separate line.(ÇŒÊ‡2adam8Ø§ÉÅ-
+`
+AWj46KfH6y6P2ydRWJt7squid:S1166±"%Either log or rethrow this exception.(…È½¼2adam8€û•Ç-
+”
+AWj4t1f26y6P2ydRWClusquid:S001160"TRename this field "iscopied" to match the regular expression '^_[a-z][a-zA-Z0-9]*$'.(¤Ëÿùÿÿÿÿ2adam8Ø§ÉÅ-
+‰
+AWj4t1f26y6P2ydRWCl1squid:S001164"NRename this field "n1" to match the regular expression '^_[a-z][a-zA-Z0-9]*$'.(ÇŒÊ‡2adam8Ø§ÉÅ-
+x
+AWj4t1f26y6P2ydRWCmQ
+squid:S106´"9Replace this use of System.out or System.err by a logger.(ªÏı¸ùÿÿÿÿ2adam8Ø§ÉÅ-
+‰
+AWj4t1f26y6P2ydRWClzsquid:S001164"NRename this field "n2" to match the regular expression '^_[a-z][a-zA-Z0-9]*$'.(ÇŒÊ‡2adam8Ø§ÉÅ-
+g
+AWj46KfH6y6P2ydRWJuBsquid:S1604h"(Make this anonymous inner class a lambda(åˆÿšùÿÿÿÿ2adam8€û•Ç-
+`
+AWj4t1f26y6P2ydRWClpsquid:S1170/"!Make this final field static too.(ÄÿêŠıÿÿÿÿ2adam8Ø§ÉÅ-
+‹
+AWj4t1f26y6P2ydRWCmGsquid:S00116d"PRename this field "tree" to match the regular expression '^_[a-z][a-zA-Z0-9]*$'.(ĞŠÌ«2adam8Ø§ÉÅ-
+Œ
+AWj46KfH6y6P2ydRWJuPsquid:S3776‚"RRefactor this method to reduce its Cognitive Complexity from 28 to the 15 allowed.(ò³ã2adam8€û•Ç-
+¼
+AWj46KfH6y6P2ydRWJuKsquid:S1186¸"€Add a nested comment explaining why this method is empty, throw an UnsupportedOperationException or complete the implementation.(‡åıÔ2adam8€û•Ç-
+‹
+AWj4t1f26y6P2ydRWCn8squid:CommentedOutCodeLineÈ"<This block of commented-out lines of code should be removed.(êĞ„½ûÿÿÿÿ2adam8Ø§ÉÅ-
+‹
+AWj4t1f26y6P2ydRWCn3squid:CommentedOutCodeLine±"<This block of commented-out lines of code should be removed.(áÆÔšøÿÿÿÿ2adam8Ø§ÉÅ-
+s
+AWj4t1f26y6P2ydRWCm4
+squid:S106Ù"9Replace this use of System.out or System.err by a logger.(¦¨á2adam8Ø§ÉÅ-
+‰
+AWj4t1f26y6P2ydRWCl0squid:S001164"NRename this field "n7" to match the regular expression '^_[a-z][a-zA-Z0-9]*$'.(ÇŒÊ‡2adam8Ø§ÉÅ-
+o
+AWj46KfH6y6P2ydRWJt3squid:S1066Ö"/Merge this if statement with the enclosing one.(š° ƒûÿÿÿÿ2adam8€û•Ç-
+’
+AWj46KfH6y6P2ydRWJuUsquid:S3776¬"RRefactor this method to reduce its Cognitive Complexity from 87 to the 15 allowed.(º–—½üÿÿÿÿ2adam8€û•Ç-
+“
+AWj46KfH6y6P2ydRWJt5
+squid:S135í"YReduce the total number of break and continue statements in this loop to use at most one.(“£ÄÏ2adam8€û•Ç-
+j
+AWj46KfH6y6P2ydRWJuSsquid:S00108¢")Either remove or fill this block of code.(ÒÌâ–øÿÿÿÿ2adam8€û•Ç-
+
+AWj46KfH6y6P2ydRWJuCsquid:S1939,"V"Serializable" is implemented by a super class; there is no need to implement it here.(ëÉøô2adam8€û•Ç-
+x
+AWj4t1f26y6P2ydRWCmy
+squid:S106¥"9Replace this use of System.out or System.err by a logger.(é¯Áúıÿÿÿÿ2adam8Ø§ÉÅ-
+_
+AWj46KfH6y6P2ydRWJt4squid:S1696±"$Avoid catching NullPointerException.(…È½¼2adam8€û•Ç-
+`
+AWj4t1f26y6P2ydRWCnNsquid:S1659±"%Declare "childel" on a separate line.(ØúÅë2adam8Ø§ÉÅ-
+^
+AWj4t1f26y6P2ydRWCmvsquid:S1659™"#Declare "name1" on a separate line.(”ƒ2adam8Ø§ÉÅ-
+s
+AWj4t1f26y6P2ydRWCnc
+squid:S106î"9Replace this use of System.out or System.err by a logger.(Îã­Ã2adam8Ø§ÉÅ-
+…
+AWj4t1f26y6P2ydRWCnzsquid:CommentedOutCodeLine@"<This block of commented-out lines of code should be removed.(ÁĞì«2adam8Ø§ÉÅ-
+x
+AWj4t1f26y6P2ydRWCm5
+squid:S106æ"9Replace this use of System.out or System.err by a logger.(ÙÂÂßûÿÿÿÿ2adam8Ø§ÉÅ-
+t
+AWj4t1f26y6P2ydRWCmfsquid:S3400ı"9Remove this method and declare a constant for this value.(ˆ¡‚Ä2adam8Ø§ÉÅ-
+}
+AWj4t1f26y6P2ydRWCmtsquid:HiddenFieldCheck…"8Rename "path" which hides the field declared at line 99.(€Çø12adam8Ø§ÉÅ-
+¼
+AWj46KfH6y6P2ydRWJuLsquid:S1186¼"€Add a nested comment explaining why this method is empty, throw an UnsupportedOperationException or complete the implementation.(Áïüõ2adam8€û•Ç-
+
+AWj4t1f26y6P2ydRWCl6squid:S001166"PRename this field "open" to match the regular expression '^_[a-z][a-zA-Z0-9]*$'.(‡şµÒúÿÿÿÿ2adam8Ø§ÉÅ-
+s
+AWj4t1f26y6P2ydRWCm2
+squid:S106É"9Replace this use of System.out or System.err by a logger.(¦¨á2adam8Ø§ÉÅ-
+t
+AWj46KfH6y6P2ydRWJuVsquid:S2221Ş"4Catch a list of specific exception subtypes instead.(¼Ôîàùÿÿÿÿ2adam8€û•Ç-
+œ
+AWj46KfH6y6P2ydRWJt2squid:S1188¦"\Reduce this anonymous class number of lines from 26 to at most 20, or make it a named class.(¾˜œşÿÿÿÿ2adam8€û•Ç-
+osquid:CommentedOutCodeLine®"<This block of commented-out lines of code should be removed.(ğöŠ”ÿÿÿÿÿ8Ì…Ó-
+W
+squid:S106¸"9Replace this use of System.out or System.err by a logger.(ÚöË¶8Ø§ÉÅ-
