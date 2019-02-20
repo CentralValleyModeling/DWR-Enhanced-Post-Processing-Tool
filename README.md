@@ -1,4 +1,4 @@
-# EPPT
+# DWR Enhanced Post Processing Tool (EPPT)
 
 The DWR Enhanced Post Processor Tool (EPPT) is a Windows desktop user interface application that will allow experienced CalSim/ CalLite users to review, compare and report study results. The major features of the application include:
 1.	Quick Results, model run comparison using pre-defined metrics and selection options for time, parameter, and location. 
