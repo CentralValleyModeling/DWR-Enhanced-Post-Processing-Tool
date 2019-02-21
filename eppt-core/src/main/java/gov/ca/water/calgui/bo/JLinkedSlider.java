@@ -13,7 +13,7 @@ import javax.swing.*;
 /**
  * This class extends the Swing JSlider class by linking a slider to a "left"
  * and a "right" JTextBox. The right textbox displays the value of the slider
- * and the left JTextBox displays the value (maximum - slider value). The
+ * and the left JTextBox displays the value (_maximum - slider value). The
  * JTextBoxes do not need to be visible.
  *
  * @author Originally authored by Dan Rucinski (LimnoTech)
@@ -22,50 +22,51 @@ public class JLinkedSlider extends JSlider
 {
 
 	private static final long serialVersionUID = 7532351267994562680L;
-	private float maximum;
-	private float lVal;
-	private float rVal;
-	private String lTextBoxID = "";
-	private String rTextBoxID = "";
+	private double _maximum;
+	private double _lVal;
+	private double _rVal;
+	private String _lTextBoxID = "";
+	private String _rTextBoxID = "";
 
 	public JLinkedSlider()
 	{
+		//this class doesn't appear to be used anywhere - cody 2/21/19
 	}
 
 	public String getLTextBoxID()
 	{
-		return lTextBoxID;
+		return _lTextBoxID;
 	}
 
 	public void setLTextBoxID(String textBoxID)
 	{
-		lTextBoxID = textBoxID;
+		_lTextBoxID = textBoxID;
 	}
 
 	public String getRTextBoxID()
 	{
-		return rTextBoxID;
+		return _rTextBoxID;
 	}
 
 	public void setRTextBoxID(String textBoxID)
 	{
-		rTextBoxID = textBoxID;
+		_rTextBoxID = textBoxID;
 	}
 
 	public void setVals(float slideVal)
 	{
-		lVal = maximum - slideVal;
-		rVal = slideVal;
+		_lVal = _maximum - slideVal;
+		_rVal = slideVal;
 	}
 
-	public float getLVal()
+	public double getLVal()
 	{
-		return lVal;
+		return _lVal;
 	}
 
-	public float getRVal()
+	public double getRVal()
 	{
-		return rVal;
+		return _rVal;
 	}
 
 }
