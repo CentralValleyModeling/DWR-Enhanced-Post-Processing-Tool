@@ -1244,15 +1244,14 @@ public final class ScenarioSvcImpl implements IScenarioSvc
 		Set<String> keys = this.userDefinedTableMap.keySet();
 		if(!keys.isEmpty())
 		{
+			Optional<GUILinks2BO> gUILinks2BO = Optional.empty();
 			for(String key : keys)
 			{
 				try
 				{
-					GUILinks2BO gUILinks2BO = guiLinks2BOList.stream()
-															 .filter(seedData -> seedData.getDataTables().equals(
-																	 key)).findFirst().get();
-					sb.append(convertTableToString(gUILinks2BO.getTableID(), this.userDefinedTableMap.get(key))
-							+ Constant.NEW_LINE);
+					gUILinks2BO = guiLinks2BOList.stream().filter(seedData -> seedData.getDataTables().equals(key)).findFirst();
+					gUILinks2BO.ifPresent(guiLinks2BO -> sb.append(convertTableToString(guiLinks2BO.getTableID(), this.userDefinedTableMap.get(key))
+							+ Constant.NEW_LINE));
 				}
 				catch(NoSuchElementException ex)
 				{

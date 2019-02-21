@@ -7,15 +7,6 @@
 
 package gov.ca.water.calgui.bus_service.impl;
 
-import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.NoSuchElementException;
-import java.util.stream.Collectors;
-
 import gov.ca.water.calgui.bo.CalLiteGUIException;
 import gov.ca.water.calgui.bo.DataTableModel;
 import gov.ca.water.calgui.bo.GUILinks2BO;
@@ -27,6 +18,10 @@ import gov.ca.water.calgui.tech_service.ThreeFunction;
 import gov.ca.water.calgui.tech_service.impl.ErrorHandlingSvcImpl;
 import gov.ca.water.calgui.tech_service.impl.FileSystemSvcImpl;
 import org.apache.log4j.Logger;
+
+import java.nio.file.Paths;
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * This is the class for handling all the tables.
@@ -719,14 +714,19 @@ public final class TableSvcImpl implements ITableSvc
 	{
 		try
 		{
-			String header = null;
-			header = data.stream().filter(obj -> obj.contains(Constant.HEADERS)).findFirst().get();
-			String[] da = header.split(Constant.OLD_DELIMITER);
-			String[] headers = new String[da.length - 1]; // We are excluding
-			// the header word.
-			for(int i = 0; i < headers.length; i++)
+			String[] headers = new String[0];
+			Optional<String> header;
+			header = data.stream().filter(obj -> obj.contains(Constant.HEADERS)).findFirst();
+			if (header.isPresent())
 			{
-				headers[i] = da[i + 1];
+				String[] da = header.get().split(Constant.OLD_DELIMITER);
+				// We are excluding
+				headers = new String[da.length - 1];
+				// the header word.
+				for (int i = 0; i < headers.length; i++)
+				{
+					headers[i] = da[i + 1];
+				}
 			}
 			return headers;
 		}

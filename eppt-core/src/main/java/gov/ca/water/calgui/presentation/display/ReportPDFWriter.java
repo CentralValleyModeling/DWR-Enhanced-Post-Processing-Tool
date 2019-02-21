@@ -7,35 +7,11 @@
 
 package gov.ca.water.calgui.presentation.display;
 
-import java.awt.*;
-import java.awt.geom.Rectangle2D;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import javax.swing.*;
-
-import com.itextpdf.text.BaseColor;
-import com.itextpdf.text.Document;
-import com.itextpdf.text.DocumentException;
-import com.itextpdf.text.Element;
 import com.itextpdf.text.Font;
-import com.itextpdf.text.FontFactory;
-import com.itextpdf.text.PageSize;
-import com.itextpdf.text.Paragraph;
-import com.itextpdf.text.Phrase;
 import com.itextpdf.text.Rectangle;
-import com.itextpdf.text.pdf.PdfContentByte;
-import com.itextpdf.text.pdf.PdfDestination;
-import com.itextpdf.text.pdf.PdfOutline;
-import com.itextpdf.text.pdf.PdfPCell;
-import com.itextpdf.text.pdf.PdfPRow;
-import com.itextpdf.text.pdf.PdfPTable;
-import com.itextpdf.text.pdf.PdfWriter;
+import com.itextpdf.text.*;
 import com.itextpdf.text.pdf.TextField;
+import com.itextpdf.text.pdf.*;
 import gov.ca.water.calgui.bus_service.impl.XMLParsingSvcImpl;
 import gov.ca.water.calgui.presentation.Report.Writer;
 import gov.ca.water.calgui.tech_service.IDialogSvc;
@@ -54,6 +30,17 @@ import org.jfree.data.time.TimeSeriesCollection;
 import org.jfree.data.xy.DefaultXYDataset;
 import org.jfree.ui.RectangleInsets;
 import org.swixml.SwingEngine;
+
+import javax.swing.*;
+import java.awt.*;
+import java.awt.geom.Rectangle2D;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
 public class ReportPDFWriter implements Writer
 {
@@ -187,14 +174,13 @@ public class ReportPDFWriter implements Writer
 			}
 			catch(Exception ex)
 			{
-				ex.printStackTrace();
+				LOG.error(ex.getMessage());
 			}
 
 		}
 		catch(DocumentException e)
 		{
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			LOG.error(e.getMessage());
 		}
 	}
 
@@ -224,7 +210,7 @@ public class ReportPDFWriter implements Writer
 		new PdfOutline(writer.getRootOutline(), new PdfDestination(PdfDestination.FITH), chart.getTitle().getText());
 		PdfContentByte cb = writer.getDirectContent();
 		Graphics2D graphics2D = cb.createGraphics(PageSize.A4.getHeight(), PageSize.A4.getWidth());
-		Rectangle2D r2d2 = new Rectangle2D.Double(36, 36, PageSize.A4.getHeight() - 72, PageSize.A4.getWidth() - 72);
+		Rectangle2D r2d2 = new Rectangle2D.Double(36, 36, (double) PageSize.A4.getHeight() - 72, (double) PageSize.A4.getWidth() - 72);
 		chart.draw(graphics2D, r2d2);
 		graphics2D.dispose();
 	}

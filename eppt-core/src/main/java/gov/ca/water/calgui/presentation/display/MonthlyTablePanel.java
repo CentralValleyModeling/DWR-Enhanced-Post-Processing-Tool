@@ -7,6 +7,15 @@
 
 package gov.ca.water.calgui.presentation.display;
 
+
+import gov.ca.water.calgui.bus_service.IDSSGrabber1Svc;
+import gov.ca.water.calgui.bus_service.impl.DSSGrabber2SvcImpl;
+import hec.heclib.util.HecTime;
+import hec.io.TimeSeriesContainer;
+
+import javax.swing.*;
+import javax.swing.table.AbstractTableModel;
+import javax.swing.table.DefaultTableCellRenderer;
 import java.awt.*;
 import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.StringSelection;
@@ -15,16 +24,8 @@ import java.awt.event.ActionListener;
 import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
 import java.text.DecimalFormat;
-import java.util.Vector;
-import javax.swing.*;
-import javax.swing.table.AbstractTableModel;
-import javax.swing.table.DefaultTableCellRenderer;
-
-import gov.ca.water.calgui.bus_service.IDSSGrabber1Svc;
-import gov.ca.water.calgui.bus_service.impl.DSSGrabber2SvcImpl;
-
-import hec.heclib.util.HecTime;
-import hec.io.TimeSeriesContainer;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Creates a panel tabulating results by month (column) and year (row)
@@ -65,8 +66,8 @@ public class MonthlyTablePanel extends JPanel implements ActionListener, Compone
 		this(title, tscs, stscs, null, dss_Grabber, sName, isBase);
 	}
 
-	public MonthlyTablePanel(String title, TimeSeriesContainer[] tscs, TimeSeriesContainer[] stscs,
-							 IDSSGrabber1Svc dss_Grabber, DSSGrabber2SvcImpl dss_Grabber2, String sName, boolean isBase)
+	private MonthlyTablePanel(String title, TimeSeriesContainer[] primaryResults, TimeSeriesContainer[] secondaryResults,
+							  IDSSGrabber1Svc _dss_Grabber, DSSGrabber2SvcImpl _dss_Grabber2, String sName, boolean isBase)
 	{
 
 		super();
@@ -78,67 +79,41 @@ public class MonthlyTablePanel extends JPanel implements ActionListener, Compone
 		scrollPane.setPreferredSize(new Dimension(750, 600));
 
 		DecimalFormat df1 = new DecimalFormat("#.#");
-		HecTime ht = new HecTime();
+		HecTime hecTime = new HecTime();
 
-		Vector<String> columns = new Vector<String>();
-		columns.addElement("WY");
-		columns.addElement("Oct");
-		columns.addElement("Nov");
-		columns.addElement("Dec");
-		columns.addElement("Jan");
-		columns.addElement("Feb");
-		columns.addElement("Mar");
-		columns.addElement("Apr");
-		columns.addElement("May");
-		columns.addElement("Jun");
-		columns.addElement("Jul");
-		columns.addElement("Aug");
-		columns.addElement("Sep");
-		boolean isCFS = dss_Grabber == null ? dss_Grabber2.getOriginalUnits().equals("CFS")
-				: dss_Grabber.getOriginalUnits().equals("CFS");
-		if(isCFS)
+		boolean isCFS = _dss_Grabber == null ? "CFS".equals(_dss_Grabber2.getOriginalUnits())
+				: "CFS".equals(_dss_Grabber.getOriginalUnits());
+
+		List<String> columns = getColumns(isCFS);
+
+		int secondaryResultsLength = 0;
+		if (secondaryResults != null)
 		{
-			columns.addElement("Ann (TAF)");
+			secondaryResultsLength = secondaryResults.length;
 		}
 
-		for(int s = 0; s < tscs.length + (stscs == null ? 0 : stscs.length); s += (isBase ? tscs.length : 1))
+		int incrementAmount = 1;
+		if (isBase)
+		{
+			incrementAmount = primaryResults.length;
+		}
+
+		//this is the master loop
+		for (int s = 0; s < primaryResults.length + secondaryResultsLength; s += incrementAmount)
 		{
 
-			String sLabel = sName;
-			TimeSeriesContainer tsc;
-			if(s < tscs.length)
-			{
-				tsc = tscs[s];
-				sLabel = title;
-			}
-			else
-			{
-				tsc = stscs[s - tscs.length];
-				if(sName.equals(""))
-				{
-					String[] parts = tsc.fullName.split("/");
-					sLabel = parts[2] + "/" + parts[3];
-				}
-				else
-				{
-					sLabel = sName;
-				}
-			}
+			TimeSeriesContainer tsc = assignTimeSeriesContainer(s, primaryResults, secondaryResults);
+			String sLabel = getLabelName(s, sName, tsc, title, primaryResults.length);
+
 			JLabel label = new JLabel();
 			if(tsc != null)
 			{
 				label.setText(sLabel + " (" + tsc.units + ") - " + tsc.fileName);
 				panel.add(label);
 
-				// int first = 0;
-				// while (ht.month() != 10) {
-				// first++;
-				// ht.set(tsc.times[first]);
-				// }
-
 				// Get starting water year for first point
 
-				Vector<String> data = new Vector<String>();
+				List<String> data = new ArrayList<>();
 				double sum = 0;
 				double[] mins = {1e10, 1e10, 1e10, 1e10, 1e10, 1e10, 1e10, 1e10, 1e10, 1e10, 1e10, 1e10, 1e10,};
 				double[] maxs = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,};
@@ -149,35 +124,36 @@ public class MonthlyTablePanel extends JPanel implements ActionListener, Compone
 				int[] years = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
 
 				// Put in empty months (if any) first
-				ht.set(tsc.times[0]);
-				int wy = ht.year() + (ht.month() < 10 ? 0 : 1);
-				data.addElement(Integer.toString(wy));
-				for(int i = 0; i < (ht.month() + 2) % 12; i++)
+				hecTime.set(tsc.times[0]);
+				int waterYear = hecTime.year() + (hecTime.month() < 10 ? 0 : 1);
+				data.add(Integer.toString(waterYear));
+
+				for (int i = 0; i < (hecTime.month() + 2) % 12; i++)
 				{
-					data.addElement("");
+					data.add("");
 				}
 
 				for(int i = 0; i < tsc.numberValues; i++)
 				{
-					ht.set(tsc.times[i]);
-					int y = ht.year();
-					wy = (ht.month() < 10) ? y : y + 1;
-					int m = (ht.month() + 2) % 12;
+					hecTime.set(tsc.times[i]);
+					int year = hecTime.year();
+					waterYear = (hecTime.month() < 10) ? year : year + 1;
+					int month = (hecTime.month() + 2) % 12;
 
 					// Put in column sum and new water year at the end of each
 					// row.
 
-					if(m == 0)
+					if (month == 0)
 					{
 						if(i != 0)
 						{
 							if(isCFS)
 							{
-								double aTAFY = dss_Grabber == null ? dss_Grabber2.getAnnualTAF(s, wy - 1)
-										: dss_Grabber.getAnnualTAF(s, wy - 1);
+								double aTAFY = _dss_Grabber == null ? _dss_Grabber2.getAnnualTAF(s, waterYear - 1)
+										: _dss_Grabber.getAnnualTAF(s, waterYear - 1);
 								if(aTAFY != -1)
 								{
-									data.addElement(df1.format(aTAFY));
+									data.add(df1.format(aTAFY));
 									minTAFY = Math.min(minTAFY, aTAFY);
 									maxTAFY = Math.max(maxTAFY, aTAFY);
 									sumTAFY += aTAFY;
@@ -185,37 +161,37 @@ public class MonthlyTablePanel extends JPanel implements ActionListener, Compone
 								}
 								else
 								{
-									data.addElement("");
+									data.add("");
 								}
 							}
-							data.addElement(Integer.toString(wy));
+							data.add(Integer.toString(waterYear));
 						}
 					}
 
 					// Aggregate
 
-					years[m]++;
+					years[month]++;
 					sum = sum + tsc.values[i];
-					avgs[m] = avgs[m] + tsc.values[i];
-					mins[m] = Math.min(mins[m], tsc.values[i]);
-					maxs[m] = Math.max(maxs[m], tsc.values[i]);
-					data.addElement(df1.format(tsc.values[i]));
+					avgs[month] = avgs[month] + tsc.values[i];
+					mins[month] = Math.min(mins[month], tsc.values[i]);
+					maxs[month] = Math.max(maxs[month], tsc.values[i]);
+					data.add(df1.format(tsc.values[i]));
 				}
 
 				// Fill in end
 
-				ht.set(tsc.times[tsc.numberValues - 1]);
-				for(int i = 1 + (ht.month() + 2) % 12; i < 12; i++)
+				hecTime.set(tsc.times[tsc.numberValues - 1]);
+				for (int i = 1 + (hecTime.month() + 2) % 12; i < 12; i++)
 				{
-					data.addElement("");
+					data.add("");
 				}
 				if(isCFS)
 				{
-					double aTAFY = dss_Grabber == null ? dss_Grabber2.getAnnualTAF(s, wy)
-							: dss_Grabber.getAnnualTAF(s, wy);
+					double aTAFY = _dss_Grabber == null ? _dss_Grabber2.getAnnualTAF(s, waterYear)
+							: _dss_Grabber.getAnnualTAF(s, waterYear);
 					if(aTAFY != -1)
 					{
-						data.addElement(df1.format(aTAFY));
+						data.add(df1.format(aTAFY));
 
 						minTAFY = Math.min(minTAFY, aTAFY);
 						maxTAFY = Math.max(maxTAFY, aTAFY);
@@ -224,40 +200,40 @@ public class MonthlyTablePanel extends JPanel implements ActionListener, Compone
 					}
 					else
 					{
-						data.addElement("");
+						data.add("");
 					}
 				}
 
 				// Column statistics
 
-				data.addElement("Min");
+				data.add("Min");
 				for(int i = 0; i < 12; i++)
 				{
-					data.addElement(years[i] > 0 ? df1.format(mins[i]) : "");
+					data.add(years[i] > 0 ? df1.format(mins[i]) : "");
 				}
 				if(isCFS)
 				{
-					data.addElement(df1.format(minTAFY));
+					data.add(df1.format(minTAFY));
 				}
 
-				data.addElement("Max");
+				data.add("Max");
 				for(int i = 0; i < 12; i++)
 				{
-					data.addElement(years[i] > 0 ? df1.format(maxs[i]) : "");
+					data.add(years[i] > 0 ? df1.format(maxs[i]) : "");
 				}
 				if(isCFS)
 				{
-					data.addElement(df1.format(maxTAFY));
+					data.add(df1.format(maxTAFY));
 				}
 
-				data.addElement("Avg");
+				data.add("Avg");
 				for(int i = 0; i < 12; i++)
 				{
-					data.addElement(years[i] > 0 ? df1.format(avgs[i] / years[i]) : "");
+					data.add(years[i] > 0 ? df1.format(avgs[i] / years[i]) : "");
 				}
 				if(isCFS)
 				{
-					data.addElement(df1.format(sumTAFY / years[12]));
+					data.add(df1.format(sumTAFY / years[12]));
 				}
 
 				SimpleTableModel2 model = new SimpleTableModel2(data, columns);
@@ -287,6 +263,69 @@ public class MonthlyTablePanel extends JPanel implements ActionListener, Compone
 		box.add(copy);
 		add(box);
 	}
+
+	private TimeSeriesContainer assignTimeSeriesContainer(int index, TimeSeriesContainer[] primaryResults, TimeSeriesContainer[] secondaryResults)
+	{
+		TimeSeriesContainer tsc;
+		if (index < primaryResults.length)
+		{
+			tsc = primaryResults[index];
+		}
+		else
+		{
+			tsc = secondaryResults[index - primaryResults.length];
+		}
+		return tsc;
+	}
+
+	private String getLabelName(int index, String name, TimeSeriesContainer tsc, String title, int primaryResultsLength)
+	{
+		String sLabel;
+		if (index < primaryResultsLength)
+		{
+			sLabel = title;
+		}
+		else
+		{
+			if ("".equals(name))
+			{
+				String[] parts = tsc.fullName.split("/");
+				sLabel = parts[2] + "/" + parts[3];
+			}
+			else
+			{
+				sLabel = name;
+			}
+		}
+
+		return sLabel;
+	}
+
+	private List<String> getColumns(boolean isCFS)
+	{
+		List<String> columns = new ArrayList<>();
+		columns.add("WY");
+		columns.add("Oct");
+		columns.add("Nov");
+		columns.add("Dec");
+		columns.add("Jan");
+		columns.add("Feb");
+		columns.add("Mar");
+		columns.add("Apr");
+		columns.add("May");
+		columns.add("Jun");
+		columns.add("Jul");
+		columns.add("Aug");
+		columns.add("Sep");
+
+		if (isCFS)
+		{
+			columns.add("Ann (TAF)");
+		}
+
+		return columns;
+	}
+
 
 	@Override
 	public void actionPerformed(ActionEvent e)
@@ -397,10 +436,10 @@ public class MonthlyTablePanel extends JPanel implements ActionListener, Compone
 		 *
 		 */
 		private static final long serialVersionUID = 1L;
-		protected Vector<String> data;
-		protected Vector<String> columnNames;
+		protected List<String> data;
+		protected List<String> columnNames;
 
-		public SimpleTableModel2(Vector<String> datain, Vector<String> columnin)
+		public SimpleTableModel2(List<String> datain, List<String> columnin)
 		{
 			data = datain;
 			columnNames = columnin;
@@ -424,7 +463,7 @@ public class MonthlyTablePanel extends JPanel implements ActionListener, Compone
 			String colName = "";
 			if(columnIndex <= getColumnCount())
 			{
-				colName = columnNames.elementAt(columnIndex);
+				colName = columnNames.get(columnIndex);
 			}
 			return colName;
 		}
@@ -444,14 +483,13 @@ public class MonthlyTablePanel extends JPanel implements ActionListener, Compone
 		@Override
 		public Object getValueAt(int rowIndex, int columnIndex)
 		{
-			return data.elementAt((rowIndex * getColumnCount()) + columnIndex);
+			return data.get((rowIndex * getColumnCount()) + columnIndex);
 		}
 
 		@Override
 		public void setValueAt(Object aValue, int rowIndex, int columnIndex)
 		{
-			data.setElementAt((String) aValue, ((rowIndex * getColumnCount()) + columnIndex));
-			// return;
+			data.set(((rowIndex * getColumnCount()) + columnIndex), (String) aValue);
 		}
 	}
 }
