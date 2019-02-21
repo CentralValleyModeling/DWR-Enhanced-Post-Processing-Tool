@@ -1,0 +1,42 @@
+<!--
+  ~ Copyright (c) 2019
+  ~ California Department of Water Resources
+  ~ All Rights Reserved.  DWR PROPRIETARY/CONFIDENTIAL.
+  ~ Source may not be released without written approval from DWR
+  -->
+
+<panel id="schematics" font="Tahoma-Italic-12"
+	   border="LineBorder(grey,1)" layout="GridBagLayout">
+	<panel id="schematic_card_layout" layout="CardLayout">
+		<gridbagconstraints gridx="0" gridy="0"/>
+		<panel id="schematic_holder" constraints="First" layout="BorderLayout" preferredsize="950,600"/>
+		<panel id="schematic_holder2" constraints="Second" layout="BorderLayout"
+			   preferredsize="950,600"/>
+	</panel>
+	<hbox>
+		<gridbagconstraints gridx="0" gridy="1"/>
+		<panel layout="FlowLayout(FlowLayout.Left)">
+			<vbox>
+				<label
+						text="Click on an arc or node for data; shift+click, then drag to pan;"
+						font="Tahoma-BOLD-13" foreground="CC3333"/>
+				<label
+						text="Shift+right click, then move mouse down/up to zoom in/out; ctrl+click, then select an area to zoom to it"
+						font="Tahoma-BOLD-13" foreground="CC3333"/>
+			</vbox>
+		</panel>
+		<hbox>
+			<buttongroup>
+				<radiobutton id="rdbSchemNormal" name="rdbSchemNormal"
+							 text="Normal" selected="true"/>
+				<radiobutton id="rdbSchemMB" name="rdbSchemMB" text="Mass balance"/>
+			</buttongroup>
+		</hbox>
+		<panel layout="FlowLayout(FlowLayout.Right)">
+			<vbox>
+				<button text="Controls ..." ActionCommand="AC_Controls"/>
+				<button text="Help" ActionCommand="AC_Help"/>
+			</vbox>
+		</panel>
+	</hbox>
+</panel>

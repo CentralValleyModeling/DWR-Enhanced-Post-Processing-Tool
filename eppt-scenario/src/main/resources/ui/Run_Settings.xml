@@ -1,0 +1,192 @@
+<!--
+  ~ Copyright (c) 2019
+  ~ California Department of Water Resources
+  ~ All Rights Reserved.  DWR PROPRIETARY/CONFIDENTIAL.
+  ~ Source may not be released without written approval from DWR
+  -->
+
+<panel id="runsettings" name="runsettings" layout="GridBagLayout">
+	<panel layout="GridBagLayout">
+		<gridbagconstraints insets="0,0,0,5"
+							anchor="GridBagConstraints.NORTHWEST" gridx="0" gridy="0"/>
+		<button enabled="false" visible="false" text="Set Scenario Directory...">
+			<gridbagconstraints insets="0,0,5,5"
+								anchor="GridBagConstraints.NORTHWEST" gridx="1" gridy="5"/>
+		</button>
+		<!-- NOTE id added to label below to associate with textfield -->
+		<label id="run_txfDir_t" text="Scenario Directory" visible="false">
+			<gridbagconstraints insets="0,0,5,5"
+								anchor="GridBagConstraints.NORTHWEST" gridx="0" gridy="10"/>
+		</label>
+		<textfield id="run_txfDir" name="run_txfDir" visible="false"
+				   enabled="false" text=".\Scenarios">
+			<gridbagconstraints insets="0,0,5,5"
+								anchor="GridBagConstraints.NORTHWEST" gridx="1" gridy="10"/>
+		</textfield>
+		<button enabled="true" text="Load Scenario..." ActionCommand="AC_LoadScen">
+			<gridbagconstraints insets="0,0,5,5"
+								anchor="GridBagConstraints.NORTHWEST" gridx="1" gridy="12"/>
+		</button>
+		<button enabled="true" text="Save Scenario" ActionCommand="AC_SaveScen">
+			<gridbagconstraints insets="0,0,5,5"
+								anchor="GridBagConstraints.NORTHWEST" gridx="1" gridy="14"/>
+		</button>
+		<button enabled="true" text="Save As..." ActionCommand="AC_SaveScenAs"
+				name="AC_SaveScenAs">
+			<gridbagconstraints insets="0,0,5,5"
+								anchor="GridBagConstraints.NORTHWEST" gridx="1" gridy="15"/>
+		</button>
+		<button enabled="true" text="View Scenario Settings"
+				ActionCommand="AC_ViewScen">
+			<gridbagconstraints insets="0,0,5,5"
+								anchor="GridBagConstraints.NORTHWEST" gridx="1" gridy="16"/>
+		</button>
+		<button enabled="true" visible="false" text="Compare..."
+				ActionCommand="AC_CompScen">
+			<gridbagconstraints insets="0,0,5,5"
+								anchor="GridBagConstraints.NORTHEAST" gridx="0" gridy="16"/>
+		</button>
+		<label text="Scenario Name" id="run_txfScen_t">
+			<gridbagconstraints insets="0,0,5,5"
+								anchor="GridBagConstraints.NORTHWEST" gridx="0" gridy="20"/>
+		</label>
+		<textfield id="run_txfScen" name="run_txfScen" text="DEFAULT.cls"
+				   enabled="false" preferredsize="170,20">
+			<gridbagconstraints insets="0,0,5,5"
+								anchor="GridBagConstraints.NORTHEAST" gridx="1" gridy="20"/>
+		</textfield>
+		<label text="DSS File Name" id="run_txfoDSS_t">
+			<gridbagconstraints insets="0,0,5,5"
+								anchor="GridBagConstraints.NORTHWEST" gridx="0" gridy="30"/>
+		</label>
+		<textfield name="run_txfoDSS" id="run_txfoDSS" enabled="false"
+				   text="DEFAULT_DV.DSS" preferredsize="170,20">
+			<gridbagconstraints insets="0,0,5,5"
+								anchor="GridBagConstraints.NORTHWEST" gridx="1" gridy="30"/>
+		</textfield>
+		<label text="Scenario Description" id="run_txaScenDesc_t">
+			<gridbagconstraints insets="0,0,5,5"
+								anchor="GridBagConstraints.NORTHWEST" gridx="0" gridy="40"
+								gridwidth="2"/>
+		</label>
+		<scrollpane preferredsize="400,150" minimumsize="400,150">
+			<gridbagconstraints insets="0,0,5,5"
+								anchor="GridBagConstraints.NORTHWEST" gridx="0" gridy="41"
+								gridwidth="2"/>
+			<textarea id="run_txaScenDesc" name="run_txaScenDesc"
+					  linewrap="true" wrapstyleword="true" text=" "></textarea>
+		</scrollpane>
+		<panel border="TitledBorder(Run Period)" layout="GridBagLayout">
+			<gridbagconstraints weightx="0.5"
+								anchor="GridBagConstraints.NORTHWEST" gridx="0" gridy="50"
+								gridwidth="2"/>
+			<label text="Month">
+				<gridbagconstraints weightx="0.5"
+									anchor="GridBagConstraints.NORTHWEST" gridx="1" gridy="0"/>
+			</label>
+			<label text="Year">
+				<gridbagconstraints weightx="0.5"
+									anchor="GridBagConstraints.NORTHWEST" gridx="2" gridy="0"/>
+			</label>
+			<label text="Start ">
+				<gridbagconstraints insets="0,0,5,5"
+									anchor="GridBagConstraints.NORTHWEST" gridx="0" gridy="1"/>
+			</label>
+			<spinner id="spnRunStartMonth" name="spnRunStartMonth"
+					 enabled="false">
+				<gridbagconstraints insets="0,0,5,5"
+									anchor="GridBagConstraints.NORTHWEST" gridx="1" gridy="1"/>
+			</spinner>
+			<spinner id="spnRunStartYear" name="spnRunStartYear" enabled="false">
+				<gridbagconstraints insets="0,0,5,5"
+									anchor="GridBagConstraints.NORTHWEST" gridx="2" gridy="1"/>
+			</spinner>
+			<label text="End">
+				<gridbagconstraints insets="0,0,5,5"
+									anchor="GridBagConstraints.NORTHWEST" gridx="0" gridy="2"/>
+			</label>
+			<spinner id="spnRunEndMonth" name="spnRunEndMonth">
+				<gridbagconstraints insets="0,0,5,5"
+									anchor="GridBagConstraints.NORTHWEST" gridx="1" gridy="2"/>
+			</spinner>
+			<spinner id="spnRunEndYear" name="spnRunEndYear">
+				<gridbagconstraints insets="0,0,5,5"
+									anchor="GridBagConstraints.NORTHWEST" gridx="2" gridy="2"/>
+			</spinner>
+		</panel>
+		<panel border="TitledBorder(Run Type)" layout="GridBagLayout"
+			   enabled="False">
+			<gridbagconstraints weightx="0.5"
+								anchor="GridBagConstraints.NORTHWEST" gridx="0" gridy="60"/>
+			<buttongroup>
+				<radiobutton name="run_rdbDet" id="run_rdbDet" text="Deterministic"
+							 selected="True">
+					<gridbagconstraints anchor="GridBagConstraints.NORTHWEST"
+										gridx="0" gridy="0"/>
+				</radiobutton>
+				<radiobutton name="run_rdbProb" id="run_rdbProb" text="Probabilistic"
+							 enabled="False">
+					<gridbagconstraints anchor="GridBagConstraints.NORTHWEST"
+										gridx="0" gridy="1"/>
+				</radiobutton>
+			</buttongroup>
+		</panel>
+		<panel border="TitledBorder(Run Basis)" layout="GridBagLayout"
+			   enabled="False">
+			<gridbagconstraints anchor="GridBagConstraints.NORTHWEST"
+								gridx="1" gridy="60" gridwidth="2"/>
+			<buttongroup>
+				<radiobutton id="run_rdbD1485" name="run_rdbD1485" text="D-1485"
+							 selected="True">
+					<gridbagconstraints anchor="GridBagConstraints.NORTHWEST"
+										gridx="0" gridy="0"/>
+				</radiobutton>
+				<radiobutton id="run_rdbD1641" name="run_rdbD1641"
+							 text="Pre-Biological Opinion" enabled="true">
+					<gridbagconstraints anchor="GridBagConstraints.NORTHWEST"
+										gridx="0" gridy="1"/>
+				</radiobutton>
+				<radiobutton id="run_rdbBO" name="run_rdbBO" text="Biological Opinions"
+							 selected="True">
+					<gridbagconstraints anchor="GridBagConstraints.NORTHWEST"
+										gridx="0" gridy="2"/>
+				</radiobutton>
+			</buttongroup>
+		</panel>
+		<panel border="TitledBorder(Batch runs)" enabled="True" layout="GridBagLayout">
+			<gridbagconstraints anchor="GridBagConstraints.NORTHWEST"
+								gridx="0" gridy="70" gridwidth="2"/>
+			<button text=" Select Scenarios ... " ActionCommand="AC_BATCH"
+					name="run_btnBatchSel" id="run_btnBatchSel">
+				<gridbagconstraints gridx="0" gridy="1"
+									gridwidth="3"/>
+			</button>
+			<label name="run_lblThreadsInfo" id="run_lblThreadsInfo"
+				   enabled="false" text="Simultaneous runs (1-4)">
+				<gridbagconstraints gridx="0" gridy="10"/>
+			</label>
+			<label name="run_lblThreads" id="run_lblThreads" text="  4 runs">
+				<gridbagconstraints gridx="4" gridy="10"/>
+			</label>
+			<slider name="run_sldThreads" id="run_sldThreads" minimum="1"
+					minortickspacing="1" paintticks="true" maximum="4" orientation="0">
+				<gridbagconstraints insets="5,0,0,0" gridx="2"
+									gridy="10"/>
+			</slider>
+		</panel>
+		<button text=" Run Scenario " ActionCommand="AC_RUN" name="run_btnRun"
+				id="run_btnRun">
+			<gridbagconstraints anchor="GridBagConstraints.NORTHWEST"
+								gridx="0" gridy="80" gridwidth="2" insets="20,5,5,0"/>
+		</button>
+		<button text="Help" id="RunHelp" ActionCommand="AC_Help">
+			<gridbagconstraints anchor="GridBagConstraints.NORTHWEST"
+								gridx="0" gridy="99" gridwidth="1" insets="5,5,5,0"/>
+		</button>
+	</panel>
+	<panel>
+		<gridbagconstraints insets="0,30,20,0"
+							anchor="GridBagConstraints.NORTHWEST" gridx="1" gridy="0"/>
+		<label id="map" icon="images/CA_map_and_Delta_logo1.JPG"/>
+	</panel>
+</panel>

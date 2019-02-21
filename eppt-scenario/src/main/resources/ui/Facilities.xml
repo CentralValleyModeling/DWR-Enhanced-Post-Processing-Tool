@@ -1,0 +1,477 @@
+<!--
+  ~ Copyright (c) 2019
+  ~ California Department of Water Resources
+  ~ All Rights Reserved.  DWR PROPRIETARY/CONFIDENTIAL.
+  ~ Source may not be released without written approval from DWR
+  -->
+
+<panel id="facilities" name="facilities" layout="GridBagLayout">
+	<panel id="facilities1" font="Tahoma-Bold-12" layout="GridBagLayout">
+		<panel resizeable="false" border="TitledBorder(Storage Facility Options)" layout="GridBagLayout">
+			<gridbagconstraints insets="0,0,5,5" anchor="GridBagConstraints.WEST" gridx="0" gridy="0"/>
+			<checkbox name="fac_ckb1" id="fac_ckb1" enabled="true" visible="true"
+					  text="North of Delta Offstream Storage"
+					  minimumsize="240,20">
+				<gridbagconstraints insets="0,0,5,5" anchor="GridBagConstraints.WEST" gridx="0" gridy="0"/>
+			</checkbox>
+			<checkbox name="fac_ckb2" id="fac_ckb2" text="Shasta Enlargement" minimumsize="240,20" enabled="true">
+				<gridbagconstraints insets="0,0,5,5" anchor="GridBagConstraints.WEST" gridx="0" gridy="1"/>
+			</checkbox>
+			<checkbox name="fac_ckb3" id="fac_ckb3" text="Los Vaqueros Enlargement" minimumsize="240,20" enabled="true">
+				<gridbagconstraints insets="0,0,5,5" anchor="GridBagConstraints.WEST" gridx="0" gridy="2"/>
+			</checkbox>
+			<checkbox name="fac_ckb4" id="fac_ckb4" text="Temperance Flat" minimumsize="240,20" enabled="true"
+					  visible="true">
+				<gridbagconstraints insets="0,0,5,5" anchor="GridBagConstraints.WEST" gridx="0" gridy="3"/>
+			</checkbox>
+			<checkbox name="fac_ckb5" id="fac_ckb5" text="Sacramento Valley Conjunctive Use" minimumsize="240,20"
+					  enabled="true"
+					  visible="true">
+				<gridbagconstraints insets="0,0,5,5" anchor="GridBagConstraints.WEST" gridx="0" gridy="4"/>
+			</checkbox>
+			<checkbox name="fac_ckb46" id="fac_ckb46" text="San Luis Enlargement" minimumsize="240,20" enabled="true">
+				<gridbagconstraints insets="0,0,5,5" anchor="GridBagConstraints.WEST" gridx="0" gridy="5"/>
+			</checkbox>
+		</panel>
+		<panel resizeable="false" visible="true" border="TitledBorder(Conveyance Facility Options)"
+			   layout="GridBagLayout">
+			<gridbagconstraints insets="0,0,5,5" anchor="GridBagConstraints.WEST" gridx="0" gridy="1"/>
+			<checkbox name="fac_ckb6" id="fac_ckb6" text="Isolated Facility" minimumsize="240,20" enabled="true"
+					  visible="true"
+					  selected="false">
+				<gridbagconstraints insets="0,0,5,5" anchor="GridBagConstraints.WEST" gridx="0" gridy="0"/>
+			</checkbox>
+			<checkbox name="fac_ckb7" id="fac_ckb7" text="Banks Pumping Plant" minimumsize="240,20" seleted="true"
+					  enabled="true">
+				<gridbagconstraints insets="0,0,5,5" anchor="GridBagConstraints.WEST" gridx="0" gridy="1"/>
+			</checkbox>
+		</panel>
+		<panel resizeable="false" visible="true" layout="GridBagLayout"
+			   border="TitledBorder(Habitat Restoration Options)">
+			<gridbagconstraints insets="0,0,5,5" anchor="GridBagConstraints.WEST" gridx="0" gridy="2"/>
+			<checkbox name="fac_ckb8" id="fac_ckb8" text="Fremont Weir - Yolo Bypass" minimumsize="240,20"
+					  enabled="true">
+				<gridbagconstraints insets="0,0,5,5" anchor="GridBagConstraints.WEST" gridx="0" gridy="0"/>
+			</checkbox>
+			<checkbox name="fac_ckb9" id="fac_ckb9" text="DWSC East Bypass" minimumsize="240,20" enabled="true">
+				<gridbagconstraints insets="0,0,5,5" anchor="GridBagConstraints.WEST" gridx="0" gridy="1"/>
+			</checkbox>
+			<checkbox name="fac_ckb10" id="fac_ckb10" text="Stone Lakes Bypass" minimumsize="240,20" enabled="true">
+				<gridbagconstraints insets="0,0,5,5" anchor="GridBagConstraints.WEST" gridx="0" gridy="2"/>
+			</checkbox>
+		</panel>
+
+		<label text="Access facilities parameters by selecting" font="Tahoma-BOLD-13" foreground="CC3333">
+			<gridbagconstraints insets="0,0,5,5" gridx="0" gridy="90" anchor="GridBagConstraints.NORTHWEST"/>
+		</label>
+		<label text="or right-clicking on item at left" font="Tahoma-BOLD-13" foreground="CC3333">
+			<gridbagconstraints insets="0,0,5,5" gridx="0" gridy="91" anchor="GridBagConstraints.NORTHWEST"/>
+		</label>
+		<label icon="images/NEW_DWR_LOGO_3inch_72dpi.jpg" visible="false">
+			<gridbagconstraints insets="0,0,5,5" anchor="GridBagConstraints.WEST" gridx="1" gridy="3"/>
+		</label>
+		<button text="Help" id="FacHelp" ActionCommand="AC_Help">
+			<gridbagconstraints anchor="GridBagConstraints.WEST" gridx="0" gridy="99" gridwidth="2" insets="5,5,5,0"/>
+		</button>
+
+		<panel name="fac_pan1" id="fac_pan1" resizeable="false" enabled="false" visible="true"
+			   border="TitledBorder(North of Delta Offstream Storage NODOS Options)" preferredsize="500,250"
+			   layout="GridBagLayout">
+			<gridbagconstraints insets="0,0,5,5" anchor="GridBagConstraints.NORTHWEST" gridx="1" gridy="0"
+								gridheight="3"/>
+			<label id="fac_txf1_t" text="NODOS Reservoir Maximum Capacity (TAF)">
+				<gridbagconstraints insets="0,5,5,5" anchor="GridBagConstraints.WEST" gridx="0" gridy="0"/>
+			</label>
+			<textfield name="fac_txf1" id="fac_txf1" text=" 2000 ">
+				<gridbagconstraints insets="0,0,5,5" anchor="GridBagConstraints.WEST" gridx="1" gridy="0"/>
+			</textfield>
+			<panel layout="GridBagLayout">
+				<gridbagconstraints insets="0,15,5,5" anchor="GridBagConstraints.NORTHWEST" gridx="0" gridy="1"/>
+				<textfield id="fac_lstbL1" name="fac_lstbL1" enabled="false" text="50" HorizontalAlignment="LEFT">
+					<gridbagconstraints insets="0,0,5,5" fill="GridBagConstraints.HORIZONTAL"
+										anchor="GridBagConstraints.WEST"
+										gridx="1" gridy="0" gridwidth="1"/>
+				</textfield>
+				>
+				<linkedslider name="fac_sldr1" id="fac_sldr1" minimum="0" maximum="100" value="50"
+							  LTextBoxID="fac_lstbL1"
+							  RTextBoxID="fac_lstbR1" orientation="0">
+					<gridbagconstraints insets="0,0,5,5" gridx="2" gridy="0"/>
+				</linkedslider>
+				<label text="SWP(%):">
+					<gridbagconstraints insets="0,0,5,5" anchor="GridBagConstraints.NORTHWEST" gridx="3" gridy="0"/>
+				</label>
+				<textfield id="fac_lstbR1" name="fac_lstbR1" enabled="false" text="50" HorizontalAlignment="RIGHT">
+					<gridbagconstraints insets="0,0,5,5" fill="GridBagConstraints.HORIZONTAL"
+										anchor="GridBagConstraints.WEST"
+										gridx="5" gridy="0" gridwidth="1"/>
+				</textfield>
+			</panel>
+			<label id="fac_txf2_t" text="GCID Canal Maximum Diversion Capacity for NODOS (cfs)">
+				<gridbagconstraints insets="0,5,5,5" anchor="GridBagConstraints.WEST" gridx="0" gridy="3"/>
+			</label>
+			<textfield text=" 1000 " name="fac_txf2" id="fac_txf2">
+				<gridbagconstraints insets="0,0,5,5" anchor="GridBagConstraints.WEST" gridx="1" gridy="3"/>
+			</textfield>
+			<label id="fac_txf3_t" text="TC Canal Maximum Diversion Capacity for NODOS (cfs) ">
+				<gridbagconstraints insets="0,5,5,5" anchor="GridBagConstraints.WEST" gridx="" gridy="4"/>
+			</label>
+			<textfield text=" 2000 " name="fac_txf3" id="fac_txf3">
+				<gridbagconstraints insets="0,0,5,5" anchor="GridBagConstraints.WEST" gridx="1" gridy="4"/>
+			</textfield>
+			<label id="fac_txf4_t" text="Capacity of New Pipeline at Maxwell Diversion (cfs)">
+				<gridbagconstraints insets="0,5,5,5" anchor="GridBagConstraints.WEST" gridx="0" gridy="5"/>
+			</label>
+			<textfield text=" 1000 " name="fac_txf4" id="fac_txf4">
+				<gridbagconstraints insets="0,0,5,5" anchor="GridBagConstraints.WEST" gridx="1" gridy="5"/>
+			</textfield>
+			<label id="fac_txf5_t" text="Minimum Bypass Flow at Red Bluff before NODOS Diversion (cfs)">
+				<gridbagconstraints insets="0,5,5,5" anchor="GridBagConstraints.WEST" gridx="0" gridy="6"/>
+			</label>
+			<textfield text=" 3000 " name="fac_txf5" id="fac_txf5">
+				<gridbagconstraints insets="0,0,5,5" anchor="GridBagConstraints.WEST" gridx="1" gridy="6"/>
+			</textfield>
+			<label id="fac_txf6_t" text="Oroville Storage Trigger for SWP NODOS Releases (TAF)">
+				<gridbagconstraints insets="0,5,5,5" anchor="GridBagConstraints.WEST" gridx="0" gridy="7"/>
+			</label>
+			<textfield text=" 2000 " name="fac_txf6" id="fac_txf6">
+				<gridbagconstraints insets="0,0,5,5" anchor="GridBagConstraints.WEST" gridx="1" gridy="7"/>
+			</textfield>
+			<label id="fac_txf7_t" text="Shasta Storage Trigger for CVP NODOS Releases (TAF)">
+				<gridbagconstraints insets="0,5,5,5" anchor="GridBagConstraints.WEST" gridx="0" gridy="8"/>
+			</label>
+			<textfield text=" 2300 " name="fac_txf7" id="fac_txf7">
+				<gridbagconstraints insets="0,0,5,5" anchor="GridBagConstraints.WEST" gridx="1" gridy="8"/>
+			</textfield>
+		</panel>
+		<panel name="fac_pan2" id="fac_pan2" resizeable="false" visible="false" enabled="false"
+			   border="TitledBorder(Shasta Enlargement Options)" preferredsize="500,250" layout="GridBagLayout">
+			<gridbagconstraints insets="0,0,5,5" anchor="GridBagConstraints.NORTHWEST" gridx="1" gridy="0"
+								gridheight="3"/>
+			<buttongroup>
+				<radiobutton name="fac_rdb0" id="fac_rdb0" text="None" minimumsize="340,20">
+					<gridbagconstraints insets="0,0,5,5" anchor="GridBagConstraints.NORTHWEST" gridx="0" gridy="0"/>
+				</radiobutton>
+				<radiobutton name="fac_rdb1" id="fac_rdb1" text="Shasta Dam raise of 6.5 feet (additional 256 TAF)"
+							 minimumsize="340,20">
+					<gridbagconstraints insets="0,0,5,5" anchor="GridBagConstraints.NORTHWEST" gridx="0" gridy="1"/>
+				</radiobutton>
+				<radiobutton name="fac_rdb2" id="fac_rdb2" text="Shasta Dam raise of 12.5 feet (additional 443 TAF)"
+							 minimumsize="340,20">
+					<gridbagconstraints insets="0,0,5,5" anchor="GridBagConstraints.NORTHWEST" gridx="0" gridy="2"/>
+				</radiobutton>
+				<radiobutton name="fac_rdb3" id="fac_rdb3" text="Shasta Dam raise of 18.5 feet (additional 634 TAF)"
+							 minimumsize="340,20">
+					<gridbagconstraints insets="0,0,5,5" anchor="GridBagConstraints.NORTHWEST" gridx="0" gridy="3"/>
+				</radiobutton>
+			</buttongroup>
+			<label icon="images/shastaDam.jpg">
+				<gridbagconstraints insets="0,0,5,5" anchor="GridBagConstraints.WEST" gridx="1" gridy="0"
+									gridheight="4"/>
+			</label>
+		</panel>
+		<panel name="fac_pan3" id="fac_pan3" resizeable="false" visible="false" enabled="false"
+			   border="TitledBorder(Los Vaqueros Reservoir Enlargement Options)" preferredsize="500,180"
+			   layout="GridBagLayout">
+			<gridbagconstraints insets="0,0,5,5" gridheight="3" anchor="GridBagConstraints.NORTHWEST" gridx="1"
+								gridy="0"/>
+			<label id="fac_txf8_t" text="Los Vaqueros Reservoir Maximum Capacity (TAF)">
+				<gridbagconstraints insets="0,5,5,5" anchor="GridBagConstraints.NORTHWEST" gridx="0" gridy="0"/>
+			</label>
+			<numtextfield id="fac_txf8" name="fac_txf8" enabled="true" MinVal="0" MaxVal="9999" columns="4" text="160">
+				<gridbagconstraints insets="0,0,5,5" anchor="GridBagConstraints.WEST" gridx="1" gridy="0"/>
+			</numtextfield>
+			<label id="fac_txf9_t" text="CCWD Alternate Intake (Victoria Canal) Diversion Capacity (cfs)">
+				<gridbagconstraints insets="0,5,5,5" anchor="GridBagConstraints.WEST" gridx="0" gridy="3"/>
+			</label>
+			<numtextfield id="fac_txf9" name="fac_txf9" enabled="false" MinVal="0" MaxVal="9999" columns="4" text="250">
+				<gridbagconstraints insets="0,0,5,5" anchor="GridBagConstraints.WEST" gridx="1" gridy="3"/>
+			</numtextfield>
+			<label id="fac_txf10_t" text="CCWD Old River Diversion Capacity (cfs)">
+				<gridbagconstraints insets="0,5,5,5" anchor="GridBagConstraints.WEST" gridx="" gridy="4"/>
+			</label>
+			<numtextfield id="fac_txf10" name="fac_txf10" enabled="false" MinVal="0" MaxVal="9999" columns="4"
+						  text="250">
+				<gridbagconstraints insets="0,0,5,5" anchor="GridBagConstraints.WEST" gridx="1" gridy="4"/>
+			</numtextfield>
+			<label id="fac_txf11_t" text="CCWD Rock Slough Diversion Capacity (cfs)">
+				<gridbagconstraints insets="0,5,5,5" anchor="GridBagConstraints.WEST" gridx="0" gridy="5"/>
+			</label>
+			<numtextfield id="fac_txf11" name="fac_txf11" enabled="false" MinVal="0" MaxVal="9999" columns="4"
+						  text="350">
+				<gridbagconstraints insets="0,0,5,5" anchor="GridBagConstraints.WEST" gridx="1" gridy="5"/>
+			</numtextfield>
+			<label id="fac_txf12_t" text="CCWD Target Maximum Chloride at Delivery (mg/L)">
+				<gridbagconstraints insets="0,5,5,5" anchor="GridBagConstraints.WEST" gridx="0" gridy="6"/>
+			</label>
+			<numtextfield id="fac_txf12" name="fac_txf12" enabled="false" MinVal="0" MaxVal="9999" columns="4"
+						  text="65">
+				<gridbagconstraints insets="0,0,5,5" anchor="GridBagConstraints.WEST" gridx="1" gridy="6"/>
+			</numtextfield>
+
+		</panel>
+		<panel name="fac_pan4" id="fac_pan4" resizeable="false" visible="false" enabled="false"
+			   border="TitledBorder(Temperance Flat (Under Construction))" preferredsize="500,250"
+			   layout="GridBagLayout">
+			<gridbagconstraints insets="0,0,5,5" anchor="GridBagConstraints.NORTHWEST" gridx="1" gridy="0"
+								gridheight="3"/>
+		</panel>
+		<panel name="fac_pan46" id="fac_pan46" resizeable="false" visible="false" enabled="false"
+			   border="TitledBorder(San Luis Enlargement Options)" preferredsize="500,250" layout="GridBagLayout">
+			<gridbagconstraints insets="0,0,5,5" anchor="GridBagConstraints.NORTHWEST" gridx="1" gridy="0"
+								gridheight="3"/>
+			<buttongroup>
+				<radiobutton name="fac_rdb4" id="fac_rdb4" text="None" minimumsize="340,20">
+					<gridbagconstraints insets="0,0,5,5" anchor="GridBagConstraints.NORTHWEST" gridx="0" gridy="0"/>
+				</radiobutton>
+				<radiobutton name="fac_rdb5" id="fac_rdb5" text="San Luis Expansion of additional 10 MAF"
+							 minimumsize="340,20">
+					<gridbagconstraints insets="0,0,5,5" anchor="GridBagConstraints.NORTHWEST" gridx="0" gridy="1"/>
+				</radiobutton>
+				<radiobutton name="fac_rdb6" id="fac_rdb6" text="San Luis Expansion of User-Specified amount(TAF)"
+							 minimumsize="340,20">
+					<gridbagconstraints insets="0,0,5,5" anchor="GridBagConstraints.NORTHWEST" gridx="0" gridy="2"/>
+				</radiobutton>
+				<numtextfield id="fac_txf41" name="fac_txf41" enabled="true" MinVal="0" MaxVal="9999" columns="4"
+							  text="1000">
+					<gridbagconstraints insets="0,0,5,5" anchor="GridBagConstraints.WEST" gridx="1" gridy="2"/>
+				</numtextfield>
+			</buttongroup>
+			<label icon="images/SanLuisReservoir.jpg">
+				<gridbagconstraints insets="0,0,5,5" anchor="GridBagConstraints.WEST" gridx="1" gridy="0"
+									gridheight="4"/>
+			</label>
+		</panel>
+		<panel name="fac_pan5" id="fac_pan5" resizeable="false" border="TitledBorder(Conjunctive Use Options)"
+			   visible="false"
+			   enabled="false" preferredsize="500,180" layout="GridBagLayout">
+			<gridbagconstraints insets="0,0,5,5" gridheight="3" anchor="GridBagConstraints.NORTHWEST" gridx="1"
+								gridy="0"/>
+			<label id="fac_txf13_t" text="In-lieu groundwater pumping (Fraction in % of 173 TAF/yr)">
+				<gridbagconstraints insets="0,5,5,5" anchor="GridBagConstraints.NORTHWEST" gridx="0" gridy="0"/>
+			</label>
+			<textfield text=" 100 " name="fac_txf13" id="fac_txf13">
+				<gridbagconstraints insets="0,0,5,5" anchor="GridBagConstraints.WEST" gridx="1" gridy="0"/>
+			</textfield>
+			<label id="fac_txf15_t" text="Fraction of water reaching Hood [IN PERCENT?]">
+				<gridbagconstraints insets="0,5,5,5" anchor="GridBagConstraints.WEST" gridx="0" gridy="3"/>
+			</label>
+			<textfield text=" 0.85 " name="fac_txf15" id="fac_txf15">
+				<gridbagconstraints insets="0,0,5,5" anchor="GridBagConstraints.WEST" gridx="1" gridy="3"/>
+			</textfield>
+			<label id="fac_txf16_t" text="Reduction Factor for Successive Activation">
+				<gridbagconstraints insets="0,5,5,5" anchor="GridBagConstraints.WEST" gridx="" gridy="4"/>
+			</label>
+			<textfield text=" 0.04 " name="fac_txf16" id="fac_txf16">
+				<gridbagconstraints insets="0,0,5,5" anchor="GridBagConstraints.WEST" gridx="1" gridy="4"/>
+			</textfield>
+			<label id="fac_txf17_t" text="Aquifer Recovery Period (years)">
+				<gridbagconstraints insets="0,5,5,5" anchor="GridBagConstraints.WEST" gridx="0" gridy="5"/>
+			</label>
+			<textfield text=" 4 " name="fac_txf17" id="fac_txf17">
+				<gridbagconstraints insets="0,0,5,5" anchor="GridBagConstraints.WEST" gridx="1" gridy="5"/>
+			</textfield>
+			<label id="fac_txf18_t" text="SWP Allocation (Table A) to Trigger Call">
+				<gridbagconstraints insets="0,5,5,5" anchor="GridBagConstraints.WEST" gridx="0" gridy="6"/>
+			</label>
+			<textfield text=" 0.65 " name="fac_txf18" id="fac_txf18">
+				<gridbagconstraints insets="0,0,5,5" anchor="GridBagConstraints.WEST" gridx="1" gridy="6"/>
+			</textfield>
+			<label id="fac_txf19_t" text="CVP Allocation (SOD AG) to Trigger Call">
+				<gridbagconstraints insets="0,5,5,5" anchor="GridBagConstraints.WEST" gridx="0" gridy="7"/>
+			</label>
+			<textfield text=" 0.6 " name="fac_txf19" id="fac_txf19">
+				<gridbagconstraints insets="0,0,5,5" anchor="GridBagConstraints.WEST" gridx="1" gridy="7"/>
+			</textfield>
+		</panel>
+		<panel name="fac_pan6" id="fac_pan6" resizeable="false" border="TitledBorder(Isolated Facility)" visible="false"
+			   enabled="false" layout="GridBagLayout">
+			<gridbagconstraints insets="0,0,5,5" anchor="GridBagConstraints.NORTHWEST" gridx="1" gridy="0"
+								gridheight="4"/>
+			<label id="fac_txf20_t" text="Isolated Facility Switches">
+				<gridbagconstraints insets="0,0,0,0" anchor="GridBagConstraints.NORTHWEST" gridx="0" gridy="0"/>
+			</label>
+			<checkbox name="fac_ckb42" id="fac_ckb42" text="Jones IF Export">
+				<gridbagconstraints insets="0,0,0,0" anchor="GridBagConstraints.NORTHWEST" gridx="0" gridy="1"/>
+			</checkbox>
+			<checkbox name="fac_ckb43" id="fac_ckb43" text="Banks IF Export">
+				<gridbagconstraints insets="0,0,0,0" anchor="GridBagConstraints.NORTHWEST" gridx="0" gridy="2"/>
+			</checkbox>
+			<checkbox name="fac_ckb45" id="fac_ckb45" text="TD Export">
+				<gridbagconstraints insets="0,0,0,0" anchor="GridBagConstraints.NORTHWEST" gridx="0" gridy="4"/>
+			</checkbox>
+			<button text="Diversion Limits" name="btnFacLimits" id="btnFacLimits" ActionCommand="Fac_TableEdit">
+				<gridbagconstraints insets="15,5,5,5" anchor="GridBagConstraints.NORTHWEST" gridx="0" gridy="8"/>
+			</button>
+			<button text="Hood Bypass Assumptions" name="btnFacHood" id="btnFacHood" ActionCommand="Fac_TableEdit">
+				<gridbagconstraints insets="15,5,5,5" anchor="GridBagConstraints.NORTHWEST" gridx="0" gridy="10"/>
+			</button>
+			<hbox preferredsize="600,400" visible="false">
+				<gridbagconstraints insets="0,10,5,5" anchor="GridBagConstraints.NORTHWEST" gridx="0" gridy="13"
+									gridwidth="3"/>
+				<scrollpane id="fac_scr1" name="fac_scr1" preferredsize="600,400">
+					<table id="tblIF1" name="tblIF1" minimumsize="600,500">
+					</table>
+				</scrollpane>
+			</hbox>
+			<hbox preferredsize="600,500" visible="false">
+				<gridbagconstraints insets="0,10,5,5" anchor="GridBagConstraints.NORTHWEST" gridx="0" gridy="13"/>
+				<scrollpane id="fac_scr2" preferredsize="600,500">
+					<table id="tblIF2" name="tblIF2" minimumsize="600,500">
+					</table>
+				</scrollpane>
+			</hbox>
+			<hbox preferredsize="600,500" visible="false">
+				<gridbagconstraints insets="0,10,5,5" anchor="GridBagConstraints.NORTHWEST" gridx="0" gridy="13"/>
+				<scrollpane id="fac_scr3" preferredsize="600,500">
+					<table id="tblIF3" name="tblIF3" minimumsize="600,500">
+					</table>
+				</scrollpane>
+			</hbox>
+		</panel>
+		<panel name="fac_pan7" id="fac_pan7" resizeable="false" border="TitledBorder(Banks Pumping Plant)"
+			   visible="false"
+			   layout="GridBagLayout">
+			<gridbagconstraints insets="0,0,5,5" anchor="GridBagConstraints.NORTHWEST" gridx="1" gridy="0"
+								gridheight="3"/>
+			<label text="Monthly Pumping Limit">
+				<gridbagconstraints insets="0,5,5,5" anchor="GridBagConstraints.NORTHWEST" gridx="0" gridy="0"/>
+			</label>
+			<scrollpane>
+				<gridbagconstraints insets="0,10,5,5" anchor="GridBagConstraints.NORTHWEST" gridx="0" gridy="2"/>
+				<table id="tblBanks" name="tblBanks">
+				</table>
+			</scrollpane>
+			<checkbox text="CCFB intake linked to existing permit" name="fac_ckb13" id="fac_ckb13">
+				<gridbagconstraints insets="10,5,5,5" anchor="GridBagConstraints.NORTHWEST" gridx="0" gridy="4"/>
+			</checkbox>
+		</panel>
+		<panel name="fac_pan8" id="fac_pan8" resizeable="false" border="TitledBorder(Habitat Restoration)"
+			   visible="false"
+			   enabled="false" preferredsize="500,220" layout="GridBagLayout">
+			<gridbagconstraints insets="0,0,5,5" anchor="GridBagConstraints.NORTHWEST" gridx="1" gridy="0"
+								gridheight="3"/>
+			<label text="Weir">
+				<gridbagconstraints insets="0,5,5,5" anchor="GridBagConstraints.NORTHWEST" gridx="0" gridy="5"/>
+			</label>
+			<label text="Max Spill (cfs)">
+				<gridbagconstraints insets="0,5,5,5" anchor="GridBagConstraints.NORTHWEST" gridx="1" gridy="5"/>
+			</label>
+			<label text="Operational Months:">
+				<gridbagconstraints insets="0,5,5,5" anchor="GridBagConstraints.NORTHWEST" gridx="2" gridy="4"
+									gridwidth="6"/>
+			</label>
+			<label text="Dec">
+				<gridbagconstraints insets="0,5,5,5" anchor="GridBagConstraints.NORTHWEST" gridx="2" gridy="5"/>
+			</label>
+			<label text="Jan">
+				<gridbagconstraints insets="0,5,5,5" anchor="GridBagConstraints.NORTHWEST" gridx="3" gridy="5"/>
+			</label>
+			<label text="Feb">
+				<gridbagconstraints insets="0,5,5,5" anchor="GridBagConstraints.NORTHWEST" gridx="4" gridy="5"/>
+			</label>
+			<label text="Mar">
+				<gridbagconstraints insets="0,5,5,5" anchor="GridBagConstraints.NORTHWEST" gridx="5" gridy="5"/>
+			</label>
+			<label text="Apr">
+				<gridbagconstraints insets="0,5,5,5" anchor="GridBagConstraints.NORTHWEST" gridx="6" gridy="5"/>
+			</label>
+			<label text="May">
+				<gridbagconstraints insets="0,5,5,5" anchor="GridBagConstraints.NORTHWEST" gridx="7" gridy="5"/>
+			</label>
+			<checkbox text="Fremont Weir" name="fac_ckb33" id="fac_ckb33">
+				<gridbagconstraints insets="0,5,5,5" anchor="GridBagConstraints.WEST" gridx="0" gridy="10"/>
+			</checkbox>
+			<textfield text=" 3500 " name="fac_txf23" id="fac_txf23">
+				<gridbagconstraints insets="0,5,5,5" anchor="GridBagConstraints.WEST" gridx="1" gridy="10"/>
+			</textfield>
+			<checkbox name="fac_ckb14" id="fac_ckb14" enabled="false">
+				<gridbagconstraints insets="0,5,5,5" anchor="GridBagConstraints.WEST" gridx="2" gridy="10"/>
+			</checkbox>
+			<checkbox name="fac_ckb15" id="fac_ckb15" enabled="false">
+				<gridbagconstraints insets="0,5,5,5" anchor="GridBagConstraints.WEST" gridx="3" gridy="10"/>
+			</checkbox>
+			<checkbox name="fac_ckb16" id="fac_ckb16" enabled="false">
+				<gridbagconstraints insets="0,5,5,5" anchor="GridBagConstraints.WEST" gridx="4" gridy="10"/>
+			</checkbox>
+			<checkbox selected="true" name="fac_ckb17" id="fac_ckb17">
+				<gridbagconstraints insets="0,5,5,5" anchor="GridBagConstraints.WEST" gridx="5" gridy="10"/>
+			</checkbox>
+			<checkbox selected="true" name="fac_ckb18" id="fac_ckb18">
+				<gridbagconstraints insets="0,5,5,5" anchor="GridBagConstraints.WEST" gridx="6" gridy="10"/>
+			</checkbox>
+			<checkbox selected="true" name="fac_ckb19" id="fac_ckb19">
+				<gridbagconstraints insets="0,5,5,5" anchor="GridBagConstraints.WEST" gridx="7" gridy="10"/>
+			</checkbox>
+			<checkbox text="DWSC Weir" name="fac_ckb20" id="fac_ckb20">
+				<gridbagconstraints insets="0,5,5,5" anchor="GridBagConstraints.WEST" gridx="0" gridy="20"/>
+			</checkbox>
+			<textfield text=" 3000 " name="fac_txf21" id="fac_txf21">
+				<gridbagconstraints insets="0,5,5,5" anchor="GridBagConstraints.WEST" gridx="1" gridy="20"/>
+			</textfield>
+			<checkbox name="fac_ckb21" id="fac_ckb21">
+				<gridbagconstraints insets="0,5,5,5" anchor="GridBagConstraints.WEST" gridx="2" gridy="20"/>
+			</checkbox>
+			<checkbox name="fac_ckb22" id="fac_ckb22">
+				<gridbagconstraints insets="0,5,5,5" anchor="GridBagConstraints.WEST" gridx="3" gridy="20"/>
+			</checkbox>
+			<checkbox name="fac_ckb23" id="fac_ckb23">
+				<gridbagconstraints insets="0,5,5,5" anchor="GridBagConstraints.WEST" gridx="4" gridy="20"/>
+			</checkbox>
+			<checkbox selected="true" name="fac_ckb38" id="fac_ckb38">
+				<gridbagconstraints insets="0,5,5,5" anchor="GridBagConstraints.WEST" gridx="5" gridy="20"/>
+			</checkbox>
+			<checkbox selected="true" name="fac_ckb24" id="fac_ckb24">
+				<gridbagconstraints insets="0,5,5,5" anchor="GridBagConstraints.WEST" gridx="6" gridy="20"/>
+			</checkbox>
+			<checkbox selected="true" name="fac_ckb25" id="fac_ckb25">
+				<gridbagconstraints insets="0,5,5,5" anchor="GridBagConstraints.WEST" gridx="7" gridy="20"/>
+			</checkbox>
+			<checkbox text="Stone Lakes Weir" name="fac_ckb26" id="fac_ckb26">
+				<gridbagconstraints insets="0,5,5,5" anchor="GridBagConstraints.WEST" gridx="0" gridy="30"/>
+			</checkbox>
+			<textfield text=" 300 " name="fac_txf22" id="fac_txf22">
+				<gridbagconstraints insets="0,5,5,5" anchor="GridBagConstraints.WEST" gridx="1" gridy="30"/>
+			</textfield>
+			<checkbox name="fac_ckb27" id="fac_ckb27">
+				<gridbagconstraints insets="0,5,5,5" anchor="GridBagConstraints.WEST" gridx="2" gridy="30"/>
+			</checkbox>
+			<checkbox name="fac_ckb28" id="fac_ckb28">
+				<gridbagconstraints insets="0,5,5,5" anchor="GridBagConstraints.WEST" gridx="3" gridy="30"/>
+			</checkbox>
+			<checkbox name="fac_ckb29" id="fac_ckb29">
+				<gridbagconstraints insets="0,5,5,5" anchor="GridBagConstraints.WEST" gridx="4" gridy="30"/>
+			</checkbox>
+			<checkbox selected="true" name="fac_ckb30" id="fac_ckb30">
+				<gridbagconstraints insets="0,5,5,5" anchor="GridBagConstraints.WEST" gridx="5" gridy="30"/>
+			</checkbox>
+			<checkbox selected="true" name="fac_ckb31" id="fac_ckb31">
+				<gridbagconstraints insets="0,5,5,5" anchor="GridBagConstraints.WEST" gridx="6" gridy="30"/>
+			</checkbox>
+			<checkbox selected="true" name="fac_ckb32" id="fac_ckb32">
+				<gridbagconstraints insets="0,5,5,5" anchor="GridBagConstraints.WEST" gridx="7" gridy="30"/>
+			</checkbox>
+			<label text="Notch/Rating Curves input TBD">
+				<gridbagconstraints insets="20,5,5,5" anchor="GridBagConstraints.WEST" gridx="0" gridy="40"
+									gridwidth="8"/>
+			</label>
+		</panel>
+		<panel name="fac_pan9" id="fac_pan9" resizeable="false" visible="false" enabled="false"
+			   border="TitledBorder(DWSC East Bypass (Under Construction))" preferredsize="500,250"
+			   layout="GridBagLayout">
+			<gridbagconstraints insets="0,0,5,5" anchor="GridBagConstraints.NORTHWEST" gridx="1" gridy="0"
+								gridheight="3"/>
+		</panel>
+		<panel name="fac_pan10" id="fac_pan10" resizeable="false" visible="false" enabled="false"
+			   border="TitledBorder(Stone Lakes Bypass (Under Construction))" preferredsize="500,250"
+			   layout="GridBagLayout">
+			<gridbagconstraints insets="0,0,5,5" anchor="GridBagConstraints.NORTHWEST" gridx="1" gridy="0"
+								gridheight="3"/>
+		</panel>
+
+	</panel>
+	<panel preferredsize="300,400" visible="false">
+		<gridbagconstraints insets="0,0,0,0" anchor="GridBagConstraints.NORTH" gridx="2" gridy="0"/>
+		<label id="map3" name="map3" icon="images/Banks_pumping_Plant.jpg"/>
+	</panel>
+</panel>
