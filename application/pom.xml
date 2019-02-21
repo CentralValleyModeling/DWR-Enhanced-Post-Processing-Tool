@@ -65,6 +65,11 @@
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>nbm-maven-plugin</artifactId>
+                <configuration>
+                    <installerOsMacosx>false</installerOsMacosx>
+                    <installerOsSolaris>false</installerOsSolaris>
+                    <installerOsLinux>false</installerOsLinux>
+                </configuration>
             </plugin>
             <!-- Permits NbModuleSuite to be run in integration-test phase: -->
             <plugin>
