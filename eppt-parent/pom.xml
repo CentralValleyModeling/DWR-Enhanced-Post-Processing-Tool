@@ -45,6 +45,18 @@
 			<name>NetBeans</name>
 			<url>http://bits.netbeans.org/nexus/content/groups/netbeans/</url>
 		</repository>
+		<repository>
+			<id>rma-maven-library-releases</id>
+			<url>http://artifactory.rmanet.com:2447/artifactory/rma-maven-library-releases</url>
+		</repository>
+		<repository>
+			<id>rma-maven-library-snapshots</id>
+			<url>http://artifactory.rmanet.com:2447/artifactory/rma-maven-library-snapshots</url>
+		</repository>
+		<repository>
+			<id>third-party-maven-library-releases</id>
+			<url>http://artifactory.rmanet.com:2447/artifactory/third-party-maven-library-releases</url>
+		</repository>
 	</repositories>
 	<build>
 		<pluginManagement>
