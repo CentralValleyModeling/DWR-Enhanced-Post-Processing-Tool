@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ Copyright (c) 2019
+  ~ California Department of Water Resources
+  ~ All Rights Reserved.  DWR PROPRIETARY/CONFIDENTIAL.
+  ~ Source may not be released without written approval from DWR
+  -->
+
+<project name="Hello_World_Installer" default="default" basedir=".">
+	<import file="nbproject/build-impl.xml"/>
+
+	<property file="build.properties"/>
+
+	<target name="-post-compile" depends="-unjar-core-engine,create-jar-contents-list"/>
+	<target name="-unjar-core-engine">
+		<!-- Add the contents of the core engine to the engine we're building -->
+		<unjar
+				src="${reference.NBI_Engine.jar}"
+				dest="${build.classes.dir}"
+				overwrite="false"/>
+	</target>
+
+	<target name="create-jar-contents-list">
+		<pathconvert property="build.classes.dir.normalized" dirsep="/">
+			<path location="${build.classes.dir}"/>
+		</pathconvert>
+		<pathconvert pathsep="${line.separator}" property="engine.files" dirsep="/">
+			<fileset dir="${build.classes.dir}" includes="${jar.contents.includes}"/>
+			<mapper>
+				<chainedmapper>
+					<globmapper handledirsep="true" from="${build.classes.dir.normalized}/*" to="*"/>
+				</chainedmapper>
+			</mapper>
+		</pathconvert>
+		<echo file="${build.classes.dir}/${jar.contents.list}">${engine.files}</echo>
+	</target>
+
+	<target name="-post-jar">
+		<delete dir="${dist.dir}/lib"/>
+	</target>
+</project>
