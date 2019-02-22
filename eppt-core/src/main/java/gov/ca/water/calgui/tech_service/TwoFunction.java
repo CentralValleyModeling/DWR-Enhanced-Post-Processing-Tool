@@ -15,12 +15,11 @@ import gov.ca.water.calgui.bo.CalLiteGUIException;
  *
  * @param <A> 1st parameter
  * @param <B> 2nd parameter
- * @param <C> 3ed parameter
  * @param <R> return type
  * @author Mohan
  */
 @FunctionalInterface
-public interface ThreeFunction<A, B, C, R>
+public interface TwoFunction<A, B, R>
 {
-	R apply(A a, B b, C c) throws CalLiteGUIException;
+	R apply(A a, B b) throws CalLiteGUIException;
 }

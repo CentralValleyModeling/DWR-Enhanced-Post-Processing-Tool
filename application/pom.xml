@@ -80,6 +80,7 @@
                     <systemPropertyVariables>
                         <all.clusters>${all.clusters}</all.clusters>
                         <branding.token>${brandingToken}</branding.token>
+						<app.conf>nbproject/eppt.conf</app.conf>
                     </systemPropertyVariables>
                 </configuration>
             </plugin>
@@ -98,8 +99,6 @@
                             <execution>
                                 <id>extra</id>
                                 <goals>
-                                    <goal>autoupdate</goal>
-                                    <goal>webstart-app</goal>
                                     <goal>build-installers</goal>
                                 </goals>
                             </execution>

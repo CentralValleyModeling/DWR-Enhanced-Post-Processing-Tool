@@ -14,7 +14,7 @@ import gov.ca.water.calgui.bus_service.ITableSvc;
 import gov.ca.water.calgui.constant.Constant;
 import gov.ca.water.calgui.tech_service.IErrorHandlingSvc;
 import gov.ca.water.calgui.tech_service.IFileSystemSvc;
-import gov.ca.water.calgui.tech_service.ThreeFunction;
+import gov.ca.water.calgui.tech_service.TwoFunction;
 import gov.ca.water.calgui.tech_service.impl.ErrorHandlingSvcImpl;
 import gov.ca.water.calgui.tech_service.impl.FileSystemSvcImpl;
 import org.apache.log4j.Logger;
@@ -62,7 +62,7 @@ public final class TableSvcImpl implements ITableSvc
 	{
 		LOG.info("Building TableSvcImpl Object.");
 		this.fileSystemSvc = new FileSystemSvcImpl();
-		this.map = new HashMap<String, DataTableModel>();
+		this.map = new HashMap<>();
 		this.errorHandlingSvc = new ErrorHandlingSvcImpl();
 		generateMapForTables(guiLinks2BOList);
 	}
@@ -97,28 +97,25 @@ public final class TableSvcImpl implements ITableSvc
 	 *
 	 * @param lines        The data lines of the table.
 	 * @param columnLength The column lengeh.
-	 * @param errorData    The string that gives the error data.
 	 * @return Will return the table data in two dimensional array.
 	 * @throws CalLiteGUIException If anything wrong about the data then it will throw a
 	 *                             exception with the information about it.
 	 */
-	public static String[][] handleTableFileWithColumnNumber(List<String> lines, int columnLength, String errorData)
+	public static String[][] handleTableFileWithColumnNumber(List<String> lines, int columnLength )
 			throws CalLiteGUIException
 	{
-		String[][] data = null;
 		int noOfRows = getRowNumbers(lines);
-		data = new String[noOfRows][columnLength];
+		String[][] data = new String[noOfRows][columnLength];
 		for(int i = 0; i < noOfRows; i++)
 		{
 			data[i][0] = String.valueOf(i + 1);
 		}
 		for(String line : lines)
 		{
-			errorData = line;
 			String[] arr = line.split(Constant.TAB_OR_SPACE_DELIMITER);
 			if(!isDouble(Arrays.asList(arr)))
 			{
-				throw new CalLiteGUIException("The table data should only have integer values. This row \"" + errorData
+				throw new CalLiteGUIException("The table data should only have integer values. This row \"" + line
 						+ "\" has other data then integer.");
 			}
 			data[Integer.parseInt(arr[0]) - 1][Integer.parseInt(arr[1])] = arr[2];
@@ -131,17 +128,15 @@ public final class TableSvcImpl implements ITableSvc
 	 *
 	 * @param lines        The data lines of the table.
 	 * @param columnLength The column lengeh.
-	 * @param errorData    The string that gives the error data.
 	 * @return Will return the table data in two dimensional array.
 	 * @throws CalLiteGUIException If anything wrong about the data then it will throw a
 	 *                             exception with the information about it.
 	 */
-	private static String[][] handleTableFileForEIsjr(List<String> lines, int columnLength, String errorData)
+	private static String[][] handleTableFileForEIsjr(List<String> lines, int columnLength)
 			throws CalLiteGUIException
 	{
-		String[][] data = null;
 		int noOfRows = getRowNumbers(lines);
-		data = new String[noOfRows][columnLength];
+		String[][] data = new String[noOfRows][columnLength];
 		for(int i = 0; i < noOfRows; i++)
 		{
 			data[i][0] = String.valueOf(i + 1);
@@ -151,11 +146,10 @@ public final class TableSvcImpl implements ITableSvc
 		int multiplierNo = 2;
 		for(String line : lines)
 		{
-			errorData = line;
 			String[] arr = line.split(Constant.TAB_OR_SPACE_DELIMITER);
 			if(!isDouble(Arrays.asList(arr)))
 			{
-				throw new CalLiteGUIException("The table data should only have integer values. This row \"" + errorData
+				throw new CalLiteGUIException("The table data should only have integer values. This row \"" + line
 						+ "\" has other data then integer.");
 			}
 			if(arr[1].equals(colNo))
@@ -196,25 +190,22 @@ public final class TableSvcImpl implements ITableSvc
 	 *
 	 * @param lines        The data lines of the table.
 	 * @param columnLength The column lengeh.
-	 * @param errorData    The string that gives the error data.
 	 * @return Will return the table data in two dimensional array.
 	 * @throws CalLiteGUIException If anything wrong about the data then it will throw a
 	 *                             exception with the information about it.
 	 */
-	private static String[][] handleTableFileLikeTable(List<String> lines, int columnLength, String errorData)
+	private static String[][] handleTableFileLikeTable(List<String> lines, int columnLength)
 			throws CalLiteGUIException
 	{
-		String[][] data = null;
-		data = new String[lines.size()][columnLength];
+		String[][] data = new String[lines.size()][columnLength];
 		for(int i = 0; i < data.length; i++)
 		{
 			String line = lines.get(i);
-			errorData = line;
 			String[] lineData = line.split(Constant.TAB_OR_SPACE_DELIMITER);
 			List<String> temp = removeAllEmptyFromArray(lineData);
 			if(!isDouble(temp))
 			{
-				throw new CalLiteGUIException("The table data should only have integer values. This row \"" + errorData
+				throw new CalLiteGUIException("The table data should only have integer values. This row \"" + line
 						+ "\" has other data then integer.");
 			}
 			for(int j = 0; j < data[0].length; j++)
@@ -315,7 +306,7 @@ public final class TableSvcImpl implements ITableSvc
 			// We are trying to remove all the strings from the array.
 			lines = lines.stream().filter(line -> isDouble(line.split(Constant.TAB_OR_SPACE_DELIMITER)[0]))
 						 .collect(Collectors.toList());
-			data = handleTableFileLikeTable(lines, 2, errorData);
+			data = handleTableFileLikeTable(lines, 2);
 			return new DataTableModel(fileName, columnName, data, false);
 		}
 		catch(NullPointerException ex)
@@ -336,7 +327,7 @@ public final class TableSvcImpl implements ITableSvc
 	}
 
 	@Override
-	public DataTableModel getTable(String tableName, ThreeFunction<List<String>, Integer, String, String[][]> function)
+	public DataTableModel getTable(String tableName, TwoFunction<List<String>, Integer, String[][]> function)
 			throws CalLiteGUIException
 	{
 		String errorData = "";
@@ -349,7 +340,7 @@ public final class TableSvcImpl implements ITableSvc
 			// We are trying to remove all the strings from the array.
 			lines = lines.stream().filter(line -> isDouble(line.split(Constant.TAB_OR_SPACE_DELIMITER)[0]))
 						 .collect(Collectors.toList());
-			data = function.apply(lines, columnName.length, errorData);
+			data = function.apply(lines, columnName.length);
 			return new DataTableModel(tableName, columnName, data, false);
 		}
 		catch(NullPointerException ex)
@@ -454,9 +445,9 @@ public final class TableSvcImpl implements ITableSvc
 	 */
 	private Map<String, DataTableModel> handleX2table(String tableName1, String tableName2) throws CalLiteGUIException
 	{
-		Map<String, DataTableModel> tempMapForDataTable = new HashMap<String, DataTableModel>();
-		DataTableModel dtm1 = null;
-		DataTableModel dtm2 = null;
+		Map<String, DataTableModel> tempMapForDataTable = new HashMap<>();
+		DataTableModel dtm1;
+		DataTableModel dtm2;
 		// Getting the two tables.
 		if(tableName1.equals("gui_x2active"))
 		{

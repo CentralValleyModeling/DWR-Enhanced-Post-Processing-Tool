@@ -19,6 +19,7 @@ import wrimsv2.wreslparser.elements.StudyUtils;
 
 import java.io.IOException;
 import java.util.Calendar;
+import java.util.concurrent.TimeUnit;
 
 /**
  * This class is used to run a single study of the wrimsv2 class.
@@ -56,7 +57,7 @@ public class Singleton
 				long endTimeInMillis = Calendar.getInstance().getTimeInMillis();
 				int runPeriod = (int) (endTimeInMillis - startTimeInMillis);
 				LOG.debug("=================Run Time is " + runPeriod / 60000 + "min"
-						+ Math.round((runPeriod / 60000.0 - runPeriod / 60000) * 60) + "sec====");
+						+ ((runPeriod/1000) % 60)+ "sec====");
 			}
 			else
 			{

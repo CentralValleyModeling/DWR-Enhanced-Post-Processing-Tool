@@ -40,34 +40,32 @@ public class MonthlyTablePanel extends JPanel implements ActionListener, Compone
 	JPanel panel;
 	JScrollPane scrollPane;
 
-	public MonthlyTablePanel(String title, TimeSeriesContainer[] tscs, TimeSeriesContainer[] stscs,
-							 IDSSGrabber1Svc dss_Grabber, String sName)
+	public MonthlyTablePanel(String title, TimeSeriesContainer[] primaryResults, TimeSeriesContainer[] secondaryResults,
+							 IDSSGrabber1Svc dssGrabber, String sName)
 	{
-		this(title, tscs, stscs, dss_Grabber, null, sName, false);
-
+		this(title, primaryResults, secondaryResults, dssGrabber, null, sName, false);
 	}
 
-	public MonthlyTablePanel(String title, TimeSeriesContainer[] tscs, TimeSeriesContainer[] stscs,
-							 DSSGrabber2SvcImpl dss_Grabber, String sName)
+	public MonthlyTablePanel(String title, TimeSeriesContainer[] primaryResults, TimeSeriesContainer[] secondaryResults,
+							 DSSGrabber2SvcImpl dssGrabber, String sName)
 	{
-		this(title, tscs, stscs, null, dss_Grabber, sName, false);
-
+		this(title, primaryResults, secondaryResults, null, dssGrabber, sName, false);
 	}
 
-	public MonthlyTablePanel(String title, TimeSeriesContainer[] tscs, TimeSeriesContainer[] stscs,
-							 IDSSGrabber1Svc dss_Grabber, String sName, boolean isBase)
+	public MonthlyTablePanel(String title, TimeSeriesContainer[] primaryResults, TimeSeriesContainer[] secondaryResults,
+							 IDSSGrabber1Svc dssGrabber, String sName, boolean isBase)
 	{
-		this(title, tscs, stscs, dss_Grabber, null, sName, isBase);
+		this(title, primaryResults, secondaryResults, dssGrabber, null, sName, isBase);
 	}
 
-	public MonthlyTablePanel(String title, TimeSeriesContainer[] tscs, TimeSeriesContainer[] stscs,
-							 DSSGrabber2SvcImpl dss_Grabber, String sName, boolean isBase)
+	public MonthlyTablePanel(String title, TimeSeriesContainer[] primaryResults, TimeSeriesContainer[] secondaryResults,
+							 DSSGrabber2SvcImpl dssGrabber, String sName, boolean isBase)
 	{
-		this(title, tscs, stscs, null, dss_Grabber, sName, isBase);
+		this(title, primaryResults, secondaryResults, null, dssGrabber, sName, isBase);
 	}
 
 	private MonthlyTablePanel(String title, TimeSeriesContainer[] primaryResults, TimeSeriesContainer[] secondaryResults,
-							  IDSSGrabber1Svc _dss_Grabber, DSSGrabber2SvcImpl _dss_Grabber2, String sName, boolean isBase)
+							  IDSSGrabber1Svc dssGrabber, DSSGrabber2SvcImpl dssGrabber2, String sName, boolean isBase)
 	{
 
 		super();
@@ -81,8 +79,8 @@ public class MonthlyTablePanel extends JPanel implements ActionListener, Compone
 		DecimalFormat df1 = new DecimalFormat("#.#");
 		HecTime hecTime = new HecTime();
 
-		boolean isCFS = _dss_Grabber == null ? "CFS".equals(_dss_Grabber2.getOriginalUnits())
-				: "CFS".equals(_dss_Grabber.getOriginalUnits());
+		boolean isCFS = dssGrabber == null ? "CFS".equals(dssGrabber2.getOriginalUnits())
+				: "CFS".equals(dssGrabber.getOriginalUnits());
 
 		List<String> columns = getColumns(isCFS);
 
@@ -149,8 +147,8 @@ public class MonthlyTablePanel extends JPanel implements ActionListener, Compone
 						{
 							if(isCFS)
 							{
-								double aTAFY = _dss_Grabber == null ? _dss_Grabber2.getAnnualTAF(s, waterYear - 1)
-										: _dss_Grabber.getAnnualTAF(s, waterYear - 1);
+								double aTAFY = dssGrabber == null ? dssGrabber2.getAnnualTAF(s, waterYear - 1)
+										: dssGrabber.getAnnualTAF(s, waterYear - 1);
 								if(aTAFY != -1)
 								{
 									data.add(df1.format(aTAFY));
@@ -187,8 +185,8 @@ public class MonthlyTablePanel extends JPanel implements ActionListener, Compone
 				}
 				if(isCFS)
 				{
-					double aTAFY = _dss_Grabber == null ? _dss_Grabber2.getAnnualTAF(s, waterYear)
-							: _dss_Grabber.getAnnualTAF(s, waterYear);
+					double aTAFY = dssGrabber == null ? dssGrabber2.getAnnualTAF(s, waterYear)
+							: dssGrabber.getAnnualTAF(s, waterYear);
 					if(aTAFY != -1)
 					{
 						data.add(df1.format(aTAFY));

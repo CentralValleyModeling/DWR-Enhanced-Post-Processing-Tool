@@ -11,7 +11,7 @@ import java.util.List;
 
 import gov.ca.water.calgui.bo.CalLiteGUIException;
 import gov.ca.water.calgui.bo.DataTableModel;
-import gov.ca.water.calgui.tech_service.ThreeFunction;
+import gov.ca.water.calgui.tech_service.TwoFunction;
 
 /**
  * This is the interface that handles all the tables like
@@ -42,7 +42,7 @@ public interface ITableSvc
 	 * @throws CalLiteGUIException If anything wrong about the file then it will throw a
 	 *                             exception with the information about it.
 	 */
-	DataTableModel getTable(String tableName, ThreeFunction<List<String>, Integer, String, String[][]> function)
+	DataTableModel getTable(String tableName, TwoFunction<List<String>, Integer, String[][]> function)
 			throws CalLiteGUIException;
 
 	/**
