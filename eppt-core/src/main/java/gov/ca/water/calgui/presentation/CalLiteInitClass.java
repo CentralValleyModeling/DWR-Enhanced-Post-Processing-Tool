@@ -7,11 +7,34 @@
 
 package gov.ca.water.calgui.presentation;
 
+import java.awt.Color;
+import java.awt.Component;
+import java.awt.Container;
+import java.awt.Dimension;
+import java.awt.event.ActionListener;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
+import java.awt.event.FocusEvent;
+import java.awt.event.FocusListener;
+import java.awt.event.ItemListener;
+import java.awt.event.MouseListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import java.util.List;
+import javax.swing.*;
+import javax.swing.border.LineBorder;
+import javax.swing.event.ChangeListener;
+
 import calsim.app.AppUtils;
 import calsim.app.DerivedTimeSeries;
 import calsim.app.MultipleTimeSeries;
 import calsim.gui.GuiUtils;
-import gov.ca.water.calgui.bo.*;
+import gov.ca.water.calgui.bo.CalLiteGUIException;
+import gov.ca.water.calgui.bo.DataTableModel;
+import gov.ca.water.calgui.bo.FileDialogBO;
+import gov.ca.water.calgui.bo.GUILinks2BO;
+import gov.ca.water.calgui.bo.JLinkedSlider;
+import gov.ca.water.calgui.bo.ResultUtilsBO;
 import gov.ca.water.calgui.bus_delegate.IAllButtonsDele;
 import gov.ca.water.calgui.bus_delegate.IApplyDynamicConDele;
 import gov.ca.water.calgui.bus_delegate.IVerifyControlsDele;
@@ -22,7 +45,12 @@ import gov.ca.water.calgui.bus_service.IScenarioSvc;
 import gov.ca.water.calgui.bus_service.ISeedDataSvc;
 import gov.ca.water.calgui.bus_service.ITableSvc;
 import gov.ca.water.calgui.bus_service.IXMLParsingSvc;
-import gov.ca.water.calgui.bus_service.impl.*;
+import gov.ca.water.calgui.bus_service.impl.DynamicControlSvcImpl;
+import gov.ca.water.calgui.bus_service.impl.ModelRunSvcImpl;
+import gov.ca.water.calgui.bus_service.impl.ScenarioSvcImpl;
+import gov.ca.water.calgui.bus_service.impl.SeedDataSvcImpl;
+import gov.ca.water.calgui.bus_service.impl.TableSvcImpl;
+import gov.ca.water.calgui.bus_service.impl.XMLParsingSvcImpl;
 import gov.ca.water.calgui.constant.Constant;
 import gov.ca.water.calgui.tech_service.IAuditSvc;
 import gov.ca.water.calgui.tech_service.IDialogSvc;
@@ -36,14 +64,6 @@ import org.swixml.SwingEngine;
 import vista.set.DataReference;
 import vista.set.Group;
 
-import javax.swing.*;
-import javax.swing.border.LineBorder;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
-import java.awt.*;
-import java.awt.event.*;
-import java.util.List;
-
 /**
  * This class is for initializing the Application and adding the Action, Item,
  * and Mouse Listeners to the main frame.
@@ -52,12 +72,12 @@ import java.util.List;
  */
 public class CalLiteInitClass
 {
-	private static final Logger LOG = Logger.getLogger(CalLiteInitClass.class.getName());
-	private SwingEngine swingEngine;
-	private IAuditSvc auditSvc;
-	private IErrorHandlingSvc errorHandlingSvc = new ErrorHandlingSvcImpl();
-	private IDialogSvc dialogSvc = DialogSvcImpl.getDialogSvcInstance();
-	private IXMLParsingSvc xmlParsingSvc = XMLParsingSvcImpl.getXMLParsingSvcImplInstance();
+	private static final Logger LOGGER = Logger.getLogger(CalLiteInitClass.class.getName());
+	private final IErrorHandlingSvc _errorHandlingSvc = new ErrorHandlingSvcImpl();
+	private final IDialogSvc _dialogSvc = DialogSvcImpl.getDialogSvcInstance();
+	private final IXMLParsingSvc _xmlParsingSvc = XMLParsingSvcImpl.getXMLParsingSvcImplInstance();
+	private final SwingEngine _swingEngine = _xmlParsingSvc.getSwingEngine();
+	private final IAuditSvc _auditSvc = AuditSvcImpl.getAuditSvcImplInstance();
 
 	/**
 	 * Helper function that scans GUI for a button with the indicated label
@@ -71,12 +91,9 @@ public class CalLiteInitClass
 	public static Component findFirstButtonMatchingText(Component comp, String text)
 	{
 
-		if((comp instanceof JButton))
+		if((comp instanceof JButton) && ((JButton) comp).getText().equals(text))
 		{
-			if(((JButton) comp).getText().equals(text))
-			{
-				return comp;
-			}
+			return comp;
 		}
 
 		if(comp instanceof Container)
@@ -95,36 +112,6 @@ public class CalLiteInitClass
 	}
 
 	/**
-	 * Iterates through all components inside of a component and sets the
-	 * GridBagConstraints.weightx and weighty to 0.5
-	 *
-	 * @param parent
-	 *            Starting point for iteration
-	 *
-	 */
-	// private void reweightComponents(Container parent, GridBagLayout layout1)
-	// {
-	// for (Component c : parent.getComponents()) {
-	//
-	// if (c instanceof JPanel) {
-	// if (((JPanel) c).getLayout() instanceof GridBagLayout) {
-	// GridBagLayout layout2 = (GridBagLayout) ((JPanel) c).getLayout();
-	// reweightComponents((Container) c, layout2);
-	// }
-	// } else if (layout1 != null) {
-	// GridBagConstraints gbc = layout1.getConstraints(c);
-	// // gbc.weightx = 0.0;
-	// // gbc.weighty = 0.0;//
-	// gbc.ipadx = 150;
-	// gbc.ipady = 15;
-	// layout1.setConstraints(c, gbc);
-	// System.out.println(c.getName());
-	//
-	// }
-	// }
-	// }
-
-	/**
 	 * This method is called to initialize the ui.
 	 */
 	public void init()
@@ -138,99 +125,61 @@ public class CalLiteInitClass
 			verifyControlsDele.verifyTheDataBeforeUI(Constant.SCENARIOS_DIR + Constant.DEFAULT + Constant.CLS_EXT);
 			DynamicControlSvcImpl.getDynamicControlSvcImplInstance();
 			ITableSvc tableSvc = TableSvcImpl.getTableSvcImplInstance(seedDataSvc.getUserTables());
-			this.swingEngine = xmlParsingSvc.getSwingEngine();
 			IScenarioSvc scenarioSvc = ScenarioSvcImpl.getScenarioSvcImplInstance();
 			IAllButtonsDele allButtonsDele = new AllButtonsDeleImp();
 
 			// ----- Set up the GUI
-
-			// Set up month spinners
-			JSpinner spnSM1 = (JSpinner) swingEngine.find("spnRunStartMonth");
-			setMonthModelAndIndex(spnSM1, 9);
-			JSpinner spnEM1 = (JSpinner) swingEngine.find("spnRunEndMonth");
-			setMonthModelAndIndex(spnEM1, 8);
-			// Set up year spinners
-			JSpinner spnSY1 = (JSpinner) swingEngine.find("spnRunStartYear");
-			setNumberModelAndIndex(spnSY1, 1921, Constant.MIN_YEAR, Constant.MAX_YEAR, 1, "####");
-			JSpinner spnEY1 = (JSpinner) swingEngine.find("spnRunEndYear");
-			setNumberModelAndIndex(spnEY1, 2003, Constant.MIN_YEAR, Constant.MAX_YEAR, 1, "####");
-			addJSpinnerListener();
-			// Set up the global Listeners.
-			swingEngine.setActionListener(swingEngine.find(Constant.MAIN_FRAME_NAME), new GlobalActionListener());
-			setCheckBoxorMouseListener(swingEngine.find(Constant.MAIN_FRAME_NAME), new GlobalMouseListener());
-			setCheckBoxorRadioButtonItemListener(swingEngine.find(Constant.MAIN_FRAME_NAME), new GlobalItemListener());
-			setLinkedSliderChangeListener(swingEngine.find(Constant.MAIN_FRAME_NAME), new GlobalChangeListener());
-			ImageIcon icon = new ImageIcon(getClass().getResource("/images/CalLiteIcon.png"));
-			((JFrame) swingEngine.find(Constant.MAIN_FRAME_NAME)).setIconImage(icon.getImage());
-			((JTabbedPane) swingEngine.find("reg_tabbedPane")).addChangeListener(new GlobalChangeListener());
-
-			((JFrame) swingEngine.find(Constant.MAIN_FRAME_NAME))
-					.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);// EXIT_ON_CLOSE
-			((JFrame) swingEngine.find(Constant.MAIN_FRAME_NAME)).addWindowListener(new WindowAdapter()
-			{
-				@Override
-				public void windowClosing(WindowEvent we)
-				{
-					allButtonsDele.windowClosing();
-				}
-			});
+			initSpinners();
+			initGlobalListeners(allButtonsDele);
 			// Load the default cls file.
-			scenarioSvc.applyClsFile(Constant.SCENARIOS_DIR + Constant.DEFAULT + Constant.CLS_EXT, swingEngine,
+			scenarioSvc.applyClsFile(Constant.SCENARIOS_DIR + Constant.DEFAULT + Constant.CLS_EXT, _swingEngine,
 					seedDataSvc.getTableIdMap());
 			// check
-			checkForNewUserDefinedTables(xmlParsingSvc.getNewUserDefinedTables(), scenarioSvc, tableSvc, swingEngine);
-			auditSvc = AuditSvcImpl.getAuditSvcImplInstance();
-			auditSvc.clearAudit(); // we clear because when we 1st load the cls
+			checkForNewUserDefinedTables(_xmlParsingSvc.getNewUserDefinedTables(), scenarioSvc, tableSvc, _swingEngine);
+			// we clear because when we 1st load the cls
+			_auditSvc.clearAudit();
 			// file
 			// we should not have any records.
-			addJTextFieldListener(xmlParsingSvc.getjTextFieldIds());
-			addJCheckBoxListener(xmlParsingSvc.getjCheckBoxIDs());
+			addJTextFieldListener(_xmlParsingSvc.getjTextFieldIds());
+			addJCheckBoxListener(_xmlParsingSvc.getjCheckBoxIDs());
 			// Count threads and update batch run selector appropriately
-			int maxThreads = Math.max(1, Runtime.getRuntime().availableProcessors());
-			ModelRunSvcImpl.setSimultaneousRuns(maxThreads);
-			((JSlider) swingEngine.find("run_sldThreads")).addChangeListener(new GlobalChangeListener());
-			swingEngine.find("run_sldThreads").setEnabled(maxThreads > 1);
-			((JSlider) swingEngine.find("run_sldThreads")).setMaximum(maxThreads);
-			((JLabel) swingEngine.find("run_lblThreads"))
-					.setText(" " + maxThreads + ((maxThreads > 1) ? " runs" : " run"));
-			((JLabel) swingEngine.find("run_lblThreadsInfo"))
-					.setText("Simultaneous runs " + ((maxThreads > 1) ? "(1-" + maxThreads + ")" : "(1)"));
+			initBatchRun();
 			// For Result part.
-			ResultUtilsBO resultUtilsBO = ResultUtilsBO.getResultUtilsInstance(swingEngine);
+			ResultUtilsBO resultUtilsBO = ResultUtilsBO.getResultUtilsInstance(_swingEngine);
 			// Setup for Reporting page
 			// Set up additional UI elements
-			JList<?> lstScenarios = (JList<?>) swingEngine.find("SelectedList");
-			JRadioButton rdb1 = (JRadioButton) swingEngine.find("rdbp001");
-			JRadioButton rdb2 = (JRadioButton) swingEngine.find("rdbp002");
-			FileDialogBO fdDSSFiles = new FileDialogBO(lstScenarios, (JLabel) swingEngine.find("lblBase"), rdb1, rdb2,
-					(JButton) swingEngine.find("btnPower"), true);
+			JList<?> lstScenarios = (JList<?>) _swingEngine.find("SelectedList");
+			JRadioButton rdb1 = (JRadioButton) _swingEngine.find("rdbp001");
+			JRadioButton rdb2 = (JRadioButton) _swingEngine.find("rdbp002");
+			FileDialogBO fdDSSFiles = new FileDialogBO(lstScenarios, (JLabel) _swingEngine.find("lblBase"), rdb1, rdb2,
+					(JButton) _swingEngine.find("btnPower"), true);
 			resultUtilsBO.setFdDSSFiles(fdDSSFiles);
 			lstScenarios.setModel(fdDSSFiles.getLmScenNames());
 			lstScenarios.setBorder(new LineBorder(Color.gray, 1));
-			JButton btnScenario = (JButton) swingEngine.find("btnAddScenario");
+			JButton btnScenario = (JButton) _swingEngine.find("btnAddScenario");
 			btnScenario.addActionListener(fdDSSFiles);
-			JButton btnScenarioDel = (JButton) swingEngine.find("btnDelScenario");
+			JButton btnScenarioDel = (JButton) _swingEngine.find("btnDelScenario");
 			btnScenarioDel.addActionListener(fdDSSFiles);
-			JButton btnClearAll = (JButton) swingEngine.find("btnClearScenario");
+			JButton btnClearAll = (JButton) _swingEngine.find("btnClearScenario");
 			btnClearAll.addActionListener(fdDSSFiles);
 			// Set up month spinners on result page
-			JSpinner spnSM = (JSpinner) swingEngine.find("spnStartMonth");
+			JSpinner spnSM = (JSpinner) _swingEngine.find("spnStartMonth");
 			ResultUtilsBO.SetMonthModelAndIndex(spnSM, 9, resultUtilsBO, true);
-			JSpinner spnEM = (JSpinner) swingEngine.find("spnEndMonth");
+			JSpinner spnEM = (JSpinner) _swingEngine.find("spnEndMonth");
 			ResultUtilsBO.SetMonthModelAndIndex(spnEM, 8, resultUtilsBO, true);
 			// Set up year spinners
-			JSpinner spnSY = (JSpinner) swingEngine.find("spnStartYear");
+			JSpinner spnSY = (JSpinner) _swingEngine.find("spnStartYear");
 			ResultUtilsBO.SetNumberModelAndIndex(spnSY, 1921, 1921, 2003, 1, "####", resultUtilsBO, true);
-			JSpinner spnEY = (JSpinner) swingEngine.find("spnEndYear");
+			JSpinner spnEY = (JSpinner) _swingEngine.find("spnEndYear");
 			ResultUtilsBO.SetNumberModelAndIndex(spnEY, 2003, 1921, 2003, 1, "####", resultUtilsBO, true);
 			// Set up report list
-			JList<?> lstReports = (JList<?>) swingEngine.find("lstReports");
+			JList<?> lstReports = (JList<?>) _swingEngine.find("lstReports");
 			lstReports.setBorder(new LineBorder(Color.gray, 1));
 			lstReports.setVisible(true);
 
 			// For Custom Results ....
 
-			WRIMSGUILinks.buildWRIMSGUI((JPanel) swingEngine.find("WRIMS"));
+			WRIMSGUILinks.buildWRIMSGUI((JPanel) _swingEngine.find("WRIMS"));
 			WRIMSGUILinks.setStatus("Initialized.");
 			// Replace WRIMS GUI display action with CalLite GUI action
 			JButton retrieveBtn = GuiUtils.getCLGPanel().getRetrievePanel().getRetrieveBtn();
@@ -238,15 +187,7 @@ public class CalLiteInitClass
 			{
 				retrieveBtn.removeActionListener(al);
 			}
-			retrieveBtn.addActionListener(new ActionListener()
-			{
-
-				@Override
-				public void actionPerformed(ActionEvent arg0)
-				{
-					retrieve();
-				}
-			});
+			retrieveBtn.addActionListener(arg0 -> retrieve());
 			Component openButtonComponent = findFirstButtonMatchingText(GuiUtils.getCLGPanel(), "Open");
 			if(openButtonComponent != null)
 			{
@@ -255,36 +196,29 @@ public class CalLiteInitClass
 				{
 					openButton.removeActionListener(al);
 				}
-				openButton.addActionListener(new ActionListener()
-				{
-					@Override
-					public void actionPerformed(ActionEvent arg0)
-					{
-						retrieve2();
-					}
-				});
+				openButton.addActionListener(arg0 -> retrieve2());
 			}
 			// For PDF Report ...
-			((JButton) swingEngine.find("btnGetTemplateFile"))
-					.addActionListener(new FileDialogBO(null, (JTextField) swingEngine.find("tfTemplateFILE"), "inp"));
-			((JButton) swingEngine.find("btnGetReportFile1"))
-					.addActionListener(new FileDialogBO(null, (JTextField) swingEngine.find("tfReportFILE1")));
-			((JButton) swingEngine.find("btnGetReportFile2"))
-					.addActionListener(new FileDialogBO(null, (JTextField) swingEngine.find("tfReportFILE2")));
-			((JButton) swingEngine.find("btnGetReportFile3"))
-					.addActionListener(new FileDialogBO(null, (JTextField) swingEngine.find("tfReportFILE3"), "PDF"));
+			((JButton) _swingEngine.find("btnGetTemplateFile"))
+					.addActionListener(new FileDialogBO(null, (JTextField) _swingEngine.find("tfTemplateFILE"), "inp"));
+			((JButton) _swingEngine.find("btnGetReportFile1"))
+					.addActionListener(new FileDialogBO(null, (JTextField) _swingEngine.find("tfReportFILE1")));
+			((JButton) _swingEngine.find("btnGetReportFile2"))
+					.addActionListener(new FileDialogBO(null, (JTextField) _swingEngine.find("tfReportFILE2")));
+			((JButton) _swingEngine.find("btnGetReportFile3"))
+					.addActionListener(new FileDialogBO(null, (JTextField) _swingEngine.find("tfReportFILE3"), "PDF"));
 
 			// Schematic views
 
-			new SchematicMain((JPanel) swingEngine.find("schematic_holder"),
-					"file:///" + System.getProperty("user.dir") + "/Config/callite_merged.svg", swingEngine, 1.19, 0.0,
+			new SchematicMain((JPanel) _swingEngine.find("schematic_holder"),
+					"file:///" + System.getProperty("user.dir") + "/Config/callite_merged.svg", _swingEngine, 1.19, 0.0,
 					0.0, 1.19, -8.0, 5.0);
-			new SchematicMain((JPanel) swingEngine.find("schematic_holder2"),
+			new SchematicMain((JPanel) _swingEngine.find("schematic_holder2"),
 					"file:///" + System.getProperty("user.dir") + "/Config/callite-massbalance_working.svg",
-					swingEngine, 1.2, 0, 0.0, 1.2, 21.0, 15.0);
+					_swingEngine, 1.2, 0, 0.0, 1.2, 21.0, 15.0);
 
 			// Recolor results tabs
-			JTabbedPane jTabbedPane = (JTabbedPane) swingEngine.find("tabbedPane1");
+			JTabbedPane jTabbedPane = (JTabbedPane) _swingEngine.find("tabbedPane1");
 			jTabbedPane.setForegroundAt(6, Color.blue);
 			jTabbedPane.setForegroundAt(7, Color.blue);
 			jTabbedPane.setForegroundAt(8, Color.blue);
@@ -295,10 +229,10 @@ public class CalLiteInitClass
 			jTabbedPane.setBackgroundAt(9, Color.WHITE);
 			jTabbedPane.addChangeListener(resultUtilsBO);
 
-			JMenuBar menuBar = (JMenuBar) this.swingEngine.find("menu");
-			((JFrame) swingEngine.find(Constant.MAIN_FRAME_NAME)).setJMenuBar(menuBar);
+			JMenuBar menuBar = (JMenuBar) this._swingEngine.find("menu");
+			((JFrame) _swingEngine.find(Constant.MAIN_FRAME_NAME)).setJMenuBar(menuBar);
 			menuBar.setVisible(true);
-			swingEngine.find(Constant.MAIN_FRAME_NAME).addComponentListener(new ComponentAdapter()
+			_swingEngine.find(Constant.MAIN_FRAME_NAME).addComponentListener(new ComponentAdapter()
 			{
 				@Override
 				// Kludge to encourage consistent sizing
@@ -306,27 +240,74 @@ public class CalLiteInitClass
 				{
 					int height = event.getComponent().getHeight();
 					int width = event.getComponent().getWidth();
-					swingEngine.find("schematic_holder")
-							.setPreferredSize(new Dimension(width - 50, height - 200));
+					_swingEngine.find("schematic_holder")
+								.setPreferredSize(new Dimension(width - 50, height - 200));
 					SwingUtilities.updateComponentTreeUI(event.getComponent());
 				}
 			});
 			new ApplyDynamicConDeleImp().applyDynamicControlForListFromFile();
 
-			// reweightComponents((Container) swingEngine.find("runsettings"),
-			// null);
-			// reweightComponents((Container) swingEngine.find("Reporting"),
-			// null);
-
 			// Display the GUI
-			swingEngine.find(Constant.MAIN_FRAME_NAME).setVisible(true);
+			_swingEngine.find(Constant.MAIN_FRAME_NAME).setVisible(true);
 		}
-		catch(Exception e)
+		catch(RuntimeException e)
 		{
-			LOG.error(e.getMessage());
+			LOGGER.error(e.getMessage());
 			String messageText = "Unable to initialize GUI.";
-			errorHandlingSvc.businessErrorHandler(messageText, (JFrame) swingEngine.find(Constant.MAIN_FRAME_NAME), e);
+			_errorHandlingSvc.businessErrorHandler(messageText, (JFrame) _swingEngine.find(Constant.MAIN_FRAME_NAME),
+					e);
 		}
+	}
+
+	private void initBatchRun()
+	{
+		int maxThreads = Math.max(1, Runtime.getRuntime().availableProcessors());
+		ModelRunSvcImpl.setSimultaneousRuns(maxThreads);
+		((JSlider) _swingEngine.find("run_sldThreads")).addChangeListener(new GlobalChangeListener());
+		_swingEngine.find("run_sldThreads").setEnabled(maxThreads > 1);
+		((JSlider) _swingEngine.find("run_sldThreads")).setMaximum(maxThreads);
+		((JLabel) _swingEngine.find("run_lblThreads"))
+				.setText(" " + maxThreads + ((maxThreads > 1) ? " runs" : " run"));
+		((JLabel) _swingEngine.find("run_lblThreadsInfo"))
+				.setText("Simultaneous runs " + ((maxThreads > 1) ? "(1-" + maxThreads + ")" : "(1)"));
+	}
+
+	private void initGlobalListeners(IAllButtonsDele allButtonsDele)
+	{
+		// Set up the global Listeners.
+		_swingEngine.setActionListener(_swingEngine.find(Constant.MAIN_FRAME_NAME), new GlobalActionListener());
+		setCheckBoxorMouseListener(_swingEngine.find(Constant.MAIN_FRAME_NAME), new GlobalMouseListener());
+		setCheckBoxorRadioButtonItemListener(_swingEngine.find(Constant.MAIN_FRAME_NAME), new GlobalItemListener());
+		setLinkedSliderChangeListener(_swingEngine.find(Constant.MAIN_FRAME_NAME), new GlobalChangeListener());
+		ImageIcon icon = new ImageIcon(getClass().getResource("/images/CalLiteIcon.png"));
+		((JFrame) _swingEngine.find(Constant.MAIN_FRAME_NAME)).setIconImage(icon.getImage());
+		((JTabbedPane) _swingEngine.find("reg_tabbedPane")).addChangeListener(new GlobalChangeListener());
+
+		((JFrame) _swingEngine.find(Constant.MAIN_FRAME_NAME))
+				.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);// EXIT_ON_CLOSE
+		((JFrame) _swingEngine.find(Constant.MAIN_FRAME_NAME)).addWindowListener(new WindowAdapter()
+		{
+			@Override
+			public void windowClosing(WindowEvent we)
+			{
+				allButtonsDele.windowClosing();
+			}
+		});
+	}
+
+	private void initSpinners()
+	{
+		// Set up month spinners
+		JSpinner spnSM1 = (JSpinner) _swingEngine.find("spnRunStartMonth");
+		setMonthModelAndIndex(spnSM1, 9);
+		JSpinner spnEM1 = (JSpinner) _swingEngine.find("spnRunEndMonth");
+		setMonthModelAndIndex(spnEM1, 8);
+		// Set up year spinners
+		JSpinner spnSY1 = (JSpinner) _swingEngine.find("spnRunStartYear");
+		setNumberModelAndIndex(spnSY1, 1921, Constant.MIN_YEAR, Constant.MAX_YEAR, 1, "####");
+		JSpinner spnEY1 = (JSpinner) _swingEngine.find("spnRunEndYear");
+		setNumberModelAndIndex(spnEY1, 2003, Constant.MIN_YEAR, Constant.MAX_YEAR, 1, "####");
+		addJSpinnerListener();
 	}
 
 	/**
@@ -338,8 +319,8 @@ public class CalLiteInitClass
 	 * @param tableSvc          The Object of {@link TableSvcImpl}.
 	 * @param swingEngine       The Object of {@link SwingEngine}.
 	 */
-	public void checkForNewUserDefinedTables(List<String> newUserDefinedIds, IScenarioSvc scenarioSvc,
-											 ITableSvc tableSvc, SwingEngine swingEngine)
+	private void checkForNewUserDefinedTables(List<String> newUserDefinedIds, IScenarioSvc scenarioSvc,
+											  ITableSvc tableSvc, SwingEngine swingEngine)
 	{
 		DataTableModel dtm = null;
 		for(String newUserDefinedId : newUserDefinedIds)
@@ -361,7 +342,7 @@ public class CalLiteInitClass
 				catch(CalLiteGUIException ex)
 				{
 					Log.error(ex);
-					errorHandlingSvc.displayErrorMessageBeforeTheUI(new CalLiteGUIException(
+					_errorHandlingSvc.displayErrorMessageBeforeTheUI(new CalLiteGUIException(
 							"There is a table id " + newUserDefinedId
 									+ " in the gui.xml file but there is no table file with that name. Please provide the file.",
 							ex));
@@ -376,7 +357,7 @@ public class CalLiteInitClass
 	 * @param jspn The {@link JSpinner} to load.
 	 * @param idx  The month value which we should be displaying.
 	 */
-	public void setMonthModelAndIndex(JSpinner jspn, int idx)
+	private void setMonthModelAndIndex(JSpinner jspn, int idx)
 	{
 		String[] monthNames = {"Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"};
 		try
@@ -385,8 +366,9 @@ public class CalLiteInitClass
 			jspn.setModel(monthModel);
 			jspn.setValue(monthNames[idx]);
 		}
-		catch(Exception e)
+		catch(RuntimeException e)
 		{
+			LOGGER.warn("Unable to initialize month spinner", e);
 		}
 	}
 
@@ -401,7 +383,7 @@ public class CalLiteInitClass
 	 * @param step   the difference between elements of the sequence
 	 * @param format The format that the {@link JSpinner} should look like.
 	 */
-	public void setNumberModelAndIndex(JSpinner jspn, int value, int min, int max, int step, String format)
+	private void setNumberModelAndIndex(JSpinner jspn, int value, int min, int max, int step, String format)
 	{
 		SpinnerModel spnmod = new SpinnerNumberModel(value, min, max, step);
 		jspn.setModel(spnmod);
@@ -415,7 +397,7 @@ public class CalLiteInitClass
 	 * @param component
 	 * @param changeListener Object of the Item Listener.
 	 */
-	public void setLinkedSliderChangeListener(Component component, Object changeListener)
+	private void setLinkedSliderChangeListener(Component component, Object changeListener)
 	{
 		if(component instanceof JLinkedSlider)
 		{
@@ -434,7 +416,7 @@ public class CalLiteInitClass
 	 * @param component    The component to which you want to set the itemListener.
 	 * @param itemListener Object of the Item Listener.
 	 */
-	public void setCheckBoxorRadioButtonItemListener(Component component, Object itemListener)
+	private void setCheckBoxorRadioButtonItemListener(Component component, Object itemListener)
 	{
 		if(component instanceof JCheckBox || component instanceof JRadioButton)
 		{
@@ -453,7 +435,7 @@ public class CalLiteInitClass
 	 * @param component     The component to which you want to set the MouseListener.
 	 * @param mouseListener Object of the Mouse Listener.
 	 */
-	public void setCheckBoxorMouseListener(Component component, Object mouseListener)
+	private void setCheckBoxorMouseListener(Component component, Object mouseListener)
 	{
 		if(component instanceof JCheckBox)
 		{
@@ -482,15 +464,15 @@ public class CalLiteInitClass
 			{
 				if(e.getComponent().getName().equals(Constant.CKB_REG_VAMP))
 				{
-					((JLabel) swingEngine.find("labReg")).setText(Constant.VAMP_NOT_SELECTED_TEXT);
-					((JLabel) swingEngine.find("labReg2")).setText(Constant.VAMP_NOT_SELECTED_TEXT);
+					((JLabel) _swingEngine.find("labReg")).setText(Constant.VAMP_NOT_SELECTED_TEXT);
+					((JLabel) _swingEngine.find("labReg2")).setText(Constant.VAMP_NOT_SELECTED_TEXT);
 				}
 			}
 
 			@Override
 			public void focusGained(FocusEvent e)
 			{
-				boolean showTablePanel = ((JRadioButton) swingEngine.find("rdbRegQS_UD")).isSelected();
+				boolean showTablePanel = ((JRadioButton) _swingEngine.find("rdbRegQS_UD")).isSelected();
 				if(showTablePanel)
 				{
 					String cName = e.getComponent().getName();
@@ -502,22 +484,14 @@ public class CalLiteInitClass
 					}
 
 					showTablePanel = showTablePanel
-							&& (((JTabbedPane) swingEngine.find("reg_tabbedPane")).getSelectedIndex() != 2);
+							&& (((JTabbedPane) _swingEngine.find("reg_tabbedPane")).getSelectedIndex() != 2);
 
-					// Force display of panel for Trinity, Pumping
-					// showTablePanel = showTablePanel ||
-					// (cName.equals("ckbReg_TRNTY") ||
-					// cName.equals("ckbReg_PUMP"));
 
-					swingEngine.find("reg_panTab").setVisible(showTablePanel);
-					swingEngine.find("reg_panTabPlaceholder").setVisible(!showTablePanel);
+					_swingEngine.find("reg_panTab").setVisible(showTablePanel);
+					_swingEngine.find("reg_panTabPlaceholder").setVisible(!showTablePanel);
 
 					IApplyDynamicConDele applyDynamicConDele = new ApplyDynamicConDeleImp();
 					JCheckBox c = (JCheckBox) e.getComponent();
-					// boolean isSelected = c.isSelected();
-					// if (c.getName().equals(Constant.CKB_REG_VAMP) &&
-					// e.getComponent() != null)
-					// c.setSelected(!isSelected);
 
 					applyDynamicConDele.applyDynamicControl(c.getName(), c.isSelected(), c.isEnabled(), false);
 
@@ -526,28 +500,28 @@ public class CalLiteInitClass
 
 						if(c.isSelected())
 						{
-							((JLabel) swingEngine.find("labReg")).setText(Constant.VAMP_SELECTED_TEXT);
-							((JLabel) swingEngine.find("labReg2")).setText(Constant.VAMP_SELECTED_TEXT);
+							((JLabel) _swingEngine.find("labReg")).setText(Constant.VAMP_SELECTED_TEXT);
+							((JLabel) _swingEngine.find("labReg2")).setText(Constant.VAMP_SELECTED_TEXT);
 						}
 						else
 						{
-							((JLabel) swingEngine.find("labReg")).setText(Constant.VAMP_NOT_SELECTED_TEXT);
-							((JLabel) swingEngine.find("labReg2")).setText(Constant.VAMP_NOT_SELECTED_TEXT);
+							((JLabel) _swingEngine.find("labReg")).setText(Constant.VAMP_NOT_SELECTED_TEXT);
+							((JLabel) _swingEngine.find("labReg2")).setText(Constant.VAMP_NOT_SELECTED_TEXT);
 						}
 					}
 					// Make label red and enabled
 
-					swingEngine.find("labReg")
-							.setForeground(swingEngine.find("labReg2").getForeground());
+					_swingEngine.find("labReg")
+								.setForeground(_swingEngine.find("labReg2").getForeground());
 
-					swingEngine.find("labReg").setEnabled(true);
+					_swingEngine.find("labReg").setEnabled(true);
 
 				}
 			}
 		};
 		for(String name : listOfNames)
 		{
-			swingEngine.find(name).addFocusListener(focusListenerForCheckBox);
+			_swingEngine.find(name).addFocusListener(focusListenerForCheckBox);
 		}
 
 	}
@@ -563,63 +537,56 @@ public class CalLiteInitClass
 	{
 		FocusListener focusListenerForTextField = new FocusListener()
 		{
-			String oldValue = "";
+			String _oldValue = "";
 
 			@Override
 			public void focusLost(FocusEvent e)
 			{
 				JTextField field = ((JTextField) e.getComponent());
 				String newValue = field.getText();
-				if(!oldValue.equals(newValue))
+				if(!_oldValue.equals(newValue) && !_xmlParsingSvc.checkIsItFromResultPart(field.getName()))
 				{
-					if(!xmlParsingSvc.checkIsItFromResultPart(field.getName()))
-					{
-						auditSvc.addAudit(field.getName(), oldValue, newValue);
-					}
-
+					_auditSvc.addAudit(field.getName(), _oldValue, newValue);
 				}
 			}
 
 			@Override
 			public void focusGained(FocusEvent e)
 			{
-				oldValue = ((JTextField) e.getComponent()).getText();
+				_oldValue = ((JTextField) e.getComponent()).getText();
 			}
 		};
 		FocusListener focusListenerForTextArea = new FocusListener()
 		{
-			String oldValue = "";
+			String _oldValue = "";
 
 			@Override
 			public void focusLost(FocusEvent e)
 			{
 				JTextArea field = ((JTextArea) e.getComponent());
 				String newValue = field.getText();
-				if(!oldValue.equals(newValue))
+				if(!_oldValue.equals(newValue) && !_xmlParsingSvc.checkIsItFromResultPart(field.getName()))
 				{
-					if(!xmlParsingSvc.checkIsItFromResultPart(field.getName()))
-					{
-						auditSvc.addAudit(field.getName(), oldValue, newValue);
-					}
+					_auditSvc.addAudit(field.getName(), _oldValue, newValue);
 				}
 			}
 
 			@Override
 			public void focusGained(FocusEvent e)
 			{
-				oldValue = ((JTextArea) e.getComponent()).getText();
+				_oldValue = ((JTextArea) e.getComponent()).getText();
 			}
 		};
 		for(String name : listOfNames)
 		{
-			Component c = swingEngine.find(name);
+			Component c = _swingEngine.find(name);
 			if(c instanceof JTextField)
 			{
-				swingEngine.find(name).addFocusListener(focusListenerForTextField);
+				_swingEngine.find(name).addFocusListener(focusListenerForTextField);
 			}
 			else
 			{
-				swingEngine.find(name).addFocusListener(focusListenerForTextArea);
+				_swingEngine.find(name).addFocusListener(focusListenerForTextArea);
 			}
 		}
 	}
@@ -630,18 +597,11 @@ public class CalLiteInitClass
 	 */
 	private void addJSpinnerListener()
 	{
-		ChangeListener listener = new ChangeListener()
-		{
-			@Override
-			public void stateChanged(ChangeEvent e)
-			{
-				auditSvc.addAudit(((JSpinner) e.getSource()).getName(), " ",
-						String.valueOf(((JSpinner) e.getSource()).getValue()));
-			}
-		};
-		JSpinner spnRunEndMonth = (JSpinner) swingEngine.find("spnRunEndMonth");
+		ChangeListener listener = e -> _auditSvc.addAudit(((JSpinner) e.getSource()).getName(), " ",
+				String.valueOf(((JSpinner) e.getSource()).getValue()));
+		JSpinner spnRunEndMonth = (JSpinner) _swingEngine.find("spnRunEndMonth");
 		spnRunEndMonth.addChangeListener(listener);
-		JSpinner spnRunEndYear = (JSpinner) swingEngine.find("spnRunEndYear");
+		JSpinner spnRunEndYear = (JSpinner) _swingEngine.find("spnRunEndYear");
 		spnRunEndYear.addChangeListener(listener);
 	}
 
@@ -651,65 +611,34 @@ public class CalLiteInitClass
 	 */
 	private void retrieve()
 	{
-		JList<?> lstScenarios = (JList<?>) swingEngine.find("SelectedList");
+		JList<?> lstScenarios = (JList<?>) _swingEngine.find("SelectedList");
 		if(!AppUtils.baseOn)
 		{
-			// JOptionPane.showMessageDialog(swingEngine.find(Constant.MAIN_FRAME_NAME),
-			// "The Base DSS files need to be selected", "DSS Not Selected",
-			// JOptionPane.WARNING_MESSAGE);
-
-			// ImageIcon icon = new
-			// ImageIcon(getClass().getResource("/images/CalLiteIcon.png"));
-			// Object[] options = { "OK" };
-			// JOptionPane optionPane = new JOptionPane("The Base DSS files need
-			// to be selected",
-			// JOptionPane.ERROR_MESSAGE, JOptionPane.OK_OPTION, null, options,
-			// options[0]);
-			// JDialog dialog =
-			// optionPane.createDialog(swingEngine.find(Constant.MAIN_FRAME_NAME),"CalLite");
-			// dialog.setIconImage(icon.getImage());
-			// dialog.setResizable(false);
-			// dialog.setVisible(true);
-			dialogSvc.getOK("DSS not selected! The Base DSS files need to be selected", JOptionPane.WARNING_MESSAGE);
+			_dialogSvc.getOK("DSS not selected! The Base DSS files need to be selected", JOptionPane.WARNING_MESSAGE);
 			return;
 		}
 		try
 		{
 			String noRowsString = "";
-			JTable _table = GuiUtils.getCLGPanel().getRetrievePanel().getTable();
-			if(_table.getRowCount() == 0)
+			JTable table = GuiUtils.getCLGPanel().getRetrievePanel().getTable();
+			if(table.getRowCount() == 0)
 			{
 				noRowsString = " after using \"Filter\" to load variables";
 			}
-			Group _group = GuiUtils.getCLGPanel().getRetrievePanel().getGroup();
-			if(_group == null || _table.getSelectedRowCount() == 0)
+			Group group = GuiUtils.getCLGPanel().getRetrievePanel().getGroup();
+			if(group == null || table.getSelectedRowCount() == 0)
 			{
-				// JOptionPane.showMessageDialog(swingEngine.find(Constant.MAIN_FRAME_NAME),
-				// "Select one or more variables" + noRowsString,
-				// "Variable(s) Not Selected", JOptionPane.INFORMATION_MESSAGE);
-				// ImageIcon icon = new
-				// ImageIcon(getClass().getResource("/images/CalLiteIcon.png"));
-				// Object[] options = { "OK" };
-				// JOptionPane optionPane = new JOptionPane("Select one or more
-				// variables" + noRowsString,
-				// JOptionPane.ERROR_MESSAGE, JOptionPane.OK_OPTION, null,
-				// options, options[0]);
-				// JDialog dialog =
-				// optionPane.createDialog(swingEngine.find(Constant.MAIN_FRAME_NAME),"CalLite");
-				// dialog.setIconImage(icon.getImage());
-				// dialog.setResizable(false);
-				// dialog.setVisible(true);
-				dialogSvc.getOK("Variables not selected! Select one or more variables" + noRowsString,
+				_dialogSvc.getOK("Variables not selected! Select one or more variables" + noRowsString,
 						JOptionPane.INFORMATION_MESSAGE);
 				return;
 			}
-			int[] rows = _table.getSelectedRows(); // checked if count > 0 above
+			// checked if count > 0 above
+			int[] rows = table.getSelectedRows();
 			DataReference[] array = new DataReference[rows.length];
 			for(int i = 0; i < rows.length; i++)
 			{
-				array[i] = _group.getDataReference(rows[i]);
+				array[i] = group.getDataReference(rows[i]);
 			}
-			// GuiUtils.displayData(array);
 			for(int i = 0; i < rows.length; i++)
 			{
 				String[] parts = array[i].getName().split("::");
@@ -729,11 +658,9 @@ public class CalLiteInitClass
 				}
 			}
 		}
-		catch(Exception e)
+		catch(RuntimeException e)
 		{
-
-			// VistaUtils.displayException(GuiUtils.getCLGPanel(), e);
-			LOG.debug("Error in retrieve() -", e);
+			LOGGER.debug("Error in retrieve() -", e);
 		}
 		WRIMSGUILinks.setStatus("Well??");
 	}
@@ -745,54 +672,22 @@ public class CalLiteInitClass
 
 	private void retrieve2()
 	{
-		JList<?> lstScenarios = (JList<?>) swingEngine.find("SelectedList");
+		JList<?> lstScenarios = (JList<?>) _swingEngine.find("SelectedList");
 		WRIMSGUILinks.setStatus("Retrieve2");
 
 		if(!AppUtils.baseOn)
 		{
-			// JOptionPane.showMessageDialog(swingEngine.find(Constant.MAIN_FRAME_NAME),
-			// "The Base DSS files need to be selected", "DSS Not Selected",
-			// JOptionPane.WARNING_MESSAGE);
-			// ImageIcon icon = new
-			// ImageIcon(getClass().getResource("/images/CalLiteIcon.png"));
-			// Object[] options = { "OK" };
-			// JOptionPane optionPane = new JOptionPane("The Base DSS files need
-			// to be selected",
-			// JOptionPane.ERROR_MESSAGE, JOptionPane.OK_OPTION, null, options,
-			// options[0]);
-			// JDialog dialog =
-			// optionPane.createDialog(swingEngine.find(Constant.MAIN_FRAME_NAME),
-			// "CalLite");
-			// dialog.setIconImage(icon.getImage());
-			// dialog.setResizable(false);
-			// dialog.setVisible(true);
-			dialogSvc.getOK("DSS not selected! The Base DSS files need to be selected", JOptionPane.WARNING_MESSAGE);
-
+			_dialogSvc.getOK("DSS not selected! The Base DSS files need to be selected", JOptionPane.WARNING_MESSAGE);
 			return;
 		}
 
 		DerivedTimeSeries dts = GuiUtils.getCLGPanel().getDtsTreePanel().getTable().getDTS();
 		MultipleTimeSeries mts = GuiUtils.getCLGPanel().getDtsTreePanel().getTable().getMTS();
 
-		if(((mts == null) && (dts == null)) || ((dts != null) && (dts.getBParts().size() < 1))
+		if(((mts == null) && (dts == null)) || ((dts != null) && (dts.getBParts().isEmpty()))
 				|| ((mts != null) && (mts.getNumberOfDataReferences() < 1)))
 		{
-			// JOptionPane.showMessageDialog(swingEngine.find(Constant.MAIN_FRAME_NAME),
-			// "Specify DTS or MTS data references", "Nothing to Display",
-			// JOptionPane.WARNING_MESSAGE);
-			// ImageIcon icon = new
-			// ImageIcon(getClass().getResource("/images/CalLiteIcon.png"));
-			// Object[] options = { "OK" };
-			// JOptionPane optionPane = new JOptionPane("Specify DTS or MTS data
-			// references", JOptionPane.ERROR_MESSAGE,
-			// JOptionPane.OK_OPTION, null, options, options[0]);
-			// JDialog dialog =
-			// optionPane.createDialog(swingEngine.find(Constant.MAIN_FRAME_NAME),
-			// "CalLite");
-			// dialog.setIconImage(icon.getImage());
-			// dialog.setResizable(false);
-			// dialog.setVisible(true);
-			dialogSvc.getOK("Nothing to display! Specify DTS or MTS data reference", JOptionPane.WARNING_MESSAGE);
+			_dialogSvc.getOK("Nothing to display! Specify DTS or MTS data reference", JOptionPane.WARNING_MESSAGE);
 
 			return;
 		}
@@ -805,9 +700,8 @@ public class CalLiteInitClass
 		}
 		catch(Exception e)
 		{
-			// VistaUtils.displayException(GuiUtils.getCLGPanel(), e);
-			LOG.debug("Error in retrieve2() -", e);
-			errorHandlingSvc.businessErrorHandler(null, e);
+			LOGGER.debug("Error in retrieve2() -", e);
+			_errorHandlingSvc.businessErrorHandler(null, e);
 
 		}
 		WRIMSGUILinks.setStatus("Done??");

@@ -21,12 +21,12 @@ import gov.ca.water.calgui.tech_service.IAuditSvc;
  */
 public final class AuditSvcImpl implements IAuditSvc
 {
-	private static IAuditSvc auditSvc;
-	private List<AuditBO> auditRecord;
+	private static final IAuditSvc AUDIT_SVC = new AuditSvcImpl();
+	private final List<AuditBO> _auditRecord;
 
 	private AuditSvcImpl()
 	{
-		auditRecord = new ArrayList<AuditBO>();
+		_auditRecord = new ArrayList<>();
 	}
 
 	/**
@@ -38,28 +38,24 @@ public final class AuditSvcImpl implements IAuditSvc
 	 */
 	public static IAuditSvc getAuditSvcImplInstance()
 	{
-		if(auditSvc == null)
-		{
-			auditSvc = new AuditSvcImpl();
-		}
-		return auditSvc;
+		return AUDIT_SVC;
 	}
 
 	@Override
 	public void addAudit(String controlId, String oldValue, String newValue)
 	{
-		this.auditRecord.add(new AuditBO(controlId, oldValue, newValue));
+		_auditRecord.add(new AuditBO(controlId, oldValue, newValue));
 	}
 
 	@Override
 	public void clearAudit()
 	{
-		this.auditRecord.removeAll(this.auditRecord);
+		_auditRecord.clear();
 	}
 
 	@Override
 	public boolean hasValues()
 	{
-		return !this.auditRecord.isEmpty();
+		return !_auditRecord.isEmpty();
 	}
 }

@@ -61,13 +61,13 @@ public final class SeedDataSvcImpl implements ISeedDataSvc
 		LOG.debug("Building SeedDataSvcImpl Object.");
 		this.errorHandlingSvc = new ErrorHandlingSvcImpl();
 		this.fileSystemSvc = new FileSystemSvcImpl();
-		this.guiLinks2BOList = new ArrayList<GUILinks2BO>();
-		this.guiLinks4BOList = new ArrayList<GUILinks4BO>();
-		this.guiIdMap = new HashMap<String, GUILinks2BO>();
-		this.tableIdMap = new HashMap<String, GUILinks2BO>();
-		this.regIdMap = new HashMap<String, GUILinks2BO>();
-		this.guiLinks3Map = new HashMap<String, GUILinks3BO>();
-		this.guiLinks4Map = new HashMap<String, GUILinks4BO>();
+		this.guiLinks2BOList = new ArrayList<>();
+		this.guiLinks4BOList = new ArrayList<>();
+		this.guiIdMap = new HashMap<>();
+		this.tableIdMap = new HashMap<>();
+		this.regIdMap = new HashMap<>();
+		this.guiLinks3Map = new HashMap<>();
+		this.guiLinks4Map = new HashMap<>();
 
 		List<String> guiLinks2StrList;
 		List<String> guiLinks3StrList;

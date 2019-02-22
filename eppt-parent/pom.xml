@@ -17,8 +17,6 @@
 
 	<name>eppt-parent</name>
 
-
-
 	<modules>
 		<module>../branding</module>
 		<module>../application</module>
