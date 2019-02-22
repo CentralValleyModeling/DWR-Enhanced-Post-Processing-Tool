@@ -7,16 +7,6 @@
 
 package gov.ca.water.calgui.bus_service.impl;
 
-import java.awt.*;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.stream.Collectors;
-import javax.swing.*;
-
 import gov.ca.water.calgui.bo.CalLiteGUIException;
 import gov.ca.water.calgui.bo.JLinkedSlider;
 import gov.ca.water.calgui.bo.NumericTextField;
@@ -28,6 +18,12 @@ import gov.ca.water.calgui.tech_service.impl.ErrorHandlingSvcImpl;
 import gov.ca.water.calgui.tech_service.impl.FileSystemSvcImpl;
 import org.apache.log4j.Logger;
 import org.swixml.SwingEngine;
+
+import javax.swing.*;
+import java.awt.*;
+import java.util.List;
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * This class will parse the gui.xml into the Swing Engine.
@@ -90,7 +86,7 @@ public final class XMLParsingSvcImpl implements IXMLParsingSvc
 			{
 				if(!component.getName().equals(compId))
 				{
-					System.out.println(compId + " " + component.getName());
+					LOG.info(compId + " " + component.getName());
 					component.setName(compId);
 				}
 			}
@@ -194,7 +190,7 @@ public final class XMLParsingSvcImpl implements IXMLParsingSvc
 		List<String> resultTabNames = Arrays.asList("WRIMS", "External PDF", "Reporting", "schematics",
 				"Data_tabbedPane2", "controls");
 		List<String> names = new java.util.ArrayList<String>();
-		System.out.println("****" + compId);
+		LOG.info("****" + compId);
 		getAllThePanelNamesOfParent(swingEngine.find(compId), names);
 
 		boolean con = false;
@@ -231,7 +227,7 @@ public final class XMLParsingSvcImpl implements IXMLParsingSvc
 			if(component.getName() != null)
 			{
 				names.add(component.getName());
-				System.out.println(names.toString());
+				LOG.info(names.toString());
 			}
 		}
 

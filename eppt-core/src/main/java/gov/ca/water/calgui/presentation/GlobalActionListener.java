@@ -98,19 +98,6 @@ public class GlobalActionListener implements ActionListener
 									.toUpperCase().equals("DEFAULT") && allButtonsDele.defaultCLSIsProtected())
 					{
 
-						// ImageIcon icon = new
-						// ImageIcon(getClass().getResource("/images/CalLiteIcon.png"));
-						// Object[] options = { "OK" };
-						// JOptionPane optionPane = new JOptionPane("The CalLite GUI
-						// is not allowed to overwrite DEFAULT.CLS. Please use Save
-						// As to save to a different scenario file.",
-						// JOptionPane.ERROR_MESSAGE, JOptionPane.OK_OPTION, null,
-						// options, options[0]);
-						// JDialog dialog =
-						// optionPane.createDialog(swingEngine.find(Constant.MAIN_FRAME_NAME),"CalLite");
-						// dialog.setIconImage(icon.getImage());
-						// dialog.setResizable(false);
-						// dialog.setVisible(true);
 						dialogSvc.getOK(
 								"The CalLite GUI is not allowed to overwrite DEFAULT.CLS. Please use Save As to save to a different scenario file.",
 								JOptionPane.ERROR_MESSAGE);
@@ -136,22 +123,6 @@ public class GlobalActionListener implements ActionListener
 					{
 						String clsFileName = FilenameUtils
 								.removeExtension(((JTextField) swingEngine.find("run_txfScen")).getText());
-
-						// ImageIcon icon = new
-						// ImageIcon(getClass().getResource("/images/CalLiteIcon.png"));
-						// Object[] options = { "Yes", "No", "Cancel" };
-						// JOptionPane optionPane = new JOptionPane(
-						// "Scenario selections have changed for " + clsFileName
-						// + ". Would you like to save the changes?",
-						// JOptionPane.QUESTION_MESSAGE,
-						// JOptionPane.YES_NO_CANCEL_OPTION, null, options,
-						// options[2]);
-						// JDialog dialog =
-						// optionPane.createDialog(swingEngine.find(Constant.MAIN_FRAME_NAME),
-						// "CalLite");
-						// dialog.setIconImage(icon.getImage());
-						// dialog.setResizable(false);
-						// dialog.setVisible(true);
 
 						String option = dialogSvc.getYesNoCancel("Scenario selections have changed for " + clsFileName
 								+ ". Would you like to save the changes?", JOptionPane.QUESTION_MESSAGE);
