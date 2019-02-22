@@ -632,7 +632,7 @@ public class DSSGrabber1SvcImpl implements IDSSGrabber1Svc
 			// TODO: Note hard-coded D- and E-PART
 			result = (TimeSeriesContainer) hD
 					.get("/" + hecAPart + "/" + dssNames[0] + "/01JAN1930/1MON/" + hecFParts[0], true);
-			System.out.println("/" + hecAPart + "/" + dssNames[0] + "/01JAN1930/1MON/" + hecFParts[0]);
+			LOG.info("/" + hecAPart + "/" + dssNames[0] + "/01JAN1930/1MON/" + hecFParts[0]);
 			if((result == null) || (result.numberValues < 1))
 			{
 

@@ -658,7 +658,7 @@ public class Report extends SwingWorker<Void, String>
 				{
 					String msg = "No data found for " + group + " and " + path;
 					addMessage(msg);
-					System.err.println(msg);
+					LOG.severe(msg);
 					return null;
 				}
 				else
@@ -669,7 +669,7 @@ public class Report extends SwingWorker<Void, String>
 			catch(Exception ex)
 			{
 				String msg = "Exception while trying to retrieve " + path + " from " + group;
-				System.err.println(msg);
+				LOG.severe(msg);
 				addMessage(msg);
 				LOG.fine(msg);
 				return null;

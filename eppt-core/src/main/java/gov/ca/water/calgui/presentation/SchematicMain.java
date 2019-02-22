@@ -7,10 +7,6 @@
 
 package gov.ca.water.calgui.presentation;
 
-import java.awt.*;
-import java.awt.geom.AffineTransform;
-import javax.swing.*;
-
 import gov.ca.water.calgui.bus_service.impl.XMLParsingSvcImpl;
 import gov.ca.water.calgui.constant.Constant;
 import gov.ca.water.calgui.tech_service.IErrorHandlingSvc;
@@ -31,6 +27,10 @@ import org.w3c.dom.NodeList;
 import org.w3c.dom.events.Event;
 import org.w3c.dom.events.EventListener;
 import org.w3c.dom.events.EventTarget;
+
+import javax.swing.*;
+import java.awt.*;
+import java.awt.geom.AffineTransform;
 
 /**
  * SchematicMain: Class to handle display of SVG-formatted schematic view.
@@ -81,7 +81,6 @@ public class SchematicMain
 			canvas.setEnablePanInteractor(true);
 			canvas.setEnableZoomInteractor(true);
 			canvas.setURI(url);
-			// System.out.println(canvas.getURI());
 			canvas.addSVGLoadEventDispatcherListener(new SVGLoadEventDispatcherAdapter()
 			{
 				@Override
