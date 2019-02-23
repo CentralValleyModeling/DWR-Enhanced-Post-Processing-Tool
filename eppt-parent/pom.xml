@@ -24,8 +24,8 @@
 		<module>../eppt-core</module>
 		<module>../eppt-quickresults</module>
 		<module>../eppt-scenario</module>
-		<module>../calsim-gui</module>
-		<module>../vista</module>
+		<module>../eppt-calsim-gui</module>
+		<module>../eppt-vista</module>
 	</modules>
 
 	<properties>

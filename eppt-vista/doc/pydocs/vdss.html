@@ -1,0 +1,130 @@
+
+<!--
+  ~ Copyright (c) 2019
+  ~ California Department of Water Resources
+  ~ All Rights Reserved.  DWR PROPRIETARY/CONFIDENTIAL.
+  ~ Source may not be released without written approval from DWR
+  -->
+
+<!doctype html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html><head><title>Python: module vdss</title>
+</head><body bgcolor="#f0f0f8">
+
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="heading">
+<tr bgcolor="#7799ee">
+<td valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial">&nbsp;<br><big><big><strong>vdss</strong></big></big></font></td
+><td align=right valign=bottom
+><font color="#ffffff" face="helvetica, arial"><a href=".">index</a><br><a href="file:u:\git\dsm2-vista\vista\lib\lib\vdss.py">u:\git\dsm2-vista\vista\lib\lib\vdss.py</a></font></td></tr></table>
+    <p></p>
+<p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#aa55cc">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#fffff" face="helvetica, arial"><big><strong>Modules</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#aa55cc"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><table width="100%" summary="list"><tr><td width="25%" valign=top><a href="re.html">re</a><br>
+</td><td width="25%" valign=top><a href="string.html">string</a><br>
+</td><td width="25%" valign=top></td><td width="25%" valign=top></td></tr></table></td></tr></table><p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#eeaa77">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Functions</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#eeaa77"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><dl><dt><a name="-dsAddFlags"><strong>dsAddFlags</strong></a>(dataset)</dt><dd><tt><a href="#-dsAddFlags">dsAddFlags</a>(dataset)<br>
+Add&nbsp;UNSCREENED_FLAG&nbsp;to&nbsp;dataset&nbsp;that&nbsp;does&nbsp;not&nbsp;have&nbsp;any&nbsp;flags</tt></dd></dl>
+ <dl><dt><a name="-find"><strong>find</strong></a>(group, filter, part<font color="#909090">='P'</font>, selecting<font color="#909090">=1</font>)</dt><dd><tt><a href="#-find">find</a>(group,&nbsp;filter,&nbsp;part="",&nbsp;selecting=1):<br>
+Returns&nbsp;a&nbsp;copy&nbsp;of&nbsp;the&nbsp;group&nbsp;filtered&nbsp;by&nbsp;the&nbsp;filter...<br>
+Part&nbsp;can&nbsp;be&nbsp;one&nbsp;of&nbsp;A,B,C,E,F,&nbsp;or&nbsp;P&nbsp;(for&nbsp;entire&nbsp;path).<br>
+Default&nbsp;is&nbsp;P<br>
+Selecting=0&nbsp;for&nbsp;removing&nbsp;matched&nbsp;and&nbsp;1&nbsp;for&nbsp;keeping&nbsp;only&nbsp;matched</tt></dd></dl>
+ <dl><dt><a name="-findparts"><strong>findparts</strong></a>(g, a<font color="#909090">=''</font>, b<font color="#909090">=''</font>, c<font color="#909090">=''</font>, d<font color="#909090">=''</font>, e<font color="#909090">=''</font>, f<font color="#909090">=''</font>, exact<font color="#909090">=True</font>)</dt><dd><tt><a href="#-findparts">findparts</a>(g,a='',b='',c='',d='',e='',f='',exact=True):<br>
+this&nbsp;returns&nbsp;an&nbsp;array&nbsp;of&nbsp;matching&nbsp;data&nbsp;references<br>
+g&nbsp;is&nbsp;the&nbsp;group&nbsp;returned&nbsp;from&nbsp;opendss&nbsp;function<br>
+a,b,c,d,e&nbsp;&amp;&nbsp;f&nbsp;are&nbsp;the&nbsp;part&nbsp;names&nbsp;to&nbsp;be&nbsp;searched&nbsp;for<br>
+exact&nbsp;means&nbsp;that&nbsp;the&nbsp;exact&nbsp;string&nbsp;is&nbsp;matched&nbsp;as&nbsp;opposed&nbsp;to&nbsp;the&nbsp;reg.&nbsp;exp.<br>
+e.g.&nbsp;<a href="#-findparts">findparts</a>(g,b='C61',c='FLOW')&nbsp;returns&nbsp;all&nbsp;data&nbsp;references&nbsp;that<br>
+match&nbsp;C61&nbsp;in&nbsp;the&nbsp;b&nbsp;part&nbsp;and&nbsp;FLOW&nbsp;in&nbsp;the&nbsp;c&nbsp;part&nbsp;exactly.</tt></dd></dl>
+ <dl><dt><a name="-findpath"><strong>findpath</strong></a>(g, path, exact<font color="#909090">=1</font>)</dt><dd><tt><a href="#-findpath">findpath</a>(g,path,exact=1):<br>
+this&nbsp;returns&nbsp;an&nbsp;array&nbsp;of&nbsp;matching&nbsp;data&nbsp;references<br>
+g&nbsp;is&nbsp;the&nbsp;group&nbsp;returned&nbsp;from&nbsp;opendss&nbsp;function<br>
+path&nbsp;is&nbsp;the&nbsp;dsspathname&nbsp;e.g.&nbsp;'//C6/FLOW-CHANNEL////'<br>
+exact&nbsp;means&nbsp;that&nbsp;the&nbsp;exact&nbsp;string&nbsp;is&nbsp;matched&nbsp;as&nbsp;opposed&nbsp;to&nbsp;the&nbsp;reg.&nbsp;exp.</tt></dd></dl>
+ <dl><dt><a name="-gen_ref"><strong>gen_ref</strong></a>(ds, filename<font color="#909090">=''</font>, server<font color="#909090">=''</font>, pathname<font color="#909090">=''</font>)</dt><dd><tt>generates&nbsp;a&nbsp;DataReference&nbsp;given&nbsp;a&nbsp;dataset</tt></dd></dl>
+ <dl><dt><a name="-get_part_id"><strong>get_part_id</strong></a>(part)</dt></dl>
+ <dl><dt><a name="-make_dss_path"><strong>make_dss_path</strong></a>(pathname, a_part<font color="#909090">=''</font>, b_part<font color="#909090">=''</font>, f_part<font color="#909090">=''</font>)</dt><dd><tt><a href="#-make_dss_path">make_dss_path</a>(pathname,&nbsp;a_part='',&nbsp;b_part='',&nbsp;f_part='')<br>
+Adds&nbsp;additional&nbsp;A,&nbsp;B&nbsp;and&nbsp;F&nbsp;part&nbsp;text&nbsp;to&nbsp;an&nbsp;input&nbsp;pathname,&nbsp;and<br>
+checks&nbsp;for&nbsp;max&nbsp;length&nbsp;of&nbsp;each&nbsp;part&nbsp;and&nbsp;the&nbsp;pathname.&nbsp;Returns<br>
+a&nbsp;either&nbsp;a&nbsp;pathname&nbsp;object&nbsp;or&nbsp;string&nbsp;which&nbsp;is&nbsp;the&nbsp;new&nbsp;pathname,<br>
+depending&nbsp;on&nbsp;the&nbsp;type&nbsp;of&nbsp;the&nbsp;input&nbsp;pathname.</tt></dd></dl>
+ <dl><dt><a name="-make_flag_value"><strong>make_flag_value</strong></a>(flag_val)</dt></dl>
+ <dl><dt><a name="-opendss"><strong>opendss</strong></a>(filename, server<font color="#909090">='local'</font>)</dt><dd><tt><a href="#-opendss">opendss</a>(&nbsp;filename,&nbsp;server='local')&nbsp;:<br>
+opens&nbsp;a&nbsp;dss&nbsp;file&nbsp;with&nbsp;the&nbsp;given&nbsp;filename&nbsp;and&nbsp;returns&nbsp;it&nbsp;in&nbsp;a&nbsp;group&nbsp;object<br>
+The&nbsp;group&nbsp;object&nbsp;behaves&nbsp;like&nbsp;an&nbsp;array&nbsp;of&nbsp;data&nbsp;references.&nbsp;Each&nbsp;such&nbsp;data<br>
+reference&nbsp;contains&nbsp;the&nbsp;data&nbsp;set.</tt></dd></dl>
+ <dl><dt><a name="-read_dss_txt"><strong>read_dss_txt</strong></a>(file, dssts<font color="#909090">=True</font>, flag<font color="#909090">=False</font>)</dt><dd><tt><a href="#-read_dss_txt">read_dss_txt</a>(file,&nbsp;dssts=True,flag=False):&nbsp;reads&nbsp;from&nbsp;a&nbsp;ascii&nbsp;file&nbsp;in&nbsp;dssts&nbsp;or&nbsp;dssits&nbsp;format<br>
+and&nbsp;writes&nbsp;out&nbsp;the&nbsp;data&nbsp;to&nbsp;the&nbsp;appropriate&nbsp;dss&nbsp;file&nbsp;and&nbsp;pathnames.<br>
+If&nbsp;dssts&nbsp;==&nbsp;True&nbsp;then&nbsp;dssts&nbsp;format&nbsp;is&nbsp;assumed&nbsp;in&nbsp;the&nbsp;file&nbsp;else&nbsp;dssits&nbsp;format&nbsp;is&nbsp;assumed<br>
+For&nbsp;more&nbsp;info&nbsp;&nbsp;look&nbsp;up&nbsp;doc&nbsp;on&nbsp;<a href="#-read_dssts">read_dssts</a>(file)&nbsp;and&nbsp;<a href="#-read_dssits">read_dssits</a>(file)<br>
+If&nbsp;flag&nbsp;==&nbsp;True&nbsp;then&nbsp;it&nbsp;expects&nbsp;a&nbsp;flag&nbsp;value&nbsp;in&nbsp;the&nbsp;ascii&nbsp;file&nbsp;as&nbsp;well<br>
+The&nbsp;flag&nbsp;values&nbsp;in&nbsp;the&nbsp;ascii&nbsp;file&nbsp;are&nbsp;represented&nbsp;as<br>
+flag_type|user_name<br>
+where&nbsp;flag_type&nbsp;is&nbsp;one&nbsp;of&nbsp;UNSCREENED,QUESTIONABLE,MISSING,REJECT,OK<br>
+&amp;&nbsp;user_name&nbsp;is&nbsp;one&nbsp;of&nbsp;the&nbsp;authorized&nbsp;users/agency.<br>
+e.g.&nbsp;MISSING|nsandhu&nbsp;or&nbsp;REJECT|kate</tt></dd></dl>
+ <dl><dt><a name="-read_dssits"><strong>read_dssits</strong></a>(file, flag<font color="#909090">=0</font>)</dt><dd><tt><a href="#-read_dssits">read_dssits</a>(file):&nbsp;reads&nbsp;dss&nbsp;from&nbsp;dssits&nbsp;format&nbsp;file&nbsp;and&nbsp;writes&nbsp;it&nbsp;out&nbsp;to&nbsp;a&nbsp;dss&nbsp;file<br>
+DSSITS&nbsp;FORMAT&nbsp;:&nbsp;The&nbsp;()*&nbsp;brackets&nbsp;are&nbsp;not&nbsp;actually&nbsp;entered&nbsp;and&nbsp;are&nbsp;just&nbsp;to&nbsp;denote&nbsp;the<br>
+parts&nbsp;that&nbsp;repeats.&nbsp;The&nbsp;format&nbsp;is&nbsp;:-<br>
+&nbsp;<br>
+dss_filename<br>
+(&nbsp;#&nbsp;not&nbsp;in&nbsp;actual&nbsp;file<br>
+pathname&nbsp;(&nbsp;of&nbsp;this&nbsp;format&nbsp;/A/B/C//E/F/&nbsp;where&nbsp;A-F&nbsp;are&nbsp;the&nbsp;various&nbsp;path&nbsp;part&nbsp;names&nbsp;)<br>
+units&nbsp;(&nbsp;a&nbsp;string&nbsp;for&nbsp;units&nbsp;such&nbsp;as&nbsp;cfs<br>
+type&nbsp;(&nbsp;one&nbsp;of&nbsp;inst-val,&nbsp;per-val,&nbsp;inst-cum,&nbsp;per-cum,&nbsp;per-avg)<br>
+date&nbsp;(&nbsp;in&nbsp;ddMMMyyyy&nbsp;HHmm&nbsp;format&nbsp;)&nbsp;value<br>
+end<br>
+)*&nbsp;#&nbsp;repeate&nbsp;between&nbsp;brackets&nbsp;as&nbsp;many&nbsp;times&nbsp;as&nbsp;necessary<br>
+finish</tt></dd></dl>
+ <dl><dt><a name="-read_dssts"><strong>read_dssts</strong></a>(file, flag<font color="#909090">=0</font>)</dt><dd><tt><a href="#-read_dssts">read_dssts</a>(file):&nbsp;reads&nbsp;dss&nbsp;from&nbsp;dssts&nbsp;format&nbsp;file&nbsp;and&nbsp;writes&nbsp;it&nbsp;out&nbsp;to&nbsp;a&nbsp;dss&nbsp;file<br>
+DSSTS&nbsp;FORMAT&nbsp;:&nbsp;The&nbsp;()*&nbsp;brackets&nbsp;are&nbsp;not&nbsp;actually&nbsp;entered&nbsp;and&nbsp;are&nbsp;just&nbsp;to&nbsp;denote&nbsp;the<br>
+parts&nbsp;that&nbsp;repeats.&nbsp;The&nbsp;format&nbsp;is&nbsp;:-<br>
+&nbsp;<br>
+dss_filename<br>
+(&nbsp;#&nbsp;not&nbsp;in&nbsp;actual&nbsp;file<br>
+pathname&nbsp;(&nbsp;of&nbsp;this&nbsp;format&nbsp;/A/B/C//E/F/&nbsp;where&nbsp;A-F&nbsp;are&nbsp;the&nbsp;various&nbsp;path&nbsp;part&nbsp;names&nbsp;)<br>
+units&nbsp;(&nbsp;a&nbsp;string&nbsp;for&nbsp;units&nbsp;such&nbsp;as&nbsp;cfs<br>
+type&nbsp;(&nbsp;one&nbsp;of&nbsp;inst-val,&nbsp;per-val,&nbsp;inst-cum,&nbsp;per-cum,&nbsp;per-avg)<br>
+date&nbsp;(in&nbsp;ddMMMyyyy&nbsp;HHmm&nbsp;format)<br>
+values<br>
+end<br>
+)*&nbsp;#&nbsp;repeate&nbsp;between&nbsp;brackets&nbsp;as&nbsp;many&nbsp;times&nbsp;as&nbsp;necessary<br>
+finish</tt></dd></dl>
+ <dl><dt><a name="-regexp_path"><strong>regexp_path</strong></a>(path)</dt><dd><tt><a href="#-regexp_path">regexp_path</a>(path):<br>
+given&nbsp;a&nbsp;dss&nbsp;pathname&nbsp;string,&nbsp;returns&nbsp;a&nbsp;string&nbsp;suitable&nbsp;for&nbsp;regexp&nbsp;handling</tt></dd></dl>
+ <dl><dt><a name="-rename"><strong>rename</strong></a>(oldfile, oldpart, newfile, newpart, part_name<font color="#909090">='f'</font>)</dt><dd><tt><a href="#-rename">rename</a>(oldfile,oldpart,newfile,newpart,part_name="f")<br>
+Reads&nbsp;all&nbsp;matching&nbsp;oldpart's&nbsp;in&nbsp;oldfile&nbsp;and&nbsp;replaces<br>
+oldparts&nbsp;with&nbsp;newparts&nbsp;and&nbsp;writes&nbsp;out&nbsp;to&nbsp;newfile.&nbsp;The<br>
+part_name&nbsp;is&nbsp;the&nbsp;partid&nbsp;to&nbsp;be&nbsp;replaced&nbsp;and&nbsp;is&nbsp;one&nbsp;of<br>
+a,b,c&nbsp;or&nbsp;f.</tt></dd></dl>
+ <dl><dt><a name="-set_part"><strong>set_part</strong></a>(pathname, new_part, new_part_id<font color="#909090">=1</font>)</dt></dl>
+ <dl><dt><a name="-sort"><strong>sort</strong></a>(group, part_name<font color="#909090">='B'</font>, increasing<font color="#909090">=True</font>)</dt><dd><tt><a href="#-sort">sort</a>(group&nbsp;,&nbsp;part_name&nbsp;=&nbsp;'B',increasing=True):<br>
+Sorts&nbsp;given&nbsp;group&nbsp;by&nbsp;pathname&nbsp;part&nbsp;which&nbsp;is&nbsp;one&nbsp;of&nbsp;A,B,C,E&nbsp;or&nbsp;F<br>
+with&nbsp;increasing=True&nbsp;for&nbsp;increasing&nbsp;and&nbsp;increasing=False&nbsp;for&nbsp;decreasing.<br>
+Sort&nbsp;done&nbsp;in&nbsp;place;&nbsp;no&nbsp;value&nbsp;returned.</tt></dd></dl>
+ <dl><dt><a name="-wrap_data"><strong>wrap_data</strong></a>(ds, filename<font color="#909090">=''</font>, server<font color="#909090">=''</font>, pathname<font color="#909090">=''</font>)</dt><dd><tt><a href="#-wrap_data">wrap_data</a>(dataset,&nbsp;filename='',&nbsp;server='',&nbsp;pathname=''<br>
+wraps&nbsp;data&nbsp;set&nbsp;in&nbsp;a&nbsp;filename,&nbsp;servername&nbsp;and&nbsp;pathname</tt></dd></dl>
+ <dl><dt><a name="-writeascii"><strong>writeascii</strong></a>(filename, ds, outputFlags<font color="#909090">=False</font>)</dt><dd><tt><a href="#-writeascii">writeascii</a>(filename,ds,outputFlags=False)<br>
+writes&nbsp;the&nbsp;given&nbsp;data&nbsp;set&nbsp;to&nbsp;the&nbsp;given&nbsp;filename.</tt></dd></dl>
+ <dl><dt><a name="-writedss"><strong>writedss</strong></a>(filename, pathname, ds)</dt><dd><tt><a href="#-writedss">writedss</a>(filename,pathname,ds):<br>
+writes&nbsp;the&nbsp;given&nbsp;data&nbsp;set&nbsp;ds&nbsp;to&nbsp;the&nbsp;filename&nbsp;and&nbsp;the&nbsp;pathname.</tt></dd></dl>
+</td></tr></table><p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#55aa55">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Data</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#55aa55"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><strong>pp_map</strong> = {'a': 0, 'b': 1, 'c': 2, 'f': 5}</td></tr></table>
+</body></html>
