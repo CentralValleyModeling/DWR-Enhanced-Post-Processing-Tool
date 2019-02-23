@@ -20,7 +20,7 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 class QuickResultsPanelTest
 {
 	@Test
-	public void testQuickResultsPanelCreation()
+	void testQuickResultsPanelCreation()
 	{
 		QuickResultsPanel quickResultsPanel = new QuickResultsPanel();
 		assertFalse(quickResultsPanel.getComponents().length == 0);
