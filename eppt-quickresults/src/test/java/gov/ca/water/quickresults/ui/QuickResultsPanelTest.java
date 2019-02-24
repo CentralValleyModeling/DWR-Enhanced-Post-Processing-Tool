@@ -11,6 +11,7 @@ import org.apache.log4j.Logger;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 /**
  * Company: Resource Management Associates
@@ -27,5 +28,8 @@ public class QuickResultsPanelTest
 	{
 		QuickResultsPanel quickResultsPanel = new QuickResultsPanel();
 		assertFalse(quickResultsPanel.getComponents().length == 0);
+		assertNotNull(quickResultsPanel.getReportsJList());
+		assertNotNull(quickResultsPanel.getSwingEngine());
+		assertNotNull(quickResultsPanel.getVariables());
 	}
 }

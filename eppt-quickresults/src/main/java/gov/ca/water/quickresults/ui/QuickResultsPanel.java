@@ -12,6 +12,7 @@ import java.awt.Component;
 import java.awt.Container;
 import javax.swing.*;
 
+import org.apache.log4j.Logger;
 import org.swixml.SwingEngine;
 
 import rma.swing.RmaJPanel;
@@ -24,6 +25,7 @@ import rma.swing.RmaJPanel;
  */
 public class QuickResultsPanel extends RmaJPanel
 {
+	private static final Logger LOGGER = Logger.getLogger(QuickResultsPanel.class.getName());
 	private static final String LIST_REPORTS_ID = "lstReports";
 	private static final String QUICK_RESULTS_XML_PATH = "ui/Quick_Results.xml";
 	private final SwingEngine _engine;
@@ -39,6 +41,7 @@ public class QuickResultsPanel extends RmaJPanel
 		}
 		catch(Exception e)
 		{
+			LOGGER.error("Error setting up quick results swing xml: " + QUICK_RESULTS_XML_PATH, e);
 			throw new IllegalStateException(e);
 		}
 	}
