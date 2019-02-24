@@ -8,6 +8,9 @@
 package gov.ca.water.quickresults.ui;
 
 import java.awt.BorderLayout;
+import java.awt.Component;
+import java.awt.Container;
+import javax.swing.*;
 
 import org.swixml.SwingEngine;
 
@@ -21,21 +24,37 @@ import rma.swing.RmaJPanel;
  */
 public class QuickResultsPanel extends RmaJPanel
 {
+	private static final String LIST_REPORTS_ID = "lstReports";
 	private static final String QUICK_RESULTS_XML_PATH = "ui/Quick_Results.xml";
 	private final SwingEngine _engine;
 
 	public QuickResultsPanel()
 	{
-		super.setLayout(new BorderLayout());
 		_engine = new SwingEngine();
 		try
 		{
-			_engine.render(QUICK_RESULTS_XML_PATH);
+			super.setLayout(new BorderLayout());
+			Container swixmlQuickResultsPanel = _engine.render(QUICK_RESULTS_XML_PATH);
+			super.add(swixmlQuickResultsPanel);
 		}
 		catch(Exception e)
 		{
-			throw new IllegalStateException("Unable to find " + QUICK_RESULTS_XML_PATH + " file", e);
+			throw new IllegalStateException(e);
 		}
-		super.add(_engine.find("Reporting"));
+	}
+
+	SwingEngine getSwingEngine()
+	{
+		return _engine;
+	}
+
+	Component getReportsJList()
+	{
+		return _engine.find(LIST_REPORTS_ID);
+	}
+
+	JTabbedPane getVariables()
+	{
+		return ((JTabbedPane) _engine.find("variables"));
 	}
 }

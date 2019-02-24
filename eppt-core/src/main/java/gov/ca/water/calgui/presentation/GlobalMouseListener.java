@@ -7,11 +7,15 @@
 
 package gov.ca.water.calgui.presentation;
 
-import java.awt.*;
+import java.awt.Component;
+import java.awt.HeadlessException;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.util.ArrayList;
+import java.util.List;
 import javax.swing.*;
 
+import gov.ca.water.calgui.bo.RBListItemBO;
 import gov.ca.water.calgui.bus_delegate.IApplyDynamicConDele;
 import gov.ca.water.calgui.bus_delegate.impl.ApplyDynamicConDeleImp;
 import gov.ca.water.calgui.bus_service.impl.XMLParsingSvcImpl;
@@ -34,7 +38,7 @@ public class GlobalMouseListener implements MouseListener
 
 	private static final Logger LOG = Logger.getLogger(GlobalMouseListener.class.getName());
 	private IApplyDynamicConDele applyDynamicConDele = new ApplyDynamicConDeleImp();
-	private SwingEngine swingEngine = XMLParsingSvcImpl.getXMLParsingSvcImplInstance().getSwingEngine();
+	private SwingEngine _swingEngine = XMLParsingSvcImpl.getXMLParsingSvcImplInstance().getSwingEngine();
 	private IErrorHandlingSvc errorHandlingSvc = new ErrorHandlingSvcImpl();
 	private IDialogSvc dialogSvc = DialogSvcImpl.getDialogSvcInstance();
 
@@ -59,7 +63,7 @@ public class GlobalMouseListener implements MouseListener
 				// the false value don't mean any thing because we implement
 				// right
 				// click on only check box.
-				if(cName.equals("ckbReg_TRNTY") || cName.equals("ckbReg_PUMP"))
+				if(cName.equals("ckbReg_TRNTY") || "ckbReg_PUMP".equals(cName))
 				{
 
 					// Special handling for Trinity and Pumping regulations
@@ -69,13 +73,13 @@ public class GlobalMouseListener implements MouseListener
 					// forces the display of the D1485/D-1641 selector in
 					// reg_panTab
 
-					swingEngine.find("btnRegCopy").setEnabled(false);
-					swingEngine.find("btnRegPaste").setEnabled(false);
-					swingEngine.find("btnRegD1641").setEnabled(true);
-					swingEngine.find("btnRegD1485").setEnabled(true);
+					_swingEngine.find("btnRegCopy").setEnabled(false);
+					_swingEngine.find("btnRegPaste").setEnabled(false);
+					_swingEngine.find("btnRegD1641").setEnabled(true);
+					_swingEngine.find("btnRegD1485").setEnabled(true);
 
-					this.swingEngine.find("reg_panTab").setVisible(true);
-					this.swingEngine.find("reg_panTabPlaceholder").setVisible(false);
+					this._swingEngine.find("reg_panTab").setVisible(true);
+					this._swingEngine.find("reg_panTabPlaceholder").setVisible(false);
 				}
 				LOG.debug(cName);
 			}
@@ -92,38 +96,19 @@ public class GlobalMouseListener implements MouseListener
 				else
 				{
 					// Double Click
-					if(iClickCount == 2)
+					if(iClickCount == 2 && cName.startsWith("ckbp"))
 					{
-						if(cName.startsWith("ckbp"))
+						JCheckBox chk = (JCheckBox) component;
+						JList lstScenarios = (JList) _swingEngine.find("SelectedList");
+						if(lstScenarios.getModel().getSize() == 0)
 						{
-							JCheckBox chk = (JCheckBox) component;
-							JList lstScenarios = (JList) swingEngine.find("SelectedList");
-							if(lstScenarios.getModel().getSize() == 0)
-							{
-								// JOptionPane.showMessageDialog(swingEngine.find(Constant.MAIN_FRAME_NAME),
-								// "No scenarios loaded", "Error",
-								// JOptionPane.ERROR_MESSAGE);
-								// ImageIcon icon = new
-								// ImageIcon(getClass().getResource("/images/CalLiteIcon.png"));
-								// Object[] options = { "OK" };
-								// JOptionPane optionPane = new JOptionPane("No
-								// scenarios loaded",
-								// JOptionPane.ERROR_MESSAGE,
-								// JOptionPane.OK_OPTION, null, options,
-								// options[0]);
-								// JDialog dialog =
-								// optionPane.createDialog(swingEngine.find(Constant.MAIN_FRAME_NAME),"CalLite");
-								// dialog.setIconImage(icon.getImage());
-								// dialog.setResizable(false);
-								// dialog.setVisible(true);
-								dialogSvc.getOK("Error - No scenarios loaded", JOptionPane.ERROR_MESSAGE);
-							}
-							else
-							{
-								DisplayFrame.showDisplayFrames(DisplayFrame.quickState() + ";Locs-" + chk.getText()
-										+ ";Index-" + chk.getName(), lstScenarios);
-							}
-
+							dialogSvc.getOK("Error - No scenarios loaded", JOptionPane.ERROR_MESSAGE);
+						}
+						else
+						{
+							List<RBListItemBO> scenarios = getScenarios();
+							DisplayFrame.showDisplayFrames(DisplayFrame.quickState() + ";Locs-" + chk.getText()
+									+ ";Index-" + chk.getName(), scenarios);
 						}
 					}
 					// Placeholder for future handling of double-clicks
@@ -134,8 +119,24 @@ public class GlobalMouseListener implements MouseListener
 		{
 			LOG.error(e.getMessage());
 			String messageText = "Unable to initialize mouse listeners.";
-			errorHandlingSvc.businessErrorHandler(messageText, (JFrame) swingEngine.find(Constant.MAIN_FRAME_NAME), e);
+			errorHandlingSvc.businessErrorHandler(messageText, (JFrame) _swingEngine.find(Constant.MAIN_FRAME_NAME), e);
 		}
+	}
+
+	private List<RBListItemBO> getScenarios()
+	{
+		List<RBListItemBO> retval = new ArrayList<>();
+		Component component = _swingEngine.find("SelectedList");
+		if(component instanceof JList)
+		{
+			JList<RBListItemBO> lstScenarios = (JList<RBListItemBO>) component;
+			ListModel<RBListItemBO> model = lstScenarios.getModel();
+			for(int i = 0; i < model.getSize(); i++)
+			{
+				retval.add(model.getElementAt(i));
+			}
+		}
+		return retval;
 	}
 
 	@Override

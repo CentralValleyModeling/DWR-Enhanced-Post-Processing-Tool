@@ -23,7 +23,7 @@ public class ColorRGB {
 	 */
 	public ColorRGB() {
 		try {
-			java.io.InputStream is = Object.class
+			java.io.InputStream is = getClass()
 					.getResourceAsStream("/vista/graph/rgb.properties");
 			_colorDefinitions.load(is);
 		} catch (java.io.IOException ioe) {

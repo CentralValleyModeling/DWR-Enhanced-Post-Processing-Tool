@@ -5,7 +5,7 @@
  * Source may not be released without written approval from DWR
  */
 
-package gov.ca.water.calgui.presentation;
+package gov.ca.water.scenario.presentation;
 
 import java.awt.Color;
 import java.awt.Component;
@@ -20,6 +20,7 @@ import java.awt.event.ItemListener;
 import java.awt.event.MouseListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.util.ArrayList;
 import java.util.List;
 import javax.swing.*;
 import javax.swing.border.LineBorder;
@@ -34,6 +35,7 @@ import gov.ca.water.calgui.bo.DataTableModel;
 import gov.ca.water.calgui.bo.FileDialogBO;
 import gov.ca.water.calgui.bo.GUILinks2BO;
 import gov.ca.water.calgui.bo.JLinkedSlider;
+import gov.ca.water.calgui.bo.RBListItemBO;
 import gov.ca.water.calgui.bo.ResultUtilsBO;
 import gov.ca.water.calgui.bus_delegate.IAllButtonsDele;
 import gov.ca.water.calgui.bus_delegate.IApplyDynamicConDele;
@@ -52,6 +54,12 @@ import gov.ca.water.calgui.bus_service.impl.SeedDataSvcImpl;
 import gov.ca.water.calgui.bus_service.impl.TableSvcImpl;
 import gov.ca.water.calgui.bus_service.impl.XMLParsingSvcImpl;
 import gov.ca.water.calgui.constant.Constant;
+import gov.ca.water.calgui.presentation.DisplayFrame;
+import gov.ca.water.calgui.presentation.GlobalActionListener;
+import gov.ca.water.calgui.presentation.GlobalChangeListener;
+import gov.ca.water.calgui.presentation.GlobalItemListener;
+import gov.ca.water.calgui.presentation.GlobalMouseListener;
+import gov.ca.water.calgui.presentation.WRIMSGUILinks;
 import gov.ca.water.calgui.tech_service.IAuditSvc;
 import gov.ca.water.calgui.tech_service.IDialogSvc;
 import gov.ca.water.calgui.tech_service.IErrorHandlingSvc;
@@ -180,7 +188,6 @@ public class CalLiteInitClass
 			// For Custom Results ....
 
 			WRIMSGUILinks.buildWRIMSGUI((JPanel) _swingEngine.find("WRIMS"));
-			WRIMSGUILinks.setStatus("Initialized.");
 			// Replace WRIMS GUI display action with CalLite GUI action
 			JButton retrieveBtn = GuiUtils.getCLGPanel().getRetrievePanel().getRetrieveBtn();
 			for(ActionListener al : retrieveBtn.getActionListeners())
@@ -611,7 +618,7 @@ public class CalLiteInitClass
 	 */
 	private void retrieve()
 	{
-		JList<?> lstScenarios = (JList<?>) _swingEngine.find("SelectedList");
+		JList<RBListItemBO> lstScenarios = (JList<RBListItemBO>) _swingEngine.find("SelectedList");
 		if(!AppUtils.baseOn)
 		{
 			_dialogSvc.getOK("DSS not selected! The Base DSS files need to be selected", JOptionPane.WARNING_MESSAGE);
@@ -619,6 +626,12 @@ public class CalLiteInitClass
 		}
 		try
 		{
+			List<RBListItemBO> scenarios = new ArrayList<>();
+			ListModel<RBListItemBO> model = lstScenarios.getModel();
+			for(int i = 0; i < model.getSize(); i++)
+			{
+				scenarios.add(model.getElementAt(i));
+			}
 			String noRowsString = "";
 			JTable table = GuiUtils.getCLGPanel().getRetrievePanel().getTable();
 			if(table.getRowCount() == 0)
@@ -649,12 +662,12 @@ public class CalLiteInitClass
 				if(parts[1].toUpperCase().contains(("_SV.DSS")))
 				{
 					DisplayFrame.showDisplayFrames(DisplayFrame.quickState() + ";Locs-" + parts[2] + ";Index-"
-							+ parts[2] + ";File-" + parts[1], lstScenarios);
+							+ parts[2] + ";File-" + parts[1], scenarios);
 				}
 				else
 				{
 					DisplayFrame.showDisplayFrames(
-							DisplayFrame.quickState() + ";Locs-" + parts[2] + ";Index-" + parts[2], lstScenarios);
+							DisplayFrame.quickState() + ";Locs-" + parts[2] + ";Index-" + parts[2], scenarios);
 				}
 			}
 		}
@@ -662,7 +675,6 @@ public class CalLiteInitClass
 		{
 			LOGGER.debug("Error in retrieve() -", e);
 		}
-		WRIMSGUILinks.setStatus("Well??");
 	}
 
 	/**
@@ -672,9 +684,7 @@ public class CalLiteInitClass
 
 	private void retrieve2()
 	{
-		JList<?> lstScenarios = (JList<?>) _swingEngine.find("SelectedList");
-		WRIMSGUILinks.setStatus("Retrieve2");
-
+		JList<RBListItemBO> lstScenarios = (JList<RBListItemBO>) _swingEngine.find("SelectedList");
 		if(!AppUtils.baseOn)
 		{
 			_dialogSvc.getOK("DSS not selected! The Base DSS files need to be selected", JOptionPane.WARNING_MESSAGE);
@@ -694,7 +704,13 @@ public class CalLiteInitClass
 
 		try
 		{
-			DisplayFrame.showDisplayFrames_WRIMS(DisplayFrame.quickState() + ";Locs-;Index-;File-", lstScenarios, dts,
+			List<RBListItemBO> scenarios = new ArrayList<>();
+			ListModel<RBListItemBO> model = lstScenarios.getModel();
+			for(int i = 0; i < model.getSize(); i++)
+			{
+				scenarios.add(model.getElementAt(i));
+			}
+			DisplayFrame.showDisplayFramesWRIMS(DisplayFrame.quickState() + ";Locs-;Index-;File-", scenarios, dts,
 					mts);
 
 		}
@@ -704,7 +720,6 @@ public class CalLiteInitClass
 			_errorHandlingSvc.businessErrorHandler(null, e);
 
 		}
-		WRIMSGUILinks.setStatus("Done??");
 	}
 
 }

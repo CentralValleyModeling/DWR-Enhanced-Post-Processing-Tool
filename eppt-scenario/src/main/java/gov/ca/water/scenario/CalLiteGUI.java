@@ -5,11 +5,11 @@
  * Source may not be released without written approval from DWR
  */
 
-package gov.ca.water.calgui;
+package gov.ca.water.scenario;
 
+import gov.ca.water.scenario.presentation.CalLiteInitClass;
 //! Main class
 
-import gov.ca.water.calgui.presentation.CalLiteInitClass;
 
 /**
  * This is the root class for this application. We start the application using

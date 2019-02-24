@@ -192,27 +192,8 @@ public class AllButtonsDeleImp implements IAllButtonsDele
 		{
 			return true;
 		}
-		// ImageIcon icon = new
-		// ImageIcon(getClass().getResource("/images/CalLiteIcon.png"));
-		// Object[] options = { "Yes", "No" };
-		// JOptionPane optionPane = new JOptionPane("The file is up-to-date. Do
-		// you want to save again?",
-		// JOptionPane.QUESTION_MESSAGE, JOptionPane.OK_CANCEL_OPTION, null,
-		// options, options[0]);
-		// JDialog dialog =
-		// optionPane.createDialog(swingEngine.find(Constant.MAIN_FRAME_NAME),
-		// "CalLite");
-		// dialog.setIconImage(icon.getImage());
-		// dialog.setResizable(false);
-		// dialog.setVisible(true);
 		return (dialogSvc.getYesNo("The file is up-to-date. Do you want to save again?", JOptionPane.QUESTION_MESSAGE)
 						 .equals("Yes"));
-
-		// switch (optionPane.getValue().toString()) {
-		// case "Yes":
-		// return true;
-		// }
-		// return false;
 	}
 
 	@Override
@@ -246,38 +227,6 @@ public class AllButtonsDeleImp implements IAllButtonsDele
 		boolean proceed = true;
 		if((new File(tempName)).exists())
 		{
-			// proceed =
-			// (JOptionPane.showConfirmDialog(swingEngine.find(Constant.MAIN_FRAME_NAME),
-			// "The scenario file '" + tempName + "' already exists. Press OK to
-			// overwrite.",
-			// "CalLite GUI - " + clsFileName + Constant.CLS_EXT,
-			// JOptionPane.OK_CANCEL_OPTION) == JOptionPane.OK_OPTION);
-
-			// ImageIcon icon = new
-			// ImageIcon(getClass().getResource("/images/CalLiteIcon.png"));
-			// Object[] options = { "OK", "Cancel" };
-			// JOptionPane optionPane = new JOptionPane(
-			// "The scenario file '" + tempName + "' already exists. Press OK to
-			// overwrite.",
-			// JOptionPane.QUESTION_MESSAGE, JOptionPane.OK_CANCEL_OPTION, null,
-			// options, options[0]);
-			// JDialog dialog =
-			// optionPane.createDialog(swingEngine.find(Constant.MAIN_FRAME_NAME),
-			// "CalLite");
-			// dialog.setIconImage(icon.getImage());
-			// dialog.setResizable(false);
-			// dialog.setVisible(true);
-			// switch (optionPane.getValue().toString()) {
-			// case "Cancel":
-			// proceed = false;
-			// break;
-			// case "OK":
-			// proceed = true;
-			// break;
-			// default:
-			// proceed = false;
-			// break;
-			// }
 			proceed = isOKToSkipConfirmation() || (dialogSvc
 					.getOKCancel("The scenario file '" + tempName + "' already exists. Press OK to overwrite.",
 							JOptionPane.QUESTION_MESSAGE)
@@ -372,7 +321,7 @@ public class AllButtonsDeleImp implements IAllButtonsDele
 		int val = fileChooser.showOpenDialog(swingEngine.find(Constant.MAIN_FRAME_NAME));
 		if(val == JFileChooser.APPROVE_OPTION && verifyTheSelectedFiles(fileChooser, Constant.CLS_EXT))
 		{
-			List<String> fileNames = new ArrayList<String>();
+			List<String> fileNames = new ArrayList<>();
 			for(File file : fileChooser.getSelectedFiles())
 			{
 				fileNames.add(FilenameUtils.removeExtension(file.getName()));
@@ -383,23 +332,6 @@ public class AllButtonsDeleImp implements IAllButtonsDele
 														  .collect(Collectors.toList());
 			if(filesWhichAreNotSaved != null && !filesWhichAreNotSaved.isEmpty())
 			{
-				// ImageIcon icon = new
-				// ImageIcon(getClass().getResource("/images/CalLiteIcon.png"));
-				// Object[] options = { "Yes", "No" };
-				// JOptionPane optionPane = new JOptionPane(
-				// "We can't run the batch for following files because they are
-				// not saved.\n"
-				// + filesWhichAreNotSaved.stream().map(name -> name + ".cls")
-				// .collect(Collectors.joining("\n"))
-				// + "\n Do you still want to run the rest?",
-				// JOptionPane.QUESTION_MESSAGE, JOptionPane.OK_CANCEL_OPTION,
-				// null, options, options[0]);
-				// JDialog dialog =
-				// optionPane.createDialog(swingEngine.find(Constant.MAIN_FRAME_NAME),
-				// "CalLite");
-				// dialog.setIconImage(icon.getImage());
-				// dialog.setResizable(false);
-				// dialog.setVisible(true);
 				String option = dialogSvc.getYesNo(
 						"We can't run the batch for following files because they are not saved.\n"
 								+ filesWhichAreNotSaved.stream().map(name -> name + ".cls")
@@ -532,17 +464,10 @@ public class AllButtonsDeleImp implements IAllButtonsDele
 			}
 			totalData = totalData.replaceAll("(?sm)\t\t", "\t \t");
 			totalData = totalData.replaceAll("(?sm)\t\n", "\t \n");
-			// verify the row's and column's.
-			// int rowCount = new StringTokenizer(totalData,
-			// Constant.NEW_LINE).countTokens();
 			int colCount = new StringTokenizer(new StringTokenizer(totalData, Constant.NEW_LINE).nextToken(),
 					Constant.TAB_SPACE).countTokens();
 			if(colCount > table.getColumnCount())
 			{
-				// JOptionPane.showMessageDialog(swingEngine.find(Constant.MAIN_FRAME_NAME),
-				// "The column's you
-				// selected is more then the column's of the table.", "Error",
-				// JOptionPane.ERROR_MESSAGE);
 				errorHandlingSvc.validationeErrorHandler(
 						"The column's you selected is more then the column's of the table.",
 						"The column's you selected is more then the column's of the table.",
@@ -677,7 +602,7 @@ public class AllButtonsDeleImp implements IAllButtonsDele
 			editButtonOnOperations(component);
 			auditSvc.addAudit("wsi_di tables", "", swpFullFileName);
 		}
-		catch(NullPointerException ex)
+		catch(RuntimeException ex)
 		{
 			errorHandlingSvc.businessErrorHandler((JFrame) swingEngine.find(Constant.MAIN_FRAME_NAME),
 					new CalLiteGUIException("The data for geting the table name is wrong", ex));
@@ -743,26 +668,6 @@ public class AllButtonsDeleImp implements IAllButtonsDele
 	public void decisionSVInitFilesAndTableInOperations()
 	{
 		applyDynamicConDele.changeSVInitFilesAndTableInOperations(true);
-
-		// Commented out because we always want to use the stored values when
-		// loading
-
-		// String text = "";
-		// if (((JRadioButton) swingEngine.find("hyd_rdb2005")).isSelected()) {
-		// text = ((JRadioButton) swingEngine.find("hyd_rdb2005")).getText();
-		// }
-		// if (((JRadioButton) swingEngine.find("hyd_rdb2030")).isSelected()) {
-		// text = ((JRadioButton) swingEngine.find("hyd_rdb2030")).getText();
-		// }
-		// if (!text.equals("")) {
-		// int option =
-		// JOptionPane.showConfirmDialog(swingEngine.find(Constant.MAIN_FRAME_NAME),
-		// "You have selected " + text + ".\n Do you wish to use the WSI/DI
-		// curves for this configuration?");
-		// if (option == JOptionPane.YES_OPTION) {
-		// return;
-		// }
-		// }
 		/*
 		 * The following code we are setting the SWP and CVP file names as user
 		 * defined because the table values we are getting it from the cls file
@@ -785,34 +690,6 @@ public class AllButtonsDeleImp implements IAllButtonsDele
 		{
 			return true;
 		}
-		// return
-		// (JOptionPane.showConfirmDialog(swingEngine.find(Constant.MAIN_FRAME_NAME),
-		// "WSI/DI data tables have been modified. Are you sure you wish to
-		// overwrite these changes?",
-		// "CalLite GUI", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION);
-
-		// ImageIcon icon = new
-		// ImageIcon(getClass().getResource("/images/CalLiteIcon.png"));
-		// Object[] options = { "Yes", "No" };
-		// JOptionPane optionPane = new JOptionPane(
-		// "WSI/DI data tables have been modified. Are you sure you wish to
-		// overwrite these changes?",
-		// JOptionPane.QUESTION_MESSAGE, JOptionPane.YES_NO_OPTION, null,
-		// options, options[0]);
-		// JDialog dialog =
-		// optionPane.createDialog(swingEngine.find(Constant.MAIN_FRAME_NAME),
-		// "CalLite");
-		// dialog.setIconImage(icon.getImage());
-		// dialog.setResizable(false);
-		// dialog.setVisible(true);
-		// switch (optionPane.getValue().toString()) {
-		// case "No":
-		// return false;
-		// case "Yes":
-		// return true;
-		// default:
-		// return false;
-		// }
 		return (dialogSvc
 				.getYesNo("WSI/DI data tables have been modified.  Are you sure you wish to overwrite these changes?",
 						JOptionPane.QUESTION_MESSAGE)
@@ -903,31 +780,12 @@ public class AllButtonsDeleImp implements IAllButtonsDele
 	@Override
 	public void aboutButton()
 	{
-		Long longTime = new File(Constant.GUI_XML_FILENAME).lastModified();
+		long longTime = new File(Constant.GUI_XML_FILENAME).lastModified();
 		Calendar calendar = Calendar.getInstance(TimeZone.getTimeZone("PST"));
 		calendar.setTimeInMillis(longTime);
 		SimpleDateFormat sdf = new SimpleDateFormat("dd MMMM yyyy");
 		String guiXmlDate = sdf.format(calendar.getTime());
-		// JOptionPane.showMessageDialog(swingEngine.find(Constant.MAIN_FRAME_NAME),
-		// "CalLite v. " + properties.getProperty("version.id") + "\nBuild date:
-		// "
-		// + properties.getProperty("build.date") + "\nYour last GUI xml
-		// revision date: " + guiXmlDate,
-		// "About CalLite", JOptionPane.INFORMATION_MESSAGE);
-
-		// ImageIcon icon = new
-		// ImageIcon(getClass().getResource("/images/CalLiteIcon.png"));
-		// Object[] options = { "OK" };
-
-		// , JOptionPane.OK_OPTION, null, options, options[0]);
-		// JDialog dialog =
-		// optionPane.createDialog(swingEngine.find(Constant.MAIN_FRAME_NAME),"About
-		// CalLite");
-		// dialog.setIconImage(icon.getImage());
-		// dialog.setResizable(false);
-		// dialog.setVisible(true);
-		dialogSvc.getOK(
-				"CalLite GUI v. " + properties.getProperty("version.id") + " ("
+		dialogSvc.getOK("CalLite GUI v. " + properties.getProperty("version.id") + " ("
 						+ System.getProperty("sun.arch.data.model") + "-bit)\nBuild date: "
 						+ properties.getProperty("build.date") + "\nYour last GUI xml revision date: " + guiXmlDate,
 				JOptionPane.INFORMATION_MESSAGE);
@@ -936,22 +794,8 @@ public class AllButtonsDeleImp implements IAllButtonsDele
 	@Override
 	public void windowClosing()
 	{
-		// ImageIcon icon = new
-		// ImageIcon(getClass().getResource("/images/CalLiteIcon.png"));
-		// JOptionPane optionPane;
 		if(auditSvc.hasValues())
 		{
-			// Object[] options = { "Save", "Don't Save", "Cancel" };
-			// optionPane = new JOptionPane("Current scenario not saved. Would
-			// you like to save before exiting?",
-			// JOptionPane.QUESTION_MESSAGE, JOptionPane.YES_NO_CANCEL_OPTION,
-			// null, options, options[0]);
-			// JDialog dialog =
-			// optionPane.createDialog(swingEngine.find(Constant.MAIN_FRAME_NAME),
-			// "CalLite");
-			// dialog.setIconImage(icon.getImage());
-			// dialog.setResizable(false);
-			// dialog.setVisible(true);
 			String option = dialogSvc.getSaveDontSaveCancel(
 					"Current scenario not saved. Would you like to save before exiting?", JOptionPane.QUESTION_MESSAGE);
 			if(option.equals("Save"))
@@ -959,24 +803,6 @@ public class AllButtonsDeleImp implements IAllButtonsDele
 				if(((JTextField) swingEngine.find("run_txfScen")).getText().toUpperCase().equals("DEFAULT.CLS")
 						&& defaultCLSProtected)
 				{
-					// JOptionPane.showMessageDialog(swingEngine.find(Constant.MAIN_FRAME_NAME),
-					// "The CalLite GUI is not allowed to overwrite DEFAULT.CLS.
-					// Please use the Save As command to save your changes
-					// before exiting.");
-					// icon = new
-					// ImageIcon(getClass().getResource("/images/CalLiteIcon.png"));
-					// Object[] options1 = { "OK" };
-					// optionPane = new JOptionPane("The CalLite GUI is not
-					// allowed to overwrite DEFAULT.CLS. Please use the Save As
-					// command to save your changes before exiting.",
-					// JOptionPane.ERROR_MESSAGE, JOptionPane.OK_OPTION, null,
-					// options1, options1[0]);
-					// dialog =
-					// optionPane.createDialog(swingEngine.find(Constant.MAIN_FRAME_NAME),"CalLite");
-					// dialog.setIconImage(icon.getImage());
-					// dialog.setResizable(false);
-					// dialog.setVisible(true);
-
 					dialogSvc.getOK(
 							"The CalLite GUI is not allowed to overwrite DEFAULT.CLS. Please use the Save As command to save your changes before exiting.",
 							JOptionPane.ERROR_MESSAGE);
@@ -993,25 +819,14 @@ public class AllButtonsDeleImp implements IAllButtonsDele
 					System.exit(0);
 				}
 			}
-			else if(option.equals("Don't Save"))
+			else if("Don't Save".equals(option))
 			{
 				System.exit(0);
 			}
 		}
 		else
 		{
-			// Object[] options = { "Ok", "Cancel" };
-			// optionPane = new JOptionPane("Are you sure you wanto to exit ?",
-			// JOptionPane.QUESTION_MESSAGE,
-			// JOptionPane.OK_CANCEL_OPTION, null, options, options[0]);
-			// JDialog dialog =
-			// optionPane.createDialog(swingEngine.find(Constant.MAIN_FRAME_NAME),
-			// "CalLite");
-			// dialog.setIconImage(icon.getImage());
-			// dialog.setResizable(false);
-			// dialog.setVisible(true);
-			if(dialogSvc.getOKCancel("Are you sure you want to to exit ?", JOptionPane.QUESTION_MESSAGE)
-						.equals("OK"))
+			if("OK".equals(dialogSvc.getOKCancel("Are you sure you want to to exit ?", JOptionPane.QUESTION_MESSAGE)))
 			{
 				System.exit(0);
 			}

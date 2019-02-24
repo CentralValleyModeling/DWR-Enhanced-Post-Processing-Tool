@@ -7,6 +7,17 @@
 
 package gov.ca.water.calgui.presentation;
 
+import java.awt.BorderLayout;
+import java.awt.Component;
+import java.awt.Container;
+import java.awt.HeadlessException;
+import java.awt.Toolkit;
+import java.util.Date;
+import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import javax.swing.*;
+
 import calsim.app.DerivedTimeSeries;
 import calsim.app.MultipleTimeSeries;
 import gov.ca.water.calgui.bo.RBListItemBO;
@@ -15,22 +26,21 @@ import gov.ca.water.calgui.bus_service.IDSSGrabber1Svc;
 import gov.ca.water.calgui.bus_service.impl.DSSGrabber1SvcImpl;
 import gov.ca.water.calgui.bus_service.impl.DSSGrabber2SvcImpl;
 import gov.ca.water.calgui.constant.Constant;
-import gov.ca.water.calgui.presentation.display.*;
-import gov.ca.water.calgui.tech_service.IDialogSvc;
+import gov.ca.water.calgui.presentation.display.BoxPlotChartPanel;
+import gov.ca.water.calgui.presentation.display.BoxPlotChartPanel2;
+import gov.ca.water.calgui.presentation.display.ChartPanel1;
+import gov.ca.water.calgui.presentation.display.ChartPanel2;
+import gov.ca.water.calgui.presentation.display.MonthlyTablePanel;
+import gov.ca.water.calgui.presentation.display.MonthlyTablePanel2;
+import gov.ca.water.calgui.presentation.display.SummaryTablePanel;
+import gov.ca.water.calgui.presentation.display.SummaryTablePanel2;
 import gov.ca.water.calgui.tech_service.IErrorHandlingSvc;
-import gov.ca.water.calgui.tech_service.impl.DialogSvcImpl;
 import gov.ca.water.calgui.tech_service.impl.ErrorHandlingSvcImpl;
-import hec.io.TimeSeriesContainer;
 import org.apache.log4j.Logger;
 import org.jfree.data.time.Month;
 import org.swixml.SwingEngine;
 
-import javax.swing.*;
-import java.awt.*;
-import java.util.Date;
-import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+import hec.io.TimeSeriesContainer;
 
 /**
  * DisplayFrame class provides a frame for showing charts.
@@ -46,21 +56,20 @@ public class DisplayFrame
 	private static int displayDeltaX = 200;
 	private static SwingEngine swingEngine = ResultUtilsBO.getResultUtilsInstance(null).getSwix();
 	private static IErrorHandlingSvc errorHandlingSvc = new ErrorHandlingSvcImpl();
-	private static IDialogSvc dialogSvc = DialogSvcImpl.getDialogSvcInstance();
 
 	/**
 	 * showDisplayFrames method creates a frame showing multiple charts
 	 * according to parameters.
 	 *
 	 * @param displayGroup
-	 * @param lstScenarios
+	 * @param scenarios
 	 */
-	public static void showDisplayFrames(String displayGroup, JList lstScenarios)
+	public static void showDisplayFrames(String displayGroup, List<RBListItemBO> scenarios)
 	{
 
 		try
 		{
-			IDSSGrabber1Svc dssGrabber = new DSSGrabber1SvcImpl(lstScenarios);
+			IDSSGrabber1Svc dssGrabber = new DSSGrabber1SvcImpl(scenarios);
 			boolean doComparison = false;
 			boolean doDifference = false;
 			boolean doTimeSeries = false;
@@ -84,23 +93,23 @@ public class DisplayFrame
 
 			for(int i = 0; i < groupParts.length; i++)
 			{
-				if(groupParts[i].equals("Base"))
+				if("Base".equals(groupParts[i]))
 				{
 					doBase = true;
 				}
-				if(groupParts[i].equals("Comp"))
+				if("Comp".equals(groupParts[i]))
 				{
 					doComparison = true;
 				}
-				else if(groupParts[i].equals("Diff"))
+				else if("Diff".equals(groupParts[i]))
 				{
 					doDifference = true;
 				}
-				else if(groupParts[i].equals("TS"))
+				else if("TS".equals(groupParts[i]))
 				{
 					doTimeSeries = true;
 				}
-				else if(groupParts[i].equals("BP"))
+				else if("BP".equals(groupParts[i]))
 				{
 					doBoxPlot = true;
 				}
@@ -109,15 +118,15 @@ public class DisplayFrame
 					doExceedance = true;
 					exceedMonths = groupParts[i].substring(3);
 				}
-				else if(groupParts[i].equals("CFS"))
+				else if("CFS".equals(groupParts[i]))
 				{
 					isCFS = true;
 				}
-				else if(groupParts[i].equals("TAF"))
+				else if("TAF".equals(groupParts[i]))
 				{
 					isCFS = false;
 				}
-				else if(groupParts[i].equals("Monthly"))
+				else if("Monthly".equals(groupParts[i]))
 				{
 					doMonthlyTable = true;
 				}
@@ -156,15 +165,15 @@ public class DisplayFrame
 
 			dssGrabber.setIsCFS(isCFS);
 
-			if(!filename.equals(""))
+			if(!filename.isEmpty())
 			{
 				dssGrabber.setBase(filename);
 			}
 			else
 			{
-				for(int i = 0; i < lstScenarios.getModel().getSize(); i++)
+				for(int i = 0; i < scenarios.size(); i++)
 				{
-					RBListItemBO item = (RBListItemBO) lstScenarios.getModel().getElementAt(i);
+					RBListItemBO item = scenarios.get(i);
 					if(item.isSelected())
 					{
 						dssGrabber.setBase(item.toString());
@@ -192,7 +201,7 @@ public class DisplayFrame
 				{
 					message = "No GUI_Links3.csv entry found for " + namesText[i] + "/" + locationNames[i] + ".";
 				}
-				else if(dssGrabber.getPrimaryDSSName().equals(""))
+				else if(dssGrabber.getPrimaryDSSName().isEmpty())
 				{
 					message = "No DSS time series specified for " + namesText[i] + "/" + locationNames[i] + ".";
 				}
@@ -617,7 +626,7 @@ public class DisplayFrame
 					cST = cST + (((JCheckBox) c).isSelected() ? "," + ((JCheckBox) c).getText() : "");
 				}
 			}
-			if(!cST.equals(""))
+			if(!cST.isEmpty())
 			{
 				cAdd = cAdd + ";EX-" + cST;
 			}
@@ -662,9 +671,10 @@ public class DisplayFrame
 		}
 		catch(Exception e)
 		{
-			LOG.error(e.getMessage());
+			LOG.error(e.getMessage(), e);
 			String messageText = "Unable to display frame.";
-			errorHandlingSvc.businessErrorHandler(messageText, (JFrame) swingEngine.find(Constant.MAIN_FRAME_NAME), e);
+			errorHandlingSvc.businessErrorHandler(messageText,
+					(JFrame) SwingUtilities.windowForComponent(swingEngine.find("rdbp000")), e);
 		}
 		return null;
 	}
@@ -677,8 +687,9 @@ public class DisplayFrame
 	 * @param dts
 	 * @param mts
 	 */
-	public static void showDisplayFrames_WRIMS(String displayGroup, JList lstScenarios, DerivedTimeSeries dts,
-											   MultipleTimeSeries mts)
+	public static void showDisplayFramesWRIMS(String displayGroup, List<RBListItemBO> lstScenarios,
+											  DerivedTimeSeries dts,
+											  MultipleTimeSeries mts)
 	{
 
 		try
@@ -781,15 +792,15 @@ public class DisplayFrame
 
 			dssGrabber.setIsCFS(isCFS);
 
-			if(!filename.equals(""))
+			if(!filename.isEmpty())
 			{
 				dssGrabber.setBase(filename);
 			}
 			else
 			{
-				for(int i = 0; i < lstScenarios.getModel().getSize(); i++)
+				for(int i = 0; i < lstScenarios.size(); i++)
 				{
-					RBListItemBO item = (RBListItemBO) lstScenarios.getModel().getElementAt(i);
+					RBListItemBO item = lstScenarios.get(i);
 					if(item.isSelected())
 					{
 						dssGrabber.setBase(item.toString());
@@ -819,7 +830,7 @@ public class DisplayFrame
 				dssGrabber.setLocation("@@" + mts.getName());
 
 				int n = mts.getNumberOfDataReferences();
-				int s = lstScenarios.getModel().getSize();
+				int s = lstScenarios.size();
 
 				TimeSeriesContainer[][] results = new TimeSeriesContainer[n][s];
 				for(int i = 0; i < n; i++)

@@ -42,7 +42,7 @@ public interface IXMLParsingSvc
 	 * @param name Name of the component.
 	 * @return Will return the Id of the component passed in.
 	 */
-	String getcompIdfromName(String name);
+	String getCompIdfromName(String name);
 
 	/**
 	 * This will return the table id which are defined by the user. It will

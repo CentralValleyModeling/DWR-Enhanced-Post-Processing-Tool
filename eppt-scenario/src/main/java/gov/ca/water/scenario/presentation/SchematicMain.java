@@ -5,10 +5,18 @@
  * Source may not be released without written approval from DWR
  */
 
-package gov.ca.water.calgui.presentation;
+package gov.ca.water.scenario.presentation;
 
+import java.awt.Toolkit;
+import java.awt.geom.AffineTransform;
+import java.util.ArrayList;
+import java.util.List;
+import javax.swing.*;
+
+import gov.ca.water.calgui.bo.RBListItemBO;
 import gov.ca.water.calgui.bus_service.impl.XMLParsingSvcImpl;
 import gov.ca.water.calgui.constant.Constant;
+import gov.ca.water.calgui.presentation.DisplayFrame;
 import gov.ca.water.calgui.tech_service.IErrorHandlingSvc;
 import gov.ca.water.calgui.tech_service.impl.ErrorHandlingSvcImpl;
 import org.apache.batik.script.Window;
@@ -27,10 +35,6 @@ import org.w3c.dom.NodeList;
 import org.w3c.dom.events.Event;
 import org.w3c.dom.events.EventListener;
 import org.w3c.dom.events.EventTarget;
-
-import javax.swing.*;
-import java.awt.*;
-import java.awt.geom.AffineTransform;
 
 /**
  * SchematicMain: Class to handle display of SVG-formatted schematic view.
@@ -210,8 +214,14 @@ public class SchematicMain
 				}
 				else
 				{
+					List<RBListItemBO> scenarios = new ArrayList<>();
+					ListModel<RBListItemBO> model = lstScenarios.getModel();
+					for(int i = 0; i < model.getSize(); i++)
+					{
+						scenarios.add(model.getElementAt(i));
+					}
 					DisplayFrame.showDisplayFrames(DisplayFrame.quickState() + ";Locs-" + label + ";Index-"
-							+ Constant.SCHEMATIC_PREFIX + label, lstScenarios);
+							+ Constant.SCHEMATIC_PREFIX + label, scenarios);
 				}
 			}
 		}

@@ -7,6 +7,16 @@
 
 package gov.ca.water.calgui.bus_service.impl;
 
+import java.awt.Component;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
+import javax.swing.*;
+
 import gov.ca.water.calgui.bo.CalLiteGUIException;
 import gov.ca.water.calgui.bo.JLinkedSlider;
 import gov.ca.water.calgui.bo.NumericTextField;
@@ -18,12 +28,6 @@ import gov.ca.water.calgui.tech_service.impl.ErrorHandlingSvcImpl;
 import gov.ca.water.calgui.tech_service.impl.FileSystemSvcImpl;
 import org.apache.log4j.Logger;
 import org.swixml.SwingEngine;
-
-import javax.swing.*;
-import java.awt.*;
-import java.util.List;
-import java.util.*;
-import java.util.stream.Collectors;
 
 /**
  * This class will parse the gui.xml into the Swing Engine.
@@ -54,7 +58,7 @@ public final class XMLParsingSvcImpl implements IXMLParsingSvc
 		LOG.debug("Building XMLParsingSvcImpl Object.");
 		this.errorHandlingSvc = new ErrorHandlingSvcImpl();
 		this.fileSystemSvc = new FileSystemSvcImpl();
-		this.compNameIdMap = new HashMap<String, String>();
+		this.compNameIdMap = new HashMap<>();
 		this.jTextFieldIds = new ArrayList<>();
 		this.jCheckBoxIDs = new ArrayList<>();
 		this.jTextFieldIdsForLinkedSliders = new ArrayList<>();
@@ -256,7 +260,7 @@ public final class XMLParsingSvcImpl implements IXMLParsingSvc
 	}
 
 	@Override
-	public String getcompIdfromName(String name)
+	public String getCompIdfromName(String name)
 	{
 		return this.compNameIdMap.get(name);
 	}

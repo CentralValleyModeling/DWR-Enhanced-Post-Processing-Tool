@@ -7,7 +7,8 @@
 
 package gov.ca.water.calgui.bus_delegate.impl;
 
-import java.awt.*;
+import java.awt.Component;
+import java.awt.Container;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -408,7 +409,7 @@ public class ApplyDynamicConDeleImp implements IApplyDynamicConDele
 				JRadioButton radioButton = ((JRadioButton) this.swingEngine.find(itemName));
 				TitledBorder titledBorder = (TitledBorder) ((JPanel) radioButton.getParent()).getBorder();
 				GUILinks2BO guiLinks2BO = seedDataSvc
-						.getObjByGuiId(xmlParsingSvc.getcompIdfromName(titledBorder.getTitle()));
+						.getObjByGuiId(xmlParsingSvc.getCompIdfromName(titledBorder.getTitle()));
 				String guiTableName = getTableNameFromTheComponent(radioButton.getParent());
 				tableName = guiLinks2BO.getDataTables();
 				if(itemName.endsWith(Constant.D1641))

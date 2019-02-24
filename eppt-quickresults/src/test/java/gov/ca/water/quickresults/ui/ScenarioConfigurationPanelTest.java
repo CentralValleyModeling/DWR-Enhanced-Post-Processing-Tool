@@ -18,14 +18,14 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
  * @author <a href="mailto:adam@rmanet.com">Adam Korynta</a>
  * @since 02-23-2019
  */
-public class QuickResultsPanelTest
+public class ScenarioConfigurationPanelTest
 {
 	private static final Logger LOGGER = Logger.getLogger(QuickResultsPanelTest.class.getName());
 
 	@Test
 	public void testQuickResultsPanelCreation()
 	{
-		QuickResultsPanel quickResultsPanel = new QuickResultsPanel();
+		ScenarioConfigurationPanel quickResultsPanel = new ScenarioConfigurationPanel();
 		assertFalse(quickResultsPanel.getComponents().length == 0);
 	}
 }

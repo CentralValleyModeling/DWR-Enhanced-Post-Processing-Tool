@@ -7,10 +7,9 @@
 
 package gov.ca.water.quickresults.ui;
 
-import org.apache.log4j.Logger;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 /**
  * Company: Resource Management Associates
@@ -18,14 +17,14 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
  * @author <a href="mailto:adam@rmanet.com">Adam Korynta</a>
  * @since 02-23-2019
  */
-public class QuickResultsPanelTest
+public class ScenarioConfigurationListenerTest
 {
-	private static final Logger LOGGER = Logger.getLogger(QuickResultsPanelTest.class.getName());
-
 	@Test
-	public void testQuickResultsPanelCreation()
+	public void testConstructor()
 	{
-		QuickResultsPanel quickResultsPanel = new QuickResultsPanel();
-		assertFalse(quickResultsPanel.getComponents().length == 0);
+		ScenarioConfigurationPanel scenarioConfigurationPanel = new ScenarioConfigurationPanel();
+		ScenarioConfigurationListener scenarioConfigurationListener = new ScenarioConfigurationListener(
+				scenarioConfigurationPanel);
+		assertNotNull(scenarioConfigurationListener);
 	}
 }

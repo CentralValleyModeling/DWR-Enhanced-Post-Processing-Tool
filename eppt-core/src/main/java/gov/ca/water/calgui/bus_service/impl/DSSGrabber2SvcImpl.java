@@ -9,23 +9,26 @@ package gov.ca.water.calgui.bus_service.impl;
 
 //! Variant on DSSGrabber1BO for MTS (multiple time series)
 
+import java.util.Arrays;
+import java.util.Calendar;
+import java.util.List;
+import java.util.Vector;
+import javax.swing.*;
+
 import calsim.app.DerivedTimeSeries;
 import calsim.app.MultipleTimeSeries;
 import gov.ca.water.calgui.bo.GUILinks3BO;
+import gov.ca.water.calgui.bo.RBListItemBO;
 import gov.ca.water.calgui.bo.ResultUtilsBO;
 import gov.ca.water.calgui.bus_service.ISeedDataSvc;
 import gov.ca.water.calgui.constant.Constant;
 import gov.ca.water.calgui.tech_service.IErrorHandlingSvc;
 import gov.ca.water.calgui.tech_service.impl.ErrorHandlingSvcImpl;
-import hec.heclib.util.HecTime;
-import hec.io.TimeSeriesContainer;
 import org.apache.log4j.Logger;
 import org.swixml.SwingEngine;
 
-import javax.swing.*;
-import java.util.Arrays;
-import java.util.Calendar;
-import java.util.Vector;
+import hec.heclib.util.HecTime;
+import hec.io.TimeSeriesContainer;
 
 /**
  * Class to grab (generate) DSS time series BASED ON DTS list for a set of
@@ -62,7 +65,7 @@ public class DSSGrabber2SvcImpl extends DSSGrabber1SvcImpl
 	private double[][][] _annualTAFs;
 	private double[][][] _annualTAFsDiff;
 
-	public DSSGrabber2SvcImpl(JList list, DerivedTimeSeries dts, MultipleTimeSeries mts)
+	public DSSGrabber2SvcImpl(List<RBListItemBO> list, DerivedTimeSeries dts, MultipleTimeSeries mts)
 	{
 
 		super(list);
@@ -91,21 +94,21 @@ public class DSSGrabber2SvcImpl extends DSSGrabber1SvcImpl
 			{
 				// @@ indicates MTS/DTS title
 				locationName = locationName.substring(2);
-				primaryDSSName = locationName;
-				secondaryDSSName = "";
-				yLabel = "";
-				sLabel = "";
-				title = locationName;
+				_primaryDSSName = locationName;
+				_secondaryDSSName = "";
+				_yLabel = "";
+				_sLabel = "";
+				_title = locationName;
 			}
 			else if(locationName.startsWith("/"))
 			{
 				// Handle names passed from WRIMS GUI
 				String[] parts = locationName.split("/");
-				title = locationName;
-				primaryDSSName = parts[2] + "/" + parts[3];
-				secondaryDSSName = "";
-				yLabel = "";
-				sLabel = "";
+				_title = locationName;
+				_primaryDSSName = parts[2] + "/" + parts[3];
+				_secondaryDSSName = "";
+				_yLabel = "";
+				_sLabel = "";
 			}
 			else
 			{
@@ -123,11 +126,11 @@ public class DSSGrabber2SvcImpl extends DSSGrabber1SvcImpl
 				GUILinks3BO guiLinks3BO = seedDataSvc.getObjById(locationName);
 				if(guiLinks3BO != null)
 				{
-					primaryDSSName = guiLinks3BO.getPrimary();
-					secondaryDSSName = guiLinks3BO.getSecondary();
-					yLabel = guiLinks3BO.getyTitle();
-					title = guiLinks3BO.getTitle();
-					sLabel = guiLinks3BO.getyTitle2();
+					_primaryDSSName = guiLinks3BO.getPrimary();
+					_secondaryDSSName = guiLinks3BO.getSecondary();
+					_yLabel = guiLinks3BO.getyTitle();
+					_title = guiLinks3BO.getTitle();
+					_sLabel = guiLinks3BO.getyTitle2();
 				}
 			}
 		}
@@ -161,7 +164,7 @@ public class DSSGrabber2SvcImpl extends DSSGrabber1SvcImpl
 			else
 			{
 
-				if(locationName.contains(Constant.SCHEMATIC_PREFIX) && primaryDSSName.contains(","))
+				if(locationName.contains(Constant.SCHEMATIC_PREFIX) && _primaryDSSName.contains(","))
 				{
 
 					// Special handling for DEMO of schematic view - treat
@@ -170,15 +173,15 @@ public class DSSGrabber2SvcImpl extends DSSGrabber1SvcImpl
 					// TODO: Longer-term approach is probably to add a rank to
 					// arrays storing all series
 
-					String[] dssNames = primaryDSSName.split(",");
-					scenarios = dssNames.length;
-					results = new TimeSeriesContainer[scenarios];
-					for(int i = 0; i < scenarios; i++)
+					String[] dssNames = _primaryDSSName.split(",");
+					_scenarioCount = dssNames.length;
+					results = new TimeSeriesContainer[_scenarioCount];
+					for(int i = 0; i < _scenarioCount; i++)
 					{
-						results[i] = getOneSeries(baseName, dssNames[i]);
+						results[i] = getOneSeries(_baseName, dssNames[i]);
 					}
 
-					originalUnits = results[0].units;
+					_originalUnits = results[0].units;
 
 				}
 				else
@@ -186,21 +189,21 @@ public class DSSGrabber2SvcImpl extends DSSGrabber1SvcImpl
 
 					// Store number of scenarios
 
-					scenarios = lstScenarios.getModel().getSize();
-					results = new TimeSeriesContainer[scenarios];
+					_scenarioCount = _scenarios.size();
+					results = new TimeSeriesContainer[_scenarioCount];
 
 					// Base first
 
-					results[0] = getOneSeries_WRIMS(baseName, primaryDSSName, dts);
-					originalUnits = results[0].units;
+					results[0] = getOneSeries_WRIMS(_baseName, _primaryDSSName, dts);
+					_originalUnits = results[0].units;
 
 					// Then scenarios
 
 					int j = 0;
-					for(int i = 0; i < scenarios; i++)
+					for(int i = 0; i < _scenarioCount; i++)
 					{
 						String scenarioName;
-						if(baseName.contains("_SV.DSS"))
+						if(_baseName.contains("_SV.DSS"))
 						{
 							// For SVars, use WRIMS GUI Project object to
 							// determine
@@ -208,16 +211,16 @@ public class DSSGrabber2SvcImpl extends DSSGrabber1SvcImpl
 							switch(i)
 							{
 								case 0:
-									scenarioName = project.getSVFile();
+									scenarioName = _project.getSVFile();
 									break;
 								case 1:
-									scenarioName = project.getSV2File();
+									scenarioName = _project.getSV2File();
 									break;
 								case 2:
-									scenarioName = project.getSV3File();
+									scenarioName = _project.getSV3File();
 									break;
 								case 3:
-									scenarioName = project.getSV4File();
+									scenarioName = _project.getSV4File();
 									break;
 								default:
 									scenarioName = "";
@@ -226,12 +229,12 @@ public class DSSGrabber2SvcImpl extends DSSGrabber1SvcImpl
 						}
 						else
 						{
-							scenarioName = lstScenarios.getModel().getElementAt(i).toString();
+							scenarioName = _scenarios.get(i).toString();
 						}
-						if(!baseName.equals(scenarioName))
+						if(!_baseName.equals(scenarioName))
 						{
 							j = j + 1;
-							results[j] = getOneSeries_WRIMS(scenarioName, primaryDSSName, dts);
+							results[j] = getOneSeries_WRIMS(scenarioName, _primaryDSSName, dts);
 						}
 					}
 				}
@@ -265,40 +268,40 @@ public class DSSGrabber2SvcImpl extends DSSGrabber1SvcImpl
 
 				// Store number of scenarios
 
-				scenarios = lstScenarios.getModel().getSize();
-				results = new TimeSeriesContainer[scenarios];
+				_scenarioCount = _scenarios.size();
+				results = new TimeSeriesContainer[_scenarioCount];
 
 				// Base first
 
-				results[0] = getOneSeries_WRIMS(baseName, mtsI, mts);
+				results[0] = getOneSeries_WRIMS(_baseName, mtsI, mts);
 				if(results[0] != null)
 				{
-					originalUnits = results[0].units;
+					_originalUnits = results[0].units;
 				}
 
 				// Then scenarios
 
 				int j = 0;
-				for(int i = 0; i < scenarios; i++)
+				for(int i = 0; i < _scenarioCount; i++)
 				{
 					String scenarioName;
-					if(baseName.contains("_SV.DSS"))
+					if(_baseName.contains("_SV.DSS"))
 					{
 						// For SVars, use WRIMS GUI Project object to determine
 						// input files
 						switch(i)
 						{
 							case 0:
-								scenarioName = project.getSVFile();
+								scenarioName = _project.getSVFile();
 								break;
 							case 1:
-								scenarioName = project.getSV2File();
+								scenarioName = _project.getSV2File();
 								break;
 							case 2:
-								scenarioName = project.getSV3File();
+								scenarioName = _project.getSV3File();
 								break;
 							case 3:
-								scenarioName = project.getSV4File();
+								scenarioName = _project.getSV4File();
 								break;
 							default:
 								scenarioName = "";
@@ -307,9 +310,9 @@ public class DSSGrabber2SvcImpl extends DSSGrabber1SvcImpl
 					}
 					else
 					{
-						scenarioName = lstScenarios.getModel().getElementAt(i).toString();
+						scenarioName = _scenarios.get(i).toString();
 					}
-					if(!baseName.equals(scenarioName))
+					if(!_baseName.equals(scenarioName))
 					{
 						j = j + 1;
 						results[j] = getOneSeries_WRIMS(scenarioName, mtsI, mts);
@@ -350,7 +353,7 @@ public class DSSGrabber2SvcImpl extends DSSGrabber1SvcImpl
 				else
 				{
 					// Operand is a DSS time series
-					primaryDSSName = (dts2.getBPartAt(i) + "/" + dts2.getCPartAt(i));
+					_primaryDSSName = (dts2.getBPartAt(i) + "/" + dts2.getCPartAt(i));
 					if(dts2.getVarTypeAt(i).equals("DVAR"))
 					{
 						interimResult = getOneSeries(dssFilename,
@@ -360,21 +363,21 @@ public class DSSGrabber2SvcImpl extends DSSGrabber1SvcImpl
 					{
 						String svFilename = "";
 
-						if(dssFilename.equals(project.getDVFile()))
+						if(dssFilename.equals(_project.getDVFile()))
 						{
-							svFilename = project.getSVFile();
+							svFilename = _project.getSVFile();
 						}
-						else if(dssFilename.equals(project.getDV2File()))
+						else if(dssFilename.equals(_project.getDV2File()))
 						{
-							svFilename = project.getSV2File();
+							svFilename = _project.getSV2File();
 						}
-						else if(dssFilename.equals(project.getDV3File()))
+						else if(dssFilename.equals(_project.getDV3File()))
 						{
-							svFilename = project.getSV3File();
+							svFilename = _project.getSV3File();
 						}
-						else if(dssFilename.equals(project.getDV4File()))
+						else if(dssFilename.equals(_project.getDV4File()))
 						{
-							svFilename = project.getSV4File();
+							svFilename = _project.getSV4File();
 						}
 
 						interimResult = getOneSeries(svFilename,
@@ -475,14 +478,14 @@ public class DSSGrabber2SvcImpl extends DSSGrabber1SvcImpl
 				DerivedTimeSeries adt = ResultUtilsBO.getResultUtilsInstance(null).getProject()
 													 .getDTS(mts.getDTSNameAt(i));
 				result = getOneSeries_WRIMS(dssFilename, "", adt);
-				primaryDSSName = mts.getDTSNameAt(i);
+				_primaryDSSName = mts.getDTSNameAt(i);
 
 			}
 			else
 			{
 				// Operand is a DSS time series
-				primaryDSSName = (mts2.getBPartAt(i) + "//" + mts2.getCPartAt(i));
-				if(mts2.getVarTypeAt(i).equals("DVAR"))
+				_primaryDSSName = (mts2.getBPartAt(i) + "//" + mts2.getCPartAt(i));
+				if("DVAR".equals(mts2.getVarTypeAt(i)))
 				{
 					result = getOneSeries(dssFilename, (mts2.getBPartAt(i) + "/" + mts2.getCPartAt(i)));
 				}
@@ -490,21 +493,21 @@ public class DSSGrabber2SvcImpl extends DSSGrabber1SvcImpl
 				{
 					String svFilename = "";
 
-					if(dssFilename.equals(project.getDVFile()))
+					if(dssFilename.equals(_project.getDVFile()))
 					{
-						svFilename = project.getSVFile();
+						svFilename = _project.getSVFile();
 					}
-					else if(dssFilename.equals(project.getDV2File()))
+					else if(dssFilename.equals(_project.getDV2File()))
 					{
-						svFilename = project.getSV2File();
+						svFilename = _project.getSV2File();
 					}
-					else if(dssFilename.equals(project.getDV3File()))
+					else if(dssFilename.equals(_project.getDV3File()))
 					{
-						svFilename = project.getSV3File();
+						svFilename = _project.getSV3File();
 					}
-					else if(dssFilename.equals(project.getDV4File()))
+					else if(dssFilename.equals(_project.getDV4File()))
 					{
-						svFilename = project.getSV4File();
+						svFilename = _project.getSV4File();
 					}
 
 					result = getOneSeries(svFilename, (mts2.getBPartAt(i) + "/" + mts2.getCPartAt(i)));
@@ -536,12 +539,12 @@ public class DSSGrabber2SvcImpl extends DSSGrabber1SvcImpl
 
 		try
 		{
-			TimeSeriesContainer[][] results = new TimeSeriesContainer[timeSeriesResults.length][scenarios - 1];
+			TimeSeriesContainer[][] results = new TimeSeriesContainer[timeSeriesResults.length][_scenarioCount - 1];
 
 			for(int tsi = 0; tsi < timeSeriesResults.length; tsi++)
 			{
 
-				for(int i = 0; i < scenarios - 1; i++)
+				for(int i = 0; i < _scenarioCount - 1; i++)
 				{
 
 					results[tsi][i] = (TimeSeriesContainer) timeSeriesResults[tsi][i + 1].clone();
@@ -553,7 +556,7 @@ public class DSSGrabber2SvcImpl extends DSSGrabber1SvcImpl
 			}
 			return results;
 		}
-		catch(Exception e)
+		catch(RuntimeException e)
 		{
 			LOG.error(e.getMessage());
 			String messageText = "Unable to get time-series.";
@@ -577,13 +580,13 @@ public class DSSGrabber2SvcImpl extends DSSGrabber1SvcImpl
 			int datasets = primaryResults.length;
 			int scenarios = primaryResults[0].length;
 
-			_annualTAFs = new double[datasets][scenarios][endWY - startWY + 2];
+			_annualTAFs = new double[datasets][scenarios][_endWY - _startWY + 2];
 
 			for(int mtsi = 0; mtsi < datasets; mtsi++)
 			{
 				for(int i = 0; i < scenarios; i++)
 				{
-					for(int j = 0; j < endWY - startWY + 1; j++)
+					for(int j = 0; j < _endWY - _startWY + 1; j++)
 					{
 						_annualTAFs[mtsi][i][j] = 0.0;
 					}
@@ -592,7 +595,7 @@ public class DSSGrabber2SvcImpl extends DSSGrabber1SvcImpl
 
 			// Calculate
 
-			if(originalUnits.equals("CFS"))
+			if("CFS".equals(_originalUnits))
 			{
 
 				HecTime ht = new HecTime();
@@ -611,17 +614,17 @@ public class DSSGrabber2SvcImpl extends DSSGrabber1SvcImpl
 							calendar.set(ht.year(), ht.month() - 1, 1);
 							double monthlyTAF = primaryResults[mtsi][i].values[j]
 									* calendar.getActualMaximum(Calendar.DAY_OF_MONTH) * CFS_2_TAF_DAY;
-							int wy = ((ht.month() < 10) ? ht.year() : ht.year() + 1) - startWY;
+							int wy = ((ht.month() < 10) ? ht.year() : ht.year() + 1) - _startWY;
 							if(wy >= 0)
 							{
 								_annualTAFs[mtsi][i][wy] += monthlyTAF;
 							}
-							if(!isCFS)
+							if(!_isCFS)
 							{
 								primaryResults[mtsi][i].values[j] = monthlyTAF;
 							}
 						}
-						if(!isCFS)
+						if(!_isCFS)
 						{
 							primaryResults[mtsi][i].units = "TAF per year";
 						}
@@ -633,12 +636,12 @@ public class DSSGrabber2SvcImpl extends DSSGrabber1SvcImpl
 
 			if(primaryResults[0].length > 1)
 			{
-				_annualTAFsDiff = new double[datasets][scenarios - 1][endWY - startWY + 2];
+				_annualTAFsDiff = new double[datasets][scenarios - 1][_endWY - _startWY + 2];
 				for(int mtsi = 0; mtsi < primaryResults.length - 1; mtsi++)
 				{
 					for(int i = 0; i < scenarios; i++)
 					{
-						for(int j = 0; j < endWY - startWY + 1; j++)
+						for(int j = 0; j < _endWY - _startWY + 1; j++)
 						{
 							_annualTAFsDiff[mtsi][i][j] = _annualTAFs[mtsi + 1][i][j] - _annualTAFs[0][i][j];
 						}
@@ -658,13 +661,13 @@ public class DSSGrabber2SvcImpl extends DSSGrabber1SvcImpl
 	public double getAnnualTAF(int mtsi, int i, int wy)
 	{
 
-		return wy < startWY ? -1 : _annualTAFs[mtsi][i][wy - startWY];
+		return wy < _startWY ? -1 : _annualTAFs[mtsi][i][wy - _startWY];
 	}
 
 	public double getAnnualTAFDiff(int mtsi, int i, int wy)
 	{
 
-		return wy < startWY ? -1 : _annualTAFsDiff[mtsi][i][wy - startWY];
+		return wy < _startWY ? -1 : _annualTAFsDiff[mtsi][i][wy - _startWY];
 	}
 
 	/**
@@ -686,14 +689,14 @@ public class DSSGrabber2SvcImpl extends DSSGrabber1SvcImpl
 			else
 			{
 				int datasets = timeSeriesResults.length;
-				results = new TimeSeriesContainer[14][datasets][scenarios];
+				results = new TimeSeriesContainer[14][datasets][_scenarioCount];
 				for(int mtsI = 0; mtsI < datasets; mtsI++)
 				{
 					for(int month = 0; month < 14; month++)
 					{
 
 						HecTime ht = new HecTime();
-						for(int i = 0; i < scenarios; i++)
+						for(int i = 0; i < _scenarioCount; i++)
 						{
 							if(timeSeriesResults[mtsI][i] != null)
 							{
@@ -719,7 +722,7 @@ public class DSSGrabber2SvcImpl extends DSSGrabber1SvcImpl
 										values2 = new double[n];
 										for(int j = 0; j < n; j++)
 										{
-											ht.setYearMonthDay(j + startWY, 11, 1, 0);
+											ht.setYearMonthDay(j + _startWY, 11, 1, 0);
 											times2[j] = ht.value();
 											values2[j] = _annualTAFs[mtsI][i][j];
 										}
@@ -733,9 +736,9 @@ public class DSSGrabber2SvcImpl extends DSSGrabber1SvcImpl
 										n = 0;
 										if(times != null)
 										{
-											for(int j = 0; j < times.length; j++)
+											for(final int time : times)
 											{
-												ht.set(times[j]);
+												ht.set(time);
 												if(ht.month() == month + 1)
 												{
 													n = n + 1;
@@ -806,7 +809,7 @@ public class DSSGrabber2SvcImpl extends DSSGrabber1SvcImpl
 			else
 			{
 				int datasets = timeSeriesResults.length;
-				results = new TimeSeriesContainer[14][datasets][scenarios - 1];
+				results = new TimeSeriesContainer[14][datasets][_scenarioCount - 1];
 				for(int mtsI = 0; mtsI < datasets; mtsI++)
 				{
 
@@ -814,7 +817,7 @@ public class DSSGrabber2SvcImpl extends DSSGrabber1SvcImpl
 					{
 
 						HecTime ht = new HecTime();
-						for(int i = 0; i < scenarios - 1; i++)
+						for(int i = 0; i < _scenarioCount - 1; i++)
 						{
 
 							if(month == 13)
@@ -845,7 +848,7 @@ public class DSSGrabber2SvcImpl extends DSSGrabber1SvcImpl
 									values2 = new double[n];
 									for(int j = 0; j < n; j++)
 									{
-										ht.setYearMonthDay(j + startWY, 11, 1, 0);
+										ht.setYearMonthDay(j + _startWY, 11, 1, 0);
 										times2[j] = ht.value();
 										values2[j] = _annualTAFs[mtsI][i + 1][j] - _annualTAFs[mtsI][0][j];
 									}

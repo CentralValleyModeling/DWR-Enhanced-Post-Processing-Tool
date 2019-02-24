@@ -7,12 +7,14 @@
 
 package gov.ca.water.calgui.presentation;
 
-import java.awt.*;
+import java.awt.Dimension;
+import java.awt.HeadlessException;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.List;
 import javax.swing.*;
 
 import gov.ca.water.calgui.bo.RBListItemBO;
@@ -35,15 +37,15 @@ public class PowerFrame
 	private IErrorHandlingSvc errorHandlingSvc = new ErrorHandlingSvcImpl();
 	private IDialogSvc dialogSvc = DialogSvcImpl.getDialogSvcInstance();
 
-	public PowerFrame(JList lstScenarios)
+	public PowerFrame(List<RBListItemBO> lstScenarios)
 	{
 		try
 		{
 			String dssFilename = "";
 			IDSSGrabber1Svc dssGrabber = new DSSGrabber1SvcImpl(lstScenarios);
-			for(int i = 0; i < lstScenarios.getModel().getSize(); i++)
+			for(int i = 0; i < lstScenarios.size(); i++)
 			{
-				RBListItemBO item = (RBListItemBO) lstScenarios.getModel().getElementAt(i);
+				RBListItemBO item = lstScenarios.get(i);
 				if(item.isSelected())
 				{
 					dssFilename = item.toString();

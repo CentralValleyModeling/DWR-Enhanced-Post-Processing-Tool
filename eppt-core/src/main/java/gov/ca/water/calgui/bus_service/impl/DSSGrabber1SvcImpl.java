@@ -9,8 +9,22 @@ package gov.ca.water.calgui.bus_service.impl;
 
 //! Base DSS file access service
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Calendar;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Properties;
+import java.util.Scanner;
+import java.util.Vector;
+import javax.swing.*;
+
 import calsim.app.Project;
 import gov.ca.water.calgui.bo.GUILinks3BO;
+import gov.ca.water.calgui.bo.RBListItemBO;
 import gov.ca.water.calgui.bo.ResultUtilsBO;
 import gov.ca.water.calgui.bus_service.IDSSGrabber1Svc;
 import gov.ca.water.calgui.bus_service.ISeedDataSvc;
@@ -19,17 +33,12 @@ import gov.ca.water.calgui.tech_service.IDialogSvc;
 import gov.ca.water.calgui.tech_service.IErrorHandlingSvc;
 import gov.ca.water.calgui.tech_service.impl.DialogSvcImpl;
 import gov.ca.water.calgui.tech_service.impl.ErrorHandlingSvcImpl;
-import hec.heclib.dss.HecDss;
-import hec.heclib.util.HecTime;
-import hec.io.TimeSeriesContainer;
 import org.apache.log4j.Logger;
 import org.swixml.SwingEngine;
 
-import javax.swing.*;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.util.*;
+import hec.heclib.dss.HecDss;
+import hec.heclib.util.HecTime;
+import hec.io.TimeSeriesContainer;
 
 /**
  * Class to grab (load) DSS time series for a set of scenarios passed in a
@@ -57,47 +66,56 @@ public class DSSGrabber1SvcImpl implements IDSSGrabber1Svc
 {
 
 	static final double CFS_2_TAF_DAY = 0.001983471;
-	static final double TAF_DAY_2_CFS = 504.166667;
-	static Logger LOG = Logger.getLogger(DSSGrabber1SvcImpl.class.getName());
-	protected final JList lstScenarios;
-	protected String baseName;
-	protected String primaryDSSName;
-	protected String secondaryDSSName;
-	protected String title; // Chart title
-	protected String yLabel; // Y-axis label
-	protected String sLabel; // Label for secondary time series
-	protected boolean isCFS; // Indicates whether "CFS" button was selected
-	protected String originalUnits; // Copy of original units
-	protected int startTime; // Start and end time of interest
-	protected int endTime;
-	protected int startWY; // USGS Water Year for start and end time.
-	protected int endWY;
-	protected int scenarios; // Number of scenarios passed in list parameter
-	protected double[][] annualTAFs;
-	protected double[][] annualTAFsDiff;
-	protected double[][] annualCFSs;
-	protected double[][] annualCFSsDiff;
-	protected Project project = ResultUtilsBO.getResultUtilsInstance(null).getProject();
-	private ISeedDataSvc seedDataSvc = SeedDataSvcImpl.getSeedDataSvcImplInstance();
-	private SwingEngine swingEngine = XMLParsingSvcImpl.getXMLParsingSvcImplInstance().getSwingEngine();
-	private IErrorHandlingSvc errorHandlingSvc = new ErrorHandlingSvcImpl();
-	private IDialogSvc dialogSvc = DialogSvcImpl.getDialogSvcInstance();
-	private boolean stopOnMissing = true;
-	private List<String> missingDSSRecords = new ArrayList<String>();
-	private Properties properties = new Properties();
+	private static final double TAF_DAY_2_CFS = 504.166667;
+	private static Logger LOG = Logger.getLogger(DSSGrabber1SvcImpl.class.getName());
+	final List<RBListItemBO> _scenarios = new ArrayList<>();
+	String _baseName;
+	String _primaryDSSName;
+	String _secondaryDSSName;
+	// Chart title
+	String _title;
+	// Y-axis label
+	String _yLabel;
+	// Label for secondary time series
+	String _sLabel;
+	// Indicates whether "CFS" button was selected
+	String _originalUnits;
+	int _scenarioCount;
+	boolean _isCFS;
+	// USGS Water Year for start and end time.
+	int _startWY;
+	int _endWY;
+	Project _project = ResultUtilsBO.getResultUtilsInstance(null).getProject();
+	// Copy of original units
+	// Start and end time of interest
+	private int _startTime;
+	private int _endTime;
+	// Number of scenarios passed in list parameter
+	private double[][] _annualTAFs;
+	private double[][] _annualTAFsDiff;
+	private double[][] _annualCFSs;
+	private double[][] _annualCFSsDiff;
+	private ISeedDataSvc _seedDataSvc = SeedDataSvcImpl.getSeedDataSvcImplInstance();
+	private SwingEngine _swingEngine = XMLParsingSvcImpl.getXMLParsingSvcImplInstance().getSwingEngine();
+	private IErrorHandlingSvc _errorHandlingSvc = new ErrorHandlingSvcImpl();
+	private IDialogSvc _dialogSvc = DialogSvcImpl.getDialogSvcInstance();
+	private boolean _stopOnMissing;
+	private List<String> _missingDSSRecords = new ArrayList<>();
 
-	public DSSGrabber1SvcImpl(JList list)
+	public DSSGrabber1SvcImpl(List<RBListItemBO> scenarios)
 	{
-
-		this.lstScenarios = list;
+		_scenarios.addAll(scenarios);
+		String propertiesFile = "callite-gui.properties";
 		try
 		{
-			properties.load(ModelRunSvcImpl.class.getClassLoader().getResourceAsStream("callite-gui.properties"));
-			stopOnMissing = Boolean.parseBoolean(properties.getProperty("stop.display.on.null"));
+			Properties properties = new Properties();
+			properties.load(ModelRunSvcImpl.class.getClassLoader().getResourceAsStream(propertiesFile));
+			_stopOnMissing = Boolean.parseBoolean(properties.getProperty("stop.display.on.null"));
 		}
-		catch(Exception e)
+		catch(IOException | RuntimeException e)
 		{
-			stopOnMissing = true;
+			LOG.error("Unable to read properties file from: " + propertiesFile, e);
+			_stopOnMissing = true;
 		}
 		clearMissingList();
 	}
@@ -107,7 +125,7 @@ public class DSSGrabber1SvcImpl implements IDSSGrabber1Svc
 	 */
 	public void clearMissingList()
 	{
-		missingDSSRecords.clear();
+		_missingDSSRecords.clear();
 	}
 
 	/**
@@ -117,7 +135,7 @@ public class DSSGrabber1SvcImpl implements IDSSGrabber1Svc
 	 */
 	public List<String> getMissingList()
 	{
-		return missingDSSRecords;
+		return _missingDSSRecords;
 	}
 
 	/**
@@ -128,7 +146,7 @@ public class DSSGrabber1SvcImpl implements IDSSGrabber1Svc
 	 */
 	public boolean getStopOnMissing()
 	{
-		return stopOnMissing;
+		return _stopOnMissing;
 	}
 
 	/*
@@ -140,7 +158,7 @@ public class DSSGrabber1SvcImpl implements IDSSGrabber1Svc
 	@Override
 	public void setIsCFS(boolean isCFS)
 	{
-		this.isCFS = isCFS;
+		this._isCFS = isCFS;
 	}
 
 	/*
@@ -161,24 +179,24 @@ public class DSSGrabber1SvcImpl implements IDSSGrabber1Svc
 			int m = ResultUtilsBO.getResultUtilsInstance(null).monthToInt(dateRange.substring(0, 3));
 			int y = new Integer(dateRange.substring(3, 7));
 			ht.setYearMonthDay(m == 12 ? y + 1 : y, m == 12 ? 1 : m + 1, 1, 0);
-			startTime = ht.value();
-			startWY = (m < 10) ? y : y + 1; // Water year
+			_startTime = ht.value();
+			_startWY = (m < 10) ? y : y + 1; // Water year
 
 			m = ResultUtilsBO.getResultUtilsInstance(null).monthToInt(dateRange.substring(8, 11));
 			y = new Integer(dateRange.substring(11, 15));
 			ht.setYearMonthDay(m == 12 ? y + 1 : y, m == 12 ? 1 : m + 1, 1, 0);
-			endTime = ht.value();
-			endWY = ((m < 10) ? y : y + 1);
+			_endTime = ht.value();
+			_endWY = ((m < 10) ? y : y + 1);
 		}
 		catch(UnsatisfiedLinkError | NoClassDefFoundError e)
 		{
-			errorHandlingSvc.systemErrorHandler("Possible javaheclib.dll issue - CalLite GUI will close",
+			_errorHandlingSvc.systemErrorHandler("Possible javaheclib.dll issue - CalLite GUI will close",
 					"javaHecLib.dll may be the wrong version or missing.", null);
 		}
 		catch(Exception e)
 		{
 
-			startTime = -1;
+			_startTime = -1;
 			LOG.debug(e.getMessage());
 		}
 
@@ -196,7 +214,7 @@ public class DSSGrabber1SvcImpl implements IDSSGrabber1Svc
 		String delimiter;
 
 		// Windows
-		if(baseName.contains("\\"))
+		if(_baseName.contains("\\"))
 		{
 
 			delimiter = "\\\\";
@@ -208,7 +226,7 @@ public class DSSGrabber1SvcImpl implements IDSSGrabber1Svc
 			delimiter = "/";
 		}
 
-		String[] pathParts = baseName.split(delimiter);
+		String[] pathParts = _baseName.split(delimiter);
 		String fullFileName = pathParts[pathParts.length - 1];
 		String fileName = fullFileName.substring(0, fullFileName.lastIndexOf("."));
 		return fileName;
@@ -225,7 +243,7 @@ public class DSSGrabber1SvcImpl implements IDSSGrabber1Svc
 	public void setBase(String baseName)
 	{
 
-		this.baseName = baseName;
+		this._baseName = baseName;
 	}
 
 	/*
@@ -245,11 +263,11 @@ public class DSSGrabber1SvcImpl implements IDSSGrabber1Svc
 		{
 			// Handle names passed from WRIMS GUI
 			String[] parts = locationName.split("/");
-			title = locationName;
-			primaryDSSName = parts[2] + "/" + parts[3] + "/" + parts[6];
-			secondaryDSSName = "";
-			yLabel = "";
-			sLabel = "";
+			_title = locationName;
+			_primaryDSSName = parts[2] + "/" + parts[3] + "/" + parts[6];
+			_secondaryDSSName = "";
+			_yLabel = "";
+			_sLabel = "";
 		}
 		else
 		{
@@ -263,14 +281,14 @@ public class DSSGrabber1SvcImpl implements IDSSGrabber1Svc
 
 			// Location name is otherwise assumed coded as "ckpbxxx"
 
-			GUILinks3BO guiLinks3BO = seedDataSvc.getObjById(locationName);
+			GUILinks3BO guiLinks3BO = _seedDataSvc.getObjById(locationName);
 			if(guiLinks3BO != null)
 			{
-				primaryDSSName = guiLinks3BO.getPrimary();
-				secondaryDSSName = guiLinks3BO.getSecondary();
-				yLabel = guiLinks3BO.getyTitle();
-				title = guiLinks3BO.getTitle();
-				sLabel = guiLinks3BO.getyTitle2();
+				_primaryDSSName = guiLinks3BO.getPrimary();
+				_secondaryDSSName = guiLinks3BO.getSecondary();
+				_yLabel = guiLinks3BO.getyTitle();
+				_title = guiLinks3BO.getTitle();
+				_sLabel = guiLinks3BO.getyTitle2();
 			}
 		}
 	}
@@ -340,11 +358,11 @@ public class DSSGrabber1SvcImpl implements IDSSGrabber1Svc
 	{
 
 		String type = getType(locationName);
-		primaryDSSName = locationName + "/" + type;
-		secondaryDSSName = "";
-		yLabel = type;
-		title = locationName;
-		sLabel = "";
+		_primaryDSSName = locationName + "/" + type;
+		_secondaryDSSName = "";
+		_yLabel = type;
+		_title = locationName;
+		_sLabel = "";
 	}
 
 	/*
@@ -355,7 +373,7 @@ public class DSSGrabber1SvcImpl implements IDSSGrabber1Svc
 	@Override
 	public String getYLabel()
 	{
-		return yLabel;
+		return _yLabel;
 	}
 
 	/*
@@ -366,7 +384,7 @@ public class DSSGrabber1SvcImpl implements IDSSGrabber1Svc
 	@Override
 	public String getSLabel()
 	{
-		return sLabel;
+		return _sLabel;
 	}
 
 	/*
@@ -377,13 +395,13 @@ public class DSSGrabber1SvcImpl implements IDSSGrabber1Svc
 	@Override
 	public String getTitle()
 	{
-		if(title != "")
+		if(_title != "")
 		{
-			return title;
+			return _title;
 		}
 		else
 		{
-			return primaryDSSName;
+			return _primaryDSSName;
 		}
 	}
 
@@ -403,7 +421,7 @@ public class DSSGrabber1SvcImpl implements IDSSGrabber1Svc
 		{
 			Scanner scanner;
 			scanner = new Scanner(new FileInputStream(clsF.getAbsolutePath()));
-			while(scanner.hasNextLine() && sjrState.equals(""))
+			while(scanner.hasNextLine() && sjrState.isEmpty())
 			{
 				String text = scanner.nextLine();
 				if(text.startsWith("Dynamic_SJR|"))
@@ -443,7 +461,7 @@ public class DSSGrabber1SvcImpl implements IDSSGrabber1Svc
 		{
 			Scanner scanner;
 			scanner = new Scanner(new FileInputStream(clsF.getAbsolutePath()));
-			while(scanner.hasNextLine() && AN_CHstate.equals(""))
+			while(scanner.hasNextLine() && AN_CHstate.isEmpty())
 			{
 				String text = scanner.nextLine();
 				if(text.startsWith("CkbReg_AN|"))
@@ -484,7 +502,7 @@ public class DSSGrabber1SvcImpl implements IDSSGrabber1Svc
 		{
 			Scanner scanner;
 			scanner = new Scanner(new FileInputStream(clsF.getAbsolutePath()));
-			while(scanner.hasNextLine() && LVE_State.equals(""))
+			while(scanner.hasNextLine() && LVE_State.isEmpty())
 			{
 				String text = scanner.nextLine();
 				if(text.startsWith("fac_ckb3|"))
@@ -685,11 +703,11 @@ public class DSSGrabber1SvcImpl implements IDSSGrabber1Svc
 				{
 					message = "Could not find " + dssNames[0] + " in " + dssFilename;
 				}
-				if(stopOnMissing)
+				if(_stopOnMissing)
 				{
-					dialogSvc.getOK("Could not find " + dssNames[0] + " in " + dssFilename, JOptionPane.ERROR_MESSAGE);
+					_dialogSvc.getOK("Could not find " + dssNames[0] + " in " + dssFilename, JOptionPane.ERROR_MESSAGE);
 				}
-				missingDSSRecords.add(message);
+				_missingDSSRecords.add(message);
 			}
 			else
 			{
@@ -706,13 +724,13 @@ public class DSSGrabber1SvcImpl implements IDSSGrabber1Svc
 					{
 						result2 = null;
 						String message = "Could not find " + dssNames[0] + " in " + dssFilename;
-						if(stopOnMissing)
+						if(_stopOnMissing)
 						{
 							JOptionPane.showMessageDialog(null, message, "Error", JOptionPane.ERROR_MESSAGE);
 						}
 						else
 						{
-							missingDSSRecords.add(message);
+							_missingDSSRecords.add(message);
 						}
 					}
 					else
@@ -729,13 +747,13 @@ public class DSSGrabber1SvcImpl implements IDSSGrabber1Svc
 			if(result != null)
 			{
 				int first = 0; // Find starting index
-				for(int i = 0; (i < result.numberValues) && (result.times[i] < startTime); i++)
+				for(int i = 0; (i < result.numberValues) && (result.times[i] < _startTime); i++)
 				{
 					first = i + 1;
 				}
 
 				int last = result.numberValues - 1; // find ending index
-				for(int i = result.numberValues - 1; (i >= 0) && (result.times[i] >= endTime); i--)
+				for(int i = result.numberValues - 1; (i >= 0) && (result.times[i] >= _endTime); i--)
 				{
 					last = i;
 				}
@@ -778,13 +796,14 @@ public class DSSGrabber1SvcImpl implements IDSSGrabber1Svc
 			LOG.error(e.getMessage());
 			if(e.getMessage().contains("Unable to recognize record"))
 			{
-				this.missingDSSRecords.add("Could not find record - HEC message was '" + e.getMessage() + "'");
+				this._missingDSSRecords.add("Could not find record - HEC message was '" + e.getMessage() + "'");
 			}
 			else
 			{
 				String messageText = "Unable to get time series." + e.getMessage();
 
-				errorHandlingSvc.businessErrorHandler(messageText, (JFrame) swingEngine.find(Constant.MAIN_FRAME_NAME),
+				_errorHandlingSvc.businessErrorHandler(messageText,
+						(JFrame) _swingEngine.find(Constant.MAIN_FRAME_NAME),
 						e);
 			}
 		}
@@ -803,15 +822,15 @@ public class DSSGrabber1SvcImpl implements IDSSGrabber1Svc
 	protected String checkReadiness()
 	{
 		String result = null;
-		if(startTime == -1)
+		if(_startTime == -1)
 		{
 			result = "Date range is not set in DSSGrabber.";
 		}
-		else if(baseName == null)
+		else if(_baseName == null)
 		{
 			result = "Base scenario is not set in DSSGrabber.";
 		}
-		else if(primaryDSSName == null)
+		else if(_primaryDSSName == null)
 		{
 			result = "Base scenario is not set in DSSGrabber.";
 		}
@@ -842,7 +861,7 @@ public class DSSGrabber1SvcImpl implements IDSSGrabber1Svc
 			else
 			{
 
-				if(locationName.contains(Constant.SCHEMATIC_PREFIX) && primaryDSSName.contains(","))
+				if(locationName.contains(Constant.SCHEMATIC_PREFIX) && _primaryDSSName.contains(","))
 				{
 
 					// Special handling for DEMO of schematic view - treat
@@ -851,15 +870,15 @@ public class DSSGrabber1SvcImpl implements IDSSGrabber1Svc
 					// TODO: Longer-term approach is probably to add a rank to
 					// arrays storing all series
 
-					String[] dssNames = primaryDSSName.split(",");
-					scenarios = dssNames.length;
-					results = new TimeSeriesContainer[scenarios];
-					for(int i = 0; i < scenarios; i++)
+					String[] dssNames = _primaryDSSName.split(",");
+					_scenarioCount = dssNames.length;
+					results = new TimeSeriesContainer[_scenarioCount];
+					for(int i = 0; i < _scenarioCount; i++)
 					{
-						results[i] = getOneSeries(baseName, dssNames[i]);
+						results[i] = getOneSeries(_baseName, dssNames[i]);
 					}
 
-					originalUnits = results[0].units;
+					_originalUnits = results[0].units;
 
 				}
 				else
@@ -867,21 +886,21 @@ public class DSSGrabber1SvcImpl implements IDSSGrabber1Svc
 
 					// Store number of scenarios
 
-					scenarios = lstScenarios.getModel().getSize();
-					results = new TimeSeriesContainer[scenarios];
+					_scenarioCount = _scenarios.size();
+					results = new TimeSeriesContainer[_scenarioCount];
 
 					// Base first
 
-					results[0] = getOneSeries(baseName, primaryDSSName);
-					originalUnits = results[0].units;
+					results[0] = getOneSeries(_baseName, _primaryDSSName);
+					_originalUnits = results[0].units;
 
 					// Then scenarios
 
 					int j = 0;
-					for(int i = 0; i < scenarios; i++)
+					for(int i = 0; i < _scenarioCount; i++)
 					{
 						String scenarioName;
-						if(baseName.toUpperCase().contains("_SV.DSS"))
+						if(_baseName.toUpperCase().contains("_SV.DSS"))
 						{
 							// For SVars, use WRIMS GUI Project object to
 							// determine
@@ -889,16 +908,16 @@ public class DSSGrabber1SvcImpl implements IDSSGrabber1Svc
 							switch(i)
 							{
 								case 0:
-									scenarioName = project.getSVFile();
+									scenarioName = _project.getSVFile();
 									break;
 								case 1:
-									scenarioName = project.getSV2File();
+									scenarioName = _project.getSV2File();
 									break;
 								case 2:
-									scenarioName = project.getSV3File();
+									scenarioName = _project.getSV3File();
 									break;
 								case 3:
-									scenarioName = project.getSV4File();
+									scenarioName = _project.getSV4File();
 									break;
 								default:
 									scenarioName = "";
@@ -907,12 +926,12 @@ public class DSSGrabber1SvcImpl implements IDSSGrabber1Svc
 						}
 						else
 						{
-							scenarioName = lstScenarios.getModel().getElementAt(i).toString();
+							scenarioName = _scenarios.get(i).toString();
 						}
-						if(!baseName.equals(scenarioName))
+						if(!_baseName.equals(scenarioName))
 						{
 							j = j + 1;
-							results[j] = getOneSeries(scenarioName, primaryDSSName);
+							results[j] = getOneSeries(scenarioName, _primaryDSSName);
 						}
 					}
 				}
@@ -922,7 +941,8 @@ public class DSSGrabber1SvcImpl implements IDSSGrabber1Svc
 		{
 			LOG.error(e.getMessage());
 			String messageText = "Unable to get time series.";
-			errorHandlingSvc.businessErrorHandler(messageText, (JFrame) swingEngine.find(Constant.MAIN_FRAME_NAME), e);
+			_errorHandlingSvc.businessErrorHandler(messageText, (JFrame) _swingEngine.find(Constant.MAIN_FRAME_NAME),
+					e);
 		}
 
 		return results;
@@ -938,33 +958,31 @@ public class DSSGrabber1SvcImpl implements IDSSGrabber1Svc
 	public TimeSeriesContainer[] getSecondarySeries()
 	{
 
-		if(secondaryDSSName.equals("") || secondaryDSSName.equals("null"))
+		if(_secondaryDSSName.isEmpty() || "null".equals(_secondaryDSSName))
 		{
 			return null;
 		}
 		else
 		{
 
-			scenarios = lstScenarios.getModel().getSize();
-			TimeSeriesContainer[] results = new TimeSeriesContainer[scenarios];
+			_scenarioCount = _scenarios.size();
+			TimeSeriesContainer[] results = new TimeSeriesContainer[_scenarioCount];
 
 			// Base first
 
-			results[0] = getOneSeries(baseName, secondaryDSSName);
+			results[0] = getOneSeries(_baseName, _secondaryDSSName);
 
 			// Then scenarios
 
 			int j = 0;
-			for(int i = 0; i < scenarios; i++)
+			for(int i = 0; i < _scenarioCount; i++)
 			{
-				// String scenarioName = (String)
-				// lstScenarios.getModel().getElementAt(i);
-				String scenarioName = lstScenarios.getModel().getElementAt(i).toString();
+				String scenarioName = _scenarios.get(i).toString();
 
-				if(!baseName.equals(scenarioName))
+				if(!_baseName.equals(scenarioName))
 				{
 					j = j + 1;
-					results[j] = getOneSeries(scenarioName, secondaryDSSName);
+					results[j] = getOneSeries(scenarioName, _secondaryDSSName);
 				}
 			}
 			return results;
@@ -975,15 +993,15 @@ public class DSSGrabber1SvcImpl implements IDSSGrabber1Svc
 	 * (non-Javadoc)
 	 *
 	 * @see
-     * gov.ca.water.calgui.bus_service.impl.IDSSGrabber1Svc#getDifferenceSeriesWithMultipleTimeSeries(
+	 * gov.ca.water.calgui.bus_service.impl.IDSSGrabber1Svc#getDifferenceSeriesWithMultipleTimeSeries(
 	 * hec.io.TimeSeriesContainer[])
 	 */
 	@Override
 	public TimeSeriesContainer[] getDifferenceSeries(TimeSeriesContainer[] timeSeriesResults)
 	{
 
-		TimeSeriesContainer[] results = new TimeSeriesContainer[scenarios - 1];
-		for(int i = 0; i < scenarios - 1; i++)
+		TimeSeriesContainer[] results = new TimeSeriesContainer[_scenarioCount - 1];
+		for(int i = 0; i < _scenarioCount - 1; i++)
 		{
 
 			results[i] = (TimeSeriesContainer) timeSeriesResults[i + 1].clone();
@@ -1016,19 +1034,19 @@ public class DSSGrabber1SvcImpl implements IDSSGrabber1Svc
 				datasets = datasets + secondaryResults.length;
 			}
 
-			annualTAFs = new double[datasets][endWY - startWY + 2];
+			_annualTAFs = new double[datasets][_endWY - _startWY + 2];
 
 			for(int i = 0; i < datasets; i++)
 			{
-				for(int j = 0; j < endWY - startWY + 1; j++)
+				for(int j = 0; j < _endWY - _startWY + 1; j++)
 				{
-					annualTAFs[i][j] = 0.0;
+					_annualTAFs[i][j] = 0.0;
 				}
 			}
 
 			// Calculate
 
-			if(originalUnits.equals("CFS"))
+			if(_originalUnits.equals("CFS"))
 			{
 
 				HecTime ht = new HecTime();
@@ -1045,17 +1063,17 @@ public class DSSGrabber1SvcImpl implements IDSSGrabber1Svc
 						calendar.set(ht.year(), ht.month() - 1, 1);
 						double monthlyTAF = primaryResults[i].values[j]
 								* calendar.getActualMaximum(Calendar.DAY_OF_MONTH) * CFS_2_TAF_DAY;
-						int wy = ((ht.month() < 10) ? ht.year() : ht.year() + 1) - startWY;
+						int wy = ((ht.month() < 10) ? ht.year() : ht.year() + 1) - _startWY;
 						if(wy >= 0)
 						{
-							annualTAFs[i][wy] += monthlyTAF;
+							_annualTAFs[i][wy] += monthlyTAF;
 						}
-						if(!isCFS)
+						if(!_isCFS)
 						{
 							primaryResults[i].values[j] = monthlyTAF;
 						}
 					}
-					if(!isCFS)
+					if(!_isCFS)
 					{
 						primaryResults[i].units = "TAF per year";
 					}
@@ -1065,12 +1083,12 @@ public class DSSGrabber1SvcImpl implements IDSSGrabber1Svc
 
 				if(primaryResults.length > 1)
 				{
-					annualTAFsDiff = new double[primaryResults.length - 1][endWY - startWY + 2];
+					_annualTAFsDiff = new double[primaryResults.length - 1][_endWY - _startWY + 2];
 					for(int i = 0; i < primaryResults.length - 1; i++)
 					{
-						for(int j = 0; j < endWY - startWY + 1; j++)
+						for(int j = 0; j < _endWY - _startWY + 1; j++)
 						{
-							annualTAFsDiff[i][j] = annualTAFs[i + 1][j] - annualTAFs[0][j];
+							_annualTAFsDiff[i][j] = _annualTAFs[i + 1][j] - _annualTAFs[0][j];
 						}
 					}
 				}
@@ -1089,15 +1107,15 @@ public class DSSGrabber1SvcImpl implements IDSSGrabber1Svc
 							calendar.set(ht.year(), ht.month() - 1, 1);
 							double monthlyTAF = secondaryResults[i].values[j]
 									* calendar.getActualMaximum(Calendar.DAY_OF_MONTH) * CFS_2_TAF_DAY;
-							int wy = ((ht.month() < 10) ? ht.year() : ht.year() + 1) - startWY;
-							annualTAFs[i + primaryResults.length][wy] += monthlyTAF;
-							if(!isCFS)
+							int wy = ((ht.month() < 10) ? ht.year() : ht.year() + 1) - _startWY;
+							_annualTAFs[i + primaryResults.length][wy] += monthlyTAF;
+							if(!_isCFS)
 							{
 								secondaryResults[i].values[j] = monthlyTAF;
 							}
 
 						}
-						if(!isCFS)
+						if(!_isCFS)
 						{
 							secondaryResults[i].units = "TAF per year";
 						}
@@ -1109,7 +1127,8 @@ public class DSSGrabber1SvcImpl implements IDSSGrabber1Svc
 		{
 			LOG.error(e.getMessage());
 			String messageText = "Unable to calculate TAF.";
-			errorHandlingSvc.businessErrorHandler(messageText, (JFrame) swingEngine.find(Constant.MAIN_FRAME_NAME), e);
+			_errorHandlingSvc.businessErrorHandler(messageText, (JFrame) _swingEngine.find(Constant.MAIN_FRAME_NAME),
+					e);
 		}
 	}
 
@@ -1124,7 +1143,7 @@ public class DSSGrabber1SvcImpl implements IDSSGrabber1Svc
 	public double getAnnualTAF(int i, int wy)
 	{
 
-		return wy < startWY ? -1 : annualTAFs[i][wy - startWY];
+		return wy < _startWY ? -1 : _annualTAFs[i][wy - _startWY];
 	}
 
 	/*
@@ -1138,7 +1157,7 @@ public class DSSGrabber1SvcImpl implements IDSSGrabber1Svc
 	public double getAnnualTAFDiff(int i, int wy)
 	{
 
-		return wy < startWY ? -1 : annualTAFsDiff[i][wy - startWY];
+		return wy < _startWY ? -1 : _annualTAFsDiff[i][wy - _startWY];
 	}
 
 	/*
@@ -1152,7 +1171,7 @@ public class DSSGrabber1SvcImpl implements IDSSGrabber1Svc
 	public double getAnnualCFS(int i, int wy)
 	{
 
-		return wy < startWY ? -1 : annualCFSs[i][wy - startWY];
+		return wy < _startWY ? -1 : _annualCFSs[i][wy - _startWY];
 	}
 
 	/*
@@ -1166,7 +1185,7 @@ public class DSSGrabber1SvcImpl implements IDSSGrabber1Svc
 	public double getAnnualCFSDiff(int i, int wy)
 	{
 
-		return wy < startWY ? -1 : annualCFSsDiff[i][wy - startWY];
+		return wy < _startWY ? -1 : _annualCFSsDiff[i][wy - _startWY];
 	}
 
 	/*
@@ -1190,19 +1209,19 @@ public class DSSGrabber1SvcImpl implements IDSSGrabber1Svc
 				datasets = datasets + secondaryResults.length;
 			}
 
-			annualCFSs = new double[datasets][endWY - startWY + 2];
+			_annualCFSs = new double[datasets][_endWY - _startWY + 2];
 
 			for(int i = 0; i < datasets; i++)
 			{
-				for(int j = 0; j < endWY - startWY + 1; j++)
+				for(int j = 0; j < _endWY - _startWY + 1; j++)
 				{
-					annualCFSs[i][j] = 0.0;
+					_annualCFSs[i][j] = 0.0;
 				}
 			}
 
 			// Calculate
 
-			if(originalUnits.equals("TAF"))
+			if(_originalUnits.equals("TAF"))
 			{
 
 				HecTime ht = new HecTime();
@@ -1219,17 +1238,17 @@ public class DSSGrabber1SvcImpl implements IDSSGrabber1Svc
 						calendar.set(ht.year(), ht.month() - 1, 1);
 						double monthlyCFS = primaryResults[i].values[j]
 								* calendar.getActualMaximum(Calendar.DAY_OF_MONTH) * TAF_DAY_2_CFS;
-						int wy = ((ht.month() < 10) ? ht.year() : ht.year() + 1) - startWY;
+						int wy = ((ht.month() < 10) ? ht.year() : ht.year() + 1) - _startWY;
 						if(wy >= 0)
 						{
-							annualCFSs[i][wy] += monthlyCFS;
+							_annualCFSs[i][wy] += monthlyCFS;
 						}
-						if(!isCFS)
+						if(!_isCFS)
 						{
 							primaryResults[i].values[j] = monthlyCFS;
 						}
 					}
-					if(isCFS)
+					if(_isCFS)
 					{
 						primaryResults[i].units = "cfs";
 					}
@@ -1239,12 +1258,12 @@ public class DSSGrabber1SvcImpl implements IDSSGrabber1Svc
 
 				if(primaryResults.length > 1)
 				{
-					annualCFSsDiff = new double[primaryResults.length - 1][endWY - startWY + 2];
+					_annualCFSsDiff = new double[primaryResults.length - 1][_endWY - _startWY + 2];
 					for(int i = 0; i < primaryResults.length - 1; i++)
 					{
-						for(int j = 0; j < endWY - startWY + 1; j++)
+						for(int j = 0; j < _endWY - _startWY + 1; j++)
 						{
-							annualCFSsDiff[i][j] = annualCFSs[i + 1][j] - annualCFSs[0][j];
+							_annualCFSsDiff[i][j] = _annualCFSs[i + 1][j] - _annualCFSs[0][j];
 						}
 					}
 				}
@@ -1263,15 +1282,15 @@ public class DSSGrabber1SvcImpl implements IDSSGrabber1Svc
 							calendar.set(ht.year(), ht.month() - 1, 1);
 							double monthlyCFS = secondaryResults[i].values[j]
 									* calendar.getActualMaximum(Calendar.DAY_OF_MONTH) * TAF_DAY_2_CFS;
-							int wy = ((ht.month() < 10) ? ht.year() : ht.year() + 1) - startWY;
-							annualCFSs[i + primaryResults.length][wy] += monthlyCFS;
-							if(isCFS)
+							int wy = ((ht.month() < 10) ? ht.year() : ht.year() + 1) - _startWY;
+							_annualCFSs[i + primaryResults.length][wy] += monthlyCFS;
+							if(_isCFS)
 							{
 								secondaryResults[i].values[j] = monthlyCFS;
 							}
 
 						}
-						if(isCFS)
+						if(_isCFS)
 						{
 							secondaryResults[i].units = "cfs";
 						}
@@ -1283,7 +1302,8 @@ public class DSSGrabber1SvcImpl implements IDSSGrabber1Svc
 		{
 			LOG.error(e.getMessage());
 			String messageText = "Unable to calculate CFS.";
-			errorHandlingSvc.businessErrorHandler(messageText, (JFrame) swingEngine.find(Constant.MAIN_FRAME_NAME), e);
+			_errorHandlingSvc.businessErrorHandler(messageText, (JFrame) _swingEngine.find(Constant.MAIN_FRAME_NAME),
+					e);
 		}
 	}
 
@@ -1291,7 +1311,7 @@ public class DSSGrabber1SvcImpl implements IDSSGrabber1Svc
 	 * (non-Javadoc)
 	 *
 	 * @see
-     * gov.ca.water.calgui.bus_service.impl.IDSSGrabber1Svc#getExceedanceSeriesWithMultipleTimeSeries(
+	 * gov.ca.water.calgui.bus_service.impl.IDSSGrabber1Svc#getExceedanceSeriesWithMultipleTimeSeries(
 	 * hec.io.TimeSeriesContainer[])
 	 */
 	@Override
@@ -1307,13 +1327,13 @@ public class DSSGrabber1SvcImpl implements IDSSGrabber1Svc
 			}
 			else
 			{
-				results = new TimeSeriesContainer[14][scenarios];
+				results = new TimeSeriesContainer[14][_scenarioCount];
 
 				for(int month = 0; month < 14; month++)
 				{
 
 					HecTime ht = new HecTime();
-					for(int i = 0; i < scenarios; i++)
+					for(int i = 0; i < _scenarioCount; i++)
 					{
 
 						if(month == 13)
@@ -1333,14 +1353,14 @@ public class DSSGrabber1SvcImpl implements IDSSGrabber1Svc
 							{
 
 								// Annual totals - grab from annualTAFs
-								n = annualTAFs[i].length;
+								n = _annualTAFs[i].length;
 								times2 = new int[n];
 								values2 = new double[n];
 								for(int j = 0; j < n; j++)
 								{
-									ht.setYearMonthDay(j + startWY, 11, 1, 0);
+									ht.setYearMonthDay(j + _startWY, 11, 1, 0);
 									times2[j] = ht.value();
-									values2[j] = annualTAFs[i][j];
+									values2[j] = _annualTAFs[i][j];
 								}
 
 							}
@@ -1396,7 +1416,8 @@ public class DSSGrabber1SvcImpl implements IDSSGrabber1Svc
 		{
 			LOG.error(e.getMessage());
 			String messageText = "Unable to get time-series.";
-			errorHandlingSvc.businessErrorHandler(messageText, (JFrame) swingEngine.find(Constant.MAIN_FRAME_NAME), e);
+			_errorHandlingSvc.businessErrorHandler(messageText, (JFrame) _swingEngine.find(Constant.MAIN_FRAME_NAME),
+					e);
 		}
 		return null;
 	}
@@ -1405,7 +1426,7 @@ public class DSSGrabber1SvcImpl implements IDSSGrabber1Svc
 	 * (non-Javadoc)
 	 *
 	 * @see
-     * gov.ca.water.calgui.bus_service.impl.IDSSGrabber1Svc#getExceedanceSeriesDWithMultipleTimeSeries
+	 * gov.ca.water.calgui.bus_service.impl.IDSSGrabber1Svc#getExceedanceSeriesDWithMultipleTimeSeries
 	 * (hec.io.TimeSeriesContainer[])
 	 */
 	@Override
@@ -1413,10 +1434,10 @@ public class DSSGrabber1SvcImpl implements IDSSGrabber1Svc
 	{
 
 		/*
-         * Copy of getExceedanceSeriesWithMultipleTimeSeries to handle "exceedance of differences"
+		 * Copy of getExceedanceSeriesWithMultipleTimeSeries to handle "exceedance of differences"
 		 *
 		 * Calculates difference of annual TAFs to get proper results for [12];
-         * should be recombined with getExceedanceSeriesWithMultipleTimeSeries
+		 * should be recombined with getExceedanceSeriesWithMultipleTimeSeries
 		 */
 
 		try
@@ -1428,13 +1449,13 @@ public class DSSGrabber1SvcImpl implements IDSSGrabber1Svc
 			}
 			else
 			{
-				results = new TimeSeriesContainer[14][scenarios - 1];
+				results = new TimeSeriesContainer[14][_scenarioCount - 1];
 
 				for(int month = 0; month < 14; month++)
 				{
 
 					HecTime ht = new HecTime();
-					for(int i = 0; i < scenarios - 1; i++)
+					for(int i = 0; i < _scenarioCount - 1; i++)
 					{
 
 						if(month == 13)
@@ -1460,14 +1481,14 @@ public class DSSGrabber1SvcImpl implements IDSSGrabber1Svc
 							{
 
 								// Annual totals - grab from annualTAFs
-								n = annualTAFs[i + 1].length;
+								n = _annualTAFs[i + 1].length;
 								times2 = new int[n];
 								values2 = new double[n];
 								for(int j = 0; j < n; j++)
 								{
-									ht.setYearMonthDay(j + startWY, 11, 1, 0);
+									ht.setYearMonthDay(j + _startWY, 11, 1, 0);
 									times2[j] = ht.value();
-									values2[j] = annualTAFs[i + 1][j] - annualTAFs[0][j];
+									values2[j] = _annualTAFs[i + 1][j] - _annualTAFs[0][j];
 								}
 
 							}
@@ -1526,7 +1547,8 @@ public class DSSGrabber1SvcImpl implements IDSSGrabber1Svc
 		{
 			LOG.error(e.getMessage());
 			String messageText = "Unable to get time-series.";
-			errorHandlingSvc.businessErrorHandler(messageText, (JFrame) swingEngine.find(Constant.MAIN_FRAME_NAME), e);
+			_errorHandlingSvc.businessErrorHandler(messageText, (JFrame) _swingEngine.find(Constant.MAIN_FRAME_NAME),
+					e);
 		}
 		return null;
 	}
@@ -1540,7 +1562,7 @@ public class DSSGrabber1SvcImpl implements IDSSGrabber1Svc
 	@Override
 	public String getOriginalUnits()
 	{
-		return originalUnits;
+		return _originalUnits;
 	}
 
 	/*
@@ -1553,7 +1575,7 @@ public class DSSGrabber1SvcImpl implements IDSSGrabber1Svc
 	@Override
 	public void setOriginalUnits(String originalUnits)
 	{
-		this.originalUnits = originalUnits;
+		this._originalUnits = originalUnits;
 	}
 
 	/*
@@ -1565,7 +1587,7 @@ public class DSSGrabber1SvcImpl implements IDSSGrabber1Svc
 	@Override
 	public String getPrimaryDSSName()
 	{
-		return primaryDSSName;
+		return _primaryDSSName;
 	}
 
 	/*
@@ -1578,7 +1600,7 @@ public class DSSGrabber1SvcImpl implements IDSSGrabber1Svc
 	@Override
 	public void setPrimaryDSSName(String primaryDSSName)
 	{
-		this.primaryDSSName = primaryDSSName;
+		this._primaryDSSName = primaryDSSName;
 	}
 
 }
