@@ -7,8 +7,6 @@
 
 package gov.ca.water.quickresults.ui;
 
-import org.junit.jupiter.api.Test;
-
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 /**
@@ -19,7 +17,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
  */
 public class ScenarioConfigurationListenerTest
 {
-	@Test
+	//	@Test
 	public void testConstructor()
 	{
 		ScenarioConfigurationPanel scenarioConfigurationPanel = new ScenarioConfigurationPanel();
