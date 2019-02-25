@@ -317,7 +317,7 @@ public class GlobalActionListener implements ActionListener
 						{
 							scenarios.add(model.getElementAt(i));
 						}
-						DisplayFrame.showDisplayFrames(
+						DisplayFrame.showDisplayFrames(_swingEngine,
 								(String) ((JList) _swingEngine.find("lstReports")).getSelectedValue(),
 								scenarios);
 					}
@@ -389,7 +389,6 @@ public class GlobalActionListener implements ActionListener
 			}
 			catch(IOException ex)
 			{
-				// LOG.debug(ex);
 				LOG.error(ex.getMessage());
 				String messageText = "Unable to load scenarios.";
 				_errorHandlingSvc.businessErrorHandler(messageText,

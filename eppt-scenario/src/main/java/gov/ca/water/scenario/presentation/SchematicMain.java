@@ -200,9 +200,6 @@ public class SchematicMain
 				JList lstScenarios = (JList) swix.find("SelectedList");
 				if(lstScenarios.getModel().getSize() == 0)
 				{
-					// JOptionPane.showMessageDialog(swingEngine.find(Constant.MAIN_FRAME_NAME),
-					// "No scenarios loaded", "Error",
-					// JOptionPane.ERROR_MESSAGE);
 					ImageIcon icon = new ImageIcon(getClass().getResource("/images/CalLiteIcon.png"));
 					Object[] options = {"OK"};
 					JOptionPane optionPane = new JOptionPane("No scenarios loaded", JOptionPane.ERROR_MESSAGE,
@@ -220,7 +217,8 @@ public class SchematicMain
 					{
 						scenarios.add(model.getElementAt(i));
 					}
-					DisplayFrame.showDisplayFrames(DisplayFrame.quickState() + ";Locs-" + label + ";Index-"
+					DisplayFrame.showDisplayFrames(swingEngine,
+							DisplayFrame.quickState(swingEngine) + ";Locs-" + label + ";Index-"
 							+ Constant.SCHEMATIC_PREFIX + label, scenarios);
 				}
 			}

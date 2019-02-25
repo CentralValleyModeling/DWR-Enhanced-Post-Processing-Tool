@@ -661,13 +661,15 @@ public class CalLiteInitClass
 
 				if(parts[1].toUpperCase().contains(("_SV.DSS")))
 				{
-					DisplayFrame.showDisplayFrames(DisplayFrame.quickState() + ";Locs-" + parts[2] + ";Index-"
+					DisplayFrame.showDisplayFrames(_swingEngine,
+							DisplayFrame.quickState(_swingEngine) + ";Locs-" + parts[2] + ";Index-"
 							+ parts[2] + ";File-" + parts[1], scenarios);
 				}
 				else
 				{
-					DisplayFrame.showDisplayFrames(
-							DisplayFrame.quickState() + ";Locs-" + parts[2] + ";Index-" + parts[2], scenarios);
+					DisplayFrame.showDisplayFrames(_swingEngine,
+							DisplayFrame.quickState(_swingEngine) + ";Locs-" + parts[2] + ";Index-" + parts[2],
+							scenarios);
 				}
 			}
 		}
@@ -710,7 +712,8 @@ public class CalLiteInitClass
 			{
 				scenarios.add(model.getElementAt(i));
 			}
-			DisplayFrame.showDisplayFramesWRIMS(DisplayFrame.quickState() + ";Locs-;Index-;File-", scenarios, dts,
+			DisplayFrame.showDisplayFramesWRIMS(_swingEngine,
+					DisplayFrame.quickState(_swingEngine) + ";Locs-;Index-;File-", scenarios, dts,
 					mts);
 
 		}

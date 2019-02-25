@@ -63,7 +63,7 @@ public class GlobalMouseListener implements MouseListener
 				// the false value don't mean any thing because we implement
 				// right
 				// click on only check box.
-				if(cName.equals("ckbReg_TRNTY") || "ckbReg_PUMP".equals(cName))
+				if("ckbReg_TRNTY".equals(cName) || "ckbReg_PUMP".equals(cName))
 				{
 
 					// Special handling for Trinity and Pumping regulations
@@ -107,7 +107,8 @@ public class GlobalMouseListener implements MouseListener
 						else
 						{
 							List<RBListItemBO> scenarios = getScenarios();
-							DisplayFrame.showDisplayFrames(DisplayFrame.quickState() + ";Locs-" + chk.getText()
+							DisplayFrame.showDisplayFrames(_swingEngine,
+									DisplayFrame.quickState(_swingEngine) + ";Locs-" + chk.getText()
 									+ ";Index-" + chk.getName(), scenarios);
 						}
 					}

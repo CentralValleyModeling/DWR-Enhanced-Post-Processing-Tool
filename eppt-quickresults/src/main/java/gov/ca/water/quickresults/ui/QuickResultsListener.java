@@ -86,7 +86,8 @@ class QuickResultsListener implements ActionListener
 				JList<String> lstReports = (JList<String>) component;
 				for(int i = 0; i < lstReports.getModel().getSize(); i++)
 				{
-					DisplayFrame.showDisplayFrames((lstReports.getModel().getElementAt(i)),
+					DisplayFrame.showDisplayFrames(_quickResultsPanel.getSwingEngine(),
+							(lstReports.getModel().getElementAt(i)),
 							scenarios);
 				}
 			}
@@ -143,8 +144,8 @@ class QuickResultsListener implements ActionListener
 			String[] lstArray1 = new String[n + 1];
 			System.arraycopy(lstArray, 0, lstArray1, 0, n);
 			// Add new items
-			String cSTOR = ";Locs-";
-			String cSTORIdx = ";Index-";
+			StringBuilder cSTOR = new StringBuilder(";Locs-");
+			StringBuilder cSTORIdx = new StringBuilder(";Index-");
 			Component[] components = _quickResultsPanel.getVariables().getComponents();
 			for(Component c : components)
 			{
@@ -157,15 +158,13 @@ class QuickResultsListener implements ActionListener
 						{
 							JCheckBox cb = (JCheckBox) c2;
 							String cName = cb.getName();
-							if(cName.startsWith("ckbp"))
+							if(cName.startsWith("ckbp") && cb.isSelected())
 							{
-								if(cb.isSelected())
-								{
-									cSTOR = cSTOR + cb.getText().trim() + ",";
-									cSTORIdx = cSTORIdx + cName + ",";
-								}
+								cSTOR.append(cb.getText().trim()).append(",");
+								cSTORIdx.append(cName).append(",");
 							}
-							lstArray1[n] = DisplayFrame.quickState() + cSTOR + cSTORIdx;
+							lstArray1[n] = DisplayFrame.quickState(
+									_scenarioConfigurationPanel.getSwingEngine()) + cSTOR + cSTORIdx;
 
 							Component component = _quickResultsPanel.getReportsJList();
 							if(component instanceof JList)
