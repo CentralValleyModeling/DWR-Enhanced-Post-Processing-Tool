@@ -9,13 +9,10 @@ package gov.ca.water.calgui.bo;
 
 //! Custom file chooser for selection of different CalLite file types
 
-import gov.ca.water.calgui.bus_service.impl.XMLParsingSvcImpl;
-import gov.ca.water.calgui.constant.Constant;
 import gov.ca.water.calgui.presentation.WRIMSGUILinks;
 import gov.ca.water.calgui.tech_service.IErrorHandlingSvc;
 import gov.ca.water.calgui.tech_service.impl.ErrorHandlingSvcImpl;
 import org.apache.log4j.Logger;
-import org.swixml.SwingEngine;
 
 import javax.swing.*;
 import javax.swing.event.ListDataEvent;
@@ -50,7 +47,8 @@ public class FileDialogBO implements ActionListener
 	JRadioButton rdbopt1 = null;
 	JRadioButton rdbopt2 = null;
 	JButton btn1 = null;
-	private SwingEngine swingEngine = XMLParsingSvcImpl.getXMLParsingSvcImplInstance().getSwingEngine();
+	private final JFrame _mainFrame;
+	//private SwingEngine swingEngine = XMLParsingSvcImpl.getXMLParsingSvcImplInstance().getSwingEngine();
 	private IErrorHandlingSvc errorHandlingSvc = new ErrorHandlingSvcImpl();
 
 
@@ -61,8 +59,9 @@ public class FileDialogBO implements ActionListener
 	 * @param aList
 	 * @param aTextField
 	 */
-	public FileDialogBO(JList aList, JTextField aTextField)
+	public FileDialogBO(JList aList, JTextField aTextField, JFrame mainFrame)
 	{
+		_mainFrame = mainFrame;
 		theLabel = null;
 		theFileExt = "DSS";
 		theTextField = aTextField;
@@ -77,8 +76,9 @@ public class FileDialogBO implements ActionListener
 	 * @param aTextField
 	 * @param aFileExt
 	 */
-	public FileDialogBO(JList aList, JTextField aTextField, String aFileExt)
+	public FileDialogBO(JList aList, JTextField aTextField, String aFileExt, JFrame mainFrame)
 	{
+		_mainFrame = mainFrame;
 		theLabel = null;
 		theTextField = aTextField;
 		theFileExt = aFileExt;
@@ -97,8 +97,9 @@ public class FileDialogBO implements ActionListener
 	 * @param btn
 	 */
 	public FileDialogBO(JList aList, JLabel aLabel, JRadioButton rdb1, JRadioButton rdb2, JButton btn,
-						boolean isMultiple)
+						boolean isMultiple, JFrame mainFrame)
 	{
+		_mainFrame = mainFrame;
 		theLabel = aLabel;
 		theFileExt = "DSS";
 		theTextField = null;
@@ -239,7 +240,7 @@ public class FileDialogBO implements ActionListener
 		{
 			LOG.error(e.getMessage());
 			String messageText = "Unable to set up file dialog.";
-			errorHandlingSvc.businessErrorHandler(messageText, (JFrame) swingEngine.find(Constant.MAIN_FRAME_NAME), e);
+			errorHandlingSvc.businessErrorHandler(messageText, _mainFrame, e);
 		}
 	}
 
@@ -294,7 +295,7 @@ public class FileDialogBO implements ActionListener
 				{
 					UIManager.put("FileChooser.openDialogTitleText", "Select Scenarios");
 					fc.setMultiSelectionEnabled(true);
-					dialogRC = fc.showDialog(swingEngine.find(Constant.MAIN_FRAME_NAME), "Select");
+					dialogRC = fc.showDialog(_mainFrame, "Select");
 					if(theList != null && dialogRC != 1)
 					{
 						for(File file : fc.getSelectedFiles())
@@ -307,11 +308,11 @@ public class FileDialogBO implements ActionListener
 				{
 					if(theFileExt == null)
 					{
-						rc = fc.showOpenDialog(swingEngine.find(Constant.MAIN_FRAME_NAME));
+						rc = fc.showOpenDialog(_mainFrame);
 					}
 					else
 					{
-						rc = fc.showDialog(swingEngine.find(Constant.MAIN_FRAME_NAME),
+						rc = fc.showDialog(_mainFrame,
 								theFileExt.equals("DSS") ? "Open" : "Save");
 					}
 					dialogRC = rc;
@@ -344,7 +345,7 @@ public class FileDialogBO implements ActionListener
 		{
 			LOG.error(e1.getMessage());
 			String messageText = "Unable to show file chooser.";
-			errorHandlingSvc.businessErrorHandler(messageText, (JFrame) swingEngine.find(Constant.MAIN_FRAME_NAME), e1);
+			errorHandlingSvc.businessErrorHandler(messageText, _mainFrame, e1);
 		}
 		return;
 	}
@@ -383,7 +384,7 @@ public class FileDialogBO implements ActionListener
 		{
 			LOG.error(e.getMessage());
 			String messageText = "Unable to update list.";
-			errorHandlingSvc.businessErrorHandler(messageText, (JFrame) swingEngine.find(Constant.MAIN_FRAME_NAME), e);
+			errorHandlingSvc.businessErrorHandler(messageText, _mainFrame, e);
 		}
 	}
 

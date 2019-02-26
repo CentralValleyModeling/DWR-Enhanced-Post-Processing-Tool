@@ -25,6 +25,13 @@ import gov.ca.water.calgui.tech_service.impl.DialogSvcImpl;
 import gov.ca.water.calgui.tech_service.impl.ErrorHandlingSvcImpl;
 import org.apache.log4j.Logger;
 
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.ArrayList;
+import java.util.List;
+
 
 /**
  * Company: Resource Management Associates
@@ -61,6 +68,7 @@ class QuickResultsListener implements ActionListener
 			case "Rep_SaveList":
 				saveReportList();
 				break;
+
 			case "Rep_LoadList":
 				loadReportList();
 				break;

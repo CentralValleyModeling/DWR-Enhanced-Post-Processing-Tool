@@ -7,35 +7,12 @@
 
 package gov.ca.water.scenario.presentation;
 
-import java.awt.Color;
-import java.awt.Component;
-import java.awt.Container;
-import java.awt.Dimension;
-import java.awt.event.ActionListener;
-import java.awt.event.ComponentAdapter;
-import java.awt.event.ComponentEvent;
-import java.awt.event.FocusEvent;
-import java.awt.event.FocusListener;
-import java.awt.event.ItemListener;
-import java.awt.event.MouseListener;
-import java.util.ArrayList;
-import java.util.List;
-import javax.swing.*;
-import javax.swing.border.LineBorder;
-import javax.swing.event.ChangeListener;
-
 import calsim.app.AppUtils;
 import calsim.app.DerivedTimeSeries;
 import calsim.app.MultipleTimeSeries;
 import calsim.gui.GuiUtils;
 import gov.ca.water.calgui.EpptInitializationException;
-import gov.ca.water.calgui.bo.CalLiteGUIException;
-import gov.ca.water.calgui.bo.DataTableModel;
-import gov.ca.water.calgui.bo.FileDialogBO;
-import gov.ca.water.calgui.bo.GUILinks2BO;
-import gov.ca.water.calgui.bo.JLinkedSlider;
-import gov.ca.water.calgui.bo.RBListItemBO;
-import gov.ca.water.calgui.bo.ResultUtilsBO;
+import gov.ca.water.calgui.bo.*;
 import gov.ca.water.calgui.bus_delegate.IAllButtonsDele;
 import gov.ca.water.calgui.bus_delegate.IApplyDynamicConDele;
 import gov.ca.water.calgui.bus_delegate.IVerifyControlsDele;
@@ -46,18 +23,9 @@ import gov.ca.water.calgui.bus_service.IScenarioSvc;
 import gov.ca.water.calgui.bus_service.ISeedDataSvc;
 import gov.ca.water.calgui.bus_service.ITableSvc;
 import gov.ca.water.calgui.bus_service.IXMLParsingSvc;
-import gov.ca.water.calgui.bus_service.impl.DynamicControlSvcImpl;
-import gov.ca.water.calgui.bus_service.impl.ModelRunSvcImpl;
-import gov.ca.water.calgui.bus_service.impl.ScenarioSvcImpl;
-import gov.ca.water.calgui.bus_service.impl.SeedDataSvcImpl;
-import gov.ca.water.calgui.bus_service.impl.TableSvcImpl;
-import gov.ca.water.calgui.bus_service.impl.XMLParsingSvcImpl;
+import gov.ca.water.calgui.bus_service.impl.*;
 import gov.ca.water.calgui.constant.Constant;
-import gov.ca.water.calgui.presentation.DisplayFrame;
-import gov.ca.water.calgui.presentation.GlobalActionListener;
-import gov.ca.water.calgui.presentation.GlobalChangeListener;
-import gov.ca.water.calgui.presentation.GlobalItemListener;
-import gov.ca.water.calgui.presentation.WRIMSGUILinks;
+import gov.ca.water.calgui.presentation.*;
 import gov.ca.water.calgui.tech_service.IAuditSvc;
 import gov.ca.water.calgui.tech_service.IDialogSvc;
 import gov.ca.water.calgui.tech_service.IErrorHandlingSvc;
@@ -69,6 +37,14 @@ import org.jfree.util.Log;
 import org.swixml.SwingEngine;
 import vista.set.DataReference;
 import vista.set.Group;
+
+import javax.swing.*;
+import javax.swing.border.LineBorder;
+import javax.swing.event.ChangeListener;
+import java.awt.*;
+import java.awt.event.*;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * This class is for initializing the Application and adding the Action, Item,
@@ -182,12 +158,13 @@ public class CalLiteInitClass
 			resultUtilsBO.setFdDSSFiles(fdDSSFiles);
 			lstScenarios.setModel(fdDSSFiles.getLmScenNames());
 			lstScenarios.setBorder(new LineBorder(Color.gray, 1));
-			JButton btnScenario = (JButton) swingEngine.find("btnAddScenario");
-			btnScenario.addActionListener(fdDSSFiles);
+
 			JButton btnScenarioDel = (JButton) swingEngine.find("btnDelScenario");
 			btnScenarioDel.addActionListener(fdDSSFiles);
+
 			JButton btnClearAll = (JButton) swingEngine.find("btnClearScenario");
 			btnClearAll.addActionListener(fdDSSFiles);
+
 			// Set up month spinners on result page
 			JSpinner spnSM = (JSpinner) swingEngine.find("spnStartMonth");
 			ResultUtilsBO.SetMonthModelAndIndex(spnSM, 9, resultUtilsBO, true);
