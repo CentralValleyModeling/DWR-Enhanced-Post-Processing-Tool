@@ -61,11 +61,6 @@ public interface IAllButtonsDele
 	void aboutButton();
 
 	/**
-	 * This method is used to handle the exit of the ui.
-	 */
-	void windowClosing();
-
-	/**
 	 * This method is used for the "Select.." buttons on the "Hydroclimate" tab.
 	 * This method will read the file and set the values of the text fields.
 	 *

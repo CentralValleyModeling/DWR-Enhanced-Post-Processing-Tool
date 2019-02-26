@@ -8,10 +8,7 @@
 package calsim.schematic;
 //import calsim.app.*;
 
-import java.awt.BorderLayout;
-import java.awt.Component;
-import java.awt.FileDialog;
-import java.awt.Frame;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
@@ -479,26 +476,6 @@ public class SchematicEditor
 		dragButton.doClick();
 	}
 
-	/**
-	 *
-	 */
-	public static void main(String[] args)
-	{
-		if(args == null || args.length != 2)
-		{
-			System.out.println("Usage: java SchematicEditor network.net node.xy");
-			return;
-		}
-		SchematicEditor editor = new SchematicEditor(args[0], args[1]);
-		Frame fr = JOptionPane.getFrameForComponent(editor.getSchematicCanvas());
-		fr.addWindowListener(new WindowAdapter()
-		{
-			public void windowClosing(WindowEvent evt)
-			{
-				System.exit(0);
-			}
-		});
-	}
 
 	/**
 	 *

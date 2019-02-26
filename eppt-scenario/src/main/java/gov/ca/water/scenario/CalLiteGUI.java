@@ -7,6 +7,7 @@
 
 package gov.ca.water.scenario;
 
+import gov.ca.water.calgui.EpptInitializationException;
 import gov.ca.water.scenario.presentation.CalLiteInitClass;
 //! Main class
 
@@ -21,7 +22,14 @@ public class CalLiteGUI
 {
 	public static void main(String[] args)
 	{
-		CalLiteInitClass calLiteInit = new CalLiteInitClass();
-		calLiteInit.init();
+		try
+		{
+			CalLiteInitClass calLiteInit = new CalLiteInitClass();
+			calLiteInit.init();
+		}
+		catch(EpptInitializationException ex)
+		{
+			//do something. Issue finding or reading the data
+		}
 	}
 }

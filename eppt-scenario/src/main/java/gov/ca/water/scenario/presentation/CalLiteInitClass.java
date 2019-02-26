@@ -18,8 +18,6 @@ import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 import java.awt.event.ItemListener;
 import java.awt.event.MouseListener;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.*;
@@ -30,6 +28,7 @@ import calsim.app.AppUtils;
 import calsim.app.DerivedTimeSeries;
 import calsim.app.MultipleTimeSeries;
 import calsim.gui.GuiUtils;
+import gov.ca.water.calgui.EpptInitializationException;
 import gov.ca.water.calgui.bo.CalLiteGUIException;
 import gov.ca.water.calgui.bo.DataTableModel;
 import gov.ca.water.calgui.bo.FileDialogBO;
@@ -58,7 +57,6 @@ import gov.ca.water.calgui.presentation.DisplayFrame;
 import gov.ca.water.calgui.presentation.GlobalActionListener;
 import gov.ca.water.calgui.presentation.GlobalChangeListener;
 import gov.ca.water.calgui.presentation.GlobalItemListener;
-import gov.ca.water.calgui.presentation.GlobalMouseListener;
 import gov.ca.water.calgui.presentation.WRIMSGUILinks;
 import gov.ca.water.calgui.tech_service.IAuditSvc;
 import gov.ca.water.calgui.tech_service.IDialogSvc;
@@ -81,10 +79,8 @@ import vista.set.Group;
 public class CalLiteInitClass
 {
 	private static final Logger LOGGER = Logger.getLogger(CalLiteInitClass.class.getName());
-	private final IErrorHandlingSvc _errorHandlingSvc = new ErrorHandlingSvcImpl();
-	private final IDialogSvc _dialogSvc = DialogSvcImpl.getDialogSvcInstance();
-	private final IXMLParsingSvc _xmlParsingSvc = XMLParsingSvcImpl.getXMLParsingSvcImplInstance();
-	private final SwingEngine _swingEngine = _xmlParsingSvc.getSwingEngine();
+	private  IXMLParsingSvc _xmlParsingSvc;
+	private  SwingEngine _swingEngine;
 	private final IAuditSvc _auditSvc = AuditSvcImpl.getAuditSvcImplInstance();
 
 	/**
@@ -122,17 +118,39 @@ public class CalLiteInitClass
 	/**
 	 * This method is called to initialize the ui.
 	 */
-	public void init()
+	public void init() throws EpptInitializationException
 	{
 
+		IErrorHandlingSvc errorHandlingSvc = new ErrorHandlingSvcImpl();
+		IDialogSvc dialogSvc = DialogSvcImpl.getDialogSvcInstance();
+		 _swingEngine = null;
 		try
 		{
 			// ----- Build all the Services.
-			ISeedDataSvc seedDataSvc = SeedDataSvcImpl.getSeedDataSvcImplInstance();
+			 _xmlParsingSvc = XMLParsingSvcImpl.createXMLParsingSvcImplInstance();
+			 _swingEngine = _xmlParsingSvc.getSwingEngine();
+
+			init2(errorHandlingSvc, dialogSvc, _swingEngine, _xmlParsingSvc);
+		}
+		catch(RuntimeException e )
+		{
+			LOGGER.error("Error initializing CalLite", e);
+
+
+		}
+	}
+
+	private void init2(IErrorHandlingSvc errorHandlingSvc, IDialogSvc dialogSvc, SwingEngine swingEngine, IXMLParsingSvc xmlParsingSvc) throws EpptInitializationException
+	{
+		try
+		{
+
+
+			ISeedDataSvc seedDataSvc = SeedDataSvcImpl.createSeedDataSvcImplInstance();
 			IVerifyControlsDele verifyControlsDele = new VerifyControlsDeleImp();
 			verifyControlsDele.verifyTheDataBeforeUI(Constant.SCENARIOS_DIR + Constant.DEFAULT + Constant.CLS_EXT);
-			DynamicControlSvcImpl.getDynamicControlSvcImplInstance();
-			ITableSvc tableSvc = TableSvcImpl.getTableSvcImplInstance(seedDataSvc.getUserTables());
+			DynamicControlSvcImpl.createDynamicControlSvcImplInstance();
+			ITableSvc tableSvc = TableSvcImpl.createTableSvcImplInstance(seedDataSvc.getUserTables());
 			IScenarioSvc scenarioSvc = ScenarioSvcImpl.getScenarioSvcImplInstance();
 			IAllButtonsDele allButtonsDele = new AllButtonsDeleImp();
 
@@ -140,92 +158,92 @@ public class CalLiteInitClass
 			initSpinners();
 			initGlobalListeners(allButtonsDele);
 			// Load the default cls file.
-			scenarioSvc.applyClsFile(Constant.SCENARIOS_DIR + Constant.DEFAULT + Constant.CLS_EXT, _swingEngine,
+			scenarioSvc.applyClsFile(Constant.SCENARIOS_DIR + Constant.DEFAULT + Constant.CLS_EXT, swingEngine,
 					seedDataSvc.getTableIdMap());
 			// check
-			checkForNewUserDefinedTables(_xmlParsingSvc.getNewUserDefinedTables(), scenarioSvc, tableSvc, _swingEngine);
+			checkForNewUserDefinedTables(xmlParsingSvc.getNewUserDefinedTables(), scenarioSvc, tableSvc, swingEngine);
 			// we clear because when we 1st load the cls
 			_auditSvc.clearAudit();
 			// file
 			// we should not have any records.
-			addJTextFieldListener(_xmlParsingSvc.getjTextFieldIds());
-			addJCheckBoxListener(_xmlParsingSvc.getjCheckBoxIDs());
+			addJTextFieldListener(xmlParsingSvc.getjTextFieldIds());
+			addJCheckBoxListener(xmlParsingSvc.getjCheckBoxIDs());
 			// Count threads and update batch run selector appropriately
 			initBatchRun();
 			// For Result part.
-			ResultUtilsBO resultUtilsBO = ResultUtilsBO.getResultUtilsInstance(_swingEngine);
+			ResultUtilsBO resultUtilsBO = ResultUtilsBO.getResultUtilsInstance(swingEngine);
 			// Setup for Reporting page
 			// Set up additional UI elements
-			JList<?> lstScenarios = (JList<?>) _swingEngine.find("SelectedList");
-			JRadioButton rdb1 = (JRadioButton) _swingEngine.find("rdbp001");
-			JRadioButton rdb2 = (JRadioButton) _swingEngine.find("rdbp002");
-			FileDialogBO fdDSSFiles = new FileDialogBO(lstScenarios, (JLabel) _swingEngine.find("lblBase"), rdb1, rdb2,
-					(JButton) _swingEngine.find("btnPower"), true);
+			JList<?> lstScenarios = (JList<?>) swingEngine.find("SelectedList");
+			JRadioButton rdb1 = (JRadioButton) swingEngine.find("rdbp001");
+			JRadioButton rdb2 = (JRadioButton) swingEngine.find("rdbp002");
+			FileDialogBO fdDSSFiles = new FileDialogBO(lstScenarios, (JLabel) swingEngine.find("lblBase"), rdb1, rdb2,
+					(JButton) swingEngine.find("btnPower"), true);
 			resultUtilsBO.setFdDSSFiles(fdDSSFiles);
 			lstScenarios.setModel(fdDSSFiles.getLmScenNames());
 			lstScenarios.setBorder(new LineBorder(Color.gray, 1));
-			JButton btnScenario = (JButton) _swingEngine.find("btnAddScenario");
+			JButton btnScenario = (JButton) swingEngine.find("btnAddScenario");
 			btnScenario.addActionListener(fdDSSFiles);
-			JButton btnScenarioDel = (JButton) _swingEngine.find("btnDelScenario");
+			JButton btnScenarioDel = (JButton) swingEngine.find("btnDelScenario");
 			btnScenarioDel.addActionListener(fdDSSFiles);
-			JButton btnClearAll = (JButton) _swingEngine.find("btnClearScenario");
+			JButton btnClearAll = (JButton) swingEngine.find("btnClearScenario");
 			btnClearAll.addActionListener(fdDSSFiles);
 			// Set up month spinners on result page
-			JSpinner spnSM = (JSpinner) _swingEngine.find("spnStartMonth");
+			JSpinner spnSM = (JSpinner) swingEngine.find("spnStartMonth");
 			ResultUtilsBO.SetMonthModelAndIndex(spnSM, 9, resultUtilsBO, true);
-			JSpinner spnEM = (JSpinner) _swingEngine.find("spnEndMonth");
+			JSpinner spnEM = (JSpinner) swingEngine.find("spnEndMonth");
 			ResultUtilsBO.SetMonthModelAndIndex(spnEM, 8, resultUtilsBO, true);
 			// Set up year spinners
-			JSpinner spnSY = (JSpinner) _swingEngine.find("spnStartYear");
+			JSpinner spnSY = (JSpinner) swingEngine.find("spnStartYear");
 			ResultUtilsBO.SetNumberModelAndIndex(spnSY, 1921, 1921, 2003, 1, "####", resultUtilsBO, true);
-			JSpinner spnEY = (JSpinner) _swingEngine.find("spnEndYear");
+			JSpinner spnEY = (JSpinner) swingEngine.find("spnEndYear");
 			ResultUtilsBO.SetNumberModelAndIndex(spnEY, 2003, 1921, 2003, 1, "####", resultUtilsBO, true);
 			// Set up report list
-			JList<?> lstReports = (JList<?>) _swingEngine.find("lstReports");
+			JList<?> lstReports = (JList<?>) swingEngine.find("lstReports");
 			lstReports.setBorder(new LineBorder(Color.gray, 1));
 			lstReports.setVisible(true);
 
 			// For Custom Results ....
 
-			WRIMSGUILinks.buildWRIMSGUI((JPanel) _swingEngine.find("WRIMS"));
+			WRIMSGUILinks.buildWRIMSGUI((JPanel) swingEngine.find("WRIMS"));
 			// Replace WRIMS GUI display action with CalLite GUI action
 			JButton retrieveBtn = GuiUtils.getCLGPanel().getRetrievePanel().getRetrieveBtn();
-			for(ActionListener al : retrieveBtn.getActionListeners())
+			for (ActionListener al : retrieveBtn.getActionListeners())
 			{
 				retrieveBtn.removeActionListener(al);
 			}
-			retrieveBtn.addActionListener(arg0 -> retrieve());
+			retrieveBtn.addActionListener(arg0 -> retrieve(dialogSvc));
 			Component openButtonComponent = findFirstButtonMatchingText(GuiUtils.getCLGPanel(), "Open");
-			if(openButtonComponent != null)
+			if (openButtonComponent != null)
 			{
 				JButton openButton = (JButton) openButtonComponent;
-				for(ActionListener al : openButton.getActionListeners())
+				for (ActionListener al : openButton.getActionListeners())
 				{
 					openButton.removeActionListener(al);
 				}
-				openButton.addActionListener(arg0 -> retrieve2());
+				openButton.addActionListener(arg0 -> retrieve2(errorHandlingSvc, dialogSvc));
 			}
 			// For PDF Report ...
-			((JButton) _swingEngine.find("btnGetTemplateFile"))
-					.addActionListener(new FileDialogBO(null, (JTextField) _swingEngine.find("tfTemplateFILE"), "inp"));
-			((JButton) _swingEngine.find("btnGetReportFile1"))
-					.addActionListener(new FileDialogBO(null, (JTextField) _swingEngine.find("tfReportFILE1")));
-			((JButton) _swingEngine.find("btnGetReportFile2"))
-					.addActionListener(new FileDialogBO(null, (JTextField) _swingEngine.find("tfReportFILE2")));
-			((JButton) _swingEngine.find("btnGetReportFile3"))
-					.addActionListener(new FileDialogBO(null, (JTextField) _swingEngine.find("tfReportFILE3"), "PDF"));
+			((JButton) swingEngine.find("btnGetTemplateFile"))
+					.addActionListener(new FileDialogBO(null, (JTextField) swingEngine.find("tfTemplateFILE"), "inp"));
+			((JButton) swingEngine.find("btnGetReportFile1"))
+					.addActionListener(new FileDialogBO(null, (JTextField) swingEngine.find("tfReportFILE1")));
+			((JButton) swingEngine.find("btnGetReportFile2"))
+					.addActionListener(new FileDialogBO(null, (JTextField) swingEngine.find("tfReportFILE2")));
+			((JButton) swingEngine.find("btnGetReportFile3"))
+					.addActionListener(new FileDialogBO(null, (JTextField) swingEngine.find("tfReportFILE3"), "PDF"));
 
 			// Schematic views
 
-			new SchematicMain((JPanel) _swingEngine.find("schematic_holder"),
-					"file:///" + System.getProperty("user.dir") + "/Config/callite_merged.svg", _swingEngine, 1.19, 0.0,
+			new SchematicMain((JPanel) swingEngine.find("schematic_holder"),
+					"file:///" + System.getProperty("user.dir") + "/Config/callite_merged.svg", swingEngine, 1.19, 0.0,
 					0.0, 1.19, -8.0, 5.0);
-			new SchematicMain((JPanel) _swingEngine.find("schematic_holder2"),
+			new SchematicMain((JPanel) swingEngine.find("schematic_holder2"),
 					"file:///" + System.getProperty("user.dir") + "/Config/callite-massbalance_working.svg",
-					_swingEngine, 1.2, 0, 0.0, 1.2, 21.0, 15.0);
+					swingEngine, 1.2, 0, 0.0, 1.2, 21.0, 15.0);
 
 			// Recolor results tabs
-			JTabbedPane jTabbedPane = (JTabbedPane) _swingEngine.find("tabbedPane1");
+			JTabbedPane jTabbedPane = (JTabbedPane) swingEngine.find("tabbedPane1");
 			jTabbedPane.setForegroundAt(6, Color.blue);
 			jTabbedPane.setForegroundAt(7, Color.blue);
 			jTabbedPane.setForegroundAt(8, Color.blue);
@@ -236,10 +254,10 @@ public class CalLiteInitClass
 			jTabbedPane.setBackgroundAt(9, Color.WHITE);
 			jTabbedPane.addChangeListener(resultUtilsBO);
 
-			JMenuBar menuBar = (JMenuBar) this._swingEngine.find("menu");
-			((JFrame) _swingEngine.find(Constant.MAIN_FRAME_NAME)).setJMenuBar(menuBar);
+			JMenuBar menuBar = (JMenuBar) swingEngine.find("menu");
+			((JFrame) swingEngine.find(Constant.MAIN_FRAME_NAME)).setJMenuBar(menuBar);
 			menuBar.setVisible(true);
-			_swingEngine.find(Constant.MAIN_FRAME_NAME).addComponentListener(new ComponentAdapter()
+			swingEngine.find(Constant.MAIN_FRAME_NAME).addComponentListener(new ComponentAdapter()
 			{
 				@Override
 				// Kludge to encourage consistent sizing
@@ -247,21 +265,21 @@ public class CalLiteInitClass
 				{
 					int height = event.getComponent().getHeight();
 					int width = event.getComponent().getWidth();
-					_swingEngine.find("schematic_holder")
-								.setPreferredSize(new Dimension(width - 50, height - 200));
+					swingEngine.find("schematic_holder")
+							.setPreferredSize(new Dimension(width - 50, height - 200));
 					SwingUtilities.updateComponentTreeUI(event.getComponent());
 				}
 			});
 			new ApplyDynamicConDeleImp().applyDynamicControlForListFromFile();
 
 			// Display the GUI
-			_swingEngine.find(Constant.MAIN_FRAME_NAME).setVisible(true);
+			swingEngine.find(Constant.MAIN_FRAME_NAME).setVisible(true);
 		}
 		catch(RuntimeException e)
 		{
 			LOGGER.error(e.getMessage());
 			String messageText = "Unable to initialize GUI.";
-			_errorHandlingSvc.businessErrorHandler(messageText, (JFrame) _swingEngine.find(Constant.MAIN_FRAME_NAME),
+			errorHandlingSvc.businessErrorHandler(messageText, (JFrame) swingEngine.find(Constant.MAIN_FRAME_NAME),
 					e);
 		}
 	}
@@ -283,7 +301,7 @@ public class CalLiteInitClass
 	{
 		// Set up the global Listeners.
 		_swingEngine.setActionListener(_swingEngine.find(Constant.MAIN_FRAME_NAME), new GlobalActionListener());
-		setCheckBoxorMouseListener(_swingEngine.find(Constant.MAIN_FRAME_NAME), new GlobalMouseListener());
+		//setCheckBoxorMouseListener(_swingEngine.find(Constant.MAIN_FRAME_NAME), new GlobalMouseListener());
 		setCheckBoxorRadioButtonItemListener(_swingEngine.find(Constant.MAIN_FRAME_NAME), new GlobalItemListener());
 		setLinkedSliderChangeListener(_swingEngine.find(Constant.MAIN_FRAME_NAME), new GlobalChangeListener());
 		ImageIcon icon = new ImageIcon(getClass().getResource("/images/CalLiteIcon.png"));
@@ -292,14 +310,7 @@ public class CalLiteInitClass
 
 		((JFrame) _swingEngine.find(Constant.MAIN_FRAME_NAME))
 				.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);// EXIT_ON_CLOSE
-		((JFrame) _swingEngine.find(Constant.MAIN_FRAME_NAME)).addWindowListener(new WindowAdapter()
-		{
-			@Override
-			public void windowClosing(WindowEvent we)
-			{
-				allButtonsDele.windowClosing();
-			}
-		});
+
 	}
 
 	private void initSpinners()
@@ -327,7 +338,7 @@ public class CalLiteInitClass
 	 * @param swingEngine       The Object of {@link SwingEngine}.
 	 */
 	private void checkForNewUserDefinedTables(List<String> newUserDefinedIds, IScenarioSvc scenarioSvc,
-											  ITableSvc tableSvc, SwingEngine swingEngine)
+											  ITableSvc tableSvc, SwingEngine swingEngine) throws EpptInitializationException
 	{
 		DataTableModel dtm = null;
 		for(String newUserDefinedId : newUserDefinedIds)
@@ -349,10 +360,8 @@ public class CalLiteInitClass
 				catch(CalLiteGUIException ex)
 				{
 					Log.error(ex);
-					_errorHandlingSvc.displayErrorMessageBeforeTheUI(new CalLiteGUIException(
-							"There is a table id " + newUserDefinedId
-									+ " in the gui.xml file but there is no table file with that name. Please provide the file.",
-							ex));
+					String errorMsg = "There is a table id " + newUserDefinedId + " in the gui.xml file but there is no table file with that name. Please provide the file.";
+					throw new EpptInitializationException("Error getting table.", new CalLiteGUIException(errorMsg, ex));
 				}
 			}
 		}
@@ -616,12 +625,12 @@ public class CalLiteInitClass
 	 * Data retrieval for single DSS from Custom Results dashboard; modeled on
 	 * calsim.gui.GeneralRetrievePanel.retrieve()
 	 */
-	private void retrieve()
+	private void retrieve(IDialogSvc dialogSvc)
 	{
 		JList<RBListItemBO> lstScenarios = (JList<RBListItemBO>) _swingEngine.find("SelectedList");
 		if(!AppUtils.baseOn)
 		{
-			_dialogSvc.getOK("DSS not selected! The Base DSS files need to be selected", JOptionPane.WARNING_MESSAGE);
+			dialogSvc.getOK("DSS not selected! The Base DSS files need to be selected", JOptionPane.WARNING_MESSAGE);
 			return;
 		}
 		try
@@ -641,7 +650,7 @@ public class CalLiteInitClass
 			Group group = GuiUtils.getCLGPanel().getRetrievePanel().getGroup();
 			if(group == null || table.getSelectedRowCount() == 0)
 			{
-				_dialogSvc.getOK("Variables not selected! Select one or more variables" + noRowsString,
+				dialogSvc.getOK("Variables not selected! Select one or more variables" + noRowsString,
 						JOptionPane.INFORMATION_MESSAGE);
 				return;
 			}
@@ -684,12 +693,12 @@ public class CalLiteInitClass
 	 * calsim.gui.GeneralRetrievePanel.retrieve()
 	 */
 
-	private void retrieve2()
+	private void retrieve2(IErrorHandlingSvc errorHandlingSvc, IDialogSvc dialogSvc)
 	{
 		JList<RBListItemBO> lstScenarios = (JList<RBListItemBO>) _swingEngine.find("SelectedList");
 		if(!AppUtils.baseOn)
 		{
-			_dialogSvc.getOK("DSS not selected! The Base DSS files need to be selected", JOptionPane.WARNING_MESSAGE);
+			dialogSvc.getOK("DSS not selected! The Base DSS files need to be selected", JOptionPane.WARNING_MESSAGE);
 			return;
 		}
 
@@ -699,7 +708,7 @@ public class CalLiteInitClass
 		if(((mts == null) && (dts == null)) || ((dts != null) && (dts.getBParts().isEmpty()))
 				|| ((mts != null) && (mts.getNumberOfDataReferences() < 1)))
 		{
-			_dialogSvc.getOK("Nothing to display! Specify DTS or MTS data reference", JOptionPane.WARNING_MESSAGE);
+			dialogSvc.getOK("Nothing to display! Specify DTS or MTS data reference", JOptionPane.WARNING_MESSAGE);
 
 			return;
 		}
@@ -720,7 +729,7 @@ public class CalLiteInitClass
 		catch(Exception e)
 		{
 			LOGGER.debug("Error in retrieve2() -", e);
-			_errorHandlingSvc.businessErrorHandler(null, e);
+			errorHandlingSvc.businessErrorHandler(null, e);
 
 		}
 	}

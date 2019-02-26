@@ -56,7 +56,7 @@ public class ApplyDynamicConDeleImp implements IApplyDynamicConDele
 	private static final Logger LOG = Logger.getLogger(ApplyDynamicConDeleImp.class.getName());
 	private ISeedDataSvc seedDataSvc = SeedDataSvcImpl.getSeedDataSvcImplInstance();
 	private IDynamicControlSvc dynamicControlSvc = DynamicControlSvcImpl.getDynamicControlSvcImplInstance();
-	private ITableSvc tableSvc = TableSvcImpl.getTableSvcImplInstance(null);
+	private ITableSvc tableSvc = TableSvcImpl.getTableSvcImplInstance();
 	private IErrorHandlingSvc errorHandlingSvc = new ErrorHandlingSvcImpl();
 	private IXMLParsingSvc xmlParsingSvc = XMLParsingSvcImpl.getXMLParsingSvcImplInstance();
 	private SwingEngine swingEngine = xmlParsingSvc.getSwingEngine();

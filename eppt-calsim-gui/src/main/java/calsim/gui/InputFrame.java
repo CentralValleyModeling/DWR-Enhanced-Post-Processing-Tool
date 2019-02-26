@@ -7,8 +7,7 @@
 
 package calsim.gui;
 
-import java.awt.Color;
-import java.awt.Container;
+import java.awt.*;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.IOException;
@@ -64,13 +63,7 @@ public class InputFrame
 		{
 			VistaUtils.displayException(fr, ioe);
 		}
-		fr.addWindowListener(new WindowAdapter()
-		{
-			public void windowClosing(WindowEvent evt)
-			{
-				System.exit(0);
-			}
-		});
+		fr.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		fr.setSize(FRAME_WIDTH, FRAME_HEIGHT);
 		fr.setVisible(true);
 		fr.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);

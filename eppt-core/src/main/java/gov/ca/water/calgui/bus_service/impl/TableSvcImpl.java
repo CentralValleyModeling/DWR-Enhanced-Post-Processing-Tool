@@ -7,15 +7,14 @@
 
 package gov.ca.water.calgui.bus_service.impl;
 
+import gov.ca.water.calgui.EpptInitializationException;
 import gov.ca.water.calgui.bo.CalLiteGUIException;
 import gov.ca.water.calgui.bo.DataTableModel;
 import gov.ca.water.calgui.bo.GUILinks2BO;
 import gov.ca.water.calgui.bus_service.ITableSvc;
 import gov.ca.water.calgui.constant.Constant;
-import gov.ca.water.calgui.tech_service.IErrorHandlingSvc;
 import gov.ca.water.calgui.tech_service.IFileSystemSvc;
 import gov.ca.water.calgui.tech_service.TwoFunction;
-import gov.ca.water.calgui.tech_service.impl.ErrorHandlingSvcImpl;
 import gov.ca.water.calgui.tech_service.impl.FileSystemSvcImpl;
 import org.apache.log4j.Logger;
 
@@ -34,9 +33,9 @@ public final class TableSvcImpl implements ITableSvc
 	private static final Logger LOG = Logger.getLogger(TableSvcImpl.class.getName());
 	private static ITableSvc tableSvc;
 	private IFileSystemSvc fileSystemSvc;
-	private IErrorHandlingSvc errorHandlingSvc;
 	private Map<String, DataTableModel> map;
-	private String wsidiForSWPFullFileName = Constant.USER_DEFINED; // We are
+	private String _wsidiForSWPFullFileName = Constant.USER_DEFINED;
+	// We are
 	// using
 	// this to
 	// know
@@ -45,7 +44,8 @@ public final class TableSvcImpl implements ITableSvc
 	// modify
 	// the value
 	// of not.
-	private String wsidiForCVPFullFileName = Constant.USER_DEFINED; // We are
+	private String _wsidiForCVPFullFileName = Constant.USER_DEFINED;
+	// We are
 	// using
 	// this to
 	// know
@@ -58,28 +58,35 @@ public final class TableSvcImpl implements ITableSvc
 	/*
 	 * This will build the table map.
 	 */
-	private TableSvcImpl(List<GUILinks2BO> guiLinks2BOList)
+	private TableSvcImpl(List<GUILinks2BO> guiLinks2BOList) throws EpptInitializationException
 	{
 		LOG.info("Building TableSvcImpl Object.");
 		this.fileSystemSvc = new FileSystemSvcImpl();
 		this.map = new HashMap<>();
-		this.errorHandlingSvc = new ErrorHandlingSvcImpl();
 		generateMapForTables(guiLinks2BOList);
 	}
+
+	public static ITableSvc createTableSvcImplInstance(List<GUILinks2BO> list) throws EpptInitializationException
+    {
+        if(tableSvc == null)
+        {
+            tableSvc = new TableSvcImpl(list);
+        }
+        return tableSvc;
+    }
 
 	/**
 	 * This method is for implementing the singleton. It will return the
 	 * instance of this class if it is empty it will create one.
-	 *
-	 * @param list This is the list of user defined tables to load.
+	 *throws IllegalStateException
 	 * @return Will return the instance of this class if it is empty it will
 	 * create one.
 	 */
-	public static ITableSvc getTableSvcImplInstance(List<GUILinks2BO> list)
+	public static ITableSvc getTableSvcImplInstance()
 	{
 		if(tableSvc == null)
 		{
-			tableSvc = new TableSvcImpl(list);
+		    throw new IllegalArgumentException("TableSvcImpl has not been initialized. It should be created by calling 'createTableSvcImplInstance'.");
 		}
 		return tableSvc;
 	}
@@ -224,10 +231,10 @@ public final class TableSvcImpl implements ITableSvc
 	 */
 	private static List<String> removeAllEmptyFromArray(String[] lineData)
 	{
-		List<String> temp = new ArrayList<String>();
+		List<String> temp = new ArrayList<>();
 		for(int m = 0; m < lineData.length; m++)
 		{
-			if(!(lineData[m].equals(Constant.SPACE) || lineData[m] == null || lineData[m].equals("")))
+			if(!(lineData[m].equals(Constant.SPACE) || lineData[m] == null || "".equals(lineData[m])))
 			{
 				temp.add(lineData[m]);
 			}
@@ -351,8 +358,7 @@ public final class TableSvcImpl implements ITableSvc
 		catch(CalLiteGUIException ex)
 		{
 			throw new CalLiteGUIException(
-					"There is a error in the table. Table Name = " + tableName + Constant.NEW_LINE + ex.getMessage(),
-					ex);
+					"There is a error in the table. Table Name = " + tableName + Constant.NEW_LINE + ex.getMessage(), ex);
 		}
 	}
 
@@ -370,25 +376,25 @@ public final class TableSvcImpl implements ITableSvc
 	@Override
 	public String getWsidiForSWPFullFileName()
 	{
-		return wsidiForSWPFullFileName;
+		return _wsidiForSWPFullFileName;
 	}
 
 	@Override
 	public void setWsidiForSWPFullFileName(String wsidiForSWPFullFileName)
 	{
-		this.wsidiForSWPFullFileName = wsidiForSWPFullFileName;
+		this._wsidiForSWPFullFileName = wsidiForSWPFullFileName;
 	}
 
 	@Override
 	public String getWsidiForCVPFullFileName()
 	{
-		return wsidiForCVPFullFileName;
+		return _wsidiForCVPFullFileName;
 	}
 
 	@Override
 	public void setWsidiForCVPFullFileName(String wsidiForCVPFullFileName)
 	{
-		this.wsidiForCVPFullFileName = wsidiForCVPFullFileName;
+		this._wsidiForCVPFullFileName = wsidiForCVPFullFileName;
 	}
 
 	/**
@@ -396,7 +402,7 @@ public final class TableSvcImpl implements ITableSvc
 	 *
 	 * @param guiLinks2DataBOList The list of seed data objects.
 	 */
-	private void generateMapForTables(List<GUILinks2BO> guiLinks2DataBOList)
+	private void generateMapForTables(List<GUILinks2BO> guiLinks2DataBOList) throws EpptInitializationException
 	{
 		List<String> list1 = new ArrayList<String>();
 		list1.add(Constant.SWP_START_FILENAME);
@@ -424,7 +430,7 @@ public final class TableSvcImpl implements ITableSvc
 			catch(CalLiteGUIException ex)
 			{
 				LOG.error(ex.getMessage(), ex);
-				errorHandlingSvc.displayErrorMessageBeforeTheUI(ex);
+				throw new EpptInitializationException("Error generating map for table.",ex);
 			}
 		}
 	}

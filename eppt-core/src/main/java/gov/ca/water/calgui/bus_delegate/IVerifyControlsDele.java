@@ -7,6 +7,8 @@
 
 package gov.ca.water.calgui.bus_delegate;
 
+import gov.ca.water.calgui.EpptInitializationException;
+
 /**
  * This interface is used for verifying the data before the application is
  * started.
@@ -21,5 +23,5 @@ public interface IVerifyControlsDele
 	 *
 	 * @param fileName This is the file name with path of the cls file.
 	 */
-	void verifyTheDataBeforeUI(String fileName);
+	void verifyTheDataBeforeUI(String fileName) throws EpptInitializationException;
 }

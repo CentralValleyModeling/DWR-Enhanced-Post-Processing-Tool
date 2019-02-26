@@ -9,6 +9,7 @@ package gov.ca.water.calgui.bus_delegate;
 
 import java.util.List;
 
+import gov.ca.water.calgui.EpptInitializationException;
 import gov.ca.water.calgui.bo.DataTableModel;
 import gov.ca.water.calgui.presentation.ScenarioFrame;
 
@@ -32,5 +33,5 @@ public interface IScenarioDele
 	 * the 1st is Current Scenario, 2nd is the comparison and the 3ed is
 	 * differences.
 	 */
-	List<DataTableModel> getScenarioTableData(List<String> fileNames);
+	List<DataTableModel> getScenarioTableData(List<String> fileNames) throws EpptInitializationException;
 }

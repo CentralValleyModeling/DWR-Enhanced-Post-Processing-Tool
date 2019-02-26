@@ -171,16 +171,6 @@ public class StudyInterface
 		}
 	}
 
-	public static void main(String[] args)
-	{
-		StudyInterface si = new StudyInterface("D:\\TestDss\\Test1.dss", "1MON",
-				"D:\\TestDss\\Test1.txt", false);
-		MSWUtil.createTimeFactory();
-		TimeWindow tw = MSWUtil.createTimeWindow("31OCT1921 2400", "30NOV1921 2400");
-		si.activate(tw);
-		System.exit(0);
-	}
-
 	private DataReference createDataReference(Group g, String bpart)
 	{
 		Group temp = Group.createGroup(g);

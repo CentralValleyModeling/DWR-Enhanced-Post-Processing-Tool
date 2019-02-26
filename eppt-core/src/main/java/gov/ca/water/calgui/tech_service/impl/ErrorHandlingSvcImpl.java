@@ -23,6 +23,7 @@ import javax.mail.internet.MimeMessage;
 import javax.swing.*;
 
 import gov.ca.water.calgui.bo.CalLiteGUIException;
+import gov.ca.water.calgui.bo.CalLiteGUIExceptionFatal;
 import gov.ca.water.calgui.bo.ResultUtilsBO;
 import gov.ca.water.calgui.constant.Constant;
 import gov.ca.water.calgui.tech_service.IErrorHandlingSvc;
@@ -39,8 +40,6 @@ public class ErrorHandlingSvcImpl implements IErrorHandlingSvc
 
 	private static final Logger LOG = Logger.getLogger(ErrorHandlingSvcImpl.class.getName());
 	private static final Properties properties;
-	// private static SwingEngine swix =
-	// ResultUtilsBO.getResultUtilsInstance(null).getSwix();
 	private static long time = System.currentTimeMillis();
 
 	static
@@ -66,13 +65,6 @@ public class ErrorHandlingSvcImpl implements IErrorHandlingSvc
 		{
 			return mainFrame;
 		}
-	}
-
-	@Override
-	public void validationeErrorHandler(JFrame mainFrame, Throwable aThrowable)
-	{
-		List<String> error = getMessageAndStackTraceFromLayeredError(aThrowable);
-		displayErrorMessage("Validation Error : " + error.get(0), error.get(1), setFrame(mainFrame));
 	}
 
 	@Override
@@ -102,14 +94,6 @@ public class ErrorHandlingSvcImpl implements IErrorHandlingSvc
 	}
 
 	@Override
-	public void systemErrorHandler(JFrame mainFrame, Throwable aThrowable)
-	{
-		List<String> error = getMessageAndStackTraceFromLayeredError(aThrowable);
-		displayErrorMessage("System Error : " + error.get(0), error.get(1), setFrame(mainFrame));
-		System.exit(-1);
-	}
-
-	@Override
 	public void systemErrorHandler(String displayMessage, String detailMessage, JFrame mainFrame)
 	{
 		displayErrorMessage("System Error : " + displayMessage, detailMessage, setFrame(mainFrame));
@@ -132,48 +116,6 @@ public class ErrorHandlingSvcImpl implements IErrorHandlingSvc
 		}
 	}
 
-	@Override
-	public void displayErrorMessageBeforeTheUI(CalLiteGUIException ex)
-	{
-		LOG.error(ex.getMessage(), ex);
-		ImageIcon icon = new ImageIcon(getClass().getResource("/images/CalLiteIcon.png"));
-		JTextArea textArea = new JTextArea(ex.getMessage());
-		JScrollPane scrollPane = new JScrollPane(textArea);
-		textArea.setLineWrap(true);
-		textArea.setWrapStyleWord(true);
-		scrollPane.setPreferredSize(new Dimension(500, 300));
-		JPanel panel = new JPanel();
-		panel.add(scrollPane);
-		JOptionPane optionPane;
-		if(ex.isRequiredToExit())
-		{
-			Object[] options = new Object[1];
-			options[0] = "exit";
-			optionPane = new JOptionPane(panel, JOptionPane.ERROR_MESSAGE, JOptionPane.OK_CANCEL_OPTION, null, options,
-					options[0]);
-			JDialog dialog = optionPane.createDialog("Information");
-			dialog.setIconImage(icon.getImage());
-			dialog.setResizable(false);
-			dialog.setVisible(true);
-			System.exit(-1);
-		}
-		else
-		{
-			Object[] options = new Object[2];
-			options[0] = "continue";
-			options[1] = "exit";
-			optionPane = new JOptionPane(panel, JOptionPane.QUESTION_MESSAGE, JOptionPane.OK_CANCEL_OPTION, null,
-					options, options[0]);
-			JDialog dialog = optionPane.createDialog("Information");
-			dialog.setIconImage(icon.getImage());
-			dialog.setResizable(false);
-			dialog.setVisible(true);
-			if(optionPane.getValue().toString().equals("exit"))
-			{
-				System.exit(-1);
-			}
-		}
-	}
 
 	/**
 	 * This method will change the layered exceptions into the message string
@@ -186,8 +128,8 @@ public class ErrorHandlingSvcImpl implements IErrorHandlingSvc
 	 */
 	private List<String> getMessageAndStackTraceFromLayeredError(Throwable aThrowable)
 	{
-		StringBuffer errorMessage = new StringBuffer();
-		List<String> list = new ArrayList<String>();
+		StringBuilder errorMessage = new StringBuilder();
+		List<String> list = new ArrayList<>();
 		String stackTrace = "";
 		while(true)
 		{

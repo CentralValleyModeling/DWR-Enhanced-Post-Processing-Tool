@@ -56,7 +56,7 @@ public final class ProgressFrame extends JFrame implements ActionListener
 	private JScrollPane listScroller;
 	private Map<String, String> scenarioNamesAndAction;
 	private IMonitorSvc monitorSvc = new MonitorSvcImpl();
-	private ITableSvc tableSvc = TableSvcImpl.getTableSvcImplInstance(null);
+	private ITableSvc tableSvc = TableSvcImpl.getTableSvcImplInstance();
 	private IScenarioSvc scenarioSvc = ScenarioSvcImpl.getScenarioSvcImplInstance();
 	private IAllButtonsDele allButtonsDele = new AllButtonsDeleImp();
 	private SwingEngine swingEngine = XMLParsingSvcImpl.getXMLParsingSvcImplInstance().getSwingEngine();

@@ -23,6 +23,7 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
 import gov.ca.water.calgui.bo.CalLiteGUIException;
+import gov.ca.water.calgui.bo.CalLiteGUIExceptionFatal;
 import gov.ca.water.calgui.constant.Constant;
 import gov.ca.water.calgui.tech_service.IFileSystemSvc;
 import org.apache.commons.io.FilenameUtils;
@@ -52,14 +53,29 @@ public class FileSystemSvcImpl implements IFileSystemSvc
 			catch(IOException ex)
 			{
 				LOG.error(ex.getMessage(), ex);
-				throw new CalLiteGUIException("File data is corrupted : " + fileName, ex, isRequired);
+				if(isRequired)
+				{
+					throw new CalLiteGUIExceptionFatal("File data is corrupted : " + fileName, ex);
+				}
+				else
+				{
+					throw new CalLiteGUIException("File data is corrupted : " + fileName, ex);
+				}
 			}
 		}
 		else
 		{
 			LOG.error("File missing : " + fileName);
 			FileNotFoundException ex = new FileNotFoundException("File missing : " + fileName);
-			throw new CalLiteGUIException("File missing : " + fileName, ex, isRequired);
+			if(isRequired)
+			{
+				throw new CalLiteGUIExceptionFatal("File missing : " + fileName, ex);
+			}
+			else
+			{
+				throw new CalLiteGUIException("File missing : " + fileName, ex);
+
+			}
 		}
 		return list;
 	}
@@ -100,7 +116,7 @@ public class FileSystemSvcImpl implements IFileSystemSvc
 		catch(Exception ex)
 		{
 			LOG.error("The SwiXml is not build." + Constant.NEW_LINE + ex.getMessage(), ex);
-			throw new CalLiteGUIException("The SwiXml is not build." + Constant.NEW_LINE + ex.getMessage(), ex, true);
+			throw new CalLiteGUIExceptionFatal("The SwiXml is not build." + Constant.NEW_LINE + ex.getMessage(), ex);
 		}
 	}
 

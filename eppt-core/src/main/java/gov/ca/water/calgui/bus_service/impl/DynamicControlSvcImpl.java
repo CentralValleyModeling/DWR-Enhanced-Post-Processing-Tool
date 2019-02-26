@@ -13,15 +13,15 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Pattern;
 import javax.swing.*;
 
+import gov.ca.water.calgui.EpptInitializationException;
 import gov.ca.water.calgui.bo.CalLiteGUIException;
 import gov.ca.water.calgui.bo.TriggerBO;
 import gov.ca.water.calgui.bus_service.IDynamicControlSvc;
 import gov.ca.water.calgui.constant.Constant;
-import gov.ca.water.calgui.tech_service.IErrorHandlingSvc;
 import gov.ca.water.calgui.tech_service.IFileSystemSvc;
-import gov.ca.water.calgui.tech_service.impl.ErrorHandlingSvcImpl;
 import gov.ca.water.calgui.tech_service.impl.FileSystemSvcImpl;
 import org.apache.log4j.Logger;
 import org.swixml.SwingEngine;
@@ -34,24 +34,23 @@ import org.swixml.SwingEngine;
 public final class DynamicControlSvcImpl implements IDynamicControlSvc
 {
 	private static final Logger LOG = Logger.getLogger(DynamicControlSvcImpl.class.getName());
+	private static final Pattern DELIMITER = Pattern.compile(Constant.DELIMITER);
 	private static IDynamicControlSvc dynamicControlSvc;
-	private IFileSystemSvc fileSystemSvc;
-	private Map<String, List<TriggerBO>> triggerMapForEnableDisable;
-	private Map<String, List<TriggerBO>> triggerMapForCheckUncheck;
-	private IErrorHandlingSvc errorHandlingSvc;
-	private boolean preventRoeTrigger = false;
+	private IFileSystemSvc _fileSystemSvc;
+	private Map<String, List<TriggerBO>> _triggerMapForEnableDisable;
+	private Map<String, List<TriggerBO>> _triggerMapForCheckUncheck;
+	private boolean _preventRoeTrigger = false;
 
 	/*
 	 * This will load TriggerForDymanicSelection.table and
 	 * TriggerForDynamicDisplay.table files into memory.
 	 */
-	private DynamicControlSvcImpl()
-	{
+	private DynamicControlSvcImpl() throws EpptInitializationException
+    {
 		LOG.info("Building DynamicControlSvcImpl Object.");
-		this.fileSystemSvc = new FileSystemSvcImpl();
-		this.triggerMapForEnableDisable = new HashMap<String, List<TriggerBO>>();
-		this.triggerMapForCheckUncheck = new HashMap<String, List<TriggerBO>>();
-		this.errorHandlingSvc = new ErrorHandlingSvcImpl();
+		this._fileSystemSvc = new FileSystemSvcImpl();
+		this._triggerMapForEnableDisable = new HashMap<>();
+		this._triggerMapForCheckUncheck = new HashMap<>();
 		/*
 		 * This method will load the TriggerForDynamicDisplay.table file into
 		 * the memory. The data really is if one component is selected then this
@@ -61,31 +60,43 @@ public final class DynamicControlSvcImpl implements IDynamicControlSvc
 		 * show and hide which will make the component visible and not visible.
 		 *
 		 */
-		loadTriggerTable(Constant.TRIGGER_ENABLE_DISABLE_FILENAME, this.triggerMapForEnableDisable);
+		loadTriggerTable(Constant.TRIGGER_ENABLE_DISABLE_FILENAME, this._triggerMapForEnableDisable);
 		/*
 		 * This method will load the TriggerForDymanicSelection.table file into
 		 * the memory. The data really is if one JCheckBox and JRadioButton is
 		 * selected then all the other AFFECTED once will be selected or
 		 * de-selected based on the data.
 		 */
-		loadTriggerTable(Constant.TRIGGER_CHECK_UNCHECK_FILENAME, this.triggerMapForCheckUncheck);
+		loadTriggerTable(Constant.TRIGGER_CHECK_UNCHECK_FILENAME, this._triggerMapForCheckUncheck);
 	}
 
 	/**
 	 * This method is for implementing the singleton. It will return the
 	 * instance of this class if it is empty it will create one.
-	 *
+	 * throws IllegalStateException
 	 * @return Will return the instance of this class if it is empty it will
 	 * create one.
 	 */
 	public static IDynamicControlSvc getDynamicControlSvcImplInstance()
-	{
-		if(dynamicControlSvc == null)
-		{
-			dynamicControlSvc = new DynamicControlSvcImpl();
-		}
-		return dynamicControlSvc;
+    {
+        if(dynamicControlSvc == null)
+        {
+            throw new IllegalStateException("the dynamic control service has not been initialized. A call to " +
+                    "'DynamicControlSvcImpl.createDynamicControlSvcImplInstance()' should have been made in the CalLiteInitClass.init method.");
+        }
+        else
+        {
+            return dynamicControlSvc;
+        }
 	}
+
+	public static void createDynamicControlSvcImplInstance()throws EpptInitializationException
+    {
+        if(dynamicControlSvc == null)
+        {
+            dynamicControlSvc = new DynamicControlSvcImpl();
+        }
+    }
 
 	/**
 	 * This will tell whether the line is comment or not.
@@ -104,18 +115,18 @@ public final class DynamicControlSvcImpl implements IDynamicControlSvc
 	 * @param fileName   The file Name
 	 * @param triggerMap The list of trigger map.
 	 */
-	private void loadTriggerTable(String fileName, Map<String, List<TriggerBO>> triggerMap)
-	{
+	private void loadTriggerTable(String fileName, Map<String, List<TriggerBO>> triggerMap) throws EpptInitializationException
+    {
 		List<String> triggerStrList;
 		String errorStr = "";
-		String mapKey = "";
+		String mapKey;
 		try
 		{
-			triggerStrList = fileSystemSvc.getFileData(fileName, true, DynamicControlSvcImpl::isNotComments);
+			triggerStrList = _fileSystemSvc.getFileData(fileName, true, DynamicControlSvcImpl::isNotComments);
 			for(String triggerStr : triggerStrList)
 			{
 				errorStr = triggerStr;
-				String[] list = triggerStr.split(Constant.DELIMITER);
+				String[] list = DELIMITER.split(triggerStr);
 				TriggerBO triggerBO = new TriggerBO(list[0], list[1], list[2], list[3]);
 				mapKey = list[0] + Constant.DASH + list[1];
 				if(triggerMap.containsKey(mapKey))
@@ -124,7 +135,7 @@ public final class DynamicControlSvcImpl implements IDynamicControlSvc
 				}
 				else
 				{
-					List<TriggerBO> temp = new ArrayList<TriggerBO>();
+					List<TriggerBO> temp = new ArrayList<>();
 					temp.add(triggerBO);
 					triggerMap.put(mapKey, temp);
 				}
@@ -135,53 +146,52 @@ public final class DynamicControlSvcImpl implements IDynamicControlSvc
 			String errorMessage = "In file \"" + fileName + "\" has a corrupted data at line \"" + errorStr + "\""
 					+ Constant.NEW_LINE + "The column number which the data is corrupted is " + ex.getMessage();
 			LOG.error(errorMessage, ex);
-			errorHandlingSvc.displayErrorMessageBeforeTheUI(new CalLiteGUIException(errorMessage, ex, true));
+			throw new EpptInitializationException(errorMessage, ex);
 		}
 		catch(CalLiteGUIException ex)
 		{
 			LOG.error(ex.getMessage(), ex);
-			errorHandlingSvc.displayErrorMessageBeforeTheUI(ex);
+            throw new EpptInitializationException( ex.getMessage());
 		}
 	}
 
 	@Override
 	public void doDynamicControl(String itemName, boolean isSelected, boolean isEnabled, SwingEngine swingEngine)
 	{
-		List<TriggerBO> listForEnableDisable = this.triggerMapForEnableDisable
+		List<TriggerBO> listForEnableDisable = this._triggerMapForEnableDisable
 				.get(itemName + Constant.DASH + booleanToStringOnOff(isSelected));
 		if(listForEnableDisable != null)
 		{
 			for(TriggerBO triggerBO : listForEnableDisable)
 			{
 
-				if(triggerBO.getAffectdeAction().equalsIgnoreCase("show")
-						|| triggerBO.getAffectdeAction().equalsIgnoreCase("hide"))
+				if("show".equalsIgnoreCase(triggerBO.getAffectdeAction())
+						|| "hide".equalsIgnoreCase(triggerBO.getAffectdeAction()))
 				{
 					toggleVisComponentAndChildren(swingEngine.find(triggerBO.getAffectdeGuiId()),
 							stringShowHideToBoolean(triggerBO.getAffectdeAction()));
 				}
-				else
+				else if(isEnabled)
 				{
-					if(isEnabled)
-					{
+
 						toggleEnComponentAndChildren(swingEngine.find(triggerBO.getAffectdeGuiId()),
 								stringOnOffToBoolean(triggerBO.getAffectdeAction()));
-					}
+
 				}
 			}
 		}
-		List<TriggerBO> listForCheckUncheck = this.triggerMapForCheckUncheck
+		List<TriggerBO> listForCheckUncheck = this._triggerMapForCheckUncheck
 				.get(itemName + Constant.DASH + Boolean.toString(isSelected).toUpperCase());
 		if(listForCheckUncheck != null)
 		{
 			for(TriggerBO triggerBoForCheck : listForCheckUncheck)
 			{
-				if(triggerBoForCheck.getAffectdeGuiId().equals("ckbReg_X2ROE"))
+				if("ckbReg_X2ROE".equals(triggerBoForCheck.getAffectdeGuiId()))
 				{
-					this.preventRoeTrigger = true;
+					this._preventRoeTrigger = true;
 					setComponentSelected(swingEngine.find(triggerBoForCheck.getAffectdeGuiId()),
 							Boolean.valueOf(triggerBoForCheck.getAffectdeAction()));
-					this.preventRoeTrigger = false;
+					this._preventRoeTrigger = false;
 				}
 				else
 				{
@@ -250,7 +260,7 @@ public final class DynamicControlSvcImpl implements IDynamicControlSvc
 	 */
 	private boolean stringShowHideToBoolean(String value)
 	{
-		return value.equals("show");
+		return "show".equals(value);
 	}
 
 	/**
@@ -262,14 +272,14 @@ public final class DynamicControlSvcImpl implements IDynamicControlSvc
 	 */
 	private boolean stringOnOffToBoolean(String value)
 	{
-		return value.equals("on");
+		return "on".equals(value);
 	}
 
 	@Override
 	public TriggerBO getTriggerBOById(String id)
 	{
-		return this.triggerMapForEnableDisable.get(id + Constant.DASH + "on") != null
-				? this.triggerMapForEnableDisable.get(id + Constant.DASH + "on").get(0) : null;
+		return this._triggerMapForEnableDisable.get(id + Constant.DASH + "on") != null
+				? this._triggerMapForEnableDisable.get(id + Constant.DASH + "on").get(0) : null;
 	}
 
 	@Override
@@ -351,6 +361,6 @@ public final class DynamicControlSvcImpl implements IDynamicControlSvc
 	@Override
 	public boolean isPreventRoeTrigger()
 	{
-		return preventRoeTrigger;
+		return _preventRoeTrigger;
 	}
 }

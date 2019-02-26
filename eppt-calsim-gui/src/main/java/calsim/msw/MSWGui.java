@@ -43,6 +43,7 @@ import javax.swing.text.BadLocationException;
 import calsim.app.AppUtils;
 import calsim.app.CSVParser;
 import calsim.gui.GuiUtils;
+import org.python.jline.internal.Log;
 import vista.gui.DocumentWriter;
 import wrims.schematic.Schematic;
 import wrims.schematic.SchematicUtils;
@@ -213,22 +214,6 @@ public class MSWGui extends JFrame implements ActionListener, ComponentListener
 		_stopButton.setEnabled(false);
 	}
 
-	/**
-	 * Main method
-	 */
-	public static void main(String[] args)
-	{
-
-		try
-		{
-			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-		}
-		catch(Exception e)
-		{
-			System.out.println(e.getMessage());
-		}
-		new MSWGui();
-	}
 
 	/**
 	 * Creates file menu for the gui for the gui menubar
@@ -693,12 +678,9 @@ public class MSWGui extends JFrame implements ActionListener, ComponentListener
 				catch(IOException ioe)
 				{
 					ioe.printStackTrace(System.err);
-					System.exit(1);
 				}
 			}
 		}
-		//		writePreferences();
-		System.exit(0);
 	}
 
 	/**

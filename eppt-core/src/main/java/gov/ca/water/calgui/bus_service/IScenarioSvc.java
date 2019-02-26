@@ -10,6 +10,7 @@ package gov.ca.water.calgui.bus_service;
 import java.util.List;
 import java.util.Map;
 
+import gov.ca.water.calgui.EpptInitializationException;
 import gov.ca.water.calgui.bo.CalLiteGUIException;
 import gov.ca.water.calgui.bo.DataTableModel;
 import gov.ca.water.calgui.bo.GUILinks2BO;
@@ -44,7 +45,7 @@ public interface IScenarioSvc
 	 * @param wsidiStatusStr        List to be filled with WSIDISTATUS entries from cls file
 	 */
 	void getCLSData(String fileName, List<String> controlStrList, List<String> dataTableModelStrList,
-					List<String> regulationoptionsStr, List<String> wsidiStatusStr);
+					List<String> regulationoptionsStr, List<String> wsidiStatusStr) throws EpptInitializationException;
 
 	/**
 	 * This will open the cls file read in the data and apply it for the current
@@ -54,7 +55,7 @@ public interface IScenarioSvc
 	 * @param swingEngine The object of the GUI.
 	 * @param tableMap    The map with key as the table id and value as table object.
 	 */
-	void applyClsFile(String fileName, SwingEngine swingEngine, Map<String, GUILinks2BO> tableMap);
+	void applyClsFile(String fileName, SwingEngine swingEngine, Map<String, GUILinks2BO> tableMap) throws EpptInitializationException;
 
 	/**
 	 * This will save the current state of the ui into the cls file and the

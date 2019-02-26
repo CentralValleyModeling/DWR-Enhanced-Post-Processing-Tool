@@ -7,7 +7,7 @@
 
 package calsim.msw;
 
-import java.awt.Cursor;
+import java.awt.*;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.util.Hashtable;
@@ -152,25 +152,6 @@ public class MultiStudyWrapper extends Thread
 		{
 			throw ioe;
 		}
-	}
-
-	/**
-	 * For testing or possibly automation
-	 *
-	 * @param args
-	 */
-	public static void main(String[] args)
-	{
-		try
-		{
-			new MultiStudyWrapper(args[0], new MSWGui());
-		}
-		catch(Exception e)
-		{
-			JOptionPane.showMessageDialog(null, "Exception" + e,
-					e.getMessage(), JOptionPane.ERROR_MESSAGE);
-		}
-		System.exit(0);
 	}
 
 	private String getInterfaceInfo(int index)

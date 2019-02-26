@@ -5,7 +5,7 @@
  * Source may not be released without written approval from DWR
  */
 
-package gov.ca.water.calgui.batch;
+package gov.ca.water.scenario;
 //! Creates and executes a single batch file for one run
 
 import org.antlr.runtime.RecognitionException;
@@ -19,7 +19,6 @@ import wrimsv2.wreslparser.elements.StudyUtils;
 
 import java.io.IOException;
 import java.util.Calendar;
-import java.util.concurrent.TimeUnit;
 
 /**
  * This class is used to run a single study of the wrimsv2 class.

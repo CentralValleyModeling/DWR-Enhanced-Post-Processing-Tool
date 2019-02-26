@@ -17,14 +17,14 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import javax.swing.*;
 
+import gov.ca.water.calgui.EpptInitializationException;
 import gov.ca.water.calgui.bo.CalLiteGUIException;
+import gov.ca.water.calgui.bo.CalLiteGUIExceptionFatal;
 import gov.ca.water.calgui.bo.JLinkedSlider;
 import gov.ca.water.calgui.bo.NumericTextField;
 import gov.ca.water.calgui.bus_service.IXMLParsingSvc;
 import gov.ca.water.calgui.constant.Constant;
-import gov.ca.water.calgui.tech_service.IErrorHandlingSvc;
 import gov.ca.water.calgui.tech_service.IFileSystemSvc;
-import gov.ca.water.calgui.tech_service.impl.ErrorHandlingSvcImpl;
 import gov.ca.water.calgui.tech_service.impl.FileSystemSvcImpl;
 import org.apache.log4j.Logger;
 import org.swixml.SwingEngine;
@@ -39,53 +39,51 @@ public final class XMLParsingSvcImpl implements IXMLParsingSvc
 
 	private static final Logger LOG = Logger.getLogger(XMLParsingSvcImpl.class.getName());
 	private static IXMLParsingSvc xmlParsingSvc;
-	private SwingEngine swingEngine;
-	private IFileSystemSvc fileSystemSvc;
-	private IErrorHandlingSvc errorHandlingSvc;
-	private Map<String, String> compNameIdMap;
-	private List<String> newUserDefinedTables;
-	private List<String> jTextFieldIds;
-	private List<String> jTextFieldIdsForLinkedSliders;
-	private List<String> jCheckBoxIDs; // Checkboxes on regulations screen
+	private SwingEngine _swingEngine;
+	private Map<String, String> _compNameIdMap;
+	private List<String> _newUserDefinedTables;
+	private List<String> _jTextFieldIds;
+	private List<String> _jTextFieldIdsForLinkedSliders;
+	private List<String> _jCheckBoxIDs;
+	// Checkboxes on regulations screen
 
 	/*
 	 * In this we 1st build the SwingEngine from the Gui.xml file. We build the
-	 * newUserDefinedTables list by getting all the JTable component id and
+	 * _newUserDefinedTables list by getting all the JTable component id and
 	 * exclude the default ones.
 	 */
-	private XMLParsingSvcImpl()
+	private XMLParsingSvcImpl() throws EpptInitializationException
 	{
 		LOG.debug("Building XMLParsingSvcImpl Object.");
-		this.errorHandlingSvc = new ErrorHandlingSvcImpl();
-		this.fileSystemSvc = new FileSystemSvcImpl();
-		this.compNameIdMap = new HashMap<>();
-		this.jTextFieldIds = new ArrayList<>();
-		this.jCheckBoxIDs = new ArrayList<>();
-		this.jTextFieldIdsForLinkedSliders = new ArrayList<>();
+		IFileSystemSvc _fileSystemSvc = new FileSystemSvcImpl();
+		this._compNameIdMap = new HashMap<>();
+		this._jTextFieldIds = new ArrayList<>();
+		this._jCheckBoxIDs = new ArrayList<>();
+		this._jTextFieldIdsForLinkedSliders = new ArrayList<>();
 
-		this.swingEngine = new SwingEngine();
-		swingEngine.getTaglib().registerTag("numtextfield", NumericTextField.class);
-		swingEngine.getTaglib().registerTag("linkedslider", JLinkedSlider.class);
+		this._swingEngine = new SwingEngine();
+		_swingEngine.getTaglib().registerTag("numtextfield", NumericTextField.class);
+		_swingEngine.getTaglib().registerTag("linkedslider", JLinkedSlider.class);
 
 		try
 		{
-			swingEngine.render(fileSystemSvc.getXMLDocument());
+			_swingEngine.render(_fileSystemSvc.getXMLDocument());
 		}
 		catch(CalLiteGUIException ex)
 		{
-			errorHandlingSvc.displayErrorMessageBeforeTheUI(ex);
+			throw new EpptInitializationException("Error trying to get xml document: ..//Config//GUI.xml.",ex);
 		}
 		catch(Exception ex)
 		{
-			errorHandlingSvc.displayErrorMessageBeforeTheUI(new CalLiteGUIException(
-					"This is from Swing Engine : " + Constant.NEW_LINE + ex.getMessage(), ex, true));
+			throw new EpptInitializationException("Error rendering xml document: ..//Config//GUI.xml.",new CalLiteGUIExceptionFatal(
+					"This is from Swing Engine : " + Constant.NEW_LINE + ex.getMessage(), ex));
 		}
 
 		Set<String> compIds = this.getIdFromXML();
 
 		// Force names to match IDs for all checkboxes and radio buttons
 		compIds.stream().forEach((compId) -> {
-			Component component = this.swingEngine.find(compId);
+			Component component = this._swingEngine.find(compId);
 			if(component instanceof JCheckBox)
 			{
 				if(!component.getName().equals(compId))
@@ -104,67 +102,67 @@ public final class XMLParsingSvcImpl implements IXMLParsingSvc
 		});
 
 		compIds.stream().forEach((compId) -> {
-			Component component = this.swingEngine.find(compId);
+			Component component = this._swingEngine.find(compId);
 			if(component instanceof JCheckBox)
 			{
-				this.compNameIdMap.put(((JCheckBox) component).getText(), compId);
+				this._compNameIdMap.put(((JCheckBox) component).getText(), compId);
 			}
 		});
-		List<String> temp = compIds.stream().filter((compId) -> swingEngine.find(compId) instanceof JTextField)
+		List<String> temp = compIds.stream().filter((compId) -> _swingEngine.find(compId) instanceof JTextField)
 								   .collect(Collectors.toList());
 		for(String string : temp)
 		{
 			if(!checkIsItFromResultPart(string))
 			{
-				jTextFieldIds.add(string);
+				_jTextFieldIds.add(string);
 			}
 		}
-		temp = compIds.stream().filter((compId) -> swingEngine.find(compId) instanceof JTextArea)
+		temp = compIds.stream().filter((compId) -> _swingEngine.find(compId) instanceof JTextArea)
 					  .collect(Collectors.toList());
 		for(String string : temp)
 		{
 			if(!checkIsItFromResultPart(string))
 			{
-				jTextFieldIds.add(string);
+				_jTextFieldIds.add(string);
 			}
 		}
 
 		// Build a list of TextBoxes that are referenced by JLinkedSliders
 
-		temp = compIds.stream().filter((compId) -> swingEngine.find(compId) instanceof JLinkedSlider)
+		temp = compIds.stream().filter((compId) -> _swingEngine.find(compId) instanceof JLinkedSlider)
 					  .collect(Collectors.toList());
 		for(String string : temp)
 		{
 			if(!checkIsItFromResultPart(string))
 			{
-				JLinkedSlider ls = (JLinkedSlider) swingEngine.find(string);
+				JLinkedSlider ls = (JLinkedSlider) _swingEngine.find(string);
 				if(!ls.getLTextBoxID().equals(""))
 				{
-					jTextFieldIdsForLinkedSliders.add(ls.getLTextBoxID());
+					_jTextFieldIdsForLinkedSliders.add(ls.getLTextBoxID());
 				}
 				if(!ls.getRTextBoxID().equals(""))
 				{
-					jTextFieldIdsForLinkedSliders.add(ls.getRTextBoxID());
+					_jTextFieldIdsForLinkedSliders.add(ls.getRTextBoxID());
 				}
 			}
 		}
 
-		temp = compIds.stream().filter((compId) -> swingEngine.find(compId) instanceof JCheckBox)
+		temp = compIds.stream().filter((compId) -> _swingEngine.find(compId) instanceof JCheckBox)
 					  .collect(Collectors.toList());
 		for(String string : temp)
 		{
 			if(checkIsItFromRegulationPart(string))
 			{
-				jCheckBoxIDs.add(string);
+				_jCheckBoxIDs.add(string);
 			}
 		}
-		this.newUserDefinedTables = compIds.stream().filter((compId) -> swingEngine.find(compId) instanceof JTable)
+		this._newUserDefinedTables = compIds.stream().filter((compId) -> _swingEngine.find(compId) instanceof JTable)
 										   .collect(Collectors.toList());
-		this.newUserDefinedTables.remove("tblRegValues");
-		this.newUserDefinedTables.remove("tblOpValues");
-		this.newUserDefinedTables.remove("tblIF3");
-		this.newUserDefinedTables.remove("tblIF2");
-		this.newUserDefinedTables.remove("tblIF1");
+		this._newUserDefinedTables.remove("tblRegValues");
+		this._newUserDefinedTables.remove("tblOpValues");
+		this._newUserDefinedTables.remove("tblIF3");
+		this._newUserDefinedTables.remove("tblIF2");
+		this._newUserDefinedTables.remove("tblIF1");
 	}
 
 	/**
@@ -175,6 +173,18 @@ public final class XMLParsingSvcImpl implements IXMLParsingSvc
 	 * create one.
 	 */
 	public static IXMLParsingSvc getXMLParsingSvcImplInstance()
+	{
+		if(xmlParsingSvc == null)
+		{
+			throw new IllegalStateException("");
+		}
+		else
+		{
+			return xmlParsingSvc;
+		}
+	}
+
+	public static IXMLParsingSvc createXMLParsingSvcImplInstance() throws EpptInitializationException
 	{
 		if(xmlParsingSvc == null)
 		{
@@ -195,7 +205,7 @@ public final class XMLParsingSvcImpl implements IXMLParsingSvc
 				"Data_tabbedPane2", "controls");
 		List<String> names = new java.util.ArrayList<String>();
 		LOG.info("****" + compId);
-		getAllThePanelNamesOfParent(swingEngine.find(compId), names);
+		getAllThePanelNamesOfParent(_swingEngine.find(compId), names);
 
 		boolean con = false;
 		for(String string : resultTabNames)
@@ -214,7 +224,7 @@ public final class XMLParsingSvcImpl implements IXMLParsingSvc
 	private boolean checkIsItFromRegulationPart(String compId)
 	{
 		List<String> names = new java.util.ArrayList<String>();
-		getAllThePanelNamesOfParent(swingEngine.find(compId).getParent(), names);
+		getAllThePanelNamesOfParent(_swingEngine.find(compId).getParent(), names);
 		return names.contains("regulations");
 	}
 
@@ -244,37 +254,37 @@ public final class XMLParsingSvcImpl implements IXMLParsingSvc
 	@Override
 	public List<String> getjTextFieldIds()
 	{
-		return jTextFieldIds;
+		return _jTextFieldIds;
 	}
 
 	@Override
 	public List<String> getjTextFieldIdsForLinkedSliders()
 	{
-		return jTextFieldIdsForLinkedSliders;
+		return _jTextFieldIdsForLinkedSliders;
 	}
 
 	@Override
 	public List<String> getjCheckBoxIDs()
 	{
-		return jCheckBoxIDs;
+		return _jCheckBoxIDs;
 	}
 
 	@Override
 	public String getCompIdfromName(String name)
 	{
-		return this.compNameIdMap.get(name);
+		return this._compNameIdMap.get(name);
 	}
 
 	@Override
 	public SwingEngine getSwingEngine()
 	{
-		return this.swingEngine;
+		return this._swingEngine;
 	}
 
 	@Override
 	public Set<String> getIdFromXML()
 	{
-		Map<String, Object> map = this.swingEngine.getIdMap();
+		Map<String, Object> map = this._swingEngine.getIdMap();
 		// Set<String> swt = map.keySet();
 		// swt.stream().forEach(key -> LOG.debug(key + " " +
 		// map.get(key).getClass().getName()));
@@ -291,6 +301,6 @@ public final class XMLParsingSvcImpl implements IXMLParsingSvc
 	@Override
 	public List<String> getNewUserDefinedTables()
 	{
-		return newUserDefinedTables;
+		return _newUserDefinedTables;
 	}
 }

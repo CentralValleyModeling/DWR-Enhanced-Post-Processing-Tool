@@ -48,13 +48,7 @@ public class InputPropertyFrame
 		JFrame fr = new JFrame("" + _obj);/*
     fr.setIconImage(Toolkit.getDefaultToolkit().
                     createImage(VistaUtils.getImageAsBytes("/calsim/gui/calsimoas.gif")));*/
-		fr.addWindowListener(new WindowAdapter()
-		{
-			public void windowClosing(WindowEvent evt)
-			{
-				System.exit(0);
-			}
-		});
+		fr.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		fr.setSize(FRAME_WIDTH, FRAME_HEIGHT);
 		fr.setVisible(true);
 		fr.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);

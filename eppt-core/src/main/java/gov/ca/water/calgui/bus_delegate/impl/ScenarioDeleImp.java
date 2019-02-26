@@ -17,6 +17,7 @@ import java.util.Map;
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
 
+import gov.ca.water.calgui.EpptInitializationException;
 import gov.ca.water.calgui.bo.DataTableModel;
 import gov.ca.water.calgui.bo.GUILinks2BO;
 import gov.ca.water.calgui.bo.NumericTextField;
@@ -46,7 +47,7 @@ public class ScenarioDeleImp implements IScenarioDele
 	private ISeedDataSvc seedDataSvc = SeedDataSvcImpl.getSeedDataSvcImplInstance();
 
 	@Override
-	public List<DataTableModel> getScenarioTableData(List<String> fileNames)
+	public List<DataTableModel> getScenarioTableData(List<String> fileNames) throws EpptInitializationException
 	{
 		if(fileNames == null)
 		{
@@ -80,7 +81,7 @@ public class ScenarioDeleImp implements IScenarioDele
 	 * all the files which are passed in from the @param fileName. If
 	 * there is only one file name then it will give the base one.
 	 */
-	private DataTableModel buildScenarioTables(List<String> fileNames)
+	private DataTableModel buildScenarioTables(List<String> fileNames) throws EpptInitializationException
 	{
 		List<Map<String, String>> clsMapList = new ArrayList<Map<String, String>>();
 		String[] columnNames = new String[fileNames.size() + 1];
@@ -200,7 +201,7 @@ public class ScenarioDeleImp implements IScenarioDele
 	 * @return Will return the map of whole cls file.
 	 */
 	private Map<String, String> buildMapOfCLSFile(String fileName, SwingEngine swingEngine,
-												  Map<String, GUILinks2BO> tableMap)
+												  Map<String, GUILinks2BO> tableMap) throws EpptInitializationException
 	{
 		List<String> controlStrList = new ArrayList<String>();
 		List<String> dataTableModelStrList = new ArrayList<String>();

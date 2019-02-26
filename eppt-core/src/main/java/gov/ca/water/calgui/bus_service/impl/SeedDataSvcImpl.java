@@ -13,15 +13,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import gov.ca.water.calgui.bo.CalLiteGUIException;
-import gov.ca.water.calgui.bo.GUILinks2BO;
-import gov.ca.water.calgui.bo.GUILinks3BO;
-import gov.ca.water.calgui.bo.GUILinks4BO;
+import gov.ca.water.calgui.EpptInitializationException;
+import gov.ca.water.calgui.bo.*;
 import gov.ca.water.calgui.bus_service.ISeedDataSvc;
 import gov.ca.water.calgui.constant.Constant;
-import gov.ca.water.calgui.tech_service.IErrorHandlingSvc;
 import gov.ca.water.calgui.tech_service.IFileSystemSvc;
-import gov.ca.water.calgui.tech_service.impl.ErrorHandlingSvcImpl;
 import gov.ca.water.calgui.tech_service.impl.FileSystemSvcImpl;
 import org.apache.log4j.Logger;
 
@@ -36,38 +32,31 @@ import org.apache.log4j.Logger;
 public final class SeedDataSvcImpl implements ISeedDataSvc
 {
 	private static final Logger LOG = Logger.getLogger(SeedDataSvcImpl.class.getName());
-	private static ISeedDataSvc seedDataSvc;
-	private IErrorHandlingSvc errorHandlingSvc;
-	private IFileSystemSvc fileSystemSvc;
-	private List<GUILinks2BO> guiLinks2BOList;
-	private List<GUILinks3BO> guiLinks3BOList;
-	private List<GUILinks4BO> guiLinks4BOList;
+	private static ISeedDataSvc _seedDataSvc;
+	private List<GUILinks2BO> _guiLinks2BOList;
 
-	private String[][] gl3_lookups;
-
-	private Map<String, GUILinks2BO> guiIdMap;
-	private Map<String, GUILinks2BO> tableIdMap;
-	private Map<String, GUILinks2BO> regIdMap;
-	private Map<String, GUILinks3BO> guiLinks3Map;
-	private Map<String, GUILinks4BO> guiLinks4Map;
+	private Map<String, GUILinks2BO> _guiIdMap;
+	private Map<String, GUILinks2BO> _tableIdMap;
+	private Map<String, GUILinks2BO> _regIdMap;
+	private Map<String, GUILinks3BO> _guiLinks3Map;
+	private Map<String, GUILinks4BO> _guiLinks4Map;
 
 	/**
 	 * This will read the gui_links.csv files and build the list and maps of
 	 * {@link GUILinks2BO} objects and the maps of {@link GUILinks4BO} and
 	 * {@link GUILinks4BO} objects.
 	 */
-	private SeedDataSvcImpl()
+	private SeedDataSvcImpl() throws EpptInitializationException
 	{
 		LOG.debug("Building SeedDataSvcImpl Object.");
-		this.errorHandlingSvc = new ErrorHandlingSvcImpl();
-		this.fileSystemSvc = new FileSystemSvcImpl();
-		this.guiLinks2BOList = new ArrayList<>();
-		this.guiLinks4BOList = new ArrayList<>();
-		this.guiIdMap = new HashMap<>();
-		this.tableIdMap = new HashMap<>();
-		this.regIdMap = new HashMap<>();
-		this.guiLinks3Map = new HashMap<>();
-		this.guiLinks4Map = new HashMap<>();
+		IFileSystemSvc _fileSystemSvc = new FileSystemSvcImpl();
+		this._guiLinks2BOList = new ArrayList<>();
+		List<GUILinks4BO> _guiLinks4BOList = new ArrayList<>();
+		this._guiIdMap = new HashMap<>();
+		this._tableIdMap = new HashMap<>();
+		this._regIdMap = new HashMap<>();
+		this._guiLinks3Map = new HashMap<>();
+		this._guiLinks4Map = new HashMap<>();
 
 		List<String> guiLinks2StrList;
 		List<String> guiLinks3StrList;
@@ -77,61 +66,61 @@ public final class SeedDataSvcImpl implements ISeedDataSvc
 		try
 		{
 			fileName = Constant.GUI_LINKS2_FILENAME;
-			guiLinks2StrList = fileSystemSvc.getFileData(fileName, true, SeedDataSvcImpl::isNotComments);
+			guiLinks2StrList = _fileSystemSvc.getFileData(fileName, true, SeedDataSvcImpl::isNotComments);
 			for(String guiLinks2Str : guiLinks2StrList)
 			{
 				errorStr = guiLinks2Str;
 				String[] list = guiLinks2Str.split(Constant.DELIMITER);
 				GUILinks2BO gUILinks2BO = new GUILinks2BO(list[0], list[1], list[2], list[3], list[4], list[5], list[6],
 						list[7], list[8], list[9], list[10], list[11], list[12], list[13], list[14]);
-				guiLinks2BOList.add(gUILinks2BO);
-				guiIdMap.put(gUILinks2BO.getGuiId(), gUILinks2BO);
+				_guiLinks2BOList.add(gUILinks2BO);
+				_guiIdMap.put(gUILinks2BO.getGuiId(), gUILinks2BO);
 				if(!gUILinks2BO.getTableID().equals(Constant.N_A))
 				{
-					if(tableIdMap.get(gUILinks2BO.getTableID()) == null)
+					if(_tableIdMap.get(gUILinks2BO.getTableID()) == null)
 					{
-						tableIdMap.put(gUILinks2BO.getTableID(), gUILinks2BO);
+						_tableIdMap.put(gUILinks2BO.getTableID(), gUILinks2BO);
 					}
 					else
 					{
-						errorHandlingSvc.displayErrorMessageBeforeTheUI(
-								new CalLiteGUIException("The Table Id is same for these two controls - "
-										+ tableIdMap.get(gUILinks2BO.getTableID()).getGuiId() + " , "
-										+ gUILinks2BO.getGuiId(), true));
+						String errorMsg = "The Table Id is same for these two controls - " + _tableIdMap.get(gUILinks2BO.getTableID()).getGuiId() + " , " + gUILinks2BO.getGuiId();
+						throw new EpptInitializationException(errorMsg);
+
 					}
 				}
 				if(!gUILinks2BO.getRegID().equals(Constant.N_A))
 				{
-					if(regIdMap.get(gUILinks2BO.getRegID()) == null)
+					if(_regIdMap.get(gUILinks2BO.getRegID()) == null)
 					{
-						regIdMap.put(gUILinks2BO.getRegID(), gUILinks2BO);
+						_regIdMap.put(gUILinks2BO.getRegID(), gUILinks2BO);
 					}
 					else
 					{
-						errorHandlingSvc.displayErrorMessageBeforeTheUI(
-								new CalLiteGUIException("The RegId is same for these two controls - "
-										+ regIdMap.get(gUILinks2BO.getRegID()).getGuiId() + " , "
-										+ gUILinks2BO.getGuiId(), true));
+
+						throw new EpptInitializationException("The RegId is same for these two controls - "
+								+ _regIdMap.get(gUILinks2BO.getRegID()).getGuiId() + " , "
+								+ gUILinks2BO.getGuiId());
+
 					}
 				}
 			}
 			fileName = Constant.GUI_LINKS4_FILENAME;
-			guiLinks4StrList = fileSystemSvc.getFileData(fileName, true, SeedDataSvcImpl::isNotComments);
+			guiLinks4StrList = _fileSystemSvc.getFileData(fileName, true, SeedDataSvcImpl::isNotComments);
 			for(String guiLink4Str : guiLinks4StrList)
 			{
 				errorStr = guiLink4Str;
 				String[] list = guiLink4Str.split(Constant.DELIMITER);
 				GUILinks4BO gUILinks4BO = new GUILinks4BO(list[0], list[1], list[2], list[3], list[4], list[5], list[6],
 						list[7], list[8], list[9], list[10]);
-				guiLinks4BOList.add(gUILinks4BO);
+				_guiLinks4BOList.add(gUILinks4BO);
 				String id = gUILinks4BO.getRunBasisID() + gUILinks4BO.getLodId() + gUILinks4BO.getCcprojectId()
 						+ gUILinks4BO.getCcmodelId();
-				guiLinks4Map.put(id, gUILinks4BO);
+				_guiLinks4Map.put(id, gUILinks4BO);
 			}
 
 			fileName = Constant.GUI_LINKS3_FILENAME;
-			guiLinks3StrList = fileSystemSvc.getFileData(fileName, true, SeedDataSvcImpl::isNotComments);
-			gl3_lookups = new String[guiLinks3StrList.size()][6];
+			guiLinks3StrList = _fileSystemSvc.getFileData(fileName, true, SeedDataSvcImpl::isNotComments);
+			String[][] gl3_lookups = new String[guiLinks3StrList.size()][6];
 			for(String guiLink3Str : guiLinks3StrList)
 			{
 				errorStr = guiLink3Str;
@@ -146,7 +135,7 @@ public final class SeedDataSvcImpl implements ISeedDataSvc
 				{
 					id = list[0];
 				}
-				guiLinks3Map.put(id, guiLinks3BO);
+				_guiLinks3Map.put(id, guiLinks3BO);
 			}
 
 		}
@@ -155,12 +144,12 @@ public final class SeedDataSvcImpl implements ISeedDataSvc
 			String errorMessage = "In file \"" + fileName + "\" has corrupted data at line \"" + errorStr + "\""
 					+ Constant.NEW_LINE + "The column number which the data is corrupted is " + ex.getMessage();
 			LOG.error(errorMessage, ex);
-			errorHandlingSvc.displayErrorMessageBeforeTheUI(new CalLiteGUIException(errorMessage, ex, true));
+			throw new EpptInitializationException(errorMessage);
 		}
 		catch(CalLiteGUIException ex)
 		{
 			LOG.error(ex.getMessage(), ex);
-			errorHandlingSvc.displayErrorMessageBeforeTheUI(ex);
+			throw new EpptInitializationException("Failed to get file data for file: " + fileName ,ex);
 		}
 	}
 
@@ -171,13 +160,25 @@ public final class SeedDataSvcImpl implements ISeedDataSvc
 	 * @return Will return the instance of this class if it is empty it will
 	 * create one.
 	 */
-	public static ISeedDataSvc getSeedDataSvcImplInstance()
+	public static ISeedDataSvc getSeedDataSvcImplInstance() throws IllegalStateException
 	{
-		if(seedDataSvc == null)
+		if(_seedDataSvc == null)
 		{
-			seedDataSvc = new SeedDataSvcImpl();
+			throw new IllegalArgumentException();
 		}
-		return seedDataSvc;
+		else
+		{
+			return _seedDataSvc;
+		}
+	}
+
+	public static ISeedDataSvc createSeedDataSvcImplInstance() throws EpptInitializationException
+	{
+		if(_seedDataSvc == null)
+		{
+			_seedDataSvc = new SeedDataSvcImpl();
+		}
+		return _seedDataSvc;
 	}
 
 	/**
@@ -194,7 +195,7 @@ public final class SeedDataSvcImpl implements ISeedDataSvc
 	@Override
 	public GUILinks2BO getObjByGuiId(String guiId)
 	{
-		GUILinks2BO gUILinks2BO = guiIdMap.get(guiId);
+		GUILinks2BO gUILinks2BO = _guiIdMap.get(guiId);
 		if(gUILinks2BO == null)
 		{
 			LOG.info("There is no GUI_Links2 data for this guiId = " + guiId);
@@ -204,7 +205,7 @@ public final class SeedDataSvcImpl implements ISeedDataSvc
 
 	public GUILinks3BO getObjById(String id)
 	{
-		GUILinks3BO guiLinks3BO = guiLinks3Map.get(id);
+		GUILinks3BO guiLinks3BO = _guiLinks3Map.get(id);
 		if(guiLinks3BO == null)
 		{
 			LOG.info("There is no GUI_Links3 data for this id = " + id);
@@ -215,7 +216,7 @@ public final class SeedDataSvcImpl implements ISeedDataSvc
 	@Override
 	public GUILinks4BO getObjByRunBasisLodCcprojCcmodelIds(String id)
 	{
-		GUILinks4BO gUILinks4BO = this.guiLinks4Map.get(id);
+		GUILinks4BO gUILinks4BO = this._guiLinks4Map.get(id);
 		if(gUILinks4BO == null)
 		{
 			LOG.info("There is no GuiLinks4BO Object for this value = " + id);
@@ -226,19 +227,19 @@ public final class SeedDataSvcImpl implements ISeedDataSvc
 	@Override
 	public List<GUILinks2BO> getUserTables()
 	{
-		return this.tableIdMap.values().stream().collect(Collectors.toList());
+		return this._tableIdMap.values().stream().collect(Collectors.toList());
 	}
 
 	@Override
 	public List<GUILinks2BO> getGUILinks2BOList()
 	{
-		return guiLinks2BOList;
+		return _guiLinks2BOList;
 	}
 
 	@Override
 	public Map<String, GUILinks2BO> getTableIdMap()
 	{
-		return tableIdMap;
+		return _tableIdMap;
 	}
 
 	@Override
@@ -250,7 +251,7 @@ public final class SeedDataSvcImpl implements ISeedDataSvc
 	@Override
 	public List<GUILinks2BO> getRegulationsTabData()
 	{
-		return this.regIdMap.values().stream()
+		return this._regIdMap.values().stream()
 							.filter(seedData -> seedData.getDashboard().equalsIgnoreCase(Constant.REGULATIONS_TABNAME))
 							.collect(Collectors.toList());
 	}

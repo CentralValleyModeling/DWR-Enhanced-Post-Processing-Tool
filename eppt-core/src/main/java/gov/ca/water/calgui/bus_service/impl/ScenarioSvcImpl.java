@@ -7,6 +7,7 @@
 
 package gov.ca.water.calgui.bus_service.impl;
 
+import gov.ca.water.calgui.EpptInitializationException;
 import gov.ca.water.calgui.bo.CalLiteGUIException;
 import gov.ca.water.calgui.bo.DataTableModel;
 import gov.ca.water.calgui.bo.GUILinks2BO;
@@ -109,7 +110,7 @@ public final class ScenarioSvcImpl implements IScenarioSvc
 
 	@Override
 	public void getCLSData(String fileName, List<String> controlStrList, List<String> dataTableModelStrList,
-						   List<String> regulationoptionsStr, List<String> wsidiStatusStr)
+						   List<String> regulationoptionsStr, List<String> wsidiStatusStr) throws EpptInitializationException
 	{
 		List<String> data = null;
 		boolean isDataTableModel = false;
@@ -121,7 +122,7 @@ public final class ScenarioSvcImpl implements IScenarioSvc
 		}
 		catch(CalLiteGUIException ex)
 		{
-			errorHandlingSvc.displayErrorMessageBeforeTheUI(ex);
+			throw new EpptInitializationException("Error trying to get CLS data from file: " + fileName, ex);
 		}
 		for(String stringInClsFile : data)
 		{
@@ -167,7 +168,7 @@ public final class ScenarioSvcImpl implements IScenarioSvc
 	}
 
 	@Override
-	public void applyClsFile(String fileName, SwingEngine swingEngine, Map<String, GUILinks2BO> tableMap)
+	public void applyClsFile(String fileName, SwingEngine swingEngine, Map<String, GUILinks2BO> tableMap) throws EpptInitializationException
 	{
 		this.isCLSFlag = true;
 		List<String> controlStrList = new ArrayList<String>();
@@ -262,9 +263,9 @@ public final class ScenarioSvcImpl implements IScenarioSvc
 	 * @param dataTableModelStrList This data table strings from the cls file.
 	 * @param tableMap              The map with key as the table id and value as table object.
 	 */
-	private void populateClsTableMap(List<String> dataTableModelStrList, Map<String, GUILinks2BO> tableMap)
+	private void populateClsTableMap(List<String> dataTableModelStrList, Map<String, GUILinks2BO> tableMap) throws EpptInitializationException
 	{
-		String tableName = "";
+		String tableName;
 		for(String dataTableModelStr : dataTableModelStrList)
 		{
 			try
@@ -322,7 +323,7 @@ public final class ScenarioSvcImpl implements IScenarioSvc
 			}
 			catch(CalLiteGUIException ex)
 			{
-				errorHandlingSvc.displayErrorMessageBeforeTheUI(ex);
+				throw new EpptInitializationException("Error attempting to get column name from table id.",ex);
 			}
 		}
 	}
@@ -1244,7 +1245,7 @@ public final class ScenarioSvcImpl implements IScenarioSvc
 		Set<String> keys = this.userDefinedTableMap.keySet();
 		if(!keys.isEmpty())
 		{
-			Optional<GUILinks2BO> gUILinks2BO = Optional.empty();
+			Optional<GUILinks2BO> gUILinks2BO;
 			for(String key : keys)
 			{
 				try

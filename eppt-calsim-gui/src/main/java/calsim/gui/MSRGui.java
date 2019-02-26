@@ -12,13 +12,7 @@ package calsim.gui;
 //import vista.gui.*;
 //import vista.time.*;
 
-import java.awt.BorderLayout;
-import java.awt.Container;
-import java.awt.FileDialog;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
-import java.awt.GridLayout;
-import java.awt.Insets;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
@@ -244,22 +238,6 @@ public class MSRGui
 		_runner = new MultiStudyRunner(_hideWarnings, _hideProgressDetails);
 	}
 
-	/**
-	 * Main method
-	 */
-	public static void main(String[] args)
-	{
-
-		try
-		{
-			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-		}
-		catch(Exception e)
-		{
-			System.out.println(e.getMessage());
-		}
-		new MSRGui();
-	}
 
 	/**
 	 * Creates menu bar for the gui
@@ -696,7 +674,6 @@ public class MSRGui
 
 			}
 		}
-		System.exit(0);
 	}
 
 	/**
@@ -1179,34 +1156,5 @@ public class MSRGui
 		return new Integer(s).intValue();
 	}
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 

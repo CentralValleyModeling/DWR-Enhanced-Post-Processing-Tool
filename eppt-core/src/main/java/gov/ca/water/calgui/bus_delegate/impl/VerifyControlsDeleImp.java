@@ -15,6 +15,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import javax.swing.*;
 
+import gov.ca.water.calgui.EpptInitializationException;
 import gov.ca.water.calgui.bo.CalLiteGUIException;
 import gov.ca.water.calgui.bus_delegate.IVerifyControlsDele;
 import gov.ca.water.calgui.bus_service.IScenarioSvc;
@@ -44,7 +45,7 @@ public class VerifyControlsDeleImp implements IVerifyControlsDele
 	private IScenarioSvc scenarioSvc = ScenarioSvcImpl.getScenarioSvcImplInstance();
 
 	@Override
-	public void verifyTheDataBeforeUI(String fileName)
+	public void verifyTheDataBeforeUI(String fileName) throws EpptInitializationException
 	{
 		this.verifyGUIToSeedData();
 		this.verifyCLSToGUIIds(fileName);
@@ -53,7 +54,7 @@ public class VerifyControlsDeleImp implements IVerifyControlsDele
 	/**
 	 * This method will verify the Gui id with the SeedData(gui_link2.csv).
 	 */
-	private void verifyGUIToSeedData()
+	private void verifyGUIToSeedData() throws EpptInitializationException
 	{
 		Set<String> compIds = xmlParsingSvc.getIdFromXML();
 		List<String> controlIds = compIds.stream()
@@ -99,7 +100,7 @@ public class VerifyControlsDeleImp implements IVerifyControlsDele
 			errorControlsIds.forEach((id) -> buffer.append(" - " + id + Constant.NEW_LINE));
 			buffer.append(Constant.NEW_LINE + Constant.NEW_LINE
 					+ "Add records to GUI_Links2.csv if the control is valid, or modify the exclusion list in VerifyControlsDeleImp.verifyGUIToSeedData and recompile.");
-			errorHandlingSvc.displayErrorMessageBeforeTheUI(new CalLiteGUIException(buffer.toString(), false));
+			throw new EpptInitializationException(buffer.toString());
 		}
 	}
 
@@ -109,7 +110,7 @@ public class VerifyControlsDeleImp implements IVerifyControlsDele
 	 *
 	 * @param fileName This is the file name with path of the cls file.
 	 */
-	private void verifyCLSToGUIIds(String fileName)
+	private void verifyCLSToGUIIds(String fileName) throws EpptInitializationException
 	{
 		List<String> controlStrList = new ArrayList<String>();
 		List<String> dataTableModelStrList = new ArrayList<String>();
@@ -118,23 +119,23 @@ public class VerifyControlsDeleImp implements IVerifyControlsDele
 		// Read in the cls file data.
 		scenarioSvc.getCLSData(fileName, controlStrList, dataTableModelStrList, regulationoptionsStr, wsidiStatusStr);
 		Set<String> guiIds = xmlParsingSvc.getIdFromXML();
-		List<String> conStr = controlStrList.stream().map((key) -> {
+		List<String> controlStrings = controlStrList.stream().map((key) -> {
 			return key.split(Constant.PIPELINE_DELIMITER)[0];
 		}).collect(Collectors.toList());
-		conStr.removeAll(guiIds);
+		controlStrings.removeAll(guiIds);
 		List<String> tempList = Arrays.asList("run_txfDir", "hyd_ANNKM", "hyd_DSS_Index", "fac_ckb1", "fac_ckb4",
 				"fac_ckb5", "ckbReg5", "ckbReg12", "ckbReg16", "ckbReg17", "btnRegD1641", "btnRegD1485", "btnRegUD",
 				"op_rdb4", "op_rdb5", "op_ckbSWP", "op_ntfSWP", "op_ckbCWP", "op_ntfCWP1", "op_ntfCWP2",
 				"txf_Manual_SV", "txf_Manual_SV_F", "txf_Manual_Init", "txf_Manual_Init_F");
-		conStr.removeAll(tempList);
-		if(!conStr.isEmpty())
+		controlStrings.removeAll(tempList);
+		if(!controlStrings.isEmpty())
 		{
 			StringBuffer buffer = new StringBuffer();
 			buffer.append(
 					"The CLS File has these Control Ids but they are missing from the xml file. Do you want to continue?"
 							+ Constant.NEW_LINE);
-			conStr.forEach((id) -> buffer.append(id + Constant.NEW_LINE));
-			errorHandlingSvc.displayErrorMessageBeforeTheUI(new CalLiteGUIException(buffer.toString(), false));
+			controlStrings.forEach((id) -> buffer.append(id + Constant.NEW_LINE));
+			throw new EpptInitializationException(buffer.toString());
 		}
 		List<String> regData = new ArrayList<String>(
 				Arrays.asList(regulationoptionsStr.get(0).split(Constant.PIPELINE_DELIMITER)));
@@ -144,8 +145,8 @@ public class VerifyControlsDeleImp implements IVerifyControlsDele
 		{
 			StringBuffer buffer = new StringBuffer();
 			buffer.append("The CLS File has these reg Ids which are wrong please correct them." + Constant.NEW_LINE);
-			conStr.forEach((id) -> buffer.append(id + Constant.NEW_LINE));
-			errorHandlingSvc.displayErrorMessageBeforeTheUI(new CalLiteGUIException(buffer.toString(), true));
+			controlStrings.forEach((id) -> buffer.append(id + Constant.NEW_LINE));
+			throw new EpptInitializationException(buffer.toString());
 		}
 	}
 

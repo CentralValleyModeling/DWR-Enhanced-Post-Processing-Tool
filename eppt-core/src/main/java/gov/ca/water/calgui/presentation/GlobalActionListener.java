@@ -29,6 +29,7 @@ import calsim.app.Project;
 import calsim.gui.DtsTreeModel;
 import calsim.gui.DtsTreePanel;
 import calsim.gui.GuiUtils;
+import gov.ca.water.calgui.EpptInitializationException;
 import gov.ca.water.calgui.bo.DataTableModel;
 import gov.ca.water.calgui.bo.RBListItemBO;
 import gov.ca.water.calgui.bo.ResultUtilsBO;
@@ -181,9 +182,6 @@ public class GlobalActionListener implements ActionListener
 				case "AC_About":
 					this._allButtonsDele.aboutButton();
 					break;
-				case "AC_Exit":
-					this._allButtonsDele.windowClosing();
-					break;
 				case "AC_Select_DSS_SV":
 					this._allButtonsDele.selectingSVAndInitFile("hyd_DSS_SV", "hyd_DSS_SV_F", "txf_Manual_SV",
 							"txf_Manual_SV_F");
@@ -334,6 +332,10 @@ public class GlobalActionListener implements ActionListener
 			_errorHandlingSvc.businessErrorHandler(messageText, (JFrame) _swingEngine.find(Constant.MAIN_FRAME_NAME),
 					e);
 		}
+		catch(EpptInitializationException ex)
+		{
+			//do something? There was an issue finding the file or reading the file
+		}
 	}
 
 	/**
@@ -374,7 +376,7 @@ public class GlobalActionListener implements ActionListener
 	 * This method is used to display the "View Scenario Settings" button on the
 	 * "Run Settings" tab.
 	 */
-	public void loadViewScen()
+	public void loadViewScen() throws EpptInitializationException
 	{
 		boolean pro = this._allButtonsDele.saveForViewScen();
 		if(pro)

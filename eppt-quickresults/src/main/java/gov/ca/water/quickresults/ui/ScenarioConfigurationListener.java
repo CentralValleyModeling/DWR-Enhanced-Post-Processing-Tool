@@ -17,6 +17,7 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.swing.*;
 
+import gov.ca.water.calgui.EpptInitializationException;
 import gov.ca.water.calgui.bo.DataTableModel;
 import gov.ca.water.calgui.bus_delegate.IScenarioDele;
 import gov.ca.water.calgui.bus_delegate.impl.ScenarioDeleImp;
@@ -70,10 +71,17 @@ class ScenarioConfigurationListener implements ActionListener
 							   .getFileName().toString();
 			fileNames.add(name.substring(0, name.length() - 7) + Constant.CLS_EXT);
 		}
-		List<DataTableModel> dtmList = scenarioDele.getScenarioTableData(fileNames);
-		ScenarioFrame scenarioFrame = new ScenarioFrame(dtmList);
-		scenarioFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-		scenarioFrame.setVisible(true);
+		try
+		{
+			List<DataTableModel> dtmList = scenarioDele.getScenarioTableData(fileNames);
+			ScenarioFrame scenarioFrame = new ScenarioFrame(dtmList);
+			scenarioFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+			scenarioFrame.setVisible(true);
+		}
+		catch(EpptInitializationException ex)
+		{
+			//do something? Error finding or reading file in fileNames
+		}
 		try
 		{
 			Files.delete(

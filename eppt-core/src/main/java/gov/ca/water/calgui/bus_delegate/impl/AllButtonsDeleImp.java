@@ -78,7 +78,7 @@ public class AllButtonsDeleImp implements IAllButtonsDele
 	private IModelRunSvc modelRunSvc = new ModelRunSvcImpl();
 	private IScenarioSvc scenarioSvc = ScenarioSvcImpl.getScenarioSvcImplInstance();
 	private ISeedDataSvc seedDataSvc = SeedDataSvcImpl.getSeedDataSvcImplInstance();
-	private ITableSvc tableSvc = TableSvcImpl.getTableSvcImplInstance(seedDataSvc.getGUILinks2BOList());
+	private ITableSvc tableSvc = TableSvcImpl.getTableSvcImplInstance();
 	private IErrorHandlingSvc errorHandlingSvc = new ErrorHandlingSvcImpl();
 	private Properties properties = new Properties();
 	private boolean defaultCLSProtected = true;
@@ -785,51 +785,12 @@ public class AllButtonsDeleImp implements IAllButtonsDele
 		calendar.setTimeInMillis(longTime);
 		SimpleDateFormat sdf = new SimpleDateFormat("dd MMMM yyyy");
 		String guiXmlDate = sdf.format(calendar.getTime());
-		dialogSvc.getOK("CalLite GUI v. " + properties.getProperty("version.id") + " ("
+		dialogSvc.getOK(
+				"CalLite GUI v. " + properties.getProperty("version.id") + " ("
 						+ System.getProperty("sun.arch.data.model") + "-bit)\nBuild date: "
 						+ properties.getProperty("build.date") + "\nYour last GUI xml revision date: " + guiXmlDate,
 				JOptionPane.INFORMATION_MESSAGE);
 	}
 
-	@Override
-	public void windowClosing()
-	{
-		if(auditSvc.hasValues())
-		{
-			String option = dialogSvc.getSaveDontSaveCancel(
-					"Current scenario not saved. Would you like to save before exiting?", JOptionPane.QUESTION_MESSAGE);
-			if(option.equals("Save"))
-			{
-				if(((JTextField) swingEngine.find("run_txfScen")).getText().toUpperCase().equals("DEFAULT.CLS")
-						&& defaultCLSProtected)
-				{
-					dialogSvc.getOK(
-							"The CalLite GUI is not allowed to overwrite DEFAULT.CLS. Please use the Save As command to save your changes before exiting.",
-							JOptionPane.ERROR_MESSAGE);
 
-				}
-				else
-				{
-					boolean isSaved = saveCurrentStateToFile();
-					if(!isSaved)
-					{
-						errorHandlingSvc.businessErrorHandler("We encountered a problem when saving the file.", "",
-								(JFrame) swingEngine.find(Constant.MAIN_FRAME_NAME));
-					}
-					System.exit(0);
-				}
-			}
-			else if("Don't Save".equals(option))
-			{
-				System.exit(0);
-			}
-		}
-		else
-		{
-			if("OK".equals(dialogSvc.getOKCancel("Are you sure you want to to exit ?", JOptionPane.QUESTION_MESSAGE)))
-			{
-				System.exit(0);
-			}
-		}
-	}
 }
