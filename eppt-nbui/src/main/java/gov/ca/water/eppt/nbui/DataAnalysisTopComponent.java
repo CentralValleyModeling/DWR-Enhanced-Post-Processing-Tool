@@ -6,6 +6,10 @@
  */
 package gov.ca.water.eppt.nbui;
 
+import java.awt.BorderLayout;
+import javax.swing.*;
+
+import gov.ca.water.quickresults.ui.DataAnalysisPanel;
 import org.openide.awt.ActionID;
 import org.openide.awt.ActionReference;
 import org.openide.util.NbBundle.Messages;
@@ -40,5 +44,9 @@ public final class DataAnalysisTopComponent extends TopComponent
 	public DataAnalysisTopComponent()
 	{
 		setName("Data Analysis");
+		DataAnalysisPanel dataAnalysisPanel = new DataAnalysisPanel();
+		JScrollPane scrollPane = new JScrollPane(dataAnalysisPanel);
+		setLayout(new BorderLayout());
+		add(scrollPane, BorderLayout.CENTER);
 	}
 }

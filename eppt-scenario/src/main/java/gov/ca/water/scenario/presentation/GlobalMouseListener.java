@@ -5,7 +5,7 @@
  * Source may not be released without written approval from DWR
  */
 
-package gov.ca.water.calgui.presentation;
+package gov.ca.water.scenario.presentation;
 
 import java.awt.Component;
 import java.awt.HeadlessException;
@@ -20,6 +20,7 @@ import gov.ca.water.calgui.bus_delegate.IApplyDynamicConDele;
 import gov.ca.water.calgui.bus_delegate.impl.ApplyDynamicConDeleImp;
 import gov.ca.water.calgui.bus_service.impl.XMLParsingSvcImpl;
 import gov.ca.water.calgui.constant.Constant;
+import gov.ca.water.calgui.presentation.DisplayFrame;
 import gov.ca.water.calgui.tech_service.IDialogSvc;
 import gov.ca.water.calgui.tech_service.IErrorHandlingSvc;
 import gov.ca.water.calgui.tech_service.impl.DialogSvcImpl;

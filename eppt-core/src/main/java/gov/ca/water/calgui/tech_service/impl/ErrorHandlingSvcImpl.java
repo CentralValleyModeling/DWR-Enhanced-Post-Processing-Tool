@@ -7,7 +7,7 @@
 
 package gov.ca.water.calgui.tech_service.impl;
 
-import java.awt.*;
+import java.awt.Dimension;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.io.Writer;
@@ -51,52 +51,42 @@ public class ErrorHandlingSvcImpl implements IErrorHandlingSvc
 		}
 		catch(Exception ex)
 		{
-			LOG.error("Problem loading properties. " + ex.getMessage());
-		}
-	}
-
-	private JFrame setFrame(JFrame mainFrame)
-	{
-		if(mainFrame == null)
-		{
-			return (JFrame) ResultUtilsBO.getResultUtilsInstance(null).getSwix().find(Constant.MAIN_FRAME_NAME);
-		}
-		else
-		{
-			return mainFrame;
+			LOG.error("Problem loading properties. " + ex.getMessage(), ex);
 		}
 	}
 
 	@Override
+
 	public void validationeErrorHandler(String displayMessage, String detailMessage, JFrame mainFrame)
 	{
-		displayErrorMessage("Validation Error : " + displayMessage, detailMessage, setFrame(mainFrame));
+		displayErrorMessage("Validation Error : " + displayMessage, detailMessage, mainFrame);
 	}
 
 	@Override
 	public void businessErrorHandler(JFrame mainFrame, Throwable aThrowable)
 	{
 		List<String> error = getMessageAndStackTraceFromLayeredError(aThrowable);
-		displayErrorMessage("Business Error : " + error.get(0), error.get(1), setFrame(mainFrame));
+		displayErrorMessage("Business Error : " + error.get(0), error.get(1), mainFrame);
 	}
 
 	@Override
 	public void businessErrorHandler(String displayMessage, JFrame mainFrame, Throwable aThrowable)
 	{
 		List<String> error = getMessageAndStackTraceFromLayeredError(aThrowable);
-		displayErrorMessage("Business Error : " + displayMessage, error.get(1), setFrame(mainFrame));
+		displayErrorMessage("Business Error : " + displayMessage, error.get(1), mainFrame);
 	}
 
 	@Override
 	public void businessErrorHandler(String displayMessage, String detailMessage, JFrame mainFrame)
 	{
-		displayErrorMessage("Business Error : " + displayMessage, detailMessage, setFrame(mainFrame));
+		displayErrorMessage("Business Error : " + displayMessage, detailMessage, mainFrame);
 	}
 
 	@Override
+
 	public void systemErrorHandler(String displayMessage, String detailMessage, JFrame mainFrame)
 	{
-		displayErrorMessage("System Error : " + displayMessage, detailMessage, setFrame(mainFrame));
+		displayErrorMessage("System Error : " + displayMessage, detailMessage, mainFrame);
 		System.exit(-1);
 	}
 

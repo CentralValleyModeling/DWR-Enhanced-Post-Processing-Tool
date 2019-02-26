@@ -68,6 +68,37 @@
 			<artifactId>org-netbeans-modules-settings</artifactId>
 			<version>${netbeans.version}</version>
 		</dependency>
+		<dependency>
+			<groupId>gov.ca.water</groupId>
+			<artifactId>eppt-quickresults</artifactId>
+			<version>1.0-SNAPSHOT</version>
+		</dependency>
+		<dependency>
+			<groupId>com.google.flogger</groupId>
+			<artifactId>flogger</artifactId>
+			<version>0.3.1</version>
+		</dependency>
+		<dependency>
+			<groupId>com.google.flogger</groupId>
+			<artifactId>flogger-system-backend</artifactId>
+			<version>0.3.1</version>
+			<scope>compile</scope>
+		</dependency>
+		<dependency>
+			<groupId>com.google.errorprone</groupId>
+			<artifactId>error_prone_annotations</artifactId>
+			<version>2.3.2</version>
+		</dependency>
+		<dependency>
+			<groupId>com.google.code.findbugs</groupId>
+			<artifactId>jsr305</artifactId>
+			<version>3.0.1</version>
+		</dependency>
+		<dependency>
+			<groupId>org.ow2.asm</groupId>
+			<artifactId>asm-all</artifactId>
+			<version>5.0.1</version>
+		</dependency>
     </dependencies>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>

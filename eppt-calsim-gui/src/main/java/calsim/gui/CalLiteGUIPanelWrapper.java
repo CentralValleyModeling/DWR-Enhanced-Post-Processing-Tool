@@ -74,17 +74,9 @@ public class CalLiteGUIPanelWrapper
 	 */
 	JPanel createPanel()
 	{
-
-		// JPanel jPanel = new JPanel();
-		// jPanel.setLayout(new BorderLayout());
-		// jPanel.setBackground(new Color(229, 240, 203));
-		// jPanel.add(GuiUtils.createStudyTab());
-		// GuiUtils.createStudyTab(); // Created, but not displayed.
-
 		_panel = new JPanel();
 		_panel.setLayout(new BorderLayout());
 		_panel.add(GuiUtils.createMainPanelCLG(_fr), BorderLayout.CENTER);
-
 		return _panel;
 
 	}

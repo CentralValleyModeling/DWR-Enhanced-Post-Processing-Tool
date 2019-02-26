@@ -205,7 +205,8 @@ public class CalLiteInitClass
 
 			// For Custom Results ....
 
-			WRIMSGUILinks.buildWRIMSGUI((JPanel) swingEngine.find("WRIMS"));
+			WRIMSGUILinks.buildWRIMSGUI((JFrame) _swingEngine.find(Constant.MAIN_FRAME_NAME),
+					(JPanel) _swingEngine.find("WRIMS"));
 			// Replace WRIMS GUI display action with CalLite GUI action
 			JButton retrieveBtn = GuiUtils.getCLGPanel().getRetrievePanel().getRetrieveBtn();
 			for (ActionListener al : retrieveBtn.getActionListeners())

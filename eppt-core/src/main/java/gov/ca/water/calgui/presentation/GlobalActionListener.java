@@ -21,6 +21,7 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
 import javax.swing.filechooser.FileNameExtensionFilter;
@@ -252,24 +253,6 @@ public class GlobalActionListener implements ActionListener
 					}
 					break;
 
-				case "CR_LoadList":
-					ResultUtilsBO.getResultUtilsInstance(null).readCGR();
-					break;
-
-				case "CR_SaveList":
-					ResultUtilsBO.getResultUtilsInstance(null).writeCGR();
-					break;
-
-				case "CR_ClearTree":
-					Project p = ResultUtilsBO.getResultUtilsInstance(null).getProject();
-					p.clearMTSList();
-					p.clearDTSList();
-					DtsTreePanel dtp = GuiUtils.getCLGPanel().getDtsTreePanel();
-					DtsTreeModel dtm = DtsTreePanel.getCurrentModel();
-					DtsTreeModel.clearVectors();
-					dtm.createTreeFromPrj(null, null, "");
-					GuiUtils.getCLGPanel().repaint();
-					break;
 
 				// From Quick Results and External PDF
 
@@ -652,21 +635,11 @@ public class GlobalActionListener implements ActionListener
 				}
 				theText = theText + "\n";
 				ByteArrayInputStream bs = new ByteArrayInputStream(theText.getBytes());
-				try
-				{
-					Report report = new Report(bs, ((JTextField) _swingEngine.find("tfReportFILE3")).getToolTipText());
-					report.execute();
-				}
-				catch(IOException e1)
-				{
-					// LOG.debug(e1.getMessage()); // Not sure - should catch
-					// // thread problems like
-					// // already-open PDF?
-					LOG.error(e1.getMessage());
-					String messageText = "Unable to display report.";
-					_errorHandlingSvc.businessErrorHandler(messageText,
-							(JFrame) _swingEngine.find(Constant.MAIN_FRAME_NAME), e1);
-				}
+				Report report = new Report(bs, ((JTextField) _swingEngine.find("tfReportFILE3")).getToolTipText());
+				_swingEngine.find("btnReport").setEnabled(false);
+				CompletableFuture.runAsync(report, SwingUtilities::invokeLater)
+								 .thenRunAsync(() -> _swingEngine.find("btnReport").setEnabled(true),
+										 SwingUtilities::invokeLater);
 			}
 			catch(IOException e1)
 			{

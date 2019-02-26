@@ -85,18 +85,6 @@
 				<artifactId>nbm-maven-plugin</artifactId>
 				<configuration>
 					<finalName>DWR-EPPT-${maven.build.timestamp}</finalName>
-					<installersFilePrefix>DWR-EPPT-${maven.build.timestamp}</installersFilePrefix>
-					<installerOsLinux>false</installerOsLinux>
-					<installerOsMacosx>false</installerOsMacosx>
-					<installerOsSolaris>false</installerOsSolaris>
-					<installerPack200Enable>true</installerPack200Enable>
-					<installerOsWindows>true</installerOsWindows>
-					<templateFile>${basedir}/src/installer/template.xml</templateFile>
-					<userSettings>
-						<configuration.logic.file>${basedir}/src/installer/ConfigurationLogic.java
-						</configuration.logic.file>
-					</userSettings>
-					<etcConfFile>src/nbproject/eppt.conf</etcConfFile>
 					<brandingToken>eppt</brandingToken>
 				</configuration>
 			</plugin>
@@ -131,6 +119,21 @@
 								</goals>
 							</execution>
 						</executions>
+						<configuration>
+							<installersFilePrefix>DWR-EPPT-${maven.build.timestamp}</installersFilePrefix>
+							<installerOsLinux>false</installerOsLinux>
+							<installerOsMacosx>false</installerOsMacosx>
+							<installerOsSolaris>false</installerOsSolaris>
+							<installerPack200Enable>true</installerPack200Enable>
+							<installerOsWindows>true</installerOsWindows>
+							<userSettings>
+								<configuration.logic.file>
+									${basedir}/src/installer/ConfigurationLogic.java
+								</configuration.logic.file>
+							</userSettings>
+							<templateFile>${basedir}/src/installer/template.xml</templateFile>
+							<etcConfFile>src/nbproject/eppt.conf</etcConfFile>
+						</configuration>
 					</plugin>
 				</plugins>
 			</build>

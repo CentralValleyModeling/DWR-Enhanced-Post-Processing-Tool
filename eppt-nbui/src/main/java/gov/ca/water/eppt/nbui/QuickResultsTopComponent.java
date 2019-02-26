@@ -6,6 +6,10 @@
  */
 package gov.ca.water.eppt.nbui;
 
+import java.awt.BorderLayout;
+import javax.swing.*;
+
+import gov.ca.water.quickresults.ui.QuickResultsPanel;
 import org.openide.awt.ActionID;
 import org.openide.awt.ActionReference;
 import org.openide.util.NbBundle.Messages;
@@ -40,7 +44,10 @@ public final class QuickResultsTopComponent extends TopComponent
 	public QuickResultsTopComponent()
 	{
 		setName("Quick Results");
-		setToolTipText(null);
+		QuickResultsPanel quickResultsPanel = new QuickResultsPanel();
+		JScrollPane scrollPane = new JScrollPane(quickResultsPanel);
+		setLayout(new BorderLayout());
+		add(scrollPane, BorderLayout.CENTER);
 	}
 
 }

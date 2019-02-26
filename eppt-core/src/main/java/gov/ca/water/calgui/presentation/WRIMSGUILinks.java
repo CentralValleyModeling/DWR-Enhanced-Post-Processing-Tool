@@ -26,12 +26,9 @@ import calsim.gui.CalLiteGUIPanelWrapper;
 import calsim.gui.GuiUtils;
 import gov.ca.water.calgui.bo.RBListItemBO;
 import gov.ca.water.calgui.bo.ResultUtilsBO;
-import gov.ca.water.calgui.bus_service.impl.XMLParsingSvcImpl;
-import gov.ca.water.calgui.constant.Constant;
 import gov.ca.water.calgui.tech_service.IErrorHandlingSvc;
 import gov.ca.water.calgui.tech_service.impl.ErrorHandlingSvcImpl;
 import org.apache.log4j.Logger;
-import org.swixml.SwingEngine;
 
 /**
  *
@@ -41,12 +38,16 @@ import org.swixml.SwingEngine;
  * @author tslawecki
  *
  */
-public class WRIMSGUILinks
+public final class WRIMSGUILinks
 {
 
 	private static final Logger LOG = Logger.getLogger(WRIMSGUILinks.class.getName());
-	private static SwingEngine swingEngine = XMLParsingSvcImpl.getXMLParsingSvcImplInstance().getSwingEngine();
 	private static IErrorHandlingSvc errorHandlingSvc = new ErrorHandlingSvcImpl();
+
+	private WRIMSGUILinks()
+	{
+		throw new AssertionError("Utility class");
+	}
 
 	/**
 	 * Builds the WRIMS GUI panel for use in CalLite GUI while extracting a
@@ -55,27 +56,16 @@ public class WRIMSGUILinks
 	 * @param p
 	 *            Container panel for the WRIMS GUI panel
 	 */
-	public static void buildWRIMSGUI(JPanel p)
+	public static void buildWRIMSGUI(JFrame frame, JPanel p)
 	{
+		p.setSize(900, 650);
 
-		try
-		{
-			p.setSize(900, 650);
-
-			CalLiteGUIPanelWrapper pw = new CalLiteGUIPanelWrapper(
-					(JFrame) ResultUtilsBO.getResultUtilsInstance(null).getSwix().find(Constant.MAIN_FRAME_NAME));
-			pw.getPanel().setSize(900, 650);
-			p.add(pw.getPanel(), BorderLayout.NORTH);
-			JPanel statusPanel = GuiUtils.getStatusPanel();
-			p.add(statusPanel, BorderLayout.CENTER);
-			GuiUtils.setStatus("Initialized.");
-		}
-		catch(RuntimeException e)
-		{
-			LOG.error(e.getMessage());
-			String messageText = "Unable to update WRIMS GUI files.";
-			errorHandlingSvc.businessErrorHandler(messageText, (JFrame) swingEngine.find(Constant.MAIN_FRAME_NAME), e);
-		}
+		CalLiteGUIPanelWrapper pw = new CalLiteGUIPanelWrapper(frame);
+		pw.getPanel().setSize(900, 650);
+		p.add(pw.getPanel(), BorderLayout.NORTH);
+		JPanel statusPanel = GuiUtils.getStatusPanel();
+		p.add(statusPanel, BorderLayout.CENTER);
+		GuiUtils.setStatus("Initialized.");
 	}
 
 	/**
@@ -173,7 +163,7 @@ public class WRIMSGUILinks
 		{
 			LOG.error(e.getMessage());
 			String messageText = "Unable to update WRIMS GUI files.";
-			errorHandlingSvc.businessErrorHandler(messageText, (JFrame) swingEngine.find(Constant.MAIN_FRAME_NAME), e);
+			errorHandlingSvc.businessErrorHandler(messageText, (JFrame) SwingUtilities.windowForComponent(theList), e);
 		}
 	}
 

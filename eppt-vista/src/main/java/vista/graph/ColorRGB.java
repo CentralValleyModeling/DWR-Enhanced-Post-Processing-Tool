@@ -24,7 +24,7 @@ public class ColorRGB {
 	public ColorRGB() {
 		try {
 			java.io.InputStream is = getClass()
-					.getResourceAsStream("/vista/graph/rgb.properties");
+					.getResourceAsStream("rgb.properties");
 			_colorDefinitions.load(is);
 		} catch (java.io.IOException ioe) {
 			System.out.println("Color Definitions file " + "rgb.properties"

@@ -22,6 +22,7 @@ import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Optional;
 import java.util.Vector;
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
@@ -160,10 +161,10 @@ public class ResultUtilsBO implements ChangeListener
 	/**
 	 * Reads QuickResults output list, Custom Results Dts Tree
 	 */
-	public void readCGR()
+	public Optional<List<String>> readCGR()
 	{
 		String aLine;
-		Vector<String> data = new Vector<String>();
+		List<String> data = null;
 		JFileChooser fc = new JFileChooser();
 		fc.setFileFilter(new SimpleFileFilter("cgr", "CalLite GUI Report File (*.cgr)"));
 		fc.setCurrentDirectory(new File(".//Config"));
@@ -172,6 +173,7 @@ public class ResultUtilsBO implements ChangeListener
 		int retval = fc.showOpenDialog(_swingEngine.find(Constant.MAIN_FRAME_NAME));
 		if(retval == JFileChooser.APPROVE_OPTION)
 		{
+			data = new ArrayList<>();
 			// ... The user selected a file, get it, use it.
 			file = fc.getSelectedFile();
 			filename = file.toString();
@@ -208,9 +210,8 @@ public class ResultUtilsBO implements ChangeListener
 			{
 				LOG.debug(e1.getMessage());
 			}
-			JList lstReports = (JList) (getSwix()).find("lstReports");
-			lstReports.setListData(data);
 		}
+		return Optional.ofNullable(data);
 	}
 
 	/**
@@ -345,16 +346,6 @@ public class ResultUtilsBO implements ChangeListener
 			_controlFrame = null;
 		}
 		return;
-	}
-
-	/**
-	 * Getter for access to application-wide SwiXml engine
-	 *
-	 * @return swix
-	 */
-	public SwingEngine getSwix()
-	{
-		return _swingEngine;
 	}
 
 	/**

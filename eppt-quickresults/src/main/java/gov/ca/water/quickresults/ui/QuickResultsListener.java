@@ -13,6 +13,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import javax.swing.*;
 
 import gov.ca.water.calgui.bo.RBListItemBO;
@@ -60,8 +61,25 @@ class QuickResultsListener implements ActionListener
 			case "Rep_SaveList":
 				saveReportList();
 				break;
+			case "Rep_LoadList":
+				loadReportList();
+				break;
 			default:
 				LOGGER.info("Testing action events " + e.getActionCommand());
+		}
+	}
+
+	private void loadReportList()
+	{
+		Optional<List<String>> data = ResultUtilsBO.getResultUtilsInstance(null).readCGR();
+		if(data.isPresent())
+		{
+			Component component = _quickResultsPanel.getReportsJList();
+			if(component instanceof JList)
+			{
+				JList<String> lstReports = (JList<String>) component;
+				lstReports.setListData(data.get().toArray(new String[0]));
+			}
 		}
 	}
 

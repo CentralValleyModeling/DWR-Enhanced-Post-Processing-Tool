@@ -7,28 +7,41 @@
 
 package gov.ca.water.calgui.presentation;
 
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.TimeZone;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.*;
+
 import gov.ca.dsm2.input.parser.InputTable;
 import gov.ca.dsm2.input.parser.Parser;
 import gov.ca.dsm2.input.parser.Tables;
-import gov.ca.water.calgui.bo.ResultUtilsBO;
 import gov.ca.water.calgui.presentation.display.ReportPDFWriter;
-import gov.ca.water.calgui.tech_service.IErrorHandlingSvc;
-import gov.ca.water.calgui.tech_service.impl.ErrorHandlingSvcImpl;
-import org.swixml.SwingEngine;
 import vista.db.dss.DSSUtil;
 import vista.report.TSMath;
-import vista.set.*;
+import vista.set.Constants;
+import vista.set.DataReference;
+import vista.set.DataSetElement;
+import vista.set.ElementFilter;
+import vista.set.ElementFilterIterator;
+import vista.set.Group;
+import vista.set.MultiIterator;
+import vista.set.Pathname;
+import vista.set.RegularTimeSeries;
+import vista.set.Stats;
+import vista.set.TimeSeries;
 import vista.time.SubTimeFormat;
 import vista.time.Time;
 import vista.time.TimeFactory;
 import vista.time.TimeWindow;
-
-import javax.swing.*;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.*;
-import java.util.logging.Logger;
 
 /**
  * Generates a report based on the template file instructions
@@ -39,9 +52,7 @@ public class Report extends SwingWorker<Void, String>
 {
 
 	private static final Logger LOG = Logger.getLogger(Report.class.getName());
-	private static SwingEngine swix = ResultUtilsBO.getResultUtilsInstance(null).getSwix();
 	private ProgressFrameForPDF progressFrameForPDF;
-	private IErrorHandlingSvc errorHandlingSvc = new ErrorHandlingSvcImpl();
 	private StringBuffer messages = new StringBuffer();
 	private InputStream inputStream;
 
@@ -55,7 +66,7 @@ public class Report extends SwingWorker<Void, String>
 	private HashMap<String, String> scalars;
 	private Writer writer;
 
-	public Report(InputStream inputStream, String outputFilename) throws IOException
+	public Report(InputStream inputStream, String outputFilename)
 	{
 
 		this.inputStream = inputStream;
@@ -82,7 +93,6 @@ public class Report extends SwingWorker<Void, String>
 	{
 		progressFrameForPDF = ProgressFrameForPDF.getProgressFrameInstance();
 		publish("Generating report in background thread.");
-		swix.find("btnReport").setEnabled(false);
 
 		LOG.fine("Parsing input template");
 		publish("Parsing input template.");
@@ -108,20 +118,18 @@ public class Report extends SwingWorker<Void, String>
 	protected void done()
 	{
 
-		swix.find("btnReport").setEnabled(true);
+		String command = "cmd /c start " + outputFilename;
 		try
 		{
-			Runtime.getRuntime().exec("cmd /c start " + outputFilename);
+			Runtime.getRuntime().exec(command);
 		}
 		catch(IOException e)
 		{
-			LOG.fine(e.getMessage());
+			LOG.log(Level.FINE, "Error thrown processing command: " + command, e);
 		}
-		return;
-
 	}
 
-	void generateReport(InputStream templateContentStream) throws IOException
+	private void generateReport(InputStream templateContentStream) throws IOException
 	{
 		LOG.fine("Parsing input template");
 		clearMessages();
@@ -130,7 +138,7 @@ public class Report extends SwingWorker<Void, String>
 		LOG.fine("Done generating report");
 	}
 
-	void parseTemplateFile(InputStream templateFileStream) throws IOException
+	private void parseTemplateFile(InputStream templateFileStream) throws IOException
 	{
 
 		if(isInitialized)
