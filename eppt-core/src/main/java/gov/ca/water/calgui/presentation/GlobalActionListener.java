@@ -11,25 +11,16 @@ import java.awt.Component;
 import java.awt.HeadlessException;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.BufferedReader;
-import java.io.ByteArrayInputStream;
-import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.concurrent.CompletableFuture;
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
-import calsim.app.Project;
-import calsim.gui.DtsTreeModel;
-import calsim.gui.DtsTreePanel;
-import calsim.gui.GuiUtils;
 import gov.ca.water.calgui.EpptInitializationException;
 import gov.ca.water.calgui.bo.DataTableModel;
 import gov.ca.water.calgui.bo.RBListItemBO;
@@ -273,9 +264,6 @@ public class GlobalActionListener implements ActionListener
 					break;
 				case "AC_DfcClear":
 					clearQRCheckBoxes("delta_flow_criteria");
-					break;
-				case "AC_GenReport":
-					generateReport();
 					break;
 				case "Rep_LoadList":
 					ResultUtilsBO.getResultUtilsInstance(null).readCGR();
@@ -576,80 +564,4 @@ public class GlobalActionListener implements ActionListener
 		}
 	}
 
-	/**
-	 * Generates PDF report from "External PDF" dashboard - action "ACGenReport"
-	 */
-	private void generateReport()
-	{
-		if(((JTextField) _swingEngine.find("tfReportFILE1")).getText().isEmpty()
-				|| ((JTextField) _swingEngine.find("tfReportFILE2")).getText().isEmpty()
-				|| ((JTextField) _swingEngine.find("tfReportFILE3")).getText().isEmpty())
-		{
-			_dialogSvc.getOK("You must specify the source DSS files and the output PDF file",
-					JOptionPane.ERROR_MESSAGE);
-		}
-		else
-		{
-			try(FileInputStream fin = new FileInputStream(
-					((JTextField) _swingEngine.find("tfTemplateFILE")).getToolTipText());
-				BufferedReader br = new BufferedReader(new InputStreamReader(fin)))
-			{
-
-				// Create an inputstream from template file;
-				// Open the template file
-				String theText = br.readLine() + "\n";
-				theText = theText + br.readLine() + "\n";
-				theText = theText + br.readLine() + "\n";
-				String skipLine = br.readLine();
-				theText = theText + "FILE_BASE\t" + ((JTextField) _swingEngine.find("tfReportFILE1")).getToolTipText()
-						+ "\n";
-				skipLine = br.readLine();
-				theText = theText + "NAME_BASE\t\"" + ((JTextField) _swingEngine.find("tfReportNAME1")).getText()
-						+ "\"\n";
-				skipLine = br.readLine();
-				theText = theText + "FILE_ALT\t" + ((JTextField) _swingEngine.find("tfReportFILE2")).getToolTipText()
-						+ "\n";
-				skipLine = br.readLine();
-				theText = theText + "NAME_ALT\t\"" + ((JTextField) _swingEngine.find("tfReportNAME2")).getText()
-						+ "\"\n";
-				skipLine = br.readLine();
-				theText = theText + "OUTFILE\t" + ((JTextField) _swingEngine.find("tfReportFILE3")).getToolTipText()
-						+ "\n";
-				skipLine = br.readLine();
-				theText = theText + "NOTE\t\"" + ((JTextArea) _swingEngine.find("taReportNOTES")).getText() + "\"\n";
-				skipLine = br.readLine();
-				theText = theText + "ASSUMPTIONS\t\"" + ((JTextArea) _swingEngine.find("taReportASSUMPTIONS")).getText()
-						+ "\"\n";
-				skipLine = br.readLine();
-				theText = theText + "MODELER\t\"" + ((JTextField) _swingEngine.find("tfReportMODELER")).getText()
-						+ "\"\n";
-
-				theText = theText + "TABLE_FONT_SIZE\t" + ((JTextField) _swingEngine.find("tfFontSize")).getText()
-						+ "\n";
-
-				String aLine = br.readLine();
-				while(aLine != null)
-				{
-					theText = theText + aLine + "\n";
-					aLine = br.readLine();
-				}
-				theText = theText + "\n";
-				ByteArrayInputStream bs = new ByteArrayInputStream(theText.getBytes());
-				Report report = new Report(bs, ((JTextField) _swingEngine.find("tfReportFILE3")).getToolTipText());
-				_swingEngine.find("btnReport").setEnabled(false);
-				CompletableFuture.runAsync(report, SwingUtilities::invokeLater)
-								 .thenRunAsync(() -> _swingEngine.find("btnReport").setEnabled(true),
-										 SwingUtilities::invokeLater);
-			}
-			catch(IOException e1)
-			{
-				LOG.error(e1.getMessage());
-				String messageText = "Unable to display report.";
-				_errorHandlingSvc.businessErrorHandler(messageText,
-						(JFrame) _swingEngine.find(Constant.MAIN_FRAME_NAME),
-						e1);
-				// (?)
-			}
-		}
-	}
 }

@@ -17,6 +17,7 @@
 		<relativePath>../eppt-parent</relativePath>
 	</parent>
 	<artifactId>eppt-calsim-gui</artifactId>
+	<name>EPPT CalSim GUI</name>
 	<dependencies>
 		<dependency>
 			<groupId>gov.ca.water</groupId>

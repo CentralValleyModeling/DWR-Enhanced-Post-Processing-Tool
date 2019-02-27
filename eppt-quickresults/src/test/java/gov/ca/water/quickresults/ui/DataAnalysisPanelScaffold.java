@@ -23,6 +23,8 @@ public class DataAnalysisPanelScaffold
 	public static void main(String[] args)
 	{
 		DataAnalysisPanel dataAnalysisPanel = new DataAnalysisPanel();
+		DataAnalysisListener dataAnalysisListener = new DataAnalysisListener(dataAnalysisPanel);
+		dataAnalysisPanel.getSwingEngine().setActionListener(dataAnalysisPanel, dataAnalysisListener);
 		JFrame jFrame = new JFrame();
 		jFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		SwingUtilities.invokeLater(() ->
