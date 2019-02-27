@@ -1,0 +1,33 @@
+#application user properties
+#Tue Sep 03 13:32:09 EDT 2013
+ReportUtils.minimumIntegerDigits=1
+ReportUtils.minimumFractionDigits=0
+AppUtils.show60_20_20=false
+ReportUtils.DEFAULT_FONT_SIZE=12
+CalsimGui.FRAME_WIDTH2=1100
+ReportUtils.DEFAULT_LEFT_MARGIN=24
+AppUtils.useCFS=false
+CalsimGui.FRAME_WIDTH1=900
+AppUtils.DEFAULT_TABLE_SIZE=java.awt.Dimension[width\=300,height\=700]
+ReportUtils.groupingUsed=false
+ReportUtils.MIN_ITEM_COLOR=java.awt.Color[r\=255,g\=0,b\=0]
+AppUtils.viewGraph=true
+ReportUtils.DEFAULT_LINE_LENGTH=124
+AppUtils.plotDifference=false
+ReportUtils.MAX_ITEM_COLOR=java.awt.Color[r\=0,g\=0,b\=255]
+AppUtils.plotComparitive=false
+ReportUtils.WATER_YEAR_COLOR=java.awt.Color[r\=85,g\=107,b\=47]
+ReportUtils.HEADER_HIGH_LIGHT_COLOR=java.awt.Color[r\=255,g\=239,b\=213]
+AppUtils.useStoredUnits=false
+AppUtils.show40_30_30=false
+CalsimGui.FRAME_HEIGHT=666
+AppUtils.viewMonthlyTable=false
+AppUtils.currentProject=null
+AppUtils.isWaterYear=true
+ReportUtils.HEADER_COLOR=java.awt.Color[r\=128,g\=58,b\=0]
+AppUtils.DEFAULT_TIME_WINDOW=OCT1921-SEP1994
+ReportUtils.maximumFractionDigits=0
+AppProps.version=2
+AppUtils.DEFAULT_MT_SIZE=java.awt.Dimension[width\=800,height\=300]
+AppUtils.DEFAULT_PLOT_SIZE=java.awt.Dimension[width\=750,height\=650]
+AppUtils.viewTable=false

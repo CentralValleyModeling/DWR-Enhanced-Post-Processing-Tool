@@ -154,7 +154,7 @@ public class CalLiteInitClass
 			JRadioButton rdb1 = (JRadioButton) swingEngine.find("rdbp001");
 			JRadioButton rdb2 = (JRadioButton) swingEngine.find("rdbp002");
 			FileDialogBO fdDSSFiles = new FileDialogBO(lstScenarios, (JLabel) swingEngine.find("lblBase"), rdb1, rdb2,
-					(JButton) swingEngine.find("btnPower"), true);
+					(JButton) swingEngine.find("btnPower"), true, (JFrame) _swingEngine.find(Constant.MAIN_FRAME_NAME));
 			resultUtilsBO.setFdDSSFiles(fdDSSFiles);
 			lstScenarios.setModel(fdDSSFiles.getLmScenNames());
 			lstScenarios.setBorder(new LineBorder(Color.gray, 1));
@@ -203,13 +203,13 @@ public class CalLiteInitClass
 			}
 			// For PDF Report ...
 			((JButton) swingEngine.find("btnGetTemplateFile"))
-					.addActionListener(new FileDialogBO(null, (JTextField) swingEngine.find("tfTemplateFILE"), "inp"));
+					.addActionListener(new FileDialogBO(null, (JTextField) swingEngine.find("tfTemplateFILE"), "inp", (JFrame) _swingEngine.find(Constant.MAIN_FRAME_NAME)));
 			((JButton) swingEngine.find("btnGetReportFile1"))
-					.addActionListener(new FileDialogBO(null, (JTextField) swingEngine.find("tfReportFILE1")));
+					.addActionListener(new FileDialogBO(null, (JTextField) swingEngine.find("tfReportFILE1"), (JFrame) _swingEngine.find(Constant.MAIN_FRAME_NAME)));
 			((JButton) swingEngine.find("btnGetReportFile2"))
-					.addActionListener(new FileDialogBO(null, (JTextField) swingEngine.find("tfReportFILE2")));
+					.addActionListener(new FileDialogBO(null, (JTextField) swingEngine.find("tfReportFILE2"), (JFrame) _swingEngine.find(Constant.MAIN_FRAME_NAME)));
 			((JButton) swingEngine.find("btnGetReportFile3"))
-					.addActionListener(new FileDialogBO(null, (JTextField) swingEngine.find("tfReportFILE3"), "PDF"));
+					.addActionListener(new FileDialogBO(null, (JTextField) swingEngine.find("tfReportFILE3"), "PDF", (JFrame) _swingEngine.find(Constant.MAIN_FRAME_NAME)));
 
 			// Schematic views
 

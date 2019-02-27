@@ -7,10 +7,7 @@
 
 package calsim.app;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
+import java.io.*;
 import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -42,13 +39,13 @@ public final class AppProps
 	{
 		File appPropsDir = checkForPropsDir();
 		File appPropsFile = new File(appPropsDir.getPath() + File.separator + "app.props");
+		String filename = "app.props";
 		if(!appPropsFile.exists())
 		{
 			// then look in jar file for defaults & save to props file
-			String filename = "J:\\DWR\\RCP_ProofOfConcept\\EPPT_ANT\\Scenario/calsim/app/app.props";
-			try
+			try (InputStream propsStream = AppProps.class.getClassLoader().getResourceAsStream(filename))
 			{
-				PROPERTIES.load(new FileInputStream(filename));
+				PROPERTIES.load(propsStream);// new FileInputStream(filename));
 				save();
 			}
 			catch(IOException ioe)
@@ -59,23 +56,21 @@ public final class AppProps
 		else
 		{
 			// read from app.props file
-			try
+			try (InputStream propsStream = AppProps.class.getClassLoader().getResourceAsStream(filename))
 			{
 				// always load defaults and then user customized properties
-				PROPERTIES.load(new FileInputStream("J:\\DWR\\RCP_ProofOfConcept\\EPPT_ANT\\Scenario/calsim/app/app.props"));
+				PROPERTIES.load(propsStream);
 				PROPERTIES.load(new FileInputStream(appPropsFile));
 				// make sure the version is matched or exists. If not load from
 				// jar file first and then from props file again
 				Properties jarprops = new Properties();
-				jarprops.load(
-						new FileInputStream("J:\\DWR\\RCP_ProofOfConcept\\EPPT_ANT\\Scenario/calsim/app/app.props"));
+				jarprops.load(propsStream);
 				String propVersion = PROPERTIES.getProperty("AppProps.version");
 				String jarPropVersion = jarprops.getProperty("AppProps.version");
 				if(propVersion == null || Integer.parseInt(propVersion) < Integer.parseInt(jarPropVersion))
 				{
 					// load the latest
-					String filename = "J:\\DWR\\RCP_ProofOfConcept\\EPPT_ANT\\Scenario/calsim/app/app.props";
-					PROPERTIES.load(new FileInputStream(filename));
+					PROPERTIES.load(propsStream);
 					// override with users properties
 					PROPERTIES.load(new FileInputStream(appPropsFile));
 					// finally override the versionid for app props
