@@ -9,6 +9,7 @@ package gov.ca.water.quickresults.ui;
 
 import javax.swing.*;
 
+import org.apache.log4j.Logger;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -21,11 +22,19 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
  */
 class CustomResultsPanelTest
 {
+	private static Logger LOGGER = Logger.getLogger(CustomResultsPanelTest.class.getName());
 	@Test
 	void testCtor()
 	{
-		JFrame frame = new JFrame();
-		CustomResultsPanel customResultsPanel = new CustomResultsPanel(frame);
-		assertNotNull(customResultsPanel.getSwingEngine());
+		try
+		{
+			JFrame frame = new JFrame();
+			CustomResultsPanel customResultsPanel = new CustomResultsPanel(frame);
+			assertNotNull(customResultsPanel.getSwingEngine());
+		}
+		catch(Throwable e)
+		{
+			LOGGER.fatal(e);
+		}
 	}
 }
