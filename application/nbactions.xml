@@ -1,0 +1,17 @@
+git<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ Copyright (c) 2019
+  ~ California Department of Water Resources
+  ~ All Rights Reserved.  DWR PROPRIETARY/CONFIDENTIAL.
+  ~ Source may not be released without written approval from DWR
+  -->
+
+<actions>
+	<action>
+		<actionName>CUSTOM-Generate installers</actionName>
+		<displayName>Generate installers</displayName>
+		<goals>
+			<goal>nbm:build-installers</goal>
+		</goals>
+	</action>
+</actions>
