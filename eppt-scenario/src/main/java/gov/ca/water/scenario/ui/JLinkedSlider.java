@@ -5,7 +5,7 @@
  * Source may not be released without written approval from DWR
  */
 
-package gov.ca.water.calgui.bo;
+package gov.ca.water.scenario.ui;
 //! JLinkedSlider.java
 
 import javax.swing.*;

@@ -12,7 +12,6 @@ import java.awt.Container;
 import javax.swing.*;
 
 import org.apache.log4j.Logger;
-import org.swixml.SwingEngine;
 
 /**
  * Company: Resource Management Associates
@@ -20,19 +19,17 @@ import org.swixml.SwingEngine;
  * @author <a href="mailto:adam@rmanet.com">Adam Korynta</a>
  * @since 02-26-2019
  */
-public class DataAnalysisPanel extends JPanel
+public class DataAnalysisPanel extends EpptPanel
 {
 	private static final Logger LOGGER = Logger.getLogger(QuickResultsPanel.class.getName());
 	private static final String DATA_ANALYSIS_XML_PATH = "ui/Data_Analysis.xml";
-	private final SwingEngine _swingEngine;
 
 	public DataAnalysisPanel()
 	{
-		_swingEngine = new SwingEngine();
 		try
 		{
 			super.setLayout(new BorderLayout());
-			Container swixmlQuickResultsPanel = _swingEngine.render(DATA_ANALYSIS_XML_PATH);
+			Container swixmlQuickResultsPanel = getSwingEngine().render(DATA_ANALYSIS_XML_PATH);
 			super.add(swixmlQuickResultsPanel);
 		}
 		catch(Exception e)
@@ -42,63 +39,63 @@ public class DataAnalysisPanel extends JPanel
 		}
 	}
 
-	SwingEngine getSwingEngine()
-	{
-		return _swingEngine;
-	}
-
 	JTextField getReportTemplateTextField()
 	{
-		return (JTextField) _swingEngine.find("tfTemplateFILE");
+		return (JTextField) getSwingEngine().find("tfTemplateFILE");
 	}
 
 	JTextField getDssResultFileField1()
 	{
-		return (JTextField) _swingEngine.find("tfReportFILE1");
+		return (JTextField) getSwingEngine().find("tfReportFILE1");
 	}
 
 	JTextField getDssResultFileField2()
 	{
-		return (JTextField) _swingEngine.find("tfReportFILE2");
+		return (JTextField) getSwingEngine().find("tfReportFILE2");
 	}
 
 	JTextField getOutputTextField()
 	{
-		return (JTextField) _swingEngine.find("tfReportFILE3");
+		return (JTextField) getSwingEngine().find("tfReportFILE3");
 	}
 
 	JButton getReportButton()
 	{
-		return (JButton) _swingEngine.find("btnReport");
+		return (JButton) getSwingEngine().find("btnReport");
 	}
 
 	JTextField getReportName1()
 	{
-		return ((JTextField) _swingEngine.find("tfReportNAME1"));
+		return ((JTextField) getSwingEngine().find("tfReportNAME1"));
 	}
 
 	JTextField getReportName2()
 	{
-		return ((JTextField) _swingEngine.find("tfReportNAME2"));
+		return ((JTextField) getSwingEngine().find("tfReportNAME2"));
 	}
 
 	JTextArea getReportNotes()
 	{
-		return ((JTextArea) _swingEngine.find("taReportNOTES"));
+		return ((JTextArea) getSwingEngine().find("taReportNOTES"));
 	}
 
 	JTextArea getReportAssumptions()
 	{
-		return ((JTextArea) _swingEngine.find("taReportASSUMPTIONS"));
+		return ((JTextArea) getSwingEngine().find("taReportASSUMPTIONS"));
 	}
 
 	JTextField getReportModeler()
 	{
-		return ((JTextField) _swingEngine.find("tfReportMODELER"));
+		return ((JTextField) getSwingEngine().find("tfReportMODELER"));
 	}
 
 	JTextField getReportSize()
 	{
-		return ((JTextField) _swingEngine.find("tfFontSize"));
+		return ((JTextField) getSwingEngine().find("tfFontSize"));
+	}
+
+	public void setActionListener(DataAnalysisListener dataAnalysisListener)
+	{
+		getSwingEngine().setActionListener(this, dataAnalysisListener);
 	}
 }

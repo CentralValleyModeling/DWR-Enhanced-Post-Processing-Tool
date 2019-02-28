@@ -5,7 +5,7 @@
  * Source may not be released without written approval from DWR
  */
 
-package gov.ca.water.calgui.bus_delegate.impl;
+package gov.ca.water.businessservice.impl;
 
 import java.awt.Component;
 import java.awt.Container;
@@ -16,21 +16,20 @@ import javax.swing.*;
 import javax.swing.border.TitledBorder;
 import javax.swing.table.DefaultTableCellRenderer;
 
+import gov.ca.water.businessservice.IApplyDynamicConDele;
+import gov.ca.water.businessservice.IXMLParsingSvc;
 import gov.ca.water.calgui.bo.CalLiteGUIException;
 import gov.ca.water.calgui.bo.DataTableModel;
 import gov.ca.water.calgui.bo.GUILinks2BO;
 import gov.ca.water.calgui.bo.GUILinks4BO;
-import gov.ca.water.calgui.bus_delegate.IApplyDynamicConDele;
 import gov.ca.water.calgui.bus_service.IDynamicControlSvc;
 import gov.ca.water.calgui.bus_service.IScenarioSvc;
 import gov.ca.water.calgui.bus_service.ISeedDataSvc;
 import gov.ca.water.calgui.bus_service.ITableSvc;
-import gov.ca.water.calgui.bus_service.IXMLParsingSvc;
 import gov.ca.water.calgui.bus_service.impl.DynamicControlSvcImpl;
 import gov.ca.water.calgui.bus_service.impl.ScenarioSvcImpl;
 import gov.ca.water.calgui.bus_service.impl.SeedDataSvcImpl;
 import gov.ca.water.calgui.bus_service.impl.TableSvcImpl;
-import gov.ca.water.calgui.bus_service.impl.XMLParsingSvcImpl;
 import gov.ca.water.calgui.constant.Constant;
 import gov.ca.water.calgui.tech_service.IErrorHandlingSvc;
 import gov.ca.water.calgui.tech_service.IFileSystemSvc;
@@ -95,7 +94,7 @@ public class ApplyDynamicConDeleImp implements IApplyDynamicConDele
 		catch(CalLiteGUIException ex)
 		{
 			LOG.error(ex);
-			errorHandlingSvc.businessErrorHandler((JFrame) swingEngine.find(Constant.MAIN_FRAME_NAME), ex);
+			errorHandlingSvc.businessErrorHandler(ex);
 		}
 	}
 
@@ -109,13 +108,12 @@ public class ApplyDynamicConDeleImp implements IApplyDynamicConDele
 		catch(CloneNotSupportedException ex)
 		{
 			LOG.error(ex);
-			errorHandlingSvc.businessErrorHandler((JFrame) swingEngine.find(Constant.MAIN_FRAME_NAME),
-					new CalLiteGUIException("Unable to clone the table class.", ex));
+			errorHandlingSvc.businessErrorHandler(new CalLiteGUIException("Unable to clone the table class.", ex));
 		}
 		catch(CalLiteGUIException ex)
 		{
 			LOG.error(ex);
-			errorHandlingSvc.businessErrorHandler((JFrame) swingEngine.find(Constant.MAIN_FRAME_NAME), ex);
+			errorHandlingSvc.businessErrorHandler(ex);
 		}
 		if(itemName.equals("fac_ckb2") && !isSelected)
 		{
@@ -232,7 +230,7 @@ public class ApplyDynamicConDeleImp implements IApplyDynamicConDele
 		}
 		catch(NullPointerException ex)
 		{
-			errorHandlingSvc.businessErrorHandler((JFrame) swingEngine.find(Constant.MAIN_FRAME_NAME),
+			errorHandlingSvc.businessErrorHandler(
 					new CalLiteGUIException("The data for geting the table name is wrong", ex));
 		}
 	}
@@ -474,7 +472,7 @@ public class ApplyDynamicConDeleImp implements IApplyDynamicConDele
 				message = message + "\nYou may be missing the entries '" + itemName + ",on,reg_panTab,on' and '"
 						+ itemName + ",off,reg_panTab,off'";
 			}
-			errorHandlingSvc.businessErrorHandler((JFrame) swingEngine.find(Constant.MAIN_FRAME_NAME),
+			errorHandlingSvc.businessErrorHandler(
 					new CalLiteGUIException(message, ex));
 		}
 		if(toDisplayMessage)

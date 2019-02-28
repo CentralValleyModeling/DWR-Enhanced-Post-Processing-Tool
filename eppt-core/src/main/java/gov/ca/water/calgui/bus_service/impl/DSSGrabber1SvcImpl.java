@@ -34,7 +34,6 @@ import gov.ca.water.calgui.tech_service.IErrorHandlingSvc;
 import gov.ca.water.calgui.tech_service.impl.DialogSvcImpl;
 import gov.ca.water.calgui.tech_service.impl.ErrorHandlingSvcImpl;
 import org.apache.log4j.Logger;
-import org.swixml.SwingEngine;
 
 import hec.heclib.dss.HecDss;
 import hec.heclib.util.HecTime;
@@ -96,7 +95,6 @@ public class DSSGrabber1SvcImpl implements IDSSGrabber1Svc
 	private double[][] _annualCFSs;
 	private double[][] _annualCFSsDiff;
 	private ISeedDataSvc _seedDataSvc = SeedDataSvcImpl.getSeedDataSvcImplInstance();
-	private SwingEngine _swingEngine = XMLParsingSvcImpl.getXMLParsingSvcImplInstance().getSwingEngine();
 	private IErrorHandlingSvc _errorHandlingSvc = new ErrorHandlingSvcImpl();
 	private IDialogSvc _dialogSvc = DialogSvcImpl.getDialogSvcInstance();
 	private boolean _stopOnMissing;
@@ -191,7 +189,7 @@ public class DSSGrabber1SvcImpl implements IDSSGrabber1Svc
 		catch(UnsatisfiedLinkError | NoClassDefFoundError e)
 		{
 			_errorHandlingSvc.systemErrorHandler("Possible javaheclib.dll issue - CalLite GUI will close",
-					"javaHecLib.dll may be the wrong version or missing.", null);
+					"javaHecLib.dll may be the wrong version or missing.");
 		}
 		catch(Exception e)
 		{
@@ -802,9 +800,7 @@ public class DSSGrabber1SvcImpl implements IDSSGrabber1Svc
 			{
 				String messageText = "Unable to get time series." + e.getMessage();
 
-				_errorHandlingSvc.businessErrorHandler(messageText,
-						(JFrame) _swingEngine.find(Constant.MAIN_FRAME_NAME),
-						e);
+				_errorHandlingSvc.businessErrorHandler(messageText, e);
 			}
 		}
 
@@ -941,8 +937,7 @@ public class DSSGrabber1SvcImpl implements IDSSGrabber1Svc
 		{
 			LOG.error(e.getMessage());
 			String messageText = "Unable to get time series.";
-			_errorHandlingSvc.businessErrorHandler(messageText, (JFrame) _swingEngine.find(Constant.MAIN_FRAME_NAME),
-					e);
+			_errorHandlingSvc.businessErrorHandler(messageText, e);
 		}
 
 		return results;
@@ -1127,8 +1122,7 @@ public class DSSGrabber1SvcImpl implements IDSSGrabber1Svc
 		{
 			LOG.error(e.getMessage());
 			String messageText = "Unable to calculate TAF.";
-			_errorHandlingSvc.businessErrorHandler(messageText, (JFrame) _swingEngine.find(Constant.MAIN_FRAME_NAME),
-					e);
+			_errorHandlingSvc.businessErrorHandler(messageText, e);
 		}
 	}
 
@@ -1302,8 +1296,7 @@ public class DSSGrabber1SvcImpl implements IDSSGrabber1Svc
 		{
 			LOG.error(e.getMessage());
 			String messageText = "Unable to calculate CFS.";
-			_errorHandlingSvc.businessErrorHandler(messageText, (JFrame) _swingEngine.find(Constant.MAIN_FRAME_NAME),
-					e);
+			_errorHandlingSvc.businessErrorHandler(messageText, e);
 		}
 	}
 
@@ -1416,8 +1409,7 @@ public class DSSGrabber1SvcImpl implements IDSSGrabber1Svc
 		{
 			LOG.error(e.getMessage());
 			String messageText = "Unable to get time-series.";
-			_errorHandlingSvc.businessErrorHandler(messageText, (JFrame) _swingEngine.find(Constant.MAIN_FRAME_NAME),
-					e);
+			_errorHandlingSvc.businessErrorHandler(messageText, e);
 		}
 		return null;
 	}
@@ -1547,8 +1539,7 @@ public class DSSGrabber1SvcImpl implements IDSSGrabber1Svc
 		{
 			LOG.error(e.getMessage());
 			String messageText = "Unable to get time-series.";
-			_errorHandlingSvc.businessErrorHandler(messageText, (JFrame) _swingEngine.find(Constant.MAIN_FRAME_NAME),
-					e);
+			_errorHandlingSvc.businessErrorHandler(messageText, e);
 		}
 		return null;
 	}

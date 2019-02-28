@@ -9,22 +9,28 @@ package gov.ca.water.calgui.bo;
 
 //! Custom file chooser for selection of different CalLite file types
 
-import gov.ca.water.calgui.presentation.WRIMSGUILinks;
-import gov.ca.water.calgui.tech_service.IErrorHandlingSvc;
-import gov.ca.water.calgui.tech_service.impl.ErrorHandlingSvcImpl;
-import org.apache.log4j.Logger;
-
-import javax.swing.*;
-import javax.swing.event.ListDataEvent;
-import javax.swing.event.ListDataListener;
-import java.awt.*;
+import java.awt.Component;
+import java.awt.Container;
+import java.awt.HeadlessException;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.HashMap;
 import java.util.Map;
+import javax.swing.*;
+import javax.swing.event.ListDataEvent;
+import javax.swing.event.ListDataListener;
+
+import gov.ca.water.calgui.presentation.WRIMSGUILinks;
+import gov.ca.water.calgui.tech_service.IErrorHandlingSvc;
+import gov.ca.water.calgui.tech_service.impl.ErrorHandlingSvcImpl;
+import org.apache.log4j.Logger;
 
 /**
  * Supports selection of different types of CalLite files from customized
@@ -240,7 +246,7 @@ public class FileDialogBO implements ActionListener
 		{
 			LOG.error(e.getMessage());
 			String messageText = "Unable to set up file dialog.";
-			errorHandlingSvc.businessErrorHandler(messageText, _mainFrame, e);
+			errorHandlingSvc.businessErrorHandler(messageText, e);
 		}
 	}
 
@@ -345,7 +351,7 @@ public class FileDialogBO implements ActionListener
 		{
 			LOG.error(e1.getMessage());
 			String messageText = "Unable to show file chooser.";
-			errorHandlingSvc.businessErrorHandler(messageText, _mainFrame, e1);
+			errorHandlingSvc.businessErrorHandler(messageText, e1);
 		}
 		return;
 	}
@@ -384,7 +390,7 @@ public class FileDialogBO implements ActionListener
 		{
 			LOG.error(e.getMessage());
 			String messageText = "Unable to update list.";
-			errorHandlingSvc.businessErrorHandler(messageText, _mainFrame, e);
+			errorHandlingSvc.businessErrorHandler(messageText, e);
 		}
 	}
 

@@ -13,8 +13,8 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.swing.*;
 
+import gov.ca.water.businessservice.impl.XMLParsingSvcImpl;
 import gov.ca.water.calgui.bo.RBListItemBO;
-import gov.ca.water.calgui.bus_service.impl.XMLParsingSvcImpl;
 import gov.ca.water.calgui.constant.Constant;
 import gov.ca.water.calgui.presentation.DisplayFrame;
 import gov.ca.water.calgui.tech_service.IErrorHandlingSvc;
@@ -119,7 +119,7 @@ public class SchematicMain
 		{
 			LOG.error(e.getMessage());
 			String messageText = "Unable to display schematic.";
-			errorHandlingSvc.businessErrorHandler(messageText, (JFrame) swingEngine.find(Constant.MAIN_FRAME_NAME), e);
+			errorHandlingSvc.businessErrorHandler(messageText, e);
 		}
 
 	}

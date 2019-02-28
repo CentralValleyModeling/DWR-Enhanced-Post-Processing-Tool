@@ -7,6 +7,17 @@
 
 package gov.ca.water.quickresults.ui;
 
+import java.awt.Component;
+import java.awt.Window;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.List;
+import javax.swing.*;
+
 import gov.ca.water.calgui.EpptInitializationException;
 import gov.ca.water.calgui.bo.DataTableModel;
 import gov.ca.water.calgui.bo.FileDialogBO;
@@ -16,16 +27,6 @@ import gov.ca.water.calgui.constant.Constant;
 import gov.ca.water.calgui.presentation.ScenarioFrame;
 import org.apache.log4j.Logger;
 import org.swixml.SwingEngine;
-
-import javax.swing.*;
-import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.List;
 
 
 /**
@@ -83,6 +84,12 @@ class ScenarioConfigurationListener implements ActionListener
         fileDialogBO.actionPerformed(e);
     }
 
+	private JFrame getMainWindow()
+	{
+		Window window = SwingUtilities.windowForComponent(_scenarioConfigurationPanel);
+		return (JFrame) window;
+	}
+
     private void compareScenarios()
     {
         IScenarioDele scenarioDele = new ScenarioDeleImp();
@@ -95,8 +102,9 @@ class ScenarioConfigurationListener implements ActionListener
         }
         try
         {
-            List<DataTableModel> dtmList = scenarioDele.getScenarioTableData(fileNames);
-            ScenarioFrame scenarioFrame = new ScenarioFrame(dtmList);
+			List<DataTableModel> dtmList = scenarioDele.getScenarioTableData(fileNames,
+					_scenarioConfigurationPanel.getSwingEngine());
+			ScenarioFrame scenarioFrame = new ScenarioFrame(dtmList, getMainWindow());
             scenarioFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
             scenarioFrame.setVisible(true);
         }

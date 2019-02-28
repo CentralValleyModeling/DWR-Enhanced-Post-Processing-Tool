@@ -7,19 +7,19 @@
 
 package gov.ca.water.calgui.presentation;
 
-import java.awt.*;
+import java.awt.Dimension;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.util.List;
 import javax.swing.*;
 
 import gov.ca.water.calgui.bo.DataTableModel;
-import gov.ca.water.calgui.bus_service.impl.XMLParsingSvcImpl;
-import gov.ca.water.calgui.constant.Constant;
 import gov.ca.water.calgui.tech_service.IErrorHandlingSvc;
 import gov.ca.water.calgui.tech_service.impl.ErrorHandlingSvcImpl;
 import org.apache.log4j.Logger;
-import org.swixml.SwingEngine;
 
 /**
  * This frame is used for the "View Scenario Settings" button in the
@@ -34,9 +34,8 @@ public class ScenarioFrame extends JFrame implements ItemListener
 	private JPanel comparisonPanel = new JPanel();
 	private JPanel differencePanel = new JPanel();
 	private IErrorHandlingSvc errorHandlingSvc = new ErrorHandlingSvcImpl();
-	private SwingEngine swingEngine = XMLParsingSvcImpl.getXMLParsingSvcImplInstance().getSwingEngine();
 
-	public ScenarioFrame(List<DataTableModel> dtmList)
+	public ScenarioFrame(List<DataTableModel> dtmList, JFrame mainFrame)
 	{
 		try
 		{
@@ -101,7 +100,7 @@ public class ScenarioFrame extends JFrame implements ItemListener
 		{
 			LOG.error(e.getMessage());
 			String messageText = "Unable to display scenario frame.";
-			errorHandlingSvc.businessErrorHandler(messageText, (JFrame) swingEngine.find(Constant.MAIN_FRAME_NAME), e);
+			errorHandlingSvc.businessErrorHandler(messageText, e);
 		}
 	}
 

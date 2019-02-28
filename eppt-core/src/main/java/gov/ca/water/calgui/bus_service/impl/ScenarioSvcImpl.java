@@ -7,6 +7,30 @@
 
 package gov.ca.water.calgui.bus_service.impl;
 
+import java.awt.Component;
+import java.awt.Container;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.nio.file.Files;
+import java.nio.file.NoSuchFileException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardOpenOption;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Calendar;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.NoSuchElementException;
+import java.util.Optional;
+import java.util.Set;
+import javax.swing.*;
+import javax.swing.text.JTextComponent;
+
 import gov.ca.water.calgui.EpptInitializationException;
 import gov.ca.water.calgui.bo.CalLiteGUIException;
 import gov.ca.water.calgui.bo.DataTableModel;
@@ -25,14 +49,6 @@ import org.apache.log4j.Logger;
 import org.swixml.SwingEngine;
 import org.swixml.XScrollPane;
 import wrimsv2.evaluator.TimeOperation;
-
-import javax.swing.*;
-import javax.swing.text.JTextComponent;
-import java.awt.*;
-import java.io.*;
-import java.nio.file.*;
-import java.util.List;
-import java.util.*;
 
 /**
  * This is the class for handling the cls file and saving the data.
@@ -211,8 +227,7 @@ public final class ScenarioSvcImpl implements IScenarioSvc
 		}
 		catch(CalLiteGUIException ex)
 		{
-			errorHandlingSvc.businessErrorHandler((JFrame) swingEngine.find(Constant.MAIN_FRAME_NAME),
-					new CalLiteGUIException("We are unable to save the file.", ex));
+			errorHandlingSvc.businessErrorHandler(new CalLiteGUIException("We are unable to save the file.", ex));
 			return false;
 		}
 	}

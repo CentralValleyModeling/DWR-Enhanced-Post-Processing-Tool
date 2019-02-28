@@ -24,11 +24,9 @@ import org.openide.windows.WindowManager;
 		//iconBase="SET/PATH/TO/ICON/HERE",
 		persistenceType = TopComponent.PERSISTENCE_ALWAYS
 )
-@TopComponent.Registration(mode = "editor", openAtStartup = true)
+@TopComponent.Registration(mode = "editor", openAtStartup = true, position = 3333)
 @ActionID(category = "Window", id = "gov.ca.water.eppt.nbui.CustomResultsTopComponent")
-@ActionReference(path = "Menu/Window" /*
- * , position = 333
- */)
+@ActionReference(path = "Menu/Window", position = 3333)
 @TopComponent.OpenActionRegistration(
 		displayName = "#CTL_CustomResultsAction",
 		preferredID = "CustomResultsTopComponent"

@@ -52,6 +52,7 @@ public class Report extends SwingWorker<Void, String>
 {
 
 	private static final Logger LOG = Logger.getLogger(Report.class.getName());
+	private final JFrame _mainFrame;
 	private ProgressFrameForPDF progressFrameForPDF;
 	private StringBuffer messages = new StringBuffer();
 	private InputStream inputStream;
@@ -66,32 +67,33 @@ public class Report extends SwingWorker<Void, String>
 	private HashMap<String, String> scalars;
 	private Writer writer;
 
-	public Report(InputStream inputStream, String outputFilename)
+	public Report(InputStream inputStream, String outputFilename, JFrame mainFrame)
 	{
-
+		_mainFrame = mainFrame;
 		this.inputStream = inputStream;
 		this.outputFilename = outputFilename;
 		this.isInitialized = true;
-
 	}
 
 	/*
 	 * ********* END SwingWorker additions
 	 */
 
-	public Report(String templateFile) throws IOException
+	public Report(String templateFile, JFrame mainFrame) throws IOException
 	{
-		this(new FileInputStream(templateFile));
+		this(new FileInputStream(templateFile), mainFrame);
 	}
-	public Report(InputStream inputStream) throws IOException
+
+	public Report(InputStream inputStream, JFrame mainFrame) throws IOException
 	{
+		_mainFrame = mainFrame;
 		generateReport(inputStream);
 	}
 
 	@Override
 	protected Void doInBackground() throws Exception
 	{
-		progressFrameForPDF = ProgressFrameForPDF.getProgressFrameInstance();
+		progressFrameForPDF = ProgressFrameForPDF.getProgressFrameInstance(_mainFrame);
 		publish("Generating report in background thread.");
 
 		LOG.fine("Parsing input template");

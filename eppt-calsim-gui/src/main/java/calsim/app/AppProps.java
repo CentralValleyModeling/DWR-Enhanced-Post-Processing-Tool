@@ -7,7 +7,11 @@
 
 package calsim.app;
 
-import java.io.*;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -45,7 +49,7 @@ public final class AppProps
 			// then look in jar file for defaults & save to props file
 			try (InputStream propsStream = AppProps.class.getClassLoader().getResourceAsStream(filename))
 			{
-				PROPERTIES.load(propsStream);// new FileInputStream(filename));
+				PROPERTIES.load(propsStream);
 				save();
 			}
 			catch(IOException ioe)
@@ -60,11 +64,17 @@ public final class AppProps
 			{
 				// always load defaults and then user customized properties
 				PROPERTIES.load(propsStream);
-				PROPERTIES.load(new FileInputStream(appPropsFile));
+				try(FileInputStream inputStream = new FileInputStream(appPropsFile))
+				{
+					PROPERTIES.load(inputStream);
+				}
 				// make sure the version is matched or exists. If not load from
 				// jar file first and then from props file again
 				Properties jarprops = new Properties();
-				jarprops.load(propsStream);
+				try(FileInputStream inputStream = new FileInputStream(appPropsFile))
+				{
+					jarprops.load(inputStream);
+				}
 				String propVersion = PROPERTIES.getProperty("AppProps.version");
 				String jarPropVersion = jarprops.getProperty("AppProps.version");
 				if(propVersion == null || Integer.parseInt(propVersion) < Integer.parseInt(jarPropVersion))

@@ -20,24 +20,21 @@ import javax.swing.*;
 import gov.ca.water.calgui.bo.RBListItemBO;
 import gov.ca.water.calgui.bus_service.IDSSGrabber1Svc;
 import gov.ca.water.calgui.bus_service.impl.DSSGrabber1SvcImpl;
-import gov.ca.water.calgui.bus_service.impl.XMLParsingSvcImpl;
 import gov.ca.water.calgui.constant.Constant;
 import gov.ca.water.calgui.tech_service.IDialogSvc;
 import gov.ca.water.calgui.tech_service.IErrorHandlingSvc;
 import gov.ca.water.calgui.tech_service.impl.DialogSvcImpl;
 import gov.ca.water.calgui.tech_service.impl.ErrorHandlingSvcImpl;
 import org.apache.log4j.Logger;
-import org.swixml.SwingEngine;
 
 public class PowerFrame
 {
 	private static final Logger LOG = Logger.getLogger(PowerFrame.class.getName());
-	JFrame frame;
-	private SwingEngine swingEngine = XMLParsingSvcImpl.getXMLParsingSvcImplInstance().getSwingEngine();
+	private JFrame _frame;
 	private IErrorHandlingSvc errorHandlingSvc = new ErrorHandlingSvcImpl();
 	private IDialogSvc dialogSvc = DialogSvcImpl.getDialogSvcInstance();
 
-	public PowerFrame(List<RBListItemBO> lstScenarios)
+	public PowerFrame(List<RBListItemBO> lstScenarios, JFrame mainFrame)
 	{
 		try
 		{
@@ -63,18 +60,18 @@ public class PowerFrame
 			}
 			else
 			{
-				frame = new JFrame("Power Viewer:" + dssGrabber.getBase());
-				frame.setPreferredSize(new Dimension(800, 600));
-				frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-				frame.pack();
-				frame.setVisible(true);
+				_frame = new JFrame("Power Viewer:" + dssGrabber.getBase());
+				_frame.setPreferredSize(new Dimension(800, 600));
+				_frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+				_frame.pack();
+				_frame.setVisible(true);
 			}
 		}
 		catch(HeadlessException e)
 		{
 			LOG.error(e.getMessage());
 			String messageText = "Unable to display Power frame.";
-			errorHandlingSvc.businessErrorHandler(messageText, (JFrame) swingEngine.find(Constant.MAIN_FRAME_NAME), e);
+			errorHandlingSvc.businessErrorHandler(messageText, e);
 		}
 	}
 
@@ -129,7 +126,7 @@ public class PowerFrame
 		}
 		catch(Throwable t)
 		{
-			errorHandlingSvc.businessErrorHandler("Run failure!", "Power Generation module did not run.", null);
+			errorHandlingSvc.businessErrorHandler("Run failure!", "Power Generation module did not run.");
 			LOG.debug(t.getStackTrace());
 		}
 		return success;

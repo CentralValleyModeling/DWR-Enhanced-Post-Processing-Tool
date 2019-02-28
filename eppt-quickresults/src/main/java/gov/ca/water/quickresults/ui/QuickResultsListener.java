@@ -8,7 +8,6 @@
 package gov.ca.water.quickresults.ui;
 
 import java.awt.Component;
-import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
@@ -24,13 +23,6 @@ import gov.ca.water.calgui.tech_service.IErrorHandlingSvc;
 import gov.ca.water.calgui.tech_service.impl.DialogSvcImpl;
 import gov.ca.water.calgui.tech_service.impl.ErrorHandlingSvcImpl;
 import org.apache.log4j.Logger;
-
-import javax.swing.*;
-import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.util.ArrayList;
-import java.util.List;
 
 
 /**
@@ -208,8 +200,7 @@ class QuickResultsListener implements ActionListener
 			LOGGER.error(e.getMessage(), e);
 			String messageText = "Unable to display frame.";
 			IErrorHandlingSvc errorHandlingSvc = new ErrorHandlingSvcImpl();
-			Window windowAncestor = SwingUtilities.getWindowAncestor(_quickResultsPanel.getReportsJList());
-			errorHandlingSvc.businessErrorHandler(messageText, (JFrame) windowAncestor, e);
+			errorHandlingSvc.businessErrorHandler(messageText, e);
 		}
 	}
 }

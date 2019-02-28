@@ -7,6 +7,17 @@
 
 package gov.ca.water.calgui.bus_service.impl;
 
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Properties;
+import javax.swing.*;
+
 import gov.ca.water.calgui.bus_service.IModelRunSvc;
 import gov.ca.water.calgui.constant.Constant;
 import gov.ca.water.calgui.tech_service.IDialogSvc;
@@ -16,13 +27,6 @@ import gov.ca.water.calgui.tech_service.impl.ErrorHandlingSvcImpl;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.log4j.Logger;
 import org.swixml.SwingEngine;
-
-import javax.swing.*;
-import java.io.*;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Properties;
 
 /**
  * This class will handle the batch run.
@@ -34,18 +38,17 @@ public final class ModelRunSvcImpl implements IModelRunSvc
 
 	private static final Logger LOG = Logger.getLogger(ModelRunSvcImpl.class.getName());
 	private static int SIMULTANEOUS_RUNS;
-	private static SwingEngine swingEngine = XMLParsingSvcImpl.getXMLParsingSvcImplInstance().getSwingEngine();
 	private Properties _properties = new Properties();
-	private int wsdiIterations;
-	private IErrorHandlingSvc errorHandlingSvc = new ErrorHandlingSvcImpl();
-	private IDialogSvc dialogSvc = DialogSvcImpl.getDialogSvcInstance();
+	private static IErrorHandlingSvc _errorHandlingSvc = new ErrorHandlingSvcImpl();
+	private int _wsdiIterations;
+	private IDialogSvc _dialogSvc = DialogSvcImpl.getDialogSvcInstance();
 
 	public ModelRunSvcImpl()
 	{
 		try
 		{
 			_properties.load(ModelRunSvcImpl.class.getClassLoader().getResourceAsStream("callite-gui._properties"));
-			wsdiIterations = Integer.parseInt(_properties.getProperty("wsidi.iterations"));
+			_wsdiIterations = Integer.parseInt(_properties.getProperty("wsidi.iterations"));
 		}
 		catch(Exception ex)
 		{
@@ -71,7 +74,7 @@ public final class ModelRunSvcImpl implements IModelRunSvc
 	 * @param scenarioFileName The list of scenario names in this run.
 	 * @param iterations       The number of iterations.
 	 */
-	public static void setupMainBatchFileWSIDI(String batFileName, String scenarioFileName, final int iterations)
+	private static void setupMainBatchFileWSIDI(String batFileName, String scenarioFileName, final int iterations)
 	{
 
 		if(batFileName == null || batFileName.isEmpty())
@@ -126,8 +129,7 @@ public final class ModelRunSvcImpl implements IModelRunSvc
 		}
 		catch(Throwable t)
 		{
-			JOptionPane.showMessageDialog(swingEngine.find(Constant.MAIN_FRAME_NAME), t.getMessage(), "Run failure!",
-					JOptionPane.ERROR_MESSAGE);
+			_errorHandlingSvc.businessErrorHandler("Run failure!", t);
 			LOG.debug(t.getStackTrace());
 		}
 	}
@@ -164,15 +166,13 @@ public final class ModelRunSvcImpl implements IModelRunSvc
 	{
 		if(scenarioNamesList.isEmpty() || scenarioNamesList == null)
 		{
-			errorHandlingSvc.validationeErrorHandler("The scenario name list is empty to run the batch program.",
-					"The scenario name list is empty to run the batch program.",
-					(JFrame) swingEngine.find(Constant.MAIN_FRAME_NAME));
+			_errorHandlingSvc.validationeErrorHandler("The scenario name list is empty to run the batch program.",
+					"The scenario name list is empty to run the batch program.");
 		}
 		if(!dateSelectionIsValid(swingEngine))
 		{
-			errorHandlingSvc.validationeErrorHandler("The End Date should be greater then the start date",
-					"The End Date should be greater then the start date",
-					(JFrame) swingEngine.find(Constant.MAIN_FRAME_NAME));
+			_errorHandlingSvc.validationeErrorHandler("The End Date should be greater then the start date",
+					"The End Date should be greater then the start date");
 		}
 		// Disable run button
 		JButton btn = (JButton) swingEngine.find("run_btnRun");
@@ -183,12 +183,12 @@ public final class ModelRunSvcImpl implements IModelRunSvc
 		{
 			if(scenarioNamesList.size() > 1)
 			{
-				dialogSvc.getOK("WSIDI generation only allowed for a single hydroclimate realization.",
+				_dialogSvc.getOK("WSIDI generation only allowed for a single hydroclimate realization.",
 						JOptionPane.ERROR_MESSAGE);
 			}
 			else
 			{
-				setupMainBatchFileWSIDI(null, scenarioNamesList.get(0), wsdiIterations);
+				setupMainBatchFileWSIDI(null, scenarioNamesList.get(0), _wsdiIterations);
 				runBatch();
 			}
 		}

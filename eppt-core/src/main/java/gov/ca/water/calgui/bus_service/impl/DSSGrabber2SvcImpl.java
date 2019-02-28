@@ -13,7 +13,6 @@ import java.util.Arrays;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Vector;
-import javax.swing.*;
 
 import calsim.app.DerivedTimeSeries;
 import calsim.app.MultipleTimeSeries;
@@ -25,7 +24,6 @@ import gov.ca.water.calgui.constant.Constant;
 import gov.ca.water.calgui.tech_service.IErrorHandlingSvc;
 import gov.ca.water.calgui.tech_service.impl.ErrorHandlingSvcImpl;
 import org.apache.log4j.Logger;
-import org.swixml.SwingEngine;
 
 import hec.heclib.util.HecTime;
 import hec.io.TimeSeriesContainer;
@@ -61,7 +59,6 @@ public class DSSGrabber2SvcImpl extends DSSGrabber1SvcImpl
 	private final MultipleTimeSeries mts;
 	private ISeedDataSvc seedDataSvc = SeedDataSvcImpl.getSeedDataSvcImplInstance();
 	private IErrorHandlingSvc errorHandlingSvc = new ErrorHandlingSvcImpl();
-	private SwingEngine swingEngine = XMLParsingSvcImpl.getXMLParsingSvcImplInstance().getSwingEngine();
 	private double[][][] _annualTAFs;
 	private double[][][] _annualTAFsDiff;
 
@@ -138,7 +135,7 @@ public class DSSGrabber2SvcImpl extends DSSGrabber1SvcImpl
 		{
 			LOG.error(e.getMessage());
 			String messageText = "Unable to set location.";
-			errorHandlingSvc.businessErrorHandler(messageText, (JFrame) swingEngine.find(Constant.MAIN_FRAME_NAME), e);
+			errorHandlingSvc.businessErrorHandler(messageText, e);
 		}
 	}
 
@@ -246,7 +243,7 @@ public class DSSGrabber2SvcImpl extends DSSGrabber1SvcImpl
 		{
 			LOG.error(e.getMessage());
 			String messageText = "Unable to get time-series.";
-			errorHandlingSvc.businessErrorHandler(messageText, (JFrame) swingEngine.find(Constant.MAIN_FRAME_NAME), e);
+			errorHandlingSvc.businessErrorHandler(messageText, e);
 		}
 		return null;
 	}
@@ -326,7 +323,7 @@ public class DSSGrabber2SvcImpl extends DSSGrabber1SvcImpl
 		{
 			LOG.error(e.getMessage());
 			String messageText = "Unable to get time-series.";
-			errorHandlingSvc.businessErrorHandler(messageText, (JFrame) swingEngine.find(Constant.MAIN_FRAME_NAME), e);
+			errorHandlingSvc.businessErrorHandler(messageText, e);
 		}
 		return null;
 	}
@@ -460,7 +457,7 @@ public class DSSGrabber2SvcImpl extends DSSGrabber1SvcImpl
 		{
 			LOG.error(e.getMessage());
 			String messageText = "Unable to get time-series.";
-			errorHandlingSvc.businessErrorHandler(messageText, (JFrame) swingEngine.find(Constant.MAIN_FRAME_NAME), e);
+			errorHandlingSvc.businessErrorHandler(messageText, e);
 		}
 		return null;
 
@@ -519,7 +516,7 @@ public class DSSGrabber2SvcImpl extends DSSGrabber1SvcImpl
 		{
 			LOG.error(e.getMessage());
 			String messageText = "Unable to get time series from.";
-			errorHandlingSvc.businessErrorHandler(messageText, (JFrame) swingEngine.find(Constant.MAIN_FRAME_NAME), e);
+			errorHandlingSvc.businessErrorHandler(messageText, e);
 		}
 		return null;
 	}
@@ -560,7 +557,7 @@ public class DSSGrabber2SvcImpl extends DSSGrabber1SvcImpl
 		{
 			LOG.error(e.getMessage());
 			String messageText = "Unable to get time-series.";
-			errorHandlingSvc.businessErrorHandler(messageText, (JFrame) swingEngine.find(Constant.MAIN_FRAME_NAME), e);
+			errorHandlingSvc.businessErrorHandler(messageText, e);
 		}
 		return timeSeriesResults;
 	}
@@ -653,7 +650,7 @@ public class DSSGrabber2SvcImpl extends DSSGrabber1SvcImpl
 		{
 			LOG.error(e.getMessage());
 			String messageText = "Unable to calculate TAF.";
-			errorHandlingSvc.businessErrorHandler(messageText, (JFrame) swingEngine.find(Constant.MAIN_FRAME_NAME), e);
+			errorHandlingSvc.businessErrorHandler(messageText, e);
 		}
 
 	}
@@ -783,7 +780,7 @@ public class DSSGrabber2SvcImpl extends DSSGrabber1SvcImpl
 		{
 			LOG.error(e.getMessage());
 			String messageText = "Unable to get time-series.";
-			errorHandlingSvc.businessErrorHandler(messageText, (JFrame) swingEngine.find(Constant.MAIN_FRAME_NAME), e);
+			errorHandlingSvc.businessErrorHandler(messageText, e);
 		}
 		return null;
 	}
@@ -911,7 +908,7 @@ public class DSSGrabber2SvcImpl extends DSSGrabber1SvcImpl
 		{
 			LOG.error(e.getMessage());
 			String messageText = "Unable to get time-series.";
-			errorHandlingSvc.businessErrorHandler(messageText, (JFrame) swingEngine.find(Constant.MAIN_FRAME_NAME), e);
+			errorHandlingSvc.businessErrorHandler(messageText, e);
 		}
 		return null;
 	}

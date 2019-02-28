@@ -8,15 +8,10 @@
 package gov.ca.water.calgui.presentation.display;
 
 
-import gov.ca.water.calgui.bus_service.IDSSGrabber1Svc;
-import gov.ca.water.calgui.bus_service.impl.DSSGrabber2SvcImpl;
-import hec.heclib.util.HecTime;
-import hec.io.TimeSeriesContainer;
-
-import javax.swing.*;
-import javax.swing.table.AbstractTableModel;
-import javax.swing.table.DefaultTableCellRenderer;
-import java.awt.*;
+import java.awt.BorderLayout;
+import java.awt.Component;
+import java.awt.Dimension;
+import java.awt.Toolkit;
 import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.StringSelection;
 import java.awt.event.ActionEvent;
@@ -26,6 +21,15 @@ import java.awt.event.ComponentListener;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
+import javax.swing.*;
+import javax.swing.table.AbstractTableModel;
+import javax.swing.table.DefaultTableCellRenderer;
+
+import gov.ca.water.calgui.bus_service.IDSSGrabber1Svc;
+import gov.ca.water.calgui.bus_service.impl.DSSGrabber2SvcImpl;
+
+import hec.heclib.util.HecTime;
+import hec.io.TimeSeriesContainer;
 
 /**
  * Creates a panel tabulating results by month (column) and year (row)
@@ -34,11 +38,11 @@ public class MonthlyTablePanel extends JPanel implements ActionListener, Compone
 {
 
 	private static final long serialVersionUID = 1L;
-	final String LINE_BREAK = "\n";
-	final String CELL_BREAK = "\t";
-	final Clipboard CLIPBOARD = Toolkit.getDefaultToolkit().getSystemClipboard();
-	JPanel panel;
-	JScrollPane scrollPane;
+	private static final String LINE_BREAK = "\n";
+	private static final String CELL_BREAK = "\t";
+	private final Clipboard _clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
+	private final JPanel _panel;
+	private final JScrollPane _scrollPane;
 
 	public MonthlyTablePanel(String title, TimeSeriesContainer[] primaryResults, TimeSeriesContainer[] secondaryResults,
 							 IDSSGrabber1Svc dssGrabber, String sName)
@@ -70,11 +74,11 @@ public class MonthlyTablePanel extends JPanel implements ActionListener, Compone
 
 		super();
 
-		panel = new JPanel();
-		panel.setLayout((new BoxLayout(panel, BoxLayout.PAGE_AXIS)));
+		_panel = new JPanel();
+		_panel.setLayout((new BoxLayout(_panel, BoxLayout.PAGE_AXIS)));
 
-		scrollPane = new JScrollPane(panel);
-		scrollPane.setPreferredSize(new Dimension(750, 600));
+		_scrollPane = new JScrollPane(_panel);
+		_scrollPane.setPreferredSize(new Dimension(750, 600));
 
 		DecimalFormat df1 = new DecimalFormat("#.#");
 		HecTime hecTime = new HecTime();
@@ -107,7 +111,7 @@ public class MonthlyTablePanel extends JPanel implements ActionListener, Compone
 			if(tsc != null)
 			{
 				label.setText(sLabel + " (" + tsc.units + ") - " + tsc.fileName);
-				panel.add(label);
+				_panel.add(label);
 
 				// Get starting water year for first point
 
@@ -247,14 +251,14 @@ public class MonthlyTablePanel extends JPanel implements ActionListener, Compone
 				renderer.setHorizontalAlignment(JLabel.RIGHT);
 
 				addComponentListener(this);
-				panel.add(table.getTableHeader(), BorderLayout.NORTH);
-				panel.add(table);
+				_panel.add(table.getTableHeader(), BorderLayout.NORTH);
+				_panel.add(table);
 			}
 		}
 
 		Box box = Box.createVerticalBox();
 
-		box.add(scrollPane);
+		box.add(_scrollPane);
 		JButton copy = new JButton("Copy to Clipboard");
 		copy.setAlignmentX(LEFT_ALIGNMENT);
 		copy.addActionListener(this);
@@ -340,7 +344,7 @@ public class MonthlyTablePanel extends JPanel implements ActionListener, Compone
 				{
 					StringBuffer excelStr = new StringBuffer();
 
-					Component[] components = panel.getComponents();
+					Component[] components = _panel.getComponents();
 
 					for(int i = 0; i < components.length; i++)
 					{
@@ -376,7 +380,7 @@ public class MonthlyTablePanel extends JPanel implements ActionListener, Compone
 							}
 
 							StringSelection sel = new StringSelection(excelStr.toString());
-							CLIPBOARD.setContents(sel, sel);
+							_clipboard.setContents(sel, sel);
 						}
 						else if(components[i] instanceof JLabel)
 						{
@@ -417,8 +421,8 @@ public class MonthlyTablePanel extends JPanel implements ActionListener, Compone
 		Dimension dim = super.getSize();
 		int width = (int) (dim.width * 0.99);
 		int height = (int) (dim.height * 0.90);
-		scrollPane.setPreferredSize(new Dimension(width, height));
-		scrollPane.revalidate();
+		_scrollPane.setPreferredSize(new Dimension(width, height));
+		_scrollPane.revalidate();
 	}
 
 	@Override

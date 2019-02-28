@@ -7,25 +7,27 @@
 
 package gov.ca.water.quickresults.ui;
 
-import javax.swing.*;
+import org.swixml.SwingEngine;
 
-import org.junit.jupiter.api.Test;
-
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import rma.swing.RmaJPanel;
 
 /**
  * Company: Resource Management Associates
  *
  * @author <a href="mailto:adam@rmanet.com">Adam Korynta</a>
- * @since 02-26-2019
+ * @since 02-28-2019
  */
-class CustomResultsPanelTest
+public class EpptPanel extends RmaJPanel
 {
-	@Test
-	void testCtor()
+	private final SwingEngine _swingEngine;
+
+	public EpptPanel()
 	{
-		JFrame frame = new JFrame();
-		CustomResultsPanel customResultsPanel = new CustomResultsPanel(frame);
-		assertNotNull(customResultsPanel.getSwingEngine());
+		_swingEngine = new SwingEngine();
+	}
+
+	SwingEngine getSwingEngine()
+	{
+		return _swingEngine;
 	}
 }

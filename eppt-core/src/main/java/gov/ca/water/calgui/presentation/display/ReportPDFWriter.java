@@ -85,7 +85,7 @@ public class ReportPDFWriter implements Writer
 		}
 		catch(NumberFormatException nfe)
 		{
-			errorHandlingSvc.validationeErrorHandler("Number format exception in font size", nfe.getMessage(), null);
+			errorHandlingSvc.validationeErrorHandler("Number format exception in font size", nfe.getMessage());
 		}
 
 		tableFont = FontFactory.getFont("Arial", fontSize);

@@ -32,14 +32,14 @@ import org.apache.log4j.Logger;
  * @author <a href="mailto:adam@rmanet.com">Adam Korynta</a>
  * @since 02-27-2019
  */
-class DataAnalysisListener implements ActionListener
+public class DataAnalysisListener implements ActionListener
 {
 	private static final Logger LOGGER = Logger.getLogger(DataAnalysisListener.class.getName());
 	private static final String INP_FILE_EXTENSION = "inp";
 	private static final String PDF_FILE_EXTENSION = "PDF";
 	private final DataAnalysisPanel _dataAnalysisPanel;
 
-	DataAnalysisListener(DataAnalysisPanel dataAnalysisPanel)
+	public DataAnalysisListener(DataAnalysisPanel dataAnalysisPanel)
 	{
 		_dataAnalysisPanel = dataAnalysisPanel;
 	}
@@ -69,10 +69,8 @@ class DataAnalysisListener implements ActionListener
 					generateReportAction();
 					break;
 				default:
-				{
 					LOGGER.info("Action Command " + e.getActionCommand());
 					LOGGER.info("Action Source " + component.getName());
-				}
 			}
 		}
 	}
@@ -124,60 +122,52 @@ class DataAnalysisListener implements ActionListener
 
 	private void generateReport()
 	{
-		try(FileInputStream fin = new FileInputStream(
-				_dataAnalysisPanel.getReportTemplateTextField().getToolTipText());
+		try(FileInputStream fin = new FileInputStream(_dataAnalysisPanel.getReportTemplateTextField().getToolTipText());
 			BufferedReader br = new BufferedReader(new InputStreamReader(fin)))
 		{
-
-			// Create an inputstream from template file;
 			// Open the template file
-			String theText = br.readLine() + "\n";
-			theText = theText + br.readLine() + "\n";
-			theText = theText + br.readLine() + "\n";
+			StringBuilder theText = new StringBuilder(br.readLine() + "\n");
+			theText.append(br.readLine()).append("\n");
+			theText.append(br.readLine()).append("\n");
 			String skipLine = br.readLine();
 			LOGGER.debug("Skip Line: " + skipLine);
-			theText = theText + "FILE_BASE\t" + _dataAnalysisPanel.getDssResultFileField1().getToolTipText()
-					+ "\n";
+			theText.append("FILE_BASE\t").append(_dataAnalysisPanel.getDssResultFileField1().getToolTipText()).append(
+					"\n");
 			skipLine = br.readLine();
 			LOGGER.debug("Skip Line: " + skipLine);
-			theText = theText + "NAME_BASE\t\"" + _dataAnalysisPanel.getReportName1().getText()
-					+ "\"\n";
+			theText.append("NAME_BASE\t\"").append(_dataAnalysisPanel.getReportName1().getText()).append("\"\n");
 			skipLine = br.readLine();
 			LOGGER.debug("Skip Line: " + skipLine);
-			theText = theText + "FILE_ALT\t" + _dataAnalysisPanel.getDssResultFileField2().getToolTipText()
-					+ "\n";
+			theText.append("FILE_ALT\t").append(_dataAnalysisPanel.getDssResultFileField2().getToolTipText()).append(
+					"\n");
 			skipLine = br.readLine();
 			LOGGER.debug("Skip Line: " + skipLine);
-			theText = theText + "NAME_ALT\t\"" + _dataAnalysisPanel.getReportName2().getText()
-					+ "\"\n";
+			theText.append("NAME_ALT\t\"").append(_dataAnalysisPanel.getReportName2().getText()).append("\"\n");
 			skipLine = br.readLine();
 			LOGGER.debug("Skip Line: " + skipLine);
-			theText = theText + "OUTFILE\t" + _dataAnalysisPanel.getOutputTextField().getToolTipText()
-					+ "\n";
+			theText.append("OUTFILE\t").append(_dataAnalysisPanel.getOutputTextField().getToolTipText()).append("\n");
 			skipLine = br.readLine();
 			LOGGER.debug("Skip Line: " + skipLine);
-			theText = theText + "NOTE\t\"" + _dataAnalysisPanel.getReportNotes().getText() + "\"\n";
+			theText.append("NOTE\t\"").append(_dataAnalysisPanel.getReportNotes().getText()).append("\"\n");
 			skipLine = br.readLine();
 			LOGGER.debug("Skip Line: " + skipLine);
-			theText = theText + "ASSUMPTIONS\t\"" + _dataAnalysisPanel.getReportAssumptions().getText()
-					+ "\"\n";
+			theText.append("ASSUMPTIONS\t\"").append(_dataAnalysisPanel.getReportAssumptions().getText()).append(
+					"\"\n");
 			skipLine = br.readLine();
 			LOGGER.debug("Skip Line: " + skipLine);
-			theText = theText + "MODELER\t\"" + _dataAnalysisPanel.getReportModeler().getText()
-					+ "\"\n";
+			theText.append("MODELER\t\"").append(_dataAnalysisPanel.getReportModeler().getText()).append("\"\n");
 
-			theText = theText + "TABLE_FONT_SIZE\t" + _dataAnalysisPanel.getReportSize().getText()
-					+ "\n";
+			theText.append("TABLE_FONT_SIZE\t").append(_dataAnalysisPanel.getReportSize().getText()).append("\n");
 
 			String aLine = br.readLine();
 			while(aLine != null)
 			{
-				theText = theText + aLine + "\n";
+				theText.append(aLine).append("\n");
 				aLine = br.readLine();
 			}
-			theText = theText + "\n";
-			ByteArrayInputStream bs = new ByteArrayInputStream(theText.getBytes());
-			Report report = new Report(bs, _dataAnalysisPanel.getOutputTextField().getToolTipText());
+			theText.append("\n");
+			ByteArrayInputStream bs = new ByteArrayInputStream(theText.toString().getBytes());
+			Report report = new Report(bs, _dataAnalysisPanel.getOutputTextField().getToolTipText(), getMainWindow());
 			_dataAnalysisPanel.getReportButton().setEnabled(false);
 			CompletableFuture.runAsync(report, SwingUtilities::invokeLater)
 							 .thenRunAsync(() -> _dataAnalysisPanel.getReportButton().setEnabled(true),
@@ -188,7 +178,7 @@ class DataAnalysisListener implements ActionListener
 			LOGGER.error(e1.getMessage());
 			String messageText = "Unable to display report.";
 			ErrorHandlingSvcImpl errorHandlingSvc = new ErrorHandlingSvcImpl();
-			errorHandlingSvc.businessErrorHandler(messageText, getMainWindow(), e1);
+			errorHandlingSvc.businessErrorHandler(messageText, e1);
 		}
 	}
 }

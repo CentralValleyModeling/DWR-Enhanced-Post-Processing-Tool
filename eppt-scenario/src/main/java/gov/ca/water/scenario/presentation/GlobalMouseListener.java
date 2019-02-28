@@ -15,11 +15,10 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.swing.*;
 
+import gov.ca.water.businessservice.IApplyDynamicConDele;
+import gov.ca.water.businessservice.impl.ApplyDynamicConDeleImp;
+import gov.ca.water.businessservice.impl.XMLParsingSvcImpl;
 import gov.ca.water.calgui.bo.RBListItemBO;
-import gov.ca.water.calgui.bus_delegate.IApplyDynamicConDele;
-import gov.ca.water.calgui.bus_delegate.impl.ApplyDynamicConDeleImp;
-import gov.ca.water.calgui.bus_service.impl.XMLParsingSvcImpl;
-import gov.ca.water.calgui.constant.Constant;
 import gov.ca.water.calgui.presentation.DisplayFrame;
 import gov.ca.water.calgui.tech_service.IDialogSvc;
 import gov.ca.water.calgui.tech_service.IErrorHandlingSvc;
@@ -121,7 +120,7 @@ public class GlobalMouseListener implements MouseListener
 		{
 			LOG.error(e.getMessage());
 			String messageText = "Unable to initialize mouse listeners.";
-			errorHandlingSvc.businessErrorHandler(messageText, (JFrame) _swingEngine.find(Constant.MAIN_FRAME_NAME), e);
+			errorHandlingSvc.businessErrorHandler(messageText, e);
 		}
 	}
 

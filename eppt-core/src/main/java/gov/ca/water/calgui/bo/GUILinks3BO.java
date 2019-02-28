@@ -21,70 +21,70 @@ public class GUILinks3BO
 	 * with the string "ckbp" padded with leading zeros (e.g."1" is mapped to
 	 * "ckbp001").
 	 */
-	private String iD;
+	private String _iD;
 	/**
 	 * One or more C-PART/D-PART DSS record identifiers specifying the primary
 	 * data set(s) plotted. Multiple identifiers can be entered with a plus sign
 	 * "+" between, like "D_CCWDINTK/FLOW-DELIVERY+D_CCWDVCOR/FLOW-DELIVERY"
 	 */
-	private String primary;
+	private String _primary;
 	/**
 	 * A single C-PART/D-PART DSS record identifiers specifying the secondary
 	 * data set plotted against the right y-axis. Appending the string (-1)
 	 * shifts the data by one month, like "JP_EC_STD/SALINITY(-1)"
 	 */
-	private String secondary;
+	private String _secondary;
 	/**
 	 * Left-hand (primary) axis title.
 	 */
-	private String yTitle;
+	private String _yTitle;
 	/**
 	 * Chart title.
 	 */
-	private String title;
+	private String _title;
 	/**
 	 * Right-hand (secondary) title
 	 */
-	private String yTitle2;
+	private String _yTitle2;
 
 	public GUILinks3BO(String iD, String primary, String secondary, String yTitle, String title, String yTitle2)
 	{
-		this.iD = iD;
-		this.primary = primary;
-		this.secondary = secondary;
-		this.yTitle = yTitle;
-		this.title = title;
-		this.yTitle2 = yTitle2;
+		this._iD = iD;
+		this._primary = primary;
+		this._secondary = secondary;
+		this._yTitle = yTitle;
+		this._title = title;
+		this._yTitle2 = yTitle2;
 	}
 
 	public String getiD()
 	{
-		return iD;
+		return _iD;
 	}
 
 	public String getPrimary()
 	{
-		return primary;
+		return _primary;
 	}
 
 	public String getSecondary()
 	{
-		return secondary;
+		return _secondary;
 	}
 
 	public String getyTitle()
 	{
-		return yTitle;
+		return _yTitle;
 	}
 
 	public String getTitle()
 	{
-		return title;
+		return _title;
 	}
 
 	public String getyTitle2()
 	{
-		return yTitle2;
+		return _yTitle2;
 	}
 
 }

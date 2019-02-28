@@ -8,14 +8,11 @@
 package gov.ca.water.calgui.bo;
 //! Root table model for tabular data in the GUI
 
-import javax.swing.*;
 import javax.swing.table.AbstractTableModel;
 
 import gov.ca.water.calgui.constant.Constant;
 import gov.ca.water.calgui.tech_service.IAuditSvc;
 import gov.ca.water.calgui.tech_service.impl.AuditSvcImpl;
-import org.apache.log4j.Logger;
-import org.swixml.SwingEngine;
 
 /**
  * This class is used to hold the tables for the application.
@@ -24,7 +21,6 @@ import org.swixml.SwingEngine;
  */
 public class DataTableModel extends AbstractTableModel
 {
-	private static final Logger LOG = Logger.getLogger(DataTableModel.class.getName());
 	/**
 	 * see {@link AuditSvcImpl}
 	 */
@@ -32,135 +28,111 @@ public class DataTableModel extends AbstractTableModel
 	/**
 	 * This will hold the value of the table name in this table.
 	 */
-	private String tableName = "";
+	private String _tableName = "";
 	/**
 	 * This will hold all the column names in this table.
 	 */
-	private String[] columnNames;
+	private String[] _columnNames;
 	/**
 	 * This will hold all the data values that will be displayed in the table.
 	 */
-	private Object[][] data;
+	private Object[][] _data;
 	/**
 	 * This will tell whether the table can be modify or not.
 	 */
-	private boolean isCellEditable;
+	private boolean _isCellEditable;
 	/**
 	 * The object of the GUI.
 	 */
-	private SwingEngine swingEngine;
-
 	public DataTableModel(String tableName, String[] columnName, Object[][] data, boolean isCellEditable)
 	{
-		this.tableName = tableName;
-		this.columnNames = columnName;
-		this.data = data;
-		this.isCellEditable = isCellEditable;
+
+		_tableName = tableName;
+		_columnNames = columnName;
+		_data = data;
+		_isCellEditable = isCellEditable;
 	}
 
 	@Override
-	public Object clone() throws CloneNotSupportedException
+	public Object clone()
 	{
-		String tableName = this.tableName;
-		String[] colNames = new String[this.columnNames.length];
+		String tableName = this._tableName;
+		String[] colNames = new String[this._columnNames.length];
 		for(int i = 0; i < colNames.length; i++)
 		{
-			colNames[i] = this.columnNames[i];
+			colNames[i] = this._columnNames[i];
 		}
-		Object[][] data1 = new Object[this.data.length][this.data[0].length];
+		Object[][] data1 = new Object[this._data.length][this._data[0].length];
 		for(int i = 0; i < data1.length; i++)
 		{
 			for(int j = 0; j < data1[0].length; j++)
 			{
-				data1[i][j] = this.data[i][j];
+				data1[i][j] = this._data[i][j];
 			}
 		}
-		return new DataTableModel(tableName, colNames, data1, this.isCellEditable);
+		return new DataTableModel(tableName, colNames, data1, _isCellEditable);
 	}
 
 	public String[] getColumnNames()
 	{
-		return columnNames;
+		return _columnNames;
 	}
 
 	public void setColumnNames(String[] columnNames)
 	{
-		this.columnNames = columnNames;
+		this._columnNames = columnNames;
 	}
 
 	public Object[][] getData()
 	{
-		return data;
+		return _data;
 	}
 
 	public void setData(Object[][] data)
 	{
-		this.data = data;
+		this._data = data;
 	}
 
 	public boolean isCellEditable()
 	{
-		return isCellEditable;
+		return _isCellEditable;
 	}
 
 	public void setCellEditable(boolean isCellEditable)
 	{
-		this.isCellEditable = isCellEditable;
+		this._isCellEditable = isCellEditable;
 	}
 
 	@Override
 	public int getColumnCount()
 	{
-		return columnNames.length;
+		return _columnNames.length;
 	}
 
 	@Override
 	public int getRowCount()
 	{
-		return data.length;
+		return _data.length;
 	}
 
 	@Override
 	public Object getValueAt(int r, int c)
 	{
-		return data[r][c];
+		return _data[r][c];
 	}
 
 	@Override
 	public boolean isCellEditable(int row, int col)
 	{
-		return this.isCellEditable;
+		return this._isCellEditable;
 	}
 
 	@Override
 	public void setValueAt(Object value, int row, int col)
 	{
-		auditSvc.addAudit(tableName + Constant.DASH + row + Constant.DASH + col, String.valueOf(getValueAt(row, col)),
+		auditSvc.addAudit(_tableName + Constant.DASH + row + Constant.DASH + col, String.valueOf(getValueAt(row, col)),
 				String.valueOf(value));
-		if(tableName.toLowerCase().startsWith("wsi") || tableName.equals(Constant.USER_DEFINED))
-		{
-			try
-			{
-				JLabel jLabel = (JLabel) swingEngine.find("op_WSIDI_Status");
-				String oldValue = jLabel.getText();
-				if(oldValue.endsWith(Constant.UNEDITED_FORLABEL))
-				{
-					String val = oldValue.replace(Constant.UNEDITED_FORLABEL, Constant.EDITED_FORLABEL);
-					jLabel.setText(val);
-				}
-				else if(oldValue.endsWith("iterations)"))
-				{
-					String[] parts = oldValue.split("\\(");
-					String val = parts[0] + Constant.EDITED_FORLABEL;
-					jLabel.setText(val);
-				}
-			}
-			catch(NullPointerException ex)
-			{
-				LOG.error(ex);
-			}
-		}
-		data[row][col] = value;
+		_data[row][col] = value;
 		fireTableCellUpdated(row, col);
 	}
 
@@ -170,7 +142,7 @@ public class DataTableModel extends AbstractTableModel
 		String colName = "";
 		if(columnIndex <= getColumnCount())
 		{
-			colName = columnNames[columnIndex];
+			colName = _columnNames[columnIndex];
 		}
 		return colName;
 	}
@@ -183,16 +155,11 @@ public class DataTableModel extends AbstractTableModel
 
 	public String getTableName()
 	{
-		return tableName;
+		return _tableName;
 	}
 
 	public void setTableName(String tableName)
 	{
-		this.tableName = tableName;
-	}
-
-	public void setSwingEngine(SwingEngine swingEngine)
-	{
-		this.swingEngine = swingEngine;
+		this._tableName = tableName;
 	}
 }

@@ -5,7 +5,7 @@
  * Source may not be released without written approval from DWR
  */
 
-package gov.ca.water.calgui.presentation;
+package gov.ca.water.scenario.presentation;
 
 import java.awt.Component;
 import java.awt.HeadlessException;
@@ -21,26 +21,30 @@ import javax.swing.*;
 import javax.swing.border.TitledBorder;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
+import gov.ca.water.businessservice.IAllButtonsDele;
+import gov.ca.water.businessservice.IApplyDynamicConDele;
+import gov.ca.water.businessservice.impl.AllButtonsDeleImp;
+import gov.ca.water.businessservice.impl.ApplyDynamicConDeleImp;
+import gov.ca.water.businessservice.impl.VerifyControlsDeleImp;
+import gov.ca.water.businessservice.impl.XMLParsingSvcImpl;
 import gov.ca.water.calgui.EpptInitializationException;
 import gov.ca.water.calgui.bo.DataTableModel;
 import gov.ca.water.calgui.bo.RBListItemBO;
 import gov.ca.water.calgui.bo.ResultUtilsBO;
-import gov.ca.water.calgui.bus_delegate.IAllButtonsDele;
-import gov.ca.water.calgui.bus_delegate.IApplyDynamicConDele;
 import gov.ca.water.calgui.bus_delegate.IScenarioDele;
 import gov.ca.water.calgui.bus_delegate.IVerifyControlsDele;
-import gov.ca.water.calgui.bus_delegate.impl.AllButtonsDeleImp;
-import gov.ca.water.calgui.bus_delegate.impl.ApplyDynamicConDeleImp;
 import gov.ca.water.calgui.bus_delegate.impl.ScenarioDeleImp;
-import gov.ca.water.calgui.bus_delegate.impl.VerifyControlsDeleImp;
 import gov.ca.water.calgui.bus_service.IModelRunSvc;
 import gov.ca.water.calgui.bus_service.IScenarioSvc;
 import gov.ca.water.calgui.bus_service.ISeedDataSvc;
 import gov.ca.water.calgui.bus_service.impl.ModelRunSvcImpl;
 import gov.ca.water.calgui.bus_service.impl.ScenarioSvcImpl;
 import gov.ca.water.calgui.bus_service.impl.SeedDataSvcImpl;
-import gov.ca.water.calgui.bus_service.impl.XMLParsingSvcImpl;
 import gov.ca.water.calgui.constant.Constant;
+import gov.ca.water.calgui.presentation.DisplayFrame;
+import gov.ca.water.calgui.presentation.PowerFrame;
+import gov.ca.water.calgui.presentation.ProgressFrame;
+import gov.ca.water.calgui.presentation.ScenarioFrame;
 import gov.ca.water.calgui.tech_service.IAuditSvc;
 import gov.ca.water.calgui.tech_service.IDialogSvc;
 import gov.ca.water.calgui.tech_service.IErrorHandlingSvc;
@@ -71,7 +75,6 @@ public class GlobalActionListener implements ActionListener
 	private final IVerifyControlsDele _verifyControlsDele = new VerifyControlsDeleImp();
 	private final IErrorHandlingSvc _errorHandlingSvc = new ErrorHandlingSvcImpl();
 	private final IApplyDynamicConDele _applyDynamicConDele = new ApplyDynamicConDeleImp();
-	private JList<String> _lstReports = null;
 
 	@SuppressWarnings("unchecked")
 	@Override
@@ -79,7 +82,7 @@ public class GlobalActionListener implements ActionListener
 	{
 		try
 		{
-			_lstReports = (JList<String>) _swingEngine.find("lstReports");
+			final JList<String> lstReports = (JList<String>) _swingEngine.find("lstReports");
 			final JList<RBListItemBO> lstScenarios = (JList<RBListItemBO>) _swingEngine.find("SelectedList");
 			JTable table = null;
 			switch(ae.getActionCommand())
@@ -93,23 +96,11 @@ public class GlobalActionListener implements ActionListener
 					{
 						scendarios.add(model.getElementAt(i));
 					}
-					PowerFrame pf = new PowerFrame(scendarios);
+					PowerFrame pf = new PowerFrame(scendarios, (JFrame) _swingEngine.find(Constant.MAIN_FRAME_NAME));
 					break;
 
 				case "AC_SaveScen":
-					if(FilenameUtils.removeExtension(((JTextField) _swingEngine.find("run_txfScen")).getText())
-									.toUpperCase().equals("DEFAULT") && _allButtonsDele.defaultCLSIsProtected())
-					{
-
-						_dialogSvc.getOK(
-								"The CalLite GUI is not allowed to overwrite DEFAULT.CLS. Please use Save As to save to a different scenario file.",
-								JOptionPane.ERROR_MESSAGE);
-
-					}
-					else
-					{
-						this._allButtonsDele.saveCurrentStateToFile();
-					}
+					saveScenario();
 					break;
 				case "AC_SaveScenAs":
 					this._allButtonsDele.saveAsButton();
@@ -118,49 +109,7 @@ public class GlobalActionListener implements ActionListener
 					loadViewScen();
 					break;
 				case "AC_LoadScen":
-
-					boolean doLoad = true; // Check for changed scenario prior to
-					// load -
-					// tad 20170202
-					if(_auditSvc.hasValues())
-					{
-						String clsFileName = FilenameUtils
-								.removeExtension(((JTextField) _swingEngine.find("run_txfScen")).getText());
-
-						String option = _dialogSvc.getYesNoCancel("Scenario selections have changed for " + clsFileName
-								+ ". Would you like to save the changes?", JOptionPane.QUESTION_MESSAGE);
-						switch(option)
-						{
-							case "Cancel":
-
-								doLoad = false;
-								break;
-
-							case "Yes":
-
-								doLoad = this._allButtonsDele.saveCurrentStateToFile(clsFileName);
-								break;
-
-							case "No":
-
-								doLoad = true;
-								break;
-						}
-					}
-					if(doLoad)
-					{
-						JFileChooser fChooser = new JFileChooser(Constant.SCENARIOS_DIR);
-						fChooser.setMultiSelectionEnabled(false);
-						FileNameExtensionFilter filter = new FileNameExtensionFilter("CLS FILES (.cls)", "cls");
-						fChooser.setFileFilter(filter);
-						int val = fChooser.showOpenDialog(_swingEngine.find(Constant.MAIN_FRAME_NAME));
-						if(val == JFileChooser.APPROVE_OPTION
-								&& this._allButtonsDele.verifyTheSelectedFiles(fChooser, Constant.CLS_EXT))
-						{
-							String fileName = fChooser.getSelectedFile().getName();
-							loadScenarioButton(fileName);
-						}
-					}
+					loadScenario();
 					break;
 				case "AC_Help":
 					this._allButtonsDele.helpButton();
@@ -207,8 +156,7 @@ public class GlobalActionListener implements ActionListener
 					else
 					{
 						_errorHandlingSvc.validationeErrorHandler("You can't paste untel you select user defined.",
-								"You can't paste untel you select user defined.",
-								(JFrame) _swingEngine.find(Constant.MAIN_FRAME_NAME));
+								"You can't paste untel you select user defined.");
 					}
 					break;
 				case "Op_TableEdit":
@@ -232,21 +180,7 @@ public class GlobalActionListener implements ActionListener
 					table = (JTable) _swingEngine.find("tblOpValues");
 					this._allButtonsDele.pasteTableValues(table);
 					break;
-
-				// From Custom Results dashboard
-
-				case "AC_Controls":
-					ControlFrame cf = ResultUtilsBO.getResultUtilsInstance(null).getControlFrame();
-					cf.display();
-					if(cf.getExtendedState() == JFrame.ICONIFIED)
-					{
-						cf.setExtendedState(JFrame.NORMAL);
-					}
-					break;
-
-
 				// From Quick Results and External PDF
-
 				case "AC_PresetClear":
 					clearQRCheckBoxes("presets");
 					break;
@@ -273,7 +207,7 @@ public class GlobalActionListener implements ActionListener
 					{
 						_dialogSvc.getOK("Error - No scenarios loaded", JOptionPane.ERROR_MESSAGE);
 					}
-					else if(_lstReports.getSelectedValue() == null)
+					else if(lstReports.getSelectedValue() == null)
 					{
 						_dialogSvc.getOK("Error - No display group selected", JOptionPane.ERROR_MESSAGE);
 					}
@@ -300,12 +234,71 @@ public class GlobalActionListener implements ActionListener
 		{
 			LOG.error(e.getMessage());
 			String messageText = "Unable to initialize action listeners.";
-			_errorHandlingSvc.businessErrorHandler(messageText, (JFrame) _swingEngine.find(Constant.MAIN_FRAME_NAME),
-					e);
+			_errorHandlingSvc.businessErrorHandler(messageText, e);
 		}
 		catch(EpptInitializationException ex)
 		{
 			//do something? There was an issue finding the file or reading the file
+		}
+	}
+
+	private void saveScenario()
+	{
+		if(FilenameUtils.removeExtension(((JTextField) _swingEngine.find("run_txfScen")).getText())
+						.toUpperCase().equals("DEFAULT") && _allButtonsDele.defaultCLSIsProtected())
+		{
+
+			_dialogSvc.getOK(
+					"The CalLite GUI is not allowed to overwrite DEFAULT.CLS. Please use Save As to save to a different scenario file.",
+					JOptionPane.ERROR_MESSAGE);
+
+		}
+		else
+		{
+			this._allButtonsDele.saveCurrentStateToFile();
+		}
+		return;
+	}
+
+	private void loadScenario()
+	{
+		// Check for changed scenario prior to
+		boolean doLoad = true;
+		// load -
+		// tad 20170202
+		if(_auditSvc.hasValues())
+		{
+			String clsFileName = FilenameUtils
+					.removeExtension(((JTextField) _swingEngine.find("run_txfScen")).getText());
+
+			String option = _dialogSvc.getYesNoCancel("Scenario selections have changed for " + clsFileName
+					+ ". Would you like to save the changes?", JOptionPane.QUESTION_MESSAGE);
+			switch(option)
+			{
+				case "Cancel":
+					doLoad = false;
+					break;
+				case "Yes":
+					doLoad = this._allButtonsDele.saveCurrentStateToFile(clsFileName);
+					break;
+				case "No":
+					doLoad = true;
+					break;
+			}
+		}
+		if(doLoad)
+		{
+			JFileChooser fChooser = new JFileChooser(Constant.SCENARIOS_DIR);
+			fChooser.setMultiSelectionEnabled(false);
+			FileNameExtensionFilter filter = new FileNameExtensionFilter("CLS FILES (.cls)", "cls");
+			fChooser.setFileFilter(filter);
+			int val = fChooser.showOpenDialog(_swingEngine.find(Constant.MAIN_FRAME_NAME));
+			if(val == JFileChooser.APPROVE_OPTION
+					&& this._allButtonsDele.verifyTheSelectedFiles(fChooser, Constant.CLS_EXT))
+			{
+				String fileName = fChooser.getSelectedFile().getName();
+				loadScenarioButton(fileName);
+			}
 		}
 	}
 
@@ -338,8 +331,7 @@ public class GlobalActionListener implements ActionListener
 		{
 			LOG.error(e.getMessage());
 			String messageText = "Unable to load scenarios.";
-			_errorHandlingSvc.businessErrorHandler(messageText, (JFrame) _swingEngine.find(Constant.MAIN_FRAME_NAME),
-					e);
+			_errorHandlingSvc.businessErrorHandler(messageText, e);
 		}
 	}
 
@@ -352,8 +344,9 @@ public class GlobalActionListener implements ActionListener
 		boolean pro = this._allButtonsDele.saveForViewScen();
 		if(pro)
 		{
-			List<DataTableModel> dtmList = _scenarioDele.getScenarioTableData(null);
-			ScenarioFrame scenarioFrame = new ScenarioFrame(dtmList);
+			List<DataTableModel> dtmList = _scenarioDele.getScenarioTableData(null, _swingEngine);
+			ScenarioFrame scenarioFrame = new ScenarioFrame(dtmList,
+					(JFrame) _swingEngine.find(Constant.MAIN_FRAME_NAME));
 			scenarioFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 			scenarioFrame.setVisible(true);
 			try
@@ -364,9 +357,7 @@ public class GlobalActionListener implements ActionListener
 			{
 				LOG.error(ex.getMessage());
 				String messageText = "Unable to load scenarios.";
-				_errorHandlingSvc.businessErrorHandler(messageText,
-						(JFrame) _swingEngine.find(Constant.MAIN_FRAME_NAME),
-						ex);
+				_errorHandlingSvc.businessErrorHandler(messageText, ex);
 			}
 		}
 	}
@@ -394,8 +385,7 @@ public class GlobalActionListener implements ActionListener
 		{
 			LOG.error(e.getMessage());
 			String messageText = "Unable to run batch file.";
-			_errorHandlingSvc.businessErrorHandler(messageText, (JFrame) _swingEngine.find(Constant.MAIN_FRAME_NAME),
-					e);
+			_errorHandlingSvc.businessErrorHandler(messageText, e);
 		}
 	}
 
@@ -422,8 +412,7 @@ public class GlobalActionListener implements ActionListener
 		{
 			LOG.error(e.getMessage());
 			String messageText = "Unable to run wsidi.";
-			_errorHandlingSvc.businessErrorHandler(messageText, (JFrame) _swingEngine.find(Constant.MAIN_FRAME_NAME),
-					e);
+			_errorHandlingSvc.businessErrorHandler(messageText, e);
 		}
 	}
 
@@ -440,28 +429,8 @@ public class GlobalActionListener implements ActionListener
 		{
 			String clsFileName = FilenameUtils
 					.removeExtension(((JTextField) _swingEngine.find("run_txfScen")).getText());
-			if(clsFileName.toUpperCase().equals(Constant.DEFAULT))
+			if(clsFileName.equalsIgnoreCase(Constant.DEFAULT))
 			{
-				// JOptionPane.showMessageDialog(swingEngine.find(Constant.MAIN_FRAME_NAME),
-				// "The CalLite GUI is not allowed to modify the default
-				// scenario 'DEFAULT.CLS'. Please use Save As to save to a
-				// different scenario file.");
-				//
-				// ImageIcon icon = new
-				// ImageIcon(getClass().getResource("/images/CalLiteIcon.png"));
-				// Object[] options = { "OK" };
-				// JOptionPane optionPane = new JOptionPane(
-				// "The CalLite GUI is not allowed to modify the default
-				// scenario 'DEFAULT.CLS'. Please use Save As to save to a
-				// different scenario file.",
-				// JOptionPane.ERROR_MESSAGE, JOptionPane.OK_OPTION, null,
-				// options, options[0]);
-				// JDialog dialog =
-				// optionPane.createDialog(swingEngine.find(Constant.MAIN_FRAME_NAME),
-				// "CalLite");
-				// dialog.setIconImage(icon.getImage());
-				// dialog.setResizable(false);
-				// dialog.setVisible(true);
 				_dialogSvc.getOK(
 						"Error - The CalLite GUI is not allowed to modify the default scenario 'DEFAULT.CLS'. Please use Save As to save to a different scenario file",
 						JOptionPane.ERROR_MESSAGE);
@@ -470,21 +439,6 @@ public class GlobalActionListener implements ActionListener
 			}
 			if(!Files.isExecutable(Paths.get(Constant.RUN_DETAILS_DIR + clsFileName)))
 			{
-				// ImageIcon icon = new
-				// ImageIcon(getClass().getResource("/images/CalLiteIcon.png"));
-				// Object[] options = { "Yes", "No" };
-				// JOptionPane optionPane = new JOptionPane(
-				// "The cls file does not have a corresponding directory
-				// structure.\nThe batch will not run without this.\nDo you want
-				// to save to create that directory?",
-				// JOptionPane.QUESTION_MESSAGE, JOptionPane.OK_CANCEL_OPTION,
-				// null, options, options[0]);
-				// JDialog dialog =
-				// optionPane.createDialog(swingEngine.find(Constant.MAIN_FRAME_NAME),
-				// "CalLite");
-				// dialog.setIconImage(icon.getImage());
-				// dialog.setResizable(false);
-				// dialog.setVisible(true);
 				String option = _dialogSvc.getYesNo(
 						"The cls file does not have a corresponding directory structure.\nThe batch will not run without this.\nDo you want to save to create that directory?",
 						JOptionPane.QUESTION_MESSAGE);
@@ -499,21 +453,6 @@ public class GlobalActionListener implements ActionListener
 			isSaved = false;
 			if(_auditSvc.hasValues())
 			{
-
-				// ImageIcon icon = new
-				// ImageIcon(getClass().getResource("/images/CalLiteIcon.png"));
-				// Object[] options = { "Yes", "No" };
-				// JOptionPane optionPane = new JOptionPane(
-				// "Scenario selections have changed. Would you like to save the
-				// changes?",
-				// JOptionPane.QUESTION_MESSAGE, JOptionPane.YES_NO_OPTION,
-				// null, options, options[1]);
-				// JDialog dialog =
-				// optionPane.createDialog(swingEngine.find(Constant.MAIN_FRAME_NAME),
-				// "CalLite");
-				// dialog.setIconImage(icon.getImage());
-				// dialog.setResizable(false);
-				// dialog.setVisible(true);
 				String option = _dialogSvc.getYesNo(
 						"Scenario selections have changed. Would you like to save the changes?",
 						JOptionPane.QUESTION_MESSAGE);
@@ -539,8 +478,7 @@ public class GlobalActionListener implements ActionListener
 		{
 			LOG.error(e.getMessage());
 			String messageText = "Unable to run batch file.";
-			_errorHandlingSvc.businessErrorHandler(messageText, (JFrame) _swingEngine.find(Constant.MAIN_FRAME_NAME),
-					e);
+			_errorHandlingSvc.businessErrorHandler(messageText, e);
 		}
 		return false;
 	}
@@ -554,11 +492,11 @@ public class GlobalActionListener implements ActionListener
 	{
 		JPanel panel = (JPanel) _swingEngine.find(panelName);
 		Component[] components = panel.getComponents();
-		for(int i = 0; i < components.length; i++)
+		for(final Component component : components)
 		{
-			if(components[i] instanceof JCheckBox)
+			if(component instanceof JCheckBox)
 			{
-				JCheckBox c = (JCheckBox) components[i];
+				JCheckBox c = (JCheckBox) component;
 				c.setSelected(false);
 			}
 		}

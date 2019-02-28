@@ -10,7 +10,6 @@ package gov.ca.water.calgui.bo;
 //! Utilities for display of results
 
 import java.awt.Component;
-import java.awt.GridBagConstraints;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
@@ -35,7 +34,6 @@ import calsim.app.Project;
 import calsim.gui.DtsTreeModel;
 import calsim.gui.DtsTreePanel;
 import gov.ca.water.calgui.constant.Constant;
-import gov.ca.water.calgui.presentation.ControlFrame;
 import gov.ca.water.calgui.tech_service.IDialogSvc;
 import gov.ca.water.calgui.tech_service.impl.DialogSvcImpl;
 import org.apache.log4j.Logger;
@@ -54,7 +52,6 @@ public class ResultUtilsBO implements ChangeListener
 	private HashMap<String, Integer> _monthMap;
 	private SwingEngine _swingEngine;
 	private Project _project;
-	private ControlFrame _controlFrame = null;
 	private FileDialogBO fdDSSFiles;
 
 	/**
@@ -69,7 +66,7 @@ public class ResultUtilsBO implements ChangeListener
 
 		// Build map for mmm -> m mapping
 
-		_monthMap = new HashMap<String, Integer>();
+		_monthMap = new HashMap<>();
 		_monthMap.put("jan", 1);
 		_monthMap.put("feb", 2);
 		_monthMap.put("mar", 3);
@@ -123,7 +120,7 @@ public class ResultUtilsBO implements ChangeListener
 		SpinnerModel spnmod = new SpinnerNumberModel(val, min, max, step);
 		jspn.setModel(spnmod);
 		jspn.setEditor(new JSpinner.NumberEditor(jspn, format));
-		if(changelistener == true)
+		if(changelistener)
 		{
 			jspn.addChangeListener((ChangeListener) obj);
 		}
@@ -168,8 +165,8 @@ public class ResultUtilsBO implements ChangeListener
 		JFileChooser fc = new JFileChooser();
 		fc.setFileFilter(new SimpleFileFilter("cgr", "CalLite GUI Report File (*.cgr)"));
 		fc.setCurrentDirectory(new File(".//Config"));
-		File file = null;
-		String filename = null;
+		File file;
+		String filename;
 		int retval = fc.showOpenDialog(_swingEngine.find(Constant.MAIN_FRAME_NAME));
 		if(retval == JFileChooser.APPROVE_OPTION)
 		{
@@ -189,20 +186,18 @@ public class ResultUtilsBO implements ChangeListener
 				if(aLine != null)
 				{
 					DtsTreePanel.getCurrentModel().readData(filename + ".tree.xml", "");
-					Vector<MultipleTimeSeries> mts = DtsTreeModel
-							.getPrjMts();
-					Vector<DerivedTimeSeries> dts = DtsTreeModel
-							.getPrjDts();
+					Vector<MultipleTimeSeries> mts = DtsTreeModel.getPrjMts();
+					Vector<DerivedTimeSeries> dts = DtsTreeModel.getPrjDts();
 					Project p = getProject();
 					p.clearMTSList();
-					for(int i = 0; i < mts.size(); i++)
+					for(MultipleTimeSeries mt : mts)
 					{
-						p.add(mts.get(i));
+						p.add(mt);
 					}
 					p.clearDTSList();
-					for(int i = 0; i < dts.size(); i++)
+					for(DerivedTimeSeries dt : dts)
 					{
-						p.add(dts.get(i));
+						p.add(dt);
 					}
 				}
 			}
@@ -237,10 +232,9 @@ public class ResultUtilsBO implements ChangeListener
 			boolean saveFlag = true;
 			if(new File(filename).exists())
 			{
-				saveFlag = (_dialogSvc
+				saveFlag = "OK".equals(_dialogSvc
 						.getOKCancel("The display list file '" + filename + "' already exists. Press OK to overwrite.",
-								JOptionPane.QUESTION_MESSAGE)
-						.equals("OK"));
+								JOptionPane.QUESTION_MESSAGE));
 			}
 			if(saveFlag)
 			{
@@ -255,14 +249,14 @@ public class ResultUtilsBO implements ChangeListener
 					for(int i = 0; i < size; i++)
 					{
 						Object item = lstReports.getModel().getElementAt(i);
-						if(item.toString() != " ")
+						if(!item.toString().equals(" "))
 						{
 							lstArray[n] = item.toString();
 							n = n + 1;
 						}
 					}
 					// Store contents of Project
-					List<String> pList = new ArrayList<String>();
+					List<String> pList = new ArrayList<>();
 					pList.add("===== Dts Tree =====");
 					Project p = getProject();
 					pList.add(String.valueOf(p.getNumberOfMTS()));
@@ -289,19 +283,16 @@ public class ResultUtilsBO implements ChangeListener
 									+ dts.getOperationIdAt(j) + ";" + dts.getDTSNameAt(j));
 						}
 					}
-					try
+					try(PrintStream output = new PrintStream(outputStream))
 					{
-						PrintStream output = new PrintStream(outputStream);
 						for(int i = 0; i < n; i++)
 						{
 							output.println(lstArray[i]);
 						}
-						for(int i = 0; i < pList.size(); i++)
+						for(String s : pList)
 						{
-							output.println(pList.get(i));
+							output.println(s);
 						}
-						output.close();
-						outputStream.close();
 						DtsTreePanel.getCurrentModel().saveFile(filename + ".tree.xml");
 					}
 					catch(IOException ex)
@@ -317,35 +308,6 @@ public class ResultUtilsBO implements ChangeListener
 
 			}
 		}
-	}
-
-	/**
-	 * Creates a singleton ControlFrame to receive undocked Quick Results
-	 * controls for use with Map View and Custom Results dashboards
-	 *
-	 * @return
-	 */
-	public ControlFrame getControlFrame()
-	{
-
-		if(_controlFrame == null)
-		{
-			_controlFrame = new ControlFrame();
-		}
-		return _controlFrame;
-	}
-
-	/**
-	 * Disposes of ControlFrame
-	 */
-	public void closeControlFrame()
-	{
-		if(_controlFrame != null)
-		{
-			_controlFrame.dispose();
-			_controlFrame = null;
-		}
-		return;
 	}
 
 	/**
@@ -389,7 +351,7 @@ public class ResultUtilsBO implements ChangeListener
 	{
 		Component c = (Component) changeEvent.getSource();
 		String lcName = c.getName().toLowerCase();
-		if(lcName.substring(0, 3).equals("spn"))
+		if("spn".equals(lcName.substring(0, 3)))
 		{
 			// Constrain run times to [10/1921,9/2003]
 			int syr = (Integer) ((JSpinner) _swingEngine.find("spnRunStartYear")).getValue();
@@ -418,45 +380,11 @@ public class ResultUtilsBO implements ChangeListener
 				((JSpinner) _swingEngine.find("spnEndMonth")).setValue("Sep");
 			}
 		}
-		else if(lcName.equals("tabbedpane1"))
+		else if("tabbedpane1".equals(lcName))
 		{
 			JMenuBar menuBar = (JMenuBar) this._swingEngine.find("menu");
 			menuBar.setSize(150, 20);
-			if(((JTabbedPane) c).getSelectedIndex() == 6)
-			{ // Quick Results
-				ControlFrame cf = getControlFrame();
-				if(cf != null)
-				{
-
-					JPanel p = (JPanel) _swingEngine.find("controls");
-					GridBagConstraints gbc = new GridBagConstraints();
-
-					gbc.gridx = 0;
-					gbc.gridy = 0;
-					gbc.gridheight = 1;
-					gbc.anchor = GridBagConstraints.NORTHWEST;
-					p.add(_swingEngine.find("ss"), gbc);
-
-					gbc.gridy = 1;
-					p.add(_swingEngine.find("Display"), gbc);
-
-					_swingEngine.find("Reporting").invalidate();
-
-					closeControlFrame();
-
-				}
-			}
 		}
-	}
-
-	/**
-	 * Return the custom file dialog containing the scenario list
-	 *
-	 * @return
-	 */
-	public FileDialogBO getFdDSSFiles()
-	{
-		return fdDSSFiles;
 	}
 
 	/**

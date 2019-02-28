@@ -8,6 +8,9 @@
 package gov.ca.water.scenario;
 //! Creates and executes a single batch file for one run
 
+import java.io.IOException;
+import java.util.Calendar;
+
 import org.antlr.runtime.RecognitionException;
 import org.apache.log4j.Logger;
 import wrimsv2.commondata.wresldata.StudyDataSet;
@@ -17,13 +20,10 @@ import wrimsv2.components.PreRunModel;
 import wrimsv2.evaluator.PreEvaluator;
 import wrimsv2.wreslparser.elements.StudyUtils;
 
-import java.io.IOException;
-import java.util.Calendar;
-
 /**
  * This class is used to run a single study of the wrimsv2 class.
  */
-public class Singleton
+public final class Singleton
 {
 	private static final Logger LOG = Logger.getLogger(Singleton.class.getName());
 
@@ -64,13 +64,9 @@ public class Singleton
 						+ Error.getTotalError() + " =================");
 			}
 		}
-		catch(RecognitionException ex)
+		catch(RecognitionException | IOException ex)
 		{
-            LOG.error(ex.getMessage());
-		}
-		catch(IOException ex)
-		{
-            LOG.error(ex.getMessage());
+			LOG.error(ex.getMessage(), ex);
 		}
 		System.exit(0);
 	}

@@ -28,35 +28,31 @@ import calsim.app.AppUtils;
 import calsim.app.DerivedTimeSeries;
 import calsim.app.MultipleTimeSeries;
 import calsim.gui.GuiUtils;
+import gov.ca.water.businessservice.IAllButtonsDele;
+import gov.ca.water.businessservice.IApplyDynamicConDele;
+import gov.ca.water.businessservice.IXMLParsingSvc;
+import gov.ca.water.businessservice.impl.AllButtonsDeleImp;
+import gov.ca.water.businessservice.impl.ApplyDynamicConDeleImp;
+import gov.ca.water.businessservice.impl.VerifyControlsDeleImp;
+import gov.ca.water.businessservice.impl.XMLParsingSvcImpl;
 import gov.ca.water.calgui.EpptInitializationException;
 import gov.ca.water.calgui.bo.CalLiteGUIException;
 import gov.ca.water.calgui.bo.DataTableModel;
 import gov.ca.water.calgui.bo.FileDialogBO;
 import gov.ca.water.calgui.bo.GUILinks2BO;
-import gov.ca.water.calgui.bo.JLinkedSlider;
 import gov.ca.water.calgui.bo.RBListItemBO;
 import gov.ca.water.calgui.bo.ResultUtilsBO;
-import gov.ca.water.calgui.bus_delegate.IAllButtonsDele;
-import gov.ca.water.calgui.bus_delegate.IApplyDynamicConDele;
 import gov.ca.water.calgui.bus_delegate.IVerifyControlsDele;
-import gov.ca.water.calgui.bus_delegate.impl.AllButtonsDeleImp;
-import gov.ca.water.calgui.bus_delegate.impl.ApplyDynamicConDeleImp;
-import gov.ca.water.calgui.bus_delegate.impl.VerifyControlsDeleImp;
 import gov.ca.water.calgui.bus_service.IScenarioSvc;
 import gov.ca.water.calgui.bus_service.ISeedDataSvc;
 import gov.ca.water.calgui.bus_service.ITableSvc;
-import gov.ca.water.calgui.bus_service.IXMLParsingSvc;
 import gov.ca.water.calgui.bus_service.impl.DynamicControlSvcImpl;
 import gov.ca.water.calgui.bus_service.impl.ModelRunSvcImpl;
 import gov.ca.water.calgui.bus_service.impl.ScenarioSvcImpl;
 import gov.ca.water.calgui.bus_service.impl.SeedDataSvcImpl;
 import gov.ca.water.calgui.bus_service.impl.TableSvcImpl;
-import gov.ca.water.calgui.bus_service.impl.XMLParsingSvcImpl;
 import gov.ca.water.calgui.constant.Constant;
 import gov.ca.water.calgui.presentation.DisplayFrame;
-import gov.ca.water.calgui.presentation.GlobalActionListener;
-import gov.ca.water.calgui.presentation.GlobalChangeListener;
-import gov.ca.water.calgui.presentation.GlobalItemListener;
 import gov.ca.water.calgui.presentation.WRIMSGUILinks;
 import gov.ca.water.calgui.tech_service.IAuditSvc;
 import gov.ca.water.calgui.tech_service.IDialogSvc;
@@ -64,6 +60,7 @@ import gov.ca.water.calgui.tech_service.IErrorHandlingSvc;
 import gov.ca.water.calgui.tech_service.impl.AuditSvcImpl;
 import gov.ca.water.calgui.tech_service.impl.DialogSvcImpl;
 import gov.ca.water.calgui.tech_service.impl.ErrorHandlingSvcImpl;
+import gov.ca.water.scenario.ui.JLinkedSlider;
 import org.apache.log4j.Logger;
 import org.jfree.util.Log;
 import org.swixml.SwingEngine;
@@ -271,8 +268,7 @@ public class CalLiteInitClass
 		{
 			LOGGER.error(e.getMessage());
 			String messageText = "Unable to initialize GUI.";
-			errorHandlingSvc.businessErrorHandler(messageText, (JFrame) swingEngine.find(Constant.MAIN_FRAME_NAME),
-					e);
+			errorHandlingSvc.businessErrorHandler(messageText, e);
 		}
 	}
 

@@ -7,7 +7,8 @@
 
 package gov.ca.water.calgui.bus_delegate.impl;
 
-import java.awt.*;
+import java.awt.Component;
+import java.awt.Container;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedHashMap;
@@ -25,10 +26,8 @@ import gov.ca.water.calgui.bo.ScenarioDisplayBO;
 import gov.ca.water.calgui.bus_delegate.IScenarioDele;
 import gov.ca.water.calgui.bus_service.IScenarioSvc;
 import gov.ca.water.calgui.bus_service.ISeedDataSvc;
-import gov.ca.water.calgui.bus_service.IXMLParsingSvc;
 import gov.ca.water.calgui.bus_service.impl.ScenarioSvcImpl;
 import gov.ca.water.calgui.bus_service.impl.SeedDataSvcImpl;
-import gov.ca.water.calgui.bus_service.impl.XMLParsingSvcImpl;
 import gov.ca.water.calgui.constant.Constant;
 import org.apache.commons.io.FilenameUtils;
 import org.swixml.SwingEngine;
@@ -41,24 +40,23 @@ import org.swixml.SwingEngine;
  */
 public class ScenarioDeleImp implements IScenarioDele
 {
-	private IXMLParsingSvc xmlParsingSvc = XMLParsingSvcImpl.getXMLParsingSvcImplInstance();
-	private SwingEngine swingEngine = xmlParsingSvc.getSwingEngine();
-	private IScenarioSvc scenarioSvc = ScenarioSvcImpl.getScenarioSvcImplInstance();
-	private ISeedDataSvc seedDataSvc = SeedDataSvcImpl.getSeedDataSvcImplInstance();
+	private final IScenarioSvc _scenarioSvc = ScenarioSvcImpl.getScenarioSvcImplInstance();
+	private final ISeedDataSvc _seedDataSvc = SeedDataSvcImpl.getSeedDataSvcImplInstance();
 
 	@Override
-	public List<DataTableModel> getScenarioTableData(List<String> fileNames) throws EpptInitializationException
+	public List<DataTableModel> getScenarioTableData(List<String> fileNames, SwingEngine swingEngine)
+			throws EpptInitializationException
 	{
 		if(fileNames == null)
 		{
-			fileNames = new ArrayList<String>();
+			fileNames = new ArrayList<>();
 		}
 		String currentScenario = Constant.CURRENT_SCENARIO + Constant.CLS_EXT;
 		fileNames.add(0, currentScenario);
-		List<DataTableModel> dtmList = new ArrayList<DataTableModel>();
+		List<DataTableModel> dtmList = new ArrayList<>();
 		if(fileNames.size() > 1)
 		{
-			DataTableModel comparisonDTM = buildScenarioTables(fileNames);
+			DataTableModel comparisonDTM = buildScenarioTables(fileNames, swingEngine);
 			DataTableModel baseDTM = builsBaseScenarioTables(comparisonDTM);
 			DataTableModel differenceDTM = differenceScenarioTables(comparisonDTM);
 			dtmList.add(baseDTM);
@@ -67,7 +65,7 @@ public class ScenarioDeleImp implements IScenarioDele
 		}
 		else
 		{
-			dtmList.add(buildScenarioTables(fileNames));
+			dtmList.add(buildScenarioTables(fileNames, swingEngine));
 		}
 		return dtmList;
 	}
@@ -81,16 +79,17 @@ public class ScenarioDeleImp implements IScenarioDele
 	 * all the files which are passed in from the @param fileName. If
 	 * there is only one file name then it will give the base one.
 	 */
-	private DataTableModel buildScenarioTables(List<String> fileNames) throws EpptInitializationException
+	private DataTableModel buildScenarioTables(List<String> fileNames, SwingEngine swingEngine)
+			throws EpptInitializationException
 	{
-		List<Map<String, String>> clsMapList = new ArrayList<Map<String, String>>();
+		List<Map<String, String>> clsMapList = new ArrayList<>();
 		String[] columnNames = new String[fileNames.size() + 1];
 		columnNames[0] = "Dashboard Options";
 		int index = 1;
 		// This will take the file names and get the Map of each cls file.
 		for(String fileName : fileNames)
 		{
-			clsMapList.add(buildMapOfCLSFile(fileName, swingEngine, seedDataSvc.getTableIdMap()));
+			clsMapList.add(buildMapOfCLSFile(fileName, swingEngine, _seedDataSvc.getTableIdMap()));
 			columnNames[index] = FilenameUtils.removeExtension(fileName);
 			index++;
 		}
@@ -99,7 +98,7 @@ public class ScenarioDeleImp implements IScenarioDele
 		 * of the file. we are using List because we don't know the no of rows.
 		 * It may vary based on file.
 		 */
-		List<Object[]> data = new ArrayList<Object[]>();
+		List<Object[]> data = new ArrayList<>();
 		Map<String, String> firstMap = clsMapList.get(0);
 		for(String key : firstMap.keySet())
 		{
@@ -167,10 +166,10 @@ public class ScenarioDeleImp implements IScenarioDele
 		Object[][] data = dataTableModel.getData();
 		Object[][] compData = new Object[data.length][data[0].length];
 		int index = 0;
-		for(int i = 0; i < data.length; i++)
+		for(final Object[] datum : data)
 		{
 			boolean isDifferent = false;
-			Object[] temp = data[i];
+			Object[] temp = datum;
 			Object value = temp[1];
 			for(int j = 2; j < temp.length; j++)
 			{
@@ -182,7 +181,7 @@ public class ScenarioDeleImp implements IScenarioDele
 			}
 			if(isDifferent)
 			{
-				compData[index] = data[i];
+				compData[index] = datum;
 				index++;
 			}
 		}
@@ -203,18 +202,18 @@ public class ScenarioDeleImp implements IScenarioDele
 	private Map<String, String> buildMapOfCLSFile(String fileName, SwingEngine swingEngine,
 												  Map<String, GUILinks2BO> tableMap) throws EpptInitializationException
 	{
-		List<String> controlStrList = new ArrayList<String>();
-		List<String> dataTableModelStrList = new ArrayList<String>();
-		List<String> regulationoptionsStr = new ArrayList<String>();
-		List<String> wsidiStatusStr = new ArrayList<String>();
+		List<String> controlStrList = new ArrayList<>();
+		List<String> dataTableModelStrList = new ArrayList<>();
+		List<String> regulationoptionsStr = new ArrayList<>();
+		List<String> wsidiStatusStr = new ArrayList<>();
 		// Read in the cls file data.
-		scenarioSvc.getCLSData(Constant.SCENARIOS_DIR + fileName, controlStrList, dataTableModelStrList,
+		_scenarioSvc.getCLSData(Constant.SCENARIOS_DIR + fileName, controlStrList, dataTableModelStrList,
 				regulationoptionsStr, wsidiStatusStr);
 		// This will build all the component data into list of
 		// ScenarioDisplayBO.
 		List<ScenarioDisplayBO> componentData = buildCompDataIntoScenarioDisplayBOs(controlStrList, swingEngine);
 		// This will convert the table Data in the cls file to the map.
-		Map<String, String> tableData = buildTableDataInCLSIntoMap(dataTableModelStrList, swingEngine, tableMap);
+		Map<String, String> tableData = buildTableDataInCLSIntoMap(dataTableModelStrList, tableMap);
 		return buildDisplayBOsAndTableDataIntoMap(componentData, tableData);
 	}
 
@@ -223,19 +222,18 @@ public class ScenarioDeleImp implements IScenarioDele
 	 * rows have the key as the following format "Empty-dataTable name-RowNo".
 	 *
 	 * @param dataTableModelStrList The table Data list from the cls file.
-	 * @param swingEngine           The instance of Swing Engine.
 	 * @param tableMap              Map of the table data and the key is the table Id.
 	 * @return This contain all the table Data as a map.
 	 */
-	private Map<String, String> buildTableDataInCLSIntoMap(List<String> dataTableModelStrList, SwingEngine swingEngine,
+	private Map<String, String> buildTableDataInCLSIntoMap(List<String> dataTableModelStrList,
 														   Map<String, GUILinks2BO> tableMap)
 	{
-		Map<String, String> allTableData = new LinkedHashMap<String, String>();
+		Map<String, String> allTableData = new LinkedHashMap<>();
 		String tableName = "";
 		for(String dataTableStr : dataTableModelStrList)
 		{
 			String[] arr = dataTableStr.split(Constant.PIPELINE_DELIMITER);
-			if(scenarioSvc.isDouble(arr[0]))
+			if(_scenarioSvc.isDouble(arr[0]))
 			{
 				GUILinks2BO gUILinks2BO = tableMap.get(arr[0]);
 				tableName = gUILinks2BO.getDataTables();
@@ -247,10 +245,10 @@ public class ScenarioDeleImp implements IScenarioDele
 			allTableData.put(tableName.toUpperCase(), Constant.SPACE);
 			String[] tableData = arr[1].split(Constant.SEMICOLON);
 			int index = 1;
-			for(int i = 0; i < tableData.length; i++)
+			for(final String tableDatum : tableData)
 			{
 				allTableData.put(Constant.EMPTY + Constant.DASH + tableName.toUpperCase() + Constant.DASH + index,
-						tableData[i]);
+						tableDatum);
 				index++;
 			}
 		}
@@ -273,14 +271,14 @@ public class ScenarioDeleImp implements IScenarioDele
 		String currentParent = "";
 		String currentParent2 = "";
 		String space = Constant.SPACE + Constant.SPACE;
-		Map<String, String> data = new LinkedHashMap<String, String>();
+		Map<String, String> data = new LinkedHashMap<>();
 		// This will convert the component Data into the map.
 		for(ScenarioDisplayBO scenarioDisplayBO : componentData)
 		{
 			if(scenarioDisplayBO.getComponentParents().contains(Constant.PIPELINE))
 			{
 				String[] parentArr = scenarioDisplayBO.getComponentParents().split(Constant.PIPELINE_DELIMITER);
-				if(parent1.equals(""))
+				if(parent1.isEmpty())
 				{
 					parent1 = parentArr[0];
 					parent2 = parentArr[1];
@@ -308,7 +306,7 @@ public class ScenarioDeleImp implements IScenarioDele
 			}
 			else
 			{
-				if(parent1.equals(""))
+				if(parent1.isEmpty())
 				{
 					parent1 = scenarioDisplayBO.getComponentParents();
 					data.put(parent1, Constant.SPACE);
@@ -339,7 +337,7 @@ public class ScenarioDeleImp implements IScenarioDele
 	private List<ScenarioDisplayBO> buildCompDataIntoScenarioDisplayBOs(List<String> controlStrList,
 																		SwingEngine swingEngine)
 	{
-		List<ScenarioDisplayBO> componentData = new ArrayList<ScenarioDisplayBO>();
+		List<ScenarioDisplayBO> componentData = new ArrayList<>();
 		for(String controlStr : controlStrList)
 		{
 			String[] arr = controlStr.split(Constant.PIPELINE_DELIMITER);
@@ -356,7 +354,7 @@ public class ScenarioDeleImp implements IScenarioDele
 			if(component instanceof JCheckBox)
 			{
 				JCheckBox jcb = (JCheckBox) component;
-				if(jcb.getText().equals(""))
+				if(jcb.getText().isEmpty())
 				{
 					componentText = componentName;
 				}
@@ -364,7 +362,7 @@ public class ScenarioDeleImp implements IScenarioDele
 				{
 					componentText = jcb.getText();
 				}
-				if(value.equals("false"))
+				if("false".equals(value))
 				{
 					value = "Turned off";
 				}
@@ -381,7 +379,7 @@ public class ScenarioDeleImp implements IScenarioDele
 			{
 				JRadioButton jrb = (JRadioButton) component;
 				componentText = componentName;
-				if(value.equals("true"))
+				if("true".equals(value))
 				{
 					Container cont = jrb;
 					while(cont.getParent() != null)
@@ -436,7 +434,7 @@ public class ScenarioDeleImp implements IScenarioDele
 				case "spnRunStartYear":
 					for(ScenarioDisplayBO sdBO : componentData)
 					{
-						if(sdBO.getComponentText().equals("Run Start"))
+						if("Run Start".equals(sdBO.getComponentText()))
 						{
 							sdBO.setComponentValue(sdBO.getComponentValue() + Constant.SPACE + value);
 						}
@@ -449,7 +447,7 @@ public class ScenarioDeleImp implements IScenarioDele
 				case "spnRunEndYear":
 					for(ScenarioDisplayBO sdBO : componentData)
 					{
-						if(sdBO.getComponentText().equals("Run End"))
+						if("Run End".equals(sdBO.getComponentText()))
 						{
 							sdBO.setComponentValue(sdBO.getComponentValue() + Constant.SPACE + value);
 						}
@@ -472,7 +470,7 @@ public class ScenarioDeleImp implements IScenarioDele
 	 */
 	private String getControlParents(Component component)
 	{
-		StringBuffer sb = new StringBuffer();
+		StringBuilder sb = new StringBuilder();
 		Container cont = (Container) component;
 		while(cont.getParent() != null)
 		{
@@ -485,33 +483,29 @@ public class ScenarioDeleImp implements IScenarioDele
 			{
 				JPanel jp = (JPanel) cont;
 				String name = jp.getName();
-				if(name != null && !name.equals(""))
+				if(name != null && !name.isEmpty() && !sb.toString().contains(name.toLowerCase()))
 				{
-					// if (!name.equals("runsettings")) {
-					if(!sb.toString().contains(name.toLowerCase()))
-					{
-						sb.append(name + Constant.PIPELINE);
-					}
-					// }
+					sb.append(name).append(Constant.PIPELINE);
 				}
 			}
 		}
 		sb = sb.deleteCharAt(sb.length() - 1);
 		// Reverse the string
 		String[] strArray = sb.toString().split(Constant.PIPELINE_DELIMITER);
-		List<String> result = new LinkedList<String>();
-		for(int i = 0; i < strArray.length; i++)
+		List<String> result = new LinkedList<>();
+		for(final String s : strArray)
 		{
-			if(!strArray[i].equals("null.contentPane"))
+			if(!"null.contentPane".equals(s))
 			{
-				result.add(strArray[i]);
+				result.add(s);
 			}
 		}
 		Collections.reverse(result);
-		StringBuffer sb1 = new StringBuffer();
-		for(int i = 0; i < result.size(); i++)
+		StringBuilder sb1 = new StringBuilder();
+		for(String s : result)
 		{
-			sb1.append(result.toArray()[i].toString() + Constant.PIPELINE);
+			sb1.append(s)
+			   .append(Constant.PIPELINE);
 		}
 		sb = sb1.deleteCharAt(sb1.length() - 1);
 		return sb.toString();

@@ -15,12 +15,9 @@ import java.awt.event.ActionEvent;
 import java.io.IOException;
 import javax.swing.*;
 
-import gov.ca.water.calgui.bus_service.impl.XMLParsingSvcImpl;
-import gov.ca.water.calgui.constant.Constant;
 import gov.ca.water.calgui.tech_service.IErrorHandlingSvc;
 import gov.ca.water.calgui.tech_service.impl.ErrorHandlingSvcImpl;
 import org.apache.log4j.Logger;
-import org.swixml.SwingEngine;
 
 /**
  * This frame is used for displaying the monitored status of run and save
@@ -40,7 +37,7 @@ public final class ProgressFrameForPDF extends JFrame
 	/**
 	 * This will prepare the Dialog box to show.
 	 */
-	private ProgressFrameForPDF()
+	private ProgressFrameForPDF(JFrame mainFrame)
 	{
 		String[] data = {"No reports active"};
 		_list = new JList<>(data);
@@ -54,9 +51,8 @@ public final class ProgressFrameForPDF extends JFrame
 		{
 			LOG.error(e.getMessage());
 			String messageText = "Unable to display PDF progress frame.";
-			final SwingEngine swingEngine = XMLParsingSvcImpl.getXMLParsingSvcImplInstance().getSwingEngine();
 			final IErrorHandlingSvc errorHandlingSvc = new ErrorHandlingSvcImpl();
-			errorHandlingSvc.businessErrorHandler(messageText, (JFrame) swingEngine.find(Constant.MAIN_FRAME_NAME), e);
+			errorHandlingSvc.businessErrorHandler(messageText, e);
 		}
 	}
 
@@ -95,11 +91,11 @@ public final class ProgressFrameForPDF extends JFrame
 	 *
 	 * @return
 	 */
-	public static ProgressFrameForPDF getProgressFrameInstance()
+	public static ProgressFrameForPDF getProgressFrameInstance(JFrame mainFrame)
 	{
 		if(progressFrame == null)
 		{
-			progressFrame = new ProgressFrameForPDF();
+			progressFrame = new ProgressFrameForPDF(mainFrame);
 		}
 		return progressFrame;
 	}

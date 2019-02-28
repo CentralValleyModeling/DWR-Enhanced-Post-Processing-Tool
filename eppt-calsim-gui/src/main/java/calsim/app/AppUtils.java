@@ -7,26 +7,60 @@
 
 package calsim.app;
 
+import java.awt.Dimension;
+import java.awt.Toolkit;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.LineNumberReader;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Comparator;
+import java.util.Enumeration;
+import java.util.Hashtable;
+import java.util.List;
+import java.util.StringTokenizer;
+import java.util.Vector;
+import javax.swing.*;
+
 import calsim.gui.GuiUtils;
 import calsim.gui.MonthlyTableDisplay;
-import calsim.gym.*;
+import calsim.gym.Arc;
+import calsim.gym.ChannelArc;
+import calsim.gym.DemandArc;
+import calsim.gym.FloodArc;
+import calsim.gym.InputArc;
+import calsim.gym.ReturnArc;
 import vista.app.DataGraphFrame;
 import vista.app.DataTableFrame;
 import vista.app.DefaultGraphBuilder;
 import vista.app.MultiDataTableFrame;
 import vista.db.dss.DSSUtil;
-import vista.graph.*;
-import vista.set.*;
+import vista.graph.Axis;
+import vista.graph.AxisAttr;
+import vista.graph.Graph;
+import vista.graph.GraphUtils;
+import vista.graph.MultiPlot;
+import vista.graph.Plot;
+import vista.set.DataReference;
+import vista.set.DataSet;
+import vista.set.DataSetAttr;
+import vista.set.DataSetElement;
+import vista.set.DataSetIterator;
+import vista.set.DefaultReference;
+import vista.set.Group;
+import vista.set.PathPartPredicate;
+import vista.set.Pathname;
+import vista.set.RegularTimeSeries;
+import vista.set.SetUtils;
+import vista.set.TimeSeries;
+import vista.set.TimeSeriesMath;
 import vista.time.Time;
 import vista.time.TimeFactory;
 import vista.time.TimeInterval;
 import vista.time.TimeWindow;
-
-import javax.swing.*;
-import java.awt.*;
-import java.io.*;
-import java.util.List;
-import java.util.*;
 
 /**
  * Common utility functions for App package
@@ -2274,7 +2308,7 @@ public final class AppUtils
 	 */
 	public static int[] readMTList(String file)
 	{
-		String filePath = "/data/" + file;
+		String filePath = "/calsim/app/data/" + file;
 		try (InputStream is = AppUtils.class.getResourceAsStream(filePath);
 			 InputStreamReader inputStreamReader = new InputStreamReader(is);
 			 LineNumberReader reader = new LineNumberReader(inputStreamReader))

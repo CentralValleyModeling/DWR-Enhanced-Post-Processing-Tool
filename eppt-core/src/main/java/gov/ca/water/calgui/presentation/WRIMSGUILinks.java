@@ -163,7 +163,7 @@ public final class WRIMSGUILinks
 		{
 			LOG.error(e.getMessage());
 			String messageText = "Unable to update WRIMS GUI files.";
-			errorHandlingSvc.businessErrorHandler(messageText, (JFrame) SwingUtilities.windowForComponent(theList), e);
+			errorHandlingSvc.businessErrorHandler(messageText, e);
 		}
 	}
 

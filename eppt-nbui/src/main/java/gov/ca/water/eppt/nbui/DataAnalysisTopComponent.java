@@ -9,6 +9,7 @@ package gov.ca.water.eppt.nbui;
 import java.awt.BorderLayout;
 import javax.swing.*;
 
+import gov.ca.water.quickresults.ui.DataAnalysisListener;
 import gov.ca.water.quickresults.ui.DataAnalysisPanel;
 import org.openide.awt.ActionID;
 import org.openide.awt.ActionReference;
@@ -23,11 +24,9 @@ import org.openide.windows.TopComponent;
 		//iconBase="SET/PATH/TO/ICON/HERE",
 		persistenceType = TopComponent.PERSISTENCE_ALWAYS
 )
-@TopComponent.Registration(mode = "editor", openAtStartup = true)
+@TopComponent.Registration(mode = "editor", openAtStartup = true, position = 4444)
 @ActionID(category = "Window", id = "gov.ca.water.eppt.nbui.DataAnalysisTopComponent")
-@ActionReference(path = "Menu/Window" /*
- * , position = 333
- */)
+@ActionReference(path = "Menu/Window", position = 4444)
 @TopComponent.OpenActionRegistration(
 		displayName = "#CTL_DataAnalysisAction",
 		preferredID = "DataAnalysisTopComponent"
@@ -45,6 +44,8 @@ public final class DataAnalysisTopComponent extends TopComponent
 	{
 		setName("Data Analysis");
 		DataAnalysisPanel dataAnalysisPanel = new DataAnalysisPanel();
+		DataAnalysisListener dataAnalysisListener = new DataAnalysisListener(dataAnalysisPanel);
+		dataAnalysisPanel.setActionListener(dataAnalysisListener);
 		JScrollPane scrollPane = new JScrollPane(dataAnalysisPanel);
 		setLayout(new BorderLayout());
 		add(scrollPane, BorderLayout.CENTER);

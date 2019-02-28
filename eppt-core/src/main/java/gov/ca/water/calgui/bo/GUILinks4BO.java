@@ -20,128 +20,128 @@ public class GUILinks4BO
 	 * The RunBasis_ID from GUI_Link4.table. Please refer GUI_Link4.table for
 	 * more information.
 	 */
-	private String runBasisID;
+	private String _runBasisID;
 	/**
 	 * The LOD_ID from GUI_Link4.table. Please refer GUI_Link4.table for more
 	 * information.
 	 */
-	private String lodId;
+	private String _lodId;
 	/**
 	 * The CCProject_ID from GUI_Link4.table. Please refer GUI_Link4.table for
 	 * more information.
 	 */
-	private String ccprojectId;
+	private String _ccprojectId;
 	/**
 	 * The CCModel_ID from GUI_Link4.table. Please refer GUI_Link4.table for
 	 * more information.
 	 */
-	private String ccmodelId;
+	private String _ccmodelId;
 	/**
 	 * The SV_File from GUI_Link4.table. Please refer GUI_Link4.table for more
 	 * information.
 	 */
-	private String svFile;
+	private String _svFile;
 	/**
 	 * The F_PartSV from GUI_Link4.table. Please refer GUI_Link4.table for more
 	 * information.
 	 */
-	private String fPartSV1;
+	private String _fPartSV1;
 	/**
 	 * The Init_File from GUI_Link4.table. Please refer GUI_Link4.table for more
 	 * information.
 	 */
-	private String initFile;
+	private String _initFile;
 	/**
 	 * The F_PartSV from GUI_Link4.table. Please refer GUI_Link4.table for more
 	 * information.
 	 */
-	private String fPartSV2;
+	private String _fPartSV2;
 	/**
 	 * The CVP_WSI_DI from GUI_Link4.table. Please refer GUI_Link4.table for
 	 * more information.
 	 */
-	private String cvpWsiDi;
+	private String _cvpWsiDi;
 	/**
 	 * The SWP_WSI_DI from GUI_Link4.table. Please refer GUI_Link4.table for
 	 * more information.
 	 */
-	private String swpWsiDi;
+	private String _swpWsiDi;
 	/**
 	 * The Lookup from GUI_Link4.table. Please refer GUI_Link4.table for more
 	 * information.
 	 */
-	private String lookup;
+	private String _lookup;
 
 	public GUILinks4BO(String runBasisID, String lodId, String ccprojectId, String ccmodelId, String svFile,
 					   String fPartSV1, String initFile, String fPartSV2, String cvpWsiDi, String swpWsiDi,
 					   String lookup)
 	{
 		super();
-		this.runBasisID = runBasisID;
-		this.lodId = lodId;
-		this.ccprojectId = ccprojectId;
-		this.ccmodelId = ccmodelId;
-		this.svFile = svFile;
-		this.fPartSV1 = fPartSV1;
-		this.initFile = initFile;
-		this.fPartSV2 = fPartSV2;
-		this.cvpWsiDi = cvpWsiDi;
-		this.swpWsiDi = swpWsiDi;
-		this.lookup = lookup;
+		this._runBasisID = runBasisID;
+		this._lodId = lodId;
+		this._ccprojectId = ccprojectId;
+		this._ccmodelId = ccmodelId;
+		this._svFile = svFile;
+		this._fPartSV1 = fPartSV1;
+		this._initFile = initFile;
+		this._fPartSV2 = fPartSV2;
+		this._cvpWsiDi = cvpWsiDi;
+		this._swpWsiDi = swpWsiDi;
+		this._lookup = lookup;
 	}
 
 	public String getRunBasisID()
 	{
-		return runBasisID;
+		return _runBasisID;
 	}
 
 	public String getLodId()
 	{
-		return lodId;
+		return _lodId;
 	}
 
 	public String getCcprojectId()
 	{
-		return ccprojectId;
+		return _ccprojectId;
 	}
 
 	public String getCcmodelId()
 	{
-		return ccmodelId;
+		return _ccmodelId;
 	}
 
 	public String getSvFile()
 	{
-		return svFile;
+		return _svFile;
 	}
 
 	public String getfPartSV1()
 	{
-		return fPartSV1;
+		return _fPartSV1;
 	}
 
 	public String getInitFile()
 	{
-		return initFile;
+		return _initFile;
 	}
 
 	public String getfPartSV2()
 	{
-		return fPartSV2;
+		return _fPartSV2;
 	}
 
 	public String getCvpWsiDi()
 	{
-		return cvpWsiDi;
+		return _cvpWsiDi;
 	}
 
 	public String getSwpWsiDi()
 	{
-		return swpWsiDi;
+		return _swpWsiDi;
 	}
 
 	public String getLookup()
 	{
-		return lookup;
+		return _lookup;
 	}
 }

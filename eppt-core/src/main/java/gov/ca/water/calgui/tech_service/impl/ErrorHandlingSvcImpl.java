@@ -23,8 +23,6 @@ import javax.mail.internet.MimeMessage;
 import javax.swing.*;
 
 import gov.ca.water.calgui.bo.CalLiteGUIException;
-import gov.ca.water.calgui.bo.CalLiteGUIExceptionFatal;
-import gov.ca.water.calgui.bo.ResultUtilsBO;
 import gov.ca.water.calgui.constant.Constant;
 import gov.ca.water.calgui.tech_service.IErrorHandlingSvc;
 import org.apache.log4j.Logger;
@@ -57,36 +55,35 @@ public class ErrorHandlingSvcImpl implements IErrorHandlingSvc
 
 	@Override
 
-	public void validationeErrorHandler(String displayMessage, String detailMessage, JFrame mainFrame)
+	public void validationeErrorHandler(String displayMessage, String detailMessage)
 	{
-		displayErrorMessage("Validation Error : " + displayMessage, detailMessage, mainFrame);
+		displayErrorMessage("Validation Error : " + displayMessage, detailMessage);
 	}
 
 	@Override
-	public void businessErrorHandler(JFrame mainFrame, Throwable aThrowable)
+	public void businessErrorHandler(Throwable aThrowable)
 	{
 		List<String> error = getMessageAndStackTraceFromLayeredError(aThrowable);
-		displayErrorMessage("Business Error : " + error.get(0), error.get(1), mainFrame);
+		displayErrorMessage("Business Error : " + error.get(0), error.get(1));
 	}
 
 	@Override
-	public void businessErrorHandler(String displayMessage, JFrame mainFrame, Throwable aThrowable)
+	public void businessErrorHandler(String displayMessage, Throwable aThrowable)
 	{
 		List<String> error = getMessageAndStackTraceFromLayeredError(aThrowable);
-		displayErrorMessage("Business Error : " + displayMessage, error.get(1), mainFrame);
+		displayErrorMessage("Business Error : " + displayMessage, error.get(1));
 	}
 
 	@Override
-	public void businessErrorHandler(String displayMessage, String detailMessage, JFrame mainFrame)
+	public void businessErrorHandler(String displayMessage, String detailMessage)
 	{
-		displayErrorMessage("Business Error : " + displayMessage, detailMessage, mainFrame);
+		displayErrorMessage("Business Error : " + displayMessage, detailMessage);
 	}
 
 	@Override
-
-	public void systemErrorHandler(String displayMessage, String detailMessage, JFrame mainFrame)
+	public void systemErrorHandler(String displayMessage, String detailMessage)
 	{
-		displayErrorMessage("System Error : " + displayMessage, detailMessage, mainFrame);
+		displayErrorMessage("System Error : " + displayMessage, detailMessage);
 		System.exit(-1);
 	}
 
@@ -145,9 +142,8 @@ public class ErrorHandlingSvcImpl implements IErrorHandlingSvc
 	 *
 	 * @param displayMessage Message to display the user.
 	 * @param detailMessage  Detail message with stack trace for additional information.
-	 * @param mainFrame      For displaying the message.
 	 */
-	private void displayErrorMessage(String displayMessage, String detailMessage, JFrame mainFrame)
+	private void displayErrorMessage(String displayMessage, String detailMessage)
 	{
 		if((System.currentTimeMillis() - ErrorHandlingSvcImpl.time) < 2000)
 		{
@@ -158,7 +154,7 @@ public class ErrorHandlingSvcImpl implements IErrorHandlingSvc
 		Object[] options = {"ok", "show details"};
 		JOptionPane optionPane = new JOptionPane(displayMessage, JOptionPane.ERROR_MESSAGE, JOptionPane.YES_NO_OPTION,
 				null, options, options[1]);
-		JDialog dialog = optionPane.createDialog(mainFrame, "CalLite GUI");
+		JDialog dialog = optionPane.createDialog(null, "CalLite GUI");
 		dialog.setIconImage(icon.getImage());
 		dialog.setResizable(false);
 		dialog.setVisible(true);
@@ -166,21 +162,20 @@ public class ErrorHandlingSvcImpl implements IErrorHandlingSvc
 		JTextArea text = new JTextArea(detailMessage);
 		JScrollPane scroll = new JScrollPane(text);
 		scroll.setPreferredSize(new Dimension(600, 400));
-		if(optionPane.getValue().toString().equals("show details"))
+		if("show details".equals(optionPane.getValue().toString()))
 		{
-			JOptionPane.showMessageDialog(mainFrame, scroll, "Error", JOptionPane.ERROR_MESSAGE, icon);
+			JOptionPane.showMessageDialog(null, scroll, "Error", JOptionPane.ERROR_MESSAGE, icon);
 		}
 		LOG.debug(emailMessage);
-		sendEmail(emailMessage, mainFrame);
+		sendEmail(emailMessage);
 	}
 
 	/**
 	 * This method will send email.
 	 *
 	 * @param message   The detail message which is send in the email.
-	 * @param mainFrame For displaying the message when we have a error.
 	 */
-	private void sendEmail(String message, JFrame mainFrame)
+	private void sendEmail(String message)
 	{
 		if(Boolean.parseBoolean(properties.getProperty("email.to.developer")))
 		{
@@ -207,7 +202,7 @@ public class ErrorHandlingSvcImpl implements IErrorHandlingSvc
 			catch(MessagingException ex)
 			{
 				LOG.error(getStackTraceAsString(ex));
-				JOptionPane.showMessageDialog(mainFrame, "Can't send email to the developer.", "Error",
+				JOptionPane.showMessageDialog(null, "Can't send email to the developer.", "Error",
 						JOptionPane.ERROR_MESSAGE);
 			}
 		}

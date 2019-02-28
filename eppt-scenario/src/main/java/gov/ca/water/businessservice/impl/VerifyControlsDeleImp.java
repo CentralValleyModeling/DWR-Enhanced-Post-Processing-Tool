@@ -5,9 +5,10 @@
  * Source may not be released without written approval from DWR
  */
 
-package gov.ca.water.calgui.bus_delegate.impl;
+package gov.ca.water.businessservice.impl;
 
-import java.awt.*;
+import java.awt.Component;
+import java.awt.Container;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -15,19 +16,14 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import javax.swing.*;
 
+import gov.ca.water.businessservice.IXMLParsingSvc;
 import gov.ca.water.calgui.EpptInitializationException;
-import gov.ca.water.calgui.bo.CalLiteGUIException;
 import gov.ca.water.calgui.bus_delegate.IVerifyControlsDele;
 import gov.ca.water.calgui.bus_service.IScenarioSvc;
 import gov.ca.water.calgui.bus_service.ISeedDataSvc;
-import gov.ca.water.calgui.bus_service.IXMLParsingSvc;
 import gov.ca.water.calgui.bus_service.impl.ScenarioSvcImpl;
 import gov.ca.water.calgui.bus_service.impl.SeedDataSvcImpl;
-import gov.ca.water.calgui.bus_service.impl.XMLParsingSvcImpl;
 import gov.ca.water.calgui.constant.Constant;
-import gov.ca.water.calgui.tech_service.IErrorHandlingSvc;
-import gov.ca.water.calgui.tech_service.impl.ErrorHandlingSvcImpl;
-import org.apache.log4j.Logger;
 import org.swixml.SwingEngine;
 
 /**
@@ -37,11 +33,8 @@ import org.swixml.SwingEngine;
  */
 public class VerifyControlsDeleImp implements IVerifyControlsDele
 {
-	private static final Logger LOG = Logger.getLogger(VerifyControlsDeleImp.class.getName());
-	private IXMLParsingSvc xmlParsingSvc = XMLParsingSvcImpl.getXMLParsingSvcImplInstance();
-	private SwingEngine swingEngine = xmlParsingSvc.getSwingEngine();
+	IXMLParsingSvc xmlParsingSvc = XMLParsingSvcImpl.getXMLParsingSvcImplInstance();
 	private ISeedDataSvc seedDataSvc = SeedDataSvcImpl.getSeedDataSvcImplInstance();
-	private IErrorHandlingSvc errorHandlingSvc = new ErrorHandlingSvcImpl();
 	private IScenarioSvc scenarioSvc = ScenarioSvcImpl.getScenarioSvcImplInstance();
 
 	@Override
@@ -57,14 +50,15 @@ public class VerifyControlsDeleImp implements IVerifyControlsDele
 	private void verifyGUIToSeedData() throws EpptInitializationException
 	{
 		Set<String> compIds = xmlParsingSvc.getIdFromXML();
+		SwingEngine swingEngine = xmlParsingSvc.getSwingEngine();
 		List<String> controlIds = compIds.stream()
 										 .filter((id) -> swingEngine.find(id) instanceof JRadioButton
 												 || swingEngine.find(id) instanceof JCheckBox || swingEngine.find(
 												 id) instanceof JTextField)
 										 .collect(Collectors.toList());
-		List<String> errorControlsIds = new ArrayList<String>();
+		List<String> errorControlsIds = new ArrayList<>();
 		// The list is for radio buttons.
-		List<String> removeList = new ArrayList<String>(Arrays.asList("run_rdbProb", "rdbRegQS_UD", "btnDSS_Auto",
+		List<String> removeList = new ArrayList<>(Arrays.asList("run_rdbProb", "rdbRegQS_UD", "btnDSS_Auto",
 				"rdbRegQS_1641BO", "btnDSS_Manual", "rdbRegQS_D1485", "op_rdb3", "rdbRegQS_D1641", "run_rdbDet"));
 		// The list is for Text Field.
 		removeList.addAll(Arrays.asList("hyd_DSS_Init_F", "run_txfoDSS", "run_txfScen", "fac_txf18", "fac_txf19",
@@ -77,11 +71,11 @@ public class VerifyControlsDeleImp implements IVerifyControlsDele
 				"fac_ckb22", "fac_ckb23", "fac_ckb24", "fac_ckb25", "fac_ckb26", "fac_ckb27", "fac_ckb28", "fac_ckb29",
 				"fac_ckb10", "fac_ckb13", "fac_ckb14", "fac_ckb15", "fac_ckb16", "fac_ckb17", "fac_ckb18", "fac_ckb19",
 				"fac_ckb42", "fac_ckb43", "fac_ckb45", "Vern_RPA"));
-		getTheIds(xmlParsingSvc.getSwingEngine().find("Reporting"), removeList);
-		getTheIds(xmlParsingSvc.getSwingEngine().find("Custom"), removeList);
-		getTheIds(xmlParsingSvc.getSwingEngine().find("schematics"), removeList);
-		getTheIds(xmlParsingSvc.getSwingEngine().find("dataAnalysis"), removeList);
-		getTheIds(xmlParsingSvc.getSwingEngine().find("sandbox"), removeList);
+		getTheIds(swingEngine.find("Reporting"), removeList);
+		getTheIds(swingEngine.find("Custom"), removeList);
+		getTheIds(swingEngine.find("schematics"), removeList);
+		getTheIds(swingEngine.find("dataAnalysis"), removeList);
+		getTheIds(swingEngine.find("sandbox"), removeList);
 
 		for(String id : controlIds)
 		{
@@ -93,7 +87,7 @@ public class VerifyControlsDeleImp implements IVerifyControlsDele
 		errorControlsIds.removeAll(removeList);
 		if(!errorControlsIds.isEmpty())
 		{
-			StringBuffer buffer = new StringBuffer();
+			StringBuilder buffer = new StringBuilder();
 			buffer.append(
 					"There is no GUI_Links2.csv record for the following control IDs defined in the GUI XML files: "
 							+ Constant.NEW_LINE);
@@ -112,16 +106,15 @@ public class VerifyControlsDeleImp implements IVerifyControlsDele
 	 */
 	private void verifyCLSToGUIIds(String fileName) throws EpptInitializationException
 	{
-		List<String> controlStrList = new ArrayList<String>();
-		List<String> dataTableModelStrList = new ArrayList<String>();
-		List<String> regulationoptionsStr = new ArrayList<String>();
-		List<String> wsidiStatusStr = new ArrayList<String>();
+		List<String> controlStrList = new ArrayList<>();
+		List<String> dataTableModelStrList = new ArrayList<>();
+		List<String> regulationoptionsStr = new ArrayList<>();
+		List<String> wsidiStatusStr = new ArrayList<>();
 		// Read in the cls file data.
 		scenarioSvc.getCLSData(fileName, controlStrList, dataTableModelStrList, regulationoptionsStr, wsidiStatusStr);
 		Set<String> guiIds = xmlParsingSvc.getIdFromXML();
-		List<String> controlStrings = controlStrList.stream().map((key) -> {
-			return key.split(Constant.PIPELINE_DELIMITER)[0];
-		}).collect(Collectors.toList());
+		List<String> controlStrings = controlStrList.stream().map((key) -> key.split(Constant.PIPELINE_DELIMITER)[0])
+													.collect(Collectors.toList());
 		controlStrings.removeAll(guiIds);
 		List<String> tempList = Arrays.asList("run_txfDir", "hyd_ANNKM", "hyd_DSS_Index", "fac_ckb1", "fac_ckb4",
 				"fac_ckb5", "ckbReg5", "ckbReg12", "ckbReg16", "ckbReg17", "btnRegD1641", "btnRegD1485", "btnRegUD",
@@ -130,22 +123,22 @@ public class VerifyControlsDeleImp implements IVerifyControlsDele
 		controlStrings.removeAll(tempList);
 		if(!controlStrings.isEmpty())
 		{
-			StringBuffer buffer = new StringBuffer();
+			StringBuilder buffer = new StringBuilder();
 			buffer.append(
 					"The CLS File has these Control Ids but they are missing from the xml file. Do you want to continue?"
 							+ Constant.NEW_LINE);
-			controlStrings.forEach((id) -> buffer.append(id + Constant.NEW_LINE));
+			controlStrings.forEach(id -> buffer.append(id + Constant.NEW_LINE));
 			throw new EpptInitializationException(buffer.toString());
 		}
-		List<String> regData = new ArrayList<String>(
+		List<String> regData = new ArrayList<>(
 				Arrays.asList(regulationoptionsStr.get(0).split(Constant.PIPELINE_DELIMITER)));
 		List<String> numb = Arrays.asList("0", "1", "2", "3", "4");
 		regData.removeAll(numb);
 		if(!regData.isEmpty())
 		{
-			StringBuffer buffer = new StringBuffer();
+			StringBuilder buffer = new StringBuilder();
 			buffer.append("The CLS File has these reg Ids which are wrong please correct them." + Constant.NEW_LINE);
-			controlStrings.forEach((id) -> buffer.append(id + Constant.NEW_LINE));
+			controlStrings.forEach((id) -> buffer.append(id).append(Constant.NEW_LINE));
 			throw new EpptInitializationException(buffer.toString());
 		}
 	}

@@ -205,7 +205,7 @@ public class DisplayFrame
 				}
 				if(message != null)
 				{
-					errorHandlingSvc.businessErrorHandler(message, message, null);
+					errorHandlingSvc.businessErrorHandler(message, message);
 				}
 				else
 				{
@@ -478,7 +478,7 @@ public class DisplayFrame
 		{
 			LOG.error(e.getMessage());
 			String messageText = "Unable to display frame.";
-			errorHandlingSvc.businessErrorHandler(messageText, (JFrame) swingEngine.find(Constant.MAIN_FRAME_NAME), e);
+			errorHandlingSvc.businessErrorHandler(messageText, e);
 		}
 	}
 
@@ -527,7 +527,7 @@ public class DisplayFrame
 		{
 			LOG.error(e.getMessage());
 			String messageText = "Unable to display frame.";
-			errorHandlingSvc.businessErrorHandler(messageText, (JFrame) swingEngine.find(Constant.MAIN_FRAME_NAME), e);
+			errorHandlingSvc.businessErrorHandler(messageText, e);
 		}
 		return null;
 
@@ -643,8 +643,7 @@ public class DisplayFrame
 		{
 			LOG.error(e.getMessage(), e);
 			String messageText = "Unable to display frame.";
-			errorHandlingSvc.businessErrorHandler(messageText,
-					(JFrame) SwingUtilities.windowForComponent(swingEngine.find("rdbp000")), e);
+			errorHandlingSvc.businessErrorHandler(messageText, e);
 		}
 		return null;
 	}
@@ -1205,7 +1204,7 @@ public class DisplayFrame
 		{
 			LOG.error(e.getMessage());
 			String messageText = "Unable to display frame.";
-			errorHandlingSvc.businessErrorHandler(messageText, (JFrame) swingEngine.find(Constant.MAIN_FRAME_NAME), e);
+			errorHandlingSvc.businessErrorHandler(messageText, e);
 		}
 
 	}

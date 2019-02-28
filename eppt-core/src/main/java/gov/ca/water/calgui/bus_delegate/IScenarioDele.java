@@ -12,6 +12,7 @@ import java.util.List;
 import gov.ca.water.calgui.EpptInitializationException;
 import gov.ca.water.calgui.bo.DataTableModel;
 import gov.ca.water.calgui.presentation.ScenarioFrame;
+import org.swixml.SwingEngine;
 
 /**
  * This is used to show the Scenario state of the application and also compare
@@ -33,5 +34,6 @@ public interface IScenarioDele
 	 * the 1st is Current Scenario, 2nd is the comparison and the 3ed is
 	 * differences.
 	 */
-	List<DataTableModel> getScenarioTableData(List<String> fileNames) throws EpptInitializationException;
+	List<DataTableModel> getScenarioTableData(List<String> fileNames, SwingEngine swingEngine)
+			throws EpptInitializationException;
 }
