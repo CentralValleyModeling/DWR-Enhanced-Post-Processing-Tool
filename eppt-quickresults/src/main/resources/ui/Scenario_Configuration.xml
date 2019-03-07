@@ -42,7 +42,7 @@
 			<label text="Year">
 				<gridbagconstraints insets="0,5,5,0" anchor="GridBagConstraints.WEST" gridx="2" gridy="0"/>
 			</label>
-			<label text="Start ">
+			<label text="Start:">
 				<gridbagconstraints insets="0,0,5,3" anchor="GridBagConstraints.WEST" gridx="0" gridy="1"/>
 			</label>
 			<spinner id="spnStartMonth" name="spnStartMonth" preferredsize="75,25" minimumsize="50,20">
@@ -51,7 +51,7 @@
 			<spinner id="spnStartYear" name="spnStartYear" preferredsize="75,25" minimumsize="50,20">
 				<gridbagconstraints insets="0,0,5,3" anchor="GridBagConstraints.WEST" gridx="2" gridy="1"/>
 			</spinner>
-			<label text="End">
+			<label text="End:">
 				<gridbagconstraints insets="0,0,5,3" anchor="GridBagConstraints.WEST" gridx="0" gridy="2"/>
 			</label>
 			<spinner id="spnEndMonth" name="spnEndMonth" preferredsize="75,25" minimumsize="50,20">
@@ -85,7 +85,7 @@
 									gridwidth="2"/>
 			</checkbox>
 			<checkbox name="RepckbBAWPlot" id="RepckbBAWPlot" enabled="true" text="Box and whiskers plot">
-				<gridbagconstraints insets="0,0,0,0" anchor="GridBagConstraints.WEST" gridx="2" gridy="4"
+				<gridbagconstraints insets="0,0,5,3" anchor="GridBagConstraints.WEST" gridx="2" gridy="4"
 									gridwidth="1"/>
 			</checkbox>
 			<checkbox name="RepckbExceedancePlot" id="RepckbExceedancePlot" text="Exceedance plot" selected="true"
@@ -93,12 +93,7 @@
 				<gridbagconstraints insets="0,0,0,0" anchor="GridBagConstraints.WEST" gridx="0" gridy="5"
 									gridwidth="2"/>
 			</checkbox>
-			<label text="Exceedance Plots">
-				<gridbagconstraints insets="0,0,0,0" anchor="GridBagConstraints.WEST" gridx="0" gridy="5"
-									gridwidth="2"/>
-			</label>
-			'
-			<panel id="controls2" resizeable="true" border="TitledBorder" layout="GridBagLayout" enabled="true">
+			<panel id="controls2" resizeable="true" border="TitledBorder(Exceedance Plots)" layout="GridBagLayout" enabled="true">
 				<gridbagconstraints insets="0,0,0,3" anchor="GridBagConstraints.WEST" gridx="0" gridy="6"
 									gridwidth="3"/>
 				<checkbox name="RepchkMonOct" id="RepchkMonOct" text="Oct" font="Tahoma-Normal-11" enabled="true">

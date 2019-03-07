@@ -7,12 +7,9 @@
 
 package gov.ca.water.quickresults.ui.customresults;
 
-import java.awt.BorderLayout;
-import javax.swing.*;
-
-import gov.ca.water.quickresults.ui.scenarioconfig.ScenarioConfigurationPanel;
-
-import static org.junit.jupiter.api.Assertions.fail;
+import gov.ca.water.calgui.EpptInitializationException;
+import gov.ca.water.quickresults.ui.EpptPanel;
+import gov.ca.water.quickresults.ui.EpptScaffold;
 
 /**
  * Company: Resource Management Associates
@@ -20,30 +17,19 @@ import static org.junit.jupiter.api.Assertions.fail;
  * @author <a href="mailto:adam@rmanet.com">Adam Korynta</a>
  * @since 02-26-2019
  */
-public class CustomResultsScaffold
+public class CustomResultsScaffold extends EpptScaffold
 {
-	public static void main(String[] args)
+	public static void main(String[] args) throws EpptInitializationException
 	{
-		JFrame jFrame = new JFrame();
-		jFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		new CustomResultsScaffold().initScaffold();
+	}
+
+	@Override
+	protected EpptPanel buildEpptPanel()
+	{
 		CustomResultsPanel customResultsPanel = new CustomResultsPanel();
 		customResultsPanel.getSwingEngine().setActionListener(customResultsPanel,
 				new CustomResultsListener(customResultsPanel));
-		SwingUtilities.invokeLater(() ->
-		{
-			try
-			{
-				UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-			}
-			catch(ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException e)
-			{
-				fail(e);
-			}
-			ScenarioConfigurationPanel scenarioConfigurationPanel = ScenarioConfigurationPanel.getScenarioConfigurationPanel();
-			jFrame.setLayout(new BorderLayout());
-			jFrame.add(customResultsPanel, BorderLayout.CENTER);
-			jFrame.pack();
-			jFrame.setVisible(true);
-		});
+		return customResultsPanel;
 	}
 }
