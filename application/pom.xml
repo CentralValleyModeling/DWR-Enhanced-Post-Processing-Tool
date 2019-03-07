@@ -24,7 +24,7 @@
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<all.clusters>${project.build.directory}/${brandingToken}</all.clusters>
-		<maven.build.timestamp.format>yyyy-MM-dd-HHmm</maven.build.timestamp.format>
+		<maven.build.timestamp.format>yyyy-MM-dd</maven.build.timestamp.format>
 	</properties>
 
 	<dependencies>
