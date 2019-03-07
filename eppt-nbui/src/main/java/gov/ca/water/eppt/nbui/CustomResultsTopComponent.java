@@ -37,17 +37,25 @@ import org.openide.windows.TopComponent;
 				"CTL_CustomResultsTopComponent=CustomResults Window",
 				"HINT_CustomResultsTopComponent=This is a CustomResults window"
 		})
-public final class CustomResultsTopComponent extends TopComponent
+public final class CustomResultsTopComponent extends EpptTopComponent
 {
+
+	private final CustomResultsPanel _customResultsPanel;
 
 	public CustomResultsTopComponent()
 	{
 		setName("Custom Results");
-		CustomResultsPanel customResultsPanel = new CustomResultsPanel();
-		CustomResultsListener customResultsListener = new CustomResultsListener(customResultsPanel);
-		customResultsPanel.setActionListener(customResultsListener);
-		JScrollPane scrollPane = new JScrollPane(customResultsPanel);
+		_customResultsPanel = new CustomResultsPanel();
+		CustomResultsListener customResultsListener = new CustomResultsListener(_customResultsPanel);
+		_customResultsPanel.setActionListener(customResultsListener);
+		JScrollPane scrollPane = new JScrollPane(_customResultsPanel);
 		setLayout(new BorderLayout());
 		add(scrollPane, BorderLayout.CENTER);
+	}
+
+	@Override
+	public String getJavaHelpId()
+	{
+		return _customResultsPanel.getJavaHelpId();
 	}
 }

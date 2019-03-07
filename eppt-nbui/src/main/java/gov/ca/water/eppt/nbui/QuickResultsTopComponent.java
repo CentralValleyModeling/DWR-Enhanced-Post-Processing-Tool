@@ -37,18 +37,25 @@ import org.openide.windows.TopComponent;
 				"CTL_QuickResultsTopComponent=Quick Results Window",
 				"HINT_QuickResultsTopComponent=This is the Quick Results window"
 		})
-public final class QuickResultsTopComponent extends TopComponent
+public final class QuickResultsTopComponent extends EpptTopComponent
 {
+
+	private final QuickResultsPanel _quickResultsPanel;
 
 	public QuickResultsTopComponent()
 	{
 		setName("Quick Results");
-		QuickResultsPanel quickResultsPanel = new QuickResultsPanel();
-		QuickResultsListener quickResultsListener = new QuickResultsListener(quickResultsPanel);
-		quickResultsPanel.getSwingEngine().setActionListener(quickResultsPanel, quickResultsListener);
-		JScrollPane scrollPane = new JScrollPane(quickResultsPanel);
+		_quickResultsPanel = new QuickResultsPanel();
+		QuickResultsListener quickResultsListener = new QuickResultsListener(_quickResultsPanel);
+		_quickResultsPanel.getSwingEngine().setActionListener(_quickResultsPanel, quickResultsListener);
+		JScrollPane scrollPane = new JScrollPane(_quickResultsPanel);
 		setLayout(new BorderLayout());
 		add(scrollPane, BorderLayout.CENTER);
 	}
 
+	@Override
+	public String getJavaHelpId()
+	{
+		return _quickResultsPanel.getJavaHelpId();
+	}
 }

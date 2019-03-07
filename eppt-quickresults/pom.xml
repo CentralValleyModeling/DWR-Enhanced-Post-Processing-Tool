@@ -49,5 +49,17 @@
 			<type>dll</type>
 			<scope>runtime</scope>
 		</dependency>
+		<dependency>
+			<groupId>com.seaglasslookandfeel</groupId>
+			<artifactId>seaglasslookandfeel</artifactId>
+			<version>0.2.1</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>com.jtattoo</groupId>
+			<artifactId>JTattoo</artifactId>
+			<version>1.6.11</version>
+			<scope>test</scope>
+		</dependency>
 	</dependencies>
 </project>

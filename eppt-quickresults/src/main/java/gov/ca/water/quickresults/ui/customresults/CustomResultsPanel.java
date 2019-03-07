@@ -78,6 +78,12 @@ public class CustomResultsPanel extends EpptPanel
 		}
 	}
 
+	@Override
+	public String getJavaHelpId()
+	{
+		return "Custom Results";
+	}
+
 	/**
 	 * Helper function that scans GUI for a button with the indicated label
 	 * starting with a given component. Used in CalLite GUI to find the "Open"

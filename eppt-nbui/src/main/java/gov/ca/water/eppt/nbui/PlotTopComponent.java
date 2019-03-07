@@ -18,7 +18,7 @@ import org.openide.windows.TopComponent;
  * @author <a href="mailto:adam@rmanet.com">Adam Korynta</a>
  * @since 03-06-2019
  */
-public class PlotTopComponent extends TopComponent
+public class PlotTopComponent extends EpptTopComponent
 {
 	public PlotTopComponent(JTabbedPane tabbedPane)
 	{
@@ -40,5 +40,11 @@ public class PlotTopComponent extends TopComponent
 	protected String preferredID()
 	{
 		return "PlotTopComponent";
+	}
+
+	@Override
+	public String getJavaHelpId()
+	{
+		return "Viewing Results";
 	}
 }

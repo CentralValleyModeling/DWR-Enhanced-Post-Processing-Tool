@@ -19,7 +19,7 @@ import rma.swing.RmaJPanel;
  * @author <a href="mailto:adam@rmanet.com">Adam Korynta</a>
  * @since 02-28-2019
  */
-public class EpptPanel extends RmaJPanel
+public abstract class EpptPanel extends RmaJPanel
 {
 	private final SwingEngine _swingEngine;
 
@@ -32,6 +32,8 @@ public class EpptPanel extends RmaJPanel
 	{
 		return _swingEngine;
 	}
+
+	public abstract String getJavaHelpId();
 
 	public void setActionListener(ActionListener actionListener)
 	{
