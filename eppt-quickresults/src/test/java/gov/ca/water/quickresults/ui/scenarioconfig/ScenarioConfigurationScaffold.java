@@ -7,13 +7,9 @@
 
 package gov.ca.water.quickresults.ui.scenarioconfig;
 
-import java.awt.BorderLayout;
-import javax.swing.*;
-
 import gov.ca.water.calgui.EpptInitializationException;
-import gov.ca.water.calgui.bus_service.impl.GuiLinksSeedDataSvcImpl;
-
-import static org.junit.jupiter.api.Assertions.fail;
+import gov.ca.water.quickresults.ui.EpptPanel;
+import gov.ca.water.quickresults.ui.EpptScaffold;
 
 /**
  * Company: Resource Management Associates
@@ -21,34 +17,23 @@ import static org.junit.jupiter.api.Assertions.fail;
  * @author <a href="mailto:adam@rmanet.com">Adam Korynta</a>
  * @since 02-23-2019
  */
-public class ScenarioConfigurationScaffold
+public class ScenarioConfigurationScaffold extends EpptScaffold
 {
 
 
 	public static void main(String[] args) throws EpptInitializationException
 	{
-		try
-		{
-			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-		}
-		catch(ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException e)
-		{
-			fail(e);
-		}
-		GuiLinksSeedDataSvcImpl.createSeedDataSvcImplInstance();
+		new ScenarioConfigurationScaffold().initScaffold();
+	}
+
+	@Override
+	protected EpptPanel buildEpptPanel()
+	{
 		ScenarioConfigurationPanel scenarioConfigurationPanel = ScenarioConfigurationPanel.getScenarioConfigurationPanel();
 		ScenarioConfigurationListener scenarioConfigurationListener = new ScenarioConfigurationListener(
 				scenarioConfigurationPanel);
 		scenarioConfigurationPanel.getSwingEngine().setActionListener(scenarioConfigurationPanel,
 				scenarioConfigurationListener);
-		JFrame jFrame = new JFrame();
-		jFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		SwingUtilities.invokeLater(() ->
-		{
-			jFrame.setLayout(new BorderLayout());
-			jFrame.add(scenarioConfigurationPanel, BorderLayout.CENTER);
-			jFrame.pack();
-			jFrame.setVisible(true);
-		});
+		return scenarioConfigurationPanel;
 	}
 }
