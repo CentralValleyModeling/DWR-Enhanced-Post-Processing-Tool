@@ -37,17 +37,25 @@ import org.openide.windows.TopComponent;
 				"CTL_DataAnalysisTopComponent=Data Analysis Window",
 				"HINT_DataAnalysisTopComponent=This is the Data Analysis window"
 		})
-public final class DataAnalysisTopComponent extends TopComponent
+public final class DataAnalysisTopComponent extends EpptTopComponent
 {
+
+	private final DataAnalysisPanel _dataAnalysisPanel;
 
 	public DataAnalysisTopComponent()
 	{
 		setName("Data Analysis");
-		DataAnalysisPanel dataAnalysisPanel = new DataAnalysisPanel();
-		DataAnalysisListener dataAnalysisListener = new DataAnalysisListener(dataAnalysisPanel);
-		dataAnalysisPanel.setActionListener(dataAnalysisListener);
-		JScrollPane scrollPane = new JScrollPane(dataAnalysisPanel);
+		_dataAnalysisPanel = new DataAnalysisPanel();
+		DataAnalysisListener dataAnalysisListener = new DataAnalysisListener(_dataAnalysisPanel);
+		_dataAnalysisPanel.setActionListener(dataAnalysisListener);
+		JScrollPane scrollPane = new JScrollPane(_dataAnalysisPanel);
 		setLayout(new BorderLayout());
 		add(scrollPane, BorderLayout.CENTER);
+	}
+
+	@Override
+	public String getJavaHelpId()
+	{
+		return _dataAnalysisPanel.getJavaHelpId();
 	}
 }

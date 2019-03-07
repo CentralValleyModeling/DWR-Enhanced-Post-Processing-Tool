@@ -37,7 +37,7 @@ import org.openide.windows.TopComponent;
 				"CTL_ScenarioConfigurationTopComponent=Scenario Configuration Window",
 				"HINT_ScenarioConfigurationTopComponent=This is the Scenario Configuration window"
 		})
-public final class ScenarioConfigurationTopComponent extends TopComponent
+public final class ScenarioConfigurationTopComponent extends EpptTopComponent
 {
 
 	public ScenarioConfigurationTopComponent()
@@ -52,4 +52,9 @@ public final class ScenarioConfigurationTopComponent extends TopComponent
 		add(scrollPane, BorderLayout.CENTER);
 	}
 
+	@Override
+	public String getJavaHelpId()
+	{
+		return null;
+	}
 }

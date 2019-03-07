@@ -74,6 +74,13 @@ public class ScenarioConfigurationPanel extends EpptPanel
 		return new ScenarioConfigurationPanel();
 	}
 
+
+	@Override
+	public String getJavaHelpId()
+	{
+		return "Viewing Results";
+	}
+
 	private Component getSelectedList()
 	{
 		return getSwingEngine().find("SelectedList");

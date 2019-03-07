@@ -41,6 +41,12 @@ public class DataAnalysisPanel extends EpptPanel
 		}
 	}
 
+	@Override
+	public String getJavaHelpId()
+	{
+		return "Data Analysis";
+	}
+
 	JTextField getReportTemplateTextField()
 	{
 		return (JTextField) getSwingEngine().find("tfTemplateFILE");

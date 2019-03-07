@@ -42,11 +42,11 @@ public class FileSystemSvcImpl implements IFileSystemSvc
 	@Override
 	public List<String> getFileData(String fileName, boolean isRequired) throws CalLiteGUIException
 	{
-		Path p = Paths.get(fileName);
+		Path p = Paths.get(System.getProperty("user.dir")).resolve(fileName);
 		List<String> list = null;
 		if(Files.isExecutable(p))
 		{
-			try(Stream<String> stream = Files.lines(Paths.get(fileName)))
+			try(Stream<String> stream = Files.lines(p))
 			{
 				list = stream.collect(Collectors.toList());
 			}

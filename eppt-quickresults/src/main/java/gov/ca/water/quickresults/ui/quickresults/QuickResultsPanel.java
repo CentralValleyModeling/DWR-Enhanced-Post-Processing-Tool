@@ -51,6 +51,12 @@ public class QuickResultsPanel extends EpptPanel
 		}
 	}
 
+	@Override
+	public String getJavaHelpId()
+	{
+		return "Quick Results";
+	}
+
 	private void setCheckBoxorMouseListener(Component component, Object mouseListener)
 	{
 		if(component instanceof JCheckBox)

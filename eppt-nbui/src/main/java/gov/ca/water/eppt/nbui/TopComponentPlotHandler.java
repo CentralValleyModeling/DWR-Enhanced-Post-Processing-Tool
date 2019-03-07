@@ -33,16 +33,6 @@ public class TopComponentPlotHandler implements DisplayFrame.PlotHandler
 			output.dockInto(topComponent);
 			topComponent.open();
 			topComponent.requestActive();
-			//			if(!(doTimeSeries || doExceedance || doMonthlyTable || doSummaryTable))
-			//			{
-			//				if(dssGrabber.getMissingList() == null)
-			//				{
-			//					container.add(new JLabel("Nothing to show!"));
-			//				}
-			//			}
-			//			else
-			//			{
-			//			}
 		}
 	}
 }
