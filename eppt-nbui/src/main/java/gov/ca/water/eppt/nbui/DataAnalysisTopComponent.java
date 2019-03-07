@@ -9,8 +9,8 @@ package gov.ca.water.eppt.nbui;
 import java.awt.BorderLayout;
 import javax.swing.*;
 
-import gov.ca.water.quickresults.ui.DataAnalysisListener;
-import gov.ca.water.quickresults.ui.DataAnalysisPanel;
+import gov.ca.water.quickresults.ui.dataanalysis.DataAnalysisListener;
+import gov.ca.water.quickresults.ui.dataanalysis.DataAnalysisPanel;
 import org.openide.awt.ActionID;
 import org.openide.awt.ActionReference;
 import org.openide.util.NbBundle.Messages;
@@ -28,14 +28,14 @@ import org.openide.windows.TopComponent;
 @ActionID(category = "Window", id = "gov.ca.water.eppt.nbui.DataAnalysisTopComponent")
 @ActionReference(path = "Menu/Window", position = 4444)
 @TopComponent.OpenActionRegistration(
-		displayName = "#CTL_DataAnalysisAction",
+		displayName = "Data Analysis",
 		preferredID = "DataAnalysisTopComponent"
 )
 @Messages(
 		{
-				"CTL_DataAnalysisAction=DataAnalysis",
-				"CTL_DataAnalysisTopComponent=DataAnalysis Window",
-				"HINT_DataAnalysisTopComponent=This is a DataAnalysis window"
+				"CTL_DataAnalysisAction=Data Analysis",
+				"CTL_DataAnalysisTopComponent=Data Analysis Window",
+				"HINT_DataAnalysisTopComponent=This is the Data Analysis window"
 		})
 public final class DataAnalysisTopComponent extends TopComponent
 {

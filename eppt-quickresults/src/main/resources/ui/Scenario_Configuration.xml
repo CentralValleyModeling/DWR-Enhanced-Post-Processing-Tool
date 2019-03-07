@@ -14,15 +14,13 @@
 			<button id="btnClearScenario" name="btnClearScenario" text="Clear All"
 					ActionCommand="btnClearScenario"/>
 			<glue minimumsize="30,0"/>
-			<button id="btnCompareScenarios" name="btnCompareScenarios" ActionCommand="AC_CompScen"
-					text="Compare Scenarios"/>
 		</panel>
 		<scrollpane name="spsl" id="spsl" constraints="BorderLayout.CENTER" minimumsize="410,90" preferredsize="410,90">
 			<list id="SelectedList" name="SelectedList">
 			</list>
 		</scrollpane>
 		<panel constraints="BorderLayout.SOUTH" layout="FlowLayout(FlowLayout.LEFT)">
-			<label text=" "></label>
+			<label text=" "/>
 			<buttongroup>
 				<radiobutton name="rdbp000" id="rdbp000" text="Base" selected="true">
 				</radiobutton>
@@ -218,24 +216,19 @@
 						  enabled="true">
 					<gridbagconstraints gridx="3" gridy="2" anchor="GridBagConstraints.WEST"/>
 				</checkbox>
-				<checkbox id="rdbPeriod3" name="rdbPeriod3" text="Dry (1976-1977)" font="Tahoma-Normal-11"
-						  enabled="true">
+				<checkbox id="rdbPeriod3" name="rdbPeriod3" text="Dry (1976-1977)" font="Tahoma-Normal-11" enabled="true">
 					<gridbagconstraints gridx="3" gridy="3" anchor="GridBagConstraints.WEST"/>
 				</checkbox>
-				<checkbox id="rdbPeriod4" name="rdbPeriod4" text="Dry (1986-1992)" font="Tahoma-Normal-11"
-						  enabled="true">
+				<checkbox id="rdbPeriod4" name="rdbPeriod4" text="Dry (1986-1992)" font="Tahoma-Normal-11" enabled="true">
 					<gridbagconstraints gridx="3" gridy="4" anchor="GridBagConstraints.WEST"/>
 				</checkbox>
-				<checkbox id="rdbPeriod5" name="rdbPeriod5" text="All dry periods" font="Tahoma-Normal-11"
-						  enabled="true">
+				<checkbox id="rdbPeriod5" name="rdbPeriod5" text="All dry periods" font="Tahoma-Normal-11" enabled="true">
 					<gridbagconstraints gridx="3" gridy="5" anchor="GridBagConstraints.WEST"/>
 				</checkbox>
 			</panel>
 			<hbox>
-				<button text="Power Generation" id="btnPower" ActionCommand="AC_Power" enabled="false"></button>
-				<button text="Help" id="QuickHelp" ActionCommand="AC_Help"></button>
-				<gridbagconstraints anchor="GridBagConstraints.WEST" gridx="0" gridy="10" gridwidth="2"
-									insets="0,0,0,0"/>
+				<gridbagconstraints anchor="GridBagConstraints.WEST" gridx="0" gridy="10" gridwidth="2" insets="0,0,0,0"/>
+				<button text="Help" id="QuickHelp" ActionCommand="AC_Help"/>
 			</hbox>
 		</panel>
 	</panel>

@@ -27,7 +27,7 @@ import gov.ca.water.calgui.bo.GUILinks3BO;
 import gov.ca.water.calgui.bo.RBListItemBO;
 import gov.ca.water.calgui.bo.ResultUtilsBO;
 import gov.ca.water.calgui.bus_service.IDSSGrabber1Svc;
-import gov.ca.water.calgui.bus_service.ISeedDataSvc;
+import gov.ca.water.calgui.bus_service.IGuiLinksSeedDataSvc;
 import gov.ca.water.calgui.constant.Constant;
 import gov.ca.water.calgui.tech_service.IDialogSvc;
 import gov.ca.water.calgui.tech_service.IErrorHandlingSvc;
@@ -94,7 +94,7 @@ public class DSSGrabber1SvcImpl implements IDSSGrabber1Svc
 	private double[][] _annualTAFsDiff;
 	private double[][] _annualCFSs;
 	private double[][] _annualCFSsDiff;
-	private ISeedDataSvc _seedDataSvc = SeedDataSvcImpl.getSeedDataSvcImplInstance();
+	private IGuiLinksSeedDataSvc _seedDataSvc = GuiLinksSeedDataSvcImpl.getSeedDataSvcImplInstance();
 	private IErrorHandlingSvc _errorHandlingSvc = new ErrorHandlingSvcImpl();
 	private IDialogSvc _dialogSvc = DialogSvcImpl.getDialogSvcInstance();
 	private boolean _stopOnMissing;
@@ -175,7 +175,7 @@ public class DSSGrabber1SvcImpl implements IDSSGrabber1Svc
 			HecTime ht = new HecTime();
 
 			int m = ResultUtilsBO.getResultUtilsInstance(null).monthToInt(dateRange.substring(0, 3));
-			int y = new Integer(dateRange.substring(3, 7));
+			int y = Integer.parseInt(dateRange.substring(3, 7));
 			ht.setYearMonthDay(m == 12 ? y + 1 : y, m == 12 ? 1 : m + 1, 1, 0);
 			_startTime = ht.value();
 			_startWY = (m < 10) ? y : y + 1; // Water year
@@ -184,7 +184,7 @@ public class DSSGrabber1SvcImpl implements IDSSGrabber1Svc
 			y = new Integer(dateRange.substring(11, 15));
 			ht.setYearMonthDay(m == 12 ? y + 1 : y, m == 12 ? 1 : m + 1, 1, 0);
 			_endTime = ht.value();
-			_endWY = ((m < 10) ? y : y + 1);
+			_endWY = (m < 10) ? y : y + 1;
 		}
 		catch(UnsatisfiedLinkError | NoClassDefFoundError e)
 		{
@@ -570,229 +570,239 @@ public class DSSGrabber1SvcImpl implements IDSSGrabber1Svc
 	protected TimeSeriesContainer getOneSeries(String dssFilename, String dssName)
 	{
 
-		HecDss hD;
+		HecDss hD = null;
 		TimeSeriesContainer result = null;
 
 		try
 		{
 
 			hD = HecDss.open(dssFilename);
-
+			Vector<String> aList = hD.getPathnameList();
+			if(!hD.isOpened())
+			{
+				throw new IllegalArgumentException("Unable to open DSS file: " + dssFilename);
+			}
 			// Determine A-part and F-part directly from file - 10/4/2011 -
 			// assumes constant throughout
-
-			@SuppressWarnings("unchecked")
-			// TODO: is it better to write code that does not require
-					// suppresswarnings?
-					Vector<String> aList = hD.getPathnameList();
 			Iterator<String> it = aList.iterator();
-			String aPath = it.next();
-			String[] temp = aPath.split("/");
-			String hecAPart = temp[1];
-			String hecFPart = temp[6] + "/";
-
-			String delims = "[+]";
-			String[] dssNames1 = dssName.split(delims);
-
-			// Check for time shift (-1 at end of name)
-
-			boolean doTimeShift = false;
-			if(dssNames1[0].endsWith("(-1)"))
+			if(it.hasNext())
 			{
-				doTimeShift = true;
-				dssNames1[0] = dssNames1[0].substring(0, dssNames1[0].length() - 4);
-			}
 
-			// Assign F-Part for each DSS - use default if not specified,
-			// otherwise last part in supplied name.
+				String aPath = it.next();
+				String[] temp = aPath.split("/");
+				String hecAPart = temp[1];
+				String hecFPart = temp[6] + "/";
 
-			String[] dssNames = new String[dssNames1.length];
-			String[] hecFParts = new String[dssNames1.length];
-			for(int i = 0; i < dssNames1.length; i++)
-			{
-				String[] nameParts = dssNames1[i].split("/");
-				if(nameParts.length < 2)
+				String delims = "[+]";
+				String[] dssNames1 = dssName.split(delims);
+
+				// Check for time shift (-1 at end of name)
+
+				boolean doTimeShift = false;
+				if(dssNames1[0].endsWith("(-1)"))
 				{
-					dssNames[i] = "MISSING_B/OR_CPART";
+					doTimeShift = true;
+					dssNames1[0] = dssNames1[0].substring(0, dssNames1[0].length() - 4);
 				}
-				else
+
+				// Assign F-Part for each DSS - use default if not specified,
+				// otherwise last part in supplied name.
+
+				String[] dssNames = new String[dssNames1.length];
+				String[] hecFParts = new String[dssNames1.length];
+				for(int i = 0; i < dssNames1.length; i++)
 				{
-					dssNames[i] = nameParts[0] + "/" + nameParts[1];
-					if(nameParts.length == 2)
+					String[] nameParts = dssNames1[i].split("/");
+					if(nameParts.length < 2)
 					{
-						hecFParts[i] = hecFPart;
+						dssNames[i] = "MISSING_B/OR_CPART";
 					}
 					else
 					{
-						// TODO: Use nameParts UNLESS it's "LOOKUP", in which
-						// case we should look up the value by matching B and C
-						// parts
-
-						hecFParts[i] = nameParts[nameParts.length - 1] + "/";
-						if(hecFParts[i].equals("LOOKUP/"))
+						dssNames[i] = nameParts[0] + "/" + nameParts[1];
+						if(nameParts.length == 2)
 						{
-							for(String path : aList)
-							{
-								String[] parts = path.split("/");
-								if(dssNames[i].equals(parts[2] + "/" + parts[3]))
-								{
-									hecFParts[i] = parts[6] + "/";
-								}
+							hecFParts[i] = hecFPart;
+						}
+						else
+						{
+							// TODO: Use nameParts UNLESS it's "LOOKUP", in which
+							// case we should look up the value by matching B and C
+							// parts
 
+							hecFParts[i] = nameParts[nameParts.length - 1] + "/";
+							if("LOOKUP/".equals(hecFParts[i]))
+							{
+								for(String path : aList)
+								{
+									String[] parts = path.split("/");
+									if(dssNames[i].equals(parts[2] + "/" + parts[3]))
+									{
+										hecFParts[i] = parts[6] + "/";
+									}
+
+								}
 							}
 						}
 					}
 				}
-			}
 
-			// TODO: Note hard-coded D- and E-PART
-			result = (TimeSeriesContainer) hD
-					.get("/" + hecAPart + "/" + dssNames[0] + "/01JAN1930/1MON/" + hecFParts[0], true);
-			LOG.info("/" + hecAPart + "/" + dssNames[0] + "/01JAN1930/1MON/" + hecFParts[0]);
-			if((result == null) || (result.numberValues < 1))
-			{
-
-				String message;
-				result = null;
-
-				if(!clsIsDynamicSJR(dssFilename) && ((dssNames[0].equals("S_MELON/STORAGE"))
-						|| (dssNames[0].equals("S_PEDRO/STORAGE")) || (dssNames[0].equals("S_MCLRE/STORAGE"))
-						|| (dssNames[0].equals("S_MLRTN/STORAGE")) || (dssNames[0].equals("C_STANRIPN/FLOW-CHANNEL"))
-						|| (dssNames[0].equals("C_TUOL/FLOW-CHANNEL")) || (dssNames[0].equals("C_MERCED2/FLOW-CHANNEL"))
-						|| (dssNames[0].equals("C_SJRMS/FLOW-CHANNEL"))
-						|| (dssNames[0].equals("D_STANRIPN/FLOW-DELIVERY"))
-						|| (dssNames[0].equals("D_STANGDWN/FLOW-DELIVERY"))
-						|| (dssNames[0].equals("D_TUOL/FLOW-DELIVERY"))
-						|| (dssNames[0].equals("D_TUOL1B/FLOW-DELIVERY"))
-						|| (dssNames[0].equals("D_TUOL2/FLOW-DELIVERY"))
-						|| (dssNames[0].equals("D_MERCED1/FLOW-DELIVERY"))
-						|| (dssNames[0].equals("D_MERCED2/FLOW-DELIVERY"))
-						|| (dssNames[0].equals("D_MDRCNL/FLOW-DELIVERY"))
-						|| (dssNames[0].equals("D_FKCNL/FLOW-DELIVERY"))))
+				// TODO: Note hard-coded D- and E-PART
+				result = (TimeSeriesContainer) hD
+						.get("/" + hecAPart + "/" + dssNames[0] + "/01JAN1930/1MON/" + hecFParts[0], true);
+				LOG.info("/" + hecAPart + "/" + dssNames[0] + "/01JAN1930/1MON/" + hecFParts[0]);
+				if((result == null) || (result.numberValues < 1))
 				{
 
-					message = " Could not find " + dssNames[0] + " in " + dssFilename
-							+ ".\n The selected scenario was not run using dynamic SJR simulation;";
+					String message;
+					result = null;
+
+					if(!clsIsDynamicSJR(dssFilename) && (("S_MELON/STORAGE".equals(dssNames[0]))
+							|| ("S_PEDRO/STORAGE".equals(dssNames[0])) || ("S_MCLRE/STORAGE".equals(dssNames[0]))
+							|| ("S_MLRTN/STORAGE".equals(dssNames[0])) || ("C_STANRIPN/FLOW-CHANNEL".equals(
+							dssNames[0]))
+							|| ("C_TUOL/FLOW-CHANNEL".equals(dssNames[0])) || ("C_MERCED2/FLOW-CHANNEL".equals(
+							dssNames[0]))
+							|| ("C_SJRMS/FLOW-CHANNEL".equals(dssNames[0]))
+							|| ("D_STANRIPN/FLOW-DELIVERY".equals(dssNames[0]))
+							|| ("D_STANGDWN/FLOW-DELIVERY".equals(dssNames[0]))
+							|| ("D_TUOL/FLOW-DELIVERY".equals(dssNames[0]))
+							|| ("D_TUOL1B/FLOW-DELIVERY".equals(dssNames[0]))
+							|| ("D_TUOL2/FLOW-DELIVERY".equals(dssNames[0]))
+							|| ("D_MERCED1/FLOW-DELIVERY".equals(dssNames[0]))
+							|| ("D_MERCED2/FLOW-DELIVERY".equals(dssNames[0]))
+							|| ("D_MDRCNL/FLOW-DELIVERY".equals(dssNames[0]))
+							|| ("D_FKCNL/FLOW-DELIVERY".equals(dssNames[0]))))
+					{
+
+						message = " Could not find " + dssNames[0] + " in " + dssFilename
+								+ ".\n The selected scenario was not run using dynamic SJR simulation;";
+
+					}
+
+					else if(!clsAntiochChipps(dssFilename)
+							&& (("AN_EC_STD/SALINITY".equals(dssNames[0])) || ("CH_EC_STD/SALINITY".equals(
+							dssNames[0]))))
+					{
+
+						message = " Could not find " + dssNames[0] + " in " + dssFilename
+								+ ".\n The selected scenario was not run with D-1485 Fish and Wildlife (at Antioch and Chipps) regulations.";
+					}
+
+					else if(!clsLVE(dssFilename) && (("S422/STORAGE".equals(dssNames[0]))
+							|| ("WQ408_OR_/SALINITY".equals(dssNames[0])) || ("WQ408_VC_/SALINITY".equals(dssNames[0]))
+							|| ("WQ408_RS_/SALINITY".equals(dssNames[0]))
+							|| ("C422_FILL_CC/FLOW-CHANNEL".equals(dssNames[0]))
+							|| ("D420/FLOW-DELIVERY".equals(dssNames[0])) || ("D408_OR/FLOW-DELIVERY".equals(
+							dssNames[0]))
+							|| ("D408_VC/FLOW-DELIVERY".equals(dssNames[0]))
+							|| ("D408_RS/FLOW-DELIVERY".equals(dssNames[0])) || ("WQ420/SALINITY".equals(dssNames[0]))))
+					{
+
+						message = "Could not find " + dssNames[0] + " in " + dssFilename
+								+ ".\n The selected scenario was not run with Los Vaqueros Enlargement.";
+					}
+
+					else
+					{
+						message = "Could not find " + dssNames[0] + " in " + dssFilename;
+					}
+					if(_stopOnMissing)
+					{
+						_dialogSvc.getOK("Could not find " + dssNames[0] + " in " + dssFilename,
+								JOptionPane.ERROR_MESSAGE);
+					}
+					_missingDSSRecords.add(message);
 
 				}
-
-				else if(!clsAntiochChipps(dssFilename)
-						&& ((dssNames[0].equals("AN_EC_STD/SALINITY")) || (dssNames[0].equals("CH_EC_STD/SALINITY"))))
-				{
-
-					message = " Could not find " + dssNames[0] + " in " + dssFilename
-							+ ".\n The selected scenario was not run with D-1485 Fish and Wildlife (at Antioch and Chipps) regulations.";
-				}
-
-				else if(!clsLVE(dssFilename) && ((dssNames[0].equals("S422/STORAGE"))
-						|| (dssNames[0].equals("WQ408_OR_/SALINITY")) || (dssNames[0].equals("WQ408_VC_/SALINITY"))
-						|| (dssNames[0].equals("WQ408_RS_/SALINITY"))
-						|| (dssNames[0].equals("C422_FILL_CC/FLOW-CHANNEL"))
-						|| (dssNames[0].equals("D420/FLOW-DELIVERY")) || (dssNames[0].equals("D408_OR/FLOW-DELIVERY"))
-						|| (dssNames[0].equals("D408_VC/FLOW-DELIVERY"))
-						|| (dssNames[0].equals("D408_RS/FLOW-DELIVERY")) || (dssNames[0].equals("WQ420/SALINITY"))))
-				{
-
-					message = "Could not find " + dssNames[0] + " in " + dssFilename
-							+ ".\n The selected scenario was not run with Los Vaqueros Enlargement.";
-				}
-
 				else
 				{
-					message = "Could not find " + dssNames[0] + " in " + dssFilename;
-				}
-				if(_stopOnMissing)
-				{
-					_dialogSvc.getOK("Could not find " + dssNames[0] + " in " + dssFilename, JOptionPane.ERROR_MESSAGE);
-				}
-				_missingDSSRecords.add(message);
-			}
-			else
-			{
 
-				// If no error, add results from other datasets in dssNames
-				// array.
+					// If no error, add results from other datasets in dssNames
+					// array.
 
-				for(int i = 1; i < dssNames.length; i++)
-				{
-					// TODO: Note hard-coded D- and E-PART
-					TimeSeriesContainer result2 = (TimeSeriesContainer) hD
-							.get("/" + hecAPart + "/" + dssNames[i] + "/01JAN2020/1MON/" + hecFParts[i], true);
-					if(result2 == null || result2.numberValues < 1)
+					for(int i = 1; i < dssNames.length; i++)
 					{
-						result2 = null;
-						String message = "Could not find " + dssNames[0] + " in " + dssFilename;
-						if(_stopOnMissing)
+						// TODO: Note hard-coded D- and E-PART
+						TimeSeriesContainer result2 = (TimeSeriesContainer) hD
+								.get("/" + hecAPart + "/" + dssNames[i] + "/01JAN2020/1MON/" + hecFParts[i], true);
+						if(result2 == null || result2.numberValues < 1)
 						{
-							JOptionPane.showMessageDialog(null, message, "Error", JOptionPane.ERROR_MESSAGE);
+							result2 = null;
+							String message = "Could not find " + dssNames[0] + " in " + dssFilename;
+							if(_stopOnMissing)
+							{
+								JOptionPane.showMessageDialog(null, message, "Error", JOptionPane.ERROR_MESSAGE);
+							}
+							else
+							{
+								_missingDSSRecords.add(message);
+							}
 						}
 						else
 						{
-							_missingDSSRecords.add(message);
+							for(int j = 0; j < result2.numberValues; j++)
+							{
+								result.values[j] = result.values[j] + result2.values[j];
+							}
 						}
 					}
-					else
+
+
+				}
+				// Trim to date range
+				if(result != null)
+				{
+					// Find starting index
+					int first = 0;
+					for(int i = 0; (i < result.numberValues) && (result.times[i] < _startTime); i++)
 					{
-						for(int j = 0; j < result2.numberValues; j++)
+						first = i + 1;
+					}
+					// find ending index
+					int last = result.numberValues - 1;
+					for(int i = result.numberValues - 1; (i >= 0) && (result.times[i] >= _endTime); i--)
+					{
+						last = i;
+					}
+					// Shift results in array to start
+					if(first != 0)
+					{
+						for(int i = 0; i <= (last - first); i++)
+						{ // TODO: Think
+							// through
+							// change to
+							// <= done 11/9
+							result.times[i] = result.times[i + first];
+							result.values[i] = result.values[i + first];
+						}
+					}
+
+					result.numberValues = last - first + 1; // Adjust count of
+					// results
+
+					// Do time shift where indicated (when a dataset has suffix
+					// "(-1)"
+
+					if(doTimeShift)
+					{
+						if(result.numberValues - 1 - result.numberValues >= 0)
 						{
-							result.values[j] = result.values[j] + result2.values[j];
+							System.arraycopy(result.times, result.numberValues + 1, result.times, result.numberValues,
+									result.numberValues - 1 - result.numberValues);
 						}
+						result.numberValues = result.numberValues - 1;
 					}
 				}
+
 			}
-
-			// Trim to date range
-			if(result != null)
-			{
-				int first = 0; // Find starting index
-				for(int i = 0; (i < result.numberValues) && (result.times[i] < _startTime); i++)
-				{
-					first = i + 1;
-				}
-
-				int last = result.numberValues - 1; // find ending index
-				for(int i = result.numberValues - 1; (i >= 0) && (result.times[i] >= _endTime); i--)
-				{
-					last = i;
-				}
-
-				if(first != 0) // Shift results in array to start
-				{
-					for(int i = 0; i <= (last - first); i++)
-					{ // TODO: Think
-						// through
-						// change to
-						// <= done 11/9
-						result.times[i] = result.times[i + first];
-						result.values[i] = result.values[i + first];
-					}
-				}
-
-				result.numberValues = last - first + 1; // Adjust count of
-				// results
-
-				// Do time shift where indicated (when a dataset has suffix
-				// "(-1)"
-
-				if(doTimeShift)
-				{
-					for(int i = result.numberValues; i < result.numberValues - 1; i++)
-					{
-						result.times[i] = result.times[i + 1];
-					}
-					result.numberValues = result.numberValues - 1;
-				}
-			}
-
 		}
-		catch(
-
-				Exception e)
+		catch(Exception e)
 		{
 
 			LOG.debug(e.getMessage());
 			LOG.error(e.getMessage());
-			if(e.getMessage().contains("Unable to recognize record"))
+			if(e.getMessage() != null && e.getMessage().contains("Unable to recognize record"))
 			{
 				this._missingDSSRecords.add("Could not find record - HEC message was '" + e.getMessage() + "'");
 			}
@@ -801,6 +811,13 @@ public class DSSGrabber1SvcImpl implements IDSSGrabber1Svc
 				String messageText = "Unable to get time series." + e.getMessage();
 
 				_errorHandlingSvc.businessErrorHandler(messageText, e);
+			}
+		}
+		finally
+		{
+			if(hD != null)
+			{
+				hD.close();
 			}
 		}
 
@@ -815,7 +832,7 @@ public class DSSGrabber1SvcImpl implements IDSSGrabber1Svc
 		return result;
 	}
 
-	protected String checkReadiness()
+	void checkReadiness()
 	{
 		String result = null;
 		if(_startTime == -1)
@@ -831,7 +848,10 @@ public class DSSGrabber1SvcImpl implements IDSSGrabber1Svc
 			result = "Base scenario is not set in DSSGrabber.";
 		}
 		LOG.debug(result);
-		return result;
+		if(result != null)
+		{
+			throw new IllegalStateException(result);
+		}
 	}
 
 	/*
@@ -849,86 +869,82 @@ public class DSSGrabber1SvcImpl implements IDSSGrabber1Svc
 
 		try
 		{
-			if(checkReadiness() != null)
-			{
-				throw new NullPointerException(checkReadiness());
-			}
+			checkReadiness();
 
+			if(locationName.contains(Constant.SCHEMATIC_PREFIX) && _primaryDSSName.contains(","))
+			{
+
+				// Special handling for DEMO of schematic view - treat
+				// multiple
+				// series as multiple scenarios
+				// TODO: Longer-term approach is probably to add a rank to
+				// arrays storing all series
+
+				String[] dssNames = _primaryDSSName.split(",");
+				_scenarioCount = dssNames.length;
+				results = new TimeSeriesContainer[_scenarioCount];
+				for(int i = 0; i < _scenarioCount; i++)
+				{
+					results[i] = getOneSeries(_baseName, dssNames[i]);
+				}
+
+				_originalUnits = results[0].units;
+
+			}
 			else
 			{
 
-				if(locationName.contains(Constant.SCHEMATIC_PREFIX) && _primaryDSSName.contains(","))
+				// Store number of scenarios
+
+				_scenarioCount = _scenarios.size();
+				results = new TimeSeriesContainer[_scenarioCount];
+
+				// Base first
+
+				results[0] = getOneSeries(_baseName, _primaryDSSName);
+				if(results[0] != null)
 				{
-
-					// Special handling for DEMO of schematic view - treat
-					// multiple
-					// series as multiple scenarios
-					// TODO: Longer-term approach is probably to add a rank to
-					// arrays storing all series
-
-					String[] dssNames = _primaryDSSName.split(",");
-					_scenarioCount = dssNames.length;
-					results = new TimeSeriesContainer[_scenarioCount];
-					for(int i = 0; i < _scenarioCount; i++)
-					{
-						results[i] = getOneSeries(_baseName, dssNames[i]);
-					}
-
 					_originalUnits = results[0].units;
-
 				}
-				else
+
+				// Then scenarios
+
+				int j = 0;
+				for(int i = 0; i < _scenarioCount; i++)
 				{
-
-					// Store number of scenarios
-
-					_scenarioCount = _scenarios.size();
-					results = new TimeSeriesContainer[_scenarioCount];
-
-					// Base first
-
-					results[0] = getOneSeries(_baseName, _primaryDSSName);
-					_originalUnits = results[0].units;
-
-					// Then scenarios
-
-					int j = 0;
-					for(int i = 0; i < _scenarioCount; i++)
+					String scenarioName;
+					if(_baseName.toUpperCase().contains("_SV.DSS"))
 					{
-						String scenarioName;
-						if(_baseName.toUpperCase().contains("_SV.DSS"))
+						// For SVars, use WRIMS GUI Project object to
+						// determine
+						// input files
+						switch(i)
 						{
-							// For SVars, use WRIMS GUI Project object to
-							// determine
-							// input files
-							switch(i)
-							{
-								case 0:
-									scenarioName = _project.getSVFile();
-									break;
-								case 1:
-									scenarioName = _project.getSV2File();
-									break;
-								case 2:
-									scenarioName = _project.getSV3File();
-									break;
-								case 3:
-									scenarioName = _project.getSV4File();
-									break;
-								default:
-									scenarioName = "";
-									break;
-							}
+							case 0:
+								scenarioName = _project.getSVFile();
+								break;
+							case 1:
+								scenarioName = _project.getSV2File();
+								break;
+							case 2:
+								scenarioName = _project.getSV3File();
+								break;
+							case 3:
+								scenarioName = _project.getSV4File();
+								break;
+							default:
+								scenarioName = "";
+								break;
 						}
-						else
-						{
-							scenarioName = _scenarios.get(i).toString();
-						}
-						if(!_baseName.equals(scenarioName))
-						{
-							j = j + 1;
-							results[j] = getOneSeries(scenarioName, _primaryDSSName);
-						}
+					}
+					else
+					{
+						scenarioName = _scenarios.get(i).toString();
+					}
+					if(!_baseName.equals(scenarioName))
+					{
+						j = j + 1;
+						results[j] = getOneSeries(scenarioName, _primaryDSSName);
 					}
 				}
 			}

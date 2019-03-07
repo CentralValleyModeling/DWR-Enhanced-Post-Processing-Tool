@@ -372,7 +372,7 @@ public final class ModelRunSvcImpl implements IModelRunSvc
 		Integer endYr = (Integer) ((JSpinner) swingEngine.find("spnRunEndYear")).getValue();
 		Integer iSMon = monthToInt(startMon);
 		Integer iEMon = monthToInt(endMon);
-		Integer numMon = (endYr - startYr) * 12 + (iEMon - iSMon) + 1;
+		int numMon = (endYr - startYr) * 12 + (iEMon - iSMon) + 1;
 		return numMon > 1;
 	}
 }

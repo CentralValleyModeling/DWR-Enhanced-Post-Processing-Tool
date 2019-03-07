@@ -19,6 +19,7 @@ import gov.ca.water.calgui.constant.Constant;
 import gov.ca.water.calgui.presentation.DisplayFrame;
 import gov.ca.water.calgui.tech_service.IErrorHandlingSvc;
 import gov.ca.water.calgui.tech_service.impl.ErrorHandlingSvcImpl;
+import gov.ca.water.quickresults.ui.scenarioconfig.ScenarioConfigurationPanel;
 import org.apache.batik.script.Window;
 import org.apache.batik.swing.JSVGCanvas;
 import org.apache.batik.swing.JSVGScrollPane;
@@ -27,6 +28,7 @@ import org.apache.batik.swing.gvt.GVTTreeRendererEvent;
 import org.apache.batik.swing.svg.SVGLoadEventDispatcherAdapter;
 import org.apache.batik.swing.svg.SVGLoadEventDispatcherEvent;
 import org.apache.log4j.Logger;
+import org.jfree.data.time.Month;
 import org.swixml.SwingEngine;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -217,9 +219,12 @@ public class SchematicMain
 					{
 						scenarios.add(model.getElementAt(i));
 					}
-					DisplayFrame.showDisplayFrames(swingEngine,
-							DisplayFrame.quickState(swingEngine) + ";Locs-" + label + ";Index-"
-							+ Constant.SCHEMATIC_PREFIX + label, scenarios);
+					ScenarioConfigurationPanel scenarioConfigurationPanel = ScenarioConfigurationPanel.getScenarioConfigurationPanel();
+					String quickState = scenarioConfigurationPanel.quickState();
+					Month startMonth = scenarioConfigurationPanel.getStartMonth();
+					Month endMonth = scenarioConfigurationPanel.getEndMonth();
+					DisplayFrame.showDisplayFrames(quickState + ";Locs-" + label + ";Index-"
+							+ Constant.SCHEMATIC_PREFIX + label, scenarios, startMonth, endMonth);
 				}
 			}
 		}

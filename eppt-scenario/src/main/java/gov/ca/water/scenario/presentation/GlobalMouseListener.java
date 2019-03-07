@@ -9,8 +9,8 @@ package gov.ca.water.scenario.presentation;
 
 import java.awt.Component;
 import java.awt.HeadlessException;
+import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.*;
@@ -24,7 +24,9 @@ import gov.ca.water.calgui.tech_service.IDialogSvc;
 import gov.ca.water.calgui.tech_service.IErrorHandlingSvc;
 import gov.ca.water.calgui.tech_service.impl.DialogSvcImpl;
 import gov.ca.water.calgui.tech_service.impl.ErrorHandlingSvcImpl;
+import gov.ca.water.quickresults.ui.scenarioconfig.ScenarioConfigurationPanel;
 import org.apache.log4j.Logger;
+import org.jfree.data.time.Month;
 import org.swixml.SwingEngine;
 
 /**
@@ -33,7 +35,7 @@ import org.swixml.SwingEngine;
  *
  * @author Mohan
  */
-public class GlobalMouseListener implements MouseListener
+public class GlobalMouseListener extends MouseAdapter
 {
 
 	private static final Logger LOG = Logger.getLogger(GlobalMouseListener.class.getName());
@@ -107,9 +109,13 @@ public class GlobalMouseListener implements MouseListener
 						else
 						{
 							List<RBListItemBO> scenarios = getScenarios();
-							DisplayFrame.showDisplayFrames(_swingEngine,
-									DisplayFrame.quickState(_swingEngine) + ";Locs-" + chk.getText()
-									+ ";Index-" + chk.getName(), scenarios);
+
+							ScenarioConfigurationPanel scenarioConfigurationPanel = ScenarioConfigurationPanel.getScenarioConfigurationPanel();
+							String quickState = scenarioConfigurationPanel.quickState();
+							Month startMonth = scenarioConfigurationPanel.getStartMonth();
+							Month endMonth = scenarioConfigurationPanel.getEndMonth();
+							DisplayFrame.showDisplayFrames(quickState + ";Locs-" + chk.getText()
+									+ ";Index-" + chk.getName(), scenarios, startMonth, endMonth);
 						}
 					}
 					// Placeholder for future handling of double-clicks
@@ -138,25 +144,5 @@ public class GlobalMouseListener implements MouseListener
 			}
 		}
 		return retval;
-	}
-
-	@Override
-	public void mouseReleased(MouseEvent arg0)
-	{
-	}
-
-	@Override
-	public void mouseEntered(MouseEvent arg0)
-	{
-	}
-
-	@Override
-	public void mouseExited(MouseEvent arg0)
-	{
-	}
-
-	@Override
-	public void mousePressed(MouseEvent arg0)
-	{
 	}
 }

@@ -19,7 +19,7 @@
 	<artifactId>eppt-branding</artifactId>
 	<packaging>nbm</packaging>
 
-	<name>eppt-branding</name>
+	<name>EPPT Branding</name>
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>

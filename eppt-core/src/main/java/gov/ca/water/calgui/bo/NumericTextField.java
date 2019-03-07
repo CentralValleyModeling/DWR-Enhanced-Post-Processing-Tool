@@ -23,8 +23,9 @@ import javax.swing.text.PlainDocument;
 public class NumericTextField extends JTextField
 {
 	private static final long serialVersionUID = 2314410705390899848L;
-	private float minimum;
-	private float maximum;
+	private static final Pattern DIGITS = Pattern.compile("(\\d*)|[0-9]{0,15}[.]{1}[0-9]{0,15}");
+	private float _minimum;
+	private float _maximum;
 
 	public NumericTextField()
 	{
@@ -38,22 +39,22 @@ public class NumericTextField extends JTextField
 
 	public float getMinVal()
 	{
-		return minimum;
+		return _minimum;
 	}
 
 	public void setMinVal(float minval)
 	{
-		minimum = minval;
+		_minimum = minval;
 	}
 
 	public float getMaxVal()
 	{
-		return maximum;
+		return _maximum;
 	}
 
 	public void setMaxVal(float maxval)
 	{
-		maximum = maxval;
+		_maximum = maxval;
 	}
 
 	/**
@@ -63,7 +64,7 @@ public class NumericTextField extends JTextField
 	{
 		private static final long serialVersionUID = 234219857118535655L;
 		// The regular expression to match input against (zero or more digits)
-		private final Pattern DIGITS = Pattern.compile("(\\d*)|[0-9]{0,15}[.]{1}[0-9]{0,15}");
+
 
 		@Override
 		public void insertString(int offs, String value, AttributeSet a) throws BadLocationException
@@ -73,16 +74,17 @@ public class NumericTextField extends JTextField
 			String s1 = s.substring(0, offs);
 			String s2 = s.substring(offs, super.getLength());
 			String sfinal = s1 + value + s2;
-			value = value.trim(); // EDIT DKR 4/8/14 Corrected from previous
-			// "sfinal"
+			// EDIT DKR 4/8/14 Corrected from previous
+			value = value.trim();
 			try
 			{
-				float f = Float.valueOf(sfinal).floatValue();
+				float f = Float.valueOf(sfinal);
 				float min = getMinVal();
 				float max = getMaxVal();
-				if(value != null && DIGITS.matcher(value).matches() && f >= min && f <= max)
+				if(DIGITS.matcher(value).matches() && f >= min && f <= max)
 				{
-					super.insertString(offs, value, a); // EDIT DKR 4/8/14 from
+					// EDIT DKR 4/8/14 from
+					super.insertString(offs, value, a);
 				}
 				// previous "sfinal"
 			}

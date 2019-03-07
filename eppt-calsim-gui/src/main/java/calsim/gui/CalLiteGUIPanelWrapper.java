@@ -11,7 +11,6 @@
 package calsim.gui;
 
 import java.awt.BorderLayout;
-import java.awt.Color;
 import javax.swing.*;
 
 /**
@@ -28,43 +27,19 @@ import javax.swing.*;
 public class CalLiteGUIPanelWrapper
 {
 
-	// public static boolean DEBUG = true;
-
 	/**
 	 *
 	 */
 	private JTabbedPane _tabbedPane;
-	private JFrame _fr;
 	private JPanel _panel; // LimnoTech
 
 	/**
 	 * constructor - creates a panel <s>tabbed pane</s>, which contains several
 	 * tabs of main panel, schematic editor, etc.
 	 */
-	public CalLiteGUIPanelWrapper(JFrame fr)
+	public CalLiteGUIPanelWrapper()
 	{
-		_fr = fr;
-		// _tabbedPane = createTabbedPane();
 		_panel = createPanel();
-	}
-
-	/**
-	 * create the tabbed pane (left as reference only)
-	 */
-
-	JTabbedPane createTabbedPane()
-	{
-		_tabbedPane = new JTabbedPane();
-		JPanel jPanel = new JPanel();
-		jPanel.setLayout(new BorderLayout());
-		jPanel.setBackground(new Color(229, 240, 203));
-		// jPanel.add(GuiUtils.createStudyTab());
-
-		_tabbedPane.addTab("Study   ", null, jPanel, "Study tabbed pane");
-		_tabbedPane.addTab("Output    ", null, GuiUtils.createMainPanel(_fr),
-				"OutPut panel");
-
-		return _tabbedPane;
 	}
 
 	/**
@@ -72,11 +47,11 @@ public class CalLiteGUIPanelWrapper
 	 *
 	 * @return
 	 */
-	JPanel createPanel()
+	private JPanel createPanel()
 	{
 		_panel = new JPanel();
 		_panel.setLayout(new BorderLayout());
-		_panel.add(GuiUtils.createMainPanelCLG(_fr), BorderLayout.CENTER);
+		_panel.add(GuiUtils.createMainPanelCLG(), BorderLayout.CENTER);
 		return _panel;
 
 	}

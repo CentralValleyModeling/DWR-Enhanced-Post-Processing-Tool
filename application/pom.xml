@@ -19,7 +19,7 @@
 	<artifactId>eppt-app</artifactId>
 	<packaging>nbm-application</packaging>
 
-	<name>eppt-app</name>
+	<name>EPPT Application</name>
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -86,6 +86,9 @@
 				<configuration>
 					<finalName>DWR-EPPT-${maven.build.timestamp}</finalName>
 					<brandingToken>eppt</brandingToken>
+					<debugAdditionalArguments>
+						-J"-agentlib:jdwp=transport=dt_socket,server=y,suspend=y,address=5164" -J-Xmx2g
+					</debugAdditionalArguments>
 				</configuration>
 			</plugin>
 			<!-- Permits NbModuleSuite to be run in integration-test phase: -->

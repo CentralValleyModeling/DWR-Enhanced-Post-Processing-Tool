@@ -52,27 +52,29 @@ public class Report extends SwingWorker<Void, String>
 {
 
 	private static final Logger LOG = Logger.getLogger(Report.class.getName());
+	private static final String TIME_SERIES = "timeseries";
+	private static final String EXCEEDANCE = "exceedance";
 	private final JFrame _mainFrame;
-	private ProgressFrameForPDF progressFrameForPDF;
-	private StringBuffer messages = new StringBuffer();
-	private InputStream inputStream;
+	private final StringBuilder _messages = new StringBuilder();
+	private ProgressFrameForPDF _progressFrameForPDF;
+	private InputStream _inputStream;
 
 	/*
 	 * ********* START SwingWorker additions
 	 */
-	private String outputFilename;
-	private boolean isInitialized = false;
-	private ArrayList<ArrayList<String>> twValues;
-	private ArrayList<PathnameMap> pathnameMaps;
-	private HashMap<String, String> scalars;
-	private Writer writer;
+	private String _outputFilename;
+	private boolean _isInitialized = false;
+	private List<ArrayList<String>> _twValues;
+	private List<PathnameMap> _pathnameMaps;
+	private HashMap<String, String> _scalars;
+	private Writer _writer;
 
 	public Report(InputStream inputStream, String outputFilename, JFrame mainFrame)
 	{
 		_mainFrame = mainFrame;
-		this.inputStream = inputStream;
-		this.outputFilename = outputFilename;
-		this.isInitialized = true;
+		this._inputStream = inputStream;
+		this._outputFilename = outputFilename;
+		this._isInitialized = true;
 	}
 
 	/*
@@ -93,12 +95,12 @@ public class Report extends SwingWorker<Void, String>
 	@Override
 	protected Void doInBackground() throws Exception
 	{
-		progressFrameForPDF = ProgressFrameForPDF.getProgressFrameInstance(_mainFrame);
+		_progressFrameForPDF = ProgressFrameForPDF.getProgressFrameInstance(_mainFrame);
 		publish("Generating report in background thread.");
 
 		LOG.fine("Parsing input template");
 		publish("Parsing input template.");
-		parseTemplateFile(inputStream);
+		parseTemplateFile(_inputStream);
 
 		publish("Processing DSS files.");
 		doProcessing();
@@ -112,7 +114,7 @@ public class Report extends SwingWorker<Void, String>
 	@Override
 	protected void process(List<String> status)
 	{
-		progressFrameForPDF.setList(status.get(status.size() - 1));
+		_progressFrameForPDF.setList(status.get(status.size() - 1));
 		return;
 	}
 
@@ -120,7 +122,7 @@ public class Report extends SwingWorker<Void, String>
 	protected void done()
 	{
 
-		String command = "cmd /c start " + outputFilename;
+		String command = "cmd /c start " + _outputFilename;
 		try
 		{
 			Runtime.getRuntime().exec(command);
@@ -143,7 +145,7 @@ public class Report extends SwingWorker<Void, String>
 	private void parseTemplateFile(InputStream templateFileStream) throws IOException
 	{
 
-		if(isInitialized)
+		if(_isInitialized)
 		{
 			publish("Parsing template file.");
 		}
@@ -154,51 +156,51 @@ public class Report extends SwingWorker<Void, String>
 		InputTable scalarTable = tables.getTableNamed("SCALAR");
 		ArrayList<ArrayList<String>> scalarValues = scalarTable.getValues();
 		int nscalars = scalarValues.size();
-		scalars = new HashMap<String, String>();
+		_scalars = new HashMap<String, String>();
 		for(int i = 0; i < nscalars; i++)
 		{
 			String name = scalarTable.getValue(i, "NAME");
 			String value = scalarTable.getValue(i, "VALUE");
-			scalars.put(name, value);
+			_scalars.put(name, value);
 		}
 		// load pathname mapping into a map
 		InputTable pathnameMappingTable = tables.getTableNamed("PATHNAME_MAPPING");
 		ArrayList<ArrayList<String>> pmap_values = pathnameMappingTable.getValues();
 		int nvalues = pmap_values.size();
-		pathnameMaps = new ArrayList<PathnameMap>();
+		_pathnameMaps = new ArrayList<PathnameMap>();
 		for(int i = 0; i < nvalues; i++)
 		{
 			String var_name = pathnameMappingTable.getValue(i, "VARIABLE");
 			var_name = var_name.replace("\"", "");
 			PathnameMap path_map = new PathnameMap(var_name);
-			path_map._report_type = pathnameMappingTable.getValue(i, "REPORT_TYPE").toLowerCase();
+			path_map._reportType = pathnameMappingTable.getValue(i, "REPORT_TYPE").toLowerCase();
 			path_map._pathBase = pathnameMappingTable.getValue(i, "PATH_BASE");
 			path_map._pathAlt = pathnameMappingTable.getValue(i, "PATH_ALT");
-			path_map._var_category = pathnameMappingTable.getValue(i, "VAR_CATEGORY");
-			path_map._row_type = pathnameMappingTable.getValue(i, "ROW_TYPE");
-			if ((path_map._pathAlt == null) || (path_map._pathAlt.length() == 0))
+			path_map._varCategory = pathnameMappingTable.getValue(i, "VAR_CATEGORY");
+			path_map._rowType = pathnameMappingTable.getValue(i, "ROW_TYPE");
+			if((path_map._pathAlt == null) || (path_map._pathAlt.length() == 0))
 			{
 				path_map._pathAlt = path_map._pathBase;
 			}
-			path_map.plot = pathnameMappingTable.getValue(i, "PLOT").equalsIgnoreCase("Y");
+			path_map._plot = pathnameMappingTable.getValue(i, "PLOT").equalsIgnoreCase("Y");
 			path_map._units = pathnameMappingTable.getValue(i, "UNIT");
-			pathnameMaps.add(path_map);
+			_pathnameMaps.add(path_map);
 		}
 		InputTable timeWindowTable = tables.getTableNamed("TIME_PERIODS");
-		twValues = timeWindowTable.getValues();
+		_twValues = timeWindowTable.getValues();
 	}
 
 	public void doProcessing()
 	{
 		// open files 1 and file 2 and loop over to plot
-		if(isInitialized)
+		if(_isInitialized)
 		{
 			publish("Processing template file.");
 		}
-		Group dssGroupBase = opendss(scalars.get("FILE_BASE"));
-		Group dssGroupAlt = opendss(scalars.get("FILE_ALT"));
+		Group dssGroupBase = opendss(_scalars.get("FILE_BASE"));
+		Group dssGroupAlt = opendss(_scalars.get("FILE_ALT"));
 		ArrayList<TimeWindow> timewindows = new ArrayList<TimeWindow>();
-		for(ArrayList<String> values : twValues)
+		for(ArrayList<String> values : _twValues)
 		{
 			String v = values.get(1).replace("\"", "");
 			timewindows.add(TimeFactory.getInstance().createTimeWindow(v));
@@ -208,16 +210,17 @@ public class Report extends SwingWorker<Void, String>
 		{
 			tw = timewindows.get(0);
 		}
-		String output_file = scalars.get("OUTFILE");
-		writer = new ReportPDFWriter();
-		writer.startDocument(output_file);
-		String author = scalars.get("MODELER").replace("\"", "");
-		writer.addTitlePage(String.format("System Water Balance Report: %s vs %s", scalars.get("NAME_ALT"),
-				scalars.get("NAME_BASE")), author, scalars.get("FILE_BASE"), scalars.get("FILE_ALT"));
-		writer.setAuthor(author);
+		String output_file = _scalars.get("OUTFILE");
+		_writer = new ReportPDFWriter();
+		_writer.startDocument(output_file);
+		String author = _scalars.get("MODELER").replace("\"", "");
+		_writer.addTitlePage(String.format("System Water Balance Report: %s vs %s", _scalars.get("NAME_ALT"),
+				_scalars.get("NAME_BASE")), author, _scalars.get("FILE_BASE"), _scalars.get("FILE_ALT"));
+		_writer.setAuthor(author);
 		if((dssGroupBase == null) || (dssGroupAlt == null))
 		{
-			String msg = "No data available in either : " + scalars.get("FILE_BASE") + " or " + scalars.get("FILE_ALT");
+			String msg = "No data available in either : " + _scalars.get("FILE_BASE") + " or " + _scalars.get(
+					"FILE_ALT");
 			LOG.severe(msg);
 			addMessage(msg);
 			return;
@@ -225,112 +228,113 @@ public class Report extends SwingWorker<Void, String>
 
 		generateSummaryTable();
 		int dataIndex = 0;
-		for(PathnameMap pathMap : pathnameMaps)
+		for(PathnameMap pathMap : _pathnameMaps)
 		{
 			dataIndex = dataIndex + 1;
-			if(isInitialized)
+			if(_isInitialized)
 			{
-				publish("Generating plot " + dataIndex + " of " + pathnameMaps.size() + ".");
+				publish("Generating plot " + dataIndex + " of " + _pathnameMaps.size() + ".");
 			}
 
 			LOG.fine("Working on index: " + dataIndex);
-			if ((pathMap._pathAlt == null) || (pathMap._pathAlt == ""))
+			if((pathMap._pathAlt == null) || (pathMap._pathAlt == ""))
 			{
 				pathMap._pathAlt = pathMap._pathBase;
 			}
 			boolean calculate_dts = false;
-			if (pathMap._var_category.equals("HEADER"))
+			if(pathMap._varCategory.equals("HEADER"))
 			{
 				LOG.fine("Inserting header");
 				continue;
 			}
-			if (pathMap._report_type.endsWith("_post"))
+			if(pathMap._reportType.endsWith("_post"))
 			{
 				calculate_dts = true;
 			}
-			DataReference refBase = getReference(dssGroupBase, pathMap._pathBase, calculate_dts, pathnameMaps, 1);
-			DataReference refAlt = getReference(dssGroupAlt, pathMap._pathAlt, calculate_dts, pathnameMaps, 2);
+			DataReference refBase = getReference(dssGroupBase, pathMap._pathBase, calculate_dts, _pathnameMaps, 1);
+			DataReference refAlt = getReference(dssGroupAlt, pathMap._pathAlt, calculate_dts, _pathnameMaps, 2);
 			if((refBase == null) || (refAlt == null))
 			{
 				continue;
 			}
 			// Switch order from original code to reverse legends ... LimnoTech
 			// 20110816
-			String[] series_name = new String[]{scalars.get("NAME_ALT"), scalars.get("NAME_BASE")};
+			String[] series_name = new String[]{_scalars.get("NAME_ALT"), _scalars.get("NAME_BASE")};
 			// String[] series_name = new String[] { scalars.get("NAME_BASE"),
 			// scalars.get("NAME_ALT") };
-			if (pathMap._units.equals("CFS2TAF"))
+			if(pathMap._units.equals("CFS2TAF"))
 			{
 				TSMath.cfs2taf((RegularTimeSeries) refBase.getData());
 				TSMath.cfs2taf((RegularTimeSeries) refAlt.getData());
 			}
-			else if (pathMap._units.equals("TAF2CFS"))
+			else if(pathMap._units.equals("TAF2CFS"))
 			{
 				TSMath.taf2cfs((RegularTimeSeries) refBase.getData());
 				TSMath.taf2cfs((RegularTimeSeries) refAlt.getData());
 			}
 			String data_units = getUnits(refBase, refAlt);
 			String data_type = getType(refBase, refAlt);
-			if(pathMap.plot)
+			if(pathMap._plot)
 			{
-				if (pathMap._report_type.startsWith("average"))
+				if(pathMap._reportType.startsWith("average"))
 				{
 					generatePlot(buildDataArray(refAlt, refBase, tw), dataIndex,
-							"Average " + pathMap._var_name.replace("\"", ""), series_name,
-							data_type + "(" + data_units + ")", "Time", PlotType.TIME_SERIES);
+							"Average " + pathMap._varName.replace("\"", ""), series_name,
+							data_type + "(" + data_units + ")", "Time", TIME_SERIES);
 				}
-				else if (pathMap._report_type.startsWith("exceedance"))
+				else if(pathMap._reportType.startsWith("exceedance"))
 				{
-					generatePlot(buildExceedanceArray(refAlt, refBase, pathMap._var_category == "S_SEPT", tw), dataIndex,
+					generatePlot(buildExceedanceArray(refAlt, refBase, pathMap._varCategory == "S_SEPT", tw), dataIndex,
 							getExceedancePlotTitle(pathMap), series_name, data_type + "(" + data_units + ")",
-							"Percent at or above", PlotType.EXCEEDANCE);
+							"Percent at or above", EXCEEDANCE);
 				}
-				else if (pathMap._report_type.startsWith("avg_excd"))
+				else if(pathMap._reportType.startsWith("avg_excd"))
 				{
 					generatePlot(buildDataArray(refAlt, refBase, tw), dataIndex,
-							"Average " + pathMap._var_name.replace("\"", ""), series_name,
-							data_type + "(" + data_units + ")", "Time", PlotType.TIME_SERIES);
-					generatePlot(buildExceedanceArray(refAlt, refBase, pathMap._var_category == "S_SEPT", tw), dataIndex,
+							"Average " + pathMap._varName.replace("\"", ""), series_name,
+							data_type + "(" + data_units + ")", "Time", TIME_SERIES);
+					generatePlot(buildExceedanceArray(refAlt, refBase, pathMap._varCategory == "S_SEPT", tw), dataIndex,
 							getExceedancePlotTitle(pathMap), series_name, data_type + "(" + data_units + ")",
-							"Percent at or above", PlotType.EXCEEDANCE);
+							"Percent at or above", EXCEEDANCE);
 				}
-				else if (pathMap._report_type.startsWith("timeseries"))
+				else if(pathMap._reportType.startsWith("timeseries"))
 				{
 					generatePlot(buildDataArray(refAlt, refBase, tw), dataIndex,
-							"Average " + pathMap._var_name.replace("\"", ""), series_name,
-							data_type + "(" + data_units + ")", "Time", PlotType.TIME_SERIES);
+							"Average " + pathMap._varName.replace("\"", ""), series_name,
+							data_type + "(" + data_units + ")", "Time", TIME_SERIES);
 				}
-				else if (pathMap._report_type.equals("alloc"))
+				else if(pathMap._reportType.equals("alloc"))
 				{
 					generatePlot(buildExceedanceArray(refAlt, refBase, true, tw), dataIndex,
-							"Exceedance " + pathMap._var_name.replace("\"", ""), series_name, "Allocation (%)",
-							"Probability", PlotType.EXCEEDANCE);
+							"Exceedance " + pathMap._varName.replace("\"", ""), series_name, "Allocation (%)",
+							"Probability", EXCEEDANCE);
 				}
 			}
 		}
-		writer.endDocument();
+		_writer.endDocument();
 	}
 
 	private void generateSummaryTable()
 	{
 
-		if(isInitialized)
+		if(_isInitialized)
 		{
 			publish("Generating summary table.");
 		}
 
-		writer.setTableFontSize(scalars.get("TABLE_FONT_SIZE"));
+		_writer.setTableFontSize(_scalars.get("TABLE_FONT_SIZE"));
 
-		writer.addTableTitle(
-				String.format("System Flow Comparision: %s vs %s", scalars.get("NAME_ALT"), scalars.get("NAME_BASE")));
-		writer.addTableSubTitle(scalars.get("NOTE").replace("\"", ""));
-		writer.addTableSubTitle(scalars.get("ASSUMPTIONS").replace("\"", ""));
-		writer.addTableSubTitle(" "); // add empty line to increase space
+		_writer.addTableTitle(
+				String.format("System Flow Comparision: %s vs %s", _scalars.get("NAME_ALT"),
+						_scalars.get("NAME_BASE")));
+		_writer.addTableSubTitle(_scalars.get("NOTE").replace("\"", ""));
+		_writer.addTableSubTitle(_scalars.get("ASSUMPTIONS").replace("\"", ""));
+		_writer.addTableSubTitle(" "); // add empty line to increase space
 		// between title and table
-		Group dssGroupBase = opendss(scalars.get("FILE_BASE"));
-		Group dssGroupAlt = opendss(scalars.get("FILE_ALT"));
+		Group dssGroupBase = opendss(_scalars.get("FILE_BASE"));
+		Group dssGroupAlt = opendss(_scalars.get("FILE_ALT"));
 		ArrayList<TimeWindow> timewindows = new ArrayList<TimeWindow>();
-		for(ArrayList<String> values : twValues)
+		for(ArrayList<String> values : _twValues)
 		{
 			String v = values.get(1).replace("\"", "");
 			timewindows.add(TimeFactory.getInstance().createTimeWindow(v));
@@ -343,7 +347,7 @@ public class Report extends SwingWorker<Void, String>
 		for(TimeWindow tw : timewindows)
 		{
 			headerRow.add(formatTimeWindowAsWaterYear(tw));
-			headerRow2.addAll(Arrays.asList(scalars.get("NAME_ALT"), scalars.get("NAME_BASE"), "Diff", "% Diff"));
+			headerRow2.addAll(Arrays.asList(_scalars.get("NAME_ALT"), _scalars.get("NAME_BASE"), "Diff", "% Diff"));
 		}
 		int[] columnSpans = new int[timewindows.size() + 1];
 		columnSpans[0] = 1;
@@ -351,38 +355,38 @@ public class Report extends SwingWorker<Void, String>
 		{
 			columnSpans[i] = 4;
 		}
-		writer.addTableHeader(headerRow, columnSpans);
-		writer.addTableHeader(headerRow2, null);
+		_writer.addTableHeader(headerRow, columnSpans);
+		_writer.addTableHeader(headerRow2, null);
 		List<String> categoryList = Arrays.asList("RF", "DI", "DO", "DE", "SWPSOD", "CVPSOD");
 		boolean firstDataRow = true;
 		int dataIndex = 0;
-		for(PathnameMap pathMap : pathnameMaps)
+		for(PathnameMap pathMap : _pathnameMaps)
 		{
 			dataIndex++;
-			if(isInitialized)
+			if(_isInitialized)
 			{
-				publish("Processing dataset " + dataIndex + " of " + pathnameMaps.size());
+				publish("Processing dataset " + dataIndex + " of " + _pathnameMaps.size());
 			}
 
-			if (!categoryList.contains(pathMap._var_category))
+			if(!categoryList.contains(pathMap._varCategory))
 			{
 				continue;
 			}
 			ArrayList<String> rowData = new ArrayList<String>();
-			rowData.add(pathMap._var_name);
+			rowData.add(pathMap._varName);
 			boolean calculate_dts = false;
-			if (pathMap._report_type.toLowerCase().endsWith("_post"))
+			if(pathMap._reportType.toLowerCase().endsWith("_post"))
 			{
 				calculate_dts = true;
 			}
 			DataReference refBase = null, refAlt = null;
-			if (!pathMap._pathBase.equalsIgnoreCase("ignore"))
+			if(!pathMap._pathBase.equalsIgnoreCase("ignore"))
 			{
-				refBase = getReference(dssGroupBase, pathMap._pathBase, calculate_dts, pathnameMaps, 1);
+				refBase = getReference(dssGroupBase, pathMap._pathBase, calculate_dts, _pathnameMaps, 1);
 			}
-			if (!pathMap._pathAlt.equalsIgnoreCase("ignore"))
+			if(!pathMap._pathAlt.equalsIgnoreCase("ignore"))
 			{
-				refAlt = getReference(dssGroupAlt, pathMap._pathAlt, calculate_dts, pathnameMaps, 2);
+				refAlt = getReference(dssGroupAlt, pathMap._pathAlt, calculate_dts, _pathnameMaps, 2);
 			}
 			for(TimeWindow tw : timewindows)
 			{
@@ -422,7 +426,7 @@ public class Report extends SwingWorker<Void, String>
 					rowData.add(formatDoubleValue(pctDiff));
 				}
 			}
-			if ("B".equals(pathMap._row_type))
+			if("B".equals(pathMap._rowType))
 			{
 				if(!firstDataRow)
 				{
@@ -431,17 +435,17 @@ public class Report extends SwingWorker<Void, String>
 					{
 						blankRow.add(" ");
 					}
-					writer.addTableRow(blankRow, null, Writer.NORMAL, false);
+					_writer.addTableRow(blankRow, null, Writer.NORMAL, false);
 				}
-				writer.addTableRow(rowData, null, Writer.BOLD, false);
+				_writer.addTableRow(rowData, null, Writer.BOLD, false);
 			}
 			else
 			{
-				writer.addTableRow(rowData, null, Writer.NORMAL, false);
+				_writer.addTableRow(rowData, null, Writer.NORMAL, false);
 			}
 			firstDataRow = false;
 		}
-		writer.endTable();
+		_writer.endTable();
 	}
 
 	private String formatDoubleValue(double val)
@@ -449,16 +453,16 @@ public class Report extends SwingWorker<Void, String>
 		return Double.isNaN(val) ? "" : String.format("%3d", Math.round(val));
 	}
 
-	public void generatePlot(ArrayList<double[]> buildDataArray, int dataIndex, String title, String[] seriesName,
-							 String yAxisLabel, String xAxisLabel, String plotType)
+	private void generatePlot(List<double[]> buildDataArray, int dataIndex, String title, String[] seriesName,
+							  String yAxisLabel, String xAxisLabel, String plotType)
 	{
-		if(plotType.equals(PlotType.TIME_SERIES))
+		if(plotType.equals(TIME_SERIES))
 		{
-			writer.addTimeSeriesPlot(buildDataArray, title, seriesName, xAxisLabel, yAxisLabel);
+			_writer.addTimeSeriesPlot(buildDataArray, title, seriesName, xAxisLabel, yAxisLabel);
 		}
-		else if(plotType.equals(PlotType.EXCEEDANCE))
+		else if(plotType.equals(EXCEEDANCE))
 		{
-			writer.addExceedancePlot(buildDataArray, title, seriesName, xAxisLabel, yAxisLabel);
+			_writer.addExceedancePlot(buildDataArray, title, seriesName, xAxisLabel, yAxisLabel);
 		}
 		else
 		{
@@ -471,13 +475,13 @@ public class Report extends SwingWorker<Void, String>
 
 	public String getOutputFile()
 	{
-		return scalars.get("OUTFILE");
+		return _scalars.get("OUTFILE");
 	}
 
 	private ArrayList<double[]> buildDataArray(DataReference ref1, DataReference ref2, TimeWindow tw)
 	{
 		ArrayList<double[]> dlist = new ArrayList<double[]>();
-		if ((ref1 == null) || (ref2 == null))
+		if((ref1 == null) || (ref2 == null))
 		{
 			return dlist;
 		}
@@ -621,8 +625,8 @@ public class Report extends SwingWorker<Void, String>
 		}
 	}
 
-	public DataReference getReference(Group group, String path, boolean calculate_dts,
-									  ArrayList<PathnameMap> pathname_maps, int group_no)
+	private DataReference getReference(Group group, String path, boolean calculate_dts,
+									   List<PathnameMap> pathname_maps, int group_no)
 	{
 		if(calculate_dts)
 		{
@@ -698,7 +702,7 @@ public class Report extends SwingWorker<Void, String>
 	 * @param exact
 	 * @return
 	 */
-	public DataReference[] findpath(Group g, String path, boolean exact)
+	private DataReference[] findpath(Group g, String path, boolean exact)
 	{
 		String[] pa = new String[6];
 		for(int i = 0; i < 6; i++)
@@ -706,7 +710,8 @@ public class Report extends SwingWorker<Void, String>
 			pa[i] = "";
 		}
 		int i = 0;
-		for(String p : path.trim().split("/"))
+		String[] split = path.trim().split("/");
+		for(String p : split)
 		{
 			if(i == 0)
 			{
@@ -718,12 +723,9 @@ public class Report extends SwingWorker<Void, String>
 				break;
 			}
 			pa[i - 1] = p;
-			if(exact)
+			if(exact && p.length() > 0)
 			{
-				if(p.length() > 0)
-				{
-					pa[i - 1] = "^" + pa[i - 1] + "$";
-				}
+				pa[i - 1] = "^" + pa[i - 1] + "$";
 			}
 			i++;
 		}
@@ -749,24 +751,24 @@ public class Report extends SwingWorker<Void, String>
 		return builder.toString();
 	}
 
-	public String formatTimeWindowAsWaterYear(TimeWindow tw)
+	private String formatTimeWindowAsWaterYear(TimeWindow tw)
 	{
-		SubTimeFormat year_format = new SubTimeFormat("yyyy");
-		return tw.getStartTime().__add__("3MON").format(year_format) + "-"
-				+ tw.getEndTime().__add__("3MON").format(year_format);
+		SubTimeFormat yearFormat = new SubTimeFormat("yyyy");
+		return tw.getStartTime().__add__("3MON").format(yearFormat) + "-"
+				+ tw.getEndTime().__add__("3MON").format(yearFormat);
 	}
 
-	public String getExceedancePlotTitle(PathnameMap path_map)
+	private String getExceedancePlotTitle(PathnameMap pathMap)
 	{
-		String title = "Exceedance " + path_map._var_name.replace("\"", "");
-		if (path_map._var_category.equals("S_SEPT"))
+		String title = "Exceedance " + pathMap._varName.replace("\"", "");
+		if("S_SEPT".equals(pathMap._varCategory))
 		{
 			title = title + " (Sept)";
 		}
 		return title;
 	}
 
-	public String getUnitsForReference(DataReference ref)
+	private String getUnitsForReference(DataReference ref)
 	{
 		if(ref != null)
 		{
@@ -775,7 +777,7 @@ public class Report extends SwingWorker<Void, String>
 		return "";
 	}
 
-	public String getUnits(DataReference ref1, DataReference ref2)
+	private String getUnits(DataReference ref1, DataReference ref2)
 	{
 		if(ref1 == null)
 		{
@@ -797,9 +799,9 @@ public class Report extends SwingWorker<Void, String>
 	/**
 	 * Clear {@link ProgressFrameForPDF} status window message buffer
 	 */
-	public void clearMessages()
+	private void clearMessages()
 	{
-		messages.setLength(0);
+		_messages.setLength(0);
 	}
 
 	/**
@@ -807,9 +809,9 @@ public class Report extends SwingWorker<Void, String>
 	 *
 	 * @param msg
 	 */
-	public void addMessage(String msg)
+	private void addMessage(String msg)
 	{
-		messages.append(msg).append("\n");
+		_messages.append(msg).append("\n");
 	}
 
 	/**
@@ -833,16 +835,16 @@ public class Report extends SwingWorker<Void, String>
 
 		void addTableTitle(String string);
 
-		void addTableHeader(ArrayList<String> headerRow, int[] columnSpans);
+		void addTableHeader(List<String> headerRow, int[] columnSpans);
 
 		void addTableRow(List<String> rowData, int[] columnSpans, int style, boolean centered);
 
 		void endTable();
 
-		void addTimeSeriesPlot(ArrayList<double[]> buildDataArray, String title, String[] seriesName, String xAxisLabel,
+		void addTimeSeriesPlot(List<double[]> buildDataArray, String title, String[] seriesName, String xAxisLabel,
 							   String yAxisLabel);
 
-		void addExceedancePlot(ArrayList<double[]> buildDataArray, String title, String[] seriesName, String xAxisLabel,
+		void addExceedancePlot(List<double[]> buildDataArray, String title, String[] seriesName, String xAxisLabel,
 							   String yAxisLabel);
 
 		void setAuthor(String author);
@@ -852,28 +854,20 @@ public class Report extends SwingWorker<Void, String>
 		void addTitlePage(String compareInfo, String author, String fileBase, String fileAlt);
 	}
 
-	public interface PlotType
+	private static final class PathnameMap
 	{
+		private String _reportType;
+		private String _pathBase;
+		private String _pathAlt;
+		private String _rowType;
+		private String _units;
+		private String _varCategory;
+		private String _varName;
+		private boolean _plot;
 
-		String TIME_SERIES = "timeseries";
-		String EXCEEDANCE = "exceedance";
-
-	}
-
-	public static class PathnameMap
-	{
-		String _report_type;
-		String _pathBase;
-		String _pathAlt;
-		String _row_type;
-		String _units;
-		private String _var_category;
-		private String _var_name;
-		boolean plot;
-
-		public PathnameMap(String var_name)
+		private PathnameMap(String varName)
 		{
-			this._var_name = var_name;
+			_varName = varName;
 		}
 	}
 

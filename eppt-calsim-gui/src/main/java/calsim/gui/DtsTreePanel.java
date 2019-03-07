@@ -15,9 +15,7 @@ import javax.swing.tree.DefaultMutableTreeNode;
 
 import calsim.app.DerivedTimeSeries;
 import calsim.app.MultipleTimeSeries;
-//import java.io.*;
-//import javax.swing.table.TableColumnModel;
-//import javax.swing.event.TableModelEvent;
+
 
 /**
  * Panel that holds the DTS Tree on the Output side of the GUI
@@ -31,52 +29,47 @@ import calsim.app.MultipleTimeSeries;
 public class DtsTreePanel extends JPanel
 {
 
-	static DefaultMutableTreeNode dumbyRoot = new DefaultMutableTreeNode("Root");
-	static String[] tags = {".dts", ".DTS", ".mts", ".MTS"};
-	//static String pics[] = {"d:\\Calsim1\\calsim\\gui\\sphere01.gif","d:\\Calsim1\\calsim\\gui\\sphere01.gif","d:\\Calsim1\\calsim\\gui\\smdi_or.gif","d:\\Calsim1\\calsim\\gui\\smdi_or.gif"};
-	private static DtsTreeModel _dtm;
-	JSplitPane holder = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT);
-	CalsimTree _tree;
-	DTSTable _table;
-	DefaultInternalFrame _fr;
-	DerivedTimeSeries _dts;
+	private static final DefaultMutableTreeNode DUMBY_ROOT = new DefaultMutableTreeNode("Root");
+	private static final String[] tags = {".dts", ".DTS", ".mts", ".MTS"};
+	private static DtsTreeModel DTS_TREE_MODEL;
+	private final JSplitPane _holder = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT);
+	private final CalsimTree _tree;
+	private final DTSTable _table;
+	private DerivedTimeSeries _dts;
+
 	public DtsTreePanel()
 	{
-		_dtm = new DtsTreeModel(dumbyRoot, tags, null, this);
-		_tree = new CalsimTree(_dtm);
-		_dtm.setTree(_tree);
-		dumbyRoot = null;
-		//_fileholder = createFileHolder();
+		DTS_TREE_MODEL = new DtsTreeModel(DUMBY_ROOT, tags, null, this);
+		_tree = new CalsimTree(DTS_TREE_MODEL);
+		DTS_TREE_MODEL.setTree(_tree);
 		setLayout(new BorderLayout());
-		//add(_fileholder,BorderLayout.NORTH);
-		holder.setLeftComponent(createTreeHolder());
+		_holder.setLeftComponent(createTreeHolder());
 		DerivedTimeSeries dts = new DerivedTimeSeries(" ");
 		setDTS(dts);
 		_table = new DTSTable(dts);
-		//CB    _fr = new DefaultInternalFrame(_table);
-		//CB    holder.setRightComponent(_fr);  //CB table is NOT visible with this original line of code (for Java 5 and 6)
-		holder.setRightComponent(
-				_table);  //CB THIS FIXED IT SO THE TABLE SHOWS!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-		holder.setDividerLocation(200);
-		add(holder, BorderLayout.CENTER);
+		//CB THIS FIXED IT SO THE TABLE SHOWS!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+		_holder.setRightComponent(_table);
+		_holder.setDividerLocation(200);
+		add(_holder, BorderLayout.CENTER);
 		setVisible(true);
-		this.setBackground(Color.YELLOW);    //CB NO VISIBLE CHANGE
+		//CB NO VISIBLE CHANGE
+		this.setBackground(Color.YELLOW);
 	}
 
 	public static DtsTreeModel getCurrentModel()
 	{
-		return _dtm;
+		return DTS_TREE_MODEL;
 	}
 
-	public JPanel createTreeHolder()
+	private JPanel createTreeHolder()
 	{
 		JPanel treeholder = new JPanel(new GridLayout(1, 1));
-		JScrollPane holder = new JScrollPane(_tree);
-		treeholder.add(holder);
+		JScrollPane scrollPane = new JScrollPane(_tree);
+		treeholder.add(scrollPane);
 		return treeholder;
 	}
 
-	public void setDTSTable(DerivedTimeSeries dts, MultipleTimeSeries mts)
+	void setDTSTable(DerivedTimeSeries dts, MultipleTimeSeries mts)
 	{
 		_table.setTableModel(dts, mts);
 	}

@@ -9,7 +9,6 @@ package gov.ca.water.calgui.bo;
 
 //! Utilities for display of results
 
-import java.awt.Component;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
@@ -24,7 +23,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Vector;
 import javax.swing.*;
-import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
 import calsim.app.AppUtils;
@@ -44,7 +42,7 @@ import org.swixml.SwingEngine;
  *
  * @author tslawecki
  */
-public class ResultUtilsBO implements ChangeListener
+public class ResultUtilsBO
 {
 	private static final Logger LOG = Logger.getLogger(ResultUtilsBO.class.getName());
 	private static ResultUtilsBO resultUtilsBO;
@@ -52,7 +50,6 @@ public class ResultUtilsBO implements ChangeListener
 	private HashMap<String, Integer> _monthMap;
 	private SwingEngine _swingEngine;
 	private Project _project;
-	private FileDialogBO fdDSSFiles;
 
 	/**
 	 * Constructor stores SwiXml instance, builds month-to-integer map, and sets
@@ -143,7 +140,7 @@ public class ResultUtilsBO implements ChangeListener
 			SpinnerListModel monthModel = new SpinnerListModel(monthNames);
 			jspn.setModel(monthModel);
 			jspn.setValue(monthNames[idx]);
-			if(changelistener == true)
+			if(changelistener)
 			{
 				jspn.addChangeListener((ChangeListener) obj);
 			}
@@ -158,7 +155,7 @@ public class ResultUtilsBO implements ChangeListener
 	/**
 	 * Reads QuickResults output list, Custom Results Dts Tree
 	 */
-	public Optional<List<String>> readCGR()
+	public Optional<List<String>> readCGR(JFrame jFrame)
 	{
 		String aLine;
 		List<String> data = null;
@@ -167,7 +164,7 @@ public class ResultUtilsBO implements ChangeListener
 		fc.setCurrentDirectory(new File(".//Config"));
 		File file;
 		String filename;
-		int retval = fc.showOpenDialog(_swingEngine.find(Constant.MAIN_FRAME_NAME));
+		int retval = fc.showOpenDialog(jFrame);
 		if(retval == JFileChooser.APPROVE_OPTION)
 		{
 			data = new ArrayList<>();
@@ -217,8 +214,8 @@ public class ResultUtilsBO implements ChangeListener
 		JFileChooser fc = new JFileChooser();
 		fc.setFileFilter(new SimpleFileFilter("cgr", "CalLite Report File (*.cgr)"));
 		fc.setCurrentDirectory(new File(".//Config"));
-		File file = null;
-		String filename = null;
+		File file;
+		String filename;
 		int retval = fc.showSaveDialog(_swingEngine.find(Constant.MAIN_FRAME_NAME));
 		if(retval == JFileChooser.APPROVE_OPTION)
 		{
@@ -249,7 +246,7 @@ public class ResultUtilsBO implements ChangeListener
 					for(int i = 0; i < size; i++)
 					{
 						Object item = lstReports.getModel().getElementAt(i);
-						if(!item.toString().equals(" "))
+						if(!" ".equals(item.toString()))
 						{
 							lstArray[n] = item.toString();
 							n = n + 1;
@@ -283,30 +280,37 @@ public class ResultUtilsBO implements ChangeListener
 									+ dts.getOperationIdAt(j) + ";" + dts.getDTSNameAt(j));
 						}
 					}
-					try(PrintStream output = new PrintStream(outputStream))
-					{
-						for(int i = 0; i < n; i++)
-						{
-							output.println(lstArray[i]);
-						}
-						for(String s : pList)
-						{
-							output.println(s);
-						}
-						DtsTreePanel.getCurrentModel().saveFile(filename + ".tree.xml");
-					}
-					catch(IOException ex)
-					{
-						LOG.debug(ex.getMessage());
-					}
+					writeTreeXml(filename, outputStream, n, lstArray, pList);
 				}
 				catch(IOException e2)
 				{
-					LOG.debug(e2.getMessage());
-					return;
+					LOG.debug(e2.getMessage(), e2);
 				}
-
 			}
+		}
+	}
+
+	private void writeTreeXml(String filename, OutputStream outputStream, int n, String[] lstArray, List<String> pList)
+	{
+		try(PrintStream output = new PrintStream(outputStream))
+		{
+			for(int i = 0; i < n; i++)
+			{
+				output.println(lstArray[i]);
+			}
+			for(String s : pList)
+			{
+				output.println(s);
+			}
+			DtsTreeModel currentModel = DtsTreePanel.getCurrentModel();
+			if(currentModel != null)
+			{
+				currentModel.saveFile(filename + ".tree.xml");
+			}
+		}
+		catch(IOException ex)
+		{
+			LOG.debug(ex.getMessage());
 		}
 	}
 
@@ -343,50 +347,6 @@ public class ResultUtilsBO implements ChangeListener
 		return monthCode.intValue();
 	}
 
-	@Override
-	/**
-	 * Custom ChangeListener constrains time spinners to WY 1922 - WY 2003
-	 */
-	public void stateChanged(ChangeEvent changeEvent)
-	{
-		Component c = (Component) changeEvent.getSource();
-		String lcName = c.getName().toLowerCase();
-		if("spn".equals(lcName.substring(0, 3)))
-		{
-			// Constrain run times to [10/1921,9/2003]
-			int syr = (Integer) ((JSpinner) _swingEngine.find("spnRunStartYear")).getValue();
-			int eyr = (Integer) ((JSpinner) _swingEngine.find("spnRunEndYear")).getValue();
-			int smo = monthToInt(((String) ((JSpinner) _swingEngine.find("spnRunStartMonth")).getValue()).trim());
-			int emo = monthToInt(((String) ((JSpinner) _swingEngine.find("spnRunEndMonth")).getValue()).trim());
-			if((syr == 1921) && (smo < 10))
-			{
-				((JSpinner) _swingEngine.find("spnRunStartMonth")).setValue("Oct");
-			}
-			if((eyr == 2003) && (emo > 9))
-			{
-				((JSpinner) _swingEngine.find("spnRunEndMonth")).setValue("Sep");
-			}
-			// Constrain display times the same way [inefficient?]
-			syr = (Integer) ((JSpinner) _swingEngine.find("spnStartYear")).getValue();
-			eyr = (Integer) ((JSpinner) _swingEngine.find("spnEndYear")).getValue();
-			smo = monthToInt(((String) ((JSpinner) _swingEngine.find("spnStartMonth")).getValue()).trim());
-			emo = monthToInt(((String) ((JSpinner) _swingEngine.find("spnEndMonth")).getValue()).trim());
-			if((syr == 1921) && (smo < 10))
-			{
-				((JSpinner) _swingEngine.find("spnStartMonth")).setValue("Oct");
-			}
-			if((eyr == 2003) && (emo > 9))
-			{
-				((JSpinner) _swingEngine.find("spnEndMonth")).setValue("Sep");
-			}
-		}
-		else if("tabbedpane1".equals(lcName))
-		{
-			JMenuBar menuBar = (JMenuBar) this._swingEngine.find("menu");
-			menuBar.setSize(150, 20);
-		}
-	}
-
 	/**
 	 * Store the custom file dialog containing the Quick Results scenario list
 	 *
@@ -394,6 +354,6 @@ public class ResultUtilsBO implements ChangeListener
 	 */
 	public void setFdDSSFiles(FileDialogBO fdDSSFiles)
 	{
-		this.fdDSSFiles = fdDSSFiles;
+		final FileDialogBO fdDSSFiles1 = fdDSSFiles;
 	}
 }

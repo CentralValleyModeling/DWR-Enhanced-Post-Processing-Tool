@@ -54,7 +54,7 @@ public class CalsimGui
 				createImage(VistaUtils.getImageAsBytes("/calsim/gui/calsimoas.gif")));
 		Container pane = fr.getContentPane();
 		pane.setLayout(new BorderLayout());
-		TabbedPane tabbedPane = new TabbedPane(fr);
+		TabbedPane tabbedPane = new TabbedPane();
 		pane.add(tabbedPane.getTabbedPane(), BorderLayout.CENTER);
 		pane.add(GuiUtils.getStatusPanel(), BorderLayout.SOUTH);
 		//
@@ -74,7 +74,6 @@ public class CalsimGui
 				exit();
 			}
 		});
-		//System.out.println(FRAME_WIDTH+" "+FRAME_HEIGHT);
 		fr.setSize(810, FRAME_HEIGHT);
 		fr.setVisible(true);
 		fr.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);

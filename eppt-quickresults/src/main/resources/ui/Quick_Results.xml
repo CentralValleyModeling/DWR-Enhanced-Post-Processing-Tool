@@ -10,7 +10,7 @@
 		<panel id="ss2" resizeable="false" border="TitledBorder(Report List)" layout="BorderLayout"
 			   preferredsize="510,180"
 			   minimumsize="510,180" maximumsize="510,180" constraints="Borderlayout.NORTH">
-			<panel layout="FlowLayout(FlowLayout.LEFT)">
+			<panel constraints="BorderLayout.NORTH" layout="FlowLayout(FlowLayout.LEFT)">
 				<button text="Add To List" ActionCommand="Rep_AddList"/>
 				<button text="Clear List" ActionCommand="Rep_ClearList"/>
 				<glue minimumsize="10,1"/>

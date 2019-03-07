@@ -19,68 +19,68 @@ public class TriggerBO
 	/**
 	 * The trigger gui id is the one which says the id for the Dynamic action.
 	 */
-	private String triggerGuiId;
+	private String _triggerGuiId;
 	/**
 	 * The trigger action is the one which says whether it's selected or
 	 * not-selected for the trigger gui id.
 	 */
-	private String triggerAction;
+	private String _triggerAction;
 	/**
 	 * The affectde gui id is the one which says the id for which the Dynamic
 	 * action is going to apply.
 	 */
-	private String affectdeGuiId;
+	private String _affectdeGuiId;
 	/**
 	 * The affected action is the one which says what should happen for the
 	 * affected gui id.
 	 */
-	private String affectdeAction;
+	private String _affectdeAction;
 
 	public TriggerBO(String triggerGuiId, String triggerAction, String affectdeGuiId, String affectdeAction)
 	{
-		this.triggerGuiId = triggerGuiId;
-		this.triggerAction = triggerAction;
-		this.affectdeGuiId = affectdeGuiId;
-		this.affectdeAction = affectdeAction;
+		_triggerGuiId = triggerGuiId;
+		_triggerAction = triggerAction;
+		_affectdeGuiId = affectdeGuiId;
+		_affectdeAction = affectdeAction;
 	}
 
 	public String getTriggerGuiId()
 	{
-		return triggerGuiId;
+		return _triggerGuiId;
 	}
 
 	public void setTriggerGuiId(String triggerGuiId)
 	{
-		this.triggerGuiId = triggerGuiId;
+		this._triggerGuiId = triggerGuiId;
 	}
 
 	public String getTriggerAction()
 	{
-		return triggerAction;
+		return _triggerAction;
 	}
 
 	public void setTriggerAction(String triggerAction)
 	{
-		this.triggerAction = triggerAction;
+		this._triggerAction = triggerAction;
 	}
 
 	public String getAffectdeGuiId()
 	{
-		return affectdeGuiId;
+		return _affectdeGuiId;
 	}
 
 	public void setAffectdeGuiId(String affectdeGuiId)
 	{
-		this.affectdeGuiId = affectdeGuiId;
+		this._affectdeGuiId = affectdeGuiId;
 	}
 
 	public String getAffectdeAction()
 	{
-		return affectdeAction;
+		return _affectdeAction;
 	}
 
 	public void setAffectdeAction(String affectdeAction)
 	{
-		this.affectdeAction = affectdeAction;
+		this._affectdeAction = affectdeAction;
 	}
 }

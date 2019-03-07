@@ -20,52 +20,52 @@ public class ScenarioDisplayBO
 	 * This field will hold the text of the component to display it in
 	 * "View Scenario Settings".
 	 */
-	String componentText;
+	private String _componentText;
 	/**
 	 * This field will hold the parent text of the component to display it in
 	 * "View Scenario Settings".
 	 */
-	String componentParents;
+	private String _componentParents;
 	/**
 	 * This field will hold the value of the component to display it in
 	 * "View Scenario Settings". ex Default.cls, Default_dv.dss.
 	 */
-	String componentValue;
+	private String _componentValue;
 
 	public ScenarioDisplayBO(String componentText, String componentParents, String componentValue)
 	{
-		this.componentText = componentText;
-		this.componentParents = componentParents;
-		this.componentValue = componentValue;
+		_componentText = componentText;
+		_componentParents = componentParents;
+		_componentValue = componentValue;
 	}
 
 	public String getComponentText()
 	{
-		return componentText;
+		return _componentText;
 	}
 
 	public void setComponentText(String componentText)
 	{
-		this.componentText = componentText;
+		_componentText = componentText;
 	}
 
 	public String getComponentParents()
 	{
-		return componentParents;
+		return _componentParents;
 	}
 
 	public void setComponentParents(String componentParents)
 	{
-		this.componentParents = componentParents;
+		_componentParents = componentParents;
 	}
 
 	public String getComponentValue()
 	{
-		return componentValue;
+		return _componentValue;
 	}
 
 	public void setComponentValue(String componentValue)
 	{
-		this.componentValue = componentValue;
+		_componentValue = componentValue;
 	}
 }

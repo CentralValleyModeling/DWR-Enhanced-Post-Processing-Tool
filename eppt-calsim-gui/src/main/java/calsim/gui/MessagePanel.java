@@ -106,30 +106,15 @@ public class MessagePanel
 	private JLabel[] _labelNames;
 	private Vector _twitems = new Vector(1, 1);
 	private JPanel _messagePanelComp;
-	private MainPanel _mp;
-	private JFrame _frame;
-
-	/**
-	 * constructor
-	 */
-	public MessagePanel(JFrame frame, MainPanel mp)
-	{
-		_frame = frame;
-		_mp = mp;
-		_messagePanelComp = createMessagePanel();
-	}
 
 	/**
 	 * Alternate constructor added to handle CalLite GUI needs
 	 *
 	 * @param fr
 	 */
-	public MessagePanel(JFrame fr)
+	public MessagePanel()
 	{
-		_frame = fr;
-		_mp = null;
 		_messagePanelComp = createMessagePanel();
-
 	}
 
 	static void setDtsMasterMessage(String str)
@@ -417,8 +402,6 @@ public class MessagePanel
 		gc.gridx = 0;
 		gc.gridy = 1;
 		panel1.add(createUtilsPanel(), gc);
-		NodeArcMenuBar nodeArcMenuBar = new NodeArcMenuBar(_mp);
-		_frame.setJMenuBar(nodeArcMenuBar.getMenuBar());
 		return panel1;
 	}
 

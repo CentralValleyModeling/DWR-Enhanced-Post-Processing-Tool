@@ -5,7 +5,6 @@
   ~ All Rights Reserved.  DWR PROPRIETARY/CONFIDENTIAL.
   ~ Source may not be released without written approval from DWR
   -->
-
 <!DOCTYPE filesystem PUBLIC "-//NetBeans//DTD Filesystem 1.2//EN" "http://www.netbeans.org/dtds/filesystem-1_2.dtd">
 <filesystem>
 	<folder name="Actions">
@@ -78,5 +77,6 @@
 		<file name="File_hidden"/>
 		<file name="Memory_hidden"/>
 		<file name="UndoRedo_hidden"/>
+		<file name="Tools"/>
 	</folder>
 </filesystem>

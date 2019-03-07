@@ -43,11 +43,10 @@ public class MainPanel extends JPanel
 	 * Add layout active messages panel, schematic icon, and status panel to the main panel.
 	 * parameters: frame in which the panel will be displayed
 	 */
-	public MainPanel(JFrame fr)
+	public MainPanel()
 	{
-		JFrame frame = fr;
 		_mainMenuBar = new MainMenuBar(this);
-		_messagePanel = new MessagePanel(frame, this);
+		_messagePanel = new MessagePanel();
 		setLayout(new BorderLayout(5, 5));
 		add(_messagePanel.getMessagePanelComp(), BorderLayout.NORTH);
 		_tabbedPane = new JTabbedPane();

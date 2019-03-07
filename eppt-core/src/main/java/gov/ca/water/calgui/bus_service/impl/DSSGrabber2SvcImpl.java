@@ -19,7 +19,7 @@ import calsim.app.MultipleTimeSeries;
 import gov.ca.water.calgui.bo.GUILinks3BO;
 import gov.ca.water.calgui.bo.RBListItemBO;
 import gov.ca.water.calgui.bo.ResultUtilsBO;
-import gov.ca.water.calgui.bus_service.ISeedDataSvc;
+import gov.ca.water.calgui.bus_service.IGuiLinksSeedDataSvc;
 import gov.ca.water.calgui.constant.Constant;
 import gov.ca.water.calgui.tech_service.IErrorHandlingSvc;
 import gov.ca.water.calgui.tech_service.impl.ErrorHandlingSvcImpl;
@@ -57,7 +57,7 @@ public class DSSGrabber2SvcImpl extends DSSGrabber1SvcImpl
 	static Logger LOG = Logger.getLogger(DSSGrabber2SvcImpl.class.getName());
 	private final DerivedTimeSeries dts;
 	private final MultipleTimeSeries mts;
-	private ISeedDataSvc seedDataSvc = SeedDataSvcImpl.getSeedDataSvcImplInstance();
+	private IGuiLinksSeedDataSvc seedDataSvc = GuiLinksSeedDataSvcImpl.getSeedDataSvcImplInstance();
 	private IErrorHandlingSvc errorHandlingSvc = new ErrorHandlingSvcImpl();
 	private double[][][] _annualTAFs;
 	private double[][][] _annualTAFsDiff;
@@ -152,114 +152,27 @@ public class DSSGrabber2SvcImpl extends DSSGrabber1SvcImpl
 		try
 		{
 			TimeSeriesContainer[] results = null;
-
-			if(checkReadiness() != null)
-			{
-				throw new NullPointerException(checkReadiness());
-			}
-
-			else
+			checkReadiness();
+			if(locationName.contains(Constant.SCHEMATIC_PREFIX) && _primaryDSSName.contains(","))
 			{
 
-				if(locationName.contains(Constant.SCHEMATIC_PREFIX) && _primaryDSSName.contains(","))
+				// Special handling for DEMO of schematic view - treat
+				// multiple
+				// series as multiple scenarios
+				// TODO: Longer-term approach is probably to add a rank to
+				// arrays storing all series
+
+				String[] dssNames = _primaryDSSName.split(",");
+				_scenarioCount = dssNames.length;
+				results = new TimeSeriesContainer[_scenarioCount];
+				for(int i = 0; i < _scenarioCount; i++)
 				{
-
-					// Special handling for DEMO of schematic view - treat
-					// multiple
-					// series as multiple scenarios
-					// TODO: Longer-term approach is probably to add a rank to
-					// arrays storing all series
-
-					String[] dssNames = _primaryDSSName.split(",");
-					_scenarioCount = dssNames.length;
-					results = new TimeSeriesContainer[_scenarioCount];
-					for(int i = 0; i < _scenarioCount; i++)
-					{
-						results[i] = getOneSeries(_baseName, dssNames[i]);
-					}
-
-					_originalUnits = results[0].units;
-
+					results[i] = getOneSeries(_baseName, dssNames[i]);
 				}
-				else
-				{
 
-					// Store number of scenarios
+				_originalUnits = results[0].units;
 
-					_scenarioCount = _scenarios.size();
-					results = new TimeSeriesContainer[_scenarioCount];
-
-					// Base first
-
-					results[0] = getOneSeries_WRIMS(_baseName, _primaryDSSName, dts);
-					_originalUnits = results[0].units;
-
-					// Then scenarios
-
-					int j = 0;
-					for(int i = 0; i < _scenarioCount; i++)
-					{
-						String scenarioName;
-						if(_baseName.contains("_SV.DSS"))
-						{
-							// For SVars, use WRIMS GUI Project object to
-							// determine
-							// input files
-							switch(i)
-							{
-								case 0:
-									scenarioName = _project.getSVFile();
-									break;
-								case 1:
-									scenarioName = _project.getSV2File();
-									break;
-								case 2:
-									scenarioName = _project.getSV3File();
-									break;
-								case 3:
-									scenarioName = _project.getSV4File();
-									break;
-								default:
-									scenarioName = "";
-									break;
-							}
-						}
-						else
-						{
-							scenarioName = _scenarios.get(i).toString();
-						}
-						if(!_baseName.equals(scenarioName))
-						{
-							j = j + 1;
-							results[j] = getOneSeries_WRIMS(scenarioName, _primaryDSSName, dts);
-						}
-					}
-				}
 			}
-
-			return results;
-		}
-		catch(Exception e)
-		{
-			LOG.error(e.getMessage());
-			String messageText = "Unable to get time-series.";
-			errorHandlingSvc.businessErrorHandler(messageText, e);
-		}
-		return null;
-	}
-
-	public TimeSeriesContainer[] getMultipleTimeSeries(int mtsI)
-	{
-
-		try
-		{
-			TimeSeriesContainer[] results = null;
-
-			if(checkReadiness() != null)
-			{
-				throw new NullPointerException(checkReadiness());
-			}
-
 			else
 			{
 
@@ -270,11 +183,8 @@ public class DSSGrabber2SvcImpl extends DSSGrabber1SvcImpl
 
 				// Base first
 
-				results[0] = getOneSeries_WRIMS(_baseName, mtsI, mts);
-				if(results[0] != null)
-				{
-					_originalUnits = results[0].units;
-				}
+				results[0] = getOneSeries_WRIMS(_baseName, _primaryDSSName, dts);
+				_originalUnits = results[0].units;
 
 				// Then scenarios
 
@@ -284,7 +194,8 @@ public class DSSGrabber2SvcImpl extends DSSGrabber1SvcImpl
 					String scenarioName;
 					if(_baseName.contains("_SV.DSS"))
 					{
-						// For SVars, use WRIMS GUI Project object to determine
+						// For SVars, use WRIMS GUI Project object to
+						// determine
 						// input files
 						switch(i)
 						{
@@ -312,8 +223,80 @@ public class DSSGrabber2SvcImpl extends DSSGrabber1SvcImpl
 					if(!_baseName.equals(scenarioName))
 					{
 						j = j + 1;
-						results[j] = getOneSeries_WRIMS(scenarioName, mtsI, mts);
+						results[j] = getOneSeries_WRIMS(scenarioName, _primaryDSSName, dts);
 					}
+				}
+			}
+
+			return results;
+		}
+		catch(Exception e)
+		{
+			LOG.error(e.getMessage());
+			String messageText = "Unable to get time-series.";
+			errorHandlingSvc.businessErrorHandler(messageText, e);
+		}
+		return null;
+	}
+
+	public TimeSeriesContainer[] getMultipleTimeSeries(int mtsI)
+	{
+
+		try
+		{
+			TimeSeriesContainer[] results = null;
+			checkReadiness();
+
+			// Store number of scenarios
+
+			_scenarioCount = _scenarios.size();
+			results = new TimeSeriesContainer[_scenarioCount];
+
+			// Base first
+
+			results[0] = getOneSeries_WRIMS(_baseName, mtsI, mts);
+			if(results[0] != null)
+			{
+				_originalUnits = results[0].units;
+			}
+
+			// Then scenarios
+
+			int j = 0;
+			for(int i = 0; i < _scenarioCount; i++)
+			{
+				String scenarioName;
+				if(_baseName.contains("_SV.DSS"))
+				{
+					// For SVars, use WRIMS GUI Project object to determine
+					// input files
+					switch(i)
+					{
+						case 0:
+							scenarioName = _project.getSVFile();
+							break;
+						case 1:
+							scenarioName = _project.getSV2File();
+							break;
+						case 2:
+							scenarioName = _project.getSV3File();
+							break;
+						case 3:
+							scenarioName = _project.getSV4File();
+							break;
+						default:
+							scenarioName = "";
+							break;
+					}
+				}
+				else
+				{
+					scenarioName = _scenarios.get(i).toString();
+				}
+				if(!_baseName.equals(scenarioName))
+				{
+					j = j + 1;
+					results[j] = getOneSeries_WRIMS(scenarioName, mtsI, mts);
 				}
 			}
 
@@ -522,7 +505,7 @@ public class DSSGrabber2SvcImpl extends DSSGrabber1SvcImpl
 	}
 
 	/**
-     * Variant of getDifferenceSeriesWithMultipleTimeSeries to work with MTS (multiple time series)
+	 * Variant of getDifferenceSeriesWithMultipleTimeSeries to work with MTS (multiple time series)
 	 *
 	 * @param timeSeriesResults array of arrays of HEC TimeSeriesContainer objects, each
 	 *                          representing a set of results for a scenario. Base is in
@@ -531,7 +514,7 @@ public class DSSGrabber2SvcImpl extends DSSGrabber1SvcImpl
 	 * than timeSeriesResult. Position [0] contains difference [1]-[0],
 	 * position [1] contains difference [2]-[0], ...
 	 */
-    public TimeSeriesContainer[][] getDifferenceSeriesWithMultipleTimeSeries(TimeSeriesContainer[][] timeSeriesResults)
+	public TimeSeriesContainer[][] getDifferenceSeriesWithMultipleTimeSeries(TimeSeriesContainer[][] timeSeriesResults)
 	{
 
 		try
@@ -668,12 +651,13 @@ public class DSSGrabber2SvcImpl extends DSSGrabber1SvcImpl
 	}
 
 	/**
-     * Variant of getExceedanceSeriesWithMultipleTimeSeries for mts
+	 * Variant of getExceedanceSeriesWithMultipleTimeSeries for mts
 	 *
 	 * @param timeSeriesResults
 	 * @return
 	 */
-    public TimeSeriesContainer[][][] getExceedanceSeriesWithMultipleTimeSeries(TimeSeriesContainer[][] timeSeriesResults)
+	public TimeSeriesContainer[][][] getExceedanceSeriesWithMultipleTimeSeries(
+			TimeSeriesContainer[][] timeSeriesResults)
 	{
 
 		try
@@ -786,14 +770,15 @@ public class DSSGrabber2SvcImpl extends DSSGrabber1SvcImpl
 	}
 
 	/**
-     * Variant of getExceedanceSeriesDWithMultipleTimeSeries that works with MTS files
+	 * Variant of getExceedanceSeriesDWithMultipleTimeSeries that works with MTS files
 	 * <p>
 	 * Should be recombinable with other exceedance methods.
 	 *
 	 * @param timeSeriesResults
 	 * @return
 	 */
-    public TimeSeriesContainer[][][] getExceedanceSeriesDWithMultipleTimeSeries(TimeSeriesContainer[][] timeSeriesResults)
+	public TimeSeriesContainer[][][] getExceedanceSeriesDWithMultipleTimeSeries(
+			TimeSeriesContainer[][] timeSeriesResults)
 	{
 
 		try

@@ -9,12 +9,12 @@ package gov.ca.water.eppt.nbui;
 import java.awt.BorderLayout;
 import javax.swing.*;
 
-import gov.ca.water.quickresults.ui.CustomResultsPanel;
+import gov.ca.water.quickresults.ui.customresults.CustomResultsListener;
+import gov.ca.water.quickresults.ui.customresults.CustomResultsPanel;
 import org.openide.awt.ActionID;
 import org.openide.awt.ActionReference;
 import org.openide.util.NbBundle.Messages;
 import org.openide.windows.TopComponent;
-import org.openide.windows.WindowManager;
 
 /**
  * Top component which displays something.
@@ -28,7 +28,7 @@ import org.openide.windows.WindowManager;
 @ActionID(category = "Window", id = "gov.ca.water.eppt.nbui.CustomResultsTopComponent")
 @ActionReference(path = "Menu/Window", position = 3333)
 @TopComponent.OpenActionRegistration(
-		displayName = "#CTL_CustomResultsAction",
+		displayName = "Custom Results",
 		preferredID = "CustomResultsTopComponent"
 )
 @Messages(
@@ -43,8 +43,9 @@ public final class CustomResultsTopComponent extends TopComponent
 	public CustomResultsTopComponent()
 	{
 		setName("Custom Results");
-		CustomResultsPanel customResultsPanel = new CustomResultsPanel(
-				(JFrame) WindowManager.getDefault().getMainWindow());
+		CustomResultsPanel customResultsPanel = new CustomResultsPanel();
+		CustomResultsListener customResultsListener = new CustomResultsListener(customResultsPanel);
+		customResultsPanel.setActionListener(customResultsListener);
 		JScrollPane scrollPane = new JScrollPane(customResultsPanel);
 		setLayout(new BorderLayout());
 		add(scrollPane, BorderLayout.CENTER);

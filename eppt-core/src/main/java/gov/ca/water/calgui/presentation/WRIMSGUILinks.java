@@ -5,9 +5,6 @@
  * Source may not be released without written approval from DWR
  */
 
-/**
- *
- */
 package gov.ca.water.calgui.presentation;
 
 import java.awt.BorderLayout;
@@ -56,11 +53,11 @@ public final class WRIMSGUILinks
 	 * @param p
 	 *            Container panel for the WRIMS GUI panel
 	 */
-	public static void buildWRIMSGUI(JFrame frame, JPanel p)
+	public static void buildWRIMSGUI(JPanel p)
 	{
 		p.setSize(900, 650);
 
-		CalLiteGUIPanelWrapper pw = new CalLiteGUIPanelWrapper(frame);
+		CalLiteGUIPanelWrapper pw = new CalLiteGUIPanelWrapper();
 		pw.getPanel().setSize(900, 650);
 		p.add(pw.getPanel(), BorderLayout.NORTH);
 		JPanel statusPanel = GuiUtils.getStatusPanel();
@@ -194,7 +191,8 @@ public final class WRIMSGUILinks
 		}
 		catch(IOException e)
 		{
-			LOG.info(clsF.getName() + " not openable - checking for like-named SV file", e);
+			LOG.info(clsF.getName() + " not openable - checking for like-named SV file");
+			LOG.debug(clsF.getName() + " not openable - checking for like-named SV file", e);
 		}
 
 		if(!svFileName.isEmpty())

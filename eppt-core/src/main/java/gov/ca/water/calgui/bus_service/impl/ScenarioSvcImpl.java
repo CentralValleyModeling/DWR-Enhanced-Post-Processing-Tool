@@ -62,7 +62,7 @@ public final class ScenarioSvcImpl implements IScenarioSvc
 	private IErrorHandlingSvc errorHandlingSvc = new ErrorHandlingSvcImpl();
 	private IFileSystemSvc fileSystemSvc = new FileSystemSvcImpl();
 	private int[] regulationoptions = new int[100];
-	private Map<String, DataTableModel> userDefinedTableMap = new HashMap<String, DataTableModel>();
+	private Map<String, DataTableModel> userDefinedTableMap = new HashMap<>();
 	private boolean isCLSFlag = true;
 
 	private ScenarioSvcImpl()
@@ -126,9 +126,10 @@ public final class ScenarioSvcImpl implements IScenarioSvc
 
 	@Override
 	public void getCLSData(String fileName, List<String> controlStrList, List<String> dataTableModelStrList,
-						   List<String> regulationoptionsStr, List<String> wsidiStatusStr) throws EpptInitializationException
+						   List<String> regulationoptionsStr, List<String> wsidiStatusStr)
+			throws EpptInitializationException
 	{
-		List<String> data = null;
+		List<String> data;
 		boolean isDataTableModel = false;
 		boolean isRegulationoptions = false;
 		boolean isWSIDIStatus = false;
@@ -184,14 +185,14 @@ public final class ScenarioSvcImpl implements IScenarioSvc
 	}
 
 	@Override
-	public void applyClsFile(String fileName, SwingEngine swingEngine, Map<String, GUILinks2BO> tableMap) throws EpptInitializationException
+	public void applyClsFile(String fileName, SwingEngine swingEngine, Map<String, GUILinks2BO> tableMap)
+			throws EpptInitializationException
 	{
 		this.isCLSFlag = true;
-		List<String> controlStrList = new ArrayList<String>();
-		List<String> dataTableModelStrList = new ArrayList<String>();
-		// List<String> userDefinedFlagsStrList = new ArrayList<String>();
-		List<String> regulationoptionsStr = new ArrayList<String>();
-		List<String> wsidiStatusStr = new ArrayList<String>();
+		List<String> controlStrList = new ArrayList<>();
+		List<String> dataTableModelStrList = new ArrayList<>();
+		List<String> regulationoptionsStr = new ArrayList<>();
+		List<String> wsidiStatusStr = new ArrayList<>();
 		// Read in the cls file data.
 		scenarioSvc.getCLSData(fileName, controlStrList, dataTableModelStrList, regulationoptionsStr, wsidiStatusStr);
 		if(!regulationoptionsStr.isEmpty())
@@ -278,7 +279,8 @@ public final class ScenarioSvcImpl implements IScenarioSvc
 	 * @param dataTableModelStrList This data table strings from the cls file.
 	 * @param tableMap              The map with key as the table id and value as table object.
 	 */
-	private void populateClsTableMap(List<String> dataTableModelStrList, Map<String, GUILinks2BO> tableMap) throws EpptInitializationException
+	private void populateClsTableMap(List<String> dataTableModelStrList, Map<String, GUILinks2BO> tableMap)
+			throws EpptInitializationException
 	{
 		String tableName;
 		for(String dataTableModelStr : dataTableModelStrList)
@@ -338,7 +340,7 @@ public final class ScenarioSvcImpl implements IScenarioSvc
 			}
 			catch(CalLiteGUIException ex)
 			{
-				throw new EpptInitializationException("Error attempting to get column name from table id.",ex);
+				throw new EpptInitializationException("Error attempting to get column name from table id.", ex);
 			}
 		}
 	}
@@ -392,12 +394,12 @@ public final class ScenarioSvcImpl implements IScenarioSvc
 					ex);
 		}
 		String[] headers = new String[0];
-		if (header.isPresent())
+		if(header.isPresent())
 		{
 			String[] da = header.get().split(Constant.OLD_DELIMITER);
 
 			headers = new String[da.length - 1];
-			for (int i = 0; i < headers.length; i++)
+			for(int i = 0; i < headers.length; i++)
 			{
 				headers[i] = da[i + 1];
 			}
@@ -927,8 +929,9 @@ public final class ScenarioSvcImpl implements IScenarioSvc
 		{
 			for(int i = 0; i < tableData.length; i++)
 			{
-				fileDataStrBuff.append((i + 1) + Constant.TAB_SPACE + colNum + Constant.TAB_SPACE + tableData[i][offset]
-						+ Constant.TAB_SPACE + tableData[i][mul] + Constant.NEW_LINE);
+				fileDataStrBuff.append(i + 1).append(Constant.TAB_SPACE).append(colNum).append(
+						Constant.TAB_SPACE).append(tableData[i][offset]).append(Constant.TAB_SPACE).append(
+						tableData[i][mul]).append(Constant.NEW_LINE);
 			}
 			offset += 2;
 			mul += 2;
@@ -967,9 +970,9 @@ public final class ScenarioSvcImpl implements IScenarioSvc
 		Object[][] tableData = table.getData();
 		for(final Object[] tableDatum : tableData)
 		{
-			for(int j = 0; j < tableDatum.length; j++)
+			for(final Object o : tableDatum)
 			{
-				fileDataStrBuff.append(tableDatum[j]).append(Constant.TAB_SPACE);
+				fileDataStrBuff.append(o).append(Constant.TAB_SPACE);
 			}
 			fileDataStrBuff.append(Constant.NEW_LINE);
 		}
@@ -1068,7 +1071,7 @@ public final class ScenarioSvcImpl implements IScenarioSvc
 	private void writeToFileIndexAndOption(SwingEngine swingEngine, List<GUILinks2BO> guiLinks2BOList, String runDir,
 										   String generatedDir) throws CalLiteGUIException
 	{
-		Map<String, List<GUILinks2BO>> tableNameMap = new HashMap<String, List<GUILinks2BO>>();
+		Map<String, List<GUILinks2BO>> tableNameMap = new HashMap<>();
 		for(GUILinks2BO gUILinks2BO : guiLinks2BOList)
 		{
 			String tableName = gUILinks2BO.getTableName();
@@ -1106,12 +1109,12 @@ public final class ScenarioSvcImpl implements IScenarioSvc
 				if(c instanceof JTextField || c instanceof NumericTextField || c instanceof JTextArea)
 				{
 					option = ((JTextComponent) c).getText();
-					if(!(c instanceof JTextArea) && option.equals(""))
+					if(!(c instanceof JTextArea) && option.isEmpty())
 					{
 						option = "0";
 					}
-					fileDataStrBuf.append(index + Constant.OLD_DELIMITER + option + Constant.OLD_DELIMITER + description
-							+ Constant.NEW_LINE);
+					fileDataStrBuf.append(index).append(Constant.OLD_DELIMITER).append(option).append(
+							Constant.OLD_DELIMITER).append(description).append(Constant.NEW_LINE);
 				}
 				else if(c instanceof JRadioButton)
 				{
@@ -1126,21 +1129,18 @@ public final class ScenarioSvcImpl implements IScenarioSvc
 					}
 					if(((AbstractButton) c).isSelected())
 					{
-						fileDataStrBuf.append(index + Constant.OLD_DELIMITER + option + Constant.OLD_DELIMITER
-								+ description + Constant.NEW_LINE);
+						fileDataStrBuf.append(index).append(Constant.OLD_DELIMITER).append(option).append(
+								Constant.OLD_DELIMITER).append(description).append(Constant.NEW_LINE);
 					}
 				}
 				else if(c instanceof JCheckBox)
 				{
 					if(((AbstractButton) c).isSelected())
 					{
-						if(gUILinks2BO.getGuiId().startsWith("ckbReg"))
+						if(gUILinks2BO.getGuiId().startsWith("ckbReg") && !"n/a".equals(gUILinks2BO.getRegID()))
 						{
-							if(!gUILinks2BO.getRegID().equals("n/a"))
-							{
-								int rID = Integer.parseInt(gUILinks2BO.getRegID());
-								option = String.valueOf(this.regulationoptions[rID]);
-							}
+							int rID = Integer.parseInt(gUILinks2BO.getRegID());
+							option = String.valueOf(this.regulationoptions[rID]);
 						}
 						else
 						{
@@ -1150,7 +1150,7 @@ public final class ScenarioSvcImpl implements IScenarioSvc
 					else
 					{
 						String naFlag = gUILinks2BO.getNoregulation();
-						if(naFlag == "1")
+						if("1".equals(naFlag))
 						{
 							option = "NA";
 						}
@@ -1159,16 +1159,17 @@ public final class ScenarioSvcImpl implements IScenarioSvc
 							option = "0";
 						}
 					}
-					fileDataStrBuf.append(index + Constant.OLD_DELIMITER + option + Constant.OLD_DELIMITER + description
-							+ Constant.NEW_LINE);
+					fileDataStrBuf.append(index).append(Constant.OLD_DELIMITER).append(option).append(
+							Constant.OLD_DELIMITER).append(description).append(Constant.NEW_LINE);
 				}
 				else if(c == null)
-				{ // control not found we have this
+				{
+					// control not found we have this
 					// scenario with "GUI_SJR.table" index
 					// 2.
 					option = "0";
-					fileDataStrBuf.append(index + Constant.OLD_DELIMITER + option + Constant.OLD_DELIMITER + description
-							+ Constant.NEW_LINE);
+					fileDataStrBuf.append(index).append(Constant.OLD_DELIMITER).append(option).append(
+							Constant.OLD_DELIMITER).append(description).append(Constant.NEW_LINE);
 				}
 			}
 			fileSystemSvc.saveDataToFile(generatedDir + tableName, fileDataStrBuf.toString());
@@ -1223,7 +1224,7 @@ public final class ScenarioSvcImpl implements IScenarioSvc
 	public void saveToCLSFile(String fileName, SwingEngine swingEngine, List<GUILinks2BO> guiLinks2BOList)
 			throws CalLiteGUIException
 	{
-		List<String> panelNames = new ArrayList<String>();
+		List<String> panelNames = new ArrayList<>();
 		JTabbedPane main = (JTabbedPane) swingEngine.find(Constant.MAIN_PANEL_NAME);
 		main.getComponents();
 		for(Component child : main.getComponents())
@@ -1236,12 +1237,9 @@ public final class ScenarioSvcImpl implements IScenarioSvc
 					{
 						for(Component child2 : ((Container) child1).getComponents())
 						{
-							if(child2 instanceof JPanel)
+							if(child2 instanceof JPanel && child2.getName() != null)
 							{
-								if(child2.getName() != null)
-								{
-									panelNames.add(child2.getName());
-								}
+								panelNames.add(child2.getName());
 							}
 						}
 					}
@@ -1251,10 +1249,8 @@ public final class ScenarioSvcImpl implements IScenarioSvc
 		// TODO: Update if needed for new result dashboards
 		List<String> resultTabNames = Arrays.asList("Custom", "externalPDF", "Reporting", "schematics");
 		panelNames.removeAll(resultTabNames);
-		StringBuffer sb = new StringBuffer();
-		panelNames.forEach((panelName) -> {
-			setControlValues(swingEngine.find(panelName), sb);
-		});
+		StringBuilder sb = new StringBuilder();
+		panelNames.forEach(panelName -> setControlValues(swingEngine.find(panelName), sb));
 
 		sb.append("DATATABLEMODELS" + Constant.NEW_LINE);
 		Set<String> keys = this.userDefinedTableMap.keySet();
@@ -1265,9 +1261,11 @@ public final class ScenarioSvcImpl implements IScenarioSvc
 			{
 				try
 				{
-					gUILinks2BO = guiLinks2BOList.stream().filter(seedData -> seedData.getDataTables().equals(key)).findFirst();
-					gUILinks2BO.ifPresent(guiLinks2BO -> sb.append(convertTableToString(guiLinks2BO.getTableID(), this.userDefinedTableMap.get(key))
-							+ Constant.NEW_LINE));
+					gUILinks2BO = guiLinks2BOList.stream().filter(
+							seedData -> seedData.getDataTables().equals(key)).findFirst();
+					gUILinks2BO.ifPresent(guiLinks2BO -> sb.append(
+							convertTableToString(guiLinks2BO.getTableID(), this.userDefinedTableMap.get(key)))
+														   .append(Constant.NEW_LINE));
 				}
 				catch(NoSuchElementException ex)
 				{
@@ -1278,10 +1276,10 @@ public final class ScenarioSvcImpl implements IScenarioSvc
 		sb.append("END DATATABLEMODELS" + Constant.NEW_LINE);
 
 		sb.append("REGULATIONOPTIONS" + Constant.NEW_LINE);
-		String sRegFlags = String.valueOf(this.regulationoptions[0]);
+		StringBuilder sRegFlags = new StringBuilder(String.valueOf(this.regulationoptions[0]));
 		for(int i = 1; i < this.regulationoptions.length; i++)
 		{
-			sRegFlags += Constant.PIPELINE + this.regulationoptions[i];
+			sRegFlags.append(Constant.PIPELINE).append(this.regulationoptions[i]);
 		}
 		sb.append(sRegFlags + Constant.NEW_LINE);
 		sb.append("END REGULATIONOPTIONS" + Constant.NEW_LINE);
@@ -1304,18 +1302,18 @@ public final class ScenarioSvcImpl implements IScenarioSvc
 	 */
 	private String convertTableToString(String tableId, DataTableModel dataTableModel)
 	{
-		String tableStr = tableId + Constant.PIPELINE;
+		StringBuilder tableStr = new StringBuilder(tableId + Constant.PIPELINE);
 		Object[][] data = dataTableModel.getData();
-		for(int i = 0; i < data.length; i++)
+		for(final Object[] datum : data)
 		{
-			tableStr += String.valueOf(data[i][0]);
+			tableStr.append(datum[0]);
 			for(int j = 1; j < data[0].length; j++)
 			{
-				tableStr += Constant.COMMA + data[i][j];
+				tableStr.append(Constant.COMMA).append(datum[j]);
 			}
-			tableStr += Constant.SEMICOLON;
+			tableStr.append(Constant.SEMICOLON);
 		}
-		return tableStr;
+		return tableStr.toString();
 	}
 
 	/**
@@ -1325,11 +1323,11 @@ public final class ScenarioSvcImpl implements IScenarioSvc
 	 * @param component    The component which control values we need to set.
 	 * @param stringBuffer The data that need to be set.
 	 */
-	private void setControlValues(Component component, StringBuffer stringBuffer)
+	private void setControlValues(Component component, StringBuilder stringBuffer)
 	{
 		String compName = "";
 		String value = "";
-		Boolean val;
+		boolean val;
 		compName = component.getName();
 		if(compName != null)
 		{
@@ -1337,18 +1335,18 @@ public final class ScenarioSvcImpl implements IScenarioSvc
 					|| component instanceof JTextArea)
 			{
 				value = ((JTextComponent) component).getText();
-				stringBuffer.append(compName + Constant.PIPELINE + value + Constant.NEW_LINE);
+				stringBuffer.append(compName).append(Constant.PIPELINE).append(value).append(Constant.NEW_LINE);
 			}
 			else if(component instanceof JSpinner)
 			{
 				value = ((JSpinner) component).getValue().toString();
-				stringBuffer.append(compName + Constant.PIPELINE + value + Constant.NEW_LINE);
+				stringBuffer.append(compName).append(Constant.PIPELINE).append(value).append(Constant.NEW_LINE);
 			}
 			else if(component instanceof JCheckBox || component instanceof JRadioButton)
 			{
 				val = ((AbstractButton) component).isSelected();
-				value = val.toString();
-				stringBuffer.append(compName + Constant.PIPELINE + value + Constant.NEW_LINE);
+				value = Boolean.toString(val);
+				stringBuffer.append(compName).append(Constant.PIPELINE).append(value).append(Constant.NEW_LINE);
 			}
 		}
 		for(Component child : ((Container) component).getComponents())
@@ -1391,31 +1389,6 @@ public final class ScenarioSvcImpl implements IScenarioSvc
 		catch(IOException ex)
 		{
 			LOG.debug("IOException: " + ex.getMessage(), ex);
-		}
-		// try {
-		// FileWriter fw = new FileWriter(statusFilename, (new
-		// File(statusFilename)).exists()); // the true will append the new
-		// // data
-		// fw.write(text);
-		// fw.close();
-		// } catch (IOException ioe) {
-		// log.debug("IOException: " + ioe.getMessage());
-		// }
-	}
-
-	/**
-	 * This method will set the {@code component} and all its children with the
-	 * given boolean value.
-	 *
-	 * @param component the component that need to be set
-	 * @param boolea    the value.
-	 */
-	public void toggleEnComponentAndChildren(Component component, Boolean boolea)
-	{
-		component.setEnabled(boolea);
-		for(Component child : ((Container) component).getComponents())
-		{
-			toggleEnComponentAndChildren(child, boolea);
 		}
 	}
 }

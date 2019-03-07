@@ -10,6 +10,7 @@ package gov.ca.water.calgui.batch;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 
 import gov.ca.water.calgui.bus_service.impl.ModelRunSvcImpl;
 import org.apache.log4j.Logger;
@@ -28,7 +29,7 @@ public class RunScenarios
 
 	public static void main(String[] args)
 	{
-		ArrayList<String> scenarioList = new ArrayList<String>();
+		List<String> scenarioList = new ArrayList<>();
 		scenarioList.add("test1");
 		scenarioList.add("test2");
 		RunScenarios rs = new RunScenarios();
@@ -42,7 +43,7 @@ public class RunScenarios
 		}
 	}
 
-	public void runParallel(ArrayList<String> scenarioList) throws IOException, InterruptedException
+	public void runParallel(List<String> scenarioList) throws IOException, InterruptedException
 	{
 		for(String sc : scenarioList)
 		{

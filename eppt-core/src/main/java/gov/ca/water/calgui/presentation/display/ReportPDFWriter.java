@@ -124,23 +124,6 @@ public class ReportPDFWriter implements Writer
 		catch(IOException ioe)
 		{
 			LOG.debug(ioe.getMessage());
-			// JOptionPane.showMessageDialog(null, "Please close the file " +
-			// (new File(filename).getName()) + " if it is open.",
-			// "Warning!", JOptionPane.WARNING_MESSAGE);
-			// ImageIcon icon = new
-			// ImageIcon(getClass().getResource("/images/CalLiteIcon.png"));
-			// Object[] options = { "OK" };
-			// JOptionPane optionPane = new JOptionPane(
-			// "Please close the file " + (new File(filename).getName()) + " if
-			// it is open.",
-			// JOptionPane.ERROR_MESSAGE, JOptionPane.OK_OPTION, null, options,
-			// options[0]);
-			// JDialog dialog =
-			// optionPane.createDialog(swingEngine.find(Constant.MAIN_FRAME_NAME),
-			// "CalLite");
-			// dialog.setIconImage(icon.getImage());
-			// dialog.setResizable(false);
-			// dialog.setVisible(true);
 			dialogSvc.getOK("Please close the file " + (new File(filename).getName()) + " if it is open.",
 					JOptionPane.WARNING_MESSAGE);
 			return;
@@ -154,7 +137,7 @@ public class ReportPDFWriter implements Writer
 		try
 		{
 			Paragraph title = new Paragraph("\n\n\n\n" + compareInfo,
-					FontFactory.getFont("Arial", 24f, Font.BOLD, BaseColor.BLUE));
+					FontFactory.getFont("Arial", 24F, Font.BOLD, BaseColor.BLUE));
 			title.setAlignment(Element.ALIGN_CENTER);
 			document.add(title);
 			Paragraph pauthor = new Paragraph("\n\n" + "Author: " + author,
@@ -172,7 +155,6 @@ public class ReportPDFWriter implements Writer
 				tf1.setBorderColor(BaseColor.RED);
 				tf1.setBorderWidth(1);
 				tf1.setRotation(90);
-				// tf1.setBorderStyle(PdfBorderDictionary.STYLE_BEVELED);
 				tf1.setText("Alternative 1 DSS file: " + fileBase + "\n\n" + "Alternative 2 DSS file: " + fileAlt);
 				tf1.setAlignment(Element.ALIGN_LEFT);
 				tf1.setOptions(TextField.REQUIRED | TextField.READ_ONLY | TextField.MULTILINE);
@@ -222,7 +204,7 @@ public class ReportPDFWriter implements Writer
 	}
 
 	@Override
-	public void addTableHeader(ArrayList<String> headerRow, int[] columnSpans)
+	public void addTableHeader(List<String> headerRow, int[] columnSpans)
 	{
 		if(summaryTable == null)
 		{
@@ -408,7 +390,7 @@ public class ReportPDFWriter implements Writer
 	}
 
 	@Override
-	public void addExceedancePlot(ArrayList<double[]> buildDataArray, String title, String[] seriesName,
+	public void addExceedancePlot(List<double[]> buildDataArray, String title, String[] seriesName,
 								  String xAxisLabel, String yAxisLabel)
 	{
 		DefaultXYDataset dataset = new DefaultXYDataset();
@@ -437,7 +419,7 @@ public class ReportPDFWriter implements Writer
 	}
 
 	@Override
-	public void addTimeSeriesPlot(ArrayList<double[]> buildDataArray, String title, String[] seriesName,
+	public void addTimeSeriesPlot(List<double[]> buildDataArray, String title, String[] seriesName,
 								  String xAxisLabel, String yAxisLabel)
 	{
 		TimeSeriesCollection datasets = new TimeSeriesCollection();

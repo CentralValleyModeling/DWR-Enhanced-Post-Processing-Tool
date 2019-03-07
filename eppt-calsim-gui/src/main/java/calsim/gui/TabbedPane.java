@@ -25,15 +25,13 @@ public class TabbedPane
 	 *
 	 */
 	private JTabbedPane _tabbedPane;
-	private JFrame _fr;
 
 	/**
 	 * constructor
 	 * create a tabbed pane, which contains several tabs of main panel, schematic editor, etc.
 	 */
-	public TabbedPane(JFrame fr)
+	public TabbedPane()
 	{
-		_fr = fr;
 		_tabbedPane = createTabbedPane();
 	}
 
@@ -44,7 +42,7 @@ public class TabbedPane
 	{
 		_tabbedPane = new JTabbedPane();
 		_tabbedPane.addTab("Study   ", null, GuiUtils.createStudyTab(), "Study tabbed pane");
-		_tabbedPane.addTab("Output    ", null, GuiUtils.createMainPanel(_fr), "OutPut panel");
+		_tabbedPane.addTab("Output    ", null, GuiUtils.createMainPanel(), "OutPut panel");
 		return _tabbedPane;
 	}
 

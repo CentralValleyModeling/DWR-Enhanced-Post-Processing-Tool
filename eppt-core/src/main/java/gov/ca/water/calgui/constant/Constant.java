@@ -7,13 +7,14 @@
 
 package gov.ca.water.calgui.constant;
 
+
 /**
  * This class is used to hold all the constant values required for the
  * application.
  *
  * @author Mohan
  */
-public class Constant
+public final class Constant
 {
 
 	public static final String CLS_EXT = ".CLS";
@@ -33,9 +34,7 @@ public class Constant
 	public static final String RUN_DIR = "//Run//";
 	// File Names.
 	public static final String GUI_XML_FILENAME = System.getProperty("user.dir") + "//Config//GUI.xml";
-	public static final String GUI_LINKS2_FILENAME = System.getProperty("user.dir") + "//Config//GUI_Links2" + CSV_EXT;
-	public static final String GUI_LINKS3_FILENAME = System.getProperty("user.dir") + "//Config//GUI_Links3" + CSV_EXT;
-	public static final String GUI_LINKS4_FILENAME = System.getProperty("user.dir") + "//Config//GUI_Links4" + CSV_EXT;
+
 	public static final String DYNAMIC_CONTROL_FOR_STARTUP_FILENAME = System.getProperty("user.dir")
 			+ "//Config//DynamicControlForStartUp" + CSV_EXT;
 	public static final String TRIGGER_ENABLE_DISABLE_FILENAME = System.getProperty("user.dir")
@@ -106,4 +105,8 @@ public class Constant
 	public static final String VAMP_SELECTED_TEXT = "If D1485 is selected, take VAMP D1641 hydrology with a D1485 run.";
 	public static final String VAMP_NOT_SELECTED_TEXT = "Access regulation table (where applicable) by selecting or right-clicking on a regulation name.";
 
+	private Constant()
+	{
+		throw new AssertionError("Utility class");
+	}
 }

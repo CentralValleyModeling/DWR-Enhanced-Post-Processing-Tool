@@ -17,46 +17,46 @@ package gov.ca.water.calgui.bo;
 public class RBListItemBO
 {
 
-	private final String label;
-	private final String fullname;
-	private boolean isSelected = false;
-	private String svFilename;
+	private final String _label;
+	private final String _fullname;
+	private boolean _isSelected = false;
+	private String _svFilename;
 
 	public RBListItemBO(String label, String label2)
 	{
-		this.label = label2;
-		this.fullname = label;
-		this.svFilename = "";
+		this._label = label2;
+		this._fullname = label;
+		this._svFilename = "";
 	}
 
 	public boolean isSelected()
 	{
-		return isSelected;
+		return _isSelected;
 	}
 
 	public void setSelected(boolean isSelected)
 	{
-		this.isSelected = isSelected;
+		this._isSelected = isSelected;
 	}
 
 	public String getSVFilename()
 	{
-		return svFilename;
+		return _svFilename;
 	}
 
 	public void setSVFilename(String svf)
 	{
-		svFilename = svf;
+		_svFilename = svf;
 	}
 
 	@Override
 	public String toString()
 	{
-		return fullname;
+		return _fullname;
 	}
 
-	public String toString2()
+	String getLabel()
 	{
-		return label;
+		return _label;
 	}
 }

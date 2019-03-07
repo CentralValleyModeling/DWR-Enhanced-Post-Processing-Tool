@@ -1,0 +1,496 @@
+! ID,Primary,Secondary,Ytitle,Title,Slegend
+! First group is for Quick Results dashboard: ID is converted to format 'ckbpxxx' - e.g. 16 -> ckbp016,,,,,
+1,S_TRNTY/STORAGE,null,Storage,Trinity Reservoir Storage,null
+2,C_TRNTY/FLOW-CHANNEL,null,Flow,Clear Creek,null
+3,C_LWSTN/FLOW-CHANNEL,null,Flow,Trinity River,null
+4,D_CLEARTU/FLOW-TUNNEL,TRINITY_IMPORTDV/ALIAS,Flow,Trinity River Exports,Import Target
+5,S_WKYTN/STORAGE,null,Storage,Whiskeytown Reservoir Storage,null
+6,D_SPRING/FLOW-TUNNEL,null,Flow,Spring Creek Tunnel,null
+7,C_WKYTN_M/FLOW,C_WKYTN_MIF/FLOW-MIN-INSTREAM,Flow,Clear Creek,Minimum Instream Flow
+8,I_SHSTA/STORAGE,null,Flow,Sacramento River Inflow,null
+9,S_SHSTA/STORAGE+S_SHSTAE/STORAGE,null,Storage,Shasta Reservoir Storage,null
+10,C_SHSTA/FLOW-CHANNEL,null,Flow,Sacramento River at Shasta,null
+11,C_KSWCK/FLOW-CHANNEL,C_KSWCK_MIF/FLOW-MIN-INSTREAM,Flow,Sacramento River at Keswick,Minimum Instream Flow
+12,AD_RedBlf,null,null,Accretion/Depletion at Red Bluff,null
+13,D_REDBLF/FLOW-DELIVERY,null,Flow,Diversion at Red Bluff,null
+14,C_REDBLF/FLOW-CHANNEL,C_REDBLF_MIF/FLOW-MIN-INSTREAM,Flow,Sacramento River at Red Bluff,Minimum Instream Flow
+15,C_KSWCK/FLOW-CHANNEL,C_KSWCK_MIF/FLOW-MIN-INSTREAM,Flow,Sacramento River at Keswick,Minimum Instream Flow
+16,C_SHSTA/FLOW-CHANNEL,null,Flow,Sacramento River at Shasta,null
+102,S_TRNTY/STORAGE,null,Storage,Trinity Reservoir Storage,null
+103,S_SHSTA/STORAGE+S_SHSTAE/STORAGE,null,Storage,Shasta Reservoir Storage,null
+104,S_FOLSM/STORAGE,null,Storage,Folsom Reservoir Storage,null
+105,S_TRNTY/STORAGE+S_SHSTA/STORAGE+S_SHSTAE/STORAGE+S_FOLSM/STORAGE,null,Storage,CVP North of Delta Storage,null
+106,S_SLCVP/STORAGE,null,Storage,CVP San Luis Reservoir Storage,null
+107,S_OROVL/STORAGE,null,Storage,Oroville Reservoir Storage,null
+108,S_SLSWP/STORAGE,null,Storage,SWP San Luis Reservoir Storage,null
+111,S_TRNTY/STORAGE,S_TRNTYLEVEL4DV/STORAGE-LEVEL,Storage,Trinity Reservoir Operations,Flood Pool Target
+112,S_SHSTA/STORAGE+S_SHSTAE/STORAGE,S_SHSTALEVEL5DV/STORAGE-LEVEL,Storage,Shasta Reservoir Operations,Flood Pool Target
+113,S_FOLSM/STORAGE,S_FOLSMLEVEL5DV/STORAGE-LEVEL,Storage,Folsom Reservoir Operations,Flood Pool Target
+114,S_SLCVP/STORAGE,CVPRULECV/RULECURVE,Storage,CVP San Luis Reservoir Operations,Rule Curve
+115,S_OROVL/STORAGE,S_OROVLLEVEL5DV/STORAGE-LEVEL,Storage,Oroville Reservoir Operations,Flood Pool Target
+116,S_SLSWP/STORAGE,SWPRULECV/RULECURVE,Storage,SWP San Luis Reservoir Operations,Rule Curve
+202,C_LWSTN/FLOW-CHANNEL,MIF_C_LEWISTONDV/FLOW-MIN-REQUIRED,Flow,Trinity River,Minimum Instream Flow
+203,D_CLEARTU/FLOW-TUNNEL,TRINITY_IMPORTDV/UNDEFINED,Flow,Trinity River Exports,Import Target
+204,C_WKYTN_M/FLOW,C_WKYTN_MIF/FLOW-MIN-INSTREAM,Flow,Clear Creek,Minimum Instream Flow
+205,D_SPRING/FLOW-TUNNEL,null,Flow,Spring Creek Tunnel,null
+206,C_KSWCK/FLOW-CHANNEL,C_KSWCK_MIF/FLOW-MIN-INSTREAM,Flow,Sacramento River at Keswick,Minimum Instream Flow
+207,C_REDBLF/FLOW-CHANNEL,C_REDBLF_MIF/FLOW-MIN-INSTREAM,Flow,Sacramento River at Red Bluff,Minimum Instream Flow
+208,C_WILKNS/FLOW-CHANNEL,C_WILKNS_MIF/FLOW-MIN-INSTREAM,Flow,Sacramento River at Wilkins Slough,Minimum Instream Flow
+209,C_THERM/FLOW-CHANNEL,C_THERM_MIF/FLOW-MIN-INSTREAM,Flow,Feather River at Thermolito,Minimum Instream Flow
+210,C_YUBFEA/FLOW-CHANNEL,C_YUBFEA_MIF/FLOW-MIN-INSTREAM,Flow,Feather River Below Yuba Confluence,Minimum Instream Flow
+211,C_NIMBUS/FLOW-CHANNEL,C_NIMBUS_MIF/FLOW-MIN-INSTREAM,Flow,American River at Nimbus,Minimum Instream Flow
+212,D_FREWEIR/FLOW-DELIVERY,null,Flow,Fremont Weir,null
+213,D_SACWEIR/FLOW-DELIVERY,null,Flow,Sacramento Weir,null
+214,C_HOOD/FLOW-CHANNEL,D_HOOD/FLOW-DELIVERY,Flow,Sacramento River at Hood,Diversion
+215,C_YOLOBP/FLOW-CHANNEL,null,Flow,Yolo Bypass,null
+216,C_DXC/FLOW-CHANNEL,null,Flow,Delta Cross Channel,null
+217,C_SACRV/FLOW-CHANNEL,C_SACRV_MIF/FLOW-MIN-INSTREAM,Flow,Sacramento River at Rio Vista,Minimum Instream Flow
+218,C_OMR/FLOW-CHANNEL,C_INDNSL/FLOW-CHANNEL,Flow,Old and Middle River,Indian Slough Flow
+219,C_SJRVI/FLOW-CHANNEL,null,Flow,San Joaquin River near Jersey Point (QWEST),null
+302,INFLOW/INFLOW-DELTA,null,Flow,Delta Inflow,null
+303,C_SACSJR/FLOW-CHANNEL,null,Flow,Delta Outflow,null
+304,D_DELTAREQD/FLOW-DELIVERY,null,Flow,Delta Required Outflow,null
+305,EXPRATIO_/EI-RATIO-STD,null,null,Export-Inflow Ratio,null
+306,X2_PRV/X2-POSITION-PREV,null,Position,X2 Position,null
+307,null,null,null,null,null
+310,D_JONES/FLOW-DELIVERY,null,Flow,Jones Exports,null
+311,D_BANKS/FLOW-DELIVERY,null,Flow,Banks Exports,null
+312,EXPORTACTUALTD/EXPORT-PRJ,null,Flow,Total Exports,null
+313,C_NBA/FLOW-CHANNEL,null,Flow,North Bay Aqueduct,null
+314,D_CCWDVCOR/FLOW-DELIVERY,null,Flow,CCWD Alternative Intake Exports,null
+315,D_CCWDINTK/FLOW-DELIVERY,null,Flow,CCWD Rock Slough Exports,null
+316,D_CCWDINTK/FLOW-DELIVERY+D_CCWDVCOR/FLOW-DELIVERY,null,Flow,CCWD Total Exports,null
+402,DEL_CVP_TOTAL_N/DELIVERY-CVP,null,Deliveries,CVP North of Delta Deliveries,null
+403,CVPTOTALDEL/FLOW-DELIVERY,null,Deliveries,CVP South of Delta Deliveries (including CVC),null
+404,SWP_NOD_DEL/DELIVERY-SWP,null,Deliveries,SWP North of Delta Deliveries,null
+405,SWP_TA_TOTAL/SWP_DELIVERY+SWP_CO_TOTAL/SWP_DELIVERY+SWP_IN_TOTAL/SWP_DELIVERY,null,Deliveries,SWP Total Deliveries,null
+406,SWP_IN_TOTAL/SWP_DELIVERY,null,Deliveries,SWP Article 21 (Interruptible) Deliveries,null
+409,null,null,null,null,null
+410,JP_EC_MONTH/SALINITY,JP_EC_STD/SALINITY(-1),Electrical Conductivity,Jersey Point Salinity,Salinity Standard
+411,RS_CL_MONTH/SALINITY,RS_CL_STD/SALINITY(-1),Chloride Concentration,Rock Slough Salinity,Salinity Standard
+412,EM_EC_MONTH/SALINITY,EM_EC_STD/SALINITY(-1),Electrical Conductivity,Emmaton Salinity,Salinity Standard
+413,CO_EC_MONTH/SALINITY,CO_EC_STD/SALINITY(-1),Electrical Conductivity,Collinsville Salinity,Salinity Standard
+414,AN_EC_MONTH/SALINITY,AN_EC_STD/SALINITY(-1),Electrical Conductivity,Antioch Salinity,Salinity Standard
+415,CH_EC_MONTH/SALINITY,CH_EC_STD/SALINITY(-1),Electrical Conductivity,Chipps Salinity,Salinity Standard
+416,null,null,null,null,null
+417,null,null,null,null,null
+418,null,null,null,null,null
+419,null,null,null,null,null
+420,null,null,null,null,null
+508,S422/STORAGE,null,Storage,Los Vaqueros Storage,null
+509,WQ408_OR_/SALINITY,null,Electrical Conductivity,Diversion Salinity - Old River,null
+510,WQ408_VC_/SALINITY,null,Electrical Conductivity,Diversion Salinity - Victoria Canal,null
+511,WQ408_RS_/SALINITY,null,Electrical Conductivity,Diversion Salinity - Rock Slough,null
+512,C422_FILL_CC/FLOW-CHANNEL,null,Flow,Los Vaqueros Fill,null
+513,D420/FLOW-DELIVERY,null,Flow,CCWD Deliveries,null
+514,D408_OR/FLOW-DELIVERY,null,Flow,CCWD Diversions - Old River,null
+515,D408_VC/FLOW-DELIVERY,null,Flow,CCWD Diversions - Victoria Canal,null
+516,D408_RS/FLOW-DELIVERY,null,Flow,CCWD Diversions - Rock Slough,null
+517,WQ420/SALINITY,null,Electrical Conductivity,CCWD Delivery Salinity,null
+600,S_MELON/STORAGE,null,Storage,New Melones Reservoir Storage,null
+601,S_PEDRO/STORAGE,null,Storage,New Don Pedro Reservoir Storage,null
+602,S_MCLRE/STORAGE,null,Storage,Mclure Reservoir Storage,null
+603,S_MLRTN/STORAGE,null,Storage,Millerton Reservoir Storage,null
+604,C_SJRVER/FLOW-CHANNEL,null,Flow,Flow from SJR to Vernalis ,null
+605,C_STANRIPN/FLOW-CHANNEL,null,Flow,Flow of Stanislaus River to SJR,null
+606,C_TUOL/FLOW-CHANNEL,null,Flow,Flow of Tuolumne River to SJR,null
+607,C_MERCED2/FLOW-CHANNEL,null,Flow,Flow of Merced river to SJR,null
+608,C_SJRMS/FLOW-CHANNEL,null,Flow,Flow of SJR at Mud Slough ,null
+609,C_MDOTA/FLOW-CHANNEL,null,Flow,Flow below Mendota Pool,null
+610,D_STANRIPN/FLOW-DELIVERY+D_STANGDWN/FLOW-DELIVERY,null,Deliveries,Deliveries of Stanislaus,null
+611,D_TUOL/FLOW-DELIVERY+D_TUOL1B/FLOW-DELIVERY+D_TUOL2/FLOW-DELIVERY,null,Deliveries,Deliveries of Tuolumne,null
+612,D_MERCED1/FLOW-DELIVERY+D_MERCED2/FLOW-DELIVERY,null,Deliveries,Deliveries of Merced,null
+613,D_MDRCNL/FLOW-DELIVERY+D_FKCNL/FLOW-DELIVERY,null,Deliveries,Deliveries of Friant,null
+614,VERNWQFINAL/SALINITY-EC,null,Electrical Conductivity,Vernalis Salinity,Salinity Standard
+801,SHORT_AD_HST/SHORTAGE-FLOW,null,Shortage,Flow Shortage at H St.,null
+802,SHORT_AD_KSWCK/SHORTAGE-FLOW,null,Shortage,Flow Shortage at Keswick,null
+803,SHORT_AD_NIMBUS/SHORTAGE-FLOW,null,Shortage,Flow Shortage at Nimbus,null
+804,SHORT_AD_REDBLF/SHORTAGE-FLOW,null,Shortage,Flow Shortage at Red Bluff,null
+805,SHORT_AD_SACAME/SHORTAGE-FLOW,null,Shortage,Flow Shortage at Sacramento-American Confluence,null
+806,SHORT_AD_SACFEA/SHORTAGE-FLOW,null,Shortage,Flow Shortage at Sacramento-Feather Confluence,null
+807,SHORT_AD_THERM/SHORTAGE-FLOW,null,Shortage,Flow Shortage at Thermalito,null
+808,SHORT_AD_WILKNS/SHORTAGE-FLOW,null,Shortage,Flow Shortage at Wilkins Slough,null
+809,SHORT_AD_YOLOBP/SHORTAGE-FLOW,null,Shortage,Flow Shortage at Yolo Bypass,null
+810,SHORT_AD_YUBFEA/SHORTAGE-FLOW,null,Shortage,Flow Shortage at Feather-Yuba Confluence,null
+901,C_SACSJR/FLOW-CHANNEL,NDO_SWRCB_DV/DELTAFLOWCRITERIA,Flow,Net Delta Outflow,Detla OutFlow Criteria
+902,C_SACRV/FLOW-CHANNEL,RIOVISTA_SWRCB_DV/DELTAFLOWCRITERIA,Flow,Sacramento River at Rio Vista,Sacramento River Flow Criteria at Rio Vista
+903,C_SJR/FLOW-ACCRDEPL,SJR_SWRCB_DV/DELTAFLOWCRITERIA,Flow,San Joaquin River at Vernalis,San Joaquin River Flow Criteria at Vernalis
+904,EXTRAWATER_NDO/EXTRAWATER,null,Extra Water Needed,Net Delta Outflow,null
+905,EXTRAWATER_RIOVISTA/EXTRAWATER,null,Extra Water Needed,Sacramento River at Rio Vista,null
+906,EXTRAWATER_SJR/EXTRAWATER,null,Extra Water Needed,San Joaquin River at Vernalis,null
+851,SHORT_SWP_PWR/DELIVERY-SHORTAGE-SWP,null,Shortage,SWP Water Rights Shortages,null
+852,SHORT_SWP_PAG_N/DELIVERY-SHORTAGE-SWP,null,Shortage,SWP North of Delta Ag Shortages,null
+853,SHORT_SWP_PAG_S/DELIVERY-SHORTAGE-SWP,null,Shortage,SWP South of Delta Ag Shortages,null
+854,SHORT_SWP_PAG/DELIVERY-SHORTAGE-SWP,null,Shortage,SWP Total Ag Shortages,null
+855,SHORT_SWP_PMI_N/DELIVERY-SHORTAGE-SWP,null,Shortage,SWP North of Delta M&I Demands Shortages,null
+856,SHORT_SWP_PMI_S/DELIVERY-SHORTAGE-SWP,null,Shortage,SWP South of Delta M&I Demands Shortages,null
+857,SHORT_SWP_PMI/DELIVERY-SHORTAGE-SWP,null,Shortage,SWP Total M&I Shortages,null
+858,SHORT_SWP_MWD/DELIVERY-SHORTAGE-SWP,null,Shortage,SWP MWD Shortages,null
+859,SHORT_SWP_OTH/DELIVERY-SHORTAGE-SWP,null,Shortage,SWP Other Shortages,null
+860,SHORT_SWP_PLS/DELIVERY-SHORTAGE-SWP,null,Shortage,SWP Losses Shortages,null
+861,SHORT_SWP_TOT_N/DELIVERY-SHORTAGE-SWP,null,Shortage,SWP North of Delta Total Shortages,null
+862,SHORT_SWP_TOT_S/DELIVERY-SHORTAGE-SWP,null,Shortage,SWP South of Delta Total Shortages,null
+863,SHORT_SWP_TOTAL/DELIVERY-SHORTAGE-SWP,null,Shortage,SWP Total Shortages,null
+881,SHORT_CVP_PAG_S/DELIVERY-SHORTAGE-CVP,null,Shortage,CVP South of Delta Ag Shortages,null
+882,SHORT_CVP_PMI_S/DELIVERY-SHORTAGE-CVP,null,Shortage,CVP South of Delta M&I Shortages,null
+883,SHORT_CVP_PEX_S/DELIVERY-SHORTAGE-CVP,null,Shortage,CVP South of Delta Exchange Shortages,null
+884,SHORT_CVP_PRF_S/DELIVERY-SHORTAGE-CVP,null,Shortage,CVP South of Delta Refuge Shortages,null
+885,SHORT_CVP_PLS_S/DELIVERY-SHORTAGE-CVP,null,Shortage,CVP South of Delta Losses Shortages,null
+886,SHORT_CVP_TOT_S/DELIVERY-SHORTAGE-CVP,null,Shortage,CVP South of Delta Total Shortages,null
+! ----- Second group is for Schematic/Map view dashboard - ID is matched to SVG element ID,,,,,
+TRINITY,"S_TRNTY/STORAGE,E_TRNTY/EVAPORATION,A_TRNTY/SURFACE-AREA,C_TRNTY/FLOW-CHANNEL,I_TRNTY_S2D/FLOW-INFLOW",null,Storage,"Storage, Evaporation, Area, and Flows at Trinity",null
+SHASTA,"S_SHSTA/STORAGE,E_SHSTA/EVAPORATION,A_SHSTA/SURFACE-AREA,C_SHSTA/FLOW-CHANNEL,I_SHSTA_S2D/FLOW-INFLOW",null,Storage,"Storage, Evaporation, Area, and Flows at Shasta",null
+WHISKEYTOWN,"S_WKYTN/STORAGE,E_WKYTN/EVAPORATION,A_WKYTN/SURFACE-AREA,C_WKYTN/FLOW-CHANNEL,I_WKYTN_S2D/FLOW-INFLOW,D_CLEARTU/FLOW-TUNNEL,D_SPRING/FLOW-TUNNEL",null,Storage,"Storage, Evaporation, Area, and Flows at Whiskeytown",null
+OROVILLE,"S_OROVL/STORAGE,E_OROVL/EVAPORATION,A_OROVL/SURFACE-AREA,C_OROVL/FLOW-CHANNEL,I_OROVL_S2D/FLOW-INFLOW,D_OROVL/FLOW-DELIVERY",null,Storage,"Storage, Evaporation, Area, and Flows at Oroville",null
+FOLSOM,"S_FOLSM/STORAGE,E_FOLSM/EVAPORATION,A_FOLSM/SURFACE-AREA,C_FOLSM/FLOW-CHANNEL,I_FOLSM_S2D/FLOW-INFLOW,D_FOLSM/FLOW-DELIVERY",null,Storage,"Storage, Evaporation, Area, and Flows at Folsom",null
+CVP SL,"S_SLCVP/STORAGE,E_SLCVP/EVAPORATION,A_SLCVP/SURFACE-AREA,C_SLCVP/FLOW-CHANNEL,D_OFBCVP/FLOW-DELIVERY,D_SLCVP/FLOW-DELIVERY,C_SLSWP/FLOW-CHANNEL",null,Storage,"Storage, Evaporation, Area, and Flows at CVP San Luis",null
+SWP SL,"S_SLSWP/STORAGE,E_SLSWP/EVAPORATION,A_SLSWP/SURFACE-AREA,C_SLSWP/FLOW-CHANNEL,D_OFBSWP/FLOW-DELIVERY",null,Storage,"Storage, Evaporation, Area, and Flows at SWP San Luis",null
+NEWHOGAN,"S_NHGAN/STORAGE,E_NHGAN/EVAPORATION,A_NHGAN/SURFACE-AREA,C_NHGAN/FLOW-CHANNEL,I_NHGAN_S2D/FLOW-INFLOW",null,Storage,"Storage, Evaporation, Area, and Flows at New Hogan",null
+NEWMELONES,"S_MELON/STORAGE,E_MELON/EVAPORATION,A_MELON/SURFACE-AREA,C_MELON/FLOW-CHANNEL,I_MELON_S2D/FLOW-INFLOW",null,Storage,"Storage, Evaporation, Area, and Flows at New Melones",null
+NEWDONPEDRO,"S_PEDRO/STORAGE,E_PEDRO/EVAPORATION,A_PEDRO/SURFACE-AREA,C_PEDRO/FLOW-CHANNEL,I_PEDRO_S2D/FLOW-INFLOW",null,Storage,"Storage, Evaporation, Area, and Flows at New Don Pedro",null
+MCCLURE,"S_MCLRE/STORAGE,E_MCLRE/EVAPORATION,A_MCLRE/SURFACE-AREA,C_MCLRE/FLOW-CHANNEL,I_MCLRE_S2D/FLOW-INFLOW",null,Storage,"Storage, Evaporation, Area, and Flows at McClure",null
+EASTMAN,"S_ESTMN/STORAGE,E_ESTMN/EVAPORATION,A_ESTMN/SURFACE-AREA,C_ESTMN/FLOW-CHANNEL,I_ESTMN_S2D/FLOW-INFLOW",null,Storage,"Storage, Evaporation, Area, and Flows at Eastman",null
+HENSLEY,"S_HNSLY/STORAGE,E_HNSLY/EVAPORATION,A_HNSLY/SURFACE-AREA,C_HNSLY/FLOW-CHANNEL,I_HNSLY_S2D/FLOW-INFLOW",null,Storage,"Storage, Evaporation, Area, and Flows at Hensley",null
+MILLERTON,"S_MLRTN/STORAGE,E_MLRTN/EVAPORATION,A_MLRTN/SURFACE-AREA,C_MLRTN/FLOW-CHANNEL,I_MLRTN_S2D/FLOW-INFLOW",null,Storage,"Storage, Evaporation, Area, and Flows at Millerton",null
+S_TRNTY,S_TRNTY/STORAGE,null,Storage,Storage at Trinity,null
+S_WKYTN,S_WKYTN/STORAGE,null,Storage,Storage at Whiskeytown,null
+S_SHSTA,S_SHSTA/STORAGE+SHSTAE/STORAGE,null,Storage,Storage at Shasta,null
+S_OROVL,S_OROVL/STORAGE,null,Storage,Storage at Oroville,null
+S_FOLSM,S_FOLSM/STORAGE,null,Storage,Storage at Folsom,null
+S_SLCVP,S_SLCVP/STORAGE,null,Storage,Storage at CVP San Luis,null
+S_SLSWP,S_SLSWP/STORAGE,null,Storage,Storage at SWP San Luis,null
+S_NHGAN,S_NHGAN/STORAGE,null,Storage,Storage at New Hogan,null
+S_MELON,S_MELON/STORAGE,null,Storage,Storage at New Melones,null
+S_PEDRO,S_PEDRO/STORAGE,null,Storage,Storage at New Don Pedro,null
+S_MCLRE,S_MCLRE/STORAGE,null,Storage,Storage at McClure,null
+S_ESTMN,S_ESTMN/STORAGE,null,Storage,Storage at Eastman,null
+S_HNSLY,S_HNSLY/STORAGE,null,Storage,Storage at Hensley,null
+S_MLRTN,S_MLRTN/STORAGE,null,Storage,Storage at Millerton,null
+LEWISTON,"I_LEWISTON_S2D/FLOW-INFLOW,C_TRNTY/FLOW-CHANNEL,D_CLEARTU/FLOW-TUNNEL,C_LWSTN/FLOW-CHANNEL",null,Flow,Flows at Lewiston,null
+KESWICK,"C_SHSTA/FLOW-CHANNEL,AD_KSWCK_ACTUAL/FLOW-ACCRDEPL,D_SPRING/FLOW-TUNNEL,C_KSWCK/FLOW-CHANNEL",null,Flow,Flows at Keswick,null
+RED BLUFF,"C_KSWCK/FLOW-CHANNEL,C_WKYTN/FLOW-CHANNEL,D_REDBLF/FLOW-DELIVERY,AD_REDBLF_ACTUAL/FLOW-ACCRDEPL,C_REDBLF/FLOW-CHANNEL",null,Flow,Flows at Red Bluff,null
+WILKINS SL,"C_REDBLF/FLOW-CHANNEL,D_WILKNS/FLOW-DELIVERY,AD_WILKNS_ACTUAL/FLOW-ACCRDEPL,C_WILKNS/FLOW-CHANNEL",null,Flow,Flows at Wilkins Slough,null
+THERMALITO,"C_OROVL/FLOW-CHANNEL,D_THERM/FLOW-DELIVERY,AD_THERM_ACTUAL/FLOW-ACCRDEPL,C_THERM/FLOW-CHANNEL",null,Flow,Flows at Thermalito,null
+DAGUERRE PT,"I_YUBA_S2D/FLOW-INFLOW,D_DAGUER/FLOW-DELIVERY,C_DAGUER/FLOW-CHANNEL",null,Flow,Flows at Daguerre Point,null
+YUBAFEATHER,"C_THERM/FLOW-CHANNEL,C_DAGUER/FLOW-CHANNEL,D_YUBFEA/FLOW-DELIVERY,AD_YUBFEA_ACTUAL/FLOW-ACCRDEPL,C_YUBFEA/FLOW-CHANNEL",null,Flow,Flows at Yuba City,null
+SACFEATHER,"C_WILKNS/FLOW-CHANNEL,C_YUBFEA/FLOW-CHANNEL,AD_SACFEA_ACTUAL/FLOW-ACCRDEPL,D_FREWEIR/FLOW-DELIVERY,C_SACFEA/FLOW-CHANNEL",null,Flow,Flows at Sacramento and Feather Rivers Confluence,null
+NIMBUS,"C_FOLSM/FLOW-CHANNEL,D_NIMBUS/FLOW-DELIVERY,AD_NIMBUS_ACTUAL/FLOW-ACCRDEPL,C_NIMBUS/FLOW-CHANNEL",null,Flow,Flows at Nimbus,null
+H ST,"C_NIMBUS/FLOW-CHANNEL,D_HST/FLOW-DELIVERY,AD_HST_ACTUAL/FLOW-ACCRDEPL,C_HST/FLOW-CHANNEL",null,Flow,Flows at H. St.,null
+SACAMERICAN,"C_HST/FLOW-CHANNEL,C_SACFEA/FLOW-CHANNEL,D_SACWEIR/FLOW-DELIVERY,D_SACAME/FLOW-DELIVERY,AD_SACAME_ACTUAL/FLOW-ACCRDEPL,C_SACAME/FLOW-CHANNEL",null,Flow,Flows at Sacramento and American Rivers Confluence,null
+HOOD,"C_SACAME/FLOW-CHANNEL,I_HOOD_S2D/FLOW-INFLOW,D_HOOD/FLOW-DELIVERY,C_HOOD/FLOW-CHANNEL",null,Flow,Flows at Hood,null
+DXC,"C_HOOD/FLOW-CHANNEL,C_SACDXC/FLOW-CHANNEL,C_DXC/FLOW-CHANNEL",null,Flow,Flows at Delta Cross Channel,null
+YOLO BYPASS,"D_FREWEIR/FLOW-DELIVERY,D_SACWEIR/FLOW-DELIVERY,AD_YOLOBP_ACTUAL/FLOW-ACCRDEPL,C_YOLOBP/FLOW-CHANNEL",null,Flow,Flows at Yolo Bypass,null
+NORTH DELTA,"C_YOLOBP/FLOW-CHANNEL,C_SACDXC/FLOW-CHANNEL,C_NBA/FLOW-CHANNEL,C_SACND/FLOW-CHANNEL",null,Flow,Flows at North of Delta,null
+NORTH BAY AQUEDUCT,"C_NBA/FLOW-CHANNEL,D_VALLEJO/FLOW-DELIVERY,D_NAPA/FLOW-DELIVERY,D_SOLANO/FLOW-DELIVERY,D_FVB/FLOW-DELIVERY,",null,Flow,Flows at North Bay Aqueduct,null
+BRANNAN ISLAND,"C_SACND/FLOW-CHANNEL,I_BRANANIS_S2D/FLOW-INFLOW,D_BRANANIS/FLOW-DELIVERY,C_SACBI/FLOW-CHANNEL",null,Flow,Flows at Brannan Island,null
+RIO VISTA,"C_SACBI/FLOW-CHANNEL,C_SACRV/FLOW-CHANNEL",null,Flow,Flows at Rio Vista,null
+SACSJR,"C_SACRV/FLOW-CHANNEL,I_MARSHCR_S2D/FLOW-INFLOW,I_SACSJR_S2D/FLOW-INFLOW,D_ANTIOCH/FLOW-DELIVERY,D_SACSJR/FLOW-DELIVERY,C_SJRVI/FLOW-CHANNEL,C_SACSJR/FLOW-CHANNEL",null,Flow,Flows at Sacramento and San Joaquin Rivers Confluence,null
+DELTA,"C_SACSJR/FLOW-CHANNEL,D_DELTAREQD/FLOW-DELIVERY,C_DELTA/FLOW-CHANNEL",null,Flow,Flows at Delta,null
+VENICE ISLAND,"C_SJRVI/FLOW-CHANNEL,D_CCWDINTK/FLOW-DELIVERY,C_INDNSL/FLOW-CHANNEL,C_OMR/FLOW-CHANNEL,C_SJRMI/FLOW-CHANNEL",null,Flow,Flows at Venice Island,null
+MEDFORD ISLAND,"C_SJRMI/FLOW-CHANNEL,I_MEDFORDIS_S2D/FLOW-INFLOW,D_MEDFORDIS/FLOW-DELIVERY,C_SJRCD/FLOW-CHANNEL",null,Flow,Flows at Medford Island,null
+MOKELUMNE,"C_DXC/FLOW-CHANNEL,AD_MOKELUMNE_S2D/FLOW-ACCRDEPL,C_MOKLMN/FLOW-CHANNEL",null,Flow,Flows at Mokelumne River,null
+TERMINOUS,"I_TERMINOUS_S2D/FLOW-INFLOW,C_MOKLMN/FLOW-CHANNEL,D_TERMINOUS/FLOW-DELIVERY,C_TRMNS/FLOW-CHANNEL",null,Flow,Flows at Terminous,null
+CENTRAL DELTA,"C_TRMNS/FLOW-CHANNEL,C_SJRCD/FLOW-CHANNEL,C_SJRSTO/FLOW-CHANNEL",null,Flow,Flows at Central Delta,null
+STOCKTON,"C_SJRSTO/FLOW-CHANNEL,I_STOCKTON_S2D/FLOW-INFLOW,D_STOCKTON/FLOW-DELIVERY,C_SJRCAL/FLOW-CHANNEL,",null,Flow,Flows at Stockton,null
+SJRCALAVERAS,"C_SJRCAL/FLOW-CHANNEL,AD_CALAVERAS_S2D/FLOW-ACCRDEPL,C_SJROLDR/FLOW-CHANNEL",null,Flow,Flows at SJRCalaveras,null
+SJROLDRIVER,"C_SJROLDR/FLOW-CHANNEL,C_SJRVER/FLOW-CHANNEL,C_OLDRIVER/FLOW-CHANNEL",null,Flow,Flows at SJROldRiver,null
+ROCK SLOUGH,"C_INDNSL/FLOW-CHANNEL,C_OMR/FLOW-CHANNEL,D_CCWDVCOR/FLOW-DELIVERY,C_CONYIS/FLOW-CHANNEL",null,Flow,Flows at Rock Slough,null
+CONEYISLAND,"C_CONYIS/FLOW-CHANNEL,I_CONEYIS_S2D/FLOW-INFLOW,D_CONEYIS/FLOW-DELIVERY,D_EXPTD/FLOW-DELIVERY,C_OLDRIVER/FLOW-CHANNEL",null,Flow,Flows at Coney Island,null
+JONES PP,"D_EXPTD/FLOW-DELIVERY,C_BNKEXP/FLOW-CHANNEL,D_JONES/FLOW-DELIVERY",null,Flow,Flows at Jones Pumping Plant,null
+UPPER DMC,"D_JONES/FLOW-DELIVERY,D_UPDMC/FLOW-DELIVERY,C_INTRTI/FLOW-CHANNEL,C_UPDMC/FLOW-CHANNEL",null,Flow,Flows at Upper Delta Mendota Canal,null
+O'NEIL FB CVP,"C_UPDMC/FLOW-CHANNEL,D_OFBCVP/FLOW-DELIVERY,C_ONLFB/FLOW-CHANNEL,C_OFBCVP/FLOW-CHANNEL",null,Flow,Flows at O'Neil Forebay CVP,null
+CVP JOINTUSE,"C_OFBCVP/FLOW-CHANNEL,C_SLCVP/FLOW-CHANNEL,D_CVPJU_LDMC/FLOW-DELIVERY,D_CVPJUSWP/FLOW-DELIVERY,C_CVPJU/FLOW-CHANNEL,C_CVPDMC/FLOW-CHANNEL",null,Flow,Flows at CVP Joint Use,null
+MENDOTAPOOL,"C_CVPDMC/FLOW-CHANNEL,C_MDOTA/FLOW-CHANNEL,D_MENDOTAPL/FLOW-DELIVERY,I_MDOTA_S2D/FLOW-INFLOW",null,Flow,Flows at Mendota Pool,null
+CVP DOS AMIGOS,"C_CVPJU/FLOW-CHANNEL,D_SWPJUCVP/FLOW-DELIVERY,D_DOSAMIGOSCVP/FLOW-DELIVERY,C_DSAMGC/FLOW-CHANNEL",null,Flow,Flows at CVP Dos Amigos,null
+BANKS PP,"C_BNKEXP/FLOW-CHANNEL,I_CVCWHEEL/FLOW-INFLOW,D_BANKS/FLOW-DELIVERY",null,Flow,Flows at Banks Pumping Plant,null
+SOUTH BAY,"D_BANKS/FLOW-DELIVERY,D_SBAY/FLOW-DELIVERY,D_DELVALLE/FLOW-DELIVERY,I_DELVALLE/FLOW-INFLOW,C_SBAY/FLOW-CHANNEL",null,Flow,Flows at South Bay Aquenduct,null
+O'NEIL FB SWP,"C_SBAY/FLOW-CHANNEL,D_OFBSWP/FLOW-DELIVERY,D_ONEILLFBSWP/FLOW-DELIVERY,C_ONLFB/FLOW-CHANNEL,C_OFBSWP/FLOW-CHANNEL",null,Flow,Flows at O'Neil Forebay SWP,null
+SWP JOINTUSE,"C_OFBSWP/FLOW-CHANNEL,C_SLSWP/FLOW-CHANNEL,D_SWPJUCVP/FLOW-DELIVERY,C_SWPJU/FLOW-CHANNEL",null,Flow,Flows at SWP Joint Use,null
+SWP DOS AMIGOS,"C_SWPJU/FLOW-CHANNEL,D_DOSAMIGOSSWP/FLOW-DELIVERY,D_CVPJUSWP/FLOW-DELIVERY,C_DSAMGS/FLOW-CHANNEL",null,Flow,Flows at SWP Dos Amigos,null
+JOINT USE TERMINAL (830),"C_DSAMGS/FLOW-CHANNEL,C_DSAMGC/FLOW-CHANNEL,C_JTUTERM/FLOW-CHANNEL",null,Flow,Flows at Joint Use Terminal,null
+LAS PERILLAS (850),"C_JTUTERM/FLOW-CHANNEL,D_EMP2DUD/FLOW-DELIVERY,C_COASTAQDCT/FLOW-CHANNEL,C_LASPER/FLOW-CHANNEL",null,Flow,Flows at Las Perillas,null
+BADGER HILL,"C_COASTAQDCT/FLOW-CHANNEL,D_COASTAQDCT/FLOW-DELIVERY",null,Flow,Flows at Badger Hill,null
+KCWA (851),"C_LASPER/FLOW-CHANNEL,D_KCWA/FLOW-DELIVERY,C_KCWA/FLOW-CHANNEL",null,Flow,Flows at Kern County Water Agency,null
+CROSS VALLEY CANAL (857),"C_KCWA/FLOW-CHANNEL,D_CVP_CVC/FLOW-DELIVERY,D_CVPRFG_854/FLOW-DELIVERY,C_CVC/FLOW-CHANNEL",null,Flow,Flows at Cross Valley Canal,null
+CHRISMAN PUMPING PLANT (864),"C_CVC/FLOW-CHANNEL,D_CVC2CHRIS/FLOW-DELIVERY,I_KERN_S2D/FLOW-INFLOW,C_CHRISPP/FLOW-CHANNEL",null,Flow,Flows at Chrisman Pumping Plant,null
+OSO AND ALAMO BIFURCATION POINT (875),"C_CHRISPP/FLOW-CHANNEL,C_OSO/FLOW-CHANNEL,C_ALAMO/FLOW-CHANNEL",null,Flow,Flows at Oso and Alamo Bifurcation Point,null
+WARNE POWER PLANT (892),"C_OSO/FLOW-CHANNEL,D_OSO/FLOW-DELIVERY,C_WARNEPP/FLOW-CHANNEL",null,Flow,Flows at Warne Power Plant,null
+WEST BRANCH,"C_WARNEPP/FLOW-CHANNEL,D_PYRAMID/FLOW-DELIVERY,D_CASTAIC/FLOW-DELIVERY,AD_CASTAIC_S2D/FLOW-ACCRDEPL,D_WARNEPP/FLOW-DELIVERY,D_WARNEPP_SPILL/FLOW-DELIVERY,I_CASTAIC/FLOW-INFLOW,I_PYRAMID/FLOW-INFLOW",null,Flow,Flows at West Branch,null
+PEARBLOSSOM PUMPING PLANT (880),"C_ALAMO/FLOW-CHANNEL,D_ALAMO/FLOW-DELIVERY,C_PEARBLPP/FLOW-CHANNEL",null,Flow,Flows at Pearblossom Pumping Plant,null
+EAST BRANCH,"C_PEARBLPP/FLOW-CHANNEL,D_PEARBLPP/FLOW-DELIVERY,D_PERRIS/FLOW-DELIVERY,D_SILVERWOOD/FLOW-DELIVERY,I_PERRIS/FLOW-INFLOW,I_SILVERWOOD/FLOW-INFLOW",null,Flow,Flows at East Branch,null
+SACRAMENTO RIVER,C_HOOD/FLOW-CHANNEL,null,Flow,Flow at Hood,null
+SAN JOAQUIN RIVER,C_SJRVER/FLOW-CHANNEL,null,Flow,San Joaquin River,null
+EAST SIDE STREAMS,AD_CALAVERAS_S2D/FLOW-ACCRDEPL+AD_MOKELUMNE_S2D/FLOW-ACCRDEPL,null,Flow,East Side Streams,null
+EXPORTS,D_BANKS_SWP/FLOW-DELIVERY+D_BANKS_CVP/FLOW-DELIVERY+D_JONES/FLOW-DELIVERY,null,Flow,Exports,null
+DELTA OUTFLOW,C_SACSJR/FLOW-CHANNEL,null,Flow,Delta Outflow,null
+NET DICU,NET_DICU/DICU_FLOW,null,DICU,Net DICU,null
+NBA EXPORTS,C_NBA/FLOW-CHANNEL,null,Flow,North Bay Aqueduct,null
+CCWD EXPORTS,D_CCWDINTK/FLOW-DELIVERY+D_CCWDVCOR/FLOW-DELIVERY,null,Flow,CCWD Total Exports,null
+JP,JP_EC_MONTH/SALINITY,JP_EC_STD/SALINITY(-1),Electrical Conductivity,Jersey Point Salinity,Salinity Standard
+RS,RS_CL_MONTH/SALINITY,RS_CL_STD/SALINITY(-1),Chloride Concentration,Rock Slough Salinity,Salinity Standard
+EM,EM_EC_MONTH/SALINITY,EM_EC_STD/SALINITY(-1),Electrical Conductivity,Emmaton Salinity,Salinity Standard
+CO,CO_EC_MONTH/SALINITY,CO_EC_STD/SALINITY(-1),Electrical Conductivity,Collinsville Salinity,Salinity Standard
+RV,C_SACRV/FLOW-CHANNEL,RIOVISTA_SWRCB_DV/DELTAFLOWCRITERIA,Flow,Sacramento River at Rio Vista,Sacramento River Flow Criteria at Rio Vista
+SJR,C_SJR/FLOW-ACCRDEPL,SJR_SWRCB_DV/DELTAFLOWCRITERIA,Flow,San Joaquin River at Vernalis,San Joaquin River Flow Criteria at Vernalis
+DO,C_SACSJR/FLOW-CHANNEL,NDO_SWRCB_DV/DELTAFLOWCRITERIA,Flow,Net Delta Outflow,Detla OutFlow Criteria
+I_BRANANIS,I_BRANANIS_S2D/FLOW-INFLOW,null,Flow,Inflows to Brannan Island,null
+I_CASTAIC,I_CASTAIC/FLOW-INFLOW,null,Flow,Inflows to Castaic,null
+I_CONEYIS,I_CONEYIS_S2D/FLOW-INFLOW,null,Flow,Inflows to Coney Island,null
+I_CVCWHEEL,I_CVCWHEEL/FLOW-INFLOW,null,Flow,Inflows to CVC Wheel,null
+I_DELVALLE,I_DELVALLE/FLOW-INFLOW,null,Flow,Inflows to DelValle ,null
+I_FOLSM,I_FOLSM_S2D/FLOW-INFLOW,null,Flow,Inflows to Folsom Lake,null
+I_HOOD,I_HOOD_S2D/FLOW-INFLOW,null,Flow,Inflows to Hood ,null
+I_MDOTA,I_MDOTA_S2D/FLOW-INFLOW,null,Flow,Inflows to James Bifurcation Point (I_MDOTA_S2D),null
+I_KELLYRIDGE,I_KELLYRIDGE_S2D/FLOW-INFLOW,null,Flow,Inflows to Kelly Ridge,null
+I_KERN (KERN RIVER INTERTIE),I_KERN_S2D/FLOW-INFLOW,null,Flow,Inflows to Kern River,null
+I_LEWISTON,I_LEWISTON_S2D/FLOW-INFLOW,null,Flow,Inflows to Lewiston ,null
+I_MARSHCR,I_MARSHCR_S2D/FLOW-INFLOW,null,Flow,Inflows to Marsh Creek,null
+I_MEDFORDIS,I_MEDFORDIS_S2D/FLOW-INFLOW,null,Flow,Inflows to Medford Island,null
+I_MOKELUMNE,I_MOKELUMNE_S2D/FLOW-INFLOW,null,Flow,Inflows from Mokelumne River,null
+I_NIMBUS,I_NIMBUS_S2D/FLOW-INFLOW,null,Flow,Inflows to Nimbus ,null
+I_OROVL,I_OROVL_S2D/FLOW-INFLOW,null,Flow,Inflows to Oroville Lake,null
+I_PYRAMID,I_PYRAMID/FLOW-INFLOW,null,Flow,Inflows to Pyramid Lake,null
+I_SACSJR,I_SACSJR_S2D/FLOW-INFLOW,null,Flow,Inflows from San Joaquin River,null
+I_SHSTA,I_SHSTA_S2D/FLOW-INFLOW,null,Flow,Inflows to Shasta Lake,null
+I_STOCKTON,I_STOCKTON_S2D/FLOW-INFLOW,null,Flow,Inflows to Stockton ,null
+I_TERMINOUS,I_TERMINOUS_S2D/FLOW-INFLOW,null,Flow,Inflows to Terminous ,null
+I_TRNTY,I_TRNTY_S2D/FLOW-INFLOW,null,Flow,Inflows to Trinity ,null
+I_WKYTN,I_WKYTN_S2D/FLOW-INFLOW,null,Flow,Inflows to Whiskeytown ,null
+I_YUBA,I_YUBA_S2D/FLOW-INFLOW,null,Flow,Inflows to Yuba City,null
+I_CALAV,I_CALAV_S2D/FLOW-INFLOW,null,Flow,Inflows to Calaveras,null
+I_NHGAN,I_NHGAN_S2D/FLOW-INFLOW,null,Flow,Inflows to New Hogan,null
+I_SJRSTAN,I_SJRSTAN_S2D/FLOW-INFLOW,null,Flow,Inflows at SJRStanislaus,null
+I_STANRIPN,I_STANRIPN_S2D/FLOW-INFLOW,null,Flow,Inflows at Ripon,null
+I_STANGDWN,I_STANGDWN_S2D/FLOW-INFLOW,null,Flow,Inflows to Goodwin,null
+I_MELON,I_MELON_S2D/FLOW-INFLOW,null,Flow,Inflows to New Melones,null
+I_SJRMAZE,I_SJRMAZE_S2D/FLOW-INFLOW,null,Flow,Inflows to SJRMaze,null
+I_TUOL,I_TUOL_S2D/FLOW-INFLOW,null,Flow,Inflows to Tuolumne,null
+I_PEDRO,I_PEDRO_S2D/FLOW-INFLOW,null,Flow,Inflows to New Don Pedro,null
+I_MERCED2,I_MERCED2_S2D/FLOW-INFLOW,null,Flow,Inflows to Merced2,null
+I_MERCED1,I_MERCED1_S2D/FLOW-INFLOW,null,Flow,Inflows to Merced1,null
+I_MCLRE,I_MCLRE_S2D/FLOW-INFLOW,null,Flow,Inflows to McClure,null
+I_SJRMS,I_SJRMS_S2D/FLOW-INFLOW,null,Flow,Inflows to SJRMudSalt,null
+I_EASTBYP,I_EASTBYP_S2D/FLOW-INFLOW,null,Flow,Inflows to Chowchilla2,null
+I_ESTMN,I_ESTMN_S2D/FLOW-INFLOW,null,Flow,Inflows to Eastman,null
+I_HNSLY,I_HNSLY_S2D/FLOW-INFLOW,null,Flow,Inflows to Hensley,null
+I_MLRTN,I_MLRTN_S2D/FLOW-INFLOW,null,Flow,Inflows to Millerton,null
+C_ALAMO,C_ALAMO/FLOW-CHANNEL,null,Flow,Flows below Alamo,null
+C_BNKEXP,C_BNKEXP/FLOW-CHANNEL,null,Flow,CVP Exports through Banks Pumping Plant,null
+C_CHRISPP,C_CHRISPP/FLOW-CHANNEL,null,Flow,Flows below Chrisman Pumping Plant,null
+C_COASTAQDCT (850),C_COASTAQDCT/FLOW-CHANNEL,null,Flow,Flows below Coastal Aqueduct,null
+C_CONYIS,C_CONYIS/FLOW-CHANNEL,null,Flow,Flows below Coney Island,null
+C_CVC,C_CVC/FLOW-CHANNEL,null,Flow,Flows below Cross Valley Canal,null
+C_CVPDMC,C_CVPDMC/FLOW-CHANNEL,null,Flow,Flows below CVP Delta Mendota Canal,null
+C_CVPJU,C_CVPJU/FLOW-CHANNEL,null,Flow,Flows below CVP Joint Use,null
+C_DAGUER,C_DAGUER/FLOW-CHANNEL,null,Flow,Flows below Daguerre Point,null
+C_DELTA,C_DELTA/FLOW-CHANNEL,null,Flow,Flows below Delta,null
+C_DSAMGC,C_DSAMGC/FLOW-CHANNEL,null,Flow,Flows below Dos Amigos CVP,null
+C_DSAMGS,C_DSAMGS/FLOW-CHANNEL,null,Flow,Flows below Dos Amigos SWP,null
+C_DXC,C_DXC/FLOW-CHANNEL,null,Flow,Flows below Delta Cross Channel,null
+C_FOLSM,C_FOLSM/FLOW-CHANNEL,null,Flow,Flows below Folsom,null
+C_HOOD,C_HOOD/FLOW-CHANNEL,D_HOOD/FLOW-DELIVERY,Flow,Flows below Hood,Diversion
+C_HST,C_HST/FLOW-CHANNEL,null,Flow,Flows below H. St.,null
+C_INDNSL,C_INDNSL/FLOW-CHANNEL,null,Flow,Flows below Rock Slough,null
+C_INTRTI,C_INTRTI/FLOW-CHANNEL,null,Flow,Flows below Intertie,null
+C_JTUTERM,C_JTUTERM/FLOW-CHANNEL,null,Flow,Flows below Joint Use Terminal,null
+C_KCWA,C_KCWA/FLOW-CHANNEL,null,Flow,Flows below Kern County Water Agency,null
+C_KSWCK,C_KSWCK/FLOW-CHANNEL,C_KSWCK_MIF/FLOW-MIN-INSTREAM,Flow,Sacramento River at Keswick,Minimum Instream Flow
+C_LASPER,C_LASPER/FLOW-CHANNEL,null,Flow,Flows below Lasper,null
+C_LWSTN,C_LWSTN/FLOW-CHANNEL,null,Flow,Flows below Lewiston,null
+C_MOKLMN,C_MOKLMN/FLOW-CHANNEL,null,Flow,Flows below Mokelumne River,null
+C_MDOTA,C_MDOTA/FLOW-CHANNEL,null,Flow,Flows below Mendota Pool,null
+C_NBA,C_NBA/FLOW-CHANNEL,null,Flow,Flows below North Bay Aqueduct,null
+C_NIMBUS,C_NIMBUS/FLOW-CHANNEL,C_NIMBUS_MIF/FLOW-MIN-INSTREAM,Flow,American River at Nimbus,Minimum Instream Flow
+C_OFBCVP,C_OFBCVP/FLOW-CHANNEL,null,Flow,Flows below O'Neil Forebay CVP,null
+C_OFBSWP,C_OFBSWP/FLOW-CHANNEL,null,Flow,Flows below O'Neil Forebay SWP,null
+C_OMR,C_OMR/FLOW-CHANNEL,C_INDNSL/FLOW-CHANNEL,Flow,Flows below Old and Middle River,Indian Slough Flow
+C_ONLFB,C_ONLFB/FLOW-CHANNEL,null,Flow,Flows below O'Neil Forebay,null
+C_OROVL,C_OROVL/FLOW-CHANNEL,null,Flow,Flows below Oroville,null
+C_OSO,C_OSO/FLOW-CHANNEL,null,Flow,Flows below Oso and Alamo,null
+C_PEARBLPP,C_PEARBLPP/FLOW-CHANNEL,null,Flow,Flows below Pearlblossom Pumping Plant,null
+C_REDBLF,C_REDBLF/FLOW-CHANNEL,C_REDBLF_MIF/FLOW-MIN-INSTREAM,Flow,Flows below Red Bluff,Minimum Instream Flow
+C_SACAME,C_SACAME/FLOW-CHANNEL,null,Flow,Flows below Sacramento and American Rivers Confluence,null
+C_SACBI,C_SACBI/FLOW-CHANNEL,null,Flow,Flows below Brannan Island,null
+C_SACDXC,C_SACDXC/FLOW-CHANNEL,null,Flow,Flows below Sacramento at Delta Cross Channel,null
+C_SACFEA,C_SACFEA/FLOW-CHANNEL,null,Flow,Flows below Sacramento and Feather Rivers Confluence,null
+C_SACND,C_SACND/FLOW-CHANNEL,null,Flow,Flows below Sacramento River at North Delta,null
+C_SACRV,C_SACRV/FLOW-CHANNEL,RIOVISTA_SWRCB_DV/DELTAFLOWCRITERIA,Flow,Flows below Rio Vista,Sacramento_River_Flow_Criteria_at_Rio_Vista
+C_SACSJR,C_SACSJR/FLOW-CHANNEL,NDO_SWRCB_DV/DELTAFLOWCRITERIA,Flow,Net Delta Outflows,Detla_OutFlow_Criteria
+C_SBAY,C_SBAY/FLOW-CHANNEL,null,Flow,Flows below South Bay Aqueduct,null
+C_SHSTA,C_SHSTA/FLOW-CHANNEL,null,Flow,Flows below Shasta Lake,null
+C_SJRCAL,C_SJRCAL/FLOW-CHANNEL,null,Flow,Flows on San Joaquin River below SJRCalaveras,null
+C_SJRCD,C_SJRCD/FLOW-CHANNEL,null,Flow,Flows on San Joaquin River at Central Delta,null
+C_SJRMI,C_SJRMI/FLOW-CHANNEL,null,Flow,Flows on San Joaquin River below Medford Island,null
+C_SJROLDR,C_SJROLDR/FLOW-CHANNEL,null,Flow,Flows on San Joaquin River Below Old River,null
+C_SJRSTO,C_SJRSTO/FLOW-CHANNEL,null,Flow,Flows on San Joaquin River below Stockton,null
+C_SJRVER,C_SJRVER/FLOW-CHANNEL,null,Flow,Flows on San Joaquin River below Vernalis,null
+C_SJRVI,C_SJRVI/FLOW-CHANNEL,null,Flow,Flows on San Joaquin River below Venice Island,null
+C_SLCVP,C_SLCVP/FLOW-CHANNEL,null,Flow,Flows below CVP San Luis,null
+C_SLSWP,C_SLSWP/FLOW-CHANNEL,null,Flow,Flows below SWP San Luis,null
+C_SWPJU,C_SWPJU/FLOW-CHANNEL,null,Flow,Flows below SWP Joint Use Facility,null
+C_THERM,C_THERM/FLOW-CHANNEL,C_THERM_MIF/FLOW-MIN-INSTREAM,Flow,Flows below Thermalito,Minimum Instream Flow
+C_TRMNS,C_TRMNS/FLOW-CHANNEL,null,Flow,Flows below Terminous,null
+C_TRNTY,C_TRNTY/FLOW-CHANNEL,null,Flow,Flows below Trinity,null
+C_UPDMC,C_UPDMC/FLOW-CHANNEL,null,Flow,Flows below Upper Mendota Canal,null
+C_OLDRIVER,C_OLDRIVER/FLOW-CHANNEL,null,Flow,Flows on Old River,null
+C_WARNEPP,C_WARNEPP/FLOW-CHANNEL,null,Flow,Flows below Warne Power Plant,null
+C_WILKNS,C_WILKNS/FLOW-CHANNEL,C_WILKNS_MIF/FLOW-MIN-INSTREAM,Flow,Flows below Wilkins Slough,Minimum Instream Flow
+C_WKYTN,C_WKYTN/FLOW-CHANNEL,C_WKYTN_MIF/FLOW-MIN-INSTREAM,Flow,Flows below Whiskeytown,Minimum Instream Flow
+C_YOLOBP,C_YOLOBP/FLOW-CHANNEL,null,Flow,Flows below Yolo Bypass,null
+C_YUBFEA,C_YUBFEA/FLOW-CHANNEL,C_YUBFEA_MIF/FLOW-MIN-INSTREAM,Flow,Flows below Yuba City,Minimum Instream Flow
+C_CALAV,C_CALAV/FLOW-CHANNEL,null,Flow,Flows on Calaveras River below Calaveras,null
+C_NHGAN,C_NHGAN/FLOW-CHANNEL,null,Flow,Flows on Calaveras River below New Hogan,null
+C_SJRSTAN,C_SJRSTAN/FLOW-CHANNEL,null,Flow,Flows on San Joaquin River below SJRStanislaus,null
+C_STANRIPN,C_STANRIPN/FLOW-CHANNEL,null,Flow,Flows on Stanislaus River below Ripon,null
+C_SJRMAZE,C_SJRMAZE/FLOW-CHANNEL,null,Flow,Flows on San Joaquin River below SJRMaze,null
+C_STANGDWN,C_STANGDWN/FLOW-CHANNEL,null,Flow,Flows on Stanislaus River below Goodwin,null
+C_MELON,C_MELON/FLOW-CHANNEL,null,Flow,Flows on Stanislaus River below New Melones,null
+C_SJRTUOL,C_SJRTUOL/FLOW-CHANNEL,null,Flow,Flows on San Joaquin River below SJRTuolumne,null
+C_SJRMER,C_SJRMER/FLOW-CHANNEL,null,Flow,Flows on San Joaquin River below SJRMerced,null
+C_TUOL,C_TUOL/FLOW-CHANNEL,null,Flow,Flows on Tuolumne River below Tuolumne,null
+C_PEDRO,C_PEDRO/FLOW-CHANNEL,null,Flow,Flows on Tuolumne River below New Don Pedro,null
+C619,C619/FLOW-CHANNEL,null,Flow,Westside Return Flows to SJRMerced,null
+C_MERCED2,C_MERCED2/FLOW-CHANNEL,null,Flow,Flows on Merced River below Merced2,null
+C_SJRMS,C_SJRMS/FLOW-CHANNEL,null,Flow,Flows on San Joaquin River below SJRMudSalt,null
+C_MERCED1,C_MERCED1/FLOW-CHANNEL,null,Flow,Flows on Merced River below Merced1,null
+C_MCLRE,C_MCLRE/FLOW-CHANNEL,null,Flow,Flows on Merced River below McClure,null
+C_SJRLNDR,C_SJRLNDR/FLOW-CHANNEL,null,Flow,Flows on San Joaquin River below SJRLander,null
+C_MDOTABVAMP,C_MDOTABVAMP/FLOW-CHANNEL,null,Flow,Westside Return Flows to SJRMudSalt,null
+C_EASTBYP,C_EASTBYP/FLOW-CHANNEL,null,Flow,Flows through Eastside Bypass,null
+C_SJRMPBYP,C_SJRMPBYP/FLOW-CHANNEL,null,Flow,Flows on San Joaquin River below SJRMaraBypass,null
+C_MPBYP,C_MPBYP/FLOW-CHANNEL,null,Flow,Flows through Maraposa Bypass,null
+C_SJRSAND,C_SJRSAND/FLOW-CHANNEL,null,Flow,Flows on San Joaquin River below SJRSand,null
+C_SJRSACK,C_SJRSACK/FLOW-CHANNEL,null,Flow,Flows on San Joaquin River below SJRSack,null
+C_SANDSL,C_SANDSL/FLOW-CHANNEL,null,Flow,Flows through Sand Slough,null
+C_SJRREST,C_SJRREST/FLOW-CHANNEL,null,Flow,San Joaquin River Restoration Flows below Chowchilla Bifurcation,null
+C_MDOTA,C_MDOTA/FLOW-CHANNEL,null,Flow,Flows on San Joaquin River below Mendota Pool,null
+C_SJRSACKBC,C_SJRSACKBC/FLOW-CHANNEL,null,Flow,Canal Flow from Sack Dam,null
+C_CHOWR,C_CHOWR/FLOW-CHANNEL,null,Flow,Flows on Chowchilla River below Chowchilla1,null
+C_CHOWBYP2,C_CHOWBYP2/FLOW-CHANNEL,null,Flow,Flows on Chowchilla Bypass below Fresno River,null
+C_MDRCNL,C_MDRCNL/FLOW-CHANNEL,null,Flow,Madera Canal Flows to Chowchilla1,null
+C_ESTMN,C_ESTMN/FLOW-CHANNEL,null,Flow,Flows on Chowchilla River below Eastman,null
+C_MDRCNLF,C_MDRCNLF/FLOW-CHANNEL,null,Flow,Madera Canal Spills to Chowchilla1,null
+C_MDRCNL_16B,C_MDRCNL_16B/FLOW-CHANNEL,null,Flow,Madera Canal 16B Flows to Chowchilla1,null
+C_FRSNO,C_FRSNO/FLOW-CHANNEL,null,Flow,Flows on Fresno River below Fresno,null
+C_CHOWBYP1,C_CHOWBYP1/FLOW-CHANNEL,null,Flow,Flows on Chowchilla Bypass below Chowchilla Bifurcation,null
+C_HNSLY,C_HNSLY/FLOW-CHANNEL,null,Flow,Flows on Fresno River below Hensley,null
+C_CVPDMC,C_CVPDMC/FLOW-CHANNEL,null,Flow,Flows in Delta Mendota Canal,null
+C_SJRCB,C_SJRCB/FLOW-CHANNEL,null,Flow,Flows on San Joaquin River below Chowchilla Bifurcation,null
+C_MDOTABC,C_MDOTABC/FLOW-CHANNEL,null,Flow,Canal Flow from Mendota Pool,null
+C_GRAVF,C_GRAVF/FLOW-CHANNEL,null,Flow,Flows on San Joaquin River below Gravelly Ford,null
+C_MLRTN,C_MLRTN/FLOW-CHANNEL,null,Flow,Flows on San Joaquin River below Millerton,null
+D_ALAMO (877-880),D_ALAMO/FLOW-DELIVERY,null,Deliveries,Deliveries from Alamo,null
+D_ANTIOCH,D_ANTIOCH/FLOW-DELIVERY,null,Deliveries,Deliveries from Antioch,null
+D_BANKS,D_BANKS/FLOW-DELIVERY,null,Deliveries,Banks Pumping Plant Exports,null
+D_BRANANIS,D_BRANANIS/FLOW-DELIVERY,null,Deliveries,Deliveries from Brannan Island,null
+D_CASTAIC,D_CASTAIC/FLOW-DELIVERY,null,Deliveries,Deliveries from Castaic,null
+D_CCWDINTK,D_CCWDINTK/FLOW-DELIVERY,null,Deliveries,Deliveries from Contra Costa Water District Intake,null
+D_CCWDVCOR,D_CCWDVCOR/FLOW-DELIVERY,null,Deliveries,Deliveries from Victoria Canal and Old River to Contra Costa Water District,null
+D_COASTAQDCT (850),D_COASTAQDCT/FLOW-DELIVERY,null,Deliveries,Deliveries from Coastal Aqueduct,null
+D_CONEYIS,D_CONEYIS/FLOW-DELIVERY,null,Deliveries,Deliveries from Coney Island,null
+D_CVC2CHRIS(859_862_863_864),D_CVC2CHRIS/FLOW-DELIVERY,null,Deliveries,Deliveries from Chrisman Pumping Plant,null
+D_CVP_CVC (855),D_CVP_CVC/FLOW-DELIVERY,null,Deliveries,Deliveries from Cross Valley Canal,null
+D_CVPJU_LDMC,D_CVPJU_LDMC/FLOW-DELIVERY,null,Deliveries,Deliveries from CVP Joint Use Lower Mendota Canal,null
+D_CVPJUSWP,D_CVPJUSWP/FLOW-DELIVERY,null,Deliveries,Deliveries from CVP/SWP Joint Use,null
+D_CVPRFG_854 (854_856),D_CVPRFG_854/FLOW-DELIVERY,null,Deliveries,Deliveries from CVPRFG_854,null
+D_DAGUER,D_DAGUER/FLOW-DELIVERY,null,Deliveries,Deliveries from Dagguere Point,null
+D_DELTAREQD,D_DELTAREQD/FLOW-DELIVERY,null,Deliveries,Deliveries from Delta Required Outflow,null
+D_DELVALLE,D_DELVALLE/FLOW-DELIVERY,null,Deliveries,Deliveries from DelValle,null
+D_DOSAMIGOSCVP,D_DOSAMIGOSCVP/FLOW-DELIVERY,null,Deliveries,Deliveries from CVP Dos Amigos Pumping Plant,null
+D_DOSAMIGOSSWP,D_DOSAMIGOSSWP/FLOW-DELIVERY,null,Deliveries,Deliveries from SWP Dos Amigos Pumping Plant,null
+D_EMP2DUD (846-849),D_EMP2DUD/FLOW-DELIVERY,null,Deliveries,Deliveries from Las Perillas,null
+D_EXPTD,D_EXPTD/FLOW-DELIVERY,null,Deliveries,Deliveries from Coney Island and Pumping Plants,null
+D_FOLSM,D_FOLSM/FLOW-DELIVERY,null,Deliveries,Deliveries from Folsom,null
+D_FREWEIR,D_FREWEIR/FLOW-DELIVERY,null,Deliveries,Deliveries from Fremont Weir,null
+D_FVB,D_FVB/FLOW-DELIVERY,null,Deliveries,Deliveries from FVB,null
+D_HOOD,D_HOOD/FLOW-DELIVERY,null,Deliveries,Deliveries from Hood,null
+D_HST,D_HST/FLOW-DELIVERY,null,Deliveries,Deliveries from H. St.,null
+D_JONES,D_JONES/FLOW-DELIVERY,null,Deliveries,Jones Pumping Plant Exports,null
+D_KCWA (851),D_KCWA/FLOW-DELIVERY,null,Deliveries,Deliveries from Kern County Water Agency,null
+D_MEDFORDIS,D_MEDFORDIS/FLOW-DELIVERY,null,Deliveries,Deliveries from Medford Island,null
+D_MENDOTAPL,D_MENDOTAPL/FLOW-DELIVERY,null,Deliveries,Deliveries from Mendota Pool,null
+D_NAPA,D_NAPA/FLOW-DELIVERY,null,Deliveries,Deliveries from Napa,null
+D_NIMBUS,D_NIMBUS/FLOW-DELIVERY,null,Deliveries,Deliveries from Nimbus,null
+D_OFBCVP,D_OFBCVP/FLOW-DELIVERY,null,Deliveries,Deliveries from CVP O'Neil Forebay,null
+D_OFBSWP,D_OFBSWP/FLOW-DELIVERY,null,Deliveries,Deliveries from SWP O'Neil Forebay,null
+D_ONEILLFBSWP,D_ONEILLFBSWP/FLOW-DELIVERY,null,Deliveries,Deliveries to O'Neil Forebay SWP,null
+D_OROVL,D_OROVL/FLOW-DELIVERY,null,Deliveries,Deliveries from Oroville,null
+D_OSO,D_OSO/FLOW-DELIVERY,null,Deliveries,Deliveries from Oso,null
+D_PEARBLPP,D_PEARBLPP/FLOW-DELIVERY,null,Deliveries,Deliveries from Pearlblossom Pumping Plant,null
+D_PERRIS,D_PERRIS/FLOW-DELIVERY,null,Deliveries,Deliveries from Perris,null
+D_PYRAMID,D_PYRAMID/FLOW-DELIVERY,null,Deliveries,Deliveries from Pyramid,null
+D_REDBLF,D_REDBLF/FLOW-DELIVERY,null,Deliveries,Deliveries from Red Bluff,null
+D_SACAME,D_SACAME/FLOW-DELIVERY,null,Deliveries,Deliveries from Sacramento River at American River Confluence,null
+D_SACSJR,D_SACSJR/FLOW-DELIVERY,null,Deliveries,Deliveries from Sacramento River at San Joaquin River Confluence,null
+D_SACWEIR,D_SACWEIR/FLOW-DELIVERY,null,Deliveries,Deliveries from Sacramento Weir,null
+D_SBAY,D_SBAY/FLOW-DELIVERY,null,Deliveries,Deliveries from South Bay,null
+D_SILVERWOOD,D_SILVERWOOD/FLOW-DELIVERY,null,Deliveries,Deliveries from Silverwood,null
+D_SLCVP,D_SLCVP/FLOW-DELIVERY,null,Deliveries,Deliveries from CVP San Luis,null
+D_SOLANO,D_SOLANO/FLOW-DELIVERY,null,Deliveries,Deliveries from Solano,null
+D_STOCKTON,D_STOCKTON/FLOW-DELIVERY,null,Deliveries,Deliveries from Stockton,null
+D_SWPJUCVP,D_SWPJUCVP/FLOW-DELIVERY,null,Deliveries,Deliveries from SWP/CVP Joint Use Facility,null
+D_TERMINOUS,D_TERMINOUS/FLOW-DELIVERY,null,Deliveries,Deliveries from Terminous,null
+D_THERM,D_THERM/FLOW-DELIVERY,null,Deliveries,Deliveries from Thermalito,null
+D_UPDMC,D_UPDMC/FLOW-DELIVERY,null,Deliveries,Deliveries from Upper Delta Mendota Canal,null
+D_VALLEJO,D_VALLEJO/FLOW-DELIVERY,null,Deliveries,Deliveries from Vallejo,null
+D_WARNEPP,D_WARNEPP/FLOW-DELIVERY,null,Deliveries,Deliveries from Warne Pumping Plant,null
+D_WARNEPP_SPILL,D_WARNEPP_SPILL/FLOW-DELIVERY,null,Deliveries,Deliveries from Warne Pumping Plant Spillway,null
+D_WILKNS,D_WILKNS/FLOW-DELIVERY,null,Deliveries,Deliveries from Wilkins Slough,null
+D_YUBFEA,D_YUBFEA/FLOW-DELIVERY,null,Deliveries,Deliveries from Yuba City,null
+D_CLEARTU,D_CLEARTU/FLOW-TUNNEL,TRINITY_IMPORTDV/ALIAS,Flow,Trinity River Exports,Import Target
+D_SPRING,D_SPRING/FLOW-TUNNEL,null,Deliveries,Deliveries from Spring Creek Tunnel,null
+D_SJRCAL,D_SJRCAL/FLOW-DELIVERY,null,Deliveries,Deliveries from SJRCalaveras,null
+D_CALAV,D_CALAV/FLOW-DELIVERY,null,Deliveries,Deliveries from Calaveras,null
+D_SJRVER,D_SJRVER/FLOW-DELIVERY,null,Deliveries,Deliveries from SJRVernalis,null
+D_SJRSTAN,D_SJRSTAN/FLOW-DELIVERY,null,Deliveries,Deliveries from SJRStanislaus,null
+D_STANRIPN,D_STANRIPN/FLOW-DELIVERY,null,Deliveries,Deliveries from Ripon,null
+D_STANGDWN,D_STANGDWN/FLOW-DELIVERY,null,Deliveries,Deliveries from Goodwin,null
+D_SJRTUOL,D_SJRTUOL/FLOW-DELIVERY,null,Deliveries,Deliveries from SJRTuolumne,null
+D_TUOL,D_TUOL/FLOW-DELIVERY,null,Deliveries,Deliveries from Tuolumne,null
+D_SJRMER,D_SJRMER/FLOW-DELIVERY,null,Deliveries,Deliveries from SJRMerced,null
+D_MERCED2,D_MERCED2/FLOW-DELIVERY,null,Deliveries,Deliveries from Merced2,null
+D_MERCED1,D_MERCED1/FLOW-DELIVERY,null,Deliveries,Deliveries from Merced1,null
+D_CHOWR1,D_CHOWR1/FLOW-DELIVERY,null,Deliveries,Deliveries from Chowchilla1,null
+D_CHOWBYP,D_CHOWBYP/FLOW-DELIVERY,null,Deliveries,Deliveries from Chowchilla Bypass,null
+D590F,D590F/FLOW-DELIVERY,null,Deliveries,Madera Canal Spills to Fresno,null
+D_FRSNO,D_FRSNO/FLOW-DELIVERY,null,Deliveries,Deliveries from Fresno,null
+D_MDOTA,D_MDOTA/FLOW-DELIVERY,null,Deliveries,Deliveries from Mendota Pool,null
+D_GRAVF,D_GRAVF/FLOW-DELIVERY,null,Deliveries,Deliveries from Gravelly Ford,null
+D_FKCNL,D_FKCNL/FLOW-DELIVERY,null,Deliveries,Deliveries from Friant-Kern Canal,null
+D_MDRCNL,D_MDRCNL/FLOW-DELIVERY,null,Deliveries,Deliveries from Madera Canal,null
+AD_HST,AD_HST_ACTUAL/FLOW-ACCRDEPL,null,Accretion/Depletion,Accretion/Depletion at H. St.,null
+AD_KSWCK,AD_KSWCK_ACTUAL/FLOW-ACCRDEPL,null,Accretion/Depletion,Accretion/Depletion at Keswick,null
+AD_NIMBUS,AD_NIMBUS_ACTUAL/FLOW-ACCRDEPL,null,Accretion/Depletion,Accretion/Depletion at Nimbus,null
+AD_REDBLF,AD_REDBLF_ACTUAL/FLOW-ACCRDEPL,null,Accretion/Depletion,Accretion/Depletion at Red Bluff,null
+AD_SACAME,AD_SACAME_ACTUAL/FLOW-ACCRDEPL,null,Accretion/Depletion,Accretion/Depletion at Sacramento River at American River,null
+AD_SACFEA,AD_SACFEA_ACTUAL/FLOW-ACCRDEPL,null,Accretion/Depletion,Accretion/Depletion at Sacramento River at Feather River,null
+AD_THERM,AD_THERM_ACTUAL/FLOW-ACCRDEPL,null,Accretion/Depletion,Accretion/Depletion at Thermalito,null
+AD_WILKNS,AD_WILKNS_ACTUAL/FLOW-ACCRDEPL,null,Accretion/Depletion,Accretion/Depletion at Wilkins Slough,null
+AD_YOLOBP,AD_YOLOBP_ACTUAL/FLOW-ACCRDEPL,null,Accretion/Depletion,Accretion/Depletion at Yolo Bypass,null
+AD_YUBFEA,AD_YUBFEA_ACTUAL/FLOW-ACCRDEPL,null,Accretion/Depletion,Accretion/Depletion at Yuba & Feather Confluence,null
+AD_SJRCAL,AD_SJRCAL/FLOW-ACCRDEPL,null,Accretion/Depletion,Accretion/Depletion at SJRCalaveras,null
+AD_CALAVERAS,AD_CALAVERAS_S2D/FLOW-ACCRDEPL,null,Accretion/Depletion,Accretion/Depletion at Calaveras,null
+AD_CASTAIC,AD_CASTAIC_S2D/FLOW-ACCRDEPL,null,Accretion/Depletion,Accretion/Depletion at Castaic,null
+AD_MOKELUMNE,AD_MOKELUMNE_S2D/FLOW-ACCRDEPL,null,Accretion/Depletion,Accretion/Depletion at Mokelumne River,null
+AD_CALAV,AD_CALAV/FLOW-ACCRDEPL,null,Accretion/Depletion,Accretion/Depletion at Calaveras,null
+AD_SJRVER,AD_SJRVER/FLOW-ACCRDEPL,null,Accretion/Depletion,Accretion/Depletion at SJRVernalis,null
+AD_SJRSTAN,AD_SJRSTAN/FLOW-ACCRDEPL,null,Accretion/Depletion,Accretion/Depletion at SJRStanislaus,null
+AD_STANRIPN,AD_STANRIPN/FLOW-ACCRDEPL,null,Accretion/Depletion,Accretion/Depletion at Ripon,null
+AD_STANGDWN,AD_STANGDWN_S2D/FLOW-ACCRDEPL,null,Accretion/Depletion,Accretion/Depletion at Goodwin,null
+AD_SJRMAZE,AD_SJRMAZE/FLOW-ACCRDEPL,null,Accretion/Depletion,Accretion/Depletion at SJRMaze,null
+AD_SJRTUOL,AD_SJRTUOL/FLOW-ACCRDEPL,null,Accretion/Depletion,Accretion/Depletion at SJRTuolumne,null
+AD_TUOL,AD_TUOL/FLOW-ACCRDEPL,null,Accretion/Depletion,Accretion/Depletion at Tuolumne,null
+AD_SJRMER,AD_SJRMER/FLOW-ACCRDEPL,null,Accretion/Depletion,Accretion/Depletion at SJRMerced,null
+AD_MERCED2,AD_MERCED2/FLOW-ACCRDEPL,null,Accretion/Depletion,Accretion/Depletion at Merced2,null
+AD_SJRMS,AD_SJRMS/FLOW-ACCRDEPL,null,Accretion/Depletion,Accretion/Depletion at SJRMudSalt,null
+AD_SJRSAND,AD_SJRSAND/FLOW-ACCRDEPL,null,Accretion/Depletion,Accretion/Depletion at SJRSand,null
+AD_SJRSACK,AD_SJRSACK/FLOW-ACCRDEPL,null,Accretion/Depletion,Accretion/Depletion at SJRSack,null
+AD_CHOW2,AD_CHOW2/FLOW-ACCRDEPL,null,Accretion/Depletion,Accretion/Depletion at Chowchilla2,null
+AD_CHOWR1,AD_CHOWR1/FLOW-ACCRDEPL,null,Accretion/Depletion,Accretion/Depletion at Chowchilla1,null
+AD_CHOWBYP,AD_CHOWBYP/FLOW-ACCRDEPL,null,Accretion/Depletion,Accretion/Depletion at Chowchilla Bypass,null
+AD_FRSNO,AD_FRSNO/FLOW-ACCRDEPL,null,Accretion/Depletion,Accretion/Depletion at Fresno,null
+AD_MDOTA,AD_MDOTA/FLOW-ACCRDEPL,null,Accretion/Depletion,Accretion/Depletion at Mendota Pool,null
+AD_SJRCB,AD_SJRCB/FLOW-ACCRDEPL,null,Accretion/Depletion,Accretion/Depletion at Chowchilla Bifurcation,null
+AD_GRAVF,AD_GRAVF/FLOW-ACCRDEPL,null,Accretion/Depletion,Accretion/Depletion at Gravelly Ford,null
+I_MDOTA,I_MDOTA_S2D/FLOW-INFLOW,null,Flow,Inflows to Mendota Pool from James Bypass,null
+YOLO,"D_FREWEIR/FLOW-DELIVERY,D_SACWEIR/FLOW-DELIVERY,AD_YOLOBP_ACTUAL/FLOW-ACCRDEPL,C_YOLOBP/FLOW-CHANNEL",null,Flow,Flows at Yolo Bypass,null

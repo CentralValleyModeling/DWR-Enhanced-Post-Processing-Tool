@@ -36,7 +36,6 @@ public class CalLiteGUIMainPanel extends JPanel
 	 */
 	private MessagePanel _messagePanel;
 	private NodeArcMenuBar _nodeArcMenuBar;
-	//	private MainMenuBar _mainMenuBar;
 	private JTabbedPane _tabbedPane;
 	private DtsTreePanel _dtsTreePanel;
 
@@ -45,15 +44,14 @@ public class CalLiteGUIMainPanel extends JPanel
 	 * panel to the main panel. parameters: frame in which the panel will be
 	 * displayed
 	 */
-	public CalLiteGUIMainPanel(JFrame fr)
+	public CalLiteGUIMainPanel()
 	{
 
 		setBackground(new Color(229, 240, 203));
 		setLayout(new BorderLayout(5, 5));
 
 		// Create the main menu and the message panel, but DO NOT display
-		_messagePanel = new MessagePanel(fr);
-		//		_mainMenuBar = new MainMenuBar(this);
+		_messagePanel = new MessagePanel();
 
 		_tabbedPane = new JTabbedPane();
 		setRetrievePanel();

@@ -24,7 +24,7 @@ public class DataTableModel extends AbstractTableModel
 	/**
 	 * see {@link AuditSvcImpl}
 	 */
-	private IAuditSvc auditSvc = AuditSvcImpl.getAuditSvcImplInstance();
+	private IAuditSvc _auditSvc = AuditSvcImpl.getAuditSvcImplInstance();
 	/**
 	 * This will hold the value of the table name in this table.
 	 */
@@ -58,17 +58,11 @@ public class DataTableModel extends AbstractTableModel
 	{
 		String tableName = this._tableName;
 		String[] colNames = new String[this._columnNames.length];
-		for(int i = 0; i < colNames.length; i++)
-		{
-			colNames[i] = this._columnNames[i];
-		}
+		System.arraycopy(this._columnNames, 0, colNames, 0, colNames.length);
 		Object[][] data1 = new Object[this._data.length][this._data[0].length];
 		for(int i = 0; i < data1.length; i++)
 		{
-			for(int j = 0; j < data1[0].length; j++)
-			{
-				data1[i][j] = this._data[i][j];
-			}
+			System.arraycopy(this._data[i], 0, data1[i], 0, data1[0].length);
 		}
 		return new DataTableModel(tableName, colNames, data1, _isCellEditable);
 	}
@@ -130,7 +124,7 @@ public class DataTableModel extends AbstractTableModel
 	@Override
 	public void setValueAt(Object value, int row, int col)
 	{
-		auditSvc.addAudit(_tableName + Constant.DASH + row + Constant.DASH + col, String.valueOf(getValueAt(row, col)),
+		_auditSvc.addAudit(_tableName + Constant.DASH + row + Constant.DASH + col, String.valueOf(getValueAt(row, col)),
 				String.valueOf(value));
 		_data[row][col] = value;
 		fireTableCellUpdated(row, col);

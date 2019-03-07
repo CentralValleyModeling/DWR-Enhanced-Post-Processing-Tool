@@ -9,7 +9,8 @@ package gov.ca.water.eppt.nbui;
 import java.awt.BorderLayout;
 import javax.swing.*;
 
-import gov.ca.water.quickresults.ui.ScenarioConfigurationPanel;
+import gov.ca.water.quickresults.ui.scenarioconfig.ScenarioConfigurationListener;
+import gov.ca.water.quickresults.ui.scenarioconfig.ScenarioConfigurationPanel;
 import org.openide.awt.ActionID;
 import org.openide.awt.ActionReference;
 import org.openide.util.NbBundle.Messages;
@@ -27,14 +28,14 @@ import org.openide.windows.TopComponent;
 @ActionID(category = "Window", id = "gov.ca.water.eppt.nbui.ScenarioConfigurationTopComponent")
 @ActionReference(path = "Menu/Window", position = 1111)
 @TopComponent.OpenActionRegistration(
-		displayName = "#CTL_ScenarioConfigurationAction",
+		displayName = "Scenario Configuration",
 		preferredID = "ScenarioConfigurationTopComponent"
 )
 @Messages(
 		{
-				"CTL_ScenarioConfigurationAction=ScenarioConfiguration",
-				"CTL_ScenarioConfigurationTopComponent=ScenarioConfiguration Window",
-				"HINT_ScenarioConfigurationTopComponent=This is a ScenarioConfiguration window"
+				"CTL_ScenarioConfigurationAction=Scenario Configuration",
+				"CTL_ScenarioConfigurationTopComponent=Scenario Configuration Window",
+				"HINT_ScenarioConfigurationTopComponent=This is the Scenario Configuration window"
 		})
 public final class ScenarioConfigurationTopComponent extends TopComponent
 {
@@ -42,7 +43,10 @@ public final class ScenarioConfigurationTopComponent extends TopComponent
 	public ScenarioConfigurationTopComponent()
 	{
 		setName("Scenario Configuration");
-		ScenarioConfigurationPanel scenarioConfigurationPanel = new ScenarioConfigurationPanel();
+		ScenarioConfigurationPanel scenarioConfigurationPanel = ScenarioConfigurationPanel.getScenarioConfigurationPanel();
+		ScenarioConfigurationListener scenarioConfigurationListener = new ScenarioConfigurationListener(
+				scenarioConfigurationPanel);
+		scenarioConfigurationPanel.setActionListener(scenarioConfigurationListener);
 		JScrollPane scrollPane = new JScrollPane(scenarioConfigurationPanel);
 		setLayout(new BorderLayout());
 		add(scrollPane, BorderLayout.CENTER);

@@ -23,6 +23,7 @@ public class ApplicationTest extends NbTestCase
 
 	public static Test suite()
 	{
+		System.setProperty("user.dir", System.getProperty("user.dir") + "\\target\\eppt");
 		return NbModuleSuite.createConfiguration(ApplicationTest.class).
 				gui(false).
 									failOnMessage(Level.WARNING). // works at least in RELEASE71

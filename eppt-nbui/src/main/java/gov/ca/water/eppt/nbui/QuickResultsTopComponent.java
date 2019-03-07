@@ -9,7 +9,8 @@ package gov.ca.water.eppt.nbui;
 import java.awt.BorderLayout;
 import javax.swing.*;
 
-import gov.ca.water.quickresults.ui.QuickResultsPanel;
+import gov.ca.water.quickresults.ui.quickresults.QuickResultsListener;
+import gov.ca.water.quickresults.ui.quickresults.QuickResultsPanel;
 import org.openide.awt.ActionID;
 import org.openide.awt.ActionReference;
 import org.openide.util.NbBundle.Messages;
@@ -27,14 +28,14 @@ import org.openide.windows.TopComponent;
 @ActionID(category = "Window", id = "gov.ca.water.eppt.nbui.QuickResultsTopComponent")
 @ActionReference(path = "Menu/Window", position = 2222)
 @TopComponent.OpenActionRegistration(
-		displayName = "#CTL_QuickResultsAction",
+		displayName = "Quick Results",
 		preferredID = "QuickResultsTopComponent"
 )
 @Messages(
 		{
-				"CTL_QuickResultsAction=QuickResults",
-				"CTL_QuickResultsTopComponent=QuickResults Window",
-				"HINT_QuickResultsTopComponent=This is a QuickResults window"
+				"CTL_QuickResultsAction=Quick Results",
+				"CTL_QuickResultsTopComponent=Quick Results Window",
+				"HINT_QuickResultsTopComponent=This is the Quick Results window"
 		})
 public final class QuickResultsTopComponent extends TopComponent
 {
@@ -43,6 +44,8 @@ public final class QuickResultsTopComponent extends TopComponent
 	{
 		setName("Quick Results");
 		QuickResultsPanel quickResultsPanel = new QuickResultsPanel();
+		QuickResultsListener quickResultsListener = new QuickResultsListener(quickResultsPanel);
+		quickResultsPanel.getSwingEngine().setActionListener(quickResultsPanel, quickResultsListener);
 		JScrollPane scrollPane = new JScrollPane(quickResultsPanel);
 		setLayout(new BorderLayout());
 		add(scrollPane, BorderLayout.CENTER);

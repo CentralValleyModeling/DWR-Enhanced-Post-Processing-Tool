@@ -49,7 +49,7 @@ public class CalLiteGUITestWrapper
 		Container pane = frameBase.getContentPane();
 		pane.setBackground(new Color(207, 220, 200));
 		pane.setLayout(new BorderLayout());
-		CalLiteGUIPanelWrapper panel = new CalLiteGUIPanelWrapper(frameBase);
+		CalLiteGUIPanelWrapper panel = new CalLiteGUIPanelWrapper();
 
 		// Put in custom action
 

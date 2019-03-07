@@ -455,11 +455,11 @@ public class GuiUtils
 	/**
 	 *
 	 */
-	static MainPanel createMainPanel(JFrame fr)
+	static MainPanel createMainPanel()
 	{
 		if(_panel == null)
 		{
-			_panel = new MainPanel(fr);
+			_panel = new MainPanel();
 		}
 		return _panel;
 	}
@@ -472,11 +472,11 @@ public class GuiUtils
 		return _panel;
 	}
 
-	static CalLiteGUIMainPanel createMainPanelCLG(JFrame fr)
+	static CalLiteGUIMainPanel createMainPanelCLG()
 	{
 		if(_panelCLG == null)
 		{
-			_panelCLG = new CalLiteGUIMainPanel(fr);
+			_panelCLG = new CalLiteGUIMainPanel();
 		}
 		return _panelCLG;
 	}

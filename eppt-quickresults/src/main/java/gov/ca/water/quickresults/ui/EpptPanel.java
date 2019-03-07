@@ -7,6 +7,8 @@
 
 package gov.ca.water.quickresults.ui;
 
+import java.awt.event.ActionListener;
+
 import org.swixml.SwingEngine;
 
 import rma.swing.RmaJPanel;
@@ -26,8 +28,13 @@ public class EpptPanel extends RmaJPanel
 		_swingEngine = new SwingEngine();
 	}
 
-	SwingEngine getSwingEngine()
+	public SwingEngine getSwingEngine()
 	{
 		return _swingEngine;
+	}
+
+	public void setActionListener(ActionListener actionListener)
+	{
+		getSwingEngine().setActionListener(this, actionListener);
 	}
 }

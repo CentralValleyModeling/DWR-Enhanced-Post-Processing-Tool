@@ -23,36 +23,35 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 
 import gov.ca.water.businessservice.IAllButtonsDele;
 import gov.ca.water.businessservice.IApplyDynamicConDele;
+import gov.ca.water.businessservice.IScenarioDele;
+import gov.ca.water.businessservice.ISeedDataSvc;
+import gov.ca.water.businessservice.IVerifyControlsDele;
 import gov.ca.water.businessservice.impl.AllButtonsDeleImp;
 import gov.ca.water.businessservice.impl.ApplyDynamicConDeleImp;
+import gov.ca.water.businessservice.impl.ScenarioDeleImp;
+import gov.ca.water.businessservice.impl.SeedDataSvcImpl;
 import gov.ca.water.businessservice.impl.VerifyControlsDeleImp;
 import gov.ca.water.businessservice.impl.XMLParsingSvcImpl;
 import gov.ca.water.calgui.EpptInitializationException;
 import gov.ca.water.calgui.bo.DataTableModel;
 import gov.ca.water.calgui.bo.RBListItemBO;
-import gov.ca.water.calgui.bo.ResultUtilsBO;
-import gov.ca.water.calgui.bus_delegate.IScenarioDele;
-import gov.ca.water.calgui.bus_delegate.IVerifyControlsDele;
-import gov.ca.water.calgui.bus_delegate.impl.ScenarioDeleImp;
 import gov.ca.water.calgui.bus_service.IModelRunSvc;
 import gov.ca.water.calgui.bus_service.IScenarioSvc;
-import gov.ca.water.calgui.bus_service.ISeedDataSvc;
 import gov.ca.water.calgui.bus_service.impl.ModelRunSvcImpl;
 import gov.ca.water.calgui.bus_service.impl.ScenarioSvcImpl;
-import gov.ca.water.calgui.bus_service.impl.SeedDataSvcImpl;
 import gov.ca.water.calgui.constant.Constant;
 import gov.ca.water.calgui.presentation.DisplayFrame;
-import gov.ca.water.calgui.presentation.PowerFrame;
 import gov.ca.water.calgui.presentation.ProgressFrame;
-import gov.ca.water.calgui.presentation.ScenarioFrame;
 import gov.ca.water.calgui.tech_service.IAuditSvc;
 import gov.ca.water.calgui.tech_service.IDialogSvc;
 import gov.ca.water.calgui.tech_service.IErrorHandlingSvc;
 import gov.ca.water.calgui.tech_service.impl.AuditSvcImpl;
 import gov.ca.water.calgui.tech_service.impl.DialogSvcImpl;
 import gov.ca.water.calgui.tech_service.impl.ErrorHandlingSvcImpl;
+import gov.ca.water.quickresults.ui.scenarioconfig.ScenarioConfigurationPanel;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.log4j.Logger;
+import org.jfree.data.time.Month;
 import org.swixml.SwingEngine;
 
 /**
@@ -96,7 +95,7 @@ public class GlobalActionListener implements ActionListener
 					{
 						scendarios.add(model.getElementAt(i));
 					}
-					PowerFrame pf = new PowerFrame(scendarios, (JFrame) _swingEngine.find(Constant.MAIN_FRAME_NAME));
+					PowerFrame pf = new PowerFrame(scendarios);
 					break;
 
 				case "AC_SaveScen":
@@ -196,11 +195,11 @@ public class GlobalActionListener implements ActionListener
 				case "AC_DShortClear":
 					clearQRCheckBoxes("DShort");
 					break;
+				case "AC_CompScen":
+					compareScenarios();
+					break;
 				case "AC_DfcClear":
 					clearQRCheckBoxes("delta_flow_criteria");
-					break;
-				case "Rep_LoadList":
-					ResultUtilsBO.getResultUtilsInstance(null).readCGR();
 					break;
 				case "Rep_DispCur":
 					if(lstScenarios.getModel().getSize() == 0)
@@ -220,9 +219,13 @@ public class GlobalActionListener implements ActionListener
 						{
 							scenarios.add(model.getElementAt(i));
 						}
-						DisplayFrame.showDisplayFrames(_swingEngine,
+						ScenarioConfigurationPanel scenarioConfigurationPanel = ScenarioConfigurationPanel.getScenarioConfigurationPanel();
+						String quickState = scenarioConfigurationPanel.quickState();
+						Month startMonth = scenarioConfigurationPanel.getStartMonth();
+						Month endMonth = scenarioConfigurationPanel.getEndMonth();
+						DisplayFrame.showDisplayFrames(
 								(String) ((JList) _swingEngine.find("lstReports")).getSelectedValue(),
-								scenarios);
+								scenarios, startMonth, endMonth);
 					}
 					break;
 				case "Time_SELECT":
@@ -335,6 +338,41 @@ public class GlobalActionListener implements ActionListener
 		}
 	}
 
+
+	private void compareScenarios()
+	{
+		ScenarioConfigurationPanel scenarioConfigurationPanel = ScenarioConfigurationPanel.getScenarioConfigurationPanel();
+		IScenarioDele scenarioDele = new ScenarioDeleImp();
+		List<String> fileNames = new ArrayList<>();
+		for(int i = 0; i < scenarioConfigurationPanel.getScenarios().size(); i++)
+		{
+			String name = Paths.get(scenarioConfigurationPanel.getScenarios().get(i).toString())
+							   .getFileName().toString();
+			fileNames.add(name.substring(0, name.length() - 7) + Constant.CLS_EXT);
+		}
+		try
+		{
+			List<DataTableModel> dtmList = scenarioDele.getScenarioTableData(fileNames,
+					scenarioConfigurationPanel.getSwingEngine());
+			ScenarioFrame scenarioFrame = new ScenarioFrame(dtmList);
+			scenarioFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+			scenarioFrame.setVisible(true);
+		}
+		catch(EpptInitializationException ex)
+		{
+			LOG.fatal("Unable to compare Scenarios", ex);
+		}
+		try
+		{
+			Files.delete(
+					Paths.get(Constant.SCENARIOS_DIR + Constant.CURRENT_SCENARIO + Constant.CLS_EXT));
+		}
+		catch(IOException ex)
+		{
+			LOG.debug(ex);
+		}
+	}
+
 	/**
 	 * This method is used to display the "View Scenario Settings" button on the
 	 * "Run Settings" tab.
@@ -345,8 +383,7 @@ public class GlobalActionListener implements ActionListener
 		if(pro)
 		{
 			List<DataTableModel> dtmList = _scenarioDele.getScenarioTableData(null, _swingEngine);
-			ScenarioFrame scenarioFrame = new ScenarioFrame(dtmList,
-					(JFrame) _swingEngine.find(Constant.MAIN_FRAME_NAME));
+			ScenarioFrame scenarioFrame = new ScenarioFrame(dtmList);
 			scenarioFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 			scenarioFrame.setVisible(true);
 			try

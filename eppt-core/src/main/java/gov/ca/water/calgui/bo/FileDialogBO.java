@@ -42,20 +42,19 @@ public class FileDialogBO implements ActionListener
 {
 
 	private static final Logger LOG = Logger.getLogger(FileDialogBO.class.getName());
-	private DefaultListModel lmScenNames;
-	private JFileChooser fc = new JFileChooser2();
-	private int dialogRC;
-	JList theList;
-	JLabel theLabel;
-	JTextField theTextField;
-	boolean theMultipleFlag = false;
-	String theFileExt = null;
-	JRadioButton rdbopt1 = null;
-	JRadioButton rdbopt2 = null;
-	JButton btn1 = null;
+	private DefaultListModel _lmScenNames;
+	private JFileChooser _fc = new JFileChooser2();
+	private int _dialogRC;
+	private JList _theList;
+	private JLabel _theLabel;
+	private JTextField _theTextField;
+	private boolean _theMultipleFlag = false;
+	private String _theFileExt = null;
+	private JRadioButton _rdbopt1 = null;
+	private JRadioButton _rdbopt2 = null;
+	private JButton _btn1 = null;
 	private final JFrame _mainFrame;
-	//private SwingEngine swingEngine = XMLParsingSvcImpl.getXMLParsingSvcImplInstance().getSwingEngine();
-	private IErrorHandlingSvc errorHandlingSvc = new ErrorHandlingSvcImpl();
+	private IErrorHandlingSvc _errorHandlingSvc = new ErrorHandlingSvcImpl();
 
 
 	/**
@@ -68,9 +67,9 @@ public class FileDialogBO implements ActionListener
 	public FileDialogBO(JList aList, JTextField aTextField, JFrame mainFrame)
 	{
 		_mainFrame = mainFrame;
-		theLabel = null;
-		theFileExt = "DSS";
-		theTextField = aTextField;
+		_theLabel = null;
+		_theFileExt = "DSS";
+		_theTextField = aTextField;
 		setup(aList);
 	}
 
@@ -85,9 +84,9 @@ public class FileDialogBO implements ActionListener
 	public FileDialogBO(JList aList, JTextField aTextField, String aFileExt, JFrame mainFrame)
 	{
 		_mainFrame = mainFrame;
-		theLabel = null;
-		theTextField = aTextField;
-		theFileExt = aFileExt;
+		_theLabel = null;
+		_theTextField = aTextField;
+		_theFileExt = aFileExt;
 		setup(aList);
 	}
 
@@ -106,44 +105,44 @@ public class FileDialogBO implements ActionListener
 						boolean isMultiple, JFrame mainFrame)
 	{
 		_mainFrame = mainFrame;
-		theLabel = aLabel;
-		theFileExt = "DSS";
-		theTextField = null;
+		_theLabel = aLabel;
+		_theFileExt = "DSS";
+		_theTextField = null;
 		setup(aList);
-		rdbopt1 = rdb1;
-		rdbopt2 = rdb2;
-		btn1 = btn;
-		theMultipleFlag = isMultiple;
+		_rdbopt1 = rdb1;
+		_rdbopt2 = rdb2;
+		_btn1 = btn;
+		_theMultipleFlag = isMultiple;
 	}
 
 	public DefaultListModel getLmScenNames()
 	{
-		return lmScenNames;
+		return _lmScenNames;
 	}
 
 	public void setLmScenNames(DefaultListModel lmScenNames)
 	{
-		this.lmScenNames = lmScenNames;
+		this._lmScenNames = lmScenNames;
 	}
 
 	public JFileChooser getFc()
 	{
-		return fc;
+		return _fc;
 	}
 
 	public void setFc(JFileChooser fc)
 	{
-		this.fc = fc;
+		this._fc = fc;
 	}
 
 	public int getDialogRC()
 	{
-		return dialogRC;
+		return _dialogRC;
 	}
 
 	public void setDialogRC(int dialogRC)
 	{
-		this.dialogRC = dialogRC;
+		this._dialogRC = dialogRC;
 	}
 
 	/**
@@ -158,27 +157,27 @@ public class FileDialogBO implements ActionListener
 		{
 			// Set up file chooser
 
-			if(theFileExt.equals("DSS"))
+			if("DSS".equals(_theFileExt))
 			{
-				fc.setFileFilter(new SimpleFileFilter("DSS"));
-				fc.setCurrentDirectory(new File(".//Scenarios"));
+				_fc.setFileFilter(new SimpleFileFilter("DSS"));
+				_fc.setCurrentDirectory(new File(".//Scenarios"));
 			}
-			else if(theFileExt.equals("DSS2"))
+			else if("DSS2".equals(_theFileExt))
 			{
-				theFileExt = "DSS";
-				fc.setFileFilter(new SimpleFileFilter("DSS"));
-				fc.setCurrentDirectory(new File(".//Model_w2/DSS_Files"));
+				_theFileExt = "DSS";
+				_fc.setFileFilter(new SimpleFileFilter("DSS"));
+				_fc.setCurrentDirectory(new File(".//Model_w2/DSS_Files"));
 			}
 			else
 			{
-				fc.setFileFilter(new SimpleFileFilter(theFileExt));
-				if(theFileExt.equals("PDF") || theFileExt.equals("CLS"))
+				_fc.setFileFilter(new SimpleFileFilter(_theFileExt));
+				if("PDF".equals(_theFileExt) || "CLS".equals(_theFileExt))
 				{
-					fc.setCurrentDirectory(new File(".//Scenarios"));
+					_fc.setCurrentDirectory(new File(".//Scenarios"));
 				}
 				else
 				{
-					fc.setCurrentDirectory(new File(".//Config"));
+					_fc.setCurrentDirectory(new File(".//Config"));
 				}
 			}
 
@@ -188,16 +187,17 @@ public class FileDialogBO implements ActionListener
 			if(aList != null)
 			{
 
-				lmScenNames = new DefaultListModel();
-				lmScenNames.addListDataListener(new MyListDataListener());
+				_lmScenNames = new DefaultListModel();
+				_lmScenNames.addListDataListener(new MyListDataListener());
 
-				theList = aList;
-				theList.setCellRenderer(new RBListRenderer());
-				theList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+				_theList = aList;
+				_theList.setModel(_lmScenNames);
+				_theList.setCellRenderer(new RBListRenderer());
+				_theList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 
 				// Add a mouse listener to handle changing selection
 
-				theList.addMouseListener(new MouseAdapter()
+				_theList.addMouseListener(new MouseAdapter()
 				{
 					@Override
 					public void mouseClicked(MouseEvent event)
@@ -246,7 +246,7 @@ public class FileDialogBO implements ActionListener
 		{
 			LOG.error(e.getMessage());
 			String messageText = "Unable to set up file dialog.";
-			errorHandlingSvc.businessErrorHandler(messageText, e);
+			_errorHandlingSvc.businessErrorHandler(messageText, e);
 		}
 	}
 
@@ -261,99 +261,116 @@ public class FileDialogBO implements ActionListener
 				obj = e.getSource();
 			}
 			if((obj != null) && (((Component) obj).getName() != null)
-					&& ((Component) obj).getName().equals("btnDelScenario"))
+					&& "btnDelScenario".equals(((Component) obj).getName()))
 			{
-				// If invoked by QR DelScenario button, delete a scenario from
-				// Quick
-				// Results scenario list
-				if((theList != null) && lmScenNames.getSize() > 0)
-				{
-					int todel = -1;
-					for(int i = 0; i < lmScenNames.getSize(); i++)
-					{
-						if(((RBListItemBO) lmScenNames.getElementAt(i)).isSelected())
-						{
-							todel = i;
-						}
-					}
-					if(todel > 0)
-					{
-						((RBListItemBO) lmScenNames.getElementAt(todel - 1)).setSelected(true);
-					}
-					else if(todel < lmScenNames.getSize() - 1)
-					{
-						((RBListItemBO) lmScenNames.getElementAt(todel + 1)).setSelected(true);
-					}
-					lmScenNames.remove(todel);
-				}
+				deleteScenario();
 			}
-			else if(e.getActionCommand().equals("btnClearScenario"))
+			else if("btnClearScenario".equals(e.getActionCommand()))
 			{
-				((DefaultListModel) theList.getModel()).clear();
-				theList.repaint();
-
+				clearAllScenarios();
 			}
 			else
 			{
-				// Otherwise, show dialog
-				int rc;
-				if(theMultipleFlag)
-				{
-					UIManager.put("FileChooser.openDialogTitleText", "Select Scenarios");
-					fc.setMultiSelectionEnabled(true);
-					dialogRC = fc.showDialog(_mainFrame, "Select");
-					if(theList != null && dialogRC != 1)
-					{
-						for(File file : fc.getSelectedFiles())
-						{
-							addFileToList(file);
-						}
-					}
-				}
-				else
-				{
-					if(theFileExt == null)
-					{
-						rc = fc.showOpenDialog(_mainFrame);
-					}
-					else
-					{
-						rc = fc.showDialog(_mainFrame,
-								theFileExt.equals("DSS") ? "Open" : "Save");
-					}
-					dialogRC = rc;
-					File file;
-					if(rc == 0)
-					{
-						file = fc.getSelectedFile();
-						if ("PDF".equals(theFileExt) && !file.getName().toLowerCase().endsWith(".pdf"))
-						{
-							file = new File(file.getPath() + ".PDF");
-						}
-						if ("CLS".equals(theFileExt) && !file.getName().toLowerCase().endsWith(".cls"))
-						{
-							file = new File(file.getPath() + ".CLS");
-						}
-						if(theList != null)
-						{
-							addFileToList(file);
-						}
-						else if(theTextField != null)
-						{
-							theTextField.setText(file.getName());
-							theTextField.setToolTipText(file.getPath());
-						}
-					}
-				}
+				addScenario();
 			}
 		}
 		catch(HeadlessException e1)
 		{
 			LOG.error(e1.getMessage());
 			String messageText = "Unable to show file chooser.";
-			errorHandlingSvc.businessErrorHandler(messageText, e1);
+			_errorHandlingSvc.businessErrorHandler(messageText, e1);
 		}
-		return;
+		if(_theList != null)
+		{
+			_theList.repaint();
+		}
+	}
+
+	private void addScenario()
+	{
+		// Otherwise, show dialog
+		int rc;
+		if(_theMultipleFlag)
+		{
+			UIManager.put("FileChooser.openDialogTitleText", "Select Scenarios");
+			_fc.setMultiSelectionEnabled(true);
+			_dialogRC = _fc.showDialog(_mainFrame, "Select");
+			if(_theList != null && _dialogRC != 1)
+			{
+				for(File file : _fc.getSelectedFiles())
+				{
+					addFileToList(file);
+				}
+			}
+		}
+		else
+		{
+			if(_theFileExt == null)
+			{
+				rc = _fc.showOpenDialog(_mainFrame);
+			}
+			else
+			{
+				rc = _fc.showDialog(_mainFrame,
+						_theFileExt.equals("DSS") ? "Open" : "Save");
+			}
+			_dialogRC = rc;
+			File file;
+			if(rc == 0)
+			{
+				file = _fc.getSelectedFile();
+				if("PDF".equals(_theFileExt) && !file.getName().toLowerCase().endsWith(".pdf"))
+				{
+					file = new File(file.getPath() + ".PDF");
+				}
+				if("CLS".equals(_theFileExt) && !file.getName().toLowerCase().endsWith(".cls"))
+				{
+					file = new File(file.getPath() + ".CLS");
+				}
+				if(_theList != null)
+				{
+					addFileToList(file);
+				}
+				else if(_theTextField != null)
+				{
+					_theTextField.setText(file.getName());
+					_theTextField.setToolTipText(file.getPath());
+				}
+			}
+		}
+	}
+
+	private void clearAllScenarios()
+	{
+		((DefaultListModel) _theList.getModel()).clear();
+		_theList.repaint();
+	}
+
+	private void deleteScenario()
+	{
+		// If invoked by QR DelScenario button, delete a scenario from
+		// Quick
+		// Results scenario list
+		if((_theList != null) && _lmScenNames.getSize() > 0)
+		{
+			int todel = -1;
+			for(int i = 0; i < _lmScenNames.getSize(); i++)
+			{
+				if(((RBListItemBO) _lmScenNames.getElementAt(i)).isSelected())
+				{
+					todel = i;
+				}
+			}
+			if(todel > 0)
+			{
+				((RBListItemBO) _lmScenNames.getElementAt(todel - 1)).setSelected(true);
+			}
+			else if(todel < _lmScenNames.getSize() - 1)
+			{
+				((RBListItemBO) _lmScenNames.getElementAt(todel + 1)).setSelected(true);
+			}
+			_lmScenNames.remove(todel);
+		}
 	}
 
 	/**
@@ -367,30 +384,30 @@ public class FileDialogBO implements ActionListener
 		try
 		{
 			boolean match = false;
-			for(int i = 0; i < lmScenNames.getSize(); i++)
+			for(int i = 0; i < _lmScenNames.getSize(); i++)
 			{
-				RBListItemBO rbli = (RBListItemBO) lmScenNames.getElementAt(i);
+				RBListItemBO rbli = (RBListItemBO) _lmScenNames.getElementAt(i);
 				match = match || (rbli.toString().equals(file.getPath()));
 			}
 
 			if(!match)
 			{
-				lmScenNames.addElement(new RBListItemBO(file.getPath(), file.getName()));
-				if(lmScenNames.getSize() == 1)
+				_lmScenNames.addElement(new RBListItemBO(file.getPath(), file.getName()));
+				if(_lmScenNames.getSize() == 1)
 				{
-					((RBListItemBO) lmScenNames.getElementAt(0)).setSelected(true);
+					((RBListItemBO) _lmScenNames.getElementAt(0)).setSelected(true);
 				}
-				theList.ensureIndexIsVisible(lmScenNames.getSize() - 1);
-				theList.revalidate();
-				theList.validate();
-				theList.getParent().invalidate();
+				_theList.ensureIndexIsVisible(_lmScenNames.getSize() - 1);
+				_theList.revalidate();
+				_theList.validate();
+				_theList.getParent().invalidate();
 			}
 		}
 		catch(Exception e)
 		{
 			LOG.error(e.getMessage());
 			String messageText = "Unable to update list.";
-			errorHandlingSvc.businessErrorHandler(messageText, e);
+			_errorHandlingSvc.businessErrorHandler(messageText, e);
 		}
 	}
 
@@ -410,30 +427,29 @@ public class FileDialogBO implements ActionListener
 		@Override
 		public void intervalAdded(ListDataEvent e)
 		{
-			if(rdbopt1 != null && rdbopt2 != null)
+			if(_rdbopt1 != null && _rdbopt2 != null)
 			{
-				rdbopt1.setEnabled(lmScenNames.getSize() > 1);
-				rdbopt2.setEnabled(lmScenNames.getSize() > 1);
+				_rdbopt1.setEnabled(_lmScenNames.getSize() > 1);
+				_rdbopt2.setEnabled(_lmScenNames.getSize() > 1);
 			}
-			WRIMSGUILinks.updateProjectFiles(theList);
-			if(btn1 != null)
+			if(_btn1 != null)
 			{
-				btn1.setEnabled(true);
+				_btn1.setEnabled(true);
 			}
 		}
 
 		@Override
 		public void intervalRemoved(ListDataEvent e)
 		{
-			if(rdbopt1 != null && rdbopt2 != null)
+			if(_rdbopt1 != null && _rdbopt2 != null)
 			{
-				rdbopt1.setEnabled(lmScenNames.getSize() > 1);
-				rdbopt2.setEnabled(lmScenNames.getSize() > 1);
+				_rdbopt1.setEnabled(_lmScenNames.getSize() > 1);
+				_rdbopt2.setEnabled(_lmScenNames.getSize() > 1);
 			}
-			WRIMSGUILinks.updateProjectFiles(theList);
-			if(btn1 != null)
+			WRIMSGUILinks.updateProjectFiles(_theList);
+			if(_btn1 != null)
 			{
-				btn1.setEnabled(lmScenNames.getSize() > 0);
+				_btn1.setEnabled(_lmScenNames.getSize() > 0);
 			}
 		}
 	}
@@ -448,12 +464,12 @@ public class FileDialogBO implements ActionListener
 
 		private static final long serialVersionUID = -3040003845509293885L;
 
-		private final JFileChooser2 theOwner;
-		private final Map<String, String> theToolTips = new HashMap<String, String>();
+		private final JFileChooser2 _theOwner;
+		private final Map<String, String> _theToolTips = new HashMap<>();
 
 		private FileNameRenderer(JFileChooser2 jFileChooser)
 		{
-			theOwner = jFileChooser;
+			_theOwner = jFileChooser;
 		}
 
 		@Override
@@ -461,51 +477,44 @@ public class FileDialogBO implements ActionListener
 													  boolean cellHasFocus)
 		{
 			JLabel lbl = (JLabel) super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
-			if(!theOwner.toolTipFlag)
+			if(!_theOwner._toolTipFlag)
 			{
-				theToolTips.clear();
+				_theToolTips.clear();
 				File folder = new File(System.getProperty("user.dir") + "\\Scenarios"); // change
 				// to
 				// read
 				// current
 				// directory
 				File[] listOfFiles = folder.listFiles();
-
-				for(int i = 0; i < listOfFiles.length; i++)
+				if(listOfFiles != null)
 				{
-					if(listOfFiles[i].isFile())
+					for(final File listOfFile : listOfFiles)
 					{
-						if(listOfFiles[i].getName().toLowerCase().endsWith(".txt"))
+						if(listOfFile.isFile() && listOfFile.getName().toLowerCase().endsWith(".txt"))
 						{
-							try(FileInputStream fin = new FileInputStream(listOfFiles[i]);
+							try(FileInputStream fin = new FileInputStream(listOfFile);
 								BufferedReader br = new BufferedReader(new InputStreamReader(fin)))
 							{
 								String theKey = br.readLine().toLowerCase();
 								String theValue = br.readLine() + "\n" + br.readLine() + "\n" + br.readLine();
-								theToolTips.put(theKey.toLowerCase(), theValue);
+								_theToolTips.put(theKey.toLowerCase(), theValue);
 							}
 							catch(IOException e1)
 							{
 								LOG.debug(e1.getMessage());
 
 							}
-
 						}
+						// need to flag when directory
+						_theOwner._toolTipFlag = true;
+						// changes
 					}
-					theOwner.toolTipFlag = true; // need to flag when directory
-					// changes
 				}
 			}
 			File file = new File(String.valueOf(value));
-
-			if(theToolTips.containsKey(file.getName().toLowerCase()))
-			{
-				lbl.setToolTipText(theToolTips.get(file.getName().toLowerCase()));
-			}
-			else
-			{
-				lbl.setToolTipText("No scenario information for this file");
-			}
+			String tooltip = _theToolTips.getOrDefault(file.getName().toLowerCase(),
+					"No scenario information for this file");
+			lbl.setToolTipText(tooltip);
 			lbl.setText(file.getName());
 			return lbl;
 		}
@@ -521,7 +530,7 @@ public class FileDialogBO implements ActionListener
 	{
 		private static final long serialVersionUID = -150877374751505363L;
 
-		private boolean toolTipFlag = false;
+		private boolean _toolTipFlag = false;
 
 		private Component findJList(Component comp)
 		{
@@ -533,9 +542,9 @@ public class FileDialogBO implements ActionListener
 			if(comp instanceof Container)
 			{
 				Component[] components = ((Container) comp).getComponents();
-				for(int i = 0; i < components.length; i++)
+				for(final Component component : components)
 				{
-					Component child = findJList(components[i]);
+					Component child = findJList(component);
 					if(child != null)
 					{
 						return child;
@@ -549,11 +558,11 @@ public class FileDialogBO implements ActionListener
 		public int showOpenDialog(Component c)
 		{
 			JList myList = (JList) findJList(this);
-			if (myList != null)
+			if(myList != null)
 			{
 				myList.setCellRenderer(new FileNameRenderer(this));
 			}
-			toolTipFlag = false;
+			_toolTipFlag = false;
 			return super.showOpenDialog(c);
 		}
 	}
@@ -574,7 +583,7 @@ public class FileDialogBO implements ActionListener
 			setFont(list.getFont());
 			setBackground(list.getBackground());
 			setForeground(list.getForeground());
-			setText(((RBListItemBO) value).toString2());
+			setText(((RBListItemBO) value).getLabel());
 			this.setToolTipText(value.toString() + " 	\n" + ((RBListItemBO) value).getSVFilename());
 			return this;
 		}

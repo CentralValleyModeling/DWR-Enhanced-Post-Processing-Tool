@@ -17,7 +17,7 @@
 		<relativePath>../eppt-parent</relativePath>
 	</parent>
 	<artifactId>eppt-quickresults</artifactId>
-
+	<name>EPPT Quick Results</name>
 	<dependencies>
 		<dependency>
 			<groupId>gov.ca.water</groupId>
@@ -41,6 +41,13 @@
 			<artifactId>junit-jupiter-engine</artifactId>
 			<version>5.3.1</version>
 			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>hec</groupId>
+			<artifactId>javaHeclib</artifactId>
+			<version>7-GS</version>
+			<type>dll</type>
+			<scope>runtime</scope>
 		</dependency>
 	</dependencies>
 </project>

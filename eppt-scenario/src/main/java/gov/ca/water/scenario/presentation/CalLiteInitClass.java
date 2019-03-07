@@ -11,28 +11,25 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.Container;
 import java.awt.Dimension;
-import java.awt.event.ActionListener;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 import java.awt.event.ItemListener;
-import java.awt.event.MouseListener;
-import java.util.ArrayList;
 import java.util.List;
 import javax.swing.*;
 import javax.swing.border.LineBorder;
 import javax.swing.event.ChangeListener;
 
-import calsim.app.AppUtils;
-import calsim.app.DerivedTimeSeries;
-import calsim.app.MultipleTimeSeries;
-import calsim.gui.GuiUtils;
 import gov.ca.water.businessservice.IAllButtonsDele;
 import gov.ca.water.businessservice.IApplyDynamicConDele;
+import gov.ca.water.businessservice.ISeedDataSvc;
+import gov.ca.water.businessservice.IVerifyControlsDele;
 import gov.ca.water.businessservice.IXMLParsingSvc;
 import gov.ca.water.businessservice.impl.AllButtonsDeleImp;
 import gov.ca.water.businessservice.impl.ApplyDynamicConDeleImp;
+import gov.ca.water.businessservice.impl.DynamicControlSvcImpl;
+import gov.ca.water.businessservice.impl.SeedDataSvcImpl;
 import gov.ca.water.businessservice.impl.VerifyControlsDeleImp;
 import gov.ca.water.businessservice.impl.XMLParsingSvcImpl;
 import gov.ca.water.calgui.EpptInitializationException;
@@ -40,20 +37,13 @@ import gov.ca.water.calgui.bo.CalLiteGUIException;
 import gov.ca.water.calgui.bo.DataTableModel;
 import gov.ca.water.calgui.bo.FileDialogBO;
 import gov.ca.water.calgui.bo.GUILinks2BO;
-import gov.ca.water.calgui.bo.RBListItemBO;
 import gov.ca.water.calgui.bo.ResultUtilsBO;
-import gov.ca.water.calgui.bus_delegate.IVerifyControlsDele;
 import gov.ca.water.calgui.bus_service.IScenarioSvc;
-import gov.ca.water.calgui.bus_service.ISeedDataSvc;
 import gov.ca.water.calgui.bus_service.ITableSvc;
-import gov.ca.water.calgui.bus_service.impl.DynamicControlSvcImpl;
 import gov.ca.water.calgui.bus_service.impl.ModelRunSvcImpl;
 import gov.ca.water.calgui.bus_service.impl.ScenarioSvcImpl;
-import gov.ca.water.calgui.bus_service.impl.SeedDataSvcImpl;
 import gov.ca.water.calgui.bus_service.impl.TableSvcImpl;
 import gov.ca.water.calgui.constant.Constant;
-import gov.ca.water.calgui.presentation.DisplayFrame;
-import gov.ca.water.calgui.presentation.WRIMSGUILinks;
 import gov.ca.water.calgui.tech_service.IAuditSvc;
 import gov.ca.water.calgui.tech_service.IDialogSvc;
 import gov.ca.water.calgui.tech_service.IErrorHandlingSvc;
@@ -64,8 +54,6 @@ import gov.ca.water.scenario.ui.JLinkedSlider;
 import org.apache.log4j.Logger;
 import org.jfree.util.Log;
 import org.swixml.SwingEngine;
-import vista.set.DataReference;
-import vista.set.Group;
 
 /**
  * This class is for initializing the Application and adding the Action, Item,
@@ -80,37 +68,7 @@ public class CalLiteInitClass
 	private  SwingEngine _swingEngine;
 	private final IAuditSvc _auditSvc = AuditSvcImpl.getAuditSvcImplInstance();
 
-	/**
-	 * Helper function that scans GUI for a button with the indicated label
-	 * starting with a given component. Used in CalLite GUI to find the "Open"
-	 * button on the CLG panel and replace the associated action.
-	 *
-	 * @param comp Starting component. Function recurses through childre.n
-	 * @param text Text to match on JButton
-	 * @return JButton component with specified label
-	 */
-	public static Component findFirstButtonMatchingText(Component comp, String text)
-	{
 
-		if((comp instanceof JButton) && ((JButton) comp).getText().equals(text))
-		{
-			return comp;
-		}
-
-		if(comp instanceof Container)
-		{
-			Container container = (Container) comp;
-			for(int i = 0; i < container.getComponentCount(); i++)
-			{
-				Component comp2 = findFirstButtonMatchingText(container.getComponent(i), text);
-				if(comp2 != null)
-				{
-					return comp2;
-				}
-			}
-		}
-		return null;
-	}
 
 	/**
 	 * This method is called to initialize the ui.
@@ -186,42 +144,8 @@ public class CalLiteInitClass
 			JButton btnClearAll = (JButton) swingEngine.find("btnClearScenario");
 			btnClearAll.addActionListener(fdDSSFiles);
 
-			// Set up month spinners on result page
-			JSpinner spnSM = (JSpinner) swingEngine.find("spnStartMonth");
-			ResultUtilsBO.SetMonthModelAndIndex(spnSM, 9, resultUtilsBO, true);
-			JSpinner spnEM = (JSpinner) swingEngine.find("spnEndMonth");
-			ResultUtilsBO.SetMonthModelAndIndex(spnEM, 8, resultUtilsBO, true);
-			// Set up year spinners
-			JSpinner spnSY = (JSpinner) swingEngine.find("spnStartYear");
-			ResultUtilsBO.SetNumberModelAndIndex(spnSY, 1921, 1921, 2003, 1, "####", resultUtilsBO, true);
-			JSpinner spnEY = (JSpinner) swingEngine.find("spnEndYear");
-			ResultUtilsBO.SetNumberModelAndIndex(spnEY, 2003, 1921, 2003, 1, "####", resultUtilsBO, true);
-			// Set up report list
-			JList<?> lstReports = (JList<?>) swingEngine.find("lstReports");
-			lstReports.setBorder(new LineBorder(Color.gray, 1));
-			lstReports.setVisible(true);
 
-			// For Custom Results ....
 
-			WRIMSGUILinks.buildWRIMSGUI((JFrame) _swingEngine.find(Constant.MAIN_FRAME_NAME),
-					(JPanel) _swingEngine.find("WRIMS"));
-			// Replace WRIMS GUI display action with CalLite GUI action
-			JButton retrieveBtn = GuiUtils.getCLGPanel().getRetrievePanel().getRetrieveBtn();
-			for (ActionListener al : retrieveBtn.getActionListeners())
-			{
-				retrieveBtn.removeActionListener(al);
-			}
-			retrieveBtn.addActionListener(arg0 -> retrieve(dialogSvc));
-			Component openButtonComponent = findFirstButtonMatchingText(GuiUtils.getCLGPanel(), "Open");
-			if (openButtonComponent != null)
-			{
-				JButton openButton = (JButton) openButtonComponent;
-				for (ActionListener al : openButton.getActionListeners())
-				{
-					openButton.removeActionListener(al);
-				}
-				openButton.addActionListener(arg0 -> retrieve2(errorHandlingSvc, dialogSvc));
-			}
 			// Schematic views
 
 			new SchematicMain((JPanel) swingEngine.find("schematic_holder"),
@@ -241,7 +165,49 @@ public class CalLiteInitClass
 			jTabbedPane.setBackgroundAt(7, Color.WHITE);
 			jTabbedPane.setBackgroundAt(8, Color.WHITE);
 			jTabbedPane.setBackgroundAt(9, Color.WHITE);
-			jTabbedPane.addChangeListener(resultUtilsBO);
+			jTabbedPane.addChangeListener(e ->
+			{
+				Component c = (Component) e.getSource();
+				String lcName = c.getName().toLowerCase();
+				if("spn".equals(lcName.substring(0, 3)))
+				{
+					// Constrain run times to [10/1921,9/2003]
+					int syr = (Integer) ((JSpinner) _swingEngine.find("spnRunStartYear")).getValue();
+					int eyr = (Integer) ((JSpinner) _swingEngine.find("spnRunEndYear")).getValue();
+					int smo = ResultUtilsBO.getResultUtilsInstance(null).monthToInt(
+							((String) ((JSpinner) _swingEngine.find("spnRunStartMonth")).getValue()).trim());
+					int emo = ResultUtilsBO.getResultUtilsInstance(null).monthToInt(
+							((String) ((JSpinner) _swingEngine.find("spnRunEndMonth")).getValue()).trim());
+					if((syr == 1921) && (smo < 10))
+					{
+						((JSpinner) _swingEngine.find("spnRunStartMonth")).setValue("Oct");
+					}
+					if((eyr == 2003) && (emo > 9))
+					{
+						((JSpinner) _swingEngine.find("spnRunEndMonth")).setValue("Sep");
+					}
+					// Constrain display times the same way [inefficient?]
+					syr = (Integer) ((JSpinner) _swingEngine.find("spnStartYear")).getValue();
+					eyr = (Integer) ((JSpinner) _swingEngine.find("spnEndYear")).getValue();
+					smo = ResultUtilsBO.getResultUtilsInstance(null).monthToInt(
+							((String) ((JSpinner) _swingEngine.find("spnStartMonth")).getValue()).trim());
+					emo = ResultUtilsBO.getResultUtilsInstance(null).monthToInt(
+							((String) ((JSpinner) _swingEngine.find("spnEndMonth")).getValue()).trim());
+					if((syr == 1921) && (smo < 10))
+					{
+						((JSpinner) _swingEngine.find("spnStartMonth")).setValue("Oct");
+					}
+					if((eyr == 2003) && (emo > 9))
+					{
+						((JSpinner) _swingEngine.find("spnEndMonth")).setValue("Sep");
+					}
+				}
+				else if("tabbedpane1".equals(lcName))
+				{
+					JMenuBar menuBar = (JMenuBar) this._swingEngine.find("menu");
+					menuBar.setSize(150, 20);
+				}
+			});
 
 			JMenuBar menuBar = (JMenuBar) swingEngine.find("menu");
 			((JFrame) swingEngine.find(Constant.MAIN_FRAME_NAME)).setJMenuBar(menuBar);
@@ -433,25 +399,6 @@ public class CalLiteInitClass
 	}
 
 	/**
-	 * This method will set the mouse listener for the component and for all
-	 * it's children which are Check Box.
-	 *
-	 * @param component     The component to which you want to set the MouseListener.
-	 * @param mouseListener Object of the Mouse Listener.
-	 */
-	private void setCheckBoxorMouseListener(Component component, Object mouseListener)
-	{
-		if(component instanceof JCheckBox)
-		{
-			component.addMouseListener((MouseListener) mouseListener);
-		}
-		for(Component child : ((Container) component).getComponents())
-		{
-			setCheckBoxorMouseListener(child, mouseListener);
-		}
-	}
-
-	/**
 	 * This method is to add focus listeners to regulations checkboxes tracking
 	 * the changes.
 	 *
@@ -609,117 +556,8 @@ public class CalLiteInitClass
 		spnRunEndYear.addChangeListener(listener);
 	}
 
-	/**
-	 * Data retrieval for single DSS from Custom Results dashboard; modeled on
-	 * calsim.gui.GeneralRetrievePanel.retrieve()
-	 */
-	private void retrieve(IDialogSvc dialogSvc)
-	{
-		JList<RBListItemBO> lstScenarios = (JList<RBListItemBO>) _swingEngine.find("SelectedList");
-		if(!AppUtils.baseOn)
-		{
-			dialogSvc.getOK("DSS not selected! The Base DSS files need to be selected", JOptionPane.WARNING_MESSAGE);
-			return;
-		}
-		try
-		{
-			List<RBListItemBO> scenarios = new ArrayList<>();
-			ListModel<RBListItemBO> model = lstScenarios.getModel();
-			for(int i = 0; i < model.getSize(); i++)
-			{
-				scenarios.add(model.getElementAt(i));
-			}
-			String noRowsString = "";
-			JTable table = GuiUtils.getCLGPanel().getRetrievePanel().getTable();
-			if(table.getRowCount() == 0)
-			{
-				noRowsString = " after using \"Filter\" to load variables";
-			}
-			Group group = GuiUtils.getCLGPanel().getRetrievePanel().getGroup();
-			if(group == null || table.getSelectedRowCount() == 0)
-			{
-				dialogSvc.getOK("Variables not selected! Select one or more variables" + noRowsString,
-						JOptionPane.INFORMATION_MESSAGE);
-				return;
-			}
-			// checked if count > 0 above
-			int[] rows = table.getSelectedRows();
-			DataReference[] array = new DataReference[rows.length];
-			for(int i = 0; i < rows.length; i++)
-			{
-				array[i] = group.getDataReference(rows[i]);
-			}
-			for(int i = 0; i < rows.length; i++)
-			{
-				String[] parts = array[i].getName().split("::");
-				String[] parts2 = parts[2].split("/");
-				parts[2] = "/" + parts2[1] + "/" + parts2[2] + "/" + parts2[3] + "/" + parts[3] + "/" + parts2[5] + "/"
-						+ parts2[6] + "/";
 
-				if(parts[1].toUpperCase().contains(("_SV.DSS")))
-				{
-					DisplayFrame.showDisplayFrames(_swingEngine,
-							DisplayFrame.quickState(_swingEngine) + ";Locs-" + parts[2] + ";Index-"
-							+ parts[2] + ";File-" + parts[1], scenarios);
-				}
-				else
-				{
-					DisplayFrame.showDisplayFrames(_swingEngine,
-							DisplayFrame.quickState(_swingEngine) + ";Locs-" + parts[2] + ";Index-" + parts[2],
-							scenarios);
-				}
-			}
-		}
-		catch(RuntimeException e)
-		{
-			LOGGER.debug("Error in retrieve() -", e);
-		}
-	}
 
-	/**
-	 * Data retrieval for DTS/MTS from Custom Results dashboard; modeled on
-	 * calsim.gui.GeneralRetrievePanel.retrieve()
-	 */
 
-	private void retrieve2(IErrorHandlingSvc errorHandlingSvc, IDialogSvc dialogSvc)
-	{
-		JList<RBListItemBO> lstScenarios = (JList<RBListItemBO>) _swingEngine.find("SelectedList");
-		if(!AppUtils.baseOn)
-		{
-			dialogSvc.getOK("DSS not selected! The Base DSS files need to be selected", JOptionPane.WARNING_MESSAGE);
-			return;
-		}
-
-		DerivedTimeSeries dts = GuiUtils.getCLGPanel().getDtsTreePanel().getTable().getDTS();
-		MultipleTimeSeries mts = GuiUtils.getCLGPanel().getDtsTreePanel().getTable().getMTS();
-
-		if(((mts == null) && (dts == null)) || ((dts != null) && (dts.getBParts().isEmpty()))
-				|| ((mts != null) && (mts.getNumberOfDataReferences() < 1)))
-		{
-			dialogSvc.getOK("Nothing to display! Specify DTS or MTS data reference", JOptionPane.WARNING_MESSAGE);
-
-			return;
-		}
-
-		try
-		{
-			List<RBListItemBO> scenarios = new ArrayList<>();
-			ListModel<RBListItemBO> model = lstScenarios.getModel();
-			for(int i = 0; i < model.getSize(); i++)
-			{
-				scenarios.add(model.getElementAt(i));
-			}
-			DisplayFrame.showDisplayFramesWRIMS(_swingEngine,
-					DisplayFrame.quickState(_swingEngine) + ";Locs-;Index-;File-", scenarios, dts,
-					mts);
-
-		}
-		catch(Exception e)
-		{
-			LOGGER.debug("Error in retrieve2() -", e);
-			errorHandlingSvc.businessErrorHandler(null, e);
-
-		}
-	}
 
 }

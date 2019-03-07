@@ -23,8 +23,6 @@ import java.util.Vector;
 import javax.swing.*;
 import javax.swing.event.TreeModelEvent;
 import javax.swing.event.TreeModelListener;
-import javax.swing.event.TreeSelectionEvent;
-import javax.swing.event.TreeSelectionListener;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.TreeNode;
 import javax.swing.tree.TreePath;
@@ -374,13 +372,13 @@ public class DtsTreeModel extends GeneralTreeModel
 		}
 	}
 
-	public void changeMTSName(String name)
+	private void changeMTSName(String name)
 	{
 		if(_mts != null)
 		{
 			DefaultMutableTreeNode node = (DefaultMutableTreeNode) (path.getLastPathComponent());
-			if(checkForDuplicates(name, (DefaultMutableTreeNode) getRoot()) > 1 && !name.toUpperCase().equals(
-					oldname.toUpperCase()))
+			if(checkForDuplicates(name, (DefaultMutableTreeNode) getRoot()) > 1 && !name.equalsIgnoreCase(
+					oldname))
 			{
 				JOptionPane.showMessageDialog(null, "Cannot rename node. A node by this name already exists.",
 						"Cannot Perform", JOptionPane.WARNING_MESSAGE);
@@ -408,32 +406,29 @@ public class DtsTreeModel extends GeneralTreeModel
 	public void setTree(CalsimTree tree)
 	{
 		_tree = tree;
-		_tree.addTreeSelectionListener(new TreeSelectionListener()
+		_tree.addTreeSelectionListener(e ->
 		{
-			public void valueChanged(TreeSelectionEvent e)
+			path = _tree.getSelectionPath();
+			if(path != null)
 			{
-				path = _tree.getSelectionPath();
-				if(path != null)
+				DefaultMutableTreeNode node = (DefaultMutableTreeNode) (path.getLastPathComponent());
+				String name = (String) node.getUserObject();
+				if(!node.getAllowsChildren() && checkExtension(".dts", name))
 				{
-					DefaultMutableTreeNode node = (DefaultMutableTreeNode) (path.getLastPathComponent());
-					String name = (String) node.getUserObject();
-					if(!node.getAllowsChildren() && checkExtension(".dts", name))
-					{
-						_dts = AppUtils.getCurrentProject().getDTS(name.toUpperCase());
-						DTSOpen();
-						AppUtils.getCurrentProject().setDTSMod(false);
-					}
-					else if(!node.getAllowsChildren() && checkExtension(".mts", name))
-					{
-						_mts = AppUtils.findMTS(name.toUpperCase());
-						MTSOpen();
-						AppUtils.getCurrentProject().setDTSMod(false);
-					}
-					else if(node.getAllowsChildren())
-					{
-						_dts = new DerivedTimeSeries(" ");
-						_dtp.setDTSTable(_dts, null);
-					}
+					_dts = AppUtils.getCurrentProject().getDTS(name.toUpperCase());
+					DTSOpen();
+					AppUtils.getCurrentProject().setDTSMod(false);
+				}
+				else if(!node.getAllowsChildren() && checkExtension(".mts", name))
+				{
+					_mts = AppUtils.findMTS(name.toUpperCase());
+					MTSOpen();
+					AppUtils.getCurrentProject().setDTSMod(false);
+				}
+				else if(node.getAllowsChildren())
+				{
+					_dts = new DerivedTimeSeries(" ");
+					_dtp.setDTSTable(_dts, null);
 				}
 			}
 		});
@@ -462,7 +457,7 @@ public class DtsTreeModel extends GeneralTreeModel
 		removeNode(node);
 	}
 
-	public DefaultMutableTreeNode copyAllChildren(DefaultMutableTreeNode parent)
+	private DefaultMutableTreeNode copyAllChildren(DefaultMutableTreeNode parent)
 	{
 		DefaultMutableTreeNode newparent = (DefaultMutableTreeNode) parent.clone();
 		if(parent.getChildCount() == 0)
