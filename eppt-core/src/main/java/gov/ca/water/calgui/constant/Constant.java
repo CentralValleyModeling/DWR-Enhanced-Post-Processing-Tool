@@ -23,6 +23,7 @@ public final class Constant
 	public static final String DSS_EXT = ".dss";
 	public static final String TXT_EXT = ".txt";
 	public static final String DV_NAME = "_DV";
+	public static final String CONFIG_DIR = System.getProperty("user.dir") + "\\dwr_eppt\\config\\";
 	public static final String SCENARIOS_DIR = System.getProperty("user.dir") + "//Scenarios//";
 	public static final String RUN_DETAILS_DIR = SCENARIOS_DIR + "Run_Details//";
 	public static final String MODEL_W2_DIR = System.getProperty("user.dir") + "//Model_w2//";

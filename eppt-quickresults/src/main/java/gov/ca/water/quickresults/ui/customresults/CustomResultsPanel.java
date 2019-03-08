@@ -42,7 +42,7 @@ import vista.set.Group;
 public class CustomResultsPanel extends EpptPanel
 {
 	private static final Logger LOGGER = Logger.getLogger(QuickResultsPanel.class.getName());
-	private static final String CUSTOM_RESULTS_XML_PATH = "ui/Custom_Results.xml";
+	private static final String CUSTOM_RESULTS_XML_FILE = "Custom_Results.xml";
 	private final IErrorHandlingSvc _errorHandlingSvc = new ErrorHandlingSvcImpl();
 	private final IDialogSvc _dialogSvc = DialogSvcImpl.getDialogSvcInstance();
 
@@ -51,8 +51,8 @@ public class CustomResultsPanel extends EpptPanel
 		try
 		{
 			super.setLayout(new BorderLayout());
-			Container swixmlQuickResultsPanel = getSwingEngine().render(CUSTOM_RESULTS_XML_PATH);
-			super.add(swixmlQuickResultsPanel);
+			Container swixmlCustomResultsPanel = renderSwixml(CUSTOM_RESULTS_XML_FILE);
+			super.add(swixmlCustomResultsPanel);
 			WRIMSGUILinks.buildWRIMSGUI((JPanel) getSwingEngine().find("WRIMS"));
 			JButton retrieveBtn = GuiUtils.getCLGPanel().getRetrievePanel().getRetrieveBtn();
 			for(ActionListener al : retrieveBtn.getActionListeners())
@@ -73,7 +73,7 @@ public class CustomResultsPanel extends EpptPanel
 		}
 		catch(Exception e)
 		{
-			LOGGER.error("Error setting up quick results swing xml: " + CUSTOM_RESULTS_XML_PATH, e);
+			LOGGER.error("Error setting up quick results swing xml: " + CUSTOM_RESULTS_XML_FILE, e);
 			throw new IllegalStateException(e);
 		}
 	}

@@ -31,7 +31,7 @@ import org.jfree.data.time.Month;
 public class ScenarioConfigurationPanel extends EpptPanel
 {
 	private static final Logger LOGGER = Logger.getLogger(ScenarioConfigurationPanel.class.getName());
-	private static final String SCENARIO_CONFIGURATION_XML_PATH = "ui/Scenario_Configuration.xml";
+	private static final String SCENARIO_CONFIGURATION_XML_FILE = "Scenario_Configuration.xml";
 	private static final ScenarioConfigurationPanel SINGLETON = new ScenarioConfigurationPanel();
 	private static IErrorHandlingSvc errorHandlingSvc = new ErrorHandlingSvcImpl();
 
@@ -40,7 +40,7 @@ public class ScenarioConfigurationPanel extends EpptPanel
 		try
 		{
 			super.setLayout(new BorderLayout());
-			Container swixmlScenarioConfigurationPanel = getSwingEngine().render(SCENARIO_CONFIGURATION_XML_PATH);
+			Container swixmlScenarioConfigurationPanel = renderSwixml(SCENARIO_CONFIGURATION_XML_FILE);
 			super.add(swixmlScenarioConfigurationPanel);
 			// Set up month spinners on result page
 			JSpinner spnSM = (JSpinner) getSwingEngine().find("spnStartMonth");
@@ -55,6 +55,7 @@ public class ScenarioConfigurationPanel extends EpptPanel
 		}
 		catch(Exception e)
 		{
+			LOGGER.error("Error setting up quick results swing xml: " + SCENARIO_CONFIGURATION_XML_FILE, e);
 			throw new IllegalStateException(e);
 		}
 	}

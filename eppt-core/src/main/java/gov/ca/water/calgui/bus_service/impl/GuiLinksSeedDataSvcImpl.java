@@ -22,6 +22,7 @@ import gov.ca.water.calgui.tech_service.IFileSystemSvc;
 import gov.ca.water.calgui.tech_service.impl.FileSystemSvcImpl;
 import org.apache.log4j.Logger;
 
+import static gov.ca.water.calgui.constant.Constant.CONFIG_DIR;
 import static gov.ca.water.calgui.constant.Constant.CSV_EXT;
 
 /**
@@ -35,7 +36,7 @@ import static gov.ca.water.calgui.constant.Constant.CSV_EXT;
 public final class GuiLinksSeedDataSvcImpl implements IGuiLinksSeedDataSvc
 {
 	private static final Logger LOG = Logger.getLogger(GuiLinksSeedDataSvcImpl.class.getName());
-	private static final String GUI_LINKS3_FILENAME = "eppt/modules/Config/GUI_Links3" + CSV_EXT;
+	private static final String GUI_LINKS3_FILENAME = CONFIG_DIR + "/GUI_Links3" + CSV_EXT;
 	private static IGuiLinksSeedDataSvc _seedDataSvc;
 
 	private final Map<String, GUILinks3BO> _guiLinks3Map = new HashMap<>();

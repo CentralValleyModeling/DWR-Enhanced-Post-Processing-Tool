@@ -28,14 +28,14 @@ public class QuickResultsPanel extends EpptPanel
 {
 	private static final Logger LOGGER = Logger.getLogger(QuickResultsPanel.class.getName());
 	private static final String LIST_REPORTS_ID = "lstReports";
-	private static final String QUICK_RESULTS_XML_PATH = "ui/Quick_Results.xml";
+	private static final String QUICK_RESULTS_XML_FILE = "Quick_Results.xml";
 
 	public QuickResultsPanel()
 	{
 		try
 		{
 			super.setLayout(new BorderLayout());
-			Container swixmlQuickResultsPanel = getSwingEngine().render(QUICK_RESULTS_XML_PATH);
+			Container swixmlQuickResultsPanel = renderSwixml(QUICK_RESULTS_XML_FILE);
 			super.add(swixmlQuickResultsPanel);
 			Component reptabbedPane = getSwingEngine().find("reptabbedPane");
 			setCheckBoxorMouseListener(reptabbedPane, new QuickResultsMouseListener());
@@ -46,7 +46,7 @@ public class QuickResultsPanel extends EpptPanel
 		}
 		catch(Exception e)
 		{
-			LOGGER.error("Error setting up quick results swing xml: " + QUICK_RESULTS_XML_PATH, e);
+			LOGGER.error("Error setting up quick results swing xml: " + QUICK_RESULTS_XML_FILE, e);
 			throw new IllegalStateException(e);
 		}
 	}
