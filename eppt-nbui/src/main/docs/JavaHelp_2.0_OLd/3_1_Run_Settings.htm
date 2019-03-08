@@ -1,0 +1,62 @@
+<!--
+  ~ Copyright (c) 2019
+  ~ California Department of Water Resources
+  ~ All Rights Reserved.  DWR PROPRIETARY/CONFIDENTIAL.
+  ~ Source may not be released without written approval from DWR
+  -->
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
+    <meta content="Adobe RoboHelp 10" name="generator"/>
+    <title>3.1. Run Settings</title>
+    <link href="default.css" rel="StyleSheet" type="text/css"/>
+    <style title="hcp" type="text/css">
+        <!--
+        span.hcp1 {
+            font-weight: bold;
+        }
+
+        -->
+    </style>
+</head>
+
+<body>
+
+
+<h2>3.1. Run Settings</h2>
+<p>The Run Settings dashboard allows the user to load, save, run, select
+    scenario(s), view scenario settings, enter a scenario description, initiate
+    batch runs, specify the run period, run type, and specify the run basis.</p>
+<p>&#160;</p>
+<p>Scenario settings are saved with a file extension .cls (CalLite Scenario).
+    The file is portable and can be easily loaded by another user.</p>
+<p>&#160;</p>
+<p>The <span class="hcp1"><b>View Scenario Settings</b></span> button
+    allows the user to view all selected scenario options in a summarized
+    table. This should be checked to ensure that all settings are correct
+    before running.</p>
+<p>&#160;</p>
+<p>The Run Period can be set to any period starting no earlier than Oct
+    1921 and ending no later than Sep 2003 (water years 1922-2003). In this
+    version of CalLite, only deterministic run types are possible. Probabilistic
+    runs may be added in later versions of the model. The Run Basis sets the
+    type of CalSim II run to use as a baseline of the CalLite run. Currently,
+    three run bases are available: Biological Opinion RPAs, Pre-Biological
+    Opinion RPAs, and D-1485. The base CalSim II run affects the AD (accretion/depletion)
+    terms that are used in CalLite (through the SV input file) and also the
+    WSI-DI tables. </p>
+<p>&#160;</p>
+<p>If shortages associated with AD terms in the North of Delta area exist,
+    CalLite will display a warning message at the end of the simulation. See
+    Appendix A of the CalLite Reference Manual for a further description of
+    AD terms and shortages.</p>
+<p>&#160;</p>
+<p>The <span class="hcp1"><b>Batch Runs</b></span> option provides
+    the capability to run up to four CalLite studies simultaneously, which
+    is more efficient than having to parameterize and run each individual
+    study through a separate GUI instance.</p>
+</body>
+</html>

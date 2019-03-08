@@ -1,0 +1,77 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!--
+  ~ Copyright (c) 2019
+  ~ California Department of Water Resources
+  ~ All Rights Reserved.  DWR PROPRIETARY/CONFIDENTIAL.
+  ~ Source may not be released without written approval from DWR
+  -->
+
+<!DOCTYPE index PUBLIC "-//Sun Microsystems Inc.//DTD JavaHelp Index Version 2.0//EN" "http://java.sun.com/products/javahelp/index_2_0.dtd">
+<index version="2.0">
+	<indexitem text="Accretion/depletion" target="Run Settings"/>
+	<indexitem text="Map Display" target="Web Map (Beta)"/>
+	<indexitem text="Run Settings" target="Run Settings"/>
+	<indexitem text="ANN X2" target="Hydroclimate"/>
+	<indexitem text="Article 21" target="Demands"/>
+	<indexitem text="Article 56" target="Demands"/>
+	<indexitem text="Artificial Neural Network" target="Hydroclimate"/>
+	<indexitem text="Biological Opinions" target="Other regulations"/>
+	<indexitem text="BO" target="D1641/D1485 Regulations"/>
+	<indexitem text="BO RPA" target="D1641/D1485 Regulations"/>
+	<indexitem text="California Aqueduct" target="Operations"/>
+	<indexitem text="CalLite Google Map" target="Web Map (Beta)"/>
+	<indexitem text="CalLite GUI:1. Introduction" target="Introduction"/>
+	<indexitem text="CalLite Results window" target="Tutorial"/>
+	<indexitem text="CalLite Scenario" target="Run Settings"/>
+	<indexitem text="CALSIM:1. Introduction" target="Introduction"/>
+	<indexitem text="CALSIM:4.4. External PDF" target="External PDF"/>
+	<indexitem text="CalSim II:1. Introduction" target="Introduction"/>
+	<indexitem text="CalSim II:3.6. Operations" target="Operations"/>
+	<indexitem text="CalSim II:3.1. Run Settings" target="Run Settings"/>
+	<indexitem text="Central Valley" target="Introduction"/>
+	<indexitem text="Central Valley Project" target="Introduction"/>
+	<indexitem text="Current Sea Level" target="Hydroclimate"/>
+	<indexitem text="Custom Results Dashboard" target="Custom Results"/>
+	<indexitem text="CVC Wheeling" target="Operations"/>
+	<indexitem text="CVP:1. Introduction" target="Introduction"/>
+	<indexitem text="CVP:4.4. External PDF" target="External PDF"/>
+	<indexitem text="CVP:3.6. Operations" target="Operations"/>
+	<indexitem text="CVP:3.5.3. Other regulations" target="Other regulations"/>
+	<indexitem text="CVP:3.3. Demands" target="Demands"/>
+	<indexitem text="CVP:5. Tutorial" target="Tutorial"/>
+	<indexitem text="CVP Operations" target="Operations"/>
+	<indexitem text="CVP South" target="Demands"/>
+	<indexitem text="D1485" target="Run Settings"/>
+	<indexitem text="D1641" target="Other regulations"/>
+	<indexitem text="Dataset" target="Tutorial"/>
+	<indexitem text="Delta Flow Criteria" target="Other regulations"/>
+	<indexitem text="Demands:3.3. Demands" target="Demands"/>
+	<indexitem text="Demands:5. Tutorial" target="Tutorial"/>
+	<indexitem text="Diversion" target="Operations"/>
+	<indexitem text="DMC" target="Operations"/>
+	<indexitem text="Future LOD" target="Hydroclimate"/>
+	<indexitem text="Hydroclimate:1. Introduction" target="Introduction"/>
+	<indexitem text="Hydroclimate:3.2. Hydroclimate" target="Hydroclimate"/>
+	<indexitem text="Map View" target="Map View"/>
+	<indexitem text="Quick Select" target="Quick Select"/>
+	<indexitem text="Regulations:3.5. Regulations" target="Regulations"/>
+	<indexitem text="Regulations:5. Tutorial" target="Tutorial"/>
+	<indexitem text="Results" target="Results"/>
+	<indexitem text="Run Basis" target="Hydroclimate"/>
+	<indexitem text="Run Scenario" target="Tutorial"/>
+	<indexitem text="Sacramento" target="Quick Results"/>
+	<indexitem text="Sacramento River" target="Other regulations"/>
+	<indexitem text="San Joaquin River" target="SJR Controls"/>
+	<indexitem text="Scenario Description" target="Tutorial"/>
+	<indexitem text="Scenario Settings" target="Scenario Settings"/>
+	<indexitem text="Schematic" target="Map View"/>
+	<indexitem text="Shortages" target="Quick Results"/>
+	<indexitem text="Trinity River" target="Quick Results"/>
+	<indexitem text="Vernalis" target="SJR Controls"/>
+	<indexitem text="View Scenario Settings" target="Run Settings"/>
+	<indexitem text="Water Supply Index" target="Operations"/>
+	<indexitem text="Web Map" target="Web Map (Beta)"/>
+	<indexitem text="WRIMS" target="Introduction"/>
+	<indexitem text="WRIMS II" target="Introduction"/>
+	<indexitem text="X2" target="Hydroclimate"/>
+</index>

@@ -1,0 +1,81 @@
+<!--
+  ~ Copyright (c) 2019
+  ~ California Department of Water Resources
+  ~ All Rights Reserved.  DWR PROPRIETARY/CONFIDENTIAL.
+  ~ Source may not be released without written approval from DWR
+  -->
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
+    <meta content="Adobe RoboHelp 10" name="generator"/>
+    <title>4.4. External PDF</title>
+    <link href="default.css" rel="StyleSheet" type="text/css"/>
+    <style title="hcp" type="text/css">
+        <!--
+        p.hcp1 {
+            font-weight: bold;
+        }
+
+        p.hcp2 {
+            margin-left: 40px;
+        }
+
+        p.hcp3 {
+            text-align: center;
+        }
+
+        -->
+    </style>
+</head>
+
+<body>
+
+
+<h2>4.4. External PDF</h2>
+<p>This dashboard allows the user to produce a standardized comparison
+    or corroboration report comparing two CalLite scenarios, two CalSim scenarios,
+    or between CalLite and CalSim scenarios. </p>
+<p>&#160;</p>
+<p>The dashboard produces this report by calling one of the CalLite utilities,
+    the CalLite report tool. The report shows storage in major reservoirs,
+    flows at key river segments, CVP and SWP deliveries, and other scenario
+    outputs. </p>
+<p>&#160;</p>
+<p>In order to generate the report, use the Select File buttons to select
+    a report template file (.inp file), two DSS output files, and a report
+    output file name. Next, enter names for each of the two studies to be
+    compared (defaults are set to CalLite 1 and CalLite 2), and finally hit
+    the Generate Report button. Optional information such as notes, assumptions,
+    and modeler name can also be added to the report.</p>
+<p>&#160;</p>
+<p class="hcp1">CalLite-CalLite comparison:</p>
+<p class="hcp2">The default report template file (callite_scenario_comparison.inp)
+    will compare two CalLite scenarios. </p>
+<p>&#160;</p>
+<p class="hcp1">CalSim-CalLite corroboration:</p>
+<p class="hcp2">The report tool can also be used to compare
+    CalLite results to CalSim results. To do this, the DSS Result File #1
+    must be set to the output DSS from a CalSim simulation, the DSS Result
+    File #2 must be set to the output DSS from a CalLite simulation and the
+    report template file must be set to calsim_callite_corroboration.inp.
+    &#160;</p>
+<p>&#160;</p>
+<p class="hcp1">CalSim-CalSim comparison:</p>
+<p class="hcp2">Use the calsim_calsim_corroboration.inp report
+    template file.</p>
+<p>&#160;</p>
+<p>For more detailed description of the report tool, and instructions on
+    how to edit the report template files, see Appendix J in the CalLite Reference
+    Manual.</p>
+<p>&#160;</p>
+<p>&#160;</p>
+<p class="hcp3"><img alt="" border="0" height="778" src="Fig13_External_PDF.jpg" style="border: none;" width="1034"/>
+</p>
+<p class="hcp3"><span style="font-weight: bold;"><b>Figure 
+ 4-5.</b></span> The External PDF dashboard automatically creates a standardized
+    comparison or corroboration reports based on two DV files.</p>
+</body>
+</html>

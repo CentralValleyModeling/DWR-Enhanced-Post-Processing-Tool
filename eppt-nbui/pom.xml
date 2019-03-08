@@ -40,6 +40,13 @@
 								<include>*</include>
 							</includes>
 						</nbmResource>
+						<nbmResource>
+							<directory>${project.basedir}/src/main/docs</directory>
+							<targetPath>docs</targetPath>
+							<includes>
+								<include>**</include>
+							</includes>
+						</nbmResource>
 					</nbmResources>
 				</configuration>
 			</plugin>

@@ -1,0 +1,111 @@
+<!--
+  ~ Copyright (c) 2019
+  ~ California Department of Water Resources
+  ~ All Rights Reserved.  DWR PROPRIETARY/CONFIDENTIAL.
+  ~ Source may not be released without written approval from DWR
+  -->
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
+    <meta content="Adobe RoboHelp 10" name="generator"/>
+    <title>3.6. Operations</title>
+    <link href="default.css" rel="StyleSheet" type="text/css"/>
+    <style title="hcp" type="text/css">
+        <!--
+        span.hcp1 {
+            font-weight: bold;
+        }
+
+        p.hcp2 {
+            margin-left: 40px;
+            text-decoration: underline;
+        }
+
+        p.hcp3 {
+            margin-left: 40px;
+        }
+
+        img.hcp4 {
+            border: none;
+        }
+
+        p.hcp5 {
+            margin-left: 0px;
+            font-weight: bold;
+            text-align: center;
+        }
+
+        -->
+    </style>
+</head>
+
+<body>
+
+
+<h2>3.6. Operations</h2>
+<p>The operations dashboard has options relating to CVP and SWP system
+    operations, as follows:</p>
+<p>&#160;</p>
+<p><span class="hcp1"><b>CVP Operations and Facilities.</b></span>
+    The checkboxes here can be used to turn on or off three different wheeling
+    operations: Payback Wheeling (D-1485), CVC Wheeling, and Joint Point of
+    Diversion. The option is also available to turn on or off the Delta- Mendota
+    Canal (DMC)/California Aqueduct Intertie. The Intertie project allows
+    the DMC and California Aqueduct to share conveyance capacity, thus increasing
+    export capacity. </p>
+<p>&#160;</p>
+<p>For more detailed description of these operational facilities, see the
+    Reference Manual. </p>
+<p>&#160;</p>
+<p><span class="hcp1"><b>CVP/SWP Allocation Methods.</b></span>
+    Here the user can choose between different CVP and SWP allocation methods.
+    Currently, users have the option for allocation by either Water Supply
+    Index/Delivery Index (WSI/DI) curves or by the Forecast Allocation Method
+    (FAM). </p>
+<p>&#160;</p>
+<p class="hcp2">WSI-DI Method</p>
+<p class="hcp3">The WSI-DI method is the procedure currently
+    used in CalSim II. This logic develops an allocation decision for system-wide
+    CVP and SWP deliveries based on water in storage, forecasts of usable
+    inflow, and storage carryover targets. The allocations for the CVP Water
+    Right, Exchange, and Settlement contractors and SWP Feather River Service
+    Area contractors are dependent on reservoir inflow criteria. South-of-Delta
+    delivery allocations for the CVP are based on water in CVP San Luis storage
+    plus projections of available water for export prior to low point. This
+    is identical to the current procedure used in CalSim II. </p>
+<p>&#160;</p>
+<p class="hcp3">Default WSI/DI curves for both CVP and SWP
+    may be altered by clicking on the appropriate box and editing the values
+    in the table on the right side of the screen. The user should be aware
+    that the WSI-DI curves should be edited with caution. They are carefully
+    developed through iterative simulation of CalSim II, with a particular
+    set of water supplies and demands. More aggressive allocations may result
+    in reservoir storage conditions that are not able to meet regulations
+    through dry years. Relaxed allocations may result in storage levels that
+    create higher flows in some months and unexpected modifications to Delta
+    operations. </p>
+<p>&#160;</p>
+<p class="hcp3"><img alt="" border="0" class="hcp4" height="24" src="image15.gif" width="25"/> <span style="font-weight: bold;
+														 color: #ff0000;"><font
+        color="red"><b>WARNING:</b></font></span>
+    Model results may differ from expected operation, so a careful analysis
+    of the output results by an expert is always necessary. </p>
+<p class="hcp3">&#160;</p>
+<p class="hcp2">FAM Method</p>
+<p class="hcp3">FAM is developed based on the California
+    Allocation Module (CAM). The model is developed by utilizing the multi-step
+    optimization functions in WRIMS 2. FAM is coupled with the CalLite model
+    by working as an additional cycle.</p>
+<p class="hcp3">&#160;</p>
+<p style="margin-left: 0px;">For more information about CalLite allocation
+    methods, see Appendix G of the CalLite Reference Manual.</p>
+<p style="margin-left: 0px; font-weight: bold;">&#160;</p>
+<p class="hcp5"><img alt="" border="0" class="hcp4" height="768" src="Fig9_Operations.jpg" width="1024"/></p>
+<p class="hcp5">Figure
+    3-9.<span style="font-weight: normal;"> Operations control dashboard.
+ </span></p>
+</body>
+</html>
