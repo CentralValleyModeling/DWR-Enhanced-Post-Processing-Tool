@@ -658,9 +658,6 @@ public class Project implements Serializable
 		{
 			_dvg = AppUtils.openDSSFile(_dvf);
 		}
-		//if ( _dvg == null ){
-		//  throw new RuntimeException("No file loaded for decision variables!");
-		//}
 		return _dvg;
 	}
 
@@ -675,9 +672,6 @@ public class Project implements Serializable
 		{
 			_svg = AppUtils.openDSSFile(_svf);
 		}
-		//if ( _svg == null ){
-		//  throw new RuntimeException("No file loaded for state variables!");
-		//}
 		return _svg;
 	}
 

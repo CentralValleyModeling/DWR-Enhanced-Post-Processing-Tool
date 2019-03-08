@@ -221,10 +221,6 @@
 					<gridbagconstraints gridx="3" gridy="5" anchor="GridBagConstraints.WEST"/>
 				</checkbox>
 			</panel>
-			<hbox>
-				<gridbagconstraints anchor="GridBagConstraints.WEST" gridx="0" gridy="10" gridwidth="2" insets="0,0,0,0"/>
-				<button text="Help" id="QuickHelp" ActionCommand="AC_Help"/>
-			</hbox>
 		</panel>
 	</panel>
 </panel>

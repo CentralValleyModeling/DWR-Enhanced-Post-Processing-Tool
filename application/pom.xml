@@ -119,6 +119,7 @@
 								<id>extra</id>
 								<goals>
 									<goal>build-installers</goal>
+									<goal>cluster-app</goal>
 								</goals>
 							</execution>
 						</executions>

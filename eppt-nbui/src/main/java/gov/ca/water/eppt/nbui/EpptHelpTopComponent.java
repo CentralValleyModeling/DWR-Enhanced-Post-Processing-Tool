@@ -9,11 +9,13 @@ package gov.ca.water.eppt.nbui;
 import java.awt.BorderLayout;
 import java.net.MalformedURLException;
 import java.net.URL;
+import javax.help.BadIDException;
 import javax.help.HelpSet;
 import javax.help.HelpSetException;
 import javax.help.JHelp;
 
 import gov.ca.water.calgui.EpptInitializationException;
+import org.apache.log4j.Logger;
 import org.openide.awt.ActionID;
 import org.openide.awt.ActionReference;
 import org.openide.windows.TopComponent;
@@ -35,7 +37,6 @@ import org.openide.windows.TopComponent;
 )
 public final class EpptHelpTopComponent extends TopComponent
 {
-
 	private final JHelp _helpViewer;
 
 	public EpptHelpTopComponent() throws EpptInitializationException
@@ -66,7 +67,14 @@ public final class EpptHelpTopComponent extends TopComponent
 		TopComponent activated = TopComponent.getRegistry().getActivated();
 		if(activated instanceof EpptTopComponent)
 		{
-			_helpViewer.setCurrentID(((EpptTopComponent) activated).getJavaHelpId());
+			try
+			{
+				_helpViewer.setCurrentID(((EpptTopComponent) activated).getJavaHelpId());
+			}
+			catch(BadIDException ex)
+			{
+				Logger.getLogger(EpptHelpTopComponent.class.getName()).debug(ex);
+			}
 		}
 	}
 

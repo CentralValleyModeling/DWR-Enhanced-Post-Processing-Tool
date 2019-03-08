@@ -564,8 +564,8 @@ public final class AppUtils
 		Group gc = Group.createGroup(dssGroup);
 		// do mapping
 
-		//
-		if(bpart != null && !bpart.equals(""))
+		gc.reload();
+		if(bpart != null && !bpart.isEmpty())
 		{
 			gc.filterBy(new PathPartPredicate("^" + bpart + "$", Pathname.B_PART), true);
 		}
@@ -576,9 +576,8 @@ public final class AppUtils
 					+ " for bpart = " + bpart);
 			throw new RuntimeException("No matching reference in " + dssGroup.getName()
 					+ " for bpart = " + bpart);
-			//      return null;
 		}
-		if(cpart != null && !cpart.equals(""))
+		if(cpart != null && !cpart.isEmpty())
 		{
 			gc.filterBy(new PathPartPredicate("^" + cpart + "$", Pathname.C_PART), true);
 		}
@@ -605,20 +604,6 @@ public final class AppUtils
 		}
 		return ref;
 	}
-	/**
-	 * @returns true if the given data reference represents a
-	 * state variable
-	 */
-/*CB  public static boolean isStateVariable(DataReference ref){
-    return ref.getFilename().toLowerCase().trim().endsWith("sv.dss");
-  } */
-	/**
-	 * @returns true if the given data reference represents a
-	 * decision variable
-	 */
-/*  public static boolean isDecisionVariable(DataReference ref){
-    return ref.getFilename().toLowerCase().trim().endsWith("dv.dss");
-  } */
 
 	/**
 	 * gets the pathnames for the matching parts array and fileType
@@ -630,8 +615,8 @@ public final class AppUtils
 	 */
 	public static DataReference[] getDataReferences(String[] parts, String fileType)
 	{
-		Group dssGroup = null;
-		if(fileType.equals(SVAR))
+		Group dssGroup;
+		if(SVAR.equals(fileType))
 		{
 			dssGroup = AppUtils.getCurrentProject().getSVGroup();
 		}
@@ -656,6 +641,7 @@ public final class AppUtils
 		TimeWindow tw = AppUtils.getCurrentProject().getTimeWindow();
 
 		Group gc = Group.createGroup(dssGroup);
+		gc.reload();
 		for(int i = 0; i < parts.length; i++)
 		{
 			String part = parts[i];
@@ -700,7 +686,9 @@ public final class AppUtils
 		}
 		try
 		{
-			return DSSUtil.createGroup("local", dssfile);
+			Group group = DSSUtil.createGroup("local", dssfile);
+			group.getNumberOfDataReferences();
+			return group;
 		}
 		catch(Exception e)
 		{
@@ -2513,11 +2501,6 @@ public final class AppUtils
 		String catalogFile = DSSUtil.getCatalogFilename(dssFile);
 		File cf = new File(catalogFile);
 		File df = new File(dssFile);
-/*    System.out.println(catalogFile + " " + dssFile);
-    System.out.println(!cf.exists());
-    System.out.println(cf.lastModified());
-    System.out.println(df.lastModified());
-    System.out.println(cf.lastModified() < df.lastModified());*/
 		return (!cf.exists()) || (cf.lastModified() < df.lastModified());
 	}
 

@@ -426,7 +426,7 @@
 				</panel>
 				<panel layout="FlowLayout(FlowLayout.LEFT)" name="Water Mgt. Actions">
 					<panel id="WMA" name="Water Mgt. Actions" layout="GridBagLayout">
-						<label text="Los Vaqueros Enlargement" font="Tahoma-BOLD">
+						<label text="Los Vaqueros Enlargement" font="Tahoma-BOLD-14" foreground="3366FF">
 							<gridbagconstraints weightx="0.5" anchor="GridBagConstraints.WEST" gridx="9" gridy="7"/>
 						</label>
 						<checkbox name="ckbp508" id="ckbp508" text="LVR Storage ">

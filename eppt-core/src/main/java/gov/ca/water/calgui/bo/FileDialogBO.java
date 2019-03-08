@@ -432,6 +432,7 @@ public class FileDialogBO implements ActionListener
 				_rdbopt1.setEnabled(_lmScenNames.getSize() > 1);
 				_rdbopt2.setEnabled(_lmScenNames.getSize() > 1);
 			}
+			WRIMSGUILinks.updateProjectFiles(_theList);
 			if(_btn1 != null)
 			{
 				_btn1.setEnabled(true);

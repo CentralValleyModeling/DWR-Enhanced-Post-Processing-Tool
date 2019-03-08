@@ -19,7 +19,4 @@
 	<panel constraints="BorderLayout.CENTER" name="WRIMS" id="WRIMS" layout="BorderLayout"
 		   preferredsize="900,600">
 	</panel>
-	<panel layout="FlowLayout(FlowLayout.LEFT)" constraints="BorderLayout.SOUTH">
-		<button text="Help" id="CRHelp" ActionCommand="AC_Help"/>
-	</panel>
 </panel>

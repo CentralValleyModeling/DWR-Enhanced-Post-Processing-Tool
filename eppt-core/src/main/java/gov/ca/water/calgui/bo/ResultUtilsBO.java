@@ -31,7 +31,6 @@ import calsim.app.MultipleTimeSeries;
 import calsim.app.Project;
 import calsim.gui.DtsTreeModel;
 import calsim.gui.DtsTreePanel;
-import gov.ca.water.calgui.constant.Constant;
 import gov.ca.water.calgui.tech_service.IDialogSvc;
 import gov.ca.water.calgui.tech_service.impl.DialogSvcImpl;
 import org.apache.log4j.Logger;
@@ -209,14 +208,14 @@ public class ResultUtilsBO
 	/**
 	 * Writes Quick Results display list, Custom Result DTS tree
 	 */
-	public void writeCGR()
+	public void writeCGR(JFrame jFrame)
 	{
 		JFileChooser fc = new JFileChooser();
 		fc.setFileFilter(new SimpleFileFilter("cgr", "CalLite Report File (*.cgr)"));
 		fc.setCurrentDirectory(new File(".//Config"));
 		File file;
 		String filename;
-		int retval = fc.showSaveDialog(_swingEngine.find(Constant.MAIN_FRAME_NAME));
+		int retval = fc.showSaveDialog(jFrame);
 		if(retval == JFileChooser.APPROVE_OPTION)
 		{
 			// ... The user selected a file, get it, use it.

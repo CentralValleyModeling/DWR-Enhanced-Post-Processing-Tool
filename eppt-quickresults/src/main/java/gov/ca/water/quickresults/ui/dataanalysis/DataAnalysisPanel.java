@@ -44,7 +44,7 @@ public class DataAnalysisPanel extends EpptPanel
 	@Override
 	public String getJavaHelpId()
 	{
-		return "Data Analysis";
+		return "External PDF";
 	}
 
 	JTextField getReportTemplateTextField()

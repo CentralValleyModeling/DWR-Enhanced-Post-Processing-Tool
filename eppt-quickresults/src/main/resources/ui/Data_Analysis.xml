@@ -95,9 +95,6 @@
 			</textfield>
 		</panel>
 		<panel constraints="BorderLayout.SOUTH" layout="BorderLayout">
-			<panel constraints="BorderLayout.WEST" layout="FlowLayout(FlowLayout.LEFT)">
-				<button text="Help" id="ReportHelp" ActionCommand="AC_Help"/>
-			</panel>
 			<panel constraints="BorderLayout.EAST" layout="FlowLayout(FlowLayout.RIGHT)">
 				<button name="btnReport" id="btnReport" text="Generate Report" ActionCommand="AC_GenReport"/>
 			</panel>

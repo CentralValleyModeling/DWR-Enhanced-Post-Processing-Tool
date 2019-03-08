@@ -80,11 +80,7 @@
 
 	<target name="prepare-zip" depends="-init-zip,-build-zip"/>
 
-	<target name="prepare-sources">
-		<copy file="${configuration.logic.file}" overwrite="true"
-			  tofile="${installer.build.dir}/ext/components/products/helloworld/src/org/mycompany/ConfigurationLogic.java"/>
-		<copy file="${conf.file}" overwrite="true"
-			  tofile="${harness.dir}/etc/app.conf"/>
+	<target name="prepare-sources">-->
 		<copy todir="${installer.build.dir}">
 			<fileset dir="${nbi.stub.location}"/>
 		</copy>
