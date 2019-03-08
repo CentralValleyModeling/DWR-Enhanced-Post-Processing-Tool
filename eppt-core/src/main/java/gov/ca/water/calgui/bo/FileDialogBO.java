@@ -27,6 +27,8 @@ import javax.swing.*;
 import javax.swing.event.ListDataEvent;
 import javax.swing.event.ListDataListener;
 
+import gov.ca.water.calgui.constant.Constant;
+import gov.ca.water.calgui.constant.EpptPreferences;
 import gov.ca.water.calgui.presentation.WRIMSGUILinks;
 import gov.ca.water.calgui.tech_service.IErrorHandlingSvc;
 import gov.ca.water.calgui.tech_service.impl.ErrorHandlingSvcImpl;
@@ -120,31 +122,6 @@ public class FileDialogBO implements ActionListener
 		return _lmScenNames;
 	}
 
-	public void setLmScenNames(DefaultListModel lmScenNames)
-	{
-		this._lmScenNames = lmScenNames;
-	}
-
-	public JFileChooser getFc()
-	{
-		return _fc;
-	}
-
-	public void setFc(JFileChooser fc)
-	{
-		this._fc = fc;
-	}
-
-	public int getDialogRC()
-	{
-		return _dialogRC;
-	}
-
-	public void setDialogRC(int dialogRC)
-	{
-		this._dialogRC = dialogRC;
-	}
-
 	/**
 	 * Common code for all constructors
 	 *
@@ -160,24 +137,24 @@ public class FileDialogBO implements ActionListener
 			if("DSS".equals(_theFileExt))
 			{
 				_fc.setFileFilter(new SimpleFileFilter("DSS"));
-				_fc.setCurrentDirectory(new File(".//Scenarios"));
+				_fc.setCurrentDirectory(EpptPreferences.getScenariosPaths().toFile());
 			}
 			else if("DSS2".equals(_theFileExt))
 			{
 				_theFileExt = "DSS";
 				_fc.setFileFilter(new SimpleFileFilter("DSS"));
-				_fc.setCurrentDirectory(new File(".//Model_w2/DSS_Files"));
+				_fc.setCurrentDirectory(EpptPreferences.getModelDssPath().toFile());
 			}
 			else
 			{
 				_fc.setFileFilter(new SimpleFileFilter(_theFileExt));
 				if("PDF".equals(_theFileExt) || "CLS".equals(_theFileExt))
 				{
-					_fc.setCurrentDirectory(new File(".//Scenarios"));
+					_fc.setCurrentDirectory(EpptPreferences.getReportsPath().toFile());
 				}
 				else
 				{
-					_fc.setCurrentDirectory(new File(".//Config"));
+					_fc.setCurrentDirectory(new File(Constant.CONFIG_DIR));
 				}
 			}
 
@@ -312,7 +289,7 @@ public class FileDialogBO implements ActionListener
 			else
 			{
 				rc = _fc.showDialog(_mainFrame,
-						_theFileExt.equals("DSS") ? "Open" : "Save");
+						"DSS".equals(_theFileExt) ? "Open" : "Save");
 			}
 			_dialogRC = rc;
 			File file;

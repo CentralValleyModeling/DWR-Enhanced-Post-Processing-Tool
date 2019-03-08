@@ -281,7 +281,7 @@ public class SummaryTablePanel extends JPanel implements ActionListener, Compone
 
 				_avg = new double[6][6][14];
 				_sdev = new double[6][6][14];
-				data[t] = new Vector<String>();
+				data[t] = new Vector<>();
 				String[] leftPart = {"All", "Sac 40-30-30", "Shasta", "Feather", "SJR", "Dry"};
 				String[] rightPartsclimate = {"", "Wet", "Above", "Normal", "Dry", "Extreme"};
 				String[] rightPartsclimate2 = {"", "Normal", "Below Normal", "Dry", "Critical", ""};
@@ -315,9 +315,9 @@ public class SummaryTablePanel extends JPanel implements ActionListener, Compone
 
 								int nmed = n[i1][i2][i3];
 								double[] medx2 = new double[nmed];
-								for(int i4 = 0; i4 < nmed; i4++)
+								if(nmed >= 0)
 								{
-									medx2[i4] = _medx[i1][i2][i3][i4];
+									System.arraycopy(_medx[i1][i2][i3], 0, medx2, 0, nmed);
 								}
 								Arrays.sort(medx2);
 								// TODO fix logic for even sizes
@@ -405,14 +405,7 @@ public class SummaryTablePanel extends JPanel implements ActionListener, Compone
 										switch(tag)
 										{
 											case 0:
-												data[t].addElement(df1.format(_avg[i1][i2][i3m])); // *
-												// (i3m
-												// ==
-												// 0
-												// ?
-												// 12
-												// :
-												// 1)));
+												data[t].addElement(df1.format(_avg[i1][i2][i3m]));
 												break;
 											case 1:
 												data[t].addElement(df1.format(_sdev[i1][i2][i3m]));
@@ -444,9 +437,12 @@ public class SummaryTablePanel extends JPanel implements ActionListener, Compone
 
 				// Delete extra blank row at end of table
 
-				for(int i = 0; i < 15; i++)
+				if(data[t] != null && !data[t].isEmpty())
 				{
-					data[t].removeElementAt(data[t].size() - 1);
+					for(int i = 0; i < 15; i++)
+					{
+						data[t].removeElementAt(data[t].size() - 1);
+					}
 				}
 
 				SimpleTableModel model = new SimpleTableModel(data[t], columns);

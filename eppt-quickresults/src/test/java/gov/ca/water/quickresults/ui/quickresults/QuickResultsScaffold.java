@@ -35,6 +35,8 @@ public class QuickResultsScaffold extends EpptScaffold
 	private static void addScenarios()
 	{
 		ScenarioConfigurationPanel scenarioConfigurationPanel = ScenarioConfigurationPanel.getScenarioConfigurationPanel();
+		JRadioButton radioButton = (JRadioButton) scenarioConfigurationPanel.getSwingEngine().find("rdbp001");
+		radioButton.setSelected(true);
 		Component component = scenarioConfigurationPanel.getSwingEngine().find("SelectedList");
 		if(component instanceof JList)
 		{
@@ -48,6 +50,9 @@ public class QuickResultsScaffold extends EpptScaffold
 			String altFile = Thread.currentThread().getContextClassLoader().getResource(
 					"Alternative.dss").getFile().substring(1);
 			currentScenarios.add(new RBListItemBO(altFile, "Alternative.dss"));
+			String cs2 = Thread.currentThread().getContextClassLoader().getResource(
+					"CSII_DCR2017_Base_DV.dss").getFile().substring(1);
+			currentScenarios.add(new RBListItemBO(cs2, "CSII_DCR2017_Base_DV.dss"));
 			DefaultListModel<RBListItemBO> defaultModel = new DefaultListModel<>();
 			for(RBListItemBO item : currentScenarios)
 			{

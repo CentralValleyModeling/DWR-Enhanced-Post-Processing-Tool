@@ -17,11 +17,11 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import javax.swing.*;
 
+import gov.ca.water.bo.NumericTextField;
 import gov.ca.water.businessservice.IXMLParsingSvc;
 import gov.ca.water.calgui.EpptInitializationException;
 import gov.ca.water.calgui.bo.CalLiteGUIException;
 import gov.ca.water.calgui.bo.CalLiteGUIExceptionFatal;
-import gov.ca.water.calgui.bo.NumericTextField;
 import gov.ca.water.calgui.constant.Constant;
 import gov.ca.water.calgui.tech_service.IFileSystemSvc;
 import gov.ca.water.calgui.tech_service.impl.FileSystemSvcImpl;

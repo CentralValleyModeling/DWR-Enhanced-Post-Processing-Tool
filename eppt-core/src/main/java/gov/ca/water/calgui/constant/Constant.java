@@ -25,8 +25,7 @@ public final class Constant
 	public static final String DV_NAME = "_DV";
 	public static final String CONFIG_DIR = System.getProperty("user.dir") + "\\dwr_eppt\\config\\";
 	public static final String DOCS_DIR = System.getProperty("user.dir") + "\\dwr_eppt\\docs\\";
-	public static final String SCENARIOS_DIR = System.getProperty("user.dir") + "//Scenarios//";
-	public static final String RUN_DETAILS_DIR = SCENARIOS_DIR + "Run_Details//";
+	public static final String RUN_DETAILS_DIR = "//Scenarios//Run_Details//";
 	public static final String MODEL_W2_DIR = System.getProperty("user.dir") + "//Model_w2//";
 	public static final String MODEL_W2_DSS_DIR = MODEL_W2_DIR + "//DSS_Files//";
 	public static final String MODEL_W2_WRESL_DIR = MODEL_W2_DIR + "wresl//";
@@ -106,6 +105,11 @@ public final class Constant
 	public static final String CKB_REG_VAMP = "ckbReg_VAMP";
 	public static final String VAMP_SELECTED_TEXT = "If D1485 is selected, take VAMP D1641 hydrology with a D1485 run.";
 	public static final String VAMP_NOT_SELECTED_TEXT = "Access regulation table (where applicable) by selecting or right-clicking on a regulation name.";
+
+	public static final String SCENARIOS_DIR = "Scenarios";
+	static final String MODEL_DIR = "Model_w2";
+	static final String MODEL_DSS_DIR = "DSS_Files";
+	static final String REPORTS_DIR = "Reports";
 
 	private Constant()
 	{

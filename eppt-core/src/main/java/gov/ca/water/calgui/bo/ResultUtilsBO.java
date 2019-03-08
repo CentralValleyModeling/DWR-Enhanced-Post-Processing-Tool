@@ -31,6 +31,7 @@ import calsim.app.MultipleTimeSeries;
 import calsim.app.Project;
 import calsim.gui.DtsTreeModel;
 import calsim.gui.DtsTreePanel;
+import gov.ca.water.calgui.constant.Constant;
 import gov.ca.water.calgui.tech_service.IDialogSvc;
 import gov.ca.water.calgui.tech_service.impl.DialogSvcImpl;
 import org.apache.log4j.Logger;
@@ -160,7 +161,7 @@ public class ResultUtilsBO
 		List<String> data = null;
 		JFileChooser fc = new JFileChooser();
 		fc.setFileFilter(new SimpleFileFilter("cgr", "CalLite GUI Report File (*.cgr)"));
-		fc.setCurrentDirectory(new File(".//Config"));
+		fc.setCurrentDirectory(new File(Constant.CONFIG_DIR));
 		File file;
 		String filename;
 		int retval = fc.showOpenDialog(jFrame);
@@ -212,7 +213,7 @@ public class ResultUtilsBO
 	{
 		JFileChooser fc = new JFileChooser();
 		fc.setFileFilter(new SimpleFileFilter("cgr", "CalLite Report File (*.cgr)"));
-		fc.setCurrentDirectory(new File(".//Config"));
+		fc.setCurrentDirectory(new File(Constant.CONFIG_DIR));
 		File file;
 		String filename;
 		int retval = fc.showSaveDialog(jFrame);

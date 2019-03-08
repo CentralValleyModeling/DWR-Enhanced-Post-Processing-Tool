@@ -7,7 +7,11 @@
 
 package gov.ca.water.calgui.presentation.display;
 
-import java.awt.*;
+import java.awt.BasicStroke;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Graphics;
+import java.awt.Stroke;
 import java.awt.datatransfer.StringSelection;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -24,8 +28,6 @@ import javax.print.attribute.standard.OrientationRequested;
 import javax.swing.*;
 
 import gov.ca.water.calgui.constant.Constant;
-import gov.ca.water.calgui.tech_service.IErrorHandlingSvc;
-import gov.ca.water.calgui.tech_service.impl.ErrorHandlingSvcImpl;
 import org.apache.log4j.Logger;
 import org.jfree.chart.ChartColor;
 import org.jfree.chart.ChartFactory;
@@ -60,9 +62,8 @@ public class ChartPanel1 extends JPanel implements Printable
 	 */
 	private static final long serialVersionUID = 7398804723681056388L;
 	private static Logger LOG = Logger.getLogger(ChartPanel.class.getName());
-	JButton btnScatter;
-	private String buffer;
-	private IErrorHandlingSvc errorHandlingSvc = new ErrorHandlingSvcImpl();
+	private JButton _btnScatter;
+	private String _buffer;
 
 	public ChartPanel1(String title, String yLabel, TimeSeriesContainer[] tscs, TimeSeriesContainer[] stscs,
 					   boolean isExceed, Date lower, Date upper, String sLabel)
@@ -87,7 +88,7 @@ public class ChartPanel1 extends JPanel implements Printable
 		String sName = "";
 		if(sLabel.equals(""))
 		{
-			if(stscs != null)
+			if(stscs != null && stscs[0] != null)
 			{
 				String[] sParts = stscs[0].fullName.split("/");
 				if(sParts.length > 3)
@@ -397,11 +398,11 @@ public class ChartPanel1 extends JPanel implements Printable
 			@Override
 			public void actionPerformed(ActionEvent e)
 			{
-				if(buffer == null)
+				if(_buffer == null)
 				{
 					return;
 				}
-				StringSelection clipString = new StringSelection(buffer);
+				StringSelection clipString = new StringSelection(_buffer);
 				getToolkit().getSystemClipboard().setContents(clipString, clipString);
 			}
 		});
@@ -437,32 +438,32 @@ public class ChartPanel1 extends JPanel implements Printable
 			this.setBackground(Color.WHITE);
 
 			// Button for XY scatter
-			btnScatter = new JButton("XY Scatter");
-			btnScatter.setSize(new Dimension(100, 20));
-			btnScatter.setMaximumSize(new Dimension(110, 20));
-			btnScatter.setPreferredSize(new Dimension(110, 20));
-			btnScatter.addActionListener(new ActionListener()
+			_btnScatter = new JButton("XY Scatter");
+			_btnScatter.setSize(new Dimension(100, 20));
+			_btnScatter.setMaximumSize(new Dimension(110, 20));
+			_btnScatter.setPreferredSize(new Dimension(110, 20));
+			_btnScatter.addActionListener(new ActionListener()
 			{
 
 				@Override
 				public void actionPerformed(ActionEvent arg0)
 				{
-					if(btnScatter.getText().equals("XY Scatter"))
+					if(_btnScatter.getText().equals("XY Scatter"))
 					{
-						btnScatter.setText("Time Series");
+						_btnScatter.setText("Time Series");
 						p1.setVisible(false);
 						p2.setVisible(true);
 					}
 					else
 					{
-						btnScatter.setText("XY Scatter");
+						_btnScatter.setText("XY Scatter");
 						p1.setVisible(true);
 						p2.setVisible(false);
 					}
 				}
 			});
 
-			this.add(btnScatter);
+			this.add(_btnScatter);
 		}
 
 		if(plot instanceof CombinedDomainXYPlot)
@@ -472,24 +473,24 @@ public class ChartPanel1 extends JPanel implements Printable
 		{
 			// Put data in buffer for clipboard
 
-			buffer = title + "\n";
+			_buffer = title + "\n";
 
 			// Dataset titles
 
 			XYDataset dataset = plot.getDataset();
 			for(int i = 0; i < dataset.getSeriesCount(); i++)
 			{
-				buffer = buffer + dataset.getSeriesKey(i).toString() + "\t\t\t";
+				_buffer = _buffer + dataset.getSeriesKey(i).toString() + "\t\t\t";
 			}
 
-			buffer = buffer + "\n";
+			_buffer = _buffer + "\n";
 
 			for(int i = 0; i < dataset.getSeriesCount(); i++)
 			{
-				buffer = buffer + (isExceed ? "%" : "Date") + "\t" + axis.getLabel() + "\t\t";
+				_buffer = _buffer + (isExceed ? "%" : "Date") + "\t" + axis.getLabel() + "\t\t";
 			}
 
-			buffer = buffer + "\n";
+			_buffer = _buffer + "\n";
 
 			// Data
 			SimpleDateFormat df = new SimpleDateFormat("MM/dd/yyyy");
@@ -503,21 +504,21 @@ public class ChartPanel1 extends JPanel implements Printable
 						if(isExceed)
 
 						{
-							buffer = buffer + dataset.getXValue(i, j) + "\t" + dataset.getYValue(i, j) + "\t\t";
+							_buffer = _buffer + dataset.getXValue(i, j) + "\t" + dataset.getYValue(i, j) + "\t\t";
 						}
 						else
 						{
-							buffer = buffer + df.format(new Date((long) dataset.getXValue(i, j))) + "\t"
+							_buffer = _buffer + df.format(new Date((long) dataset.getXValue(i, j))) + "\t"
 									+ dataset.getYValue(i, j) + "\t\t";
 						}
 					}
 					else
 					{
-						buffer = buffer + "\t\t\t";
+						_buffer = _buffer + "\t\t\t";
 					}
 				}
 
-				buffer = buffer + "\n";
+				_buffer = _buffer + "\n";
 			}
 		}
 	}

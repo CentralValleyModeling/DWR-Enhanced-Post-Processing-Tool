@@ -10,8 +10,8 @@ package gov.ca.water.businessservice;
 import java.util.List;
 import java.util.Map;
 
-import gov.ca.water.calgui.bo.GUILinks2BO;
-import gov.ca.water.calgui.bo.GUILinks4BO;
+import gov.ca.water.bo.GUILinks2BO;
+import gov.ca.water.bo.GUILinks4BO;
 
 /**
  * Company: Resource Management Associates
