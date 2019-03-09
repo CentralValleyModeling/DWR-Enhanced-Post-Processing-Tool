@@ -87,19 +87,19 @@ public final class GuiLinksSeedDataSvcImpl implements IGuiLinksSeedDataSvc
 			{
 				errorStr = guiLinkString;
 				String[] list = guiLinkString.split(Constant.DELIMITER);
-				int checkboxId = Integer.parseInt(list[0]);
+				int checkboxId = Integer.parseInt(list[0].trim());
 				GUILinksAllModelsBO guiLinksAllModelsBO = _guiLinksAllModels.computeIfAbsent(checkboxId,
 						id -> createGuiLinksAllModels(list, id));
 				String model = list[1];
 				String primary = null;
 				if(list.length > 2)
 				{
-					primary = list[2];
+					primary = list[2].trim();
 				}
 				String secondary = null;
 				if(list.length > 3)
 				{
-					secondary = list[3];
+					secondary = list[3].trim();
 				}
 				guiLinksAllModelsBO.addModelMapping(GUILinksAllModelsBO.Model.findModel(model), primary, secondary);
 			}
