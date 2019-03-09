@@ -164,13 +164,8 @@ public class ScenarioConfigurationPanel extends EpptPanel
 			// checkbox - Tad 2/23/17
 
 			StringBuilder cST = new StringBuilder();
-			for(Component c : ((JPanel) getSwingEngine().find("controls2")).getComponents())
-			{
-				if(c instanceof JCheckBox && ((JCheckBox) c).isSelected())
-				{
-					cST.append(",").append(((JCheckBox) c).getText());
-				}
-			}
+			Component[] controls2 = ((JPanel) getSwingEngine().find("controls2")).getComponents();
+			addExceedancePlots(cST, controls2);
 			if(cST.length() > 0)
 			{
 				cAdd = cAdd + ";EX-" + cST;
@@ -195,18 +190,7 @@ public class ScenarioConfigurationPanel extends EpptPanel
 			if(ckb.isSelected())
 			{
 				cST = new StringBuilder(";ST-");
-				for(final Component component : components)
-				{
-					if(component instanceof JCheckBox)
-					{
-						JCheckBox c = (JCheckBox) component;
-						if(c.isSelected())
-						{
-							String cName = c.getText();
-							cST.append(",").append(cName);
-						}
-					}
-				}
+				addSummaryTables(cST, components);
 				cAdd = cAdd + cST;
 			}
 
@@ -219,6 +203,41 @@ public class ScenarioConfigurationPanel extends EpptPanel
 			errorHandlingSvc.businessErrorHandler(messageText, e);
 		}
 		return null;
+	}
+
+	private void addExceedancePlots(StringBuilder cST, Component[] components)
+	{
+		for(Component c : components)
+		{
+			if(c instanceof JCheckBox && ((JCheckBox) c).isSelected())
+			{
+				cST.append(",").append(((JCheckBox) c).getText());
+			}
+			else if(c instanceof Container)
+			{
+				addExceedancePlots(cST, ((Container) c).getComponents());
+			}
+		}
+	}
+
+	private void addSummaryTables(StringBuilder cST, Component[] components)
+	{
+		for(final Component component : components)
+		{
+			if(component instanceof JCheckBox)
+			{
+				JCheckBox c = (JCheckBox) component;
+				if(c.isSelected())
+				{
+					String cName = c.getText();
+					cST.append(",").append(cName);
+				}
+			}
+			else if(component instanceof Container)
+			{
+				addSummaryTables(cST, ((Container) component).getComponents());
+			}
+		}
 	}
 
 	public Month getStartMonth()
