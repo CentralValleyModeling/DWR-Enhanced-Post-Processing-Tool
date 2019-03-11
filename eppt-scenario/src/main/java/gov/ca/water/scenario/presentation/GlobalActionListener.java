@@ -352,8 +352,7 @@ public class GlobalActionListener implements ActionListener
 		}
 		try
 		{
-			List<DataTableModel> dtmList = scenarioDele.getScenarioTableData(fileNames,
-					scenarioConfigurationPanel.getSwingEngine());
+			List<DataTableModel> dtmList = scenarioDele.getScenarioTableData(fileNames, _swingEngine);
 			ScenarioFrame scenarioFrame = new ScenarioFrame(dtmList);
 			scenarioFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 			scenarioFrame.setVisible(true);

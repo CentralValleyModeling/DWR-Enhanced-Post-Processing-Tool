@@ -28,7 +28,6 @@ import gov.ca.water.calgui.bo.RBListItemBO;
 import gov.ca.water.calgui.bo.ResultUtilsBO;
 import gov.ca.water.calgui.bus_service.IDSSGrabber1Svc;
 import gov.ca.water.calgui.bus_service.IGuiLinksSeedDataSvc;
-import gov.ca.water.calgui.constant.Constant;
 import gov.ca.water.calgui.tech_service.IDialogSvc;
 import gov.ca.water.calgui.tech_service.IErrorHandlingSvc;
 import gov.ca.water.calgui.tech_service.impl.DialogSvcImpl;
@@ -270,14 +269,6 @@ public class DSSGrabber1SvcImpl implements IDSSGrabber1Svc
 		}
 		else
 		{
-			String lookupID = locationName;
-			if(lookupID.startsWith(Constant.SCHEMATIC_PREFIX))
-			// Strip off prefix for schematic view - NOT SURE IF WE CAN'T
-			// JUST ELIMINATE PREFIX?
-			{
-				lookupID = lookupID.substring(Constant.SCHEMATIC_PREFIX.length());
-			}
-
 			// Location name is otherwise assumed coded as "ckpbxxx"
 
 			GUILinksAllModelsBO guiLinksAllModelsBO = _seedDataSvc.getObjById(locationName);

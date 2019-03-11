@@ -47,7 +47,7 @@ public final class QuickResultsTopComponent extends EpptTopComponent
 		setName("Quick Results");
 		_quickResultsPanel = new QuickResultsPanel();
 		QuickResultsListener quickResultsListener = new QuickResultsListener(_quickResultsPanel);
-		_quickResultsPanel.getSwingEngine().setActionListener(_quickResultsPanel, quickResultsListener);
+		_quickResultsPanel.setActionListener(quickResultsListener);
 		JScrollPane scrollPane = new JScrollPane(_quickResultsPanel);
 		setLayout(new BorderLayout());
 		add(scrollPane, BorderLayout.CENTER);

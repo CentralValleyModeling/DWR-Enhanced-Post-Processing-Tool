@@ -61,7 +61,7 @@ public final class EpptPreferences
 		return Paths.get(scenarioConfigurationFile);
 	}
 
-	public static void getLastScenarioConfiguration(Path lastConfiguration)
+	public static void setLastScenarioConfiguration(Path lastConfiguration)
 	{
 		ROOT_PREFERENCES.node(EPPT_HOME).put(LAST_SCENARIO_CONFIGURATION,
 				lastConfiguration.toAbsolutePath().toString());

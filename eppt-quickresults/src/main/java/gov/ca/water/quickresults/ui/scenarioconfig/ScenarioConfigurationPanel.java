@@ -10,12 +10,15 @@ package gov.ca.water.quickresults.ui.scenarioconfig;
 import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Container;
+import java.io.IOException;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.*;
 
 import gov.ca.water.calgui.bo.RBListItemBO;
 import gov.ca.water.calgui.bo.ResultUtilsBO;
+import gov.ca.water.calgui.constant.EpptPreferences;
 import gov.ca.water.calgui.tech_service.IErrorHandlingSvc;
 import gov.ca.water.calgui.tech_service.impl.ErrorHandlingSvcImpl;
 import gov.ca.water.quickresults.ui.EpptPanel;
@@ -34,29 +37,58 @@ public final class ScenarioConfigurationPanel extends EpptPanel
 	private static final String SCENARIO_CONFIGURATION_XML_FILE = "Scenario_Configuration.xml";
 	private static final ScenarioConfigurationPanel SINGLETON = new ScenarioConfigurationPanel();
 	private static IErrorHandlingSvc errorHandlingSvc = new ErrorHandlingSvcImpl();
+	private final ScenarioConfigurationIO _scenarioConfigurationIO;
 
 	private ScenarioConfigurationPanel()
 	{
 		try
 		{
+			_scenarioConfigurationIO = new ScenarioConfigurationIO(getSwingEngine());
 			super.setLayout(new BorderLayout());
 			Container swixmlScenarioConfigurationPanel = renderSwixml(SCENARIO_CONFIGURATION_XML_FILE);
 			super.add(swixmlScenarioConfigurationPanel);
-			// Set up month spinners on result page
-			JSpinner spnSM = (JSpinner) getSwingEngine().find("spnStartMonth");
-			ResultUtilsBO.SetMonthModelAndIndex(spnSM, 9, null, true);
-			JSpinner spnEM = (JSpinner) getSwingEngine().find("spnEndMonth");
-			ResultUtilsBO.SetMonthModelAndIndex(spnEM, 8, null, true);
-			// Set up year spinners
-			JSpinner spnSY = (JSpinner) getSwingEngine().find("spnStartYear");
-			ResultUtilsBO.SetNumberModelAndIndex(spnSY, 1921, 1921, 2003, 1, "####", null, true);
-			JSpinner spnEY = (JSpinner) getSwingEngine().find("spnEndYear");
-			ResultUtilsBO.SetNumberModelAndIndex(spnEY, 2003, 1921, 2003, 1, "####", null, true);
+			initModels();
+			Path lastScenarioConfiguration = EpptPreferences.getLastScenarioConfiguration();
+			loadScenarioConfiguration(lastScenarioConfiguration);
 		}
 		catch(Exception e)
 		{
 			LOGGER.error("Error setting up quick results swing xml: " + SCENARIO_CONFIGURATION_XML_FILE, e);
 			throw new IllegalStateException(e);
+		}
+	}
+
+	private void initModels()
+	{
+		// Set up month spinners on result page
+		JSpinner spnSM = (JSpinner) getSwingEngine().find("spnStartMonth");
+		ResultUtilsBO.SetMonthModelAndIndex(spnSM, 9, null, true);
+		JSpinner spnEM = (JSpinner) getSwingEngine().find("spnEndMonth");
+		ResultUtilsBO.SetMonthModelAndIndex(spnEM, 8, null, true);
+		// Set up year spinners
+		JSpinner spnSY = (JSpinner) getSwingEngine().find("spnStartYear");
+		ResultUtilsBO.SetNumberModelAndIndex(spnSY, 1921, 1921, 2003, 1, "####", null, true);
+		JSpinner spnEY = (JSpinner) getSwingEngine().find("spnEndYear");
+		ResultUtilsBO.SetNumberModelAndIndex(spnEY, 2003, 1921, 2003, 1, "####", null, true);
+		JCheckBox summaryTableCheckbox = (JCheckBox) getSwingEngine().find("RepckbSummaryTable");
+		summaryTableCheckbox.addActionListener(e ->
+		{
+			boolean selected = summaryTableCheckbox.isSelected();
+			Container controls3 = (Container) getSwingEngine().find("controls3");
+			setSummaryTableEnabled(selected, controls3);
+		});
+	}
+
+	private void setSummaryTableEnabled(boolean selected, Container container)
+	{
+		container.setEnabled(selected);
+		for(Component component : container.getComponents())
+		{
+			component.setEnabled(selected);
+			if(component instanceof Container)
+			{
+				setSummaryTableEnabled(selected, (Container) component);
+			}
 		}
 	}
 
@@ -258,4 +290,37 @@ public final class ScenarioConfigurationPanel extends EpptPanel
 		return new Month(month, year);
 	}
 
+	public void saveConfigurationToPath(Path selectedPath) throws IOException
+	{
+		_scenarioConfigurationIO.saveConfiguration(selectedPath);
+		EpptPreferences.setLastScenarioConfiguration(selectedPath);
+	}
+
+	public void loadScenarioConfiguration(Path selectedPath) throws IOException
+	{
+		if(selectedPath.toFile().exists())
+		{
+			_scenarioConfigurationIO.loadConfiguration(selectedPath);
+		}
+	}
+
+	JList<?> getScenarioList()
+	{
+		return (JList<?>) getSwingEngine().find("SelectedList");
+	}
+
+	JRadioButton getRadioButton1()
+	{
+		return (JRadioButton) getSwingEngine().find("rdbp001");
+	}
+
+	JRadioButton getRadioButton2()
+	{
+		return (JRadioButton) getSwingEngine().find("rdbp002");
+	}
+
+	JLabel getLabelBase()
+	{
+		return (JLabel) getSwingEngine().find("lblBase");
+	}
 }

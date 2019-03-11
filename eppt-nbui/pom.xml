@@ -249,6 +249,16 @@
 			<artifactId>images</artifactId>
 			<version>dev-SNAPSHOT</version>
 		</dependency>
+		<dependency>
+			<groupId>org.netbeans.api</groupId>
+			<artifactId>org-openide-filesystems</artifactId>
+			<version>RELEASE82</version>
+		</dependency>
+		<dependency>
+			<groupId>org.netbeans.api</groupId>
+			<artifactId>org-openide-loaders</artifactId>
+			<version>RELEASE82</version>
+		</dependency>
 	</dependencies>
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>

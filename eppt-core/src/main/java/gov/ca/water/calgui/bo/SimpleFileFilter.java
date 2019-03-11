@@ -26,7 +26,7 @@ public class SimpleFileFilter extends javax.swing.filechooser.FileFilter
 	 *
 	 * @param aFileExt
 	 */
-	SimpleFileFilter(String aFileExt)
+	public SimpleFileFilter(String aFileExt)
 	{
 		_fileExt = aFileExt.toLowerCase();
 		_desc = aFileExt.toUpperCase() + " File (*." + aFileExt.toLowerCase() + ")";
@@ -39,7 +39,7 @@ public class SimpleFileFilter extends javax.swing.filechooser.FileFilter
 	 * @param aFileExt
 	 * @param aDesc
 	 */
-	SimpleFileFilter(String aFileExt, String aDesc)
+	public SimpleFileFilter(String aFileExt, String aDesc)
 	{
 		_fileExt = aFileExt.toLowerCase();
 		_desc = aDesc;

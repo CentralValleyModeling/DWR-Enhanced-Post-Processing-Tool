@@ -16,7 +16,7 @@ package gov.ca.water.calgui.constant;
  */
 public final class Constant
 {
-
+	public static final String EPPT_EXT = "eppt";
 	public static final String CLS_EXT = ".CLS";
 	public static final String TABLE_EXT = ".table";
 	public static final String CSV_EXT = ".csv";
