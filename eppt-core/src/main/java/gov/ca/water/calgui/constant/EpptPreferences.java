@@ -7,6 +7,7 @@
 
 package gov.ca.water.calgui.constant;
 
+import java.io.File;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.prefs.Preferences;
@@ -23,6 +24,7 @@ public final class EpptPreferences
 	private static final Preferences ROOT_PREFERENCES = Preferences.userRoot().node("DWR").node("EPPT");
 	private static final String EPPT_HOME = "eppt_home";
 	private static final String PROJECT_DIRECTORY = "project_directory";
+	private static final String LAST_SCENARIO_CONFIGURATION = "last_scenario_configuration";
 
 	private EpptPreferences()
 	{
@@ -31,8 +33,8 @@ public final class EpptPreferences
 
 	public static Path getProjectsPath()
 	{
-		String epptHomeDefault = Paths.get(FileSystemView.getFileSystemView().getDefaultDirectory().getPath()).resolve(
-				"EPPT").toString();
+		File defaultDirectory = FileSystemView.getFileSystemView().getDefaultDirectory();
+		String epptHomeDefault = Paths.get(defaultDirectory.getPath()).resolve("EPPT").toString();
 		Preferences homePrefs = ROOT_PREFERENCES.node(EPPT_HOME);
 		String homeDirPref = homePrefs.get(PROJECT_DIRECTORY, epptHomeDefault);
 		return Paths.get(homeDirPref);
@@ -51,6 +53,18 @@ public final class EpptPreferences
 	public static Path getReportsPath()
 	{
 		return getProjectsPath().resolve(Constant.REPORTS_DIR);
+	}
+
+	public static Path getLastScenarioConfiguration()
+	{
+		String scenarioConfigurationFile = ROOT_PREFERENCES.node(EPPT_HOME).get(LAST_SCENARIO_CONFIGURATION, "");
+		return Paths.get(scenarioConfigurationFile);
+	}
+
+	public static void getLastScenarioConfiguration(Path lastConfiguration)
+	{
+		ROOT_PREFERENCES.node(EPPT_HOME).put(LAST_SCENARIO_CONFIGURATION,
+				lastConfiguration.toAbsolutePath().toString());
 	}
 
 }
