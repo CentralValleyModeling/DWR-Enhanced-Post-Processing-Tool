@@ -33,7 +33,9 @@ public final class EpptPreferences
 	{
 		String epptHomeDefault = Paths.get(FileSystemView.getFileSystemView().getDefaultDirectory().getPath()).resolve(
 				"EPPT").toString();
-		return Paths.get(ROOT_PREFERENCES.node(EPPT_HOME).get(PROJECT_DIRECTORY, epptHomeDefault));
+		Preferences homePrefs = ROOT_PREFERENCES.node(EPPT_HOME);
+		String homeDirPref = homePrefs.get(PROJECT_DIRECTORY, epptHomeDefault);
+		return Paths.get(homeDirPref);
 	}
 
 	public static Path getScenariosPaths()

@@ -28,7 +28,7 @@ import org.jfree.data.time.Month;
  * @author <a href="mailto:adam@rmanet.com">Adam Korynta</a>
  * @since 02-21-2019
  */
-public class ScenarioConfigurationPanel extends EpptPanel
+public final class ScenarioConfigurationPanel extends EpptPanel
 {
 	private static final Logger LOGGER = Logger.getLogger(ScenarioConfigurationPanel.class.getName());
 	private static final String SCENARIO_CONFIGURATION_XML_FILE = "Scenario_Configuration.xml";
