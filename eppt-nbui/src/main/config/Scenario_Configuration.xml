@@ -37,7 +37,7 @@
 		   minimumsize="440,502">
 		<panel layout="GridBagLayout">
 			<panel layout="GridBagLayout">
-				<gridbagconstraints insets="0,0,5,3" anchor="GridBagConstraints.WEST" gridx="1" gridy="1" fill="GridBagConstraints.HORIZONTAL"/>
+				<gridbagconstraints insets="0,5,5,3" anchor="GridBagConstraints.NORTHWEST" gridx="1" gridy="1"/>
 				<label text="Month">
 					<gridbagconstraints insets="0,5,5,0" anchor="GridBagConstraints.NORTHWEST" gridx="1" gridy="0"/>
 				</label>
@@ -81,20 +81,15 @@
 					<radiobutton id="rdbCapo" name="rdbCap0" text="Capacity (Off-Peak)"/>
 				</buttongroup>
 			</hbox>
-			<hbox visible="false">
-				<gridbagconstraints insets="0,0,5,3" anchor="GridBagConstraints.WEST" gridx="1" gridy="4" fill="GridBagConstraints.HORIZONTAL"/>
-				<checkbox name="RepckbTimeSeriesPlot" id="RepckbTimeSeriesPlot" text="Time series plot" selected="true">
-					<gridbagconstraints insets="0,0,5,3" anchor="GridBagConstraints.WEST" gridx="0" gridy="4"/>
+			<panel layout="GridBagLayout">
+				<gridbagconstraints insets="0,0,5,3" anchor="GridBagConstraints.WEST" gridx="1" gridy="4"/>
+				<checkbox name="RepckbTimeSeriesPlot" id="RepckbTimeSeriesPlot" text="Display Time Series Plot" selected="true">
+					<gridbagconstraints insets="0,0,5,3" anchor="GridBagConstraints.WEST" gridx="1" gridy="1"/>
 				</checkbox>
-				<checkbox name="RepckbBAWPlot" id="RepckbBAWPlot" enabled="true" text="Box and whiskers plot">
-					<gridbagconstraints insets="0,0,5,3" anchor="GridBagConstraints.WEST" gridx="2" gridy="4"/>
+				<checkbox name="RepckbBAWPlot" id="RepckbBAWPlot" enabled="true" text="Display Box and Whiskers Plot">
+					<gridbagconstraints insets="0,0,5,3" anchor="GridBagConstraints.WEST" gridx="1" gridy="2"/>
 				</checkbox>
-				<checkbox name="RepckbExceedancePlot" id="RepckbExceedancePlot" text="Exceedance plot" selected="true"
-						  visible="false">
-					<gridbagconstraints insets="0,0,0,0" anchor="GridBagConstraints.WEST" gridx="0" gridy="5"
-										gridwidth="2"/>
-				</checkbox>
-			</hbox>
+			</panel>
 			<panel id="controls2" border="TitledBorder(Exceedance Plots)" layout="GridBagLayout" enabled="true">
 				<gridbagconstraints insets="0,0,5,3" anchor="GridBagConstraints.WEST" gridx="1" gridy="5" fill="GridBagConstraints.HORIZONTAL"/>
 				<panel layout="GridBagLayout">
@@ -153,20 +148,16 @@
 					</button>
 				</panel>
 			</panel>
-			<panel layout="FlowLayout(FlowLayout.LEFT)">
-				<gridbagconstraints insets="0,0,0,3" anchor="GridBagConstraints.WEST" gridx="1" gridy="6" fill="GridBagConstraints.HORIZONTAL"/>
-				<checkbox id="RepckbMonthlyTable" name="RepckbMonthlyTable" text="Monthly table">
-					<gridbagconstraints anchor="GridBagConstraints.WEST" gridx="1" gridy="1"/>
+			<panel layout="GridBagLayout">
+				<gridbagconstraints insets="0,0,5,3" anchor="GridBagConstraints.WEST" gridx="1" gridy="6"/>
+				<checkbox id="RepckbMonthlyTable" name="RepckbMonthlyTable" text="Display Monthly Table">
+					<gridbagconstraints insets="0,0,5,3" anchor="GridBagConstraints.WEST" gridx="1" gridy="1"/>
+				</checkbox>
+				<checkbox name="RepckbSummaryTable" id="RepckbSummaryTable" text="Display Summary Table" selected="true">
+					<gridbagconstraints insets="0,0,5,3" anchor="GridBagConstraints.WEST" gridx="1" gridy="12"/>
 				</checkbox>
 			</panel>
-
-			<panel layout="FlowLayout(FlowLayout.LEFT)">
-				<gridbagconstraints insets="0,0,0,3" anchor="GridBagConstraints.WEST" gridx="1" gridy="7" fill="GridBagConstraints.HORIZONTAL"/>
-				<checkbox name="RepckbSummaryTable" id="RepckbSummaryTable" text="Summary table" selected="true">
-					<gridbagconstraints anchor="GridBagConstraints.WEST" gridx="1" gridy="1"/>
-				</checkbox>
-			</panel>
-			<panel id="controls3" border="TitledBorder" layout="GridBagLayout" enabled="true">
+			<panel id="controls3" border="TitledBorder(Summary Table)" layout="GridBagLayout" enabled="true">
 				<gridbagconstraints insets="0,0,5,3" anchor="GridBagConstraints.WEST" gridx="1" gridy="8" fill="GridBagConstraints.HORIZONTAL"/>
 				<panel layout="GridBagLayout">
 					<gridbagconstraints insets="3,0,3,3" gridx="1" gridy="1" anchor="GridBagConstraints.NORTHWEST"/>
