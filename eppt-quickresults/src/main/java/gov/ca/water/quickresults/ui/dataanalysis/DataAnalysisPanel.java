@@ -11,6 +11,7 @@ import java.awt.BorderLayout;
 import java.awt.Container;
 import javax.swing.*;
 
+import gov.ca.water.calgui.constant.EpptPreferences;
 import gov.ca.water.quickresults.ui.EpptPanel;
 import gov.ca.water.quickresults.ui.quickresults.QuickResultsPanel;
 import org.apache.log4j.Logger;
@@ -24,19 +25,21 @@ import org.apache.log4j.Logger;
 public class DataAnalysisPanel extends EpptPanel
 {
 	private static final Logger LOGGER = Logger.getLogger(QuickResultsPanel.class.getName());
-	private static final String DATA_ANALYSIS_XML_PATH = "ui/Data_Analysis.xml";
+	private static final String DATA_ANALYSIS_XML_FILE = "Data_Analysis.xml";
 
 	public DataAnalysisPanel()
 	{
 		try
 		{
 			super.setLayout(new BorderLayout());
-			Container swixmlQuickResultsPanel = getSwingEngine().render(DATA_ANALYSIS_XML_PATH);
+			Container swixmlQuickResultsPanel = renderSwixml(DATA_ANALYSIS_XML_FILE);
 			super.add(swixmlQuickResultsPanel);
+			JTextField tfReportFILE3 = (JTextField) getSwingEngine().find("tfReportFILE3");
+			tfReportFILE3.setToolTipText(EpptPreferences.getReportsPath().resolve(tfReportFILE3.getText()).toString());
 		}
 		catch(Exception e)
 		{
-			LOGGER.error("Error setting up quick results swing xml: " + DATA_ANALYSIS_XML_PATH, e);
+			LOGGER.error("Error setting up quick results swing xml: " + DATA_ANALYSIS_XML_FILE, e);
 			throw new IllegalStateException(e);
 		}
 	}
@@ -44,7 +47,7 @@ public class DataAnalysisPanel extends EpptPanel
 	@Override
 	public String getJavaHelpId()
 	{
-		return "Data Analysis";
+		return "External PDF";
 	}
 
 	JTextField getReportTemplateTextField()

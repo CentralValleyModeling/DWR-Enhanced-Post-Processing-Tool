@@ -7,11 +7,17 @@
 
 package gov.ca.water.quickresults.ui;
 
+import java.awt.Container;
 import java.awt.event.ActionListener;
+import java.net.URL;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import org.swixml.SwingEngine;
 
 import rma.swing.RmaJPanel;
+
+import static gov.ca.water.calgui.constant.Constant.CONFIG_DIR;
 
 /**
  * Company: Resource Management Associates
@@ -21,6 +27,7 @@ import rma.swing.RmaJPanel;
  */
 public abstract class EpptPanel extends RmaJPanel
 {
+	private static final Logger LOGGER = Logger.getLogger(EpptPanel.class.getName());
 	private final SwingEngine _swingEngine;
 
 	public EpptPanel()
@@ -38,5 +45,22 @@ public abstract class EpptPanel extends RmaJPanel
 	public void setActionListener(ActionListener actionListener)
 	{
 		getSwingEngine().setActionListener(this, actionListener);
+	}
+
+	protected Container renderSwixml(String fileName) throws Exception
+	{
+		Container retval;
+		try
+		{
+			String configPath = "file:" + CONFIG_DIR + fileName;
+			URL url = new URL(configPath);
+			retval = getSwingEngine().render(url);
+		}
+		catch(Exception ex)
+		{
+			LOGGER.log(Level.WARNING, "Unable to render from URL, trying test file", ex);
+			retval = getSwingEngine().render("ui/" + fileName);
+		}
+		return retval;
 	}
 }

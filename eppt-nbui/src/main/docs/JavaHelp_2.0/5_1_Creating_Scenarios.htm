@@ -1,0 +1,139 @@
+<!--
+  ~ Copyright (c) 2019
+  ~ California Department of Water Resources
+  ~ All Rights Reserved.  DWR PROPRIETARY/CONFIDENTIAL.
+  ~ Source may not be released without written approval from DWR
+  -->
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
+    <meta content="Adobe RoboHelp 10" name="generator"/>
+    <title>5.1. Creating Scenarios</title>
+    <link href="default.css" rel="StyleSheet" type="text/css"/>
+    <style title="hcp" type="text/css">
+        <!--
+        p.hcp1 {
+            text-align: center;
+        }
+
+        img.hcp2 {
+            border: none;
+        }
+
+        span.hcp3 {
+            font-weight: bold;
+        }
+
+        span.hcp4 {
+            font-style: italic;
+        }
+
+        -->
+    </style>
+</head>
+
+<body>
+
+
+<h2>5.1. Creating Scenarios</h2>
+<p>The CalLite GUI automatically loads a default scenario when starting
+    up. Moving through the different model input dashboards allows viewing
+    of the various model settings. For this scenario, select the Base (Current
+    Sea Level) and Future Level of development (set with option buttons on
+    the Hydroclimate dashboard), assume Fixed demands (Full Table A for SWP
+    and Full Contract for CVP, set with option buttons on the Demands dashboard),
+    and apply only the D-1641 regulations by checking D-1641 in the Regulations
+    dashboard under Quick Select. Figures 5-2, 5-3, and 5-4 show the Hydroclimate,
+    Demands, and Regulations dashboards, respectively. </p>
+<p>&#160;</p>
+<p class="hcp1"><img alt="" border="0" class="hcp2" height="778" src="Fig3_Hydroclimate.jpg" width="1034"/></p>
+<p class="hcp1"><span class="hcp3"><b>Figure 
+ 5-2.</b></span> <span class="hcp4"><i>Future Level of development 
+ and Base (Current Sea Level)</i></span> options are selected on Hydroclimate
+    dashboard.</p>
+<p>&#160;</p>
+<p>&#160;&#160;</p>
+<p class="hcp1"><img alt="" border="0" class="hcp2" height="778" src="Fig4_Demands.jpg" width="1034"/></p>
+<p class="hcp1"><span class="hcp3"><b>Figure 
+ 5-3.</b></span> SWP demands to <span class="hcp4"><i>Future</i></span>
+    and CVP demands to <span class="hcp4"><i>Full Contract</i></span>
+    on Demands dashboard.</p>
+<p>&#160;</p>
+<p>On the Regulations dashboard, numerical criteria associated with certain
+    regulatory options are presented in an adjoining table. The user can change
+    the values in those tables by checking the User Defined option. Default
+    values for the tables can be restored by selecting one of the three predefined
+    regulatory options under Quick Select. For this exercise, select D-1641.</p>
+<p>&#160;</p>
+<p class="hcp1"><img alt="" border="0" class="hcp2" height="768" src="Fig6_Regulations.jpg" width="1024"/></p>
+<p class="hcp1"><span class="hcp3"><b>Figure 
+ 5-4.</b></span> D-1641 regulation constraints are selected by checking D-1641
+    under Quick Select on the Regulations dashboard.</p>
+<p>&#160;</p>
+<p>Save the scenario to a new file, this can be done by pressing the <span class="hcp4"><i>Save As…</i></span> button on
+    the Run Settings
+    dashboard, or with the menu command <span class="hcp4"><i>File
+ | Save As…</i></span> (Figure 5-5).</p>
+<p>&#160;</p>
+<p class="hcp1">&#160;&#160;<img alt="" border="0" class="hcp2" height="778" src="Fig18_Regulations_Save-As.jpg"
+                                 width="1034"/></p>
+<p class="hcp1"><span class="hcp3"><b>Figure 
+ 5-5.</b></span> Preparing to save the scenario.</p>
+<p>&#160;</p>
+<p>Type the descriptive scenario name, for example <span class="hcp4"><i>Future_LOD_Future_Demand_D1641</i></span>,
+    once the dialog box appears. The scenario setting will be stored in the
+    Scenarios subdirectory in <span class="hcp4"><i>Future_LOD_Future_Demand_D1641.CLS</i></span>
+    and the model results will be placed in the file <span
+            class="hcp4"><i>Future_LOD_Future_Demand_D1641_DV.DSS</i></span>
+    also in the Scenarios subdirectory. Figure 5-6 displays the Save dialog
+    box.</p>
+<p>&#160;&#160;</p>
+<p class="hcp1"><img alt="" border="0" class="hcp2" height="777" src="Fig19_Regulations_SavingD1641.jpg" width="1033"/>
+</p>
+<p class="hcp1"><span class="hcp3"><b>Figure 
+ 5-6.</b></span> Saving the Future_LOD_Future_Demand_D1641 scenario.</p>
+<p>&#160;</p>
+<p>On the Run Settings dashboard, text in the Scenario Description box
+    can be entered to describe the selections just made as shown in Figure
+    5-7. Simulate the model for the D-1641 scenario settings by either pressing
+    <span class="hcp4"><i>Run Scenario</i></span> on the Run Settings
+    dashboard, or with the menu choice <span class="hcp4"><i>File
+ | Run</i></span>. The CalLite GUI creates a set of model input files in the
+    Run directory based on the settings in the currently-loaded scenario and
+    then executes the model. The Status Monitor window shows the progress
+    of the simulation. It can be minimized, moved, or covered up. Figure 5-9
+    provides a screenshot of the GUI during simulation.</p>
+<p>&#160;</p>
+<p class="hcp1"><img alt="" border="0" class="hcp2" height="778" src="Fig20_Scenario_Description_Box.jpg" width="1034"/>
+</p>
+<p style="font-weight: bold; text-align: center;">Figure 5-7. <span style="font-weight: normal;">Text 
+ added to the Scenario Description box.</span> &#160;</p>
+<p>&#160;</p>
+<p class="hcp1"><img alt="" border="0" class="hcp2" height="779" src="Fig21_Status-Monitor.jpg" width="1037"/></p>
+<p class="hcp1"><span class="hcp3"><b>Figure 
+ 5-8.</b></span> Model execution status is presented in the Status Monitor
+    window.</p>
+<p>&#160;</p>
+<p>Create a second scenario that adds the Biological Opinion regulatory
+    constraints to the scenario on top of the <span class="hcp4"><i>D-1641</i></span>
+    regulations. Do this by selecting the <span class="hcp4"><i>D-1641</i></span>
+    plus <span class="hcp4"><i>BO RPAs</i></span> from the <span class="hcp4"><i>Quick
+ Select</i></span> box in the Regulations dashboard. Once the change is done,
+    the scenario can be saved as <span class="hcp4"><i>Future_LOD_Future_Demand_D1641+BO.CLS</i></span>.
+    Simulate the model to generate the <span class="hcp4"><i>Future_LOD_Future_Demand_D1641+BO_DV.DSS</i></span>
+    output file. Figure 5-9 shows the D-1641 plus Biological Opinion (BO)
+    RPAs checked on.</p>
+<p>&#160;</p>
+<p class="hcp1"><img alt="" border="0" class="hcp2" height="776" src="Fig22_Regulations_D1641+BORPA.jpg" width="1035"/>
+</p>
+<p class="hcp1"><span class="hcp3"><b>Figure 
+ 5-9.</b></span> D-1641 plus Biological Opinion RPAs regulations are selected
+    and the <span class="hcp4"><i>Future_LOD_ Future_Demand_D1641+BORPAs</i></span>
+    scenario is ready to save.</p>
+<p>&#160;</p>
+<p class="hcp1">&#160;</p>
+</body>
+</html>

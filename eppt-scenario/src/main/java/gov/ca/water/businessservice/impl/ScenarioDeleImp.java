@@ -18,14 +18,13 @@ import java.util.Map;
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
 
+import gov.ca.water.bo.GUILinks2BO;
+import gov.ca.water.bo.ScenarioDisplayBO;
 import gov.ca.water.businessservice.IScenarioDele;
+import gov.ca.water.businessservice.IScenarioSvc;
 import gov.ca.water.businessservice.ISeedDataSvc;
 import gov.ca.water.calgui.EpptInitializationException;
 import gov.ca.water.calgui.bo.DataTableModel;
-import gov.ca.water.calgui.bo.GUILinks2BO;
-import gov.ca.water.calgui.bo.ScenarioDisplayBO;
-import gov.ca.water.calgui.bus_service.IScenarioSvc;
-import gov.ca.water.calgui.bus_service.impl.ScenarioSvcImpl;
 import gov.ca.water.calgui.constant.Constant;
 import org.apache.commons.io.FilenameUtils;
 import org.swixml.SwingEngine;

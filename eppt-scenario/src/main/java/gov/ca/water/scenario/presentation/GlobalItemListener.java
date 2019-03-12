@@ -18,12 +18,12 @@ import javax.swing.*;
 
 import gov.ca.water.businessservice.IApplyDynamicConDele;
 import gov.ca.water.businessservice.IDynamicControlSvc;
+import gov.ca.water.businessservice.IScenarioSvc;
 import gov.ca.water.businessservice.IXMLParsingSvc;
 import gov.ca.water.businessservice.impl.ApplyDynamicConDeleImp;
 import gov.ca.water.businessservice.impl.DynamicControlSvcImpl;
+import gov.ca.water.businessservice.impl.ScenarioSvcImpl;
 import gov.ca.water.businessservice.impl.XMLParsingSvcImpl;
-import gov.ca.water.calgui.bus_service.IScenarioSvc;
-import gov.ca.water.calgui.bus_service.impl.ScenarioSvcImpl;
 import gov.ca.water.calgui.constant.Constant;
 import gov.ca.water.calgui.tech_service.IAuditSvc;
 import gov.ca.water.calgui.tech_service.IDialogSvc;

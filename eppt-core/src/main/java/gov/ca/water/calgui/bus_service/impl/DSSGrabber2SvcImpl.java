@@ -16,11 +16,10 @@ import java.util.Vector;
 
 import calsim.app.DerivedTimeSeries;
 import calsim.app.MultipleTimeSeries;
-import gov.ca.water.calgui.bo.GUILinks3BO;
+import gov.ca.water.calgui.bo.GUILinksAllModelsBO;
 import gov.ca.water.calgui.bo.RBListItemBO;
 import gov.ca.water.calgui.bo.ResultUtilsBO;
 import gov.ca.water.calgui.bus_service.IGuiLinksSeedDataSvc;
-import gov.ca.water.calgui.constant.Constant;
 import gov.ca.water.calgui.tech_service.IErrorHandlingSvc;
 import gov.ca.water.calgui.tech_service.impl.ErrorHandlingSvcImpl;
 import org.apache.log4j.Logger;
@@ -54,20 +53,19 @@ import hec.io.TimeSeriesContainer;
 public class DSSGrabber2SvcImpl extends DSSGrabber1SvcImpl
 {
 
-	static Logger LOG = Logger.getLogger(DSSGrabber2SvcImpl.class.getName());
-	private final DerivedTimeSeries dts;
-	private final MultipleTimeSeries mts;
-	private IGuiLinksSeedDataSvc seedDataSvc = GuiLinksSeedDataSvcImpl.getSeedDataSvcImplInstance();
-	private IErrorHandlingSvc errorHandlingSvc = new ErrorHandlingSvcImpl();
+	private static final Logger LOG = Logger.getLogger(DSSGrabber2SvcImpl.class.getName());
+	private final DerivedTimeSeries _dts;
+	private final MultipleTimeSeries _mts;
+	private final IGuiLinksSeedDataSvc _seedDataSvc = GuiLinksSeedDataSvcImpl.getSeedDataSvcImplInstance();
+	private final IErrorHandlingSvc _errorHandlingSvc = new ErrorHandlingSvcImpl();
 	private double[][][] _annualTAFs;
 	private double[][][] _annualTAFsDiff;
 
 	public DSSGrabber2SvcImpl(List<RBListItemBO> list, DerivedTimeSeries dts, MultipleTimeSeries mts)
 	{
-
 		super(list);
-		this.dts = dts;
-		this.mts = mts;
+		this._dts = dts;
+		this._mts = mts;
 	}
 
 	/**
@@ -91,43 +89,38 @@ public class DSSGrabber2SvcImpl extends DSSGrabber1SvcImpl
 			{
 				// @@ indicates MTS/DTS title
 				locationName = locationName.substring(2);
-				_primaryDSSName = locationName;
-				_secondaryDSSName = "";
-				_yLabel = "";
-				_sLabel = "";
-				_title = locationName;
+				_primaryDSSName.clear();
+				_primaryDSSName.add(locationName);
+				_secondaryDSSName.clear();
+				_axisLabel = "";
+				_legend = "";
+				_plotTitle = locationName;
 			}
 			else if(locationName.startsWith("/"))
 			{
 				// Handle names passed from WRIMS GUI
 				String[] parts = locationName.split("/");
-				_title = locationName;
-				_primaryDSSName = parts[2] + "/" + parts[3];
-				_secondaryDSSName = "";
-				_yLabel = "";
-				_sLabel = "";
+				_plotTitle = locationName;
+				_primaryDSSName.clear();
+				_primaryDSSName.add(parts[2] + "/" + parts[3]);
+				_secondaryDSSName.clear();
+				_axisLabel = "";
+				_legend = "";
 			}
 			else
 			{
-				String lookupID = locationName;
-				if(lookupID.startsWith(Constant.SCHEMATIC_PREFIX))
-				// Strip off prefix for schematic view - NOT SURE IF WE
-				// CAN'T
-				// JUST ELIMINATE PREFIX?
-				{
-					lookupID = lookupID.substring(Constant.SCHEMATIC_PREFIX.length());
-				}
-
 				// Location name is otherwise assumed coded as "ckpbxxx"
 
-				GUILinks3BO guiLinks3BO = seedDataSvc.getObjById(locationName);
-				if(guiLinks3BO != null)
+				GUILinksAllModelsBO guiLinksAllModelsBO = _seedDataSvc.getObjById(locationName);
+				if(guiLinksAllModelsBO != null)
 				{
-					_primaryDSSName = guiLinks3BO.getPrimary();
-					_secondaryDSSName = guiLinks3BO.getSecondary();
-					_yLabel = guiLinks3BO.getyTitle();
-					_title = guiLinks3BO.getTitle();
-					_sLabel = guiLinks3BO.getyTitle2();
+					_primaryDSSName.clear();
+					_primaryDSSName.addAll(guiLinksAllModelsBO.getPrimary());
+					_secondaryDSSName.clear();
+					_secondaryDSSName.addAll(guiLinksAllModelsBO.getSecondary());
+					_axisLabel = guiLinksAllModelsBO.getPlotAxisLabel();
+					_plotTitle = guiLinksAllModelsBO.getPlotTitle();
+					_legend = guiLinksAllModelsBO.getLegend();
 				}
 			}
 		}
@@ -135,7 +128,7 @@ public class DSSGrabber2SvcImpl extends DSSGrabber1SvcImpl
 		{
 			LOG.error(e.getMessage());
 			String messageText = "Unable to set location.";
-			errorHandlingSvc.businessErrorHandler(messageText, e);
+			_errorHandlingSvc.businessErrorHandler(messageText, e);
 		}
 	}
 
@@ -151,80 +144,57 @@ public class DSSGrabber2SvcImpl extends DSSGrabber1SvcImpl
 
 		try
 		{
-			TimeSeriesContainer[] results = null;
+			TimeSeriesContainer[] results;
 			checkReadiness();
-			if(locationName.contains(Constant.SCHEMATIC_PREFIX) && _primaryDSSName.contains(","))
+
+			// Store number of scenarios
+
+			_scenarioCount = _scenarios.size();
+			results = new TimeSeriesContainer[_scenarioCount];
+
+			// Base first
+
+			results[0] = getOneSeriesWRIMS(_baseName, _dts);
+			_originalUnits = results[0].units;
+
+			// Then scenarios
+
+			int j = 0;
+			for(int i = 0; i < _scenarioCount; i++)
 			{
-
-				// Special handling for DEMO of schematic view - treat
-				// multiple
-				// series as multiple scenarios
-				// TODO: Longer-term approach is probably to add a rank to
-				// arrays storing all series
-
-				String[] dssNames = _primaryDSSName.split(",");
-				_scenarioCount = dssNames.length;
-				results = new TimeSeriesContainer[_scenarioCount];
-				for(int i = 0; i < _scenarioCount; i++)
+				String scenarioName;
+				if(_baseName.contains("_SV.DSS"))
 				{
-					results[i] = getOneSeries(_baseName, dssNames[i]);
+					// For SVars, use WRIMS GUI Project object to
+					// determine
+					// input files
+					switch(i)
+					{
+						case 0:
+							scenarioName = _project.getSVFile();
+							break;
+						case 1:
+							scenarioName = _project.getSV2File();
+							break;
+						case 2:
+							scenarioName = _project.getSV3File();
+							break;
+						case 3:
+							scenarioName = _project.getSV4File();
+							break;
+						default:
+							scenarioName = "";
+							break;
+					}
 				}
-
-				_originalUnits = results[0].units;
-
-			}
-			else
-			{
-
-				// Store number of scenarios
-
-				_scenarioCount = _scenarios.size();
-				results = new TimeSeriesContainer[_scenarioCount];
-
-				// Base first
-
-				results[0] = getOneSeries_WRIMS(_baseName, _primaryDSSName, dts);
-				_originalUnits = results[0].units;
-
-				// Then scenarios
-
-				int j = 0;
-				for(int i = 0; i < _scenarioCount; i++)
+				else
 				{
-					String scenarioName;
-					if(_baseName.contains("_SV.DSS"))
-					{
-						// For SVars, use WRIMS GUI Project object to
-						// determine
-						// input files
-						switch(i)
-						{
-							case 0:
-								scenarioName = _project.getSVFile();
-								break;
-							case 1:
-								scenarioName = _project.getSV2File();
-								break;
-							case 2:
-								scenarioName = _project.getSV3File();
-								break;
-							case 3:
-								scenarioName = _project.getSV4File();
-								break;
-							default:
-								scenarioName = "";
-								break;
-						}
-					}
-					else
-					{
-						scenarioName = _scenarios.get(i).toString();
-					}
-					if(!_baseName.equals(scenarioName))
-					{
-						j = j + 1;
-						results[j] = getOneSeries_WRIMS(scenarioName, _primaryDSSName, dts);
-					}
+					scenarioName = _scenarios.get(i).toString();
+				}
+				if(!_baseName.equals(scenarioName))
+				{
+					j = j + 1;
+					results[j] = getOneSeriesWRIMS(scenarioName, _dts);
 				}
 			}
 
@@ -234,7 +204,7 @@ public class DSSGrabber2SvcImpl extends DSSGrabber1SvcImpl
 		{
 			LOG.error(e.getMessage());
 			String messageText = "Unable to get time-series.";
-			errorHandlingSvc.businessErrorHandler(messageText, e);
+			_errorHandlingSvc.businessErrorHandler(messageText, e);
 		}
 		return null;
 	}
@@ -254,7 +224,7 @@ public class DSSGrabber2SvcImpl extends DSSGrabber1SvcImpl
 
 			// Base first
 
-			results[0] = getOneSeries_WRIMS(_baseName, mtsI, mts);
+			results[0] = getOneSeriesWRIMS(_baseName, mtsI, _mts);
 			if(results[0] != null)
 			{
 				_originalUnits = results[0].units;
@@ -296,7 +266,7 @@ public class DSSGrabber2SvcImpl extends DSSGrabber1SvcImpl
 				if(!_baseName.equals(scenarioName))
 				{
 					j = j + 1;
-					results[j] = getOneSeries_WRIMS(scenarioName, mtsI, mts);
+					results[j] = getOneSeriesWRIMS(scenarioName, mtsI, _mts);
 				}
 			}
 
@@ -306,12 +276,12 @@ public class DSSGrabber2SvcImpl extends DSSGrabber1SvcImpl
 		{
 			LOG.error(e.getMessage());
 			String messageText = "Unable to get time-series.";
-			errorHandlingSvc.businessErrorHandler(messageText, e);
+			_errorHandlingSvc.businessErrorHandler(messageText, e);
 		}
 		return null;
 	}
 
-	private TimeSeriesContainer getOneSeries_WRIMS(String dssFilename, String dssName, DerivedTimeSeries dts2)
+	private TimeSeriesContainer getOneSeriesWRIMS(String dssFilename, DerivedTimeSeries dts2)
 	{
 
 		try
@@ -328,12 +298,13 @@ public class DSSGrabber2SvcImpl extends DSSGrabber1SvcImpl
 					// Operand is reference to another DTS
 					DerivedTimeSeries adt = ResultUtilsBO.getResultUtilsInstance(null).getProject()
 														 .getDTS((String) dtsNames.get(i));
-					interimResult = getOneSeries_WRIMS(dssFilename, dssName, adt);
+					interimResult = getOneSeriesWRIMS(dssFilename, adt);
 				}
 				else
 				{
 					// Operand is a DSS time series
-					_primaryDSSName = (dts2.getBPartAt(i) + "/" + dts2.getCPartAt(i));
+					_primaryDSSName.clear();
+					_primaryDSSName.add(dts2.getBPartAt(i) + "/" + dts2.getCPartAt(i));
 					if(dts2.getVarTypeAt(i).equals("DVAR"))
 					{
 						interimResult = getOneSeries(dssFilename,
@@ -440,31 +411,33 @@ public class DSSGrabber2SvcImpl extends DSSGrabber1SvcImpl
 		{
 			LOG.error(e.getMessage());
 			String messageText = "Unable to get time-series.";
-			errorHandlingSvc.businessErrorHandler(messageText, e);
+			_errorHandlingSvc.businessErrorHandler(messageText, e);
 		}
 		return null;
 
 	}
 
-	private TimeSeriesContainer getOneSeries_WRIMS(String dssFilename, int i, MultipleTimeSeries mts2)
+	private TimeSeriesContainer getOneSeriesWRIMS(String dssFilename, int i, MultipleTimeSeries mts2)
 	{
 
 		try
 		{
 			TimeSeriesContainer result = null;
-			if(!mts2.getDTSNameAt(i).equals(""))
+			if(!mts2.getDTSNameAt(i).isEmpty())
 			{
 				// Operand is reference to a DTS
 				DerivedTimeSeries adt = ResultUtilsBO.getResultUtilsInstance(null).getProject()
-													 .getDTS(mts.getDTSNameAt(i));
-				result = getOneSeries_WRIMS(dssFilename, "", adt);
-				_primaryDSSName = mts.getDTSNameAt(i);
+													 .getDTS(_mts.getDTSNameAt(i));
+				result = getOneSeriesWRIMS(dssFilename, adt);
+				_primaryDSSName.clear();
+				_primaryDSSName.add(_mts.getDTSNameAt(i));
 
 			}
 			else
 			{
 				// Operand is a DSS time series
-				_primaryDSSName = (mts2.getBPartAt(i) + "//" + mts2.getCPartAt(i));
+				_primaryDSSName.clear();
+				_primaryDSSName.add(mts2.getBPartAt(i) + "//" + mts2.getCPartAt(i));
 				if("DVAR".equals(mts2.getVarTypeAt(i)))
 				{
 					result = getOneSeries(dssFilename, (mts2.getBPartAt(i) + "/" + mts2.getCPartAt(i)));
@@ -499,7 +472,7 @@ public class DSSGrabber2SvcImpl extends DSSGrabber1SvcImpl
 		{
 			LOG.error(e.getMessage());
 			String messageText = "Unable to get time series from.";
-			errorHandlingSvc.businessErrorHandler(messageText, e);
+			_errorHandlingSvc.businessErrorHandler(messageText, e);
 		}
 		return null;
 	}
@@ -540,7 +513,7 @@ public class DSSGrabber2SvcImpl extends DSSGrabber1SvcImpl
 		{
 			LOG.error(e.getMessage());
 			String messageText = "Unable to get time-series.";
-			errorHandlingSvc.businessErrorHandler(messageText, e);
+			_errorHandlingSvc.businessErrorHandler(messageText, e);
 		}
 		return timeSeriesResults;
 	}
@@ -633,7 +606,7 @@ public class DSSGrabber2SvcImpl extends DSSGrabber1SvcImpl
 		{
 			LOG.error(e.getMessage());
 			String messageText = "Unable to calculate TAF.";
-			errorHandlingSvc.businessErrorHandler(messageText, e);
+			_errorHandlingSvc.businessErrorHandler(messageText, e);
 		}
 
 	}
@@ -764,7 +737,7 @@ public class DSSGrabber2SvcImpl extends DSSGrabber1SvcImpl
 		{
 			LOG.error(e.getMessage());
 			String messageText = "Unable to get time-series.";
-			errorHandlingSvc.businessErrorHandler(messageText, e);
+			_errorHandlingSvc.businessErrorHandler(messageText, e);
 		}
 		return null;
 	}
@@ -893,7 +866,7 @@ public class DSSGrabber2SvcImpl extends DSSGrabber1SvcImpl
 		{
 			LOG.error(e.getMessage());
 			String messageText = "Unable to get time-series.";
-			errorHandlingSvc.businessErrorHandler(messageText, e);
+			_errorHandlingSvc.businessErrorHandler(messageText, e);
 		}
 		return null;
 	}

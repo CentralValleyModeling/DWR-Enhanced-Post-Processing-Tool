@@ -39,7 +39,7 @@ import vista.set.SortMechanism;
 public class GeneralRetrievePanel extends JPanel
 {
 	public static final int NUM_PATH_PARTS = 6;
-	public static boolean DEBUG = true;
+	public static boolean DEBUG = false;
 	private static boolean[] ascVals = new boolean[Pathname.MAX_PARTS];
 	private JTextField[] _pathText;
 	private JComboBox _varTypeBox;

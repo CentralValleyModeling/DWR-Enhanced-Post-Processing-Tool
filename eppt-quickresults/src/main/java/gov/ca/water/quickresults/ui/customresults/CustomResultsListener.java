@@ -63,7 +63,8 @@ public class CustomResultsListener implements ActionListener
 
 	private void saveList()
 	{
-		ResultUtilsBO.getResultUtilsInstance(_customResultsPanel.getSwingEngine()).writeCGR();
+		Window window = SwingUtilities.windowForComponent(_customResultsPanel);
+		ResultUtilsBO.getResultUtilsInstance(_customResultsPanel.getSwingEngine()).writeCGR((JFrame) window);
 	}
 
 	private void clearTree()

@@ -13,15 +13,14 @@ import java.util.Map;
 
 import gov.ca.water.calgui.EpptInitializationException;
 import gov.ca.water.calgui.bo.CalLiteGUIException;
-import gov.ca.water.calgui.bo.GUILinks2BO;
-import gov.ca.water.calgui.bo.GUILinks3BO;
-import gov.ca.water.calgui.bo.GUILinks4BO;
+import gov.ca.water.calgui.bo.GUILinksAllModelsBO;
 import gov.ca.water.calgui.bus_service.IGuiLinksSeedDataSvc;
 import gov.ca.water.calgui.constant.Constant;
 import gov.ca.water.calgui.tech_service.IFileSystemSvc;
 import gov.ca.water.calgui.tech_service.impl.FileSystemSvcImpl;
 import org.apache.log4j.Logger;
 
+import static gov.ca.water.calgui.constant.Constant.CONFIG_DIR;
 import static gov.ca.water.calgui.constant.Constant.CSV_EXT;
 
 /**
@@ -35,21 +34,18 @@ import static gov.ca.water.calgui.constant.Constant.CSV_EXT;
 public final class GuiLinksSeedDataSvcImpl implements IGuiLinksSeedDataSvc
 {
 	private static final Logger LOG = Logger.getLogger(GuiLinksSeedDataSvcImpl.class.getName());
-	private static final String GUI_LINKS3_FILENAME = "eppt/modules/Config/GUI_Links3" + CSV_EXT;
-	private static IGuiLinksSeedDataSvc _seedDataSvc;
-
-	private final Map<String, GUILinks3BO> _guiLinks3Map = new HashMap<>();
+	private static final String GUI_LINKS3_FILENAME = CONFIG_DIR + "/GUI_Links3" + CSV_EXT;
+	private static final String GUI_LINKS_ALL_MODELS_FILENAME = CONFIG_DIR + "/GUI_Links_All_Models" + CSV_EXT;
+	private static IGuiLinksSeedDataSvc seedDataSvc;
+	private final Map<Integer, GUILinksAllModelsBO> _guiLinksAllModels = new HashMap<>();
 
 	/**
-	 * This will read the gui_links.csv files and build the list and maps of
-	 * {@link GUILinks2BO} objects and the maps of {@link GUILinks4BO} and
-	 * {@link GUILinks4BO} objects.
+	 * This will read the gui_links.csv files and build the list and maps of {@link GUILinksAllModelsBO}
 	 */
 	private GuiLinksSeedDataSvcImpl() throws EpptInitializationException
 	{
 		LOG.debug("Building SeedDataSvcImpl Object.");
-		IFileSystemSvc fileSystemSvc = new FileSystemSvcImpl();
-		initGuiLinks3(fileSystemSvc);
+		initGuiLinksAllModels();
 	}
 
 	/**
@@ -61,46 +57,71 @@ public final class GuiLinksSeedDataSvcImpl implements IGuiLinksSeedDataSvc
 	 */
 	public static IGuiLinksSeedDataSvc getSeedDataSvcImplInstance()
 	{
-		if(_seedDataSvc == null)
+		if(seedDataSvc == null)
 		{
 			throw new IllegalArgumentException();
 		}
 		else
 		{
-			return _seedDataSvc;
+			return seedDataSvc;
 		}
 	}
 
-	public static IGuiLinksSeedDataSvc createSeedDataSvcImplInstance() throws EpptInitializationException
+	public static void createSeedDataSvcImplInstance() throws EpptInitializationException
 	{
-		if(_seedDataSvc == null)
+		if(seedDataSvc == null)
 		{
-			_seedDataSvc = new GuiLinksSeedDataSvcImpl();
+			seedDataSvc = new GuiLinksSeedDataSvcImpl();
 		}
-		return _seedDataSvc;
 	}
 
-	private void initGuiLinks3(IFileSystemSvc fileSystemSvc) throws EpptInitializationException
+	private void initGuiLinksAllModels() throws EpptInitializationException
 	{
+		IFileSystemSvc fileSystemSvc = new FileSystemSvcImpl();
 		String errorStr = "";
 		try
 		{
-			List<String> guiLinks3StrList = fileSystemSvc.getFileData(GUI_LINKS3_FILENAME, true,
+			List<String> guiLinkStrings = fileSystemSvc.getFileData(GUI_LINKS_ALL_MODELS_FILENAME, true,
 					GuiLinksSeedDataSvcImpl::isNotComments);
-			for(String guiLink3Str : guiLinks3StrList)
+			for(String guiLinkString : guiLinkStrings)
 			{
-				errorStr = guiLink3Str;
-				String[] list = guiLink3Str.split(Constant.DELIMITER);
-				GUILinks3BO guiLinks3BO = new GUILinks3BO(list[0], list[1], list[2], list[3], list[4], list[5]);
-				String id = extractCheckboxId(list);
-				_guiLinks3Map.put(id, guiLinks3BO);
+				errorStr = guiLinkString;
+				String[] list = guiLinkString.split(Constant.DELIMITER);
+				int checkboxId = Integer.parseInt(list[0].trim());
+				GUILinksAllModelsBO guiLinksAllModelsBO = _guiLinksAllModels.computeIfAbsent(checkboxId,
+						id -> createGuiLinksAllModels(list, id));
+				String model = list[1];
+				String primary = null;
+				if(list.length > 2)
+				{
+					primary = list[2].trim();
+				}
+				String secondary = null;
+				if(list.length > 3)
+				{
+					secondary = list[3].trim();
+				}
+				guiLinksAllModelsBO.addModelMapping(GUILinksAllModelsBO.Model.findModel(model), primary, secondary);
 			}
-
 		}
 		catch(ArrayIndexOutOfBoundsException ex)
 		{
-			String errorMessage = "In file \"" + GUI_LINKS3_FILENAME + "\" has corrupted data at line \"" + errorStr + "\""
+			String errorMessage = "In file \"" + GUI_LINKS_ALL_MODELS_FILENAME + "\" has corrupted data at line \"" + errorStr + "\""
 					+ Constant.NEW_LINE + "The column number which the data is corrupted is " + ex.getMessage();
+			LOG.error(errorMessage, ex);
+			throw new EpptInitializationException(errorMessage);
+		}
+		catch(NumberFormatException ex)
+		{
+			String errorMessage = "In file \"" + GUI_LINKS_ALL_MODELS_FILENAME + "\" has corrupted data at line \"" + errorStr + "\""
+					+ Constant.NEW_LINE + "The checkbox id is not an Integer " + ex.getMessage();
+			LOG.error(errorMessage, ex);
+			throw new EpptInitializationException(errorMessage);
+		}
+		catch(IllegalArgumentException ex)
+		{
+			String errorMessage = "In file \"" + GUI_LINKS_ALL_MODELS_FILENAME + "\" has corrupted data at line \"" + errorStr + "\""
+					+ Constant.NEW_LINE + "The model could not be parsed " + ex.getMessage();
 			LOG.error(errorMessage, ex);
 			throw new EpptInitializationException(errorMessage);
 		}
@@ -111,16 +132,51 @@ public final class GuiLinksSeedDataSvcImpl implements IGuiLinksSeedDataSvc
 		}
 	}
 
-	private String extractCheckboxId(String[] list)
+	private GUILinksAllModelsBO createGuiLinksAllModels(String[] list, int checkboxId)
+	{
+		String yTitle = "";
+		if(list.length > 4)
+		{
+			yTitle = list[4];
+		}
+		String title = "";
+		if(list.length > 5)
+		{
+			title = list[5];
+		}
+		String sLegend = "";
+		if(list.length > 6)
+		{
+			sLegend = list[6];
+		}
+		String id = extractCheckboxId(checkboxId);
+		return new GUILinksAllModelsBO(id, yTitle, title, sLegend);
+	}
+
+	private String extractCheckboxId(int checkboxId)
 	{
 		String id;
 		try
 		{
-			id = String.format("ckbp%03d", Integer.parseInt(list[0]));
+			id = String.format("ckbp%03d", checkboxId);
 		}
 		catch(NumberFormatException e)
 		{
-			id = list[0];
+			id = Integer.toString(checkboxId);
+		}
+		return id;
+	}
+
+	private int extractCheckboxId(String checkboxId)
+	{
+		int id;
+		try
+		{
+			id = Integer.parseInt(checkboxId.replace("ckbp", ""));
+		}
+		catch(NumberFormatException e)
+		{
+			id = Integer.parseInt(checkboxId);
 		}
 		return id;
 	}
@@ -136,12 +192,12 @@ public final class GuiLinksSeedDataSvcImpl implements IGuiLinksSeedDataSvc
 		return !line.startsWith(Constant.EXCLAMATION);
 	}
 
-	public GUILinks3BO getObjById(String id)
+	public GUILinksAllModelsBO getObjById(String id)
 	{
-		GUILinks3BO guiLinks3BO = _guiLinks3Map.get(id);
+		GUILinksAllModelsBO guiLinks3BO = _guiLinksAllModels.get(extractCheckboxId(id));
 		if(guiLinks3BO == null)
 		{
-			LOG.info("There is no GUI_Links3 data for this id = " + id);
+			LOG.info("There is no GUI Links data for this id = " + id);
 		}
 		return guiLinks3BO;
 	}

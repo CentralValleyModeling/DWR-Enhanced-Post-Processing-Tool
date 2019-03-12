@@ -9,7 +9,6 @@ package gov.ca.water.calgui.presentation.display;
 
 import java.awt.Container;
 import java.awt.HeadlessException;
-import java.awt.Toolkit;
 import java.util.List;
 import javax.swing.*;
 
@@ -96,8 +95,8 @@ public class DefaultPlotHandler implements DisplayFrame.PlotHandler
 			frame.pack();
 			frame.setTitle("CalLite Results - " + tabbedpane.getName());
 			// CalLite icon
-			java.net.URL imgURL = Thread.currentThread().getContextClassLoader().getResource("/images/CalLiteIcon.png");
-			frame.setIconImage(Toolkit.getDefaultToolkit().getImage(imgURL));
+			//			java.net.URL imgURL = Thread.currentThread().getContextClassLoader().getResource("/images/CalLiteIcon.png");
+			//			frame.setIconImage(Toolkit.getDefaultToolkit().getImage(imgURL));
 
 			//			if(!(doTimeSeries || doExceedance || doMonthlyTable || doSummaryTable))
 			//			{

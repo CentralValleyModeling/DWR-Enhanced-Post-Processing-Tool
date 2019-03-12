@@ -161,7 +161,7 @@ public class ResultUtilsBO
 		List<String> data = null;
 		JFileChooser fc = new JFileChooser();
 		fc.setFileFilter(new SimpleFileFilter("cgr", "CalLite GUI Report File (*.cgr)"));
-		fc.setCurrentDirectory(new File(".//Config"));
+		fc.setCurrentDirectory(new File(Constant.CONFIG_DIR));
 		File file;
 		String filename;
 		int retval = fc.showOpenDialog(jFrame);
@@ -209,14 +209,14 @@ public class ResultUtilsBO
 	/**
 	 * Writes Quick Results display list, Custom Result DTS tree
 	 */
-	public void writeCGR()
+	public void writeCGR(JFrame jFrame)
 	{
 		JFileChooser fc = new JFileChooser();
 		fc.setFileFilter(new SimpleFileFilter("cgr", "CalLite Report File (*.cgr)"));
-		fc.setCurrentDirectory(new File(".//Config"));
+		fc.setCurrentDirectory(new File(Constant.CONFIG_DIR));
 		File file;
 		String filename;
-		int retval = fc.showSaveDialog(_swingEngine.find(Constant.MAIN_FRAME_NAME));
+		int retval = fc.showSaveDialog(jFrame);
 		if(retval == JFileChooser.APPROVE_OPTION)
 		{
 			// ... The user selected a file, get it, use it.

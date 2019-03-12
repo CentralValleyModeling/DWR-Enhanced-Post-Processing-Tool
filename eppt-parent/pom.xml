@@ -30,7 +30,7 @@
 
 	<properties>
 		<netbeans.version>RELEASE82</netbeans.version>
-		<brandingToken>eppt</brandingToken>
+		<brandingToken>dwr_eppt</brandingToken>
 	</properties>
 	<repositories>
 		<!--

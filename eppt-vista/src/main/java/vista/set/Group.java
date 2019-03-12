@@ -122,7 +122,7 @@ public class Group implements Named, Serializable, Comparable<Group>
 	{
 		Group gcopy = new Group();
 		gcopy.setName(g.getName() + "(copy)");
-		gcopy._referenceList = new ArrayList<DataReference>(g._referenceList);
+		gcopy._referenceList = new ArrayList<>(g._referenceList);
 		return gcopy;
 	}
 

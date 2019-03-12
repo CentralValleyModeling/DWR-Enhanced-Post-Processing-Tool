@@ -16,12 +16,11 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import javax.swing.*;
 
+import gov.ca.water.businessservice.IScenarioSvc;
 import gov.ca.water.businessservice.ISeedDataSvc;
 import gov.ca.water.businessservice.IVerifyControlsDele;
 import gov.ca.water.businessservice.IXMLParsingSvc;
 import gov.ca.water.calgui.EpptInitializationException;
-import gov.ca.water.calgui.bus_service.IScenarioSvc;
-import gov.ca.water.calgui.bus_service.impl.ScenarioSvcImpl;
 import gov.ca.water.calgui.constant.Constant;
 import org.swixml.SwingEngine;
 

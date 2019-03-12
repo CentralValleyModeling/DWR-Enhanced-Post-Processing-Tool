@@ -14,7 +14,6 @@ import javax.swing.*;
 
 import gov.ca.water.calgui.bo.FileDialogBO;
 import org.apache.log4j.Logger;
-import org.swixml.SwingEngine;
 
 
 /**
@@ -32,11 +31,11 @@ public class ScenarioConfigurationListener implements ActionListener
 	public ScenarioConfigurationListener(ScenarioConfigurationPanel scenarioConfigurationPanel)
 	{
 		_scenarioConfigurationPanel = scenarioConfigurationPanel;
-		SwingEngine swingEngine = _scenarioConfigurationPanel.getSwingEngine();
-		JList<?> lstScenarios = (JList<?>) swingEngine.find("SelectedList");
-		JRadioButton rdb1 = (JRadioButton) swingEngine.find("rdbp001");
-		JRadioButton rdb2 = (JRadioButton) swingEngine.find("rdbp002");
-		JLabel lblBase = (JLabel) swingEngine.find("lblBase");
+
+		JList<?> lstScenarios = _scenarioConfigurationPanel.getScenarioList();
+		JRadioButton rdb1 = _scenarioConfigurationPanel.getRadioButton1();
+		JRadioButton rdb2 = _scenarioConfigurationPanel.getRadioButton2();
+		JLabel lblBase = _scenarioConfigurationPanel.getLabelBase();
 		_addScnearioFileDialogBO = new FileDialogBO(lstScenarios, lblBase, rdb1, rdb2,
 				null, true, (JFrame) SwingUtilities.windowForComponent(_scenarioConfigurationPanel));
 	}
@@ -62,8 +61,8 @@ public class ScenarioConfigurationListener implements ActionListener
 				launchFileDialogToAddScenarios(e);
 				break;
 			default:
-				LOGGER.info("Testing action events " + e.getActionCommand());
 		}
+		ScenarioConfigurationPanel.getScenarioConfigurationPanel().setModified(true);
 	}
 
 	private void launchFileDialogToAddScenarios(ActionEvent e)

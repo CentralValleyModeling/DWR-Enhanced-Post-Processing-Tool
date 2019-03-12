@@ -60,14 +60,6 @@ public interface IDSSGrabber1Svc
 	void setLocation(String locationName);
 
 	/**
-	 * Sets dataset (DSS) names to read from scenario DSS files, title, and axis
-	 * labels be parsing string defined in web viewer.
-	 *
-	 * @param locationName coded location string passed
-	 */
-	void setLocationWeb(String locationName);
-
-	/**
 	 * Gets primary y-axis label assigned by DSS_Grabber to the results read in
 	 * from DSS file.
 	 *
@@ -90,7 +82,7 @@ public interface IDSSGrabber1Svc
 	 *
 	 * @return string containing title
 	 */
-	String getTitle();
+	String getPlotTitle();
 
 	/**
 	 * Checks if a DSS file has records with "HYDROPOWER" as the A-PART
@@ -141,19 +133,6 @@ public interface IDSSGrabber1Svc
 
 	double getAnnualTAFDiff(int i, int wy);
 
-	double getAnnualCFS(int i, int wy);
-
-	double getAnnualCFSDiff(int i, int wy);
-
-	/**
-	 * Calculates annual volume in CFS for any TAF dataset, and replaces monthly
-	 * values if CFS flag is checked.
-	 *
-	 * @param primaryResults
-	 * @param secondaryResults
-	 */
-	void calcCFSforTAF(TimeSeriesContainer[] primaryResults, TimeSeriesContainer[] secondaryResults);
-
 	/**
 	 * Generates exceedance time series from monthly DSS results.
 	 *
@@ -175,11 +154,7 @@ public interface IDSSGrabber1Svc
 
 	String getOriginalUnits();
 
-	void setOriginalUnits(String originalUnits);
-
-	String getPrimaryDSSName();
-
-	void setPrimaryDSSName(String primaryDSSName);
+	List<String> getPrimaryDSSName();
 
 	/**
 	 * Clears list of DSS records that were not found in scenario DV.DSS files

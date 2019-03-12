@@ -13,11 +13,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import gov.ca.water.bo.GUILinks2BO;
+import gov.ca.water.bo.GUILinks4BO;
 import gov.ca.water.businessservice.ISeedDataSvc;
 import gov.ca.water.calgui.EpptInitializationException;
 import gov.ca.water.calgui.bo.CalLiteGUIException;
-import gov.ca.water.calgui.bo.GUILinks2BO;
-import gov.ca.water.calgui.bo.GUILinks4BO;
 import gov.ca.water.calgui.constant.Constant;
 import gov.ca.water.calgui.tech_service.IFileSystemSvc;
 import gov.ca.water.calgui.tech_service.impl.FileSystemSvcImpl;

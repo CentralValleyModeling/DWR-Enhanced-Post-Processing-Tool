@@ -12,6 +12,7 @@ import java.awt.event.ActionListener;
 
 import org.openide.awt.ActionID;
 import org.openide.awt.ActionReference;
+import org.openide.awt.ActionReferences;
 import org.openide.awt.ActionRegistration;
 import org.openide.util.NbBundle.Messages;
 import org.openide.windows.WindowManager;
@@ -19,14 +20,19 @@ import org.openide.windows.WindowManager;
 import hec.dssgui.ListSelection;
 
 @ActionID(
-		category = "Tools",
+		category = "EPPT",
 		id = "gov.ca.water.eppt.nbui.actions.DssVueAction"
 )
 @ActionRegistration(
 		iconBase = "gov/ca/water/eppt/nbui/actions/HecDssVue.png",
 		displayName = "HEC-DSSVue"
 )
-@ActionReference(path = "Menu/Tools", position = 0, separatorAfter = 50)
+@ActionReferences(
+		{
+				@ActionReference(path = "Menu/Tools", position = 0, separatorAfter = 50)
+				,
+				@ActionReference(path = "Toolbars/EPPT", position = 555)
+		})
 @Messages("CTL_DssVueAction=HEC-DSSVue")
 public final class DssVueAction implements ActionListener
 {

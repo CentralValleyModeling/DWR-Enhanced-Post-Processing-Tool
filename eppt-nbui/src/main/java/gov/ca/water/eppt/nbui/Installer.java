@@ -6,13 +6,17 @@
  */
 package gov.ca.water.eppt.nbui;
 
+import java.io.IOException;
 import java.lang.reflect.Field;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import gov.ca.water.calgui.EpptInitializationException;
 import gov.ca.water.calgui.bus_service.impl.GuiLinksSeedDataSvcImpl;
+import gov.ca.water.calgui.constant.EpptPreferences;
 import gov.ca.water.calgui.presentation.DisplayFrame;
 import org.openide.modules.ModuleInstall;
 import org.openide.windows.WindowManager;
@@ -26,10 +30,34 @@ public class Installer extends ModuleInstall
 	@Override
 	public void restored()
 	{
+		initEpptHome();
 		initEpptConfigs();
 		initHeclibDll();
 		initLogger();
 		initPlotHandler();
+	}
+
+	private void initEpptHome()
+	{
+		createPaths(EpptPreferences.getProjectsPath());
+		createPaths(EpptPreferences.getModelDssPath());
+		createPaths(EpptPreferences.getScenariosPaths());
+		createPaths(EpptPreferences.getReportsPath());
+	}
+
+	private void createPaths(Path path)
+	{
+		if(!path.toFile().exists())
+		{
+			try
+			{
+				Files.createDirectories(path);
+			}
+			catch(IOException ex)
+			{
+				LOGGER.log(Level.SEVERE, "Unable to initialize EPPT Home: " + path, ex);
+			}
+		}
 	}
 
 	private void initPlotHandler()

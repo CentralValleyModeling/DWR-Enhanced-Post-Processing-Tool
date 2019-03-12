@@ -83,9 +83,10 @@
 			<plugin>
 				<groupId>org.codehaus.mojo</groupId>
 				<artifactId>nbm-maven-plugin</artifactId>
+				<extensions>true</extensions>
 				<configuration>
 					<finalName>DWR-EPPT-${maven.build.timestamp}</finalName>
-					<brandingToken>eppt</brandingToken>
+					<brandingToken>${brandingToken}</brandingToken>
 					<debugAdditionalArguments>
 						-J"-agentlib:jdwp=transport=dt_socket,server=y,suspend=y,address=5164" -J-Xmx2g
 					</debugAdditionalArguments>
@@ -119,6 +120,7 @@
 								<id>extra</id>
 								<goals>
 									<goal>build-installers</goal>
+									<goal>cluster-app</goal>
 								</goals>
 							</execution>
 						</executions>

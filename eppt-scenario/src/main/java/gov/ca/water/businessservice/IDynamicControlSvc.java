@@ -10,7 +10,7 @@ package gov.ca.water.businessservice;
 import java.awt.Component;
 import java.util.List;
 
-import gov.ca.water.calgui.bo.TriggerBO;
+import gov.ca.water.bo.TriggerBO;
 import org.swixml.SwingEngine;
 
 /**

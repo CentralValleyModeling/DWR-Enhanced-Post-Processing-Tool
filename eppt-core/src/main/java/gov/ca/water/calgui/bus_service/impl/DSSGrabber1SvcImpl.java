@@ -23,12 +23,11 @@ import java.util.Vector;
 import javax.swing.*;
 
 import calsim.app.Project;
-import gov.ca.water.calgui.bo.GUILinks3BO;
+import gov.ca.water.calgui.bo.GUILinksAllModelsBO;
 import gov.ca.water.calgui.bo.RBListItemBO;
 import gov.ca.water.calgui.bo.ResultUtilsBO;
 import gov.ca.water.calgui.bus_service.IDSSGrabber1Svc;
 import gov.ca.water.calgui.bus_service.IGuiLinksSeedDataSvc;
-import gov.ca.water.calgui.constant.Constant;
 import gov.ca.water.calgui.tech_service.IDialogSvc;
 import gov.ca.water.calgui.tech_service.IErrorHandlingSvc;
 import gov.ca.water.calgui.tech_service.impl.DialogSvcImpl;
@@ -69,14 +68,14 @@ public class DSSGrabber1SvcImpl implements IDSSGrabber1Svc
 	private static Logger LOG = Logger.getLogger(DSSGrabber1SvcImpl.class.getName());
 	final List<RBListItemBO> _scenarios = new ArrayList<>();
 	String _baseName;
-	String _primaryDSSName;
-	String _secondaryDSSName;
+	final List<String> _primaryDSSName = new ArrayList<>();
+	final List<String> _secondaryDSSName = new ArrayList<>();
 	// Chart title
-	String _title;
+	String _plotTitle;
 	// Y-axis label
-	String _yLabel;
+	String _axisLabel;
 	// Label for secondary time series
-	String _sLabel;
+	String _legend;
 	// Indicates whether "CFS" button was selected
 	String _originalUnits;
 	int _scenarioCount;
@@ -261,106 +260,29 @@ public class DSSGrabber1SvcImpl implements IDSSGrabber1Svc
 		{
 			// Handle names passed from WRIMS GUI
 			String[] parts = locationName.split("/");
-			_title = locationName;
-			_primaryDSSName = parts[2] + "/" + parts[3] + "/" + parts[6];
-			_secondaryDSSName = "";
-			_yLabel = "";
-			_sLabel = "";
+			_plotTitle = locationName;
+			_primaryDSSName.clear();
+			_primaryDSSName.add(parts[2] + "/" + parts[3] + "/" + parts[6]);
+			_secondaryDSSName.clear();
+			_axisLabel = "";
+			_legend = "";
 		}
 		else
 		{
-			String lookupID = locationName;
-			if(lookupID.startsWith(Constant.SCHEMATIC_PREFIX))
-			// Strip off prefix for schematic view - NOT SURE IF WE CAN'T
-			// JUST ELIMINATE PREFIX?
-			{
-				lookupID = lookupID.substring(Constant.SCHEMATIC_PREFIX.length());
-			}
-
 			// Location name is otherwise assumed coded as "ckpbxxx"
 
-			GUILinks3BO guiLinks3BO = _seedDataSvc.getObjById(locationName);
-			if(guiLinks3BO != null)
+			GUILinksAllModelsBO guiLinksAllModelsBO = _seedDataSvc.getObjById(locationName);
+			if(guiLinksAllModelsBO != null)
 			{
-				_primaryDSSName = guiLinks3BO.getPrimary();
-				_secondaryDSSName = guiLinks3BO.getSecondary();
-				_yLabel = guiLinks3BO.getyTitle();
-				_title = guiLinks3BO.getTitle();
-				_sLabel = guiLinks3BO.getyTitle2();
+				_primaryDSSName.clear();
+				_primaryDSSName.addAll(guiLinksAllModelsBO.getPrimary());
+				_secondaryDSSName.clear();
+				_secondaryDSSName.addAll(guiLinksAllModelsBO.getSecondary());
+				_axisLabel = guiLinksAllModelsBO.getPlotAxisLabel();
+				_plotTitle = guiLinksAllModelsBO.getPlotTitle();
+				_legend = guiLinksAllModelsBO.getLegend();
 			}
 		}
-	}
-
-	/**
-	 * Provides element type (DSS D-PART) based on prefix location (C-PART). For
-	 * example, a C-PART prefix of "S_" maps to "STORAGE".
-	 *
-	 * @param name (C-PART)
-	 * @return appropriate D-PART
-	 */
-	private String getType(String name)
-	{
-		String type;
-		if(name.startsWith("S_") || name.startsWith("s_"))
-		{
-			type = "STORAGE";
-		}
-		else if(name.startsWith("C_") || name.startsWith("c_"))
-		{
-			type = "FLOW-CHANNEL";
-		}
-		else if(name.startsWith("D_") || name.startsWith("d_"))
-		{
-			type = "FLOW-DELIVERY";
-		}
-		else if(name.startsWith("R_") || name.startsWith("r_"))
-		{
-			type = "RETURN-FLOW";
-		}
-		else if(name.startsWith("I_") || name.startsWith("i_"))
-		{
-			type = "INFLOW";
-		}
-		else if(name.startsWith("AD_") || name.startsWith("ad_"))
-		{
-			type = "FLOW-ACCRDEPL";
-		}
-		else if(name.startsWith("S") || name.startsWith("s"))
-		{
-			type = "STORAGE";
-		}
-		else if(name.startsWith("D") || name.startsWith("d"))
-		{
-			type = "FLOW-DELIVERY";
-		}
-		else if(name.startsWith("C") || name.startsWith("c"))
-		{
-			type = "FLOW-CHANNEL";
-		}
-		else
-		{
-			type = "";
-		}
-		return type;
-	}
-
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see
-	 * gov.ca.water.calgui.bus_service.impl.IDSSGrabber1Svc#setLocationWeb(java.
-	 * lang.String)
-	 */
-	@Override
-	public void setLocationWeb(String locationName)
-	{
-
-		String type = getType(locationName);
-		_primaryDSSName = locationName + "/" + type;
-		_secondaryDSSName = "";
-		_yLabel = type;
-		_title = locationName;
-		_sLabel = "";
 	}
 
 	/*
@@ -371,7 +293,7 @@ public class DSSGrabber1SvcImpl implements IDSSGrabber1Svc
 	@Override
 	public String getYLabel()
 	{
-		return _yLabel;
+		return _axisLabel;
 	}
 
 	/*
@@ -382,24 +304,24 @@ public class DSSGrabber1SvcImpl implements IDSSGrabber1Svc
 	@Override
 	public String getSLabel()
 	{
-		return _sLabel;
+		return _legend;
 	}
 
 	/*
 	 * (non-Javadoc)
 	 *
-	 * @see gov.ca.water.calgui.bus_service.impl.IDSSGrabber1Svc#getTitle()
+	 * @see gov.ca.water.calgui.bus_service.impl.IDSSGrabber1Svc#getPlotTitle()
 	 */
 	@Override
-	public String getTitle()
+	public String getPlotTitle()
 	{
-		if(_title != "")
+		if(_plotTitle != null && !_plotTitle.isEmpty())
 		{
-			return _title;
+			return _plotTitle;
 		}
 		else
 		{
-			return _primaryDSSName;
+			return String.join(",", _primaryDSSName);
 		}
 	}
 
@@ -454,19 +376,19 @@ public class DSSGrabber1SvcImpl implements IDSSGrabber1Svc
 	{
 		String clsFileName = dvFilename.substring(0, dvFilename.length() - 7) + ".cls";
 		File clsF = new File(clsFileName);
-		String AN_CHstate = "";
+		String anChstate = "";
 		try
 		{
 			Scanner scanner;
 			scanner = new Scanner(new FileInputStream(clsF.getAbsolutePath()));
-			while(scanner.hasNextLine() && AN_CHstate.isEmpty())
+			while(scanner.hasNextLine() && anChstate.isEmpty())
 			{
 				String text = scanner.nextLine();
 				if(text.startsWith("CkbReg_AN|"))
 				{
 
 					String[] texts = text.split("[|]");
-					AN_CHstate = texts[1];
+					anChstate = texts[1];
 				}
 			}
 			scanner.close();
@@ -477,7 +399,7 @@ public class DSSGrabber1SvcImpl implements IDSSGrabber1Svc
 			LOG.info(clsF.getName() + " not openable - Antioch/Chipps assumed off");
 		}
 
-		return (AN_CHstate.equals("true"));
+		return Boolean.valueOf(anChstate);
 	}
 
 	// Logic to display error message if a user is trying access LVE quick
@@ -495,19 +417,19 @@ public class DSSGrabber1SvcImpl implements IDSSGrabber1Svc
 	{
 		String clsFileName = dvFilename.substring(0, dvFilename.length() - 7) + ".cls";
 		File clsF = new File(clsFileName);
-		String LVE_State = "";
+		String lveState = "";
 		try
 		{
 			Scanner scanner;
 			scanner = new Scanner(new FileInputStream(clsF.getAbsolutePath()));
-			while(scanner.hasNextLine() && LVE_State.isEmpty())
+			while(scanner.hasNextLine() && lveState.isEmpty())
 			{
 				String text = scanner.nextLine();
 				if(text.startsWith("fac_ckb3|"))
 				{
 
 					String[] texts = text.split("[|]");
-					LVE_State = texts[1];
+					lveState = texts[1];
 				}
 			}
 			scanner.close();
@@ -518,7 +440,7 @@ public class DSSGrabber1SvcImpl implements IDSSGrabber1Svc
 			LOG.info(clsF.getName() + " not openable - LVE assumed off");
 		}
 
-		return (LVE_State.equals("true"));
+		return Boolean.valueOf(lveState);
 	}
 
 	/*
@@ -707,11 +629,6 @@ public class DSSGrabber1SvcImpl implements IDSSGrabber1Svc
 					{
 						message = "Could not find " + dssNames[0] + " in " + dssFilename;
 					}
-					if(_stopOnMissing)
-					{
-						_dialogSvc.getOK("Could not find " + dssNames[0] + " in " + dssFilename,
-								JOptionPane.ERROR_MESSAGE);
-					}
 					_missingDSSRecords.add(message);
 
 				}
@@ -871,81 +788,63 @@ public class DSSGrabber1SvcImpl implements IDSSGrabber1Svc
 		{
 			checkReadiness();
 
-			if(locationName.contains(Constant.SCHEMATIC_PREFIX) && _primaryDSSName.contains(","))
+			// Store number of scenarios
+
+			_scenarioCount = _scenarios.size();
+			results = new TimeSeriesContainer[_scenarioCount];
+
+			// Base first
+			TimeSeriesContainer oneSeries = getOneTimeSeriesFromAllModels(_baseName, _primaryDSSName);
+			results[0] = oneSeries;
+			if(results[0] != null)
 			{
-
-				// Special handling for DEMO of schematic view - treat
-				// multiple
-				// series as multiple scenarios
-				// TODO: Longer-term approach is probably to add a rank to
-				// arrays storing all series
-
-				String[] dssNames = _primaryDSSName.split(",");
-				_scenarioCount = dssNames.length;
-				results = new TimeSeriesContainer[_scenarioCount];
-				for(int i = 0; i < _scenarioCount; i++)
-				{
-					results[i] = getOneSeries(_baseName, dssNames[i]);
-				}
-
 				_originalUnits = results[0].units;
-
 			}
-			else
+			else if(_stopOnMissing)
 			{
+				_dialogSvc.getOK("Could not find " + String.join(",", _primaryDSSName) + " in " + _baseName,
+						JOptionPane.ERROR_MESSAGE);
+			}
 
-				// Store number of scenarios
+			// Then scenarios
 
-				_scenarioCount = _scenarios.size();
-				results = new TimeSeriesContainer[_scenarioCount];
-
-				// Base first
-
-				results[0] = getOneSeries(_baseName, _primaryDSSName);
-				if(results[0] != null)
+			int j = 0;
+			for(int i = 0; i < _scenarioCount; i++)
+			{
+				String scenarioName;
+				if(_baseName.toUpperCase().contains("_SV.DSS"))
 				{
-					_originalUnits = results[0].units;
+					// For SVars, use WRIMS GUI Project object to
+					// determine
+					// input files
+					switch(i)
+					{
+						case 0:
+							scenarioName = _project.getSVFile();
+							break;
+						case 1:
+							scenarioName = _project.getSV2File();
+							break;
+						case 2:
+							scenarioName = _project.getSV3File();
+							break;
+						case 3:
+							scenarioName = _project.getSV4File();
+							break;
+						default:
+							scenarioName = "";
+							break;
+					}
 				}
-
-				// Then scenarios
-
-				int j = 0;
-				for(int i = 0; i < _scenarioCount; i++)
+				else
 				{
-					String scenarioName;
-					if(_baseName.toUpperCase().contains("_SV.DSS"))
-					{
-						// For SVars, use WRIMS GUI Project object to
-						// determine
-						// input files
-						switch(i)
-						{
-							case 0:
-								scenarioName = _project.getSVFile();
-								break;
-							case 1:
-								scenarioName = _project.getSV2File();
-								break;
-							case 2:
-								scenarioName = _project.getSV3File();
-								break;
-							case 3:
-								scenarioName = _project.getSV4File();
-								break;
-							default:
-								scenarioName = "";
-								break;
-						}
-					}
-					else
-					{
-						scenarioName = _scenarios.get(i).toString();
-					}
-					if(!_baseName.equals(scenarioName))
-					{
-						j = j + 1;
-						results[j] = getOneSeries(scenarioName, _primaryDSSName);
-					}
+					scenarioName = _scenarios.get(i).toString();
+				}
+				if(!_baseName.equals(scenarioName))
+				{
+					j = j + 1;
+					TimeSeriesContainer tsc = getOneTimeSeriesFromAllModels(scenarioName, _primaryDSSName);
+					results[j] = tsc;
 				}
 			}
 		}
@@ -957,6 +856,25 @@ public class DSSGrabber1SvcImpl implements IDSSGrabber1Svc
 		}
 
 		return results;
+	}
+
+	private TimeSeriesContainer getOneTimeSeriesFromAllModels(String scenarioName, List<String> dssNames)
+	{
+		TimeSeriesContainer oneSeries = null;
+		for(String primaryTs : dssNames)
+		{
+			oneSeries = getOneSeries(scenarioName, primaryTs);
+			if(oneSeries != null)
+			{
+				break;
+			}
+		}
+		if(oneSeries == null && _stopOnMissing)
+		{
+			_dialogSvc.getOK("Could not find " + String.join(",", dssNames) + " in " + scenarioName,
+					JOptionPane.ERROR_MESSAGE);
+		}
+		return oneSeries;
 	}
 
 	/*
@@ -981,7 +899,8 @@ public class DSSGrabber1SvcImpl implements IDSSGrabber1Svc
 
 			// Base first
 
-			results[0] = getOneSeries(_baseName, _secondaryDSSName);
+			TimeSeriesContainer oneSeries = getOneTimeSeriesFromAllModels(_baseName, _secondaryDSSName);
+			results[0] = oneSeries;
 
 			// Then scenarios
 
@@ -993,7 +912,8 @@ public class DSSGrabber1SvcImpl implements IDSSGrabber1Svc
 				if(!_baseName.equals(scenarioName))
 				{
 					j = j + 1;
-					results[j] = getOneSeries(scenarioName, _secondaryDSSName);
+					TimeSeriesContainer tsc = getOneTimeSeriesFromAllModels(scenarioName, _secondaryDSSName);
+					results[j] = tsc;
 				}
 			}
 			return results;
@@ -1168,152 +1088,6 @@ public class DSSGrabber1SvcImpl implements IDSSGrabber1Svc
 	{
 
 		return wy < _startWY ? -1 : _annualTAFsDiff[i][wy - _startWY];
-	}
-
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see
-	 * gov.ca.water.calgui.bus_service.impl.IDSSGrabber1Svc#getAnnualCFS(int,
-	 * int)
-	 */
-	@Override
-	public double getAnnualCFS(int i, int wy)
-	{
-
-		return wy < _startWY ? -1 : _annualCFSs[i][wy - _startWY];
-	}
-
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see
-	 * gov.ca.water.calgui.bus_service.impl.IDSSGrabber1Svc#getAnnualCFSDiff(
-	 * int, int)
-	 */
-	@Override
-	public double getAnnualCFSDiff(int i, int wy)
-	{
-
-		return wy < _startWY ? -1 : _annualCFSsDiff[i][wy - _startWY];
-	}
-
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see
-	 * gov.ca.water.calgui.bus_service.impl.IDSSGrabber1Svc#calcCFSforTAF(hec.io
-	 * .TimeSeriesContainer[], hec.io.TimeSeriesContainer[])
-	 */
-	@Override
-	public void calcCFSforTAF(TimeSeriesContainer[] primaryResults, TimeSeriesContainer[] secondaryResults)
-	{
-
-		try
-		{
-			// Allocate and zero out
-
-			int datasets = primaryResults.length;
-			if(secondaryResults != null)
-			{
-				datasets = datasets + secondaryResults.length;
-			}
-
-			_annualCFSs = new double[datasets][_endWY - _startWY + 2];
-
-			for(int i = 0; i < datasets; i++)
-			{
-				for(int j = 0; j < _endWY - _startWY + 1; j++)
-				{
-					_annualCFSs[i][j] = 0.0;
-				}
-			}
-
-			// Calculate
-
-			if(_originalUnits.equals("TAF"))
-			{
-
-				HecTime ht = new HecTime();
-				Calendar calendar = Calendar.getInstance();
-
-				// Primary series
-
-				for(int i = 0; i < primaryResults.length; i++)
-				{
-					for(int j = 0; j < primaryResults[i].numberValues; j++)
-					{
-
-						ht.set(primaryResults[i].times[j]);
-						calendar.set(ht.year(), ht.month() - 1, 1);
-						double monthlyCFS = primaryResults[i].values[j]
-								* calendar.getActualMaximum(Calendar.DAY_OF_MONTH) * TAF_DAY_2_CFS;
-						int wy = ((ht.month() < 10) ? ht.year() : ht.year() + 1) - _startWY;
-						if(wy >= 0)
-						{
-							_annualCFSs[i][wy] += monthlyCFS;
-						}
-						if(!_isCFS)
-						{
-							primaryResults[i].values[j] = monthlyCFS;
-						}
-					}
-					if(_isCFS)
-					{
-						primaryResults[i].units = "cfs";
-					}
-				}
-
-				// Calculate differences if applicable (primary series only)
-
-				if(primaryResults.length > 1)
-				{
-					_annualCFSsDiff = new double[primaryResults.length - 1][_endWY - _startWY + 2];
-					for(int i = 0; i < primaryResults.length - 1; i++)
-					{
-						for(int j = 0; j < _endWY - _startWY + 1; j++)
-						{
-							_annualCFSsDiff[i][j] = _annualCFSs[i + 1][j] - _annualCFSs[0][j];
-						}
-					}
-				}
-
-				if(secondaryResults != null)
-				{
-
-					// Secondary series
-
-					for(int i = 0; i < secondaryResults.length; i++)
-					{
-						for(int j = 0; j < secondaryResults[i].numberValues; j++)
-						{
-
-							ht.set(secondaryResults[i].times[j]);
-							calendar.set(ht.year(), ht.month() - 1, 1);
-							double monthlyCFS = secondaryResults[i].values[j]
-									* calendar.getActualMaximum(Calendar.DAY_OF_MONTH) * TAF_DAY_2_CFS;
-							int wy = ((ht.month() < 10) ? ht.year() : ht.year() + 1) - _startWY;
-							_annualCFSs[i + primaryResults.length][wy] += monthlyCFS;
-							if(_isCFS)
-							{
-								secondaryResults[i].values[j] = monthlyCFS;
-							}
-
-						}
-						if(_isCFS)
-						{
-							secondaryResults[i].units = "cfs";
-						}
-					}
-				}
-			}
-		}
-		catch(Exception e)
-		{
-			LOG.error(e.getMessage());
-			String messageText = "Unable to calculate CFS.";
-			_errorHandlingSvc.businessErrorHandler(messageText, e);
-		}
 	}
 
 	/*
@@ -1576,38 +1350,12 @@ public class DSSGrabber1SvcImpl implements IDSSGrabber1Svc
 	 * (non-Javadoc)
 	 *
 	 * @see
-	 * gov.ca.water.calgui.bus_service.impl.IDSSGrabber1Svc#setOriginalUnits(
-	 * java.lang.String)
-	 */
-	@Override
-	public void setOriginalUnits(String originalUnits)
-	{
-		this._originalUnits = originalUnits;
-	}
-
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see
 	 * gov.ca.water.calgui.bus_service.impl.IDSSGrabber1Svc#getPrimaryDSSName()
 	 */
 	@Override
-	public String getPrimaryDSSName()
+	public List<String> getPrimaryDSSName()
 	{
 		return _primaryDSSName;
-	}
-
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see
-	 * gov.ca.water.calgui.bus_service.impl.IDSSGrabber1Svc#setPrimaryDSSName(
-	 * java.lang.String)
-	 */
-	@Override
-	public void setPrimaryDSSName(String primaryDSSName)
-	{
-		this._primaryDSSName = primaryDSSName;
 	}
 
 }

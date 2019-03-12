@@ -87,7 +87,8 @@ public class QuickResultsListener implements ActionListener
 
 	private void saveReportList()
 	{
-		ResultUtilsBO.getResultUtilsInstance(_quickResultsPanel.getSwingEngine()).writeCGR();
+		Window window = SwingUtilities.windowForComponent(_quickResultsPanel);
+		ResultUtilsBO.getResultUtilsInstance(_quickResultsPanel.getSwingEngine()).writeCGR((JFrame) window);
 	}
 
 	private void displayReportList()

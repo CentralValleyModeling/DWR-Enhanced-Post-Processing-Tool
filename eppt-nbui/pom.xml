@@ -35,9 +35,16 @@
 						</nbmResource>
 						<nbmResource>
 							<directory>${project.basedir}/src/main/Config</directory>
-							<targetPath>modules/Config</targetPath>
+							<targetPath>config</targetPath>
 							<includes>
 								<include>*</include>
+							</includes>
+						</nbmResource>
+						<nbmResource>
+							<directory>${project.basedir}/src/main/docs</directory>
+							<targetPath>docs</targetPath>
+							<includes>
+								<include>**</include>
 							</includes>
 						</nbmResource>
 					</nbmResources>
@@ -241,6 +248,16 @@
 			<groupId>hecjavadev-core</groupId>
 			<artifactId>images</artifactId>
 			<version>dev-SNAPSHOT</version>
+		</dependency>
+		<dependency>
+			<groupId>org.netbeans.api</groupId>
+			<artifactId>org-openide-filesystems</artifactId>
+			<version>RELEASE82</version>
+		</dependency>
+		<dependency>
+			<groupId>org.netbeans.api</groupId>
+			<artifactId>org-openide-loaders</artifactId>
+			<version>RELEASE82</version>
 		</dependency>
 	</dependencies>
 	<properties>

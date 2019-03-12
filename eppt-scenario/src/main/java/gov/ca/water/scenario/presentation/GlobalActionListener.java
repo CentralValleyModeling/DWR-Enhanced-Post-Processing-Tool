@@ -24,11 +24,13 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 import gov.ca.water.businessservice.IAllButtonsDele;
 import gov.ca.water.businessservice.IApplyDynamicConDele;
 import gov.ca.water.businessservice.IScenarioDele;
+import gov.ca.water.businessservice.IScenarioSvc;
 import gov.ca.water.businessservice.ISeedDataSvc;
 import gov.ca.water.businessservice.IVerifyControlsDele;
 import gov.ca.water.businessservice.impl.AllButtonsDeleImp;
 import gov.ca.water.businessservice.impl.ApplyDynamicConDeleImp;
 import gov.ca.water.businessservice.impl.ScenarioDeleImp;
+import gov.ca.water.businessservice.impl.ScenarioSvcImpl;
 import gov.ca.water.businessservice.impl.SeedDataSvcImpl;
 import gov.ca.water.businessservice.impl.VerifyControlsDeleImp;
 import gov.ca.water.businessservice.impl.XMLParsingSvcImpl;
@@ -36,9 +38,7 @@ import gov.ca.water.calgui.EpptInitializationException;
 import gov.ca.water.calgui.bo.DataTableModel;
 import gov.ca.water.calgui.bo.RBListItemBO;
 import gov.ca.water.calgui.bus_service.IModelRunSvc;
-import gov.ca.water.calgui.bus_service.IScenarioSvc;
 import gov.ca.water.calgui.bus_service.impl.ModelRunSvcImpl;
-import gov.ca.water.calgui.bus_service.impl.ScenarioSvcImpl;
 import gov.ca.water.calgui.constant.Constant;
 import gov.ca.water.calgui.presentation.DisplayFrame;
 import gov.ca.water.calgui.presentation.ProgressFrame;
@@ -352,8 +352,7 @@ public class GlobalActionListener implements ActionListener
 		}
 		try
 		{
-			List<DataTableModel> dtmList = scenarioDele.getScenarioTableData(fileNames,
-					scenarioConfigurationPanel.getSwingEngine());
+			List<DataTableModel> dtmList = scenarioDele.getScenarioTableData(fileNames, _swingEngine);
 			ScenarioFrame scenarioFrame = new ScenarioFrame(dtmList);
 			scenarioFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 			scenarioFrame.setVisible(true);

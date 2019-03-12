@@ -9,11 +9,14 @@ package gov.ca.water.eppt.nbui;
 import java.awt.BorderLayout;
 import java.net.MalformedURLException;
 import java.net.URL;
+import javax.help.BadIDException;
 import javax.help.HelpSet;
 import javax.help.HelpSetException;
 import javax.help.JHelp;
 
 import gov.ca.water.calgui.EpptInitializationException;
+import gov.ca.water.calgui.constant.Constant;
+import org.apache.log4j.Logger;
 import org.openide.awt.ActionID;
 import org.openide.awt.ActionReference;
 import org.openide.windows.TopComponent;
@@ -35,7 +38,6 @@ import org.openide.windows.TopComponent;
 )
 public final class EpptHelpTopComponent extends TopComponent
 {
-
 	private final JHelp _helpViewer;
 
 	public EpptHelpTopComponent() throws EpptInitializationException
@@ -43,7 +45,7 @@ public final class EpptHelpTopComponent extends TopComponent
 		setName("EPPT Help");
 		try
 		{
-			String path = "J:/DWR/Installer/EPPT/CalLiteGUI_P3/docs/JavaHelp_2.0/CalLite3-GUI-Help_JavaHelp_V2_082614.hs";
+			String path = Constant.DOCS_DIR + "\\JavaHelp_2.0\\CalLite3-GUI-Help_JavaHelp_V2_082614.hs";
 			URL url = new URL("file:///" + path);
 			_helpViewer = new JHelp(new HelpSet(null, url));
 			setLayout(new BorderLayout());
@@ -66,7 +68,20 @@ public final class EpptHelpTopComponent extends TopComponent
 		TopComponent activated = TopComponent.getRegistry().getActivated();
 		if(activated instanceof EpptTopComponent)
 		{
-			_helpViewer.setCurrentID(((EpptTopComponent) activated).getJavaHelpId());
+			String javaHelpId = ((EpptTopComponent) activated).getJavaHelpId();
+			selectCurrentHelperId(javaHelpId);
+		}
+	}
+
+	void selectCurrentHelperId(String id)
+	{
+		try
+		{
+			_helpViewer.setCurrentID(id);
+		}
+		catch(BadIDException ex)
+		{
+			Logger.getLogger(EpptHelpTopComponent.class.getName()).debug(ex);
 		}
 	}
 
