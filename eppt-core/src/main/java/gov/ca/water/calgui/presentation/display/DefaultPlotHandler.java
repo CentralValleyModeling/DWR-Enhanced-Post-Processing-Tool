@@ -12,7 +12,7 @@ import java.awt.HeadlessException;
 import java.util.List;
 import javax.swing.*;
 
-import gov.ca.water.calgui.presentation.DisplayFrame;
+import gov.ca.water.calgui.presentation.DisplayHelper;
 import gov.ca.water.calgui.tech_service.IErrorHandlingSvc;
 import gov.ca.water.calgui.tech_service.impl.ErrorHandlingSvcImpl;
 import org.apache.log4j.Logger;
@@ -23,7 +23,7 @@ import org.apache.log4j.Logger;
  * @author <a href="mailto:adam@rmanet.com">Adam Korynta</a>
  * @since 03-06-2019
  */
-public class DefaultPlotHandler implements DisplayFrame.PlotHandler
+public class DefaultPlotHandler implements DisplayHelper.PlotHandler
 {
 	private static final Logger LOG = Logger.getLogger(DefaultPlotHandler.class.getName());
 	private static final int displayDeltaY = 20;

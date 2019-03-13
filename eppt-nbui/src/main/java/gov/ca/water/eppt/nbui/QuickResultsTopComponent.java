@@ -9,7 +9,6 @@ package gov.ca.water.eppt.nbui;
 import java.awt.BorderLayout;
 import javax.swing.*;
 
-import gov.ca.water.calgui.presentation.display.DefaultPlotHandler;
 import gov.ca.water.quickresults.ui.quickresults.QuickResultsListener;
 import gov.ca.water.quickresults.ui.quickresults.QuickResultsPanel;
 import org.openide.awt.ActionID;

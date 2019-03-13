@@ -47,12 +47,11 @@ import hec.io.TimeSeriesContainer;
  *
  * @author tslawecki
  */
- class DisplayFrame
+  class DisplayFrame
 {
 
 	private static final Logger LOG = Logger.getLogger(DisplayFrame.class.getName());
 	private static final IErrorHandlingSvc ERROR_HANDLING_SVC = new ErrorHandlingSvcImpl();
-	private static PlotHandler _topComponentPlotHandler = new DefaultPlotHandler();
 
 
 	/**
@@ -959,17 +958,7 @@ import hec.io.TimeSeriesContainer;
 	}
 
 
-	public static void installPlotHandler(PlotHandler topComponentPlotHandler)
-	{
-		_topComponentPlotHandler = topComponentPlotHandler;
-	}
 
-	public static PlotHandler getPlotHandler()
-	{
-		return _topComponentPlotHandler;
-	}
-	public interface PlotHandler
-	{
-		void openPlots(List<JTabbedPane> tabbedPanes);
-	}
+
+
 }
