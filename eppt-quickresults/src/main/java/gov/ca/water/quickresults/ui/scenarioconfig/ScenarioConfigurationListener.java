@@ -13,6 +13,7 @@ import java.awt.event.ActionListener;
 import javax.swing.*;
 
 import gov.ca.water.calgui.bo.FileDialogBO;
+import gov.ca.water.calgui.bo.RBListItemBO;
 import org.apache.log4j.Logger;
 
 
@@ -32,12 +33,9 @@ public class ScenarioConfigurationListener implements ActionListener
 	{
 		_scenarioConfigurationPanel = scenarioConfigurationPanel;
 
-		JList<?> lstScenarios = _scenarioConfigurationPanel.getScenarioList();
-		JRadioButton rdb1 = _scenarioConfigurationPanel.getRadioButton1();
-		JRadioButton rdb2 = _scenarioConfigurationPanel.getRadioButton2();
-		JLabel lblBase = _scenarioConfigurationPanel.getLabelBase();
-		_addScnearioFileDialogBO = new FileDialogBO(lstScenarios, lblBase, rdb1, rdb2,
-				null, true, (JFrame) SwingUtilities.windowForComponent(_scenarioConfigurationPanel));
+		DefaultListModel<RBListItemBO> lstScenarios = _scenarioConfigurationPanel.getLmScenNames();
+		_addScnearioFileDialogBO = new FileDialogBO(lstScenarios, true,
+				(JFrame) SwingUtilities.windowForComponent(_scenarioConfigurationPanel));
 	}
 
 	@Override
@@ -62,7 +60,10 @@ public class ScenarioConfigurationListener implements ActionListener
 				break;
 			default:
 		}
-		ScenarioConfigurationPanel.getScenarioConfigurationPanel().setModified(true);
+		ScenarioConfigurationPanel scenarioConfigurationPanel = ScenarioConfigurationPanel.getScenarioConfigurationPanel();
+
+		scenarioConfigurationPanel.getScenarioList().repaint();
+		scenarioConfigurationPanel.setModified(true);
 	}
 
 	private void launchFileDialogToAddScenarios(ActionEvent e)

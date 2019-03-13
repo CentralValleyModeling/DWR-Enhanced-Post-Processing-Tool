@@ -10,16 +10,21 @@ package gov.ca.water.quickresults.ui.scenarioconfig;
 import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Container;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
+import javax.swing.event.ListDataEvent;
+import javax.swing.event.ListDataListener;
 
 import gov.ca.water.calgui.bo.RBListItemBO;
 import gov.ca.water.calgui.bo.ResultUtilsBO;
 import gov.ca.water.calgui.constant.EpptPreferences;
+import gov.ca.water.calgui.presentation.WRIMSGUILinks;
 import gov.ca.water.calgui.tech_service.IErrorHandlingSvc;
 import gov.ca.water.calgui.tech_service.impl.ErrorHandlingSvcImpl;
 import gov.ca.water.quickresults.ui.EpptPanel;
@@ -39,6 +44,7 @@ public final class ScenarioConfigurationPanel extends EpptPanel
 	private static final ScenarioConfigurationPanel SINGLETON = new ScenarioConfigurationPanel();
 	private static IErrorHandlingSvc errorHandlingSvc = new ErrorHandlingSvcImpl();
 	private final ScenarioConfigurationIO _scenarioConfigurationIO;
+	private DefaultListModel<RBListItemBO> _lmScenNames;
 
 	private ScenarioConfigurationPanel()
 	{
@@ -59,6 +65,38 @@ public final class ScenarioConfigurationPanel extends EpptPanel
 
 	private void initModels()
 	{
+		Component component = getSwingEngine().find("SelectedList");
+		if(component instanceof JList)
+		{
+			JList<RBListItemBO> lstScenarios = (JList<RBListItemBO>) component;
+			lstScenarios.getSelectionModel().addListSelectionListener(e -> setModified(true));
+			lstScenarios.getModel().addListDataListener(new ListDataListener()
+			{
+				@Override
+				public void intervalAdded(ListDataEvent e)
+				{
+					getRadioButton1().setEnabled(getScenarios().size() > 1);
+					getRadioButton2().setEnabled(getScenarios().size() > 1);
+					setModified(true);
+				}
+
+				@Override
+				public void intervalRemoved(ListDataEvent e)
+				{
+					getRadioButton1().setEnabled(getScenarios().size() > 1);
+					getRadioButton2().setEnabled(getScenarios().size() > 1);
+					setModified(true);
+				}
+
+				@Override
+				public void contentsChanged(ListDataEvent e)
+				{
+					getRadioButton1().setEnabled(getScenarios().size() > 1);
+					getRadioButton2().setEnabled(getScenarios().size() > 1);
+					setModified(true);
+				}
+			});
+		}
 		// Set up month spinners on result page
 		JSpinner spnSM = (JSpinner) getSwingEngine().find("spnStartMonth");
 		ResultUtilsBO.SetMonthModelAndIndex(spnSM, 9, null, true);
@@ -76,6 +114,55 @@ public final class ScenarioConfigurationPanel extends EpptPanel
 			boolean selected = summaryTableCheckbox.isSelected();
 			Container controls3 = (Container) getSwingEngine().find("controls3");
 			setSummaryTableEnabled(selected, controls3);
+		});
+
+		_lmScenNames = new DefaultListModel<>();
+		_lmScenNames.addListDataListener(new MyListDataListener());
+		getScenarioList().setModel(_lmScenNames);
+		getScenarioList().setCellRenderer(new RBListRenderer());
+		getScenarioList().setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		getScenarioList().addMouseListener(new MouseAdapter()
+		{
+			@Override
+			public void mouseClicked(MouseEvent event)
+			{
+
+				JList list = (JList) event.getSource();
+
+				// Get index of item clicked
+
+				if(list.getModel().getSize() > 0)
+				{
+					int index = list.locationToIndex(event.getPoint());
+
+					// Toggle selected state
+
+					for(int i = 0; i < list.getModel().getSize(); i++)
+					{
+						RBListItemBO item = (RBListItemBO) list.getModel().getElementAt(i);
+						if(i == index)
+						{
+							item.setSelected(true);
+							list.repaint(list.getCellBounds(i, i));
+						}
+						else
+						{
+							if(item.isSelected())
+							{
+								list.repaint(list.getCellBounds(i, i));
+							}
+							item.setSelected(false);
+						}
+					}
+
+					// Repaint cell
+
+					list.repaint(list.getCellBounds(index, index));
+
+					WRIMSGUILinks.updateProjectFiles(list);
+
+				}
+			}
 		});
 	}
 
@@ -306,9 +393,14 @@ public final class ScenarioConfigurationPanel extends EpptPanel
 		}
 	}
 
-	JList<?> getScenarioList()
+	JList<RBListItemBO> getScenarioList()
 	{
-		return (JList<?>) getSwingEngine().find("SelectedList");
+		return (JList<RBListItemBO>) getSwingEngine().find("SelectedList");
+	}
+
+	DefaultListModel<RBListItemBO> getLmScenNames()
+	{
+		return _lmScenNames;
 	}
 
 	JRadioButton getRadioButton1()
@@ -319,11 +411,6 @@ public final class ScenarioConfigurationPanel extends EpptPanel
 	JRadioButton getRadioButton2()
 	{
 		return (JRadioButton) getSwingEngine().find("rdbp002");
-	}
-
-	JLabel getLabelBase()
-	{
-		return (JLabel) getSwingEngine().find("lblBase");
 	}
 
 	void setStartMonth(Month start)
@@ -344,19 +431,86 @@ public final class ScenarioConfigurationPanel extends EpptPanel
 
 	public void setScenarios(List<RBListItemBO> scenarios)
 	{
-		ScenarioConfigurationPanel scenarioConfigurationPanel = ScenarioConfigurationPanel.getScenarioConfigurationPanel();
-		JRadioButton radioButton = (JRadioButton) scenarioConfigurationPanel.getSwingEngine().find("rdbp001");
+		JRadioButton radioButton = (JRadioButton) getSwingEngine().find("rdbp001");
 		radioButton.setSelected(true);
-		Component component = scenarioConfigurationPanel.getSwingEngine().find("SelectedList");
+		Component component = getSwingEngine().find("SelectedList");
 		if(component instanceof JList)
 		{
 			JList<RBListItemBO> lstScenarios = (JList<RBListItemBO>) component;
-			DefaultListModel<RBListItemBO> defaultModel = new DefaultListModel<>();
+			_lmScenNames.removeAllElements();
 			for(RBListItemBO item : scenarios)
 			{
-				defaultModel.addElement(item);
+				_lmScenNames.addElement(item);
 			}
-			lstScenarios.setModel(defaultModel);
+			lstScenarios.setModel(_lmScenNames);
+			scenarioListChanged();
 		}
+	}
+
+	private void scenarioListChanged()
+	{
+		getRadioButton1().setEnabled(_lmScenNames.getSize() > 1);
+		getRadioButton2().setEnabled(_lmScenNames.getSize() > 1);
+		if(_lmScenNames.getSize() <= 1)
+		{
+			JRadioButton radioButton = (JRadioButton) getSwingEngine().find("rdbp000");
+			radioButton.setSelected(true);
+		}
+		WRIMSGUILinks.updateProjectFiles(getScenarioList());
+		ScenarioConfigurationPanel.this.setModified(true);
+		getScenarioList().setModel(_lmScenNames);
+		getScenarioList().invalidate();
+		getScenarioList().revalidate();
+		getScenarioList().repaint();
+	}
+
+	/**
+	 * Custom class to show radiobutton items in place of textfields in a list
+	 *
+	 * @author tslawecki
+	 */
+	private class RBListRenderer extends JRadioButton implements ListCellRenderer
+	{
+		@Override
+		public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected,
+													  boolean hasFocus)
+		{
+			setEnabled(list.isEnabled());
+			setSelected(((RBListItemBO) value).isSelected());
+			setFont(list.getFont());
+			setBackground(list.getBackground());
+			setForeground(list.getForeground());
+			setText(((RBListItemBO) value).getLabel());
+			this.setToolTipText(value.toString() + " 	\n" + ((RBListItemBO) value).getSVFilename());
+			return this;
+		}
+	}
+
+	/**
+	 * Custom ListDataListener to enable/disable controls based on number of
+	 * files in list.
+	 *
+	 * @author tslawecki
+	 */
+	private class MyListDataListener implements ListDataListener
+	{
+		@Override
+		public void contentsChanged(ListDataEvent e)
+		{
+			scenarioListChanged();
+		}
+
+		@Override
+		public void intervalAdded(ListDataEvent e)
+		{
+			scenarioListChanged();
+		}
+
+		@Override
+		public void intervalRemoved(ListDataEvent e)
+		{
+			scenarioListChanged();
+		}
+
 	}
 }

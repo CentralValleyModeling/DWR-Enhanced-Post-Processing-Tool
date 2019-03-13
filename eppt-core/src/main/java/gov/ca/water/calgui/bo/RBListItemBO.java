@@ -55,7 +55,7 @@ public class RBListItemBO
 		return _fullname;
 	}
 
-	String getLabel()
+	public String getLabel()
 	{
 		return _label;
 	}

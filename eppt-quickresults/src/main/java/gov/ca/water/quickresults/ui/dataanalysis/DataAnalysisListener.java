@@ -83,20 +83,20 @@ public class DataAnalysisListener implements ActionListener
 
 	private void selectDssFile(ActionEvent e, JTextField jTextField)
 	{
-		FileDialogBO fileDialogBO = new FileDialogBO(null, jTextField, getMainWindow());
+		FileDialogBO fileDialogBO = new FileDialogBO(jTextField, getMainWindow());
 		fileDialogBO.actionPerformed(e);
 	}
 
 	private void selectTemplateFile(ActionEvent e)
 	{
-		FileDialogBO fileDialogBO = new FileDialogBO(null, _dataAnalysisPanel.getReportTemplateTextField(),
+		FileDialogBO fileDialogBO = new FileDialogBO(_dataAnalysisPanel.getReportTemplateTextField(),
 				INP_FILE_EXTENSION, getMainWindow());
 		fileDialogBO.actionPerformed(e);
 	}
 
 	private void selectOutputFile(ActionEvent e)
 	{
-		FileDialogBO fileDialogBO = new FileDialogBO(null, _dataAnalysisPanel.getOutputTextField(), PDF_FILE_EXTENSION,
+		FileDialogBO fileDialogBO = new FileDialogBO(_dataAnalysisPanel.getOutputTextField(), PDF_FILE_EXTENSION,
 				getMainWindow());
 		fileDialogBO.actionPerformed(e);
 	}
