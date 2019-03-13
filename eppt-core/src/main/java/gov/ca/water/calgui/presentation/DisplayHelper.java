@@ -26,6 +26,7 @@ public class DisplayHelper
 
     private final  ExecutorService _executorService;
     private final Component _component;
+    private static PlotHandler _topComponentPlotHandler = new DefaultPlotHandler();
 
     public DisplayHelper(Component comp)
     {
@@ -33,9 +34,9 @@ public class DisplayHelper
         _executorService = Executors.newSingleThreadExecutor(DisplayHelper::newThread);
     }
 
-    public void installPlotHandler(DisplayFrame.PlotHandler plotHandler)
+    public static void installPlotHandler(PlotHandler plotHandler)
     {
-        DisplayFrame.installPlotHandler(plotHandler);
+        _topComponentPlotHandler = plotHandler;
     }
     private static Thread newThread(Runnable r)
     {
@@ -58,7 +59,7 @@ public class DisplayHelper
                                            Month endMonth)
     {
         CompletableFuture.supplyAsync(() -> getTabbedPanes(displayGroup, scenarios, startMonth, endMonth), _executorService)
-        .thenAcceptAsync(DisplayFrame.getPlotHandler()::openPlots, SwingUtilities::invokeLater);
+        .thenAcceptAsync(_topComponentPlotHandler::openPlots, SwingUtilities::invokeLater);
 
 
     }
@@ -99,7 +100,7 @@ public class DisplayHelper
                                                 MultipleTimeSeries mts, Month startMonth, Month endMonth)
     {
         CompletableFuture.supplyAsync(() -> getTabbedPanesWRIMS(displayGroup, lstScenarios, dts, mts, startMonth, endMonth), _executorService)
-                .thenAcceptAsync(DisplayFrame.getPlotHandler()::openPlots, SwingUtilities::invokeLater);
+                .thenAcceptAsync(_topComponentPlotHandler::openPlots, SwingUtilities::invokeLater);
 
 
     }
@@ -122,6 +123,13 @@ public class DisplayHelper
         }
         return jTabbedPanes;
 
+    }
+
+
+    @FunctionalInterface
+    public interface PlotHandler
+    {
+        void openPlots(List<JTabbedPane> tabbedPanes);
     }
 
 }

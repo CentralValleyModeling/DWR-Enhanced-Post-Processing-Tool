@@ -10,7 +10,7 @@ package gov.ca.water.eppt.nbui;
 import java.util.List;
 import javax.swing.*;
 
-import gov.ca.water.calgui.presentation.DisplayFrame;
+import gov.ca.water.calgui.presentation.DisplayHelper;
 import org.openide.windows.Mode;
 import org.openide.windows.WindowManager;
 
@@ -20,7 +20,7 @@ import org.openide.windows.WindowManager;
  * @author <a href="mailto:adam@rmanet.com">Adam Korynta</a>
  * @since 03-06-2019
  */
-public class TopComponentPlotHandler implements DisplayFrame.PlotHandler
+public class TopComponentPlotHandler implements DisplayHelper.PlotHandler
 {
 	@Override
 	public void openPlots(List<JTabbedPane> tabbedPanes)

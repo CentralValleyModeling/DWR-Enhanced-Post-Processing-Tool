@@ -9,6 +9,8 @@ package gov.ca.water.quickresults.ui.dataanalysis;
 
 import java.awt.BorderLayout;
 import java.awt.Container;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import javax.swing.*;
 
 import gov.ca.water.calgui.constant.Constant;
@@ -36,7 +38,8 @@ public class DataAnalysisPanel extends EpptPanel
 			Container swixmlQuickResultsPanel = renderSwixml(DATA_ANALYSIS_XML_FILE);
 			super.add(swixmlQuickResultsPanel);
 			JTextField tfTemplateFile = (JTextField) getSwingEngine().find("tfTemplateFILE");
-			tfTemplateFile.setToolTipText(Constant.CONFIG_DIR);
+			Path defaultTemplateFile = Paths.get(Constant.CONFIG_DIR).resolve(tfTemplateFile.getText());
+			tfTemplateFile.setToolTipText(defaultTemplateFile.toString());
 			JTextField tfReportFILE3 = (JTextField) getSwingEngine().find("tfReportFILE3");
 			tfReportFILE3.setToolTipText(EpptPreferences.getReportsPath().resolve(tfReportFILE3.getText()).toString());
 		}
@@ -55,7 +58,7 @@ public class DataAnalysisPanel extends EpptPanel
 
 	JTextField getReportTemplateTextField()
 	{
-		return (JTextField) getSwingEngine().find("tfTemplateFILE");
+		return 	(JTextField) getSwingEngine().find("tfTemplateFILE");
 	}
 
 	JTextField getDssResultFileField1()
