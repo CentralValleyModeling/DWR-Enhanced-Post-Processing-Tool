@@ -45,17 +45,20 @@ public class Installer extends ModuleInstall
 
 	private void loadLastScenarioConfiguration()
 	{
-		ScenarioConfigurationPanel scenarioConfigurationPanel = ScenarioConfigurationPanel.getScenarioConfigurationPanel();
-		Path lastScenarioConfiguration = EpptPreferences.getLastScenarioConfiguration();
-		try
+		WindowManager.getDefault().invokeWhenUIReady(() ->
 		{
-			scenarioConfigurationPanel.loadScenarioConfiguration(lastScenarioConfiguration);
-		}
-		catch(IOException ex)
-		{
-			LOGGER.log(Level.SEVERE,
-					"Unable to load last Scenario Configuration EPPT Home: " + lastScenarioConfiguration, ex);
-		}
+			ScenarioConfigurationPanel scenarioConfigurationPanel = ScenarioConfigurationPanel.getScenarioConfigurationPanel();
+			Path lastScenarioConfiguration = EpptPreferences.getLastScenarioConfiguration();
+			try
+			{
+				scenarioConfigurationPanel.loadScenarioConfiguration(lastScenarioConfiguration);
+			}
+			catch(IOException ex)
+			{
+				LOGGER.log(Level.SEVERE,
+						"Unable to load last Scenario Configuration EPPT Home: " + lastScenarioConfiguration, ex);
+			}
+		});
 	}
 
 	private void initEpptHome()
