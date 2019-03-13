@@ -51,26 +51,29 @@ public class DataAnalysisListener implements ActionListener
 		if(source instanceof Component)
 		{
 			Component component = ((Component) source);
-			switch(component.getName())
+			if(component.getName() != null)
 			{
-				case "btnGetTemplateFile":
-					selectTemplateFile(e);
-					break;
-				case "btnGetReportFile1":
-					selectDssFile(e, _dataAnalysisPanel.getDssResultFileField1());
-					break;
-				case "btnGetReportFile2":
-					selectDssFile(e, _dataAnalysisPanel.getDssResultFileField2());
-					break;
-				case "btnGetReportFile3":
-					selectOutputFile(e);
-					break;
-				case "btnReport":
-					generateReportAction();
-					break;
-				default:
-					LOGGER.info("Action Command " + e.getActionCommand());
-					LOGGER.info("Action Source " + component.getName());
+				switch(component.getName())
+				{
+					case "btnGetTemplateFile":
+						selectTemplateFile(e);
+						break;
+					case "btnGetReportFile1":
+						selectDssFile(e, _dataAnalysisPanel.getDssResultFileField1());
+						break;
+					case "btnGetReportFile2":
+						selectDssFile(e, _dataAnalysisPanel.getDssResultFileField2());
+						break;
+					case "btnGetReportFile3":
+						selectOutputFile(e);
+						break;
+					case "btnReport":
+						generateReportAction();
+						break;
+					default:
+						LOGGER.info("Action Command " + e.getActionCommand());
+						LOGGER.info("Action Source " + component.getName());
+				}
 			}
 		}
 	}
