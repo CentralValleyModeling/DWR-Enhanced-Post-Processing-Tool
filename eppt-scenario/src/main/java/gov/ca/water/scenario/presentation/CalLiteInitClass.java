@@ -41,6 +41,7 @@ import gov.ca.water.calgui.EpptInitializationException;
 import gov.ca.water.calgui.bo.CalLiteGUIException;
 import gov.ca.water.calgui.bo.DataTableModel;
 import gov.ca.water.calgui.bo.FileDialogBO;
+import gov.ca.water.calgui.bo.RBListItemBO;
 import gov.ca.water.calgui.bo.ResultUtilsBO;
 import gov.ca.water.calgui.bus_service.impl.ModelRunSvcImpl;
 import gov.ca.water.calgui.constant.Constant;
@@ -131,10 +132,9 @@ public class CalLiteInitClass
 			// Setup for Reporting page
 			// Set up additional UI elements
 			JList<?> lstScenarios = (JList<?>) swingEngine.find("SelectedList");
-			JRadioButton rdb1 = (JRadioButton) swingEngine.find("rdbp001");
-			JRadioButton rdb2 = (JRadioButton) swingEngine.find("rdbp002");
-			FileDialogBO fdDSSFiles = new FileDialogBO(lstScenarios, (JLabel) swingEngine.find("lblBase"), rdb1, rdb2,
-					(JButton) swingEngine.find("btnPower"), true, (JFrame) _swingEngine.find(Constant.MAIN_FRAME_NAME));
+			FileDialogBO fdDSSFiles = new FileDialogBO(
+					(DefaultListModel<RBListItemBO>) lstScenarios.getModel(), true,
+					(JFrame) _swingEngine.find(Constant.MAIN_FRAME_NAME));
 			lstScenarios.setModel(fdDSSFiles.getLmScenNames());
 			lstScenarios.setBorder(new LineBorder(Color.gray, 1));
 

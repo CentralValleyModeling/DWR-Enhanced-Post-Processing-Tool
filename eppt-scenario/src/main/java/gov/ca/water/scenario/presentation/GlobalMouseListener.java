@@ -24,7 +24,7 @@ import gov.ca.water.calgui.tech_service.IDialogSvc;
 import gov.ca.water.calgui.tech_service.IErrorHandlingSvc;
 import gov.ca.water.calgui.tech_service.impl.DialogSvcImpl;
 import gov.ca.water.calgui.tech_service.impl.ErrorHandlingSvcImpl;
-import gov.ca.water.quickresults.ui.scenarioconfig.ScenarioConfigurationPanel;
+import gov.ca.water.quickresults.ui.scenarioconfig.ProjectConfigurationPanel;
 import org.apache.log4j.Logger;
 import org.jfree.data.time.Month;
 import org.swixml.SwingEngine;
@@ -116,10 +116,10 @@ public class GlobalMouseListener extends MouseAdapter
 						{
 							List<RBListItemBO> scenarios = getScenarios();
 
-							ScenarioConfigurationPanel scenarioConfigurationPanel = ScenarioConfigurationPanel.getScenarioConfigurationPanel();
-							String quickState = scenarioConfigurationPanel.quickState();
-							Month startMonth = scenarioConfigurationPanel.getStartMonth();
-							Month endMonth = scenarioConfigurationPanel.getEndMonth();
+							ProjectConfigurationPanel projectConfigurationPanel = ProjectConfigurationPanel.getProjectConfigurationPanel();
+							String quickState = projectConfigurationPanel.quickState();
+							Month startMonth = projectConfigurationPanel.getStartMonth();
+							Month endMonth = projectConfigurationPanel.getEndMonth();
 							_displayHelper.showDisplayFrames(quickState + ";Locs-" + chk.getText()
 									+ ";Index-" + chk.getName(), scenarios, startMonth, endMonth);
 						}

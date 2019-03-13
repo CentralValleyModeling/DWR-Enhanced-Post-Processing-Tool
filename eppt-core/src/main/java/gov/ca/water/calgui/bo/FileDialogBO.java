@@ -14,8 +14,6 @@ import java.awt.Container;
 import java.awt.HeadlessException;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
@@ -24,12 +22,9 @@ import java.io.InputStreamReader;
 import java.util.HashMap;
 import java.util.Map;
 import javax.swing.*;
-import javax.swing.event.ListDataEvent;
-import javax.swing.event.ListDataListener;
 
 import gov.ca.water.calgui.constant.Constant;
 import gov.ca.water.calgui.constant.EpptPreferences;
-import gov.ca.water.calgui.presentation.WRIMSGUILinks;
 import gov.ca.water.calgui.tech_service.IErrorHandlingSvc;
 import gov.ca.water.calgui.tech_service.impl.ErrorHandlingSvcImpl;
 import org.apache.log4j.Logger;
@@ -44,17 +39,12 @@ public class FileDialogBO implements ActionListener
 {
 
 	private static final Logger LOG = Logger.getLogger(FileDialogBO.class.getName());
-	private DefaultListModel _lmScenNames;
+	private final DefaultListModel _lmScenNames;
 	private JFileChooser _fc = new JFileChooser2();
 	private int _dialogRC;
-	private JList _theList;
-	private JLabel _theLabel;
 	private JTextField _theTextField;
 	private boolean _theMultipleFlag = false;
 	private String _theFileExt = null;
-	private JRadioButton _rdbopt1 = null;
-	private JRadioButton _rdbopt2 = null;
-	private JButton _btn1 = null;
 	private final JFrame _mainFrame;
 	private IErrorHandlingSvc _errorHandlingSvc = new ErrorHandlingSvcImpl();
 
@@ -63,33 +53,31 @@ public class FileDialogBO implements ActionListener
 	 * Constructor for use with DSS files, result is appended to list and placed
 	 * in textfield.
 	 *
-	 * @param aList
 	 * @param aTextField
 	 */
-	public FileDialogBO(JList aList, JTextField aTextField, JFrame mainFrame)
+	public FileDialogBO(JTextField aTextField, JFrame mainFrame)
 	{
 		_mainFrame = mainFrame;
-		_theLabel = null;
+		_lmScenNames = null;
 		_theFileExt = "DSS";
 		_theTextField = aTextField;
-		setup(aList);
+		setup();
 	}
 
 	/**
 	 * Constructor for use with arbitrary files, result is appended to list and
 	 * placed in textfield.
 	 *
-	 * @param aList
 	 * @param aTextField
 	 * @param aFileExt
 	 */
-	public FileDialogBO(JList aList, JTextField aTextField, String aFileExt, JFrame mainFrame)
+	public FileDialogBO(JTextField aTextField, String aFileExt, JFrame mainFrame)
 	{
 		_mainFrame = mainFrame;
-		_theLabel = null;
+		_lmScenNames = null;
 		_theTextField = aTextField;
 		_theFileExt = aFileExt;
-		setup(aList);
+		setup();
 	}
 
 	/**
@@ -97,23 +85,14 @@ public class FileDialogBO implements ActionListener
 	 * are enabled when list length greater than 1, button is enabled when list
 	 * is not empty;
 	 *
-	 * @param aList
-	 * @param aLabel
-	 * @param rdb1
-	 * @param rdb2
-	 * @param btn
 	 */
-	public FileDialogBO(JList aList, JLabel aLabel, JRadioButton rdb1, JRadioButton rdb2, JButton btn,
-						boolean isMultiple, JFrame mainFrame)
+	public FileDialogBO(DefaultListModel<RBListItemBO> lmScenNames, boolean isMultiple, JFrame mainFrame)
 	{
 		_mainFrame = mainFrame;
-		_theLabel = aLabel;
 		_theFileExt = "DSS";
 		_theTextField = null;
-		setup(aList);
-		_rdbopt1 = rdb1;
-		_rdbopt2 = rdb2;
-		_btn1 = btn;
+		_lmScenNames = lmScenNames;
+		setup();
 		_theMultipleFlag = isMultiple;
 	}
 
@@ -122,12 +101,7 @@ public class FileDialogBO implements ActionListener
 		return _lmScenNames;
 	}
 
-	/**
-	 * Common code for all constructors
-	 *
-	 * @param aList
-	 */
-	private void setup(JList aList)
+	private void setup()
 	{
 
 		try
@@ -156,74 +130,6 @@ public class FileDialogBO implements ActionListener
 				{
 					_fc.setCurrentDirectory(new File(Constant.CONFIG_DIR));
 				}
-			}
-
-			// If a list is specified, create customized JList for handling of
-			// files.
-
-			if(aList != null)
-			{
-
-				_lmScenNames = new DefaultListModel();
-				_lmScenNames.addListDataListener(new MyListDataListener());
-
-				_theList = aList;
-				if(_theList.getModel() != null && _theList.getModel().getSize() > 0)
-				{
-					for(int i = 0; i < _theList.getModel().getSize(); i++)
-					{
-						_lmScenNames.addElement(_theList.getModel().getElementAt(i));
-					}
-				}
-				_theList.setModel(_lmScenNames);
-				_theList.setCellRenderer(new RBListRenderer());
-				_theList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-
-				// Add a mouse listener to handle changing selection
-
-				_theList.addMouseListener(new MouseAdapter()
-				{
-					@Override
-					public void mouseClicked(MouseEvent event)
-					{
-
-						JList list = (JList) event.getSource();
-
-						// Get index of item clicked
-
-						if(list.getModel().getSize() > 0)
-						{
-							int index = list.locationToIndex(event.getPoint());
-
-							// Toggle selected state
-
-							for(int i = 0; i < list.getModel().getSize(); i++)
-							{
-								RBListItemBO item = (RBListItemBO) list.getModel().getElementAt(i);
-								if(i == index)
-								{
-									item.setSelected(true);
-									list.repaint(list.getCellBounds(i, i));
-								}
-								else
-								{
-									if(item.isSelected())
-									{
-										list.repaint(list.getCellBounds(i, i));
-									}
-									item.setSelected(false);
-								}
-							}
-
-							// Repaint cell
-
-							list.repaint(list.getCellBounds(index, index));
-
-							WRIMSGUILinks.updateProjectFiles(list);
-
-						}
-					}
-				});
 			}
 		}
 		catch(Exception e)
@@ -264,10 +170,6 @@ public class FileDialogBO implements ActionListener
 			String messageText = "Unable to show file chooser.";
 			_errorHandlingSvc.businessErrorHandler(messageText, e1);
 		}
-		if(_theList != null)
-		{
-			_theList.repaint();
-		}
 	}
 
 	private void addScenario()
@@ -279,7 +181,7 @@ public class FileDialogBO implements ActionListener
 			UIManager.put("FileChooser.openDialogTitleText", "Select Scenarios");
 			_fc.setMultiSelectionEnabled(true);
 			_dialogRC = _fc.showDialog(_mainFrame, "Select");
-			if(_theList != null && _dialogRC != 1)
+			if(_lmScenNames != null && _dialogRC != 1)
 			{
 				for(File file : _fc.getSelectedFiles())
 				{
@@ -311,7 +213,7 @@ public class FileDialogBO implements ActionListener
 				{
 					file = new File(file.getPath() + ".CLS");
 				}
-				if(_theList != null)
+				if(_lmScenNames != null)
 				{
 					addFileToList(file);
 				}
@@ -326,8 +228,7 @@ public class FileDialogBO implements ActionListener
 
 	private void clearAllScenarios()
 	{
-		((DefaultListModel) _theList.getModel()).clear();
-		_theList.repaint();
+		_lmScenNames.clear();
 	}
 
 	private void deleteScenario()
@@ -335,7 +236,7 @@ public class FileDialogBO implements ActionListener
 		// If invoked by QR DelScenario button, delete a scenario from
 		// Quick
 		// Results scenario list
-		if((_theList != null) && _lmScenNames.getSize() > 0)
+		if((_lmScenNames != null) && _lmScenNames.getSize() > 0)
 		{
 			int todel = -1;
 			for(int i = 0; i < _lmScenNames.getSize(); i++)
@@ -381,10 +282,6 @@ public class FileDialogBO implements ActionListener
 				{
 					((RBListItemBO) _lmScenNames.getElementAt(0)).setSelected(true);
 				}
-				_theList.ensureIndexIsVisible(_lmScenNames.getSize() - 1);
-				_theList.revalidate();
-				_theList.validate();
-				_theList.getParent().invalidate();
 			}
 		}
 		catch(Exception e)
@@ -395,49 +292,6 @@ public class FileDialogBO implements ActionListener
 		}
 	}
 
-	/**
-	 * Custom ListDataListener to enable/disable controls based on number of
-	 * files in list.
-	 *
-	 * @author tslawecki
-	 */
-	private class MyListDataListener implements ListDataListener
-	{
-		@Override
-		public void contentsChanged(ListDataEvent e)
-		{
-		}
-
-		@Override
-		public void intervalAdded(ListDataEvent e)
-		{
-			if(_rdbopt1 != null && _rdbopt2 != null)
-			{
-				_rdbopt1.setEnabled(_lmScenNames.getSize() > 1);
-				_rdbopt2.setEnabled(_lmScenNames.getSize() > 1);
-			}
-			WRIMSGUILinks.updateProjectFiles(_theList);
-			if(_btn1 != null)
-			{
-				_btn1.setEnabled(true);
-			}
-		}
-
-		@Override
-		public void intervalRemoved(ListDataEvent e)
-		{
-			if(_rdbopt1 != null && _rdbopt2 != null)
-			{
-				_rdbopt1.setEnabled(_lmScenNames.getSize() > 1);
-				_rdbopt2.setEnabled(_lmScenNames.getSize() > 1);
-			}
-			WRIMSGUILinks.updateProjectFiles(_theList);
-			if(_btn1 != null)
-			{
-				_btn1.setEnabled(_lmScenNames.getSize() > 0);
-			}
-		}
-	}
 
 	/**
 	 * Custom class shows scenario description in tooltip
@@ -552,25 +406,4 @@ public class FileDialogBO implements ActionListener
 		}
 	}
 
-	/**
-	 * Custom class to show radiobutton items in place of textfields in a list
-	 *
-	 * @author tslawecki
-	 */
-	private class RBListRenderer extends JRadioButton implements ListCellRenderer
-	{
-		@Override
-		public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected,
-													  boolean hasFocus)
-		{
-			setEnabled(list.isEnabled());
-			setSelected(((RBListItemBO) value).isSelected());
-			setFont(list.getFont());
-			setBackground(list.getBackground());
-			setForeground(list.getForeground());
-			setText(((RBListItemBO) value).getLabel());
-			this.setToolTipText(value.toString() + " 	\n" + ((RBListItemBO) value).getSVFilename());
-			return this;
-		}
-	}
 }

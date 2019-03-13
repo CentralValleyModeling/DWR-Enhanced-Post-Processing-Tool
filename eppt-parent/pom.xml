@@ -22,7 +22,7 @@
 		<module>../application</module>
 		<module>../eppt-nbui</module>
 		<module>../eppt-core</module>
-		<module>../eppt-quickresults</module>
+		<module>../eppt-ui</module>
 		<module>../eppt-scenario</module>
 		<module>../eppt-calsim-gui</module>
 		<module>../eppt-vista</module>

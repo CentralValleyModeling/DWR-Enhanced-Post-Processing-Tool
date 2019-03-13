@@ -96,12 +96,6 @@ public final class WRIMSGUILinks
 				project.setDVHashtable();
 
 				String svFileName = item.getSVFilename();
-				if(svFileName.isEmpty())
-				{
-					svFileName = findSVFileName(dvFileName);
-					item.setSVFilename(svFileName);
-				}
-
 				project.setSVFile(svFileName);
 				if(svFileName != null)
 				{
@@ -123,11 +117,6 @@ public final class WRIMSGUILinks
 					RBListItemBO item = (RBListItemBO) theList.getModel().getElementAt(i);
 					String dvFileName = item.toString();
 					String svFileName = item.getSVFilename();
-					if(svFileName.isEmpty())
-					{
-						svFileName = findSVFileName(dvFileName);
-						item.setSVFilename(svFileName);
-					}
 					if(item.isSelected())
 					{
 						project.setDVFile(dvFileName);
