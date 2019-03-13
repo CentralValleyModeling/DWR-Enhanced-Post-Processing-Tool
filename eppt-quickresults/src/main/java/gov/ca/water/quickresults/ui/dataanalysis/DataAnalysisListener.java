@@ -169,7 +169,7 @@ public class DataAnalysisListener implements ActionListener
 			ByteArrayInputStream bs = new ByteArrayInputStream(theText.toString().getBytes());
 			Report report = new Report(bs, _dataAnalysisPanel.getOutputTextField().getToolTipText(), getMainWindow());
 			_dataAnalysisPanel.getReportButton().setEnabled(false);
-			CompletableFuture.runAsync(report, SwingUtilities::invokeLater)
+			CompletableFuture.runAsync(report)
 							 .thenRunAsync(() -> _dataAnalysisPanel.getReportButton().setEnabled(true),
 									 SwingUtilities::invokeLater);
 		}

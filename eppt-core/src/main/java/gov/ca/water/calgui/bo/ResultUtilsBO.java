@@ -20,6 +20,7 @@ import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.Vector;
 import javax.swing.*;
@@ -348,12 +349,14 @@ public class ResultUtilsBO
 	}
 
 	/**
-	 * Store the custom file dialog containing the Quick Results scenario list
-	 *
-	 * @param fdDSSFiles
+	 * Convert 1-12 integer to three-letter month abbreviation
+	 * @param month 1-12 integer
+	 * @return three-letter month abbreviation
 	 */
-	public void setFdDSSFiles(FileDialogBO fdDSSFiles)
+	public String intToMonth(int month)
 	{
-		final FileDialogBO fdDSSFiles1 = fdDSSFiles;
+		String monthString = _monthMap.entrySet().stream().filter(entry -> entry.getValue() == month)
+									  .map(Map.Entry::getKey).findAny().orElse("");
+		return monthString.substring(0, 1).toUpperCase() + monthString.substring(1).toLowerCase();
 	}
 }

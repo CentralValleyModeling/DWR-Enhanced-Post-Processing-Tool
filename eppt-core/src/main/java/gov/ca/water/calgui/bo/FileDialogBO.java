@@ -168,6 +168,13 @@ public class FileDialogBO implements ActionListener
 				_lmScenNames.addListDataListener(new MyListDataListener());
 
 				_theList = aList;
+				if(_theList.getModel() != null && _theList.getModel().getSize() > 0)
+				{
+					for(int i = 0; i < _theList.getModel().getSize(); i++)
+					{
+						_lmScenNames.addElement(_theList.getModel().getElementAt(i));
+					}
+				}
 				_theList.setModel(_lmScenNames);
 				_theList.setCellRenderer(new RBListRenderer());
 				_theList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);

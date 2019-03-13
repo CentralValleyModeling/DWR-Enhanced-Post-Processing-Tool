@@ -134,7 +134,6 @@ public class CalLiteInitClass
 			JRadioButton rdb2 = (JRadioButton) swingEngine.find("rdbp002");
 			FileDialogBO fdDSSFiles = new FileDialogBO(lstScenarios, (JLabel) swingEngine.find("lblBase"), rdb1, rdb2,
 					(JButton) swingEngine.find("btnPower"), true, (JFrame) _swingEngine.find(Constant.MAIN_FRAME_NAME));
-			resultUtilsBO.setFdDSSFiles(fdDSSFiles);
 			lstScenarios.setModel(fdDSSFiles.getLmScenNames());
 			lstScenarios.setBorder(new LineBorder(Color.gray, 1));
 
