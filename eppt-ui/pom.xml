@@ -16,8 +16,8 @@
 		<version>1.0-SNAPSHOT</version>
 		<relativePath>../eppt-parent</relativePath>
 	</parent>
-	<artifactId>eppt-quickresults</artifactId>
-	<name>EPPT Quick Results</name>
+	<artifactId>eppt-ui</artifactId>
+	<name>EPPT UI</name>
 	<dependencies>
 		<dependency>
 			<groupId>gov.ca.water</groupId>

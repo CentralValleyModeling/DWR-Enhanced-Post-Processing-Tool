@@ -28,7 +28,7 @@ public abstract class EpptScaffold
 	static
 	{
 		String userDir = Paths.get(System.getProperty("user.dir")).resolve(
-				"eppt-quickresults/target/test-classes").toAbsolutePath().toString();
+				"eppt-ui/target/test-classes").toAbsolutePath().toString();
 		System.setProperty("user.dir", userDir);
 	}
 
