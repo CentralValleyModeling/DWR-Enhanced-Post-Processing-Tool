@@ -11,6 +11,7 @@ import java.awt.BorderLayout;
 import java.awt.Container;
 import javax.swing.*;
 
+import gov.ca.water.calgui.constant.Constant;
 import gov.ca.water.calgui.constant.EpptPreferences;
 import gov.ca.water.quickresults.ui.EpptPanel;
 import gov.ca.water.quickresults.ui.quickresults.QuickResultsPanel;
@@ -34,6 +35,8 @@ public class DataAnalysisPanel extends EpptPanel
 			super.setLayout(new BorderLayout());
 			Container swixmlQuickResultsPanel = renderSwixml(DATA_ANALYSIS_XML_FILE);
 			super.add(swixmlQuickResultsPanel);
+			JTextField tfTemplateFile = (JTextField) getSwingEngine().find("tfTemplateFILE");
+			tfTemplateFile.setToolTipText(Constant.CONFIG_DIR);
 			JTextField tfReportFILE3 = (JTextField) getSwingEngine().find("tfReportFILE3");
 			tfReportFILE3.setToolTipText(EpptPreferences.getReportsPath().resolve(tfReportFILE3.getText()).toString());
 		}

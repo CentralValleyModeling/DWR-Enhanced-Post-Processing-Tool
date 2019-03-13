@@ -19,7 +19,7 @@ import gov.ca.water.businessservice.IApplyDynamicConDele;
 import gov.ca.water.businessservice.impl.ApplyDynamicConDeleImp;
 import gov.ca.water.businessservice.impl.XMLParsingSvcImpl;
 import gov.ca.water.calgui.bo.RBListItemBO;
-import gov.ca.water.calgui.presentation.DisplayFrame;
+import gov.ca.water.calgui.presentation.DisplayHelper;
 import gov.ca.water.calgui.tech_service.IDialogSvc;
 import gov.ca.water.calgui.tech_service.IErrorHandlingSvc;
 import gov.ca.water.calgui.tech_service.impl.DialogSvcImpl;
@@ -39,10 +39,16 @@ public class GlobalMouseListener extends MouseAdapter
 {
 
 	private static final Logger LOG = Logger.getLogger(GlobalMouseListener.class.getName());
+	private final DisplayHelper _displayHelper;
 	private IApplyDynamicConDele applyDynamicConDele = new ApplyDynamicConDeleImp();
 	private SwingEngine _swingEngine = XMLParsingSvcImpl.getXMLParsingSvcImplInstance().getSwingEngine();
 	private IErrorHandlingSvc errorHandlingSvc = new ErrorHandlingSvcImpl();
 	private IDialogSvc dialogSvc = DialogSvcImpl.getDialogSvcInstance();
+
+	public GlobalMouseListener(DisplayHelper displayHelper)
+	{
+		_displayHelper = displayHelper;
+	}
 
 	@Override
 	public void mouseClicked(MouseEvent me)
@@ -114,7 +120,7 @@ public class GlobalMouseListener extends MouseAdapter
 							String quickState = scenarioConfigurationPanel.quickState();
 							Month startMonth = scenarioConfigurationPanel.getStartMonth();
 							Month endMonth = scenarioConfigurationPanel.getEndMonth();
-							DisplayFrame.showDisplayFrames(quickState + ";Locs-" + chk.getText()
+							_displayHelper.showDisplayFrames(quickState + ";Locs-" + chk.getText()
 									+ ";Index-" + chk.getName(), scenarios, startMonth, endMonth);
 						}
 					}

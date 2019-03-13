@@ -6,18 +6,22 @@
  */
 package gov.ca.water.eppt.nbui;
 
+import java.awt.Frame;
 import java.io.IOException;
 import java.lang.reflect.Field;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Arrays;
+import java.util.logging.Handler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.*;
 
 import gov.ca.water.calgui.EpptInitializationException;
 import gov.ca.water.calgui.bus_service.impl.GuiLinksSeedDataSvcImpl;
 import gov.ca.water.calgui.constant.EpptPreferences;
-import gov.ca.water.calgui.presentation.DisplayFrame;
+import gov.ca.water.calgui.tech_service.impl.DialogSvcImpl;
+import gov.ca.water.quickresults.ui.scenarioconfig.ScenarioConfigurationPanel;
 import org.openide.modules.ModuleInstall;
 import org.openide.windows.WindowManager;
 
@@ -34,7 +38,22 @@ public class Installer extends ModuleInstall
 		initEpptConfigs();
 		initHeclibDll();
 		initLogger();
-		initPlotHandler();
+		loadLastScenarioConfiguration();
+	}
+
+	private void loadLastScenarioConfiguration()
+	{
+		ScenarioConfigurationPanel scenarioConfigurationPanel = ScenarioConfigurationPanel.getScenarioConfigurationPanel();
+		Path lastScenarioConfiguration = EpptPreferences.getLastScenarioConfiguration();
+		try
+		{
+			scenarioConfigurationPanel.loadScenarioConfiguration(lastScenarioConfiguration);
+		}
+		catch(IOException ex)
+		{
+			LOGGER.log(Level.SEVERE,
+					"Unable to load last Scenario Configuration EPPT Home: " + lastScenarioConfiguration, ex);
+		}
 	}
 
 	private void initEpptHome()
@@ -60,10 +79,6 @@ public class Installer extends ModuleInstall
 		}
 	}
 
-	private void initPlotHandler()
-	{
-		DisplayFrame.installPlotHandler(new TopComponentPlotHandler());
-	}
 
 	private void initEpptConfigs()
 	{
@@ -135,9 +150,17 @@ public class Installer extends ModuleInstall
 			handler.setShowDialogLevel(Level.parse(showDialogLevel));
 
 			handler.setFrame(true);
-			handler.setTitle("REGI Error Log");
+			handler.setTitle("EPPT Error Log");
 			handler.setParentWindow(WindowManager.getDefault().getMainWindow());
 
+			Handler[] handlers = rootLogger.getHandlers();
+			for(Handler defaultHandlers : handlers)
+			{
+				if(defaultHandlers.getClass().getName().contains("TopLogging"))
+				{
+					rootLogger.removeHandler(defaultHandlers);
+				}
+			}
 			rootLogger.addHandler(handler);
 		});
 	}

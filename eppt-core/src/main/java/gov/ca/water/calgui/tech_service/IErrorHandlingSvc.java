@@ -57,17 +57,6 @@ public interface IErrorHandlingSvc
 	 */
 	void systemErrorHandler(String displayMessage, String detailMessage);
 
-
-	/**
-	 * This method will take the Throwable and convert the the Stack Trace into
-	 * a string and return it.
-	 *
-	 * @param aThrowable An exception class which has all messages in layer and the
-	 *                   stack trace.
-	 * @return Will return whole stack trace as string.
-	 */
-	String getStackTraceAsString(Throwable aThrowable);
-
 	/**
 	 * @param displayMessage
 	 * @param aThrowable

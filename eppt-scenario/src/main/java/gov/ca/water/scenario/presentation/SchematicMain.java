@@ -16,7 +16,7 @@ import javax.swing.*;
 import gov.ca.water.businessservice.impl.XMLParsingSvcImpl;
 import gov.ca.water.calgui.bo.RBListItemBO;
 import gov.ca.water.calgui.constant.Constant;
-import gov.ca.water.calgui.presentation.DisplayFrame;
+import gov.ca.water.calgui.presentation.DisplayHelper;
 import gov.ca.water.calgui.tech_service.IErrorHandlingSvc;
 import gov.ca.water.calgui.tech_service.impl.ErrorHandlingSvcImpl;
 import gov.ca.water.quickresults.ui.scenarioconfig.ScenarioConfigurationPanel;
@@ -47,6 +47,7 @@ public class SchematicMain
 {
 
 	private static final Logger LOG = Logger.getLogger(SchematicMain.class.getName());
+	private final DisplayHelper _displayHelper;
 	JSVGCanvas canvas;
 	AffineTransform theAT;
 	Document document;
@@ -76,6 +77,7 @@ public class SchematicMain
 	public SchematicMain(JPanel p, String url, SwingEngine swix, double m0, double m1, double m2, double m3, double m4,
 						 double m5)
 	{
+		_displayHelper = new DisplayHelper(p);
 		this.swix = swix;
 		try
 		{
@@ -223,7 +225,7 @@ public class SchematicMain
 					String quickState = scenarioConfigurationPanel.quickState();
 					Month startMonth = scenarioConfigurationPanel.getStartMonth();
 					Month endMonth = scenarioConfigurationPanel.getEndMonth();
-					DisplayFrame.showDisplayFrames(quickState + ";Locs-" + label + ";Index-"
+					_displayHelper.showDisplayFrames(quickState + ";Locs-" + label + ";Index-"
 							+ Constant.SCHEMATIC_PREFIX + label, scenarios, startMonth, endMonth);
 				}
 			}

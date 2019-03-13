@@ -19,7 +19,7 @@ import javax.swing.*;
 
 import gov.ca.water.calgui.bo.RBListItemBO;
 import gov.ca.water.calgui.bo.ResultUtilsBO;
-import gov.ca.water.calgui.presentation.DisplayFrame;
+import gov.ca.water.calgui.presentation.DisplayHelper;
 import gov.ca.water.calgui.tech_service.IDialogSvc;
 import gov.ca.water.calgui.tech_service.IErrorHandlingSvc;
 import gov.ca.water.calgui.tech_service.impl.DialogSvcImpl;
@@ -110,8 +110,11 @@ public class QuickResultsListener implements ActionListener
 				Month endMonth = scenarioConfigurationPanel.getEndMonth();
 				for(int i = 0; i < lstReports.getModel().getSize(); i++)
 				{
-					DisplayFrame.showDisplayFrames((lstReports.getModel().getElementAt(i)),
+					DisplayHelper displayHelper = _quickResultsPanel.getDisplayHelper();
+					displayHelper.showDisplayFrames((lstReports.getModel().getElementAt(i)),
 							scenarios, startMonth, endMonth);
+					//DisplayFrame.showDisplayFrames((lstReports.getModel().getElementAt(i)),
+					//		scenarios, startMonth, endMonth);
 				}
 			}
 		}

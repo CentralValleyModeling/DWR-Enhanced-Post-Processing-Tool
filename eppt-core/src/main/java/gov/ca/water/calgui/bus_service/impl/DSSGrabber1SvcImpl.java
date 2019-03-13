@@ -32,11 +32,15 @@ import gov.ca.water.calgui.tech_service.IDialogSvc;
 import gov.ca.water.calgui.tech_service.IErrorHandlingSvc;
 import gov.ca.water.calgui.tech_service.impl.DialogSvcImpl;
 import gov.ca.water.calgui.tech_service.impl.ErrorHandlingSvcImpl;
+import hec.hecmath.TimeSeriesMath;
+import hec.hecmath.computation.ValueContainer;
+import hec.hecmath.functions.TimeSeriesFunctions;
 import org.apache.log4j.Logger;
 
 import hec.heclib.dss.HecDss;
 import hec.heclib.util.HecTime;
 import hec.io.TimeSeriesContainer;
+import rma.lang.RmaMath;
 
 /**
  * Class to grab (load) DSS time series for a set of scenarios passed in a
@@ -640,6 +644,7 @@ public class DSSGrabber1SvcImpl implements IDSSGrabber1Svc
 
 					for(int i = 1; i < dssNames.length; i++)
 					{
+
 						// TODO: Note hard-coded D- and E-PART
 						TimeSeriesContainer result2 = (TimeSeriesContainer) hD
 								.get("/" + hecAPart + "/" + dssNames[i] + "/01JAN2020/1MON/" + hecFParts[i], true);
@@ -658,10 +663,8 @@ public class DSSGrabber1SvcImpl implements IDSSGrabber1Svc
 						}
 						else
 						{
-							for(int j = 0; j < result2.numberValues; j++)
-							{
-								result.values[j] = result.values[j] + result2.values[j];
-							}
+							//combine result2 and result together and assign to result.
+							result = TimeSeriesFunctions.add(Arrays.asList(new ValueContainer(result), new ValueContainer(result2)), (String) null);
 						}
 					}
 
@@ -1031,24 +1034,27 @@ public class DSSGrabber1SvcImpl implements IDSSGrabber1Svc
 
 					for(int i = 0; i < secondaryResults.length; i++)
 					{
-						for(int j = 0; j < secondaryResults[i].numberValues; j++)
+						if(secondaryResults[i] != null)
 						{
-
-							ht.set(secondaryResults[i].times[j]);
-							calendar.set(ht.year(), ht.month() - 1, 1);
-							double monthlyTAF = secondaryResults[i].values[j]
-									* calendar.getActualMaximum(Calendar.DAY_OF_MONTH) * CFS_2_TAF_DAY;
-							int wy = ((ht.month() < 10) ? ht.year() : ht.year() + 1) - _startWY;
-							_annualTAFs[i + primaryResults.length][wy] += monthlyTAF;
-							if(!_isCFS)
+							for (int j = 0; j < secondaryResults[i].numberValues; j++)
 							{
-								secondaryResults[i].values[j] = monthlyTAF;
-							}
 
-						}
-						if(!_isCFS)
-						{
-							secondaryResults[i].units = "TAF per year";
+								ht.set(secondaryResults[i].times[j]);
+								calendar.set(ht.year(), ht.month() - 1, 1);
+								double monthlyTAF = secondaryResults[i].values[j]
+										* calendar.getActualMaximum(Calendar.DAY_OF_MONTH) * CFS_2_TAF_DAY;
+								int wy = ((ht.month() < 10) ? ht.year() : ht.year() + 1) - _startWY;
+								_annualTAFs[i + primaryResults.length][wy] += monthlyTAF;
+								if (!_isCFS)
+								{
+									secondaryResults[i].values[j] = monthlyTAF;
+								}
+
+							}
+							if (!_isCFS)
+							{
+								secondaryResults[i].units = "TAF per year";
+							}
 						}
 					}
 				}

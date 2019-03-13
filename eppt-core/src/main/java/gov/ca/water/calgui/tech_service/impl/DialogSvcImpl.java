@@ -21,15 +21,14 @@ public class DialogSvcImpl implements IDialogSvc
 {
 
 	private static IDialogSvc dialogSvc = null;
-	private ImageIcon icon = new ImageIcon(getClass().getResource("/images/CalLiteIcon.png"));
-	private JFrame _mainFrame = null;
+	private static JFrame _mainFrame = null;
 
 	private DialogSvcImpl()
 	{
 
 	}
 
-	public void setMainFrame(JFrame mainFrame)
+	public static void installMainFrame(JFrame mainFrame)
 	{
 		_mainFrame = mainFrame;
 	}
@@ -122,7 +121,7 @@ public class DialogSvcImpl implements IDialogSvc
 	{
 		JOptionPane optionPane = new JOptionPane(message, messageType, optionType, null, options, options[0]);
 		JDialog dialog = optionPane.createDialog(_mainFrame, "CalLite GUI");
-		dialog.setIconImage(icon.getImage());
+		dialog.setIconImage(_mainFrame.getIconImage());
 		dialog.setResizable(false);
 		dialog.setVisible(true);
 		return optionPane.getValue().toString();

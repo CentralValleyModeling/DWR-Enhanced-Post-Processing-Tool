@@ -15,6 +15,7 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.*;
+import javax.swing.border.TitledBorder;
 
 import gov.ca.water.calgui.bo.RBListItemBO;
 import gov.ca.water.calgui.bo.ResultUtilsBO;
@@ -43,13 +44,11 @@ public final class ScenarioConfigurationPanel extends EpptPanel
 	{
 		try
 		{
-			_scenarioConfigurationIO = new ScenarioConfigurationIO(getSwingEngine());
+			_scenarioConfigurationIO = new ScenarioConfigurationIO();
 			super.setLayout(new BorderLayout());
 			Container swixmlScenarioConfigurationPanel = renderSwixml(SCENARIO_CONFIGURATION_XML_FILE);
 			super.add(swixmlScenarioConfigurationPanel);
 			initModels();
-			Path lastScenarioConfiguration = EpptPreferences.getLastScenarioConfiguration();
-			loadScenarioConfiguration(lastScenarioConfiguration);
 		}
 		catch(Exception e)
 		{
@@ -70,6 +69,7 @@ public final class ScenarioConfigurationPanel extends EpptPanel
 		ResultUtilsBO.SetNumberModelAndIndex(spnSY, 1921, 1921, 2003, 1, "####", null, true);
 		JSpinner spnEY = (JSpinner) getSwingEngine().find("spnEndYear");
 		ResultUtilsBO.SetNumberModelAndIndex(spnEY, 2003, 1921, 2003, 1, "####", null, true);
+
 		JCheckBox summaryTableCheckbox = (JCheckBox) getSwingEngine().find("RepckbSummaryTable");
 		summaryTableCheckbox.addActionListener(e ->
 		{
@@ -301,6 +301,8 @@ public final class ScenarioConfigurationPanel extends EpptPanel
 		if(selectedPath.toFile().exists())
 		{
 			_scenarioConfigurationIO.loadConfiguration(selectedPath);
+			JPanel panel = (JPanel) getSwingEngine().find("ss");
+			panel.setBorder(new TitledBorder("Scenarios - " + selectedPath.getFileName()));
 		}
 	}
 
@@ -322,5 +324,39 @@ public final class ScenarioConfigurationPanel extends EpptPanel
 	JLabel getLabelBase()
 	{
 		return (JLabel) getSwingEngine().find("lblBase");
+	}
+
+	void setStartMonth(Month start)
+	{
+		JSpinner monthSpinner = (JSpinner) getSwingEngine().find("spnStartMonth");
+		monthSpinner.setValue(ResultUtilsBO.getResultUtilsInstance(null).intToMonth(start.getMonth()));
+		JSpinner yearSpinner = (JSpinner) getSwingEngine().find("spnStartYear");
+		yearSpinner.setValue(start.getYearValue());
+	}
+
+	void setEndMonth(Month end)
+	{
+		JSpinner monthSpinner = (JSpinner) getSwingEngine().find("spnEndMonth");
+		monthSpinner.setValue(ResultUtilsBO.getResultUtilsInstance(null).intToMonth(end.getMonth()));
+		JSpinner yearSpinner = (JSpinner) getSwingEngine().find("spnEndYear");
+		yearSpinner.setValue(end.getYearValue());
+	}
+
+	public void setScenarios(List<RBListItemBO> scenarios)
+	{
+		ScenarioConfigurationPanel scenarioConfigurationPanel = ScenarioConfigurationPanel.getScenarioConfigurationPanel();
+		JRadioButton radioButton = (JRadioButton) scenarioConfigurationPanel.getSwingEngine().find("rdbp001");
+		radioButton.setSelected(true);
+		Component component = scenarioConfigurationPanel.getSwingEngine().find("SelectedList");
+		if(component instanceof JList)
+		{
+			JList<RBListItemBO> lstScenarios = (JList<RBListItemBO>) component;
+			DefaultListModel<RBListItemBO> defaultModel = new DefaultListModel<>();
+			for(RBListItemBO item : scenarios)
+			{
+				defaultModel.addElement(item);
+			}
+			lstScenarios.setModel(defaultModel);
+		}
 	}
 }

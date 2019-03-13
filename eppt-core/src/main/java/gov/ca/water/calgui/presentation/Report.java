@@ -96,6 +96,8 @@ public class Report extends SwingWorker<Void, String>
 	protected Void doInBackground() throws Exception
 	{
 		_progressFrameForPDF = ProgressFrameForPDF.getProgressFrameInstance(_mainFrame);
+		_progressFrameForPDF.toFront();
+		_progressFrameForPDF.setVisible(true);
 		publish("Generating report in background thread.");
 
 		LOG.fine("Parsing input template");

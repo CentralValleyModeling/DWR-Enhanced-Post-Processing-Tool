@@ -19,12 +19,12 @@ import calsim.app.DerivedTimeSeries;
 import calsim.app.MultipleTimeSeries;
 import calsim.gui.GuiUtils;
 import gov.ca.water.calgui.bo.RBListItemBO;
-import gov.ca.water.calgui.presentation.DisplayFrame;
 import gov.ca.water.calgui.presentation.WRIMSGUILinks;
 import gov.ca.water.calgui.tech_service.IDialogSvc;
 import gov.ca.water.calgui.tech_service.IErrorHandlingSvc;
 import gov.ca.water.calgui.tech_service.impl.DialogSvcImpl;
 import gov.ca.water.calgui.tech_service.impl.ErrorHandlingSvcImpl;
+import gov.ca.water.calgui.presentation.DisplayHelper;
 import gov.ca.water.quickresults.ui.EpptPanel;
 import gov.ca.water.quickresults.ui.quickresults.QuickResultsPanel;
 import gov.ca.water.quickresults.ui.scenarioconfig.ScenarioConfigurationPanel;
@@ -45,11 +45,13 @@ public class CustomResultsPanel extends EpptPanel
 	private static final String CUSTOM_RESULTS_XML_FILE = "Custom_Results.xml";
 	private final IErrorHandlingSvc _errorHandlingSvc = new ErrorHandlingSvcImpl();
 	private final IDialogSvc _dialogSvc = DialogSvcImpl.getDialogSvcInstance();
+	private final DisplayHelper _displayHelper;
 
 	public CustomResultsPanel()
 	{
 		try
 		{
+			_displayHelper = new DisplayHelper(this);
 			super.setLayout(new BorderLayout());
 			Container swixmlCustomResultsPanel = renderSwixml(CUSTOM_RESULTS_XML_FILE);
 			super.add(swixmlCustomResultsPanel);
@@ -162,12 +164,12 @@ public class CustomResultsPanel extends EpptPanel
 				Month endMonth = scenarioConfigurationPanel.getEndMonth();
 				if(parts[1].toUpperCase().contains(("_SV.DSS")))
 				{
-					DisplayFrame.showDisplayFrames(quickState + ";Locs-" + parts[2] + ";Index-"
+					_displayHelper.showDisplayFrames(quickState + ";Locs-" + parts[2] + ";Index-"
 							+ parts[2] + ";File-" + parts[1], scenarios, startMonth, endMonth);
 				}
 				else
 				{
-					DisplayFrame.showDisplayFrames(
+					_displayHelper.showDisplayFrames(
 							quickState + ";Locs-" + parts[2] + ";Index-" + parts[2],
 							scenarios, startMonth, endMonth);
 				}
@@ -211,7 +213,7 @@ public class CustomResultsPanel extends EpptPanel
 			Month startMonth = scenarioConfigurationPanel.getStartMonth();
 			Month endMonth = scenarioConfigurationPanel.getEndMonth();
 			List<RBListItemBO> scenarios = scenarioConfigurationPanel.getScenarios();
-			DisplayFrame.showDisplayFramesWRIMS(quickState + ";Locs-;Index-;File-", scenarios, dts,
+			_displayHelper.showDisplayFramesWRIMS(quickState + ";Locs-;Index-;File-", scenarios, dts,
 					mts, startMonth, endMonth);
 
 		}

@@ -94,7 +94,7 @@ public final class SaveScenarioConfiguration extends AbstractAction implements P
 		JMenuItem jMenuItem = new JMenuItem("Save As...");
 		jMenuItem.addActionListener(new SaveAsScenarioConfiguration());
 		menu.add(jMenuItem);
-		ImageIcon imageIcon = getSaveIcon();
+		ImageIcon imageIcon = getSaveIcon("save24.png");
 		JToggleButton dropDownToggleButton = DropDownButtonFactory.createDropDownToggleButton(imageIcon, menu);
 		dropDownToggleButton.addActionListener(e -> performSave());
 		return dropDownToggleButton;
@@ -103,17 +103,17 @@ public final class SaveScenarioConfiguration extends AbstractAction implements P
 	@Override
 	public JMenuItem getMenuPresenter()
 	{
-		ImageIcon imageIcon = getSaveIcon();
+		ImageIcon imageIcon = getSaveIcon("save.png");
 		JMenuItem jMenuItem = new JMenuItem("Save Scenario Configuration", imageIcon);
 		jMenuItem.addActionListener(e -> performSave());
 		return jMenuItem;
 	}
 
-	private ImageIcon getSaveIcon()
+	private ImageIcon getSaveIcon(String iconName)
 	{
 		ImageIcon imageIcon = new ImageIcon("");
 		URL saveImg = Thread.currentThread().getContextClassLoader().getResource(
-				"/gov/ca/water/eppt/nbui/actions/save.png");
+				"/gov/ca/water/eppt/nbui/actions/" + iconName);
 		if(saveImg != null)
 		{
 			imageIcon = new ImageIcon(saveImg);

@@ -122,7 +122,8 @@ public class DataAnalysisListener implements ActionListener
 
 	private void generateReport()
 	{
-		try(FileInputStream fin = new FileInputStream(_dataAnalysisPanel.getReportTemplateTextField().getToolTipText());
+		String fileName = _dataAnalysisPanel.getReportTemplateTextField().getToolTipText();
+		try(FileInputStream fin = new FileInputStream(fileName);
 			BufferedReader br = new BufferedReader(new InputStreamReader(fin)))
 		{
 			// Open the template file
@@ -169,7 +170,7 @@ public class DataAnalysisListener implements ActionListener
 			ByteArrayInputStream bs = new ByteArrayInputStream(theText.toString().getBytes());
 			Report report = new Report(bs, _dataAnalysisPanel.getOutputTextField().getToolTipText(), getMainWindow());
 			_dataAnalysisPanel.getReportButton().setEnabled(false);
-			CompletableFuture.runAsync(report, SwingUtilities::invokeLater)
+			CompletableFuture.runAsync(report)
 							 .thenRunAsync(() -> _dataAnalysisPanel.getReportButton().setEnabled(true),
 									 SwingUtilities::invokeLater);
 		}
