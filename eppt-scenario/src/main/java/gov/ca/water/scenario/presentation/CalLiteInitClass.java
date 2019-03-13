@@ -44,6 +44,7 @@ import gov.ca.water.calgui.bo.FileDialogBO;
 import gov.ca.water.calgui.bo.ResultUtilsBO;
 import gov.ca.water.calgui.bus_service.impl.ModelRunSvcImpl;
 import gov.ca.water.calgui.constant.Constant;
+import gov.ca.water.calgui.presentation.DisplayHelper;
 import gov.ca.water.calgui.tech_service.IAuditSvc;
 import gov.ca.water.calgui.tech_service.IDialogSvc;
 import gov.ca.water.calgui.tech_service.IErrorHandlingSvc;
@@ -253,15 +254,17 @@ public class CalLiteInitClass
 	private void initGlobalListeners(IAllButtonsDele allButtonsDele)
 	{
 		// Set up the global Listeners.
-		_swingEngine.setActionListener(_swingEngine.find(Constant.MAIN_FRAME_NAME), new GlobalActionListener());
+		Component mainFrame = _swingEngine.find(Constant.MAIN_FRAME_NAME);
+		DisplayHelper displayHelper = new DisplayHelper(mainFrame);
+		_swingEngine.setActionListener(mainFrame, new GlobalActionListener(displayHelper));
 		//setCheckBoxorMouseListener(_swingEngine.find(Constant.MAIN_FRAME_NAME), new GlobalMouseListener());
-		setCheckBoxorRadioButtonItemListener(_swingEngine.find(Constant.MAIN_FRAME_NAME), new GlobalItemListener());
-		setLinkedSliderChangeListener(_swingEngine.find(Constant.MAIN_FRAME_NAME), new GlobalChangeListener());
+		setCheckBoxorRadioButtonItemListener(mainFrame, new GlobalItemListener());
+		setLinkedSliderChangeListener(mainFrame, new GlobalChangeListener());
 		ImageIcon icon = new ImageIcon(getClass().getResource("/images/CalLiteIcon.png"));
-		((JFrame) _swingEngine.find(Constant.MAIN_FRAME_NAME)).setIconImage(icon.getImage());
+		((JFrame) mainFrame).setIconImage(icon.getImage());
 		((JTabbedPane) _swingEngine.find("reg_tabbedPane")).addChangeListener(new GlobalChangeListener());
 
-		((JFrame) _swingEngine.find(Constant.MAIN_FRAME_NAME))
+		((JFrame) mainFrame)
 				.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);// EXIT_ON_CLOSE
 
 	}

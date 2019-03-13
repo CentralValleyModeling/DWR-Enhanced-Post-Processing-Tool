@@ -40,7 +40,7 @@ import gov.ca.water.calgui.bo.RBListItemBO;
 import gov.ca.water.calgui.bus_service.IModelRunSvc;
 import gov.ca.water.calgui.bus_service.impl.ModelRunSvcImpl;
 import gov.ca.water.calgui.constant.Constant;
-import gov.ca.water.calgui.presentation.DisplayFrame;
+import gov.ca.water.calgui.presentation.DisplayHelper;
 import gov.ca.water.calgui.presentation.ProgressFrame;
 import gov.ca.water.calgui.tech_service.IAuditSvc;
 import gov.ca.water.calgui.tech_service.IDialogSvc;
@@ -74,6 +74,12 @@ public class GlobalActionListener implements ActionListener
 	private final IVerifyControlsDele _verifyControlsDele = new VerifyControlsDeleImp();
 	private final IErrorHandlingSvc _errorHandlingSvc = new ErrorHandlingSvcImpl();
 	private final IApplyDynamicConDele _applyDynamicConDele = new ApplyDynamicConDeleImp();
+	private final DisplayHelper _displayHelper;
+
+	public GlobalActionListener(DisplayHelper displayHelper)
+	{
+		_displayHelper = displayHelper;
+	}
 
 	@SuppressWarnings("unchecked")
 	@Override
@@ -223,9 +229,8 @@ public class GlobalActionListener implements ActionListener
 						String quickState = scenarioConfigurationPanel.quickState();
 						Month startMonth = scenarioConfigurationPanel.getStartMonth();
 						Month endMonth = scenarioConfigurationPanel.getEndMonth();
-						DisplayFrame.showDisplayFrames(
-								(String) ((JList) _swingEngine.find("lstReports")).getSelectedValue(),
-								scenarios, startMonth, endMonth);
+						_displayHelper.showDisplayFrames(
+								(String) ((JList) _swingEngine.find("lstReports")).getSelectedValue(), scenarios, startMonth, endMonth);
 					}
 					break;
 				case "Time_SELECT":

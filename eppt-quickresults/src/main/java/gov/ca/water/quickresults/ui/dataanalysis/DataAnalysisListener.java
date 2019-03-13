@@ -122,7 +122,8 @@ public class DataAnalysisListener implements ActionListener
 
 	private void generateReport()
 	{
-		try(FileInputStream fin = new FileInputStream(_dataAnalysisPanel.getReportTemplateTextField().getToolTipText());
+		String fileName = _dataAnalysisPanel.getReportTemplateTextField().getToolTipText();
+		try(FileInputStream fin = new FileInputStream(fileName);
 			BufferedReader br = new BufferedReader(new InputStreamReader(fin)))
 		{
 			// Open the template file

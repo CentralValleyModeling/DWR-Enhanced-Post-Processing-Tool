@@ -20,7 +20,6 @@ import javax.swing.*;
 import gov.ca.water.calgui.EpptInitializationException;
 import gov.ca.water.calgui.bus_service.impl.GuiLinksSeedDataSvcImpl;
 import gov.ca.water.calgui.constant.EpptPreferences;
-import gov.ca.water.calgui.presentation.DisplayFrame;
 import gov.ca.water.calgui.tech_service.impl.DialogSvcImpl;
 import gov.ca.water.quickresults.ui.scenarioconfig.ScenarioConfigurationPanel;
 import org.openide.modules.ModuleInstall;
@@ -39,7 +38,6 @@ public class Installer extends ModuleInstall
 		initEpptConfigs();
 		initHeclibDll();
 		initLogger();
-		initPlotHandler();
 		loadLastScenarioConfiguration();
 	}
 
@@ -81,15 +79,6 @@ public class Installer extends ModuleInstall
 		}
 	}
 
-	private void initPlotHandler()
-	{
-		WindowManager.getDefault().invokeWhenUIReady(() ->
-		{
-			Frame mainWindow = WindowManager.getDefault().getMainWindow();
-			DialogSvcImpl.installMainFrame((JFrame) mainWindow);
-		});
-		DisplayFrame.installPlotHandler(new TopComponentPlotHandler());
-	}
 
 	private void initEpptConfigs()
 	{

@@ -12,6 +12,9 @@ import java.awt.HeadlessException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javax.swing.*;
@@ -44,12 +47,13 @@ import hec.io.TimeSeriesContainer;
  *
  * @author tslawecki
  */
-public class DisplayFrame
+ class DisplayFrame
 {
 
 	private static final Logger LOG = Logger.getLogger(DisplayFrame.class.getName());
 	private static final IErrorHandlingSvc ERROR_HANDLING_SVC = new ErrorHandlingSvcImpl();
 	private static PlotHandler _topComponentPlotHandler = new DefaultPlotHandler();
+
 
 	/**
 	 * showDisplayFrames method creates a frame showing multiple charts
@@ -58,7 +62,7 @@ public class DisplayFrame
 	 * @param displayGroup
 	 * @param scenarios
 	 */
-	public static void showDisplayFrames(String displayGroup, List<RBListItemBO> scenarios, Month startMonth,
+	  static List<JTabbedPane> showDisplayFrames(String displayGroup, List<RBListItemBO> scenarios, Month startMonth,
 										 Month endMonth)
 	{
 		List<JTabbedPane> tabbedPanes = new ArrayList<>();
@@ -432,7 +436,7 @@ public class DisplayFrame
 			String messageText = "Unable to display frame.";
 			ERROR_HANDLING_SVC.businessErrorHandler(messageText, e);
 		}
-		_topComponentPlotHandler.openPlots(tabbedPanes);
+		return tabbedPanes;
 	}
 
 
@@ -444,7 +448,7 @@ public class DisplayFrame
 	 * @param dts
 	 * @param mts
 	 */
-	public static void showDisplayFramesWRIMS(String displayGroup,
+	static List<JTabbedPane> showDisplayFramesWRIMS(String displayGroup,
 											  List<RBListItemBO> lstScenarios,
 											  DerivedTimeSeries dts,
 											  MultipleTimeSeries mts,
@@ -951,14 +955,19 @@ public class DisplayFrame
 			String messageText = "Unable to display frame.";
 			ERROR_HANDLING_SVC.businessErrorHandler(messageText, e);
 		}
-		_topComponentPlotHandler.openPlots(tabbedPanes);
+		return tabbedPanes;
 	}
+
 
 	public static void installPlotHandler(PlotHandler topComponentPlotHandler)
 	{
 		_topComponentPlotHandler = topComponentPlotHandler;
 	}
 
+	public static PlotHandler getPlotHandler()
+	{
+		return _topComponentPlotHandler;
+	}
 	public interface PlotHandler
 	{
 		void openPlots(List<JTabbedPane> tabbedPanes);
