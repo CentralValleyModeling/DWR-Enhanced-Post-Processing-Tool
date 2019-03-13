@@ -39,7 +39,7 @@ import org.openide.windows.WindowManager;
 )
 @ActionRegistration(
 		iconBase = "gov/ca/water/eppt/nbui/actions/load.png",
-		displayName = "Load Scenario Configuration"
+		displayName = "Load Project Configuration"
 )
 @ActionReferences(
 		{
@@ -47,7 +47,7 @@ import org.openide.windows.WindowManager;
 				,
 				@ActionReference(path = "Toolbars/EPPT", position = 333)
 		})
-@Messages("CTL_LoadScenarioConfiguration=Load Scenario Configuration")
+@Messages("CTL_LoadScenarioConfiguration=Load Project Configuration")
 public final class LoadProjectConfiguration extends AbstractAction
 		implements Presenter.Toolbar, Presenter.Menu, ContextAwareAction
 {
@@ -62,7 +62,7 @@ public final class LoadProjectConfiguration extends AbstractAction
 
 	private LoadProjectConfiguration(Lookup context)
 	{
-		putValue(Action.NAME, "Load Scenario Configuration");
+		putValue(Action.NAME, "Load Project Configuration");
 		putValue(Action.SMALL_ICON, "gov/ca/water/eppt/nbui/actions/load.png");
 		putValue(Action.LARGE_ICON_KEY, "gov/ca/water/eppt/nbui/actions/load24.png");
 		_lkpInfo = context.lookupResult(ProjectConfigurationSavable.class);
@@ -94,7 +94,7 @@ public final class LoadProjectConfiguration extends AbstractAction
 			}
 			catch(IOException ex)
 			{
-				LOGGER.log(Level.SEVERE, "Error saving Scenario Configuration to: " + selectedPath, ex);
+				LOGGER.log(Level.SEVERE, "Error saving Project Configuration to: " + selectedPath, ex);
 			}
 		}
 	}
@@ -104,7 +104,7 @@ public final class LoadProjectConfiguration extends AbstractAction
 	{
 		ImageIcon imageIcon = getSaveIcon("load24.png");
 		JButton button = new JButton(imageIcon);
-		button.setToolTipText("Load Scenario Configuration");
+		button.setToolTipText("Load Project Configuration");
 		button.addActionListener(this);
 		return button;
 	}
@@ -113,7 +113,7 @@ public final class LoadProjectConfiguration extends AbstractAction
 	public JMenuItem getMenuPresenter()
 	{
 		ImageIcon imageIcon = getSaveIcon("load.png");
-		JMenuItem jMenuItem = new JMenuItem("Load Scenario Configuration", imageIcon);
+		JMenuItem jMenuItem = new JMenuItem("Load Project Configuration", imageIcon);
 		jMenuItem.addActionListener(this);
 		return jMenuItem;
 	}

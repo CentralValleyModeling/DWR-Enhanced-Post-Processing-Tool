@@ -37,7 +37,7 @@ import org.openide.windows.WindowManager;
 )
 @ActionRegistration(
 		iconBase = "gov/ca/water/eppt/nbui/actions/HecDssVue.png",
-		displayName = "Save Scenario Configuration"
+		displayName = "Save Project Configuration"
 )
 @ActionReferences(
 		{
@@ -45,7 +45,7 @@ import org.openide.windows.WindowManager;
 				,
 				@ActionReference(path = "Toolbars/EPPT", position = 111)
 		})
-@Messages("CTL_SaveScenarioConfiguration=Save Scenario Configuration")
+@Messages("CTL_SaveScenarioConfiguration=Save Project Configuration")
 public final class SaveProjectConfiguration extends AbstractAction implements Presenter.Toolbar, Presenter.Menu,
 																			  ContextAwareAction
 {
@@ -59,7 +59,7 @@ public final class SaveProjectConfiguration extends AbstractAction implements Pr
 
 	private SaveProjectConfiguration(Lookup context)
 	{
-		putValue(Action.NAME, "Save Scenario Configuration");
+		putValue(Action.NAME, "Save Project Configuration");
 		_lkpInfo = context.lookupResult(ProjectConfigurationSavable.class);
 	}
 
@@ -108,7 +108,7 @@ public final class SaveProjectConfiguration extends AbstractAction implements Pr
 	public JMenuItem getMenuPresenter()
 	{
 		ImageIcon imageIcon = getSaveIcon("save.png");
-		JMenuItem jMenuItem = new JMenuItem("Save Scenario Configuration", imageIcon);
+		JMenuItem jMenuItem = new JMenuItem("Save Project Configuration", imageIcon);
 		jMenuItem.addActionListener(e -> performSave());
 		return jMenuItem;
 	}
@@ -133,7 +133,7 @@ public final class SaveProjectConfiguration extends AbstractAction implements Pr
 		}
 		catch(IOException ex)
 		{
-			LOGGER.log(Level.SEVERE, "Error saving current Scenario Configuration to:", ex);
+			LOGGER.log(Level.SEVERE, "Error saving current Project Configuration to:", ex);
 		}
 	}
 

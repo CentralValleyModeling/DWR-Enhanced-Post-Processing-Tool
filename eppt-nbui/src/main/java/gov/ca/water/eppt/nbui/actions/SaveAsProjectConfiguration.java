@@ -45,7 +45,7 @@ import org.openide.windows.WindowManager;
 		{
 				@ActionReference(path = "Menu/File", position = 2)
 		})
-@Messages("CTL_SaveAsScenarioConfiguration=Save Scenario Configuration As...")
+@Messages("CTL_SaveAsScenarioConfiguration=Save Project Configuration As...")
 public final class SaveAsProjectConfiguration implements ActionListener
 {
 
@@ -73,7 +73,7 @@ public final class SaveAsProjectConfiguration implements ActionListener
 		}
 		catch(IOException ex)
 		{
-			LOGGER.log(Level.SEVERE, "Error saving Scenario Configuration", ex);
+			LOGGER.log(Level.SEVERE, "Error saving Project Configuration", ex);
 		}
 	}
 

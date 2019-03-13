@@ -59,7 +59,7 @@ public class Installer extends ModuleInstall
 			catch(IOException ex)
 			{
 				LOGGER.log(Level.SEVERE,
-						"Unable to load last Scenario Configuration EPPT Home: " + lastProjectConfiguration, ex);
+						"Unable to load last Project Configuration EPPT Home: " + lastProjectConfiguration, ex);
 			}
 		});
 	}

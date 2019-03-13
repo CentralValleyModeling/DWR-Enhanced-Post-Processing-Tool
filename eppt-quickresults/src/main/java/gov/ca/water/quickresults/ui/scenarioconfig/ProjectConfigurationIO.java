@@ -49,7 +49,7 @@ class ProjectConfigurationIO
 			writeSelectedProperties(properties, components);
 			writeMonthProperties(properties);
 			writeScenarioDssPaths(properties, selectedPath);
-			properties.store(bufferedWriter, "EPPT Scenario Configuration");
+			properties.store(bufferedWriter, "EPPT Project Configuration");
 		}
 	}
 

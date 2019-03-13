@@ -32,18 +32,18 @@ import rma.swing.RmaJPanel;
 @ActionID(category = "Window", id = "gov.ca.water.eppt.nbui.ProjectConfigurationTopComponent")
 @ActionReference(path = "Menu/Window", position = 1111)
 @TopComponent.OpenActionRegistration(
-		displayName = "Scenario Configuration",
+		displayName = "Project Configuration",
 		preferredID = "ProjectConfigurationTopComponent"
 )
 @Messages(
 		{
-				"CTL_ScenarioConfigurationAction=Scenario Configuration",
-				"CTL_ScenarioConfigurationTopComponent=Scenario Configuration Window",
-				"HINT_ScenarioConfigurationTopComponent=This is the Scenario Configuration window"
+				"CTL_ScenarioConfigurationAction=Project Configuration",
+				"CTL_ScenarioConfigurationTopComponent=Project Configuration Window",
+				"HINT_ScenarioConfigurationTopComponent=This is the Project Configuration window"
 		})
 public final class ProjectConfigurationTopComponent extends EpptTopComponent
 {
-	private static final String TOP_COMPONENT_NAME = "Scenario Configuration";
+	private static final String TOP_COMPONENT_NAME = "Project Configuration";
 	private final InstanceContent _instanceContent = new InstanceContent();
 	private String _lastQuickState = null;
 

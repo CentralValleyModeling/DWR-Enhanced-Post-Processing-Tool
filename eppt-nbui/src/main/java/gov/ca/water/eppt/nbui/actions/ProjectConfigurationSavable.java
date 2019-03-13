@@ -34,7 +34,7 @@ public class ProjectConfigurationSavable extends AbstractSavable implements Save
 	@Override
 	protected String findDisplayName()
 	{
-		return "Scenario Configuration";
+		return "Project Configuration";
 	}
 
 	@Override
