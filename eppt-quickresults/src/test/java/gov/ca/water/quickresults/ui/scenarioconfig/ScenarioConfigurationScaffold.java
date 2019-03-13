@@ -29,11 +29,11 @@ public class ScenarioConfigurationScaffold extends EpptScaffold
 	@Override
 	protected EpptPanel buildEpptPanel()
 	{
-		ScenarioConfigurationPanel scenarioConfigurationPanel = ScenarioConfigurationPanel.getScenarioConfigurationPanel();
-		ScenarioConfigurationListener scenarioConfigurationListener = new ScenarioConfigurationListener(
-				scenarioConfigurationPanel);
-		scenarioConfigurationPanel.getSwingEngine().setActionListener(scenarioConfigurationPanel,
-				scenarioConfigurationListener);
-		return scenarioConfigurationPanel;
+		ProjectConfigurationPanel projectConfigurationPanel = ProjectConfigurationPanel.getProjectConfigurationPanel();
+		ProjectConfigurationListener projectConfigurationListener = new ProjectConfigurationListener(
+				projectConfigurationPanel);
+		projectConfigurationPanel.getSwingEngine().setActionListener(projectConfigurationPanel,
+				projectConfigurationListener);
+		return projectConfigurationPanel;
 	}
 }

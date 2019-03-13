@@ -23,19 +23,19 @@ import org.apache.log4j.Logger;
  * @author <a href="mailto:adam@rmanet.com">Adam Korynta</a>
  * @since 02-23-2019
  */
-public class ScenarioConfigurationListener implements ActionListener
+public class ProjectConfigurationListener implements ActionListener
 {
-	private static final Logger LOGGER = Logger.getLogger(ScenarioConfigurationListener.class.getName());
-	private final ScenarioConfigurationPanel _scenarioConfigurationPanel;
+	private static final Logger LOGGER = Logger.getLogger(ProjectConfigurationListener.class.getName());
+	private final ProjectConfigurationPanel _projectConfigurationPanel;
 	private final FileDialogBO _addScnearioFileDialogBO;
 
-	public ScenarioConfigurationListener(ScenarioConfigurationPanel scenarioConfigurationPanel)
+	public ProjectConfigurationListener(ProjectConfigurationPanel projectConfigurationPanel)
 	{
-		_scenarioConfigurationPanel = scenarioConfigurationPanel;
+		_projectConfigurationPanel = projectConfigurationPanel;
 
-		DefaultListModel<RBListItemBO> lstScenarios = _scenarioConfigurationPanel.getLmScenNames();
+		DefaultListModel<RBListItemBO> lstScenarios = _projectConfigurationPanel.getLmScenNames();
 		_addScnearioFileDialogBO = new FileDialogBO(lstScenarios, true,
-				(JFrame) SwingUtilities.windowForComponent(_scenarioConfigurationPanel));
+				(JFrame) SwingUtilities.windowForComponent(_projectConfigurationPanel));
 	}
 
 	@Override
@@ -60,10 +60,10 @@ public class ScenarioConfigurationListener implements ActionListener
 				break;
 			default:
 		}
-		ScenarioConfigurationPanel scenarioConfigurationPanel = ScenarioConfigurationPanel.getScenarioConfigurationPanel();
+		ProjectConfigurationPanel projectConfigurationPanel = ProjectConfigurationPanel.getProjectConfigurationPanel();
 
-		scenarioConfigurationPanel.getScenarioList().repaint();
-		scenarioConfigurationPanel.setModified(true);
+		projectConfigurationPanel.getScenarioList().repaint();
+		projectConfigurationPanel.setModified(true);
 	}
 
 	private void launchFileDialogToAddScenarios(ActionEvent e)
@@ -78,7 +78,7 @@ public class ScenarioConfigurationListener implements ActionListener
 	 */
 	private void setQRMonthCheckBoxesSelected(boolean b)
 	{
-		JPanel controls2 = _scenarioConfigurationPanel.getControls2();
+		JPanel controls2 = _projectConfigurationPanel.getControls2();
 		Component[] components = controls2.getComponents();
 		for(final Component component : components)
 		{

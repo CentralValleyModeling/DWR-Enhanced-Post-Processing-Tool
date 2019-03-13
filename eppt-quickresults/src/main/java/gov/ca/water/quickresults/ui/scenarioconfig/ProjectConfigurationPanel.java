@@ -37,20 +37,21 @@ import org.jfree.data.time.Month;
  * @author <a href="mailto:adam@rmanet.com">Adam Korynta</a>
  * @since 02-21-2019
  */
-public final class ScenarioConfigurationPanel extends EpptPanel
+public final class ProjectConfigurationPanel extends EpptPanel
 {
-	private static final Logger LOGGER = Logger.getLogger(ScenarioConfigurationPanel.class.getName());
+	private static final Logger LOGGER = Logger.getLogger(ProjectConfigurationPanel.class.getName());
 	private static final String SCENARIO_CONFIGURATION_XML_FILE = "Scenario_Configuration.xml";
-	private static final ScenarioConfigurationPanel SINGLETON = new ScenarioConfigurationPanel();
+	private static final ProjectConfigurationPanel SINGLETON = new ProjectConfigurationPanel();
 	private static IErrorHandlingSvc errorHandlingSvc = new ErrorHandlingSvcImpl();
-	private final ScenarioConfigurationIO _scenarioConfigurationIO;
+	private final ProjectConfigurationIO _projectConfigurationIO;
 	private DefaultListModel<RBListItemBO> _lmScenNames;
+	private String _projectName = "";
 
-	private ScenarioConfigurationPanel()
+	private ProjectConfigurationPanel()
 	{
 		try
 		{
-			_scenarioConfigurationIO = new ScenarioConfigurationIO();
+			_projectConfigurationIO = new ProjectConfigurationIO();
 			super.setLayout(new BorderLayout());
 			Container swixmlScenarioConfigurationPanel = renderSwixml(SCENARIO_CONFIGURATION_XML_FILE);
 			super.add(swixmlScenarioConfigurationPanel);
@@ -179,7 +180,7 @@ public final class ScenarioConfigurationPanel extends EpptPanel
 		}
 	}
 
-	public static ScenarioConfigurationPanel getScenarioConfigurationPanel()
+	public static ProjectConfigurationPanel getProjectConfigurationPanel()
 	{
 		return SINGLETON;
 	}
@@ -187,11 +188,11 @@ public final class ScenarioConfigurationPanel extends EpptPanel
 	/**
 	 * This method is for unit testing purposes only
 	 *
-	 * @return a new ScenarioConfigurationPanel with UI initialized
+	 * @return a new ProjectConfigurationPanel with UI initialized
 	 */
-	static ScenarioConfigurationPanel createScenarioConfigurationPanel()
+	static ProjectConfigurationPanel createScenarioConfigurationPanel()
 	{
-		return new ScenarioConfigurationPanel();
+		return new ProjectConfigurationPanel();
 	}
 
 
@@ -379,7 +380,8 @@ public final class ScenarioConfigurationPanel extends EpptPanel
 
 	public void saveConfigurationToPath(Path selectedPath) throws IOException
 	{
-		_scenarioConfigurationIO.saveConfiguration(selectedPath);
+		_projectConfigurationIO.saveConfiguration(selectedPath);
+		_projectName = selectedPath.getFileName().toString();
 		EpptPreferences.setLastScenarioConfiguration(selectedPath);
 	}
 
@@ -387,7 +389,9 @@ public final class ScenarioConfigurationPanel extends EpptPanel
 	{
 		if(selectedPath.toFile().exists())
 		{
-			_scenarioConfigurationIO.loadConfiguration(selectedPath);
+			_projectConfigurationIO.loadConfiguration(selectedPath);
+			EpptPreferences.setLastScenarioConfiguration(selectedPath);
+			_projectName = selectedPath.getFileName().toString();
 			JPanel panel = (JPanel) getSwingEngine().find("ss");
 			panel.setBorder(new TitledBorder("Scenarios - " + selectedPath.getFileName()));
 		}
@@ -403,12 +407,12 @@ public final class ScenarioConfigurationPanel extends EpptPanel
 		return _lmScenNames;
 	}
 
-	JRadioButton getRadioButton1()
+	private JRadioButton getRadioButton1()
 	{
 		return (JRadioButton) getSwingEngine().find("rdbp001");
 	}
 
-	JRadioButton getRadioButton2()
+	private JRadioButton getRadioButton2()
 	{
 		return (JRadioButton) getSwingEngine().find("rdbp002");
 	}
@@ -457,11 +461,16 @@ public final class ScenarioConfigurationPanel extends EpptPanel
 			radioButton.setSelected(true);
 		}
 		WRIMSGUILinks.updateProjectFiles(getScenarioList());
-		ScenarioConfigurationPanel.this.setModified(true);
+		ProjectConfigurationPanel.this.setModified(true);
 		getScenarioList().setModel(_lmScenNames);
 		getScenarioList().invalidate();
 		getScenarioList().revalidate();
 		getScenarioList().repaint();
+	}
+
+	public String getProjectName()
+	{
+		return _projectName;
 	}
 
 	/**
@@ -469,7 +478,7 @@ public final class ScenarioConfigurationPanel extends EpptPanel
 	 *
 	 * @author tslawecki
 	 */
-	private class RBListRenderer extends JRadioButton implements ListCellRenderer
+	private static class RBListRenderer extends JRadioButton implements ListCellRenderer
 	{
 		@Override
 		public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected,

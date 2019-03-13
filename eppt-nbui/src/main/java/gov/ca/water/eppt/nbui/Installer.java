@@ -22,7 +22,7 @@ import gov.ca.water.calgui.bus_service.impl.GuiLinksSeedDataSvcImpl;
 import gov.ca.water.calgui.constant.EpptPreferences;
 import gov.ca.water.calgui.presentation.DisplayFrame;
 import gov.ca.water.calgui.tech_service.impl.DialogSvcImpl;
-import gov.ca.water.quickresults.ui.scenarioconfig.ScenarioConfigurationPanel;
+import gov.ca.water.quickresults.ui.scenarioconfig.ProjectConfigurationPanel;
 import org.openide.modules.ModuleInstall;
 import org.openide.windows.WindowManager;
 
@@ -30,6 +30,7 @@ import rma.swing.logging.DialogLogHandler;
 
 public class Installer extends ModuleInstall
 {
+	public static final String MAIN_FRAME_NAME = "EPPT";
 	private static final Logger LOGGER = Logger.getLogger(Installer.class.getName());
 
 	@Override
@@ -47,11 +48,13 @@ public class Installer extends ModuleInstall
 	{
 		WindowManager.getDefault().invokeWhenUIReady(() ->
 		{
-			ScenarioConfigurationPanel scenarioConfigurationPanel = ScenarioConfigurationPanel.getScenarioConfigurationPanel();
+			ProjectConfigurationPanel projectConfigurationPanel = ProjectConfigurationPanel.getProjectConfigurationPanel();
 			Path lastScenarioConfiguration = EpptPreferences.getLastScenarioConfiguration();
 			try
 			{
-				scenarioConfigurationPanel.loadScenarioConfiguration(lastScenarioConfiguration);
+				projectConfigurationPanel.loadScenarioConfiguration(lastScenarioConfiguration);
+				WindowManager.getDefault().getMainWindow().setTitle(
+						MAIN_FRAME_NAME + " - " + projectConfigurationPanel.getProjectName());
 			}
 			catch(IOException ex)
 			{

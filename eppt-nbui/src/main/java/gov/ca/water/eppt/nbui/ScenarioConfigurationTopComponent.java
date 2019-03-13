@@ -11,8 +11,8 @@ import java.util.Objects;
 import javax.swing.*;
 
 import gov.ca.water.eppt.nbui.actions.ScenarioConfigurationSavable;
-import gov.ca.water.quickresults.ui.scenarioconfig.ScenarioConfigurationListener;
-import gov.ca.water.quickresults.ui.scenarioconfig.ScenarioConfigurationPanel;
+import gov.ca.water.quickresults.ui.scenarioconfig.ProjectConfigurationListener;
+import gov.ca.water.quickresults.ui.scenarioconfig.ProjectConfigurationPanel;
 import org.openide.awt.ActionID;
 import org.openide.awt.ActionReference;
 import org.openide.util.NbBundle.Messages;
@@ -61,7 +61,7 @@ public final class ScenarioConfigurationTopComponent extends EpptTopComponent
 			{
 				if(b)
 				{
-					String newQuickState = ScenarioConfigurationPanel.getScenarioConfigurationPanel().quickState();
+					String newQuickState = ProjectConfigurationPanel.getProjectConfigurationPanel().quickState();
 					if(!Objects.equals(_lastQuickState, newQuickState))
 					{
 						_lastQuickState = newQuickState;
@@ -80,12 +80,12 @@ public final class ScenarioConfigurationTopComponent extends EpptTopComponent
 				}
 			}
 		};
-		ScenarioConfigurationPanel scenarioConfigurationPanel = ScenarioConfigurationPanel.getScenarioConfigurationPanel();
-		ScenarioConfigurationListener scenarioConfigurationListener = new ScenarioConfigurationListener(
-				scenarioConfigurationPanel);
-		scenarioConfigurationPanel.setActionListener(scenarioConfigurationListener);
+		ProjectConfigurationPanel projectConfigurationPanel = ProjectConfigurationPanel.getProjectConfigurationPanel();
+		ProjectConfigurationListener projectConfigurationListener = new ProjectConfigurationListener(
+				projectConfigurationPanel);
+		projectConfigurationPanel.setActionListener(projectConfigurationListener);
 		rmaJPanel.setLayout(new BorderLayout());
-		rmaJPanel.add(scenarioConfigurationPanel, BorderLayout.CENTER);
+		rmaJPanel.add(projectConfigurationPanel, BorderLayout.CENTER);
 		JScrollPane scrollPane = new JScrollPane(rmaJPanel);
 		setLayout(new BorderLayout());
 		add(scrollPane, BorderLayout.CENTER);

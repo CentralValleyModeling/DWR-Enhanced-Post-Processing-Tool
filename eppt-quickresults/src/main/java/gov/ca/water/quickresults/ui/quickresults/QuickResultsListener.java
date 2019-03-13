@@ -24,7 +24,7 @@ import gov.ca.water.calgui.tech_service.IDialogSvc;
 import gov.ca.water.calgui.tech_service.IErrorHandlingSvc;
 import gov.ca.water.calgui.tech_service.impl.DialogSvcImpl;
 import gov.ca.water.calgui.tech_service.impl.ErrorHandlingSvcImpl;
-import gov.ca.water.quickresults.ui.scenarioconfig.ScenarioConfigurationPanel;
+import gov.ca.water.quickresults.ui.scenarioconfig.ProjectConfigurationPanel;
 import org.apache.log4j.Logger;
 import org.jfree.data.time.Month;
 
@@ -93,8 +93,8 @@ public class QuickResultsListener implements ActionListener
 
 	private void displayReportList()
 	{
-		ScenarioConfigurationPanel scenarioConfigurationPanel = ScenarioConfigurationPanel.getScenarioConfigurationPanel();
-		List<RBListItemBO> scenarios = scenarioConfigurationPanel.getScenarios();
+		ProjectConfigurationPanel projectConfigurationPanel = ProjectConfigurationPanel.getProjectConfigurationPanel();
+		List<RBListItemBO> scenarios = projectConfigurationPanel.getScenarios();
 		if(scenarios.isEmpty())
 		{
 			IDialogSvc dialogSvc = DialogSvcImpl.getDialogSvcInstance();
@@ -106,8 +106,8 @@ public class QuickResultsListener implements ActionListener
 			if(component instanceof JList)
 			{
 				JList<String> lstReports = (JList<String>) component;
-				Month startMonth = scenarioConfigurationPanel.getStartMonth();
-				Month endMonth = scenarioConfigurationPanel.getEndMonth();
+				Month startMonth = projectConfigurationPanel.getStartMonth();
+				Month endMonth = projectConfigurationPanel.getEndMonth();
 				for(int i = 0; i < lstReports.getModel().getSize(); i++)
 				{
 					DisplayFrame.showDisplayFrames((lstReports.getModel().getElementAt(i)),
@@ -191,7 +191,7 @@ public class QuickResultsListener implements ActionListener
 		StringBuilder cSTORIdx = new StringBuilder(";Index-");
 		Component[] components = _quickResultsPanel.getVariables().getComponents();
 		extractCheckBoxes(cSTOR, cSTORIdx, components);
-		return ScenarioConfigurationPanel.getScenarioConfigurationPanel().quickState() + cSTOR + cSTORIdx;
+		return ProjectConfigurationPanel.getProjectConfigurationPanel().quickState() + cSTOR + cSTORIdx;
 	}
 
 	private void extractCheckBoxes(StringBuilder cSTOR, StringBuilder cSTORIdx, Component[] components)

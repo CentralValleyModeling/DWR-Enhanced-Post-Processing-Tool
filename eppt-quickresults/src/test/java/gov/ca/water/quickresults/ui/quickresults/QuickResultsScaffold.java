@@ -15,7 +15,7 @@ import gov.ca.water.calgui.EpptInitializationException;
 import gov.ca.water.calgui.bo.RBListItemBO;
 import gov.ca.water.quickresults.ui.EpptPanel;
 import gov.ca.water.quickresults.ui.EpptScaffold;
-import gov.ca.water.quickresults.ui.scenarioconfig.ScenarioConfigurationPanel;
+import gov.ca.water.quickresults.ui.scenarioconfig.ProjectConfigurationPanel;
 
 /**
  * Company: Resource Management Associates
@@ -34,14 +34,14 @@ public class QuickResultsScaffold extends EpptScaffold
 
 	private static void addScenarios()
 	{
-		ScenarioConfigurationPanel scenarioConfigurationPanel = ScenarioConfigurationPanel.getScenarioConfigurationPanel();
-		JRadioButton radioButton = (JRadioButton) scenarioConfigurationPanel.getSwingEngine().find("rdbp001");
+		ProjectConfigurationPanel projectConfigurationPanel = ProjectConfigurationPanel.getProjectConfigurationPanel();
+		JRadioButton radioButton = (JRadioButton) projectConfigurationPanel.getSwingEngine().find("rdbp001");
 		radioButton.setSelected(true);
-		Component component = scenarioConfigurationPanel.getSwingEngine().find("SelectedList");
+		Component component = projectConfigurationPanel.getSwingEngine().find("SelectedList");
 		if(component instanceof JList)
 		{
 			JList<RBListItemBO> lstScenarios = (JList<RBListItemBO>) component;
-			List<RBListItemBO> currentScenarios = scenarioConfigurationPanel.getScenarios();
+			List<RBListItemBO> currentScenarios = projectConfigurationPanel.getScenarios();
 			String baseFile = Thread.currentThread().getContextClassLoader().getResource(
 					"Base.dss").getFile().substring(1);
 			RBListItemBO base = new RBListItemBO(baseFile, "Base.dss");

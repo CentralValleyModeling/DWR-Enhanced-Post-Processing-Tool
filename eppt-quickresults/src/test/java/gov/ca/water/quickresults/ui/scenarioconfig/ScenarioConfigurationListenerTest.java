@@ -20,9 +20,9 @@ public class ScenarioConfigurationListenerTest
 	//	@Test
 	public void testConstructor()
 	{
-		ScenarioConfigurationPanel scenarioConfigurationPanel = ScenarioConfigurationPanel.getScenarioConfigurationPanel();
-		ScenarioConfigurationListener scenarioConfigurationListener = new ScenarioConfigurationListener(
-				scenarioConfigurationPanel);
-		assertNotNull(scenarioConfigurationListener);
+		ProjectConfigurationPanel projectConfigurationPanel = ProjectConfigurationPanel.getProjectConfigurationPanel();
+		ProjectConfigurationListener projectConfigurationListener = new ProjectConfigurationListener(
+				projectConfigurationPanel);
+		assertNotNull(projectConfigurationListener);
 	}
 }

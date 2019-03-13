@@ -31,7 +31,7 @@ import org.jfree.data.time.Month;
  * @author <a href="mailto:adam@rmanet.com">Adam Korynta</a>
  * @since 03-11-2019
  */
-class ScenarioConfigurationIO
+class ProjectConfigurationIO
 {
 	private static final String START_MONTH_PROPERTY = "Start_Month";
 	private static final String START_YEAR_PROPERTY = "Start_Year";
@@ -44,8 +44,8 @@ class ScenarioConfigurationIO
 		Properties properties = new Properties();
 		try(BufferedWriter bufferedWriter = Files.newBufferedWriter(selectedPath, StandardOpenOption.CREATE))
 		{
-			ScenarioConfigurationPanel scenarioConfigurationPanel = ScenarioConfigurationPanel.getScenarioConfigurationPanel();
-			Component[] components = scenarioConfigurationPanel.getComponents();
+			ProjectConfigurationPanel projectConfigurationPanel = ProjectConfigurationPanel.getProjectConfigurationPanel();
+			Component[] components = projectConfigurationPanel.getComponents();
 			writeSelectedProperties(properties, components);
 			writeMonthProperties(properties);
 			writeScenarioDssPaths(properties, selectedPath);
@@ -55,8 +55,8 @@ class ScenarioConfigurationIO
 
 	private void writeScenarioDssPaths(Properties properties, Path selectedPath)
 	{
-		ScenarioConfigurationPanel scenarioConfigurationPanel = ScenarioConfigurationPanel.getScenarioConfigurationPanel();
-		List<RBListItemBO> scenarios = scenarioConfigurationPanel.getScenarios();
+		ProjectConfigurationPanel projectConfigurationPanel = ProjectConfigurationPanel.getProjectConfigurationPanel();
+		List<RBListItemBO> scenarios = projectConfigurationPanel.getScenarios();
 		int i = 1;
 		for(RBListItemBO scenario : scenarios)
 		{
@@ -74,7 +74,7 @@ class ScenarioConfigurationIO
 
 	private void readScenarioDssPaths(Properties properties, Path selectedPath)
 	{
-		ScenarioConfigurationPanel scenarioConfigurationPanel = ScenarioConfigurationPanel.getScenarioConfigurationPanel();
+		ProjectConfigurationPanel projectConfigurationPanel = ProjectConfigurationPanel.getProjectConfigurationPanel();
 		List<RBListItemBO> scenarios = new ArrayList<>();
 		int i = 1;
 
@@ -100,32 +100,32 @@ class ScenarioConfigurationIO
 			i++;
 		}
 		while(path != null);
-		scenarioConfigurationPanel.setScenarios(scenarios);
+		projectConfigurationPanel.setScenarios(scenarios);
 	}
 
 	private void writeMonthProperties(Properties properties)
 	{
-		ScenarioConfigurationPanel scenarioConfigurationPanel = ScenarioConfigurationPanel.getScenarioConfigurationPanel();
+		ProjectConfigurationPanel projectConfigurationPanel = ProjectConfigurationPanel.getProjectConfigurationPanel();
 		properties.setProperty(START_MONTH_PROPERTY,
-				String.valueOf(scenarioConfigurationPanel.getStartMonth().getMonth()));
+				String.valueOf(projectConfigurationPanel.getStartMonth().getMonth()));
 		properties.setProperty(START_YEAR_PROPERTY,
-				String.valueOf(scenarioConfigurationPanel.getStartMonth().getYearValue()));
-		properties.setProperty(END_MONTH_PROPERTY, String.valueOf(scenarioConfigurationPanel.getEndMonth().getMonth()));
+				String.valueOf(projectConfigurationPanel.getStartMonth().getYearValue()));
+		properties.setProperty(END_MONTH_PROPERTY, String.valueOf(projectConfigurationPanel.getEndMonth().getMonth()));
 		properties.setProperty(END_YEAR_PROPERTY,
-				String.valueOf(scenarioConfigurationPanel.getEndMonth().getYearValue()));
+				String.valueOf(projectConfigurationPanel.getEndMonth().getYearValue()));
 	}
 
 	private void readMonthProperties(Properties properties)
 	{
-		ScenarioConfigurationPanel scenarioConfigurationPanel = ScenarioConfigurationPanel.getScenarioConfigurationPanel();
+		ProjectConfigurationPanel projectConfigurationPanel = ProjectConfigurationPanel.getProjectConfigurationPanel();
 		String startMonth = properties.getProperty(START_MONTH_PROPERTY, "10");
 		String startYear = properties.getProperty(START_YEAR_PROPERTY, "1921");
 		String endMonth = properties.getProperty(END_MONTH_PROPERTY, "9");
 		String endYear = properties.getProperty(END_YEAR_PROPERTY, "2003");
 		Month start = new Month(Integer.parseInt(startMonth), Integer.parseInt(startYear));
 		Month end = new Month(Integer.parseInt(endMonth), Integer.parseInt(endYear));
-		scenarioConfigurationPanel.setStartMonth(start);
-		scenarioConfigurationPanel.setEndMonth(end);
+		projectConfigurationPanel.setStartMonth(start);
+		projectConfigurationPanel.setEndMonth(end);
 	}
 
 	private void writeSelectedProperties(Properties properties, Component[] components)
@@ -174,8 +174,8 @@ class ScenarioConfigurationIO
 		try(BufferedReader bufferedReader = Files.newBufferedReader(selectedPath))
 		{
 			properties.load(bufferedReader);
-			ScenarioConfigurationPanel scenarioConfigurationPanel = ScenarioConfigurationPanel.getScenarioConfigurationPanel();
-			Component[] components = scenarioConfigurationPanel.getComponents();
+			ProjectConfigurationPanel projectConfigurationPanel = ProjectConfigurationPanel.getProjectConfigurationPanel();
+			Component[] components = projectConfigurationPanel.getComponents();
 			readSelectedProperties(properties, components);
 			readMonthProperties(properties);
 			readScenarioDssPaths(properties, selectedPath);

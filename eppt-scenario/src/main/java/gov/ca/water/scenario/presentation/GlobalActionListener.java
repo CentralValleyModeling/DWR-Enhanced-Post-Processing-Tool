@@ -48,7 +48,7 @@ import gov.ca.water.calgui.tech_service.IErrorHandlingSvc;
 import gov.ca.water.calgui.tech_service.impl.AuditSvcImpl;
 import gov.ca.water.calgui.tech_service.impl.DialogSvcImpl;
 import gov.ca.water.calgui.tech_service.impl.ErrorHandlingSvcImpl;
-import gov.ca.water.quickresults.ui.scenarioconfig.ScenarioConfigurationPanel;
+import gov.ca.water.quickresults.ui.scenarioconfig.ProjectConfigurationPanel;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.log4j.Logger;
 import org.jfree.data.time.Month;
@@ -219,10 +219,10 @@ public class GlobalActionListener implements ActionListener
 						{
 							scenarios.add(model.getElementAt(i));
 						}
-						ScenarioConfigurationPanel scenarioConfigurationPanel = ScenarioConfigurationPanel.getScenarioConfigurationPanel();
-						String quickState = scenarioConfigurationPanel.quickState();
-						Month startMonth = scenarioConfigurationPanel.getStartMonth();
-						Month endMonth = scenarioConfigurationPanel.getEndMonth();
+						ProjectConfigurationPanel projectConfigurationPanel = ProjectConfigurationPanel.getProjectConfigurationPanel();
+						String quickState = projectConfigurationPanel.quickState();
+						Month startMonth = projectConfigurationPanel.getStartMonth();
+						Month endMonth = projectConfigurationPanel.getEndMonth();
 						DisplayFrame.showDisplayFrames(
 								(String) ((JList) _swingEngine.find("lstReports")).getSelectedValue(),
 								scenarios, startMonth, endMonth);
@@ -341,12 +341,12 @@ public class GlobalActionListener implements ActionListener
 
 	private void compareScenarios()
 	{
-		ScenarioConfigurationPanel scenarioConfigurationPanel = ScenarioConfigurationPanel.getScenarioConfigurationPanel();
+		ProjectConfigurationPanel projectConfigurationPanel = ProjectConfigurationPanel.getProjectConfigurationPanel();
 		IScenarioDele scenarioDele = new ScenarioDeleImp();
 		List<String> fileNames = new ArrayList<>();
-		for(int i = 0; i < scenarioConfigurationPanel.getScenarios().size(); i++)
+		for(int i = 0; i < projectConfigurationPanel.getScenarios().size(); i++)
 		{
-			String name = Paths.get(scenarioConfigurationPanel.getScenarios().get(i).toString())
+			String name = Paths.get(projectConfigurationPanel.getScenarios().get(i).toString())
 							   .getFileName().toString();
 			fileNames.add(name.substring(0, name.length() - 7) + Constant.CLS_EXT);
 		}

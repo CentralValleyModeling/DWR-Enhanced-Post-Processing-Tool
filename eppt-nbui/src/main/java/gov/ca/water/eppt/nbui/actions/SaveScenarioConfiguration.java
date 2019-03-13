@@ -17,7 +17,8 @@ import java.util.logging.Logger;
 import javax.swing.*;
 
 import gov.ca.water.calgui.constant.EpptPreferences;
-import gov.ca.water.quickresults.ui.scenarioconfig.ScenarioConfigurationPanel;
+import gov.ca.water.eppt.nbui.Installer;
+import gov.ca.water.quickresults.ui.scenarioconfig.ProjectConfigurationPanel;
 import org.openide.awt.ActionID;
 import org.openide.awt.ActionReference;
 import org.openide.awt.ActionReferences;
@@ -28,6 +29,7 @@ import org.openide.util.Lookup;
 import org.openide.util.NbBundle.Messages;
 import org.openide.util.Utilities;
 import org.openide.util.actions.Presenter;
+import org.openide.windows.WindowManager;
 
 @ActionID(
 		category = "EPPT",
@@ -67,18 +69,20 @@ public final class SaveScenarioConfiguration extends AbstractAction implements P
 		LOGGER.log(Level.FINEST, "No-Opped method. Using toolbar presenter instead");
 	}
 
-	public void saveCurrentConfiguration() throws IOException
+	void saveCurrentConfiguration() throws IOException
 	{
 		Path lastScenarioConfiguration = EpptPreferences.getLastScenarioConfiguration();
 		if(lastScenarioConfiguration.toFile().exists())
 		{
-			ScenarioConfigurationPanel.getScenarioConfigurationPanel()
-									  .saveConfigurationToPath(lastScenarioConfiguration);
+			ProjectConfigurationPanel.getProjectConfigurationPanel()
+									 .saveConfigurationToPath(lastScenarioConfiguration);
 		}
 		else
 		{
 			new SaveAsScenarioConfiguration().saveAs();
 		}
+		WindowManager.getDefault().getMainWindow().setTitle(
+				Installer.MAIN_FRAME_NAME + " - " + ProjectConfigurationPanel.getProjectConfigurationPanel().getProjectName());
 		Collection<? extends ScenarioConfigurationSavable> scenarioConfigurationSavables = _lkpInfo.allInstances();
 		for(ScenarioConfigurationSavable savable : scenarioConfigurationSavables)
 		{

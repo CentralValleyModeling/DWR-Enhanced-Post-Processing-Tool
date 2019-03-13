@@ -20,7 +20,8 @@ import javax.swing.*;
 import gov.ca.water.calgui.bo.SimpleFileFilter;
 import gov.ca.water.calgui.constant.Constant;
 import gov.ca.water.calgui.constant.EpptPreferences;
-import gov.ca.water.quickresults.ui.scenarioconfig.ScenarioConfigurationPanel;
+import gov.ca.water.eppt.nbui.Installer;
+import gov.ca.water.quickresults.ui.scenarioconfig.ProjectConfigurationPanel;
 import org.openide.awt.ActionID;
 import org.openide.awt.ActionReference;
 import org.openide.awt.ActionReferences;
@@ -82,7 +83,9 @@ public final class LoadScenarioConfiguration extends AbstractAction
 			Path selectedPath = selectedFile.toPath();
 			try
 			{
-				ScenarioConfigurationPanel.getScenarioConfigurationPanel().loadScenarioConfiguration(selectedPath);
+				ProjectConfigurationPanel.getProjectConfigurationPanel().loadScenarioConfiguration(selectedPath);
+				WindowManager.getDefault().getMainWindow().setTitle(
+						Installer.MAIN_FRAME_NAME + " - " + ProjectConfigurationPanel.getProjectConfigurationPanel().getProjectName());
 				Collection<? extends ScenarioConfigurationSavable> scenarioConfigurationSavables = _lkpInfo.allInstances();
 				for(ScenarioConfigurationSavable savable : scenarioConfigurationSavables)
 				{

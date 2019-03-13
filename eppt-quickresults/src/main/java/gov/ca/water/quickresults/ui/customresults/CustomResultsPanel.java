@@ -27,7 +27,7 @@ import gov.ca.water.calgui.tech_service.impl.DialogSvcImpl;
 import gov.ca.water.calgui.tech_service.impl.ErrorHandlingSvcImpl;
 import gov.ca.water.quickresults.ui.EpptPanel;
 import gov.ca.water.quickresults.ui.quickresults.QuickResultsPanel;
-import gov.ca.water.quickresults.ui.scenarioconfig.ScenarioConfigurationPanel;
+import gov.ca.water.quickresults.ui.scenarioconfig.ProjectConfigurationPanel;
 import org.apache.log4j.Logger;
 import org.jfree.data.time.Month;
 import vista.set.DataReference;
@@ -129,8 +129,8 @@ public class CustomResultsPanel extends EpptPanel
 		}
 		try
 		{
-			ScenarioConfigurationPanel scenarioConfigurationPanel = ScenarioConfigurationPanel.getScenarioConfigurationPanel();
-			List<RBListItemBO> scenarios = scenarioConfigurationPanel.getScenarios();
+			ProjectConfigurationPanel projectConfigurationPanel = ProjectConfigurationPanel.getProjectConfigurationPanel();
+			List<RBListItemBO> scenarios = projectConfigurationPanel.getScenarios();
 			String noRowsString = "";
 			JTable table = GuiUtils.getCLGPanel().getRetrievePanel().getTable();
 			if(table.getRowCount() == 0)
@@ -157,9 +157,9 @@ public class CustomResultsPanel extends EpptPanel
 				String[] parts2 = parts[2].split("/");
 				parts[2] = "/" + parts2[1] + "/" + parts2[2] + "/" + parts2[3] + "/" + parts[3] + "/" + parts2[5] + "/"
 						+ parts2[6] + "/";
-				String quickState = scenarioConfigurationPanel.quickState();
-				Month startMonth = scenarioConfigurationPanel.getStartMonth();
-				Month endMonth = scenarioConfigurationPanel.getEndMonth();
+				String quickState = projectConfigurationPanel.quickState();
+				Month startMonth = projectConfigurationPanel.getStartMonth();
+				Month endMonth = projectConfigurationPanel.getEndMonth();
 				if(parts[1].toUpperCase().contains(("_SV.DSS")))
 				{
 					DisplayFrame.showDisplayFrames(quickState + ";Locs-" + parts[2] + ";Index-"
@@ -206,11 +206,11 @@ public class CustomResultsPanel extends EpptPanel
 
 		try
 		{
-			ScenarioConfigurationPanel scenarioConfigurationPanel = ScenarioConfigurationPanel.getScenarioConfigurationPanel();
-			String quickState = scenarioConfigurationPanel.quickState();
-			Month startMonth = scenarioConfigurationPanel.getStartMonth();
-			Month endMonth = scenarioConfigurationPanel.getEndMonth();
-			List<RBListItemBO> scenarios = scenarioConfigurationPanel.getScenarios();
+			ProjectConfigurationPanel projectConfigurationPanel = ProjectConfigurationPanel.getProjectConfigurationPanel();
+			String quickState = projectConfigurationPanel.quickState();
+			Month startMonth = projectConfigurationPanel.getStartMonth();
+			Month endMonth = projectConfigurationPanel.getEndMonth();
+			List<RBListItemBO> scenarios = projectConfigurationPanel.getScenarios();
 			DisplayFrame.showDisplayFramesWRIMS(quickState + ";Locs-;Index-;File-", scenarios, dts,
 					mts, startMonth, endMonth);
 
