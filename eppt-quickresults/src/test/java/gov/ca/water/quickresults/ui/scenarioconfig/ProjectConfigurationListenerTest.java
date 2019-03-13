@@ -15,7 +15,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
  * @author <a href="mailto:adam@rmanet.com">Adam Korynta</a>
  * @since 02-23-2019
  */
-public class ScenarioConfigurationListenerTest
+public class ProjectConfigurationListenerTest
 {
 	//	@Test
 	public void testConstructor()

@@ -9,7 +9,7 @@ package gov.ca.water.eppt.nbui.actions;
 
 import java.io.IOException;
 
-import gov.ca.water.eppt.nbui.ScenarioConfigurationTopComponent;
+import gov.ca.water.eppt.nbui.ProjectConfigurationTopComponent;
 import org.netbeans.spi.actions.AbstractSavable;
 import org.openide.filesystems.FileObject;
 import org.openide.loaders.SaveAsCapable;
@@ -20,11 +20,11 @@ import org.openide.loaders.SaveAsCapable;
  * @author <a href="mailto:adam@rmanet.com">Adam Korynta</a>
  * @since 03-11-2019
  */
-public class ScenarioConfigurationSavable extends AbstractSavable implements SaveAsCapable
+public class ProjectConfigurationSavable extends AbstractSavable implements SaveAsCapable
 {
-	private final ScenarioConfigurationTopComponent _tc;
+	private final ProjectConfigurationTopComponent _tc;
 
-	public ScenarioConfigurationSavable(ScenarioConfigurationTopComponent tc)
+	public ProjectConfigurationSavable(ProjectConfigurationTopComponent tc)
 	{
 		_tc = tc;
 		_tc.topComponentNameModified();
@@ -40,7 +40,7 @@ public class ScenarioConfigurationSavable extends AbstractSavable implements Sav
 	@Override
 	protected void handleSave() throws IOException
 	{
-		new SaveScenarioConfiguration().saveCurrentConfiguration();
+		new SaveProjectConfiguration().saveCurrentConfiguration();
 	}
 
 	void removeFromLookup()
@@ -53,9 +53,9 @@ public class ScenarioConfigurationSavable extends AbstractSavable implements Sav
 	@Override
 	public boolean equals(Object obj)
 	{
-		if(obj instanceof ScenarioConfigurationSavable)
+		if(obj instanceof ProjectConfigurationSavable)
 		{
-			ScenarioConfigurationSavable m = (ScenarioConfigurationSavable) obj;
+			ProjectConfigurationSavable m = (ProjectConfigurationSavable) obj;
 			return _tc == m._tc;
 		}
 		return false;
@@ -70,7 +70,7 @@ public class ScenarioConfigurationSavable extends AbstractSavable implements Sav
 	@Override
 	public void saveAs(FileObject fileObject, String s) throws IOException
 	{
-		new SaveAsScenarioConfiguration().saveAs();
+		new SaveAsProjectConfiguration().saveAs();
 		_tc.removeContent(this);
 		unregister();
 	}

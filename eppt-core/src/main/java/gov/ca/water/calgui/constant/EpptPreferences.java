@@ -60,7 +60,7 @@ public final class EpptPreferences
 		return getProjectsPath().resolve(Constant.REPORTS_DIR);
 	}
 
-	public static Path getLastScenarioConfiguration()
+	public static Path getLastProjectConfiguration()
 	{
 		String scenarioConfigurationFile = ROOT_PREFERENCES.node(EPPT_HOME).get(LAST_SCENARIO_CONFIGURATION, "");
 		return Paths.get(scenarioConfigurationFile);

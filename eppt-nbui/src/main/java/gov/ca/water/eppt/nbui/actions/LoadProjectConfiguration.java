@@ -35,7 +35,7 @@ import org.openide.windows.WindowManager;
 
 @ActionID(
 		category = "EPPT",
-		id = "gov.ca.water.eppt.nbui.actions.LoadScenarioConfiguration"
+		id = "gov.ca.water.eppt.nbui.actions.LoadProjectConfiguration"
 )
 @ActionRegistration(
 		iconBase = "gov/ca/water/eppt/nbui/actions/load.png",
@@ -48,24 +48,24 @@ import org.openide.windows.WindowManager;
 				@ActionReference(path = "Toolbars/EPPT", position = 333)
 		})
 @Messages("CTL_LoadScenarioConfiguration=Load Scenario Configuration")
-public final class LoadScenarioConfiguration extends AbstractAction
+public final class LoadProjectConfiguration extends AbstractAction
 		implements Presenter.Toolbar, Presenter.Menu, ContextAwareAction
 {
 
-	private static final Logger LOGGER = Logger.getLogger(LoadScenarioConfiguration.class.getName());
-	private Lookup.Result<ScenarioConfigurationSavable> _lkpInfo;
+	private static final Logger LOGGER = Logger.getLogger(LoadProjectConfiguration.class.getName());
+	private Lookup.Result<ProjectConfigurationSavable> _lkpInfo;
 
-	public LoadScenarioConfiguration()
+	public LoadProjectConfiguration()
 	{
 		this(Utilities.actionsGlobalContext());
 	}
 
-	private LoadScenarioConfiguration(Lookup context)
+	private LoadProjectConfiguration(Lookup context)
 	{
 		putValue(Action.NAME, "Load Scenario Configuration");
 		putValue(Action.SMALL_ICON, "gov/ca/water/eppt/nbui/actions/load.png");
 		putValue(Action.LARGE_ICON_KEY, "gov/ca/water/eppt/nbui/actions/load24.png");
-		_lkpInfo = context.lookupResult(ScenarioConfigurationSavable.class);
+		_lkpInfo = context.lookupResult(ProjectConfigurationSavable.class);
 	}
 
 	@Override
@@ -83,11 +83,11 @@ public final class LoadScenarioConfiguration extends AbstractAction
 			Path selectedPath = selectedFile.toPath();
 			try
 			{
-				ProjectConfigurationPanel.getProjectConfigurationPanel().loadScenarioConfiguration(selectedPath);
+				ProjectConfigurationPanel.getProjectConfigurationPanel().loadProjectConfiguration(selectedPath);
 				WindowManager.getDefault().getMainWindow().setTitle(
 						Installer.MAIN_FRAME_NAME + " - " + ProjectConfigurationPanel.getProjectConfigurationPanel().getProjectName());
-				Collection<? extends ScenarioConfigurationSavable> scenarioConfigurationSavables = _lkpInfo.allInstances();
-				for(ScenarioConfigurationSavable savable : scenarioConfigurationSavables)
+				Collection<? extends ProjectConfigurationSavable> scenarioConfigurationSavables = _lkpInfo.allInstances();
+				for(ProjectConfigurationSavable savable : scenarioConfigurationSavables)
 				{
 					savable.removeFromLookup();
 				}
@@ -133,6 +133,6 @@ public final class LoadScenarioConfiguration extends AbstractAction
 	@Override
 	public Action createContextAwareInstance(Lookup context)
 	{
-		return new LoadScenarioConfiguration(context);
+		return new LoadProjectConfiguration(context);
 	}
 }

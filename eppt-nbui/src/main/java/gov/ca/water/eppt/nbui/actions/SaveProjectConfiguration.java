@@ -33,7 +33,7 @@ import org.openide.windows.WindowManager;
 
 @ActionID(
 		category = "EPPT",
-		id = "gov.ca.water.eppt.nbui.actions.SaveScenarioConfiguration"
+		id = "gov.ca.water.eppt.nbui.actions.SaveProjectConfiguration"
 )
 @ActionRegistration(
 		iconBase = "gov/ca/water/eppt/nbui/actions/HecDssVue.png",
@@ -46,21 +46,21 @@ import org.openide.windows.WindowManager;
 				@ActionReference(path = "Toolbars/EPPT", position = 111)
 		})
 @Messages("CTL_SaveScenarioConfiguration=Save Scenario Configuration")
-public final class SaveScenarioConfiguration extends AbstractAction implements Presenter.Toolbar, Presenter.Menu,
-																			   ContextAwareAction
+public final class SaveProjectConfiguration extends AbstractAction implements Presenter.Toolbar, Presenter.Menu,
+																			  ContextAwareAction
 {
-	private static final Logger LOGGER = Logger.getLogger(SaveScenarioConfiguration.class.getName());
-	private Lookup.Result<ScenarioConfigurationSavable> _lkpInfo;
+	private static final Logger LOGGER = Logger.getLogger(SaveProjectConfiguration.class.getName());
+	private Lookup.Result<ProjectConfigurationSavable> _lkpInfo;
 
-	public SaveScenarioConfiguration()
+	public SaveProjectConfiguration()
 	{
 		this(Utilities.actionsGlobalContext());
 	}
 
-	private SaveScenarioConfiguration(Lookup context)
+	private SaveProjectConfiguration(Lookup context)
 	{
 		putValue(Action.NAME, "Save Scenario Configuration");
-		_lkpInfo = context.lookupResult(ScenarioConfigurationSavable.class);
+		_lkpInfo = context.lookupResult(ProjectConfigurationSavable.class);
 	}
 
 	@Override
@@ -71,7 +71,7 @@ public final class SaveScenarioConfiguration extends AbstractAction implements P
 
 	void saveCurrentConfiguration() throws IOException
 	{
-		Path lastScenarioConfiguration = EpptPreferences.getLastScenarioConfiguration();
+		Path lastScenarioConfiguration = EpptPreferences.getLastProjectConfiguration();
 		if(lastScenarioConfiguration.toFile().exists())
 		{
 			ProjectConfigurationPanel.getProjectConfigurationPanel()
@@ -79,12 +79,12 @@ public final class SaveScenarioConfiguration extends AbstractAction implements P
 		}
 		else
 		{
-			new SaveAsScenarioConfiguration().saveAs();
+			new SaveAsProjectConfiguration().saveAs();
 		}
 		WindowManager.getDefault().getMainWindow().setTitle(
 				Installer.MAIN_FRAME_NAME + " - " + ProjectConfigurationPanel.getProjectConfigurationPanel().getProjectName());
-		Collection<? extends ScenarioConfigurationSavable> scenarioConfigurationSavables = _lkpInfo.allInstances();
-		for(ScenarioConfigurationSavable savable : scenarioConfigurationSavables)
+		Collection<? extends ProjectConfigurationSavable> scenarioConfigurationSavables = _lkpInfo.allInstances();
+		for(ProjectConfigurationSavable savable : scenarioConfigurationSavables)
 		{
 			savable.removeFromLookup();
 		}
@@ -96,7 +96,7 @@ public final class SaveScenarioConfiguration extends AbstractAction implements P
 	{
 		JPopupMenu menu = new JPopupMenu();
 		JMenuItem jMenuItem = new JMenuItem("Save As...");
-		jMenuItem.addActionListener(new SaveAsScenarioConfiguration());
+		jMenuItem.addActionListener(new SaveAsProjectConfiguration());
 		menu.add(jMenuItem);
 		ImageIcon imageIcon = getSaveIcon("save24.png");
 		JToggleButton dropDownToggleButton = DropDownButtonFactory.createDropDownToggleButton(imageIcon, menu);
@@ -140,6 +140,6 @@ public final class SaveScenarioConfiguration extends AbstractAction implements P
 	@Override
 	public Action createContextAwareInstance(Lookup context)
 	{
-		return new SaveScenarioConfiguration(context);
+		return new SaveProjectConfiguration(context);
 	}
 }

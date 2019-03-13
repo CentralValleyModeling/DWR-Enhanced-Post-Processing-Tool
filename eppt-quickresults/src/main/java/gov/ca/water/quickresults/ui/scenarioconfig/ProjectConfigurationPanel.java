@@ -385,7 +385,7 @@ public final class ProjectConfigurationPanel extends EpptPanel
 		EpptPreferences.setLastScenarioConfiguration(selectedPath);
 	}
 
-	public void loadScenarioConfiguration(Path selectedPath) throws IOException
+	public void loadProjectConfiguration(Path selectedPath) throws IOException
 	{
 		if(selectedPath.toFile().exists())
 		{

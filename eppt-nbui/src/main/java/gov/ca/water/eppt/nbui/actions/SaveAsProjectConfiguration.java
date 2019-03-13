@@ -35,7 +35,7 @@ import org.openide.windows.WindowManager;
 
 @ActionID(
 		category = "EPPT",
-		id = "gov.ca.water.eppt.nbui.actions.SaveAsScenarioConfiguration"
+		id = "gov.ca.water.eppt.nbui.actions.SaveAsProjectConfiguration"
 )
 @ActionRegistration(
 		iconBase = "gov/ca/water/eppt/nbui/actions/save.png",
@@ -46,22 +46,22 @@ import org.openide.windows.WindowManager;
 				@ActionReference(path = "Menu/File", position = 2)
 		})
 @Messages("CTL_SaveAsScenarioConfiguration=Save Scenario Configuration As...")
-public final class SaveAsScenarioConfiguration implements ActionListener
+public final class SaveAsProjectConfiguration implements ActionListener
 {
 
-	private static final Logger LOGGER = Logger.getLogger(SaveAsScenarioConfiguration.class.getName());
+	private static final Logger LOGGER = Logger.getLogger(SaveAsProjectConfiguration.class.getName());
 	private static final PathMatcher EPPT_EXTENSION_MATCHER = FileSystems.getDefault().getPathMatcher(
 			"glob:*." + Constant.EPPT_EXT);
-	private Lookup.Result<ScenarioConfigurationSavable> _lkpInfo;
+	private Lookup.Result<ProjectConfigurationSavable> _lkpInfo;
 
-	public SaveAsScenarioConfiguration()
+	public SaveAsProjectConfiguration()
 	{
 		this(Utilities.actionsGlobalContext());
 	}
 
-	private SaveAsScenarioConfiguration(Lookup context)
+	private SaveAsProjectConfiguration(Lookup context)
 	{
-		_lkpInfo = context.lookupResult(ScenarioConfigurationSavable.class);
+		_lkpInfo = context.lookupResult(ProjectConfigurationSavable.class);
 	}
 
 	@Override
@@ -97,8 +97,8 @@ public final class SaveAsScenarioConfiguration implements ActionListener
 					Installer.MAIN_FRAME_NAME + " - " + ProjectConfigurationPanel.getProjectConfigurationPanel().getProjectName());
 			ProjectConfigurationPanel.getProjectConfigurationPanel().setModified(false);
 		}
-		Collection<? extends ScenarioConfigurationSavable> scenarioConfigurationSavables = _lkpInfo.allInstances();
-		for(ScenarioConfigurationSavable savable : scenarioConfigurationSavables)
+		Collection<? extends ProjectConfigurationSavable> scenarioConfigurationSavables = _lkpInfo.allInstances();
+		for(ProjectConfigurationSavable savable : scenarioConfigurationSavables)
 		{
 			savable.removeFromLookup();
 		}

@@ -17,13 +17,13 @@ import gov.ca.water.quickresults.ui.EpptScaffold;
  * @author <a href="mailto:adam@rmanet.com">Adam Korynta</a>
  * @since 02-23-2019
  */
-public class ScenarioConfigurationScaffold extends EpptScaffold
+public class ProjectConfigurationScaffold extends EpptScaffold
 {
 
 
 	public static void main(String[] args) throws EpptInitializationException
 	{
-		new ScenarioConfigurationScaffold().initScaffold();
+		new ProjectConfigurationScaffold().initScaffold();
 	}
 
 	@Override

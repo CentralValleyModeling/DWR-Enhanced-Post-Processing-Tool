@@ -41,25 +41,25 @@ public class Installer extends ModuleInstall
 		initHeclibDll();
 		initLogger();
 		initPlotHandler();
-		loadLastScenarioConfiguration();
+		loadLastProjectConfiguration();
 	}
 
-	private void loadLastScenarioConfiguration()
+	private void loadLastProjectConfiguration()
 	{
 		WindowManager.getDefault().invokeWhenUIReady(() ->
 		{
 			ProjectConfigurationPanel projectConfigurationPanel = ProjectConfigurationPanel.getProjectConfigurationPanel();
-			Path lastScenarioConfiguration = EpptPreferences.getLastScenarioConfiguration();
+			Path lastProjectConfiguration = EpptPreferences.getLastProjectConfiguration();
 			try
 			{
-				projectConfigurationPanel.loadScenarioConfiguration(lastScenarioConfiguration);
+				projectConfigurationPanel.loadProjectConfiguration(lastProjectConfiguration);
 				WindowManager.getDefault().getMainWindow().setTitle(
 						MAIN_FRAME_NAME + " - " + projectConfigurationPanel.getProjectName());
 			}
 			catch(IOException ex)
 			{
 				LOGGER.log(Level.SEVERE,
-						"Unable to load last Scenario Configuration EPPT Home: " + lastScenarioConfiguration, ex);
+						"Unable to load last Scenario Configuration EPPT Home: " + lastProjectConfiguration, ex);
 			}
 		});
 	}

@@ -10,7 +10,7 @@ import java.awt.BorderLayout;
 import java.util.Objects;
 import javax.swing.*;
 
-import gov.ca.water.eppt.nbui.actions.ScenarioConfigurationSavable;
+import gov.ca.water.eppt.nbui.actions.ProjectConfigurationSavable;
 import gov.ca.water.quickresults.ui.scenarioconfig.ProjectConfigurationListener;
 import gov.ca.water.quickresults.ui.scenarioconfig.ProjectConfigurationPanel;
 import org.openide.awt.ActionID;
@@ -26,14 +26,14 @@ import rma.swing.RmaJPanel;
  * Top component which displays something.
  */
 @TopComponent.Description(
-		preferredID = "ScenarioConfigurationTopComponent"
+		preferredID = "ProjectConfigurationTopComponent"
 )
 @TopComponent.Registration(mode = "explorer", openAtStartup = true, position = 1111)
-@ActionID(category = "Window", id = "gov.ca.water.eppt.nbui.ScenarioConfigurationTopComponent")
+@ActionID(category = "Window", id = "gov.ca.water.eppt.nbui.ProjectConfigurationTopComponent")
 @ActionReference(path = "Menu/Window", position = 1111)
 @TopComponent.OpenActionRegistration(
 		displayName = "Scenario Configuration",
-		preferredID = "ScenarioConfigurationTopComponent"
+		preferredID = "ProjectConfigurationTopComponent"
 )
 @Messages(
 		{
@@ -41,7 +41,7 @@ import rma.swing.RmaJPanel;
 				"CTL_ScenarioConfigurationTopComponent=Scenario Configuration Window",
 				"HINT_ScenarioConfigurationTopComponent=This is the Scenario Configuration window"
 		})
-public final class ScenarioConfigurationTopComponent extends EpptTopComponent
+public final class ProjectConfigurationTopComponent extends EpptTopComponent
 {
 	private static final String TOP_COMPONENT_NAME = "Scenario Configuration";
 	private final InstanceContent _instanceContent = new InstanceContent();
@@ -50,7 +50,7 @@ public final class ScenarioConfigurationTopComponent extends EpptTopComponent
 	/**
 	 *
 	 */
-	public ScenarioConfigurationTopComponent()
+	public ProjectConfigurationTopComponent()
 	{
 		setName(TOP_COMPONENT_NAME);
 		associateLookup(new AbstractLookup(_instanceContent));
@@ -66,11 +66,11 @@ public final class ScenarioConfigurationTopComponent extends EpptTopComponent
 					{
 						_lastQuickState = newQuickState;
 						topComponentNameModified();
-						ScenarioConfigurationSavable savable = getLookup().lookup(ScenarioConfigurationSavable.class);
+						ProjectConfigurationSavable savable = getLookup().lookup(ProjectConfigurationSavable.class);
 						if(savable == null)
 						{
 							_instanceContent.add(
-									new ScenarioConfigurationSavable(ScenarioConfigurationTopComponent.this));
+									new ProjectConfigurationSavable(ProjectConfigurationTopComponent.this));
 						}
 					}
 				}
