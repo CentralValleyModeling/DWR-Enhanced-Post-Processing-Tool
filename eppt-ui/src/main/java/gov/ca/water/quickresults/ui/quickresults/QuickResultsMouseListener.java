@@ -14,11 +14,11 @@ import java.util.List;
 import javax.swing.*;
 
 import gov.ca.water.calgui.bo.RBListItemBO;
+import gov.ca.water.calgui.presentation.DisplayHelper;
 import gov.ca.water.calgui.tech_service.IDialogSvc;
 import gov.ca.water.calgui.tech_service.IErrorHandlingSvc;
 import gov.ca.water.calgui.tech_service.impl.DialogSvcImpl;
 import gov.ca.water.calgui.tech_service.impl.ErrorHandlingSvcImpl;
-import gov.ca.water.calgui.presentation.DisplayHelper;
 import gov.ca.water.quickresults.ui.scenarioconfig.ProjectConfigurationPanel;
 import org.apache.log4j.Logger;
 import org.jfree.data.time.Month;
@@ -65,7 +65,11 @@ class QuickResultsMouseListener extends MouseAdapter
 					}
 					else
 					{
-
+						ProjectConfigurationPanel projectConfigurationPanel = ProjectConfigurationPanel.getProjectConfigurationPanel();
+						String quickState = projectConfigurationPanel.quickState();
+						Month startMonth = projectConfigurationPanel.getStartMonth();
+						Month endMonth = projectConfigurationPanel.getEndMonth();
+						_displayHelper.showDisplayFrames(quickState + ";Locs-" + chk.getText()
 								+ ";Index-" + chk.getName(), scenarios, startMonth, endMonth);
 					}
 				}

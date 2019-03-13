@@ -6,7 +6,8 @@
  */
 package gov.ca.water.eppt.nbui;
 
-import java.awt.*;
+import java.awt.Dimension;
+import java.awt.Frame;
 import java.io.IOException;
 import java.lang.reflect.Field;
 import java.nio.file.Files;
@@ -25,6 +26,7 @@ import gov.ca.water.calgui.tech_service.impl.DialogSvcImpl;
 import gov.ca.water.quickresults.ui.scenarioconfig.ProjectConfigurationPanel;
 import org.openide.modules.ModuleInstall;
 import org.openide.windows.WindowManager;
+
 import rma.swing.logging.DialogLogHandler;
 
 public class Installer extends ModuleInstall
@@ -39,7 +41,7 @@ public class Installer extends ModuleInstall
 		initEpptConfigs();
 		initHeclibDll();
 		initLogger();
-		loadLastScenarioConfiguration();
+		loadLastProjectConfiguration();
 		setMinimumWindowSize();
 		initPlotHandler();
 	}
