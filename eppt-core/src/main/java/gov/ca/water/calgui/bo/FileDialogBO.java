@@ -191,7 +191,7 @@ public class FileDialogBO implements ActionListener
 		}
 		else
 		{
-			if(_theFileExt == null)
+			if(_theFileExt == null || "inp".equalsIgnoreCase(_theFileExt))
 			{
 				rc = _fc.showOpenDialog(_mainFrame);
 			}
