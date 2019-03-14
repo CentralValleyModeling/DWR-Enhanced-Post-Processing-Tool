@@ -10,6 +10,7 @@ import java.awt.Frame;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+import gov.ca.water.calgui.constant.EpptPreferences;
 import org.openide.awt.ActionID;
 import org.openide.awt.ActionReference;
 import org.openide.awt.ActionReferences;
@@ -47,6 +48,7 @@ public final class DssVueAction implements ActionListener
 			_listSelection = createListSelection();
 			Frame mainWindow = WindowManager.getDefault().getMainWindow();
 			_listSelection.setLocationRelativeTo(mainWindow);
+			_listSelection.setDirectory(EpptPreferences.getScenariosPaths().toString());
 		}
 		_listSelection.setVisible(true);
 	}
