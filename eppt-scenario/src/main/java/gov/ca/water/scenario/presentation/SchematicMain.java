@@ -19,7 +19,7 @@ import gov.ca.water.calgui.constant.Constant;
 import gov.ca.water.calgui.presentation.DisplayHelper;
 import gov.ca.water.calgui.tech_service.IErrorHandlingSvc;
 import gov.ca.water.calgui.tech_service.impl.ErrorHandlingSvcImpl;
-import gov.ca.water.quickresults.ui.scenarioconfig.ProjectConfigurationPanel;
+import gov.ca.water.quickresults.ui.projectconfig.ProjectConfigurationPanel;
 import org.apache.batik.script.Window;
 import org.apache.batik.swing.JSVGCanvas;
 import org.apache.batik.swing.JSVGScrollPane;

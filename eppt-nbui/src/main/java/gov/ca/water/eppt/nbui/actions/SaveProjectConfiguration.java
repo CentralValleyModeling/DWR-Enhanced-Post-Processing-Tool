@@ -18,7 +18,7 @@ import javax.swing.*;
 
 import gov.ca.water.calgui.constant.EpptPreferences;
 import gov.ca.water.eppt.nbui.Installer;
-import gov.ca.water.quickresults.ui.scenarioconfig.ProjectConfigurationPanel;
+import gov.ca.water.quickresults.ui.projectconfig.ProjectConfigurationPanel;
 import org.openide.awt.ActionID;
 import org.openide.awt.ActionReference;
 import org.openide.awt.ActionReferences;

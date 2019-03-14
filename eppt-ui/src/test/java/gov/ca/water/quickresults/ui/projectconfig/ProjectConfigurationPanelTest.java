@@ -5,7 +5,7 @@
  * Source may not be released without written approval from DWR
  */
 
-package gov.ca.water.quickresults.ui.scenarioconfig;
+package gov.ca.water.quickresults.ui.projectconfig;
 
 import javax.swing.*;
 

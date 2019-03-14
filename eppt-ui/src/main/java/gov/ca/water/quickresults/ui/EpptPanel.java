@@ -60,7 +60,7 @@ public abstract class EpptPanel extends RmaJPanel
 		}
 		catch(Exception ex)
 		{
-			LOGGER.log(Level.WARNING, "Unable to render from URL, trying test file", ex);
+			LOGGER.log(Level.FINE, "Unable to render from URL, trying test file", ex);
 			retval = getSwingEngine().render("ui/" + fileName);
 		}
 		return retval;
