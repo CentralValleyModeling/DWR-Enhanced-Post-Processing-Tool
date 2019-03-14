@@ -89,13 +89,6 @@ public class DisplayHelper
         SwingUtilities.invokeLater(()-> _component.setCursor(cursor));
     }
 
-//    private void displayGlassPane()
-//    {
-//        JPanel glassPane = (JPanel)SwingUtilities.getRootPane(_component).getGlassPane();
-//        SwingUtilities.invokeLater(()->glassPane.setVisible(true));
-//
-//    }
-
     private void displayFramesWRIMSOnBackground(String displayGroup, List<RBListItemBO> lstScenarios, DerivedTimeSeries dts,
                                                 MultipleTimeSeries mts, Month startMonth, Month endMonth)
     {
