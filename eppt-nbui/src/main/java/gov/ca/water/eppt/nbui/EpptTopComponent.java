@@ -79,12 +79,18 @@ public abstract class EpptTopComponent extends TopComponent
 	private EpptHelpTopComponent getOpenedEpptHelpTopComponent()
 	{
 		EpptHelpTopComponent epptHelpTopComponent = null;
-		Set<TopComponent> opened = WindowManager.getDefault().getRegistry().getOpened();
-		for(TopComponent tc : opened)
+		Set<? extends Mode> modes = WindowManager.getDefault().getModes();
+		for(Mode mode : modes)
 		{
-			if(tc instanceof EpptHelpTopComponent)
+			TopComponent[] topComponents = mode.getTopComponents();
+			for(TopComponent tc : topComponents)
 			{
-				epptHelpTopComponent = (EpptHelpTopComponent) tc;
+				if(tc instanceof EpptHelpTopComponent)
+				{
+					epptHelpTopComponent = (EpptHelpTopComponent) tc;
+					epptHelpTopComponent.open();
+					break;
+				}
 			}
 		}
 		return epptHelpTopComponent;

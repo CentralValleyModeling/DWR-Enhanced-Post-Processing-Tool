@@ -24,6 +24,7 @@ import gov.ca.water.calgui.tech_service.IDialogSvc;
 import gov.ca.water.calgui.tech_service.IErrorHandlingSvc;
 import gov.ca.water.calgui.tech_service.impl.DialogSvcImpl;
 import gov.ca.water.calgui.tech_service.impl.ErrorHandlingSvcImpl;
+import gov.ca.water.quickresults.ui.EpptPanel;
 import gov.ca.water.quickresults.ui.scenarioconfig.ProjectConfigurationPanel;
 import org.apache.log4j.Logger;
 import org.jfree.data.time.Month;
@@ -65,8 +66,22 @@ public class QuickResultsListener implements ActionListener
 			case "Rep_LoadList":
 				loadReportList();
 				break;
+			case "AC_Clear":
+				clearSelectedPanelCheckboxes();
+				break;
 			default:
 				LOGGER.debug("Testing action events " + e.getActionCommand());
+		}
+
+	}
+
+	private void clearSelectedPanelCheckboxes()
+	{
+		JTabbedPane variables = _quickResultsPanel.getVariables();
+		Component selectedComponent = variables.getSelectedComponent();
+		if(selectedComponent instanceof Container)
+		{
+			EpptPanel.setCheckboxesSelectedRecusive(false, (Container) selectedComponent);
 		}
 	}
 

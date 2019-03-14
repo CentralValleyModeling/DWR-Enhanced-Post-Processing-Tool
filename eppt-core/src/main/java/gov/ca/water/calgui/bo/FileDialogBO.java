@@ -10,17 +10,10 @@ package gov.ca.water.calgui.bo;
 //! Custom file chooser for selection of different CalLite file types
 
 import java.awt.Component;
-import java.awt.Container;
 import java.awt.HeadlessException;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.util.HashMap;
-import java.util.Map;
 import javax.swing.*;
 
 import gov.ca.water.calgui.constant.Constant;
@@ -40,7 +33,7 @@ public class FileDialogBO implements ActionListener
 
 	private static final Logger LOG = Logger.getLogger(FileDialogBO.class.getName());
 	private final DefaultListModel _lmScenNames;
-	private JFileChooser _fc = new JFileChooser2();
+	private JFileChooser _fc = new JFileChooser();
 	private int _dialogRC;
 	private JTextField _theTextField;
 	private boolean _theMultipleFlag = false;
@@ -132,7 +125,7 @@ public class FileDialogBO implements ActionListener
 				}
 			}
 		}
-		catch(Exception e)
+		catch(RuntimeException e)
 		{
 			LOG.error(e.getMessage());
 			String messageText = "Unable to set up file dialog.";
@@ -155,7 +148,7 @@ public class FileDialogBO implements ActionListener
 			{
 				deleteScenario();
 			}
-			else if("btnClearScenario".equals(e.getActionCommand()))
+			else if(e != null && "btnClearScenario".equals(e.getActionCommand()))
 			{
 				clearAllScenarios();
 			}
@@ -193,10 +186,12 @@ public class FileDialogBO implements ActionListener
 		{
 			if(_theFileExt == null || "inp".equalsIgnoreCase(_theFileExt))
 			{
+				_fc.setFileSelectionMode(JFileChooser.FILES_ONLY);
 				rc = _fc.showOpenDialog(_mainFrame);
 			}
 			else
 			{
+				_fc.setFileSelectionMode(JFileChooser.FILES_ONLY);
 				rc = _fc.showDialog(_mainFrame,
 						"DSS".equals(_theFileExt) ? "Open" : "Save");
 			}
@@ -264,7 +259,7 @@ public class FileDialogBO implements ActionListener
 	 *
 	 * @param file
 	 */
-	public void addFileToList(File file)
+	private void addFileToList(File file)
 	{
 		try
 		{
@@ -284,7 +279,7 @@ public class FileDialogBO implements ActionListener
 				}
 			}
 		}
-		catch(Exception e)
+		catch(RuntimeException e)
 		{
 			LOG.error(e.getMessage());
 			String messageText = "Unable to update list.";
@@ -292,118 +287,5 @@ public class FileDialogBO implements ActionListener
 		}
 	}
 
-
-	/**
-	 * Custom class shows scenario description in tooltip
-	 *
-	 * @author tslawecki
-	 */
-	private class FileNameRenderer extends DefaultListCellRenderer
-	{
-
-		private static final long serialVersionUID = -3040003845509293885L;
-
-		private final JFileChooser2 _theOwner;
-		private final Map<String, String> _theToolTips = new HashMap<>();
-
-		private FileNameRenderer(JFileChooser2 jFileChooser)
-		{
-			_theOwner = jFileChooser;
-		}
-
-		@Override
-		public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected,
-													  boolean cellHasFocus)
-		{
-			JLabel lbl = (JLabel) super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
-			if(!_theOwner._toolTipFlag)
-			{
-				_theToolTips.clear();
-				File folder = new File(System.getProperty("user.dir") + "\\Scenarios"); // change
-				// to
-				// read
-				// current
-				// directory
-				File[] listOfFiles = folder.listFiles();
-				if(listOfFiles != null)
-				{
-					for(final File listOfFile : listOfFiles)
-					{
-						if(listOfFile.isFile() && listOfFile.getName().toLowerCase().endsWith(".txt"))
-						{
-							try(FileInputStream fin = new FileInputStream(listOfFile);
-								BufferedReader br = new BufferedReader(new InputStreamReader(fin)))
-							{
-								String theKey = br.readLine().toLowerCase();
-								String theValue = br.readLine() + "\n" + br.readLine() + "\n" + br.readLine();
-								_theToolTips.put(theKey.toLowerCase(), theValue);
-							}
-							catch(IOException e1)
-							{
-								LOG.debug(e1.getMessage());
-
-							}
-						}
-						// need to flag when directory
-						_theOwner._toolTipFlag = true;
-						// changes
-					}
-				}
-			}
-			File file = new File(String.valueOf(value));
-			String tooltip = _theToolTips.getOrDefault(file.getName().toLowerCase(),
-					"No scenario information for this file");
-			lbl.setToolTipText(tooltip);
-			lbl.setText(file.getName());
-			return lbl;
-		}
-	}
-
-	/**
-	 * Custom FileChooser that puts scenario description for *.cls (assumedin
-	 * *.txt) in tooltip
-	 *
-	 * @author tslawecki
-	 */
-	private class JFileChooser2 extends javax.swing.JFileChooser
-	{
-		private static final long serialVersionUID = -150877374751505363L;
-
-		private boolean _toolTipFlag = false;
-
-		private Component findJList(Component comp)
-		{
-
-			if(comp instanceof JList)
-			{
-				return comp;
-			}
-			if(comp instanceof Container)
-			{
-				Component[] components = ((Container) comp).getComponents();
-				for(final Component component : components)
-				{
-					Component child = findJList(component);
-					if(child != null)
-					{
-						return child;
-					}
-				}
-			}
-			return null;
-		}
-
-		@Override
-		public int showOpenDialog(Component c)
-		{
-			JList myList = (JList) findJList(this);
-			if(myList != null)
-			{
-				myList.setCellRenderer(new FileNameRenderer(this));
-			}
-			_toolTipFlag = false;
-			return super.showOpenDialog(c);
-		}
-	}
 
 }

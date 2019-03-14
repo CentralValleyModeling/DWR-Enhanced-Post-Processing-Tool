@@ -7,13 +7,13 @@
 
 package gov.ca.water.quickresults.ui.scenarioconfig;
 
-import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.*;
 
 import gov.ca.water.calgui.bo.FileDialogBO;
 import gov.ca.water.calgui.bo.RBListItemBO;
+import gov.ca.water.quickresults.ui.EpptPanel;
 import org.apache.log4j.Logger;
 
 
@@ -61,7 +61,6 @@ public class ProjectConfigurationListener implements ActionListener
 			default:
 		}
 		ProjectConfigurationPanel projectConfigurationPanel = ProjectConfigurationPanel.getProjectConfigurationPanel();
-
 		projectConfigurationPanel.getScenarioList().repaint();
 		projectConfigurationPanel.setModified(true);
 	}
@@ -79,18 +78,7 @@ public class ProjectConfigurationListener implements ActionListener
 	private void setQRMonthCheckBoxesSelected(boolean b)
 	{
 		JPanel controls2 = _projectConfigurationPanel.getControls2();
-		Component[] components = controls2.getComponents();
-		for(final Component component : components)
-		{
-			if(component instanceof JCheckBox)
-			{
-				JCheckBox c = (JCheckBox) component;
-				String cName = c.getName();
-				if(cName != null && cName.startsWith("RepchkMon"))
-				{
-					c.setSelected(b);
-				}
-			}
-		}
+		EpptPanel.setCheckboxesSelectedRecusive(b, controls2);
 	}
+
 }

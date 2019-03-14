@@ -13,8 +13,8 @@
         <module name="eppt-calsim-gui" />
         <module name="eppt-core" />
         <module name="eppt-nbui" />
-        <module name="eppt-quickresults" />
         <module name="eppt-scenario" />
+        <module name="eppt-ui" />
         <module name="eppt-vista" />
         <module name="maven-archiver" />
         <module name="vista" />
@@ -22,6 +22,7 @@
     </annotationProcessing>
     <bytecodeTargetLevel>
       <module name="eppt-callite" target="1.5" />
+      <module name="eppt-quickresults" target="1.8" />
       <module name="maven-archiver" target="1.5" />
       <module name="maven-archiver (1)" target="1.5" />
       <module name="maven-archiver (2)" target="1.5" />

@@ -45,7 +45,7 @@ import org.openide.windows.WindowManager;
 		{
 				@ActionReference(path = "Menu/File", position = 300, separatorAfter = 555)
 				,
-				@ActionReference(path = "Toolbars/EPPT", position = 333)
+				@ActionReference(path = "Toolbars/EPPT", position = 333, separatorAfter = 444)
 		})
 @Messages("CTL_LoadProjectConfiguration=Load...")
 public final class LoadProjectConfiguration extends AbstractAction
@@ -62,7 +62,7 @@ public final class LoadProjectConfiguration extends AbstractAction
 
 	private LoadProjectConfiguration(Lookup context)
 	{
-		putValue(Action.NAME, "Load Project Configuration");
+		putValue(Action.NAME, "Load");
 		putValue(Action.SMALL_ICON, "gov/ca/water/eppt/nbui/actions/open.png");
 		putValue(Action.LARGE_ICON_KEY, "gov/ca/water/eppt/nbui/actions/open24.png");
 		_lkpInfo = context.lookupResult(ProjectConfigurationSavable.class);
@@ -113,7 +113,7 @@ public final class LoadProjectConfiguration extends AbstractAction
 	public JMenuItem getMenuPresenter()
 	{
 		ImageIcon imageIcon = getSaveIcon("open.png");
-		JMenuItem jMenuItem = new JMenuItem("Load Project Configuration", imageIcon);
+		JMenuItem jMenuItem = new JMenuItem("Load", imageIcon);
 		jMenuItem.addActionListener(this);
 		return jMenuItem;
 	}

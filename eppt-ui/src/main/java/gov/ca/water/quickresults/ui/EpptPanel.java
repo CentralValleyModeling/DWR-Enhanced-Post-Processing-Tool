@@ -7,11 +7,13 @@
 
 package gov.ca.water.quickresults.ui;
 
+import java.awt.Component;
 import java.awt.Container;
 import java.awt.event.ActionListener;
 import java.net.URL;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.*;
 
 import org.swixml.SwingEngine;
 
@@ -62,5 +64,23 @@ public abstract class EpptPanel extends RmaJPanel
 			retval = getSwingEngine().render("ui/" + fileName);
 		}
 		return retval;
+	}
+
+
+	public static void setCheckboxesSelectedRecusive(boolean b, Container container)
+	{
+		Component[] components = container.getComponents();
+		for(final Component component : components)
+		{
+			if(component instanceof JCheckBox)
+			{
+				JCheckBox c = (JCheckBox) component;
+				c.setSelected(b);
+			}
+			else if(component instanceof Container)
+			{
+				setCheckboxesSelectedRecusive(b, (Container) component);
+			}
+		}
 	}
 }
