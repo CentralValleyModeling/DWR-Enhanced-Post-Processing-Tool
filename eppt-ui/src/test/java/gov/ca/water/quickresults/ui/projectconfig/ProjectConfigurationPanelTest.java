@@ -9,8 +9,6 @@ package gov.ca.water.quickresults.ui.projectconfig;
 
 import javax.swing.*;
 
-import gov.ca.water.quickresults.ui.quickresults.QuickResultsPanelTest;
-import org.apache.log4j.Logger;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -24,7 +22,6 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
  */
 class ProjectConfigurationPanelTest
 {
-	private static final Logger LOGGER = Logger.getLogger(QuickResultsPanelTest.class.getName());
 
 	@Test
 	void testScenarioConfigurationPanelCreation()
