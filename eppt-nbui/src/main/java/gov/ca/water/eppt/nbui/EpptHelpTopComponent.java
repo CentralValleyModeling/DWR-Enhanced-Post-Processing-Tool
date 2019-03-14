@@ -9,10 +9,12 @@ package gov.ca.water.eppt.nbui;
 import java.awt.BorderLayout;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.logging.Level;
 import javax.help.BadIDException;
 import javax.help.HelpSet;
 import javax.help.HelpSetException;
 import javax.help.JHelp;
+import javax.swing.*;
 
 import gov.ca.water.calgui.EpptInitializationException;
 import gov.ca.water.calgui.constant.Constant;
@@ -20,14 +22,14 @@ import org.apache.log4j.Logger;
 import org.openide.awt.ActionID;
 import org.openide.awt.ActionReference;
 import org.openide.windows.TopComponent;
+import org.openide.windows.WindowManager;
 
 /**
  * Top component which displays something.
  */
 @TopComponent.Description(
 		preferredID = "EpptHelpTopComponent",
-		iconBase = "gov/ca/water/eppt/nbui/questionmark18.gif",
-		persistenceType = TopComponent.PERSISTENCE_NEVER
+		iconBase = "gov/ca/water/eppt/nbui/questionmark18.gif"
 )
 @TopComponent.Registration(mode = "properties", openAtStartup = false)
 @ActionID(category = "Window", id = "gov.ca.water.eppt.nbui.EpptHelpTopComponent")
@@ -90,5 +92,7 @@ public final class EpptHelpTopComponent extends TopComponent
 	{
 		super.componentOpened();
 		selectActivatedHelp();
+		SwingUtilities.invokeLater(() -> WindowManager.getDefault().setTopComponentFloating(this, true));
+		java.util.logging.Logger.getLogger(EpptHelpTopComponent.class.getName()).log(Level.SEVERE, "Error");
 	}
 }

@@ -38,7 +38,7 @@
 		</dependency>
 		<dependency>
 			<groupId>gov.ca.water</groupId>
-			<artifactId>eppt-quickresults</artifactId>
+			<artifactId>eppt-ui</artifactId>
 			<version>1.0-SNAPSHOT</version>
 			<scope>compile</scope>
 		</dependency>

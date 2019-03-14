@@ -6,7 +6,8 @@
  */
 package gov.ca.water.eppt.nbui;
 
-import java.awt.*;
+import java.awt.Dimension;
+import java.awt.Frame;
 import java.io.IOException;
 import java.lang.reflect.Field;
 import java.nio.file.Files;
@@ -22,7 +23,7 @@ import gov.ca.water.calgui.bus_service.impl.GuiLinksSeedDataSvcImpl;
 import gov.ca.water.calgui.constant.EpptPreferences;
 import gov.ca.water.calgui.presentation.DisplayHelper;
 import gov.ca.water.calgui.tech_service.impl.DialogSvcImpl;
-import gov.ca.water.quickresults.ui.scenarioconfig.ScenarioConfigurationPanel;
+import gov.ca.water.quickresults.ui.scenarioconfig.ProjectConfigurationPanel;
 import org.openide.modules.ModuleInstall;
 import org.openide.windows.WindowManager;
 
@@ -30,6 +31,7 @@ import rma.swing.logging.DialogLogHandler;
 
 public class Installer extends ModuleInstall
 {
+	public static final String MAIN_FRAME_NAME = "EPPT";
 	private static final Logger LOGGER = Logger.getLogger(Installer.class.getName());
 
 	@Override
@@ -39,7 +41,7 @@ public class Installer extends ModuleInstall
 		initEpptConfigs();
 		initHeclibDll();
 		initLogger();
-		loadLastScenarioConfiguration();
+		loadLastProjectConfiguration();
 		setMinimumWindowSize();
 		initPlotHandler();
 	}
@@ -51,20 +53,25 @@ public class Installer extends ModuleInstall
 			WindowManager.getDefault().getMainWindow().setMinimumSize(new Dimension(545, 630));
 		});
 	}
-
-	private void loadLastScenarioConfiguration()
+	
+	private void loadLastProjectConfiguration()
 	{
-		ScenarioConfigurationPanel scenarioConfigurationPanel = ScenarioConfigurationPanel.getScenarioConfigurationPanel();
-		Path lastScenarioConfiguration = EpptPreferences.getLastScenarioConfiguration();
-		try
+		WindowManager.getDefault().invokeWhenUIReady(() ->
 		{
-			scenarioConfigurationPanel.loadScenarioConfiguration(lastScenarioConfiguration);
-		}
-		catch(IOException ex)
-		{
-			LOGGER.log(Level.SEVERE,
-					"Unable to load last Scenario Configuration EPPT Home: " + lastScenarioConfiguration, ex);
-		}
+			ProjectConfigurationPanel projectConfigurationPanel = ProjectConfigurationPanel.getProjectConfigurationPanel();
+			Path lastProjectConfiguration = EpptPreferences.getLastProjectConfiguration();
+			try
+			{
+				projectConfigurationPanel.loadProjectConfiguration(lastProjectConfiguration);
+				WindowManager.getDefault().getMainWindow().setTitle(
+						MAIN_FRAME_NAME + " - " + projectConfigurationPanel.getProjectName());
+			}
+			catch(IOException ex)
+			{
+				LOGGER.log(Level.SEVERE,
+						"Unable to load last Project Configuration EPPT Home: " + lastProjectConfiguration, ex);
+			}
+		});
 	}
 	private void initPlotHandler()
 	{

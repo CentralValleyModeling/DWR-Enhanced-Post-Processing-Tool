@@ -39,6 +39,11 @@ public final class ProgressFrameForPDF extends JFrame
 	 */
 	private ProgressFrameForPDF(JFrame mainFrame)
 	{
+		if(mainFrame != null)
+		{
+			setIconImage(mainFrame.getIconImage());
+			setLocationRelativeTo(mainFrame);
+		}
 		String[] data = {"No reports active"};
 		_list = new JList<>(data);
 		_listScroller = new JScrollPane(_list);
@@ -82,8 +87,6 @@ public final class ProgressFrameForPDF extends JFrame
 		pack();
 		Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
 		setLocation((dim.width - 400) / 2, (dim.height - 200) / 2);
-		java.net.URL imgURL = getClass().getResource("/images/CalLiteIcon.png");
-		setIconImage(Toolkit.getDefaultToolkit().getImage(imgURL));
 	}
 
 	/**

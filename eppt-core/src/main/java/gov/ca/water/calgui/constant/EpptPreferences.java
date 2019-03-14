@@ -22,9 +22,11 @@ import javax.swing.filechooser.FileSystemView;
 public final class EpptPreferences
 {
 	private static final Preferences ROOT_PREFERENCES = Preferences.userRoot().node("DWR").node("EPPT");
-	private static final String EPPT_HOME = "eppt_home";
+	private static final Preferences REPORT_NODE = ROOT_PREFERENCES.node("Report");
+	private static final Preferences EPPT_HOME = ROOT_PREFERENCES.node("eppt_home");
 	private static final String PROJECT_DIRECTORY = "project_directory";
 	private static final String LAST_SCENARIO_CONFIGURATION = "last_scenario_configuration";
+	private static final String REPORT_OUTPUT_LOCATION = "report_output_location";
 
 	private EpptPreferences()
 	{
@@ -39,8 +41,7 @@ public final class EpptPreferences
 		{
 
 			String epptHomeDefault = Paths.get(defaultDirectory.getPath()).resolve("EPPT").toString();
-			Preferences homePrefs = ROOT_PREFERENCES.node(EPPT_HOME);
-			retval = homePrefs.get(PROJECT_DIRECTORY, epptHomeDefault);
+			retval = EPPT_HOME.get(PROJECT_DIRECTORY, epptHomeDefault);
 		}
 		return Paths.get(retval);
 	}
@@ -60,16 +61,29 @@ public final class EpptPreferences
 		return getProjectsPath().resolve(Constant.REPORTS_DIR);
 	}
 
-	public static Path getLastScenarioConfiguration()
+	public static void setProjectsPath(String text)
 	{
-		String scenarioConfigurationFile = ROOT_PREFERENCES.node(EPPT_HOME).get(LAST_SCENARIO_CONFIGURATION, "");
+		EPPT_HOME.put(PROJECT_DIRECTORY, text);
+	}
+
+	public static Path getLastProjectConfiguration()
+	{
+		String scenarioConfigurationFile = EPPT_HOME.get(LAST_SCENARIO_CONFIGURATION, "");
 		return Paths.get(scenarioConfigurationFile);
 	}
 
 	public static void setLastScenarioConfiguration(Path lastConfiguration)
 	{
-		ROOT_PREFERENCES.node(EPPT_HOME).put(LAST_SCENARIO_CONFIGURATION,
-				lastConfiguration.toAbsolutePath().toString());
+		EPPT_HOME.put(LAST_SCENARIO_CONFIGURATION, lastConfiguration.toAbsolutePath().toString());
 	}
 
+	public static String getResultsOutputLocation()
+	{
+		return REPORT_NODE.get(REPORT_OUTPUT_LOCATION, EpptPreferences.getProjectsPath().toString());
+	}
+
+	public static void setResultsOutputLocation(String path)
+	{
+		REPORT_NODE.put(REPORT_OUTPUT_LOCATION, path);
+	}
 }
