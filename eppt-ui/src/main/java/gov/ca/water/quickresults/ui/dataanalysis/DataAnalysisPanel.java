@@ -110,4 +110,6 @@ public class DataAnalysisPanel extends EpptPanel
 	{
 		return ((JTextField) getSwingEngine().find("tfFontSize"));
 	}
+
+
 }

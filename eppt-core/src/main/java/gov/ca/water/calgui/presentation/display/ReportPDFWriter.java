@@ -95,7 +95,7 @@ public class ReportPDFWriter implements Writer
 	}
 
 	@Override
-	public void startDocument(String filename)
+	public boolean startDocument(String filename)
 	{
 
 		// Check if file is already open
@@ -120,14 +120,18 @@ public class ReportPDFWriter implements Writer
 		catch(DocumentException de)
 		{
 			LOG.debug(de.getMessage());
+			dialogSvc.getOK("Error while creating the pdf file: " + (new File(filename).getName()) + ". " +  de.getMessage(),
+					JOptionPane.WARNING_MESSAGE);
+			return false;
 		}
 		catch(IOException ioe)
 		{
 			LOG.debug(ioe.getMessage());
-			dialogSvc.getOK("Please close the file " + (new File(filename).getName()) + " if it is open.",
+			dialogSvc.getOK("Error while creating the pdf file: " + (new File(filename).getName()) + "\nIf the file is already open, please close it and try again.\n" + ioe.getMessage(),
 					JOptionPane.WARNING_MESSAGE);
-			return;
+			return false;
 		}
+		return true;
 	}
 
 	@Override

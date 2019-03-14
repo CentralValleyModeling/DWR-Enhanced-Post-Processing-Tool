@@ -11,15 +11,12 @@ import java.awt.Component;
 import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.BufferedReader;
-import java.io.ByteArrayInputStream;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.util.concurrent.CompletableFuture;
 import javax.swing.*;
 
 import gov.ca.water.calgui.bo.FileDialogBO;
+import gov.ca.water.calgui.constant.EpptPreferences;
 import gov.ca.water.calgui.presentation.Report;
 import gov.ca.water.calgui.tech_service.IDialogSvc;
 import gov.ca.water.calgui.tech_service.impl.DialogSvcImpl;
@@ -109,18 +106,96 @@ public class DataAnalysisListener implements ActionListener
 	 */
 	private void generateReportAction()
 	{
-		if(_dataAnalysisPanel.getDssResultFileField1().getText().isEmpty()
-				|| _dataAnalysisPanel.getDssResultFileField2().getText().isEmpty()
-				|| _dataAnalysisPanel.getOutputTextField().getText().isEmpty())
+		String errorMsg = isInputsValid();
+		if(errorMsg != null)
 		{
 			IDialogSvc dialogSvcInstance = DialogSvcImpl.getDialogSvcInstance();
-			dialogSvcInstance.getOK("You must specify the source DSS files and the output PDF file",
-					JOptionPane.ERROR_MESSAGE);
+			dialogSvcInstance.getOK(errorMsg, JOptionPane.ERROR_MESSAGE);
 		}
 		else
 		{
+			String filePath = EpptPreferences.getReportsPath().resolve(_dataAnalysisPanel.getOutputTextField().getText()).toString();
+			File outputFile = new File(filePath);
+			if(outputFile.exists())
+			{
+				IDialogSvc dialogSvcInstance = DialogSvcImpl.getDialogSvcInstance();
+				String message = "The output file: '" + outputFile.getAbsolutePath() + "' already exists."
+						+ "\n Would you like to continue and replace the existing file?";
+				String yesNo = dialogSvcInstance.getYesNo(message, JOptionPane.WARNING_MESSAGE);
+				if("Yes".equalsIgnoreCase(yesNo))
+				{
+					int i = 0;
+				}
+				else
+				{
+					return;
+				}
+			}
 			generateReport();
 		}
+	}
+
+
+
+	private String isInputsValid()
+	{
+		String errorMsg = null;
+		if(_dataAnalysisPanel.getDssResultFileField1().getText().isEmpty())
+		{
+			return "You must specify DSS result file #1";
+		}
+		else if(_dataAnalysisPanel.getDssResultFileField2().getText().isEmpty())
+		{
+			return "You must specify DSS result file #2";
+
+		}
+		else if(_dataAnalysisPanel.getOutputTextField().getText().isEmpty())
+		{
+			return "You must specify the report output PDF file";
+		}
+
+		//check to see if the selected output path is a valid file name and path
+		File outputFile = new File(_dataAnalysisPanel.getOutputTextField().getText());
+		if(!outputFile.exists())
+		{
+			try
+			{
+				outputFile.createNewFile();
+				outputFile.delete();
+			}
+			catch (IOException ex)
+			{
+				return "The selected report output file name is not a valid file name";
+			}
+		}
+
+		String fontSize = _dataAnalysisPanel.getReportSize().getText();
+		if(fontSize == null || fontSize.isEmpty())
+		{
+			return "You must specify a font size";
+		}
+
+		try
+		{
+			double d = Double.parseDouble(fontSize);
+			if(d%1 != 0)
+			{
+				errorMsg = "The font size has to be an integer value";
+			}
+			else if(d<0)
+			{
+				errorMsg = "The font size cannot be negative";
+			}
+			else if(d==0)
+			{
+				errorMsg = "The font size cannot be zero";
+			}
+		}
+		catch(Exception ex)
+		{
+			errorMsg = "The font size entered could not be converted to a number";
+		}
+		return errorMsg;
 	}
 
 	private void generateReport()
