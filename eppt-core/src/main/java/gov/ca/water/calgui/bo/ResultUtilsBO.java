@@ -23,6 +23,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Vector;
+import java.util.logging.Level;
 import javax.swing.*;
 import javax.swing.event.ChangeListener;
 
@@ -92,7 +93,7 @@ public class ResultUtilsBO
 	 */
 	public static ResultUtilsBO getResultUtilsInstance(SwingEngine swingEngine)
 	{
-		if(resultUtilsBO == null)
+		//		if(resultUtilsBO == null)
 		{
 			resultUtilsBO = new ResultUtilsBO(swingEngine);
 		}
@@ -240,17 +241,21 @@ public class ResultUtilsBO
 				{
 					// Store previous list items
 					JList lstReports = (JList) (_swingEngine).find("lstReports");
-					int size = lstReports.getModel().getSize(); // 4
-					int n;
-					n = 0;
-					String[] lstArray = new String[size];
-					for(int i = 0; i < size; i++)
+					String[] lstArray = new String[0];
+					int n = 0;
+					if(lstReports != null)
 					{
-						Object item = lstReports.getModel().getElementAt(i);
-						if(!" ".equals(item.toString()))
+
+						int size = lstReports.getModel().getSize(); // 4
+						lstArray = new String[size];
+						for(int i = 0; i < size; i++)
 						{
-							lstArray[n] = item.toString();
-							n = n + 1;
+							Object item = lstReports.getModel().getElementAt(i);
+							if(!" ".equals(item.toString()))
+							{
+								lstArray[n] = item.toString();
+								n = n + 1;
+							}
 						}
 					}
 					// Store contents of Project
@@ -286,6 +291,11 @@ public class ResultUtilsBO
 				catch(IOException e2)
 				{
 					LOG.debug(e2.getMessage(), e2);
+				}
+				catch(RuntimeException ex)
+				{
+					java.util.logging.Logger.getLogger(ResultUtilsBO.class.getName())
+											.log(Level.SEVERE, "Error saving", ex);
 				}
 			}
 		}
@@ -350,6 +360,7 @@ public class ResultUtilsBO
 
 	/**
 	 * Convert 1-12 integer to three-letter month abbreviation
+	 *
 	 * @param month 1-12 integer
 	 * @return three-letter month abbreviation
 	 */
