@@ -94,12 +94,15 @@ public class NewProjectConfiguration implements ActionListener
 	{
 		NameDialog nameDialog = new NameDialog(WindowManager.getDefault().getMainWindow());
 		String substring = String.valueOf(new Date().getTime()).substring(5);
-		nameDialog.setName("New_Scenario_" + substring);
+		String newProjectName = "New_Project_" + substring;
+		nameDialog.setName(newProjectName);
 		nameDialog.setDescription("");
 		nameDialog.setModal(true);
 		nameDialog.setVisible(true);
-		JFileChooser fileChooser = new JFileChooser(EpptPreferences.getProjectsPath().toFile());
+		Path projectsPath = EpptPreferences.getProjectsPath();
+		JFileChooser fileChooser = new JFileChooser(projectsPath.toFile());
 		fileChooser.setFileFilter(new SimpleFileFilter(Constant.EPPT_EXT, "EPPT Project File"));
+		fileChooser.setSelectedFile(projectsPath.resolve(newProjectName).toFile());
 		fileChooser.setMultiSelectionEnabled(false);
 		fileChooser.setDialogType(JFileChooser.SAVE_DIALOG);
 		fileChooser.showSaveDialog(WindowManager.getDefault().getMainWindow());

@@ -37,9 +37,9 @@ import rma.swing.RmaJPanel;
 )
 @Messages(
 		{
-				"CTL_ScenarioConfigurationAction=Project Configuration",
-				"CTL_ScenarioConfigurationTopComponent=Project Configuration Window",
-				"HINT_ScenarioConfigurationTopComponent=This is the Project Configuration window"
+				"CTL_ProjectConfigurationAction=Project Configuration",
+				"CTL_ProjectConfigurationTopComponent=Project Configuration Window",
+				"HINT_ProjectConfigurationTopComponent=This is the Project Configuration window"
 		})
 public final class ProjectConfigurationTopComponent extends EpptTopComponent
 {

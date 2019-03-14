@@ -42,7 +42,7 @@ import org.jfree.data.time.Month;
 public final class ProjectConfigurationPanel extends EpptPanel
 {
 	private static final Logger LOGGER = Logger.getLogger(ProjectConfigurationPanel.class.getName());
-	private static final String SCENARIO_CONFIGURATION_XML_FILE = "Scenario_Configuration.xml";
+	private static final String SCENARIO_CONFIGURATION_XML_FILE = "Project_Configuration.xml";
 	private static final ProjectConfigurationPanel SINGLETON = new ProjectConfigurationPanel();
 	private static IErrorHandlingSvc errorHandlingSvc = new ErrorHandlingSvcImpl();
 	private final ProjectConfigurationIO _projectConfigurationIO;
@@ -57,8 +57,8 @@ public final class ProjectConfigurationPanel extends EpptPanel
 		{
 			_projectConfigurationIO = new ProjectConfigurationIO();
 			super.setLayout(new BorderLayout());
-			Container swixmlScenarioConfigurationPanel = renderSwixml(SCENARIO_CONFIGURATION_XML_FILE);
-			super.add(swixmlScenarioConfigurationPanel, BorderLayout.CENTER);
+			Container swixmlProjectConfigurationPanel = renderSwixml(SCENARIO_CONFIGURATION_XML_FILE);
+			super.add(swixmlProjectConfigurationPanel, BorderLayout.CENTER);
 			_nameField = new JTextField();
 			_descriptionField = new JTextField();
 			initComponents();
@@ -97,6 +97,34 @@ public final class ProjectConfigurationPanel extends EpptPanel
 		revalidate();
 	}
 
+	/**
+	 * This method is for unit testing purposes only
+	 *
+	 * @return a new ProjectConfigurationPanel with UI initialized
+	 */
+	static ProjectConfigurationPanel createProjectConfigurationPanel()
+	{
+		return new ProjectConfigurationPanel();
+	}
+
+	private void setSummaryTableEnabled(boolean selected, Container container)
+	{
+		container.setEnabled(selected);
+		for(Component component : container.getComponents())
+		{
+			component.setEnabled(selected);
+			if(component instanceof Container)
+			{
+				setSummaryTableEnabled(selected, (Container) component);
+			}
+		}
+	}
+
+	public static ProjectConfigurationPanel getProjectConfigurationPanel()
+	{
+		return SINGLETON;
+	}
+
 	private void initModels()
 	{
 		Component component = getSwingEngine().find("SelectedList");
@@ -104,32 +132,7 @@ public final class ProjectConfigurationPanel extends EpptPanel
 		{
 			JList<RBListItemBO> lstScenarios = (JList<RBListItemBO>) component;
 			lstScenarios.getSelectionModel().addListSelectionListener(e -> setModified(true));
-			lstScenarios.getModel().addListDataListener(new ListDataListener()
-			{
-				@Override
-				public void intervalAdded(ListDataEvent e)
-				{
-					getRadioButton1().setEnabled(getScenarios().size() > 1);
-					getRadioButton2().setEnabled(getScenarios().size() > 1);
-					setModified(true);
-				}
-
-				@Override
-				public void intervalRemoved(ListDataEvent e)
-				{
-					getRadioButton1().setEnabled(getScenarios().size() > 1);
-					getRadioButton2().setEnabled(getScenarios().size() > 1);
-					setModified(true);
-				}
-
-				@Override
-				public void contentsChanged(ListDataEvent e)
-				{
-					getRadioButton1().setEnabled(getScenarios().size() > 1);
-					getRadioButton2().setEnabled(getScenarios().size() > 1);
-					setModified(true);
-				}
-			});
+			lstScenarios.getModel().addListDataListener(new ProjectConfigurationListDataListener());
 		}
 		// Set up month spinners on result page
 		JSpinner spnSM = (JSpinner) getSwingEngine().find("spnStartMonth");
@@ -155,77 +158,7 @@ public final class ProjectConfigurationPanel extends EpptPanel
 		getScenarioList().setModel(_lmScenNames);
 		getScenarioList().setCellRenderer(new RBListRenderer());
 		getScenarioList().setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-		getScenarioList().addMouseListener(new MouseAdapter()
-		{
-			@Override
-			public void mouseClicked(MouseEvent event)
-			{
-
-				JList list = (JList) event.getSource();
-
-				// Get index of item clicked
-
-				if(list.getModel().getSize() > 0)
-				{
-					int index = list.locationToIndex(event.getPoint());
-
-					// Toggle selected state
-
-					for(int i = 0; i < list.getModel().getSize(); i++)
-					{
-						RBListItemBO item = (RBListItemBO) list.getModel().getElementAt(i);
-						if(i == index)
-						{
-							item.setSelected(true);
-							list.repaint(list.getCellBounds(i, i));
-						}
-						else
-						{
-							if(item.isSelected())
-							{
-								list.repaint(list.getCellBounds(i, i));
-							}
-							item.setSelected(false);
-						}
-					}
-
-					// Repaint cell
-
-					list.repaint(list.getCellBounds(index, index));
-
-					WRIMSGUILinks.updateProjectFiles(list);
-
-				}
-			}
-		});
-	}
-
-	private void setSummaryTableEnabled(boolean selected, Container container)
-	{
-		container.setEnabled(selected);
-		for(Component component : container.getComponents())
-		{
-			component.setEnabled(selected);
-			if(component instanceof Container)
-			{
-				setSummaryTableEnabled(selected, (Container) component);
-			}
-		}
-	}
-
-	public static ProjectConfigurationPanel getProjectConfigurationPanel()
-	{
-		return SINGLETON;
-	}
-
-	/**
-	 * This method is for unit testing purposes only
-	 *
-	 * @return a new ProjectConfigurationPanel with UI initialized
-	 */
-	static ProjectConfigurationPanel createScenarioConfigurationPanel()
-	{
-		return new ProjectConfigurationPanel();
+		getScenarioList().addMouseListener(new ProjectConfigurationMouseAdapter());
 	}
 
 
@@ -426,7 +359,7 @@ public final class ProjectConfigurationPanel extends EpptPanel
 		_projectConfigurationIO.saveConfiguration(selectedPath, projectName, projectDescription);
 		_nameField.setText(projectName);
 		_descriptionField.setText(projectDescription);
-		EpptPreferences.setLastScenarioConfiguration(selectedPath);
+		EpptPreferences.setLastProjectConfiguration(selectedPath);
 	}
 
 	public void loadProjectConfiguration(Path selectedPath) throws IOException
@@ -438,7 +371,7 @@ public final class ProjectConfigurationPanel extends EpptPanel
 				_ignoreModifiedEvents = true;
 				ProjectConfigurationDescriptor projectConfigurationDescriptor = _projectConfigurationIO.loadConfiguration(
 						selectedPath);
-				EpptPreferences.setLastScenarioConfiguration(selectedPath);
+				EpptPreferences.setLastProjectConfiguration(selectedPath);
 				_nameField.setText(projectConfigurationDescriptor.getName());
 				_descriptionField.setText(projectConfigurationDescriptor.getDescription());
 			}
@@ -578,5 +511,77 @@ public final class ProjectConfigurationPanel extends EpptPanel
 			scenarioListChanged();
 		}
 
+	}
+
+	private class ProjectConfigurationMouseAdapter extends MouseAdapter
+	{
+		@Override
+		public void mouseClicked(MouseEvent event)
+		{
+
+			JList list = (JList) event.getSource();
+
+			// Get index of item clicked
+
+			if(list.getModel().getSize() > 0)
+			{
+				int index = list.locationToIndex(event.getPoint());
+
+				// Toggle selected state
+
+				for(int i = 0; i < list.getModel().getSize(); i++)
+				{
+					RBListItemBO item = (RBListItemBO) list.getModel().getElementAt(i);
+					if(i == index)
+					{
+						item.setSelected(true);
+						list.repaint(list.getCellBounds(i, i));
+					}
+					else
+					{
+						if(item.isSelected())
+						{
+							list.repaint(list.getCellBounds(i, i));
+						}
+						item.setSelected(false);
+					}
+				}
+
+				// Repaint cell
+
+				list.repaint(list.getCellBounds(index, index));
+
+				WRIMSGUILinks.updateProjectFiles(list);
+
+			}
+		}
+	}
+
+	private class ProjectConfigurationListDataListener implements ListDataListener
+	{
+		@Override
+		public void intervalAdded(ListDataEvent e)
+		{
+			scenariosChanged();
+		}
+
+		@Override
+		public void intervalRemoved(ListDataEvent e)
+		{
+			scenariosChanged();
+		}
+
+		@Override
+		public void contentsChanged(ListDataEvent e)
+		{
+			scenariosChanged();
+		}
+
+		private void scenariosChanged()
+		{
+			getRadioButton1().setEnabled(getScenarios().size() > 1);
+			getRadioButton2().setEnabled(getScenarios().size() > 1);
+			setModified(true);
+		}
 	}
 }

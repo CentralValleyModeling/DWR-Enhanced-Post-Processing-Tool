@@ -44,7 +44,7 @@ import org.openide.windows.WindowManager;
 				,
 				@ActionReference(path = "Toolbars/EPPT", position = 111)
 		})
-@Messages("CTL_SaveScenarioConfiguration=Save Project Configuration")
+@Messages("CTL_SaveProjectConfiguration=Save Project Configuration")
 public final class SaveProjectConfiguration extends AbstractAction implements Presenter.Toolbar, Presenter.Menu,
 																			  ContextAwareAction
 {
@@ -70,12 +70,12 @@ public final class SaveProjectConfiguration extends AbstractAction implements Pr
 
 	void saveCurrentConfiguration() throws IOException
 	{
-		Path lastScenarioConfiguration = EpptPreferences.getLastProjectConfiguration();
+		Path lastProjectConfiguration = EpptPreferences.getLastProjectConfiguration();
 		ProjectConfigurationPanel projectConfigurationPanel = ProjectConfigurationPanel.getProjectConfigurationPanel();
-		if(lastScenarioConfiguration.toFile().exists())
+		if(lastProjectConfiguration.toFile().exists())
 		{
 
-			projectConfigurationPanel.saveConfigurationToPath(lastScenarioConfiguration,
+			projectConfigurationPanel.saveConfigurationToPath(lastProjectConfiguration,
 					projectConfigurationPanel.getProjectName(), projectConfigurationPanel.getProjectDescription());
 		}
 		else

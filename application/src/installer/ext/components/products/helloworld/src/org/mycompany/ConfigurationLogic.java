@@ -13,6 +13,7 @@ import java.io.InputStream;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import javax.swing.JOptionPane;
 
 import org.mycompany.installer.utils.applications.NetBeansRCPUtils;
 import org.mycompany.wizard.panels.HelloWorldPanel;
@@ -198,7 +199,7 @@ public class ConfigurationLogic extends ProductConfigurationLogic
         }
 
         File javaHome = new File(System.getProperty("java.home"));
-        File target = new File(installLocation, jre);
+        File target = new File(installLocation, "jre");
         try
         {
             FileUtils.copyFile(javaHome, target, true); //FileUtils is one of the NBI core classes, already imported
@@ -314,7 +315,7 @@ public class ConfigurationLogic extends ProductConfigurationLogic
                 LogManager.unindent();
             }
         }
-        File jre = new File(installLocation, jre);
+        File jre = new File(installLocation, "jre");
         if(jre.exists())
         {
             try
@@ -323,6 +324,7 @@ public class ConfigurationLogic extends ProductConfigurationLogic
                 {
                     FileUtils.deleteOnExit(file);
                 }
+                FileUtils.deleteOnExit(jre);
                 FileUtils.deleteOnExit(installLocation);
             }
             catch(IOException e)
