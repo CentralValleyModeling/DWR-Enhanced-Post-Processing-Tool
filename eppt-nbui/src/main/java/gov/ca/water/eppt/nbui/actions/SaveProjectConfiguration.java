@@ -37,11 +37,11 @@ import org.openide.windows.WindowManager;
 )
 @ActionRegistration(
 		iconBase = "gov/ca/water/eppt/nbui/actions/HecDssVue.png",
-		displayName = "Save Project Configuration"
+		displayName = "Save"
 )
 @ActionReferences(
 		{
-				@ActionReference(path = "Menu/File", position = 0)
+				@ActionReference(path = "Menu/File", position = 100)
 				,
 				@ActionReference(path = "Toolbars/EPPT", position = 111)
 		})
@@ -59,7 +59,7 @@ public final class SaveProjectConfiguration extends AbstractAction implements Pr
 
 	private SaveProjectConfiguration(Lookup context)
 	{
-		putValue(Action.NAME, "Save Project Configuration");
+		putValue(Action.NAME, "Save");
 		_lkpInfo = context.lookupResult(ProjectConfigurationSavable.class);
 	}
 
@@ -108,7 +108,7 @@ public final class SaveProjectConfiguration extends AbstractAction implements Pr
 	public JMenuItem getMenuPresenter()
 	{
 		ImageIcon imageIcon = getSaveIcon("save.png");
-		JMenuItem jMenuItem = new JMenuItem("Save Project Configuration", imageIcon);
+		JMenuItem jMenuItem = new JMenuItem("Save", imageIcon);
 		jMenuItem.addActionListener(e -> performSave());
 		return jMenuItem;
 	}

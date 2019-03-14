@@ -38,16 +38,16 @@ import org.openide.windows.WindowManager;
 		id = "gov.ca.water.eppt.nbui.actions.LoadProjectConfiguration"
 )
 @ActionRegistration(
-		iconBase = "gov/ca/water/eppt/nbui/actions/load.png",
-		displayName = "Load Project Configuration"
+		iconBase = "gov/ca/water/eppt/nbui/actions/open.png",
+		displayName = "Load..."
 )
 @ActionReferences(
 		{
-				@ActionReference(path = "Menu/File", position = 11, separatorAfter = 50)
+				@ActionReference(path = "Menu/File", position = 300, separatorAfter = 555)
 				,
 				@ActionReference(path = "Toolbars/EPPT", position = 333)
 		})
-@Messages("CTL_LoadScenarioConfiguration=Load Project Configuration")
+@Messages("CTL_LoadProjectConfiguration=Load...")
 public final class LoadProjectConfiguration extends AbstractAction
 		implements Presenter.Toolbar, Presenter.Menu, ContextAwareAction
 {
@@ -63,8 +63,8 @@ public final class LoadProjectConfiguration extends AbstractAction
 	private LoadProjectConfiguration(Lookup context)
 	{
 		putValue(Action.NAME, "Load Project Configuration");
-		putValue(Action.SMALL_ICON, "gov/ca/water/eppt/nbui/actions/load.png");
-		putValue(Action.LARGE_ICON_KEY, "gov/ca/water/eppt/nbui/actions/load24.png");
+		putValue(Action.SMALL_ICON, "gov/ca/water/eppt/nbui/actions/open.png");
+		putValue(Action.LARGE_ICON_KEY, "gov/ca/water/eppt/nbui/actions/open24.png");
 		_lkpInfo = context.lookupResult(ProjectConfigurationSavable.class);
 	}
 
@@ -102,7 +102,7 @@ public final class LoadProjectConfiguration extends AbstractAction
 	@Override
 	public Component getToolbarPresenter()
 	{
-		ImageIcon imageIcon = getSaveIcon("load24.png");
+		ImageIcon imageIcon = getSaveIcon("open24.png");
 		JButton button = new JButton(imageIcon);
 		button.setToolTipText("Load Project Configuration");
 		button.addActionListener(this);
@@ -112,7 +112,7 @@ public final class LoadProjectConfiguration extends AbstractAction
 	@Override
 	public JMenuItem getMenuPresenter()
 	{
-		ImageIcon imageIcon = getSaveIcon("load.png");
+		ImageIcon imageIcon = getSaveIcon("open.png");
 		JMenuItem jMenuItem = new JMenuItem("Load Project Configuration", imageIcon);
 		jMenuItem.addActionListener(this);
 		return jMenuItem;

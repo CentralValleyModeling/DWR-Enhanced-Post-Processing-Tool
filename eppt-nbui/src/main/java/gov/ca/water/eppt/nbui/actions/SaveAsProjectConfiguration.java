@@ -38,12 +38,12 @@ import org.openide.windows.WindowManager;
 		id = "gov.ca.water.eppt.nbui.actions.SaveAsProjectConfiguration"
 )
 @ActionRegistration(
-		iconBase = "gov/ca/water/eppt/nbui/actions/save.png",
+		iconBase = "gov/ca/water/eppt/nbui/actions/copy.gif",
 		displayName = "Save As..."
 )
 @ActionReferences(
 		{
-				@ActionReference(path = "Menu/File", position = 2)
+				@ActionReference(path = "Menu/File", position = 200)
 		})
 @Messages("CTL_SaveAsScenarioConfiguration=Save Project Configuration As...")
 public final class SaveAsProjectConfiguration implements ActionListener
