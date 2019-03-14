@@ -117,7 +117,7 @@ public final class SaveProjectConfiguration extends AbstractAction implements Pr
 	{
 		ImageIcon imageIcon = new ImageIcon("");
 		URL saveImg = Thread.currentThread().getContextClassLoader().getResource(
-				"/gov/ca/water/eppt/nbui/actions/" + iconName);
+				"gov/ca/water/eppt/nbui/actions/" + iconName);
 		if(saveImg != null)
 		{
 			imageIcon = new ImageIcon(saveImg);

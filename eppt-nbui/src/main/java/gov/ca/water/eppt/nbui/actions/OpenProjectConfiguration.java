@@ -35,11 +35,11 @@ import org.openide.windows.WindowManager;
 
 @ActionID(
 		category = "EPPT",
-		id = "gov.ca.water.eppt.nbui.actions.LoadProjectConfiguration"
+		id = "gov.ca.water.eppt.nbui.actions.OpenProjectConfiguration"
 )
 @ActionRegistration(
 		iconBase = "gov/ca/water/eppt/nbui/actions/open.png",
-		displayName = "Load..."
+		displayName = "Open..."
 )
 @ActionReferences(
 		{
@@ -47,22 +47,22 @@ import org.openide.windows.WindowManager;
 				,
 				@ActionReference(path = "Toolbars/EPPT", position = 333, separatorAfter = 444)
 		})
-@Messages("CTL_LoadProjectConfiguration=Load...")
-public final class LoadProjectConfiguration extends AbstractAction
+@Messages("CTL_LoadProjectConfiguration=Open...")
+public final class OpenProjectConfiguration extends AbstractAction
 		implements Presenter.Toolbar, Presenter.Menu, ContextAwareAction
 {
 
-	private static final Logger LOGGER = Logger.getLogger(LoadProjectConfiguration.class.getName());
+	private static final Logger LOGGER = Logger.getLogger(OpenProjectConfiguration.class.getName());
 	private Lookup.Result<ProjectConfigurationSavable> _lkpInfo;
 
-	public LoadProjectConfiguration()
+	public OpenProjectConfiguration()
 	{
 		this(Utilities.actionsGlobalContext());
 	}
 
-	private LoadProjectConfiguration(Lookup context)
+	private OpenProjectConfiguration(Lookup context)
 	{
-		putValue(Action.NAME, "Load");
+		putValue(Action.NAME, "Open...");
 		putValue(Action.SMALL_ICON, "gov/ca/water/eppt/nbui/actions/open.png");
 		putValue(Action.LARGE_ICON_KEY, "gov/ca/water/eppt/nbui/actions/open24.png");
 		_lkpInfo = context.lookupResult(ProjectConfigurationSavable.class);
@@ -104,7 +104,7 @@ public final class LoadProjectConfiguration extends AbstractAction
 	{
 		ImageIcon imageIcon = getSaveIcon("open24.png");
 		JButton button = new JButton(imageIcon);
-		button.setToolTipText("Load Project Configuration");
+		button.setToolTipText("Open Project Configuration");
 		button.addActionListener(this);
 		return button;
 	}
@@ -113,7 +113,7 @@ public final class LoadProjectConfiguration extends AbstractAction
 	public JMenuItem getMenuPresenter()
 	{
 		ImageIcon imageIcon = getSaveIcon("open.png");
-		JMenuItem jMenuItem = new JMenuItem("Load", imageIcon);
+		JMenuItem jMenuItem = new JMenuItem("Open...", imageIcon);
 		jMenuItem.addActionListener(this);
 		return jMenuItem;
 	}
@@ -122,7 +122,7 @@ public final class LoadProjectConfiguration extends AbstractAction
 	{
 		ImageIcon imageIcon = new ImageIcon("");
 		URL saveImg = Thread.currentThread().getContextClassLoader().getResource(
-				"/gov/ca/water/eppt/nbui/actions/" + iconName);
+				"gov/ca/water/eppt/nbui/actions/" + iconName);
 		if(saveImg != null)
 		{
 			imageIcon = new ImageIcon(saveImg);
@@ -133,6 +133,6 @@ public final class LoadProjectConfiguration extends AbstractAction
 	@Override
 	public Action createContextAwareInstance(Lookup context)
 	{
-		return new LoadProjectConfiguration(context);
+		return new OpenProjectConfiguration(context);
 	}
 }
