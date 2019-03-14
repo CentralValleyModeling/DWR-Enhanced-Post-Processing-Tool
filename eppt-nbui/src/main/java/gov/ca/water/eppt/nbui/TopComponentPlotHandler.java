@@ -10,6 +10,7 @@ package gov.ca.water.eppt.nbui;
 import java.util.List;
 import javax.swing.*;
 
+import gov.ca.water.calgui.constant.EpptPreferences;
 import gov.ca.water.calgui.presentation.DisplayHelper;
 import org.openide.windows.Mode;
 import org.openide.windows.WindowManager;
@@ -25,14 +26,15 @@ public class TopComponentPlotHandler implements DisplayHelper.PlotHandler
 	@Override
 	public void openPlots(List<JTabbedPane> tabbedPanes)
 	{
-
-		Mode output = WindowManager.getDefault().findMode("output");
+		String resultsOutputLocation = EpptPreferences.getResultsOutputLocation();
+		Mode output = WindowManager.getDefault().findMode(resultsOutputLocation);
 		for(JTabbedPane tabbedpane : tabbedPanes)
 		{
 			PlotTopComponent topComponent = new PlotTopComponent(tabbedpane);
 			output.dockInto(topComponent);
 			topComponent.open();
 			topComponent.requestActive();
+			WindowManager.getDefault().setTopComponentFloating(topComponent, true);
 		}
 	}
 }

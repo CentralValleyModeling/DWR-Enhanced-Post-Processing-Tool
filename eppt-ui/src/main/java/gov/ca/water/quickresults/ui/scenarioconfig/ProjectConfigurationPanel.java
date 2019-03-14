@@ -17,7 +17,6 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.*;
-import javax.swing.border.TitledBorder;
 import javax.swing.event.ListDataEvent;
 import javax.swing.event.ListDataListener;
 
@@ -46,6 +45,7 @@ public final class ProjectConfigurationPanel extends EpptPanel
 	private final ProjectConfigurationIO _projectConfigurationIO;
 	private DefaultListModel<RBListItemBO> _lmScenNames;
 	private String _projectName = "";
+	private boolean _ignoreModifiedEvents = false;
 
 	private ProjectConfigurationPanel()
 	{
@@ -340,6 +340,15 @@ public final class ProjectConfigurationPanel extends EpptPanel
 		}
 	}
 
+	@Override
+	public void setModified(boolean b)
+	{
+		if(!_ignoreModifiedEvents)
+		{
+			super.setModified(b);
+		}
+	}
+
 	private void addSummaryTables(StringBuilder cST, Component[] components)
 	{
 		for(final Component component : components)
@@ -389,11 +398,17 @@ public final class ProjectConfigurationPanel extends EpptPanel
 	{
 		if(selectedPath.toFile().exists())
 		{
-			_projectConfigurationIO.loadConfiguration(selectedPath);
-			EpptPreferences.setLastScenarioConfiguration(selectedPath);
-			_projectName = selectedPath.getFileName().toString();
-			JPanel panel = (JPanel) getSwingEngine().find("ss");
-			panel.setBorder(new TitledBorder("Scenarios - " + selectedPath.getFileName()));
+			try
+			{
+				_ignoreModifiedEvents = true;
+				_projectConfigurationIO.loadConfiguration(selectedPath);
+				EpptPreferences.setLastScenarioConfiguration(selectedPath);
+				_projectName = selectedPath.getFileName().toString();
+			}
+			finally
+			{
+				_ignoreModifiedEvents = false;
+			}
 		}
 	}
 

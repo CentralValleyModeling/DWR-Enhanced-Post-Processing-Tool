@@ -35,7 +35,7 @@ public class ProjectConfigurationListener implements ActionListener
 
 		DefaultListModel<RBListItemBO> lstScenarios = _projectConfigurationPanel.getLmScenNames();
 		_addScnearioFileDialogBO = new FileDialogBO(lstScenarios, true,
-				(JFrame) SwingUtilities.windowForComponent(_projectConfigurationPanel));
+				projectConfigurationPanel);
 	}
 
 	@Override

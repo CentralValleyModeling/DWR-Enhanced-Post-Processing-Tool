@@ -38,7 +38,7 @@ public class FileDialogBO implements ActionListener
 	private JTextField _theTextField;
 	private boolean _theMultipleFlag = false;
 	private String _theFileExt = null;
-	private final JFrame _mainFrame;
+	private Component _parentComponent;
 	private IErrorHandlingSvc _errorHandlingSvc = new ErrorHandlingSvcImpl();
 
 
@@ -48,9 +48,9 @@ public class FileDialogBO implements ActionListener
 	 *
 	 * @param aTextField
 	 */
-	public FileDialogBO(JTextField aTextField, JFrame mainFrame)
+	public FileDialogBO(JTextField aTextField, Component mainFrame)
 	{
-		_mainFrame = mainFrame;
+		_parentComponent = mainFrame;
 		_lmScenNames = null;
 		_theFileExt = "DSS";
 		_theTextField = aTextField;
@@ -64,9 +64,9 @@ public class FileDialogBO implements ActionListener
 	 * @param aTextField
 	 * @param aFileExt
 	 */
-	public FileDialogBO(JTextField aTextField, String aFileExt, JFrame mainFrame)
+	public FileDialogBO(JTextField aTextField, String aFileExt, Component mainFrame)
 	{
-		_mainFrame = mainFrame;
+		_parentComponent = mainFrame;
 		_lmScenNames = null;
 		_theTextField = aTextField;
 		_theFileExt = aFileExt;
@@ -79,9 +79,9 @@ public class FileDialogBO implements ActionListener
 	 * is not empty;
 	 *
 	 */
-	public FileDialogBO(DefaultListModel<RBListItemBO> lmScenNames, boolean isMultiple, JFrame mainFrame)
+	public FileDialogBO(DefaultListModel<RBListItemBO> lmScenNames, boolean isMultiple, Component mainFrame)
 	{
-		_mainFrame = mainFrame;
+		_parentComponent = mainFrame;
 		_theFileExt = "DSS";
 		_theTextField = null;
 		_lmScenNames = lmScenNames;
@@ -138,10 +138,12 @@ public class FileDialogBO implements ActionListener
 	{
 		try
 		{
+			setup();
+			Object source = e.getSource();
 			Object obj = null;
 			if(e != null)
 			{
-				obj = e.getSource();
+				obj = source;
 			}
 			if((obj != null) && (((Component) obj).getName() != null)
 					&& "btnDelScenario".equals(((Component) obj).getName()))
@@ -173,7 +175,7 @@ public class FileDialogBO implements ActionListener
 		{
 			UIManager.put("FileChooser.openDialogTitleText", "Select Scenarios");
 			_fc.setMultiSelectionEnabled(true);
-			_dialogRC = _fc.showDialog(_mainFrame, "Select");
+			_dialogRC = _fc.showDialog(_parentComponent, "Select");
 			if(_lmScenNames != null && _dialogRC != 1)
 			{
 				for(File file : _fc.getSelectedFiles())
@@ -187,12 +189,12 @@ public class FileDialogBO implements ActionListener
 			if(_theFileExt == null || "inp".equalsIgnoreCase(_theFileExt))
 			{
 				_fc.setFileSelectionMode(JFileChooser.FILES_ONLY);
-				rc = _fc.showOpenDialog(_mainFrame);
+				rc = _fc.showOpenDialog(_parentComponent);
 			}
 			else
 			{
 				_fc.setFileSelectionMode(JFileChooser.FILES_ONLY);
-				rc = _fc.showDialog(_mainFrame,
+				rc = _fc.showDialog(_parentComponent,
 						"DSS".equals(_theFileExt) ? "Open" : "Save");
 			}
 			_dialogRC = rc;
