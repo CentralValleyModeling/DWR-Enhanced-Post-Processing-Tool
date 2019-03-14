@@ -23,7 +23,6 @@ import org.openide.awt.ActionID;
 import org.openide.awt.ActionReference;
 import org.openide.awt.ActionReferences;
 import org.openide.awt.ActionRegistration;
-import org.openide.awt.DropDownButtonFactory;
 import org.openide.util.ContextAwareAction;
 import org.openide.util.Lookup;
 import org.openide.util.NbBundle.Messages;
@@ -72,17 +71,19 @@ public final class SaveProjectConfiguration extends AbstractAction implements Pr
 	void saveCurrentConfiguration() throws IOException
 	{
 		Path lastScenarioConfiguration = EpptPreferences.getLastProjectConfiguration();
+		ProjectConfigurationPanel projectConfigurationPanel = ProjectConfigurationPanel.getProjectConfigurationPanel();
 		if(lastScenarioConfiguration.toFile().exists())
 		{
-			ProjectConfigurationPanel.getProjectConfigurationPanel()
-									 .saveConfigurationToPath(lastScenarioConfiguration);
+
+			projectConfigurationPanel.saveConfigurationToPath(lastScenarioConfiguration,
+					projectConfigurationPanel.getProjectName(), projectConfigurationPanel.getProjectDescription());
 		}
 		else
 		{
-			new SaveAsProjectConfiguration().saveAs();
+			new NewProjectConfiguration().saveAs();
 		}
 		WindowManager.getDefault().getMainWindow().setTitle(
-				Installer.MAIN_FRAME_NAME + " - " + ProjectConfigurationPanel.getProjectConfigurationPanel().getProjectName());
+				Installer.MAIN_FRAME_NAME + " - " + projectConfigurationPanel.getProjectName());
 		Collection<? extends ProjectConfigurationSavable> scenarioConfigurationSavables = _lkpInfo.allInstances();
 		for(ProjectConfigurationSavable savable : scenarioConfigurationSavables)
 		{
@@ -94,12 +95,8 @@ public final class SaveProjectConfiguration extends AbstractAction implements Pr
 	@Override
 	public Component getToolbarPresenter()
 	{
-		JPopupMenu menu = new JPopupMenu();
-		JMenuItem jMenuItem = new JMenuItem("Save As...");
-		jMenuItem.addActionListener(new SaveAsProjectConfiguration());
-		menu.add(jMenuItem);
 		ImageIcon imageIcon = getSaveIcon("save24.png");
-		JToggleButton dropDownToggleButton = DropDownButtonFactory.createDropDownToggleButton(imageIcon, menu);
+		JButton dropDownToggleButton = new JButton(imageIcon);
 		dropDownToggleButton.addActionListener(e -> performSave());
 		return dropDownToggleButton;
 	}

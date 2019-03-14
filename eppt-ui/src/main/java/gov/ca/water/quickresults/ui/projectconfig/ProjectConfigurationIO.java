@@ -51,15 +51,14 @@ class ProjectConfigurationIO
 	private static final String MONTH_OPTIONS_KEY = "month_options";
 	private static final String ID_KEY = "id";
 
-	void saveConfiguration(Path selectedPath) throws IOException
+	void saveConfiguration(Path selectedPath, String name, String description) throws IOException
 	{
 		try(BufferedWriter bufferedWriter = Files.newBufferedWriter(selectedPath))
 		{
-			ProjectConfigurationPanel projectConfigurationPanel = ProjectConfigurationPanel.getProjectConfigurationPanel();
 			JSONObject jsonObject = new JSONObject();
 			jsonObject.put(VERSION_KEY, VERSION);
-			jsonObject.put(NAME_KEY, projectConfigurationPanel.getProjectName());
-			jsonObject.put(DESCRIPTION_KEY, projectConfigurationPanel.getProjectDescription());
+			jsonObject.put(NAME_KEY, name);
+			jsonObject.put(DESCRIPTION_KEY, description);
 			jsonObject.put(CREATION_DATE_KEY, ZonedDateTime.now());
 			jsonObject.put(SCENARIO_FILES_KEY, buildScenarioFilesArray(selectedPath));
 			jsonObject.put(DISPLAY_OPTIONS_KEY, writeSelectedProperties());
@@ -68,7 +67,7 @@ class ProjectConfigurationIO
 		}
 	}
 
-	void loadConfiguration(Path selectedPath) throws IOException
+	ProjectConfigurationDescriptor loadConfiguration(Path selectedPath) throws IOException
 	{
 		String collect = Files.readAllLines(selectedPath).stream().collect(Collectors.joining("\n"));
 		JSONObject jsonObject = new JSONObject(collect);
@@ -78,6 +77,9 @@ class ProjectConfigurationIO
 		readMonthProperties(monthProperties);
 		JSONArray scenarioPaths = jsonObject.getJSONArray(SCENARIO_FILES_KEY);
 		readScenarioDssPaths(scenarioPaths, selectedPath);
+		String name = jsonObject.getString(NAME_KEY);
+		String description = jsonObject.getString(DESCRIPTION_KEY);
+		return new ProjectConfigurationDescriptor(name, description);
 	}
 
 	private JSONArray buildScenarioFilesArray(Path selectedPath)

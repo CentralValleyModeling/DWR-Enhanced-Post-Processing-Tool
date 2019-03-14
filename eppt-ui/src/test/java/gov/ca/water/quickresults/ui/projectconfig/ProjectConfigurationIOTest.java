@@ -40,7 +40,7 @@ public class ProjectConfigurationIOTest
 		rbListItemBO.setSelected(true);
 		projectConfigurationPanel.setScenarios(Collections.singletonList(rbListItemBO));
 		ProjectConfigurationIO projectConfigurationIO = new ProjectConfigurationIO();
-		projectConfigurationIO.saveConfiguration(path);
+		projectConfigurationIO.saveConfiguration(path, "Test2", "blah");
 		projectConfigurationPanel.setScenarios(Collections.emptyList());
 		assertTrue(projectConfigurationPanel.getScenarios().isEmpty());
 		projectConfigurationPanel.loadProjectConfiguration(path);
@@ -59,7 +59,7 @@ public class ProjectConfigurationIOTest
 		ProjectConfigurationIO projectConfigurationIO = new ProjectConfigurationIO();
 		JCheckBox repchkMonJan = (JCheckBox) projectConfigurationPanel.getSwingEngine().find("RepchkMonJan");
 		repchkMonJan.setSelected(true);
-		projectConfigurationIO.saveConfiguration(path);
+		projectConfigurationIO.saveConfiguration(path, "Test2", "blah");
 		repchkMonJan.setSelected(false);
 		projectConfigurationPanel.loadProjectConfiguration(path);
 		assertTrue(repchkMonJan.isSelected());
@@ -73,7 +73,7 @@ public class ProjectConfigurationIOTest
 		ProjectConfigurationIO projectConfigurationIO = new ProjectConfigurationIO();
 		Month month = new Month(4, 2000);
 		projectConfigurationPanel.setEndMonth(month);
-		projectConfigurationIO.saveConfiguration(path);
+		projectConfigurationIO.saveConfiguration(path, "Test2", "blah");
 		projectConfigurationPanel.setEndMonth(new Month(6, 1955));
 		projectConfigurationPanel.loadProjectConfiguration(path);
 		Month endMonth = projectConfigurationPanel.getEndMonth();

@@ -99,7 +99,7 @@ public final class OpenProjectConfiguration extends AbstractAction
 				savable.removeFromLookup();
 			}
 		}
-		catch(IOException ex)
+		catch(IOException | RuntimeException ex)
 		{
 			LOGGER.log(Level.SEVERE, "Error saving Project Configuration to: " + selectedPath, ex);
 		}

@@ -10,6 +10,9 @@ package gov.ca.water.quickresults.ui.projectconfig;
 import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Container;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.IOException;
@@ -43,10 +46,10 @@ public final class ProjectConfigurationPanel extends EpptPanel
 	private static final ProjectConfigurationPanel SINGLETON = new ProjectConfigurationPanel();
 	private static IErrorHandlingSvc errorHandlingSvc = new ErrorHandlingSvcImpl();
 	private final ProjectConfigurationIO _projectConfigurationIO;
+	private final JTextField _nameField;
+	private final JTextField _descriptionField;
 	private DefaultListModel<RBListItemBO> _lmScenNames;
-	private String _projectName = "";
 	private boolean _ignoreModifiedEvents = false;
-	private String _description = "";
 
 	private ProjectConfigurationPanel()
 	{
@@ -55,7 +58,10 @@ public final class ProjectConfigurationPanel extends EpptPanel
 			_projectConfigurationIO = new ProjectConfigurationIO();
 			super.setLayout(new BorderLayout());
 			Container swixmlScenarioConfigurationPanel = renderSwixml(SCENARIO_CONFIGURATION_XML_FILE);
-			super.add(swixmlScenarioConfigurationPanel);
+			super.add(swixmlScenarioConfigurationPanel, BorderLayout.CENTER);
+			_nameField = new JTextField();
+			_descriptionField = new JTextField();
+			initComponents();
 			initModels();
 		}
 		catch(Exception e)
@@ -63,6 +69,32 @@ public final class ProjectConfigurationPanel extends EpptPanel
 			LOGGER.error("Error setting up quick results swing xml: " + SCENARIO_CONFIGURATION_XML_FILE, e);
 			throw new IllegalStateException(e);
 		}
+	}
+
+	private void initComponents()
+	{
+		JPanel header = new JPanel();
+		header.setLayout(new GridBagLayout());
+		_nameField.setEnabled(false);
+		_descriptionField.setEnabled(false);
+		add(header, BorderLayout.NORTH);
+		header.add(new JLabel("Project Name:"), new GridBagConstraints(1,
+				1, 1, 1, .02, .5,
+				GridBagConstraints.WEST, GridBagConstraints.BOTH,
+				new Insets(1, 5, 1, 1), 5, 5));
+		header.add(_nameField, new GridBagConstraints(2,
+				1, 1, 1, 1.0, .5,
+				GridBagConstraints.EAST, GridBagConstraints.HORIZONTAL,
+				new Insets(1, 1, 1, 5), 5, 5));
+		header.add(new JLabel("Description:"), new GridBagConstraints(1,
+				2, 1, 1, .02, .5,
+				GridBagConstraints.WEST, GridBagConstraints.BOTH,
+				new Insets(1, 5, 1, 1), 5, 5));
+		header.add(_descriptionField, new GridBagConstraints(2,
+				2, 1, 1, 1.0, .5,
+				GridBagConstraints.EAST, GridBagConstraints.HORIZONTAL,
+				new Insets(1, 1, 1, 5), 5, 5));
+		revalidate();
 	}
 
 	private void initModels()
@@ -388,10 +420,12 @@ public final class ProjectConfigurationPanel extends EpptPanel
 		return new Month(month, year);
 	}
 
-	public void saveConfigurationToPath(Path selectedPath) throws IOException
+	public void saveConfigurationToPath(Path selectedPath, String projectName, String projectDescription)
+			throws IOException
 	{
-		_projectConfigurationIO.saveConfiguration(selectedPath);
-		_projectName = selectedPath.getFileName().toString();
+		_projectConfigurationIO.saveConfiguration(selectedPath, projectName, projectDescription);
+		_nameField.setText(projectName);
+		_descriptionField.setText(projectDescription);
 		EpptPreferences.setLastScenarioConfiguration(selectedPath);
 	}
 
@@ -402,9 +436,11 @@ public final class ProjectConfigurationPanel extends EpptPanel
 			try
 			{
 				_ignoreModifiedEvents = true;
-				_projectConfigurationIO.loadConfiguration(selectedPath);
+				ProjectConfigurationDescriptor projectConfigurationDescriptor = _projectConfigurationIO.loadConfiguration(
+						selectedPath);
 				EpptPreferences.setLastScenarioConfiguration(selectedPath);
-				_projectName = selectedPath.getFileName().toString();
+				_nameField.setText(projectConfigurationDescriptor.getName());
+				_descriptionField.setText(projectConfigurationDescriptor.getDescription());
 			}
 			finally
 			{
@@ -486,12 +522,12 @@ public final class ProjectConfigurationPanel extends EpptPanel
 
 	public String getProjectName()
 	{
-		return _projectName;
+		return _nameField.getText();
 	}
 
-	String getProjectDescription()
+	public String getProjectDescription()
 	{
-		return _description;
+		return _descriptionField.getText();
 	}
 
 	/**
