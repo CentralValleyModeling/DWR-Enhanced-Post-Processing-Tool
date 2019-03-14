@@ -21,11 +21,12 @@ import gov.ca.water.calgui.bo.SimpleFileFilter;
 import gov.ca.water.calgui.constant.Constant;
 import gov.ca.water.calgui.constant.EpptPreferences;
 import gov.ca.water.eppt.nbui.Installer;
-import gov.ca.water.quickresults.ui.scenarioconfig.ProjectConfigurationPanel;
+import gov.ca.water.quickresults.ui.projectconfig.ProjectConfigurationPanel;
 import org.openide.awt.ActionID;
 import org.openide.awt.ActionReference;
 import org.openide.awt.ActionReferences;
 import org.openide.awt.ActionRegistration;
+import org.openide.awt.DropDownButtonFactory;
 import org.openide.util.ContextAwareAction;
 import org.openide.util.Lookup;
 import org.openide.util.NbBundle.Messages;
@@ -81,21 +82,26 @@ public final class OpenProjectConfiguration extends AbstractAction
 		if(selectedFile != null && selectedFile.exists())
 		{
 			Path selectedPath = selectedFile.toPath();
-			try
+			loadFromPath(selectedPath);
+		}
+	}
+
+	private void loadFromPath(Path selectedPath)
+	{
+		try
+		{
+			ProjectConfigurationPanel.getProjectConfigurationPanel().loadProjectConfiguration(selectedPath);
+			WindowManager.getDefault().getMainWindow().setTitle(
+					Installer.MAIN_FRAME_NAME + " - " + ProjectConfigurationPanel.getProjectConfigurationPanel().getProjectName());
+			Collection<? extends ProjectConfigurationSavable> scenarioConfigurationSavables = _lkpInfo.allInstances();
+			for(ProjectConfigurationSavable savable : scenarioConfigurationSavables)
 			{
-				ProjectConfigurationPanel.getProjectConfigurationPanel().loadProjectConfiguration(selectedPath);
-				WindowManager.getDefault().getMainWindow().setTitle(
-						Installer.MAIN_FRAME_NAME + " - " + ProjectConfigurationPanel.getProjectConfigurationPanel().getProjectName());
-				Collection<? extends ProjectConfigurationSavable> scenarioConfigurationSavables = _lkpInfo.allInstances();
-				for(ProjectConfigurationSavable savable : scenarioConfigurationSavables)
-				{
-					savable.removeFromLookup();
-				}
+				savable.removeFromLookup();
 			}
-			catch(IOException ex)
-			{
-				LOGGER.log(Level.SEVERE, "Error saving Project Configuration to: " + selectedPath, ex);
-			}
+		}
+		catch(IOException ex)
+		{
+			LOGGER.log(Level.SEVERE, "Error saving Project Configuration to: " + selectedPath, ex);
 		}
 	}
 
@@ -103,10 +109,16 @@ public final class OpenProjectConfiguration extends AbstractAction
 	public Component getToolbarPresenter()
 	{
 		ImageIcon imageIcon = getSaveIcon("open24.png");
-		JButton button = new JButton(imageIcon);
+		JPopupMenu menu = new JPopupMenu();
+		createMenuItems(menu);
+		JToggleButton button = DropDownButtonFactory.createDropDownToggleButton(imageIcon, menu);
 		button.setToolTipText("Open Project Configuration");
 		button.addActionListener(this);
 		return button;
+	}
+
+	private void createMenuItems(JPopupMenu menu)
+	{
 	}
 
 	@Override

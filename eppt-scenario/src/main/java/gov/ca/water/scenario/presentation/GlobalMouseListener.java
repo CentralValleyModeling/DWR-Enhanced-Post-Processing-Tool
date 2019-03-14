@@ -24,7 +24,7 @@ import gov.ca.water.calgui.tech_service.IDialogSvc;
 import gov.ca.water.calgui.tech_service.IErrorHandlingSvc;
 import gov.ca.water.calgui.tech_service.impl.DialogSvcImpl;
 import gov.ca.water.calgui.tech_service.impl.ErrorHandlingSvcImpl;
-import gov.ca.water.quickresults.ui.scenarioconfig.ProjectConfigurationPanel;
+import gov.ca.water.quickresults.ui.projectconfig.ProjectConfigurationPanel;
 import org.apache.log4j.Logger;
 import org.jfree.data.time.Month;
 import org.swixml.SwingEngine;

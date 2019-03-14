@@ -1,0 +1,187 @@
+{
+  "month_options": [
+    {
+      "Start_Month": "10"
+    },
+    {
+      "Start_Year": "1921"
+    },
+    {
+      "End_Month": "9"
+    },
+    {
+      "End_Year": "2003"
+    }
+  ],
+  "scenario_files": [],
+  "name": "",
+  "description": "",
+  "creation_date": "2019-03-14T07:53:47.922-07:00[America/Los_Angeles]",
+  "version": "1.0",
+  "display_options": [
+    {
+      "id": "rdbp000",
+      "selected": true
+    },
+    {
+      "id": "rdbp001",
+      "selected": false
+    },
+    {
+      "id": "rdbp002",
+      "selected": false
+    },
+    {
+      "id": "rdbCFS",
+      "selected": false
+    },
+    {
+      "id": "rdbTAF",
+      "selected": true
+    },
+    {
+      "id": "rdbEnergy",
+      "selected": true
+    },
+    {
+      "id": "rdbCap",
+      "selected": false
+    },
+    {
+      "id": "rdbCapp",
+      "selected": false
+    },
+    {
+      "id": "rdbCap0",
+      "selected": false
+    },
+    {
+      "id": "RepckbTimeSeriesPlot",
+      "selected": true
+    },
+    {
+      "id": "RepckbBAWPlot",
+      "selected": false
+    },
+    {
+      "id": "RepchkMonOct",
+      "selected": false
+    },
+    {
+      "id": "RepchkMonNov",
+      "selected": false
+    },
+    {
+      "id": "RepchkMonDec",
+      "selected": false
+    },
+    {
+      "id": "RepchkMonJan",
+      "selected": false
+    },
+    {
+      "id": "RepchkMonFeb",
+      "selected": false
+    },
+    {
+      "id": "RepchkMonMar",
+      "selected": false
+    },
+    {
+      "id": "RepchkMonApr",
+      "selected": false
+    },
+    {
+      "id": "RepchkMonMay",
+      "selected": false
+    },
+    {
+      "id": "RepchkMonJun",
+      "selected": false
+    },
+    {
+      "id": "RepchkMonJul",
+      "selected": false
+    },
+    {
+      "id": "RepchkMonAug",
+      "selected": false
+    },
+    {
+      "id": "RepchkMonSep",
+      "selected": false
+    },
+    {
+      "id": "RepchkMonALL",
+      "selected": false
+    },
+    {
+      "id": "RepchkMonAnnual",
+      "selected": false
+    },
+    {
+      "id": "RepckbMonthlyTable",
+      "selected": false
+    },
+    {
+      "id": "RepckbSummaryTable",
+      "selected": true
+    },
+    {
+      "id": "rdbStat1",
+      "selected": true
+    },
+    {
+      "id": "rdbStat2",
+      "selected": false
+    },
+    {
+      "id": "rdbStat3",
+      "selected": false
+    },
+    {
+      "id": "rdbStat4",
+      "selected": false
+    },
+    {
+      "id": "rdbStat5",
+      "selected": false
+    },
+    {
+      "id": "rdbWYType1",
+      "selected": false
+    },
+    {
+      "id": "rdbWYType2",
+      "selected": false
+    },
+    {
+      "id": "rdbWYType3",
+      "selected": false
+    },
+    {
+      "id": "rdbWYType4",
+      "selected": false
+    },
+    {
+      "id": "rdbPeriod1",
+      "selected": true
+    },
+    {
+      "id": "rdbPeriod2",
+      "selected": false
+    },
+    {
+      "id": "rdbPeriod3",
+      "selected": false
+    },
+    {
+      "id": "rdbPeriod4",
+      "selected": false
+    },
+    {
+      "id": "rdbPeriod5",
+      "selected": false
+    }
+  ]
+}

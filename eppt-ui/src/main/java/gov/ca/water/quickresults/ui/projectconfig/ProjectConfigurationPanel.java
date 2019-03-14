@@ -5,7 +5,7 @@
  * Source may not be released without written approval from DWR
  */
 
-package gov.ca.water.quickresults.ui.scenarioconfig;
+package gov.ca.water.quickresults.ui.projectconfig;
 
 import java.awt.BorderLayout;
 import java.awt.Component;
@@ -46,6 +46,7 @@ public final class ProjectConfigurationPanel extends EpptPanel
 	private DefaultListModel<RBListItemBO> _lmScenNames;
 	private String _projectName = "";
 	private boolean _ignoreModifiedEvents = false;
+	private String _description = "";
 
 	private ProjectConfigurationPanel()
 	{
@@ -486,6 +487,11 @@ public final class ProjectConfigurationPanel extends EpptPanel
 	public String getProjectName()
 	{
 		return _projectName;
+	}
+
+	String getProjectDescription()
+	{
+		return _description;
 	}
 
 	/**

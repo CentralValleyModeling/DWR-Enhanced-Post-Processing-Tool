@@ -11,8 +11,8 @@ import java.util.Objects;
 import javax.swing.*;
 
 import gov.ca.water.eppt.nbui.actions.ProjectConfigurationSavable;
-import gov.ca.water.quickresults.ui.scenarioconfig.ProjectConfigurationListener;
-import gov.ca.water.quickresults.ui.scenarioconfig.ProjectConfigurationPanel;
+import gov.ca.water.quickresults.ui.projectconfig.ProjectConfigurationListener;
+import gov.ca.water.quickresults.ui.projectconfig.ProjectConfigurationPanel;
 import org.openide.awt.ActionID;
 import org.openide.awt.ActionReference;
 import org.openide.util.NbBundle.Messages;

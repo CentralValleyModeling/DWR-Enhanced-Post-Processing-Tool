@@ -23,7 +23,7 @@ import gov.ca.water.calgui.bus_service.impl.GuiLinksSeedDataSvcImpl;
 import gov.ca.water.calgui.constant.EpptPreferences;
 import gov.ca.water.calgui.presentation.DisplayHelper;
 import gov.ca.water.calgui.tech_service.impl.DialogSvcImpl;
-import gov.ca.water.quickresults.ui.scenarioconfig.ProjectConfigurationPanel;
+import gov.ca.water.quickresults.ui.projectconfig.ProjectConfigurationPanel;
 import org.openide.modules.ModuleInstall;
 import org.openide.windows.WindowManager;
 
