@@ -12,7 +12,7 @@
 	<parent>
 		<groupId>gov.ca.water</groupId>
 		<artifactId>eppt-parent</artifactId>
-		<version>1.0-SNAPSHOT</version>
+		<version>1.0.0-SNAPSHOT</version>
 		<relativePath>../eppt-parent</relativePath>
 	</parent>
 
@@ -85,7 +85,7 @@
 				<artifactId>nbm-maven-plugin</artifactId>
 				<extensions>true</extensions>
 				<configuration>
-					<finalName>DWR-EPPT-${maven.build.timestamp}</finalName>
+					<finalName>DWR-EPPT</finalName>
 					<brandingToken>${brandingToken}</brandingToken>
 					<debugAdditionalArguments>
 						-J"-agentlib:jdwp=transport=dt_socket,server=y,suspend=y,address=5164" -J-Xmx2g
@@ -125,7 +125,7 @@
 							</execution>
 						</executions>
 						<configuration>
-							<installersFilePrefix>DWR-EPPT-${maven.build.timestamp}</installersFilePrefix>
+							<installersFilePrefix>DWR-EPPT</installersFilePrefix>
 							<installerOsLinux>false</installerOsLinux>
 							<installerOsMacosx>false</installerOsMacosx>
 							<installerOsSolaris>false</installerOsSolaris>
