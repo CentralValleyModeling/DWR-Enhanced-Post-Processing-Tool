@@ -20,6 +20,8 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.*;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 import javax.swing.event.ListDataEvent;
 import javax.swing.event.ListDataListener;
 
@@ -75,8 +77,6 @@ public final class ProjectConfigurationPanel extends EpptPanel
 	{
 		JPanel header = new JPanel();
 		header.setLayout(new GridBagLayout());
-		_nameField.setEnabled(false);
-		_descriptionField.setEnabled(false);
 		add(header, BorderLayout.NORTH);
 		header.add(new JLabel("Project Name:"), new GridBagConstraints(1,
 				1, 1, 1, .02, .5,
@@ -159,6 +159,29 @@ public final class ProjectConfigurationPanel extends EpptPanel
 		getScenarioList().setCellRenderer(new RBListRenderer());
 		getScenarioList().setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		getScenarioList().addMouseListener(new ProjectConfigurationMouseAdapter());
+
+		DocumentListener documentListener = new DocumentListener()
+		{
+			@Override
+			public void insertUpdate(DocumentEvent e)
+			{
+				ProjectConfigurationPanel.this.setModified(true);
+			}
+
+			@Override
+			public void removeUpdate(DocumentEvent e)
+			{
+				ProjectConfigurationPanel.this.setModified(true);
+			}
+
+			@Override
+			public void changedUpdate(DocumentEvent e)
+			{
+				ProjectConfigurationPanel.this.setModified(true);
+			}
+		};
+		_nameField.getDocument().addDocumentListener(documentListener);
+		_descriptionField.getDocument().addDocumentListener(documentListener);
 	}
 
 
