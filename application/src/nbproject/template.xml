@@ -81,6 +81,19 @@
 	<target name="prepare-zip" depends="-init-zip,-build-zip"/>
 
 	<target name="prepare-sources">-->
+		<condition property="ilc.path" value="${nbi.instleftcorner.file}">
+			<and>
+				<isset property="nbi.instleftcorner.file"/>
+				<available file="${nbi.instleftcorner.file}"/>
+			</and>
+		</condition>
+		<condition property="ilc.defined">
+			<and>
+				<isset property="nbi.instleftcorner.file"/>
+				<available file="${nbi.instleftcorner.file}"/>
+			</and>
+		</condition>
+		<antcall target="-prepare-ilc"/>
 		<copy todir="${installer.build.dir}">
 			<fileset dir="${nbi.stub.location}"/>
 		</copy>
@@ -209,5 +222,8 @@
 			<regexp pattern="${regexp.token}"/>
 			<substitution expression="${regexp.replacement}"/>
 		</replaceregexp>
+	</target>
+	<target name="-prepare-ilc" if="ilc.defined">
+		<copy file="${ilc.path}" tofile="${installer.build.dir}/ext/engine/src/org/mycompany/installer/wizard/wizard-description-background-left.png" overwrite="true"/>
 	</target>
 </project>

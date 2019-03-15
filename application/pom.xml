@@ -135,9 +135,13 @@
 								<configuration.logic.file>
 									${basedir}/src/installer/ConfigurationLogic.java
 								</configuration.logic.file>
+								<nbi.instleftcorner.file>${basedir}/src/installer/ilc.png</nbi.instleftcorner.file>
 							</userSettings>
 							<templateFile>${basedir}/src/installer/template.xml</templateFile>
 							<etcConfFile>src/nbproject/eppt.conf</etcConfFile>
+							<brandingToken>${brandingToken}</brandingToken>
+							<binDirectory>${basedir}/src/installer/binaries</binDirectory>
+
 						</configuration>
 					</plugin>
 				</plugins>
