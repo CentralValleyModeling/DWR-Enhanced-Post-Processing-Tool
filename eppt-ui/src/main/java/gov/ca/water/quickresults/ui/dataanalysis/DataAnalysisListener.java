@@ -155,7 +155,8 @@ public class DataAnalysisListener implements ActionListener
 		}
 
 		//check to see if the selected output path is a valid file name and path
-		File outputFile = new File(_dataAnalysisPanel.getOutputTextField().getText());
+		String filePath = EpptPreferences.getReportsPath().resolve(_dataAnalysisPanel.getOutputTextField().getText()).toString();
+		File outputFile = new File(filePath);
 		if(!outputFile.exists())
 		{
 			try
@@ -165,7 +166,7 @@ public class DataAnalysisListener implements ActionListener
 			}
 			catch (IOException ex)
 			{
-				return "The selected report output file name is not a valid file name";
+				return "Error creating the Report Output File: " + outputFile.getName() + "\n" + ex.getMessage();
 			}
 		}
 
