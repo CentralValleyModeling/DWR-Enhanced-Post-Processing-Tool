@@ -20,6 +20,7 @@ import java.io.InputStream;
 import java.util.Properties;
 import java.util.prefs.Preferences;
 import javax.swing.*;
+import javax.swing.filechooser.FileNameExtensionFilter;
 
 /**
  * Encapsulates commonly needed functionality.
@@ -332,6 +333,14 @@ public class VistaUtils
 	public static String getDirOrFileFromDialog(Component comp, int type,
 												String extension, String description, boolean dirOnly)
 	{
+		if(comp == null)
+		{
+			Frame[] frames = Frame.getFrames();
+			if(frames != null && frames.length > 0)
+			{
+				comp = frames[0];
+			}
+		}
 		Frame frame = JOptionPane.getFrameForComponent(comp);
 		String filename = null;
 		String title = "Save File to...";
@@ -341,36 +350,40 @@ public class VistaUtils
 		}
 		if(AWT_FILE_DIALOG)
 		{
-			FileDialog fileDialog = new FileDialog(frame, "", type);
-			if(_lastDirectory != null)
+			JFileChooser fileChooser = new JFileChooser();
+
+			fileChooser.setSelectedFile(new File("*" + extension));
+			if(dirOnly)
 			{
-				fileDialog.setDirectory(_lastDirectory);
+				fileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
 			}
-			fileDialog.setModal(true);
-			fileDialog.setFile("*" + extension);
-			fileDialog.show();
-			if(fileDialog.getFile() == null)
+			else
+			{
+				fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
+			}
+			fileChooser.setFileFilter(new FileNameExtensionFilter(description, extension));
+			fileChooser.showSaveDialog(frame);
+			if(fileChooser.getSelectedFile() == null)
 			{
 				return null;
 			}
-			if(fileDialog.getFile().equals("*" + extension))
+			if(fileChooser.getSelectedFile().toString().equals("*" + extension))
 			{
 				return null;
 			}
-			if(fileDialog.getDirectory() == null)
+			if(fileChooser.getCurrentDirectory() == null)
 			{
 				return null;
 			}
 			if(!dirOnly)
 			{
-				filename = fileDialog.getDirectory() + fileDialog.getFile();
+				filename = fileChooser.getCurrentDirectory().toString() + fileChooser.getSelectedFile().toString();
 			}
 			else
 			{
-				filename = fileDialog.getDirectory();
+				filename = fileChooser.getCurrentDirectory().toString();
 			}
-			_lastDirectory = fileDialog.getDirectory();
-			Preferences.userRoot().put("last.dir", _lastDirectory);
+			_lastDirectory = fileChooser.getCurrentDirectory().toString();
 		}
 		else
 		{
