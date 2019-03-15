@@ -32,15 +32,13 @@ import gov.ca.water.calgui.tech_service.IDialogSvc;
 import gov.ca.water.calgui.tech_service.IErrorHandlingSvc;
 import gov.ca.water.calgui.tech_service.impl.DialogSvcImpl;
 import gov.ca.water.calgui.tech_service.impl.ErrorHandlingSvcImpl;
-import hec.hecmath.TimeSeriesMath;
-import hec.hecmath.computation.ValueContainer;
-import hec.hecmath.functions.TimeSeriesFunctions;
 import org.apache.log4j.Logger;
 
 import hec.heclib.dss.HecDss;
 import hec.heclib.util.HecTime;
+import hec.hecmath.computation.ValueContainer;
+import hec.hecmath.functions.TimeSeriesFunctions;
 import hec.io.TimeSeriesContainer;
-import rma.lang.RmaMath;
 
 /**
  * Class to grab (load) DSS time series for a set of scenarios passed in a
@@ -664,7 +662,9 @@ public class DSSGrabber1SvcImpl implements IDSSGrabber1Svc
 						else
 						{
 							//combine result2 and result together and assign to result.
-							result = TimeSeriesFunctions.add(Arrays.asList(new ValueContainer(result), new ValueContainer(result2)), (String) null);
+							result = TimeSeriesFunctions.add(
+									Arrays.asList(new ValueContainer(result), new ValueContainer(result2)),
+									(String) null);
 						}
 					}
 
@@ -980,7 +980,7 @@ public class DSSGrabber1SvcImpl implements IDSSGrabber1Svc
 
 			// Calculate
 
-			if(_originalUnits.equals("CFS"))
+			if("CFS".equals(_originalUnits))
 			{
 
 				HecTime ht = new HecTime();
@@ -990,26 +990,29 @@ public class DSSGrabber1SvcImpl implements IDSSGrabber1Svc
 
 				for(int i = 0; i < primaryResults.length; i++)
 				{
-					for(int j = 0; j < primaryResults[i].numberValues; j++)
+					if(primaryResults[i] != null)
 					{
-
-						ht.set(primaryResults[i].times[j]);
-						calendar.set(ht.year(), ht.month() - 1, 1);
-						double monthlyTAF = primaryResults[i].values[j]
-								* calendar.getActualMaximum(Calendar.DAY_OF_MONTH) * CFS_2_TAF_DAY;
-						int wy = ((ht.month() < 10) ? ht.year() : ht.year() + 1) - _startWY;
-						if(wy >= 0)
+						for(int j = 0; j < primaryResults[i].numberValues; j++)
 						{
-							_annualTAFs[i][wy] += monthlyTAF;
+
+							ht.set(primaryResults[i].times[j]);
+							calendar.set(ht.year(), ht.month() - 1, 1);
+							double monthlyTAF = primaryResults[i].values[j]
+									* calendar.getActualMaximum(Calendar.DAY_OF_MONTH) * CFS_2_TAF_DAY;
+							int wy = ((ht.month() < 10) ? ht.year() : ht.year() + 1) - _startWY;
+							if(wy >= 0)
+							{
+								_annualTAFs[i][wy] += monthlyTAF;
+							}
+							if(!_isCFS)
+							{
+								primaryResults[i].values[j] = monthlyTAF;
+							}
 						}
 						if(!_isCFS)
 						{
-							primaryResults[i].values[j] = monthlyTAF;
+							primaryResults[i].units = "TAF per year";
 						}
-					}
-					if(!_isCFS)
-					{
-						primaryResults[i].units = "TAF per year";
 					}
 				}
 
@@ -1036,7 +1039,7 @@ public class DSSGrabber1SvcImpl implements IDSSGrabber1Svc
 					{
 						if(secondaryResults[i] != null)
 						{
-							for (int j = 0; j < secondaryResults[i].numberValues; j++)
+							for(int j = 0; j < secondaryResults[i].numberValues; j++)
 							{
 
 								ht.set(secondaryResults[i].times[j]);
@@ -1045,13 +1048,13 @@ public class DSSGrabber1SvcImpl implements IDSSGrabber1Svc
 										* calendar.getActualMaximum(Calendar.DAY_OF_MONTH) * CFS_2_TAF_DAY;
 								int wy = ((ht.month() < 10) ? ht.year() : ht.year() + 1) - _startWY;
 								_annualTAFs[i + primaryResults.length][wy] += monthlyTAF;
-								if (!_isCFS)
+								if(!_isCFS)
 								{
 									secondaryResults[i].values[j] = monthlyTAF;
 								}
 
 							}
-							if (!_isCFS)
+							if(!_isCFS)
 							{
 								secondaryResults[i].units = "TAF per year";
 							}

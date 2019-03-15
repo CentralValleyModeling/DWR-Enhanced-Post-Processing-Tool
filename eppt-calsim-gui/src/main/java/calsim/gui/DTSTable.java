@@ -748,6 +748,7 @@ public class DTSTable extends MPanel
 		}
 		try
 		{
+			name = name.trim();
 			if(name == null || name.isEmpty())
 			{
 				return;
