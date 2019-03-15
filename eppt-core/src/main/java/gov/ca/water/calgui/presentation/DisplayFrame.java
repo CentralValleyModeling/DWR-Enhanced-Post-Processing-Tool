@@ -12,9 +12,6 @@ import java.awt.HeadlessException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javax.swing.*;
@@ -30,7 +27,6 @@ import gov.ca.water.calgui.presentation.display.BoxPlotChartPanel;
 import gov.ca.water.calgui.presentation.display.BoxPlotChartPanel2;
 import gov.ca.water.calgui.presentation.display.ChartPanel1;
 import gov.ca.water.calgui.presentation.display.ChartPanel2;
-import gov.ca.water.calgui.presentation.display.DefaultPlotHandler;
 import gov.ca.water.calgui.presentation.display.MonthlyTablePanel;
 import gov.ca.water.calgui.presentation.display.MonthlyTablePanel2;
 import gov.ca.water.calgui.presentation.display.SummaryTablePanel;
@@ -277,7 +273,7 @@ import hec.io.TimeSeriesContainer;
 							// done
 							for(int m1 = 0; m1 < 12; m1++)
 							{
-								if(exceedMonths.contains(monthNames[m1]))
+								if(exceedMonths.contains(monthNames[m1]) && excResults != null)
 								{
 									if(doDifference)
 									{
@@ -354,7 +350,7 @@ import hec.io.TimeSeriesContainer;
 						ChartPanel1 cp1;
 						ChartPanel1 cp2;
 
-						if(doTimeSeries)
+						if(doTimeSeries && primaryResults != null && primaryResults[0] != null)
 						{
 							if(locationName.contains(Constant.SCHEMATIC_PREFIX)
 									&& dssGrabber.getPrimaryDSSName().contains(","))
