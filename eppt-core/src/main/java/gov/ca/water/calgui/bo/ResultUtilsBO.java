@@ -86,6 +86,7 @@ public class ResultUtilsBO
 		AppUtils.baseOn = false;
 	}
 
+
 	/**
 	 * This method is for implementing the singleton.
 	 *
@@ -93,10 +94,11 @@ public class ResultUtilsBO
 	 */
 	public static ResultUtilsBO getResultUtilsInstance(SwingEngine swingEngine)
 	{
-		//		if(resultUtilsBO == null)
+		if(resultUtilsBO == null)
 		{
 			resultUtilsBO = new ResultUtilsBO(swingEngine);
 		}
+		resultUtilsBO._swingEngine = swingEngine;
 		return resultUtilsBO;
 	}
 

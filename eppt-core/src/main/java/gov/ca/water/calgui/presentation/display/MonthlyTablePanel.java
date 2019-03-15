@@ -289,7 +289,7 @@ public class MonthlyTablePanel extends JPanel implements ActionListener, Compone
 		}
 		else
 		{
-			if ("".equals(name))
+			if ("".equals(name) && tsc != null)
 			{
 				String[] parts = tsc.fullName.split("/");
 				sLabel = parts[2] + "/" + parts[3];
