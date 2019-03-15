@@ -66,7 +66,7 @@ public class Installer extends ModuleInstall
 				WindowManager.getDefault().getMainWindow().setTitle(
 						MAIN_FRAME_NAME + " - " + projectConfigurationPanel.getProjectName());
 			}
-			catch(IOException ex)
+			catch(IOException | RuntimeException ex)
 			{
 				LOGGER.log(Level.SEVERE,
 						"Unable to load last Project Configuration EPPT Home: " + lastProjectConfiguration, ex);

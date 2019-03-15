@@ -9,6 +9,7 @@ package gov.ca.water.eppt.nbui;
 import java.awt.BorderLayout;
 import javax.swing.*;
 
+import gov.ca.water.calgui.presentation.DisplayHelper;
 import gov.ca.water.quickresults.ui.quickresults.QuickResultsListener;
 import gov.ca.water.quickresults.ui.quickresults.QuickResultsPanel;
 import org.openide.awt.ActionID;
@@ -46,7 +47,7 @@ public final class QuickResultsTopComponent extends EpptTopComponent
 	{
 		setName("Quick Results");
 		_quickResultsPanel = new QuickResultsPanel();
-		_quickResultsPanel.getDisplayHelper().installPlotHandler(new TopComponentPlotHandler());
+		DisplayHelper.installPlotHandler(new TopComponentPlotHandler());
 		QuickResultsListener quickResultsListener = new QuickResultsListener(_quickResultsPanel);
 		_quickResultsPanel.setActionListener(quickResultsListener);
 		JScrollPane scrollPane = new JScrollPane(_quickResultsPanel);

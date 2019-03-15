@@ -5,7 +5,7 @@
   ~ Source may not be released without written approval from DWR
   -->
 
-<panel id="ScenarioConfiguration" name="ScenarioConfiguration" layout="BorderLayout">
+<panel id="ProjectConfiguration" name="ProjectConfiguration" layout="BorderLayout">
 	<panel id="ss" resizeable="false" border="TitledBorder(Scenarios)" constraints="BorderLayout.NORTH"
 		   layout="BorderLayout">
 		<panel constraints="BorderLayout.NORTH" layout="FlowLayout(FlowLayout.LEFT)">

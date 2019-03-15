@@ -24,7 +24,7 @@ class ProjectConfigurationPanelTest
 {
 
 	@Test
-	void testScenarioConfigurationPanelCreation()
+	void testProjectConfigurationPanelCreation()
 	{
 		ProjectConfigurationPanel projectConfigurationPanel = ProjectConfigurationPanel.getProjectConfigurationPanel();
 		assertFalse(projectConfigurationPanel.getComponents().length == 0);
@@ -33,7 +33,7 @@ class ProjectConfigurationPanelTest
 	@Test
 	void testQuickStateDefault()
 	{
-		ProjectConfigurationPanel projectConfigurationPanel = ProjectConfigurationPanel.createScenarioConfigurationPanel();
+		ProjectConfigurationPanel projectConfigurationPanel = ProjectConfigurationPanel.createProjectConfigurationPanel();
 		JRadioButton radioButton = (JRadioButton) projectConfigurationPanel.getSwingEngine().find("rdbp000");
 		radioButton.setSelected(true);
 		String quickState = projectConfigurationPanel.quickState();
@@ -43,7 +43,7 @@ class ProjectConfigurationPanelTest
 	@Test
 	void testQuickStateComparison()
 	{
-		ProjectConfigurationPanel projectConfigurationPanel = ProjectConfigurationPanel.createScenarioConfigurationPanel();
+		ProjectConfigurationPanel projectConfigurationPanel = ProjectConfigurationPanel.createProjectConfigurationPanel();
 		JRadioButton radioButton = (JRadioButton) projectConfigurationPanel.getSwingEngine().find("rdbp001");
 		radioButton.setSelected(true);
 		String quickState = projectConfigurationPanel.quickState();
@@ -53,7 +53,7 @@ class ProjectConfigurationPanelTest
 	@Test
 	void testQuickStateDiff()
 	{
-		ProjectConfigurationPanel projectConfigurationPanel = ProjectConfigurationPanel.createScenarioConfigurationPanel();
+		ProjectConfigurationPanel projectConfigurationPanel = ProjectConfigurationPanel.createProjectConfigurationPanel();
 		JRadioButton radioButton = (JRadioButton) projectConfigurationPanel.getSwingEngine().find("rdbp002");
 		radioButton.setSelected(true);
 		String quickState = projectConfigurationPanel.quickState();
@@ -63,7 +63,7 @@ class ProjectConfigurationPanelTest
 	@Test
 	void testQuickStateTimeSeriesPlot()
 	{
-		ProjectConfigurationPanel projectConfigurationPanel = ProjectConfigurationPanel.createScenarioConfigurationPanel();
+		ProjectConfigurationPanel projectConfigurationPanel = ProjectConfigurationPanel.createProjectConfigurationPanel();
 		JCheckBox repckbTimeSeriesPlot = (JCheckBox) projectConfigurationPanel.getSwingEngine().find(
 				"RepckbTimeSeriesPlot");
 		repckbTimeSeriesPlot.setSelected(true);
@@ -74,7 +74,7 @@ class ProjectConfigurationPanelTest
 	@Test
 	void testQuickStateBoxAndWhiskersPlot()
 	{
-		ProjectConfigurationPanel projectConfigurationPanel = ProjectConfigurationPanel.createScenarioConfigurationPanel();
+		ProjectConfigurationPanel projectConfigurationPanel = ProjectConfigurationPanel.createProjectConfigurationPanel();
 		JCheckBox repckbTimeSeriesPlot = (JCheckBox) projectConfigurationPanel.getSwingEngine().find(
 				"RepckbBAWPlot");
 		repckbTimeSeriesPlot.setSelected(true);

@@ -214,7 +214,11 @@ public class Report extends SwingWorker<Void, String>
 		}
 		String output_file = _scalars.get("OUTFILE");
 		_writer = new ReportPDFWriter();
-		_writer.startDocument(output_file);
+		boolean wasSuccessful = _writer.startDocument(output_file);
+		if(!wasSuccessful)
+		{
+			return;
+		}
 		String author = _scalars.get("MODELER").replace("\"", "");
 		_writer.addTitlePage(String.format("System Water Balance Report: %s vs %s", _scalars.get("NAME_ALT"),
 				_scalars.get("NAME_BASE")), author, _scalars.get("FILE_BASE"), _scalars.get("FILE_ALT"));
@@ -829,7 +833,7 @@ public class Report extends SwingWorker<Void, String>
 		int BOLD = 100;
 		int NORMAL = 1;
 
-		void startDocument(String outputFile);
+		boolean startDocument(String outputFile);
 
 		void endDocument();
 

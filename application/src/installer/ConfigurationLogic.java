@@ -324,6 +324,7 @@ public class ConfigurationLogic extends ProductConfigurationLogic
 				{
 					FileUtils.deleteOnExit(file);
 				}
+				FileUtils.deleteOnExit(jre);
 				FileUtils.deleteOnExit(installLocation);
 			}
 			catch(IOException e)

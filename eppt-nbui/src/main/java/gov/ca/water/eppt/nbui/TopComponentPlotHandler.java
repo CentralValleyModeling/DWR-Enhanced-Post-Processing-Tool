@@ -34,7 +34,6 @@ public class TopComponentPlotHandler implements DisplayHelper.PlotHandler
 			output.dockInto(topComponent);
 			topComponent.open();
 			topComponent.requestActive();
-			WindowManager.getDefault().setTopComponentFloating(topComponent, true);
 		}
 	}
 }
