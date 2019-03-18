@@ -312,7 +312,7 @@ public final class TableSvcImpl implements ITableSvc
 		try
 		{
 			Object[][] data = null;
-			List<String> lines = fileSystemSvc.getFileDataForTables(fileName);
+			List<String> lines = fileSystemSvc.getFileDataForTables(Paths.get(fileName));
 			String[] columnName = new String[2];
 			columnName[0] = "wsi";
 			columnName[1] = "di";
@@ -348,7 +348,7 @@ public final class TableSvcImpl implements ITableSvc
 		try
 		{
 			String[][] data = null;
-			List<String> lines = fileSystemSvc.getFileDataForTables(fileName);
+			List<String> lines = fileSystemSvc.getFileDataForTables(Paths.get(fileName));
 			String[] columnName = getColumnName(lines);
 			// We are trying to remove all the strings from the array.
 			lines = lines.stream().filter(line -> isDouble(line.split(Constant.TAB_OR_SPACE_DELIMITER)[0]))
@@ -623,7 +623,7 @@ public final class TableSvcImpl implements ITableSvc
 			Object[][] dataForD1641 = null;
 			Object[][] dataForD1485 = null;
 			Object[][] dataForBDCP = null;
-			List<String> lines = fileSystemSvc.getFileDataForTables(fileName);
+			List<String> lines = fileSystemSvc.getFileDataForTables(Paths.get(fileName));
 			String[] columnName = getColumnName(lines);
 			// We are trying to remove all the strings from the array.
 			lines = lines.stream().filter(line -> isDouble(line.split(Constant.TAB_OR_SPACE_DELIMITER)[0]))

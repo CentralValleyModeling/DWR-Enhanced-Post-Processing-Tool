@@ -7,6 +7,7 @@
 
 package gov.ca.water.calgui.tech_service;
 
+import java.nio.file.Path;
 import java.util.List;
 import java.util.function.Predicate;
 
@@ -31,7 +32,7 @@ public interface IFileSystemSvc
 	 * @return return the lines in the file as list.
 	 * @throws CalLiteGUIException It throws a general exception.
 	 */
-	List<String> getFileData(String fileName, boolean isRequired) throws CalLiteGUIException;
+	List<String> getFileData(Path fileName, boolean isRequired) throws CalLiteGUIException;
 
 	/**
 	 * This will take the file name and read the lines and then filter them
@@ -46,7 +47,7 @@ public interface IFileSystemSvc
 	 * the selector passed in.
 	 * @throws CalLiteGUIException It throws a general exception.
 	 */
-	List<String> getFileData(String fileName, boolean isRequired, Predicate<String> selector)
+	List<String> getFileData(Path fileName, boolean isRequired, Predicate<String> selector)
 			throws CalLiteGUIException;
 
 	/**
@@ -57,7 +58,7 @@ public interface IFileSystemSvc
 	 * @return return the lines in the file as list after removing the comments.
 	 * @throws CalLiteGUIException It throws a general exception.
 	 */
-	List<String> getFileDataForTables(String fileName) throws CalLiteGUIException;
+	List<String> getFileDataForTables(Path fileName) throws CalLiteGUIException;
 
 	/**
 	 * This will save the given data into the given file.
@@ -66,7 +67,7 @@ public interface IFileSystemSvc
 	 * @param data     The data which is writen to the file.
 	 * @throws CalLiteGUIException It throws a general exception.
 	 */
-	void saveDataToFile(String fileName, String data) throws CalLiteGUIException;
+	void saveDataToFile(Path fileName, String data) throws CalLiteGUIException;
 
 	/**
 	 * This will generate the Document from the XML file.
@@ -94,5 +95,5 @@ public interface IFileSystemSvc
 	 * @param fileName The file Name
 	 * @return Will return the lookup string.
 	 */
-	String getLookupFromTheFileName(String fileName);
+	String getLookupFromTheFileName(Path fileName);
 }

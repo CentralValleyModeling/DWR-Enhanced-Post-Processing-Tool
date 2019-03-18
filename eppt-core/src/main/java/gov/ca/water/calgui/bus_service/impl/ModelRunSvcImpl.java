@@ -12,6 +12,7 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -26,7 +27,6 @@ import gov.ca.water.calgui.tech_service.impl.DialogSvcImpl;
 import gov.ca.water.calgui.tech_service.impl.ErrorHandlingSvcImpl;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.log4j.Logger;
-import org.swixml.SwingEngine;
 
 /**
  * This class will handle the batch run.
@@ -37,7 +37,7 @@ public final class ModelRunSvcImpl implements IModelRunSvc
 {
 
 	private static final Logger LOG = Logger.getLogger(ModelRunSvcImpl.class.getName());
-	private static int SIMULTANEOUS_RUNS;
+	private static int SIMULTANEOUS_RUNS = Math.max(1, Runtime.getRuntime().availableProcessors());
 	private Properties _properties = new Properties();
 	private static IErrorHandlingSvc _errorHandlingSvc = new ErrorHandlingSvcImpl();
 	private int _wsdiIterations;
@@ -74,7 +74,7 @@ public final class ModelRunSvcImpl implements IModelRunSvc
 	 * @param scenarioFileName The list of scenario names in this run.
 	 * @param iterations       The number of iterations.
 	 */
-	private static void setupMainBatchFileWSIDI(String batFileName, String scenarioFileName, final int iterations)
+	private static void setupMainBatchFileWSIDI(String batFileName, Path scenarioFileName, final int iterations)
 	{
 
 		if(batFileName == null || batFileName.isEmpty())
@@ -82,8 +82,8 @@ public final class ModelRunSvcImpl implements IModelRunSvc
 			batFileName = "CalLite_w2.bat";
 		}
 		String del = "";
-		String scenarioName = FilenameUtils.removeExtension(scenarioFileName);
-		String scenarioPath = new File(Constant.RUN_DETAILS_DIR + scenarioName).getAbsolutePath();
+		String scenarioName = FilenameUtils.removeExtension(scenarioFileName.getFileName().toString());
+		String scenarioPath = scenarioFileName.toAbsolutePath().toString();
 		String progressFilePath = new File(scenarioPath, "run\\progress.txt").getAbsolutePath();
 		String wreslCheckFilePath = new File(scenarioPath, "run\\\"=WreslCheck_main=.log\"").getAbsolutePath();
 		String wreslCheckWsidiFilePath = new File(scenarioPath, "run\\\"=WreslCheck_main_wsidi=.log\"")
@@ -142,7 +142,7 @@ public final class ModelRunSvcImpl implements IModelRunSvc
 	 */
 	public static int monthToInt(String month)
 	{
-		HashMap<String, Integer> monthMap = new HashMap<String, Integer>();
+		HashMap<String, Integer> monthMap = new HashMap<>();
 		monthMap.put("jan", 1);
 		monthMap.put("feb", 2);
 		monthMap.put("mar", 3);
@@ -162,21 +162,13 @@ public final class ModelRunSvcImpl implements IModelRunSvc
 	}
 
 	@Override
-	public void doBatch(List<String> scenarioNamesList, SwingEngine swingEngine, boolean isWsidi)
+	public void doBatch(List<Path> scenarioNamesList, boolean isWsidi)
 	{
 		if(scenarioNamesList.isEmpty() || scenarioNamesList == null)
 		{
 			_errorHandlingSvc.validationeErrorHandler("The scenario name list is empty to run the batch program.",
 					"The scenario name list is empty to run the batch program.");
 		}
-		if(!dateSelectionIsValid(swingEngine))
-		{
-			_errorHandlingSvc.validationeErrorHandler("The End Date should be greater then the start date",
-					"The End Date should be greater then the start date");
-		}
-		// Disable run button
-		JButton btn = (JButton) swingEngine.find("run_btnRun");
-		btn.setEnabled(false);
 		// delete previous generated batch file
 		deleteBatchFile();
 		if(isWsidi)
@@ -197,7 +189,15 @@ public final class ModelRunSvcImpl implements IModelRunSvc
 			// how many simultaneous run?
 			int numberOfSimultaneousRun = SIMULTANEOUS_RUNS;
 			// how many sub batch files?
-			int numberOfSubBatch = (int) Math.ceil((double) scenarioNamesList.size() / numberOfSimultaneousRun);
+			int numberOfSubBatch;
+			if(numberOfSimultaneousRun == 0)
+			{
+				numberOfSubBatch = 1;
+			}
+			else
+			{
+				numberOfSubBatch = (int) Math.ceil((double) scenarioNamesList.size() / numberOfSimultaneousRun);
+			}
 			// sub batch file name array
 			String[] subBatchFileNameArray = new String[numberOfSubBatch];
 			for(int j = 0; j < numberOfSubBatch; j++)
@@ -205,21 +205,20 @@ public final class ModelRunSvcImpl implements IModelRunSvc
 				subBatchFileNameArray[j] = "group_" + j + ".bat";
 				File subBatchFile = new File(System.getProperty("user.dir"), subBatchFileNameArray[j]);
 				deleteDirectory(subBatchFile);
-				List<String> groupScenFileNameList = new ArrayList<String>();
+				List<Path> groupScenFileNameList = new ArrayList<>();
 				for(int i = j * numberOfSimultaneousRun; i < Math.min((j + 1) * numberOfSimultaneousRun,
 						scenarioNamesList.size()); i++)
 				{
-					String scenFileName = scenarioNamesList.get(i);
+					Path scenFileName = scenarioNamesList.get(i);
 					groupScenFileNameList.add(scenFileName);
 				}
-				setupBatchFile(subBatchFileNameArray[j], groupScenFileNameList, true);
+				setupBatchFile(subBatchFileNameArray[j], groupScenFileNameList);
 			}
 			// generate main batch file
 			setupMainBatchFile(null, scenarioNamesList, subBatchFileNameArray);
 			// run all scenarios with 3 secs delay between jvm initialization
 			runBatch();
 		}
-		btn.setEnabled(true);
 	}
 
 	/**
@@ -230,14 +229,14 @@ public final class ModelRunSvcImpl implements IModelRunSvc
 	 * @param scenarioNamesList     The list of scenario names in this run.
 	 * @param subBatchFileNameArray The individual batch file name.
 	 */
-	public void setupMainBatchFile(String batFileName, List<String> scenarioNamesList, String[] subBatchFileNameArray)
+	public void setupMainBatchFile(String batFileName, List<Path> scenarioNamesList, String[] subBatchFileNameArray)
 	{
 		if(batFileName == null || batFileName.isEmpty())
 		{
 			batFileName = "CalLite_w2.bat";
 		}
 		StringBuilder del = new StringBuilder();
-		for(String scenarioName : scenarioNamesList)
+		for(Path scenarioName : scenarioNamesList)
 		{
 			String scenarioPath = new File(Constant.RUN_DETAILS_DIR + scenarioName).getAbsolutePath();
 			String wsidilogFilePath = new File(scenarioPath, "run\\wsidi_iteration.log").getAbsolutePath();
@@ -278,9 +277,8 @@ public final class ModelRunSvcImpl implements IModelRunSvc
 	 *
 	 * @param batFileName      The batch file name
 	 * @param scenarioFileName The scenario file name
-	 * @param isParallel       whether it is parallel or not.
 	 */
-	private void setupBatchFile(String batFileName, List<String> scenarioFileName, boolean isParallel)
+	private void setupBatchFile(String batFileName, List<Path> scenarioFileName)
 	{
 		if(batFileName == null || batFileName.isEmpty())
 		{
@@ -295,11 +293,11 @@ public final class ModelRunSvcImpl implements IModelRunSvc
 		{
 			for(int i = 0; i < scenarioFileName.size(); i++)
 			{
-				String scenarioName = FilenameUtils.removeExtension(scenarioFileName.get(i));
-				String scenarioPath = new File(Constant.RUN_DETAILS_DIR + scenarioName).getAbsolutePath();
+				String scenarioName = FilenameUtils.removeExtension(scenarioFileName.get(i).getFileName().toString());
+				String scenarioPath = scenarioFileName.get(i).toAbsolutePath().toString();
 				String configFilePath = new File(scenarioPath, scenarioName + ".config").getAbsolutePath();
 				String batchText = "%~dp0\\Model_w2\\runConfig_calgui " + configFilePath + " " + scenarioName;
-				if(isParallel && i < scenarioFileName.size() - 1)
+				if(i < scenarioFileName.size() - 1)
 				{
 					batchFilePW.println("start /min " + batchText);
 					batchFilePW.println("timeout 20");
@@ -356,23 +354,5 @@ public final class ModelRunSvcImpl implements IModelRunSvc
 		{
 			LOG.error("Unable to delete batch file: " + batchFile.getAbsolutePath());
 		}
-	}
-
-	/**
-	 * Checks if date selection is valid for scenario currently in memory
-	 *
-	 * @param swingEngine The {@link SwingEngine} Object.
-	 * @return Will return true if the selected value is valid.
-	 */
-	private boolean dateSelectionIsValid(SwingEngine swingEngine)
-	{
-		String startMon = ((String) ((JSpinner) swingEngine.find("spnRunStartMonth")).getValue()).trim();
-		String endMon = ((String) ((JSpinner) swingEngine.find("spnRunEndMonth")).getValue()).trim();
-		Integer startYr = (Integer) ((JSpinner) swingEngine.find("spnRunStartYear")).getValue();
-		Integer endYr = (Integer) ((JSpinner) swingEngine.find("spnRunEndYear")).getValue();
-		Integer iSMon = monthToInt(startMon);
-		Integer iEMon = monthToInt(endMon);
-		int numMon = (endYr - startYr) * 12 + (iEMon - iSMon) + 1;
-		return numMon > 1;
 	}
 }

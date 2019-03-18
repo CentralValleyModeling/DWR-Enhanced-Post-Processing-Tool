@@ -58,18 +58,18 @@ public class CustomResultsListener implements ActionListener
 	private void loadList()
 	{
 		Window window = SwingUtilities.windowForComponent(_customResultsPanel);
-		ResultUtilsBO.getResultUtilsInstance(_customResultsPanel.getSwingEngine()).readCGR((JFrame) window);
+		ResultUtilsBO.getResultUtilsInstance().readCGR((JFrame) window);
 	}
 
 	private void saveList()
 	{
 		Window window = SwingUtilities.windowForComponent(_customResultsPanel);
-		ResultUtilsBO.getResultUtilsInstance(_customResultsPanel.getSwingEngine()).writeCGR((JFrame) window);
+		ResultUtilsBO.getResultUtilsInstance().writeCGR((JFrame) window, null);
 	}
 
 	private void clearTree()
 	{
-		Project p = ResultUtilsBO.getResultUtilsInstance(_customResultsPanel.getSwingEngine()).getProject();
+		Project p = ResultUtilsBO.getResultUtilsInstance().getProject();
 		p.clearMTSList();
 		p.clearDTSList();
 		DtsTreeModel dtm = DtsTreePanel.getCurrentModel();

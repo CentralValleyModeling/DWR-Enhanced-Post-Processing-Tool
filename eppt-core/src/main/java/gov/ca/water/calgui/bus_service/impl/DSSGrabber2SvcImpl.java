@@ -296,7 +296,7 @@ public class DSSGrabber2SvcImpl extends DSSGrabber1SvcImpl
 				if(!((String) dtsNames.get(i)).isEmpty())
 				{
 					// Operand is reference to another DTS
-					DerivedTimeSeries adt = ResultUtilsBO.getResultUtilsInstance(null).getProject()
+					DerivedTimeSeries adt = ResultUtilsBO.getResultUtilsInstance().getProject()
 														 .getDTS((String) dtsNames.get(i));
 					interimResult = getOneSeriesWRIMS(dssFilename, adt);
 				}
@@ -426,7 +426,7 @@ public class DSSGrabber2SvcImpl extends DSSGrabber1SvcImpl
 			if(!mts2.getDTSNameAt(i).isEmpty())
 			{
 				// Operand is reference to a DTS
-				DerivedTimeSeries adt = ResultUtilsBO.getResultUtilsInstance(null).getProject()
+				DerivedTimeSeries adt = ResultUtilsBO.getResultUtilsInstance().getProject()
 													 .getDTS(_mts.getDTSNameAt(i));
 				result = getOneSeriesWRIMS(dssFilename, adt);
 				_primaryDSSName.clear();

@@ -9,6 +9,7 @@ package gov.ca.water.businessservice.impl;
 
 import java.awt.Component;
 import java.awt.Container;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedHashMap;
@@ -202,7 +203,7 @@ public class ScenarioDeleImp implements IScenarioDele
 		List<String> regulationoptionsStr = new ArrayList<>();
 		List<String> wsidiStatusStr = new ArrayList<>();
 		// Read in the cls file data.
-		_scenarioSvc.getCLSData(Constant.SCENARIOS_DIR + fileName, controlStrList, dataTableModelStrList,
+		_scenarioSvc.getCLSData(Paths.get(Constant.SCENARIOS_DIR + fileName), controlStrList, dataTableModelStrList,
 				regulationoptionsStr, wsidiStatusStr);
 		// This will build all the component data into list of
 		// ScenarioDisplayBO.

@@ -16,6 +16,7 @@ import java.awt.event.ComponentEvent;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 import java.awt.event.ItemListener;
+import java.nio.file.Paths;
 import java.util.List;
 import javax.swing.*;
 import javax.swing.border.LineBorder;
@@ -115,7 +116,8 @@ public class CalLiteInitClass
 			initSpinners();
 			initGlobalListeners(allButtonsDele);
 			// Load the default cls file.
-			scenarioSvc.applyClsFile(Constant.SCENARIOS_DIR + Constant.DEFAULT + Constant.CLS_EXT, swingEngine,
+			scenarioSvc.applyClsFile(Paths.get(Constant.SCENARIOS_DIR + Constant.DEFAULT + Constant.CLS_EXT),
+					swingEngine,
 					seedDataSvc.getTableIdMap());
 			// check
 			checkForNewUserDefinedTables(xmlParsingSvc.getNewUserDefinedTables(), scenarioSvc, tableSvc, swingEngine);
@@ -128,7 +130,7 @@ public class CalLiteInitClass
 			// Count threads and update batch run selector appropriately
 			initBatchRun();
 			// For Result part.
-			ResultUtilsBO resultUtilsBO = ResultUtilsBO.getResultUtilsInstance(swingEngine);
+			ResultUtilsBO resultUtilsBO = ResultUtilsBO.getResultUtilsInstance();
 			// Setup for Reporting page
 			// Set up additional UI elements
 			JList<?> lstScenarios = (JList<?>) swingEngine.find("SelectedList");
@@ -174,9 +176,9 @@ public class CalLiteInitClass
 					// Constrain run times to [10/1921,9/2003]
 					int syr = (Integer) ((JSpinner) _swingEngine.find("spnRunStartYear")).getValue();
 					int eyr = (Integer) ((JSpinner) _swingEngine.find("spnRunEndYear")).getValue();
-					int smo = ResultUtilsBO.getResultUtilsInstance(null).monthToInt(
+					int smo = ResultUtilsBO.getResultUtilsInstance().monthToInt(
 							((String) ((JSpinner) _swingEngine.find("spnRunStartMonth")).getValue()).trim());
-					int emo = ResultUtilsBO.getResultUtilsInstance(null).monthToInt(
+					int emo = ResultUtilsBO.getResultUtilsInstance().monthToInt(
 							((String) ((JSpinner) _swingEngine.find("spnRunEndMonth")).getValue()).trim());
 					if((syr == 1921) && (smo < 10))
 					{
@@ -189,9 +191,9 @@ public class CalLiteInitClass
 					// Constrain display times the same way [inefficient?]
 					syr = (Integer) ((JSpinner) _swingEngine.find("spnStartYear")).getValue();
 					eyr = (Integer) ((JSpinner) _swingEngine.find("spnEndYear")).getValue();
-					smo = ResultUtilsBO.getResultUtilsInstance(null).monthToInt(
+					smo = ResultUtilsBO.getResultUtilsInstance().monthToInt(
 							((String) ((JSpinner) _swingEngine.find("spnStartMonth")).getValue()).trim());
-					emo = ResultUtilsBO.getResultUtilsInstance(null).monthToInt(
+					emo = ResultUtilsBO.getResultUtilsInstance().monthToInt(
 							((String) ((JSpinner) _swingEngine.find("spnEndMonth")).getValue()).trim());
 					if((syr == 1921) && (smo < 10))
 					{

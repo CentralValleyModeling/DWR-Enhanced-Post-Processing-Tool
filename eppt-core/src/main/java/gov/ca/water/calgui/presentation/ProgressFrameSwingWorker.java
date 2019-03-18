@@ -8,6 +8,7 @@
 package gov.ca.water.calgui.presentation;
 
 import java.io.IOException;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -33,7 +34,7 @@ import org.apache.log4j.Logger;
 public class ProgressFrameSwingWorker extends SwingWorker<Void, String>
 {
 	private static final Logger LOG = Logger.getLogger(ProgressFrameSwingWorker.class.getName());
-	private final Map<String, String> _scenarioNamesAndAction = new HashMap<>();
+	private final Map<Path, String> _scenarioNamesAndAction = new HashMap<>();
 	private final Properties _properties = new Properties();
 	private final Consumer<String> _statusUpdater;
 	private final Consumer<String[]> _listUpdater;
@@ -67,7 +68,7 @@ public class ProgressFrameSwingWorker extends SwingWorker<Void, String>
 		return _monitorSvc;
 	}
 
-	protected Map<String, String> getScenarioNamesAndAction()
+	protected Map<Path, String> getScenarioNamesAndAction()
 	{
 		return _scenarioNamesAndAction;
 	}
@@ -87,7 +88,7 @@ public class ProgressFrameSwingWorker extends SwingWorker<Void, String>
 				boolean sleepAfterDisplay = false;
 				String[] listData;
 				List<String> data = new ArrayList<>();
-				List<String> scenariosToDrop = new ArrayList<>();
+				List<Path> scenariosToDrop = new ArrayList<>();
 				if(_scenarioNamesAndAction.isEmpty())
 				{
 					listData = new String[1];
@@ -96,11 +97,11 @@ public class ProgressFrameSwingWorker extends SwingWorker<Void, String>
 				}
 				else
 				{
-					for(String scenarioName : _scenarioNamesAndAction.keySet())
+					for(Path scenarioName : _scenarioNamesAndAction.keySet())
 					{
 						sleepAfterDisplay = processScenario(data, scenariosToDrop, scenarioName);
 					}
-					for(String s : scenariosToDrop)
+					for(Path s : scenariosToDrop)
 					{
 						_scenarioNamesAndAction.remove(s);
 					}
@@ -134,8 +135,8 @@ public class ProgressFrameSwingWorker extends SwingWorker<Void, String>
 		return null;
 	}
 
-	protected boolean processScenario(List<String> data, List<String> scenariosToDrop,
-									  String scenarioName)
+	protected boolean processScenario(List<String> data, List<Path> scenariosToDrop,
+									  Path scenarioName)
 	{
 		boolean sleepAfterDisplay = false;
 		if(Constant.SAVE.equalsIgnoreCase(_scenarioNamesAndAction.get(scenarioName)))
@@ -151,8 +152,8 @@ public class ProgressFrameSwingWorker extends SwingWorker<Void, String>
 		return sleepAfterDisplay;
 	}
 
-	private boolean save(List<String> data, List<String> scenariosToDrop,
-						 String scenarioName)
+	private boolean save(List<String> data, List<Path> scenariosToDrop,
+						 Path scenarioName)
 	{
 		boolean sleepAfterDisplay = false;
 		String text;
@@ -166,8 +167,8 @@ public class ProgressFrameSwingWorker extends SwingWorker<Void, String>
 		return sleepAfterDisplay;
 	}
 
-	private boolean processBatchRun(List<String> data, List<String> scenariosToDrop,
-									String scenarioName)
+	private boolean processBatchRun(List<String> data, List<Path> scenariosToDrop,
+									Path scenarioName)
 	{
 		boolean sleepAfterDisplay = false;
 		final String text;
@@ -182,7 +183,7 @@ public class ProgressFrameSwingWorker extends SwingWorker<Void, String>
 		return sleepAfterDisplay;
 	}
 
-	void addScenario(String key, String type)
+	void addScenario(Path key, String type)
 	{
 		_scenarioNamesAndAction.put(key, type);
 	}

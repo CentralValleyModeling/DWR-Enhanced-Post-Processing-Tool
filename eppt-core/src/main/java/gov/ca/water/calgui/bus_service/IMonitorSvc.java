@@ -7,6 +7,8 @@
 
 package gov.ca.water.calgui.bus_service;
 
+import java.nio.file.Path;
+
 /**
  * This is the interface for Monitor the process which is done behind the seen.
  *
@@ -21,7 +23,7 @@ public interface IMonitorSvc
 	 * @param scenarioName Just the scenario name.
 	 * @return Will return the string to be displayed.
 	 */
-	String save(String scenarioName);
+	String save(Path scenarioName);
 
 	/**
 	 * This method will return the status of the batch run process.
@@ -29,7 +31,7 @@ public interface IMonitorSvc
 	 * @param scenarioName Just the scenario name.
 	 * @return Will return the string to be displayed.
 	 */
-	String runModel(String scenarioName);
+	String runModel(Path scenarioName);
 
 	/**
 	 * This method will return the status of the batch run process for WSIDI.

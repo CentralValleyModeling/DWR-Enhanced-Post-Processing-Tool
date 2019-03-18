@@ -7,6 +7,7 @@
 
 package gov.ca.water.calgui.bus_service.impl;
 
+import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -81,7 +82,7 @@ public final class GuiLinksSeedDataSvcImpl implements IGuiLinksSeedDataSvc
 		String errorStr = "";
 		try
 		{
-			List<String> guiLinkStrings = fileSystemSvc.getFileData(GUI_LINKS_ALL_MODELS_FILENAME, true,
+			List<String> guiLinkStrings = fileSystemSvc.getFileData(Paths.get(GUI_LINKS_ALL_MODELS_FILENAME), true,
 					GuiLinksSeedDataSvcImpl::isNotComments);
 			for(String guiLinkString : guiLinkStrings)
 			{

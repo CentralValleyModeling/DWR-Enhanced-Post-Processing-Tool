@@ -7,6 +7,7 @@
 
 package gov.ca.water.scenario.presentation;
 
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
 import java.util.function.Consumer;
@@ -49,7 +50,7 @@ public class ProgressFrameSwingWorkerWsidi extends ProgressFrameSwingWorker
 		_swingEngine = swingEngine;
 	}
 
-	protected boolean processScenario(List<String> data, List<String> scenariosToDrop,
+	protected boolean processScenario(List<String> data, List<Path> scenariosToDrop,
 									  String scenarioName)
 	{
 		boolean sleepAfterDisplay;
@@ -60,12 +61,12 @@ public class ProgressFrameSwingWorkerWsidi extends ProgressFrameSwingWorker
 		}
 		else
 		{
-			sleepAfterDisplay = super.processScenario(data, scenariosToDrop, scenarioName);
+			sleepAfterDisplay = super.processScenario(data, scenariosToDrop, Paths.get(scenarioName));
 		}
 		return sleepAfterDisplay;
 	}
 
-	private boolean processBatchWsidiRun(List<String> data, List<String> scenariosToDrop,
+	private boolean processBatchWsidiRun(List<String> data, List<Path> scenariosToDrop,
 										 String scenarioName)
 	{
 		boolean sleepAfterDisplay = false;
@@ -80,7 +81,7 @@ public class ProgressFrameSwingWorkerWsidi extends ProgressFrameSwingWorker
 		{
 			sleepAfterDisplay = true;
 			loadGeneratedWSIDI(scenarioName);
-			scenariosToDrop.add(scenarioName);
+			scenariosToDrop.add(Paths.get(scenarioName));
 		}
 		return sleepAfterDisplay;
 	}

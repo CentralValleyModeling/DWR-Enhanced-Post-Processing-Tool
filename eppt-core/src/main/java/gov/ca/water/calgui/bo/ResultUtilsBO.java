@@ -37,7 +37,6 @@ import gov.ca.water.calgui.constant.Constant;
 import gov.ca.water.calgui.tech_service.IDialogSvc;
 import gov.ca.water.calgui.tech_service.impl.DialogSvcImpl;
 import org.apache.log4j.Logger;
-import org.swixml.SwingEngine;
 
 /**
  * Supporting utilities for display of results
@@ -50,18 +49,14 @@ public class ResultUtilsBO
 	private static ResultUtilsBO resultUtilsBO;
 	private IDialogSvc _dialogSvc = DialogSvcImpl.getDialogSvcInstance();
 	private HashMap<String, Integer> _monthMap;
-	private SwingEngine _swingEngine;
 	private Project _project;
 
 	/**
 	 * Constructor stores SwiXml instance, builds month-to-integer map, and sets
 	 * up a WRIMS GUI Project object for use in Custom Results
-	 *
-	 * @param swingEngine
 	 */
-	private ResultUtilsBO(SwingEngine swingEngine)
+	private ResultUtilsBO()
 	{
-		this._swingEngine = swingEngine;
 
 		// Build map for mmm -> m mapping
 
@@ -92,13 +87,12 @@ public class ResultUtilsBO
 	 *
 	 * @return
 	 */
-	public static ResultUtilsBO getResultUtilsInstance(SwingEngine swingEngine)
+	public static ResultUtilsBO getResultUtilsInstance()
 	{
 		if(resultUtilsBO == null)
 		{
-			resultUtilsBO = new ResultUtilsBO(swingEngine);
+			resultUtilsBO = new ResultUtilsBO();
 		}
-		resultUtilsBO._swingEngine = swingEngine;
 		return resultUtilsBO;
 	}
 
@@ -213,7 +207,7 @@ public class ResultUtilsBO
 	/**
 	 * Writes Quick Results display list, Custom Result DTS tree
 	 */
-	public void writeCGR(JFrame jFrame)
+	public void writeCGR(JFrame jFrame, JList<?> lstReports)
 	{
 		JFileChooser fc = new JFileChooser();
 		fc.setFileFilter(new SimpleFileFilter("cgr", "CalLite Report File (*.cgr)"));
@@ -242,12 +236,10 @@ public class ResultUtilsBO
 				try(OutputStream outputStream = new FileOutputStream(filename))
 				{
 					// Store previous list items
-					JList lstReports = (JList) (_swingEngine).find("lstReports");
 					String[] lstArray = new String[0];
 					int n = 0;
 					if(lstReports != null)
 					{
-
 						int size = lstReports.getModel().getSize(); // 4
 						lstArray = new String[size];
 						for(int i = 0; i < size; i++)

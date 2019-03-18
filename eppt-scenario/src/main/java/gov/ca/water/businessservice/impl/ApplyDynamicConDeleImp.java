@@ -9,6 +9,7 @@ package gov.ca.water.businessservice.impl;
 
 import java.awt.Component;
 import java.awt.Container;
+import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -63,7 +64,8 @@ public class ApplyDynamicConDeleImp implements IApplyDynamicConDele
 	{
 		try
 		{
-			List<String> controlIds = fileSystemSvc.getFileData(Constant.DYNAMIC_CONTROL_FOR_STARTUP_FILENAME, false,
+			List<String> controlIds = fileSystemSvc.getFileData(
+					Paths.get(Constant.DYNAMIC_CONTROL_FOR_STARTUP_FILENAME), false,
 					line -> !line.startsWith(Constant.EXCLAMATION));
 
 			List<JCheckBox> checkBoxList = controlIds.stream().filter(id -> swingEngine.find(id) instanceof JCheckBox)

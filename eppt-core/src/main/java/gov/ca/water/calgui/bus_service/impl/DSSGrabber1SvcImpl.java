@@ -85,7 +85,7 @@ public class DSSGrabber1SvcImpl implements IDSSGrabber1Svc
 	// USGS Water Year for start and end time.
 	int _startWY;
 	int _endWY;
-	Project _project = ResultUtilsBO.getResultUtilsInstance(null).getProject();
+	Project _project = ResultUtilsBO.getResultUtilsInstance().getProject();
 	// Copy of original units
 	// Start and end time of interest
 	private int _startTime;
@@ -175,13 +175,13 @@ public class DSSGrabber1SvcImpl implements IDSSGrabber1Svc
 		{
 			HecTime ht = new HecTime();
 
-			int m = ResultUtilsBO.getResultUtilsInstance(null).monthToInt(dateRange.substring(0, 3));
+			int m = ResultUtilsBO.getResultUtilsInstance().monthToInt(dateRange.substring(0, 3));
 			int y = Integer.parseInt(dateRange.substring(3, 7));
 			ht.setYearMonthDay(m == 12 ? y + 1 : y, m == 12 ? 1 : m + 1, 1, 0);
 			_startTime = ht.value();
 			_startWY = (m < 10) ? y : y + 1; // Water year
 
-			m = ResultUtilsBO.getResultUtilsInstance(null).monthToInt(dateRange.substring(8, 11));
+			m = ResultUtilsBO.getResultUtilsInstance().monthToInt(dateRange.substring(8, 11));
 			y = new Integer(dateRange.substring(11, 15));
 			ht.setYearMonthDay(m == 12 ? y + 1 : y, m == 12 ? 1 : m + 1, 1, 0);
 			_endTime = ht.value();

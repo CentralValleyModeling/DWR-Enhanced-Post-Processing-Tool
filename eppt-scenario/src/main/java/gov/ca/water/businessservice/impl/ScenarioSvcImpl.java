@@ -125,7 +125,7 @@ public final class ScenarioSvcImpl implements IScenarioSvc
 	}
 
 	@Override
-	public void getCLSData(String fileName, List<String> controlStrList, List<String> dataTableModelStrList,
+	public void getCLSData(Path fileName, List<String> controlStrList, List<String> dataTableModelStrList,
 						   List<String> regulationoptionsStr, List<String> wsidiStatusStr)
 			throws EpptInitializationException
 	{
@@ -185,7 +185,7 @@ public final class ScenarioSvcImpl implements IScenarioSvc
 	}
 
 	@Override
-	public void applyClsFile(String fileName, SwingEngine swingEngine, Map<String, GUILinks2BO> tableMap)
+	public void applyClsFile(Path fileName, SwingEngine swingEngine, Map<String, GUILinks2BO> tableMap)
 			throws EpptInitializationException
 	{
 		this.isCLSFlag = true;
@@ -218,11 +218,12 @@ public final class ScenarioSvcImpl implements IScenarioSvc
 	}
 
 	@Override
-	public boolean save(String fileName, SwingEngine swingEngine, List<GUILinks2BO> guiLinks2BOList)
+	public boolean save(Path fileName, SwingEngine swingEngine, List<GUILinks2BO> guiLinks2BOList)
 	{
 		try
 		{
-			saveToCLSFile(Constant.SCENARIOS_DIR + fileName + Constant.CLS_EXT, swingEngine, guiLinks2BOList);
+			saveToCLSFile(Paths.get(Constant.SCENARIOS_DIR + fileName + Constant.CLS_EXT), swingEngine,
+					guiLinks2BOList);
 			saveFiles(fileName, swingEngine, guiLinks2BOList);
 			return true;
 		}
@@ -379,7 +380,7 @@ public final class ScenarioSvcImpl implements IScenarioSvc
 	private String[] getColumnNamesFromTableId(String tableName) throws CalLiteGUIException
 	{
 		List<String> tableStrList = fileSystemSvc
-				.getFileDataForTables(Constant.MODEL_W2_WRESL_LOOKUP_DIR + tableName + Constant.TABLE_EXT);
+				.getFileDataForTables(Paths.get(Constant.MODEL_W2_WRESL_LOOKUP_DIR + tableName + Constant.TABLE_EXT));
 		Optional<String> header = Optional.empty();
 		try
 		{
@@ -498,7 +499,7 @@ public final class ScenarioSvcImpl implements IScenarioSvc
 	 * @param guiLinks2BOList The data list from gui_link2.table.
 	 * @throws CalLiteGUIException It throws a general exception.
 	 */
-	private void saveFiles(String fileName, SwingEngine swingEngine, List<GUILinks2BO> guiLinks2BOList)
+	private void saveFiles(Path fileName, SwingEngine swingEngine, List<GUILinks2BO> guiLinks2BOList)
 			throws CalLiteGUIException
 	{
 		String runDirAbsPath = Paths.get(Constant.RUN_DETAILS_DIR + fileName + Constant.RUN_DIR).toString();
@@ -677,16 +678,16 @@ public final class ScenarioSvcImpl implements IScenarioSvc
 		lineNum[13] = 34;
 		newtext[13] = ((JTextField) swingEngine.find("hyd_DSS_Init_F")).getText();
 
-		replaceLinesInFile(runDirAbsPath + "\\study.sty", lineNum, newtext);
+		replaceLinesInFile(Paths.get(runDirAbsPath).resolve("study.sty"), lineNum, newtext);
 
 		updateSaveStatusFile(runDirAbsPath + Constant.SAVE_FILE + Constant.TXT_EXT, "Writing WRIMSv2 Batchfile.");
 		// configuration file for wrims v2
-		Integer iStartMonth = TimeOperation.monthValue(startMon.toLowerCase());
-		Integer iEndMonth = TimeOperation.monthValue(endMon.toLowerCase());
-		Integer iStartDay = TimeOperation.numberOfDays(iStartMonth, startYr);
-		Integer iEndDay = TimeOperation.numberOfDays(iEndMonth, endYr);
+		int iStartMonth = TimeOperation.monthValue(startMon.toLowerCase());
+		int iEndMonth = TimeOperation.monthValue(endMon.toLowerCase());
+		int iStartDay = TimeOperation.numberOfDays(iStartMonth, startYr);
+		int iEndDay = TimeOperation.numberOfDays(iEndMonth, endYr);
 
-		Map<String, String> configMap = new HashMap<String, String>();
+		Map<String, String> configMap = new HashMap<>();
 		configMap.put("MainFile", runDirAbsPath + "\\main.wresl");
 		configMap.put("DvarFile", FilenameUtils.removeExtension(newtext[6]) + ".dss");
 		configMap.put("SvarFile", newtext[5]);
@@ -694,13 +695,13 @@ public final class ScenarioSvcImpl implements IScenarioSvc
 		configMap.put("InitFile", newtext[7]);
 		configMap.put("InitFPart", newtext[13]);
 		configMap.put("StartYear", startYr.toString());
-		configMap.put("StartMonth", iStartMonth.toString());
-		configMap.put("StartDay", iStartDay.toString());
+		configMap.put("StartMonth", Integer.toString(iStartMonth));
+		configMap.put("StartDay", Integer.toString(iStartDay));
 		configMap.put("EndYear", endYr.toString());
-		configMap.put("EndMonth", iEndMonth.toString());
-		configMap.put("EndDay", iEndDay.toString());
+		configMap.put("EndMonth", Integer.toString(iEndMonth));
+		configMap.put("EndDay", Integer.toString(iEndDay));
 		configMap.put("UserPath", System.getProperty("user.dir"));
-		configMap.put("ScenarioName", fileName);
+		configMap.put("ScenarioName", fileName.toAbsolutePath().toString());
 		configMap.put("ScenarioPath", new File(runDirAbsPath).getParentFile().getAbsolutePath());
 		configMap.put("RunPath", runDirAbsPath);
 		configMap.put("ConfigFilePath",
@@ -718,8 +719,6 @@ public final class ScenarioSvcImpl implements IScenarioSvc
 		configText = configText.replace("{SvarFPart}", configMap.get("SvarFPart"));
 		configText = configText.replace("{InitFile}", configMap.get("InitFile"));
 		configText = configText.replace("{InitFPart}", configMap.get("InitFPart"));
-		// configText = configText.replace("{DvarFile}",
-		// configMap.get("DvarFile"));
 		configText = configText.replace("{StartYear}", configMap.get("StartYear"));
 		configText = configText.replace("{StartMonth}", configMap.get("StartMonth"));
 		configText = configText.replace("{EndYear}", configMap.get("EndYear"));
@@ -764,7 +763,7 @@ public final class ScenarioSvcImpl implements IScenarioSvc
 	 * @param newText  The new text to replace.
 	 * @throws CalLiteGUIException It throws a general exception.
 	 */
-	private void replaceLinesInFile(String fileName, Integer[] lineNum, String[] newText) throws CalLiteGUIException
+	private void replaceLinesInFile(Path fileName, Integer[] lineNum, String[] newText) throws CalLiteGUIException
 	{
 		Integer lineCt = 0;
 		Integer n = 0;
@@ -856,9 +855,9 @@ public final class ScenarioSvcImpl implements IScenarioSvc
 			}
 			for(String fileName : fileDataMap.keySet())
 			{
-				fileSystemSvc.saveDataToFile(runDir + fileName + Constant.TABLE_EXT,
+				fileSystemSvc.saveDataToFile(Paths.get(runDir + fileName + Constant.TABLE_EXT),
 						fileDataMap.get(fileName).toString());
-				fileSystemSvc.saveDataToFile(generatedDir + fileName + Constant.TABLE_EXT,
+				fileSystemSvc.saveDataToFile(Paths.get(generatedDir + fileName + Constant.TABLE_EXT),
 						fileDataMap.get(fileName).toString());
 			}
 		}
@@ -1022,7 +1021,7 @@ public final class ScenarioSvcImpl implements IScenarioSvc
 	private StringBuilder getTheCommentFromFile(String tableName) throws CalLiteGUIException
 	{
 		StringBuilder fileDataStrBuff = new StringBuilder();
-		String fileName = Paths.get(Constant.MODEL_W2_WRESL_LOOKUP_DIR + tableName + Constant.TABLE_EXT).toString();
+		Path fileName = Paths.get(Constant.MODEL_W2_WRESL_LOOKUP_DIR + tableName + Constant.TABLE_EXT);
 		try
 		{
 			List<String> oldFileData = fileSystemSvc.getFileData(fileName, false);
@@ -1095,7 +1094,7 @@ public final class ScenarioSvcImpl implements IScenarioSvc
 			List<GUILinks2BO> data = tableNameMap.get(tableName);
 			List<String> headerList = null;
 			StringBuffer fileDataStrBuf = new StringBuffer();
-			headerList = fileSystemSvc.getFileData(Constant.MODEL_W2_WRESL_LOOKUP_DIR + tableName, false,
+			headerList = fileSystemSvc.getFileData(Paths.get(Constant.MODEL_W2_WRESL_LOOKUP_DIR + tableName), false,
 					ScenarioSvcImpl::isComment);
 			headerList.stream().forEach(header -> fileDataStrBuf.append(header + Constant.NEW_LINE));
 			fileDataStrBuf.append(FilenameUtils.removeExtension(tableName) + Constant.NEW_LINE);
@@ -1172,8 +1171,8 @@ public final class ScenarioSvcImpl implements IScenarioSvc
 							Constant.OLD_DELIMITER).append(description).append(Constant.NEW_LINE);
 				}
 			}
-			fileSystemSvc.saveDataToFile(generatedDir + tableName, fileDataStrBuf.toString());
-			fileSystemSvc.saveDataToFile(runDir + tableName, fileDataStrBuf.toString());
+			fileSystemSvc.saveDataToFile(Paths.get(generatedDir + tableName), fileDataStrBuf.toString());
+			fileSystemSvc.saveDataToFile(Paths.get(runDir + tableName), fileDataStrBuf.toString());
 		}
 	}
 
@@ -1221,7 +1220,7 @@ public final class ScenarioSvcImpl implements IScenarioSvc
 	}
 
 	@Override
-	public void saveToCLSFile(String fileName, SwingEngine swingEngine, List<GUILinks2BO> guiLinks2BOList)
+	public void saveToCLSFile(Path fileName, SwingEngine swingEngine, List<GUILinks2BO> guiLinks2BOList)
 			throws CalLiteGUIException
 	{
 		List<String> panelNames = new ArrayList<>();

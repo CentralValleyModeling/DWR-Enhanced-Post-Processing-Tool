@@ -361,19 +361,18 @@ public final class ProjectConfigurationPanel extends EpptPanel
 	public Month getStartMonth()
 	{
 		JSpinner monthSpinner = (JSpinner) getSwingEngine().find("spnStartMonth");
-		int month = ResultUtilsBO.getResultUtilsInstance(null).monthToInt(monthSpinner.getValue().toString());
+		int month = ResultUtilsBO.getResultUtilsInstance().monthToInt(monthSpinner.getValue().toString());
 		JSpinner yearSpinner = (JSpinner) getSwingEngine().find("spnStartYear");
 		int year = Integer.parseInt(yearSpinner.getValue().toString());
 		return new Month(month, year);
 	}
 
-	public Month getEndMonth()
+	void setStartMonth(Month start)
 	{
-		JSpinner monthSpinner = (JSpinner) getSwingEngine().find("spnEndMonth");
-		int month = ResultUtilsBO.getResultUtilsInstance(null).monthToInt(monthSpinner.getValue().toString());
-		JSpinner yearSpinner = (JSpinner) getSwingEngine().find("spnEndYear");
-		int year = Integer.parseInt(yearSpinner.getValue().toString());
-		return new Month(month, year);
+		JSpinner monthSpinner = (JSpinner) getSwingEngine().find("spnStartMonth");
+		monthSpinner.setValue(ResultUtilsBO.getResultUtilsInstance().intToMonth(start.getMonth()));
+		JSpinner yearSpinner = (JSpinner) getSwingEngine().find("spnStartYear");
+		yearSpinner.setValue(start.getYearValue());
 	}
 
 	public void saveConfigurationToPath(Path selectedPath, String projectName, String projectDescription)
@@ -425,18 +424,19 @@ public final class ProjectConfigurationPanel extends EpptPanel
 		return (JRadioButton) getSwingEngine().find("rdbp002");
 	}
 
-	void setStartMonth(Month start)
+	public Month getEndMonth()
 	{
-		JSpinner monthSpinner = (JSpinner) getSwingEngine().find("spnStartMonth");
-		monthSpinner.setValue(ResultUtilsBO.getResultUtilsInstance(null).intToMonth(start.getMonth()));
-		JSpinner yearSpinner = (JSpinner) getSwingEngine().find("spnStartYear");
-		yearSpinner.setValue(start.getYearValue());
+		JSpinner monthSpinner = (JSpinner) getSwingEngine().find("spnEndMonth");
+		int month = ResultUtilsBO.getResultUtilsInstance().monthToInt(monthSpinner.getValue().toString());
+		JSpinner yearSpinner = (JSpinner) getSwingEngine().find("spnEndYear");
+		int year = Integer.parseInt(yearSpinner.getValue().toString());
+		return new Month(month, year);
 	}
 
 	void setEndMonth(Month end)
 	{
 		JSpinner monthSpinner = (JSpinner) getSwingEngine().find("spnEndMonth");
-		monthSpinner.setValue(ResultUtilsBO.getResultUtilsInstance(null).intToMonth(end.getMonth()));
+		monthSpinner.setValue(ResultUtilsBO.getResultUtilsInstance().intToMonth(end.getMonth()));
 		JSpinner yearSpinner = (JSpinner) getSwingEngine().find("spnEndYear");
 		yearSpinner.setValue(end.getYearValue());
 	}

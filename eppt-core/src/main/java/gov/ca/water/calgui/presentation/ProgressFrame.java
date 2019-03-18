@@ -14,6 +14,7 @@ import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
+import java.nio.file.Path;
 import java.util.List;
 import javax.swing.*;
 
@@ -182,7 +183,7 @@ public final class ProgressFrame extends JFrame implements ActionListener
 	 * @param key  The name of which we should monitor.
 	 * @param type which type.
 	 */
-	public void addScenarioNamesAndAction(String key, String type)
+	public void addScenarioNamesAndAction(Path key, String type)
 	{
 		_workerScenarioMonitor.addScenario(key, type);
 		if(_listScroller.isVisible())
@@ -197,7 +198,7 @@ public final class ProgressFrame extends JFrame implements ActionListener
 	 * @param keys The names of which we should monitor.
 	 * @param type which type like save or batch run.
 	 */
-	public void addScenarioNamesAndAction(List<String> keys, String type)
+	public void addScenarioNamesAndAction(List<Path> keys, String type)
 	{
 		keys.forEach(key -> _workerScenarioMonitor.addScenario(key, type));
 

@@ -9,6 +9,7 @@ package gov.ca.water.businessservice.impl;
 
 import java.awt.Component;
 import java.awt.Container;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -109,7 +110,8 @@ public class VerifyControlsDeleImp implements IVerifyControlsDele
 		List<String> regulationoptionsStr = new ArrayList<>();
 		List<String> wsidiStatusStr = new ArrayList<>();
 		// Read in the cls file data.
-		scenarioSvc.getCLSData(fileName, controlStrList, dataTableModelStrList, regulationoptionsStr, wsidiStatusStr);
+		scenarioSvc.getCLSData(
+				Paths.get(fileName), controlStrList, dataTableModelStrList, regulationoptionsStr, wsidiStatusStr);
 		Set<String> guiIds = xmlParsingSvc.getIdFromXML();
 		List<String> controlStrings = controlStrList.stream().map((key) -> key.split(Constant.PIPELINE_DELIMITER)[0])
 													.collect(Collectors.toList());

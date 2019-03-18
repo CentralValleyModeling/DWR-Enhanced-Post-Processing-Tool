@@ -13,9 +13,10 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
@@ -287,7 +288,7 @@ public class GlobalActionListener implements ActionListener
 					doLoad = false;
 					break;
 				case "Yes":
-					doLoad = this._allButtonsDele.saveCurrentStateToFile(clsFileName);
+					doLoad = this._allButtonsDele.saveCurrentStateToFile(Paths.get(clsFileName));
 					break;
 				case "No":
 					doLoad = true;
@@ -323,7 +324,8 @@ public class GlobalActionListener implements ActionListener
 			LOG.debug("loading this cls file " + fileName);
 			fileName = FilenameUtils.removeExtension(fileName);
 			this._verifyControlsDele.verifyTheDataBeforeUI(Constant.SCENARIOS_DIR + fileName + Constant.CLS_EXT);
-			this._scenarioSvc.applyClsFile(Constant.SCENARIOS_DIR + fileName + Constant.CLS_EXT, _swingEngine,
+			this._scenarioSvc.applyClsFile(Paths.get(Constant.SCENARIOS_DIR + fileName + Constant.CLS_EXT),
+					_swingEngine,
 					_seedDataSvc.getTableIdMap());
 			((JTextField) _swingEngine.find("run_txfScen")).setText(fileName + Constant.CLS_EXT);
 			((JTextField) _swingEngine.find("run_txfoDSS")).setText(fileName + Constant.DV_NAME + Constant.DSS_EXT);
@@ -415,11 +417,12 @@ public class GlobalActionListener implements ActionListener
 			if(decisionBeforeTheBatchRun())
 			{
 				ProgressFrame progressFrame = ProgressFrame.getProgressFrameInstance();
-				List<String> fileName = Arrays.asList(clsFileName);
-				progressFrame.addScenarioNamesAndAction(clsFileName, Constant.BATCH_RUN);
+				Path path = Paths.get(clsFileName);
+				List<Path> fileName = Collections.singletonList(path);
+				progressFrame.addScenarioNamesAndAction(path, Constant.BATCH_RUN);
 				progressFrame.setBtnText(Constant.STATUS_BTN_TEXT_STOP);
 				progressFrame.makeDialogVisible();
-				_modelRunSvc.doBatch(fileName, _swingEngine, false);
+				_modelRunSvc.doBatch(fileName, false);
 			}
 		}
 		catch(Exception e)
@@ -442,11 +445,12 @@ public class GlobalActionListener implements ActionListener
 			if(decisionBeforeTheBatchRun())
 			{
 				ProgressFrame progressFrame = ProgressFrame.getProgressFrameInstance();
-				List<String> fileName = Arrays.asList(clsFileName);
-				progressFrame.addScenarioNamesAndAction(clsFileName, Constant.BATCH_RUN_WSIDI);
+				Path path = Paths.get(clsFileName);
+				List<Path> fileName = Collections.singletonList(path);
+				progressFrame.addScenarioNamesAndAction(path, Constant.BATCH_RUN_WSIDI);
 				progressFrame.setBtnText(Constant.STATUS_BTN_TEXT_STOP);
 				progressFrame.makeDialogVisible();
-				_modelRunSvc.doBatch(fileName, _swingEngine, true);
+				_modelRunSvc.doBatch(fileName, true);
 			}
 		}
 		catch(Exception e)
@@ -486,7 +490,7 @@ public class GlobalActionListener implements ActionListener
 				switch(option)
 				{
 					case "Yes":
-						return this._allButtonsDele.saveCurrentStateToFile(clsFileName);
+						return this._allButtonsDele.saveCurrentStateToFile(Paths.get(clsFileName));
 					case "No":
 						return false;
 				}
@@ -500,7 +504,7 @@ public class GlobalActionListener implements ActionListener
 				switch(option)
 				{
 					case "Yes":
-						isSaved = this._allButtonsDele.saveCurrentStateToFile(clsFileName);
+						isSaved = this._allButtonsDele.saveCurrentStateToFile(Paths.get(clsFileName));
 						break;
 					case "No":
 						loadScenarioButton(((JTextField) _swingEngine.find("run_txfScen")).getText());

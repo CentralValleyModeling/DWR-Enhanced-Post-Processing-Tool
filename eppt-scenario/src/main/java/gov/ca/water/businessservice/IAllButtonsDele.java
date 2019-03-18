@@ -7,6 +7,7 @@
 
 package gov.ca.water.businessservice;
 
+import java.nio.file.Path;
 import javax.swing.*;
 
 /**
@@ -30,7 +31,7 @@ public interface IAllButtonsDele
 	 * @param clsFileName Just the name of the cls file whithout the extension.
 	 * @return It will return true if the save is successful.
 	 */
-	boolean saveCurrentStateToFile(String clsFileName);
+	boolean saveCurrentStateToFile(Path clsFileName);
 
 	/**
 	 * This is to handle the "Save As" button on the "Run Settings" tab.

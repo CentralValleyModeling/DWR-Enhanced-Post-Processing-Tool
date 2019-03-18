@@ -19,12 +19,12 @@
 	<artifactId>eppt-core</artifactId>
 	<name>EPPT Core</name>
 	<dependencies>
-		<dependency>
-			<groupId>org.swixml</groupId>
-			<artifactId>swixml</artifactId>
-			<version>240</version>
-			<classifier>CalLiteGUI_P3</classifier>
-		</dependency>
+		<!--<dependency>-->
+		<!--<groupId>org.swixml</groupId>-->
+		<!--<artifactId>swixml</artifactId>-->
+		<!--<version>240</version>-->
+		<!--<classifier>CalLiteGUI_P3</classifier>-->
+		<!--</dependency>-->
 		<dependency>
 			<groupId>gov.ca.water</groupId>
 			<artifactId>eppt-calsim-gui</artifactId>

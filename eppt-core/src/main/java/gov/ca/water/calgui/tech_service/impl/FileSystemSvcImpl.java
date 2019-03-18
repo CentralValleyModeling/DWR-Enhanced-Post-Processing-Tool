@@ -40,7 +40,7 @@ public class FileSystemSvcImpl implements IFileSystemSvc
 	private static final Logger LOG = Logger.getLogger(FileSystemSvcImpl.class.getName());
 
 	@Override
-	public List<String> getFileData(String fileName, boolean isRequired) throws CalLiteGUIException
+	public List<String> getFileData(Path fileName, boolean isRequired) throws CalLiteGUIException
 	{
 		Path p = Paths.get(System.getProperty("user.dir")).resolve(fileName);
 		List<String> list = null;
@@ -81,14 +81,14 @@ public class FileSystemSvcImpl implements IFileSystemSvc
 	}
 
 	@Override
-	public List<String> getFileData(String fileName, boolean isRequired, Predicate<String> selector)
+	public List<String> getFileData(Path fileName, boolean isRequired, Predicate<String> selector)
 			throws CalLiteGUIException
 	{
 		return this.getFileData(fileName, isRequired).stream().filter(selector).collect(Collectors.toList());
 	}
 
 	@Override
-	public List<String> getFileDataForTables(String fileName) throws CalLiteGUIException
+	public List<String> getFileDataForTables(Path fileName) throws CalLiteGUIException
 	{
 		List<String> list = this.getFileData(fileName, false);
 		return list.stream().filter((obj) -> {
@@ -121,12 +121,11 @@ public class FileSystemSvcImpl implements IFileSystemSvc
 	}
 
 	@Override
-	public void saveDataToFile(String fileName, String data) throws CalLiteGUIException
+	public void saveDataToFile(Path fileName, String data) throws CalLiteGUIException
 	{
-		if(!fileName.isEmpty())
+		if(!fileName.toString().isEmpty())
 		{
-			Path path = Paths.get(fileName);
-			try(BufferedWriter writer = Files.newBufferedWriter(path))
+			try(BufferedWriter writer = Files.newBufferedWriter(fileName))
 			{
 				writer.write(data);
 			}
@@ -141,13 +140,13 @@ public class FileSystemSvcImpl implements IFileSystemSvc
 	public String getTheLookupFromTheFullFileName(String fullName)
 	{
 		String fileName = Paths.get(fullName).getFileName().toString();
-		return getLookupFromTheFileName(fileName);
+		return getLookupFromTheFileName(Paths.get(fileName));
 	}
 
 	@Override
-	public String getLookupFromTheFileName(String fileName)
+	public String getLookupFromTheFileName(Path fileName)
 	{
-		String[] arr = FilenameUtils.removeExtension(fileName).split(Constant.UNDER_SCORE);
+		String[] arr = FilenameUtils.removeExtension(fileName.getFileName().toString()).split(Constant.UNDER_SCORE);
 		String lookupValue = arr[arr.length - 1];
 		if(lookupValue.equalsIgnoreCase("swp") || lookupValue.equalsIgnoreCase("sys"))
 		{

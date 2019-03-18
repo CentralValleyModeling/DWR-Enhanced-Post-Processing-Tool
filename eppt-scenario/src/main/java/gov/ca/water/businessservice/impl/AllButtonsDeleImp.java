@@ -16,6 +16,7 @@ import java.awt.datatransfer.UnsupportedFlavorException;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -111,7 +112,7 @@ public class AllButtonsDeleImp implements IAllButtonsDele
 		FileNameExtensionFilter filter = new FileNameExtensionFilter("CLS FILES (.cls)", "cls");
 		fileChooser.setFileFilter(filter);
 
-		String newScrName = "DEFAULT"; // Check to make sure GUI is not
+		Path newScrName = Paths.get("DEFAULT"); // Check to make sure GUI is not
 		// overwriting DEFAULT.CLS - tad
 		// 20170202
 		int val = JFileChooser.APPROVE_OPTION;
@@ -122,12 +123,12 @@ public class AllButtonsDeleImp implements IAllButtonsDele
 
 			if(val == JFileChooser.APPROVE_OPTION)
 			{
-				newScrName = fileChooser.getSelectedFile().getName();
-				if(newScrName.toLowerCase().endsWith(".cls"))
+				newScrName = fileChooser.getSelectedFile().toPath();
+				if(newScrName.getFileName().toString().toLowerCase().endsWith(".cls"))
 				{
-					newScrName = FilenameUtils.removeExtension(newScrName);
+					newScrName = Paths.get(FilenameUtils.removeExtension(newScrName.getFileName().toString()));
 				}
-				if(newScrName.toUpperCase().equals("DEFAULT") && _defaultCLSProtected)
+				if(newScrName.getFileName().toString().toUpperCase().equals("DEFAULT") && _defaultCLSProtected)
 				{
 					_dialogSvc.getOK(
 							"The CalLite GUI is not allowed to overwrite DEFAULT.CLS. Please choose a different scenario file name or cancel the save operation.",
@@ -150,7 +151,7 @@ public class AllButtonsDeleImp implements IAllButtonsDele
 	public boolean saveCurrentStateToFile()
 	{
 		String clsFileName = ((JTextField) _swingEngine.find("run_txfScen")).getText();
-		return saveCurrentStateToFile(FilenameUtils.removeExtension(clsFileName));
+		return saveCurrentStateToFile(Paths.get(FilenameUtils.removeExtension(clsFileName)));
 	}
 
 	/**
@@ -160,7 +161,7 @@ public class AllButtonsDeleImp implements IAllButtonsDele
 	 */
 
 	@Override
-	public boolean saveCurrentStateToFile(String clsFileName)
+	public boolean saveCurrentStateToFile(Path clsFileName)
 	{
 		this.setOKToSkipConfirmation(false);
 		if(decisionToSaveOrNot(clsFileName))
@@ -177,7 +178,7 @@ public class AllButtonsDeleImp implements IAllButtonsDele
 	 * @param clsFileName The cls file name.
 	 * @return Will return true if we need to save to the file.
 	 */
-	private boolean decisionToSaveOrNot(String clsFileName)
+	private boolean decisionToSaveOrNot(Path clsFileName)
 	{
 		if(_auditSvc.hasValues())
 		{
@@ -196,7 +197,7 @@ public class AllButtonsDeleImp implements IAllButtonsDele
 	{
 		try
 		{
-			_scenarioSvc.saveToCLSFile(Constant.SCENARIOS_DIR + Constant.CURRENT_SCENARIO + Constant.CLS_EXT,
+			_scenarioSvc.saveToCLSFile(Paths.get(Constant.SCENARIOS_DIR + Constant.CURRENT_SCENARIO + Constant.CLS_EXT),
 					_swingEngine, _seedDataSvc.getGUILinks2BOList());
 			return true;
 		}
@@ -215,17 +216,16 @@ public class AllButtonsDeleImp implements IAllButtonsDele
 	 * @param clsFileName The cls file name to save the currnt state of the ui.
 	 * @return Will return true if the save is successful.
 	 */
-	private boolean save(String clsFileName)
+	private boolean save(Path clsFileName)
 	{
 
 		String tempName = Constant.SCENARIOS_DIR + clsFileName + Constant.CLS_EXT;
 		boolean proceed = true;
 		if((new File(tempName)).exists())
 		{
-			proceed = isOKToSkipConfirmation() || (_dialogSvc
+			proceed = isOKToSkipConfirmation() || ("OK".equals(_dialogSvc
 					.getOKCancel("The scenario file '" + tempName + "' already exists. Press OK to overwrite.",
-							JOptionPane.QUESTION_MESSAGE)
-					.equals("OK"));
+							JOptionPane.QUESTION_MESSAGE)));
 
 		}
 
@@ -316,15 +316,15 @@ public class AllButtonsDeleImp implements IAllButtonsDele
 		int val = fileChooser.showOpenDialog(_swingEngine.find(Constant.MAIN_FRAME_NAME));
 		if(val == JFileChooser.APPROVE_OPTION && verifyTheSelectedFiles(fileChooser, Constant.CLS_EXT))
 		{
-			List<String> fileNames = new ArrayList<>();
+			List<Path> fileNames = new ArrayList<>();
 			for(File file : fileChooser.getSelectedFiles())
 			{
-				fileNames.add(FilenameUtils.removeExtension(file.getName()));
+				fileNames.add(Paths.get(FilenameUtils.removeExtension(file.getName())));
 			}
-			List<String> filesWhichAreNotSaved = fileNames.stream()
-														  .filter(fileName -> !Files.isExecutable(
+			List<Path> filesWhichAreNotSaved = fileNames.stream()
+														.filter(fileName -> !Files.isExecutable(
 																  Paths.get(Constant.RUN_DETAILS_DIR + fileName)))
-														  .collect(Collectors.toList());
+														.collect(Collectors.toList());
 			if(filesWhichAreNotSaved != null && !filesWhichAreNotSaved.isEmpty())
 			{
 				String option = _dialogSvc.getYesNo(
@@ -346,7 +346,7 @@ public class AllButtonsDeleImp implements IAllButtonsDele
 			progressFrame.addScenarioNamesAndAction(fileNames, Constant.BATCH_RUN);
 			progressFrame.setBtnText(Constant.STATUS_BTN_TEXT_STOP);
 			progressFrame.makeDialogVisible();
-			_modelRunSvc.doBatch(fileNames, _swingEngine, false);
+			_modelRunSvc.doBatch(fileNames, false);
 		}
 	}
 

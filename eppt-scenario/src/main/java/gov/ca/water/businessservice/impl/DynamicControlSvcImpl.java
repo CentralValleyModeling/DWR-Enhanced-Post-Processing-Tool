@@ -9,6 +9,7 @@ package gov.ca.water.businessservice.impl;
 
 import java.awt.Component;
 import java.awt.Container;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -123,7 +124,8 @@ public final class DynamicControlSvcImpl implements IDynamicControlSvc
 		String mapKey;
 		try
 		{
-			triggerStrList = _fileSystemSvc.getFileData(fileName, true, DynamicControlSvcImpl::isNotComments);
+			triggerStrList = _fileSystemSvc.getFileData(Paths.get(fileName), true,
+					DynamicControlSvcImpl::isNotComments);
 			for(String triggerStr : triggerStrList)
 			{
 				errorStr = triggerStr;

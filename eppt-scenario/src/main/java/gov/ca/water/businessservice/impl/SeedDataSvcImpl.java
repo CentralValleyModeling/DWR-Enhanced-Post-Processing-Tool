@@ -7,6 +7,7 @@
 
 package gov.ca.water.businessservice.impl;
 
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -155,7 +156,7 @@ public class SeedDataSvcImpl implements ISeedDataSvc
 		String errorStr = "";
 		try
 		{
-			List<String> guiLinks4StrList = fileSystemSvc.getFileData(GUI_LINKS4_FILENAME, true,
+			List<String> guiLinks4StrList = fileSystemSvc.getFileData(Paths.get(GUI_LINKS4_FILENAME), true,
 					SeedDataSvcImpl::isNotComments);
 			for(String guiLink4Str : guiLinks4StrList)
 			{
@@ -189,7 +190,7 @@ public class SeedDataSvcImpl implements ISeedDataSvc
 		String errorStr = "";
 		try
 		{
-			List<String> guiLinks2StrList = fileSystemSvc.getFileData(GUI_LINKS2_FILENAME, true,
+			List<String> guiLinks2StrList = fileSystemSvc.getFileData(Paths.get(GUI_LINKS2_FILENAME), true,
 					SeedDataSvcImpl::isNotComments);
 			for(String guiLinks2Str : guiLinks2StrList)
 			{

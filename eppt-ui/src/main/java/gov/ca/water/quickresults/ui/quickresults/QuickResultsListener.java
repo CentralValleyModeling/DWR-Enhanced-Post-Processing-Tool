@@ -88,7 +88,7 @@ public class QuickResultsListener implements ActionListener
 	private void loadReportList()
 	{
 		Window window = SwingUtilities.windowForComponent(_quickResultsPanel);
-		Optional<List<String>> data = ResultUtilsBO.getResultUtilsInstance(null).readCGR((JFrame) window);
+		Optional<List<String>> data = ResultUtilsBO.getResultUtilsInstance().readCGR((JFrame) window);
 		if(data.isPresent())
 		{
 			Component component = _quickResultsPanel.getReportsJList();
@@ -103,7 +103,8 @@ public class QuickResultsListener implements ActionListener
 	private void saveReportList()
 	{
 		Window window = SwingUtilities.windowForComponent(_quickResultsPanel);
-		ResultUtilsBO.getResultUtilsInstance(_quickResultsPanel.getSwingEngine()).writeCGR((JFrame) window);
+		JList<?> lstReports = (JList<?>) _quickResultsPanel.getSwingEngine().find("lstReports");
+		ResultUtilsBO.getResultUtilsInstance().writeCGR((JFrame) window, lstReports);
 	}
 
 	private void displayReportList()
