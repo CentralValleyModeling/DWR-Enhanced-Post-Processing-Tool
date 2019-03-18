@@ -12,27 +12,25 @@
 
 	<groupId>gov.ca.water</groupId>
 	<artifactId>eppt-parent</artifactId>
-	<version>1.0-SNAPSHOT</version>
+	<version>1.0.0-SNAPSHOT</version>
 	<packaging>pom</packaging>
 
-	<name>eppt-parent</name>
-
-
+	<name>EPPT Parent</name>
 
 	<modules>
 		<module>../branding</module>
 		<module>../application</module>
 		<module>../eppt-nbui</module>
 		<module>../eppt-core</module>
-		<module>../eppt-quickresults</module>
+		<module>../eppt-ui</module>
 		<module>../eppt-scenario</module>
-		<module>../calsim-gui</module>
-		<module>../vista</module>
+		<module>../eppt-calsim-gui</module>
+		<module>../eppt-vista</module>
 	</modules>
 
 	<properties>
 		<netbeans.version>RELEASE82</netbeans.version>
-		<brandingToken>eppt</brandingToken>
+		<brandingToken>dwr_eppt</brandingToken>
 	</properties>
 	<repositories>
 		<!--
@@ -45,36 +43,75 @@
 			<name>NetBeans</name>
 			<url>http://bits.netbeans.org/nexus/content/groups/netbeans/</url>
 		</repository>
+		<repository>
+			<id>rma-maven-library-releases</id>
+			<url>http://artifactory.rmanet.com:2447/artifactory/rma-maven-library-releases</url>
+		</repository>
+		<repository>
+			<id>rma-maven-library-snapshots</id>
+			<url>http://artifactory.rmanet.com:2447/artifactory/rma-maven-library-snapshots</url>
+		</repository>
+		<repository>
+			<id>third-party-maven-library-releases</id>
+			<url>http://artifactory.rmanet.com:2447/artifactory/third-party-maven-library-releases</url>
+		</repository>
+		<repository>
+			<id>usace-software-release</id>
+			<url>http://artifactory.rmanet.com:2447/artifactory/usace-software-release</url>
+		</repository>
 	</repositories>
 	<build>
-		<pluginManagement>
-			<plugins>
-				<plugin>
-					<groupId>org.codehaus.mojo</groupId>
-					<artifactId>nbm-maven-plugin</artifactId>
-					<version>4.1</version>
-					<extensions>true</extensions>
-					<configuration>
-						<brandingToken>${brandingToken}</brandingToken>
-						<cluster>${brandingToken}</cluster>
-					</configuration>
-				</plugin>
-				<plugin>
-					<!-- NetBeans 6.9+ requires JDK 6, starting NetBeans 7.4 source 1.7 is required -->
-					<groupId>org.apache.maven.plugins</groupId>
-					<artifactId>maven-compiler-plugin</artifactId>
-					<version>2.5.1</version>
-					<configuration>
-						<source>1.8</source>
-						<target>1.8</target>
-					</configuration>
-				</plugin>
-				<plugin>
-					<groupId>org.apache.maven.plugins</groupId>
-					<artifactId>maven-jar-plugin</artifactId>
-					<version>2.4</version>
-				</plugin>
-			</plugins>
-		</pluginManagement>
+		<plugins>
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>nbm-maven-plugin</artifactId>
+				<version>4.1</version>
+				<extensions>true</extensions>
+				<configuration>
+					<brandingToken>${brandingToken}</brandingToken>
+					<cluster>${brandingToken}</cluster>
+				</configuration>
+			</plugin>
+			<plugin>
+				<!-- NetBeans 6.9+ requires JDK 6, starting NetBeans 7.4 source 1.7 is required -->
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>2.5.1</version>
+				<configuration>
+					<source>1.8</source>
+					<target>1.8</target>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-jar-plugin</artifactId>
+				<version>2.4</version>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-surefire-plugin</artifactId>
+				<version>2.22.0</version>
+			</plugin>
+			<!--<plugin>-->
+			<!--<groupId>org.jacoco</groupId>-->
+			<!--<artifactId>jacoco-maven-plugin</artifactId>-->
+			<!--<version>0.8.3</version>-->
+			<!--<executions>-->
+			<!--<execution>-->
+			<!--<phase>compile</phase>-->
+			<!--<goals>-->
+			<!--<goal>prepare-agent</goal>-->
+			<!--</goals>-->
+			<!--</execution>-->
+			<!--<execution>-->
+			<!--<id>report</id>-->
+			<!--<phase>test</phase>-->
+			<!--<goals>-->
+			<!--<goal>report</goal>-->
+			<!--</goals>-->
+			<!--</execution>-->
+			<!--</executions>-->
+			<!--</plugin>-->
+		</plugins>
 	</build>
 </project>

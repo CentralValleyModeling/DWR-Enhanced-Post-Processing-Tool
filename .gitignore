@@ -3,3 +3,5 @@
 .idea/sonarlint-state.xml
 .idea/copyright/HEC.xml
 .idea/workspace.xml
+.idea/compiler.xml
+/*/target/*

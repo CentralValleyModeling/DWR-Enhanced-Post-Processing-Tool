@@ -7,12 +7,36 @@
 
 package gov.ca.water.calgui.presentation.display;
 
+import java.awt.Color;
+import java.awt.Graphics2D;
+import java.awt.geom.Rectangle2D;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import javax.swing.*;
+
+import com.itextpdf.text.BaseColor;
+import com.itextpdf.text.Document;
+import com.itextpdf.text.DocumentException;
+import com.itextpdf.text.Element;
 import com.itextpdf.text.Font;
+import com.itextpdf.text.FontFactory;
+import com.itextpdf.text.PageSize;
+import com.itextpdf.text.Paragraph;
+import com.itextpdf.text.Phrase;
 import com.itextpdf.text.Rectangle;
-import com.itextpdf.text.*;
+import com.itextpdf.text.pdf.PdfContentByte;
+import com.itextpdf.text.pdf.PdfDestination;
+import com.itextpdf.text.pdf.PdfOutline;
+import com.itextpdf.text.pdf.PdfPCell;
+import com.itextpdf.text.pdf.PdfPRow;
+import com.itextpdf.text.pdf.PdfPTable;
+import com.itextpdf.text.pdf.PdfWriter;
 import com.itextpdf.text.pdf.TextField;
-import com.itextpdf.text.pdf.*;
-import gov.ca.water.calgui.bus_service.impl.XMLParsingSvcImpl;
 import gov.ca.water.calgui.presentation.Report.Writer;
 import gov.ca.water.calgui.tech_service.IDialogSvc;
 import gov.ca.water.calgui.tech_service.IErrorHandlingSvc;
@@ -29,18 +53,6 @@ import org.jfree.data.time.TimeSeries;
 import org.jfree.data.time.TimeSeriesCollection;
 import org.jfree.data.xy.DefaultXYDataset;
 import org.jfree.ui.RectangleInsets;
-import org.swixml.SwingEngine;
-
-import javax.swing.*;
-import java.awt.*;
-import java.awt.geom.Rectangle2D;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
 
 public class ReportPDFWriter implements Writer
 {
@@ -53,7 +65,6 @@ public class ReportPDFWriter implements Writer
 	private Font subtitleFont;
 	private Font smallBoldFont;
 	private String dateStr;
-	private SwingEngine swingEngine = XMLParsingSvcImpl.getXMLParsingSvcImplInstance().getSwingEngine();
 	private Font tableFont;
 	private Font tableBoldFont;
 	private IDialogSvc dialogSvc = DialogSvcImpl.getDialogSvcInstance();
@@ -61,11 +72,6 @@ public class ReportPDFWriter implements Writer
 	public ReportPDFWriter()
 	{
 
-	}
-
-	public ReportPDFWriter(String filename)
-	{
-		startDocument(filename);
 	}
 
 	@Override
@@ -79,7 +85,7 @@ public class ReportPDFWriter implements Writer
 		}
 		catch(NumberFormatException nfe)
 		{
-			errorHandlingSvc.validationeErrorHandler("Number format exception in font size", nfe.getMessage(), null);
+			errorHandlingSvc.validationeErrorHandler("Number format exception in font size", nfe.getMessage());
 		}
 
 		tableFont = FontFactory.getFont("Arial", fontSize);
@@ -89,7 +95,7 @@ public class ReportPDFWriter implements Writer
 	}
 
 	@Override
-	public void startDocument(String filename)
+	public boolean startDocument(String filename)
 	{
 
 		// Check if file is already open
@@ -114,31 +120,18 @@ public class ReportPDFWriter implements Writer
 		catch(DocumentException de)
 		{
 			LOG.debug(de.getMessage());
+			dialogSvc.getOK("Error while creating the pdf file: " + (new File(filename).getName()) + ". " +  de.getMessage(),
+					JOptionPane.WARNING_MESSAGE);
+			return false;
 		}
 		catch(IOException ioe)
 		{
 			LOG.debug(ioe.getMessage());
-			// JOptionPane.showMessageDialog(null, "Please close the file " +
-			// (new File(filename).getName()) + " if it is open.",
-			// "Warning!", JOptionPane.WARNING_MESSAGE);
-			// ImageIcon icon = new
-			// ImageIcon(getClass().getResource("/images/CalLiteIcon.png"));
-			// Object[] options = { "OK" };
-			// JOptionPane optionPane = new JOptionPane(
-			// "Please close the file " + (new File(filename).getName()) + " if
-			// it is open.",
-			// JOptionPane.ERROR_MESSAGE, JOptionPane.OK_OPTION, null, options,
-			// options[0]);
-			// JDialog dialog =
-			// optionPane.createDialog(swingEngine.find(Constant.MAIN_FRAME_NAME),
-			// "CalLite");
-			// dialog.setIconImage(icon.getImage());
-			// dialog.setResizable(false);
-			// dialog.setVisible(true);
-			dialogSvc.getOK("Please close the file " + (new File(filename).getName()) + " if it is open.",
+			dialogSvc.getOK("Error while creating the pdf file: " + (new File(filename).getName()) + "\nIf the file is already open, please close it and try again.\n" + ioe.getMessage(),
 					JOptionPane.WARNING_MESSAGE);
-			return;
+			return false;
 		}
+		return true;
 	}
 
 	@Override
@@ -148,7 +141,7 @@ public class ReportPDFWriter implements Writer
 		try
 		{
 			Paragraph title = new Paragraph("\n\n\n\n" + compareInfo,
-					FontFactory.getFont("Arial", 24f, Font.BOLD, BaseColor.BLUE));
+					FontFactory.getFont("Arial", 24F, Font.BOLD, BaseColor.BLUE));
 			title.setAlignment(Element.ALIGN_CENTER);
 			document.add(title);
 			Paragraph pauthor = new Paragraph("\n\n" + "Author: " + author,
@@ -166,7 +159,6 @@ public class ReportPDFWriter implements Writer
 				tf1.setBorderColor(BaseColor.RED);
 				tf1.setBorderWidth(1);
 				tf1.setRotation(90);
-				// tf1.setBorderStyle(PdfBorderDictionary.STYLE_BEVELED);
 				tf1.setText("Alternative 1 DSS file: " + fileBase + "\n\n" + "Alternative 2 DSS file: " + fileAlt);
 				tf1.setAlignment(Element.ALIGN_LEFT);
 				tf1.setOptions(TextField.REQUIRED | TextField.READ_ONLY | TextField.MULTILINE);
@@ -216,7 +208,7 @@ public class ReportPDFWriter implements Writer
 	}
 
 	@Override
-	public void addTableHeader(ArrayList<String> headerRow, int[] columnSpans)
+	public void addTableHeader(List<String> headerRow, int[] columnSpans)
 	{
 		if(summaryTable == null)
 		{
@@ -402,7 +394,7 @@ public class ReportPDFWriter implements Writer
 	}
 
 	@Override
-	public void addExceedancePlot(ArrayList<double[]> buildDataArray, String title, String[] seriesName,
+	public void addExceedancePlot(List<double[]> buildDataArray, String title, String[] seriesName,
 								  String xAxisLabel, String yAxisLabel)
 	{
 		DefaultXYDataset dataset = new DefaultXYDataset();
@@ -431,7 +423,7 @@ public class ReportPDFWriter implements Writer
 	}
 
 	@Override
-	public void addTimeSeriesPlot(ArrayList<double[]> buildDataArray, String title, String[] seriesName,
+	public void addTimeSeriesPlot(List<double[]> buildDataArray, String title, String[] seriesName,
 								  String xAxisLabel, String yAxisLabel)
 	{
 		TimeSeriesCollection datasets = new TimeSeriesCollection();

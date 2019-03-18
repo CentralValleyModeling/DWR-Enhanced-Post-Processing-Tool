@@ -6,6 +6,11 @@
  */
 package gov.ca.water.eppt.nbui;
 
+import java.awt.BorderLayout;
+import javax.swing.*;
+
+import gov.ca.water.quickresults.ui.customresults.CustomResultsListener;
+import gov.ca.water.quickresults.ui.customresults.CustomResultsPanel;
 import org.openide.awt.ActionID;
 import org.openide.awt.ActionReference;
 import org.openide.util.NbBundle.Messages;
@@ -19,13 +24,11 @@ import org.openide.windows.TopComponent;
 		//iconBase="SET/PATH/TO/ICON/HERE",
 		persistenceType = TopComponent.PERSISTENCE_ALWAYS
 )
-@TopComponent.Registration(mode = "editor", openAtStartup = true)
+@TopComponent.Registration(mode = "editor", openAtStartup = true, position = 3333)
 @ActionID(category = "Window", id = "gov.ca.water.eppt.nbui.CustomResultsTopComponent")
-@ActionReference(path = "Menu/Window" /*
- * , position = 333
- */)
+@ActionReference(path = "Menu/Window", position = 3333)
 @TopComponent.OpenActionRegistration(
-		displayName = "#CTL_CustomResultsAction",
+		displayName = "Custom Results",
 		preferredID = "CustomResultsTopComponent"
 )
 @Messages(
@@ -34,11 +37,25 @@ import org.openide.windows.TopComponent;
 				"CTL_CustomResultsTopComponent=CustomResults Window",
 				"HINT_CustomResultsTopComponent=This is a CustomResults window"
 		})
-public final class CustomResultsTopComponent extends TopComponent
+public final class CustomResultsTopComponent extends EpptTopComponent
 {
+
+	private final CustomResultsPanel _customResultsPanel;
 
 	public CustomResultsTopComponent()
 	{
 		setName("Custom Results");
+		_customResultsPanel = new CustomResultsPanel();
+		CustomResultsListener customResultsListener = new CustomResultsListener(_customResultsPanel);
+		_customResultsPanel.setActionListener(customResultsListener);
+		JScrollPane scrollPane = new JScrollPane(_customResultsPanel);
+		setLayout(new BorderLayout());
+		add(scrollPane, BorderLayout.CENTER);
+	}
+
+	@Override
+	public String getJavaHelpId()
+	{
+		return _customResultsPanel.getJavaHelpId();
 	}
 }

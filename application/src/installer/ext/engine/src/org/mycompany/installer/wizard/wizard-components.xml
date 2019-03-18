@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ Copyright (c) 2019
+  ~ California Department of Water Resources
+  ~ All Rights Reserved.  DWR PROPRIETARY/CONFIDENTIAL.
+  ~ Source may not be released without written approval from DWR
+  -->
+
+<wizard xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="wizard-components.xsd">
+	<component
+			class="org.mycompany.installer.wizard.components.actions.InitializeAction"/>
+	<component
+			class="org.mycompany.installer.wizard.components.panels.WelcomePanel"/>
+	<component
+			class="org.mycompany.installer.wizard.components.sequences.MainSequence"/>
+	<component
+			class="org.netbeans.installer.wizard.components.sequences.CreateBundleSequence"/>
+	<component
+			class="org.netbeans.installer.wizard.components.actions.FinalizeRegistryAction"/>
+</wizard>

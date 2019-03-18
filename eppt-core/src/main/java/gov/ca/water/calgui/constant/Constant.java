@@ -7,23 +7,25 @@
 
 package gov.ca.water.calgui.constant;
 
+
 /**
  * This class is used to hold all the constant values required for the
  * application.
  *
  * @author Mohan
  */
-public class Constant
+public final class Constant
 {
-
+	public static final String EPPT_EXT = "eppt";
 	public static final String CLS_EXT = ".CLS";
 	public static final String TABLE_EXT = ".table";
 	public static final String CSV_EXT = ".csv";
 	public static final String DSS_EXT = ".dss";
 	public static final String TXT_EXT = ".txt";
 	public static final String DV_NAME = "_DV";
-	public static final String SCENARIOS_DIR = System.getProperty("user.dir") + "//Scenarios//";
-	public static final String RUN_DETAILS_DIR = SCENARIOS_DIR + "Run_Details//";
+	public static final String CONFIG_DIR = System.getProperty("user.dir") + "\\dwr_eppt\\config\\";
+	public static final String DOCS_DIR = System.getProperty("user.dir") + "\\dwr_eppt\\docs\\";
+	public static final String RUN_DETAILS_DIR = "//Scenarios//Run_Details//";
 	public static final String MODEL_W2_DIR = System.getProperty("user.dir") + "//Model_w2//";
 	public static final String MODEL_W2_DSS_DIR = MODEL_W2_DIR + "//DSS_Files//";
 	public static final String MODEL_W2_WRESL_DIR = MODEL_W2_DIR + "wresl//";
@@ -33,9 +35,7 @@ public class Constant
 	public static final String RUN_DIR = "//Run//";
 	// File Names.
 	public static final String GUI_XML_FILENAME = System.getProperty("user.dir") + "//Config//GUI.xml";
-	public static final String GUI_LINKS2_FILENAME = System.getProperty("user.dir") + "//Config//GUI_Links2" + CSV_EXT;
-	public static final String GUI_LINKS3_FILENAME = System.getProperty("user.dir") + "//Config//GUI_Links3" + CSV_EXT;
-	public static final String GUI_LINKS4_FILENAME = System.getProperty("user.dir") + "//Config//GUI_Links4" + CSV_EXT;
+
 	public static final String DYNAMIC_CONTROL_FOR_STARTUP_FILENAME = System.getProperty("user.dir")
 			+ "//Config//DynamicControlForStartUp" + CSV_EXT;
 	public static final String TRIGGER_ENABLE_DISABLE_FILENAME = System.getProperty("user.dir")
@@ -106,4 +106,13 @@ public class Constant
 	public static final String VAMP_SELECTED_TEXT = "If D1485 is selected, take VAMP D1641 hydrology with a D1485 run.";
 	public static final String VAMP_NOT_SELECTED_TEXT = "Access regulation table (where applicable) by selecting or right-clicking on a regulation name.";
 
+	public static final String SCENARIOS_DIR = "Scenarios";
+	static final String MODEL_DIR = "Model_w2";
+	static final String MODEL_DSS_DIR = "DSS_Files";
+	static final String REPORTS_DIR = "Reports";
+
+	private Constant()
+	{
+		throw new AssertionError("Utility class");
+	}
 }

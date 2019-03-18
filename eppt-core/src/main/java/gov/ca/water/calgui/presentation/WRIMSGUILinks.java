@@ -5,16 +5,15 @@
  * Source may not be released without written approval from DWR
  */
 
-/**
- *
- */
 package gov.ca.water.calgui.presentation;
 
-import java.awt.*;
+import java.awt.BorderLayout;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
-import java.util.Scanner;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.Optional;
+import java.util.stream.Stream;
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
@@ -24,12 +23,9 @@ import calsim.gui.CalLiteGUIPanelWrapper;
 import calsim.gui.GuiUtils;
 import gov.ca.water.calgui.bo.RBListItemBO;
 import gov.ca.water.calgui.bo.ResultUtilsBO;
-import gov.ca.water.calgui.bus_service.impl.XMLParsingSvcImpl;
-import gov.ca.water.calgui.constant.Constant;
 import gov.ca.water.calgui.tech_service.IErrorHandlingSvc;
 import gov.ca.water.calgui.tech_service.impl.ErrorHandlingSvcImpl;
 import org.apache.log4j.Logger;
-import org.swixml.SwingEngine;
 
 /**
  *
@@ -39,24 +35,15 @@ import org.swixml.SwingEngine;
  * @author tslawecki
  *
  */
-public class WRIMSGUILinks
+public final class WRIMSGUILinks
 {
 
 	private static final Logger LOG = Logger.getLogger(WRIMSGUILinks.class.getName());
-	private static SwingEngine swingEngine = XMLParsingSvcImpl.getXMLParsingSvcImplInstance().getSwingEngine();
 	private static IErrorHandlingSvc errorHandlingSvc = new ErrorHandlingSvcImpl();
 
-	/**
-	 * This method is intended to update the status label inside the WRIMS GUI
-	 * panel to reflect progress reading data files. It is currently a stub.
-	 *
-	 * @param text
-	 */
-	public static void setStatus(String text)
+	private WRIMSGUILinks()
 	{
-		LOG.debug("Status update to '" + text + "'");
-		// statusLabel.setText(text);
-		// statusLabel.invalidate();
+		throw new AssertionError("Utility class");
 	}
 
 	/**
@@ -68,27 +55,14 @@ public class WRIMSGUILinks
 	 */
 	public static void buildWRIMSGUI(JPanel p)
 	{
+		p.setSize(900, 650);
 
-		try
-		{
-			p.setSize(900, 650);
-
-			CalLiteGUIPanelWrapper pw = new CalLiteGUIPanelWrapper(
-					(JFrame) ResultUtilsBO.getResultUtilsInstance(null).getSwix().find(Constant.MAIN_FRAME_NAME));
-			pw.getPanel().setSize(900, 650);
-			p.add(pw.getPanel(), BorderLayout.NORTH);
-			JPanel statusPanel = GuiUtils.getStatusPanel();
-			p.add(statusPanel, BorderLayout.CENTER);
-			GuiUtils.setStatus("Initialized.");
-		}
-		catch(Exception e)
-		{
-			LOG.error(e.getMessage());
-			String messageText = "Unable to update WRIMS GUI files.";
-			errorHandlingSvc.businessErrorHandler(messageText, (JFrame) swingEngine.find(Constant.MAIN_FRAME_NAME), e);
-		}
-
-		// statusLabel = (JLabel) statusPanel.getComponent(2);
+		CalLiteGUIPanelWrapper pw = new CalLiteGUIPanelWrapper();
+		pw.getPanel().setSize(900, 650);
+		p.add(pw.getPanel(), BorderLayout.NORTH);
+		JPanel statusPanel = GuiUtils.getStatusPanel();
+		p.add(statusPanel, BorderLayout.CENTER);
+		GuiUtils.setStatus("Initialized.");
 	}
 
 	/**
@@ -122,14 +96,8 @@ public class WRIMSGUILinks
 				project.setDVHashtable();
 
 				String svFileName = item.getSVFilename();
-				if(svFileName.equals(""))
-				{
-					svFileName = findSVFileName(dvFileName);
-					item.setSVFilename(svFileName);
-				}
-
 				project.setSVFile(svFileName);
-				if(!(svFileName == null))
+				if(svFileName != null)
 				{
 					File svFile = new File(svFileName);
 					if(svFile.exists() && !svFile.isDirectory())
@@ -137,9 +105,7 @@ public class WRIMSGUILinks
 						project.setSVHashtable();
 					}
 				}
-
 				AppUtils.baseOn = true;
-
 			}
 			else
 			{
@@ -151,11 +117,6 @@ public class WRIMSGUILinks
 					RBListItemBO item = (RBListItemBO) theList.getModel().getElementAt(i);
 					String dvFileName = item.toString();
 					String svFileName = item.getSVFilename();
-					if(svFileName.equals(""))
-					{
-						svFileName = findSVFileName(dvFileName);
-						item.setSVFilename(svFileName);
-					}
 					if(item.isSelected())
 					{
 						project.setDVFile(dvFileName);
@@ -184,11 +145,11 @@ public class WRIMSGUILinks
 				}
 			}
 		}
-		catch(Exception e)
+		catch(RuntimeException e)
 		{
 			LOG.error(e.getMessage());
 			String messageText = "Unable to update WRIMS GUI files.";
-			errorHandlingSvc.businessErrorHandler(messageText, (JFrame) swingEngine.find(Constant.MAIN_FRAME_NAME), e);
+			errorHandlingSvc.businessErrorHandler(messageText, e);
 		}
 	}
 
@@ -208,38 +169,32 @@ public class WRIMSGUILinks
 		String clsFileName = dvFileName.substring(0, dvFileName.length() - 7) + ".cls";
 		File clsF = new File(clsFileName);
 		String svFileName = "";
-		try
+		try(Stream<String> lines = Files.lines(Paths.get(clsF.getAbsolutePath())))
 		{
-			Scanner scanner;
-			scanner = new Scanner(new FileInputStream(clsF.getAbsolutePath()));
-			while(scanner.hasNextLine() && svFileName.equals(""))
+			Optional<String> hydDssSvLine = lines.filter(line -> line.startsWith("hyd_DSS_SV|")).findFirst();
+			if(hydDssSvLine.isPresent())
 			{
-				String text = scanner.nextLine();
-				if(text.startsWith("hyd_DSS_SV|"))
-				{
-
-					String[] texts = text.split("[|]");
-					svFileName = texts[1];
-				}
+				String[] texts = hydDssSvLine.get().split("[|]");
+				svFileName = texts[1];
 			}
-			scanner.close();
-
 		}
 		catch(IOException e)
 		{
 			LOG.info(clsF.getName() + " not openable - checking for like-named SV file");
+			LOG.debug(clsF.getName() + " not openable - checking for like-named SV file", e);
 		}
 
-		if(!svFileName.equals(""))
+		if(!svFileName.isEmpty())
 		{
 
 			// Found in CLS - Build string pointing to
 			// "Scenarios/Run_Details/scenarioname/Run/DSS/svfilename"
-
-			String svPathString = dvFileName.substring(0, dvFileName.length() - 7); // Strip
+			String svPathString = dvFileName.substring(0, dvFileName.length() - 7);
+			// Strip
 			// out
 			// "_DV.DSS"
-			int i = svPathString.lastIndexOf("\\"); // find rightmost "/"
+			// find rightmost "/"
+			int i = svPathString.lastIndexOf('\\');
 			svFileName = svPathString.substring(0, i) + "\\Run_Details" + svPathString.substring(i) + "\\Run\\DSS\\"
 					+ svFileName;
 
@@ -248,8 +203,7 @@ public class WRIMSGUILinks
 		{
 
 			// Not found in CLS: first, check if there's a corresponding SV.DSS
-
-			if(dvFileName.substring(dvFileName.length() - 6).toUpperCase().equals("DV.DSS"))
+			if("DV.DSS".equalsIgnoreCase(dvFileName.substring(dvFileName.length() - 6)))
 			{
 				svFileName = dvFileName.substring(0, dvFileName.length() - 6) + "SV.dss";
 				File svF = new File(svFileName);
@@ -262,7 +216,7 @@ public class WRIMSGUILinks
 					svFileName = "";
 				}
 
-				if(svFileName.equals(""))
+				if(svFileName.isEmpty())
 				{
 
 					// No corresponding SV.DSS - get file from file dialog!

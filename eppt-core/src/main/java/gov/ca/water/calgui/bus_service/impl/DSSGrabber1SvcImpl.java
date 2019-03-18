@@ -9,27 +9,36 @@ package gov.ca.water.calgui.bus_service.impl;
 
 //! Base DSS file access service
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Calendar;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Properties;
+import java.util.Scanner;
+import java.util.Vector;
+import javax.swing.*;
+
 import calsim.app.Project;
-import gov.ca.water.calgui.bo.GUILinks3BO;
+import gov.ca.water.calgui.bo.GUILinksAllModelsBO;
+import gov.ca.water.calgui.bo.RBListItemBO;
 import gov.ca.water.calgui.bo.ResultUtilsBO;
 import gov.ca.water.calgui.bus_service.IDSSGrabber1Svc;
-import gov.ca.water.calgui.bus_service.ISeedDataSvc;
-import gov.ca.water.calgui.constant.Constant;
+import gov.ca.water.calgui.bus_service.IGuiLinksSeedDataSvc;
 import gov.ca.water.calgui.tech_service.IDialogSvc;
 import gov.ca.water.calgui.tech_service.IErrorHandlingSvc;
 import gov.ca.water.calgui.tech_service.impl.DialogSvcImpl;
 import gov.ca.water.calgui.tech_service.impl.ErrorHandlingSvcImpl;
+import org.apache.log4j.Logger;
+
 import hec.heclib.dss.HecDss;
 import hec.heclib.util.HecTime;
+import hec.hecmath.computation.ValueContainer;
+import hec.hecmath.functions.TimeSeriesFunctions;
 import hec.io.TimeSeriesContainer;
-import org.apache.log4j.Logger;
-import org.swixml.SwingEngine;
-
-import javax.swing.*;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.util.*;
 
 /**
  * Class to grab (load) DSS time series for a set of scenarios passed in a
@@ -57,47 +66,55 @@ public class DSSGrabber1SvcImpl implements IDSSGrabber1Svc
 {
 
 	static final double CFS_2_TAF_DAY = 0.001983471;
-	static final double TAF_DAY_2_CFS = 504.166667;
-	static Logger LOG = Logger.getLogger(DSSGrabber1SvcImpl.class.getName());
-	protected final JList lstScenarios;
-	protected String baseName;
-	protected String primaryDSSName;
-	protected String secondaryDSSName;
-	protected String title; // Chart title
-	protected String yLabel; // Y-axis label
-	protected String sLabel; // Label for secondary time series
-	protected boolean isCFS; // Indicates whether "CFS" button was selected
-	protected String originalUnits; // Copy of original units
-	protected int startTime; // Start and end time of interest
-	protected int endTime;
-	protected int startWY; // USGS Water Year for start and end time.
-	protected int endWY;
-	protected int scenarios; // Number of scenarios passed in list parameter
-	protected double[][] annualTAFs;
-	protected double[][] annualTAFsDiff;
-	protected double[][] annualCFSs;
-	protected double[][] annualCFSsDiff;
-	protected Project project = ResultUtilsBO.getResultUtilsInstance(null).getProject();
-	private ISeedDataSvc seedDataSvc = SeedDataSvcImpl.getSeedDataSvcImplInstance();
-	private SwingEngine swingEngine = XMLParsingSvcImpl.getXMLParsingSvcImplInstance().getSwingEngine();
-	private IErrorHandlingSvc errorHandlingSvc = new ErrorHandlingSvcImpl();
-	private IDialogSvc dialogSvc = DialogSvcImpl.getDialogSvcInstance();
-	private boolean stopOnMissing = true;
-	private List<String> missingDSSRecords = new ArrayList<String>();
-	private Properties properties = new Properties();
+	private static final double TAF_DAY_2_CFS = 504.166667;
+	private static Logger LOG = Logger.getLogger(DSSGrabber1SvcImpl.class.getName());
+	final List<RBListItemBO> _scenarios = new ArrayList<>();
+	String _baseName;
+	final List<String> _primaryDSSName = new ArrayList<>();
+	final List<String> _secondaryDSSName = new ArrayList<>();
+	// Chart title
+	String _plotTitle;
+	// Y-axis label
+	String _axisLabel;
+	// Label for secondary time series
+	String _legend;
+	// Indicates whether "CFS" button was selected
+	String _originalUnits;
+	int _scenarioCount;
+	boolean _isCFS;
+	// USGS Water Year for start and end time.
+	int _startWY;
+	int _endWY;
+	Project _project = ResultUtilsBO.getResultUtilsInstance(null).getProject();
+	// Copy of original units
+	// Start and end time of interest
+	private int _startTime;
+	private int _endTime;
+	// Number of scenarios passed in list parameter
+	private double[][] _annualTAFs;
+	private double[][] _annualTAFsDiff;
+	private double[][] _annualCFSs;
+	private double[][] _annualCFSsDiff;
+	private IGuiLinksSeedDataSvc _seedDataSvc = GuiLinksSeedDataSvcImpl.getSeedDataSvcImplInstance();
+	private IErrorHandlingSvc _errorHandlingSvc = new ErrorHandlingSvcImpl();
+	private IDialogSvc _dialogSvc = DialogSvcImpl.getDialogSvcInstance();
+	private boolean _stopOnMissing;
+	private List<String> _missingDSSRecords = new ArrayList<>();
 
-	public DSSGrabber1SvcImpl(JList list)
+	public DSSGrabber1SvcImpl(List<RBListItemBO> scenarios)
 	{
-
-		this.lstScenarios = list;
+		_scenarios.addAll(scenarios);
+		String propertiesFile = "callite-gui.properties";
 		try
 		{
-			properties.load(ModelRunSvcImpl.class.getClassLoader().getResourceAsStream("callite-gui.properties"));
-			stopOnMissing = Boolean.parseBoolean(properties.getProperty("stop.display.on.null"));
+			Properties properties = new Properties();
+			properties.load(ModelRunSvcImpl.class.getClassLoader().getResourceAsStream(propertiesFile));
+			_stopOnMissing = Boolean.parseBoolean(properties.getProperty("stop.display.on.null"));
 		}
-		catch(Exception e)
+		catch(IOException | RuntimeException e)
 		{
-			stopOnMissing = true;
+			LOG.error("Unable to read properties file from: " + propertiesFile, e);
+			_stopOnMissing = true;
 		}
 		clearMissingList();
 	}
@@ -107,7 +124,7 @@ public class DSSGrabber1SvcImpl implements IDSSGrabber1Svc
 	 */
 	public void clearMissingList()
 	{
-		missingDSSRecords.clear();
+		_missingDSSRecords.clear();
 	}
 
 	/**
@@ -117,7 +134,7 @@ public class DSSGrabber1SvcImpl implements IDSSGrabber1Svc
 	 */
 	public List<String> getMissingList()
 	{
-		return missingDSSRecords;
+		return _missingDSSRecords;
 	}
 
 	/**
@@ -128,7 +145,7 @@ public class DSSGrabber1SvcImpl implements IDSSGrabber1Svc
 	 */
 	public boolean getStopOnMissing()
 	{
-		return stopOnMissing;
+		return _stopOnMissing;
 	}
 
 	/*
@@ -140,7 +157,7 @@ public class DSSGrabber1SvcImpl implements IDSSGrabber1Svc
 	@Override
 	public void setIsCFS(boolean isCFS)
 	{
-		this.isCFS = isCFS;
+		this._isCFS = isCFS;
 	}
 
 	/*
@@ -159,26 +176,26 @@ public class DSSGrabber1SvcImpl implements IDSSGrabber1Svc
 			HecTime ht = new HecTime();
 
 			int m = ResultUtilsBO.getResultUtilsInstance(null).monthToInt(dateRange.substring(0, 3));
-			int y = new Integer(dateRange.substring(3, 7));
+			int y = Integer.parseInt(dateRange.substring(3, 7));
 			ht.setYearMonthDay(m == 12 ? y + 1 : y, m == 12 ? 1 : m + 1, 1, 0);
-			startTime = ht.value();
-			startWY = (m < 10) ? y : y + 1; // Water year
+			_startTime = ht.value();
+			_startWY = (m < 10) ? y : y + 1; // Water year
 
 			m = ResultUtilsBO.getResultUtilsInstance(null).monthToInt(dateRange.substring(8, 11));
 			y = new Integer(dateRange.substring(11, 15));
 			ht.setYearMonthDay(m == 12 ? y + 1 : y, m == 12 ? 1 : m + 1, 1, 0);
-			endTime = ht.value();
-			endWY = ((m < 10) ? y : y + 1);
+			_endTime = ht.value();
+			_endWY = (m < 10) ? y : y + 1;
 		}
 		catch(UnsatisfiedLinkError | NoClassDefFoundError e)
 		{
-			errorHandlingSvc.systemErrorHandler("Possible javaheclib.dll issue - CalLite GUI will close",
-					"javaHecLib.dll may be the wrong version or missing.", null);
+			_errorHandlingSvc.systemErrorHandler("Possible javaheclib.dll issue - CalLite GUI will close",
+					"javaHecLib.dll may be the wrong version or missing.");
 		}
 		catch(Exception e)
 		{
 
-			startTime = -1;
+			_startTime = -1;
 			LOG.debug(e.getMessage());
 		}
 
@@ -196,7 +213,7 @@ public class DSSGrabber1SvcImpl implements IDSSGrabber1Svc
 		String delimiter;
 
 		// Windows
-		if(baseName.contains("\\"))
+		if(_baseName.contains("\\"))
 		{
 
 			delimiter = "\\\\";
@@ -208,7 +225,7 @@ public class DSSGrabber1SvcImpl implements IDSSGrabber1Svc
 			delimiter = "/";
 		}
 
-		String[] pathParts = baseName.split(delimiter);
+		String[] pathParts = _baseName.split(delimiter);
 		String fullFileName = pathParts[pathParts.length - 1];
 		String fileName = fullFileName.substring(0, fullFileName.lastIndexOf("."));
 		return fileName;
@@ -225,7 +242,7 @@ public class DSSGrabber1SvcImpl implements IDSSGrabber1Svc
 	public void setBase(String baseName)
 	{
 
-		this.baseName = baseName;
+		this._baseName = baseName;
 	}
 
 	/*
@@ -245,106 +262,29 @@ public class DSSGrabber1SvcImpl implements IDSSGrabber1Svc
 		{
 			// Handle names passed from WRIMS GUI
 			String[] parts = locationName.split("/");
-			title = locationName;
-			primaryDSSName = parts[2] + "/" + parts[3] + "/" + parts[6];
-			secondaryDSSName = "";
-			yLabel = "";
-			sLabel = "";
+			_plotTitle = locationName;
+			_primaryDSSName.clear();
+			_primaryDSSName.add(parts[2] + "/" + parts[3] + "/" + parts[6]);
+			_secondaryDSSName.clear();
+			_axisLabel = "";
+			_legend = "";
 		}
 		else
 		{
-			String lookupID = locationName;
-			if(lookupID.startsWith(Constant.SCHEMATIC_PREFIX))
-			// Strip off prefix for schematic view - NOT SURE IF WE CAN'T
-			// JUST ELIMINATE PREFIX?
-			{
-				lookupID = lookupID.substring(Constant.SCHEMATIC_PREFIX.length());
-			}
-
 			// Location name is otherwise assumed coded as "ckpbxxx"
 
-			GUILinks3BO guiLinks3BO = seedDataSvc.getObjById(locationName);
-			if(guiLinks3BO != null)
+			GUILinksAllModelsBO guiLinksAllModelsBO = _seedDataSvc.getObjById(locationName);
+			if(guiLinksAllModelsBO != null)
 			{
-				primaryDSSName = guiLinks3BO.getPrimary();
-				secondaryDSSName = guiLinks3BO.getSecondary();
-				yLabel = guiLinks3BO.getyTitle();
-				title = guiLinks3BO.getTitle();
-				sLabel = guiLinks3BO.getyTitle2();
+				_primaryDSSName.clear();
+				_primaryDSSName.addAll(guiLinksAllModelsBO.getPrimary());
+				_secondaryDSSName.clear();
+				_secondaryDSSName.addAll(guiLinksAllModelsBO.getSecondary());
+				_axisLabel = guiLinksAllModelsBO.getPlotAxisLabel();
+				_plotTitle = guiLinksAllModelsBO.getPlotTitle();
+				_legend = guiLinksAllModelsBO.getLegend();
 			}
 		}
-	}
-
-	/**
-	 * Provides element type (DSS D-PART) based on prefix location (C-PART). For
-	 * example, a C-PART prefix of "S_" maps to "STORAGE".
-	 *
-	 * @param name (C-PART)
-	 * @return appropriate D-PART
-	 */
-	private String getType(String name)
-	{
-		String type;
-		if(name.startsWith("S_") || name.startsWith("s_"))
-		{
-			type = "STORAGE";
-		}
-		else if(name.startsWith("C_") || name.startsWith("c_"))
-		{
-			type = "FLOW-CHANNEL";
-		}
-		else if(name.startsWith("D_") || name.startsWith("d_"))
-		{
-			type = "FLOW-DELIVERY";
-		}
-		else if(name.startsWith("R_") || name.startsWith("r_"))
-		{
-			type = "RETURN-FLOW";
-		}
-		else if(name.startsWith("I_") || name.startsWith("i_"))
-		{
-			type = "INFLOW";
-		}
-		else if(name.startsWith("AD_") || name.startsWith("ad_"))
-		{
-			type = "FLOW-ACCRDEPL";
-		}
-		else if(name.startsWith("S") || name.startsWith("s"))
-		{
-			type = "STORAGE";
-		}
-		else if(name.startsWith("D") || name.startsWith("d"))
-		{
-			type = "FLOW-DELIVERY";
-		}
-		else if(name.startsWith("C") || name.startsWith("c"))
-		{
-			type = "FLOW-CHANNEL";
-		}
-		else
-		{
-			type = "";
-		}
-		return type;
-	}
-
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see
-	 * gov.ca.water.calgui.bus_service.impl.IDSSGrabber1Svc#setLocationWeb(java.
-	 * lang.String)
-	 */
-	@Override
-	public void setLocationWeb(String locationName)
-	{
-
-		String type = getType(locationName);
-		primaryDSSName = locationName + "/" + type;
-		secondaryDSSName = "";
-		yLabel = type;
-		title = locationName;
-		sLabel = "";
 	}
 
 	/*
@@ -355,7 +295,7 @@ public class DSSGrabber1SvcImpl implements IDSSGrabber1Svc
 	@Override
 	public String getYLabel()
 	{
-		return yLabel;
+		return _axisLabel;
 	}
 
 	/*
@@ -366,24 +306,24 @@ public class DSSGrabber1SvcImpl implements IDSSGrabber1Svc
 	@Override
 	public String getSLabel()
 	{
-		return sLabel;
+		return _legend;
 	}
 
 	/*
 	 * (non-Javadoc)
 	 *
-	 * @see gov.ca.water.calgui.bus_service.impl.IDSSGrabber1Svc#getTitle()
+	 * @see gov.ca.water.calgui.bus_service.impl.IDSSGrabber1Svc#getPlotTitle()
 	 */
 	@Override
-	public String getTitle()
+	public String getPlotTitle()
 	{
-		if(title != "")
+		if(_plotTitle != null && !_plotTitle.isEmpty())
 		{
-			return title;
+			return _plotTitle;
 		}
 		else
 		{
-			return primaryDSSName;
+			return String.join(",", _primaryDSSName);
 		}
 	}
 
@@ -403,7 +343,7 @@ public class DSSGrabber1SvcImpl implements IDSSGrabber1Svc
 		{
 			Scanner scanner;
 			scanner = new Scanner(new FileInputStream(clsF.getAbsolutePath()));
-			while(scanner.hasNextLine() && sjrState.equals(""))
+			while(scanner.hasNextLine() && sjrState.isEmpty())
 			{
 				String text = scanner.nextLine();
 				if(text.startsWith("Dynamic_SJR|"))
@@ -438,19 +378,19 @@ public class DSSGrabber1SvcImpl implements IDSSGrabber1Svc
 	{
 		String clsFileName = dvFilename.substring(0, dvFilename.length() - 7) + ".cls";
 		File clsF = new File(clsFileName);
-		String AN_CHstate = "";
+		String anChstate = "";
 		try
 		{
 			Scanner scanner;
 			scanner = new Scanner(new FileInputStream(clsF.getAbsolutePath()));
-			while(scanner.hasNextLine() && AN_CHstate.equals(""))
+			while(scanner.hasNextLine() && anChstate.isEmpty())
 			{
 				String text = scanner.nextLine();
 				if(text.startsWith("CkbReg_AN|"))
 				{
 
 					String[] texts = text.split("[|]");
-					AN_CHstate = texts[1];
+					anChstate = texts[1];
 				}
 			}
 			scanner.close();
@@ -461,7 +401,7 @@ public class DSSGrabber1SvcImpl implements IDSSGrabber1Svc
 			LOG.info(clsF.getName() + " not openable - Antioch/Chipps assumed off");
 		}
 
-		return (AN_CHstate.equals("true"));
+		return Boolean.valueOf(anChstate);
 	}
 
 	// Logic to display error message if a user is trying access LVE quick
@@ -479,19 +419,19 @@ public class DSSGrabber1SvcImpl implements IDSSGrabber1Svc
 	{
 		String clsFileName = dvFilename.substring(0, dvFilename.length() - 7) + ".cls";
 		File clsF = new File(clsFileName);
-		String LVE_State = "";
+		String lveState = "";
 		try
 		{
 			Scanner scanner;
 			scanner = new Scanner(new FileInputStream(clsF.getAbsolutePath()));
-			while(scanner.hasNextLine() && LVE_State.equals(""))
+			while(scanner.hasNextLine() && lveState.isEmpty())
 			{
 				String text = scanner.nextLine();
 				if(text.startsWith("fac_ckb3|"))
 				{
 
 					String[] texts = text.split("[|]");
-					LVE_State = texts[1];
+					lveState = texts[1];
 				}
 			}
 			scanner.close();
@@ -502,7 +442,7 @@ public class DSSGrabber1SvcImpl implements IDSSGrabber1Svc
 			LOG.info(clsF.getName() + " not openable - LVE assumed off");
 		}
 
-		return (LVE_State.equals("true"));
+		return Boolean.valueOf(lveState);
 	}
 
 	/*
@@ -554,238 +494,250 @@ public class DSSGrabber1SvcImpl implements IDSSGrabber1Svc
 	protected TimeSeriesContainer getOneSeries(String dssFilename, String dssName)
 	{
 
-		HecDss hD;
+		HecDss hD = null;
 		TimeSeriesContainer result = null;
 
 		try
 		{
 
 			hD = HecDss.open(dssFilename);
-
+			Vector<String> aList = hD.getPathnameList();
+			if(!hD.isOpened())
+			{
+				throw new IllegalArgumentException("Unable to open DSS file: " + dssFilename);
+			}
 			// Determine A-part and F-part directly from file - 10/4/2011 -
 			// assumes constant throughout
-
-			@SuppressWarnings("unchecked")
-			// TODO: is it better to write code that does not require
-					// suppresswarnings?
-					Vector<String> aList = hD.getPathnameList();
 			Iterator<String> it = aList.iterator();
-			String aPath = it.next();
-			String[] temp = aPath.split("/");
-			String hecAPart = temp[1];
-			String hecFPart = temp[6] + "/";
-
-			String delims = "[+]";
-			String[] dssNames1 = dssName.split(delims);
-
-			// Check for time shift (-1 at end of name)
-
-			boolean doTimeShift = false;
-			if(dssNames1[0].endsWith("(-1)"))
+			if(it.hasNext())
 			{
-				doTimeShift = true;
-				dssNames1[0] = dssNames1[0].substring(0, dssNames1[0].length() - 4);
-			}
 
-			// Assign F-Part for each DSS - use default if not specified,
-			// otherwise last part in supplied name.
+				String aPath = it.next();
+				String[] temp = aPath.split("/");
+				String hecAPart = temp[1];
+				String hecFPart = temp[6] + "/";
 
-			String[] dssNames = new String[dssNames1.length];
-			String[] hecFParts = new String[dssNames1.length];
-			for(int i = 0; i < dssNames1.length; i++)
-			{
-				String[] nameParts = dssNames1[i].split("/");
-				if(nameParts.length < 2)
+				String delims = "[+]";
+				String[] dssNames1 = dssName.split(delims);
+
+				// Check for time shift (-1 at end of name)
+
+				boolean doTimeShift = false;
+				if(dssNames1[0].endsWith("(-1)"))
 				{
-					dssNames[i] = "MISSING_B/OR_CPART";
+					doTimeShift = true;
+					dssNames1[0] = dssNames1[0].substring(0, dssNames1[0].length() - 4);
 				}
-				else
+
+				// Assign F-Part for each DSS - use default if not specified,
+				// otherwise last part in supplied name.
+
+				String[] dssNames = new String[dssNames1.length];
+				String[] hecFParts = new String[dssNames1.length];
+				for(int i = 0; i < dssNames1.length; i++)
 				{
-					dssNames[i] = nameParts[0] + "/" + nameParts[1];
-					if(nameParts.length == 2)
+					String[] nameParts = dssNames1[i].split("/");
+					if(nameParts.length < 2)
 					{
-						hecFParts[i] = hecFPart;
+						dssNames[i] = "MISSING_B/OR_CPART";
 					}
 					else
 					{
-						// TODO: Use nameParts UNLESS it's "LOOKUP", in which
-						// case we should look up the value by matching B and C
-						// parts
-
-						hecFParts[i] = nameParts[nameParts.length - 1] + "/";
-						if(hecFParts[i].equals("LOOKUP/"))
+						dssNames[i] = nameParts[0] + "/" + nameParts[1];
+						if(nameParts.length == 2)
 						{
-							for(String path : aList)
-							{
-								String[] parts = path.split("/");
-								if(dssNames[i].equals(parts[2] + "/" + parts[3]))
-								{
-									hecFParts[i] = parts[6] + "/";
-								}
+							hecFParts[i] = hecFPart;
+						}
+						else
+						{
+							// TODO: Use nameParts UNLESS it's "LOOKUP", in which
+							// case we should look up the value by matching B and C
+							// parts
 
+							hecFParts[i] = nameParts[nameParts.length - 1] + "/";
+							if("LOOKUP/".equals(hecFParts[i]))
+							{
+								for(String path : aList)
+								{
+									String[] parts = path.split("/");
+									if(dssNames[i].equals(parts[2] + "/" + parts[3]))
+									{
+										hecFParts[i] = parts[6] + "/";
+									}
+
+								}
 							}
 						}
 					}
 				}
-			}
 
-			// TODO: Note hard-coded D- and E-PART
-			result = (TimeSeriesContainer) hD
-					.get("/" + hecAPart + "/" + dssNames[0] + "/01JAN1930/1MON/" + hecFParts[0], true);
-			System.out.println("/" + hecAPart + "/" + dssNames[0] + "/01JAN1930/1MON/" + hecFParts[0]);
-			if((result == null) || (result.numberValues < 1))
-			{
-
-				String message;
-				result = null;
-
-				if(!clsIsDynamicSJR(dssFilename) && ((dssNames[0].equals("S_MELON/STORAGE"))
-						|| (dssNames[0].equals("S_PEDRO/STORAGE")) || (dssNames[0].equals("S_MCLRE/STORAGE"))
-						|| (dssNames[0].equals("S_MLRTN/STORAGE")) || (dssNames[0].equals("C_STANRIPN/FLOW-CHANNEL"))
-						|| (dssNames[0].equals("C_TUOL/FLOW-CHANNEL")) || (dssNames[0].equals("C_MERCED2/FLOW-CHANNEL"))
-						|| (dssNames[0].equals("C_SJRMS/FLOW-CHANNEL"))
-						|| (dssNames[0].equals("D_STANRIPN/FLOW-DELIVERY"))
-						|| (dssNames[0].equals("D_STANGDWN/FLOW-DELIVERY"))
-						|| (dssNames[0].equals("D_TUOL/FLOW-DELIVERY"))
-						|| (dssNames[0].equals("D_TUOL1B/FLOW-DELIVERY"))
-						|| (dssNames[0].equals("D_TUOL2/FLOW-DELIVERY"))
-						|| (dssNames[0].equals("D_MERCED1/FLOW-DELIVERY"))
-						|| (dssNames[0].equals("D_MERCED2/FLOW-DELIVERY"))
-						|| (dssNames[0].equals("D_MDRCNL/FLOW-DELIVERY"))
-						|| (dssNames[0].equals("D_FKCNL/FLOW-DELIVERY"))))
+				// TODO: Note hard-coded D- and E-PART
+				result = (TimeSeriesContainer) hD
+						.get("/" + hecAPart + "/" + dssNames[0] + "/01JAN1930/1MON/" + hecFParts[0], true);
+				LOG.info("/" + hecAPart + "/" + dssNames[0] + "/01JAN1930/1MON/" + hecFParts[0]);
+				if((result == null) || (result.numberValues < 1))
 				{
 
-					message = " Could not find " + dssNames[0] + " in " + dssFilename
-							+ ".\n The selected scenario was not run using dynamic SJR simulation;";
+					String message;
+					result = null;
+
+					if(!clsIsDynamicSJR(dssFilename) && (("S_MELON/STORAGE".equals(dssNames[0]))
+							|| ("S_PEDRO/STORAGE".equals(dssNames[0])) || ("S_MCLRE/STORAGE".equals(dssNames[0]))
+							|| ("S_MLRTN/STORAGE".equals(dssNames[0])) || ("C_STANRIPN/FLOW-CHANNEL".equals(
+							dssNames[0]))
+							|| ("C_TUOL/FLOW-CHANNEL".equals(dssNames[0])) || ("C_MERCED2/FLOW-CHANNEL".equals(
+							dssNames[0]))
+							|| ("C_SJRMS/FLOW-CHANNEL".equals(dssNames[0]))
+							|| ("D_STANRIPN/FLOW-DELIVERY".equals(dssNames[0]))
+							|| ("D_STANGDWN/FLOW-DELIVERY".equals(dssNames[0]))
+							|| ("D_TUOL/FLOW-DELIVERY".equals(dssNames[0]))
+							|| ("D_TUOL1B/FLOW-DELIVERY".equals(dssNames[0]))
+							|| ("D_TUOL2/FLOW-DELIVERY".equals(dssNames[0]))
+							|| ("D_MERCED1/FLOW-DELIVERY".equals(dssNames[0]))
+							|| ("D_MERCED2/FLOW-DELIVERY".equals(dssNames[0]))
+							|| ("D_MDRCNL/FLOW-DELIVERY".equals(dssNames[0]))
+							|| ("D_FKCNL/FLOW-DELIVERY".equals(dssNames[0]))))
+					{
+
+						message = " Could not find " + dssNames[0] + " in " + dssFilename
+								+ ".\n The selected scenario was not run using dynamic SJR simulation;";
+
+					}
+
+					else if(!clsAntiochChipps(dssFilename)
+							&& (("AN_EC_STD/SALINITY".equals(dssNames[0])) || ("CH_EC_STD/SALINITY".equals(
+							dssNames[0]))))
+					{
+
+						message = " Could not find " + dssNames[0] + " in " + dssFilename
+								+ ".\n The selected scenario was not run with D-1485 Fish and Wildlife (at Antioch and Chipps) regulations.";
+					}
+
+					else if(!clsLVE(dssFilename) && (("S422/STORAGE".equals(dssNames[0]))
+							|| ("WQ408_OR_/SALINITY".equals(dssNames[0])) || ("WQ408_VC_/SALINITY".equals(dssNames[0]))
+							|| ("WQ408_RS_/SALINITY".equals(dssNames[0]))
+							|| ("C422_FILL_CC/FLOW-CHANNEL".equals(dssNames[0]))
+							|| ("D420/FLOW-DELIVERY".equals(dssNames[0])) || ("D408_OR/FLOW-DELIVERY".equals(
+							dssNames[0]))
+							|| ("D408_VC/FLOW-DELIVERY".equals(dssNames[0]))
+							|| ("D408_RS/FLOW-DELIVERY".equals(dssNames[0])) || ("WQ420/SALINITY".equals(dssNames[0]))))
+					{
+
+						message = "Could not find " + dssNames[0] + " in " + dssFilename
+								+ ".\n The selected scenario was not run with Los Vaqueros Enlargement.";
+					}
+
+					else
+					{
+						message = "Could not find " + dssNames[0] + " in " + dssFilename;
+					}
+					_missingDSSRecords.add(message);
 
 				}
-
-				else if(!clsAntiochChipps(dssFilename)
-						&& ((dssNames[0].equals("AN_EC_STD/SALINITY")) || (dssNames[0].equals("CH_EC_STD/SALINITY"))))
-				{
-
-					message = " Could not find " + dssNames[0] + " in " + dssFilename
-							+ ".\n The selected scenario was not run with D-1485 Fish and Wildlife (at Antioch and Chipps) regulations.";
-				}
-
-				else if(!clsLVE(dssFilename) && ((dssNames[0].equals("S422/STORAGE"))
-						|| (dssNames[0].equals("WQ408_OR_/SALINITY")) || (dssNames[0].equals("WQ408_VC_/SALINITY"))
-						|| (dssNames[0].equals("WQ408_RS_/SALINITY"))
-						|| (dssNames[0].equals("C422_FILL_CC/FLOW-CHANNEL"))
-						|| (dssNames[0].equals("D420/FLOW-DELIVERY")) || (dssNames[0].equals("D408_OR/FLOW-DELIVERY"))
-						|| (dssNames[0].equals("D408_VC/FLOW-DELIVERY"))
-						|| (dssNames[0].equals("D408_RS/FLOW-DELIVERY")) || (dssNames[0].equals("WQ420/SALINITY"))))
-				{
-
-					message = "Could not find " + dssNames[0] + " in " + dssFilename
-							+ ".\n The selected scenario was not run with Los Vaqueros Enlargement.";
-				}
-
 				else
 				{
-					message = "Could not find " + dssNames[0] + " in " + dssFilename;
-				}
-				if(stopOnMissing)
-				{
-					dialogSvc.getOK("Could not find " + dssNames[0] + " in " + dssFilename, JOptionPane.ERROR_MESSAGE);
-				}
-				missingDSSRecords.add(message);
-			}
-			else
-			{
 
-				// If no error, add results from other datasets in dssNames
-				// array.
+					// If no error, add results from other datasets in dssNames
+					// array.
 
-				for(int i = 1; i < dssNames.length; i++)
-				{
-					// TODO: Note hard-coded D- and E-PART
-					TimeSeriesContainer result2 = (TimeSeriesContainer) hD
-							.get("/" + hecAPart + "/" + dssNames[i] + "/01JAN2020/1MON/" + hecFParts[i], true);
-					if(result2 == null || result2.numberValues < 1)
+					for(int i = 1; i < dssNames.length; i++)
 					{
-						result2 = null;
-						String message = "Could not find " + dssNames[0] + " in " + dssFilename;
-						if(stopOnMissing)
+
+						// TODO: Note hard-coded D- and E-PART
+						TimeSeriesContainer result2 = (TimeSeriesContainer) hD
+								.get("/" + hecAPart + "/" + dssNames[i] + "/01JAN2020/1MON/" + hecFParts[i], true);
+						if(result2 == null || result2.numberValues < 1)
 						{
-							JOptionPane.showMessageDialog(null, message, "Error", JOptionPane.ERROR_MESSAGE);
+							result2 = null;
+							String message = "Could not find " + dssNames[0] + " in " + dssFilename;
+							if(_stopOnMissing)
+							{
+								JOptionPane.showMessageDialog(null, message, "Error", JOptionPane.ERROR_MESSAGE);
+							}
+							else
+							{
+								_missingDSSRecords.add(message);
+							}
 						}
 						else
 						{
-							missingDSSRecords.add(message);
+							//combine result2 and result together and assign to result.
+							result = TimeSeriesFunctions.add(
+									Arrays.asList(new ValueContainer(result), new ValueContainer(result2)),
+									(String) null);
 						}
 					}
-					else
+
+
+				}
+				// Trim to date range
+				if(result != null)
+				{
+					// Find starting index
+					int first = 0;
+					for(int i = 0; (i < result.numberValues) && (result.times[i] < _startTime); i++)
 					{
-						for(int j = 0; j < result2.numberValues; j++)
+						first = i + 1;
+					}
+					// find ending index
+					int last = result.numberValues - 1;
+					for(int i = result.numberValues - 1; (i >= 0) && (result.times[i] >= _endTime); i--)
+					{
+						last = i;
+					}
+					// Shift results in array to start
+					if(first != 0)
+					{
+						for(int i = 0; i <= (last - first); i++)
+						{ // TODO: Think
+							// through
+							// change to
+							// <= done 11/9
+							result.times[i] = result.times[i + first];
+							result.values[i] = result.values[i + first];
+						}
+					}
+
+					result.numberValues = last - first + 1; // Adjust count of
+					// results
+
+					// Do time shift where indicated (when a dataset has suffix
+					// "(-1)"
+
+					if(doTimeShift)
+					{
+						if(result.numberValues - 1 - result.numberValues >= 0)
 						{
-							result.values[j] = result.values[j] + result2.values[j];
+							System.arraycopy(result.times, result.numberValues + 1, result.times, result.numberValues,
+									result.numberValues - 1 - result.numberValues);
 						}
+						result.numberValues = result.numberValues - 1;
 					}
 				}
+
 			}
-
-			// Trim to date range
-			if(result != null)
-			{
-				int first = 0; // Find starting index
-				for(int i = 0; (i < result.numberValues) && (result.times[i] < startTime); i++)
-				{
-					first = i + 1;
-				}
-
-				int last = result.numberValues - 1; // find ending index
-				for(int i = result.numberValues - 1; (i >= 0) && (result.times[i] >= endTime); i--)
-				{
-					last = i;
-				}
-
-				if(first != 0) // Shift results in array to start
-				{
-					for(int i = 0; i <= (last - first); i++)
-					{ // TODO: Think
-						// through
-						// change to
-						// <= done 11/9
-						result.times[i] = result.times[i + first];
-						result.values[i] = result.values[i + first];
-					}
-				}
-
-				result.numberValues = last - first + 1; // Adjust count of
-				// results
-
-				// Do time shift where indicated (when a dataset has suffix
-				// "(-1)"
-
-				if(doTimeShift)
-				{
-					for(int i = result.numberValues; i < result.numberValues - 1; i++)
-					{
-						result.times[i] = result.times[i + 1];
-					}
-					result.numberValues = result.numberValues - 1;
-				}
-			}
-
 		}
-		catch(
-
-				Exception e)
+		catch(Exception e)
 		{
 
 			LOG.debug(e.getMessage());
 			LOG.error(e.getMessage());
-			if(e.getMessage().contains("Unable to recognize record"))
+			if(e.getMessage() != null && e.getMessage().contains("Unable to recognize record"))
 			{
-				this.missingDSSRecords.add("Could not find record - HEC message was '" + e.getMessage() + "'");
+				this._missingDSSRecords.add("Could not find record - HEC message was '" + e.getMessage() + "'");
 			}
 			else
 			{
 				String messageText = "Unable to get time series." + e.getMessage();
 
-				errorHandlingSvc.businessErrorHandler(messageText, (JFrame) swingEngine.find(Constant.MAIN_FRAME_NAME),
-						e);
+				_errorHandlingSvc.businessErrorHandler(messageText, e);
+			}
+		}
+		finally
+		{
+			if(hD != null)
+			{
+				hD.close();
 			}
 		}
 
@@ -800,23 +752,26 @@ public class DSSGrabber1SvcImpl implements IDSSGrabber1Svc
 		return result;
 	}
 
-	protected String checkReadiness()
+	void checkReadiness()
 	{
 		String result = null;
-		if(startTime == -1)
+		if(_startTime == -1)
 		{
 			result = "Date range is not set in DSSGrabber.";
 		}
-		else if(baseName == null)
+		else if(_baseName == null)
 		{
 			result = "Base scenario is not set in DSSGrabber.";
 		}
-		else if(primaryDSSName == null)
+		else if(_primaryDSSName == null)
 		{
 			result = "Base scenario is not set in DSSGrabber.";
 		}
 		LOG.debug(result);
-		return result;
+		if(result != null)
+		{
+			throw new IllegalStateException(result);
+		}
 	}
 
 	/*
@@ -834,87 +789,65 @@ public class DSSGrabber1SvcImpl implements IDSSGrabber1Svc
 
 		try
 		{
-			if(checkReadiness() != null)
+			checkReadiness();
+
+			// Store number of scenarios
+
+			_scenarioCount = _scenarios.size();
+			results = new TimeSeriesContainer[_scenarioCount];
+
+			// Base first
+			TimeSeriesContainer oneSeries = getOneTimeSeriesFromAllModels(_baseName, _primaryDSSName);
+			results[0] = oneSeries;
+			if(results[0] != null)
 			{
-				throw new NullPointerException(checkReadiness());
+				_originalUnits = results[0].units;
+			}
+			else if(_stopOnMissing)
+			{
+				_dialogSvc.getOK("Could not find " + String.join(",", _primaryDSSName) + " in " + _baseName,
+						JOptionPane.ERROR_MESSAGE);
 			}
 
-			else
+			// Then scenarios
+
+			int j = 0;
+			for(int i = 0; i < _scenarioCount; i++)
 			{
-
-				if(locationName.contains(Constant.SCHEMATIC_PREFIX) && primaryDSSName.contains(","))
+				String scenarioName;
+				if(_baseName.toUpperCase().contains("_SV.DSS"))
 				{
-
-					// Special handling for DEMO of schematic view - treat
-					// multiple
-					// series as multiple scenarios
-					// TODO: Longer-term approach is probably to add a rank to
-					// arrays storing all series
-
-					String[] dssNames = primaryDSSName.split(",");
-					scenarios = dssNames.length;
-					results = new TimeSeriesContainer[scenarios];
-					for(int i = 0; i < scenarios; i++)
+					// For SVars, use WRIMS GUI Project object to
+					// determine
+					// input files
+					switch(i)
 					{
-						results[i] = getOneSeries(baseName, dssNames[i]);
+						case 0:
+							scenarioName = _project.getSVFile();
+							break;
+						case 1:
+							scenarioName = _project.getSV2File();
+							break;
+						case 2:
+							scenarioName = _project.getSV3File();
+							break;
+						case 3:
+							scenarioName = _project.getSV4File();
+							break;
+						default:
+							scenarioName = "";
+							break;
 					}
-
-					originalUnits = results[0].units;
-
 				}
 				else
 				{
-
-					// Store number of scenarios
-
-					scenarios = lstScenarios.getModel().getSize();
-					results = new TimeSeriesContainer[scenarios];
-
-					// Base first
-
-					results[0] = getOneSeries(baseName, primaryDSSName);
-					originalUnits = results[0].units;
-
-					// Then scenarios
-
-					int j = 0;
-					for(int i = 0; i < scenarios; i++)
-					{
-						String scenarioName;
-						if(baseName.toUpperCase().contains("_SV.DSS"))
-						{
-							// For SVars, use WRIMS GUI Project object to
-							// determine
-							// input files
-							switch(i)
-							{
-								case 0:
-									scenarioName = project.getSVFile();
-									break;
-								case 1:
-									scenarioName = project.getSV2File();
-									break;
-								case 2:
-									scenarioName = project.getSV3File();
-									break;
-								case 3:
-									scenarioName = project.getSV4File();
-									break;
-								default:
-									scenarioName = "";
-									break;
-							}
-						}
-						else
-						{
-							scenarioName = lstScenarios.getModel().getElementAt(i).toString();
-						}
-						if(!baseName.equals(scenarioName))
-						{
-							j = j + 1;
-							results[j] = getOneSeries(scenarioName, primaryDSSName);
-						}
-					}
+					scenarioName = _scenarios.get(i).toString();
+				}
+				if(!_baseName.equals(scenarioName))
+				{
+					j = j + 1;
+					TimeSeriesContainer tsc = getOneTimeSeriesFromAllModels(scenarioName, _primaryDSSName);
+					results[j] = tsc;
 				}
 			}
 		}
@@ -922,10 +855,29 @@ public class DSSGrabber1SvcImpl implements IDSSGrabber1Svc
 		{
 			LOG.error(e.getMessage());
 			String messageText = "Unable to get time series.";
-			errorHandlingSvc.businessErrorHandler(messageText, (JFrame) swingEngine.find(Constant.MAIN_FRAME_NAME), e);
+			_errorHandlingSvc.businessErrorHandler(messageText, e);
 		}
 
 		return results;
+	}
+
+	private TimeSeriesContainer getOneTimeSeriesFromAllModels(String scenarioName, List<String> dssNames)
+	{
+		TimeSeriesContainer oneSeries = null;
+		for(String primaryTs : dssNames)
+		{
+			oneSeries = getOneSeries(scenarioName, primaryTs);
+			if(oneSeries != null)
+			{
+				break;
+			}
+		}
+		if(oneSeries == null && _stopOnMissing)
+		{
+			_dialogSvc.getOK("Could not find " + String.join(",", dssNames) + " in " + scenarioName,
+					JOptionPane.ERROR_MESSAGE);
+		}
+		return oneSeries;
 	}
 
 	/*
@@ -938,33 +890,33 @@ public class DSSGrabber1SvcImpl implements IDSSGrabber1Svc
 	public TimeSeriesContainer[] getSecondarySeries()
 	{
 
-		if(secondaryDSSName.equals("") || secondaryDSSName.equals("null"))
+		if(_secondaryDSSName.isEmpty() || "null".equals(_secondaryDSSName))
 		{
 			return null;
 		}
 		else
 		{
 
-			scenarios = lstScenarios.getModel().getSize();
-			TimeSeriesContainer[] results = new TimeSeriesContainer[scenarios];
+			_scenarioCount = _scenarios.size();
+			TimeSeriesContainer[] results = new TimeSeriesContainer[_scenarioCount];
 
 			// Base first
 
-			results[0] = getOneSeries(baseName, secondaryDSSName);
+			TimeSeriesContainer oneSeries = getOneTimeSeriesFromAllModels(_baseName, _secondaryDSSName);
+			results[0] = oneSeries;
 
 			// Then scenarios
 
 			int j = 0;
-			for(int i = 0; i < scenarios; i++)
+			for(int i = 0; i < _scenarioCount; i++)
 			{
-				// String scenarioName = (String)
-				// lstScenarios.getModel().getElementAt(i);
-				String scenarioName = lstScenarios.getModel().getElementAt(i).toString();
+				String scenarioName = _scenarios.get(i).toString();
 
-				if(!baseName.equals(scenarioName))
+				if(!_baseName.equals(scenarioName))
 				{
 					j = j + 1;
-					results[j] = getOneSeries(scenarioName, secondaryDSSName);
+					TimeSeriesContainer tsc = getOneTimeSeriesFromAllModels(scenarioName, _secondaryDSSName);
+					results[j] = tsc;
 				}
 			}
 			return results;
@@ -975,15 +927,15 @@ public class DSSGrabber1SvcImpl implements IDSSGrabber1Svc
 	 * (non-Javadoc)
 	 *
 	 * @see
-     * gov.ca.water.calgui.bus_service.impl.IDSSGrabber1Svc#getDifferenceSeriesWithMultipleTimeSeries(
+	 * gov.ca.water.calgui.bus_service.impl.IDSSGrabber1Svc#getDifferenceSeriesWithMultipleTimeSeries(
 	 * hec.io.TimeSeriesContainer[])
 	 */
 	@Override
 	public TimeSeriesContainer[] getDifferenceSeries(TimeSeriesContainer[] timeSeriesResults)
 	{
 
-		TimeSeriesContainer[] results = new TimeSeriesContainer[scenarios - 1];
-		for(int i = 0; i < scenarios - 1; i++)
+		TimeSeriesContainer[] results = new TimeSeriesContainer[_scenarioCount - 1];
+		for(int i = 0; i < _scenarioCount - 1; i++)
 		{
 
 			results[i] = (TimeSeriesContainer) timeSeriesResults[i + 1].clone();
@@ -1016,19 +968,19 @@ public class DSSGrabber1SvcImpl implements IDSSGrabber1Svc
 				datasets = datasets + secondaryResults.length;
 			}
 
-			annualTAFs = new double[datasets][endWY - startWY + 2];
+			_annualTAFs = new double[datasets][_endWY - _startWY + 2];
 
 			for(int i = 0; i < datasets; i++)
 			{
-				for(int j = 0; j < endWY - startWY + 1; j++)
+				for(int j = 0; j < _endWY - _startWY + 1; j++)
 				{
-					annualTAFs[i][j] = 0.0;
+					_annualTAFs[i][j] = 0.0;
 				}
 			}
 
 			// Calculate
 
-			if(originalUnits.equals("CFS"))
+			if("CFS".equals(_originalUnits))
 			{
 
 				HecTime ht = new HecTime();
@@ -1038,26 +990,29 @@ public class DSSGrabber1SvcImpl implements IDSSGrabber1Svc
 
 				for(int i = 0; i < primaryResults.length; i++)
 				{
-					for(int j = 0; j < primaryResults[i].numberValues; j++)
+					if(primaryResults[i] != null)
 					{
+						for(int j = 0; j < primaryResults[i].numberValues; j++)
+						{
 
-						ht.set(primaryResults[i].times[j]);
-						calendar.set(ht.year(), ht.month() - 1, 1);
-						double monthlyTAF = primaryResults[i].values[j]
-								* calendar.getActualMaximum(Calendar.DAY_OF_MONTH) * CFS_2_TAF_DAY;
-						int wy = ((ht.month() < 10) ? ht.year() : ht.year() + 1) - startWY;
-						if(wy >= 0)
-						{
-							annualTAFs[i][wy] += monthlyTAF;
+							ht.set(primaryResults[i].times[j]);
+							calendar.set(ht.year(), ht.month() - 1, 1);
+							double monthlyTAF = primaryResults[i].values[j]
+									* calendar.getActualMaximum(Calendar.DAY_OF_MONTH) * CFS_2_TAF_DAY;
+							int wy = ((ht.month() < 10) ? ht.year() : ht.year() + 1) - _startWY;
+							if(wy >= 0)
+							{
+								_annualTAFs[i][wy] += monthlyTAF;
+							}
+							if(!_isCFS)
+							{
+								primaryResults[i].values[j] = monthlyTAF;
+							}
 						}
-						if(!isCFS)
+						if(!_isCFS)
 						{
-							primaryResults[i].values[j] = monthlyTAF;
+							primaryResults[i].units = "TAF per year";
 						}
-					}
-					if(!isCFS)
-					{
-						primaryResults[i].units = "TAF per year";
 					}
 				}
 
@@ -1065,12 +1020,12 @@ public class DSSGrabber1SvcImpl implements IDSSGrabber1Svc
 
 				if(primaryResults.length > 1)
 				{
-					annualTAFsDiff = new double[primaryResults.length - 1][endWY - startWY + 2];
+					_annualTAFsDiff = new double[primaryResults.length - 1][_endWY - _startWY + 2];
 					for(int i = 0; i < primaryResults.length - 1; i++)
 					{
-						for(int j = 0; j < endWY - startWY + 1; j++)
+						for(int j = 0; j < _endWY - _startWY + 1; j++)
 						{
-							annualTAFsDiff[i][j] = annualTAFs[i + 1][j] - annualTAFs[0][j];
+							_annualTAFsDiff[i][j] = _annualTAFs[i + 1][j] - _annualTAFs[0][j];
 						}
 					}
 				}
@@ -1082,24 +1037,27 @@ public class DSSGrabber1SvcImpl implements IDSSGrabber1Svc
 
 					for(int i = 0; i < secondaryResults.length; i++)
 					{
-						for(int j = 0; j < secondaryResults[i].numberValues; j++)
+						if(secondaryResults[i] != null)
 						{
-
-							ht.set(secondaryResults[i].times[j]);
-							calendar.set(ht.year(), ht.month() - 1, 1);
-							double monthlyTAF = secondaryResults[i].values[j]
-									* calendar.getActualMaximum(Calendar.DAY_OF_MONTH) * CFS_2_TAF_DAY;
-							int wy = ((ht.month() < 10) ? ht.year() : ht.year() + 1) - startWY;
-							annualTAFs[i + primaryResults.length][wy] += monthlyTAF;
-							if(!isCFS)
+							for(int j = 0; j < secondaryResults[i].numberValues; j++)
 							{
-								secondaryResults[i].values[j] = monthlyTAF;
-							}
 
-						}
-						if(!isCFS)
-						{
-							secondaryResults[i].units = "TAF per year";
+								ht.set(secondaryResults[i].times[j]);
+								calendar.set(ht.year(), ht.month() - 1, 1);
+								double monthlyTAF = secondaryResults[i].values[j]
+										* calendar.getActualMaximum(Calendar.DAY_OF_MONTH) * CFS_2_TAF_DAY;
+								int wy = ((ht.month() < 10) ? ht.year() : ht.year() + 1) - _startWY;
+								_annualTAFs[i + primaryResults.length][wy] += monthlyTAF;
+								if(!_isCFS)
+								{
+									secondaryResults[i].values[j] = monthlyTAF;
+								}
+
+							}
+							if(!_isCFS)
+							{
+								secondaryResults[i].units = "TAF per year";
+							}
 						}
 					}
 				}
@@ -1109,7 +1067,7 @@ public class DSSGrabber1SvcImpl implements IDSSGrabber1Svc
 		{
 			LOG.error(e.getMessage());
 			String messageText = "Unable to calculate TAF.";
-			errorHandlingSvc.businessErrorHandler(messageText, (JFrame) swingEngine.find(Constant.MAIN_FRAME_NAME), e);
+			_errorHandlingSvc.businessErrorHandler(messageText, e);
 		}
 	}
 
@@ -1124,7 +1082,7 @@ public class DSSGrabber1SvcImpl implements IDSSGrabber1Svc
 	public double getAnnualTAF(int i, int wy)
 	{
 
-		return wy < startWY ? -1 : annualTAFs[i][wy - startWY];
+		return wy < _startWY ? -1 : _annualTAFs[i][wy - _startWY];
 	}
 
 	/*
@@ -1138,160 +1096,14 @@ public class DSSGrabber1SvcImpl implements IDSSGrabber1Svc
 	public double getAnnualTAFDiff(int i, int wy)
 	{
 
-		return wy < startWY ? -1 : annualTAFsDiff[i][wy - startWY];
+		return wy < _startWY ? -1 : _annualTAFsDiff[i][wy - _startWY];
 	}
 
 	/*
 	 * (non-Javadoc)
 	 *
 	 * @see
-	 * gov.ca.water.calgui.bus_service.impl.IDSSGrabber1Svc#getAnnualCFS(int,
-	 * int)
-	 */
-	@Override
-	public double getAnnualCFS(int i, int wy)
-	{
-
-		return wy < startWY ? -1 : annualCFSs[i][wy - startWY];
-	}
-
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see
-	 * gov.ca.water.calgui.bus_service.impl.IDSSGrabber1Svc#getAnnualCFSDiff(
-	 * int, int)
-	 */
-	@Override
-	public double getAnnualCFSDiff(int i, int wy)
-	{
-
-		return wy < startWY ? -1 : annualCFSsDiff[i][wy - startWY];
-	}
-
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see
-	 * gov.ca.water.calgui.bus_service.impl.IDSSGrabber1Svc#calcCFSforTAF(hec.io
-	 * .TimeSeriesContainer[], hec.io.TimeSeriesContainer[])
-	 */
-	@Override
-	public void calcCFSforTAF(TimeSeriesContainer[] primaryResults, TimeSeriesContainer[] secondaryResults)
-	{
-
-		try
-		{
-			// Allocate and zero out
-
-			int datasets = primaryResults.length;
-			if(secondaryResults != null)
-			{
-				datasets = datasets + secondaryResults.length;
-			}
-
-			annualCFSs = new double[datasets][endWY - startWY + 2];
-
-			for(int i = 0; i < datasets; i++)
-			{
-				for(int j = 0; j < endWY - startWY + 1; j++)
-				{
-					annualCFSs[i][j] = 0.0;
-				}
-			}
-
-			// Calculate
-
-			if(originalUnits.equals("TAF"))
-			{
-
-				HecTime ht = new HecTime();
-				Calendar calendar = Calendar.getInstance();
-
-				// Primary series
-
-				for(int i = 0; i < primaryResults.length; i++)
-				{
-					for(int j = 0; j < primaryResults[i].numberValues; j++)
-					{
-
-						ht.set(primaryResults[i].times[j]);
-						calendar.set(ht.year(), ht.month() - 1, 1);
-						double monthlyCFS = primaryResults[i].values[j]
-								* calendar.getActualMaximum(Calendar.DAY_OF_MONTH) * TAF_DAY_2_CFS;
-						int wy = ((ht.month() < 10) ? ht.year() : ht.year() + 1) - startWY;
-						if(wy >= 0)
-						{
-							annualCFSs[i][wy] += monthlyCFS;
-						}
-						if(!isCFS)
-						{
-							primaryResults[i].values[j] = monthlyCFS;
-						}
-					}
-					if(isCFS)
-					{
-						primaryResults[i].units = "cfs";
-					}
-				}
-
-				// Calculate differences if applicable (primary series only)
-
-				if(primaryResults.length > 1)
-				{
-					annualCFSsDiff = new double[primaryResults.length - 1][endWY - startWY + 2];
-					for(int i = 0; i < primaryResults.length - 1; i++)
-					{
-						for(int j = 0; j < endWY - startWY + 1; j++)
-						{
-							annualCFSsDiff[i][j] = annualCFSs[i + 1][j] - annualCFSs[0][j];
-						}
-					}
-				}
-
-				if(secondaryResults != null)
-				{
-
-					// Secondary series
-
-					for(int i = 0; i < secondaryResults.length; i++)
-					{
-						for(int j = 0; j < secondaryResults[i].numberValues; j++)
-						{
-
-							ht.set(secondaryResults[i].times[j]);
-							calendar.set(ht.year(), ht.month() - 1, 1);
-							double monthlyCFS = secondaryResults[i].values[j]
-									* calendar.getActualMaximum(Calendar.DAY_OF_MONTH) * TAF_DAY_2_CFS;
-							int wy = ((ht.month() < 10) ? ht.year() : ht.year() + 1) - startWY;
-							annualCFSs[i + primaryResults.length][wy] += monthlyCFS;
-							if(isCFS)
-							{
-								secondaryResults[i].values[j] = monthlyCFS;
-							}
-
-						}
-						if(isCFS)
-						{
-							secondaryResults[i].units = "cfs";
-						}
-					}
-				}
-			}
-		}
-		catch(Exception e)
-		{
-			LOG.error(e.getMessage());
-			String messageText = "Unable to calculate CFS.";
-			errorHandlingSvc.businessErrorHandler(messageText, (JFrame) swingEngine.find(Constant.MAIN_FRAME_NAME), e);
-		}
-	}
-
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see
-     * gov.ca.water.calgui.bus_service.impl.IDSSGrabber1Svc#getExceedanceSeriesWithMultipleTimeSeries(
+	 * gov.ca.water.calgui.bus_service.impl.IDSSGrabber1Svc#getExceedanceSeriesWithMultipleTimeSeries(
 	 * hec.io.TimeSeriesContainer[])
 	 */
 	@Override
@@ -1307,13 +1119,13 @@ public class DSSGrabber1SvcImpl implements IDSSGrabber1Svc
 			}
 			else
 			{
-				results = new TimeSeriesContainer[14][scenarios];
+				results = new TimeSeriesContainer[14][_scenarioCount];
 
 				for(int month = 0; month < 14; month++)
 				{
 
 					HecTime ht = new HecTime();
-					for(int i = 0; i < scenarios; i++)
+					for(int i = 0; i < _scenarioCount; i++)
 					{
 
 						if(month == 13)
@@ -1333,14 +1145,14 @@ public class DSSGrabber1SvcImpl implements IDSSGrabber1Svc
 							{
 
 								// Annual totals - grab from annualTAFs
-								n = annualTAFs[i].length;
+								n = _annualTAFs[i].length;
 								times2 = new int[n];
 								values2 = new double[n];
 								for(int j = 0; j < n; j++)
 								{
-									ht.setYearMonthDay(j + startWY, 11, 1, 0);
+									ht.setYearMonthDay(j + _startWY, 11, 1, 0);
 									times2[j] = ht.value();
-									values2[j] = annualTAFs[i][j];
+									values2[j] = _annualTAFs[i][j];
 								}
 
 							}
@@ -1396,7 +1208,7 @@ public class DSSGrabber1SvcImpl implements IDSSGrabber1Svc
 		{
 			LOG.error(e.getMessage());
 			String messageText = "Unable to get time-series.";
-			errorHandlingSvc.businessErrorHandler(messageText, (JFrame) swingEngine.find(Constant.MAIN_FRAME_NAME), e);
+			_errorHandlingSvc.businessErrorHandler(messageText, e);
 		}
 		return null;
 	}
@@ -1405,7 +1217,7 @@ public class DSSGrabber1SvcImpl implements IDSSGrabber1Svc
 	 * (non-Javadoc)
 	 *
 	 * @see
-     * gov.ca.water.calgui.bus_service.impl.IDSSGrabber1Svc#getExceedanceSeriesDWithMultipleTimeSeries
+	 * gov.ca.water.calgui.bus_service.impl.IDSSGrabber1Svc#getExceedanceSeriesDWithMultipleTimeSeries
 	 * (hec.io.TimeSeriesContainer[])
 	 */
 	@Override
@@ -1413,10 +1225,10 @@ public class DSSGrabber1SvcImpl implements IDSSGrabber1Svc
 	{
 
 		/*
-         * Copy of getExceedanceSeriesWithMultipleTimeSeries to handle "exceedance of differences"
+		 * Copy of getExceedanceSeriesWithMultipleTimeSeries to handle "exceedance of differences"
 		 *
 		 * Calculates difference of annual TAFs to get proper results for [12];
-         * should be recombined with getExceedanceSeriesWithMultipleTimeSeries
+		 * should be recombined with getExceedanceSeriesWithMultipleTimeSeries
 		 */
 
 		try
@@ -1428,13 +1240,13 @@ public class DSSGrabber1SvcImpl implements IDSSGrabber1Svc
 			}
 			else
 			{
-				results = new TimeSeriesContainer[14][scenarios - 1];
+				results = new TimeSeriesContainer[14][_scenarioCount - 1];
 
 				for(int month = 0; month < 14; month++)
 				{
 
 					HecTime ht = new HecTime();
-					for(int i = 0; i < scenarios - 1; i++)
+					for(int i = 0; i < _scenarioCount - 1; i++)
 					{
 
 						if(month == 13)
@@ -1460,14 +1272,14 @@ public class DSSGrabber1SvcImpl implements IDSSGrabber1Svc
 							{
 
 								// Annual totals - grab from annualTAFs
-								n = annualTAFs[i + 1].length;
+								n = _annualTAFs[i + 1].length;
 								times2 = new int[n];
 								values2 = new double[n];
 								for(int j = 0; j < n; j++)
 								{
-									ht.setYearMonthDay(j + startWY, 11, 1, 0);
+									ht.setYearMonthDay(j + _startWY, 11, 1, 0);
 									times2[j] = ht.value();
-									values2[j] = annualTAFs[i + 1][j] - annualTAFs[0][j];
+									values2[j] = _annualTAFs[i + 1][j] - _annualTAFs[0][j];
 								}
 
 							}
@@ -1526,7 +1338,7 @@ public class DSSGrabber1SvcImpl implements IDSSGrabber1Svc
 		{
 			LOG.error(e.getMessage());
 			String messageText = "Unable to get time-series.";
-			errorHandlingSvc.businessErrorHandler(messageText, (JFrame) swingEngine.find(Constant.MAIN_FRAME_NAME), e);
+			_errorHandlingSvc.businessErrorHandler(messageText, e);
 		}
 		return null;
 	}
@@ -1540,20 +1352,7 @@ public class DSSGrabber1SvcImpl implements IDSSGrabber1Svc
 	@Override
 	public String getOriginalUnits()
 	{
-		return originalUnits;
-	}
-
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see
-	 * gov.ca.water.calgui.bus_service.impl.IDSSGrabber1Svc#setOriginalUnits(
-	 * java.lang.String)
-	 */
-	@Override
-	public void setOriginalUnits(String originalUnits)
-	{
-		this.originalUnits = originalUnits;
+		return _originalUnits;
 	}
 
 	/*
@@ -1563,22 +1362,9 @@ public class DSSGrabber1SvcImpl implements IDSSGrabber1Svc
 	 * gov.ca.water.calgui.bus_service.impl.IDSSGrabber1Svc#getPrimaryDSSName()
 	 */
 	@Override
-	public String getPrimaryDSSName()
+	public List<String> getPrimaryDSSName()
 	{
-		return primaryDSSName;
-	}
-
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see
-	 * gov.ca.water.calgui.bus_service.impl.IDSSGrabber1Svc#setPrimaryDSSName(
-	 * java.lang.String)
-	 */
-	@Override
-	public void setPrimaryDSSName(String primaryDSSName)
-	{
-		this.primaryDSSName = primaryDSSName;
+		return _primaryDSSName;
 	}
 
 }

@@ -1,0 +1,40 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!--
+  ~ Copyright (c) 2019
+  ~ California Department of Water Resources
+  ~ All Rights Reserved.  DWR PROPRIETARY/CONFIDENTIAL.
+  ~ Source may not be released without written approval from DWR
+  -->
+
+<!DOCTYPE toc PUBLIC "-//Sun Microsystems Inc.//DTD JavaHelp TOC Version 2.0//EN" "http://java.sun.com/products/javahelp/toc_2_0.dtd">
+<toc version="2.0">
+	<tocitem text="1. Introduction" target="Introduction"/>
+	<tocitem text="2. Main Menu Options" target="Dropdown Menus"/>
+	<tocitem text="3. Scenario Settings" target="Scenario Settings">
+		<tocitem text="3.1. Run Settings" target="Run Settings"/>
+		<tocitem text="3.2. Hydroclimate" target="Hydroclimate"/>
+		<tocitem text="3.3. Demands" target="Demands"/>
+		<tocitem text="3.4. Facilities" target="Facilities"/>
+		<tocitem text="3.5. Regulations" target="Regulations">
+			<tocitem text="3.5.1. Quick Select" target="Quick Select"/>
+			<tocitem text="3.5.2. D1641/D1485 Regulations" target="D1641/D1485 Regulations"/>
+			<tocitem text="3.5.3. BORPA regulations" target="BORPA regulations"/>
+			<tocitem text="3.5.4. SJR Controls" target="SJR Controls"/>
+			<tocitem text="3.5.5. Other regulations" target="Other regulations"/>
+		</tocitem>
+		<tocitem text="3.6. Operations" target="Operations"/>
+	</tocitem>
+	<tocitem text="4. Results" target="Results">
+		<tocitem text="4.1. Quick Results" target="Quick Results"/>
+		<tocitem text="4.2. Custom Results" target="Custom Results"/>
+		<tocitem text="4.3. Map View" target="Map View"/>
+		<tocitem text="4.4. External PDF" target="External PDF"/>
+		<tocitem text="4.5. Web Map" target="Web Map (Beta)"/>
+	</tocitem>
+	<tocitem text="5. Tutorial" target="Tutorial">
+		<tocitem text="5.1. Creating Scenarios" target="Creating Scenarios"/>
+		<tocitem text="5.2. Viewing Results" target="Viewing Results"/>
+
+
+	</tocitem>
+</toc>

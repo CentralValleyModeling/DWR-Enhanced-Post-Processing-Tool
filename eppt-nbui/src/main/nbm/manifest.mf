@@ -1,4 +1,5 @@
 Manifest-Version: 1.0
+OpenIDE-Module-Install: gov/ca/water/eppt/nbui/Installer.class
 OpenIDE-Module-Layer: gov/ca/water/eppt/nbui/layer.xml
 OpenIDE-Module-Localizing-Bundle: gov/ca/water/eppt/nbui/Bundle.properties
 OpenIDE-Module-Requires: org.openide.windows.WindowManager

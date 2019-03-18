@@ -9,10 +9,7 @@ package gov.ca.water.calgui.tech_service.impl;
 
 import javax.swing.*;
 
-import gov.ca.water.calgui.bus_service.impl.XMLParsingSvcImpl;
-import gov.ca.water.calgui.constant.Constant;
 import gov.ca.water.calgui.tech_service.IDialogSvc;
-import org.swixml.SwingEngine;
 
 /**
  * Provides JOptionPane access with CalLite icon and consistent (center of main
@@ -24,12 +21,16 @@ public class DialogSvcImpl implements IDialogSvc
 {
 
 	private static IDialogSvc dialogSvc = null;
-	private SwingEngine swingEngine = XMLParsingSvcImpl.getXMLParsingSvcImplInstance().getSwingEngine();
-	private ImageIcon icon = new ImageIcon(getClass().getResource("/images/CalLiteIcon.png"));
+	private static JFrame _mainFrame = null;
 
-	public DialogSvcImpl()
+	private DialogSvcImpl()
 	{
 
+	}
+
+	public static void installMainFrame(JFrame mainFrame)
+	{
+		_mainFrame = mainFrame;
 	}
 
 	/**
@@ -119,8 +120,8 @@ public class DialogSvcImpl implements IDialogSvc
 	private String common(String message, int messageType, int optionType, Object[] options)
 	{
 		JOptionPane optionPane = new JOptionPane(message, messageType, optionType, null, options, options[0]);
-		JDialog dialog = optionPane.createDialog(swingEngine.find(Constant.MAIN_FRAME_NAME), "CalLite GUI");
-		dialog.setIconImage(icon.getImage());
+		JDialog dialog = optionPane.createDialog(_mainFrame, "CalLite GUI");
+		dialog.setIconImage(_mainFrame.getIconImage());
 		dialog.setResizable(false);
 		dialog.setVisible(true);
 		return optionPane.getValue().toString();

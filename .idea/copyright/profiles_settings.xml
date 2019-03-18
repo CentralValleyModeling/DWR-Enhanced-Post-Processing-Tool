@@ -1,5 +1,5 @@
 <component name="CopyrightManager">
-  <settings>
+  <settings default="DWR">
     <module2copyright>
       <element module="All" copyright="DWR" />
     </module2copyright>

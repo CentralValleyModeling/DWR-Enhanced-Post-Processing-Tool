@@ -18,51 +18,51 @@ public class AuditBO
 	/**
 	 * The control Id of the record.
 	 */
-	private String controlId;
+	private String _controlId;
 	/**
 	 * The old value of the control id.
 	 */
-	private String oldValue;
+	private String _oldValue;
 	/**
 	 * The new value of the control id.
 	 */
-	private String newValue;
+	private String _newValue;
 
 	public AuditBO(String controlId, String oldValue, String newValue)
 	{
 		super();
-		this.controlId = controlId;
-		this.oldValue = oldValue;
-		this.newValue = newValue;
+		this._controlId = controlId;
+		this._oldValue = oldValue;
+		this._newValue = newValue;
 	}
 
 	public String getControlId()
 	{
-		return controlId;
+		return _controlId;
 	}
 
 	public void setControlId(String controlId)
 	{
-		this.controlId = controlId;
+		this._controlId = controlId;
 	}
 
 	public String getOldValue()
 	{
-		return oldValue;
+		return _oldValue;
 	}
 
 	public void setOldValue(String oldValue)
 	{
-		this.oldValue = oldValue;
+		this._oldValue = oldValue;
 	}
 
 	public String getNewValue()
 	{
-		return newValue;
+		return _newValue;
 	}
 
 	public void setNewValue(String newValue)
 	{
-		this.newValue = newValue;
+		this._newValue = newValue;
 	}
 }
