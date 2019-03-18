@@ -1,4 +1,3 @@
-# DWR Enhanced Post Processing Tool (EPPT)
 ## EPPT-Vista Module
 
 The EPPT-Vista Module is a modified copy of the source from https://github.com/CADWRDeltaModeling/dsm2-vista for use with the EPPT application.
