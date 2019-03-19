@@ -166,12 +166,6 @@
 			<type>dll</type>
 		</dependency>
 		<dependency>
-			<groupId>org.swixml</groupId>
-			<artifactId>swixml</artifactId>
-			<version>240</version>
-			<classifier>CalLiteGUI_P3</classifier>
-		</dependency>
-		<dependency>
 			<groupId>gov.ca.water</groupId>
 			<artifactId>eppt-calsim-gui</artifactId>
 			<version>1.0.1-SNAPSHOT</version>
