@@ -30,7 +30,7 @@ import hec.dssgui.ListSelection;
 )
 @ActionReferences(
 		{
-				@ActionReference(path = "Menu/Tools", position = 0, separatorAfter = 50)
+				@ActionReference(path = "Menu/Tools", position = 1111, separatorAfter = 1112)
 				,
 				@ActionReference(path = "Toolbars/EPPT", position = 555)
 		})
