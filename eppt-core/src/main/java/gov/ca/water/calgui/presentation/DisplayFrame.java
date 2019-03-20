@@ -390,7 +390,6 @@ class DisplayFrame
 							tabbedpane.setName(namesText[i]);
 							tabbedPanes.add(tabbedpane);
 						}
-
 					}
 				}
 			}

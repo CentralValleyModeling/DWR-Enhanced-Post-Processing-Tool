@@ -8,6 +8,7 @@
 package gov.ca.water.eppt.nbui;
 
 import java.awt.BorderLayout;
+import java.awt.Dimension;
 import javax.swing.*;
 
 import org.openide.windows.TopComponent;
@@ -22,6 +23,7 @@ public class PlotTopComponent extends EpptTopComponent
 {
 	public PlotTopComponent(JTabbedPane tabbedPane)
 	{
+		tabbedPane.setPreferredSize(new Dimension(545, 630));
 		tabbedPane.setSelectedIndex(0);
 		JScrollPane jScrollPane = new JScrollPane();
 		jScrollPane.setViewportView(tabbedPane);

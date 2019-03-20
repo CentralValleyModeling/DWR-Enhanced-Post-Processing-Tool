@@ -37,7 +37,7 @@ public class ProjectConfigurationIOTest
 		ProjectConfigurationPanel projectConfigurationPanel = ProjectConfigurationPanel.getProjectConfigurationPanel();
 		String baseFile = Thread.currentThread().getContextClassLoader().getResource(
 				"Base.dss").getFile().substring(1);
-		RBListItemBO rbListItemBO = new RBListItemBO(baseFile, "Base.dss", GUILinksAllModelsBO.Model.CAL_LITE);
+		RBListItemBO rbListItemBO = new RBListItemBO(baseFile, "Base.dss", GUILinksAllModelsBO.Model.findModel("CalLite"));
 		rbListItemBO.setSelected(true);
 		projectConfigurationPanel.setScenarios(Collections.singletonList(rbListItemBO));
 		ProjectConfigurationIO projectConfigurationIO = new ProjectConfigurationIO();

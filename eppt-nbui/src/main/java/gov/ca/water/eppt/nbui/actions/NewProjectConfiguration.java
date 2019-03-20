@@ -26,6 +26,7 @@ import gov.ca.water.calgui.constant.Constant;
 import gov.ca.water.calgui.constant.EpptPreferences;
 import gov.ca.water.eppt.nbui.Installer;
 import gov.ca.water.quickresults.ui.projectconfig.ProjectConfigurationPanel;
+import org.netbeans.api.actions.Savable;
 import org.openide.awt.ActionID;
 import org.openide.awt.ActionReference;
 import org.openide.awt.ActionReferences;
@@ -93,7 +94,7 @@ public class NewProjectConfiguration implements ActionListener
 	void saveAs() throws IOException
 	{
 		NameDialog nameDialog = new NameDialog(WindowManager.getDefault().getMainWindow());
-		String substring = String.valueOf(new Date().getTime()).substring(5);
+		String substring = String.valueOf(new Date().getTime()).substring(8);
 		String newProjectName = "New_Project_" + substring;
 		nameDialog.setName(newProjectName);
 		nameDialog.setDescription("");
@@ -114,14 +115,23 @@ public class NewProjectConfiguration implements ActionListener
 			{
 				selectedPath = Paths.get(selectedPath + "." + Constant.EPPT_EXT);
 			}
+			try
+			{
+				ProjectConfigurationPanel.getProjectConfigurationPanel().resetProjectConfiguration();
+			}
+			catch(Exception e)
+			{
+				throw new IOException("Unable to reset Project Configuration to default state");
+			}
 			ProjectConfigurationPanel.getProjectConfigurationPanel().saveConfigurationToPath(selectedPath,
 					nameDialog.getName(), nameDialog.getDescription());
 			WindowManager.getDefault().getMainWindow().setTitle(
 					Installer.MAIN_FRAME_NAME + " - " + ProjectConfigurationPanel.getProjectConfigurationPanel().getProjectName());
 			ProjectConfigurationPanel.getProjectConfigurationPanel().setModified(false);
 		}
-		Collection<? extends ProjectConfigurationSavable> scenarioConfigurationSavables = _lkpInfo.allInstances();
-		for(ProjectConfigurationSavable savable : scenarioConfigurationSavables)
+		Collection<? extends ProjectConfigurationSavable> projectConfigurationSavables = Savable.REGISTRY.lookupAll(
+				ProjectConfigurationSavable.class);
+		for(ProjectConfigurationSavable savable : projectConfigurationSavables)
 		{
 			savable.removeFromLookup();
 		}

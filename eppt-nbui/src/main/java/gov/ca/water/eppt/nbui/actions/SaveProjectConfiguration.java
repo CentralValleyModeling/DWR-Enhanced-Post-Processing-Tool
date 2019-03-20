@@ -19,6 +19,7 @@ import javax.swing.*;
 import gov.ca.water.calgui.constant.EpptPreferences;
 import gov.ca.water.eppt.nbui.Installer;
 import gov.ca.water.quickresults.ui.projectconfig.ProjectConfigurationPanel;
+import org.netbeans.api.actions.Savable;
 import org.openide.awt.ActionID;
 import org.openide.awt.ActionReference;
 import org.openide.awt.ActionReferences;
@@ -84,8 +85,9 @@ public final class SaveProjectConfiguration extends AbstractAction implements Pr
 		}
 		WindowManager.getDefault().getMainWindow().setTitle(
 				Installer.MAIN_FRAME_NAME + " - " + projectConfigurationPanel.getProjectName());
-		Collection<? extends ProjectConfigurationSavable> scenarioConfigurationSavables = _lkpInfo.allInstances();
-		for(ProjectConfigurationSavable savable : scenarioConfigurationSavables)
+		Collection<? extends ProjectConfigurationSavable> projectConfigurationSavables = Savable.REGISTRY.lookupAll(
+				ProjectConfigurationSavable.class);
+		for(ProjectConfigurationSavable savable : projectConfigurationSavables)
 		{
 			savable.removeFromLookup();
 		}

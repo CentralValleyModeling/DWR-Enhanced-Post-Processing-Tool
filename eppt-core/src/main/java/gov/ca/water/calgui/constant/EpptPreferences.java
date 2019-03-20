@@ -22,7 +22,7 @@ import javax.swing.filechooser.FileSystemView;
 public final class EpptPreferences
 {
 	private static final Preferences ROOT_PREFERENCES = Preferences.userRoot().node("DWR").node("EPPT");
-	private static final Preferences REPORT_NODE = ROOT_PREFERENCES.node("Report");
+	private static final Preferences REPORT_NODE = ROOT_PREFERENCES.node("report");
 	private static final Preferences EPPT_HOME = ROOT_PREFERENCES.node("eppt_home");
 	private static final String PROJECT_DIRECTORY = "project_directory";
 	private static final String LAST_SCENARIO_CONFIGURATION = "last_scenario_configuration";

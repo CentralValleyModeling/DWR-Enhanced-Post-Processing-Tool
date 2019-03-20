@@ -70,6 +70,7 @@ public class DisplayHelper
         try
         {
             setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
+
             jTabbedPanes  = DisplayFrame.showDisplayFrames(displayGroup, scenarios, startMonth, endMonth);
         }
         catch(RuntimeException ex)

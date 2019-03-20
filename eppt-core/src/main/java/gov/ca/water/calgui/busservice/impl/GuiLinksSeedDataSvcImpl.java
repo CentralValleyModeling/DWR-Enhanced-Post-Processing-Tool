@@ -102,7 +102,7 @@ public final class GuiLinksSeedDataSvcImpl implements IGuiLinksSeedDataSvc
 				{
 					secondary = list[3].trim();
 				}
-				guiLinksAllModelsBO.addModelMapping(GUILinksAllModelsBO.Model.findModel(model), primary, secondary);
+				guiLinksAllModelsBO.addModelMapping(model, primary, secondary);
 			}
 		}
 		catch(ArrayIndexOutOfBoundsException ex)

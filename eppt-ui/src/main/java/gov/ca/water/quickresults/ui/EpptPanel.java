@@ -31,6 +31,7 @@ public abstract class EpptPanel extends RmaJPanel
 {
 	private static final Logger LOGGER = Logger.getLogger(EpptPanel.class.getName());
 	private final SwingEngine _swingEngine;
+	private ActionListener _actionListener;
 
 	public EpptPanel()
 	{
@@ -46,7 +47,13 @@ public abstract class EpptPanel extends RmaJPanel
 
 	public void setActionListener(ActionListener actionListener)
 	{
+		_actionListener = actionListener;
 		getSwingEngine().setActionListener(this, actionListener);
+	}
+
+	protected ActionListener getActionListener()
+	{
+		return _actionListener;
 	}
 
 	protected Container renderSwixml(String fileName) throws Exception

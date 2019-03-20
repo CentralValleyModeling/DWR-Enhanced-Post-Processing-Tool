@@ -58,13 +58,15 @@ public final class ProjectConfigurationPanel extends EpptPanel
 		try
 		{
 			_projectConfigurationIO = new ProjectConfigurationIO();
+			_nameField = new JTextField();
+			_descriptionField = new JTextField();
+			_lmScenNames = new DefaultListModel<>();
 			super.setLayout(new BorderLayout());
 			Container swixmlProjectConfigurationPanel = renderSwixml(SCENARIO_CONFIGURATION_XML_FILE);
 			super.add(swixmlProjectConfigurationPanel, BorderLayout.CENTER);
-			_nameField = new JTextField();
-			_descriptionField = new JTextField();
 			initComponents();
 			initModels();
+			_lmScenNames.addListDataListener(new MyListDataListener());
 		}
 		catch(Exception e)
 		{
@@ -152,9 +154,7 @@ public final class ProjectConfigurationPanel extends EpptPanel
 			Container controls3 = (Container) getSwingEngine().find("controls3");
 			setSummaryTableEnabled(selected, controls3);
 		});
-
-		_lmScenNames = new DefaultListModel<>();
-		_lmScenNames.addListDataListener(new MyListDataListener());
+		_lmScenNames.removeAllElements();
 		getScenarioList().setModel(_lmScenNames);
 		getScenarioList().setCellRenderer(new RBListRenderer());
 		getScenarioList().setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
@@ -484,6 +484,16 @@ public final class ProjectConfigurationPanel extends EpptPanel
 	public String getProjectDescription()
 	{
 		return _descriptionField.getText();
+	}
+
+	public void resetProjectConfiguration() throws Exception
+	{
+		removeAll();
+		Container swixmlProjectConfigurationPanel = renderSwixml(SCENARIO_CONFIGURATION_XML_FILE);
+		super.add(swixmlProjectConfigurationPanel, BorderLayout.CENTER);
+		initComponents();
+		initModels();
+		setActionListener(getActionListener());
 	}
 
 	/**

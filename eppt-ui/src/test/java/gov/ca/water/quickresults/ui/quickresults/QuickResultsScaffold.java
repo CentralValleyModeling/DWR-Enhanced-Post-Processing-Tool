@@ -45,15 +45,15 @@ public class QuickResultsScaffold extends EpptScaffold
 			List<RBListItemBO> currentScenarios = projectConfigurationPanel.getScenarios();
 			String baseFile = Thread.currentThread().getContextClassLoader().getResource(
 					"Base.dss").getFile().substring(1);
-			RBListItemBO base = new RBListItemBO(baseFile, "Base.dss", GUILinksAllModelsBO.Model.CAL_LITE);
+			RBListItemBO base = new RBListItemBO(baseFile, "Base.dss", GUILinksAllModelsBO.Model.findModel("CalLite"));
 			base.setSelected(true);
 			currentScenarios.add(base);
 			String altFile = Thread.currentThread().getContextClassLoader().getResource(
 					"Alternative.dss").getFile().substring(1);
-			currentScenarios.add(new RBListItemBO(altFile, "Alternative.dss", GUILinksAllModelsBO.Model.CAL_LITE));
+			currentScenarios.add(new RBListItemBO(altFile, "Alternative.dss", GUILinksAllModelsBO.Model.findModel("CalLite")));
 			String cs2 = Thread.currentThread().getContextClassLoader().getResource(
 					"CSII_DCR2017_Base_DV.dss").getFile().substring(1);
-			currentScenarios.add(new RBListItemBO(cs2, "CSII_DCR2017_Base_DV.dss", GUILinksAllModelsBO.Model.CAL_SIM_2));
+			currentScenarios.add(new RBListItemBO(cs2, "CSII_DCR2017_Base_DV.dss",  GUILinksAllModelsBO.Model.findModel("CalSim2")));
 			DefaultListModel<RBListItemBO> defaultModel = new DefaultListModel<>();
 			for(RBListItemBO item : currentScenarios)
 			{

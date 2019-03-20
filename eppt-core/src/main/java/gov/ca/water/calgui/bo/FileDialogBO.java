@@ -168,8 +168,8 @@ public class FileDialogBO implements ActionListener
 	{
 		return (GUILinksAllModelsBO.Model) JOptionPane.showInputDialog(_parentComponent, "EPPT Model",
 				"Choose Model:", JOptionPane.QUESTION_MESSAGE, null,
-				GUILinksAllModelsBO.Model.values(),
-				GUILinksAllModelsBO.Model.CAL_LITE);
+				GUILinksAllModelsBO.Model.values().toArray(),
+				new GUILinksAllModelsBO.Model("CalLite"));
 
 	}
 

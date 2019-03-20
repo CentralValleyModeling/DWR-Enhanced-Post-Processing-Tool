@@ -7,14 +7,16 @@
 
 package gov.ca.water.calgui.bo;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.Set;
 
-import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toMap;
 
 /**
@@ -64,18 +66,20 @@ public class GUILinksAllModelsBO
 		return Optional.ofNullable(_modelMapping.get(model));
 	}
 
-	public void addModelMapping(Model model, String primary, String secondary)
+	public void addModelMapping(String modelString, String primary, String secondary)
 	{
-		if(model == null)
+		if(modelString == null)
 		{
 			throw new IllegalArgumentException("Unable to add null model");
 		}
-		_modelMapping.put(model, new ModelData(primary, secondary, model));
+		Model model = new Model(modelString);
+		Model.addModel(model);
+		_modelMapping.put(model, new ModelData(primary, secondary, Model.findModel(modelString)));
 	}
 
 	public Map<Model, String> getPrimary()
 	{
-		return Arrays.stream(Model.values())
+		return Model.values().stream()
 					 .map(this::getModelData)
 					 .filter(Optional::isPresent)
 					 .map(Optional::get)
@@ -85,7 +89,7 @@ public class GUILinksAllModelsBO
 
 	public Map<Model, String> getSecondary()
 	{
-		return Arrays.stream(Model.values())
+		return Model.values().stream()
 					 .map(this::getModelData)
 					 .filter(Optional::isPresent)
 					 .map(Optional::get)
@@ -94,14 +98,15 @@ public class GUILinksAllModelsBO
 					 .collect(toMap(ModelData::getModel, ModelData::getSecondary));
 	}
 
-	public enum Model
+	public static class Model
 	{
-		CAL_LITE("CalLite"), CAL_SIM_2("CalSim2"), CAL_SIM_3("CalSim3");
+		private static final Set<Model> MODELS = new HashSet<>();
 
 		private final String _name;
 
 		Model(String name)
 		{
+			Objects.requireNonNull(name, "Model name connot be null");
 			_name = name;
 		}
 
@@ -118,9 +123,19 @@ public class GUILinksAllModelsBO
 			}
 			if(retval == null)
 			{
-				retval = CAL_LITE;
+				retval = new Model("CalLite");
 			}
 			return retval;
+		}
+
+		private static void addModel(Model models)
+		{
+			MODELS.add(models);
+		}
+
+		public static List<Model> values()
+		{
+			return new ArrayList<>(MODELS);
 		}
 
 		@Override
@@ -128,9 +143,30 @@ public class GUILinksAllModelsBO
 		{
 			return _name;
 		}
+
+		@Override
+		public boolean equals(Object o)
+		{
+			if(this == o)
+			{
+				return true;
+			}
+			if(!(o instanceof Model))
+			{
+				return false;
+			}
+			final Model model = (Model) o;
+			return _name.equals(model._name);
+		}
+
+		@Override
+		public int hashCode()
+		{
+			return Objects.hash(_name);
+		}
 	}
 
-	public class ModelData
+	public static class ModelData
 	{
 		private final String _primary;
 		private final String _secondary;

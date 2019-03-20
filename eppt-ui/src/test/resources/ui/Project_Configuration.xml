@@ -33,8 +33,8 @@
 	</panel>
 	<panel id="Display" resizeable="false" border="TitledBorder(Display)" constraints="BorderLayout.CENTER"
 		   layout="FlowLayout(FlowLayout.LEFT)"
-		   preferredsize="440,502"
-		   minimumsize="440,502">
+		   preferredsize="440,600"
+		   minimumsize="440,600">
 		<panel layout="GridBagLayout">
 			<panel layout="GridBagLayout">
 				<gridbagconstraints insets="0,5,5,3" anchor="GridBagConstraints.NORTHWEST" gridx="1" gridy="1"/>

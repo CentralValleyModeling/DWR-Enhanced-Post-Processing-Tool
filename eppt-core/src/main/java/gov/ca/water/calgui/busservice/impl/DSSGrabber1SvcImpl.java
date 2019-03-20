@@ -576,9 +576,9 @@ public class DSSGrabber1SvcImpl implements IDSSGrabber1Svc
 				}
 
 				// TODO: Note hard-coded D- and E-PART
-				result = (TimeSeriesContainer) hD
-						.get("/" + hecAPart + "/" + dssNames[0] + "/01JAN1930/1MON/" + hecFParts[0], true);
-				LOGGER.info("/" + hecAPart + "/" + dssNames[0] + "/01JAN1930/1MON/" + hecFParts[0]);
+				String firstPath = "/" + hecAPart + "/" + dssNames[0] + "/01JAN1930/1MON/" + hecFParts[0];
+				result = (TimeSeriesContainer) hD.get(firstPath, true);
+				LOGGER.fine(String.format("/%s/%s/01JAN1930/1MON/%s", hecAPart, dssNames[0], hecFParts[0]));
 				if((result == null) || (result.numberValues < 1))
 				{
 
@@ -633,11 +633,10 @@ public class DSSGrabber1SvcImpl implements IDSSGrabber1Svc
 
 					else
 					{
-						message = "Could not find " + dssNames[0] + " in " + dssFilename;
+						message = "Could not find " + dssNames[0] + " in " + dssFilename + " - attempted to retrieve path: " + firstPath;
 					}
 					List<String> messages = _missingDSSRecords.computeIfAbsent(model, m -> new ArrayList<>());
 					messages.add(message);
-
 				}
 				else
 				{
@@ -649,12 +648,14 @@ public class DSSGrabber1SvcImpl implements IDSSGrabber1Svc
 					{
 
 						// TODO: Note hard-coded D- and E-PART
+						String pathName = "/" + hecAPart + "/" + dssNames[i] + "/01JAN2020/1MON/" + hecFParts[i];
 						TimeSeriesContainer result2 = (TimeSeriesContainer) hD
-								.get("/" + hecAPart + "/" + dssNames[i] + "/01JAN2020/1MON/" + hecFParts[i], true);
+								.get(pathName, true);
 						if(result2 == null || result2.numberValues < 1)
 						{
 							result2 = null;
-							String message = "Could not find " + dssNames[0] + " in " + dssFilename;
+							String message = String.format("Could not find %s in %s - attempted to retrieve path: %s",
+									dssNames[0], dssFilename, pathName);
 							if(_stopOnMissing)
 							{
 								JOptionPane.showMessageDialog(null, message, "Error", JOptionPane.ERROR_MESSAGE);
@@ -859,7 +860,7 @@ public class DSSGrabber1SvcImpl implements IDSSGrabber1Svc
 				}
 			}
 		}
-		catch(Exception ex)
+		catch(RuntimeException ex)
 		{
 			LOGGER.log(Level.SEVERE, "Unable to get time series.", ex);
 		}
@@ -878,7 +879,7 @@ public class DSSGrabber1SvcImpl implements IDSSGrabber1Svc
 		}
 		if(oneSeries == null)
 		{
-			LOGGER.log(Level.WARNING, "No matching GUI Links record in: " + scenarioName + " for Model: " + model);
+			LOGGER.log(Level.WARNING, "No matching GUI Links record in: " + scenarioName + " for Model: " + model + " with path: " + primaryTs);
 			if(_stopOnMissing)
 			{
 				reportMissingTimeSeries(scenarioName);
@@ -1240,7 +1241,7 @@ public class DSSGrabber1SvcImpl implements IDSSGrabber1Svc
 			}
 			return results;
 		}
-		catch(Exception ex)
+		catch(RuntimeException ex)
 		{
 			LOGGER.log(Level.SEVERE, "Unable to get time-series.", ex);
 		}
@@ -1380,7 +1381,7 @@ public class DSSGrabber1SvcImpl implements IDSSGrabber1Svc
 			}
 			return results;
 		}
-		catch(Exception ex)
+		catch(RuntimeException ex)
 		{
 			LOGGER.log(Level.SEVERE, "Unable to get time-series.", ex);
 		}

@@ -284,23 +284,27 @@ public class ChartPanel1 extends JPanel implements Printable
 				TimeSeriesCollection dataset = new TimeSeriesCollection();
 				for(int i = 0; i < (isBase ? 1 : tscs.length); i++)
 				{
-					if(isSchVw)
+					TimeSeriesContainer tsc = tscs[i];
+					if(tsc != null)
 					{
-						series[i] = new TimeSeries(svNames[i]);
+						if(isSchVw)
+						{
+							series[i] = new TimeSeries(svNames[i]);
+						}
+						else
+						{
+							series[i] = new TimeSeries(tsc.fileName);
+						}
+						primaries++;
+						for(int j = 0; j < tsc.numberValues; j++)
+						{
+							ht.set(tsc.times[j]);
+							series[i].addOrUpdate(new Month(ht.month(), ht.year()), tsc.values[j]);
+							ymin = Math.min(ymin, tsc.values[j]);
+							ymax = Math.max(ymax, tsc.values[j]);
+						}
+						dataset.addSeries(series[i]);
 					}
-					else
-					{
-						series[i] = new TimeSeries(tscs[i].fileName);
-					}
-					primaries++;
-					for(int j = 0; j < tscs[i].numberValues; j++)
-					{
-						ht.set(tscs[i].times[j]);
-						series[i].addOrUpdate(new Month(ht.month(), ht.year()), tscs[i].values[j]);
-						ymin = Math.min(ymin, tscs[i].values[j]);
-						ymax = Math.max(ymax, tscs[i].values[j]);
-					}
-					dataset.addSeries(series[i]);
 				}
 
 				if(stscs != null)
@@ -337,7 +341,7 @@ public class ChartPanel1 extends JPanel implements Printable
 						yLabel + " (" + tscs[0].units + ")", // y-axis label
 						dataset); // create and display a frame...
 
-				if(scatterAvailable)
+				if(scatterAvailable && tscs[0] != null && tscs[1] != null)
 				{
 
 					XYSeriesCollection datasetXY = new XYSeriesCollection();
@@ -365,6 +369,10 @@ public class ChartPanel1 extends JPanel implements Printable
 					renderer.setUseFillPaint(true);
 					renderer.setBaseFillPaint(Color.white);
 
+				}
+				else
+				{
+					scatterAvailable = false;
 				}
 
 			}
@@ -422,7 +430,7 @@ public class ChartPanel1 extends JPanel implements Printable
 			ChartPanel p2 = new ChartPanel(chart);
 			this.add(p2);
 		}
-		if(scatterAvailable)
+		if(scatterAvailable && chartXY != null)
 		{
 
 			setChartOptions(chartXY, stscs, isExceed, isBase, ymax, ymin, primaries);

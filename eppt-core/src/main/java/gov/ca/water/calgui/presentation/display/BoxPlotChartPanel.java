@@ -66,44 +66,48 @@ public class BoxPlotChartPanel extends JPanel implements Printable
 		{
 			for(int j = 0; j < categoryCount; j++)
 			{
-				final List<Double> list = new ArrayList<Double>();
 
-				if(j == 0)
+				TimeSeriesContainer tsc = tscs[i];
+				if(tsc != null)
 				{
-					// All data
-					for(int k = 0; k < tscs[i].numberValues; k++)
+					final List<Double> list = new ArrayList<>();
+					if(j == 0)
 					{
-						list.add(tscs[i].values[k]);
-						ymin = Math.min(ymin, tscs[i].values[k]);
-						ymax = Math.max(ymax, tscs[i].values[k]);
-					}
-				}
-				else if(j <= 13)
-				{
-					// Monthly
-					for(int k = j - 1; k < tscs[i].numberValues; k += 12)
-					{
-						list.add(tscs[i].values[k]);
-					}
-				}
-
-				else
-				{
-					// Annual
-					for(int k = 0; k < tscs[i].numberValues; k += 12)
-					{
-						double sum = 0;
-						for(int l = 0; l < 12; l++)
+						// All data
+						for(int k = 0; k < tsc.numberValues; k++)
 						{
-							sum = sum + tscs[i].values[k + l];
+							list.add(tsc.values[k]);
+							ymin = Math.min(ymin, tsc.values[k]);
+							ymax = Math.max(ymax, tsc.values[k]);
 						}
-						list.add(sum / 12);
+					}
+					else if(j <= 13)
+					{
+						// Monthly
+						for(int k = j - 1; k < tsc.numberValues; k += 12)
+						{
+							list.add(tsc.values[k]);
+						}
 					}
 
+					else
+					{
+						// Annual
+						for(int k = 0; k < tsc.numberValues; k += 12)
+						{
+							double sum = 0;
+							for(int l = 0; l < 12; l++)
+							{
+								sum = sum + tsc.values[k + l];
+							}
+							list.add(sum / 12);
+						}
+
+					}
+					dataset.add(list, tsc.fileName, j == 0 ? "All"
+							: j == 13 ? "Annual" : "OctNovDecJanFebMarAprMayJunJulAugSep".substring(3 * j - 3, 3 * j));
+					list.clear();
 				}
-				dataset.add(list, tscs[i].fileName, j == 0 ? "All"
-						: j == 13 ? "Annual" : "OctNovDecJanFebMarAprMayJunJulAugSep".substring(3 * j - 3, 3 * j));
-				list.clear();
 			}
 
 			final CategoryAxis xAxis = new CategoryAxis("Period");
