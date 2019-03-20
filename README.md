@@ -5,3 +5,7 @@ The DWR Enhanced Post Processor Tool (EPPT) is a Windows desktop user interface 
 2.	DTS Report, similar to Quick Results but introduces derived time series (DTS) that allows for comparison between model variables.
 3.	Schematic View (*will be developed in a subsequent version), comparison and drill-down of model runs presented using a schematic view of the system.
 4.	QA/QC Report, model run comparison presented as a PDF report that includes summary information and detailed graphs and tables.
+
+# Module Dependency Graph
+
+![Dependency Graph](https://github.com/CalSimCalLite/DWR-Enhanced-Post-Processing-Tool/blob/master/DependencyGraph.png)
