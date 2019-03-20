@@ -25,12 +25,12 @@ import gov.ca.water.businessservice.impl.DynamicControlSvcImpl;
 import gov.ca.water.businessservice.impl.ScenarioSvcImpl;
 import gov.ca.water.businessservice.impl.XMLParsingSvcImpl;
 import gov.ca.water.calgui.constant.Constant;
-import gov.ca.water.calgui.tech_service.IAuditSvc;
-import gov.ca.water.calgui.tech_service.IDialogSvc;
-import gov.ca.water.calgui.tech_service.IErrorHandlingSvc;
-import gov.ca.water.calgui.tech_service.impl.AuditSvcImpl;
-import gov.ca.water.calgui.tech_service.impl.DialogSvcImpl;
-import gov.ca.water.calgui.tech_service.impl.ErrorHandlingSvcImpl;
+import gov.ca.water.calgui.techservice.IAuditSvc;
+import gov.ca.water.calgui.techservice.IDialogSvc;
+import gov.ca.water.calgui.techservice.IErrorHandlingSvc;
+import gov.ca.water.calgui.techservice.impl.AuditSvcImpl;
+import gov.ca.water.calgui.techservice.impl.DialogSvcImpl;
+import gov.ca.water.calgui.techservice.impl.ErrorHandlingSvcImpl;
 import org.apache.log4j.Logger;
 import org.swixml.SwingEngine;
 

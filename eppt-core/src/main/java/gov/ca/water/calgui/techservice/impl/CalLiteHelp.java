@@ -5,7 +5,7 @@
  * Source may not be released without written approval from DWR
  */
 
-package gov.ca.water.calgui.tech_service.impl;
+package gov.ca.water.calgui.techservice.impl;
 
 import java.io.File;
 import java.io.IOException;

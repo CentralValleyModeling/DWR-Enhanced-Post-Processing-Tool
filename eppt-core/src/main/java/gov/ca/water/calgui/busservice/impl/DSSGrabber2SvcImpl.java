@@ -5,7 +5,7 @@
  * Source may not be released without written approval from DWR
  */
 
-package gov.ca.water.calgui.bus_service.impl;
+package gov.ca.water.calgui.busservice.impl;
 
 //! Variant on DSSGrabber1BO for MTS (multiple time series)
 
@@ -13,16 +13,17 @@ import java.util.Arrays;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Vector;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import calsim.app.DerivedTimeSeries;
 import calsim.app.MultipleTimeSeries;
 import gov.ca.water.calgui.bo.GUILinksAllModelsBO;
 import gov.ca.water.calgui.bo.RBListItemBO;
 import gov.ca.water.calgui.bo.ResultUtilsBO;
-import gov.ca.water.calgui.bus_service.IGuiLinksSeedDataSvc;
-import gov.ca.water.calgui.tech_service.IErrorHandlingSvc;
-import gov.ca.water.calgui.tech_service.impl.ErrorHandlingSvcImpl;
-import org.apache.log4j.Logger;
+import gov.ca.water.calgui.busservice.IGuiLinksSeedDataSvc;
+import gov.ca.water.calgui.techservice.IErrorHandlingSvc;
+import gov.ca.water.calgui.techservice.impl.ErrorHandlingSvcImpl;
 
 import hec.heclib.util.HecTime;
 import hec.io.TimeSeriesContainer;
@@ -53,11 +54,10 @@ import hec.io.TimeSeriesContainer;
 public class DSSGrabber2SvcImpl extends DSSGrabber1SvcImpl
 {
 
-	private static final Logger LOG = Logger.getLogger(DSSGrabber2SvcImpl.class.getName());
+	private static final Logger LOGGER = Logger.getLogger(DSSGrabber2SvcImpl.class.getName());
 	private final DerivedTimeSeries _dts;
 	private final MultipleTimeSeries _mts;
 	private final IGuiLinksSeedDataSvc _seedDataSvc = GuiLinksSeedDataSvcImpl.getSeedDataSvcImplInstance();
-	private final IErrorHandlingSvc _errorHandlingSvc = new ErrorHandlingSvcImpl();
 	private double[][][] _annualTAFs;
 	private double[][][] _annualTAFsDiff;
 
@@ -77,7 +77,8 @@ public class DSSGrabber2SvcImpl extends DSSGrabber1SvcImpl
 	 *
 	 * @param locationName index into GUI_Links3.table or Schematic_DSS_Link4.table
 	 */
-	public void setLocation(String locationName)
+	@Override
+	public void setLocation(String locationName, GUILinksAllModelsBO.Model model)
 	{
 
 		try
@@ -90,7 +91,7 @@ public class DSSGrabber2SvcImpl extends DSSGrabber1SvcImpl
 				// @@ indicates MTS/DTS title
 				locationName = locationName.substring(2);
 				_primaryDSSName.clear();
-				_primaryDSSName.add(locationName);
+				_primaryDSSName.put(model, locationName);
 				_secondaryDSSName.clear();
 				_axisLabel = "";
 				_legend = "";
@@ -102,7 +103,7 @@ public class DSSGrabber2SvcImpl extends DSSGrabber1SvcImpl
 				String[] parts = locationName.split("/");
 				_plotTitle = locationName;
 				_primaryDSSName.clear();
-				_primaryDSSName.add(parts[2] + "/" + parts[3]);
+				_primaryDSSName.put(model, parts[2] + "/" + parts[3]);
 				_secondaryDSSName.clear();
 				_axisLabel = "";
 				_legend = "";
@@ -115,20 +116,18 @@ public class DSSGrabber2SvcImpl extends DSSGrabber1SvcImpl
 				if(guiLinksAllModelsBO != null)
 				{
 					_primaryDSSName.clear();
-					_primaryDSSName.addAll(guiLinksAllModelsBO.getPrimary());
+					_primaryDSSName.putAll(guiLinksAllModelsBO.getPrimary());
 					_secondaryDSSName.clear();
-					_secondaryDSSName.addAll(guiLinksAllModelsBO.getSecondary());
+					_secondaryDSSName.putAll(guiLinksAllModelsBO.getSecondary());
 					_axisLabel = guiLinksAllModelsBO.getPlotAxisLabel();
 					_plotTitle = guiLinksAllModelsBO.getPlotTitle();
 					_legend = guiLinksAllModelsBO.getLegend();
 				}
 			}
 		}
-		catch(Exception e)
+		catch(Exception ex)
 		{
-			LOG.error(e.getMessage());
-			String messageText = "Unable to set location.";
-			_errorHandlingSvc.businessErrorHandler(messageText, e);
+			LOGGER.log(Level.SEVERE, "Unable to set location.", ex);
 		}
 	}
 
@@ -154,7 +153,7 @@ public class DSSGrabber2SvcImpl extends DSSGrabber1SvcImpl
 
 			// Base first
 
-			results[0] = getOneSeriesWRIMS(_baseName, _dts);
+			results[0] = getOneSeriesWRIMS(_baseName, _baseModel, _dts);
 			_originalUnits = results[0].units;
 
 			// Then scenarios
@@ -163,6 +162,7 @@ public class DSSGrabber2SvcImpl extends DSSGrabber1SvcImpl
 			for(int i = 0; i < _scenarioCount; i++)
 			{
 				String scenarioName;
+				GUILinksAllModelsBO.Model model = _baseModel;
 				if(_baseName.contains("_SV.DSS"))
 				{
 					// For SVars, use WRIMS GUI Project object to
@@ -189,22 +189,22 @@ public class DSSGrabber2SvcImpl extends DSSGrabber1SvcImpl
 				}
 				else
 				{
-					scenarioName = _scenarios.get(i).toString();
+					RBListItemBO rbListItemBO = _scenarios.get(i);
+					scenarioName = rbListItemBO.toString();
+					model = rbListItemBO.getModel();
 				}
 				if(!_baseName.equals(scenarioName))
 				{
 					j = j + 1;
-					results[j] = getOneSeriesWRIMS(scenarioName, _dts);
+					results[j] = getOneSeriesWRIMS(scenarioName, model, _dts);
 				}
 			}
 
 			return results;
 		}
-		catch(Exception e)
+		catch(Exception ex)
 		{
-			LOG.error(e.getMessage());
-			String messageText = "Unable to get time-series.";
-			_errorHandlingSvc.businessErrorHandler(messageText, e);
+			LOGGER.log(Level.SEVERE, "Unable to get time-series.", ex);
 		}
 		return null;
 	}
@@ -224,7 +224,7 @@ public class DSSGrabber2SvcImpl extends DSSGrabber1SvcImpl
 
 			// Base first
 
-			results[0] = getOneSeriesWRIMS(_baseName, mtsI, _mts);
+			results[0] = getOneSeriesWRIMS(_baseName, _baseModel, mtsI, _mts);
 			if(results[0] != null)
 			{
 				_originalUnits = results[0].units;
@@ -236,6 +236,7 @@ public class DSSGrabber2SvcImpl extends DSSGrabber1SvcImpl
 			for(int i = 0; i < _scenarioCount; i++)
 			{
 				String scenarioName;
+				GUILinksAllModelsBO.Model model = _baseModel;
 				if(_baseName.contains("_SV.DSS"))
 				{
 					// For SVars, use WRIMS GUI Project object to determine
@@ -261,27 +262,27 @@ public class DSSGrabber2SvcImpl extends DSSGrabber1SvcImpl
 				}
 				else
 				{
-					scenarioName = _scenarios.get(i).toString();
+					RBListItemBO rbListItemBO = _scenarios.get(i);
+					scenarioName = rbListItemBO.toString();
+					model = rbListItemBO.getModel();
 				}
 				if(!_baseName.equals(scenarioName))
 				{
 					j = j + 1;
-					results[j] = getOneSeriesWRIMS(scenarioName, mtsI, _mts);
+					results[j] = getOneSeriesWRIMS(scenarioName, model, mtsI, _mts);
 				}
 			}
 
 			return results;
 		}
-		catch(Exception e)
+		catch(Exception ex)
 		{
-			LOG.error(e.getMessage());
-			String messageText = "Unable to get time-series.";
-			_errorHandlingSvc.businessErrorHandler(messageText, e);
+			LOGGER.log(Level.SEVERE, "Unable to get time-series.", ex);
 		}
 		return null;
 	}
 
-	private TimeSeriesContainer getOneSeriesWRIMS(String dssFilename, DerivedTimeSeries dts2)
+	private TimeSeriesContainer getOneSeriesWRIMS(String dssFilename, GUILinksAllModelsBO.Model model, DerivedTimeSeries dts2)
 	{
 
 		try
@@ -298,17 +299,17 @@ public class DSSGrabber2SvcImpl extends DSSGrabber1SvcImpl
 					// Operand is reference to another DTS
 					DerivedTimeSeries adt = ResultUtilsBO.getResultUtilsInstance().getProject()
 														 .getDTS((String) dtsNames.get(i));
-					interimResult = getOneSeriesWRIMS(dssFilename, adt);
+					interimResult = getOneSeriesWRIMS(dssFilename, model, adt);
 				}
 				else
 				{
 					// Operand is a DSS time series
 					_primaryDSSName.clear();
-					_primaryDSSName.add(dts2.getBPartAt(i) + "/" + dts2.getCPartAt(i));
-					if(dts2.getVarTypeAt(i).equals("DVAR"))
+					_primaryDSSName.put(model, dts2.getBPartAt(i) + "/" + dts2.getCPartAt(i));
+					if("DVAR".equals(dts2.getVarTypeAt(i)))
 					{
 						interimResult = getOneSeries(dssFilename,
-								(dts2.getBPartAt(i) + "/" + dts2.getCPartAt(i) + "/LOOKUP"));
+								(dts2.getBPartAt(i) + "/" + dts2.getCPartAt(i) + "/LOOKUP"), model);
 					}
 					else
 					{
@@ -332,7 +333,7 @@ public class DSSGrabber2SvcImpl extends DSSGrabber1SvcImpl
 						}
 
 						interimResult = getOneSeries(svFilename,
-								(dts2.getBPartAt(i) + "/" + dts2.getCPartAt(i) + "/LOOKUP"));
+								(dts2.getBPartAt(i) + "/" + dts2.getCPartAt(i) + "/LOOKUP"), model);
 					}
 				}
 				if(interimResult != null)
@@ -407,40 +408,39 @@ public class DSSGrabber2SvcImpl extends DSSGrabber1SvcImpl
 			}
 			return result;
 		}
-		catch(Exception e)
+		catch(Exception ex)
 		{
-			LOG.error(e.getMessage());
-			String messageText = "Unable to get time-series.";
-			_errorHandlingSvc.businessErrorHandler(messageText, e);
+			LOGGER.log(Level.SEVERE, "Unable to get time-series.", ex);
 		}
 		return null;
 
 	}
 
-	private TimeSeriesContainer getOneSeriesWRIMS(String dssFilename, int i, MultipleTimeSeries mts2)
+	private TimeSeriesContainer getOneSeriesWRIMS(String dssFilename, GUILinksAllModelsBO.Model model,
+												  int i, MultipleTimeSeries mts2)
 	{
 
 		try
 		{
-			TimeSeriesContainer result = null;
+			TimeSeriesContainer result;
 			if(!mts2.getDTSNameAt(i).isEmpty())
 			{
 				// Operand is reference to a DTS
 				DerivedTimeSeries adt = ResultUtilsBO.getResultUtilsInstance().getProject()
 													 .getDTS(_mts.getDTSNameAt(i));
-				result = getOneSeriesWRIMS(dssFilename, adt);
+				result = getOneSeriesWRIMS(dssFilename, model, adt);
 				_primaryDSSName.clear();
-				_primaryDSSName.add(_mts.getDTSNameAt(i));
+				_primaryDSSName.put(model, _mts.getDTSNameAt(i));
 
 			}
 			else
 			{
 				// Operand is a DSS time series
 				_primaryDSSName.clear();
-				_primaryDSSName.add(mts2.getBPartAt(i) + "//" + mts2.getCPartAt(i));
+				_primaryDSSName.put(model, mts2.getBPartAt(i) + "//" + mts2.getCPartAt(i));
 				if("DVAR".equals(mts2.getVarTypeAt(i)))
 				{
-					result = getOneSeries(dssFilename, (mts2.getBPartAt(i) + "/" + mts2.getCPartAt(i)));
+					result = getOneSeries(dssFilename, (mts2.getBPartAt(i) + "/" + mts2.getCPartAt(i)), model);
 				}
 				else
 				{
@@ -463,16 +463,14 @@ public class DSSGrabber2SvcImpl extends DSSGrabber1SvcImpl
 						svFilename = _project.getSV4File();
 					}
 
-					result = getOneSeries(svFilename, (mts2.getBPartAt(i) + "/" + mts2.getCPartAt(i)));
+					result = getOneSeries(svFilename, (mts2.getBPartAt(i) + "/" + mts2.getCPartAt(i)), model);
 				}
 			}
 			return result;
 		}
-		catch(Exception e)
+		catch(Exception ex)
 		{
-			LOG.error(e.getMessage());
-			String messageText = "Unable to get time series from.";
-			_errorHandlingSvc.businessErrorHandler(messageText, e);
+			LOGGER.log(Level.SEVERE, "Unable to get time series from.", ex);
 		}
 		return null;
 	}
@@ -509,11 +507,9 @@ public class DSSGrabber2SvcImpl extends DSSGrabber1SvcImpl
 			}
 			return results;
 		}
-		catch(RuntimeException e)
+		catch(RuntimeException ex)
 		{
-			LOG.error(e.getMessage());
-			String messageText = "Unable to get time-series.";
-			_errorHandlingSvc.businessErrorHandler(messageText, e);
+			LOGGER.log(Level.SEVERE, "Unable to get time-series.", ex);
 		}
 		return timeSeriesResults;
 	}
@@ -602,11 +598,9 @@ public class DSSGrabber2SvcImpl extends DSSGrabber1SvcImpl
 				}
 			}
 		}
-		catch(Exception e)
+		catch(Exception ex)
 		{
-			LOG.error(e.getMessage());
-			String messageText = "Unable to calculate TAF.";
-			_errorHandlingSvc.businessErrorHandler(messageText, e);
+			LOGGER.log(Level.SEVERE, "Unable to calculate TAF.", ex);
 		}
 
 	}
@@ -733,11 +727,9 @@ public class DSSGrabber2SvcImpl extends DSSGrabber1SvcImpl
 			}
 			return results;
 		}
-		catch(Exception e)
+		catch(Exception ex)
 		{
-			LOG.error(e.getMessage());
-			String messageText = "Unable to get time-series.";
-			_errorHandlingSvc.businessErrorHandler(messageText, e);
+			LOGGER.log(Level.SEVERE, "Unable to get time-series.", ex);
 		}
 		return null;
 	}
@@ -862,11 +854,9 @@ public class DSSGrabber2SvcImpl extends DSSGrabber1SvcImpl
 			}
 			return results;
 		}
-		catch(Exception e)
+		catch(Exception ex)
 		{
-			LOG.error(e.getMessage());
-			String messageText = "Unable to get time-series.";
-			_errorHandlingSvc.businessErrorHandler(messageText, e);
+			LOGGER.log(Level.SEVERE, "Unable to get time-series.", ex);
 		}
 		return null;
 	}

@@ -5,9 +5,12 @@
  * Source may not be released without written approval from DWR
  */
 
-package gov.ca.water.calgui.bus_service;
+package gov.ca.water.calgui.busservice;
 
 import java.util.List;
+import java.util.Map;
+
+import gov.ca.water.calgui.bo.GUILinksAllModelsBO;
 
 import hec.io.TimeSeriesContainer;
 
@@ -46,7 +49,7 @@ public interface IDSSGrabber1Svc
 	 *
 	 * @param baseName name of scenario/DSS file to use as base.
 	 */
-	void setBase(String baseName);
+	void setBase(String baseName, GUILinksAllModelsBO.Model model);
 
 	/**
 	 * Sets dataset (DSS) names to read from scenario DSS files, title, and axis
@@ -57,7 +60,7 @@ public interface IDSSGrabber1Svc
 	 *
 	 * @param locationName index into GUI_Links3.table or Schematic_DSS_Link4.table
 	 */
-	void setLocation(String locationName);
+	void setLocation(String locationName, GUILinksAllModelsBO.Model model);
 
 	/**
 	 * Gets primary y-axis label assigned by DSS_Grabber to the results read in
@@ -154,7 +157,7 @@ public interface IDSSGrabber1Svc
 
 	String getOriginalUnits();
 
-	List<String> getPrimaryDSSName();
+	Map<GUILinksAllModelsBO.Model, String> getPrimaryDSSName();
 
 	/**
 	 * Clears list of DSS records that were not found in scenario DV.DSS files
@@ -166,7 +169,7 @@ public interface IDSSGrabber1Svc
 	 *
 	 * @return list, or null if not tracked due to property setting
 	 */
-	List<String> getMissingList();
+	Map<GUILinksAllModelsBO.Model, List<String>> getMissingList();
 
 	/**
 	 * Provide access to stopOnMissing flag read from callite-gui.properties

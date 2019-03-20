@@ -5,11 +5,11 @@
  * Source may not be released without written approval from DWR
  */
 
-package gov.ca.water.calgui.tech_service.impl;
+package gov.ca.water.calgui.techservice.impl;
 
 import javax.swing.*;
 
-import gov.ca.water.calgui.tech_service.IDialogSvc;
+import gov.ca.water.calgui.techservice.IDialogSvc;
 
 /**
  * Provides JOptionPane access with CalLite icon and consistent (center of main
@@ -49,7 +49,7 @@ public class DialogSvcImpl implements IDialogSvc
 	 * (non-Javadoc)
 	 *
 	 * @see
-	 * gov.ca.water.calgui.tech_service.impl.IDialogSvc#getOK(java.lang.String,
+	 * gov.ca.water.calgui.techservice.impl.IDialogSvc#getOK(java.lang.String,
 	 * int)
 	 */
 	@Override
@@ -62,7 +62,7 @@ public class DialogSvcImpl implements IDialogSvc
 	/*
 	 * (non-Javadoc)
 	 *
-	 * @see gov.ca.water.calgui.tech_service.impl.IDialogSvc#getYesNo(java.lang.
+	 * @see gov.ca.water.calgui.techservice.impl.IDialogSvc#getYesNo(java.lang.
 	 * String, int)
 	 */
 	@Override
@@ -76,7 +76,7 @@ public class DialogSvcImpl implements IDialogSvc
 	 * (non-Javadoc)
 	 *
 	 * @see
-	 * gov.ca.water.calgui.tech_service.impl.IDialogSvc#getOKCancel(java.lang.
+	 * gov.ca.water.calgui.techservice.impl.IDialogSvc#getOKCancel(java.lang.
 	 * String, int)
 	 */
 	@Override
@@ -90,7 +90,7 @@ public class DialogSvcImpl implements IDialogSvc
 	 * (non-Javadoc)
 	 *
 	 * @see
-	 * gov.ca.water.calgui.tech_service.impl.IDialogSvc#getSaveDontSaveCancel(
+	 * gov.ca.water.calgui.techservice.impl.IDialogSvc#getSaveDontSaveCancel(
 	 * java.lang.String, int)
 	 */
 	@Override

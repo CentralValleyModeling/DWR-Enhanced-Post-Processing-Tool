@@ -13,6 +13,7 @@ import java.nio.file.Paths;
 import java.util.Collections;
 import javax.swing.*;
 
+import gov.ca.water.calgui.bo.GUILinksAllModelsBO;
 import gov.ca.water.calgui.bo.RBListItemBO;
 import org.jfree.data.time.Month;
 import org.junit.jupiter.api.Test;
@@ -36,7 +37,7 @@ public class ProjectConfigurationIOTest
 		ProjectConfigurationPanel projectConfigurationPanel = ProjectConfigurationPanel.getProjectConfigurationPanel();
 		String baseFile = Thread.currentThread().getContextClassLoader().getResource(
 				"Base.dss").getFile().substring(1);
-		RBListItemBO rbListItemBO = new RBListItemBO(baseFile, "Base.dss");
+		RBListItemBO rbListItemBO = new RBListItemBO(baseFile, "Base.dss", GUILinksAllModelsBO.Model.CAL_LITE);
 		rbListItemBO.setSelected(true);
 		projectConfigurationPanel.setScenarios(Collections.singletonList(rbListItemBO));
 		ProjectConfigurationIO projectConfigurationIO = new ProjectConfigurationIO();

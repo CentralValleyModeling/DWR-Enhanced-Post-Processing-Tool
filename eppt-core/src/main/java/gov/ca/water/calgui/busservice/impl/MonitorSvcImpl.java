@@ -5,7 +5,7 @@
  * Source may not be released without written approval from DWR
  */
 
-package gov.ca.water.calgui.bus_service.impl;
+package gov.ca.water.calgui.busservice.impl;
 
 import java.io.IOException;
 import java.nio.file.AccessDeniedException;
@@ -20,7 +20,7 @@ import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import gov.ca.water.calgui.bus_service.IMonitorSvc;
+import gov.ca.water.calgui.busservice.IMonitorSvc;
 import gov.ca.water.calgui.constant.Constant;
 
 /**

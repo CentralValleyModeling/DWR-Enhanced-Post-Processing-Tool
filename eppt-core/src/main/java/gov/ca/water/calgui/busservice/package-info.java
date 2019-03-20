@@ -12,4 +12,4 @@
  *
  * @author Mohan
  */
-package gov.ca.water.calgui.bus_service;
+package gov.ca.water.calgui.busservice;

@@ -5,7 +5,7 @@
  * Source may not be released without written approval from DWR
  */
 
-package gov.ca.water.calgui.bus_service;
+package gov.ca.water.calgui.busservice;
 
 import java.nio.file.Path;
 import java.util.List;

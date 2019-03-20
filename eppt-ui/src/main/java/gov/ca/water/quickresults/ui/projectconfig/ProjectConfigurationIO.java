@@ -20,6 +20,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 import javax.swing.*;
 
+import gov.ca.water.calgui.bo.GUILinksAllModelsBO;
 import gov.ca.water.calgui.bo.RBListItemBO;
 import gov.ca.water.calgui.constant.EpptPreferences;
 import org.jfree.data.time.Month;
@@ -46,6 +47,7 @@ class ProjectConfigurationIO
 	private static final String CREATION_DATE_KEY = "creation_date";
 	private static final String SCENARIO_FILES_KEY = "scenario_files";
 	private static final String FILE_KEY = "file";
+	private static final String MODEL_KEY = "model";
 	private static final String SELECTED_KEY = "selected";
 	private static final String DISPLAY_OPTIONS_KEY = "display_options";
 	private static final String MONTH_OPTIONS_KEY = "month_options";
@@ -98,6 +100,7 @@ class ProjectConfigurationIO
 			JSONObject jsonObject = new JSONObject();
 			jsonObject.put(FILE_KEY, path.toString());
 			jsonObject.put(SELECTED_KEY, scenario.isSelected());
+			jsonObject.put(MODEL_KEY, scenario.getModel().toString());
 			jsonArray.put(jsonObject);
 		}
 		return jsonArray;
@@ -121,7 +124,13 @@ class ProjectConfigurationIO
 				}
 				if(dssPath.isAbsolute())
 				{
-					RBListItemBO rbListItemBO = new RBListItemBO(dssPath.toString(), dssPath.getFileName().toString());
+					String modelString = null;
+					if(jsonObject.has(MODEL_KEY))
+					{
+						modelString = jsonObject.getString(MODEL_KEY);
+					}
+					GUILinksAllModelsBO.Model model = GUILinksAllModelsBO.Model.findModel(modelString);
+					RBListItemBO rbListItemBO = new RBListItemBO(dssPath.toString(), dssPath.getFileName().toString(), model);
 					boolean selected = jsonObject.getBoolean(SELECTED_KEY);
 					rbListItemBO.setSelected(selected);
 					scenarios.add(rbListItemBO);

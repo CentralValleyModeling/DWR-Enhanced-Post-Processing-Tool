@@ -5,7 +5,7 @@
  * Source may not be released without written approval from DWR
  */
 
-package gov.ca.water.calgui.bus_service.impl;
+package gov.ca.water.calgui.busservice.impl;
 
 import java.nio.file.Paths;
 import java.util.HashMap;
@@ -15,10 +15,10 @@ import java.util.Map;
 import gov.ca.water.calgui.EpptInitializationException;
 import gov.ca.water.calgui.bo.CalLiteGUIException;
 import gov.ca.water.calgui.bo.GUILinksAllModelsBO;
-import gov.ca.water.calgui.bus_service.IGuiLinksSeedDataSvc;
+import gov.ca.water.calgui.busservice.IGuiLinksSeedDataSvc;
 import gov.ca.water.calgui.constant.Constant;
-import gov.ca.water.calgui.tech_service.IFileSystemSvc;
-import gov.ca.water.calgui.tech_service.impl.FileSystemSvcImpl;
+import gov.ca.water.calgui.techservice.IFileSystemSvc;
+import gov.ca.water.calgui.techservice.impl.FileSystemSvcImpl;
 import org.apache.log4j.Logger;
 
 import static gov.ca.water.calgui.constant.Constant.CONFIG_DIR;

@@ -11,8 +11,8 @@ package gov.ca.water.calgui.bo;
 import javax.swing.table.AbstractTableModel;
 
 import gov.ca.water.calgui.constant.Constant;
-import gov.ca.water.calgui.tech_service.IAuditSvc;
-import gov.ca.water.calgui.tech_service.impl.AuditSvcImpl;
+import gov.ca.water.calgui.techservice.IAuditSvc;
+import gov.ca.water.calgui.techservice.impl.AuditSvcImpl;
 
 /**
  * This class is used to hold the tables for the application.

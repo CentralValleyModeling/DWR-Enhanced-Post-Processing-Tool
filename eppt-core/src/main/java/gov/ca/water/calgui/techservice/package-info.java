@@ -12,4 +12,4 @@
  *
  * @author Mohan
  */
-package gov.ca.water.calgui.tech_service;
+package gov.ca.water.calgui.techservice;

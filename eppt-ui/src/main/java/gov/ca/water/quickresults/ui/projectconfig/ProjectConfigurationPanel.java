@@ -29,8 +29,8 @@ import gov.ca.water.calgui.bo.RBListItemBO;
 import gov.ca.water.calgui.bo.ResultUtilsBO;
 import gov.ca.water.calgui.constant.EpptPreferences;
 import gov.ca.water.calgui.presentation.WRIMSGUILinks;
-import gov.ca.water.calgui.tech_service.IErrorHandlingSvc;
-import gov.ca.water.calgui.tech_service.impl.ErrorHandlingSvcImpl;
+import gov.ca.water.calgui.techservice.IErrorHandlingSvc;
+import gov.ca.water.calgui.techservice.impl.ErrorHandlingSvcImpl;
 import gov.ca.water.quickresults.ui.EpptPanel;
 import org.apache.log4j.Logger;
 import org.jfree.data.time.Month;
@@ -497,13 +497,14 @@ public final class ProjectConfigurationPanel extends EpptPanel
 		public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected,
 													  boolean hasFocus)
 		{
+			RBListItemBO rbListItemBO = (RBListItemBO) value;
 			setEnabled(list.isEnabled());
-			setSelected(((RBListItemBO) value).isSelected());
+			setSelected(rbListItemBO.isSelected());
 			setFont(list.getFont());
 			setBackground(list.getBackground());
 			setForeground(list.getForeground());
-			setText(((RBListItemBO) value).getLabel());
-			this.setToolTipText(value.toString() + " 	\n" + ((RBListItemBO) value).getSVFilename());
+			setText(rbListItemBO.getLabel() + " (" + rbListItemBO.getModel() + ")");
+			this.setToolTipText(value.toString() + " 	\n" + rbListItemBO.getSVFilename());
 			return this;
 		}
 	}

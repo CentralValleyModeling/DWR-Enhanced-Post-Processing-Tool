@@ -5,7 +5,7 @@
  * Source may not be released without written approval from DWR
  */
 
-package gov.ca.water.calgui.bus_service.impl;
+package gov.ca.water.calgui.busservice.impl;
 
 //! Base DSS file access service
 
@@ -15,24 +15,27 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Properties;
 import java.util.Scanner;
 import java.util.Vector;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.*;
 
 import calsim.app.Project;
 import gov.ca.water.calgui.bo.GUILinksAllModelsBO;
 import gov.ca.water.calgui.bo.RBListItemBO;
 import gov.ca.water.calgui.bo.ResultUtilsBO;
-import gov.ca.water.calgui.bus_service.IDSSGrabber1Svc;
-import gov.ca.water.calgui.bus_service.IGuiLinksSeedDataSvc;
-import gov.ca.water.calgui.tech_service.IDialogSvc;
-import gov.ca.water.calgui.tech_service.IErrorHandlingSvc;
-import gov.ca.water.calgui.tech_service.impl.DialogSvcImpl;
-import gov.ca.water.calgui.tech_service.impl.ErrorHandlingSvcImpl;
-import org.apache.log4j.Logger;
+import gov.ca.water.calgui.busservice.IDSSGrabber1Svc;
+import gov.ca.water.calgui.busservice.IGuiLinksSeedDataSvc;
+import gov.ca.water.calgui.techservice.IDialogSvc;
+import gov.ca.water.calgui.techservice.IErrorHandlingSvc;
+import gov.ca.water.calgui.techservice.impl.DialogSvcImpl;
+import gov.ca.water.calgui.techservice.impl.ErrorHandlingSvcImpl;
 
 import hec.heclib.dss.HecDss;
 import hec.heclib.util.HecTime;
@@ -67,11 +70,12 @@ public class DSSGrabber1SvcImpl implements IDSSGrabber1Svc
 
 	static final double CFS_2_TAF_DAY = 0.001983471;
 	private static final double TAF_DAY_2_CFS = 504.166667;
-	private static Logger LOG = Logger.getLogger(DSSGrabber1SvcImpl.class.getName());
+	private static Logger LOGGER = Logger.getLogger(DSSGrabber1SvcImpl.class.getName());
 	final List<RBListItemBO> _scenarios = new ArrayList<>();
 	String _baseName;
-	final List<String> _primaryDSSName = new ArrayList<>();
-	final List<String> _secondaryDSSName = new ArrayList<>();
+	GUILinksAllModelsBO.Model _baseModel;
+	final Map<GUILinksAllModelsBO.Model, String> _primaryDSSName = new HashMap<>();
+	final Map<GUILinksAllModelsBO.Model, String> _secondaryDSSName = new HashMap<>();
 	// Chart title
 	String _plotTitle;
 	// Y-axis label
@@ -93,13 +97,10 @@ public class DSSGrabber1SvcImpl implements IDSSGrabber1Svc
 	// Number of scenarios passed in list parameter
 	private double[][] _annualTAFs;
 	private double[][] _annualTAFsDiff;
-	private double[][] _annualCFSs;
-	private double[][] _annualCFSsDiff;
 	private IGuiLinksSeedDataSvc _seedDataSvc = GuiLinksSeedDataSvcImpl.getSeedDataSvcImplInstance();
-	private IErrorHandlingSvc _errorHandlingSvc = new ErrorHandlingSvcImpl();
 	private IDialogSvc _dialogSvc = DialogSvcImpl.getDialogSvcInstance();
 	private boolean _stopOnMissing;
-	private List<String> _missingDSSRecords = new ArrayList<>();
+	private final Map<GUILinksAllModelsBO.Model, List<String>> _missingDSSRecords = new HashMap<>();
 
 	public DSSGrabber1SvcImpl(List<RBListItemBO> scenarios)
 	{
@@ -111,9 +112,9 @@ public class DSSGrabber1SvcImpl implements IDSSGrabber1Svc
 			properties.load(ModelRunSvcImpl.class.getClassLoader().getResourceAsStream(propertiesFile));
 			_stopOnMissing = Boolean.parseBoolean(properties.getProperty("stop.display.on.null"));
 		}
-		catch(IOException | RuntimeException e)
+		catch(IOException | RuntimeException ex)
 		{
-			LOG.error("Unable to read properties file from: " + propertiesFile, e);
+			LOGGER.log(Level.WARNING, "Unable to read properties file from: " + propertiesFile, ex);
 			_stopOnMissing = true;
 		}
 		clearMissingList();
@@ -132,7 +133,7 @@ public class DSSGrabber1SvcImpl implements IDSSGrabber1Svc
 	 *
 	 * @return list, or null if not tracked due to property setting
 	 */
-	public List<String> getMissingList()
+	public Map<GUILinksAllModelsBO.Model, List<String>> getMissingList()
 	{
 		return _missingDSSRecords;
 	}
@@ -152,7 +153,7 @@ public class DSSGrabber1SvcImpl implements IDSSGrabber1Svc
 	 * (non-Javadoc)
 	 *
 	 * @see
-	 * gov.ca.water.calgui.bus_service.impl.IDSSGrabber1Svc#setIsCFS(boolean)
+	 * gov.ca.water.calgui.busservice.impl.IDSSGrabber1Svc#setIsCFS(boolean)
 	 */
 	@Override
 	public void setIsCFS(boolean isCFS)
@@ -164,7 +165,7 @@ public class DSSGrabber1SvcImpl implements IDSSGrabber1Svc
 	 * (non-Javadoc)
 	 *
 	 * @see
-	 * gov.ca.water.calgui.bus_service.impl.IDSSGrabber1Svc#setDateRange(java.
+	 * gov.ca.water.calgui.busservice.impl.IDSSGrabber1Svc#setDateRange(java.
 	 * lang.String)
 	 */
 	@Override
@@ -187,16 +188,14 @@ public class DSSGrabber1SvcImpl implements IDSSGrabber1Svc
 			_endTime = ht.value();
 			_endWY = (m < 10) ? y : y + 1;
 		}
-		catch(UnsatisfiedLinkError | NoClassDefFoundError e)
+		catch(UnsatisfiedLinkError | NoClassDefFoundError ex)
 		{
-			_errorHandlingSvc.systemErrorHandler("Possible javaheclib.dll issue - CalLite GUI will close",
-					"javaHecLib.dll may be the wrong version or missing.");
+			LOGGER.log(Level.SEVERE, "Possible javaheclib.dll issue javaHecLib.dll may be the wrong version or missing.", ex);
 		}
-		catch(Exception e)
+		catch(RuntimeException ex)
 		{
-
 			_startTime = -1;
-			LOG.debug(e.getMessage());
+			LOGGER.log(Level.WARNING, ex.getMessage(), ex);
 		}
 
 	}
@@ -204,7 +203,7 @@ public class DSSGrabber1SvcImpl implements IDSSGrabber1Svc
 	/*
 	 * (non-Javadoc)
 	 *
-	 * @see gov.ca.water.calgui.bus_service.impl.IDSSGrabber1Svc#getBase()
+	 * @see gov.ca.water.calgui.busservice.impl.IDSSGrabber1Svc#getBase()
 	 */
 	@Override
 	public String getBase()
@@ -235,25 +234,25 @@ public class DSSGrabber1SvcImpl implements IDSSGrabber1Svc
 	 * (non-Javadoc)
 	 *
 	 * @see
-	 * gov.ca.water.calgui.bus_service.impl.IDSSGrabber1Svc#setBase(java.lang.
+	 * gov.ca.water.calgui.busservice.impl.IDSSGrabber1Svc#setBase(java.lang.
 	 * String)
 	 */
 	@Override
-	public void setBase(String baseName)
+	public void setBase(String baseName, GUILinksAllModelsBO.Model model)
 	{
-
-		this._baseName = baseName;
+		_baseName = baseName;
+		_baseModel = model;
 	}
 
 	/*
 	 * (non-Javadoc)
 	 *
 	 * @see
-	 * gov.ca.water.calgui.bus_service.impl.IDSSGrabber1Svc#setLocation(java.
+	 * gov.ca.water.calgui.busservice.impl.IDSSGrabber1Svc#setLocation(java.
 	 * lang.String)
 	 */
 	@Override
-	public void setLocation(String locationName)
+	public void setLocation(String locationName, GUILinksAllModelsBO.Model model)
 	{
 
 		locationName = locationName.trim();
@@ -264,7 +263,7 @@ public class DSSGrabber1SvcImpl implements IDSSGrabber1Svc
 			String[] parts = locationName.split("/");
 			_plotTitle = locationName;
 			_primaryDSSName.clear();
-			_primaryDSSName.add(parts[2] + "/" + parts[3] + "/" + parts[6]);
+			_primaryDSSName.put(model, parts[2] + "/" + parts[3] + "/" + parts[6]);
 			_secondaryDSSName.clear();
 			_axisLabel = "";
 			_legend = "";
@@ -277,9 +276,9 @@ public class DSSGrabber1SvcImpl implements IDSSGrabber1Svc
 			if(guiLinksAllModelsBO != null)
 			{
 				_primaryDSSName.clear();
-				_primaryDSSName.addAll(guiLinksAllModelsBO.getPrimary());
+				_primaryDSSName.putAll(guiLinksAllModelsBO.getPrimary());
 				_secondaryDSSName.clear();
-				_secondaryDSSName.addAll(guiLinksAllModelsBO.getSecondary());
+				_secondaryDSSName.putAll(guiLinksAllModelsBO.getSecondary());
 				_axisLabel = guiLinksAllModelsBO.getPlotAxisLabel();
 				_plotTitle = guiLinksAllModelsBO.getPlotTitle();
 				_legend = guiLinksAllModelsBO.getLegend();
@@ -290,7 +289,7 @@ public class DSSGrabber1SvcImpl implements IDSSGrabber1Svc
 	/*
 	 * (non-Javadoc)
 	 *
-	 * @see gov.ca.water.calgui.bus_service.impl.IDSSGrabber1Svc#getYLabel()
+	 * @see gov.ca.water.calgui.busservice.impl.IDSSGrabber1Svc#getYLabel()
 	 */
 	@Override
 	public String getYLabel()
@@ -301,7 +300,7 @@ public class DSSGrabber1SvcImpl implements IDSSGrabber1Svc
 	/*
 	 * (non-Javadoc)
 	 *
-	 * @see gov.ca.water.calgui.bus_service.impl.IDSSGrabber1Svc#getSLabel()
+	 * @see gov.ca.water.calgui.busservice.impl.IDSSGrabber1Svc#getSLabel()
 	 */
 	@Override
 	public String getSLabel()
@@ -312,7 +311,7 @@ public class DSSGrabber1SvcImpl implements IDSSGrabber1Svc
 	/*
 	 * (non-Javadoc)
 	 *
-	 * @see gov.ca.water.calgui.bus_service.impl.IDSSGrabber1Svc#getPlotTitle()
+	 * @see gov.ca.water.calgui.busservice.impl.IDSSGrabber1Svc#getPlotTitle()
 	 */
 	@Override
 	public String getPlotTitle()
@@ -323,7 +322,12 @@ public class DSSGrabber1SvcImpl implements IDSSGrabber1Svc
 		}
 		else
 		{
-			return String.join(",", _primaryDSSName);
+			List<String> titles = new ArrayList<>();
+			for(Map.Entry<GUILinksAllModelsBO.Model, String> entry : _primaryDSSName.entrySet())
+			{
+				titles.add(entry.toString() + " (" + entry.getKey() + ")");
+			}
+			return String.join(",", titles);
 		}
 	}
 
@@ -356,12 +360,12 @@ public class DSSGrabber1SvcImpl implements IDSSGrabber1Svc
 			scanner.close();
 
 		}
-		catch(IOException e)
+		catch(IOException ex)
 		{
-			LOG.info(clsF.getName() + " not openable - SJR assumed static");
+			LOGGER.log(Level.FINE, clsF.getName() + " not openable - SJR assumed static", ex);
 		}
 
-		return (sjrState.equals("true"));
+		return Boolean.valueOf(sjrState);
 	}
 
 	/**
@@ -396,9 +400,9 @@ public class DSSGrabber1SvcImpl implements IDSSGrabber1Svc
 			scanner.close();
 
 		}
-		catch(IOException e)
+		catch(IOException ex)
 		{
-			LOG.info(clsF.getName() + " not openable - Antioch/Chipps assumed off");
+			LOGGER.log(Level.FINE, clsF.getName() + " not openable - Antioch/Chipps assumed off", ex);
 		}
 
 		return Boolean.valueOf(anChstate);
@@ -437,9 +441,9 @@ public class DSSGrabber1SvcImpl implements IDSSGrabber1Svc
 			scanner.close();
 
 		}
-		catch(IOException e)
+		catch(IOException ex)
 		{
-			LOG.info(clsF.getName() + " not openable - LVE assumed off");
+			LOGGER.log(Level.FINE, clsF.getName() + " not openable - LVE assumed off", ex);
 		}
 
 		return Boolean.valueOf(lveState);
@@ -449,7 +453,7 @@ public class DSSGrabber1SvcImpl implements IDSSGrabber1Svc
 	 * (non-Javadoc)
 	 *
 	 * @see
-	 * gov.ca.water.calgui.bus_service.impl.IDSSGrabber1Svc#hasPower(java.lang.
+	 * gov.ca.water.calgui.busservice.impl.IDSSGrabber1Svc#hasPower(java.lang.
 	 * String)
 	 */
 	@Override
@@ -470,10 +474,10 @@ public class DSSGrabber1SvcImpl implements IDSSGrabber1Svc
 				}
 			}
 		}
-		catch(Exception e)
+		catch(Exception ex)
 		{
 
-			LOG.debug(e.getMessage());
+			LOGGER.log(Level.FINE, ex.getMessage(), ex);
 
 		}
 		return false;
@@ -491,7 +495,7 @@ public class DSSGrabber1SvcImpl implements IDSSGrabber1Svc
 	 * @return HEC TimeSeriesContainer with times, values, number of values, and
 	 * file name.
 	 */
-	protected TimeSeriesContainer getOneSeries(String dssFilename, String dssName)
+	protected TimeSeriesContainer getOneSeries(String dssFilename, String dssName, GUILinksAllModelsBO.Model model)
 	{
 
 		HecDss hD = null;
@@ -574,7 +578,7 @@ public class DSSGrabber1SvcImpl implements IDSSGrabber1Svc
 				// TODO: Note hard-coded D- and E-PART
 				result = (TimeSeriesContainer) hD
 						.get("/" + hecAPart + "/" + dssNames[0] + "/01JAN1930/1MON/" + hecFParts[0], true);
-				LOG.info("/" + hecAPart + "/" + dssNames[0] + "/01JAN1930/1MON/" + hecFParts[0]);
+				LOGGER.info("/" + hecAPart + "/" + dssNames[0] + "/01JAN1930/1MON/" + hecFParts[0]);
 				if((result == null) || (result.numberValues < 1))
 				{
 
@@ -631,7 +635,8 @@ public class DSSGrabber1SvcImpl implements IDSSGrabber1Svc
 					{
 						message = "Could not find " + dssNames[0] + " in " + dssFilename;
 					}
-					_missingDSSRecords.add(message);
+					List<String> messages = _missingDSSRecords.computeIfAbsent(model, m -> new ArrayList<>());
+					messages.add(message);
 
 				}
 				else
@@ -656,7 +661,8 @@ public class DSSGrabber1SvcImpl implements IDSSGrabber1Svc
 							}
 							else
 							{
-								_missingDSSRecords.add(message);
+								List<String> messages = _missingDSSRecords.computeIfAbsent(model, m -> new ArrayList<>());
+								messages.add(message);
 							}
 						}
 						else
@@ -717,20 +723,20 @@ public class DSSGrabber1SvcImpl implements IDSSGrabber1Svc
 
 			}
 		}
-		catch(Exception e)
+		catch(Exception ex)
 		{
-
-			LOG.debug(e.getMessage());
-			LOG.error(e.getMessage());
-			if(e.getMessage() != null && e.getMessage().contains("Unable to recognize record"))
+			String messageText;
+			if(ex.getMessage() != null && ex.getMessage().contains("Unable to recognize record"))
 			{
-				this._missingDSSRecords.add("Could not find record - HEC message was '" + e.getMessage() + "'");
+				messageText = "Could not find record - HEC message was '" + ex.getMessage() + "'";
+				LOGGER.log(Level.FINE, messageText, ex);
+				List<String> messages = _missingDSSRecords.computeIfAbsent(model, m -> new ArrayList<>());
+				messages.add(messageText);
 			}
 			else
 			{
-				String messageText = "Unable to get time series." + e.getMessage();
-
-				_errorHandlingSvc.businessErrorHandler(messageText, e);
+				messageText = "Unable to get time series." + ex.getMessage();
+				LOGGER.log(Level.SEVERE, messageText, ex);
 			}
 		}
 		finally
@@ -767,7 +773,7 @@ public class DSSGrabber1SvcImpl implements IDSSGrabber1Svc
 		{
 			result = "Base scenario is not set in DSSGrabber.";
 		}
-		LOG.debug(result);
+		LOGGER.log(Level.FINE, result);
 		if(result != null)
 		{
 			throw new IllegalStateException(result);
@@ -778,7 +784,7 @@ public class DSSGrabber1SvcImpl implements IDSSGrabber1Svc
 	 * (non-Javadoc)
 	 *
 	 * @see
-	 * gov.ca.water.calgui.bus_service.impl.IDSSGrabber1Svc#getPrimarySeries(
+	 * gov.ca.water.calgui.busservice.impl.IDSSGrabber1Svc#getPrimarySeries(
 	 * java.lang.String)
 	 */
 	@Override
@@ -797,7 +803,7 @@ public class DSSGrabber1SvcImpl implements IDSSGrabber1Svc
 			results = new TimeSeriesContainer[_scenarioCount];
 
 			// Base first
-			TimeSeriesContainer oneSeries = getOneTimeSeriesFromAllModels(_baseName, _primaryDSSName);
+			TimeSeriesContainer oneSeries = getOneTimeSeriesFromAllModels(_baseName, _baseModel, _primaryDSSName);
 			results[0] = oneSeries;
 			if(results[0] != null)
 			{
@@ -805,8 +811,7 @@ public class DSSGrabber1SvcImpl implements IDSSGrabber1Svc
 			}
 			else if(_stopOnMissing)
 			{
-				_dialogSvc.getOK("Could not find " + String.join(",", _primaryDSSName) + " in " + _baseName,
-						JOptionPane.ERROR_MESSAGE);
+				reportMissingTimeSeries(_baseName);
 			}
 
 			// Then scenarios
@@ -815,6 +820,7 @@ public class DSSGrabber1SvcImpl implements IDSSGrabber1Svc
 			for(int i = 0; i < _scenarioCount; i++)
 			{
 				String scenarioName;
+				GUILinksAllModelsBO.Model model = _baseModel;
 				if(_baseName.toUpperCase().contains("_SV.DSS"))
 				{
 					// For SVars, use WRIMS GUI Project object to
@@ -841,56 +847,68 @@ public class DSSGrabber1SvcImpl implements IDSSGrabber1Svc
 				}
 				else
 				{
-					scenarioName = _scenarios.get(i).toString();
+					RBListItemBO rbListItemBO = _scenarios.get(i);
+					scenarioName = rbListItemBO.toString();
+					model = rbListItemBO.getModel();
 				}
 				if(!_baseName.equals(scenarioName))
 				{
 					j = j + 1;
-					TimeSeriesContainer tsc = getOneTimeSeriesFromAllModels(scenarioName, _primaryDSSName);
+					TimeSeriesContainer tsc = getOneTimeSeriesFromAllModels(scenarioName, model, _primaryDSSName);
 					results[j] = tsc;
 				}
 			}
 		}
-		catch(Exception e)
+		catch(Exception ex)
 		{
-			LOG.error(e.getMessage());
-			String messageText = "Unable to get time series.";
-			_errorHandlingSvc.businessErrorHandler(messageText, e);
+			LOGGER.log(Level.SEVERE, "Unable to get time series.", ex);
 		}
 
 		return results;
 	}
 
-	private TimeSeriesContainer getOneTimeSeriesFromAllModels(String scenarioName, List<String> dssNames)
+	private TimeSeriesContainer getOneTimeSeriesFromAllModels(String scenarioName, GUILinksAllModelsBO.Model model,
+															  Map<GUILinksAllModelsBO.Model, String> dssNames)
 	{
 		TimeSeriesContainer oneSeries = null;
-		for(String primaryTs : dssNames)
+		String primaryTs = dssNames.get(model);
+		if(primaryTs != null)
 		{
-			oneSeries = getOneSeries(scenarioName, primaryTs);
-			if(oneSeries != null)
+			oneSeries = getOneSeries(scenarioName, primaryTs, model);
+		}
+		if(oneSeries == null)
+		{
+			LOGGER.log(Level.WARNING, "No matching GUI Links record in: " + scenarioName + " for Model: " + model);
+			if(_stopOnMissing)
 			{
-				break;
+				reportMissingTimeSeries(scenarioName);
 			}
 		}
-		if(oneSeries == null && _stopOnMissing)
-		{
-			_dialogSvc.getOK("Could not find " + String.join(",", dssNames) + " in " + scenarioName,
-					JOptionPane.ERROR_MESSAGE);
-		}
 		return oneSeries;
+	}
+
+	private void reportMissingTimeSeries(String scenarioName)
+	{
+		List<String> titles = new ArrayList<>();
+		for(Map.Entry<GUILinksAllModelsBO.Model, String> entry : _primaryDSSName.entrySet())
+		{
+			titles.add(entry.toString() + " (" + entry.getKey() + ")");
+		}
+		_dialogSvc.getOK("Could not find " + String.join(",", titles) + " in " + scenarioName,
+				JOptionPane.ERROR_MESSAGE);
 	}
 
 	/*
 	 * (non-Javadoc)
 	 *
 	 * @see
-	 * gov.ca.water.calgui.bus_service.impl.IDSSGrabber1Svc#getSecondarySeries()
+	 * gov.ca.water.calgui.busservice.impl.IDSSGrabber1Svc#getSecondarySeries()
 	 */
 	@Override
 	public TimeSeriesContainer[] getSecondarySeries()
 	{
 
-		if(_secondaryDSSName.isEmpty() || "null".equals(_secondaryDSSName))
+		if(_secondaryDSSName.isEmpty())
 		{
 			return null;
 		}
@@ -902,7 +920,7 @@ public class DSSGrabber1SvcImpl implements IDSSGrabber1Svc
 
 			// Base first
 
-			TimeSeriesContainer oneSeries = getOneTimeSeriesFromAllModels(_baseName, _secondaryDSSName);
+			TimeSeriesContainer oneSeries = getOneTimeSeriesFromAllModels(_baseName, _baseModel, _secondaryDSSName);
 			results[0] = oneSeries;
 
 			// Then scenarios
@@ -910,12 +928,14 @@ public class DSSGrabber1SvcImpl implements IDSSGrabber1Svc
 			int j = 0;
 			for(int i = 0; i < _scenarioCount; i++)
 			{
-				String scenarioName = _scenarios.get(i).toString();
+				RBListItemBO rbListItemBO = _scenarios.get(i);
+				String scenarioName = rbListItemBO.toString();
+				GUILinksAllModelsBO.Model model = rbListItemBO.getModel();
 
 				if(!_baseName.equals(scenarioName))
 				{
 					j = j + 1;
-					TimeSeriesContainer tsc = getOneTimeSeriesFromAllModels(scenarioName, _secondaryDSSName);
+					TimeSeriesContainer tsc = getOneTimeSeriesFromAllModels(scenarioName, model, _secondaryDSSName);
 					results[j] = tsc;
 				}
 			}
@@ -927,7 +947,7 @@ public class DSSGrabber1SvcImpl implements IDSSGrabber1Svc
 	 * (non-Javadoc)
 	 *
 	 * @see
-	 * gov.ca.water.calgui.bus_service.impl.IDSSGrabber1Svc#getDifferenceSeriesWithMultipleTimeSeries(
+	 * gov.ca.water.calgui.busservice.impl.IDSSGrabber1Svc#getDifferenceSeriesWithMultipleTimeSeries(
 	 * hec.io.TimeSeriesContainer[])
 	 */
 	@Override
@@ -935,13 +955,19 @@ public class DSSGrabber1SvcImpl implements IDSSGrabber1Svc
 	{
 
 		TimeSeriesContainer[] results = new TimeSeriesContainer[_scenarioCount - 1];
-		for(int i = 0; i < _scenarioCount - 1; i++)
+		if(timeSeriesResults[0] != null)
 		{
-
-			results[i] = (TimeSeriesContainer) timeSeriesResults[i + 1].clone();
-			for(int j = 0; j < results[i].numberValues; j++)
+			for(int i = 0; i < _scenarioCount - 1; i++)
 			{
-				results[i].values[j] = results[i].values[j] - timeSeriesResults[0].values[j];
+				TimeSeriesContainer timeSeriesResult = timeSeriesResults[i + 1];
+				if(timeSeriesResult != null)
+				{
+					results[i] = (TimeSeriesContainer) timeSeriesResult.clone();
+					for(int j = 0; j < results[i].numberValues; j++)
+					{
+						results[i].values[j] = results[i].values[j] - timeSeriesResults[0].values[j];
+					}
+				}
 			}
 		}
 		return results;
@@ -951,7 +977,7 @@ public class DSSGrabber1SvcImpl implements IDSSGrabber1Svc
 	 * (non-Javadoc)
 	 *
 	 * @see
-	 * gov.ca.water.calgui.bus_service.impl.IDSSGrabber1Svc#calcTAFforCFS(hec.io
+	 * gov.ca.water.calgui.busservice.impl.IDSSGrabber1Svc#calcTAFforCFS(hec.io
 	 * .TimeSeriesContainer[], hec.io.TimeSeriesContainer[])
 	 */
 	@Override
@@ -1063,11 +1089,9 @@ public class DSSGrabber1SvcImpl implements IDSSGrabber1Svc
 				}
 			}
 		}
-		catch(Exception e)
+		catch(RuntimeException ex)
 		{
-			LOG.error(e.getMessage());
-			String messageText = "Unable to calculate TAF.";
-			_errorHandlingSvc.businessErrorHandler(messageText, e);
+			LOGGER.log(Level.SEVERE, "Unable to calculate TAF.", ex);
 		}
 	}
 
@@ -1075,7 +1099,7 @@ public class DSSGrabber1SvcImpl implements IDSSGrabber1Svc
 	 * (non-Javadoc)
 	 *
 	 * @see
-	 * gov.ca.water.calgui.bus_service.impl.IDSSGrabber1Svc#getAnnualTAF(int,
+	 * gov.ca.water.calgui.busservice.impl.IDSSGrabber1Svc#getAnnualTAF(int,
 	 * int)
 	 */
 	@Override
@@ -1089,7 +1113,7 @@ public class DSSGrabber1SvcImpl implements IDSSGrabber1Svc
 	 * (non-Javadoc)
 	 *
 	 * @see
-	 * gov.ca.water.calgui.bus_service.impl.IDSSGrabber1Svc#getAnnualTAFDiff(
+	 * gov.ca.water.calgui.busservice.impl.IDSSGrabber1Svc#getAnnualTAFDiff(
 	 * int, int)
 	 */
 	@Override
@@ -1103,7 +1127,7 @@ public class DSSGrabber1SvcImpl implements IDSSGrabber1Svc
 	 * (non-Javadoc)
 	 *
 	 * @see
-	 * gov.ca.water.calgui.bus_service.impl.IDSSGrabber1Svc#getExceedanceSeriesWithMultipleTimeSeries(
+	 * gov.ca.water.calgui.busservice.impl.IDSSGrabber1Svc#getExceedanceSeriesWithMultipleTimeSeries(
 	 * hec.io.TimeSeriesContainer[])
 	 */
 	@Override
@@ -1113,7 +1137,19 @@ public class DSSGrabber1SvcImpl implements IDSSGrabber1Svc
 		TimeSeriesContainer[][] results;
 		try
 		{
-			if(timeSeriesResults == null || timeSeriesResults[0] == null || timeSeriesResults[0].times == null)
+			boolean valid = timeSeriesResults != null;
+			if(valid)
+			{
+				for(TimeSeriesContainer tsc : timeSeriesResults)
+				{
+					valid = tsc != null && tsc.times != null;
+					if(!valid)
+					{
+						break;
+					}
+				}
+			}
+			if(!valid)
 			{
 				results = null;
 			}
@@ -1163,9 +1199,9 @@ public class DSSGrabber1SvcImpl implements IDSSGrabber1Svc
 								double[] values = timeSeriesResults[i].values;
 
 								n = 0;
-								for(int j = 0; j < times.length; j++)
+								for(final int time : times)
 								{
-									ht.set(times[j]);
+									ht.set(time);
 									if(ht.month() == month + 1)
 									{
 										n = n + 1;
@@ -1204,11 +1240,9 @@ public class DSSGrabber1SvcImpl implements IDSSGrabber1Svc
 			}
 			return results;
 		}
-		catch(Exception e)
+		catch(Exception ex)
 		{
-			LOG.error(e.getMessage());
-			String messageText = "Unable to get time-series.";
-			_errorHandlingSvc.businessErrorHandler(messageText, e);
+			LOGGER.log(Level.SEVERE, "Unable to get time-series.", ex);
 		}
 		return null;
 	}
@@ -1217,7 +1251,7 @@ public class DSSGrabber1SvcImpl implements IDSSGrabber1Svc
 	 * (non-Javadoc)
 	 *
 	 * @see
-	 * gov.ca.water.calgui.bus_service.impl.IDSSGrabber1Svc#getExceedanceSeriesDWithMultipleTimeSeries
+	 * gov.ca.water.calgui.busservice.impl.IDSSGrabber1Svc#getExceedanceSeriesDWithMultipleTimeSeries
 	 * (hec.io.TimeSeriesContainer[])
 	 */
 	@Override
@@ -1227,14 +1261,26 @@ public class DSSGrabber1SvcImpl implements IDSSGrabber1Svc
 		/*
 		 * Copy of getExceedanceSeriesWithMultipleTimeSeries to handle "exceedance of differences"
 		 *
-		 * Calculates difference of annual TAFs to get proper results for [12];
+		 * Calculates difference of annual TAFs to get proper results for [12]
 		 * should be recombined with getExceedanceSeriesWithMultipleTimeSeries
 		 */
 
 		try
 		{
 			TimeSeriesContainer[][] results;
-			if(timeSeriesResults == null)
+			boolean valid = timeSeriesResults != null;
+			if(valid)
+			{
+				for(TimeSeriesContainer tsc : timeSeriesResults)
+				{
+					valid = tsc != null && tsc.times != null;
+					if(!valid)
+					{
+						break;
+					}
+				}
+			}
+			if(!valid)
 			{
 				results = null;
 			}
@@ -1289,9 +1335,9 @@ public class DSSGrabber1SvcImpl implements IDSSGrabber1Svc
 								int[] times = timeSeriesResults[i + 1].times;
 								double[] values = timeSeriesResults[i + 1].values;
 								n = 0;
-								for(int j = 0; j < times.length; j++)
+								for(final int time : times)
 								{
-									ht.set(times[j]);
+									ht.set(time);
 									if(ht.month() == month + 1)
 									{
 										n = n + 1;
@@ -1334,11 +1380,9 @@ public class DSSGrabber1SvcImpl implements IDSSGrabber1Svc
 			}
 			return results;
 		}
-		catch(Exception e)
+		catch(Exception ex)
 		{
-			LOG.error(e.getMessage());
-			String messageText = "Unable to get time-series.";
-			_errorHandlingSvc.businessErrorHandler(messageText, e);
+			LOGGER.log(Level.SEVERE, "Unable to get time-series.", ex);
 		}
 		return null;
 	}
@@ -1347,7 +1391,7 @@ public class DSSGrabber1SvcImpl implements IDSSGrabber1Svc
 	 * (non-Javadoc)
 	 *
 	 * @see
-	 * gov.ca.water.calgui.bus_service.impl.IDSSGrabber1Svc#getOriginalUnits()
+	 * gov.ca.water.calgui.busservice.impl.IDSSGrabber1Svc#getOriginalUnits()
 	 */
 	@Override
 	public String getOriginalUnits()
@@ -1359,10 +1403,10 @@ public class DSSGrabber1SvcImpl implements IDSSGrabber1Svc
 	 * (non-Javadoc)
 	 *
 	 * @see
-	 * gov.ca.water.calgui.bus_service.impl.IDSSGrabber1Svc#getPrimaryDSSName()
+	 * gov.ca.water.calgui.busservice.impl.IDSSGrabber1Svc#getPrimaryDSSName()
 	 */
 	@Override
-	public List<String> getPrimaryDSSName()
+	public Map<GUILinksAllModelsBO.Model, String> getPrimaryDSSName()
 	{
 		return _primaryDSSName;
 	}

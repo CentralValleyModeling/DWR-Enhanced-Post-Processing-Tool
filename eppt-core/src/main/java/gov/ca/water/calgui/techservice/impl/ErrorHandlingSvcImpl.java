@@ -5,12 +5,12 @@
  * Source may not be released without written approval from DWR
  */
 
-package gov.ca.water.calgui.tech_service.impl;
+package gov.ca.water.calgui.techservice.impl;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import gov.ca.water.calgui.tech_service.IErrorHandlingSvc;
+import gov.ca.water.calgui.techservice.IErrorHandlingSvc;
 
 /**
  * This is the class for handling different type of error like validation

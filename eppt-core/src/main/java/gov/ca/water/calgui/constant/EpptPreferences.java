@@ -79,7 +79,7 @@ public final class EpptPreferences
 
 	public static String getResultsOutputLocation()
 	{
-		return REPORT_NODE.get(REPORT_OUTPUT_LOCATION, "properties");
+		return REPORT_NODE.get(REPORT_OUTPUT_LOCATION, "editor");
 	}
 
 	public static void setResultsOutputLocation(String path)

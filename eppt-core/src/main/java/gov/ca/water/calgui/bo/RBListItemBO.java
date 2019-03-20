@@ -21,17 +21,24 @@ public class RBListItemBO
 	private final String _fullname;
 	private boolean _isSelected = false;
 	private String _svFilename;
+	private GUILinksAllModelsBO.Model _model;
 
-	public RBListItemBO(String label, String label2)
+	public RBListItemBO(String label, String label2, GUILinksAllModelsBO.Model model)
 	{
-		this._label = label2;
-		this._fullname = label;
-		this._svFilename = "";
+		_label = label2;
+		_fullname = label;
+		_svFilename = "";
+		_model = model;
 	}
 
 	public boolean isSelected()
 	{
 		return _isSelected;
+	}
+
+	public GUILinksAllModelsBO.Model getModel()
+	{
+		return _model;
 	}
 
 	public void setSelected(boolean isSelected)
@@ -42,11 +49,6 @@ public class RBListItemBO
 	public String getSVFilename()
 	{
 		return _svFilename;
-	}
-
-	public void setSVFilename(String svf)
-	{
-		_svFilename = svf;
 	}
 
 	@Override

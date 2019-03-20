@@ -10,6 +10,7 @@ package gov.ca.water.eppt.nbui.actions;
 import java.io.IOException;
 
 import gov.ca.water.eppt.nbui.ProjectConfigurationTopComponent;
+import gov.ca.water.quickresults.ui.projectconfig.ProjectConfigurationPanel;
 import org.netbeans.spi.actions.AbstractSavable;
 import org.openide.filesystems.FileObject;
 import org.openide.loaders.SaveAsCapable;
@@ -34,7 +35,7 @@ public class ProjectConfigurationSavable extends AbstractSavable implements Save
 	@Override
 	protected String findDisplayName()
 	{
-		return "Project Configuration";
+		return "Project Configuration - " + ProjectConfigurationPanel.getProjectConfigurationPanel().getProjectName();
 	}
 
 	@Override

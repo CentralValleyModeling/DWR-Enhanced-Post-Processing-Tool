@@ -177,7 +177,7 @@
 					<checkbox id="rdbStat4" name="rdbStat4" text="StdDev" font="Tahoma-Normal-11" enabled="true">
 						<gridbagconstraints insets="3,0,3,3" gridx="1" gridy="5" anchor="GridBagConstraints.WEST"/>
 					</checkbox>
-					<checkbox id="rdbStat5" name="rdbStat5" text="Median" font="Tahoma-Normal-11" enabled="truee">
+					<checkbox id="rdbStat5" name="rdbStat5" text="Median" font="Tahoma-Normal-11" enabled="true">
 						<gridbagconstraints insets="3,0,3,3" gridx="1" gridy="6" anchor="GridBagConstraints.WEST"/>
 					</checkbox>
 				</panel>

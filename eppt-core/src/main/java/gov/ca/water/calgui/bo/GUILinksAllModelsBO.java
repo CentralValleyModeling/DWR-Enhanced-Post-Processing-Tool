@@ -15,6 +15,7 @@ import java.util.Objects;
 import java.util.Optional;
 
 import static java.util.stream.Collectors.toList;
+import static java.util.stream.Collectors.toMap;
 
 /**
  * Company: Resource Management Associates
@@ -58,7 +59,7 @@ public class GUILinksAllModelsBO
 		return _legend;
 	}
 
-	public Optional<ModelData> getModelData(Model model)
+	private Optional<ModelData> getModelData(Model model)
 	{
 		return Optional.ofNullable(_modelMapping.get(model));
 	}
@@ -69,29 +70,28 @@ public class GUILinksAllModelsBO
 		{
 			throw new IllegalArgumentException("Unable to add null model");
 		}
-		_modelMapping.put(model, new ModelData(primary, secondary));
+		_modelMapping.put(model, new ModelData(primary, secondary, model));
 	}
 
-	public List<String> getPrimary()
+	public Map<Model, String> getPrimary()
 	{
 		return Arrays.stream(Model.values())
 					 .map(this::getModelData)
 					 .filter(Optional::isPresent)
 					 .map(Optional::get)
-					 .map(ModelData::getPrimary)
-					 .filter(Objects::nonNull)
-					 .collect(toList());
+					 .filter(data->data.getPrimary() != null)
+					 .collect(toMap(ModelData::getModel, ModelData::getPrimary));
 	}
 
-	public List<String> getSecondary()
+	public Map<Model, String> getSecondary()
 	{
 		return Arrays.stream(Model.values())
 					 .map(this::getModelData)
 					 .filter(Optional::isPresent)
 					 .map(Optional::get)
-					 .map(ModelData::getSecondary)
-					 .filter(Objects::nonNull)
-					 .collect(toList());
+					 .filter(data->data.getSecondary() != null)
+					 .filter(data->!data.getSecondary().isEmpty())
+					 .collect(toMap(ModelData::getModel, ModelData::getSecondary));
 	}
 
 	public enum Model
@@ -110,13 +110,23 @@ public class GUILinksAllModelsBO
 			Model retval = null;
 			for(Model m : Model.values())
 			{
-				if(model.equalsIgnoreCase(m._name))
+				if(m._name.equalsIgnoreCase(model))
 				{
 					retval = m;
 					break;
 				}
 			}
+			if(retval == null)
+			{
+				retval = CAL_LITE;
+			}
 			return retval;
+		}
+
+		@Override
+		public String toString()
+		{
+			return _name;
 		}
 	}
 
@@ -124,11 +134,18 @@ public class GUILinksAllModelsBO
 	{
 		private final String _primary;
 		private final String _secondary;
+		private final Model _model;
 
-		private ModelData(String primary, String seconday)
+		private ModelData(String primary, String seconday, Model model)
 		{
 			_primary = primary;
 			_secondary = seconday;
+			_model = model;
+		}
+
+		public Model getModel()
+		{
+			return _model;
 		}
 
 		public String getPrimary()

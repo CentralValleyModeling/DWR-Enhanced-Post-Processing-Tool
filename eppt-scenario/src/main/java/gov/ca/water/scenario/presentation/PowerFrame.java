@@ -18,13 +18,13 @@ import java.util.List;
 import javax.swing.*;
 
 import gov.ca.water.calgui.bo.RBListItemBO;
-import gov.ca.water.calgui.bus_service.IDSSGrabber1Svc;
-import gov.ca.water.calgui.bus_service.impl.DSSGrabber1SvcImpl;
+import gov.ca.water.calgui.busservice.IDSSGrabber1Svc;
+import gov.ca.water.calgui.busservice.impl.DSSGrabber1SvcImpl;
 import gov.ca.water.calgui.constant.Constant;
-import gov.ca.water.calgui.tech_service.IDialogSvc;
-import gov.ca.water.calgui.tech_service.IErrorHandlingSvc;
-import gov.ca.water.calgui.tech_service.impl.DialogSvcImpl;
-import gov.ca.water.calgui.tech_service.impl.ErrorHandlingSvcImpl;
+import gov.ca.water.calgui.techservice.IDialogSvc;
+import gov.ca.water.calgui.techservice.IErrorHandlingSvc;
+import gov.ca.water.calgui.techservice.impl.DialogSvcImpl;
+import gov.ca.water.calgui.techservice.impl.ErrorHandlingSvcImpl;
 import org.apache.log4j.Logger;
 
 class PowerFrame
@@ -44,7 +44,7 @@ class PowerFrame
 				if(item.isSelected())
 				{
 					dssFilename = item.toString();
-					dssGrabber.setBase(item.toString());
+					dssGrabber.setBase(item.toString(), item.getModel());
 				}
 			}
 			if(!dssGrabber.hasPower(dssFilename))

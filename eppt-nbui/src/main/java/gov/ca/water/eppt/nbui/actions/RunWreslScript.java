@@ -16,8 +16,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.*;
 
-import gov.ca.water.calgui.bus_service.IModelRunSvc;
-import gov.ca.water.calgui.bus_service.impl.ModelRunSvcImpl;
+import gov.ca.water.calgui.busservice.IModelRunSvc;
+import gov.ca.water.calgui.busservice.impl.ModelRunSvcImpl;
 import gov.ca.water.calgui.constant.Constant;
 import gov.ca.water.calgui.constant.EpptPreferences;
 import gov.ca.water.calgui.presentation.ProgressFrame;

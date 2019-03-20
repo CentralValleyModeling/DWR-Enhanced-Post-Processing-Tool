@@ -12,7 +12,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import gov.ca.water.calgui.bus_service.impl.ModelRunSvcImpl;
+import gov.ca.water.calgui.busservice.impl.ModelRunSvcImpl;
 import org.apache.log4j.Logger;
 
 /**

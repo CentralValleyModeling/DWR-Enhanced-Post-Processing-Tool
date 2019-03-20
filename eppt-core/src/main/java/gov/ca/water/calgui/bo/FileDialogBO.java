@@ -18,8 +18,8 @@ import javax.swing.*;
 
 import gov.ca.water.calgui.constant.Constant;
 import gov.ca.water.calgui.constant.EpptPreferences;
-import gov.ca.water.calgui.tech_service.IErrorHandlingSvc;
-import gov.ca.water.calgui.tech_service.impl.ErrorHandlingSvcImpl;
+import gov.ca.water.calgui.techservice.IErrorHandlingSvc;
+import gov.ca.water.calgui.techservice.impl.ErrorHandlingSvcImpl;
 import org.apache.log4j.Logger;
 
 /**
@@ -34,7 +34,6 @@ public class FileDialogBO implements ActionListener
 	private static final Logger LOG = Logger.getLogger(FileDialogBO.class.getName());
 	private final DefaultListModel _lmScenNames;
 	private JFileChooser _fc = new JFileChooser();
-	private int _dialogRC;
 	private JTextField _theTextField;
 	private boolean _theMultipleFlag = false;
 	private String _theFileExt = null;
@@ -77,7 +76,6 @@ public class FileDialogBO implements ActionListener
 	 * Constructor used for DSS files, result is appended to list, radiobuttons
 	 * are enabled when list length greater than 1, button is enabled when list
 	 * is not empty;
-	 *
 	 */
 	public FileDialogBO(DefaultListModel<RBListItemBO> lmScenNames, boolean isMultiple, Component mainFrame)
 	{
@@ -140,23 +138,22 @@ public class FileDialogBO implements ActionListener
 		{
 			setup();
 			Object source = e.getSource();
-			Object obj = null;
-			if(e != null)
-			{
-				obj = source;
-			}
-			if((obj != null) && (((Component) obj).getName() != null)
-					&& "btnDelScenario".equals(((Component) obj).getName()))
+			if((source != null) && (((Component) source).getName() != null)
+					&& "btnDelScenario".equals(((Component) source).getName()))
 			{
 				deleteScenario();
 			}
-			else if(e != null && "btnClearScenario".equals(e.getActionCommand()))
+			else if("btnClearScenario".equals(e.getActionCommand()))
 			{
 				clearAllScenarios();
 			}
 			else
 			{
-				addScenario();
+				GUILinksAllModelsBO.Model model = chooseModel();
+				if(model != null)
+				{
+					addScenario(model);
+				}
 			}
 		}
 		catch(HeadlessException e1)
@@ -167,7 +164,16 @@ public class FileDialogBO implements ActionListener
 		}
 	}
 
-	private void addScenario()
+	private GUILinksAllModelsBO.Model chooseModel()
+	{
+		return (GUILinksAllModelsBO.Model) JOptionPane.showInputDialog(_parentComponent, "EPPT Model",
+				"Choose Model:", JOptionPane.QUESTION_MESSAGE, null,
+				GUILinksAllModelsBO.Model.values(),
+				GUILinksAllModelsBO.Model.CAL_LITE);
+
+	}
+
+	private void addScenario(GUILinksAllModelsBO.Model model)
 	{
 		// Otherwise, show dialog
 		int rc;
@@ -175,12 +181,12 @@ public class FileDialogBO implements ActionListener
 		{
 			UIManager.put("FileChooser.openDialogTitleText", "Select Scenarios");
 			_fc.setMultiSelectionEnabled(true);
-			_dialogRC = _fc.showDialog(_parentComponent, "Select");
-			if(_lmScenNames != null && _dialogRC != 1)
+			int dialogRC = _fc.showDialog(_parentComponent, "Select");
+			if(_lmScenNames != null && dialogRC != 1)
 			{
 				for(File file : _fc.getSelectedFiles())
 				{
-					addFileToList(file);
+					addFileToList(file, model);
 				}
 			}
 		}
@@ -197,7 +203,6 @@ public class FileDialogBO implements ActionListener
 				rc = _fc.showDialog(_parentComponent,
 						"DSS".equals(_theFileExt) ? "Open" : "Save");
 			}
-			_dialogRC = rc;
 			File file;
 			if(rc == 0)
 			{
@@ -212,7 +217,7 @@ public class FileDialogBO implements ActionListener
 				}
 				if(_lmScenNames != null)
 				{
-					addFileToList(file);
+					addFileToList(file, model);
 				}
 				else if(_theTextField != null)
 				{
@@ -261,7 +266,7 @@ public class FileDialogBO implements ActionListener
 	 *
 	 * @param file
 	 */
-	private void addFileToList(File file)
+	private void addFileToList(File file, GUILinksAllModelsBO.Model model)
 	{
 		try
 		{
@@ -269,12 +274,16 @@ public class FileDialogBO implements ActionListener
 			for(int i = 0; i < _lmScenNames.getSize(); i++)
 			{
 				RBListItemBO rbli = (RBListItemBO) _lmScenNames.getElementAt(i);
-				match = match || (rbli.toString().equals(file.getPath()));
+				match = rbli.toString().equals(file.getPath());
+				if(match)
+				{
+					break;
+				}
 			}
 
 			if(!match)
 			{
-				_lmScenNames.addElement(new RBListItemBO(file.getPath(), file.getName()));
+				_lmScenNames.addElement(new RBListItemBO(file.getPath(), file.getName(), model));
 				if(_lmScenNames.getSize() == 1)
 				{
 					((RBListItemBO) _lmScenNames.getElementAt(0)).setSelected(true);

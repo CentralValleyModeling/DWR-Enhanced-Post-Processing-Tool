@@ -5,7 +5,7 @@
  * Source may not be released without written approval from DWR
  */
 
-package gov.ca.water.calgui.tech_service.impl;
+package gov.ca.water.calgui.techservice.impl;
 
 import java.io.BufferedWriter;
 import java.io.FileInputStream;
@@ -25,7 +25,7 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import gov.ca.water.calgui.bo.CalLiteGUIException;
 import gov.ca.water.calgui.bo.CalLiteGUIExceptionFatal;
 import gov.ca.water.calgui.constant.Constant;
-import gov.ca.water.calgui.tech_service.IFileSystemSvc;
+import gov.ca.water.calgui.techservice.IFileSystemSvc;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.log4j.Logger;
 import org.w3c.dom.Document;

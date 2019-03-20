@@ -101,7 +101,7 @@ public final class OpenProjectConfiguration extends AbstractAction
 		}
 		catch(IOException | RuntimeException ex)
 		{
-			LOGGER.log(Level.SEVERE, "Error saving Project Configuration to: " + selectedPath, ex);
+			LOGGER.log(Level.SEVERE, "Error loading Project Configuration to: " + selectedPath, ex);
 		}
 	}
 

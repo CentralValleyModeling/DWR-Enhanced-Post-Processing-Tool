@@ -13,9 +13,9 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
 import gov.ca.water.businessservice.impl.XMLParsingSvcImpl;
-import gov.ca.water.calgui.bus_service.impl.ModelRunSvcImpl;
-import gov.ca.water.calgui.tech_service.IErrorHandlingSvc;
-import gov.ca.water.calgui.tech_service.impl.ErrorHandlingSvcImpl;
+import gov.ca.water.calgui.busservice.impl.ModelRunSvcImpl;
+import gov.ca.water.calgui.techservice.IErrorHandlingSvc;
+import gov.ca.water.calgui.techservice.impl.ErrorHandlingSvcImpl;
 import gov.ca.water.scenario.ui.JLinkedSlider;
 import org.apache.log4j.Logger;
 import org.swixml.SwingEngine;

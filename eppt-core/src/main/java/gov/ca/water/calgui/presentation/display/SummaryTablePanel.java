@@ -25,8 +25,8 @@ import javax.swing.table.AbstractTableModel;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableColumn;
 
-import gov.ca.water.calgui.bus_service.IDSSGrabber1Svc;
-import gov.ca.water.calgui.bus_service.impl.DSSGrabber2SvcImpl;
+import gov.ca.water.calgui.busservice.IDSSGrabber1Svc;
+import gov.ca.water.calgui.busservice.impl.DSSGrabber2SvcImpl;
 
 import hec.heclib.util.HecTime;
 import hec.io.TimeSeriesContainer;
@@ -154,8 +154,8 @@ public class SummaryTablePanel extends JPanel implements ActionListener, Compone
 		columns.addElement("Sep");
 		columns.addElement("All (TAF)");
 
-		boolean isCFS = dss_Grabber == null ? dss_Grabber2.getOriginalUnits().equals("CFS")
-				: dss_Grabber.getOriginalUnits().equals("CFS");
+		boolean isCFS = dss_Grabber == null ? "CFS".equals(dss_Grabber2.getOriginalUnits())
+				: "CFS".equals(dss_Grabber.getOriginalUnits());
 
 		// loop over all Primary datasets
 

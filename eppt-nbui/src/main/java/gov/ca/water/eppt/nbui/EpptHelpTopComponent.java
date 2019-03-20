@@ -9,7 +9,6 @@ package gov.ca.water.eppt.nbui;
 import java.awt.BorderLayout;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.logging.Level;
 import javax.help.BadIDException;
 import javax.help.HelpSet;
 import javax.help.HelpSetException;
@@ -93,6 +92,5 @@ public final class EpptHelpTopComponent extends TopComponent
 		super.componentOpened();
 		selectActivatedHelp();
 		SwingUtilities.invokeLater(() -> WindowManager.getDefault().setTopComponentFloating(this, true));
-		java.util.logging.Logger.getLogger(EpptHelpTopComponent.class.getName()).log(Level.SEVERE, "Error");
 	}
 }

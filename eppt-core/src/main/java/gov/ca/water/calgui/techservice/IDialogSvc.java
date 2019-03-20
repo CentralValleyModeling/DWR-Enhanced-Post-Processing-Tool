@@ -5,7 +5,7 @@
  * Source may not be released without written approval from DWR
  */
 
-package gov.ca.water.calgui.tech_service;
+package gov.ca.water.calgui.techservice;
 
 /**
  * Interface for common JOptionPane for simple dialogs with CalLite logo,

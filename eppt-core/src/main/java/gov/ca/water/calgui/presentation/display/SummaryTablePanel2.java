@@ -26,8 +26,8 @@ import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableColumn;
 
 import calsim.app.MultipleTimeSeries;
-import gov.ca.water.calgui.bus_service.IDSSGrabber1Svc;
-import gov.ca.water.calgui.bus_service.impl.DSSGrabber2SvcImpl;
+import gov.ca.water.calgui.busservice.IDSSGrabber1Svc;
+import gov.ca.water.calgui.busservice.impl.DSSGrabber2SvcImpl;
 
 import hec.heclib.util.HecTime;
 import hec.io.TimeSeriesContainer;

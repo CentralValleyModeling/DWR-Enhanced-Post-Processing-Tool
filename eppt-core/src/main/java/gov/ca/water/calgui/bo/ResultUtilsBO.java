@@ -34,8 +34,8 @@ import calsim.app.Project;
 import calsim.gui.DtsTreeModel;
 import calsim.gui.DtsTreePanel;
 import gov.ca.water.calgui.constant.Constant;
-import gov.ca.water.calgui.tech_service.IDialogSvc;
-import gov.ca.water.calgui.tech_service.impl.DialogSvcImpl;
+import gov.ca.water.calgui.techservice.IDialogSvc;
+import gov.ca.water.calgui.techservice.impl.DialogSvcImpl;
 import org.apache.log4j.Logger;
 
 /**

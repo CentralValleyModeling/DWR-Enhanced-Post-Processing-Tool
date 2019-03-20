@@ -19,10 +19,10 @@ import java.util.logging.Logger;
 import javax.swing.*;
 
 import gov.ca.water.calgui.EpptInitializationException;
-import gov.ca.water.calgui.bus_service.impl.GuiLinksSeedDataSvcImpl;
+import gov.ca.water.calgui.busservice.impl.GuiLinksSeedDataSvcImpl;
 import gov.ca.water.calgui.constant.EpptPreferences;
 import gov.ca.water.calgui.presentation.DisplayHelper;
-import gov.ca.water.calgui.tech_service.impl.DialogSvcImpl;
+import gov.ca.water.calgui.techservice.impl.DialogSvcImpl;
 import gov.ca.water.quickresults.ui.projectconfig.ProjectConfigurationPanel;
 import org.openide.modules.ModuleInstall;
 import org.openide.windows.WindowManager;

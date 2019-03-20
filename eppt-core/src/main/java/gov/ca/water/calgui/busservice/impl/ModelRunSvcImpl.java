@@ -5,7 +5,7 @@
  * Source may not be released without written approval from DWR
  */
 
-package gov.ca.water.calgui.bus_service.impl;
+package gov.ca.water.calgui.busservice.impl;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -19,12 +19,12 @@ import java.util.List;
 import java.util.Properties;
 import javax.swing.*;
 
-import gov.ca.water.calgui.bus_service.IModelRunSvc;
+import gov.ca.water.calgui.busservice.IModelRunSvc;
 import gov.ca.water.calgui.constant.Constant;
-import gov.ca.water.calgui.tech_service.IDialogSvc;
-import gov.ca.water.calgui.tech_service.IErrorHandlingSvc;
-import gov.ca.water.calgui.tech_service.impl.DialogSvcImpl;
-import gov.ca.water.calgui.tech_service.impl.ErrorHandlingSvcImpl;
+import gov.ca.water.calgui.techservice.IDialogSvc;
+import gov.ca.water.calgui.techservice.IErrorHandlingSvc;
+import gov.ca.water.calgui.techservice.impl.DialogSvcImpl;
+import gov.ca.water.calgui.techservice.impl.ErrorHandlingSvcImpl;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.log4j.Logger;
 
