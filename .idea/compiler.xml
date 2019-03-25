@@ -18,12 +18,5 @@
         <module name="maven-archiver" />
       </profile>
     </annotationProcessing>
-    <bytecodeTargetLevel>
-      <module name="eppt-callite" target="1.5" />
-      <module name="eppt-quickresults" target="1.8" />
-      <module name="maven-archiver" target="1.5" />
-      <module name="maven-archiver (1)" target="1.5" />
-      <module name="maven-archiver (2)" target="1.5" />
-    </bytecodeTargetLevel>
   </component>
 </project>

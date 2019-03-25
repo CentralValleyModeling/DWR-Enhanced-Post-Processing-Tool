@@ -1,7 +1,7 @@
 <component name="CopyrightManager">
-  <settings default="DWR">
+  <settings default="EPPT">
     <module2copyright>
-      <element module="All" copyright="DWR" />
+      <element module="All" copyright="EPPT" />
     </module2copyright>
   </settings>
 </component>
