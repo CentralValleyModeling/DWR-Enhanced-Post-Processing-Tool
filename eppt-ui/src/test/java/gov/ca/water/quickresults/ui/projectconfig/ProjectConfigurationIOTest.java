@@ -1,8 +1,13 @@
 /*
- * Copyright (c) 2019
- * California Department of Water Resources
- * All Rights Reserved.  DWR PROPRIETARY/CONFIDENTIAL.
- * Source may not be released without written approval from DWR
+ * Enhanced Post Processing Tool (EPPT) Copyright (c) 2019.
+ *
+ * EPPT is copyrighted by the State of California, Department of Water Resources. It is licensed
+ * under the GNU General Public License, version 2. This means it can be
+ * copied, distributed, and modified freely, but you may not restrict others
+ * in their ability to copy, distribute, and modify it. See the license below
+ * for more details.
+ *
+ * GNU General Public License
  */
 
 package gov.ca.water.quickresults.ui.projectconfig;
@@ -41,7 +46,7 @@ public class ProjectConfigurationIOTest
 		rbListItemBO.setSelected(true);
 		projectConfigurationPanel.setScenarios(Collections.singletonList(rbListItemBO));
 		ProjectConfigurationIO projectConfigurationIO = new ProjectConfigurationIO();
-		projectConfigurationIO.saveConfiguration(path, "Test2", "blah");
+		projectConfigurationIO.saveConfiguration(path, "UnitTest", "test for project configuration IO");
 		projectConfigurationPanel.setScenarios(Collections.emptyList());
 		assertTrue(projectConfigurationPanel.getScenarios().isEmpty());
 		projectConfigurationPanel.loadProjectConfiguration(path);
@@ -60,7 +65,7 @@ public class ProjectConfigurationIOTest
 		ProjectConfigurationIO projectConfigurationIO = new ProjectConfigurationIO();
 		JCheckBox repchkMonJan = (JCheckBox) projectConfigurationPanel.getSwingEngine().find("RepchkMonJan");
 		repchkMonJan.setSelected(true);
-		projectConfigurationIO.saveConfiguration(path, "Test2", "blah");
+		projectConfigurationIO.saveConfiguration(path, "UnitTest", "test for project configuration IO");
 		repchkMonJan.setSelected(false);
 		projectConfigurationPanel.loadProjectConfiguration(path);
 		assertTrue(repchkMonJan.isSelected());
@@ -74,7 +79,7 @@ public class ProjectConfigurationIOTest
 		ProjectConfigurationIO projectConfigurationIO = new ProjectConfigurationIO();
 		Month month = new Month(4, 2000);
 		projectConfigurationPanel.setEndMonth(month);
-		projectConfigurationIO.saveConfiguration(path, "Test2", "blah");
+		projectConfigurationIO.saveConfiguration(path, "UnitTest", "test for project configuration IO");
 		projectConfigurationPanel.setEndMonth(new Month(6, 1955));
 		projectConfigurationPanel.loadProjectConfiguration(path);
 		Month endMonth = projectConfigurationPanel.getEndMonth();

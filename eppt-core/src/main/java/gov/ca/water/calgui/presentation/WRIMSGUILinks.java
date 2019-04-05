@@ -1,8 +1,13 @@
 /*
- * Copyright (c) 2019
- * California Department of Water Resources
- * All Rights Reserved.  DWR PROPRIETARY/CONFIDENTIAL.
- * Source may not be released without written approval from DWR
+ * Enhanced Post Processing Tool (EPPT) Copyright (c) 2019.
+ *
+ * EPPT is copyrighted by the State of California, Department of Water Resources. It is licensed
+ * under the GNU General Public License, version 2. This means it can be
+ * copied, distributed, and modified freely, but you may not restrict others
+ * in their ability to copy, distribute, and modify it. See the license below
+ * for more details.
+ *
+ * GNU General Public License
  */
 
 package gov.ca.water.calgui.presentation;
@@ -28,12 +33,10 @@ import gov.ca.water.calgui.techservice.impl.ErrorHandlingSvcImpl;
 import org.apache.log4j.Logger;
 
 /**
- *
  * Methods for updating Project values in the WRIMS GUI object space from
  * CalLite GUI
  *
  * @author tslawecki
- *
  */
 public final class WRIMSGUILinks
 {
@@ -50,8 +53,7 @@ public final class WRIMSGUILinks
 	 * Builds the WRIMS GUI panel for use in CalLite GUI while extracting a
 	 * reference to the status label.
 	 *
-	 * @param p
-	 *            Container panel for the WRIMS GUI panel
+	 * @param p Container panel for the WRIMS GUI panel
 	 */
 	public static void buildWRIMSGUI(JPanel p)
 	{
@@ -68,8 +70,7 @@ public final class WRIMSGUILinks
 	/**
 	 * Update WRIMS GUI project file names from file list
 	 *
-	 * @param theList
-	 *            List of file names
+	 * @param theList List of file names
 	 */
 	public static void updateProjectFiles(JList theList)
 	{
@@ -95,15 +96,13 @@ public final class WRIMSGUILinks
 				project.setDVFile(dvFileName);
 				project.setDVHashtable();
 
-				String svFileName = item.getSVFilename();
+				//item.getSVFilename()
+				String svFileName = "";
 				project.setSVFile(svFileName);
-				if(svFileName != null)
+				File svFile = new File(svFileName);
+				if(svFile.exists() && !svFile.isDirectory())
 				{
-					File svFile = new File(svFileName);
-					if(svFile.exists() && !svFile.isDirectory())
-					{
-						project.setSVHashtable();
-					}
+					project.setSVHashtable();
 				}
 				AppUtils.baseOn = true;
 			}
@@ -116,7 +115,8 @@ public final class WRIMSGUILinks
 
 					RBListItemBO item = (RBListItemBO) theList.getModel().getElementAt(i);
 					String dvFileName = item.toString();
-					String svFileName = item.getSVFilename();
+					//item.getSVFilename()
+					String svFileName = "";
 					if(item.isSelected())
 					{
 						project.setDVFile(dvFileName);

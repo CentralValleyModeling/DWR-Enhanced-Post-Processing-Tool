@@ -1,8 +1,13 @@
 /*
- * Copyright (c) 2019
- * California Department of Water Resources
- * All Rights Reserved.  DWR PROPRIETARY/CONFIDENTIAL.
- * Source may not be released without written approval from DWR
+ * Enhanced Post Processing Tool (EPPT) Copyright (c) 2019.
+ *
+ * EPPT is copyrighted by the State of California, Department of Water Resources. It is licensed
+ * under the GNU General Public License, version 2. This means it can be
+ * copied, distributed, and modified freely, but you may not restrict others
+ * in their ability to copy, distribute, and modify it. See the license below
+ * for more details.
+ *
+ * GNU General Public License
  */
 
 package gov.ca.water.quickresults.ui.projectconfig;
@@ -75,21 +80,6 @@ public final class ProjectConfigurationPanel extends EpptPanel
 		}
 	}
 
-	/**
-	 * This method is for unit testing purposes only
-	 *
-	 * @return a new ProjectConfigurationPanel with UI initialized
-	 */
-	static ProjectConfigurationPanel createProjectConfigurationPanel()
-	{
-		return new ProjectConfigurationPanel();
-	}
-
-	public static ProjectConfigurationPanel getProjectConfigurationPanel()
-	{
-		return SINGLETON;
-	}
-
 	private void initComponents()
 	{
 		JPanel header = new JPanel();
@@ -114,6 +104,16 @@ public final class ProjectConfigurationPanel extends EpptPanel
 		revalidate();
 	}
 
+	/**
+	 * This method is for unit testing purposes only
+	 *
+	 * @return a new ProjectConfigurationPanel with UI initialized
+	 */
+	static ProjectConfigurationPanel createProjectConfigurationPanel()
+	{
+		return new ProjectConfigurationPanel();
+	}
+
 	private void setSummaryTableEnabled(boolean selected, Container container)
 	{
 		container.setEnabled(selected);
@@ -125,6 +125,11 @@ public final class ProjectConfigurationPanel extends EpptPanel
 				setSummaryTableEnabled(selected, (Container) component);
 			}
 		}
+	}
+
+	public static ProjectConfigurationPanel getProjectConfigurationPanel()
+	{
+		return SINGLETON;
 	}
 
 	private void initModels()
@@ -217,21 +222,36 @@ public final class ProjectConfigurationPanel extends EpptPanel
 		return retval;
 	}
 
-	public void setScenarios(List<RBListItemBO> scenarios)
+
+	void clearAllScenarios()
 	{
-		JRadioButton radioButton = (JRadioButton) getSwingEngine().find("rdbp001");
-		radioButton.setSelected(true);
-		Component component = getSwingEngine().find("SelectedList");
-		if(component instanceof JList)
+		_lmScenNames.clear();
+	}
+
+	void deleteScenario()
+	{
+		// If invoked by QR DelScenario button, delete a scenario from
+		// Quick
+		// Results scenario list
+		if((_lmScenNames != null) && _lmScenNames.getSize() > 0)
 		{
-			JList<RBListItemBO> lstScenarios = (JList<RBListItemBO>) component;
-			_lmScenNames.removeAllElements();
-			for(RBListItemBO item : scenarios)
+			int todel = -1;
+			for(int i = 0; i < _lmScenNames.getSize(); i++)
 			{
-				_lmScenNames.addElement(item);
+				if(_lmScenNames.getElementAt(i).isSelected())
+				{
+					todel = i;
+				}
 			}
-			lstScenarios.setModel(_lmScenNames);
-			scenarioListChanged();
+			if(todel > 0)
+			{
+				_lmScenNames.getElementAt(todel - 1).setSelected(true);
+			}
+			else if(todel < _lmScenNames.getSize() - 1)
+			{
+				_lmScenNames.getElementAt(todel + 1).setSelected(true);
+			}
+			_lmScenNames.remove(todel);
 		}
 	}
 
@@ -477,6 +497,24 @@ public final class ProjectConfigurationPanel extends EpptPanel
 		yearSpinner.setValue(end.getYearValue());
 	}
 
+	public void setScenarios(List<RBListItemBO> scenarios)
+	{
+		JRadioButton radioButton = (JRadioButton) getSwingEngine().find("rdbp001");
+		radioButton.setSelected(true);
+		Component component = getSwingEngine().find("SelectedList");
+		if(component instanceof JList)
+		{
+			JList<RBListItemBO> lstScenarios = (JList<RBListItemBO>) component;
+			_lmScenNames.removeAllElements();
+			for(RBListItemBO item : scenarios)
+			{
+				_lmScenNames.addElement(item);
+			}
+			lstScenarios.setModel(_lmScenNames);
+			scenarioListChanged();
+		}
+	}
+
 	private void scenarioListChanged()
 	{
 		getRadioButton1().setEnabled(_lmScenNames.getSize() > 1);
@@ -532,7 +570,7 @@ public final class ProjectConfigurationPanel extends EpptPanel
 			setBackground(list.getBackground());
 			setForeground(list.getForeground());
 			setText(rbListItemBO.getLabel() + " (" + rbListItemBO.getModel() + ")");
-			this.setToolTipText(value.toString() + " 	\n" + rbListItemBO.getSVFilename());
+			this.setToolTipText(value.toString());
 			return this;
 		}
 	}
