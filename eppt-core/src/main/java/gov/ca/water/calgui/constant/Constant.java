@@ -1,8 +1,13 @@
 /*
- * Copyright (c) 2019
- * California Department of Water Resources
- * All Rights Reserved.  DWR PROPRIETARY/CONFIDENTIAL.
- * Source may not be released without written approval from DWR
+ * Enhanced Post Processing Tool (EPPT) Copyright (c) 2019.
+ *
+ * EPPT is copyrighted by the State of California, Department of Water Resources. It is licensed
+ * under the GNU General Public License, version 2. This means it can be
+ * copied, distributed, and modified freely, but you may not restrict others
+ * in their ability to copy, distribute, and modify it. See the license below
+ * for more details.
+ *
+ * GNU General Public License
  */
 
 package gov.ca.water.calgui.constant;
@@ -25,6 +30,7 @@ public final class Constant
 	public static final String DV_NAME = "_DV";
 	public static final String CONFIG_DIR = System.getProperty("user.dir") + "\\dwr_eppt\\config\\";
 	public static final String DOCS_DIR = System.getProperty("user.dir") + "\\dwr_eppt\\docs\\";
+	public static final String WRESL_DIR = System.getProperty("user.dir") + "\\dwr_eppt\\wresl\\";
 	public static final String RUN_DETAILS_DIR = "Run_Details";
 	public static final String MODEL_W2_DIR = System.getProperty("user.dir") + "//Model_w2//";
 	public static final String MODEL_W2_DSS_DIR = MODEL_W2_DIR + "//DSS_Files//";

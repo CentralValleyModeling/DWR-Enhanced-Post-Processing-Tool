@@ -1,23 +1,30 @@
 <!--
-  ~ Copyright (c) 2019
-  ~ California Department of Water Resources
-  ~ All Rights Reserved.  DWR PROPRIETARY/CONFIDENTIAL.
-  ~ Source may not be released without written approval from DWR
+  ~ Enhanced Post Processing Tool (EPPT) Copyright (c) 2019.
+  ~
+  ~ EPPT is copyrighted by the State of California, Department of Water Resources. It is licensed
+  ~ under the GNU General Public License, version 2. This means it can be
+  ~ copied, distributed, and modified freely, but you may not restrict others
+  ~ in their ability to copy, distribute, and modify it. See the license below
+  ~ for more details.
+  ~
+  ~ GNU General Public License
   -->
 
 <panel id="ProjectConfiguration" name="ProjectConfiguration" layout="BorderLayout">
 	<panel id="ss" resizeable="false" border="TitledBorder(Scenarios)" constraints="BorderLayout.NORTH"
 		   layout="BorderLayout">
 		<panel constraints="BorderLayout.NORTH" layout="FlowLayout(FlowLayout.LEFT)">
-			<button id="btnAddScenario" name="btnAddScenario" text="Add" ActionCommand="btnAddScenario"/>
-			<button id="btnDelScenario" name="btnDelScenario" text="Delete" ActionCommand="btnDelScenario"/>
-			<button id="btnClearScenario" name="btnClearScenario" text="Clear All"
-					ActionCommand="btnClearScenario"/>
+			<button id="btnAddScenario" name="btnAddScenario" text="Add" ActionCommand="btnAddScenario" PreferredSize="80,24"/>
+			<button id="btnEditScenario" name="btnEditScenario" text="Edit" ActionCommand="btnEditScenario" PreferredSize="80,24"/>
+			<button id="btnDelScenario" name="btnDelScenario" text="Delete" ActionCommand="btnDelScenario" PreferredSize="80,24"/>
+			<button id="btnClearScenario" name="btnClearScenario" text="Clear All" ActionCommand="btnClearScenario" PreferredSize="80,24"/>
 			<glue minimumsize="30,0"/>
 		</panel>
 		<scrollpane name="spsl" id="spsl" constraints="BorderLayout.CENTER" minimumsize="410,90" preferredsize="410,90">
-			<list id="SelectedList" name="SelectedList">
+			<list id="SelectedList" name="SelectedList" Visible="false">
 			</list>
+			<tree id="ScenarioTree" name="ScenarioTree">
+			</tree>
 		</scrollpane>
 		<panel constraints="BorderLayout.SOUTH" layout="FlowLayout(FlowLayout.LEFT)">
 			<label text=" "/>

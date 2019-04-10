@@ -141,6 +141,7 @@ public class CalLiteInitClass
 			JList<?> lstScenarios = (JList<?>) swingEngine.find("SelectedList");
 			ScenarioChooserBO fdDSSFiles = new ScenarioChooserBO(
 					(DefaultListModel<RBListItemBO>) lstScenarios.getModel(),
+
 					_swingEngine.find(Constant.MAIN_FRAME_NAME));
 			lstScenarios.setModel(fdDSSFiles.getLmScenNames());
 			lstScenarios.setBorder(new LineBorder(Color.gray, 1));

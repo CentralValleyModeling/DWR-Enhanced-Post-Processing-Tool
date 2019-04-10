@@ -24,16 +24,24 @@ import java.io.IOException;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.event.ListDataEvent;
 import javax.swing.event.ListDataListener;
+import javax.swing.event.TreeSelectionEvent;
+import javax.swing.event.TreeSelectionListener;
+import javax.swing.tree.DefaultMutableTreeNode;
+import javax.swing.tree.DefaultTreeModel;
+import javax.swing.tree.TreeNode;
+import javax.swing.tree.TreePath;
 
 import gov.ca.water.calgui.bo.RBListItemBO;
 import gov.ca.water.calgui.bo.ResultUtilsBO;
 import gov.ca.water.calgui.constant.EpptPreferences;
 import gov.ca.water.calgui.presentation.WRIMSGUILinks;
+import gov.ca.water.calgui.project.EpptScenarioRun;
 import gov.ca.water.calgui.techservice.IErrorHandlingSvc;
 import gov.ca.water.calgui.techservice.impl.ErrorHandlingSvcImpl;
 import gov.ca.water.quickresults.ui.EpptPanel;
@@ -52,26 +60,25 @@ public final class ProjectConfigurationPanel extends EpptPanel
 	private static final String SCENARIO_CONFIGURATION_XML_FILE = "Project_Configuration.xml";
 	private static final ProjectConfigurationPanel SINGLETON = new ProjectConfigurationPanel();
 	private static IErrorHandlingSvc errorHandlingSvc = new ErrorHandlingSvcImpl();
-	private final ProjectConfigurationIO _projectConfigurationIO;
-	private final JTextField _nameField;
-	private final JTextField _descriptionField;
-	private DefaultListModel<RBListItemBO> _lmScenNames;
+	private final ProjectConfigurationIO _projectConfigurationIO = new ProjectConfigurationIO();
+	private final JTextField _nameField = new JTextField();
+	private final JTextField _descriptionField = new JTextField();
+	private final DefaultTreeModel _scenarioTreeModel;
+	private final DefaultMutableTreeNode _rootNode = new DefaultMutableTreeNode();
+	private DefaultListModel<RBListItemBO> _lmScenNames = new DefaultListModel<>();
 	private boolean _ignoreModifiedEvents = false;
 
 	private ProjectConfigurationPanel()
 	{
+		_scenarioTreeModel = new DefaultTreeModel(_rootNode);
 		try
 		{
-			_projectConfigurationIO = new ProjectConfigurationIO();
-			_nameField = new JTextField();
-			_descriptionField = new JTextField();
-			_lmScenNames = new DefaultListModel<>();
 			super.setLayout(new BorderLayout());
 			Container swixmlProjectConfigurationPanel = renderSwixml(SCENARIO_CONFIGURATION_XML_FILE);
 			super.add(swixmlProjectConfigurationPanel, BorderLayout.CENTER);
 			initComponents();
 			initModels();
-			_lmScenNames.addListDataListener(new MyListDataListener());
+			initListeners();
 		}
 		catch(Exception e)
 		{
@@ -81,6 +88,13 @@ public final class ProjectConfigurationPanel extends EpptPanel
 	}
 
 	private void initComponents()
+	{
+		initScenarioTree();
+		initProjectNameDescription();
+		revalidate();
+	}
+
+	private void initProjectNameDescription()
 	{
 		JPanel header = new JPanel();
 		header.setLayout(new GridBagLayout());
@@ -101,7 +115,67 @@ public final class ProjectConfigurationPanel extends EpptPanel
 				2, 1, 1, 1.0, .5,
 				GridBagConstraints.EAST, GridBagConstraints.HORIZONTAL,
 				new Insets(1, 1, 1, 5), 5, 5));
-		revalidate();
+	}
+
+	private void initScenarioTree()
+	{
+		Component component = getSwingEngine().find("ScenarioTree");
+		if(component instanceof JTree)
+		{
+			JTree scenarioTree = (JTree) component;
+			ToolTipManager.sharedInstance().registerComponent(scenarioTree);
+			scenarioTree.setCellRenderer(new ScenarioRunCellRenderer());
+			scenarioTree.addTreeSelectionListener(new TreeSelectionListener()
+			{
+				@Override
+				public void valueChanged(TreeSelectionEvent e)
+				{
+					Object[] path = e.getPath().getPath();
+					if(path.length == 2)
+					{
+						Object obj = path[1];
+						if(obj instanceof ScenarioRunNode)
+						{
+							getScenarioRunNodes().forEach(n -> n.setBase(false));
+							((ScenarioRunNode) obj).setBase(true);
+
+							scenarioTree.repaint();
+							WRIMSGUILinks.updateProjectFiles(getScenarioList());
+						}
+					}
+				}
+			});
+		}
+	}
+
+	private List<ScenarioRunNode> getScenarioRunNodes()
+	{
+		List<ScenarioRunNode> retval = new ArrayList<>();
+		int childCount = _rootNode.getChildCount();
+		for(int i = 0; i < childCount; i++)
+		{
+			TreeNode childAt = _rootNode.getChildAt(i);
+			if(childAt instanceof ScenarioRunNode)
+			{
+				retval.add(((ScenarioRunNode) childAt));
+			}
+		}
+		return retval;
+	}
+
+	private List<EpptScenarioRun> getScenarioRuns()
+	{
+		List<EpptScenarioRun> retval = new ArrayList<>();
+		int childCount = _rootNode.getChildCount();
+		for(int i = 0; i < childCount; i++)
+		{
+			TreeNode childAt = _rootNode.getChildAt(i);
+			if(childAt instanceof ScenarioRunNode)
+			{
+				retval.add(((ScenarioRunNode) childAt).getScenarioRun());
+			}
+		}
+		return retval;
 	}
 
 	/**
@@ -134,24 +208,13 @@ public final class ProjectConfigurationPanel extends EpptPanel
 
 	private void initModels()
 	{
-		Component component = getSwingEngine().find("SelectedList");
-		if(component instanceof JList)
-		{
-			JList<RBListItemBO> lstScenarios = (JList<RBListItemBO>) component;
-			lstScenarios.getSelectionModel().addListSelectionListener(e -> setModified(true));
-			lstScenarios.getModel().addListDataListener(new ProjectConfigurationListDataListener());
-		}
-		// Set up month spinners on result page
-		JSpinner spnSM = (JSpinner) getSwingEngine().find("spnStartMonth");
-		ResultUtilsBO.SetMonthModelAndIndex(spnSM, 9, null, true);
-		JSpinner spnEM = (JSpinner) getSwingEngine().find("spnEndMonth");
-		ResultUtilsBO.SetMonthModelAndIndex(spnEM, 8, null, true);
-		// Set up year spinners
-		JSpinner spnSY = (JSpinner) getSwingEngine().find("spnStartYear");
-		ResultUtilsBO.SetNumberModelAndIndex(spnSY, 1921, 1921, 2003, 1, "####", null, true);
-		JSpinner spnEY = (JSpinner) getSwingEngine().find("spnEndYear");
-		ResultUtilsBO.SetNumberModelAndIndex(spnEY, 2003, 1921, 2003, 1, "####", null, true);
+		initializeDssListModel();
+		initializeScenariosModel();
+		initializeSpinners();
+	}
 
+	private void initListeners()
+	{
 		JCheckBox summaryTableCheckbox = (JCheckBox) getSwingEngine().find("RepckbSummaryTable");
 		summaryTableCheckbox.addActionListener(e ->
 		{
@@ -159,11 +222,6 @@ public final class ProjectConfigurationPanel extends EpptPanel
 			Container controls3 = (Container) getSwingEngine().find("controls3");
 			setSummaryTableEnabled(selected, controls3);
 		});
-		_lmScenNames.removeAllElements();
-		getScenarioList().setModel(_lmScenNames);
-		getScenarioList().setCellRenderer(new RBListRenderer());
-		getScenarioList().setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-		getScenarioList().addMouseListener(new ProjectConfigurationMouseAdapter());
 
 		DocumentListener documentListener = new DocumentListener()
 		{
@@ -187,6 +245,51 @@ public final class ProjectConfigurationPanel extends EpptPanel
 		};
 		_nameField.getDocument().addDocumentListener(documentListener);
 		_descriptionField.getDocument().addDocumentListener(documentListener);
+		_lmScenNames.addListDataListener(new MyListDataListener());
+	}
+
+	private void initializeSpinners()
+	{
+		// Set up month spinners on result page
+		JSpinner spnSM = (JSpinner) getSwingEngine().find("spnStartMonth");
+		ResultUtilsBO.SetMonthModelAndIndex(spnSM, 9, null, true);
+		JSpinner spnEM = (JSpinner) getSwingEngine().find("spnEndMonth");
+		ResultUtilsBO.SetMonthModelAndIndex(spnEM, 8, null, true);
+		// Set up year spinners
+		JSpinner spnSY = (JSpinner) getSwingEngine().find("spnStartYear");
+		ResultUtilsBO.SetNumberModelAndIndex(spnSY, 1921, 1921, 2003, 1, "####", null, true);
+		JSpinner spnEY = (JSpinner) getSwingEngine().find("spnEndYear");
+		ResultUtilsBO.SetNumberModelAndIndex(spnEY, 2003, 1921, 2003, 1, "####", null, true);
+	}
+
+	private void initializeDssListModel()
+	{
+		Component component = getSwingEngine().find("SelectedList");
+		if(component instanceof JList)
+		{
+			JList<RBListItemBO> lstScenarios = (JList<RBListItemBO>) component;
+			lstScenarios.getSelectionModel().addListSelectionListener(e -> setModified(true));
+			lstScenarios.getModel().addListDataListener(new ProjectConfigurationListDataListener());
+			_lmScenNames.removeAllElements();
+			getScenarioList().setModel(_lmScenNames);
+			getScenarioList().setCellRenderer(new RBListRenderer());
+			getScenarioList().setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+			getScenarioList().addMouseListener(new ProjectConfigurationMouseAdapter());
+		}
+	}
+
+	private void initializeScenariosModel()
+	{
+		Component component = getSwingEngine().find("ScenarioTree");
+		if(component instanceof JTree)
+		{
+			JTree scenarioTree = (JTree) component;
+			_rootNode.removeAllChildren();
+			scenarioTree.setModel(_scenarioTreeModel);
+			scenarioTree.setRootVisible(false);
+			scenarioTree.setExpandsSelectedPaths(true);
+			scenarioTree.expandPath(new TreePath(((DefaultMutableTreeNode) _scenarioTreeModel.getRoot()).getPath()));
+		}
 	}
 
 
@@ -225,33 +328,47 @@ public final class ProjectConfigurationPanel extends EpptPanel
 
 	void clearAllScenarios()
 	{
-		_lmScenNames.clear();
+		_rootNode.removeAllChildren();
+		_scenarioTreeModel.reload();
+
+	}
+
+	private void updateRadioState()
+	{
+		getRadioButton1().setEnabled(_rootNode.getChildCount() > 1);
+		getRadioButton2().setEnabled(_rootNode.getChildCount() > 1);
 	}
 
 	void deleteScenario()
 	{
-		// If invoked by QR DelScenario button, delete a scenario from
-		// Quick
-		// Results scenario list
-		if((_lmScenNames != null) && _lmScenNames.getSize() > 0)
+		EpptScenarioRun selectedScenario = getSelectedScenario();
+		if(selectedScenario != null)
 		{
-			int todel = -1;
-			for(int i = 0; i < _lmScenNames.getSize(); i++)
+			int childCount = _rootNode.getChildCount();
+			for(int i = 0; i < childCount; i++)
 			{
-				if(_lmScenNames.getElementAt(i).isSelected())
+				TreeNode childAt = _rootNode.getChildAt(i);
+				if(childAt instanceof ScenarioRunNode)
 				{
-					todel = i;
+					EpptScenarioRun scenarioRun = ((ScenarioRunNode) childAt).getScenarioRun();
+					if(Objects.equals(scenarioRun, selectedScenario))
+					{
+						_rootNode.remove(i);
+						_scenarioTreeModel.reload();
+						setModified(true);
+						if(((ScenarioRunNode) childAt).isBase())
+						{
+							List<ScenarioRunNode> scenarioRunNodes = getScenarioRunNodes();
+							if(!scenarioRunNodes.isEmpty())
+							{
+								scenarioRunNodes.get(0).setBase(true);
+							}
+						}
+						updateRadioState();
+						break;
+					}
 				}
 			}
-			if(todel > 0)
-			{
-				_lmScenNames.getElementAt(todel - 1).setSelected(true);
-			}
-			else if(todel < _lmScenNames.getSize() - 1)
-			{
-				_lmScenNames.getElementAt(todel + 1).setSelected(true);
-			}
-			_lmScenNames.remove(todel);
 		}
 	}
 
@@ -550,6 +667,84 @@ public final class ProjectConfigurationPanel extends EpptPanel
 		initComponents();
 		initModels();
 		setActionListener(getActionListener());
+	}
+
+	EpptScenarioRun getSelectedScenario()
+	{
+		EpptScenarioRun retval = null;
+		Component component = getSwingEngine().find("ScenarioTree");
+		if(component instanceof JTree)
+		{
+			JTree scenarioTree = (JTree) component;
+			TreePath selectionPath = scenarioTree.getSelectionPath();
+			if(selectionPath != null)
+			{
+				Object[] path = selectionPath.getPath();
+				if(path.length > 1)
+				{
+					Object node = path[1];
+					if(node instanceof ScenarioRunNode)
+					{
+						retval = ((ScenarioRunNode) node).getScenarioRun();
+					}
+				}
+			}
+		}
+		return retval;
+	}
+
+	void addScenario(EpptScenarioRun scenarioRun)
+	{
+		if(scenarioRun != null)
+		{
+			ScenarioRunNode scenarioRunNode = new ScenarioRunNode(scenarioRun);
+			scenarioRunNode.setBase(_rootNode.getChildCount() == 0);
+			_scenarioTreeModel.insertNodeInto(scenarioRunNode,
+					_rootNode, _rootNode.getChildCount());
+			Component component = getSwingEngine().find("ScenarioTree");
+			if(component instanceof JTree)
+			{
+				JTree scenarioTree = (JTree) component;
+				scenarioTree.makeVisible(new TreePath(scenarioRunNode.getPath()));
+				expandNode(scenarioRunNode);
+				setModified(true);
+				updateRadioState();
+			}
+		}
+	}
+
+	void replaceScenario(EpptScenarioRun oldScenarioRun, EpptScenarioRun newScenarioRun)
+	{
+		int childCount = _rootNode.getChildCount();
+		for(int i = 0; i < childCount; i++)
+		{
+			TreeNode childAt = _rootNode.getChildAt(i);
+			if(childAt instanceof ScenarioRunNode)
+			{
+				EpptScenarioRun scenarioRun = ((ScenarioRunNode) childAt).getScenarioRun();
+				if(Objects.equals(scenarioRun, oldScenarioRun))
+				{
+					_rootNode.remove(i);
+					ScenarioRunNode newNode = new ScenarioRunNode(newScenarioRun);
+					newNode.setBase(((ScenarioRunNode) childAt).isBase());
+					_rootNode.insert(newNode, i);
+					_scenarioTreeModel.reload(newNode);
+					expandNode(newNode);
+					setModified(true);
+					break;
+				}
+			}
+		}
+	}
+
+	private void expandNode(TreeNode treeNode)
+	{
+		Component component = getSwingEngine().find("ScenarioTree");
+		if(component instanceof JTree && treeNode != null)
+		{
+			JTree scenarioTree = (JTree) component;
+			scenarioTree.expandPath(new TreePath(_scenarioTreeModel.getPathToRoot(treeNode)));
+		}
 	}
 
 	/**

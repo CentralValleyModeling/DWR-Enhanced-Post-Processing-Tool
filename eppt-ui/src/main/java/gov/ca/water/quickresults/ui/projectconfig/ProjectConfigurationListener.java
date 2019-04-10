@@ -12,12 +12,14 @@
 
 package gov.ca.water.quickresults.ui.projectconfig;
 
+import java.awt.Frame;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.logging.Logger;
 import javax.swing.*;
 
 import gov.ca.water.calgui.bo.RBListItemBO;
+import gov.ca.water.calgui.project.EpptScenarioRun;
 import gov.ca.water.quickresults.ui.EpptPanel;
 
 
@@ -36,7 +38,6 @@ public class ProjectConfigurationListener implements ActionListener
 	public ProjectConfigurationListener(ProjectConfigurationPanel projectConfigurationPanel)
 	{
 		_projectConfigurationPanel = projectConfigurationPanel;
-
 		DefaultListModel<RBListItemBO> lstScenarios = _projectConfigurationPanel.getLmScenNames();
 		_addScnearioFileDialogBO = new ScenarioChooserBO(lstScenarios, projectConfigurationPanel);
 	}
@@ -53,13 +54,16 @@ public class ProjectConfigurationListener implements ActionListener
 				setQRMonthCheckBoxesSelected(true);
 				break;
 			case "btnAddScenario":
-				launchFileDialogToAddScenarios(e);
+				launchFileDialogToAddScenario(e);
+				break;
+			case "btnEditScenario":
+				launchFileDialogToEditScenario(e);
 				break;
 			case "btnDelScenario":
-				ProjectConfigurationPanel.getProjectConfigurationPanel().deleteScenario();
+				_projectConfigurationPanel.deleteScenario();
 				break;
 			case "btnClearScenario":
-				ProjectConfigurationPanel.getProjectConfigurationPanel().clearAllScenarios();
+				_projectConfigurationPanel.clearAllScenarios();
 				break;
 			default:
 		}
@@ -68,9 +72,33 @@ public class ProjectConfigurationListener implements ActionListener
 		projectConfigurationPanel.setModified(true);
 	}
 
-	private void launchFileDialogToAddScenarios(ActionEvent e)
+	private void launchFileDialogToAddScenario(ActionEvent e)
 	{
-		_addScnearioFileDialogBO.createScenario();
+		ScenarioRunEditor scenarioRunEditor = new ScenarioRunEditor(
+				(Frame) SwingUtilities.windowForComponent(_projectConfigurationPanel));
+		scenarioRunEditor.setVisible(true);
+		EpptScenarioRun scenarioRun = scenarioRunEditor.createRun();
+		if(scenarioRun != null)
+		{
+			_projectConfigurationPanel.addScenario(scenarioRun);
+		}
+	}
+
+	private void launchFileDialogToEditScenario(ActionEvent e)
+	{
+		EpptScenarioRun oldScenarioRun = _projectConfigurationPanel.getSelectedScenario();
+		if(oldScenarioRun != null)
+		{
+			ScenarioRunEditor scenarioRunEditor = new ScenarioRunEditor(
+					(Frame) SwingUtilities.windowForComponent(_projectConfigurationPanel));
+			scenarioRunEditor.fillPanel(oldScenarioRun);
+			scenarioRunEditor.setVisible(true);
+			EpptScenarioRun newScenarioRun = scenarioRunEditor.createRun();
+			if(newScenarioRun != null)
+			{
+				_projectConfigurationPanel.replaceScenario(oldScenarioRun, newScenarioRun);
+			}
+		}
 	}
 
 	/**

@@ -12,7 +12,7 @@
 
 package gov.ca.water.calgui.project;
 
-import java.util.Collections;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -31,7 +31,7 @@ public class EpptProject
 	{
 		_name = name;
 		_description = description;
-		_scenarioRuns = Collections.unmodifiableList(scenarioRuns);
+		_scenarioRuns = scenarioRuns;
 	}
 
 
@@ -44,11 +44,16 @@ public class EpptProject
 	}
 
 	/**
-	 * @return immutable list of Senario runs
+	 * @return copy list of Senario runs
 	 */
 	public List<EpptScenarioRun> getScenarioRuns()
 	{
-		return _scenarioRuns;
+		return new ArrayList<>(_scenarioRuns);
+	}
+
+	public void addScenarioRun(EpptScenarioRun scenarioRun)
+	{
+		_scenarioRuns.add(scenarioRun);
 	}
 
 	/**
