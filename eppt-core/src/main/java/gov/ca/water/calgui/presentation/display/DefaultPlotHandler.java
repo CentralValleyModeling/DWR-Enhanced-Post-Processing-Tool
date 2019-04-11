@@ -93,7 +93,7 @@ public class DefaultPlotHandler implements DisplayHelper.PlotHandler
 			container.add(tabbedpane);
 
 			frame.pack();
-			frame.setTitle("CalLite Results - " + tabbedpane.getName());
+			frame.setTitle("Results - " + tabbedpane.getName());
 			// CalLite icon
 			//			java.net.URL imgURL = Thread.currentThread().getContextClassLoader().getResource("/images/CalLiteIcon.png");
 			//			frame.setIconImage(Toolkit.getDefaultToolkit().getImage(imgURL));

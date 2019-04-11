@@ -34,7 +34,7 @@ public class PlotTopComponent extends EpptTopComponent
 		jScrollPane.setViewportView(tabbedPane);
 		super.setLayout(new BorderLayout());
 		super.add(jScrollPane, BorderLayout.CENTER);
-		super.setName("CalLite Results - " + tabbedPane.getName());
+		super.setName("Results - " + tabbedPane.getName());
 	}
 
 	@Override
