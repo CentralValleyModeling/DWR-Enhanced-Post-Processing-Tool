@@ -9,10 +9,7 @@ package gov.ca.water.calgui.presentation;
 
 import java.awt.BorderLayout;
 import java.awt.HeadlessException;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javax.swing.*;
@@ -63,6 +60,7 @@ class DisplayFrame
 		List<JTabbedPane> tabbedPanes = new ArrayList<>();
 		try
 		{
+
 			IDSSGrabber1Svc dssGrabber = new DSSGrabber1SvcImpl(scenarios);
 			boolean doComparison = false;
 			boolean doDifference = false;
@@ -207,6 +205,7 @@ class DisplayFrame
 						TimeSeriesContainer[] primaryResults = dssGrabber.getPrimarySeries(locationName);
 						TimeSeriesContainer[] secondaryResults = dssGrabber.getSecondarySeries();
 
+
 						dssGrabber.calcTAFforCFS(primaryResults, secondaryResults);
 
 						TimeSeriesContainer[] diffResults = dssGrabber.getDifferenceSeries(primaryResults);
@@ -280,6 +279,7 @@ class DisplayFrame
 								{
 									if(exceedMonths.contains(monthNames[m1]) && excResults != null)
 									{
+
 										insertTabForMonth(doDifference, doBase, tabbedpane, lower,
 												upper, primaryResults, excResults,
 												sexcResults, dexcResults, m1, monthNames[m1], dssGrabber.getPlotTitle(),
@@ -462,6 +462,7 @@ class DisplayFrame
 		List<JTabbedPane> tabbedPanes = new ArrayList<>();
 		try
 		{
+
 			DSSGrabber2SvcImpl dssGrabber = new DSSGrabber2SvcImpl(lstScenarios, dts, mts);
 			boolean doComparison = false;
 			boolean doDifference = false;
@@ -912,6 +913,7 @@ class DisplayFrame
 											 TimeSeriesContainer[][] dexcResults, int m1, String monthName,
 											 String plotTitle, String yLabel, String sLabel)
 	{
+
 		final ChartPanel1 cp3;
 		final boolean plottedOne;
 		if(doDifference)

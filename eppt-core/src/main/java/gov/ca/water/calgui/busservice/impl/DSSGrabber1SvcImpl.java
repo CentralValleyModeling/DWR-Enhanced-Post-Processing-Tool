@@ -42,6 +42,7 @@ import hec.heclib.util.HecTime;
 import hec.hecmath.computation.ValueContainer;
 import hec.hecmath.functions.TimeSeriesFunctions;
 import hec.io.TimeSeriesContainer;
+import org.apache.commons.io.FilenameUtils;
 
 /**
  * Class to grab (load) DSS time series for a set of scenarios passed in a
@@ -806,6 +807,10 @@ public class DSSGrabber1SvcImpl implements IDSSGrabber1Svc
 			// Base first
 			TimeSeriesContainer oneSeries = getOneTimeSeriesFromAllModels(_baseName, _baseModel, _primaryDSSName);
 			results[0] = oneSeries;
+			if(oneSeries != null)
+			{
+				oneSeries.setName(FilenameUtils.getBaseName(_baseName) + " (" + _baseModel + ")");
+			}
 			if(results[0] != null)
 			{
 				_originalUnits = results[0].units;
@@ -857,6 +862,10 @@ public class DSSGrabber1SvcImpl implements IDSSGrabber1Svc
 					j = j + 1;
 					TimeSeriesContainer tsc = getOneTimeSeriesFromAllModels(scenarioName, model, _primaryDSSName);
 					results[j] = tsc;
+					if(tsc != null)
+					{
+						tsc.setName(FilenameUtils.getBaseName(scenarioName) + " (" + model + ")");
+					}
 				}
 			}
 		}
@@ -923,7 +932,10 @@ public class DSSGrabber1SvcImpl implements IDSSGrabber1Svc
 
 			TimeSeriesContainer oneSeries = getOneTimeSeriesFromAllModels(_baseName, _baseModel, _secondaryDSSName);
 			results[0] = oneSeries;
-
+			if(oneSeries != null)
+			{
+				oneSeries.setName(FilenameUtils.getBaseName(_baseName) + " (" + _baseModel + ")");
+			}
 			// Then scenarios
 
 			int j = 0;
@@ -938,6 +950,10 @@ public class DSSGrabber1SvcImpl implements IDSSGrabber1Svc
 					j = j + 1;
 					TimeSeriesContainer tsc = getOneTimeSeriesFromAllModels(scenarioName, model, _secondaryDSSName);
 					results[j] = tsc;
+					if(tsc != null)
+					{
+						tsc.setName(FilenameUtils.getBaseName(scenarioName) + " (" + _baseModel + ")");
+					}
 				}
 			}
 			return results;

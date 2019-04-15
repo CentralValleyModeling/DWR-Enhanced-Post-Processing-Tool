@@ -377,7 +377,7 @@ public class VistaUtils
 			}
 			if(!dirOnly)
 			{
-				filename = fileChooser.getCurrentDirectory().toString() + fileChooser.getSelectedFile().toString();
+				filename = fileChooser.getSelectedFile().toString();
 			}
 			else
 			{
