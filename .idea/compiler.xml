@@ -7,11 +7,14 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
+        <module name="eppt-app" />
         <module name="eppt-application" />
         <module name="eppt-branding" />
         <module name="eppt-calsim-gui" />
         <module name="eppt-core" />
         <module name="eppt-nbui" />
+        <module name="eppt-report-data" />
+        <module name="eppt-report-engine" />
         <module name="eppt-scenario" />
         <module name="eppt-ui" />
         <module name="eppt-vista" />

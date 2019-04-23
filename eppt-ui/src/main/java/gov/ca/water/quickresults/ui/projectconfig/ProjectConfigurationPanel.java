@@ -75,6 +75,21 @@ public final class ProjectConfigurationPanel extends EpptPanel
 		}
 	}
 
+	/**
+	 * This method is for unit testing purposes only
+	 *
+	 * @return a new ProjectConfigurationPanel with UI initialized
+	 */
+	static ProjectConfigurationPanel createProjectConfigurationPanel()
+	{
+		return new ProjectConfigurationPanel();
+	}
+
+	public static ProjectConfigurationPanel getProjectConfigurationPanel()
+	{
+		return SINGLETON;
+	}
+
 	private void initComponents()
 	{
 		JPanel header = new JPanel();
@@ -99,16 +114,6 @@ public final class ProjectConfigurationPanel extends EpptPanel
 		revalidate();
 	}
 
-	/**
-	 * This method is for unit testing purposes only
-	 *
-	 * @return a new ProjectConfigurationPanel with UI initialized
-	 */
-	static ProjectConfigurationPanel createProjectConfigurationPanel()
-	{
-		return new ProjectConfigurationPanel();
-	}
-
 	private void setSummaryTableEnabled(boolean selected, Container container)
 	{
 		container.setEnabled(selected);
@@ -120,11 +125,6 @@ public final class ProjectConfigurationPanel extends EpptPanel
 				setSummaryTableEnabled(selected, (Container) component);
 			}
 		}
-	}
-
-	public static ProjectConfigurationPanel getProjectConfigurationPanel()
-	{
-		return SINGLETON;
 	}
 
 	private void initModels()
@@ -217,8 +217,30 @@ public final class ProjectConfigurationPanel extends EpptPanel
 		return retval;
 	}
 
+	public void setScenarios(List<RBListItemBO> scenarios)
+	{
+		JRadioButton radioButton = (JRadioButton) getSwingEngine().find("rdbp001");
+		radioButton.setSelected(true);
+		Component component = getSwingEngine().find("SelectedList");
+		if(component instanceof JList)
+		{
+			JList<RBListItemBO> lstScenarios = (JList<RBListItemBO>) component;
+			_lmScenNames.removeAllElements();
+			for(RBListItemBO item : scenarios)
+			{
+				_lmScenNames.addElement(item);
+			}
+			lstScenarios.setModel(_lmScenNames);
+			scenarioListChanged();
+		}
+	}
+
 	public String quickState()
 	{
+
+		QuickStateBuilder builder = new QuickStateBuilder();
+
+
 
 		try
 		{
@@ -228,28 +250,35 @@ public final class ProjectConfigurationPanel extends EpptPanel
 			if(rdb.isSelected())
 			{
 				cAdd = cAdd + "Base";
+				builder.withComparisonType(QuickState.ComparisonType.BASE);
 			}
 
 			rdb = (JRadioButton) getSwingEngine().find("rdbp001");
 			if(rdb.isSelected())
 			{
 				cAdd = cAdd + "Comp";
+				builder.withComparisonType(QuickState.ComparisonType.COMP);
+
 			}
 
 			rdb = (JRadioButton) getSwingEngine().find("rdbp002");
 			if(rdb.isSelected())
 			{
 				cAdd = cAdd + "Diff";
+				builder.withComparisonType(QuickState.ComparisonType.DIFF);
+
 			}
 			// Units
 			rdb = (JRadioButton) getSwingEngine().find("rdbCFS");
 			if(rdb.isSelected())
 			{
 				cAdd = cAdd + ";CFS";
+				builder.withDisplayCFS();
 			}
 			else
 			{
 				cAdd = cAdd + ";TAF";
+				builder.withDisplayTAF();
 			}
 
 			// Date
@@ -257,6 +286,7 @@ public final class ProjectConfigurationPanel extends EpptPanel
 			JSpinner spnEM = (JSpinner) getSwingEngine().find("spnEndMonth");
 			JSpinner spnSY = (JSpinner) getSwingEngine().find("spnStartYear");
 			JSpinner spnEY = (JSpinner) getSwingEngine().find("spnEndYear");
+
 			String cDate = spnSM.getValue().toString() + spnSY.getValue().toString();
 			cDate = cDate + "-" + spnEM.getValue().toString() + spnEY.getValue().toString();
 			cAdd = cAdd + ";" + cDate;
@@ -266,6 +296,7 @@ public final class ProjectConfigurationPanel extends EpptPanel
 			if(ckb.isSelected())
 			{
 				cAdd = cAdd + ";TS";
+				builder.withDisplayTimeSeriesPlot();
 			}
 
 			// Exceedance Plot
@@ -275,6 +306,7 @@ public final class ProjectConfigurationPanel extends EpptPanel
 			StringBuilder cST = new StringBuilder();
 			Component[] controls2 = ((JPanel) getSwingEngine().find("controls2")).getComponents();
 			addExceedancePlots(cST, controls2);
+			builder.withExceedancePlots(controls2);
 			if(cST.length() > 0)
 			{
 				cAdd = cAdd + ";EX-" + cST;
@@ -284,6 +316,7 @@ public final class ProjectConfigurationPanel extends EpptPanel
 			if(((JCheckBox) getSwingEngine().find("RepckbBAWPlot")).isSelected())
 			{
 				cAdd = cAdd + ";BP";
+				builder.withDisplayBoxAndWhiskerPlot();
 			}
 			// Monthly Table
 			ckb = (JCheckBox) getSwingEngine().find("RepckbMonthlyTable");
@@ -311,6 +344,9 @@ public final class ProjectConfigurationPanel extends EpptPanel
 			String messageText = "Unable to display frame.";
 			errorHandlingSvc.businessErrorHandler(messageText, e);
 		}
+
+		QuickState quickState = builder.createQuickState();
+
 		return null;
 	}
 
@@ -439,24 +475,6 @@ public final class ProjectConfigurationPanel extends EpptPanel
 		monthSpinner.setValue(ResultUtilsBO.getResultUtilsInstance().intToMonth(end.getMonth()));
 		JSpinner yearSpinner = (JSpinner) getSwingEngine().find("spnEndYear");
 		yearSpinner.setValue(end.getYearValue());
-	}
-
-	public void setScenarios(List<RBListItemBO> scenarios)
-	{
-		JRadioButton radioButton = (JRadioButton) getSwingEngine().find("rdbp001");
-		radioButton.setSelected(true);
-		Component component = getSwingEngine().find("SelectedList");
-		if(component instanceof JList)
-		{
-			JList<RBListItemBO> lstScenarios = (JList<RBListItemBO>) component;
-			_lmScenNames.removeAllElements();
-			for(RBListItemBO item : scenarios)
-			{
-				_lmScenNames.addElement(item);
-			}
-			lstScenarios.setModel(_lmScenNames);
-			scenarioListChanged();
-		}
 	}
 
 	private void scenarioListChanged()
