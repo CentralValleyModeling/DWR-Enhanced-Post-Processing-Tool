@@ -265,7 +265,8 @@
 		<dependency>
 			<groupId>hecjavadev-core</groupId>
 			<artifactId>images</artifactId>
-
+			<version>6.0</version>
+			<classifier>DeltaERT-1-4-0-97-Obfuscated</classifier>
 		</dependency>
 		<dependency>
 			<groupId>org.netbeans.api</groupId>
@@ -293,6 +294,12 @@
 			<version>1.0.1-SNAPSHOT</version>
 		</dependency>
 	</dependencies>
+	<repositories>
+		<repository>
+			<id>jr-ce-releases</id>
+			<url>http://jaspersoft.artifactoryonline.com/jaspersoft/jr-ce-releases</url>
+		</repository>
+	</repositories>
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	</properties>
