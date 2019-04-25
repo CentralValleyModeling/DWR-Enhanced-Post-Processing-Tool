@@ -39,7 +39,7 @@ import gov.ca.water.calgui.techservice.impl.ErrorHandlingSvcImpl;
 
 import hec.heclib.dss.HecDss;
 import hec.heclib.util.HecTime;
-import hec.hecmath.computation.ValueContainer;
+import hec.hecmath.computation.r;
 import hec.hecmath.functions.TimeSeriesFunctions;
 import hec.io.TimeSeriesContainer;
 import org.apache.commons.io.FilenameUtils;
@@ -671,7 +671,7 @@ public class DSSGrabber1SvcImpl implements IDSSGrabber1Svc
 						{
 							//combine result2 and result together and assign to result.
 							result = TimeSeriesFunctions.add(
-									Arrays.asList(new ValueContainer(result), new ValueContainer(result2)),
+									Arrays.asList(new r(result), new r(result2)),
 									(String) null);
 						}
 					}
@@ -809,7 +809,7 @@ public class DSSGrabber1SvcImpl implements IDSSGrabber1Svc
 			results[0] = oneSeries;
 			if(oneSeries != null)
 			{
-				oneSeries.setName(FilenameUtils.getBaseName(_baseName) + " (" + _baseModel + ")");
+				oneSeries.fullName = FilenameUtils.getBaseName(_baseName) + " (" + _baseModel + ")";
 			}
 			if(results[0] != null)
 			{
@@ -864,7 +864,7 @@ public class DSSGrabber1SvcImpl implements IDSSGrabber1Svc
 					results[j] = tsc;
 					if(tsc != null)
 					{
-						tsc.setName(FilenameUtils.getBaseName(scenarioName) + " (" + model + ")");
+						tsc.fullName = FilenameUtils.getBaseName(scenarioName) + " (" + model + ")";
 					}
 				}
 			}
@@ -934,7 +934,7 @@ public class DSSGrabber1SvcImpl implements IDSSGrabber1Svc
 			results[0] = oneSeries;
 			if(oneSeries != null)
 			{
-				oneSeries.setName(FilenameUtils.getBaseName(_baseName) + " (" + _baseModel + ")");
+				oneSeries.fullName = FilenameUtils.getBaseName(_baseName) + " (" + _baseModel + ")";
 			}
 			// Then scenarios
 
@@ -952,7 +952,7 @@ public class DSSGrabber1SvcImpl implements IDSSGrabber1Svc
 					results[j] = tsc;
 					if(tsc != null)
 					{
-						tsc.setName(FilenameUtils.getBaseName(scenarioName) + " (" + _baseModel + ")");
+						tsc.fullName = FilenameUtils.getBaseName(scenarioName) + " (" + _baseModel + ")";
 					}
 				}
 			}

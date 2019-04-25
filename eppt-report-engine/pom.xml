@@ -32,27 +32,15 @@
         </dependency>
         <dependency>
             <groupId>hecjavadev-core</groupId>
-            <artifactId>hec-lib</artifactId>
-            <version>6.0-SNAPSHOT</version>
-            <scope>compile</scope>
-        </dependency>
-        <dependency>
-            <groupId>hecjavadev-core</groupId>
             <artifactId>hec-core</artifactId>
-            <version>6.0-SNAPSHOT</version>
-            <scope>compile</scope>
-        </dependency>
-        <dependency>
-            <groupId>hecjavadev-core</groupId>
-            <artifactId>hec-data</artifactId>
-            <version>6.0-SNAPSHOT</version>
-            <scope>compile</scope>
+            <version>6.0</version>
+            <classifier>DeltaERT-1-4-0-97-Obfuscated</classifier>
         </dependency>
         <dependency>
             <groupId>hecjavadev-core</groupId>
             <artifactId>rma</artifactId>
-            <version>6.0-SNAPSHOT</version>
-            <scope>compile</scope>
+            <version>6.0</version>
+            <classifier>DeltaERT-1-4-0-97-Obfuscated</classifier>
         </dependency>
         <dependency>
             <groupId>gov.ca.water</groupId>

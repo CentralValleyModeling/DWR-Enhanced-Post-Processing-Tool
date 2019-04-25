@@ -57,11 +57,6 @@
 			<version>1.0</version>
 			<classifier>Wrims_Distribution</classifier>
 		</dependency>
-		<dependency>
-			<groupId>hecjavadev-core</groupId>
-			<artifactId>hec-lib</artifactId>
-			<version>dev-SNAPSHOT</version>
-		</dependency>
 	</dependencies>
 	<repositories>
 		<repository>

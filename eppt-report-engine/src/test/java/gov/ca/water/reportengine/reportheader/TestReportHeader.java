@@ -39,7 +39,7 @@ public class TestReportHeader extends TestReportHeaderBase
 
         //create report header
         List<String> altNames = new ArrayList<>();
-        ReportHeader rh = new ReportHeader("Bryan Gray", "CSII_Base", altNames);
+        ReportHeader rh = new ReportHeader("Bryan Gray", "CSII_Base", "", altNames);
         ReportHeaderXMLCreator rhWriter = new ReportHeaderXMLCreator();
         rhWriter.appendReportHeaderElement(rh, doc);
         writeXmlFile(XML_PATH, doc);
@@ -73,7 +73,7 @@ public class TestReportHeader extends TestReportHeaderBase
 
         //create report header
         List<String> altNames = new ArrayList<>(Arrays.asList("CSII Alternative"));
-        ReportHeader rh = new ReportHeader("Bryan Gray", "CSII_Base", altNames);
+        ReportHeader rh = new ReportHeader("Bryan Gray", "CSII_Base", "", altNames);
         ReportHeaderXMLCreator rhWriter = new ReportHeaderXMLCreator();
         rhWriter.appendReportHeaderElement(rh, doc);
         writeXmlFile(XML_PATH, doc);

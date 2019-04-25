@@ -15,7 +15,6 @@ package gov.ca.water.reportengine.executivereport;
 import hec.heclib.dss.DSSPathname;
 import hec.heclib.dss.HecDss;
 import hec.io.TimeSeriesContainer;
-import org.python.antlr.base.mod;
 
 import java.nio.file.Path;
 import java.util.ArrayList;

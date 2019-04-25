@@ -53,28 +53,37 @@
 		</dependency>
 		<dependency>
 			<groupId>hecjavadev-core</groupId>
-			<artifactId>hec-lib</artifactId>
-			<version>dev-SNAPSHOT</version>
-		</dependency>
-		<dependency>
-			<groupId>hecjavadev-core</groupId>
-			<artifactId>hec-data</artifactId>
-			<version>dev-SNAPSHOT</version>
-		</dependency>
-		<dependency>
-			<groupId>hecjavadev-core</groupId>
 			<artifactId>rma</artifactId>
-			<version>dev-SNAPSHOT</version>
+			<version>6.0</version>
+			<classifier>DeltaERT-1-4-0-97-Obfuscated</classifier>
 		</dependency>
 		<dependency>
 			<groupId>hecjavadev-core</groupId>
 			<artifactId>hec-core</artifactId>
-			<version>dev-SNAPSHOT</version>
+			<version>6.0</version>
+			<classifier>DeltaERT-1-4-0-97-Obfuscated</classifier>
+		</dependency>
+		<dependency>
+			<groupId>hec.gfx2d</groupId>
+			<artifactId>hec-plots</artifactId>
+			<version>1.1</version>
+			<classifier>DeltaERT-1-4-0-97-Obfuscated</classifier>
+		</dependency>
+		<dependency>
+			<groupId>hec.dssgui</groupId>
+			<artifactId>hec-dssvue</artifactId>
+			<version>3.0.1</version>
+			<classifier>DeltaERT-1-4-0-97-Obfuscated</classifier>
 		</dependency>
 		<dependency>
 			<groupId>org.slf4j</groupId>
 			<artifactId>slf4j-api</artifactId>
 			<version>1.7.25</version>
+		</dependency>
+		<dependency>
+			<groupId>org.python</groupId>
+			<artifactId>jython</artifactId>
+			<version>2.5.2</version>
 		</dependency>
 		<dependency>
 			<groupId>ncsa.hdf</groupId>
