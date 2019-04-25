@@ -27,7 +27,6 @@
 		<module>../eppt-calsim-gui</module>
 		<module>../eppt-vista</module>
         <module>../eppt-report-engine</module>
-        <module>../eppt-report-data</module>
     </modules>
 
 	<properties>

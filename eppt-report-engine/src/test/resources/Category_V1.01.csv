@@ -1,47 +1,48 @@
 ﻿Modules,Sub Modules,Linked Variables,Flag/Value
-Reservoir Operations,# of Blow DP,TRNTY_DP_STATUS_DTS,2
-Reservoir Operations,# of Blow DP,SHST_DP_STATUS_DTS,2
-Reservoir Operations,# of Blow DP,FLSM_DP_STATUS_DTS,2
-Reservoir Operations,# of Blow DP,OROV_DP_STATUS_DTS,2
-Reservoir Operations,# of Above Flood,TRNTY_FLD_STATUS_DTS,0
-Reservoir Operations,# of Above Flood,SHST_FLD_STATUS_DTS,0
-Reservoir Operations,# of Above Flood,FLSM_FLD_STATUS_DTS,0
-Reservoir Operations,# of Above Flood,OROV_FLD_STATUS_DTS,0
-Reservoir Operations,# of Spill,TRNTY_Spill_STATUS_DTS,1
-Reservoir Operations,# of Spill,SHST_Spill_STATUS_DTS,1
-Reservoir Operations,# of Spill,FLSM_Spill_STATUS_DTS,1
-Reservoir Operations,# of Spill,OROV_Spill_STATUS_DTS,1
-North of Delta Upstream Minimum Flow Requirements,# ofViolation,C100_MIF_STATUS_DTS,2
-North of Delta Upstream Minimum Flow Requirements,# ofViolation,C3_MIF_STATUS_DTS,2
-North of Delta Upstream Minimum Flow Requirements,# ofViolation,C5_MIF_STATUS_DTS,2
-North of Delta Upstream Minimum Flow Requirements,# ofViolation,C112_MIF_STATUS_DTS,2
-North of Delta Upstream Minimum Flow Requirements,# ofViolation,C114_MIF_STATUS_DTS,2
-North of Delta Upstream Minimum Flow Requirements,# ofViolation,C129_MIF_STATUS_DTS,2
-North of Delta Upstream Minimum Flow Requirements,# ofViolation,C169_MIF_STATUS_DTS,2
-North of Delta Upstream Minimum Flow Requirements,# ofViolation,C200A_MIF_STATUS_DTS,2
-North of Delta Upstream Minimum Flow Requirements,# ofViolation,C203_MIF_STATUS_DTS,2
-North of Delta Upstream Minimum Flow Requirements,# ofViolation,C223_MIF_STATUS_DTS,2
-North of Delta Upstream Minimum Flow Requirements,# ofViolation,C9_MIF_STATUS_DTS,2
-North of Delta Upstream Minimum Flow Requirements,# ofViolation,C303_MIF_STATUS_DTS,2
-North of Delta Weirs Operations,# ofViolation,Sutter_Weirs_Op_DTS,1
-North of Delta Weirs Operations,# ofViolation,Yolo_Weirs_Op_DTS,1
-North of Delta Groundwater Pumping,# ofViolation,GP60_OverPump_STATUS_DTS,1
-North of Delta Groundwater Pumping,# ofViolation,GP64_OverPump_STATUS_DTS,1
-North of Delta Groundwater Pumping,# ofViolation,GP65_OverPump_STATUS_DTS,1
-North of Delta Groundwater Pumping,# ofViolation,GP66_OverPump_STATUS_DTS,1
-Delta Operations,# ofViolation,ANN_STATUS_DTS,2
-Delta Operations,# ofViolation,FX2_STATUS_DTS,2
-Delta Operations,# ofViolation,SX2_STATUS_DTS,2
-Delta Operations,# ofViolation,EI_STATUS_DTS,2
-Delta Operations,# ofViolation,RV_STATUS_DTS,2
-Delta Operations,# ofViolation,OMR_STATUS_DTS,2
-Delta Operations,# ofViolation,SJRIE_STATUS_DTS,2
-Delta Operations,# ofViolation,DCC_STATUS_DTS,2
-Delta Operations,# ofViolation,NDOI_STATUS_DTS,2
-Coordinated Operations Agreement,% Different,CVP_COA_P_diff,Value
-Coordinated Operations Agreement,% Different,SWP_COA_P_diff,Value
-Allocations and Deliveries,# of Shortage,SHORT_CVP_STATUS_DTS,1
-Allocations and Deliveries,# of Shortage,SHORT_SWP_STATUS_DTS,1
-Mass Balance ,# of inbalance ,NOD_MB_STATUS_DTS,1
-Mass Balance ,# of inbalance ,Delta_MB_STATUS_DTS,1
-Mass Balance ,# of inbalance ,SOD_MB_STATUS_DTS,1
+ModelInputs,dummyData,TRNTY_DP_STATUS_DTS,2
+ReservoirOperations,BelowDP,TRNTY_DP_STATUS_DTS,2
+ReservoirOperations,BelowDP,SHST_DP_STATUS_DTS,2
+ReservoirOperations,BelowDP,FLSM_DP_STATUS_DTS,2
+ReservoirOperations,BelowDP,OROV_DP_STATUS_DTS,2
+ReservoirOperations,AboveFlood,TRNTY_FLD_STATUS_DTS,0
+ReservoirOperations,AboveFlood,SHST_FLD_STATUS_DTS,0
+ReservoirOperations,AboveFlood,FLSM_FLD_STATUS_DTS,0
+ReservoirOperations,AboveFlood,OROV_FLD_STATUS_DTS,0
+ReservoirOperations,Spill,TRNTY_Spill_STATUS_DTS,1
+ReservoirOperations,Spill,SHST_Spill_STATUS_DTS,1
+ReservoirOperations,Spill,FLSM_Spill_STATUS_DTS,1
+ReservoirOperations,Spill,OROV_Spill_STATUS_DTS,1
+UpstreamMinimumFlowRequirements,Violation,C100_MIF_STATUS_DTS,2
+UpstreamMinimumFlowRequirements,Violation,C3_MIF_STATUS_DTS,2
+UpstreamMinimumFlowRequirements,Violation,C5_MIF_STATUS_DTS,2
+UpstreamMinimumFlowRequirements,Violation,C112_MIF_STATUS_DTS,2
+UpstreamMinimumFlowRequirements,Violation,C114_MIF_STATUS_DTS,2
+UpstreamMinimumFlowRequirements,Violation,C129_MIF_STATUS_DTS,2
+UpstreamMinimumFlowRequirements,Violation,C169_MIF_STATUS_DTS,2
+UpstreamMinimumFlowRequirements,Violation,C200A_MIF_STATUS_DTS,2
+UpstreamMinimumFlowRequirements,Violation,C203_MIF_STATUS_DTS,2
+UpstreamMinimumFlowRequirements,Violation,C223_MIF_STATUS_DTS,2
+UpstreamMinimumFlowRequirements,Violation,C9_MIF_STATUS_DTS,2
+UpstreamMinimumFlowRequirements,Violation,C303_MIF_STATUS_DTS,2
+DeltaWeirsOperations,Violation,Sutter_Weirs_Op_DTS,1
+DeltaWeirsOperations,Violation,Yolo_Weirs_Op_DTS,1
+DeltaGroundwaterPumping,Violation,GP60_OverPump_STATUS_DTS,1
+DeltaGroundwaterPumping,Violation,GP64_OverPump_STATUS_DTS,1
+DeltaGroundwaterPumping,Violation,GP65_OverPump_STATUS_DTS,1
+DeltaGroundwaterPumping,Violation,GP66_OverPump_STATUS_DTS,1
+DeltaOperations,Violation,ANN_STATUS_DTS,2
+DeltaOperations,Violation,FX2_STATUS_DTS,2
+DeltaOperations,Violation,SX2_STATUS_DTS,2
+DeltaOperations,Violation,EI_STATUS_DTS,2
+DeltaOperations,Violation,RV_STATUS_DTS,2
+DeltaOperations,Violation,OMR_STATUS_DTS,2
+DeltaOperations,Violation,SJRIE_STATUS_DTS,2
+DeltaOperations,Violation,DCC_STATUS_DTS,2
+DeltaOperations,Violation,NDOI_STATUS_DTS,2
+CoordinatedOperationsAgreement,Different,CVP_COA_P_DIFF_DTS,Value
+CoordinatedOperationsAgreement,Different,SWP_COA_P_DIFF_DTS,Value
+AllocationsAndDeliveries,Shortage,SHORT_CVP_STATUS_DTS,1
+AllocationsAndDeliveries,Shortage,SHORT_SWP_STATUS_DTS,1
+MassBalance,OffBalance,NOD_MB_STATUS_DTS,1
+MassBalance,OffBalance,Delta_MB_STATUS_DTS,1
+MassBalance,OffBalance,SOD_MB_STATUS_DTS,1
