@@ -155,7 +155,7 @@ public class ChartPanel1 extends JPanel implements Printable
                 {
                     if (stscs[i].numberValues > 0)
                     {
-                        stscs[i].setName(sName + " - " + stscs[i].getName());
+                        stscs[i].fullName = sName + " - " + stscs[i].fullName;
                         String uniqueName = getUniqueLegendNameForCurve(sseries,stscs[i]);
                         sseries[i] = new XYSeries( uniqueName);
                         for (int j = 0; j < stscs[i].numberValues; j++)
@@ -301,7 +301,7 @@ public class ChartPanel1 extends JPanel implements Printable
                     {
                         if (isSchVw)
                         {
-                            tsc.setName(svNames[i] + " - " + tsc.getName());
+                            tsc.fullName = svNames[i] + " - " + tsc.fullName;
                             series[i] = new TimeSeries(getUniqueLegendNameForCurve(series, tsc));
                         }
                         else
@@ -327,7 +327,7 @@ public class ChartPanel1 extends JPanel implements Printable
                     {
                         if (stscs[i] != null && stscs[i].numberValues > 0)
                         {
-                            stscs[i].setName(sName + " - " + stscs[i].getName());
+                            stscs[i].fullName = sName + " - " + stscs[i].fullName;
                             sseries[i] = new TimeSeries(getUniqueLegendNameForCurve(sseries, stscs[i]));//sName);
                             double maxval = -1e37;
                             for (int j = 0; j < stscs[i].numberValues; j++)
@@ -547,7 +547,7 @@ public class ChartPanel1 extends JPanel implements Printable
 
     private String getUniqueLegendNameForCurve(Series[] dataSet, TimeSeriesContainer tsc)
     {
-        String uniqueName = tsc.getName();
+        String uniqueName = tsc.fullName;
 
         //check for uniqueness and add numbers at the end until it is
         boolean nameIsUnique;

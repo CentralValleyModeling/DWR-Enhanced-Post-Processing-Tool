@@ -182,18 +182,21 @@
 		</dependency>
 		<dependency>
 			<groupId>hecjavadev-core</groupId>
-			<artifactId>hec-data</artifactId>
-			<version>dev-SNAPSHOT</version>
-		</dependency>
-		<dependency>
-			<groupId>hecjavadev-core</groupId>
 			<artifactId>hec-core</artifactId>
-			<version>dev-SNAPSHOT</version>
+			<version>6.0</version>
+			<classifier>DeltaERT-1-4-0-97-Obfuscated</classifier>
 		</dependency>
 		<dependency>
 			<groupId>hec.dataui</groupId>
 			<artifactId>hec-data-ui</artifactId>
-			<version>1.1-SNAPSHOT</version>
+			<version>1.1</version>
+			<classifier>DeltaERT-1-4-0-97-Obfuscated</classifier>
+		</dependency>
+		<dependency>
+			<groupId>hec.map</groupId>
+			<artifactId>hec-maps</artifactId>
+			<version>1.1</version>
+			<classifier>DeltaERT-1-4-0-97-Obfuscated</classifier>
 		</dependency>
 		<dependency>
 			<groupId>org.jfree</groupId>
@@ -205,6 +208,22 @@
 			<artifactId>wrimsv2</artifactId>
 			<version>1.0</version>
 			<classifier>Wrims_Distribution</classifier>
+		</dependency>
+		<dependency>
+			<groupId>rma.util</groupId>
+			<artifactId>lookup</artifactId>
+			<version>1.0</version>
+		</dependency>
+		<dependency>
+			<groupId>com.vividsolutions</groupId>
+			<artifactId>jts</artifactId>
+			<version>1.13</version>
+			<exclusions>
+				<exclusion>
+					<groupId>*</groupId>
+					<artifactId>*</artifactId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 		<dependency>
 			<groupId>com.itextpdf</groupId>
@@ -241,7 +260,8 @@
 		<dependency>
 			<groupId>hecjavadev-core</groupId>
 			<artifactId>images</artifactId>
-			<version>dev-SNAPSHOT</version>
+			<version>6.0</version>
+			<classifier>DeltaERT-1-4-0-97-Obfuscated</classifier>
 		</dependency>
 		<dependency>
 			<groupId>org.netbeans.api</groupId>

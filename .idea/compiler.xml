@@ -13,7 +13,6 @@
         <module name="eppt-calsim-gui" />
         <module name="eppt-core" />
         <module name="eppt-nbui" />
-        <module name="eppt-report-data" />
         <module name="eppt-report-engine" />
         <module name="eppt-scenario" />
         <module name="eppt-ui" />
@@ -21,5 +20,8 @@
         <module name="maven-archiver" />
       </profile>
     </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="eppt-report-data" target="1.8" />
+    </bytecodeTargetLevel>
   </component>
 </project>
