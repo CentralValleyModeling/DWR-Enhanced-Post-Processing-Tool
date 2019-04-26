@@ -27,6 +27,7 @@
 		<module>../eppt-calsim-gui</module>
 		<module>../eppt-vista</module>
         <module>../eppt-report-engine</module>
+		<module>../eppt-jasper-engine</module>
     </modules>
 
 	<properties>
