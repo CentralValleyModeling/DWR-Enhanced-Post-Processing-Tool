@@ -325,7 +325,8 @@ public class ExecutiveReportXMLCreator
 
         return altStudyElem;
     }
-    public void loadHelperXMLFile() throws ExecutiveReportException
+
+    private void loadHelperXMLFile() throws ExecutiveReportException
     {
 
         URL helperXMLURL = this.getClass().getClassLoader().getResource("ExecutiveReportHelperXML.xml");

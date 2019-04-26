@@ -34,8 +34,14 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 
+import hec.heclib.dss.HecDSSFileAccess;
+
 public class TestQAQCReportBase
 {
+    static
+    {
+        HecDSSFileAccess.setMessageLevel(HecDSSFileAccess.MESS_LEVEL_CRITICAL);
+    }
 
     public void writeXmlFile(String xmlPath, Document doc) throws ParserConfigurationException, TransformerException
     {
