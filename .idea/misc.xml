@@ -13,6 +13,7 @@
         <option value="$PROJECT_DIR$/vista/pom.xml" />
         <option value="$PROJECT_DIR$/eppt-vista/pom.xml" />
         <option value="$PROJECT_DIR$/eppt-calsim-gui/pom.xml" />
+        <option value="$PROJECT_DIR$/eppt-jasper-engine/pom.xml" />
       </list>
     </option>
     <option name="ignoredFiles">
