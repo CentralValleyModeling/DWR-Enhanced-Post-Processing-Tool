@@ -12,6 +12,7 @@
         <module name="eppt-branding" />
         <module name="eppt-calsim-gui" />
         <module name="eppt-core" />
+        <module name="eppt-jasper-engine" />
         <module name="eppt-nbui" />
         <module name="eppt-report-engine" />
         <module name="eppt-scenario" />

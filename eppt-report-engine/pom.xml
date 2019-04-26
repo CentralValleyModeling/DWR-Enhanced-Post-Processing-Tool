@@ -14,15 +14,53 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0"
 		 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 		 xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
 	<parent>
 		<artifactId>eppt-parent</artifactId>
 		<groupId>gov.ca.water</groupId>
 		<version>1.0.1-SNAPSHOT</version>
 		<relativePath>../eppt-parent/pom.xml</relativePath>
 	</parent>
-	<modelVersion>4.0.0</modelVersion>
-
 	<artifactId>eppt-report-engine</artifactId>
+	<name>EPPT Report Engine</name>
+	<dependencies>
+		<dependency>
+			<groupId>hecjavadev-core</groupId>
+			<artifactId>hec-core</artifactId>
+			<version>6.0</version>
+			<classifier>DeltaERT-1-4-0-97-Obfuscated</classifier>
+		</dependency>
+		<dependency>
+			<groupId>hecjavadev-core</groupId>
+			<artifactId>rma</artifactId>
+			<version>6.0</version>
+			<classifier>DeltaERT-1-4-0-97-Obfuscated</classifier>
+		</dependency>
+		<dependency>
+			<groupId>gov.ca.water</groupId>
+			<artifactId>eppt-report-data</artifactId>
+			<version>1.0.1-SNAPSHOT</version>
+			<scope>compile</scope>
+		</dependency>
+		<dependency>
+			<groupId>hec.dssgui</groupId>
+			<artifactId>hec-dssvue</artifactId>
+			<version>3.0.1</version>
+			<classifier>DeltaERT-1-4-0-97-Obfuscated</classifier>
+		</dependency>
+		<dependency>
+			<groupId>org.junit.jupiter</groupId>
+			<artifactId>junit-jupiter-api</artifactId>
+			<version>5.4.0</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.junit.jupiter</groupId>
+			<artifactId>junit-jupiter-engine</artifactId>
+			<version>5.4.0</version>
+			<scope>test</scope>
+		</dependency>
+	</dependencies>
 	<build>
 		<plugins>
 			<plugin>
@@ -72,44 +110,4 @@
 			</plugin>
 		</plugins>
 	</build>
-	<dependencies>
-		<dependency>
-			<groupId>hecjavadev-core</groupId>
-			<artifactId>hec-core</artifactId>
-			<version>6.0</version>
-			<classifier>DeltaERT-1-4-0-97-Obfuscated</classifier>
-		</dependency>
-		<dependency>
-			<groupId>hecjavadev-core</groupId>
-			<artifactId>rma</artifactId>
-			<version>6.0</version>
-			<classifier>DeltaERT-1-4-0-97-Obfuscated</classifier>
-		</dependency>
-		<dependency>
-			<groupId>gov.ca.water</groupId>
-			<artifactId>eppt-report-data</artifactId>
-			<version>1.0.1-SNAPSHOT</version>
-			<scope>compile</scope>
-		</dependency>
-		<dependency>
-			<groupId>hec.dssgui</groupId>
-			<artifactId>hec-dssvue</artifactId>
-			<version>3.0.1</version>
-			<classifier>DeltaERT-1-4-0-97-Obfuscated</classifier>
-		</dependency>
-		<dependency>
-			<groupId>org.junit.jupiter</groupId>
-			<artifactId>junit-jupiter-api</artifactId>
-			<version>5.4.0</version>
-			<scope>test</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.junit.jupiter</groupId>
-			<artifactId>junit-jupiter-engine</artifactId>
-			<version>5.4.0</version>
-			<scope>test</scope>
-		</dependency>
-	</dependencies>
-
-
 </project>

@@ -1,0 +1,272 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.2.2.final using JasperReports Library version 6.2.2  -->
+<!-- 2019-04-23T07:39:20 -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="QAQC_AssumptionChanges" language="groovy" pageWidth="504" pageHeight="684" columnWidth="504" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="da75db69-3924-4f44-998a-80195014db99">
+	<property name="net.sf.jasperreports.data.adapter" value="QAQC_Datasource.xml"/>
+	<property name="com.jaspersoft.studio.unit." value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.pageHeight" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.pageWidth" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.topMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.bottomMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.leftMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.rightMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.columnWidth" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.columnSpacing" value="pixel"/>
+	<queryString language="XPath">
+		<![CDATA[/qaqc-report/assumption-changes/records-list/record]]>
+	</queryString>
+	<field name="record" class="java.lang.String">
+		<fieldDescription><![CDATA[.]]></fieldDescription>
+	</field>
+	<field name="ic-common-records-different-data" class="java.lang.String">
+		<fieldDescription><![CDATA[/qaqc-report/assumption-changes/initial-conditions/common-records-different-data]]></fieldDescription>
+	</field>
+	<field name="ic-records-only-in-base" class="java.lang.String">
+		<fieldDescription><![CDATA[/qaqc-report/assumption-changes/initial-conditions/records-only-in-base]]></fieldDescription>
+	</field>
+	<field name="ic-records-only-in-alternative" class="java.lang.String">
+		<fieldDescription><![CDATA[/qaqc-report/assumption-changes/initial-conditions/records-only-in-alternative]]></fieldDescription>
+	</field>
+	<field name="sv-common-records-different-data_1" class="java.lang.String">
+		<fieldDescription><![CDATA[/qaqc-report/assumption-changes/state-variables/common-records-different-data]]></fieldDescription>
+	</field>
+	<field name="sv-records-only-in-base_1" class="java.lang.String">
+		<fieldDescription><![CDATA[/qaqc-report/assumption-changes/state-variables/records-only-in-base]]></fieldDescription>
+	</field>
+	<field name="sv-records-only-in-alternative_1" class="java.lang.String">
+		<fieldDescription><![CDATA[/qaqc-report/assumption-changes/state-variables/records-only-in-alternative]]></fieldDescription>
+	</field>
+	<group name="Summary">
+		<groupHeader>
+			<band height="238">
+				<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				<textField>
+					<reportElement x="0" y="40" width="200" height="21" uuid="2e805f31-ec14-4ab6-ae15-121177911d69"/>
+					<box leftPadding="4">
+						<topPen lineWidth="1.0"/>
+						<leftPen lineWidth="1.0"/>
+						<bottomPen lineWidth="1.0"/>
+						<rightPen lineWidth="1.0"/>
+					</box>
+					<textElement verticalAlignment="Middle"/>
+					<textFieldExpression><![CDATA["Common Records, Different Data"]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="0" y="0" width="180" height="21" forecolor="#2F5496" uuid="46374672-f9b5-4415-aacf-390e763325bc"/>
+					<textElement>
+						<font size="16"/>
+					</textElement>
+					<textFieldExpression><![CDATA["Assumption Changes"]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="0" y="22" width="180" height="18" forecolor="#2F5496" uuid="6c60c05f-8dd0-4320-b130-b864e528ad6d"/>
+					<textElement>
+						<font size="12"/>
+					</textElement>
+					<textFieldExpression><![CDATA["Initial Condition"]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="0" y="61" width="200" height="21" uuid="804c5472-c074-4483-9b92-8ee7c01d2ca9"/>
+					<box leftPadding="4">
+						<topPen lineWidth="1.0"/>
+						<leftPen lineWidth="1.0"/>
+						<bottomPen lineWidth="1.0"/>
+						<rightPen lineWidth="1.0"/>
+					</box>
+					<textElement verticalAlignment="Middle"/>
+					<textFieldExpression><![CDATA["Records only included in the Base Study"]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="0" y="82" width="200" height="21" uuid="8850f5c8-2586-492e-8a4d-bf6c01f388b8"/>
+					<box leftPadding="4">
+						<topPen lineWidth="1.0"/>
+						<leftPen lineWidth="1.0"/>
+						<bottomPen lineWidth="1.0"/>
+						<rightPen lineWidth="1.0"/>
+					</box>
+					<textElement verticalAlignment="Middle"/>
+					<textFieldExpression><![CDATA["Records only included in the Alt Study"]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="-1" y="162" width="200" height="21" uuid="bd021b2d-f1a5-4944-a5cc-e6c4391c2fea"/>
+					<box leftPadding="4">
+						<topPen lineWidth="1.0"/>
+						<leftPen lineWidth="1.0"/>
+						<bottomPen lineWidth="1.0"/>
+						<rightPen lineWidth="1.0"/>
+					</box>
+					<textElement verticalAlignment="Middle"/>
+					<textFieldExpression><![CDATA["Records only included in the Base Study"]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="-1" y="123" width="180" height="18" forecolor="#2F5496" uuid="d4d385eb-972d-45cc-afd7-0bc92cf4e478"/>
+					<textElement>
+						<font size="12"/>
+					</textElement>
+					<textFieldExpression><![CDATA["State Variables"]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="-1" y="141" width="200" height="21" uuid="18ec37a6-18a3-49f0-a2e5-b2dd4c99068b"/>
+					<box leftPadding="4">
+						<topPen lineWidth="1.0"/>
+						<leftPen lineWidth="1.0"/>
+						<bottomPen lineWidth="1.0"/>
+						<rightPen lineWidth="1.0"/>
+					</box>
+					<textElement verticalAlignment="Middle"/>
+					<textFieldExpression><![CDATA["Common Records, Different Data"]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="-1" y="183" width="200" height="21" uuid="f2fa1bfa-07a8-46b6-bf28-4639b178ab42"/>
+					<box leftPadding="4">
+						<topPen lineWidth="1.0"/>
+						<leftPen lineWidth="1.0"/>
+						<bottomPen lineWidth="1.0"/>
+						<rightPen lineWidth="1.0"/>
+					</box>
+					<textElement verticalAlignment="Middle"/>
+					<textFieldExpression><![CDATA["Records only included in the Alt Study"]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="200" y="40" width="200" height="21" uuid="0741d2b8-8511-45ba-8687-d84b5c7d6598"/>
+					<box leftPadding="4">
+						<topPen lineWidth="1.0"/>
+						<leftPen lineWidth="1.0"/>
+						<bottomPen lineWidth="1.0"/>
+						<rightPen lineWidth="1.0"/>
+					</box>
+					<textElement verticalAlignment="Middle"/>
+					<textFieldExpression><![CDATA[$F{ic-common-records-different-data}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="200" y="61" width="200" height="21" uuid="9310cd90-c16a-451c-bd37-f01b14930061"/>
+					<box leftPadding="4">
+						<topPen lineWidth="1.0"/>
+						<leftPen lineWidth="1.0"/>
+						<bottomPen lineWidth="1.0"/>
+						<rightPen lineWidth="1.0"/>
+					</box>
+					<textElement verticalAlignment="Middle"/>
+					<textFieldExpression><![CDATA[$F{ic-records-only-in-base}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="200" y="82" width="200" height="21" uuid="6f024293-e8f9-4beb-85c2-35de7fc0d835"/>
+					<box leftPadding="4">
+						<topPen lineWidth="1.0"/>
+						<leftPen lineWidth="1.0"/>
+						<bottomPen lineWidth="1.0"/>
+						<rightPen lineWidth="1.0"/>
+					</box>
+					<textElement verticalAlignment="Middle"/>
+					<textFieldExpression><![CDATA[$F{ic-records-only-in-alternative}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="199" y="141" width="200" height="21" uuid="25b68bce-7515-4ecd-ab3d-df40e81b69ab"/>
+					<box leftPadding="4">
+						<topPen lineWidth="1.0"/>
+						<leftPen lineWidth="1.0"/>
+						<bottomPen lineWidth="1.0"/>
+						<rightPen lineWidth="1.0"/>
+					</box>
+					<textElement verticalAlignment="Middle"/>
+					<textFieldExpression><![CDATA[$F{sv-common-records-different-data_1}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="199" y="162" width="200" height="21" uuid="c7e8a1ac-1e31-40f4-86d0-63f32ac83d30"/>
+					<box leftPadding="4">
+						<topPen lineWidth="1.0"/>
+						<leftPen lineWidth="1.0"/>
+						<bottomPen lineWidth="1.0"/>
+						<rightPen lineWidth="1.0"/>
+					</box>
+					<textElement verticalAlignment="Middle"/>
+					<textFieldExpression><![CDATA[$F{sv-records-only-in-base_1}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="199" y="183" width="200" height="21" uuid="8b5ec5a1-4909-4861-a5f8-d50d1f862de1"/>
+					<box leftPadding="4">
+						<topPen lineWidth="1.0"/>
+						<leftPen lineWidth="1.0"/>
+						<bottomPen lineWidth="1.0"/>
+						<rightPen lineWidth="1.0"/>
+					</box>
+					<textElement verticalAlignment="Middle"/>
+					<textFieldExpression><![CDATA[$F{sv-records-only-in-alternative_1}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="0" y="220" width="180" height="18" forecolor="#2F5496" uuid="e9ee689e-3cb9-4d4c-9296-327049da51c6"/>
+					<textElement>
+						<font size="12"/>
+					</textElement>
+					<textFieldExpression><![CDATA["Common Records, Different Data"]]></textFieldExpression>
+				</textField>
+			</band>
+		</groupHeader>
+		<groupFooter>
+			<band height="50"/>
+		</groupFooter>
+	</group>
+	<group name="Records_List">
+		<groupExpression><![CDATA[$F{record}]]></groupExpression>
+		<groupHeader>
+			<band>
+				<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				<printWhenExpression><![CDATA[1==0]]></printWhenExpression>
+			</band>
+		</groupHeader>
+		<groupFooter>
+			<band height="15">
+				<textField>
+					<reportElement x="25" y="0" width="479" height="15" uuid="5d2575c6-70db-438c-9f28-a7588462458e">
+						<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					</reportElement>
+					<box>
+						<topPen lineWidth="0.0"/>
+						<leftPen lineWidth="0.0"/>
+						<bottomPen lineWidth="0.0"/>
+						<rightPen lineWidth="0.0"/>
+					</box>
+					<textFieldExpression><![CDATA[$V{REPORT_COUNT}+".   "+$F{record}]]></textFieldExpression>
+				</textField>
+			</band>
+		</groupFooter>
+	</group>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band splitType="Stretch">
+			<printWhenExpression><![CDATA[1==0]]></printWhenExpression>
+		</band>
+	</title>
+	<pageHeader>
+		<band splitType="Stretch">
+			<printWhenExpression><![CDATA[1==0]]></printWhenExpression>
+		</band>
+	</pageHeader>
+	<columnHeader>
+		<band splitType="Stretch">
+			<printWhenExpression><![CDATA[1==0]]></printWhenExpression>
+		</band>
+	</columnHeader>
+	<detail>
+		<band splitType="Stretch">
+			<printWhenExpression><![CDATA[1==0]]></printWhenExpression>
+		</band>
+	</detail>
+	<columnFooter>
+		<band splitType="Stretch">
+			<printWhenExpression><![CDATA[1==0]]></printWhenExpression>
+		</band>
+	</columnFooter>
+	<pageFooter>
+		<band splitType="Stretch">
+			<printWhenExpression><![CDATA[1==0]]></printWhenExpression>
+		</band>
+	</pageFooter>
+	<summary>
+		<band splitType="Stretch">
+			<printWhenExpression><![CDATA[1==0]]></printWhenExpression>
+		</band>
+	</summary>
+</jasperReport>
