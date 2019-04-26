@@ -33,6 +33,7 @@ import gov.ca.water.calgui.presentation.Report;
 import gov.ca.water.calgui.techservice.IDialogSvc;
 import gov.ca.water.calgui.techservice.impl.DialogSvcImpl;
 import gov.ca.water.calgui.techservice.impl.ErrorHandlingSvcImpl;
+import gov.ca.water.quickresults.ui.FileDialogBO;
 
 /**
  * Company: Resource Management Associates
