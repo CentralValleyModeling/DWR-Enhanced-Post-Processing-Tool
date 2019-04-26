@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+  ~ Enhanced Post Processing Tool (EPPT) Copyright (c) 2019.
+  ~
+  ~ EPPT is copyrighted by the State of California, Department of Water Resources. It is licensed
+  ~ under the GNU General Public License, version 2. This means it can be
+  ~ copied, distributed, and modified freely, but you may not restrict others
+  ~ in their ability to copy, distribute, and modify it. See the license below
+  ~ for more details.
+  ~
+  ~ GNU General Public License
+  -->
+
+<modules>
+    <model-inputs>
+        <ts-updated>%s timeseries updated in SV</ts-updated>
+        <files-changed>%s files changed</files-changed>
+        <files-added>%s new files added</files-added>
+        <files-deleted>%s files deleted</files-deleted>
+    </model-inputs>
+	<ReservoirOperations>
+        <BelowDP>%s incident(s) of below DP</BelowDP>
+        <AboveFlood>%s incident(s) of above Flood</AboveFlood>
+        <Spill>%s incident(s) of Spill</Spill>
+    </ReservoirOperations>
+    <UpstreamMinimumFlowRequirements>
+        <Violation>%s incident(s) of violation</Violation>
+    </UpstreamMinimumFlowRequirements>
+    <DeltaWeirsOperations>
+        <Violation>%s incident(s) of spilling</Violation>
+    </DeltaWeirsOperations>
+    <DeltaGroundwaterPumping>
+        <Violation>%s incident(s) of violation</Violation>
+    </DeltaGroundwaterPumping>
+    <DeltaOperations>
+        <Violation>%s incident(s) of violation</Violation>
+    </DeltaOperations>
+    <CoordinatedOperationsAgreement>
+        <Different>%s%% different Between Actual and Agreed ratio</Different>
+    </CoordinatedOperationsAgreement>
+    <AllocationsAndDeliveries>
+        <Shortage>%s incident(s) of shortage</Shortage>
+    </AllocationsAndDeliveries>
+    <MassBalance>
+        <OffBalance>%s incident(s) of off balance</OffBalance>
+    </MassBalance>
+</modules>

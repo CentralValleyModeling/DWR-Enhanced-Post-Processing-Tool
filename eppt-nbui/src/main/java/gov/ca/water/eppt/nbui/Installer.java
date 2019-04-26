@@ -27,6 +27,7 @@ import gov.ca.water.quickresults.ui.projectconfig.ProjectConfigurationPanel;
 import org.openide.modules.ModuleInstall;
 import org.openide.windows.WindowManager;
 
+import hec.heclib.dss.HecDSSFileAccess;
 import rma.swing.logging.DialogLogHandler;
 
 public class Installer extends ModuleInstall
@@ -144,6 +145,7 @@ public class Installer extends ModuleInstall
 			newPaths[newPaths.length - 1] = pathToAdd;
 			usrPathsField.set(null, newPaths);
 			System.loadLibrary("javaHeclib");
+			HecDSSFileAccess.setMessageLevel(HecDSSFileAccess.MESS_LEVEL_GENERAL);
 		}
 		catch(NoSuchFieldException | IllegalAccessException ex)
 		{
