@@ -14,8 +14,6 @@ package gov.ca.water.eppt.nbui.actions;
 
 import java.util.logging.Logger;
 
-import org.junit.jupiter.api.Test;
-
 import hec.heclib.dss.HecDSSFileAccess;
 
 /**
@@ -28,7 +26,7 @@ class TestRunWreslScript
 {
 	private static final Logger LOGGER = Logger.getLogger(TestRunWreslScript.class.getName());
 
-	@Test
+	//	@Test
 	void actionPerformed() throws Exception
 	{
 		HecDSSFileAccess.setMessageLevel(HecDSSFileAccess.MESS_LEVEL_GENERAL);
