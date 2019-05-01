@@ -62,6 +62,8 @@
 					<useDefaultManifestFile>true</useDefaultManifestFile>
 				</configuration>
 			</plugin>
+
+
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-dependency-plugin</artifactId>
@@ -98,6 +100,28 @@
 							<type>lic</type>
 							<destFileName>CalLiteXAv16.lic</destFileName>
 						</artifactItem>
+						<artifactItem>
+							<groupId>sunsetsoft</groupId>
+							<artifactId>xa</artifactId>
+							<version>v16</version>
+							<classifier>x64</classifier>
+							<type>dll</type>
+							<destFileName>XAV16_x64.dll</destFileName>
+						</artifactItem>
+						<artifactItem>
+							<groupId>dwr</groupId>
+							<artifactId>n2xa</artifactId>
+							<version>v3</version>
+							<type>dll</type>
+							<destFileName>n2xav3.dll</destFileName>
+						</artifactItem>
+						<artifactItem>
+							<groupId>dwr</groupId>
+							<artifactId>cb</artifactId>
+							<version>v16</version>
+							<type>dll</type>
+							<destFileName>cb.dll</destFileName>
+						</artifactItem>
 					</artifactItems>
 					<outputDirectory>${project.build.directory}/lib</outputDirectory>
 					<overWriteReleases>true</overWriteReleases>
@@ -105,14 +129,18 @@
 				</configuration>
 			</plugin>
 			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-surefire-plugin</artifactId>
 				<version>2.22.1</version>
 				<configuration>
-					<argLine>-Djava.library.path=${project.build.directory}/lib</argLine>
+					<argLine>-Djava.library.path=${project.build.directory}\test-classess</argLine>
 				</configuration>
 			</plugin>
 		</plugins>
 	</build>
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+	</properties>
 	<dependencies>
 		<dependency>
 			<groupId>org.netbeans.api</groupId>
@@ -335,7 +363,4 @@
 			<url>http://artifactory.rmanet.com:2447/artifactory/eppt-third-party-dlls</url>
 		</repository>
 	</repositories>
-	<properties>
-		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-	</properties>
 </project>

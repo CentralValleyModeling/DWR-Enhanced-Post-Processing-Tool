@@ -18,9 +18,12 @@ import java.nio.file.Paths;
 import java.util.Collections;
 import javax.swing.*;
 
+import gov.ca.water.calgui.EpptInitializationException;
 import gov.ca.water.calgui.bo.GUILinksAllModelsBO;
 import gov.ca.water.calgui.bo.RBListItemBO;
+import gov.ca.water.calgui.busservice.impl.GuiLinksSeedDataSvcImpl;
 import org.jfree.data.time.Month;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -35,6 +38,15 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  */
 public class ProjectConfigurationIOTest
 {
+
+	@BeforeAll
+	static void setup() throws EpptInitializationException
+	{
+		Path target = Paths.get(System.getProperty("user.dir")).resolve("target").resolve("test-classes");
+		System.setProperty("user.dir", target.toString());
+		GuiLinksSeedDataSvcImpl.createSeedDataSvcImplInstance();
+	}
+
 	@Test
 	public void testProjectConfigurationJsonScenarioReload() throws IOException
 	{

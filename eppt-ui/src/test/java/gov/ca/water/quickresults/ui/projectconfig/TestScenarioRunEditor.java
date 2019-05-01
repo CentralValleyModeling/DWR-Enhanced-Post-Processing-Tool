@@ -44,8 +44,7 @@ class TestScenarioRunEditor
 	@BeforeAll
 	static void setup() throws EpptInitializationException
 	{
-		Path target = Paths.get(System.getProperty("user.dir")).resolve("target").resolve(
-				"test-classes");
+		Path target = Paths.get(System.getProperty("user.dir")).resolve("target").resolve("test-classes");
 		System.setProperty("user.dir", target.toString());
 		GuiLinksSeedDataSvcImpl.createSeedDataSvcImplInstance();
 	}
