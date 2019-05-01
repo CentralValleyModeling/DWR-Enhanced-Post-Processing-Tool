@@ -53,9 +53,9 @@ public class ProjectConfigurationIOTest
 		projectConfigurationPanel.loadProjectConfiguration(path);
 		assertFalse(projectConfigurationPanel.getScenarios().isEmpty());
 		assertTrue(projectConfigurationPanel.getScenarios().get(0).isSelected());
-		assertEquals(Paths.get(rbListItemBO.toString()),
+		assertEquals(Paths.get(rbListItemBO.toString()).getFileName(),
 				Paths.get(projectConfigurationPanel.getScenarios().get(0).toString()));
-		assertEquals(rbListItemBO.getLabel(), projectConfigurationPanel.getScenarios().get(0).getLabel());
+		assertEquals(Paths.get(rbListItemBO.getLabel()), Paths.get(projectConfigurationPanel.getScenarios().get(0).getLabel()));
 	}
 
 	@Test

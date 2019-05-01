@@ -15,6 +15,8 @@ package gov.ca.water.quickresults.ui.projectconfig;
 import java.nio.file.Path;
 import javax.swing.tree.DefaultMutableTreeNode;
 
+import gov.ca.water.calgui.project.NamedDssPath;
+
 /**
  * Company: Resource Management Associates
  *
@@ -23,21 +25,21 @@ import javax.swing.tree.DefaultMutableTreeNode;
  */
 class DssPathNode extends DefaultMutableTreeNode
 {
-	private final Path _dssPath;
+	private final NamedDssPath _dssPath;
 	private final String _suffix;
 
-	DssPathNode(Path dssPath, String suffix)
+	DssPathNode(NamedDssPath dssPath, String suffix)
 	{
 		_dssPath = dssPath;
 		_suffix = suffix;
 	}
 
-	DssPathNode(Path dssPath)
+	DssPathNode(NamedDssPath dssPath)
 	{
 		this(dssPath, null);
 	}
 
-	public Path getDssPath()
+	NamedDssPath getDssPath()
 	{
 		return _dssPath;
 	}
@@ -45,6 +47,6 @@ class DssPathNode extends DefaultMutableTreeNode
 	@Override
 	public String toString()
 	{
-		return _dssPath.getFileName() + " (" + _suffix + ")";
+		return _dssPath.getAliasName() + " (" + _suffix + ")";
 	}
 }

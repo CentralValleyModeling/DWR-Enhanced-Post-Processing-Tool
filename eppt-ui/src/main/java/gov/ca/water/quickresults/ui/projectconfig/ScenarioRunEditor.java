@@ -31,6 +31,8 @@ import gov.ca.water.calgui.bo.SimpleFileFilter;
 import gov.ca.water.calgui.constant.EpptPreferences;
 import gov.ca.water.calgui.project.EpptDssContainer;
 import gov.ca.water.calgui.project.EpptScenarioRun;
+import gov.ca.water.calgui.project.NamedDssPath;
+import gov.ca.water.quickresults.ui.PathTextField;
 
 /**
  * Company: Resource Management Associates
@@ -48,21 +50,28 @@ class ScenarioRunEditor extends JDialog
 	private final JTextField _ivTextField;
 	private final JTextField _dvTextField;
 	private final JTextField _svTextField;
-	private final DefaultListModel<Path> _extraDssListModel;
+	private final JTextField _ivAliasTextField;
+	private final JTextField _dvAliasTextField;
+	private final JTextField _svAliasTextField;
+	private final DefaultListModel<NamedDssPath> _extraDssListModel;
 	private boolean _canceled = true;
 
 	ScenarioRunEditor(Frame frame)
 	{
 		super(frame, "New Scenario Run", true);
-		setPreferredSize(new Dimension(400, 500));
+		setPreferredSize(new Dimension(650, 500));
+		setMinimumSize(new Dimension(650, 500));
 		_nameField = new JTextField();
 		_descriptionField = new JTextField();
 		_modelCombobox = new JComboBox<>();
-		_outputTextField = new JTextField();
-		_wreslTextField = new JTextField();
-		_dvTextField = new JTextField();
-		_svTextField = new JTextField();
-		_ivTextField = new JTextField();
+		_outputTextField = PathTextField.createDirectoryTextField();
+		_wreslTextField = PathTextField.createFileTextField("wresl");
+		_dvTextField = PathTextField.createFileTextField("dss");
+		_svTextField = PathTextField.createFileTextField("dss");
+		_ivTextField = PathTextField.createFileTextField("dss");
+		_dvAliasTextField = new JTextField();
+		_svAliasTextField = new JTextField();
+		_ivAliasTextField = new JTextField();
 		_extraDssListModel = new DefaultListModel<>();
 		initComponents();
 		initModelCombo();
@@ -81,20 +90,23 @@ class ScenarioRunEditor extends JDialog
 		_outputTextField.setText(scenarioRun.getOutputPath().toString());
 		_wreslTextField.setText(scenarioRun.getWreslMain().toString());
 		EpptDssContainer dssContainer = scenarioRun.getDssContainer();
-		Path dvDssFile = dssContainer.getDvDssFile();
+		NamedDssPath dvDssFile = dssContainer.getDvDssFile();
 		if(dvDssFile != null)
 		{
-			_dvTextField.setText(dvDssFile.toString());
+			_dvTextField.setText(dvDssFile.getDssPath().toString());
+			_dvAliasTextField.setText(dvDssFile.getAliasName());
 		}
-		Path svDssFile = dssContainer.getSvDssFile();
+		NamedDssPath svDssFile = dssContainer.getSvDssFile();
 		if(svDssFile != null)
 		{
-			_svTextField.setText(svDssFile.toString());
+			_svTextField.setText(svDssFile.getDssPath().toString());
+			_svAliasTextField.setText(svDssFile.getAliasName());
 		}
-		Path ivDssFile = dssContainer.getIvDssFile();
+		NamedDssPath ivDssFile = dssContainer.getIvDssFile();
 		if(ivDssFile != null)
 		{
-			_ivTextField.setText(ivDssFile.toString());
+			_ivTextField.setText(ivDssFile.getDssPath().toString());
+			_ivAliasTextField.setText(ivDssFile.getAliasName());
 		}
 		dssContainer.getExtraDssFiles().forEach(_extraDssListModel::addElement);
 	}
@@ -124,9 +136,9 @@ class ScenarioRunEditor extends JDialog
 	private JPanel buildDefaultDssPanel()
 	{
 		JPanel defaultDssPanel = new JPanel();
-		JPanel dvPanel = createDssSelectorPanel("DV DSS:", _dvTextField);
-		JPanel svPanel = createDssSelectorPanel("SV DSS:", _svTextField);
-		JPanel ivPanel = createDssSelectorPanel("IV DSS:", _ivTextField);
+		JPanel dvPanel = createDssSelectorPanel("DV DSS:", _dvTextField, _dvAliasTextField);
+		JPanel svPanel = createDssSelectorPanel("SV DSS:", _svTextField, _svAliasTextField);
+		JPanel ivPanel = createDssSelectorPanel("IV DSS:", _ivTextField, _ivAliasTextField);
 		defaultDssPanel.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
 		defaultDssPanel.setLayout(new BoxLayout(defaultDssPanel, BoxLayout.Y_AXIS));
 		defaultDssPanel.add(dvPanel);
@@ -141,7 +153,7 @@ class ScenarioRunEditor extends JDialog
 	{
 		JPanel extraDssPanel = new JPanel();
 		extraDssPanel.setBorder(new TitledBorder("Extra DSS"));
-		JList<Path> dssTree = new JList<>();
+		JList<NamedDssPath> dssTree = new JList<>();
 		JPanel treeButtonPanel = new JPanel();
 		treeButtonPanel.setLayout(new FlowLayout(FlowLayout.RIGHT));
 		JButton plusButton = new JButton("+");
@@ -157,7 +169,7 @@ class ScenarioRunEditor extends JDialog
 		return extraDssPanel;
 	}
 
-	private void removeSelectedDss(ActionEvent e, Path selectedValue)
+	private void removeSelectedDss(ActionEvent e, NamedDssPath selectedValue)
 	{
 		if(selectedValue != null)
 		{
@@ -175,23 +187,37 @@ class ScenarioRunEditor extends JDialog
 		File selectedFile = fileChooser.getSelectedFile();
 		if(selectedFile != null)
 		{
-			_extraDssListModel.addElement(selectedFile.toPath());
+			_extraDssListModel.addElement(new NamedDssPath(selectedFile.toPath(), selectedFile.toPath().getFileName().toString()));
 		}
 	}
 
-	private JPanel createDssSelectorPanel(String label, JTextField textField)
+	private JPanel createDssSelectorPanel(String labelText, JTextField fileField, JTextField aliasField)
 	{
 		Dimension dimension = new Dimension(70, 8);
-		JPanel panel = new JPanel();
-		JLabel extraLabel = new JLabel(label);
-		extraLabel.setPreferredSize(dimension);
-		panel.setLayout(new BorderLayout(5, 5));
-		panel.add(extraLabel, BorderLayout.WEST);
-		panel.add(textField, BorderLayout.CENTER);
+		JLabel label = new JLabel(labelText);
+		label.setPreferredSize(dimension);
+
+		JPanel filePanel = new JPanel();
+		filePanel.setLayout(new BorderLayout(0, 5));
+		filePanel.add(fileField, BorderLayout.CENTER);
 		JButton extraDssButton = new JButton("...");
-		panel.add(extraDssButton, BorderLayout.EAST);
-		extraDssButton.addActionListener(e -> selectDss(textField));
-		return panel;
+		extraDssButton.addActionListener(e -> selectDss(fileField));
+		filePanel.add(extraDssButton, BorderLayout.EAST);
+		filePanel.add(label, BorderLayout.WEST);
+
+		JPanel aliasPanel = new JPanel();
+		aliasPanel.setLayout(new BorderLayout(5, 5));
+		aliasPanel.add(aliasField, BorderLayout.CENTER);
+		JLabel aliasLabel = new JLabel("Alias:");
+		aliasPanel.add(aliasLabel, BorderLayout.WEST);
+
+		JPanel outerPanel = new JPanel();
+		outerPanel.setLayout(new BorderLayout(5, 5));
+		outerPanel.add(filePanel, BorderLayout.CENTER);
+		aliasPanel.setPreferredSize(new Dimension(200, fileField.getPreferredSize().height));
+		outerPanel.add(aliasPanel, BorderLayout.EAST);
+
+		return outerPanel;
 	}
 
 	private void buildScenarioFields()
@@ -357,30 +383,32 @@ class ScenarioRunEditor extends JDialog
 
 	private EpptDssContainer createDssContainer()
 	{
-		Path dvDssFile = null;
-		String dvTextFieldText = _dvTextField.getText();
-		if(dvTextFieldText != null && !dvTextFieldText.isEmpty())
-		{
-			dvDssFile = Paths.get(dvTextFieldText);
-		}
-		Path svDssFile = null;
-		String svTextFieldText = _svTextField.getText();
-		if(svTextFieldText != null && !svTextFieldText.isEmpty())
-		{
-			svDssFile = Paths.get(svTextFieldText);
-		}
-		Path ivDssFile = null;
-		String ivTextFieldText = _ivTextField.getText();
-		if(ivTextFieldText != null && !ivTextFieldText.isEmpty())
-		{
-			ivDssFile = Paths.get(ivTextFieldText);
-		}
-		List<Path> extraDssFiles = new ArrayList<>();
+		NamedDssPath dvDssFile = getNamedDssPath(_dvTextField, _dvAliasTextField);
+		NamedDssPath svDssFile = getNamedDssPath(_svTextField, _svAliasTextField);
+		NamedDssPath ivDssFile = getNamedDssPath(_ivTextField, _ivAliasTextField);
+		List<NamedDssPath> extraDssFiles = new ArrayList<>();
 		for(int i = 0; i < _extraDssListModel.getSize(); i++)
 		{
 			extraDssFiles.add(_extraDssListModel.get(i));
 		}
 		return new EpptDssContainer(dvDssFile, svDssFile, ivDssFile, extraDssFiles);
+	}
+
+	private NamedDssPath getNamedDssPath(JTextField pathTextField, JTextField aliasTextField)
+	{
+		NamedDssPath ivDssFile = null;
+		String ivTextFieldText = pathTextField.getText();
+		if(ivTextFieldText != null && !ivTextFieldText.isEmpty())
+		{
+			Path ivPath = Paths.get(ivTextFieldText);
+			String aliasText = aliasTextField.getText();
+			if(aliasText.isEmpty())
+			{
+				aliasText = ivPath.getFileName().toString();
+			}
+			ivDssFile = new NamedDssPath(ivPath, aliasText);
+		}
+		return ivDssFile;
 	}
 
 	private boolean validateRun()

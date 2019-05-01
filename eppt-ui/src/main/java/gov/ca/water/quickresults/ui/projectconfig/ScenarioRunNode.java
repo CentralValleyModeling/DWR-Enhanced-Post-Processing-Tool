@@ -17,6 +17,7 @@ import javax.swing.tree.DefaultMutableTreeNode;
 
 import gov.ca.water.calgui.project.EpptDssContainer;
 import gov.ca.water.calgui.project.EpptScenarioRun;
+import gov.ca.water.calgui.project.NamedDssPath;
 
 /**
  * Company: Resource Management Associates
@@ -33,17 +34,17 @@ class ScenarioRunNode extends DefaultMutableTreeNode
 	{
 		_scenarioRun = scenarioRun;
 		EpptDssContainer dssContainer = scenarioRun.getDssContainer();
-		Path dvDssFile = dssContainer.getDvDssFile();
+		NamedDssPath dvDssFile = dssContainer.getDvDssFile();
 		if(dvDssFile != null)
 		{
 			add(new DssPathNode(dvDssFile, "DV"));
 		}
-		Path svDssFile = dssContainer.getSvDssFile();
+		NamedDssPath svDssFile = dssContainer.getSvDssFile();
 		if(svDssFile != null)
 		{
 			add(new DssPathNode(svDssFile, "SV"));
 		}
-		Path ivDssFile = dssContainer.getIvDssFile();
+		NamedDssPath ivDssFile = dssContainer.getIvDssFile();
 		if(ivDssFile != null)
 		{
 			add(new DssPathNode(ivDssFile, "IV"));

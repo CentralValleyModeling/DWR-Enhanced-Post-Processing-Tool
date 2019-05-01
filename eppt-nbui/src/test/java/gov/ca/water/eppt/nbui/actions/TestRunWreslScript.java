@@ -12,18 +12,11 @@
 
 package gov.ca.water.eppt.nbui.actions;
 
-import java.awt.Desktop;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.NoSuchFileException;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
+import hec.heclib.dss.HecDSSFileAccess;
 
 /**
  * Company: Resource Management Associates
@@ -38,18 +31,8 @@ class TestRunWreslScript
 	@Test
 	void actionPerformed() throws Exception
 	{
+		HecDSSFileAccess.setMessageLevel(HecDSSFileAccess.MESS_LEVEL_GENERAL);
 		RunWreslScript runWreslScript = new RunWreslScript();
-		Path outputPath = Paths.get("C:\\Users\\adam\\Documents\\EPPT\\Project1\\Reports\\QAQC_Report_Test.pdf");
-		try
-		{
-			Files.delete(outputPath);
-		}
-		catch(NoSuchFileException ex)
-		{
-			LOGGER.log(Level.FINE, "PDF already removed", ex);
-		}
-		Path jrxmlPath = Paths.get("C:\\Users\\adam\\Documents\\EPPT\\Project1\\Reports\\QAQC_Report.jrxml");
-		runWreslScript.runReportWithOutputFile(outputPath, jrxmlPath);
-		assertTrue(outputPath.toFile().isFile(), "PDF Must be generated");
+		runWreslScript.initReport(new String[]{"-config=J:\\DWR\\QA_QC\\SupportingDocs040219\\EPPT Supporting Doc 040219\\DEFAULT.config"});
 	}
 }

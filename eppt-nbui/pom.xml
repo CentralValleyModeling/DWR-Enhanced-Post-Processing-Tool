@@ -84,10 +84,31 @@
 							<type>dll</type>
 							<destFileName>javaHeclib.dll</destFileName>
 						</artifactItem>
+						<artifactItem>
+							<groupId>dwr</groupId>
+							<artifactId>callite</artifactId>
+							<version>v16</version>
+							<type>dll</type>
+							<destFileName>CalLiteV16.dll</destFileName>
+						</artifactItem>
+						<artifactItem>
+							<groupId>dwr</groupId>
+							<artifactId>callite-xa</artifactId>
+							<version>v16</version>
+							<type>lic</type>
+							<destFileName>CalLiteXAv16.lic</destFileName>
+						</artifactItem>
 					</artifactItems>
 					<outputDirectory>${project.build.directory}/lib</outputDirectory>
 					<overWriteReleases>true</overWriteReleases>
 					<overWriteSnapshots>true</overWriteSnapshots>
+				</configuration>
+			</plugin>
+			<plugin>
+				<artifactId>maven-surefire-plugin</artifactId>
+				<version>2.22.1</version>
+				<configuration>
+					<argLine>-Djava.library.path=${project.build.directory}/lib</argLine>
 				</configuration>
 			</plugin>
 		</plugins>
@@ -293,11 +314,25 @@
 			<artifactId>eppt-report-engine</artifactId>
 			<version>1.0.1-SNAPSHOT</version>
 		</dependency>
+		<dependency>
+			<groupId>com.google.guava</groupId>
+			<artifactId>guava</artifactId>
+			<version>27.1-jre</version>
+		</dependency>
+		<dependency>
+			<groupId>com.sunsetsoft</groupId>
+			<artifactId>xaoptimizer</artifactId>
+			<version>V16_x64</version>
+		</dependency>
 	</dependencies>
 	<repositories>
 		<repository>
 			<id>jr-ce-releases</id>
 			<url>http://jaspersoft.artifactoryonline.com/jaspersoft/jr-ce-releases</url>
+		</repository>
+		<repository>
+			<id>eppt-third-party-dlls</id>
+			<url>http://artifactory.rmanet.com:2447/artifactory/eppt-third-party-dlls</url>
 		</repository>
 	</repositories>
 	<properties>

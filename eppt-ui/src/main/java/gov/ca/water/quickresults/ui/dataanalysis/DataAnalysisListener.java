@@ -118,7 +118,7 @@ public class DataAnalysisListener implements ActionListener
 	 */
 	private void generateReportAction()
 	{
-		String errorMsg = isInputsValid();
+		String errorMsg = areInputsValid();
 		if(errorMsg != null)
 		{
 			IDialogSvc dialogSvcInstance = DialogSvcImpl.getDialogSvcInstance();
@@ -145,26 +145,74 @@ public class DataAnalysisListener implements ActionListener
 	}
 
 
-	private String isInputsValid()
+	private String areInputsValid()
 	{
-		String errorMsg = null;
+		String retval = null;
 		if(_dataAnalysisPanel.getDssResultFileField1().getText().isEmpty())
 		{
-			return "You must specify DSS result file #1";
+			retval = "You must specify DSS result file #1";
 		}
 		else if(_dataAnalysisPanel.getDssResultFileField2().getText().isEmpty())
 		{
-			return "You must specify DSS result file #2";
+			retval = "You must specify DSS result file #2";
 
 		}
 		else if(_dataAnalysisPanel.getOutputTextField().getText().isEmpty())
 		{
-			return "You must specify the report output PDF file";
+			retval = "You must specify the report output PDF file";
 		}
+		else
+		{
 
-		//check to see if the selected output path is a valid file name and path
-		String filePath = EpptPreferences.getReportsPath().resolve(
-				_dataAnalysisPanel.getOutputTextField().getText()).toString();
+			//check to see if the selected output path is a valid file name and path
+			String filePath = EpptPreferences.getReportsPath().resolve(
+					_dataAnalysisPanel.getOutputTextField().getText()).toString();
+			String msg = hasFileWritingPermissions(filePath);
+			if(msg == null)
+			{
+
+				retval = hasValidFontSize(retval);
+			}
+		}
+		return retval;
+	}
+
+	private String hasValidFontSize(String retval)
+	{
+		String fontSize = _dataAnalysisPanel.getReportSize().getText();
+		if(fontSize == null || fontSize.isEmpty())
+		{
+			retval = "You must specify a font size";
+		}
+		else
+		{
+			try
+			{
+				double d = Double.parseDouble(fontSize);
+				if(d % 1 != 0)
+				{
+					retval = "The font size has to be an integer value";
+				}
+				else if(d < 0)
+				{
+					retval = "The font size cannot be negative";
+				}
+				else if(d == 0)
+				{
+					retval = "The font size cannot be zero";
+				}
+			}
+			catch(RuntimeException ex)
+			{
+				retval = "The font size entered could not be converted to a number";
+				LOGGER.log(Level.WARNING, "Font size error", ex);
+			}
+		}
+		return retval;
+	}
+
+	private String hasFileWritingPermissions(String filePath)
+	{
 		File outputFile = new File(filePath);
 		if(!outputFile.exists())
 		{
@@ -184,35 +232,7 @@ public class DataAnalysisListener implements ActionListener
 				return msg;
 			}
 		}
-
-		String fontSize = _dataAnalysisPanel.getReportSize().getText();
-		if(fontSize == null || fontSize.isEmpty())
-		{
-			return "You must specify a font size";
-		}
-
-		try
-		{
-			double d = Double.parseDouble(fontSize);
-			if(d % 1 != 0)
-			{
-				errorMsg = "The font size has to be an integer value";
-			}
-			else if(d < 0)
-			{
-				errorMsg = "The font size cannot be negative";
-			}
-			else if(d == 0)
-			{
-				errorMsg = "The font size cannot be zero";
-			}
-		}
-		catch(RuntimeException ex)
-		{
-			errorMsg = "The font size entered could not be converted to a number";
-			LOGGER.log(Level.WARNING, "Font size error", ex);
-		}
-		return errorMsg;
+		return null;
 	}
 
 	private void generateReport()

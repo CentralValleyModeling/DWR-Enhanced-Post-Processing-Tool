@@ -23,6 +23,7 @@ import gov.ca.water.calgui.bo.GUILinksAllModelsBO;
 import gov.ca.water.calgui.busservice.impl.GuiLinksSeedDataSvcImpl;
 import gov.ca.water.calgui.project.EpptDssContainer;
 import gov.ca.water.calgui.project.EpptScenarioRun;
+import gov.ca.water.calgui.project.NamedDssPath;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
@@ -68,10 +69,10 @@ class TestScenarioRunEditor
 		GUILinksAllModelsBO.Model model = GUILinksAllModelsBO.Model.findModel("CalSim2");
 		Path outputPath = Paths.get("OUPUTPATH");
 		Path wreslMain = Paths.get("WRESLMain");
-		Path dvDssFile = Paths.get("DV FILE");
-		Path svDssFile = Paths.get("SV FILE");
-		Path ivDssFile = Paths.get("IV File");
-		List<Path> extraDssFiles = Arrays.asList(Paths.get("EXTRA 1"), Paths.get("Extra 2"));
+		NamedDssPath dvDssFile = new NamedDssPath(Paths.get("DV FILE"), "TEST DV");
+		NamedDssPath svDssFile = new NamedDssPath(Paths.get("SV FILE"), "TEST SV");
+		NamedDssPath ivDssFile = new NamedDssPath(Paths.get("IV File"), "TEST IV");
+		List<NamedDssPath> extraDssFiles = Arrays.asList(new NamedDssPath(Paths.get("EXTRA 1"), "EXTRA1"), new NamedDssPath(Paths.get("Extra 2"), "EXTRA2"));
 		EpptDssContainer dssContainer = new EpptDssContainer(dvDssFile, svDssFile, ivDssFile, extraDssFiles);
 		EpptScenarioRun epptScenarioRun = new EpptScenarioRun(name, description, model, outputPath,
 				wreslMain, dssContainer);

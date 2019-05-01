@@ -641,7 +641,7 @@ public final class ProjectConfigurationPanel extends EpptPanel
 			JRadioButton radioButton = (JRadioButton) getSwingEngine().find("rdbp000");
 			radioButton.setSelected(true);
 		}
-		WRIMSGUILinks.updateProjectFiles(getScenarioList());
+//		WRIMSGUILinks.updateProjectFiles(getScenarioList());
 		ProjectConfigurationPanel.this.setModified(true);
 		getScenarioList().setModel(_lmScenNames);
 		getScenarioList().invalidate();

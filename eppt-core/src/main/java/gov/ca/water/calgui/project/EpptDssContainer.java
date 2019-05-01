@@ -24,12 +24,12 @@ import java.util.List;
  */
 public class EpptDssContainer
 {
-	private final Path _dvDssFile;
-	private final Path _svDssFile;
-	private final Path _ivDssFile;
-	private final List<Path> _extraDssFiles;
+	private final NamedDssPath _dvDssFile;
+	private final NamedDssPath _svDssFile;
+	private final NamedDssPath _ivDssFile;
+	private final List<NamedDssPath> _extraDssFiles;
 
-	public EpptDssContainer(Path dvDssFile, Path svDssFile, Path ivDssFile, List<Path> extraDssFiles)
+	public EpptDssContainer(NamedDssPath dvDssFile, NamedDssPath svDssFile, NamedDssPath ivDssFile, List<NamedDssPath> extraDssFiles)
 	{
 
 		_dvDssFile = dvDssFile;
@@ -41,7 +41,7 @@ public class EpptDssContainer
 	/**
 	 * @return path to the Derived Variable DSS file path
 	 */
-	public Path getDvDssFile()
+	public NamedDssPath getDvDssFile()
 	{
 		return _dvDssFile;
 	}
@@ -49,12 +49,12 @@ public class EpptDssContainer
 	/**
 	 * @return path to the State Variable DSS file path
 	 */
-	public Path getSvDssFile()
+	public NamedDssPath getSvDssFile()
 	{
 		return _svDssFile;
 	}
 
-	public Path getIvDssFile()
+	public NamedDssPath getIvDssFile()
 	{
 		return _ivDssFile;
 	}
@@ -62,8 +62,9 @@ public class EpptDssContainer
 	/**
 	 * @return unmodifiable list of extra DSS file paths
 	 */
-	public List<Path> getExtraDssFiles()
+	public List<NamedDssPath> getExtraDssFiles()
 	{
 		return _extraDssFiles;
 	}
+
 }
