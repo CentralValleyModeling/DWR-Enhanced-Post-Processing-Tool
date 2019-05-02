@@ -10,7 +10,7 @@
  * GNU General Public License
  */
 
-package gov.ca.water.reportengine.assumptionchanges;
+package gov.ca.water.reportengine.filechanges;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;

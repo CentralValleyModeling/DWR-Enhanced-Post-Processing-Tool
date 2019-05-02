@@ -10,7 +10,7 @@
  * GNU General Public License
  */
 
-package gov.ca.water.reportengine.assumptionchanges;
+package gov.ca.water.reportengine.filechanges;
 
 import gov.ca.water.reportengine.EpptReportException;
 import hec.heclib.dss.DSSPathname;
@@ -22,9 +22,14 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class AssumptionChangesDataProcessor
 {
+    private static final Logger LOGGER = Logger.getLogger(AssumptionChangesDataProcessor.class.getName());
+
+
     private static final int B_PART = 0;
     private static final int C_PART = 1;
 
@@ -146,6 +151,10 @@ public class AssumptionChangesDataProcessor
         else if (altHasFile && !baseHasFile)
         {
             altRecordsOnly.add(altCatalog.get(0).toString());
+        }
+        else
+        {
+            LOGGER.log(Level.WARNING, "The base and the alternative did not contain the dss file: " + pathFromMaster);
         }
     }
 

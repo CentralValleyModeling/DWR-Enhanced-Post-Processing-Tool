@@ -13,24 +13,14 @@
 package gov.ca.water.reportengine.executivereport;
 
 import gov.ca.water.reportengine.TestQAQCReportBase;
-import gov.ca.water.reportengine.executivereport.ExecutiveReportXMLCreator;
+import gov.ca.water.reportengine.filechanges.AssumptionChangesDataProcessor;
+import gov.ca.water.reportengine.filechanges.FileChangesStatistics;
 import org.junit.jupiter.api.Assertions;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
-import org.xml.sax.SAXException;
-
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.transform.Transformer;
-import javax.xml.transform.TransformerException;
-import javax.xml.transform.TransformerFactory;
-import javax.xml.transform.dom.DOMSource;
-import javax.xml.transform.stream.StreamResult;
 import java.io.File;
-import java.io.IOException;
 import java.net.URL;
 import java.nio.file.Path;
 import java.util.ArrayList;
@@ -38,7 +28,7 @@ import java.util.List;
 
 public class ExecutiveReportTestBase extends TestQAQCReportBase
 {
-    static final String XML_PATH = System.getProperty("user.dir") + "\\executivereport.xml";
+    private static final String XML_PATH = System.getProperty("user.dir") + "\\executivereport.xml";
     private Document _qAQCMaster;
     private Document _qAQCReportToTest;
 
@@ -49,7 +39,10 @@ public class ExecutiveReportTestBase extends TestQAQCReportBase
         //create executive report and write it out
         Document doc = getDoc();
         ExecutiveReportXMLCreator erWriter = new ExecutiveReportXMLCreator();
-        erWriter.appendExecutiveReportTableElement(getCSVPath(), getDssFilePathsForBaseOnly(), false, doc);
+
+       // List<FileChangesStatistics> statsForAllAlternatives = getFileChangeStatsList();
+
+        erWriter.appendExecutiveReportTableElement(getCSVPath(), getDssFilePathsForBaseOnly(), null, false, doc);
         writeXmlFile(XML_PATH, doc);
 
         //read the xml file to test
@@ -79,7 +72,8 @@ public class ExecutiveReportTestBase extends TestQAQCReportBase
         //create executive report and write it out
         Document doc = getDoc();
         ExecutiveReportXMLCreator erWriter = new ExecutiveReportXMLCreator();
-        erWriter.appendExecutiveReportTableElement(getCSVPath(), getDssFilePathsForSameModel(), true, doc);
+        List<FileChangesStatistics> statsForAllAlternatives = getFileChangeStatsList();
+        erWriter.appendExecutiveReportTableElement(getCSVPath(), getDssFilePathsForSameModel(),statsForAllAlternatives, true, doc);
         writeXmlFile(XML_PATH, doc);
 
         //read the xml file to test
@@ -101,6 +95,21 @@ public class ExecutiveReportTestBase extends TestQAQCReportBase
             Assertions.assertEquals(getStudyValue(elemsFromMaster.get(i)), getStudyValue(elemsToTest.get(i)), "Study Value");
             Assertions.assertEquals(getModelEntriesValue(elemsFromMaster.get(i)), getModelEntriesValue(elemsToTest.get(i)), "Model Entries Value");
         }
+    }
+
+    private List<FileChangesStatistics> getFileChangeStatsList() throws Exception
+    {
+        Path stateVarCSV = getAssumpChangesStateVariablesCSV();
+
+        Path svBasePath = getStateVariableBaseDSSPath();
+        Path sVAltPath = getStateVariableAltDSSPath();
+
+        AssumptionChangesDataProcessor stateVarProcessor = new AssumptionChangesDataProcessor(stateVarCSV);
+        FileChangesStatistics stateVarStats = stateVarProcessor.processAssumptionChanges(svBasePath, sVAltPath);
+
+        List<FileChangesStatistics> statsForAllAlternatives = new ArrayList<>();
+        statsForAllAlternatives.add(stateVarStats);
+        return statsForAllAlternatives;
     }
 
     public List<Element> getModuleElementsWithName(Document doc, String modelEntriesName)

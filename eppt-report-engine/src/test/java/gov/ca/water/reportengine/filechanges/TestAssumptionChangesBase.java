@@ -10,7 +10,7 @@
  * GNU General Public License
  */
 
-package gov.ca.water.reportengine.assumptionchanges;
+package gov.ca.water.reportengine.filechanges;
 
 import gov.ca.water.reportengine.TestQAQCReportBase;
 import org.w3c.dom.Element;

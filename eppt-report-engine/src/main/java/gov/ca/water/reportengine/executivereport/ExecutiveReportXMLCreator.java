@@ -12,6 +12,7 @@
 
 package gov.ca.water.reportengine.executivereport;
 
+import gov.ca.water.reportengine.filechanges.FileChangesStatistics;
 import org.w3c.dom.*;
 import org.xml.sax.SAXException;
 
@@ -30,9 +31,9 @@ public class ExecutiveReportXMLCreator
     private static final String TABLE_HEADER = "executive-report-table";
     static final String NEW_LINE = "&#xD;";
 
-     static final String MODULE = "module";
-     static final String MODEL_ENTRIES = "model-entries";
-     static final String NAME = "name";
+    static final String MODULE = "module";
+    static final String MODEL_ENTRIES = "model-entries";
+    static final String NAME = "name";
     static final String STUDY = "study";
     static final String STUDY_ORDER = "study-order";
     static final String MODEL_ORDER = "model-order";
@@ -78,31 +79,30 @@ public class ExecutiveReportXMLCreator
 
     /**
      * Creates the entire executive report element
+     *
      * @param csvPath
      * @param dssFiles
      * @return
      * @throws Exception
      */
-    public void appendExecutiveReportTableElement(Path csvPath, List<Path> dssFiles, boolean sameModel, Document doc) throws Exception
+    void appendExecutiveReportTableElement(Path csvPath, List<Path> dssFiles, List<FileChangesStatistics> modelInputStats, boolean sameModel, Document doc) throws Exception
     {
-        if(dssFiles.size() == 1)
+        if (dssFiles.size() == 1)
         {
             sameModel = false;
         }
         loadHelperXMLFile();
-        ExecutiveReportsLinks erLinks = new ExecutiveReportsLinks();
-        erLinks.readCSVFile(csvPath);
 
         Element execReportTableElem = doc.createElement(TABLE_HEADER);
 
         int i = 1;
-        for(Path path:dssFiles)
+        for (Path path : dssFiles)
         {
-            ExecutiveReportProcessor processor = new ExecutiveReportProcessor();
-            processor.readViolationsFromDssFile(erLinks.getModules(), path, i);
+            ExecutiveReportProcessor processor = new ExecutiveReportProcessor(csvPath);
+            List<Module> modules = processor.processDSSFile(path, i);
             //now the modules have the violation numbers
 
-            List<Element> scenarioElements = createScenarioElements(erLinks.getModules(), i, sameModel, doc);
+            List<Element> scenarioElements = createScenarioElements(modules, getAssumptionChangesForScenario(modelInputStats, i), i, sameModel, doc);
             scenarioElements.forEach(execReportTableElem::appendChild);
 
             i++;
@@ -112,35 +112,54 @@ public class ExecutiveReportXMLCreator
 
     }
 
+    private FileChangesStatistics getAssumptionChangesForScenario(List<FileChangesStatistics> stats, int scenarioNumber)
+    {
+        FileChangesStatistics retval = null;
+        if (stats == null || scenarioNumber < 2)
+        {
+            return null;
+        }
+        if (stats.size() > scenarioNumber - 2)
+        {
+            retval = stats.get(scenarioNumber - 2);
+        }
+        return retval;
+    }
+
     /**
      * Creates all the elements in a scenario (goes down the column of the table)
+     *
      * @param modules
      * @param scenarioNumber
      * @param doc
      * @return
      */
-    private List<Element> createScenarioElements(List<Module> modules, int scenarioNumber, boolean sameModel, Document doc)
+    private List<Element> createScenarioElements(List<Module> modules, FileChangesStatistics assumpStats, int scenarioNumber, boolean sameModel, Document doc)
     {
 
         List<Element> retVal = new ArrayList<>();
-        int rowNumber =1;
-        for(Module mod : modules)
+        int rowNumber = 1;
+        for (Module mod : modules)
         {
-            if(!sameModel && "ModelInputs".equalsIgnoreCase(mod.getName()))
+            if ("ModelInputs".equalsIgnoreCase(mod.getName()))
             {
-                //exclude the model inputs row
-
+                if (sameModel)
+                {
+                    retVal.add(createModelInputsElementFromModule(mod, assumpStats, scenarioNumber, rowNumber, doc));
+                    rowNumber++;
+                }
+                //else skip it, we don't want to write it out
             }
-            else if("CoordinatedOperationsAgreement".equalsIgnoreCase(mod.getName()))
+            else if ("CoordinatedOperationsAgreement".equalsIgnoreCase(mod.getName()))
             {
                 //add this element using the max value from the list of values
-                retVal.add(createCOAElementFromModule(mod,scenarioNumber,rowNumber,doc));
+                retVal.add(createCOAElementFromModule(mod, scenarioNumber, rowNumber, doc));
                 rowNumber++;
             }
             else
             {
                 //do the generic creator
-                retVal.add( createElementFromModule(mod, scenarioNumber, rowNumber, doc));
+                retVal.add(createElementFromModule(mod, scenarioNumber, rowNumber, doc));
                 rowNumber++;
             }
         }
@@ -148,9 +167,7 @@ public class ExecutiveReportXMLCreator
     }
 
 
-
     /**
-     *
      * @param module
      * @param alternativeNumber base = 1, alt1 = 2, alt2 = 3
      * @param rowNumber
@@ -161,7 +178,7 @@ public class ExecutiveReportXMLCreator
     {
         List<String> subModuleStrings = new ArrayList<>();
 
-        for(SubModule sm : module.getSubModules())
+        for (SubModule sm : module.getSubModules())
         {
 
             NodeList moduleNodes = _helperDoc.getElementsByTagName(module.getName());
@@ -172,13 +189,13 @@ public class ExecutiveReportXMLCreator
                 {
                     Element elem = (Element) moduleNode;
                     int numViolations;
-                    if(alternativeNumber == 1)
+                    if (alternativeNumber == 1)
                     {
                         numViolations = sm.getBaseViolations().size();
                     }
                     else
                     {
-                        numViolations = sm.getAlternativeViolations("alt" + alternativeNumber).size();
+                        numViolations = sm.getAlternativeViolations(alternativeNumber).size();
                     }
                     String subModuleText = elem.getElementsByTagName(sm.getName()).item(0).getTextContent();
                     String formattedText = String.format(subModuleText, numViolations);
@@ -189,15 +206,40 @@ public class ExecutiveReportXMLCreator
 
         String elementString = subModuleStrings.stream().map(String::valueOf).collect(Collectors.joining(NEW_LINE));
 
-        if(alternativeNumber == 1)
+        if (alternativeNumber == 1)
         {
-            return createBaseModuleElement(doc, rowNumber, module.getName(),elementString);
+            return createBaseModuleElement(doc, rowNumber, module.getName(), elementString);
         }
         else
         {
-            return createAlternativeModuleElement(doc,alternativeNumber, rowNumber, module.getName(),elementString);
+            return createAlternativeModuleElement(doc, alternativeNumber, rowNumber, module.getName(), elementString);
 
         }
+
+    }
+
+    private Element createModelInputsElementFromModule(Module module, FileChangesStatistics assumpStats, int scenarioNumber, int rowNumber, Document doc)
+    {
+        List<String> subModuleStrings = new ArrayList<>();
+
+        if (scenarioNumber == 1)
+        {
+            return createBaseModuleElement(doc, rowNumber, module.getName(), "Base");
+        }
+
+        List<SubModule> subModules = module.getSubModules();
+        if (subModules.size() == 4)
+        {
+            int stateVariableChangesSize = assumpStats.getChangedFiles().size();
+            //subModules.get(0).addAlternativeViolations(scenarioNumber, stateVariableChangesSize);
+            //subModules.get(1)
+            //subModules.get(2)
+            //subModules.get(3)
+
+        }
+
+        String elementString = subModuleStrings.stream().map(String::valueOf).collect(Collectors.joining(NEW_LINE));
+        return createAlternativeModuleElement(doc, scenarioNumber, rowNumber, module.getName(), elementString);
 
     }
 
@@ -205,7 +247,7 @@ public class ExecutiveReportXMLCreator
     {
         List<String> subModuleStrings = new ArrayList<>();
 
-        for(SubModule sm : module.getSubModules())
+        for (SubModule sm : module.getSubModules())
         {
 
             NodeList moduleNodes = _helperDoc.getElementsByTagName(module.getName());
@@ -216,13 +258,13 @@ public class ExecutiveReportXMLCreator
                 {
                     Element elem = (Element) moduleNode;
                     double maxValue;
-                    if(alternativeNumber == 1)
+                    if (alternativeNumber == 1)
                     {
                         maxValue = sm.getBaseViolations().get(0).getMaxValue();
                     }
                     else
                     {
-                        maxValue = sm.getAlternativeViolations("alt" + alternativeNumber).get(0).getMaxValue();
+                        maxValue = sm.getAlternativeViolations(alternativeNumber).get(0).getMaxValue();
                     }
                     String subModuleText = elem.getElementsByTagName(sm.getName()).item(0).getTextContent();
                     String formattedText = String.format(subModuleText, maxValue);
@@ -233,20 +275,18 @@ public class ExecutiveReportXMLCreator
 
         String elementString = subModuleStrings.stream().map(String::valueOf).collect(Collectors.joining(NEW_LINE));
 
-        if(alternativeNumber == 1)
+        if (alternativeNumber == 1)
         {
-            return createBaseModuleElement(doc, rowNumber, module.getName(),elementString);
+            return createBaseModuleElement(doc, rowNumber, module.getName(), elementString);
         }
         else
         {
-            return createAlternativeModuleElement(doc,alternativeNumber, rowNumber, module.getName(),elementString);
+            return createAlternativeModuleElement(doc, alternativeNumber, rowNumber, module.getName(), elementString);
         }
     }
 
 
-
     /**
-     *
      * @param doc
      * @param altColumnNumber this needs to start with 2 since base is in column 1
      * @param row
@@ -254,18 +294,19 @@ public class ExecutiveReportXMLCreator
      * @param value
      * @return
      */
-    private Element createAlternativeModuleElement(Document doc,int altColumnNumber, int row, String rowName, String value)
+    private Element createAlternativeModuleElement(Document doc, int altColumnNumber, int row, String rowName, String value)
     {
         Element moduleElement = createModuleElement(doc);
         moduleElement.appendChild(createAlternativeStudyElement(doc, altColumnNumber));
-        moduleElement.appendChild(createModelEntriesElement(doc,row,rowName,value));
+        moduleElement.appendChild(createModelEntriesElement(doc, row, rowName, value));
         return moduleElement;
     }
+
     private Element createBaseModuleElement(Document doc, int row, String rowName, String value)
     {
         Element moduleElement = createModuleElement(doc);
         moduleElement.appendChild(createBaseStudyElement(doc));
-        moduleElement.appendChild(createModelEntriesElement(doc,row,rowName,value));
+        moduleElement.appendChild(createModelEntriesElement(doc, row, rowName, value));
         return moduleElement;
     }
 
@@ -284,7 +325,7 @@ public class ExecutiveReportXMLCreator
 
         Attr modelOrderAttr = doc.createAttribute(MODEL_ORDER);
         String rowNumber = "";
-        if(row<10)
+        if (row < 10)
         {
             rowNumber = "0" + row;
         }

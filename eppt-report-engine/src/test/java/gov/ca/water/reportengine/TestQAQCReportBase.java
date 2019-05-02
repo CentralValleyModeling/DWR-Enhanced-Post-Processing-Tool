@@ -13,6 +13,7 @@
 package gov.ca.water.reportengine;
 
 import gov.ca.water.reportengine.executivereport.ExecutiveReportXMLCreator;
+import hec.data.meta.RatingCatalogQuery;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -41,6 +42,41 @@ public class TestQAQCReportBase
     static
     {
         HecDSSFileAccess.setMessageLevel(HecDSSFileAccess.MESS_LEVEL_CRITICAL);
+    }
+
+    protected Path getInitialConditionsCSV()
+    {
+        URL initCondResource = this.getClass().getClassLoader().getResource("AssumptionChangesInitialConditionsDSSPaths.csv");
+        return new File(initCondResource.getPath()).toPath();
+    }
+    protected Path getInitialConditionsBaseDSSPath()
+    {
+        URL resource = this.getClass().getClassLoader().getResource("SampleInit_Base.dss");
+        return new File(resource.getPath()).toPath();
+    }
+
+    protected Path getInitialConditionsAltDSSPath()
+    {
+        URL alt = this.getClass().getClassLoader().getResource("SampleInit_Alt.dss");
+        return new File(alt.getPath()).toPath();
+    }
+
+    protected Path getAssumpChangesStateVariablesCSV()
+    {
+        URL stateVarResource = this.getClass().getClassLoader().getResource("AssumptionChangesStateVariablesDSSPaths.csv");
+        return new File(stateVarResource.getPath()).toPath();
+    }
+
+    protected Path getStateVariableBaseDSSPath()
+    {
+        URL svBaseDss = this.getClass().getClassLoader().getResource("SampleSV_Base.dss");
+        return new File(svBaseDss.getPath()).toPath();
+    }
+
+    protected Path getStateVariableAltDSSPath()
+    {
+        URL altSV = this.getClass().getClassLoader().getResource("SampleSV_Alt.dss");
+        return new File(altSV.getPath()).toPath();
     }
 
     public void writeXmlFile(String xmlPath, Document doc) throws ParserConfigurationException, TransformerException

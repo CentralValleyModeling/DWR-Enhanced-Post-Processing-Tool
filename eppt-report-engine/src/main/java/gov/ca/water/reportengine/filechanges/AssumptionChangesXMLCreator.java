@@ -10,7 +10,7 @@
  * GNU General Public License
  */
 
-package gov.ca.water.reportengine.assumptionchanges;
+package gov.ca.water.reportengine.filechanges;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -40,15 +40,15 @@ public class AssumptionChangesXMLCreator
     {
         Element assumptionChangesRoot = document.createElement(ASSUMPTION_CHANGES);
 
-        assumptionChangesRoot.appendChild(createInitialConditionsElement(document, initCondStats.getChanges().size(),
+        assumptionChangesRoot.appendChild(createInitialConditionsElement(document, initCondStats.getChangedFiles().size(),
                 initCondStats.getRecordsOnlyInBase().size(), initCondStats.getRecordsOnlyInAlt().size()));
 
-        assumptionChangesRoot.appendChild(createStateVariablesElement(document, stateVarStats.getChanges().size(),
+        assumptionChangesRoot.appendChild(createStateVariablesElement(document, stateVarStats.getChangedFiles().size(),
                 stateVarStats.getRecordsOnlyInBase().size(), stateVarStats.getRecordsOnlyInAlt().size()));
 
         Set<String> totalChanges = new HashSet<>();
-        totalChanges.addAll(initCondStats.getChanges());
-        totalChanges.addAll(stateVarStats.getChanges());
+        totalChanges.addAll(initCondStats.getChangedFiles());
+        totalChanges.addAll(stateVarStats.getChangedFiles());
 
         assumptionChangesRoot.appendChild(createRecordsList(totalChanges,document));
         document.appendChild(assumptionChangesRoot);

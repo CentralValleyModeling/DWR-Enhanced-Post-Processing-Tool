@@ -16,26 +16,38 @@ import hec.heclib.dss.DSSPathname;
 import hec.heclib.dss.HecDss;
 import hec.io.TimeSeriesContainer;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Vector;
 
 public class ExecutiveReportProcessor
 {
-
+    private static final int MODULE_COLUMN = 0;
+    private static final int SUB_MODULE_COLUMN = 1;
+    private static final int LINKED_VARS_COLUMN = 2;
+    private static final int FLAG_COLUMN = 3;
     private final List<Module> _modules = new ArrayList<>();
+
+
+    public ExecutiveReportProcessor(Path csvPath) throws ExecutiveReportException
+    {
+        readCSVFile(csvPath);
+    }
 
     /**
      * Gets the violations from the dssFile and puts them into the correct subModule
      *
-     * @param modules
      * @param dssFile
+     * @param scenarioNumber 1 for base, 2 for alt1, ...
      * @throws Exception
      */
-    public void readViolationsFromDssFile(List<Module> modules, Path dssFile, int scenarioNumber) throws Exception
+    List<Module> processDSSFile(Path dssFile, int scenarioNumber) throws Exception
     {
-        _modules.addAll(modules);
         HecDss hD = HecDss.open(dssFile.toString());
 
         for (Module mod : _modules)
@@ -94,14 +106,15 @@ public class ExecutiveReportProcessor
                 }
                 else
                 {
-                    sm.addAlternativeViolations("alt" + scenarioNumber, violations);
+                    sm.addAlternativeViolations(scenarioNumber, violations);
                 }
             }
         }
+        return _modules;
     }
 
 
-    public void setMaxValueForCOAModuleFromDssFile(Module mod, Path dssFile, int scenarioNumber) throws Exception
+    private void setMaxValueForCOAModuleFromDssFile(Module mod, Path dssFile, int scenarioNumber) throws Exception
     {
         HecDss hD = HecDss.open(dssFile.toString());
 
@@ -160,7 +173,7 @@ public class ExecutiveReportProcessor
             {
                 List<FlagViolation> violations = new ArrayList<>();
                 violations.add(violation);
-                sm.addAlternativeViolations("alt" + scenarioNumber, violations);
+                sm.addAlternativeViolations(scenarioNumber, violations);
             }
         }
 
@@ -217,6 +230,112 @@ public class ExecutiveReportProcessor
 
         return violationRows;
     }
+
+
+
+
+
+
+
+
+
+
+
+    //read the csv file and create modules and sub modules
+    private void readCSVFile(Path csvFilePath) throws ExecutiveReportException
+    {
+        String line = "";
+        String csvSplitBy = ",";
+
+        try (BufferedReader br = Files.newBufferedReader(csvFilePath))
+        {
+
+            //skip first line
+            int i = 0;
+            while ((line = br.readLine()) != null)
+            {
+                if (i == 0)
+                {
+                    i++;
+                    continue;
+                }
+                // use comma as separator
+                String[] row = line.split(csvSplitBy);
+                String modName = row[MODULE_COLUMN];
+                if (findModuleByName(modName) == null)
+                {
+                    //create a new module object
+                    Module mod = new Module(modName);
+                    _modules.add(mod);
+                }
+                processSubModules(modName, row);
+            }
+        }
+        catch (IOException e)
+        {
+            throw new ExecutiveReportException("Error reading the csv file: " + csvFilePath, e);
+        }
+    }
+
+
+    private Module findModuleByName(String modName)
+    {
+        for (Module mod : _modules)
+        {
+            if (mod.getName().equals(modName))
+            {
+                return mod;
+            }
+        }
+        return null;
+    }
+
+    private void processSubModules(String moduleName, String[] rowValues)
+    {
+        Module mod = findModuleByName(moduleName);
+        if(mod != null)
+        {
+            List<SubModule> subModules = mod.getSubModules();
+            for (SubModule subMod : subModules)
+            {
+                if (Objects.equals(subMod.getName(), rowValues[SUB_MODULE_COLUMN]))
+                {
+                    //the submodule already exists, just add to it
+                    subMod.addLinkedRecord(rowValues[LINKED_VARS_COLUMN]);
+                    return;
+                }
+            }
+            //if we get here, then this is a new module
+            SubModule subMod = new SubModule(rowValues[SUB_MODULE_COLUMN], convertStringToFlagType(rowValues[FLAG_COLUMN]));
+            subMod.addLinkedRecord(rowValues[LINKED_VARS_COLUMN]);
+            subModules.add(subMod);
+        }
+    }
+
+    private SubModule.FlagType convertStringToFlagType(String flag)
+    {
+        SubModule.FlagType retVal = SubModule.FlagType.NEGATIVE_INFINITY;
+        if ("0".equalsIgnoreCase(flag))
+        {
+            retVal = SubModule.FlagType.ZERO;
+        }
+        else if ("1".equalsIgnoreCase(flag))
+        {
+            retVal = SubModule.FlagType.ONE;
+        }
+        else if ("2".equalsIgnoreCase(flag))
+        {
+            retVal = SubModule.FlagType.TWO;
+        }
+        return retVal;
+    }
+
+    List<Module> getModules()
+    {
+        return new ArrayList<>( _modules);
+    }
+
+
 
 }
 

@@ -112,21 +112,17 @@
    </executive-report>
    <assumption-changes>
       <initial-conditions>
-         <common-records-different-data>N/A</common-records-different-data>
-         <records-only-in-base>N/A</records-only-in-base>
-         <records-only-in-alternative>N/A</records-only-in-alternative>
+         <common-records-different-data>1</common-records-different-data>
+         <records-only-in-base>1</records-only-in-base>
+         <records-only-in-alternative>0</records-only-in-alternative>
       </initial-conditions>
       <state-variables>
-         <common-records-different-data>31</common-records-different-data>
-         <records-only-in-base>N/A</records-only-in-base>
-         <records-only-in-alternative>N/A</records-only-in-alternative>
+         <common-records-different-data>0</common-records-different-data>
+         <records-only-in-base>0</records-only-in-base>
+         <records-only-in-alternative>0</records-only-in-alternative>
       </state-variables>
       <records-list>
-         <record>/CALSIM/I1/FLOW-INFLOW//2020D09E/</record>
-         <record>/CALSIM/I10/FLOW-INFLOW//2020D09E/</record>
-         <record>/CALSIM/I10801/FLOW-INFLOW//2020D09E/</record>
-         <record>/CALSIM/I10802/FLOW-INFLOW//2020D09E/</record>
-         <record>/CALSIM/I10803/FLOW-INFLOW//2020D09E/</record>
+         <record>/CALSIM/S17/STORAGE/01JAN1920/1MON/2020D09E/</record>
       </records-list>
    </assumption-changes>
    <code-changes>
@@ -153,7 +149,7 @@
             <change>.\CONV\Run\Lookup\wytypeSJR.table</change>
             <change>.\CONV\Run\Lookup\wytypeSJRave5.table</change>
          </subtype>
-         <subtype change-subtype="System-Connectivity" updated="false">
+         <subtype change-subtype="System Connectivity" updated="false">
             <change/>
          </subtype>
       </type>

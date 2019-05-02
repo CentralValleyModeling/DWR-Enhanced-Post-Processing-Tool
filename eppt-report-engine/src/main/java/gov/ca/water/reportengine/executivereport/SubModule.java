@@ -23,7 +23,7 @@ public class SubModule
     private final String _name;
 
     private List<FlagViolation> _baseViolations = new ArrayList<>();
-    private Map<String, List<FlagViolation>> _alternativeViolations = new HashMap<>();
+    private Map<Integer, List<FlagViolation>> _alternativeViolations = new HashMap<>();
 
     public enum FlagType
     {
@@ -65,7 +65,7 @@ public class SubModule
         _baseViolations.addAll(violations);
     }
 
-    public void addAlternativeViolations(String altName, List<FlagViolation> violations)
+    public void addAlternativeViolations(int altName, List<FlagViolation> violations)
     {
         if(_alternativeViolations.containsKey(altName))
         {
@@ -83,11 +83,11 @@ public class SubModule
         return _baseViolations;
     }
 
-    public List<FlagViolation> getAlternativeViolations(String altName)
+    public List<FlagViolation> getAlternativeViolations(int altNumber)
     {
-        if(_alternativeViolations.containsKey(altName))
+        if(_alternativeViolations.containsKey(altNumber))
         {
-            return _alternativeViolations.get(altName);
+            return _alternativeViolations.get(altNumber);
         }
         return new ArrayList<>();
     }
