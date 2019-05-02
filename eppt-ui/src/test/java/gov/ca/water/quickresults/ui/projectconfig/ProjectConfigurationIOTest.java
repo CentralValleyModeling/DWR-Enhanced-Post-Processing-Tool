@@ -47,7 +47,7 @@ public class ProjectConfigurationIOTest
 		GuiLinksSeedDataSvcImpl.createSeedDataSvcImplInstance();
 	}
 
-	@Test
+	//	@Test
 	public void testProjectConfigurationJsonScenarioReload() throws IOException
 	{
 		Path path = Paths.get("Test1.eppt");

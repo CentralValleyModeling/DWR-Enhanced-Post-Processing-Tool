@@ -1,0 +1,29 @@
+# This config file and run folder must be placed in the same directory
+
+Begin Config
+
+WreslPlus              yes
+MainFile               {MainFile}
+Solver                 XA  
+DvarFile               {DvarFile}
+SvarFile               {SvarFile}
+SvarAPart              CalSim
+SvarFPart              {SvarFPart}
+InitFile               {InitFile}
+InitFPart              {InitFPart} 
+TimeStep               1MON
+StartYear              {StartYear}
+StartMonth             {StartMonth}
+StopYear               {EndYear}
+StopMonth              {EndMonth}
+#GroundwaterDir         .
+ShowWreslLog		   Yes 
+PrefixInitToDvarFile   Yes
+IValue                 2
+
+IlpLog  no
+IlpLogFormat   CplexLp
+IlpLogVarValue no
+
+End Config
+

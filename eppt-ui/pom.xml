@@ -78,18 +78,18 @@
 		</dependency>
 	</dependencies>
 	<properties>
-		<argLine>-Djava.library.path=${project.build.directory}\lib</argLine>
+		<argLine>-Djava.library.path=${project.build.directory}\lib -Xmx1024m -XX:MaxPermSize=256m</argLine>
 	</properties>
 	<build>
 		<plugins>
 			<plugin>
-			<groupId>org.apache.maven.plugins</groupId>
-			<artifactId>maven-surefire-plugin</artifactId>
-			<version>2.22.1</version>
-			<configuration>
-				<forkMode>once</forkMode>
-			</configuration>
-		</plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-surefire-plugin</artifactId>
+				<version>2.22.1</version>
+				<configuration>
+					<forkCount>0</forkCount>
+				</configuration>
+			</plugin>
 		</plugins>
 	</build>
 </project>
