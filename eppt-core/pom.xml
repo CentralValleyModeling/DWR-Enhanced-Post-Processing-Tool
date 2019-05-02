@@ -100,6 +100,16 @@
 			<version>5.4.0</version>
 			<scope>test</scope>
 		</dependency>
+		<dependency>
+			<groupId>com.google.guava</groupId>
+			<artifactId>guava</artifactId>
+			<version>27.1-jre</version>
+		</dependency>
+		<dependency>
+			<groupId>com.sunsetsoft</groupId>
+			<artifactId>xaoptimizer</artifactId>
+			<version>V16_x64</version>
+		</dependency>
 	</dependencies>
 	<repositories>
 		<repository>

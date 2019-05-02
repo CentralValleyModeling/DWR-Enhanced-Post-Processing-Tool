@@ -31,8 +31,8 @@ public final class Constant
 	public static final String CONFIG_DIR = System.getProperty("user.dir") + "\\dwr_eppt\\config\\";
 	public static final String DOCS_DIR = System.getProperty("user.dir") + "\\dwr_eppt\\docs\\";
 	public static final String WRESL_DIR = System.getProperty("user.dir") + "\\dwr_eppt\\wresl\\";
-	public static final String RUN_DETAILS_DIR = "Run_Details";
 	public static final String MODEL_W2_DIR = System.getProperty("user.dir") + "//Model_w2//";
+	public static final String RUN_DETAILS_DIR = "Run_Details";
 	public static final String MODEL_W2_DSS_DIR = MODEL_W2_DIR + "//DSS_Files//";
 	public static final String MODEL_W2_WRESL_DIR = MODEL_W2_DIR + "wresl//";
 	public static final String LOOKUP_DIR = "//Lookup//";

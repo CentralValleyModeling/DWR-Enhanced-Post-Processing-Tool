@@ -713,6 +713,17 @@ public final class ProjectConfigurationPanel extends EpptPanel
 		}
 	}
 
+	public List<EpptScenarioRun> getEpptScenarioRuns()
+	{
+		List<EpptScenarioRun> scenarioRuns = new ArrayList<>();
+		int childCount = _rootNode.getChildCount();
+		for(int i = 0; i < childCount; i++)
+		{
+
+		}
+		return scenarioRuns;
+	}
+
 	void replaceScenario(EpptScenarioRun oldScenarioRun, EpptScenarioRun newScenarioRun)
 	{
 		int childCount = _rootNode.getChildCount();
