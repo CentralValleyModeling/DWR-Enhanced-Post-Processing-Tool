@@ -78,7 +78,7 @@
 		</dependency>
 	</dependencies>
 	<properties>
-		<argLine>-Djava.library.path=${project.build.directory}\lib</argLine>
+		<argLine>-Djava.library.path=${project.build.directory}\lib -Xmx1024m -XX:MaxPermSize=256m</argLine>
 	</properties>
 	<build>
 		<plugins>
