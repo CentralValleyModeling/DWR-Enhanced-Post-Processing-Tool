@@ -12,10 +12,11 @@
 
 package gov.ca.water.reportengine.filechanges;
 
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.w3c.dom.Document;
-
-import java.awt.dnd.DropTargetDragEvent;
+import org.w3c.dom.Element;
+import org.w3c.dom.NodeList;
 
 public class TestCodeChanges extends TestCodeChangesBase
 {
@@ -39,6 +40,36 @@ public class TestCodeChanges extends TestCodeChangesBase
 
         _qAQCReportToTest = loadReportToTest(XML_PATH);
         _qAQCMaster = loadComparisonSameModelReport();
+
+        Element elemToTest = getElementsWithName(_qAQCReportToTest, CODE_CHANGES);
+        Element elemFromMaster = getElementsWithName(_qAQCMaster, CODE_CHANGES);
+
+        //test header values
+        Element headerElemToTest = getHeaderElement(elemToTest);
+        Element headerElemFromMaster = getHeaderElement(elemFromMaster);
+
+        Assertions.assertEquals( getFilesUpdated(headerElemFromMaster), getFilesUpdated(headerElemToTest),"header: files updated");
+        Assertions.assertEquals( getFilesAddedFromAltElem(headerElemFromMaster),getFilesAddedFromAltElem(headerElemToTest), "header: files added");
+        Assertions.assertEquals( getFilesDeletedFromCodeChangeElem(elemFromMaster), getFilesDeletedFromCodeChangeElem(elemToTest), "header: files deleted");
+
+        //test modified files section
+        Element modifiedSectionElementToTest = getSectionElement(elemToTest, "Modified Files");
+        Element modifiedSectionElementFromMaster = getSectionElement(elemFromMaster, "Modified Files");
+
+        testSection(modifiedSectionElementFromMaster, modifiedSectionElementToTest);
+
+        //test new files section
+        Element newSectionTest = getSectionElement(elemToTest, "New");
+        Element newSectionMaster = getSectionElement(elemFromMaster, "New");
+
+        testSection(newSectionMaster, newSectionTest);
+
+        //test deleted files section
+        Element deleteSectionTest = getSectionElement(elemToTest, "Deleted");
+        Element deleteSectionMaster = getSectionElement(elemFromMaster, "Deleted");
+
+        testSection(deleteSectionMaster, deleteSectionTest);
+
 
     }
 

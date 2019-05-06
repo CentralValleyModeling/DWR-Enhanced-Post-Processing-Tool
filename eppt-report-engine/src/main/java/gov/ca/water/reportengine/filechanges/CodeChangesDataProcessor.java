@@ -13,13 +13,19 @@
 package gov.ca.water.reportengine.filechanges;
 
 import gov.ca.water.reportengine.EpptReportException;
+import org.apache.commons.io.FileUtils;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.*;
 import java.util.logging.Logger;
+import java.util.stream.Stream;
+
+import static java.util.stream.Collectors.toList;
 
 public class CodeChangesDataProcessor
 {
@@ -32,6 +38,8 @@ public class CodeChangesDataProcessor
     //private Map<CodeChangesType, List<CodeChangesSubType>> _changesMap = new HashMap<>();
     private final List<CodeChangesType> _codeChangesTypes = new ArrayList<>();
 
+    private List<String> _allFilesFromMaster = new ArrayList<>();
+
     public CodeChangesDataProcessor(Path csvPath) throws EpptReportException
     {
         loadCodeChangesCSV(csvPath);
@@ -42,66 +50,156 @@ public class CodeChangesDataProcessor
         return _codeChangesTypes;
     }
 
-    public FileChangesStatistics processCodeChanges(Path baseOutputPath, Path altOutputPath)
+
+
+
+    public FileChangesStatistics processCodeChanges(Path baseOutputPath, Path altOutputPath) throws EpptReportException, IOException
     {
-        Set<String> addedToAlt = new HashSet<>();
-        Set<String> deletedFromBase = new HashSet<>();
-        Map<CodeChangesSubType, Set<String>> subtypeToFileChangesMap = new HashMap<>();
+        Set<Path> modifiedFiles = new HashSet<>();
+        Set<Path> addedInAlt = new HashSet<>();
+        Set<Path> deletedFromBase = new HashSet<>();
 
+        List<Path> basePaths = getAllPathsInDir(baseOutputPath);
+        List<Path> altPaths = getAllPathsInDir(altOutputPath);
 
-        for(CodeChangesType parent : _codeChangesTypes)
+        for(Path basePath : basePaths)
         {
-            for(CodeChangesSubType subType : parent.getSubTypes())
+            if(altPaths.contains(basePath) )//&& areFilesDifferent(basePath,altPath))
             {
-                Set<String> modifiedFilesForSubtype = new HashSet<>();
-
-                for(String wreslFile : subType.getWreslFiles())
+                Path base = baseOutputPath.resolve(basePath);
+                Path alt = altOutputPath.resolve(basePath);
+                if(areFilesDifferent(base,alt))
                 {
-                    boolean baseHasFile = doesFileExistInDirectory(baseOutputPath);
-                    boolean altHasFile = doesFileExistInDirectory(altOutputPath);
-                    if(baseHasFile && altHasFile)
-                    {
-                        //compare them
-                        if(areFilesDifferent(baseOutputPath,altOutputPath))
-                        {
-                            modifiedFilesForSubtype.add(baseOutputPath.toString());
-                        }
-                    }
-                    else if(baseHasFile && !altHasFile)
-                    {
-                        //file was deleted in alt
-                        addedToAlt.add(altOutputPath.toString());
-
-                    }
-                    else if(!baseHasFile && altHasFile)
-                    {
-                        //file was added to alt
-                        deletedFromBase.add(baseOutputPath.toString());
-                    }
+                    modifiedFiles.add(basePath);
                 }
-
-                subtypeToFileChangesMap.put(subType,modifiedFilesForSubtype);
+            }
+            else if(!altPaths.contains(basePath))
+            {
+                deletedFromBase.add(basePath);
             }
         }
 
+        for(Path altPath : altPaths)
+        {
+            if(!basePaths.contains(altPath))
+            {
+                addedInAlt.add(altPath);
+            }
+        }
+
+
+//        Map<CodeChangesSubType, Set<String>> subtypeToFileChangesMap = new HashMap<>();
+//
+//
+//        for (CodeChangesType parent : _codeChangesTypes)
+//        {
+//            for (CodeChangesSubType subType : parent.getSubTypes())
+//            {
+//                Set<String> modifiedFilesForSubtype = new HashSet<>();
+//
+//                for (String wreslFile : subType.getWreslFiles())
+//                {
+//
+//                    _allFilesFromMaster.add(wreslFile);
+//                    boolean baseHasFile = doesFileExistInDirectory(baseOutputPath, wreslFile);
+//                    boolean altHasFile = doesFileExistInDirectory(altOutputPath, wreslFile);
+//                    if (baseHasFile && altHasFile)
+//                    {
+//                        //compare them
+//                        if (areFilesDifferent(baseOutputPath, altOutputPath))
+//                        {
+//                            modifiedFilesForSubtype.add(wreslFile);
+//                        }
+//                    }
+//                    else if (baseHasFile && !altHasFile)
+//                    {
+//                        //file was deleted in alt
+//                        deletedFromBase.add(wreslFile);
+//
+//                    }
+//                    else if (!baseHasFile && altHasFile)
+//                    {
+//                        //file was added to alt
+//                        addedInAlt.add(wreslFile);
+//                    }
+//                }
+//
+//                subtypeToFileChangesMap.put(subType, modifiedFilesForSubtype);
+//            }
+//        }
+
         return new FileChangesStatistics.Builder()
-                .withRecordsOnlyInAlt(addedToAlt)
-                .withRecordsOnlyInBase(deletedFromBase)
-                .withSubtypeModifiedFiles(subtypeToFileChangesMap)
+                .withFilesAddedToAlt(addedInAlt)
+                .withFilesDeletedFromBase(deletedFromBase)
+                .withCodeChangesModifiedFiles(modifiedFiles)
                 .build();
-
     }
 
-
-
-    private boolean doesFileExistInDirectory(Path outputPath)
+    private List<Path> getAllPathsInDir(Path outputDirectory) throws EpptReportException
     {
-        return true;
+        List<Path> allPaths;
+        try (Stream<Path> paths = Files.walk(outputDirectory))
+        {
+            allPaths = paths.filter(p -> p.toFile().isFile())
+                    .map(outputDirectory::relativize)
+                    .collect(toList());
+
+        }
+        catch (IOException e)
+        {
+            throw new EpptReportException("Error getting all files", e);
+        }
+        return allPaths;
     }
 
-    private boolean areFilesDifferent(Path baseFile, Path altFile)
+//    private List<Path> getAllFilesNotInMaster(Path outputDirectory) throws EpptReportException
+//    {
+//        List<Path> addedFiles = new ArrayList<>();
+//        List<Path> allPaths;
+//        try (Stream<Path> paths = Files.walk(outputDirectory))
+//        {
+//            allPaths = paths.filter(path1 -> Files.isRegularFile(path1)).collect(toList());
+//
+//
+//            List<Path> fullFilesFromMaster = _allFilesFromMaster.stream()
+//                    .map(outputDirectory::resolve)
+//                    .collect(toList());
+//
+//            for (Path basePath : allPaths)
+//            {
+//                if (!fullFilesFromMaster.contains(basePath))
+//                {
+//                    addedFiles.add(basePath);
+//                }
+//            }
+//
+//        }
+//        catch (IOException e)
+//        {
+//            throw new EpptReportException("Error getting all files", e);
+//        }
+//        return addedFiles;
+//    }
+
+
+//    private boolean doesFileExistInDirectory(Path outputPath, String fileLookingFor)
+//    {
+//        String trimmedFile = fileLookingFor.substring(1);
+//        String totalPath = outputPath.toString() + trimmedFile;
+//        File f = new File(totalPath);
+//        if (f.exists() && !f.isDirectory())
+//        {
+//            return true;
+//        }
+//        else
+//        {
+//            return false;
+//        }
+//    }
+
+    private boolean areFilesDifferent(Path baseFile, Path altFile) throws IOException
     {
-        return true;
+        return !FileUtils.contentEquals(baseFile.toFile(), altFile.toFile());
     }
 
     private void loadCodeChangesCSV(Path csvPath) throws EpptReportException
@@ -129,30 +227,32 @@ public class CodeChangesDataProcessor
                 String type = row[TYPE_COLUMN];
                 String subtype = row[SUBTYPE_COLUMN];
                 String wreslFile = null;
-                if(row.length>2)
+                if (row.length > 2)
                 {
                     wreslFile = row[WRESL_FILES_COLUMN];
                 }
 
                 boolean isNewType = true;
-                for(int i = 0;i<_codeChangesTypes.size();i++)
+                for (int i = 0; i < _codeChangesTypes.size(); i++)
                 {
                     CodeChangesType parent = _codeChangesTypes.get(i);
-                    if(Objects.equals(parent.getName(), type))
+                    if (Objects.equals(parent.getName(), type))
                     {
                         isNewType = false;
                         updateSubtypes(parent, subtype, wreslFile);
                     }
                 }
 
-                if(isNewType)
+                if (isNewType)
                 {
                     //create new type
                     CodeChangesType codeChangeType = new CodeChangesType(type);
                     CodeChangesSubType codeChangesSubType = new CodeChangesSubType(subtype);
-                    if(wreslFile != null)
+                    if (wreslFile != null)
                     {
-                        codeChangesSubType.addWreslFile(wreslFile);
+                        //add it and get rid of any trailing "." and or slashes by normalizing
+                        Path wreslPath = Paths.get(wreslFile);
+                        codeChangesSubType.addWreslFile(wreslPath.normalize().toString());
                     }
                     codeChangeType.addSubtype(codeChangesSubType);
                     _codeChangesTypes.add(codeChangeType);
@@ -169,24 +269,26 @@ public class CodeChangesDataProcessor
     {
         List<CodeChangesSubType> subTypes = type.getSubTypes();
         boolean foundSubtype = false;
-        for(int i = 0;i<subTypes.size();i++)
+        for (int i = 0; i < subTypes.size(); i++)
         {
-            if(Objects.equals(subTypes.get(i).getName(), subtype))
+            if (Objects.equals(subTypes.get(i).getName(), subtype))
             {
-                if(file != null)
+                if (file != null)
                 {
-                    subTypes.get(i).addWreslFile(file);
+                    Path wreslPath = Paths.get(file);
+                    subTypes.get(i).addWreslFile(wreslPath.normalize().toString());
                 }
                 foundSubtype = true;
                 break;
             }
         }
-        if(foundSubtype == false)
+        if (foundSubtype == false)
         {
             CodeChangesSubType codeChangesSubType = new CodeChangesSubType(subtype);
-            if(file != null)
+            if (file != null)
             {
-                codeChangesSubType.addWreslFile(file);
+                Path wreslPath = Paths.get(file);
+                codeChangesSubType.addWreslFile(wreslPath.normalize().toString());
             }
             type.addSubtype(codeChangesSubType);
         }

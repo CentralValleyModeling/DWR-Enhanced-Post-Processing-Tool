@@ -146,4 +146,10 @@ public class TestQAQCReportBase
 
     }
 
+    public Element getChildElementWithName(Element elem, String name)
+    {
+        NodeList elementsByTagName = elem.getElementsByTagName(name);
+        return (Element) elementsByTagName.item(0);
+    }
+
 }

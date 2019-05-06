@@ -60,6 +60,12 @@
 			<version>5.4.0</version>
 			<scope>test</scope>
 		</dependency>
+		<dependency>
+			<groupId>commons-io</groupId>
+			<artifactId>commons-io</artifactId>
+			<version>2.5</version>
+			<scope>compile</scope>
+		</dependency>
 	</dependencies>
 	<properties>
 		<argLine>-Djava.library.path=${project.build.directory}\lib -Duser.dir=${project.build.directory}\test-classess</argLine>

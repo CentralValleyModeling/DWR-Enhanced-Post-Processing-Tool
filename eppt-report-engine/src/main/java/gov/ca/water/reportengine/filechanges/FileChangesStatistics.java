@@ -12,6 +12,7 @@
 
 package gov.ca.water.reportengine.filechanges;
 
+import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -20,30 +21,46 @@ import java.util.Set;
 public class FileChangesStatistics
 {
 
-    private final Set<String> _filesDeletedFromBase;
+    private final Set<Path> _filesDeletedFromBase;
+    private final Set<Path> _filesAddedToAlt;
+    private final Set<Path> _codeChangesModifiedFiles;
+
     private final Set<String> _recordsOnlyInAlt;
     private final Set<String> _recordsOnlyInBase;
     private final Set<String> _changedFiles;
-    private final Map<CodeChangesSubType, Set<String>> _codeChangesSubtypeToModifiedFiles;
 
-    private FileChangesStatistics(Set<String> recordsOnlyInBase, Set<String> recordsOnlyInAlt, Set<String> filesUpdates, Set<String> filesDeletedFromBase,
-                                  Map<CodeChangesSubType, Set<String>> codeChangesSubtypeToModifiedFiles)
+    private FileChangesStatistics(Set<String> recordsOnlyInBase, Set<String> recordsOnlyInAlt, Set<String> filesUpdates,
+                                  Set<Path> filesDeletedFromBase, Set<Path> filesAddedToAlt, Set<Path> codeChangesFilesModified)
     {
         _recordsOnlyInAlt = recordsOnlyInAlt;
         _recordsOnlyInBase = recordsOnlyInBase;
         _changedFiles = filesUpdates;
+
         _filesDeletedFromBase = filesDeletedFromBase;
-        _codeChangesSubtypeToModifiedFiles = codeChangesSubtypeToModifiedFiles;
+        _filesAddedToAlt = filesAddedToAlt;
+        _codeChangesModifiedFiles = codeChangesFilesModified;
     }
+
+   public Set<Path> getCodeChangesModifiedFiles()
+   {
+       return _codeChangesModifiedFiles;
+   }
+    public Set<Path> getFilesDeletedFromBase()
+    {
+        return _filesDeletedFromBase;
+    }
+
+    public Set<Path> getFilesAddedToAlt()
+    {
+        return _filesAddedToAlt;
+    }
+
 
     public Set<String> getChangedFiles()
     {
         return _changedFiles;
     }
-    public Set<String> getFilesDeletedFromBase()
-    {
-        return _filesDeletedFromBase;
-    }
+
     public Set<String> getRecordsOnlyInAlt()
     {
         return _recordsOnlyInAlt;
@@ -54,23 +71,21 @@ public class FileChangesStatistics
         return _recordsOnlyInBase;
     }
 
-    public Set<String> getModifiedFilesForSubtype(CodeChangesSubType subtype)
-    {
-        Set<String> retval = new HashSet<>();
-        if(_codeChangesSubtypeToModifiedFiles.containsKey(subtype))
-        {
-            retval = _codeChangesSubtypeToModifiedFiles.get(subtype);
-        }
-        return retval;
-    }
+
+
+
 
     public static class Builder
     {
-        private Set<String> _recordsOnlyInAlt;
-        private Set<String> _recordsOnlyInBase;
-        private Set<String> _changes;
-        private Set<String> _filesDeletedFromBase;
-        private Map<CodeChangesSubType, Set<String>> _codeChangesSubtypeToModifiedFiles;
+        //assumption changes
+        private final Set<String> _recordsOnlyInAlt;
+        private final Set<String> _recordsOnlyInBase;
+        private final Set<String> _changes;
+
+        //for code changes section of eppt report
+        private final Set<Path> _filesAddedToAlt;
+        private final Set<Path> _filesDeletedFromBase;
+        private final Set<Path> _codeChangesModifiedFiles;
 
 
         public Builder()
@@ -78,42 +93,52 @@ public class FileChangesStatistics
             _recordsOnlyInAlt = new HashSet<>();
             _recordsOnlyInBase = new HashSet<>();
             _changes = new HashSet<>();
+
             _filesDeletedFromBase = new HashSet<>();
-            _codeChangesSubtypeToModifiedFiles = new HashMap<>();
+            _filesAddedToAlt = new HashSet<>();
+            _codeChangesModifiedFiles = new HashSet<>();
         }
 
         public FileChangesStatistics build()
         {
-            return new FileChangesStatistics(_recordsOnlyInBase, _recordsOnlyInAlt, _changes, _filesDeletedFromBase, _codeChangesSubtypeToModifiedFiles);
+            return new FileChangesStatistics(_recordsOnlyInBase, _recordsOnlyInAlt, _changes, _filesDeletedFromBase, _filesAddedToAlt, _codeChangesModifiedFiles);
         }
 
-        public Builder withSubtypeModifiedFiles(Map<CodeChangesSubType, Set<String>> map)
+        public Builder withCodeChangesModifiedFiles(Set<Path> modifiedPaths)
         {
-            _codeChangesSubtypeToModifiedFiles.putAll(map);
+            _codeChangesModifiedFiles.addAll(modifiedPaths);
             return this;
         }
 
-        public Builder withFilesDeletedFromBase(Set<String> deletedFromBase)
+        public Builder withFilesDeletedFromBase(Set<Path> deletedFromBase)
         {
-            _filesDeletedFromBase = deletedFromBase;
+            _filesDeletedFromBase.addAll(deletedFromBase);
             return this;
         }
 
-        public Builder withRecordsOnlyInBase(Set<String> recsOnlyInBase)
+        public Builder withFilesAddedToAlt(Set<Path> addedToAlt)
         {
-            _recordsOnlyInBase = recsOnlyInBase;
+            _filesAddedToAlt.addAll(addedToAlt);
             return this;
         }
 
-        public Builder withRecordsOnlyInAlt(Set<String> recsOnlyInAlt)
+
+
+        public Builder withRecordsOnlyInAlt(Set<String> onlyInAlt)
         {
-            _recordsOnlyInAlt = recsOnlyInAlt;
+            _recordsOnlyInAlt.addAll(onlyInAlt);
+            return this;
+        }
+
+        public Builder withRecordsOnlyInBase(Set<String> onlyInBase)
+        {
+            _recordsOnlyInBase.addAll(onlyInBase);
             return this;
         }
 
         public Builder withFileChanges(Set<String> fileChanges)
         {
-            _changes = fileChanges;
+            _changes.addAll(fileChanges);
             return this;
         }
     }
