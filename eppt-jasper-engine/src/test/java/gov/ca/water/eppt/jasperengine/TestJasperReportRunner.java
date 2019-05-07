@@ -12,9 +12,7 @@
 
 package gov.ca.water.eppt.jasperengine;
 
-import java.awt.Desktop;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.NoSuchFileException;
@@ -38,7 +36,7 @@ public class TestJasperReportRunner
 {
 	private static final Logger LOGGER = Logger.getLogger(TestJasperReportRunner.class.getName());
 
-//	@Test
+	@Test
 	public void testReportRunner() throws Exception
 	{
 		JasperReportRunner jasperReportRunner = new JasperReportRunner();
