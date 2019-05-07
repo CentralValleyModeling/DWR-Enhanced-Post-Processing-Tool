@@ -33,7 +33,7 @@ public class ExecutiveReportTestBase extends TestQAQCReportBase
     private Document _qAQCReportToTest;
 
 
-    void testBaseOnly(String moduleName, String masterModelEntriesName) throws Exception
+    void testBaseOnly(String moduleName) throws Exception
     {
 
         //create executive report and write it out
@@ -42,7 +42,7 @@ public class ExecutiveReportTestBase extends TestQAQCReportBase
 
        // List<FileChangesStatistics> statsForAllAlternatives = getFileChangeStatsList();
 
-        erWriter.appendExecutiveReportTableElement(getCSVPath(), getDssFilePathsForBaseOnly(), null, false, doc);
+        erWriter.appendExecutiveReportTableElement(getCSVPath(),getModuleLinkingCSVPath(), getDssFilePathsForBaseOnly(), null, false, doc);
         writeXmlFile(XML_PATH, doc);
 
         //read the xml file to test
@@ -51,10 +51,10 @@ public class ExecutiveReportTestBase extends TestQAQCReportBase
 
         //get the elements to compare
         List<Element> elemsToTest = getModuleElementsWithName(_qAQCReportToTest, moduleName);
-        List<Element> elemsFromMaster = getModuleElementsWithName(_qAQCMaster, masterModelEntriesName);
+        List<Element> elemsFromMaster = getModuleElementsWithName(_qAQCMaster, moduleName);
 
         //check that the number of modules (# of columns) is equal to the base + number of alternatives
-        Assertions.assertTrue(elemsToTest.size() == 1);
+        Assertions.assertEquals(1, elemsToTest.size());
 
         for (int i = 0; i < elemsToTest.size(); i++)
         {
@@ -66,14 +66,14 @@ public class ExecutiveReportTestBase extends TestQAQCReportBase
         }
     }
 
-    void testOneAlternativeSameModel(String moduleName, String masterModelEntriesName) throws Exception
+    void testOneAlternativeSameModel(String moduleName) throws Exception
     {
 
         //create executive report and write it out
         Document doc = getDoc();
         ExecutiveReportXMLCreator erWriter = new ExecutiveReportXMLCreator();
         List<FileChangesStatistics> statsForAllAlternatives = getFileChangeStatsList();
-        erWriter.appendExecutiveReportTableElement(getCSVPath(), getDssFilePathsForSameModel(),statsForAllAlternatives, true, doc);
+        erWriter.appendExecutiveReportTableElement(getCSVPath(),getModuleLinkingCSVPath(), getDssFilePathsForSameModel(),statsForAllAlternatives, true, doc);
         writeXmlFile(XML_PATH, doc);
 
         //read the xml file to test
@@ -82,10 +82,10 @@ public class ExecutiveReportTestBase extends TestQAQCReportBase
 
         //get the elements to compare
         List<Element> elemsToTest = getModuleElementsWithName(_qAQCReportToTest, moduleName);
-        List<Element> elemsFromMaster = getModuleElementsWithName(_qAQCMaster, masterModelEntriesName);
+        List<Element> elemsFromMaster = getModuleElementsWithName(_qAQCMaster, moduleName);
 
         //check that the number of modules (# of columns) is equal to the base + number of alternatives
-        Assertions.assertTrue(elemsToTest.size() == 2);
+        Assertions.assertEquals(2, elemsToTest.size());
 
         for (int i = 0; i < elemsToTest.size(); i++)
         {

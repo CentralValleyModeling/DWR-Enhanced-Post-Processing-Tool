@@ -27,16 +27,17 @@ import java.util.Vector;
 
 public class ExecutiveReportProcessor
 {
-    private static final int MODULE_COLUMN = 0;
-    private static final int SUB_MODULE_COLUMN = 1;
-    private static final int LINKED_VARS_COLUMN = 2;
-    private static final int FLAG_COLUMN = 3;
+    private static final int ID_COLUMN = 0;
+    private static final int MODULE_COLUMN = 1;
+    private static final int SUB_MODULE_COLUMN = 2;
+    //private static final int LINKED_VARS_COLUMN = 99;
+    private static final int FLAG_COLUMN = 4;
     private final List<Module> _modules = new ArrayList<>();
 
 
-    public ExecutiveReportProcessor(Path csvPath) throws ExecutiveReportException
+    public ExecutiveReportProcessor(Path moduleCSVPath, Path moduleLinkingCSVPath) throws ExecutiveReportException
     {
-        readCSVFile(csvPath);
+        readCSVFile(moduleCSVPath, moduleLinkingCSVPath);
     }
 
     /**
@@ -53,7 +54,7 @@ public class ExecutiveReportProcessor
         for (Module mod : _modules)
         {
 
-            if("CoordinatedOperationsAgreement".equalsIgnoreCase(mod.getName()))
+            if("COA".equalsIgnoreCase(mod.getName()))
             {
                 setMaxValueForCOAModuleFromDssFile(mod,dssFile,scenarioNumber);
                 continue;
@@ -146,7 +147,7 @@ public class ExecutiveReportProcessor
                     else
                     {
                         throw new ExecutiveReportException("Error reading dssFile during executive report generation: " + dssFile.toString()
-                        + ". Could not find any records with name: " + dssPath);
+                        + " Could not find record with name: " + dssPath);
                     }
                     TimeSeriesContainer result = (TimeSeriesContainer) hD.get(dssPath, true);
 
@@ -156,6 +157,10 @@ public class ExecutiveReportProcessor
 
                     violation = new FlagViolation(maxValue);
 
+                }
+                catch(ExecutiveReportException ex)
+                {
+                    throw ex;
                 }
                 catch (Exception e)
                 {
@@ -242,12 +247,12 @@ public class ExecutiveReportProcessor
 
 
     //read the csv file and create modules and sub modules
-    private void readCSVFile(Path csvFilePath) throws ExecutiveReportException
+    private void readCSVFile(Path moduleCSVPath, Path moduleLinkingCSVPath) throws ExecutiveReportException
     {
         String line = "";
         String csvSplitBy = ",";
 
-        try (BufferedReader br = Files.newBufferedReader(csvFilePath))
+        try (BufferedReader br = Files.newBufferedReader(moduleCSVPath))
         {
 
             //skip first line
@@ -262,21 +267,94 @@ public class ExecutiveReportProcessor
                 // use comma as separator
                 String[] row = line.split(csvSplitBy);
                 String modName = row[MODULE_COLUMN];
-                if (findModuleByName(modName) == null)
+                Module mod = findModuleByName(modName);
+                if (mod == null)
                 {
                     //create a new module object
-                    Module mod = new Module(modName);
+                    mod = new Module(modName);
                     _modules.add(mod);
                 }
-                processSubModules(modName, row);
+               // int modID = Integer.parseInt(row[ID_COLUMN]);
+                //List<String> linkedFiles = getLinkedFilesFromID(modID, moduleLinkingCSVPath);
+                updateSubModules(mod, row);
+            }
+
+            //we have finished creating all the mods and sub mods. Now add the linked variables to the submods
+            addLinkedVariablesToSubModules(moduleLinkingCSVPath);
+        }
+        catch (IOException e)
+        {
+            throw new ExecutiveReportException("Error reading the csv file: " + moduleCSVPath, e);
+        }
+    }
+
+    private void addLinkedVariablesToSubModules(Path moduleLinkingCSVPath) throws ExecutiveReportException
+    {
+        for(Module mod: _modules)
+        {
+            for(SubModule sub: mod.getSubModules())
+            {
+                int id = sub.getId();
+                List<String> linkedFiles = getLinkedFilesFromID(id, moduleLinkingCSVPath);
+                sub.addLinkedRecords(linkedFiles);
+            }
+        }
+    }
+
+    private void updateSubModules(Module mod, String[] rowValues)
+    {
+        if(mod != null)
+        {
+            List<SubModule> subModules = mod.getSubModules();
+            for (SubModule subMod : subModules)
+            {
+                if (Objects.equals(subMod.getName(), rowValues[SUB_MODULE_COLUMN]))
+                {
+                    //the submodule already exists
+                    //subMod.addLinkedRecord(linkedValues);
+                    return;
+                }
+            }
+            //if we get here, then this is a new module
+            int modID = Integer.parseInt(rowValues[ID_COLUMN]);
+            String name = rowValues[SUB_MODULE_COLUMN];
+
+            SubModule subMod = new SubModule(modID,name , convertStringToFlagType(rowValues[FLAG_COLUMN]));
+            //subMod.addLinkedRecord(rowValues[LINKED_VARS_COLUMN]);
+            subModules.add(subMod);
+        }
+    }
+
+    private List<String> getLinkedFilesFromID(int id, Path moduleLinkingCSVPath) throws ExecutiveReportException
+    {
+        String line = "";
+        String csvSplitBy = ",";
+        List<String> retval = new ArrayList<>();
+        try (BufferedReader br = Files.newBufferedReader(moduleLinkingCSVPath))
+        {
+            //skip first line
+            int i = 0;
+            while ((line = br.readLine()) != null)
+            {
+                if (i == 0)
+                {
+                    i++;
+                    continue;
+                }
+                String[] row = line.split(csvSplitBy);
+                int rowID = Integer.parseInt(row[0]);
+                if(rowID == id)
+                {
+                    retval.add(row[1]);
+                }
             }
         }
         catch (IOException e)
         {
-            throw new ExecutiveReportException("Error reading the csv file: " + csvFilePath, e);
+            throw new ExecutiveReportException("Error reading the csv file: " + moduleLinkingCSVPath, e);
         }
+        return retval;
     }
-
 
     private Module findModuleByName(String modName)
     {
@@ -290,27 +368,7 @@ public class ExecutiveReportProcessor
         return null;
     }
 
-    private void processSubModules(String moduleName, String[] rowValues)
-    {
-        Module mod = findModuleByName(moduleName);
-        if(mod != null)
-        {
-            List<SubModule> subModules = mod.getSubModules();
-            for (SubModule subMod : subModules)
-            {
-                if (Objects.equals(subMod.getName(), rowValues[SUB_MODULE_COLUMN]))
-                {
-                    //the submodule already exists, just add to it
-                    subMod.addLinkedRecord(rowValues[LINKED_VARS_COLUMN]);
-                    return;
-                }
-            }
-            //if we get here, then this is a new module
-            SubModule subMod = new SubModule(rowValues[SUB_MODULE_COLUMN], convertStringToFlagType(rowValues[FLAG_COLUMN]));
-            subMod.addLinkedRecord(rowValues[LINKED_VARS_COLUMN]);
-            subModules.add(subMod);
-        }
-    }
+
 
     private SubModule.FlagType convertStringToFlagType(String flag)
     {

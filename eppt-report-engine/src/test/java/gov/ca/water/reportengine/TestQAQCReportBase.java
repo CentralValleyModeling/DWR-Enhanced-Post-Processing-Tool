@@ -95,9 +95,15 @@ public class TestQAQCReportBase
         return documentBuilder.newDocument();
     }
 
-    public Path getCSVPath()
+    protected Path getCSVPath()
     {
-        URL resource = this.getClass().getClassLoader().getResource("Category_V1.01.csv");
+        URL resource = this.getClass().getClassLoader().getResource("ExecutiveReportModulesCSV.csv");
+        return new File(resource.getPath()).toPath();
+    }
+
+    protected Path getModuleLinkingCSVPath()
+    {
+        URL resource = this.getClass().getClassLoader().getResource("SubModuleLinking.csv");
         return new File(resource.getPath()).toPath();
     }
 

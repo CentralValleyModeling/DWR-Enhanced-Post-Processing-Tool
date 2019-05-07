@@ -19,13 +19,13 @@ public class TestReservoirOperationsRow extends ExecutiveReportTestBase
     @Test
     void testResOpsRowWithBaseOnly() throws Exception
     {
-        testBaseOnly(ExecutiveReportXMLCreator.RES_OPS, "Reservoir Operation");
+        testBaseOnly( "Reservoir Operation");
     }
 
     @Test
     void testResOpsRowWithOneAlternativeSameModel() throws Exception
     {
-        testOneAlternativeSameModel(ExecutiveReportXMLCreator.RES_OPS, "Reservoir Operation");
+        testOneAlternativeSameModel( "Reservoir Operation");
     }
 
 }

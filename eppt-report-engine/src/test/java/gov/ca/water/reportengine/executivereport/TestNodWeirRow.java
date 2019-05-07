@@ -19,13 +19,13 @@ public class TestNodWeirRow extends ExecutiveReportTestBase
     @Test
     void testNodWeirRowWithBaseOnly() throws Exception
     {
-        testBaseOnly(ExecutiveReportXMLCreator.NOD_WEIR, "NOD Weirs Operations");
+        testBaseOnly( "NOD Weirs Operations");
     }
 
     @Test
     void testResNodWeirRowWithOneAlternativeSameModel() throws Exception
     {
-        testOneAlternativeSameModel(ExecutiveReportXMLCreator.NOD_WEIR, "NOD Weirs Operations");
+        testOneAlternativeSameModel( "NOD Weirs Operations");
     }
 
 }

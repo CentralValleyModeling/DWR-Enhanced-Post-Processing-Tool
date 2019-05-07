@@ -23,11 +23,11 @@
       <executive-report-table>
          <module header="Issues">
             <study study-order="1">Base Study</study>
-            <model-entries model-order="01" name="Reservoir Operation">0 incident(s) of below DP&#xD;0 incident(s) of above Flood&#xD;0 incident(s) of Spill</model-entries>
+            <model-entries model-order="01" name="NOD Reservoir Operation">0 incident(s) of below DP&#xD;0 incident(s) of above Flood&#xD;0 incident(s) of Spill</model-entries>
          </module>
          <module header="Issues">
             <study study-order="1">Base Study</study>
-            <model-entries model-order="02" name="Upstream MIF Requirements">1 incident(s) of violation</model-entries>
+            <model-entries model-order="02" name="Upstream Minimum Flow Requirements">1 incident(s) of violation</model-entries>
          </module>
          <module header="Issues">
             <study study-order="1">Base Study</study>

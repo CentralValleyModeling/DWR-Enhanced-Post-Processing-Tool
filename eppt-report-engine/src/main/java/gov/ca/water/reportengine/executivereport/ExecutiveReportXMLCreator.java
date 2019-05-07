@@ -69,7 +69,7 @@ public class ExecutiveReportXMLCreator
     static final String MASS_BALANCE = "MassBalance";
 
     //values from the helper xml
-    private Document _helperDoc;
+    //private Document _helperDoc;
 
 
     public ExecutiveReportXMLCreator()
@@ -80,25 +80,25 @@ public class ExecutiveReportXMLCreator
     /**
      * Creates the entire executive report element
      *
-     * @param csvPath
+     * @param modulesCSVPath
      * @param dssFiles
      * @return
      * @throws Exception
      */
-    void appendExecutiveReportTableElement(Path csvPath, List<Path> dssFiles, List<FileChangesStatistics> modelInputStats, boolean sameModel, Document doc) throws Exception
+    void appendExecutiveReportTableElement(Path modulesCSVPath,Path moduleLinkingCSVPath, List<Path> dssFiles, List<FileChangesStatistics> modelInputStats, boolean sameModel, Document doc) throws Exception
     {
         if (dssFiles.size() == 1)
         {
             sameModel = false;
         }
-        loadHelperXMLFile();
+        //loadHelperXMLFile();
 
         Element execReportTableElem = doc.createElement(TABLE_HEADER);
 
         int i = 1;
         for (Path path : dssFiles)
         {
-            ExecutiveReportProcessor processor = new ExecutiveReportProcessor(csvPath);
+            ExecutiveReportProcessor processor = new ExecutiveReportProcessor(modulesCSVPath, moduleLinkingCSVPath);
             List<Module> modules = processor.processDSSFile(path, i);
             //now the modules have the violation numbers
 
@@ -141,7 +141,7 @@ public class ExecutiveReportXMLCreator
         int rowNumber = 1;
         for (Module mod : modules)
         {
-            if ("ModelInputs".equalsIgnoreCase(mod.getName()))
+            if ("Model Inputs".equalsIgnoreCase(mod.getName()))
             {
                 if (sameModel)
                 {
@@ -150,7 +150,7 @@ public class ExecutiveReportXMLCreator
                 }
                 //else skip it, we don't want to write it out
             }
-            else if ("CoordinatedOperationsAgreement".equalsIgnoreCase(mod.getName()))
+            else if ("COA".equalsIgnoreCase(mod.getName()))
             {
                 //add this element using the max value from the list of values
                 retVal.add(createCOAElementFromModule(mod, scenarioNumber, rowNumber, doc));
@@ -181,13 +181,13 @@ public class ExecutiveReportXMLCreator
         for (SubModule sm : module.getSubModules())
         {
 
-            NodeList moduleNodes = _helperDoc.getElementsByTagName(module.getName());
-            if (moduleNodes.getLength() > 0)
+           // NodeList moduleNodes = _helperDoc.getElementsByTagName(module.getName());
+            //if (moduleNodes.getLength() > 0)
             {
-                Node moduleNode = moduleNodes.item(0);
-                if (moduleNode.getNodeType() == Node.ELEMENT_NODE)
+                //Node moduleNode = moduleNodes.item(0);
+                //if (moduleNode.getNodeType() == Node.ELEMENT_NODE)
                 {
-                    Element elem = (Element) moduleNode;
+                    //Element elem = (Element) moduleNode;
                     int numViolations;
                     if (alternativeNumber == 1)
                     {
@@ -197,7 +197,7 @@ public class ExecutiveReportXMLCreator
                     {
                         numViolations = sm.getAlternativeViolations(alternativeNumber).size();
                     }
-                    String subModuleText = elem.getElementsByTagName(sm.getName()).item(0).getTextContent();
+                    String subModuleText = sm.getName(); //elem.getElementsByTagName(sm.getName()).item(0).getTextContent();
                     String formattedText = String.format(subModuleText, numViolations);
                     subModuleStrings.add(formattedText);
                 }
@@ -250,13 +250,13 @@ public class ExecutiveReportXMLCreator
         for (SubModule sm : module.getSubModules())
         {
 
-            NodeList moduleNodes = _helperDoc.getElementsByTagName(module.getName());
-            if (moduleNodes.getLength() > 0)
+            //NodeList moduleNodes = _helperDoc.getElementsByTagName(module.getName());
+            //if (moduleNodes.getLength() > 0)
             {
-                Node moduleNode = moduleNodes.item(0);
-                if (moduleNode.getNodeType() == Node.ELEMENT_NODE)
+                //Node moduleNode = moduleNodes.item(0);
+                //if (moduleNode.getNodeType() == Node.ELEMENT_NODE)
                 {
-                    Element elem = (Element) moduleNode;
+                   // Element elem = (Element) moduleNode;
                     double maxValue;
                     if (alternativeNumber == 1)
                     {
@@ -266,7 +266,7 @@ public class ExecutiveReportXMLCreator
                     {
                         maxValue = sm.getAlternativeViolations(alternativeNumber).get(0).getMaxValue();
                     }
-                    String subModuleText = elem.getElementsByTagName(sm.getName()).item(0).getTextContent();
+                    String subModuleText = sm.getName(); //elem.getElementsByTagName(sm.getName()).item(0).getTextContent();
                     String formattedText = String.format(subModuleText, maxValue);
                     subModuleStrings.add(formattedText);
                 }
@@ -367,21 +367,21 @@ public class ExecutiveReportXMLCreator
         return altStudyElem;
     }
 
-    private void loadHelperXMLFile() throws ExecutiveReportException
-    {
-
-        URL helperXMLURL = this.getClass().getClassLoader().getResource("ExecutiveReportHelperXML.xml");
-        String path = helperXMLURL.getPath();
-        try
-        {
-            DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
-            DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
-            _helperDoc = dBuilder.parse(path);
-            _helperDoc.getDocumentElement().normalize();
-        }
-        catch (ParserConfigurationException | IOException | SAXException e)
-        {
-            throw new ExecutiveReportException("Error while trying to read the xml file: " + path, e);
-        }
-    }
+//    private void loadHelperXMLFile() throws ExecutiveReportException
+//    {
+//
+//        URL helperXMLURL = this.getClass().getClassLoader().getResource("ExecutiveReportHelperXML.xml");
+//        String path = helperXMLURL.getPath();
+//        try
+//        {
+//            DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
+//            DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
+//            _helperDoc = dBuilder.parse(path);
+//            _helperDoc.getDocumentElement().normalize();
+//        }
+//        catch (ParserConfigurationException | IOException | SAXException e)
+//        {
+//            throw new ExecutiveReportException("Error while trying to read the xml file: " + path, e);
+//        }
+//    }
 }

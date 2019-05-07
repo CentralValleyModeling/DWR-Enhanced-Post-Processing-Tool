@@ -21,6 +21,8 @@ public class SubModule
     private final FlagType _flagValue;
     private final List<String> _linkedRecords;
     private final String _name;
+    private final int _id;
+    //private final String _text;
 
     private List<FlagViolation> _baseViolations = new ArrayList<>();
     private Map<Integer, List<FlagViolation>> _alternativeViolations = new HashMap<>();
@@ -34,38 +36,46 @@ public class SubModule
         OTHER
     }
 
-    public SubModule(String name, FlagType flagValue)
+    SubModule(int id, String name, FlagType flagValue)
     {
+        //_text = text;
+        _id = id;
         _name = name;
         _flagValue = flagValue;
         _linkedRecords = new ArrayList<>();
     }
 
-    public void addLinkedRecord(String recordName)
+    public int getId()
     {
-        _linkedRecords.add(recordName);
+        return _id;
     }
+    void addLinkedRecords(List<String> recordNames)
+    {
+        _linkedRecords.addAll(recordNames);
+    }
+
+
     public String getName()
     {
         return _name;
     }
 
-    public FlagType getFlagValue()
+     FlagType getFlagValue()
     {
         return _flagValue;
     }
 
-    public List<String> getLinkedRecords()
+     List<String> getLinkedRecords()
     {
         return _linkedRecords;
     }
 
-    public void addBaseViolations(List<FlagViolation> violations)
+     void addBaseViolations(List<FlagViolation> violations)
     {
         _baseViolations.addAll(violations);
     }
 
-    public void addAlternativeViolations(int altName, List<FlagViolation> violations)
+     void addAlternativeViolations(int altName, List<FlagViolation> violations)
     {
         if(_alternativeViolations.containsKey(altName))
         {
@@ -78,12 +88,12 @@ public class SubModule
         }
     }
 
-    public List<FlagViolation> getBaseViolations()
+     List<FlagViolation> getBaseViolations()
     {
         return _baseViolations;
     }
 
-    public List<FlagViolation> getAlternativeViolations(int altNumber)
+     List<FlagViolation> getAlternativeViolations(int altNumber)
     {
         if(_alternativeViolations.containsKey(altNumber))
         {

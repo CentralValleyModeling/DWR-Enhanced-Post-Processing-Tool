@@ -1,0 +1,15 @@
+ID,Modules Text,Sub-module Executive Report Text,Sub Module additional text,Flag/Value
+1,Model Inputs,%d timeseries updated in SV,,Value 
+2,Model Inputs,%d file(s) changed,,Value 
+3,Model Inputs,%d file(s) added,,Value 
+4,Model Inputs,%d file(s) deleted,,Value
+5,NOD Reservoir Operation,%d incident(s) of below DP,%title% below %Threshold Label%,2
+6,NOD Reservoir Operation,%d incident(s) of above Flood,%title% above %Threshold Label% ,0
+7,NOD Reservoir Operation,%d incident(s) of Spill,%title% at %Threshold Label% ,1
+8,Upstream Minimum Flow Requirements,%d incident(s) of violation,%title% %Threshold Label% violations:,2
+9,NOD Weirs Operation,%d incident(s) of spilling,%title% %Threshold Label% violations:,1
+10,NOD Groundwater Pumping,%d incident(s) of violation,%title% %Threshold Label% violations:,1
+11,Delta Operations,%d incident(s) of violation,%title% %Threshold Label% violations:,2
+12,COA,%.2f%% different Between Actual and Agreed ratio,%title% %Threshold Label% difference:,Value
+13,Allocations and Deliveries,%d incident(s) of shortage,%title% %Threshold Label% shortages:,1
+14,Mass Balance ,%d incident(s) of off balance,%title% %Threshold Label% off balance: ,1

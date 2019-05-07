@@ -21,13 +21,13 @@ public class TestCOARow extends ExecutiveReportTestBase
     @Test
     void testCOARowWithBaseOnly() throws Exception
     {
-        testBaseOnly(ExecutiveReportXMLCreator.COA, "COA");
+        testBaseOnly( "COA");
     }
 
     @Test
     void testResCOARowWithOneAlternativeSameModel() throws Exception
     {
-        testOneAlternativeSameModel(ExecutiveReportXMLCreator.COA, "COA");
+        testOneAlternativeSameModel( "COA");
     }
 
 }

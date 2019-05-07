@@ -21,12 +21,12 @@ public class TestAllocationDeliveriesRow extends ExecutiveReportTestBase
     @Test
     void testAllocationDeliveriesRowWithBaseOnly() throws Exception
     {
-        testBaseOnly(ExecutiveReportXMLCreator.ALLOCATIONS_DEL, "Allocations and Deliveries");
+        testBaseOnly( "Allocations and Deliveries");
     }
 
     @Test
     void testAllocationDeliveriesRowWithOneAlternativeSameModel() throws Exception
     {
-        testOneAlternativeSameModel(ExecutiveReportXMLCreator.ALLOCATIONS_DEL, "Allocations and Deliveries");
+        testOneAlternativeSameModel( "Allocations and Deliveries");
     }
 }

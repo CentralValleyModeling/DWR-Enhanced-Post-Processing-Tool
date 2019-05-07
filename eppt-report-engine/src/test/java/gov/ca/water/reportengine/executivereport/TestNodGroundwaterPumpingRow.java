@@ -20,12 +20,12 @@ public class TestNodGroundwaterPumpingRow extends ExecutiveReportTestBase
     @Test
     void testGroundwaterRowWithBaseOnly() throws Exception
     {
-        testBaseOnly(ExecutiveReportXMLCreator.NOD_GROUND_PUMP, "NOD Groundwater Pumping");
+        testBaseOnly( "NOD Groundwater Pumping");
     }
 
     @Test
     void testResGroundwaterRowWithOneAlternativeSameModel() throws Exception
     {
-        testOneAlternativeSameModel(ExecutiveReportXMLCreator.NOD_GROUND_PUMP, "NOD Groundwater Pumping");
+        testOneAlternativeSameModel( "NOD Groundwater Pumping");
     }
 }

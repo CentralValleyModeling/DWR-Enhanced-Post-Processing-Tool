@@ -21,12 +21,12 @@ public class TestDeltaOpsRow extends ExecutiveReportTestBase
     @Test
     void testDeltaOpsRowWithBaseOnly() throws Exception
     {
-        testBaseOnly(ExecutiveReportXMLCreator.DELTA_OPS, "Delta Operations");
+        testBaseOnly( "Delta Operations");
     }
 
     @Test
     void testResDeltaOpsRowWithOneAlternativeSameModel() throws Exception
     {
-        testOneAlternativeSameModel(ExecutiveReportXMLCreator.DELTA_OPS, "Delta Operations");
+        testOneAlternativeSameModel( "Delta Operations");
     }
 }

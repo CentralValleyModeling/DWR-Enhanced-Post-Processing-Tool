@@ -20,12 +20,12 @@ public class TestMassBalanceRow extends ExecutiveReportTestBase
     @Test
     void testMassBalanceRowWithBaseOnly() throws Exception
     {
-        testBaseOnly(ExecutiveReportXMLCreator.MASS_BALANCE, "Mass Balance");
+        testBaseOnly( "Mass Balance");
     }
 
     @Test
     void testResMassBalanceRowWithOneAlternativeSameModel() throws Exception
     {
-        testOneAlternativeSameModel(ExecutiveReportXMLCreator.MASS_BALANCE, "Mass Balance");
+        testOneAlternativeSameModel( "Mass Balance");
     }
 }
