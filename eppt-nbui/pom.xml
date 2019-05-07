@@ -153,7 +153,7 @@
 		<dependency>
 			<groupId>gov.ca.water</groupId>
 			<artifactId>wrimsv2</artifactId>
-			<version>1.0</version>
+			<version>3513.e282bd99</version>
 			<classifier>Wrims_Distribution</classifier>
 		</dependency>
 		<dependency>
@@ -295,6 +295,13 @@
 						<nbmResource>
 							<directory>${project.basedir}/src/main/wresl</directory>
 							<targetPath>wresl</targetPath>
+							<includes>
+								<include>**</include>
+							</includes>
+						</nbmResource>
+						<nbmResource>
+							<directory>${project.basedir}/src/main/jasper</directory>
+							<targetPath>jasper</targetPath>
 							<includes>
 								<include>**</include>
 							</includes>

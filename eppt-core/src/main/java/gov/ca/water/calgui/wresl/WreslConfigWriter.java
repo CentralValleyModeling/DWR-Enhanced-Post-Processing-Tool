@@ -90,8 +90,8 @@ class WreslConfigWriter
 			configText = configText.replace("{SvarFile}", dssContainer.getSvDssFile().getDssPath().toString());
 			configText = configText.replace("{InitFile}", dssContainer.getIvDssFile().getDssPath().toString());
 			configText = configText.replace("{DvarFile}", dssContainer.getDvDssFile().getDssPath().toString());
-			//			configText = configText.replace("{SvarFPart}", _svFPart);
-			//			configText = configText.replace("{InitFPart}", _ivFPart);
+			configText = configText.replace("{SvarFPart}", "2020D09E");
+			configText = configText.replace("{InitFPart}", "2020D09E");
 			configText = configText.replace("{StartYear}", Integer.toString(_startDate.getYear()));
 			configText = configText.replace("{StartMonth}", Integer.toString(_startDate.getMonthValue()));
 			configText = configText.replace("{StartDay}", Integer.toString(_startDate.getDayOfMonth()));

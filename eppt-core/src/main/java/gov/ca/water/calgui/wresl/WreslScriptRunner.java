@@ -12,12 +12,24 @@
 
 package gov.ca.water.calgui.wresl;
 
+import java.io.BufferedInputStream;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.time.LocalDate;
 import java.util.Calendar;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import gov.ca.water.calgui.project.EpptScenarioRun;
 import org.antlr.runtime.RecognitionException;
@@ -89,28 +101,51 @@ public class WreslScriptRunner
 					.write()
 					.toAbsolutePath();
 			String separator = System.getProperty("file.separator");
-			String classpath = "\"" + System.getProperty("java.class.path") + "\"";
+			String javaLibraryPath = "-Djava.library.path=\"" + Paths.get("dwr_eppt/modules/lib").toAbsolutePath() + "\"";
 			String path = "\"" + System.getProperty("java.home")
 					+ separator + "bin" + separator + "java" + "\"";
-			String[] args = new String[]{path, "-cp",
-					classpath, WreslScriptRunner.class.getName(), "-config=\"" + configPath.toString() + "\""};
-			String commandLine = String.join(" ", args);
-			ProcessBuilder processBuilder = new ProcessBuilder()
-					.command(commandLine)
-					.inheritIO();
-			LOGGER.log(Level.INFO, "Running process: {0}", commandLine);
-			Process process = processBuilder.start();
-			process.waitFor();
-			int exitValue = process.exitValue();
-			if(exitValue != 0)
+			String classpath =  "";//"\"";// + System.getProperty("java.class.path") + "\";";
+			Path epptDir = Paths.get("dwr_eppt");
+			Path modulesDir = epptDir.resolve("modules/ext");
+			try(Stream<Path> walk = Files.walk(modulesDir, 2))
 			{
-				throw new WreslScriptException(
-						"Error running wresl script: " + _scenarioRun.getWreslMain() + ". Return code was: " + exitValue);
+				classpath += walk.filter(p -> p.toFile().isDirectory()).map(Object::toString)
+								 .map(p->"set classpath=%classpath%;" + p)
+								 .collect(Collectors.joining("\n"));
 			}
+
+
+			String[] args = new String[]{path, "-Xmx1472m -Xss1280K", javaLibraryPath, WreslScriptRunner.class.getName(), "-config=\"" + configPath.toString() + "\""};
+			String commandLine = String.join(" ", args);
+			Path outputBat = Paths.get("output.bat");
+			try(BufferedWriter bufferedWriter = Files.newBufferedWriter(outputBat))
+			{
+				//				bufferedWriter.write("setlocal");
+				bufferedWriter.newLine();
+				bufferedWriter.newLine();
+				bufferedWriter.write(classpath);
+				bufferedWriter.newLine();
+				bufferedWriter.write(commandLine);
+				bufferedWriter.flush();
+			}
+			ProcessBuilder processBuilder = new ProcessBuilder()
+					.command(outputBat.toString())
+					.redirectOutput(new File("output.txt"));
+			LOGGER.log(Level.INFO, "Running process: {0}", commandLine);
+			WreslScriptRunner.main(new String[]{"-config=" + configPath.toString()});
+//			Process process = processBuilder.start();
+//			process.waitFor();
+//			int exitValue = process.exitValue();
+//			if(exitValue != 0)
+//			{
+//				throw new WreslScriptException(_scenarioRun.getWreslMain() + " " +
+//						"WRESL ERROR Return Code: " + exitValue);
+//			}
 		}
-		catch(IOException | InterruptedException ex)
+		catch(IOException /*| InterruptedException*/ ex)
 		{
 			LOGGER.log(Level.SEVERE, "Error starting WRESL script JVM", ex);
+			Thread.currentThread().interrupt();
 		}
 	}
 }

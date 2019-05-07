@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xmlDataAdapter class="net.sf.jasperreports.data.xml.XmlDataAdapterImpl">
+   <name>QAQCReport</name>
+   <dataFile xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="repositoryDataLocation">
+      <location>QAQC_Report_Comparison-DiffModel.xml</location>
+   </dataFile>
+   <useConnection>true</useConnection>
+   <namespaceAware>true</namespaceAware>
+   <selectExpression />
+   <locale xmlns:java="http://java.sun.com" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="java:java.lang.String">en_US</locale>
+   <timeZone xmlns:java="http://java.sun.com" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="java:java.lang.String">America/Los_Angeles</timeZone>
+</xmlDataAdapter>

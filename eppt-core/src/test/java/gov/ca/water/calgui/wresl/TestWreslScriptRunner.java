@@ -40,6 +40,7 @@ public class TestWreslScriptRunner
 {
 
 	private static EpptScenarioRun EPPT_SCENARIO_RUN;
+	private static EpptScenarioRun EPPT_SCENARIO_RUN_NOOP;
 
 	static
 	{
@@ -56,8 +57,10 @@ public class TestWreslScriptRunner
 		String description = "Unit test runner";
 		GUILinksAllModelsBO.Model model = GUILinksAllModelsBO.Model.findModel("CalSim2");
 		Path outputPath = Paths.get("");
-		Path wreslMain = new File(
+		Path wreslMain  = new File(
 				TestWreslScriptRunner.class.getClassLoader().getResource("mainControl.wresl").getFile()).toPath();
+		Path wreslNoop= new File(
+				TestWreslScriptRunner.class.getClassLoader().getResource("logic_Dummy.wresl").getFile()).toPath();
 		Path dvPath = new File(
 				TestWreslScriptRunner.class.getClassLoader().getResource("SampleDV_Base.dss").getFile()).toPath();
 		NamedDssPath dvDssFile = new NamedDssPath(dvPath, "DV");
@@ -71,17 +74,19 @@ public class TestWreslScriptRunner
 		EpptDssContainer dssContainer = new EpptDssContainer(dvDssFile, svDssFile, ivDssFile, extraDssFiles);
 		EPPT_SCENARIO_RUN = new EpptScenarioRun(name, description, model, outputPath,
 				wreslMain, dssContainer);
+		EPPT_SCENARIO_RUN_NOOP = new EpptScenarioRun(name, description, model, outputPath,
+				wreslNoop, dssContainer);
 	}
 
-	@Test
-	void testWreslScriptRunnerNoop() throws Exception
+//	@Test
+	void testWreslScriptRunnerMain() throws Exception
 	{
 		try
 		{
 
 			LocalDate start = LocalDate.ofYearDay(1922, 3);
 			LocalDate end = LocalDate.ofYearDay(2000, 3);
-			new WreslScriptRunner(EPPT_SCENARIO_RUN).run(start, end);
+			new WreslScriptRunner(EPPT_SCENARIO_RUN_NOOP).run(start, end);
 		}
 		catch(WreslScriptException ex)
 		{
@@ -89,15 +94,14 @@ public class TestWreslScriptRunner
 		}
 	}
 
-	@Test
+//	@Test
 	void testWreslScriptNoop() throws Exception
 	{
 		try
 		{
-
 			LocalDate start = LocalDate.ofYearDay(1922, 3);
 			LocalDate end = LocalDate.ofYearDay(2000, 3);
-			Path write = new WreslConfigWriter(EPPT_SCENARIO_RUN)
+			Path write = new WreslConfigWriter(EPPT_SCENARIO_RUN_NOOP)
 					.withStartDate(start)
 					.withEndDate(end)
 					.write();

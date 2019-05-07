@@ -32,7 +32,6 @@ import gov.ca.water.calgui.constant.EpptPreferences;
 import gov.ca.water.calgui.project.EpptDssContainer;
 import gov.ca.water.calgui.project.EpptScenarioRun;
 import gov.ca.water.calgui.project.NamedDssPath;
-import gov.ca.water.quickresults.ui.PathTextField;
 
 /**
  * Company: Resource Management Associates
@@ -64,11 +63,11 @@ class ScenarioRunEditor extends JDialog
 		_nameField = new JTextField();
 		_descriptionField = new JTextField();
 		_modelCombobox = new JComboBox<>();
-		_outputTextField = PathTextField.createDirectoryTextField();
-		_wreslTextField = PathTextField.createFileTextField("wresl");
-		_dvTextField = PathTextField.createFileTextField("dss");
-		_svTextField = PathTextField.createFileTextField("dss");
-		_ivTextField = PathTextField.createFileTextField("dss");
+		_outputTextField = new JTextField();
+		_wreslTextField = new JTextField();
+		_dvTextField = new JTextField();
+		_svTextField = new JTextField();
+		_ivTextField = new JTextField();
 		_dvAliasTextField = new JTextField();
 		_svAliasTextField = new JTextField();
 		_ivAliasTextField = new JTextField();

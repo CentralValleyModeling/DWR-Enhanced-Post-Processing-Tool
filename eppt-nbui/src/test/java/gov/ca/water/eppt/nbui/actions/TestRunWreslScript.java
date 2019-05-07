@@ -31,6 +31,6 @@ class TestRunWreslScript
 	{
 		HecDSSFileAccess.setMessageLevel(HecDSSFileAccess.MESS_LEVEL_GENERAL);
 		RunWreslScript runWreslScript = new RunWreslScript();
-		runWreslScript.initReport(new String[]{"-config=J:\\DWR\\QA_QC\\SupportingDocs040219\\EPPT Supporting Doc 040219\\DEFAULT.config"});
+		runWreslScript.initReport();
 	}
 }
