@@ -33,12 +33,11 @@ public class ScenarioRunCellRenderer extends DefaultTreeCellRenderer
 				row, hasFocus);
 		if(value instanceof ScenarioRunNode)
 		{
-			JRadioButton radioButton = buildRadioButton((ScenarioRunNode) value, selected);
-			treeCellRendererComponent = radioButton;
+			treeCellRendererComponent = buildRadioButton((ScenarioRunNode) value, selected);
 		}
 		else if(value instanceof DssPathNode)
 		{
-			setToolTipText(((DssPathNode) value).getDssPath().toString());
+			setToolTipText(((DssPathNode) value).getDssPath().getDssPath().toString());
 		}
 		return treeCellRendererComponent;
 	}

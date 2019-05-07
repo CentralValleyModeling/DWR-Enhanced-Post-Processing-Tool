@@ -24,6 +24,7 @@ import java.io.IOException;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
@@ -41,12 +42,15 @@ import gov.ca.water.calgui.bo.RBListItemBO;
 import gov.ca.water.calgui.bo.ResultUtilsBO;
 import gov.ca.water.calgui.constant.EpptPreferences;
 import gov.ca.water.calgui.presentation.WRIMSGUILinks;
+import gov.ca.water.calgui.project.EpptProject;
 import gov.ca.water.calgui.project.EpptScenarioRun;
 import gov.ca.water.calgui.techservice.IErrorHandlingSvc;
 import gov.ca.water.calgui.techservice.impl.ErrorHandlingSvcImpl;
 import gov.ca.water.quickresults.ui.EpptPanel;
 import org.apache.log4j.Logger;
 import org.jfree.data.time.Month;
+
+import static gov.ca.water.quickresults.ui.projectconfig.ProjectConfigurationIO.ID_KEY;
 
 /**
  * Company: Resource Management Associates
@@ -65,7 +69,6 @@ public final class ProjectConfigurationPanel extends EpptPanel
 	private final JTextField _descriptionField = new JTextField();
 	private final DefaultTreeModel _scenarioTreeModel;
 	private final DefaultMutableTreeNode _rootNode = new DefaultMutableTreeNode();
-	private DefaultListModel<RBListItemBO> _lmScenNames = new DefaultListModel<>();
 	private boolean _ignoreModifiedEvents = false;
 
 	private ProjectConfigurationPanel()
@@ -163,21 +166,6 @@ public final class ProjectConfigurationPanel extends EpptPanel
 		return retval;
 	}
 
-	private List<EpptScenarioRun> getScenarioRuns()
-	{
-		List<EpptScenarioRun> retval = new ArrayList<>();
-		int childCount = _rootNode.getChildCount();
-		for(int i = 0; i < childCount; i++)
-		{
-			TreeNode childAt = _rootNode.getChildAt(i);
-			if(childAt instanceof ScenarioRunNode)
-			{
-				retval.add(((ScenarioRunNode) childAt).getScenarioRun());
-			}
-		}
-		return retval;
-	}
-
 	/**
 	 * This method is for unit testing purposes only
 	 *
@@ -208,7 +196,6 @@ public final class ProjectConfigurationPanel extends EpptPanel
 
 	private void initModels()
 	{
-		initializeDssListModel();
 		initializeScenariosModel();
 		initializeSpinners();
 	}
@@ -245,7 +232,6 @@ public final class ProjectConfigurationPanel extends EpptPanel
 		};
 		_nameField.getDocument().addDocumentListener(documentListener);
 		_descriptionField.getDocument().addDocumentListener(documentListener);
-		_lmScenNames.addListDataListener(new MyListDataListener());
 	}
 
 	private void initializeSpinners()
@@ -260,22 +246,6 @@ public final class ProjectConfigurationPanel extends EpptPanel
 		ResultUtilsBO.SetNumberModelAndIndex(spnSY, 1921, 1921, 2003, 1, "####", null, true);
 		JSpinner spnEY = (JSpinner) getSwingEngine().find("spnEndYear");
 		ResultUtilsBO.SetNumberModelAndIndex(spnEY, 2003, 1921, 2003, 1, "####", null, true);
-	}
-
-	private void initializeDssListModel()
-	{
-		Component component = getSwingEngine().find("SelectedList");
-		if(component instanceof JList)
-		{
-			JList<RBListItemBO> lstScenarios = (JList<RBListItemBO>) component;
-			lstScenarios.getSelectionModel().addListSelectionListener(e -> setModified(true));
-			lstScenarios.getModel().addListDataListener(new ProjectConfigurationListDataListener());
-			_lmScenNames.removeAllElements();
-			getScenarioList().setModel(_lmScenNames);
-			getScenarioList().setCellRenderer(new RBListRenderer());
-			getScenarioList().setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-			getScenarioList().addMouseListener(new ProjectConfigurationMouseAdapter());
-		}
 	}
 
 	private void initializeScenariosModel()
@@ -299,30 +269,9 @@ public final class ProjectConfigurationPanel extends EpptPanel
 		return "Viewing Results";
 	}
 
-	private Component getSelectedList()
-	{
-		return getSwingEngine().find("SelectedList");
-	}
-
 	JPanel getControls2()
 	{
 		return (JPanel) getSwingEngine().find("controls2");
-	}
-
-	public List<RBListItemBO> getScenarios()
-	{
-		List<RBListItemBO> retval = new ArrayList<>();
-		Component component = getSelectedList();
-		if(component instanceof JList)
-		{
-			JList<RBListItemBO> lstScenarios = (JList<RBListItemBO>) component;
-			ListModel<RBListItemBO> model = lstScenarios.getModel();
-			for(int i = 0; i < model.getSize(); i++)
-			{
-				retval.add(model.getElementAt(i));
-			}
-		}
-		return retval;
 	}
 
 
@@ -564,11 +513,19 @@ public final class ProjectConfigurationPanel extends EpptPanel
 			try
 			{
 				_ignoreModifiedEvents = true;
-				ProjectConfigurationDescriptor projectConfigurationDescriptor = _projectConfigurationIO.loadConfiguration(
+
+				EpptProject project = _projectConfigurationIO.loadConfiguration(
 						selectedPath);
 				EpptPreferences.setLastProjectConfiguration(selectedPath);
-				_nameField.setText(projectConfigurationDescriptor.getName());
-				_descriptionField.setText(projectConfigurationDescriptor.getDescription());
+				_nameField.setText(project.getName());
+				_descriptionField.setText(project.getDescription());
+				setStartMonth(project.getStartMonth());
+				setEndMonth(project.getEndMonth());
+				updateSelectedComponents(project.getSelectedComponents());
+				for(EpptScenarioRun scenarioRun : project.getScenarioRuns())
+				{
+					addScenario(scenarioRun);
+				}
 			}
 			finally
 			{
@@ -577,14 +534,27 @@ public final class ProjectConfigurationPanel extends EpptPanel
 		}
 	}
 
+	private void updateSelectedComponents(Map<String, Boolean> selectedComponents)
+	{
+		for(Map.Entry<String, Boolean> entry : selectedComponents.entrySet())
+		{
+			String key = entry.getKey();
+			Boolean selected = entry.getValue();
+			Component component = getSwingEngine().find(key);
+			if(component instanceof JCheckBox)
+			{
+				((JCheckBox) component).setSelected(selected);
+			}
+			else if(component instanceof JRadioButton)
+			{
+				((JRadioButton) component).setSelected(selected);
+			}
+		}
+	}
+
 	JList<RBListItemBO> getScenarioList()
 	{
 		return (JList<RBListItemBO>) getSwingEngine().find("SelectedList");
-	}
-
-	DefaultListModel<RBListItemBO> getLmScenNames()
-	{
-		return _lmScenNames;
 	}
 
 	private JRadioButton getRadioButton1()
@@ -614,41 +584,6 @@ public final class ProjectConfigurationPanel extends EpptPanel
 		yearSpinner.setValue(end.getYearValue());
 	}
 
-	public void setScenarios(List<RBListItemBO> scenarios)
-	{
-		JRadioButton radioButton = (JRadioButton) getSwingEngine().find("rdbp001");
-		radioButton.setSelected(true);
-		Component component = getSwingEngine().find("SelectedList");
-		if(component instanceof JList)
-		{
-			JList<RBListItemBO> lstScenarios = (JList<RBListItemBO>) component;
-			_lmScenNames.removeAllElements();
-			for(RBListItemBO item : scenarios)
-			{
-				_lmScenNames.addElement(item);
-			}
-			lstScenarios.setModel(_lmScenNames);
-			scenarioListChanged();
-		}
-	}
-
-	private void scenarioListChanged()
-	{
-		getRadioButton1().setEnabled(_lmScenNames.getSize() > 1);
-		getRadioButton2().setEnabled(_lmScenNames.getSize() > 1);
-		if(_lmScenNames.getSize() <= 1)
-		{
-			JRadioButton radioButton = (JRadioButton) getSwingEngine().find("rdbp000");
-			radioButton.setSelected(true);
-		}
-//		WRIMSGUILinks.updateProjectFiles(getScenarioList());
-		ProjectConfigurationPanel.this.setModified(true);
-		getScenarioList().setModel(_lmScenNames);
-		getScenarioList().invalidate();
-		getScenarioList().revalidate();
-		getScenarioList().repaint();
-	}
-
 	public String getProjectName()
 	{
 		return _nameField.getText();
@@ -667,6 +602,26 @@ public final class ProjectConfigurationPanel extends EpptPanel
 		initComponents();
 		initModels();
 		setActionListener(getActionListener());
+	}
+
+	public EpptScenarioRun getBaseScenario()
+	{
+		EpptScenarioRun retval = null;
+		int childCount = _rootNode.getChildCount();
+		for(int i = 0; i < childCount; i++)
+		{
+			TreeNode childAt = _rootNode.getChildAt(i);
+			if(childAt instanceof ScenarioRunNode)
+			{
+				ScenarioRunNode scenarioRunNode = (ScenarioRunNode) childAt;
+				if(scenarioRunNode.isBase())
+				{
+					retval = scenarioRunNode.getScenarioRun();
+					break;
+				}
+			}
+		}
+		return retval;
 	}
 
 	EpptScenarioRun getSelectedScenario()
@@ -713,13 +668,32 @@ public final class ProjectConfigurationPanel extends EpptPanel
 		}
 	}
 
+	public List<EpptScenarioRun> getEpptScenarioAlternatives()
+	{
+		List<EpptScenarioRun> scenarioRuns = new ArrayList<>();
+		int childCount = _rootNode.getChildCount();
+		for(int i = 0; i < childCount; i++)
+		{
+			TreeNode childAt = _rootNode.getChildAt(i);
+			if(childAt instanceof ScenarioRunNode && !((ScenarioRunNode) childAt).isBase())
+			{
+				scenarioRuns.add(((ScenarioRunNode) childAt).getScenarioRun());
+			}
+		}
+		return scenarioRuns;
+	}
+
 	public List<EpptScenarioRun> getEpptScenarioRuns()
 	{
 		List<EpptScenarioRun> scenarioRuns = new ArrayList<>();
 		int childCount = _rootNode.getChildCount();
 		for(int i = 0; i < childCount; i++)
 		{
-
+			TreeNode childAt = _rootNode.getChildAt(i);
+			if(childAt instanceof ScenarioRunNode)
+			{
+				scenarioRuns.add(((ScenarioRunNode) childAt).getScenarioRun());
+			}
 		}
 		return scenarioRuns;
 	}
@@ -755,129 +729,6 @@ public final class ProjectConfigurationPanel extends EpptPanel
 		{
 			JTree scenarioTree = (JTree) component;
 			scenarioTree.expandPath(new TreePath(_scenarioTreeModel.getPathToRoot(treeNode)));
-		}
-	}
-
-	/**
-	 * Custom class to show radiobutton items in place of textfields in a list
-	 *
-	 * @author tslawecki
-	 */
-	private static class RBListRenderer extends JRadioButton implements ListCellRenderer
-	{
-		@Override
-		public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected,
-													  boolean hasFocus)
-		{
-			RBListItemBO rbListItemBO = (RBListItemBO) value;
-			setEnabled(list.isEnabled());
-			setSelected(rbListItemBO.isSelected());
-			setFont(list.getFont());
-			setBackground(list.getBackground());
-			setForeground(list.getForeground());
-			setText(rbListItemBO.getLabel() + " (" + rbListItemBO.getModel() + ")");
-			this.setToolTipText(value.toString());
-			return this;
-		}
-	}
-
-	/**
-	 * Custom ListDataListener to enable/disable controls based on number of
-	 * files in list.
-	 *
-	 * @author tslawecki
-	 */
-	private class MyListDataListener implements ListDataListener
-	{
-		@Override
-		public void contentsChanged(ListDataEvent e)
-		{
-			scenarioListChanged();
-		}
-
-		@Override
-		public void intervalAdded(ListDataEvent e)
-		{
-			scenarioListChanged();
-		}
-
-		@Override
-		public void intervalRemoved(ListDataEvent e)
-		{
-			scenarioListChanged();
-		}
-
-	}
-
-	private class ProjectConfigurationMouseAdapter extends MouseAdapter
-	{
-		@Override
-		public void mouseClicked(MouseEvent event)
-		{
-
-			JList list = (JList) event.getSource();
-
-			// Get index of item clicked
-
-			if(list.getModel().getSize() > 0)
-			{
-				int index = list.locationToIndex(event.getPoint());
-
-				// Toggle selected state
-
-				for(int i = 0; i < list.getModel().getSize(); i++)
-				{
-					RBListItemBO item = (RBListItemBO) list.getModel().getElementAt(i);
-					if(i == index)
-					{
-						item.setSelected(true);
-						list.repaint(list.getCellBounds(i, i));
-					}
-					else
-					{
-						if(item.isSelected())
-						{
-							list.repaint(list.getCellBounds(i, i));
-						}
-						item.setSelected(false);
-					}
-				}
-
-				// Repaint cell
-
-				list.repaint(list.getCellBounds(index, index));
-
-				WRIMSGUILinks.updateProjectFiles(list);
-
-			}
-		}
-	}
-
-	private class ProjectConfigurationListDataListener implements ListDataListener
-	{
-		@Override
-		public void intervalAdded(ListDataEvent e)
-		{
-			scenariosChanged();
-		}
-
-		@Override
-		public void intervalRemoved(ListDataEvent e)
-		{
-			scenariosChanged();
-		}
-
-		@Override
-		public void contentsChanged(ListDataEvent e)
-		{
-			scenariosChanged();
-		}
-
-		private void scenariosChanged()
-		{
-			getRadioButton1().setEnabled(getScenarios().size() > 1);
-			getRadioButton2().setEnabled(getScenarios().size() > 1);
-			setModified(true);
 		}
 	}
 }

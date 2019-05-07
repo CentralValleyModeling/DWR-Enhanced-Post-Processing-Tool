@@ -17,6 +17,8 @@ package gov.ca.water.calgui.busservice.impl;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
 import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -24,9 +26,10 @@ import java.util.logging.Logger;
 import calsim.app.DerivedTimeSeries;
 import calsim.app.MultipleTimeSeries;
 import gov.ca.water.calgui.bo.GUILinksAllModelsBO;
-import gov.ca.water.calgui.bo.RBListItemBO;
 import gov.ca.water.calgui.bo.ResultUtilsBO;
 import gov.ca.water.calgui.busservice.IGuiLinksSeedDataSvc;
+import gov.ca.water.calgui.project.EpptScenarioRun;
+import gov.ca.water.calgui.project.NamedDssPath;
 
 import hec.heclib.util.HecTime;
 import hec.io.TimeSeriesContainer;
@@ -46,7 +49,7 @@ import hec.io.TimeSeriesContainer;
  * <ul>
  * <li>DSS_Grabber</li>
  * <li>setIsCFS</li>
- * <li>setBase</li>
+ * <li>setScenarioRuns</li>
  * <li>setLocation</li>
  * <li>setDateRange</li>
  * <li>getPrimarySeries</li>
@@ -64,9 +67,8 @@ public class DSSGrabber2SvcImpl extends DSSGrabber1SvcImpl
 	private double[][][] _annualTAFs;
 	private double[][][] _annualTAFsDiff;
 
-	public DSSGrabber2SvcImpl(List<RBListItemBO> list, DerivedTimeSeries dts, MultipleTimeSeries mts)
+	public DSSGrabber2SvcImpl(DerivedTimeSeries dts, MultipleTimeSeries mts)
 	{
-		super(list);
 		this._dts = dts;
 		this._mts = mts;
 	}
@@ -151,55 +153,24 @@ public class DSSGrabber2SvcImpl extends DSSGrabber1SvcImpl
 
 			// Store number of scenarios
 
-			_scenarioCount = _scenarios.size();
-			results = new TimeSeriesContainer[_scenarioCount];
+			results = new TimeSeriesContainer[_alternatives.size() + 1];
 
 			// Base first
-
-			results[0] = getOneSeriesWRIMS(_baseName, _baseModel, _dts);
+			Optional<TimeSeriesContainer> dtsContainer = getDtsContainer(_baseScenarioRun);
+			if(dtsContainer.isPresent())
+			{
+				results[0] = dtsContainer.get();
+			}
 			_originalUnits = results[0].units;
 
 			// Then scenarios
 
-			int j = 0;
-			for(int i = 0; i < _scenarioCount; i++)
+			for(int i = 0; i < _alternatives.size(); i++)
 			{
-				String scenarioName;
-				GUILinksAllModelsBO.Model model = _baseModel;
-				if(_baseName.contains("_SV.DSS"))
+				dtsContainer = getDtsContainer(_alternatives.get(i));
+				if(dtsContainer.isPresent())
 				{
-					// For SVars, use WRIMS GUI Project object to
-					// determine
-					// input files
-					switch(i)
-					{
-						case 0:
-							scenarioName = _project.getSVFile();
-							break;
-						case 1:
-							scenarioName = _project.getSV2File();
-							break;
-						case 2:
-							scenarioName = _project.getSV3File();
-							break;
-						case 3:
-							scenarioName = _project.getSV4File();
-							break;
-						default:
-							scenarioName = "";
-							break;
-					}
-				}
-				else
-				{
-					RBListItemBO rbListItemBO = _scenarios.get(i);
-					scenarioName = rbListItemBO.toString();
-					model = rbListItemBO.getModel();
-				}
-				if(!_baseName.equals(scenarioName))
-				{
-					j = j + 1;
-					results[j] = getOneSeriesWRIMS(scenarioName, model, _dts);
+					results[i + 1] = dtsContainer.get();
 				}
 			}
 
@@ -222,12 +193,15 @@ public class DSSGrabber2SvcImpl extends DSSGrabber1SvcImpl
 
 			// Store number of scenarios
 
-			_scenarioCount = _scenarios.size();
-			results = new TimeSeriesContainer[_scenarioCount];
+			results = new TimeSeriesContainer[_alternatives.size() + 1];
 
 			// Base first
 
-			results[0] = getOneSeriesWRIMS(_baseName, _baseModel, mtsI, _mts);
+			Optional<TimeSeriesContainer> tsOpt = getMtsContainer(_baseScenarioRun, mtsI);
+			if(tsOpt.isPresent())
+			{
+				results[0] = tsOpt.get();
+			}
 			if(results[0] != null)
 			{
 				_originalUnits = results[0].units;
@@ -235,44 +209,13 @@ public class DSSGrabber2SvcImpl extends DSSGrabber1SvcImpl
 
 			// Then scenarios
 
-			int j = 0;
-			for(int i = 0; i < _scenarioCount; i++)
+			for(int i = 0; i < _alternatives.size(); i++)
 			{
-				String scenarioName;
-				GUILinksAllModelsBO.Model model = _baseModel;
-				if(_baseName.contains("_SV.DSS"))
+				EpptScenarioRun epptScenarioRun = _alternatives.get(i);
+				tsOpt = getMtsContainer(epptScenarioRun, mtsI);
+				if(tsOpt.isPresent())
 				{
-					// For SVars, use WRIMS GUI Project object to determine
-					// input files
-					switch(i)
-					{
-						case 0:
-							scenarioName = _project.getSVFile();
-							break;
-						case 1:
-							scenarioName = _project.getSV2File();
-							break;
-						case 2:
-							scenarioName = _project.getSV3File();
-							break;
-						case 3:
-							scenarioName = _project.getSV4File();
-							break;
-						default:
-							scenarioName = "";
-							break;
-					}
-				}
-				else
-				{
-					RBListItemBO rbListItemBO = _scenarios.get(i);
-					scenarioName = rbListItemBO.toString();
-					model = rbListItemBO.getModel();
-				}
-				if(!_baseName.equals(scenarioName))
-				{
-					j = j + 1;
-					results[j] = getOneSeriesWRIMS(scenarioName, model, mtsI, _mts);
+					results[i + 1] = tsOpt.get();
 				}
 			}
 
@@ -285,7 +228,33 @@ public class DSSGrabber2SvcImpl extends DSSGrabber1SvcImpl
 		return null;
 	}
 
-	private TimeSeriesContainer getOneSeriesWRIMS(String dssFilename, GUILinksAllModelsBO.Model model, DerivedTimeSeries dts2)
+	private Optional<TimeSeriesContainer> getMtsContainer(EpptScenarioRun epptScenarioRun, int mtsI)
+	{
+		return epptScenarioRun.getDssContainer()
+							  .getAllDssFiles()
+							  .stream()
+							  .map(p -> getOneSeriesWRIMS(p,
+									  epptScenarioRun.getModel(),
+									  mtsI, _mts))
+							  .filter(Objects::nonNull)
+							  .findFirst();
+	}
+
+
+	private Optional<TimeSeriesContainer> getDtsContainer(EpptScenarioRun epptScenarioRun)
+	{
+		return epptScenarioRun.getDssContainer()
+							  .getAllDssFiles()
+							  .stream()
+							  .map(p -> getOneSeriesWRIMS(p,
+									  epptScenarioRun.getModel(),
+									  _dts))
+							  .filter(Objects::nonNull)
+							  .findFirst();
+	}
+
+	private TimeSeriesContainer getOneSeriesWRIMS(NamedDssPath dssPath, GUILinksAllModelsBO.Model model,
+												  DerivedTimeSeries dts2)
 	{
 
 		try
@@ -296,13 +265,13 @@ public class DSSGrabber2SvcImpl extends DSSGrabber1SvcImpl
 			boolean first = true;
 			for(int i = 0; i < dts2.getNumberOfDataReferences(); i++)
 			{
-				TimeSeriesContainer interimResult;
+				TimeSeriesContainer interimResult = null;
 				if(!((String) dtsNames.get(i)).isEmpty())
 				{
 					// Operand is reference to another DTS
 					DerivedTimeSeries adt = ResultUtilsBO.getResultUtilsInstance().getProject()
 														 .getDTS((String) dtsNames.get(i));
-					interimResult = getOneSeriesWRIMS(dssFilename, model, adt);
+					interimResult = getOneSeriesWRIMS(dssPath, model, adt);
 				}
 				else
 				{
@@ -311,32 +280,32 @@ public class DSSGrabber2SvcImpl extends DSSGrabber1SvcImpl
 					_primaryDSSName.put(model, dts2.getBPartAt(i) + "/" + dts2.getCPartAt(i));
 					if("DVAR".equals(dts2.getVarTypeAt(i)))
 					{
-						interimResult = getOneSeries(dssFilename,
+						interimResult = getOneSeries(dssPath,
 								(dts2.getBPartAt(i) + "/" + dts2.getCPartAt(i) + "/LOOKUP"), model);
 					}
 					else
 					{
-						String svFilename = "";
+						//						String svFilename = "";
 
-						if(dssFilename.equals(_project.getDVFile()))
-						{
-							svFilename = _project.getSVFile();
-						}
-						else if(dssFilename.equals(_project.getDV2File()))
-						{
-							svFilename = _project.getSV2File();
-						}
-						else if(dssFilename.equals(_project.getDV3File()))
-						{
-							svFilename = _project.getSV3File();
-						}
-						else if(dssFilename.equals(_project.getDV4File()))
-						{
-							svFilename = _project.getSV4File();
-						}
+						//						if(dssFilename.equals(_project.getDVFile()))
+						//						{
+						//							svFilename = _project.getSVFile();
+						//						}
+						//						else if(dssFilename.equals(_project.getDV2File()))
+						//						{
+						//							svFilename = _project.getSV2File();
+						//						}
+						//						else if(dssFilename.equals(_project.getDV3File()))
+						//						{
+						//							svFilename = _project.getSV3File();
+						//						}
+						//						else if(dssFilename.equals(_project.getDV4File()))
+						//						{
+						//							svFilename = _project.getSV4File();
+						//						}
 
-						interimResult = getOneSeries(svFilename,
-								(dts2.getBPartAt(i) + "/" + dts2.getCPartAt(i) + "/LOOKUP"), model);
+						//						interimResult = getOneSeries(svFilename,
+						//								(dts2.getBPartAt(i) + "/" + dts2.getCPartAt(i) + "/LOOKUP"), model);
 					}
 				}
 				if(interimResult != null)
@@ -419,19 +388,19 @@ public class DSSGrabber2SvcImpl extends DSSGrabber1SvcImpl
 
 	}
 
-	private TimeSeriesContainer getOneSeriesWRIMS(String dssFilename, GUILinksAllModelsBO.Model model,
+	private TimeSeriesContainer getOneSeriesWRIMS(NamedDssPath dssPath, GUILinksAllModelsBO.Model model,
 												  int i, MultipleTimeSeries mts2)
 	{
 
 		try
 		{
-			TimeSeriesContainer result;
+			TimeSeriesContainer result = null;
 			if(!mts2.getDTSNameAt(i).isEmpty())
 			{
 				// Operand is reference to a DTS
 				DerivedTimeSeries adt = ResultUtilsBO.getResultUtilsInstance().getProject()
 													 .getDTS(_mts.getDTSNameAt(i));
-				result = getOneSeriesWRIMS(dssFilename, model, adt);
+				result = getOneSeriesWRIMS(dssPath, model, adt);
 				_primaryDSSName.clear();
 				_primaryDSSName.put(model, _mts.getDTSNameAt(i));
 
@@ -443,30 +412,30 @@ public class DSSGrabber2SvcImpl extends DSSGrabber1SvcImpl
 				_primaryDSSName.put(model, mts2.getBPartAt(i) + "//" + mts2.getCPartAt(i));
 				if("DVAR".equals(mts2.getVarTypeAt(i)))
 				{
-					result = getOneSeries(dssFilename, (mts2.getBPartAt(i) + "/" + mts2.getCPartAt(i)), model);
+					result = getOneSeries(dssPath, (mts2.getBPartAt(i) + "/" + mts2.getCPartAt(i)), model);
 				}
 				else
 				{
-					String svFilename = "";
-
-					if(dssFilename.equals(_project.getDVFile()))
-					{
-						svFilename = _project.getSVFile();
-					}
-					else if(dssFilename.equals(_project.getDV2File()))
-					{
-						svFilename = _project.getSV2File();
-					}
-					else if(dssFilename.equals(_project.getDV3File()))
-					{
-						svFilename = _project.getSV3File();
-					}
-					else if(dssFilename.equals(_project.getDV4File()))
-					{
-						svFilename = _project.getSV4File();
-					}
-
-					result = getOneSeries(svFilename, (mts2.getBPartAt(i) + "/" + mts2.getCPartAt(i)), model);
+					//					String svFilename = "";
+					//
+					//					if(dssFilename.equals(_project.getDVFile()))
+					//					{
+					//						svFilename = _project.getSVFile();
+					//					}
+					//					else if(dssFilename.equals(_project.getDV2File()))
+					//					{
+					//						svFilename = _project.getSV2File();
+					//					}
+					//					else if(dssFilename.equals(_project.getDV3File()))
+					//					{
+					//						svFilename = _project.getSV3File();
+					//					}
+					//					else if(dssFilename.equals(_project.getDV4File()))
+					//					{
+					//						svFilename = _project.getSV4File();
+					//					}
+					//
+					//					result = getOneSeries(svFilename, (mts2.getBPartAt(i) + "/" + mts2.getCPartAt(i)), model);
 				}
 			}
 			return result;
@@ -493,12 +462,12 @@ public class DSSGrabber2SvcImpl extends DSSGrabber1SvcImpl
 
 		try
 		{
-			TimeSeriesContainer[][] results = new TimeSeriesContainer[timeSeriesResults.length][_scenarioCount - 1];
+			TimeSeriesContainer[][] results = new TimeSeriesContainer[timeSeriesResults.length][_alternatives.size()];
 
 			for(int tsi = 0; tsi < timeSeriesResults.length; tsi++)
 			{
 
-				for(int i = 0; i < _scenarioCount - 1; i++)
+				for(int i = 0; i < _alternatives.size(); i++)
 				{
 
 					results[tsi][i] = (TimeSeriesContainer) timeSeriesResults[tsi][i + 1].clone();
@@ -640,14 +609,14 @@ public class DSSGrabber2SvcImpl extends DSSGrabber1SvcImpl
 			else
 			{
 				int datasets = timeSeriesResults.length;
-				results = new TimeSeriesContainer[14][datasets][_scenarioCount];
+				results = new TimeSeriesContainer[14][datasets][_alternatives.size() + 1];
 				for(int mtsI = 0; mtsI < datasets; mtsI++)
 				{
 					for(int month = 0; month < 14; month++)
 					{
 
 						HecTime ht = new HecTime();
-						for(int i = 0; i < _scenarioCount; i++)
+						for(int i = 0; i < _alternatives.size() + 1; i++)
 						{
 							if(timeSeriesResults[mtsI][i] != null)
 							{
@@ -759,7 +728,7 @@ public class DSSGrabber2SvcImpl extends DSSGrabber1SvcImpl
 			else
 			{
 				int datasets = timeSeriesResults.length;
-				results = new TimeSeriesContainer[14][datasets][_scenarioCount - 1];
+				results = new TimeSeriesContainer[14][datasets][_alternatives.size()];
 				for(int mtsI = 0; mtsI < datasets; mtsI++)
 				{
 
@@ -767,7 +736,7 @@ public class DSSGrabber2SvcImpl extends DSSGrabber1SvcImpl
 					{
 
 						HecTime ht = new HecTime();
-						for(int i = 0; i < _scenarioCount - 1; i++)
+						for(int i = 0; i < _alternatives.size(); i++)
 						{
 
 							if(month == 13)

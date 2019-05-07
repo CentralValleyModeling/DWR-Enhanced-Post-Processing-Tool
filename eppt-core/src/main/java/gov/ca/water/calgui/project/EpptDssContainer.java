@@ -13,6 +13,7 @@
 package gov.ca.water.calgui.project;
 
 import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -65,6 +66,16 @@ public class EpptDssContainer
 	public List<NamedDssPath> getExtraDssFiles()
 	{
 		return _extraDssFiles;
+	}
+
+	public List<NamedDssPath> getAllDssFiles()
+	{
+		List<NamedDssPath> retval = new ArrayList<>();
+		retval.add(getDvDssFile());
+		retval.add(getIvDssFile());
+		retval.add(getSvDssFile());
+		retval.addAll(getExtraDssFiles());
+		return retval;
 	}
 
 }

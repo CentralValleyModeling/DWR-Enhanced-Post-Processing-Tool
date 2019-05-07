@@ -18,7 +18,6 @@ import java.awt.event.ActionListener;
 import java.util.logging.Logger;
 import javax.swing.*;
 
-import gov.ca.water.calgui.bo.RBListItemBO;
 import gov.ca.water.calgui.project.EpptScenarioRun;
 import gov.ca.water.quickresults.ui.EpptPanel;
 
@@ -33,13 +32,10 @@ public class ProjectConfigurationListener implements ActionListener
 {
 	private static final Logger LOGGER = Logger.getLogger(ProjectConfigurationListener.class.getName());
 	private final ProjectConfigurationPanel _projectConfigurationPanel;
-	private final ScenarioChooserBO _addScnearioFileDialogBO;
 
 	public ProjectConfigurationListener(ProjectConfigurationPanel projectConfigurationPanel)
 	{
 		_projectConfigurationPanel = projectConfigurationPanel;
-		DefaultListModel<RBListItemBO> lstScenarios = _projectConfigurationPanel.getLmScenNames();
-		_addScnearioFileDialogBO = new ScenarioChooserBO(lstScenarios, projectConfigurationPanel);
 	}
 
 	@Override

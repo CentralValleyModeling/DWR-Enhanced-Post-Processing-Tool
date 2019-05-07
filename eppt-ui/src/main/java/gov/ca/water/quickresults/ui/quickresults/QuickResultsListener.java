@@ -25,6 +25,7 @@ import javax.swing.*;
 import gov.ca.water.calgui.bo.RBListItemBO;
 import gov.ca.water.calgui.bo.ResultUtilsBO;
 import gov.ca.water.calgui.presentation.DisplayHelper;
+import gov.ca.water.calgui.project.EpptScenarioRun;
 import gov.ca.water.calgui.techservice.IDialogSvc;
 import gov.ca.water.calgui.techservice.IErrorHandlingSvc;
 import gov.ca.water.calgui.techservice.impl.DialogSvcImpl;
@@ -115,8 +116,9 @@ public class QuickResultsListener implements ActionListener
 	private void displayReportList()
 	{
 		ProjectConfigurationPanel projectConfigurationPanel = ProjectConfigurationPanel.getProjectConfigurationPanel();
-		List<RBListItemBO> scenarios = projectConfigurationPanel.getScenarios();
-		if(scenarios.isEmpty())
+		List<EpptScenarioRun> alternatives = projectConfigurationPanel.getEpptScenarioAlternatives();
+		EpptScenarioRun baseScenario = projectConfigurationPanel.getBaseScenario();
+		if(baseScenario == null)
 		{
 			IDialogSvc dialogSvc = DialogSvcImpl.getDialogSvcInstance();
 			dialogSvc.getOK("Error - No scenarios loaded", JOptionPane.ERROR_MESSAGE);
@@ -133,7 +135,7 @@ public class QuickResultsListener implements ActionListener
 				{
 					DisplayHelper displayHelper = _quickResultsPanel.getDisplayHelper();
 					displayHelper.showDisplayFrames((lstReports.getModel().getElementAt(i)),
-							scenarios, startMonth, endMonth);
+							baseScenario, alternatives, startMonth, endMonth);
 				}
 			}
 		}

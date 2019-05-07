@@ -69,6 +69,10 @@
 			<id>usace-software-release</id>
 			<url>http://artifactory.rmanet.com:2447/artifactory/usace-software-release</url>
 		</repository>
+		<repository>
+			<id>eppt-third-party-dlls</id>
+			<url>http://artifactory.rmanet.com:2447/artifactory/eppt-third-party-dlls</url>
+		</repository>
 	</repositories>
 	<build>
 		<plugins>

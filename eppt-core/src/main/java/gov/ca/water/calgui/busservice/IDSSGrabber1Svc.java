@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.Map;
 
 import gov.ca.water.calgui.bo.GUILinksAllModelsBO;
+import gov.ca.water.calgui.project.EpptScenarioRun;
 
 import hec.io.TimeSeriesContainer;
 
@@ -40,16 +41,16 @@ public interface IDSSGrabber1Svc
 	 *
 	 * @return name of the base scenario file WITHOUT the file extension
 	 */
-	String getBase();
+	String getBaseRunName();
 
 	/**
 	 * Sets base scenario for calculations and display. The base scenario is
 	 * listed first in legends and used as the basis for difference
 	 * calculations.
 	 *
-	 * @param baseName name of scenario/DSS file to use as base.
+	 * @param scenarioRun scenario to use as base.
 	 */
-	void setBase(String baseName, GUILinksAllModelsBO.Model model);
+	void setScenarioRuns(EpptScenarioRun scenarioRun, List<EpptScenarioRun> alternatives);
 
 	/**
 	 * Sets dataset (DSS) names to read from scenario DSS files, title, and axis

@@ -18,9 +18,9 @@ import calsim.app.AppUtils;
 import calsim.app.DerivedTimeSeries;
 import calsim.app.MultipleTimeSeries;
 import calsim.gui.GuiUtils;
-import gov.ca.water.calgui.bo.RBListItemBO;
 import gov.ca.water.calgui.presentation.DisplayHelper;
 import gov.ca.water.calgui.presentation.WRIMSGUILinks;
+import gov.ca.water.calgui.project.EpptScenarioRun;
 import gov.ca.water.calgui.techservice.IDialogSvc;
 import gov.ca.water.calgui.techservice.IErrorHandlingSvc;
 import gov.ca.water.calgui.techservice.impl.DialogSvcImpl;
@@ -132,7 +132,7 @@ public class CustomResultsPanel extends EpptPanel
 		try
 		{
 			ProjectConfigurationPanel projectConfigurationPanel = ProjectConfigurationPanel.getProjectConfigurationPanel();
-			List<RBListItemBO> scenarios = projectConfigurationPanel.getScenarios();
+			List<EpptScenarioRun> scenarios = projectConfigurationPanel.getEpptScenarioRuns();
 			String noRowsString = "";
 			JTable table = GuiUtils.getCLGPanel().getRetrievePanel().getTable();
 			if(table.getRowCount() == 0)
@@ -159,19 +159,24 @@ public class CustomResultsPanel extends EpptPanel
 				String[] parts2 = parts[2].split("/");
 				parts[2] = "/" + parts2[1] + "/" + parts2[2] + "/" + parts2[3] + "/" + parts[3] + "/" + parts2[5] + "/"
 						+ parts2[6] + "/";
+				EpptScenarioRun baseScenario = projectConfigurationPanel.getBaseScenario();
+				List<EpptScenarioRun> alternatives = projectConfigurationPanel.getEpptScenarioAlternatives();
 				String quickState = projectConfigurationPanel.quickState();
 				Month startMonth = projectConfigurationPanel.getStartMonth();
 				Month endMonth = projectConfigurationPanel.getEndMonth();
-				if(parts[1].toUpperCase().contains(("_SV.DSS")))
+				if(baseScenario != null)
 				{
-					_displayHelper.showDisplayFrames(quickState + ";Locs-" + parts[2] + ";Index-"
-							+ parts[2] + ";File-" + parts[1], scenarios, startMonth, endMonth);
-				}
-				else
-				{
-					_displayHelper.showDisplayFrames(
-							quickState + ";Locs-" + parts[2] + ";Index-" + parts[2],
-							scenarios, startMonth, endMonth);
+					if(parts[1].toUpperCase().contains(("_SV.DSS")))
+					{
+						_displayHelper.showDisplayFrames(quickState + ";Locs-" + parts[2] + ";Index-"
+								+ parts[2] + ";File-" + parts[1], baseScenario, alternatives, startMonth, endMonth);
+					}
+					else
+					{
+						_displayHelper.showDisplayFrames(
+								quickState + ";Locs-" + parts[2] + ";Index-" + parts[2],
+								baseScenario, alternatives, startMonth, endMonth);
+					}
 				}
 			}
 		}
@@ -209,12 +214,18 @@ public class CustomResultsPanel extends EpptPanel
 		try
 		{
 			ProjectConfigurationPanel projectConfigurationPanel = ProjectConfigurationPanel.getProjectConfigurationPanel();
-			String quickState = projectConfigurationPanel.quickState();
-			Month startMonth = projectConfigurationPanel.getStartMonth();
-			Month endMonth = projectConfigurationPanel.getEndMonth();
-			List<RBListItemBO> scenarios = projectConfigurationPanel.getScenarios();
-			_displayHelper.showDisplayFramesWRIMS(quickState + ";Locs-;Index-;File-", scenarios, dts,
-					mts, startMonth, endMonth);
+			List<EpptScenarioRun> alternatives = projectConfigurationPanel.getEpptScenarioAlternatives();
+			EpptScenarioRun baseScenario = projectConfigurationPanel.getBaseScenario();
+			if(baseScenario != null)
+			{
+				String quickState = projectConfigurationPanel.quickState();
+				Month startMonth = projectConfigurationPanel.getStartMonth();
+				Month endMonth = projectConfigurationPanel.getEndMonth();
+				List<EpptScenarioRun> scenarios = projectConfigurationPanel.getEpptScenarioRuns();
+				_displayHelper.showDisplayFramesWRIMS(quickState + ";Locs-;Index-;File-", baseScenario, alternatives,
+						dts,
+						mts, startMonth, endMonth);
+			}
 
 		}
 		catch(Exception e)

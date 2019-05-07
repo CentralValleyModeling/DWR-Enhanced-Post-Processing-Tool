@@ -9,7 +9,10 @@ package gov.ca.water.calgui.presentation;
 
 import java.awt.BorderLayout;
 import java.awt.HeadlessException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javax.swing.*;
@@ -17,7 +20,6 @@ import javax.swing.*;
 import calsim.app.DerivedTimeSeries;
 import calsim.app.MultipleTimeSeries;
 import gov.ca.water.calgui.bo.GUILinksAllModelsBO;
-import gov.ca.water.calgui.bo.RBListItemBO;
 import gov.ca.water.calgui.busservice.IDSSGrabber1Svc;
 import gov.ca.water.calgui.busservice.impl.DSSGrabber1SvcImpl;
 import gov.ca.water.calgui.busservice.impl.DSSGrabber2SvcImpl;
@@ -30,6 +32,7 @@ import gov.ca.water.calgui.presentation.display.MonthlyTablePanel;
 import gov.ca.water.calgui.presentation.display.MonthlyTablePanel2;
 import gov.ca.water.calgui.presentation.display.SummaryTablePanel;
 import gov.ca.water.calgui.presentation.display.SummaryTablePanel2;
+import gov.ca.water.calgui.project.EpptScenarioRun;
 import gov.ca.water.calgui.techservice.IErrorHandlingSvc;
 import gov.ca.water.calgui.techservice.impl.ErrorHandlingSvcImpl;
 import org.apache.log4j.Logger;
@@ -54,14 +57,15 @@ class DisplayFrame
 	 * showDisplayFrames method creates a frame showing multiple charts
 	 * according to parameters.
 	 */
-	static List<JTabbedPane> showDisplayFrames(String displayGroup, List<RBListItemBO> scenarios, Month startMonth,
+	static List<JTabbedPane> showDisplayFrames(String displayGroup, EpptScenarioRun baseRun,
+											   List<EpptScenarioRun> alternatives, Month startMonth,
 											   Month endMonth)
 	{
 		List<JTabbedPane> tabbedPanes = new ArrayList<>();
 		try
 		{
 
-			IDSSGrabber1Svc dssGrabber = new DSSGrabber1SvcImpl(scenarios);
+			IDSSGrabber1Svc dssGrabber = new DSSGrabber1SvcImpl();
 			boolean doComparison = false;
 			boolean doDifference = false;
 			boolean doTimeSeries = false;
@@ -79,8 +83,7 @@ class DisplayFrame
 			String filename = "";
 
 			String[] groupParts = displayGroup.split(";");
-			String[] monthNames = {"Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov",
-					"Dec"};
+			String[] monthNames = {"Oct", "Nov", "Dec", "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep",};
 
 			for(final String groupPart : groupParts)
 			{
@@ -154,23 +157,7 @@ class DisplayFrame
 			}
 
 			dssGrabber.setIsCFS(isCFS);
-			GUILinksAllModelsBO.Model model = null;
-			if(!filename.isEmpty())
-			{
-				dssGrabber.setBase(filename, null);
-			}
-			else
-			{
-				for(RBListItemBO item : scenarios)
-				{
-					if(item.isSelected())
-					{
-						dssGrabber.setBase(item.toString(), item.getModel());
-						model = item.getModel();
-						break;
-					}
-				}
-			}
+			dssGrabber.setScenarioRuns(baseRun, alternatives);
 
 			String[] locationNames = locations.split(",");
 			String[] namesText = names.split(",");
@@ -185,7 +172,7 @@ class DisplayFrame
 				}
 				else
 				{
-					dssGrabber.setLocation(locationName, model);
+					dssGrabber.setLocation(locationName, baseRun.getModel());
 
 					if(dssGrabber.getPrimaryDSSName() == null)
 					{
@@ -232,7 +219,7 @@ class DisplayFrame
 											secondaryResults,
 											summaryTags, dssGrabber.getSLabel(), dssGrabber, doBase);
 								}
-								tabbedpane.insertTab("Summary - " + dssGrabber.getBase(), null, stp, null, 0);
+								tabbedpane.insertTab("Summary - " + dssGrabber.getBaseRunName(), null, stp, null, 0);
 							}
 
 							if(doMonthlyTable)
@@ -250,7 +237,7 @@ class DisplayFrame
 											secondaryResults,
 											dssGrabber, dssGrabber.getSLabel(), doBase);
 								}
-								tabbedpane.insertTab("Monthly - " + dssGrabber.getBase(), null, mtp, null, 0);
+								tabbedpane.insertTab("Monthly - " + dssGrabber.getBaseRunName(), null, mtp, null, 0);
 							}
 
 							Date lower = new Date();
@@ -275,7 +262,7 @@ class DisplayFrame
 								// plots
 								// were
 								// done
-								for(int m1 = 0; m1 < 12; m1++)
+								for(int m1 = 11; m1 >= 0; m1--)
 								{
 									if(exceedMonths.contains(monthNames[m1]) && excResults != null)
 									{
@@ -407,7 +394,8 @@ class DisplayFrame
 	{
 		StringBuilder buffer = new StringBuilder();
 		buffer.append("<html><br>Not all DSS records were found, some results may be missing:<br><br>");
-		missing.entrySet().forEach(id -> buffer.append("Model: ").append(id.getKey()).append("<br>").append(String.join("<br>", id.getValue())).append("<br>"));
+		missing.entrySet().forEach(id -> buffer.append("Model: ").append(id.getKey()).append("<br>").append(
+				String.join("<br>", id.getValue())).append("<br>"));
 		buffer.append("</html>");
 		JPanel panel = new JPanel();
 		panel.setLayout(new BorderLayout());
@@ -449,12 +437,13 @@ class DisplayFrame
 	 * Creates a frame to display DTS/MTS variables from WRIMS GUI
 	 *
 	 * @param displayGroup
-	 * @param lstScenarios
+	 * @param alternatives
 	 * @param dts
 	 * @param mts
 	 */
 	static List<JTabbedPane> showDisplayFramesWRIMS(String displayGroup,
-													List<RBListItemBO> lstScenarios,
+													EpptScenarioRun baseRun,
+													List<EpptScenarioRun> alternatives,
 													DerivedTimeSeries dts,
 													MultipleTimeSeries mts,
 													Month startMonth, Month endMonth)
@@ -463,7 +452,7 @@ class DisplayFrame
 		try
 		{
 
-			DSSGrabber2SvcImpl dssGrabber = new DSSGrabber2SvcImpl(lstScenarios, dts, mts);
+			DSSGrabber2SvcImpl dssGrabber = new DSSGrabber2SvcImpl(dts, mts);
 			boolean doComparison = false;
 			boolean doDifference = false;
 			boolean doTimeSeries = false;
@@ -548,24 +537,7 @@ class DisplayFrame
 			JTabbedPane tabbedpane = new JTabbedPane();
 
 			dssGrabber.setIsCFS(isCFS);
-
-			GUILinksAllModelsBO.Model model = null;
-			if(!filename.isEmpty())
-			{
-				dssGrabber.setBase(filename, null);
-			}
-			else
-			{
-				for(RBListItemBO item : lstScenarios)
-				{
-					if(item.isSelected())
-					{
-						dssGrabber.setBase(item.toString(), item.getModel());
-						model = item.getModel();
-						break;
-					}
-				}
-			}
+			dssGrabber.setScenarioRuns(baseRun, alternatives);
 
 			dssGrabber.setDateRange(dateRange);
 
@@ -580,10 +552,10 @@ class DisplayFrame
 
 				// Handle MTS
 
-				dssGrabber.setLocation("@@" + mts.getName(), model);
+				dssGrabber.setLocation("@@" + mts.getName(), baseRun.getModel());
 
 				int n = mts.getNumberOfDataReferences();
-				int s = lstScenarios.size();
+				int s = alternatives.size();
 
 				TimeSeriesContainer[][] results = new TimeSeriesContainer[n][s];
 				for(int i = 0; i < n; i++)
@@ -611,7 +583,7 @@ class DisplayFrame
 						stp = new SummaryTablePanel2(dssGrabber.getPlotTitle(), results, null, summaryTags,
 								dssGrabber.getSLabel(), null, dssGrabber, doBase, mts);
 					}
-					tabbedpane.insertTab("Summary - " + dssGrabber.getBase(), null, stp, null, 0);
+					tabbedpane.insertTab("Summary - " + dssGrabber.getBaseRunName(), null, stp, null, 0);
 				}
 
 				if(doMonthlyTable)
@@ -629,7 +601,7 @@ class DisplayFrame
 								dssGrabber.getSLabel(),
 								doBase, mts);
 					}
-					tabbedpane.insertTab("Monthly - " + dssGrabber.getBase(), null, mtp, null, 0);
+					tabbedpane.insertTab("Monthly - " + dssGrabber.getBaseRunName(), null, mtp, null, 0);
 				}
 
 				if(doBoxPlot)
@@ -755,7 +727,7 @@ class DisplayFrame
 
 				// Handle DTS
 
-				dssGrabber.setLocation("@@" + dts.getName(), model);
+				dssGrabber.setLocation("@@" + dts.getName(), baseRun.getModel());
 
 				TimeSeriesContainer[] primaryResults = dssGrabber.getPrimarySeries("DUMMY");
 				TimeSeriesContainer[] secondaryResults = dssGrabber.getSecondarySeries();
@@ -954,7 +926,7 @@ class DisplayFrame
 			stp = new SummaryTablePanel(dssGrabber.getPlotTitle(), primaryResults, secondaryResults,
 					summaryTags, dssGrabber.getSLabel(), dssGrabber, doBase);
 		}
-		tabbedpane.insertTab("Summary - " + dssGrabber.getBase(), null, stp, null, 0);
+		tabbedpane.insertTab("Summary - " + dssGrabber.getBaseRunName(), null, stp, null, 0);
 	}
 
 	private static void insertMonthlyTable(DSSGrabber2SvcImpl dssGrabber, boolean doDifference, boolean doBase,
@@ -973,7 +945,7 @@ class DisplayFrame
 			mtp = new MonthlyTablePanel(dssGrabber.getPlotTitle(), primaryResults, secondaryResults,
 					dssGrabber, dssGrabber.getSLabel(), doBase);
 		}
-		tabbedpane.insertTab("Monthly - " + dssGrabber.getBase(), null, mtp, null, 0);
+		tabbedpane.insertTab("Monthly - " + dssGrabber.getBaseRunName(), null, mtp, null, 0);
 	}
 
 

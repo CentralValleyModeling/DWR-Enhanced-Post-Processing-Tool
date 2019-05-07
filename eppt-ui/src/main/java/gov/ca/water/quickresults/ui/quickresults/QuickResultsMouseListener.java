@@ -10,11 +10,12 @@ package gov.ca.water.quickresults.ui.quickresults;
 import java.awt.HeadlessException;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.util.ArrayList;
 import java.util.List;
 import javax.swing.*;
 
-import gov.ca.water.calgui.bo.RBListItemBO;
 import gov.ca.water.calgui.presentation.DisplayHelper;
+import gov.ca.water.calgui.project.EpptScenarioRun;
 import gov.ca.water.calgui.techservice.IDialogSvc;
 import gov.ca.water.calgui.techservice.IErrorHandlingSvc;
 import gov.ca.water.calgui.techservice.impl.DialogSvcImpl;
@@ -50,28 +51,26 @@ class QuickResultsMouseListener extends MouseAdapter
 			JComponent component = (JComponent) e.getComponent();
 			String cName = component.getName();
 
-			if(!SwingUtilities.isRightMouseButton(e))
+			if(!SwingUtilities.isRightMouseButton(e) && e.isControlDown() && cName.startsWith("ckbp"))
 			{
 				// checkbox from quick results.
-				int iClickCount = e.getClickCount();
-				if(iClickCount == 2 && cName.startsWith("ckbp"))
+				JCheckBox chk = (JCheckBox) component;
+				//This is to undo the click event action
+				chk.setSelected(!chk.isSelected());
+				List<EpptScenarioRun> alternatives = ProjectConfigurationPanel.getProjectConfigurationPanel().getEpptScenarioAlternatives();
+				EpptScenarioRun baseScenario = ProjectConfigurationPanel.getProjectConfigurationPanel().getBaseScenario();
+				if(baseScenario == null)
 				{
-					// Double Click
-					JCheckBox chk = (JCheckBox) component;
-					List<RBListItemBO> scenarios = ProjectConfigurationPanel.getProjectConfigurationPanel().getScenarios();
-					if(scenarios.isEmpty())
-					{
-						_dialogSvc.getOK("Error - No scenarios loaded", JOptionPane.ERROR_MESSAGE);
-					}
-					else
-					{
-						ProjectConfigurationPanel projectConfigurationPanel = ProjectConfigurationPanel.getProjectConfigurationPanel();
-						String quickState = projectConfigurationPanel.quickState();
-						Month startMonth = projectConfigurationPanel.getStartMonth();
-						Month endMonth = projectConfigurationPanel.getEndMonth();
-						_displayHelper.showDisplayFrames(quickState + ";Locs-" + chk.getText()
-								+ ";Index-" + chk.getName(), scenarios, startMonth, endMonth);
-					}
+					_dialogSvc.getOK("Error - No scenarios loaded", JOptionPane.ERROR_MESSAGE);
+				}
+				else
+				{
+					ProjectConfigurationPanel projectConfigurationPanel = ProjectConfigurationPanel.getProjectConfigurationPanel();
+					String quickState = projectConfigurationPanel.quickState();
+					Month startMonth = projectConfigurationPanel.getStartMonth();
+					Month endMonth = projectConfigurationPanel.getEndMonth();
+					_displayHelper.showDisplayFrames(quickState + ";Locs-" + chk.getText()
+							+ ";Index-" + chk.getName(), baseScenario, alternatives, startMonth, endMonth);
 				}
 			}
 		}

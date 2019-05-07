@@ -17,6 +17,7 @@ import gov.ca.water.businessservice.impl.XMLParsingSvcImpl;
 import gov.ca.water.calgui.bo.RBListItemBO;
 import gov.ca.water.calgui.constant.Constant;
 import gov.ca.water.calgui.presentation.DisplayHelper;
+import gov.ca.water.calgui.project.EpptScenarioRun;
 import gov.ca.water.calgui.techservice.IErrorHandlingSvc;
 import gov.ca.water.calgui.techservice.impl.ErrorHandlingSvcImpl;
 import gov.ca.water.quickresults.ui.projectconfig.ProjectConfigurationPanel;
@@ -215,18 +216,17 @@ public class SchematicMain
 				}
 				else
 				{
-					List<RBListItemBO> scenarios = new ArrayList<>();
-					ListModel<RBListItemBO> model = lstScenarios.getModel();
-					for(int i = 0; i < model.getSize(); i++)
-					{
-						scenarios.add(model.getElementAt(i));
-					}
 					ProjectConfigurationPanel projectConfigurationPanel = ProjectConfigurationPanel.getProjectConfigurationPanel();
-					String quickState = projectConfigurationPanel.quickState();
-					Month startMonth = projectConfigurationPanel.getStartMonth();
-					Month endMonth = projectConfigurationPanel.getEndMonth();
-					_displayHelper.showDisplayFrames(quickState + ";Locs-" + label + ";Index-"
-							+ Constant.SCHEMATIC_PREFIX + label, scenarios, startMonth, endMonth);
+					EpptScenarioRun baseScenario = projectConfigurationPanel.getBaseScenario();
+					if(baseScenario != null)
+					{
+						List<EpptScenarioRun> alternatives = projectConfigurationPanel.getEpptScenarioAlternatives();
+						String quickState = projectConfigurationPanel.quickState();
+						Month startMonth = projectConfigurationPanel.getStartMonth();
+						Month endMonth = projectConfigurationPanel.getEndMonth();
+						_displayHelper.showDisplayFrames(quickState + ";Locs-" + label + ";Index-"
+								+ Constant.SCHEMATIC_PREFIX + label, baseScenario, alternatives, startMonth, endMonth);
+					}
 				}
 			}
 		}

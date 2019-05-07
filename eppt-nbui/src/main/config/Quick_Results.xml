@@ -280,7 +280,7 @@
 						<button name="btnpClear" id="btnpClear" text="Clear All" ActionCommand="AC_Clear">
 							<gridbagconstraints insets="5,0,5,0" weightx="0.5" anchor="GridBagConstraints.WEST" gridx="1" gridy="3"/>
 						</button>
-						<label font="Tahoma-BOLD-13" foreground="CC3333" text="Double-click item to display  ">
+						<label font="Tahoma-BOLD-13" foreground="CC3333" text="CTRL+Click item to display  ">
 							<gridbagconstraints weightx="0.5" anchor="GridBagConstraints.EAST" gridx="4" gridy="3"
 												gridwidth="3"/>
 						</label>

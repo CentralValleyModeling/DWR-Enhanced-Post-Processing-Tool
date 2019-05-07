@@ -24,6 +24,8 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
+import java.util.Optional;
 import java.util.Properties;
 import java.util.Scanner;
 import java.util.Vector;
@@ -33,10 +35,12 @@ import javax.swing.*;
 
 import calsim.app.Project;
 import gov.ca.water.calgui.bo.GUILinksAllModelsBO;
-import gov.ca.water.calgui.bo.RBListItemBO;
 import gov.ca.water.calgui.bo.ResultUtilsBO;
 import gov.ca.water.calgui.busservice.IDSSGrabber1Svc;
 import gov.ca.water.calgui.busservice.IGuiLinksSeedDataSvc;
+import gov.ca.water.calgui.project.EpptDssContainer;
+import gov.ca.water.calgui.project.EpptScenarioRun;
+import gov.ca.water.calgui.project.NamedDssPath;
 import gov.ca.water.calgui.techservice.IDialogSvc;
 import gov.ca.water.calgui.techservice.impl.DialogSvcImpl;
 
@@ -45,7 +49,6 @@ import hec.heclib.util.HecTime;
 import hec.hecmath.computation.r;
 import hec.hecmath.functions.TimeSeriesFunctions;
 import hec.io.TimeSeriesContainer;
-import org.apache.commons.io.FilenameUtils;
 
 /**
  * Class to grab (load) DSS time series for a set of scenarios passed in a
@@ -61,7 +64,7 @@ import org.apache.commons.io.FilenameUtils;
  * <ul>
  * <li>DSS_Grabber</li>
  * <li>setIsCFS</li>
- * <li>setBase</li>
+ * <li>setScenarioRuns</li>
  * <li>setLocation</li>
  * <li>setDateRange</li>
  * <li>getPrimarySeries</li>
@@ -75,9 +78,6 @@ public class DSSGrabber1SvcImpl implements IDSSGrabber1Svc
 	static final double CFS_2_TAF_DAY = 0.001983471;
 	private static final double TAF_DAY_2_CFS = 504.166667;
 	private static Logger LOGGER = Logger.getLogger(DSSGrabber1SvcImpl.class.getName());
-	final List<RBListItemBO> _scenarios = new ArrayList<>();
-	String _baseName;
-	GUILinksAllModelsBO.Model _baseModel;
 	final Map<GUILinksAllModelsBO.Model, String> _primaryDSSName = new HashMap<>();
 	final Map<GUILinksAllModelsBO.Model, String> _secondaryDSSName = new HashMap<>();
 	// Chart title
@@ -88,12 +88,13 @@ public class DSSGrabber1SvcImpl implements IDSSGrabber1Svc
 	String _legend;
 	// Indicates whether "CFS" button was selected
 	String _originalUnits;
-	int _scenarioCount;
 	boolean _isCFS;
 	// USGS Water Year for start and end time.
 	int _startWY;
 	int _endWY;
 	Project _project = ResultUtilsBO.getResultUtilsInstance().getProject();
+	EpptScenarioRun _baseScenarioRun;
+	final List<EpptScenarioRun> _alternatives = new ArrayList<>();
 	// Copy of original units
 	// Start and end time of interest
 	private int _startTime;
@@ -106,9 +107,8 @@ public class DSSGrabber1SvcImpl implements IDSSGrabber1Svc
 	private boolean _stopOnMissing;
 	private final Map<GUILinksAllModelsBO.Model, List<String>> _missingDSSRecords = new HashMap<>();
 
-	public DSSGrabber1SvcImpl(List<RBListItemBO> scenarios)
+	public DSSGrabber1SvcImpl()
 	{
-		_scenarios.addAll(scenarios);
 		String propertiesFile = "callite-gui.properties";
 		try
 		{
@@ -194,7 +194,8 @@ public class DSSGrabber1SvcImpl implements IDSSGrabber1Svc
 		}
 		catch(UnsatisfiedLinkError | NoClassDefFoundError ex)
 		{
-			LOGGER.log(Level.SEVERE, "Possible javaheclib.dll issue javaHecLib.dll may be the wrong version or missing.", ex);
+			LOGGER.log(Level.SEVERE,
+					"Possible javaheclib.dll issue javaHecLib.dll may be the wrong version or missing.", ex);
 		}
 		catch(RuntimeException ex)
 		{
@@ -207,45 +208,27 @@ public class DSSGrabber1SvcImpl implements IDSSGrabber1Svc
 	/*
 	 * (non-Javadoc)
 	 *
-	 * @see gov.ca.water.calgui.busservice.impl.IDSSGrabber1Svc#getBase()
+	 * @see gov.ca.water.calgui.busservice.impl.IDSSGrabber1Svc#getBaseRunName()
 	 */
 	@Override
-	public String getBase()
+	public String getBaseRunName()
 	{
-
-		String delimiter;
-
-		// Windows
-		if(_baseName.contains("\\"))
-		{
-
-			delimiter = "\\\\";
-		}
-
-		// The rest of the world
-		else
-		{
-			delimiter = "/";
-		}
-
-		String[] pathParts = _baseName.split(delimiter);
-		String fullFileName = pathParts[pathParts.length - 1];
-		String fileName = fullFileName.substring(0, fullFileName.lastIndexOf("."));
-		return fileName;
+		return _baseScenarioRun.getName();
 	}
 
 	/*
 	 * (non-Javadoc)
 	 *
 	 * @see
-	 * gov.ca.water.calgui.busservice.impl.IDSSGrabber1Svc#setBase(java.lang.
+	 * gov.ca.water.calgui.busservice.impl.IDSSGrabber1Svc#setScenarioRuns(java.lang.
 	 * String)
 	 */
 	@Override
-	public void setBase(String baseName, GUILinksAllModelsBO.Model model)
+	public void setScenarioRuns(EpptScenarioRun scenarioRun, List<EpptScenarioRun> alternatives)
 	{
-		_baseName = baseName;
-		_baseModel = model;
+		_baseScenarioRun = scenarioRun;
+		_alternatives.clear();
+		_alternatives.addAll(alternatives);
 	}
 
 	/*
@@ -490,16 +473,16 @@ public class DSSGrabber1SvcImpl implements IDSSGrabber1Svc
 	/**
 	 * Reads a specified dataset from a specified HEC DSS file.
 	 *
-	 * @param dssFilename name of HEC DSS file from which to read results
-	 * @param dssName     name(s) of dataset(s) to read from HEC DSS file. Multiple
-	 *                    dataset names can be specified - separated by "+"; the dataset
-	 *                    results will be read and summed. if the first data set has the
-	 *                    suffix (-1), the results read will be shifted one month
-	 *                    earlier.
+	 * @param dssPath name of HEC DSS file from which to read results
+	 * @param dssName name(s) of dataset(s) to read from HEC DSS file. Multiple
+	 *                dataset names can be specified - separated by "+"; the dataset
+	 *                results will be read and summed. if the first data set has the
+	 *                suffix (-1), the results read will be shifted one month
+	 *                earlier.
 	 * @return HEC TimeSeriesContainer with times, values, number of values, and
 	 * file name.
 	 */
-	protected TimeSeriesContainer getOneSeries(String dssFilename, String dssName, GUILinksAllModelsBO.Model model)
+	protected TimeSeriesContainer getOneSeries(NamedDssPath dssPath, String dssName, GUILinksAllModelsBO.Model model)
 	{
 
 		HecDss hD = null;
@@ -508,11 +491,11 @@ public class DSSGrabber1SvcImpl implements IDSSGrabber1Svc
 		try
 		{
 
-			hD = HecDss.open(dssFilename);
+			hD = HecDss.open(dssPath.getDssPath().toString());
 			Vector<String> aList = hD.getPathnameList();
 			if(!hD.isOpened())
 			{
-				throw new IllegalArgumentException("Unable to open DSS file: " + dssFilename);
+				throw new IllegalArgumentException("Unable to open DSS file: " + dssPath.getDssPath());
 			}
 			// Determine A-part and F-part directly from file - 10/4/2011 -
 			// assumes constant throughout
@@ -589,7 +572,7 @@ public class DSSGrabber1SvcImpl implements IDSSGrabber1Svc
 					String message;
 					result = null;
 
-					if(!clsIsDynamicSJR(dssFilename) && (("S_MELON/STORAGE".equals(dssNames[0]))
+					if(!clsIsDynamicSJR(dssPath.getDssPath().toString()) && (("S_MELON/STORAGE".equals(dssNames[0]))
 							|| ("S_PEDRO/STORAGE".equals(dssNames[0])) || ("S_MCLRE/STORAGE".equals(dssNames[0]))
 							|| ("S_MLRTN/STORAGE".equals(dssNames[0])) || ("C_STANRIPN/FLOW-CHANNEL".equals(
 							dssNames[0]))
@@ -607,21 +590,21 @@ public class DSSGrabber1SvcImpl implements IDSSGrabber1Svc
 							|| ("D_FKCNL/FLOW-DELIVERY".equals(dssNames[0]))))
 					{
 
-						message = " Could not find " + dssNames[0] + " in " + dssFilename
+						message = " Could not find " + dssNames[0] + " in " + dssPath.getDssPath()
 								+ ".\n The selected scenario was not run using dynamic SJR simulation;";
 
 					}
 
-					else if(!clsAntiochChipps(dssFilename)
+					else if(!clsAntiochChipps(dssPath.getDssPath().toString())
 							&& (("AN_EC_STD/SALINITY".equals(dssNames[0])) || ("CH_EC_STD/SALINITY".equals(
 							dssNames[0]))))
 					{
 
-						message = " Could not find " + dssNames[0] + " in " + dssFilename
+						message = " Could not find " + dssNames[0] + " in " + dssPath.getDssPath()
 								+ ".\n The selected scenario was not run with D-1485 Fish and Wildlife (at Antioch and Chipps) regulations.";
 					}
 
-					else if(!clsLVE(dssFilename) && (("S422/STORAGE".equals(dssNames[0]))
+					else if(!clsLVE(dssPath.getDssPath().toString()) && (("S422/STORAGE".equals(dssNames[0]))
 							|| ("WQ408_OR_/SALINITY".equals(dssNames[0])) || ("WQ408_VC_/SALINITY".equals(dssNames[0]))
 							|| ("WQ408_RS_/SALINITY".equals(dssNames[0]))
 							|| ("C422_FILL_CC/FLOW-CHANNEL".equals(dssNames[0]))
@@ -631,13 +614,13 @@ public class DSSGrabber1SvcImpl implements IDSSGrabber1Svc
 							|| ("D408_RS/FLOW-DELIVERY".equals(dssNames[0])) || ("WQ420/SALINITY".equals(dssNames[0]))))
 					{
 
-						message = "Could not find " + dssNames[0] + " in " + dssFilename
+						message = "Could not find " + dssNames[0] + " in " + dssPath.getDssPath()
 								+ ".\n The selected scenario was not run with Los Vaqueros Enlargement.";
 					}
 
 					else
 					{
-						message = "Could not find " + dssNames[0] + " in " + dssFilename + " - attempted to retrieve path: " + firstPath;
+						message = "Could not find " + dssNames[0] + " in " + dssPath.getDssPath() + " - attempted to retrieve path: " + firstPath;
 					}
 					List<String> messages = _missingDSSRecords.computeIfAbsent(model, m -> new ArrayList<>());
 					messages.add(message);
@@ -659,14 +642,15 @@ public class DSSGrabber1SvcImpl implements IDSSGrabber1Svc
 						{
 							result2 = null;
 							String message = String.format("Could not find %s in %s - attempted to retrieve path: %s",
-									dssNames[0], dssFilename, pathName);
+									dssNames[0], dssPath.getDssPath(), pathName);
 							if(_stopOnMissing)
 							{
 								JOptionPane.showMessageDialog(null, message, "Error", JOptionPane.ERROR_MESSAGE);
 							}
 							else
 							{
-								List<String> messages = _missingDSSRecords.computeIfAbsent(model, m -> new ArrayList<>());
+								List<String> messages = _missingDSSRecords.computeIfAbsent(model,
+										m -> new ArrayList<>());
 								messages.add(message);
 							}
 						}
@@ -754,10 +738,10 @@ public class DSSGrabber1SvcImpl implements IDSSGrabber1Svc
 
 		// Store name portion of DSS file in TimeSeriesContainer
 
-		String shortFileName = new File(dssFilename).getName();
 		if(result != null)
 		{
-			result.fileName = shortFileName;
+			result.fileName = dssPath.getDssPath().toString();
+			result.fullName = dssPath.getAliasName() + " (" + model + ")";
 		}
 
 		return result;
@@ -770,11 +754,11 @@ public class DSSGrabber1SvcImpl implements IDSSGrabber1Svc
 		{
 			result = "Date range is not set in DSSGrabber.";
 		}
-		else if(_baseName == null)
+		else if(_baseScenarioRun == null)
 		{
 			result = "Base scenario is not set in DSSGrabber.";
 		}
-		else if(_primaryDSSName == null)
+		else if(_primaryDSSName.isEmpty())
 		{
 			result = "Base scenario is not set in DSSGrabber.";
 		}
@@ -803,73 +787,26 @@ public class DSSGrabber1SvcImpl implements IDSSGrabber1Svc
 			checkReadiness();
 
 			// Store number of scenarios
-
-			_scenarioCount = _scenarios.size();
-			results = new TimeSeriesContainer[_scenarioCount];
+			results = new TimeSeriesContainer[_alternatives.size() + 1];
 
 			// Base first
-			TimeSeriesContainer oneSeries = getOneTimeSeriesFromAllModels(_baseName, _baseModel, _primaryDSSName);
+			EpptDssContainer dssContainer = _baseScenarioRun.getDssContainer();
+			TimeSeriesContainer oneSeries = getOneTimeSeriesFromAllModels(dssContainer,
+					_baseScenarioRun.getModel(), _primaryDSSName);
 			results[0] = oneSeries;
-			if(oneSeries != null)
-			{
-				oneSeries.fullName = FilenameUtils.getBaseName(_baseName) + " (" + _baseModel + ")";
-			}
 			if(results[0] != null)
 			{
 				_originalUnits = results[0].units;
 			}
-			else if(_stopOnMissing)
-			{
-				reportMissingTimeSeries(_baseName);
-			}
 
 			// Then scenarios
 
-			int j = 0;
-			for(int i = 0; i < _scenarioCount; i++)
+			for(int i = 0; i < _alternatives.size(); i++)
 			{
-				String scenarioName;
-				GUILinksAllModelsBO.Model model = _baseModel;
-				if(_baseName.toUpperCase().contains("_SV.DSS"))
-				{
-					// For SVars, use WRIMS GUI Project object to
-					// determine
-					// input files
-					switch(i)
-					{
-						case 0:
-							scenarioName = _project.getSVFile();
-							break;
-						case 1:
-							scenarioName = _project.getSV2File();
-							break;
-						case 2:
-							scenarioName = _project.getSV3File();
-							break;
-						case 3:
-							scenarioName = _project.getSV4File();
-							break;
-						default:
-							scenarioName = "";
-							break;
-					}
-				}
-				else
-				{
-					RBListItemBO rbListItemBO = _scenarios.get(i);
-					scenarioName = rbListItemBO.toString();
-					model = rbListItemBO.getModel();
-				}
-				if(!_baseName.equals(scenarioName))
-				{
-					j = j + 1;
-					TimeSeriesContainer tsc = getOneTimeSeriesFromAllModels(scenarioName, model, _primaryDSSName);
-					results[j] = tsc;
-					if(tsc != null)
-					{
-						tsc.fullName = FilenameUtils.getBaseName(scenarioName) + " (" + model + ")";
-					}
-				}
+				EpptScenarioRun epptScenarioRun = _alternatives.get(i);
+				TimeSeriesContainer tsc = getOneTimeSeriesFromAllModels(epptScenarioRun.getDssContainer(),
+						epptScenarioRun.getModel(), _primaryDSSName);
+				results[i + 1] = tsc;
 			}
 		}
 		catch(RuntimeException ex)
@@ -880,34 +817,41 @@ public class DSSGrabber1SvcImpl implements IDSSGrabber1Svc
 		return results;
 	}
 
-	private TimeSeriesContainer getOneTimeSeriesFromAllModels(String scenarioName, GUILinksAllModelsBO.Model model,
+	private TimeSeriesContainer getOneTimeSeriesFromAllModels(EpptDssContainer dssContainer,
+															  GUILinksAllModelsBO.Model model,
 															  Map<GUILinksAllModelsBO.Model, String> dssNames)
 	{
 		TimeSeriesContainer oneSeries = null;
 		String primaryTs = dssNames.get(model);
 		if(primaryTs != null)
 		{
-			oneSeries = getOneSeries(scenarioName, primaryTs, model);
-		}
-		if(oneSeries == null)
-		{
-			LOGGER.log(Level.WARNING, "No matching GUI Links record in: " + scenarioName + " for Model: " + model + " with path: " + primaryTs);
-			if(_stopOnMissing)
+			Optional<TimeSeriesContainer> timeSeriesContainerOptional = dssContainer.getAllDssFiles().stream()
+																					.map(p -> getOneSeries(p, primaryTs,
+																							model))
+																					.filter(Objects::nonNull)
+																					.findFirst();
+			if(timeSeriesContainerOptional.isPresent())
 			{
-				reportMissingTimeSeries(scenarioName);
+				oneSeries = timeSeriesContainerOptional.get();
 			}
+		}
+		else
+		{
+			LOGGER.log(Level.WARNING, "No matching GUI Links record in for Model: {0} with path: {1}",
+					new Object[]{model, primaryTs});
 		}
 		return oneSeries;
 	}
 
-	private void reportMissingTimeSeries(String scenarioName)
+	private void reportMissingTimeSeries(NamedDssPath dssPath)
 	{
 		List<String> titles = new ArrayList<>();
 		for(Map.Entry<GUILinksAllModelsBO.Model, String> entry : _primaryDSSName.entrySet())
 		{
 			titles.add(entry.toString() + " (" + entry.getKey() + ")");
 		}
-		_dialogSvc.getOK("Could not find " + String.join(",", titles) + " in " + scenarioName,
+		_dialogSvc.getOK("Could not find " + String.join(",",
+				titles) + " in " + dssPath.getAliasName() + " File: " + dssPath.getDssPath(),
 				JOptionPane.ERROR_MESSAGE);
 	}
 
@@ -928,36 +872,19 @@ public class DSSGrabber1SvcImpl implements IDSSGrabber1Svc
 		else
 		{
 
-			_scenarioCount = _scenarios.size();
-			TimeSeriesContainer[] results = new TimeSeriesContainer[_scenarioCount];
+			TimeSeriesContainer[] results = new TimeSeriesContainer[_alternatives.size() + 1];
 
 			// Base first
 
-			TimeSeriesContainer oneSeries = getOneTimeSeriesFromAllModels(_baseName, _baseModel, _secondaryDSSName);
+			TimeSeriesContainer oneSeries = getOneTimeSeriesFromAllModels(_baseScenarioRun.getDssContainer(), _baseScenarioRun.getModel(), _secondaryDSSName);
 			results[0] = oneSeries;
-			if(oneSeries != null)
-			{
-				oneSeries.fullName = FilenameUtils.getBaseName(_baseName) + " (" + _baseModel + ")";
-			}
 			// Then scenarios
 
-			int j = 0;
-			for(int i = 0; i < _scenarioCount; i++)
+			for(int i = 0; i < _alternatives.size(); i++)
 			{
-				RBListItemBO rbListItemBO = _scenarios.get(i);
-				String scenarioName = rbListItemBO.toString();
-				GUILinksAllModelsBO.Model model = rbListItemBO.getModel();
-
-				if(!_baseName.equals(scenarioName))
-				{
-					j = j + 1;
-					TimeSeriesContainer tsc = getOneTimeSeriesFromAllModels(scenarioName, model, _secondaryDSSName);
-					results[j] = tsc;
-					if(tsc != null)
-					{
-						tsc.fullName = FilenameUtils.getBaseName(scenarioName) + " (" + _baseModel + ")";
-					}
-				}
+				EpptScenarioRun epptScenarioRun = _alternatives.get(i);
+				TimeSeriesContainer tsc = getOneTimeSeriesFromAllModels(epptScenarioRun.getDssContainer(), epptScenarioRun.getModel(), _secondaryDSSName);
+				results[i + 1] = tsc;
 			}
 			return results;
 		}
@@ -974,10 +901,10 @@ public class DSSGrabber1SvcImpl implements IDSSGrabber1Svc
 	public TimeSeriesContainer[] getDifferenceSeries(TimeSeriesContainer[] timeSeriesResults)
 	{
 
-		TimeSeriesContainer[] results = new TimeSeriesContainer[_scenarioCount - 1];
+		TimeSeriesContainer[] results = new TimeSeriesContainer[_alternatives.size()];
 		if(timeSeriesResults[0] != null)
 		{
-			for(int i = 0; i < _scenarioCount - 1; i++)
+			for(int i = 0; i < _alternatives.size(); i++)
 			{
 				TimeSeriesContainer timeSeriesResult = timeSeriesResults[i + 1];
 				if(timeSeriesResult != null)
@@ -1175,13 +1102,13 @@ public class DSSGrabber1SvcImpl implements IDSSGrabber1Svc
 			}
 			else
 			{
-				results = new TimeSeriesContainer[14][_scenarioCount];
+				results = new TimeSeriesContainer[14][_alternatives.size() + 1];
 
 				for(int month = 0; month < 14; month++)
 				{
 
 					HecTime ht = new HecTime();
-					for(int i = 0; i < _scenarioCount; i++)
+					for(int i = 0; i < _alternatives.size() + 1; i++)
 					{
 
 						if(month == 13)
@@ -1306,13 +1233,13 @@ public class DSSGrabber1SvcImpl implements IDSSGrabber1Svc
 			}
 			else
 			{
-				results = new TimeSeriesContainer[14][_scenarioCount - 1];
+				results = new TimeSeriesContainer[14][_alternatives.size()];
 
 				for(int month = 0; month < 14; month++)
 				{
 
 					HecTime ht = new HecTime();
-					for(int i = 0; i < _scenarioCount - 1; i++)
+					for(int i = 0; i < _alternatives.size(); i++)
 					{
 
 						if(month == 13)

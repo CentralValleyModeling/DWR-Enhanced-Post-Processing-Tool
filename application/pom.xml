@@ -93,7 +93,7 @@
 					<finalName>DWR-EPPT</finalName>
 					<brandingToken>${brandingToken}</brandingToken>
 					<debugAdditionalArguments>
-						-J"-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=5164" -J-Xmx2g
+						-J"-agentlib:jdwp=transport=dt_socket,server=y,suspend=y,address=5164" -J-Xmx2g
 					</debugAdditionalArguments>
 				</configuration>
 			</plugin>
@@ -126,6 +126,7 @@
 								<goals>
 									<goal>build-installers</goal>
 									<goal>cluster-app</goal>
+									<goal>run-platform</goal>
 								</goals>
 							</execution>
 						</executions>

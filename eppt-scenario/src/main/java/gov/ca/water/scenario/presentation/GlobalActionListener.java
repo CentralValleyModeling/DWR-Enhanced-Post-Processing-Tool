@@ -208,32 +208,6 @@ public class GlobalActionListener implements ActionListener
 				case "AC_DfcClear":
 					clearQRCheckBoxes("delta_flow_criteria");
 					break;
-				case "Rep_DispCur":
-					if(lstScenarios.getModel().getSize() == 0)
-					{
-						_dialogSvc.getOK("Error - No scenarios loaded", JOptionPane.ERROR_MESSAGE);
-					}
-					else if(lstReports.getSelectedValue() == null)
-					{
-						_dialogSvc.getOK("Error - No display group selected", JOptionPane.ERROR_MESSAGE);
-					}
-					else
-					{
-
-						List<RBListItemBO> scenarios = new ArrayList<>();
-						model = lstScenarios.getModel();
-						for(int i = 0; i < model.getSize(); i++)
-						{
-							scenarios.add(model.getElementAt(i));
-						}
-						ProjectConfigurationPanel projectConfigurationPanel = ProjectConfigurationPanel.getProjectConfigurationPanel();
-						String quickState = projectConfigurationPanel.quickState();
-						Month startMonth = projectConfigurationPanel.getStartMonth();
-						Month endMonth = projectConfigurationPanel.getEndMonth();
-						_displayHelper.showDisplayFrames(
-								(String) ((JList) _swingEngine.find("lstReports")).getSelectedValue(), scenarios, startMonth, endMonth);
-					}
-					break;
 				case "Time_SELECT":
 
 					break;
@@ -351,12 +325,12 @@ public class GlobalActionListener implements ActionListener
 		ProjectConfigurationPanel projectConfigurationPanel = ProjectConfigurationPanel.getProjectConfigurationPanel();
 		IScenarioDele scenarioDele = new ScenarioDeleImp();
 		List<String> fileNames = new ArrayList<>();
-		for(int i = 0; i < projectConfigurationPanel.getScenarios().size(); i++)
-		{
-			String name = Paths.get(projectConfigurationPanel.getScenarios().get(i).toString())
-							   .getFileName().toString();
-			fileNames.add(name.substring(0, name.length() - 7) + Constant.CLS_EXT);
-		}
+//		for(int i = 0; i < projectConfigurationPanel.getScenarios().size(); i++)
+//		{
+//			String name = Paths.get(projectConfigurationPanel.getScenarios().get(i).toString())
+//							   .getFileName().toString();
+//			fileNames.add(name.substring(0, name.length() - 7) + Constant.CLS_EXT);
+//		}
 		try
 		{
 			List<DataTableModel> dtmList = scenarioDele.getScenarioTableData(fileNames, _swingEngine);

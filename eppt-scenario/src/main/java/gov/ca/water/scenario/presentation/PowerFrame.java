@@ -38,19 +38,19 @@ class PowerFrame
 		try
 		{
 			String dssFilename = "";
-			IDSSGrabber1Svc dssGrabber = new DSSGrabber1SvcImpl(lstScenarios);
+			IDSSGrabber1Svc dssGrabber = new DSSGrabber1SvcImpl();
 			for(RBListItemBO item : lstScenarios)
 			{
 				if(item.isSelected())
 				{
 					dssFilename = item.toString();
-					dssGrabber.setBase(item.toString(), item.getModel());
+//					dssGrabber.setScenarioRuns(item.toString(), item.getModel());
 				}
 			}
 			if(!dssGrabber.hasPower(dssFilename))
 			{
 				if("OK".equals(_dialogSvc.getOKCancel(
-						"There are no power records in " + dssGrabber.getBase() + ". Press OK to run the Power Module.",
+						"There are no power records in " + dssGrabber.getBaseRunName() + ". Press OK to run the Power Module.",
 						JOptionPane.PLAIN_MESSAGE)))
 				{
 					runPowerModule("DEFAULT");
@@ -58,7 +58,7 @@ class PowerFrame
 			}
 			else
 			{
-				final JFrame frame = new JFrame("Power Viewer:" + dssGrabber.getBase());
+				final JFrame frame = new JFrame("Power Viewer:" + dssGrabber.getBaseRunName());
 				frame.setPreferredSize(new Dimension(800, 600));
 				frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 				frame.pack();
