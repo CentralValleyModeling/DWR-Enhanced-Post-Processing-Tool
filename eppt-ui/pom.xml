@@ -93,6 +93,7 @@
 				<version>2.22.1</version>
 				<configuration>
 					<forkCount>0</forkCount>
+					<additionalClasspathElements>${java.home}/lib/ext/jfxrt.jar</additionalClasspathElements>
 				</configuration>
 			</plugin>
 		</plugins>

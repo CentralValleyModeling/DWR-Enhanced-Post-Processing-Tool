@@ -14,6 +14,8 @@ package gov.ca.water.quickresults.ui.projectconfig.scenariotable;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import gov.ca.water.calgui.project.EpptScenarioRun;
 import javafx.application.Platform;
@@ -37,6 +39,7 @@ import static gov.ca.water.quickresults.ui.projectconfig.scenariotable.ScenarioT
  */
 public class ScenarioTablePanel extends JFXPanel
 {
+	private static final Logger LOGGER = Logger.getLogger(ScenarioTablePanel.class.getName());
 	private RmaTreeTableView<ScenarioTableModel, ParentRowModel> _treeTable;
 	private ScenarioTableModel _scnearioTableModel;
 
@@ -56,7 +59,14 @@ public class ScenarioTablePanel extends JFXPanel
 		_treeTable.setCellView(ALTERNATIVE_COL_SPEC, new RmaCheckBoxCellView());
 		BorderPane borderPane = new BorderPane();
 		borderPane.setCenter(_treeTable);
-		setScene(new Scene(borderPane));
+		try
+		{
+			setScene(new Scene(borderPane));
+		}
+		catch(RuntimeException ex)
+		{
+			LOGGER.log(Level.SEVERE, "Unable to set JavaFX scene for Scenario Table", ex);
+		}
 		Platform.runLater(_treeTable::resizeAllColumnsToFitContent);
 	}
 
