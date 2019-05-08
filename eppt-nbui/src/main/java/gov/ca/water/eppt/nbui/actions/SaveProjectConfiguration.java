@@ -11,6 +11,7 @@ import java.awt.event.ActionEvent;
 import java.io.IOException;
 import java.net.URL;
 import java.nio.file.Path;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -18,6 +19,7 @@ import javax.swing.*;
 
 import gov.ca.water.calgui.constant.EpptPreferences;
 import gov.ca.water.eppt.nbui.Installer;
+import gov.ca.water.eppt.nbui.ProjectConfigurationTopComponent;
 import gov.ca.water.quickresults.ui.projectconfig.ProjectConfigurationPanel;
 import org.netbeans.api.actions.Savable;
 import org.openide.awt.ActionID;
@@ -87,9 +89,23 @@ public final class SaveProjectConfiguration extends AbstractAction implements Pr
 				Installer.MAIN_FRAME_NAME + " - " + projectConfigurationPanel.getProjectName());
 		Collection<? extends ProjectConfigurationSavable> projectConfigurationSavables = Savable.REGISTRY.lookupAll(
 				ProjectConfigurationSavable.class);
-		for(ProjectConfigurationSavable savable : projectConfigurationSavables)
+		if(projectConfigurationSavables.isEmpty())
 		{
-			savable.removeFromLookup();
+			WindowManager.getDefault().getModes()
+						 .stream()
+						 .map(m -> m.getTopComponents())
+						 .map(Arrays::asList)
+						 .flatMap(Collection::stream)
+						 .filter(t -> t instanceof ProjectConfigurationTopComponent)
+						 .map(t -> (ProjectConfigurationTopComponent) t)
+						 .forEach(ProjectConfigurationTopComponent::topComponentNameUnmodified);
+		}
+		else
+		{
+			for(ProjectConfigurationSavable savable : projectConfigurationSavables)
+			{
+				savable.removeFromLookup();
+			}
 		}
 	}
 

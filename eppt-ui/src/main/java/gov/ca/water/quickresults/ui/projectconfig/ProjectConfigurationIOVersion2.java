@@ -24,6 +24,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import javax.swing.*;
 
 import gov.ca.water.calgui.bo.GUILinksAllModelsBO;
@@ -103,12 +104,22 @@ class ProjectConfigurationIOVersion2
 			JSONObject namedDssDvJsonObject = createDssJson(dssContainer.getDvDssFile());
 			JSONObject namedDssSvJsonObject = createDssJson(dssContainer.getSvDssFile());
 			JSONObject namedDssIvJsonObject = createDssJson(dssContainer.getIvDssFile());
-			dssContainerJson.put(SCENARIO_DV_KEY, namedDssDvJsonObject);
-			dssContainerJson.put(SCENARIO_SV_KEY, namedDssSvJsonObject);
-			dssContainerJson.put(SCENARIO_IV_KEY, namedDssIvJsonObject);
+			if(namedDssDvJsonObject != null)
+			{
+				dssContainerJson.put(SCENARIO_DV_KEY, namedDssDvJsonObject);
+			}
+			if(namedDssSvJsonObject != null)
+			{
+				dssContainerJson.put(SCENARIO_SV_KEY, namedDssSvJsonObject);
+			}
+			if(namedDssIvJsonObject != null)
+			{
+				dssContainerJson.put(SCENARIO_IV_KEY, namedDssIvJsonObject);
+			}
 			JSONArray extraDssArray = new JSONArray();
 			dssContainer.getExtraDssFiles().stream()
 						.map(this::createDssJson)
+						.filter(Objects::nonNull)
 						.forEach(extraDssArray::put);
 			dssContainerJson.put(SCENARIO_DSS_EXTRA, extraDssArray);
 			jsonObject.put(SCENARIO_DSS_FILES, dssContainerJson);
@@ -162,9 +173,19 @@ class ProjectConfigurationIOVersion2
 
 	private JSONObject createDssJson(NamedDssPath dvDssFile)
 	{
-		JSONObject namedDssJsonObject = new JSONObject();
-		namedDssJsonObject.put(SCENARIO_DSS_NAME, dvDssFile.getAliasName());
-		namedDssJsonObject.put(SCENARIO_DSS_PATH, dvDssFile.getDssPath());
+		JSONObject namedDssJsonObject = null;
+		if(dvDssFile != null)
+		{
+			namedDssJsonObject = new JSONObject();
+			if(dvDssFile.getAliasName() != null)
+			{
+				namedDssJsonObject.put(SCENARIO_DSS_NAME, dvDssFile.getAliasName());
+			}
+			if(dvDssFile.getDssPath() != null)
+			{
+				namedDssJsonObject.put(SCENARIO_DSS_PATH, dvDssFile.getDssPath());
+			}
+		}
 		return namedDssJsonObject;
 	}
 

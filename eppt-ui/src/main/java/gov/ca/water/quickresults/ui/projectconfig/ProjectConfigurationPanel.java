@@ -20,6 +20,7 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Level;
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
@@ -184,6 +185,7 @@ public final class ProjectConfigurationPanel extends EpptPanel
 	void clearAllScenarios()
 	{
 		_scenarioTablePanel.clearScenarios();
+		setModified(true);
 
 	}
 
@@ -198,6 +200,7 @@ public final class ProjectConfigurationPanel extends EpptPanel
 	void deleteScenario()
 	{
 		_scenarioTablePanel.deleteSelectedScenarioRun();
+		setModified(true);
 	}
 
 	public String quickState()
@@ -409,6 +412,10 @@ public final class ProjectConfigurationPanel extends EpptPanel
 					addScenario(scenarioRun);
 				}
 			}
+			catch(RuntimeException ex)
+			{
+				LOGGER.error("Error loading project configuration", ex);
+			}
 			finally
 			{
 				_ignoreModifiedEvents = false;
@@ -497,6 +504,7 @@ public final class ProjectConfigurationPanel extends EpptPanel
 	{
 		_scenarioTablePanel.addScenarioRun(scenarioRun);
 		updateRadioState();
+		setModified(true);
 	}
 
 	public List<EpptScenarioRun> getEpptScenarioAlternatives()
@@ -519,5 +527,6 @@ public final class ProjectConfigurationPanel extends EpptPanel
 	void replaceScenario(EpptScenarioRun oldScenarioRun, EpptScenarioRun newScenarioRun)
 	{
 		_scenarioTablePanel.updateScenario(oldScenarioRun, newScenarioRun);
+		setModified(true);
 	}
 }

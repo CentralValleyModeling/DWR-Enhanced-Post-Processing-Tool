@@ -13,6 +13,7 @@
 package gov.ca.water.quickresults.ui.projectconfig.scenariotable;
 
 import javafx.beans.value.ObservableValue;
+import javafx.scene.paint.Color;
 
 import com.rma.javafx.treetable.columns.specs.TreeTableColumnSpec;
 import com.rma.javafx.treetable.rows.RmaTreeTableRowModel;
@@ -28,5 +29,11 @@ abstract class ParentRowModel extends RmaTreeTableRowModel<ParentRowModel>
 	ParentRowModel(ParentRowModel parent)
 	{
 		super(parent);
+	}
+
+	@Override
+	public Color getUneditableBgCellColor(TreeTableColumnSpec columnSpec)
+	{
+		return getEditableBgCellColor(columnSpec);
 	}
 }

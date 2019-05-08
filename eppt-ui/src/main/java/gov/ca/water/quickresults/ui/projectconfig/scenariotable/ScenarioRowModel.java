@@ -166,9 +166,4 @@ class ScenarioRowModel extends ParentRowModel
 		return _scenarioRunTableModel.getBaseScenarioRun() == null;
 	}
 
-	@Override
-	public Color getUneditableBgCellColor(TreeTableColumnSpec columnSpec)
-	{
-		return getEditableBgCellColor(columnSpec);
-	}
 }

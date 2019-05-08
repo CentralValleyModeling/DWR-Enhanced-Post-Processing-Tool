@@ -30,6 +30,7 @@ import com.rma.javafx.treetable.cells.views.RmaCheckBoxCellView;
 
 import static gov.ca.water.quickresults.ui.projectconfig.scenariotable.ScenarioTableModel.ALTERNATIVE_COL_SPEC;
 import static gov.ca.water.quickresults.ui.projectconfig.scenariotable.ScenarioTableModel.BASE_COL_SPEC;
+import static gov.ca.water.quickresults.ui.projectconfig.scenariotable.ScenarioTableModel.NAME_COL_SPEC;
 
 /**
  * Company: Resource Management Associates
@@ -67,7 +68,7 @@ public class ScenarioTablePanel extends JFXPanel
 		{
 			LOGGER.log(Level.SEVERE, "Unable to set JavaFX scene for Scenario Table", ex);
 		}
-		Platform.runLater(_treeTable::resizeAllColumnsToFitContent);
+		Platform.runLater(() -> _treeTable.getColumnFromSpec(NAME_COL_SPEC).setPrefWidth(200));
 	}
 
 	public void clearScenarios()
@@ -99,11 +100,9 @@ public class ScenarioTablePanel extends JFXPanel
 
 	public void addScenarioRun(EpptScenarioRun scenarioRun)
 	{
-		Platform.runLater(() ->
-		{
-			_scnearioTableModel.getRows().add(new ScenarioRowModel(_treeTable, _scnearioTableModel, scenarioRun,
-					_scnearioTableModel.getRows().isEmpty(), false));
-		});
+		Platform.runLater(() -> _scnearioTableModel.getRows().add(
+				new ScenarioRowModel(_treeTable, _scnearioTableModel, scenarioRun,
+						_scnearioTableModel.getRows().isEmpty(), false)));
 	}
 
 	public void updateScenario(EpptScenarioRun oldScenarioRun, EpptScenarioRun newScenarioRun)
@@ -119,6 +118,7 @@ public class ScenarioTablePanel extends JFXPanel
 				_scnearioTableModel.getRows().add(i,
 						new ScenarioRowModel(_treeTable, _scnearioTableModel, newScenarioRun, oldModel.isBase(),
 								oldModel.isAlternative()));
+
 			}
 		});
 	}
@@ -136,5 +136,4 @@ public class ScenarioTablePanel extends JFXPanel
 			}
 		}
 		return retval;
-	}
-}
+	}}

@@ -136,7 +136,7 @@
 							<installerOsMacosx>false</installerOsMacosx>
 							<installerOsSolaris>false</installerOsSolaris>
 							<installerPack200Enable>true</installerPack200Enable>
-							<installerOsWindows>true</installerOsWindows>
+							<installerOsWindows>false</installerOsWindows>
 							<userSettings>
 								<configuration.logic.file>
 									${basedir}/src/installer/ConfigurationLogic.java
