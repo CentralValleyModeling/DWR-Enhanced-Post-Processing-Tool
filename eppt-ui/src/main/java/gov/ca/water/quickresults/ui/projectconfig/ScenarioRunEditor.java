@@ -25,6 +25,7 @@ import java.util.Date;
 import java.util.List;
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
+import javax.swing.plaf.basic.BasicArrowButton;
 
 import gov.ca.water.calgui.bo.GUILinksAllModelsBO;
 import gov.ca.water.calgui.bo.SimpleFileFilter;
@@ -157,10 +158,16 @@ class ScenarioRunEditor extends JDialog
 		treeButtonPanel.setLayout(new FlowLayout(FlowLayout.RIGHT));
 		JButton plusButton = new JButton("+");
 		JButton minusButton = new JButton("-");
+		JButton upButton = new JButton("<html>&#9650;</html>");
+		JButton downButton = new JButton("<html>&#9660;</html>");
 		plusButton.addActionListener(this::addExtraDss);
-		minusButton.addActionListener(e -> removeSelectedDss(e, dssTree.getSelectedValue()));
+		minusButton.addActionListener(e -> removeSelectedDss(dssTree.getSelectedValue()));
+		upButton.addActionListener(e -> moveSelectedDssUp(dssTree.getSelectedIndex()));
+		downButton.addActionListener(e -> moveSelectedDssDown(dssTree.getSelectedIndex()));
 		treeButtonPanel.add(plusButton);
 		treeButtonPanel.add(minusButton);
+		treeButtonPanel.add(upButton);
+		treeButtonPanel.add(downButton);
 		dssTree.setModel(_extraDssListModel);
 		extraDssPanel.setLayout(new BorderLayout());
 		extraDssPanel.add(treeButtonPanel, BorderLayout.SOUTH);
@@ -168,7 +175,25 @@ class ScenarioRunEditor extends JDialog
 		return extraDssPanel;
 	}
 
-	private void removeSelectedDss(ActionEvent e, NamedDssPath selectedValue)
+	private void moveSelectedDssDown(int selectedValue)
+	{
+		if(selectedValue >= 0 && selectedValue < _extraDssListModel.size() - 1)
+		{
+			NamedDssPath remove = _extraDssListModel.remove(selectedValue);
+			_extraDssListModel.add(selectedValue + 1, remove);
+		}
+	}
+
+	private void moveSelectedDssUp(int selectedValue)
+	{
+		if(selectedValue >= 1)
+		{
+			NamedDssPath remove = _extraDssListModel.remove(selectedValue);
+			_extraDssListModel.add(selectedValue - 1, remove);
+		}
+	}
+
+	private void removeSelectedDss(NamedDssPath selectedValue)
 	{
 		if(selectedValue != null)
 		{
@@ -186,7 +211,8 @@ class ScenarioRunEditor extends JDialog
 		File selectedFile = fileChooser.getSelectedFile();
 		if(selectedFile != null)
 		{
-			_extraDssListModel.addElement(new NamedDssPath(selectedFile.toPath(), selectedFile.toPath().getFileName().toString()));
+			_extraDssListModel.addElement(
+					new NamedDssPath(selectedFile.toPath(), selectedFile.toPath().getFileName().toString()));
 		}
 	}
 

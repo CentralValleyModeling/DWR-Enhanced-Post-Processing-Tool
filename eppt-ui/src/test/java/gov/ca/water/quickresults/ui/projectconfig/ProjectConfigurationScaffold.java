@@ -46,7 +46,7 @@ public class ProjectConfigurationScaffold extends EpptScaffold
 				e1.printStackTrace();
 			}
 		});
-		projectConfigurationPanel.add(reset, BorderLayout.SOUTH);
+//		projectConfigurationPanel.add(reset, BorderLayout.SOUTH);
 		ProjectConfigurationListener projectConfigurationListener = new ProjectConfigurationListener(
 				projectConfigurationPanel);
 		projectConfigurationPanel.setActionListener(projectConfigurationListener);

@@ -53,7 +53,7 @@ public abstract class EpptScaffold
 		{
 			jFrame.setLayout(new BorderLayout());
 			jFrame.add(epptPanel, BorderLayout.CENTER);
-			jFrame.add(buildUiManagerPanel(jFrame), BorderLayout.NORTH);
+//			jFrame.add(buildUiManagerPanel(jFrame), BorderLayout.NORTH);
 			jFrame.pack();
 			jFrame.setVisible(true);
 		});

@@ -68,7 +68,8 @@ public class MonthlyTablePanel extends JPanel implements ActionListener, Compone
 		this(title, primaryResults, secondaryResults, null, dssGrabber, sName, isBase);
 	}
 
-	private MonthlyTablePanel(String title, TimeSeriesContainer[] primaryResults, TimeSeriesContainer[] secondaryResults,
+	private MonthlyTablePanel(String title, TimeSeriesContainer[] primaryResults,
+							  TimeSeriesContainer[] secondaryResults,
 							  IDSSGrabber1Svc dssGrabber, DSSGrabber2SvcImpl dssGrabber2, String sName, boolean isBase)
 	{
 
@@ -89,19 +90,19 @@ public class MonthlyTablePanel extends JPanel implements ActionListener, Compone
 		List<String> columns = getColumns(isCFS);
 
 		int secondaryResultsLength = 0;
-		if (secondaryResults != null)
+		if(secondaryResults != null)
 		{
 			secondaryResultsLength = secondaryResults.length;
 		}
 
 		int incrementAmount = 1;
-		if (isBase)
+		if(isBase)
 		{
 			incrementAmount = primaryResults.length;
 		}
 
 		//this is the master loop
-		for (int s = 0; s < primaryResults.length + secondaryResultsLength; s += incrementAmount)
+		for(int s = 0; s < primaryResults.length + secondaryResultsLength; s += incrementAmount)
 		{
 
 			TimeSeriesContainer tsc = assignTimeSeriesContainer(s, primaryResults, secondaryResults);
@@ -130,7 +131,7 @@ public class MonthlyTablePanel extends JPanel implements ActionListener, Compone
 				int waterYear = hecTime.year() + (hecTime.month() < 10 ? 0 : 1);
 				data.add(Integer.toString(waterYear));
 
-				for (int i = 0; i < (hecTime.month() + 2) % 12; i++)
+				for(int i = 0; i < (hecTime.month() + 2) % 12; i++)
 				{
 					data.add("");
 				}
@@ -145,7 +146,7 @@ public class MonthlyTablePanel extends JPanel implements ActionListener, Compone
 					// Put in column sum and new water year at the end of each
 					// row.
 
-					if (month == 0)
+					if(month == 0)
 					{
 						if(i != 0)
 						{
@@ -183,7 +184,7 @@ public class MonthlyTablePanel extends JPanel implements ActionListener, Compone
 				// Fill in end
 
 				hecTime.set(tsc.times[tsc.numberValues - 1]);
-				for (int i = 1 + (hecTime.month() + 2) % 12; i < 12; i++)
+				for(int i = 1 + (hecTime.month() + 2) % 12; i < 12; i++)
 				{
 					data.add("");
 				}
@@ -266,10 +267,11 @@ public class MonthlyTablePanel extends JPanel implements ActionListener, Compone
 		add(box);
 	}
 
-	private TimeSeriesContainer assignTimeSeriesContainer(int index, TimeSeriesContainer[] primaryResults, TimeSeriesContainer[] secondaryResults)
+	private TimeSeriesContainer assignTimeSeriesContainer(int index, TimeSeriesContainer[] primaryResults,
+														  TimeSeriesContainer[] secondaryResults)
 	{
 		TimeSeriesContainer tsc;
-		if (index < primaryResults.length)
+		if(index < primaryResults.length)
 		{
 			tsc = primaryResults[index];
 		}
@@ -283,16 +285,15 @@ public class MonthlyTablePanel extends JPanel implements ActionListener, Compone
 	private String getLabelName(int index, String name, TimeSeriesContainer tsc, String title, int primaryResultsLength)
 	{
 		String sLabel;
-		if (index < primaryResultsLength)
+		if(index < primaryResultsLength)
 		{
 			sLabel = title;
 		}
 		else
 		{
-			if ("".equals(name) && tsc != null)
+			if("".equals(name) && tsc != null)
 			{
-				String[] parts = tsc.fullName.split("/");
-				sLabel = parts[2] + "/" + parts[3];
+				sLabel = tsc.fullName;
 			}
 			else
 			{
@@ -320,7 +321,7 @@ public class MonthlyTablePanel extends JPanel implements ActionListener, Compone
 		columns.add("Aug");
 		columns.add("Sep");
 
-		if (isCFS)
+		if(isCFS)
 		{
 			columns.add("Ann (TAF)");
 		}

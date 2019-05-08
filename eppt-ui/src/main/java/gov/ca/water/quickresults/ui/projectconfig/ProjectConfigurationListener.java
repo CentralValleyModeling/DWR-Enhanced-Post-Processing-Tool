@@ -64,7 +64,6 @@ public class ProjectConfigurationListener implements ActionListener
 			default:
 		}
 		ProjectConfigurationPanel projectConfigurationPanel = ProjectConfigurationPanel.getProjectConfigurationPanel();
-		projectConfigurationPanel.getScenarioList().repaint();
 		projectConfigurationPanel.setModified(true);
 	}
 

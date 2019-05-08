@@ -65,19 +65,11 @@ public class ExceedanceChartPanel extends JPanel implements Printable
 
 		int primaries = 0;
 		String sName = "";
-		if(sLabel.equals(""))
+		if("".equals(sLabel))
 		{
 			if(stscs != null)
 			{
-				String[] sParts = stscs[0].fullName.split("/");
-				if(sParts.length > 3)
-				{
-					sName = sParts[2] + "/" + sParts[3];
-				}
-				else
-				{
-					sName = "Unassigned Secondary";
-				}
+				sName = stscs[0].fullName;
 			}
 		}
 		else

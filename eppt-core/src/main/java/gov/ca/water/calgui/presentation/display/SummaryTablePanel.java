@@ -472,8 +472,7 @@ public class SummaryTablePanel extends JPanel implements ActionListener, Compone
 						}
 						else
 						{
-							String[] parts = tsc.fullName.split("/");
-							labelText = parts[2] + "/" + parts[3];
+							labelText = tsc.fullName;
 						}
 					}
 				}
@@ -485,14 +484,13 @@ public class SummaryTablePanel extends JPanel implements ActionListener, Compone
 					}
 					else
 					{
-						if(!sName.equals(""))
+						if(!"".equals(sName))
 						{
 							labelText = sName;
 						}
 						else
 						{
-							String[] parts = tsc.fullName.split("/");
-							labelText = parts[2] + "/" + parts[3];
+							labelText = tsc.fullName;
 						}
 					}
 				}

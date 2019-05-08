@@ -63,4 +63,18 @@ public class NamedDssPath
 	{
 		return Objects.hash(getDssPath(), getAliasName());
 	}
+
+
+	@Override
+	public String toString()
+	{
+		if(_aliasName != null)
+		{
+			return _aliasName;
+		}
+		else
+		{
+			return _dssPath.toString();
+		}
+	}
 }

@@ -15,42 +15,25 @@ package gov.ca.water.quickresults.ui.projectconfig;
 import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Container;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
-import java.awt.Insets;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
-import javax.swing.event.ListDataEvent;
-import javax.swing.event.ListDataListener;
-import javax.swing.event.TreeSelectionEvent;
-import javax.swing.event.TreeSelectionListener;
-import javax.swing.tree.DefaultMutableTreeNode;
-import javax.swing.tree.DefaultTreeModel;
-import javax.swing.tree.TreeNode;
-import javax.swing.tree.TreePath;
 
-import gov.ca.water.calgui.bo.RBListItemBO;
 import gov.ca.water.calgui.bo.ResultUtilsBO;
 import gov.ca.water.calgui.constant.EpptPreferences;
-import gov.ca.water.calgui.presentation.WRIMSGUILinks;
 import gov.ca.water.calgui.project.EpptProject;
 import gov.ca.water.calgui.project.EpptScenarioRun;
 import gov.ca.water.calgui.techservice.IErrorHandlingSvc;
 import gov.ca.water.calgui.techservice.impl.ErrorHandlingSvcImpl;
 import gov.ca.water.quickresults.ui.EpptPanel;
+import gov.ca.water.quickresults.ui.projectconfig.scenariotable.ScenarioTablePanel;
 import org.apache.log4j.Logger;
 import org.jfree.data.time.Month;
-
-import static gov.ca.water.quickresults.ui.projectconfig.ProjectConfigurationIO.ID_KEY;
 
 /**
  * Company: Resource Management Associates
@@ -65,15 +48,11 @@ public final class ProjectConfigurationPanel extends EpptPanel
 	private static final ProjectConfigurationPanel SINGLETON = new ProjectConfigurationPanel();
 	private static IErrorHandlingSvc errorHandlingSvc = new ErrorHandlingSvcImpl();
 	private final ProjectConfigurationIO _projectConfigurationIO = new ProjectConfigurationIO();
-	private final JTextField _nameField = new JTextField();
-	private final JTextField _descriptionField = new JTextField();
-	private final DefaultTreeModel _scenarioTreeModel;
-	private final DefaultMutableTreeNode _rootNode = new DefaultMutableTreeNode();
+	private final ScenarioTablePanel _scenarioTablePanel = new ScenarioTablePanel();
 	private boolean _ignoreModifiedEvents = false;
 
 	private ProjectConfigurationPanel()
 	{
-		_scenarioTreeModel = new DefaultTreeModel(_rootNode);
 		try
 		{
 			super.setLayout(new BorderLayout());
@@ -93,77 +72,18 @@ public final class ProjectConfigurationPanel extends EpptPanel
 	private void initComponents()
 	{
 		initScenarioTree();
-		initProjectNameDescription();
 		revalidate();
-	}
-
-	private void initProjectNameDescription()
-	{
-		JPanel header = new JPanel();
-		header.setLayout(new GridBagLayout());
-		add(header, BorderLayout.NORTH);
-		header.add(new JLabel("Project Name:"), new GridBagConstraints(1,
-				1, 1, 1, .02, .5,
-				GridBagConstraints.WEST, GridBagConstraints.BOTH,
-				new Insets(1, 5, 1, 1), 5, 5));
-		header.add(_nameField, new GridBagConstraints(2,
-				1, 1, 1, 1.0, .5,
-				GridBagConstraints.EAST, GridBagConstraints.HORIZONTAL,
-				new Insets(1, 1, 1, 5), 5, 5));
-		header.add(new JLabel("Description:"), new GridBagConstraints(1,
-				2, 1, 1, .02, .5,
-				GridBagConstraints.WEST, GridBagConstraints.BOTH,
-				new Insets(1, 5, 1, 1), 5, 5));
-		header.add(_descriptionField, new GridBagConstraints(2,
-				2, 1, 1, 1.0, .5,
-				GridBagConstraints.EAST, GridBagConstraints.HORIZONTAL,
-				new Insets(1, 1, 1, 5), 5, 5));
 	}
 
 	private void initScenarioTree()
 	{
 		Component component = getSwingEngine().find("ScenarioTree");
-		if(component instanceof JTree)
+		if(component instanceof JPanel)
 		{
-			JTree scenarioTree = (JTree) component;
-			ToolTipManager.sharedInstance().registerComponent(scenarioTree);
-			scenarioTree.setCellRenderer(new ScenarioRunCellRenderer());
-			scenarioTree.addTreeSelectionListener(new TreeSelectionListener()
-			{
-				@Override
-				public void valueChanged(TreeSelectionEvent e)
-				{
-					Object[] path = e.getPath().getPath();
-					if(path.length == 2)
-					{
-						Object obj = path[1];
-						if(obj instanceof ScenarioRunNode)
-						{
-							getScenarioRunNodes().forEach(n -> n.setBase(false));
-							((ScenarioRunNode) obj).setBase(true);
-
-							scenarioTree.repaint();
-							WRIMSGUILinks.updateProjectFiles(getScenarioList());
-						}
-					}
-				}
-			});
+			JPanel treePanel = (JPanel) component;
+			treePanel.setLayout(new BorderLayout());
+			treePanel.add(_scenarioTablePanel, BorderLayout.CENTER);
 		}
-	}
-
-	private List<ScenarioRunNode> getScenarioRunNodes()
-	{
-		List<ScenarioRunNode> retval = new ArrayList<>();
-		int childCount = _rootNode.getChildCount();
-		for(int i = 0; i < childCount; i++)
-		{
-			TreeNode childAt = _rootNode.getChildAt(i);
-			if(childAt instanceof ScenarioRunNode)
-			{
-				retval.add(((ScenarioRunNode) childAt));
-			}
-		}
-		return retval;
 	}
 
 	/**
@@ -196,7 +116,6 @@ public final class ProjectConfigurationPanel extends EpptPanel
 
 	private void initModels()
 	{
-		initializeScenariosModel();
 		initializeSpinners();
 	}
 
@@ -230,8 +149,10 @@ public final class ProjectConfigurationPanel extends EpptPanel
 				ProjectConfigurationPanel.this.setModified(true);
 			}
 		};
-		_nameField.getDocument().addDocumentListener(documentListener);
-		_descriptionField.getDocument().addDocumentListener(documentListener);
+		JTextField projectNameField = (JTextField) getSwingEngine().find("prj_name");
+		JTextField descriptionField = (JTextField) getSwingEngine().find("prj_desc");
+		projectNameField.getDocument().addDocumentListener(documentListener);
+		descriptionField.getDocument().addDocumentListener(documentListener);
 	}
 
 	private void initializeSpinners()
@@ -248,21 +169,6 @@ public final class ProjectConfigurationPanel extends EpptPanel
 		ResultUtilsBO.SetNumberModelAndIndex(spnEY, 2003, 1921, 2003, 1, "####", null, true);
 	}
 
-	private void initializeScenariosModel()
-	{
-		Component component = getSwingEngine().find("ScenarioTree");
-		if(component instanceof JTree)
-		{
-			JTree scenarioTree = (JTree) component;
-			_rootNode.removeAllChildren();
-			scenarioTree.setModel(_scenarioTreeModel);
-			scenarioTree.setRootVisible(false);
-			scenarioTree.setExpandsSelectedPaths(true);
-			scenarioTree.expandPath(new TreePath(((DefaultMutableTreeNode) _scenarioTreeModel.getRoot()).getPath()));
-		}
-	}
-
-
 	@Override
 	public String getJavaHelpId()
 	{
@@ -277,55 +183,27 @@ public final class ProjectConfigurationPanel extends EpptPanel
 
 	void clearAllScenarios()
 	{
-		_rootNode.removeAllChildren();
-		_scenarioTreeModel.reload();
+		_scenarioTablePanel.clearScenarios();
 
 	}
 
 	private void updateRadioState()
 	{
-		getRadioButton1().setEnabled(_rootNode.getChildCount() > 1);
-		getRadioButton2().setEnabled(_rootNode.getChildCount() > 1);
+		EpptScenarioRun epptScenarioRun = _scenarioTablePanel.getBaseScenarioRun();
+		List<EpptScenarioRun> epptScenarioRuns = _scenarioTablePanel.getAlternativeScenarioRuns();
+		getRadioButton1().setEnabled(!epptScenarioRuns.isEmpty() && epptScenarioRun != null);
+		getRadioButton2().setEnabled(epptScenarioRuns.isEmpty() && epptScenarioRun != null);
 	}
 
 	void deleteScenario()
 	{
-		EpptScenarioRun selectedScenario = getSelectedScenario();
-		if(selectedScenario != null)
-		{
-			int childCount = _rootNode.getChildCount();
-			for(int i = 0; i < childCount; i++)
-			{
-				TreeNode childAt = _rootNode.getChildAt(i);
-				if(childAt instanceof ScenarioRunNode)
-				{
-					EpptScenarioRun scenarioRun = ((ScenarioRunNode) childAt).getScenarioRun();
-					if(Objects.equals(scenarioRun, selectedScenario))
-					{
-						_rootNode.remove(i);
-						_scenarioTreeModel.reload();
-						setModified(true);
-						if(((ScenarioRunNode) childAt).isBase())
-						{
-							List<ScenarioRunNode> scenarioRunNodes = getScenarioRunNodes();
-							if(!scenarioRunNodes.isEmpty())
-							{
-								scenarioRunNodes.get(0).setBase(true);
-							}
-						}
-						updateRadioState();
-						break;
-					}
-				}
-			}
-		}
+		_scenarioTablePanel.deleteSelectedScenarioRun();
 	}
 
 	public String quickState()
 	{
 
 		QuickStateBuilder builder = new QuickStateBuilder();
-
 
 
 		try
@@ -489,7 +367,7 @@ public final class ProjectConfigurationPanel extends EpptPanel
 		return new Month(month, year);
 	}
 
-	void setStartMonth(Month start)
+	private void setStartMonth(Month start)
 	{
 		JSpinner monthSpinner = (JSpinner) getSwingEngine().find("spnStartMonth");
 		monthSpinner.setValue(ResultUtilsBO.getResultUtilsInstance().intToMonth(start.getMonth()));
@@ -501,8 +379,10 @@ public final class ProjectConfigurationPanel extends EpptPanel
 			throws IOException
 	{
 		_projectConfigurationIO.saveConfiguration(selectedPath, projectName, projectDescription);
-		_nameField.setText(projectName);
-		_descriptionField.setText(projectDescription);
+		JTextField projectNameField = (JTextField) getSwingEngine().find("prj_name");
+		JTextField descriptionField = (JTextField) getSwingEngine().find("prj_desc");
+		projectNameField.setText(projectName);
+		descriptionField.setText(projectDescription);
 		EpptPreferences.setLastProjectConfiguration(selectedPath);
 	}
 
@@ -517,8 +397,10 @@ public final class ProjectConfigurationPanel extends EpptPanel
 				EpptProject project = _projectConfigurationIO.loadConfiguration(
 						selectedPath);
 				EpptPreferences.setLastProjectConfiguration(selectedPath);
-				_nameField.setText(project.getName());
-				_descriptionField.setText(project.getDescription());
+				JTextField projectNameField = (JTextField) getSwingEngine().find("prj_name");
+				JTextField descriptionField = (JTextField) getSwingEngine().find("prj_desc");
+				projectNameField.setText(project.getName());
+				descriptionField.setText(project.getDescription());
 				setStartMonth(project.getStartMonth());
 				setEndMonth(project.getEndMonth());
 				updateSelectedComponents(project.getSelectedComponents());
@@ -552,11 +434,6 @@ public final class ProjectConfigurationPanel extends EpptPanel
 		}
 	}
 
-	JList<RBListItemBO> getScenarioList()
-	{
-		return (JList<RBListItemBO>) getSwingEngine().find("SelectedList");
-	}
-
 	private JRadioButton getRadioButton1()
 	{
 		return (JRadioButton) getSwingEngine().find("rdbp001");
@@ -586,12 +463,14 @@ public final class ProjectConfigurationPanel extends EpptPanel
 
 	public String getProjectName()
 	{
-		return _nameField.getText();
+		JTextField projectNameField = (JTextField) getSwingEngine().find("prj_name");
+		return projectNameField.getText();
 	}
 
 	public String getProjectDescription()
 	{
-		return _descriptionField.getText();
+		JTextField descriptionField = (JTextField) getSwingEngine().find("prj_desc");
+		return descriptionField.getText();
 	}
 
 	public void resetProjectConfiguration() throws Exception
@@ -606,129 +485,39 @@ public final class ProjectConfigurationPanel extends EpptPanel
 
 	public EpptScenarioRun getBaseScenario()
 	{
-		EpptScenarioRun retval = null;
-		int childCount = _rootNode.getChildCount();
-		for(int i = 0; i < childCount; i++)
-		{
-			TreeNode childAt = _rootNode.getChildAt(i);
-			if(childAt instanceof ScenarioRunNode)
-			{
-				ScenarioRunNode scenarioRunNode = (ScenarioRunNode) childAt;
-				if(scenarioRunNode.isBase())
-				{
-					retval = scenarioRunNode.getScenarioRun();
-					break;
-				}
-			}
-		}
-		return retval;
+		return _scenarioTablePanel.getBaseScenarioRun();
 	}
 
 	EpptScenarioRun getSelectedScenario()
 	{
-		EpptScenarioRun retval = null;
-		Component component = getSwingEngine().find("ScenarioTree");
-		if(component instanceof JTree)
-		{
-			JTree scenarioTree = (JTree) component;
-			TreePath selectionPath = scenarioTree.getSelectionPath();
-			if(selectionPath != null)
-			{
-				Object[] path = selectionPath.getPath();
-				if(path.length > 1)
-				{
-					Object node = path[1];
-					if(node instanceof ScenarioRunNode)
-					{
-						retval = ((ScenarioRunNode) node).getScenarioRun();
-					}
-				}
-			}
-		}
-		return retval;
+		return _scenarioTablePanel.getSelectedScenario();
 	}
 
 	void addScenario(EpptScenarioRun scenarioRun)
 	{
-		if(scenarioRun != null)
-		{
-			ScenarioRunNode scenarioRunNode = new ScenarioRunNode(scenarioRun);
-			scenarioRunNode.setBase(_rootNode.getChildCount() == 0);
-			_scenarioTreeModel.insertNodeInto(scenarioRunNode,
-					_rootNode, _rootNode.getChildCount());
-			Component component = getSwingEngine().find("ScenarioTree");
-			if(component instanceof JTree)
-			{
-				JTree scenarioTree = (JTree) component;
-				scenarioTree.makeVisible(new TreePath(scenarioRunNode.getPath()));
-				expandNode(scenarioRunNode);
-				setModified(true);
-				updateRadioState();
-			}
-		}
+		_scenarioTablePanel.addScenarioRun(scenarioRun);
+		updateRadioState();
 	}
 
 	public List<EpptScenarioRun> getEpptScenarioAlternatives()
 	{
-		List<EpptScenarioRun> scenarioRuns = new ArrayList<>();
-		int childCount = _rootNode.getChildCount();
-		for(int i = 0; i < childCount; i++)
-		{
-			TreeNode childAt = _rootNode.getChildAt(i);
-			if(childAt instanceof ScenarioRunNode && !((ScenarioRunNode) childAt).isBase())
-			{
-				scenarioRuns.add(((ScenarioRunNode) childAt).getScenarioRun());
-			}
-		}
-		return scenarioRuns;
+		return _scenarioTablePanel.getAlternativeScenarioRuns();
 	}
 
 	public List<EpptScenarioRun> getEpptScenarioRuns()
 	{
-		List<EpptScenarioRun> scenarioRuns = new ArrayList<>();
-		int childCount = _rootNode.getChildCount();
-		for(int i = 0; i < childCount; i++)
+		List<EpptScenarioRun> retval = new ArrayList<>();
+		EpptScenarioRun baseScenarioRun = _scenarioTablePanel.getBaseScenarioRun();
+		if(baseScenarioRun != null)
 		{
-			TreeNode childAt = _rootNode.getChildAt(i);
-			if(childAt instanceof ScenarioRunNode)
-			{
-				scenarioRuns.add(((ScenarioRunNode) childAt).getScenarioRun());
-			}
+			retval.add(baseScenarioRun);
+			retval.addAll(_scenarioTablePanel.getAlternativeScenarioRuns());
 		}
-		return scenarioRuns;
+		return retval;
 	}
 
 	void replaceScenario(EpptScenarioRun oldScenarioRun, EpptScenarioRun newScenarioRun)
 	{
-		int childCount = _rootNode.getChildCount();
-		for(int i = 0; i < childCount; i++)
-		{
-			TreeNode childAt = _rootNode.getChildAt(i);
-			if(childAt instanceof ScenarioRunNode)
-			{
-				EpptScenarioRun scenarioRun = ((ScenarioRunNode) childAt).getScenarioRun();
-				if(Objects.equals(scenarioRun, oldScenarioRun))
-				{
-					_rootNode.remove(i);
-					ScenarioRunNode newNode = new ScenarioRunNode(newScenarioRun);
-					newNode.setBase(((ScenarioRunNode) childAt).isBase());
-					_rootNode.insert(newNode, i);
-					_scenarioTreeModel.reload(newNode);
-					expandNode(newNode);
-					setModified(true);
-					break;
-				}
-			}
-		}
-	}
-
-	private void expandNode(TreeNode treeNode)
-	{
-		Component component = getSwingEngine().find("ScenarioTree");
-		if(component instanceof JTree && treeNode != null)
-		{
-			JTree scenarioTree = (JTree) component;
-			scenarioTree.expandPath(new TreePath(_scenarioTreeModel.getPathToRoot(treeNode)));
-		}
+		_scenarioTablePanel.updateScenario(oldScenarioRun, newScenarioRun);
 	}
 }
