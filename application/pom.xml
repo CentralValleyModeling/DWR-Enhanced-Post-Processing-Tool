@@ -175,6 +175,19 @@
 						</configuration>
 					</plugin>
 					<plugin>
+						<groupId>org.codehaus.mojo</groupId>
+						<artifactId>build-helper-maven-plugin</artifactId>
+						<version>1.8</version>
+						<executions>
+							<execution>
+								<id>parse-version</id>
+								<goals>
+									<goal>parse-version</goal>
+								</goals>
+							</execution>
+						</executions>
+					</plugin>
+					<plugin>
 						<groupId>org.apache.maven.plugins</groupId>
 						<artifactId>maven-antrun-plugin</artifactId>
 						<version>1.8</version>
@@ -194,7 +207,7 @@
 											<arg value="C:\Program Files\7-Zip\7z.exe"/>
 											<arg value="a"/>
 											<arg value="-sfx"/>
-											<arg value="${project.build.directory}\${zip-dist-name}-${project.version}-${maven.build.timestamp}.exe"/>
+											<arg value="${project.build.directory}\${zip-dist-name}-${parsedVersion.majorVersion}.${parsedVersion.minorVersion}.${parsedVersion.incrementalVersion}-${maven.build.timestamp}.exe"/>
 											<arg value="${project.build.directory}\dwr_eppt"/>
 										</exec>
 									</target>
