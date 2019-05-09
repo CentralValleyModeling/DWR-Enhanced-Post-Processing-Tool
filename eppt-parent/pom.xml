@@ -41,7 +41,9 @@
 	<properties>
 		<netbeans.version>RELEASE82</netbeans.version>
 		<brandingToken>dwr_eppt</brandingToken>
+		<maven.build.timestamp.format>yyyy-MM-dd-HHmmss</maven.build.timestamp.format>
 	</properties>
+
 	<repositories>
 		<!--
 		Repository hosting NetBeans modules, especially APIs.
@@ -72,6 +74,10 @@
 		<repository>
 			<id>eppt-third-party-dlls</id>
 			<url>http://artifactory.rmanet.com:2447/artifactory/eppt-third-party-dlls</url>
+		</repository>
+		<repository>
+			<id>dwr-application-releases</id>
+			<url>http://artifactory.rmanet.com:2447/artifactory/dwr-application-releases</url>
 		</repository>
 	</repositories>
 	<build>
