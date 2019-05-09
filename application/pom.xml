@@ -194,7 +194,7 @@
 											<arg value="C:\Program Files\7-Zip\7z.exe"/>
 											<arg value="a"/>
 											<arg value="-sfx"/>
-											<arg value="${project.build.directory}\${zip-dist-name}-${maven.build.timestamp}.exe"/>
+											<arg value="${project.build.directory}\${zip-dist-name}-${project.version}-${maven.build.timestamp}.exe"/>
 											<arg value="${project.build.directory}\dwr_eppt"/>
 										</exec>
 									</target>
