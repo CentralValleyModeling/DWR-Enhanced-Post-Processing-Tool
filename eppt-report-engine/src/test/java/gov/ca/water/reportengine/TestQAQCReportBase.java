@@ -12,8 +12,15 @@
 
 package gov.ca.water.reportengine;
 
+import gov.ca.water.calgui.EpptInitializationException;
+import gov.ca.water.calgui.bo.GUILinksAllModelsBO;
+import gov.ca.water.calgui.busservice.impl.GuiLinksSeedDataSvcImpl;
+import gov.ca.water.calgui.project.EpptDssContainer;
+import gov.ca.water.calgui.project.EpptScenarioRun;
+import gov.ca.water.calgui.project.NamedDssPath;
 import gov.ca.water.reportengine.executivereport.ExecutiveReportXMLCreator;
 import hec.data.meta.RatingCatalogQuery;
+import org.junit.jupiter.api.BeforeAll;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -32,7 +39,9 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import hec.heclib.dss.HecDSSFileAccess;
@@ -42,6 +51,97 @@ public class TestQAQCReportBase
     static
     {
         HecDSSFileAccess.setMessageLevel(HecDSSFileAccess.MESS_LEVEL_CRITICAL);
+    }
+
+    @BeforeAll
+    public static void setup() throws EpptInitializationException
+    {
+        Path target = Paths.get(System.getProperty("user.dir")).resolve("target").resolve("test-classes");
+        System.setProperty("user.dir", target.toString());
+        GuiLinksSeedDataSvcImpl.createSeedDataSvcImplInstance();
+    }
+
+
+    public EpptScenarioRun getBaseScenarioRun()
+    {
+
+        Path ivPath = getInitialConditionsBaseDSSPath();
+        NamedDssPath ivDssFile = new NamedDssPath(ivPath, "INIT");
+
+        Path svPath = getStateVariableBaseDSSPath();
+        NamedDssPath svDssFile = new NamedDssPath(svPath, "SV");
+
+        Path dvPath = getDVPath();
+        NamedDssPath dvDssFile = new NamedDssPath(dvPath, "DV");
+
+        List<NamedDssPath> extraDssFiles = Collections.emptyList();
+        EpptDssContainer dssContainer = new EpptDssContainer(dvDssFile, svDssFile, ivDssFile, extraDssFiles);
+
+
+        GUILinksAllModelsBO.Model calSim2 = GUILinksAllModelsBO.Model.findModel("CalSim2");// model = new GUILinksAllModelsBO.Model("CalSim2");
+        EpptScenarioRun baseRun = new EpptScenarioRun("baseScenario", "desc", calSim2,null,null, dssContainer);
+        return baseRun;
+    }
+
+    public List<EpptScenarioRun> getAltScenarioRuns()
+    {
+        GUILinksAllModelsBO.Model calSim2 = GUILinksAllModelsBO.Model.findModel("CalSim2");// model = new GUILinksAllModelsBO.Model("CalSim2");
+        EpptScenarioRun alt1Run = new EpptScenarioRun("alt1Scenario", "desc", calSim2,null,null,null);
+
+        List<EpptScenarioRun> altRuns = new ArrayList<>();
+        altRuns.add(alt1Run);
+        return altRuns;
+    }
+
+    protected Path getCodeChangesCsvPath()
+    {
+        URL codeChangesPath = this.getClass().getClassLoader().getResource("CodeChangesDSSPaths.csv");
+        return new File(codeChangesPath.getPath()).toPath();
+    }
+
+    protected Path getBaseOutputPath()
+    {
+        URL baseOutputPath = this.getClass().getClassLoader().getResource("BaseOutputDirectory");
+        return new File(baseOutputPath.getPath()).toPath();
+
+    }
+
+    protected Path getAltOutputPath()
+    {
+        URL altOutputPath = this.getClass().getClassLoader().getResource("AltOutputDirectory");
+        return new File(altOutputPath.getPath()).toPath();
+    }
+
+    public List<Path> getDssFilePathsForBaseOnly()
+    {
+        URL resource = this.getClass().getClassLoader().getResource("SamplePstPrcss_Base_v1.01.dss");
+        Path dssFilePath = new File(resource.getPath()).toPath();
+
+        List<Path> dssFiles = new ArrayList<>();
+        dssFiles.add(dssFilePath);
+
+        return dssFiles;
+    }
+
+    public List<Path> getDssFilePathsForSameModel()
+    {
+        URL resource = this.getClass().getClassLoader().getResource("SamplePstPrcss_Base_v1.01.dss");
+        Path dssFilePath = new File(resource.getPath()).toPath();
+
+        URL resource2 = this.getClass().getClassLoader().getResource("SamplePstPrcss_Alt1_v1.01.dss");
+        Path dssFilePath2 = new File(resource2.getPath()).toPath();
+
+        List<Path> dssFiles = new ArrayList<>();
+        dssFiles.add(dssFilePath);
+        dssFiles.add(dssFilePath2);
+
+        return dssFiles;
+    }
+
+    protected Path getDVPath()
+    {
+        URL sampleDVBase = this.getClass().getClassLoader().getResource("SampleDV_Base.dss");
+        return new File(sampleDVBase.getPath()).toPath();
     }
 
     protected Path getInitialConditionsCSV()
@@ -84,7 +184,7 @@ public class TestQAQCReportBase
         TransformerFactory transformerFactory = TransformerFactory.newInstance();
         Transformer transformer = transformerFactory.newTransformer();
         DOMSource domSource = new DOMSource(doc);
-        StreamResult streamResult = new StreamResult(new File(xmlPath));
+        StreamResult streamResult = new StreamResult(new File(xmlPath).getPath());// Paths.get(xmlPath).toAbsolutePath().toFile());
         transformer.transform(domSource, streamResult);
     }
 
@@ -111,7 +211,7 @@ public class TestQAQCReportBase
     {
         DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
         DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
-        Document doc = dBuilder.parse(path);
+        Document doc = dBuilder.parse(new File(path).getPath());
         doc.getDocumentElement().normalize();
         return doc;
     }

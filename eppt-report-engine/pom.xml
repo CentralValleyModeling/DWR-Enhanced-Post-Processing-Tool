@@ -37,12 +37,6 @@
 			<classifier>DeltaERT-1-4-0-97-Obfuscated</classifier>
 		</dependency>
 		<dependency>
-			<groupId>gov.ca.water</groupId>
-			<artifactId>eppt-report-data</artifactId>
-			<version>1.0.1-SNAPSHOT</version>
-			<scope>compile</scope>
-		</dependency>
-		<dependency>
 			<groupId>hec.dssgui</groupId>
 			<artifactId>hec-dssvue</artifactId>
 			<version>3.0.1</version>
@@ -64,6 +58,12 @@
 			<groupId>commons-io</groupId>
 			<artifactId>commons-io</artifactId>
 			<version>2.5</version>
+			<scope>compile</scope>
+		</dependency>
+		<dependency>
+			<groupId>gov.ca.water</groupId>
+			<artifactId>eppt-core</artifactId>
+			<version>${project.version}</version>
 			<scope>compile</scope>
 		</dependency>
 	</dependencies>

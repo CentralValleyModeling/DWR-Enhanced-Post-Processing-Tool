@@ -19,13 +19,13 @@ public class TestNodWeirRow extends ExecutiveReportTestBase
     @Test
     void testNodWeirRowWithBaseOnly() throws Exception
     {
-        testBaseOnly( "NOD Weirs Operations");
+        testBaseOnly( "NOD Weirs Operation");
     }
 
     @Test
     void testResNodWeirRowWithOneAlternativeSameModel() throws Exception
     {
-        testOneAlternativeSameModel( "NOD Weirs Operations");
+        testOneAlternativeSameModel( "NOD Weirs Operation");
     }
 
 }

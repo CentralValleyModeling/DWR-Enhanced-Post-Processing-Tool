@@ -16,6 +16,7 @@ import gov.ca.water.reportengine.EpptReportException;
 import hec.heclib.dss.DSSPathname;
 import hec.heclib.dss.HecDss;
 import hec.io.TimeSeriesContainer;
+import rma.lang.RmaMath;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -33,7 +34,6 @@ public class AssumptionChangesDataProcessor
     private static final int B_PART = 0;
     private static final int C_PART = 1;
 
-
 //    private int _initCondDifferentData;
 //    private int _initCondBaseOnly;
 //    private int _initCondAltOnly;
@@ -43,18 +43,20 @@ public class AssumptionChangesDataProcessor
 //    private int _stateVarAltOnly;
 
     private final Set<DSSPathname> _csvMasterPathList;
+    private final double _tolerance;
 //    private Set<String> _baseInitCondPathList = new ArrayList<>();
 //    private Set<String> _altInitCondPathList = new ArrayList<>();
 //
 //    private Set<String> _csvStateVarMasterPathList = new ArrayList<>();
 //    private Set<String> _baseStateVarPathList = new ArrayList<>();
 //    private Set<String> _altStateVarPathList = new ArrayList<>();
+     //private final double _tolerance;
 
 
-    public AssumptionChangesDataProcessor(Path csvPath) throws EpptReportException
+    public AssumptionChangesDataProcessor(Path csvPath, double tolerance) throws EpptReportException
     {
         _csvMasterPathList = loadMasterDSSPathList(csvPath);
-
+        _tolerance = tolerance;
     }
 
 
@@ -68,7 +70,7 @@ public class AssumptionChangesDataProcessor
 //        return _initCondAltOnly;
 //    }
 
-    public FileChangesStatistics processAssumptionChanges(Path basePath, Path altPath) throws Exception
+    public AssumptionChangesStatistics processAssumptionChanges(Path basePath, Path altPath) throws Exception
     {
 
 
@@ -106,7 +108,7 @@ public class AssumptionChangesDataProcessor
 
     }
 
-    private FileChangesStatistics processAssumptionChangesStatistics(HecDss baseFile, HecDss altFile) throws EpptReportException
+    private AssumptionChangesStatistics processAssumptionChangesStatistics(HecDss baseFile, HecDss altFile) throws EpptReportException
     {
         Set<String> changes = new HashSet<>();
         Set<String> baseRecordsOnly = new HashSet<>();
@@ -117,15 +119,13 @@ public class AssumptionChangesDataProcessor
             processDSSDifferences(changes, baseRecordsOnly, altRecordsOnly, baseFile, altFile, pathName);
         }
 
-        return new FileChangesStatistics.Builder()
-                .withRecordsOnlyInBase(baseRecordsOnly)
-                .withRecordsOnlyInAlt(altRecordsOnly)
-                .withFileChanges(changes)
-                .build();
+        return new AssumptionChangesStatistics(baseRecordsOnly,altRecordsOnly, changes);
+
 
     }
 
-    private void processDSSDifferences(Set<String> changes, Set<String> baseRecordsOnly, Set<String> altRecordsOnly, HecDss baseFile, HecDss altFile, DSSPathname pathFromMaster) throws EpptReportException
+    private void processDSSDifferences(Set<String> changes, Set<String> baseRecordsOnly, Set<String> altRecordsOnly,
+                                       HecDss baseFile, HecDss altFile, DSSPathname pathFromMaster) throws EpptReportException
     {
         Vector baseCatalog = baseFile.getCatalogedPathnames(pathFromMaster.toString());
         boolean baseHasFile = !baseCatalog.isEmpty();
@@ -137,7 +137,7 @@ public class AssumptionChangesDataProcessor
         if (baseHasFile && altHasFile)
         {
             String baseDssPathname = baseCatalog.get(0).toString();
-            if(isDssFileDataDifferent(baseFile, altFile, baseDssPathname))
+            if(!compareDSSData(baseFile, altFile, baseDssPathname))
             {
                 changes.add(baseDssPathname);
             }
@@ -154,13 +154,14 @@ public class AssumptionChangesDataProcessor
         }
         else
         {
-            LOGGER.log(Level.WARNING, "The base and the alternative did not contain the dss file: " + pathFromMaster);
+            LOGGER.log(Level.WARNING, "The base and the alternative did not contain the dss file: {0}" , pathFromMaster);
         }
     }
 
 
-    private boolean isDssFileDataDifferent(HecDss base, HecDss alt, String pathFromMaster) throws EpptReportException
+    private boolean compareDSSData(HecDss base, HecDss alt, String pathFromMaster) throws EpptReportException
     {
+        boolean retval = false;
         try
         {
 
@@ -172,35 +173,28 @@ public class AssumptionChangesDataProcessor
             double[] altValues = altContainer.values;
             int[] altTimes = altContainer.times;
 
-            if (baseValues.length != altValues.length || baseTimes.length != altTimes.length)
+            if (baseValues.length == altValues.length && baseTimes.length == altTimes.length)
             {
-                return true;
-            }
-
-            for (int i = 0; i < baseValues.length; i++)
-            {
-                if (baseValues[i] != altValues[i])
+                CompareDSSValues compare = new CompareDSSValues(_tolerance);
+                if (compare.compareValues(baseValues, altValues))
                 {
-                    return true;
+                    if (compare.compareTimes(baseTimes, altTimes))
+                    {
+                        retval =  true;
+                    }
                 }
             }
-            for (int i = 0; i < baseTimes.length; i++)
-            {
-                if (baseTimes[i] != altTimes[i])
-                {
-                    return true;
-                }
-            }
-
         }
         catch (Exception e)
         {
-            throw new EpptReportException("Error reading DSS record: " + pathFromMaster.toString() + ".\n" +
+            throw new EpptReportException("Error reading DSS record: " + pathFromMaster + ".\n" +
                     "In files:" + "\n" + base.getFilename() + "\n" + alt.getFilename(), e);
         }
 
-        return false;
+        return retval;
     }
+
+
 
     private Set<DSSPathname> loadMasterDSSPathList(Path dssCSVPath) throws EpptReportException
     {

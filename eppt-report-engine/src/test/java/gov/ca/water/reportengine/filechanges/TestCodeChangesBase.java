@@ -26,24 +26,7 @@ import java.util.List;
 public class TestCodeChangesBase extends TestQAQCReportBase
 {
 
-    protected Path getCodeChangesCsvPath()
-    {
-        URL codeChangesPath = this.getClass().getClassLoader().getResource("CodeChangesDSSPaths.csv");
-        return new File(codeChangesPath.getPath()).toPath();
-    }
 
-    protected Path getBaseOutputPath()
-    {
-        URL baseOutputPath = this.getClass().getClassLoader().getResource("BaseOutputDirectory");
-        return new File(baseOutputPath.getPath()).toPath();
-
-    }
-
-    protected Path getAltOutputPath()
-    {
-        URL altOutputPath = this.getClass().getClassLoader().getResource("AltOutputDirectory");
-        return new File(altOutputPath.getPath()).toPath();
-    }
 
 
     Element getHeaderElement(Element codeChangeElem)

@@ -55,28 +55,28 @@ public class CodeChangesXMLCreator
     private static final String UNCATEGORIZED = "Uncategorized";
     private static final String OTHERS = "Others";
 
-    private Set<Path> _modifiedFilesInMaster;
-    private Set<Path> _modifidFilesNotInMaster;
+    private final Set<Path>  _modifiedFilesInMaster = new HashSet<>();
+    private final Set<Path> _modifidFilesNotInMaster = new HashSet<>();
 
-    private Set<Path> _fileAddedToAltInMaster;
-    private Set<Path> _fileAddedToAltNotInMaster;
+    private final Set<Path> _fileAddedToAltInMaster = new HashSet<>();
+    private final Set<Path> _fileAddedToAltNotInMaster = new HashSet<>();
 
-    private Set<Path> _fileDeletedFromBaseInMaster;
-    private Set<Path> _fileDeletedFromBaseNotInMaster;
+    private final Set<Path> _fileDeletedFromBaseInMaster = new HashSet<>();
+    private final Set<Path> _fileDeletedFromBaseNotInMaster = new HashSet<>();
 
     public void appendCodeChangesElement(Path csvPath, Path baseOutputPath, Path altOutputPath, String altName, Document document) throws EpptReportException, IOException
     {
 
         CodeChangesDataProcessor processor = new CodeChangesDataProcessor(csvPath);
-        FileChangesStatistics fileChangesStatistics = processor.processCodeChanges(baseOutputPath, altOutputPath);
+        CodeChangesStatistics stats = processor.processCodeChanges(baseOutputPath, altOutputPath);
         List<CodeChangesType> codeChangesTypes = processor.getCodeChangesTypes();
 
-        loadFileChangesFromStats(fileChangesStatistics, codeChangesTypes);
+        loadFileChangesFromStats(stats, codeChangesTypes);
 
         Element codeChangesElemRoot = document.createElement(CODE_CHANGES);
 
         //create header
-        codeChangesElemRoot.appendChild(createHeader(altName, fileChangesStatistics, document));
+        codeChangesElemRoot.appendChild(createHeader(altName, stats, document));
 
 
         //create modified section
@@ -114,7 +114,7 @@ private Element createSection(String sectionName,List<CodeChangesType> codeChang
     return sectionElem;
 }
 
-    private void loadFileChangesFromStats(FileChangesStatistics stats, List<CodeChangesType> codeChangesTypes)
+    private void loadFileChangesFromStats(CodeChangesStatistics stats, List<CodeChangesType> codeChangesTypes)
     {
         //get all master files
         List<String> allMasterFiles = new ArrayList<>();
@@ -128,15 +128,6 @@ private Element createSection(String sectionName,List<CodeChangesType> codeChang
                 }
             }
         }
-
-        _modifiedFilesInMaster = new HashSet<>();
-        _modifidFilesNotInMaster = new HashSet<>();
-
-        _fileAddedToAltInMaster = new HashSet<>();
-        _fileAddedToAltNotInMaster = new HashSet<>();
-
-        _fileDeletedFromBaseInMaster = new HashSet<>();
-        _fileDeletedFromBaseNotInMaster = new HashSet<>();
 
 //        _modifiedFilesInMaster.addAll(stats.getCodeChangesModifiedFiles());
 //        _fileAddedToAltInMaster.addAll(stats.getFilesAddedToAlt());
@@ -212,7 +203,7 @@ private Element createSection(String sectionName,List<CodeChangesType> codeChang
         return subElem;
     }
 
-    private Element createHeader(String altName, FileChangesStatistics stats, Document document)
+    private Element createHeader(String altName, CodeChangesStatistics stats, Document document)
     {
         Element headerElem = document.createElement(HEADER);
         //Element alternativesElem = document.createElement(ALTERNATIVES);

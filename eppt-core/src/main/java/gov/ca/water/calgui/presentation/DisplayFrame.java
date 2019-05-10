@@ -189,7 +189,7 @@ class DisplayFrame
 
 						dssGrabber.setDateRange(dateRange);
 
-						TimeSeriesContainer[] primaryResults = dssGrabber.getPrimarySeries(locationName);
+						TimeSeriesContainer[] primaryResults = dssGrabber.getPrimarySeries();
 						TimeSeriesContainer[] secondaryResults = dssGrabber.getSecondarySeries();
 
 
@@ -729,7 +729,7 @@ class DisplayFrame
 
 				dssGrabber.setLocation("@@" + dts.getName(), baseRun.getModel());
 
-				TimeSeriesContainer[] primaryResults = dssGrabber.getPrimarySeries("DUMMY");
+				TimeSeriesContainer[] primaryResults = dssGrabber.getPrimarySeries();
 				TimeSeriesContainer[] secondaryResults = dssGrabber.getSecondarySeries();
 
 				dssGrabber.calcTAFforCFS(primaryResults, secondaryResults);

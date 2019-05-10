@@ -16,6 +16,7 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
+import org.w3c.dom.NodeList;
 
 import java.nio.file.Path;
 import java.util.List;
@@ -24,6 +25,7 @@ public class TestAssumptionChanges extends TestAssumptionChangesBase
 {
     private static final String XML_PATH = System.getProperty("user.dir") + "\\assumptionChanges.xml";
     private static final String ASSUMPTION_CHANGES = "assumption-changes";
+    private final double _tolerance = .001;
 
     private Document _qAQCMaster;
     private Document _qAQCReportToTest;
@@ -41,17 +43,20 @@ public class TestAssumptionChanges extends TestAssumptionChangesBase
         Path svBasePath = getStateVariableBaseDSSPath();
         Path sVAltPath = getStateVariableAltDSSPath();
 
-        AssumptionChangesDataProcessor initProcessor = new AssumptionChangesDataProcessor(initCondCSV);
-        FileChangesStatistics initCondStats = initProcessor.processAssumptionChanges(initBasePath, initAltPath);
+        AssumptionChangesDataProcessor initProcessor = new AssumptionChangesDataProcessor(initCondCSV, _tolerance);
+        AssumptionChangesStatistics initCondStats = initProcessor.processAssumptionChanges(initBasePath, initAltPath);
 
-        AssumptionChangesDataProcessor stateVarProcessor = new AssumptionChangesDataProcessor(stateVarCSV);
-        FileChangesStatistics stateVarStats = stateVarProcessor.processAssumptionChanges(svBasePath, sVAltPath);
+        AssumptionChangesDataProcessor stateVarProcessor = new AssumptionChangesDataProcessor(stateVarCSV, _tolerance);
+        AssumptionChangesStatistics stateVarStats = stateVarProcessor.processAssumptionChanges(svBasePath, sVAltPath);
 
 
         Document doc = getDoc();
 
         AssumptionChangesXMLCreator assumpCreater = new AssumptionChangesXMLCreator();
-        assumpCreater.appendAssumptionChangesElement(doc, initCondStats, stateVarStats);
+
+        FileChangesStatistics stats = new FileChangesStatistics(initCondStats, stateVarStats, null);
+
+        assumpCreater.appendAssumptionChangesElement(doc, stats);
 
         writeXmlFile(XML_PATH, doc);
 
@@ -78,18 +83,52 @@ public class TestAssumptionChanges extends TestAssumptionChangesBase
         Assertions.assertEquals(getRecordsOnlyBase(stateVarMaster), getRecordsOnlyBase(stateVarToTest), "state var OnlyInBase");
         Assertions.assertEquals(getRecordsOnlyAlt(stateVarMaster), getRecordsOnlyAlt(stateVarToTest), "state var OnlyInAlt");
 
-        List<String> changesListToTest = getChangesList(elemToTest);
-        List<String> changesListFromMaster = getChangesList(elemFromMaster);
 
-        Assertions.assertTrue(changesListFromMaster.size() == changesListToTest.size());
+        NodeList recordsTest = getCommonRecordsDifDataRecords(initConditionsToTest);
+        NodeList recordsMaster = getCommonRecordsDifDataRecords(initCondMaster);
 
-        for(int i = 0;i< changesListToTest.size();i++)
+        Assertions.assertEquals(recordsMaster.getLength(), recordsTest.getLength(), "common records list");
+
+        for(int i = 0;i<recordsMaster.getLength();i++)
         {
-            Assertions.assertEquals(changesListFromMaster.get(i), changesListToTest.get(i));
+            String recordFromTest = recordsTest.item(0).getTextContent();
+            String recordFromMaster = recordsMaster.item(0).getTextContent();
+
+            Assertions.assertEquals(recordFromMaster, recordFromTest, "record");
+
+        }
+
+
+        recordsTest = getOnlyInBaseRecords(initConditionsToTest);
+        recordsMaster = getOnlyInBaseRecords(initCondMaster);
+
+        Assertions.assertEquals(recordsMaster.getLength(), recordsTest.getLength(), "only in base list");
+
+        for(int i = 0;i<recordsMaster.getLength();i++)
+        {
+            String recordFromTest = recordsTest.item(0).getTextContent();
+            String recordFromMaster = recordsMaster.item(0).getTextContent();
+
+            Assertions.assertEquals(recordFromMaster, recordFromTest, "record");
+
+        }
+
+
+        recordsTest = getOnlyInAltRecords(initConditionsToTest);
+        recordsMaster = getOnlyInAltRecords(initCondMaster);
+
+        Assertions.assertEquals(recordsMaster.getLength(), recordsTest.getLength(), "only in alt list");
+
+        for(int i = 0;i<recordsMaster.getLength();i++)
+        {
+            String recordFromTest = recordsTest.item(0).getTextContent();
+            String recordFromMaster = recordsMaster.item(0).getTextContent();
+
+            Assertions.assertEquals(recordFromMaster, recordFromTest, "record");
+
         }
 
     }
-
 
 
 }

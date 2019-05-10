@@ -777,7 +777,7 @@ public class DSSGrabber1SvcImpl implements IDSSGrabber1Svc
 	 * java.lang.String)
 	 */
 	@Override
-	public TimeSeriesContainer[] getPrimarySeries(String locationName)
+	public TimeSeriesContainer[] getPrimarySeries()
 	{
 
 		TimeSeriesContainer[] results = null;

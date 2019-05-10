@@ -12,6 +12,8 @@
 
 package gov.ca.water.reportengine.executivereport;
 
+import gov.ca.water.calgui.project.EpptScenarioRun;
+import gov.ca.water.reportengine.ModuleCreator;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.w3c.dom.Document;
@@ -22,13 +24,57 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.logging.Logger;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-public class TestModelInputsRow
+public class TestModelInputsRow extends ExecutiveReportTestBase
 {
+    private static final String XML_PATH = System.getProperty("user.dir") +  "\\executivereport.xml";
+    private Document _qAQCMaster;
+    private Document _qAQCReportToTest;
+
+    @Test
+    void testModelInputsRowWithBaseOnly() throws Exception
+    {
+        //create executive report and write it out
+        Document doc = getDoc();
+        ExecutiveReportXMLCreator erWriter = new ExecutiveReportXMLCreator();
+
+        EpptScenarioRun baseScenarioRun = getBaseScenarioRun();
+        List<EpptScenarioRun> allRuns = new ArrayList<>();
+        allRuns.add(baseScenarioRun);
+
+        ModuleCreator mc = new ModuleCreator();
+        List<Module> modules = mc.createModules(getCSVPath(), getModuleLinkingCSVPath());
+
+        DTSProcessor dtsProcessor = new DTSProcessor(modules);
+        Map<EpptScenarioRun, Map<SubModule, List<FlagViolation>>> runsToViolations = dtsProcessor.processDSSFiles(allRuns, getDssFilePathsForBaseOnly());
+
+
+
+        erWriter.appendExecutiveReportTableElement(allRuns, runsToViolations, modules,  null, false, doc);
+        writeXmlFile(XML_PATH, doc);
+
+        //read the xml file to test
+        _qAQCReportToTest = loadReportToTest(XML_PATH);
+        _qAQCMaster = loadBaseOnlyReport();
+
+        //get the elements to compare
+        List<Element> elemsToTest = getModuleElementsWithName(_qAQCReportToTest, "Model Inputs");
+        List<Element> elemsFromMaster = getModuleElementsWithName(_qAQCMaster, "Model Inputs");
+
+        //check that the number of modules (# of columns) is equal to the base + number of alternatives
+        Assertions.assertEquals(0, elemsToTest.size());
+    }
+
+    @Test
+    void testModelInputsRowWithOneAlternativeSameModel() throws Exception
+    {
+        testOneAlternativeSameModel( "Model Inputs");
+    }
 
 //    private static Logger LOGGER = Logger.getLogger(TestModelInputsRow.class.getName());
 //    private Document _qAQCMaster;

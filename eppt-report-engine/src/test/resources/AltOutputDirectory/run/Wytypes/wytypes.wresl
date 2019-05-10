@@ -1,120 +1,105 @@
-/************************************
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ Enhanced Post Processing Tool (EPPT) Copyright (c) 2019.
+  ~
+  ~ EPPT is copyrighted by the State of California, Department of Water Resources. It is licensed
+  ~ under the GNU General Public License, version 2. This means it can be
+  ~ copied, distributed, and modified freely, but you may not restrict others
+  ~ in their ability to copy, distribute, and modify it. See the license below
+  ~ for more details.
+  ~
+  ~ GNU General Public License
+  -->
 
-Calc_Delta_Op.wresl
-
-Yuxiang, DWR, BDO
-2019/02/09
-
-This file post process the delta operation during each timestep   
-**************************************/
-
-! Check if delta is in IBU or UWFE 
-! define IBU_UWFE {alias int_IBU_UWFE kind 'DTS-STATUS' units 'NONE'} !COA
-
-/***********************Negative Carriage Water **********************/
-! Negative Carriage water occurs when a Salinity standard is controling and the slope (m) of this salinity standard is geater than 1
-! Negative Carriage Water for JP 
-define NegativeCW_JP_CHECK {
-	case yes {
-	condition JP_Check_ == 1 .and. JP_M > 1 + none_zero_threshold
-	value 1
-	}
-	case no {
-	condition always
-	value 0
-	}
-}
-define NegativeCW_EM_CHECK {
-	case yes {
-	condition EM_Check_ == 1 .and. EM_M > 1 + none_zero_threshold
-	value 1
-	}
-	case no {
-	condition always
-	value 0
-	}
-}
-define NegativeCW_CO_CHECK {
-	case yes {
-	condition CO_Check_ == 1 .and. CO_M > 1 + none_zero_threshold
-	value 1
-	}
-	case no {
-	condition always
-	value 0
-	}
-}
-define NegativeCW_RS_CHECK {
-	case yes1 {
-	condition abs(RS_MRDO_1 - TOT_DO_) < abs_threshold .and. RS_M_1 > 1 + none_zero_threshold
-	value 1
-	}
-	case yes2 {
-	condition abs(RS_MRDO_2 - TOT_DO_) < abs_threshold .and. RS_M_2 > 1 + none_zero_threshold
-	value 1
-	}	
-	case yes3 {
-	condition abs(RS_MRDO_3 - TOT_DO_) < abs_threshold .and. RS_M_3 > 1 + none_zero_threshold
-	value 1
-	}	
-	case no {
-	condition always
-	value 0
-	}
-}
-! chech which timestep have Negative Carriage Water Condition 0 = no Negative Carriage Water, 1 = have Negative Carriage Water
-define NegativeCW_CHECK {value max(NegativeCW_JP_CHECK, NegativeCW_EM_CHECK, NegativeCW_CO_CHECK, NegativeCW_RS_CHECK)}
-! Negative carriage water Q
-define NegativeCW {
-	case yes {
-	condition NegativeCW_CHECK == 1
-	value TOTAL_EXP - C400 ! underreview - need peer review on calculation of negative carriage water amount
-	}
-	case no {
-	condition always
-	value 0
-	}
-}
-
-/***********************EXP1 EXP2 **********************/
-! Check if Banks pumped CVP UWFE water for SWP project
-define D419_EXP2_CHECK {
-	case yes {
-	condition D419_EXP2 > abs_threshold
-	value 1
-	}
-	case no {
-	condition always
-	value 0
-	}
-}
-
-! Check if Tracy pumped SWP UWFE water for CVP project
-define D418_EXP2_CHECK {
-	case yes {
-	condition D418_EXP2 > abs_threshold
-	value 1
-	}
-	case no {
-	condition always
-	value 0
-	}
-}
-
-/****************** Outputs **********************/
-!Negative Carriage Water
-define NegativeCW_STATUS_DTS {alias NegativeCW_CHECK kind 'DTS-STATUS' units 'NONE'}
-define NegativeCW_DTS {alias NegativeCW kind 'FLOW' units 'CFS'}
-define D418_EXP2_STATUS_DTS {alias D418_EXP2_CHECK kind 'DTS-STATUS' units 'NONE'}
-define D419_EXP2_STATUS_DTS {alias D419_EXP2_CHECK kind 'DTS-STATUS' units 'NONE'}
-! output export amount of Banks and Tracy
-define D418_EXP1_DTS {alias D418_EXP1 kind 'DTS-FLOW-DELIVERY' units 'CFS'}
-define D418_EXP2_DTS {alias D418_EXP2 kind 'DTS-FLOW-DELIVERY' units 'CFS'}
-define D418_CVP_DTS {alias D418_CVP kind 'DTS-FLOW-DELIVERY' units 'CFS'}
-!define D418_SWP_DTS {alias D418_SWP_ kind 'DTS-FLOW-DELIVERY' units 'CFS'}
-define D419_EXP1_DTS {alias D419_EXP1 kind 'DTS-FLOW-DELIVERY' units 'CFS'}
-define D419_EXP2_DTS {alias D419_EXP2 kind 'DTS-FLOW-DELIVERY' units 'CFS'}
-define D419_CVP_DTS {alias D419_CVP kind 'DTS-FLOW-DELIVERY' units 'CFS'}
-define D419_SWP_DTS {alias D419_SWP kind 'DTS-FLOW-DELIVERY' units 'CFS'}
-
-
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+		 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		 xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<artifactId>eppt-parent</artifactId>
+		<groupId>gov.ca.water</groupId>
+		<version>1.0.1-SNAPSHOT</version>
+		<relativePath>../eppt-parent/pom.xml</relativePath>
+	</parent>
+	<artifactId>eppt-report-engine</artifactId>
+	<name>EPPT Report Engine</name>
+	<dependencies>
+		<dependency>
+			<groupId>hecjavadev-core</groupId>
+			<artifactId>hec-core</artifactId>
+			<version>6.0</version>
+			<classifier>DeltaERT-1-4-0-97-Obfuscated</classifier>
+		</dependency>
+		<dependency>
+			<groupId>hecjavadev-core</groupId>
+			<artifactId>rma</artifactId>
+			<version>6.0</version>
+			<classifier>DeltaERT-1-4-0-97-Obfuscated</classifier>
+		</dependency>
+		<dependency>
+			<groupId>gov.ca.water</groupId>
+			<artifactId>eppt-report-data</artifactId>
+			<version>1.0.1-SNAPSHOT</version>
+			<scope>compile</scope>
+		</dependency>
+		<dependency>
+			<groupId>hec.dssgui</groupId>
+			<artifactId>hec-dssvue</artifactId>
+			<version>3.0.1</version>
+			<classifier>DeltaERT-1-4-0-97-Obfuscated</classifier>
+		</dependency>
+		<dependency>
+			<groupId>org.junit.jupiter</groupId>
+			<artifactId>junit-jupiter-api</artifactId>
+			<version>5.4.0</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.junit.jupiter</groupId>
+			<artifactId>junit-jupiter-engine</artifactId>
+			<version>5.4.0</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>commons-io</groupId>
+			<artifactId>commons-io</artifactId>
+			<version>2.5</version>
+			<scope>compile</scope>
+		</dependency>
+	</dependencies>
+	<properties>
+		<argLine>-Djava.library.path=${project.build.directory}\lib -Duser.dir=${project.build.directory}\test-classess</argLine>
+	</properties>
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-dependency-plugin</artifactId>
+				<version>3.1.1</version>
+				<executions>
+					<execution>
+						<id>copy-dependencies</id>
+						<phase>validate</phase>
+						<goals>
+							<goal>copy</goal>
+						</goals>
+					</execution>
+				</executions>
+				<configuration>
+					<artifactItems>
+						<artifactItem>
+							<groupId>hec</groupId>
+							<artifactId>javaHeclib</artifactId>
+							<version>7-GS</version>
+							<type>dll</type>
+							<destFileName>javaHeclib.dll</destFileName>
+						</artifactItem>
+					</artifactItems>
+					<outputDirectory>${project.build.directory}/lib</outputDirectory>
+					<overWriteReleases>true</overWriteReleases>
+					<overWriteSnapshots>true</overWriteSnapshots>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+</project>

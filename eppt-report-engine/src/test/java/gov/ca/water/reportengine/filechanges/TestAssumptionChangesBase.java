@@ -23,32 +23,57 @@ class TestAssumptionChangesBase extends TestQAQCReportBase
 {
     Element getInitialConditionsElem(Element elem)
     {
-        NodeList elementsByTagName = elem.getElementsByTagName("initial-conditions");
+        NodeList elementsByTagName = elem.getElementsByTagName("input");//"initial-conditions");
         return (Element) elementsByTagName.item(0);
     }
 
     Element getStateVariablesElem(Element elem)
     {
-        NodeList elementsByTagName = elem.getElementsByTagName("state-variables");
-        return (Element) elementsByTagName.item(0);
+        NodeList elementsByTagName = elem.getElementsByTagName("input");//"state-variables");
+        return (Element) elementsByTagName.item(1);
     }
 
     String getCommonRecDifData(Element elem)
     {
-        NodeList elementsByTagName = elem.getElementsByTagName("common-records-different-data");
-        return ((Element) elementsByTagName.item(0)).getTextContent();
+        return elem.getAttribute("common-records-different-data");
+        //NodeList elementsByTagName = elem.getElementsByTagName("common-records-different-data");
+        //return ((Element) elementsByTagName.item(0)).getTextContent();
     }
 
     String getRecordsOnlyBase(Element elem)
     {
-        NodeList elementsByTagName = elem.getElementsByTagName("records-only-in-base");
-        return ((Element) elementsByTagName.item(0)).getTextContent();
+        return elem.getAttribute("records-only-in-base");
+
+       //NodeList elementsByTagName = elem.getElementsByTagName("records-only-in-base");
+        //return ((Element) elementsByTagName.item(0)).getTextContent();
     }
 
     String getRecordsOnlyAlt(Element elem)
     {
-        NodeList elementsByTagName = elem.getElementsByTagName("records-only-in-alternative");
-        return ((Element) elementsByTagName.item(0)).getTextContent();
+        return elem.getAttribute("records-only-in-alternative");
+
+        //NodeList elementsByTagName = elem.getElementsByTagName("records-only-in-alternative");
+        //return ((Element) elementsByTagName.item(0)).getTextContent();
+    }
+    NodeList getCommonRecordsDifDataRecords(Element inputLevelElement)
+    {
+        NodeList elementsByTagName = inputLevelElement.getElementsByTagName("input-type");
+        Element elem = (Element)elementsByTagName.item(0);
+        return elem.getElementsByTagName("record");
+    }
+
+    NodeList getOnlyInBaseRecords(Element inputLevelElement)
+    {
+        NodeList elementsByTagName = inputLevelElement.getElementsByTagName("input-type");
+        Element elem = (Element)elementsByTagName.item(1);
+        return elem.getElementsByTagName("record");
+    }
+
+    NodeList getOnlyInAltRecords(Element inputLevelElement)
+    {
+        NodeList elementsByTagName = inputLevelElement.getElementsByTagName("input-type");
+        Element elem = (Element)elementsByTagName.item(2);
+        return elem.getElementsByTagName("record");
     }
 
     List<String> getChangesList(Element elem)

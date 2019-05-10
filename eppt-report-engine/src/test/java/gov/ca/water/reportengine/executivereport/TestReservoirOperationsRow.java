@@ -19,13 +19,13 @@ public class TestReservoirOperationsRow extends ExecutiveReportTestBase
     @Test
     void testResOpsRowWithBaseOnly() throws Exception
     {
-        testBaseOnly( "Reservoir Operation");
+        testBaseOnly( "NOD Reservoir Operation");
     }
 
     @Test
     void testResOpsRowWithOneAlternativeSameModel() throws Exception
     {
-        testOneAlternativeSameModel( "Reservoir Operation");
+        testOneAlternativeSameModel( "NOD Reservoir Operation");
     }
 
 }

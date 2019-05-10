@@ -36,7 +36,7 @@ public class SubModule
         OTHER
     }
 
-    SubModule(int id, String name, FlagType flagValue)
+    public SubModule(int id, String name, FlagType flagValue)
     {
         //_text = text;
         _id = id;
@@ -49,7 +49,7 @@ public class SubModule
     {
         return _id;
     }
-    void addLinkedRecords(List<String> recordNames)
+    public void addLinkedRecords(List<String> recordNames)
     {
         _linkedRecords.addAll(recordNames);
     }
@@ -88,19 +88,19 @@ public class SubModule
         }
     }
 
-     List<FlagViolation> getBaseViolations()
-    {
-        return _baseViolations;
-    }
-
-     List<FlagViolation> getAlternativeViolations(int altNumber)
-    {
-        if(_alternativeViolations.containsKey(altNumber))
-        {
-            return _alternativeViolations.get(altNumber);
-        }
-        return new ArrayList<>();
-    }
+//     public List<FlagViolation> getBaseViolations()
+//    {
+//        return _baseViolations;
+//    }
+//
+//     public List<FlagViolation> getAlternativeViolations(int altNumber)
+//    {
+//        if(_alternativeViolations.containsKey(altNumber))
+//        {
+//            return _alternativeViolations.get(altNumber);
+//        }
+//        return new ArrayList<>();
+//    }
 
 
 }

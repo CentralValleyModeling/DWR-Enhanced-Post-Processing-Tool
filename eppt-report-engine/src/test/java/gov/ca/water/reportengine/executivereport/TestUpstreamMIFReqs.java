@@ -21,13 +21,13 @@ public class TestUpstreamMIFReqs extends ExecutiveReportTestBase
     @Test
     void testUpstreamRowWithBaseOnly() throws Exception
     {
-        testBaseOnly("Upstream MIF Requirements");
+        testBaseOnly("Upstream Minimum Flow Requirements");
     }
 
     @Test
     void testResUpstreamRowWithOneAlternativeSameModel() throws Exception
     {
-        testOneAlternativeSameModel( "Upstream MIF Requirements");
+        testOneAlternativeSameModel( "Upstream Minimum Flow Requirements");
     }
 
 }

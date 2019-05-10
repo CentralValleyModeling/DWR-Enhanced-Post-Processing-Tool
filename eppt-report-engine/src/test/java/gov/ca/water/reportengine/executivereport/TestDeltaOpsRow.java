@@ -25,7 +25,7 @@ public class TestDeltaOpsRow extends ExecutiveReportTestBase
     }
 
     @Test
-    void testResDeltaOpsRowWithOneAlternativeSameModel() throws Exception
+    void testDeltaOpsRowWithOneAlternativeSameModel() throws Exception
     {
         testOneAlternativeSameModel( "Delta Operations");
     }

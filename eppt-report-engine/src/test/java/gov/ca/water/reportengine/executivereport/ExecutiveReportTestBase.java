@@ -12,9 +12,10 @@
 
 package gov.ca.water.reportengine.executivereport;
 
+import gov.ca.water.calgui.project.EpptScenarioRun;
+import gov.ca.water.reportengine.ModuleCreator;
 import gov.ca.water.reportengine.TestQAQCReportBase;
-import gov.ca.water.reportengine.filechanges.AssumptionChangesDataProcessor;
-import gov.ca.water.reportengine.filechanges.FileChangesStatistics;
+import gov.ca.water.reportengine.filechanges.*;
 import org.junit.jupiter.api.Assertions;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -25,12 +26,14 @@ import java.net.URL;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 public class ExecutiveReportTestBase extends TestQAQCReportBase
 {
-    private static final String XML_PATH = System.getProperty("user.dir") + "\\executivereport.xml";
+    private static final String XML_PATH = System.getProperty("user.dir") +  "\\executivereport.xml";
     private Document _qAQCMaster;
     private Document _qAQCReportToTest;
+    private final double _tolerance = .001;
 
 
     void testBaseOnly(String moduleName) throws Exception
@@ -40,9 +43,19 @@ public class ExecutiveReportTestBase extends TestQAQCReportBase
         Document doc = getDoc();
         ExecutiveReportXMLCreator erWriter = new ExecutiveReportXMLCreator();
 
-       // List<FileChangesStatistics> statsForAllAlternatives = getFileChangeStatsList();
+        EpptScenarioRun baseScenarioRun = getBaseScenarioRun();
+        List<EpptScenarioRun> allRuns = new ArrayList<>();
+        allRuns.add(baseScenarioRun);
 
-        erWriter.appendExecutiveReportTableElement(getCSVPath(),getModuleLinkingCSVPath(), getDssFilePathsForBaseOnly(), null, false, doc);
+        ModuleCreator mc = new ModuleCreator();
+        List<Module> modules = mc.createModules(getCSVPath(), getModuleLinkingCSVPath());
+
+        DTSProcessor dtsProcessor = new DTSProcessor(modules);
+        Map<EpptScenarioRun, Map<SubModule, List<FlagViolation>>> runsToViolations = dtsProcessor.processDSSFiles(allRuns, getDssFilePathsForBaseOnly());
+
+
+
+        erWriter.appendExecutiveReportTableElement(allRuns, runsToViolations, modules,  null, false, doc);
         writeXmlFile(XML_PATH, doc);
 
         //read the xml file to test
@@ -68,12 +81,25 @@ public class ExecutiveReportTestBase extends TestQAQCReportBase
 
     void testOneAlternativeSameModel(String moduleName) throws Exception
     {
-
         //create executive report and write it out
         Document doc = getDoc();
         ExecutiveReportXMLCreator erWriter = new ExecutiveReportXMLCreator();
         List<FileChangesStatistics> statsForAllAlternatives = getFileChangeStatsList();
-        erWriter.appendExecutiveReportTableElement(getCSVPath(),getModuleLinkingCSVPath(), getDssFilePathsForSameModel(),statsForAllAlternatives, true, doc);
+
+        ModuleCreator mc = new ModuleCreator();
+        List<Module> modules = mc.createModules(getCSVPath(), getModuleLinkingCSVPath());
+
+        EpptScenarioRun baseScenarioRun = getBaseScenarioRun();
+        List<EpptScenarioRun> altScenarioRuns = getAltScenarioRuns();
+        List<EpptScenarioRun> allRuns = new ArrayList<>();
+        allRuns.add(baseScenarioRun);
+        allRuns.addAll(altScenarioRuns);
+
+        DTSProcessor dtsProcessor = new DTSProcessor(modules);
+        Map<EpptScenarioRun, Map<SubModule, List<FlagViolation>>> runsToViolations = dtsProcessor.processDSSFiles(allRuns, getDssFilePathsForSameModel());
+
+
+        erWriter.appendExecutiveReportTableElement(allRuns, runsToViolations, modules,statsForAllAlternatives, true, doc);
         writeXmlFile(XML_PATH, doc);
 
         //read the xml file to test
@@ -99,16 +125,27 @@ public class ExecutiveReportTestBase extends TestQAQCReportBase
 
     private List<FileChangesStatistics> getFileChangeStatsList() throws Exception
     {
-        Path stateVarCSV = getAssumpChangesStateVariablesCSV();
+        Path initCondCSV = getInitialConditionsCSV();
+        Path initBasePath = getInitialConditionsBaseDSSPath();
+        Path initAltPath = getInitialConditionsAltDSSPath();
 
+        Path stateVarCSV = getAssumpChangesStateVariablesCSV();
         Path svBasePath = getStateVariableBaseDSSPath();
         Path sVAltPath = getStateVariableAltDSSPath();
 
-        AssumptionChangesDataProcessor stateVarProcessor = new AssumptionChangesDataProcessor(stateVarCSV);
-        FileChangesStatistics stateVarStats = stateVarProcessor.processAssumptionChanges(svBasePath, sVAltPath);
+        AssumptionChangesDataProcessor initProcessor = new AssumptionChangesDataProcessor(initCondCSV, _tolerance);
+        AssumptionChangesStatistics initCondStats = initProcessor.processAssumptionChanges(initBasePath, initAltPath);
+
+        AssumptionChangesDataProcessor stateVarProcessor = new AssumptionChangesDataProcessor(stateVarCSV, _tolerance);
+        AssumptionChangesStatistics stateVarStats = stateVarProcessor.processAssumptionChanges(svBasePath, sVAltPath);
+
+        CodeChangesDataProcessor processor = new CodeChangesDataProcessor(getCodeChangesCsvPath());
+        CodeChangesStatistics codeChangeStats = processor.processCodeChanges(getBaseOutputPath(), getAltOutputPath());
+
+        FileChangesStatistics fileChangesStatistics = new FileChangesStatistics(initCondStats, stateVarStats, codeChangeStats);
 
         List<FileChangesStatistics> statsForAllAlternatives = new ArrayList<>();
-        statsForAllAlternatives.add(stateVarStats);
+        statsForAllAlternatives.add(fileChangesStatistics);
         return statsForAllAlternatives;
     }
 
@@ -131,31 +168,7 @@ public class ExecutiveReportTestBase extends TestQAQCReportBase
         return moduleElements;
     }
 
-    public List<Path> getDssFilePathsForBaseOnly()
-    {
-        URL resource = this.getClass().getClassLoader().getResource("SamplePstPrcss_Base_v1.01.dss");
-        Path dssFilePath = new File(resource.getPath()).toPath();
 
-        List<Path> dssFiles = new ArrayList<>();
-        dssFiles.add(dssFilePath);
-
-        return dssFiles;
-    }
-
-    public List<Path> getDssFilePathsForSameModel()
-    {
-        URL resource = this.getClass().getClassLoader().getResource("SamplePstPrcss_Base_v1.01.dss");
-        Path dssFilePath = new File(resource.getPath()).toPath();
-
-        URL resource2 = this.getClass().getClassLoader().getResource("SamplePstPrcss_Alt1_v1.01.dss");
-        Path dssFilePath2 = new File(resource2.getPath()).toPath();
-
-        List<Path> dssFiles = new ArrayList<>();
-        dssFiles.add(dssFilePath);
-        dssFiles.add(dssFilePath2);
-
-        return dssFiles;
-    }
 
 
 

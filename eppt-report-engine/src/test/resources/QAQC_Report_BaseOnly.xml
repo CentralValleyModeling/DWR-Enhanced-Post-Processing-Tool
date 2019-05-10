@@ -23,31 +23,31 @@
       <executive-report-table>
          <module header="Issues">
             <study study-order="1">Base Study</study>
-            <model-entries model-order="01" name="NOD Reservoir Operation">0 incident(s) of below DP&#xD;0 incident(s) of above Flood&#xD;0 incident(s) of Spill</model-entries>
+            <model-entries model-order="01" name="NOD Reservoir Operation">0 incident(s) of below DP&#xD;5 incident(s) of above Flood&#xD;0 incident(s) of Spill</model-entries>
          </module>
          <module header="Issues">
             <study study-order="1">Base Study</study>
-            <model-entries model-order="02" name="Upstream Minimum Flow Requirements">1 incident(s) of violation</model-entries>
+            <model-entries model-order="02" name="Upstream Minimum Flow Requirements">10 incident(s) of violation</model-entries>
          </module>
          <module header="Issues">
             <study study-order="1">Base Study</study>
-            <model-entries model-order="03" name="NOD Weirs Operations">132 incident(s) of spilling</model-entries>
+            <model-entries model-order="03" name="NOD Weirs Operation">275 incident(s) of spilling</model-entries>
          </module>
          <module header="Issues">
             <study study-order="1">Base Study</study>
-            <model-entries model-order="04" name="NOD Groundwater Pumping">954 incident(s) of violation</model-entries>
+            <model-entries model-order="04" name="NOD Groundwater Pumping">2364 incident(s) of violation</model-entries>
          </module>
          <module header="Issues">
             <study study-order="1">Base Study</study>
-            <model-entries model-order="05" name="Delta Operations">0 incident(s) of violation</model-entries>
+            <model-entries model-order="05" name="Delta Operations">571 incident(s) of violation</model-entries>
          </module>
          <module header="Issues">
             <study study-order="1">Base Study</study>
-            <model-entries model-order="06" name="COA">1.0% different Between Actual and Agreed ratio</model-entries>
+            <model-entries model-order="06" name="COA">1.00% different Between Actual and Agreed ratio</model-entries>
          </module>
          <module header="Issues">
             <study study-order="1">Base Study</study>
-            <model-entries model-order="07" name="Allocations and Deliveries">378 incident(s) of shortage</model-entries>
+            <model-entries model-order="07" name="Allocations and Deliveries">1003 incident(s) of shortage</model-entries>
          </module>
          <module header="Issues">
             <study study-order="1">Base Study</study>

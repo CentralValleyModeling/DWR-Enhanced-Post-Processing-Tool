@@ -53,7 +53,7 @@ public class CodeChangesDataProcessor
 
 
 
-    public FileChangesStatistics processCodeChanges(Path baseOutputPath, Path altOutputPath) throws EpptReportException, IOException
+    public CodeChangesStatistics processCodeChanges(Path baseOutputPath, Path altOutputPath) throws EpptReportException, IOException
     {
         Set<Path> modifiedFiles = new HashSet<>();
         Set<Path> addedInAlt = new HashSet<>();
@@ -127,12 +127,8 @@ public class CodeChangesDataProcessor
 //                subtypeToFileChangesMap.put(subType, modifiedFilesForSubtype);
 //            }
 //        }
+        return new CodeChangesStatistics(deletedFromBase, addedInAlt, modifiedFiles);
 
-        return new FileChangesStatistics.Builder()
-                .withFilesAddedToAlt(addedInAlt)
-                .withFilesDeletedFromBase(deletedFromBase)
-                .withCodeChangesModifiedFiles(modifiedFiles)
-                .build();
     }
 
     private List<Path> getAllPathsInDir(Path outputDirectory) throws EpptReportException

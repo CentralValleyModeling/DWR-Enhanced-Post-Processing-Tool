@@ -103,7 +103,7 @@ public interface IDSSGrabber1Svc
 	 *
 	 * @return Array of HEC TimeSeriesContainer - one TSC for each scenario
 	 */
-	TimeSeriesContainer[] getPrimarySeries(String locationName);
+	TimeSeriesContainer[] getPrimarySeries();
 
 	/**
 	 * Reads the DSS results for the secondary series for each scenario.

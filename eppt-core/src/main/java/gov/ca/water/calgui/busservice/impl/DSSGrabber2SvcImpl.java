@@ -143,7 +143,7 @@ public class DSSGrabber2SvcImpl extends DSSGrabber1SvcImpl
 	 *
 	 * @return Array of HEC TimeSeriesContainer - one TSC for each scenario
 	 */
-	public TimeSeriesContainer[] getPrimarySeries(String locationName)
+	public TimeSeriesContainer[] getPrimarySeries()
 	{
 
 		try

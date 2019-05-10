@@ -12,26 +12,37 @@
 
 package gov.ca.water.reportengine.executivereport;
 
-class FlagViolation
+import java.util.List;
+
+public class FlagViolation
 {
 
-
-    private  int _time;
+    private  List<Integer> _times;
+    private final String _dtsFileName;
     private  double _maxValue;
 
-    FlagViolation(int time)
+    FlagViolation(List<Integer> times, String dtsFileName)
     {
-        _time = time;
+        _times = times;
+        _dtsFileName = dtsFileName;
+
     }
 
-    FlagViolation(double maxValue)
+    FlagViolation(double maxValue,String dtsFileName)
     {
         _maxValue = maxValue;
+        _dtsFileName = dtsFileName;
+
     }
 
-    int getTime()
+    public String getDtsFileName()
     {
-        return _time;
+        return _dtsFileName;
+    }
+
+    public List<Integer> getTimes()
+    {
+        return _times;
     }
 
     double getMaxValue()
