@@ -12,6 +12,7 @@
 
 package gov.ca.water.quickresults.ui.projectconfig.scenariotable;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 import java.util.logging.Level;
@@ -42,7 +43,7 @@ public class ScenarioTablePanel extends JFXPanel
 {
 	private static final Logger LOGGER = Logger.getLogger(ScenarioTablePanel.class.getName());
 	private RmaTreeTableView<ScenarioTableModel, ParentRowModel> _treeTable;
-	private ScenarioTableModel _scnearioTableModel;
+	private ScenarioTableModel _scenarioTableModel;
 
 	public ScenarioTablePanel()
 	{
@@ -52,9 +53,9 @@ public class ScenarioTablePanel extends JFXPanel
 
 	private void initFX()
 	{
-		_scnearioTableModel = new ScenarioTableModel();
+		_scenarioTableModel = new ScenarioTableModel();
 		_treeTable = new RmaTreeTableView<>();
-		_treeTable.setModel(_scnearioTableModel);
+		_treeTable.setModel(_scenarioTableModel);
 		_treeTable.setPlaceholder(new Label("No Scenario Runs"));
 		_treeTable.setCellView(BASE_COL_SPEC, new RmaCheckBoxCellView());
 		_treeTable.setCellView(ALTERNATIVE_COL_SPEC, new RmaCheckBoxCellView());
@@ -75,48 +76,48 @@ public class ScenarioTablePanel extends JFXPanel
 	{
 		Platform.runLater(() ->
 		{
-			if(_scnearioTableModel != null)
+			if(_scenarioTableModel != null)
 			{
-				_scnearioTableModel.getRows().clear();
+				_scenarioTableModel.getRows().clear();
 			}
 		});
 	}
 
 	public EpptScenarioRun getBaseScenarioRun()
 	{
-		return _scnearioTableModel.getBaseScenarioRun();
+		return _scenarioTableModel.getBaseScenarioRun();
 	}
 
 	public List<EpptScenarioRun> getAlternativeScenarioRuns()
 	{
-		return _scnearioTableModel.getAlternativeScenarioRuns();
+		return _scenarioTableModel.getAlternativeScenarioRuns();
 	}
 
 	public void deleteSelectedScenarioRun()
 	{
 		Platform.runLater(() -> TreeTableViewSelectionUtilities.getSelectedRowModels(_treeTable)
-															   .forEach(_scnearioTableModel.getRows()::remove));
+															   .forEach(_scenarioTableModel.getRows()::remove));
 	}
 
 	public void addScenarioRun(EpptScenarioRun scenarioRun)
 	{
-		Platform.runLater(() -> _scnearioTableModel.getRows().add(
-				new ScenarioRowModel(_treeTable, _scnearioTableModel, scenarioRun,
-						_scnearioTableModel.getRows().isEmpty(), false)));
+		Platform.runLater(() -> _scenarioTableModel.getRows().add(
+				new ScenarioRowModel(_treeTable, _scenarioTableModel, scenarioRun,
+						_scenarioTableModel.getRows().isEmpty(), false)));
 	}
 
 	public void updateScenario(EpptScenarioRun oldScenarioRun, EpptScenarioRun newScenarioRun)
 	{
 		Platform.runLater(() ->
 		{
-			Optional<ScenarioRowModel> scenarioRowModel = _scnearioTableModel.getRowForScenarioRun(oldScenarioRun);
+			Optional<ScenarioRowModel> scenarioRowModel = _scenarioTableModel.getRowForScenarioRun(oldScenarioRun);
 			if(scenarioRowModel.isPresent())
 			{
 				ScenarioRowModel oldModel = scenarioRowModel.get();
-				int i = _scnearioTableModel.getRows().indexOf(oldModel);
-				_scnearioTableModel.getRows().remove(i);
-				_scnearioTableModel.getRows().add(i,
-						new ScenarioRowModel(_treeTable, _scnearioTableModel, newScenarioRun, oldModel.isBase(),
+				int i = _scenarioTableModel.getRows().indexOf(oldModel);
+				_scenarioTableModel.getRows().remove(i);
+				_scenarioTableModel.getRows().add(i,
+						new ScenarioRowModel(_treeTable, _scenarioTableModel, newScenarioRun, oldModel.isBase(),
 								oldModel.isAlternative()));
 
 			}
@@ -136,4 +137,10 @@ public class ScenarioTablePanel extends JFXPanel
 			}
 		}
 		return retval;
-	}}
+	}
+
+	public Collection<? extends EpptScenarioRun> getAllScenarioRuns()
+	{
+		return _scenarioTableModel.getAllScenarioRuns();
+	}
+}

@@ -20,7 +20,6 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.logging.Level;
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
@@ -521,6 +520,15 @@ public final class ProjectConfigurationPanel extends EpptPanel
 			retval.add(baseScenarioRun);
 			retval.addAll(_scenarioTablePanel.getAlternativeScenarioRuns());
 		}
+		return retval;
+	}
+
+	public List<EpptScenarioRun> getAllEpptScenarioRuns()
+	{
+		List<EpptScenarioRun> retval = new ArrayList<>();
+		EpptScenarioRun baseScenarioRun = _scenarioTablePanel.getBaseScenarioRun();
+		retval.add(baseScenarioRun);
+		retval.addAll(_scenarioTablePanel.getAllScenarioRuns());
 		return retval;
 	}
 

@@ -12,9 +12,20 @@
 
 package gov.ca.water.eppt.nbui;
 
-import java.io.OutputStream;
-import java.io.PrintStream;
+import java.awt.Color;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.*;
+import javax.swing.text.BadLocationException;
+import javax.swing.text.Style;
+import javax.swing.text.StyleConstants;
+import javax.swing.text.StyledDocument;
 
 /**
  * Company: Resource Management Associates
@@ -22,272 +33,104 @@ import javax.swing.*;
  * @author <a href="mailto:adam@rmanet.com">Adam Korynta</a>
  * @since 05-10-2019
  */
-public class TextAreaPrintStream extends PrintStream
+class TextAreaPrintStream
 {
-	private final JTextArea _textArea;
-	private boolean atLineStart = true;
-	private String indent = "";
+	private static final Logger LOGGER = Logger.getLogger(TextAreaPrintStream.class.getName());
+	private final JTextPane _textArea;
+	private final ExecutorService _executorService;
+	private boolean _stopThreads = false;
+	//Used to print error messages in red
+	private StyledDocument _doc;
+	private Style _style;
 
-	public TextAreaPrintStream(JTextArea textArea, OutputStream outputStream)
+	TextAreaPrintStream(JTextPane textArea, InputStream inputStream, InputStream errorStream)
 	{
-		super(outputStream);
 		_textArea = textArea;
+		_doc = (StyledDocument) textArea.getDocument();
+		_style = _doc.addStyle("ConsoleStyle", null);
+		StyleConstants.setFontFamily(_style, "MonoSpaced");
+		StyleConstants.setFontSize(_style, 12);
+
+		BufferedReader stdInput = new BufferedReader(new InputStreamReader(inputStream));
+
+		final BufferedReader stdError = new BufferedReader(new InputStreamReader(errorStream));
+
+		_executorService = Executors.newFixedThreadPool(2);
+		StreamGobbler errorGobbler = new StreamGobbler(errorStream, "ERROR");
+
+		// any output?
+		StreamGobbler outputGobbler = new StreamGobbler(inputStream, "OUTPUT");
+
+		// start gobblers
+		_executorService.submit(outputGobbler);
+		_executorService.submit(errorGobbler);
 	}
 
-	private void writeToTextArea(String str)
+	/**
+	 * Stops the "_stdOutReader" threads
+	 */
+	public synchronized void close()
 	{
-		if(_textArea != null)
-		{
-			synchronized(_textArea)
-			{
-				_textArea.setCaretPosition(_textArea.getDocument().getLength());
-				_textArea.append(str);
-			}
-		}
+
+		// Notify the threads that they must stop
+		_stopThreads = true;
+		this.notifyAll();
+		_executorService.shutdownNow();
 	}
 
-	private void write(String str)
+	private void appendText(String str, String type)
 	{
-		String[] s = str.split("\n", -1);
-		if(s.length == 0)
+		if("ERROR".equalsIgnoreCase(type))
 		{
-			return;
-		}
-		for(int i = 0; i < s.length - 1; i++)
-		{
-			writeWithPotentialIndent(s[i]);
-			writeWithPotentialIndent("\n");
-			atLineStart = true;
-		}
-		String last = s[s.length - 1];
-		if(!last.equals(""))
-		{
-			writeWithPotentialIndent(last);
-		}
-	}
-
-	private void writeWithPotentialIndent(String s)
-	{
-		if(atLineStart)
-		{
-			writeToTextArea(indent + s);
-			atLineStart = false;
+			StyleConstants.setForeground(_style, Color.red);
 		}
 		else
 		{
-			writeToTextArea(s);
+			StyleConstants.setForeground(_style, Color.black);
+		}
+		try
+		{
+			int length = _doc.getLength();
+			_doc.insertString(length, "\n" + str, _style);
+			_textArea.setCaretPosition(length + 1);
+		}
+		catch(BadLocationException e)
+		{
+			LOGGER.log(Level.SEVERE, "Error appending text", e);
 		}
 	}
 
-	private void newLine()
+	private final class StreamGobbler implements Runnable
 	{
-		write("\n");
-	}
 
-	@Override
-	public void print(boolean b)
-	{
-		synchronized(this)
+		private InputStream _is;
+		private String _type;
+
+		private StreamGobbler(InputStream is, String type)
 		{
-			super.print(b);
-			write(String.valueOf(b));
+			this._is = is;
+			this._type = type;
 		}
-	}
 
-	@Override
-	public void print(char c)
-	{
-		synchronized(this)
+		@Override
+		public void run()
 		{
-			super.print(c);
-			write(String.valueOf(c));
-		}
-	}
-
-	@Override
-	public void print(char[] s)
-	{
-		synchronized(this)
-		{
-			super.print(s);
-			write(String.valueOf(s));
-		}
-	}
-
-	@Override
-	public void print(double d)
-	{
-		synchronized(this)
-		{
-			super.print(d);
-			write(String.valueOf(d));
-		}
-	}
-
-	@Override
-	public void print(float f)
-	{
-		synchronized(this)
-		{
-			super.print(f);
-			write(String.valueOf(f));
-		}
-	}
-
-	@Override
-	public void print(int i)
-	{
-		synchronized(this)
-		{
-			super.print(i);
-			write(String.valueOf(i));
-		}
-	}
-
-	@Override
-	public void print(long l)
-	{
-		synchronized(this)
-		{
-			super.print(l);
-			write(String.valueOf(l));
-		}
-	}
-
-	@Override
-	public void print(Object o)
-	{
-		synchronized(this)
-		{
-			super.print(o);
-			write(String.valueOf(o));
-		}
-	}
-
-	@Override
-	public void print(String s)
-	{
-		synchronized(this)
-		{
-			super.print(s);
-			if(s == null)
+			try
 			{
-				write("null");
+				InputStreamReader isr = new InputStreamReader(_is);
+				BufferedReader br = new BufferedReader(isr);
+				String line = null;
+				while((line = br.readLine()) != null && !_stopThreads)
+				{
+					String str = line;
+					SwingUtilities.invokeLater(() ->appendText(str, _type));
+				}
 			}
-			else
+			catch(IOException ioe)
 			{
-				write(s);
+				LOGGER.log(Level.SEVERE, "Error processing WRESL Text", ioe);
 			}
 		}
 	}
 
-	@Override
-	public void println()
-	{
-		synchronized(this)
-		{
-			newLine();
-			super.println();
-		}
-	}
-
-	@Override
-	public void println(boolean x)
-	{
-		synchronized(this)
-		{
-			print(x);
-			newLine();
-			super.println();
-		}
-	}
-
-	@Override
-	public void println(char x)
-	{
-		synchronized(this)
-		{
-			print(x);
-			newLine();
-			super.println();
-		}
-	}
-
-	@Override
-	public void println(int x)
-	{
-		synchronized(this)
-		{
-			print(x);
-			newLine();
-			super.println();
-		}
-	}
-
-	@Override
-	public void println(long x)
-	{
-		synchronized(this)
-		{
-			print(x);
-			newLine();
-			super.println();
-		}
-	}
-
-	@Override
-	public void println(float x)
-	{
-		synchronized(this)
-		{
-			print(x);
-			newLine();
-			super.println();
-		}
-	}
-
-	@Override
-	public void println(double x)
-	{
-		synchronized(this)
-		{
-			print(x);
-			newLine();
-			super.println();
-		}
-	}
-
-	@Override
-	public void println(char x[])
-	{
-		synchronized(this)
-		{
-			print(x);
-			newLine();
-			super.println();
-		}
-	}
-
-	@Override
-	public void println(String x)
-	{
-		synchronized(this)
-		{
-			print(x);
-			newLine();
-			super.println();
-		}
-	}
-
-	@Override
-	public void println(Object x)
-	{
-		String s = String.valueOf(x);
-		synchronized(this)
-		{
-			print(s);
-			newLine();
-			super.println();
-		}
-	}
 }

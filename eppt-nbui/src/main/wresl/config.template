@@ -1,30 +1,42 @@
-# This config file and run folder must be placed in the same directory
+##################################################################################
+# Command line Example:
+# C:\wrimsv2_SG\bin\runConfig_limitedXA.bat D:\example\EXISTING_BO.config
+#
+# Note:
+# 1. This config file and the RUN directory must be placed in the same directory.
+# 2. Use relative path to increase the portability.
+#    For example, use RUN\main.wresl for MainFile and DSS\INIT.dss for InitFile
+##################################################################################
 
 Begin Config
 
-WreslPlus              yes
-MainFile               {MainFile}
-Solver                 XA  
-DvarFile               {DvarFile}
-SvarFile               {SvarFile}
-SvarAPart              CalSim
-SvarFPart              {SvarFPart}
-InitFile               {InitFile}
-InitFPart              {InitFPart} 
-TimeStep               1MON
-StartYear              {StartYear}
-StartMonth             {StartMonth}
-StopYear               {EndYear}
-StopMonth              {EndMonth}
-#GroundwaterDir         .
-ShowWreslLog		   Yes 
-PrefixInitToDvarFile   Yes
-IValue                 2
 
-ovoption               0
-IlpLog  no
-IlpLogFormat   CplexLp
-IlpLogVarValue no
+MainFile           {MainFile}
+Solver             XA
+DvarFile           {PostProcessDss}
+SvarFile           {DvFile}
+SvarFile2          {SvFile}
+SvarAPart          {SvAPart}
+SvarFPart          {SvFPart}
+InitFile           {IvFile}
+InitFPart          {IvFPart}
+TimeStep           1MON
+StartYear          {StartYear}
+StartMonth         {StartMonth}
+StartDay           {StartDay}
+StopYear           {EndYear}
+StopMonth          {EndMonth}
+StopDay            {EndDay}
+IlpLog             No
+IlpLogFormat       None
+IlpLogVarValue     No
+IlpLogAllCycles    No
+WreslPlus          yes
+AllowSvTsInit      yes
+DatabaseURL        none
+SQLGroup           calsim
+OVOption           0
+OVFile             .
 
 End Config
 

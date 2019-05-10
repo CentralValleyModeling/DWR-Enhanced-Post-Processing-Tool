@@ -146,4 +146,14 @@ class ScenarioTableModel extends RmaTreeTableModel<ParentRowModel>
 				.map(ScenarioRowModel::getScenarioRun)
 				.collect(toList());
 	}
+
+	List<EpptScenarioRun> getAllScenarioRuns()
+	{
+		return getRows()
+				.stream()
+				.filter(r->r instanceof ScenarioRowModel)
+				.map(r->(ScenarioRowModel)r)
+				.map(ScenarioRowModel::getScenarioRun)
+				.collect(toList());
+	}
 }

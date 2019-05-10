@@ -18,10 +18,16 @@ import java.io.PrintWriter;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.time.LocalDate;
+import java.util.Vector;
 
 import gov.ca.water.calgui.constant.Constant;
 import gov.ca.water.calgui.project.EpptDssContainer;
 import gov.ca.water.calgui.project.EpptScenarioRun;
+
+import hec.heclib.dss.DSSPathname;
+import hec.heclib.dss.HecDSSFileAccess;
+import hec.heclib.dss.HecDss;
+import hec.lang.TimeStep;
 
 /**
  * Company: Resource Management Associates
@@ -87,18 +93,26 @@ class WreslConfigWriter
 			String configText = wrimsv2.wreslparser.elements.Tools
 					.readFileAsString(Constant.WRESL_DIR + "\\config.template");
 			EpptDssContainer dssContainer = _scenarioRun.getDssContainer();
-			configText = configText.replace("{SvarFile}", dssContainer.getSvDssFile().getDssPath().toString());
-			configText = configText.replace("{InitFile}", dssContainer.getIvDssFile().getDssPath().toString());
-			configText = configText.replace("{DvarFile}", dssContainer.getDvDssFile().getDssPath().toString());
-			configText = configText.replace("{SvarFPart}", "2020D09E");
-			configText = configText.replace("{InitFPart}", "2020D09E");
+
+			DSSPathname svRecord = getFirstRecord(dssContainer.getSvDssFile().getDssPath());
+			DSSPathname ivRecord = getFirstRecord(dssContainer.getIvDssFile().getDssPath());
+
+			configText = configText.replace("{MainFile}", _scenarioRun.getWreslMain().toAbsolutePath().toString());
+			configText = configText.replace("{PostProcessDss}", _scenarioRun.getOutputPath().resolve("PostProcessDss.dss").toString());
+
+			configText = configText.replace("{SvFile}", dssContainer.getSvDssFile().getDssPath().toString());
+			configText = configText.replace("{SvAPart}", svRecord.getAPart());
+			configText = configText.replace("{SvFPart}", svRecord.getFPart());
+			configText = configText.replace("{DvFile}", dssContainer.getDvDssFile().getDssPath().toString());
+			configText = configText.replace("{IvFile}", dssContainer.getIvDssFile().getDssPath().toString());
+			configText = configText.replace("{IvFPart}", ivRecord.getFPart());
+
 			configText = configText.replace("{StartYear}", Integer.toString(_startDate.getYear()));
 			configText = configText.replace("{StartMonth}", Integer.toString(_startDate.getMonthValue()));
 			configText = configText.replace("{StartDay}", Integer.toString(_startDate.getDayOfMonth()));
 			configText = configText.replace("{EndYear}", Integer.toString(_endDate.getYear()));
 			configText = configText.replace("{EndMonth}", Integer.toString(_endDate.getMonthValue()));
 			configText = configText.replace("{EndDay}", Integer.toString(_endDate.getDayOfMonth()));
-			configText = configText.replace("{MainFile}", _scenarioRun.getWreslMain().toAbsolutePath().toString());
 
 			Path configPath = _scenarioRun.getOutputPath().resolve("WRESL.config");
 			try(BufferedWriter bufferedWriter = Files.newBufferedWriter(configPath);
@@ -112,6 +126,35 @@ class WreslConfigWriter
 				throw new WreslScriptException("There is a error when building the config file for wsidi", ex);
 			}
 			return configPath;
+		}
+	}
+
+	private DSSPathname getFirstRecord(Path path) throws WreslScriptException
+	{
+		try
+		{
+			HecDss open = HecDss.open(path.toString());
+			Vector pathnameList = open.getPathnameList();
+			if(!pathnameList.isEmpty())
+			{
+				String record = pathnameList.get(0).toString();
+				return new DSSPathname(record);
+			}
+			else
+			{
+				throw new WreslScriptException("DSS File is empty: " + path);
+			}
+		}
+		catch(Exception e)
+		{
+			if(e instanceof WreslScriptException)
+			{
+				throw (WreslScriptException)e;
+			}
+			else
+			{
+				throw new WreslScriptException("Unable to process A and F parts for DSS File: " + path);
+			}
 		}
 	}
 }

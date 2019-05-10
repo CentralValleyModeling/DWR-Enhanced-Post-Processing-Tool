@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta charset="UTF-8" />
+  <title>4.3. Data Analysis</title>
+  <meta name="generator" content="Adobe RoboHelp 2019" />
+  <link rel="stylesheet" href="../assets/css/default.css" />
+  <link rel="stylesheet" href="../assets/css/20190509_EPPT_Help_Draft_NO.css" />
+</head>
+<body>
+  <div>
+    <h2><span style="font-family: verdana, geneva;">4.3. Data Analysis</span></h2>
+    <p> </p>
+    <p><span style="font-family: verdana, geneva; font-size: 11pt;">This dashboard allows the user to produce a standardized comparison or corroboration report comparing two CalLite scenarios, two CalSim II scenarios, two CalSim 3 scenarios or between scenarios of any two of the previously mentioned models.</span></p>
+    <p> </p>
+    <p><span style="font-family: verdana, geneva; font-size: 11pt;">The EPPT produces this report by calling one of the CalLite utilities, the CalLite report tool. The report shows storage in major reservoirs, flows at key river segments, CVP and SWP deliveries, and other scenario outputs.</span></p>
+    <p> </p>
+    <p><span style="font-family: verdana, geneva; font-size: 11pt;">In order to generate the report, use the Select File buttons to select a report template file (.inp file), two DSS output files, and a report output file name. Next, enter names for each of the two studies to be compared (defaults are set to CalLite 1 and CalLite 2), and finally hit the Generate Report button. Optional information such as notes, assumptions, and modeler name can also be added to the report.</span></p>
+    <p> </p>
+    <ul class="List0" data-start="1">
+      <li><span style="font-family: verdana, geneva; font-size: 11pt;"><strong>CalLite-CalLite comparison:</strong></span>
+        <ul data-start="1.1">
+          <li><span style="font-family: verdana, geneva; font-size: 11pt;">The default report template file (callite_scenario_comparison.inp) will compare two CalLite scenarios.</span></li>
+        </ul>
+      </li>
+      <li><span style="font-family: verdana, geneva; font-size: 11pt;"><strong>CalSim II-CalSim II comparison:</strong></span>
+        <ul data-start="2.1">
+          <li><span style="font-family: verdana, geneva; font-size: 11pt;">Click “Select File …” in the “Report Template File” row and select “calsim_calsim_comparison.inp”.</span></li>
+        </ul>
+      </li>
+      <li><span style="font-family: verdana, geneva; font-size: 11pt;"><strong>CalSim 3-CalSim 3 comparison:</strong></span>
+        <ul data-start="3.1">
+          <li><span style="font-family: verdana, geneva; font-size: 11pt;">Click “Select File …” in the “Report Template File” row and select “calsim3_calsim3_comparison.inp”.</span></li>
+        </ul>
+      </li>
+      <li><span style="font-family: verdana, geneva; font-size: 11pt;"><strong>CalSim II-CalLite corroboration:</strong></span>
+        <ul data-start="4.1">
+          <li><span style="font-family: verdana, geneva; font-size: 11pt;">The report tool can also be used to compare CalLite results to CalSim results. To do this, the DSS Result File #1 must be set to the output DSS from a CalSim simulation, the DSS Result File #2 must be set to the output DSS from a CalLite simulation and the report template file must be set to calsim_callite_corroboration.inp.  </span></li>
+        </ul>
+      </li>
+      <li><span style="font-family: verdana, geneva; font-size: 11pt;"><strong>CalSim 3-CalLite corroboration:</strong></span>
+        <ul data-start="5.1">
+          <li><span style="font-family: verdana, geneva; font-size: 11pt;">To compare CalSim 3 results to CalLite results, the DSS Result File #1 must be set to the output DSS from a CalSim 3 simulation, the DSS Result File #2 must be set to the output DSS from a CalLite simulation and the report template file must be set to calsim3_callite_corroboration.inp.</span></li>
+        </ul>
+      </li>
+      <li><span style="font-family: verdana, geneva; font-size: 11pt;"><strong>CalSim 3-CalSim II corroboration:</strong></span>
+        <ul data-start="6.1">
+          <li><span style="font-family: verdana, geneva; font-size: 11pt;">To compare CalSim 3 results to CalSim II results, the DSS Result File #1 must be set to the output DSS from a CalSim 3 simulation, the DSS Result File #2 must be set to the output DSS from a CalSim II simulation and the report template file must be set to calsim3_calsim_corroboration.inp.</span></li>
+        </ul>
+      </li>
+    </ul>
+    <p class="hcp2"> </p>
+    <p><span style="font-family: verdana, geneva; font-size: 11pt;">For more detailed description of the report tool, and instructions on how to edit the report template files, see Appendix x in the EPPT Reference Manual.</span></p>
+    <p> </p>
+    <p><span style="font-family: verdana, geneva; font-size: 11pt;"><img alt="Picture 38" height="779" src="../assets/images/20190509_EPPT_Help_Draft_NO_files/Fig4-3_DataAnalysis.png" style="display: block; margin-left: auto; margin-right: auto;" width="947" /></span></p>
+    <p style="text-align: center;"><span style="font-size: 11pt; font-family: verdana, geneva;"><strong>Figure 4-3.</strong> The Data Analysis dashboard automatically creates a standardized comparison or corroboration report based on two DSS files.</span></p>
+  </div>
+</body>
+</html>

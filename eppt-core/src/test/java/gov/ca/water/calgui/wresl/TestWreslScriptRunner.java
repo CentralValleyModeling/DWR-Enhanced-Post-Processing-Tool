@@ -86,7 +86,7 @@ public class TestWreslScriptRunner
 
 			LocalDate start = LocalDate.ofYearDay(1922, 3);
 			LocalDate end = LocalDate.ofYearDay(2000, 3);
-			WreslScriptRunner wreslScriptRunner = new WreslScriptRunner(EPPT_SCENARIO_RUN_NOOP, (s,o)->{});
+			WreslScriptRunner wreslScriptRunner = new WreslScriptRunner(EPPT_SCENARIO_RUN_NOOP, (s,p,o,e)->{});
 			wreslScriptRunner.run(start, end);
 		}
 		catch(WreslScriptException ex)

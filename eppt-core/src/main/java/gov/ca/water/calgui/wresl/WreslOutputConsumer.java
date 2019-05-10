@@ -12,7 +12,7 @@
 
 package gov.ca.water.calgui.wresl;
 
-import java.io.OutputStream;
+import java.io.InputStream;
 
 import gov.ca.water.calgui.project.EpptScenarioRun;
 
@@ -26,5 +26,5 @@ import gov.ca.water.calgui.project.EpptScenarioRun;
 @FunctionalInterface
 public interface WreslOutputConsumer
 {
-	void consume(EpptScenarioRun scenarioRun, OutputStream outputStream);
+	void consume(EpptScenarioRun scenarioRun, Process process, InputStream outputStream, InputStream errorStream);
 }

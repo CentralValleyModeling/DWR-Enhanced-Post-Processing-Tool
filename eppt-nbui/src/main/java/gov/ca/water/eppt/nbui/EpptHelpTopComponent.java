@@ -30,7 +30,7 @@ import org.openide.windows.WindowManager;
 		preferredID = "EpptHelpTopComponent",
 		iconBase = "gov/ca/water/eppt/nbui/questionmark18.gif"
 )
-@TopComponent.Registration(mode = "properties", openAtStartup = false)
+@TopComponent.Registration(mode = "editor", openAtStartup = false)
 @ActionID(category = "Window", id = "gov.ca.water.eppt.nbui.EpptHelpTopComponent")
 @ActionReference(path = "Menu/Help", position = 0)
 @TopComponent.OpenActionRegistration(
@@ -46,7 +46,7 @@ public final class EpptHelpTopComponent extends TopComponent
 		setName("EPPT Help");
 		try
 		{
-			String path = Constant.DOCS_DIR + "\\JavaHelp_2.0\\CalLite3-GUI-Help_JavaHelp_V2_082614.hs";
+			String path = Constant.DOCS_DIR + "\\Help\\CalLite3-GUI-Help_JavaHelp_V2_082614.hs";
 			URL url = new URL("file:///" + path);
 			_helpViewer = new JHelp(new HelpSet(null, url));
 			setLayout(new BorderLayout());

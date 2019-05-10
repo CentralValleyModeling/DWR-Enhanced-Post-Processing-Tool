@@ -14,11 +14,15 @@ package gov.ca.water.calgui.wresl;
 
 import java.io.BufferedWriter;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.time.Duration;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.Calendar;
 import java.util.function.Consumer;
 import java.util.logging.Level;
@@ -29,6 +33,7 @@ import java.util.stream.Stream;
 import javax.swing.*;
 
 import gov.ca.water.calgui.project.EpptScenarioRun;
+import org.antlr.runtime.RecognitionException;
 import wrimsv2.commondata.wresldata.StudyDataSet;
 import wrimsv2.components.ControllerBatch;
 import wrimsv2.components.Error;
@@ -56,12 +61,13 @@ public class WreslScriptRunner
 
 	public static void main(String[] args) throws WreslScriptException
 	{
-		ControllerBatch cb = new ControllerBatch();
-		cb.enableProgressLog = true;
-		long startTimeInMillis = Calendar.getInstance().getTimeInMillis();
+		LocalDateTime start = LocalDateTime.now();
+		LOGGER.log(Level.INFO, "============= Starting Run: {0} =============", start);
 		try
 		{
-
+			ControllerBatch cb = new ControllerBatch();
+			cb.enableProgressLog = true;
+			long startTimeInMillis = Calendar.getInstance().getTimeInMillis();
 			cb.processArgs(args);
 			StudyDataSet sds = cb.parse();
 			String errorString = Integer.toString(StudyUtils.total_errors) + Error.getTotalError() + "*****";
@@ -74,8 +80,6 @@ public class WreslScriptRunner
 				cb.runModelXA(sds);
 				long endTimeInMillis = Calendar.getInstance().getTimeInMillis();
 				int runPeriod = (int) (endTimeInMillis - startTimeInMillis);
-				LOGGER.log(Level.CONFIG, "=================Run Time is {0}min {1}sec====",
-						new Object[]{runPeriod / 60000, ((runPeriod / 1000) % 60)});
 			}
 			else
 			{
@@ -83,9 +87,17 @@ public class WreslScriptRunner
 						new Object[]{StudyUtils.total_errors, Error.getTotalError()});
 			}
 		}
-		catch(Throwable ex)
+		catch(RuntimeException | IOException | RecognitionException ex)
 		{
 			throw new WreslScriptException("WRESL Script Execution error", ex);
+		}
+		finally
+		{
+			LocalDateTime end = LocalDateTime.now();
+			LOGGER.log(Level.INFO, "============= Run Finished: {0} =============", end);
+			long minutes = ChronoUnit.MINUTES.between(start, end);
+			long seconds = Duration.between(start, end).minus(minutes, ChronoUnit.MINUTES).getSeconds();
+			LOGGER.log(Level.INFO, "============= Run Took: {0}min {1}sec =============", new Object[]{minutes, seconds});
 		}
 	}
 
@@ -102,7 +114,7 @@ public class WreslScriptRunner
 			String javaLibraryPath = "-Djava.library.path=\"" + Paths.get("dwr_eppt/modules/lib").toAbsolutePath() + "\"";
 			String path = "\"" + System.getProperty("java.home")
 					+ separator + "bin" + separator + "java" + "\"";
-			String classpath =  "";
+			String classpath =  "echo off \n";
 			Path epptDir = Paths.get("dwr_eppt");
 			Path modulesDir = epptDir.resolve("modules");
 			try(Stream<Path> walk = Files.walk(modulesDir, 3))
@@ -111,7 +123,7 @@ public class WreslScriptRunner
 																	   .filter(p -> !p.toString().endsWith("jar"))
 																	   .map(Object::toString)
 																	   .map(p -> "set classpath=%classpath%;" + p + "/*")
-																	   .collect(Collectors.joining("\n"));
+																	   .collect(Collectors.joining("\n")) + "echo on\n";
 			}
 
 
@@ -129,10 +141,13 @@ public class WreslScriptRunner
 			}
 			ProcessBuilder processBuilder = new ProcessBuilder()
 					.command(outputBat.toString());
+//					.redirectOutput(ProcessBuilder.Redirect.PIPE)
+//					.redirectError(ProcessBuilder.Redirect.PIPE);
 			LOGGER.log(Level.INFO, "Running process: {0}", commandLine);
 			Process process = processBuilder.start();
-			OutputStream outputStream = process.getOutputStream();
-			_outputStreamConsumer.consume(_scenarioRun, outputStream);
+			InputStream errorStream = process.getErrorStream();
+			InputStream outputStream = process.getInputStream();
+			_outputStreamConsumer.consume(_scenarioRun, process, outputStream, errorStream);
 			process.waitFor();
 			int exitValue = process.exitValue();
 			if(exitValue != 0)
@@ -140,6 +155,7 @@ public class WreslScriptRunner
 				throw new WreslScriptException(_scenarioRun.getWreslMain() + " " +
 						"WRESL ERROR Return Code: " + exitValue);
 			}
+			process.destroy();
 		}
 		catch(IOException | InterruptedException ex)
 		{

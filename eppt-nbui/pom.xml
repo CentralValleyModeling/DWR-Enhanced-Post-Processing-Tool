@@ -153,8 +153,7 @@
 		<dependency>
 			<groupId>gov.ca.water</groupId>
 			<artifactId>wrimsv2</artifactId>
-			<version>3513.e282bd99</version>
-			<classifier>Wrims_Distribution</classifier>
+			<version>3470.bed59cee.master-dirty</version>
 		</dependency>
 		<dependency>
 			<groupId>rma.util</groupId>
