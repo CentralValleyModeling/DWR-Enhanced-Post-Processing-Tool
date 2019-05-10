@@ -12,27 +12,23 @@
 
 package gov.ca.water.calgui.wresl;
 
-import java.io.BufferedInputStream;
 import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.FileWriter;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalDate;
 import java.util.Calendar;
+import java.util.function.Consumer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import javax.swing.*;
+
 import gov.ca.water.calgui.project.EpptScenarioRun;
-import org.antlr.runtime.RecognitionException;
 import wrimsv2.commondata.wresldata.StudyDataSet;
 import wrimsv2.components.ControllerBatch;
 import wrimsv2.components.Error;
@@ -50,10 +46,12 @@ public class WreslScriptRunner
 {
 	private static final Logger LOGGER = Logger.getLogger(WreslScriptRunner.class.getName());
 	private final EpptScenarioRun _scenarioRun;
+	private final WreslOutputConsumer _outputStreamConsumer;
 
-	public WreslScriptRunner(EpptScenarioRun scenarioRun)
+	public WreslScriptRunner(EpptScenarioRun scenarioRun, WreslOutputConsumer outputStreamConsumer)
 	{
 		_scenarioRun = scenarioRun;
+		_outputStreamConsumer = outputStreamConsumer;
 	}
 
 	public static void main(String[] args) throws WreslScriptException
@@ -85,7 +83,7 @@ public class WreslScriptRunner
 						new Object[]{StudyUtils.total_errors, Error.getTotalError()});
 			}
 		}
-		catch(RecognitionException | IOException ex)
+		catch(Throwable ex)
 		{
 			throw new WreslScriptException("WRESL Script Execution error", ex);
 		}
@@ -104,14 +102,16 @@ public class WreslScriptRunner
 			String javaLibraryPath = "-Djava.library.path=\"" + Paths.get("dwr_eppt/modules/lib").toAbsolutePath() + "\"";
 			String path = "\"" + System.getProperty("java.home")
 					+ separator + "bin" + separator + "java" + "\"";
-			String classpath =  "";//"\"";// + System.getProperty("java.class.path") + "\";";
+			String classpath =  "";
 			Path epptDir = Paths.get("dwr_eppt");
-			Path modulesDir = epptDir.resolve("modules/ext");
-			try(Stream<Path> walk = Files.walk(modulesDir, 2))
+			Path modulesDir = epptDir.resolve("modules");
+			try(Stream<Path> walk = Files.walk(modulesDir, 3))
 			{
-				classpath += walk.filter(p -> p.toFile().isDirectory()).map(Object::toString)
-								 .map(p->"set classpath=%classpath%;" + p)
-								 .collect(Collectors.joining("\n"));
+				classpath += walk.filter(p -> p.toFile().isDirectory())
+																	   .filter(p -> !p.toString().endsWith("jar"))
+																	   .map(Object::toString)
+																	   .map(p -> "set classpath=%classpath%;" + p + "/*")
+																	   .collect(Collectors.joining("\n"));
 			}
 
 
@@ -120,7 +120,6 @@ public class WreslScriptRunner
 			Path outputBat = Paths.get("output.bat");
 			try(BufferedWriter bufferedWriter = Files.newBufferedWriter(outputBat))
 			{
-				//				bufferedWriter.write("setlocal");
 				bufferedWriter.newLine();
 				bufferedWriter.newLine();
 				bufferedWriter.write(classpath);
@@ -129,20 +128,20 @@ public class WreslScriptRunner
 				bufferedWriter.flush();
 			}
 			ProcessBuilder processBuilder = new ProcessBuilder()
-					.command(outputBat.toString())
-					.redirectOutput(new File("output.txt"));
+					.command(outputBat.toString());
 			LOGGER.log(Level.INFO, "Running process: {0}", commandLine);
-			WreslScriptRunner.main(new String[]{"-config=" + configPath.toString()});
-//			Process process = processBuilder.start();
-//			process.waitFor();
-//			int exitValue = process.exitValue();
-//			if(exitValue != 0)
-//			{
-//				throw new WreslScriptException(_scenarioRun.getWreslMain() + " " +
-//						"WRESL ERROR Return Code: " + exitValue);
-//			}
+			Process process = processBuilder.start();
+			OutputStream outputStream = process.getOutputStream();
+			_outputStreamConsumer.consume(_scenarioRun, outputStream);
+			process.waitFor();
+			int exitValue = process.exitValue();
+			if(exitValue != 0)
+			{
+				throw new WreslScriptException(_scenarioRun.getWreslMain() + " " +
+						"WRESL ERROR Return Code: " + exitValue);
+			}
 		}
-		catch(IOException /*| InterruptedException*/ ex)
+		catch(IOException | InterruptedException ex)
 		{
 			LOGGER.log(Level.SEVERE, "Error starting WRESL script JVM", ex);
 			Thread.currentThread().interrupt();

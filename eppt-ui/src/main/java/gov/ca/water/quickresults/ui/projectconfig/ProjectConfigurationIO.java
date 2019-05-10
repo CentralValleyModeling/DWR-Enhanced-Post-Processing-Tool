@@ -82,20 +82,27 @@ class ProjectConfigurationIO
 	EpptProject loadConfiguration(Path selectedPath) throws IOException
 	{
 		String collect = String.join("\n", Files.readAllLines(selectedPath));
-		JSONObject jsonObject = new JSONObject(collect);
-		if(VERSION_1_0.equalsIgnoreCase(jsonObject.getString(VERSION_KEY)))
+		if(collect != null && !collect.isEmpty())
 		{
-			ProjectConfigurationIOVersion1 projectConfigurationIOVersion1 = new ProjectConfigurationIOVersion1();
-			return projectConfigurationIOVersion1.loadConfiguration(selectedPath, jsonObject);
-		}
-		else if(VERSION_2_0.equalsIgnoreCase(jsonObject.getString(VERSION_KEY)))
-		{
-			ProjectConfigurationIOVersion2 projectConfigurationIOVersion1 = new ProjectConfigurationIOVersion2();
-			return projectConfigurationIOVersion1.loadConfiguration(jsonObject);
+			JSONObject jsonObject = new JSONObject(collect);
+			if(VERSION_1_0.equalsIgnoreCase(jsonObject.getString(VERSION_KEY)))
+			{
+				ProjectConfigurationIOVersion1 projectConfigurationIOVersion1 = new ProjectConfigurationIOVersion1();
+				return projectConfigurationIOVersion1.loadConfiguration(selectedPath, jsonObject);
+			}
+			else if(VERSION_2_0.equalsIgnoreCase(jsonObject.getString(VERSION_KEY)))
+			{
+				ProjectConfigurationIOVersion2 projectConfigurationIOVersion1 = new ProjectConfigurationIOVersion2();
+				return projectConfigurationIOVersion1.loadConfiguration(jsonObject);
+			}
+			else
+			{
+				throw new IOException("Version of EPPT Project not supported: " + jsonObject.getString(VERSION_KEY));
+			}
 		}
 		else
 		{
-			throw new IOException("Version of EPPT Project not supported: " + jsonObject.getString(VERSION_KEY));
+			throw new IOException("Corrupt EPPT Project file: " + selectedPath);
 		}
 	}
 }

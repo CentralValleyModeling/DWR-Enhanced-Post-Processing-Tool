@@ -14,15 +14,19 @@ package gov.ca.water.eppt.nbui.actions;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.OutputStream;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
+import java.util.function.Consumer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import gov.ca.water.calgui.project.EpptScenarioRun;
+import gov.ca.water.calgui.wresl.WreslOutputConsumer;
 import gov.ca.water.calgui.wresl.WreslScriptException;
 import gov.ca.water.calgui.wresl.WreslScriptRunner;
+import gov.ca.water.eppt.nbui.WreslRunDialog;
 import gov.ca.water.quickresults.ui.projectconfig.ProjectConfigurationPanel;
 import org.jfree.data.time.Month;
 import org.netbeans.api.progress.ProgressHandle;
@@ -65,6 +69,23 @@ public class RunWreslScript implements ActionListener
 
 	void initReport()
 	{
+
+		ProjectConfigurationPanel projectConfigurationPanel = ProjectConfigurationPanel.getProjectConfigurationPanel();
+		Month startMonth = projectConfigurationPanel.getStartMonth();
+		Month endMonth = projectConfigurationPanel.getEndMonth();
+		LocalDate start = LocalDate.of(startMonth.getYearValue(), startMonth.getMonth(), 1);
+		LocalDate end = LocalDate.of(endMonth.getYearValue(), endMonth.getMonth(), 1);
+		List<EpptScenarioRun> epptScenarioRuns = projectConfigurationPanel.getEpptScenarioRuns();
+		WreslRunDialog wreslRunDialog = new WreslRunDialog();
+		wreslRunDialog.setVisible(true);
+		for(EpptScenarioRun scenarioRun : epptScenarioRuns)
+		{
+			runWresl(scenarioRun, start, end, wreslRunDialog);
+		}
+	}
+
+	private void runWresl(EpptScenarioRun scenarioRun, LocalDate start, LocalDate end, WreslOutputConsumer outputStreamConsumer)
+	{
 		CompletableFuture.runAsync(() ->
 		{
 
@@ -72,7 +93,8 @@ public class RunWreslScript implements ActionListener
 			try
 			{
 				handle.start();
-				runWresl();
+				WreslScriptRunner wreslScriptRunner = new WreslScriptRunner(scenarioRun, outputStreamConsumer);
+				wreslScriptRunner.run(start, end);
 			}
 			catch(WreslScriptException | RuntimeException e1)
 			{
@@ -82,28 +104,13 @@ public class RunWreslScript implements ActionListener
 			{
 				handle.finish();
 			}
-		}).whenComplete((v,t)->
+		}).whenComplete((v, t) ->
 		{
 			if(t != null)
 			{
 				LOGGER.log(Level.SEVERE, "Error in WRESL Script Run", t);
 			}
 		});
-	}
-
-	private void runWresl() throws WreslScriptException
-	{
-		ProjectConfigurationPanel projectConfigurationPanel = ProjectConfigurationPanel.getProjectConfigurationPanel();
-		Month startMonth = projectConfigurationPanel.getStartMonth();
-		Month endMonth = projectConfigurationPanel.getEndMonth();
-		LocalDate start = LocalDate.of(startMonth.getYearValue(), startMonth.getMonth(), 1);
-		LocalDate end = LocalDate.of(endMonth.getYearValue(), endMonth.getMonth(), 1);
-		List<EpptScenarioRun> epptScenarioRuns = projectConfigurationPanel.getEpptScenarioRuns();
-		for(EpptScenarioRun scenarioRun : epptScenarioRuns)
-		{
-			WreslScriptRunner wreslScriptRunner = new WreslScriptRunner(scenarioRun);
-			wreslScriptRunner.run(start, end);
-		}
 	}
 
 }

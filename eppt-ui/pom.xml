@@ -23,6 +23,9 @@
 	</parent>
 	<artifactId>eppt-ui</artifactId>
 	<name>EPPT UI</name>
+	<properties>
+		<argLine>-Djava.library.path=${project.build.directory}\lib -Xmx1024m -XX:MaxPermSize=256m</argLine>
+	</properties>
 	<dependencies>
 		<dependency>
 			<groupId>gov.ca.water</groupId>
@@ -82,9 +85,6 @@
 			<version>20171018</version>
 		</dependency>
 	</dependencies>
-	<properties>
-		<argLine>-Djava.library.path=${project.build.directory}\lib -Xmx1024m -XX:MaxPermSize=256m</argLine>
-	</properties>
 	<build>
 		<plugins>
 			<plugin>

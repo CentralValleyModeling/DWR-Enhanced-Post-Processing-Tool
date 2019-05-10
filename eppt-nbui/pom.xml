@@ -282,7 +282,7 @@
 							<directory>${project.build.directory}/lib</directory>
 							<targetPath>modules/lib</targetPath>
 							<includes>
-								<include>*.dll</include>
+								<include>**</include>
 							</includes>
 						</nbmResource>
 						<nbmResource>
