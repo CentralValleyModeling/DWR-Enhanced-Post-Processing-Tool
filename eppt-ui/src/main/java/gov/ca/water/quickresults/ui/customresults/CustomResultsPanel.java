@@ -11,16 +11,22 @@ import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Container;
 import java.awt.event.ActionListener;
+import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 import javax.swing.*;
 
 import calsim.app.AppUtils;
 import calsim.app.DerivedTimeSeries;
 import calsim.app.MultipleTimeSeries;
+import calsim.gui.GeneralRetrievePanel;
 import calsim.gui.GuiUtils;
 import gov.ca.water.calgui.presentation.DisplayHelper;
 import gov.ca.water.calgui.presentation.WRIMSGUILinks;
 import gov.ca.water.calgui.project.EpptScenarioRun;
+import gov.ca.water.calgui.project.NamedDssPath;
 import gov.ca.water.calgui.techservice.IDialogSvc;
 import gov.ca.water.calgui.techservice.IErrorHandlingSvc;
 import gov.ca.water.calgui.techservice.impl.DialogSvcImpl;
@@ -32,6 +38,8 @@ import org.apache.log4j.Logger;
 import org.jfree.data.time.Month;
 import vista.set.DataReference;
 import vista.set.Group;
+
+import static java.util.stream.Collectors.toList;
 
 /**
  * Company: Resource Management Associates
@@ -62,6 +70,12 @@ public class CustomResultsPanel extends EpptPanel
 				retrieveBtn.removeActionListener(al);
 			}
 			retrieveBtn.addActionListener(arg0 -> retrieve());
+			JButton filterBtn = GuiUtils.getCLGPanel().getRetrievePanel().getFilterBtn();
+			for(ActionListener al : filterBtn.getActionListeners())
+			{
+				filterBtn.removeActionListener(al);
+			}
+			filterBtn.addActionListener(arg0 -> filter());
 			Component openButtonComponent = findFirstButtonMatchingText(GuiUtils.getCLGPanel(), "Open");
 			if(openButtonComponent != null)
 			{
@@ -78,6 +92,40 @@ public class CustomResultsPanel extends EpptPanel
 			LOGGER.error("Error setting up quick results swing xml: " + CUSTOM_RESULTS_XML_FILE, e);
 			throw new IllegalStateException(e);
 		}
+	}
+
+	private void filter()
+	{
+		ProjectConfigurationPanel projectConfigurationPanel = ProjectConfigurationPanel.getProjectConfigurationPanel();
+		EpptScenarioRun baseScenario = projectConfigurationPanel.getBaseScenario();
+		if(baseScenario != null)
+		{
+			List<Path> allDssFiles = baseScenario.getDssContainer().getAllDssFiles()
+												 .stream()
+												 .filter(Objects::nonNull)
+												 .map(NamedDssPath::getDssPath)
+												 .filter(Objects::nonNull)
+												 .collect(toList());
+			List<DataReference> allrefs = new ArrayList<>();
+			GeneralRetrievePanel retrievePanel = GuiUtils.getCLGPanel().getRetrievePanel();
+			for(Path path : allDssFiles)
+			{
+				String[] stringParts = retrievePanel.getStringParts();
+				Group dssGroup = AppUtils.openDSSFile(path.toString());
+				Group gc = Group.createGroup(dssGroup);
+				DataReference[] refs = AppUtils.createRefs(stringParts, null, gc);
+				if(refs != null)
+				{
+					allrefs.addAll(Arrays.asList(refs));
+				}
+			}
+			retrievePanel.updateTable(allrefs.toArray(new DataReference[0]));
+		}
+		else
+		{
+			_dialogSvc.getOK("DSS not selected! The Base DSS files need to be selected", JOptionPane.WARNING_MESSAGE);
+		}
+
 	}
 
 	@Override
@@ -124,15 +172,9 @@ public class CustomResultsPanel extends EpptPanel
 	 */
 	private void retrieve()
 	{
-		if(!AppUtils.baseOn)
-		{
-			_dialogSvc.getOK("DSS not selected! The Base DSS files need to be selected", JOptionPane.WARNING_MESSAGE);
-			return;
-		}
 		try
 		{
 			ProjectConfigurationPanel projectConfigurationPanel = ProjectConfigurationPanel.getProjectConfigurationPanel();
-			List<EpptScenarioRun> scenarios = projectConfigurationPanel.getEpptScenarioRuns();
 			String noRowsString = "";
 			JTable table = GuiUtils.getCLGPanel().getRetrievePanel().getTable();
 			if(table.getRowCount() == 0)
@@ -160,23 +202,14 @@ public class CustomResultsPanel extends EpptPanel
 				parts[2] = "/" + parts2[1] + "/" + parts2[2] + "/" + parts2[3] + "/" + parts[3] + "/" + parts2[5] + "/"
 						+ parts2[6] + "/";
 				EpptScenarioRun baseScenario = projectConfigurationPanel.getBaseScenario();
-				List<EpptScenarioRun> alternatives = projectConfigurationPanel.getEpptScenarioAlternatives();
 				String quickState = projectConfigurationPanel.quickState();
 				Month startMonth = projectConfigurationPanel.getStartMonth();
 				Month endMonth = projectConfigurationPanel.getEndMonth();
 				if(baseScenario != null)
 				{
-					if(parts[1].toUpperCase().contains(("_SV.DSS")))
-					{
-						_displayHelper.showDisplayFrames(quickState + ";Locs-" + parts[2] + ";Index-"
-								+ parts[2] + ";File-" + parts[1], baseScenario, alternatives, startMonth, endMonth);
-					}
-					else
-					{
-						_displayHelper.showDisplayFrames(
-								quickState + ";Locs-" + parts[2] + ";Index-" + parts[2],
-								baseScenario, alternatives, startMonth, endMonth);
-					}
+					_displayHelper.showDisplayFrames(
+							quickState + ";Locs-" + parts[2] + ";Index-" + parts[2],
+							baseScenario, new ArrayList<>(), startMonth, endMonth);
 				}
 			}
 		}
@@ -193,12 +226,6 @@ public class CustomResultsPanel extends EpptPanel
 
 	private void retrieve2()
 	{
-
-		if(!AppUtils.baseOn)
-		{
-			_dialogSvc.getOK("DSS not selected! The Base DSS files need to be selected", JOptionPane.WARNING_MESSAGE);
-			return;
-		}
 
 		DerivedTimeSeries dts = GuiUtils.getCLGPanel().getDtsTreePanel().getTable().getDTS();
 		MultipleTimeSeries mts = GuiUtils.getCLGPanel().getDtsTreePanel().getTable().getMTS();

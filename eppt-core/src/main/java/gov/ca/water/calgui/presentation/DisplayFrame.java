@@ -172,7 +172,7 @@ class DisplayFrame
 				}
 				else
 				{
-					dssGrabber.setLocation(locationName, baseRun.getModel());
+					dssGrabber.setLocation(locationName);
 
 					if(dssGrabber.getPrimaryDSSName() == null)
 					{
@@ -374,7 +374,8 @@ class DisplayFrame
 						}
 						if(showFrame)
 						{
-							tabbedpane.setName(namesText[i]);
+							String title = baseRun.getName() + " - " + namesText[i];
+							tabbedpane.setName(title);
 							tabbedPanes.add(tabbedpane);
 						}
 					}
@@ -552,7 +553,7 @@ class DisplayFrame
 
 				// Handle MTS
 
-				dssGrabber.setLocation("@@" + mts.getName(), baseRun.getModel());
+				dssGrabber.setLocation("@@" + mts.getName());
 
 				int n = mts.getNumberOfDataReferences();
 				int s = alternatives.size();
@@ -727,7 +728,7 @@ class DisplayFrame
 
 				// Handle DTS
 
-				dssGrabber.setLocation("@@" + dts.getName(), baseRun.getModel());
+				dssGrabber.setLocation("@@" + dts.getName());
 
 				TimeSeriesContainer[] primaryResults = dssGrabber.getPrimarySeries();
 				TimeSeriesContainer[] secondaryResults = dssGrabber.getSecondarySeries();

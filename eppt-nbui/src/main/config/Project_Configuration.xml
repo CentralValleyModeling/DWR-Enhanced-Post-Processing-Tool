@@ -35,22 +35,29 @@
 					<button id="btnEditScenario" name="btnEditScenario" text="Edit" ActionCommand="btnEditScenario" PreferredSize="80,24"/>
 					<button id="btnDelScenario" name="btnDelScenario" text="Delete" ActionCommand="btnDelScenario" PreferredSize="80,24"/>
 					<button id="btnClearScenario" name="btnClearScenario" text="Clear All" ActionCommand="btnClearScenario" PreferredSize="80,24"/>
+
 				</panel>
 				<panel id="ScenarioTree" constraints="BorderLayout.CENTER" preferredsize="410,300" layout="BorderLayout"/>
-				<panel constraints="BorderLayout.SOUTH" layout="FlowLayout(FlowLayout.LEFT)">
-					<buttongroup>
-						<radiobutton name="rdbp000" id="rdbp000" text="Base" selected="true">
-						</radiobutton>
-						<radiobutton name="rdbp001" id="rdbp001" text="Comparison" enabled="false">
-						</radiobutton>
-						<radiobutton name="rdbp002" id="rdbp002" text="Difference" enabled="false">
-						</radiobutton>
-					</buttongroup>
+				<panel constraints="BorderLayout.SOUTH" layout="BorderLayout">
+					<panel constraints="BorderLayout.WEST" layout="FlowLayout(FlowLayout.LEFT)">
+						<buttongroup>
+							<radiobutton name="rdbp000" id="rdbp000" text="Base" selected="true">
+							</radiobutton>
+							<radiobutton name="rdbp001" id="rdbp001" text="Comparison" enabled="false">
+							</radiobutton>
+							<radiobutton name="rdbp002" id="rdbp002" text="Difference" enabled="false">
+							</radiobutton>
+						</buttongroup>
+					</panel>
+					<panel constraints="BorderLayout.EAST" layout="FlowLayout(FlowLayout.RIGHT)">
+						<button id="moveUp" name="moveUp" text="&#9650;" ActionCommand="moveUp" PreferredSize="80,24"/>
+						<button id="moveDown" name="moveDown" text="&#9660;" ActionCommand="moveDown" PreferredSize="80,24"/>
+					</panel>
 				</panel>
 			</panel>
 		</panel>
 		<panel layout="BorderLayout" border="TitledBorder(Display)">
-			<scrollpane id="Display" border="null" PreferredSize="410,500" constraints="BorderLayout.CENTER">
+			<scrollpane id="Display" border="null" PreferredSize="410,400" constraints="BorderLayout.CENTER">
 				<panel layout="FlowLayout(FlowLayout.LEFT)">
 					<panel layout="GridBagLayout">
 						<panel layout="GridBagLayout">
@@ -88,16 +95,6 @@
 								<radiobutton id="rdbTAF" name="rdbTAF" text="TAF" selected="true"/>
 							</buttongroup>
 						</panel>
-						<hbox visible="false">
-							<gridbagconstraints insets="0,0,5,3" anchor="GridBagConstraints.WEST" gridx="1" gridy="3" fill="GridBagConstraints.HORIZONTAL"/>
-							<label text="Display: "/>
-							<buttongroup id="rep4pg">
-								<radiobutton id="rdbEnergy" name="rdbEnergy" text="Energy" selected="true"/>
-								<radiobutton id="rdbCap" name="rdbCap" text="Capacity"/>
-								<radiobutton id="rdbCapp" name="rdbCapp" text="Capacity (On-Peak)"/>
-								<radiobutton id="rdbCapo" name="rdbCap0" text="Capacity (Off-Peak)"/>
-							</buttongroup>
-						</hbox>
 						<panel layout="GridBagLayout">
 							<gridbagconstraints insets="0,0,5,3" anchor="GridBagConstraints.WEST" gridx="1" gridy="4"/>
 							<checkbox name="RepckbTimeSeriesPlot" id="RepckbTimeSeriesPlot" text="Display Time Series Plot" selected="true">
@@ -105,6 +102,12 @@
 							</checkbox>
 							<checkbox name="RepckbBAWPlot" id="RepckbBAWPlot" enabled="true" text="Display Box and Whiskers Plot">
 								<gridbagconstraints insets="0,0,5,3" anchor="GridBagConstraints.WEST" gridx="1" gridy="2"/>
+							</checkbox>
+							<checkbox id="RepckbMonthlyTable" name="RepckbMonthlyTable" text="Display Monthly Table">
+								<gridbagconstraints insets="0,0,5,3" anchor="GridBagConstraints.WEST" gridx="2" gridy="1"/>
+							</checkbox>
+							<checkbox name="RepckbSummaryTable" id="RepckbSummaryTable" text="Display Summary Table" selected="true">
+								<gridbagconstraints insets="0,0,5,3" anchor="GridBagConstraints.WEST" gridx="2" gridy="2"/>
 							</checkbox>
 						</panel>
 						<panel id="controls2" border="TitledBorder(Exceedance Plots)" layout="GridBagLayout" enabled="true">
@@ -164,15 +167,6 @@
 														gridwidth="2"/>
 								</button>
 							</panel>
-						</panel>
-						<panel layout="GridBagLayout">
-							<gridbagconstraints insets="0,0,5,3" anchor="GridBagConstraints.WEST" gridx="1" gridy="6"/>
-							<checkbox id="RepckbMonthlyTable" name="RepckbMonthlyTable" text="Display Monthly Table">
-								<gridbagconstraints insets="0,0,5,3" anchor="GridBagConstraints.WEST" gridx="1" gridy="1"/>
-							</checkbox>
-							<checkbox name="RepckbSummaryTable" id="RepckbSummaryTable" text="Display Summary Table" selected="true">
-								<gridbagconstraints insets="0,0,5,3" anchor="GridBagConstraints.WEST" gridx="1" gridy="12"/>
-							</checkbox>
 						</panel>
 						<panel id="controls3" border="TitledBorder(Summary Table)" layout="GridBagLayout" enabled="true">
 							<gridbagconstraints insets="0,0,5,3" anchor="GridBagConstraints.WEST" gridx="1" gridy="8" fill="GridBagConstraints.HORIZONTAL"/>

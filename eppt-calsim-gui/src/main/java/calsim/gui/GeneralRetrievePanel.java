@@ -47,6 +47,7 @@ public class GeneralRetrievePanel extends JPanel
 	private Group _group;
 	private JTable _table;
 	private JPanel _upperPanel, _lowerPanel;
+	private JButton _filterBtn;
 
 	/**
 	 * constructor
@@ -94,7 +95,7 @@ public class GeneralRetrievePanel extends JPanel
 		_pathText[5].setBorder(BorderFactory.createTitledBorder(
 				BorderFactory.createLineBorder(Color.lightGray), "F"));
 		//
-		filterPanel.add(_varTypeBox);
+//		filterPanel.add(_varTypeBox);
 		for(int i = 0; i < NUM_PATH_PARTS; i++)
 		{
 			filterPanel.add(_pathText[i]);
@@ -102,10 +103,10 @@ public class GeneralRetrievePanel extends JPanel
 		filterPanel.setBorder(BorderFactory.createTitledBorder(
 				BorderFactory.createLineBorder(Color.blue), "Filter"));
 		//
-		JButton filterBtn = new JButton("Filter");
+		_filterBtn = new JButton("Filter");
 		_retrieveBtn = new JButton("Retrieve");
 		//
-		filterBtn.addActionListener(new GuiTaskListener("Filtering...")
+		_filterBtn.addActionListener(new GuiTaskListener("Filtering...")
 		{
 			public void doWork()
 			{
@@ -123,7 +124,7 @@ public class GeneralRetrievePanel extends JPanel
 				});
 		Box btnPanel = new Box(BoxLayout.X_AXIS);
 		btnPanel.add(Box.createHorizontalGlue());
-		btnPanel.add(filterBtn);
+		btnPanel.add(_filterBtn);
 		btnPanel.add(_retrieveBtn);
 		btnPanel.add(Box.createHorizontalGlue());
 		//
@@ -201,19 +202,7 @@ public class GeneralRetrievePanel extends JPanel
 			return;
 		}
 		// store filter on parts in array or null if empty string
-		String[] parts = new String[NUM_PATH_PARTS];
-		for(int i = 0; i < NUM_PATH_PARTS; i++)
-		{
-			String txt = _pathText[i].getText().trim().toUpperCase();
-			if(txt.length() > 0)
-			{
-				parts[i] = txt;
-			}
-			else
-			{
-				parts[i] = null;
-			}
-		}
+		String[] parts = getStringParts();
 		// filter and get array of desired references depending upon varible
 		// type
 		try
@@ -232,10 +221,28 @@ public class GeneralRetrievePanel extends JPanel
 		}
 	}
 
+	public String[] getStringParts()
+	{
+		String[] parts = new String[NUM_PATH_PARTS];
+		for(int i = 0; i < NUM_PATH_PARTS; i++)
+		{
+			String txt = _pathText[i].getText().trim().toUpperCase();
+			if(txt.length() > 0)
+			{
+				parts[i] = txt;
+			}
+			else
+			{
+				parts[i] = null;
+			}
+		}
+		return parts;
+	}
+
 	/**
 	 *
 	 */
-	void updateTable(DataReference[] refs)
+	public void updateTable(DataReference[] refs)
 	{
 		if(refs == null || refs.length == 0)
 		{
@@ -293,6 +300,12 @@ public class GeneralRetrievePanel extends JPanel
 	{
 		return _retrieveBtn;
 	}
+
+	public JButton getFilterBtn()
+	{
+		return _filterBtn;
+	}
+
 
 	public JTable getTable()
 	{

@@ -61,7 +61,7 @@ class QuickResultsMouseListener extends MouseAdapter
 				EpptScenarioRun baseScenario = ProjectConfigurationPanel.getProjectConfigurationPanel().getBaseScenario();
 				if(baseScenario == null)
 				{
-					_dialogSvc.getOK("Error - No scenarios loaded", JOptionPane.ERROR_MESSAGE);
+					_dialogSvc.getOK("Error - No Base Scenario defined", JOptionPane.ERROR_MESSAGE);
 				}
 				else
 				{

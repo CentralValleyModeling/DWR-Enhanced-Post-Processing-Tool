@@ -239,7 +239,7 @@ public class DSSGrabber1SvcImpl implements IDSSGrabber1Svc
 	 * lang.String)
 	 */
 	@Override
-	public void setLocation(String locationName, GUILinksAllModelsBO.Model model)
+	public void setLocation(String locationName)
 	{
 
 		locationName = locationName.trim();
@@ -250,7 +250,7 @@ public class DSSGrabber1SvcImpl implements IDSSGrabber1Svc
 			String[] parts = locationName.split("/");
 			_plotTitle = locationName;
 			_primaryDSSName.clear();
-			_primaryDSSName.put(model, parts[2] + "/" + parts[3] + "/" + parts[6]);
+			_primaryDSSName.put(_baseScenarioRun.getModel(), parts[2] + "/" + parts[3] + "/" + parts[6]);
 			_secondaryDSSName.clear();
 			_axisLabel = "";
 			_legend = "";
@@ -789,14 +789,14 @@ public class DSSGrabber1SvcImpl implements IDSSGrabber1Svc
 			// Store number of scenarios
 			results = new TimeSeriesContainer[_alternatives.size() + 1];
 
-			GUILinksAllModelsBO.Model model = _baseScenarioRun.getModel();
-			String dssPathName = _primaryDSSName.get(model);
-			if(dssPathName != null)
+			GUILinksAllModelsBO.Model baseModel = _baseScenarioRun.getModel();
+			String baseDssPathName = _primaryDSSName.get(baseModel);
+			if(baseDssPathName != null)
 			{
 				// Base first
 				EpptDssContainer dssContainer = _baseScenarioRun.getDssContainer();
 				TimeSeriesContainer oneSeries = getOneTimeSeriesFromAllModels(dssContainer,
-						_baseScenarioRun.getModel(), dssPathName);
+						_baseScenarioRun.getModel(), baseDssPathName);
 				results[0] = oneSeries;
 				if(results[0] != null)
 				{
@@ -808,15 +808,23 @@ public class DSSGrabber1SvcImpl implements IDSSGrabber1Svc
 				for(int i = 0; i < _alternatives.size(); i++)
 				{
 					EpptScenarioRun epptScenarioRun = _alternatives.get(i);
-					TimeSeriesContainer tsc = getOneTimeSeriesFromAllModels(epptScenarioRun.getDssContainer(),
-							epptScenarioRun.getModel(), dssPathName);
+					TimeSeriesContainer tsc = null;
+
+					GUILinksAllModelsBO.Model altModel = epptScenarioRun.getModel();
+					String altDssPathName = _primaryDSSName.get(altModel);
+					if(altDssPathName != null)
+					{
+
+						tsc = getOneTimeSeriesFromAllModels(epptScenarioRun.getDssContainer(),
+								epptScenarioRun.getModel(), altDssPathName);
+					}
 					results[i + 1] = tsc;
 				}
 			}
 			else
 			{
 				LOGGER.log(Level.WARNING, "No matching DV GUI Links record in for Model: {0} with path: {1}",
-						new Object[]{model, dssPathName});
+						new Object[]{baseModel, baseDssPathName});
 			}
 		}
 		catch(RuntimeException ex)
@@ -833,6 +841,7 @@ public class DSSGrabber1SvcImpl implements IDSSGrabber1Svc
 	{
 		TimeSeriesContainer oneSeries = null;
 			Optional<TimeSeriesContainer> timeSeriesContainerOptional = dssContainer.getAllDssFiles().stream()
+																					.filter(Objects::nonNull)
 																					.map(p -> getOneSeries(p, dssPathName,
 																							model))
 																					.filter(Objects::nonNull)
@@ -870,20 +879,24 @@ public class DSSGrabber1SvcImpl implements IDSSGrabber1Svc
 		if(!_secondaryDSSName.isEmpty())
 		{
 			List<TimeSeriesContainer> timeSeriesContainers = new ArrayList<>();
-			GUILinksAllModelsBO.Model model = _baseScenarioRun.getModel();
-			String dssPathName = _secondaryDSSName.get(model);
-			if(dssPathName != null)
+			GUILinksAllModelsBO.Model baseModel = _baseScenarioRun.getModel();
+			String baseDssPathName = _secondaryDSSName.get(baseModel);
+			if(baseDssPathName != null)
 			{
-				String[] split = dssPathName.split("\\|");
-				for(String splitPathname : split)
+				for(String splitPathname : baseDssPathName.split("\\|"))
 				{
 					// Base first
 					TimeSeriesContainer oneSeries = getOneTimeSeriesFromAllModels(_baseScenarioRun.getDssContainer(),
-							model, splitPathname);
+							baseModel, splitPathname);
 					timeSeriesContainers.add(oneSeries);
 					// Then scenarios
 
-					for(EpptScenarioRun epptScenarioRun : _alternatives)
+				}
+				for(EpptScenarioRun epptScenarioRun : _alternatives)
+				{
+					GUILinksAllModelsBO.Model altModel = epptScenarioRun.getModel();
+					String altDssPathName = _secondaryDSSName.get(altModel);
+					for(String splitPathname : altDssPathName.split("\\|"))
 					{
 						TimeSeriesContainer tsc = getOneTimeSeriesFromAllModels(epptScenarioRun.getDssContainer(),
 								epptScenarioRun.getModel(), splitPathname);
@@ -895,7 +908,7 @@ public class DSSGrabber1SvcImpl implements IDSSGrabber1Svc
 			else
 			{
 				LOGGER.log(Level.WARNING, "No matching SV GUI Links record in for Model: {0} with path: {1}",
-						new Object[]{model, dssPathName});
+						new Object[]{baseModel, baseDssPathName});
 			}
 		}
 		return results;

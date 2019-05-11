@@ -13,6 +13,7 @@
 package gov.ca.water.calgui.wresl;
 
 import java.io.File;
+import java.io.InputStream;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalDate;
@@ -86,7 +87,20 @@ public class TestWreslScriptRunner
 
 			LocalDate start = LocalDate.ofYearDay(1922, 3);
 			LocalDate end = LocalDate.ofYearDay(2000, 3);
-			WreslScriptRunner wreslScriptRunner = new WreslScriptRunner(EPPT_SCENARIO_RUN_NOOP, (s,p,o,e)->{});
+			WreslScriptRunner wreslScriptRunner = new WreslScriptRunner(EPPT_SCENARIO_RUN_NOOP, new WreslOutputConsumer()
+			{
+				@Override
+				public void runStarted(EpptScenarioRun scenarioRun, Process process, InputStream outputStream, InputStream errorStream)
+				{
+
+				}
+
+				@Override
+				public void runFinished(Process process)
+				{
+
+				}
+			});
 			wreslScriptRunner.run(start, end);
 		}
 		catch(WreslScriptException ex)

@@ -97,7 +97,7 @@ public class WreslRunDialog extends JDialog implements WreslOutputConsumer
 	}
 
 	@Override
-	public void consume(EpptScenarioRun scenarioRun, Process process, InputStream outputStream, InputStream errorStream)
+	public void runStarted(EpptScenarioRun scenarioRun, Process process, InputStream outputStream, InputStream errorStream)
 	{
 		SwingUtilities.invokeLater(() ->
 		{
@@ -116,17 +116,37 @@ public class WreslRunDialog extends JDialog implements WreslOutputConsumer
 		});
 	}
 
+	@Override
+	public void runFinished(Process process)
+	{
+		SwingUtilities.invokeLater(() ->
+		{
+			_processes.remove(process);
+			if(_processes.isEmpty())
+			{
+				remove(_startButton);
+				remove(_stopButton);
+				add(_startButton, BorderLayout.SOUTH);
+				revalidate();
+			}
+		});
+	}
+
 	private void destroyProcesses()
 	{
+		_textAreaPrintStreams.forEach(TextAreaPrintStream::close);
 		_processes.forEach(Process::destroyForcibly);
+		remove(_startButton);
+		remove(_stopButton);
+		add(_startButton, BorderLayout.SOUTH);
+		revalidate();
 	}
 
 	@Override
 	public void dispose()
 	{
-		super.dispose();
-		_textAreaPrintStreams.forEach(TextAreaPrintStream::close);
 		destroyProcesses();
+		super.dispose();
 	}
 
 	private void runScenario(EpptScenarioRun epptScenarioRun)
@@ -157,7 +177,7 @@ public class WreslRunDialog extends JDialog implements WreslOutputConsumer
 			}
 			catch(WreslScriptException | RuntimeException e1)
 			{
-				LOGGER.log(Level.WARNING, "Error in WRESL Script Run", e1);
+				LOGGER.log(Level.SEVERE, "Error in WRESL Script Run", e1);
 			}
 			finally
 			{

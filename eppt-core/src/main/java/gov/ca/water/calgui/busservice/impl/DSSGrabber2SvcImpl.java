@@ -83,7 +83,7 @@ public class DSSGrabber2SvcImpl extends DSSGrabber1SvcImpl
 	 * @param locationName index into GUI_Links3.table or Schematic_DSS_Link4.table
 	 */
 	@Override
-	public void setLocation(String locationName, GUILinksAllModelsBO.Model model)
+	public void setLocation(String locationName)
 	{
 
 		try
@@ -96,7 +96,7 @@ public class DSSGrabber2SvcImpl extends DSSGrabber1SvcImpl
 				// @@ indicates MTS/DTS title
 				locationName = locationName.substring(2);
 				_primaryDSSName.clear();
-				_primaryDSSName.put(model, locationName);
+				_primaryDSSName.put(_baseScenarioRun.getModel(), locationName);
 				_secondaryDSSName.clear();
 				_axisLabel = "";
 				_legend = "";
@@ -108,7 +108,7 @@ public class DSSGrabber2SvcImpl extends DSSGrabber1SvcImpl
 				String[] parts = locationName.split("/");
 				_plotTitle = locationName;
 				_primaryDSSName.clear();
-				_primaryDSSName.put(model, parts[2] + "/" + parts[3]);
+				_primaryDSSName.put(_baseScenarioRun.getModel(), parts[2] + "/" + parts[3]);
 				_secondaryDSSName.clear();
 				_axisLabel = "";
 				_legend = "";

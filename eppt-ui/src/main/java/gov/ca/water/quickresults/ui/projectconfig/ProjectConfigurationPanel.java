@@ -32,6 +32,7 @@ import gov.ca.water.calgui.techservice.IErrorHandlingSvc;
 import gov.ca.water.calgui.techservice.impl.ErrorHandlingSvcImpl;
 import gov.ca.water.quickresults.ui.EpptPanel;
 import gov.ca.water.quickresults.ui.projectconfig.scenariotable.ScenarioTablePanel;
+import javafx.application.Platform;
 import org.apache.log4j.Logger;
 import org.jfree.data.time.Month;
 
@@ -190,10 +191,10 @@ public final class ProjectConfigurationPanel extends EpptPanel
 
 	private void updateRadioState()
 	{
-		EpptScenarioRun epptScenarioRun = _scenarioTablePanel.getBaseScenarioRun();
-		List<EpptScenarioRun> epptScenarioRuns = _scenarioTablePanel.getAlternativeScenarioRuns();
-		getRadioButton1().setEnabled(!epptScenarioRuns.isEmpty() && epptScenarioRun != null);
-		getRadioButton2().setEnabled(epptScenarioRuns.isEmpty() && epptScenarioRun != null);
+		EpptScenarioRun base = _scenarioTablePanel.getBaseScenarioRun();
+		List<EpptScenarioRun> alternatives = _scenarioTablePanel.getAlternativeScenarioRuns();
+		getRadioButton1().setEnabled(!alternatives.isEmpty() && base != null);
+		getRadioButton2().setEnabled(!alternatives.isEmpty() && base != null);
 	}
 
 	void deleteScenario()
@@ -336,6 +337,7 @@ public final class ProjectConfigurationPanel extends EpptPanel
 	{
 		if(!_ignoreModifiedEvents)
 		{
+			updateRadioState();
 			super.setModified(b);
 		}
 	}
@@ -410,6 +412,14 @@ public final class ProjectConfigurationPanel extends EpptPanel
 				{
 					addScenario(scenarioRun);
 				}
+				//Need to ensure this is called after scenarios are added to TreeTable model
+				Platform.runLater(()->
+				{
+					SwingUtilities.invokeLater(()->
+					{
+						updateRadioState();
+					});
+				});
 			}
 			catch(RuntimeException ex)
 			{
@@ -525,16 +535,24 @@ public final class ProjectConfigurationPanel extends EpptPanel
 
 	public List<EpptScenarioRun> getAllEpptScenarioRuns()
 	{
-		List<EpptScenarioRun> retval = new ArrayList<>();
-		EpptScenarioRun baseScenarioRun = _scenarioTablePanel.getBaseScenarioRun();
-		retval.add(baseScenarioRun);
-		retval.addAll(_scenarioTablePanel.getAllScenarioRuns());
-		return retval;
+		return new ArrayList<>(_scenarioTablePanel.getAllScenarioRuns());
 	}
 
 	void replaceScenario(EpptScenarioRun oldScenarioRun, EpptScenarioRun newScenarioRun)
 	{
 		_scenarioTablePanel.updateScenario(oldScenarioRun, newScenarioRun);
+		setModified(true);
+	}
+
+	void moveSelectedScenarioUp()
+	{
+		_scenarioTablePanel.moveSelectedScenarioUp();
+		setModified(true);
+	}
+
+	void moveSelectedScenarioDown()
+	{
+		_scenarioTablePanel.moveSelectedScenarioDown();
 		setModified(true);
 	}
 }

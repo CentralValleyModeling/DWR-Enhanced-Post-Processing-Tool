@@ -68,7 +68,7 @@ public class DisplayHelper
 	{
 		CompletableFuture.supplyAsync(() -> getTabbedPanes(displayGroup, baseRun, scenarios, startMonth, endMonth),
 				_executorService)
-						 .thenAcceptAsync(_topComponentPlotHandler::openPlots, SwingUtilities::invokeLater);
+						 .thenAcceptAsync(tabbedPanes -> _topComponentPlotHandler.openPlots(tabbedPanes), SwingUtilities::invokeLater);
 
 
 	}

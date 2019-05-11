@@ -61,7 +61,7 @@ class ScenarioTableModel extends RmaTreeTableModel<ParentRowModel>
 				.withCanBeHidden(true)
 				.withEditable(false)
 				.withSortable(false)
-				.withVisibleByDefault(true)
+				.withVisibleByDefault(false)
 				.build();
 		DESCRIPTION_COL_SPEC = new RmaTreeTableColumnSpec.Builder("Description")
 				.withCanBeHidden(true)
@@ -114,7 +114,7 @@ class ScenarioTableModel extends RmaTreeTableModel<ParentRowModel>
 		getColumnSpecs().add(DSS_PATH_COL_SPEC);
 	}
 
-	Optional<ScenarioRowModel> getRowForScenarioRun(EpptScenarioRun oldScenarioRun)
+	synchronized Optional<ScenarioRowModel> getRowForScenarioRun(EpptScenarioRun oldScenarioRun)
 	{
 		return getRows()
 				.stream()
@@ -124,7 +124,7 @@ class ScenarioTableModel extends RmaTreeTableModel<ParentRowModel>
 				.findAny();
 	}
 
-	EpptScenarioRun getBaseScenarioRun()
+	synchronized EpptScenarioRun getBaseScenarioRun()
 	{
 		return getRows()
 				.stream()
@@ -136,7 +136,7 @@ class ScenarioTableModel extends RmaTreeTableModel<ParentRowModel>
 				.orElse(null);
 	}
 
-	List<EpptScenarioRun> getAlternativeScenarioRuns()
+	synchronized List<EpptScenarioRun> getAlternativeScenarioRuns()
 	{
 		return getRows()
 				.stream()
@@ -147,7 +147,7 @@ class ScenarioTableModel extends RmaTreeTableModel<ParentRowModel>
 				.collect(toList());
 	}
 
-	List<EpptScenarioRun> getAllScenarioRuns()
+	synchronized List<EpptScenarioRun> getAllScenarioRuns()
 	{
 		return getRows()
 				.stream()

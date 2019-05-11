@@ -642,6 +642,11 @@ public final class AppUtils
 
 		Group gc = Group.createGroup(dssGroup);
 		gc.reload();
+		return createRefs(parts, tw, gc);
+	}
+
+	public static DataReference[] createRefs(String[] parts, TimeWindow tw, Group gc)
+	{
 		for(int i = 0; i < parts.length; i++)
 		{
 			String part = parts[i];
@@ -660,7 +665,7 @@ public final class AppUtils
 			}
 			if(gc.getNumberOfDataReferences() == 0)
 			{
-				throw new RuntimeException("No matching reference in " + dssGroup.getName()
+				throw new RuntimeException("No matching reference in " + gc.getName()
 						+ " for part = " + part);
 			}
 		}

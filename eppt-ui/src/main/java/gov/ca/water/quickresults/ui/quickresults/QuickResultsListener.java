@@ -121,7 +121,7 @@ public class QuickResultsListener implements ActionListener
 		if(baseScenario == null)
 		{
 			IDialogSvc dialogSvc = DialogSvcImpl.getDialogSvcInstance();
-			dialogSvc.getOK("Error - No scenarios loaded", JOptionPane.ERROR_MESSAGE);
+			dialogSvc.getOK("Error - No Base Scenario defined", JOptionPane.ERROR_MESSAGE);
 		}
 		else
 		{

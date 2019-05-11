@@ -23,8 +23,9 @@ import gov.ca.water.calgui.project.EpptScenarioRun;
  * @since 05-10-2019
  */
 
-@FunctionalInterface
 public interface WreslOutputConsumer
 {
-	void consume(EpptScenarioRun scenarioRun, Process process, InputStream outputStream, InputStream errorStream);
+	void runStarted(EpptScenarioRun scenarioRun, Process process, InputStream outputStream, InputStream errorStream);
+
+	void runFinished(Process process);
 }

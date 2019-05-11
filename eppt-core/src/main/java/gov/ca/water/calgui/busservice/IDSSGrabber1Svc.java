@@ -59,9 +59,9 @@ public interface IDSSGrabber1Svc
 	 * it starts with Constant.SCHEMATIC_PREFIX) or into GUI_Links3.table. These
 	 * tables may be combined in Phase 2.
 	 *
-	 * @param locationName index into GUI_Links3.table or Schematic_DSS_Link4.table
+	 * @param locationName
 	 */
-	void setLocation(String locationName, GUILinksAllModelsBO.Model model);
+	void setLocation(String locationName);
 
 	/**
 	 * Gets primary y-axis label assigned by DSS_Grabber to the results read in

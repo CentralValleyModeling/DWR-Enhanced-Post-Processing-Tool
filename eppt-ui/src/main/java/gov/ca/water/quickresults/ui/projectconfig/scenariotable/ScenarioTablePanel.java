@@ -12,19 +12,25 @@
 
 package gov.ca.water.quickresults.ui.projectconfig.scenariotable;
 
+import java.awt.Container;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import javax.swing.*;
+
 import gov.ca.water.calgui.project.EpptScenarioRun;
 import javafx.application.Platform;
+import javafx.collections.ObservableList;
 import javafx.embed.swing.JFXPanel;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.layout.BorderPane;
 
+import rma.lang.Modifiable;
+import rma.util.RMAUtil;
 import com.rma.javafx.treetable.RmaTreeTableView;
 import com.rma.javafx.treetable.TreeTableViewSelectionUtilities;
 import com.rma.javafx.treetable.cells.views.RmaCheckBoxCellView;
@@ -102,8 +108,14 @@ public class ScenarioTablePanel extends JFXPanel
 	public void addScenarioRun(EpptScenarioRun scenarioRun)
 	{
 		Platform.runLater(() -> _scenarioTableModel.getRows().add(
-				new ScenarioRowModel(_treeTable, _scenarioTableModel, scenarioRun,
-						_scenarioTableModel.getRows().isEmpty(), false)));
+				new ScenarioRowModel(this::setModified, _scenarioTableModel, scenarioRun,
+						getBaseScenarioRun() == null, getBaseScenarioRun() != null && getAlternativeScenarioRuns().isEmpty())));
+	}
+
+	private void setModified()
+	{
+		_treeTable.refresh();
+		SwingUtilities.invokeLater(()->RMAUtil.setParentModified(this));
 	}
 
 	public void updateScenario(EpptScenarioRun oldScenarioRun, EpptScenarioRun newScenarioRun)
@@ -117,7 +129,7 @@ public class ScenarioTablePanel extends JFXPanel
 				int i = _scenarioTableModel.getRows().indexOf(oldModel);
 				_scenarioTableModel.getRows().remove(i);
 				_scenarioTableModel.getRows().add(i,
-						new ScenarioRowModel(_treeTable, _scenarioTableModel, newScenarioRun, oldModel.isBase(),
+						new ScenarioRowModel(this::setModified, _scenarioTableModel, newScenarioRun, oldModel.isBase(),
 								oldModel.isAlternative()));
 
 			}
@@ -142,5 +154,41 @@ public class ScenarioTablePanel extends JFXPanel
 	public Collection<? extends EpptScenarioRun> getAllScenarioRuns()
 	{
 		return _scenarioTableModel.getAllScenarioRuns();
+	}
+
+	public void moveSelectedScenarioUp()
+	{
+		List<ParentRowModel> selectedRowModels = TreeTableViewSelectionUtilities.getSelectedRowModels(_treeTable);
+		ObservableList<ParentRowModel> rows = _scenarioTableModel.getRows();
+		if(!selectedRowModels.isEmpty())
+		{
+			for(ParentRowModel rowModel : selectedRowModels)
+			{
+				int i = rows.indexOf(rowModel);
+				if(i > 0)
+				{
+					rows.remove(i);
+					rows.add(i-1, rowModel);
+				}
+			}
+		}
+	}
+
+	public void moveSelectedScenarioDown()
+	{
+		List<ParentRowModel> selectedRowModels = TreeTableViewSelectionUtilities.getSelectedRowModels(_treeTable);
+		ObservableList<ParentRowModel> rows = _scenarioTableModel.getRows();
+		if(!selectedRowModels.isEmpty())
+		{
+			for(ParentRowModel rowModel : selectedRowModels)
+			{
+				int i = rows.indexOf(rowModel);
+				if(i >= 0 && i < rows.size() -1)
+				{
+					rows.remove(i);
+					rows.add(i+1, rowModel);
+				}
+			}
+		}
 	}
 }

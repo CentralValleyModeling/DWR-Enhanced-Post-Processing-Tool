@@ -21,7 +21,6 @@ import gov.ca.water.calgui.project.NamedDssPath;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ObservableValue;
 import javafx.scene.control.TreeTableView;
-import javafx.scene.paint.Color;
 
 import com.rma.javafx.treetable.columns.specs.TreeTableColumnSpec;
 
@@ -51,7 +50,7 @@ class ScenarioRowModel extends ParentRowModel
 	private final SimpleObjectProperty<String> _wreslMainProperty;
 	private final ScenarioTableModel _scenarioRunTableModel;
 
-	ScenarioRowModel(TreeTableView<?> treeTableView, ScenarioTableModel scenarioRunTableModel, EpptScenarioRun scenarioRun, boolean base, boolean alternative)
+	ScenarioRowModel(Runnable modified, ScenarioTableModel scenarioRunTableModel, EpptScenarioRun scenarioRun, boolean base, boolean alternative)
 	{
 		super(null);
 		_scenarioRunTableModel = scenarioRunTableModel;
@@ -62,9 +61,9 @@ class ScenarioRowModel extends ParentRowModel
 		_outputProperty = new SimpleObjectProperty<>(Objects.toString(scenarioRun.getOutputPath()));
 		_wreslMainProperty = new SimpleObjectProperty<>(Objects.toString(scenarioRun.getWreslMain()));
 		_baseProperty = new SimpleObjectProperty<>(base);
-		_baseProperty.addListener((e,o,n)->treeTableView.refresh());
+		_baseProperty.addListener((e,o,n)->modified.run());
 		_alternativeProperty = new SimpleObjectProperty<>(alternative);
-		_alternativeProperty.addListener((e,o,n)->treeTableView.refresh());
+		_alternativeProperty.addListener((e,o,n)->modified.run());
 		addDssPathChildren();
 	}
 

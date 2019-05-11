@@ -141,9 +141,22 @@ class ProjectConfigurationIOVersion2
 			Path outputPath = Paths.get(scenarioJson.getString(SCENARIO_OUTPUT_PATH));
 			Path wreslMain = Paths.get(scenarioJson.getString(SCENARIO_WRESL_MAIN));
 			JSONObject jsonObject = scenarioJson.getJSONObject(SCENARIO_DSS_FILES);
-			NamedDssPath dvDssFile = readDssJson(jsonObject.getJSONObject(SCENARIO_DV_KEY));
-			NamedDssPath svDssFile = readDssJson(jsonObject.getJSONObject(SCENARIO_SV_KEY));
-			NamedDssPath ivDssFile = readDssJson(jsonObject.getJSONObject(SCENARIO_IV_KEY));
+			NamedDssPath dvDssFile = null;
+			if(jsonObject.has(SCENARIO_DV_KEY))
+			{
+				dvDssFile = readDssJson(jsonObject.getJSONObject(SCENARIO_DV_KEY));
+			}
+			NamedDssPath svDssFile = null;
+			if(jsonObject.has(SCENARIO_SV_KEY))
+			{
+				svDssFile = readDssJson(jsonObject.getJSONObject(SCENARIO_SV_KEY));
+			}
+			NamedDssPath ivDssFile = null;
+			if(jsonObject.has(SCENARIO_IV_KEY))
+			{
+				ivDssFile = readDssJson(jsonObject.getJSONObject(SCENARIO_IV_KEY));
+			}
+
 			List<NamedDssPath> extraDssFiles = readExtraDss(jsonObject);
 			EpptDssContainer dssContainer = new EpptDssContainer(dvDssFile, svDssFile, ivDssFile, extraDssFiles);
 			EpptScenarioRun epptScenarioRun = new EpptScenarioRun(name, description,
@@ -156,10 +169,13 @@ class ProjectConfigurationIOVersion2
 	private List<NamedDssPath> readExtraDss(JSONObject jsonObject)
 	{
 		List<NamedDssPath> extraDssFiles = new ArrayList<>();
-		JSONArray jsonArray = jsonObject.getJSONArray(SCENARIO_DSS_EXTRA);
-		for(int j = 0; j < jsonArray.length(); j++)
+		if(jsonObject.has(SCENARIO_DSS_EXTRA))
 		{
-			extraDssFiles.add(readDssJson(jsonArray.getJSONObject(j)));
+			JSONArray jsonArray = jsonObject.getJSONArray(SCENARIO_DSS_EXTRA);
+			for(int j = 0; j < jsonArray.length(); j++)
+			{
+				extraDssFiles.add(readDssJson(jsonArray.getJSONObject(j)));
+			}
 		}
 		return extraDssFiles;
 	}

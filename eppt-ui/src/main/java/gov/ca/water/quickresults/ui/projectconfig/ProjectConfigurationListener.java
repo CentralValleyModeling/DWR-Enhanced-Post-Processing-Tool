@@ -61,6 +61,12 @@ public class ProjectConfigurationListener implements ActionListener
 			case "btnClearScenario":
 				_projectConfigurationPanel.clearAllScenarios();
 				break;
+			case "moveUp":
+				_projectConfigurationPanel.moveSelectedScenarioUp();
+				break;
+			case "moveDown":
+				_projectConfigurationPanel.moveSelectedScenarioDown();
+				break;
 			default:
 		}
 		ProjectConfigurationPanel projectConfigurationPanel = ProjectConfigurationPanel.getProjectConfigurationPanel();
