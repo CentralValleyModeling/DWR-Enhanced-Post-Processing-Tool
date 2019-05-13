@@ -45,5 +45,9 @@ public class DetailedIssue
     {
         return _guiLink;
     }
+    public int getThresholdLink()
+    {
+        return _thresholdLink;
+    }
 
 }

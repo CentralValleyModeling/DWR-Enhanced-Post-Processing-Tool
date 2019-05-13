@@ -31,7 +31,7 @@ public class TestDetailedIssueReport extends TestDetailedIssuesReportBase
     @Test
     void testDetailedIssueSameModel() throws Exception
     {
-
+        
         EpptScenarioRun baseScenarioRun = getBaseScenarioRun();
         List<EpptScenarioRun> altScenarioRuns = getAltScenarioRuns();
         List<EpptScenarioRun> allRuns = new ArrayList<>();
@@ -43,11 +43,12 @@ public class TestDetailedIssueReport extends TestDetailedIssuesReportBase
         List<DetailedIssue> allDetailedIssues = mc.getAllDetailedIssues();
 
         DTSProcessor dtsProcessor = new DTSProcessor(modules);
-        Map<EpptScenarioRun, Map<SubModule, List<FlagViolation>>> runsToViolations = dtsProcessor.processDSSFiles(allRuns, getDssFilePathsForBaseOnly());
+        Map<EpptScenarioRun, Map<SubModule, List<FlagViolation>>> runsToViolations = dtsProcessor.processDSSFiles(allRuns, getDssFilePathsForSameModel());
 
 
 
         DetailedIssueProcessor processor = new DetailedIssueProcessor(runsToViolations, modules, allDetailedIssues, allRuns,true);
+        Map<EpptScenarioRun, Map<Module, List<DetailedIssueViolation>>> process = processor.process();
         //Map<EpptScenarioRun, Map<Module, List<DetailedIssueViolation>>> runsToViolations = processor.process();
 
         int test = 0;

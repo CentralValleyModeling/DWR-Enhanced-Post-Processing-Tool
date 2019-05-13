@@ -13,9 +13,13 @@
 package gov.ca.water.reportengine.executivereport;
 
 import gov.ca.water.calgui.project.EpptScenarioRun;
+import gov.ca.water.reportengine.EpptReportException;
 import hec.heclib.dss.DSSPathname;
 import hec.heclib.dss.HecDss;
+import hec.heclib.util.HecTime;
+import hec.heclib.util.HecTimeArray;
 import hec.io.TimeSeriesContainer;
+import hec.lang.Const;
 import org.python.antlr.base.mod;
 import org.python.antlr.op.Sub;
 
@@ -42,6 +46,10 @@ public class DTSProcessor
     {
         //once we know how to get the post process dss files from the run then we can get rid of the dss files parameter.
 
+        if(runs.size() != dssFiles.size())
+        {
+            throw new EpptReportException("Different number of DSS files as runs. Number of runs: " + runs.size() + " Number of DSS files: " + dssFiles.size() + ".");
+        }
         Map<EpptScenarioRun,Map<SubModule, List<FlagViolation>>> runToViolations = new HashMap<>();
 
 
@@ -112,9 +120,15 @@ public class DTSProcessor
                         TimeSeriesContainer result = (TimeSeriesContainer) hD.get(dssPath, true);
 
                         double[] values = result.values;
+                        HecTimeArray times1 = result.getTimes();
+                        for(int i = 0; i< times1.numberElements();i++)
+                        {
+                            HecTime hecTime = times1.elementAt(i);
+                        }
+
                         int[] times = result.times;
 
-                        FlagViolation flagViolationFromRecord = createFlagViolationFromRecord(values, times, flagValue, lr);
+                        FlagViolation flagViolationFromRecord = createFlagViolationFromRecord(result, flagValue, lr);
                         if(flagViolationFromRecord != null)
                         {
                             violations.add(flagViolationFromRecord);
@@ -229,8 +243,21 @@ public class DTSProcessor
     }
 
     //are the values and the time arrays always going to be the same length?
-    private FlagViolation createFlagViolationFromRecord(double[] vals, int[] times, SubModule.FlagType flagType, String linkedVar)
+    private FlagViolation createFlagViolationFromRecord(TimeSeriesContainer tsc, SubModule.FlagType flagType, String linkedVar)
     {
+        double[] vals = tsc.values;
+        HecTimeArray times1 = tsc.getTimes();
+        for(int i = 0; i< times1.numberElements();i++)
+        {
+            HecTime hecTime = times1.elementAt(i);
+            double value = tsc.getValue(hecTime);
+            if(Const.isValid(value))
+            {
+                if (value == flagType)
+
+            }
+        }
+
         List<Integer> violationTimes = new ArrayList<>();
         for (int i = 0; i < vals.length; i++)
         {
@@ -241,7 +268,7 @@ public class DTSProcessor
                 {
                     if (flagType == SubModule.FlagType.ZERO)
                     {
-                        violationTimes.add(times[i]);
+                        violationTimes.add( times1.elementAt(i));// times[i]);
                     }
                     break;
                 }

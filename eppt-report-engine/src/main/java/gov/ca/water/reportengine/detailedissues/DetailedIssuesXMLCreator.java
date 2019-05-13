@@ -12,6 +12,7 @@
 
 package gov.ca.water.reportengine.detailedissues;
 
+import gov.ca.water.calgui.project.EpptScenarioRun;
 import gov.ca.water.reportengine.executivereport.FlagViolation;
 import gov.ca.water.reportengine.executivereport.Module;
 import gov.ca.water.reportengine.executivereport.SubModule;
@@ -21,6 +22,7 @@ import org.w3c.dom.Element;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 public class DetailedIssuesXMLCreator
 {
@@ -34,7 +36,7 @@ public class DetailedIssuesXMLCreator
     private static final String ALTERNATIVE = "alternative";
 
 
-    public void appendDetailedIssuesElement(List<Module> modules, Document document)
+    public void appendDetailedIssuesElement(Map<EpptScenarioRun, Map<Module, List<DetailedIssueViolation>>> runsToModViolations, Document document)
     {
 
         Element rootElem = document.createElement(ISSUES_REPORT);
