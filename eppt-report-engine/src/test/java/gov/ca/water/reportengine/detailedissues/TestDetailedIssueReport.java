@@ -19,7 +19,9 @@ import gov.ca.water.reportengine.executivereport.FlagViolation;
 import gov.ca.water.reportengine.executivereport.Module;
 import gov.ca.water.reportengine.executivereport.SubModule;
 import org.junit.jupiter.api.Test;
+import org.w3c.dom.Document;
 
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -28,7 +30,7 @@ public class TestDetailedIssueReport extends TestDetailedIssuesReportBase
 {
 
 
-//    @Test
+    @Test
     void testDetailedIssueSameModel() throws Exception
     {
         
@@ -43,13 +45,17 @@ public class TestDetailedIssueReport extends TestDetailedIssuesReportBase
         List<DetailedIssue> allDetailedIssues = mc.getAllDetailedIssues();
 
         DTSProcessor dtsProcessor = new DTSProcessor(modules);
-        Map<EpptScenarioRun, Map<SubModule, List<FlagViolation>>> runsToViolations = dtsProcessor.processDSSFiles(allRuns, getDssFilePathsForSameModel());
+        Map<EpptScenarioRun, Map<SubModule, List<FlagViolation>>> runsToFlagViolations = dtsProcessor.processDSSFiles(allRuns, getDssFilePathsForSameModel());
 
+        Document doc = getDoc();
 
+        DetailedIssueProcessor processor = new DetailedIssueProcessor(runsToFlagViolations, modules, allDetailedIssues, allRuns,true);
+        Map<EpptScenarioRun, Map<Module, List<DetailedIssueViolation>>> runsToDetailedViolations = processor.process();
 
-        DetailedIssueProcessor processor = new DetailedIssueProcessor(runsToViolations, modules, allDetailedIssues, allRuns,true);
-        Map<EpptScenarioRun, Map<Module, List<DetailedIssueViolation>>> process = processor.process();
-        //Map<EpptScenarioRun, Map<Module, List<DetailedIssueViolation>>> runsToViolations = processor.process();
+        DetailedIssuesXMLCreator xmlCreator = new DetailedIssuesXMLCreator();
+        xmlCreator.appendDetailedIssuesElement(runsToDetailedViolations, baseScenarioRun, altScenarioRuns, modules,doc);
+
+        Path path = writeXmlFile(doc);
 
         int test = 0;
 

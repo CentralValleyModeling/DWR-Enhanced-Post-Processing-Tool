@@ -27,20 +27,19 @@ public class DetailedIssueViolation
 {
     private static final Logger LOGGER = Logger.getLogger(DetailedIssueViolation.class.getName());
 
-    private final List<Integer> _times;
+    private final List<HecTime> _times;
     private final String _title;
     private final List<Issue> _issues = new ArrayList<>();
 
-    DetailedIssueViolation(List<Integer> times, String title, Map<Integer, Double> actualValues,
-                           Map<Integer, Double> thresholdValues, Map<Integer, String> waterYearType)
+    DetailedIssueViolation(List<HecTime> times, String title, Map<HecTime, Double> actualValues,
+                           Map<HecTime, Double> thresholdValues, Map<HecTime, String> waterYearType)
     {
 
         _times = times;
         _title = title;
 
-        for(Integer time : times)
+        for(HecTime time : times)
         {
-            HecTime date = new HecTime(time);
 
             String waterYear = waterYearType.get(time);
             Double value = actualValues.get(time);
@@ -49,14 +48,19 @@ public class DetailedIssueViolation
 
             if(waterYear != null && standard != null)
             {
-                Issue issue = new Issue(date, waterYear, value, standard);
+                Issue issue = new Issue(time, waterYear, value, standard);
                 _issues.add(issue);
             }
             else
             {
-                LOGGER.warn("Tried to create a detailed issue for time " + date.toString() + " but the water year or the standard was null.");
+                LOGGER.warn("Tried to create a detailed issue for time " + time.toString() + " but the water year or the standard was null.");
             }
         }
+    }
+
+    public String getTitle()
+    {
+        return _title;
     }
 
     public List<Issue> getIssues()
@@ -85,18 +89,16 @@ public class DetailedIssueViolation
         public String toString()
         {
 
-
-            Date javaDate = _time.getJavaDate(0);
-            String time = new SimpleDateFormat("MM/YYYY").format(javaDate);
-
             String actualValue = "N/A";
             if(_value != null)
             {
-                 actualValue = String.format("#.##", _value);
+                 actualValue = String.format("%.2f", _value);
             }
 
-            String standardValue = String.format("#.##", _standard);
-            return time + " " + _waterYearType + " @ " + actualValue + " | " + standardValue;
+            String standardValue = String.format("%.2f", _standard);
+
+            String formattedTime = _time.month()  +"/"+ _time.year();
+            return formattedTime + " " + _waterYearType + " @ " + actualValue + " | " + standardValue;
         }
     }
 

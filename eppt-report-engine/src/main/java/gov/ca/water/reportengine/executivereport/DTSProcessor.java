@@ -245,51 +245,47 @@ public class DTSProcessor
     //are the values and the time arrays always going to be the same length?
     private FlagViolation createFlagViolationFromRecord(TimeSeriesContainer tsc, SubModule.FlagType flagType, String linkedVar)
     {
+        List<HecTime> violationTimes = new ArrayList<>();
         double[] vals = tsc.values;
-        HecTimeArray times1 = tsc.getTimes();
-        for(int i = 0; i< times1.numberElements();i++)
+        HecTimeArray times = tsc.getTimes();
+        for(int i = 0; i< times.numberElements();i++)
         {
-            HecTime hecTime = times1.elementAt(i);
-            double value = tsc.getValue(hecTime);
+            HecTime hecTime = times.elementAt(i);
+            int value = (int)Math.round(tsc.getValue(hecTime));
             if(Const.isValid(value))
             {
-                if (value == flagType)
+                switch (value)
+                {
+                    case 0:
+                    {
+                        if (flagType == SubModule.FlagType.ZERO)
+                        {
+                            violationTimes.add( hecTime);
+                        }
+                        break;
+                    }
+                    case 1:
+                    {
+                        if (flagType == SubModule.FlagType.ONE)
+                        {
+                            violationTimes.add(hecTime);
+                        }
+                        break;
+                    }
+                    case 2:
+                    {
+                        if (flagType == SubModule.FlagType.TWO)
+                        {
+                            violationTimes.add(hecTime);
+                        }
+                        break;
+                    }
+                }
 
             }
         }
 
-        List<Integer> violationTimes = new ArrayList<>();
-        for (int i = 0; i < vals.length; i++)
-        {
-            int value = (int) vals[i];
-            switch (value)
-            {
-                case 0:
-                {
-                    if (flagType == SubModule.FlagType.ZERO)
-                    {
-                        violationTimes.add( times1.elementAt(i));// times[i]);
-                    }
-                    break;
-                }
-                case 1:
-                {
-                    if (flagType == SubModule.FlagType.ONE)
-                    {
-                        violationTimes.add(times[i]);
-                    }
-                    break;
-                }
-                case 2:
-                {
-                    if (flagType == SubModule.FlagType.TWO)
-                    {
-                        violationTimes.add(times[i]);
-                    }
-                    break;
-                }
-            }
-        }
+
         if(violationTimes.isEmpty())
         {
             return null;

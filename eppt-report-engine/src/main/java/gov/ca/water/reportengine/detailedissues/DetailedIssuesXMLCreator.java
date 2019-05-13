@@ -16,6 +16,8 @@ import gov.ca.water.calgui.project.EpptScenarioRun;
 import gov.ca.water.reportengine.executivereport.FlagViolation;
 import gov.ca.water.reportengine.executivereport.Module;
 import gov.ca.water.reportengine.executivereport.SubModule;
+import org.apache.log4j.Logger;
+import org.python.antlr.base.mod;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
@@ -26,6 +28,8 @@ import java.util.Map;
 
 public class DetailedIssuesXMLCreator
 {
+    private static final Logger LOGGER = Logger.getLogger(DetailedIssuesXMLCreator.class.getName());
+
     private static final String ISSUES_REPORT = "issues-report";
     private static final String ISSUES_TYPE = "issue-type";
     private static final String ISSUE = "issue";
@@ -34,84 +38,91 @@ public class DetailedIssuesXMLCreator
     private static final String BASE = "base";
     private static final String ALTERNATIVES = "alternatives";
     private static final String ALTERNATIVE = "alternative";
+    private static final String ALTERNATIVE_NAME = "alternative-name";
 
 
-    public void appendDetailedIssuesElement(Map<EpptScenarioRun, Map<Module, List<DetailedIssueViolation>>> runsToModViolations, Document document)
+    public void appendDetailedIssuesElement(Map<EpptScenarioRun, Map<Module, List<DetailedIssueViolation>>> runsToModViolations,
+                                            EpptScenarioRun baseRun,List<EpptScenarioRun> altRuns,List<Module> modules, Document document)
     {
-
         Element rootElem = document.createElement(ISSUES_REPORT);
 
-        Element baseElem = document.createElement(BASE);
-
-        for(Module mod : modules)
+        if(runsToModViolations.containsKey(baseRun))
         {
-            baseElem.appendChild(createIssueTypeElement(mod, document));
+            Element baseDetailedIssues = createBaseDetailedIssues(runsToModViolations.get(baseRun),modules, document);
+            rootElem.appendChild(baseDetailedIssues);
         }
-        rootElem.appendChild(baseElem);
+        else
+        {
+            LOGGER.error("Unable to create base detailed issue report because the scenario run " + baseRun.toString() +
+                    " was not found in the map of runs to violations.");
+        }
 
+        Element alternativesElem = document.createElement(ALTERNATIVES);
+        for(EpptScenarioRun run : altRuns)
+        {
+            if(runsToModViolations.containsKey(run))
+            {
+                Element alternativeDetailedIssues = createAlternativeDetailedIssues(run.getName(), runsToModViolations.get(run),
+                        modules, document);
+                alternativesElem.appendChild(alternativeDetailedIssues);
+            }
+        }
+
+        rootElem.appendChild(alternativesElem);
         document.appendChild(rootElem);
     }
 
+    private Element createAlternativeDetailedIssues(String altName, Map<Module, List<DetailedIssueViolation>> modsToViolations,List<Module> modules, Document document)
+    {
+        Element altElem = document.createElement(ALTERNATIVE);
+        altElem.setAttribute(ALTERNATIVE_NAME, altName);
+        for(Module mod : modules)
+        {
+            List<DetailedIssueViolation> divs = modsToViolations.get(mod);
+            altElem.appendChild(createIssueTypeElement(mod,divs, document));
+        }
+        return altElem;
+    }
 
-    private Element createIssueTypeElement(Module mod, Document document)
+    private Element createBaseDetailedIssues(Map<Module, List<DetailedIssueViolation>> modsToViolations,List<Module> modules, Document document)
+    {
+        Element baseElem = document.createElement(BASE);
+        for(Module mod : modules)
+        {
+            List<DetailedIssueViolation> divs = modsToViolations.get(mod);
+            baseElem.appendChild(createIssueTypeElement(mod,divs, document));
+        }
+        return baseElem;
+    }
+
+    private Element createIssueTypeElement(Module mod,List<DetailedIssueViolation> violations, Document document)
     {
         Element issuesTypeElem = document.createElement(ISSUES_TYPE);
         issuesTypeElem.setAttribute(NAME, mod.getName());
 
-
-
-        //issuesTypeElem.appendChild(createLocationElement(getLocationName(), , document));
-
-
-
+        for(DetailedIssueViolation div : violations)
+        {
+            Element locationElement = createLocationElement(div, document);
+            issuesTypeElem.appendChild(locationElement);
+        }
 
         return issuesTypeElem;
     }
 
-    private String getTitle(Module mod)
+
+    private Element createLocationElement(DetailedIssueViolation div, Document document)
     {
-        //List<String> dtsFileNames = new ArrayList<>();
-        List<DetailedIssue> detailedIssues = new ArrayList<>();
-        List<SubModule> subModules = mod.getSubModules();
-        for(SubModule subMod : subModules)
+        Element locationElem = document.createElement(LOCATION);
+        locationElem.setAttribute(NAME, div.getTitle());
+        for(DetailedIssueViolation.Issue issue : div.getIssues())
         {
-            //List<FlagViolation> baseViolations = subMod.getBaseViolations();
-            //for(FlagViolation violation : baseViolations)
-            {
-                //DetailedIssue di = new DetailedIssue(subMod.getId(), violation.getTimes(), violation.getDtsFileName());
-                //detailedIssues.add(di);
-                //dtsFileNames.add(violation.getDtsFileName());
-            }
-        }
-        //now i have all the dtsfile names
-        return "";
-    }
-
-
-
-
-    private Element createLocationElement(String locationName, List<FlagViolation> violations, Document document)
-    {
-        Element locationElem = document.createElement(locationName);
-        for(FlagViolation violation : violations)
-        {
-
-            locationElem.appendChild(createIssueElement(document,getIssueString()));
+            Element issueElement = createIssueElement(issue.toString(), document);
+            locationElem.appendChild(issueElement);
         }
         return locationElem;
     }
 
-    private String getLocationName()
-    {
-        return "";
-    }
-
-    private String getIssueString()
-    {
-        return "";
-    }
-
-    private Element createIssueElement(Document document, String value)
+    private Element createIssueElement(String value, Document document)
     {
         Element issueElem = document.createElement(ISSUE);
         issueElem.setTextContent(value);

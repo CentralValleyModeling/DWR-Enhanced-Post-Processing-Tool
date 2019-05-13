@@ -82,23 +82,19 @@ public class ExecutiveReportXMLCreator
      * @return
      * @throws Exception
      */
-    void appendExecutiveReportTableElement(List<EpptScenarioRun> runs, Map<EpptScenarioRun, Map<SubModule, List<FlagViolation>>> runsToViolations,
-                                           List<Module> modules, List<FileChangesStatistics> modelInputStats, boolean sameModel, Document doc) throws Exception
+    public void appendExecutiveReportTableElement(List<EpptScenarioRun> runs, Map<EpptScenarioRun, Map<SubModule,
+            List<FlagViolation>>> runsToViolations, List<Module> modules,
+                                                  List<FileChangesStatistics> modelInputStats, boolean sameModel, Document doc)
     {
         if (runs.size() == 1)
         {
             sameModel = false;
         }
-        //loadHelperXMLFile();
 
         Element execReportTableElem = doc.createElement(TABLE_HEADER);
 
-        //int i = 1;
         for (int i = 0;i<runs.size();i++)
         {
-            //DTSProcessor processor = new DTSProcessor(modules);
-           // List<Module> modules = processor.processDSSFile(path, i);
-            //now the modules have the violation numbers
             Map<SubModule, List<FlagViolation>> subModToViolations = new HashMap<>();
             if(runsToViolations.containsKey(runs.get(i)))
             {
@@ -108,8 +104,6 @@ public class ExecutiveReportXMLCreator
 
             List<Element> scenarioElements = createScenarioElements(subModToViolations, modules, assumpChanges, i, sameModel, doc);
             scenarioElements.forEach(execReportTableElem::appendChild);
-
-            //i++;
         }
 
         doc.appendChild(execReportTableElem);

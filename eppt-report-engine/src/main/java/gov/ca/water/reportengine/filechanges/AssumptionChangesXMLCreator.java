@@ -44,7 +44,7 @@ public class AssumptionChangesXMLCreator
 
 
 
-    void appendAssumptionChangesElement(Document document, FileChangesStatistics stats)
+    public void appendAssumptionChangesElement(Document document, FileChangesStatistics stats)
     {
         Element assumptionChangesRoot = document.createElement(ASSUMPTION_CHANGES);
         AssumptionChangesStatistics initAssumptionStats = stats.getInitAssumptionStats();

@@ -15,6 +15,7 @@ package gov.ca.water.reportengine;
 import gov.ca.water.calgui.EpptInitializationException;
 import gov.ca.water.calgui.bo.GUILinksAllModelsBO;
 import gov.ca.water.calgui.busservice.impl.GuiLinksSeedDataSvcImpl;
+import gov.ca.water.calgui.busservice.impl.ThresholdLinksSeedDataSvc;
 import gov.ca.water.calgui.project.EpptDssContainer;
 import gov.ca.water.calgui.project.EpptScenarioRun;
 import gov.ca.water.calgui.project.NamedDssPath;
@@ -61,6 +62,7 @@ public class TestQAQCReportBase
         Path target = Paths.get(System.getProperty("user.dir")).resolve("target").resolve("test-classes");
         System.setProperty("user.dir", target.toString());
         GuiLinksSeedDataSvcImpl.createSeedDataSvcImplInstance();
+        ThresholdLinksSeedDataSvc.createSeedDataSvcImplInstance();
     }
 
 
@@ -87,8 +89,20 @@ public class TestQAQCReportBase
 
     public List<EpptScenarioRun> getAltScenarioRuns()
     {
+        Path ivPath = getInitialConditionsAltDSSPath();
+        NamedDssPath ivDssFile = new NamedDssPath(ivPath, "INIT");
+
+        Path svPath = getStateVariableAltDSSPath();
+        NamedDssPath svDssFile = new NamedDssPath(svPath, "SV");
+
+        Path dvPath = getDVPath();
+        NamedDssPath dvDssFile = new NamedDssPath(dvPath, "DV");
+
+        List<NamedDssPath> extraDssFiles = Collections.emptyList();
+        EpptDssContainer dssContainer = new EpptDssContainer(dvDssFile, svDssFile, ivDssFile, extraDssFiles);
+
         GUILinksAllModelsBO.Model calSim2 = GUILinksAllModelsBO.Model.findModel("CalSim2");// model = new GUILinksAllModelsBO.Model("CalSim2");
-        EpptScenarioRun alt1Run = new EpptScenarioRun("alt1Scenario", "desc", calSim2,null,null,null);
+        EpptScenarioRun alt1Run = new EpptScenarioRun("alt1Scenario", "desc", calSim2,null,null,dssContainer);
 
         List<EpptScenarioRun> altRuns = new ArrayList<>();
         altRuns.add(alt1Run);
@@ -186,7 +200,8 @@ public class TestQAQCReportBase
         TransformerFactory transformerFactory = TransformerFactory.newInstance();
         Transformer transformer = transformerFactory.newTransformer();
         DOMSource domSource = new DOMSource(doc);
-        Path report = Files.createTempFile("reportXML", String.valueOf(new Date().getTime()));
+        Path report = Files.createTempFile("reportXML", ".xml" );
+
         report.toFile().deleteOnExit();
         StreamResult streamResult = new StreamResult(report.toString());
         transformer.transform(domSource, streamResult);
@@ -208,7 +223,7 @@ public class TestQAQCReportBase
 
     protected Path getModuleLinkingCSVPath()
     {
-        URL resource = this.getClass().getClassLoader().getResource("SubModuleLinking.csv");
+        URL resource = this.getClass().getClassLoader().getResource("Details.csv");
         return new File(resource.getPath()).toPath();
     }
 

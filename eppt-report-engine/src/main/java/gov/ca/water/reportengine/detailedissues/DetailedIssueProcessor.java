@@ -22,6 +22,7 @@ import gov.ca.water.reportengine.executivereport.SubModule;
 import hec.heclib.util.HecTime;
 import hec.io.TimeSeriesContainer;
 import hec.lang.Const;
+import org.apache.log4j.Logger;
 import org.python.antlr.base.mod;
 
 import java.util.*;
@@ -29,6 +30,7 @@ import java.util.*;
 public class DetailedIssueProcessor
 {
 
+    private static final Logger LOGGER = Logger.getLogger(DetailedIssueProcessor.class.getName());
 
     private final List<DetailedIssue> _baseDetailedIssues = new ArrayList<>();
     private final List<DetailedIssue> _altDetailedIssues = new ArrayList<>();
@@ -88,9 +90,17 @@ public class DetailedIssueProcessor
                     DetailedIssue di = getDetailedIssueThatMatchViolation(violation);
                     if (di != null)
                     {
-                        DetailedIssueViolation div = createDetailedIssueViolation(violation, di.getGuiLink(),
-                                di.getThresholdLink(), run);
-                        dIVsForMod.add(div);
+                        if(Const.isValid(di.getGuiLink()) && Const.isValid(di.getThresholdLink()))
+                        {
+                            DetailedIssueViolation div = createDetailedIssueViolation(violation, di.getGuiLink(),
+                                    di.getThresholdLink(), run);
+                            dIVsForMod.add(div);
+                        }
+                        else
+                        {
+                            LOGGER.warn("Could not create a detailed issue violation because the gui link or the threshold link was not a valid" +
+                                    " number for " + di.getLinkedVar());
+                        }
                     }
                 }
 
@@ -126,41 +136,41 @@ public class DetailedIssueProcessor
             valueContainer = primarySeries[0];
         }
 
-        Map<Integer, Double> actualValues = getActualValues(violation.getTimes(), valueContainer);
-        Map<Integer, Double> thresholdValues = getThresholdValues(violation.getTimes(), thresholdSeriesContainer);
+        Map<HecTime, Double> actualValues = getActualValues(violation.getTimes(), valueContainer);
+        Map<HecTime, Double> thresholdValues = getThresholdValues(violation.getTimes(), thresholdSeriesContainer);
 
-        return new DetailedIssueViolation(violation.getTimes(), title, actualValues, thresholdValues, getWaterYearTypes());
+        return new DetailedIssueViolation(violation.getTimes(), title, actualValues, thresholdValues, getWaterYearTypes(violation.getTimes()));
     }
 
-    private Map<Integer, Double> getActualValues(List<Integer> times,  TimeSeriesContainer tsc)
+    private Map<HecTime, Double> getActualValues(List<HecTime> times,  TimeSeriesContainer tsc)
     {
-        Map<Integer, Double> values = new HashMap<>();
-        for(Integer time : times)
+        Map<HecTime, Double> values = new HashMap<>();
+        for(HecTime time : times)
         {
-            //convert time to hectime
-            HecTime hecTime = new HecTime(time);
-            double value = tsc.getValue(hecTime);
+            double value = tsc.getValue(time);
             values.put(time, value);
         }
         return values;
     }
 
-    private Map<Integer, Double> getThresholdValues(List<Integer> times,  TimeSeriesContainer tsc)
+    private Map<HecTime, Double> getThresholdValues(List<HecTime> times,  TimeSeriesContainer tsc)
     {
-        Map<Integer, Double> thresholds = new HashMap<>();
-        for(Integer time : times)
+        Map<HecTime, Double> thresholds = new HashMap<>();
+        for(HecTime time : times)
         {
-            //convert time to hectime
             double threshold = tsc.getValue(time);
             thresholds.put(time, threshold);
         }
         return thresholds;
     }
 
-    private Map<Integer, String> getWaterYearTypes()
+    private Map<HecTime, String> getWaterYearTypes(List<HecTime> times)
     {
-        Map<Integer, String> types = new HashMap<>();
-
+        Map<HecTime, String> types = new HashMap<>();
+        for(HecTime time : times)
+        {
+            types.put(time, "Test water year type");
+        }
 
         return types;
     }

@@ -29,8 +29,13 @@ public class DetailedIssuesReader
 
     private static final int MODULE_ID = 0;
     private static final int LINKED_VAR = 1;
-    private static final int GUI_LINK = 2;
-    private static final int THRESHOLD_LINK = 3;
+    private static final int SECTION_ID = 2;
+    private static final int GUI_LINK = 3;
+    private static final int THRESHOLD_LINK = 4;
+
+    private static final String EXEC_DETAILS_REPORT = "ED";
+    private static final String SUMMARY_STATS_REPORT = "ST";
+
 
     private final Path _detailedIssuesCSVPath;
 
@@ -57,11 +62,41 @@ public class DetailedIssuesReader
                     continue;
                 }
                 String[] row = line.split(csvSplitBy);
+
+                //skip comments
+                if(row.length > 0)
+                {
+                    String firstString = row[0];
+                    String trimmedString = firstString.trim();
+                    //if there is no model id then we continue the for loop
+                    if(trimmedString.length()>0)
+                    {
+                        char firstChar = trimmedString.charAt(0);
+
+                        if (firstChar == '#' || firstChar == '!')
+                        {
+                            continue;
+                        }
+                    }
+                    else
+                    {
+                        continue;
+                    }
+
+                    //only use rows that have a section id of "ED"
+                    if(!row[SECTION_ID].contains(EXEC_DETAILS_REPORT))
+                    {
+                        continue;
+                    }
+
+                }
+
                 int subModuleID = Integer.parseInt(row[MODULE_ID]);
                 String linkedVar = row[LINKED_VAR];
 
                 int guiLink = Const.UNDEFINED_INT;
                 int thresholdLink  = Const.UNDEFINED_INT;
+
                 if(row.length>2)
                 {
                     if (!row[GUI_LINK].equals(""))
