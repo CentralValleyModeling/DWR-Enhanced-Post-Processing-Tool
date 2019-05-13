@@ -25,17 +25,13 @@ import static gov.ca.water.calgui.constant.Constant.CONFIG_DIR;
 import static gov.ca.water.calgui.constant.Constant.CSV_EXT;
 
 /**
- * This class holds key required data for the application from the
- * GUI_Links*.csv files.
- * <p>
- * *
+ * This class holds key required data for the application from the GUI_Links_AllModels.csv file.
  *
  * @author Mohan
  */
 public final class GuiLinksSeedDataSvcImpl implements IGuiLinksSeedDataSvc
 {
 	private static final Logger LOG = Logger.getLogger(GuiLinksSeedDataSvcImpl.class.getName());
-	private static final String GUI_LINKS3_FILENAME = CONFIG_DIR + "/GUI_Links3" + CSV_EXT;
 	private static final String GUI_LINKS_ALL_MODELS_FILENAME = CONFIG_DIR + "/GUI_Links_All_Models" + CSV_EXT;
 	private static IGuiLinksSeedDataSvc seedDataSvc;
 	private final Map<Integer, GUILinksAllModelsBO> _guiLinksAllModels = new HashMap<>();
@@ -129,7 +125,7 @@ public final class GuiLinksSeedDataSvcImpl implements IGuiLinksSeedDataSvc
 		catch(CalLiteGUIException ex)
 		{
 			LOG.error(ex.getMessage(), ex);
-			throw new EpptInitializationException("Failed to get file data for file: " + GUI_LINKS3_FILENAME, ex);
+			throw new EpptInitializationException("Failed to get file data for file: " + GUI_LINKS_ALL_MODELS_FILENAME, ex);
 		}
 	}
 

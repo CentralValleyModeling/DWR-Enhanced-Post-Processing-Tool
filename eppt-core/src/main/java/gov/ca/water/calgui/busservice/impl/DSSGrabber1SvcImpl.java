@@ -36,6 +36,7 @@ import javax.swing.*;
 import calsim.app.Project;
 import gov.ca.water.calgui.bo.GUILinksAllModelsBO;
 import gov.ca.water.calgui.bo.ResultUtilsBO;
+import gov.ca.water.calgui.bo.ThresholdLinksBO;
 import gov.ca.water.calgui.busservice.IDSSGrabber1Svc;
 import gov.ca.water.calgui.busservice.IGuiLinksSeedDataSvc;
 import gov.ca.water.calgui.project.EpptDssContainer;
@@ -80,6 +81,7 @@ public class DSSGrabber1SvcImpl implements IDSSGrabber1Svc
 	private static Logger LOGGER = Logger.getLogger(DSSGrabber1SvcImpl.class.getName());
 	final Map<GUILinksAllModelsBO.Model, String> _primaryDSSName = new HashMap<>();
 	final Map<GUILinksAllModelsBO.Model, String> _secondaryDSSName = new HashMap<>();
+	final Map<GUILinksAllModelsBO.Model, String> _thresholdDSSName = new HashMap<>();
 	// Chart title
 	String _plotTitle;
 	// Y-axis label
@@ -102,10 +104,12 @@ public class DSSGrabber1SvcImpl implements IDSSGrabber1Svc
 	// Number of scenarios passed in list parameter
 	private double[][] _annualTAFs;
 	private double[][] _annualTAFsDiff;
-	private IGuiLinksSeedDataSvc _seedDataSvc = GuiLinksSeedDataSvcImpl.getSeedDataSvcImplInstance();
+	private final IGuiLinksSeedDataSvc _seedDataSvc = GuiLinksSeedDataSvcImpl.getSeedDataSvcImplInstance();
+	private final ThresholdLinksSeedDataSvc  _thresholdLinksSeedDataSvc = ThresholdLinksSeedDataSvc.getSeedDataSvcImplInstance();
 	private IDialogSvc _dialogSvc = DialogSvcImpl.getDialogSvcInstance();
 	private boolean _stopOnMissing;
 	private final Map<GUILinksAllModelsBO.Model, List<String>> _missingDSSRecords = new HashMap<>();
+	private ThresholdLinksBO _threshold;
 
 	public DSSGrabber1SvcImpl()
 	{
@@ -264,12 +268,23 @@ public class DSSGrabber1SvcImpl implements IDSSGrabber1Svc
 			{
 				_primaryDSSName.clear();
 				_primaryDSSName.putAll(guiLinksAllModelsBO.getPrimary());
+				_thresholdDSSName.clear();
 				_secondaryDSSName.clear();
 				_secondaryDSSName.putAll(guiLinksAllModelsBO.getSecondary());
 				_axisLabel = guiLinksAllModelsBO.getPlotAxisLabel();
 				_plotTitle = guiLinksAllModelsBO.getPlotTitle();
 				_legend = guiLinksAllModelsBO.getLegend();
 			}
+		}
+	}
+
+	public void setThresholdId(int id)
+	{
+
+		ThresholdLinksBO objById = _thresholdLinksSeedDataSvc.getObjById(id);
+		if(objById != null)
+		{
+			_threshold = objById;
 		}
 	}
 
@@ -911,6 +926,61 @@ public class DSSGrabber1SvcImpl implements IDSSGrabber1Svc
 						new Object[]{baseModel, baseDssPathName});
 			}
 		}
+		return results;
+	}
+
+	public TimeSeriesContainer[] getThresholdTimeSeries()
+	{
+
+		TimeSeriesContainer[] results = null;
+
+		try
+		{
+			checkReadiness();
+
+			// Store number of scenarios
+			results = new TimeSeriesContainer[_alternatives.size() + 1];
+			GUILinksAllModelsBO.Model baseModel = _baseScenarioRun.getModel();
+			ThresholdLinksBO.ModelData modelData = _threshold.getModelData(baseModel);
+			if(modelData != null)
+			{
+				String baseDssPathName = modelData.getPrimary();
+				// Base first
+				EpptDssContainer dssContainer = _baseScenarioRun.getDssContainer();
+				TimeSeriesContainer oneSeries = getOneTimeSeriesFromAllModels(dssContainer,
+						_baseScenarioRun.getModel(), baseDssPathName);
+				results[0] = oneSeries;
+
+				// Then scenarios
+
+				for(int i = 0; i < _alternatives.size(); i++)
+				{
+					EpptScenarioRun epptScenarioRun = _alternatives.get(i);
+					TimeSeriesContainer tsc = null;
+
+					GUILinksAllModelsBO.Model altModel = epptScenarioRun.getModel();
+					ThresholdLinksBO.ModelData altModelData = _threshold.getModelData(altModel);
+					if(altModelData != null)
+					{
+						String altDssPathName = altModelData.getPrimary();
+
+						tsc = getOneTimeSeriesFromAllModels(epptScenarioRun.getDssContainer(),
+								epptScenarioRun.getModel(), altDssPathName);
+					}
+					results[i + 1] = tsc;
+				}
+			}
+			else
+			{
+				LOGGER.log(Level.WARNING, "No matching Threshold Links record in for Model: {0} with path: {1}",
+						new Object[]{baseModel, baseModel});
+			}
+		}
+		catch(RuntimeException ex)
+		{
+			LOGGER.log(Level.SEVERE, "Unable to get time series.", ex);
+		}
+
 		return results;
 	}
 

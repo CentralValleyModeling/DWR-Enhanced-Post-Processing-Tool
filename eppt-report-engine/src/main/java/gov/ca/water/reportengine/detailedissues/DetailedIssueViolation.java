@@ -12,10 +12,15 @@
 
 package gov.ca.water.reportengine.detailedissues;
 
+import hec.heclib.util.HecTime;
 import hec.io.TimeSeriesContainer;
 
+import java.text.SimpleDateFormat;
+import java.time.ZoneId;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 public class DetailedIssueViolation
 {
@@ -24,7 +29,7 @@ public class DetailedIssueViolation
     private final String _title;
     private final List<Issue> _issues = new ArrayList<>();
 
-    DetailedIssueViolation(List<Integer> times, String title, TimeSeriesContainer valueContainer, TimeSeriesContainer thresholdContainer, String waterYearType)
+    DetailedIssueViolation(List<Integer> times, String title, Map<Integer, Double> actualValues, Map<Integer, Double> thresholdValues, Map<Integer, String> waterYearType)
     {
 
         _times = times;
@@ -32,10 +37,10 @@ public class DetailedIssueViolation
 
         for(Integer time : times)
         {
-            String date = "testTime";
-            String waterYear = "testWaterYear";
-            String value = "value";
-            String standard = "standard";
+            HecTime date = new HecTime(time);
+            String waterYear = waterYearType.get(time);
+            Double value = actualValues.get(time);
+            Double standard = thresholdValues.get(time);
             Issue issue = new Issue(date, waterYear, value, standard);
             _issues.add(issue);
         }
@@ -49,14 +54,29 @@ public class DetailedIssueViolation
     static class Issue
     {
 
-        private final String _time;
+        private final HecTime _time;
+        private final String _waterYearType;
+        private final Double _value;
+        private final Double _standard;
 
-        Issue(String time, String waterYearType, String value, String standard)
+        Issue(HecTime time, String waterYearType, Double value, Double standard)
         {
 
             _time = time;
+            _waterYearType = waterYearType;
+            _value = value;
+            _standard = standard;
         }
 
+        @Override
+        public String toString()
+        {
+            Date javaDate = _time.getJavaDate(0);
+            String time = new SimpleDateFormat("MM/YYYY").format(javaDate);
+            String actualValue = String.format("#.##", _value);
+            String standardValue = String.format("#.##", _standard);
+            return time + " " + _waterYearType + " @ " + actualValue + " | " + standardValue;
+        }
     }
 
 }

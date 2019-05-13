@@ -25,6 +25,7 @@ import javax.swing.*;
 
 import gov.ca.water.calgui.EpptInitializationException;
 import gov.ca.water.calgui.busservice.impl.GuiLinksSeedDataSvcImpl;
+import gov.ca.water.calgui.busservice.impl.ThresholdLinksSeedDataSvc;
 import gov.ca.water.calgui.constant.EpptPreferences;
 import gov.ca.water.calgui.presentation.DisplayHelper;
 import gov.ca.water.calgui.techservice.impl.DialogSvcImpl;
@@ -118,10 +119,11 @@ public class Installer extends ModuleInstall
 		try
 		{
 			GuiLinksSeedDataSvcImpl.createSeedDataSvcImplInstance();
+			ThresholdLinksSeedDataSvc.createSeedDataSvcImplInstance();
 		}
 		catch(EpptInitializationException ex)
 		{
-			LOGGER.log(Level.SEVERE, "Unable to initialize GUI Links", ex);
+			LOGGER.log(Level.SEVERE, "Unable to initialize GUI or Threshold Links", ex);
 		}
 	}
 
