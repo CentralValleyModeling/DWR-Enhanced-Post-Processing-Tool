@@ -30,7 +30,7 @@ import java.util.Map;
 
 public class ExecutiveReportTestBase extends TestQAQCReportBase
 {
-    private static final String XML_PATH = System.getProperty("user.dir") +  "\\executivereport.xml";
+//    private static final String XML_PATH = System.getProperty("user.dir") +  "\\executivereport.xml";
     private Document _qAQCMaster;
     private Document _qAQCReportToTest;
     private final double _tolerance = .001;
@@ -56,10 +56,10 @@ public class ExecutiveReportTestBase extends TestQAQCReportBase
 
 
         erWriter.appendExecutiveReportTableElement(allRuns, runsToViolations, modules,  null, false, doc);
-        writeXmlFile(XML_PATH, doc);
+        Path path = writeXmlFile(doc);
 
         //read the xml file to test
-        _qAQCReportToTest = loadReportToTest(XML_PATH);
+        _qAQCReportToTest = loadReportToTest(path);
         _qAQCMaster = loadBaseOnlyReport();
 
         //get the elements to compare
@@ -100,10 +100,10 @@ public class ExecutiveReportTestBase extends TestQAQCReportBase
 
 
         erWriter.appendExecutiveReportTableElement(allRuns, runsToViolations, modules,statsForAllAlternatives, true, doc);
-        writeXmlFile(XML_PATH, doc);
+        Path path = writeXmlFile(doc);
 
         //read the xml file to test
-        _qAQCReportToTest = loadReportToTest(XML_PATH);
+        _qAQCReportToTest = loadReportToTest(path);
         _qAQCMaster = loadComparisonSameModelReport();
 
         //get the elements to compare

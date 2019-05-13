@@ -12,6 +12,8 @@
 
 package gov.ca.water.reportengine.filechanges;
 
+import java.nio.file.Path;
+
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.w3c.dom.Document;
@@ -20,7 +22,7 @@ import org.w3c.dom.NodeList;
 
 public class TestCodeChanges extends TestCodeChangesBase
 {
-    private static final String XML_PATH = System.getProperty("user.dir") + "\\codeChanges.xml";
+//    private static final String XML_PATH = System.getProperty("user.dir") + "\\codeChanges.xml";
     private static final String CODE_CHANGES = "code-changes";
 
     private Document _qAQCMaster;
@@ -36,9 +38,9 @@ public class TestCodeChanges extends TestCodeChangesBase
         CodeChangesXMLCreator creator = new CodeChangesXMLCreator();
         creator.appendCodeChangesElement(getCodeChangesCsvPath(),getBaseOutputPath(),getAltOutputPath(),"Alternative 1",doc);
 
-        writeXmlFile(XML_PATH, doc);
+        Path path = writeXmlFile(doc);
 
-        _qAQCReportToTest = loadReportToTest(XML_PATH);
+        _qAQCReportToTest = loadReportToTest(path);
         _qAQCMaster = loadComparisonSameModelReport();
 
         Element elemToTest = getElementsWithName(_qAQCReportToTest, CODE_CHANGES);

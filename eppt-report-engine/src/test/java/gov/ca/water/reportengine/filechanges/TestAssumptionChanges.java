@@ -23,7 +23,7 @@ import java.util.List;
 
 public class TestAssumptionChanges extends TestAssumptionChangesBase
 {
-    private static final String XML_PATH = System.getProperty("user.dir") + "\\assumptionChanges.xml";
+//    private static final String XML_PATH = System.getProperty("user.dir") + "\\assumptionChanges.xml";
     private static final String ASSUMPTION_CHANGES = "assumption-changes";
     private final double _tolerance = .001;
 
@@ -58,9 +58,9 @@ public class TestAssumptionChanges extends TestAssumptionChangesBase
 
         assumpCreater.appendAssumptionChangesElement(doc, stats);
 
-        writeXmlFile(XML_PATH, doc);
+        Path path = writeXmlFile(doc);
 
-        _qAQCReportToTest = loadReportToTest(XML_PATH);
+        _qAQCReportToTest = loadReportToTest(path);
         _qAQCMaster = loadComparisonSameModelReport();
 
         //get the elements to compare

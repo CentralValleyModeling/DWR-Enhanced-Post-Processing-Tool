@@ -28,7 +28,7 @@ public class TestDetailedIssueReport extends TestDetailedIssuesReportBase
 {
 
 
-    @Test
+//    @Test
     void testDetailedIssueSameModel() throws Exception
     {
 

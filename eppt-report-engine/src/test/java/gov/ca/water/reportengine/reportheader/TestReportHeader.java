@@ -17,6 +17,7 @@ import org.junit.jupiter.api.Test;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -25,7 +26,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class TestReportHeader extends TestReportHeaderBase
 {
-    private static final String XML_PATH = System.getProperty("user.dir") + "\\headerXML2Alts.xml";
+//    private static final String XML_PATH = System.getProperty("user.dir") + "\\headerXML2Alts.xml";
     private static final String REPORT_HEADER_TAG = "report-header";
 
     private Document _qAQCMaster;
@@ -42,9 +43,9 @@ public class TestReportHeader extends TestReportHeaderBase
         ReportHeader rh = new ReportHeader("Bryan Gray", "EPPT Prototype", "CSII_Base", altNames);
         ReportHeaderXMLCreator rhWriter = new ReportHeaderXMLCreator();
         rhWriter.appendReportHeaderElement(rh, doc);
-        writeXmlFile(XML_PATH, doc);
+        Path path = writeXmlFile(doc);
 
-        _qAQCReportToTest = loadReportToTest(XML_PATH);
+        _qAQCReportToTest = loadReportToTest(path);
         _qAQCMaster = loadBaseOnlyReport();
 
         //get the elements to compare
@@ -76,9 +77,9 @@ public class TestReportHeader extends TestReportHeaderBase
         ReportHeader rh = new ReportHeader("Bryan Gray", "EPPT Prototype", "CSII_Base", altNames);
         ReportHeaderXMLCreator rhWriter = new ReportHeaderXMLCreator();
         rhWriter.appendReportHeaderElement(rh, doc);
-        writeXmlFile(XML_PATH, doc);
+        Path path = writeXmlFile(doc);
 
-        _qAQCReportToTest = loadReportToTest(XML_PATH);
+        _qAQCReportToTest = loadReportToTest(path);
         _qAQCMaster = loadComparisonSameModelReport();
 
         //get the elements to compare

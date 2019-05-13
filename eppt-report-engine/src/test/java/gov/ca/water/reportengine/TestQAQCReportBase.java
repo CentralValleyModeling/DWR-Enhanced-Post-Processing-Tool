@@ -38,10 +38,12 @@ import javax.xml.transform.stream.StreamResult;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 
 import hec.heclib.dss.HecDSSFileAccess;
@@ -179,13 +181,16 @@ public class TestQAQCReportBase
         return new File(altSV.getPath()).toPath();
     }
 
-    public void writeXmlFile(String xmlPath, Document doc) throws ParserConfigurationException, TransformerException
+    public Path writeXmlFile(Document doc) throws ParserConfigurationException, TransformerException, IOException
     {
         TransformerFactory transformerFactory = TransformerFactory.newInstance();
         Transformer transformer = transformerFactory.newTransformer();
         DOMSource domSource = new DOMSource(doc);
-        StreamResult streamResult = new StreamResult(new File(xmlPath).getPath());// Paths.get(xmlPath).toAbsolutePath().toFile());
+        Path report = Files.createTempFile("reportXML", String.valueOf(new Date().getTime()));
+        report.toFile().deleteOnExit();
+        StreamResult streamResult = new StreamResult(report.toString());
         transformer.transform(domSource, streamResult);
+        return report;
     }
 
     public Document getDoc() throws ParserConfigurationException
@@ -207,11 +212,11 @@ public class TestQAQCReportBase
         return new File(resource.getPath()).toPath();
     }
 
-    public Document loadReportToTest(String path) throws Exception
+    public Document loadReportToTest(Path path) throws Exception
     {
         DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
         DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
-        Document doc = dBuilder.parse(new File(path).getPath());
+        Document doc = dBuilder.parse(path.toString());
         doc.getDocumentElement().normalize();
         return doc;
     }

@@ -22,6 +22,7 @@ import org.w3c.dom.Element;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import java.net.URL;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -32,7 +33,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class TestModelInputsRow extends ExecutiveReportTestBase
 {
-    private static final String XML_PATH = System.getProperty("user.dir") +  "\\executivereport.xml";
+//    private static final String XML_PATH = System.getProperty("user.dir") +  "\\executivereport.xml";
     private Document _qAQCMaster;
     private Document _qAQCReportToTest;
 
@@ -56,10 +57,10 @@ public class TestModelInputsRow extends ExecutiveReportTestBase
 
 
         erWriter.appendExecutiveReportTableElement(allRuns, runsToViolations, modules,  null, false, doc);
-        writeXmlFile(XML_PATH, doc);
+        Path path = writeXmlFile(doc);
 
         //read the xml file to test
-        _qAQCReportToTest = loadReportToTest(XML_PATH);
+        _qAQCReportToTest = loadReportToTest(path);
         _qAQCMaster = loadBaseOnlyReport();
 
         //get the elements to compare

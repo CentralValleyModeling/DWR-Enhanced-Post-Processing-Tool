@@ -90,11 +90,13 @@ public final class ThresholdLinksSeedDataSvc
 		{
 			List<String> thresholdLinkStrings = fileSystemSvc.getFileData(Paths.get(THRESHOLD_LINKS_FILENAME), true,
 					ThresholdLinksSeedDataSvc::isNotComments);
+			//Header
+			thresholdLinkStrings.remove(0);
 			for(String thresholdLinkString : thresholdLinkStrings)
 			{
 				errorStr = thresholdLinkString;
 				String[] list = thresholdLinkString.split(Constant.DELIMITER);
-				if(list.length >= THRESHOLD_INDEX && list[THRESHOLD_INDEX] != null)
+				if(list.length > THRESHOLD_INDEX && list[THRESHOLD_INDEX] != null)
 				{
 					int id = Integer.parseInt(list[ID_INDEX].trim());
 					ThresholdLinksBO threadholdLinksBO = _thresholdLinks.computeIfAbsent(id,
@@ -136,7 +138,7 @@ public final class ThresholdLinksSeedDataSvc
 	private ThresholdLinksBO createThresholdLinks(String[] list, int checkboxId)
 	{
 		String label = "";
-		if(list.length >= LABEL_INDEX)
+		if(list.length > LABEL_INDEX)
 		{
 			label= list[LABEL_INDEX];
 		}

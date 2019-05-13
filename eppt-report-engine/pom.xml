@@ -23,6 +23,9 @@
 	</parent>
 	<artifactId>eppt-report-engine</artifactId>
 	<name>EPPT Report Engine</name>
+	<properties>
+		<argLine>-Djava.library.path=${project.build.directory}\lib -Duser.dir=${project.build.directory}\test-classess</argLine>
+	</properties>
 	<dependencies>
 		<dependency>
 			<groupId>hecjavadev-core</groupId>
@@ -67,9 +70,6 @@
 			<scope>compile</scope>
 		</dependency>
 	</dependencies>
-	<properties>
-		<argLine>-Djava.library.path=${project.build.directory}\lib -Duser.dir=${project.build.directory}\test-classess</argLine>
-	</properties>
 	<build>
 		<plugins>
 			<plugin>
