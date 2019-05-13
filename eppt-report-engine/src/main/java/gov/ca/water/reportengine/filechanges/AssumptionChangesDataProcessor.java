@@ -114,6 +114,8 @@ public class AssumptionChangesDataProcessor
         Set<String> baseRecordsOnly = new HashSet<>();
         Set<String> altRecordsOnly = new HashSet<>();
 
+        baseFile.getPathnameList();
+        altFile.getPathnameList();
         for (DSSPathname pathName : _csvMasterPathList)
         {
             processDSSDifferences(changes, baseRecordsOnly, altRecordsOnly, baseFile, altFile, pathName);
@@ -154,7 +156,7 @@ public class AssumptionChangesDataProcessor
         }
         else
         {
-            LOGGER.log(Level.WARNING, "The base and the alternative did not contain the dss file: {0}" , pathFromMaster);
+            LOGGER.log(Level.FINE, "The base and the alternative did not contain the dss file: {0}" , pathFromMaster);
         }
     }
 
