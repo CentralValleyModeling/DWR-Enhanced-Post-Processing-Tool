@@ -49,6 +49,7 @@ import gov.ca.water.reportengine.filechanges.CodeChangesXMLCreator;
 import gov.ca.water.reportengine.filechanges.FileChangesStatistics;
 import gov.ca.water.reportengine.reportheader.ReportHeader;
 import gov.ca.water.reportengine.reportheader.ReportHeaderXMLCreator;
+import gov.ca.water.reportengine.reportreaders.WaterYearTableReader;
 import org.w3c.dom.Document;
 
 import static gov.ca.water.calgui.constant.Constant.CONFIG_DIR;
@@ -64,6 +65,8 @@ public class EPPTReport
 	private static final String DETAILS_CSV = CONFIG_DIR + "/Details" + CSV_EXT;
 	private static final String CODE_CHANGES_CSV = CONFIG_DIR + "/CodeChangesDSSPaths" + CSV_EXT;
 
+	private final Path _wyTypeTable;
+	private final Path _wyNameLookup;
 	private final Path _pathToWriteOut;
 	private final EpptScenarioRun _baseRun;
 	private final List<EpptScenarioRun> _altRuns;
@@ -75,8 +78,10 @@ public class EPPTReport
 
 	private List<DetailedIssue> _allDetailedIssues;
 
-	public EPPTReport(Path pathToWriteOut, EpptScenarioRun baseRun, List<EpptScenarioRun> altRuns, double tolerance, String author, String subtitle)
+	public EPPTReport(Path wyTypeTable,Path wyNameLookup, Path pathToWriteOut, EpptScenarioRun baseRun, List<EpptScenarioRun> altRuns, double tolerance, String author, String subtitle)
 	{
+		_wyTypeTable = wyTypeTable;
+		_wyNameLookup = wyNameLookup;
 		_pathToWriteOut = pathToWriteOut;
 		_baseRun = baseRun;
 		_altRuns = altRuns;
@@ -160,7 +165,7 @@ public class EPPTReport
 		Map<EpptScenarioRun, Map<SubModule, List<FlagViolation>>> runsToFlagViolations =
 				dtsProcessor.processDSSFiles(allRuns, getPostProcessDSSPathsForAllRuns());
 
-		DetailedIssueProcessor processor = new DetailedIssueProcessor(runsToFlagViolations, _modules, _allDetailedIssues, allRuns, true);
+		DetailedIssueProcessor processor = new DetailedIssueProcessor(_wyTypeTable, _wyNameLookup, runsToFlagViolations, _modules, _allDetailedIssues, allRuns, true);
 		Map<EpptScenarioRun, Map<Module, List<DetailedIssueViolation>>> runsToDetailedViolations = processor.process();
 
 		DetailedIssuesXMLCreator xmlCreator = new DetailedIssuesXMLCreator();

@@ -16,15 +16,19 @@ import gov.ca.water.calgui.bo.GUILinksAllModelsBO;
 import gov.ca.water.calgui.busservice.impl.DSSGrabber1SvcImpl;
 import gov.ca.water.calgui.busservice.impl.GuiLinksSeedDataSvcImpl;
 import gov.ca.water.calgui.project.EpptScenarioRun;
+import gov.ca.water.reportengine.EpptReportException;
 import gov.ca.water.reportengine.executivereport.FlagViolation;
 import gov.ca.water.reportengine.executivereport.Module;
 import gov.ca.water.reportengine.executivereport.SubModule;
+import gov.ca.water.reportengine.reportreaders.WaterYearTableReader;
+import gov.ca.water.reportengine.reportreaders.WaterYearType;
 import hec.heclib.util.HecTime;
 import hec.io.TimeSeriesContainer;
 import hec.lang.Const;
 import org.apache.log4j.Logger;
 import org.python.antlr.base.mod;
 
+import java.nio.file.Path;
 import java.util.*;
 
 public class DetailedIssueProcessor
@@ -43,10 +47,14 @@ public class DetailedIssueProcessor
     private final List<FlagViolation> _baseViolations = new ArrayList<>();
     private final List<FlagViolation> _altViolations = new ArrayList<>();
 
+    private final List<WaterYearType> _waterYearTypes;
 
-    public DetailedIssueProcessor(Map<EpptScenarioRun, Map<SubModule, List<FlagViolation>>> runsToViolations, List<Module> modules,
-                                  List<DetailedIssue> allDetailedIssues, List<EpptScenarioRun> runs, boolean isCFS)
+    public DetailedIssueProcessor(Path waterYearTypeTable, Path waterYearNameLookup, Map<EpptScenarioRun, Map<SubModule, List<FlagViolation>>> runsToViolations, List<Module> modules,
+                                  List<DetailedIssue> allDetailedIssues, List<EpptScenarioRun> runs, boolean isCFS) throws EpptReportException
     {
+        WaterYearTableReader wyTypeReader = new WaterYearTableReader(waterYearTypeTable, waterYearNameLookup);
+        _waterYearTypes = wyTypeReader.read();
+
         _runsToViolations = runsToViolations;
         _modules = modules;
         _allDetailedIssues = allDetailedIssues;
@@ -138,17 +146,20 @@ public class DetailedIssueProcessor
 
         Map<HecTime, Double> actualValues = getActualValues(violation.getTimes(), valueContainer);
         Map<HecTime, Double> thresholdValues = getThresholdValues(violation.getTimes(), thresholdSeriesContainer);
-
-        return new DetailedIssueViolation(violation.getTimes(), title, actualValues, thresholdValues, getWaterYearTypes(violation.getTimes()));
+        Map<HecTime, String> waterYearTypes = getWaterYearTypes(violation.getTimes());
+        return new DetailedIssueViolation(violation.getTimes(), title, actualValues, thresholdValues, waterYearTypes);
     }
 
     private Map<HecTime, Double> getActualValues(List<HecTime> times,  TimeSeriesContainer tsc)
     {
         Map<HecTime, Double> values = new HashMap<>();
-        for(HecTime time : times)
+        if(tsc != null)
         {
-            double value = tsc.getValue(time);
-            values.put(time, value);
+            for (HecTime time : times)
+            {
+                double value = tsc.getValue(time);
+                values.put(time, value);
+            }
         }
         return values;
     }
@@ -156,10 +167,13 @@ public class DetailedIssueProcessor
     private Map<HecTime, Double> getThresholdValues(List<HecTime> times,  TimeSeriesContainer tsc)
     {
         Map<HecTime, Double> thresholds = new HashMap<>();
-        for(HecTime time : times)
+        if(tsc != null)
         {
-            double threshold = tsc.getValue(time);
-            thresholds.put(time, threshold);
+            for (HecTime time : times)
+            {
+                double threshold = tsc.getValue(time);
+                thresholds.put(time, threshold);
+            }
         }
         return thresholds;
     }
@@ -169,7 +183,16 @@ public class DetailedIssueProcessor
         Map<HecTime, String> types = new HashMap<>();
         for(HecTime time : times)
         {
-            types.put(time, "Test water year type");
+            String waterYearTypeString = "Undefined";
+            for(WaterYearType wyt : _waterYearTypes)
+            {
+                if( wyt.getYear() == time.year())
+                {
+                    waterYearTypeString = wyt.getWaterYearType();
+                    break;
+                }
+            }
+            types.put(time, waterYearTypeString);
         }
 
         return types;

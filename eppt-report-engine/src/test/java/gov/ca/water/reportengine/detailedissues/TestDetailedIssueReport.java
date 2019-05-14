@@ -18,6 +18,8 @@ import gov.ca.water.reportengine.executivereport.DTSProcessor;
 import gov.ca.water.reportengine.executivereport.FlagViolation;
 import gov.ca.water.reportengine.executivereport.Module;
 import gov.ca.water.reportengine.executivereport.SubModule;
+import gov.ca.water.reportengine.reportreaders.WaterYearTableReader;
+import gov.ca.water.reportengine.reportreaders.WaterYearType;
 import org.junit.jupiter.api.Test;
 import org.w3c.dom.Document;
 
@@ -33,7 +35,9 @@ public class TestDetailedIssueReport extends TestDetailedIssuesReportBase
     @Test
     void testDetailedIssueSameModel() throws Exception
     {
-        
+//        WaterYearTableReader wyTypeReader = new WaterYearTableReader(getWyTypeTablePath(), getWyTypeNameLookupTablePath());
+//        List<WaterYearType> waterYearTypes = wyTypeReader.read();
+
         EpptScenarioRun baseScenarioRun = getBaseScenarioRun();
         List<EpptScenarioRun> altScenarioRuns = getAltScenarioRuns();
         List<EpptScenarioRun> allRuns = new ArrayList<>();
@@ -49,7 +53,7 @@ public class TestDetailedIssueReport extends TestDetailedIssuesReportBase
 
         Document doc = getDoc();
 
-        DetailedIssueProcessor processor = new DetailedIssueProcessor(runsToFlagViolations, modules, allDetailedIssues, allRuns,true);
+        DetailedIssueProcessor processor = new DetailedIssueProcessor(getWyTypeTablePath(), getWyTypeNameLookupTablePath(), runsToFlagViolations, modules, allDetailedIssues, allRuns,true);
         Map<EpptScenarioRun, Map<Module, List<DetailedIssueViolation>>> runsToDetailedViolations = processor.process();
 
         DetailedIssuesXMLCreator xmlCreator = new DetailedIssuesXMLCreator();

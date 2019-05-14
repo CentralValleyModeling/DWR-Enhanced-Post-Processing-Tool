@@ -92,7 +92,7 @@ public class DTSProcessor
 
 				if("COA".equalsIgnoreCase(mod.getName()))
 				{
-					Map<SubModule, List<FlagViolation>> subModuleListMap = setMaxValueForCOAModuleFromDssFile(mod, dssFile);
+					Map<SubModule, List<FlagViolation>> subModuleListMap = setMaxValueForCOAModuleFromDssFile(mod, hD);
 					for(Map.Entry<SubModule, List<FlagViolation>> entry : subModuleListMap.entrySet())
 					{
 						subModToViolations.put(entry.getKey(), entry.getValue());
@@ -129,15 +129,6 @@ public class DTSProcessor
 							}
 							TimeSeriesContainer result = (TimeSeriesContainer) hD.get(dssPath, true);
 
-							double[] values = result.values;
-							HecTimeArray times1 = result.getTimes();
-							for(int i = 0; i < times1.numberElements(); i++)
-							{
-								HecTime hecTime = times1.elementAt(i);
-							}
-
-							int[] times = result.times;
-
 							FlagViolation flagViolationFromRecord = createFlagViolationFromRecord(result, flagValue, lr);
 							if(flagViolationFromRecord != null)
 							{
@@ -165,7 +156,7 @@ public class DTSProcessor
 		}
 		catch(Exception e)
 		{
-			throw new EpptReportException("Unable top open dssFile: " + dssFile, e);
+			throw new EpptReportException("Unable to open dssFile: " + dssFile, e);
 		}
 		finally
 		{
@@ -178,13 +169,11 @@ public class DTSProcessor
 	}
 
 
-	private Map<SubModule, List<FlagViolation>> setMaxValueForCOAModuleFromDssFile(Module mod, Path dssFile) throws EpptReportException
+	private Map<SubModule, List<FlagViolation>> setMaxValueForCOAModuleFromDssFile(Module mod, HecDss hD) throws EpptReportException
 	{
 		Map<SubModule, List<FlagViolation>> subModToViolations = new HashMap<>();
-		HecDss hD = null;
 		try
 		{
-			hD = HecDss.open(dssFile.toString());
 			List<SubModule> subModules = mod.getSubModules();
 			FlagViolation violation = null;
 			for(SubModule sm : subModules)
@@ -215,10 +204,14 @@ public class DTSProcessor
 							double maxValue = getMaxValue(values);
 
 							violation = new FlagViolation(maxValue, lr);
+
+							List<FlagViolation> violations = new ArrayList<>();
+							violations.add(violation);
+							subModToViolations.put(sm, violations);
 						}
 						else
 						{
-							throw new ExecutiveReportException("Error reading dssFile during executive report generation: " + dssFile.toString()
+							throw new ExecutiveReportException("Error reading dssFile during executive report generation: " + hD.getFilename()
 									+ " Could not find record with name: " + dssPath);
 						}
 
@@ -229,30 +222,17 @@ public class DTSProcessor
 					}
 					catch(Exception e)
 					{
-						throw new ExecutiveReportException("Error reading dssFile during executive report generation: " + dssFile.toString(), e);
+						throw new ExecutiveReportException("Error reading dssFile during executive report generation: " + hD.getFilename(), e);
 					}
 
 				}
-				List<FlagViolation> violations = new ArrayList<>();
-				violations.add(violation);
-				subModToViolations.put(sm, violations);
-				//            if (scenarioNumber == 1)
-				//            {
-				//                List<FlagViolation> violations = new ArrayList<>();
-				//                violations.add(violation);
-				//                sm.addBaseViolations(violations);
-				//            }
-				//            else
-				//            {
-				//                List<FlagViolation> violations = new ArrayList<>();
-				//                violations.add(violation);
-				//                sm.addAlternativeViolations(scenarioNumber, violations);
-				//            }
+
+
 			}
 		}
 		catch(Exception e)
 		{
-			throw new EpptReportException("Unable to open DSS file: " + dssFile, e);
+			throw new EpptReportException("Unable to open DSS file: " + hD.getFilename(), e);
 		}
 		finally
 		{

@@ -32,7 +32,7 @@ import static gov.ca.water.calgui.constant.Constant.CSV_EXT;
 public final class GuiLinksSeedDataSvcImpl implements IGuiLinksSeedDataSvc
 {
 	private static final Logger LOG = Logger.getLogger(GuiLinksSeedDataSvcImpl.class.getName());
-	private static final String GUI_LINKS_ALL_MODELS_FILENAME = CONFIG_DIR + "/GUI_Links_All_Models" + CSV_EXT;
+	private static final String GUI_LINKS_ALL_MODELS_FILENAME = CONFIG_DIR + "/GUI_Links" + CSV_EXT;
 	private static IGuiLinksSeedDataSvc seedDataSvc;
 	private final Map<Integer, GUILinksAllModelsBO> _guiLinksAllModels = new HashMap<>();
 
@@ -83,6 +83,20 @@ public final class GuiLinksSeedDataSvcImpl implements IGuiLinksSeedDataSvc
 			for(String guiLinkString : guiLinkStrings)
 			{
 				errorStr = guiLinkString;
+				//don't count comment rows
+				if(guiLinkString.length()>0)
+				{
+					if(guiLinkString.trim().charAt(0) == '\uFEFF' || guiLinkString.trim().charAt(0) == '!' || guiLinkString.trim().charAt(0) == '#')
+					{
+						continue;
+					}
+				}
+				else
+				{
+					continue;
+				}
+
+
 				String[] list = guiLinkString.split(Constant.DELIMITER);
 				int checkboxId = Integer.parseInt(list[0].trim());
 				GUILinksAllModelsBO guiLinksAllModelsBO = _guiLinksAllModels.computeIfAbsent(checkboxId,

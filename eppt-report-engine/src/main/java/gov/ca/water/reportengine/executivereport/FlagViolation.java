@@ -13,20 +13,23 @@
 package gov.ca.water.reportengine.executivereport;
 
 import hec.heclib.util.HecTime;
+import hec.lang.Const;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class FlagViolation
 {
 
-    private  List<HecTime> _times;
+    private final List<HecTime> _times = new ArrayList<>();
     private final String _dtsFileName;
-    private  double _maxValue;
+    private final  double _maxValue;
 
     FlagViolation(List<HecTime> times, String dtsFileName)
     {
-        _times = times;
+        _times.addAll(times);
         _dtsFileName = dtsFileName;
+        _maxValue = Const.UNDEFINED_DOUBLE;
 
     }
 
