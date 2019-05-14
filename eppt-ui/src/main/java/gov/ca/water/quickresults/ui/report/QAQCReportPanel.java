@@ -216,7 +216,10 @@ public class QAQCReportPanel extends RmaJPanel implements ProcessOutputConsumer
 			double tolerance = Double.parseDouble(_toleranceTextField.getText());
 			String author = _authorTextField.getText();
 			String subtitle = _reportSubtitle.getText();
-			qaqcReportGenerator.generateQAQCReport(baseRun, altRun, tolerance, author, subtitle, pathToWriteOut);
+			Path waterYearTablePath = Paths.get(_waterYearTable.getText());
+			Path waterYearLookupPath = Paths.get(_waterYearLookup.getText());
+
+			qaqcReportGenerator.generateQAQCReport(waterYearTablePath, waterYearLookupPath, baseRun, altRun, tolerance, author, subtitle, pathToWriteOut);
 		}
 		catch(QAQCReportException | RuntimeException e)
 		{

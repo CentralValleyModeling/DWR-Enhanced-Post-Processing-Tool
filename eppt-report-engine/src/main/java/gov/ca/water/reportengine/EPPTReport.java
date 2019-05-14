@@ -175,11 +175,11 @@ public class EPPTReport
 	private List<Path> getPostProcessDSSPathsForAllRuns()
 	{
 		List<Path> retval = new ArrayList<>();
-		retval.add(_baseRun.getDssContainer().getDvDssFile().getDssPath());//what dss file is this? shouldn't it be "pst_prcss"
+		retval.add(_baseRun.getPostProcessDss());
 
 		for(EpptScenarioRun run : _altRuns)
 		{
-			retval.add(run.getDssContainer().getDvDssFile().getDssPath());
+			retval.add(run.getPostProcessDss());
 		}
 		return retval;
 	}
