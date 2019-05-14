@@ -77,8 +77,13 @@ public final class SaveProjectConfiguration extends AbstractAction implements Pr
 		ProjectConfigurationPanel projectConfigurationPanel = ProjectConfigurationPanel.getProjectConfigurationPanel();
 		if(lastProjectConfiguration.toFile().exists())
 		{
-
-			projectConfigurationPanel.saveConfigurationToPath(lastProjectConfiguration,
+			Path projectDir = lastProjectConfiguration.getParent();
+			//For backwards compatibility
+			if(projectDir.normalize().equals(EpptPreferences.getProjectsPath()))
+			{
+				projectDir = projectDir.resolve(projectConfigurationPanel.getProjectName());
+			}
+			projectConfigurationPanel.saveConfigurationToPath(projectDir,
 					projectConfigurationPanel.getProjectName(), projectConfigurationPanel.getProjectDescription());
 		}
 		else

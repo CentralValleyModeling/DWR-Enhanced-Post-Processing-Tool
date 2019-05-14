@@ -114,8 +114,7 @@ class WreslConfigWriter
 			{
 				configText = configText.replace("{MainFile}", wreslMain.toAbsolutePath().toString());
 			}
-			Path outputPath = _scenarioRun.getOutputPath();
-			configText = configText.replace("{PostProcessDss}", outputPath.resolve(_scenarioRun.getName() + "_PostProc.dss").toString());
+			configText = configText.replace("{PostProcessDss}", _scenarioRun.getPostProcessDss().toString());
 
 
 			configText = configText.replace("{StartYear}", Integer.toString(_startDate.getYear()));

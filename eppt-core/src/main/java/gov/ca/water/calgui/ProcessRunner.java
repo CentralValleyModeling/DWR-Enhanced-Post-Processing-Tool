@@ -93,7 +93,7 @@ public abstract class ProcessRunner
 		{
 			if(process != null)
 			{
-				process.destroy();
+				process.destroyForcibly();
 			}
 		}
 	}

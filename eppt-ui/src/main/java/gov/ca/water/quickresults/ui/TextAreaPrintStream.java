@@ -78,7 +78,7 @@ public class TextAreaPrintStream
 		_executorService.shutdownNow();
 	}
 
-	public void appendErrorText(String str)
+	private void appendErrorText(String str)
 	{
 		SwingUtilities.invokeLater(() ->
 		{
@@ -87,7 +87,7 @@ public class TextAreaPrintStream
 		});
 	}
 
-	public void appendNormalText(String str)
+	private void appendNormalText(String str)
 	{
 		SwingUtilities.invokeLater(() ->
 		{

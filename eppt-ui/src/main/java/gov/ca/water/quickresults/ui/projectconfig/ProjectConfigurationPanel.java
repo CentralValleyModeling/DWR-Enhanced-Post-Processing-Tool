@@ -25,6 +25,7 @@ import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
 import gov.ca.water.calgui.bo.ResultUtilsBO;
+import gov.ca.water.calgui.constant.Constant;
 import gov.ca.water.calgui.constant.EpptPreferences;
 import gov.ca.water.calgui.project.EpptProject;
 import gov.ca.water.calgui.project.EpptScenarioRun;
@@ -382,12 +383,17 @@ public final class ProjectConfigurationPanel extends EpptPanel
 	public void saveConfigurationToPath(Path selectedPath, String projectName, String projectDescription)
 			throws IOException
 	{
-		_projectConfigurationIO.saveConfiguration(selectedPath, projectName, projectDescription);
-		JTextField projectNameField = (JTextField) getSwingEngine().find("prj_name");
-		JTextField descriptionField = (JTextField) getSwingEngine().find("prj_desc");
-		projectNameField.setText(projectName);
-		descriptionField.setText(projectDescription);
-		EpptPreferences.setLastProjectConfiguration(selectedPath);
+		boolean mkdirs = selectedPath.toFile().mkdirs();
+		if(mkdirs)
+		{
+			Path projectFile = selectedPath.resolve(projectName + "." + Constant.EPPT_EXT);
+			_projectConfigurationIO.saveConfiguration(projectFile, projectName, projectDescription);
+			JTextField projectNameField = (JTextField) getSwingEngine().find("prj_name");
+			JTextField descriptionField = (JTextField) getSwingEngine().find("prj_desc");
+			projectNameField.setText(projectName);
+			descriptionField.setText(projectDescription);
+			EpptPreferences.setLastProjectConfiguration(projectFile);
+		}
 	}
 
 	public void loadProjectConfiguration(Path selectedPath) throws IOException

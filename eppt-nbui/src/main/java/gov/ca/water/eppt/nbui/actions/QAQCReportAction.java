@@ -36,7 +36,7 @@ import org.openide.windows.WindowManager;
 		id = "gov.ca.water.eppt.nbui.actions.QAQCReportAction"
 )
 @ActionRegistration(
-		iconBase = "gov/ca/water/eppt/nbui/actions/run.png",
+		iconBase = "gov/ca/water/eppt/nbui/actions/button_blue_play.png",
 		displayName = "Generate QA/QC Report"
 )
 @ActionReferences(

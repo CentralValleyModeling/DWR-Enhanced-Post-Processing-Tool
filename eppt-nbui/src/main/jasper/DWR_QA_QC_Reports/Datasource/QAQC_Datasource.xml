@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xmlDataAdapter class="net.sf.jasperreports.data.xml.XmlDataAdapterImpl">
-   <name>QAQCReport</name>
+   <name>QAQC_Datasource</name>
    <dataFile xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="repositoryDataLocation">
-      <location>QAQC_Report_BaseOnly.xml</location>
+      <location>EPPT_Data.xml</location>
    </dataFile>
    <useConnection>true</useConnection>
    <namespaceAware>true</namespaceAware>

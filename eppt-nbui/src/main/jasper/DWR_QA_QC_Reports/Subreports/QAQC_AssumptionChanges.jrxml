@@ -1,0 +1,252 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.8.0.final using JasperReports Library version 6.8.0-2ed8dfabb690ff337a5797129f2cd92902b0c87b  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="QAQC_AssumptionChanges" language="groovy" pageWidth="612" pageHeight="792" columnWidth="504" leftMargin="54" rightMargin="54" topMargin="54" bottomMargin="54" uuid="da75db69-3924-4f44-998a-80195014db99">
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="QAQC_Datasource"/>
+	<property name="net.sf.jasperreports.print.create.bookmarks" value="true"/>
+	<parameter name="Assumption_Changes" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["Assumption Changes"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="File_Comparison" class="java.lang.String">
+		<defaultValueExpression><![CDATA["File Comparison"]]></defaultValueExpression>
+	</parameter>
+	<queryString language="XPath">
+		<![CDATA[/qaqc-report/assumption-changes/input/input-type/record]]>
+	</queryString>
+	<field name="input" class="java.lang.String">
+		<property name="net.sf.jasperreports.xpath.field.expression" value="ancestor::input/@input"/>
+		<fieldDescription><![CDATA[ancestor::input/@input]]></fieldDescription>
+	</field>
+	<field name="common-records-different-data" class="java.lang.String">
+		<property name="net.sf.jasperreports.xpath.field.expression" value="ancestor::input/@common-records-different-data"/>
+		<fieldDescription><![CDATA[ancestor::input/@common-records-different-data]]></fieldDescription>
+	</field>
+	<field name="records-only-in-base" class="java.lang.String">
+		<property name="net.sf.jasperreports.xpath.field.expression" value="ancestor::input/@records-only-in-base"/>
+		<fieldDescription><![CDATA[ancestor::input/@records-only-in-base]]></fieldDescription>
+	</field>
+	<field name="records-only-in-alternative" class="java.lang.String">
+		<property name="net.sf.jasperreports.xpath.field.expression" value="ancestor::input/@records-only-in-alternative"/>
+		<fieldDescription><![CDATA[ancestor::input/@records-only-in-alternative]]></fieldDescription>
+	</field>
+	<field name="input-type" class="java.lang.String">
+		<property name="net.sf.jasperreports.xpath.field.expression" value="ancestor::input-type/@input-type"/>
+		<fieldDescription><![CDATA[ancestor::input-type/@input-type]]></fieldDescription>
+	</field>
+	<field name="record" class="java.lang.String">
+		<property name="net.sf.jasperreports.xpath.field.expression" value="child::text()"/>
+		<fieldDescription><![CDATA[child::text()]]></fieldDescription>
+	</field>
+	<variable name="v_RecordCount" class="java.lang.Integer" resetType="Group" resetGroup="Input Type">
+		<variableExpression><![CDATA[$V{v_RecordCount}+1]]></variableExpression>
+		<initialValueExpression><![CDATA[0]]></initialValueExpression>
+	</variable>
+	<group name="Input">
+		<groupExpression><![CDATA[$F{input}]]></groupExpression>
+		<groupHeader>
+			<band height="83">
+				<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				<textField>
+					<reportElement x="0" y="60" width="200" height="21" uuid="d8a8646f-d6bf-4132-bc52-d3f72c5e825b"/>
+					<box leftPadding="4">
+						<topPen lineWidth="1.0"/>
+						<leftPen lineWidth="1.0"/>
+						<bottomPen lineWidth="1.0"/>
+						<rightPen lineWidth="1.0"/>
+					</box>
+					<textElement verticalAlignment="Middle">
+						<font fontName="Arial"/>
+					</textElement>
+					<textFieldExpression><![CDATA["Records only included in the Alt Study"]]></textFieldExpression>
+				</textField>
+				<textField evaluationTime="Group" evaluationGroup="Input">
+					<reportElement x="200" y="18" width="200" height="21" printWhenGroupChanges="Input" uuid="7a3e4158-f4db-4d75-b5bd-bce22d8eff7d"/>
+					<box leftPadding="4">
+						<topPen lineWidth="1.0"/>
+						<leftPen lineWidth="1.0"/>
+						<bottomPen lineWidth="1.0"/>
+						<rightPen lineWidth="1.0"/>
+					</box>
+					<textElement verticalAlignment="Middle">
+						<font fontName="Arial"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{common-records-different-data}]]></textFieldExpression>
+				</textField>
+				<textField evaluationTime="Group" evaluationGroup="Input">
+					<reportElement x="200" y="39" width="200" height="21" printWhenGroupChanges="Input" uuid="c80290d4-cfa9-463a-8f78-cf041756db23"/>
+					<box leftPadding="4">
+						<topPen lineWidth="1.0"/>
+						<leftPen lineWidth="1.0"/>
+						<bottomPen lineWidth="1.0"/>
+						<rightPen lineWidth="1.0"/>
+					</box>
+					<textElement verticalAlignment="Middle">
+						<font fontName="Arial"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{records-only-in-base}]]></textFieldExpression>
+				</textField>
+				<textField evaluationTime="Group" evaluationGroup="Input">
+					<reportElement x="200" y="60" width="200" height="21" printWhenGroupChanges="Input" uuid="ba17c558-5309-4cf6-89e0-453419bc1e41"/>
+					<box leftPadding="4">
+						<topPen lineWidth="1.0"/>
+						<leftPen lineWidth="1.0"/>
+						<bottomPen lineWidth="1.0"/>
+						<rightPen lineWidth="1.0"/>
+					</box>
+					<textElement verticalAlignment="Middle">
+						<font fontName="Arial"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{records-only-in-alternative}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="0" y="18" width="200" height="21" uuid="55267d6f-6cf9-410a-b49a-b12398632a85"/>
+					<box leftPadding="4">
+						<topPen lineWidth="1.0"/>
+						<leftPen lineWidth="1.0"/>
+						<bottomPen lineWidth="1.0"/>
+						<rightPen lineWidth="1.0"/>
+					</box>
+					<textElement verticalAlignment="Middle">
+						<font fontName="Arial"/>
+					</textElement>
+					<textFieldExpression><![CDATA["Common Records, Different Data"]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="0" y="0" width="180" height="18" forecolor="#2F5496" uuid="728e63f9-5ae6-4f25-be59-8addf6b44a2f"/>
+					<textElement>
+						<font fontName="Arial" size="12"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{input}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="0" y="39" width="200" height="21" uuid="e8532702-a0bd-4666-9cdf-668f9b0d6393"/>
+					<box leftPadding="4">
+						<topPen lineWidth="1.0"/>
+						<leftPen lineWidth="1.0"/>
+						<bottomPen lineWidth="1.0"/>
+						<rightPen lineWidth="1.0"/>
+					</box>
+					<textElement verticalAlignment="Middle">
+						<font fontName="Arial"/>
+					</textElement>
+					<textFieldExpression><![CDATA["Records only included in the Base Study"]]></textFieldExpression>
+				</textField>
+			</band>
+		</groupHeader>
+		<groupFooter>
+			<band height="15">
+				<property name="com.jaspersoft.studio.unit.height" value="px"/>
+			</band>
+		</groupFooter>
+	</group>
+	<group name="Input Type">
+		<groupExpression><![CDATA[$F{input-type}]]></groupExpression>
+		<groupHeader>
+			<band height="18">
+				<textField>
+					<reportElement x="0" y="0" width="180" height="18" forecolor="#2F5496" uuid="a579cc56-0645-4ebc-a0dc-a32caf62da1a"/>
+					<textElement verticalAlignment="Middle">
+						<font fontName="Arial" size="10"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{input-type}]]></textFieldExpression>
+				</textField>
+			</band>
+		</groupHeader>
+		<groupFooter>
+			<band>
+				<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				<printWhenExpression><![CDATA[1==0]]></printWhenExpression>
+			</band>
+		</groupFooter>
+	</group>
+	<group name="Record">
+		<groupExpression><![CDATA[$F{record}]]></groupExpression>
+		<groupHeader>
+			<band>
+				<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				<printWhenExpression><![CDATA[1==0]]></printWhenExpression>
+			</band>
+		</groupHeader>
+		<groupFooter>
+			<band height="15">
+				<textField>
+					<reportElement x="25" y="0" width="479" height="15" uuid="9d07f912-65bc-4bc7-8558-0bb72c97a7c8">
+						<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					</reportElement>
+					<box>
+						<topPen lineWidth="0.0"/>
+						<leftPen lineWidth="0.0"/>
+						<bottomPen lineWidth="0.0"/>
+						<rightPen lineWidth="0.0"/>
+					</box>
+					<textElement verticalAlignment="Middle">
+						<font fontName="Arial"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$V{v_RecordCount}+".   "+$F{record}]]></textFieldExpression>
+				</textField>
+			</band>
+		</groupFooter>
+	</group>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="30" splitType="Stretch">
+			<property name="com.jaspersoft.studio.unit.height" value="px"/>
+			<textField isStretchWithOverflow="true" bookmarkLevel="1">
+				<reportElement stretchType="ContainerBottom" x="240" y="0" width="180" height="21" forecolor="#FFFFFF" uuid="0d769764-0000-4195-b75a-5f637dd1e6e8"/>
+				<textElement verticalAlignment="Bottom">
+					<font fontName="Arial" size="16"/>
+				</textElement>
+				<textFieldExpression><![CDATA["File Comparison"]]></textFieldExpression>
+				<anchorNameExpression><![CDATA[$P{File_Comparison}]]></anchorNameExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" bookmarkLevel="2">
+				<reportElement stretchType="ContainerBottom" x="0" y="0" width="180" height="21" forecolor="#2F5496" uuid="bdc7b3ea-bb1b-4c81-a3d3-3606716e6d3b"/>
+				<textElement verticalAlignment="Bottom">
+					<font fontName="Arial" size="16"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Assumption Changes"]]></textFieldExpression>
+				<anchorNameExpression><![CDATA[$P{Assumption_Changes}]]></anchorNameExpression>
+			</textField>
+		</band>
+	</title>
+	<pageHeader>
+		<band splitType="Stretch">
+			<printWhenExpression><![CDATA[1==0]]></printWhenExpression>
+		</band>
+	</pageHeader>
+	<columnHeader>
+		<band splitType="Stretch">
+			<printWhenExpression><![CDATA[1==0]]></printWhenExpression>
+		</band>
+	</columnHeader>
+	<detail>
+		<band splitType="Stretch">
+			<printWhenExpression><![CDATA[1==0]]></printWhenExpression>
+		</band>
+	</detail>
+	<columnFooter>
+		<band splitType="Stretch">
+			<printWhenExpression><![CDATA[1==0]]></printWhenExpression>
+		</band>
+	</columnFooter>
+	<pageFooter>
+		<band height="15" splitType="Stretch">
+			<textField evaluationTime="Master">
+				<reportElement mode="Transparent" x="0" y="0" width="504" height="15" uuid="19ac8623-cf3f-456e-b789-bbe751000a74">
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA["Page | " + ($V{MASTER_CURRENT_PAGE}-1)]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageFooter>
+	<summary>
+		<band height="21" splitType="Stretch">
+			<property name="com.jaspersoft.studio.unit.height" value="px"/>
+			<printWhenExpression><![CDATA[1==0]]></printWhenExpression>
+		</band>
+	</summary>
+</jasperReport>
