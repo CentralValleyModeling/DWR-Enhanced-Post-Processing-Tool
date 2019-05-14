@@ -110,6 +110,27 @@ public class QAQCReportPanel extends RmaJPanel implements ProcessOutputConsumer
 		Path currentProject = EpptPreferences.getLastProjectConfiguration();
 		Path reports = currentProject.getParent().resolve("Reports");
 		_pdfOutput.setText(reports.toString());
+		_baseComboBox.addActionListener(e -> baseComboboxChanged());
+		_altComboBox.addActionListener(e -> altComboboxChanged());
+	}
+
+	private void altComboboxChanged()
+	{
+		Object selectedItem = _altComboBox.getSelectedItem();
+		if(selectedItem != null)
+		{
+			_baseComboBox.removeItem(selectedItem);
+		}
+
+	}
+
+	private void baseComboboxChanged()
+	{
+		Object selectedItem = _baseComboBox.getSelectedItem();
+		if(selectedItem != null)
+		{
+			_altComboBox.removeItem(selectedItem);
+		}
 	}
 
 	private void chooseReportFile()

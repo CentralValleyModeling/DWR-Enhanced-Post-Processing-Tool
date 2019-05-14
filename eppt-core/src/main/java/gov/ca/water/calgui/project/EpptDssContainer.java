@@ -12,7 +12,6 @@
 
 package gov.ca.water.calgui.project;
 
-import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -28,14 +27,15 @@ public class EpptDssContainer
 	private final NamedDssPath _dvDssFile;
 	private final NamedDssPath _svDssFile;
 	private final NamedDssPath _ivDssFile;
+	private final NamedDssPath _dtsDssFile;
 	private final List<NamedDssPath> _extraDssFiles;
 
-	public EpptDssContainer(NamedDssPath dvDssFile, NamedDssPath svDssFile, NamedDssPath ivDssFile, List<NamedDssPath> extraDssFiles)
+	public EpptDssContainer(NamedDssPath dvDssFile, NamedDssPath svDssFile, NamedDssPath ivDssFile, NamedDssPath dtsDssFile, List<NamedDssPath> extraDssFiles)
 	{
-
 		_dvDssFile = dvDssFile;
 		_svDssFile = svDssFile;
 		_ivDssFile = ivDssFile;
+		_dtsDssFile = dtsDssFile;
 		_extraDssFiles = Collections.unmodifiableList(extraDssFiles);
 	}
 
@@ -58,6 +58,11 @@ public class EpptDssContainer
 	public NamedDssPath getIvDssFile()
 	{
 		return _ivDssFile;
+	}
+
+	public NamedDssPath getDtsDssFile()
+	{
+		return _dtsDssFile;
 	}
 
 	/**

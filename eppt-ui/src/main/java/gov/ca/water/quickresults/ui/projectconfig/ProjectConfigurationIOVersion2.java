@@ -104,6 +104,7 @@ class ProjectConfigurationIOVersion2
 			JSONObject namedDssDvJsonObject = createDssJson(dssContainer.getDvDssFile());
 			JSONObject namedDssSvJsonObject = createDssJson(dssContainer.getSvDssFile());
 			JSONObject namedDssIvJsonObject = createDssJson(dssContainer.getIvDssFile());
+			JSONObject namedDssDtsJsonObject = createDssJson(dssContainer.getDtsDssFile());
 			if(namedDssDvJsonObject != null)
 			{
 				dssContainerJson.put(SCENARIO_DV_KEY, namedDssDvJsonObject);
@@ -115,6 +116,10 @@ class ProjectConfigurationIOVersion2
 			if(namedDssIvJsonObject != null)
 			{
 				dssContainerJson.put(SCENARIO_IV_KEY, namedDssIvJsonObject);
+			}
+			if(namedDssDtsJsonObject != null)
+			{
+				dssContainerJson.put(SCENARIO_DTS_KEY, namedDssDtsJsonObject);
 			}
 			JSONArray extraDssArray = new JSONArray();
 			dssContainer.getExtraDssFiles().stream()
@@ -156,9 +161,14 @@ class ProjectConfigurationIOVersion2
 			{
 				ivDssFile = readDssJson(jsonObject.getJSONObject(SCENARIO_IV_KEY));
 			}
+			NamedDssPath dtsDssFile = null;
+			if(jsonObject.has(SCENARIO_DTS_KEY))
+			{
+				ivDssFile = readDssJson(jsonObject.getJSONObject(SCENARIO_DTS_KEY));
+			}
 
 			List<NamedDssPath> extraDssFiles = readExtraDss(jsonObject);
-			EpptDssContainer dssContainer = new EpptDssContainer(dvDssFile, svDssFile, ivDssFile, extraDssFiles);
+			EpptDssContainer dssContainer = new EpptDssContainer(dvDssFile, svDssFile, ivDssFile, dtsDssFile, extraDssFiles);
 			EpptScenarioRun epptScenarioRun = new EpptScenarioRun(name, description,
 					model, outputPath, wreslMain, dssContainer);
 			retval.add(epptScenarioRun);

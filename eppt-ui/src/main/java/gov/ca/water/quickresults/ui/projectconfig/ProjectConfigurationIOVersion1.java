@@ -97,9 +97,10 @@ class ProjectConfigurationIOVersion1
 		NamedDssPath dvDssFile = new NamedDssPath(dssPath, dssPath.getFileName().toString());
 		NamedDssPath svDssFile = null;
 		NamedDssPath ivDssFile = null;
+		NamedDssPath dtsDssFile = null;
 		List<NamedDssPath> extraDssFiles = new ArrayList<>();
 		EpptDssContainer dssContainer = new EpptDssContainer(dvDssFile, svDssFile,
-				ivDssFile, extraDssFiles);
+				ivDssFile, dtsDssFile, extraDssFiles);
 		return new EpptScenarioRun(name, description,
 				model, outputPath, wreslMain, dssContainer);
 	}

@@ -72,7 +72,7 @@ class TestScenarioRunEditor
 		NamedDssPath svDssFile = new NamedDssPath(Paths.get("SV FILE"), "TEST SV");
 		NamedDssPath ivDssFile = new NamedDssPath(Paths.get("IV File"), "TEST IV");
 		List<NamedDssPath> extraDssFiles = Arrays.asList(new NamedDssPath(Paths.get("EXTRA 1"), "EXTRA1"), new NamedDssPath(Paths.get("Extra 2"), "EXTRA2"));
-		EpptDssContainer dssContainer = new EpptDssContainer(dvDssFile, svDssFile, ivDssFile, extraDssFiles);
+		EpptDssContainer dssContainer = new EpptDssContainer(dvDssFile, svDssFile, ivDssFile, ivDssFile, extraDssFiles);
 		EpptScenarioRun epptScenarioRun = new EpptScenarioRun(name, description, model, outputPath,
 				wreslMain, dssContainer);
 		scenarioRunEditor.fillPanel(epptScenarioRun);

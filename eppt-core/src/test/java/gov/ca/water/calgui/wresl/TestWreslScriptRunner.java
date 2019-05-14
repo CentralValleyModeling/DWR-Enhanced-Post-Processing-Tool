@@ -71,7 +71,7 @@ public class TestWreslScriptRunner
 				TestWreslScriptRunner.class.getClassLoader().getResource("SampleSV_Base.dss").getFile()).toPath();
 		NamedDssPath svDssFile = new NamedDssPath(svPath, "SV");
 		List<NamedDssPath> extraDssFiles = Collections.emptyList();
-		EpptDssContainer dssContainer = new EpptDssContainer(dvDssFile, svDssFile, ivDssFile, extraDssFiles);
+		EpptDssContainer dssContainer = new EpptDssContainer(dvDssFile, svDssFile, ivDssFile, ivDssFile, extraDssFiles);
 		EPPT_SCENARIO_RUN = new EpptScenarioRun(name, description, model, outputPath,
 				wreslMain, dssContainer);
 		EPPT_SCENARIO_RUN_NOOP = new EpptScenarioRun(name, description, model, outputPath,

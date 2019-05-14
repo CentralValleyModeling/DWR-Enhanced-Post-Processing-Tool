@@ -92,14 +92,14 @@ public class EpptScenarioRun
 
 	public Path getPostProcessDss()
 	{
-		NamedDssPath dvDssFile = getDssContainer().getDvDssFile();
-		if(dvDssFile != null)
+		NamedDssPath dtsDssFile = getDssContainer().getDtsDssFile();
+		if(dtsDssFile != null)
 		{
-			return dvDssFile.getDssPath().getParent().resolve(getName() + "_PostProc.dss");
+			return dtsDssFile.getDssPath();
 		}
 		else
 		{
-			return getWreslMain().getParent().resolve(getName() + "_PostProc.dss");
+			return null;
 		}
 	}
 

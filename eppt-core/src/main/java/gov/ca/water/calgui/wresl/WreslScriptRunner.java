@@ -137,8 +137,6 @@ public class WreslScriptRunner
 					.command(outputBat.toString());
 			LOGGER.log(Level.INFO, "Running process: {0}", commandLine);
 			process = processBuilder.start();
-			InputStream errorStream = process.getErrorStream();
-			InputStream outputStream = process.getInputStream();
 			_outputStreamConsumer.runStarted(_scenarioRun, process);
 			process.waitFor();
 			int exitValue = process.exitValue();
@@ -157,7 +155,8 @@ public class WreslScriptRunner
 		{
 			if(process != null)
 			{
-				process.destroy();
+				process.destroyForcibly();
+				_outputStreamConsumer.runFinished(process);
 			}
 		}
 	}

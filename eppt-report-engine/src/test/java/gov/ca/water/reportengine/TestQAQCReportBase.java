@@ -79,7 +79,7 @@ public class TestQAQCReportBase
         NamedDssPath dvDssFile = new NamedDssPath(dvPath, "DV");
 
         List<NamedDssPath> extraDssFiles = Collections.emptyList();
-        EpptDssContainer dssContainer = new EpptDssContainer(dvDssFile, svDssFile, ivDssFile, extraDssFiles);
+        EpptDssContainer dssContainer = new EpptDssContainer(dvDssFile, svDssFile, ivDssFile, ivDssFile, extraDssFiles);
 
 
         GUILinksAllModelsBO.Model calSim2 = GUILinksAllModelsBO.Model.findModel("CalSim2");// model = new GUILinksAllModelsBO.Model("CalSim2");
@@ -99,7 +99,7 @@ public class TestQAQCReportBase
         NamedDssPath dvDssFile = new NamedDssPath(dvPath, "DV");
 
         List<NamedDssPath> extraDssFiles = Collections.emptyList();
-        EpptDssContainer dssContainer = new EpptDssContainer(dvDssFile, svDssFile, ivDssFile, extraDssFiles);
+        EpptDssContainer dssContainer = new EpptDssContainer(dvDssFile, svDssFile, ivDssFile, ivDssFile, extraDssFiles);
 
         GUILinksAllModelsBO.Model calSim2 = GUILinksAllModelsBO.Model.findModel("CalSim2");// model = new GUILinksAllModelsBO.Model("CalSim2");
         EpptScenarioRun alt1Run = new EpptScenarioRun("alt1Scenario", "desc", calSim2,null,null,dssContainer);

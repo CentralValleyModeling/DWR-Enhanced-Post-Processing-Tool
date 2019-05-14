@@ -65,6 +65,7 @@ class ProjectConfigurationIO
 	static final String SCENARIO_DV_KEY = "scenario_dv_key";
 	static final String SCENARIO_SV_KEY = "scenario_sv_key";
 	static final String SCENARIO_IV_KEY = "scenario_iv_key";
+	static final String SCENARIO_DTS_KEY = "scenario_dts_key";
 	static final String SCENARIO_DSS_EXTRA = "scenario_dss_extra";
 	static final String FILE_KEY = "file";
 	static final String MODEL_KEY = "model";
