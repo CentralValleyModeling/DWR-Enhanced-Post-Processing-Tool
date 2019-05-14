@@ -115,8 +115,7 @@ class WreslConfigWriter
 				configText = configText.replace("{MainFile}", wreslMain.toAbsolutePath().toString());
 			}
 			Path outputPath = _scenarioRun.getOutputPath();
-			configText = configText.replace("{PostProcessDss}",
-					outputPath.resolve(_scenarioRun.getName() + "_PostProc.dss").toString());
+			configText = configText.replace("{PostProcessDss}", outputPath.resolve(_scenarioRun.getName() + "_PostProc.dss").toString());
 
 
 			configText = configText.replace("{StartYear}", Integer.toString(_startDate.getYear()));
@@ -126,7 +125,7 @@ class WreslConfigWriter
 			configText = configText.replace("{EndMonth}", Integer.toString(_endDate.getMonthValue()));
 			configText = configText.replace("{EndDay}", Integer.toString(_endDate.getDayOfMonth()));
 
-			Path configPath = outputPath.resolve("WRESL.config");
+			Path configPath = _scenarioRun.getWreslMain().getParent().resolve("WRESL.config");
 			try(BufferedWriter bufferedWriter = Files.newBufferedWriter(configPath);
 				PrintWriter configFilePW = new PrintWriter(bufferedWriter))
 			{
@@ -142,10 +141,11 @@ class WreslConfigWriter
 
 		private DSSPathname getFirstRecord(Path path) throws WreslScriptException
 		{
+			HecDss dss = null;
 			try
 			{
-				HecDss open = HecDss.open(path.toString());
-				List<?> pathnameList = open.getPathnameList();
+				dss = HecDss.open(path.toString());
+				List<?> pathnameList = dss.getPathnameList();
 				if(!pathnameList.isEmpty())
 				{
 					String record = pathnameList.get(0).toString();
@@ -163,6 +163,13 @@ class WreslConfigWriter
 			catch(Exception e)
 			{
 				throw new WreslScriptException("Unable to process A and F parts for DSS File: " + path, e);
+			}
+			finally
+			{
+				if(dss != null)
+				{
+					dss.close();
+				}
 			}
 		}
 	}

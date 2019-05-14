@@ -106,7 +106,7 @@ public class ExecutiveReportXMLCreator
             scenarioElements.forEach(execReportTableElem::appendChild);
         }
 
-        doc.appendChild(execReportTableElem);
+//        doc.appendChild(execReportTableElem);
 
     }
 

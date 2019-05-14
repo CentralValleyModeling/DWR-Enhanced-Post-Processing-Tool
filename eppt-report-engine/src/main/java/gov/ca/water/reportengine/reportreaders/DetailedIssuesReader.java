@@ -56,7 +56,7 @@ public class DetailedIssuesReader
             int i = 0;
             while ((line = br.readLine()) != null)
             {
-                if (i == 0)
+                if (i == 0 || line.startsWith("!") || line.startsWith("#"))
                 {
                     i++;
                     continue;
@@ -99,14 +99,14 @@ public class DetailedIssuesReader
 
                 if(row.length>2)
                 {
-                    if (!row[GUI_LINK].equals(""))
+                    if (!"".equals(row[GUI_LINK]) && !"N/A".equals(row[GUI_LINK]))
                     {
                         guiLink = Integer.parseInt(row[GUI_LINK]);
                     }
                 }
                 if(row.length>3)
                 {
-                    if (!row[THRESHOLD_LINK].equals(""))
+                    if (!"".equals(row[THRESHOLD_LINK]))
                     {
                         thresholdLink = Integer.parseInt(row[THRESHOLD_LINK]);
                     }

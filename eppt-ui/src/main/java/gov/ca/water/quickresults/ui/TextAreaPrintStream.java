@@ -78,16 +78,26 @@ public class TextAreaPrintStream
 		_executorService.shutdownNow();
 	}
 
-	private void appendText(String str, String type)
+	public void appendErrorText(String str)
 	{
-		if("ERROR".equalsIgnoreCase(type))
+		SwingUtilities.invokeLater(() ->
 		{
 			StyleConstants.setForeground(_style, Color.red);
-		}
-		else
+			appendText(str);
+		});
+	}
+
+	public void appendNormalText(String str)
+	{
+		SwingUtilities.invokeLater(() ->
 		{
 			StyleConstants.setForeground(_style, Color.black);
-		}
+			appendText(str);
+		});
+	}
+
+	private void appendText(String str)
+	{
 		try
 		{
 			int length = _doc.getLength();
@@ -123,7 +133,14 @@ public class TextAreaPrintStream
 				while((line = br.readLine()) != null && !_stopThreads)
 				{
 					String str = line;
-					SwingUtilities.invokeLater(() ->appendText(str, _type));
+					if("ERROR".equalsIgnoreCase(_type))
+					{
+						appendErrorText(str);
+					}
+					else
+					{
+						appendNormalText(str);
+					}
 				}
 			}
 			catch(IOException ioe)

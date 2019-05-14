@@ -70,7 +70,7 @@ public class AssumptionChangesDataProcessor
 //        return _initCondAltOnly;
 //    }
 
-    public AssumptionChangesStatistics processAssumptionChanges(Path basePath, Path altPath) throws Exception
+    public AssumptionChangesStatistics processAssumptionChanges(Path basePath, Path altPath) throws EpptReportException
     {
 
 

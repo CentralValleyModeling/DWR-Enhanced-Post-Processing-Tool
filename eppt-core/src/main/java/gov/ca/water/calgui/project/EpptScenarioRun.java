@@ -90,6 +90,19 @@ public class EpptScenarioRun
 		return _model;
 	}
 
+	public Path getPostProcessDss()
+	{
+		NamedDssPath dvDssFile = getDssContainer().getDvDssFile();
+		if(dvDssFile != null)
+		{
+			return dvDssFile.getDssPath().getParent().resolve(getName() + "_PostProc.dss");
+		}
+		else
+		{
+			return getWreslMain().getParent().resolve(getName() + "_PostProc.dss");
+		}
+	}
+
 	/**
 	 * @return container with relevant DSS file paths
 	 */
