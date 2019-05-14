@@ -46,11 +46,14 @@ public class TestJasperReportRunner
 		Path output = Paths.get("Output.pdf");
 		try
 		{
-			Files.delete(output);
+			if(output.toFile().exists())
+			{
+				Files.delete(output);
+			}
 		}
 		catch(NoSuchFileException ex)
 		{
-			LOGGER.log(Level.FINE, "File already deleted", ex);
+			LOGGER.log(Level.SEVERE, "File already deleted", ex);
 		}
 		jasperReportRunner.runReportWithOutputFile(output, jrxmlPath);
 		assertTrue(output.toFile().exists(), "Output PDF should be generated");

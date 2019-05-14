@@ -102,6 +102,17 @@
 			<artifactId>json</artifactId>
 			<version>20171018</version>
 		</dependency>
+		<dependency>
+			<groupId>gov.ca.water</groupId>
+			<artifactId>eppt-report-engine</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>gov.ca.water</groupId>
+			<artifactId>eppt-jasper-engine</artifactId>
+			<version>${project.version}</version>
+			<!--<scope>runtime</scope>-->
+		</dependency>
 	</dependencies>
 	<build>
 		<plugins>

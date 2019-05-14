@@ -12,13 +12,12 @@
 
 package gov.ca.water.eppt.nbui.actions;
 
+import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.List;
+import javax.swing.*;
 
-import gov.ca.water.calgui.project.EpptScenarioRun;
-import gov.ca.water.quickresults.ui.WreslRunDialog;
-import gov.ca.water.quickresults.ui.projectconfig.ProjectConfigurationPanel;
+import gov.ca.water.quickresults.ui.report.QAQCReportPanel;
 import org.openide.awt.ActionID;
 import org.openide.awt.ActionReference;
 import org.openide.awt.ActionReferences;
@@ -34,36 +33,43 @@ import org.openide.windows.WindowManager;
  */
 @ActionID(
 		category = "EPPT",
-		id = "gov.ca.water.eppt.nbui.actions.RunWreslScript"
+		id = "gov.ca.water.eppt.nbui.actions.QAQCReportAction"
 )
 @ActionRegistration(
 		iconBase = "gov/ca/water/eppt/nbui/actions/run.png",
-		displayName = "Run WRESL Script"
+		displayName = "Generate QA/QC Report"
 )
 @ActionReferences(
 		{
-				@ActionReference(path = "Menu/Tools", position = 0)
+				@ActionReference(path = "Menu/Tools", position = 50)
 				,
-				@ActionReference(path = "Toolbars/EPPT", position = 666)
+				@ActionReference(path = "Toolbars/EPPT", position = 777)
 		})
-@NbBundle.Messages("CTL_RunWreslScript=Run WRESL Script")
-public class RunWreslScript implements ActionListener
+@NbBundle.Messages("CTL_QAQCReportAction=Generate QA/QC Report")
+public class QAQCReportAction implements ActionListener
 {
 
-	private WreslRunDialog _wreslRunDialog;
+	private final QAQCReportPanel _reportPanel = new QAQCReportPanel();
+	private JDialog _qaQcReportDialog;
 
 	@Override
 	public void actionPerformed(ActionEvent e)
 	{
-		if(_wreslRunDialog == null)
+		if(_qaQcReportDialog == null)
 		{
-			_wreslRunDialog = new WreslRunDialog(WindowManager.getDefault().getMainWindow());
+			_qaQcReportDialog = new JDialog(WindowManager.getDefault().getMainWindow(), "Generate QA/QC Report");
+			_qaQcReportDialog.setLayout(new BorderLayout());
+			_qaQcReportDialog.add(_reportPanel, BorderLayout.CENTER);
+			_qaQcReportDialog.pack();
+			_qaQcReportDialog.setLocationRelativeTo(WindowManager.getDefault().getMainWindow());
 		}
-		List<EpptScenarioRun> allEpptScenarioRuns = ProjectConfigurationPanel.getProjectConfigurationPanel().getAllEpptScenarioRuns();
-		_wreslRunDialog.buildScenarioPanel(allEpptScenarioRuns);
-		_wreslRunDialog.revalidate();
-		_wreslRunDialog.setVisible(true);
-		_wreslRunDialog.toFront();
+		if(!_qaQcReportDialog.isVisible())
+		{
+			_reportPanel.fillComboScenarioRuns();
+		}
+		_qaQcReportDialog.revalidate();
+		_qaQcReportDialog.setVisible(true);
+		_qaQcReportDialog.toFront();
 	}
 
 }

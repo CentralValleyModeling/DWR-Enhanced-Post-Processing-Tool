@@ -1,17 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Created with Jaspersoft Studio version 6.3.1.final using JasperReports Library version 6.3.1  -->
-<!-- 2019-04-25T10:34:44 -->
-<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="QAQC_CodeChangesB" language="groovy" pageWidth="431" pageHeight="684" columnWidth="431" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" whenResourceMissingType="Empty" uuid="da75db69-3924-4f44-998a-80195014db99">
-	<property name="net.sf.jasperreports.data.adapter" value="QAQC_Datasource.xml"/>
-	<property name="com.jaspersoft.studio.unit." value="pixel"/>
-	<property name="com.jaspersoft.studio.unit.pageHeight" value="pixel"/>
-	<property name="com.jaspersoft.studio.unit.pageWidth" value="pixel"/>
-	<property name="com.jaspersoft.studio.unit.topMargin" value="pixel"/>
-	<property name="com.jaspersoft.studio.unit.bottomMargin" value="pixel"/>
-	<property name="com.jaspersoft.studio.unit.leftMargin" value="pixel"/>
-	<property name="com.jaspersoft.studio.unit.rightMargin" value="pixel"/>
-	<property name="com.jaspersoft.studio.unit.columnWidth" value="pixel"/>
-	<property name="com.jaspersoft.studio.unit.columnSpacing" value="pixel"/>
+<!-- Created with Jaspersoft Studio version 6.8.0.final using JasperReports Library version 6.8.0-2ed8dfabb690ff337a5797129f2cd92902b0c87b  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="QAQC_CodeChangesB" language="groovy" pageWidth="503" pageHeight="684" columnWidth="503" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" whenResourceMissingType="Empty" uuid="da75db69-3924-4f44-998a-80195014db99">
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="QAQC_Datasource"/>
 	<parameter name="XML_DATA_DOCUMENT" class="org.w3c.dom.Document" isForPrompting="false"/>
 	<parameter name="XML_INPUT_STREAM" class="java.io.InputStream" isForPrompting="false"/>
 	<parameter name="XML_FILE" class="java.io.File" isForPrompting="false"/>
@@ -20,71 +10,50 @@
 	<parameter name="XML_NUMBER_PATTERN" class="java.lang.String" isForPrompting="false"/>
 	<parameter name="XML_LOCALE" class="java.util.Locale" isForPrompting="false"/>
 	<parameter name="XML_TIME_ZONE" class="java.util.TimeZone" isForPrompting="false"/>
-	<parameter name="p_change-type" class="java.lang.String">
-		<parameterDescription><![CDATA["Hydrology"]]></parameterDescription>
-		<defaultValueExpression><![CDATA["Hydrology"]]></defaultValueExpression>
+	<parameter name="p_section-name" class="java.lang.String" isForPrompting="false">
+		<parameterDescription><![CDATA["Modified File"]]></parameterDescription>
+		<defaultValueExpression><![CDATA["modified"]]></defaultValueExpression>
 	</parameter>
 	<queryString language="XPath">
-		<![CDATA[/qaqc-report/code-changes/type/subtype/change]]>
+		<![CDATA[/qaqc-report/code-changes/section/type/subtype/change]]>
 	</queryString>
+	<field name="section-name" class="java.lang.String">
+		<property name="net.sf.jasperreports.xpath.field.expression" value="ancestor::section/@section-name"/>
+		<fieldDescription><![CDATA[ancestor::section/@section-name]]></fieldDescription>
+	</field>
 	<field name="change-type" class="java.lang.String">
+		<property name="net.sf.jasperreports.xpath.field.expression" value="ancestor::type/@change-type"/>
 		<fieldDescription><![CDATA[ancestor::type/@change-type]]></fieldDescription>
 	</field>
 	<field name="change-subtype" class="java.lang.String">
+		<property name="net.sf.jasperreports.xpath.field.expression" value="ancestor::subtype/@change-subtype"/>
 		<fieldDescription><![CDATA[ancestor::subtype/@change-subtype]]></fieldDescription>
 	</field>
 	<field name="change" class="java.lang.String">
+		<property name="net.sf.jasperreports.xpath.field.expression" value="child::text()"/>
 		<fieldDescription><![CDATA[child::text()]]></fieldDescription>
-	</field>
-	<field name="updated" class="java.lang.String">
-		<fieldDescription><![CDATA[ancestor::subtype/@updated]]></fieldDescription>
-	</field>
-	<field name="updated-text" class="java.lang.String">
-		<fieldDescription><![CDATA[ancestor::subtype/@updated-text]]></fieldDescription>
 	</field>
 	<group name="change-type">
 		<groupExpression><![CDATA[$F{change-type}]]></groupExpression>
 		<groupHeader>
 			<band>
-				<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 				<printWhenExpression><![CDATA[1==0]]></printWhenExpression>
 			</band>
 		</groupHeader>
 		<groupFooter>
-			<band>
+			<band height="15" splitType="Stretch">
 				<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
-				<printWhenExpression><![CDATA[1==0]]></printWhenExpression>
-			</band>
-		</groupFooter>
-	</group>
-	<group name="change-subtype">
-		<groupExpression><![CDATA[$F{change-subtype}]]></groupExpression>
-		<groupHeader>
-			<band>
-				<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
-				<printWhenExpression><![CDATA[1==0]]></printWhenExpression>
-			</band>
-		</groupHeader>
-		<groupFooter>
-			<band height="17" splitType="Prevent">
-				<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
-				<printWhenExpression><![CDATA[$F{change-type}==$P{p_change-type}]]></printWhenExpression>
-				<textField isStretchWithOverflow="true">
-					<reportElement positionType="Float" stretchType="ContainerBottom" isPrintRepeatedValues="false" x="1" y="1" width="80" height="15" uuid="dbf0e919-55f8-4eae-bf7f-a7d52e20e2e4">
-						<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
-					</reportElement>
-					<box leftPadding="5" rightPadding="5"/>
-					<textFieldExpression><![CDATA[$F{change-subtype}]]></textFieldExpression>
-				</textField>
+				<printWhenExpression><![CDATA[$P{p_section-name} == $F{section-name}]]></printWhenExpression>
 				<subreport isUsingCache="false" runToBottom="false" overflowType="Stretch">
-					<reportElement positionType="Float" stretchType="RelativeToBandHeight" isPrintRepeatedValues="false" x="81" y="1" width="350" height="15" uuid="7a131b2f-c13b-4bac-a46e-0c09de459bc5">
-						<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					<reportElement stretchType="RelativeToBandHeight" isPrintRepeatedValues="false" x="76" y="0" width="427" height="15" uuid="745f7b39-4ccc-437f-8810-3b29596067f3">
+						<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					</reportElement>
-					<subreportParameter name="p_change-subtype">
-						<subreportParameterExpression><![CDATA[$F{change-subtype}]]></subreportParameterExpression>
-					</subreportParameter>
 					<subreportParameter name="p_change-type">
 						<subreportParameterExpression><![CDATA[$F{change-type}]]></subreportParameterExpression>
+					</subreportParameter>
+					<subreportParameter name="p_section-name">
+						<subreportParameterExpression><![CDATA[$F{section-name}]]></subreportParameterExpression>
 					</subreportParameter>
 					<subreportParameter name="XML_DATA_DOCUMENT">
 						<subreportParameterExpression><![CDATA[$P{XML_DATA_DOCUMENT}]]></subreportParameterExpression>
@@ -111,22 +80,48 @@
 						<subreportParameterExpression><![CDATA[$P{XML_TIME_ZONE}]]></subreportParameterExpression>
 					</subreportParameter>
 					<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
-					<subreportExpression><![CDATA["/Subreports/QAQC_CodeChangesC.jasper"]]></subreportExpression>
+					<subreportExpression><![CDATA["Subreports/QAQC_CodeChangesC.jasper"]]></subreportExpression>
 				</subreport>
+				<textField isStretchWithOverflow="true">
+					<reportElement isPrintRepeatedValues="false" x="1" y="0" width="75" height="15" uuid="18e9d0b6-8853-4330-9b61-e2000b2cb105">
+						<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					</reportElement>
+					<box leftPadding="5" rightPadding="5"/>
+					<textFieldExpression><![CDATA[$F{change-type}]]></textFieldExpression>
+				</textField>
 				<line>
-					<reportElement mode="Transparent" x="0" y="0" width="431" height="1" uuid="91c702ec-d271-431e-b3c8-9f03b98da5f5">
-						<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					<reportElement stretchType="ContainerBottom" mode="Transparent" x="0" y="0" width="1" height="15" isPrintWhenDetailOverflows="true" uuid="a2080c2d-4892-49d2-8d2c-21a832e96de0">
+						<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
 					</reportElement>
 				</line>
 				<line>
-					<reportElement stretchType="ContainerBottom" mode="Transparent" x="81" y="0" width="1" height="17" uuid="bb2dcd7f-bf8d-42f2-a0f9-17656ece700d"/>
+					<reportElement stretchType="ContainerBottom" mode="Transparent" x="76" y="0" width="1" height="15" uuid="1a182bab-9074-4fe3-94bf-73a2b92e92e1">
+						<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					</reportElement>
 				</line>
 				<line>
-					<reportElement stretchType="ContainerBottom" mode="Transparent" x="0" y="0" width="1" height="17" uuid="063e2e82-556e-418d-8199-97d747164b06"/>
+					<reportElement stretchType="ContainerBottom" mode="Transparent" x="157" y="0" width="1" height="15" uuid="dcbdb10d-6ef6-4782-a1c6-86833c95f196">
+						<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					</reportElement>
 				</line>
 				<line>
-					<reportElement stretchType="ContainerBottom" mode="Transparent" x="430" y="0" width="1" height="17" uuid="505c2ad7-d39e-4350-8efc-5504702114c9"/>
+					<reportElement x="0" y="0" width="503" height="1" uuid="7613d060-2257-4bad-a9f8-5d8c6988f099"/>
 				</line>
+			</band>
+		</groupFooter>
+	</group>
+	<group name="change-subtype">
+		<groupExpression><![CDATA[$F{change-subtype}]]></groupExpression>
+		<groupHeader>
+			<band>
+				<printWhenExpression><![CDATA[1==0]]></printWhenExpression>
+			</band>
+		</groupHeader>
+		<groupFooter>
+			<band>
+				<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				<printWhenExpression><![CDATA[1==0]]></printWhenExpression>
 			</band>
 		</groupFooter>
 	</group>
@@ -135,6 +130,7 @@
 	</background>
 	<title>
 		<band splitType="Stretch">
+			<property name="com.jaspersoft.studio.unit.height" value="px"/>
 			<printWhenExpression><![CDATA[1==0]]></printWhenExpression>
 		</band>
 	</title>
@@ -151,6 +147,7 @@
 	</columnHeader>
 	<detail>
 		<band splitType="Prevent">
+			<property name="com.jaspersoft.studio.unit.height" value="px"/>
 			<printWhenExpression><![CDATA[1==0]]></printWhenExpression>
 		</band>
 	</detail>

@@ -27,7 +27,6 @@ import gov.ca.water.calgui.project.EpptDssContainer;
 import gov.ca.water.calgui.project.EpptScenarioRun;
 import gov.ca.water.calgui.project.NamedDssPath;
 import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.fail;
 
@@ -87,10 +86,10 @@ public class TestWreslScriptRunner
 
 			LocalDate start = LocalDate.ofYearDay(1922, 3);
 			LocalDate end = LocalDate.ofYearDay(2000, 3);
-			WreslScriptRunner wreslScriptRunner = new WreslScriptRunner(EPPT_SCENARIO_RUN_NOOP, new WreslOutputConsumer()
+			WreslScriptRunner wreslScriptRunner = new WreslScriptRunner(EPPT_SCENARIO_RUN_NOOP, new ProcessOutputConsumer()
 			{
 				@Override
-				public void runStarted(EpptScenarioRun scenarioRun, Process process, InputStream outputStream, InputStream errorStream)
+				public void runStarted(EpptScenarioRun scenarioRun, Process process)
 				{
 
 				}

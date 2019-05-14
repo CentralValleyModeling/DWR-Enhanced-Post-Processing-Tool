@@ -96,6 +96,7 @@ public class NewProjectConfiguration implements ActionListener
 		NameDialog nameDialog = new NameDialog(WindowManager.getDefault().getMainWindow());
 		String substring = String.valueOf(new Date().getTime()).substring(8);
 		String newProjectName = "New_Project_" + substring;
+		nameDialog.setTitle("New Project");
 		nameDialog.setName(newProjectName);
 		nameDialog.setDescription("");
 		nameDialog.setModal(true);

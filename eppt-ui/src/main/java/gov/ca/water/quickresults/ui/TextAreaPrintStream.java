@@ -10,7 +10,7 @@
  * GNU General Public License
  */
 
-package gov.ca.water.eppt.nbui;
+package gov.ca.water.quickresults.ui;
 
 import java.awt.Color;
 import java.io.BufferedReader;
@@ -33,7 +33,7 @@ import javax.swing.text.StyledDocument;
  * @author <a href="mailto:adam@rmanet.com">Adam Korynta</a>
  * @since 05-10-2019
  */
-class TextAreaPrintStream
+public class TextAreaPrintStream
 {
 	private static final Logger LOGGER = Logger.getLogger(TextAreaPrintStream.class.getName());
 	private final JTextPane _textArea;
@@ -43,7 +43,7 @@ class TextAreaPrintStream
 	private StyledDocument _doc;
 	private Style _style;
 
-	TextAreaPrintStream(JTextPane textArea, InputStream inputStream, InputStream errorStream)
+	public TextAreaPrintStream(JTextPane textArea, InputStream inputStream, InputStream errorStream)
 	{
 		_textArea = textArea;
 		_doc = (StyledDocument) textArea.getDocument();

@@ -10,11 +10,12 @@
  * GNU General Public License
  */
 
-package gov.ca.water.eppt.nbui;
+package gov.ca.water.quickresults.ui;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Frame;
 import java.awt.GridLayout;
 import java.io.InputStream;
 import java.time.LocalDate;
@@ -28,13 +29,11 @@ import javax.swing.*;
 import javax.swing.border.TitledBorder;
 
 import gov.ca.water.calgui.project.EpptScenarioRun;
-import gov.ca.water.calgui.wresl.WreslOutputConsumer;
+import gov.ca.water.calgui.wresl.ProcessOutputConsumer;
 import gov.ca.water.calgui.wresl.WreslScriptException;
 import gov.ca.water.calgui.wresl.WreslScriptRunner;
 import gov.ca.water.quickresults.ui.projectconfig.ProjectConfigurationPanel;
 import org.jfree.data.time.Month;
-import org.netbeans.api.progress.ProgressHandle;
-import org.openide.windows.WindowManager;
 
 /**
  * Company: Resource Management Associates
@@ -42,7 +41,7 @@ import org.openide.windows.WindowManager;
  * @author <a href="mailto:adam@rmanet.com">Adam Korynta</a>
  * @since 05-10-2019
  */
-public class WreslRunDialog extends JDialog implements WreslOutputConsumer
+public class WreslRunDialog extends JDialog implements ProcessOutputConsumer
 {
 	private static final Logger LOGGER = Logger.getLogger(WreslRunDialog.class.getName());
 
@@ -54,11 +53,11 @@ public class WreslRunDialog extends JDialog implements WreslOutputConsumer
 	private final List<EpptScenarioRunCheckbox> _scenarioRunCheckboxes = new ArrayList<>();
 	private JPanel _scenarioPanel;
 
-	public WreslRunDialog()
+	public WreslRunDialog(Frame frame)
 	{
-		super(WindowManager.getDefault().getMainWindow(), "Run WRESL Script", false);
+		super(frame, "Run WRESL Script", false);
 		setSize(new Dimension(1200, 500));
-		setLocationRelativeTo(WindowManager.getDefault().getMainWindow());
+		setLocationRelativeTo(frame);
 		setLayout(new BorderLayout());
 		_tabbedPane = new JTabbedPane();
 		_stopButton.addActionListener(e -> destroyProcesses());
@@ -97,7 +96,7 @@ public class WreslRunDialog extends JDialog implements WreslOutputConsumer
 	}
 
 	@Override
-	public void runStarted(EpptScenarioRun scenarioRun, Process process, InputStream outputStream, InputStream errorStream)
+	public void runStarted(EpptScenarioRun scenarioRun, Process process)
 	{
 		SwingUtilities.invokeLater(() ->
 		{
@@ -109,7 +108,7 @@ public class WreslRunDialog extends JDialog implements WreslOutputConsumer
 			textArea.setEditable(false);
 			textArea.setBackground(Color.WHITE);
 			JScrollPane jsp = new JScrollPane(textArea);
-			TextAreaPrintStream textAreaPrintStream = new TextAreaPrintStream(textArea, outputStream, errorStream);
+			TextAreaPrintStream textAreaPrintStream = new TextAreaPrintStream(textArea, process.getInputStream(), process.getErrorStream());
 			_tabbedPane.addTab(scenarioRun.getName(), jsp);
 			_textAreaPrintStreams.add(textAreaPrintStream);
 			revalidate();
@@ -167,21 +166,14 @@ public class WreslRunDialog extends JDialog implements WreslOutputConsumer
 	{
 		CompletableFuture.runAsync(() ->
 		{
-
-			ProgressHandle handle = ProgressHandle.createHandle("Running WRESL Script");
 			try
 			{
-				handle.start();
 				WreslScriptRunner wreslScriptRunner = new WreslScriptRunner(scenarioRun, this);
 				wreslScriptRunner.run(start, end);
 			}
 			catch(WreslScriptException | RuntimeException e1)
 			{
 				LOGGER.log(Level.SEVERE, "Error in WRESL Script Run", e1);
-			}
-			finally
-			{
-				handle.finish();
 			}
 		}).whenComplete((v, t) ->
 		{

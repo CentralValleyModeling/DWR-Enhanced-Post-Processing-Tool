@@ -175,6 +175,11 @@ public class CustomResultsPanel extends EpptPanel
 		try
 		{
 			ProjectConfigurationPanel projectConfigurationPanel = ProjectConfigurationPanel.getProjectConfigurationPanel();
+			if(projectConfigurationPanel.getBaseScenario() == null)
+			{
+				_dialogSvc.getOK("DSS not selected! The Base DSS files need to be selected", JOptionPane.WARNING_MESSAGE);
+				return;
+			}
 			String noRowsString = "";
 			JTable table = GuiUtils.getCLGPanel().getRetrievePanel().getTable();
 			if(table.getRowCount() == 0)

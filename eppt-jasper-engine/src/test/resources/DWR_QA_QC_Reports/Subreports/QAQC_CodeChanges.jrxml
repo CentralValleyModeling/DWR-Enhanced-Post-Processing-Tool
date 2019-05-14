@@ -1,23 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!--
-  ~ Enhanced Post Processing Tool (EPPT) Copyright (c) 2019.
-  ~
-  ~ EPPT is copyrighted by the State of California, Department of Water Resources. It is licensed
-  ~ under the GNU General Public License, version 2. This means it can be
-  ~ copied, distributed, and modified freely, but you may not restrict others
-  ~ in their ability to copy, distribute, and modify it. See the license below
-  ~ for more details.
-  ~
-  ~ GNU General Public License
-  -->
-
-<!-- Created with Jaspersoft Studio version 6.3.1.final using JasperReports Library version 6.3.1  -->
-<!-- 2019-04-24T08:41:00 -->
+<!-- Created with Jaspersoft Studio version 6.8.0.final using JasperReports Library version 6.8.0-2ed8dfabb690ff337a5797129f2cd92902b0c87b  -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="QAQC_CodeChanges" language="groovy" pageWidth="504" pageHeight="684" whenNoDataType="BlankPage" columnWidth="504" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" whenResourceMissingType="Empty" uuid="da75db69-3924-4f44-998a-80195014db99">
-	<property name="net.sf.jasperreports.data.adapter" value="QAQC_Datasource.xml"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="QAQC_Datasource"/>
 	<property name="com.jaspersoft.studio.unit." value="pixel"/>
+	<property name="net.sf.jasperreports.print.create.bookmarks" value="true"/>
 	<subDataset name="Dataset1" uuid="2b435048-dcd7-4708-974c-85806c8a9c73">
-		<property name="net.sf.jasperreports.data.adapter" value="QAQC_Datasource.xml"/>
+		<property name="com.jaspersoft.studio.data.defaultdataadapter" value="QAQCReportHeader"/>
 		<parameter name="XML_DATA_DOCUMENT" class="org.w3c.dom.Document" isForPrompting="false"/>
 		<parameter name="XML_INPUT_STREAM" class="java.io.InputStream" isForPrompting="false"/>
 		<parameter name="XML_FILE" class="java.io.File" isForPrompting="false"/>
@@ -81,13 +69,13 @@
 	<field name="updated-text" class="java.lang.String">
 		<fieldDescription><![CDATA[ancestor::subtype/@updated-text]]></fieldDescription>
 	</field>
-	<field name="files-added-to" class="java.lang.String">
+	<field name="files-added-to" class="java.lang.Integer">
 		<fieldDescription><![CDATA[/qaqc-report/code-changes/header/alternatives/alternative/files-added-to]]></fieldDescription>
 	</field>
-	<field name="files-updated" class="java.lang.String">
+	<field name="files-updated" class="java.lang.Integer">
 		<fieldDescription><![CDATA[/qaqc-report/code-changes/header/alternatives/alternative/files-updated]]></fieldDescription>
 	</field>
-	<field name="files-deleted-from-base" class="java.lang.String">
+	<field name="files-deleted-from-base" class="java.lang.Integer">
 		<fieldDescription><![CDATA[/qaqc-report/code-changes/header/files-deleted-from-base]]></fieldDescription>
 	</field>
 	<variable name="v_groupcount" class="java.lang.Integer">
@@ -109,7 +97,7 @@
 	<group name="Header">
 		<groupHeader>
 			<band height="63">
-				<textField pattern="">
+				<textField pattern="" bookmarkLevel="1">
 					<reportElement mode="Transparent" x="0" y="0" width="380" height="24" forecolor="#2F5496" backcolor="#FFFFFF" uuid="37e25452-0015-4b0f-ac51-b63ed30c3f64">
 						<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 					</reportElement>

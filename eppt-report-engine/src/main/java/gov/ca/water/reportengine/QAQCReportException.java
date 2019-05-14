@@ -10,22 +10,23 @@
  * GNU General Public License
  */
 
-package gov.ca.water.calgui.wresl;
-
-import java.io.InputStream;
-
-import gov.ca.water.calgui.project.EpptScenarioRun;
+package gov.ca.water.reportengine;
 
 /**
  * Company: Resource Management Associates
  *
  * @author <a href="mailto:adam@rmanet.com">Adam Korynta</a>
- * @since 05-10-2019
+ * @since 05-13-2019
  */
-
-public interface WreslOutputConsumer
+public class QAQCReportException extends Exception
 {
-	void runStarted(EpptScenarioRun scenarioRun, Process process, InputStream outputStream, InputStream errorStream);
+	public QAQCReportException(String msg, Throwable throwable)
+	{
+		super(msg, throwable);
+	}
 
-	void runFinished(Process process);
+	public QAQCReportException(String msg)
+	{
+		super(msg);
+	}
 }

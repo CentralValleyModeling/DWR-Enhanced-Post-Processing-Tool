@@ -97,4 +97,10 @@ public class EpptScenarioRun
 	{
 		return _dssContainer;
 	}
+
+	@Override
+	public String toString()
+	{
+		return getName();
+	}
 }

@@ -1,9 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Created with Jaspersoft Studio version 6.2.2.final using JasperReports Library version 6.2.2  -->
-<!-- 2019-04-23T07:37:52 -->
-<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="QAQC_BaseIssuesReport" language="groovy" pageWidth="504" pageHeight="684" whenNoDataType="BlankPage" columnWidth="504" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" whenResourceMissingType="Empty" uuid="da75db69-3924-4f44-998a-80195014db99">
+<!-- Created with Jaspersoft Studio version 6.8.0.final using JasperReports Library version 6.8.0-2ed8dfabb690ff337a5797129f2cd92902b0c87b  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="QAQC_AlternativeIssuesReport" language="groovy" pageWidth="612" pageHeight="792" whenNoDataType="BlankPage" columnWidth="504" leftMargin="54" rightMargin="54" topMargin="54" bottomMargin="54" whenResourceMissingType="Empty" uuid="da75db69-3924-4f44-998a-80195014db99">
 	<property name="net.sf.jasperreports.data.adapter" value="QAQC_Datasource.xml"/>
-	<property name="com.jaspersoft.studio.unit." value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.pageHeight" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.pageWidth" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.topMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.bottomMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.leftMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.rightMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.columnWidth" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.columnSpacing" value="pixel"/>
+	<property name="net.sf.jasperreports.print.create.bookmarks" value="true"/>
 	<parameter name="XML_DATA_DOCUMENT" class="org.w3c.dom.Document" isForPrompting="false"/>
 	<parameter name="XML_INPUT_STREAM" class="java.io.InputStream" isForPrompting="false"/>
 	<parameter name="XML_FILE" class="java.io.File" isForPrompting="false"/>
@@ -12,17 +19,27 @@
 	<parameter name="XML_NUMBER_PATTERN" class="java.lang.String" isForPrompting="false"/>
 	<parameter name="XML_LOCALE" class="java.util.Locale" isForPrompting="false"/>
 	<parameter name="XML_TIME_ZONE" class="java.util.TimeZone" isForPrompting="false"/>
+	<parameter name="AlternativeIssuesReport" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["Alternative Issues Report"]]></defaultValueExpression>
+	</parameter>
 	<queryString language="XPath">
-		<![CDATA[/qaqc-report/issues-report/base/issue-type/location/issue]]>
+		<![CDATA[/qaqc-report/issues-report/alternatives/alternative/issue-type/location/issue]]>
 	</queryString>
 	<field name="name" class="java.lang.String">
+		<property name="net.sf.jasperreports.xpath.field.expression" value="ancestor::issue-type/@name"/>
 		<fieldDescription><![CDATA[ancestor::issue-type/@name]]></fieldDescription>
 	</field>
 	<field name="location" class="java.lang.String">
+		<property name="net.sf.jasperreports.xpath.field.expression" value="ancestor::location/@location"/>
 		<fieldDescription><![CDATA[ancestor::location/@location]]></fieldDescription>
 	</field>
 	<field name="issue" class="java.lang.String">
+		<property name="net.sf.jasperreports.xpath.field.expression" value="child::text()"/>
 		<fieldDescription><![CDATA[child::text()]]></fieldDescription>
+	</field>
+	<field name="alternative-name" class="java.lang.String">
+		<property name="net.sf.jasperreports.xpath.field.expression" value="ancestor::alternative/@alternative-name"/>
+		<fieldDescription><![CDATA[ancestor::alternative/@alternative-name]]></fieldDescription>
 	</field>
 	<variable name="v_groupcount" class="java.lang.Integer" incrementType="Group" incrementGroup="name" calculation="Count">
 		<variableExpression><![CDATA[$V{v_groupcount}+1]]></variableExpression>
@@ -34,10 +51,10 @@
 	</variable>
 	<group name="Header">
 		<groupHeader>
-			<band height="24">
+			<band height="23">
 				<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
-				<textField pattern="">
-					<reportElement mode="Transparent" x="0" y="1" width="380" height="23" forecolor="#2F5496" backcolor="#FFFFFF" uuid="a4a869f9-7968-40ab-b2aa-e852404855da">
+				<textField pattern="" bookmarkLevel="1">
+					<reportElement mode="Transparent" x="0" y="0" width="380" height="23" forecolor="#2F5496" backcolor="#FFFFFF" uuid="a4a869f9-7968-40ab-b2aa-e852404855da">
 						<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
 						<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 					</reportElement>
@@ -50,7 +67,8 @@
 					<textElement textAlignment="Left" verticalAlignment="Middle">
 						<font fontName="Arial" size="16"/>
 					</textElement>
-					<textFieldExpression><![CDATA["Issues Report (Base)"]]></textFieldExpression>
+					<textFieldExpression><![CDATA["Issues Report (" + $F{alternative-name} + ")"]]></textFieldExpression>
+					<anchorNameExpression><![CDATA[$P{AlternativeIssuesReport}]]></anchorNameExpression>
 				</textField>
 			</band>
 		</groupHeader>
@@ -134,8 +152,8 @@
 		</band>
 	</title>
 	<pageHeader>
-		<band height="1" splitType="Stretch">
-			<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+		<band splitType="Stretch">
+			<property name="com.jaspersoft.studio.unit.height" value="px"/>
 			<printWhenExpression><![CDATA[1==0]]></printWhenExpression>
 		</band>
 	</pageHeader>
@@ -157,8 +175,17 @@
 		</band>
 	</columnFooter>
 	<pageFooter>
-		<band height="1" splitType="Stretch">
-			<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+		<band height="15" splitType="Stretch">
+			<property name="com.jaspersoft.studio.unit.height" value="px"/>
+			<textField evaluationTime="Master">
+				<reportElement mode="Transparent" x="0" y="0" width="504" height="15" uuid="650a1c30-4e9b-462d-b11d-9f03bf602ffe">
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA["Page | " + ($V{MASTER_CURRENT_PAGE}-1)]]></textFieldExpression>
+			</textField>
 		</band>
 	</pageFooter>
 	<summary>

@@ -46,9 +46,9 @@ public class WreslScriptRunner
 {
 	private static final Logger LOGGER = Logger.getLogger(WreslScriptRunner.class.getName());
 	private final EpptScenarioRun _scenarioRun;
-	private final WreslOutputConsumer _outputStreamConsumer;
+	private final ProcessOutputConsumer _outputStreamConsumer;
 
-	public WreslScriptRunner(EpptScenarioRun scenarioRun, WreslOutputConsumer outputStreamConsumer)
+	public WreslScriptRunner(EpptScenarioRun scenarioRun, ProcessOutputConsumer outputStreamConsumer)
 	{
 		_scenarioRun = scenarioRun;
 		_outputStreamConsumer = outputStreamConsumer;
@@ -139,7 +139,7 @@ public class WreslScriptRunner
 			process = processBuilder.start();
 			InputStream errorStream = process.getErrorStream();
 			InputStream outputStream = process.getInputStream();
-			_outputStreamConsumer.runStarted(_scenarioRun, process, outputStream, errorStream);
+			_outputStreamConsumer.runStarted(_scenarioRun, process);
 			process.waitFor();
 			int exitValue = process.exitValue();
 			if(exitValue != 0)
