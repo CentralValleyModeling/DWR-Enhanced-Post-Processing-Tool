@@ -59,6 +59,37 @@ public class JasperReportRunner implements ReportRunner
 {
 	private static final Logger LOGGER = Logger.getLogger(JasperReportRunner.class.getName());
 
+	public static void main(String[] args)
+	{
+		if(args.length != 2)
+		{
+			LOGGER.log(Level.SEVERE, "input 1: expected jrxml file; input 2: expected output path");
+			System.exit(-1);
+		}
+		LocalDateTime start = LocalDateTime.now();
+		try
+		{
+			LOGGER.log(Level.INFO, "============= Starting Report: {0} =============", start);
+			LOGGER.log(Level.INFO, "Starting Jasper Report Run. JRXML File: {0} Output File: {1}", args);
+			JasperReportRunner runner = new JasperReportRunner();
+			runner.runReportWithOutputFile(Paths.get(args[0]), Paths.get(args[1]));
+			System.exit(0);
+		}
+		catch(QAQCReportException | RuntimeException e)
+		{
+			LOGGER.log(Level.SEVERE, "Error in Jasper Report", e);
+			System.exit(-1);
+		}
+		finally
+		{
+			LocalDateTime end = LocalDateTime.now();
+			LOGGER.log(Level.INFO, "============= Report Finished: {0} =============", end);
+			long minutes = ChronoUnit.MINUTES.between(start, end);
+			long seconds = Duration.between(start, end).minus(minutes, ChronoUnit.MINUTES).getSeconds();
+			LOGGER.log(Level.INFO, "============= Report Took: {0}min {1}sec =============", new Object[]{minutes, seconds});
+		}
+	}
+
 	@Override
 	public void runReportWithOutputFile(Path pdfOutputPath, Path jrxmlPath) throws QAQCReportException
 	{
@@ -134,37 +165,6 @@ public class JasperReportRunner implements ReportRunner
 		catch(JRException | IOException ex)
 		{
 			throw new QAQCReportException("Unable to generate Jasper Report PDF: " + jrxmlPath, ex);
-		}
-	}
-
-	public static void main(String[] args)
-	{
-		if(args.length != 2)
-		{
-			LOGGER.log(Level.SEVERE, "input 1: expected jrxml file; input 2: expected output path");
-			System.exit(-1);
-		}
-		LocalDateTime start = LocalDateTime.now();
-		try
-		{
-			LOGGER.log(Level.INFO, "============= Starting Report: {0} =============", start);
-			LOGGER.log(Level.INFO, "Starting Jasper Report Run. JRXML File: {0} Output File: {1}", args);
-			JasperReportRunner runner = new JasperReportRunner();
-			runner.runReportWithOutputFile(Paths.get(args[0]), Paths.get(args[1]));
-			System.exit(0);
-		}
-		catch(QAQCReportException | RuntimeException e)
-		{
-			LOGGER.log(Level.SEVERE, "Error in Jasper Report", e);
-			System.exit(-1);
-		}
-		finally
-		{
-			LocalDateTime end = LocalDateTime.now();
-			LOGGER.log(Level.INFO, "============= Report Finished: {0} =============", end);
-			long minutes = ChronoUnit.MINUTES.between(start, end);
-			long seconds = Duration.between(start, end).minus(minutes, ChronoUnit.MINUTES).getSeconds();
-			LOGGER.log(Level.INFO, "============= Report Took: {0}min {1}sec =============", new Object[]{minutes, seconds});
 		}
 	}
 }

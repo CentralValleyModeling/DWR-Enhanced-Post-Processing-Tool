@@ -25,7 +25,8 @@ import java.net.URL;
  * classes that can read the data from an ascii or binary stream or a F77 binary
  * stream.
  */
-public abstract class GenericFileInput {
+public abstract class GenericFileInput
+{
 	/**
 	 * Initialize streams and/or open connection to file input
 	 */
@@ -74,32 +75,48 @@ public abstract class GenericFileInput {
 	/**
 	 * gets input stream whether to local file or remote file (via http)
 	 */
-	public final InputStream getInputStream(String filename) {
+	public final InputStream getInputStream(String filename)
+	{
 		URL fileURL = null;
-		try {
-			if (filename.startsWith("http://"))
+		try
+		{
+			if(filename.startsWith("http://"))
+			{
 				fileURL = new URL(filename);
-			else if (filename.startsWith("file:/"))
+			}
+			else if(filename.startsWith("file:/"))
+			{
 				fileURL = new URL(filename);
-			else {
+			}
+			else
+			{
 				return new BufferedInputStream(new FileInputStream(filename));
 			}
 			return new BufferedInputStream(fileURL.openConnection()
-					.getInputStream());
-		} catch (MalformedURLException me) {
+												  .getInputStream());
+		}
+		catch(MalformedURLException me)
+		{
 			System.out.println("Not a local file, trying http connection");
-		} catch (IOException ioe) {
+		}
+		catch(IOException ioe)
+		{
 			System.out.println("Could not open file " + fileURL);
 			System.out.println("Error: " + ioe.getMessage());
 		}
 
-		try {
+		try
+		{
 			fileURL = new URL("http://" + filename);
 			return new BufferedInputStream(fileURL.openConnection()
-					.getInputStream());
-		} catch (MalformedURLException me) {
+												  .getInputStream());
+		}
+		catch(MalformedURLException me)
+		{
 			System.out.println("Failed to establish http connection");
-		} catch (IOException ioe) {
+		}
+		catch(IOException ioe)
+		{
 			System.out.println("Could not open file " + fileURL);
 		}
 

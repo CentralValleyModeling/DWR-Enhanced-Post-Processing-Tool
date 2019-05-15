@@ -18,16 +18,18 @@ import vista.set.DataSet;
 import vista.set.SetUtils;
 
 /**
- * 
- * 
  * @author Nicky Sandhu
  * @version $Id: StatsDisplayPanel.java,v 1.1 2003/10/02 20:48:42 redwood Exp $
  */
-public class StatsDisplayPanel extends JPanel {
-	public StatsDisplayPanel(DataSet ds) {
-		if (ds == null)
+public class StatsDisplayPanel extends JPanel
+{
+	public StatsDisplayPanel(DataSet ds)
+	{
+		if(ds == null)
+		{
 			throw new IllegalArgumentException(
 					"Null data set cannot have stats");
+		}
 		setLayout(new GridLayout(2, 1));
 		JTextArea ta1, ta2;
 		add(ta2 = new JTextArea(SetUtils.getHeader(ds).toString()));

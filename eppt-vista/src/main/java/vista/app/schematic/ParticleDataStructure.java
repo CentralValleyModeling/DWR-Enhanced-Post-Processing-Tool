@@ -12,9 +12,10 @@
 package vista.app.schematic;
 
 /**
-   * 
-   */
-public class ParticleDataStructure {
+ *
+ */
+public class ParticleDataStructure
+{
 	public short p;
 	public short c;
 	public short x;

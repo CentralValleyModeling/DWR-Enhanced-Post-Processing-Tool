@@ -18,27 +18,31 @@ import javax.swing.*;
 
 /**
  * A default quitable frame.
- * 
+ *
  * @author Nicky Sandhu
  * @version $Id: DefaultFrame.java,v 1.1 2003/10/02 20:48:28 redwood Exp $
  */
-public class DefaultFrame extends JFrame {
+public class DefaultFrame extends JFrame
+{
 	/**
 	 * adds the given component to the center of the frame.
 	 */
-	public DefaultFrame() {
+	public DefaultFrame()
+	{
 		WindowListener l = new DefaultWindowListener();
 		addWindowListener(l);
 	}
 
 	/**
-   *
-   */
-	private class DefaultWindowListener extends WindowAdapter {
+	 *
+	 */
+	private class DefaultWindowListener extends WindowAdapter
+	{
 		/**
-   *
-   */
-		public final void windowClosing(WindowEvent e) {
+		 *
+		 */
+		public final void windowClosing(WindowEvent e)
+		{
 			setVisible(false);
 			dispose();
 		}

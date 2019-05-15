@@ -18,12 +18,13 @@ import vista.time.TimeWindow;
  * Time Series is the base class for time series. There are two kinds of time
  * series, a sequence of regular interval separated values ( RegularTimeSeries )
  * and irregular interval separated values( IrregularTimeSeries).
- * 
- * @see RegularTimeSeries, IrregularTimeSeries
+ *
  * @author Nicky Sandhu (DWR).
  * @version $Id: TimeSeries.java,v 1.1 2003/10/02 20:49:33 redwood Exp $
+ * @see RegularTimeSeries, IrregularTimeSeries
  */
-public abstract class TimeSeries implements DataSet {
+public abstract class TimeSeries implements DataSet
+{
 	/**
 	 * returns the element at the given time. If no element exists at exactly
 	 * the specified time an exception is thrown
@@ -58,7 +59,7 @@ public abstract class TimeSeries implements DataSet {
 
 	/**
 	 * same as createSlice(TimeWindow tw)
-	 * 
+	 *
 	 * @see TimeSeries#createSlice(TimeWindow tw)
 	 */
 	public abstract TimeSeries createSlice(String stime, String etime);

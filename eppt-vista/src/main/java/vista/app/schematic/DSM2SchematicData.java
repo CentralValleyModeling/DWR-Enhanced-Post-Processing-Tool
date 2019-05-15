@@ -25,23 +25,23 @@ import vista.set.PathPartPredicate;
 import vista.set.Pathname;
 
 /**
- * 
- * 
  * @author Nicky Sandhu
  * @version $Id: DSM2SchematicData.java,v 1.2 1998/10/08 00:03:05 nsandhu Exp $
  */
-public class DSM2SchematicData implements SchematicDataModel {
+public class DSM2SchematicData implements SchematicDataModel
+{
 	public Network network;
 	public double _xmax, _xmin, _ymax, _ymin;
 	public int _index;
-	private Object _obj;
 	public Group _group;
+	private Object _obj;
 	private NumberFormat nf;
 
 	/**
-   *
-   */
-	public DSM2SchematicData(InputStream is, Group g) {
+	 *
+	 */
+	public DSM2SchematicData(InputStream is, Group g)
+	{
 		network = Network.createNetwork(is);
 		_group = g;
 		nf = NumberFormat.getInstance();
@@ -52,10 +52,13 @@ public class DSM2SchematicData implements SchematicDataModel {
 		_ymax = Float.MIN_VALUE;
 		_xmin = Float.MAX_VALUE;
 		_ymin = Float.MAX_VALUE;
-		for (int i = 1; i < count; i++) {
+		for(int i = 1; i < count; i++)
+		{
 			Node node = network.getNode(i);
-			if (node == null)
+			if(node == null)
+			{
 				continue;
+			}
 			double x = node.getX();
 			double y = node.getY();
 			_xmax = Math.max(_xmax, x);
@@ -73,64 +76,72 @@ public class DSM2SchematicData implements SchematicDataModel {
 	/**
 	 * an object associated with this model.
 	 */
-	public Object getReferenceObject() {
+	public Object getReferenceObject()
+	{
 		return _obj;
 	}
 
 	/**
 	 * an object associated with this model.
 	 */
-	public void setReferenceObject(Object obj) {
+	public void setReferenceObject(Object obj)
+	{
 		_obj = obj;
 	}
 
 	/**
 	 * gets the maximum value for the x axis
 	 */
-	public double getXMax() {
+	public double getXMax()
+	{
 		return _xmax;
 	}
 
 	/**
 	 * gets the maximum value for the x axis
 	 */
-	public double getXMin() {
+	public double getXMin()
+	{
 		return _xmin;
 	}
 
 	/**
 	 * gets the maximum value for the x axis
 	 */
-	public double getYMax() {
+	public double getYMax()
+	{
 		return _ymax;
 	}
 
 	/**
 	 * gets the maximum value for the x axis
 	 */
-	public double getYMin() {
+	public double getYMin()
+	{
 		return _ymin;
 	}
 
 	/**
 	 * resets the data iterator to beginning of curve
 	 */
-	public void reset() {
+	public void reset()
+	{
 		_index = 1;
 	}
 
 	/**
 	 * gets the next point
-	 * 
-	 * @param points
-	 *            is an array wher points[0] contains the next x value and
-	 *            points[1] contains the next y value
+	 *
+	 * @param points is an array wher points[0] contains the next x value and
+	 *               points[1] contains the next y value
 	 * @return an integer specifing movevment only or line drawing motion
 	 */
-	public SymbolData nextSymbol() {
+	public SymbolData nextSymbol()
+	{
 		DefaultSymbolData sd = new DefaultSymbolData();
 		Link l = network.getLink(_index);
-		if (l instanceof Channel) {
+		if(l instanceof Channel)
+		{
 			Channel ch = (Channel) l;
 			sd.type = SymbolData.LINE_SYMBOL;
 			sd.size = 4; // channel size
@@ -138,14 +149,18 @@ public class DSM2SchematicData implements SchematicDataModel {
 			Group g = getGroupObjectFor(l);
 			sd.obj = g;
 			sd.c = Color.blue;
-			if (g.getNumberOfDataReferences() > 0)
+			if(g.getNumberOfDataReferences() > 0)
+			{
 				sd.c = Color.yellow;
+			}
 			sd.p.x = l.getNode(0).getX();
 			sd.p.y = l.getNode(0).getY();
 			sd.op.x = l.getNode(1).getX();
 			sd.op.y = l.getNode(1).getY();
 			_index++;
-		} else {
+		}
+		else
+		{
 			sd.type = SymbolData.SYMBOL;
 			sd.shape = SymbolData.CIRCLE;
 			sd.obj = l;
@@ -153,7 +168,8 @@ public class DSM2SchematicData implements SchematicDataModel {
 			sd.size = 4;
 			double xval = 0;
 			double yval = 0;
-			for (int i = 0; i < l.getNumberOfNodes(); i++) {
+			for(int i = 0; i < l.getNumberOfNodes(); i++)
+			{
 				xval += l.getNode(i).getX();
 				yval += l.getNode(i).getY();
 			}
@@ -167,32 +183,47 @@ public class DSM2SchematicData implements SchematicDataModel {
 	/**
 	 * @return true while has more points on curve
 	 */
-	public boolean hasMoreSymbols() {
-		while (_index < network.getNumberOfLinks()
+	public boolean hasMoreSymbols()
+	{
+		while(_index < network.getNumberOfLinks()
 				&& network.getLink(_index) == null)
+		{
 			_index++;
+		}
 		return _index < network.getNumberOfLinks();
 	}
 
 	/**
 	 * gets the title text for this schematic
 	 */
-	public String getTitleText() {
+	public String getTitleText()
+	{
 		return "DSM2 Schematic";
 	}
 
+	@Override
+	public void setTitleText(String str)
+	{
+		// TODO Auto-generated method stub
+
+	}
+
 	/**
-   *
-   */
-	public Group getGroupObjectFor(Link l) {
+	 *
+	 */
+	public Group getGroupObjectFor(Link l)
+	{
 		Group g = Group.createGroup(_group);
-		if (l instanceof Channel) {
+		if(l instanceof Channel)
+		{
 			Channel c = (Channel) l;
 			// g.filterBy("HIST+CHAN");
 			// filter to get channelId_xxxx, e.g. 321_xxx or 005_xxx
 			g.filterBy(new PathPartPredicate(nf.format(c.getId()) + "_",
 					Pathname.B_PART), true);
-		} else {
+		}
+		else
+		{
 			// filter to get reservoirId_xxxx, e.g. 321_10000
 			g.filterBy(new PathPartPredicate(nf.format(l.getId()) + "_",
 					Pathname.B_PART), true);
@@ -200,100 +231,105 @@ public class DSM2SchematicData implements SchematicDataModel {
 		return g;
 	}
 
+	@Override
+	public Dimension getScreenSize()
+	{
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public SchematicSymbolData nextSymbolData()
+	{
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void setScreenSize(int width, int height)
+	{
+		// TODO Auto-generated method stub
+
+	}
+
 	/**
-	 * 
-	 * 
 	 * @author Nicky Sandhu
 	 * @version $Id: DSM2SchematicData.java,v 1.2 1998/10/08 00:03:05 nsandhu
-	 *          Exp $
+	 * Exp $
 	 */
-	public class DefaultSymbolData implements SymbolData {
+	public class DefaultSymbolData implements SymbolData
+	{
 		int size, type, shape;
 		Object obj;
 		Color c;
 		DoublePoint p = new DoublePoint(0, 0), op = new DoublePoint(0, 0);
 
-		public DefaultSymbolData() {
+		public DefaultSymbolData()
+		{
 		}
 
 		/**
-   *
-   */
-		public int getSize() {
+		 *
+		 */
+		public int getSize()
+		{
 			return size;
 		}
 
 		/**
-   *
-   */
-		public Color getColor() {
+		 *
+		 */
+		public Color getColor()
+		{
 			return c;
 		}
 
 		/**
-   *
-   */
-		public DoublePoint getAnchorPoint() {
+		 *
+		 */
+		public DoublePoint getAnchorPoint()
+		{
 			return p;
 		}
 
 		/**
- *
- */
-		public DoublePoint getOtherPoint() {
+		 *
+		 */
+		public DoublePoint getOtherPoint()
+		{
 			return op;
 		}
 
 		/**
- *
- */
-		public int getType() {
+		 *
+		 */
+		public int getType()
+		{
 			return type;
 		} // LINE_SYMBOL or SYMBOL
 
 		/**
- *
- */
-		public int getShape() {
+		 *
+		 */
+		public int getShape()
+		{
 			return shape;
 		} // for symbol it's CIRCLE, TRIANGLE, SQUARE
 
 		/**
- *
- */
-		public Object getReferenceObject() {
+		 *
+		 */
+		public Object getReferenceObject()
+		{
 			return obj;
 		}
 
 		/**
- *
- */
-		public void setReferenceObject(Object obj) {
+		 *
+		 */
+		public void setReferenceObject(Object obj)
+		{
 			this.obj = obj;
 		}
-	}
-
-	@Override
-	public Dimension getScreenSize() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public SchematicSymbolData nextSymbolData() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public void setScreenSize(int width, int height) {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public void setTitleText(String str) {
-		// TODO Auto-generated method stub
-
 	}
 }

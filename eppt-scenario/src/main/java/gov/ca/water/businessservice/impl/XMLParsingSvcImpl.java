@@ -76,11 +76,11 @@ public final class XMLParsingSvcImpl implements IXMLParsingSvc
 		}
 		catch(CalLiteGUIException ex)
 		{
-			throw new EpptInitializationException("Error trying to get xml document: ..//Config//GUI.xml.",ex);
+			throw new EpptInitializationException("Error trying to get xml document: ..//Config//GUI.xml.", ex);
 		}
 		catch(Exception ex)
 		{
-			throw new EpptInitializationException("Error rendering xml document: ..//Config//GUI.xml.",new CalLiteGUIExceptionFatal(
+			throw new EpptInitializationException("Error rendering xml document: ..//Config//GUI.xml.", new CalLiteGUIExceptionFatal(
 					"This is from Swing Engine : " + Constant.NEW_LINE + ex.getMessage(), ex));
 		}
 
@@ -162,7 +162,7 @@ public final class XMLParsingSvcImpl implements IXMLParsingSvc
 			}
 		}
 		this._newUserDefinedTables = compIds.stream().filter((compId) -> _swingEngine.find(compId) instanceof JTable)
-										   .collect(Collectors.toList());
+											.collect(Collectors.toList());
 		this._newUserDefinedTables.remove("tblRegValues");
 		this._newUserDefinedTables.remove("tblOpValues");
 		this._newUserDefinedTables.remove("tblIF3");

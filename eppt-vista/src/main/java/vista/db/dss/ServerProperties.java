@@ -18,26 +18,33 @@ import java.io.InputStream;
 import java.util.Properties;
 
 /**
- * 
- * 
  * @author Nicky Sandhu
  * @version $Id: ServerProperties.java,v 1.1 2003/10/02 20:48:46 redwood Exp $
  */
-public class ServerProperties {
+public class ServerProperties
+{
 	public static Properties props = new Properties();
-	static {
+
+	static
+	{
 		String fs = System.getProperty("file.separator");
 		InputStream is = null;
-		try {
+		try
+		{
 			is = new FileInputStream(System.getProperty("user.dir") + fs
 					+ ".vistaServer");
-		} catch (Exception e) {
+		}
+		catch(Exception e)
+		{
 			// System.err.println("Server properties file "+".vistaServer "+
 			// "not found in current or home directory!\n using defaults");
 		}
-		if (is != null) {
+		if(is != null)
+		{
 			initialize(is);
-		} else {
+		}
+		else
+		{
 			initialize();
 		}
 	}
@@ -45,7 +52,8 @@ public class ServerProperties {
 	/**
 	 * initialize to default
 	 */
-	private static void initialize() {
+	private static void initialize()
+	{
 		props.put("logfile", "");
 		props.put("password", ""); // blank password... accept all
 	}
@@ -53,22 +61,29 @@ public class ServerProperties {
 	/**
 	 * initialize from stream
 	 */
-	private static void initialize(InputStream is) {
+	private static void initialize(InputStream is)
+	{
 		initialize();
-		if (is == null)
+		if(is == null)
+		{
 			return;
+		}
 		// end default properties
-		try {
+		try
+		{
 			props.load(new BufferedInputStream(is));
-		} catch (IOException ioe) {
+		}
+		catch(IOException ioe)
+		{
 			System.out.println(ioe.getMessage());
 		}
 	}
 
 	/**
-   *
-   */
-	public static String getProperty(String key) {
+	 *
+	 */
+	public static String getProperty(String key)
+	{
 		return props.getProperty(key);
 	}
 }

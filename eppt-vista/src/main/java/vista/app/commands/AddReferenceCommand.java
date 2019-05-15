@@ -21,19 +21,21 @@ import vista.set.Group;
 
 /**
  * Encapsulates commands implementing session related commands
- * 
+ *
  * @author Nicky Sandhu
  * @version $Id: AddReferenceCommand.java,v 1.1 2003/10/02 20:48:24 redwood Exp
- *          $
+ * $
  */
-public class AddReferenceCommand implements Command {
+public class AddReferenceCommand implements Command
+{
 	private SessionContext _context;
 	private DataReference _ref;
 
 	/**
 	 * opens session and sets current session to
 	 */
-	public AddReferenceCommand(SessionContext context, DataReference ref) {
+	public AddReferenceCommand(SessionContext context, DataReference ref)
+	{
 		_context = context;
 		_ref = ref;
 	}
@@ -41,34 +43,42 @@ public class AddReferenceCommand implements Command {
 	/**
 	 * executes command
 	 */
-	public void execute() throws ExecutionException {
+	public void execute() throws ExecutionException
+	{
 		Group g = _context.getCurrentGroup();
-		if (_ref == null || g == null)
+		if(_ref == null || g == null)
+		{
 			return;
+		}
 		g.addDataReference(_ref);
 	}
 
 	/**
 	 * unexecutes command or throws exception if not unexecutable
 	 */
-	public void unexecute() throws ExecutionException {
+	public void unexecute() throws ExecutionException
+	{
 		Group g = _context.getCurrentGroup();
-		if (_ref == null || g == null)
+		if(_ref == null || g == null)
+		{
 			return;
+		}
 		g.removeDataReference(_ref);
 	}
 
 	/**
 	 * checks if command is executable.
 	 */
-	public boolean isUnexecutable() {
+	public boolean isUnexecutable()
+	{
 		return true;
 	}
 
 	/**
 	 * writes to script
 	 */
-	public void toScript(StringBuffer buf) {
+	public void toScript(StringBuffer buf)
+	{
 		SymbolTable st = MainGUI.getSymbolTable();
 		buf.append(st.getNameFor(_context.getCurrentGroup())).append(
 				".addDataReference(").append(st.getNameFor(_ref)).append(")");

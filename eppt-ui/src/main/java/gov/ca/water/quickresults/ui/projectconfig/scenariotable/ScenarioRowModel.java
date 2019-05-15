@@ -20,7 +20,6 @@ import gov.ca.water.calgui.project.EpptScenarioRun;
 import gov.ca.water.calgui.project.NamedDssPath;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ObservableValue;
-import javafx.scene.control.TreeTableView;
 
 import com.rma.javafx.treetable.columns.specs.TreeTableColumnSpec;
 
@@ -61,9 +60,9 @@ class ScenarioRowModel extends ParentRowModel
 		_outputProperty = new SimpleObjectProperty<>(Objects.toString(scenarioRun.getOutputPath()));
 		_wreslMainProperty = new SimpleObjectProperty<>(Objects.toString(scenarioRun.getWreslMain()));
 		_baseProperty = new SimpleObjectProperty<>(base);
-		_baseProperty.addListener((e,o,n)->modified.run());
+		_baseProperty.addListener((e, o, n) -> modified.run());
 		_alternativeProperty = new SimpleObjectProperty<>(alternative);
-		_alternativeProperty.addListener((e,o,n)->modified.run());
+		_alternativeProperty.addListener((e, o, n) -> modified.run());
 		addDssPathChildren();
 	}
 
@@ -90,7 +89,7 @@ class ScenarioRowModel extends ParentRowModel
 		{
 			getChildren().add(new DssPathRow(this, dtsDssFile, "DTS"));
 		}
-		dssContainer.getExtraDssFiles().forEach(child->getChildren().add(new DssPathRow(this, child, "Extra")));
+		dssContainer.getExtraDssFiles().forEach(child -> getChildren().add(new DssPathRow(this, child, "Extra")));
 	}
 
 	EpptScenarioRun getScenarioRun()

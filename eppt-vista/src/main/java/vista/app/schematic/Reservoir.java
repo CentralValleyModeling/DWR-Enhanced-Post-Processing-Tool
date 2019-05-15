@@ -13,20 +13,23 @@ package vista.app.schematic;
 
 
 /**
-   *
-   */
-class Reservoir extends Link {
+ *
+ */
+class Reservoir extends Link
+{
 	/**
-   *
-   */
-	public Reservoir(int id, Node[] nodes) {
+	 *
+	 */
+	public Reservoir(int id, Node[] nodes)
+	{
 		super(id, nodes);
 	}
 
 	/**
-   *
-   */
-	public String toString() {
+	 *
+	 */
+	public String toString()
+	{
 		StringBuffer buf = new StringBuffer("Reservoir ");
 		String eol = System.getProperty("line.separator");
 		buf.append("Id: ").append(getId()).append(eol);

@@ -53,7 +53,7 @@ public final class DynamicControlSvcImpl implements IDynamicControlSvc
 	 * TriggerForDynamicDisplay.table files into memory.
 	 */
 	private DynamicControlSvcImpl() throws EpptInitializationException
-    {
+	{
 		LOG.info("Building DynamicControlSvcImpl Object.");
 		this._fileSystemSvc = new FileSystemSvcImpl();
 		this._triggerMapForEnableDisable = new HashMap<>();
@@ -81,29 +81,30 @@ public final class DynamicControlSvcImpl implements IDynamicControlSvc
 	 * This method is for implementing the singleton. It will return the
 	 * instance of this class if it is empty it will create one.
 	 * throws IllegalStateException
+	 *
 	 * @return Will return the instance of this class if it is empty it will
 	 * create one.
 	 */
 	public static IDynamicControlSvc getDynamicControlSvcImplInstance()
-    {
-        if(dynamicControlSvc == null)
-        {
-            throw new IllegalStateException("the dynamic control service has not been initialized. A call to " +
-                    "'DynamicControlSvcImpl.createDynamicControlSvcImplInstance()' should have been made in the CalLiteInitClass.init method.");
-        }
-        else
-        {
-            return dynamicControlSvc;
-        }
+	{
+		if(dynamicControlSvc == null)
+		{
+			throw new IllegalStateException("the dynamic control service has not been initialized. A call to " +
+					"'DynamicControlSvcImpl.createDynamicControlSvcImplInstance()' should have been made in the CalLiteInitClass.init method.");
+		}
+		else
+		{
+			return dynamicControlSvc;
+		}
 	}
 
-	public static void createDynamicControlSvcImplInstance()throws EpptInitializationException
-    {
-        if(dynamicControlSvc == null)
-        {
-            dynamicControlSvc = new DynamicControlSvcImpl();
-        }
-    }
+	public static void createDynamicControlSvcImplInstance() throws EpptInitializationException
+	{
+		if(dynamicControlSvc == null)
+		{
+			dynamicControlSvc = new DynamicControlSvcImpl();
+		}
+	}
 
 	/**
 	 * This will tell whether the line is comment or not.
@@ -123,7 +124,7 @@ public final class DynamicControlSvcImpl implements IDynamicControlSvc
 	 * @param triggerMap The list of trigger map.
 	 */
 	private void loadTriggerTable(String fileName, Map<String, List<TriggerBO>> triggerMap) throws EpptInitializationException
-    {
+	{
 		List<String> triggerStrList;
 		String errorStr = "";
 		String mapKey;
@@ -159,7 +160,7 @@ public final class DynamicControlSvcImpl implements IDynamicControlSvc
 		catch(CalLiteGUIException ex)
 		{
 			LOG.error(ex.getMessage(), ex);
-            throw new EpptInitializationException( ex.getMessage());
+			throw new EpptInitializationException(ex.getMessage());
 		}
 	}
 
@@ -182,8 +183,8 @@ public final class DynamicControlSvcImpl implements IDynamicControlSvc
 				else if(isEnabled)
 				{
 
-						toggleEnComponentAndChildren(swingEngine.find(triggerBO.getAffectdeGuiId()),
-								stringOnOffToBoolean(triggerBO.getAffectdeAction()));
+					toggleEnComponentAndChildren(swingEngine.find(triggerBO.getAffectdeGuiId()),
+							stringOnOffToBoolean(triggerBO.getAffectdeAction()));
 
 				}
 			}

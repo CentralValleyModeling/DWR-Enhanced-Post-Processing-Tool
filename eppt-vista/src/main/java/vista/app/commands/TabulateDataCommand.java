@@ -20,12 +20,13 @@ import vista.set.Group;
 
 /**
  * Encapsulates commands implementing group related commands
- * 
+ *
  * @author Nicky Sandhu
  * @version $Id: TabulateDataCommand.java,v 1.1 2003/10/02 20:48:43 redwood Exp
- *          $
+ * $
  */
-public class TabulateDataCommand implements Command {
+public class TabulateDataCommand implements Command
+{
 	private Group _group;
 	private int[] _rNumbers;
 	private String _filename;
@@ -33,7 +34,8 @@ public class TabulateDataCommand implements Command {
 	/**
 	 * opens group and sets current group to
 	 */
-	public TabulateDataCommand(Group g, int[] referenceNumbers) {
+	public TabulateDataCommand(Group g, int[] referenceNumbers)
+	{
 		_group = g;
 		_rNumbers = referenceNumbers;
 	}
@@ -41,15 +43,23 @@ public class TabulateDataCommand implements Command {
 	/**
 	 * executes command
 	 */
-	public void execute() throws ExecutionException {
-		if (_rNumbers == null || _rNumbers.length == 0)
+	public void execute() throws ExecutionException
+	{
+		if(_rNumbers == null || _rNumbers.length == 0)
+		{
 			return;
-		if (_rNumbers.length == 1) {
+		}
+		if(_rNumbers.length == 1)
+		{
 			new DataTableFrame(_group.getDataReference(_rNumbers[0]));
-		} else {
+		}
+		else
+		{
 			DataReference[] refs = new DataReference[_rNumbers.length];
-			for (int i = 0; i < _rNumbers.length; i++)
+			for(int i = 0; i < _rNumbers.length; i++)
+			{
 				refs[i] = _group.getDataReference(_rNumbers[i]);
+			}
 			new MultiDataTableFrame(refs);
 		}
 	}
@@ -57,20 +67,23 @@ public class TabulateDataCommand implements Command {
 	/**
 	 * unexecutes command or throws exception if not unexecutable
 	 */
-	public void unexecute() throws ExecutionException {
+	public void unexecute() throws ExecutionException
+	{
 		throw new ExecutionException("Cannot undo tabulation of data");
 	}
 
 	/**
 	 * checks if command is executable.
 	 */
-	public boolean isUnexecutable() {
+	public boolean isUnexecutable()
+	{
 		return false;
 	}
 
 	/**
 	 * writes to script
 	 */
-	public void toScript(StringBuffer buf) {
+	public void toScript(StringBuffer buf)
+	{
 	}
 } // end of TabulateDataCommand

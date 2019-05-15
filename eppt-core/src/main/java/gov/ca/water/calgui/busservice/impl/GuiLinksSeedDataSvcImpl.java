@@ -77,6 +77,17 @@ public final class GuiLinksSeedDataSvcImpl implements IGuiLinksSeedDataSvc
 		}
 	}
 
+	/**
+	 * This will tell whether the line is comment or not.
+	 *
+	 * @param line The line to be checked.
+	 * @return Will return true if the line id not comment.
+	 */
+	private static boolean isNotComments(String line)
+	{
+		return !line.startsWith(Constant.EXCLAMATION);
+	}
+
 	private void initGuiLinksAllModels() throws EpptInitializationException
 	{
 		IFileSystemSvc fileSystemSvc = new FileSystemSvcImpl();
@@ -89,7 +100,7 @@ public final class GuiLinksSeedDataSvcImpl implements IGuiLinksSeedDataSvc
 			{
 				errorStr = guiLinkString;
 				//don't count comment rows
-				if(guiLinkString.length()>0)
+				if(guiLinkString.length() > 0)
 				{
 					if(guiLinkString.trim().charAt(0) == '\uFEFF' || guiLinkString.trim().charAt(0) == '!' || guiLinkString.trim().charAt(0) == '#')
 					{
@@ -195,17 +206,6 @@ public final class GuiLinksSeedDataSvcImpl implements IGuiLinksSeedDataSvc
 			id = Integer.parseInt(checkboxId);
 		}
 		return id;
-	}
-
-	/**
-	 * This will tell whether the line is comment or not.
-	 *
-	 * @param line The line to be checked.
-	 * @return Will return true if the line id not comment.
-	 */
-	private static boolean isNotComments(String line)
-	{
-		return !line.startsWith(Constant.EXCLAMATION);
 	}
 
 	public GUILinksAllModelsBO getObjById(String id)

@@ -18,19 +18,21 @@ import vista.set.Group;
 
 /**
  * Encapsulates commands implementing session related commands
- * 
+ *
  * @author Nicky Sandhu
  * @version $Id: MoveReferenceCommand.java,v 1.1 2003/10/02 20:48:35 redwood Exp
- *          $
+ * $
  */
-public class MoveReferenceCommand implements Command {
+public class MoveReferenceCommand implements Command
+{
 	private Group _group;
 	private int _oPos, _nPos;
 
 	/**
 	 * opens session and sets current session to
 	 */
-	public MoveReferenceCommand(Group g, int oldPosition, int newPosition) {
+	public MoveReferenceCommand(Group g, int oldPosition, int newPosition)
+	{
 		_group = g;
 		_oPos = oldPosition;
 		_nPos = newPosition;
@@ -39,7 +41,8 @@ public class MoveReferenceCommand implements Command {
 	/**
 	 * executes command
 	 */
-	public void execute() throws ExecutionException {
+	public void execute() throws ExecutionException
+	{
 		DataReference ref = _group.getDataReference(_oPos);
 		_group.removeDataReference(ref);
 		_group.insertDataReferenceAt(_nPos, ref);
@@ -48,7 +51,8 @@ public class MoveReferenceCommand implements Command {
 	/**
 	 * unexecutes command or throws exception if not unexecutable
 	 */
-	public void unexecute() throws ExecutionException {
+	public void unexecute() throws ExecutionException
+	{
 		DataReference ref = _group.getDataReference(_nPos);
 		_group.removeDataReference(ref);
 		_group.insertDataReferenceAt(_oPos, ref);
@@ -57,13 +61,15 @@ public class MoveReferenceCommand implements Command {
 	/**
 	 * checks if command is executable.
 	 */
-	public boolean isUnexecutable() {
+	public boolean isUnexecutable()
+	{
 		return true;
 	}
 
 	/**
 	 * writes to script
 	 */
-	public void toScript(StringBuffer buf) {
+	public void toScript(StringBuffer buf)
+	{
 	}
 } // end of MoveReferenceCommand

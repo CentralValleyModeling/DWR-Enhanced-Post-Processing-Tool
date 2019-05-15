@@ -37,14 +37,14 @@ public class MonthlyTableDisplay extends TextDisplay
 	public static final boolean DEBUG = false;
 	private static final String[] ITEM_TEXT =
 			{
-			"Table",
-			"Graph"
-	};
+					"Table",
+					"Graph"
+			};
 	private static final String[] TOOL_TIP_TEXT =
 			{
-			"Shows data in a table",
-			"Shows data in a graph"
-	};
+					"Shows data in a table",
+					"Shows data in a graph"
+			};
 	private static final int[] ITEM_KEYS = {
 			KeyEvent.VK_T,
 			KeyEvent.VK_G

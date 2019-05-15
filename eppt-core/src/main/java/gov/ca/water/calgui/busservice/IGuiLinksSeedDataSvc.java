@@ -42,5 +42,4 @@ public interface IGuiLinksSeedDataSvc
 	GUILinksAllModelsBO getObjById(String id);
 
 
-
 }

@@ -12,9 +12,10 @@
 package vista.graph;
 
 /**
-   *
-   */
-public class Labels {
+ *
+ */
+public class Labels
+{
 	public static final String DIALOG = "GE Dialog";
 	public static final String BACKGROUND_COLOR = "Background Color";
 	public static final String FOREGROUND_COLOR = "Foreground Color";

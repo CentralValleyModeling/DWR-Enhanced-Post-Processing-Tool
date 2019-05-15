@@ -21,47 +21,47 @@ package gov.ca.water.calgui.bo;
 public class CalLiteGUIException extends Exception
 {
 
-    private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 1L;
 
-    /**
-     * Instantiates a new CalLiteGUI exception.
-     */
-    public CalLiteGUIException()
-    {
-        super();
-    }
+	/**
+	 * Instantiates a new CalLiteGUI exception.
+	 */
+	public CalLiteGUIException()
+	{
+		super();
+	}
 
-    /**
-     * The Constructor.
-     *
-     * @param message The message to store in the exception.
-     */
-    public CalLiteGUIException(String message)
-    {
-        super(message);
-    }
+	/**
+	 * The Constructor.
+	 *
+	 * @param message The message to store in the exception.
+	 */
+	public CalLiteGUIException(String message)
+	{
+		super(message);
+	}
 
-    /**
-     * The Constructor.
-     *
-     * @param message The message
-     * @param cause   The cause
-     */
-    public CalLiteGUIException(String message, Throwable cause)
-    {
-        super(message, cause);
-    }
+	/**
+	 * The Constructor.
+	 *
+	 * @param message The message
+	 * @param cause   The cause
+	 */
+	public CalLiteGUIException(String message, Throwable cause)
+	{
+		super(message, cause);
+	}
 
 
-    /**
-     * The Constructor.
-     *
-     * @param cause the cause
-     */
-    public CalLiteGUIException(Throwable cause)
-    {
-        super(cause);
-    }
+	/**
+	 * The Constructor.
+	 *
+	 * @param cause the cause
+	 */
+	public CalLiteGUIException(Throwable cause)
+	{
+		super(cause);
+	}
 
 
 }

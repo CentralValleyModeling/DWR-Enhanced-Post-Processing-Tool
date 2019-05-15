@@ -14,8 +14,6 @@ package calsim.gui;
 //import calsim.schematic.*;
 //import calsim.schematic.input.*;
 
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
 import javax.swing.*;
 
 //import java.awt.*;

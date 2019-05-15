@@ -15,11 +15,12 @@ import java.awt.Color;
 
 /**
  * Attributes for Grid.
- * 
+ *
  * @author Nicky Sandhu (DWR).
  * @version $Id: GridAttr.java,v 1.1 2003/10/02 20:49:01 redwood Exp $
  */
-public class GridAttr extends LineElementAttr {
+public class GridAttr extends LineElementAttr
+{
 	/**
 	 * color of line
 	 */
@@ -29,9 +30,11 @@ public class GridAttr extends LineElementAttr {
 	 * copies the fields into the given GEAttr object. Also copies in the
 	 * GridAttr if the object is of that type.
 	 */
-	public void copyInto(GEAttr ga) {
+	public void copyInto(GEAttr ga)
+	{
 		super.copyInto(ga);
-		if (ga instanceof GridAttr) {
+		if(ga instanceof GridAttr)
+		{
 			GridAttr lea = (GridAttr) ga;
 			lea._color = this._color;
 		}

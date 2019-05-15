@@ -66,6 +66,20 @@ public final class ProgressFrameForPDF extends JFrame
 		}
 	}
 
+	/**
+	 * This method is for implementing the singleton.
+	 *
+	 * @return
+	 */
+	public static ProgressFrameForPDF getProgressFrameInstance(JFrame mainFrame)
+	{
+		if(progressFrame == null)
+		{
+			progressFrame = new ProgressFrameForPDF(mainFrame);
+		}
+		return progressFrame;
+	}
+
 	private void initComponents()
 	{
 		setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
@@ -92,20 +106,6 @@ public final class ProgressFrameForPDF extends JFrame
 		pack();
 		Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
 		setLocation((dim.width - 400) / 2, (dim.height - 200) / 2);
-	}
-
-	/**
-	 * This method is for implementing the singleton.
-	 *
-	 * @return
-	 */
-	public static ProgressFrameForPDF getProgressFrameInstance(JFrame mainFrame)
-	{
-		if(progressFrame == null)
-		{
-			progressFrame = new ProgressFrameForPDF(mainFrame);
-		}
-		return progressFrame;
 	}
 
 	/**

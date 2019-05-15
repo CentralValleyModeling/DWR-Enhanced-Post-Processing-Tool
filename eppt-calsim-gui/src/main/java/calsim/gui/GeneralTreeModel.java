@@ -65,38 +65,38 @@ public class GeneralTreeModel extends DefaultTreeModel implements Serializable
 	JMenuItem editnode = new JMenuItem("Edit");
 
 
-/*
-  public void pasteNode() {
-    DefaultMutableTreeNode parent = null;
+	/*
+	  public void pasteNode() {
+		DefaultMutableTreeNode parent = null;
 
-    DefaultMutableTreeNode child = new DefaultMutableTreeNode((String)copiednode.getUserObject());
-    if (copiednode.getChildCount() > 0) {
-      for (int i = 0; i < copiednode.getChildCount(); i++) {
-        child.add((DefaultMutableTreeNode)copiednode.getChildAt(i));
-      }
-    } else {
-	  child.setAllowsChildren(false);
-    }
+		DefaultMutableTreeNode child = new DefaultMutableTreeNode((String)copiednode.getUserObject());
+		if (copiednode.getChildCount() > 0) {
+		  for (int i = 0; i < copiednode.getChildCount(); i++) {
+			child.add((DefaultMutableTreeNode)copiednode.getChildAt(i));
+		  }
+		} else {
+		  child.setAllowsChildren(false);
+		}
 
-    if (copiednode == null) iscopied = false;
-    if (iscopied) {
-      if (path == null) {
-        parent = (DefaultMutableTreeNode)copiednode.getRoot();
-       } else {
-        parent = (DefaultMutableTreeNode)(path.getLastPathComponent());
-      }
-      if (parent.getAllowsChildren()) {
-        insertNodetoModel(parent,copiednode,parent.getChildCount());
-        tree.scrollPathToVisible(new TreePath(copiednode.getPath()));
-       } else {
-        nodepopup.setVisible(false);
-        cannotPerform();
-        //return child;
-      }
-    }
-    //return child;
-  }
-*/
+		if (copiednode == null) iscopied = false;
+		if (iscopied) {
+		  if (path == null) {
+			parent = (DefaultMutableTreeNode)copiednode.getRoot();
+		   } else {
+			parent = (DefaultMutableTreeNode)(path.getLastPathComponent());
+		  }
+		  if (parent.getAllowsChildren()) {
+			insertNodetoModel(parent,copiednode,parent.getChildCount());
+			tree.scrollPathToVisible(new TreePath(copiednode.getPath()));
+		   } else {
+			nodepopup.setVisible(false);
+			cannotPerform();
+			//return child;
+		  }
+		}
+		//return child;
+	  }
+	*/
 	JMenuItem cutnode = new JMenuItem("Cut");
 	JMenuItem copynode = new JMenuItem("Copy");
 	JMenuItem pastenode = new JMenuItem("Paste");

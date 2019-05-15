@@ -19,26 +19,26 @@ public class WaterYearNameLookup
 {
 
 
-    private final Map<String, List<String>> _colHeadersToValues;
+	private final Map<String, List<String>> _colHeadersToValues;
 
-    public WaterYearNameLookup(Map<String, List<String>> colHeadersToValues)
-    {
+	public WaterYearNameLookup(Map<String, List<String>> colHeadersToValues)
+	{
 
-        _colHeadersToValues = colHeadersToValues;
-    }
+		_colHeadersToValues = colHeadersToValues;
+	}
 
-    public String getWaterYearType(int waterYearTypeNum, String columnHeader)
-    {
-        String retval = "Undefined";
-        if(_colHeadersToValues.containsKey(columnHeader))
-        {
-            List<String> values = _colHeadersToValues.get(columnHeader);
-            if(values.size()>waterYearTypeNum)
-            {
-                retval = values.get(waterYearTypeNum);
-            }
-        }
-        return retval;
-    }
+	public String getWaterYearType(int waterYearTypeNum, String columnHeader)
+	{
+		String retval = "Undefined";
+		if(_colHeadersToValues.containsKey(columnHeader))
+		{
+			List<String> values = _colHeadersToValues.get(columnHeader);
+			if(values.size() > waterYearTypeNum)
+			{
+				retval = values.get(waterYearTypeNum);
+			}
+		}
+		return retval;
+	}
 
 }

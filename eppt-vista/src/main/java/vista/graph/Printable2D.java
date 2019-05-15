@@ -19,27 +19,32 @@ import java.awt.print.Printable;
 import java.awt.print.PrinterException;
 
 /**
-  *
-  *
-  */
-public class Printable2D implements Printable {
+ *
+ */
+public class Printable2D implements Printable
+{
 	private GECanvas gec;
 
 	/**
-    *
-    */
-	public Printable2D(GECanvas gec) {
+	 *
+	 */
+	public Printable2D(GECanvas gec)
+	{
 		this.gec = gec;
 	}
 
 	/**
-    *
-    */
+	 *
+	 */
 	public int print(Graphics graphics, PageFormat pageFormat, int pageIndex)
-			throws PrinterException {
-		try {
-			if (pageIndex > 0)
+			throws PrinterException
+	{
+		try
+		{
+			if(pageIndex > 0)
+			{
 				return NO_SUCH_PAGE;
+			}
 			Graphics2D g2d = (Graphics2D) graphics;
 			g2d.translate(pageFormat.getImageableX(), pageFormat
 					.getImageableY());
@@ -51,9 +56,13 @@ public class Printable2D implements Printable {
 			gec.setDoubleBuffered(false);
 			gec.paintAll(g2d);
 			return PAGE_EXISTS;
-		} catch (Exception e) {
+		}
+		catch(Exception e)
+		{
 			throw new RuntimeException(e.getMessage());
-		} finally {
+		}
+		finally
+		{
 			gec.setDoubleBuffered(true);
 		}
 	}

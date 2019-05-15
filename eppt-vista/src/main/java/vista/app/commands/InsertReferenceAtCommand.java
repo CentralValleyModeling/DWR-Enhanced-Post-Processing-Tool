@@ -19,12 +19,13 @@ import vista.set.Group;
 
 /**
  * Encapsulates commands implementing session related commands
- * 
+ *
  * @author Nicky Sandhu
  * @version $Id: InsertReferenceAtCommand.java,v 1.1 2003/10/02 20:48:32 redwood
- *          Exp $
+ * Exp $
  */
-public class InsertReferenceAtCommand implements Command {
+public class InsertReferenceAtCommand implements Command
+{
 	private SessionContext _context;
 	private DataReference _ref;
 	private int _index;
@@ -33,7 +34,8 @@ public class InsertReferenceAtCommand implements Command {
 	 * opens session and sets current session to
 	 */
 	public InsertReferenceAtCommand(SessionContext context, DataReference ref,
-			int i) {
+									int i)
+	{
 		_context = context;
 		_ref = ref;
 		_index = i;
@@ -42,33 +44,41 @@ public class InsertReferenceAtCommand implements Command {
 	/**
 	 * executes command
 	 */
-	public void execute() throws ExecutionException {
+	public void execute() throws ExecutionException
+	{
 		Group g = _context.getCurrentGroup();
-		if (_ref == null || g == null)
+		if(_ref == null || g == null)
+		{
 			return;
+		}
 		g.insertDataReferenceAt(_index, _ref);
 	}
 
 	/**
 	 * unexecutes command or throws exception if not unexecutable
 	 */
-	public void unexecute() throws ExecutionException {
+	public void unexecute() throws ExecutionException
+	{
 		Group g = _context.getCurrentGroup();
-		if (_ref == null || g == null)
+		if(_ref == null || g == null)
+		{
 			return;
+		}
 		g.removeDataReference(_ref);
 	}
 
 	/**
 	 * checks if command is executable.
 	 */
-	public boolean isUnexecutable() {
+	public boolean isUnexecutable()
+	{
 		return true;
 	}
 
 	/**
 	 * writes to script
 	 */
-	public void toScript(StringBuffer buf) {
+	public void toScript(StringBuffer buf)
+	{
 	}
 } // end of Open GroupCommand

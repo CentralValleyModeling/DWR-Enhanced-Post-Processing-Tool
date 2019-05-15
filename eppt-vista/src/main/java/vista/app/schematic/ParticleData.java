@@ -12,50 +12,58 @@
 package vista.app.schematic;
 
 /**
-   *
-   */
-public class ParticleData {
+ *
+ */
+public class ParticleData
+{
 	/**
-   *
-   */
-	public ParticleData(int nparticles) {
-		if (particles == null) {
+	 *
+	 */
+	Particle[] particles;
+	/**
+	 *
+	 */
+	String date;
+
+	/**
+	 *
+	 */
+	public ParticleData(int nparticles)
+	{
+		if(particles == null)
+		{
 			particles = new Particle[nparticles];
-			for (int i = 0; i < particles.length; i++)
+			for(int i = 0; i < particles.length; i++)
+			{
 				particles[i] = new Particle(0, 0, -1.0f, -1.0f, -1.0f);
+			}
 		}
 	}
 
 	/**
-   *
-   */
-	public Particle[] getParticles() {
+	 *
+	 */
+	public Particle[] getParticles()
+	{
 		return particles;
 	}
 
 	/**
-   *
-   */
-	public void setDate(String d) {
-		date = d;
-	}
-
-	/**
-   * 
-   */
-	public String getDate() {
+	 *
+	 */
+	public String getDate()
+	{
 		return date;
 	}
 
 	/**
-   *
-   */
-	Particle[] particles;
+	 *
+	 */
+	public void setDate(String d)
+	{
+		date = d;
+	}
 	/**
-   *
-   */
-	String date;
-	/**
-   *
-   */
+	 *
+	 */
 }

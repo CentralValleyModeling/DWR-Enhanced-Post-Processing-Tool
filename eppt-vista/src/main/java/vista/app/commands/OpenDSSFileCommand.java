@@ -23,11 +23,12 @@ import vista.set.Session;
 
 /**
  * Encapsulates commands implementing session related commands
- * 
+ *
  * @author Nicky Sandhu
  * @version $Id: OpenDSSFileCommand.java,v 1.1 2003/10/02 20:48:36 redwood Exp $
  */
-public class OpenDSSFileCommand implements Command {
+public class OpenDSSFileCommand implements Command
+{
 	private String _filename;
 	private SessionContext _app;
 	private Session _previousSession;
@@ -37,10 +38,13 @@ public class OpenDSSFileCommand implements Command {
 	/**
 	 * opens session and sets current session to
 	 */
-	public OpenDSSFileCommand(SessionContext sc, String filename, SessionView sv) {
+	public OpenDSSFileCommand(SessionContext sc, String filename, SessionView sv)
+	{
 		_app = sc;
-		if (filename == null)
+		if(filename == null)
+		{
 			throw new IllegalArgumentException("Filename not supplied");
+		}
 		_filename = filename;
 		_sessionView = sv;
 	}
@@ -48,13 +52,18 @@ public class OpenDSSFileCommand implements Command {
 	/**
 	 * executes command
 	 */
-	public void execute() throws ExecutionException {
+	public void execute() throws ExecutionException
+	{
 		File f = new File(_filename);
-		if (!f.exists())
+		if(!f.exists())
+		{
 			throw new IllegalArgumentException("No file: " + _filename
 					+ " found");
-		if (f.isDirectory())
+		}
+		if(f.isDirectory())
+		{
 			throw new IllegalArgumentException(_filename + " is a directory");
+		}
 		String directory = f.getParent();
 		Group g = DSSUtil.createGroup("local", _filename);
 		Session s = new Session();
@@ -69,7 +78,8 @@ public class OpenDSSFileCommand implements Command {
 	/**
 	 * unexecutes command or throws exception if not unexecutable
 	 */
-	public void unexecute() throws ExecutionException {
+	public void unexecute() throws ExecutionException
+	{
 		_app.setCurrentSession(_previousSession);
 		_app.setCurrentGroup(_previousGroup);
 	}
@@ -77,13 +87,15 @@ public class OpenDSSFileCommand implements Command {
 	/**
 	 * checks if command is executable.
 	 */
-	public boolean isUnexecutable() {
+	public boolean isUnexecutable()
+	{
 		return true;
 	}
 
 	/**
 	 * writes to script
 	 */
-	public void toScript(StringBuffer buf) {
+	public void toScript(StringBuffer buf)
+	{
 	}
 } // end of OpenConnectionSessionCommand

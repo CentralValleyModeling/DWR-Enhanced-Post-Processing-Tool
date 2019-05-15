@@ -14,18 +14,21 @@ package vista.set;
 
 /**
  * Matches name of Named implementers to name given in constructor.
- * 
+ *
  * @see Named
  */
-public class MatchNamePredicate implements Predicate<Named> {
+public class MatchNamePredicate implements Predicate<Named>
+{
 	/**
 	 * name to be matched
 	 */
 	private String _name;
+
 	/**
 	 * constructor name to be matched
 	 */
-	public MatchNamePredicate(String name) {
+	public MatchNamePredicate(String name)
+	{
 		_name = name;
 	}
 
@@ -34,7 +37,8 @@ public class MatchNamePredicate implements Predicate<Named> {
 	 * execute function returns true if object's name matches given name.
 	 */
 	@Override
-	public boolean apply(Named type) {
+	public boolean apply(Named type)
+	{
 		return type != null && type.getName().equals(_name);
 	}
 }

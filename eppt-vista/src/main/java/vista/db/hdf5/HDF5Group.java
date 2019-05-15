@@ -17,29 +17,34 @@ import vista.set.GroupProxy;
 
 /**
  * Reads assuming a hydro tidefile structure.
- * 
+ *
  * @author psandhu
- * 
  */
 @SuppressWarnings("serial")
-public class HDF5Group extends GroupProxy {
+public class HDF5Group extends GroupProxy
+{
 
 	private String file;
-	
-	public HDF5Group(String file) {
+
+	public HDF5Group(String file)
+	{
 		this.file = file;
 		setName(file);
 	}
 
 	@SuppressWarnings("unchecked")
 	@Override
-	protected Group getInitializedGroup() {
+	protected Group getInitializedGroup()
+	{
 		// try for hydro group first and then qual group
 		HDF5HydroGroup hdf5HydroGroup = new HDF5HydroGroup(file);
 		Group hydroGroup = hdf5HydroGroup.getInitializedGroup();
-		if (hydroGroup == null){
+		if(hydroGroup == null)
+		{
 			return new HDF5QualGroup(file).getInitializedGroup();
-		} else {
+		}
+		else
+		{
 			return hydroGroup;
 		}
 	}

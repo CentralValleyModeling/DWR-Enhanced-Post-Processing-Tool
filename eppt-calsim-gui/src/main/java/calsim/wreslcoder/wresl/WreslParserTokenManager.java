@@ -19,6 +19,9 @@ package calsim.wreslcoder.wresl;
 
 public class WreslParserTokenManager implements WreslParserConstants
 {
+	static final long[] jjtoSkip = {
+			0x7eL, 0x0L,
+	};
 	private static final String[] JJSTR_LITERAL_IMAGES =
 			{
 					"", null, null, null, null, null, null, null, null, null, null, null, null,
@@ -45,9 +48,6 @@ public class WreslParserTokenManager implements WreslParserConstants
 			};
 	private static final long[] JJTO_TOKEN = {
 			0xffffffffffffff81L, 0xffa11fffffL,
-	};
-	static final long[] jjtoSkip = {
-			0x7eL, 0x0L,
 	};
 	private final int[] jjrounds = new int[163];
 	private final int[] jjstateSet = new int[326];

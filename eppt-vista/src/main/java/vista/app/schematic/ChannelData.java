@@ -24,14 +24,25 @@ import vista.time.TimeInterval;
 import vista.time.TimeWindow;
 
 /**
-   * 
-   */
-public class ChannelData {
+ *
+ */
+public class ChannelData
+{
+	DataSetIterator _iterator;
+	String _timeWindow;
+	TimeWindow _currentTimeWindow;
+	Time _stime;
+	TimeInterval _ti;
+	private String _filename, _pathname;
+	private DataReference _reference;
+	private int _channelId;
+	private Group _group;
 	/**
-    * 
-    */
+	 *
+	 */
 	public ChannelData(int channelNumber, String filename, String pathname,
-			String startTime, String timeInterval) {
+					   String startTime, String timeInterval)
+	{
 		_filename = filename;
 		_pathname = pathname;
 		_stime = TimeFactory.getInstance().createTime(startTime);
@@ -41,22 +52,30 @@ public class ChannelData {
 	}
 
 	/**
-    *
-    */
-	public int getChannelId() {
+	 *
+	 */
+	public int getChannelId()
+	{
 		return _channelId;
 	}
 
 	/**
-    * 
-    */
-	public float getNextValue() {
-		if (_iterator == null)
+	 *
+	 */
+	public float getNextValue()
+	{
+		if(_iterator == null)
+		{
 			return 0;
-		if (_iterator.atEnd())
+		}
+		if(_iterator.atEnd())
+		{
 			getNextChunkOfData();
-		if (_iterator == null)
+		}
+		if(_iterator == null)
+		{
 			return 0;
+		}
 		//
 		float val = (float) _iterator.getElement().getY();
 		_iterator.advance();
@@ -64,30 +83,39 @@ public class ChannelData {
 	}
 
 	/**
-    * 
-    */
-	private void getNextChunkOfData() {
-		if (_currentTimeWindow == null) {
+	 *
+	 */
+	private void getNextChunkOfData()
+	{
+		if(_currentTimeWindow == null)
+		{
 			_currentTimeWindow = TimeFactory.getInstance().createTimeWindow(
 					_stime, _stime.__add__("1YEAR"));
-		} else {
+		}
+		else
+		{
 			Time st = _currentTimeWindow.getStartTime();
 			Time et = _currentTimeWindow.getEndTime();
-			if (et.compare(_stime) < 0) { // if beyond end of time window...
+			if(et.compare(_stime) < 0)
+			{ // if beyond end of time window...
 				_currentTimeWindow = TimeFactory.getInstance()
-						.createTimeWindow(_stime, _stime.__add__("1YEAR"));
+												.createTimeWindow(_stime, _stime.__add__("1YEAR"));
 			}
 		}
-		if (_reference == null) {
+		if(_reference == null)
+		{
 			_pathname = _pathname.replace('+', '.');
 			Pathname path = Pathname.createPathname(_pathname);
 			path.setPart(Pathname.D_PART, ".*");
 			Group g = DSSUtil.createGroup("local", _filename);
 			g.filterBy(path.toString());
-			if (g.getNumberOfDataReferences() == 0) {
+			if(g.getNumberOfDataReferences() == 0)
+			{
 				throw new RuntimeException("No data found for "
 						+ path.toString());
-			} else if (g.getNumberOfDataReferences() > 1) {
+			}
+			else if(g.getNumberOfDataReferences() > 1)
+			{
 				throw new RuntimeException("More than one data set found for "
 						+ path.toString());
 			}
@@ -96,30 +124,28 @@ public class ChannelData {
 		//
 		DataReference ref = DataReference
 				.create(_reference, _currentTimeWindow);
-		if (ref == null) {
+		if(ref == null)
+		{
 			_iterator = null;
 			return;
 		}
 		RegularTimeSeries ds = (RegularTimeSeries) ref.getData();
-		if (ds.getTimeInterval().compare(_ti) < 0) {
+		if(ds.getTimeInterval().compare(_ti) < 0)
+		{
 			ds = TimeSeriesMath.doPeriodOperation(ds, _ti,
 					TimeSeriesMath.PERIOD_AVERAGE);
-		} else if (ds.getTimeInterval().compare(_ti) > 0) {
+		}
+		else if(ds.getTimeInterval().compare(_ti) > 0)
+		{
 			ds = null;
 		}
-		if (ds != null)
+		if(ds != null)
+		{
 			_iterator = ds.getIterator();
+		}
 		else
+		{
 			_iterator = null;
+		}
 	}
-
-	private String _filename, _pathname;
-	private DataReference _reference;
-	private int _channelId;
-	DataSetIterator _iterator;
-	String _timeWindow;
-	TimeWindow _currentTimeWindow;
-	Time _stime;
-	TimeInterval _ti;
-	private Group _group;
 }

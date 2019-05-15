@@ -18,18 +18,20 @@ import vista.set.Session;
 
 /**
  * Encapsulates commands implementing session related commands
- * 
+ *
  * @author Nicky Sandhu
  * @version $Id: MoveGroupCommand.java,v 1.1 2003/10/02 20:48:34 redwood Exp $
  */
-public class MoveGroupCommand implements Command {
+public class MoveGroupCommand implements Command
+{
 	private Session _session;
 	private int _oPos, _nPos;
 
 	/**
 	 * opens session and sets current session to
 	 */
-	public MoveGroupCommand(Session s, int oldPosition, int newPosition) {
+	public MoveGroupCommand(Session s, int oldPosition, int newPosition)
+	{
 		_session = s;
 		_oPos = oldPosition;
 		_nPos = newPosition;
@@ -38,7 +40,8 @@ public class MoveGroupCommand implements Command {
 	/**
 	 * executes command
 	 */
-	public void execute() throws ExecutionException {
+	public void execute() throws ExecutionException
+	{
 		Group g = _session.getGroup(_oPos);
 		_session.removeGroup(g);
 		_session.insertGroupAt(_nPos, g);
@@ -47,7 +50,8 @@ public class MoveGroupCommand implements Command {
 	/**
 	 * unexecutes command or throws exception if not unexecutable
 	 */
-	public void unexecute() throws ExecutionException {
+	public void unexecute() throws ExecutionException
+	{
 		Group g = _session.getGroup(_nPos);
 		_session.removeGroup(g);
 		_session.insertGroupAt(_oPos, g);
@@ -56,13 +60,15 @@ public class MoveGroupCommand implements Command {
 	/**
 	 * checks if command is executable.
 	 */
-	public boolean isUnexecutable() {
+	public boolean isUnexecutable()
+	{
 		return true;
 	}
 
 	/**
 	 * writes to script
 	 */
-	public void toScript(StringBuffer buf) {
+	public void toScript(StringBuffer buf)
+	{
 	}
 } // end of MoveGroupCommand

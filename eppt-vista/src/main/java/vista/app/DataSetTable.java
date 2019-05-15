@@ -24,11 +24,25 @@ import vista.set.DataSet;
 import vista.set.FlagUtils;
 
 @SuppressWarnings("serial")
-public class DataSetTable extends JPanel {
-	public DataSetTable(DataSet dataSet) {
-		try {
+public class DataSetTable extends JPanel
+{
+	/**
+	 * the table
+	 */
+	private JTable _table;
+	/**
+	 * the data set table model
+	 */
+	private DataSetTableModel _dataModel;
+
+	public DataSetTable(DataSet dataSet)
+	{
+		try
+		{
 			_dataModel = new DataSetTableModel(dataSet);
-		} catch (DataRetrievalException dre) {
+		}
+		catch(DataRetrievalException dre)
+		{
 			VistaUtils.displayException(this._table, dre);
 		}
 		_table = new JTable(_dataModel);
@@ -51,9 +65,12 @@ public class DataSetTable extends JPanel {
 				.getQualityFlagName(FlagUtils.QUESTIONABLE_FLAG));
 		flagEditor.addItem(FlagUtils.getQualityFlagName(FlagUtils.REJECT_FLAG));
 		DefaultCellEditor dce = new DefaultCellEditor(flagEditor);
-		try {
+		try
+		{
 			_table.getColumn("Flag Value").setCellEditor(dce);
-		} catch (IllegalArgumentException ex) {
+		}
+		catch(IllegalArgumentException ex)
+		{
 		}
 
 		this.setLayout(new BorderLayout());
@@ -64,39 +81,55 @@ public class DataSetTable extends JPanel {
 	/**
 	 * show flag
 	 */
-	public void toggleFlagDisplay() {
-		if (_dataModel.isFlagDisplayed())
+	public void toggleFlagDisplay()
+	{
+		if(_dataModel.isFlagDisplayed())
+		{
 			_dataModel.setFlagDisplayed(false);
+		}
 		else
+		{
 			_dataModel.setFlagDisplayed(true);
+		}
 	}
 
-	public int getColumnCount() {
+	public int getColumnCount()
+	{
 		return _dataModel.getColumnCount();
 	}
 
-	public int getRowCount() {
+	public int getRowCount()
+	{
 		return _dataModel.getColumnCount();
 	}
 
-	public Object getValueAt(int row, int column) {
+	public Object getValueAt(int row, int column)
+	{
 		return _table.getValueAt(row, column);
 	}
+
 	/**
-	 * 
 	 * @param flagType
 	 */
-	public void markAs(int flagType) {
+	public void markAs(int flagType)
+	{
 		int[] rows = _table.getSelectedRows();
-		if (rows == null)
+		if(rows == null)
+		{
 			return;
-		if (rows.length <= 0)
+		}
+		if(rows.length <= 0)
+		{
 			return;
-		for (int i = 0; i < rows.length; i++) {
-			if (flagType == FlagUtils.MISSING_FLAG) {
+		}
+		for(int i = 0; i < rows.length; i++)
+		{
+			if(flagType == FlagUtils.MISSING_FLAG)
+			{
 				Object value = _table.getValueAt(rows[i], 1);
-				if (!value.equals(DataSetTableModel.MV)
-						&& !value.equals(DataSetTableModel.MR)) {
+				if(!value.equals(DataSetTableModel.MV)
+						&& !value.equals(DataSetTableModel.MR))
+				{
 					continue;
 				}
 			}
@@ -107,34 +140,28 @@ public class DataSetTable extends JPanel {
 	}
 
 	/**
-	 * 
 	 * @param beginRow
 	 * @param endRow
 	 */
-	public void updateTable(int beginRow, int endRow) {
+	public void updateTable(int beginRow, int endRow)
+	{
 		_table.tableChanged(new TableModelEvent(_table.getModel(), beginRow,
 				endRow));
 		_table.repaint();
 	}
 
-	public void setFlagOverride(boolean override) {
-		((DataSetTableModel) _table.getModel()).setFlagOveridden(override);
-	}
-
-	public boolean isFlagOverride() {
+	public boolean isFlagOverride()
+	{
 		return ((DataSetTableModel) _table.getModel()).isFlagOveridden();
 	}
 
-	public JTable getTable() {
-		return _table;
+	public void setFlagOverride(boolean override)
+	{
+		((DataSetTableModel) _table.getModel()).setFlagOveridden(override);
 	}
 
-	/**
-	 * the table
-	 */
-	private JTable _table;
-	/**
-	 * the data set table model
-	 */
-	private DataSetTableModel _dataModel;
+	public JTable getTable()
+	{
+		return _table;
+	}
 }

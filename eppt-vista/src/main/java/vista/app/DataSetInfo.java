@@ -15,11 +15,12 @@ import vista.set.DataReference;
 
 /**
  * A class encapsulating the graphing information for a data set
- * 
+ *
  * @author Nicky Sandhu
  * @version $Id: DataSetInfo.java,v 1.1 2003/10/02 20:48:27 redwood Exp $
  */
-class DataSetInfo {
+class DataSetInfo
+{
 	private DataReference _ref;
 	private int _graphIndex;
 	private int _plotIndex;
@@ -29,84 +30,96 @@ class DataSetInfo {
 	/**
 	 * creates a data set information for the given reference
 	 */
-	public DataSetInfo(DataReference ref) {
+	public DataSetInfo(DataReference ref)
+	{
 		_ref = ref;
 	}
 
 	/**
-   *
-   */
-	public DataReference getReference() {
+	 *
+	 */
+	public DataReference getReference()
+	{
 		return _ref;
 	}
 
 	/**
-   *
-   */
-	void setGraphIndex(int gi) {
-		_graphIndex = gi;
-	}
-
-	/**
-   *
-   */
-	public int getGraphIndex() {
+	 *
+	 */
+	public int getGraphIndex()
+	{
 		return _graphIndex;
 	}
 
 	/**
-   *
-   */
-	void setPlotIndex(int pi) {
-		_plotIndex = pi;
+	 *
+	 */
+	void setGraphIndex(int gi)
+	{
+		_graphIndex = gi;
 	}
 
 	/**
-   *
-   */
-	public int getPlotIndex() {
+	 *
+	 */
+	public int getPlotIndex()
+	{
 		return _plotIndex;
 	}
 
 	/**
-   *
-   */
-	void setXAxisPosition(int pos) {
-		_xPos = pos;
+	 *
+	 */
+	void setPlotIndex(int pi)
+	{
+		_plotIndex = pi;
 	}
 
 	/**
-   *
-   */
-	public int getXAxisPosition() {
+	 *
+	 */
+	public int getXAxisPosition()
+	{
 		return _xPos;
 	}
 
 	/**
-   *
-   */
-	void setYAxisPosition(int pos) {
-		_yPos = pos;
+	 *
+	 */
+	void setXAxisPosition(int pos)
+	{
+		_xPos = pos;
 	}
 
 	/**
-   *
-   */
-	public int getYAxisPosition() {
+	 *
+	 */
+	public int getYAxisPosition()
+	{
 		return _yPos;
 	}
 
 	/**
-   *
-   */
-	void setLegendLabel(String str) {
-		_legendLabel = str;
+	 *
+	 */
+	void setYAxisPosition(int pos)
+	{
+		_yPos = pos;
 	}
 
 	/**
-   *
-   */
-	public String getLegendLabel() {
+	 *
+	 */
+	public String getLegendLabel()
+	{
 		return _legendLabel;
+	}
+
+	/**
+	 *
+	 */
+	void setLegendLabel(String str)
+	{
+		_legendLabel = str;
 	}
 }

@@ -63,7 +63,7 @@ public class DataAnalysisPanel extends EpptPanel
 
 	JTextField getReportTemplateTextField()
 	{
-		return 	(JTextField) getSwingEngine().find("tfTemplateFILE");
+		return (JTextField) getSwingEngine().find("tfTemplateFILE");
 	}
 
 	JTextField getDssResultFileField1()

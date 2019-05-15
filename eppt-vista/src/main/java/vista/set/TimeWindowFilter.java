@@ -16,40 +16,45 @@ import vista.time.TimeWindow;
 /**
  * Filters given data reference using its time window. A data reference is
  * acceptable if its time window contains the time window in this filter.
- * 
+ *
  * @author Nicky Sandhu
  * @version $Id: TimeWindowFilter.java,v 1.1 2003/10/02 20:49:34 redwood Exp $
  */
-public class TimeWindowFilter implements Predicate<DataReference> {
+public class TimeWindowFilter implements Predicate<DataReference>
+{
+	/**
+	 * The time window
+	 */
+	private TimeWindow _window;
+
 	/**
 	 * initializes the regular expression compilers
 	 */
-	public TimeWindowFilter(TimeWindow window) {
+	public TimeWindowFilter(TimeWindow window)
+	{
 		_window = window;
 	}
 
 	/**
 	 * returns the time window used for filtering...
 	 */
-	public TimeWindow getTimeWindow() {
+	public TimeWindow getTimeWindow()
+	{
 		return _window;
 	}
 
 	/**
 	 * returns string representation of filter...
 	 */
-	public String toString() {
+	public String toString()
+	{
 		return "TimeWindow = " + _window;
 	}
 
-	/**
-	 * The time window
-	 */
-	private TimeWindow _window;
-
 	@Override
-	public boolean apply(DataReference ref) {
-		return (ref != null) 
-		&& (_window.contains(ref.getTimeWindow()));
+	public boolean apply(DataReference ref)
+	{
+		return (ref != null)
+				&& (_window.contains(ref.getTimeWindow()));
 	}
 }

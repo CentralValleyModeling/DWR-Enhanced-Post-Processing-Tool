@@ -13,54 +13,60 @@ package vista.app.schematic;
 
 
 /**
-   *
-   */
-public class Link {
+ *
+ */
+public class Link
+{
 	/**
-   *
-   */
-	public Link(int id, Node[] nodes) {
+	 *
+	 */
+	protected Node[] _nodes;
+	/**
+	 *
+	 */
+	protected int _id;
+
+	/**
+	 *
+	 */
+	public Link(int id, Node[] nodes)
+	{
 		_id = id;
 		_nodes = nodes;
 	}
 
 	/**
-   *
-   */
-	public int getId() {
+	 *
+	 */
+	public int getId()
+	{
 		return _id;
 	}
 
 	/**
-   *
-   */
-	public int getNumberOfNodes() {
+	 *
+	 */
+	public int getNumberOfNodes()
+	{
 		return _nodes.length;
 	}
 
 	/**
-   *
-   */
-	public Node getNode(int localIndex) {
+	 *
+	 */
+	public Node getNode(int localIndex)
+	{
 		return _nodes[localIndex];
 	}
 
 	/**
-   *
-   */
-	public String toString() {
+	 *
+	 */
+	public String toString()
+	{
 		StringBuffer buf = new StringBuffer("Link #");
 		String eol = System.getProperty("line.separator");
 		buf.append(getId()).append(eol);
 		return buf.toString();
 	}
-
-	/**
-   *
-   */
-	protected Node[] _nodes;
-	/**
-   *
-   */
-	protected int _id;
 }

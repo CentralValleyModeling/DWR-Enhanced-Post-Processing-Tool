@@ -14,12 +14,13 @@ package vista.graph;
 
 /**
  * Attributes for the Curve Element
- * 
- * @see Curve
+ *
  * @author Nicky Sandhu (DWR).
  * @version $Id: CurveAttr.java,v 1.1 2003/10/02 20:48:51 redwood Exp $
+ * @see Curve
  */
-public class CurveAttr extends GEAttr {
+public class CurveAttr extends GEAttr
+{
 	/**
 	 * thickness of line in pixels
 	 */
@@ -27,7 +28,7 @@ public class CurveAttr extends GEAttr {
 	/**
 	 * style of line such as plain, dashed, dotted, etcetra.
 	 */
-	public float[] _dashArray = new float[] { 1 };
+	public float[] _dashArray = new float[]{1};
 	/**
 	 * Name of this curve.
 	 */
@@ -50,40 +51,46 @@ public class CurveAttr extends GEAttr {
 	public Symbol _symbol = new Symbol(new SymbolAttr());
 
 	/**
-	 * sets DrawSymbol
-	 */
-	public void setDrawSymbol(boolean drawSymbol) {
-		_drawSymbol = drawSymbol;
-	}
-
-	/**
 	 * gets DrawSymbol
 	 */
-	public boolean getDrawSymbol() {
+	public boolean getDrawSymbol()
+	{
 		return _drawSymbol;
 	}
 
 	/**
-	 * sets DrawLines
+	 * sets DrawSymbol
 	 */
-	public void setDrawLines(boolean drawLines) {
-		_drawLines = drawLines;
+	public void setDrawSymbol(boolean drawSymbol)
+	{
+		_drawSymbol = drawSymbol;
 	}
 
 	/**
 	 * gets DrawLines
 	 */
-	public boolean getDrawLines() {
+	public boolean getDrawLines()
+	{
 		return _drawLines;
+	}
+
+	/**
+	 * sets DrawLines
+	 */
+	public void setDrawLines(boolean drawLines)
+	{
+		_drawLines = drawLines;
 	}
 
 	/**
 	 * copies the fields into the given GEAttr object. Also copies in the
 	 * CurveAttr if the object is of that type.
 	 */
-	public void copyInto(GEAttr ga) {
+	public void copyInto(GEAttr ga)
+	{
 		super.copyInto(ga);
-		if (ga instanceof CurveAttr) {
+		if(ga instanceof CurveAttr)
+		{
 			CurveAttr ca = (CurveAttr) ga;
 			ca._drawSymbol = this._drawSymbol;
 			ca._drawLines = this._drawLines;

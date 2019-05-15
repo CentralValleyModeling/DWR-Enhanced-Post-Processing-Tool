@@ -19,12 +19,13 @@ import vista.set.Session;
 
 /**
  * Encapsulates commands implementing session related commands
- * 
+ *
  * @author Nicky Sandhu
  * @version $Id: OpenGroupAsTreeCommand.java,v 1.2 1998/10/13 16:28:20 nsandhu
- *          Exp $
+ * Exp $
  */
-public class OpenGroupAsTreeCommand implements Command {
+public class OpenGroupAsTreeCommand implements Command
+{
 	private SessionContext _context;
 	private Session _session;
 	private int[] _gNumbers;
@@ -34,7 +35,8 @@ public class OpenGroupAsTreeCommand implements Command {
 	 * opens session and sets current session to
 	 */
 	public OpenGroupAsTreeCommand(SessionContext context, Session s,
-			int[] groupNumbers) {
+								  int[] groupNumbers)
+	{
 		_context = context;
 		_session = s;
 		_gNumbers = groupNumbers;
@@ -43,14 +45,22 @@ public class OpenGroupAsTreeCommand implements Command {
 	/**
 	 * executes command
 	 */
-	public void execute() throws ExecutionException {
-		if (_gNumbers == null || _gNumbers.length == 0)
+	public void execute() throws ExecutionException
+	{
+		if(_gNumbers == null || _gNumbers.length == 0)
+		{
 			return;
-		for (int i = 0; i < _gNumbers.length; i++) {
-			if (_group == null)
+		}
+		for(int i = 0; i < _gNumbers.length; i++)
+		{
+			if(_group == null)
+			{
 				_group = _session.getGroup(_gNumbers[i]);
+			}
 			else
+			{
 				_group = _group.unionWith(_session.getGroup(_gNumbers[i]));
+			}
 		}
 		_context.setCurrentGroup(_group);
 	}
@@ -58,19 +68,22 @@ public class OpenGroupAsTreeCommand implements Command {
 	/**
 	 * unexecutes command or throws exception if not unexecutable
 	 */
-	public void unexecute() throws ExecutionException {
+	public void unexecute() throws ExecutionException
+	{
 	}
 
 	/**
 	 * checks if command is executable.
 	 */
-	public boolean isUnexecutable() {
+	public boolean isUnexecutable()
+	{
 		return false;
 	}
 
 	/**
 	 * writes to script
 	 */
-	public void toScript(StringBuffer buf) {
+	public void toScript(StringBuffer buf)
+	{
 	}
 } // end of Open GroupCommand

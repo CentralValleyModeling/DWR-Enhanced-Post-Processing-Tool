@@ -104,10 +104,10 @@ public class Project implements Serializable
 			Pathname p = g.getDataReference(i).getPathname();
 			b = p.getPart(Pathname.B_PART);
 			c = p.getPart(Pathname.C_PART);
-          if(b == null || c == null)
-          {
-            return;
-          }
+			if(b == null || c == null)
+			{
+				return;
+			}
 			_bsv[i] = b;
 			_svList.put(b, c);
 		}
@@ -126,10 +126,10 @@ public class Project implements Serializable
 			Pathname p = g.getDataReference(i).getPathname();
 			b = p.getPart(Pathname.B_PART);
 			c = p.getPart(Pathname.C_PART);
-          if(b == null || c == null)
-          {
-            return;
-          }
+			if(b == null || c == null)
+			{
+				return;
+			}
 			_bdv[i] = b;
 			_dvList.put(b, c);
 		}
@@ -140,10 +140,10 @@ public class Project implements Serializable
 		_bparts = new String[_bsv.length + _bdv.length];
 		System.arraycopy(_bsv, 0, _bparts, 0, _bsv.length);
 		System.arraycopy(_bdv, 0, _bparts, _bsv.length, _bdv.length);
-      for(int i = 0; i < _bparts.length; i++)
-      {
-        System.out.println(_bparts[i]);
-      }
+		for(int i = 0; i < _bparts.length; i++)
+		{
+			System.out.println(_bparts[i]);
+		}
 	}
 
 	//Returns a Hashtable with the b & c parts of the SV table in it
@@ -227,10 +227,10 @@ public class Project implements Serializable
 	 */
 	public void remove(String name)
 	{
-      if(name == null)
-      {
-        return;
-      }
+		if(name == null)
+		{
+			return;
+		}
 		name = name.toUpperCase().trim();
 		if(_dtsList.containsKey(name))
 		{
@@ -250,17 +250,19 @@ public class Project implements Serializable
 
 	public boolean isInLists(String name)
 	{
-      if(name == null)
-      {
-        return false;
-      }
+		if(name == null)
+		{
+			return false;
+		}
 		name = name.toUpperCase().trim();
 		if(_dtsList.containsKey(name))
 		{
 			return true;
 		}
 		else
-          return _mtsList.containsKey(name);
+		{
+			return _mtsList.containsKey(name);
+		}
 	}
 
 	/**
@@ -302,19 +304,19 @@ public class Project implements Serializable
 	 */
 	public DerivedTimeSeries[] getDTSList()
 	{
-      if(_dtsList == null)
-      {
-        return null;
-      }
+		if(_dtsList == null)
+		{
+			return null;
+		}
 		DerivedTimeSeries[] array = new DerivedTimeSeries[_dtsList.size()];
-      if(array == null)
-      {
-        System.out.println(true);
-      }
-      if(_dtsList.size() == 0)
-      {
-        return null;
-      }
+		if(array == null)
+		{
+			System.out.println(true);
+		}
+		if(_dtsList.size() == 0)
+		{
+			return null;
+		}
 		int count = 0;
 		for(Enumeration e = _dtsList.elements(); e.hasMoreElements(); )
 		{
@@ -329,10 +331,10 @@ public class Project implements Serializable
 	 */
 	public void clearDTSList()
 	{
-      if(_dtsList == null)
-      {
-        return;
-      }
+		if(_dtsList == null)
+		{
+			return;
+		}
 		_dtsList.clear();
 		_dtsList = new Hashtable();
 	}
@@ -342,10 +344,10 @@ public class Project implements Serializable
 	 */
 	public void clearMTSList()
 	{
-      if(_mtsList == null)
-      {
-        return;
-      }
+		if(_mtsList == null)
+		{
+			return;
+		}
 		_mtsList.clear();
 		_mtsList = new Hashtable();
 	}
@@ -355,10 +357,10 @@ public class Project implements Serializable
 	 */
 	public String[] getDTSNames()
 	{
-      if(_dtsList.size() == 0)
-      {
-        return null;
-      }
+		if(_dtsList.size() == 0)
+		{
+			return null;
+		}
 		String[] array = new String[_dtsList.size() + 1];
 		array[0] = " ";
 		int count = 1;
@@ -375,10 +377,10 @@ public class Project implements Serializable
 	 */
 	public MultipleTimeSeries[] getMTSList()
 	{
-      if(_mtsList.size() == 0)
-      {
-        return null;
-      }
+		if(_mtsList.size() == 0)
+		{
+			return null;
+		}
 		MultipleTimeSeries[] array = new MultipleTimeSeries[_mtsList.size()];
 		int count = 0;
 		for(Enumeration e = _mtsList.elements(); e.hasMoreElements(); )
@@ -394,10 +396,10 @@ public class Project implements Serializable
 	 */
 	public String[] getMTSNames()
 	{
-      if(_mtsList.size() == 0)
-      {
-        return null;
-      }
+		if(_mtsList.size() == 0)
+		{
+			return null;
+		}
 		String[] array = new String[_mtsList.size()];
 		int count = 0;
 		for(Enumeration e = _mtsList.elements(); e.hasMoreElements(); )
@@ -456,10 +458,10 @@ public class Project implements Serializable
 	 */
 	public void addDTSList(DerivedTimeSeries[] dts)
 	{
-      if(dts == null || dts.length == 0)
-      {
-        return;
-      }
+		if(dts == null || dts.length == 0)
+		{
+			return;
+		}
 		for(int i = 0; i < dts.length; i++)
 		{
 			add(dts[i]);
@@ -472,10 +474,10 @@ public class Project implements Serializable
 	 */
 	public void addMTSList(MultipleTimeSeries[] mts)
 	{
-      if(mts == null || mts.length == 0)
-      {
-        return;
-      }
+		if(mts == null || mts.length == 0)
+		{
+			return;
+		}
 		for(int i = 0; i < mts.length; i++)
 		{
 			add(mts[i]);
@@ -831,14 +833,14 @@ public class Project implements Serializable
 	 */
 	public String getBaseName()
 	{
-      if(_studyName == null)
-      {
-        return AppUtils.guessStudyNameFromGroup(getDVGroup());
-      }
-      else
-      {
-        return _studyName;
-      }
+		if(_studyName == null)
+		{
+			return AppUtils.guessStudyNameFromGroup(getDVGroup());
+		}
+		else
+		{
+			return _studyName;
+		}
 	}
 
 	/**
@@ -859,14 +861,14 @@ public class Project implements Serializable
 	 */
 	public String getComp1Name()
 	{
-      if(_study1Name == null)
-      {
-        return AppUtils.guessStudyNameFromGroup(getDV2Group());
-      }
-      else
-      {
-        return _study1Name;
-      }
+		if(_study1Name == null)
+		{
+			return AppUtils.guessStudyNameFromGroup(getDV2Group());
+		}
+		else
+		{
+			return _study1Name;
+		}
 	}
 
 	/**
@@ -887,14 +889,14 @@ public class Project implements Serializable
 	 */
 	public String getComp2Name()
 	{
-      if(_study2Name == null)
-      {
-        return AppUtils.guessStudyNameFromGroup(getDV3Group());
-      }
-      else
-      {
-        return _study2Name;
-      }
+		if(_study2Name == null)
+		{
+			return AppUtils.guessStudyNameFromGroup(getDV3Group());
+		}
+		else
+		{
+			return _study2Name;
+		}
 	}
 
 	/**
@@ -915,14 +917,14 @@ public class Project implements Serializable
 	 */
 	public String getComp3Name()
 	{
-      if(_study3Name == null)
-      {
-        return AppUtils.guessStudyNameFromGroup(getDV4Group());
-      }
-      else
-      {
-        return _study3Name;
-      }
+		if(_study3Name == null)
+		{
+			return AppUtils.guessStudyNameFromGroup(getDV4Group());
+		}
+		else
+		{
+			return _study3Name;
+		}
 	}
 
 	/**
@@ -1055,10 +1057,10 @@ public class Project implements Serializable
 		while(true)
 		{
 			Element se = tw.getNextElement("study");
-          if(se == null)
-          {
-            break;
-          }
+			if(se == null)
+			{
+				break;
+			}
 			int si = new Integer(se.getAttribute("number")).intValue();
 			if(si == 1)
 			{
@@ -1132,34 +1134,34 @@ public class Project implements Serializable
 			while(true)
 			{
 				Element de = tw.getNextElement("DTS");
-              if(de == null)
-              {
-                break;
-              }
+				if(de == null)
+				{
+					break;
+				}
 				DerivedTimeSeries dts = new DerivedTimeSeries();
 				dts.fromXml(de);
 				DerivedTimeSeries olddts = getDTS(dts.getName());
-              if(olddts != null)
-              {
-                remove(olddts);
-              }
+				if(olddts != null)
+				{
+					remove(olddts);
+				}
 				add(dts);
 			}
 			tw.reset();
 			while(true)
 			{
 				Element de = tw.getNextElement("MTS");
-              if(de == null)
-              {
-                break;
-              }
+				if(de == null)
+				{
+					break;
+				}
 				MultipleTimeSeries mts = new MultipleTimeSeries();
 				mts.fromXml(de);
 				MultipleTimeSeries oldmts = getMTS(mts.getName());
-              if(oldmts != null)
-              {
-                remove(oldmts);
-              }
+				if(oldmts != null)
+				{
+					remove(oldmts);
+				}
 				add(mts);
 			}
 			int end = _loadFile.lastIndexOf("\\");

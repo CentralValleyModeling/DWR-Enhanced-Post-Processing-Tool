@@ -17,26 +17,29 @@ import vista.set.DataReference;
 import vista.set.PathnameFormat;
 
 /**
- * 
- * 
  * @author Nicky Sandhu
  * @version $Id: GraphTemplate.java,v 1.2 1998/10/08 00:03:09 nsandhu Exp $
  */
-public class GraphTemplate {
+public class GraphTemplate
+{
 	/**
-   *
-   */
-	public static String generateLegendText(DataReference ref) {
+	 *
+	 */
+	public static String generateLegendText(DataReference ref)
+	{
 		String template = MainProperties.getProperty("graph.legendTemplate");
 		return PathnameFormat.format(template, ref);
 	}
 
 	/**
-   *
-   */
-	public static String generateTitleText(Vector refs) {
-		if (refs.size() <= 0)
+	 *
+	 */
+	public static String generateTitleText(Vector refs)
+	{
+		if(refs.size() <= 0)
+		{
 			return null;
+		}
 		DataReference[] refArray = new DataReference[refs.size()];
 		refs.copyInto(refArray);
 		String template = MainProperties.getProperty("graph.titleTemplate");

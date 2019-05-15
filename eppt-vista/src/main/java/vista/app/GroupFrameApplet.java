@@ -19,15 +19,22 @@ import vista.set.Group;
 
 /**
  * A frame containing the view of a group and its associated menu items.
- * 
+ *
  * @author Nicky Sandhu
  * @version $Id: GroupFrameApplet.java,v 1.1 2000/05/10 20:38:08 nsandhu Exp $
  */
-public class GroupFrameApplet extends DefaultFrame {
+public class GroupFrameApplet extends DefaultFrame
+{
 	/**
-   *
-   */
-	public GroupFrameApplet(Group g) {
+	 *
+	 */
+	private GroupTable _groupTablePanel;
+
+	/**
+	 *
+	 */
+	public GroupFrameApplet(Group g)
+	{
 		// setIconImage(Toolkit.getDefaultToolkit().createImage(VistaUtils.getImageAsBytes("/vista/OWE.gif")));
 		_groupTablePanel = new GroupTable(g);
 		JMenuBar mbar = new JMenuBar();
@@ -52,14 +59,10 @@ public class GroupFrameApplet extends DefaultFrame {
 	}
 
 	/**
-   *
-   */
-	public GroupTable getGroupTable() {
+	 *
+	 */
+	public GroupTable getGroupTable()
+	{
 		return _groupTablePanel;
 	}
-
-	/**
-   *
-   */
-	private GroupTable _groupTablePanel;
 }

@@ -21,25 +21,40 @@ import vista.gui.DialogButtonPanel;
 
 /**
  * A modal dialog to establish connection with server
- * 
+ *
  * @author Nicky Sandhu
  * @version $Id: OpenConnectionDialog.java,v 1.1 2003/10/02 20:48:36 redwood Exp
- *          $
+ * $
  */
-public class OpenConnectionDialog extends JDialog implements Changeable {
+public class OpenConnectionDialog extends JDialog implements Changeable
+{
+	/**
+	 *
+	 */
+	private static final boolean DEBUG = false;
+	/**
+	 *
+	 */
+	private static ArrayList<String> _directoryHistory, _serverHistory;
 	private View _view;
+	/**
+	 * server and directory
+	 */
+	private JComboBox _serverField, _databaseField;
 
 	/**
 	 * sets up a blocking dialog displaying server and directory names
 	 */
-	public OpenConnectionDialog(JFrame parent, View view) {
+	public OpenConnectionDialog(JFrame parent, View view)
+	{
 		super(parent, true);
 		_view = view;
 		// set up connection panel
 		JPanel connectionPanel = new JPanel();
 		connectionPanel.setLayout(new BorderLayout());
 		// add server panel
-		if (_serverHistory == null) {
+		if(_serverHistory == null)
+		{
 			_serverHistory = new ArrayList<String>();
 			_serverHistory.add("");
 		}
@@ -52,7 +67,8 @@ public class OpenConnectionDialog extends JDialog implements Changeable {
 				BorderLayout.WEST);
 		serverPanel.add(_serverField, BorderLayout.CENTER);
 		// add directory panel
-		if (_directoryHistory == null) {
+		if(_directoryHistory == null)
+		{
 			_directoryHistory = new ArrayList<String>();
 			_directoryHistory.add(DSSUtil.getDefaultDirectory());
 		}
@@ -77,7 +93,8 @@ public class OpenConnectionDialog extends JDialog implements Changeable {
 	/**
 	 * gets server name.
 	 */
-	public String getServer() {
+	public String getServer()
+	{
 		String server = (String) _serverField.getSelectedItem();
 		return server;
 	}
@@ -85,7 +102,8 @@ public class OpenConnectionDialog extends JDialog implements Changeable {
 	/**
 	 * returns directory name.
 	 */
-	public String getDirectory() {
+	public String getDirectory()
+	{
 		String str = (String) _databaseField.getSelectedItem();
 		return str;
 	}
@@ -93,36 +111,33 @@ public class OpenConnectionDialog extends JDialog implements Changeable {
 	/**
 	 * Apply the changes (OK/Apply button pressed)
 	 */
-	public void applyChanges() {
-		if (DEBUG)
+	public void applyChanges()
+	{
+		if(DEBUG)
+		{
 			System.out.println("Making connection to " + getServer());
-		if (DEBUG)
+		}
+		if(DEBUG)
+		{
 			System.out.println("Directory " + getDirectory());
+		}
 		final String server = getServer();
 		final String dir = getDirectory();
-		if (!_serverHistory.contains(server))
+		if(!_serverHistory.contains(server))
+		{
 			_serverHistory.add(server);
-		if (!_directoryHistory.contains(server))
+		}
+		if(!_directoryHistory.contains(server))
+		{
 			_directoryHistory.add(dir);
+		}
 	}
 
 	/**
 	 * Done with making changes (OK/Cancel button pressed)
 	 */
-	public void doneChanges() {
+	public void doneChanges()
+	{
 		this.dispose();
 	}
-
-	/**
-	 * server and directory
-	 */
-	private JComboBox _serverField, _databaseField;
-	/**
-   *
-   */
-	private static final boolean DEBUG = false;
-	/**
- *
- */
-	private static ArrayList<String> _directoryHistory, _serverHistory;
 }

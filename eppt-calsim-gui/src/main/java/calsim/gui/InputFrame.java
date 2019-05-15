@@ -12,9 +12,8 @@
 
 package calsim.gui;
 
-import java.awt.*;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
+import java.awt.Color;
+import java.awt.Container;
 import java.io.IOException;
 import javax.swing.*;
 

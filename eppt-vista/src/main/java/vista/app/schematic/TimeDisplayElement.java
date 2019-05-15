@@ -27,14 +27,41 @@ import vista.graph.TextLine;
 import vista.graph.TextLineAttr;
 
 /**
-   * 
-   */
+ *
+ */
 public class TimeDisplayElement extends GEContainer implements
-		AnimationObserver {
+													AnimationObserver
+{
 	/**
-   * 
-   */
-	public TimeDisplayElement(TextLineAttr tla, TimeData data) {
+	 *
+	 */
+	TextLine _textLine;
+	/**
+	 *
+	 */
+	String _value;
+	/**
+	 *
+	 */
+	TimeData _data;
+	/**
+	 *
+	 */
+	private DSMGridElement _grid;
+	/**
+	 *
+	 */
+	private Node _node;
+	/**
+	 *
+	 */
+	private boolean DEBUG = false;
+
+	/**
+	 *
+	 */
+	public TimeDisplayElement(TextLineAttr tla, TimeData data)
+	{
 		super(tla);
 		_textLine = new TextLine(tla, "        ");
 		setLayout(new GEBorderLayout());
@@ -45,37 +72,43 @@ public class TimeDisplayElement extends GEContainer implements
 	}
 
 	/**
-   *
-   */
-	public void update(AnimationObservable o, Object arg) {
+	 *
+	 */
+	public void update(AnimationObservable o, Object arg)
+	{
 		_value = _data.getNextValue().trim();
 	}
 
 	/**
-   * 
-   */
-	public void Draw() {
+	 *
+	 */
+	public void Draw()
+	{
 	}
 
 	/**
-   * 
-   */
-	public void setGrid(DSMGridElement grid) {
+	 *
+	 */
+	public void setGrid(DSMGridElement grid)
+	{
 		_grid = grid;
 	}
 
 	/**
-   * 
-   */
-	public void setBaseNode(int nodeId) {
+	 *
+	 */
+	public void setBaseNode(int nodeId)
+	{
 		_node = _grid.getNetwork().getNode(nodeId);
 	}
 
 	/**
-   * 
-   */
-	public void setBounds(Rectangle r) {
-		if (_grid != null) {
+	 *
+	 */
+	public void setBounds(Rectangle r)
+	{
+		if(_grid != null)
+		{
 			Rectangle rb = getBounds();
 			Scale xS = _grid.getXScale();
 			Scale yS = _grid.getYScale();
@@ -83,53 +116,35 @@ public class TimeDisplayElement extends GEContainer implements
 			rb.x = xS.scaleToUC(_node.getX());
 			rb.y = yS.scaleToUC(_node.getY());
 			super.setBounds(rb);
-		} else {
+		}
+		else
+		{
 			super.setBounds(r);
 		}
 	}
 
 	/**
-   * 
-   */
-	public void animateNext() {
+	 *
+	 */
+	public void animateNext()
+	{
 		_value = _data.getNextValue();
 		Graphics gc = getGraphics();
-		((Graphics2D)gc).setTransform(new AffineTransform());
+		((Graphics2D) gc).setTransform(new AffineTransform());
 		Color previousColor = gc.getColor();
 		gc.setColor(Color.lightGray);
 		Rectangle r = getInsetedBounds();
 		gc.fillRect(r.x, r.y, r.width, r.height);
 		gc.setColor(previousColor);
-		if (_value == null)
+		if(_value == null)
+		{
 			return;
+		}
 		_textLine.setText(_value.trim());
-		if (DEBUG)
+		if(DEBUG)
+		{
 			System.out.println(_value);
+		}
 		_textLine.draw();
 	}
-
-	/**
-   * 
-   */
-	TextLine _textLine;
-	/**
-   * 
-   */
-	String _value;
-	/**
-   * 
-   */
-	TimeData _data;
-	/**
-   * 
-   */
-	private DSMGridElement _grid;
-	/**
-   * 
-   */
-	private Node _node;
-	/**
-   * 
-   */
-	private boolean DEBUG = false;
 }

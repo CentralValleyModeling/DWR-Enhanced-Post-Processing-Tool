@@ -12,36 +12,35 @@
 
 package gov.ca.water.reportengine.filechanges;
 
-import java.nio.file.Path;
 import java.util.Set;
 
 public class AssumptionChangesStatistics
 {
 
-    private final Set<String> _recordsOnlyInAlt;
-    private final Set<String> _recordsOnlyInBase;
-    private final Set<String> _changedFiles;
+	private final Set<String> _recordsOnlyInAlt;
+	private final Set<String> _recordsOnlyInBase;
+	private final Set<String> _changedFiles;
 
-    AssumptionChangesStatistics(Set<String> recordsOnlyInBase, Set<String> recordsOnlyInAlt, Set<String> filesUpdates)
-    {
-        _recordsOnlyInAlt = recordsOnlyInAlt;
-        _recordsOnlyInBase = recordsOnlyInBase;
-        _changedFiles = filesUpdates;
-    }
+	AssumptionChangesStatistics(Set<String> recordsOnlyInBase, Set<String> recordsOnlyInAlt, Set<String> filesUpdates)
+	{
+		_recordsOnlyInAlt = recordsOnlyInAlt;
+		_recordsOnlyInBase = recordsOnlyInBase;
+		_changedFiles = filesUpdates;
+	}
 
-    public Set<String> getChangedFiles()
-    {
-        return _changedFiles;
-    }
+	public Set<String> getChangedFiles()
+	{
+		return _changedFiles;
+	}
 
-    public Set<String> getRecordsOnlyInAlt()
-    {
-        return _recordsOnlyInAlt;
-    }
+	public Set<String> getRecordsOnlyInAlt()
+	{
+		return _recordsOnlyInAlt;
+	}
 
-    public Set<String> getRecordsOnlyInBase()
-    {
-        return _recordsOnlyInBase;
-    }
+	public Set<String> getRecordsOnlyInBase()
+	{
+		return _recordsOnlyInBase;
+	}
 
 }

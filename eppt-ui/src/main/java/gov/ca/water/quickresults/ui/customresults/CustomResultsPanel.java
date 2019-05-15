@@ -99,6 +99,38 @@ public class CustomResultsPanel extends EpptPanel
 		}
 	}
 
+	/**
+	 * Helper function that scans GUI for a button with the indicated label
+	 * starting with a given component. Used in CalLite GUI to find the "Open"
+	 * button on the CLG panel and replace the associated action.
+	 *
+	 * @param comp Starting component. Function recurses through childre.n
+	 * @param text Text to match on JButton
+	 * @return JButton component with specified label
+	 */
+	private static Component findFirstButtonMatchingText(Component comp, String text)
+	{
+
+		if((comp instanceof JButton) && ((JButton) comp).getText().equals(text))
+		{
+			return comp;
+		}
+
+		if(comp instanceof Container)
+		{
+			Container container = (Container) comp;
+			for(int i = 0; i < container.getComponentCount(); i++)
+			{
+				Component comp2 = findFirstButtonMatchingText(container.getComponent(i), text);
+				if(comp2 != null)
+				{
+					return comp2;
+				}
+			}
+		}
+		return null;
+	}
+
 	private void filter()
 	{
 		ProjectConfigurationPanel projectConfigurationPanel = ProjectConfigurationPanel.getProjectConfigurationPanel();
@@ -137,38 +169,6 @@ public class CustomResultsPanel extends EpptPanel
 	public String getJavaHelpId()
 	{
 		return "Custom Results";
-	}
-
-	/**
-	 * Helper function that scans GUI for a button with the indicated label
-	 * starting with a given component. Used in CalLite GUI to find the "Open"
-	 * button on the CLG panel and replace the associated action.
-	 *
-	 * @param comp Starting component. Function recurses through childre.n
-	 * @param text Text to match on JButton
-	 * @return JButton component with specified label
-	 */
-	private static Component findFirstButtonMatchingText(Component comp, String text)
-	{
-
-		if((comp instanceof JButton) && ((JButton) comp).getText().equals(text))
-		{
-			return comp;
-		}
-
-		if(comp instanceof Container)
-		{
-			Container container = (Container) comp;
-			for(int i = 0; i < container.getComponentCount(); i++)
-			{
-				Component comp2 = findFirstButtonMatchingText(container.getComponent(i), text);
-				if(comp2 != null)
-				{
-					return comp2;
-				}
-			}
-		}
-		return null;
 	}
 
 	/**

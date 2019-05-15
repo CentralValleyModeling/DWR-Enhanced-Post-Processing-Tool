@@ -15,16 +15,18 @@ import java.util.Comparator;
 
 /**
  * compares named objects
- * 
+ *
  * @see Named
  */
-public class EqualName implements Comparator<Named> {
+public class EqualName implements Comparator<Named>
+{
 	/**
 	 * execute function returns true if object1's name is lexicographically less
 	 * than object2's name
 	 */
 	@Override
-	public int compare(Named o1, Named o2) {
+	public int compare(Named o1, Named o2)
+	{
 		return o1.getName().compareTo(o2.getName());
 	}
 }

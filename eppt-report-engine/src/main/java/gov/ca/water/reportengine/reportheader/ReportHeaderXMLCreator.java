@@ -12,66 +12,66 @@
 
 package gov.ca.water.reportengine.reportheader;
 
+import java.util.List;
+
 import org.w3c.dom.Attr;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
-import java.util.List;
-
 public class ReportHeaderXMLCreator
 {
-    private static final String REPORT_HEADER = "report-header";
-    private static final String AUTHOR = "author";
-    private static final String SUBTITLES = "subtitle";
-    private static final String BASE_FILE = "base";
-    private static final String NAME_ATTR = "name";
-    private static final String ALTERNATIVES = "alternatives";
-    private static final String ALTERNATIVE = "alternative";
+	private static final String REPORT_HEADER = "report-header";
+	private static final String AUTHOR = "author";
+	private static final String SUBTITLES = "subtitle";
+	private static final String BASE_FILE = "base";
+	private static final String NAME_ATTR = "name";
+	private static final String ALTERNATIVES = "alternatives";
+	private static final String ALTERNATIVE = "alternative";
 
 
-    public ReportHeaderXMLCreator()
-    {
+	public ReportHeaderXMLCreator()
+	{
 
-    }
-
-
-    public Element createReportHeaderElement(ReportHeader reportHeader, Document document)
-    {
-        Element root = null;
-
-        root = document.createElement(REPORT_HEADER);
-
-        Element authorElem = document.createElement(AUTHOR);
-        authorElem.appendChild(document.createTextNode(reportHeader.getAuthor()));
-        root.appendChild(authorElem);
-
-        Element subtitleElem = document.createElement(SUBTITLES);
-        subtitleElem.appendChild(document.createTextNode(reportHeader.getSubTitle()));
-        root.appendChild(subtitleElem);
-
-        Element baseFileElem = document.createElement(BASE_FILE);
-        Attr baseFileAttr = document.createAttribute(NAME_ATTR);
-        baseFileAttr.setValue(reportHeader.getBaseFile());
-        baseFileElem.setAttributeNode(baseFileAttr);
-        root.appendChild(baseFileElem);
+	}
 
 
-        List<String> alternativeNames = reportHeader.getAlternativeNames();
-        if (!alternativeNames.isEmpty())
-        {
-            Element alternativesParentElem = document.createElement(ALTERNATIVES);
-            for (String altName : alternativeNames)
-            {
-                Element altElem = document.createElement(ALTERNATIVE);
-                Attr altAttr = document.createAttribute(NAME_ATTR);
-                altAttr.setValue(altName);
-                altElem.setAttributeNode(altAttr);
-                alternativesParentElem.appendChild(altElem);
-            }
-            root.appendChild(alternativesParentElem);
-        }
+	public Element createReportHeaderElement(ReportHeader reportHeader, Document document)
+	{
+		Element root = null;
 
-        return root;
-    }
+		root = document.createElement(REPORT_HEADER);
+
+		Element authorElem = document.createElement(AUTHOR);
+		authorElem.appendChild(document.createTextNode(reportHeader.getAuthor()));
+		root.appendChild(authorElem);
+
+		Element subtitleElem = document.createElement(SUBTITLES);
+		subtitleElem.appendChild(document.createTextNode(reportHeader.getSubTitle()));
+		root.appendChild(subtitleElem);
+
+		Element baseFileElem = document.createElement(BASE_FILE);
+		Attr baseFileAttr = document.createAttribute(NAME_ATTR);
+		baseFileAttr.setValue(reportHeader.getBaseFile());
+		baseFileElem.setAttributeNode(baseFileAttr);
+		root.appendChild(baseFileElem);
+
+
+		List<String> alternativeNames = reportHeader.getAlternativeNames();
+		if(!alternativeNames.isEmpty())
+		{
+			Element alternativesParentElem = document.createElement(ALTERNATIVES);
+			for(String altName : alternativeNames)
+			{
+				Element altElem = document.createElement(ALTERNATIVE);
+				Attr altAttr = document.createAttribute(NAME_ATTR);
+				altAttr.setValue(altName);
+				altElem.setAttributeNode(altAttr);
+				alternativesParentElem.appendChild(altElem);
+			}
+			root.appendChild(alternativesParentElem);
+		}
+
+		return root;
+	}
 
 }

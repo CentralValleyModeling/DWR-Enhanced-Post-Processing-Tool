@@ -26,18 +26,36 @@ import vista.set.Pathname;
  * Most filtering is done on pathnames or parts thereof using regular
  * expressions. One exception to this is the D part of the pathname which
  * represents the time window and has a TimeWindowFilter filter.
- * 
- * @see vista.set.TimeWindowFilter
- * @see vista.set.PathPartPredicate
+ *
  * @author Nicky Sandhu
  * @version $Id: PathnameFilterPanel.java,v 1.1 2003/10/02 20:48:37 redwood Exp
- *          $
+ * $
+ * @see vista.set.TimeWindowFilter
+ * @see vista.set.PathPartPredicate
  */
-public class PathnameFilterPanel extends JPanel {
+public class PathnameFilterPanel extends JPanel
+{
+	/**
+	 * The table containing the group
+	 */
+	private GroupTable _groupTable;
+	/**
+	 * filter choice, selecting/rejecting
+	 */
+	private JComboBox _filterChoice;
+	/**
+	 * pathname field
+	 */
+	private JTextField _pathTextField;
+	/**
+	 * path part fields
+	 */
+	private JTextField[] _textFields;
 	/**
 	 * constructor
 	 */
-	public PathnameFilterPanel(GroupTable parent) {
+	public PathnameFilterPanel(GroupTable parent)
+	{
 		_groupTable = parent;
 
 		JPanel filterPanel = new JPanel();
@@ -53,10 +71,11 @@ public class PathnameFilterPanel extends JPanel {
 		choicePanel.add(_filterChoice, BorderLayout.SOUTH);
 
 		filterPanel.add(choicePanel);
-		// 
+		//
 		_textFields = new JTextField[Pathname.MAX_PARTS];
 
-		for (int i = 0; i < Pathname.MAX_PARTS; i++) {
+		for(int i = 0; i < Pathname.MAX_PARTS; i++)
+		{
 			JPanel panel = new JPanel();
 			panel.setLayout(new BorderLayout());
 			panel.add(new JLabel(Pathname.getPartName(i)), BorderLayout.NORTH);
@@ -78,39 +97,29 @@ public class PathnameFilterPanel extends JPanel {
 	}
 
 	/**
-	 * The table containing the group
+	 *
 	 */
-	private GroupTable _groupTable;
-	/**
-	 * filter choice, selecting/rejecting
-	 */
-	private JComboBox _filterChoice;
-	/**
-	 * pathname field
-	 */
-	private JTextField _pathTextField;
-	/**
-	 * path part fields
-	 */
-	private JTextField[] _textFields;
-
-	/**
-   *
-   */
-	private class FilterListener implements KeyListener {
+	private class FilterListener implements KeyListener
+	{
 		/**
 		 * filters on pressing enter key on any field...
 		 */
-		public void keyPressed(KeyEvent evt) {
-			if (evt.getKeyCode() != KeyEvent.VK_ENTER)
+		public void keyPressed(KeyEvent evt)
+		{
+			if(evt.getKeyCode() != KeyEvent.VK_ENTER)
+			{
 				return;
+			}
 			boolean selecting = true;
-			if (_filterChoice.getSelectedItem().equals("Reject"))
+			if(_filterChoice.getSelectedItem().equals("Reject"))
+			{
 				selecting = false;
+			}
 			String regExp = _pathTextField.getText().trim();
 			Group group = _groupTable.getGroup();
 			String[] regExps = new String[Pathname.MAX_PARTS];
-			for (int i = 0; i < Pathname.MAX_PARTS; i++) {
+			for(int i = 0; i < Pathname.MAX_PARTS; i++)
+			{
 				regExps[i] = _textFields[i].getText().trim();
 				_textFields[i].setText("");
 			}
@@ -124,10 +133,12 @@ public class PathnameFilterPanel extends JPanel {
 					_groupTable);
 		}
 
-		public void keyTyped(KeyEvent evt) {
+		public void keyTyped(KeyEvent evt)
+		{
 		}
 
-		public void keyReleased(KeyEvent evt) {
+		public void keyReleased(KeyEvent evt)
+		{
 		}
 	}// endof FilterListener class
 }

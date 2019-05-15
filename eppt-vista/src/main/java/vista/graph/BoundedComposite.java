@@ -13,10 +13,11 @@ package vista.graph;
 
 /**
  * This interface defines the layoutable object.
- * 
+ *
  * @author Nicky Sandhu (DWR).
  * @version $Id: BoundedComposite.java,v 1.1 2003/10/02 20:48:49 redwood Exp $
  */
-public interface BoundedComposite extends Bounded, Composite {
+public interface BoundedComposite extends Bounded, Composite
+{
 
 }

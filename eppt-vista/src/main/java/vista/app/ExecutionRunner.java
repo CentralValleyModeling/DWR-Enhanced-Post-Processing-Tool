@@ -15,18 +15,20 @@ import vista.gui.Command;
 
 /**
  * Executes the command in the background
- * 
+ *
  * @author Nicky Sandhu
  * @version $Id: ExecutionRunner.java,v 1.1 2003/10/02 20:48:28 redwood Exp $
  */
-public class ExecutionRunner implements Runnable {
+public class ExecutionRunner implements Runnable
+{
 	private Command _com;
 	private View _view;
 
 	/**
 	 * initializes the runner with the command and the affected view
 	 */
-	public ExecutionRunner(Command com, View view) {
+	public ExecutionRunner(Command com, View view)
+	{
 		_com = com;
 		_view = view;
 	}
@@ -34,7 +36,8 @@ public class ExecutionRunner implements Runnable {
 	/**
 	 * run method
 	 */
-	public void run() {
+	public void run()
+	{
 		Executor.execute(_com, _view);
 	}
 }

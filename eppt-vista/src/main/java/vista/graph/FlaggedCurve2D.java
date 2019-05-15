@@ -29,20 +29,23 @@ import java.util.Hashtable;
  * Draws a default curve. It understands only linear and last value
  * interpolation types. Also both x and y coordinates are believed to be real
  * numbers
- * 
+ *
  * @author Nicky Sandhu
  * @version $Id: FlaggedCurve2D.java,v 1.1 2003/10/02 20:48:55 redwood Exp $
  */
-public class FlaggedCurve2D extends Curve implements Shape {
-	private double[] _points;
-	private Symbol rSymbol, qSymbol;
+public class FlaggedCurve2D extends Curve implements Shape
+{
 	/**
 	 * debuggin'
 	 */
 	public static boolean DEBUG = false;
 	public static boolean FAST_GRAPHICS = false;
 	public static RenderingHints FAST_RENDERING_HINTS;
-	static {
+	public static RenderingHints DEFAULT_RENDERING_HINTS = new RenderingHints(
+			null);
+
+	static
+	{
 		Hashtable hintmap = new Hashtable();
 		hintmap.put(RenderingHints.KEY_ANTIALIASING,
 				RenderingHints.VALUE_ANTIALIAS_OFF);
@@ -58,13 +61,25 @@ public class FlaggedCurve2D extends Curve implements Shape {
 				RenderingHints.VALUE_COLOR_RENDER_SPEED);
 		FAST_RENDERING_HINTS = new RenderingHints(hintmap);
 	}
-	public static RenderingHints DEFAULT_RENDERING_HINTS = new RenderingHints(
-			null);
+
+	private double[] _points;
+	private Symbol rSymbol, qSymbol;
+	/**
+	 * holder of stroke.
+	 */
+	private Stroke _previousStroke;
+	private FlaggedCurve _curve;
+	/**
+	 *
+	 */
+	private PathIterator _pathIterator;
+	private GeneralPath _gp;
 
 	/**
-   *
-   */
-	public FlaggedCurve2D(CurveAttr attributes, CurveDataModel cdm) {
+	 *
+	 */
+	public FlaggedCurve2D(CurveAttr attributes, CurveDataModel cdm)
+	{
 		super(attributes, cdm);
 		_points = new double[2];
 		_curve = new FlaggedCurve(attributes, cdm);
@@ -78,39 +93,44 @@ public class FlaggedCurve2D extends Curve implements Shape {
 	/**
 	 * sets the symbol to be drawn for questionable values
 	 */
-	public void setQuestionableSymbol(Symbol s) {
+	public void setQuestionableSymbol(Symbol s)
+	{
 		_curve.setQuestionableSymbol(s);
-		s.getAttributes()._foregroundColor=_curve.getAttributes()._foregroundColor;
+		s.getAttributes()._foregroundColor = _curve.getAttributes()._foregroundColor;
 	}
 
 	/**
 	 * sets the symbol to be drawn for questionable values
 	 */
-	public void setRejectSymbol(Symbol s) {
+	public void setRejectSymbol(Symbol s)
+	{
 		_curve.setRejectSymbol(s);
-		s.getAttributes()._foregroundColor=_curve.getAttributes()._foregroundColor;
+		s.getAttributes()._foregroundColor = _curve.getAttributes()._foregroundColor;
 	}
 
 	/**
-    *
-    */
-	public void setGraphics(Graphics g) {
+	 *
+	 */
+	public void setGraphics(Graphics g)
+	{
 		super.setGraphics(g);
 		_curve.setGraphics(g);
 	}
 
 	/**
-    *
-    */
-	public void setBounds(Rectangle bounds) {
+	 *
+	 */
+	public void setBounds(Rectangle bounds)
+	{
 		super.setBounds(bounds);
 		_curve.setBounds(bounds);
 	}
 
 	/**
-    *
-    */
-	public void setAttributes(GEAttr attr) {
+	 *
+	 */
+	public void setAttributes(GEAttr attr)
+	{
 		super.setAttributes(attr);
 		_curve.setAttributes(attr);
 	}
@@ -118,7 +138,8 @@ public class FlaggedCurve2D extends Curve implements Shape {
 	/**
 	 * creates path iterator for curve.
 	 */
-	private PathIterator createPathIterator(AffineTransform at) {
+	private PathIterator createPathIterator(AffineTransform at)
+	{
 		_pathIterator = new CurvePathIterator(getModel(), at);
 		return _pathIterator;
 		// _gp = new GeneralPath(this);
@@ -127,7 +148,8 @@ public class FlaggedCurve2D extends Curve implements Shape {
 	/**
 	 * no back ground/ transparent background
 	 */
-	public void preDraw() {
+	public void preDraw()
+	{
 		CurveAttr attr = (CurveAttr) getAttributes();
 		attr._backgroundColor = null;
 		super.preDraw();
@@ -135,8 +157,10 @@ public class FlaggedCurve2D extends Curve implements Shape {
 		// easy way of getting dashed lines. Later more sophisticated methods
 		// would be added.
 		Graphics gc = getGraphics();
-		if (gc instanceof Graphics2D && attr._drawLines) {
-			if (attr._dashArray != null && attr._dashArray.length > 1) {
+		if(gc instanceof Graphics2D && attr._drawLines)
+		{
+			if(attr._dashArray != null && attr._dashArray.length > 1)
+			{
 				Graphics2D gc2 = null;
 				gc2 = (Graphics2D) gc;
 				_previousStroke = gc2.getStroke();
@@ -144,14 +168,16 @@ public class FlaggedCurve2D extends Curve implements Shape {
 				int linejoin = BasicStroke.JOIN_ROUND;
 				float miterlimit = 0.25f;
 				float dashphase = 0.25f;
-				if (_previousStroke != null
-						&& _previousStroke instanceof BasicStroke) {
+				if(_previousStroke != null
+						&& _previousStroke instanceof BasicStroke)
+				{
 					BasicStroke bs = (BasicStroke) _previousStroke;
 					cap = bs.getEndCap();
 					linejoin = bs.getLineJoin();
 					miterlimit = bs.getMiterLimit();
 					dashphase = bs.getDashPhase();
-					if (DEBUG) {
+					if(DEBUG)
+					{
 						System.out
 								.println("Getting values from previous stroke:"
 										+ _previousStroke);
@@ -162,32 +188,40 @@ public class FlaggedCurve2D extends Curve implements Shape {
 				}
 				gc2.setStroke(new BasicStroke(attr._thickness, cap, linejoin,
 						miterlimit, attr._dashArray, dashphase));
-				if (FAST_GRAPHICS) {
+				if(FAST_GRAPHICS)
+				{
 					gc2.setRenderingHints(FAST_RENDERING_HINTS);
-				} else {
+				}
+				else
+				{
 					gc2.setRenderingHints(DEFAULT_RENDERING_HINTS);
 				}
 			}
-		} else {
+		}
+		else
+		{
 			_previousStroke = null;
-			if (gc instanceof Graphics2D) {
+			if(gc instanceof Graphics2D)
+			{
 				((Graphics2D) gc).setRenderingHints(DEFAULT_RENDERING_HINTS);
 			}
 		}
 	}
 
 	/**
-    *
-    */
-	public void setXAxis(Axis xAxis) {
+	 *
+	 */
+	public void setXAxis(Axis xAxis)
+	{
 		super.setXAxis(xAxis);
 		_curve.setXAxis(xAxis);
 	}
 
 	/**
-    *
-    */
-	public void setYAxis(Axis yAxis) {
+	 *
+	 */
+	public void setYAxis(Axis yAxis)
+	{
 		super.setYAxis(yAxis);
 		_curve.setYAxis(yAxis);
 	}
@@ -196,15 +230,18 @@ public class FlaggedCurve2D extends Curve implements Shape {
 	 * Draws the data by scaling it and joining consecutive data points and/or
 	 * plotting symbols for data points.
 	 */
-	protected void drawCurve() {
+	protected void drawCurve()
+	{
 		CurveAttr attr = (CurveAttr) getAttributes();
 		CurveDataModel cdm = getModel();
 		Axis xAxis = getXAxis();
 		Axis yAxis = getYAxis();
 		Graphics gc = getGraphics();
 		Rectangle r = getBounds();
-		if (cdm == null)
+		if(cdm == null)
+		{
 			return;
+		}
 
 		Symbol symbol = attr._symbol;
 		Rectangle symbolBounds = new Rectangle(0, 0, 25, 25);
@@ -214,20 +251,25 @@ public class FlaggedCurve2D extends Curve implements Shape {
 		// gc.setColor(attr._foregroundColor);
 		boolean doLines = false;
 		//
-		if (gc instanceof Graphics2D && attr._drawLines) {
-			if (attr._dashArray != null && attr._dashArray.length > 1) {
+		if(gc instanceof Graphics2D && attr._drawLines)
+		{
+			if(attr._dashArray != null && attr._dashArray.length > 1)
+			{
 				Graphics2D gc2 = (Graphics2D) gc;
 				AffineTransform at = getAffineTransform(xAxis.getScale(), yAxis
 						.getScale());
 				// gc2.draw(at.createTransformedShape(getGeneralPath()));
 				gc2.draw(at.createTransformedShape(this));
-			} else {
+			}
+			else
+			{
 				doLines = true;
 			}
 		}
 		// cache previous state of lines
 		boolean prevDrawLines = attr._drawLines;
-		if (!doLines) {
+		if(!doLines)
+		{
 			attr._drawLines = false;
 		}
 		// draw curve with or without lines and certainly with symbols if need
@@ -238,30 +280,39 @@ public class FlaggedCurve2D extends Curve implements Shape {
 	}
 
 	/**
-   *
-   */
-	public GeneralPath getGeneralPath() {
-		if (_gp != null) {
+	 *
+	 */
+	public GeneralPath getGeneralPath()
+	{
+		if(_gp != null)
+		{
 			return _gp;
 		}
 		_gp = new GeneralPath(GeneralPath.WIND_EVEN_ODD, 10000);
 		CurveDataModel cdm = getModel();
 		cdm.reset();
-		double[] points = { 0, 0 };
+		double[] points = {0, 0};
 		int type;
 		boolean atStart = true;
-		while (cdm.hasMorePoints()) {
+		while(cdm.hasMorePoints())
+		{
 			type = cdm.nextPoint(points);
-			if (atStart) {
+			if(atStart)
+			{
 				_gp.moveTo((float) points[0], (float) points[1]);
 				atStart = false;
 				continue;
 			}
-			if (type == CurveDataModel.MOVE_TO) {
+			if(type == CurveDataModel.MOVE_TO)
+			{
 				_gp.moveTo((float) points[0], (float) points[1]);
-			} else if (type == CurveDataModel.LINE_TO) {
+			}
+			else if(type == CurveDataModel.LINE_TO)
+			{
 				_gp.lineTo((float) points[0], (float) points[1]);
-			} else { // to do appending of Symbol shape here for Q/R data
+			}
+			else
+			{ // to do appending of Symbol shape here for Q/R data
 				_gp.moveTo((float) points[0], (float) points[1]);
 			}
 		}
@@ -269,26 +320,31 @@ public class FlaggedCurve2D extends Curve implements Shape {
 	}
 
 	/**
-   *
-   */
-	public void postDraw() {
+	 *
+	 */
+	public void postDraw()
+	{
 		CurveAttr attr = (CurveAttr) getAttributes();
 		_curve.postDraw();
 		super.postDraw();
 		Graphics gc = getGraphics();
-		if (_previousStroke != null && gc instanceof Graphics2D) {
+		if(_previousStroke != null && gc instanceof Graphics2D)
+		{
 			Graphics2D gc2 = (Graphics2D) gc;
 			gc2.setStroke(_previousStroke);
 		}
 	}
 
 	/**
-   *
-   */
-	public Rectangle2D getBounds2D() {
+	 *
+	 */
+	public Rectangle2D getBounds2D()
+	{
 		Rectangle area1 = getBounds();
-		if (area1 == null)
+		if(area1 == null)
+		{
 			return null;
+		}
 		Rectangle2D.Double area = new Rectangle2D.Double();
 		area.setRect(area1.x, area1.y, area1.width, area1.height);
 		return area;
@@ -297,76 +353,107 @@ public class FlaggedCurve2D extends Curve implements Shape {
 	/**
 	 * Test if a given coordinate is inside the boundary of the shape.
 	 */
-	public boolean contains(double x, double y) {
+	public boolean contains(double x, double y)
+	{
 		Rectangle area = getBounds();
-		if (area != null)
+		if(area != null)
+		{
 			return area.contains(x, y);
+		}
 		else
+		{
 			return false;
+		}
 	}
 
 	/**
 	 * Test if a given Point is inside the boundary of the shape.
 	 */
-	public boolean contains(Point2D p) {
+	public boolean contains(Point2D p)
+	{
 		Rectangle2D area = getBounds2D();
-		if (area != null)
+		if(area != null)
+		{
 			return area.contains(p);
+		}
 		else
+		{
 			return false;
+		}
 	}
 
 	/**
 	 * Test if the interior of the Shape intersects the interior of a given set
 	 * of rectangular coordinates.
 	 */
-	public boolean intersects(double x, double y, double w, double h) {
+	public boolean intersects(double x, double y, double w, double h)
+	{
 		Rectangle area = getBounds();
-		if (area != null)
+		if(area != null)
+		{
 			return area.intersects(x, y, w, h);
+		}
 		else
+		{
 			return false;
+		}
 	}
 
 	/**
 	 * Test if the interior of the Shape intersects the interior of a given
 	 * Rectangle.
 	 */
-	public boolean intersects(Rectangle2D r) {
+	public boolean intersects(Rectangle2D r)
+	{
 		Rectangle2D area = getBounds2D();
-		if (area != null) {
+		if(area != null)
+		{
 			return area.intersects(r);
-		} else
+		}
+		else
+		{
 			return false;
+		}
 	}
 
 	/**
 	 * Test if the interior of the Shape entirely contains the given set of
 	 * rectangular coordinates.
 	 */
-	public boolean contains(double x, double y, double w, double h) {
+	public boolean contains(double x, double y, double w, double h)
+	{
 		Rectangle area = getBounds();
-		if (area != null)
+		if(area != null)
+		{
 			return area.contains(x, y, w, h);
+		}
 		else
+		{
 			return false;
+		}
 	}
 
 	/**
 	 * Test if the interior of the Shape entirely contains the given Rectangle.
 	 */
-	public boolean contains(Rectangle2D r) {
+	public boolean contains(Rectangle2D r)
+	{
 		Rectangle2D area = getBounds2D();
-		if (area != null) {
+		if(area != null)
+		{
 			return area.contains(r);
-		} else
+		}
+		else
+		{
 			return false;
+		}
 	}
 
 	/**
 	 * returns the curve legend line for this curve
 	 */
-	public CurveLegendLine getLegendLine() {
+	public CurveLegendLine getLegendLine()
+	{
 		return new CurveLegendLine2D(this);
 	}
 
@@ -375,13 +462,13 @@ public class FlaggedCurve2D extends Curve implements Shape {
 	 * and provides access to the geometry of the outline of the shape. An
 	 * optional affine transform can be specified in which case the coordinates
 	 * returned in the iteration will be transformed accordingly.
-	 * 
-	 * @param at
-	 *            an optional AffineTransform to be applied to the coordinates
-	 *            as they are returned in the iteration, or null if the
-	 *            untransformed coordinates are desired.
+	 *
+	 * @param at an optional AffineTransform to be applied to the coordinates
+	 *           as they are returned in the iteration, or null if the
+	 *           untransformed coordinates are desired.
 	 */
-	public PathIterator getPathIterator(AffineTransform at) {
+	public PathIterator getPathIterator(AffineTransform at)
+	{
 		return createPathIterator(at);
 		// GeneralPath gp = getGeneralPath();
 		// return gp.getPathIterator(at);
@@ -396,17 +483,16 @@ public class FlaggedCurve2D extends Curve implements Shape {
 	 * specifies ?REMIND?. An optional affine transform can be specified in
 	 * which case the coordinates returned in the iteration will be transformed
 	 * accordingly.
-	 * 
-	 * @param at
-	 *            an optional AffineTransform to be applied to the coordinates
-	 *            as they are returned in the iteration, or null if the
-	 *            untransformed coordinates are desired.
-	 * @param flatness
-	 *            the maximum amount that the control points for a given curve
-	 *            can vary from colinear before a subdivided curve is replaced
-	 *            by a straight line connecting the endpoints.
+	 *
+	 * @param at       an optional AffineTransform to be applied to the coordinates
+	 *                 as they are returned in the iteration, or null if the
+	 *                 untransformed coordinates are desired.
+	 * @param flatness the maximum amount that the control points for a given curve
+	 *                 can vary from colinear before a subdivided curve is replaced
+	 *                 by a straight line connecting the endpoints.
 	 */
-	public PathIterator getPathIterator(AffineTransform at, double flatness) {
+	public PathIterator getPathIterator(AffineTransform at, double flatness)
+	{
 		return createPathIterator(at);
 		// GeneralPath gp = getGeneralPath();
 		// return gp.getPathIterator(at,flatness);
@@ -414,31 +500,23 @@ public class FlaggedCurve2D extends Curve implements Shape {
 	}
 
 	/**
-   *
-   */
-	public AffineTransform getAffineTransform(Scale xS, Scale yS) {
+	 *
+	 */
+	public AffineTransform getAffineTransform(Scale xS, Scale yS)
+	{
 		double m00 = 0, m10 = 0, m01 = 0, m11 = 0, m02 = 0, m12 = 0;
 		m01 = 0;
 		m10 = 0; // no rotation
-		if (xS != null) {
+		if(xS != null)
+		{
 			m02 = xS.getShift();
 			m00 = xS.getScaling();
 		}
-		if (yS != null) {
+		if(yS != null)
+		{
 			m12 = yS.getShift();
 			m11 = yS.getScaling();
 		}
 		return new AffineTransform(m00, m10, m01, m11, m02, m12);
 	}
-
-	/**
-	 * holder of stroke.
-	 */
-	private Stroke _previousStroke;
-	private FlaggedCurve _curve;
-	/**
-   *
-   */
-	private PathIterator _pathIterator;
-	private GeneralPath _gp;
 }

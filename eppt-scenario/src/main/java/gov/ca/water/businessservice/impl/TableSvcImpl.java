@@ -78,18 +78,19 @@ public final class TableSvcImpl implements ITableSvc
 	}
 
 	public static ITableSvc createTableSvcImplInstance(List<GUILinks2BO> list) throws EpptInitializationException
-    {
-        if(tableSvc == null)
-        {
-            tableSvc = new TableSvcImpl(list);
-        }
-        return tableSvc;
-    }
+	{
+		if(tableSvc == null)
+		{
+			tableSvc = new TableSvcImpl(list);
+		}
+		return tableSvc;
+	}
 
 	/**
 	 * This method is for implementing the singleton. It will return the
 	 * instance of this class if it is empty it will create one.
-	 *throws IllegalStateException
+	 * throws IllegalStateException
+	 *
 	 * @return Will return the instance of this class if it is empty it will
 	 * create one.
 	 */
@@ -97,7 +98,8 @@ public final class TableSvcImpl implements ITableSvc
 	{
 		if(tableSvc == null)
 		{
-		    throw new IllegalArgumentException("TableSvcImpl has not been initialized. It should be created by calling 'createTableSvcImplInstance'.");
+			throw new IllegalArgumentException(
+					"TableSvcImpl has not been initialized. It should be created by calling 'createTableSvcImplInstance'.");
 		}
 		return tableSvc;
 	}
@@ -119,7 +121,7 @@ public final class TableSvcImpl implements ITableSvc
 	 * @throws CalLiteGUIException If anything wrong about the data then it will throw a
 	 *                             exception with the information about it.
 	 */
-	public static String[][] handleTableFileWithColumnNumber(List<String> lines, int columnLength )
+	public static String[][] handleTableFileWithColumnNumber(List<String> lines, int columnLength)
 			throws CalLiteGUIException
 	{
 		int noOfRows = getRowNumbers(lines);
@@ -441,7 +443,7 @@ public final class TableSvcImpl implements ITableSvc
 			catch(CalLiteGUIException ex)
 			{
 				LOG.error(ex.getMessage(), ex);
-				throw new EpptInitializationException("Error generating map for table.",ex);
+				throw new EpptInitializationException("Error generating map for table.", ex);
 			}
 		}
 	}
@@ -725,13 +727,13 @@ public final class TableSvcImpl implements ITableSvc
 			String[] headers = new String[0];
 			Optional<String> header;
 			header = data.stream().filter(obj -> obj.contains(Constant.HEADERS)).findFirst();
-			if (header.isPresent())
+			if(header.isPresent())
 			{
 				String[] da = header.get().split(Constant.OLD_DELIMITER);
 				// We are excluding
 				headers = new String[da.length - 1];
 				// the header word.
-				for (int i = 0; i < headers.length; i++)
+				for(int i = 0; i < headers.length; i++)
 				{
 					headers[i] = da[i + 1];
 				}

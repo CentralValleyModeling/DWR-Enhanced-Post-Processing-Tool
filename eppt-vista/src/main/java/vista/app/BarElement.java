@@ -25,48 +25,87 @@ import vista.graph.GEAttr;
 import vista.graph.Scale;
 
 /**
-   * 
-   */
-public class BarElement extends AnimateElement implements AnimationObserver {
+ *
+ */
+public class BarElement extends AnimateElement implements AnimationObserver
+{
+	static NumberFormat _nf = NumberFormat.getInstance();
+
+	static
+	{
+		_nf.setMaximumFractionDigits(1);
+	}
+
 	/**
-   * 
-   */
-	public BarElement(GEAttr attr) {
+	 * Value in units of percentage
+	 */
+	protected float _value;
+	/**
+	 *
+	 */
+	protected FluxInput fluxInput;
+	/**
+	 *
+	 */
+	protected Scale _s;
+	/**
+	 *
+	 */
+	protected Color _lineColor = Color.yellow;
+	/**
+	 *
+	 */
+	protected Color _barColor = Color.red;
+	/**
+	 *
+	 */
+	protected Font _valueFont = new Font("Times Roman", Font.PLAIN, 10);
+
+	/**
+	 *
+	 */
+	public BarElement(GEAttr attr)
+	{
 		super(attr);
 		_s = new Scale(0, 100, 0, 10);
 	}
 
 	/**
-   * 
-   */
-	public void setRange(float min, float max) {
+	 *
+	 */
+	public void setRange(float min, float max)
+	{
 		_s.setDCRange(min, max);
 	}
 
 	/**
-   * 
-   */
-	public void setFluxInput(FluxInput input) {
+	 *
+	 */
+	public void setFluxInput(FluxInput input)
+	{
 		fluxInput = input;
 	}
 
 	/**
-   * 
-   */
-	public void update(AnimationObservable o, Object arg) {
+	 *
+	 */
+	public void update(AnimationObservable o, Object arg)
+	{
 		_value = fluxInput.getNextValue();
 	}
 
 	/**
-   *
-   */
-	public void Draw() {
+	 *
+	 */
+	public void Draw()
+	{
 	}
 
 	/**
-   * 
-   */
-	public void animateNext() {
+	 *
+	 */
+	public void animateNext()
+	{
 		// System.out.println(this.getClass().getName() + ".animateNext()");
 		Graphics gc = getGraphics();
 		Color previousColor = gc.getColor();
@@ -95,9 +134,10 @@ public class BarElement extends AnimateElement implements AnimationObserver {
 	}
 
 	/**
-   * 
-   */
-	private void drawLineWithValue(float value, Rectangle r) {
+	 *
+	 */
+	private void drawLineWithValue(float value, Rectangle r)
+	{
 		Graphics gc = getGraphics();
 		gc.drawLine(r.x, _s.scaleToUC(value), r.x + r.width, _s
 				.scaleToUC(value));
@@ -106,45 +146,18 @@ public class BarElement extends AnimateElement implements AnimationObserver {
 	}
 
 	/**
-   * 
-   */
-	public Dimension getPreferredSize() {
+	 *
+	 */
+	public Dimension getPreferredSize()
+	{
 		return new Dimension(50, 100);
 	}
 
 	/**
-   * 
-   */
-	public Dimension getMinimumSize() {
-		return getPreferredSize();
-	}
-
-	/**
-	 * Value in units of percentage
+	 *
 	 */
-	protected float _value;
-	/**
-   * 
-   */
-	protected FluxInput fluxInput;
-	/**
-   * 
-   */
-	protected Scale _s;
-	/**
-   * 
-   */
-	protected Color _lineColor = Color.yellow;
-	/**
-   * 
-   */
-	protected Color _barColor = Color.red;
-	/**
-   * 
-   */
-	protected Font _valueFont = new Font("Times Roman", Font.PLAIN, 10);
-	static NumberFormat _nf = NumberFormat.getInstance();
-	static {
-		_nf.setMaximumFractionDigits(1);
+	public Dimension getMinimumSize()
+	{
+		return getPreferredSize();
 	}
 }

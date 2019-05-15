@@ -55,8 +55,10 @@ import vista.set.DataReference;
 import vista.set.DefaultDataSet;
 import vista.set.DefaultReference;
 
-public class XsectionProfileViewer {
-	public static void main(String[] args) throws Exception {
+public class XsectionProfileViewer
+{
+	public static void main(String[] args) throws Exception
+	{
 		String xsectionFile = args[0];
 		Parser p = new Parser();
 		Tables tables = p.parseModel(xsectionFile);
@@ -67,30 +69,36 @@ public class XsectionProfileViewer {
 		cdnReader.readAndUpdateModel(dsm2Model);
 		//
 		Channels channels = dsm2Model.getChannels();
-		for (Channel c : channels.getChannels()) {
-			if (!c.getId().equals("126")){
+		for(Channel c : channels.getChannels())
+		{
+			if(!c.getId().equals("126"))
+			{
 				continue;
 			}
 			ArrayList<XSection> xsections = c.getXsections();
 			plot(xsections);
 		}
 	}
-	
-	public static DataReference createDataReference(XSectionProfile xp, boolean calculated){
+
+	public static DataReference createDataReference(XSectionProfile xp, boolean calculated)
+	{
 		List<double[]> profilePoints = xp.getProfilePoints();
 
 		double[] x = new double[profilePoints.size()];
 		double[] y = new double[profilePoints.size()];
-		for (int i = 0; i < profilePoints.size(); i++) {
+		for(int i = 0; i < profilePoints.size(); i++)
+		{
 			x[i] = profilePoints.get(i)[0];
 			y[i] = profilePoints.get(i)[1];
 		}
-		DefaultDataSet set = new DefaultDataSet("XSection Profile-" + (calculated ? "calculated": "from-csdp") + xp.getChannelId() + ":" + xp.getDistance(), x, y);
+		DefaultDataSet set = new DefaultDataSet(
+				"XSection Profile-" + (calculated ? "calculated" : "from-csdp") + xp.getChannelId() + ":" + xp.getDistance(), x, y);
 		return new DefaultReference(set);
 	}
-	
 
-	public static void plot(ArrayList<XSection> xsections) {
+
+	public static void plot(ArrayList<XSection> xsections)
+	{
 		DefaultGraphFactory factory = new DefaultGraphFactory();
 		Graph graph = factory.createGraph();
 		graph.setBackgroundColor(Color.WHITE);
@@ -113,17 +121,19 @@ public class XsectionProfileViewer {
 
 		// now add dataReferences
 		int ncurves = xsections.size();
-		DataReference[] refs = new DataReference[ncurves*2];
-		for(int i=0; i < ncurves; i++){
+		DataReference[] refs = new DataReference[ncurves * 2];
+		for(int i = 0; i < ncurves; i++)
+		{
 			XSectionProfile xpc = ModelUtils.calculateProfileFrom(xsections.get(i), true);
 			XSectionProfile xp = xsections.get(i).getProfile();
-			refs[2*i] = createDataReference(xp,false);
-			refs[2*i+1] = createDataReference(xpc,true);
+			refs[2 * i] = createDataReference(xp, false);
+			refs[2 * i + 1] = createDataReference(xpc, true);
 		}
 
 		GraphBuilderInfo info = new GraphBuilderInfo(refs, MainProperties.getProperties());
 		Color[] colors = new Color[]{Color.BLUE, Color.CYAN, Color.GRAY, Color.GREEN, Color.ORANGE, Color.YELLOW, Color.RED};
-		for (int i = 0; i < refs.length; i++) {
+		for(int i = 0; i < refs.length; i++)
+		{
 			int xPos = info.getXAxisPosition(refs[i]);
 			int yPos = info.getYAxisPosition(refs[i]);
 			// DataSet ds = refs[i].getData();
@@ -133,12 +143,12 @@ public class XsectionProfileViewer {
 			CurveAttr c = (CurveAttr) crv.getAttributes();
 			c.setDrawSymbol(true);
 			c.setDrawLines(true);
-			c.setForegroundColor(colors[(i/2)%colors.length]);
+			c.setForegroundColor(colors[(i / 2) % colors.length]);
 			crv.setAttributes(c);
 			SymbolAttr networkSymbolAttr = new SymbolAttr();
 			int ps = 4;
-			int[] networkSymbolX = { -ps, ps, ps, -ps };
-			int[] networkSymbolY = { ps, ps, -ps, -ps };
+			int[] networkSymbolX = {-ps, ps, ps, -ps};
+			int[] networkSymbolY = {ps, ps, -ps, -ps};
 			networkSymbolAttr.setIsFilled(true);
 			networkSymbolAttr.setSymbol(networkSymbolX, networkSymbolY, 4);
 			Symbol networkSymbol = new Symbol(networkSymbolAttr);

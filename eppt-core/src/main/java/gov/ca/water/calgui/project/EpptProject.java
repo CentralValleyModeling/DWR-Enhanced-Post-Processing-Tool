@@ -12,7 +12,6 @@
 
 package gov.ca.water.calgui.project;
 
-import java.awt.Component;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;

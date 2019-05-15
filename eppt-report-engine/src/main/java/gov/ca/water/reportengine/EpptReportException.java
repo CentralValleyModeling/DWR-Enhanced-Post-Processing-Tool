@@ -15,14 +15,14 @@ package gov.ca.water.reportengine;
 public class EpptReportException extends Exception
 {
 
-    public EpptReportException(String message)
-    {
-        super(message);
-    }
+	public EpptReportException(String message)
+	{
+		super(message);
+	}
 
-    public EpptReportException(String message, Throwable cause)
-    {
-        super(message,cause);
-    }
+	public EpptReportException(String message, Throwable cause)
+	{
+		super(message, cause);
+	}
 
 }

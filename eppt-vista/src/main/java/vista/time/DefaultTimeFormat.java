@@ -22,29 +22,34 @@ import java.util.TimeZone;
 /**
  * Formats date according to HEC DSS criteria. namely midnight is interpreted as
  * 2400 of the previous day.
- * 
+ *
  * @author Nicky Sandhu
  * @version $Id: DefaultTimeFormat.java,v 1.1 2003/10/02 20:49:35 redwood Exp $
  */
-public class DefaultTimeFormat extends TimeFormat {
+public class DefaultTimeFormat extends TimeFormat
+{
 	/**
-	 * creates a time format for the given pattern
+	 * The format object
 	 */
-	public TimeFormat create(String pattern) {
-		return new DefaultTimeFormat(pattern);
-	}
+	private DateFormat _formatter;
+	/**
+	 * the format pattern
+	 */
+	private String _pattern;
 
 	/**
 	 * Use pattern for US locale
 	 */
-	public DefaultTimeFormat() {
+	public DefaultTimeFormat()
+	{
 		this("ddMMMyyyy HHmm", Locale.US);
 	}
 
 	/**
 	 * Use pattern for US locale
 	 */
-	public DefaultTimeFormat(String pattern) {
+	public DefaultTimeFormat(String pattern)
+	{
 		this(pattern, Locale.US);
 	}
 
@@ -52,10 +57,19 @@ public class DefaultTimeFormat extends TimeFormat {
 	 * sets up formatting by given string and given locale. Time zone is assumed
 	 * to be GMT. This does not have the daylight savings time adjustments.
 	 */
-	public DefaultTimeFormat(String pattern, Locale locale) {
+	public DefaultTimeFormat(String pattern, Locale locale)
+	{
 		_pattern = pattern;
 		_formatter = new SimpleDateFormat(pattern, locale);
 		_formatter.setTimeZone(TimeZone.getTimeZone("GMT"));
+	}
+
+	/**
+	 * creates a time format for the given pattern
+	 */
+	public TimeFormat create(String pattern)
+	{
+		return new DefaultTimeFormat(pattern);
 	}
 
 	/**
@@ -63,19 +77,23 @@ public class DefaultTimeFormat extends TimeFormat {
 	 * java format is the conversion of 0000 hour string to 2400 and pushing
 	 * back the data by one day. Thus 01JAN1900 0000 becomes 31DEC1899 2400.
 	 * Rest of the times are as returned by the format of java.text.DateFormat
-	 * 
+	 *
 	 * @return the formatted date/time string.
 	 */
 	public StringBuffer format(Date date, StringBuffer toAppendTo,
-			FieldPosition fieldPosition) {
+							   FieldPosition fieldPosition)
+	{
 		String str = _formatter.format(date, toAppendTo, fieldPosition)
-				.toString();
-		if (_pattern.indexOf("HH") > 0) {
-			if (str.indexOf("0000") > 0) {
+							   .toString();
+		if(_pattern.indexOf("HH") > 0)
+		{
+			if(str.indexOf("0000") > 0)
+			{
 				Date d = new Date(date.getTime() - 60000);
 				String str2 = _formatter.format(d);
 				int pos = str2.indexOf("2359");
-				if (pos != -1) {
+				if(pos != -1)
+				{
 					str = str2.substring(0, pos);
 					str = str.concat("2400");
 				}
@@ -89,26 +107,18 @@ public class DefaultTimeFormat extends TimeFormat {
 	 * Parse a date/time string according to the given parse position. For
 	 * example, a time text "07/10/96 4:5 PM, PDT" will be parsed into a Date
 	 * that is equivalent to Date(837039928046).
-	 * 
 	 */
-	public Date parse(String text, ParsePosition pos) {
+	public Date parse(String text, ParsePosition pos)
+	{
 		Date date = _formatter.parse(text, pos);
 		return date;
 	}
 
 	/**
-    *
-    */
-	public String toString() {
+	 *
+	 */
+	public String toString()
+	{
 		return "Default Time Format: " + _pattern;
 	}
-
-	/**
-	 * The format object
-	 */
-	private DateFormat _formatter;
-	/**
-	 * the format pattern
-	 */
-	private String _pattern;
 }

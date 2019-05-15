@@ -27,43 +27,43 @@ import gov.ca.water.reportengine.QAQCReportException;
  */
 public class QAQCProcessRunner extends ProcessRunner
 {
-    private final Path _jrxml;
-    private final Path _output;
+	private final Path _jrxml;
+	private final Path _output;
 
-    public QAQCProcessRunner(Path jrxml, Path output, ProcessOutputConsumer consumer)
-    {
-        super(consumer);
-        _jrxml = jrxml;
-        _output = output;
-    }
-
-
-    @Override
-    public void processStarted(Process process)
-    {
-        getOutputStreamConsumer().runStarted(null, process);
-    }
-
-    @Override
-    protected String[] getExtraArgs()
-    {
-        return new String[]{"\"" + _jrxml.toString() + "\"", "\"" + _output.toString() + "\""};
-    }
-
-    @Override
-    protected void processExitValue(Process process) throws QAQCReportException
-    {
-        getOutputStreamConsumer().runFinished(process);
-        int exitValue = process.exitValue();
-        if (exitValue != 0)
-        {
-            throw new QAQCReportException("Error processing Report");
-        }
-    }
+	public QAQCProcessRunner(Path jrxml, Path output, ProcessOutputConsumer consumer)
+	{
+		super(consumer);
+		_jrxml = jrxml;
+		_output = output;
+	}
 
 
-    protected Class<?> getMain()
-    {
-        return JasperReportRunner.class;
-    }
+	@Override
+	public void processStarted(Process process)
+	{
+		getOutputStreamConsumer().runStarted(null, process);
+	}
+
+	@Override
+	protected String[] getExtraArgs()
+	{
+		return new String[]{"\"" + _jrxml.toString() + "\"", "\"" + _output.toString() + "\""};
+	}
+
+	@Override
+	protected void processExitValue(Process process) throws QAQCReportException
+	{
+		getOutputStreamConsumer().runFinished(process);
+		int exitValue = process.exitValue();
+		if(exitValue != 0)
+		{
+			throw new QAQCReportException("Error processing Report");
+		}
+	}
+
+
+	protected Class<?> getMain()
+	{
+		return JasperReportRunner.class;
+	}
 }

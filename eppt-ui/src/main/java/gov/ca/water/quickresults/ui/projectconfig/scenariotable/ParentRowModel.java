@@ -12,7 +12,6 @@
 
 package gov.ca.water.quickresults.ui.projectconfig.scenariotable;
 
-import javafx.beans.value.ObservableValue;
 import javafx.scene.paint.Color;
 
 import com.rma.javafx.treetable.columns.specs.TreeTableColumnSpec;

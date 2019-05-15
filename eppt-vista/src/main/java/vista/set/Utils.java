@@ -12,32 +12,37 @@
 package vista.set;
 
 /**
- * 
- * 
  * @author Nicky Sandhu
  * @version $Id: Utils.java,v 1.1 2003/10/02 20:49:34 redwood Exp $
  */
-public class Utils {
+public class Utils
+{
 	/**
 	 * Fits a straight line y = ax+b where DataSet has (x,y) values. Returns the
 	 * value of a, b, and goodness of fit.
 	 */
-	public static RegressionLine linearLSRegression(DataSet ds) {
-		if (ds == null)
+	public static RegressionLine linearLSRegression(DataSet ds)
+	{
+		if(ds == null)
+		{
 			throw new IllegalArgumentException(
 					"Null data set? can't do regression");
+		}
 		double sigXi = 0;
 		double sigYi = 0;
 		double sigXi2 = 0;
 		double sigXiYi = 0;
 		double n = ds.size();
-		if (n <= 2)
+		if(n <= 2)
+		{
 			throw new IllegalArgumentException(
 					"Too few points to do regression");
+		}
 		//
 		DataSetIterator dsi = new ElementFilterIterator(ds.getIterator(),
 				Constants.DEFAULT_FILTER);
-		while (!dsi.atEnd()) {
+		while(!dsi.atEnd())
+		{
 			DataSetElement dse = dsi.getElement();
 			double x = dse.getX(), y = dse.getY();
 			sigXi += x;
@@ -56,7 +61,8 @@ public class Utils {
 		double rab = -sigXi / (Math.sqrt(n * sigXi2));
 		double chiSq = 0.0;
 		dsi.resetIterator();
-		while (!dsi.atEnd()) {
+		while(!dsi.atEnd())
+		{
 			DataSetElement dse = dsi.getElement();
 			double x = dse.getX(), y = dse.getY();
 			//

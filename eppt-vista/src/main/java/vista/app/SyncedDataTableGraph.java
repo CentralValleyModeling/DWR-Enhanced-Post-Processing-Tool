@@ -14,8 +14,9 @@ package vista.app;
 
 import javax.swing.*;
 
-public class SyncedDataTableGraph extends JPanel{
+public class SyncedDataTableGraph extends JPanel
+{
 	private DataSetTable table;
 	private DataGraphFrame graph;
-	
+
 }

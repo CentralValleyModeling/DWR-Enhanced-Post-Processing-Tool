@@ -18,23 +18,45 @@ import javax.swing.*;
 
 /**
  * An editor for the attributes and state of the Curve object
- * 
- * @see Curve
+ *
  * @author Nicky Sandhu
  * @version $Id: CurveDialogPanel.java,v 1.1 2003/10/02 20:48:52 redwood Exp $
+ * @see Curve
  */
-public class CurveDialogPanel extends GEDialogPanel {
+public class CurveDialogPanel extends GEDialogPanel
+{
+	/**
+	 *
+	 */
+	protected final String BASIC = "Basic";
+	/**
+	 *
+	 */
+	protected final String CURVE = "Curve";
+	/**
+	 *
+	 */
+	protected final String SYMBOL = "Symbol";
+	/**
+	 *
+	 */
+	private JTextField textField, dataPerSymbolField, thicknessField,
+			dashArrayField;
+	private JCheckBox symbolCheck, lineCheck;
+	private SymbolDialogPanel symbolPanel;
 	/**
 	 * constructor
 	 */
-	public CurveDialogPanel(Curve curve) {
+	public CurveDialogPanel(Curve curve)
+	{
 		super(curve);
 	}
 
 	/**
 	 * creates panels
 	 */
-	protected JPanel createPanel() {
+	protected JPanel createPanel()
+	{
 		JPanel basicPanel = super.createPanel();
 		// text editing
 		Curve curve = (Curve) getGraphicElement();
@@ -43,13 +65,14 @@ public class CurveDialogPanel extends GEDialogPanel {
 		textField = new JTextField(attr._curveName, 15);
 		textField.setBorder(BorderFactory.createTitledBorder(BorderFactory
 				.createEtchedBorder(), "Curve Name"));
-		// 
+		//
 		thicknessField = new JTextField(new Float(attr._thickness).toString(),
 				5);
 		thicknessField.setBorder(BorderFactory.createTitledBorder(BorderFactory
 				.createEtchedBorder(), "thickness"));
 		StringBuffer dashsb = new StringBuffer(10);
-		for (int i = 0; i < attr._dashArray.length; i++) {
+		for(int i = 0; i < attr._dashArray.length; i++)
+		{
 			dashsb.append(new Float(attr._dashArray[i]).toString());
 			dashsb.append(" ");
 		}
@@ -80,7 +103,7 @@ public class CurveDialogPanel extends GEDialogPanel {
 		curvePanel.setLayout(new GridLayout(curvePanel.getComponentCount(), 1));
 		//
 		symbolPanel = new SymbolDialogPanel(curve.getSymbol());
-		//  
+		//
 		JTabbedPane interiorPane = new JTabbedPane();
 		interiorPane.addTab(BASIC, null, basicPanel);
 		interiorPane.addTab(CURVE, null, curvePanel);
@@ -97,66 +120,60 @@ public class CurveDialogPanel extends GEDialogPanel {
 	/**
 	 * apply changes for both the basic graphic element and its specialization
 	 */
-	public void applyChanges() {
+	public void applyChanges()
+	{
 		super.applyChanges();
 		symbolPanel.applyChanges();
 		Curve curve = (Curve) getGraphicElement();
 		CurveAttr attr = (CurveAttr) curve.getAttributes();
 		attr._curveName = textField.getText();
-		try {
+		try
+		{
 			attr._thickness = new Float(thicknessField.getText()).floatValue();
-		} catch (NumberFormatException nfe) {
+		}
+		catch(NumberFormatException nfe)
+		{
 			System.err.println("Incorrect thickness spec");
 		}
 
-		try {
+		try
+		{
 			StringTokenizer st = new StringTokenizer(dashArrayField.getText()
-					.trim());
+																   .trim());
 			int count = st.countTokens();
-			if (count > 0) {
+			if(count > 0)
+			{
 				float[] array = new float[count];
 				int i = 0;
-				while (st.hasMoreTokens()) {
+				while(st.hasMoreTokens())
+				{
 					array[i] = new Float(st.nextToken()).floatValue();
 					i++;
 				}
 				attr._dashArray = array;
 			}
-		} catch (NumberFormatException nfe) {
+		}
+		catch(NumberFormatException nfe)
+		{
 			System.err.println("Error in dash array");
 		}
 
 		int dps = attr._dataPerSymbol;
-		try {
+		try
+		{
 			dps = new Integer(dataPerSymbolField.getText()).intValue();
-		} catch (NumberFormatException nfe) {
+		}
+		catch(NumberFormatException nfe)
+		{
 			System.err.println("Incorrect value for Data Per Symbol Field");
 		}
 		attr._dataPerSymbol = dps;
 		attr._drawSymbol = symbolCheck.isSelected();
 		attr._drawLines = lineCheck.isSelected();
-		if (attr._drawSymbol)
+		if(attr._drawSymbol)
+		{
 			curve.setSymbol((Symbol) symbolPanel.getGraphicElement());
+		}
 	}
-
-	/**
-   *
-   */
-	private JTextField textField, dataPerSymbolField, thicknessField,
-			dashArrayField;
-	private JCheckBox symbolCheck, lineCheck;
-	private SymbolDialogPanel symbolPanel;
-	/**
- *
- */
-	protected final String BASIC = "Basic";
-	/**
- *
- */
-	protected final String CURVE = "Curve";
-	/**
- *
- */
-	protected final String SYMBOL = "Symbol";
 
 }

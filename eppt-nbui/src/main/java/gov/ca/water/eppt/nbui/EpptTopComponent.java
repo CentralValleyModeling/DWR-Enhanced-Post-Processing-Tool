@@ -35,6 +35,7 @@ import org.openide.windows.WindowManager;
 public abstract class EpptTopComponent extends TopComponent
 {
 	private static final Logger LOGGER = Logger.getLogger(EpptTopComponent.class.getName());
+
 	public abstract String getJavaHelpId();
 
 	@Override

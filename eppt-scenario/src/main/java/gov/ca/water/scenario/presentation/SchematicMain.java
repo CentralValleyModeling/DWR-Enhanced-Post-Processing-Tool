@@ -14,12 +14,10 @@ package gov.ca.water.scenario.presentation;
 
 import java.awt.Toolkit;
 import java.awt.geom.AffineTransform;
-import java.util.ArrayList;
 import java.util.List;
 import javax.swing.*;
 
 import gov.ca.water.businessservice.impl.XMLParsingSvcImpl;
-import gov.ca.water.calgui.bo.RBListItemBO;
 import gov.ca.water.calgui.constant.Constant;
 import gov.ca.water.calgui.presentation.DisplayHelper;
 import gov.ca.water.calgui.project.EpptScenarioRun;

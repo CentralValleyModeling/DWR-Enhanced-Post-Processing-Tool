@@ -36,17 +36,25 @@ import javax.swing.text.StyleConstants;
  * a PrintStream, PrintWriter, or of a running process in a swing text
  * component. The text from the output and error pipes to the child process can
  * be displayed with whatever character attributes desired.
- * 
+ *
  * @author Timothy Prinzing
  * @version 1.2 03/04/99
  */
-public class SystemConsole extends JFrame {
+public class SystemConsole extends JFrame
+{
+
+	private JScrollPane _scrollPane;
+	private JTextComponent outputArea;
+	private AttributeSet outputAttr;
+	private AttributeSet errorAttr;
+	private PrintStream orgOut, orgErr;
 
 	/**
 	 * Create a console display. By default the text region is set to not be
 	 * editable.
 	 */
-	public SystemConsole() {
+	public SystemConsole()
+	{
 		_scrollPane = new JScrollPane();
 		outputArea = createOutputArea();
 		outputArea.setEditable(false);
@@ -59,18 +67,24 @@ public class SystemConsole extends JFrame {
 		JButton clearBtn = new JButton("Clear");
 		JButton saveBtn = new JButton("Save");
 		JButton quitBtn = new JButton("Quit");
-		clearBtn.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent evt) {
+		clearBtn.addActionListener(new ActionListener()
+		{
+			public void actionPerformed(ActionEvent evt)
+			{
 				clear();
 			}
 		});
-		saveBtn.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent evt) {
+		saveBtn.addActionListener(new ActionListener()
+		{
+			public void actionPerformed(ActionEvent evt)
+			{
 				save();
 			}
 		});
-		quitBtn.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent evt) {
+		quitBtn.addActionListener(new ActionListener()
+		{
+			public void actionPerformed(ActionEvent evt)
+			{
 				setVisible(false);
 			}
 		});
@@ -90,7 +104,8 @@ public class SystemConsole extends JFrame {
 	 * Create the component to be used to display the process output. This is a
 	 * hook to allow the component used to be customized.
 	 */
-	protected JTextComponent createOutputArea() {
+	protected JTextComponent createOutputArea()
+	{
 		JTextPane pane = new JTextPane();
 		return pane;
 	}
@@ -99,7 +114,8 @@ public class SystemConsole extends JFrame {
 	 * Create a PrintStream that will display in the console using the given
 	 * attributes.
 	 */
-	public PrintStream createPrintStream(AttributeSet a) {
+	public PrintStream createPrintStream(AttributeSet a)
+	{
 		Document doc = outputArea.getDocument();
 		OutputStream out = new DocumentOutputStream(doc, a);
 		PrintStream pOut = new PrintStream(out);
@@ -110,7 +126,8 @@ public class SystemConsole extends JFrame {
 	 * Create a PrintWriter that will display in the console using the given
 	 * attributes.
 	 */
-	public PrintWriter createPrintWriter(AttributeSet a) {
+	public PrintWriter createPrintWriter(AttributeSet a)
+	{
 		Document doc = outputArea.getDocument();
 		Writer out = new DocumentWriter(doc, a);
 		PrintWriter pOut = new PrintWriter(out);
@@ -123,47 +140,53 @@ public class SystemConsole extends JFrame {
 	 * attached. This can be useful for things like compiler output where
 	 * clicking on an error warps another view to the location of the error.
 	 */
-	public JTextComponent getOutputArea() {
+	public JTextComponent getOutputArea()
+	{
 		return outputArea;
-	}
-
-	/**
-	 * Set the attributes to use when displaying the output pipe to the process
-	 * being monitored.
-	 */
-	public void setOutputAttributes(AttributeSet a) {
-		outputAttr = a.copyAttributes();
 	}
 
 	/**
 	 * Get the attributes being used when displaying the output pipe to the
 	 * process being monitored.
 	 */
-	public AttributeSet getOutputAttributes() {
+	public AttributeSet getOutputAttributes()
+	{
 		return outputAttr;
 	}
 
 	/**
-	 * Set the attributes to use when displaying the error pipe to the process
+	 * Set the attributes to use when displaying the output pipe to the process
 	 * being monitored.
 	 */
-	public void setErrorAttributes(AttributeSet a) {
-		errorAttr = a.copyAttributes();
+	public void setOutputAttributes(AttributeSet a)
+	{
+		outputAttr = a.copyAttributes();
 	}
 
 	/**
 	 * Get the attributes being used when displaying the error pipe to the
 	 * process being monitored.
 	 */
-	public AttributeSet getErrorAttributes() {
+	public AttributeSet getErrorAttributes()
+	{
 		return errorAttr;
+	}
+
+	/**
+	 * Set the attributes to use when displaying the error pipe to the process
+	 * being monitored.
+	 */
+	public void setErrorAttributes(AttributeSet a)
+	{
+		errorAttr = a.copyAttributes();
 	}
 
 	/**
 	 * Set output streams System.out and System.err to this console with
 	 * different attributes
 	 */
-	public void setOutput() {
+	public void setOutput()
+	{
 		Document doc = outputArea.getDocument();
 		// set the output stream attributes
 		setOutputAttributes(new SimpleAttributeSet());
@@ -172,7 +195,8 @@ public class SystemConsole extends JFrame {
 		setErrorAttributes(attr);
 		PrintStream pOut = createPrintStream(getOutputAttributes());
 		PrintStream pErr = createPrintStream(getErrorAttributes());
-		if (orgOut == null) {
+		if(orgOut == null)
+		{
 			orgOut = System.out;
 			orgErr = System.err;
 		}
@@ -181,18 +205,21 @@ public class SystemConsole extends JFrame {
 	}
 
 	/**
-    *
-    */
-	public void resetSystemOutput() {
+	 *
+	 */
+	public void resetSystemOutput()
+	{
 		System.setOut(orgOut);
 		System.setErr(orgErr);
 	}
 
 	/**
-    *
-    */
-	public void setVisible(boolean b) {
-		if (b) {
+	 *
+	 */
+	public void setVisible(boolean b)
+	{
+		if(b)
+		{
 			orgOut.flush();
 			orgErr.flush();
 		}
@@ -200,35 +227,39 @@ public class SystemConsole extends JFrame {
 	}
 
 	/**
-    *
-    */
-	private void clear() {
-		try {
+	 *
+	 */
+	private void clear()
+	{
+		try
+		{
 			Document doc = outputArea.getDocument();
 			doc.remove(0, doc.getLength());
-		} catch (BadLocationException be) {
+		}
+		catch(BadLocationException be)
+		{
 			be.printStackTrace(System.err);
 		}
 	}
 
 	/**
-    *
-    */
-	private void save() {
+	 *
+	 */
+	private void save()
+	{
 		String saveFile = VistaUtils.getFilenameFromDialog(this,
 				FileDialog.SAVE, "txt", "Text File");
-		if (saveFile == null)
+		if(saveFile == null)
+		{
 			return;
-		try {
+		}
+		try
+		{
 			outputArea.write(new FileWriter(saveFile));
-		} catch (Exception e) {
+		}
+		catch(Exception e)
+		{
 			e.printStackTrace(System.err);
 		}
 	}
-
-	private JScrollPane _scrollPane;
-	private JTextComponent outputArea;
-	private AttributeSet outputAttr;
-	private AttributeSet errorAttr;
-	private PrintStream orgOut, orgErr;
 }

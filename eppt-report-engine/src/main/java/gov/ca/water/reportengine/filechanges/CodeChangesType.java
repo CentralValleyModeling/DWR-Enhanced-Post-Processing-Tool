@@ -14,31 +14,30 @@ package gov.ca.water.reportengine.filechanges;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 public class CodeChangesType
 {
 
-    private final String _name;
-    private final List<CodeChangesSubType> _subTypes = new ArrayList<>();
+	private final String _name;
+	private final List<CodeChangesSubType> _subTypes = new ArrayList<>();
 
-    public CodeChangesType(String name)
-    {
-        _name = name;
-    }
+	public CodeChangesType(String name)
+	{
+		_name = name;
+	}
 
-    public void addSubtype(CodeChangesSubType subType)
-    {
-        _subTypes.add(subType);
-    }
+	public void addSubtype(CodeChangesSubType subType)
+	{
+		_subTypes.add(subType);
+	}
 
-    public List<CodeChangesSubType> getSubTypes()
-    {
-        return _subTypes;
-    }
+	public List<CodeChangesSubType> getSubTypes()
+	{
+		return _subTypes;
+	}
 
-    public String getName()
-    {
-        return _name;
-    }
+	public String getName()
+	{
+		return _name;
+	}
 }

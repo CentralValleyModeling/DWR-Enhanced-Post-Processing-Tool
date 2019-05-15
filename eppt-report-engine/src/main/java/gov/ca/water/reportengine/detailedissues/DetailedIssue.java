@@ -12,42 +12,41 @@
 
 package gov.ca.water.reportengine.detailedissues;
 
-import java.nio.file.Path;
-
 public class DetailedIssue
 {
 
-    private final int _subModuleID;
-    private final String _linkedVar;
-    private final int _guiLink;
-    private final int _thresholdLink;
+	private final int _subModuleID;
+	private final String _linkedVar;
+	private final int _guiLink;
+	private final int _thresholdLink;
 
-    public DetailedIssue(int subModuleID, String linkedVar, int guiLink, int thresholdLink)
-    {
-        _subModuleID = subModuleID;
-        _linkedVar = linkedVar;
-        _guiLink = guiLink;
-        _thresholdLink = thresholdLink;
+	public DetailedIssue(int subModuleID, String linkedVar, int guiLink, int thresholdLink)
+	{
+		_subModuleID = subModuleID;
+		_linkedVar = linkedVar;
+		_guiLink = guiLink;
+		_thresholdLink = thresholdLink;
 
-    }
+	}
 
-    public String getLinkedVar()
-    {
-        return  _linkedVar;
-    }
+	public String getLinkedVar()
+	{
+		return _linkedVar;
+	}
 
-    public int getSubModuleID()
-    {
-        return _subModuleID;
-    }
+	public int getSubModuleID()
+	{
+		return _subModuleID;
+	}
 
-    public int getGuiLink()
-    {
-        return _guiLink;
-    }
-    public int getThresholdLink()
-    {
-        return _thresholdLink;
-    }
+	public int getGuiLink()
+	{
+		return _guiLink;
+	}
+
+	public int getThresholdLink()
+	{
+		return _thresholdLink;
+	}
 
 }

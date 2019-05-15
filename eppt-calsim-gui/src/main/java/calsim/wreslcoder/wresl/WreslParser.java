@@ -35,40 +35,6 @@ import java.util.Vector;
  */
 public class WreslParser implements WreslParserConstants
 {
-	public static String version = "Wresl Parser Version 0.97";
-	public static File _lastFileParsed; // CB added
-	static java.io.PrintWriter goals, defines, globalDefines, weights, dssInit, externals, externalsLib;
-	static java.io.PrintWriter globalCodeSelect, globalDssInit, globalExternals, globalExternalsLib;
-	static java.io.PrintWriter _controlDefines, localDefines;
-	static ReportWriter svReport;
-	//  static InitSVWriter initSVReport;
-	//  static DumpSVWriter dumpSVReport;
-	static ReservedWords reservedList;    // predefined variables
-	static UniqueList tableDefList;       // stores rdbms table names
-	static UniqueList tagList;                            // stores goal names
-	// GLOBAL lists
-	static UniqueList valueDefList;       // stores names of value variables
-	static UniqueList tsDefList;                          // stores names of timeseries variables
-	static UniqueList dvarList;                           // stores names of decision variables
-	static UniqueList dllList;
-	// LOCAL lists
-	static UniqueList valueDefLocalList;          // stores names of value variables
-	static UniqueList tsDefLocalList;                     // stores names of timeseries variables
-	static UniqueList dvarLocalList;                      // stores names of decision variables
-	static Hashtable fileList;
-	static Hashtable tsParamList;
-	static Hashtable externalList;
-	static Hashtable sequenceList;
-	static Hashtable seqConditionList;
-	static Hashtable goalLocalList;
-	static Hashtable includeLocalList;
-	static PrintWriter logger;
-	static String rootDirectory;
-	static String _currentModel;
-	static Integer _currentOrder;
-	static String _currentOrderString;
-	static String _currentIncludeFile = " ";
-	static boolean _fileIsLocal = false;
 	private static final String[] tokenImage =
 			{
 					"<EOF>",
@@ -176,6 +142,40 @@ public class WreslParser implements WreslParserConstants
 					"\",\"",
 					"\")\"",
 			};
+	public static String version = "Wresl Parser Version 0.97";
+	public static File _lastFileParsed; // CB added
+	static java.io.PrintWriter goals, defines, globalDefines, weights, dssInit, externals, externalsLib;
+	static java.io.PrintWriter globalCodeSelect, globalDssInit, globalExternals, globalExternalsLib;
+	static java.io.PrintWriter _controlDefines, localDefines;
+	static ReportWriter svReport;
+	//  static InitSVWriter initSVReport;
+	//  static DumpSVWriter dumpSVReport;
+	static ReservedWords reservedList;    // predefined variables
+	static UniqueList tableDefList;       // stores rdbms table names
+	static UniqueList tagList;                            // stores goal names
+	// GLOBAL lists
+	static UniqueList valueDefList;       // stores names of value variables
+	static UniqueList tsDefList;                          // stores names of timeseries variables
+	static UniqueList dvarList;                           // stores names of decision variables
+	static UniqueList dllList;
+	// LOCAL lists
+	static UniqueList valueDefLocalList;          // stores names of value variables
+	static UniqueList tsDefLocalList;                     // stores names of timeseries variables
+	static UniqueList dvarLocalList;                      // stores names of decision variables
+	static Hashtable fileList;
+	static Hashtable tsParamList;
+	static Hashtable externalList;
+	static Hashtable sequenceList;
+	static Hashtable seqConditionList;
+	static Hashtable goalLocalList;
+	static Hashtable includeLocalList;
+	static PrintWriter logger;
+	static String rootDirectory;
+	static String _currentModel;
+	static Integer _currentOrder;
+	static String _currentOrderString;
+	static String _currentIncludeFile = " ";
+	static boolean _fileIsLocal = false;
 	//CB added to eliminate error "..user-mapped section open.." (when two parsers have "claim" to the local defines file)
 	static FileWriter _localDefinesFile;
 	// CB added

@@ -27,28 +27,32 @@ import hec.hecmath.HecMath;
 import hec.hecmath.TimeSeriesMath;
 import hec.io.DataContainer;
 import hec.io.TimeSeriesContainer;
+
 /**
  * Creates comparision plots using HEC DSSVue and instructions from a json file
  * <pre>
-{
-  "doDiffToFirst": "False",
-  "doAverage": "False",
-  "stime": "20JUL2009 0000",
-  "etime": "22JUL2009 0000",
-   "files": ["z:/somewhere/file1.dss","z:/somewhereelse/file2.dss","z:/anotherplace/file3.dss"],
-   "plots":[ 
-    { "title": "Nice 1", refs:["//BPLACE/SOMETYPE////", "//BPLACE/SOMETYPE////", "//BPLACE/SOMEOTHERTYPE////"]},
-    .....<as many as you want plots
-   ]
-}
+ * {
+ * "doDiffToFirst": "False",
+ * "doAverage": "False",
+ * "stime": "20JUL2009 0000",
+ * "etime": "22JUL2009 0000",
+ * "files": ["z:/somewhere/file1.dss","z:/somewhereelse/file2.dss","z:/anotherplace/file3.dss"],
+ * "plots":[
+ * { "title": "Nice 1", refs:["//BPLACE/SOMETYPE////", "//BPLACE/SOMETYPE////", "//BPLACE/SOMEOTHERTYPE////"]},
+ * .....<as many as you want plots
+ * ]
+ * }
  * </pre>
- * @author psandhu
  *
+ * @author psandhu
  */
-public class ComparePlots {
+public class ComparePlots
+{
 
-	public static void main(String[] args) throws Exception {
-		if (args.length < 1){
+	public static void main(String[] args) throws Exception
+	{
+		if(args.length < 1)
+		{
 			System.err.println("Usage: program file.json");
 			System.exit(1);
 		}
@@ -69,11 +73,14 @@ public class ComparePlots {
 		runCompare(files, pathsArray, titles, stime, etime, doAverage, doDiffToFirst);
 	}
 
-	private static List<String[]> parsePathArray(JsonElement jsonElement) {
+	private static List<String[]> parsePathArray(JsonElement jsonElement)
+	{
 		JsonArray plotsObj = jsonElement.getAsJsonArray();
 		ArrayList<String[]> pathsArray = new ArrayList<String[]>();
-		for(JsonElement e: plotsObj){
-			if (!e.isJsonObject()){
+		for(JsonElement e : plotsObj)
+		{
+			if(!e.isJsonObject())
+			{
 				continue;
 			}
 			JsonArray jarray = e.getAsJsonObject().get("refs").getAsJsonArray();
@@ -82,11 +89,14 @@ public class ComparePlots {
 		return pathsArray;
 	}
 
-	private static String[] parseTitles(JsonElement jsonElement) {
+	private static String[] parseTitles(JsonElement jsonElement)
+	{
 		JsonArray plotsObj = jsonElement.getAsJsonArray();
 		ArrayList<String> titles = new ArrayList<String>();
-		for(JsonElement e: plotsObj){
-			if (!e.isJsonObject()){
+		for(JsonElement e : plotsObj)
+		{
+			if(!e.isJsonObject())
+			{
 				continue;
 			}
 			titles.add(e.getAsJsonObject().get("title").getAsString());
@@ -95,9 +105,11 @@ public class ComparePlots {
 		return titles.toArray(array);
 	}
 
-	public static String[] convertToStringArray(JsonArray jArray) {
+	public static String[] convertToStringArray(JsonArray jArray)
+	{
 		ArrayList<String> list = new ArrayList<String>();
-		for(JsonElement e: jArray){
+		for(JsonElement e : jArray)
+		{
 			list.add(e.getAsString());
 		}
 		String[] array = new String[list.size()];
@@ -105,17 +117,22 @@ public class ComparePlots {
 	}
 
 	public static G2dDialog doCompare(String[] paths, HecDss[] dssfiles, String twStr, String title, boolean doAverage,
-			boolean diffToFirst) throws Exception {
+									  boolean diffToFirst) throws Exception
+	{
 		DataContainer[] data = new DataContainer[paths.length];
-		for (int i = 0; i < paths.length; i++) {
+		for(int i = 0; i < paths.length; i++)
+		{
 			DataContainer d = HecUtils.getMatching(dssfiles[i], paths[i], twStr);
-			if (doAverage) {
+			if(doAverage)
+			{
 				d = HecUtils.average(d, "1DAY");
 			}
 			data[i] = d;
 		}
-		if (diffToFirst) {
-			for (int i = 0; i < paths.length; i++) {
+		if(diffToFirst)
+		{
+			for(int i = 0; i < paths.length; i++)
+			{
 				HecMath diff = new TimeSeriesMath((TimeSeriesContainer) data[i])
 						.subtract(new TimeSeriesMath((TimeSeriesContainer) data[0]));
 				diff.getData().location = data[i].location + "-DIFF";
@@ -128,22 +145,26 @@ public class ComparePlots {
 	}
 
 	public static void runCompare(String[] files, List<String[]> pathsArray, String[] titles, String stime, String etime,
-			boolean doAverage, boolean doDiffToFirst) throws Exception {
+								  boolean doAverage, boolean doDiffToFirst) throws Exception
+	{
 		HecDss[] dssfiles = new HecDss[files.length];
 		int count = 0;
-		for (String f : files) {
+		for(String f : files)
+		{
 			HecDss d = HecUtils.openDSS(f);
 			// Do this after data retrieval is better? See doCompare function.
 			// d.setTimeWindow(stime, etime);
 			dssfiles[count++] = d;
 		}
 		String twStr = (stime == null || etime == null) ? null : stime + " " + etime;
-		for(int i=0; i < titles.length; i++){
+		for(int i = 0; i < titles.length; i++)
+		{
 			String title = titles[i];
 			String[] paths = pathsArray.get(i);
 			doCompare(paths, dssfiles, twStr, title, doAverage, doDiffToFirst);
 		}
-		for (HecDss d : dssfiles) {
+		for(HecDss d : dssfiles)
+		{
 			HecUtils.closeDSS(d);
 		}
 		System.out.println("END");

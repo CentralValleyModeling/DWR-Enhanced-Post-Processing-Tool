@@ -16,40 +16,49 @@ import javax.swing.*;
 /**
  * a model to list groups in a session.
  */
-public class SessionListModel extends AbstractListModel {
+public class SessionListModel extends AbstractListModel
+{
+	/**
+	 * this session
+	 */
+	private Session _session;
+
 	/**
 	 * A list model for this sesion
 	 */
-	public SessionListModel(Session s) {
+	public SessionListModel(Session s)
+	{
 		_session = s;
 	}
 
 	/**
 	 * return the session for this model
 	 */
-	public Session getSession() {
+	public Session getSession()
+	{
 		return _session;
 	}
 
 	/**
 	 * gets element at particular index
 	 */
-	public Object getElementAt(int index) {
+	public Object getElementAt(int index)
+	{
 		return _session.getGroup(index).toString();
 	}
 
 	/**
 	 * gets the size of the list
 	 */
-	public int getSize() {
-		if (_session != null)
+	public int getSize()
+	{
+		if(_session != null)
+		{
 			return _session.getNumberOfGroups();
+		}
 		else
+		{
 			return 0;
+		}
 	}
-
-	/**
-	 * this session
-	 */
-	private Session _session;
 }

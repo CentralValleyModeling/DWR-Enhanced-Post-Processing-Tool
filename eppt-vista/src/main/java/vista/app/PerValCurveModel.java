@@ -27,11 +27,12 @@ import vista.time.TimeInterval;
 
 /**
  * An interface containing the data required for drawing a Curve.
- * 
+ *
  * @author Nicky Sandhu
  * @version $Id: PerValCurveModel.java,v 1.1 2003/10/02 20:48:37 redwood Exp $
  */
-public class PerValCurveModel implements CurveDataModel {
+public class PerValCurveModel implements CurveDataModel
+{
 	private RegularTimeSeries _ds;
 	private DataSetIterator _dsi;
 	private double _xmax, _xmin, _ymax, _ymin;
@@ -44,16 +45,22 @@ public class PerValCurveModel implements CurveDataModel {
 	private Object _obj;
 
 	/**
-   *
-   */
+	 *
+	 */
 	public PerValCurveModel(RegularTimeSeries ds, ElementFilter f,
-			int xAxisPosition, int yAxisPosition, String legend) {
-		if (ds == null)
+							int xAxisPosition, int yAxisPosition, String legend)
+	{
+		if(ds == null)
+		{
 			throw new IllegalArgumentException("Null data set");
+		}
 		_ds = ds;
-		if (f == null) {
+		if(f == null)
+		{
 			_dsi = ds.getIterator();
-		} else {
+		}
+		else
+		{
 			_dsi = new ElementFilterIterator(ds.getIterator(), f);
 		}
 		DataSetElement dse = _dsi.getMaximum();
@@ -67,119 +74,139 @@ public class PerValCurveModel implements CurveDataModel {
 		_legendName = legend;
 		_ti = ds.getTimeInterval();
 		_contextDependentTI = _ti.isTimeContextDependent();
-		if (!_contextDependentTI)
+		if(!_contextDependentTI)
+		{
 			_interval = _ti.getIntervalInMinutes(null);
+		}
 		_atIntervalStart = true;
 	}
 
 	/**
-   *
-   */
+	 *
+	 */
 	public PerValCurveModel(RegularTimeSeries ds, ElementFilter f, int xap,
-			int yap) {
+							int yap)
+	{
 		this(ds, f, xap, yap, ds.getName());
 	}
 
 	/**
-   *
-   */
-	public PerValCurveModel(RegularTimeSeries ds, ElementFilter f) {
+	 *
+	 */
+	public PerValCurveModel(RegularTimeSeries ds, ElementFilter f)
+	{
 		this(ds, f, AxisAttr.BOTTOM, AxisAttr.LEFT, ds.getName());
 	}
 
 	/**
 	 * gets the maximum value for the x axis
 	 */
-	public double getXMax() {
+	public double getXMax()
+	{
 		return _xmax;
 	}
 
 	/**
 	 * gets the maximum value for the x axis
 	 */
-	public double getXMin() {
+	public double getXMin()
+	{
 		return _xmin;
 	}
 
 	/**
 	 * sets the maximum value for the current x axis
 	 */
-	public void setXViewMax(double max) {
+	public void setXViewMax(double max)
+	{
 
 	}
 
 	/**
 	 * gets the minimum value for the current x axis
 	 */
-	public void setXViewMin(double min) {
+	public void setXViewMin(double min)
+	{
 
 	}
 
 	/**
 	 * gets the maximum value for the x axis
 	 */
-	public double getYMax() {
+	public double getYMax()
+	{
 		return _ymax;
 	}
 
 	/**
 	 * gets the maximum value for the x axis
 	 */
-	public double getYMin() {
+	public double getYMin()
+	{
 		return _ymin;
 	}
 
 	/**
 	 * an object associated with this model.
 	 */
-	public Object getReferenceObject() {
+	public Object getReferenceObject()
+	{
 		return _obj;
 	}
 
 	/**
 	 * an object associated with this model.
 	 */
-	public void setReferenceObject(Object obj) {
+	public void setReferenceObject(Object obj)
+	{
 		_obj = obj;
 	}
 
 	/**
 	 * gets the interpolation type of the data
 	 */
-	public int getInterpolationType() {
+	public int getInterpolationType()
+	{
 		return PER_VAL;
 	}
 
 	/**
 	 * resets the data iterator to beginning of curve
 	 */
-	public void reset() {
+	public void reset()
+	{
 		_dsi.resetIterator();
 		_atIntervalStart = true;
 	}
 
 	/**
 	 * gets the next point
-	 * 
-	 * @param points
-	 *            is an array wher points[0] contains the next x value and
-	 *            points[1] contains the next y value
+	 *
+	 * @param points is an array wher points[0] contains the next x value and
+	 *               points[1] contains the next y value
 	 * @return an integer specifing movevment only or line drawing motion
 	 */
-	public int nextPoint(double[] points) {
+	public int nextPoint(double[] points)
+	{
 		int lineType = LINE_TO;
-		if (_atIntervalStart) {
+		if(_atIntervalStart)
+		{
 			DataSetElement dse = _dsi.getElement();
 			double val = getBeginningIntervalValue(dse.getX());
 			points[0] = val;
 			points[1] = dse.getY();
-			if (_dsi.atStart() || _dsi.hasSkipped() > 0) {
+			if(_dsi.atStart() || _dsi.hasSkipped() > 0)
+			{
 				lineType = MOVE_TO;
-			} else {
+			}
+			else
+			{
 				lineType = LINE_TO;
 			}
 			_atIntervalStart = false;
-		} else {
+		}
+		else
+		{
 			DataSetElement dse = _dsi.getElement();
 			points[0] = dse.getX();
 			points[1] = dse.getY();
@@ -191,14 +218,18 @@ public class PerValCurveModel implements CurveDataModel {
 	}
 
 	/**
-   *
-   */
-	public double getBeginningIntervalValue(double x) {
-		if (_contextDependentTI) {
+	 *
+	 */
+	public double getBeginningIntervalValue(double x)
+	{
+		if(_contextDependentTI)
+		{
 			Time tm = TimeFactory.getInstance().createTime(Math.round(x));
 			tm.incrementBy(_ti, -1);
 			return tm.getTimeInMinutes();
-		} else {
+		}
+		else
+		{
 			return (x - _interval);
 		}
 	}
@@ -206,51 +237,60 @@ public class PerValCurveModel implements CurveDataModel {
 	/**
 	 * @return true while has more points on curve
 	 */
-	public boolean hasMorePoints() {
+	public boolean hasMorePoints()
+	{
 		return !_dsi.atEnd() || !_atIntervalStart;
 	}
 
 	/**
 	 * gets teh legend text for this curve
 	 */
-	public String getLegendText() {
+	public String getLegendText()
+	{
 		return _legendName;
 	}
 
 	/**
 	 * get the x axis position for this curve
 	 */
-	public int getXAxisPosition() {
+	public int getXAxisPosition()
+	{
 		return _xap;
 	}
 
 	/**
 	 * geth the y axis position for this curve
 	 */
-	public int getYAxisPosition() {
+	public int getYAxisPosition()
+	{
 		return _yap;
 	}
 
 	/**
 	 * get the tick generator for x axis
 	 */
-	public TickGenerator getXAxisTickGenerator() {
+	public TickGenerator getXAxisTickGenerator()
+	{
 		return new TimeTickGenerator();
 	}
 
 	/**
 	 * get the tick generator for the y axis
 	 */
-	public TickGenerator getYAxisTickGenerator() {
+	public TickGenerator getYAxisTickGenerator()
+	{
 		return new SimpleTickGenerator();
 	}
 
 	/**
-   *
-   */
-	public void setFilter(Object f) {
-		if (f instanceof ElementFilter)
+	 *
+	 */
+	public void setFilter(Object f)
+	{
+		if(f instanceof ElementFilter)
+		{
 			_dsi = new ElementFilterIterator(_ds.getIterator(),
 					(ElementFilter) f);
+		}
 	}
 }

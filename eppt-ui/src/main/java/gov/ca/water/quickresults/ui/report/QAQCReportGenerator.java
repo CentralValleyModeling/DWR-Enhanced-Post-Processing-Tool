@@ -44,7 +44,8 @@ class QAQCReportGenerator
 		_consumer = consumer;
 	}
 
-	void generateQAQCReport(Path waterYearTable, Path waterYearLookup, EpptScenarioRun baseRun, EpptScenarioRun altRun, double tolerance, String author, String subtitle, Path outputPdf)
+	void generateQAQCReport(Path waterYearTable, Path waterYearLookup, EpptScenarioRun baseRun, EpptScenarioRun altRun, double tolerance,
+							String author, String subtitle, Path outputPdf)
 			throws QAQCReportException
 	{
 		Path path = writeReportData(waterYearTable, waterYearLookup, baseRun, altRun, tolerance, author, subtitle);
@@ -52,7 +53,8 @@ class QAQCReportGenerator
 		processRunner.run();
 	}
 
-	private Path writeReportData(Path waterYearTable, Path waterYearLookup, EpptScenarioRun baseRun, EpptScenarioRun altRun, double tolerance, String author, String subtitle)
+	private Path writeReportData(Path waterYearTable, Path waterYearLookup, EpptScenarioRun baseRun, EpptScenarioRun altRun, double tolerance,
+								 String author, String subtitle)
 			throws QAQCReportException
 	{
 		try

@@ -16,13 +16,18 @@ import vista.time.TimeFactory;
 import vista.time.TimeInterval;
 
 /**
-   * 
-   */
-public class DefaultTimeData implements TimeData {
+ *
+ */
+public class DefaultTimeData implements TimeData
+{
+	private Time _stime;
+	private TimeInterval _ti;
+	private boolean _first;
 	/**
-    *
-    */
-	public DefaultTimeData(String startTime, String timeInterval) {
+	 *
+	 */
+	public DefaultTimeData(String startTime, String timeInterval)
+	{
 		_stime = TimeFactory.getInstance().createTime(startTime);
 		_ti = TimeFactory.getInstance().createTimeInterval(timeInterval);
 		_first = true;
@@ -31,15 +36,16 @@ public class DefaultTimeData implements TimeData {
 	/**
 	 * get next time value string
 	 */
-	public String getNextValue() {
-		if (_first)
+	public String getNextValue()
+	{
+		if(_first)
+		{
 			_first = false;
+		}
 		else
+		{
 			_stime.incrementBy(_ti);
+		}
 		return _stime.toString();
 	}
-
-	private Time _stime;
-	private TimeInterval _ti;
-	private boolean _first;
 }

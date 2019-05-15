@@ -15,11 +15,12 @@ import java.util.ArrayList;
 
 /**
  * Describes a location.
- * 
+ *
  * @author Nicky Sandhu
  * @version $Id: Location.java,v 1.1 2003/10/02 20:49:26 redwood Exp $
  */
-public class Location {
+public class Location
+{
 	/**
 	 * coordinates
 	 */
@@ -30,7 +31,8 @@ public class Location {
 	/**
 	 * creates a location with given name, x and y coordinates
 	 */
-	public Location(String name, double x, double y) {
+	public Location(String name, double x, double y)
+	{
 		_name = name;
 		_aliases = new ArrayList<String>();
 		_x = x;
@@ -40,35 +42,40 @@ public class Location {
 	/**
 	 * @return the x coordinate
 	 */
-	public double getX() {
+	public double getX()
+	{
 		return _x;
 	}
 
 	/**
 	 * @return the y coordinate
 	 */
-	public double getY() {
+	public double getY()
+	{
 		return _y;
 	}
 
 	/**
 	 * @return the name of location
 	 */
-	public String getName() {
+	public String getName()
+	{
 		return _name;
 	}
 
 	/**
 	 * adds an alias to this location
 	 */
-	public void addAlias(String alias) {
+	public void addAlias(String alias)
+	{
 		_aliases.add(alias);
 	}
 
 	/**
 	 * returns the list of aliases for this location.
 	 */
-	public String[] getAliases() {
+	public String[] getAliases()
+	{
 		String[] names = new String[_aliases.size()];
 		return _aliases.toArray(names);
 	}

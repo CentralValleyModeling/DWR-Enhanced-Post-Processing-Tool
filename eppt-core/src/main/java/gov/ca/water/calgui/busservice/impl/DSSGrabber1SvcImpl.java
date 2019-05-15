@@ -82,6 +82,10 @@ public class DSSGrabber1SvcImpl implements IDSSGrabber1Svc
 	final Map<GUILinksAllModelsBO.Model, String> _primaryDSSName = new HashMap<>();
 	final Map<GUILinksAllModelsBO.Model, String> _secondaryDSSName = new HashMap<>();
 	final Map<GUILinksAllModelsBO.Model, String> _thresholdDSSName = new HashMap<>();
+	final List<EpptScenarioRun> _alternatives = new ArrayList<>();
+	private final IGuiLinksSeedDataSvc _seedDataSvc = GuiLinksSeedDataSvcImpl.getSeedDataSvcImplInstance();
+	private final ThresholdLinksSeedDataSvc _thresholdLinksSeedDataSvc = ThresholdLinksSeedDataSvc.getSeedDataSvcImplInstance();
+	private final Map<GUILinksAllModelsBO.Model, List<String>> _missingDSSRecords = new HashMap<>();
 	// Chart title
 	String _plotTitle;
 	// Y-axis label
@@ -96,7 +100,6 @@ public class DSSGrabber1SvcImpl implements IDSSGrabber1Svc
 	int _endWY;
 	Project _project = ResultUtilsBO.getResultUtilsInstance().getProject();
 	EpptScenarioRun _baseScenarioRun;
-	final List<EpptScenarioRun> _alternatives = new ArrayList<>();
 	// Copy of original units
 	// Start and end time of interest
 	private int _startTime;
@@ -104,11 +107,8 @@ public class DSSGrabber1SvcImpl implements IDSSGrabber1Svc
 	// Number of scenarios passed in list parameter
 	private double[][] _annualTAFs;
 	private double[][] _annualTAFsDiff;
-	private final IGuiLinksSeedDataSvc _seedDataSvc = GuiLinksSeedDataSvcImpl.getSeedDataSvcImplInstance();
-	private final ThresholdLinksSeedDataSvc  _thresholdLinksSeedDataSvc = ThresholdLinksSeedDataSvc.getSeedDataSvcImplInstance();
 	private IDialogSvc _dialogSvc = DialogSvcImpl.getDialogSvcInstance();
 	private boolean _stopOnMissing;
-	private final Map<GUILinksAllModelsBO.Model, List<String>> _missingDSSRecords = new HashMap<>();
 	private ThresholdLinksBO _threshold;
 
 	public DSSGrabber1SvcImpl()
@@ -855,16 +855,16 @@ public class DSSGrabber1SvcImpl implements IDSSGrabber1Svc
 															  String dssPathName)
 	{
 		TimeSeriesContainer oneSeries = null;
-			Optional<TimeSeriesContainer> timeSeriesContainerOptional = dssContainer.getAllDssFiles().stream()
-																					.filter(Objects::nonNull)
-																					.map(p -> getOneSeries(p, dssPathName,
-																							model))
-																					.filter(Objects::nonNull)
-																					.findFirst();
-			if(timeSeriesContainerOptional.isPresent())
-			{
-				oneSeries = timeSeriesContainerOptional.get();
-			}
+		Optional<TimeSeriesContainer> timeSeriesContainerOptional = dssContainer.getAllDssFiles().stream()
+																				.filter(Objects::nonNull)
+																				.map(p -> getOneSeries(p, dssPathName,
+																						model))
+																				.filter(Objects::nonNull)
+																				.findFirst();
+		if(timeSeriesContainerOptional.isPresent())
+		{
+			oneSeries = timeSeriesContainerOptional.get();
+		}
 
 		return oneSeries;
 	}

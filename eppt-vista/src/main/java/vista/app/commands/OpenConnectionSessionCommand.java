@@ -21,25 +21,28 @@ import vista.set.Session;
 
 /**
  * Encapsulates commands implementing session related commands
- * 
+ *
  * @author Nicky Sandhu
  * @version $Id: OpenConnectionSessionCommand.java,v 1.1 2003/10/02 20:48:36
- *          redwood Exp $
+ * redwood Exp $
  */
-public class OpenConnectionSessionCommand implements Command {
+public class OpenConnectionSessionCommand implements Command
+{
 	private SessionContext _app;
 
 	/**
 	 * opens session and sets current session to
 	 */
-	public OpenConnectionSessionCommand(SessionContext app) {
+	public OpenConnectionSessionCommand(SessionContext app)
+	{
 		_app = app;
 	}
 
 	/**
 	 * executes command
 	 */
-	public void execute() throws ExecutionException {
+	public void execute() throws ExecutionException
+	{
 		Session s = _app.getCurrentSession();
 		BDATConnectionDialog dialog = new BDATConnectionDialog();
 		BDATConnection connection = dialog.getConnection();
@@ -49,19 +52,22 @@ public class OpenConnectionSessionCommand implements Command {
 	/**
 	 * unexecutes command or throws exception if not unexecutable
 	 */
-	public void unexecute() throws ExecutionException {
+	public void unexecute() throws ExecutionException
+	{
 	}
 
 	/**
 	 * checks if command is executable.
 	 */
-	public boolean isUnexecutable() {
+	public boolean isUnexecutable()
+	{
 		return false;
 	}
 
 	/**
 	 * writes to script
 	 */
-	public void toScript(StringBuffer buf) {
+	public void toScript(StringBuffer buf)
+	{
 	}
 } // end of OpenConnectionSessionCommand

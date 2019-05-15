@@ -31,10 +31,9 @@ import org.jfree.data.time.Month;
 public class DisplayHelper
 {
 	private static final Logger LOGGER = Logger.getLogger(DisplayHelper.class.getName());
-
+	private static PlotHandler _topComponentPlotHandler = new DefaultPlotHandler();
 	private final ExecutorService _executorService;
 	private final Component _component;
-	private static PlotHandler _topComponentPlotHandler = new DefaultPlotHandler();
 
 	public DisplayHelper(Component comp)
 	{

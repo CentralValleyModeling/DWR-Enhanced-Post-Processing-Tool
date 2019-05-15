@@ -13,10 +13,8 @@
 package gov.ca.water.quickresults.ui.projectconfig.scenariotable;
 
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 import gov.ca.water.calgui.project.EpptScenarioRun;
 
@@ -128,8 +126,8 @@ class ScenarioTableModel extends RmaTreeTableModel<ParentRowModel>
 	{
 		return getRows()
 				.stream()
-				.filter(r->r instanceof ScenarioRowModel)
-				.map(r->(ScenarioRowModel)r)
+				.filter(r -> r instanceof ScenarioRowModel)
+				.map(r -> (ScenarioRowModel) r)
 				.filter(ScenarioRowModel::isBase)
 				.findAny()
 				.map(ScenarioRowModel::getScenarioRun)
@@ -140,8 +138,8 @@ class ScenarioTableModel extends RmaTreeTableModel<ParentRowModel>
 	{
 		return getRows()
 				.stream()
-				.filter(r->r instanceof ScenarioRowModel)
-				.map(r->(ScenarioRowModel)r)
+				.filter(r -> r instanceof ScenarioRowModel)
+				.map(r -> (ScenarioRowModel) r)
 				.filter(ScenarioRowModel::isAlternative)
 				.map(ScenarioRowModel::getScenarioRun)
 				.collect(toList());
@@ -151,8 +149,8 @@ class ScenarioTableModel extends RmaTreeTableModel<ParentRowModel>
 	{
 		return getRows()
 				.stream()
-				.filter(r->r instanceof ScenarioRowModel)
-				.map(r->(ScenarioRowModel)r)
+				.filter(r -> r instanceof ScenarioRowModel)
+				.map(r -> (ScenarioRowModel) r)
 				.map(ScenarioRowModel::getScenarioRun)
 				.collect(toList());
 	}

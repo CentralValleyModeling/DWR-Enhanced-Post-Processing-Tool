@@ -11,37 +11,36 @@
  */
 
 package gov.ca.water.reportengine.executivereport;
+
 import java.util.ArrayList;
 import java.util.List;
 
 public class Module
 {
 
-    private final String _modName;
+	private final String _modName;
 
-    private List<SubModule> _subModules = new ArrayList<>();
+	private List<SubModule> _subModules = new ArrayList<>();
 
-    public Module(String modName)
-    {
-        _modName = modName;
-    }
+	public Module(String modName)
+	{
+		_modName = modName;
+	}
 
-    public String getName()
-    {
-        return _modName;
-    }
+	public String getName()
+	{
+		return _modName;
+	}
 
-    public void addSubModule(SubModule subMod)
-    {
-        _subModules.add(subMod);
-    }
+	public void addSubModule(SubModule subMod)
+	{
+		_subModules.add(subMod);
+	}
 
-    public List<SubModule> getSubModules()
-    {
-        return _subModules;
-    }
-
-
+	public List<SubModule> getSubModules()
+	{
+		return _subModules;
+	}
 
 
 }

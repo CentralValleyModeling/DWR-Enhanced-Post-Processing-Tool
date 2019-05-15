@@ -79,7 +79,8 @@ public class EPPTReport
 
 	private List<DetailedIssue> _allDetailedIssues;
 
-	public EPPTReport(Path wyTypeTable,Path wyNameLookup, Path pathToWriteOut, EpptScenarioRun baseRun, List<EpptScenarioRun> altRuns, double tolerance, String author, String subtitle)
+	public EPPTReport(Path wyTypeTable, Path wyNameLookup, Path pathToWriteOut, EpptScenarioRun baseRun, List<EpptScenarioRun> altRuns,
+					  double tolerance, String author, String subtitle)
 	{
 		_wyTypeTable = wyTypeTable;
 		_wyNameLookup = wyNameLookup;
@@ -130,27 +131,27 @@ public class EPPTReport
 
 			//create and add the report title page
 			LOGGER.at(Level.INFO).log("Generate QAQC Title page data");
-			rootElement.appendChild( createTitlePageElem(doc));
+			rootElement.appendChild(createTitlePageElem(doc));
 
 			//code changes and assump have to be the same model
 
 			//create and add the executive report
 			LOGGER.at(Level.INFO).log("Generate QAQC Executive Summary data");
-			rootElement.appendChild( createExecutiveReportElem(runsToFlagViolations, fileChangeStats, doc));
+			rootElement.appendChild(createExecutiveReportElem(runsToFlagViolations, fileChangeStats, doc));
 
 			//create and add the detailed issues
 			LOGGER.at(Level.INFO).log("Generate QAQC Detailed Issues data");
-			rootElement.appendChild( createDetailedIssueReportElem(runsToFlagViolations, doc));
+			rootElement.appendChild(createDetailedIssueReportElem(runsToFlagViolations, doc));
 
 			//create and add the assumption changes
 			if(!fileChangeStats.isEmpty())
 			{
 				LOGGER.at(Level.INFO).log("Generate QAQC Assumption Changes data");
-				rootElement.appendChild( createAssumptionChangesElem(fileChangeStats.get(0), doc));
+				rootElement.appendChild(createAssumptionChangesElem(fileChangeStats.get(0), doc));
 
 				//create and add the code changes
 				LOGGER.at(Level.INFO).log("Generate QAQC Code Changes data");
-				rootElement.appendChild( createCodeChangesElem(_baseRun.getOutputPath(), _altRuns.get(0), doc));
+				rootElement.appendChild(createCodeChangesElem(_baseRun.getOutputPath(), _altRuns.get(0), doc));
 			}
 			LOGGER.at(Level.INFO).log("Writing data to XML: {0}", _pathToWriteOut);
 			writeXmlFile(doc);
@@ -187,7 +188,8 @@ public class EPPTReport
 		transformer.transform(domSource, streamResult);
 	}
 
-	private Element createDetailedIssueReportElem(Map<EpptScenarioRun, Map<SubModule, List<FlagViolation>>> runsToFlagViolations, Document doc) throws EpptReportException
+	private Element createDetailedIssueReportElem(Map<EpptScenarioRun, Map<SubModule, List<FlagViolation>>> runsToFlagViolations, Document doc)
+			throws EpptReportException
 	{
 		List<EpptScenarioRun> allRuns = new ArrayList<>();
 		allRuns.add(_baseRun);
@@ -224,7 +226,8 @@ public class EPPTReport
 		return assumpCreater.createAssumptionChangesElement(doc, fileChangesStatistics);
 	}
 
-	private Element createExecutiveReportElem(Map<EpptScenarioRun, Map<SubModule, List<FlagViolation>>> runsToFlagViolations, List<FileChangesStatistics> fileChangesStatistics, Document doc)
+	private Element createExecutiveReportElem(Map<EpptScenarioRun, Map<SubModule, List<FlagViolation>>> runsToFlagViolations,
+											  List<FileChangesStatistics> fileChangesStatistics, Document doc)
 	{
 		Element execRootElem = doc.createElement("executive-report");
 		ExecutiveReportXMLCreator erWriter = new ExecutiveReportXMLCreator();
@@ -233,7 +236,8 @@ public class EPPTReport
 		allRuns.add(_baseRun);
 		allRuns.addAll(_altRuns);
 
-		Element executiveReportTableElement = erWriter.createExecutiveReportTableElement(allRuns, runsToFlagViolations, _modules, fileChangesStatistics, true, doc);
+		Element executiveReportTableElement = erWriter.createExecutiveReportTableElement(allRuns, runsToFlagViolations, _modules,
+				fileChangesStatistics, true, doc);
 		execRootElem.appendChild(executiveReportTableElement);
 		return execRootElem;
 	}
@@ -298,6 +302,7 @@ public class EPPTReport
 		GUILinksAllModelsBO.Model model = _baseRun.getModel();
 		return Paths.get(CONFIG_DIR).resolve(model.toString()).resolve(STATE_VAR_CSV);
 	}
+
 	private Path getCodeChangesCsv()
 	{
 		GUILinksAllModelsBO.Model model = _baseRun.getModel();

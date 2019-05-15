@@ -43,8 +43,8 @@ public final class ModelRunSvcImpl implements IModelRunSvc
 
 	private static final Logger LOG = Logger.getLogger(ModelRunSvcImpl.class.getName());
 	private static int SIMULTANEOUS_RUNS = Math.max(1, Runtime.getRuntime().availableProcessors());
-	private Properties _properties = new Properties();
 	private static IErrorHandlingSvc _errorHandlingSvc = new ErrorHandlingSvcImpl();
+	private Properties _properties = new Properties();
 	private int _wsdiIterations;
 	private IDialogSvc _dialogSvc = DialogSvcImpl.getDialogSvcInstance();
 
@@ -355,7 +355,7 @@ public final class ModelRunSvcImpl implements IModelRunSvc
 	{
 		File batchFile = new File(System.getProperty("user.dir"), "CalLite_w2.bat");
 		boolean result = batchFile.delete();
-		if (!result)
+		if(!result)
 		{
 			LOG.error("Unable to delete batch file: " + batchFile.getAbsolutePath());
 		}

@@ -43,8 +43,8 @@ public final class ThresholdLinksSeedDataSvc
 	private static final int MODEL_INDEX = 1;
 	private static final int THRESHOLD_INDEX = 2;
 	private static final int LABEL_INDEX = 3;
-	private final Map<Integer, ThresholdLinksBO> _thresholdLinks = new HashMap<>();
 	private static ThresholdLinksSeedDataSvc seedDataSvc;
+	private final Map<Integer, ThresholdLinksBO> _thresholdLinks = new HashMap<>();
 
 	/**
 	 * This will read the Threshold_Links.csv files and build the list and maps of {@link ThresholdLinksBO}
@@ -80,6 +80,17 @@ public final class ThresholdLinksSeedDataSvc
 		{
 			seedDataSvc = new ThresholdLinksSeedDataSvc();
 		}
+	}
+
+	/**
+	 * This will tell whether the line is comment or not.
+	 *
+	 * @param line The line to be checked.
+	 * @return Will return true if the line id not comment.
+	 */
+	private static boolean isNotComments(String line)
+	{
+		return !line.startsWith(Constant.EXCLAMATION);
 	}
 
 	private void initThresholdLinksAllModels() throws EpptInitializationException
@@ -140,20 +151,9 @@ public final class ThresholdLinksSeedDataSvc
 		String label = "";
 		if(list.length > LABEL_INDEX)
 		{
-			label= list[LABEL_INDEX];
+			label = list[LABEL_INDEX];
 		}
 		return new ThresholdLinksBO(checkboxId, label);
-	}
-
-	/**
-	 * This will tell whether the line is comment or not.
-	 *
-	 * @param line The line to be checked.
-	 * @return Will return true if the line id not comment.
-	 */
-	private static boolean isNotComments(String line)
-	{
-		return !line.startsWith(Constant.EXCLAMATION);
 	}
 
 	ThresholdLinksBO getObjById(int id)

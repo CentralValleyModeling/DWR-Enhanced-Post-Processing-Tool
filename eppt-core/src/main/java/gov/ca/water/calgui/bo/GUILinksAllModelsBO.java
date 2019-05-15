@@ -84,22 +84,22 @@ public class GUILinksAllModelsBO
 	public Map<Model, String> getPrimary()
 	{
 		return Model.values().stream()
-					 .map(this::getModelData)
-					 .filter(Optional::isPresent)
-					 .map(Optional::get)
-					 .filter(data->data.getPrimary() != null)
-					 .collect(toMap(ModelData::getModel, ModelData::getPrimary));
+					.map(this::getModelData)
+					.filter(Optional::isPresent)
+					.map(Optional::get)
+					.filter(data -> data.getPrimary() != null)
+					.collect(toMap(ModelData::getModel, ModelData::getPrimary));
 	}
 
 	public Map<Model, String> getSecondary()
 	{
 		return Model.values().stream()
-					 .map(this::getModelData)
-					 .filter(Optional::isPresent)
-					 .map(Optional::get)
-					 .filter(data->data.getSecondary() != null)
-					 .filter(data->!data.getSecondary().isEmpty())
-					 .collect(toMap(ModelData::getModel, ModelData::getSecondary));
+					.map(this::getModelData)
+					.filter(Optional::isPresent)
+					.map(Optional::get)
+					.filter(data -> data.getSecondary() != null)
+					.filter(data -> !data.getSecondary().isEmpty())
+					.collect(toMap(ModelData::getModel, ModelData::getSecondary));
 	}
 
 	public static class Model

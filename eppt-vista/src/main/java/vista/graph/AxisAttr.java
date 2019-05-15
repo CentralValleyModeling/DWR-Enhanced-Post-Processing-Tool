@@ -14,12 +14,13 @@ package vista.graph;
 
 /**
  * Attributes of a Axis element
- * 
- * @see Axis
+ *
  * @author Nicky Sandhu (DWR).
  * @version $Id: AxisAttr.java,v 1.1 2003/10/02 20:48:48 redwood Exp $
+ * @see Axis
  */
-public class AxisAttr extends TickLineAttr {
+public class AxisAttr extends TickLineAttr
+{
 	/**
 	 * plot major tick labels?
 	 */
@@ -28,14 +29,20 @@ public class AxisAttr extends TickLineAttr {
 	 * plot axis label?
 	 */
 	public boolean _plotAxisLabel = true;
+	/**
+	 * The major tick label TickText attributes
+	 */
+	private TickTextAttr _ttxa = new TickTextAttr();
 
 	/**
 	 * copies the fields into the given GEAttr object. Also copies in the
 	 * TextLineAttr if the object is of that type.
 	 */
-	public void copyInto(GEAttr ga) {
+	public void copyInto(GEAttr ga)
+	{
 		super.copyInto(ga);
-		if (ga instanceof AxisAttr) {
+		if(ga instanceof AxisAttr)
+		{
 			AxisAttr tla = (AxisAttr) ga;
 			tla._plotMajorTickLabels = this._plotMajorTickLabels;
 			tla._plotAxisLabel = this._plotAxisLabel;
@@ -46,19 +53,16 @@ public class AxisAttr extends TickLineAttr {
 	/**
 	 * get the attributes of the major tick label element
 	 */
-	public TickTextAttr getTickTextAttributes() {
+	public TickTextAttr getTickTextAttributes()
+	{
 		return _ttxa;
 	}
 
 	/**
 	 * set the attributes of the labels for the major ticks
 	 */
-	public void getTickTextAttributes(TickTextAttr ttxa) {
+	public void getTickTextAttributes(TickTextAttr ttxa)
+	{
 		_ttxa = ttxa;
 	}
-
-	/**
-	 * The major tick label TickText attributes
-	 */
-	private TickTextAttr _ttxa = new TickTextAttr();
 }

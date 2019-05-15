@@ -12,101 +12,101 @@
 
 package gov.ca.water.quickresults.ui.projectconfig;
 
-import org.jfree.data.time.Month;
+import java.awt.Component;
 
-import java.awt.*;
+import org.jfree.data.time.Month;
 
 public class QuickStateBuilder
 {
 
-    QuickState.ComparisonType compType;
-    boolean isDisplayCFS;
-    boolean isDisplayTimeSeriesPlot;
-    boolean isDisplayBoxAndWhiskerPlot;
-    Month startMonthAndYear;
+	QuickState.ComparisonType compType;
+	boolean isDisplayCFS;
+	boolean isDisplayTimeSeriesPlot;
+	boolean isDisplayBoxAndWhiskerPlot;
+	Month startMonthAndYear;
 
-    public QuickStateBuilder()
-    {
+	public QuickStateBuilder()
+	{
 
-    }
+	}
 
-    public QuickStateBuilder withComparisonType(QuickState.ComparisonType compType)
-    {
-        compType = compType;
-        return this;
-    }
+	public QuickStateBuilder withComparisonType(QuickState.ComparisonType compType)
+	{
+		compType = compType;
+		return this;
+	}
 
-    public QuickStateBuilder withDisplayTimeSeriesPlot()
-    {
-        return this;
+	public QuickStateBuilder withDisplayTimeSeriesPlot()
+	{
+		return this;
 
-    }
+	}
 
-    public QuickStateBuilder withDisplayCFS()
-    {
-        return this;
+	public QuickStateBuilder withDisplayCFS()
+	{
+		return this;
 
-    }
+	}
 
-    public QuickStateBuilder withDisplayTAF()
-    {
-        return this;
+	public QuickStateBuilder withDisplayTAF()
+	{
+		return this;
 
-    }
+	}
 
-    public QuickStateBuilder withDisplayBoxAndWhiskerPlot()
-    {
-        return this;
+	public QuickStateBuilder withDisplayBoxAndWhiskerPlot()
+	{
+		return this;
 
-    }
+	}
 
-    public QuickStateBuilder withStartMonth(Month startMonth)
-    {
-        return this;
+	public QuickStateBuilder withStartMonth(Month startMonth)
+	{
+		return this;
 
-    }
+	}
 
-    public QuickStateBuilder withEndMonth(Month endMonth)
-    {
-        return this;
+	public QuickStateBuilder withEndMonth(Month endMonth)
+	{
+		return this;
 
-    }
+	}
 
-    public QuickStateBuilder withDisplayMonthlyTable()
-    {
-        return this;
+	public QuickStateBuilder withDisplayMonthlyTable()
+	{
+		return this;
 
-    }
+	}
 
-    public QuickStateBuilder withDisplaySummaryTable()
-    {
-        return this;
+	public QuickStateBuilder withDisplaySummaryTable()
+	{
+		return this;
 
-    }
+	}
 
-    public QuickStateBuilder withPlotAllExceedancePlots()
-    {
-        return this;
+	public QuickStateBuilder withPlotAllExceedancePlots()
+	{
+		return this;
 
-    }
+	}
 
-    public QuickStateBuilder withAnnualExceedancePlots()
-    {
-        return this;
+	public QuickStateBuilder withAnnualExceedancePlots()
+	{
+		return this;
 
-    }
+	}
 
-    public QuickStateBuilder withExceedancePlots(Component[] components)
-    {
-        return this;
+	public QuickStateBuilder withExceedancePlots(Component[] components)
+	{
+		return this;
 
-    }
+	}
 
-    public QuickState createQuickState()
-    {
-        return null;
-        //return new QuickState();
-    }
+	public QuickState createQuickState()
+	{
+		return null;
+		//return new QuickState();
+	}
 
 
 }

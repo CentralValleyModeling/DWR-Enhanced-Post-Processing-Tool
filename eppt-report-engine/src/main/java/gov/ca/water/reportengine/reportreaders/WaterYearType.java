@@ -14,25 +14,25 @@ package gov.ca.water.reportengine.reportreaders;
 
 public class WaterYearType
 {
-    private final String[] _columnHeaders;
-    private final int _year;
-    private final String _waterYearType;
+	private final String[] _columnHeaders;
+	private final int _year;
+	private final String _waterYearType;
 
-    public WaterYearType(String[] columnHeaders, int[] values, String waterYearType)
-    {
-        _columnHeaders = columnHeaders;
-        _year = values[0];
+	public WaterYearType(String[] columnHeaders, int[] values, String waterYearType)
+	{
+		_columnHeaders = columnHeaders;
+		_year = values[0];
 
-        _waterYearType = waterYearType;
-    }
+		_waterYearType = waterYearType;
+	}
 
-    public int getYear()
-    {
-        return _year;
-    }
+	public int getYear()
+	{
+		return _year;
+	}
 
-    public String getWaterYearType()
-    {
-        return _waterYearType;
-    }
+	public String getWaterYearType()
+	{
+		return _waterYearType;
+	}
 }

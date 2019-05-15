@@ -18,19 +18,19 @@ import java.util.List;
 public class DetailedIssueContainer
 {
 
-    private final String _name;
-    private final List<DetailedIssue> _detailedIssues = new ArrayList<>();
+	private final String _name;
+	private final List<DetailedIssue> _detailedIssues = new ArrayList<>();
 
-    public DetailedIssueContainer(String name)
-    {
+	public DetailedIssueContainer(String name)
+	{
 
-        _name = name;
-    }
+		_name = name;
+	}
 
-    void addDetailedIssue(DetailedIssue di)
-    {
-        _detailedIssues.add(di);
-    }
+	void addDetailedIssue(DetailedIssue di)
+	{
+		_detailedIssues.add(di);
+	}
 
 
 }

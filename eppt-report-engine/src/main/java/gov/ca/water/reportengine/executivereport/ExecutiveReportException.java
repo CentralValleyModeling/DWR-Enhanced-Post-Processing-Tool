@@ -17,14 +17,14 @@ import gov.ca.water.reportengine.EpptReportException;
 public class ExecutiveReportException extends EpptReportException
 {
 
-    public ExecutiveReportException(String message)
-    {
-        super(message);
-    }
+	public ExecutiveReportException(String message)
+	{
+		super(message);
+	}
 
-    public ExecutiveReportException(String message, Throwable cause)
-    {
-        super(message, cause);
-    }
+	public ExecutiveReportException(String message, Throwable cause)
+	{
+		super(message, cause);
+	}
 
 }

@@ -13,14 +13,15 @@ package vista.db.dss;
 
 /**
  * A class encapsulating information about data from the DSS data base.
- * 
+ *
  * @author Nicky Sandhu
  * @version $Id: DSSData.java,v 1.1 2003/10/02 20:48:44 redwood Exp $
  */
-public class DSSData {
+public class DSSData
+{
 	/**
 	 * The type of data as defined by constants in DSSUtil class
-	 * 
+	 *
 	 * @see DSSUtil
 	 */
 	public int _dataType;

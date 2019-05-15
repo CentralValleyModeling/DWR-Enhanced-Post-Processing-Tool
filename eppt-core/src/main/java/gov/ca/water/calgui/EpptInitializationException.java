@@ -16,14 +16,14 @@ public class EpptInitializationException extends Exception
 {
 
 
-    public EpptInitializationException(String message )
-    {
-        super(message);
-    }
+	public EpptInitializationException(String message)
+	{
+		super(message);
+	}
 
-    public EpptInitializationException(String message, Throwable cause)
-    {
-        super(message, cause);
-    }
+	public EpptInitializationException(String message, Throwable cause)
+	{
+		super(message, cause);
+	}
 
 }

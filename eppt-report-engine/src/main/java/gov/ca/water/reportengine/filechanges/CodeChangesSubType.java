@@ -12,33 +12,34 @@
 
 package gov.ca.water.reportengine.filechanges;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public class CodeChangesSubType
 {
 
-    private final List<String> _wreslFiles = new ArrayList<>();
-    private final String _name;
+	private final List<String> _wreslFiles = new ArrayList<>();
+	private final String _name;
 
-    public CodeChangesSubType(String name)
-    {
-        _name = name;
-    }
+	public CodeChangesSubType(String name)
+	{
+		_name = name;
+	}
 
 
-    public void addWreslFile(String file)
-    {
-        _wreslFiles.add(file);
-    }
+	public void addWreslFile(String file)
+	{
+		_wreslFiles.add(file);
+	}
 
-    public String getName()
-    {
-        return _name;
-    }
+	public String getName()
+	{
+		return _name;
+	}
 
-    public List<String> getWreslFiles()
-    {
-        return _wreslFiles;
-    }
+	public List<String> getWreslFiles()
+	{
+		return _wreslFiles;
+	}
 
 }

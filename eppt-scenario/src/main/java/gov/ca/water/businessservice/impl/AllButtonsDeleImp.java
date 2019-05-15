@@ -328,7 +328,7 @@ public class AllButtonsDeleImp implements IAllButtonsDele
 			}
 			List<Path> filesWhichAreNotSaved = fileNames.stream()
 														.filter(fileName -> !Files.isExecutable(
-																  Paths.get(Constant.RUN_DETAILS_DIR + fileName)))
+																Paths.get(Constant.RUN_DETAILS_DIR + fileName)))
 														.collect(Collectors.toList());
 			if(filesWhichAreNotSaved != null && !filesWhichAreNotSaved.isEmpty())
 			{

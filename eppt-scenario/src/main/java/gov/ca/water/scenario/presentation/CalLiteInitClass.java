@@ -72,11 +72,9 @@ import org.swixml.SwingEngine;
 public class CalLiteInitClass
 {
 	private static final Logger LOGGER = Logger.getLogger(CalLiteInitClass.class.getName());
-	private  IXMLParsingSvc _xmlParsingSvc;
-	private  SwingEngine _swingEngine;
 	private final IAuditSvc _auditSvc = AuditSvcImpl.getAuditSvcImplInstance();
-
-
+	private IXMLParsingSvc _xmlParsingSvc;
+	private SwingEngine _swingEngine;
 
 	/**
 	 * This method is called to initialize the ui.
@@ -86,16 +84,16 @@ public class CalLiteInitClass
 
 		IErrorHandlingSvc errorHandlingSvc = new ErrorHandlingSvcImpl();
 		IDialogSvc dialogSvc = DialogSvcImpl.getDialogSvcInstance();
-		 _swingEngine = null;
+		_swingEngine = null;
 		try
 		{
 			// ----- Build all the Services.
-			 _xmlParsingSvc = XMLParsingSvcImpl.createXMLParsingSvcImplInstance();
-			 _swingEngine = _xmlParsingSvc.getSwingEngine();
+			_xmlParsingSvc = XMLParsingSvcImpl.createXMLParsingSvcImplInstance();
+			_swingEngine = _xmlParsingSvc.getSwingEngine();
 
 			init2(errorHandlingSvc, dialogSvc, _swingEngine, _xmlParsingSvc);
 		}
-		catch(RuntimeException e )
+		catch(RuntimeException e)
 		{
 			LOGGER.error("Error initializing CalLite", e);
 
@@ -103,7 +101,8 @@ public class CalLiteInitClass
 		}
 	}
 
-	private void init2(IErrorHandlingSvc errorHandlingSvc, IDialogSvc dialogSvc, SwingEngine swingEngine, IXMLParsingSvc xmlParsingSvc) throws EpptInitializationException
+	private void init2(IErrorHandlingSvc errorHandlingSvc, IDialogSvc dialogSvc, SwingEngine swingEngine, IXMLParsingSvc xmlParsingSvc)
+			throws EpptInitializationException
 	{
 		try
 		{
@@ -145,7 +144,6 @@ public class CalLiteInitClass
 					_swingEngine.find(Constant.MAIN_FRAME_NAME));
 			lstScenarios.setModel(fdDSSFiles.getLmScenNames());
 			lstScenarios.setBorder(new LineBorder(Color.gray, 1));
-
 
 
 			// Schematic views
@@ -223,7 +221,7 @@ public class CalLiteInitClass
 					int height = event.getComponent().getHeight();
 					int width = event.getComponent().getWidth();
 					swingEngine.find("schematic_holder")
-							.setPreferredSize(new Dimension(width - 50, height - 200));
+							   .setPreferredSize(new Dimension(width - 50, height - 200));
 					SwingUtilities.updateComponentTreeUI(event.getComponent());
 				}
 			});
@@ -559,9 +557,6 @@ public class CalLiteInitClass
 		JSpinner spnRunEndYear = (JSpinner) _swingEngine.find("spnRunEndYear");
 		spnRunEndYear.addChangeListener(listener);
 	}
-
-
-
 
 
 }

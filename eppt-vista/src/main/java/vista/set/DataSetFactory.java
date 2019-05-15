@@ -14,17 +14,19 @@ package vista.set;
 
 /**
  * A class for creation of data sets
- * 
+ *
  * @author Nicky Sandhu
  * @version $Id: DataSetFactory.java,v 1.3 1998/11/02 20:22:15 nsandhu Exp $
  */
-public class DataSetFactory {
+public class DataSetFactory
+{
 	/**
 	 * creates a default data set of x and y and flag arrays with given
 	 * attributes
 	 */
 	public static DataSet createDefaultDataSet(String name, double[] x,
-			double[] y, int[] flags, DataSetAttr attr) {
+											   double[] y, int[] flags, DataSetAttr attr)
+	{
 		return new DefaultDataSet(name, x, y, flags, attr);
 	}
 
@@ -33,7 +35,8 @@ public class DataSetFactory {
 	 * attributes
 	 */
 	public static DataSet createIndexedDataSet(String name, double xi,
-			double xf, double step, double[] y, int[] flags, DataSetAttr attr) {
+											   double xf, double step, double[] y, int[] flags, DataSetAttr attr)
+	{
 		return new IndexedDataSet(name, xi, xf, step, y, flags, attr);
 	}
 
@@ -41,7 +44,8 @@ public class DataSetFactory {
 	 * creates a data set
 	 */
 	public static DataSet createTimeSeries(String name, String startTime,
-			String timeInterval, double[] y, int[] flags, DataSetAttr attr) {
+										   String timeInterval, double[] y, int[] flags, DataSetAttr attr)
+	{
 		return new RegularTimeSeries(name, startTime, timeInterval, y, flags,
 				attr);
 	}

@@ -18,12 +18,13 @@ import vista.set.Session;
 
 /**
  * Encapsulates commands implementing session related commands
- * 
+ *
  * @author Nicky Sandhu
  * @version $Id: IntersectionGroupCommand.java,v 1.1 2003/10/02 20:48:33 redwood
- *          Exp $
+ * Exp $
  */
-class IntersectionGroupCommand implements Command {
+class IntersectionGroupCommand implements Command
+{
 	private Session _session;
 	private Group _gIntersection;
 	private int[] _indices;
@@ -31,7 +32,8 @@ class IntersectionGroupCommand implements Command {
 	/**
 	 * opens session and sets current session to
 	 */
-	public IntersectionGroupCommand(Session s, int[] indices) {
+	public IntersectionGroupCommand(Session s, int[] indices)
+	{
 		_session = s;
 		_indices = indices;
 	}
@@ -39,15 +41,21 @@ class IntersectionGroupCommand implements Command {
 	/**
 	 * executes command
 	 */
-	public void execute() throws ExecutionException {
-		if (_session == null)
+	public void execute() throws ExecutionException
+	{
+		if(_session == null)
+		{
 			throw new ExecutionException(getClass().getName() + ": "
 					+ "Command on null session");
-		if (_indices == null || _indices.length == 0)
+		}
+		if(_indices == null || _indices.length == 0)
+		{
 			throw new ExecutionException(getClass().getName() + ": "
 					+ "Command on null indices");
+		}
 		_gIntersection = _session.getGroup(0);
-		for (int i = 0; i < _indices.length; i++) {
+		for(int i = 0; i < _indices.length; i++)
+		{
 			_gIntersection = _gIntersection.intersectionWith(_session
 					.getGroup(_indices[i]));
 		}
@@ -57,20 +65,23 @@ class IntersectionGroupCommand implements Command {
 	/**
 	 * unexecutes command or throws exception if not unexecutable
 	 */
-	public void unexecute() throws ExecutionException {
+	public void unexecute() throws ExecutionException
+	{
 		_session.removeGroup(_gIntersection);
 	}
 
 	/**
 	 * checks if command is executable.
 	 */
-	public boolean isUnexecutable() {
+	public boolean isUnexecutable()
+	{
 		return true;
 	}
 
 	/**
 	 * writes to script
 	 */
-	public void toScript(StringBuffer buf) {
+	public void toScript(StringBuffer buf)
+	{
 	}
 } // end of IntersectionGroupCommand

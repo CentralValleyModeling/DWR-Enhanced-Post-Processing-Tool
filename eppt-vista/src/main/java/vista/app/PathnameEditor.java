@@ -21,15 +21,18 @@ import vista.set.DataReference;
 import vista.set.Pathname;
 
 @SuppressWarnings("serial")
-public class PathnameEditor extends JDialog implements Changeable{
+public class PathnameEditor extends JDialog implements Changeable
+{
 
 
 	private DataReference ref;
 	private JTable table;
 	private DataTableFrame dataTable;
 
-	public PathnameEditor(DataTableFrame dataTable, DataReference ref){
-		if (ref==null || ref.getPathname()==null){
+	public PathnameEditor(DataTableFrame dataTable, DataReference ref)
+	{
+		if(ref == null || ref.getPathname() == null)
+		{
 			throw new IllegalArgumentException("Reference is null or pathname is null!");
 		}
 		this.ref = ref;
@@ -51,8 +54,10 @@ public class PathnameEditor extends JDialog implements Changeable{
 	}
 
 	@Override
-	public void applyChanges() {
-		if (table.isEditing()){
+	public void applyChanges()
+	{
+		if(table.isEditing())
+		{
 			table.getCellEditor().stopCellEditing();
 		}
 		Pathname p = ref.getPathname();
@@ -65,7 +70,8 @@ public class PathnameEditor extends JDialog implements Changeable{
 	}
 
 	@Override
-	public void doneChanges() {
+	public void doneChanges()
+	{
 		this.dispose();
 	}
 }

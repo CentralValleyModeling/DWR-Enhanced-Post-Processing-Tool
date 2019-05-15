@@ -50,7 +50,7 @@ public abstract class ProcessRunner
 			String javaLibraryPath = "-Djava.library.path=\"" + Paths.get("dwr_eppt/modules/lib").toAbsolutePath() + "\"";
 			String path = "\"" + System.getProperty("java.home")
 					+ separator + "bin" + separator + "java" + "\"";
-			String classpath =  "echo off \n";
+			String classpath = "echo off \n";
 			Path epptDir = Paths.get("dwr_eppt");
 			Path modulesDir = epptDir.resolve("modules");
 			try(Stream<Path> walk = Files.walk(modulesDir, 3))

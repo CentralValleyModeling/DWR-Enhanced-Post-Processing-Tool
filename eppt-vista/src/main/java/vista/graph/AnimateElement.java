@@ -18,11 +18,13 @@ package vista.graph;
  * and draw methods to render itself on the graphics context
  */
 public abstract class AnimateElement extends GraphicElement implements
-		AnimationObserver, Animate {
+															AnimationObserver, Animate
+{
 	/**
 	 * constructor
 	 */
-	public AnimateElement(GEAttr attributes) {
+	public AnimateElement(GEAttr attributes)
+	{
 		super(attributes);
 	}
 

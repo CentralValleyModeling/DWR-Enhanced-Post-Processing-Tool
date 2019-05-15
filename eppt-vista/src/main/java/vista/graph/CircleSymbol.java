@@ -17,11 +17,12 @@ import java.awt.Rectangle;
 
 /**
  * A circle symbol
- * 
+ *
  * @author Nicky Sandhu
  * @version $Id: CircleSymbol.java,v 1.1 2003/10/02 20:48:50 redwood Exp $
  */
-public class CircleSymbol extends Symbol {
+public class CircleSymbol extends Symbol
+{
 	/**
 	 * for debugging
 	 */
@@ -30,7 +31,8 @@ public class CircleSymbol extends Symbol {
 	/**
 	 * Constructor.
 	 */
-	public CircleSymbol(SymbolAttr attributes) {
+	public CircleSymbol(SymbolAttr attributes)
+	{
 		super(attributes);
 		setName("CircleSymbol");
 	}
@@ -38,7 +40,8 @@ public class CircleSymbol extends Symbol {
 	/**
 	 * true if x,y hits the drawing. More precise than contains(x,y)
 	 */
-	public boolean hitsDrawing(int x, int y) {
+	public boolean hitsDrawing(int x, int y)
+	{
 		Rectangle r = getInsetedBounds();
 		int wd = r.width / 4;
 		int ht = r.height / 4;
@@ -53,7 +56,8 @@ public class CircleSymbol extends Symbol {
 	 * done. However a subclass will do so. In this way it would be the users
 	 * choice to use the most suitable class.
 	 */
-	public void Draw() {
+	public void Draw()
+	{
 		SymbolAttr attr = (SymbolAttr) getAttributes();
 		Graphics gc = getGraphics();
 
@@ -63,34 +67,41 @@ public class CircleSymbol extends Symbol {
 		int radius = Math.min(wd, ht);
 		int x = r.x - radius / 2;
 		int y = r.y - radius / 2;
-		if (attr._isFilled)
+		if(attr._isFilled)
+		{
 			gc.fillArc(x, y, radius, radius, 0, 360);
+		}
 		else
+		{
 			gc.drawArc(x, y, radius, radius, 0, 360);
+		}
 	}
 
 	/**
 	 * calculates the preferred size of this element
-	 * 
+	 *
 	 * @return The preferred size
 	 */
-	public Dimension getPreferredSize() {
+	public Dimension getPreferredSize()
+	{
 		return new Dimension(25, 25);
 	}
 
 	/**
 	 * calculates the minimum size of this element
-	 * 
+	 *
 	 * @return The minimum size
 	 */
-	public Dimension getMinimumSize() {
+	public Dimension getMinimumSize()
+	{
 		return getPreferredSize();
 	}
 
 	/**
-   *
-   */
-	public String getPrefixTag(String prefixTag) {
+	 *
+	 */
+	public String getPrefixTag(String prefixTag)
+	{
 		return prefixTag + getName() + ".";
 	}
 }

@@ -17,7 +17,6 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Frame;
 import java.awt.GridLayout;
-import java.io.InputStream;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -61,7 +60,7 @@ public class WreslRunDialog extends JDialog implements ProcessOutputConsumer
 		setLayout(new BorderLayout());
 		_tabbedPane = new JTabbedPane();
 		_stopButton.addActionListener(e -> destroyProcesses());
-		_startButton.addActionListener(e->runSelectedScenarios());
+		_startButton.addActionListener(e -> runSelectedScenarios());
 		add(_tabbedPane, BorderLayout.CENTER);
 		add(_startButton, BorderLayout.SOUTH);
 		Runtime.getRuntime().addShutdownHook(new Thread(this::destroyProcesses));
@@ -75,7 +74,7 @@ public class WreslRunDialog extends JDialog implements ProcessOutputConsumer
 		}
 		_scenarioPanel = new JPanel();
 		_scenarioPanel.setBorder(new TitledBorder("Run Scenarios"));
-		_scenarioPanel.setLayout(new GridLayout(0,1));
+		_scenarioPanel.setLayout(new GridLayout(0, 1));
 		List<EpptScenarioRunCheckbox> scenarioRunCheckboxes = scenarioRuns
 				.stream()
 				.map(EpptScenarioRunCheckbox::new)

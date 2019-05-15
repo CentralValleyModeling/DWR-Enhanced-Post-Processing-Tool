@@ -24,7 +24,8 @@ import javax.swing.*;
 import vista.db.jdbc.bdat.BDATConnection;
 
 @SuppressWarnings("serial")
-public class BDATConnectionDialog {
+public class BDATConnectionDialog
+{
 	private JTextField userField;
 	private JPasswordField passwordField;
 	private JTextField serverField;
@@ -32,7 +33,8 @@ public class BDATConnectionDialog {
 	private JTextField databaseField;
 	private int confirmDialogReturnValue;
 
-	public BDATConnectionDialog() {
+	public BDATConnectionDialog()
+	{
 		JPanel mainPanel = new JPanel();
 		mainPanel.setLayout(new GridLayout(5, 2, 1, 3));
 		mainPanel.add(new JTextField("username:"));
@@ -52,13 +54,17 @@ public class BDATConnectionDialog {
 				JOptionPane.OK_CANCEL_OPTION);
 	}
 
-	private void initializeFields() {
+	private void initializeFields()
+	{
 		// jdbc:oracle:thin:@grsbldbe00308.np.water.ca.gov:1522:orcl
 		Properties props = new Properties();
 		String propsFile = getPropsFilename();
-		try {
+		try
+		{
 			props.load(new FileInputStream(propsFile));
-		} catch (Exception ex) {
+		}
+		catch(Exception ex)
+		{
 			System.err.println("Could not load connection info from "
 					+ propsFile + " ; using defaults");
 		}
@@ -68,32 +74,42 @@ public class BDATConnectionDialog {
 		databaseField.setText(props.getProperty("db.databaseName"));
 	}
 
-	public BDATConnection getConnection() {
-		if (confirmDialogReturnValue == 0) {
+	public BDATConnection getConnection()
+	{
+		if(confirmDialogReturnValue == 0)
+		{
 			Properties props = new Properties();
 			props.setProperty("db.user", userField.getText());
 			props.setProperty("db.servername", serverField.getText());
 			props.setProperty("db.portnumber", portField.getText());
 			props.setProperty("db.databaseName", databaseField.getText());
-			try {
+			try
+			{
 				FileOutputStream fos = new FileOutputStream(getPropsFilename());
-				props.store(fos, ""+new Date());
+				props.store(fos, "" + new Date());
 				fos.close();
-			} catch (FileNotFoundException e) {
-			} catch (IOException e) {
+			}
+			catch(FileNotFoundException e)
+			{
+			}
+			catch(IOException e)
+			{
 			}
 			// don't store password so added after save
 			props.setProperty("db.password", new String(passwordField
 					.getPassword()));
 			return new BDATConnection(props);
-		} else {
+		}
+		else
+		{
 			return null;
 		}
 	}
-	
-	private String getPropsFilename(){
+
+	private String getPropsFilename()
+	{
 		return System.getProperty("user.home")
-		+ System.getProperty("file.separator")
-		+ "vista.jdbc.properties";
+				+ System.getProperty("file.separator")
+				+ "vista.jdbc.properties";
 	}
 }

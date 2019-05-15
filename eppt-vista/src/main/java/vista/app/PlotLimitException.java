@@ -11,5 +11,6 @@
  */
 package vista.app;
 
-public class PlotLimitException extends Exception {
+public class PlotLimitException extends Exception
+{
 }

@@ -48,7 +48,6 @@ import javax.swing.text.BadLocationException;
 import calsim.app.AppUtils;
 import calsim.app.CSVParser;
 import calsim.gui.GuiUtils;
-import org.python.jline.internal.Log;
 import vista.gui.DocumentWriter;
 import wrims.schematic.Schematic;
 import wrims.schematic.SchematicUtils;

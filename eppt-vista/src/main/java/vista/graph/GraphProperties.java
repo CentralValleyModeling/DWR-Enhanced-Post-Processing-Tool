@@ -16,14 +16,17 @@ import java.util.Properties;
 import vista.gui.VistaUtils;
 
 /**
-   *
-   */
-public class GraphProperties {
+ *
+ */
+public class GraphProperties
+{
 	/**
-   *
-   */
+	 *
+	 */
 	public static Properties properties;
-	static {
+
+	static
+	{
 		properties = new Properties();
 		// load default properties
 		properties.put("GraphInfo.timeUnitString", "TIME");
@@ -58,14 +61,21 @@ public class GraphProperties {
 		properties.put("displayUnscreened", "true");
 		// load from file
 		java.io.InputStream is = null;
-		if (is == null)
+		if(is == null)
+		{
 			is = VistaUtils.getPropertyFileAsStream("graph.properties");
-		if (is == null)
+		}
+		if(is == null)
+		{
 			is = VistaUtils
 					.getResourceAsStream("/vista/graph/graph.properties");
-		try {
+		}
+		try
+		{
 			properties.load(new java.io.BufferedInputStream(is));
-		} catch (java.io.IOException ioe) {
+		}
+		catch(java.io.IOException ioe)
+		{
 			System.out.println("Properties file " + "graph.properties"
 					+ " not found");
 			System.out.println("using default properties");

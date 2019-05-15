@@ -17,37 +17,37 @@ import rma.lang.RmaMath;
 public class CompareDSSValues
 {
 
-    private final double _tolerance;
+	private final double _tolerance;
 
-    public CompareDSSValues(double tolerance)
-    {
+	public CompareDSSValues(double tolerance)
+	{
 
-        _tolerance = tolerance;
-    }
+		_tolerance = tolerance;
+	}
 
-     boolean compareTimes(int[] baseTimes, int[] altTimes)
-    {
-        for (int i = 0; i < baseTimes.length; i++)
-        {
-            if (baseTimes[i] != altTimes[i])
-            {
-                return false;
-            }
-        }
-        return true;
-    }
+	boolean compareTimes(int[] baseTimes, int[] altTimes)
+	{
+		for(int i = 0; i < baseTimes.length; i++)
+		{
+			if(baseTimes[i] != altTimes[i])
+			{
+				return false;
+			}
+		}
+		return true;
+	}
 
-     boolean compareValues( double[] baseValues, double[] altValues)
-    {
-        for (int i = 0; i < baseValues.length; i++)
-        {
-            if(!RmaMath.equals(baseValues[i] , altValues[i] , _tolerance))
-            {
-                return false;
-            }
+	boolean compareValues(double[] baseValues, double[] altValues)
+	{
+		for(int i = 0; i < baseValues.length; i++)
+		{
+			if(!RmaMath.equals(baseValues[i], altValues[i], _tolerance))
+			{
+				return false;
+			}
 
-        }
-        return true;
-    }
+		}
+		return true;
+	}
 
 }

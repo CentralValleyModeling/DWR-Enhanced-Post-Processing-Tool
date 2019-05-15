@@ -18,19 +18,21 @@ import vista.set.SortMechanism;
 
 /**
  * Encapsulates commands implementing group related commands
- * 
+ *
  * @author Nicky Sandhu
  * @version $Id: SortReferencesCommand.java,v 1.1 2003/10/02 20:48:42 redwood
- *          Exp $
+ * Exp $
  */
-public class SortReferencesCommand implements Command {
+public class SortReferencesCommand implements Command
+{
 	private Group _group;
 	private SortMechanism _sm;
 
 	/**
 	 * opens group and sets current group to
 	 */
-	public SortReferencesCommand(Group g, SortMechanism sm) {
+	public SortReferencesCommand(Group g, SortMechanism sm)
+	{
 		_group = g;
 		_sm = sm;
 	}
@@ -38,29 +40,35 @@ public class SortReferencesCommand implements Command {
 	/**
 	 * executes command
 	 */
-	public void execute() throws ExecutionException {
-		if (_group == null || _sm == null)
+	public void execute() throws ExecutionException
+	{
+		if(_group == null || _sm == null)
+		{
 			return;
+		}
 		_group.sortBy(_sm);
 	}
 
 	/**
 	 * unexecutes command or throws exception if not unexecutable
 	 */
-	public void unexecute() throws ExecutionException {
+	public void unexecute() throws ExecutionException
+	{
 		throw new ExecutionException("Unsorting is expensive");
 	}
 
 	/**
 	 * checks if command is executable.
 	 */
-	public boolean isUnexecutable() {
+	public boolean isUnexecutable()
+	{
 		return false;
 	}
 
 	/**
 	 * writes to script
 	 */
-	public void toScript(StringBuffer buf) {
+	public void toScript(StringBuffer buf)
+	{
 	}
 } // end of CloneReferenceCommand

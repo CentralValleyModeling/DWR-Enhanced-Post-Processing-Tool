@@ -52,7 +52,7 @@ public final class AppProps
 		if(!appPropsFile.exists())
 		{
 			// then look in jar file for defaults & save to props file
-			try (InputStream propsStream = AppProps.class.getClassLoader().getResourceAsStream(filename))
+			try(InputStream propsStream = AppProps.class.getClassLoader().getResourceAsStream(filename))
 			{
 				PROPERTIES.load(propsStream);
 				save();
@@ -65,7 +65,7 @@ public final class AppProps
 		else
 		{
 			// read from app.props file
-			try (InputStream propsStream = AppProps.class.getClassLoader().getResourceAsStream(filename))
+			try(InputStream propsStream = AppProps.class.getClassLoader().getResourceAsStream(filename))
 			{
 				// always load defaults and then user customized properties
 				PROPERTIES.load(propsStream);

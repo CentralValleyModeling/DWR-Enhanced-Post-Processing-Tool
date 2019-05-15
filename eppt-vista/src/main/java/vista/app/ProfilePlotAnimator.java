@@ -44,13 +44,12 @@ import vista.set.NaNFilter;
 import vista.set.RegularTimeSeries;
 
 /**
- * 
- * 
  * @author Nicky Sandhu
  * @version $Id: ProfilePlotAnimator.java,v 1.1 2003/10/02 20:48:39 redwood Exp
- *          $
+ * $
  */
-public class ProfilePlotAnimator implements AnimationObserver {
+public class ProfilePlotAnimator implements AnimationObserver
+{
 	private DataSetIterator _dsi;
 	private ElementFilter _filter;
 	private AnimatorCanvas _canvas;
@@ -59,10 +58,13 @@ public class ProfilePlotAnimator implements AnimationObserver {
 	private LegendItem _li;
 	private boolean goForward = true;
 
-	public ProfilePlotAnimator(RegularTimeSeries[] rts, double[] distances) {
-		if (rts.length != distances.length)
+	public ProfilePlotAnimator(RegularTimeSeries[] rts, double[] distances)
+	{
+		if(rts.length != distances.length)
+		{
 			throw new IllegalArgumentException("# of time series not "
 					+ "compatible with number of distances");
+		}
 
 		int delay = 500;
 		timer = new Animator();
@@ -76,29 +78,39 @@ public class ProfilePlotAnimator implements AnimationObserver {
 		JButton stopBtn = new JButton("#");
 		JButton forwardBtn = new JButton(">");
 		JButton reverseBtn = new JButton("<");
-		fasterBtn.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent evt) {
+		fasterBtn.addActionListener(new ActionListener()
+		{
+			public void actionPerformed(ActionEvent evt)
+			{
 				increaseAnimationSpeed(50);
 			}
 		});
-		slowerBtn.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent evt) {
+		slowerBtn.addActionListener(new ActionListener()
+		{
+			public void actionPerformed(ActionEvent evt)
+			{
 				increaseAnimationSpeed(-50);
 			}
 		});
-		forwardBtn.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent evt) {
+		forwardBtn.addActionListener(new ActionListener()
+		{
+			public void actionPerformed(ActionEvent evt)
+			{
 				goForward = true;
 				timer.startAnimation();
 			}
 		});
-		stopBtn.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent evt) {
+		stopBtn.addActionListener(new ActionListener()
+		{
+			public void actionPerformed(ActionEvent evt)
+			{
 				timer.stopAnimation();
 			}
 		});
-		reverseBtn.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent evt) {
+		reverseBtn.addActionListener(new ActionListener()
+		{
+			public void actionPerformed(ActionEvent evt)
+			{
 				goForward = false;
 				timer.startAnimation();
 			}
@@ -122,34 +134,44 @@ public class ProfilePlotAnimator implements AnimationObserver {
 	}
 
 	/**
-   *
-   */
-	public void update(AnimationObservable observable, Object args) {
-		if (goForward)
+	 *
+	 */
+	public void update(AnimationObservable observable, Object args)
+	{
+		if(goForward)
+		{
 			drawNext();
+		}
 		else
+		{
 			drawPrevious();
+		}
 	}
 
 	/**
-   *
-   */
+	 *
+	 */
 	public AnimatorCanvas setUpProfilePlot(RegularTimeSeries[] rts,
-			double[] distances) {
+										   double[] distances)
+	{
 		_dsi = new MultiIterator(rts, Constants.DEFAULT_FLAG_FILTER);
 		DataSetElement dse2 = _dsi.getMaximum();
 		double ymax = Float.MIN_VALUE;
-		for (int i = 1; i < dse2.getDimension(); i++) {
+		for(int i = 1; i < dse2.getDimension(); i++)
+		{
 			double d = dse2.getX(i);
-			if (Double.doubleToLongBits(d) != 0x7ff8000000000000L) {
+			if(Double.doubleToLongBits(d) != 0x7ff8000000000000L)
+			{
 				ymax = Math.max(ymax, d);
 			}
 		}
 		dse2 = _dsi.getMinimum();
 		double ymin = Float.MAX_VALUE;
-		for (int i = 1; i < dse2.getDimension(); i++) {
+		for(int i = 1; i < dse2.getDimension(); i++)
+		{
 			double d = dse2.getX(i);
-			if (Double.doubleToLongBits(d) != 0x7ff8000000000000L) {
+			if(Double.doubleToLongBits(d) != 0x7ff8000000000000L)
+			{
 				ymin = Math.min(ymin, d);
 			}
 		}
@@ -158,9 +180,11 @@ public class ProfilePlotAnimator implements AnimationObserver {
 				_dsi.getElement().getXString(0));
 		Graph graph = new Graph(new GraphAttr());
 		String title = "Profile Plot: ";
-		for (int i = 0; i < rts.length; i++) {
+		for(int i = 0; i < rts.length; i++)
+		{
 			DataSetAttr attr = rts[i].getAttributes();
-			if (attr != null && attr.getLocationName() != null) {
+			if(attr != null && attr.getLocationName() != null)
+			{
 				title += " | " + attr.getLocationName();
 			}
 		}
@@ -184,56 +208,72 @@ public class ProfilePlotAnimator implements AnimationObserver {
 	}
 
 	/**
-   *
-   */
-	public void drawNext() {
-		if (_dsi.atEnd()) {
+	 *
+	 */
+	public void drawNext()
+	{
+		if(_dsi.atEnd())
+		{
 			timer.stopAnimation();
 		}
 		DataSetElement dse = null;
-		while (!_dsi.atEnd()) {
+		while(!_dsi.atEnd())
+		{
 			dse = _dsi.getElement();
-			if (_filter.isAcceptable(dse))
+			if(_filter.isAcceptable(dse))
+			{
 				break;
+			}
 			_dsi.advance();
 		}
 		_pdm.setReferenceObject(dse);
 		_li.setLegendText(dse.getXString());
 		_canvas.redoNextPaint();
 		_canvas.repaint();
-		if (!_dsi.atEnd())
+		if(!_dsi.atEnd())
+		{
 			_dsi.advance();
+		}
 	}
 
 	/**
-   *
-   */
-	public void drawPrevious() {
-		if (!_dsi.atStart())
+	 *
+	 */
+	public void drawPrevious()
+	{
+		if(!_dsi.atStart())
+		{
 			_dsi.retreat();
+		}
 		DataSetElement dse = null;
-		while (!_dsi.atStart()) {
+		while(!_dsi.atStart())
+		{
 			dse = _dsi.getElement();
-			if (_filter.isAcceptable(dse))
+			if(_filter.isAcceptable(dse))
+			{
 				break;
+			}
 			_dsi.retreat();
 		}
 		_pdm.setReferenceObject(dse);
 		_li.setLegendText(dse.getXString());
 		_canvas.redoNextPaint();
 		_canvas.repaint();
-		if (_dsi.atStart()) {
+		if(_dsi.atStart())
+		{
 			timer.stopAnimation();
 			return;
 		}
 	}
 
 	/**
-   *
-   */
-	public void increaseAnimationSpeed(int increment) {
+	 *
+	 */
+	public void increaseAnimationSpeed(int increment)
+	{
 		int delay = (int) timer.getInterval();
-		if (delay - increment > 0) {
+		if(delay - increment > 0)
+		{
 			timer.setInterval(delay - increment);
 		}
 	}

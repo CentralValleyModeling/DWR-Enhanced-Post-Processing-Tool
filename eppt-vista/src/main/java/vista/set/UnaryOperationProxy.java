@@ -16,12 +16,38 @@ import vista.time.TimeWindow;
 
 /**
  * A proxy which results from operations on a single reference.
- * 
+ *
  * @author Nicky Sandhu
  * @version $Id: UnaryOperationProxy.java,v 1.1 2003/10/02 20:49:34 redwood Exp
- *          $
+ * $
  */
-public abstract class UnaryOperationProxy extends DataReference {
+public abstract class UnaryOperationProxy extends DataReference
+{
+	/**
+	 * the data set after it is initialized
+	 */
+	private transient DataSet _dataSet;
+	/**
+	 * reference from which generated
+	 */
+	private DataReference _ref;
+
+	/**
+	 *
+	 */
+	protected UnaryOperationProxy()
+	{
+	}
+
+	/**
+	 *
+	 */
+	public UnaryOperationProxy(DataReference ref)
+	{
+		checkInput(ref);
+		initializeAll(ref);
+	}
+
 	/**
 	 * returns the name of the proxy
 	 */
@@ -58,34 +84,30 @@ public abstract class UnaryOperationProxy extends DataReference {
 	protected abstract TimeInterval getProxyTimeInterval(DataReference ref);
 
 	/**
-	 * sets the proxy reference
-	 */
-	protected void setProxyReference(DataReference ref) {
-		TimeWindow tw = getTimeWindow();
-		if (tw.equals(ref.getTimeWindow()))
-			_ref = ref;
-		else
-			_ref = DataReference.create(ref, tw);
-
-	}
-
-	/**
 	 * checks input reference for satisfying pre-conditions
 	 */
-	protected void checkInput(DataReference ref) {
-		if (ref == null)
+	protected void checkInput(DataReference ref)
+	{
+		if(ref == null)
+		{
 			throw new IllegalArgumentException("? Reference is null");
+		}
 		TimeWindow tw = ref.getTimeWindow();
-		if (tw == null)
+		if(tw == null)
+		{
 			throw new IllegalArgumentException("? Time Window is null");
-		if (ref.getTimeInterval() == null)
+		}
+		if(ref.getTimeInterval() == null)
+		{
 			throw new IllegalArgumentException("? Time Interval is null");
+		}
 	}
 
 	/**
 	 * intializes a proxy from given names
 	 */
-	public void initializeAll(DataReference ref) {
+	public void initializeAll(DataReference ref)
+	{
 		// choose time interval
 		super.setTimeInterval(getProxyTimeInterval(ref));
 		super.setName(getProxyName(ref));
@@ -98,31 +120,19 @@ public abstract class UnaryOperationProxy extends DataReference {
 	}
 
 	/**
-   *
-   */
-	protected UnaryOperationProxy() {
-	}
-
-	/**
-   *
-   */
-	public UnaryOperationProxy(DataReference ref) {
-		checkInput(ref);
-		initializeAll(ref);
-	}
-
-	/**
 	 * sets the time window of the proxy and its referencing proxies as well.
 	 */
-	protected void setTimeWindow(TimeWindow tw) {
+	protected void setTimeWindow(TimeWindow tw)
+	{
 		super.setTimeWindow(tw);
 		_ref = DataReference.create(_ref, getTimeWindow());
 	}
 
 	/**
-   *
-   */
-	public void reloadData() {
+	 *
+	 */
+	public void reloadData()
+	{
 		_dataSet = null;
 		_ref.reloadData();
 	}
@@ -130,8 +140,10 @@ public abstract class UnaryOperationProxy extends DataReference {
 	/**
 	 * returns data after initialation and operation...
 	 */
-	public DataSet getData() throws DataRetrievalException {
-		if (_dataSet == null) {
+	public DataSet getData() throws DataRetrievalException
+	{
+		if(_dataSet == null)
+		{
 			DataSet ds = _ref.getData();
 			_dataSet = doOperation(ds);
 		}
@@ -144,18 +156,27 @@ public abstract class UnaryOperationProxy extends DataReference {
 	protected abstract DataSet doOperation(DataSet ds);
 
 	/**
-   *
-   */
-	protected DataReference getProxyReference() {
+	 *
+	 */
+	protected DataReference getProxyReference()
+	{
 		return _ref;
 	}
 
 	/**
-	 * the data set after it is initialized
+	 * sets the proxy reference
 	 */
-	private transient DataSet _dataSet;
-	/**
-	 * reference from which generated
-	 */
-	private DataReference _ref;
+	protected void setProxyReference(DataReference ref)
+	{
+		TimeWindow tw = getTimeWindow();
+		if(tw.equals(ref.getTimeWindow()))
+		{
+			_ref = ref;
+		}
+		else
+		{
+			_ref = DataReference.create(ref, tw);
+		}
+
+	}
 }

@@ -18,23 +18,37 @@ import java.lang.reflect.Method;
 /**
  * A action listener which uses reflection to invoke a callback on the given
  * method in given object's class.
- * 
+ *
  * @author Nicky Sandhu
  * @version $Id: GenericActionAdapter.java,v 1.1 2003/10/02 20:49:15 redwood Exp
- *          $
+ * $
  */
-public class GenericActionAdapter implements ActionListener {
+public class GenericActionAdapter implements ActionListener
+{
 	/**
-   *
-   */
+	 * The method to call when event is activated
+	 */
+	private Method _callbackMethod;
+	/**
+	 * The object on which the above method is invoked
+	 */
+	private Object _callbackObject;
+
+	/**
+	 *
+	 */
 	public GenericActionAdapter(Object obj, String methodName)
-			throws InstantiationException {
-		try {
+			throws InstantiationException
+	{
+		try
+		{
 			_callbackObject = obj;
 			Class callbackClass = obj.getClass();
-			Class[] parameters = { ActionEvent.class };
+			Class[] parameters = {ActionEvent.class};
 			_callbackMethod = callbackClass.getMethod(methodName, parameters);
-		} catch (Exception e) {
+		}
+		catch(Exception e)
+		{
 			e.printStackTrace();
 			throw new InstantiationException(
 					"Could not generate action adapter for "
@@ -45,23 +59,18 @@ public class GenericActionAdapter implements ActionListener {
 	/**
 	 * Invoked when an action occurs.
 	 */
-	public void actionPerformed(ActionEvent evt) {
-		try {
-			Object[] args = { evt };
+	public void actionPerformed(ActionEvent evt)
+	{
+		try
+		{
+			Object[] args = {evt};
 			_callbackMethod.invoke(_callbackObject, args);
-		} catch (Exception ex) {
+		}
+		catch(Exception ex)
+		{
 			ex.printStackTrace();
 			throw new RuntimeException("Exception while invoking call back "
 					+ _callbackMethod.getName());
 		}
 	}
-
-	/**
-	 * The method to call when event is activated
-	 */
-	private Method _callbackMethod;
-	/**
-	 * The object on which the above method is invoked
-	 */
-	private Object _callbackObject;
 }

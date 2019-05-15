@@ -125,7 +125,6 @@ public class CalLiteGUIMainPanel extends JPanel
 	//	{
 	//		return _mainMenuBar;
 	//	}
-
 	public JTabbedPane getTabbedPane()
 	{
 		return _tabbedPane;

@@ -469,8 +469,8 @@ public class DefaultTableData extends AbstractTableModel implements InputTableDa
 	/**
 	 * Returns the name of the column at <i>columnIndex</i>.
 	 *
+	 * @param columnIndex the index of column
 	 * @return the name of the column
-	 * @param    columnIndex    the index of column
 	 */
 	public String getColumnName(int columnIndex)
 	{
@@ -482,8 +482,8 @@ public class DefaultTableData extends AbstractTableModel implements InputTableDa
 	 * is editable.  Otherwise, setValueAt() on the cell will not change
 	 * the value of that cell.
 	 *
-	 * @param    rowIndex    the row whose value is to be looked up
-	 * @param    columnIndex    the column whose value is to be looked up
+	 * @param rowIndex    the row whose value is to be looked up
+	 * @param columnIndex the column whose value is to be looked up
 	 * @return true if the cell is editable.
 	 * @see #setValueAt
 	 */
@@ -496,8 +496,8 @@ public class DefaultTableData extends AbstractTableModel implements InputTableDa
 	 * Returns an attribute value for the cell at <I>columnIndex</I>
 	 * and <I>rowIndex</I>.
 	 *
-	 * @param    rowIndex    the row whose value is to be looked up
-	 * @param    columnIndex the column whose value is to be looked up
+	 * @param rowIndex    the row whose value is to be looked up
+	 * @param columnIndex the column whose value is to be looked up
 	 * @return the value Object at the specified cell
 	 */
 	public Object getValueAt(int rowIndex, int columnIndex)
@@ -508,9 +508,9 @@ public class DefaultTableData extends AbstractTableModel implements InputTableDa
 	/**
 	 * Sets an attribute value for the record in the cell at
 	 *
-	 * @param    aValue         the new value
-	 * @param    rowIndex     the row whose value is to be changed
-	 * @param    columnIndex the column whose value is to be changed
+	 * @param aValue      the new value
+	 * @param rowIndex    the row whose value is to be changed
+	 * @param columnIndex the column whose value is to be changed
 	 * @see #getValueAt
 	 * @see #isCellEditable
 	 */

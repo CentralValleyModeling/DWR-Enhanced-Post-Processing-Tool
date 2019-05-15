@@ -18,16 +18,16 @@ import java.awt.event.ActionListener;
 import javax.swing.*;
 
 /**
- * 
- * 
  * @author Nicky Sandhu
  * @version $Id: MainApplet.java,v 1.4 1999/01/07 21:05:32 nsandhu Exp $
  */
-public class MainApplet extends JApplet {
+public class MainApplet extends JApplet
+{
 	/**
-   *
-   */
-	public MainApplet() {
+	 *
+	 */
+	public MainApplet()
+	{
 		Button mainButton = new Button("Press here to start");
 		mainButton.addActionListener(new DisplayGUI());
 		getContentPane().setLayout(new FlowLayout());
@@ -36,21 +36,24 @@ public class MainApplet extends JApplet {
 	}
 
 	/**
-	 * 
-	 * 
 	 * @author Nicky Sandhu
 	 * @version $Id: MainApplet.java,v 1.4 1999/01/07 21:05:32 nsandhu Exp $
 	 */
-	class DisplayGUI implements ActionListener {
+	class DisplayGUI implements ActionListener
+	{
 		/**
-   *
-   */
-		public void actionPerformed(ActionEvent evt) {
-			try {
+		 *
+		 */
+		public void actionPerformed(ActionEvent evt)
+		{
+			try
+			{
 				// new MainGUI(null);
 				System.out.println("Loading vista utiles");
 				vista.gui.VistaUtils.showStartUpIcon();
-			} catch (Exception e) {
+			}
+			catch(Exception e)
+			{
 				System.out.println(e.getMessage());
 			}
 		}

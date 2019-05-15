@@ -51,6 +51,11 @@ public final class EpptPreferences
 		return Paths.get(retval);
 	}
 
+	public static void setProjectsPath(String text)
+	{
+		EPPT_HOME.put(PROJECT_DIRECTORY, text);
+	}
+
 	public static Path getScenariosPaths()
 	{
 		return getProjectsPath().resolve(Constant.SCENARIOS_DIR);
@@ -69,11 +74,6 @@ public final class EpptPreferences
 	public static Path getReportsPath()
 	{
 		return getProjectsPath().resolve(Constant.REPORTS_DIR);
-	}
-
-	public static void setProjectsPath(String text)
-	{
-		EPPT_HOME.put(PROJECT_DIRECTORY, text);
 	}
 
 	public static Path getLastProjectConfiguration()

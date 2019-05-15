@@ -14,7 +14,6 @@ package gov.ca.water.calgui.wresl;
 
 import java.io.BufferedWriter;
 import java.io.IOException;
-import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -108,16 +107,16 @@ public class WreslScriptRunner
 			String javaLibraryPath = "-Djava.library.path=\"" + Paths.get("dwr_eppt/modules/lib").toAbsolutePath() + "\"";
 			String path = "\"" + System.getProperty("java.home")
 					+ separator + "bin" + separator + "java" + "\"";
-			String classpath =  "echo off \n";
+			String classpath = "echo off \n";
 			Path epptDir = Paths.get("dwr_eppt");
 			Path modulesDir = epptDir.resolve("modules");
 			try(Stream<Path> walk = Files.walk(modulesDir, 3))
 			{
 				classpath += walk.filter(p -> p.toFile().isDirectory())
-																	   .filter(p -> !p.toString().endsWith("jar"))
-																	   .map(Object::toString)
-																	   .map(p -> "set classpath=%classpath%;" + p + "/*")
-																	   .collect(Collectors.joining("\n")) + "echo on\n";
+								 .filter(p -> !p.toString().endsWith("jar"))
+								 .map(Object::toString)
+								 .map(p -> "set classpath=%classpath%;" + p + "/*")
+								 .collect(Collectors.joining("\n")) + "echo on\n";
 			}
 
 

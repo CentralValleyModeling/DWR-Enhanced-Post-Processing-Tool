@@ -22,7 +22,6 @@ import java.util.List;
 import java.util.Optional;
 import javax.swing.*;
 
-import gov.ca.water.calgui.bo.RBListItemBO;
 import gov.ca.water.calgui.bo.ResultUtilsBO;
 import gov.ca.water.calgui.presentation.DisplayHelper;
 import gov.ca.water.calgui.project.EpptScenarioRun;

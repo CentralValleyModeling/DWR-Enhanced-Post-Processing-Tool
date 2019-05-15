@@ -60,7 +60,7 @@ public class Installer extends ModuleInstall
 			WindowManager.getDefault().getMainWindow().setMinimumSize(new Dimension(545, 630));
 		});
 	}
-	
+
 	private void loadLastProjectConfiguration()
 	{
 		WindowManager.getDefault().invokeWhenUIReady(() ->
@@ -81,6 +81,7 @@ public class Installer extends ModuleInstall
 			}
 		});
 	}
+
 	private void initPlotHandler()
 	{
 		WindowManager.getDefault().invokeWhenUIReady(() ->
@@ -90,6 +91,7 @@ public class Installer extends ModuleInstall
 		});
 		DisplayHelper.installPlotHandler(new TopComponentPlotHandler());
 	}
+
 	private void initEpptHome()
 	{
 		createPaths(EpptPreferences.getProjectsPath());

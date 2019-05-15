@@ -20,78 +20,8 @@ import java.util.Iterator;
  * Uses a regular expression to filter a group of pathnames. It defines either
  * Perl5 or Awk Expressions
  */
-public class DataReferenceFilter implements Enumeration<DataReference> {
-	/**
-	 * Iterates over an array of data references using a filter as defined by
-	 * regex
-	 */
-	public DataReferenceFilter(DataReference[] refs, Predicate<DataReference> predicate) {
-		_filteringFunction = predicate;
-		setSelecting(true);
-		setReferences(refs);
-		filter();
-	}
-
-	/**
-	 * sets the references and filters them.
-	 */
-	public void setReferences(DataReference[] refs) {
-		_references = refs;
-	}
-
-	/**
-	 * set to true if values are to be selected according to filtering function
-	 * criteria or false for rejecting. Selecting is the default.
-	 */
-	public final void setSelecting(boolean select) {
-		_selecting = select;
-	}
-
-	/**
-	 * true if values are selected accorrding to filtering function.
-	 */
-	public final boolean isSelecting() {
-		return _selecting;
-	}
-
-	/**
-	 * true if it has more elements
-	 */
-	public boolean hasMoreElements() {
-		return iterator.hasNext();
-	}
-
-	/**
-	 * next element in the sequence
-	 */
-	public DataReference nextElement() {
-		return iterator.next();
-	}
-
-	/**
-	 * filters the methods
-	 */
-	public final void filter() {
-		_filtered = true;
-		CollectionUtils.filter(Arrays.asList(_references), _filteringFunction, _selecting);
-		resetIterator();
-	}
-
-	/**
-	 * returns the filtered array of references
-	 */
-	public DataReference[] getFilteredArray() {
-		DataReference[] refs = new DataReference[_filteredArray.size()];
-		return _filteredArray.toArray(refs);
-	}
-
-	/**
-	 * resets the iterator.
-	 */
-	public void resetIterator() {
-		iterator = _filteredArray.iterator();
-	}
-
+public class DataReferenceFilter implements Enumeration<DataReference>
+{
 	/**
 	 * true if filter selects by given criteria
 	 */
@@ -116,4 +46,84 @@ public class DataReferenceFilter implements Enumeration<DataReference> {
 	 * iterator for the filtered array.
 	 */
 	private Iterator<DataReference> iterator;
+
+	/**
+	 * Iterates over an array of data references using a filter as defined by
+	 * regex
+	 */
+	public DataReferenceFilter(DataReference[] refs, Predicate<DataReference> predicate)
+	{
+		_filteringFunction = predicate;
+		setSelecting(true);
+		setReferences(refs);
+		filter();
+	}
+
+	/**
+	 * sets the references and filters them.
+	 */
+	public void setReferences(DataReference[] refs)
+	{
+		_references = refs;
+	}
+
+	/**
+	 * true if values are selected accorrding to filtering function.
+	 */
+	public final boolean isSelecting()
+	{
+		return _selecting;
+	}
+
+	/**
+	 * set to true if values are to be selected according to filtering function
+	 * criteria or false for rejecting. Selecting is the default.
+	 */
+	public final void setSelecting(boolean select)
+	{
+		_selecting = select;
+	}
+
+	/**
+	 * true if it has more elements
+	 */
+	public boolean hasMoreElements()
+	{
+		return iterator.hasNext();
+	}
+
+	/**
+	 * next element in the sequence
+	 */
+	public DataReference nextElement()
+	{
+		return iterator.next();
+	}
+
+	/**
+	 * filters the methods
+	 */
+	public final void filter()
+	{
+		_filtered = true;
+		CollectionUtils.filter(Arrays.asList(_references), _filteringFunction, _selecting);
+		resetIterator();
+	}
+
+	/**
+	 * returns the filtered array of references
+	 */
+	public DataReference[] getFilteredArray()
+	{
+		DataReference[] refs = new DataReference[_filteredArray.size()];
+		return _filteredArray.toArray(refs);
+	}
+
+	/**
+	 * resets the iterator.
+	 */
+	public void resetIterator()
+	{
+		iterator = _filteredArray.iterator();
+	}
 }

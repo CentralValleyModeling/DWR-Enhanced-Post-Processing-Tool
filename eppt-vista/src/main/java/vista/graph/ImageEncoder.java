@@ -37,10 +37,11 @@ import java.util.Hashtable;
 // @see PpmEncoder
 // @see Acme.JPM.Decoders.ImageDecoder
 
-public abstract class ImageEncoder implements ImageConsumer {
+public abstract class ImageEncoder implements ImageConsumer
+{
 
+	private static final ColorModel rgbModel = ColorModel.getRGBdefault();
 	protected OutputStream out;
-
 	private ImageProducer producer;
 	private int width = -1;
 	private int height = -1;
@@ -48,13 +49,13 @@ public abstract class ImageEncoder implements ImageConsumer {
 	private boolean started = false;
 	private boolean encoding;
 	private IOException iox;
-	private static final ColorModel rgbModel = ColorModel.getRGBdefault();
 	private Hashtable props = null;
 
 	// / Constructor.
 	// @param img The image to encode.
 	// @param out The stream to write the bytes to.
-	public ImageEncoder(Image img, OutputStream out) throws IOException {
+	public ImageEncoder(Image img, OutputStream out) throws IOException
+	{
 		this(img.getSource(), out);
 	}
 
@@ -62,7 +63,8 @@ public abstract class ImageEncoder implements ImageConsumer {
 	// @param producer The ImageProducer to encode.
 	// @param out The stream to write the bytes to.
 	public ImageEncoder(ImageProducer producer, OutputStream out)
-			throws IOException {
+			throws IOException
+	{
 		this.producer = producer;
 		this.out = out;
 	}
@@ -77,7 +79,7 @@ public abstract class ImageEncoder implements ImageConsumer {
 	// One int per pixel, index is row * scansize + off + col,
 	// RGBdefault (AARRGGBB) color model.
 	abstract void encodePixels(int x, int y, int w, int h, int[] rgbPixels,
-			int off, int scansize) throws IOException;
+							   int off, int scansize) throws IOException;
 
 	// / Subclasses implement this to finish an encoding.
 	abstract void encodeDone() throws IOException;
@@ -85,25 +87,36 @@ public abstract class ImageEncoder implements ImageConsumer {
 	// Our own methods.
 
 	// / Call this after initialization to get things going.
-	public synchronized void encode() throws IOException {
+	public synchronized void encode() throws IOException
+	{
 		encoding = true;
 		iox = null;
 		producer.startProduction(this);
-		while (encoding)
-			try {
+		while(encoding)
+		{
+			try
+			{
 				wait();
-			} catch (InterruptedException e) {
 			}
-		if (iox != null)
+			catch(InterruptedException e)
+			{
+			}
+		}
+		if(iox != null)
+		{
 			throw iox;
+		}
 	}
 
 	private void encodePixelsWrapper(int x, int y, int w, int h,
-			int[] rgbPixels, int off, int scansize) throws IOException {
-		if (!started) {
+									 int[] rgbPixels, int off, int scansize) throws IOException
+	{
+		if(!started)
+		{
 			started = true;
 			encodeStart(width, height);
-			if ((hintflags & TOPDOWNLEFTRIGHT) == 0) {
+			if((hintflags & TOPDOWNLEFTRIGHT) == 0)
+			{
 				producer.requestTopDownLeftRightResend(this);
 				return;
 			}
@@ -111,40 +124,52 @@ public abstract class ImageEncoder implements ImageConsumer {
 		encodePixels(x, y, w, h, rgbPixels, off, scansize);
 	}
 
-	private synchronized void done() {
+	private synchronized void done()
+	{
 		encoding = false;
 		notifyAll();
 	}
 
 	// Methods from ImageConsumer.
 
-	public void setDimensions(int width, int height) {
+	public void setDimensions(int width, int height)
+	{
 		this.width = width;
 		this.height = height;
 	}
 
-	public void setProperties(Hashtable props) {
+	public void setProperties(Hashtable props)
+	{
 		this.props = props;
 	}
 
-	public void setColorModel(ColorModel model) {
+	public void setColorModel(ColorModel model)
+	{
 		// Ignore.
 	}
 
-	public void setHints(int hintflags) {
+	public void setHints(int hintflags)
+	{
 		this.hintflags = hintflags;
 	}
 
 	public void setPixels(int x, int y, int w, int h, ColorModel model,
-			byte[] pixels, int off, int scansize) {
+						  byte[] pixels, int off, int scansize)
+	{
 		int[] rgbPixels = new int[w];
-		for (int row = 0; row < h; ++row) {
+		for(int row = 0; row < h; ++row)
+		{
 			int rowOff = off + row * scansize;
-			for (int col = 0; col < w; ++col)
+			for(int col = 0; col < w; ++col)
+			{
 				rgbPixels[col] = model.getRGB(pixels[rowOff + col] & 0xff);
-			try {
+			}
+			try
+			{
 				encodePixelsWrapper(x, y + row, w, 1, rgbPixels, 0, w);
-			} catch (IOException e) {
+			}
+			catch(IOException e)
+			{
 				iox = e;
 				done();
 				return;
@@ -153,24 +178,37 @@ public abstract class ImageEncoder implements ImageConsumer {
 	}
 
 	public void setPixels(int x, int y, int w, int h, ColorModel model,
-			int[] pixels, int off, int scansize) {
-		if (model == rgbModel) {
-			try {
+						  int[] pixels, int off, int scansize)
+	{
+		if(model == rgbModel)
+		{
+			try
+			{
 				encodePixelsWrapper(x, y, w, h, pixels, off, scansize);
-			} catch (IOException e) {
+			}
+			catch(IOException e)
+			{
 				iox = e;
 				done();
 				return;
 			}
-		} else {
+		}
+		else
+		{
 			int[] rgbPixels = new int[w];
-			for (int row = 0; row < h; ++row) {
+			for(int row = 0; row < h; ++row)
+			{
 				int rowOff = off + row * scansize;
-				for (int col = 0; col < w; ++col)
+				for(int col = 0; col < w; ++col)
+				{
 					rgbPixels[col] = model.getRGB(pixels[rowOff + col]);
-				try {
+				}
+				try
+				{
 					encodePixelsWrapper(x, y + row, w, 1, rgbPixels, 0, w);
-				} catch (IOException e) {
+				}
+				catch(IOException e)
+				{
 					iox = e;
 					done();
 					return;
@@ -179,14 +217,21 @@ public abstract class ImageEncoder implements ImageConsumer {
 		}
 	}
 
-	public void imageComplete(int status) {
+	public void imageComplete(int status)
+	{
 		producer.removeConsumer(this);
-		if (status == ImageConsumer.IMAGEABORTED)
+		if(status == ImageConsumer.IMAGEABORTED)
+		{
 			iox = new IOException("image aborted");
-		else {
-			try {
+		}
+		else
+		{
+			try
+			{
 				encodeDone();
-			} catch (IOException e) {
+			}
+			catch(IOException e)
+			{
 				iox = e;
 			}
 		}

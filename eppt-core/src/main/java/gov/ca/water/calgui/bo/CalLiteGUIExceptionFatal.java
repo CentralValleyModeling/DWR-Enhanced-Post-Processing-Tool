@@ -14,8 +14,8 @@ package gov.ca.water.calgui.bo;
 
 public class CalLiteGUIExceptionFatal extends CalLiteGUIException
 {
-    public CalLiteGUIExceptionFatal(String message, Throwable cause)
-    {
-        super(message, cause);
-    }
+	public CalLiteGUIExceptionFatal(String message, Throwable cause)
+	{
+		super(message, cause);
+	}
 }

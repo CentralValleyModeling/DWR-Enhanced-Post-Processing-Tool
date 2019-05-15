@@ -12,8 +12,6 @@
 
 package gov.ca.water.calgui.wresl;
 
-import java.io.InputStream;
-
 import gov.ca.water.calgui.project.EpptScenarioRun;
 
 /**

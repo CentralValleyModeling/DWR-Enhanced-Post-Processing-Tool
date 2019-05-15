@@ -11,5 +11,6 @@
  */
 package vista.app;
 
-public class GraphLimitException extends Exception {
+public class GraphLimitException extends Exception
+{
 }

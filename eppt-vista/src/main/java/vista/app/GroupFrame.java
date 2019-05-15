@@ -21,15 +21,22 @@ import vista.set.Group;
 
 /**
  * A frame containing the view of a group and its associated menu items.
- * 
+ *
  * @author Nicky Sandhu
  * @version $Id: GroupFrame.java,v 1.1 2003/10/02 20:48:31 redwood Exp $
  */
-public class GroupFrame extends DefaultFrame {
+public class GroupFrame extends DefaultFrame
+{
 	/**
-   *
-   */
-	public GroupFrame(Group g) {
+	 *
+	 */
+	private GroupTable _groupTablePanel;
+
+	/**
+	 *
+	 */
+	public GroupFrame(Group g)
+	{
 		setIconImage(Toolkit.getDefaultToolkit().createImage(
 				VistaUtils.getImageAsBytes("/vista/OWE.gif")));
 		_groupTablePanel = new GroupTable(g);
@@ -55,14 +62,10 @@ public class GroupFrame extends DefaultFrame {
 	}
 
 	/**
-   *
-   */
-	public GroupTable getGroupTable() {
+	 *
+	 */
+	public GroupTable getGroupTable()
+	{
 		return _groupTablePanel;
 	}
-
-	/**
-   *
-   */
-	private GroupTable _groupTablePanel;
 }

@@ -40,12 +40,11 @@ import vista.set.RegularTimeSeries;
 import vista.set.Tuple;
 
 /**
- * 
- * 
  * @author Nicky Sandhu
  * @version $Id: PieChartAnimator.java,v 1.1 2003/10/02 20:48:38 redwood Exp $
  */
-public class PieChartAnimator implements AnimationObserver {
+public class PieChartAnimator implements AnimationObserver
+{
 	private DataSetIterator _dsi;
 	private ElementFilter _filter;
 	private AnimatorCanvas _canvas;
@@ -55,7 +54,8 @@ public class PieChartAnimator implements AnimationObserver {
 	private boolean goForward = true;
 	private DataSetElement _dse;
 
-	public PieChartAnimator(RegularTimeSeries[] rts) {
+	public PieChartAnimator(RegularTimeSeries[] rts)
+	{
 		int delay = 500;
 		timer = new Animator();
 		timer.setInterval(delay);
@@ -68,29 +68,39 @@ public class PieChartAnimator implements AnimationObserver {
 		JButton stopBtn = new JButton("#");
 		JButton forwardBtn = new JButton(">");
 		JButton reverseBtn = new JButton("<");
-		fasterBtn.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent evt) {
+		fasterBtn.addActionListener(new ActionListener()
+		{
+			public void actionPerformed(ActionEvent evt)
+			{
 				increaseAnimationSpeed(50);
 			}
 		});
-		slowerBtn.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent evt) {
+		slowerBtn.addActionListener(new ActionListener()
+		{
+			public void actionPerformed(ActionEvent evt)
+			{
 				increaseAnimationSpeed(-50);
 			}
 		});
-		forwardBtn.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent evt) {
+		forwardBtn.addActionListener(new ActionListener()
+		{
+			public void actionPerformed(ActionEvent evt)
+			{
 				goForward = true;
 				timer.startAnimation();
 			}
 		});
-		stopBtn.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent evt) {
+		stopBtn.addActionListener(new ActionListener()
+		{
+			public void actionPerformed(ActionEvent evt)
+			{
 				timer.stopAnimation();
 			}
 		});
-		reverseBtn.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent evt) {
+		reverseBtn.addActionListener(new ActionListener()
+		{
+			public void actionPerformed(ActionEvent evt)
+			{
 				goForward = false;
 				timer.startAnimation();
 			}
@@ -114,52 +124,68 @@ public class PieChartAnimator implements AnimationObserver {
 	}
 
 	/**
-   *
-   */
-	public void update(AnimationObservable observable, Object args) {
-		if (goForward)
+	 *
+	 */
+	public void update(AnimationObservable observable, Object args)
+	{
+		if(goForward)
+		{
 			drawNext();
+		}
 		else
+		{
 			drawPrevious();
+		}
 	}
 
 	/**
-   *
-   */
-	public AnimatorCanvas setUpPieChart(RegularTimeSeries[] rts) {
+	 *
+	 */
+	public AnimatorCanvas setUpPieChart(RegularTimeSeries[] rts)
+	{
 		_dsi = new MultiIterator(rts, Constants.DEFAULT_FLAG_FILTER);
 		DataSetElement dse2 = _dsi.getMaximum();
 		double ymax = Float.MIN_VALUE;
-		for (int i = 1; i < dse2.getDimension(); i++) {
+		for(int i = 1; i < dse2.getDimension(); i++)
+		{
 			double d = dse2.getX(i);
-			if (Double.doubleToLongBits(d) != 0x7ff8000000000000L) {
+			if(Double.doubleToLongBits(d) != 0x7ff8000000000000L)
+			{
 				ymax = Math.max(ymax, d);
 			}
 		}
 		dse2 = _dsi.getMinimum();
 		double ymin = Float.MAX_VALUE;
-		for (int i = 1; i < dse2.getDimension(); i++) {
+		for(int i = 1; i < dse2.getDimension(); i++)
+		{
 			double d = dse2.getX(i);
-			if (Double.doubleToLongBits(d) != 0x7ff8000000000000L) {
+			if(Double.doubleToLongBits(d) != 0x7ff8000000000000L)
+			{
 				ymin = Math.min(ymin, d);
 			}
 		}
 		_dsi.resetIterator();
 		String[] labels = new String[rts.length];
-		for (int i = 0; i < labels.length; i++)
+		for(int i = 0; i < labels.length; i++)
+		{
 			labels[i] = rts[i].getName();
+		}
 		double[] vals = new double[rts.length];
 		_dse = new Tuple(vals);
 		DataSetElement dse = _dsi.getElement();
-		for (int i = 0; i < _dse.getDimension(); i++)
+		for(int i = 0; i < _dse.getDimension(); i++)
+		{
 			_dse.setX(i, dse.getX(i + 1));
+		}
 		// System.out.println(_dse);
 		_pdm = new DefaultPieChartModel(_dse, labels);
 		Graph graph = new Graph(new GraphAttr());
 		String title = "PieChart : ";
-		for (int i = 0; i < rts.length; i++) {
+		for(int i = 0; i < rts.length; i++)
+		{
 			DataSetAttr attr = rts[i].getAttributes();
-			if (attr != null && attr.getLocationName() != null) {
+			if(attr != null && attr.getLocationName() != null)
+			{
 				title += " | " + attr.getLocationName();
 			}
 		}
@@ -173,63 +199,85 @@ public class PieChartAnimator implements AnimationObserver {
 	}
 
 	/**
-   *
-   */
-	public void drawNext() {
-		if (_dsi.atEnd()) {
+	 *
+	 */
+	public void drawNext()
+	{
+		if(_dsi.atEnd())
+		{
 			timer.stopAnimation();
 		}
 		DataSetElement dse = null;
-		while (!_dsi.atEnd()) {
+		while(!_dsi.atEnd())
+		{
 			dse = _dsi.getElement();
-			if (_filter.isAcceptable(dse))
+			if(_filter.isAcceptable(dse))
+			{
 				break;
+			}
 			_dsi.advance();
 		}
-		if (dse == null)
+		if(dse == null)
+		{
 			return; // no more good elements, probably at end
+		}
 		_timeText.setText(dse.getXString());
-		for (int i = 0; i < _dse.getDimension(); i++)
+		for(int i = 0; i < _dse.getDimension(); i++)
+		{
 			_dse.setX(i, dse.getX(i + 1));
+		}
 		// System.out.println(_dse);
 		_pdm.setReferenceObject(_dse);
 		_canvas.redoNextPaint();
 		_canvas.repaint();
-		if (!_dsi.atEnd())
+		if(!_dsi.atEnd())
+		{
 			_dsi.advance();
+		}
 	}
 
 	/**
-   *
-   */
-	public void drawPrevious() {
-		if (!_dsi.atStart())
+	 *
+	 */
+	public void drawPrevious()
+	{
+		if(!_dsi.atStart())
+		{
 			_dsi.retreat();
+		}
 		DataSetElement dse = null;
-		while (!_dsi.atStart()) {
+		while(!_dsi.atStart())
+		{
 			dse = _dsi.getElement();
-			if (_filter.isAcceptable(dse))
+			if(_filter.isAcceptable(dse))
+			{
 				break;
+			}
 			_dsi.retreat();
 		}
 		_timeText.setText(dse.getXString());
-		for (int i = 0; i < _dse.getDimension(); i++)
+		for(int i = 0; i < _dse.getDimension(); i++)
+		{
 			_dse.setX(i, dse.getX(i + 1));
+		}
 		_pdm.setReferenceObject(_dse);
 		_canvas.redoNextPaint();
 		_canvas.repaint();
-		if (_dsi.atStart()) {
+		if(_dsi.atStart())
+		{
 			timer.stopAnimation();
 			return;
 		}
 	}
 
 	/**
-   *
-   */
-	public void increaseAnimationSpeed(int increment) {
+	 *
+	 */
+	public void increaseAnimationSpeed(int increment)
+	{
 		int delay = (int) timer.getInterval();
-		if (delay - increment > 0) {
+		if(delay - increment > 0)
+		{
 			timer.setInterval(delay - increment);
 		}
 	}

@@ -49,7 +49,7 @@ class PowerFrame
 				if(item.isSelected())
 				{
 					dssFilename = item.toString();
-//					dssGrabber.setScenarioRuns(item.toString(), item.getModel());
+					//					dssGrabber.setScenarioRuns(item.toString(), item.getModel());
 				}
 			}
 			if(!dssGrabber.hasPower(dssFilename))

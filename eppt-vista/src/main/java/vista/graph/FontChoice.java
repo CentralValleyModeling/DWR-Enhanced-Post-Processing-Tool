@@ -21,26 +21,39 @@ import javax.swing.*;
 /**
  * Displays fonts available in the system and enables selection of font family,
  * style and size.
- * 
+ *
  * @author Nicky Sandhu
  * @version $Id: FontChoice.java,v 1.1 2003/10/02 20:48:55 redwood Exp $
  */
-public class FontChoice extends JPanel {
+public class FontChoice extends JPanel
+{
 	/**
-   *
-   */
-	public FontChoice(Font font) {
+	 *
+	 */
+	private JCheckBox plainCheck, boldCheck, italicCheck;
+	private JComboBox sizeBox, fontBox;
+
+	/**
+	 *
+	 */
+	public FontChoice(Font font)
+	{
 		String[] fontList = Toolkit.getDefaultToolkit().getFontList();
 		fontBox = new JComboBox();
 		String fontFamily = font.getFamily();
-		for (int i = 0; i < fontList.length; i++) {
+		for(int i = 0; i < fontList.length; i++)
+		{
 			fontBox.addItem(fontList[i]);
-			if (fontFamily.equals(fontList[i]))
+			if(fontFamily.equals(fontList[i]))
+			{
 				fontBox.setSelectedIndex(i);
+			}
 		}
 		// ! java bug fix
-		if (fontFamily.equals("Times Roman"))
+		if(fontFamily.equals("Times Roman"))
+		{
 			fontBox.setSelectedItem("TimesRoman");
+		}
 		//
 		plainCheck = new JCheckBox("Plain?", font.isPlain());
 		boldCheck = new JCheckBox("Bold?", font.isBold());
@@ -49,14 +62,15 @@ public class FontChoice extends JPanel {
 		sizeBox = new JComboBox();
 		int fontSize = font.getSize();
 		int minFontSize = 3, maxFontSize = 60;
-		for (int i = minFontSize; i < maxFontSize; i++) {
+		for(int i = minFontSize; i < maxFontSize; i++)
+		{
 			sizeBox.addItem(new Integer(i).toString());
 		}
 		sizeBox.setSelectedIndex(font.getSize() - minFontSize);
 		Dimension pSize = sizeBox.getPreferredSize();
 		pSize.width = pSize.width * 2;
 		sizeBox.setPreferredSize(pSize);
-		// 
+		//
 		JPanel stylePanel = new JPanel();
 		stylePanel.setLayout(new GridLayout(3, 1));
 		stylePanel.add(plainCheck);
@@ -76,7 +90,8 @@ public class FontChoice extends JPanel {
 	/**
 	 * returns a font for the characteristics.
 	 */
-	public Font getSelectedFont() {
+	public Font getSelectedFont()
+	{
 		int plain = plainCheck.isSelected() ? Font.PLAIN : 0;
 		int bold = boldCheck.isSelected() ? Font.BOLD : 0;
 		int italic = italicCheck.isSelected() ? Font.ITALIC : 0;
@@ -84,10 +99,4 @@ public class FontChoice extends JPanel {
 		int size = new Integer((String) sizeBox.getSelectedItem()).intValue();
 		return new Font((String) fontBox.getSelectedItem(), style, size);
 	}
-
-	/**
-   *
-   */
-	private JCheckBox plainCheck, boldCheck, italicCheck;
-	private JComboBox sizeBox, fontBox;
 }

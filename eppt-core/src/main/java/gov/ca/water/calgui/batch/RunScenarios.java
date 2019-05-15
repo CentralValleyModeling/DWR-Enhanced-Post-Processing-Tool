@@ -26,7 +26,7 @@ import org.apache.log4j.Logger;
  */
 public class RunScenarios
 {
-    private static final Logger LOG = Logger.getLogger(ModelRunSvcImpl.class.getName());
+	private static final Logger LOG = Logger.getLogger(ModelRunSvcImpl.class.getName());
 
 	public RunScenarios()
 	{
@@ -44,7 +44,7 @@ public class RunScenarios
 		}
 		catch(Exception ex)
 		{
-            LOG.error(ex.getMessage());
+			LOG.error(ex.getMessage());
 		}
 	}
 

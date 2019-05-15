@@ -12,10 +12,9 @@
 package vista.app;
 
 /**
- * 
- * 
  * @author Nicky Sandhu
  * @version $Id: TableHeaderTip.java,v 1.1 2000/04/10 19:57:51 nsandhu Exp $
  */
-public class TableHeaderTip {
+public class TableHeaderTip
+{
 }

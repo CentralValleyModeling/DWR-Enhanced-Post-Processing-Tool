@@ -12,7 +12,6 @@
 
 package gov.ca.water.quickresults.ui.projectconfig;
 
-import java.nio.file.Path;
 import javax.swing.tree.DefaultMutableTreeNode;
 
 import gov.ca.water.calgui.project.NamedDssPath;

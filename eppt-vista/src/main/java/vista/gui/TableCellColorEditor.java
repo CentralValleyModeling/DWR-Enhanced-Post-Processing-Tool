@@ -17,10 +17,12 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.*;
 
-public class TableCellColorEditor extends DefaultCellEditor {
+public class TableCellColorEditor extends DefaultCellEditor
+{
 	Color currentColor = null;
 
-	public TableCellColorEditor(JButton b) {
+	public TableCellColorEditor(JButton b)
+	{
 		super(new JCheckBox()); // Unfortunately, the constructor
 		// expects a check box, combo box,
 		// or text field.
@@ -28,23 +30,28 @@ public class TableCellColorEditor extends DefaultCellEditor {
 		setClickCountToStart(1); // This is usually 1 or 2.
 
 		// Must do this so that editing stops when appropriate.
-		b.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
+		b.addActionListener(new ActionListener()
+		{
+			public void actionPerformed(ActionEvent e)
+			{
 				fireEditingStopped();
 			}
 		});
 	}
 
-	protected void fireEditingStopped() {
+	protected void fireEditingStopped()
+	{
 		super.fireEditingStopped();
 	}
 
-	public Object getCellEditorValue() {
+	public Object getCellEditorValue()
+	{
 		return currentColor;
 	}
 
 	public Component getTableCellEditorComponent(JTable table, Object value,
-			boolean isSelected, int row, int column) {
+												 boolean isSelected, int row, int column)
+	{
 		((JButton) editorComponent).setText(value.toString());
 		currentColor = (Color) value;
 		return editorComponent;

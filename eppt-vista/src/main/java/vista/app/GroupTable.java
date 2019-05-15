@@ -61,29 +61,35 @@ import vista.set.SortMechanism;
  * This class displays the group information as a table by implementing the
  * TableModel. The table columns are the parts of the pathname and the ordering
  * can be shuffled.
- * 
+ *
  * @author Nicky Sandhu
  * @version $Id: GroupTable.java,v 1.1 2003/10/02 20:48:31 redwood Exp $
  */
 @SuppressWarnings("serial")
-public class GroupTable extends JPanel implements RowMovable, View {
+public class GroupTable extends JPanel implements RowMovable, View
+{
+	private static final boolean DEBUG = false;
+	private static JProgressBar _progressBar;
+	//
+	private static boolean[] ascVals = new boolean[Pathname.MAX_PARTS];
+	public JTable _table;
+	// private static boolean ascending = true;
+	public GridBagLayout gbl;
 	private MathOperationsListener _mathListener;
 	private JLabel _groupLabel, _nRefLabel;
 	private JCheckBoxMenuItem _showFilterPanel, _showMathPanel, _showInfoPanel;
 	private PathnameFilterPanel _filterPanel;
 	private JPanel _infoPanel, _mathPanel;
-	public JTable _table;
 	private Group _group;
 	private JTextField _timeWindowField;
-	private static final boolean DEBUG = false;
 	private GraphBuilder _graphBuilder;
-	private static JProgressBar _progressBar;
 	private boolean _initShowMath = true, _initShowFilter = true;
 
 	/**
 	 * Construct a table
 	 */
-	public GroupTable(Group group) {
+	public GroupTable(Group group)
+	{
 		super();
 		createTable(group);
 		_graphBuilder = new DefaultGraphBuilder();
@@ -91,25 +97,73 @@ public class GroupTable extends JPanel implements RowMovable, View {
 	}
 
 	/**
+	 *
+	 */
+	public static void setMonitorMaximum(int value)
+	{
+		_progressBar.setMaximum(value);
+	}
+
+	public static void setMonitorMinimum(int value)
+	{
+		_progressBar.setMinimum(value);
+	}
+
+	/**
+	 *
+	 */
+	public static void setMonitorValue(int value)
+	{
+		try
+		{
+			_progressBar.setValue(value);
+			_progressBar.update(_progressBar.getGraphics());
+		}
+		catch(IllegalArgumentException e)
+		{
+		}
+	}
+
+	/**
+	 *
+	 */
+	public static void incrementMonitorValue(int value)
+	{
+		try
+		{
+			_progressBar.setValue(_progressBar.getValue() + value);
+			_progressBar.update(_progressBar.getGraphics());
+		}
+		catch(IllegalArgumentException e)
+		{
+		}
+	}
+
+	/**
 	 * the context for this gui
 	 */
-	public SessionContext getContext() {
+	public SessionContext getContext()
+	{
 		return MainGUI.getContext();
 	}
 
 	/**
 	 * updates the view of the current group object.
 	 */
-	public void updateView() {
+	public void updateView()
+	{
 		Group g = MainGUI.getContext().getCurrentGroup();
-		if (_group == null || (!_group.equals(g))) {
+		if(_group == null || (!_group.equals(g)))
+		{
 			this.removeAll();
 			_group = g;
 			createTable(g);
 		}
 		updateInfoPanel();
-		if (this.isVisible()) {
-			if (this.getGraphics() != null){
+		if(this.isVisible())
+		{
+			if(this.getGraphics() != null)
+			{
 				this.repaint();
 			}
 		}
@@ -118,9 +172,12 @@ public class GroupTable extends JPanel implements RowMovable, View {
 	/**
 	 * updates information
 	 */
-	public void updateInfoPanel() {
-		if (DEBUG)
+	public void updateInfoPanel()
+	{
+		if(DEBUG)
+		{
 			System.out.println("Group Name:" + _group.getName());
+		}
 		_groupLabel.setText("GROUP: " + _group.getName());
 		_nRefLabel.setText("NUMBER OF DATA REFERENCES: "
 				+ _group.getNumberOfDataReferences());
@@ -130,9 +187,10 @@ public class GroupTable extends JPanel implements RowMovable, View {
 	}
 
 	/**
-   *
-   */
-	public void addMenus(JMenuBar mbar) {
+	 *
+	 */
+	public void addMenus(JMenuBar mbar)
+	{
 		//
 		JMenuItem cloneDataItem = new JMenuItem("Clone");
 		JMenuItem deleteDataItem = new JMenuItem("Delete");
@@ -149,13 +207,17 @@ public class GroupTable extends JPanel implements RowMovable, View {
 		exportToItem.add(txtMenu);
 		//
 		JMenu importFromItem = new JMenu("Import Data from...");
-		Action importDSSTSAction = new AbstractAction("RTS format") {
-			public void actionPerformed(ActionEvent evt) {
+		Action importDSSTSAction = new AbstractAction("RTS format")
+		{
+			public void actionPerformed(ActionEvent evt)
+			{
 				importDSSTSAction(true);
 			}
 		};
-		Action importDSSITSAction = new AbstractAction("ITS format") {
-			public void actionPerformed(ActionEvent evt) {
+		Action importDSSITSAction = new AbstractAction("ITS format")
+		{
+			public void actionPerformed(ActionEvent evt)
+			{
 				importDSSTSAction(false);
 			}
 		};
@@ -192,68 +254,94 @@ public class GroupTable extends JPanel implements RowMovable, View {
 		dataMenu.add(quitItem);
 		// dataMenu.add(exportToItem);
 		// add listeners...
-		cloneDataItem.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent evt) {
+		cloneDataItem.addActionListener(new ActionListener()
+		{
+			public void actionPerformed(ActionEvent evt)
+			{
 				cloneData(evt);
 			}
 		});
-		deleteDataItem.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent evt) {
+		deleteDataItem.addActionListener(new ActionListener()
+		{
+			public void actionPerformed(ActionEvent evt)
+			{
 				ctrlDPressed(evt);
 			}
 		});
-		updateItem.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent evt) {
+		updateItem.addActionListener(new ActionListener()
+		{
+			public void actionPerformed(ActionEvent evt)
+			{
 				updateData(evt);
 			}
 		});
-		dssExport.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent evt) {
-				exportDataToDSS(evt,true);
+		dssExport.addActionListener(new ActionListener()
+		{
+			public void actionPerformed(ActionEvent evt)
+			{
+				exportDataToDSS(evt, true);
 			}
 		});
-		dssExportWithoutFlags.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent evt) {
-				exportDataToDSS(evt,false);
+		dssExportWithoutFlags.addActionListener(new ActionListener()
+		{
+			public void actionPerformed(ActionEvent evt)
+			{
+				exportDataToDSS(evt, false);
 			}
 		});
-		txtExport.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent evt) {
+		txtExport.addActionListener(new ActionListener()
+		{
+			public void actionPerformed(ActionEvent evt)
+			{
 				exportData(evt);
 			}
 		});
-		txtNormalExport.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent evt) {
+		txtNormalExport.addActionListener(new ActionListener()
+		{
+			public void actionPerformed(ActionEvent evt)
+			{
 				exportDataGeneric(evt);
 			}
 		});
-		showMonthlyAverage.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent evt) {
+		showMonthlyAverage.addActionListener(new ActionListener()
+		{
+			public void actionPerformed(ActionEvent evt)
+			{
 				monthlyAverage(evt);
 			}
 		});
-		showAsTableItem.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent evt) {
+		showAsTableItem.addActionListener(new ActionListener()
+		{
+			public void actionPerformed(ActionEvent evt)
+			{
 				ctrlTPressed(evt);
 			}
 		});
-		showTSItem.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent evt) {
+		showTSItem.addActionListener(new ActionListener()
+		{
+			public void actionPerformed(ActionEvent evt)
+			{
 				ctrlGPressed(evt);
 			}
 		});
-		showScatterItem.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent evt) {
+		showScatterItem.addActionListener(new ActionListener()
+		{
+			public void actionPerformed(ActionEvent evt)
+			{
 				showScatter(evt);
 			}
 		});
-		reloadItem.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent evt) {
+		reloadItem.addActionListener(new ActionListener()
+		{
+			public void actionPerformed(ActionEvent evt)
+			{
 				reloadGroup(evt);
 			}
 		});
-		quitItem.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent evt) {
+		quitItem.addActionListener(new ActionListener()
+		{
+			public void actionPerformed(ActionEvent evt)
+			{
 				quitWindow(evt);
 			}
 		});
@@ -262,30 +350,43 @@ public class GroupTable extends JPanel implements RowMovable, View {
 		JMenu animationMenu = new JMenu("Animation");
 		JMenuItem profileItem = new JMenuItem("Profile Animation");
 		JMenuItem pieItem = new JMenuItem("Pie Chart Animation");
-		profileItem.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent evt) {
+		profileItem.addActionListener(new ActionListener()
+		{
+			public void actionPerformed(ActionEvent evt)
+			{
 				DataReference[] refs = getSelectedReferences();
 				new ProfileAnimationDialog(refs);
 			}
 		});
-		pieItem.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent evt) {
+		pieItem.addActionListener(new ActionListener()
+		{
+			public void actionPerformed(ActionEvent evt)
+			{
 				DataReference[] refs = getSelectedReferences();
-				if (refs == null || refs.length == 0)
+				if(refs == null || refs.length == 0)
+				{
 					throw new IllegalArgumentException("No references selected");
+				}
 				RegularTimeSeries[] rts = new RegularTimeSeries[refs.length];
-				for (int i = 0; i < refs.length; i++) {
+				for(int i = 0; i < refs.length; i++)
+				{
 					DataSet ds = refs[i].getData();
-					if (ds == null)
+					if(ds == null)
+					{
 						throw new IllegalArgumentException(
 								"Could not get data for: " + refs[i]);
-					if (ds instanceof RegularTimeSeries)
+					}
+					if(ds instanceof RegularTimeSeries)
+					{
 						rts[i] = (RegularTimeSeries) ds;
+					}
 					else
+					{
 						throw new IllegalArgumentException(
 								"only regular time series"
 										+ " allowed in pie chart"
 										+ " animations");
+					}
 				}
 				new PieChartAnimator(rts);
 			}
@@ -298,15 +399,19 @@ public class GroupTable extends JPanel implements RowMovable, View {
 	}
 
 	/**
-   *
-   */
-	public void showFilterPanel(ActionEvent evt) {
+	 *
+	 */
+	public void showFilterPanel(ActionEvent evt)
+	{
 		boolean show = _showFilterPanel.isSelected();
-		if (show) {
+		if(show)
+		{
 			_infoPanel.add(_filterPanel);
 			_infoPanel.setLayout(new GridLayout(_infoPanel.getComponentCount(),
 					1));
-		} else {
+		}
+		else
+		{
 			_infoPanel.remove(_filterPanel);
 			_infoPanel.setLayout(new GridLayout(_infoPanel.getComponentCount(),
 					1));
@@ -315,30 +420,36 @@ public class GroupTable extends JPanel implements RowMovable, View {
 	}
 
 	/**
-   *
-   */
-	public void showSortDialog(ActionEvent evt) {
+	 *
+	 */
+	public void showSortDialog(ActionEvent evt)
+	{
 		new SortDialog((JFrame) JOptionPane.getFrameForComponent(this), this)
 				.show();
 	}
 
 	/**
-   *
-   */
-	public void showGroupTree(ActionEvent evt) {
+	 *
+	 */
+	public void showGroupTree(ActionEvent evt)
+	{
 		new GroupTreeFrame(_group);
 	}
 
 	/**
-   *
-   */
-	public void showMathPanel(ActionEvent evt) {
+	 *
+	 */
+	public void showMathPanel(ActionEvent evt)
+	{
 		boolean show = _showMathPanel.getState();
-		if (show) {
+		if(show)
+		{
 			_infoPanel.add(_mathPanel);
 			_infoPanel.setLayout(new GridLayout(_infoPanel.getComponentCount(),
 					1));
-		} else {
+		}
+		else
+		{
 			_infoPanel.remove(_mathPanel);
 			_infoPanel.setLayout(new GridLayout(_infoPanel.getComponentCount(),
 					1));
@@ -347,15 +458,19 @@ public class GroupTable extends JPanel implements RowMovable, View {
 	}
 
 	/**
-   *
-   */
-	public void showInfoPanel(ActionEvent evt) {
+	 *
+	 */
+	public void showInfoPanel(ActionEvent evt)
+	{
 		boolean show = _showInfoPanel.getState();
-		if (show) {
+		if(show)
+		{
 			this.add(_infoPanel, BorderLayout.NORTH);
 			_showFilterPanel.setEnabled(true);
 			_showMathPanel.setEnabled(true);
-		} else {
+		}
+		else
+		{
 			this.remove(_infoPanel);
 			_showFilterPanel.setEnabled(false);
 			_showMathPanel.setEnabled(false);
@@ -366,7 +481,8 @@ public class GroupTable extends JPanel implements RowMovable, View {
 	/**
 	 * quits this window
 	 */
-	public void reloadGroup(ActionEvent evt) {
+	public void reloadGroup(ActionEvent evt)
+	{
 		_group.reload();
 		MainGUI.getContext().setCurrentGroup(_group);
 		updateView();
@@ -375,7 +491,8 @@ public class GroupTable extends JPanel implements RowMovable, View {
 	/**
 	 * quits this window
 	 */
-	public void quitWindow(ActionEvent evt) {
+	public void quitWindow(ActionEvent evt)
+	{
 		JOptionPane.getFrameForComponent(this).dispose();
 		MainGUI.getContext().setCurrentGroup(null);
 	}
@@ -383,14 +500,16 @@ public class GroupTable extends JPanel implements RowMovable, View {
 	/**
 	 * adds reference to group and updates view
 	 */
-	public void addReference(DataReference ref) {
+	public void addReference(DataReference ref)
+	{
 		Executor.execute(new AddReferenceCommand(getContext(), ref), this);
 	}
 
 	/**
 	 * adds reference at currently selected item
 	 */
-	public void addReferenceAtCurrentSelection(DataReference ref) {
+	public void addReferenceAtCurrentSelection(DataReference ref)
+	{
 		int row = _table.getSelectedRow();
 		Executor.execute(new InsertReferenceAtCommand(getContext(), ref,
 				row + 1), this);
@@ -399,10 +518,13 @@ public class GroupTable extends JPanel implements RowMovable, View {
 	/**
 	 * adds clone of references to group
 	 */
-	public void cloneData(ActionEvent evt) {
+	public void cloneData(ActionEvent evt)
+	{
 		DataReference[] refs = getSelectedReferences();
-		if (refs == null || refs.length == 0)
+		if(refs == null || refs.length == 0)
+		{
 			return;
+		}
 		Executor
 				.execute(new AddReferenceCloneCommand(getContext(), refs), this);
 	}
@@ -410,198 +532,211 @@ public class GroupTable extends JPanel implements RowMovable, View {
 	/**
 	 * updates data on the server if allowed to do so.
 	 */
-	public void updateData(ActionEvent evt) {
+	public void updateData(ActionEvent evt)
+	{
 		DataReference[] refs = getSelectedReferences();
-		if (refs == null || refs.length == 0)
+		if(refs == null || refs.length == 0)
+		{
 			return;
+		}
 		Executor.execute(new UpdateDataCommand(refs), this);
 	}
 
 	/**
-   *
-   */
-	public void exportData(ActionEvent evt) {
+	 *
+	 */
+	public void exportData(ActionEvent evt)
+	{
 		// get filename from dialog...
 		String saveFilename = VistaUtils.getFilenameFromDialog(this,
 				FileDialog.SAVE, "txt", "Text Format");
-		if (saveFilename == null)
+		if(saveFilename == null)
+		{
 			return;
+		}
 		Executor.execute(new ExportDataCommand(getGroup(), _table
 				.getSelectedRows(), saveFilename), this);
 	}
 
 	/**
-   *
-   */
-	public void exportDataGeneric(ActionEvent evt) {
+	 *
+	 */
+	public void exportDataGeneric(ActionEvent evt)
+	{
 		// get filename from dialog...
 		int[] rows = _table.getSelectedRows();
-		if (rows == null || rows.length == 0)
+		if(rows == null || rows.length == 0)
+		{
 			return;
+		}
 		//
 		String saveFilename = VistaUtils.getFilenameFromDialog(this,
 				FileDialog.SAVE, "txt", "Text Format");
-		if (saveFilename == null)
+		if(saveFilename == null)
+		{
 			return;
+		}
 		//
-		for (int i = 0; i < rows.length; i++) {
+		for(int i = 0; i < rows.length; i++)
+		{
 			DataReference ref = _group.getDataReference(rows[i]);
 			SetUtils.write(ref.getData(), saveFilename, ref.getData()
-					.isFlagged());
+														   .isFlagged());
 		}
 	}
 
 	/**
-   *
-   */
-	public void exportDataToDSS(ActionEvent evt, boolean withFlags) {
+	 *
+	 */
+	public void exportDataToDSS(ActionEvent evt, boolean withFlags)
+	{
 		// get filename from dialog...
 		String saveFilename = VistaUtils.getFilenameFromDialog(this,
 				FileDialog.SAVE, "dss", "DSS Files");
-		if (saveFilename == null)
+		if(saveFilename == null)
+		{
 			return;
+		}
 		saveFilename = VistaUtils.setExtension(saveFilename, "dss");
 		Executor.execute(new ExportDataToDSSCommand(getGroup(), _table
 				.getSelectedRows(), saveFilename, withFlags), this);
 	}
 
 	/**
+	 * group for this table
+	 */
+	public Group getGroup()
+	{
+		return _group;
+	}
+
+	/**
 	 * sets new group for table.
 	 */
-	public void setGroup(Group g) {
+	public void setGroup(Group g)
+	{
 		this.removeAll();
 		createTable(g);
-		if (this.isVisible()) {
+		if(this.isVisible())
+		{
 			this.paintAll(this.getGraphics());
 		}
 	}
 
 	/**
-	 * group for this table
-	 */
-	public Group getGroup() {
-		return _group;
-	}
-
-	/**
 	 * returns selection
 	 */
-	public Object getSelectedValue() {
+	public Object getSelectedValue()
+	{
 		int row = _table.getSelectedRow();
 		return _group.getDataReference(row);
 	}
 
 	/**
 	 * @return an array of selected value or array of size 0 if no values are
-	 *         selected.
+	 * selected.
 	 */
-	public DataReference[] getSelectedReferences() {
+	public DataReference[] getSelectedReferences()
+	{
 		int rowCount = _table.getSelectedRowCount();
 		int[] rows = _table.getSelectedRows();
 		DataReference[] array = new DataReference[rowCount];
-		for (int i = 0; i < rowCount; i++)
+		for(int i = 0; i < rowCount; i++)
+		{
 			array[i] = _group.getDataReference(rows[i]);
+		}
 		return array;
 	}
 
 	/**
 	 * gets the complete table after construction.
 	 */
-	public JTable getTable() {
+	public JTable getTable()
+	{
 		return _table;
 	}
 
 	/**
 	 * CTRL - d pressed
 	 */
-	public void ctrlDPressed(ActionEvent evt) {
+	public void ctrlDPressed(ActionEvent evt)
+	{
 		int[] rows = _table.getSelectedRows();
-		if (rows == null || rows.length == 0)
+		if(rows == null || rows.length == 0)
+		{
 			return;
+		}
 		Executor.execute(new DeleteReferencesCommand(getGroup(), rows), this);
 	}
 
 	/**
-   *
-   */
-	public static void setMonitorMaximum(int value) {
-		_progressBar.setMaximum(value);
-	}
-
-	public static void setMonitorMinimum(int value) {
-		_progressBar.setMinimum(value);
-	}
-
-	/**
-   *
-   */
-	public static void setMonitorValue(int value) {
-		try {
-			_progressBar.setValue(value);
-			_progressBar.update(_progressBar.getGraphics());
-		} catch (IllegalArgumentException e) {
-		}
-	}
-
-	/**
-   *
-   */
-	public static void incrementMonitorValue(int value) {
-		try {
-			_progressBar.setValue(_progressBar.getValue() + value);
-			_progressBar.update(_progressBar.getGraphics());
-		} catch (IllegalArgumentException e) {
-		}
-	}
-
-	/**
-   *
-   */
-	public void ctrlGPressed(ActionEvent evt) {
+	 *
+	 */
+	public void ctrlGPressed(ActionEvent evt)
+	{
 		Executor.execute(new GraphDataCommand(getGroup(), _table
 				.getSelectedRows()), this);
 	}
 
 	/**
-   *
-   */
-	public void showScatter(ActionEvent evt) {
+	 *
+	 */
+	public void showScatter(ActionEvent evt)
+	{
 		Executor.execute(new ScatterGraphCommand(getGroup(), _table
 				.getSelectedRows()), this);
 	}
 
 	/**
-   *
-   */
-	public void graphData() {
-		Runnable task = new Runnable() {
-			public void run() {
-				try {
+	 *
+	 */
+	public void graphData()
+	{
+		Runnable task = new Runnable()
+		{
+			public void run()
+			{
+				try
+				{
 					int[] rows = _table.getSelectedRows();
-					if (rows == null || rows.length == 0)
+					if(rows == null || rows.length == 0)
+					{
 						return;
+					}
 					setMonitorMinimum(0);
 					setMonitorMaximum(rows.length);
-					for (int i = 0; i < rows.length; i++) {
-						try {
+					for(int i = 0; i < rows.length; i++)
+					{
+						try
+						{
 							_group.getDataReference(rows[i]).getData();
-						} catch (Exception e) {
+						}
+						catch(Exception e)
+						{
 							VistaUtils.displayException(GroupTable.this, e);
 						}
 						incrementMonitorValue(1);
 					}
 					_graphBuilder = new DefaultGraphBuilder();
-					for (int i = 0; i < rows.length; i++)
+					for(int i = 0; i < rows.length; i++)
+					{
 						_graphBuilder.addData(_group.getDataReference(rows[i]));
+					}
 					Graph[] graphs = _graphBuilder.createGraphs();
-					if (graphs != null && graphs.length > 0) {
-						for (int i = 0; i < graphs.length; i++) {
+					if(graphs != null && graphs.length > 0)
+					{
+						for(int i = 0; i < graphs.length; i++)
+						{
 							new DataGraphFrame(graphs[i], "Graph").setVisible(true);
 						}
 					}
-				} catch (Exception e) {
+				}
+				catch(Exception e)
+				{
 					VistaUtils.displayException(GroupTable.this, e);
-				} finally {
+				}
+				finally
+				{
 					setMonitorValue(0);
 				}
 			}
@@ -614,21 +749,29 @@ public class GroupTable extends JPanel implements RowMovable, View {
 	 * Monthly Average
 	 */
 
-	public void monthlyAverage(ActionEvent evt) {
-		try {
+	public void monthlyAverage(ActionEvent evt)
+	{
+		try
+		{
 			Executor.execute(new MonthlyAverageCommand(getGroup(), _table
 					.getSelectedRows()), this);
-		} catch (Exception e) {
+		}
+		catch(Exception e)
+		{
 			JOptionPane.showMessageDialog(this, e);
-		} finally {
+		}
+		finally
+		{
 		}
 	}
 
 	/**
 	 * CTRL - t pressed
 	 */
-	public void ctrlTPressed(ActionEvent evt) {
-		try {
+	public void ctrlTPressed(ActionEvent evt)
+	{
+		try
+		{
 			Executor.execute(new TabulateDataCommand(getGroup(), _table
 					.getSelectedRows()), this);
 			// this.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR) );
@@ -640,35 +783,49 @@ public class GroupTable extends JPanel implements RowMovable, View {
 			// _dataTable = new DataTable(_group.getDataReference( row ));
 			// else
 			// _dataTable = new DataTable(_group.getDataReference( row ));
-		} catch (Exception e) {
+		}
+		catch(Exception e)
+		{
 			JOptionPane.showMessageDialog(this, e);
-		} finally {
+		}
+		finally
+		{
 			// this.setCursor( Cursor.getDefaultCursor() );
 		}
 	}
 
-	public void importDSSTSAction(boolean isRegular) {
-		try {
+	public void importDSSTSAction(boolean isRegular)
+	{
+		try
+		{
 			// get filename from dialog
 			String filename = VistaUtils.getFilenameFromDialog(this,
 					FileDialog.LOAD, ".txt", "Text files");
-			if (filename == null)
+			if(filename == null)
+			{
 				return;
+			}
 			// use utility function to import data into data references into
 			// current group. The dss file in the mentioned import is created
 			// and then all the said references are merged with the current
 			// group
 			DataReference[] refs = SetUtils.importDataFromText(filename,
 					isRegular);
-			if (refs != null) {
-				for (int i = 0; i < refs.length; i++) {
+			if(refs != null)
+			{
+				for(int i = 0; i < refs.length; i++)
+				{
 					DataReference ref = refs[i];
-					if (ref == null)
+					if(ref == null)
+					{
 						continue;
+					}
 					_group.addDataReference(ref);
 				}
 			}
-		} catch (Exception e) {
+		}
+		catch(Exception e)
+		{
 			VistaUtils.displayException(this, e);
 		}
 		updateView();
@@ -677,7 +834,8 @@ public class GroupTable extends JPanel implements RowMovable, View {
 	/**
 	 * creates table
 	 */
-	private void createTable(Group group) {
+	private void createTable(Group group)
+	{
 		_group = group;
 		TableModel groupModel = new GroupTableModel(_group);
 		_table = new JTable(groupModel);
@@ -693,25 +851,28 @@ public class GroupTable extends JPanel implements RowMovable, View {
 		VistaUtils.addKeyListener(this, KeyEvent.VK_T, InputEvent.CTRL_MASK,
 				this, "ctrlTPressed");
 		//
-		if (DEBUG) {
-			for (int i = 0; i < groupModel.getColumnCount(); i++) {
+		if(DEBUG)
+		{
+			for(int i = 0; i < groupModel.getColumnCount(); i++)
+			{
 				System.out.println(columnModel.getColumn(i).getIdentifier());
 			}
 		}
 		// set column margins
-		if (DEBUG) {
+		if(DEBUG)
+		{
 			System.out.println(columnModel.getColumn(Pathname.A_PART)
-					.getWidth());
+										  .getWidth());
 			System.out.println(columnModel.getColumn(Pathname.B_PART)
-					.getWidth());
+										  .getWidth());
 			System.out.println(columnModel.getColumn(Pathname.C_PART)
-					.getWidth());
+										  .getWidth());
 			System.out.println(columnModel.getColumn(Pathname.D_PART)
-					.getWidth());
+										  .getWidth());
 			System.out.println(columnModel.getColumn(Pathname.E_PART)
-					.getWidth());
+										  .getWidth());
 			System.out.println(columnModel.getColumn(Pathname.F_PART)
-					.getWidth());
+										  .getWidth());
 		}
 		_table.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
 		columnModel.getColumn(0).setMaxWidth(30);
@@ -772,13 +933,15 @@ public class GroupTable extends JPanel implements RowMovable, View {
 		hb1.add(iPanel);
 		hb1.add(Box.createVerticalStrut(25));
 		_infoPanel.add(hb1);
-		if (_initShowMath) {
+		if(_initShowMath)
+		{
 			Box hb2 = new Box(BoxLayout.X_AXIS);
 			hb2.add(_mathPanel);
 			hb2.add(Box.createVerticalStrut(25));
 			_infoPanel.add(hb2);
 		}
-		if (_initShowFilter) {
+		if(_initShowFilter)
+		{
 			Box hb3 = new Box(BoxLayout.X_AXIS);
 			hb3.add(_filterPanel);
 			hb3.add(Box.createVerticalStrut(40));
@@ -812,18 +975,24 @@ public class GroupTable extends JPanel implements RowMovable, View {
 				.getImageAsBytes("/vista/table.gif"));
 		JButton tableButton = new JButton(tIcon);
 		JButton deleteButton = new JButton("Delete");
-		tableButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent evt) {
+		tableButton.addActionListener(new ActionListener()
+		{
+			public void actionPerformed(ActionEvent evt)
+			{
 				ctrlTPressed(evt);
 			}
 		});
-		graphButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent evt) {
+		graphButton.addActionListener(new ActionListener()
+		{
+			public void actionPerformed(ActionEvent evt)
+			{
 				ctrlGPressed(evt);
 			}
 		});
-		deleteButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent evt) {
+		deleteButton.addActionListener(new ActionListener()
+		{
+			public void actionPerformed(ActionEvent evt)
+			{
 				ctrlDPressed(evt);
 			}
 		});
@@ -839,78 +1008,87 @@ public class GroupTable extends JPanel implements RowMovable, View {
 	/**
 	 * returns the row number at point p
 	 */
-	public int rowAtPoint(Point p) {
+	public int rowAtPoint(Point p)
+	{
 		return _table.rowAtPoint(p);
 	}
 
 	/**
 	 * moves row at oldPosition to newPosition
 	 */
-	public void moveRow(int oldPosition, int newPosition) {
+	public void moveRow(int oldPosition, int newPosition)
+	{
 		Executor.execute(new MoveReferenceCommand(getGroup(), oldPosition,
 				newPosition), this);
 	}
 
+	// private static SortMechanism prevSm = null;
+
 	/**
-	 * 
-	 * 
 	 * @author Nicky Sandhu
 	 * @version $Id: GroupTable.java,v 1.1 2003/10/02 20:48:31 redwood Exp $
 	 */
-	private class TimeWindowListener implements KeyListener, ActionListener {
+	private class TimeWindowListener implements KeyListener, ActionListener
+	{
 		/**
 		 * filters on pressing enter key on any field...
 		 */
-		public void keyPressed(KeyEvent evt) {
-			if (evt.getKeyCode() != KeyEvent.VK_ENTER)
+		public void keyPressed(KeyEvent evt)
+		{
+			if(evt.getKeyCode() != KeyEvent.VK_ENTER)
+			{
 				return;
+			}
 			createTimeWindowedReferences();
 		}
 
 		/**
 		 * filters on clicking on that button
 		 */
-		public void actionPerformed(ActionEvent evt) {
+		public void actionPerformed(ActionEvent evt)
+		{
 			createTimeWindowedReferences();
 		}
 
 		/**
 		 * creates time windowed references
 		 */
-		private void createTimeWindowedReferences() {
+		private void createTimeWindowedReferences()
+		{
 			String timeText = _timeWindowField.getText().trim();
 			Executor.execute(new CreateTWReferencesCommand(getGroup(), _table
 					.getSelectedRows(), timeText), GroupTable.this);
 		}
 
-		public void keyTyped(KeyEvent evt) {
+		public void keyTyped(KeyEvent evt)
+		{
 		}
 
-		public void keyReleased(KeyEvent evt) {
+		public void keyReleased(KeyEvent evt)
+		{
 		}
 	}// endof TimeWindowListener class
 
-	//
-	private static boolean[] ascVals = new boolean[Pathname.MAX_PARTS];
-
-	// private static SortMechanism prevSm = null;
 	/**
-	 * 
-	 * 
 	 * @author Nicky Sandhu
 	 * @version $Id: GroupTable.java,v 1.1 2003/10/02 20:48:31 redwood Exp $
 	 */
-	private class TableHeaderMouseListener extends MouseAdapter {
+	private class TableHeaderMouseListener extends MouseAdapter
+	{
 
-		public TableHeaderMouseListener() {
-			for (int i = 0; i < ascVals.length; i++)
+		public TableHeaderMouseListener()
+		{
+			for(int i = 0; i < ascVals.length; i++)
+			{
 				ascVals[i] = true;
+			}
 		}
 
 		/**
-   *
-   */
-		public void mouseClicked(MouseEvent e) {
+		 *
+		 */
+		public void mouseClicked(MouseEvent e)
+		{
 			TableColumnModel columnModel = _table.getColumnModel();
 			int viewColumn = columnModel.getColumnIndexAtX(e.getX());
 			int column = _table.convertColumnIndexToModel(viewColumn);
@@ -918,7 +1096,8 @@ public class GroupTable extends JPanel implements RowMovable, View {
 			// if ( e.isControlDown() ){
 			// prevSm = null;
 			// }
-			if (e.getClickCount() == 1 && column != -1) {
+			if(e.getClickCount() == 1 && column != -1)
+			{
 				SortMechanism<DataReference> sortMechanism = null;
 				// if ( prevSm != null && ((PartNamePredicate)
 				// prevSm).getPartId() == column){
@@ -935,7 +1114,4 @@ public class GroupTable extends JPanel implements RowMovable, View {
 			}
 		}
 	} // end of mouse clicked class
-
-	// private static boolean ascending = true;
-	public GridBagLayout gbl;
 }

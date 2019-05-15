@@ -23,20 +23,22 @@ import vista.gui.DialogButtonPanel;
 
 /**
  * a panel for user option settings
- * 
+ *
  * @author Nicky Sandhu
  * @version $Id: OptionsDialog.java,v 1.1 2003/10/02 20:48:37 redwood Exp $
  */
-public class OptionsDialog extends JDialog implements Changeable {
+public class OptionsDialog extends JDialog implements Changeable
+{
 	private Properties _props;
 	private JComboBox laf, sip1, sip2;
 	private JTextField swf, shf, ds, dd, dp, tt, lt;
 	private JCheckBox connectChoice, flagChoice, localChoice;
 
 	/**
-   *
-   */
-	public OptionsDialog(Frame f, Properties p) {
+	 *
+	 */
+	public OptionsDialog(Frame f, Properties p)
+	{
 		super(f);
 		// look and feel options
 		laf = new JComboBox();
@@ -149,46 +151,68 @@ public class OptionsDialog extends JDialog implements Changeable {
 	}
 
 	/**
-   *
-   */
-	public void initializeFrom(Properties p) {
+	 *
+	 */
+	public void initializeFrom(Properties p)
+	{
 		laf.setSelectedItem(_props.getProperty("gui.lookAndFeel"));
 		swf.setText(_props.getProperty("gui.width"));
 		shf.setText(_props.getProperty("gui.height"));
 		String pos = _props.getProperty("gui.initialPosition");
-		if (pos.indexOf("top") >= 0)
+		if(pos.indexOf("top") >= 0)
+		{
 			sip1.setSelectedIndex(0);
+		}
 		else
+		{
 			sip1.setSelectedIndex(1);
-		if (pos.indexOf("left") >= 0)
+		}
+		if(pos.indexOf("left") >= 0)
+		{
 			sip2.setSelectedIndex(0);
+		}
 		else
+		{
 			sip2.setSelectedIndex(1);
-		if (_props.getProperty("gui.connect").indexOf("true") >= 0)
+		}
+		if(_props.getProperty("gui.connect").indexOf("true") >= 0)
+		{
 			connectChoice.setSelected(true);
+		}
 		else
+		{
 			connectChoice.setSelected(false);
+		}
 		// _props.getProperty("","");
 		ds.setText(_props.getProperty("default.server"));
 		dd.setText(_props.getProperty("default.dir"));
 		dp.setText(_props.getProperty("default.port"));
-		if (_props.getProperty("dss.flags").indexOf("true") >= 0)
+		if(_props.getProperty("dss.flags").indexOf("true") >= 0)
+		{
 			flagChoice.setSelected(true);
+		}
 		else
+		{
 			flagChoice.setSelected(false);
-		if (_props.getProperty("dss.localAccess").indexOf("true") >= 0)
+		}
+		if(_props.getProperty("dss.localAccess").indexOf("true") >= 0)
+		{
 			localChoice.setSelected(true);
+		}
 		else
+		{
 			localChoice.setSelected(false);
+		}
 		//
 		tt.setText(_props.getProperty("graph.titleTemplate"));
 		lt.setText(_props.getProperty("graph.legendTemplate"));
 	}
 
 	/**
-   *
-   */
-	public Properties getProperties() {
+	 *
+	 */
+	public Properties getProperties()
+	{
 		// get latest values...
 		// default properites...
 		_props.put("gui.width", swf.getText());
@@ -214,21 +238,24 @@ public class OptionsDialog extends JDialog implements Changeable {
 	}
 
 	/**
-   *
-   */
-	public void applyChanges() {
+	 *
+	 */
+	public void applyChanges()
+	{
 		Properties p = getProperties();
 		Container f = getParent();
-		if (f instanceof SessionFrame) {
+		if(f instanceof SessionFrame)
+		{
 			SessionFrame sf = (SessionFrame) f;
 			sf.setProperties(p);
 		}
 	}
 
 	/**
-   *
-   */
-	public void doneChanges() {
+	 *
+	 */
+	public void doneChanges()
+	{
 		dispose();
 	}
 }

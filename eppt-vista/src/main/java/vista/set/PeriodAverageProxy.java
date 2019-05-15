@@ -16,24 +16,36 @@ import vista.time.TimeWindow;
 
 /**
  * A proxy for period averaging operations
- * 
+ *
  * @author Nicky Sandhu
  * @version $Id: PeriodAverageProxy.java,v 1.1 2003/10/02 20:49:29 redwood Exp $
  */
-public class PeriodAverageProxy extends PeriodOperationProxy {
+public class PeriodAverageProxy extends PeriodOperationProxy
+{
 	/**
-   *
-   */
-	protected String getOperationName() {
+	 *
+	 */
+	public PeriodAverageProxy(DataReference ref, TimeInterval ti)
+	{
+		super(ref, ti);
+	}
+
+	/**
+	 *
+	 */
+	protected String getOperationName()
+	{
 		return "PER-AVG";
 	}
 
 	/**
 	 * returns the value for this period from the values in the array
 	 */
-	protected double doPeriodOperation(double[] yvals, int nvals) {
+	protected double doPeriodOperation(double[] yvals, int nvals)
+	{
 		double sum = 0.0;
-		for (int i = 0; i < nvals; i++) {
+		for(int i = 0; i < nvals; i++)
+		{
 			sum += yvals[i];
 		}
 		return sum / nvals;
@@ -43,46 +55,45 @@ public class PeriodAverageProxy extends PeriodOperationProxy {
 	 * returns the flag for the value of this period from the values in the
 	 * array.
 	 */
-	protected int doFlagOperation(int[] flags, int nvals) {
+	protected int doFlagOperation(int[] flags, int nvals)
+	{
 		return 0;
 	}
 
 	/**
-   *
-   */
-	public PeriodAverageProxy(DataReference ref, TimeInterval ti) {
-		super(ref, ti);
-	}
-
-	/**
-   *
-   */
-	protected String getProxyName(DataReference ref, TimeInterval ti) {
+	 *
+	 */
+	protected String getProxyName(DataReference ref, TimeInterval ti)
+	{
 		return ref.getName() + getOperationName();
 	}
 
 	/**
-   *
-   */
-	protected String getProxyServerName(DataReference ref, TimeInterval ti) {
+	 *
+	 */
+	protected String getProxyServerName(DataReference ref, TimeInterval ti)
+	{
 		return "";
 	}
 
 	/**
-   *
-   */
-	protected String getProxyFileName(DataReference ref, TimeInterval ti) {
+	 *
+	 */
+	protected String getProxyFileName(DataReference ref, TimeInterval ti)
+	{
 		return "";
 	}
 
 	/**
-   *
-   */
-	protected Pathname getProxyPathname(DataReference ref, TimeInterval ti) {
+	 *
+	 */
+	protected Pathname getProxyPathname(DataReference ref, TimeInterval ti)
+	{
 		Pathname path = ref.getPathname();
 		// create pathname from operation + pathname -- > should be delegated
 		String[] parts = new String[Pathname.MAX_PARTS];
-		for (int i = 0; i < parts.length; i++) {
+		for(int i = 0; i < parts.length; i++)
+		{
 			parts[i] = path.getPart(i);
 		}
 		parts[Pathname.B_PART] = parts[Pathname.B_PART] + "_PERAVG";
@@ -96,16 +107,18 @@ public class PeriodAverageProxy extends PeriodOperationProxy {
 	}
 
 	/**
-   *
-   */
-	protected TimeWindow getProxyTimeWindow(DataReference ref, TimeInterval ti) {
+	 *
+	 */
+	protected TimeWindow getProxyTimeWindow(DataReference ref, TimeInterval ti)
+	{
 		return ref.getTimeWindow();
 	}
 
 	/**
 	 * create a clone of itself
 	 */
-	public DataReference createClone() {
+	public DataReference createClone()
+	{
 		return new PeriodAverageProxy(getUnderlyingReference(),
 				getPeriodTimeInterval());
 	}

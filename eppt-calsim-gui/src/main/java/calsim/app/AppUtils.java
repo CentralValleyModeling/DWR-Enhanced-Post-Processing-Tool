@@ -84,15 +84,7 @@ public final class AppUtils
 	 *
 	 */
 	public static boolean VIEW_TABLE = false;
-	/**
-	 *
-	 */
-	static boolean RES_TABLE = false;
-
 	public static boolean POSITION = false;
-
-	static int NUM_LEVELS = 5;
-
 	public static int NUM_YEARS_MAX = 201;
 	/**
 	 *
@@ -195,6 +187,15 @@ public final class AppUtils
 	 */
 	public static int nperiods = 0;
 	/**
+	 *
+	 */
+	static boolean RES_TABLE = false;
+	static int NUM_LEVELS = 5;
+	/**
+	 *
+	 */
+	static PathPartMapping[] _mapping = new PathPartMapping[2];
+	/**
 	 * the default sizes for plots
 	 */
 	private static Dimension DEFAULT_PLOT_SIZE = new Dimension(750, 650);
@@ -203,10 +204,6 @@ public final class AppUtils
 	private static String[] _bparts = null, _cparts = null;
 	private static int[] MT_40_30_30 = readMTList("MT40-30-30.table");
 	private static int[] MT_60_20_20 = readMTList("MT60-20-20.table");
-	/**
-	 *
-	 */
-	static PathPartMapping[] _mapping = new PathPartMapping[2];
 	/**
 	 * the current project
 	 */
@@ -1007,7 +1004,9 @@ public final class AppUtils
 			return false;
 		}
 		else
+		{
 			return getCurrentProject().getMTS(name) == null;
+		}
 	}
 
 	/**
@@ -2307,9 +2306,9 @@ public final class AppUtils
 	public static int[] readMTList(String file)
 	{
 		String filePath = "/calsim/app/data/" + file;
-		try (InputStream is = AppUtils.class.getResourceAsStream(filePath);
-			 InputStreamReader inputStreamReader = new InputStreamReader(is);
-			 LineNumberReader reader = new LineNumberReader(inputStreamReader))
+		try(InputStream is = AppUtils.class.getResourceAsStream(filePath);
+			InputStreamReader inputStreamReader = new InputStreamReader(is);
+			LineNumberReader reader = new LineNumberReader(inputStreamReader))
 		{
 
 			List<Integer> yearArray = new ArrayList<>(73);

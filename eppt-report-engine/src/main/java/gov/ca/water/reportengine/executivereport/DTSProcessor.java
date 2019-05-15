@@ -62,7 +62,7 @@ public class DTSProcessor
 
 		for(int i = 0; i < runs.size(); i++)
 		{
-			Map<SubModule, List<FlagViolation>> subModuleToViolations = processDSSFile( dssFiles.get(i));
+			Map<SubModule, List<FlagViolation>> subModuleToViolations = processDSSFile(dssFiles.get(i));
 			runToViolations.put(runs.get(i), subModuleToViolations);
 		}
 		return runToViolations;
@@ -74,7 +74,7 @@ public class DTSProcessor
 	 * @param dssFile
 	 * @throws Exception
 	 */
-	private Map<SubModule, List<FlagViolation>> processDSSFile( Path dssFile) throws EpptReportException
+	private Map<SubModule, List<FlagViolation>> processDSSFile(Path dssFile) throws EpptReportException
 	{
 		Map<SubModule, List<FlagViolation>> subModToViolations = new HashMap<>();
 		HecDss hD = null;
@@ -135,7 +135,8 @@ public class DTSProcessor
 						{
 							if(e.getMessage() != null && e.getMessage().contains("Unable to recognize record"))
 							{
-								FluentLogger.forEnclosingClass().at(Level.INFO).withCause(e).log("Skipping record: %s from file: %s", dssPath, dssFile);
+								FluentLogger.forEnclosingClass().at(Level.INFO).withCause(e).log("Skipping record: %s from file: %s", dssPath,
+										dssFile);
 							}
 							else
 							{

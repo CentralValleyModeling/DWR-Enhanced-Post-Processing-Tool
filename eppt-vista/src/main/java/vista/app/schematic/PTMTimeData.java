@@ -13,25 +13,30 @@ package vista.app.schematic;
 
 import vista.app.TimeData;
 
-  /**
-   * 
-   */
-public class PTMTimeData implements TimeData {
-  /**
-   * 
-   */
-public PTMTimeData(ParticleData particleData){
-  super();
-  _particleData = particleData;
-}
-  /**
-   * 
-   */
-public String getNextValue(){
-  return _particleData.getDate();
-}
-  /**
-   * 
-   */
-private ParticleData _particleData;
+/**
+ *
+ */
+public class PTMTimeData implements TimeData
+{
+	/**
+	 *
+	 */
+	private ParticleData _particleData;
+
+	/**
+	 *
+	 */
+	public PTMTimeData(ParticleData particleData)
+	{
+		super();
+		_particleData = particleData;
+	}
+
+	/**
+	 *
+	 */
+	public String getNextValue()
+	{
+		return _particleData.getDate();
+	}
 }

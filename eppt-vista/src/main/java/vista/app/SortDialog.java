@@ -26,15 +26,25 @@ import vista.set.ListDirectedPredicate;
 
 /**
  * A modal dialog to establish connection with server
- * 
+ *
  * @author Nicky Sandhu
  * @version $Id: SortDialog.java,v 1.1 2003/10/02 20:48:42 redwood Exp $
  */
-public class SortDialog extends JDialog implements Changeable, RowMovable {
+public class SortDialog extends JDialog implements Changeable, RowMovable
+{
+	/**
+	 *
+	 */
+	private static final boolean DEBUG = false;
+	private JList _sortList;
+	private GroupTable _table;
+	private Vector _listV;
+
 	/**
 	 * sets up a blocking dialog displaying server and directory names
 	 */
-	public SortDialog(JFrame parent, GroupTable table) {
+	public SortDialog(JFrame parent, GroupTable table)
+	{
 		super(parent, true);
 		_table = table;
 		//
@@ -68,20 +78,25 @@ public class SortDialog extends JDialog implements Changeable, RowMovable {
 	/**
 	 * adds str to end of list
 	 */
-	void addToSortList(String str) {
+	void addToSortList(String str)
+	{
 		_listV.addElement(str);
 		_sortList.setListData(_listV);
 		_sortList.repaint();
 	}
 
 	/**
-   *
-   */
-	void removeSelected() {
+	 *
+	 */
+	void removeSelected()
+	{
 		Object[] obj = _sortList.getSelectedValues();
-		if (obj == null)
+		if(obj == null)
+		{
 			return;
-		for (int i = 0; i < obj.length; i++) {
+		}
+		for(int i = 0; i < obj.length; i++)
+		{
 			_listV.removeElement(obj[i]);
 		}
 		_sortList.setListData(_listV);
@@ -91,13 +106,15 @@ public class SortDialog extends JDialog implements Changeable, RowMovable {
 	/**
 	 * Apply the changes (OK/Apply button pressed)
 	 */
-	public void applyChanges() {
+	public void applyChanges()
+	{
 		String[] list = new String[_listV.size()];
 		_listV.copyInto(list);
-		if (list != null && list.length > 1){
+		if(list != null && list.length > 1)
+		{
 			throw new RuntimeException("If this functionality is needed. it needs to be fixed first!");
 		}
-		//FIXME: 
+		//FIXME:
 		ListDirectedPredicate ldp = new ListDirectedPredicate(list[0]);
 		_table.getGroup().sortBy(ldp);
 		_table.repaint();
@@ -106,21 +123,24 @@ public class SortDialog extends JDialog implements Changeable, RowMovable {
 	/**
 	 * Done with making changes (OK/Cancel button pressed)
 	 */
-	public void doneChanges() {
+	public void doneChanges()
+	{
 		this.dispose();
 	}
 
 	/**
 	 * returns the row number at point p
 	 */
-	public int rowAtPoint(Point p) {
+	public int rowAtPoint(Point p)
+	{
 		return _sortList.locationToIndex(p);
 	}
 
 	/**
 	 * moves row at oldPosition to newPosition
 	 */
-	public void moveRow(int oldPosition, int newPosition) {
+	public void moveRow(int oldPosition, int newPosition)
+	{
 		Object obj = _listV.elementAt(oldPosition);
 		_listV.removeElement(obj);
 		_listV.insertElementAt(obj, newPosition);
@@ -129,37 +149,31 @@ public class SortDialog extends JDialog implements Changeable, RowMovable {
 	}
 
 	/**
-   *
-   */
-	private static final boolean DEBUG = false;
-	private JList _sortList;
-	private GroupTable _table;
-	private Vector _listV;
-
-	/**
-	 * 
-	 * 
 	 * @author Nicky Sandhu
 	 * @version $Id: SortDialog.java,v 1.1 2003/10/02 20:48:42 redwood Exp $
 	 */
-	public class LoadFileListener implements ActionListener {
-		public void actionPerformed(ActionEvent evt) {
+	public class LoadFileListener implements ActionListener
+	{
+		public void actionPerformed(ActionEvent evt)
+		{
 			String filename = VistaUtils.getFilenameFromDialog(SortDialog.this,
 					FileDialog.LOAD, ".sort", "Sorting Order List");
-			if (filename == null)
+			if(filename == null)
+			{
 				return;
+			}
 			SortDialog.this.addToSortList(filename);
 		}
 	} // end of load file listener
 
 	/**
-	 * 
-	 * 
 	 * @author Nicky Sandhu
 	 * @version $Id: SortDialog.java,v 1.1 2003/10/02 20:48:42 redwood Exp $
 	 */
-	public class RemoveFileListener implements ActionListener {
-		public void actionPerformed(ActionEvent evt) {
+	public class RemoveFileListener implements ActionListener
+	{
+		public void actionPerformed(ActionEvent evt)
+		{
 			removeSelected();
 		}
 	} // end of load file listener

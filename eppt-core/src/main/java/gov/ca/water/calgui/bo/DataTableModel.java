@@ -46,6 +46,7 @@ public class DataTableModel extends AbstractTableModel
 	 * This will tell whether the table can be modify or not.
 	 */
 	private boolean _isCellEditable;
+
 	/**
 	 * The object of the GUI.
 	 */

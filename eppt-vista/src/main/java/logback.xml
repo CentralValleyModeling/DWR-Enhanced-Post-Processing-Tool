@@ -20,10 +20,10 @@
 		</layout>
 	</appender>
 
-	<logger name="vista" level="WARN" />
+	<logger name="vista" level="WARN"/>
 
 
 	<root level="debug">
-		<appender-ref ref="STDOUT" />
+		<appender-ref ref="STDOUT"/>
 	</root>
 </configuration>

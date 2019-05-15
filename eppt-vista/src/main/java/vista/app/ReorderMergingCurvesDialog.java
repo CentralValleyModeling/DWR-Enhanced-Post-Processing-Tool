@@ -31,15 +31,18 @@ import vista.gui.DialogButtonPanel;
 import vista.set.DataReference;
 
 @SuppressWarnings("serial")
-public class ReorderMergingCurvesDialog extends JDialog implements Changeable{
+public class ReorderMergingCurvesDialog extends JDialog implements Changeable
+{
 
 	private JTable table;
 	private boolean reordered;
 
-	public ReorderMergingCurvesDialog(Component comp,Curve[] curves){
-		reordered=false;
+	public ReorderMergingCurvesDialog(Component comp, Curve[] curves)
+	{
+		reordered = false;
 		Object[][] data = new Object[curves.length][1];
-		for(int i=0; i < curves.length; i++){
+		for(int i = 0; i < curves.length; i++)
+		{
 			data[i][0] = curves[i];
 		}
 		table = new JTable(new DefaultTableModel(data, new String[]{"Data"}));
@@ -59,14 +62,14 @@ public class ReorderMergingCurvesDialog extends JDialog implements Changeable{
 		ActionListener orderListener = new OrderChangeActionListener();
 		upBtn.addActionListener(orderListener);
 		downBtn.addActionListener(orderListener);
-		
+
 		JPanel tablePanel = new JPanel();
 		mainPanel.add(tablePanel, BorderLayout.CENTER);
 		tablePanel.setLayout(new BorderLayout());
 		tablePanel.add(table.getTableHeader(), BorderLayout.NORTH);
-		tablePanel.add(table,BorderLayout.CENTER);
-		
-		
+		tablePanel.add(table, BorderLayout.CENTER);
+
+
 		getContentPane().setLayout(new BorderLayout());
 		getContentPane().add(mainPanel, BorderLayout.CENTER);
 		getContentPane().add(new DialogButtonPanel(this, false), BorderLayout.SOUTH);
@@ -74,42 +77,70 @@ public class ReorderMergingCurvesDialog extends JDialog implements Changeable{
 		pack();
 		setModal(true);
 		setVisible(true);
-		
+
 	}
-	
-	
+
+
 	@Override
-	public void applyChanges() {
+	public void applyChanges()
+	{
 		reordered = true;
 	}
 
 	@Override
-	public void doneChanges() {
+	public void doneChanges()
+	{
 		this.dispose();
 	}
 
-	public class OrderChangeActionListener implements ActionListener{
+	public Curve[] getCurves()
+	{
+		if(!reordered)
+		{
+			return null;
+		}
+		TableModel model = table.getModel();
+		int n = model.getRowCount();
+		Curve[] curves = new Curve[n];
+		for(int i = 0; i < n; i++)
+		{
+			curves[i] = (Curve) model.getValueAt(i, 0);
+		}
+		return curves;
+	}
+
+	public class OrderChangeActionListener implements ActionListener
+	{
 		public static final int UP = 100;
 		public static final int DOWN = 200;
+
 		@Override
-		public void actionPerformed(ActionEvent evt) {
+		public void actionPerformed(ActionEvent evt)
+		{
 			JButton button = (JButton) evt.getSource();
-			if (button.getText().equals("Up")){
+			if(button.getText().equals("Up"))
+			{
 				moveAndSelect(UP);
-			} else {
+			}
+			else
+			{
 				moveAndSelect(DOWN);
 			}
 		}
-		
-		private void moveAndSelect(int direction) {
+
+		private void moveAndSelect(int direction)
+		{
 			int selectedRow = table.getSelectedRow();
-			if (selectedRow == -1){
+			if(selectedRow == -1)
+			{
 				return;
 			}
-			if (selectedRow ==0 && direction == UP){
+			if(selectedRow == 0 && direction == UP)
+			{
 				return;
 			}
-			if (selectedRow == table.getRowCount()-1 && direction == DOWN){
+			if(selectedRow == table.getRowCount() - 1 && direction == DOWN)
+			{
 				return;
 			}
 			int swapRow = direction == UP ? selectedRow - 1 : selectedRow + 1;
@@ -119,52 +150,45 @@ public class ReorderMergingCurvesDialog extends JDialog implements Changeable{
 			model.setValueAt(valueAt, swapRow, 0);
 			table.setRowSelectionInterval(swapRow, swapRow);
 		}
-		
-	}
-	
-	public class CurveCellEditor extends DefaultCellEditor{
 
-		public CurveCellEditor(JTextField textField) {
+	}
+
+	public class CurveCellEditor extends DefaultCellEditor
+	{
+
+		public CurveCellEditor(JTextField textField)
+		{
 			super(textField);
 		}
 
 		@Override
-		public boolean isCellEditable(EventObject anEvent) {
+		public boolean isCellEditable(EventObject anEvent)
+		{
 			return false;
 		}
-		
-		
+
+
 	}
-	
-	public class CurveCellRenderer implements TableCellRenderer{
+
+	public class CurveCellRenderer implements TableCellRenderer
+	{
 
 		@Override
 		public Component getTableCellRendererComponent(JTable table,
-				Object value, boolean isSelected, boolean hasFocus, int row,
-				int column) {
+													   Object value, boolean isSelected, boolean hasFocus, int row,
+													   int column)
+		{
 			Curve curve = (Curve) value;
 			DataReference ref = (DataReference) curve.getModel().getReferenceObject();
 			LegendItem item = new LegendItem(curve);
 			GECanvas canvas = new GECanvas(item);
 			canvas.setToolTipText(ref.getPathname().toString());
-			if (isSelected){
+			if(isSelected)
+			{
 				item.setBackgroundColor(Color.GRAY);
 			}
 			return canvas;
 		}
-		
-	}
 
-	public Curve[] getCurves() {
-		if (!reordered){
-			return null;
-		}
-		TableModel model = table.getModel();
-		int n = model.getRowCount();
-		Curve[] curves = new Curve[n];
-		for(int i=0; i < n; i++){
-			curves[i] = (Curve) model.getValueAt(i, 0);
-		}
-		return curves;
 	}
 }

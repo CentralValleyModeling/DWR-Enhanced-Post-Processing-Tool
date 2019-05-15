@@ -23,32 +23,116 @@ import vista.set.Pathname;
  * filtering /sorting can be supported without having to read in the catalog all
  * at once.
  */
-class DSSCatalogReader implements Enumeration {
+class DSSCatalogReader implements Enumeration
+{
+	/**
+	 *
+	 */
+	static final int MAX_LINE_LENGTH = 132;
+	/**
+	 *
+	 */
+	private static final boolean DEBUG = false;
+	/**
+	 *
+	 */
+	protected Pathname _masterPath = null;
 	private String[] _catalogListing;
 	private int _currentIndex = 0;
 	private String _currentLine;
+	private int _npaths;
+	/**
+	 *
+	 */
+	private String[] _parts = new String[Pathname.MAX_PARTS];
+	/**
+	 *
+	 */
+	private int[] _beginIndex = new int[Pathname.MAX_PARTS];
+	/**
+	 *
+	 */
+	private int[] _endIndex = new int[Pathname.MAX_PARTS];
 
 	/**
 	 * Initializes the reader with this file
 	 */
-	public DSSCatalogReader(String[] catalogListing) {
-		if (catalogListing == null)
+	public DSSCatalogReader(String[] catalogListing)
+	{
+		if(catalogListing == null)
+		{
 			throw new IllegalArgumentException("Null catalog");
+		}
 		_catalogListing = catalogListing;
 		readCatalog();
 	}
 
 	/**
+	 * returns a string with .dss replaced by .dsd
+	 */
+	public static String getCatalogFilename(String dssfile)
+	{
+		return dssfile.substring(0, dssfile.lastIndexOf(".")).trim() + ".dsd";
+	}
+
+	/**
+	 * returns a string with .dsd replaced by .dss
+	 */
+	public static String getDSSFilename(String dsdfile)
+	{
+		return dsdfile.substring(0, dsdfile.lastIndexOf(".")).trim() + ".dss";
+	}
+
+	/**
+	 * true if name ends with ".dss"
+	 */
+	public static boolean isValidDSSFile(String dssfile)
+	{
+		return (dssfile.endsWith(".dss"));
+	}
+
+	// /**
+	// *
+	// */
+	// private static Pattern _pattern;
+	// static {
+	// try {
+	// _pattern = new AwkCompiler().compile("(- )+(-)");
+	// } catch ( MalformedPatternException mpe ){
+	// mpe.printStackTrace();
+	// throw new RuntimeException("Incorrect Regular Expression ");
+	// }
+	// }
+	/**
+	 *
+	 */
+	// private static PatternMatcher _matcher = new AwkMatcher();
+
+	/**
+	 * true if name ends with ".dsd"
+	 */
+	public static boolean isValidDSDFile(String dsdfile)
+	{
+		return (dsdfile.endsWith(".dsd"));
+	}
+
+	/**
 	 * Reads in the catalog
 	 */
-	private void readCatalog() {
-		while (hasMoreLines()) {
-			if (nextLine().startsWith("Tag"))
+	private void readCatalog()
+	{
+		while(hasMoreLines())
+		{
+			if(nextLine().startsWith("Tag"))
+			{
 				break;
+			}
 		}
 		String line = _currentLine;
-		if (line == null)
+		if(line == null)
+		{
 			throw new IllegalArgumentException("Catalog is empty ?");
+		}
 		_beginIndex[Pathname.A_PART] = line.indexOf("A Part");
 		_endIndex[Pathname.A_PART] = line.indexOf("B Part");
 		_beginIndex[Pathname.B_PART] = line.indexOf("B Part");
@@ -66,20 +150,23 @@ class DSSCatalogReader implements Enumeration {
 		_npaths = _catalogListing.length - _currentIndex;
 	}
 
-	private int _npaths;
-
-	public int getNumberOfPaths() {
+	public int getNumberOfPaths()
+	{
 		return _npaths;
 	}
 
-	public boolean hasMoreLines() {
+	public boolean hasMoreLines()
+	{
 		return (_currentIndex < _catalogListing.length);
 	}
 
-	public String nextLine() {
+	public String nextLine()
+	{
 		// clean out memory
-		if (_currentIndex > 0)
+		if(_currentIndex > 0)
+		{
 			_catalogListing[_currentIndex - 1] = null;
+		}
 		_currentLine = _catalogListing[_currentIndex].trim();
 		_currentIndex++;
 		return _currentLine;
@@ -88,15 +175,17 @@ class DSSCatalogReader implements Enumeration {
 	/**
 	 * Checks to see if more data references are available.
 	 */
-	public boolean hasMoreElements() {
+	public boolean hasMoreElements()
+	{
 		return (hasMoreLines() && !_catalogListing[_currentIndex].trim()
-				.startsWith("*"));
+																 .startsWith("*"));
 	}
 
 	/**
 	 * Returns the next data reference
 	 */
-	public Object nextElement() {
+	public Object nextElement()
+	{
 		nextLine();
 		Pathname path = makePathname(_currentLine);
 		return path;
@@ -105,9 +194,11 @@ class DSSCatalogReader implements Enumeration {
 	/**
 	 * Returns an array of pathnames for this catalog
 	 */
-	public Pathname[] getPathnames() {
+	public Pathname[] getPathnames()
+	{
 		ArrayList<Pathname> array = new ArrayList<Pathname>();
-		while (hasMoreElements()) {
+		while(hasMoreElements())
+		{
 			array.add((Pathname) nextElement());
 		}
 		Pathname[] pathnames = new Pathname[array.size()];
@@ -115,52 +206,71 @@ class DSSCatalogReader implements Enumeration {
 	}
 
 	/**
-   *
-   */
-	private String[] _parts = new String[Pathname.MAX_PARTS];
-
-	/**
-   *
-   */
-	protected Pathname makePathname(String line) {
-		if (DEBUG)
+	 *
+	 */
+	protected Pathname makePathname(String line)
+	{
+		if(DEBUG)
+		{
 			System.out.println(line);
-		if (_masterPath == null) {
+		}
+		if(_masterPath == null)
+		{
 			_endIndex[Pathname.D_PART] = _currentLine.length();
-			for (int i = 0; i < _parts.length; i++) {
+			for(int i = 0; i < _parts.length; i++)
+			{
 				_parts[i] = _currentLine
 						.substring(_beginIndex[i], _endIndex[i]);
 			}
-			for (int i = 0; i < _parts.length; i++) {
-				if (_parts[i].indexOf("(null)") >= 0)
+			for(int i = 0; i < _parts.length; i++)
+			{
+				if(_parts[i].indexOf("(null)") >= 0)
+				{
 					_parts[i] = "";
+				}
 			}
-			if (_parts[Pathname.D_PART].indexOf("*") >= 0) {
+			if(_parts[Pathname.D_PART].indexOf("*") >= 0)
+			{
 				int inx = _parts[Pathname.D_PART].indexOf("*");
 				_parts[Pathname.D_PART] = _parts[Pathname.D_PART].substring(0,
 						inx);
 			}
 			_masterPath = Pathname.createPathname(_parts);
-		} else {
+		}
+		else
+		{
 			_endIndex[Pathname.D_PART] = _currentLine.length();
-			if (DEBUG)
+			if(DEBUG)
+			{
 				System.out.println(_currentLine);
-			for (int i = 0; i < _parts.length; i++) {
-				if (DEBUG)
+			}
+			for(int i = 0; i < _parts.length; i++)
+			{
+				if(DEBUG)
+				{
 					System.out.println("index " + i);
-				if (DEBUG)
+				}
+				if(DEBUG)
+				{
 					System.out.println("begin index " + _beginIndex[i]);
-				if (DEBUG)
+				}
+				if(DEBUG)
+				{
 					System.out.println("end index " + _endIndex[i]);
+				}
 				_parts[i] = _currentLine
 						.substring(_beginIndex[i], _endIndex[i]);
 			}
 			updateFrom(_parts, _masterPath);
-			for (int i = 0; i < _parts.length; i++) {
-				if (_parts[i].indexOf("(null)") >= 0)
+			for(int i = 0; i < _parts.length; i++)
+			{
+				if(_parts[i].indexOf("(null)") >= 0)
+				{
 					_parts[i] = "";
+				}
 			}
-			if (_parts[Pathname.D_PART].indexOf("*") >= 0) {
+			if(_parts[Pathname.D_PART].indexOf("*") >= 0)
+			{
 				int inx = _parts[Pathname.D_PART].indexOf("*");
 				_parts[Pathname.D_PART] = _parts[Pathname.D_PART].substring(0,
 						inx);
@@ -172,80 +282,19 @@ class DSSCatalogReader implements Enumeration {
 
 	}
 
-	// /**
-	// *
-	// */
-	// private static Pattern _pattern;
-	// static {
-	// try {
-	// _pattern = new AwkCompiler().compile("(- )+(-)");
-	// } catch ( MalformedPatternException mpe ){
-	// mpe.printStackTrace();
-	// throw new RuntimeException("Incorrect Regular Expression ");
-	// }
-	// }
 	/**
-   *
-   */
-	// private static PatternMatcher _matcher = new AwkMatcher();
-	/**
-   *
-   */
-	private void updateFrom(String[] parts, Pathname path) {
-		for (int i = 0; i < parts.length; i++) {
+	 *
+	 */
+	private void updateFrom(String[] parts, Pathname path)
+	{
+		for(int i = 0; i < parts.length; i++)
+		{
 			// if ( _matcher.matches( parts[i], _pattern ) ) parts[i] =
 			// path.getPart(i);
-			if (parts[i].indexOf("- -") >= 0)
+			if(parts[i].indexOf("- -") >= 0)
+			{
 				parts[i] = path.getPart(i);
+			}
 		}
 	}
-
-	/**
-	 * returns a string with .dss replaced by .dsd
-	 */
-	public static String getCatalogFilename(String dssfile) {
-		return dssfile.substring(0, dssfile.lastIndexOf(".")).trim() + ".dsd";
-	}
-
-	/**
-	 * returns a string with .dsd replaced by .dss
-	 */
-	public static String getDSSFilename(String dsdfile) {
-		return dsdfile.substring(0, dsdfile.lastIndexOf(".")).trim() + ".dss";
-	}
-
-	/**
-	 * true if name ends with ".dss"
-	 */
-	public static boolean isValidDSSFile(String dssfile) {
-		return (dssfile.endsWith(".dss"));
-	}
-
-	/**
-	 * true if name ends with ".dsd"
-	 */
-	public static boolean isValidDSDFile(String dsdfile) {
-		return (dsdfile.endsWith(".dsd"));
-	}
-
-	/**
-   *
-   */
-	private int[] _beginIndex = new int[Pathname.MAX_PARTS];
-	/**
-   *
-   */
-	private int[] _endIndex = new int[Pathname.MAX_PARTS];
-	/**
-   *
-   */
-	protected Pathname _masterPath = null;
-	/**
-   *
-   */
-	static final int MAX_LINE_LENGTH = 132;
-	/**
-   *
-   */
-	private static final boolean DEBUG = false;
 }

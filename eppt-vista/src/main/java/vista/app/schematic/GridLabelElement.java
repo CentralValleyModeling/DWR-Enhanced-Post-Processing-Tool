@@ -18,35 +18,50 @@ import vista.graph.TextLine;
 import vista.graph.TextLineAttr;
 
 /**
-   * 
-   */
-public class GridLabelElement extends TextLine {
+ *
+ */
+public class GridLabelElement extends TextLine
+{
 	/**
-   * 
-   */
-	public GridLabelElement(TextLineAttr tla, String label) {
+	 *
+	 */
+	private DSMGridElement _grid;
+	/**
+	 *
+	 */
+	private Node _node;
+
+	/**
+	 *
+	 */
+	public GridLabelElement(TextLineAttr tla, String label)
+	{
 		super(tla, label);
 	}
 
 	/**
-   * 
-   */
-	public void setGrid(DSMGridElement grid) {
+	 *
+	 */
+	public void setGrid(DSMGridElement grid)
+	{
 		_grid = grid;
 	}
 
 	/**
-   * 
-   */
-	public void setBaseNode(int nodeId) {
+	 *
+	 */
+	public void setBaseNode(int nodeId)
+	{
 		_node = _grid.getNetwork().getNode(nodeId);
 	}
 
 	/**
-   * 
-   */
-	public void setBounds(Rectangle r) {
-		if (_grid != null) {
+	 *
+	 */
+	public void setBounds(Rectangle r)
+	{
+		if(_grid != null)
+		{
 			Rectangle rb = getBounds();
 			Scale xS = _grid.getXScale();
 			Scale yS = _grid.getYScale();
@@ -54,17 +69,10 @@ public class GridLabelElement extends TextLine {
 			rb.x = xS.scaleToUC(_node.getX());
 			rb.y = yS.scaleToUC(_node.getY());
 			super.setBounds(rb);
-		} else {
+		}
+		else
+		{
 			super.setBounds(r);
 		}
 	}
-
-	/**
-   * 
-   */
-	private DSMGridElement _grid;
-	/**
-   * 
-   */
-	private Node _node;
 }

@@ -16,13 +16,14 @@ import javax.swing.*;
 
 /**
  * Just a way to force it to set page width??
- * 
  */
-public class ReportPane extends JTextPane {
+public class ReportPane extends JTextPane
+{
 	/**
-    *
-    */
-	public boolean getScrollableTracksViewportWidth() {
+	 *
+	 */
+	public boolean getScrollableTracksViewportWidth()
+	{
 		return false;
 	}
 }

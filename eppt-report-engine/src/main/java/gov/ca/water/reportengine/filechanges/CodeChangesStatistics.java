@@ -17,32 +17,33 @@ import java.util.Set;
 
 public class CodeChangesStatistics
 {
-    private final Set<Path> _filesDeletedFromBase;
-    private final Set<Path> _filesAddedToAlt;
-    private final Set<Path> _codeChangesModifiedFiles;
+	private final Set<Path> _filesDeletedFromBase;
+	private final Set<Path> _filesAddedToAlt;
+	private final Set<Path> _codeChangesModifiedFiles;
 
-    CodeChangesStatistics(Set<Path> filesDeletedFromBase, Set<Path> filesAddedToAlt, Set<Path> codeChangesFilesModified)
-    {
-
-
-        _filesDeletedFromBase = filesDeletedFromBase;
-        _filesAddedToAlt = filesAddedToAlt;
-        _codeChangesModifiedFiles = codeChangesFilesModified;
-    }
+	CodeChangesStatistics(Set<Path> filesDeletedFromBase, Set<Path> filesAddedToAlt, Set<Path> codeChangesFilesModified)
+	{
 
 
-    public Set<Path> getCodeChangesModifiedFiles()
-    {
-        return _codeChangesModifiedFiles;
-    }
-    public Set<Path> getFilesDeletedFromBase()
-    {
-        return _filesDeletedFromBase;
-    }
+		_filesDeletedFromBase = filesDeletedFromBase;
+		_filesAddedToAlt = filesAddedToAlt;
+		_codeChangesModifiedFiles = codeChangesFilesModified;
+	}
 
-    public Set<Path> getFilesAddedToAlt()
-    {
-        return _filesAddedToAlt;
-    }
+
+	public Set<Path> getCodeChangesModifiedFiles()
+	{
+		return _codeChangesModifiedFiles;
+	}
+
+	public Set<Path> getFilesDeletedFromBase()
+	{
+		return _filesDeletedFromBase;
+	}
+
+	public Set<Path> getFilesAddedToAlt()
+	{
+		return _filesAddedToAlt;
+	}
 
 }

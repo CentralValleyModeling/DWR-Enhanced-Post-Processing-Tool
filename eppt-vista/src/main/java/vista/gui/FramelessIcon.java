@@ -20,15 +20,17 @@ import javax.swing.*;
 
 /**
  * A display of the start up icon window
- * 
+ *
  * @author Nicky Sandhu
  * @version $Id: FramelessIcon.java,v 1.1 2003/10/02 20:49:15 redwood Exp $
  */
-public class FramelessIcon extends Window {
+public class FramelessIcon extends Window
+{
 	/**
-   *
-   */
-	public FramelessIcon(byte[] imageData) {
+	 *
+	 */
+	public FramelessIcon(byte[] imageData)
+	{
 		super(new Frame(""));
 		Icon im = new ImageIcon(imageData);
 		JLabel lbl = null;

@@ -100,7 +100,7 @@ public class GeneralRetrievePanel extends JPanel
 		_pathText[5].setBorder(BorderFactory.createTitledBorder(
 				BorderFactory.createLineBorder(Color.lightGray), "F"));
 		//
-//		filterPanel.add(_varTypeBox);
+		//		filterPanel.add(_varTypeBox);
 		for(int i = 0; i < NUM_PATH_PARTS; i++)
 		{
 			filterPanel.add(_pathText[i]);

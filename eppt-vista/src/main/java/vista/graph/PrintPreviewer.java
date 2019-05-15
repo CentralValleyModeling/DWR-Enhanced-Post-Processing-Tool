@@ -35,27 +35,24 @@ import vista.app.MainProperties;
 import vista.gui.VistaUtils;
 
 //import sun.awt.motif.*;
+
 /**
  * A print previewer
- * 
+ *
  * @author Nicky Sandhu
  * @version $Id: PrintPreviewer.java,v 1.1 2003/10/02 20:49:07 redwood Exp $
  */
 public class PrintPreviewer extends JFrame implements MouseListener,
-		MouseMotionListener {
-	private int _pp = 72;
-	private int _ox = 0, _oy = 0;
-	private int _pw = 8 * 72, _ph = 11 * 72;
-	private Insets _margins;
-	private JRadioButtonMenuItem _lo, _po;
-	public GECanvas canvas;
-	public GraphicElement _ge;
+													  MouseMotionListener
+{
 	public static int PORTRAIT = 1;
 	public static int LANDSCAPE = 2;
 	public static Rectangle _lastRectangle = new Rectangle(0, 0, 10, 10);
 	public static int _lastOrientation = PORTRAIT;
 	public static String[] _printerNames;
-	static {
+
+	static
+	{
 		String prop = MainProperties.getProperties().getProperty("pp.rect");
 		StringTokenizer st = new StringTokenizer(prop, ",");
 		_lastRectangle.x = new Integer(st.nextToken()).intValue();
@@ -66,10 +63,20 @@ public class PrintPreviewer extends JFrame implements MouseListener,
 		st = new StringTokenizer(prop, ",");
 		_printerNames = new String[st.countTokens()];
 		int i = 0;
-		while (st.hasMoreTokens()) {
+		while(st.hasMoreTokens())
+		{
 			_printerNames[i++] = st.nextToken();
 		}
 	}
+
+	public GECanvas canvas;
+	public GraphicElement _ge;
+	public Rectangle _prevRectangle;
+	private int _pp = 72;
+	private int _ox = 0, _oy = 0;
+	private int _pw = 8 * 72, _ph = 11 * 72;
+	private Insets _margins;
+	private JRadioButtonMenuItem _lo, _po;
 	private boolean _drawRect = false;
 	private int _initialX = 0, _initialY = 0;
 	private boolean _doMoving = false, _doResizing = false;
@@ -77,14 +84,14 @@ public class PrintPreviewer extends JFrame implements MouseListener,
 			MOVE_CURSOR = Cursor.getPredefinedCursor(Cursor.MOVE_CURSOR);
 	private int zoneSize = 8;
 	private javax.swing.Timer _timer;
-	public Rectangle _prevRectangle;
 	private int _orientation;
 	private boolean nr, sr, er, wr;
 
 	/**
-   *
-   */
-	public PrintPreviewer(GraphicElement ge) {
+	 *
+	 */
+	public PrintPreviewer(GraphicElement ge)
+	{
 		JMenuBar mbar = new JMenuBar();
 		JMenu printMenu = new JMenu("Print");
 		JMenu printItem = new JMenu("Print to");
@@ -98,9 +105,12 @@ public class PrintPreviewer extends JFrame implements MouseListener,
 		ButtonGroup bg = new ButtonGroup();
 		bg.add(_lo);
 		bg.add(_po);
-		if (_lastOrientation == PORTRAIT) {
+		if(_lastOrientation == PORTRAIT)
+		{
 			_po.setSelected(true);
-		} else {
+		}
+		else
+		{
 			_lo.setSelected(true);
 		}
 		JMenuItem doneItem = new JMenuItem("Done Previewing");
@@ -113,18 +123,24 @@ public class PrintPreviewer extends JFrame implements MouseListener,
 		mbar.add(printMenu);
 		setJMenuBar(mbar);
 
-		printFileItem.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent evt) {
+		printFileItem.addActionListener(new ActionListener()
+		{
+			public void actionPerformed(ActionEvent evt)
+			{
 				printFile();
 			}
 		});
-		printPrinterItem.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent evt) {
+		printPrinterItem.addActionListener(new ActionListener()
+		{
+			public void actionPerformed(ActionEvent evt)
+			{
 				printPrinter();
 			}
 		});
-		doneItem.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent evt) {
+		doneItem.addActionListener(new ActionListener()
+		{
+			public void actionPerformed(ActionEvent evt)
+			{
 				// save pprect to properties
 				Rectangle r = _lastRectangle;
 				String rectProp = "" + r.x + "," + r.y + "," + r.width + ","
@@ -136,15 +152,22 @@ public class PrintPreviewer extends JFrame implements MouseListener,
 				dispose();
 			}
 		});
-		ActionListener orlistener = new ActionListener() {
-			public void actionPerformed(ActionEvent evt) {
+		ActionListener orlistener = new ActionListener()
+		{
+			public void actionPerformed(ActionEvent evt)
+			{
 				Object obj = evt.getSource();
-				if (!(obj instanceof JRadioButtonMenuItem))
+				if(!(obj instanceof JRadioButtonMenuItem))
+				{
 					return;
+				}
 				JRadioButtonMenuItem ji = (JRadioButtonMenuItem) obj;
-				if (ji.getText().indexOf("Portrait") >= 0) {
+				if(ji.getText().indexOf("Portrait") >= 0)
+				{
 					setOrientation(PORTRAIT);
-				} else {
+				}
+				else
+				{
 					setOrientation(LANDSCAPE);
 				}
 			}
@@ -162,16 +185,21 @@ public class PrintPreviewer extends JFrame implements MouseListener,
 		//
 		addMouseListener(this);
 		addMouseMotionListener(this);
-		_timer = new javax.swing.Timer(400, new ActionListener() {
-			public void actionPerformed(ActionEvent evt) {
+		_timer = new javax.swing.Timer(400, new ActionListener()
+		{
+			public void actionPerformed(ActionEvent evt)
+			{
 				paint(getGraphics());
 			}
 		});
 		//
 		_orientation = _lastOrientation;
-		if (_orientation == PORTRAIT) {
+		if(_orientation == PORTRAIT)
+		{
 			setSize(_pw, _ph);
-		} else {
+		}
+		else
+		{
 			setSize(_ph, _pw);
 		}
 		this.setResizable(false);
@@ -179,18 +207,24 @@ public class PrintPreviewer extends JFrame implements MouseListener,
 	}
 
 	/**
-   *
-   */
-	public void setOrientation(int or) {
+	 *
+	 */
+	public void setOrientation(int or)
+	{
 		float dpi = 72.0f;
-		if (or == _orientation)
+		if(or == _orientation)
+		{
 			return;
+		}
 		_orientation = or;
 		setParams(_lastRectangle.x / dpi, _lastRectangle.y / dpi,
 				_lastRectangle.height / dpi, _lastRectangle.width / dpi);
-		if (_orientation == PORTRAIT) {
+		if(_orientation == PORTRAIT)
+		{
 			setSize(_pw, _ph);
-		} else {
+		}
+		else
+		{
 			setSize(_ph, _pw);
 		}
 	}
@@ -198,11 +232,14 @@ public class PrintPreviewer extends JFrame implements MouseListener,
 	/**
 	 * prints to file after quering by filename dialog for filename
 	 */
-	public void printFile() {
+	public void printFile()
+	{
 		String filename = VistaUtils.getFilenameFromDialog(this,
 				FileDialog.SAVE, "ps", "Post script file");
-		if (filename == null || filename.length() == 0)
+		if(filename == null || filename.length() == 0)
+		{
 			return;
+		}
 		printToFile(filename);
 	}
 
@@ -211,40 +248,54 @@ public class PrintPreviewer extends JFrame implements MouseListener,
 	 * works on Solaris where the result is output to a tmp file, then printed
 	 * to printer
 	 */
-	public void printPrinter() {
+	public void printPrinter()
+	{
 		String osname = System.getProperty("os.name");
-		if (osname.indexOf("olaris") >= 0) {
+		if(osname.indexOf("olaris") >= 0)
+		{
 			// all this is pretty much for Solaris
 			String printerName = (String) JOptionPane.showInputDialog(this,
 					"Printer Name", "Printer chooser",
 					JOptionPane.PLAIN_MESSAGE, null, _printerNames,
 					_printerNames[0]);
-			if (printerName == null || printerName.length() == 0)
+			if(printerName == null || printerName.length() == 0)
+			{
 				return;
+			}
 			String filename = "/tmp/vista" + new java.util.Random().nextInt()
 					+ ".ps";
 			printToFile(filename);
-			try {
+			try
+			{
 				Runtime.getRuntime().exec(
 						"lp -d " + printerName.trim() + " " + filename
 								+ "; rm -rf " + filename);
-			} catch (IOException ioe) {
+			}
+			catch(IOException ioe)
+			{
 				VistaUtils.displayException(this, ioe);
 			}
-		} else {
+		}
+		else
+		{
 			GraphicElement ge = canvas.getGraphicElement();
 			Dimension d = ge.getSize();
 			Dimension d2 = getSize();
 			// set up printing properties
 			Properties printProps = new Properties();
 			printProps.put("awt.print.destination", "printer");
-			if (_po.isSelected())
+			if(_po.isSelected())
+			{
 				printProps.put("awt.print.orientation", "portrait");
+			}
 			else
+			{
 				printProps.put("awt.print.orientation", "landscape");
+			}
 			// get print job
 			PrintJob pjob = null;
-			if (pjob == null) {
+			if(pjob == null)
+			{
 				pjob = Toolkit.getDefaultToolkit().getPrintJob(this, "",
 						printProps);
 			}
@@ -252,8 +303,10 @@ public class PrintPreviewer extends JFrame implements MouseListener,
 			pg.setClip(canvas.getBounds());
 			ge.setBounds(canvas.getBounds());
 			ge.setGraphics(pg);
-			if (ge instanceof GEContainer)
+			if(ge instanceof GEContainer)
+			{
 				((GEContainer) ge).doLayout();
+			}
 			ge.draw(pg);
 			pg.dispose();
 			pjob.end();
@@ -263,28 +316,40 @@ public class PrintPreviewer extends JFrame implements MouseListener,
 	/**
 	 * prints to given filename
 	 */
-	public void printToFile(String filename) {
-		try {
+	public void printToFile(String filename)
+	{
+		try
+		{
 			GraphicElement ge = canvas.getGraphicElement();
 			Dimension d = ge.getSize();
 			Dimension d2 = getSize();
 			PrintJob pjob = null;
 			String osname = System.getProperty("os.name");
-			if (osname.indexOf("olaris") >= 0) {
+			if(osname.indexOf("olaris") >= 0)
+			{
 				// uncomment and compile on solaris
 				// pjob = new sun.awt.motif.PSPrintJob(ps,"Graph",d2,72);
-			} else if (osname.indexOf("indows") >= 0) {
-			} else {
 			}
-			if (pjob == null) {
+			else if(osname.indexOf("indows") >= 0)
+			{
+			}
+			else
+			{
+			}
+			if(pjob == null)
+			{
 				// set up printing properties
 				Properties printProps = new Properties();
 				printProps.put("awt.print.destination", "file");
 				printProps.put("awt.print.fileName", filename);
-				if (_po.isSelected())
+				if(_po.isSelected())
+				{
 					printProps.put("awt.print.orientation", "portrait");
+				}
 				else
+				{
 					printProps.put("awt.print.orientation", "landscape");
+				}
 				pjob = Toolkit.getDefaultToolkit().getPrintJob(this, "",
 						printProps);
 			}
@@ -292,35 +357,39 @@ public class PrintPreviewer extends JFrame implements MouseListener,
 			pg.setClip(canvas.getBounds());
 			ge.setBounds(canvas.getBounds());
 			ge.setGraphics(pg);
-			if (ge instanceof GEContainer)
+			if(ge instanceof GEContainer)
+			{
 				((GEContainer) ge).doLayout();
+			}
 			ge.draw(pg);
 			pg.dispose();
 			pjob.end();
-		} catch (Exception e) {
+		}
+		catch(Exception e)
+		{
 			VistaUtils.displayException(this, e);
 		}
 	}
 
 	/**
 	 * set the margins
-	 * 
-	 * @param tm
-	 *            distance from top side of page
-	 * @param lm
-	 *            distance from left side of page
-	 * @param width
-	 *            width of graph
-	 * @param height
-	 *            height of graph All dimension are in inches
+	 *
+	 * @param tm     distance from top side of page
+	 * @param lm     distance from left side of page
+	 * @param width  width of graph
+	 * @param height height of graph All dimension are in inches
 	 */
-	public void setParams(float tm, float lm, float w, float h) {
+	public void setParams(float tm, float lm, float w, float h)
+	{
 		int t = Math.round(tm * 72);
 		int l = Math.round(lm * 72);
 		int width = Math.round(w * 72);
 		int height = Math.round(h * 72);
-		if (height <= 0 || width <= 0) {
-		} else {
+		if(height <= 0 || width <= 0)
+		{
+		}
+		else
+		{
 			_lastRectangle.x = l;
 			_lastRectangle.y = t;
 			_lastRectangle.width = width;
@@ -331,11 +400,13 @@ public class PrintPreviewer extends JFrame implements MouseListener,
 	}
 
 	/**
-   *
-   */
-	public void paint(Graphics g) {
+	 *
+	 */
+	public void paint(Graphics g)
+	{
 		// if in draw rectangle mode watch for mouse motions
-		if (_drawRect) {
+		if(_drawRect)
+		{
 			// get image of graph canvas
 			// if ( _doResizing ) canvas.redoNextPaint();
 			super.setBackground(Color.white);
@@ -349,19 +420,23 @@ public class PrintPreviewer extends JFrame implements MouseListener,
 			r.y = r.y - rr.y;
 			r.width = _lastRectangle.width;
 			r.height = _lastRectangle.height;
-			if (_doResizing && !(nr || sr || er || wr)) { // saves time for huge
-															// plots
+			if(_doResizing && !(nr || sr || er || wr))
+			{ // saves time for huge
+				// plots
 				canvas.redoNextPaint();
 				canvas.setBounds(r);
 			}
-			if (_doMoving) {
+			if(_doMoving)
+			{
 				canvas.setBounds(r);
 			}
 			// canvas.setBounds(_lastRectangle);
 			g.drawRect(_lastRectangle.x, _lastRectangle.y,
 					_lastRectangle.width, _lastRectangle.height);
 			// draw rectangle on top of canvas
-		} else {
+		}
+		else
+		{
 			super.setBackground(Color.white);
 			super.paint(g);
 			Rectangle r = canvas.getBounds();
@@ -386,19 +461,26 @@ public class PrintPreviewer extends JFrame implements MouseListener,
 	 * these hot spot regions. If the zoom rectangle is not visible mark the
 	 * initial point and final point as the initial point and some resonable
 	 * width/height.
-	 * 
 	 */
-	public void mousePressed(MouseEvent e) {
+	public void mousePressed(MouseEvent e)
+	{
 		// on pressing middle mouse btn
-		if (SwingUtilities.isMiddleMouseButton(e)) {
-			if (!_drawRect) {
+		if(SwingUtilities.isMiddleMouseButton(e))
+		{
+			if(!_drawRect)
+			{
 				_drawRect = true; // draw the rectangle
-			} else {
+			}
+			else
+			{
 				setCursor(NORMAL_CURSOR);
 				_drawRect = false;
 			}
-		} else {
-			if (_drawRect) {
+		}
+		else
+		{
+			if(_drawRect)
+			{
 				_prevRectangle = new Rectangle(_lastRectangle);
 				_initialX = e.getX();
 				_initialY = e.getY();
@@ -410,74 +492,112 @@ public class PrintPreviewer extends JFrame implements MouseListener,
 	/**
 	 * mouse moved
 	 */
-	public void mouseMoved(MouseEvent evt) {
-		if (_drawRect) { // if in resize/move mode
+	public void mouseMoved(MouseEvent evt)
+	{
+		if(_drawRect)
+		{ // if in resize/move mode
 			_timer.stop();
 			int x = evt.getX();
 			int y = evt.getY();
 			Rectangle r = _lastRectangle;
 			// if mouse is within 2pixels of rectangle boundary -> resize
 			// if mouse is inside boundary by inside of 2pixels -> move
-			if (_lastRectangle.contains(x, y)) {
-				if (Math.abs(_lastRectangle.y - y) <= zoneSize) {
+			if(_lastRectangle.contains(x, y))
+			{
+				if(Math.abs(_lastRectangle.y - y) <= zoneSize)
+				{
 					nr = true;
-				} else if (Math.abs(_lastRectangle.y + _lastRectangle.height
-						- y) <= zoneSize) {
+				}
+				else if(Math.abs(_lastRectangle.y + _lastRectangle.height
+						- y) <= zoneSize)
+				{
 					sr = true;
-				} else {
+				}
+				else
+				{
 					nr = sr = false;
 				}
-				if (Math.abs(_lastRectangle.x - x) <= zoneSize) {
+				if(Math.abs(_lastRectangle.x - x) <= zoneSize)
+				{
 					wr = true;
-				} else if (Math
-						.abs(_lastRectangle.x + _lastRectangle.width - x) <= zoneSize) {
+				}
+				else if(Math
+						.abs(_lastRectangle.x + _lastRectangle.width - x) <= zoneSize)
+				{
 					er = true;
-				} else {
+				}
+				else
+				{
 					wr = er = false;
 				}
-				if (nr || sr || wr || er) {
+				if(nr || sr || wr || er)
+				{
 					_doMoving = false;
 					_doResizing = true;
 					setCursor();
-				} else {
+				}
+				else
+				{
 					_doMoving = true;
 					_doResizing = false;
 					nr = sr = wr = er = false;
 					setCursor(MOVE_CURSOR);
 				}
-			} else {
+			}
+			else
+			{
 				nr = sr = wr = er = false;
 				_doMoving = _doResizing = false;
 				setCursor();
 			}
-		} else {
+		}
+		else
+		{
 			nr = sr = wr = er = false;
 			_doMoving = _doResizing = false;
 		}
 	}
 
 	/**
-   *
-   */
-	private void setCursor() {
+	 *
+	 */
+	private void setCursor()
+	{
 		Cursor cursor = NORMAL_CURSOR;
-		if (nr && er) {
+		if(nr && er)
+		{
 			cursor = Cursor.getPredefinedCursor(Cursor.NE_RESIZE_CURSOR);
-		} else if (nr && wr) {
+		}
+		else if(nr && wr)
+		{
 			cursor = Cursor.getPredefinedCursor(Cursor.NW_RESIZE_CURSOR);
-		} else if (sr && wr) {
+		}
+		else if(sr && wr)
+		{
 			cursor = Cursor.getPredefinedCursor(Cursor.SW_RESIZE_CURSOR);
-		} else if (sr && er) {
+		}
+		else if(sr && er)
+		{
 			cursor = Cursor.getPredefinedCursor(Cursor.SE_RESIZE_CURSOR);
-		} else if (nr) {
+		}
+		else if(nr)
+		{
 			cursor = Cursor.getPredefinedCursor(Cursor.N_RESIZE_CURSOR);
-		} else if (sr) {
+		}
+		else if(sr)
+		{
 			cursor = Cursor.getPredefinedCursor(Cursor.S_RESIZE_CURSOR);
-		} else if (wr) {
+		}
+		else if(wr)
+		{
 			cursor = Cursor.getPredefinedCursor(Cursor.W_RESIZE_CURSOR);
-		} else if (er) {
+		}
+		else if(er)
+		{
 			cursor = Cursor.getPredefinedCursor(Cursor.E_RESIZE_CURSOR);
-		} else {
+		}
+		else
+		{
 			cursor = NORMAL_CURSOR;
 		}
 		setCursor(cursor);
@@ -486,29 +606,35 @@ public class PrintPreviewer extends JFrame implements MouseListener,
 	/**
 	 * If mouse has not been dragged then don't draw zoom rectangle
 	 */
-	public void mouseReleased(MouseEvent e) {
+	public void mouseReleased(MouseEvent e)
+	{
 		nr = sr = wr = er = false;
-		if (_timer != null)
+		if(_timer != null)
+		{
 			_timer.stop();
+		}
 		repaint();
 	}
 
 	/**
 	 * If mouse has not been dragged then don't draw zoom rectangle
 	 */
-	public void mouseClicked(MouseEvent e) {
+	public void mouseClicked(MouseEvent e)
+	{
 	}
 
 	/**
 	 * If mouse has not been dragged then don't draw zoom rectangle
 	 */
-	public void mouseEntered(MouseEvent e) {
+	public void mouseEntered(MouseEvent e)
+	{
 	}
 
 	/**
 	 * If mouse has not been dragged then don't draw zoom rectangle
 	 */
-	public void mouseExited(MouseEvent e) {
+	public void mouseExited(MouseEvent e)
+	{
 	}
 
 	/**
@@ -519,10 +645,13 @@ public class PrintPreviewer extends JFrame implements MouseListener,
 	 * rectangle If the moving mode is on then the rectangle is moved with the
 	 * rectangle shape being preserved.
 	 */
-	public void mouseDragged(MouseEvent e) {
-		if (_drawRect) {
+	public void mouseDragged(MouseEvent e)
+	{
+		if(_drawRect)
+		{
 			_timer.start();
-			if (_doMoving) {
+			if(_doMoving)
+			{
 				int x = e.getX();
 				int y = e.getY();
 				int delx = x - _initialX;
@@ -532,24 +661,31 @@ public class PrintPreviewer extends JFrame implements MouseListener,
 				_initialX = x;
 				_initialY = y;
 			}
-			if (_doResizing) {
+			if(_doResizing)
+			{
 				int x = e.getX();
 				int y = e.getY();
 				int delx = x - _initialX;
 				int dely = y - _initialY;
-				if (nr) {
+				if(nr)
+				{
 					// near top
 					_lastRectangle.y += dely;
 					_lastRectangle.height -= dely;
-				} else if (sr) {
+				}
+				else if(sr)
+				{
 					// near bottom
 					_lastRectangle.height += dely;
 				}
-				if (wr) {
+				if(wr)
+				{
 					// near left
 					_lastRectangle.x += delx;
 					_lastRectangle.width -= delx;
-				} else if (er) {
+				}
+				else if(er)
+				{
 					// near right
 					_lastRectangle.width += delx;
 				}

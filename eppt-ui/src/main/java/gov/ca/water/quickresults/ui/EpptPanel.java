@@ -43,6 +43,23 @@ public abstract class EpptPanel extends RmaJPanel
 		_swingEngine = new SwingEngine();
 	}
 
+	public static void setCheckboxesSelectedRecusive(boolean b, Container container)
+	{
+		Component[] components = container.getComponents();
+		for(final Component component : components)
+		{
+			if(component instanceof JCheckBox)
+			{
+				JCheckBox c = (JCheckBox) component;
+				c.setSelected(b);
+			}
+			else if(component instanceof Container)
+			{
+				setCheckboxesSelectedRecusive(b, (Container) component);
+			}
+		}
+	}
+
 	public SwingEngine getSwingEngine()
 	{
 		return _swingEngine;
@@ -50,15 +67,15 @@ public abstract class EpptPanel extends RmaJPanel
 
 	public abstract String getJavaHelpId();
 
+	protected ActionListener getActionListener()
+	{
+		return _actionListener;
+	}
+
 	public void setActionListener(ActionListener actionListener)
 	{
 		_actionListener = actionListener;
 		getSwingEngine().setActionListener(this, actionListener);
-	}
-
-	protected ActionListener getActionListener()
-	{
-		return _actionListener;
 	}
 
 	protected Container renderSwixml(String fileName) throws Exception
@@ -76,23 +93,5 @@ public abstract class EpptPanel extends RmaJPanel
 			retval = getSwingEngine().render("ui/" + fileName);
 		}
 		return retval;
-	}
-
-
-	public static void setCheckboxesSelectedRecusive(boolean b, Container container)
-	{
-		Component[] components = container.getComponents();
-		for(final Component component : components)
-		{
-			if(component instanceof JCheckBox)
-			{
-				JCheckBox c = (JCheckBox) component;
-				c.setSelected(b);
-			}
-			else if(component instanceof Container)
-			{
-				setCheckboxesSelectedRecusive(b, (Container) component);
-			}
-		}
 	}
 }

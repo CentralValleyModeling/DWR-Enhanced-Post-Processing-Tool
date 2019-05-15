@@ -30,23 +30,35 @@ import vista.gui.DialogButtonPanel;
 /**
  * Initializes a tree dialog for a GEContainer and redraws the containing canvas
  * on apply/done button press.
- * 
+ *
  * @author Nicky Sandhu
  * @version $Id: GETreeDialog.java,v 1.1 2003/10/02 20:48:59 redwood Exp $
  */
-public class GETreeDialog extends JDialog implements Changeable {
+public class GETreeDialog extends JDialog implements Changeable
+{
+	/**
+	 *
+	 */
+	public static final boolean DEBUG = false;
+	private GECanvas _gC;
+	private JTree tree;
+	private JSplitPane _splitPane;
+	private GEDialogPanel _currentPanel;
+
 	/**
 	 * initializes a tree structure of components contained in a GEContainer
 	 * from the given graph frame.
 	 */
-	public GETreeDialog(Frame frame, GECanvas canvas) {
+	public GETreeDialog(Frame frame, GECanvas canvas)
+	{
 		super(frame);
 		_splitPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT);
 		// make left pane tree
 		_gC = canvas;
 		GraphicElement ge = _gC.getGraphicElement();
 		GETree treePanel = null;
-		if (ge instanceof GEContainer) {
+		if(ge instanceof GEContainer)
+		{
 			treePanel = new GETree((GEContainer) ge);
 			tree = treePanel.getTree();
 			_splitPane.setLeftComponent(treePanel);
@@ -67,9 +79,10 @@ public class GETreeDialog extends JDialog implements Changeable {
 	}
 
 	/**
-    *
-    */
-	public void setCurrentPanel(GEDialogPanel panel) {
+	 *
+	 */
+	public void setCurrentPanel(GEDialogPanel panel)
+	{
 		_currentPanel = panel;
 		_splitPane.setRightComponent(_currentPanel);
 		_splitPane.setDividerLocation(0.35);
@@ -78,7 +91,8 @@ public class GETreeDialog extends JDialog implements Changeable {
 	/**
 	 * apply changes done
 	 */
-	public void applyChanges() {
+	public void applyChanges()
+	{
 		_currentPanel.applyChanges();
 		_gC.redoNextPaint();
 		_gC.update(_gC.getGraphics());
@@ -87,21 +101,24 @@ public class GETreeDialog extends JDialog implements Changeable {
 	/**
 	 * done with changes, dispose of dialog
 	 */
-	public void doneChanges() {
+	public void doneChanges()
+	{
 		dispose();
 	}
 
 	/**
 	 * path single clicked
 	 */
-	public void pathSingleClicked(int selRow, TreePath selPath) {
+	public void pathSingleClicked(int selRow, TreePath selPath)
+	{
 		pathSelected(selPath);
 	}
 
 	/**
-   *
-   */
-	public void pathSelected(TreePath selPath) {
+	 *
+	 */
+	public void pathSelected(TreePath selPath)
+	{
 		DefaultMutableTreeNode node = (DefaultMutableTreeNode) selPath
 				.getLastPathComponent();
 		GraphicElement ge = (GraphicElement) node.getUserObject();
@@ -111,22 +128,30 @@ public class GETreeDialog extends JDialog implements Changeable {
 	/**
 	 * path double clicked
 	 */
-	public void pathDoubleClicked(int selRow, TreePath selPath) {
+	public void pathDoubleClicked(int selRow, TreePath selPath)
+	{
 		pathSelected(selPath);
 	}
 
 	/**
-   *
-   */
-	private void addMouseListenerToTree() {
-		MouseListener ml = new MouseAdapter() {
-			public void mouseClicked(MouseEvent e) {
+	 *
+	 */
+	private void addMouseListenerToTree()
+	{
+		MouseListener ml = new MouseAdapter()
+		{
+			public void mouseClicked(MouseEvent e)
+			{
 				int selRow = tree.getRowForLocation(e.getX(), e.getY());
 				TreePath selPath = tree.getPathForLocation(e.getX(), e.getY());
-				if (selRow != -1) {
-					if (e.getClickCount() == 1) {
+				if(selRow != -1)
+				{
+					if(e.getClickCount() == 1)
+					{
 						pathSingleClicked(selRow, selPath);
-					} else if (e.getClickCount() == 2) {
+					}
+					else if(e.getClickCount() == 2)
+					{
 						pathDoubleClicked(selRow, selPath);
 					}
 				}
@@ -136,20 +161,12 @@ public class GETreeDialog extends JDialog implements Changeable {
 	}
 
 	/**
-    *
-    */
-	public static final boolean DEBUG = false;
-	private GECanvas _gC;
-	private JTree tree;
-	private JSplitPane _splitPane;
-	private GEDialogPanel _currentPanel;
-
-	/**
-    *
-    *
-    */
-	private class GETreeListener implements TreeSelectionListener {
-		public void valueChanged(TreeSelectionEvent evt) {
+	 *
+	 */
+	private class GETreeListener implements TreeSelectionListener
+	{
+		public void valueChanged(TreeSelectionEvent evt)
+		{
 			pathSelected(evt.getPath());
 		}
 	}

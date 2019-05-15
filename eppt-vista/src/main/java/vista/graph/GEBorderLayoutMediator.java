@@ -17,44 +17,57 @@ import java.util.ArrayList;
 /**
  * Mediates between layout managers to synchronize or exchange layout
  * information
- * 
+ *
  * @author Nicky Sandhu (DWR).
  * @version $Id: GEBorderLayoutMediator.java,v 1.1 2003/10/02 20:48:56 redwood
- *          Exp $
+ * Exp $
  */
-public class GEBorderLayoutMediator implements LayoutMediator {
+public class GEBorderLayoutMediator implements LayoutMediator
+{
 	/**
 	 * for debuggin'
 	 */
 	public static final boolean DEBUG = false;
+	/**
+	 *
+	 */
+	private ArrayList<GEMultiBorderLayout> _layoutGroup = new ArrayList<GEMultiBorderLayout>();
 
 	/**
 	 * Constructor
 	 */
-	public GEBorderLayoutMediator() {
+	public GEBorderLayoutMediator()
+	{
 	}
 
 	/**
 	 * Add layout manager to the group to be synchronized
-	 * 
-	 * @param lm
-	 *            The layout manager to be added
+	 *
+	 * @param lm The layout manager to be added
 	 */
-	public void addLayoutManager(GELayoutManager lm) {
-		if (lm instanceof GEMultiBorderLayout)
+	public void addLayoutManager(GELayoutManager lm)
+	{
+		if(lm instanceof GEMultiBorderLayout)
+		{
 			_layoutGroup.add((GEMultiBorderLayout) lm);
+		}
 	}
 
 	/**
 	 * Get the preferred size by getting information from layout managers.
 	 */
-	public Dimension getPreferredSize(Object object) {
+	public Dimension getPreferredSize(Object object)
+	{
 		Dimension preferredSize = new Dimension(0, 0);
-		if (DEBUG)
+		if(DEBUG)
+		{
 			System.out.println(" " + this + ":" + object);
-		if (object instanceof String) {
+		}
+		if(object instanceof String)
+		{
 			String position = (String) object;
-			for (GEMultiBorderLayout layout : _layoutGroup) {
+			for(GEMultiBorderLayout layout : _layoutGroup)
+			{
 				Dimension size = preferredSize;
 				size = layout.getPreferredDimensions(position);
 				// if (DEBUG) System.out.println("Layout " + layout + ":"
@@ -64,20 +77,18 @@ public class GEBorderLayoutMediator implements LayoutMediator {
 						preferredSize.height);
 			}
 		}
-		if (DEBUG)
+		if(DEBUG)
+		{
 			System.out.println("Preferred Size: " + preferredSize);
+		}
 		return preferredSize;
 	}
 
 	/**
 	 * Get the minimum size by getting information from layout managers.
 	 */
-	public Dimension getMinimumSize(Object object) {
+	public Dimension getMinimumSize(Object object)
+	{
 		return getPreferredSize(object);
 	}
-
-	/**
-   * 
-   */
-	private ArrayList<GEMultiBorderLayout> _layoutGroup = new ArrayList<GEMultiBorderLayout>();
 }

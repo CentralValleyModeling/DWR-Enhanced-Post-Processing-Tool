@@ -12,14 +12,12 @@
 
 package gov.ca.water.quickresults.ui.projectconfig;
 
-import java.awt.Component;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import javax.swing.*;
 
 import gov.ca.water.calgui.bo.GUILinksAllModelsBO;
 import gov.ca.water.calgui.project.EpptDssContainer;
@@ -29,7 +27,6 @@ import gov.ca.water.calgui.project.NamedDssPath;
 import org.jfree.data.time.Month;
 import org.json.JSONArray;
 import org.json.JSONObject;
-import org.swixml.SwingEngine;
 
 import static gov.ca.water.quickresults.ui.projectconfig.ProjectConfigurationIO.*;
 

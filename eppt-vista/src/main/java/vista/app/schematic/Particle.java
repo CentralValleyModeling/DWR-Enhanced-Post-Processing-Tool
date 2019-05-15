@@ -16,45 +16,8 @@ package vista.app.schematic;
  * the waterbody in which it is and its x,y,z position relative to that
  * waterbody.
  */
-public class Particle {
-	/**
-	 * constructor
-	 */
-	public Particle(int id, int waterbodyId, float x, float y, float z) {
-		setData(id, waterbodyId, x, y, z);
-	}
-
-	/**
-	 * sets the value of data of this particle
-	 */
-	public void setData(int id, int waterbodyId, float x, float y, float z) {
-
-		_id = id;
-		_wbId = waterbodyId;
-		_x = x;
-		_y = y;
-		_z = z;
-
-	}
-
-	/**
-   *
-   */
-	public int getWaterbodyId() {
-		return _wbId;
-	}
-
-	/**
-   *
-   */
-	public float getDistanceFromUpNode() {
-		return _x;
-	}
-	
-	public String toString(){
-		return String.format("Particle: %03d in %d @ (%10.2f,%10.2f,%10.2f)",_id,_wbId,_x,_y,_z);
-	}
-
+public class Particle
+{
 	/**
 	 * Id of this particle
 	 */
@@ -75,4 +38,47 @@ public class Particle {
 	 * normalized z distance from bottom of channel
 	 */
 	public float _z;
+
+	/**
+	 * constructor
+	 */
+	public Particle(int id, int waterbodyId, float x, float y, float z)
+	{
+		setData(id, waterbodyId, x, y, z);
+	}
+
+	/**
+	 * sets the value of data of this particle
+	 */
+	public void setData(int id, int waterbodyId, float x, float y, float z)
+	{
+
+		_id = id;
+		_wbId = waterbodyId;
+		_x = x;
+		_y = y;
+		_z = z;
+
+	}
+
+	/**
+	 *
+	 */
+	public int getWaterbodyId()
+	{
+		return _wbId;
+	}
+
+	/**
+	 *
+	 */
+	public float getDistanceFromUpNode()
+	{
+		return _x;
+	}
+
+	public String toString()
+	{
+		return String.format("Particle: %03d in %d @ (%10.2f,%10.2f,%10.2f)", _id, _wbId, _x, _y, _z);
+	}
 }

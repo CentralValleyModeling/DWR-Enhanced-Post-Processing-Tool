@@ -18,23 +18,60 @@ import javax.swing.*;
 
 /**
  * An editor for the attributes and state of the TextLine object
- * 
- * @see TextLine
+ *
  * @author Nicky Sandhu
  * @version $Id: TextDialogPanel.java,v 1.1 2003/10/02 20:49:09 redwood Exp $
+ * @see TextLine
  */
-public class TextDialogPanel extends GEDialogPanel {
+public class TextDialogPanel extends GEDialogPanel
+{
+	/**
+	 *
+	 */
+	protected final String BASIC = "Basic";
+	/**
+	 *
+	 */
+	protected final String TEXT = "Text";
+	/**
+	 *
+	 */
+	protected final String CENTER = "Center";
+	/**
+	 *
+	 */
+	protected final String LEFT = "Left";
+	/**
+	 *
+	 */
+	protected final String RIGHT = "Right";
+	/**
+	 *
+	 */
+	protected final String SIDE_BY_SIDE = "Side by Side";
+	/**
+	 *
+	 */
+	protected final String TOP_ON_TOP = "Top on Top";
+	/**
+	 *
+	 */
+	private JComboBox justificationChoice, arrangementChoice;
+	private FontChoice fontPanel;
+	private JTextField textField;
 	/**
 	 * constructor
 	 */
-	public TextDialogPanel(TextLine textLine) {
+	public TextDialogPanel(TextLine textLine)
+	{
 		super(textLine);
 	}
 
 	/**
 	 * creates panels
 	 */
-	protected JPanel createPanel() {
+	protected JPanel createPanel()
+	{
 		JPanel basicPanel = super.createPanel();
 		// text editing
 		TextLine tL = (TextLine) getGraphicElement();
@@ -46,7 +83,7 @@ public class TextDialogPanel extends GEDialogPanel {
 		fontPanel.setBorder(BorderFactory.createTitledBorder(BorderFactory
 				.createEtchedBorder(), Labels.FONT));
 		TextLineAttr attr = (TextLineAttr) tL.getAttributes();
-		//  
+		//
 		justificationChoice = new JComboBox();
 		justificationChoice.addItem(CENTER);
 		justificationChoice.addItem(LEFT);
@@ -55,18 +92,19 @@ public class TextDialogPanel extends GEDialogPanel {
 		justPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
 		justPanel.add(new JLabel(Labels.JUSTIFICATION));
 		justPanel.add(justificationChoice);
-		switch (attr._justification) {
-		case TextLineAttr.CENTER:
-			justificationChoice.setSelectedItem(CENTER);
-			break;
-		case TextLineAttr.LEFT:
-			justificationChoice.setSelectedItem(LEFT);
-			break;
-		case TextLineAttr.RIGHT:
-			justificationChoice.setSelectedItem(RIGHT);
-			break;
-		default:
-			justificationChoice.setSelectedItem(LEFT);
+		switch(attr._justification)
+		{
+			case TextLineAttr.CENTER:
+				justificationChoice.setSelectedItem(CENTER);
+				break;
+			case TextLineAttr.LEFT:
+				justificationChoice.setSelectedItem(LEFT);
+				break;
+			case TextLineAttr.RIGHT:
+				justificationChoice.setSelectedItem(RIGHT);
+				break;
+			default:
+				justificationChoice.setSelectedItem(LEFT);
 		}
 		//
 		arrangementChoice = new JComboBox();
@@ -76,15 +114,16 @@ public class TextDialogPanel extends GEDialogPanel {
 		arrangementPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
 		arrangementPanel.add(new JLabel(Labels.ARRANGEMENT));
 		arrangementPanel.add(arrangementChoice);
-		switch (attr._textArrangement) {
-		case TextLineAttr.SIDE_BY_SIDE:
-			arrangementChoice.setSelectedItem(SIDE_BY_SIDE);
-			break;
-		case TextLineAttr.TOP_ON_TOP:
-			arrangementChoice.setSelectedItem(TOP_ON_TOP);
-			break;
-		default:
-			arrangementChoice.setSelectedItem(SIDE_BY_SIDE);
+		switch(attr._textArrangement)
+		{
+			case TextLineAttr.SIDE_BY_SIDE:
+				arrangementChoice.setSelectedItem(SIDE_BY_SIDE);
+				break;
+			case TextLineAttr.TOP_ON_TOP:
+				arrangementChoice.setSelectedItem(TOP_ON_TOP);
+				break;
+			default:
+				arrangementChoice.setSelectedItem(SIDE_BY_SIDE);
 		}
 		//
 		JPanel taPanel = new JPanel();
@@ -100,7 +139,7 @@ public class TextDialogPanel extends GEDialogPanel {
 		textPanel.add(fontPanel);
 		textPanel.add(taPanel);
 		textPanel.setLayout(new GridLayout(textPanel.getComponentCount(), 1));
-		//  
+		//
 		JTabbedPane interiorPane = new JTabbedPane();
 		interiorPane.addTab(BASIC, null, basicPanel);
 		interiorPane.addTab(TEXT, null, textPanel);
@@ -116,60 +155,34 @@ public class TextDialogPanel extends GEDialogPanel {
 	/**
 	 * apply changes for both the basic graphic element and its specialization
 	 */
-	public void applyChanges() {
+	public void applyChanges()
+	{
 		super.applyChanges();
 		TextLine tL = (TextLine) getGraphicElement();
 		TextLineAttr attr = (TextLineAttr) tL.getAttributes();
 		tL.setText(textField.getText());
 		attr._font = fontPanel.getSelectedFont();
 		attr._originalFontSize = attr._font.getSize();
-		if (justificationChoice.getSelectedItem().equals(CENTER)) {
+		if(justificationChoice.getSelectedItem().equals(CENTER))
+		{
 			attr._justification = TextLineAttr.CENTER;
-		} else if (justificationChoice.getSelectedItem().equals(LEFT)) {
+		}
+		else if(justificationChoice.getSelectedItem().equals(LEFT))
+		{
 			attr._justification = TextLineAttr.LEFT;
-		} else {
+		}
+		else
+		{
 			attr._justification = TextLineAttr.RIGHT;
 		}
-		if (arrangementChoice.getSelectedItem().equals(SIDE_BY_SIDE)) {
+		if(arrangementChoice.getSelectedItem().equals(SIDE_BY_SIDE))
+		{
 			attr._textArrangement = TextLineAttr.SIDE_BY_SIDE;
-		} else {
+		}
+		else
+		{
 			attr._textArrangement = TextLineAttr.TOP_ON_TOP;
 		}
 	}
-
-	/**
-   *
-   */
-	private JComboBox justificationChoice, arrangementChoice;
-	private FontChoice fontPanel;
-	private JTextField textField;
-	/**
- *
- */
-	protected final String BASIC = "Basic";
-	/**
- *
- */
-	protected final String TEXT = "Text";
-	/**
- *
- */
-	protected final String CENTER = "Center";
-	/**
- *
- */
-	protected final String LEFT = "Left";
-	/**
- *
- */
-	protected final String RIGHT = "Right";
-	/**
- *
- */
-	protected final String SIDE_BY_SIDE = "Side by Side";
-	/**
- *
- */
-	protected final String TOP_ON_TOP = "Top on Top";
 
 }

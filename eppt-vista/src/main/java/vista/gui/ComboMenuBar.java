@@ -25,12 +25,14 @@ import javax.swing.border.EtchedBorder;
 /**
  * @version 1.0 05/10/99
  */
-public class ComboMenuBar extends JMenuBar {
+public class ComboMenuBar extends JMenuBar
+{
 
 	JMenu menu;
 	Dimension preferredSize;
 
-	public ComboMenuBar(JMenu menu) {
+	public ComboMenuBar(JMenu menu)
+	{
 		this.menu = menu;
 
 		Color color = UIManager.getColor("Menu.selectionBackground");
@@ -45,36 +47,37 @@ public class ComboMenuBar extends JMenuBar {
 		add(menu);
 	}
 
-	class MenuItemListener implements ActionListener {
-		public void actionPerformed(ActionEvent e) {
-			JMenuItem item = (JMenuItem) e.getSource();
-			menu.setText(item.getText());
-			menu.requestFocus();
-		}
+	public static JMenu createMenu(String label)
+	{
+		return new ComboMenu(label);
 	}
 
-	private void setListener(JMenuItem item, ActionListener listener) {
-		if (item instanceof JMenu) {
+	private void setListener(JMenuItem item, ActionListener listener)
+	{
+		if(item instanceof JMenu)
+		{
 			JMenu menu = (JMenu) item;
 			int n = menu.getItemCount();
-			for (int i = 0; i < n; i++) {
+			for(int i = 0; i < n; i++)
+			{
 				setListener(menu.getItem(i), listener);
 			}
-		} else if (item != null) { // null means separator
+		}
+		else if(item != null)
+		{ // null means separator
 			item.addActionListener(listener);
 		}
 	}
 
-	public String getSelectedItem() {
+	public String getSelectedItem()
+	{
 		return menu.getText();
 	}
 
-	public void setPreferredSize(Dimension size) {
-		preferredSize = size;
-	}
-
-	public Dimension getPreferredSize() {
-		if (preferredSize == null) {
+	public Dimension getPreferredSize()
+	{
+		if(preferredSize == null)
+		{
 			Dimension sd = super.getPreferredSize();
 			Dimension menuD = getItemSize(menu);
 			Insets margin = menu.getMargin();
@@ -86,17 +89,29 @@ public class ComboMenuBar extends JMenuBar {
 		return preferredSize;
 	}
 
-	private Dimension getItemSize(JMenu menu) {
+	public void setPreferredSize(Dimension size)
+	{
+		preferredSize = size;
+	}
+
+	private Dimension getItemSize(JMenu menu)
+	{
 		Dimension d = new Dimension(0, 0);
 		int n = menu.getItemCount();
-		for (int i = 0; i < n; i++) {
+		for(int i = 0; i < n; i++)
+		{
 			Dimension itemD;
 			JMenuItem item = menu.getItem(i);
-			if (item instanceof JMenu) {
+			if(item instanceof JMenu)
+			{
 				itemD = getItemSize((JMenu) item);
-			} else if (item != null) {
+			}
+			else if(item != null)
+			{
 				itemD = item.getPreferredSize();
-			} else {
+			}
+			else
+			{
 				itemD = new Dimension(0, 0); // separator
 			}
 			d.width = Math.max(d.width, itemD.width);
@@ -105,10 +120,12 @@ public class ComboMenuBar extends JMenuBar {
 		return d;
 	}
 
-	public static class ComboMenu extends JMenu {
+	public static class ComboMenu extends JMenu
+	{
 		ArrowIcon iconRenderer;
 
-		public ComboMenu(String label) {
+		public ComboMenu(String label)
+		{
 			super(label);
 			iconRenderer = new ArrowIcon(SwingConstants.SOUTH, true);
 			setBorder(new EtchedBorder());
@@ -117,7 +134,8 @@ public class ComboMenuBar extends JMenuBar {
 			setFocusPainted(true);
 		}
 
-		public void paintComponent(Graphics g) {
+		public void paintComponent(Graphics g)
+		{
 			super.paintComponent(g);
 			Dimension d = this.getPreferredSize();
 			int x = Math.max(0, d.width - iconRenderer.getIconWidth() - 3);
@@ -127,8 +145,14 @@ public class ComboMenuBar extends JMenuBar {
 		}
 	}
 
-	public static JMenu createMenu(String label) {
-		return new ComboMenu(label);
+	class MenuItemListener implements ActionListener
+	{
+		public void actionPerformed(ActionEvent e)
+		{
+			JMenuItem item = (JMenuItem) e.getSource();
+			menu.setText(item.getText());
+			menu.requestFocus();
+		}
 	}
 
 }

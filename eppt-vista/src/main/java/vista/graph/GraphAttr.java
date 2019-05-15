@@ -15,11 +15,12 @@ import java.awt.Color;
 
 /**
  * Attributes of a graph.
- * 
+ *
  * @author Nicky Sandhu
  * @version $Id: GraphAttr.java,v 1.1 2003/10/02 20:49:00 redwood Exp $
  */
-public class GraphAttr extends GEAttr {
+public class GraphAttr extends GEAttr
+{
 	/**
 	 * attributes for the title
 	 */
@@ -34,65 +35,74 @@ public class GraphAttr extends GEAttr {
 	private GEAttr _la = new LegendAttr();
 
 	/**
+	 * sets up default color table.
+	 */
+	public static Color[] getDefaultColorTable()
+	{
+		Color[] colorTable = {Color.red, Color.green, Color.blue, Color.pink,
+				Color.cyan, Color.orange, Color.black, Color.magenta,
+				Color.yellow, Color.white};
+		return colorTable;
+	}
+
+	/**
 	 * copies the fields into the given GEAttr object. Also copies in the
 	 * TextLineAttr if the object is of that type.
 	 */
-	public void copyInto(GEAttr ga) {
+	public void copyInto(GEAttr ga)
+	{
 		super.copyInto(ga);
-		if (ga instanceof GraphAttr) {
+		if(ga instanceof GraphAttr)
+		{
 			GraphAttr tla = (GraphAttr) ga;
 		}
 	}
 
 	/**
-	 * sets plot attributes
-	 */
-	public void setPlotAttributes(PlotAttr pa) {
-		_pa = pa;
-	}
-
-	/**
 	 * gets plot attributes
 	 */
-	public PlotAttr getPlotAttributes() {
+	public PlotAttr getPlotAttributes()
+	{
 		return _pa;
 	}
 
 	/**
-	 * sets legend attributes
+	 * sets plot attributes
 	 */
-	public void setLegendAttributes(GEAttr la) {
-		_la = la;
+	public void setPlotAttributes(PlotAttr pa)
+	{
+		_pa = pa;
 	}
 
 	/**
 	 * gets legend attributes
 	 */
-	public GEAttr getLegendAttributes() {
+	public GEAttr getLegendAttributes()
+	{
 		return _la;
 	}
 
 	/**
-	 * sets title attributes
+	 * sets legend attributes
 	 */
-	public void setTitleAttributes(TextLineAttr tla) {
-		_tla = tla;
+	public void setLegendAttributes(GEAttr la)
+	{
+		_la = la;
 	}
 
 	/**
 	 * gets title attributes
 	 */
-	public TextLineAttr getTitleAttributes() {
+	public TextLineAttr getTitleAttributes()
+	{
 		return _tla;
 	}
 
 	/**
-	 * sets up default color table.
+	 * sets title attributes
 	 */
-	public static Color[] getDefaultColorTable() {
-		Color[] colorTable = { Color.red, Color.green, Color.blue, Color.pink,
-				Color.cyan, Color.orange, Color.black, Color.magenta,
-				Color.yellow, Color.white };
-		return colorTable;
+	public void setTitleAttributes(TextLineAttr tla)
+	{
+		_tla = tla;
 	}
 }

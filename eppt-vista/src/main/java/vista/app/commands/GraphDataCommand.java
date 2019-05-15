@@ -21,11 +21,12 @@ import vista.set.Group;
 
 /**
  * Encapsulates commands implementing group related commands
- * 
+ *
  * @author Nicky Sandhu
  * @version $Id: GraphDataCommand.java,v 1.1 2003/10/02 20:48:30 redwood Exp $
  */
-public class GraphDataCommand implements Command {
+public class GraphDataCommand implements Command
+{
 	private Group _group;
 	private int[] _rNumbers;
 	private String _filename;
@@ -34,7 +35,8 @@ public class GraphDataCommand implements Command {
 	/**
 	 * opens group and sets current group to
 	 */
-	public GraphDataCommand(Group g, int[] referenceNumbers) {
+	public GraphDataCommand(Group g, int[] referenceNumbers)
+	{
 		_group = g;
 		_rNumbers = referenceNumbers;
 	}
@@ -42,16 +44,22 @@ public class GraphDataCommand implements Command {
 	/**
 	 * executes command
 	 */
-	public void execute() throws ExecutionException {
-		if (_rNumbers == null || _rNumbers.length == 0)
+	public void execute() throws ExecutionException
+	{
+		if(_rNumbers == null || _rNumbers.length == 0)
+		{
 			return;
+		}
 		DefaultGraphBuilder gb = new DefaultGraphBuilder();
-		for (int i = 0; i < _rNumbers.length; i++) {
+		for(int i = 0; i < _rNumbers.length; i++)
+		{
 			gb.addData(_group.getDataReference(_rNumbers[i]));
 		}
 		Graph[] graphs = gb.createGraphs();
-		if (graphs != null || graphs.length > 0) {
-			for (int i = 0; i < graphs.length; i++) {
+		if(graphs != null || graphs.length > 0)
+		{
+			for(int i = 0; i < graphs.length; i++)
+			{
 				new DataGraphFrame(graphs[i], "Graph").setVisible(true);
 			}
 		}
@@ -60,20 +68,23 @@ public class GraphDataCommand implements Command {
 	/**
 	 * unexecutes command or throws exception if not unexecutable
 	 */
-	public void unexecute() throws ExecutionException {
+	public void unexecute() throws ExecutionException
+	{
 		throw new ExecutionException("Cannot undo graphing of data");
 	}
 
 	/**
 	 * checks if command is executable.
 	 */
-	public boolean isUnexecutable() {
+	public boolean isUnexecutable()
+	{
 		return false;
 	}
 
 	/**
 	 * writes to script
 	 */
-	public void toScript(StringBuffer buf) {
+	public void toScript(StringBuffer buf)
+	{
 	}
 } // end of GraphDataCommand

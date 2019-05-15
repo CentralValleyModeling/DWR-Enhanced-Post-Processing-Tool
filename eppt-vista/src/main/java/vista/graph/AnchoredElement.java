@@ -11,20 +11,24 @@
  */
 package vista.graph;
 
-public class AnchoredElement {
+public class AnchoredElement
+{
 	Bounded element;
 	DoubleRect rect;
 
-	public AnchoredElement(Bounded b, DoubleRect r) {
+	public AnchoredElement(Bounded b, DoubleRect r)
+	{
 		element = b;
 		rect = r;
 	}
 
-	public Bounded getElement() {
+	public Bounded getElement()
+	{
 		return element;
 	}
 
-	public DoubleRect getBounds() {
+	public DoubleRect getBounds()
+	{
 		return rect;
 	}
 }

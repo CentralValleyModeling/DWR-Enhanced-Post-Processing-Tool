@@ -20,24 +20,26 @@ import vista.time.TimeFormat;
 
 /**
  * Displays the co-ordinates of a point in the drawing region of the plot.
- * 
+ *
  * @author Nicky Sandhu
  * @version $Id: CoordinateDisplayInteractor.java,v 1.1 2003/10/02 20:48:51
- *          redwood Exp $
+ * redwood Exp $
  */
-public class CoordinateDisplayInteractor extends ElementInteractor {
+public class CoordinateDisplayInteractor extends ElementInteractor
+{
 	/**
-   *
-   */
+	 *
+	 */
 	private static DecimalFormat _df;
 	private static TimeFormat _dtf;
 	private TimeFactory _tf;
 	private GECanvas _gC;
 
 	/**
-   *
-   */
-	public CoordinateDisplayInteractor(GECanvas gC) {
+	 *
+	 */
+	public CoordinateDisplayInteractor(GECanvas gC)
+	{
 		_gC = gC;
 		_df = new DecimalFormat();
 		_df.setMaximumFractionDigits(2);
@@ -51,51 +53,66 @@ public class CoordinateDisplayInteractor extends ElementInteractor {
 	}
 
 	/**
-    *
-    */
-	public void doneDisplaying() {
+	 *
+	 */
+	public void doneDisplaying()
+	{
 		ToolTipManager.sharedInstance().unregisterComponent(_gC);
 		ToolTipManager.sharedInstance().setEnabled(false);
 	}
 
 	/**
-   *
-   */
-	public void mouseMoved(MouseEvent e) {
+	 *
+	 */
+	public void mouseMoved(MouseEvent e)
+	{
 		int x = e.getX();
 		int y = e.getY();
 		// System.out.println(x+","+y);
 		Plot plot = getPlot(e.getX(), e.getY());
-		if (plot.getDrawingRegion().contains(x, y)) {
+		if(plot.getDrawingRegion().contains(x, y))
+		{
 			StringBuffer buf = new StringBuffer(100);
 			Axis axis = plot.getAxis(AxisAttr.BOTTOM);
-			if (axis != null) {
+			if(axis != null)
+			{
 				buf.append("b = ");
-				if (axis.getTickGenerator().getFormatter() instanceof TimeFormat)
+				if(axis.getTickGenerator().getFormatter() instanceof TimeFormat)
+				{
 					buf.append(_tf.createTime(
 							(long) axis.getScale().scaleToDC(x)).format(_dtf));
+				}
 				else
+				{
 					buf.append(_df.format(axis.getScale().scaleToDC(x)));
+				}
 			}
 			//
 			axis = plot.getAxis(AxisAttr.LEFT);
-			if (axis != null) {
+			if(axis != null)
+			{
 				buf.append(", l = ");
 				buf.append(_df.format(axis.getScale().scaleToDC(y)));
 			}
 			//
 			axis = plot.getAxis(AxisAttr.TOP);
-			if (axis != null) {
+			if(axis != null)
+			{
 				buf.append(" | t = ");
-				if (axis.getTickGenerator().getFormatter() instanceof TimeFormat)
+				if(axis.getTickGenerator().getFormatter() instanceof TimeFormat)
+				{
 					buf.append(_tf.createTime(
 							(long) axis.getScale().scaleToDC(x)).format(_dtf));
+				}
 				else
+				{
 					buf.append(_df.format(axis.getScale().scaleToDC(x)));
+				}
 			}
 			//
 			axis = plot.getAxis(AxisAttr.RIGHT);
-			if (axis != null) {
+			if(axis != null)
+			{
 				buf.append(" , r = ");
 				buf.append(_df.format(axis.getScale().scaleToDC(y)));
 			}
@@ -106,33 +123,48 @@ public class CoordinateDisplayInteractor extends ElementInteractor {
 	}
 
 	/**
-   *
-   */
-	private Plot getPlot(int x, int y) {
+	 *
+	 */
+	private Plot getPlot(int x, int y)
+	{
 		Graph graph = (Graph) _gC.getGraphicElement();
 		Plot plot = graph.getPlot();
 		GraphicElement[] leafs = graph.getElements(MultiPlot.class);
-		if (leafs == null)
+		if(leafs == null)
+		{
 			return plot;
-		if (leafs.length == 1) {
+		}
+		if(leafs.length == 1)
+		{
 			MultiPlot mp = (MultiPlot) leafs[0];
 			leafs = mp.getElements(Plot.class);
 		}
-		if (leafs == null)
+		if(leafs == null)
+		{
 			return plot;
-		for (int i = 0; i < leafs.length; i++) {
-			if (leafs[i] instanceof MultiPlot)
-				continue;
-			Plot p = (Plot) leafs[i];
-			if (p != null && p.contains(x, y))
-				plot = p;
-			if (DEBUG)
-				System.out.println(i + ": " + leafs[i]);
 		}
-		if (DEBUG)
+		for(int i = 0; i < leafs.length; i++)
+		{
+			if(leafs[i] instanceof MultiPlot)
+			{
+				continue;
+			}
+			Plot p = (Plot) leafs[i];
+			if(p != null && p.contains(x, y))
+			{
+				plot = p;
+			}
+			if(DEBUG)
+			{
+				System.out.println(i + ": " + leafs[i]);
+			}
+		}
+		if(DEBUG)
+		{
 			System.out.println("Plot @ " + "(" + x + "," + y + "): "
 					+ plot.getClass().getName() + "@"
 					+ Integer.toHexString(plot.hashCode()));
+		}
 		return plot;
 	}
 }

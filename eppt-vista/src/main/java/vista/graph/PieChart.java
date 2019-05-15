@@ -16,20 +16,21 @@ import java.awt.Graphics;
 import java.awt.Rectangle;
 
 /**
- * 
- * 
  * @author Nicky Sandhu
  * @version $Id: PieChart.java,v 1.1 2003/10/02 20:49:05 redwood Exp $
  */
-public class PieChart extends GEContainer {
+public class PieChart extends GEContainer
+{
 	private GEContainer _pc;
 	private PieChartModel _pcm;
 
-	public PieChart(PieChartModel pcm) {
+	public PieChart(PieChartModel pcm)
+	{
 		this(new GEAttr(), pcm);
 	}
 
-	public PieChart(GEAttr attr, PieChartModel pcm) {
+	public PieChart(GEAttr attr, PieChartModel pcm)
+	{
 		super(attr);
 		_pcm = pcm;
 		setLayout(new GEBorderLayout());
@@ -39,9 +40,10 @@ public class PieChart extends GEContainer {
 	}
 
 	/**
-   *
-   */
-	public void Draw() {
+	 *
+	 */
+	public void Draw()
+	{
 		Graphics g = getGraphics();
 		Rectangle r = _pc.getBounds();
 		_pcm.reset();
@@ -50,7 +52,8 @@ public class PieChart extends GEContainer {
 		double sum = 0;
 		int index = 0;
 		int cl = GraphUtils._colorTable.length;
-		while (_pcm.hasMorePies()) {
+		while(_pcm.hasMorePies())
+		{
 			PieModel pm = _pcm.nextPie();
 			String label = pm.getLabel();
 			double val = pm.getValue();
@@ -67,25 +70,28 @@ public class PieChart extends GEContainer {
 	/**
 	 * draws with update pie chart model if any
 	 */
-	public void animateNext() {
+	public void animateNext()
+	{
 		Draw();
 	}
 
 	/**
 	 * calculates the preferred size of this element
-	 * 
+	 *
 	 * @return the preferred size
 	 */
-	public Dimension getPreferredSize() {
+	public Dimension getPreferredSize()
+	{
 		return new Dimension(125, 125);
 	}
 
 	/**
 	 * calculates the minimum size of this element
-	 * 
+	 *
 	 * @return the minimum size
 	 */
-	public Dimension getMinimumSize() {
+	public Dimension getMinimumSize()
+	{
 		return new Dimension(125, 125);
 	}
 }

@@ -12,7 +12,7 @@
 
 package calsim.msw;
 
-import java.awt.*;
+import java.awt.Cursor;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.util.Hashtable;

@@ -39,14 +39,14 @@ import vista.time.TimeWindow;
  */
 public class MonthlyReport
 {
+	public static final boolean DEBUG = false;
+	public static final int HTML = 11;
 	private static final String[] MONTHS =
 			{
 					"OCT", "NOV", "DEC", "JAN", "FEB",
 					"MAR", "APR", "MAY", "JUN", "JUL",
 					"AUG", "SEP"
 			};
-	public static final boolean DEBUG = false;
-	public static final int HTML = 11;
 	/**
 	 * this controls the distance between consecutive values
 	 */

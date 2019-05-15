@@ -14,5 +14,6 @@ package vista.graph;
 /**
  *
  */
-public interface Attributes {
+public interface Attributes
+{
 }

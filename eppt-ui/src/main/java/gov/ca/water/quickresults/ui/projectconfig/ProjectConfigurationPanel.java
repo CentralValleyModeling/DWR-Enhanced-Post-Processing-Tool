@@ -73,6 +73,21 @@ public final class ProjectConfigurationPanel extends EpptPanel
 		}
 	}
 
+	/**
+	 * This method is for unit testing purposes only
+	 *
+	 * @return a new ProjectConfigurationPanel with UI initialized
+	 */
+	static ProjectConfigurationPanel createProjectConfigurationPanel()
+	{
+		return new ProjectConfigurationPanel();
+	}
+
+	public static ProjectConfigurationPanel getProjectConfigurationPanel()
+	{
+		return SINGLETON;
+	}
+
 	private void initComponents()
 	{
 		initScenarioTree();
@@ -90,16 +105,6 @@ public final class ProjectConfigurationPanel extends EpptPanel
 		}
 	}
 
-	/**
-	 * This method is for unit testing purposes only
-	 *
-	 * @return a new ProjectConfigurationPanel with UI initialized
-	 */
-	static ProjectConfigurationPanel createProjectConfigurationPanel()
-	{
-		return new ProjectConfigurationPanel();
-	}
-
 	private void setSummaryTableEnabled(boolean selected, Container container)
 	{
 		container.setEnabled(selected);
@@ -111,11 +116,6 @@ public final class ProjectConfigurationPanel extends EpptPanel
 				setSummaryTableEnabled(selected, (Container) component);
 			}
 		}
-	}
-
-	public static ProjectConfigurationPanel getProjectConfigurationPanel()
-	{
-		return SINGLETON;
 	}
 
 	private void initModels()
