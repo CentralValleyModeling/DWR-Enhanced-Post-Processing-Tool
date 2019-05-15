@@ -11,17 +11,37 @@
     </properties>
     <border type="none"/>
     <children>
-      <grid id="e0e5a" layout-manager="FlowLayout" hgap="5" vgap="5" flow-align="2">
+      <grid id="e0e5a" layout-manager="BorderLayout" hgap="0" vgap="0">
         <constraints border-constraint="South"/>
         <properties/>
         <border type="none"/>
         <children>
-          <component id="74b35" class="javax.swing.JButton" binding="_generateReportButton" default-binding="true">
-            <constraints/>
-            <properties>
-              <text value="Generate Report"/>
-            </properties>
-          </component>
+          <grid id="8f87e" layout-manager="FlowLayout" hgap="5" vgap="5" flow-align="2">
+            <constraints border-constraint="Center"/>
+            <properties/>
+            <border type="none"/>
+            <children>
+              <component id="74b35" class="javax.swing.JButton" binding="_generateReportButton" default-binding="true">
+                <constraints/>
+                <properties>
+                  <text value="Generate Report"/>
+                </properties>
+              </component>
+            </children>
+          </grid>
+          <grid id="88195" layout-manager="BorderLayout" hgap="0" vgap="0">
+            <constraints border-constraint="North"/>
+            <properties/>
+            <border type="none"/>
+            <children>
+              <component id="ccd8b" class="javax.swing.JProgressBar" binding="_progressBar1" default-binding="true">
+                <constraints border-constraint="Center"/>
+                <properties>
+                  <visible value="false"/>
+                </properties>
+              </component>
+            </children>
+          </grid>
         </children>
       </grid>
       <grid id="bee11" layout-manager="BorderLayout" hgap="0" vgap="0">
@@ -158,7 +178,7 @@
                   <text value="WY Name Lookups:"/>
                 </properties>
               </component>
-              <grid id="59f8c" layout-manager="BorderLayout" hgap="0" vgap="0">
+              <grid id="59f8c" layout-manager="BorderLayout" hgap="2" vgap="0">
                 <constraints>
                   <grid row="6" column="1" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
                   <gridbag top="5" left="5" bottom="5" right="5" weightx="0.0" weighty="0.0"/>
@@ -183,7 +203,7 @@
                   </component>
                 </children>
               </grid>
-              <grid id="86385" layout-manager="BorderLayout" hgap="0" vgap="0">
+              <grid id="86385" layout-manager="BorderLayout" hgap="2" vgap="0">
                 <constraints>
                   <grid row="7" column="1" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
                   <gridbag top="5" left="5" bottom="5" right="5" weightx="0.0" weighty="0.0"/>

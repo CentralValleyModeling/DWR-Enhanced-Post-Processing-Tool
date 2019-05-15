@@ -32,6 +32,7 @@ public final class EpptPreferences
 	private static final String PROJECT_DIRECTORY = "project_directory";
 	private static final String LAST_SCENARIO_CONFIGURATION = "last_scenario_configuration";
 	private static final String REPORT_OUTPUT_LOCATION = "report_output_location";
+	private static final String USERNAME = "eppt_username";
 
 	private EpptPreferences()
 	{
@@ -95,5 +96,15 @@ public final class EpptPreferences
 	public static void setResultsOutputLocation(String path)
 	{
 		REPORT_NODE.put(REPORT_OUTPUT_LOCATION, path);
+	}
+
+	public static String getUsername()
+	{
+		return EPPT_HOME.get(USERNAME, System.getProperty("user.name"));
+	}
+
+	public static void setUsername(String path)
+	{
+		EPPT_HOME.put(USERNAME, path);
 	}
 }
