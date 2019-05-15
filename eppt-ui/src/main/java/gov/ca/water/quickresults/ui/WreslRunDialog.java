@@ -110,6 +110,7 @@ public class WreslRunDialog extends JDialog implements ProcessOutputConsumer
 			TextAreaPrintStream textAreaPrintStream = new TextAreaPrintStream(textArea, process.getInputStream(), process.getErrorStream());
 			_tabbedPane.addTab(scenarioRun.getName(), jsp);
 			_textAreaPrintStreams.add(textAreaPrintStream);
+			repaint();
 			revalidate();
 		});
 	}
@@ -119,13 +120,13 @@ public class WreslRunDialog extends JDialog implements ProcessOutputConsumer
 	{
 		SwingUtilities.invokeLater(() ->
 		{
-
 			_processes.remove(process);
 			if(_processes.isEmpty())
 			{
 				remove(_startButton);
 				remove(_stopButton);
 				add(_startButton, BorderLayout.SOUTH);
+				repaint();
 				revalidate();
 			}
 		});
