@@ -170,7 +170,7 @@ public class ModulesReader
 			int modID = Integer.parseInt(rowValues[ID_COLUMN]);
 			String name = rowValues[SUB_MODULE_COLUMN];
 
-			SubModule subMod = new SubModule(modID, name, convertStringToFlagType(rowValues[FLAG_COLUMN]));
+			SubModule subMod = new SubModule(modID, name, convertStringToFlagType(rowValues[FLAG_COLUMN]), rowValues[TITLE_COLUMN]);
 			subModules.add(subMod);
 		}
 	}

@@ -156,7 +156,7 @@ public final class ThresholdLinksSeedDataSvc
 		return new ThresholdLinksBO(checkboxId, label);
 	}
 
-	ThresholdLinksBO getObjById(int id)
+	public ThresholdLinksBO getObjById(int id)
 	{
 		ThresholdLinksBO thresholdLinksBO = _thresholdLinks.get(id);
 		if(thresholdLinksBO == null)

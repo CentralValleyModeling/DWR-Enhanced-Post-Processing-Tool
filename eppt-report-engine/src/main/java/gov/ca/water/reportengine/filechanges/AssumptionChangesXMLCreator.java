@@ -13,12 +13,15 @@
 package gov.ca.water.reportengine.filechanges;
 
 import java.util.Set;
+import java.util.logging.Level;
 
+import com.google.common.flogger.FluentLogger;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 public class AssumptionChangesXMLCreator
 {
+	private static final FluentLogger LOGGER = FluentLogger.forEnclosingClass();
 
 	private static final String ASSUMPTION_CHANGES = "assumption-changes";
 	private static final String INPUT = "input";
@@ -44,6 +47,7 @@ public class AssumptionChangesXMLCreator
 
 	public Element createAssumptionChangesElement(Document document, FileChangesStatistics stats)
 	{
+		LOGGER.at(Level.INFO).log("Writing Assumption Changes to XML");
 		Element assumptionChangesRoot = document.createElement(ASSUMPTION_CHANGES);
 		AssumptionChangesStatistics initAssumptionStats = stats.getInitAssumptionStats();
 		AssumptionChangesStatistics svAssumptionStats = stats.getSVAssumptionStats();

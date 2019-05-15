@@ -21,17 +21,16 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.logging.Level;
 
+import com.google.common.flogger.FluentLogger;
 import gov.ca.water.reportengine.EpptReportException;
 import gov.ca.water.reportengine.executivereport.ExecutiveReportException;
+import org.python.antlr.base.mod;
 
 public class WaterYearTableReader
 {
-	private static final int WATERYEAR = 0;
-	private static final int SAC_INDEX = 1;
-	private static final int SJR_INDEX = 2;
-	private static final int SHASTA_INDEX = 3;
-	private static final int AMER_D893 = 4;
+	private static final FluentLogger LOGGER = FluentLogger.forEnclosingClass();
 
 	private final Path _waterYearTypeTable;
 	private final Path _waterYearNameLookup;
@@ -41,7 +40,6 @@ public class WaterYearTableReader
 
 	public WaterYearTableReader(Path waterYearTypeTable, Path waterYearNameLookup)
 	{
-
 		_waterYearTypeTable = waterYearTypeTable;
 		_waterYearNameLookup = waterYearNameLookup;
 	}
@@ -53,6 +51,7 @@ public class WaterYearTableReader
 		String line = "";
 		String whitespaceSplit = "\\s+";
 		List<WaterYearType> retval = new ArrayList<>();
+		LOGGER.at(Level.INFO).log("Reading Water Year Type Table: %s", _waterYearTypeTable);
 		try(BufferedReader br = Files.newBufferedReader(_waterYearTypeTable))
 		{
 			String[] previousLine = null;
@@ -98,12 +97,8 @@ public class WaterYearTableReader
 					{
 						continue;
 					}
-
-
 				}
-
 			}
-
 		}
 		catch(IOException e)
 		{
@@ -114,6 +109,7 @@ public class WaterYearTableReader
 
 	private void readNameLookupTable() throws ExecutiveReportException
 	{
+		LOGGER.at(Level.INFO).log("Reading Water Year Type Name Lookup: %s", _waterYearNameLookup);
 		String line = "";
 		String csvSplitBy = ",";
 
@@ -148,17 +144,12 @@ public class WaterYearTableReader
 					{
 						columnHeadersHaveNotBeenDefined = false;
 
-						for(int i = 0; i < row.length; i++)
+						for(final String s : row)
 						{
 							//skip the first column
-
-							colHeaders.add(row[i]);
-
-							columnsToValues.put(row[i], new ArrayList<>());
-
+							colHeaders.add(s);
+							columnsToValues.put(s, new ArrayList<>());
 						}
-
-
 					}
 					else
 					{
@@ -177,14 +168,10 @@ public class WaterYearTableReader
 								value = "Undefined";
 							}
 							columnsToValues.get(colHeaders.get(i)).add(value);
-
 						}
 					}
 				}
-
-
 			}
-
 			_waterYearNameLookupTable = new WaterYearNameLookup(columnsToValues);
 
 		}
@@ -192,7 +179,6 @@ public class WaterYearTableReader
 		{
 			throw new ExecutiveReportException("Error reading the water year type name lookup csv file: " + _waterYearNameLookup, e);
 		}
-
 	}
 
 	private WaterYearType createWaterYearType(String[] columnHeaders, String[] values) throws EpptReportException

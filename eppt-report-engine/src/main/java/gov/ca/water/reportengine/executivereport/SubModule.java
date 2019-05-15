@@ -20,6 +20,7 @@ import java.util.Map;
 public class SubModule
 {
 	private final FlagType _flagValue;
+	private final String _title;
 	private final List<String> _linkedRecords;
 	private final String _name;
 	private final int _id;
@@ -28,12 +29,13 @@ public class SubModule
 	private List<FlagViolation> _baseViolations = new ArrayList<>();
 	private Map<Integer, List<FlagViolation>> _alternativeViolations = new HashMap<>();
 
-	public SubModule(int id, String name, FlagType flagValue)
+	public SubModule(int id, String name, FlagType flagValue, String title)
 	{
 		//_text = text;
 		_id = id;
 		_name = name;
 		_flagValue = flagValue;
+		_title = title;
 		_linkedRecords = new ArrayList<>();
 	}
 
@@ -50,6 +52,11 @@ public class SubModule
 	public String getName()
 	{
 		return _name;
+	}
+
+	public String getTitle()
+	{
+		return _title;
 	}
 
 	FlagType getFlagValue()

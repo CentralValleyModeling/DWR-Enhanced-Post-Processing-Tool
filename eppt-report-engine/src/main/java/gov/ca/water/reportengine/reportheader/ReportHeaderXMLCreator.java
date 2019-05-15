@@ -13,13 +13,16 @@
 package gov.ca.water.reportengine.reportheader;
 
 import java.util.List;
+import java.util.logging.Level;
 
+import com.google.common.flogger.FluentLogger;
 import org.w3c.dom.Attr;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 public class ReportHeaderXMLCreator
 {
+	private static final FluentLogger LOGGER = FluentLogger.forEnclosingClass();
 	private static final String REPORT_HEADER = "report-header";
 	private static final String AUTHOR = "author";
 	private static final String SUBTITLES = "subtitle";
@@ -29,17 +32,10 @@ public class ReportHeaderXMLCreator
 	private static final String ALTERNATIVE = "alternative";
 
 
-	public ReportHeaderXMLCreator()
-	{
-
-	}
-
-
 	public Element createReportHeaderElement(ReportHeader reportHeader, Document document)
 	{
-		Element root = null;
-
-		root = document.createElement(REPORT_HEADER);
+		LOGGER.at(Level.INFO).log("Writing Report Header to XML");
+		Element root = document.createElement(REPORT_HEADER);
 
 		Element authorElem = document.createElement(AUTHOR);
 		authorElem.appendChild(document.createTextNode(reportHeader.getAuthor()));

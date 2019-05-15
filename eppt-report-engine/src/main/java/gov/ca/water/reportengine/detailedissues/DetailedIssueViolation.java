@@ -29,7 +29,7 @@ public class DetailedIssueViolation
 	private final List<Issue> _issues = new ArrayList<>();
 
 	DetailedIssueViolation(List<HecTime> times, String title, Map<HecTime, Double> actualValues,
-						   Map<HecTime, Double> thresholdValues, Map<HecTime, String> waterYearType)
+						   Map<HecTime, Double> thresholdValues, Map<HecTime, String> waterYearType, String valueUnits, String standardUnits)
 	{
 
 		_times = times;
@@ -45,7 +45,7 @@ public class DetailedIssueViolation
 
 			if(waterYear != null && standard != null)
 			{
-				Issue issue = new Issue(time, waterYear, value, standard);
+				Issue issue = new Issue(time, waterYear, value, valueUnits, standard, standardUnits);
 				_issues.add(issue);
 			}
 			else
@@ -71,15 +71,19 @@ public class DetailedIssueViolation
 		private final HecTime _time;
 		private final String _waterYearType;
 		private final Double _value;
+		private final String _valueUnits;
 		private final Double _standard;
+		private final String _standardUnits;
 
-		Issue(HecTime time, String waterYearType, Double value, Double standard)
+		Issue(HecTime time, String waterYearType, Double value, String valueUnits, Double standard, String standardUnits)
 		{
 
 			_time = time;
 			_waterYearType = waterYearType;
 			_value = value;
+			_valueUnits = valueUnits;
 			_standard = standard;
+			_standardUnits = standardUnits;
 		}
 
 		@Override
@@ -91,11 +95,14 @@ public class DetailedIssueViolation
 			{
 				actualValue = String.format("%.2f", _value);
 			}
-
-			String standardValue = String.format("%.2f", _standard);
+			String standardValue = "";
+			if(_standard != null)
+			{
+				standardValue = String.format("%.2f", _standard) + " " + _standardUnits;
+			}
 
 			String formattedTime = _time.month() + "/" + _time.year();
-			return formattedTime + " " + _waterYearType + " @ " + actualValue + " | " + standardValue;
+			return formattedTime + " " + _waterYearType + " @ " + actualValue + " " + _valueUnits + " | " + standardValue;
 		}
 	}
 

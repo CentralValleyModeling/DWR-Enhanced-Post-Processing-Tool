@@ -18,7 +18,9 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
 
+import com.google.common.flogger.FluentLogger;
 import gov.ca.water.reportengine.EpptReportException;
 import gov.ca.water.reportengine.detailedissues.DetailedIssue;
 
@@ -26,6 +28,7 @@ import hec.lang.Const;
 
 public class DetailedIssuesReader
 {
+	private static final FluentLogger LOGGER = FluentLogger.forEnclosingClass();
 
 	private static final int MODULE_ID = 0;
 	private static final int LINKED_VAR = 1;
@@ -41,7 +44,6 @@ public class DetailedIssuesReader
 
 	public DetailedIssuesReader(Path detailedIssuesCSVPath)
 	{
-
 		_detailedIssuesCSVPath = detailedIssuesCSVPath;
 	}
 
@@ -50,6 +52,7 @@ public class DetailedIssuesReader
 		String line = "";
 		String csvSplitBy = ",";
 		List<DetailedIssue> retval = new ArrayList<>();
+		LOGGER.at(Level.INFO).log("Reading DTS Configuration %s", _detailedIssuesCSVPath);
 		try(BufferedReader br = Files.newBufferedReader(_detailedIssuesCSVPath))
 		{
 			//skip first line

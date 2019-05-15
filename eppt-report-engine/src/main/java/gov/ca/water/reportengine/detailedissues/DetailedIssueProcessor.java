@@ -19,12 +19,15 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.logging.Level;
 
 import com.google.common.flogger.FluentLogger;
 import gov.ca.water.calgui.bo.GUILinksAllModelsBO;
+import gov.ca.water.calgui.bo.ThresholdLinksBO;
 import gov.ca.water.calgui.busservice.impl.DSSGrabber1SvcImpl;
 import gov.ca.water.calgui.busservice.impl.GuiLinksSeedDataSvcImpl;
+import gov.ca.water.calgui.busservice.impl.ThresholdLinksSeedDataSvc;
 import gov.ca.water.calgui.project.EpptScenarioRun;
 import gov.ca.water.reportengine.EpptReportException;
 import gov.ca.water.reportengine.executivereport.FlagViolation;
@@ -79,13 +82,19 @@ public class DetailedIssueProcessor
 		{
 			if(_runsToViolations.containsKey(run))
 			{
+				LOGGER.at(Level.INFO).log("Processing Detailed Issues for Scenario Run: %s", run.getName());
 				Map<Module, List<DetailedIssueViolation>> modToDIVs = new HashMap<>();
 				Map<SubModule, List<FlagViolation>> subModToViolations = _runsToViolations.get(run);
 				for(Module mod : _modules)
 				{
+					LOGGER.at(Level.INFO).log("Processing Detailed Issues for Module: %s", mod.getName());
 					modToDIVs.put(mod, processModule(run, subModToViolations, mod));
 				}
 				moduleToDIV.put(run, modToDIVs);
+			}
+			else
+			{
+				LOGGER.at(Level.INFO).log("No Detailed Issues for: %s", run.getName());
 			}
 		}
 
@@ -101,18 +110,22 @@ public class DetailedIssueProcessor
 		{
 			if(subModToViolations.containsKey(subMod))
 			{
-				List<FlagViolation> violations = subModToViolations.get(subMod);
-				dIVsForMod.addAll(violations.stream()
-											.map(violation -> processFlagViolation(run, violation))
-											.filter(Objects::nonNull)
-											.limit(10)
-											.collect(toList()));
+				LOGGER.at(Level.INFO).log("Processing Detailed Issues for Sub-Module: %s", subMod.getName());
+				dIVsForMod.addAll(subModToViolations.get(subMod)
+													.stream()
+													.map(violation -> processFlagViolation(run, violation, subMod))
+													.filter(Objects::nonNull)
+													.collect(toList()));
+			}
+			else
+			{
+				LOGGER.at(Level.INFO).log("No Detailed Issues for: %s", subMod.getName());
 			}
 		}
 		return dIVsForMod;
 	}
 
-	private DetailedIssueViolation processFlagViolation(EpptScenarioRun run, FlagViolation violation)
+	private DetailedIssueViolation processFlagViolation(EpptScenarioRun run, FlagViolation violation, SubModule subMod)
 	{
 		DetailedIssueViolation div = null;
 		DetailedIssue di = getDetailedIssueThatMatchViolation(violation);
@@ -120,7 +133,7 @@ public class DetailedIssueProcessor
 		{
 			if(Const.isValid(di.getGuiLink()) && Const.isValid(di.getThresholdLink()))
 			{
-				div = createDetailedIssueViolation(violation, di.getGuiLink(), di.getThresholdLink(), run);
+				div = createDetailedIssueViolation(violation, di.getGuiLink(), di.getThresholdLink(), run, subMod);
 			}
 			else
 			{
@@ -133,11 +146,21 @@ public class DetailedIssueProcessor
 	}
 
 
-	private DetailedIssueViolation createDetailedIssueViolation(FlagViolation violation, int guiID, int thresholdID, EpptScenarioRun run)
+	private DetailedIssueViolation createDetailedIssueViolation(FlagViolation violation, int guiID, int thresholdID, EpptScenarioRun run, SubModule subMod)
 	{
 		//create title
-		GUILinksAllModelsBO objById = GuiLinksSeedDataSvcImpl.getSeedDataSvcImplInstance().getObjById(Integer.toString(guiID));
-		String title = objById.getPlotTitle();
+		GUILinksAllModelsBO guiLink = GuiLinksSeedDataSvcImpl.getSeedDataSvcImplInstance().getObjById(Integer.toString(guiID));
+		ThresholdLinksBO thresholdLink = ThresholdLinksSeedDataSvc.getSeedDataSvcImplInstance().getObjById(thresholdID);
+		String title = subMod.getTitle();
+		if(guiLink != null)
+		{
+			title = title.replace("%title%", guiLink.getPlotTitle());
+		}
+		if(thresholdLink != null)
+		{
+			title = title.replace("%Threshold Label%", thresholdLink.getLabel());
+		}
+
 		if(Objects.equals("", title))
 		{
 			title = "Undefined";
@@ -161,11 +184,30 @@ public class DetailedIssueProcessor
 		{
 			valueContainer = primarySeries[0];
 		}
-
-		Map<HecTime, Double> actualValues = getActualValues(violation.getTimes(), valueContainer);
-		Map<HecTime, Double> thresholdValues = getThresholdValues(violation.getTimes(), thresholdSeriesContainer);
-		Map<HecTime, String> waterYearTypes = getWaterYearTypes(violation.getTimes());
-		return new DetailedIssueViolation(violation.getTimes(), title, actualValues, thresholdValues, waterYearTypes);
+		LOGGER.at(Level.INFO).log("Processing violations from: %s", violation.getDtsFileName());
+		List<HecTime> violationTimes = violation.getTimes();
+		if(violationTimes.size() > 10)
+		{
+			LOGGER.at(Level.INFO).log("Showing first 10 violations. Total violation count: %s", violationTimes.size());
+		}
+		List<HecTime> times = violationTimes
+									   .stream()
+									   .limit(10)
+									   .collect(toList());
+		String valueUnits = "";
+		if(valueContainer != null)
+		{
+			valueUnits = valueContainer.getUnits();
+		}
+		String standardUnits = "";
+		if(thresholdSeriesContainer != null)
+		{
+			standardUnits = thresholdSeriesContainer.getUnits();
+		}
+		Map<HecTime, Double> actualValues = getActualValues(times, valueContainer);
+		Map<HecTime, Double> thresholdValues = getThresholdValues(times, thresholdSeriesContainer);
+		Map<HecTime, String> waterYearTypes = getWaterYearTypes(times);
+		return new DetailedIssueViolation(times, title, actualValues, thresholdValues, waterYearTypes, valueUnits, standardUnits);
 	}
 
 	private Map<HecTime, Double> getActualValues(List<HecTime> times, TimeSeriesContainer tsc)

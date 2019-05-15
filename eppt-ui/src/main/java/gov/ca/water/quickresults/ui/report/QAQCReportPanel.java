@@ -204,6 +204,7 @@ public class QAQCReportPanel extends RmaJPanel implements ProcessOutputConsumer
 
 	private void generateReport()
 	{
+		_textPane1.setText("");
 		EpptScenarioRun baseRun = (EpptScenarioRun) _baseComboBox.getSelectedItem();
 		if(baseRun != null)
 		{

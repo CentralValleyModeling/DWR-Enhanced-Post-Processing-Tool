@@ -15,9 +15,13 @@ package gov.ca.water.reportengine;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.time.Duration;
+import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.logging.Level;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -95,9 +99,10 @@ public class EPPTReport
 	//what about base only vs alt vs alts
 	public void writeReport() throws QAQCReportException
 	{
+		LocalDateTime start = LocalDateTime.now();
 		try
 		{
-			LOGGER.at(Level.INFO).log("Begin QAQC Report Data processing");
+			LOGGER.at(Level.INFO).log("============= Starting Report Processor: %s =============", start);
 			Document doc = createDoc();
 
 			//do some up front processing
@@ -117,16 +122,10 @@ public class EPPTReport
 			Map<EpptScenarioRun, Map<SubModule, List<FlagViolation>>> runsToFlagViolations =
 					dtsProcessor.processDSSFiles(allRuns, getPostProcessDSSPathsForAllRuns());
 
-			boolean canShowAssumptionChanges = canShowAssumptionChanges();
 			//create the rootnode
-			String canShow = "true";
-			if(canShowAssumptionChanges == false)
-			{
-				canShow = "false";
-			}
 			Element rootElement = doc.createElement("qaqc-report");
 			rootElement.setAttribute("alternative-count", Integer.toString(_altRuns.size()));
-			rootElement.setAttribute("show-assumption-changes", canShow);
+			rootElement.setAttribute("show-assumption-changes", Boolean.toString(canShowAssumptionChanges()));
 			doc.appendChild(rootElement);
 
 			//create and add the report title page
@@ -160,6 +159,14 @@ public class EPPTReport
 		{
 			throw new QAQCReportException("Error in report generation", e);
 		}
+		finally
+		{
+			LocalDateTime end = LocalDateTime.now();
+			LOGGER.at(Level.INFO).log("============= Report Processing Finished: %s =============", end);
+			long minutes = ChronoUnit.MINUTES.between(start, end);
+			long seconds = Duration.between(start, end).minus(minutes, ChronoUnit.MINUTES).getSeconds();
+			LOGGER.at(Level.INFO).log("============= Report Processing Took: %smin %ssec =============", minutes, seconds);
+		}
 	}
 
 	private boolean canShowAssumptionChanges()
@@ -169,7 +176,7 @@ public class EPPTReport
 		{
 			GUILinksAllModelsBO.Model baseModel = _baseRun.getModel();
 			GUILinksAllModelsBO.Model altModel = _altRuns.get(0).getModel();
-			if(baseModel == altModel)
+			if(Objects.equals(baseModel, altModel))
 			{
 				retval = true;
 			}
@@ -184,8 +191,10 @@ public class EPPTReport
 		Transformer transformer = transformerFactory.newTransformer();
 		DOMSource domSource = new DOMSource(doc);
 
+		LOGGER.at(Level.INFO).log("Generating XML at path: %s", _pathToWriteOut);
 		StreamResult streamResult = new StreamResult(_pathToWriteOut.toString());
 		transformer.transform(domSource, streamResult);
+		LOGGER.at(Level.INFO).log("Finished writing XML");
 	}
 
 	private Element createDetailedIssueReportElem(Map<EpptScenarioRun, Map<SubModule, List<FlagViolation>>> runsToFlagViolations, Document doc)
@@ -195,7 +204,7 @@ public class EPPTReport
 		allRuns.add(_baseRun);
 		allRuns.addAll(_altRuns);
 		DetailedIssueProcessor processor =
-				new DetailedIssueProcessor(_wyTypeTable, _wyNameLookup, runsToFlagViolations, _modules, _allDetailedIssues, allRuns, true);
+				new DetailedIssueProcessor(_wyTypeTable, _wyNameLookup, runsToFlagViolations, _modules, _allDetailedIssues, allRuns, false);
 		Map<EpptScenarioRun, Map<Module, List<DetailedIssueViolation>>> runsToDetailedViolations = processor.process();
 
 		DetailedIssuesXMLCreator xmlCreator = new DetailedIssuesXMLCreator();
@@ -273,19 +282,25 @@ public class EPPTReport
 		for(EpptScenarioRun altRun : _altRuns)
 		{
 
-			AssumptionChangesDataProcessor initProcessor = new AssumptionChangesDataProcessor(getInitialConditionsCsv(), _tolerance);
-			AssumptionChangesStatistics initCondStats =
-					initProcessor.processAssumptionChanges(baseInitDSSPath, altRun.getDssContainer().getIvDssFile().getDssPath());
+			if(Objects.equals(altRun.getModel(), _baseRun.getModel()))
+			{
+				LOGGER.at(Level.INFO).log("Processing Assumption Changes Initial Conditions for: %s", altRun.getName());
+				AssumptionChangesDataProcessor initProcessor = new AssumptionChangesDataProcessor(getInitialConditionsCsv(), _tolerance);
+				AssumptionChangesStatistics initCondStats =
+						initProcessor.processAssumptionChanges(baseInitDSSPath, altRun.getDssContainer().getIvDssFile().getDssPath());
 
-			AssumptionChangesDataProcessor stateVarProcessor = new AssumptionChangesDataProcessor(getStateVariableCsv(), _tolerance);
-			AssumptionChangesStatistics stateVarStats =
-					stateVarProcessor.processAssumptionChanges(baseStateVarDSSPath, altRun.getDssContainer().getSvDssFile().getDssPath());
+				LOGGER.at(Level.INFO).log("Processing Assumption State Variables for: %s", altRun.getName());
+				AssumptionChangesDataProcessor stateVarProcessor = new AssumptionChangesDataProcessor(getStateVariableCsv(), _tolerance);
+				AssumptionChangesStatistics stateVarStats =
+						stateVarProcessor.processAssumptionChanges(baseStateVarDSSPath, altRun.getDssContainer().getSvDssFile().getDssPath());
 
-			CodeChangesDataProcessor processor = new CodeChangesDataProcessor(getCodeChangesCsv());
-			CodeChangesStatistics codeChangeStats = processor.processCodeChanges(baseOutputPath, altRun.getOutputPath());
+				LOGGER.at(Level.INFO).log("Processing Code Changes for: %s", altRun.getName());
+				CodeChangesDataProcessor processor = new CodeChangesDataProcessor(getCodeChangesCsv());
+				CodeChangesStatistics codeChangeStats = processor.processCodeChanges(baseOutputPath, altRun.getOutputPath());
 
-			FileChangesStatistics fileChangesStatistics = new FileChangesStatistics(initCondStats, stateVarStats, codeChangeStats);
-			statsForAllAlternatives.add(fileChangesStatistics);
+				FileChangesStatistics fileChangesStatistics = new FileChangesStatistics(initCondStats, stateVarStats, codeChangeStats);
+				statsForAllAlternatives.add(fileChangesStatistics);
+			}
 		}
 
 		return statsForAllAlternatives;

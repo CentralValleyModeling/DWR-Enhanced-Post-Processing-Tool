@@ -16,8 +16,10 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Level;
 import java.util.stream.Collectors;
 
+import com.google.common.flogger.FluentLogger;
 import gov.ca.water.calgui.project.EpptScenarioRun;
 import gov.ca.water.reportengine.filechanges.AssumptionChangesStatistics;
 import gov.ca.water.reportengine.filechanges.CodeChangesStatistics;
@@ -30,6 +32,7 @@ import hec.lang.Const;
 
 public class ExecutiveReportXMLCreator
 {
+	private static final FluentLogger LOGGER = FluentLogger.forEnclosingClass();
 	static final String NEW_LINE = "\n"; //"&#xD;";
 	static final String MODULE = "module";
 	static final String MODEL_ENTRIES = "model-entries";
@@ -59,15 +62,6 @@ public class ExecutiveReportXMLCreator
 	private static final String BASE_STUDY = "Base Study";
 	private static final String ALTERNATIVE_STUDY = "Alternative Study";
 
-	//values from the helper xml
-	//private Document _helperDoc;
-
-
-	public ExecutiveReportXMLCreator()
-	{
-
-	}
-
 	/**
 	 * Creates the entire executive report element
 	 *
@@ -79,6 +73,7 @@ public class ExecutiveReportXMLCreator
 													 List<Module> modules, List<FileChangesStatistics> modelInputStats, boolean sameModel,
 													 Document doc)
 	{
+		LOGGER.at(Level.INFO).log("Writing Executive Summary to XML");
 		if(runs.size() == 1)
 		{
 			sameModel = false;
@@ -99,7 +94,6 @@ public class ExecutiveReportXMLCreator
 			scenarioElements.forEach(execReportTableElem::appendChild);
 		}
 		return execReportTableElem;
-		//        doc.appendChild(execReportTableElem);
 
 	}
 

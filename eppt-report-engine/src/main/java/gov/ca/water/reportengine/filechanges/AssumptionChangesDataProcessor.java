@@ -20,8 +20,8 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.Vector;
 import java.util.logging.Level;
-import java.util.logging.Logger;
 
+import com.google.common.flogger.FluentLogger;
 import gov.ca.water.reportengine.EpptReportException;
 
 import hec.heclib.dss.DSSPathname;
@@ -30,29 +30,13 @@ import hec.io.TimeSeriesContainer;
 
 public class AssumptionChangesDataProcessor
 {
-	private static final Logger LOGGER = Logger.getLogger(AssumptionChangesDataProcessor.class.getName());
-
+	private static final FluentLogger LOGGER = FluentLogger.forEnclosingClass();
 
 	private static final int B_PART = 0;
 	private static final int C_PART = 1;
 
-	//    private int _initCondDifferentData;
-	//    private int _initCondBaseOnly;
-	//    private int _initCondAltOnly;
-	//
-	//    private int _stateVarDifferentData;
-	//    private int _stateVarBaseOnly;
-	//    private int _stateVarAltOnly;
-
 	private final Set<DSSPathname> _csvMasterPathList;
 	private final double _tolerance;
-	//    private Set<String> _baseInitCondPathList = new ArrayList<>();
-	//    private Set<String> _altInitCondPathList = new ArrayList<>();
-	//
-	//    private Set<String> _csvStateVarMasterPathList = new ArrayList<>();
-	//    private Set<String> _baseStateVarPathList = new ArrayList<>();
-	//    private Set<String> _altStateVarPathList = new ArrayList<>();
-	//private final double _tolerance;
 
 
 	public AssumptionChangesDataProcessor(Path csvPath, double tolerance) throws EpptReportException
@@ -61,21 +45,11 @@ public class AssumptionChangesDataProcessor
 		_tolerance = tolerance;
 	}
 
-
-	//    public int getInitCondRecordsOnlyInBase()
-	//    {
-	//        return _initCondBaseOnly;
-	//    }
-	//
-	//    public int getInitCondRecordsOnlyInAlt()
-	//    {
-	//        return _initCondAltOnly;
-	//    }
-
 	public AssumptionChangesStatistics processAssumptionChanges(Path basePath, Path altPath) throws EpptReportException
 	{
 
-
+		LOGGER.at(Level.INFO).log("Assumption Changes in base path: %s compared to: %s", basePath, altPath);
+		LOGGER.at(Level.INFO).log("DSS Compare tolderance is: %s", _tolerance);
 		HecDss baseFile = null;
 		HecDss altFile = null;
 		try
@@ -158,7 +132,7 @@ public class AssumptionChangesDataProcessor
 		}
 		else
 		{
-			LOGGER.log(Level.FINE, "The base and the alternative did not contain the dss file: {0}", pathFromMaster);
+			LOGGER.at(Level.FINE).log("The base and the alternative did not contain the dss file: %s", pathFromMaster);
 		}
 	}
 
@@ -239,66 +213,4 @@ public class AssumptionChangesDataProcessor
 		}
 		return dssPaths;
 	}
-
-	//    private List<String> getDssPathList(Path dssPath) throws EpptReportException
-	//    {
-	//        //combine the B and C parts and compare against the master
-	//        List<String> bAndCPartsList = new ArrayList<>();
-	//
-	//        HecDss hD = null;
-	//        try
-	//        {
-	//            hD = HecDss.open(dssPath.toString());
-	//            Vector<String> aList = hD.getPathnameList();
-	//            for(String path : aList)
-	//            {
-	//                String[] pathValues = path.split("/");
-	//                if(pathValues)
-	//                String bPart = pathValues[2];
-	//                String cPart = pathValues[3];
-	//                bAndCPartsList.add(bPart + "/" + cPart);
-	//            }
-	//        }
-	//        catch (Exception e)
-	//        {
-	//            throw new EpptReportException("Error opening DSS file in assumption changes processor: " + dssPath, e);
-	//        }
-	//        finally
-	//        {
-	//            if(hD!= null)
-	//            {
-	//                hD.close();
-	//            }
-	//        }
-	//
-	//        return bAndCPartsList;
-	//    }
-	//
-	//
-	//    private List<String> getRecordsOnlyInBase(List<String> baseRecords, List<String> altRecords)
-	//    {
-	//        List<String> baseOnlyRecords = new ArrayList<>();
-	//        for(String baseRec : baseRecords)
-	//        {
-	//            if(!altRecords.contains(baseRec))
-	//            {
-	//                baseOnlyRecords.add(baseRec);
-	//            }
-	//        }
-	//        return baseOnlyRecords;
-	//    }
-	//
-	//    private List<String> getRecordsOnlyInAlt(List<String> baseRecords, List<String> altRecords)
-	//    {
-	//        List<String> altOnlyRecords = new ArrayList<>();
-	//        for(String altRecord : altRecords)
-	//        {
-	//            if(!baseRecords.contains(altRecord))
-	//            {
-	//                altOnlyRecords.add(altRecord);
-	//            }
-	//        }
-	//        return altOnlyRecords;
-	//    }
-
 }

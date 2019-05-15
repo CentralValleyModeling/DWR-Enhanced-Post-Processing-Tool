@@ -18,13 +18,16 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.logging.Level;
 
+import com.google.common.flogger.FluentLogger;
 import gov.ca.water.reportengine.EpptReportException;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 public class CodeChangesXMLCreator
 {
+	private static final FluentLogger LOGGER = FluentLogger.forEnclosingClass();
 
 	private static final String CODE_CHANGES = "code-changes";
 
@@ -66,7 +69,7 @@ public class CodeChangesXMLCreator
 	public Element createCodeChangesElement(Path csvPath, Path baseOutputPath, Path altOutputPath, String altName, Document document)
 			throws EpptReportException, IOException
 	{
-
+		LOGGER.at(Level.INFO).log("Writing Code Changes to XML");
 		CodeChangesDataProcessor processor = new CodeChangesDataProcessor(csvPath);
 		CodeChangesStatistics stats = processor.processCodeChanges(baseOutputPath, altOutputPath);
 		List<CodeChangesType> codeChangesTypes = processor.getCodeChangesTypes();
