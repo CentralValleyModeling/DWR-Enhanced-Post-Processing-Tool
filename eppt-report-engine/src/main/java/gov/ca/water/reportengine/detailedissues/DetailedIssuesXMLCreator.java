@@ -34,6 +34,7 @@ public class DetailedIssuesXMLCreator
 	private static final String ALTERNATIVES = "alternatives";
 	private static final String ALTERNATIVE = "alternative";
 	private static final String ALTERNATIVE_NAME = "alternative-name";
+	private static final String NUM_ISSUES = "number-of-issues";
 
 
 	public Element createDetailedIssuesElement(Map<EpptScenarioRun, Map<Module, List<DetailedIssueViolation>>> runsToModViolations,
@@ -95,6 +96,15 @@ public class DetailedIssuesXMLCreator
 	{
 		Element issuesTypeElem = document.createElement(ISSUES_TYPE);
 		issuesTypeElem.setAttribute(NAME, mod.getName());
+		int totalNumIssues = 0;
+		for(DetailedIssueViolation div : violations)
+		{
+			for(DetailedIssueViolation.Issue issue : div.getIssues())
+			{
+				totalNumIssues++;
+			}
+		}
+		issuesTypeElem.setAttribute(NUM_ISSUES, Integer.toString(totalNumIssues));
 
 		if(violations.isEmpty())
 		{

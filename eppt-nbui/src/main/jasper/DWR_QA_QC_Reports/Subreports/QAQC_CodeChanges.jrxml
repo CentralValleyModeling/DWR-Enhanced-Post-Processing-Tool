@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Created with Jaspersoft Studio version 6.8.0.final using JasperReports Library version 6.8.0-2ed8dfabb690ff337a5797129f2cd92902b0c87b  -->
+<!-- Created with Jaspersoft Studio version 6.2.2.final using JasperReports Library version 6.2.2  -->
+<!-- 2019-05-15T08:22:28 -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="QAQC_CodeChanges" language="groovy" pageWidth="612" pageHeight="792" columnWidth="504" leftMargin="54" rightMargin="54" topMargin="54" bottomMargin="54" isFloatColumnFooter="true" whenResourceMissingType="Empty" uuid="da75db69-3924-4f44-998a-80195014db99">
 	<property name="net.sf.jasperreports.data.adapter" value="QAQC_Datasource.xml"/>
 	<property name="net.sf.jasperreports.print.create.bookmarks" value="true"/>
@@ -60,6 +61,7 @@
 		<groupHeader>
 			<band height="30">
 				<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				<printWhenExpression><![CDATA[$F{section-name} != null]]></printWhenExpression>
 				<textField isStretchWithOverflow="true">
 					<reportElement isPrintRepeatedValues="false" x="0" y="15" width="503" height="15" forecolor="#2F5496" uuid="5c2ab8e4-b5ec-4fd9-92ee-76d2c740f7d8">
 						<property name="com.jaspersoft.studio.unit.y" value="px"/>
@@ -82,10 +84,12 @@
 		<groupFooter>
 			<band height="15" splitType="Stretch">
 				<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				<printWhenExpression><![CDATA[$F{section-name} != null]]></printWhenExpression>
 				<subreport isUsingCache="false" runToBottom="false" overflowType="Stretch">
 					<reportElement key="" stretchType="RelativeToBandHeight" isPrintRepeatedValues="false" x="0" y="0" width="503" height="15" printWhenGroupChanges="section-name" uuid="b84185c3-98f5-45c2-97da-ff49e0c96d4f">
 						<property name="com.jaspersoft.studio.unit.y" value="px"/>
 						<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+						<printWhenExpression><![CDATA[$F{change-type} != null]]></printWhenExpression>
 					</reportElement>
 					<subreportParameter name="p_section-name">
 						<subreportParameterExpression><![CDATA[$F{section-name}]]></subreportParameterExpression>
@@ -196,7 +200,7 @@
 	</detail>
 	<columnFooter>
 		<band height="1" splitType="Prevent">
-			<printWhenExpression><![CDATA[1==1]]></printWhenExpression>
+			<printWhenExpression><![CDATA[$F{section-name} != null]]></printWhenExpression>
 			<line>
 				<reportElement mode="Transparent" x="0" y="0" width="504" height="1" isPrintWhenDetailOverflows="true" uuid="753e9326-ffbd-46cb-9b3f-11b909bb9cc7">
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>

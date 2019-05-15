@@ -138,21 +138,24 @@ public class CodeChangesXMLCreator
 	{
 		//create modified section
 		Element sectionElem = createSectionElement(sectionName, document);
+		boolean sectionHasAtLeastOneType = false;
 		for(CodeChangesType cct : codeChangesTypes)
 		{
 			Element typeElement = createTypeElement(cct, changedFilesInMaster, document);
 			if(typeElement != null)
 			{
+				sectionHasAtLeastOneType = true;
 				sectionElem.appendChild(typeElement);
 			}
 		}
 		Element uncategorizedElement = createUncategorizedElement(changedFilesNotInMaster, document);
 		if(uncategorizedElement != null)
 		{
+			sectionHasAtLeastOneType = true;
 			sectionElem.appendChild(uncategorizedElement);
 		}
 
-		if(codeChangesTypes.isEmpty() && changedFilesInMaster.isEmpty())
+		if(!sectionHasAtLeastOneType)
 		{
 			return null;
 		}

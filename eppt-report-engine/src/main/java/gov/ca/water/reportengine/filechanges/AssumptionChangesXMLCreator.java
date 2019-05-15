@@ -93,7 +93,8 @@ public class AssumptionChangesXMLCreator
 		if(	!atLeastOneInputTypeElem)
 		{
 			//create empty input type elem
-			createEmptyInputTypeElement(document);
+			Element emptyInputTypeElement = createEmptyInputTypeElement(document);
+			conditionsElement.appendChild(emptyInputTypeElement);
 		}
 
 		return conditionsElement;

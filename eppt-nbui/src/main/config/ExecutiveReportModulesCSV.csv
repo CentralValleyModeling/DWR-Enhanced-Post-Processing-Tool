@@ -1,7 +1,7 @@
 ID,Modules Text,Sub-module Executive Report Text,Sub Module additional text,Flag/Value
-1,Model Inputs,%d timeseries updated in IC,,Value
-2,Model Inputs,%d records in IC base only,,Value
-3,Model Inputs,%d records in IC Alt only,,Value
+1,Model Inputs,%d timeseries updated in IV,,Value
+2,Model Inputs,%d records in IV base only,,Value
+3,Model Inputs,%d records in IV Alt only,,Value
 4,Model Inputs,%d timeseries updated in SV,,Value
 5,NOD Reservoir Operation,%d incident(s) of below DP,%title% below %Threshold Label%,2
 6,NOD Reservoir Operation,%d incident(s) of above Flood,%title% above %Threshold Label% ,0

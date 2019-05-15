@@ -557,7 +557,7 @@ public class QAQCReportPanel extends RmaJPanel implements ProcessOutputConsumer
 		_ignoreSelectionChange = false;
 		Path currentProject = EpptPreferences.getLastProjectConfiguration();
 		Path reports = currentProject.getParent().resolve("Reports");
-		_pdfOutput.setText(reports.toString() + projectConfigurationPanel.getProjectName() + ".pdf");
+		_pdfOutput.setText(reports.resolve(projectConfigurationPanel.getProjectName() + ".pdf").toString());
 	}
 
 	@Override
