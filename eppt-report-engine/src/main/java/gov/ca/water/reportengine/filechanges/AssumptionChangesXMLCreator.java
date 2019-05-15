@@ -34,10 +34,6 @@ public class AssumptionChangesXMLCreator
 	private static final String ONLY_IN_BASE = "records-only-in-base";
 	private static final String ONLY_IN_ALT = "records-only-in-alternative";
 
-	// private static final String STATE_VARS = "state-variables";
-
-	private static final String RECORDS_LIST = "records-list";
-
 	private static final String RECORD = "record";
 
 	private static final String COMMON_RECORD = "Common Records, Different Data";
@@ -71,21 +67,47 @@ public class AssumptionChangesXMLCreator
 		conditionsElement.setAttribute(ONLY_IN_BASE, Integer.toString(recordsInBaseOnly.size()));
 		conditionsElement.setAttribute(ONLY_IN_ALT, Integer.toString(recordsInAltOnly.size()));
 
-		conditionsElement.appendChild(createInputTypeElement(COMMON_RECORD, commonRecordsWithDifData, document));
-		conditionsElement.appendChild(createInputTypeElement(BASE_ONLY, recordsInBaseOnly, document));
-		conditionsElement.appendChild(createInputTypeElement(ALT_ONLY, recordsInAltOnly, document));
+
+		Element comRecDifDataElem = createInputTypeElement(COMMON_RECORD, commonRecordsWithDifData, document);
+		Element recsOnlyInBaseElem = createInputTypeElement(BASE_ONLY, recordsInBaseOnly, document);
+		Element onlyInAltElem = createInputTypeElement(ALT_ONLY, recordsInAltOnly, document);
+
+		boolean atLeastOneInputTypeElem = false;
+
+		if(comRecDifDataElem != null)
+		{
+			atLeastOneInputTypeElem = true;
+			conditionsElement.appendChild(comRecDifDataElem);
+		}
+		if(recsOnlyInBaseElem != null)
+		{
+			atLeastOneInputTypeElem = true;
+			conditionsElement.appendChild(recsOnlyInBaseElem);
+		}
+		if(onlyInAltElem != null)
+		{
+			atLeastOneInputTypeElem = true;
+			conditionsElement.appendChild(onlyInAltElem);
+		}
+
+		if(	!atLeastOneInputTypeElem)
+		{
+			//create empty input type elem
+			createEmptyInputTypeElement(document);
+		}
 
 		return conditionsElement;
 	}
 
-	//    private Element createStateVariablesElement(Document document, int commonRecordsWithDifData, int recordsInBaseOnly, int recordsInAltOnly)
-	//    {
-	//        Element stateVarElement = document.createElement(STATE_VARS);
-	//        stateVarElement.appendChild(createCommonRecDifData(commonRecordsWithDifData, document));
-	//        stateVarElement.appendChild(createOnlyInBase(recordsInBaseOnly, document));
-	//        stateVarElement.appendChild(createOnlyInAlt(recordsInAltOnly, document));
-	//        return stateVarElement;
-	//    }
+	private Element createEmptyInputTypeElement(Document document)
+	{
+		Element inputTypeElem = document.createElement(INPUT_TYPE);
+		Element recordElem = document.createElement(RECORD);
+
+		inputTypeElem.appendChild(recordElem);
+
+		return inputTypeElem;
+	}
 
 	private Element createInputTypeElement(String inputType, Set<String> records, Document document)
 	{
@@ -94,7 +116,7 @@ public class AssumptionChangesXMLCreator
 
 		if(records.isEmpty())
 		{
-			inputTypeElem.appendChild(createEmptyRecordElem(document));
+			return null;
 		}
 		else
 		{
@@ -106,49 +128,11 @@ public class AssumptionChangesXMLCreator
 		return inputTypeElem;
 	}
 
-	private Element createRecordsList(Set<String> records, Document document)
-	{
-		Element recordsRootElem = document.createElement(RECORDS_LIST);
-
-		for(String rec : records)
-		{
-			recordsRootElem.appendChild(createRecordElem(rec, document));
-		}
-		return recordsRootElem;
-	}
-
-	private Element createEmptyRecordElem(Document document)
-	{
-		Element recordElem = document.createElement(RECORD);
-		return recordElem;
-	}
-
 	private Element createRecordElem(String record, Document document)
 	{
 		Element recordElem = document.createElement(RECORD);
 		recordElem.setTextContent(record);
 		return recordElem;
-	}
-
-	private Element createCommonRecDifData(int numRecordsWithDifData, Document document)
-	{
-		Element comRecordDifDataElem = document.createElement(COM_REC_DIF_DATA);
-		comRecordDifDataElem.setTextContent(Integer.toString(numRecordsWithDifData));
-		return comRecordDifDataElem;
-	}
-
-	private Element createOnlyInBase(int numRecordsWithDifData, Document document)
-	{
-		Element onlyInBaseElem = document.createElement(ONLY_IN_BASE);
-		onlyInBaseElem.setTextContent(Integer.toString(numRecordsWithDifData));
-		return onlyInBaseElem;
-	}
-
-	private Element createOnlyInAlt(int numRecordsWithDifData, Document document)
-	{
-		Element onlyInAltElem = document.createElement(ONLY_IN_ALT);
-		onlyInAltElem.setTextContent(Integer.toString(numRecordsWithDifData));
-		return onlyInAltElem;
 	}
 
 }

@@ -12,10 +12,7 @@
 
 package gov.ca.water.reportengine.executivereport;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.logging.Level;
 import java.util.stream.Collectors;
 
@@ -340,6 +337,10 @@ public class ExecutiveReportXMLCreator
 		}
 
 		String elementString = subModuleStrings.stream().map(String::valueOf).collect(Collectors.joining(NEW_LINE));
+		if(Objects.equals(elementString, ""))
+		{
+			elementString = "No Changes";
+		}
 		return createAlternativeModuleElement(doc, scenarioNumber, rowNumber, module.getName(), elementString);
 
 	}

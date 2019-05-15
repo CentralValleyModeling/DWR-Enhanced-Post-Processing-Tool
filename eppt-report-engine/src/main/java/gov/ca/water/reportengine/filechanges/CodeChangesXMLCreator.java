@@ -22,6 +22,7 @@ import java.util.logging.Level;
 
 import com.google.common.flogger.FluentLogger;
 import gov.ca.water.reportengine.EpptReportException;
+import org.python.bouncycastle.crypto.tls.NewSessionTicket;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
@@ -81,19 +82,54 @@ public class CodeChangesXMLCreator
 		//create header
 		codeChangesElemRoot.appendChild(createHeader(altName, stats, document));
 
-
+		boolean atLeastOneSectionElemExists = false;
 		//create modified section
 		Element modifiedSectionElem = createSection(MOD_FILE, codeChangesTypes, _modifiedFilesInMaster, _modifidFilesNotInMaster, document);
-		codeChangesElemRoot.appendChild(modifiedSectionElem);
+		if(modifiedSectionElem != null)
+		{
+			atLeastOneSectionElemExists = true;
+			codeChangesElemRoot.appendChild(modifiedSectionElem);
+		}
+
 
 		Element newSectionElem = createSection(STAR_NAME, codeChangesTypes, _fileAddedToAltInMaster, _fileAddedToAltNotInMaster, document);
-		codeChangesElemRoot.appendChild(newSectionElem);
+		if(newSectionElem != null)
+		{
+			atLeastOneSectionElemExists = true;
+			codeChangesElemRoot.appendChild(newSectionElem);
+		}
 
 		Element deleteSectionElem = createSection(STAR_DELETED, codeChangesTypes, _fileDeletedFromBaseInMaster, _fileDeletedFromBaseNotInMaster,
 				document);
-		codeChangesElemRoot.appendChild(deleteSectionElem);
+		if(deleteSectionElem != null)
+		{
+			atLeastOneSectionElemExists = true;
+			codeChangesElemRoot.appendChild(deleteSectionElem);
+		}
+
+		if(!atLeastOneSectionElemExists)
+		{
+			//create empty elements
+			Element emptySection = createEmptySection(document);
+			codeChangesElemRoot.appendChild(emptySection);
+		}
 
 		return codeChangesElemRoot;
+	}
+
+	private Element createEmptySection(Document document)
+	{
+		Element sectionElem = document.createElement(SECTION);
+		Element typeElem = document.createElement(TYPE);
+		sectionElem.appendChild(typeElem);
+
+		Element subTypeElem = document.createElement(SUBTYPE);
+		typeElem.appendChild(subTypeElem);
+
+		Element changeElem = document.createElement(CHANGE);
+		subTypeElem.appendChild(changeElem);
+
+		return sectionElem;
 	}
 
 
@@ -115,7 +151,15 @@ public class CodeChangesXMLCreator
 		{
 			sectionElem.appendChild(uncategorizedElement);
 		}
-		return sectionElem;
+
+		if(codeChangesTypes.isEmpty() && changedFilesInMaster.isEmpty())
+		{
+			return null;
+		}
+		else
+		{
+			return sectionElem;
+		}
 	}
 
 	private void loadFileChangesFromStats(CodeChangesStatistics stats, List<CodeChangesType> codeChangesTypes)
