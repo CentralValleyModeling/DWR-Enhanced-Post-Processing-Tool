@@ -88,7 +88,11 @@ public class WaterYearTableReader
 								_columnHeaders = previousLine;
 
 							}
-							retval.add(createWaterYearType(_columnHeaders, row));
+							WaterYearType waterYearType = createWaterYearType(_columnHeaders, row);
+							if(waterYearType != null)
+							{
+								retval.add(waterYearType);
+							}
 						}
 
 						previousLine = row;

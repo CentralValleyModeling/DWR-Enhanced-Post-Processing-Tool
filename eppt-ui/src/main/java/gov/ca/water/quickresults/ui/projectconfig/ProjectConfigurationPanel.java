@@ -315,8 +315,6 @@ public final class ProjectConfigurationPanel extends EpptPanel
 			errorHandlingSvc.businessErrorHandler(messageText, e);
 		}
 
-		QuickState quickState = builder.createQuickState();
-
 		return null;
 	}
 
@@ -424,13 +422,7 @@ public final class ProjectConfigurationPanel extends EpptPanel
 					addScenario(scenarioRun);
 				}
 				//Need to ensure this is called after scenarios are added to TreeTable model
-				Platform.runLater(() ->
-				{
-					SwingUtilities.invokeLater(() ->
-					{
-						updateRadioState();
-					});
-				});
+				Platform.runLater(() ->SwingUtilities.invokeLater(this::updateRadioState));
 			}
 			catch(RuntimeException ex)
 			{

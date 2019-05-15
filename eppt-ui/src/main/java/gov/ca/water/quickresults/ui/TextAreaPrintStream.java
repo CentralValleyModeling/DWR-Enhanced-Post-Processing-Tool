@@ -51,10 +51,6 @@ public class TextAreaPrintStream
 		StyleConstants.setFontFamily(_style, "MonoSpaced");
 		StyleConstants.setFontSize(_style, 12);
 
-		BufferedReader stdInput = new BufferedReader(new InputStreamReader(inputStream));
-
-		final BufferedReader stdError = new BufferedReader(new InputStreamReader(errorStream));
-
 		_executorService = Executors.newFixedThreadPool(2);
 		StreamGobbler errorGobbler = new StreamGobbler(errorStream, "ERROR");
 

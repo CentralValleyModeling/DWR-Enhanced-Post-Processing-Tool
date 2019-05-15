@@ -263,7 +263,7 @@ public class CustomResultsPanel extends EpptPanel
 			}
 
 		}
-		catch(Exception e)
+		catch(RuntimeException e)
 		{
 			LOGGER.debug("Error in retrieve2() -", e);
 			_errorHandlingSvc.businessErrorHandler(null, e);

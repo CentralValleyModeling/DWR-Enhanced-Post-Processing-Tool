@@ -33,7 +33,6 @@ import gov.ca.water.calgui.constant.EpptPreferences;
  */
 public class ScenarioChooserBO
 {
-	private static final Logger LOGGER = Logger.getLogger(ScenarioChooserBO.class.getName());
 	private final DefaultListModel _lmScenNames;
 	private final Component _parentComponent;
 	private final JFileChooser _fc = new JFileChooser();

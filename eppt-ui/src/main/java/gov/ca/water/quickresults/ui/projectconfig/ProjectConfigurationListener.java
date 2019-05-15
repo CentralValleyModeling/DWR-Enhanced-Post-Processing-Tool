@@ -15,7 +15,6 @@ package gov.ca.water.quickresults.ui.projectconfig;
 import java.awt.Frame;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.logging.Logger;
 import javax.swing.*;
 
 import gov.ca.water.calgui.project.EpptScenarioRun;
@@ -30,7 +29,6 @@ import gov.ca.water.quickresults.ui.EpptPanel;
  */
 public class ProjectConfigurationListener implements ActionListener
 {
-	private static final Logger LOGGER = Logger.getLogger(ProjectConfigurationListener.class.getName());
 	private final ProjectConfigurationPanel _projectConfigurationPanel;
 
 	public ProjectConfigurationListener(ProjectConfigurationPanel projectConfigurationPanel)

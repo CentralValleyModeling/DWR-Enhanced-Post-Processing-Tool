@@ -105,7 +105,7 @@ class QAQCReportGenerator
 		}
 		catch(IOException e)
 		{
-			throw new RuntimeException("Error copying file: " + source, e);
+			throw new IllegalStateException("Error copying file: " + source, e);
 		}
 	}
 }

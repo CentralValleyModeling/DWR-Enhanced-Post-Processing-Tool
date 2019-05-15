@@ -24,6 +24,7 @@ public class QuickStateBuilder
 	boolean isDisplayTimeSeriesPlot;
 	boolean isDisplayBoxAndWhiskerPlot;
 	Month startMonthAndYear;
+	private QuickState.ComparisonType _compType;
 
 	public QuickStateBuilder()
 	{
@@ -32,7 +33,7 @@ public class QuickStateBuilder
 
 	public QuickStateBuilder withComparisonType(QuickState.ComparisonType compType)
 	{
-		compType = compType;
+		_compType = compType;
 		return this;
 	}
 
