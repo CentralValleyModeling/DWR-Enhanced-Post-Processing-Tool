@@ -58,6 +58,7 @@ class ScenarioRunEditor extends JDialog
 	private final JTextField _dtsAliasTextField = new JTextField();
 	private final DefaultListModel<NamedDssPath> _extraDssListModel;
 	private boolean _canceled = true;
+	private JFileChooser _fileChooser;
 
 	ScenarioRunEditor(Frame frame)
 	{
@@ -219,9 +220,8 @@ class ScenarioRunEditor extends JDialog
 
 	private void addExtraDss(ActionEvent e)
 	{
-		JFileChooser fileChooser = new JFileChooser();
+		JFileChooser fileChooser = getFileChooser("Select DSS File");
 		fileChooser.setFileFilter(new SimpleFileFilter("DSS"));
-		fileChooser.setCurrentDirectory(EpptPreferences.getProjectsPath().toFile());
 		fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
 		fileChooser.showDialog(this, "Select");
 		File selectedFile = fileChooser.getSelectedFile();
@@ -231,12 +231,23 @@ class ScenarioRunEditor extends JDialog
 			nameDialog.setDescriptionVisible(false);
 			nameDialog.setTitle("Extra DSS Alias");
 			nameDialog.setName(selectedFile.getName());
+			nameDialog.pack();
 			nameDialog.setVisible(true);
 			if(!nameDialog.isCanceled())
 			{
 				_extraDssListModel.addElement(new NamedDssPath(selectedFile.toPath(), nameDialog.getName()));
 			}
 		}
+	}
+
+	private JFileChooser getFileChooser(String s)
+	{
+		if(_fileChooser == null)
+		{
+			_fileChooser = new JFileChooser(s);
+			_fileChooser.setCurrentDirectory(EpptPreferences.getLastProjectConfiguration().getParent().toFile());
+		}
+		return _fileChooser;
 	}
 
 	private JPanel createDssSelectorPanel(String labelText, JTextField fileField, JTextField aliasField)
@@ -335,9 +346,8 @@ class ScenarioRunEditor extends JDialog
 
 	private void selectWreslMain(ActionEvent actionEvent)
 	{
-		JFileChooser fileChooser = new JFileChooser();
+		JFileChooser fileChooser = getFileChooser("Select WRESL Main");
 		fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
-		fileChooser.setCurrentDirectory(EpptPreferences.getWreslDirectory().toFile());
 		fileChooser.showDialog(this, "Select");
 		File selectedFile = fileChooser.getSelectedFile();
 		if(selectedFile != null)
@@ -348,9 +358,8 @@ class ScenarioRunEditor extends JDialog
 
 	private void selectOutputPath(ActionEvent actionEvent)
 	{
-		JFileChooser fileChooser = new JFileChooser("Select Scenario Run Directory");
+		JFileChooser fileChooser = getFileChooser("Select Scenario Run Directory");
 		fileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
-		fileChooser.setCurrentDirectory(EpptPreferences.getProjectsPath().toFile());
 		fileChooser.showDialog(this, "Select");
 		File selectedFile = fileChooser.getSelectedFile();
 		if(selectedFile != null)
@@ -361,9 +370,8 @@ class ScenarioRunEditor extends JDialog
 
 	private void selectDss(JTextField textField)
 	{
-		JFileChooser fileChooser = new JFileChooser("Select Scenario Run Directory");
+		JFileChooser fileChooser = getFileChooser("Select Scenario Run Directory");
 		fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
-		fileChooser.setCurrentDirectory(EpptPreferences.getProjectsPath().toFile());
 		fileChooser.setFileFilter(new SimpleFileFilter("DSS"));
 		fileChooser.showDialog(this, "Select");
 		File selectedFile = fileChooser.getSelectedFile();
@@ -450,6 +458,10 @@ class ScenarioRunEditor extends JDialog
 		if(ivTextFieldText != null && !ivTextFieldText.isEmpty())
 		{
 			Path ivPath = Paths.get(ivTextFieldText);
+			if(!ivPath.toString().toLowerCase().endsWith("dss"))
+			{
+				ivPath = Paths.get(ivPath.toString() + ".dss");
+			}
 			String aliasText = aliasTextField.getText();
 			if(aliasText.isEmpty())
 			{

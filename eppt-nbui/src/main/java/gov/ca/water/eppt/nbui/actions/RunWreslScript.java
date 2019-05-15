@@ -50,20 +50,30 @@ import org.openide.windows.WindowManager;
 public class RunWreslScript implements ActionListener
 {
 
-	private WreslRunDialog _wreslRunDialog;
+	private static WreslRunDialog wreslRunDialog;
 
 	@Override
 	public void actionPerformed(ActionEvent e)
 	{
-		if(_wreslRunDialog == null)
+		action();
+	}
+
+	private static void action()
+	{
+		if(wreslRunDialog == null)
 		{
-			_wreslRunDialog = new WreslRunDialog(WindowManager.getDefault().getMainWindow());
+			wreslRunDialog = new WreslRunDialog(WindowManager.getDefault().getMainWindow());
 		}
 		List<EpptScenarioRun> allEpptScenarioRuns = ProjectConfigurationPanel.getProjectConfigurationPanel().getAllEpptScenarioRuns();
-		_wreslRunDialog.buildScenarioPanel(allEpptScenarioRuns);
-		_wreslRunDialog.revalidate();
-		_wreslRunDialog.setVisible(true);
-		_wreslRunDialog.toFront();
+		wreslRunDialog.buildScenarioPanel(allEpptScenarioRuns);
+		wreslRunDialog.revalidate();
+		wreslRunDialog.setVisible(true);
+		wreslRunDialog.toFront();
+	}
+
+	public static void destroyProcesses()
+	{
+		wreslRunDialog.destroyProcesses();
 	}
 
 }

@@ -29,6 +29,7 @@ import gov.ca.water.calgui.busservice.impl.ThresholdLinksSeedDataSvc;
 import gov.ca.water.calgui.constant.EpptPreferences;
 import gov.ca.water.calgui.presentation.DisplayHelper;
 import gov.ca.water.calgui.techservice.impl.DialogSvcImpl;
+import gov.ca.water.eppt.nbui.actions.RunWreslScript;
 import gov.ca.water.quickresults.ui.projectconfig.ProjectConfigurationPanel;
 import org.openide.modules.ModuleInstall;
 import org.openide.windows.WindowManager;
@@ -53,12 +54,16 @@ public class Installer extends ModuleInstall
 		initPlotHandler();
 	}
 
+	@Override
+	public boolean closing()
+	{
+		RunWreslScript.destroyProcesses();
+		return true;
+	}
+
 	private void setMinimumWindowSize()
 	{
-		WindowManager.getDefault().invokeWhenUIReady(() ->
-		{
-			WindowManager.getDefault().getMainWindow().setMinimumSize(new Dimension(545, 630));
-		});
+		WindowManager.getDefault().invokeWhenUIReady(() -> WindowManager.getDefault().getMainWindow().setMinimumSize(new Dimension(545, 630)));
 	}
 
 	private void loadLastProjectConfiguration()
@@ -173,33 +178,35 @@ public class Installer extends ModuleInstall
 		netbeansLogger.setParent(rootLogger);
 		netbeansLogger.setUseParentHandlers(true);
 
-		WindowManager.getDefault().invokeWhenUIReady(() ->
+		WindowManager.getDefault().invokeWhenUIReady(() ->setupLogHandlers(rootLogger));
+	}
+
+	private void setupLogHandlers(Logger rootLogger)
+	{
+		WindowManager.getDefault().getMainWindow();
+		String publishedLevel = Level.SEVERE.getName();
+		String showDialogLevel = Level.SEVERE.getName();
+
+		DialogLogHandler handler = DialogLogHandler.getInstance();
+		handler.addIgnoredLoggerName("netbeans");
+		handler.addIgnoredSourceClass("org.netbeans");
+		handler.addIgnoredSourceClass("org.openide");
+
+		handler.setLevel(Level.parse(publishedLevel));
+		handler.setShowDialogLevel(Level.parse(showDialogLevel));
+
+		handler.setFrame(true);
+		handler.setTitle("EPPT Error Log");
+		handler.setParentWindow(WindowManager.getDefault().getMainWindow());
+
+		Handler[] handlers = rootLogger.getHandlers();
+		for(Handler defaultHandlers : handlers)
 		{
-			WindowManager.getDefault().getMainWindow();
-			String publishedLevel = Level.SEVERE.getName();
-			String showDialogLevel = Level.SEVERE.getName();
-
-			DialogLogHandler handler = DialogLogHandler.getInstance();
-			handler.addIgnoredLoggerName("netbeans");
-			handler.addIgnoredSourceClass("org.netbeans");
-			handler.addIgnoredSourceClass("org.openide");
-
-			handler.setLevel(Level.parse(publishedLevel));
-			handler.setShowDialogLevel(Level.parse(showDialogLevel));
-
-			handler.setFrame(true);
-			handler.setTitle("EPPT Error Log");
-			handler.setParentWindow(WindowManager.getDefault().getMainWindow());
-
-			Handler[] handlers = rootLogger.getHandlers();
-			for(Handler defaultHandlers : handlers)
+			if(defaultHandlers.getClass().getName().contains("TopLogging"))
 			{
-				if(defaultHandlers.getClass().getName().contains("TopLogging"))
-				{
-					rootLogger.removeHandler(defaultHandlers);
-				}
+				rootLogger.removeHandler(defaultHandlers);
 			}
-			rootLogger.addHandler(handler);
-		});
+		}
+		rootLogger.addHandler(handler);
 	}
 }
