@@ -88,18 +88,17 @@ public class WaterYearTableReader
 								_columnHeaders = previousLine;
 
 							}
-							WaterYearType waterYearType = createWaterYearType(_columnHeaders, row);
-							if(waterYearType != null)
+							if(_columnHeaders != null)
 							{
-								retval.add(waterYearType);
+								WaterYearType waterYearType = createWaterYearType(_columnHeaders, row);
+								if(waterYearType != null)
+								{
+									retval.add(waterYearType);
+								}
 							}
 						}
 
 						previousLine = row;
-					}
-					else
-					{
-						continue;
 					}
 				}
 			}
