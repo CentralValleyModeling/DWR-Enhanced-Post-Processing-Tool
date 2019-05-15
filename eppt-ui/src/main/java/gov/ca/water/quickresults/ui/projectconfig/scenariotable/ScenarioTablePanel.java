@@ -12,25 +12,26 @@
 
 package gov.ca.water.quickresults.ui.projectconfig.scenariotable;
 
-import java.awt.Container;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
 import javax.swing.*;
 
 import gov.ca.water.calgui.project.EpptScenarioRun;
 import javafx.application.Platform;
 import javafx.collections.ObservableList;
 import javafx.embed.swing.JFXPanel;
+import javafx.scene.Node;
 import javafx.scene.Scene;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
 import javafx.scene.layout.BorderPane;
 
-import rma.lang.Modifiable;
 import rma.util.RMAUtil;
+import com.rma.javafx.iface.ColumnSpec;
+import com.rma.javafx.iface.RowModel;
 import com.rma.javafx.treetable.RmaTreeTableView;
 import com.rma.javafx.treetable.TreeTableViewSelectionUtilities;
 import com.rma.javafx.treetable.cells.views.RmaCheckBoxCellView;
@@ -63,8 +64,8 @@ public class ScenarioTablePanel extends JFXPanel
 		_treeTable = new RmaTreeTableView<>();
 		_treeTable.setModel(_scenarioTableModel);
 		_treeTable.setPlaceholder(new Label("No Scenario Runs"));
-		_treeTable.setCellView(BASE_COL_SPEC, new RmaCheckBoxCellView());
-		_treeTable.setCellView(ALTERNATIVE_COL_SPEC, new RmaCheckBoxCellView());
+		_treeTable.setCellView(BASE_COL_SPEC, new ScenarioCheckboxView());
+		_treeTable.setCellView(ALTERNATIVE_COL_SPEC, new ScenarioCheckboxView());
 		BorderPane borderPane = new BorderPane();
 		borderPane.setCenter(_treeTable);
 		try
@@ -115,7 +116,7 @@ public class ScenarioTablePanel extends JFXPanel
 	private void setModified()
 	{
 		_treeTable.refresh();
-		SwingUtilities.invokeLater(()->RMAUtil.setParentModified(this));
+		SwingUtilities.invokeLater(() -> RMAUtil.setParentModified(this));
 	}
 
 	public void updateScenario(EpptScenarioRun oldScenarioRun, EpptScenarioRun newScenarioRun)
@@ -168,7 +169,7 @@ public class ScenarioTablePanel extends JFXPanel
 				if(i > 0)
 				{
 					rows.remove(i);
-					rows.add(i-1, rowModel);
+					rows.add(i - 1, rowModel);
 				}
 			}
 		}
@@ -183,11 +184,41 @@ public class ScenarioTablePanel extends JFXPanel
 			for(ParentRowModel rowModel : selectedRowModels)
 			{
 				int i = rows.indexOf(rowModel);
-				if(i >= 0 && i < rows.size() -1)
+				if(i >= 0 && i < rows.size() - 1)
 				{
 					rows.remove(i);
-					rows.add(i+1, rowModel);
+					rows.add(i + 1, rowModel);
 				}
+			}
+		}
+	}
+
+	private static class ScenarioCheckboxView extends RmaCheckBoxCellView
+	{
+
+		@Override
+		public CheckBox getCellEditorNode(Object value, RowModel<?> row, ColumnSpec column)
+		{
+			if(row instanceof DssPathRow)
+			{
+				return null;
+			}
+			else
+			{
+				return super.getCellEditorNode(value, row, column);
+			}
+		}
+
+		@Override
+		public CheckBox getCellRendererNode(Object value, Node graphic, RowModel<?> row, ColumnSpec column, boolean isCellEditable)
+		{
+			if(row instanceof DssPathRow)
+			{
+				return null;
+			}
+			else
+			{
+				return super.getCellRendererNode(value, graphic, row, column, isCellEditable);
 			}
 		}
 	}

@@ -164,7 +164,7 @@ class ProjectConfigurationIOVersion2
 			NamedDssPath dtsDssFile = null;
 			if(jsonObject.has(SCENARIO_DTS_KEY))
 			{
-				ivDssFile = readDssJson(jsonObject.getJSONObject(SCENARIO_DTS_KEY));
+				dtsDssFile = readDssJson(jsonObject.getJSONObject(SCENARIO_DTS_KEY));
 			}
 
 			List<NamedDssPath> extraDssFiles = readExtraDss(jsonObject);

@@ -85,6 +85,11 @@ class ScenarioRowModel extends ParentRowModel
 		{
 			getChildren().add(new DssPathRow(this, ivDssFile, "IV"));
 		}
+		NamedDssPath dtsDssFile = dssContainer.getDtsDssFile();
+		if(dtsDssFile != null)
+		{
+			getChildren().add(new DssPathRow(this, dtsDssFile, "DTS"));
+		}
 		dssContainer.getExtraDssFiles().forEach(child->getChildren().add(new DssPathRow(this, child, "Extra")));
 	}
 

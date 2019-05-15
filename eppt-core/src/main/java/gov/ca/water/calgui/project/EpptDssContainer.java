@@ -77,8 +77,9 @@ public class EpptDssContainer
 	{
 		List<NamedDssPath> retval = new ArrayList<>();
 		retval.add(getDvDssFile());
-		retval.add(getIvDssFile());
 		retval.add(getSvDssFile());
+		retval.add(getIvDssFile());
+		retval.add(getDtsDssFile());
 		retval.addAll(getExtraDssFiles());
 		return retval;
 	}

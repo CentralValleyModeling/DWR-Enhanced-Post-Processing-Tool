@@ -246,15 +246,13 @@ public class CustomResultsPanel extends EpptPanel
 		try
 		{
 			ProjectConfigurationPanel projectConfigurationPanel = ProjectConfigurationPanel.getProjectConfigurationPanel();
-			List<EpptScenarioRun> alternatives = projectConfigurationPanel.getEpptScenarioAlternatives();
 			EpptScenarioRun baseScenario = projectConfigurationPanel.getBaseScenario();
 			if(baseScenario != null)
 			{
 				String quickState = projectConfigurationPanel.quickState();
 				Month startMonth = projectConfigurationPanel.getStartMonth();
 				Month endMonth = projectConfigurationPanel.getEndMonth();
-				List<EpptScenarioRun> scenarios = projectConfigurationPanel.getEpptScenarioRuns();
-				_displayHelper.showDisplayFramesWRIMS(quickState + ";Locs-;Index-;File-", baseScenario, alternatives,
+				_displayHelper.showDisplayFramesWRIMS(quickState + ";Locs-;Index-;File-", baseScenario, new ArrayList<>(),
 						dts,
 						mts, startMonth, endMonth);
 			}

@@ -384,16 +384,17 @@ public final class ProjectConfigurationPanel extends EpptPanel
 			throws IOException
 	{
 		boolean mkdirs = selectedPath.toFile().mkdirs();
-		if(mkdirs)
+		if(!mkdirs)
 		{
-			Path projectFile = selectedPath.resolve(projectName + "." + Constant.EPPT_EXT);
-			_projectConfigurationIO.saveConfiguration(projectFile, projectName, projectDescription);
-			JTextField projectNameField = (JTextField) getSwingEngine().find("prj_name");
-			JTextField descriptionField = (JTextField) getSwingEngine().find("prj_desc");
-			projectNameField.setText(projectName);
-			descriptionField.setText(projectDescription);
-			EpptPreferences.setLastProjectConfiguration(projectFile);
+			LOGGER.debug("Path not created: " + selectedPath);
 		}
+		Path projectFile = selectedPath.resolve(projectName + "." + Constant.EPPT_EXT);
+		_projectConfigurationIO.saveConfiguration(projectFile, projectName, projectDescription);
+		JTextField projectNameField = (JTextField) getSwingEngine().find("prj_name");
+		JTextField descriptionField = (JTextField) getSwingEngine().find("prj_desc");
+		projectNameField.setText(projectName);
+		descriptionField.setText(projectDescription);
+		EpptPreferences.setLastProjectConfiguration(projectFile);
 	}
 
 	public void loadProjectConfiguration(Path selectedPath) throws IOException
@@ -414,14 +415,15 @@ public final class ProjectConfigurationPanel extends EpptPanel
 				setStartMonth(project.getStartMonth());
 				setEndMonth(project.getEndMonth());
 				updateSelectedComponents(project.getSelectedComponents());
+				_scenarioTablePanel.clearScenarios();
 				for(EpptScenarioRun scenarioRun : project.getScenarioRuns())
 				{
 					addScenario(scenarioRun);
 				}
 				//Need to ensure this is called after scenarios are added to TreeTable model
-				Platform.runLater(()->
+				Platform.runLater(() ->
 				{
-					SwingUtilities.invokeLater(()->
+					SwingUtilities.invokeLater(() ->
 					{
 						updateRadioState();
 					});
