@@ -47,7 +47,7 @@ public class WreslRunDialog extends JDialog implements ProcessOutputConsumer
 	private final JTabbedPane _tabbedPane;
 	private final List<TextAreaPrintStream> _textAreaPrintStreams = new ArrayList<>();
 	private final JButton _startButton = new JButton("Run WRESL");
-	private final JButton _stopButton = new JButton("Stop all WRESL Scripts");
+	private final JButton _stopButton = new JButton("Stop All WRESL Scripts");
 	private final List<Process> _processes = new ArrayList<>();
 	private final List<EpptScenarioRunCheckbox> _scenarioRunCheckboxes = new ArrayList<>();
 	private final JProgressBar _progressBar;
