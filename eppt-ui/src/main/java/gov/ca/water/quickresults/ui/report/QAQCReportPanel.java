@@ -108,9 +108,6 @@ public class QAQCReportPanel extends RmaJPanel implements ProcessOutputConsumer
 		_waterYearLookup.setText(Paths.get(WY_TYPES_NAME_LOOKUP).normalize().toString());
 		_wyLookupBtn.addActionListener(e -> chooseWaterYearLookup());
 		_wyTableBtn.addActionListener(e -> chooseWaterYearTable());
-		Path currentProject = EpptPreferences.getLastProjectConfiguration();
-		Path reports = currentProject.getParent().resolve("Reports");
-		_pdfOutput.setText(reports.toString());
 		_baseComboBox.addActionListener(this::scenarioComboboxChanged);
 		_altComboBox.addActionListener(this::scenarioComboboxChanged);
 	}
@@ -554,11 +551,13 @@ public class QAQCReportPanel extends RmaJPanel implements ProcessOutputConsumer
 		if(baseScenario != null)
 		{
 			_baseComboBox.setSelectedItem(baseScenario);
-			_pdfOutput.setText(baseScenario.getOutputPath().resolve("QAQC_EPPT_" + baseScenario.getName() + ".pdf").toString());
 		}
 		_altComboBox.setSelectedItem(null);
 		_altComboBox.removeItem(baseScenario);
 		_ignoreSelectionChange = false;
+		Path currentProject = EpptPreferences.getLastProjectConfiguration();
+		Path reports = currentProject.getParent().resolve("Reports");
+		_pdfOutput.setText(reports.toString() + projectConfigurationPanel.getProjectName() + ".pdf");
 	}
 
 	@Override

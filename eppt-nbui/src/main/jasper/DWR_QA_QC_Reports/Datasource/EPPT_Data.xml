@@ -10,279 +10,248 @@
   ~
   ~ GNU General Public License
   -->
-
 <qaqc-report alternative-count="1" show-assumption-changes="true">
-    <report-header>
-        <author>Bryan Gray</author>
-        <subtitle>EPPT Prototype</subtitle>
-        <base name="CSII_Base"/>
-        <alternatives>
-            <alternative name="CSII Alternative"/>
-        </alternatives>
-    </report-header>
-    <executive-report>
-        <executive-report-header-entries>
-            <base-violations>1</base-violations>
-            <alternative-violations>1</alternative-violations>
-            <pct-change-violations>2% increase</pct-change-violations>
-            <avg-annual-export-previous>1</avg-annual-export-previous>
-            <avg-annual-export-current>2</avg-annual-export-current>
-            <annual-export-increase-decrease>increase</annual-export-increase-decrease>
-            <avg-cvp-nod-storage-previous>1</avg-cvp-nod-storage-previous>
-            <avg-cvp-nod-storage-current>2</avg-cvp-nod-storage-current>
-            <cvp-nod-storage-increase-decrease>decrease</cvp-nod-storage-increase-decrease>
-            <avg-swp-nod-storage-previous>1</avg-swp-nod-storage-previous>
-            <avg-swp-nod-storage-current>2</avg-swp-nod-storage-current>
-            <swp-nod-storage-increase-decrease>decrease</swp-nod-storage-increase-decrease>
-        </executive-report-header-entries>
-        <executive-report-table>
-            <module header="Issues">
-                <study study-order="1">Base Study</study>
-                <model-entries model-order="01" name="Model Inputs">N/A</model-entries>
-            </module>
-            <module header="Issues">
-                <study study-order="2">Alternative Study</study>
-                <model-entries model-order="01" name="Model Inputs">31 timeseries updated in SV&#xD;21 files changed&#xD;1 new file added&#xD;2 files deleted</model-entries>
-            </module>
-            <module header="Issues">
-                <study study-order="1">Base Study</study>
-                <model-entries model-order="02" name="NOD Reservoir Operation">0 incident(s) of below DP&#xD;0 incident(s) of above Flood&#xD;0 incident(s) of Spill</model-entries>
-            </module>
-            <module header="Issues">
-                <study study-order="2">Alternative Study</study>
-                <model-entries model-order="02" name="NOD Reservoir Operation">0 incident(s) of below DP&#xD;0 incident(s) of above Flood&#xD;0 incident(s) of Spill</model-entries>
-            </module>
-            <module header="Issues">
-                <study study-order="1">Base Study</study>
-                <model-entries model-order="03" name="Upstream Minimum Flow Requirements">1 incident(s) of violation</model-entries>
-            </module>
-            <module header="Issues">
-                <study study-order="2">Alternative Study</study>
-                <model-entries model-order="03" name="Upstream Minimum Flow Requirements">1 incident(s) of violation</model-entries>
-            </module>
-            <module header="Issues">
-                <study study-order="1">Base Study</study>
-                <model-entries model-order="04" name="NOD Weirs Operation">132 incident(s) of spilling</model-entries>
-            </module>
-            <module header="Issues">
-                <study study-order="2">Alternative Study</study>
-                <model-entries model-order="04" name="NOD Weirs Operation">132 incident(s) of spilling</model-entries>
-            </module>
-            <module header="Issues">
-                <study study-order="1">Base Study</study>
-                <model-entries model-order="05" name="NOD Groundwater Pumping">954 incident(s) of violation</model-entries>
-            </module>
-            <module header="Issues">
-                <study study-order="2">Alternative Study</study>
-                <model-entries model-order="05" name="NOD Groundwater Pumping">954 incident(s) of violation</model-entries>
-            </module>
-            <module header="Issues">
-                <study study-order="1">Base Study</study>
-                <model-entries model-order="06" name="Delta Operations">0 incident(s) of violation</model-entries>
-            </module>
-            <module header="Issues">
-                <study study-order="2">Alternative Study</study>
-                <model-entries model-order="06" name="Delta Operations">0 incident(s) of violation</model-entries>
-            </module>
-            <module header="Issues">
-                <study study-order="1">Base Study</study>
-                <model-entries model-order="07" name="COA">1.00% different Between Actual and Agreed ratio</model-entries>
-            </module>
-            <module header="Issues">
-                <study study-order="2">Alternative Study</study>
-                <model-entries model-order="07" name="COA">1.00% different Between Actual and Agreed ratio</model-entries>
-            </module>
-            <module header="Issues">
-                <study study-order="1">Base Study</study>
-                <model-entries model-order="08" name="Allocations and Deliveries">378 incident(s) of shortage</model-entries>
-            </module>
-            <module header="Issues">
-                <study study-order="2">Alternative Study</study>
-                <model-entries model-order="08" name="Allocations and Deliveries">378 incident(s) of shortage</model-entries>
-            </module>
-            <module header="Issues">
-                <study study-order="1">Base Study</study>
-                <model-entries model-order="09" name="Mass Balance">0 incident(s) of off balance</model-entries>
-            </module>
-            <module header="Issues">
-                <study study-order="2">Alternative Study</study>
-                <model-entries model-order="09" name="Mass Balance">0 incident(s) of off balance</model-entries>
-            </module>
-        </executive-report-table>
-    </executive-report>
-    <assumption-changes>
-        <input input="Initial Conditions" common-records-different-data="1" records-only-in-base="1" records-only-in-alternative="0">
-            <input-type input-type="Common Records, Different Data">
-                <record>/CALSIM/S17/STORAGE/01JAN1920/1MON/2020D09E/</record>
-            </input-type>
-            <input-type input-type="Records only included in the Base Study">
-                <record>/CALSIM/A18/SURFACE-AREA/01JAN1920/1MON/2020D09E/</record>
-            </input-type>
-            <input-type input-type="Records only included in the Alt Study">
-            </input-type>
-        </input>
-        <input input="State Variables" common-records-different-data="1" records-only-in-base="0" records-only-in-alternative="0">
-            <input-type input-type="Common Records, Different Data">
-                <record>/CALSIM/DAY1/VOL-FRACTION/01JAN1950/1MON/2020D09E/</record>
-            </input-type>
-            <input-type input-type="Records only included in the Base Study">
-            </input-type>
-            <input-type input-type="Records only included in the Alt Study">
-            </input-type>
-        </input>
-    </assumption-changes>
-    <code-changes>
-        <header>
-            <files-updated>2</files-updated>
-            <files-added-to>2</files-added-to>
-            <files-deleted-from-base>2</files-deleted-from-base>
-        </header>
-        <section section-name="modified">
-            <type change-type="Hydrology">
-                <subtype change-subtype="Climate">
-                    <change>run\Lookup\wytypeTRIN.table</change>
-                    <change>run\Wytypes\wytypes.wresl</change>
-                </subtype>
-            </type>
-            <type change-type="Others">
-                <subtype change-subtype="Lookup Tables">
-                    <change>run\Lookup\wytypeTRIN.table</change>
-                </subtype>
-            </type>
-        </section>
-        <section section-name="new">
-            <type change-type="Hydrology">
-                <subtype change-subtype="Climate">
-                    <change>run\Lookup\SacValleyIndex.table</change>
-                </subtype>
-            </type>
-            <type change-type="Others">
-                <subtype change-subtype="Lookup Tables">
-                    <change>run\Lookup\SacValleyIndex.table</change>
-                </subtype>
-            </type>
-            <type change-type="Uncategorized">
-                <subtype change-subtype="Others">
-                    <change>run\Wytypes\addedToAlt.wresl</change>
-                </subtype>
-            </type>
-        </section>
-        <section section-name="deleted">
-            <type change-type="Hydrology">
-                <subtype change-subtype="Climate">
-                    <change>run\Lookup\eightriver.table</change>
-                </subtype>
-            </type>
-            <type change-type="Others">
-                <subtype change-subtype="Lookup Tables">
-                    <change>run\Lookup\eightriver.table</change>
-                </subtype>
-            </type>
-            <type change-type="Uncategorized">
-                <subtype change-subtype="Others">
-                    <change>run\Wytypes\addedToBase.wresl</change>
-                </subtype>
-            </type>
-        </section>
-    </code-changes>
-    <issues-report>
-        <base>
-            <issue-type name="NOD Reservoir Operation Issues">
-                <location>
-                    <issue/>
-                </location>
+   <report-header>
+      <author>Bryan Gray</author>
+      <subtitle>EPPT Prototype</subtitle>
+      <base name="CSII_Base" />
+      <alternatives>
+         <alternative name="CSII Alternative" />
+      </alternatives>
+   </report-header>
+   <executive-report>
+      <executive-report-header-entries>
+         <base-violations>1</base-violations>
+         <alternative-violations>1</alternative-violations>
+         <pct-change-violations>2% increase</pct-change-violations>
+         <avg-annual-export-previous>1</avg-annual-export-previous>
+         <avg-annual-export-current>2</avg-annual-export-current>
+         <annual-export-increase-decrease>increase</annual-export-increase-decrease>
+         <avg-cvp-nod-storage-previous>1</avg-cvp-nod-storage-previous>
+         <avg-cvp-nod-storage-current>2</avg-cvp-nod-storage-current>
+         <cvp-nod-storage-increase-decrease>decrease</cvp-nod-storage-increase-decrease>
+         <avg-swp-nod-storage-previous>1</avg-swp-nod-storage-previous>
+         <avg-swp-nod-storage-current>2</avg-swp-nod-storage-current>
+         <swp-nod-storage-increase-decrease>decrease</swp-nod-storage-increase-decrease>
+      </executive-report-header-entries>
+      <executive-report-table>
+         <module header="Issues">
+            <study study-order="1">Base Study</study>
+            <model-entries model-order="01" name="Model Inputs">N/A</model-entries>
+         </module>
+         <module header="Issues">
+            <study study-order="2">Alternative Study</study>
+            <model-entries model-order="01" name="Model Inputs">31 timeseries updated in SV&#xD;21 files changed&#xD;1 new file added&#xD;2 files deleted</model-entries>
+         </module>
+         <module header="Issues">
+            <study study-order="1">Base Study</study>
+            <model-entries model-order="02" name="NOD Reservoir Operation">0 incident(s) of below DP&#xD;0 incident(s) of above Flood&#xD;0 incident(s) of Spill</model-entries>
+         </module>
+         <module header="Issues">
+            <study study-order="2">Alternative Study</study>
+            <model-entries model-order="02" name="NOD Reservoir Operation">0 incident(s) of below DP&#xD;0 incident(s) of above Flood&#xD;0 incident(s) of Spill</model-entries>
+         </module>
+         <module header="Issues">
+            <study study-order="1">Base Study</study>
+            <model-entries model-order="03" name="Upstream Minimum Flow Requirements">1 incident(s) of violation</model-entries>
+         </module>
+         <module header="Issues">
+            <study study-order="2">Alternative Study</study>
+            <model-entries model-order="03" name="Upstream Minimum Flow Requirements">1 incident(s) of violation</model-entries>
+         </module>
+         <module header="Issues">
+            <study study-order="1">Base Study</study>
+            <model-entries model-order="04" name="NOD Weirs Operation">132 incident(s) of spilling</model-entries>
+         </module>
+         <module header="Issues">
+            <study study-order="2">Alternative Study</study>
+            <model-entries model-order="04" name="NOD Weirs Operation">132 incident(s) of spilling</model-entries>
+         </module>
+         <module header="Issues">
+            <study study-order="1">Base Study</study>
+            <model-entries model-order="05" name="NOD Groundwater Pumping">954 incident(s) of violation</model-entries>
+         </module>
+         <module header="Issues">
+            <study study-order="2">Alternative Study</study>
+            <model-entries model-order="05" name="NOD Groundwater Pumping">954 incident(s) of violation</model-entries>
+         </module>
+         <module header="Issues">
+            <study study-order="1">Base Study</study>
+            <model-entries model-order="06" name="Delta Operations">0 incident(s) of violation</model-entries>
+         </module>
+         <module header="Issues">
+            <study study-order="2">Alternative Study</study>
+            <model-entries model-order="06" name="Delta Operations">0 incident(s) of violation</model-entries>
+         </module>
+         <module header="Issues">
+            <study study-order="1">Base Study</study>
+            <model-entries model-order="07" name="COA">1.00% different Between Actual and Agreed ratio</model-entries>
+         </module>
+         <module header="Issues">
+            <study study-order="2">Alternative Study</study>
+            <model-entries model-order="07" name="COA">1.00% different Between Actual and Agreed ratio</model-entries>
+         </module>
+         <module header="Issues">
+            <study study-order="1">Base Study</study>
+            <model-entries model-order="08" name="Allocations and Deliveries">378 incident(s) of shortage</model-entries>
+         </module>
+         <module header="Issues">
+            <study study-order="2">Alternative Study</study>
+            <model-entries model-order="08" name="Allocations and Deliveries">378 incident(s) of shortage</model-entries>
+         </module>
+         <module header="Issues">
+            <study study-order="1">Base Study</study>
+            <model-entries model-order="09" name="Mass Balance">0 incident(s) of off balance</model-entries>
+         </module>
+         <module header="Issues">
+            <study study-order="2">Alternative Study</study>
+            <model-entries model-order="09" name="Mass Balance">0 incident(s) of off balance</model-entries>
+         </module>
+      </executive-report-table>
+   </executive-report>
+   <assumption-changes>
+      <input input="Initial Conditions" common-records-different-data="1" records-only-in-base="1" records-only-in-alternative="0">
+         <input-type input-type="Common Records, Different Data">
+            <record>/CALSIM/S17/STORAGE/01JAN1920/1MON/2020D09E/</record>
+         </input-type>
+         <input-type input-type="Records only included in the Base Study">
+            <record>/CALSIM/A18/SURFACE-AREA/01JAN1920/1MON/2020D09E/</record>
+         </input-type>
+      </input>
+      <input input="State Variables" common-records-different-data="1" records-only-in-base="0" records-only-in-alternative="0">
+         <input-type input-type="Common Records, Different Data">
+            <record>/CALSIM/DAY1/VOL-FRACTION/01JAN1950/1MON/2020D09E/</record>
+         </input-type>
+      </input>
+   </assumption-changes>
+   <code-changes>
+      <header>
+         <files-updated>2</files-updated>
+         <files-added-to>2</files-added-to>
+         <files-deleted-from-base>2</files-deleted-from-base>
+      </header>
+      <section section-name="modified" />
+      <section section-name="new">
+         <type change-type="Uncategorized">
+            <subtype change-subtype="Others">
+               <change>6C3__2017DCR_OldANN_NewSWPDemand_x64.launch</change>
+               <change>.project</change>
+               <change>CONV\CONV_SA.sty</change>
+               <change>CONV\CONVWSI.sty</change>
+               <change>CONV\__study.config</change>
+            </subtype>
+         </type>
+      </section>
+      <section section-name="deleted">
+         <type change-type="Uncategorized">
+            <subtype change-subtype="Others">
+               <change>QAQC_EPPT_base.pdf</change>
+               <change>QAQC_EPPT_NewScenarioRun 2371115.pdf</change>
+               <change>QAQC_EPPT_base cody.pdf</change>
+               <change>QAQC_EPPT_NewScenarioRun 7942420.pdf</change>
+               <change>QAQC_EPPT_NewScenarioRun 2.pdf</change>
+            </subtype>
+         </type>
+      </section>
+   </code-changes>
+   <issues-report>
+      <base>
+         <issue-type name="NOD Reservoir Operation Issues" number-of-issues="100">
+            <location>
+               <issue />
+            </location>
+         </issue-type>
+         <issue-type name="Upstream MIF Requirement Issues" number-of-issues="100">
+            <location>
+               <issue />
+            </location>
+         </issue-type>
+         <issue-type name="NOD Weirs Operation Issues" number-of-issues="100">
+            <location>
+               <issue />
+            </location>
+         </issue-type>
+         <issue-type name="NOD Groundwater Pumping Issues" number-of-issues="100">
+            <location>
+               <issue />
+            </location>
+         </issue-type>
+         <issue-type name="Delta Operation Issues" number-of-issues="100">
+            <location location="H&amp;S-Bank">
+               <issue>06/1934 (Water Year Type) @ 0 CFS | Standard</issue>
+               <issue>06/1935 (Water Year Type) @ 0 CFS | Standard</issue>
+            </location>
+         </issue-type>
+         <issue-type name="COA Issues" number-of-issues="100">
+            <location>
+               <issue />
+            </location>
+         </issue-type>
+         <issue-type name="Allocations and Deliveries Issues" number-of-issues="100">
+            <location>
+               <issue />
+            </location>
+         </issue-type>
+         <issue-type name="Mass Balance Issues" number-of-issues="100">
+            <location>
+               <issue />
+            </location>
+         </issue-type>
+      </base>
+      <alternatives>
+         <alternative alternative-name="Alternative">
+            <issue-type name="NOD Reservoir Operation Issues" number-of-issues="100">
+               <location location="Shasta Reservoir above Flood">
+                  <issue>03/1966 (Water Year Type) @4550 TAF</issue>
+               </location>
             </issue-type>
-            <issue-type name="Upstream MIF Requirement Issues">
-                <location>
-                    <issue/>
-                </location>
+            <issue-type name="Upstream MIF Requirement Issues" number-of-issues="100">
+               <location location="Trinity River below Lewiston MIF violations">
+                  <issue>05/1934 (Water Year Type) @200 CFS | Standard</issue>
+                  <issue>06/1977 (Water Year Type) @250 CFS | Standard</issue>
+               </location>
+               <location location="Navigation Control Point MIF violation">
+                  <issue>05/1934 (Water Year Type) @100 CFS | Standard</issue>
+               </location>
             </issue-type>
-            <issue-type name="NOD Weirs Operation Issues">
-                <location>
-                    <issue/>
-                </location>
+            <issue-type name="NOD Weirs Operation Issues" number-of-issues="100">
+               <location>
+                  <issue />
+               </location>
             </issue-type>
-            <issue-type name="NOD Groundwater Pumping Issues">
-                <location>
-                    <issue/>
-                </location>
+            <issue-type name="NOD Groundwater Pumping Issues" number-of-issues="100">
+               <location>
+                  <issue />
+               </location>
             </issue-type>
-            <issue-type name="Delta Operation Issues">
-                <location location="H&amp;S-Bank">
-                    <issue>06/1934 (Water Year Type) @ 0 CFS | Standard</issue>
-                    <issue>06/1935 (Water Year Type) @ 0 CFS | Standard</issue>
-                </location>
+            <issue-type name="Delta Operation Issues" number-of-issues="100">
+               <location location="H&amp;S violations - Bank">
+                  <issue>06/1934 (Water Year Type) @ 0 CFS | Standard</issue>
+                  <issue>06/1935 (Water Year Type) @ 0 CFS | Standard</issue>
+               </location>
+               <location location="D1641 violations - RS Salinity">
+                  <issue>04/1977 (Water Year Type) @155 mg/L | Standard</issue>
+               </location>
             </issue-type>
-            <issue-type name="COA Issues">
-                <location>
-                    <issue/>
-                </location>
+            <issue-type name="COA Issues" number-of-issues="100">
+               <location location="Months where difference of sharing ratio &gt; 5%">
+                  <issue>09/1992 (Water Year Type) @7%</issue>
+                  <issue>10/1992 (Water Year Type) @6%</issue>
+               </location>
             </issue-type>
-            <issue-type name="Allocations and Deliveries Issues">
-                <location>
-                    <issue/>
-                </location>
+            <issue-type name="Allocations and Deliveries Issues" number-of-issues="100">
+               <location>
+                  <issue />
+               </location>
             </issue-type>
-            <issue-type name="Mass Balance Issues">
-                <location>
-                    <issue/>
-                </location>
+            <issue-type name="Mass Balance Issues" number-of-issues="100">
+               <location>
+                  <issue />
+               </location>
             </issue-type>
-        </base>
-        <alternatives>
-            <alternative alternative-name="Alternative">
-                <issue-type name="NOD Reservoir Operation Issues">
-                    <location location="Shasta Reservoir above Flood">
-                        <issue>03/1966 (Water Year Type) @4550 TAF</issue>
-                    </location>
-                </issue-type>
-                <issue-type name="Upstream MIF Requirement Issues">
-                    <location location="Trinity River below Lewiston MIF violations">
-                        <issue>05/1934 (Water Year Type) @200 CFS | Standard</issue>
-                        <issue>06/1977 (Water Year Type) @250 CFS | Standard</issue>
-                    </location>
-                    <location location="Navigation Control Point MIF violation">
-                        <issue>05/1934 (Water Year Type) @100 CFS | Standard</issue>
-                    </location>
-                </issue-type>
-                <issue-type name="NOD Weirs Operation Issues">
-                    <location>
-                        <issue/>
-                    </location>
-                </issue-type>
-                <issue-type name="NOD Groundwater Pumping Issues">
-                    <location>
-                        <issue/>
-                    </location>
-                </issue-type>
-                <issue-type name="Delta Operation Issues">
-                    <location location="H&amp;S violations - Bank">
-                        <issue>06/1934 (Water Year Type) @ 0 CFS | Standard</issue>
-                        <issue>06/1935 (Water Year Type) @ 0 CFS | Standard</issue>
-                    </location>
-                    <location location="D1641 violations - RS Salinity">
-                        <issue>04/1977 (Water Year Type) @155 mg/L | Standard</issue>
-                    </location>
-                </issue-type>
-                <issue-type name="COA Issues">
-                    <location location="Months where difference of sharing ratio &gt; 5%">
-                        <issue>09/1992 (Water Year Type) @7%</issue>
-                        <issue>10/1992 (Water Year Type) @6%</issue>
-                    </location>
-                </issue-type>
-                <issue-type name="Allocations and Deliveries Issues">
-                    <location>
-                        <issue/>
-                    </location>
-                </issue-type>
-                <issue-type name="Mass Balance Issues">
-                    <location>
-                        <issue/>
-                    </location>
-                </issue-type>
-            </alternative>
-        </alternatives>
-    </issues-report>
+         </alternative>
+      </alternatives>
+   </issues-report>
    <standard-summary-statistics>
       <operation-type operation-order="1" operation-type="CVP">
          <reservoir reservoir-order="1" reservor="Trinity">
@@ -583,4 +552,102 @@
          </reservoir>
       </operation-type>
    </standard-summary-statistics>
+   <controls-for-reservoir-operation>
+      <reservoir reservoir-order="1" reservoir="Trinity Storage">
+         <run runorder="1" run="Base">
+            <equality equ-order="1" equ="LT &gt; or No">
+               <pool poolorder="1" poolname="Dead Pool">0</pool>
+               <pool poolorder="2" poolname="Capacity">0</pool>
+               <pool poolorder="3" poolname="Spill">N/A</pool>
+               <pool poolorder="4" poolname="Flood Level">823</pool>
+               <pool poolorder="5" poolname="RC Level">468</pool>
+            </equality>
+            <equality equ-order="2" equ="=">
+               <pool poolorder="1" poolname="Dead Pool">0</pool>
+               <pool poolorder="2" poolname="Capacity">4</pool>
+               <pool poolorder="3" poolname="Spill">0</pool>
+               <pool poolorder="4" poolname="Flood Level">160</pool>
+               <pool poolorder="5" poolname="RC Level">20</pool>
+            </equality>
+            <equality equ-order="3" equ="GT &lt; or Yes">
+               <pool poolorder="1" poolname="Dead Pool">984</pool>
+               <pool poolorder="2" poolname="Capacity">980</pool>
+               <pool poolorder="3" poolname="Spill">984</pool>
+               <pool poolorder="4" poolname="Flood Level">1</pool>
+               <pool poolorder="5" poolname="RC Level">496</pool>
+            </equality>
+         </run>
+         <run runorder="2" run="Alternative">
+            <equality equ-order="1" equ="LT &gt; or No">
+               <pool poolorder="1" poolname="Dead Pool">0</pool>
+               <pool poolorder="2" poolname="Capacity">0</pool>
+               <pool poolorder="3" poolname="Spill">N/A</pool>
+               <pool poolorder="4" poolname="Flood Level">823</pool>
+               <pool poolorder="5" poolname="RC Level">468</pool>
+            </equality>
+            <equality equ-order="2" equ="=">
+               <pool poolorder="1" poolname="Dead Pool">0</pool>
+               <pool poolorder="2" poolname="Capacity">4</pool>
+               <pool poolorder="3" poolname="Spill">0</pool>
+               <pool poolorder="4" poolname="Flood Level">160</pool>
+               <pool poolorder="5" poolname="RC Level">20</pool>
+            </equality>
+            <equality equ-order="3" equ="GT &lt; or Yes">
+               <pool poolorder="1" poolname="Dead Pool">984</pool>
+               <pool poolorder="2" poolname="Capacity">980</pool>
+               <pool poolorder="3" poolname="Spill">984</pool>
+               <pool poolorder="4" poolname="Flood Level">1</pool>
+               <pool poolorder="5" poolname="RC Level">496</pool>
+            </equality>
+         </run>
+      </reservoir>
+      <reservoir reservoir-order="2" reservoir="Shasta Storage">
+         <run runorder="1" run="Base">
+            <equality equ-order="1" equ="LT &gt; or No">
+               <pool poolorder="1" poolname="Dead Pool">0</pool>
+               <pool poolorder="2" poolname="Capacity">0</pool>
+               <pool poolorder="3" poolname="Spill">N/A</pool>
+               <pool poolorder="4" poolname="Flood Level">823</pool>
+               <pool poolorder="5" poolname="RC Level">468</pool>
+            </equality>
+            <equality equ-order="2" equ="=">
+               <pool poolorder="1" poolname="Dead Pool">0</pool>
+               <pool poolorder="2" poolname="Capacity">4</pool>
+               <pool poolorder="3" poolname="Spill">0</pool>
+               <pool poolorder="4" poolname="Flood Level">160</pool>
+               <pool poolorder="5" poolname="RC Level">20</pool>
+            </equality>
+            <equality equ-order="3" equ="GT &lt; or Yes">
+               <pool poolorder="1" poolname="Dead Pool">984</pool>
+               <pool poolorder="2" poolname="Capacity">980</pool>
+               <pool poolorder="3" poolname="Spill">984</pool>
+               <pool poolorder="4" poolname="Flood Level">1</pool>
+               <pool poolorder="5" poolname="RC Level">496</pool>
+            </equality>
+         </run>
+         <run runorder="2" run="Alternative">
+            <equality equ-order="1" equ="LT &gt; or No">
+               <pool poolorder="1" poolname="Dead Pool">0</pool>
+               <pool poolorder="2" poolname="Capacity">0</pool>
+               <pool poolorder="3" poolname="Spill">N/A</pool>
+               <pool poolorder="4" poolname="Flood Level">823</pool>
+               <pool poolorder="5" poolname="RC Level">468</pool>
+            </equality>
+            <equality equ-order="2" equ="=">
+               <pool poolorder="1" poolname="Dead Pool">0</pool>
+               <pool poolorder="2" poolname="Capacity">4</pool>
+               <pool poolorder="3" poolname="Spill">0</pool>
+               <pool poolorder="4" poolname="Flood Level">160</pool>
+               <pool poolorder="5" poolname="RC Level">20</pool>
+            </equality>
+            <equality equ-order="3" equ="GT &lt; or Yes">
+               <pool poolorder="1" poolname="Dead Pool">984</pool>
+               <pool poolorder="2" poolname="Capacity">980</pool>
+               <pool poolorder="3" poolname="Spill">984</pool>
+               <pool poolorder="4" poolname="Flood Level">1</pool>
+               <pool poolorder="5" poolname="RC Level">496</pool>
+            </equality>
+         </run>
+      </reservoir>
+   </controls-for-reservoir-operation>
 </qaqc-report>
