@@ -21,8 +21,7 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
-import java.io.File;
-import java.net.URL;
+
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
@@ -55,7 +54,7 @@ public class ExecutiveReportTestBase extends TestQAQCReportBase
 
 
 
-        erWriter.appendExecutiveReportTableElement(allRuns, runsToViolations, modules,  null, false, doc);
+        erWriter.createExecutiveReportTableElement(allRuns, runsToViolations, modules,  null, false, doc);
         Path path = writeXmlFile(doc);
 
         //read the xml file to test
@@ -99,7 +98,7 @@ public class ExecutiveReportTestBase extends TestQAQCReportBase
         Map<EpptScenarioRun, Map<SubModule, List<FlagViolation>>> runsToViolations = dtsProcessor.processDSSFiles(allRuns, getDssFilePathsForSameModel());
 
 
-        erWriter.appendExecutiveReportTableElement(allRuns, runsToViolations, modules,statsForAllAlternatives, true, doc);
+        erWriter.createExecutiveReportTableElement(allRuns, runsToViolations, modules,statsForAllAlternatives, true, doc);
         Path path = writeXmlFile(doc);
 
         //read the xml file to test

@@ -19,14 +19,10 @@ import org.junit.jupiter.api.Test;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import java.net.URL;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.logging.Logger;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -56,7 +52,7 @@ public class TestModelInputsRow extends ExecutiveReportTestBase
 
 
 
-        erWriter.appendExecutiveReportTableElement(allRuns, runsToViolations, modules,  null, false, doc);
+        erWriter.createExecutiveReportTableElement(allRuns, runsToViolations, modules,  null, false, doc);
         Path path = writeXmlFile(doc);
 
         //read the xml file to test

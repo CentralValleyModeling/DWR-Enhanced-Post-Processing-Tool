@@ -49,9 +49,9 @@ public class CodeChangesXMLCreator
     private static final String SECTION = "section";
     private static final String SECTION_NAME = "section-name";
 
-    private static final String MOD_FILE = "Modified Files";
-    private static final String STAR_NAME = "New";
-    private static final String STAR_DELETED = "Deleted";
+    private static final String MOD_FILE = "modified";
+    private static final String STAR_NAME = "new";
+    private static final String STAR_DELETED = "deleted";
     private static final String UNCATEGORIZED = "Uncategorized";
     private static final String OTHERS = "Others";
 
@@ -64,7 +64,7 @@ public class CodeChangesXMLCreator
     private final Set<Path> _fileDeletedFromBaseInMaster = new HashSet<>();
     private final Set<Path> _fileDeletedFromBaseNotInMaster = new HashSet<>();
 
-    public void appendCodeChangesElement(Path csvPath, Path baseOutputPath, Path altOutputPath, String altName, Document document) throws EpptReportException, IOException
+    public Element createCodeChangesElement(Path csvPath, Path baseOutputPath, Path altOutputPath, String altName, Document document) throws EpptReportException, IOException
     {
 
         CodeChangesDataProcessor processor = new CodeChangesDataProcessor(csvPath);
@@ -89,7 +89,7 @@ public class CodeChangesXMLCreator
         Element deleteSectionElem = createSection(STAR_DELETED, codeChangesTypes,_fileDeletedFromBaseInMaster, _fileDeletedFromBaseNotInMaster, document);
         codeChangesElemRoot.appendChild(deleteSectionElem);
 
-        document.appendChild(codeChangesElemRoot);
+        return codeChangesElemRoot;
     }
 
 

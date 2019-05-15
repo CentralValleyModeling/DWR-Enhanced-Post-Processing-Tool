@@ -18,7 +18,6 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
-import org.w3c.dom.NodeList;
 
 public class TestCodeChanges extends TestCodeChangesBase
 {
@@ -36,7 +35,7 @@ public class TestCodeChanges extends TestCodeChangesBase
     {
         Document doc = getDoc();
         CodeChangesXMLCreator creator = new CodeChangesXMLCreator();
-        creator.appendCodeChangesElement(getCodeChangesCsvPath(),getBaseOutputPath(),getAltOutputPath(),"Alternative 1",doc);
+        creator.createCodeChangesElement(getCodeChangesCsvPath(),getBaseOutputPath(),getAltOutputPath(),"Alternative 1",doc);
 
         Path path = writeXmlFile(doc);
 

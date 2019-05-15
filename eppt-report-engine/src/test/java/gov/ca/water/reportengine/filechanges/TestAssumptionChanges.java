@@ -19,7 +19,6 @@ import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
 import java.nio.file.Path;
-import java.util.List;
 
 public class TestAssumptionChanges extends TestAssumptionChangesBase
 {
@@ -56,7 +55,7 @@ public class TestAssumptionChanges extends TestAssumptionChangesBase
 
         FileChangesStatistics stats = new FileChangesStatistics(initCondStats, stateVarStats, null);
 
-        assumpCreater.appendAssumptionChangesElement(doc, stats);
+        assumpCreater.createAssumptionChangesElement(doc, stats);
 
         Path path = writeXmlFile(doc);
 

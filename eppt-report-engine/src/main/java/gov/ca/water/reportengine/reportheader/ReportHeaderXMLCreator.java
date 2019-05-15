@@ -35,12 +35,11 @@ public class ReportHeaderXMLCreator
     }
 
 
-    public Element appendReportHeaderElement(ReportHeader reportHeader, Document document)
+    public Element createReportHeaderElement(ReportHeader reportHeader, Document document)
     {
         Element root = null;
 
         root = document.createElement(REPORT_HEADER);
-        document.appendChild(root);
 
         Element authorElem = document.createElement(AUTHOR);
         authorElem.appendChild(document.createTextNode(reportHeader.getAuthor()));

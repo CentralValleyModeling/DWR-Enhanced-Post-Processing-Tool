@@ -41,14 +41,14 @@ public class DetailedIssuesXMLCreator
     private static final String ALTERNATIVE_NAME = "alternative-name";
 
 
-    public void appendDetailedIssuesElement(Map<EpptScenarioRun, Map<Module, List<DetailedIssueViolation>>> runsToModViolations,
-                                            EpptScenarioRun baseRun,List<EpptScenarioRun> altRuns,List<Module> modules, Document document)
+    public Element createDetailedIssuesElement(Map<EpptScenarioRun, Map<Module, List<DetailedIssueViolation>>> runsToModViolations,
+                                               EpptScenarioRun baseRun, List<EpptScenarioRun> altRuns, List<Module> modules, Document document)
     {
         Element rootElem = document.createElement(ISSUES_REPORT);
 
-        if(runsToModViolations.containsKey(baseRun))
+        if (runsToModViolations.containsKey(baseRun))
         {
-            Element baseDetailedIssues = createBaseDetailedIssues(runsToModViolations.get(baseRun),modules, document);
+            Element baseDetailedIssues = createBaseDetailedIssues(runsToModViolations.get(baseRun), modules, document);
             rootElem.appendChild(baseDetailedIssues);
         }
         else
@@ -58,9 +58,9 @@ public class DetailedIssuesXMLCreator
         }
 
         Element alternativesElem = document.createElement(ALTERNATIVES);
-        for(EpptScenarioRun run : altRuns)
+        for (EpptScenarioRun run : altRuns)
         {
-            if(runsToModViolations.containsKey(run))
+            if (runsToModViolations.containsKey(run))
             {
                 Element alternativeDetailedIssues = createAlternativeDetailedIssues(run.getName(), runsToModViolations.get(run),
                         modules, document);
@@ -69,55 +69,87 @@ public class DetailedIssuesXMLCreator
         }
 
         rootElem.appendChild(alternativesElem);
-        document.appendChild(rootElem);
+        return rootElem;
     }
 
-    private Element createAlternativeDetailedIssues(String altName, Map<Module, List<DetailedIssueViolation>> modsToViolations,List<Module> modules, Document document)
+    private Element createAlternativeDetailedIssues(String altName, Map<Module, List<DetailedIssueViolation>> modsToViolations, List<Module> modules, Document document)
     {
         Element altElem = document.createElement(ALTERNATIVE);
         altElem.setAttribute(ALTERNATIVE_NAME, altName);
-        for(Module mod : modules)
+        for (Module mod : modules)
         {
             List<DetailedIssueViolation> divs = modsToViolations.get(mod);
-            altElem.appendChild(createIssueTypeElement(mod,divs, document));
+            altElem.appendChild(createIssueTypeElement(mod, divs, document));
         }
         return altElem;
     }
 
-    private Element createBaseDetailedIssues(Map<Module, List<DetailedIssueViolation>> modsToViolations,List<Module> modules, Document document)
+    private Element createBaseDetailedIssues(Map<Module, List<DetailedIssueViolation>> modsToViolations, List<Module> modules, Document document)
     {
         Element baseElem = document.createElement(BASE);
-        for(Module mod : modules)
+        for (Module mod : modules)
         {
             List<DetailedIssueViolation> divs = modsToViolations.get(mod);
-            baseElem.appendChild(createIssueTypeElement(mod,divs, document));
+            baseElem.appendChild(createIssueTypeElement(mod, divs, document));
         }
         return baseElem;
     }
 
-    private Element createIssueTypeElement(Module mod,List<DetailedIssueViolation> violations, Document document)
+    private Element createIssueTypeElement(Module mod, List<DetailedIssueViolation> violations, Document document)
     {
         Element issuesTypeElem = document.createElement(ISSUES_TYPE);
         issuesTypeElem.setAttribute(NAME, mod.getName());
 
-        for(DetailedIssueViolation div : violations)
+        if (violations.isEmpty())
         {
-            Element locationElement = createLocationElement(div, document);
-            issuesTypeElem.appendChild(locationElement);
+            //we still want an empty location element
+            Element emptyLocationElement = createEmptyLocationElement(document);
+            issuesTypeElem.appendChild(emptyLocationElement);
+        }
+        else
+        {
+            for (DetailedIssueViolation div : violations)
+            {
+                Element locationElement = createLocationElement(div, document);
+                issuesTypeElem.appendChild(locationElement);
+            }
         }
 
         return issuesTypeElem;
     }
 
+    private Element createEmptyLocationElement(Document document)
+    {
+        Element locationElem = document.createElement(LOCATION);
+        Element issueElement = createEmptyIssueElement(document);
+        locationElem.appendChild(issueElement);
+
+        return locationElem;
+    }
+
+    private Element createEmptyIssueElement(Document document)
+    {
+        Element issueElem = document.createElement(ISSUE);
+        return issueElem;
+    }
 
     private Element createLocationElement(DetailedIssueViolation div, Document document)
     {
         Element locationElem = document.createElement(LOCATION);
-        locationElem.setAttribute(NAME, div.getTitle());
-        for(DetailedIssueViolation.Issue issue : div.getIssues())
+        locationElem.setAttribute(LOCATION, div.getTitle());
+
+        if(div.getIssues().isEmpty())
         {
-            Element issueElement = createIssueElement(issue.toString(), document);
+            Element issueElement = createEmptyIssueElement( document);
             locationElem.appendChild(issueElement);
+        }
+        else
+        {
+            for (DetailedIssueViolation.Issue issue : div.getIssues())
+            {
+                Element issueElement = createIssueElement(issue.toString(), document);
+                locationElem.appendChild(issueElement);
+            }
         }
         return locationElem;
     }

@@ -18,8 +18,6 @@ import gov.ca.water.reportengine.executivereport.DTSProcessor;
 import gov.ca.water.reportengine.executivereport.FlagViolation;
 import gov.ca.water.reportengine.executivereport.Module;
 import gov.ca.water.reportengine.executivereport.SubModule;
-import gov.ca.water.reportengine.reportreaders.WaterYearTableReader;
-import gov.ca.water.reportengine.reportreaders.WaterYearType;
 import org.junit.jupiter.api.Test;
 import org.w3c.dom.Document;
 
@@ -57,7 +55,7 @@ public class TestDetailedIssueReport extends TestDetailedIssuesReportBase
         Map<EpptScenarioRun, Map<Module, List<DetailedIssueViolation>>> runsToDetailedViolations = processor.process();
 
         DetailedIssuesXMLCreator xmlCreator = new DetailedIssuesXMLCreator();
-        xmlCreator.appendDetailedIssuesElement(runsToDetailedViolations, baseScenarioRun, altScenarioRuns, modules,doc);
+        xmlCreator.createDetailedIssuesElement(runsToDetailedViolations, baseScenarioRun, altScenarioRuns, modules,doc);
 
         Path path = writeXmlFile(doc);
 

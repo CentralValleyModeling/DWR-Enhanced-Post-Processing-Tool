@@ -16,7 +16,6 @@ import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
@@ -30,6 +29,7 @@ import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
 import com.google.common.flogger.FluentLogger;
+import gov.ca.water.calgui.bo.GUILinksAllModelsBO;
 import gov.ca.water.calgui.project.EpptScenarioRun;
 import gov.ca.water.reportengine.detailedissues.DetailedIssue;
 import gov.ca.water.reportengine.detailedissues.DetailedIssueProcessor;
@@ -49,8 +49,8 @@ import gov.ca.water.reportengine.filechanges.CodeChangesXMLCreator;
 import gov.ca.water.reportengine.filechanges.FileChangesStatistics;
 import gov.ca.water.reportengine.reportheader.ReportHeader;
 import gov.ca.water.reportengine.reportheader.ReportHeaderXMLCreator;
-import gov.ca.water.reportengine.reportreaders.WaterYearTableReader;
 import org.w3c.dom.Document;
+import org.w3c.dom.Element;
 
 import static gov.ca.water.calgui.constant.Constant.CONFIG_DIR;
 import static gov.ca.water.calgui.constant.Constant.CSV_EXT;
@@ -59,8 +59,8 @@ public class EPPTReport
 {
 	private static final FluentLogger LOGGER = FluentLogger.forEnclosingClass();
 
-	private static final String INIT_COND_CSV = CONFIG_DIR + "/AssumptionChangesInitialConditionsDSSPaths" + CSV_EXT;
-	private static final String STATE_VAR_CSV = CONFIG_DIR + "/AssumptionChangesStateVariablesDSSPaths" + CSV_EXT;
+	private static final String INIT_COND_CSV = CONFIG_DIR + "/AssumpChangesInitCond" + CSV_EXT;
+	private static final String STATE_VAR_CSV = CONFIG_DIR + "/AssumpChangesStateVar" + CSV_EXT;
 	private static final String MODULES_CSV = CONFIG_DIR + "/ExecutiveReportModulesCSV" + CSV_EXT;
 	private static final String DETAILS_CSV = CONFIG_DIR + "/Details" + CSV_EXT;
 	private static final String CODE_CHANGES_CSV = CONFIG_DIR + "/CodeChangesDSSPaths" + CSV_EXT;
@@ -110,32 +110,49 @@ public class EPPTReport
 			//create the file change stats. One for each alt to the base in order of alts
 			List<FileChangesStatistics> fileChangeStats = getFileChangeStatsList();
 
+			List<EpptScenarioRun> allRuns = new ArrayList<>();
+			allRuns.add(_baseRun);
+			allRuns.addAll(_altRuns);
+			DTSProcessor dtsProcessor = new DTSProcessor(_modules);
+			Map<EpptScenarioRun, Map<SubModule, List<FlagViolation>>> runsToFlagViolations =
+					dtsProcessor.processDSSFiles(allRuns, getPostProcessDSSPathsForAllRuns());
+
+			boolean canShowAssumptionChanges = canShowAssumptionChanges();
+			//create the rootnode
+			String canShow = "true";
+			if(canShowAssumptionChanges == false)
+			{
+				canShow = "false";
+			}
+			Element rootElement = doc.createElement("qaqc-report");
+			rootElement.setAttribute("alternative-count", Integer.toString(_altRuns.size()));
+			rootElement.setAttribute("show-assumption-changes", canShow);
+			doc.appendChild(rootElement);
 
 			//create and add the report title page
 			LOGGER.at(Level.INFO).log("Generate QAQC Title page data");
-			addTitlePageToDoc(doc);
-
+			rootElement.appendChild( createTitlePageElem(doc));
 
 			//code changes and assump have to be the same model
 
-
 			//create and add the executive report
 			LOGGER.at(Level.INFO).log("Generate QAQC Executive Summary data");
-			addExecutiveReportToDoc(fileChangeStats, doc);
+			rootElement.appendChild( createExecutiveReportElem(runsToFlagViolations, fileChangeStats, doc));
 
 			//create and add the detailed issues
 			LOGGER.at(Level.INFO).log("Generate QAQC Detailed Issues data");
-			addDetailedIssueReport(doc);
+			rootElement.appendChild( createDetailedIssueReportElem(runsToFlagViolations, doc));
 
 			//create and add the assumption changes
-			LOGGER.at(Level.INFO).log("Generate QAQC Assumption Changes data");
-			addAssumptionChangesToDoc(fileChangeStats.get(0),
-					doc);//i need to rethink how i am doing these stats. This one doesn't support multiple alts
+			if(!fileChangeStats.isEmpty())
+			{
+				LOGGER.at(Level.INFO).log("Generate QAQC Assumption Changes data");
+				rootElement.appendChild( createAssumptionChangesElem(fileChangeStats.get(0), doc));
 
-			//create and add the code changes
-			LOGGER.at(Level.INFO).log("Generate QAQC Code Changes data");
-			addCodeChangesToDoc(_baseRun.getOutputPath(), _altRuns.get(0), doc);
-
+				//create and add the code changes
+				LOGGER.at(Level.INFO).log("Generate QAQC Code Changes data");
+				rootElement.appendChild( createCodeChangesElem(_baseRun.getOutputPath(), _altRuns.get(0), doc));
+			}
 			LOGGER.at(Level.INFO).log("Writing data to XML: {0}", _pathToWriteOut);
 			writeXmlFile(doc);
 		}
@@ -143,6 +160,22 @@ public class EPPTReport
 		{
 			throw new QAQCReportException("Error in report generation", e);
 		}
+	}
+
+	private boolean canShowAssumptionChanges()
+	{
+		boolean retval = false;
+		if(!_altRuns.isEmpty())
+		{
+			GUILinksAllModelsBO.Model baseModel = _baseRun.getModel();
+			GUILinksAllModelsBO.Model altModel = _altRuns.get(0).getModel();
+			if(baseModel == altModel)
+			{
+				retval = true;
+			}
+		}
+		return retval;
+
 	}
 
 	private void writeXmlFile(Document doc) throws TransformerException
@@ -155,21 +188,17 @@ public class EPPTReport
 		transformer.transform(domSource, streamResult);
 	}
 
-	private void addDetailedIssueReport(Document doc) throws EpptReportException
+	private Element createDetailedIssueReportElem(Map<EpptScenarioRun, Map<SubModule, List<FlagViolation>>> runsToFlagViolations, Document doc) throws EpptReportException
 	{
-		DTSProcessor dtsProcessor = new DTSProcessor(_modules);
 		List<EpptScenarioRun> allRuns = new ArrayList<>();
 		allRuns.add(_baseRun);
 		allRuns.addAll(_altRuns);
-
-		Map<EpptScenarioRun, Map<SubModule, List<FlagViolation>>> runsToFlagViolations =
-				dtsProcessor.processDSSFiles(allRuns, getPostProcessDSSPathsForAllRuns());
-
-		DetailedIssueProcessor processor = new DetailedIssueProcessor(_wyTypeTable, _wyNameLookup, runsToFlagViolations, _modules, _allDetailedIssues, allRuns, true);
+		DetailedIssueProcessor processor =
+				new DetailedIssueProcessor(_wyTypeTable, _wyNameLookup, runsToFlagViolations, _modules, _allDetailedIssues, allRuns, true);
 		Map<EpptScenarioRun, Map<Module, List<DetailedIssueViolation>>> runsToDetailedViolations = processor.process();
 
 		DetailedIssuesXMLCreator xmlCreator = new DetailedIssuesXMLCreator();
-		xmlCreator.appendDetailedIssuesElement(runsToDetailedViolations, _baseRun, _altRuns, _modules, doc);
+		return xmlCreator.createDetailedIssuesElement(runsToDetailedViolations, _baseRun, _altRuns, _modules, doc);
 	}
 
 	private List<Path> getPostProcessDSSPathsForAllRuns()
@@ -184,36 +213,33 @@ public class EPPTReport
 		return retval;
 	}
 
-	private void addCodeChangesToDoc(Path baseOutputPath, EpptScenarioRun altRun, Document doc) throws IOException, EpptReportException
+	private Element createCodeChangesElem(Path baseOutputPath, EpptScenarioRun altRun, Document doc) throws IOException, EpptReportException
 	{
 		CodeChangesXMLCreator creator = new CodeChangesXMLCreator();
-		creator.appendCodeChangesElement(Paths.get(CODE_CHANGES_CSV), baseOutputPath, altRun.getOutputPath(), altRun.getName(), doc);
+		return creator.createCodeChangesElement(Paths.get(CODE_CHANGES_CSV), baseOutputPath, altRun.getOutputPath(), altRun.getName(), doc);
 	}
 
-	private void addAssumptionChangesToDoc(FileChangesStatistics fileChangesStatistics, Document doc)
+	private Element createAssumptionChangesElem(FileChangesStatistics fileChangesStatistics, Document doc)
 	{
 		AssumptionChangesXMLCreator assumpCreater = new AssumptionChangesXMLCreator();
-		assumpCreater.appendAssumptionChangesElement(doc, fileChangesStatistics);
-
+		return assumpCreater.createAssumptionChangesElement(doc, fileChangesStatistics);
 	}
 
-	private void addExecutiveReportToDoc(List<FileChangesStatistics> fileChangesStatistics, Document doc) throws EpptReportException
+	private Element createExecutiveReportElem(Map<EpptScenarioRun, Map<SubModule, List<FlagViolation>>> runsToFlagViolations, List<FileChangesStatistics> fileChangesStatistics, Document doc)
 	{
+		Element execRootElem = doc.createElement("executive-report");
 		ExecutiveReportXMLCreator erWriter = new ExecutiveReportXMLCreator();
 
 		List<EpptScenarioRun> allRuns = new ArrayList<>();
 		allRuns.add(_baseRun);
 		allRuns.addAll(_altRuns);
 
-		DTSProcessor dtsProcessor = new DTSProcessor(_modules);
-		Map<EpptScenarioRun, Map<SubModule, List<FlagViolation>>> runsToViolations = new HashMap<>();//this is a list of the post process dss paths
-
-
-		erWriter.appendExecutiveReportTableElement(allRuns, runsToViolations, _modules, fileChangesStatistics, true, doc);
-		runsToViolations = dtsProcessor.processDSSFiles(allRuns, getPostProcessDSSPathsForAllRuns());
+		Element executiveReportTableElement = erWriter.createExecutiveReportTableElement(allRuns, runsToFlagViolations, _modules, fileChangesStatistics, true, doc);
+		execRootElem.appendChild(executiveReportTableElement);
+		return execRootElem;
 	}
 
-	private void addTitlePageToDoc(Document doc)
+	private Element createTitlePageElem(Document doc)
 	{
 		List<String> altNames = new ArrayList<>();
 		for(EpptScenarioRun altRun : _altRuns)
@@ -222,7 +248,7 @@ public class EPPTReport
 		}
 		ReportHeader rh = new ReportHeader(_author, _subtitle, _baseRun.getName(), altNames);
 		ReportHeaderXMLCreator rhWriter = new ReportHeaderXMLCreator();
-		rhWriter.appendReportHeaderElement(rh, doc);
+		return rhWriter.createReportHeaderElement(rh, doc);
 	}
 
 
@@ -243,6 +269,7 @@ public class EPPTReport
 		Path baseOutputPath = _baseRun.getOutputPath();
 		for(EpptScenarioRun altRun : _altRuns)
 		{
+
 			AssumptionChangesDataProcessor initProcessor = new AssumptionChangesDataProcessor(Paths.get(INIT_COND_CSV), _tolerance);
 			AssumptionChangesStatistics initCondStats =
 					initProcessor.processAssumptionChanges(baseInitDSSPath, altRun.getDssContainer().getIvDssFile().getDssPath());
@@ -259,6 +286,15 @@ public class EPPTReport
 		}
 
 		return statsForAllAlternatives;
+	}
+
+	private Path getAssumpChangeInitPath(EpptScenarioRun run)
+	{
+		if(run.getModel().toString().equals("CalSim2"))
+		{
+
+		}
+		return null;
 	}
 
 }

@@ -62,13 +62,8 @@ public class DTSProcessor
 
 		for(int i = 0; i < runs.size(); i++)
 		{
-			//DTSProcessor processor = new DTSProcessor(_modules);
-			Map<SubModule, List<FlagViolation>> subModuleToViolations = processDSSFile(runs.get(i), dssFiles.get(i));
+			Map<SubModule, List<FlagViolation>> subModuleToViolations = processDSSFile( dssFiles.get(i));
 			runToViolations.put(runs.get(i), subModuleToViolations);
-			//now the modules have the violation numbers
-
-			//List<Element> scenarioElements = createScenarioElements(modules, getAssumptionChangesForScenario(modelInputStats, i), i, sameModel, doc);
-			//scenarioElements.forEach(execReportTableElem::appendChild);
 		}
 		return runToViolations;
 	}
@@ -79,7 +74,7 @@ public class DTSProcessor
 	 * @param dssFile
 	 * @throws Exception
 	 */
-	private Map<SubModule, List<FlagViolation>> processDSSFile(EpptScenarioRun run, Path dssFile) throws EpptReportException
+	private Map<SubModule, List<FlagViolation>> processDSSFile( Path dssFile) throws EpptReportException
 	{
 		Map<SubModule, List<FlagViolation>> subModToViolations = new HashMap<>();
 		HecDss hD = null;

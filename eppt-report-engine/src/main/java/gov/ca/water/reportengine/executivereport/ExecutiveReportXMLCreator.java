@@ -27,7 +27,7 @@ import java.util.stream.Collectors;
 public class ExecutiveReportXMLCreator
 {
     private static final String TABLE_HEADER = "executive-report-table";
-    static final String NEW_LINE = "&#xD;";
+    static final String NEW_LINE = "\n"; //"&#xD;";
 
     static final String MODULE = "module";
     static final String MODEL_ENTRIES = "model-entries";
@@ -82,9 +82,9 @@ public class ExecutiveReportXMLCreator
      * @return
      * @throws Exception
      */
-    public void appendExecutiveReportTableElement(List<EpptScenarioRun> runs, Map<EpptScenarioRun, Map<SubModule,
-            List<FlagViolation>>> runsToViolations, List<Module> modules,
-                                                  List<FileChangesStatistics> modelInputStats, boolean sameModel, Document doc)
+    public Element createExecutiveReportTableElement(List<EpptScenarioRun> runs,
+                                                  Map<EpptScenarioRun, Map<SubModule, List<FlagViolation>>> runsToViolations,
+                                                  List<Module> modules, List<FileChangesStatistics> modelInputStats, boolean sameModel, Document doc)
     {
         if (runs.size() == 1)
         {
@@ -105,7 +105,7 @@ public class ExecutiveReportXMLCreator
             List<Element> scenarioElements = createScenarioElements(subModToViolations, modules, assumpChanges, i, sameModel, doc);
             scenarioElements.forEach(execReportTableElem::appendChild);
         }
-
+        return execReportTableElem;
 //        doc.appendChild(execReportTableElem);
 
     }

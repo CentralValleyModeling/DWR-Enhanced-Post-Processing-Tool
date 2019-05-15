@@ -44,7 +44,7 @@ public class AssumptionChangesXMLCreator
 
 
 
-    public void appendAssumptionChangesElement(Document document, FileChangesStatistics stats)
+    public Element createAssumptionChangesElement(Document document, FileChangesStatistics stats)
     {
         Element assumptionChangesRoot = document.createElement(ASSUMPTION_CHANGES);
         AssumptionChangesStatistics initAssumptionStats = stats.getInitAssumptionStats();
@@ -56,12 +56,7 @@ public class AssumptionChangesXMLCreator
         assumptionChangesRoot.appendChild(createConditionElement(STATE_VARIABLES ,document, svAssumptionStats.getChangedFiles(),
                 svAssumptionStats.getRecordsOnlyInBase(), svAssumptionStats.getRecordsOnlyInAlt()));
 
-//        Set<String> totalChanges = new HashSet<>();
-//        totalChanges.addAll(initCondStats.getChangedFiles());
-//        totalChanges.addAll(stateVarStats.getChangedFiles());
-
-        //assumptionChangesRoot.appendChild(createRecordsList(totalChanges,document));
-        document.appendChild(assumptionChangesRoot);
+        return assumptionChangesRoot;
     }
 
 
@@ -95,9 +90,16 @@ public class AssumptionChangesXMLCreator
         Element inputTypeElem = document.createElement(INPUT_TYPE);
         inputTypeElem.setAttribute(INPUT_TYPE, inputType);
 
-        for(String rec: records)
+        if(records.isEmpty())
         {
-            inputTypeElem.appendChild(createRecordElem(rec,document));
+            inputTypeElem.appendChild(createEmptyRecordElem(document));
+        }
+        else
+        {
+            for (String rec : records)
+            {
+                inputTypeElem.appendChild(createRecordElem(rec, document));
+            }
         }
         return inputTypeElem;
     }
@@ -111,6 +113,12 @@ public class AssumptionChangesXMLCreator
             recordsRootElem.appendChild(createRecordElem(rec,document));
         }
         return recordsRootElem;
+    }
+
+    private Element createEmptyRecordElem(  Document document)
+    {
+        Element recordElem = document.createElement(RECORD);
+        return recordElem;
     }
 
     private Element createRecordElem(String record,  Document document)

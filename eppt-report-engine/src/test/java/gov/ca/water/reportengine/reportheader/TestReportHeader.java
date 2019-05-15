@@ -42,7 +42,7 @@ public class TestReportHeader extends TestReportHeaderBase
         List<String> altNames = new ArrayList<>();
         ReportHeader rh = new ReportHeader("Bryan Gray", "EPPT Prototype", "CSII_Base", altNames);
         ReportHeaderXMLCreator rhWriter = new ReportHeaderXMLCreator();
-        rhWriter.appendReportHeaderElement(rh, doc);
+        rhWriter.createReportHeaderElement(rh, doc);
         Path path = writeXmlFile(doc);
 
         _qAQCReportToTest = loadReportToTest(path);
@@ -76,7 +76,7 @@ public class TestReportHeader extends TestReportHeaderBase
         List<String> altNames = new ArrayList<>(Arrays.asList("CSII Alternative"));
         ReportHeader rh = new ReportHeader("Bryan Gray", "EPPT Prototype", "CSII_Base", altNames);
         ReportHeaderXMLCreator rhWriter = new ReportHeaderXMLCreator();
-        rhWriter.appendReportHeaderElement(rh, doc);
+        rhWriter.createReportHeaderElement(rh, doc);
         Path path = writeXmlFile(doc);
 
         _qAQCReportToTest = loadReportToTest(path);

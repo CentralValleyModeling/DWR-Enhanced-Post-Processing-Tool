@@ -123,7 +123,10 @@ public class DetailedIssueProcessor
         //create title
         GUILinksAllModelsBO objById = GuiLinksSeedDataSvcImpl.getSeedDataSvcImplInstance().getObjById(Integer.toString(guiID));
         String title = objById.getPlotTitle();
-
+        if(Objects.equals("", title))
+        {
+            title = "Undefined";
+        }
 
         DSSGrabber1SvcImpl grabber1Svc = buildDssGrabber(run, guiID, thresholdID);
 
