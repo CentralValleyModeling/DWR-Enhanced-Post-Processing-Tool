@@ -384,7 +384,7 @@ public class QAQCReportPanel extends RmaJPanel implements ProcessOutputConsumer
 		gbc.insets = new Insets(5, 5, 5, 5);
 		panel3.add(label7, gbc);
 		final JPanel panel5 = new JPanel();
-		panel5.setLayout(new BorderLayout(0, 0));
+		panel5.setLayout(new BorderLayout(2, 0));
 		gbc = new GridBagConstraints();
 		gbc.gridx = 1;
 		gbc.gridy = 6;
@@ -401,7 +401,7 @@ public class QAQCReportPanel extends RmaJPanel implements ProcessOutputConsumer
 		_wyTableBtn.setText("...");
 		panel5.add(_wyTableBtn, BorderLayout.EAST);
 		final JPanel panel6 = new JPanel();
-		panel6.setLayout(new BorderLayout(0, 0));
+		panel6.setLayout(new BorderLayout(2, 0));
 		gbc = new GridBagConstraints();
 		gbc.gridx = 1;
 		gbc.gridy = 7;
