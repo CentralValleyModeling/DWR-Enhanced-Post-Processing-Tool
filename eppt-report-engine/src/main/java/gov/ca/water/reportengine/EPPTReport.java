@@ -23,6 +23,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.logging.Level;
+import javax.xml.XMLConstants;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -152,7 +153,7 @@ public class EPPTReport
 				LOGGER.at(Level.INFO).log("Generate QAQC Code Changes data");
 				rootElement.appendChild(createCodeChangesElem(_baseRun.getOutputPath(), _altRuns.get(0), doc));
 			}
-			LOGGER.at(Level.INFO).log("Writing data to XML: {0}", _pathToWriteOut);
+			LOGGER.at(Level.INFO).log("Writing data to XML: %s", _pathToWriteOut);
 			writeXmlFile(doc);
 		}
 		catch(RuntimeException | IOException | EpptReportException | ParserConfigurationException | TransformerException e)
@@ -188,6 +189,7 @@ public class EPPTReport
 	private void writeXmlFile(Document doc) throws TransformerException
 	{
 		TransformerFactory transformerFactory = TransformerFactory.newInstance();
+		transformerFactory.setFeature(XMLConstants.FEATURE_SECURE_PROCESSING, true);
 		Transformer transformer = transformerFactory.newTransformer();
 		DOMSource domSource = new DOMSource(doc);
 
