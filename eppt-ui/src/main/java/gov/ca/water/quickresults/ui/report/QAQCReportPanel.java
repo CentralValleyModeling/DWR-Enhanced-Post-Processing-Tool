@@ -98,7 +98,7 @@ public class QAQCReportPanel extends RmaJPanel implements ProcessOutputConsumer
 		addListeners();
 		setLayout(new BorderLayout());
 		add($$$getRootComponent$$$(), BorderLayout.CENTER);
-		_authorTextField.setText(System.getProperty("user.name"));
+		_authorTextField.setText(EpptPreferences.getUsername());
 		((RmaJDecimalField) _toleranceTextField).setValue(0.01);
 		_fileChooserBtn.addActionListener(e -> chooseReportFile());
 		_doc = (StyledDocument) _textPane1.getDocument();
@@ -224,6 +224,7 @@ public class QAQCReportPanel extends RmaJPanel implements ProcessOutputConsumer
 			QAQCReportGenerator qaqcReportGenerator = new QAQCReportGenerator(this);
 			double tolerance = Double.parseDouble(_toleranceTextField.getText());
 			String author = _authorTextField.getText();
+			EpptPreferences.setUsername(author);
 			String subtitle = _reportSubtitle.getText();
 			Path waterYearTablePath = Paths.get(_waterYearTable.getText());
 			Path waterYearLookupPath = Paths.get(_waterYearLookup.getText());
