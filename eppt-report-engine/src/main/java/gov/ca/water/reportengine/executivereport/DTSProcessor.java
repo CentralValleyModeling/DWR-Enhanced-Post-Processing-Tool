@@ -135,7 +135,7 @@ public class DTSProcessor
 						{
 							if(e.getMessage() != null && e.getMessage().contains("Unable to recognize record"))
 							{
-								FluentLogger.forEnclosingClass().at(Level.INFO).withCause(e).log("Skipping record: %s", dssPath);
+								FluentLogger.forEnclosingClass().at(Level.INFO).withCause(e).log("Skipping record: %s from file: %s", dssPath, dssFile);
 							}
 							else
 							{

@@ -120,6 +120,7 @@ public class WreslRunDialog extends JDialog implements ProcessOutputConsumer
 	{
 		SwingUtilities.invokeLater(() ->
 		{
+
 			_processes.remove(process);
 			if(_processes.isEmpty())
 			{

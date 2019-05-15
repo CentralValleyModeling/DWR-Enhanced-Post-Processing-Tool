@@ -20,11 +20,11 @@ import java.awt.FlowLayout;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
+import java.awt.event.ActionEvent;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.CompletableFuture;
@@ -90,6 +90,7 @@ public class QAQCReportPanel extends RmaJPanel implements ProcessOutputConsumer
 	private JButton _wyLookupBtn;
 	private JTextField _waterYearTable;
 	private TextAreaPrintStream _textAreaPrintStream;
+	private boolean _ignoreSelectionChange;
 
 	public QAQCReportPanel()
 	{
@@ -110,26 +111,35 @@ public class QAQCReportPanel extends RmaJPanel implements ProcessOutputConsumer
 		Path currentProject = EpptPreferences.getLastProjectConfiguration();
 		Path reports = currentProject.getParent().resolve("Reports");
 		_pdfOutput.setText(reports.toString());
-		_baseComboBox.addActionListener(e -> baseComboboxChanged());
-		_altComboBox.addActionListener(e -> altComboboxChanged());
+		_baseComboBox.addActionListener(this::scenarioComboboxChanged);
+		_altComboBox.addActionListener(this::scenarioComboboxChanged);
 	}
 
-	private void altComboboxChanged()
+	private void scenarioComboboxChanged(ActionEvent e)
 	{
-		Object selectedItem = _altComboBox.getSelectedItem();
-		if(selectedItem != null)
+		if(!_ignoreSelectionChange)
 		{
-			_baseComboBox.removeItem(selectedItem);
-		}
-
-	}
-
-	private void baseComboboxChanged()
-	{
-		Object selectedItem = _baseComboBox.getSelectedItem();
-		if(selectedItem != null)
-		{
-			_altComboBox.removeItem(selectedItem);
+			_ignoreSelectionChange = true;
+			Object selectedBaseItem = _baseComboBox.getSelectedItem();
+			Object selectedAltItem = _altComboBox.getSelectedItem();
+			_baseComboBox.removeAllItems();
+			_altComboBox.removeAllItems();
+			_altComboBox.addItem(null);
+			ProjectConfigurationPanel projectConfigurationPanel = ProjectConfigurationPanel.getProjectConfigurationPanel();
+			List<EpptScenarioRun> allEpptScenarioRuns = projectConfigurationPanel.getAllEpptScenarioRuns();
+			allEpptScenarioRuns.forEach(s -> _baseComboBox.addItem(s));
+			allEpptScenarioRuns.forEach(s -> _altComboBox.addItem(s));
+			if(selectedAltItem != null)
+			{
+				_baseComboBox.removeItem(selectedAltItem);
+			}
+			if(selectedBaseItem != null)
+			{
+				_altComboBox.removeItem(selectedBaseItem);
+			}
+			_baseComboBox.setSelectedItem(selectedBaseItem);
+			_altComboBox.setSelectedItem(selectedAltItem);
+			_ignoreSelectionChange = true;
 		}
 	}
 

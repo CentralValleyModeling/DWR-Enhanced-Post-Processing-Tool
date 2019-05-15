@@ -137,11 +137,12 @@ public class JasperReportRunner implements ReportRunner
 		}
 	}
 
-	public static void main(String[] args) throws QAQCReportException
+	public static void main(String[] args)
 	{
 		if(args.length != 2)
 		{
-			throw new QAQCReportException("input 1: expected jrxml file; input 2: expected output path");
+			LOGGER.log(Level.SEVERE, "input 1: expected jrxml file; input 2: expected output path");
+			System.exit(-1);
 		}
 		LocalDateTime start = LocalDateTime.now();
 		try
@@ -150,6 +151,12 @@ public class JasperReportRunner implements ReportRunner
 			LOGGER.log(Level.INFO, "Starting Jasper Report Run. JRXML File: {0} Output File: {1}", args);
 			JasperReportRunner runner = new JasperReportRunner();
 			runner.runReportWithOutputFile(Paths.get(args[0]), Paths.get(args[1]));
+			System.exit(0);
+		}
+		catch(QAQCReportException e)
+		{
+			LOGGER.log(Level.SEVERE, "Error in Jasper Report", e);
+			System.exit(-1);
 		}
 		finally
 		{
