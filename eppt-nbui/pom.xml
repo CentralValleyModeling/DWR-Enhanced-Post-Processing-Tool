@@ -318,7 +318,7 @@
 							<directory>${project.basedir}/src/main/config</directory>
 							<targetPath>config</targetPath>
 							<includes>
-								<include>*</include>
+								<include>**</include>
 							</includes>
 						</nbmResource>
 						<nbmResource>

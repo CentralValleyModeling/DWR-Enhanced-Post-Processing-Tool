@@ -59,17 +59,18 @@ public class EPPTReport
 {
 	private static final FluentLogger LOGGER = FluentLogger.forEnclosingClass();
 
-	private static final String INIT_COND_CSV = CONFIG_DIR + "/AssumpChangesInitCond" + CSV_EXT;
-	private static final String STATE_VAR_CSV = CONFIG_DIR + "/AssumpChangesStateVar" + CSV_EXT;
+	private static final String INIT_COND_CSV = "AssumpChangesInitCond" + CSV_EXT;
+	private static final String STATE_VAR_CSV = "AssumpChangesStateVar" + CSV_EXT;
+	private static final String CODE_CHANGES_CSV = "CodeChangesDSSPaths" + CSV_EXT;
+
 	private static final String MODULES_CSV = CONFIG_DIR + "/ExecutiveReportModulesCSV" + CSV_EXT;
 	private static final String DETAILS_CSV = CONFIG_DIR + "/Details" + CSV_EXT;
-	private static final String CODE_CHANGES_CSV = CONFIG_DIR + "/CodeChangesDSSPaths" + CSV_EXT;
 
 	private final Path _wyTypeTable;
 	private final Path _wyNameLookup;
 	private final Path _pathToWriteOut;
 	private final EpptScenarioRun _baseRun;
-	private final List<EpptScenarioRun> _altRuns;
+	private final List<EpptScenarioRun> _altRuns = new ArrayList<>();
 	private final double _tolerance;
 	private final String _author;
 	private final String _subtitle;
@@ -84,10 +85,8 @@ public class EPPTReport
 		_wyNameLookup = wyNameLookup;
 		_pathToWriteOut = pathToWriteOut;
 		_baseRun = baseRun;
-		_altRuns = altRuns;
+		_altRuns.addAll(altRuns);
 		_tolerance = tolerance;
-
-
 		_author = author;
 		_subtitle = subtitle;
 	}
@@ -216,7 +215,7 @@ public class EPPTReport
 	private Element createCodeChangesElem(Path baseOutputPath, EpptScenarioRun altRun, Document doc) throws IOException, EpptReportException
 	{
 		CodeChangesXMLCreator creator = new CodeChangesXMLCreator();
-		return creator.createCodeChangesElement(Paths.get(CODE_CHANGES_CSV), baseOutputPath, altRun.getOutputPath(), altRun.getName(), doc);
+		return creator.createCodeChangesElement(getCodeChangesCsv(), baseOutputPath, altRun.getOutputPath(), altRun.getName(), doc);
 	}
 
 	private Element createAssumptionChangesElem(FileChangesStatistics fileChangesStatistics, Document doc)
@@ -270,15 +269,15 @@ public class EPPTReport
 		for(EpptScenarioRun altRun : _altRuns)
 		{
 
-			AssumptionChangesDataProcessor initProcessor = new AssumptionChangesDataProcessor(Paths.get(INIT_COND_CSV), _tolerance);
+			AssumptionChangesDataProcessor initProcessor = new AssumptionChangesDataProcessor(getInitialConditionsCsv(), _tolerance);
 			AssumptionChangesStatistics initCondStats =
 					initProcessor.processAssumptionChanges(baseInitDSSPath, altRun.getDssContainer().getIvDssFile().getDssPath());
 
-			AssumptionChangesDataProcessor stateVarProcessor = new AssumptionChangesDataProcessor(Paths.get(STATE_VAR_CSV), _tolerance);
+			AssumptionChangesDataProcessor stateVarProcessor = new AssumptionChangesDataProcessor(getStateVariableCsv(), _tolerance);
 			AssumptionChangesStatistics stateVarStats =
 					stateVarProcessor.processAssumptionChanges(baseStateVarDSSPath, altRun.getDssContainer().getSvDssFile().getDssPath());
 
-			CodeChangesDataProcessor processor = new CodeChangesDataProcessor(Paths.get(CODE_CHANGES_CSV));
+			CodeChangesDataProcessor processor = new CodeChangesDataProcessor(getCodeChangesCsv());
 			CodeChangesStatistics codeChangeStats = processor.processCodeChanges(baseOutputPath, altRun.getOutputPath());
 
 			FileChangesStatistics fileChangesStatistics = new FileChangesStatistics(initCondStats, stateVarStats, codeChangeStats);
@@ -288,13 +287,21 @@ public class EPPTReport
 		return statsForAllAlternatives;
 	}
 
-	private Path getAssumpChangeInitPath(EpptScenarioRun run)
+	private Path getInitialConditionsCsv()
 	{
-		if(run.getModel().toString().equals("CalSim2"))
-		{
+		GUILinksAllModelsBO.Model model = _baseRun.getModel();
+		return Paths.get(CONFIG_DIR).resolve(model.toString()).resolve(INIT_COND_CSV);
+	}
 
-		}
-		return null;
+	private Path getStateVariableCsv()
+	{
+		GUILinksAllModelsBO.Model model = _baseRun.getModel();
+		return Paths.get(CONFIG_DIR).resolve(model.toString()).resolve(STATE_VAR_CSV);
+	}
+	private Path getCodeChangesCsv()
+	{
+		GUILinksAllModelsBO.Model model = _baseRun.getModel();
+		return Paths.get(CONFIG_DIR).resolve(model.toString()).resolve(CODE_CHANGES_CSV);
 	}
 
 }

@@ -37,6 +37,8 @@ import javafx.application.Platform;
 import org.apache.log4j.Logger;
 import org.jfree.data.time.Month;
 
+import rma.util.RMAUtil;
+
 /**
  * Company: Resource Management Associates
  *
@@ -340,6 +342,7 @@ public final class ProjectConfigurationPanel extends EpptPanel
 		{
 			updateRadioState();
 			super.setModified(b);
+			RMAUtil.setParentModified(this);
 		}
 	}
 

@@ -12,7 +12,6 @@
 package gov.ca.water.eppt.nbui;
 
 import java.awt.BorderLayout;
-import java.util.Objects;
 import javax.swing.*;
 
 import gov.ca.water.eppt.nbui.actions.ProjectConfigurationSavable;
@@ -55,7 +54,6 @@ public final class ProjectConfigurationTopComponent extends EpptTopComponent
 {
 	private static final String TOP_COMPONENT_NAME = "Project Configuration";
 	private final InstanceContent _instanceContent = new InstanceContent();
-	private String _lastQuickState = null;
 
 	/**
 	 *
@@ -71,17 +69,12 @@ public final class ProjectConfigurationTopComponent extends EpptTopComponent
 			{
 				if(b)
 				{
-					String newQuickState = ProjectConfigurationPanel.getProjectConfigurationPanel().quickState();
-					if(!Objects.equals(_lastQuickState, newQuickState))
+					topComponentNameModified();
+					ProjectConfigurationSavable savable = getLookup().lookup(ProjectConfigurationSavable.class);
+					if(savable == null)
 					{
-						_lastQuickState = newQuickState;
-						topComponentNameModified();
-						ProjectConfigurationSavable savable = getLookup().lookup(ProjectConfigurationSavable.class);
-						if(savable == null)
-						{
-							_instanceContent.add(
-									new ProjectConfigurationSavable(ProjectConfigurationTopComponent.this));
-						}
+						_instanceContent.add(
+								new ProjectConfigurationSavable(ProjectConfigurationTopComponent.this));
 					}
 				}
 				else

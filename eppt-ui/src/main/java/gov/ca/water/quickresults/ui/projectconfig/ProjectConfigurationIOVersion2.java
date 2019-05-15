@@ -90,7 +90,7 @@ class ProjectConfigurationIOVersion2
 	{
 		JSONArray jsonArray = new JSONArray();
 		ProjectConfigurationPanel projectConfigurationPanel = ProjectConfigurationPanel.getProjectConfigurationPanel();
-		List<EpptScenarioRun> epptScenarioRuns = projectConfigurationPanel.getEpptScenarioRuns();
+		List<EpptScenarioRun> epptScenarioRuns = projectConfigurationPanel.getAllEpptScenarioRuns();
 		for(EpptScenarioRun scenario : epptScenarioRuns)
 		{
 			JSONObject jsonObject = new JSONObject();

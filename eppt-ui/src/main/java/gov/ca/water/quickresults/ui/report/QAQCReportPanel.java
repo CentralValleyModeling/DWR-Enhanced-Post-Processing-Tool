@@ -107,7 +107,7 @@ public class QAQCReportPanel extends RmaJPanel implements ProcessOutputConsumer
 		_waterYearTable.setText(Paths.get(WY_TYPES_TABLE).normalize().toString());
 		_waterYearLookup.setText(Paths.get(WY_TYPES_NAME_LOOKUP).normalize().toString());
 		_wyLookupBtn.addActionListener(e -> chooseWaterYearLookup());
-		_wyLookupBtn.addActionListener(e -> chooseWaterYearTable());
+		_wyTableBtn.addActionListener(e -> chooseWaterYearTable());
 		Path currentProject = EpptPreferences.getLastProjectConfiguration();
 		Path reports = currentProject.getParent().resolve("Reports");
 		_pdfOutput.setText(reports.toString());
@@ -139,7 +139,7 @@ public class QAQCReportPanel extends RmaJPanel implements ProcessOutputConsumer
 			}
 			_baseComboBox.setSelectedItem(selectedBaseItem);
 			_altComboBox.setSelectedItem(selectedAltItem);
-			_ignoreSelectionChange = true;
+			_ignoreSelectionChange = false;
 		}
 	}
 
@@ -219,6 +219,7 @@ public class QAQCReportPanel extends RmaJPanel implements ProcessOutputConsumer
 	{
 		try
 		{
+			SwingUtilities.invokeLater(() -> _generateReportButton.setEnabled(false));
 			Path pathToWriteOut = Paths.get(_pdfOutput.getText());
 			EpptScenarioRun baseRun = (EpptScenarioRun) _baseComboBox.getSelectedItem();
 			EpptScenarioRun altRun = (EpptScenarioRun) _altComboBox.getSelectedItem();
@@ -228,13 +229,17 @@ public class QAQCReportPanel extends RmaJPanel implements ProcessOutputConsumer
 			String subtitle = _reportSubtitle.getText();
 			Path waterYearTablePath = Paths.get(_waterYearTable.getText());
 			Path waterYearLookupPath = Paths.get(_waterYearLookup.getText());
-
-			qaqcReportGenerator.generateQAQCReport(waterYearTablePath, waterYearLookupPath, baseRun, altRun, tolerance, author, subtitle, pathToWriteOut);
+			qaqcReportGenerator.generateQAQCReport(waterYearTablePath, waterYearLookupPath, baseRun, altRun, tolerance, author, subtitle,
+					pathToWriteOut);
 		}
 		catch(QAQCReportException | RuntimeException e)
 		{
 			LOGGER.log(Level.SEVERE, "Unable to generate Report PDF", e);
 			appendErrorText("Error: " + e);
+		}
+		finally
+		{
+			SwingUtilities.invokeLater(() -> _generateReportButton.setEnabled(true));
 		}
 	}
 
@@ -535,6 +540,7 @@ public class QAQCReportPanel extends RmaJPanel implements ProcessOutputConsumer
 
 	public void fillComboScenarioRuns()
 	{
+		_ignoreSelectionChange = true;
 		_textPane1.setText("");
 		_baseComboBox.removeAllItems();
 		_altComboBox.removeAllItems();
@@ -550,6 +556,8 @@ public class QAQCReportPanel extends RmaJPanel implements ProcessOutputConsumer
 			_pdfOutput.setText(baseScenario.getOutputPath().resolve("QAQC_EPPT_" + baseScenario.getName() + ".pdf").toString());
 		}
 		_altComboBox.setSelectedItem(null);
+		_altComboBox.removeItem(baseScenario);
+		_ignoreSelectionChange = false;
 	}
 
 	@Override

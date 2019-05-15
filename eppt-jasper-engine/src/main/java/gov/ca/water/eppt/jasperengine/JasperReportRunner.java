@@ -147,13 +147,13 @@ public class JasperReportRunner implements ReportRunner
 		LocalDateTime start = LocalDateTime.now();
 		try
 		{
-			LOGGER.log(Level.INFO, "============= Starting Run: {0} =============", start);
+			LOGGER.log(Level.INFO, "============= Starting Report: {0} =============", start);
 			LOGGER.log(Level.INFO, "Starting Jasper Report Run. JRXML File: {0} Output File: {1}", args);
 			JasperReportRunner runner = new JasperReportRunner();
 			runner.runReportWithOutputFile(Paths.get(args[0]), Paths.get(args[1]));
 			System.exit(0);
 		}
-		catch(QAQCReportException e)
+		catch(QAQCReportException | RuntimeException e)
 		{
 			LOGGER.log(Level.SEVERE, "Error in Jasper Report", e);
 			System.exit(-1);
@@ -161,10 +161,10 @@ public class JasperReportRunner implements ReportRunner
 		finally
 		{
 			LocalDateTime end = LocalDateTime.now();
-			LOGGER.log(Level.INFO, "============= Run Finished: {0} =============", end);
+			LOGGER.log(Level.INFO, "============= Report Finished: {0} =============", end);
 			long minutes = ChronoUnit.MINUTES.between(start, end);
 			long seconds = Duration.between(start, end).minus(minutes, ChronoUnit.MINUTES).getSeconds();
-			LOGGER.log(Level.INFO, "============= Run Took: {0}min {1}sec =============", new Object[]{minutes, seconds});
+			LOGGER.log(Level.INFO, "============= Report Took: {0}min {1}sec =============", new Object[]{minutes, seconds});
 		}
 	}
 }
