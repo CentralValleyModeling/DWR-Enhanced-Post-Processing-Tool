@@ -99,10 +99,7 @@ public class DetailedIssuesXMLCreator
 		int totalNumIssues = 0;
 		for(DetailedIssueViolation div : violations)
 		{
-			for(DetailedIssueViolation.Issue issue : div.getIssues())
-			{
-				totalNumIssues++;
-			}
+			totalNumIssues+= div.getTotalNumberOfViolations();
 		}
 		issuesTypeElem.setAttribute(NUM_ISSUES, Integer.toString(totalNumIssues));
 

@@ -47,7 +47,7 @@ public class TestDetailedIssueReport extends TestDetailedIssuesReportBase
         List<DetailedIssue> allDetailedIssues = mc.getAllDetailedIssues();
 
         DTSProcessor dtsProcessor = new DTSProcessor(modules);
-        Map<EpptScenarioRun, Map<SubModule, List<FlagViolation>>> runsToFlagViolations = dtsProcessor.processDSSFiles(allRuns, getDssFilePathsForSameModel());
+        Map<EpptScenarioRun, Map<SubModule, List<FlagViolation>>> runsToFlagViolations = dtsProcessor.processDSSFiles(allRuns);
 
         Document doc = getDoc();
 

@@ -32,11 +32,6 @@ public class Module
 		return _modName;
 	}
 
-	public void addSubModule(SubModule subMod)
-	{
-		_subModules.add(subMod);
-	}
-
 	public List<SubModule> getSubModules()
 	{
 		return _subModules;

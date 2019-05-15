@@ -88,7 +88,8 @@ public class DetailedIssueProcessor
 				for(Module mod : _modules)
 				{
 					LOGGER.at(Level.INFO).log("Processing Detailed Issues for Module: %s", mod.getName());
-					modToDIVs.put(mod, processModule(run, subModToViolations, mod));
+					List<DetailedIssueViolation> detailedIssueViolations = processModule(run, subModToViolations, mod);
+					modToDIVs.put(mod, detailedIssueViolations);
 				}
 				moduleToDIV.put(run, modToDIVs);
 			}
@@ -154,7 +155,12 @@ public class DetailedIssueProcessor
 		String title = subMod.getTitle();
 		if(guiLink != null)
 		{
-			title = title.replace("%title%", guiLink.getPlotTitle());
+			String guiLinkTitle = guiLink.getPlotTitle();
+			if(guiLinkTitle.trim().isEmpty())
+			{
+				guiLinkTitle = violation.getDtsFileName();
+			}
+			title = title.replace("%title%", guiLinkTitle);
 		}
 		if(thresholdLink != null)
 		{
@@ -207,7 +213,7 @@ public class DetailedIssueProcessor
 		Map<HecTime, Double> actualValues = getActualValues(times, valueContainer);
 		Map<HecTime, Double> thresholdValues = getThresholdValues(times, thresholdSeriesContainer);
 		Map<HecTime, String> waterYearTypes = getWaterYearTypes(times);
-		return new DetailedIssueViolation(times, title, actualValues, thresholdValues, waterYearTypes, valueUnits, standardUnits);
+		return new DetailedIssueViolation(times, title, actualValues, thresholdValues, waterYearTypes, valueUnits, standardUnits, violation.getTimes().size());
 	}
 
 	private Map<HecTime, Double> getActualValues(List<HecTime> times, TimeSeriesContainer tsc)

@@ -121,7 +121,7 @@ public class EPPTReport
 			allRuns.addAll(_altRuns);
 			DTSProcessor dtsProcessor = new DTSProcessor(_modules);
 			Map<EpptScenarioRun, Map<SubModule, List<FlagViolation>>> runsToFlagViolations =
-					dtsProcessor.processDSSFiles(allRuns, getPostProcessDSSPathsForAllRuns());
+					dtsProcessor.processDSSFiles(allRuns);
 
 			//create the rootnode
 			Element rootElement = doc.createElement("qaqc-report");
@@ -211,18 +211,6 @@ public class EPPTReport
 
 		DetailedIssuesXMLCreator xmlCreator = new DetailedIssuesXMLCreator();
 		return xmlCreator.createDetailedIssuesElement(runsToDetailedViolations, _baseRun, _altRuns, _modules, doc);
-	}
-
-	private List<Path> getPostProcessDSSPathsForAllRuns()
-	{
-		List<Path> retval = new ArrayList<>();
-		retval.add(_baseRun.getPostProcessDss());
-
-		for(EpptScenarioRun run : _altRuns)
-		{
-			retval.add(run.getPostProcessDss());
-		}
-		return retval;
 	}
 
 	private Element createCodeChangesElem(Path baseOutputPath, EpptScenarioRun altRun, Document doc) throws IOException, EpptReportException

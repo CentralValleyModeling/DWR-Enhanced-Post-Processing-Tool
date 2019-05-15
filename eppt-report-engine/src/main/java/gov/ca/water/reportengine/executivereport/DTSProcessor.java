@@ -42,9 +42,14 @@ public class DTSProcessor
 		_modules.addAll(modules);
 	}
 
-	public Map<EpptScenarioRun, Map<SubModule, List<FlagViolation>>> processDSSFiles(List<EpptScenarioRun> runs, List<Path> dssFiles)
+	public Map<EpptScenarioRun, Map<SubModule, List<FlagViolation>>> processDSSFiles(List<EpptScenarioRun> runs)
 			throws EpptReportException
 	{
+		List<Path> dssFiles = new ArrayList<>();
+		for(EpptScenarioRun run : runs)
+		{
+			dssFiles.add(run.getPostProcessDss());
+		}
 		//once we know how to get the post process dss files from the run then we can get rid of the dss files parameter.
 		if(runs.size() != dssFiles.size())
 		{

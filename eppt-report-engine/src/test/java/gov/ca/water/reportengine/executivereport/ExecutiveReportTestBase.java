@@ -50,7 +50,7 @@ public class ExecutiveReportTestBase extends TestQAQCReportBase
         List<Module> modules = mc.createModules(getCSVPath(), getModuleLinkingCSVPath());
 
         DTSProcessor dtsProcessor = new DTSProcessor(modules);
-        Map<EpptScenarioRun, Map<SubModule, List<FlagViolation>>> runsToViolations = dtsProcessor.processDSSFiles(allRuns, getDssFilePathsForBaseOnly());
+        Map<EpptScenarioRun, Map<SubModule, List<FlagViolation>>> runsToViolations = dtsProcessor.processDSSFiles(allRuns);
 
 
 
@@ -95,7 +95,7 @@ public class ExecutiveReportTestBase extends TestQAQCReportBase
         allRuns.addAll(altScenarioRuns);
 
         DTSProcessor dtsProcessor = new DTSProcessor(modules);
-        Map<EpptScenarioRun, Map<SubModule, List<FlagViolation>>> runsToViolations = dtsProcessor.processDSSFiles(allRuns, getDssFilePathsForSameModel());
+        Map<EpptScenarioRun, Map<SubModule, List<FlagViolation>>> runsToViolations = dtsProcessor.processDSSFiles(allRuns);
 
 
         erWriter.createExecutiveReportTableElement(allRuns, runsToViolations, modules,statsForAllAlternatives, true, doc);
