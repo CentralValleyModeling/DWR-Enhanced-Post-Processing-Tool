@@ -637,8 +637,6 @@ public class DSSGrabber1SvcImpl implements IDSSGrabber1Svc
 					{
 						message = "Could not find " + dssNames[0] + " in " + dssPath.getDssPath() + " - attempted to retrieve path: " + firstPath;
 					}
-					List<String> messages = _missingDSSRecords.computeIfAbsent(model, m -> new ArrayList<>());
-					messages.add(message);
 				}
 				else
 				{
@@ -661,12 +659,6 @@ public class DSSGrabber1SvcImpl implements IDSSGrabber1Svc
 							if(_stopOnMissing)
 							{
 								JOptionPane.showMessageDialog(null, message, "Error", JOptionPane.ERROR_MESSAGE);
-							}
-							else
-							{
-								List<String> messages = _missingDSSRecords.computeIfAbsent(model,
-										m -> new ArrayList<>());
-								messages.add(message);
 							}
 						}
 						else
@@ -734,8 +726,6 @@ public class DSSGrabber1SvcImpl implements IDSSGrabber1Svc
 			{
 				messageText = "Could not find record - HEC message was '" + ex.getMessage() + "'";
 				LOGGER.log(Level.FINE, messageText, ex);
-				List<String> messages = _missingDSSRecords.computeIfAbsent(model, m -> new ArrayList<>());
-				messages.add(messageText);
 			}
 			else
 			{
@@ -829,11 +819,14 @@ public class DSSGrabber1SvcImpl implements IDSSGrabber1Svc
 					String altDssPathName = _primaryDSSName.get(altModel);
 					if(altDssPathName != null)
 					{
+						if(altDssPathName != null)
+						{
 
-						tsc = getOneTimeSeriesFromAllModels(epptScenarioRun.getDssContainer(),
-								epptScenarioRun.getModel(), altDssPathName);
+							tsc = getOneTimeSeriesFromAllModels(epptScenarioRun.getDssContainer(),
+									epptScenarioRun.getModel(), altDssPathName);
+						}
+						results[i + 1] = tsc;
 					}
-					results[i + 1] = tsc;
 				}
 			}
 			else
@@ -864,6 +857,12 @@ public class DSSGrabber1SvcImpl implements IDSSGrabber1Svc
 		if(timeSeriesContainerOptional.isPresent())
 		{
 			oneSeries = timeSeriesContainerOptional.get();
+		}
+		else
+		{
+			String messageText = "Could not find record - " + dssPathName;
+			List<String> messages = _missingDSSRecords.computeIfAbsent(model, m -> new ArrayList<>());
+			messages.add(messageText);
 		}
 
 		return oneSeries;
@@ -911,11 +910,14 @@ public class DSSGrabber1SvcImpl implements IDSSGrabber1Svc
 				{
 					GUILinksAllModelsBO.Model altModel = epptScenarioRun.getModel();
 					String altDssPathName = _secondaryDSSName.get(altModel);
-					for(String splitPathname : altDssPathName.split("\\|"))
+					if(altDssPathName != null)
 					{
-						TimeSeriesContainer tsc = getOneTimeSeriesFromAllModels(epptScenarioRun.getDssContainer(),
-								epptScenarioRun.getModel(), splitPathname);
-						timeSeriesContainers.add(tsc);
+						for(String splitPathname : altDssPathName.split("\\|"))
+						{
+							TimeSeriesContainer tsc = getOneTimeSeriesFromAllModels(epptScenarioRun.getDssContainer(),
+									epptScenarioRun.getModel(), splitPathname);
+							timeSeriesContainers.add(tsc);
+						}
 					}
 				}
 				results = timeSeriesContainers.toArray(new TimeSeriesContainer[0]);

@@ -15,6 +15,7 @@ package gov.ca.water.calgui.presentation;
 import java.awt.BorderLayout;
 import java.awt.HeadlessException;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -44,6 +45,8 @@ import org.apache.log4j.Logger;
 import org.jfree.data.time.Month;
 
 import hec.io.TimeSeriesContainer;
+
+import static java.util.stream.Collectors.toList;
 
 /**
  * DisplayFrame class provides a frame for showing charts.
@@ -368,7 +371,11 @@ class DisplayFrame
 						}
 						Map<GUILinksAllModelsBO.Model, List<String>> missing = dssGrabber.getMissingList();
 						boolean showFrame = false;
-						if(missing.isEmpty())
+						List<String> collect = missing.values()
+													  .stream()
+													  .flatMap(Collection::stream)
+													  .collect(toList());
+						if(collect.isEmpty())
 						{
 							showFrame = true;
 						}
