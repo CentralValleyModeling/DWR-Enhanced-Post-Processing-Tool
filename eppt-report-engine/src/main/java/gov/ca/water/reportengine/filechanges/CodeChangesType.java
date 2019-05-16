@@ -21,17 +21,17 @@ public class CodeChangesType
 	private final String _name;
 	private final List<CodeChangesSubType> _subTypes = new ArrayList<>();
 
-	public CodeChangesType(String name)
+	CodeChangesType(String name)
 	{
 		_name = name;
 	}
 
-	public void addSubtype(CodeChangesSubType subType)
+	void addSubtype(CodeChangesSubType subType)
 	{
 		_subTypes.add(subType);
 	}
 
-	public List<CodeChangesSubType> getSubTypes()
+	List<CodeChangesSubType> getSubTypes()
 	{
 		return _subTypes;
 	}

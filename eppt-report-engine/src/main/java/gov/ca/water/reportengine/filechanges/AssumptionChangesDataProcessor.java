@@ -175,7 +175,7 @@ public class AssumptionChangesDataProcessor
 
 	private Set<DSSPathname> loadMasterDSSPathList(Path dssCSVPath) throws EpptReportException
 	{
-		String line = "";
+		String line;
 		String csvSplitBy = ",";
 		Set<DSSPathname> dssPaths = new HashSet<>();
 

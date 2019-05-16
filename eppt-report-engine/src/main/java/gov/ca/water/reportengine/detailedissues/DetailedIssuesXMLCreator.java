@@ -132,8 +132,8 @@ public class DetailedIssuesXMLCreator
 
 	private Element createEmptyIssueElement(Document document)
 	{
-		Element issueElem = document.createElement(ISSUE);
-		return issueElem;
+		return document.createElement(ISSUE);
+
 	}
 
 	private Element createLocationElement(DetailedIssueViolation div, Document document)

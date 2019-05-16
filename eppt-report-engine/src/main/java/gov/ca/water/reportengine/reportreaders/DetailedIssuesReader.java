@@ -91,7 +91,6 @@ public class DetailedIssuesReader
 					{
 						continue;
 					}
-
 				}
 
 				int subModuleID = Integer.parseInt(row[MODULE_ID]);

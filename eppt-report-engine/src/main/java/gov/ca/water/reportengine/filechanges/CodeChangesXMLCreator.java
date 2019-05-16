@@ -22,7 +22,6 @@ import java.util.logging.Level;
 
 import com.google.common.flogger.FluentLogger;
 import gov.ca.water.reportengine.EpptReportException;
-import org.python.bouncycastle.crypto.tls.NewSessionTicket;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
@@ -33,8 +32,7 @@ public class CodeChangesXMLCreator
 	private static final String CODE_CHANGES = "code-changes";
 
 	private static final String HEADER = "header";
-	private static final String ALTERNATIVES = "alternatives";
-	private static final String ALTERNATIVE = "alternative";
+
 	private static final String FILES_UPDATED = "files-updated";
 
 	private static final String FILES_ADDED_TO = "files-added-to";
@@ -47,7 +45,6 @@ public class CodeChangesXMLCreator
 
 	private static final String CHANGE = "change";
 	private static final String CHANGE_SUBTYPE = "change-subtype";
-	private static final String UPDATED = "updated";
 
 	private static final String SECTION = "section";
 	private static final String SECTION_NAME = "section-name";
@@ -67,7 +64,7 @@ public class CodeChangesXMLCreator
 	private final Set<Path> _fileDeletedFromBaseInMaster = new HashSet<>();
 	private final Set<Path> _fileDeletedFromBaseNotInMaster = new HashSet<>();
 
-	public Element createCodeChangesElement(Path csvPath, Path baseOutputPath, Path altOutputPath, String altName, Document document)
+	public Element createCodeChangesElement(Path csvPath, Path baseOutputPath, Path altOutputPath, Document document)
 			throws EpptReportException, IOException
 	{
 		LOGGER.at(Level.INFO).log("Writing Code Changes to XML");
@@ -80,7 +77,7 @@ public class CodeChangesXMLCreator
 		Element codeChangesElemRoot = document.createElement(CODE_CHANGES);
 
 		//create header
-		codeChangesElemRoot.appendChild(createHeader(altName, stats, document));
+		codeChangesElemRoot.appendChild(createHeader(stats, document));
 
 		boolean atLeastOneSectionElemExists = false;
 		//create modified section
@@ -173,16 +170,9 @@ public class CodeChangesXMLCreator
 		{
 			for(CodeChangesSubType sub : cct.getSubTypes())
 			{
-				for(String file : sub.getWreslFiles())
-				{
-					allMasterFiles.add(file);
-				}
+				allMasterFiles.addAll(sub.getWreslFiles());
 			}
 		}
-
-		//        _modifiedFilesInMaster.addAll(stats.getCodeChangesModifiedFiles());
-		//        _fileAddedToAltInMaster.addAll(stats.getFilesAddedToAlt());
-		//        _fileDeletedFromBaseInMaster.addAll(stats.getFilesDeletedFromBase());
 
 		for(Path modFile : stats.getCodeChangesModifiedFiles())
 		{
@@ -255,13 +245,10 @@ public class CodeChangesXMLCreator
 		return subElem;
 	}
 
-	private Element createHeader(String altName, CodeChangesStatistics stats, Document document)
+	private Element createHeader( CodeChangesStatistics stats, Document document)
 	{
 		Element headerElem = document.createElement(HEADER);
-		//Element alternativesElem = document.createElement(ALTERNATIVES);
-		// headerElem.appendChild(alternativesElem);
 
-		//        alternativesElem.appendChild(createAlternativeElem(altName, stats.getCodeChangesModifiedFiles().size(),stats.getFilesAddedToAlt().size(),document));
 		Element filesUpdatedElem = document.createElement(FILES_UPDATED);
 		filesUpdatedElem.setTextContent(Integer.toString(stats.getCodeChangesModifiedFiles().size()));
 		headerElem.appendChild(filesUpdatedElem);
@@ -276,23 +263,6 @@ public class CodeChangesXMLCreator
 
 		return headerElem;
 	}
-
-	//    private Element createAlternativeElem(String altName, int filesUpdated, int filesAdded, Document document)
-	//    {
-	//        //Element altElem = document.createElement(ALTERNATIVE);
-	//        //altElem.setAttribute("name",altName);
-	//
-	//        Element filesUpdatedElem = document.createElement(FILES_UPDATED);
-	//        filesUpdatedElem.setTextContent(Integer.toString(filesUpdated));
-	//        altElem.appendChild(filesUpdatedElem);
-	//
-	//        Element filesAddedElem = document.createElement(FILES_ADDED_TO);
-	//        filesAddedElem.setTextContent(Integer.toString(filesAdded));
-	//        altElem.appendChild(filesAddedElem);
-	//
-	//        return altElem;
-	//    }
-
 
 	private Element createTypeElement(CodeChangesType type, Set<Path> files, Document document)
 	{
@@ -322,18 +292,12 @@ public class CodeChangesXMLCreator
 		}
 	}
 
-
 	private Element createSubtype(CodeChangesSubType subType, Set<Path> files, Document document)
 	{
-		//Set<Path> codeChangesModifiedFiles = stats.getCodeChangesModifiedFiles();
 		Element subTypeElem = document.createElement(SUBTYPE);
 		if(!files.isEmpty())
 		{
-
-			//String updatedVal = modifiedFilesThatAreInMaster.isEmpty() ? "true" : "false";
-
 			subTypeElem.setAttribute(CHANGE_SUBTYPE, subType.getName());
-			//subTypeElem.setAttribute(UPDATED, updatedVal);
 
 			//create the list of changes
 			for(Path change : files)
@@ -356,56 +320,5 @@ public class CodeChangesXMLCreator
 			return subTypeElem;
 		}
 	}
-
-	//    private Element createTypeElement(CodeChangesType type,FileChangesStatistics stats, Document document)
-	//    {
-	//
-	//        Element typeElem = document.createElement(TYPE);
-	//        typeElem.setAttribute(CHANGE_TYPE, type.getName());
-	//
-	//        List<CodeChangesSubType> subTypes = type.getSubTypes();
-	//
-	//        for(CodeChangesSubType subType : subTypes)
-	//        {
-	//            typeElem.appendChild(createSubtype(subType, stats, document));
-	//        }
-	//
-	//        return typeElem;
-	//    }
-	//
-	//
-	//    private Element createSubtype(CodeChangesSubType subType,FileChangesStatistics stats, Document document)
-	//    {
-	//        Set<Path> codeChangesModifiedFiles = stats.getCodeChangesModifiedFiles();
-	//        List<String> wreslFiles = subType.getWreslFiles();
-	//        List<Path> modifiedFilesThatAreInMaster = new ArrayList<>();
-	//        for(Path p : codeChangesModifiedFiles)
-	//        {
-	//            if(wreslFiles.contains(p.toString()))
-	//            {
-	//                modifiedFilesThatAreInMaster.add(p);
-	//                if(_modifiedFilesInMaster.contains(p))
-	//                {
-	//                    _modifiedFilesInMaster.remove(p);
-	//                }
-	//            }
-	//        }
-	//
-	//        //String updatedVal = modifiedFilesThatAreInMaster.isEmpty() ? "true" : "false";
-	//
-	//        Element subTypeElem = document.createElement(SUBTYPE);
-	//        subTypeElem.setAttribute(CHANGE_SUBTYPE, subType.getName());
-	//        //subTypeElem.setAttribute(UPDATED, updatedVal);
-	//
-	//        //create the list of changes
-	//        for(Path change : modifiedFilesThatAreInMaster)
-	//        {
-	//            Element changeElem = document.createElement(CHANGE);
-	//            changeElem.setTextContent(change.toString());
-	//            subTypeElem.appendChild(changeElem);
-	//        }
-	//        return subTypeElem;
-	//    }
-
 
 }

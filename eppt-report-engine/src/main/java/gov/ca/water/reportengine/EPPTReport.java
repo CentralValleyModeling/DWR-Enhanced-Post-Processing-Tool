@@ -13,7 +13,6 @@
 package gov.ca.water.reportengine;
 
 import java.io.IOException;
-import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.Duration;
@@ -348,7 +347,7 @@ public class EPPTReport
     private Element createCodeChangesElem(Path baseOutputPath, EpptScenarioRun altRun, Document doc) throws IOException, EpptReportException
     {
         CodeChangesXMLCreator creator = new CodeChangesXMLCreator();
-        return creator.createCodeChangesElement(getCodeChangesCsv(), baseOutputPath, altRun.getOutputPath(), altRun.getName(), doc);
+        return creator.createCodeChangesElement(getCodeChangesCsv(), baseOutputPath, altRun.getOutputPath(), doc);
     }
 
     private Element createAssumptionChangesElem(FileChangesStatistics fileChangesStatistics, Document doc)

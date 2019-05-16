@@ -62,7 +62,7 @@ public class CodeChangesDataProcessor
 
 		for(Path basePath : basePaths)
 		{
-			if(altPaths.contains(basePath))//&& areFilesDifferent(basePath,altPath))
+			if(altPaths.contains(basePath))
 			{
 				Path base = baseOutputPath.resolve(basePath);
 				Path alt = altOutputPath.resolve(basePath);

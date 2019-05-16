@@ -819,20 +819,16 @@ public class DSSGrabber1SvcImpl implements IDSSGrabber1Svc
 					String altDssPathName = _primaryDSSName.get(altModel);
 					if(altDssPathName != null)
 					{
-						if(altDssPathName != null)
-						{
-
 							tsc = getOneTimeSeriesFromAllModels(epptScenarioRun.getDssContainer(),
 									epptScenarioRun.getModel(), altDssPathName);
-						}
 						results[i + 1] = tsc;
 					}
 				}
 			}
 			else
 			{
-				LOGGER.log(Level.WARNING, "No matching DV GUI Links record in for Model: {0} with path: {1}",
-						new Object[]{baseModel, baseDssPathName});
+				LOGGER.log(Level.WARNING, "No matching DV GUI Links record in Model: {0} because the path is null",
+						new Object[]{baseModel});
 			}
 		}
 		catch(RuntimeException ex)
@@ -868,17 +864,6 @@ public class DSSGrabber1SvcImpl implements IDSSGrabber1Svc
 		return oneSeries;
 	}
 
-	private void reportMissingTimeSeries(NamedDssPath dssPath)
-	{
-		List<String> titles = new ArrayList<>();
-		for(Map.Entry<GUILinksAllModelsBO.Model, String> entry : _primaryDSSName.entrySet())
-		{
-			titles.add(entry.toString() + " (" + entry.getKey() + ")");
-		}
-		_dialogSvc.getOK("Could not find " + String.join(",",
-				titles) + " in " + dssPath.getAliasName() + " File: " + dssPath.getDssPath(),
-				JOptionPane.ERROR_MESSAGE);
-	}
 
 	/*
 	 * (non-Javadoc)

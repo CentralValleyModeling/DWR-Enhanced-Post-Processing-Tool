@@ -24,7 +24,6 @@ public class DetailedIssueViolation
 {
     private static final Logger LOGGER = Logger.getLogger(DetailedIssueViolation.class.getName());
 
-    private final List<HecTime> _times;
     private final String _title;
     private final int _totalNumberOfViolations;
     private final List<Issue> _issues = new ArrayList<>();
@@ -34,7 +33,6 @@ public class DetailedIssueViolation
                            String standardUnits, int totalNumberOfViolations)
     {
 
-        _times = times;
         _title = title;
         _totalNumberOfViolations = totalNumberOfViolations;
 
@@ -49,7 +47,7 @@ public class DetailedIssueViolation
         }
     }
 
-    public int getTotalNumberOfViolations()
+    int getTotalNumberOfViolations()
     {
         return _totalNumberOfViolations;
     }

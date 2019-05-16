@@ -30,41 +30,20 @@ import hec.lang.Const;
 public class ExecutiveReportXMLCreator
 {
     private static final FluentLogger LOGGER = FluentLogger.forEnclosingClass();
-    static final String NEW_LINE = "\n"; //"&#xD;";
+    static final String NEW_LINE = "\n";
     static final String MODULE = "module";
     static final String MODEL_ENTRIES = "model-entries";
     static final String NAME = "name";
     static final String STUDY = "study";
     static final String STUDY_ORDER = "study-order";
     static final String MODEL_ORDER = "model-order";
-    //reservoir operations row
-    static final String RES_OPS = "ReservoirOperations";
-    //Upstream mif reqs
-    static final String UPSTREAM_MIF_REQ = "UpstreamMinimumFlowRequirements";
-    //nod weirs ops
-    static final String NOD_WEIR = "DeltaWeirsOperations";
-    //nod groundwater pumping
-    static final String NOD_GROUND_PUMP = "DeltaGroundwaterPumping";
-    //delta operations row
-    static final String DELTA_OPS = "DeltaOperations";
-    //COA row
-    static final String COA = "CoordinatedOperationsAgreement";
-    //Allocations and deliveries row
-    static final String ALLOCATIONS_DEL = "AllocationsAndDeliveries";
-    //mass balance row
-    static final String MASS_BALANCE = "MassBalance";
     private static final String TABLE_HEADER = "executive-report-table";
     private static final String MODULE_HEADER_ATTR = "header";
     private static final String MODULE_HEADER_VALUE = "Issues";
     private static final String BASE_STUDY = "Base Study";
     private static final String ALTERNATIVE_STUDY = "Alternative Study";
 
-    /**
-     * Creates the entire executive report element
-     *
-     * @return
-     * @throws Exception
-     */
+
     public Element createExecutiveReportTableElement(List<EpptScenarioRun> runs,
                                                      Map<EpptScenarioRun, Map<SubModule, List<FlagViolation>>> runsToViolations,
                                                      List<Module> modules, List<FileChangesStatistics> modelInputStats, boolean sameModel,
@@ -97,7 +76,6 @@ public class ExecutiveReportXMLCreator
     private FileChangesStatistics getAssumptionChangesForScenario(List<FileChangesStatistics> stats, int scenarioNumber)
     {
         FileChangesStatistics retval = null;
-        //there is no model input stats for the base
         if (stats == null || scenarioNumber == 0)
         {
             return null;
@@ -112,9 +90,9 @@ public class ExecutiveReportXMLCreator
     /**
      * Creates all the elements in a scenario (goes down the column of the table)
      *
-     * @param modules
-     * @param scenarioNumber
-     * @param doc
+     * @param modules        The list of all the modules
+     * @param scenarioNumber 0 is the base, 1 is first alternative, etc
+     * @param doc            The document to create the elements
      * @return
      */
     private List<Element> createScenarioElements(Map<SubModule, List<FlagViolation>> subModToViolations, List<Module> modules,
@@ -153,8 +131,8 @@ public class ExecutiveReportXMLCreator
 
     /**
      * @param module
-     * @param scenarioNumber base = 1, alt1 = 2, alt2 = 3
-     * @param rowNumber
+     * @param scenarioNumber base = 0, alt1 = 1, alt2 = 2
+     * @param rowNumber      starts with 1 and actually gets put into the xml element
      * @param doc
      * @return
      */
@@ -225,94 +203,10 @@ public class ExecutiveReportXMLCreator
             int filesDeletedFromBase = codeChangesStats.getFilesDeletedFromBase().size();
             int codeChangesModifiedFiles = codeChangesStats.getCodeChangesModifiedFiles().size();
 
-            String formattedText = "";
             for (SubModule sm : subModules)
             {
-                switch (sm.getId())
-                {
-                    case 1:
-                    {
-                        if (initChanged > 0)
-                        {
-                            formattedText = String.format(sm.getName(), initChanged);
-                            subModuleStrings.add(formattedText);
-                        }
-                        break;
-                    }
-                    case 2:
-                    {
-                        if (initOnlyInBase > 0)
-                        {
-                            formattedText = String.format(sm.getName(), initOnlyInBase);
-                            subModuleStrings.add(formattedText);
-                        }
-                        break;
-                    }
-                    case 3:
-                    {
-                        if (initOnlyInAlt > 0)
-                        {
-                            formattedText = String.format(sm.getName(), initOnlyInAlt);
-                            subModuleStrings.add(formattedText);
-                        }
-                        break;
-                    }
-                    case 4:
-                    {
-                        if (svChanged > 0)
-                        {
-                            formattedText = String.format(sm.getName(), svChanged);
-                            subModuleStrings.add(formattedText);
-                        }
-                        break;
-                    }
-                    case 15:
-                    {
-                        if (svOnlyInBase > 0)
-                        {
-                            formattedText = String.format(sm.getName(), svOnlyInBase);
-                            subModuleStrings.add(formattedText);
-                        }
-                        break;
-                    }
-                    case 16:
-                    {
-                        if (svOnlyInAlt > 0)
-                        {
-                            formattedText = String.format(sm.getName(), svOnlyInAlt);
-                            subModuleStrings.add(formattedText);
-                        }
-                        break;
-                    }
-                    case 17:
-                    {
-                        if (codeChangesModifiedFiles > 0)
-                        {
-                            formattedText = String.format(sm.getName(), codeChangesModifiedFiles);
-                            subModuleStrings.add(formattedText);
-                        }
-                        break;
-                    }
-                    case 18:
-                    {
-                        if (filesAddedToAlt > 0)
-                        {
-                            formattedText = String.format(sm.getName(), filesAddedToAlt);
-                            subModuleStrings.add(formattedText);
-                        }
-                        break;
-                    }
-                    case 19:
-                    {
-                        if (filesDeletedFromBase > 0)
-                        {
-                            formattedText = String.format(sm.getName(), filesDeletedFromBase);
-                            subModuleStrings.add(formattedText);
-                        }
-                        break;
-                    }
-
-                }
+                addFormattedTextToSubModule(subModuleStrings, initOnlyInBase, initOnlyInAlt, initChanged, svOnlyInBase,
+                        svOnlyInAlt, svChanged, filesAddedToAlt, filesDeletedFromBase, codeChangesModifiedFiles, sm);
             }
 
 
@@ -327,6 +221,97 @@ public class ExecutiveReportXMLCreator
 
     }
 
+    private void addFormattedTextToSubModule(List<String> subModuleStrings, int initOnlyInBase, int initOnlyInAlt, int initChanged,
+                                             int svOnlyInBase, int svOnlyInAlt, int svChanged, int filesAddedToAlt, int filesDeletedFromBase, int codeChangesModifiedFiles, SubModule sm)
+    {
+        String formattedText;
+        switch (sm.getId())
+        {
+            case 1:
+            {
+                if (initChanged > 0)
+                {
+                    formattedText = String.format(sm.getName(), initChanged);
+                    subModuleStrings.add(formattedText);
+                }
+                break;
+            }
+            case 2:
+            {
+                if (initOnlyInBase > 0)
+                {
+                    formattedText = String.format(sm.getName(), initOnlyInBase);
+                    subModuleStrings.add(formattedText);
+                }
+                break;
+            }
+            case 3:
+            {
+                if (initOnlyInAlt > 0)
+                {
+                    formattedText = String.format(sm.getName(), initOnlyInAlt);
+                    subModuleStrings.add(formattedText);
+                }
+                break;
+            }
+            case 4:
+            {
+                if (svChanged > 0)
+                {
+                    formattedText = String.format(sm.getName(), svChanged);
+                    subModuleStrings.add(formattedText);
+                }
+                break;
+            }
+            case 15:
+            {
+                if (svOnlyInBase > 0)
+                {
+                    formattedText = String.format(sm.getName(), svOnlyInBase);
+                    subModuleStrings.add(formattedText);
+                }
+                break;
+            }
+            case 16:
+            {
+                if (svOnlyInAlt > 0)
+                {
+                    formattedText = String.format(sm.getName(), svOnlyInAlt);
+                    subModuleStrings.add(formattedText);
+                }
+                break;
+            }
+            case 17:
+            {
+                if (codeChangesModifiedFiles > 0)
+                {
+                    formattedText = String.format(sm.getName(), codeChangesModifiedFiles);
+                    subModuleStrings.add(formattedText);
+                }
+                break;
+            }
+            case 18:
+            {
+                if (filesAddedToAlt > 0)
+                {
+                    formattedText = String.format(sm.getName(), filesAddedToAlt);
+                    subModuleStrings.add(formattedText);
+                }
+                break;
+            }
+            case 19:
+            {
+                if (filesDeletedFromBase > 0)
+                {
+                    formattedText = String.format(sm.getName(), filesDeletedFromBase);
+                    subModuleStrings.add(formattedText);
+                }
+                break;
+            }
+
+        }
+    }
+
     private Element createCOAElementFromModule(Map<SubModule, List<FlagViolation>> subModToViolations, Module module, int alternativeNumber,
                                                int rowNumber, Document doc)
     {
@@ -335,33 +320,15 @@ public class ExecutiveReportXMLCreator
         for (SubModule sm : module.getSubModules())
         {
 
-            //NodeList moduleNodes = _helperDoc.getElementsByTagName(module.getName());
-            //if (moduleNodes.getLength() > 0)
+            double maxValue = Const.UNDEFINED_DOUBLE;
+
+            if (subModToViolations.containsKey(sm))
             {
-                //Node moduleNode = moduleNodes.item(0);
-                //if (moduleNode.getNodeType() == Node.ELEMENT_NODE)
-                {
-                    // Element elem = (Element) moduleNode;
-                    double maxValue = Const.UNDEFINED_DOUBLE;
-
-                    if (subModToViolations.containsKey(sm))
-                    {
-                        maxValue = subModToViolations.get(sm).get(0).getMaxValue();
-                    }
-
-                    //                    if (alternativeNumber == 1)
-                    //                    {
-                    //                        maxValue = sm.getBaseViolations().get(0).getMaxValue();
-                    //                    }
-                    //                    else
-                    //                    {
-                    //                        maxValue = sm.getAlternativeViolations(alternativeNumber).get(0).getMaxValue();
-                    //                    }
-                    String subModuleText = sm.getName(); //elem.getElementsByTagName(sm.getName()).item(0).getTextContent();
-                    String formattedText = String.format(subModuleText, maxValue);
-                    subModuleStrings.add(formattedText);
-                }
+                maxValue = subModToViolations.get(sm).get(0).getMaxValue();
             }
+            String subModuleText = sm.getName();
+            String formattedText = String.format(subModuleText, maxValue);
+            subModuleStrings.add(formattedText);
         }
 
         String elementString = subModuleStrings.stream().map(String::valueOf).collect(Collectors.joining(NEW_LINE));
@@ -377,14 +344,6 @@ public class ExecutiveReportXMLCreator
     }
 
 
-    /**
-     * @param doc
-     * @param altColumnNumber this needs to start with 2 since base is in column 1
-     * @param row
-     * @param rowName
-     * @param value
-     * @return
-     */
     private Element createAlternativeModuleElement(Document doc, int altColumnNumber, int row, String rowName, String value)
     {
         //scenario list starts with zero, but in the xml it will start with 1 so I increment by 1 here
@@ -417,7 +376,7 @@ public class ExecutiveReportXMLCreator
         Element modelEntry = doc.createElement(MODEL_ENTRIES);
 
         Attr modelOrderAttr = doc.createAttribute(MODEL_ORDER);
-        String rowNumber = "";
+        String rowNumber;
         if (row < 10)
         {
             rowNumber = "0" + row;
@@ -459,22 +418,4 @@ public class ExecutiveReportXMLCreator
 
         return altStudyElem;
     }
-
-    //    private void loadHelperXMLFile() throws ExecutiveReportException
-    //    {
-    //
-    //        URL helperXMLURL = this.getClass().getClassLoader().getResource("ExecutiveReportHelperXML.xml");
-    //        String path = helperXMLURL.getPath();
-    //        try
-    //        {
-    //            DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
-    //            DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
-    //            _helperDoc = dBuilder.parse(path);
-    //            _helperDoc.getDocumentElement().normalize();
-    //        }
-    //        catch (ParserConfigurationException | IOException | SAXException e)
-    //        {
-    //            throw new ExecutiveReportException("Error while trying to read the xml file: " + path, e);
-    //        }
-    //    }
 }

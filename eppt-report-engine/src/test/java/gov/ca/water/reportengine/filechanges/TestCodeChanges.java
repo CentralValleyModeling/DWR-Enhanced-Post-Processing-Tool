@@ -35,7 +35,7 @@ public class TestCodeChanges extends TestCodeChangesBase
     {
         Document doc = getDoc();
         CodeChangesXMLCreator creator = new CodeChangesXMLCreator();
-        creator.createCodeChangesElement(getCodeChangesCsvPath(),getBaseOutputPath(),getAltOutputPath(),"Alternative 1",doc);
+        creator.createCodeChangesElement(getCodeChangesCsvPath(),getBaseOutputPath(),getAltOutputPath(),doc);
 
         Path path = writeXmlFile(doc);
 

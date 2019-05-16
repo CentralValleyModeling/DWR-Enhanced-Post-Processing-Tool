@@ -19,9 +19,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-import java.util.Optional;
 import java.util.logging.Level;
-
 import com.google.common.flogger.FluentLogger;
 import gov.ca.water.calgui.bo.GUILinksAllModelsBO;
 import gov.ca.water.calgui.bo.ThresholdLinksBO;
@@ -46,18 +44,11 @@ public class DetailedIssueProcessor
 {
 
 	private static final FluentLogger LOGGER = FluentLogger.forEnclosingClass();
-
-	private final List<DetailedIssue> _baseDetailedIssues = new ArrayList<>();
-	private final List<DetailedIssue> _altDetailedIssues = new ArrayList<>();
-
 	private final Map<EpptScenarioRun, Map<SubModule, List<FlagViolation>>> _runsToViolations;
 	private final List<Module> _modules;
 	private final List<DetailedIssue> _allDetailedIssues;
 	private final List<EpptScenarioRun> _runs;
 	private final boolean _isCFS;
-	private final List<FlagViolation> _baseViolations = new ArrayList<>();
-	private final List<FlagViolation> _altViolations = new ArrayList<>();
-
 	private final List<WaterYearType> _waterYearTypes;
 
 	public DetailedIssueProcessor(Path waterYearTypeTable, Path waterYearNameLookup,
@@ -66,7 +57,6 @@ public class DetailedIssueProcessor
 	{
 		WaterYearTableReader wyTypeReader = new WaterYearTableReader(waterYearTypeTable, waterYearNameLookup);
 		_waterYearTypes = wyTypeReader.read();
-
 		_runsToViolations = runsToViolations;
 		_modules = modules;
 		_allDetailedIssues = allDetailedIssues;
@@ -274,96 +264,6 @@ public class DetailedIssueProcessor
 		return grabber1Svc;
 	}
 
-	//private List<EpptScenarioRun> getAltRuns(List<EpptScenarioRun> allRuns)
-	//{
-	//    List<EpptScenarioRun> altRuns = new ArrayList<>();
-	//    if(allRuns.size()>1)
-	//    {
-	//        for(int i = 1;i<allRuns.size();i++)
-	//        {
-	//            altRuns.add(allRuns.get(i));
-	//        }
-	//    }
-	//    return altRuns;
-	//}
-	//
-	//
-	//
-	//
-	//
-	//    private Map<EpptScenarioRun, TimeSeriesContainer> getActualValues(int guiID, EpptScenarioRun baseRun, List<EpptScenarioRun> altRuns, boolean isCFS)
-	//    {
-	//        Map<EpptScenarioRun, TimeSeriesContainer> runToTimeSeriesContainer = new HashMap<>();
-	//        DetailedIssueViolation div = null;
-	//        String title = "Untitled Measurement";
-	//        if (Const.isValid(guiID))
-	//        {
-	//            GUILinksAllModelsBO objById = GuiLinksSeedDataSvcImpl.getSeedDataSvcImplInstance().getObjById(Integer.toString(guiID));
-	//            Map<GUILinksAllModelsBO.Model, String> primary = objById.getPrimary();
-	//            title = objById.getPlotTitle();
-	//            String bAndCPart = primary.get(baseRun.getModel());
-	//
-	//
-	//            DSSGrabber1SvcImpl grabber1Svc = new DSSGrabber1SvcImpl();
-	//            grabber1Svc.setIsCFS(isCFS);
-	//            grabber1Svc.setScenarioRuns(baseRun, altRuns);
-	//            grabber1Svc.setLocation(Integer.toString(guiID), baseRun.getModel());
-	//            //grabber1Svc.setDateRange(); figure this out at some point
-	//            TimeSeriesContainer[] primarySeries = grabber1Svc.getPrimarySeries();
-	//
-	//            runToTimeSeriesContainer.put(baseRun, primarySeries[0]);
-	//
-	//            for(int i = 1;i<primarySeries.length;i++)
-	//            {
-	//                runToTimeSeriesContainer.put(altRuns.get(i-1),primarySeries[i] );
-	//
-	//            }
-	//
-	//            //title
-	//            //list of violations?
-	//                //date, wateryeartype, cfs, standard
-	//
-	//           // div = new DetailedIssueViolation(violation.getTimes(), title, primarySeries);
-	//        }
-	//        return runToTimeSeriesContainer;
-	//    }
-	//
-	//    private Map<EpptScenarioRun, TimeSeriesContainer> getThreshold(FlagViolation violation, int thresholdId, EpptScenarioRun baseRun, List<EpptScenarioRun> altRuns, boolean isCFS)
-	//    {
-	//        Map<EpptScenarioRun, TimeSeriesContainer> runToTimeSeriesContainer = new HashMap<>();
-	//        DetailedIssueViolation div = null;
-	//        String title = "Untitled Measurement";
-	//        if (Const.isValid(thresholdId))
-	//        {
-	//            GUILinksAllModelsBO objById = GuiLinksSeedDataSvcImpl.getSeedDataSvcImplInstance().getObjById(Integer.toString(thresholdId));
-	//            Map<GUILinksAllModelsBO.Model, String> primary = objById.getPrimary();
-	//            title = objById.getPlotTitle();
-	//            String bAndCPart = primary.get(baseRun.getModel());
-	//
-	//
-	//            DSSGrabber1SvcImpl grabber1Svc = new DSSGrabber1SvcImpl();
-	//            grabber1Svc.setIsCFS(isCFS);
-	//            grabber1Svc.setScenarioRuns(baseRun, altRuns);
-	//            grabber1Svc.setLocation(Integer.toString(thresholdId), baseRun.getModel());
-	//            //grabber1Svc.setDateRange(); figure this out at some point
-	//            TimeSeriesContainer[] primarySeries = grabber1Svc.getPrimarySeries();
-	//
-	//            runToTimeSeriesContainer.put(baseRun, primarySeries[0]);
-	//
-	//            for(int i = 1;i<primarySeries.length;i++)
-	//            {
-	//                runToTimeSeriesContainer.put(altRuns.get(i-1),primarySeries[i] );
-	//
-	//            }
-	//
-	//            //title
-	//            //list of violations?
-	//            //date, wateryeartype, cfs, standard
-	//
-	//            div = new DetailedIssueViolation(violation.getTimes(), title, primarySeries);
-	//        }
-	//        return runToTimeSeriesContainer;
-	//    }
 
 	private DetailedIssue getDetailedIssueThatMatchViolation(FlagViolation violation)
 	{
@@ -376,64 +276,5 @@ public class DetailedIssueProcessor
 		}
 		return null;
 	}
-
-	//    private List<DetailedIssue> getDetailedIssuesForSubModID(int id)
-	//    {
-	//        List<DetailedIssue> retval = new ArrayList<>();
-	//        for(DetailedIssue di : _allDetailedIssues)
-	//        {
-	//            if(di.getSubModuleID() == id)
-	//            {
-	//                retval.add(di);
-	//            }
-	//        }
-	//        return retval;
-	//    }
-
-
-	//
-	//    private List<FlagViolation> getAltFlagViolationsFromModule(Module mod, String altName)
-	//    {
-	//        List<SubModule> subModules = mod.getSubModules();
-	//        for(SubModule subMod : subModules)
-	//        {
-	//            subMod.getBaseViolations()
-	//        }
-	//    }
-
-
-	//    private List<DetailedIssue> getBaseDetailedIssuesFromModules()
-	//    {
-	//        Map<Module, List<DetailedIssue>> moduleToIssues = new HashMap<>();
-	//
-	//        List<DetailedIssue> detailedIssues = new ArrayList<>();
-	//        for (Module mod : _modules)
-	//        {
-	//            List<SubModule> subModules = mod.getSubModules();
-	//            for (SubModule subMod : subModules)
-	//            {
-	//                List<FlagViolation> baseViolations = subMod.getBaseViolations();
-	//                for (FlagViolation violation : baseViolations)
-	//                {
-	//
-	//                    String dtsFileName = violation.getDtsFileName();
-	//                    for (DetailedIssue di : _baseDetailedIssues)
-	//                    {
-	//                        if (Objects.equals(di.getLinkedVar(), dtsFileName))
-	//                        {
-	//
-	//                        }
-	//                    }
-	//
-	//                    violation.get
-	//                    DetailedIssue di = new DetailedIssue(subMod.getId(), violation.getTimes(), dtsFileName);
-	//                    detailedIssues.add(di);
-	//                    //dtsFileNames.add(violation.getDtsFileName());
-	//                }
-	//            }
-	//        }
-	//        return detailedIssues;
-	//    }
-
 
 }

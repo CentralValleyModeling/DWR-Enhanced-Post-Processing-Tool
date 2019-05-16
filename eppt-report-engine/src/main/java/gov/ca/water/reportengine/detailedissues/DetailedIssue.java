@@ -39,12 +39,12 @@ public class DetailedIssue
 		return _subModuleID;
 	}
 
-	public int getGuiLink()
+	int getGuiLink()
 	{
 		return _guiLink;
 	}
 
-	public int getThresholdLink()
+	int getThresholdLink()
 	{
 		return _thresholdLink;
 	}
