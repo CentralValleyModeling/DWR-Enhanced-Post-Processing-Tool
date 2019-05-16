@@ -132,6 +132,7 @@ public class WreslScriptRunner
 				bufferedWriter.write(commandLine);
 				bufferedWriter.flush();
 			}
+			outputBat.toFile().deleteOnExit();
 			ProcessBuilder processBuilder = new ProcessBuilder()
 					.command(outputBat.toString());
 			LOGGER.log(Level.INFO, "Running process: {0}", commandLine);
