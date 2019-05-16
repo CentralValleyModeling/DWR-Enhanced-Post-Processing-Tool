@@ -499,6 +499,7 @@ public final class ProjectConfigurationPanel extends EpptPanel
 		super.add(swixmlProjectConfigurationPanel, BorderLayout.CENTER);
 		initComponents();
 		initModels();
+		_scenarioTablePanel.clearScenarios();
 		setActionListener(getActionListener());
 	}
 
