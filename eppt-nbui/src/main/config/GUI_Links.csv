@@ -1,7 +1,7 @@
 ﻿!Checkbox ID,Model,DV Primary (PART B/PART C),DV Secondary (PART B/PART C),Ytitle,Title,Slegend
 !Storage + Flow Tab,,,,,,
 102,CalLite,S_TRNTY/STORAGE,,Storage,Trinity Reservoir Storage,
-102,CalSim2,S1/STORAGE,1|2|3|4|5,,,
+102,CalSim2,S1/STORAGE,,,,
 102,CalSim3,S_TRNTY/STORAGE,,,,
 103,CalLite,S_SHSTA/STORAGE+S_SHSTAE/STORAGE,,Storage,Shasta Reservoir Storage,
 103,CalSim2,S4/STORAGE+S44/STORAGE,,,,
