@@ -102,25 +102,28 @@ public class NewProjectConfiguration implements ActionListener
 		nameDialog.setDescription("");
 		nameDialog.setModal(true);
 		nameDialog.setVisible(true);
-		Path projectPath = EpptPreferences.getProjectsPath().resolve(nameDialog.getName());
-		try
+		if(!nameDialog.isCanceled())
 		{
-			ProjectConfigurationPanel.getProjectConfigurationPanel().resetProjectConfiguration();
-		}
-		catch(Exception e)
-		{
-			throw new IOException("Unable to reset Project Configuration to default state");
-		}
-		ProjectConfigurationPanel.getProjectConfigurationPanel().saveConfigurationToPath(projectPath,
-				nameDialog.getName(), nameDialog.getDescription());
-		WindowManager.getDefault().getMainWindow().setTitle(
-				Installer.MAIN_FRAME_NAME + " - " + ProjectConfigurationPanel.getProjectConfigurationPanel().getProjectName());
-		ProjectConfigurationPanel.getProjectConfigurationPanel().setModified(false);
-		Collection<? extends ProjectConfigurationSavable> projectConfigurationSavables = Savable.REGISTRY.lookupAll(
-				ProjectConfigurationSavable.class);
-		for(ProjectConfigurationSavable savable : projectConfigurationSavables)
-		{
-			savable.removeFromLookup();
+			Path projectPath = EpptPreferences.getProjectsPath().resolve(nameDialog.getName());
+			try
+			{
+				ProjectConfigurationPanel.getProjectConfigurationPanel().resetProjectConfiguration();
+			}
+			catch(Exception e)
+			{
+				throw new IOException("Unable to reset Project Configuration to default state");
+			}
+			ProjectConfigurationPanel.getProjectConfigurationPanel().saveConfigurationToPath(projectPath,
+					nameDialog.getName(), nameDialog.getDescription());
+			WindowManager.getDefault().getMainWindow().setTitle(
+					Installer.MAIN_FRAME_NAME + " - " + ProjectConfigurationPanel.getProjectConfigurationPanel().getProjectName());
+			ProjectConfigurationPanel.getProjectConfigurationPanel().setModified(false);
+			Collection<? extends ProjectConfigurationSavable> projectConfigurationSavables = Savable.REGISTRY.lookupAll(
+					ProjectConfigurationSavable.class);
+			for(ProjectConfigurationSavable savable : projectConfigurationSavables)
+			{
+				savable.removeFromLookup();
+			}
 		}
 	}
 }
