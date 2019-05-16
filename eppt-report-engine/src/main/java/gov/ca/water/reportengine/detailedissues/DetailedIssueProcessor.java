@@ -77,9 +77,12 @@ public class DetailedIssueProcessor
 				Map<SubModule, List<FlagViolation>> subModToViolations = _runsToViolations.get(run);
 				for(Module mod : _modules)
 				{
-					LOGGER.at(Level.INFO).log("Processing Detailed Issues for Module: %s", mod.getName());
-					List<DetailedIssueViolation> detailedIssueViolations = processModule(run, subModToViolations, mod);
-					modToDIVs.put(mod, detailedIssueViolations);
+					if(!Objects.equals("Model Inputs",mod.getName()))
+					{
+						LOGGER.at(Level.INFO).log("Processing Detailed Issues for Module: %s", mod.getName());
+						List<DetailedIssueViolation> detailedIssueViolations = processModule(run, subModToViolations, mod);
+						modToDIVs.put(mod, detailedIssueViolations);
+					}
 				}
 				moduleToDIV.put(run, modToDIVs);
 			}

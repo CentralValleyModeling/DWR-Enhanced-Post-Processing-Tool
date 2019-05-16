@@ -151,7 +151,12 @@ public class QAQCReportPanel extends RmaJPanel implements ProcessOutputConsumer
 		File selectedFile = jFileChooser.getSelectedFile();
 		if(selectedFile != null)
 		{
-			_pdfOutput.setText(selectedFile.toString());
+			String filePath = selectedFile.toString();
+			if(!filePath.toLowerCase().endsWith("pdf"))
+			{
+				filePath += ".pdf";
+			}
+			_pdfOutput.setText(filePath);
 		}
 	}
 
