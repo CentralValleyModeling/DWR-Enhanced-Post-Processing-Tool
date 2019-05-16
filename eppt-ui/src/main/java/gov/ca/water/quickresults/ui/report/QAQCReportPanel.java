@@ -211,7 +211,20 @@ public class QAQCReportPanel extends RmaJPanel implements ProcessOutputConsumer
 		EpptScenarioRun baseRun = (EpptScenarioRun) _baseComboBox.getSelectedItem();
 		if(baseRun != null)
 		{
-			CompletableFuture.runAsync(this::generateQAQCReport);
+			boolean exists = Paths.get(_pdfOutput.getText()).toFile().exists();
+			if(exists)
+			{
+				int warning = JOptionPane.showConfirmDialog(this, "PDF: " + _pdfOutput.getText() + " already exists. Do you wish to overwrite?",
+						"Warning", JOptionPane.YES_NO_OPTION);
+				if(warning == JOptionPane.YES_OPTION)
+				{
+					CompletableFuture.runAsync(this::generateQAQCReport);
+				}
+			}
+			else
+			{
+				CompletableFuture.runAsync(this::generateQAQCReport);
+			}
 		}
 		else
 		{
