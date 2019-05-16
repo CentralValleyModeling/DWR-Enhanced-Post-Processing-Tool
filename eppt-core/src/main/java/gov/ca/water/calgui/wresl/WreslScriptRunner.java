@@ -35,6 +35,8 @@ import wrimsv2.components.PreRunModel;
 import wrimsv2.evaluator.PreEvaluator;
 import wrimsv2.wreslparser.elements.StudyUtils;
 
+import hec.heclib.dss.HecDSSFileAccess;
+
 /**
  * Company: Resource Management Associates
  *
@@ -59,6 +61,7 @@ public class WreslScriptRunner
 		LOGGER.log(Level.INFO, "============= Starting Run: {0} =============", start);
 		try
 		{
+			HecDSSFileAccess.setMessageLevel(HecDSSFileAccess.MESS_LEVEL_GENERAL);
 			ControllerBatch cb = new ControllerBatch();
 			cb.enableProgressLog = true;
 			cb.processArgs(args);
