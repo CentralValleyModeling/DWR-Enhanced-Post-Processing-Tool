@@ -453,23 +453,23 @@ class ScenarioRunEditor extends JDialog
 
 	private NamedDssPath getNamedDssPath(JTextField pathTextField, JTextField aliasTextField)
 	{
-		NamedDssPath ivDssFile = null;
-		String ivTextFieldText = pathTextField.getText();
-		if(ivTextFieldText != null && !ivTextFieldText.isEmpty())
+		NamedDssPath dssFile = null;
+		String textFieldText = pathTextField.getText();
+		if(textFieldText != null && !textFieldText.isEmpty())
 		{
-			Path ivPath = Paths.get(ivTextFieldText);
-			if(!ivPath.toString().toLowerCase().endsWith("dss"))
+			Path textPath = Paths.get(textFieldText);
+			if(!textPath.toString().toLowerCase().endsWith("dss"))
 			{
-				ivPath = Paths.get(ivPath.toString() + ".dss");
+				textPath = Paths.get(textPath.toString() + ".dss");
 			}
 			String aliasText = aliasTextField.getText();
 			if(aliasText.isEmpty())
 			{
-				aliasText = ivPath.getFileName().toString();
+				aliasText = textPath.getFileName().toString();
 			}
-			ivDssFile = new NamedDssPath(ivPath, aliasText);
+			dssFile = new NamedDssPath(textPath, aliasText);
 		}
-		return ivDssFile;
+		return dssFile;
 	}
 
 	private boolean validateRun()
