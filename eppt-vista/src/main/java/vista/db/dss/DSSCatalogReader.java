@@ -258,8 +258,9 @@ class DSSCatalogReader implements Enumeration
 				{
 					System.out.println("end index " + _endIndex[i]);
 				}
-				_parts[i] = _currentLine
-						.substring(_beginIndex[i], _endIndex[i]);
+				int beginIndex = Math.min(_beginIndex[i], _currentLine.length());
+				int endIndex = Math.min(_endIndex[i], _currentLine.length());
+				_parts[i] = _currentLine.substring(beginIndex, endIndex);
 			}
 			updateFrom(_parts, _masterPath);
 			for(int i = 0; i < _parts.length; i++)
