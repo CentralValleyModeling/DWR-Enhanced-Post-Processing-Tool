@@ -159,6 +159,10 @@ public class CustomResultsPanel extends EpptPanel
 					}
 				}
 			}
+			if(allrefs.isEmpty())
+			{
+				_dialogSvc.getOK("No records found using filter", JOptionPane.WARNING_MESSAGE);
+			}
 			retrievePanel.updateTable(allrefs.toArray(new DataReference[0]));
 		}
 		else

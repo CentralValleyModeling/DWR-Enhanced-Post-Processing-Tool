@@ -667,8 +667,7 @@ public final class AppUtils
 			}
 			if(gc.getNumberOfDataReferences() == 0)
 			{
-				throw new RuntimeException("No matching reference in " + gc.getName()
-						+ " for part = " + part);
+				return null;
 			}
 		}
 		int count = gc.getNumberOfDataReferences();
