@@ -76,7 +76,10 @@ public class DetailedIssuesXMLCreator
 		for(Module mod : modules)
 		{
 			List<DetailedIssueViolation> divs = modsToViolations.get(mod);
-			altElem.appendChild(createIssueTypeElement(mod, divs, document));
+			if(divs != null)
+			{
+				altElem.appendChild(createIssueTypeElement(mod, divs, document));
+			}
 		}
 		return altElem;
 	}
