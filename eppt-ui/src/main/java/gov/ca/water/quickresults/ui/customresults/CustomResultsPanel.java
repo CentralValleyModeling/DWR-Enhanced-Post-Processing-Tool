@@ -149,11 +149,14 @@ public class CustomResultsPanel extends EpptPanel
 			{
 				String[] stringParts = retrievePanel.getStringParts();
 				Group dssGroup = AppUtils.openDSSFile(path.toString());
-				Group gc = Group.createGroup(dssGroup);
-				DataReference[] refs = AppUtils.createRefs(stringParts, null, gc);
-				if(refs != null)
+				if(dssGroup != null)
 				{
-					allrefs.addAll(Arrays.asList(refs));
+					Group gc = Group.createGroup(dssGroup);
+					DataReference[] refs = AppUtils.createRefs(stringParts, null, gc);
+					if(refs != null)
+					{
+						allrefs.addAll(Arrays.asList(refs));
+					}
 				}
 			}
 			retrievePanel.updateTable(allrefs.toArray(new DataReference[0]));
