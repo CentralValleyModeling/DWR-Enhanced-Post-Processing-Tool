@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ Enhanced Post Processing Tool (EPPT) Copyright (c) 2019.
+  ~
+  ~ EPPT is copyrighted by the State of California, Department of Water Resources. It is licensed
+  ~ under the GNU General Public License, version 2. This means it can be
+  ~ copied, distributed, and modified freely, but you may not restrict others
+  ~ in their ability to copy, distribute, and modify it. See the license below
+  ~ for more details.
+  ~
+  ~ GNU General Public License
+  -->
+
+<!-- Created with Jaspersoft Studio version 6.8.0.final using JasperReports Library version 6.8.0-2ed8dfabb690ff337a5797129f2cd92902b0c87b  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="QAQC_StandardSummaryStatisticImages" language="groovy" pageWidth="612" pageHeight="792" columnWidth="504" leftMargin="54" rightMargin="54" topMargin="54" bottomMargin="54" uuid="fdf29854-1cab-4c3d-99e9-a38b49852a26">
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<property name="net.sf.jasperreports.data.adapter" value="QAQC_Datasource.xml"/>
+	<property name="net.sf.jasperreports.export.xls.collapse.row.span" value="true"/>
+	<property name="net.sf.jasperreports.print.create.bookmarks" value="true"/>
+	<property name="com.jaspersoft.studio.unit.pageHeight" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.pageWidth" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.topMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.bottomMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.leftMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.rightMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.columnWidth" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.columnSpacing" value="pixel"/>
+	<subDataset name="StandardSummaryStatisticTable" uuid="f3a906c3-3594-4221-9290-c1267e5ee543">
+		<property name="com.jaspersoft.studio.data.defaultdataadapter" value="QAQC_Datasource"/>
+		<queryString language="xPath">
+			<![CDATA[/qaqc-report/standard-summary-statistics/operation-type/reservoir/period/run-value]]>
+		</queryString>
+		<field name="operation-order" class="java.lang.Integer">
+			<fieldDescription><![CDATA[ancestor::operation-type/@operation-order]]></fieldDescription>
+		</field>
+		<field name="operation-type" class="java.lang.String">
+			<fieldDescription><![CDATA[ancestor::operation-type/@operation-type]]></fieldDescription>
+		</field>
+		<field name="reservoir-order" class="java.lang.Integer">
+			<fieldDescription><![CDATA[ancestor::reservoir/@reservoir-order]]></fieldDescription>
+		</field>
+		<field name="reservor" class="java.lang.String">
+			<fieldDescription><![CDATA[ancestor::reservoir/@reservor]]></fieldDescription>
+		</field>
+		<field name="period-order" class="java.lang.Integer">
+			<fieldDescription><![CDATA[ancestor::period/@period-order]]></fieldDescription>
+		</field>
+		<field name="period" class="java.lang.String">
+			<fieldDescription><![CDATA[ancestor::period/@period]]></fieldDescription>
+		</field>
+		<field name="runorder" class="java.lang.Integer">
+			<fieldDescription><![CDATA[@runorder]]></fieldDescription>
+		</field>
+		<field name="run" class="java.lang.String">
+			<fieldDescription><![CDATA[@run]]></fieldDescription>
+		</field>
+		<field name="run-value" class="java.lang.Integer">
+			<fieldDescription><![CDATA[child::text()]]></fieldDescription>
+		</field>
+	</subDataset>
+	<parameter name="p_change-type" class="java.lang.String" isForPrompting="false">
+		<parameterDescription><![CDATA["Hydrology"]]></parameterDescription>
+		<defaultValueExpression><![CDATA["*New"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="p_change-subtype" class="java.lang.String" isForPrompting="false">
+		<parameterDescription><![CDATA["Climate"]]></parameterDescription>
+		<defaultValueExpression><![CDATA[""]]></defaultValueExpression>
+	</parameter>
+	<parameter name="Section_Title" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["Standard Summary Statistic"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="SubSection_Title" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["1.   Reservoir Operation"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="Table_Title" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["1.a Summary stats for Reservoir Operation"]]></defaultValueExpression>
+	</parameter>
+	<queryString language="XPath">
+		<![CDATA[/qaqc-report/standard-summary-statistics/operation-type/reservoir/period/run-value]]>
+	</queryString>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band splitType="Stretch">
+			<property name="com.jaspersoft.studio.unit.height" value="px"/>
+			<printWhenExpression><![CDATA[1==0]]></printWhenExpression>
+		</band>
+	</title>
+	<columnHeader>
+		<band splitType="Stretch">
+			<printWhenExpression><![CDATA[1==0]]></printWhenExpression>
+		</band>
+	</columnHeader>
+	<detail>
+		<band splitType="Stretch">
+			<printWhenExpression><![CDATA[1==0]]></printWhenExpression>
+		</band>
+	</detail>
+	<pageFooter>
+		<band height="15">
+			<textField evaluationTime="Master">
+				<reportElement mode="Transparent" x="0" y="0" width="504" height="15" uuid="7ae48ece-aaba-49a5-ab08-c4bfa9079a6f">
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA["Page | " + ($V{MASTER_CURRENT_PAGE}-1)]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageFooter>
+	<summary>
+		<band height="610">
+			<property name="com.jaspersoft.studio.unit.height" value="px"/>
+			<image>
+				<reportElement x="0" y="0" width="504" height="610" uuid="df31cb47-d925-4276-b2c1-2ba4bec3c1ae">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<imageExpression><![CDATA["DWR_QA_QC_Reports/Images/1a1.jpg"]]></imageExpression>
+			</image>
+		</band>
+	</summary>
+</jasperReport>

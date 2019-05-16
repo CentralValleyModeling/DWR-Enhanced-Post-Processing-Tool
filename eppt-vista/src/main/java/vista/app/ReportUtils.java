@@ -1,8 +1,13 @@
 /*
- * Copyright (c) 2019
- * California Department of Water Resources
- * All Rights Reserved.  DWR PROPRIETARY/CONFIDENTIAL.
- * Source may not be released without written approval from DWR
+ * Enhanced Post Processing Tool (EPPT) Copyright (c) 2019.
+ *
+ * EPPT is copyrighted by the State of California, Department of Water Resources. It is licensed
+ * under the GNU General Public License, version 2. This means it can be
+ * copied, distributed, and modified freely, but you may not restrict others
+ * in their ability to copy, distribute, and modify it. See the license below
+ * for more details.
+ *
+ * GNU General Public License
  */
 
 package vista.app;
@@ -18,100 +23,167 @@ import javax.swing.text.StyledDocument;
 
 /**
  * A set of utility functions for writing out text aligned in columns of a line.
- * 
+ *
  * @@author Nicky Sandhu
  * @@version $Id: ReportUtils.java,v 1.3 2000/08/22 22:13:20 redwood Exp $
  */
-public class ReportUtils {
+public class ReportUtils
+{
 	public static final int BEGIN_AT = 1;
 	public static final int END_AT = 2;
 	public static final int CENTER_AT = 3;
 	public static String ls = System.getProperty("line.separator");
+	/**
+	 * sets the default font size
+	 */
+	public static int DEFAULT_FONT_SIZE = 12;
+	/**
+	 * sets the spacing between lines as a ratio of the default ratio
+	 */
+	public static float INTERLINE_SPACING_RATIO = 0.5f;
+	/**
+	 * this is the color for the min value in a line
+	 */
+	public static Color HEADER_HIGH_LIGHT_COLOR = new Color(255, 239, 213); // papaya
+	/**
+	 * this is the color for the min value in a line
+	 */
+	public static Color HEADER_COLOR = new Color(128, 58, 0); //
+	/**
+	 * this is the color for the min value in a line
+	 */
+	public static Color MIN_ITEM_COLOR = Color.red;
+	/**
+	 * this is the color for the max value in a line
+	 */
+	public static Color MAX_ITEM_COLOR = Color.blue;
+	/**
+	 * this is the color for the max value in a line
+	 */
+	public static Color WATER_YEAR_COLOR = new Color(85, 107, 47); // Dark olive
+	/**
+	 *
+	 */
+	public static int DEFAULT_LEFT_MARGIN = 24;
+	/**
+	 *
+	 */
+	public static int DEFAULT_LINE_LENGTH = 124;
 	static char _filler = ' ';
+	/**
+	 * the default formatter for numbers
+	 */
+	static NumberFormat _numberFormat = NumberFormat.getInstance();
 
 	/**
 	 * The filler used when space is called.
 	 */
-	public static void setFiller(char filler) {
+	public static void setFiller(char filler)
+	{
 		_filler = filler;
 	}
 
 	/**
 	 * 1. Does not write out null strings 2. Does not write out string if space
 	 * is not sufficient.
-	 * 
+	 *
 	 * @@param doc The document to append to
 	 * @@param columns The columns containing the column value from the
-	 *         beginning of the line
+	 * beginning of the line
 	 * @@param strs The strings to be inserted at the column
 	 * @@param justifications The justification ( begin at, end at or center at
-	 *         ) for the string
+	 * ) for the string
 	 * @@param styles The style for the inserted string
 	 */
 	public static void addLine(Document doc, int[] columns, String[] strs,
-			int[] justifications, Style[] styles) {
+							   int[] justifications, Style[] styles)
+	{
 		// check for len(columns) == len(strs) == len(just) == len(styles)
-		if (doc == null)
+		if(doc == null)
+		{
 			return;
-		if (columns == null || strs == null || justifications == null
+		}
+		if(columns == null || strs == null || justifications == null
 				|| styles == null)
+		{
 			return;
-		if (columns.length != strs.length)
+		}
+		if(columns.length != strs.length)
+		{
 			return;
-		if (columns.length != justifications.length)
+		}
+		if(columns.length != justifications.length)
+		{
 			return;
-		if (columns.length != styles.length)
+		}
+		if(columns.length != styles.length)
+		{
 			return;
+		}
 		// check to make sure that columns are in increasing order
 		//
 		int beginOffset = doc.getEndPosition().getOffset();
 		int currentOffset = doc.getEndPosition().getOffset();
-		for (int i = 0; i < columns.length; i++) {
+		for(int i = 0; i < columns.length; i++)
+		{
 			int currentCol = currentOffset - beginOffset;
 			int col = columns[i];
 			String str = strs[i];
 			int offset = 0;
-			if (str == null)
+			if(str == null)
+			{
 				continue;
-			switch (justifications[i]) {
-			case BEGIN_AT:
-				offset = col - currentCol;
-				break;
-			case END_AT:
-				offset = col - currentCol - str.length();
-				break;
-			case CENTER_AT:
-				offset = col - currentCol - str.length() / 2;
-				break;
-			default:
-				throw new RuntimeException(
-						"Unrecognized type for justification: "
-								+ justifications[i]);
 			}
-			if (offset < 0)
+			switch(justifications[i])
+			{
+				case BEGIN_AT:
+					offset = col - currentCol;
+					break;
+				case END_AT:
+					offset = col - currentCol - str.length();
+					break;
+				case CENTER_AT:
+					offset = col - currentCol - str.length() / 2;
+					break;
+				default:
+					throw new RuntimeException(
+							"Unrecognized type for justification: "
+									+ justifications[i]);
+			}
+			if(offset < 0)
+			{
 				continue;
+			}
 			addString(doc, offset, str, styles[i]);
 			currentOffset = doc.getEndPosition().getOffset();
 		}
 		// finally add the end of line marker
 		addString(doc, 0, ls, styles[styles.length - 1]);
 	}
+	// whip
 
 	/**
 	 * This method checks to make sure the doc and string are non-null and then
 	 * inserts the string to the end of the document after pushing offset number
 	 * of spaces and in the given style.
 	 */
-	public static void addString(Document doc, int offset, String str, Style s) {
-		if (doc == null || str == null)
+	public static void addString(Document doc, int offset, String str, Style s)
+	{
+		if(doc == null || str == null)
+		{
 			return;
-		try {
-			if (offset > 0) {
+		}
+		try
+		{
+			if(offset > 0)
+			{
 				doc.insertString(doc.getEndPosition().getOffset() - 1,
 						space(offset), s);
 			}
 			doc.insertString(doc.getEndPosition().getOffset() - 1, str, s);
-		} catch (BadLocationException ble) {
+		}
+		catch(BadLocationException ble)
+		{
 			throw new RuntimeException("Hmm.. an internal insertion error @@ "
 					+ doc.getEndPosition() + " for string: " + str);
 		}
@@ -120,17 +192,21 @@ public class ReportUtils {
 	/**
 	 * makes a string with the given number of characters using the the current
 	 * filler character. Its a bit more efficient than using repeat
-	 * 
-	 * @@see repeat(int,String)
+	 *
+	 * @@see repeat(int, String)
 	 * @@param number The number of spaces in the string
 	 * @@return the string of given number of spaces
 	 */
-	public static String space(int number) {
-		if (number < 0)
+	public static String space(int number)
+	{
+		if(number < 0)
+		{
 			return "";
+		}
 		StringBuffer buf = new StringBuffer(number);
 		buf.setLength(number);
-		for (int i = 0; i < number; i++) {
+		for(int i = 0; i < number; i++)
+		{
 			buf.setCharAt(i, _filler);
 		}
 		return buf.toString();
@@ -139,11 +215,15 @@ public class ReportUtils {
 	/**
 	 * repeats a string for the given number of times and returns that string
 	 */
-	public static String repeat(String str, int number) {
-		if (number < 0)
+	public static String repeat(String str, int number)
+	{
+		if(number < 0)
+		{
 			return "";
+		}
 		StringBuffer buf = new StringBuffer(number * str.length());
-		for (int i = 0; i < number; i++) {
+		for(int i = 0; i < number; i++)
+		{
 			buf.append(str);
 		}
 		return buf.toString();
@@ -152,7 +232,8 @@ public class ReportUtils {
 	/**
 	 * @@return a style context of the given default styles.
 	 */
-	public static StyleContext createDefaultStyles() {
+	public static StyleContext createDefaultStyles()
+	{
 		StyleContext styles = new StyleContext();
 		// the main style
 		Style smain = styles.addStyle("main", null);
@@ -197,78 +278,39 @@ public class ReportUtils {
 		//
 		return styles;
 	}
+	// green
 
 	/**
 	 * @@return the main style of the document from which all other styles are
-	 *          based off.
+	 * based off.
 	 */
-	public static Style getMainStyle(StyledDocument doc) {
+	public static Style getMainStyle(StyledDocument doc)
+	{
 		return doc.getStyle("main");
 	}
 
 	/**
 	 * returns a string with the current formatter
 	 */
-	public static String format(double d) {
+	public static String format(double d)
+	{
 		return _numberFormat.format(d);
 	}
 
 	/**
 	 * Format specifications for numbers in report.
-	 * 
+	 *
 	 * @@param minFracDigits: Minimum Fraction Digits
 	 * @@param minIntDigits: Minimum Integer Digits
 	 * @@param maxFracDigits: Maximum Fraction Digits
 	 * @@param useGrouping: Use grouping, ie. 10,000 instead of 10000.
 	 */
 	public static void setFormat(int minFracDigits, int minIntDigits,
-			int maxFracDigits, boolean useGrouping) {
+								 int maxFracDigits, boolean useGrouping)
+	{
 		_numberFormat.setMinimumFractionDigits(minFracDigits);
 		_numberFormat.setMinimumIntegerDigits(minIntDigits);
 		_numberFormat.setMaximumFractionDigits(maxFracDigits);
 		_numberFormat.setGroupingUsed(useGrouping);
 	}
-
-	/**
-	 * sets the default font size
-	 */
-	public static int DEFAULT_FONT_SIZE = 12;
-	/**
-	 * sets the spacing between lines as a ratio of the default ratio
-	 */
-	public static float INTERLINE_SPACING_RATIO = 0.5f;
-	/**
-	 * this is the color for the min value in a line
-	 */
-	public static Color HEADER_HIGH_LIGHT_COLOR = new Color(255, 239, 213); // papaya
-																			// whip
-	/**
-	 * this is the color for the min value in a line
-	 */
-	public static Color HEADER_COLOR = new Color(128, 58, 0); // 
-	/**
-	 * this is the color for the min value in a line
-	 */
-	public static Color MIN_ITEM_COLOR = Color.red;
-	/**
-	 * this is the color for the max value in a line
-	 */
-	public static Color MAX_ITEM_COLOR = Color.blue;
-	/**
-	 * this is the color for the max value in a line
-	 */
-	public static Color WATER_YEAR_COLOR = new Color(85, 107, 47); // Dark olive
-																	// green
-	/**
-	 * the default formatter for numbers
-	 */
-	static NumberFormat _numberFormat = NumberFormat.getInstance();
-	/**
-    *
-    */
-	public static int DEFAULT_LEFT_MARGIN = 24;
-	/**
-    *
-    */
-	public static int DEFAULT_LINE_LENGTH = 124;
 }

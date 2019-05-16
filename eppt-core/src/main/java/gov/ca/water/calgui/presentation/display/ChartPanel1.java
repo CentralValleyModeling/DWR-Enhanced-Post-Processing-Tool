@@ -1,8 +1,13 @@
 /*
- * Copyright (c) 2019
- * California Department of Water Resources
- * All Rights Reserved.  DWR PROPRIETARY/CONFIDENTIAL.
- * Source may not be released without written approval from DWR
+ * Enhanced Post Processing Tool (EPPT) Copyright (c) 2019.
+ *
+ * EPPT is copyrighted by the State of California, Department of Water Resources. It is licensed
+ * under the GNU General Public License, version 2. This means it can be
+ * copied, distributed, and modified freely, but you may not restrict others
+ * in their ability to copy, distribute, and modify it. See the license below
+ * for more details.
+ *
+ * GNU General Public License
  */
 
 package gov.ca.water.calgui.presentation.display;
@@ -43,7 +48,9 @@ import org.jfree.chart.plot.XYPlot;
 import org.jfree.chart.renderer.xy.StandardXYItemRenderer;
 import org.jfree.chart.renderer.xy.XYItemRenderer;
 import org.jfree.chart.renderer.xy.XYLineAndShapeRenderer;
+import org.jfree.chart.title.LegendTitle;
 import org.jfree.data.Range;
+import org.jfree.data.general.Series;
 import org.jfree.data.time.Month;
 import org.jfree.data.time.TimeSeries;
 import org.jfree.data.time.TimeSeriesCollection;
@@ -71,6 +78,7 @@ public class ChartPanel1 extends JPanel implements Printable
 		this(title, yLabel, tscs, stscs, isExceed, lower, upper, sLabel, false);
 	}
 
+
 	public ChartPanel1(String title, String yLabel, TimeSeriesContainer[] tscs, TimeSeriesContainer[] stscs,
 					   boolean isExceed, Date lower, Date upper, String sLabel, boolean isBase)
 	{
@@ -86,19 +94,11 @@ public class ChartPanel1 extends JPanel implements Printable
 
 		int primaries = 0;
 		String sName = "";
-		if(sLabel.equals(""))
+		if("".equals(sLabel))
 		{
 			if(stscs != null && stscs[0] != null)
 			{
-				String[] sParts = stscs[0].fullName.split("/");
-				if(sParts.length > 3)
-				{
-					sName = sParts[2] + "/" + sParts[3];
-				}
-				else
-				{
-					sName = "Unassigned Secondary";
-				}
+				sName = stscs[0].fullName;
 			}
 		}
 		else
@@ -122,12 +122,13 @@ public class ChartPanel1 extends JPanel implements Printable
 		{
 
 			// Primary datasets
-
 			XYSeriesCollection dataset = new XYSeriesCollection();
 			XYSeries[] series = new XYSeries[(isBase ? 1 : tscs.length)];
 			for(int i = 0; i < (isBase ? 1 : tscs.length); i++)
 			{
-				series[i] = new XYSeries(tscs[i].fileName);
+				//requires unique name
+				String uniqueName = getUniqueLegendNameForCurve(series, tscs[i]);
+				series[i] = new XYSeries(uniqueName);
 				primaries++;
 				for(int j = 0; j < tscs[i].numberValues; j++)
 				{
@@ -147,7 +148,9 @@ public class ChartPanel1 extends JPanel implements Printable
 				{
 					if(stscs[i].numberValues > 0)
 					{
-						sseries[i] = new XYSeries(sName);
+						stscs[i].fullName = sName + " - " + stscs[i].fullName;
+						String uniqueName = getUniqueLegendNameForCurve(sseries, stscs[i]);
+						sseries[i] = new XYSeries(uniqueName);
 						for(int j = 0; j < stscs[i].numberValues; j++)
 						{
 							if(stscs[i].values[j] == 99000)
@@ -161,6 +164,7 @@ public class ChartPanel1 extends JPanel implements Printable
 								ymax = Math.max(ymax, stscs[i].values[j]);
 							}
 						}
+
 						dataset.addSeries(sseries[i]);
 					}
 				}
@@ -171,6 +175,7 @@ public class ChartPanel1 extends JPanel implements Printable
 					yLabel + ((yLabel.endsWith("(TAF)") ? "" : "(" + tscs[0].units + ")")), // y-axis
 					// label
 					dataset); // create and display a frame...
+			LegendTitle legend = chart.getLegend();
 
 		}
 		else
@@ -193,7 +198,7 @@ public class ChartPanel1 extends JPanel implements Printable
 					}
 					else
 					{
-						series[i] = new TimeSeries(tscs[i].fileName);
+						series[i] = new TimeSeries(getUniqueLegendNameForCurve(series, tscs[i]));// tscs[i].fileName);
 					}
 					for(int j = 0; j < tscs[i].numberValues; j++)
 					{
@@ -284,23 +289,28 @@ public class ChartPanel1 extends JPanel implements Printable
 				TimeSeriesCollection dataset = new TimeSeriesCollection();
 				for(int i = 0; i < (isBase ? 1 : tscs.length); i++)
 				{
-					if(isSchVw)
+					TimeSeriesContainer tsc = tscs[i];
+					if(tsc != null)
 					{
-						series[i] = new TimeSeries(svNames[i]);
+						if(isSchVw)
+						{
+							tsc.fullName = svNames[i] + " - " + tsc.fullName;
+							series[i] = new TimeSeries(getUniqueLegendNameForCurve(series, tsc));
+						}
+						else
+						{
+							series[i] = new TimeSeries(getUniqueLegendNameForCurve(series, tsc));//tsc.getName());
+						}
+						primaries++;
+						for(int j = 0; j < tsc.numberValues; j++)
+						{
+							ht.set(tsc.times[j]);
+							series[i].addOrUpdate(new Month(ht.month(), ht.year()), tsc.values[j]);
+							ymin = Math.min(ymin, tsc.values[j]);
+							ymax = Math.max(ymax, tsc.values[j]);
+						}
+						dataset.addSeries(series[i]);
 					}
-					else
-					{
-						series[i] = new TimeSeries(tscs[i].fileName);
-					}
-					primaries++;
-					for(int j = 0; j < tscs[i].numberValues; j++)
-					{
-						ht.set(tscs[i].times[j]);
-						series[i].addOrUpdate(new Month(ht.month(), ht.year()), tscs[i].values[j]);
-						ymin = Math.min(ymin, tscs[i].values[j]);
-						ymax = Math.max(ymax, tscs[i].values[j]);
-					}
-					dataset.addSeries(series[i]);
 				}
 
 				if(stscs != null)
@@ -310,7 +320,8 @@ public class ChartPanel1 extends JPanel implements Printable
 					{
 						if(stscs[i] != null && stscs[i].numberValues > 0)
 						{
-							sseries[i] = new TimeSeries(sName);
+							stscs[i].fullName = sName + " - " + stscs[i].fullName;
+							sseries[i] = new TimeSeries(getUniqueLegendNameForCurve(sseries, stscs[i]));//sName);
 							double maxval = -1e37;
 							for(int j = 0; j < stscs[i].numberValues; j++)
 							{
@@ -337,7 +348,7 @@ public class ChartPanel1 extends JPanel implements Printable
 						yLabel + " (" + tscs[0].units + ")", // y-axis label
 						dataset); // create and display a frame...
 
-				if(scatterAvailable)
+				if(scatterAvailable && tscs[0] != null && tscs[1] != null)
 				{
 
 					XYSeriesCollection datasetXY = new XYSeriesCollection();
@@ -365,6 +376,10 @@ public class ChartPanel1 extends JPanel implements Printable
 					renderer.setUseFillPaint(true);
 					renderer.setBaseFillPaint(Color.white);
 
+				}
+				else
+				{
+					scatterAvailable = false;
 				}
 
 			}
@@ -422,7 +437,7 @@ public class ChartPanel1 extends JPanel implements Printable
 			ChartPanel p2 = new ChartPanel(chart);
 			this.add(p2);
 		}
-		if(scatterAvailable)
+		if(scatterAvailable && chartXY != null)
 		{
 
 			setChartOptions(chartXY, stscs, isExceed, isBase, ymax, ymin, primaries);
@@ -521,6 +536,39 @@ public class ChartPanel1 extends JPanel implements Printable
 				_buffer = _buffer + "\n";
 			}
 		}
+	}
+
+	private String getUniqueLegendNameForCurve(Series[] dataSet, TimeSeriesContainer tsc)
+	{
+		String uniqueName = tsc.fullName;
+
+		//check for uniqueness and add numbers at the end until it is
+		boolean nameIsUnique;
+		int i = 2;
+		do
+		{
+			nameIsUnique = true;
+			if(dataSet.length > 0)
+			{
+				for(Series line : dataSet)
+				{
+					if(line != null)
+					{
+						if(line.getKey().equals(uniqueName))
+						{
+							nameIsUnique = false;
+							uniqueName = uniqueName.concat(" " + i);
+							i++;
+						}
+					}
+				}
+			}
+		}
+		while(!nameIsUnique);
+
+
+		return uniqueName;
+
 	}
 
 	/**

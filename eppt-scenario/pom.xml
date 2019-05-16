@@ -1,9 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-  ~ Copyright (c) 2019
-  ~ California Department of Water Resources
-  ~ All Rights Reserved.  DWR PROPRIETARY/CONFIDENTIAL.
-  ~ Source may not be released without written approval from DWR
+  ~ Enhanced Post Processing Tool (EPPT) Copyright (c) 2019.
+  ~
+  ~ EPPT is copyrighted by the State of California, Department of Water Resources. It is licensed
+  ~ under the GNU General Public License, version 2. This means it can be
+  ~ copied, distributed, and modified freely, but you may not restrict others
+  ~ in their ability to copy, distribute, and modify it. See the license below
+  ~ for more details.
+  ~
+  ~ GNU General Public License
   -->
 
 <project xmlns="http://maven.apache.org/POM/4.0.0"
@@ -12,7 +17,7 @@
 	<parent>
 		<groupId>gov.ca.water</groupId>
 		<artifactId>eppt-parent</artifactId>
-		<version>1.0.0-SNAPSHOT</version>
+		<version>1.0.1-SNAPSHOT</version>
 		<relativePath>../eppt-parent</relativePath>
 	</parent>
 	<modelVersion>4.0.0</modelVersion>
@@ -34,12 +39,12 @@
 		<dependency>
 			<groupId>gov.ca.water</groupId>
 			<artifactId>eppt-core</artifactId>
-			<version>1.0.0-SNAPSHOT</version>
+			<version>${project.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>gov.ca.water</groupId>
 			<artifactId>eppt-ui</artifactId>
-			<version>1.0.0-SNAPSHOT</version>
+			<version>${project.version}</version>
 			<scope>compile</scope>
 		</dependency>
 	</dependencies>

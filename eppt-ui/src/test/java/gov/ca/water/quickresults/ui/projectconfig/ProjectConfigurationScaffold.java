@@ -7,6 +7,10 @@
 
 package gov.ca.water.quickresults.ui.projectconfig;
 
+import java.awt.BorderLayout;
+
+import javax.swing.*;
+
 import gov.ca.water.calgui.EpptInitializationException;
 import gov.ca.water.quickresults.ui.EpptPanel;
 import gov.ca.water.quickresults.ui.EpptScaffold;
@@ -30,10 +34,22 @@ public class ProjectConfigurationScaffold extends EpptScaffold
 	protected EpptPanel buildEpptPanel()
 	{
 		ProjectConfigurationPanel projectConfigurationPanel = ProjectConfigurationPanel.getProjectConfigurationPanel();
+		JButton reset = new JButton("Reset");
+		reset.addActionListener(e-> {
+			try
+			{
+				projectConfigurationPanel.resetProjectConfiguration();
+				projectConfigurationPanel.add(reset, BorderLayout.SOUTH);
+			}
+			catch(Exception e1)
+			{
+				e1.printStackTrace();
+			}
+		});
+//		projectConfigurationPanel.add(reset, BorderLayout.SOUTH);
 		ProjectConfigurationListener projectConfigurationListener = new ProjectConfigurationListener(
 				projectConfigurationPanel);
-		projectConfigurationPanel.getSwingEngine().setActionListener(projectConfigurationPanel,
-				projectConfigurationListener);
+		projectConfigurationPanel.setActionListener(projectConfigurationListener);
 		return projectConfigurationPanel;
 	}
 }

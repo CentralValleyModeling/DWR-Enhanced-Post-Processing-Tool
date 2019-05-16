@@ -1,8 +1,13 @@
 /*
- * Copyright (c) 2019
- * California Department of Water Resources
- * All Rights Reserved.  DWR PROPRIETARY/CONFIDENTIAL.
- * Source may not be released without written approval from DWR
+ * Enhanced Post Processing Tool (EPPT) Copyright (c) 2019.
+ *
+ * EPPT is copyrighted by the State of California, Department of Water Resources. It is licensed
+ * under the GNU General Public License, version 2. This means it can be
+ * copied, distributed, and modified freely, but you may not restrict others
+ * in their ability to copy, distribute, and modify it. See the license below
+ * for more details.
+ *
+ * GNU General Public License
  */
 package vista.app;
 
@@ -14,15 +19,22 @@ import vista.set.Group;
 
 /**
  * A frame containing the view of a group and its associated menu items.
- * 
+ *
  * @author Nicky Sandhu
  * @version $Id: GroupFrameApplet.java,v 1.1 2000/05/10 20:38:08 nsandhu Exp $
  */
-public class GroupFrameApplet extends DefaultFrame {
+public class GroupFrameApplet extends DefaultFrame
+{
 	/**
-   *
-   */
-	public GroupFrameApplet(Group g) {
+	 *
+	 */
+	private GroupTable _groupTablePanel;
+
+	/**
+	 *
+	 */
+	public GroupFrameApplet(Group g)
+	{
 		// setIconImage(Toolkit.getDefaultToolkit().createImage(VistaUtils.getImageAsBytes("/vista/OWE.gif")));
 		_groupTablePanel = new GroupTable(g);
 		JMenuBar mbar = new JMenuBar();
@@ -47,14 +59,10 @@ public class GroupFrameApplet extends DefaultFrame {
 	}
 
 	/**
-   *
-   */
-	public GroupTable getGroupTable() {
+	 *
+	 */
+	public GroupTable getGroupTable()
+	{
 		return _groupTablePanel;
 	}
-
-	/**
-   *
-   */
-	private GroupTable _groupTablePanel;
 }

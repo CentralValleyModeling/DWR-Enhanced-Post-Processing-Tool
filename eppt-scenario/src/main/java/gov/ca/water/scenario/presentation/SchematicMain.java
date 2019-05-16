@@ -1,24 +1,28 @@
 /*
- * Copyright (c) 2019
- * California Department of Water Resources
- * All Rights Reserved.  DWR PROPRIETARY/CONFIDENTIAL.
- * Source may not be released without written approval from DWR
+ * Enhanced Post Processing Tool (EPPT) Copyright (c) 2019.
+ *
+ * EPPT is copyrighted by the State of California, Department of Water Resources. It is licensed
+ * under the GNU General Public License, version 2. This means it can be
+ * copied, distributed, and modified freely, but you may not restrict others
+ * in their ability to copy, distribute, and modify it. See the license below
+ * for more details.
+ *
+ * GNU General Public License
  */
 
 package gov.ca.water.scenario.presentation;
 
 import java.awt.Toolkit;
 import java.awt.geom.AffineTransform;
-import java.util.ArrayList;
 import java.util.List;
 import javax.swing.*;
 
 import gov.ca.water.businessservice.impl.XMLParsingSvcImpl;
-import gov.ca.water.calgui.bo.RBListItemBO;
 import gov.ca.water.calgui.constant.Constant;
 import gov.ca.water.calgui.presentation.DisplayHelper;
-import gov.ca.water.calgui.tech_service.IErrorHandlingSvc;
-import gov.ca.water.calgui.tech_service.impl.ErrorHandlingSvcImpl;
+import gov.ca.water.calgui.project.EpptScenarioRun;
+import gov.ca.water.calgui.techservice.IErrorHandlingSvc;
+import gov.ca.water.calgui.techservice.impl.ErrorHandlingSvcImpl;
 import gov.ca.water.quickresults.ui.projectconfig.ProjectConfigurationPanel;
 import org.apache.batik.script.Window;
 import org.apache.batik.swing.JSVGCanvas;
@@ -215,18 +219,17 @@ public class SchematicMain
 				}
 				else
 				{
-					List<RBListItemBO> scenarios = new ArrayList<>();
-					ListModel<RBListItemBO> model = lstScenarios.getModel();
-					for(int i = 0; i < model.getSize(); i++)
-					{
-						scenarios.add(model.getElementAt(i));
-					}
 					ProjectConfigurationPanel projectConfigurationPanel = ProjectConfigurationPanel.getProjectConfigurationPanel();
-					String quickState = projectConfigurationPanel.quickState();
-					Month startMonth = projectConfigurationPanel.getStartMonth();
-					Month endMonth = projectConfigurationPanel.getEndMonth();
-					_displayHelper.showDisplayFrames(quickState + ";Locs-" + label + ";Index-"
-							+ Constant.SCHEMATIC_PREFIX + label, scenarios, startMonth, endMonth);
+					EpptScenarioRun baseScenario = projectConfigurationPanel.getBaseScenario();
+					if(baseScenario != null)
+					{
+						List<EpptScenarioRun> alternatives = projectConfigurationPanel.getEpptScenarioAlternatives();
+						String quickState = projectConfigurationPanel.quickState();
+						Month startMonth = projectConfigurationPanel.getStartMonth();
+						Month endMonth = projectConfigurationPanel.getEndMonth();
+						_displayHelper.showDisplayFrames(quickState + ";Locs-" + label + ";Index-"
+								+ Constant.SCHEMATIC_PREFIX + label, baseScenario, alternatives, startMonth, endMonth);
+					}
 				}
 			}
 		}

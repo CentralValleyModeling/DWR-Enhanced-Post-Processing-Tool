@@ -1,8 +1,13 @@
 /*
- * Copyright (c) 2019
- * California Department of Water Resources
- * All Rights Reserved.  DWR PROPRIETARY/CONFIDENTIAL.
- * Source may not be released without written approval from DWR
+ * Enhanced Post Processing Tool (EPPT) Copyright (c) 2019.
+ *
+ * EPPT is copyrighted by the State of California, Department of Water Resources. It is licensed
+ * under the GNU General Public License, version 2. This means it can be
+ * copied, distributed, and modified freely, but you may not restrict others
+ * in their ability to copy, distribute, and modify it. See the license below
+ * for more details.
+ *
+ * GNU General Public License
  */
 package vista.set;
 
@@ -10,18 +15,25 @@ import vista.time.TimeFactory;
 import vista.time.TimeWindow;
 
 /**
- * 
  * @author Nicky Sandhu
  * @version $Id: DefaultReference.java,v 1.5 2000/03/27 18:38:42 nsandhu Exp $
  */
-public class DefaultReference extends DataReference {
+public class DefaultReference extends DataReference
+{
 	/**
-   *
-   */
-	public DefaultReference(DataSet ds) {
+	 *
+	 */
+	private DataSet _dataSet;
+
+	/**
+	 *
+	 */
+	public DefaultReference(DataSet ds)
+	{
 		String pathname = null;
 		DataSetAttr attr = ds.getAttributes();
-		if (ds instanceof RegularTimeSeries) {
+		if(ds instanceof RegularTimeSeries)
+		{
 			RegularTimeSeries rts = (RegularTimeSeries) ds;
 			setName(ds.getName());
 			pathname = "/" + attr.getGroupName() + "/" + attr.getLocationName()
@@ -29,35 +41,43 @@ public class DefaultReference extends DataReference {
 					+ rts.getTimeWindow().getStartTime().toString() + "/"
 					+ rts.getTimeInterval().toString() + "/"
 					+ attr.getSourceName() + "/";
-		} else if (ds instanceof IrregularTimeSeries) {
+		}
+		else if(ds instanceof IrregularTimeSeries)
+		{
 			setName(ds.getName());
 			IrregularTimeSeries its = (IrregularTimeSeries) ds;
 			pathname = "/" + attr.getGroupName() + "/" + attr.getLocationName()
 					+ "/" + attr.getTypeName() + "/"
 					+ its.getTimeWindow().getStartTime().toString()
 					+ "/IR-YEAR/" + attr.getSourceName() + "/";
-		} else if (ds instanceof DefaultDataSet) {
+		}
+		else if(ds instanceof DefaultDataSet)
+		{
 			setName(ds.getName());
 			pathname = "/" + attr.getGroupName() + "/" + attr.getLocationName()
 					+ "/" + attr.getTypeName() + "///" + attr.getSourceName()
 					+ "/";
-		} else {
+		}
+		else
+		{
 			throw new RuntimeException("Unrecognized type of data set: " + ds);
 		}
 		init("local", "data.dss", pathname, ds);
 	}
 
 	/**
-   *
-   */
-	public DefaultReference(String server, String file, String path, DataSet ds) {
+	 *
+	 */
+	public DefaultReference(String server, String file, String path, DataSet ds)
+	{
 		init(server, file, path, ds);
 	}
 
 	/**
-   *
-   */
-	private void init(String server, String file, String path, DataSet ds) {
+	 *
+	 */
+	private void init(String server, String file, String path, DataSet ds)
+	{
 		setServername(server);
 		setFilename(file);
 		Pathname pathname = Pathname.createPathname(path);
@@ -67,7 +87,8 @@ public class DefaultReference extends DataReference {
 		String yUnits = "";
 		String xType = "";
 		String yType = "";
-		if (ds instanceof RegularTimeSeries) {
+		if(ds instanceof RegularTimeSeries)
+		{
 			RegularTimeSeries rts = (RegularTimeSeries) ds;
 			// always set the time interval before setting the timewindow..
 			setTimeInterval(rts.getTimeInterval());
@@ -77,7 +98,9 @@ public class DefaultReference extends DataReference {
 			yUnits = ds.getAttributes().getYUnits();
 			xType = ds.getAttributes().getXType();
 			yType = ds.getAttributes().getYType();
-		} else if (ds instanceof IrregularTimeSeries) {
+		}
+		else if(ds instanceof IrregularTimeSeries)
+		{
 			IrregularTimeSeries its = (IrregularTimeSeries) ds;
 			// always set the time interval before setting the timewindow..
 			setTimeInterval(TimeFactory.getInstance().createTimeInterval(
@@ -88,7 +111,9 @@ public class DefaultReference extends DataReference {
 			yUnits = ds.getAttributes().getYUnits();
 			xType = ds.getAttributes().getXType();
 			yType = ds.getAttributes().getYType();
-		} else {
+		}
+		else
+		{
 			dataType = DataType.PAIRED;
 			xUnits = ds.getAttributes().getXUnits();
 			yUnits = ds.getAttributes().getYUnits();
@@ -97,8 +122,8 @@ public class DefaultReference extends DataReference {
 		}
 		DataSetAttr attr = new DataSetAttr(pathname.getPart(Pathname.A_PART),
 				pathname.getPart(Pathname.B_PART), pathname
-						.getPart(Pathname.C_PART), pathname
-						.getPart(Pathname.F_PART), dataType, xUnits, yUnits,
+				.getPart(Pathname.C_PART), pathname
+				.getPart(Pathname.F_PART), dataType, xUnits, yUnits,
 				xType, yType);
 		_dataSet = ds;
 	}
@@ -106,23 +131,26 @@ public class DefaultReference extends DataReference {
 	/**
 	 * reloads data
 	 */
-	public void reloadData() {
+	public void reloadData()
+	{
 	}
 
 	/**
 	 * Retrieves data from the data base if data is null. If retrieval fails it
 	 * throws a RuntimeException.
-	 * 
+	 *
 	 * @return reference to the initialized data set.
 	 */
-	public DataSet getData() {
+	public DataSet getData()
+	{
 		return _dataSet;
 	}
 
 	/**
 	 * create a clone of itself
 	 */
-	protected DataReference createClone() {
+	protected DataReference createClone()
+	{
 		return new DefaultReference(getServername(), getFilename(),
 				getPathname().toString(), _dataSet);
 	}
@@ -130,14 +158,15 @@ public class DefaultReference extends DataReference {
 	/**
 	 * checks equivalency of two data references.
 	 */
-	public boolean isSameAs(DataReference ref) {
+	public boolean isSameAs(DataReference ref)
+	{
 		return (ref != null)
 				&& ((ref.getTimeWindow() == null && getTimeWindow() == null) || (ref
-						.getTimeWindow() != null && ref.getTimeWindow().equals(
-						getTimeWindow())))
+				.getTimeWindow() != null && ref.getTimeWindow().equals(
+				getTimeWindow())))
 				&& ((ref.getTimeInterval() == null && getTimeInterval() == null) || (ref
-						.getTimeInterval() != null && ref.getTimeInterval()
-						.equals(getTimeInterval())))
+				.getTimeInterval() != null && ref.getTimeInterval()
+												 .equals(getTimeInterval())))
 				&& (ref.getFilename().equals(getFilename()))
 				&& (ref.getServername().equals(getServername()))
 				&& (ref.getPathname().equals(getPathname()));
@@ -146,22 +175,26 @@ public class DefaultReference extends DataReference {
 	/**
 	 * gets the time window for this reference
 	 */
-	protected void setTimeWindow(TimeWindow tw) {
+	protected void setTimeWindow(TimeWindow tw)
+	{
 		super.setTimeWindow(tw);
-		if (tw == null)
+		if(tw == null)
+		{
 			return;
-		if (!(_dataSet instanceof TimeSeries))
+		}
+		if(!(_dataSet instanceof TimeSeries))
+		{
 			return;
-		if (_dataSet instanceof RegularTimeSeries)
+		}
+		if(_dataSet instanceof RegularTimeSeries)
+		{
 			_dataSet = ((RegularTimeSeries) _dataSet)
 					.createSlice(getTimeWindow());
-		else if (_dataSet instanceof IrregularTimeSeries)
+		}
+		else if(_dataSet instanceof IrregularTimeSeries)
+		{
 			_dataSet = ((IrregularTimeSeries) _dataSet)
 					.createSlice(getTimeWindow());
+		}
 	}
-
-	/**
-   *
-   */
-	private DataSet _dataSet;
 }

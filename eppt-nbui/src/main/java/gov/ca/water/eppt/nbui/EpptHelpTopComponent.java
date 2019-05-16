@@ -1,8 +1,13 @@
 /*
- * Copyright (c) 2019
- * California Department of Water Resources
- * All Rights Reserved.  DWR PROPRIETARY/CONFIDENTIAL.
- * Source may not be released without written approval from DWR
+ * Enhanced Post Processing Tool (EPPT) Copyright (c) 2019.
+ *
+ * EPPT is copyrighted by the State of California, Department of Water Resources. It is licensed
+ * under the GNU General Public License, version 2. This means it can be
+ * copied, distributed, and modified freely, but you may not restrict others
+ * in their ability to copy, distribute, and modify it. See the license below
+ * for more details.
+ *
+ * GNU General Public License
  */
 package gov.ca.water.eppt.nbui;
 
@@ -30,7 +35,7 @@ import org.openide.windows.WindowManager;
 		preferredID = "EpptHelpTopComponent",
 		iconBase = "gov/ca/water/eppt/nbui/questionmark18.gif"
 )
-@TopComponent.Registration(mode = "properties", openAtStartup = false)
+@TopComponent.Registration(mode = "editor", openAtStartup = false)
 @ActionID(category = "Window", id = "gov.ca.water.eppt.nbui.EpptHelpTopComponent")
 @ActionReference(path = "Menu/Help", position = 0)
 @TopComponent.OpenActionRegistration(
@@ -46,7 +51,7 @@ public final class EpptHelpTopComponent extends TopComponent
 		setName("EPPT Help");
 		try
 		{
-			String path = Constant.DOCS_DIR + "\\JavaHelp_2.0\\CalLite3-GUI-Help_JavaHelp_V2_082614.hs";
+			String path = Constant.DOCS_DIR + "\\Help\\CalLite3-GUI-Help_JavaHelp_V2_082614.hs";
 			URL url = new URL("file:///" + path);
 			_helpViewer = new JHelp(new HelpSet(null, url));
 			setLayout(new BorderLayout());

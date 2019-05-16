@@ -1,0 +1,96 @@
+﻿/*
+ * Enhanced Post Processing Tool (EPPT) Copyright (c) 2019.
+ *
+ * EPPT is copyrighted by the State of California, Department of Water Resources. It is licensed
+ * under the GNU General Public License, version 2. This means it can be
+ * copied, distributed, and modified freely, but you may not restrict others
+ * in their ability to copy, distribute, and modify it. See the license below
+ * for more details.
+ *
+ * GNU General Public License
+ */
+
+body {
+    font-family: arial;
+    background-color: #ffffff;
+}
+
+h1 {
+    font-weight: bold;
+    font-size: 24.0pt;
+}
+
+h2 {
+    font-weight: bold;
+    font-size: 18.0pt;
+}
+
+h3 {
+    font-weight: bold;
+    font-size: 16pt;
+    x-next-type: p;
+}
+
+h4 {
+    font-weight: bold;
+    font-size: 12.0pt;
+}
+
+h5 {
+    font-weight: bold;
+    font-size: 10.0pt;
+}
+
+h6 {
+    font-weight: bold;
+    font-size: 8.0pt;
+}
+
+p {
+    margin-top: 0pt;
+    margin-bottom: 0pt;
+    font-size: 14pt;
+}
+
+a.expandspot {
+    color: #008000;
+    cursor: hand;
+    font-style: italic;
+    text-decoration: none;
+}
+
+span.expandtext {
+    font-style: italic;
+    font-weight: normal;
+    color: #ff0000;
+}
+
+a.dropspot {
+    cursor: hand;
+    color: #008000;
+    font-style: italic;
+    text-decoration: none;
+}
+
+a.glossterm {
+    color: #800000;
+    cursor: hand;
+    font-style: italic;
+    text-decoration: none;
+}
+
+span.glosstext {
+    font-style: italic;
+    font-weight: normal;
+    color: #0000ff;
+}
+
+ol {
+    margin-top: 0px;
+    margin-bottom: 0px;
+}
+
+ul {
+    margin-top: 0px;
+    margin-bottom: 0px;
+}

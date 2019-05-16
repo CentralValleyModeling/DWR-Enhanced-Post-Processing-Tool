@@ -1,0 +1,14 @@
+/************************************
+
+Logic_dummy.wresl
+
+Taraky, DWR, BDO
+20170810
+
+This file sets a dummy goal for xa solver to run the study.    
+**************************************/
+
+define [local] dummy {std kind 'none' units 'none'} 
+goal setdummy {dummy = 1}
+
+

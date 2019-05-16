@@ -1,14 +1,20 @@
 /*
- * Copyright (c) 2019
- * California Department of Water Resources
- * All Rights Reserved.  DWR PROPRIETARY/CONFIDENTIAL.
- * Source may not be released without written approval from DWR
+ * Enhanced Post Processing Tool (EPPT) Copyright (c) 2019.
+ *
+ * EPPT is copyrighted by the State of California, Department of Water Resources. It is licensed
+ * under the GNU General Public License, version 2. This means it can be
+ * copied, distributed, and modified freely, but you may not restrict others
+ * in their ability to copy, distribute, and modify it. See the license below
+ * for more details.
+ *
+ * GNU General Public License
  */
 
 package gov.ca.water.businessservice.impl;
 
 import java.awt.Component;
 import java.awt.Container;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -22,8 +28,8 @@ import gov.ca.water.businessservice.IDynamicControlSvc;
 import gov.ca.water.calgui.EpptInitializationException;
 import gov.ca.water.calgui.bo.CalLiteGUIException;
 import gov.ca.water.calgui.constant.Constant;
-import gov.ca.water.calgui.tech_service.IFileSystemSvc;
-import gov.ca.water.calgui.tech_service.impl.FileSystemSvcImpl;
+import gov.ca.water.calgui.techservice.IFileSystemSvc;
+import gov.ca.water.calgui.techservice.impl.FileSystemSvcImpl;
 import org.apache.log4j.Logger;
 import org.swixml.SwingEngine;
 
@@ -47,7 +53,7 @@ public final class DynamicControlSvcImpl implements IDynamicControlSvc
 	 * TriggerForDynamicDisplay.table files into memory.
 	 */
 	private DynamicControlSvcImpl() throws EpptInitializationException
-    {
+	{
 		LOG.info("Building DynamicControlSvcImpl Object.");
 		this._fileSystemSvc = new FileSystemSvcImpl();
 		this._triggerMapForEnableDisable = new HashMap<>();
@@ -75,29 +81,30 @@ public final class DynamicControlSvcImpl implements IDynamicControlSvc
 	 * This method is for implementing the singleton. It will return the
 	 * instance of this class if it is empty it will create one.
 	 * throws IllegalStateException
+	 *
 	 * @return Will return the instance of this class if it is empty it will
 	 * create one.
 	 */
 	public static IDynamicControlSvc getDynamicControlSvcImplInstance()
-    {
-        if(dynamicControlSvc == null)
-        {
-            throw new IllegalStateException("the dynamic control service has not been initialized. A call to " +
-                    "'DynamicControlSvcImpl.createDynamicControlSvcImplInstance()' should have been made in the CalLiteInitClass.init method.");
-        }
-        else
-        {
-            return dynamicControlSvc;
-        }
+	{
+		if(dynamicControlSvc == null)
+		{
+			throw new IllegalStateException("the dynamic control service has not been initialized. A call to " +
+					"'DynamicControlSvcImpl.createDynamicControlSvcImplInstance()' should have been made in the CalLiteInitClass.init method.");
+		}
+		else
+		{
+			return dynamicControlSvc;
+		}
 	}
 
-	public static void createDynamicControlSvcImplInstance()throws EpptInitializationException
-    {
-        if(dynamicControlSvc == null)
-        {
-            dynamicControlSvc = new DynamicControlSvcImpl();
-        }
-    }
+	public static void createDynamicControlSvcImplInstance() throws EpptInitializationException
+	{
+		if(dynamicControlSvc == null)
+		{
+			dynamicControlSvc = new DynamicControlSvcImpl();
+		}
+	}
 
 	/**
 	 * This will tell whether the line is comment or not.
@@ -117,13 +124,14 @@ public final class DynamicControlSvcImpl implements IDynamicControlSvc
 	 * @param triggerMap The list of trigger map.
 	 */
 	private void loadTriggerTable(String fileName, Map<String, List<TriggerBO>> triggerMap) throws EpptInitializationException
-    {
+	{
 		List<String> triggerStrList;
 		String errorStr = "";
 		String mapKey;
 		try
 		{
-			triggerStrList = _fileSystemSvc.getFileData(fileName, true, DynamicControlSvcImpl::isNotComments);
+			triggerStrList = _fileSystemSvc.getFileData(Paths.get(fileName), true,
+					DynamicControlSvcImpl::isNotComments);
 			for(String triggerStr : triggerStrList)
 			{
 				errorStr = triggerStr;
@@ -152,7 +160,7 @@ public final class DynamicControlSvcImpl implements IDynamicControlSvc
 		catch(CalLiteGUIException ex)
 		{
 			LOG.error(ex.getMessage(), ex);
-            throw new EpptInitializationException( ex.getMessage());
+			throw new EpptInitializationException(ex.getMessage());
 		}
 	}
 
@@ -175,8 +183,8 @@ public final class DynamicControlSvcImpl implements IDynamicControlSvc
 				else if(isEnabled)
 				{
 
-						toggleEnComponentAndChildren(swingEngine.find(triggerBO.getAffectdeGuiId()),
-								stringOnOffToBoolean(triggerBO.getAffectdeAction()));
+					toggleEnComponentAndChildren(swingEngine.find(triggerBO.getAffectdeGuiId()),
+							stringOnOffToBoolean(triggerBO.getAffectdeAction()));
 
 				}
 			}

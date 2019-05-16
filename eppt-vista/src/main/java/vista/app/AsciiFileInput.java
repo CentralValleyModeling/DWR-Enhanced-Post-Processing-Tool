@@ -1,8 +1,13 @@
 /*
- * Copyright (c) 2019
- * California Department of Water Resources
- * All Rights Reserved.  DWR PROPRIETARY/CONFIDENTIAL.
- * Source may not be released without written approval from DWR
+ * Enhanced Post Processing Tool (EPPT) Copyright (c) 2019.
+ *
+ * EPPT is copyrighted by the State of California, Department of Water Resources. It is licensed
+ * under the GNU General Public License, version 2. This means it can be
+ * copied, distributed, and modified freely, but you may not restrict others
+ * in their ability to copy, distribute, and modify it. See the license below
+ * for more details.
+ *
+ * GNU General Public License
  */
 package vista.app;
 
@@ -16,17 +21,34 @@ import java.util.NoSuchElementException;
 import java.util.StringTokenizer;
 
 /**
-   *
-   */
-public class AsciiFileInput extends GenericFileInput {
+ *
+ */
+public class AsciiFileInput extends GenericFileInput
+{
+	/**
+	 *
+	 */
+	private LineNumberReader reader;
+	/**
+	 *
+	 */
+	private StringTokenizer tokenizer;
+	/**
+	 *
+	 */
+	private InputStream is;
+
 	/**
 	 * Initialize streams and/or open connection to file input
 	 */
-	public void initializeInput(String filename) throws IOException {
+	public void initializeInput(String filename) throws IOException
+	{
 		// InputStream is = getInputStream(filename);
 		is = getInputStream(filename);
-		if (is == null)
+		if(is == null)
+		{
 			throw new IOException("Could not initialize from " + filename);
+		}
 		reader = new LineNumberReader(new InputStreamReader(is), 8192 * 2);
 		tokenizer = new StringTokenizer(" ");
 	}
@@ -34,72 +56,91 @@ public class AsciiFileInput extends GenericFileInput {
 	/**
 	 * reads line and returns as string
 	 */
-	public String readString() throws IOException {
+	public String readString() throws IOException
+	{
 		return reader.readLine();
 	}
 
 	/**
 	 * read a short or interpret next data input as short
 	 */
-	public short readShort() throws IOException {
+	public short readShort() throws IOException
+	{
 		String val = getNextToken();
-		if (val == null)
+		if(val == null)
+		{
 			throw new IOException(" No more data ");
+		}
 		return new Short(val).shortValue();
 	}
 
 	/**
 	 * read an integer
 	 */
-	public int readInt() throws IOException {
+	public int readInt() throws IOException
+	{
 		String val = getNextToken();
-		if (val == null)
+		if(val == null)
+		{
 			throw new IOException(" No more data ");
+		}
 		return new Integer(val).intValue();
 	}
 
 	/**
 	 * read a float
 	 */
-	public float readFloat() throws IOException {
+	public float readFloat() throws IOException
+	{
 		String val = getNextToken();
-		if (val == null)
+		if(val == null)
+		{
 			throw new IOException(" No more data ");
+		}
 		return new Float(val).floatValue();
 	}
 
 	/**
 	 * read a double
 	 */
-	public double readDouble() throws IOException {
+	public double readDouble() throws IOException
+	{
 		String val = getNextToken();
-		if (val == null)
+		if(val == null)
+		{
 			throw new IOException(" No more data ");
+		}
 		return new Double(val).doubleValue();
 	}
 
 	/**
 	 * move to next record
 	 */
-	public void nextRecord() throws IOException {
+	public void nextRecord() throws IOException
+	{
 		readString();
 	}
 
 	/**
 	 * close the input stream and release resources
 	 */
-	public void closeStream() throws IOException {
+	public void closeStream() throws IOException
+	{
 		is.close();
 	}
 
 	/**
-   *
-   */
-	private final String getNextToken() throws IOException {
+	 *
+	 */
+	private final String getNextToken() throws IOException
+	{
 		String val = null;
-		try {
+		try
+		{
 			val = tokenizer.nextToken();
-		} catch (NoSuchElementException e) {
+		}
+		catch(NoSuchElementException e)
+		{
 			tokenizer = new StringTokenizer(reader.readLine());
 			val = tokenizer.nextToken();
 		}
@@ -107,18 +148,23 @@ public class AsciiFileInput extends GenericFileInput {
 	}
 
 	/**
-   * 
-   */
-	public Object readObject(Object obj) throws IOException {
+	 *
+	 */
+	public Object readObject(Object obj) throws IOException
+	{
 
 		Class objectClass = obj.getClass();
-		if (objectClass.isArray()) {
+		if(objectClass.isArray())
+		{
 			int len = Array.getLength(obj);
 			Field[] fields = objectClass.getComponentType().getFields();
-			for (int i = 0; i < len; i++) {
+			for(int i = 0; i < len; i++)
+			{
 				Array.set(obj, i, readThisObject(Array.get(obj, i), fields));
 			}
-		} else {
+		}
+		else
+		{
 			obj = readThisObject(obj, obj.getClass().getFields());
 		}
 
@@ -126,39 +172,39 @@ public class AsciiFileInput extends GenericFileInput {
 	}
 
 	/**
-   * 
-   */
+	 *
+	 */
 	private Object readThisObject(Object obj, Field[] fields)
-			throws IOException {
-		try {
-			for (int i = 0; i < fields.length; i++) {
+			throws IOException
+	{
+		try
+		{
+			for(int i = 0; i < fields.length; i++)
+			{
 				// System.out.println(fields[i].getType());
-				if (fields[i].getType() == Short.TYPE)
+				if(fields[i].getType() == Short.TYPE)
+				{
 					fields[i].setShort(obj, readShort());
-				else if (fields[i].getType() == Integer.TYPE)
+				}
+				else if(fields[i].getType() == Integer.TYPE)
+				{
 					fields[i].setInt(obj, readInt());
-				else if (fields[i].getType() == Float.TYPE)
+				}
+				else if(fields[i].getType() == Float.TYPE)
+				{
 					fields[i].setFloat(obj, readFloat());
-				else if (fields[i].getType() == Double.TYPE)
+				}
+				else if(fields[i].getType() == Double.TYPE)
+				{
 					fields[i].setDouble(obj, readDouble());
+				}
 			}
-		} catch (IllegalAccessException iae) {
+		}
+		catch(IllegalAccessException iae)
+		{
 			throw new IOException(" Illegal Access Exception " + iae);
 		}
 
 		return obj;
 	}
-
-	/**
-   *
-   */
-	private LineNumberReader reader;
-	/**
-   *
-   */
-	private StringTokenizer tokenizer;
-	/**
-   *
-   */
-	private InputStream is;
 }

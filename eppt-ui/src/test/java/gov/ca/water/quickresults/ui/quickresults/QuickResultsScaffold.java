@@ -12,7 +12,9 @@ import java.util.List;
 import javax.swing.*;
 
 import gov.ca.water.calgui.EpptInitializationException;
+import gov.ca.water.calgui.bo.GUILinksAllModelsBO;
 import gov.ca.water.calgui.bo.RBListItemBO;
+import gov.ca.water.calgui.project.EpptScenarioRun;
 import gov.ca.water.quickresults.ui.EpptPanel;
 import gov.ca.water.quickresults.ui.EpptScaffold;
 import gov.ca.water.quickresults.ui.projectconfig.ProjectConfigurationPanel;
@@ -41,24 +43,24 @@ public class QuickResultsScaffold extends EpptScaffold
 		if(component instanceof JList)
 		{
 			JList<RBListItemBO> lstScenarios = (JList<RBListItemBO>) component;
-			List<RBListItemBO> currentScenarios = projectConfigurationPanel.getScenarios();
-			String baseFile = Thread.currentThread().getContextClassLoader().getResource(
-					"Base.dss").getFile().substring(1);
-			RBListItemBO base = new RBListItemBO(baseFile, "Base.dss");
-			base.setSelected(true);
-			currentScenarios.add(base);
-			String altFile = Thread.currentThread().getContextClassLoader().getResource(
-					"Alternative.dss").getFile().substring(1);
-			currentScenarios.add(new RBListItemBO(altFile, "Alternative.dss"));
-			String cs2 = Thread.currentThread().getContextClassLoader().getResource(
-					"CSII_DCR2017_Base_DV.dss").getFile().substring(1);
-			currentScenarios.add(new RBListItemBO(cs2, "CSII_DCR2017_Base_DV.dss"));
-			DefaultListModel<RBListItemBO> defaultModel = new DefaultListModel<>();
-			for(RBListItemBO item : currentScenarios)
-			{
-				defaultModel.addElement(item);
-			}
-			lstScenarios.setModel(defaultModel);
+			List<EpptScenarioRun> currentScenarios = projectConfigurationPanel.getEpptScenarioRuns();
+//			String baseFile = Thread.currentThread().getContextClassLoader().getResource(
+//					"Base.dss").getFile().substring(1);
+//			RBListItemBO base = new RBListItemBO(baseFile, "Base.dss", GUILinksAllModelsBO.Model.findModel("CalLite"));
+//			base.setSelected(true);
+//			currentScenarios.add(base);
+//			String altFile = Thread.currentThread().getContextClassLoader().getResource(
+//					"Alternative.dss").getFile().substring(1);
+//			currentScenarios.add(new RBListItemBO(altFile, "Alternative.dss", GUILinksAllModelsBO.Model.findModel("CalLite")));
+//			String cs2 = Thread.currentThread().getContextClassLoader().getResource(
+//					"CSII_DCR2017_Base_DV.dss").getFile().substring(1);
+//			currentScenarios.add(new RBListItemBO(cs2, "CSII_DCR2017_Base_DV.dss",  GUILinksAllModelsBO.Model.findModel("CalSim2")));
+//			DefaultListModel<RBListItemBO> defaultModel = new DefaultListModel<>();
+//			for(RBListItemBO item : currentScenarios)
+//			{
+//				defaultModel.addElement(item);
+//			}
+//			lstScenarios.setModel(defaultModel);
 		}
 	}
 

@@ -1,128 +1,148 @@
 /*
- * Copyright (c) 2019
- * California Department of Water Resources
- * All Rights Reserved.  DWR PROPRIETARY/CONFIDENTIAL.
- * Source may not be released without written approval from DWR
+ * Enhanced Post Processing Tool (EPPT) Copyright (c) 2019.
+ *
+ * EPPT is copyrighted by the State of California, Department of Water Resources. It is licensed
+ * under the GNU General Public License, version 2. This means it can be
+ * copied, distributed, and modified freely, but you may not restrict others
+ * in their ability to copy, distribute, and modify it. See the license below
+ * for more details.
+ *
+ * GNU General Public License
  */
 
 package gov.ca.water.calgui.presentation;
 
+import java.awt.Component;
+import java.awt.Cursor;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import javax.swing.*;
+
 import calsim.app.DerivedTimeSeries;
 import calsim.app.MultipleTimeSeries;
-import gov.ca.water.calgui.bo.RBListItemBO;
 import gov.ca.water.calgui.presentation.display.DefaultPlotHandler;
+import gov.ca.water.calgui.project.EpptScenarioRun;
 import org.apache.log4j.Logger;
 import org.jfree.data.time.Month;
 
-import javax.swing.*;
-import java.awt.*;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.concurrent.*;
-
 public class DisplayHelper
 {
-    private static final Logger LOGGER = Logger.getLogger(DisplayHelper.class.getName());
+	private static final Logger LOGGER = Logger.getLogger(DisplayHelper.class.getName());
+	private static PlotHandler _topComponentPlotHandler = new DefaultPlotHandler();
+	private final ExecutorService _executorService;
+	private final Component _component;
 
-    private final  ExecutorService _executorService;
-    private final Component _component;
-    private static PlotHandler _topComponentPlotHandler = new DefaultPlotHandler();
+	public DisplayHelper(Component comp)
+	{
+		_component = comp;
+		_executorService = Executors.newSingleThreadExecutor(DisplayHelper::newThread);
+	}
 
-    public DisplayHelper(Component comp)
-    {
-        _component = comp;
-        _executorService = Executors.newSingleThreadExecutor(DisplayHelper::newThread);
-    }
+	public static void installPlotHandler(PlotHandler plotHandler)
+	{
+		_topComponentPlotHandler = plotHandler;
+	}
 
-    public static void installPlotHandler(PlotHandler plotHandler)
-    {
-        _topComponentPlotHandler = plotHandler;
-    }
-    private static Thread newThread(Runnable r)
-    {
-        return new Thread(r, "DisplayHelperThread");
-    }
+	private static Thread newThread(Runnable r)
+	{
+		return new Thread(r, "DisplayHelperThread");
+	}
 
-    public void showDisplayFrames(String displayGroup, List<RBListItemBO> scenarios, Month startMonth,
-                                  Month endMonth)
-    {
-            displayFramesOnBackground(displayGroup,scenarios,startMonth,endMonth);
-    }
-    public void showDisplayFramesWRIMS(String displayGroup, List<RBListItemBO> lstScenarios, DerivedTimeSeries dts,
-                                       MultipleTimeSeries mts, Month startMonth, Month endMonth)
-    {
-        displayFramesWRIMSOnBackground(displayGroup,lstScenarios,dts,mts,startMonth,endMonth);
-    }
+	public void showDisplayFrames(String displayGroup, EpptScenarioRun baseRun, List<EpptScenarioRun> scenarios,
+								  Month startMonth,
+								  Month endMonth)
+	{
+		displayFramesOnBackground(displayGroup, baseRun, scenarios, startMonth, endMonth);
+	}
 
-
-    private void displayFramesOnBackground(String displayGroup, List<RBListItemBO> scenarios, Month startMonth,
-                                           Month endMonth)
-    {
-        CompletableFuture.supplyAsync(() -> getTabbedPanes(displayGroup, scenarios, startMonth, endMonth), _executorService)
-        .thenAcceptAsync(_topComponentPlotHandler::openPlots, SwingUtilities::invokeLater);
+	public void showDisplayFramesWRIMS(String displayGroup, EpptScenarioRun baseRun, List<EpptScenarioRun> lstScenarios,
+									   DerivedTimeSeries dts,
+									   MultipleTimeSeries mts, Month startMonth, Month endMonth)
+	{
+		displayFramesWRIMSOnBackground(displayGroup, baseRun, lstScenarios, dts, mts, startMonth, endMonth);
+	}
 
 
-    }
-
-    private List<JTabbedPane> getTabbedPanes(String displayGroup, List<RBListItemBO> scenarios, Month startMonth, Month endMonth)
-    {
-        List<JTabbedPane> jTabbedPanes = new ArrayList<>();
-        try
-        {
-            setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
-            jTabbedPanes  = DisplayFrame.showDisplayFrames(displayGroup, scenarios, startMonth, endMonth);
-        }
-        catch(RuntimeException ex)
-        {
-            LOGGER.error("An error occurred while trying to display the ");
-        }
-        finally
-        {
-
-            setCursor(Cursor.getDefaultCursor());
-        }
-        return jTabbedPanes;
-    }
-
-    private void setCursor(Cursor cursor)
-    {
-        SwingUtilities.invokeLater(()-> _component.setCursor(cursor));
-    }
-
-    private void displayFramesWRIMSOnBackground(String displayGroup, List<RBListItemBO> lstScenarios, DerivedTimeSeries dts,
-                                                MultipleTimeSeries mts, Month startMonth, Month endMonth)
-    {
-        CompletableFuture.supplyAsync(() -> getTabbedPanesWRIMS(displayGroup, lstScenarios, dts, mts, startMonth, endMonth), _executorService)
-                .thenAcceptAsync(_topComponentPlotHandler::openPlots, SwingUtilities::invokeLater);
+	private void displayFramesOnBackground(String displayGroup, EpptScenarioRun baseRun,
+										   List<EpptScenarioRun> scenarios, Month startMonth,
+										   Month endMonth)
+	{
+		CompletableFuture.supplyAsync(() -> getTabbedPanes(displayGroup, baseRun, scenarios, startMonth, endMonth),
+				_executorService)
+						 .thenAcceptAsync(tabbedPanes -> _topComponentPlotHandler.openPlots(tabbedPanes), SwingUtilities::invokeLater);
 
 
-    }
+	}
 
-    private List<JTabbedPane> getTabbedPanesWRIMS(String displayGroup, List<RBListItemBO> lstScenarios, DerivedTimeSeries dts, MultipleTimeSeries mts, Month startMonth, Month endMonth)
-    {
-        List<JTabbedPane> jTabbedPanes = new ArrayList<>();
-        try
-        {
-            setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
-            jTabbedPanes = DisplayFrame.showDisplayFramesWRIMS(displayGroup, lstScenarios, dts, mts, startMonth, endMonth);
-        }
-        catch(RuntimeException ex)
-        {
+	private List<JTabbedPane> getTabbedPanes(String displayGroup, EpptScenarioRun baseRun,
+											 List<EpptScenarioRun> scenarios, Month startMonth, Month endMonth)
+	{
+		List<JTabbedPane> jTabbedPanes = new ArrayList<>();
+		try
+		{
+			setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
 
-        }
-        finally
-        {
-            setCursor(Cursor.getDefaultCursor());
-        }
-        return jTabbedPanes;
+			jTabbedPanes = DisplayFrame.showDisplayFrames(displayGroup, baseRun, scenarios, startMonth, endMonth);
+		}
+		catch(RuntimeException ex)
+		{
+			LOGGER.error("An error occurred while trying to display the ");
+		}
+		finally
+		{
 
-    }
+			setCursor(Cursor.getDefaultCursor());
+		}
+		return jTabbedPanes;
+	}
+
+	private void setCursor(Cursor cursor)
+	{
+		SwingUtilities.invokeLater(() -> _component.setCursor(cursor));
+	}
+
+	private void displayFramesWRIMSOnBackground(String displayGroup, EpptScenarioRun baseRun,
+												List<EpptScenarioRun> lstScenarios, DerivedTimeSeries dts,
+												MultipleTimeSeries mts, Month startMonth, Month endMonth)
+	{
+		CompletableFuture.supplyAsync(
+				() -> getTabbedPanesWRIMS(displayGroup, baseRun, lstScenarios, dts, mts, startMonth, endMonth), _executorService)
+						 .thenAcceptAsync(_topComponentPlotHandler::openPlots, SwingUtilities::invokeLater);
 
 
-    @FunctionalInterface
-    public interface PlotHandler
-    {
-        void openPlots(List<JTabbedPane> tabbedPanes);
-    }
+	}
+
+	private List<JTabbedPane> getTabbedPanesWRIMS(String displayGroup, EpptScenarioRun baseRun,
+												  List<EpptScenarioRun> lstScenarios, DerivedTimeSeries dts,
+												  MultipleTimeSeries mts, Month startMonth, Month endMonth)
+	{
+		List<JTabbedPane> jTabbedPanes = new ArrayList<>();
+		try
+		{
+			setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
+			jTabbedPanes = DisplayFrame.showDisplayFramesWRIMS(displayGroup, baseRun, lstScenarios, dts, mts,
+					startMonth, endMonth);
+		}
+		catch(RuntimeException ex)
+		{
+
+		}
+		finally
+		{
+			setCursor(Cursor.getDefaultCursor());
+		}
+		return jTabbedPanes;
+
+	}
+
+
+	@FunctionalInterface
+	public interface PlotHandler
+	{
+		void openPlots(List<JTabbedPane> tabbedPanes);
+	}
 
 }

@@ -1,8 +1,13 @@
 /*
- * Copyright (c) 2019
- * California Department of Water Resources
- * All Rights Reserved.  DWR PROPRIETARY/CONFIDENTIAL.
- * Source may not be released without written approval from DWR
+ * Enhanced Post Processing Tool (EPPT) Copyright (c) 2019.
+ *
+ * EPPT is copyrighted by the State of California, Department of Water Resources. It is licensed
+ * under the GNU General Public License, version 2. This means it can be
+ * copied, distributed, and modified freely, but you may not restrict others
+ * in their ability to copy, distribute, and modify it. See the license below
+ * for more details.
+ *
+ * GNU General Public License
  */
 
 package gov.ca.water.quickresults.ui.projectconfig;
@@ -10,30 +15,29 @@ package gov.ca.water.quickresults.ui.projectconfig;
 import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Container;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
-import java.awt.Insets;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
-import javax.swing.event.ListDataEvent;
-import javax.swing.event.ListDataListener;
 
-import gov.ca.water.calgui.bo.RBListItemBO;
 import gov.ca.water.calgui.bo.ResultUtilsBO;
+import gov.ca.water.calgui.constant.Constant;
 import gov.ca.water.calgui.constant.EpptPreferences;
-import gov.ca.water.calgui.presentation.WRIMSGUILinks;
-import gov.ca.water.calgui.tech_service.IErrorHandlingSvc;
-import gov.ca.water.calgui.tech_service.impl.ErrorHandlingSvcImpl;
+import gov.ca.water.calgui.project.EpptProject;
+import gov.ca.water.calgui.project.EpptScenarioRun;
+import gov.ca.water.calgui.techservice.IErrorHandlingSvc;
+import gov.ca.water.calgui.techservice.impl.ErrorHandlingSvcImpl;
 import gov.ca.water.quickresults.ui.EpptPanel;
+import gov.ca.water.quickresults.ui.projectconfig.scenariotable.ScenarioTablePanel;
+import javafx.application.Platform;
 import org.apache.log4j.Logger;
 import org.jfree.data.time.Month;
+
+import rma.util.RMAUtil;
 
 /**
  * Company: Resource Management Associates
@@ -47,54 +51,26 @@ public final class ProjectConfigurationPanel extends EpptPanel
 	private static final String SCENARIO_CONFIGURATION_XML_FILE = "Project_Configuration.xml";
 	private static final ProjectConfigurationPanel SINGLETON = new ProjectConfigurationPanel();
 	private static IErrorHandlingSvc errorHandlingSvc = new ErrorHandlingSvcImpl();
-	private final ProjectConfigurationIO _projectConfigurationIO;
-	private final JTextField _nameField;
-	private final JTextField _descriptionField;
-	private DefaultListModel<RBListItemBO> _lmScenNames;
+	private final ProjectConfigurationIO _projectConfigurationIO = new ProjectConfigurationIO();
+	private final ScenarioTablePanel _scenarioTablePanel = new ScenarioTablePanel();
 	private boolean _ignoreModifiedEvents = false;
 
 	private ProjectConfigurationPanel()
 	{
 		try
 		{
-			_projectConfigurationIO = new ProjectConfigurationIO();
 			super.setLayout(new BorderLayout());
 			Container swixmlProjectConfigurationPanel = renderSwixml(SCENARIO_CONFIGURATION_XML_FILE);
 			super.add(swixmlProjectConfigurationPanel, BorderLayout.CENTER);
-			_nameField = new JTextField();
-			_descriptionField = new JTextField();
 			initComponents();
 			initModels();
+			initListeners();
 		}
 		catch(Exception e)
 		{
 			LOGGER.error("Error setting up quick results swing xml: " + SCENARIO_CONFIGURATION_XML_FILE, e);
 			throw new IllegalStateException(e);
 		}
-	}
-
-	private void initComponents()
-	{
-		JPanel header = new JPanel();
-		header.setLayout(new GridBagLayout());
-		add(header, BorderLayout.NORTH);
-		header.add(new JLabel("Project Name:"), new GridBagConstraints(1,
-				1, 1, 1, .02, .5,
-				GridBagConstraints.WEST, GridBagConstraints.BOTH,
-				new Insets(1, 5, 1, 1), 5, 5));
-		header.add(_nameField, new GridBagConstraints(2,
-				1, 1, 1, 1.0, .5,
-				GridBagConstraints.EAST, GridBagConstraints.HORIZONTAL,
-				new Insets(1, 1, 1, 5), 5, 5));
-		header.add(new JLabel("Description:"), new GridBagConstraints(1,
-				2, 1, 1, .02, .5,
-				GridBagConstraints.WEST, GridBagConstraints.BOTH,
-				new Insets(1, 5, 1, 1), 5, 5));
-		header.add(_descriptionField, new GridBagConstraints(2,
-				2, 1, 1, 1.0, .5,
-				GridBagConstraints.EAST, GridBagConstraints.HORIZONTAL,
-				new Insets(1, 1, 1, 5), 5, 5));
-		revalidate();
 	}
 
 	/**
@@ -105,6 +81,28 @@ public final class ProjectConfigurationPanel extends EpptPanel
 	static ProjectConfigurationPanel createProjectConfigurationPanel()
 	{
 		return new ProjectConfigurationPanel();
+	}
+
+	public static ProjectConfigurationPanel getProjectConfigurationPanel()
+	{
+		return SINGLETON;
+	}
+
+	private void initComponents()
+	{
+		initScenarioTree();
+		revalidate();
+	}
+
+	private void initScenarioTree()
+	{
+		Component component = getSwingEngine().find("ScenarioTree");
+		if(component instanceof JPanel)
+		{
+			JPanel treePanel = (JPanel) component;
+			treePanel.setLayout(new BorderLayout());
+			treePanel.add(_scenarioTablePanel, BorderLayout.CENTER);
+		}
 	}
 
 	private void setSummaryTableEnabled(boolean selected, Container container)
@@ -120,31 +118,13 @@ public final class ProjectConfigurationPanel extends EpptPanel
 		}
 	}
 
-	public static ProjectConfigurationPanel getProjectConfigurationPanel()
-	{
-		return SINGLETON;
-	}
-
 	private void initModels()
 	{
-		Component component = getSwingEngine().find("SelectedList");
-		if(component instanceof JList)
-		{
-			JList<RBListItemBO> lstScenarios = (JList<RBListItemBO>) component;
-			lstScenarios.getSelectionModel().addListSelectionListener(e -> setModified(true));
-			lstScenarios.getModel().addListDataListener(new ProjectConfigurationListDataListener());
-		}
-		// Set up month spinners on result page
-		JSpinner spnSM = (JSpinner) getSwingEngine().find("spnStartMonth");
-		ResultUtilsBO.SetMonthModelAndIndex(spnSM, 9, null, true);
-		JSpinner spnEM = (JSpinner) getSwingEngine().find("spnEndMonth");
-		ResultUtilsBO.SetMonthModelAndIndex(spnEM, 8, null, true);
-		// Set up year spinners
-		JSpinner spnSY = (JSpinner) getSwingEngine().find("spnStartYear");
-		ResultUtilsBO.SetNumberModelAndIndex(spnSY, 1921, 1921, 2003, 1, "####", null, true);
-		JSpinner spnEY = (JSpinner) getSwingEngine().find("spnEndYear");
-		ResultUtilsBO.SetNumberModelAndIndex(spnEY, 2003, 1921, 2003, 1, "####", null, true);
+		initializeSpinners();
+	}
 
+	private void initListeners()
+	{
 		JCheckBox summaryTableCheckbox = (JCheckBox) getSwingEngine().find("RepckbSummaryTable");
 		summaryTableCheckbox.addActionListener(e ->
 		{
@@ -152,13 +132,6 @@ public final class ProjectConfigurationPanel extends EpptPanel
 			Container controls3 = (Container) getSwingEngine().find("controls3");
 			setSummaryTableEnabled(selected, controls3);
 		});
-
-		_lmScenNames = new DefaultListModel<>();
-		_lmScenNames.addListDataListener(new MyListDataListener());
-		getScenarioList().setModel(_lmScenNames);
-		getScenarioList().setCellRenderer(new RBListRenderer());
-		getScenarioList().setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-		getScenarioList().addMouseListener(new ProjectConfigurationMouseAdapter());
 
 		DocumentListener documentListener = new DocumentListener()
 		{
@@ -180,10 +153,25 @@ public final class ProjectConfigurationPanel extends EpptPanel
 				ProjectConfigurationPanel.this.setModified(true);
 			}
 		};
-		_nameField.getDocument().addDocumentListener(documentListener);
-		_descriptionField.getDocument().addDocumentListener(documentListener);
+		JTextField projectNameField = (JTextField) getSwingEngine().find("prj_name");
+		JTextField descriptionField = (JTextField) getSwingEngine().find("prj_desc");
+		projectNameField.getDocument().addDocumentListener(documentListener);
+		descriptionField.getDocument().addDocumentListener(documentListener);
 	}
 
+	private void initializeSpinners()
+	{
+		// Set up month spinners on result page
+		JSpinner spnSM = (JSpinner) getSwingEngine().find("spnStartMonth");
+		ResultUtilsBO.SetMonthModelAndIndex(spnSM, 9, null, true);
+		JSpinner spnEM = (JSpinner) getSwingEngine().find("spnEndMonth");
+		ResultUtilsBO.SetMonthModelAndIndex(spnEM, 8, null, true);
+		// Set up year spinners
+		JSpinner spnSY = (JSpinner) getSwingEngine().find("spnStartYear");
+		ResultUtilsBO.SetNumberModelAndIndex(spnSY, 1921, 1921, 2003, 1, "####", null, true);
+		JSpinner spnEY = (JSpinner) getSwingEngine().find("spnEndYear");
+		ResultUtilsBO.SetNumberModelAndIndex(spnEY, 2003, 1921, 2003, 1, "####", null, true);
+	}
 
 	@Override
 	public String getJavaHelpId()
@@ -191,34 +179,38 @@ public final class ProjectConfigurationPanel extends EpptPanel
 		return "Viewing Results";
 	}
 
-	private Component getSelectedList()
-	{
-		return getSwingEngine().find("SelectedList");
-	}
-
 	JPanel getControls2()
 	{
 		return (JPanel) getSwingEngine().find("controls2");
 	}
 
-	public List<RBListItemBO> getScenarios()
+
+	void clearAllScenarios()
 	{
-		List<RBListItemBO> retval = new ArrayList<>();
-		Component component = getSelectedList();
-		if(component instanceof JList)
-		{
-			JList<RBListItemBO> lstScenarios = (JList<RBListItemBO>) component;
-			ListModel<RBListItemBO> model = lstScenarios.getModel();
-			for(int i = 0; i < model.getSize(); i++)
-			{
-				retval.add(model.getElementAt(i));
-			}
-		}
-		return retval;
+		_scenarioTablePanel.clearScenarios();
+		setModified(true);
+
+	}
+
+	private void updateRadioState()
+	{
+		EpptScenarioRun base = _scenarioTablePanel.getBaseScenarioRun();
+		List<EpptScenarioRun> alternatives = _scenarioTablePanel.getAlternativeScenarioRuns();
+		getRadioButton1().setEnabled(!alternatives.isEmpty() && base != null);
+		getRadioButton2().setEnabled(!alternatives.isEmpty() && base != null);
+	}
+
+	void deleteScenario()
+	{
+		_scenarioTablePanel.deleteSelectedScenarioRun();
+		setModified(true);
 	}
 
 	public String quickState()
 	{
+
+		QuickStateBuilder builder = new QuickStateBuilder();
+
 
 		try
 		{
@@ -228,28 +220,35 @@ public final class ProjectConfigurationPanel extends EpptPanel
 			if(rdb.isSelected())
 			{
 				cAdd = cAdd + "Base";
+				builder.withComparisonType(QuickState.ComparisonType.BASE);
 			}
 
 			rdb = (JRadioButton) getSwingEngine().find("rdbp001");
 			if(rdb.isSelected())
 			{
 				cAdd = cAdd + "Comp";
+				builder.withComparisonType(QuickState.ComparisonType.COMP);
+
 			}
 
 			rdb = (JRadioButton) getSwingEngine().find("rdbp002");
 			if(rdb.isSelected())
 			{
 				cAdd = cAdd + "Diff";
+				builder.withComparisonType(QuickState.ComparisonType.DIFF);
+
 			}
 			// Units
 			rdb = (JRadioButton) getSwingEngine().find("rdbCFS");
 			if(rdb.isSelected())
 			{
 				cAdd = cAdd + ";CFS";
+				builder.withDisplayCFS();
 			}
 			else
 			{
 				cAdd = cAdd + ";TAF";
+				builder.withDisplayTAF();
 			}
 
 			// Date
@@ -257,6 +256,7 @@ public final class ProjectConfigurationPanel extends EpptPanel
 			JSpinner spnEM = (JSpinner) getSwingEngine().find("spnEndMonth");
 			JSpinner spnSY = (JSpinner) getSwingEngine().find("spnStartYear");
 			JSpinner spnEY = (JSpinner) getSwingEngine().find("spnEndYear");
+
 			String cDate = spnSM.getValue().toString() + spnSY.getValue().toString();
 			cDate = cDate + "-" + spnEM.getValue().toString() + spnEY.getValue().toString();
 			cAdd = cAdd + ";" + cDate;
@@ -266,6 +266,7 @@ public final class ProjectConfigurationPanel extends EpptPanel
 			if(ckb.isSelected())
 			{
 				cAdd = cAdd + ";TS";
+				builder.withDisplayTimeSeriesPlot();
 			}
 
 			// Exceedance Plot
@@ -275,6 +276,7 @@ public final class ProjectConfigurationPanel extends EpptPanel
 			StringBuilder cST = new StringBuilder();
 			Component[] controls2 = ((JPanel) getSwingEngine().find("controls2")).getComponents();
 			addExceedancePlots(cST, controls2);
+			builder.withExceedancePlots(controls2);
 			if(cST.length() > 0)
 			{
 				cAdd = cAdd + ";EX-" + cST;
@@ -284,6 +286,7 @@ public final class ProjectConfigurationPanel extends EpptPanel
 			if(((JCheckBox) getSwingEngine().find("RepckbBAWPlot")).isSelected())
 			{
 				cAdd = cAdd + ";BP";
+				builder.withDisplayBoxAndWhiskerPlot();
 			}
 			// Monthly Table
 			ckb = (JCheckBox) getSwingEngine().find("RepckbMonthlyTable");
@@ -311,6 +314,7 @@ public final class ProjectConfigurationPanel extends EpptPanel
 			String messageText = "Unable to display frame.";
 			errorHandlingSvc.businessErrorHandler(messageText, e);
 		}
+
 		return null;
 	}
 
@@ -334,7 +338,9 @@ public final class ProjectConfigurationPanel extends EpptPanel
 	{
 		if(!_ignoreModifiedEvents)
 		{
+			updateRadioState();
 			super.setModified(b);
+			RMAUtil.setParentModified(this);
 		}
 	}
 
@@ -361,28 +367,35 @@ public final class ProjectConfigurationPanel extends EpptPanel
 	public Month getStartMonth()
 	{
 		JSpinner monthSpinner = (JSpinner) getSwingEngine().find("spnStartMonth");
-		int month = ResultUtilsBO.getResultUtilsInstance(null).monthToInt(monthSpinner.getValue().toString());
+		int month = ResultUtilsBO.getResultUtilsInstance().monthToInt(monthSpinner.getValue().toString());
 		JSpinner yearSpinner = (JSpinner) getSwingEngine().find("spnStartYear");
 		int year = Integer.parseInt(yearSpinner.getValue().toString());
 		return new Month(month, year);
 	}
 
-	public Month getEndMonth()
+	private void setStartMonth(Month start)
 	{
-		JSpinner monthSpinner = (JSpinner) getSwingEngine().find("spnEndMonth");
-		int month = ResultUtilsBO.getResultUtilsInstance(null).monthToInt(monthSpinner.getValue().toString());
-		JSpinner yearSpinner = (JSpinner) getSwingEngine().find("spnEndYear");
-		int year = Integer.parseInt(yearSpinner.getValue().toString());
-		return new Month(month, year);
+		JSpinner monthSpinner = (JSpinner) getSwingEngine().find("spnStartMonth");
+		monthSpinner.setValue(ResultUtilsBO.getResultUtilsInstance().intToMonth(start.getMonth()));
+		JSpinner yearSpinner = (JSpinner) getSwingEngine().find("spnStartYear");
+		yearSpinner.setValue(start.getYearValue());
 	}
 
 	public void saveConfigurationToPath(Path selectedPath, String projectName, String projectDescription)
 			throws IOException
 	{
-		_projectConfigurationIO.saveConfiguration(selectedPath, projectName, projectDescription);
-		_nameField.setText(projectName);
-		_descriptionField.setText(projectDescription);
-		EpptPreferences.setLastProjectConfiguration(selectedPath);
+		boolean mkdirs = selectedPath.toFile().mkdirs();
+		if(!mkdirs)
+		{
+			LOGGER.debug("Path not created: " + selectedPath);
+		}
+		Path projectFile = selectedPath.resolve(projectName + "." + Constant.EPPT_EXT);
+		_projectConfigurationIO.saveConfiguration(projectFile, projectName, projectDescription);
+		JTextField projectNameField = (JTextField) getSwingEngine().find("prj_name");
+		JTextField descriptionField = (JTextField) getSwingEngine().find("prj_desc");
+		projectNameField.setText(projectName);
+		descriptionField.setText(projectDescription);
+		EpptPreferences.setLastProjectConfiguration(projectFile);
 	}
 
 	public void loadProjectConfiguration(Path selectedPath) throws IOException
@@ -392,11 +405,28 @@ public final class ProjectConfigurationPanel extends EpptPanel
 			try
 			{
 				_ignoreModifiedEvents = true;
-				ProjectConfigurationDescriptor projectConfigurationDescriptor = _projectConfigurationIO.loadConfiguration(
+
+				EpptProject project = _projectConfigurationIO.loadConfiguration(
 						selectedPath);
 				EpptPreferences.setLastProjectConfiguration(selectedPath);
-				_nameField.setText(projectConfigurationDescriptor.getName());
-				_descriptionField.setText(projectConfigurationDescriptor.getDescription());
+				JTextField projectNameField = (JTextField) getSwingEngine().find("prj_name");
+				JTextField descriptionField = (JTextField) getSwingEngine().find("prj_desc");
+				projectNameField.setText(project.getName());
+				descriptionField.setText(project.getDescription());
+				setStartMonth(project.getStartMonth());
+				setEndMonth(project.getEndMonth());
+				updateSelectedComponents(project.getSelectedComponents());
+				_scenarioTablePanel.clearScenarios();
+				for(EpptScenarioRun scenarioRun : project.getScenarioRuns())
+				{
+					addScenario(scenarioRun);
+				}
+				//Need to ensure this is called after scenarios are added to TreeTable model
+				Platform.runLater(() ->SwingUtilities.invokeLater(this::updateRadioState));
+			}
+			catch(RuntimeException ex)
+			{
+				LOGGER.error("Error loading project configuration", ex);
 			}
 			finally
 			{
@@ -405,14 +435,22 @@ public final class ProjectConfigurationPanel extends EpptPanel
 		}
 	}
 
-	JList<RBListItemBO> getScenarioList()
+	private void updateSelectedComponents(Map<String, Boolean> selectedComponents)
 	{
-		return (JList<RBListItemBO>) getSwingEngine().find("SelectedList");
-	}
-
-	DefaultListModel<RBListItemBO> getLmScenNames()
-	{
-		return _lmScenNames;
+		for(Map.Entry<String, Boolean> entry : selectedComponents.entrySet())
+		{
+			String key = entry.getKey();
+			Boolean selected = entry.getValue();
+			Component component = getSwingEngine().find(key);
+			if(component instanceof JCheckBox)
+			{
+				((JCheckBox) component).setSelected(selected);
+			}
+			else if(component instanceof JRadioButton)
+			{
+				((JRadioButton) component).setSelected(selected);
+			}
+		}
 	}
 
 	private JRadioButton getRadioButton1()
@@ -425,186 +463,100 @@ public final class ProjectConfigurationPanel extends EpptPanel
 		return (JRadioButton) getSwingEngine().find("rdbp002");
 	}
 
-	void setStartMonth(Month start)
+	public Month getEndMonth()
 	{
-		JSpinner monthSpinner = (JSpinner) getSwingEngine().find("spnStartMonth");
-		monthSpinner.setValue(ResultUtilsBO.getResultUtilsInstance(null).intToMonth(start.getMonth()));
-		JSpinner yearSpinner = (JSpinner) getSwingEngine().find("spnStartYear");
-		yearSpinner.setValue(start.getYearValue());
+		JSpinner monthSpinner = (JSpinner) getSwingEngine().find("spnEndMonth");
+		int month = ResultUtilsBO.getResultUtilsInstance().monthToInt(monthSpinner.getValue().toString());
+		JSpinner yearSpinner = (JSpinner) getSwingEngine().find("spnEndYear");
+		int year = Integer.parseInt(yearSpinner.getValue().toString());
+		return new Month(month, year);
 	}
 
 	void setEndMonth(Month end)
 	{
 		JSpinner monthSpinner = (JSpinner) getSwingEngine().find("spnEndMonth");
-		monthSpinner.setValue(ResultUtilsBO.getResultUtilsInstance(null).intToMonth(end.getMonth()));
+		monthSpinner.setValue(ResultUtilsBO.getResultUtilsInstance().intToMonth(end.getMonth()));
 		JSpinner yearSpinner = (JSpinner) getSwingEngine().find("spnEndYear");
 		yearSpinner.setValue(end.getYearValue());
 	}
 
-	public void setScenarios(List<RBListItemBO> scenarios)
-	{
-		JRadioButton radioButton = (JRadioButton) getSwingEngine().find("rdbp001");
-		radioButton.setSelected(true);
-		Component component = getSwingEngine().find("SelectedList");
-		if(component instanceof JList)
-		{
-			JList<RBListItemBO> lstScenarios = (JList<RBListItemBO>) component;
-			_lmScenNames.removeAllElements();
-			for(RBListItemBO item : scenarios)
-			{
-				_lmScenNames.addElement(item);
-			}
-			lstScenarios.setModel(_lmScenNames);
-			scenarioListChanged();
-		}
-	}
-
-	private void scenarioListChanged()
-	{
-		getRadioButton1().setEnabled(_lmScenNames.getSize() > 1);
-		getRadioButton2().setEnabled(_lmScenNames.getSize() > 1);
-		if(_lmScenNames.getSize() <= 1)
-		{
-			JRadioButton radioButton = (JRadioButton) getSwingEngine().find("rdbp000");
-			radioButton.setSelected(true);
-		}
-		WRIMSGUILinks.updateProjectFiles(getScenarioList());
-		ProjectConfigurationPanel.this.setModified(true);
-		getScenarioList().setModel(_lmScenNames);
-		getScenarioList().invalidate();
-		getScenarioList().revalidate();
-		getScenarioList().repaint();
-	}
-
 	public String getProjectName()
 	{
-		return _nameField.getText();
+		JTextField projectNameField = (JTextField) getSwingEngine().find("prj_name");
+		return projectNameField.getText();
 	}
 
 	public String getProjectDescription()
 	{
-		return _descriptionField.getText();
+		JTextField descriptionField = (JTextField) getSwingEngine().find("prj_desc");
+		return descriptionField.getText();
 	}
 
-	/**
-	 * Custom class to show radiobutton items in place of textfields in a list
-	 *
-	 * @author tslawecki
-	 */
-	private static class RBListRenderer extends JRadioButton implements ListCellRenderer
+	public void resetProjectConfiguration() throws Exception
 	{
-		@Override
-		public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected,
-													  boolean hasFocus)
-		{
-			setEnabled(list.isEnabled());
-			setSelected(((RBListItemBO) value).isSelected());
-			setFont(list.getFont());
-			setBackground(list.getBackground());
-			setForeground(list.getForeground());
-			setText(((RBListItemBO) value).getLabel());
-			this.setToolTipText(value.toString() + " 	\n" + ((RBListItemBO) value).getSVFilename());
-			return this;
-		}
+		removeAll();
+		Container swixmlProjectConfigurationPanel = renderSwixml(SCENARIO_CONFIGURATION_XML_FILE);
+		super.add(swixmlProjectConfigurationPanel, BorderLayout.CENTER);
+		initComponents();
+		initModels();
+		_scenarioTablePanel.clearScenarios();
+		setActionListener(getActionListener());
 	}
 
-	/**
-	 * Custom ListDataListener to enable/disable controls based on number of
-	 * files in list.
-	 *
-	 * @author tslawecki
-	 */
-	private class MyListDataListener implements ListDataListener
+	public EpptScenarioRun getBaseScenario()
 	{
-		@Override
-		public void contentsChanged(ListDataEvent e)
-		{
-			scenarioListChanged();
-		}
-
-		@Override
-		public void intervalAdded(ListDataEvent e)
-		{
-			scenarioListChanged();
-		}
-
-		@Override
-		public void intervalRemoved(ListDataEvent e)
-		{
-			scenarioListChanged();
-		}
-
+		return _scenarioTablePanel.getBaseScenarioRun();
 	}
 
-	private class ProjectConfigurationMouseAdapter extends MouseAdapter
+	EpptScenarioRun getSelectedScenario()
 	{
-		@Override
-		public void mouseClicked(MouseEvent event)
-		{
-
-			JList list = (JList) event.getSource();
-
-			// Get index of item clicked
-
-			if(list.getModel().getSize() > 0)
-			{
-				int index = list.locationToIndex(event.getPoint());
-
-				// Toggle selected state
-
-				for(int i = 0; i < list.getModel().getSize(); i++)
-				{
-					RBListItemBO item = (RBListItemBO) list.getModel().getElementAt(i);
-					if(i == index)
-					{
-						item.setSelected(true);
-						list.repaint(list.getCellBounds(i, i));
-					}
-					else
-					{
-						if(item.isSelected())
-						{
-							list.repaint(list.getCellBounds(i, i));
-						}
-						item.setSelected(false);
-					}
-				}
-
-				// Repaint cell
-
-				list.repaint(list.getCellBounds(index, index));
-
-				WRIMSGUILinks.updateProjectFiles(list);
-
-			}
-		}
+		return _scenarioTablePanel.getSelectedScenario();
 	}
 
-	private class ProjectConfigurationListDataListener implements ListDataListener
+	void addScenario(EpptScenarioRun scenarioRun)
 	{
-		@Override
-		public void intervalAdded(ListDataEvent e)
-		{
-			scenariosChanged();
-		}
+		_scenarioTablePanel.addScenarioRun(scenarioRun);
+		updateRadioState();
+		setModified(true);
+	}
 
-		@Override
-		public void intervalRemoved(ListDataEvent e)
-		{
-			scenariosChanged();
-		}
+	public List<EpptScenarioRun> getEpptScenarioAlternatives()
+	{
+		return _scenarioTablePanel.getAlternativeScenarioRuns();
+	}
 
-		@Override
-		public void contentsChanged(ListDataEvent e)
+	public List<EpptScenarioRun> getEpptScenarioRuns()
+	{
+		List<EpptScenarioRun> retval = new ArrayList<>();
+		EpptScenarioRun baseScenarioRun = _scenarioTablePanel.getBaseScenarioRun();
+		if(baseScenarioRun != null)
 		{
-			scenariosChanged();
+			retval.add(baseScenarioRun);
+			retval.addAll(_scenarioTablePanel.getAlternativeScenarioRuns());
 		}
+		return retval;
+	}
 
-		private void scenariosChanged()
-		{
-			getRadioButton1().setEnabled(getScenarios().size() > 1);
-			getRadioButton2().setEnabled(getScenarios().size() > 1);
-			setModified(true);
-		}
+	public List<EpptScenarioRun> getAllEpptScenarioRuns()
+	{
+		return new ArrayList<>(_scenarioTablePanel.getAllScenarioRuns());
+	}
+
+	void replaceScenario(EpptScenarioRun oldScenarioRun, EpptScenarioRun newScenarioRun)
+	{
+		_scenarioTablePanel.updateScenario(oldScenarioRun, newScenarioRun);
+		setModified(true);
+	}
+
+	void moveSelectedScenarioUp()
+	{
+		_scenarioTablePanel.moveSelectedScenarioUp();
+		setModified(true);
+	}
+
+	void moveSelectedScenarioDown()
+	{
+		_scenarioTablePanel.moveSelectedScenarioDown();
+		setModified(true);
 	}
 }

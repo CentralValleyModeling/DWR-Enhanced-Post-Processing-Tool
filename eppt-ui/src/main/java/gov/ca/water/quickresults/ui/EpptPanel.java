@@ -1,8 +1,13 @@
 /*
- * Copyright (c) 2019
- * California Department of Water Resources
- * All Rights Reserved.  DWR PROPRIETARY/CONFIDENTIAL.
- * Source may not be released without written approval from DWR
+ * Enhanced Post Processing Tool (EPPT) Copyright (c) 2019.
+ *
+ * EPPT is copyrighted by the State of California, Department of Water Resources. It is licensed
+ * under the GNU General Public License, version 2. This means it can be
+ * copied, distributed, and modified freely, but you may not restrict others
+ * in their ability to copy, distribute, and modify it. See the license below
+ * for more details.
+ *
+ * GNU General Public License
  */
 
 package gov.ca.water.quickresults.ui;
@@ -31,10 +36,28 @@ public abstract class EpptPanel extends RmaJPanel
 {
 	private static final Logger LOGGER = Logger.getLogger(EpptPanel.class.getName());
 	private final SwingEngine _swingEngine;
+	private ActionListener _actionListener;
 
 	public EpptPanel()
 	{
 		_swingEngine = new SwingEngine();
+	}
+
+	public static void setCheckboxesSelectedRecusive(boolean b, Container container)
+	{
+		Component[] components = container.getComponents();
+		for(final Component component : components)
+		{
+			if(component instanceof JCheckBox)
+			{
+				JCheckBox c = (JCheckBox) component;
+				c.setSelected(b);
+			}
+			else if(component instanceof Container)
+			{
+				setCheckboxesSelectedRecusive(b, (Container) component);
+			}
+		}
 	}
 
 	public SwingEngine getSwingEngine()
@@ -44,8 +67,14 @@ public abstract class EpptPanel extends RmaJPanel
 
 	public abstract String getJavaHelpId();
 
+	protected ActionListener getActionListener()
+	{
+		return _actionListener;
+	}
+
 	public void setActionListener(ActionListener actionListener)
 	{
+		_actionListener = actionListener;
 		getSwingEngine().setActionListener(this, actionListener);
 	}
 
@@ -64,23 +93,5 @@ public abstract class EpptPanel extends RmaJPanel
 			retval = getSwingEngine().render("ui/" + fileName);
 		}
 		return retval;
-	}
-
-
-	public static void setCheckboxesSelectedRecusive(boolean b, Container container)
-	{
-		Component[] components = container.getComponents();
-		for(final Component component : components)
-		{
-			if(component instanceof JCheckBox)
-			{
-				JCheckBox c = (JCheckBox) component;
-				c.setSelected(b);
-			}
-			else if(component instanceof Container)
-			{
-				setCheckboxesSelectedRecusive(b, (Container) component);
-			}
-		}
 	}
 }

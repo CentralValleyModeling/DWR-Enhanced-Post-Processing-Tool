@@ -1,8 +1,13 @@
 /*
- * Copyright (c) 2019
- * California Department of Water Resources
- * All Rights Reserved.  DWR PROPRIETARY/CONFIDENTIAL.
- * Source may not be released without written approval from DWR
+ * Enhanced Post Processing Tool (EPPT) Copyright (c) 2019.
+ *
+ * EPPT is copyrighted by the State of California, Department of Water Resources. It is licensed
+ * under the GNU General Public License, version 2. This means it can be
+ * copied, distributed, and modified freely, but you may not restrict others
+ * in their ability to copy, distribute, and modify it. See the license below
+ * for more details.
+ *
+ * GNU General Public License
  */
 package vista.graph;
 
@@ -19,11 +24,25 @@ import vista.gui.Changeable;
 /**
  * A dialog class for handling attribute change requests.
  */
-public class GEDialogPanel extends JPanel implements Changeable {
+public class GEDialogPanel extends JPanel implements Changeable
+{
+	private ColorChoice bgChooser, fgChooser;
+	private JCheckBox visibilityCheckBox, clipCheckBox;
+	private JComboBox orientationChoice;
+	private InsetsEditPanel insetsPanel;
+	/**
+	 * The graphic element whose attributes are to be displayed
+	 */
+	private GraphicElement _ge;
+	/**
+	 * The attributes of the graphic element.
+	 */
+	private GEAttr _attr;
 	/**
 	 * The constructor for initializing class variables and creating panel.
 	 */
-	public GEDialogPanel(GraphicElement ge) {
+	public GEDialogPanel(GraphicElement ge)
+	{
 		_ge = ge;
 		_attr = _ge.getAttributes();
 		setLayout(new BorderLayout());
@@ -33,14 +52,16 @@ public class GEDialogPanel extends JPanel implements Changeable {
 	/**
 	 * get the graphic element
 	 */
-	public GraphicElement getGraphicElement() {
+	public GraphicElement getGraphicElement()
+	{
 		return _ge;
 	}
 
 	/**
 	 * creates Panel with controls to control each attribute
 	 */
-	protected JPanel createPanel() {
+	protected JPanel createPanel()
+	{
 		JPanel mainPanel;
 		mainPanel = new JPanel();
 		mainPanel.setLayout(new GridLayout(5, 1));
@@ -59,10 +80,14 @@ public class GEDialogPanel extends JPanel implements Changeable {
 		orientationChoice = new JComboBox();
 		orientationChoice.addItem(Labels.HORIZONTAL);
 		orientationChoice.addItem(Labels.VERTICAL);
-		if (_attr._orientation == GEAttr.HORIZONTAL)
+		if(_attr._orientation == GEAttr.HORIZONTAL)
+		{
 			orientationChoice.setSelectedItem(Labels.HORIZONTAL);
+		}
 		else
+		{
 			orientationChoice.setSelectedItem(Labels.VERTICAL);
+		}
 		oPanel.add(orientationChoice);
 
 		visibilityCheckBox = new JCheckBox(Labels.IS_VISIBLE, _attr._isVisible);
@@ -97,22 +122,22 @@ public class GEDialogPanel extends JPanel implements Changeable {
 		return mainPanel;
 	}
 
-	private ColorChoice bgChooser, fgChooser;
-	private JCheckBox visibilityCheckBox, clipCheckBox;
-	private JComboBox orientationChoice;
-	private InsetsEditPanel insetsPanel;
-
 	/**
 	 * applies the changes to the attribute object and/or the graphic element
 	 */
-	public void applyChanges() {
+	public void applyChanges()
+	{
 		_attr._backgroundColor = bgChooser.getColor();
 		_attr._foregroundColor = fgChooser.getColor();
 		//
-		if (orientationChoice.getSelectedItem().equals(Labels.HORIZONTAL))
+		if(orientationChoice.getSelectedItem().equals(Labels.HORIZONTAL))
+		{
 			_attr._orientation = GEAttr.HORIZONTAL;
+		}
 		else
+		{
 			_attr._orientation = GEAttr.VERTICAL;
+		}
 		//
 		_attr._isVisible = visibilityCheckBox.isSelected();
 		_attr._clipWithinBounds = clipCheckBox.isSelected();
@@ -120,17 +145,9 @@ public class GEDialogPanel extends JPanel implements Changeable {
 	}
 
 	/**
-   *
-   */
-	public void doneChanges() {
+	 *
+	 */
+	public void doneChanges()
+	{
 	}
-
-	/**
-	 * The graphic element whose attributes are to be displayed
-	 */
-	private GraphicElement _ge;
-	/**
-	 * The attributes of the graphic element.
-	 */
-	private GEAttr _attr;
 }

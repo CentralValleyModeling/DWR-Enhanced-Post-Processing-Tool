@@ -1,8 +1,13 @@
 /*
- * Copyright (c) 2019
- * California Department of Water Resources
- * All Rights Reserved.  DWR PROPRIETARY/CONFIDENTIAL.
- * Source may not be released without written approval from DWR
+ * Enhanced Post Processing Tool (EPPT) Copyright (c) 2019.
+ *
+ * EPPT is copyrighted by the State of California, Department of Water Resources. It is licensed
+ * under the GNU General Public License, version 2. This means it can be
+ * copied, distributed, and modified freely, but you may not restrict others
+ * in their ability to copy, distribute, and modify it. See the license below
+ * for more details.
+ *
+ * GNU General Public License
  */
 
 package gov.ca.water.calgui.presentation.display;
@@ -38,10 +43,10 @@ import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfWriter;
 import com.itextpdf.text.pdf.TextField;
 import gov.ca.water.calgui.presentation.Report.Writer;
-import gov.ca.water.calgui.tech_service.IDialogSvc;
-import gov.ca.water.calgui.tech_service.IErrorHandlingSvc;
-import gov.ca.water.calgui.tech_service.impl.DialogSvcImpl;
-import gov.ca.water.calgui.tech_service.impl.ErrorHandlingSvcImpl;
+import gov.ca.water.calgui.techservice.IDialogSvc;
+import gov.ca.water.calgui.techservice.IErrorHandlingSvc;
+import gov.ca.water.calgui.techservice.impl.DialogSvcImpl;
+import gov.ca.water.calgui.techservice.impl.ErrorHandlingSvcImpl;
 import org.apache.log4j.Logger;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.JFreeChart;
@@ -120,14 +125,15 @@ public class ReportPDFWriter implements Writer
 		catch(DocumentException de)
 		{
 			LOG.debug(de.getMessage());
-			dialogSvc.getOK("Error while creating the pdf file: " + (new File(filename).getName()) + ". " +  de.getMessage(),
+			dialogSvc.getOK("Error while creating the pdf file: " + (new File(filename).getName()) + ". " + de.getMessage(),
 					JOptionPane.WARNING_MESSAGE);
 			return false;
 		}
 		catch(IOException ioe)
 		{
 			LOG.debug(ioe.getMessage());
-			dialogSvc.getOK("Error while creating the pdf file: " + (new File(filename).getName()) + "\nIf the file is already open, please close it and try again.\n" + ioe.getMessage(),
+			dialogSvc.getOK("Error while creating the pdf file: " + (new File(
+							filename).getName()) + "\nIf the file is already open, please close it and try again.\n" + ioe.getMessage(),
 					JOptionPane.WARNING_MESSAGE);
 			return false;
 		}

@@ -1,8 +1,13 @@
 /*
- * Copyright (c) 2019
- * California Department of Water Resources
- * All Rights Reserved.  DWR PROPRIETARY/CONFIDENTIAL.
- * Source may not be released without written approval from DWR
+ * Enhanced Post Processing Tool (EPPT) Copyright (c) 2019.
+ *
+ * EPPT is copyrighted by the State of California, Department of Water Resources. It is licensed
+ * under the GNU General Public License, version 2. This means it can be
+ * copied, distributed, and modified freely, but you may not restrict others
+ * in their ability to copy, distribute, and modify it. See the license below
+ * for more details.
+ *
+ * GNU General Public License
  */
 
 package vista.app;
@@ -16,15 +21,18 @@ import vista.set.DataReference;
 import vista.set.Pathname;
 
 @SuppressWarnings("serial")
-public class PathnameEditor extends JDialog implements Changeable{
+public class PathnameEditor extends JDialog implements Changeable
+{
 
 
 	private DataReference ref;
 	private JTable table;
 	private DataTableFrame dataTable;
 
-	public PathnameEditor(DataTableFrame dataTable, DataReference ref){
-		if (ref==null || ref.getPathname()==null){
+	public PathnameEditor(DataTableFrame dataTable, DataReference ref)
+	{
+		if(ref == null || ref.getPathname() == null)
+		{
 			throw new IllegalArgumentException("Reference is null or pathname is null!");
 		}
 		this.ref = ref;
@@ -46,8 +54,10 @@ public class PathnameEditor extends JDialog implements Changeable{
 	}
 
 	@Override
-	public void applyChanges() {
-		if (table.isEditing()){
+	public void applyChanges()
+	{
+		if(table.isEditing())
+		{
 			table.getCellEditor().stopCellEditing();
 		}
 		Pathname p = ref.getPathname();
@@ -60,7 +70,8 @@ public class PathnameEditor extends JDialog implements Changeable{
 	}
 
 	@Override
-	public void doneChanges() {
+	public void doneChanges()
+	{
 		this.dispose();
 	}
 }

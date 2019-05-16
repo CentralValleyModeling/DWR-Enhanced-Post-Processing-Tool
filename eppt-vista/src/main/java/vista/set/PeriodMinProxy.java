@@ -1,8 +1,13 @@
 /*
- * Copyright (c) 2019
- * California Department of Water Resources
- * All Rights Reserved.  DWR PROPRIETARY/CONFIDENTIAL.
- * Source may not be released without written approval from DWR
+ * Enhanced Post Processing Tool (EPPT) Copyright (c) 2019.
+ *
+ * EPPT is copyrighted by the State of California, Department of Water Resources. It is licensed
+ * under the GNU General Public License, version 2. This means it can be
+ * copied, distributed, and modified freely, but you may not restrict others
+ * in their ability to copy, distribute, and modify it. See the license below
+ * for more details.
+ *
+ * GNU General Public License
  */
 package vista.set;
 
@@ -11,26 +16,45 @@ import vista.time.TimeWindow;
 
 /**
  * A proxy for period averaging operations
- * 
+ *
  * @author Nicky Sandhu
  * @version $Id: PeriodMinProxy.java,v 1.1 2003/10/02 20:49:30 redwood Exp $
  */
-public class PeriodMinProxy extends PeriodOperationProxy {
+public class PeriodMinProxy extends PeriodOperationProxy
+{
 	/**
-   *
-   */
-	protected String getOperationName() {
+	 *
+	 */
+	private static String operationName = "PER-MIN";
+
+	/**
+	 *
+	 */
+	public PeriodMinProxy(DataReference ref, TimeInterval ti)
+	{
+		super(ref, ti);
+	}
+
+	/**
+	 *
+	 */
+	protected String getOperationName()
+	{
 		return operationName;
 	}
 
 	/**
 	 * returns the value for this period from the values in the array
 	 */
-	protected double doPeriodOperation(double[] yvals, int nvals) {
-		if (nvals <= 0)
+	protected double doPeriodOperation(double[] yvals, int nvals)
+	{
+		if(nvals <= 0)
+		{
 			return 0;
+		}
 		double min = yvals[0];
-		for (int i = 1; i < nvals; i++) {
+		for(int i = 1; i < nvals; i++)
+		{
 			min = Math.min(min, yvals[i]);
 		}
 		return min;
@@ -40,46 +64,45 @@ public class PeriodMinProxy extends PeriodOperationProxy {
 	 * returns the flag for the value of this period from the values in the
 	 * array.
 	 */
-	protected int doFlagOperation(int[] flags, int nvals) {
+	protected int doFlagOperation(int[] flags, int nvals)
+	{
 		return 0;
 	}
 
 	/**
-   *
-   */
-	public PeriodMinProxy(DataReference ref, TimeInterval ti) {
-		super(ref, ti);
-	}
-
-	/**
-   *
-   */
-	protected String getProxyName(DataReference ref, TimeInterval ti) {
+	 *
+	 */
+	protected String getProxyName(DataReference ref, TimeInterval ti)
+	{
 		return ref.getName() + operationName;
 	}
 
 	/**
-   *
-   */
-	protected String getProxyServerName(DataReference ref, TimeInterval ti) {
+	 *
+	 */
+	protected String getProxyServerName(DataReference ref, TimeInterval ti)
+	{
 		return "";
 	}
 
 	/**
-   *
-   */
-	protected String getProxyFileName(DataReference ref, TimeInterval ti) {
+	 *
+	 */
+	protected String getProxyFileName(DataReference ref, TimeInterval ti)
+	{
 		return "";
 	}
 
 	/**
-   *
-   */
-	protected Pathname getProxyPathname(DataReference ref, TimeInterval ti) {
+	 *
+	 */
+	protected Pathname getProxyPathname(DataReference ref, TimeInterval ti)
+	{
 		Pathname path = ref.getPathname();
 		// create pathname from operation + pathname -- > should be delegated
 		String[] parts = new String[Pathname.MAX_PARTS];
-		for (int i = 0; i < parts.length; i++) {
+		for(int i = 0; i < parts.length; i++)
+		{
 			parts[i] = path.getPart(i);
 		}
 		parts[Pathname.B_PART] = parts[Pathname.B_PART] + operationName;
@@ -90,22 +113,19 @@ public class PeriodMinProxy extends PeriodOperationProxy {
 	}
 
 	/**
-   *
-   */
-	protected TimeWindow getProxyTimeWindow(DataReference ref, TimeInterval ti) {
+	 *
+	 */
+	protected TimeWindow getProxyTimeWindow(DataReference ref, TimeInterval ti)
+	{
 		return ref.getTimeWindow();
 	}
 
 	/**
 	 * create a clone of itself
 	 */
-	public DataReference createClone() {
+	public DataReference createClone()
+	{
 		return new PeriodMinProxy(getUnderlyingReference(),
 				getPeriodTimeInterval());
 	}
-
-	/**
-   *
-   */
-	private static String operationName = "PER-MIN";
 }

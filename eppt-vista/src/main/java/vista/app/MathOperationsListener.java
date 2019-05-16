@@ -1,8 +1,13 @@
 /*
- * Copyright (c) 2019
- * California Department of Water Resources
- * All Rights Reserved.  DWR PROPRIETARY/CONFIDENTIAL.
- * Source may not be released without written approval from DWR
+ * Enhanced Post Processing Tool (EPPT) Copyright (c) 2019.
+ *
+ * EPPT is copyrighted by the State of California, Department of Water Resources. It is licensed
+ * under the GNU General Public License, version 2. This means it can be
+ * copied, distributed, and modified freely, but you may not restrict others
+ * in their ability to copy, distribute, and modify it. See the license below
+ * for more details.
+ *
+ * GNU General Public License
  */
 package vista.app;
 
@@ -19,21 +24,42 @@ import vista.set.DataReferenceMath;
 
 /**
  * Listens for math operations on table and performs them.
- * 
+ *
  * @author Nicky Sandhu
  * @version $Id: MathOperationsListener.java,v 1.1 2003/10/02 20:48:34 redwood
- *          Exp $
+ * Exp $
  */
-class MathOperationsListener implements ListSelectionListener {
+class MathOperationsListener implements ListSelectionListener
+{
+	/**
+	 *
+	 */
+	private GroupTable _table;
+	/**
+	 *
+	 */
+	private boolean _addKeyMode = false;
+	/**
+	 *
+	 */
+	private DataReference _ref1, _ref2;
+	/**
+	 *
+	 */
+	private boolean _selectionMode = false;
+
 	/**
 	 * adds a key listener for +,-,/,*,= for frame containing group table
 	 */
-	public MathOperationsListener(GroupTable table) {
+	public MathOperationsListener(GroupTable table)
+	{
 		_table = table;
 		JComponent comp = table.getTable();
 		// add equals listener
-		ActionListener l = new ActionListener() {
-			public void actionPerformed(ActionEvent evt) {
+		ActionListener l = new ActionListener()
+		{
+			public void actionPerformed(ActionEvent evt)
+			{
 				equalsKeyPressed(evt);
 			}
 		};
@@ -41,16 +67,20 @@ class MathOperationsListener implements ListSelectionListener {
 				InputEvent.CTRL_MASK, true);
 		comp.registerKeyboardAction(l, k, JComponent.WHEN_IN_FOCUSED_WINDOW);
 		// add + listener
-		l = new ActionListener() {
-			public void actionPerformed(ActionEvent evt) {
+		l = new ActionListener()
+		{
+			public void actionPerformed(ActionEvent evt)
+			{
 				addKeyPressed(evt);
 			}
 		};
 		k = KeyStroke.getKeyStroke(KeyEvent.VK_ADD, InputEvent.CTRL_MASK, true);
 		comp.registerKeyboardAction(l, k, JComponent.WHEN_IN_FOCUSED_WINDOW);
 		// add - listener
-		l = new ActionListener() {
-			public void actionPerformed(ActionEvent evt) {
+		l = new ActionListener()
+		{
+			public void actionPerformed(ActionEvent evt)
+			{
 				subtractKeyPressed(evt);
 			}
 		};
@@ -58,8 +88,10 @@ class MathOperationsListener implements ListSelectionListener {
 				true);
 		comp.registerKeyboardAction(l, k, JComponent.WHEN_IN_FOCUSED_WINDOW);
 		// add / listener
-		l = new ActionListener() {
-			public void actionPerformed(ActionEvent evt) {
+		l = new ActionListener()
+		{
+			public void actionPerformed(ActionEvent evt)
+			{
 				divideKeyPressed(evt);
 			}
 		};
@@ -67,8 +99,10 @@ class MathOperationsListener implements ListSelectionListener {
 				true);
 		comp.registerKeyboardAction(l, k, JComponent.WHEN_IN_FOCUSED_WINDOW);
 		// add multiply key
-		l = new ActionListener() {
-			public void actionPerformed(ActionEvent evt) {
+		l = new ActionListener()
+		{
+			public void actionPerformed(ActionEvent evt)
+			{
 				multiplyKeyPressed(evt);
 			}
 		};
@@ -78,47 +112,57 @@ class MathOperationsListener implements ListSelectionListener {
 	}
 
 	/**
-   *
-   */
-	public void actionPerformed(ActionEvent evt) {
+	 *
+	 */
+	public void actionPerformed(ActionEvent evt)
+	{
 	}
 
 	/**
-   *
-   */
-	public void valueChanged(ListSelectionEvent evt) {
+	 *
+	 */
+	public void valueChanged(ListSelectionEvent evt)
+	{
 	}
 
 	/**
-   *
-   */
-	public void equalsKeyPressed(ActionEvent evt) {
+	 *
+	 */
+	public void equalsKeyPressed(ActionEvent evt)
+	{
 		System.out.println("Equals key pressed");
 		_ref2 = (DataReference) _table.getSelectedValue();
 		System.out.println("Selected " + _ref2 + " for math operation");
-		try {
-			if (_addKeyMode) {
+		try
+		{
+			if(_addKeyMode)
+			{
 				DataReference ref = DataReferenceMath.vectorOperation(_ref1,
 						_ref2, DataReferenceMath.ADD);
 				System.out.println("done creating new reference");
 				_table.getGroup().addDataReference(ref);
 				_addKeyMode = false;
 			}
-			if (_table.isVisible()) {
+			if(_table.isVisible())
+			{
 				_table.paintAll(_table.getGraphics());
 			}
-		} catch (IllegalArgumentException iae) {
+		}
+		catch(IllegalArgumentException iae)
+		{
 			iae.printStackTrace();
 		}
 		_selectionMode = false;
 	}
 
 	/**
-   *
-   */
-	public void addKeyPressed(ActionEvent evt) {
+	 *
+	 */
+	public void addKeyPressed(ActionEvent evt)
+	{
 		System.out.println("Add key pressed");
-		if (!_selectionMode) {
+		if(!_selectionMode)
+		{
 			_addKeyMode = true;
 			_ref1 = (DataReference) _table.getSelectedValue();
 			_selectionMode = true;
@@ -127,37 +171,23 @@ class MathOperationsListener implements ListSelectionListener {
 	}
 
 	/**
-   *
-   */
-	private GroupTable _table;
-	/**
-   *
-   */
-	private boolean _addKeyMode = false;
-	/**
-   *
-   */
-	private DataReference _ref1, _ref2;
-	/**
-   *
-   */
-	private boolean _selectionMode = false;
-
-	/**
-   *
-   */
-	public void subtractKeyPressed(ActionEvent evt) {
+	 *
+	 */
+	public void subtractKeyPressed(ActionEvent evt)
+	{
 	}
 
 	/**
-   *
-   */
-	public void multiplyKeyPressed(ActionEvent evt) {
+	 *
+	 */
+	public void multiplyKeyPressed(ActionEvent evt)
+	{
 	}
 
 	/**
-   *
-   */
-	public void divideKeyPressed(ActionEvent evt) {
+	 *
+	 */
+	public void divideKeyPressed(ActionEvent evt)
+	{
 	}
 }

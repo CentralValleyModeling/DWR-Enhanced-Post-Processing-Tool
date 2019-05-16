@@ -1,8 +1,13 @@
 /*
- * Copyright (c) 2019
- * California Department of Water Resources
- * All Rights Reserved.  DWR PROPRIETARY/CONFIDENTIAL.
- * Source may not be released without written approval from DWR
+ * Enhanced Post Processing Tool (EPPT) Copyright (c) 2019.
+ *
+ * EPPT is copyrighted by the State of California, Department of Water Resources. It is licensed
+ * under the GNU General Public License, version 2. This means it can be
+ * copied, distributed, and modified freely, but you may not restrict others
+ * in their ability to copy, distribute, and modify it. See the license below
+ * for more details.
+ *
+ * GNU General Public License
  */
 package vista.gui;
 
@@ -19,12 +24,14 @@ import javax.swing.table.TableColumnModel;
  * This class displays a window when the mouse is positioned on the cell of a
  * JTable
  */
-public class TableCellToolTip implements MouseMotionListener, MouseListener {
+public class TableCellToolTip implements MouseMotionListener, MouseListener
+{
 	private JTable _table;
 	private Window _window;
 	private JLabel _label;
 
-	public TableCellToolTip(JTable table) {
+	public TableCellToolTip(JTable table)
+	{
 		_table = table;
 		_table.addMouseMotionListener(this);
 		_table.addMouseListener(this);
@@ -34,15 +41,19 @@ public class TableCellToolTip implements MouseMotionListener, MouseListener {
 		_window.add(_label);
 	}
 
-	public void mouseDragged(MouseEvent evt) {
+	public void mouseDragged(MouseEvent evt)
+	{
 		// do nothing
 		_window.setVisible(false);
 	}
 
 	// show window placed exactly on cell
-	public void mouseMoved(MouseEvent evt) {
-		if (_window.isVisible())
+	public void mouseMoved(MouseEvent evt)
+	{
+		if(_window.isVisible())
+		{
 			return;
+		}
 		// get cell under this position
 		TableColumnModel columnModel = _table.getColumnModel();
 		int viewColumn = columnModel.getColumnIndexAtX(evt.getX());
@@ -62,23 +73,28 @@ public class TableCellToolTip implements MouseMotionListener, MouseListener {
 	}
 
 	//
-	public void mouseClicked(MouseEvent evt) {
+	public void mouseClicked(MouseEvent evt)
+	{
 		_window.setVisible(false);
 	}
 
-	public void mouseEntered(MouseEvent evt) {
+	public void mouseEntered(MouseEvent evt)
+	{
 		_window.setVisible(true);
 	}
 
-	public void mouseExited(MouseEvent evt) {
+	public void mouseExited(MouseEvent evt)
+	{
 		_window.setVisible(false);
 	}
 
-	public void mousePressed(MouseEvent evt) {
+	public void mousePressed(MouseEvent evt)
+	{
 		_window.setVisible(false);
 	}
 
-	public void mouseReleased(MouseEvent evt) {
+	public void mouseReleased(MouseEvent evt)
+	{
 		_window.setVisible(false);
 	}
 }

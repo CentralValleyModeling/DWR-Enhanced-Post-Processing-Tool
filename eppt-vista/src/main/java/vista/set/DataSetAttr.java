@@ -1,8 +1,13 @@
 /*
- * Copyright (c) 2019
- * California Department of Water Resources
- * All Rights Reserved.  DWR PROPRIETARY/CONFIDENTIAL.
- * Source may not be released without written approval from DWR
+ * Enhanced Post Processing Tool (EPPT) Copyright (c) 2019.
+ *
+ * EPPT is copyrighted by the State of California, Department of Water Resources. It is licensed
+ * under the GNU General Public License, version 2. This means it can be
+ * copied, distributed, and modified freely, but you may not restrict others
+ * in their ability to copy, distribute, and modify it. See the license below
+ * for more details.
+ *
+ * GNU General Public License
  */
 package vista.set;
 
@@ -13,16 +18,26 @@ package vista.set;
  * String: A part Location Name: String: B part Type Name : String: C part
  * Source Name : String: F part The D and E parts are obtained from the DataSet
  * type
- * 
+ *
  * @author Nicky Sandhu
  * @version $Id: DataSetAttr.java,v 1.1 2003/10/02 20:49:21 redwood Exp $
  */
-public class DataSetAttr implements java.io.Serializable {
+public class DataSetAttr implements java.io.Serializable
+{
+	/**
+	 *
+	 */
+	private int _type;
+	private String _xType, _yType;
+	private String _xUnits, _yUnits;
+	private String _groupName, _locationName, _typeName, _sourceName;
+
 	/**
 	 * construct a new attribute object with unit units and type type
 	 */
 	public DataSetAttr(int type, String xUnits, String yUnits, String xType,
-			String yType) {
+					   String yType)
+	{
 		this(null, null, null, null, type, xUnits, yUnits, xType, yType);
 	}
 
@@ -30,8 +45,9 @@ public class DataSetAttr implements java.io.Serializable {
 	 * construct a new attribute object with unit units and type type
 	 */
 	public DataSetAttr(String groupName, String locName, String typeName,
-			String sourceName, int type, String xUnits, String yUnits,
-			String xType, String yType) {
+					   String sourceName, int type, String xUnits, String yUnits,
+					   String xType, String yType)
+	{
 		setType(type);
 		setXUnits(xUnits);
 		setYUnits(yUnits);
@@ -44,9 +60,10 @@ public class DataSetAttr implements java.io.Serializable {
 	}
 
 	/**
-    *
-    */
-	public DataSetAttr createClone() {
+	 *
+	 */
+	public DataSetAttr createClone()
+	{
 		DataSetAttr attr = new DataSetAttr(_groupName, _locationName,
 				_typeName, _sourceName, _type, _xUnits, _yUnits, _xType, _yType);
 		return attr;
@@ -55,156 +72,167 @@ public class DataSetAttr implements java.io.Serializable {
 	/**
 	 * what is generally referred to as the A part
 	 */
-	public String getGroupName() {
+	public String getGroupName()
+	{
 		return _groupName;
-	}
-
-	/**
-	 * the b part
-	 */
-	public String getLocationName() {
-		return _locationName;
-	}
-
-	/**
-	 * the c part
-	 */
-	public String getTypeName() {
-		return _typeName;
-	}
-
-	/**
-	 * the f part
-	 */
-	public String getSourceName() {
-		return _sourceName;
-	}
-
-	/**
-	 * get string representing the units
-	 * 
-	 * @see Units
-	 */
-	public String getXUnits() {
-		return _xUnits;
-	}
-
-	/**
-   *
-   */
-	public String getXType() {
-		return _xType;
-	}
-
-	/**
-   *
-   */
-	public String getYType() {
-		return _yType;
-	}
-
-	/**
-   *
-   */
-	public String getYUnits() {
-		return _yUnits;
-	}
-
-	/**
-	 * get integer representing type
-	 * 
-	 * @see DataType
-	 */
-	public int getType() {
-		return _type;
 	}
 
 	/**
 	 * what is generally referred to as the A part
 	 */
-	public void setGroupName(String name) {
+	public void setGroupName(String name)
+	{
 		_groupName = name == null ? "" : name.toUpperCase();
 	}
 
 	/**
 	 * the b part
 	 */
-	public void setLocationName(String name) {
+	public String getLocationName()
+	{
+		return _locationName;
+	}
+
+	/**
+	 * the b part
+	 */
+	public void setLocationName(String name)
+	{
 		_locationName = name == null ? "" : name.toUpperCase();
 	}
 
 	/**
 	 * the c part
 	 */
-	public void setTypeName(String name) {
+	public String getTypeName()
+	{
+		return _typeName;
+	}
+
+	/**
+	 * the c part
+	 */
+	public void setTypeName(String name)
+	{
 		_typeName = name == null ? "" : name.toUpperCase();
 	}
 
 	/**
 	 * the f part
 	 */
-	public void setSourceName(String name) {
+	public String getSourceName()
+	{
+		return _sourceName;
+	}
+
+	/**
+	 * the f part
+	 */
+	public void setSourceName(String name)
+	{
 		_sourceName = name == null ? "" : name.toUpperCase();
 	}
 
 	/**
-	 * set string representing the units
-	 * 
+	 * get string representing the units
+	 *
 	 * @see Units
 	 */
-	public void setXUnits(String units) {
+	public String getXUnits()
+	{
+		return _xUnits;
+	}
+
+	/**
+	 * set string representing the units
+	 *
+	 * @see Units
+	 */
+	public void setXUnits(String units)
+	{
 		_xUnits = units == null ? "" : units.toUpperCase();
 	}
 
 	/**
-   *
-   */
-	public void setYUnits(String units) {
-		_yUnits = units == null ? "" : units.toUpperCase();
+	 *
+	 */
+	public String getXType()
+	{
+		return _xType;
 	}
 
 	/**
-   *
-   */
-	public void setXType(String type) {
+	 *
+	 */
+	public void setXType(String type)
+	{
 		_xType = type == null ? "" : type.toUpperCase();
 	}
 
 	/**
-   *
-   */
-	public void setYType(String type) {
+	 *
+	 */
+	public String getYType()
+	{
+		return _yType;
+	}
+
+	/**
+	 *
+	 */
+	public void setYType(String type)
+	{
 		_yType = type == null ? "" : type.toUpperCase();
 	}
 
 	/**
-	 * set integer representing type
-	 * 
-	 * @see DataType
+	 *
 	 */
-	public void setType(int type) {
-		_type = type;
-	}
-	
-	/**
-	 * A string representation
-	 */
-	public String toString(){
-		StringBuffer buffer = new StringBuffer();
-		buffer.append(this.getTypeName()+ " @ " + this.getLocationName()+"\n");
-		buffer.append("Source: "+ this.getSourceName()+"\n");
-		buffer.append("Group: "+this.getGroupName()+"\n");
-		buffer.append("Type: "+ this.getType()+"\n");
-		buffer.append("X (type,units): "+ this.getXType()+","+this.getXUnits()+"\n");
-		buffer.append("Y (type,units): "+ this.getYType()+","+this.getYUnits()+"\n");
-		return buffer.toString();
+	public String getYUnits()
+	{
+		return _yUnits;
 	}
 
 	/**
-   *
-   */
-	private int _type;
-	private String _xType, _yType;
-	private String _xUnits, _yUnits;
-	private String _groupName, _locationName, _typeName, _sourceName;
+	 *
+	 */
+	public void setYUnits(String units)
+	{
+		_yUnits = units == null ? "" : units.toUpperCase();
+	}
+
+	/**
+	 * get integer representing type
+	 *
+	 * @see DataType
+	 */
+	public int getType()
+	{
+		return _type;
+	}
+
+	/**
+	 * set integer representing type
+	 *
+	 * @see DataType
+	 */
+	public void setType(int type)
+	{
+		_type = type;
+	}
+
+	/**
+	 * A string representation
+	 */
+	public String toString()
+	{
+		StringBuffer buffer = new StringBuffer();
+		buffer.append(this.getTypeName() + " @ " + this.getLocationName() + "\n");
+		buffer.append("Source: " + this.getSourceName() + "\n");
+		buffer.append("Group: " + this.getGroupName() + "\n");
+		buffer.append("Type: " + this.getType() + "\n");
+		buffer.append("X (type,units): " + this.getXType() + "," + this.getXUnits() + "\n");
+		buffer.append("Y (type,units): " + this.getYType() + "," + this.getYUnits() + "\n");
+		return buffer.toString();
+	}
 }

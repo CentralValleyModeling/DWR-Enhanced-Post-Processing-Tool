@@ -1,8 +1,13 @@
 /*
- * Copyright (c) 2019
- * California Department of Water Resources
- * All Rights Reserved.  DWR PROPRIETARY/CONFIDENTIAL.
- * Source may not be released without written approval from DWR
+ * Enhanced Post Processing Tool (EPPT) Copyright (c) 2019.
+ *
+ * EPPT is copyrighted by the State of California, Department of Water Resources. It is licensed
+ * under the GNU General Public License, version 2. This means it can be
+ * copied, distributed, and modified freely, but you may not restrict others
+ * in their ability to copy, distribute, and modify it. See the license below
+ * for more details.
+ *
+ * GNU General Public License
  */
 
 package gov.ca.water.businessservice.impl;
@@ -23,8 +28,8 @@ import gov.ca.water.calgui.EpptInitializationException;
 import gov.ca.water.calgui.bo.CalLiteGUIException;
 import gov.ca.water.calgui.bo.CalLiteGUIExceptionFatal;
 import gov.ca.water.calgui.constant.Constant;
-import gov.ca.water.calgui.tech_service.IFileSystemSvc;
-import gov.ca.water.calgui.tech_service.impl.FileSystemSvcImpl;
+import gov.ca.water.calgui.techservice.IFileSystemSvc;
+import gov.ca.water.calgui.techservice.impl.FileSystemSvcImpl;
 import gov.ca.water.scenario.ui.JLinkedSlider;
 import org.apache.log4j.Logger;
 import org.swixml.SwingEngine;
@@ -71,11 +76,11 @@ public final class XMLParsingSvcImpl implements IXMLParsingSvc
 		}
 		catch(CalLiteGUIException ex)
 		{
-			throw new EpptInitializationException("Error trying to get xml document: ..//Config//GUI.xml.",ex);
+			throw new EpptInitializationException("Error trying to get xml document: ..//Config//GUI.xml.", ex);
 		}
 		catch(Exception ex)
 		{
-			throw new EpptInitializationException("Error rendering xml document: ..//Config//GUI.xml.",new CalLiteGUIExceptionFatal(
+			throw new EpptInitializationException("Error rendering xml document: ..//Config//GUI.xml.", new CalLiteGUIExceptionFatal(
 					"This is from Swing Engine : " + Constant.NEW_LINE + ex.getMessage(), ex));
 		}
 
@@ -157,7 +162,7 @@ public final class XMLParsingSvcImpl implements IXMLParsingSvc
 			}
 		}
 		this._newUserDefinedTables = compIds.stream().filter((compId) -> _swingEngine.find(compId) instanceof JTable)
-										   .collect(Collectors.toList());
+											.collect(Collectors.toList());
 		this._newUserDefinedTables.remove("tblRegValues");
 		this._newUserDefinedTables.remove("tblOpValues");
 		this._newUserDefinedTables.remove("tblIF3");

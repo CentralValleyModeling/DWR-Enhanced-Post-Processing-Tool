@@ -1,8 +1,13 @@
 /*
- * Copyright (c) 2019
- * California Department of Water Resources
- * All Rights Reserved.  DWR PROPRIETARY/CONFIDENTIAL.
- * Source may not be released without written approval from DWR
+ * Enhanced Post Processing Tool (EPPT) Copyright (c) 2019.
+ *
+ * EPPT is copyrighted by the State of California, Department of Water Resources. It is licensed
+ * under the GNU General Public License, version 2. This means it can be
+ * copied, distributed, and modified freely, but you may not restrict others
+ * in their ability to copy, distribute, and modify it. See the license below
+ * for more details.
+ *
+ * GNU General Public License
  */
 package vista.graph;
 
@@ -11,14 +16,17 @@ import java.util.Properties;
 import vista.gui.VistaUtils;
 
 /**
-   *
-   */
-public class GraphProperties {
+ *
+ */
+public class GraphProperties
+{
 	/**
-   *
-   */
+	 *
+	 */
 	public static Properties properties;
-	static {
+
+	static
+	{
 		properties = new Properties();
 		// load default properties
 		properties.put("GraphInfo.timeUnitString", "TIME");
@@ -53,14 +61,21 @@ public class GraphProperties {
 		properties.put("displayUnscreened", "true");
 		// load from file
 		java.io.InputStream is = null;
-		if (is == null)
+		if(is == null)
+		{
 			is = VistaUtils.getPropertyFileAsStream("graph.properties");
-		if (is == null)
+		}
+		if(is == null)
+		{
 			is = VistaUtils
 					.getResourceAsStream("/vista/graph/graph.properties");
-		try {
+		}
+		try
+		{
 			properties.load(new java.io.BufferedInputStream(is));
-		} catch (java.io.IOException ioe) {
+		}
+		catch(java.io.IOException ioe)
+		{
 			System.out.println("Properties file " + "graph.properties"
 					+ " not found");
 			System.out.println("using default properties");

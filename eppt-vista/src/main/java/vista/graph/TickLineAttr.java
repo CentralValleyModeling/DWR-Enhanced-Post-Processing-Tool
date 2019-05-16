@@ -1,8 +1,13 @@
 /*
- * Copyright (c) 2019
- * California Department of Water Resources
- * All Rights Reserved.  DWR PROPRIETARY/CONFIDENTIAL.
- * Source may not be released without written approval from DWR
+ * Enhanced Post Processing Tool (EPPT) Copyright (c) 2019.
+ *
+ * EPPT is copyrighted by the State of California, Department of Water Resources. It is licensed
+ * under the GNU General Public License, version 2. This means it can be
+ * copied, distributed, and modified freely, but you may not restrict others
+ * in their ability to copy, distribute, and modify it. See the license below
+ * for more details.
+ *
+ * GNU General Public License
  */
 package vista.graph;
 
@@ -10,12 +15,13 @@ import java.awt.Color;
 
 /**
  * Attributes of TickLine
- * 
- * @see TickLine
+ *
  * @author Nicky Sandhu (DWR).
  * @version $Id: TickLineAttr.java,v 1.1 2003/10/02 20:49:11 redwood Exp $
+ * @see TickLine
  */
-public class TickLineAttr extends GEAttr {
+public class TickLineAttr extends GEAttr
+{
 	/**
 	 * Tick Line position in plot towards bottom
 	 */
@@ -81,17 +87,19 @@ public class TickLineAttr extends GEAttr {
 	 */
 	public int _thickness = 1;
 	/**
-   *
-   */
+	 *
+	 */
 	public Color _color = Color.black;
 
 	/**
 	 * copies the fields into the given GEAttr object. Also copies in the
 	 * TickLineAttr if the object is of that type.
 	 */
-	public void copyInto(GEAttr ga) {
+	public void copyInto(GEAttr ga)
+	{
 		super.copyInto(ga);
-		if (ga instanceof TickLineAttr) {
+		if(ga instanceof TickLineAttr)
+		{
 			TickLineAttr lea = (TickLineAttr) ga;
 			lea._position = this._position;
 			lea._tickLocation = this._tickLocation;

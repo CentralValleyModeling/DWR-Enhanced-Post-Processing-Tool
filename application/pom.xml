@@ -1,9 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-  ~ Copyright (c) 2019
-  ~ California Department of Water Resources
-  ~ All Rights Reserved.  DWR PROPRIETARY/CONFIDENTIAL.
-  ~ Source may not be released without written approval from DWR
+  ~ Enhanced Post Processing Tool (EPPT) Copyright (c) 2019.
+  ~
+  ~ EPPT is copyrighted by the State of California, Department of Water Resources. It is licensed
+  ~ under the GNU General Public License, version 2. This means it can be
+  ~ copied, distributed, and modified freely, but you may not restrict others
+  ~ in their ability to copy, distribute, and modify it. See the license below
+  ~ for more details.
+  ~
+  ~ GNU General Public License
   -->
 
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
@@ -12,7 +17,7 @@
 	<parent>
 		<groupId>gov.ca.water</groupId>
 		<artifactId>eppt-parent</artifactId>
-		<version>1.0.0-SNAPSHOT</version>
+		<version>1.0.1-SNAPSHOT</version>
 		<relativePath>../eppt-parent</relativePath>
 	</parent>
 
@@ -24,7 +29,7 @@
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<all.clusters>${project.build.directory}/${brandingToken}</all.clusters>
-		<maven.build.timestamp.format>yyyy-MM-dd</maven.build.timestamp.format>
+		<zip-dist-name>DWR-EPPT</zip-dist-name>
 	</properties>
 
 	<dependencies>
@@ -47,6 +52,11 @@
 		<dependency>
 			<groupId>${project.groupId}</groupId>
 			<artifactId>eppt-core</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>${project.groupId}</groupId>
+			<artifactId>eppt-jasper-engine</artifactId>
 			<version>${project.version}</version>
 		</dependency>
 		<!-- NbModuleSuite functional in RELEASE70 or later: -->
@@ -76,6 +86,11 @@
 			<version>5.3.1</version>
 			<scope>test</scope>
 		</dependency>
+		<dependency>
+			<groupId>org.codehaus.groovy</groupId>
+			<artifactId>groovy</artifactId>
+			<version>2.5.6</version>
+		</dependency>
 	</dependencies>
 
 	<build>
@@ -85,7 +100,7 @@
 				<artifactId>nbm-maven-plugin</artifactId>
 				<extensions>true</extensions>
 				<configuration>
-					<finalName>DWR-EPPT</finalName>
+					<finalName>${zip-dist-name}</finalName>
 					<brandingToken>${brandingToken}</brandingToken>
 					<debugAdditionalArguments>
 						-J"-agentlib:jdwp=transport=dt_socket,server=y,suspend=y,address=5164" -J-Xmx2g
@@ -106,12 +121,37 @@
 			</plugin>
 		</plugins>
 	</build>
-
 	<profiles>
 		<profile>
 			<id>deployment</id>
 			<build>
+
 				<plugins>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-dependency-plugin</artifactId>
+						<version>3.1.1</version>
+						<executions>
+							<execution>
+								<id>copy-dependencies</id>
+								<phase>compile</phase>
+								<goals>
+									<goal>copy</goal>
+								</goals>
+							</execution>
+						</executions>
+						<configuration>
+							<outputDirectory>${project.build.directory}</outputDirectory>
+							<artifactItems>
+								<artifactItem>
+									<groupId>oracle</groupId>
+									<artifactId>jre</artifactId>
+									<version>1.8.0_202</version>
+									<type>zip</type>
+								</artifactItem>
+							</artifactItems>
+						</configuration>
+					</plugin>
 					<plugin>
 						<groupId>org.codehaus.mojo</groupId>
 						<artifactId>nbm-maven-plugin</artifactId>
@@ -119,18 +159,18 @@
 							<execution>
 								<id>extra</id>
 								<goals>
-									<goal>build-installers</goal>
-									<goal>cluster-app</goal>
+									<goal>standalone-zip</goal>
+									<goal>run-platform</goal>
 								</goals>
 							</execution>
 						</executions>
 						<configuration>
-							<installersFilePrefix>DWR-EPPT</installersFilePrefix>
+							<installersFilePrefix>${zip-dist-name}-${maven.build.timestamp}</installersFilePrefix>
 							<installerOsLinux>false</installerOsLinux>
 							<installerOsMacosx>false</installerOsMacosx>
 							<installerOsSolaris>false</installerOsSolaris>
 							<installerPack200Enable>true</installerPack200Enable>
-							<installerOsWindows>true</installerOsWindows>
+							<installerOsWindows>false</installerOsWindows>
 							<userSettings>
 								<configuration.logic.file>
 									${basedir}/src/installer/ConfigurationLogic.java
@@ -141,8 +181,49 @@
 							<etcConfFile>src/nbproject/eppt.conf</etcConfFile>
 							<brandingToken>${brandingToken}</brandingToken>
 							<binDirectory>${basedir}/src/installer/binaries</binDirectory>
-
+							<licenseFile>${basedir}/src/nbproject/license.txt</licenseFile>
 						</configuration>
+					</plugin>
+					<plugin>
+						<groupId>org.codehaus.mojo</groupId>
+						<artifactId>build-helper-maven-plugin</artifactId>
+						<version>1.8</version>
+						<executions>
+							<execution>
+								<id>parse-version</id>
+								<goals>
+									<goal>parse-version</goal>
+								</goals>
+							</execution>
+						</executions>
+					</plugin>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-antrun-plugin</artifactId>
+						<version>1.8</version>
+						<executions>
+							<execution>
+								<id>copy-resource-one</id>
+								<phase>package</phase>
+								<goals>
+									<goal>run</goal>
+								</goals>
+								<configuration>
+									<target>
+										<unzip src="${project.build.directory}\jre-1.8.0_202.zip" dest="${project.build.directory}\dwr_eppt\jre"/>
+										<copy file="${project.basedir}/src/EPPT.exe" todir="${project.build.directory}\dwr_eppt"/>
+										<exec executable="cmd">
+											<arg value="/c"/>
+											<arg value="C:\Program Files\7-Zip\7z.exe"/>
+											<arg value="a"/>
+											<arg value="-sfx"/>
+											<arg value="${project.build.directory}\${zip-dist-name}-${parsedVersion.majorVersion}.${parsedVersion.minorVersion}.${parsedVersion.incrementalVersion}-${maven.build.timestamp}.exe"/>
+											<arg value="${project.build.directory}\dwr_eppt"/>
+										</exec>
+									</target>
+								</configuration>
+							</execution>
+						</executions>
 					</plugin>
 				</plugins>
 			</build>

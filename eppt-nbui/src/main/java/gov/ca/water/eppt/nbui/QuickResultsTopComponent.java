@@ -1,8 +1,13 @@
 /*
- * Copyright (c) 2019
- * California Department of Water Resources
- * All Rights Reserved.  DWR PROPRIETARY/CONFIDENTIAL.
- * Source may not be released without written approval from DWR
+ * Enhanced Post Processing Tool (EPPT) Copyright (c) 2019.
+ *
+ * EPPT is copyrighted by the State of California, Department of Water Resources. It is licensed
+ * under the GNU General Public License, version 2. This means it can be
+ * copied, distributed, and modified freely, but you may not restrict others
+ * in their ability to copy, distribute, and modify it. See the license below
+ * for more details.
+ *
+ * GNU General Public License
  */
 package gov.ca.water.eppt.nbui;
 
@@ -14,6 +19,7 @@ import gov.ca.water.quickresults.ui.quickresults.QuickResultsListener;
 import gov.ca.water.quickresults.ui.quickresults.QuickResultsPanel;
 import org.openide.awt.ActionID;
 import org.openide.awt.ActionReference;
+import org.openide.awt.ActionReferences;
 import org.openide.util.NbBundle.Messages;
 import org.openide.windows.TopComponent;
 
@@ -22,12 +28,15 @@ import org.openide.windows.TopComponent;
  */
 @TopComponent.Description(
 		preferredID = "QuickResultsTopComponent",
-		//iconBase="SET/PATH/TO/ICON/HERE",
-		persistenceType = TopComponent.PERSISTENCE_ALWAYS
+		iconBase = "gov/ca/water/eppt/nbui/QuickResults.png"
 )
 @TopComponent.Registration(mode = "editor", openAtStartup = true, position = 2222)
 @ActionID(category = "Window", id = "gov.ca.water.eppt.nbui.QuickResultsTopComponent")
-@ActionReference(path = "Menu/Window", position = 2222)
+@ActionReferences({
+		@ActionReference(path = "Menu/Window", position = 2222),
+		@ActionReference(path = "Toolbars/Window", position = 2222)
+})
+
 @TopComponent.OpenActionRegistration(
 		displayName = "Quick Results",
 		preferredID = "QuickResultsTopComponent"

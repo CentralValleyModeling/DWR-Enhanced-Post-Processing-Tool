@@ -1,8 +1,13 @@
 /*
- * Copyright (c) 2019
- * California Department of Water Resources
- * All Rights Reserved.  DWR PROPRIETARY/CONFIDENTIAL.
- * Source may not be released without written approval from DWR
+ * Enhanced Post Processing Tool (EPPT) Copyright (c) 2019.
+ *
+ * EPPT is copyrighted by the State of California, Department of Water Resources. It is licensed
+ * under the GNU General Public License, version 2. This means it can be
+ * copied, distributed, and modified freely, but you may not restrict others
+ * in their ability to copy, distribute, and modify it. See the license below
+ * for more details.
+ *
+ * GNU General Public License
  */
 package vista.app.schematic;
 
@@ -20,11 +25,43 @@ import vista.graph.Scale;
  * update method called by the Animator class. This class implements setBounds
  * and draw methods to render itself on the graphics context
  */
-public class ChannelElement extends AnimateElement {
+public class ChannelElement extends AnimateElement
+{
 	/**
-   * 
-   */
-	public ChannelElement(GEAttr attr, DSMGridElement grid, ChannelData data) {
+	 *
+	 */
+	// Transition Blue -> Green -> Yellow -> Orange -> Red
+	private static final float[] ir = {0, 0, 255, 255, 255};
+	private static final float[] ig = {0, 255, 255, 165, 0};
+	private static final float[] ib = {255, 0, 0, 0, 0};
+	private static final float[] fr = {0, 255, 255, 255, 255};
+	private static final float[] fg = {255, 255, 165, 0, 0};
+	private static final float[] fb = {0, 0, 0, 0, 0};
+	/**
+	 *
+	 */
+	protected DSMGridElement _grid;
+	/**
+	 *
+	 */
+	protected ChannelData _data;
+	/**
+	 *
+	 */
+	protected Channel _channel;
+	/**
+	 *
+	 */
+	protected float _value;
+	/**
+	 *
+	 */
+	private int channel_width = 4;
+	/**
+	 *
+	 */
+	public ChannelElement(GEAttr attr, DSMGridElement grid, ChannelData data)
+	{
 		super(attr);
 		_grid = grid;
 		_data = data;
@@ -33,15 +70,53 @@ public class ChannelElement extends AnimateElement {
 	}
 
 	/**
-    *
-    */
-	public void Draw() {
+	 *
+	 */
+	static Color getColorForValue(float _value)
+	{
+		// int ir = 0, ig = 0, ib = 255; // Blue
+		// int fr = 255, fg = 255, fb = 0; // yellow
+		// int fr = 255, fg = 10, fb = 10; // Dark red
+		// int ir = 0, ig = 100, ib = 0; // Dark green
+
+		float[] max = {100, 500, 2000, 5000, 10000};
+		float[] min = {50, 100, 500, 2000, 5000};
+		int colorIndex = 0;
+		while((_value > max[colorIndex]) && (colorIndex < max.length - 1))
+		{
+			colorIndex++;
+		}
+		float range = max[colorIndex] - min[colorIndex];
+		if(_value > max[colorIndex])
+		{
+			_value = max[colorIndex];
+		}
+		if(_value < min[colorIndex])
+		{
+			_value = min[colorIndex];
+		}
+		float normVal = (_value - min[colorIndex]) / range;
+		int r = (int) (ir[colorIndex] + normVal
+				* (fr[colorIndex] - ir[colorIndex]));
+		int g = (int) (ig[colorIndex] + normVal
+				* (fg[colorIndex] - ig[colorIndex]));
+		int b = (int) (ib[colorIndex] + normVal
+				* (fb[colorIndex] - ib[colorIndex]));
+		return new Color(r, g, b);
 	}
 
 	/**
-   * 
-   */
-	public void animateNext() {
+	 *
+	 */
+	public void Draw()
+	{
+	}
+
+	/**
+	 *
+	 */
+	public void animateNext()
+	{
 		Graphics gc = getGraphics();
 		Color previousColor = gc.getColor();
 		gc.setColor(getColorForValue(_value));
@@ -63,82 +138,24 @@ public class ChannelElement extends AnimateElement {
 	 * The update method is called when the animation frame needs to be updated.
 	 * Each element is responsible for drawing itself within the bounds given.
 	 */
-	public void update(AnimationObservable o, Object arg) {
+	public void update(AnimationObservable o, Object arg)
+	{
 		_value = _data.getNextValue();
 	}
 
 	/**
-   *
-   */
-	public Dimension getPreferredSize() {
+	 *
+	 */
+	public Dimension getPreferredSize()
+	{
 		return new Dimension(4, 4);
 	}
 
 	/**
-   *
-   */
-	public Dimension getMinimumSize() {
+	 *
+	 */
+	public Dimension getMinimumSize()
+	{
 		return getPreferredSize();
-	}
-
-	/**
-   * 
-   */
-	protected DSMGridElement _grid;
-	/**
-   * 
-   */
-	protected ChannelData _data;
-	/**
-   * 
-   */
-	protected Channel _channel;
-	/**
-   * 
-   */
-	protected float _value;
-	/**
-   * 
-   */
-	private int channel_width = 4;
-	/**
-   * 
-   */
-	// Transition Blue -> Green -> Yellow -> Orange -> Red
-	private static final float[] ir = { 0, 0, 255, 255, 255 };
-	private static final float[] ig = { 0, 255, 255, 165, 0 };
-	private static final float[] ib = { 255, 0, 0, 0, 0 };
-	private static final float[] fr = { 0, 255, 255, 255, 255 };
-	private static final float[] fg = { 255, 255, 165, 0, 0 };
-	private static final float[] fb = { 0, 0, 0, 0, 0 };
-
-	/**
-   * 
-   */
-	static Color getColorForValue(float _value) {
-		// int ir = 0, ig = 0, ib = 255; // Blue
-		// int fr = 255, fg = 255, fb = 0; // yellow
-		// int fr = 255, fg = 10, fb = 10; // Dark red
-		// int ir = 0, ig = 100, ib = 0; // Dark green
-
-		float[] max = { 100, 500, 2000, 5000, 10000 };
-		float[] min = { 50, 100, 500, 2000, 5000 };
-		int colorIndex = 0;
-		while ((_value > max[colorIndex]) && (colorIndex < max.length - 1)) {
-			colorIndex++;
-		}
-		float range = max[colorIndex] - min[colorIndex];
-		if (_value > max[colorIndex])
-			_value = max[colorIndex];
-		if (_value < min[colorIndex])
-			_value = min[colorIndex];
-		float normVal = (_value - min[colorIndex]) / range;
-		int r = (int) (ir[colorIndex] + normVal
-				* (fr[colorIndex] - ir[colorIndex]));
-		int g = (int) (ig[colorIndex] + normVal
-				* (fg[colorIndex] - ig[colorIndex]));
-		int b = (int) (ib[colorIndex] + normVal
-				* (fb[colorIndex] - ib[colorIndex]));
-		return new Color(r, g, b);
 	}
 }

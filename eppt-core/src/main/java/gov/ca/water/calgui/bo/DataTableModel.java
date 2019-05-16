@@ -1,8 +1,13 @@
 /*
- * Copyright (c) 2019
- * California Department of Water Resources
- * All Rights Reserved.  DWR PROPRIETARY/CONFIDENTIAL.
- * Source may not be released without written approval from DWR
+ * Enhanced Post Processing Tool (EPPT) Copyright (c) 2019.
+ *
+ * EPPT is copyrighted by the State of California, Department of Water Resources. It is licensed
+ * under the GNU General Public License, version 2. This means it can be
+ * copied, distributed, and modified freely, but you may not restrict others
+ * in their ability to copy, distribute, and modify it. See the license below
+ * for more details.
+ *
+ * GNU General Public License
  */
 
 package gov.ca.water.calgui.bo;
@@ -11,8 +16,8 @@ package gov.ca.water.calgui.bo;
 import javax.swing.table.AbstractTableModel;
 
 import gov.ca.water.calgui.constant.Constant;
-import gov.ca.water.calgui.tech_service.IAuditSvc;
-import gov.ca.water.calgui.tech_service.impl.AuditSvcImpl;
+import gov.ca.water.calgui.techservice.IAuditSvc;
+import gov.ca.water.calgui.techservice.impl.AuditSvcImpl;
 
 /**
  * This class is used to hold the tables for the application.
@@ -41,6 +46,7 @@ public class DataTableModel extends AbstractTableModel
 	 * This will tell whether the table can be modify or not.
 	 */
 	private boolean _isCellEditable;
+
 	/**
 	 * The object of the GUI.
 	 */

@@ -1,8 +1,13 @@
 /*
- * Copyright (c) 2019
- * California Department of Water Resources
- * All Rights Reserved.  DWR PROPRIETARY/CONFIDENTIAL.
- * Source may not be released without written approval from DWR
+ * Enhanced Post Processing Tool (EPPT) Copyright (c) 2019.
+ *
+ * EPPT is copyrighted by the State of California, Department of Water Resources. It is licensed
+ * under the GNU General Public License, version 2. This means it can be
+ * copied, distributed, and modified freely, but you may not restrict others
+ * in their ability to copy, distribute, and modify it. See the license below
+ * for more details.
+ *
+ * GNU General Public License
  */
 
 package gov.ca.water.calgui.constant;
@@ -22,11 +27,12 @@ import javax.swing.filechooser.FileSystemView;
 public final class EpptPreferences
 {
 	private static final Preferences ROOT_PREFERENCES = Preferences.userRoot().node("DWR").node("EPPT");
-	private static final Preferences REPORT_NODE = ROOT_PREFERENCES.node("Report");
+	private static final Preferences REPORT_NODE = ROOT_PREFERENCES.node("report");
 	private static final Preferences EPPT_HOME = ROOT_PREFERENCES.node("eppt_home");
 	private static final String PROJECT_DIRECTORY = "project_directory";
 	private static final String LAST_SCENARIO_CONFIGURATION = "last_scenario_configuration";
 	private static final String REPORT_OUTPUT_LOCATION = "report_output_location";
+	private static final String USERNAME = "eppt_username";
 
 	private EpptPreferences()
 	{
@@ -46,6 +52,11 @@ public final class EpptPreferences
 		return Paths.get(retval);
 	}
 
+	public static void setProjectsPath(String text)
+	{
+		EPPT_HOME.put(PROJECT_DIRECTORY, text);
+	}
+
 	public static Path getScenariosPaths()
 	{
 		return getProjectsPath().resolve(Constant.SCENARIOS_DIR);
@@ -56,14 +67,14 @@ public final class EpptPreferences
 		return getProjectsPath().resolve(Constant.MODEL_DIR).resolve(Constant.MODEL_DSS_DIR);
 	}
 
+	public static Path getWreslDirectory()
+	{
+		return Paths.get(Constant.WRESL_DIR);
+	}
+
 	public static Path getReportsPath()
 	{
 		return getProjectsPath().resolve(Constant.REPORTS_DIR);
-	}
-
-	public static void setProjectsPath(String text)
-	{
-		EPPT_HOME.put(PROJECT_DIRECTORY, text);
 	}
 
 	public static Path getLastProjectConfiguration()
@@ -85,5 +96,15 @@ public final class EpptPreferences
 	public static void setResultsOutputLocation(String path)
 	{
 		REPORT_NODE.put(REPORT_OUTPUT_LOCATION, path);
+	}
+
+	public static String getUsername()
+	{
+		return EPPT_HOME.get(USERNAME, System.getProperty("user.name"));
+	}
+
+	public static void setUsername(String path)
+	{
+		EPPT_HOME.put(USERNAME, path);
 	}
 }

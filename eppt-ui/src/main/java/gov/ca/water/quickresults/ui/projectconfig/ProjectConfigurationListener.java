@@ -1,20 +1,24 @@
 /*
- * Copyright (c) 2019
- * California Department of Water Resources
- * All Rights Reserved.  DWR PROPRIETARY/CONFIDENTIAL.
- * Source may not be released without written approval from DWR
+ * Enhanced Post Processing Tool (EPPT) Copyright (c) 2019.
+ *
+ * EPPT is copyrighted by the State of California, Department of Water Resources. It is licensed
+ * under the GNU General Public License, version 2. This means it can be
+ * copied, distributed, and modified freely, but you may not restrict others
+ * in their ability to copy, distribute, and modify it. See the license below
+ * for more details.
+ *
+ * GNU General Public License
  */
 
 package gov.ca.water.quickresults.ui.projectconfig;
 
+import java.awt.Frame;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.*;
 
-import gov.ca.water.calgui.bo.FileDialogBO;
-import gov.ca.water.calgui.bo.RBListItemBO;
+import gov.ca.water.calgui.project.EpptScenarioRun;
 import gov.ca.water.quickresults.ui.EpptPanel;
-import org.apache.log4j.Logger;
 
 
 /**
@@ -25,17 +29,11 @@ import org.apache.log4j.Logger;
  */
 public class ProjectConfigurationListener implements ActionListener
 {
-	private static final Logger LOGGER = Logger.getLogger(ProjectConfigurationListener.class.getName());
 	private final ProjectConfigurationPanel _projectConfigurationPanel;
-	private final FileDialogBO _addScnearioFileDialogBO;
 
 	public ProjectConfigurationListener(ProjectConfigurationPanel projectConfigurationPanel)
 	{
 		_projectConfigurationPanel = projectConfigurationPanel;
-
-		DefaultListModel<RBListItemBO> lstScenarios = _projectConfigurationPanel.getLmScenNames();
-		_addScnearioFileDialogBO = new FileDialogBO(lstScenarios, true,
-				projectConfigurationPanel);
 	}
 
 	@Override
@@ -50,24 +48,56 @@ public class ProjectConfigurationListener implements ActionListener
 				setQRMonthCheckBoxesSelected(true);
 				break;
 			case "btnAddScenario":
-				launchFileDialogToAddScenarios(e);
+				launchFileDialogToAddScenario(e);
+				break;
+			case "btnEditScenario":
+				launchFileDialogToEditScenario(e);
 				break;
 			case "btnDelScenario":
-				launchFileDialogToAddScenarios(e);
+				_projectConfigurationPanel.deleteScenario();
 				break;
 			case "btnClearScenario":
-				launchFileDialogToAddScenarios(e);
+				_projectConfigurationPanel.clearAllScenarios();
+				break;
+			case "moveUp":
+				_projectConfigurationPanel.moveSelectedScenarioUp();
+				break;
+			case "moveDown":
+				_projectConfigurationPanel.moveSelectedScenarioDown();
 				break;
 			default:
 		}
 		ProjectConfigurationPanel projectConfigurationPanel = ProjectConfigurationPanel.getProjectConfigurationPanel();
-		projectConfigurationPanel.getScenarioList().repaint();
 		projectConfigurationPanel.setModified(true);
 	}
 
-	private void launchFileDialogToAddScenarios(ActionEvent e)
+	private void launchFileDialogToAddScenario(ActionEvent e)
 	{
-		_addScnearioFileDialogBO.actionPerformed(e);
+		ScenarioRunEditor scenarioRunEditor = new ScenarioRunEditor(
+				(Frame) SwingUtilities.windowForComponent(_projectConfigurationPanel));
+		scenarioRunEditor.setVisible(true);
+		EpptScenarioRun scenarioRun = scenarioRunEditor.createRun();
+		if(scenarioRun != null)
+		{
+			_projectConfigurationPanel.addScenario(scenarioRun);
+		}
+	}
+
+	private void launchFileDialogToEditScenario(ActionEvent e)
+	{
+		EpptScenarioRun oldScenarioRun = _projectConfigurationPanel.getSelectedScenario();
+		if(oldScenarioRun != null)
+		{
+			ScenarioRunEditor scenarioRunEditor = new ScenarioRunEditor(
+					(Frame) SwingUtilities.windowForComponent(_projectConfigurationPanel));
+			scenarioRunEditor.fillPanel(oldScenarioRun);
+			scenarioRunEditor.setVisible(true);
+			EpptScenarioRun newScenarioRun = scenarioRunEditor.createRun();
+			if(newScenarioRun != null)
+			{
+				_projectConfigurationPanel.replaceScenario(oldScenarioRun, newScenarioRun);
+			}
+		}
 	}
 
 	/**

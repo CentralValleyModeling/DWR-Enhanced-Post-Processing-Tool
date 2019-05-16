@@ -1,8 +1,13 @@
 /*
- * Copyright (c) 2019
- * California Department of Water Resources
- * All Rights Reserved.  DWR PROPRIETARY/CONFIDENTIAL.
- * Source may not be released without written approval from DWR
+ * Enhanced Post Processing Tool (EPPT) Copyright (c) 2019.
+ *
+ * EPPT is copyrighted by the State of California, Department of Water Resources. It is licensed
+ * under the GNU General Public License, version 2. This means it can be
+ * copied, distributed, and modified freely, but you may not restrict others
+ * in their ability to copy, distribute, and modify it. See the license below
+ * for more details.
+ *
+ * GNU General Public License
  */
 package vista.app.schematic;
 
@@ -13,35 +18,50 @@ import vista.graph.TextLine;
 import vista.graph.TextLineAttr;
 
 /**
-   * 
-   */
-public class GridLabelElement extends TextLine {
+ *
+ */
+public class GridLabelElement extends TextLine
+{
 	/**
-   * 
-   */
-	public GridLabelElement(TextLineAttr tla, String label) {
+	 *
+	 */
+	private DSMGridElement _grid;
+	/**
+	 *
+	 */
+	private Node _node;
+
+	/**
+	 *
+	 */
+	public GridLabelElement(TextLineAttr tla, String label)
+	{
 		super(tla, label);
 	}
 
 	/**
-   * 
-   */
-	public void setGrid(DSMGridElement grid) {
+	 *
+	 */
+	public void setGrid(DSMGridElement grid)
+	{
 		_grid = grid;
 	}
 
 	/**
-   * 
-   */
-	public void setBaseNode(int nodeId) {
+	 *
+	 */
+	public void setBaseNode(int nodeId)
+	{
 		_node = _grid.getNetwork().getNode(nodeId);
 	}
 
 	/**
-   * 
-   */
-	public void setBounds(Rectangle r) {
-		if (_grid != null) {
+	 *
+	 */
+	public void setBounds(Rectangle r)
+	{
+		if(_grid != null)
+		{
 			Rectangle rb = getBounds();
 			Scale xS = _grid.getXScale();
 			Scale yS = _grid.getYScale();
@@ -49,17 +69,10 @@ public class GridLabelElement extends TextLine {
 			rb.x = xS.scaleToUC(_node.getX());
 			rb.y = yS.scaleToUC(_node.getY());
 			super.setBounds(rb);
-		} else {
+		}
+		else
+		{
 			super.setBounds(r);
 		}
 	}
-
-	/**
-   * 
-   */
-	private DSMGridElement _grid;
-	/**
-   * 
-   */
-	private Node _node;
 }

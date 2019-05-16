@@ -1,8 +1,13 @@
 /*
- * Copyright (c) 2019
- * California Department of Water Resources
- * All Rights Reserved.  DWR PROPRIETARY/CONFIDENTIAL.
- * Source may not be released without written approval from DWR
+ * Enhanced Post Processing Tool (EPPT) Copyright (c) 2019.
+ *
+ * EPPT is copyrighted by the State of California, Department of Water Resources. It is licensed
+ * under the GNU General Public License, version 2. This means it can be
+ * copied, distributed, and modified freely, but you may not restrict others
+ * in their ability to copy, distribute, and modify it. See the license below
+ * for more details.
+ *
+ * GNU General Public License
  */
 package vista.gui;
 
@@ -21,12 +26,13 @@ import javax.swing.*;
  * and then changes it back to the old cursor once the operation finishes. To
  * use this class correctly, make sure you call the super.preWork() and
  * super.postWork() in preWork and postWork of its subclasses.
- * 
+ *
  * @author Nicky Sandhu
  * @version $Id: CursorChangeListener.java,v 1.2 2000/03/21 18:16:29 nsandhu Exp
- *          $
+ * $
  */
-public abstract class CursorChangeListener implements ActionListener {
+public abstract class CursorChangeListener implements ActionListener
+{
 	/**
 	 * true if you want to use threads and false if you don't. Of course if you
 	 * don't some stuff may not work as expected.
@@ -36,27 +42,31 @@ public abstract class CursorChangeListener implements ActionListener {
 	private Frame _fr;
 	private Component _glass, _comp;
 	private Cursor _oldCursor;
-	private MouseListener _ml = new MouseAdapter() {
-		public void mousePressed(MouseEvent e) {
+	private MouseListener _ml = new MouseAdapter()
+	{
+		public void mousePressed(MouseEvent e)
+		{
 		}
 	};
 
 	/**
 	 * override this do something before the work
 	 */
-	public void doPreWork() {
+	public void doPreWork()
+	{
 		setCursor();
 	}
 
 	/**
-    *
-    */
+	 *
+	 */
 	public abstract void doWork();
 
 	/**
 	 * override this to something after the work
 	 */
-	public void doPostWork() {
+	public void doPostWork()
+	{
 		unsetCursor();
 	}
 
@@ -64,15 +74,22 @@ public abstract class CursorChangeListener implements ActionListener {
 	 * an implementation that uses a thread to do pre work task, the main task
 	 * and then post work task
 	 */
-	public final void actionPerformed(ActionEvent evt) {
-		if (evt.getSource() instanceof Component)
+	public final void actionPerformed(ActionEvent evt)
+	{
+		if(evt.getSource() instanceof Component)
+		{
 			_comp = (Component) evt.getSource();
-		if (USE_THREADS) {
-			if (_worker == null) {
+		}
+		if(USE_THREADS)
+		{
+			if(_worker == null)
+			{
 				_worker = new MySwingWorker(this);
 			}
 			_worker.startWork();
-		} else {
+		}
+		else
+		{
 			doPreWork();
 			doWork();
 			doPostWork();
@@ -80,18 +97,21 @@ public abstract class CursorChangeListener implements ActionListener {
 	}
 
 	/**
-    *
-    */
-	public Component getComponent() {
+	 *
+	 */
+	public Component getComponent()
+	{
 		return _comp;
 	}
 
 	/**
-    *
-    */
-	public void setCursor() {
+	 *
+	 */
+	public void setCursor()
+	{
 		_fr = VistaUtils.getFrameForComponent(getComponent());
-		if (_fr instanceof JFrame) {
+		if(_fr instanceof JFrame)
+		{
 			JFrame jfr = (JFrame) _fr;
 			_glass = jfr.getGlassPane();
 			_glass.addMouseListener(_ml);
@@ -103,10 +123,12 @@ public abstract class CursorChangeListener implements ActionListener {
 	}
 
 	/**
-    *
-    */
-	public void unsetCursor() {
-		if (_fr instanceof JFrame) {
+	 *
+	 */
+	public void unsetCursor()
+	{
+		if(_fr instanceof JFrame)
+		{
 			_glass.setCursor(_oldCursor);
 			_glass.removeMouseListener(_ml);
 			_glass.setVisible(false);
@@ -117,45 +139,53 @@ public abstract class CursorChangeListener implements ActionListener {
 	/**
 	 * An extension of SwingWorker to call pre work, work and post work methods
 	 * in that order
-	 * 
+	 *
 	 * @author Nicky Sandhu
 	 * @version $Id: CursorChangeListener.java,v 1.2 2000/03/21 18:16:29 nsandhu
-	 *          Exp $
+	 * Exp $
 	 */
-	public class MySwingWorker extends SwingWorker {
+	public class MySwingWorker extends SwingWorker
+	{
 		private CursorChangeListener _wal;
 
 		/**
-      *
-      */
-		public MySwingWorker(CursorChangeListener wal) {
+		 *
+		 */
+		public MySwingWorker(CursorChangeListener wal)
+		{
 			super();
 			_wal = wal;
 		}
 
 		/**
-      *
-      */
-		public void started() {
+		 *
+		 */
+		public void started()
+		{
 			_wal.doPreWork();
 		}
 
 		/**
-      *
-      */
-		public Object construct() {
-			try {
+		 *
+		 */
+		public Object construct()
+		{
+			try
+			{
 				_wal.doWork();
-			} catch (Exception e) {
+			}
+			catch(Exception e)
+			{
 				VistaUtils.displayException(_comp, e);
 			}
 			return "";
 		}
 
 		/**
-      *
-      */
-		public void finished() {
+		 *
+		 */
+		public void finished()
+		{
 			_wal.doPostWork();
 		}
 	}

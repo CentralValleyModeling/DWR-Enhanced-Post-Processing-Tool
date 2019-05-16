@@ -1,8 +1,13 @@
 /*
- * Copyright (c) 2019
- * California Department of Water Resources
- * All Rights Reserved.  DWR PROPRIETARY/CONFIDENTIAL.
- * Source may not be released without written approval from DWR
+ * Enhanced Post Processing Tool (EPPT) Copyright (c) 2019.
+ *
+ * EPPT is copyrighted by the State of California, Department of Water Resources. It is licensed
+ * under the GNU General Public License, version 2. This means it can be
+ * copied, distributed, and modified freely, but you may not restrict others
+ * in their ability to copy, distribute, and modify it. See the license below
+ * for more details.
+ *
+ * GNU General Public License
  */
 
 package gov.ca.water.calgui.presentation.display;
@@ -25,8 +30,8 @@ import javax.swing.table.AbstractTableModel;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableColumn;
 
-import gov.ca.water.calgui.bus_service.IDSSGrabber1Svc;
-import gov.ca.water.calgui.bus_service.impl.DSSGrabber2SvcImpl;
+import gov.ca.water.calgui.busservice.IDSSGrabber1Svc;
+import gov.ca.water.calgui.busservice.impl.DSSGrabber2SvcImpl;
 
 import hec.heclib.util.HecTime;
 import hec.io.TimeSeriesContainer;
@@ -154,8 +159,8 @@ public class SummaryTablePanel extends JPanel implements ActionListener, Compone
 		columns.addElement("Sep");
 		columns.addElement("All (TAF)");
 
-		boolean isCFS = dss_Grabber == null ? dss_Grabber2.getOriginalUnits().equals("CFS")
-				: dss_Grabber.getOriginalUnits().equals("CFS");
+		boolean isCFS = dss_Grabber == null ? "CFS".equals(dss_Grabber2.getOriginalUnits())
+				: "CFS".equals(dss_Grabber.getOriginalUnits());
 
 		// loop over all Primary datasets
 
@@ -472,8 +477,7 @@ public class SummaryTablePanel extends JPanel implements ActionListener, Compone
 						}
 						else
 						{
-							String[] parts = tsc.fullName.split("/");
-							labelText = parts[2] + "/" + parts[3];
+							labelText = tsc.fullName;
 						}
 					}
 				}
@@ -485,14 +489,13 @@ public class SummaryTablePanel extends JPanel implements ActionListener, Compone
 					}
 					else
 					{
-						if(!sName.equals(""))
+						if(!"".equals(sName))
 						{
 							labelText = sName;
 						}
 						else
 						{
-							String[] parts = tsc.fullName.split("/");
-							labelText = parts[2] + "/" + parts[3];
+							labelText = tsc.fullName;
 						}
 					}
 				}

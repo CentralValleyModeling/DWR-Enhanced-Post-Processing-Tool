@@ -13,7 +13,7 @@ import java.nio.file.Paths;
 import javax.swing.*;
 
 import gov.ca.water.calgui.EpptInitializationException;
-import gov.ca.water.calgui.bus_service.impl.GuiLinksSeedDataSvcImpl;
+import gov.ca.water.calgui.busservice.impl.GuiLinksSeedDataSvcImpl;
 
 import static org.junit.jupiter.api.Assertions.fail;
 
@@ -53,7 +53,7 @@ public abstract class EpptScaffold
 		{
 			jFrame.setLayout(new BorderLayout());
 			jFrame.add(epptPanel, BorderLayout.CENTER);
-			jFrame.add(buildUiManagerPanel(jFrame), BorderLayout.NORTH);
+//			jFrame.add(buildUiManagerPanel(jFrame), BorderLayout.NORTH);
 			jFrame.pack();
 			jFrame.setVisible(true);
 		});

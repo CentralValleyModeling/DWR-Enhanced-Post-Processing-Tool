@@ -1,13 +1,17 @@
 /*
- * Copyright (c) 2019
- * California Department of Water Resources
- * All Rights Reserved.  DWR PROPRIETARY/CONFIDENTIAL.
- * Source may not be released without written approval from DWR
+ * Enhanced Post Processing Tool (EPPT) Copyright (c) 2019.
+ *
+ * EPPT is copyrighted by the State of California, Department of Water Resources. It is licensed
+ * under the GNU General Public License, version 2. This means it can be
+ * copied, distributed, and modified freely, but you may not restrict others
+ * in their ability to copy, distribute, and modify it. See the license below
+ * for more details.
+ *
+ * GNU General Public License
  */
 package gov.ca.water.eppt.nbui;
 
 import java.awt.BorderLayout;
-import java.util.Objects;
 import javax.swing.*;
 
 import gov.ca.water.eppt.nbui.actions.ProjectConfigurationSavable;
@@ -15,6 +19,7 @@ import gov.ca.water.quickresults.ui.projectconfig.ProjectConfigurationListener;
 import gov.ca.water.quickresults.ui.projectconfig.ProjectConfigurationPanel;
 import org.openide.awt.ActionID;
 import org.openide.awt.ActionReference;
+import org.openide.awt.ActionReferences;
 import org.openide.util.NbBundle.Messages;
 import org.openide.util.lookup.AbstractLookup;
 import org.openide.util.lookup.InstanceContent;
@@ -26,11 +31,15 @@ import rma.swing.RmaJPanel;
  * Top component which displays something.
  */
 @TopComponent.Description(
-		preferredID = "ProjectConfigurationTopComponent"
+		preferredID = "ProjectConfigurationTopComponent",
+		iconBase = "gov/ca/water/eppt/nbui/ProjectConfiguration.png"
 )
 @TopComponent.Registration(mode = "explorer", openAtStartup = true, position = 1111)
 @ActionID(category = "Window", id = "gov.ca.water.eppt.nbui.ProjectConfigurationTopComponent")
-@ActionReference(path = "Menu/Window", position = 1111)
+@ActionReferences({
+		@ActionReference(path = "Menu/Window", position = 1111),
+		@ActionReference(path = "Toolbars/Window", position = 1111)
+})
 @TopComponent.OpenActionRegistration(
 		displayName = "Project Configuration",
 		preferredID = "ProjectConfigurationTopComponent"
@@ -45,7 +54,6 @@ public final class ProjectConfigurationTopComponent extends EpptTopComponent
 {
 	private static final String TOP_COMPONENT_NAME = "Project Configuration";
 	private final InstanceContent _instanceContent = new InstanceContent();
-	private String _lastQuickState = null;
 
 	/**
 	 *
@@ -61,17 +69,12 @@ public final class ProjectConfigurationTopComponent extends EpptTopComponent
 			{
 				if(b)
 				{
-					String newQuickState = ProjectConfigurationPanel.getProjectConfigurationPanel().quickState();
-					if(!Objects.equals(_lastQuickState, newQuickState))
+					topComponentNameModified();
+					ProjectConfigurationSavable savable = getLookup().lookup(ProjectConfigurationSavable.class);
+					if(savable == null)
 					{
-						_lastQuickState = newQuickState;
-						topComponentNameModified();
-						ProjectConfigurationSavable savable = getLookup().lookup(ProjectConfigurationSavable.class);
-						if(savable == null)
-						{
-							_instanceContent.add(
-									new ProjectConfigurationSavable(ProjectConfigurationTopComponent.this));
-						}
+						_instanceContent.add(
+								new ProjectConfigurationSavable(ProjectConfigurationTopComponent.this));
 					}
 				}
 				else
@@ -118,6 +121,6 @@ public final class ProjectConfigurationTopComponent extends EpptTopComponent
 	@Override
 	public String getJavaHelpId()
 	{
-		return null;
+		return "Project Configuration";
 	}
 }

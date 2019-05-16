@@ -1,8 +1,13 @@
 /*
- * Copyright (c) 2019
- * California Department of Water Resources
- * All Rights Reserved.  DWR PROPRIETARY/CONFIDENTIAL.
- * Source may not be released without written approval from DWR
+ * Enhanced Post Processing Tool (EPPT) Copyright (c) 2019.
+ *
+ * EPPT is copyrighted by the State of California, Department of Water Resources. It is licensed
+ * under the GNU General Public License, version 2. This means it can be
+ * copied, distributed, and modified freely, but you may not restrict others
+ * in their ability to copy, distribute, and modify it. See the license below
+ * for more details.
+ *
+ * GNU General Public License
  */
 package vista.graph;
 
@@ -13,20 +18,34 @@ import java.util.StringTokenizer;
 /**
  * Defines the rgb representation of colors by their names. E.g. the color
  * "linen" is r=250,g=240,b=230.
- * 
+ *
  * @author Nicky Sandhu
  * @version $Id: ColorRGB.java,v 1.1 2003/10/02 20:48:50 redwood Exp $
  */
-public class ColorRGB {
+public class ColorRGB
+{
+	/**
+	 *
+	 */
+	private static final boolean DEBUG = false;
+	/**
+	 * color defintions in a hash table
+	 */
+	private Properties _colorDefinitions = new Properties();
+
 	/**
 	 * loads name to rgb mapping from file.
 	 */
-	public ColorRGB() {
-		try {
+	public ColorRGB()
+	{
+		try
+		{
 			java.io.InputStream is = getClass()
 					.getResourceAsStream("rgb.properties");
 			_colorDefinitions.load(is);
-		} catch (java.io.IOException ioe) {
+		}
+		catch(java.io.IOException ioe)
+		{
 			System.out.println("Color Definitions file " + "rgb.properties"
 					+ " not found");
 			createDefaultProperties();
@@ -36,11 +55,15 @@ public class ColorRGB {
 	/**
 	 * loads name to rgb mapping from file.
 	 */
-	public ColorRGB(String file) {
-		try {
+	public ColorRGB(String file)
+	{
+		try
+		{
 			java.io.InputStream is = new java.io.FileInputStream(file);
 			_colorDefinitions.load(is);
-		} catch (java.io.IOException ioe) {
+		}
+		catch(java.io.IOException ioe)
+		{
 			System.out.println("Color Definitions file " + file
 					+ " not found: Using defaults");
 			createDefaultProperties();
@@ -50,11 +73,13 @@ public class ColorRGB {
 	/**
 	 * returns an array of available colors
 	 */
-	public String[] getAvailableColors() {
+	public String[] getAvailableColors()
+	{
 		String[] keyNames = new String[_colorDefinitions.size()];
 		int count = 0;
-		for (java.util.Enumeration keys = _colorDefinitions.keys(); keys
-				.hasMoreElements(); count++) {
+		for(java.util.Enumeration keys = _colorDefinitions.keys(); keys
+				.hasMoreElements(); count++)
+		{
 			keyNames[count] = (String) keys.nextElement();
 		}
 		return keyNames;
@@ -63,18 +88,24 @@ public class ColorRGB {
 	/**
 	 * returns the color as a rgb string.
 	 */
-	public final String getRGBString(String colorName) {
+	public final String getRGBString(String colorName)
+	{
 		return _colorDefinitions.getProperty(colorName);
 	}
 
 	/**
 	 * creates color
 	 */
-	public final Color createColor(String colorName) {
-		if (colorName != null)
+	public final Color createColor(String colorName)
+	{
+		if(colorName != null)
+		{
 			return parseColorProperty(colorName);
+		}
 		else
+		{
 			return Color.black;
+		}
 	}
 
 	/**
@@ -82,42 +113,60 @@ public class ColorRGB {
 	 * toString representation or the name of the color as defined in the
 	 * rgb.properties file.
 	 */
-	public final Color parseColorProperty(String colorProperty) {
+	public final Color parseColorProperty(String colorProperty)
+	{
 		StringTokenizer chopper;
 		String rgbString = "";
-		if (colorProperty.indexOf("[") == -1) {
+		if(colorProperty.indexOf("[") == -1)
+		{
 			rgbString = _colorDefinitions.getProperty(colorProperty);
-			if (DEBUG)
+			if(DEBUG)
+			{
 				_colorDefinitions.list(System.out);
-		} else {
+			}
+		}
+		else
+		{
 			chopper = new StringTokenizer(colorProperty, "[");
 			chopper.nextToken();
 			rgbString = chopper.nextToken();
 			rgbString = rgbString.substring(0, rgbString.indexOf("]"));
 		}
-		if (rgbString == null)
+		if(rgbString == null)
+		{
 			return new Color(0, 0, 0);
-		if (DEBUG)
+		}
+		if(DEBUG)
+		{
 			System.out.println("RGB : " + rgbString);
+		}
 
 		chopper = new StringTokenizer(rgbString, ",");
 		String colorComponent = chopper.nextToken().trim();
-		if (DEBUG)
+		if(DEBUG)
+		{
 			System.out.println(colorComponent);
+		}
 		int red = new Integer(colorComponent.trim().substring(
 				colorComponent.indexOf("=") + 1)).intValue();
 		colorComponent = chopper.nextToken().trim();
-		if (DEBUG)
+		if(DEBUG)
+		{
 			System.out.println(colorComponent);
+		}
 		int green = new Integer(colorComponent.substring(colorComponent
 				.indexOf("=") + 1)).intValue();
 		colorComponent = chopper.nextToken().trim();
-		if (DEBUG)
+		if(DEBUG)
+		{
 			System.out.println(colorComponent);
+		}
 		int blue = new Integer(colorComponent.substring(colorComponent
 				.indexOf("=") + 1)).intValue();
-		if (DEBUG)
+		if(DEBUG)
+		{
 			System.out.println("r = " + red + " g = " + green + " b = " + blue);
+		}
 
 		return new Color(red, green, blue);
 	}
@@ -125,7 +174,8 @@ public class ColorRGB {
 	/**
 	 * creates the default name to rgb mapping.
 	 */
-	private void createDefaultProperties() {
+	private void createDefaultProperties()
+	{
 		_colorDefinitions.put("snow", "r=255,g=250,b=250");
 		_colorDefinitions.put("ghost_white", "r=248,g=248,b=255");
 		_colorDefinitions.put("GhostWhite", "r=248,g=248,b=255");
@@ -879,13 +929,4 @@ public class ColorRGB {
 		_colorDefinitions.put("light_green", "r=144,g=238,b=144");
 		_colorDefinitions.put("LightGreen", "r=144,g=238,b=144");
 	}
-
-	/**
-	 * color defintions in a hash table
-	 */
-	private Properties _colorDefinitions = new Properties();
-	/**
-   *
-   */
-	private static final boolean DEBUG = false;
 }

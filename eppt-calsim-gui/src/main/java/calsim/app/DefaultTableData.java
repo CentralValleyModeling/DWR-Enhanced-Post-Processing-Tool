@@ -1,8 +1,13 @@
 /*
- * Copyright (c) 2019
- * California Department of Water Resources
- * All Rights Reserved.  DWR PROPRIETARY/CONFIDENTIAL.
- * Source may not be released without written approval from DWR
+ * Enhanced Post Processing Tool (EPPT) Copyright (c) 2019.
+ *
+ * EPPT is copyrighted by the State of California, Department of Water Resources. It is licensed
+ * under the GNU General Public License, version 2. This means it can be
+ * copied, distributed, and modified freely, but you may not restrict others
+ * in their ability to copy, distribute, and modify it. See the license below
+ * for more details.
+ *
+ * GNU General Public License
  */
 
 package calsim.app;
@@ -464,8 +469,8 @@ public class DefaultTableData extends AbstractTableModel implements InputTableDa
 	/**
 	 * Returns the name of the column at <i>columnIndex</i>.
 	 *
+	 * @param columnIndex the index of column
 	 * @return the name of the column
-	 * @param    columnIndex    the index of column
 	 */
 	public String getColumnName(int columnIndex)
 	{
@@ -477,8 +482,8 @@ public class DefaultTableData extends AbstractTableModel implements InputTableDa
 	 * is editable.  Otherwise, setValueAt() on the cell will not change
 	 * the value of that cell.
 	 *
-	 * @param    rowIndex    the row whose value is to be looked up
-	 * @param    columnIndex    the column whose value is to be looked up
+	 * @param rowIndex    the row whose value is to be looked up
+	 * @param columnIndex the column whose value is to be looked up
 	 * @return true if the cell is editable.
 	 * @see #setValueAt
 	 */
@@ -491,8 +496,8 @@ public class DefaultTableData extends AbstractTableModel implements InputTableDa
 	 * Returns an attribute value for the cell at <I>columnIndex</I>
 	 * and <I>rowIndex</I>.
 	 *
-	 * @param    rowIndex    the row whose value is to be looked up
-	 * @param    columnIndex the column whose value is to be looked up
+	 * @param rowIndex    the row whose value is to be looked up
+	 * @param columnIndex the column whose value is to be looked up
 	 * @return the value Object at the specified cell
 	 */
 	public Object getValueAt(int rowIndex, int columnIndex)
@@ -503,9 +508,9 @@ public class DefaultTableData extends AbstractTableModel implements InputTableDa
 	/**
 	 * Sets an attribute value for the record in the cell at
 	 *
-	 * @param    aValue         the new value
-	 * @param    rowIndex     the row whose value is to be changed
-	 * @param    columnIndex the column whose value is to be changed
+	 * @param aValue      the new value
+	 * @param rowIndex    the row whose value is to be changed
+	 * @param columnIndex the column whose value is to be changed
 	 * @see #getValueAt
 	 * @see #isCellEditable
 	 */

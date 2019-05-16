@@ -1,0 +1,556 @@
+/************************************
+
+Calc_InputDV_CSII.wresl
+
+Yuxiang, DWR, BDO
+2019/02/07
+
+This file lists CSII arcs used to calculate EPPT QAQC Post-Processing 
+**************************************/
+
+
+
+define Neg_Flt_Max {value - 3.402823466 * pow(10,38) }
+define Neg_FLT {alias Neg_Flt_Max kind 'system' units 'NONE'}
+/****************************** Define User Input Threshold *******************************/
+define abs_threshold {
+	select IValue
+	from UserInit
+	where index=2.1}
+	
+define none_zero_threshold {
+	select IValue
+	from UserInit
+	where index=2.2}
+
+define percetage_threshold {
+	select IValue
+	from UserInit
+	where index=2.3}	
+
+/****************************** INPUTS FOR  **********************************/
+/**************************Upstream MIN-INSTREAM  ****************************/
+!Trinity River Below Lewiston
+! Get the minimum flow required at TRINITY (C100)
+define Minflow_C100 { 
+       select       river_q
+       from         Trinitymin
+       where        month=month, wyt_TRIN=wyt_TRIN}
+define C100 {timeseries 'C100' kind 'FLOW-CHANNEL' units 'CFS'} ! Trinity River below Lewiston 
+define C100_MIF {timeseries 'C100_MIF' kind 'FLOW-MIN-INSTREAM' units 'CFS'} ! Trinity River below Lewiston MIF
+! Clear Creek Below Whiskeytown 
+define Minflow_C3 {timeseries 'Minflow_C3' kind 'FLOW-MIN-REQUIRED' units 'CFS'} ! Get the minimum flow required at Clear Creek (C3)
+define C3 {timeseries 'C3' kind 'FLOW-CHANNEL' units 'CFS'} ! Clear Creek Below Whiskeytown MIF
+define C3_MIF {timeseries 'C3_MIF' kind 'FLOW-MIN-INSTREAM' units 'CFS'} ! Clear Creek Below Whiskeytown 
+! Sacramento River Below Keswick 
+define Minflow_C5 {timeseries 'KESWICK_MIN' kind 'Alias' units 'CFS'} ! Get the minimum flow required at Keswick (C5)
+define C5 {timeseries 'C5' kind 'FLOW-CHANNEL' units 'CFS'} ! Sacramento River Below Keswick 
+define C5_MIF {timeseries 'C5_MIF' kind 'FLOW-MIN-INSTREAM' units 'CFS'} ! Sacramento River Below Keswick MIF
+! Sacramento River near Red Bluff
+define Minflow_C112_O {select RedMin
+               from   Redbluff_base
+               where  month=month, ShastaIndx=wyt_SHASTA_cvp} ! Get the minimum flow required at Red Bluff
+define Minflow_C112_daily {timeseries 'flow_adj_rb' kind 'FLOW' units 'CFS'}
+define Minflow_C112 {value Minflow_C112_O + Minflow_C112_daily}
+define C112 {timeseries 'C112' kind 'FLOW-CHANNEL' units 'CFS'} ! Sacramento River near Red Bluff  
+define C112_MIF {timeseries 'C112_MIF' kind 'FLOW-MIN-INSTREAM' units 'CFS'} ! Sacramento River near Red Bluff MIF 
+! Sacramento River near Wilkins Slough (NCP)
+define Minflow_C129_O {timeseries 'Minflow_C129' kind 'FLOW-MIN-REQUIRED' units 'CFS'} ! Get the minimum flow required at NCP
+define Minflow_C129_daily {timeseries 'flow_adj_wlk' kind 'FLOW' units 'CFS'}
+define Minflow_C129 {value Minflow_C129_O + Minflow_C129_daily}
+define C129 {timeseries 'C129' kind 'FLOW-CHANNEL' units 'CFS'} ! Sacramento River near Wilkins Slough  
+define C129_MIF {timeseries 'C129_MIF' kind 'FLOW-MIN-INSTREAM' units 'CFS'} ! Sacramento River near Wilkins Slough MIF 
+! Sacramento River near Freeport!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+define Minflow_C169 {timeseries 'ERP_C169mifDV' kind 'FLOW-TARGET' units 'CFS'} ! Get the minimum flow required at Freeport
+define C169 {timeseries 'C169' kind 'FLOW-CHANNEL' units 'CFS'} ! Sacramento River near Freeport 
+define C169_MIF {timeseries 'C169_MIF' kind 'FLOW-MIN-INSTREAM' units 'CFS'} ! Sacramento River near Freeport 
+!Sacramento River near HAMILTON CITY 
+! Get the minimum flow required at HAMILTON CITY
+  ! con_114GCID is in SV DSS
+! define con_114GCID {timeseries kind 'DEMAND' units 'taf' convert 'cfs'} !!!this TS is in SV file, defined in InputSV_**.wresl
+define HC_min {
+    case WBA8NNDemand {
+        condition con_114GCID > 100.     !if there is a significant diversion
+        value 4000. }                    !require the bypass flow
+    case other {
+        condition always
+        value 0. }
+}
+define ERP_C114mifDV {timeseries 'ERP_C114mifDV' kind 'FLOW-TARGET' units 'CFS'} 
+define minflow_C114_O {value max(HC_min,ERP_C114mifDV)}
+define minflow_C114_daily {timeseries 'flow_adj_hc' kind 'FLOW' units 'CFS'}
+define minflow_C114 {value minflow_C114_O + minflow_C114_daily}
+!define Minflow_C114 {timeseries 'C114_MIF' kind 'FLOW-MIN-INSTREAM' units 'CFS'} ! Get the minimum flow required at HAMILTON CITY
+define C114 {timeseries 'C114' kind 'FLOW-CHANNEL' units 'CFS'} ! Sacramento River near HAMILTON CITY 
+define C114_MIF {timeseries 'C114_MIF' kind 'FLOW-MIN-INSTREAM' units 'CFS'} ! Sacramento River near HAMILTON CITY 
+
+!!Thermolito low flow channel !
+define minflow_C200A {select minflow from minflow where C_arc=200.1,month=month}
+define C200A {timeseries 'C200A' kind 'FLOW-CHANNEL' units 'CFS'} ! Thermolito low flow channel 
+define C200A_MIF {timeseries 'C200A_MIF' kind 'FLOW-MIN-INSTREAM' units 'CFS'} ! Thermolito low flow channel MIF 
+
+! Feather River below Thermalito Complex 
+define C203 {timeseries 'C203' kind 'FLOW-CHANNEL' units 'CFS'} ! Feather River below Thermalito Complex 
+define C203min {timeseries kind 'CHANNEL-MINFLOW' units 'CFS'} !Minflow_C203
+define C203_MIF {timeseries 'C203_MIF' kind 'FLOW-MIN-INSTREAM' units 'CFS'} ! Feather River below Thermalito Complex MIF 
+! Feather River near Verona 
+define C223 {timeseries 'C223' kind 'FLOW-CHANNEL' units 'CFS'} ! Feather River near Verona 
+define C223_MIF {timeseries 'C223_MIF' kind 'FLOW-MIN-INSTREAM' units 'CFS'} ! Feather River near Verona MIF 
+!define minflow_C223 {} in SV file
+! American River below Nimbus  
+define C9 {timeseries 'C9' kind 'FLOW-CHANNEL' units 'CFS'} ! American River below Nimbus 
+define Minflow_C9 {timeseries 'c9_fmp' kind 'FLOW' units 'CFS'} 
+define C9_MIF {timeseries 'C9_MIF' kind 'FLOW-MIN-INSTREAM' units 'CFS'} ! American River below Nimbus MIF 
+! American River at H St 
+define C303 {timeseries 'C303' kind 'FLOW-CHANNEL' units 'CFS'} ! American River at H St  
+define C303_MIF {timeseries 'C303_MIF' kind 'FLOW-MIN-INSTREAM' units 'CFS'} ! American River at H St MIF 
+define Minflow_C303 {select HStMin
+             from   HSt_base
+             where  month=month, AmerD893=wyt_AMERd893_cvp
+}
+
+
+/****************************** INPUTS FOR **********************************/
+/****************************** WEIRS FLOW **********************************/
+!Weirs flow into Sutter Bypass  
+define D117 {timeseries 'D117' kind 'FLOW-DELIVERY' units 'CFS'} !Overflow Spills into Sutter bypass
+define D124 {timeseries 'D124' kind 'FLOW-DELIVERY' units 'CFS'} !Moulton Weirs Spills
+define D125 {timeseries 'D125' kind 'FLOW-DELIVERY' units 'CFS'} !Colusa Weirs Spills
+define D126 {timeseries 'D126' kind 'FLOW-DELIVERY' units 'CFS'} !Tisdale Weirs Spills
+!Weirs flow into Yolo bypass
+define D160 {timeseries 'D160' kind 'FLOW-DELIVERY' units 'CFS'} !Fremont Weirs Spills
+define D166A {timeseries 'D166A' kind 'FLOW-DELIVERY' units 'CFS'} !Sacramento Weirs Spills
+
+
+/****************************** INPUTS FOR **********************************/
+/****************************** SOD EXPORT **********************************/
+! 1. TOTAL SOD EXPORT CONTROL INPUTS
+define D418 {timeseries 'D418' kind 'FLOW-DELIVERY' units 'CFS'} !Tracy PP
+define D419 {timeseries 'D419' kind 'FLOW-DELIVERY' units 'CFS'} !Banks PP
+define D409PRE {timeseries 'D409PRE' kind 'DEBUG' units 'CFS'} !D409 In Pre-setup Cycle
+define D409UP {timeseries 'D409UP' kind 'DEBUG' units 'CFS'} !D409 In Upstream Cycle
+define EIEXPCTRL {timeseries 'EIEXPCTRL' kind 'EXPORT-CTRL-EI' units 'CFS'} 
+define EIEXPCTRLUP {timeseries 'EIEXPCTRLUP' kind 'DEBUG' units 'CFS'} 
+define APRMAYEXPCTRL {timeseries 'APRMAYEXPCTRL' kind 'EXPORT-CTRL-APRMAY' units 'CFS'} 
+define APRMAYEXPCTRLUP {timeseries 'APRMAYEXPCTRLUP' kind 'DEBUG' units 'CFS'} 
+define D409 {timeseries 'D409' kind 'FLOW-DELIVERY' units 'CFS'} !D409 
+define C408 {timeseries 'C408' kind 'FLOW-CHANNEL' units 'CFS'} !D408
+define MAXEXP_RPADV {timeseries 'MAXEXP_RPADV' kind 'EXPORT-LIMIT' units 'CFS'} 
+define EXPORT_DEC {timeseries 'EXPORT_DEC_' kind 'TEMP' units 'CFS'} 
+define C408_LBOUND {timeseries 'C408_LBOUND' kind 'FLOW-LBOUND' units 'CFS'} !OMR flow restrictions
+define C408_NoEXP1 {timeseries 'C408_NoEXP1' kind 'FLOW-CHANNEL' units 'CFS'} !OMR flows w/o Exports
+define COMB_EXP_DEC_ {timeseries 'COMB_EXP_DEC_' kind 'TEMP' units 'CFS'}
+! 2. SWP SOD EXPORT CONTROL INPUTS
+define APRMAYBANKSCTRL {timeseries 'APRMAYBANKSCTRL' kind 'EXPORT-CTRL-APRMAY' units 'CFS'} 
+define MAXEXP_RPA_SWPDV {timeseries 'MAXEXP_RPA_SWPDV' kind 'EXPORT-LIMIT' units 'CFS'} 
+define SWP_EXP_DEC_ {timeseries 'SWP_EXP_DEC_' kind 'TEMP' units 'CFS'}
+define BANKSALLOWOUT {timeseries 'BANKSALLOWOUT' kind 'FLOW-ALLOW-BANKS' units 'CFS'}
+define D419UP {timeseries 'D419UP' kind 'FLOW-DELIVERY' units 'CFS'}
+! 3. CVP SOD EXPORT CONTROL INPUTS
+define APRMAYTRACYCTRL {timeseries 'APRMAYTRACYCTRL' kind 'EXPORT-CTRL-APRMAY' units 'CFS'} 
+define MAXEXP_RPA_CVPDV {timeseries 'MAXEXP_RPA_CVPDV' kind 'EXPORT-LIMIT' units 'CFS'} 
+define CVP_EXP_DEC_ {timeseries 'CVP_EXP_DEC_' kind 'TEMP' units 'CFS'}
+define JONESALLOWOUT {timeseries 'JONESALLOWOUT' kind 'EXPORT-CTRL-JONES' units 'CFS'}
+define D418UP {timeseries 'D418UP' kind 'FLOW-DELIVERY' units 'CFS'}
+
+
+
+/****************************** INPUTS FOR **********************************/
+/******************************* SHORTAGE ***********************************/
+!NOD CVP
+define SHORT_CVP_TOT_N {timeseries 'SHORT_CVP_TOT_N' kind 'DELIVERY-SHORTAGE-CVP' units 'CFS'} !TOTAL NOD SHORTAGE
+define SHORT_CVP_PAG_N {timeseries 'SHORT_CVP_PAG_N' kind 'DELIVERY-SHORTAGE-CVP' units 'CFS'} !AG NOD SHORTAGE
+define SHORT_CVP_PMI_N {timeseries 'SHORT_CVP_PMI_N' kind 'DELIVERY-SHORTAGE-CVP' units 'CFS'} !M&I NOD SHORTAGE 
+define SHORT_CVP_PRF_N {timeseries 'SHORT_CVP_PRF_N' kind 'DELIVERY-SHORTAGE-CVP' units 'CFS'} !REFUGES NOD SHORTAGE
+define SHORT_CVP_PSC_N {timeseries 'SHORT_CVP_PSC_N' kind 'DELIVERY-SHORTAGE-CVP' units 'CFS'} !SETTLEMENT NOD SHORTAGE
+!SOD CVP
+define SHORT_CVP_TOT_S {timeseries 'SHORT_CVP_TOT_S' kind 'DELIVERY-SHORTAGE-CVP' units 'CFS'} !TOTAL SOD SHORTAGE
+define SHORT_CVP_PAG_S {timeseries 'SHORT_CVP_PAG_S' kind 'DELIVERY-SHORTAGE-CVP' units 'CFS'} !AG SOD SHORTAGE
+define SHORT_CVP_PMI_S {timeseries 'SHORT_CVP_PMI_S' kind 'DELIVERY-SHORTAGE-CVP' units 'CFS'} !M&I SOD SHORTAGE 
+define SHORT_CVP_PRF_S {timeseries 'SHORT_CVP_PRF_S' kind 'DELIVERY-SHORTAGE-CVP' units 'CFS'} !REFUGES SOD SHORTAGE
+define SHORT_CVP_PEX_S {timeseries 'SHORT_CVP_PEX_S' kind 'DELIVERY-SHORTAGE-CVP' units 'CFS'} 
+define SHORT_CVP_PLS_S {timeseries 'SHORT_CVP_PLS_S' kind 'DELIVERY-SHORTAGE-CVP' units 'CFS'} !PROJECT LOSS SOD SHORTAGE
+!NOD SWP
+define SHORT_SWP_TOT_N {timeseries 'SHORT_SWP_TOT_N' kind 'DELIVERY-SHORTAGE-SWP' units 'CFS'} !TOTAL NOD SHORTAGE
+define SHORT_SWP_PAG_N {timeseries 'SHORT_SWP_PAG_N' kind 'DELIVERY-SHORTAGE-SWP' units 'CFS'} !AG NOD SHORTAGE
+define SHORT_SWP_PMI_N {timeseries 'SHORT_SWP_PMI_N' kind 'DELIVERY-SHORTAGE-SWP' units 'CFS'} !M&I NOD SHORTAGE 
+define SHORT_SWP_PWR {timeseries 'SHORT_SWP_PWR' kind 'DELIVERY-SHORTAGE-SWP' units 'CFS'}
+!SOD SWP
+define SHORT_SWP_TOT_S {timeseries 'SHORT_SWP_TOT_S' kind 'DELIVERY-SHORTAGE-SWP' units 'CFS'} !TOTAL SOD SHORTAGE
+define SHORT_SWP_PAG_S {timeseries 'SHORT_SWP_PAG_S' kind 'DELIVERY-SHORTAGE-SWP' units 'CFS'} !AG SOD SHORTAGE
+define SHORT_SWP_PMI_S {timeseries 'SHORT_SWP_PMI_S' kind 'DELIVERY-SHORTAGE-SWP' units 'CFS'} !M&I SOD SHORTAGE 
+define SHORT_SWP_PLS {timeseries 'SHORT_SWP_PLS' kind 'DELIVERY-SHORTAGE-SWP' units 'CFS'} !LOSS SOD SHORTAGE
+
+/****************************** INPUTS FOR **********************************/
+/***************************** Delta Control ********************************/
+define D407 {timeseries 'D407' kind 'FLOW-DELIVERY' units 'CFS'} !MRDO - Minimum Required Delta Outflow (contain NDOI and X2 component)
+define C407 {timeseries 'C407' kind 'FLOW-CHANNEL' units 'CFS'} ! Regulations and Operations required Delta Outflow additional to the Delta Outflow required by NDOI & X2 
+define C407_whlcv {timeseries 'C407_whlcv' kind 'FLOW-CHANNEL' units 'CFS'}
+define C405 {timeseries 'C405' kind 'FLOW-CHANNEL' units 'CFS'} ! Flow @ Rio Vista
+define Rio_req {  ! Minimum Flow required @ Rio Vista
+       select       river_q
+       from         riovista
+       where        month=month, wyt_SAC=wyt_SAC}
+define C405_MIF {timeseries 'C405_MIF' kind 'FLOW-MIN-INSTREAM' units 'CFS'} !Minimum Flow met @ Rio Vista
+define C416A {timeseries kind 'FLOW-CHANNEL' units 'CFS'}  ! SJR to the confluence with SAC (QWEST)
+define qwest_std { ! Minimum Flow required @ QWEST
+		select 		QWESTstd 
+		from 		qwest 
+		where 		month=month, WYT=wyt_SAC}
+
+define D168C_EXC_NTDEP {timeseries 'D168C_EXC_NTDEP' kind 'FLOW' units 'CFS'} !Excess from Freeport; returned to D.O. in wheeling cycle
+!Tracy and Bank Thru Delta Exports
+define D418_TD {timeseries 'D418_TD' kind 'FLOW-DELIVERY' units 'CFS'}
+define D419_TD {timeseries 'D419_TD' kind 'FLOW-DELIVERY' units 'CFS'}
+!Export Ratio
+define EXPRATIO {timeseries 'EXPRATIO_' kind 'EI-RATIO-STD' units 'NONE'}
+!FWS OMR Inputs
+!D409_ is defined earlier
+define D409_Delta {timeseries 'D409_Delta' kind 'FLOW-DELIVERY' units 'CFS'}
+define D409_Upstream {timeseries 'D409_Upstream' kind 'FLOW-DELIVERY' units 'CFS'}
+define C406 {timeseries 'C406' kind 'FLOW-CHANNEL' units 'CFS'} 
+define C406_Delta {timeseries 'C406_Delta' kind 'FLOW-CHANNEL' units 'CFS'}
+define C406_Upstream {timeseries 'C406_Upstream' kind 'FLOW-CHANNEL' units 'CFS'}
+define OMR_INCREASE {timeseries 'OMR_INCREASE_' kind 'TEMP' units 'CFS'} !Increase in MRDO due to OMR Restriction
+define EXP_DEC_RPA {timeseries 'EXPORT_DEC_RPA_' kind 'TEMP' units 'CFS'} !Decrease in exports due to RPA restrictions
+!MRDO for WQ at control at Jersey Point, Emmaton, Rock Slough and Collinsville
+define JP_MRDO {timeseries 'JP_MRDO' kind 'FLOW' units 'CFS'} ! Minimum Required Delta Outflow for Jersey Point WQ
+define EM_MRDO {timeseries 'EM_MRDO' kind 'FLOW' units 'CFS'} ! Minimum Required Delta Outflow for Emmaton WQ
+define RS_MRDO_1 {timeseries 'RS_MRDO_1' kind 'FLOW' units 'CFS'} ! Minimum Required Delta Outflow for Rock Slough Location 1 WQ
+define RS_MRDO_2 {timeseries 'RS_MRDO_2' kind 'FLOW' units 'CFS'} ! Minimum Required Delta Outflow for Rock Slough Location 2 WQ
+define RS_MRDO_3 {timeseries 'RS_MRDO_3' kind 'FLOW' units 'CFS'} ! Minimum Required Delta Outflow for Rock Slough Location 3 WQ
+define CO_MRDO {timeseries 'CO_MRDO' kind 'FLOW' units 'CFS'} ! Minimum Required Delta Outflow for Collinsville WQ
+define C407_ANN {timeseries 'C407_ANN' kind 'FLOW-CHANNEL' units 'CFS'} !Outflow due to salinity 
+!MROD for X2 (spring and fall)
+define DO_req_flow_out {timeseries 'DO_req_flow_out' kind 'FLOW-REQ-NDOI' units 'CFS'}! "NDOI Note: X2 requirements averaged into TS"
+!NMFS SJR I/E Inputs
+define NMFS_MaxExpdv {timeseries 'NMFS_MaxExpdv' kind 'NMFS' units 'CFS'}
+!NMFS DCC Inputs
+define NMFS_MaxExpDCCdv {timeseries 'NMFS_MaxExpDCCdv' kind 'EXPORT-LIMIT' units 'CFS'}
+
+/****************************** INPUTS FOR **********************************/
+/***************************** Delta Operation ********************************/
+define C400 {timeseries 'C400' kind 'FLOW-CHANNEL' units 'CFS'}
+define JP_M {timeseries 'JP_M' kind 'SLOPE' units 'NONE'}
+define JP_B {timeseries 'JP_B' kind 'INTERCEPT' units 'NONE'}
+define EM_M {timeseries 'EM_M' kind 'SLOPE' units 'NONE'}
+define EM_B {timeseries 'EM_B' kind 'INTERCEPT' units 'NONE'}
+define CO_M {timeseries 'CO_M' kind 'SLOPE' units 'NONE'}
+define CO_B {timeseries 'CO_B' kind 'INTERCEPT' units 'NONE'}
+define RS_M_1 {timeseries 'RS_M_1' kind 'SLOPE' units 'NONE'}
+define RS_B_1 {timeseries 'RS_B_1' kind 'INTERCEPT' units 'NONE'}
+define RS_M_2 {timeseries 'RS_M_2' kind 'SLOPE' units 'NONE'}
+define RS_B_2 {timeseries 'RS_B_2' kind 'INTERCEPT' units 'NONE'}
+define RS_M_3 {timeseries 'RS_M_3' kind 'SLOPE' units 'NONE'}
+define RS_B_3 {timeseries 'RS_B_3' kind 'INTERCEPT' units 'NONE'}
+define D418_EXP1 {timeseries 'D418_EXP1' kind 'FLOW-DELIVERY' units 'CFS'}
+define D418_EXP2 {timeseries 'D418_EXP2' kind 'FLOW-DELIVERY' units 'CFS'}
+define D418_CVP {timeseries 'D418_CVP' kind 'FLOW-DELIVERY' units 'CFS'}
+!define D418_SWP {timeseries 'D418_SWP' kind 'FLOW-DELIVERY' units 'CFS'}
+define D419_EXP1 {timeseries 'D419_EXP1' kind 'FLOW-DELIVERY' units 'CFS'}
+define D419_EXP2 {timeseries 'D419_EXP2' kind 'FLOW-DELIVERY' units 'CFS'}
+define D419_CVP {timeseries 'D419_CVP' kind 'FLOW-DELIVERY' units 'CFS'}
+define D419_SWP {timeseries 'D419_SWP' kind 'FLOW-DELIVERY' units 'CFS'}
+
+/****************************** INPUTS FOR **********************************/
+/****************************** Reservoirs **********************************/
+!!!!!!!!Trinity!!!!!!!! 
+! Trinity storage
+define S1 {timeseries 'S1' kind 'STORAGE' units 'TAF'} 
+! Trinity Spills
+define F1 {timeseries 'F1' kind 'FLOW-SPILL-NON-RECOV' units 'CFS'}
+! Trinity storage at Capacity 
+define S1LEVEL5DV {timeseries 'S1LEVEL5DV' kind 'Storage-level' units 'TAF'} 
+! Trinity storage at flood level 
+define S1LEVEL4DV {timeseries 'S1LEVEL4DV' kind 'Storage-level' units 'TAF'} 
+! Trinity storage at RC level 
+define S1LEVEL3DV {timeseries 'S1LEVEL3DV' kind 'Storage-level' units 'TAF'} 
+! Trinity storage at Dead Pool level 
+define S1LEVEL1DV {timeseries 'S1LEVEL1DV' kind 'Storage-level' units 'TAF'}
+! Clear Creek Tunnel 
+define D100 {timeseries kind 'FLOW-DELIVERY' units 'CFS'}
+! Clear Creek Tunnel import met
+define D100_import {timeseries kind 'FLOW-DELIVERY' units 'CFS'}
+! D100_import Minimum requirement
+define trin_impdv {timeseries kind 'undefined' units 'cfs'}
+!!!!!!!!Shasta!!!!!!!! 
+! Shasta storage
+define S4 {timeseries 'S4' kind 'STORAGE' units 'TAF'} 
+! Shasta Spills
+define F4 {timeseries 'F4' kind 'FLOW-SPILL-NON-RECOV' units 'CFS'}
+! Shasta storage at Capacity
+define S4LEVEL6DV {timeseries 'S4LEVEL6DV' kind 'Storage-level' units 'TAF'} 
+! Shasta storage at flood level 
+define S4LEVEL5DV {timeseries 'S4LEVEL5DV' kind 'Storage-level' units 'TAF'} 
+! Shasta storage at RC level 
+define S4LEVEL3DV {timeseries 'S4LEVEL3DV' kind 'Storage-level' units 'TAF'} 
+! Shasta storage at Dead Pool level 
+define S4LEVEL1DV {timeseries 'S4LEVEL1DV' kind 'Storage-level' units 'TAF'}
+!!!!!!!!Oroville!!!!!!!!
+! OROVILLE storage
+define S6 {timeseries 'S6' kind 'STORAGE' units 'TAF'} 
+! OROVILLE Spills
+define F6 {timeseries 'F6' kind 'FLOW-SPILL-NON-RECOV' units 'CFS'}
+! OROVILLE storage at Capacity
+define S6LEVEL6DV {timeseries 'S6LEVEL6DV' kind 'Storage-level' units 'TAF'} 
+! OROVILLE storage at flood level 
+define S6LEVEL5DV {timeseries 'S6LEVEL5DV' kind 'Storage-level' units 'TAF'} 
+! OROVILLE storage at RC level 
+define S6LEVEL3DV {timeseries 'S6LEVEL3DV' kind 'Storage-level' units 'TAF'}
+! OROVILLE storage at Dead Pool level 
+define S6LEVEL1DV {timeseries 'S6LEVEL1DV' kind 'Storage-level' units 'TAF'} 
+!!!!!!!!Folsom!!!!!!!!
+! Folsom storage
+define S8 {timeseries 'S8' kind 'STORAGE' units 'TAF'}
+! Folsom Spills
+define F8 {timeseries 'F8' kind 'FLOW-SPILL-NON-RECOV' units 'CFS'}
+! Folsom storage at Capacity
+define S8LEVEL6DV {timeseries 'S8LEVEL6DV' kind 'Storage-level' units 'TAF'}  
+! Folsom storage at flood level 
+define S8LEVEL5DV {timeseries 'S8LEVEL5DV' kind 'Storage-level' units 'TAF'} 
+! Folsom storage at RC level 
+define S8LEVEL3DV {timeseries 'S8LEVEL3DV' kind 'Storage-level' units 'TAF'} 
+! Folsom storage at Dead Pool level 
+define S8LEVEL1DV {timeseries 'S8LEVEL1DV' kind 'Storage-level' units 'TAF'} 
+!!!!!!!!San Luis Reservoir!!!!!!!!
+! San Luis storage for CVP
+define S11 {timeseries 'S11' kind 'STORAGE' units 'TAF'} 
+! San Luis storage maximum capacity for CVP 
+define S11_MAX {value 972} 
+! San Luis storage minimum capacity for CVP 
+define S11_DP {value 45} 
+! San Luis storage for CVP based on Rule Curve
+define S11_RC {timeseries 'CVPRULECV' kind 'RULECURVE' units 'TAF'}
+! San Luis storage at flood level for CVP
+define S11LEVEL4DV {timeseries 'S11LEVEL4DV' kind 'Storage-level' units 'TAF'} 
+! San Luis storage at Dead Pool level for CVP
+define S11LEVEL1DV {timeseries 'S11LEVEL1DV' kind 'Storage-level' units 'TAF'} 
+! San Luis storage for SWP
+define S12 {timeseries 'S12' kind 'STORAGE' units 'TAF'} 
+! San Luis storage maximum capacity for SWP 
+define S12_MAX {value 1067} 
+! San Luis storage minimum capacity for SWP 
+define S12_DP {value 55} 
+! San Luis storage for SWP based on Rule Curve
+define S12_RC {timeseries 'SWPRULECV' kind 'RULECURVE' units 'TAF'}
+! San Luis storage at flood level for SWP
+define S12LEVEL4DV {timeseries 'S12LEVEL4DV' kind 'Storage-level' units 'TAF'} 
+! San Luis storage at Dead Pool level for SWP
+define S12LEVEL1DV {timeseries 'S12LEVEL1DV' kind 'Storage-level' units 'TAF'} 
+
+/****************************** INPUTS FOR **********************************/
+/************************** COA Sharing Percentage **************************/
+!NOD Storage 
+define FOLDS {timeseries 'FOLDS' kind 'STORAGE-CHANGE' units 'CFS'} ! Folsom Storage change
+define SWPDS {timeseries 'SWPDS' kind 'STORAGE-CHANGE' units 'CFS'} ! Oroville Storage change (coa_BO.wresl)
+define SHADS {timeseries 'SHADS' kind 'STORAGE-CHANGE' units 'CFS'} ! shasta storage Change
+define WHSSW {timeseries 'WHSSW' kind 'STORAGE-WDL' UNITS 'CFS'} ! Whiskeytown storage withdrawal
+define WHSSI {timeseries 'WHSSI' kind 'STORAGE-INC' UNITS 'CFS'} ! Whiskeytown storage increase  
+!Delta
+define int_IBU_UWFE {timeseries 'INT_IBU_UWFE' kind 'INTEGER' units 'NONE'} !IBU or UWFE status check
+define INFLW {timeseries 'INFLOW' kind 'INFLOW-DELTA' UNITS 'CFS'} !
+! Exports
+define TOTAL_EXP {timeseries 'TOTAL_EXP' kind 'FLOW-DELIVERY' units 'CFS'} !Total Export (D418+D419)
+! Exports - CVP
+! Export at Jones Pumping Plant defined as D418
+define EXP_JNS_TRCY {timeseries 'D418_EXP1' kind 'FLOW-DELIVERY' units 'CFS'} ! CVP pumping Split at Tracy
+define D419_CVPDED_EXP1 {timeseries 'D419_CVPDED_EXP1' kind 'FLOW-DELIVERY' units 'CFS'} ! CVP Export - what type?
+define D408_CVP {timeseries 'D408_CVP' kind 'flow-delivery' units 'cfs'}! CCWD CVP intake diversions by water right.
+define D408_DS_EXP1 {timeseries 'D408_DS_EXP1' kind 'FLOW-DELIVERY' units 'CFS'}   ! CCWD diversion of Delta surplus under LV water right.
+define D408_P_STR_CVP {timeseries 'D408_P_STR_CVP' kind 'FLOW-DELIVERY' units 'cfs'}! COA split for diversion of surplus to storage or for delivery
+define D408_P_DEL_CVP {timeseries 'D408_P_DEL_CVP' kind 'FLOW-DELIVERY' units 'cfs'} 
+define D408_P_WHL_SF_e1 {timeseries 'D408_P_WHL_SF_e1' kind 'FLOW-DELIVERY' units 'cfs'} ! COA split for wheeling unused CVP and SWP water 
+define D168B_EXP1 {timeseries 'D168B_EXP1' kind 'FLOW-DELIVERY' units 'CFS'} ! Delta Exporter study of Freeport Project- RSR  
+! Export - SWP
+! Export at Banks Pumping Plant defined as D419
+!define D419_EXP1 {timeseries 'D419_EXP1' kind 'FLOW-DELIVERY' units 'CFS'} ! Export Split at SWP
+define D403B {timeseries 'D403B' kind 'FLOW-DELIVERY' units 'CFS'} ! Diversion to Napa
+define D403C {timeseries 'D403C' kind 'FLOW-DELIVERY' units 'CFS'} ! Diversion to Solano
+define D408_P_WHL_SB_E1 {timeseries 'D408_P_WHL_SB_E1' kind 'FLOW-DELIVERY' units 'CFS'}
+define D408_P_DEL_SWP {timeseries 'D408_P_DEL_SWP' kind 'FLOW-DELIVERY' units 'CFS'}
+define D408_P_STR_SWP {timeseries 'D408_P_STR_SWP' kind 'FLOW-DELIVERY' units 'CFS'}
+! COA Agreed Share 
+define CVP_share {timeseries kind 'percent-COA' units 'NONE'} !COA Agreed CVP Share
+define SWP_share {timeseries kind 'percent-COA' units 'NONE'} !COA Agreed SWP Share
+
+
+/****************************** INPUTS FOR **********************************/
+/*************************** Groundwater Pumping ****************************/
+!DSA 58
+define GP60 {timeseries kind 'FLOW-DELIVERY' units 'CFS'} !DSA58 Groundwater Pumping
+define GR60AW {timeseries kind 'FLOW-CHANNEL' units 'CFS'} !Deep percolation of AW
+define GS60 {timeseries kind 'FLOW-CHANNEL' units 'CFS'} !DSA58 Stream - Groundwater Interaction
+!define mingw_58 {timeseries kind 'GW-PUMPING-MIN' units 'TAF'} ! in InputSV_CSII.wresl
+
+!DSA 12
+define GP61 {timeseries kind 'FLOW-DELIVERY' units 'CFS'} !DSA12 Groundwater Pumping
+define GR61AW {timeseries kind 'FLOW-CHANNEL' units 'CFS'} !Deep percolation of AW
+define GS61 {timeseries kind 'FLOW-CHANNEL' units 'CFS'} !DSA12 Stream - Groundwater Interaction
+
+!DSA 10
+define GP62 {timeseries kind 'FLOW-DELIVERY' units 'CFS'} !DSA10 Groundwater Pumping
+define GR62AW {timeseries kind 'FLOW-CHANNEL' units 'CFS'} !Deep percolation of AW
+define GS62 {timeseries kind 'FLOW-CHANNEL' units 'CFS'} ! DSA10 Stream - Groundwater Interaction
+
+!DSA 15
+define GP63 {timeseries kind 'FLOW-DELIVERY' units 'CFS'} !DSA15 Groundwater Pumping
+define GR63AW {timeseries kind 'FLOW-CHANNEL' units 'CFS'} !Deep percolation of AW
+define GS63 {timeseries kind 'FLOW-CHANNEL' units 'CFS'} !DSA15 Stream - Groundwater Interaction
+
+!DSA 65
+define GP64 {timeseries kind 'FLOW-DELIVERY' units 'CFS'} !DSA65 Groundwater Pumping
+define GR64AW {timeseries kind 'FLOW-CHANNEL' units 'CFS'} !Deep percolation of AW
+define GS64 {timeseries kind 'FLOW-CHANNEL' units 'CFS'} !DSA65 Stream - Groundwater Interaction
+!define mingw_65 {timeseries kind 'GW-PUMPING-MIN' units 'TAF'} ! in InputSV_CSII.wresl
+
+!DSA 69
+define GP65 {timeseries kind 'FLOW-DELIVERY' units 'CFS'} !DSA69 Groundwater Pumping
+define GR65AW {timeseries kind 'FLOW-CHANNEL' units 'CFS'} !Deep percolation of AW
+define GS65 {timeseries kind 'FLOW-CHANNEL' units 'CFS'} !DSA69 Stream - Groundwater Interaction
+!define mingw_69 {timeseries kind 'GW-PUMPING-MIN' units 'TAF'} ! in InputSV_CSII.wresl
+
+!DSA 70
+define GP66 {timeseries kind 'FLOW-DELIVERY' units 'CFS'} !DSA70 Groundwater Pumping
+define GR66AW {timeseries kind 'FLOW-CHANNEL' units 'CFS'} !Deep percolation of AW
+define GS66 {timeseries kind 'FLOW-CHANNEL' units 'CFS'} !DSA70 Stream - Groundwater Interaction
+!define mingw_70 {timeseries kind 'GW-PUMPING-MIN' units 'TAF'} ! in InputSV_CSII.wresl
+
+/****************************** INPUTS FOR **********************************/
+/**************************** NOD Mass Balance ******************************/
+
+
+define C42 {timeseries kind 'FLOW-CHANNEL' units 'CFS'}
+define C157 {timeseries kind 'FLOW-CHANNEL' units 'CFS'}
+define C17301 {timeseries kind 'FLOW-CHANNEL' units 'CFS'}
+define C17602 {timeseries kind 'FLOW-CHANNEL' units 'CFS'}
+define C17603 {timeseries kind 'FLOW-CHANNEL' units 'CFS'}
+define C225 {timeseries kind 'FLOW-CHANNEL' units 'CFS'}
+define C300 {timeseries kind 'FLOW-CHANNEL' units 'CFS'}
+!define C303 {timeseries kind 'FLOW-CHANNEL' units 'CFS'}
+define C308 {timeseries kind 'FLOW-CHANNEL' units 'CFS'}
+define C217A {timeseries kind 'FLOW-CHANNEL' units 'CFS'}
+
+define I204_WTS{timeseries kind 'FLOW-INFLOW' units 'CFS'} !Water Transfer from Yuba River
+
+define D42 {timeseries kind 'FLOW-DELIVERY' units 'CFS'}
+define D107 {timeseries kind 'FLOW-DELIVERY' units 'CFS'}
+define D11302 {timeseries kind 'FLOW-DELIVERY' units 'CFS'}
+define D17101 {timeseries kind 'FLOW-DELIVERY' units 'CFS'}
+define D17201 {timeseries kind 'FLOW-DELIVERY' units 'CFS'}
+define D11306 {timeseries kind 'FLOW-DELIVERY' units 'CFS'}
+define D17401 {timeseries kind 'FLOW-DELIVERY' units 'CFS'}
+define D14301 {timeseries kind 'FLOW-DELIVERY' units 'CFS'}
+define D14302 {timeseries kind 'FLOW-DELIVERY' units 'CFS'}
+define D17801 {timeseries kind 'FLOW-DELIVERY' units 'CFS'}
+define D18201 {timeseries kind 'FLOW-DELIVERY' units 'CFS'}
+define D18301 {timeseries kind 'FLOW-DELIVERY' units 'CFS'}
+define D14501 {timeseries kind 'FLOW-DELIVERY' units 'CFS'}
+define D131 {timeseries kind 'FLOW-DELIVERY' units 'CFS'}
+define D155 {timeseries kind 'FLOW-DELIVERY' units 'CFS'}
+define D143A_WTS {timeseries kind 'FLOW-DELIVERY' units 'CFS'}
+define D128_WTS {timeseries kind 'FLOW-DELIVERY' units 'CFS'}
+define D122A_WTS {timeseries kind 'FLOW-DELIVERY' units 'CFS'}
+define D122B_WTS {timeseries kind 'FLOW-DELIVERY' units 'CFS'}
+define D145A_WTS {timeseries kind 'FLOW-DELIVERY' units 'CFS'}
+define D162 {timeseries kind 'FLOW-DELIVERY' units 'CFS'}
+define D167 {timeseries kind 'FLOW-DELIVERY' units 'CFS'}
+define D168 {timeseries kind 'FLOW-DELIVERY' units 'CFS'}
+
+
+define D109 {timeseries kind 'FLOW-DELIVERY' units 'CFS'}
+define D118 {timeseries kind 'FLOW-DELIVERY' units 'CFS'}
+define D123 {timeseries kind 'FLOW-DELIVERY' units 'CFS'}
+define D134 {timeseries kind 'FLOW-DELIVERY' units 'CFS'}
+define D152 {timeseries kind 'FLOW-DELIVERY' units 'CFS'}
+define D166B {timeseries kind 'FLOW-DELIVERY' units 'CFS'}
+define D17501 {timeseries kind 'FLOW-DELIVERY' units 'CFS'}
+define D124A {timeseries kind 'FLOW-DELIVERY' units 'CFS'}
+
+define D6 {timeseries kind 'FLOW-DELIVERY' units 'CFS'}
+define D201 {timeseries kind 'FLOW-DELIVERY' units 'CFS'}
+define D202 {timeseries kind 'FLOW-DELIVERY' units 'CFS'}
+define D7A {timeseries kind 'FLOW-DELIVERY' units 'CFS'}
+define D7B {timeseries kind 'FLOW-DELIVERY' units 'CFS'}
+
+define D210 {timeseries kind 'FLOW-DELIVERY' units 'CFS'}
+define D218 {timeseries kind 'FLOW-DELIVERY' units 'CFS'}
+define D222 {timeseries kind 'FLOW-DELIVERY' units 'CFS'}
+define D226 {timeseries kind 'FLOW-DELIVERY' units 'CFS'}
+define D204_REOP {timeseries kind 'FLOW-DELIVERY' units 'CFS'}
+define D230_LRYA {timeseries kind 'FLOW-TRANSFERABLE' units 'CFS'}
+
+define D207B {timeseries kind 'FLOW-DELIVERY' units 'CFS'}
+
+define D8 {timeseries kind 'FLOW-DELIVERY' units 'CFS'}
+define D9 {timeseries kind 'FLOW-DELIVERY' units 'CFS'}
+
+define D307 {timeseries kind 'FLOW-DELIVERY' units 'CFS'}
+define D309B {timeseries kind 'FLOW-DELIVERY' units 'CFS'}
+define D308A {timeseries kind 'FLOW-DELIVERY' units 'CFS'}
+
+
+
+
+define R109 {timeseries kind 'FLOW-RETURN' units 'CFS'} !DSA58 return Flow
+define R114B {timeseries kind 'FLOW-RETURN' units 'CFS'}
+define R113 {timeseries kind 'FLOW-RETURN' units 'CFS'}
+define R114C {timeseries kind 'FLOW-RETURN' units 'CFS'}
+define R114A {timeseries kind 'FLOW-RETURN' units 'CFS'}
+define R182A {timeseries kind 'FLOW-RETURN' units 'CFS'}
+define R181A {timeseries kind 'FLOW-RETURN' units 'CFS'}
+define R181B {timeseries kind 'FLOW-RETURN' units 'CFS'}
+define R182B {timeseries kind 'FLOW-RETURN' units 'CFS'}
+define R184A {timeseries kind 'FLOW-RETURN' units 'CFS'}
+define R184B {timeseries kind 'FLOW-RETURN' units 'CFS'}
+define R134 {timeseries kind 'FLOW-RETURN' units 'CFS'}
+define R18302 {timeseries kind 'FLOW-RETURN' units 'CFS'}
+define R160 {timeseries kind 'FLOW-RETURN' units 'CFS'}
+define R156 {timeseries kind 'FLOW-RETURN' units 'CFS'}
+
+define R135C_DCMP {timeseries kind 'RETURN-FLOW' units 'CFS'}
+
+
+define R223 {timeseries kind 'FLOW-RETURN' units 'CFS'}
+define R135A {timeseries kind 'FLOW-RETURN' units 'CFS'}
+define R137 {timeseries kind 'FLOW-RETURN' units 'CFS'}
+define R135B {timeseries kind 'FLOW-RETURN' units 'CFS'}
+
+define R169 {timeseries kind 'FLOW-RETURN' units 'CFS'}
+
+define L143 {timeseries kind 'FLOW-DELIVERY' units 'CFS'}
+define L17201 {timeseries kind 'FLOW-DELIVERY' units 'CFS'}
+define L17401 {timeseries kind 'FLOW-DELIVERY' units 'CFS'}
+define L17801 {timeseries kind 'FLOW-DELIVERY' units 'CFS'}
+define L17101 {timeseries kind 'FLOW-DELIVERY' units 'CFS'}
+define L11302 {timeseries kind 'FLOW-DELIVERY' units 'CFS'}
+define L11306 {timeseries kind 'FLOW-DELIVERY' units 'CFS'}
+define L128 {timeseries kind 'FLOW-DELIVERY' units 'CFS'}
+define L143A {timeseries kind 'FLOW-DELIVERY' units 'CFS'}
+define L180A {timeseries kind 'FLOW-DELIVERY' units 'CFS'}
+define L122A {timeseries kind 'FLOW-DELIVERY' units 'CFS'}
+define L143B {timeseries kind 'FLOW-DELIVERY' units 'CFS'}
+define L145A {timeseries kind 'FLOW-DELIVERY' units 'CFS'}
+define L122B {timeseries kind 'FLOW-DELIVERY' units 'CFS'}
+define L182A {timeseries kind 'FLOW-DELIVERY' units 'CFS'}
+define L145B {timeseries kind 'FLOW-DELIVERY' units 'CFS'}
+define L183 {timeseries kind 'FLOW-DELIVERY' units 'CFS'}
+define L129A {timeseries kind 'FLOW-DELIVERY' units 'CFS'}
+
+
+
+define L142 {timeseries kind 'FLOW-DELIVERY' units 'CFS'} !Reach 3 Losses
+define L172 {timeseries kind 'FLOW-DELIVERY' units 'CFS'}
+define L173 {timeseries kind 'FLOW-DELIVERY' units 'CFS'}
+
+
+
+
+
+
+/****************************** INPUTS FOR **********************************/
+/************************* Phase II Post Processing *************************/
+! 1. Clair Lake (Trinity)
+define C100_EXC {timeseries 'C100_EXC' kind 'FLOW-EXCESS-INSTREAM' units 'CFS'} !Trinity River below Lewiston EXCESS-INSTREAM
+define D100_EXC {timeseries 'D100_EXC' kind 'FLOW-DELIVERY' units 'CFS'} !Clear Creek Tunnel EXCESS-INSTREAM
+
+

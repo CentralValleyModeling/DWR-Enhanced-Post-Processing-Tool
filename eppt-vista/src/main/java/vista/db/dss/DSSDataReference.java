@@ -1,8 +1,13 @@
 /*
- * Copyright (c) 2019
- * California Department of Water Resources
- * All Rights Reserved.  DWR PROPRIETARY/CONFIDENTIAL.
- * Source may not be released without written approval from DWR
+ * Enhanced Post Processing Tool (EPPT) Copyright (c) 2019.
+ *
+ * EPPT is copyrighted by the State of California, Department of Water Resources. It is licensed
+ * under the GNU General Public License, version 2. This means it can be
+ * copied, distributed, and modified freely, but you may not restrict others
+ * in their ability to copy, distribute, and modify it. See the license below
+ * for more details.
+ *
+ * GNU General Public License
  */
 package vista.db.dss;
 
@@ -21,29 +26,49 @@ import vista.time.TimeWindow;
  * An implementation of a data reference for dss data sets. This class specifies
  * the creation mechanism for this kind of data reference and the retrieval
  * mechanism for the data.
- * 
+ *
  * @author Nicky Sandhu
  * @version $Id: DSSDataReference.java,v 1.1 2003/10/02 20:48:44 redwood Exp $
  */
-class DSSDataReference extends DataReference {
+class DSSDataReference extends DataReference
+{
+	/**
+	 * separator for name
+	 */
+	static final String SEPARATOR = "::";
+	/**
+	 * The data set contained by this reference. Don't save data on serializing
+	 */
+	private transient SoftReference<DataSet> dataset;
+	private TimeWindow _dtw;
+
 	protected DSSDataReference(String server, String file, Pathname path,
-			DataSet ds) {
-		if (file == null)
+							   DataSet ds)
+	{
+		if(file == null)
+		{
 			throw new NullPointerException("File is null");
-		if (path == null)
+		}
+		if(path == null)
+		{
 			throw new NullPointerException("Path is null");
+		}
 		TimeInterval ti = null;
 		TimeWindow tw = null;
-		if (ds instanceof TimeSeries) {
+		if(ds instanceof TimeSeries)
+		{
 			TimeSeries ts = (TimeSeries) ds;
-			if (ts instanceof RegularTimeSeries) {
+			if(ts instanceof RegularTimeSeries)
+			{
 				ti = ((RegularTimeSeries) ts).getTimeInterval();
 				path.setPart(Pathname.E_PART, ti.toString());
 			}
 			tw = ts.getTimeWindow();
 			// path.setPart(Pathname.D_PART,tw.getStartTime().toString());
 			path.setPart(Pathname.D_PART, DSSUtil.getBlockStart(ts));
-		} else {
+		}
+		else
+		{
 			path.setPart(Pathname.D_PART, "");
 			path.setPart(Pathname.E_PART, "");
 		}
@@ -58,17 +83,24 @@ class DSSDataReference extends DataReference {
 	/**
 	 * create a reference using the given reference as the prototype.
 	 */
-	protected DSSDataReference(String server, String file, Pathname path) {
-		if (file == null)
+	protected DSSDataReference(String server, String file, Pathname path)
+	{
+		if(file == null)
+		{
 			throw new NullPointerException("File is null");
-		if (path == null)
+		}
+		if(path == null)
+		{
 			throw new NullPointerException("Path is null");
+		}
 		TimeInterval ti = DSSUtil.createTimeInterval(path);
 		TimeWindow tw = DSSUtil.createTimeWindow(path);
 		String dpart = path.getPart(Pathname.D_PART);
-		if (dpart.indexOf("-") > 0)
+		if(dpart.indexOf("-") > 0)
+		{
 			path.setPart(Pathname.D_PART, dpart
 					.substring(0, dpart.indexOf("-")).trim());
+		}
 		setServername(server);
 		setFilename(file);
 		setPathname(path);
@@ -80,14 +112,16 @@ class DSSDataReference extends DataReference {
 	/**
 	 * constructor for use only in session builder
 	 */
-	protected DSSDataReference() {
+	protected DSSDataReference()
+	{
 	}
 
 	/**
 	 * creates a clone of itself and returns the reference to it. This is used
 	 * in creating a clone of itself
 	 */
-	public DataReference createClone() {
+	public DataReference createClone()
+	{
 		DSSDataReference ref = new DSSDataReference();
 		ref.setServername(this.getServername());
 		ref.setFilename(this.getFilename());
@@ -99,10 +133,12 @@ class DSSDataReference extends DataReference {
 	}
 
 	/**
-   *
-   */
-	public void reloadData() {
-		if (dataset != null) {
+	 *
+	 */
+	public void reloadData()
+	{
+		if(dataset != null)
+		{
 			dataset.clear();
 			dataset = null;
 		}
@@ -112,17 +148,24 @@ class DSSDataReference extends DataReference {
 	/**
 	 * Retrieves dss data as a data set.
 	 */
-	public DataSet getData() {
-		if (dataset == null || dataset.get() == null) {
+	public DataSet getData()
+	{
+		if(dataset == null || dataset.get() == null)
+		{
 			DataSet data = null;
-			try {
+			try
+			{
 				DSSRemoteClient client = DSSUtil.createRemoteClient(
 						getServername(), -1);
 				boolean retrieveFlags = DSSUtil.areFlagsRetrieved();
 				data = client.getData(this, retrieveFlags);
-				if (data instanceof TimeSeries)
+				if(data instanceof TimeSeries)
+				{
 					setTimeWindow(((TimeSeries) data).getTimeWindow());
-			} catch (Exception re) {
+				}
+			}
+			catch(Exception re)
+			{
 				re.printStackTrace();
 				throw new DataRetrievalException(re.getMessage());
 			}
@@ -131,68 +174,71 @@ class DSSDataReference extends DataReference {
 		return dataset.get();
 	}
 
-	/**
-	 * overrides getTimeWindow
-	 */
-	public TimeWindow getTimeWindow() {
-		return _dtw;
-	}
-
-	/**
-	 * gets the time window for this reference
-	 */
-	protected void setTimeWindow(TimeWindow tw) {
-		_dtw = tw;
-		DataSet data = null;
-		if (dataset != null) {
-			data = dataset.get();
-		}
-		if (data instanceof TimeSeries) {
-			TimeSeries ts = (TimeSeries) data;
-			if (!ts.getTimeWindow().isSameAs(tw)) {
-				setData(ts.createSlice(tw));
-			}
-		} else {
-		}
-	}
-
-	private void setData(DataSet data) {
-		if (dataset != null) {
+	private void setData(DataSet data)
+	{
+		if(dataset != null)
+		{
 			dataset.clear();
 		}
 		dataset = new SoftReference<DataSet>(data);
 	}
 
 	/**
+	 * overrides getTimeWindow
+	 */
+	public TimeWindow getTimeWindow()
+	{
+		return _dtw;
+	}
+
+	/**
+	 * gets the time window for this reference
+	 */
+	protected void setTimeWindow(TimeWindow tw)
+	{
+		_dtw = tw;
+		DataSet data = null;
+		if(dataset != null)
+		{
+			data = dataset.get();
+		}
+		if(data instanceof TimeSeries)
+		{
+			TimeSeries ts = (TimeSeries) data;
+			if(!ts.getTimeWindow().isSameAs(tw))
+			{
+				setData(ts.createSlice(tw));
+			}
+		}
+		else
+		{
+		}
+	}
+
+	/**
 	 * gets the name for this reference along with associated pathname.
 	 */
-	public String getName() {
-		if (super.getName() != null)
+	public String getName()
+	{
+		if(super.getName() != null)
+		{
 			return super.getName();
+		}
 		StringBuffer buf = new StringBuffer(1000).append(getServername())
-				.append(SEPARATOR).append(getFilename()).append(SEPARATOR)
-				.append(getPathname()).append(SEPARATOR)
-				.append(getTimeWindow());
+												 .append(SEPARATOR).append(getFilename()).append(SEPARATOR)
+												 .append(getPathname()).append(SEPARATOR)
+												 .append(getTimeWindow());
 		return buf.toString();
 	}
 
 	/**
 	 * string representation of this data reference.
 	 */
-	public String toString() {
+	public String toString()
+	{
 		String p = getPathname().toString();
 		StringBuffer buf = new StringBuffer(p.length() + getName().length()
 				+ 20);
 		return buf.append(getName()).toString();
 	}
-
-	/**
-	 * The data set contained by this reference. Don't save data on serializing
-	 */
-	private transient SoftReference<DataSet> dataset;
-	/**
-	 * separator for name
-	 */
-	static final String SEPARATOR = "::";
-	private TimeWindow _dtw;
 }

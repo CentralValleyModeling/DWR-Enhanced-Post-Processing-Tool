@@ -1,8 +1,13 @@
 /*
- * Copyright (c) 2019
- * California Department of Water Resources
- * All Rights Reserved.  DWR PROPRIETARY/CONFIDENTIAL.
- * Source may not be released without written approval from DWR
+ * Enhanced Post Processing Tool (EPPT) Copyright (c) 2019.
+ *
+ * EPPT is copyrighted by the State of California, Department of Water Resources. It is licensed
+ * under the GNU General Public License, version 2. This means it can be
+ * copied, distributed, and modified freely, but you may not restrict others
+ * in their ability to copy, distribute, and modify it. See the license below
+ * for more details.
+ *
+ * GNU General Public License
  */
 
 package gov.ca.water.businessservice.impl;
@@ -24,8 +29,8 @@ import gov.ca.water.calgui.EpptInitializationException;
 import gov.ca.water.calgui.bo.CalLiteGUIException;
 import gov.ca.water.calgui.bo.DataTableModel;
 import gov.ca.water.calgui.constant.Constant;
-import gov.ca.water.calgui.tech_service.IFileSystemSvc;
-import gov.ca.water.calgui.tech_service.impl.FileSystemSvcImpl;
+import gov.ca.water.calgui.techservice.IFileSystemSvc;
+import gov.ca.water.calgui.techservice.impl.FileSystemSvcImpl;
 import org.apache.log4j.Logger;
 
 /**
@@ -73,18 +78,19 @@ public final class TableSvcImpl implements ITableSvc
 	}
 
 	public static ITableSvc createTableSvcImplInstance(List<GUILinks2BO> list) throws EpptInitializationException
-    {
-        if(tableSvc == null)
-        {
-            tableSvc = new TableSvcImpl(list);
-        }
-        return tableSvc;
-    }
+	{
+		if(tableSvc == null)
+		{
+			tableSvc = new TableSvcImpl(list);
+		}
+		return tableSvc;
+	}
 
 	/**
 	 * This method is for implementing the singleton. It will return the
 	 * instance of this class if it is empty it will create one.
-	 *throws IllegalStateException
+	 * throws IllegalStateException
+	 *
 	 * @return Will return the instance of this class if it is empty it will
 	 * create one.
 	 */
@@ -92,7 +98,8 @@ public final class TableSvcImpl implements ITableSvc
 	{
 		if(tableSvc == null)
 		{
-		    throw new IllegalArgumentException("TableSvcImpl has not been initialized. It should be created by calling 'createTableSvcImplInstance'.");
+			throw new IllegalArgumentException(
+					"TableSvcImpl has not been initialized. It should be created by calling 'createTableSvcImplInstance'.");
 		}
 		return tableSvc;
 	}
@@ -114,7 +121,7 @@ public final class TableSvcImpl implements ITableSvc
 	 * @throws CalLiteGUIException If anything wrong about the data then it will throw a
 	 *                             exception with the information about it.
 	 */
-	public static String[][] handleTableFileWithColumnNumber(List<String> lines, int columnLength )
+	public static String[][] handleTableFileWithColumnNumber(List<String> lines, int columnLength)
 			throws CalLiteGUIException
 	{
 		int noOfRows = getRowNumbers(lines);
@@ -312,7 +319,7 @@ public final class TableSvcImpl implements ITableSvc
 		try
 		{
 			Object[][] data = null;
-			List<String> lines = fileSystemSvc.getFileDataForTables(fileName);
+			List<String> lines = fileSystemSvc.getFileDataForTables(Paths.get(fileName));
 			String[] columnName = new String[2];
 			columnName[0] = "wsi";
 			columnName[1] = "di";
@@ -348,7 +355,7 @@ public final class TableSvcImpl implements ITableSvc
 		try
 		{
 			String[][] data = null;
-			List<String> lines = fileSystemSvc.getFileDataForTables(fileName);
+			List<String> lines = fileSystemSvc.getFileDataForTables(Paths.get(fileName));
 			String[] columnName = getColumnName(lines);
 			// We are trying to remove all the strings from the array.
 			lines = lines.stream().filter(line -> isDouble(line.split(Constant.TAB_OR_SPACE_DELIMITER)[0]))
@@ -436,7 +443,7 @@ public final class TableSvcImpl implements ITableSvc
 			catch(CalLiteGUIException ex)
 			{
 				LOG.error(ex.getMessage(), ex);
-				throw new EpptInitializationException("Error generating map for table.",ex);
+				throw new EpptInitializationException("Error generating map for table.", ex);
 			}
 		}
 	}
@@ -623,7 +630,7 @@ public final class TableSvcImpl implements ITableSvc
 			Object[][] dataForD1641 = null;
 			Object[][] dataForD1485 = null;
 			Object[][] dataForBDCP = null;
-			List<String> lines = fileSystemSvc.getFileDataForTables(fileName);
+			List<String> lines = fileSystemSvc.getFileDataForTables(Paths.get(fileName));
 			String[] columnName = getColumnName(lines);
 			// We are trying to remove all the strings from the array.
 			lines = lines.stream().filter(line -> isDouble(line.split(Constant.TAB_OR_SPACE_DELIMITER)[0]))
@@ -720,13 +727,13 @@ public final class TableSvcImpl implements ITableSvc
 			String[] headers = new String[0];
 			Optional<String> header;
 			header = data.stream().filter(obj -> obj.contains(Constant.HEADERS)).findFirst();
-			if (header.isPresent())
+			if(header.isPresent())
 			{
 				String[] da = header.get().split(Constant.OLD_DELIMITER);
 				// We are excluding
 				headers = new String[da.length - 1];
 				// the header word.
-				for (int i = 0; i < headers.length; i++)
+				for(int i = 0; i < headers.length; i++)
 				{
 					headers[i] = da[i + 1];
 				}

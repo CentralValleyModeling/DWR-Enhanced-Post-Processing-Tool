@@ -1,19 +1,25 @@
 /*
- * Copyright (c) 2019
- * California Department of Water Resources
- * All Rights Reserved.  DWR PROPRIETARY/CONFIDENTIAL.
- * Source may not be released without written approval from DWR
+ * Enhanced Post Processing Tool (EPPT) Copyright (c) 2019.
+ *
+ * EPPT is copyrighted by the State of California, Department of Water Resources. It is licensed
+ * under the GNU General Public License, version 2. This means it can be
+ * copied, distributed, and modified freely, but you may not restrict others
+ * in their ability to copy, distribute, and modify it. See the license below
+ * for more details.
+ *
+ * GNU General Public License
  */
 package vista.graph;
 
 
 /**
  * Attributes for the line elements
- * 
+ *
  * @author Nicky Sandhu (DWR).
  * @version $Id: LineElementAttr.java,v 1.1 2003/10/02 20:49:05 redwood Exp $
  */
-public class LineElementAttr extends GEAttr {
+public class LineElementAttr extends GEAttr
+{
 	/**
 	 * line style
 	 */
@@ -36,23 +42,26 @@ public class LineElementAttr extends GEAttr {
 	public int _style = PLAIN;
 
 	/**
-	 * sets Thickness
+	 * gets Thickness
 	 */
-	public void setThickness(int thickness) {
-		_thickness = thickness;
+	public int getThickness()
+	{
+		return _thickness;
 	}
 
 	/**
-	 * gets Thickness
+	 * sets Thickness
 	 */
-	public int getThickness() {
-		return _thickness;
+	public void setThickness(int thickness)
+	{
+		_thickness = thickness;
 	}
 
 	/**
 	 * sets Style
 	 */
-	public void setStyle(int style) {
+	public void setStyle(int style)
+	{
 		_style = style;
 	}
 
@@ -60,9 +69,11 @@ public class LineElementAttr extends GEAttr {
 	 * copies the fields into the given GEAttr object. Also copies in the
 	 * LineElementAttr if the object is of that type.
 	 */
-	public void copyInto(GEAttr ga) {
+	public void copyInto(GEAttr ga)
+	{
 		super.copyInto(ga);
-		if (ga instanceof LineElementAttr) {
+		if(ga instanceof LineElementAttr)
+		{
 			LineElementAttr lea = (LineElementAttr) ga;
 			lea._thickness = this._thickness;
 			lea._style = this._style;

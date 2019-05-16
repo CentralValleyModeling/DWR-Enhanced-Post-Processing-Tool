@@ -1,8 +1,13 @@
 /*
- * Copyright (c) 2019
- * California Department of Water Resources
- * All Rights Reserved.  DWR PROPRIETARY/CONFIDENTIAL.
- * Source may not be released without written approval from DWR
+ * Enhanced Post Processing Tool (EPPT) Copyright (c) 2019.
+ *
+ * EPPT is copyrighted by the State of California, Department of Water Resources. It is licensed
+ * under the GNU General Public License, version 2. This means it can be
+ * copied, distributed, and modified freely, but you may not restrict others
+ * in their ability to copy, distribute, and modify it. See the license below
+ * for more details.
+ *
+ * GNU General Public License
  */
 package vista.graph;
 
@@ -19,11 +24,12 @@ import java.awt.Color;
  * for both classes at once. This can be solved by declaring each property as
  * setX and getX functions and declaring each attribute class to be a collection
  * of such functions.
- * 
+ *
  * @author Nicky Sandhu (DWR).
  * @version $Id: GEAttr.java,v 1.1 2003/10/02 20:48:56 redwood Exp $
  */
-public class GEAttr implements Attributes {
+public class GEAttr implements Attributes
+{
 	/**
 	 * horizontal orientation
 	 */
@@ -61,87 +67,99 @@ public class GEAttr implements Attributes {
 	public boolean _clipWithinBounds = false;
 
 	/**
-   *
-   */
-	public void setBackgroundColor(Color backgroundColor) {
-		_backgroundColor = backgroundColor;
-	}
-
-	/**
-   *
-   */
-	public Color getBackgroundColor() {
+	 *
+	 */
+	public Color getBackgroundColor()
+	{
 		return _backgroundColor;
 	}
 
 	/**
-   *
-   */
-	public void setForegroundColor(Color foregroundColor) {
-		_foregroundColor = foregroundColor;
+	 *
+	 */
+	public void setBackgroundColor(Color backgroundColor)
+	{
+		_backgroundColor = backgroundColor;
 	}
 
 	/**
-   *
-   */
-	public Color getForegroundColor() {
+	 *
+	 */
+	public Color getForegroundColor()
+	{
 		return _foregroundColor;
 	}
 
 	/**
-	 * sets Orientation
+	 *
 	 */
-	public void setOrientation(int orientation) {
-		_orientation = orientation;
+	public void setForegroundColor(Color foregroundColor)
+	{
+		_foregroundColor = foregroundColor;
 	}
 
 	/**
 	 * gets Orientation
 	 */
-	public int getOrientation() {
+	public int getOrientation()
+	{
 		return _orientation;
 	}
 
 	/**
-	 * sets CreateGraphicsCopy
+	 * sets Orientation
 	 */
-	public void setCreateGraphicsCopy(boolean createGraphicsCopy) {
-		_createGraphicsCopy = createGraphicsCopy;
+	public void setOrientation(int orientation)
+	{
+		_orientation = orientation;
 	}
 
 	/**
 	 * gets CreateGraphicsCopy
 	 */
-	public boolean getCreateGraphicsCopy() {
+	public boolean getCreateGraphicsCopy()
+	{
 		return _createGraphicsCopy;
 	}
 
 	/**
-	 * sets IsVisible
+	 * sets CreateGraphicsCopy
 	 */
-	public void setIsVisible(boolean isVisible) {
-		_isVisible = isVisible;
+	public void setCreateGraphicsCopy(boolean createGraphicsCopy)
+	{
+		_createGraphicsCopy = createGraphicsCopy;
 	}
 
 	/**
 	 * gets IsVisible
 	 */
-	public boolean getIsVisible() {
+	public boolean getIsVisible()
+	{
 		return _isVisible;
 	}
 
 	/**
-	 * sets ClipWithinBounds
+	 * sets IsVisible
 	 */
-	public void setClipWithinBounds(boolean clipWithinBounds) {
-		_clipWithinBounds = clipWithinBounds;
+	public void setIsVisible(boolean isVisible)
+	{
+		_isVisible = isVisible;
 	}
 
 	/**
 	 * gets ClipWithinBounds
 	 */
-	public boolean getClipWithinBounds() {
+	public boolean getClipWithinBounds()
+	{
 		return _clipWithinBounds;
+	}
+
+	/**
+	 * sets ClipWithinBounds
+	 */
+	public void setClipWithinBounds(boolean clipWithinBounds)
+	{
+		_clipWithinBounds = clipWithinBounds;
 	}
 
 	// /**
@@ -156,10 +174,12 @@ public class GEAttr implements Attributes {
 	// public tp getPxx(){
 	// return _pxx;
 	// }
+
 	/**
 	 * copies the fields into the given GEAttr object
 	 */
-	public void copyInto(GEAttr ga) {
+	public void copyInto(GEAttr ga)
+	{
 		ga._backgroundColor = this._backgroundColor;
 		ga._foregroundColor = this._foregroundColor;
 		ga._orientation = this._orientation;

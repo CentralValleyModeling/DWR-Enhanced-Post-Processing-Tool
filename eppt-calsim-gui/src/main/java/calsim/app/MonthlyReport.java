@@ -1,8 +1,13 @@
 /*
- * Copyright (c) 2019
- * California Department of Water Resources
- * All Rights Reserved.  DWR PROPRIETARY/CONFIDENTIAL.
- * Source may not be released without written approval from DWR
+ * Enhanced Post Processing Tool (EPPT) Copyright (c) 2019.
+ *
+ * EPPT is copyrighted by the State of California, Department of Water Resources. It is licensed
+ * under the GNU General Public License, version 2. This means it can be
+ * copied, distributed, and modified freely, but you may not restrict others
+ * in their ability to copy, distribute, and modify it. See the license below
+ * for more details.
+ *
+ * GNU General Public License
  */
 
 package calsim.app;
@@ -34,14 +39,14 @@ import vista.time.TimeWindow;
  */
 public class MonthlyReport
 {
+	public static final boolean DEBUG = false;
+	public static final int HTML = 11;
 	private static final String[] MONTHS =
 			{
 					"OCT", "NOV", "DEC", "JAN", "FEB",
 					"MAR", "APR", "MAY", "JUN", "JUL",
 					"AUG", "SEP"
 			};
-	public static final boolean DEBUG = false;
-	public static final int HTML = 11;
 	/**
 	 * this controls the distance between consecutive values
 	 */

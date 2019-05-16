@@ -1,8 +1,13 @@
 /*
- * Copyright (c) 2019
- * California Department of Water Resources
- * All Rights Reserved.  DWR PROPRIETARY/CONFIDENTIAL.
- * Source may not be released without written approval from DWR
+ * Enhanced Post Processing Tool (EPPT) Copyright (c) 2019.
+ *
+ * EPPT is copyrighted by the State of California, Department of Water Resources. It is licensed
+ * under the GNU General Public License, version 2. This means it can be
+ * copied, distributed, and modified freely, but you may not restrict others
+ * in their ability to copy, distribute, and modify it. See the license below
+ * for more details.
+ *
+ * GNU General Public License
  */
 package gov.ca.water.eppt.nbui.actions;
 
@@ -11,6 +16,7 @@ import java.awt.event.ActionEvent;
 import java.io.IOException;
 import java.net.URL;
 import java.nio.file.Path;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -18,7 +24,9 @@ import javax.swing.*;
 
 import gov.ca.water.calgui.constant.EpptPreferences;
 import gov.ca.water.eppt.nbui.Installer;
+import gov.ca.water.eppt.nbui.ProjectConfigurationTopComponent;
 import gov.ca.water.quickresults.ui.projectconfig.ProjectConfigurationPanel;
+import org.netbeans.api.actions.Savable;
 import org.openide.awt.ActionID;
 import org.openide.awt.ActionReference;
 import org.openide.awt.ActionReferences;
@@ -74,8 +82,17 @@ public final class SaveProjectConfiguration extends AbstractAction implements Pr
 		ProjectConfigurationPanel projectConfigurationPanel = ProjectConfigurationPanel.getProjectConfigurationPanel();
 		if(lastProjectConfiguration.toFile().exists())
 		{
-
-			projectConfigurationPanel.saveConfigurationToPath(lastProjectConfiguration,
+			Path projectDir = lastProjectConfiguration.getParent();
+			//For backwards compatibility
+			if(projectDir.normalize().equals(EpptPreferences.getProjectsPath()))
+			{
+				projectDir = projectDir.resolve(projectConfigurationPanel.getProjectName());
+			}
+			else if(!projectDir.getParent().getFileName().toString().contains(projectConfigurationPanel.getProjectName()))
+			{
+				projectDir = EpptPreferences.getProjectsPath().resolve(projectConfigurationPanel.getProjectName());
+			}
+			projectConfigurationPanel.saveConfigurationToPath(projectDir,
 					projectConfigurationPanel.getProjectName(), projectConfigurationPanel.getProjectDescription());
 		}
 		else
@@ -84,10 +101,25 @@ public final class SaveProjectConfiguration extends AbstractAction implements Pr
 		}
 		WindowManager.getDefault().getMainWindow().setTitle(
 				Installer.MAIN_FRAME_NAME + " - " + projectConfigurationPanel.getProjectName());
-		Collection<? extends ProjectConfigurationSavable> scenarioConfigurationSavables = _lkpInfo.allInstances();
-		for(ProjectConfigurationSavable savable : scenarioConfigurationSavables)
+		Collection<? extends ProjectConfigurationSavable> projectConfigurationSavables = Savable.REGISTRY.lookupAll(
+				ProjectConfigurationSavable.class);
+		if(projectConfigurationSavables.isEmpty())
 		{
-			savable.removeFromLookup();
+			WindowManager.getDefault().getModes()
+						 .stream()
+						 .map(m -> m.getTopComponents())
+						 .map(Arrays::asList)
+						 .flatMap(Collection::stream)
+						 .filter(t -> t instanceof ProjectConfigurationTopComponent)
+						 .map(t -> (ProjectConfigurationTopComponent) t)
+						 .forEach(ProjectConfigurationTopComponent::topComponentNameUnmodified);
+		}
+		else
+		{
+			for(ProjectConfigurationSavable savable : projectConfigurationSavables)
+			{
+				savable.removeFromLookup();
+			}
 		}
 	}
 

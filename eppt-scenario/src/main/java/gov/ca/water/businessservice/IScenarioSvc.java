@@ -1,12 +1,18 @@
 /*
- * Copyright (c) 2019
- * California Department of Water Resources
- * All Rights Reserved.  DWR PROPRIETARY/CONFIDENTIAL.
- * Source may not be released without written approval from DWR
+ * Enhanced Post Processing Tool (EPPT) Copyright (c) 2019.
+ *
+ * EPPT is copyrighted by the State of California, Department of Water Resources. It is licensed
+ * under the GNU General Public License, version 2. This means it can be
+ * copied, distributed, and modified freely, but you may not restrict others
+ * in their ability to copy, distribute, and modify it. See the license below
+ * for more details.
+ *
+ * GNU General Public License
  */
 
 package gov.ca.water.businessservice;
 
+import java.nio.file.Path;
 import java.util.List;
 import java.util.Map;
 
@@ -44,7 +50,7 @@ public interface IScenarioSvc
 	 *                              file.
 	 * @param wsidiStatusStr        List to be filled with WSIDISTATUS entries from cls file
 	 */
-	void getCLSData(String fileName, List<String> controlStrList, List<String> dataTableModelStrList,
+	void getCLSData(Path fileName, List<String> controlStrList, List<String> dataTableModelStrList,
 					List<String> regulationoptionsStr, List<String> wsidiStatusStr) throws EpptInitializationException;
 
 	/**
@@ -55,7 +61,8 @@ public interface IScenarioSvc
 	 * @param swingEngine The object of the GUI.
 	 * @param tableMap    The map with key as the table id and value as table object.
 	 */
-	void applyClsFile(String fileName, SwingEngine swingEngine, Map<String, GUILinks2BO> tableMap) throws EpptInitializationException;
+	void applyClsFile(Path fileName, SwingEngine swingEngine, Map<String, GUILinks2BO> tableMap)
+			throws EpptInitializationException;
 
 	/**
 	 * This will save the current state of the ui into the cls file and the
@@ -66,7 +73,7 @@ public interface IScenarioSvc
 	 * @param guiLinks2BOList The data list from gui_link2.table.
 	 * @return Will return true if the save if done.
 	 */
-	boolean save(String fileName, SwingEngine swingEngine, List<GUILinks2BO> guiLinks2BOList);
+	boolean save(Path fileName, SwingEngine swingEngine, List<GUILinks2BO> guiLinks2BOList);
 
 	/**
 	 * This will return the Regulation options data.
@@ -125,7 +132,7 @@ public interface IScenarioSvc
 	 * @param guiLinks2BOList The list of seed Data.
 	 * @throws CalLiteGUIException It throws a general exception.
 	 */
-	void saveToCLSFile(String fileName, SwingEngine swingEngine, List<GUILinks2BO> guiLinks2BOList)
+	void saveToCLSFile(Path fileName, SwingEngine swingEngine, List<GUILinks2BO> guiLinks2BOList)
 			throws CalLiteGUIException;
 
 	/**

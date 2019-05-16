@@ -1,8 +1,13 @@
 /*
- * Copyright (c) 2019
- * California Department of Water Resources
- * All Rights Reserved.  DWR PROPRIETARY/CONFIDENTIAL.
- * Source may not be released without written approval from DWR
+ * Enhanced Post Processing Tool (EPPT) Copyright (c) 2019.
+ *
+ * EPPT is copyrighted by the State of California, Department of Water Resources. It is licensed
+ * under the GNU General Public License, version 2. This means it can be
+ * copied, distributed, and modified freely, but you may not restrict others
+ * in their ability to copy, distribute, and modify it. See the license below
+ * for more details.
+ *
+ * GNU General Public License
  */
 package vista.app;
 
@@ -11,19 +16,19 @@ import vista.graph.PieModel;
 import vista.set.DataSetElement;
 
 /**
- * 
- * 
  * @author Nicky Sandhu
  * @version $Id: DefaultPieChartModel.java,v 1.1 2003/10/02 20:48:28 redwood Exp
- *          $
+ * $
  */
-public class DefaultPieChartModel implements PieChartModel {
+public class DefaultPieChartModel implements PieChartModel
+{
 	private int _index;
 	private DataSetElement _dse;
 	private String[] _labels;
 	private DefaultPieModel _pm;
 
-	public DefaultPieChartModel(DataSetElement dse, String[] labels) {
+	public DefaultPieChartModel(DataSetElement dse, String[] labels)
+	{
 		_dse = dse.createClone();
 		_labels = labels;
 		_pm = new DefaultPieModel();
@@ -31,49 +36,59 @@ public class DefaultPieChartModel implements PieChartModel {
 	}
 
 	/**
-   *
-   */
-	public Object getReferenceObject() {
+	 *
+	 */
+	public Object getReferenceObject()
+	{
 		return _dse;
 	}
 
 	/**
-   *
-   */
-	public void setReferenceObject(Object obj) {
-		if (!(obj instanceof DataSetElement))
+	 *
+	 */
+	public void setReferenceObject(Object obj)
+	{
+		if(!(obj instanceof DataSetElement))
+		{
 			return;
+		}
 		_dse = (DataSetElement) obj;
 	}
 
 	/**
 	 * get title of pie chart
 	 */
-	public String getTitle() {
+	public String getTitle()
+	{
 		return "PIE CHART";
 	}
 
 	/**
 	 * get maximum value, to scale all values to this value
 	 */
-	public double getSumOfValues() {
+	public double getSumOfValues()
+	{
 		double sum = 0.0;
-		for (int i = 0; i < _dse.getDimension(); i++)
+		for(int i = 0; i < _dse.getDimension(); i++)
+		{
 			sum += _dse.getX(i);
+		}
 		return sum;
 	}
 
 	/**
 	 * true if more value are to follow
 	 */
-	public boolean hasMorePies() {
+	public boolean hasMorePies()
+	{
 		return _index < _dse.getDimension();
 	}
 
 	/**
 	 * returns information in the pie model interface
 	 */
-	public PieModel nextPie() {
+	public PieModel nextPie()
+	{
 		_pm._value = _dse.getX(_index);
 		_pm._label = _labels[_index];
 		_index++;
@@ -83,30 +98,33 @@ public class DefaultPieChartModel implements PieChartModel {
 	/**
 	 * resets to the beginning
 	 */
-	public void reset() {
+	public void reset()
+	{
 		_index = 0;
 	}
 
 	/**
-	 * 
-	 * 
 	 * @author Nicky Sandhu
 	 * @version $Id: DefaultPieChartModel.java,v 1.1 2003/10/02 20:48:28 redwood
-	 *          Exp $
+	 * Exp $
 	 */
-	class DefaultPieModel implements PieModel {
+	class DefaultPieModel implements PieModel
+	{
 		double _value;
 		String _label;
 
-		public String getLabel() {
+		public String getLabel()
+		{
 			return _label;
 		}
 
-		public double getValue() {
+		public double getValue()
+		{
 			return _value;
 		}
 
-		public Object getReferenceObject() {
+		public Object getReferenceObject()
+		{
 			return null;
 		}
 	}

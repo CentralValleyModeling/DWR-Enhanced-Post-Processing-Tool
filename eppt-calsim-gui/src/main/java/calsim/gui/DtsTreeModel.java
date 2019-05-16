@@ -1,8 +1,13 @@
 /*
- * Copyright (c) 2019
- * California Department of Water Resources
- * All Rights Reserved.  DWR PROPRIETARY/CONFIDENTIAL.
- * Source may not be released without written approval from DWR
+ * Enhanced Post Processing Tool (EPPT) Copyright (c) 2019.
+ *
+ * EPPT is copyrighted by the State of California, Department of Water Resources. It is licensed
+ * under the GNU General Public License, version 2. This means it can be
+ * copied, distributed, and modified freely, but you may not restrict others
+ * in their ability to copy, distribute, and modify it. See the license below
+ * for more details.
+ *
+ * GNU General Public License
  */
 
 package calsim.gui;
@@ -50,6 +55,13 @@ public class DtsTreeModel extends GeneralTreeModel
 	private static DefaultMutableTreeNode newnode;
 	private static Vector prjdts = new Vector(1, 1);
 	private static Vector prjmts = new Vector(1, 1);
+	String _name = null;
+	String[] _tags = null;
+	DerivedTimeSeries _dts;
+	MultipleTimeSeries _mts;
+	int newfile = 0;
+	String oldname = " ", oldpaste = " ";
+	boolean isMerge = false;
 	private JPopupMenu _nodepopup = new JPopupMenu();
 	private JMenuItem _open = new JMenuItem("Open");
 	private JMenuItem _rename = new JMenuItem("Rename");
@@ -65,11 +77,6 @@ public class DtsTreeModel extends GeneralTreeModel
 	private JMenuItem _merge = new JMenuItem("Merge");
 	private DtsTreePanel _dtp;
 	private CalsimTree _tree;
-	String _name = null;
-	String[] _tags = null;
-	DerivedTimeSeries _dts;
-	MultipleTimeSeries _mts;
-	int newfile = 0;
 	ActionListener _listener = e -> {
 		JMenuItem mi = (JMenuItem) (e.getSource());
 		if(mi.getText() == "Add DTS")
@@ -113,8 +120,6 @@ public class DtsTreeModel extends GeneralTreeModel
 			pasteNode();
 		}
 	};
-	String oldname = " ", oldpaste = " ";
-	boolean isMerge = false;
 
 	public DtsTreeModel(TreeNode dumbyRoot, String[] tags, String[] pics, DtsTreePanel dtp)
 	{

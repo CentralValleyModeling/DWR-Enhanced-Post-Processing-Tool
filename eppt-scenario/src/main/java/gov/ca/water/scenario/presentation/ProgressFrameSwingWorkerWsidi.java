@@ -1,12 +1,18 @@
 /*
- * Copyright (c) 2019
- * California Department of Water Resources
- * All Rights Reserved.  DWR PROPRIETARY/CONFIDENTIAL.
- * Source may not be released without written approval from DWR
+ * Enhanced Post Processing Tool (EPPT) Copyright (c) 2019.
+ *
+ * EPPT is copyrighted by the State of California, Department of Water Resources. It is licensed
+ * under the GNU General Public License, version 2. This means it can be
+ * copied, distributed, and modified freely, but you may not restrict others
+ * in their ability to copy, distribute, and modify it. See the license below
+ * for more details.
+ *
+ * GNU General Public License
  */
 
 package gov.ca.water.scenario.presentation;
 
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
 import java.util.function.Consumer;
@@ -49,7 +55,7 @@ public class ProgressFrameSwingWorkerWsidi extends ProgressFrameSwingWorker
 		_swingEngine = swingEngine;
 	}
 
-	protected boolean processScenario(List<String> data, List<String> scenariosToDrop,
+	protected boolean processScenario(List<String> data, List<Path> scenariosToDrop,
 									  String scenarioName)
 	{
 		boolean sleepAfterDisplay;
@@ -60,12 +66,12 @@ public class ProgressFrameSwingWorkerWsidi extends ProgressFrameSwingWorker
 		}
 		else
 		{
-			sleepAfterDisplay = super.processScenario(data, scenariosToDrop, scenarioName);
+			sleepAfterDisplay = super.processScenario(data, scenariosToDrop, Paths.get(scenarioName));
 		}
 		return sleepAfterDisplay;
 	}
 
-	private boolean processBatchWsidiRun(List<String> data, List<String> scenariosToDrop,
+	private boolean processBatchWsidiRun(List<String> data, List<Path> scenariosToDrop,
 										 String scenarioName)
 	{
 		boolean sleepAfterDisplay = false;
@@ -80,7 +86,7 @@ public class ProgressFrameSwingWorkerWsidi extends ProgressFrameSwingWorker
 		{
 			sleepAfterDisplay = true;
 			loadGeneratedWSIDI(scenarioName);
-			scenariosToDrop.add(scenarioName);
+			scenariosToDrop.add(Paths.get(scenarioName));
 		}
 		return sleepAfterDisplay;
 	}

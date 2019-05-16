@@ -1,8 +1,13 @@
 /*
- * Copyright (c) 2019
- * California Department of Water Resources
- * All Rights Reserved.  DWR PROPRIETARY/CONFIDENTIAL.
- * Source may not be released without written approval from DWR
+ * Enhanced Post Processing Tool (EPPT) Copyright (c) 2019.
+ *
+ * EPPT is copyrighted by the State of California, Department of Water Resources. It is licensed
+ * under the GNU General Public License, version 2. This means it can be
+ * copied, distributed, and modified freely, but you may not restrict others
+ * in their ability to copy, distribute, and modify it. See the license below
+ * for more details.
+ *
+ * GNU General Public License
  */
 
 package gov.ca.water.quickresults.ui.quickresults;
@@ -17,13 +22,13 @@ import java.util.List;
 import java.util.Optional;
 import javax.swing.*;
 
-import gov.ca.water.calgui.bo.RBListItemBO;
 import gov.ca.water.calgui.bo.ResultUtilsBO;
 import gov.ca.water.calgui.presentation.DisplayHelper;
-import gov.ca.water.calgui.tech_service.IDialogSvc;
-import gov.ca.water.calgui.tech_service.IErrorHandlingSvc;
-import gov.ca.water.calgui.tech_service.impl.DialogSvcImpl;
-import gov.ca.water.calgui.tech_service.impl.ErrorHandlingSvcImpl;
+import gov.ca.water.calgui.project.EpptScenarioRun;
+import gov.ca.water.calgui.techservice.IDialogSvc;
+import gov.ca.water.calgui.techservice.IErrorHandlingSvc;
+import gov.ca.water.calgui.techservice.impl.DialogSvcImpl;
+import gov.ca.water.calgui.techservice.impl.ErrorHandlingSvcImpl;
 import gov.ca.water.quickresults.ui.EpptPanel;
 import gov.ca.water.quickresults.ui.projectconfig.ProjectConfigurationPanel;
 import org.apache.log4j.Logger;
@@ -88,7 +93,7 @@ public class QuickResultsListener implements ActionListener
 	private void loadReportList()
 	{
 		Window window = SwingUtilities.windowForComponent(_quickResultsPanel);
-		Optional<List<String>> data = ResultUtilsBO.getResultUtilsInstance(null).readCGR((JFrame) window);
+		Optional<List<String>> data = ResultUtilsBO.getResultUtilsInstance().readCGR((JFrame) window);
 		if(data.isPresent())
 		{
 			Component component = _quickResultsPanel.getReportsJList();
@@ -103,17 +108,19 @@ public class QuickResultsListener implements ActionListener
 	private void saveReportList()
 	{
 		Window window = SwingUtilities.windowForComponent(_quickResultsPanel);
-		ResultUtilsBO.getResultUtilsInstance(_quickResultsPanel.getSwingEngine()).writeCGR((JFrame) window);
+		JList<?> lstReports = (JList<?>) _quickResultsPanel.getSwingEngine().find("lstReports");
+		ResultUtilsBO.getResultUtilsInstance().writeCGR((JFrame) window, lstReports);
 	}
 
 	private void displayReportList()
 	{
 		ProjectConfigurationPanel projectConfigurationPanel = ProjectConfigurationPanel.getProjectConfigurationPanel();
-		List<RBListItemBO> scenarios = projectConfigurationPanel.getScenarios();
-		if(scenarios.isEmpty())
+		List<EpptScenarioRun> alternatives = projectConfigurationPanel.getEpptScenarioAlternatives();
+		EpptScenarioRun baseScenario = projectConfigurationPanel.getBaseScenario();
+		if(baseScenario == null)
 		{
 			IDialogSvc dialogSvc = DialogSvcImpl.getDialogSvcInstance();
-			dialogSvc.getOK("Error - No scenarios loaded", JOptionPane.ERROR_MESSAGE);
+			dialogSvc.getOK("Error - No Base Scenario defined", JOptionPane.ERROR_MESSAGE);
 		}
 		else
 		{
@@ -127,9 +134,7 @@ public class QuickResultsListener implements ActionListener
 				{
 					DisplayHelper displayHelper = _quickResultsPanel.getDisplayHelper();
 					displayHelper.showDisplayFrames((lstReports.getModel().getElementAt(i)),
-							scenarios, startMonth, endMonth);
-					//DisplayFrame.showDisplayFrames((lstReports.getModel().getElementAt(i)),
-					//		scenarios, startMonth, endMonth);
+							baseScenario, alternatives, startMonth, endMonth);
 				}
 			}
 		}

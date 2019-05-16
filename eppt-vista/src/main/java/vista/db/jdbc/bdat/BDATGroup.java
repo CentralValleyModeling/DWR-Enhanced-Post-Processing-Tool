@@ -1,8 +1,13 @@
 /*
- * Copyright (c) 2019
- * California Department of Water Resources
- * All Rights Reserved.  DWR PROPRIETARY/CONFIDENTIAL.
- * Source may not be released without written approval from DWR
+ * Enhanced Post Processing Tool (EPPT) Copyright (c) 2019.
+ *
+ * EPPT is copyrighted by the State of California, Department of Water Resources. It is licensed
+ * under the GNU General Public License, version 2. This means it can be
+ * copied, distributed, and modified freely, but you may not restrict others
+ * in their ability to copy, distribute, and modify it. See the license below
+ * for more details.
+ *
+ * GNU General Public License
  */
 
 package vista.db.jdbc.bdat;
@@ -19,13 +24,15 @@ import vista.set.Group;
 import vista.set.GroupProxy;
 
 @SuppressWarnings("serial")
-public class BDATGroup extends GroupProxy {
+public class BDATGroup extends GroupProxy
+{
+	public static final int MAX_LIMIT = 10000;
 	static Logger logger = Logger.getLogger("vista.bdat");
 	private BDATConnection manager;
-	public static final int MAX_LIMIT = 10000;
 	private boolean limited = false;
 
-	public BDATGroup(BDATConnection connection) {
+	public BDATGroup(BDATConnection connection)
+	{
 		manager = connection;
 		setName("BDAT::" + manager.getDatabaseName() + "@"
 				+ manager.getServerName() + ":" + manager.getPortNumber()
@@ -33,10 +40,12 @@ public class BDATGroup extends GroupProxy {
 	}
 
 	@Override
-	protected Group getInitializedGroup() {
+	protected Group getInitializedGroup()
+	{
 		Group g = new Group();
 		Connection connection = null;
-		try {
+		try
+		{
 			// FIXME: get password should be on manager ui
 			connection = manager.getConnection();
 			Statement statement = connection.createStatement();
@@ -50,7 +59,8 @@ public class BDATGroup extends GroupProxy {
 					*/
 			ResultSet resultSet = statement.executeQuery(sql);
 			int count = 0;
-			while (resultSet.next()) {
+			while(resultSet.next())
+			{
 				int resultId = resultSet.getInt("result_id");
 				String abbreviation = resultSet.getString("abbreviation");
 				String constituentName = resultSet
@@ -63,7 +73,8 @@ public class BDATGroup extends GroupProxy {
 				String probeDepth = resultSet.getString("probe_depth");
 				Date startDate = resultSet.getDate("start_date");
 				Date endDate = resultSet.getDate("end_date");
-				if (logger.isLoggable(Level.FINE)) {
+				if(logger.isLoggable(Level.FINE))
+				{
 					logger.fine("Creating ref : " + resultId + ","
 							+ abbreviation + "," + constituentName + ","
 							+ startDate + "-" + endDate);
@@ -73,18 +84,27 @@ public class BDATGroup extends GroupProxy {
 						intervalName, readingTypeName, rankName, probeDepth,
 						startDate, endDate));
 				count++;
-				if (count >= MAX_LIMIT) {
+				if(count >= MAX_LIMIT)
+				{
 					limited = true;
 					break;
 				}
 			}
-		} catch (SQLException e) {
+		}
+		catch(SQLException e)
+		{
 			logger.log(Level.WARNING, "Error initializing Group: " + this, e);
-		} finally {
-			if (connection != null) {
-				try {
+		}
+		finally
+		{
+			if(connection != null)
+			{
+				try
+				{
 					connection.close();
-				} catch (SQLException e) {
+				}
+				catch(SQLException e)
+				{
 					e.printStackTrace();
 				}
 			}

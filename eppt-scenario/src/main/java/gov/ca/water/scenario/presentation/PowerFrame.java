@@ -1,8 +1,13 @@
 /*
- * Copyright (c) 2019
- * California Department of Water Resources
- * All Rights Reserved.  DWR PROPRIETARY/CONFIDENTIAL.
- * Source may not be released without written approval from DWR
+ * Enhanced Post Processing Tool (EPPT) Copyright (c) 2019.
+ *
+ * EPPT is copyrighted by the State of California, Department of Water Resources. It is licensed
+ * under the GNU General Public License, version 2. This means it can be
+ * copied, distributed, and modified freely, but you may not restrict others
+ * in their ability to copy, distribute, and modify it. See the license below
+ * for more details.
+ *
+ * GNU General Public License
  */
 
 package gov.ca.water.scenario.presentation;
@@ -18,13 +23,13 @@ import java.util.List;
 import javax.swing.*;
 
 import gov.ca.water.calgui.bo.RBListItemBO;
-import gov.ca.water.calgui.bus_service.IDSSGrabber1Svc;
-import gov.ca.water.calgui.bus_service.impl.DSSGrabber1SvcImpl;
+import gov.ca.water.calgui.busservice.IDSSGrabber1Svc;
+import gov.ca.water.calgui.busservice.impl.DSSGrabber1SvcImpl;
 import gov.ca.water.calgui.constant.Constant;
-import gov.ca.water.calgui.tech_service.IDialogSvc;
-import gov.ca.water.calgui.tech_service.IErrorHandlingSvc;
-import gov.ca.water.calgui.tech_service.impl.DialogSvcImpl;
-import gov.ca.water.calgui.tech_service.impl.ErrorHandlingSvcImpl;
+import gov.ca.water.calgui.techservice.IDialogSvc;
+import gov.ca.water.calgui.techservice.IErrorHandlingSvc;
+import gov.ca.water.calgui.techservice.impl.DialogSvcImpl;
+import gov.ca.water.calgui.techservice.impl.ErrorHandlingSvcImpl;
 import org.apache.log4j.Logger;
 
 class PowerFrame
@@ -38,19 +43,19 @@ class PowerFrame
 		try
 		{
 			String dssFilename = "";
-			IDSSGrabber1Svc dssGrabber = new DSSGrabber1SvcImpl(lstScenarios);
+			IDSSGrabber1Svc dssGrabber = new DSSGrabber1SvcImpl();
 			for(RBListItemBO item : lstScenarios)
 			{
 				if(item.isSelected())
 				{
 					dssFilename = item.toString();
-					dssGrabber.setBase(item.toString());
+					//					dssGrabber.setScenarioRuns(item.toString(), item.getModel());
 				}
 			}
 			if(!dssGrabber.hasPower(dssFilename))
 			{
 				if("OK".equals(_dialogSvc.getOKCancel(
-						"There are no power records in " + dssGrabber.getBase() + ". Press OK to run the Power Module.",
+						"There are no power records in " + dssGrabber.getBaseRunName() + ". Press OK to run the Power Module.",
 						JOptionPane.PLAIN_MESSAGE)))
 				{
 					runPowerModule("DEFAULT");
@@ -58,7 +63,7 @@ class PowerFrame
 			}
 			else
 			{
-				final JFrame frame = new JFrame("Power Viewer:" + dssGrabber.getBase());
+				final JFrame frame = new JFrame("Power Viewer:" + dssGrabber.getBaseRunName());
 				frame.setPreferredSize(new Dimension(800, 600));
 				frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 				frame.pack();

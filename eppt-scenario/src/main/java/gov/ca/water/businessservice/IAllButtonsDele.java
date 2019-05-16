@@ -1,12 +1,18 @@
 /*
- * Copyright (c) 2019
- * California Department of Water Resources
- * All Rights Reserved.  DWR PROPRIETARY/CONFIDENTIAL.
- * Source may not be released without written approval from DWR
+ * Enhanced Post Processing Tool (EPPT) Copyright (c) 2019.
+ *
+ * EPPT is copyrighted by the State of California, Department of Water Resources. It is licensed
+ * under the GNU General Public License, version 2. This means it can be
+ * copied, distributed, and modified freely, but you may not restrict others
+ * in their ability to copy, distribute, and modify it. See the license below
+ * for more details.
+ *
+ * GNU General Public License
  */
 
 package gov.ca.water.businessservice;
 
+import java.nio.file.Path;
 import javax.swing.*;
 
 /**
@@ -30,7 +36,7 @@ public interface IAllButtonsDele
 	 * @param clsFileName Just the name of the cls file whithout the extension.
 	 * @return It will return true if the save is successful.
 	 */
-	boolean saveCurrentStateToFile(String clsFileName);
+	boolean saveCurrentStateToFile(Path clsFileName);
 
 	/**
 	 * This is to handle the "Save As" button on the "Run Settings" tab.

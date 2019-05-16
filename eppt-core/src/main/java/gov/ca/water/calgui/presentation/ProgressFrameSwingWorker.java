@@ -1,13 +1,19 @@
 /*
- * Copyright (c) 2019
- * California Department of Water Resources
- * All Rights Reserved.  DWR PROPRIETARY/CONFIDENTIAL.
- * Source may not be released without written approval from DWR
+ * Enhanced Post Processing Tool (EPPT) Copyright (c) 2019.
+ *
+ * EPPT is copyrighted by the State of California, Department of Water Resources. It is licensed
+ * under the GNU General Public License, version 2. This means it can be
+ * copied, distributed, and modified freely, but you may not restrict others
+ * in their ability to copy, distribute, and modify it. See the license below
+ * for more details.
+ *
+ * GNU General Public License
  */
 
 package gov.ca.water.calgui.presentation;
 
 import java.io.IOException;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -17,11 +23,11 @@ import java.util.Properties;
 import java.util.function.Consumer;
 import javax.swing.*;
 
-import gov.ca.water.calgui.bus_service.IMonitorSvc;
-import gov.ca.water.calgui.bus_service.impl.MonitorSvcImpl;
+import gov.ca.water.calgui.busservice.IMonitorSvc;
+import gov.ca.water.calgui.busservice.impl.MonitorSvcImpl;
 import gov.ca.water.calgui.constant.Constant;
-import gov.ca.water.calgui.tech_service.IErrorHandlingSvc;
-import gov.ca.water.calgui.tech_service.impl.ErrorHandlingSvcImpl;
+import gov.ca.water.calgui.techservice.IErrorHandlingSvc;
+import gov.ca.water.calgui.techservice.impl.ErrorHandlingSvcImpl;
 import org.apache.log4j.Logger;
 
 /**
@@ -33,7 +39,7 @@ import org.apache.log4j.Logger;
 public class ProgressFrameSwingWorker extends SwingWorker<Void, String>
 {
 	private static final Logger LOG = Logger.getLogger(ProgressFrameSwingWorker.class.getName());
-	private final Map<String, String> _scenarioNamesAndAction = new HashMap<>();
+	private final Map<Path, String> _scenarioNamesAndAction = new HashMap<>();
 	private final Properties _properties = new Properties();
 	private final Consumer<String> _statusUpdater;
 	private final Consumer<String[]> _listUpdater;
@@ -67,7 +73,7 @@ public class ProgressFrameSwingWorker extends SwingWorker<Void, String>
 		return _monitorSvc;
 	}
 
-	protected Map<String, String> getScenarioNamesAndAction()
+	protected Map<Path, String> getScenarioNamesAndAction()
 	{
 		return _scenarioNamesAndAction;
 	}
@@ -87,7 +93,7 @@ public class ProgressFrameSwingWorker extends SwingWorker<Void, String>
 				boolean sleepAfterDisplay = false;
 				String[] listData;
 				List<String> data = new ArrayList<>();
-				List<String> scenariosToDrop = new ArrayList<>();
+				List<Path> scenariosToDrop = new ArrayList<>();
 				if(_scenarioNamesAndAction.isEmpty())
 				{
 					listData = new String[1];
@@ -96,11 +102,11 @@ public class ProgressFrameSwingWorker extends SwingWorker<Void, String>
 				}
 				else
 				{
-					for(String scenarioName : _scenarioNamesAndAction.keySet())
+					for(Path scenarioName : _scenarioNamesAndAction.keySet())
 					{
 						sleepAfterDisplay = processScenario(data, scenariosToDrop, scenarioName);
 					}
-					for(String s : scenariosToDrop)
+					for(Path s : scenariosToDrop)
 					{
 						_scenarioNamesAndAction.remove(s);
 					}
@@ -134,8 +140,8 @@ public class ProgressFrameSwingWorker extends SwingWorker<Void, String>
 		return null;
 	}
 
-	protected boolean processScenario(List<String> data, List<String> scenariosToDrop,
-									  String scenarioName)
+	protected boolean processScenario(List<String> data, List<Path> scenariosToDrop,
+									  Path scenarioName)
 	{
 		boolean sleepAfterDisplay = false;
 		if(Constant.SAVE.equalsIgnoreCase(_scenarioNamesAndAction.get(scenarioName)))
@@ -151,8 +157,8 @@ public class ProgressFrameSwingWorker extends SwingWorker<Void, String>
 		return sleepAfterDisplay;
 	}
 
-	private boolean save(List<String> data, List<String> scenariosToDrop,
-						 String scenarioName)
+	private boolean save(List<String> data, List<Path> scenariosToDrop,
+						 Path scenarioName)
 	{
 		boolean sleepAfterDisplay = false;
 		String text;
@@ -166,8 +172,8 @@ public class ProgressFrameSwingWorker extends SwingWorker<Void, String>
 		return sleepAfterDisplay;
 	}
 
-	private boolean processBatchRun(List<String> data, List<String> scenariosToDrop,
-									String scenarioName)
+	private boolean processBatchRun(List<String> data, List<Path> scenariosToDrop,
+									Path scenarioName)
 	{
 		boolean sleepAfterDisplay = false;
 		final String text;
@@ -182,7 +188,7 @@ public class ProgressFrameSwingWorker extends SwingWorker<Void, String>
 		return sleepAfterDisplay;
 	}
 
-	void addScenario(String key, String type)
+	void addScenario(Path key, String type)
 	{
 		_scenarioNamesAndAction.put(key, type);
 	}

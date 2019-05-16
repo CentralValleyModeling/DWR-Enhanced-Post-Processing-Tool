@@ -1,8 +1,13 @@
 /*
- * Copyright (c) 2019
- * California Department of Water Resources
- * All Rights Reserved.  DWR PROPRIETARY/CONFIDENTIAL.
- * Source may not be released without written approval from DWR
+ * Enhanced Post Processing Tool (EPPT) Copyright (c) 2019.
+ *
+ * EPPT is copyrighted by the State of California, Department of Water Resources. It is licensed
+ * under the GNU General Public License, version 2. This means it can be
+ * copied, distributed, and modified freely, but you may not restrict others
+ * in their ability to copy, distribute, and modify it. See the license below
+ * for more details.
+ *
+ * GNU General Public License
  */
 package vista.gui;
 
@@ -17,19 +22,20 @@ import java.util.Hashtable;
 
 /**
  * Defines the interface for classes that know how to layout Containers.
- * 
- * @see Container
- * 
- * @version 1.14, 11/23/96
+ *
  * @author Sami Shaio
  * @author Arthur van Hoff
+ * @version 1.14, 11/23/96
+ * @see Container
  */
-public class XYGridLayout implements LayoutManager2 {
+public class XYGridLayout implements LayoutManager2
+{
 	public int X_GRID_SIZE = 10;
 	public int Y_GRID_SIZE = 10;
 	private Hashtable _compTable;
 
-	public XYGridLayout(int xsize, int ysize) {
+	public XYGridLayout(int xsize, int ysize)
+	{
 		X_GRID_SIZE = xsize;
 		Y_GRID_SIZE = ysize;
 		_compTable = new Hashtable();
@@ -37,61 +43,66 @@ public class XYGridLayout implements LayoutManager2 {
 
 	/**
 	 * Adds the specified component with the specified name to the layout.
-	 * 
-	 * @param name
-	 *            the component name
-	 * @param comp
-	 *            the component to be added
+	 *
+	 * @param name the component name
+	 * @param comp the component to be added
 	 */
-	public void addLayoutComponent(String name, Component comp) {
+	public void addLayoutComponent(String name, Component comp)
+	{
 		throw new RuntimeException(
 				"I don't use this method for adding components");
 	}
 
 	/**
-   *
-   */
-	public void addLayoutComponent(Rectangle rect, Component comp) {
-		if (rect.x + rect.width > X_GRID_SIZE)
+	 *
+	 */
+	public void addLayoutComponent(Rectangle rect, Component comp)
+	{
+		if(rect.x + rect.width > X_GRID_SIZE)
+		{
 			throw new RuntimeException("Invalid additon for component " + comp
 					+ " @ " + rect);
-		if (rect.y + rect.height > Y_GRID_SIZE)
+		}
+		if(rect.y + rect.height > Y_GRID_SIZE)
+		{
 			throw new RuntimeException("Invalid additon for component " + comp
 					+ " @ " + rect);
+		}
 		_compTable.put(comp, rect);
 	}
 
 	/**
-   *
-   */
-	public Rectangle getBoundsForComponent(Component comp) {
+	 *
+	 */
+	public Rectangle getBoundsForComponent(Component comp)
+	{
 		return (Rectangle) _compTable.get(comp);
 	}
 
 	/**
 	 * Removes the specified component from the layout.
-	 * 
-	 * @param comp
-	 *            the component ot be removed
+	 *
+	 * @param comp the component ot be removed
 	 */
-	public void removeLayoutComponent(Component comp) {
+	public void removeLayoutComponent(Component comp)
+	{
 	}
 
 	/**
 	 * Calculates the preferred size dimensions for the specified panel given
 	 * the components in the specified parent container.
-	 * 
-	 * @param parent
-	 *            the component to be laid out
-	 * 
+	 *
+	 * @param parent the component to be laid out
 	 * @see #minimumLayoutSize
 	 */
-	public Dimension preferredLayoutSize(Container parent) {
+	public Dimension preferredLayoutSize(Container parent)
+	{
 		Insets insets = parent.getInsets();
 		int ncomponents = parent.getComponentCount();
 		int width = 0;
 		int height = 0;
-		for (int i = 0; i < ncomponents; i++) {
+		for(int i = 0; i < ncomponents; i++)
+		{
 			Component comp = parent.getComponent(i);
 			Dimension d = comp.getPreferredSize();
 			Rectangle rect = getBoundsForComponent(parent.getComponent(i));
@@ -107,17 +118,18 @@ public class XYGridLayout implements LayoutManager2 {
 	/**
 	 * Calculates the minimum size dimensions for the specified panel given the
 	 * components in the specified parent container.
-	 * 
-	 * @param parent
-	 *            the component to be laid out
+	 *
+	 * @param parent the component to be laid out
 	 * @see #preferredLayoutSize
 	 */
-	public Dimension minimumLayoutSize(Container parent) {
+	public Dimension minimumLayoutSize(Container parent)
+	{
 		Insets insets = parent.getInsets();
 		int ncomponents = parent.getComponentCount();
 		int width = 0;
 		int height = 0;
-		for (int i = 0; i < ncomponents; i++) {
+		for(int i = 0; i < ncomponents; i++)
+		{
 			Component comp = parent.getComponent(i);
 			Dimension d = comp.getMinimumSize();
 			Rectangle rect = getBoundsForComponent(parent.getComponent(i));
@@ -132,18 +144,21 @@ public class XYGridLayout implements LayoutManager2 {
 
 	/**
 	 * Lays out the container in the specified panel.
-	 * 
-	 * @param parent
-	 *            the component which needs to be laid out
+	 *
+	 * @param parent the component which needs to be laid out
 	 */
-	public void layoutContainer(Container parent) {
+	public void layoutContainer(Container parent)
+	{
 		Insets insets = parent.getInsets();
 		int ncomponents = parent.getComponentCount();
-		if (ncomponents == 0)
+		if(ncomponents == 0)
+		{
 			return;
+		}
 		int pw = parent.getBounds().width - (insets.left + insets.right);
 		int ph = parent.getBounds().height - (insets.top + insets.bottom);
-		for (int i = 0; i < ncomponents; i++) {
+		for(int i = 0; i < ncomponents; i++)
+		{
 			Rectangle rect = getBoundsForComponent(parent.getComponent(i));
 			int x = (int) Math.round((1.0 * rect.x) / X_GRID_SIZE * pw);
 			int y = (int) Math.round((1.0 * rect.y) / Y_GRID_SIZE * ph);
@@ -156,24 +171,24 @@ public class XYGridLayout implements LayoutManager2 {
 	/**
 	 * Adds the specified component to the layout, using the specified
 	 * constraint object.
-	 * 
-	 * @param comp
-	 *            the component to be added
-	 * @param constraints
-	 *            where/how the component is added to the layout.
+	 *
+	 * @param comp        the component to be added
+	 * @param constraints where/how the component is added to the layout.
 	 */
-	public void addLayoutComponent(Component comp, Object constraints) {
+	public void addLayoutComponent(Component comp, Object constraints)
+	{
 		addLayoutComponent((Rectangle) constraints, comp);
 	}
 
 	/**
 	 * Returns the maximum size of this component.
-	 * 
+	 *
 	 * @see java.awt.Component#getMinimumSize()
 	 * @see java.awt.Component#getPreferredSize()
 	 * @see LayoutManager
 	 */
-	public Dimension maximumLayoutSize(Container target) {
+	public Dimension maximumLayoutSize(Container target)
+	{
 		return preferredLayoutSize(target);
 	}
 
@@ -184,7 +199,8 @@ public class XYGridLayout implements LayoutManager2 {
 	 * origin, 1 is aligned the furthest away from the origin, 0.5 is centered,
 	 * etc.
 	 */
-	public float getLayoutAlignmentX(Container target) {
+	public float getLayoutAlignmentX(Container target)
+	{
 		return 0.5f;
 	}
 
@@ -195,7 +211,8 @@ public class XYGridLayout implements LayoutManager2 {
 	 * origin, 1 is aligned the furthest away from the origin, 0.5 is centered,
 	 * etc.
 	 */
-	public float getLayoutAlignmentY(Container target) {
+	public float getLayoutAlignmentY(Container target)
+	{
 		return 0.5f;
 	}
 
@@ -203,7 +220,8 @@ public class XYGridLayout implements LayoutManager2 {
 	 * Invalidates the layout, indicating that if the layout manager has cached
 	 * information it should be discarded.
 	 */
-	public void invalidateLayout(Container target) {
+	public void invalidateLayout(Container target)
+	{
 	}
 
 }

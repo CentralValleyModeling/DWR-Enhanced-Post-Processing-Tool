@@ -1,8 +1,13 @@
 /*
- * Copyright (c) 2019
- * California Department of Water Resources
- * All Rights Reserved.  DWR PROPRIETARY/CONFIDENTIAL.
- * Source may not be released without written approval from DWR
+ * Enhanced Post Processing Tool (EPPT) Copyright (c) 2019.
+ *
+ * EPPT is copyrighted by the State of California, Department of Water Resources. It is licensed
+ * under the GNU General Public License, version 2. This means it can be
+ * copied, distributed, and modified freely, but you may not restrict others
+ * in their ability to copy, distribute, and modify it. See the license below
+ * for more details.
+ *
+ * GNU General Public License
  */
 package vista.app;
 
@@ -14,17 +19,17 @@ import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableColumnModel;
 
 /**
- * 
- * 
  * @author Nicky Sandhu
  * @version $Id: TableHeaderToolTipRenderer.java,v 1.1 2003/10/02 20:48:43
- *          redwood Exp $
+ * redwood Exp $
  */
 public class TableHeaderToolTipRenderer extends DefaultTableCellRenderer
-		implements MouseMotionListener {
+		implements MouseMotionListener
+{
 	private JTable _table;
 
-	public TableHeaderToolTipRenderer(JTable table, String name) {
+	public TableHeaderToolTipRenderer(JTable table, String name)
+	{
 		super();
 		super.setValue(name);
 		super.setBackground(Color.lightGray);
@@ -44,18 +49,23 @@ public class TableHeaderToolTipRenderer extends DefaultTableCellRenderer
 	 * Invoked when the mouse button has been moved on a component (with no
 	 * buttons no down).
 	 */
-	public void mouseMoved(MouseEvent e) {
+	public void mouseMoved(MouseEvent e)
+	{
 		TableColumnModel columnModel = _table.getColumnModel();
 		int viewColumn = columnModel.getColumnIndexAtX(e.getX());
 		int column = _table.convertColumnIndexToModel(viewColumn);
-		if (column != -1) {
+		if(column != -1)
+		{
 			_table.getTableHeader()
-					.setToolTipText(_table.getColumnName(column));
-		} else {
+				  .setToolTipText(_table.getColumnName(column));
+		}
+		else
+		{
 			_table.getTableHeader().setToolTipText(null);
 		}
 	}
 
-	public void mouseDragged(MouseEvent e) {
+	public void mouseDragged(MouseEvent e)
+	{
 	}
 }

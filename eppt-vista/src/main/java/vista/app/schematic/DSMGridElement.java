@@ -1,8 +1,13 @@
 /*
- * Copyright (c) 2019
- * California Department of Water Resources
- * All Rights Reserved.  DWR PROPRIETARY/CONFIDENTIAL.
- * Source may not be released without written approval from DWR
+ * Enhanced Post Processing Tool (EPPT) Copyright (c) 2019.
+ *
+ * EPPT is copyrighted by the State of California, Department of Water Resources. It is licensed
+ * under the GNU General Public License, version 2. This means it can be
+ * copied, distributed, and modified freely, but you may not restrict others
+ * in their ability to copy, distribute, and modify it. See the license below
+ * for more details.
+ *
+ * GNU General Public License
  */
 package vista.app.schematic;
 
@@ -30,14 +35,54 @@ import vista.graph.Scale;
  * update method called by the Animator class. This class implements setBounds
  * and draw methods to render itself on the graphics context
  */
-public class DSMGridElement extends GraphicElement {
+public class DSMGridElement extends GraphicElement
+{
+	private static int[] xtl = new int[4], ytl = new int[4];
+	public double translateX = 0;
+	public double translateY = 0;
+	public double scale = 1;
+	/**
+	 *
+	 */
+	protected Network _net;
+	/**
+	 * channel color
+	 */
+	protected Color channelColor = Color.blue;
+	/**
+	 * x scaling
+	 */
+	protected Scale xS;
+	/**
+	 * y scaling
+	 */
+	protected Scale yS;
+	protected Scale grid_xS;
+	protected Scale grid_yS;
+
+	// /**
+	// * The update method is called when the animation frame needs to be
+	// updated.
+	// * Each element is responsible for drawing itself within the bounds given.
+	// */
+	// public void update(Observable o, Object arg){
+	// draw();
+	// }
+	protected float zoomfactor;
+	protected int xpos;
+	protected int ypos;
 	private BufferedImage backgroundImage;
 	private AffineTransform transform;
+	/**
+	 * The width of the channel in pixels
+	 */
+	private int channel_width = 4;
 
 	/**
-   * 
-   */
-	public DSMGridElement(Network net, String backgroundImageFile) {
+	 *
+	 */
+	public DSMGridElement(Network net, String backgroundImageFile)
+	{
 		super(new GEAttr());
 
 		_net = net;
@@ -46,9 +91,11 @@ public class DSMGridElement extends GraphicElement {
 		double yMin = Double.MAX_VALUE;
 		double yMax = Double.MIN_VALUE;
 
-		for (int i = 0; i < _net.getNumberOfNodes(); i++) {
+		for(int i = 0; i < _net.getNumberOfNodes(); i++)
+		{
 			Node n = _net.getNode(i);
-			if (n != null) {
+			if(n != null)
+			{
 				double x = n.getX();
 				double y = n.getY();
 				xMax = Math.max(xMax, x);
@@ -64,9 +111,12 @@ public class DSMGridElement extends GraphicElement {
 		grid_yS = new Scale(yMin, yMax, 0, 10);
 		setInsets(new Insets(15, 15, 15, 15));
 
-		try {
+		try
+		{
 			this.backgroundImage = ImageIO.read(new File(backgroundImageFile));
-		} catch (IOException ex) {
+		}
+		catch(IOException ex)
+		{
 
 		}
 		transform = new AffineTransform();
@@ -78,9 +128,10 @@ public class DSMGridElement extends GraphicElement {
 	}
 
 	/**
-   * 
-   */
-	public void setBounds(Rectangle r) {
+	 *
+	 */
+	public void setBounds(Rectangle r)
+	{
 		super.setBounds(r);
 		Rectangle rb = getInsetedBounds();
 		xS.setUCRange(rb.x, rb.width + rb.x);
@@ -88,17 +139,22 @@ public class DSMGridElement extends GraphicElement {
 		setZoomReference(rb);
 	}
 
-	public void setZoomReference(Rectangle rb) {
-		if (zoomfactor != 1) {
+	public void setZoomReference(Rectangle rb)
+	{
+		if(zoomfactor != 1)
+		{
 			grid_xS.setUCRange(xpos, (int) (rb.width * zoomfactor) + xpos);
 			grid_yS.setUCRange((int) (rb.height * zoomfactor) + ypos, ypos);
-		} else {
+		}
+		else
+		{
 			grid_xS.setUCRange(rb.x, rb.width + rb.x);
 			grid_yS.setUCRange(rb.height + rb.y, rb.y);
 		}
 	}
 
-	public void setZoom(float zf, int xp, int yp) {
+	public void setZoom(float zf, int xp, int yp)
+	{
 		zoomfactor = zf;
 		xpos = xp;
 		ypos = yp;
@@ -107,7 +163,8 @@ public class DSMGridElement extends GraphicElement {
 	/**
 	 * Draws the DSM grid map
 	 */
-	protected void Draw() {
+	protected void Draw()
+	{
 		/*
 		AffineTransform tx = new AffineTransform();
 		tx.translate(translateX, translateY);
@@ -119,7 +176,8 @@ public class DSMGridElement extends GraphicElement {
 
 		Rectangle r = getInsetedBounds();
 
-		if (gc instanceof Graphics2D) {
+		if(gc instanceof Graphics2D)
+		{
 			Graphics2D g2d = (Graphics2D) gc;
 			g2d.setTransform(transform);
 			g2d.setClip(r.x, r.y, r.width, r.height);
@@ -128,8 +186,10 @@ public class DSMGridElement extends GraphicElement {
 		// gc.setColor(getAttributes()._backgroundColor);
 
 		// gc.fillRect(r.x, r.y, r.width, r.height);
-		if (backgroundImage != null) {
-			if (gc instanceof Graphics2D) {
+		if(backgroundImage != null)
+		{
+			if(gc instanceof Graphics2D)
+			{
 				Graphics2D g2d = (Graphics2D) gc;
 				AffineTransform tr = new AffineTransform();
 				/*
@@ -140,19 +200,26 @@ public class DSMGridElement extends GraphicElement {
 				g2d.drawImage(backgroundImage, r.x, r.y, r.width, r.height,
 						null);
 				g2d.setTransform(transform);
-			} else {
+			}
+			else
+			{
 				gc.drawImage(backgroundImage, r.x - 20, r.y - 20,
 						r.width + 110, r.height + 15, null);
 			}
 		}
 		gc.setColor(channelColor);
 
-		for (int i = 0; i < _net.getNumberOfLinks(); i++) {
+		for(int i = 0; i < _net.getNumberOfLinks(); i++)
+		{
 			Link link = _net.getLink(i);
-			if (link != null) {
-				if (link instanceof Channel) {
+			if(link != null)
+			{
+				if(link instanceof Channel)
+				{
 					drawChannel(gc, (Channel) link);
-				} else if (link instanceof Reservoir) {
+				}
+				else if(link instanceof Reservoir)
+				{
 					drawReservoir(gc, (Reservoir) link);
 				}
 			}
@@ -161,13 +228,16 @@ public class DSMGridElement extends GraphicElement {
 
 	}
 
-	protected void showTransformDialog() {
+	protected void showTransformDialog()
+	{
 		JPanel p = new JPanel();
 		final JTextField zoomField = new JTextField("1.5");
-		zoomField.addActionListener(new ActionListener() {
+		zoomField.addActionListener(new ActionListener()
+		{
 
 			@Override
-			public void actionPerformed(ActionEvent e) {
+			public void actionPerformed(ActionEvent e)
+			{
 				double scale = Double.parseDouble(zoomField.getText());
 				transform.scale(scale, scale);
 			}
@@ -182,35 +252,43 @@ public class DSMGridElement extends GraphicElement {
 	}
 
 	/**
-   * 
-   */
-	protected void drawChannel(Graphics g, Channel channel) {
-		if (channel != null) {
+	 *
+	 */
+	protected void drawChannel(Graphics g, Channel channel)
+	{
+		if(channel != null)
+		{
 			Node upnode, downnode;
 			upnode = channel.getNode(Channel.UPNODE_INDEX);
 			downnode = channel.getNode(Channel.DOWNNODE_INDEX);
 
-			try {
+			try
+			{
 				drawThickLine(g, grid_xS.scaleToUC(upnode.getX()), grid_yS
-						.scaleToUC(upnode.getY()), grid_xS.scaleToUC(downnode
-						.getX()), grid_yS.scaleToUC(downnode.getY()),
+								.scaleToUC(upnode.getY()), grid_xS.scaleToUC(downnode
+								.getX()), grid_yS.scaleToUC(downnode.getY()),
 						channel_width);
-			} catch (Exception e) {
+			}
+			catch(Exception e)
+			{
 				System.out.println("Problem with channel " + channel);
 			}
 		}
 	}
 
 	/**
-   * 
-   */
-	protected void drawReservoir(Graphics g, Reservoir res) {
-		if (res != null) {
+	 *
+	 */
+	protected void drawReservoir(Graphics g, Reservoir res)
+	{
+		if(res != null)
+		{
 			int numberOfNodes = res.getNumberOfNodes();
 			int[] xc = new int[numberOfNodes];
 			int[] yc = new int[numberOfNodes];
 
-			for (int i = 0; i < numberOfNodes; i++) {
+			for(int i = 0; i < numberOfNodes; i++)
+			{
 				Node node = res.getNode(i);
 				xc[i] = grid_xS.scaleToUC(node.getX());
 				yc[i] = grid_yS.scaleToUC(node.getY());
@@ -220,53 +298,44 @@ public class DSMGridElement extends GraphicElement {
 		}
 	}
 
-	// /**
-	// * The update method is called when the animation frame needs to be
-	// updated.
-	// * Each element is responsible for drawing itself within the bounds given.
-	// */
-	// public void update(Observable o, Object arg){
-	// draw();
-	// }
+	/**
+	 * gets the channel color
+	 */
+	public Color getChannelColor()
+	{
+		return channelColor;
+	}
+
 	/**
 	 * Sets the channel color
 	 */
-	public void setChannelColor(Color c) {
+	public void setChannelColor(Color c)
+	{
 		channelColor = c;
 	}
 
 	/**
-	 * gets the channel color
-	 */
-	public Color getChannelColor() {
-		return channelColor;
-	}
-
-	private static int[] xtl = new int[4], ytl = new int[4];
-
-	/**
 	 * Simulates drawing of different thickness lines by using filled polygon.
-	 * 
-	 * @param g
-	 *            Graphics on which to draw
-	 * @param x1
-	 *            The starting x co-ordinate of line
-	 * @param y1
-	 *            The starting y co-ordinate of line
-	 * @param x2
-	 *            The ending x co-ordinate of line
-	 * @param y2
-	 *            The ending y co-ordinate of line
-	 * @param t
-	 *            The thickness of the line in pixels
+	 *
+	 * @param g  Graphics on which to draw
+	 * @param x1 The starting x co-ordinate of line
+	 * @param y1 The starting y co-ordinate of line
+	 * @param x2 The ending x co-ordinate of line
+	 * @param y2 The ending y co-ordinate of line
+	 * @param t  The thickness of the line in pixels
 	 */
 	public final void drawThickLine(Graphics g, int x1, int y1, int x2, int y2,
-			double t) {
+									double t)
+	{
 		double theta;
-		if (Math.abs(x2 - x1) > 0.01)
+		if(Math.abs(x2 - x1) > 0.01)
+		{
 			theta = Math.atan((y2 - y1) / (x2 - x1));
+		}
 		else
+		{
 			theta = Math.PI / 2;
+		}
 		double ct = Math.cos(theta), st = Math.sin(theta);
 		// Polygon filledPolygon = new Polygon();
 		// filledPolygon.addPoint((int)(x1-t/2*st),(int) (y1+t/2*ct));
@@ -287,89 +356,64 @@ public class DSMGridElement extends GraphicElement {
 	}
 
 	/**
-   *
-   */
-	public Dimension getPreferredSize() {
+	 *
+	 */
+	public Dimension getPreferredSize()
+	{
 		// return new Dimension( 400, 600);
 		return new Dimension(333, 500);
 	}
 
 	/**
-   *
-   */
-	public Dimension getMinimumSize() {
+	 *
+	 */
+	public Dimension getMinimumSize()
+	{
 		return getPreferredSize();
 	}
 
 	/**
-   *
-   */
-	public Network getNetwork() {
+	 *
+	 */
+	public Network getNetwork()
+	{
 		return _net;
 	}
 
 	/**
-   *
-   */
-	public Scale getXScale() {
+	 *
+	 */
+	public Scale getXScale()
+	{
 		return xS;
 	}
 
 	/**
-   *
-   */
-	public Scale getYScale() {
+	 *
+	 */
+	public Scale getYScale()
+	{
 		return yS;
 	}
 
 	/**
-   *
-   */
-	public Scale getGridXScale() {
+	 *
+	 */
+	public Scale getGridXScale()
+	{
 		return grid_xS;
 	}
 
 	/**
-   *
-   */
-	public Scale getGridYScale() {
+	 *
+	 */
+	public Scale getGridYScale()
+	{
 		return grid_yS;
 	}
 
-	/**
-   *
-   */
-	protected Network _net;
-	/**
-	 * channel color
-	 */
-	protected Color channelColor = Color.blue;
-	/**
-	 * x scaling
-	 */
-	protected Scale xS;
-	/**
-	 * y scaling
-	 */
-	protected Scale yS;
-
-	protected Scale grid_xS;
-	protected Scale grid_yS;
-
-	protected float zoomfactor;
-	protected int xpos;
-	protected int ypos;
-
-	/**
-	 * The width of the channel in pixels
-	 */
-	private int channel_width = 4;
-
-	public double translateX = 0;
-	public double translateY = 0;
-	public double scale = 1;
-
-	public AffineTransform getTransform() {
+	public AffineTransform getTransform()
+	{
 		return transform;
 	}
 

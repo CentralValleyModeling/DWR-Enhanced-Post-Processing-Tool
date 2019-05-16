@@ -1,9 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-  ~ Copyright (c) 2019
-  ~ California Department of Water Resources
-  ~ All Rights Reserved.  DWR PROPRIETARY/CONFIDENTIAL.
-  ~ Source may not be released without written approval from DWR
+  ~ Enhanced Post Processing Tool (EPPT) Copyright (c) 2019.
+  ~
+  ~ EPPT is copyrighted by the State of California, Department of Water Resources. It is licensed
+  ~ under the GNU General Public License, version 2. This means it can be
+  ~ copied, distributed, and modified freely, but you may not restrict others
+  ~ in their ability to copy, distribute, and modify it. See the license below
+  ~ for more details.
+  ~
+  ~ GNU General Public License
   -->
 
 <project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/POM/4.0.0"
@@ -12,121 +17,62 @@
 	<parent>
 		<groupId>gov.ca.water</groupId>
 		<artifactId>eppt-parent</artifactId>
-		<version>1.0.0-SNAPSHOT</version>
+		<version>1.0.1-SNAPSHOT</version>
 		<relativePath>../eppt-parent</relativePath>
 	</parent>
 	<artifactId>eppt-nbui</artifactId>
-	<name>EPPT Netbeans UI</name>
 	<packaging>nbm</packaging>
-	<build>
-		<plugins>
-			<plugin>
-				<groupId>org.codehaus.mojo</groupId>
-				<artifactId>nbm-maven-plugin</artifactId>
-				<extensions>true</extensions>
-				<configuration>
-					<nbmResources>
-						<nbmResource>
-							<directory>${project.build.directory}/lib</directory>
-							<targetPath>modules/lib</targetPath>
-							<includes>
-								<include>*.dll</include>
-							</includes>
-						</nbmResource>
-						<nbmResource>
-							<directory>${project.basedir}/src/main/Config</directory>
-							<targetPath>config</targetPath>
-							<includes>
-								<include>*</include>
-							</includes>
-						</nbmResource>
-						<nbmResource>
-							<directory>${project.basedir}/src/main/docs</directory>
-							<targetPath>docs</targetPath>
-							<includes>
-								<include>**</include>
-							</includes>
-						</nbmResource>
-					</nbmResources>
-				</configuration>
-			</plugin>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-jar-plugin</artifactId>
-				<configuration>
-					<useDefaultManifestFile>true</useDefaultManifestFile>
-				</configuration>
-			</plugin>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-dependency-plugin</artifactId>
-				<version>3.1.1</version>
-				<executions>
-					<execution>
-						<id>copy-dependencies</id>
-						<phase>validate</phase>
-						<goals>
-							<goal>copy</goal>
-						</goals>
-					</execution>
-				</executions>
-				<configuration>
-					<artifactItems>
-						<artifactItem>
-							<groupId>hec</groupId>
-							<artifactId>javaHeclib</artifactId>
-							<version>7-GS</version>
-							<type>dll</type>
-							<destFileName>javaHeclib.dll</destFileName>
-						</artifactItem>
-					</artifactItems>
-					<outputDirectory>${project.build.directory}/lib</outputDirectory>
-					<overWriteReleases>true</overWriteReleases>
-					<overWriteSnapshots>true</overWriteSnapshots>
-				</configuration>
-			</plugin>
-		</plugins>
-	</build>
+	<name>EPPT Netbeans UI</name>
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+	</properties>
 	<dependencies>
 		<dependency>
 			<groupId>org.netbeans.api</groupId>
 			<artifactId>org-netbeans-api-annotations-common</artifactId>
 			<version>${netbeans.version}</version>
+			<!--<type>nbm</type>-->
 		</dependency>
 		<dependency>
 			<groupId>org.netbeans.api</groupId>
 			<artifactId>org-openide-windows</artifactId>
 			<version>${netbeans.version}</version>
+			<!--<type>nbm</type>-->
 		</dependency>
 		<dependency>
 			<groupId>org.netbeans.api</groupId>
 			<artifactId>org-openide-util</artifactId>
 			<version>${netbeans.version}</version>
+			<!--<type>nbm</type>-->
 		</dependency>
 		<dependency>
 			<groupId>org.netbeans.api</groupId>
 			<artifactId>org-openide-util-ui</artifactId>
 			<version>${netbeans.version}</version>
+			<!--<type>nbm</type>-->
 		</dependency>
 		<dependency>
 			<groupId>org.netbeans.api</groupId>
 			<artifactId>org-openide-util-lookup</artifactId>
 			<version>${netbeans.version}</version>
+			<!--<type>nbm</type>-->
 		</dependency>
 		<dependency>
 			<groupId>org.netbeans.api</groupId>
 			<artifactId>org-openide-awt</artifactId>
 			<version>${netbeans.version}</version>
+			<!--<type>nbm</type>-->
 		</dependency>
 		<dependency>
 			<groupId>org.netbeans.api</groupId>
 			<artifactId>org-netbeans-modules-settings</artifactId>
 			<version>${netbeans.version}</version>
+			<!--<type>nbm</type>-->
 		</dependency>
 		<dependency>
 			<groupId>gov.ca.water</groupId>
 			<artifactId>eppt-ui</artifactId>
-			<version>1.0.0-SNAPSHOT</version>
+			<version>${project.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>com.google.flogger</groupId>
@@ -158,6 +104,7 @@
 			<groupId>org.netbeans.api</groupId>
 			<artifactId>org-openide-modules</artifactId>
 			<version>${netbeans.version}</version>
+			<!--<type>nbm</type>-->
 		</dependency>
 		<dependency>
 			<groupId>hec</groupId>
@@ -166,15 +113,9 @@
 			<type>dll</type>
 		</dependency>
 		<dependency>
-			<groupId>org.swixml</groupId>
-			<artifactId>swixml</artifactId>
-			<version>240</version>
-			<classifier>CalLiteGUI_P3</classifier>
-		</dependency>
-		<dependency>
 			<groupId>gov.ca.water</groupId>
 			<artifactId>eppt-calsim-gui</artifactId>
-			<version>1.0.0-SNAPSHOT</version>
+			<version>${project.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>commons-io</groupId>
@@ -188,18 +129,39 @@
 		</dependency>
 		<dependency>
 			<groupId>hecjavadev-core</groupId>
-			<artifactId>hec-data</artifactId>
-			<version>dev-SNAPSHOT</version>
-		</dependency>
-		<dependency>
-			<groupId>hecjavadev-core</groupId>
 			<artifactId>hec-core</artifactId>
-			<version>dev-SNAPSHOT</version>
+			<version>6.0</version>
+			<classifier>DeltaERT-1-4-0-97-Obfuscated</classifier>
+			<exclusions>
+				<exclusion>
+					<groupId>*</groupId>
+					<artifactId>*</artifactId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 		<dependency>
 			<groupId>hec.dataui</groupId>
 			<artifactId>hec-data-ui</artifactId>
-			<version>1.1-SNAPSHOT</version>
+			<version>1.1</version>
+			<classifier>DeltaERT-1-4-0-97-Obfuscated</classifier>
+			<exclusions>
+				<exclusion>
+					<groupId>*</groupId>
+					<artifactId>*</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+		<dependency>
+			<groupId>hec.map</groupId>
+			<artifactId>hec-maps</artifactId>
+			<version>1.1</version>
+			<classifier>DeltaERT-1-4-0-97-Obfuscated</classifier>
+			<exclusions>
+				<exclusion>
+					<groupId>*</groupId>
+					<artifactId>*</artifactId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 		<dependency>
 			<groupId>org.jfree</groupId>
@@ -209,8 +171,23 @@
 		<dependency>
 			<groupId>gov.ca.water</groupId>
 			<artifactId>wrimsv2</artifactId>
+			<version>3470.bed59cee.master-dirty</version>
+		</dependency>
+		<dependency>
+			<groupId>rma.util</groupId>
+			<artifactId>lookup</artifactId>
 			<version>1.0</version>
-			<classifier>Wrims_Distribution</classifier>
+		</dependency>
+		<dependency>
+			<groupId>com.vividsolutions</groupId>
+			<artifactId>jts</artifactId>
+			<version>1.13</version>
+			<exclusions>
+				<exclusion>
+					<groupId>*</groupId>
+					<artifactId>*</artifactId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 		<dependency>
 			<groupId>com.itextpdf</groupId>
@@ -247,25 +224,228 @@
 		<dependency>
 			<groupId>hecjavadev-core</groupId>
 			<artifactId>images</artifactId>
-			<version>dev-SNAPSHOT</version>
+			<version>6.0</version>
+			<classifier>DeltaERT-1-4-0-97-Obfuscated</classifier>
+			<exclusions>
+				<exclusion>
+					<groupId>*</groupId>
+					<artifactId>*</artifactId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 		<dependency>
 			<groupId>org.netbeans.api</groupId>
 			<artifactId>org-openide-filesystems</artifactId>
-			<version>RELEASE82</version>
+			<version>${netbeans.version}</version>
+			<!--<type>nbm</type>-->
+		</dependency>
+		<dependency>
+			<groupId>org.netbeans.api</groupId>
+			<artifactId>org-openide-nodes</artifactId>
+			<version>${netbeans.version}</version>
+			<type>nbm</type>
 		</dependency>
 		<dependency>
 			<groupId>org.netbeans.api</groupId>
 			<artifactId>org-openide-loaders</artifactId>
-			<version>RELEASE82</version>
+			<version>${netbeans.version}</version>
+			<!--<type>nbm</type>-->
 		</dependency>
 		<dependency>
 			<groupId>org.netbeans.api</groupId>
 			<artifactId>org-netbeans-modules-options-api</artifactId>
 			<version>${netbeans.version}</version>
+			<!--<type>nbm</type>-->
+		</dependency>
+		<dependency>
+			<groupId>org.netbeans.api</groupId>
+			<artifactId>org-netbeans-api-progress-compat8</artifactId>
+			<version>${netbeans.version}</version>
+			<!--<type>nbm</type>-->
+		</dependency>
+		<dependency>
+			<groupId>org.netbeans.api</groupId>
+			<artifactId>org-netbeans-api-progress</artifactId>
+			<version>${netbeans.version}</version>
+			<!--<type>nbm</type>-->
+		</dependency>
+		<dependency>
+			<groupId>org.netbeans.api</groupId>
+			<artifactId>org-netbeans-api-progress-nb</artifactId>
+			<version>${netbeans.version}</version>
+			<!--<type>nbm</type>-->
+		</dependency>
+		<dependency>
+			<groupId>gov.ca.water</groupId>
+			<artifactId>eppt-jasper-engine</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>gov.ca.water</groupId>
+			<artifactId>eppt-report-engine</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>net.sf.jasperreports</groupId>
+			<artifactId>jasperreports</artifactId>
+			<version>6.3.1</version>
+		</dependency>
+		<dependency>
+			<groupId>net.sf.jasperreports</groupId>
+			<artifactId>jasperreports-functions</artifactId>
+			<version>6.3.1</version>
+		</dependency>
+		<dependency>
+			<groupId>org.codehaus.groovy</groupId>
+			<artifactId>groovy</artifactId>
+			<version>2.5.6</version>
+		</dependency>
+		<dependency>
+			<groupId>xalan</groupId>
+			<artifactId>xalan</artifactId>
+			<version>2.7.2</version>
+		</dependency>
+		<dependency>
+			<groupId>org.jdom</groupId>
+			<artifactId>jdom</artifactId>
+			<version>1.1.3</version>
+		</dependency>
+		<dependency>
+			<groupId>rma.services.annotations</groupId>
+			<artifactId>service-annotations</artifactId>
+			<version>1.2</version>
 		</dependency>
 	</dependencies>
-	<properties>
-		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-	</properties>
+	<repositories>
+		<repository>
+			<id>jr-ce-releases</id>
+			<url>http://jaspersoft.artifactoryonline.com/jaspersoft/jr-ce-releases</url>
+		</repository>
+	</repositories>
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>nbm-maven-plugin</artifactId>
+				<version>4.0</version>
+				<extensions>true</extensions>
+				<configuration>
+					<nbmResources>
+						<nbmResource>
+							<directory>${project.build.directory}/lib</directory>
+							<targetPath>modules/lib</targetPath>
+							<includes>
+								<include>**</include>
+							</includes>
+						</nbmResource>
+						<nbmResource>
+							<directory>${project.basedir}/src/main/config</directory>
+							<targetPath>config</targetPath>
+							<includes>
+								<include>**</include>
+							</includes>
+						</nbmResource>
+						<nbmResource>
+							<directory>${project.basedir}/src/main/wresl</directory>
+							<targetPath>wresl</targetPath>
+							<includes>
+								<include>**</include>
+							</includes>
+						</nbmResource>
+						<nbmResource>
+							<directory>${project.basedir}/src/main/jasper</directory>
+							<targetPath>jasper</targetPath>
+							<includes>
+								<include>**</include>
+							</includes>
+						</nbmResource>
+						<nbmResource>
+							<directory>${project.basedir}/src/main/docs</directory>
+							<targetPath>docs</targetPath>
+							<includes>
+								<include>**</include>
+							</includes>
+						</nbmResource>
+					</nbmResources>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-jar-plugin</artifactId>
+				<version>2.4</version>
+				<configuration>
+					<useDefaultManifestFile>true</useDefaultManifestFile>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-dependency-plugin</artifactId>
+				<version>3.1.1</version>
+				<executions>
+					<execution>
+						<id>copy-dependencies</id>
+						<phase>validate</phase>
+						<goals>
+							<goal>copy</goal>
+						</goals>
+					</execution>
+				</executions>
+				<configuration>
+					<artifactItems>
+						<artifactItem>
+							<groupId>hec</groupId>
+							<artifactId>javaHeclib</artifactId>
+							<version>7-GS</version>
+							<type>dll</type>
+							<destFileName>javaHeclib.dll</destFileName>
+						</artifactItem>
+						<artifactItem>
+							<groupId>dwr</groupId>
+							<artifactId>callite</artifactId>
+							<version>v16</version>
+							<type>dll</type>
+							<destFileName>CalLiteV16.dll</destFileName>
+						</artifactItem>
+						<artifactItem>
+							<groupId>dwr</groupId>
+							<artifactId>callite-xa</artifactId>
+							<version>v16</version>
+							<type>lic</type>
+							<destFileName>CalLiteXAv16.lic</destFileName>
+						</artifactItem>
+						<artifactItem>
+							<groupId>sunsetsoft</groupId>
+							<artifactId>xa</artifactId>
+							<version>v16</version>
+							<classifier>x64</classifier>
+							<type>dll</type>
+							<destFileName>XAV16_x64.dll</destFileName>
+						</artifactItem>
+						<artifactItem>
+							<groupId>dwr</groupId>
+							<artifactId>n2xa</artifactId>
+							<version>v3</version>
+							<type>dll</type>
+							<destFileName>n2xav3.dll</destFileName>
+						</artifactItem>
+						<artifactItem>
+							<groupId>dwr</groupId>
+							<artifactId>cb</artifactId>
+							<version>v16</version>
+							<type>dll</type>
+							<destFileName>cb.dll</destFileName>
+						</artifactItem>
+					</artifactItems>
+					<outputDirectory>${project.build.directory}/lib</outputDirectory>
+					<overWriteReleases>true</overWriteReleases>
+					<overWriteSnapshots>true</overWriteSnapshots>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-surefire-plugin</artifactId>
+				<version>2.22.1</version>
+			</plugin>
+		</plugins>
+	</build>
 </project>

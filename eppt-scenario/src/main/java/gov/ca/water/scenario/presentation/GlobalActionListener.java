@@ -1,8 +1,13 @@
 /*
- * Copyright (c) 2019
- * California Department of Water Resources
- * All Rights Reserved.  DWR PROPRIETARY/CONFIDENTIAL.
- * Source may not be released without written approval from DWR
+ * Enhanced Post Processing Tool (EPPT) Copyright (c) 2019.
+ *
+ * EPPT is copyrighted by the State of California, Department of Water Resources. It is licensed
+ * under the GNU General Public License, version 2. This means it can be
+ * copied, distributed, and modified freely, but you may not restrict others
+ * in their ability to copy, distribute, and modify it. See the license below
+ * for more details.
+ *
+ * GNU General Public License
  */
 
 package gov.ca.water.scenario.presentation;
@@ -13,9 +18,10 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
@@ -37,21 +43,20 @@ import gov.ca.water.businessservice.impl.XMLParsingSvcImpl;
 import gov.ca.water.calgui.EpptInitializationException;
 import gov.ca.water.calgui.bo.DataTableModel;
 import gov.ca.water.calgui.bo.RBListItemBO;
-import gov.ca.water.calgui.bus_service.IModelRunSvc;
-import gov.ca.water.calgui.bus_service.impl.ModelRunSvcImpl;
+import gov.ca.water.calgui.busservice.IModelRunSvc;
+import gov.ca.water.calgui.busservice.impl.ModelRunSvcImpl;
 import gov.ca.water.calgui.constant.Constant;
 import gov.ca.water.calgui.presentation.DisplayHelper;
 import gov.ca.water.calgui.presentation.ProgressFrame;
-import gov.ca.water.calgui.tech_service.IAuditSvc;
-import gov.ca.water.calgui.tech_service.IDialogSvc;
-import gov.ca.water.calgui.tech_service.IErrorHandlingSvc;
-import gov.ca.water.calgui.tech_service.impl.AuditSvcImpl;
-import gov.ca.water.calgui.tech_service.impl.DialogSvcImpl;
-import gov.ca.water.calgui.tech_service.impl.ErrorHandlingSvcImpl;
+import gov.ca.water.calgui.techservice.IAuditSvc;
+import gov.ca.water.calgui.techservice.IDialogSvc;
+import gov.ca.water.calgui.techservice.IErrorHandlingSvc;
+import gov.ca.water.calgui.techservice.impl.AuditSvcImpl;
+import gov.ca.water.calgui.techservice.impl.DialogSvcImpl;
+import gov.ca.water.calgui.techservice.impl.ErrorHandlingSvcImpl;
 import gov.ca.water.quickresults.ui.projectconfig.ProjectConfigurationPanel;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.log4j.Logger;
-import org.jfree.data.time.Month;
 import org.swixml.SwingEngine;
 
 /**
@@ -207,32 +212,6 @@ public class GlobalActionListener implements ActionListener
 				case "AC_DfcClear":
 					clearQRCheckBoxes("delta_flow_criteria");
 					break;
-				case "Rep_DispCur":
-					if(lstScenarios.getModel().getSize() == 0)
-					{
-						_dialogSvc.getOK("Error - No scenarios loaded", JOptionPane.ERROR_MESSAGE);
-					}
-					else if(lstReports.getSelectedValue() == null)
-					{
-						_dialogSvc.getOK("Error - No display group selected", JOptionPane.ERROR_MESSAGE);
-					}
-					else
-					{
-
-						List<RBListItemBO> scenarios = new ArrayList<>();
-						model = lstScenarios.getModel();
-						for(int i = 0; i < model.getSize(); i++)
-						{
-							scenarios.add(model.getElementAt(i));
-						}
-						ProjectConfigurationPanel projectConfigurationPanel = ProjectConfigurationPanel.getProjectConfigurationPanel();
-						String quickState = projectConfigurationPanel.quickState();
-						Month startMonth = projectConfigurationPanel.getStartMonth();
-						Month endMonth = projectConfigurationPanel.getEndMonth();
-						_displayHelper.showDisplayFrames(
-								(String) ((JList) _swingEngine.find("lstReports")).getSelectedValue(), scenarios, startMonth, endMonth);
-					}
-					break;
 				case "Time_SELECT":
 
 					break;
@@ -287,7 +266,7 @@ public class GlobalActionListener implements ActionListener
 					doLoad = false;
 					break;
 				case "Yes":
-					doLoad = this._allButtonsDele.saveCurrentStateToFile(clsFileName);
+					doLoad = this._allButtonsDele.saveCurrentStateToFile(Paths.get(clsFileName));
 					break;
 				case "No":
 					doLoad = true;
@@ -323,7 +302,8 @@ public class GlobalActionListener implements ActionListener
 			LOG.debug("loading this cls file " + fileName);
 			fileName = FilenameUtils.removeExtension(fileName);
 			this._verifyControlsDele.verifyTheDataBeforeUI(Constant.SCENARIOS_DIR + fileName + Constant.CLS_EXT);
-			this._scenarioSvc.applyClsFile(Constant.SCENARIOS_DIR + fileName + Constant.CLS_EXT, _swingEngine,
+			this._scenarioSvc.applyClsFile(Paths.get(Constant.SCENARIOS_DIR + fileName + Constant.CLS_EXT),
+					_swingEngine,
 					_seedDataSvc.getTableIdMap());
 			((JTextField) _swingEngine.find("run_txfScen")).setText(fileName + Constant.CLS_EXT);
 			((JTextField) _swingEngine.find("run_txfoDSS")).setText(fileName + Constant.DV_NAME + Constant.DSS_EXT);
@@ -349,12 +329,12 @@ public class GlobalActionListener implements ActionListener
 		ProjectConfigurationPanel projectConfigurationPanel = ProjectConfigurationPanel.getProjectConfigurationPanel();
 		IScenarioDele scenarioDele = new ScenarioDeleImp();
 		List<String> fileNames = new ArrayList<>();
-		for(int i = 0; i < projectConfigurationPanel.getScenarios().size(); i++)
-		{
-			String name = Paths.get(projectConfigurationPanel.getScenarios().get(i).toString())
-							   .getFileName().toString();
-			fileNames.add(name.substring(0, name.length() - 7) + Constant.CLS_EXT);
-		}
+		//		for(int i = 0; i < projectConfigurationPanel.getScenarios().size(); i++)
+		//		{
+		//			String name = Paths.get(projectConfigurationPanel.getScenarios().get(i).toString())
+		//							   .getFileName().toString();
+		//			fileNames.add(name.substring(0, name.length() - 7) + Constant.CLS_EXT);
+		//		}
 		try
 		{
 			List<DataTableModel> dtmList = scenarioDele.getScenarioTableData(fileNames, _swingEngine);
@@ -415,11 +395,12 @@ public class GlobalActionListener implements ActionListener
 			if(decisionBeforeTheBatchRun())
 			{
 				ProgressFrame progressFrame = ProgressFrame.getProgressFrameInstance();
-				List<String> fileName = Arrays.asList(clsFileName);
-				progressFrame.addScenarioNamesAndAction(clsFileName, Constant.BATCH_RUN);
+				Path path = Paths.get(clsFileName);
+				List<Path> fileName = Collections.singletonList(path);
+				progressFrame.addScenarioNamesAndAction(path, Constant.BATCH_RUN);
 				progressFrame.setBtnText(Constant.STATUS_BTN_TEXT_STOP);
 				progressFrame.makeDialogVisible();
-				_modelRunSvc.doBatch(fileName, _swingEngine, false);
+				_modelRunSvc.doBatch(fileName, false);
 			}
 		}
 		catch(Exception e)
@@ -442,11 +423,12 @@ public class GlobalActionListener implements ActionListener
 			if(decisionBeforeTheBatchRun())
 			{
 				ProgressFrame progressFrame = ProgressFrame.getProgressFrameInstance();
-				List<String> fileName = Arrays.asList(clsFileName);
-				progressFrame.addScenarioNamesAndAction(clsFileName, Constant.BATCH_RUN_WSIDI);
+				Path path = Paths.get(clsFileName);
+				List<Path> fileName = Collections.singletonList(path);
+				progressFrame.addScenarioNamesAndAction(path, Constant.BATCH_RUN_WSIDI);
 				progressFrame.setBtnText(Constant.STATUS_BTN_TEXT_STOP);
 				progressFrame.makeDialogVisible();
-				_modelRunSvc.doBatch(fileName, _swingEngine, true);
+				_modelRunSvc.doBatch(fileName, true);
 			}
 		}
 		catch(Exception e)
@@ -486,7 +468,7 @@ public class GlobalActionListener implements ActionListener
 				switch(option)
 				{
 					case "Yes":
-						return this._allButtonsDele.saveCurrentStateToFile(clsFileName);
+						return this._allButtonsDele.saveCurrentStateToFile(Paths.get(clsFileName));
 					case "No":
 						return false;
 				}
@@ -500,7 +482,7 @@ public class GlobalActionListener implements ActionListener
 				switch(option)
 				{
 					case "Yes":
-						isSaved = this._allButtonsDele.saveCurrentStateToFile(clsFileName);
+						isSaved = this._allButtonsDele.saveCurrentStateToFile(Paths.get(clsFileName));
 						break;
 					case "No":
 						loadScenarioButton(((JTextField) _swingEngine.find("run_txfScen")).getText());

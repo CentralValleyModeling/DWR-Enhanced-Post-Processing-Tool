@@ -1,8 +1,13 @@
 /*
- * Copyright (c) 2019
- * California Department of Water Resources
- * All Rights Reserved.  DWR PROPRIETARY/CONFIDENTIAL.
- * Source may not be released without written approval from DWR
+ * Enhanced Post Processing Tool (EPPT) Copyright (c) 2019.
+ *
+ * EPPT is copyrighted by the State of California, Department of Water Resources. It is licensed
+ * under the GNU General Public License, version 2. This means it can be
+ * copied, distributed, and modified freely, but you may not restrict others
+ * in their ability to copy, distribute, and modify it. See the license below
+ * for more details.
+ *
+ * GNU General Public License
  */
 
 package vista.app;
@@ -29,7 +34,8 @@ import vista.time.TimeFactory;
 import vista.time.TimeInterval;
 import vista.time.TimeWindow;
 
-public class TimeSeriesMerger implements RangeActor{
+public class TimeSeriesMerger implements RangeActor
+{
 	private TimeSeries merged;
 	private Curve mergedCurve;
 	private GECanvas canvas;
@@ -39,7 +45,8 @@ public class TimeSeriesMerger implements RangeActor{
 	private Plot plot;
 	private Graph graph;
 
-	public TimeSeriesMerger(GECanvas canvas){
+	public TimeSeriesMerger(GECanvas canvas)
+	{
 		this.canvas = canvas;
 		graph = (Graph) canvas.getGraphicElement();
 		plot = graph.getPlot();
@@ -48,14 +55,16 @@ public class TimeSeriesMerger implements RangeActor{
 		this.curves = new Curve[curves.length];
 		System.arraycopy(curves, 0, this.curves, 0, curves.length);
 		TimeSeries[] timeSeries = extractTimeSeriesFromCurves(curves);
-		if (timeSeries == null){
+		if(timeSeries == null)
+		{
 			return;
 		}
 		// do merge using order in plot and union of time windows
 		TimeWindow tw = TimeSeriesMergeUtils.getTimeWindow(timeSeries);
 		merged = TimeSeriesMergeUtils.merge(timeSeries, tw);
 		DataReference mergedReference = new DefaultReference(merged);
-		mergedCurve = CurveFactory.createCurve(mergedReference, ((Curve)curves[0]).getXAxis().getPosition(), ((Curve)curves[0]).getYAxis().getPosition(), "Merged");
+		mergedCurve = CurveFactory.createCurve(mergedReference, ((Curve) curves[0]).getXAxis().getPosition(),
+				((Curve) curves[0]).getYAxis().getPosition(), "Merged");
 		mergedCurve.getAttributes()._foregroundColor = Color.gray;
 		plot.addCurve(mergedCurve);
 		graph.getLegend().add(mergedLegendItem = new LegendItem(mergedCurve));
@@ -63,42 +72,54 @@ public class TimeSeriesMerger implements RangeActor{
 		canvas.repaint();
 	}
 
-	private TimeSeries[] extractTimeSeriesFromCurves(GraphicElement[] curves) {
+	private TimeSeries[] extractTimeSeriesFromCurves(GraphicElement[] curves)
+	{
 		ArrayList<TimeSeries> tsList = new ArrayList<TimeSeries>();
-		for(int i=0; i < curves.length; i++){
+		for(int i = 0; i < curves.length; i++)
+		{
 			Curve c = (Curve) curves[i];
 			DataReference ref = (DataReference) c.getModel().getReferenceObject();
-			if (ref.getData() instanceof TimeSeries){
-				tsList.add((TimeSeries)ref.getData());
-			} else {
+			if(ref.getData() instanceof TimeSeries)
+			{
+				tsList.add((TimeSeries) ref.getData());
+			}
+			else
+			{
 				throw new RuntimeException("Not all data in plot are time series");
 			}
 		}
 		TimeSeries[] timeSeries = new TimeSeries[tsList.size()];
-		if (tsList.size()==0){
+		if(tsList.size() == 0)
+		{
 			return null;
-		}else{
+		}
+		else
+		{
 			timeSeries = tsList.toArray(timeSeries);
 		}
 		//
-		if (!checkTimeSeriesAreMergable(timeSeries)){
+		if(!checkTimeSeriesAreMergable(timeSeries))
+		{
 			throw new RuntimeException("Select only time series that are compatible for a merge");
 		}
 		return timeSeries;
 	}
 
-	public TimeSeries getMergedData() {
+	public TimeSeries getMergedData()
+	{
 		return merged;
 	}
-	
+
 	/**
 	 * For the given time window, use the curves in the order provided
 	 * and replace into the merged curve
+	 *
 	 * @param curves
 	 * @param timeWindow
 	 * @return
 	 */
-	public void doMerge(Curve[] curves, TimeWindow timeWindow){
+	public void doMerge(Curve[] curves, TimeWindow timeWindow)
+	{
 		TimeSeries[] timeSeries = extractTimeSeriesFromCurves(curves);
 		TimeSeries replacer = TimeSeriesMergeUtils.merge(timeSeries, timeWindow);
 		TimeSeriesMergeUtils.replaceInPlace(merged, replacer);
@@ -106,40 +127,53 @@ public class TimeSeriesMerger implements RangeActor{
 		canvas.repaint();
 	}
 
-	public void removeDataFromGraph() {
+	public void removeDataFromGraph()
+	{
 		Graph graph = (Graph) this.canvas.getGraphicElement();
 		graph.getPlot().removeCurve(mergedCurve);
 		graph.getLegend().remove(mergedLegendItem);
 		this.canvas.redoNextPaint();
 		this.canvas.repaint();
 	}
-	
+
 	/**
-	 * returns the messages 
+	 * returns the messages
+	 *
 	 * @param tsList
 	 * @return
 	 */
-	public boolean checkTimeSeriesAreMergable(TimeSeries[] tsList) {
-		if (tsList==null || tsList.length==0){
+	public boolean checkTimeSeriesAreMergable(TimeSeries[] tsList)
+	{
+		if(tsList == null || tsList.length == 0)
+		{
 			throw new RuntimeException("No time series or selection is empty?");
 		}
-		if (tsList.length == 1){
-			int showConfirmDialog = JOptionPane.showConfirmDialog(null, "Only one time series to merge ?", "Time series merge", JOptionPane.OK_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE);
-			if (showConfirmDialog == JOptionPane.CANCEL_OPTION){
+		if(tsList.length == 1)
+		{
+			int showConfirmDialog = JOptionPane.showConfirmDialog(null, "Only one time series to merge ?", "Time series merge",
+					JOptionPane.OK_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE);
+			if(showConfirmDialog == JOptionPane.CANCEL_OPTION)
+			{
 				return false;
 			}
 		}
-		if (TimeSeriesMergeUtils.isAllRegular(tsList)){
+		if(TimeSeriesMergeUtils.isAllRegular(tsList))
+		{
 			TimeInterval ti = null;
-			for(int i=0; i < tsList.length; i++){
+			for(int i = 0; i < tsList.length; i++)
+			{
 				TimeSeries ts = tsList[i];
 				RegularTimeSeries rts = (RegularTimeSeries) ts;
-				if (ti==null){
+				if(ti == null)
+				{
 					ti = rts.getTimeInterval();
-				} else {
+				}
+				else
+				{
 					int compare = rts.getTimeInterval().compare(ti);
-					if (compare != 0){
-						String msg = "Time Series: " +rts.getName() + "with time interval: "+rts.getTimeInterval()+" does not have expected time interval "+ti+" as others in merge list";
+					if(compare != 0)
+					{
+						String msg = "Time Series: " + rts.getName() + "with time interval: " + rts.getTimeInterval() + " does not have expected time interval " + ti + " as others in merge list";
 						throw new RuntimeException(msg);
 					}
 				}
@@ -147,40 +181,49 @@ public class TimeSeriesMerger implements RangeActor{
 		}
 		// check units
 		String units = null;
-		for(int i=0; i < tsList.length; i++){
+		for(int i = 0; i < tsList.length; i++)
+		{
 			TimeSeries ts = tsList[i];
 			String yUnits = ts.getAttributes().getYUnits();
-			if (units==null){
-				units=yUnits;
-			} else if (!units.equalsIgnoreCase(yUnits)){
-				throw new RuntimeException("Units are incompatible: "+units+" vs "+yUnits+" on "+ts.getName());
+			if(units == null)
+			{
+				units = yUnits;
 			}
-		}		
+			else if(!units.equalsIgnoreCase(yUnits))
+			{
+				throw new RuntimeException("Units are incompatible: " + units + " vs " + yUnits + " on " + ts.getName());
+			}
+		}
 		return true;
 	}
-	
-	public void selectRange(){
+
+	public void selectRange()
+	{
 		rangeSelector = new XRangeSelector(this, canvas, mergedCurve);
 	}
 
 	@Override
-	public void selectedRange(int xmin, int xmax, int ymin, int ymax) {
+	public void selectedRange(int xmin, int xmax, int ymin, int ymax)
+	{
 		TimeFactory tf = TimeFactory.getInstance();
 		Time st = tf.createTime(Math.round(mergedCurve.getXAxis().getScale().scaleToDC(xmin)));
 		Time et = tf.createTime(Math.round(mergedCurve.getXAxis().getScale().scaleToDC(xmax)));
-		if (merged instanceof RegularTimeSeries){
+		if(merged instanceof RegularTimeSeries)
+		{
 			TimeInterval ti = ((RegularTimeSeries) merged).getTimeInterval();
-			if (ti != null){
+			if(ti != null)
+			{
 				st = st.ceiling(ti);
 				et = et.floor(ti);
 			}
 		}
 		TimeWindow timeWindow = TimeFactory.getInstance().createTimeWindow(st, et);
 		//
-		ReorderMergingCurvesDialog reorderDialog = new ReorderMergingCurvesDialog(canvas,this.curves);
+		ReorderMergingCurvesDialog reorderDialog = new ReorderMergingCurvesDialog(canvas, this.curves);
 		//
 		Curve[] newOrder = reorderDialog.getCurves();
-		if (newOrder != null){
+		if(newOrder != null)
+		{
 			this.doMerge(reorderDialog.getCurves(), timeWindow);
 		}
 	}

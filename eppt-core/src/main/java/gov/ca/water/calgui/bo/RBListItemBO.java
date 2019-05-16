@@ -1,8 +1,13 @@
 /*
- * Copyright (c) 2019
- * California Department of Water Resources
- * All Rights Reserved.  DWR PROPRIETARY/CONFIDENTIAL.
- * Source may not be released without written approval from DWR
+ * Enhanced Post Processing Tool (EPPT) Copyright (c) 2019.
+ *
+ * EPPT is copyrighted by the State of California, Department of Water Resources. It is licensed
+ * under the GNU General Public License, version 2. This means it can be
+ * copied, distributed, and modified freely, but you may not restrict others
+ * in their ability to copy, distribute, and modify it. See the license below
+ * for more details.
+ *
+ * GNU General Public License
  */
 
 package gov.ca.water.calgui.bo;
@@ -18,15 +23,20 @@ public class RBListItemBO
 {
 
 	private final String _label;
-	private final String _fullname;
+	private final String _dssPath;
+	private final GUILinksAllModelsBO.Model _model;
 	private boolean _isSelected = false;
-	private String _svFilename;
 
-	public RBListItemBO(String label, String label2)
+	public RBListItemBO(String label, String dssPath, GUILinksAllModelsBO.Model model)
 	{
-		this._label = label2;
-		this._fullname = label;
-		this._svFilename = "";
+		_label = label;
+		_dssPath = dssPath;
+		_model = model;
+	}
+
+	public GUILinksAllModelsBO.Model getModel()
+	{
+		return _model;
 	}
 
 	public boolean isSelected()
@@ -39,20 +49,10 @@ public class RBListItemBO
 		this._isSelected = isSelected;
 	}
 
-	public String getSVFilename()
-	{
-		return _svFilename;
-	}
-
-	public void setSVFilename(String svf)
-	{
-		_svFilename = svf;
-	}
-
 	@Override
 	public String toString()
 	{
-		return _fullname;
+		return _dssPath;
 	}
 
 	public String getLabel()

@@ -1,8 +1,13 @@
 /*
- * Copyright (c) 2019
- * California Department of Water Resources
- * All Rights Reserved.  DWR PROPRIETARY/CONFIDENTIAL.
- * Source may not be released without written approval from DWR
+ * Enhanced Post Processing Tool (EPPT) Copyright (c) 2019.
+ *
+ * EPPT is copyrighted by the State of California, Department of Water Resources. It is licensed
+ * under the GNU General Public License, version 2. This means it can be
+ * copied, distributed, and modified freely, but you may not restrict others
+ * in their ability to copy, distribute, and modify it. See the license below
+ * for more details.
+ *
+ * GNU General Public License
  */
 
 package vista.app;
@@ -24,20 +29,22 @@ import vista.time.TimeFactory;
 import vista.time.TimeInterval;
 
 @SuppressWarnings("serial")
-public class ConversionOperationsPanel extends JPanel {
-	private static final String[] INTERVALS = new String[] { "15MIN", "1HOUR",
-			"1DAY", "1MON" };
+public class ConversionOperationsPanel extends JPanel
+{
+	private static final String[] INTERVALS = new String[]{"15MIN", "1HOUR",
+			"1DAY", "1MON"};
 	private GroupTable groupTable;
 	private JComboBox modeOptionsBox;
 	private JButton convertButton;
 	private JComboBox intervalBox;
 	private JComboBox modeBox;
 
-	public ConversionOperationsPanel(GroupTable groupTable) {
+	public ConversionOperationsPanel(GroupTable groupTable)
+	{
 		this.groupTable = groupTable;
 		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 		setBorder(BorderFactory.createTitledBorder(BorderFactory
-				.createEtchedBorder(),
+						.createEtchedBorder(),
 				"Convert timeseries to regular by either snap or interpolate"));
 		setToolTipText("Select time series from table view below and then select appropriate options and click convert");
 		JPanel panel = new JPanel();
@@ -49,7 +56,8 @@ public class ConversionOperationsPanel extends JPanel {
 
 		intervalBox = new JComboBox();
 		intervalBox.setEditable(true);
-		for (int i = 0; i < INTERVALS.length; i++) {
+		for(int i = 0; i < INTERVALS.length; i++)
+		{
 			intervalBox.addItem(INTERVALS[i]);
 		}
 		panel.add(intervalBox);
@@ -66,12 +74,17 @@ public class ConversionOperationsPanel extends JPanel {
 		modeOptionsBox = new JComboBox();
 		panel.add(modeOptionsBox);
 		setOptions("SNAP");
-		modeBox.addActionListener(new ActionListener() {
-			
-			public void actionPerformed(ActionEvent evt) {
-				if (modeBox.getSelectedItem().equals("SNAP")) {
+		modeBox.addActionListener(new ActionListener()
+		{
+
+			public void actionPerformed(ActionEvent evt)
+			{
+				if(modeBox.getSelectedItem().equals("SNAP"))
+				{
 					setOptions("SNAP");
-				} else {
+				}
+				else
+				{
 					setOptions("SAMPLE");
 				}
 			}
@@ -84,19 +97,26 @@ public class ConversionOperationsPanel extends JPanel {
 		verticalBox.setMinimumSize(new Dimension(10, 10));
 		add(verticalBox);
 		this.add(convertButton = new JButton("Convert Selected"));
-		convertButton.addActionListener(new ActionListener() {
+		convertButton.addActionListener(new ActionListener()
+		{
 
 			@Override
-			public void actionPerformed(ActionEvent e) {
+			public void actionPerformed(ActionEvent e)
+			{
 				DataReference[] selectedReferences = ConversionOperationsPanel.this.groupTable
 						.getSelectedReferences();
-				if (selectedReferences == null)
+				if(selectedReferences == null)
+				{
 					return;
-				for (int i = 0; i < selectedReferences.length; i++) {
+				}
+				for(int i = 0; i < selectedReferences.length; i++)
+				{
 					DataReference ref = selectedReferences[i];
 					DataSet ds = ref.getData();
-					if (modeBox.getSelectedItem().equals("SNAP")) {
-						if (!(ds instanceof IrregularTimeSeries)) {
+					if(modeBox.getSelectedItem().equals("SNAP"))
+					{
+						if(!(ds instanceof IrregularTimeSeries))
+						{
 							JOptionPane.showMessageDialog(
 									ConversionOperationsPanel.this,
 									"Ignoring SNAP for non irregular time series: "
@@ -106,15 +126,17 @@ public class ConversionOperationsPanel extends JPanel {
 						}
 						IrregularTimeSeries its = (IrregularTimeSeries) ds;
 						TimeInterval ti = TimeFactory.getInstance()
-								.createTimeInterval(
-										intervalBox.getSelectedItem()
-												.toString());
+													 .createTimeInterval(
+															 intervalBox.getSelectedItem()
+																		.toString());
 						int snapType = TimeSeriesMath.SNAP_NEAREST;
-						if (modeOptionsBox.getSelectedItem()
-								.equals("BACKWARDS")) {
+						if(modeOptionsBox.getSelectedItem()
+										 .equals("BACKWARDS"))
+						{
 							snapType = TimeSeriesMath.SNAP_BACKWARD;
 						}
-						if (modeOptionsBox.getSelectedItem().equals("FORWARDS")) {
+						if(modeOptionsBox.getSelectedItem().equals("FORWARDS"))
+						{
 							snapType = TimeSeriesMath.SNAP_FORWARD;
 						}
 						RegularTimeSeries snap = TimeSeriesMath.snap(its, ti,
@@ -130,8 +152,11 @@ public class ConversionOperationsPanel extends JPanel {
 						DataReference newRef = new DefaultReference("", "",
 								pathname.toString(), snap);
 						addReferenceToGroup(newRef);
-					} else if (modeBox.getSelectedItem().equals("SAMPLE")) {
-						if (!(ds instanceof IrregularTimeSeries)) {
+					}
+					else if(modeBox.getSelectedItem().equals("SAMPLE"))
+					{
+						if(!(ds instanceof IrregularTimeSeries))
+						{
 							JOptionPane.showMessageDialog(
 									ConversionOperationsPanel.this,
 									"Ignoring SAMPLE for non time series: "
@@ -141,16 +166,19 @@ public class ConversionOperationsPanel extends JPanel {
 						}
 						TimeSeries ts = (TimeSeries) ds;
 						TimeInterval ti = TimeFactory.getInstance()
-								.createTimeInterval(
-										intervalBox.getSelectedItem()
-												.toString());
+													 .createTimeInterval(
+															 intervalBox.getSelectedItem()
+																		.toString());
 						RegularTimeSeries sampled = null;
-						if (modeOptionsBox.getSelectedItem().equals(
-								"LAST VALUE")) {
+						if(modeOptionsBox.getSelectedItem().equals(
+								"LAST VALUE"))
+						{
 							sampled = TimeSeriesMath.sample(ts, ti,
 									TimeSeriesMath.LAST_VAL);
-						} else if (modeOptionsBox.getSelectedItem().equals(
-								"INTERPOLATE")) {
+						}
+						else if(modeOptionsBox.getSelectedItem().equals(
+								"INTERPOLATE"))
+						{
 							sampled = TimeSeriesMath.sample(ts, ti,
 									TimeSeriesMath.LINEAR);
 						}
@@ -173,7 +201,8 @@ public class ConversionOperationsPanel extends JPanel {
 
 	}
 
-	private void addReferenceToGroup(DataReference ref) {
+	private void addReferenceToGroup(DataReference ref)
+	{
 		// add to group and reset reference to null for next operation
 		groupTable.addReferenceAtCurrentSelection(ref);
 		groupTable.updateInfoPanel();
@@ -181,13 +210,17 @@ public class ConversionOperationsPanel extends JPanel {
 
 	}
 
-	protected void setOptions(String value) {
+	protected void setOptions(String value)
+	{
 		modeOptionsBox.removeAllItems();
-		if (value.equals("SNAP")) {
+		if(value.equals("SNAP"))
+		{
 			modeOptionsBox.addItem("NEAREST");
 			modeOptionsBox.addItem("BACKWARDS");
 			modeOptionsBox.addItem("FORWARDS");
-		} else if (value.equals("SAMPLE")) {
+		}
+		else if(value.equals("SAMPLE"))
+		{
 			modeOptionsBox.addItem("LAST VALUE");
 			modeOptionsBox.addItem("INTERPOLATE");
 		}

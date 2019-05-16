@@ -1,8 +1,13 @@
 /*
- * Copyright (c) 2019
- * California Department of Water Resources
- * All Rights Reserved.  DWR PROPRIETARY/CONFIDENTIAL.
- * Source may not be released without written approval from DWR
+ * Enhanced Post Processing Tool (EPPT) Copyright (c) 2019.
+ *
+ * EPPT is copyrighted by the State of California, Department of Water Resources. It is licensed
+ * under the GNU General Public License, version 2. This means it can be
+ * copied, distributed, and modified freely, but you may not restrict others
+ * in their ability to copy, distribute, and modify it. See the license below
+ * for more details.
+ *
+ * GNU General Public License
  */
 
 package calsim.app;
@@ -79,15 +84,7 @@ public final class AppUtils
 	 *
 	 */
 	public static boolean VIEW_TABLE = false;
-	/**
-	 *
-	 */
-	static boolean RES_TABLE = false;
-
 	public static boolean POSITION = false;
-
-	static int NUM_LEVELS = 5;
-
 	public static int NUM_YEARS_MAX = 201;
 	/**
 	 *
@@ -190,6 +187,15 @@ public final class AppUtils
 	 */
 	public static int nperiods = 0;
 	/**
+	 *
+	 */
+	static boolean RES_TABLE = false;
+	static int NUM_LEVELS = 5;
+	/**
+	 *
+	 */
+	static PathPartMapping[] _mapping = new PathPartMapping[2];
+	/**
 	 * the default sizes for plots
 	 */
 	private static Dimension DEFAULT_PLOT_SIZE = new Dimension(750, 650);
@@ -198,10 +204,6 @@ public final class AppUtils
 	private static String[] _bparts = null, _cparts = null;
 	private static int[] MT_40_30_30 = readMTList("MT40-30-30.table");
 	private static int[] MT_60_20_20 = readMTList("MT60-20-20.table");
-	/**
-	 *
-	 */
-	static PathPartMapping[] _mapping = new PathPartMapping[2];
 	/**
 	 * the current project
 	 */
@@ -642,6 +644,11 @@ public final class AppUtils
 
 		Group gc = Group.createGroup(dssGroup);
 		gc.reload();
+		return createRefs(parts, tw, gc);
+	}
+
+	public static DataReference[] createRefs(String[] parts, TimeWindow tw, Group gc)
+	{
 		for(int i = 0; i < parts.length; i++)
 		{
 			String part = parts[i];
@@ -660,8 +667,7 @@ public final class AppUtils
 			}
 			if(gc.getNumberOfDataReferences() == 0)
 			{
-				throw new RuntimeException("No matching reference in " + dssGroup.getName()
-						+ " for part = " + part);
+				return null;
 			}
 		}
 		int count = gc.getNumberOfDataReferences();
@@ -997,7 +1003,9 @@ public final class AppUtils
 			return false;
 		}
 		else
+		{
 			return getCurrentProject().getMTS(name) == null;
+		}
 	}
 
 	/**
@@ -2297,9 +2305,9 @@ public final class AppUtils
 	public static int[] readMTList(String file)
 	{
 		String filePath = "/calsim/app/data/" + file;
-		try (InputStream is = AppUtils.class.getResourceAsStream(filePath);
-			 InputStreamReader inputStreamReader = new InputStreamReader(is);
-			 LineNumberReader reader = new LineNumberReader(inputStreamReader))
+		try(InputStream is = AppUtils.class.getResourceAsStream(filePath);
+			InputStreamReader inputStreamReader = new InputStreamReader(is);
+			LineNumberReader reader = new LineNumberReader(inputStreamReader))
 		{
 
 			List<Integer> yearArray = new ArrayList<>(73);

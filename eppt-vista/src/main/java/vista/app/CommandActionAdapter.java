@@ -1,8 +1,13 @@
 /*
- * Copyright (c) 2019
- * California Department of Water Resources
- * All Rights Reserved.  DWR PROPRIETARY/CONFIDENTIAL.
- * Source may not be released without written approval from DWR
+ * Enhanced Post Processing Tool (EPPT) Copyright (c) 2019.
+ *
+ * EPPT is copyrighted by the State of California, Department of Water Resources. It is licensed
+ * under the GNU General Public License, version 2. This means it can be
+ * copied, distributed, and modified freely, but you may not restrict others
+ * in their ability to copy, distribute, and modify it. See the license below
+ * for more details.
+ *
+ * GNU General Public License
  */
 package vista.app;
 
@@ -14,12 +19,13 @@ import vista.gui.VistaException;
 
 /**
  * A action listener which uses Command interface to execute
- * 
+ *
  * @author Nicky Sandhu
  * @version $Id: CommandActionAdapter.java,v 1.1.1.1 1998/09/30 03:57:45 nsandhu
- *          Exp $
+ * Exp $
  */
-public class CommandActionAdapter implements ActionListener, Runnable {
+public class CommandActionAdapter implements ActionListener, Runnable
+{
 	private Command _command;
 	private View _view;
 	private boolean _execute;
@@ -30,7 +36,8 @@ public class CommandActionAdapter implements ActionListener, Runnable {
 	 * or false
 	 */
 	public CommandActionAdapter(Command com, View view, boolean execute,
-			boolean backgroundExecution) {
+								boolean backgroundExecution)
+	{
 		_command = com;
 		_view = view;
 		_execute = execute;
@@ -40,17 +47,23 @@ public class CommandActionAdapter implements ActionListener, Runnable {
 	/**
 	 * Invoked when an action occurs.
 	 */
-	public void actionPerformed(ActionEvent evt) {
-		if (_backgroundExecution)
+	public void actionPerformed(ActionEvent evt)
+	{
+		if(_backgroundExecution)
+		{
 			new Thread(this).start();
+		}
 		else
+		{
 			doAction();
+		}
 	}
 
 	/**
 	 * runs in a thread
 	 */
-	public void run() {
+	public void run()
+	{
 		doAction();
 	}
 
@@ -58,14 +71,22 @@ public class CommandActionAdapter implements ActionListener, Runnable {
 	 * does the main action of calling the command interface execute or
 	 * unexecute method
 	 */
-	public void doAction() {
-		try {
-			if (_execute)
+	public void doAction()
+	{
+		try
+		{
+			if(_execute)
+			{
 				_command.execute();
+			}
 			else
+			{
 				_command.unexecute();
+			}
 			_view.updateView();
-		} catch (Exception e) {
+		}
+		catch(Exception e)
+		{
 			throw new VistaException(e, getClass().getName()
 					+ " execution problem");
 		}

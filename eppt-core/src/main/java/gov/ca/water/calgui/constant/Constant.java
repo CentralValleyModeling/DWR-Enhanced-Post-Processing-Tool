@@ -1,8 +1,13 @@
 /*
- * Copyright (c) 2019
- * California Department of Water Resources
- * All Rights Reserved.  DWR PROPRIETARY/CONFIDENTIAL.
- * Source may not be released without written approval from DWR
+ * Enhanced Post Processing Tool (EPPT) Copyright (c) 2019.
+ *
+ * EPPT is copyrighted by the State of California, Department of Water Resources. It is licensed
+ * under the GNU General Public License, version 2. This means it can be
+ * copied, distributed, and modified freely, but you may not restrict others
+ * in their ability to copy, distribute, and modify it. See the license below
+ * for more details.
+ *
+ * GNU General Public License
  */
 
 package gov.ca.water.calgui.constant;
@@ -25,14 +30,16 @@ public final class Constant
 	public static final String DV_NAME = "_DV";
 	public static final String CONFIG_DIR = System.getProperty("user.dir") + "\\dwr_eppt\\config\\";
 	public static final String DOCS_DIR = System.getProperty("user.dir") + "\\dwr_eppt\\docs\\";
-	public static final String RUN_DETAILS_DIR = "//Scenarios//Run_Details//";
+	public static final String WRESL_DIR = System.getProperty("user.dir") + "\\dwr_eppt\\wresl\\";
+	public static final String JASPER_DIR = System.getProperty("user.dir") + "\\dwr_eppt\\jasper\\";
 	public static final String MODEL_W2_DIR = System.getProperty("user.dir") + "//Model_w2//";
+	public static final String RUN_DETAILS_DIR = "Run_Details";
 	public static final String MODEL_W2_DSS_DIR = MODEL_W2_DIR + "//DSS_Files//";
 	public static final String MODEL_W2_WRESL_DIR = MODEL_W2_DIR + "wresl//";
 	public static final String LOOKUP_DIR = "//Lookup//";
 	public static final String MODEL_W2_WRESL_LOOKUP_DIR = MODEL_W2_WRESL_DIR + LOOKUP_DIR;
 	public static final String GENERATED_DIR = "//Generated//";
-	public static final String RUN_DIR = "//Run//";
+	public static final String RUN_DIR = "Run";
 	// File Names.
 	public static final String GUI_XML_FILENAME = System.getProperty("user.dir") + "//Config//GUI.xml";
 
@@ -43,7 +50,7 @@ public final class Constant
 	public static final String TRIGGER_CHECK_UNCHECK_FILENAME = System.getProperty("user.dir")
 			+ "//Config//TriggerForDynamicSelection" + CSV_EXT;
 	public static final String IMAGE_PATH = System.getProperty("user.dir") + "//images//CalLiteIcon.png";
-	public static final String SAVE_FILE = "//save";
+	public static final String SAVE_FILE = "save";
 	public static final String BATCH_RUN = "Batch Run";
 	public static final String BATCH_RUN_WSIDI = "Batch Run wsidi";
 	public static final String SAVE = "save";

@@ -1,8 +1,13 @@
 /*
- * Copyright (c) 2019
- * California Department of Water Resources
- * All Rights Reserved.  DWR PROPRIETARY/CONFIDENTIAL.
- * Source may not be released without written approval from DWR
+ * Enhanced Post Processing Tool (EPPT) Copyright (c) 2019.
+ *
+ * EPPT is copyrighted by the State of California, Department of Water Resources. It is licensed
+ * under the GNU General Public License, version 2. This means it can be
+ * copied, distributed, and modified freely, but you may not restrict others
+ * in their ability to copy, distribute, and modify it. See the license below
+ * for more details.
+ *
+ * GNU General Public License
  */
 
 package gov.ca.water.scenario.presentation;
@@ -16,6 +21,7 @@ import java.awt.event.ComponentEvent;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 import java.awt.event.ItemListener;
+import java.nio.file.Paths;
 import java.util.List;
 import javax.swing.*;
 import javax.swing.border.LineBorder;
@@ -40,18 +46,18 @@ import gov.ca.water.businessservice.impl.XMLParsingSvcImpl;
 import gov.ca.water.calgui.EpptInitializationException;
 import gov.ca.water.calgui.bo.CalLiteGUIException;
 import gov.ca.water.calgui.bo.DataTableModel;
-import gov.ca.water.calgui.bo.FileDialogBO;
 import gov.ca.water.calgui.bo.RBListItemBO;
 import gov.ca.water.calgui.bo.ResultUtilsBO;
-import gov.ca.water.calgui.bus_service.impl.ModelRunSvcImpl;
+import gov.ca.water.calgui.busservice.impl.ModelRunSvcImpl;
 import gov.ca.water.calgui.constant.Constant;
 import gov.ca.water.calgui.presentation.DisplayHelper;
-import gov.ca.water.calgui.tech_service.IAuditSvc;
-import gov.ca.water.calgui.tech_service.IDialogSvc;
-import gov.ca.water.calgui.tech_service.IErrorHandlingSvc;
-import gov.ca.water.calgui.tech_service.impl.AuditSvcImpl;
-import gov.ca.water.calgui.tech_service.impl.DialogSvcImpl;
-import gov.ca.water.calgui.tech_service.impl.ErrorHandlingSvcImpl;
+import gov.ca.water.calgui.techservice.IAuditSvc;
+import gov.ca.water.calgui.techservice.IDialogSvc;
+import gov.ca.water.calgui.techservice.IErrorHandlingSvc;
+import gov.ca.water.calgui.techservice.impl.AuditSvcImpl;
+import gov.ca.water.calgui.techservice.impl.DialogSvcImpl;
+import gov.ca.water.calgui.techservice.impl.ErrorHandlingSvcImpl;
+import gov.ca.water.quickresults.ui.projectconfig.ScenarioChooserBO;
 import gov.ca.water.scenario.ui.JLinkedSlider;
 import org.apache.log4j.Logger;
 import org.jfree.util.Log;
@@ -66,11 +72,9 @@ import org.swixml.SwingEngine;
 public class CalLiteInitClass
 {
 	private static final Logger LOGGER = Logger.getLogger(CalLiteInitClass.class.getName());
-	private  IXMLParsingSvc _xmlParsingSvc;
-	private  SwingEngine _swingEngine;
 	private final IAuditSvc _auditSvc = AuditSvcImpl.getAuditSvcImplInstance();
-
-
+	private IXMLParsingSvc _xmlParsingSvc;
+	private SwingEngine _swingEngine;
 
 	/**
 	 * This method is called to initialize the ui.
@@ -80,16 +84,16 @@ public class CalLiteInitClass
 
 		IErrorHandlingSvc errorHandlingSvc = new ErrorHandlingSvcImpl();
 		IDialogSvc dialogSvc = DialogSvcImpl.getDialogSvcInstance();
-		 _swingEngine = null;
+		_swingEngine = null;
 		try
 		{
 			// ----- Build all the Services.
-			 _xmlParsingSvc = XMLParsingSvcImpl.createXMLParsingSvcImplInstance();
-			 _swingEngine = _xmlParsingSvc.getSwingEngine();
+			_xmlParsingSvc = XMLParsingSvcImpl.createXMLParsingSvcImplInstance();
+			_swingEngine = _xmlParsingSvc.getSwingEngine();
 
 			init2(errorHandlingSvc, dialogSvc, _swingEngine, _xmlParsingSvc);
 		}
-		catch(RuntimeException e )
+		catch(RuntimeException e)
 		{
 			LOGGER.error("Error initializing CalLite", e);
 
@@ -97,7 +101,8 @@ public class CalLiteInitClass
 		}
 	}
 
-	private void init2(IErrorHandlingSvc errorHandlingSvc, IDialogSvc dialogSvc, SwingEngine swingEngine, IXMLParsingSvc xmlParsingSvc) throws EpptInitializationException
+	private void init2(IErrorHandlingSvc errorHandlingSvc, IDialogSvc dialogSvc, SwingEngine swingEngine, IXMLParsingSvc xmlParsingSvc)
+			throws EpptInitializationException
 	{
 		try
 		{
@@ -115,7 +120,8 @@ public class CalLiteInitClass
 			initSpinners();
 			initGlobalListeners(allButtonsDele);
 			// Load the default cls file.
-			scenarioSvc.applyClsFile(Constant.SCENARIOS_DIR + Constant.DEFAULT + Constant.CLS_EXT, swingEngine,
+			scenarioSvc.applyClsFile(Paths.get(Constant.SCENARIOS_DIR + Constant.DEFAULT + Constant.CLS_EXT),
+					swingEngine,
 					seedDataSvc.getTableIdMap());
 			// check
 			checkForNewUserDefinedTables(xmlParsingSvc.getNewUserDefinedTables(), scenarioSvc, tableSvc, swingEngine);
@@ -128,22 +134,16 @@ public class CalLiteInitClass
 			// Count threads and update batch run selector appropriately
 			initBatchRun();
 			// For Result part.
-			ResultUtilsBO resultUtilsBO = ResultUtilsBO.getResultUtilsInstance(swingEngine);
+			ResultUtilsBO resultUtilsBO = ResultUtilsBO.getResultUtilsInstance();
 			// Setup for Reporting page
 			// Set up additional UI elements
 			JList<?> lstScenarios = (JList<?>) swingEngine.find("SelectedList");
-			FileDialogBO fdDSSFiles = new FileDialogBO(
-					(DefaultListModel<RBListItemBO>) lstScenarios.getModel(), true,
-					(JFrame) _swingEngine.find(Constant.MAIN_FRAME_NAME));
+			ScenarioChooserBO fdDSSFiles = new ScenarioChooserBO(
+					(DefaultListModel<RBListItemBO>) lstScenarios.getModel(),
+
+					_swingEngine.find(Constant.MAIN_FRAME_NAME));
 			lstScenarios.setModel(fdDSSFiles.getLmScenNames());
 			lstScenarios.setBorder(new LineBorder(Color.gray, 1));
-
-			JButton btnScenarioDel = (JButton) swingEngine.find("btnDelScenario");
-			btnScenarioDel.addActionListener(fdDSSFiles);
-
-			JButton btnClearAll = (JButton) swingEngine.find("btnClearScenario");
-			btnClearAll.addActionListener(fdDSSFiles);
-
 
 
 			// Schematic views
@@ -174,9 +174,9 @@ public class CalLiteInitClass
 					// Constrain run times to [10/1921,9/2003]
 					int syr = (Integer) ((JSpinner) _swingEngine.find("spnRunStartYear")).getValue();
 					int eyr = (Integer) ((JSpinner) _swingEngine.find("spnRunEndYear")).getValue();
-					int smo = ResultUtilsBO.getResultUtilsInstance(null).monthToInt(
+					int smo = ResultUtilsBO.getResultUtilsInstance().monthToInt(
 							((String) ((JSpinner) _swingEngine.find("spnRunStartMonth")).getValue()).trim());
-					int emo = ResultUtilsBO.getResultUtilsInstance(null).monthToInt(
+					int emo = ResultUtilsBO.getResultUtilsInstance().monthToInt(
 							((String) ((JSpinner) _swingEngine.find("spnRunEndMonth")).getValue()).trim());
 					if((syr == 1921) && (smo < 10))
 					{
@@ -189,9 +189,9 @@ public class CalLiteInitClass
 					// Constrain display times the same way [inefficient?]
 					syr = (Integer) ((JSpinner) _swingEngine.find("spnStartYear")).getValue();
 					eyr = (Integer) ((JSpinner) _swingEngine.find("spnEndYear")).getValue();
-					smo = ResultUtilsBO.getResultUtilsInstance(null).monthToInt(
+					smo = ResultUtilsBO.getResultUtilsInstance().monthToInt(
 							((String) ((JSpinner) _swingEngine.find("spnStartMonth")).getValue()).trim());
-					emo = ResultUtilsBO.getResultUtilsInstance(null).monthToInt(
+					emo = ResultUtilsBO.getResultUtilsInstance().monthToInt(
 							((String) ((JSpinner) _swingEngine.find("spnEndMonth")).getValue()).trim());
 					if((syr == 1921) && (smo < 10))
 					{
@@ -221,7 +221,7 @@ public class CalLiteInitClass
 					int height = event.getComponent().getHeight();
 					int width = event.getComponent().getWidth();
 					swingEngine.find("schematic_holder")
-							.setPreferredSize(new Dimension(width - 50, height - 200));
+							   .setPreferredSize(new Dimension(width - 50, height - 200));
 					SwingUtilities.updateComponentTreeUI(event.getComponent());
 				}
 			});
@@ -557,9 +557,6 @@ public class CalLiteInitClass
 		JSpinner spnRunEndYear = (JSpinner) _swingEngine.find("spnRunEndYear");
 		spnRunEndYear.addChangeListener(listener);
 	}
-
-
-
 
 
 }

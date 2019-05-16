@@ -1,14 +1,20 @@
 /*
- * Copyright (c) 2019
- * California Department of Water Resources
- * All Rights Reserved.  DWR PROPRIETARY/CONFIDENTIAL.
- * Source may not be released without written approval from DWR
+ * Enhanced Post Processing Tool (EPPT) Copyright (c) 2019.
+ *
+ * EPPT is copyrighted by the State of California, Department of Water Resources. It is licensed
+ * under the GNU General Public License, version 2. This means it can be
+ * copied, distributed, and modified freely, but you may not restrict others
+ * in their ability to copy, distribute, and modify it. See the license below
+ * for more details.
+ *
+ * GNU General Public License
  */
 
 package gov.ca.water.businessservice.impl;
 
 import java.awt.Component;
 import java.awt.Container;
+import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -27,10 +33,10 @@ import gov.ca.water.businessservice.IXMLParsingSvc;
 import gov.ca.water.calgui.bo.CalLiteGUIException;
 import gov.ca.water.calgui.bo.DataTableModel;
 import gov.ca.water.calgui.constant.Constant;
-import gov.ca.water.calgui.tech_service.IErrorHandlingSvc;
-import gov.ca.water.calgui.tech_service.IFileSystemSvc;
-import gov.ca.water.calgui.tech_service.impl.ErrorHandlingSvcImpl;
-import gov.ca.water.calgui.tech_service.impl.FileSystemSvcImpl;
+import gov.ca.water.calgui.techservice.IErrorHandlingSvc;
+import gov.ca.water.calgui.techservice.IFileSystemSvc;
+import gov.ca.water.calgui.techservice.impl.ErrorHandlingSvcImpl;
+import gov.ca.water.calgui.techservice.impl.FileSystemSvcImpl;
 import org.apache.log4j.Logger;
 import org.swixml.SwingEngine;
 
@@ -63,7 +69,8 @@ public class ApplyDynamicConDeleImp implements IApplyDynamicConDele
 	{
 		try
 		{
-			List<String> controlIds = fileSystemSvc.getFileData(Constant.DYNAMIC_CONTROL_FOR_STARTUP_FILENAME, false,
+			List<String> controlIds = fileSystemSvc.getFileData(
+					Paths.get(Constant.DYNAMIC_CONTROL_FOR_STARTUP_FILENAME), false,
 					line -> !line.startsWith(Constant.EXCLAMATION));
 
 			List<JCheckBox> checkBoxList = controlIds.stream().filter(id -> swingEngine.find(id) instanceof JCheckBox)

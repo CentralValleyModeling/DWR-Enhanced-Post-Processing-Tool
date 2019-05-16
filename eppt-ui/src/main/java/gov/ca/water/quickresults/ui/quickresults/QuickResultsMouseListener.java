@@ -1,8 +1,13 @@
 /*
- * Copyright (c) 2019
- * California Department of Water Resources
- * All Rights Reserved.  DWR PROPRIETARY/CONFIDENTIAL.
- * Source may not be released without written approval from DWR
+ * Enhanced Post Processing Tool (EPPT) Copyright (c) 2019.
+ *
+ * EPPT is copyrighted by the State of California, Department of Water Resources. It is licensed
+ * under the GNU General Public License, version 2. This means it can be
+ * copied, distributed, and modified freely, but you may not restrict others
+ * in their ability to copy, distribute, and modify it. See the license below
+ * for more details.
+ *
+ * GNU General Public License
  */
 
 package gov.ca.water.quickresults.ui.quickresults;
@@ -13,12 +18,12 @@ import java.awt.event.MouseEvent;
 import java.util.List;
 import javax.swing.*;
 
-import gov.ca.water.calgui.bo.RBListItemBO;
 import gov.ca.water.calgui.presentation.DisplayHelper;
-import gov.ca.water.calgui.tech_service.IDialogSvc;
-import gov.ca.water.calgui.tech_service.IErrorHandlingSvc;
-import gov.ca.water.calgui.tech_service.impl.DialogSvcImpl;
-import gov.ca.water.calgui.tech_service.impl.ErrorHandlingSvcImpl;
+import gov.ca.water.calgui.project.EpptScenarioRun;
+import gov.ca.water.calgui.techservice.IDialogSvc;
+import gov.ca.water.calgui.techservice.IErrorHandlingSvc;
+import gov.ca.water.calgui.techservice.impl.DialogSvcImpl;
+import gov.ca.water.calgui.techservice.impl.ErrorHandlingSvcImpl;
 import gov.ca.water.quickresults.ui.projectconfig.ProjectConfigurationPanel;
 import org.apache.log4j.Logger;
 import org.jfree.data.time.Month;
@@ -50,28 +55,26 @@ class QuickResultsMouseListener extends MouseAdapter
 			JComponent component = (JComponent) e.getComponent();
 			String cName = component.getName();
 
-			if(!SwingUtilities.isRightMouseButton(e))
+			if(!SwingUtilities.isRightMouseButton(e) && e.isControlDown() && cName.startsWith("ckbp"))
 			{
 				// checkbox from quick results.
-				int iClickCount = e.getClickCount();
-				if(iClickCount == 2 && cName.startsWith("ckbp"))
+				JCheckBox chk = (JCheckBox) component;
+				//This is to undo the click event action
+				chk.setSelected(!chk.isSelected());
+				List<EpptScenarioRun> alternatives = ProjectConfigurationPanel.getProjectConfigurationPanel().getEpptScenarioAlternatives();
+				EpptScenarioRun baseScenario = ProjectConfigurationPanel.getProjectConfigurationPanel().getBaseScenario();
+				if(baseScenario == null)
 				{
-					// Double Click
-					JCheckBox chk = (JCheckBox) component;
-					List<RBListItemBO> scenarios = ProjectConfigurationPanel.getProjectConfigurationPanel().getScenarios();
-					if(scenarios.isEmpty())
-					{
-						_dialogSvc.getOK("Error - No scenarios loaded", JOptionPane.ERROR_MESSAGE);
-					}
-					else
-					{
-						ProjectConfigurationPanel projectConfigurationPanel = ProjectConfigurationPanel.getProjectConfigurationPanel();
-						String quickState = projectConfigurationPanel.quickState();
-						Month startMonth = projectConfigurationPanel.getStartMonth();
-						Month endMonth = projectConfigurationPanel.getEndMonth();
-						_displayHelper.showDisplayFrames(quickState + ";Locs-" + chk.getText()
-								+ ";Index-" + chk.getName(), scenarios, startMonth, endMonth);
-					}
+					_dialogSvc.getOK("Error - No Base Scenario defined", JOptionPane.ERROR_MESSAGE);
+				}
+				else
+				{
+					ProjectConfigurationPanel projectConfigurationPanel = ProjectConfigurationPanel.getProjectConfigurationPanel();
+					String quickState = projectConfigurationPanel.quickState();
+					Month startMonth = projectConfigurationPanel.getStartMonth();
+					Month endMonth = projectConfigurationPanel.getEndMonth();
+					_displayHelper.showDisplayFrames(quickState + ";Locs-" + chk.getText()
+							+ ";Index-" + chk.getName(), baseScenario, alternatives, startMonth, endMonth);
 				}
 			}
 		}

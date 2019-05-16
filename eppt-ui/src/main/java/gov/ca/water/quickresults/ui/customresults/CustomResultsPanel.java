@@ -1,8 +1,13 @@
 /*
- * Copyright (c) 2019
- * California Department of Water Resources
- * All Rights Reserved.  DWR PROPRIETARY/CONFIDENTIAL.
- * Source may not be released without written approval from DWR
+ * Enhanced Post Processing Tool (EPPT) Copyright (c) 2019.
+ *
+ * EPPT is copyrighted by the State of California, Department of Water Resources. It is licensed
+ * under the GNU General Public License, version 2. This means it can be
+ * copied, distributed, and modified freely, but you may not restrict others
+ * in their ability to copy, distribute, and modify it. See the license below
+ * for more details.
+ *
+ * GNU General Public License
  */
 
 package gov.ca.water.quickresults.ui.customresults;
@@ -11,20 +16,26 @@ import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Container;
 import java.awt.event.ActionListener;
+import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 import javax.swing.*;
 
 import calsim.app.AppUtils;
 import calsim.app.DerivedTimeSeries;
 import calsim.app.MultipleTimeSeries;
+import calsim.gui.GeneralRetrievePanel;
 import calsim.gui.GuiUtils;
-import gov.ca.water.calgui.bo.RBListItemBO;
 import gov.ca.water.calgui.presentation.DisplayHelper;
 import gov.ca.water.calgui.presentation.WRIMSGUILinks;
-import gov.ca.water.calgui.tech_service.IDialogSvc;
-import gov.ca.water.calgui.tech_service.IErrorHandlingSvc;
-import gov.ca.water.calgui.tech_service.impl.DialogSvcImpl;
-import gov.ca.water.calgui.tech_service.impl.ErrorHandlingSvcImpl;
+import gov.ca.water.calgui.project.EpptScenarioRun;
+import gov.ca.water.calgui.project.NamedDssPath;
+import gov.ca.water.calgui.techservice.IDialogSvc;
+import gov.ca.water.calgui.techservice.IErrorHandlingSvc;
+import gov.ca.water.calgui.techservice.impl.DialogSvcImpl;
+import gov.ca.water.calgui.techservice.impl.ErrorHandlingSvcImpl;
 import gov.ca.water.quickresults.ui.EpptPanel;
 import gov.ca.water.quickresults.ui.projectconfig.ProjectConfigurationPanel;
 import gov.ca.water.quickresults.ui.quickresults.QuickResultsPanel;
@@ -32,6 +43,8 @@ import org.apache.log4j.Logger;
 import org.jfree.data.time.Month;
 import vista.set.DataReference;
 import vista.set.Group;
+
+import static java.util.stream.Collectors.toList;
 
 /**
  * Company: Resource Management Associates
@@ -62,6 +75,12 @@ public class CustomResultsPanel extends EpptPanel
 				retrieveBtn.removeActionListener(al);
 			}
 			retrieveBtn.addActionListener(arg0 -> retrieve());
+			JButton filterBtn = GuiUtils.getCLGPanel().getRetrievePanel().getFilterBtn();
+			for(ActionListener al : filterBtn.getActionListeners())
+			{
+				filterBtn.removeActionListener(al);
+			}
+			filterBtn.addActionListener(arg0 -> filter());
 			Component openButtonComponent = findFirstButtonMatchingText(GuiUtils.getCLGPanel(), "Open");
 			if(openButtonComponent != null)
 			{
@@ -78,12 +97,6 @@ public class CustomResultsPanel extends EpptPanel
 			LOGGER.error("Error setting up quick results swing xml: " + CUSTOM_RESULTS_XML_FILE, e);
 			throw new IllegalStateException(e);
 		}
-	}
-
-	@Override
-	public String getJavaHelpId()
-	{
-		return "Custom Results";
 	}
 
 	/**
@@ -118,21 +131,67 @@ public class CustomResultsPanel extends EpptPanel
 		return null;
 	}
 
+	private void filter()
+	{
+		ProjectConfigurationPanel projectConfigurationPanel = ProjectConfigurationPanel.getProjectConfigurationPanel();
+		EpptScenarioRun baseScenario = projectConfigurationPanel.getBaseScenario();
+		if(baseScenario != null)
+		{
+			List<Path> allDssFiles = baseScenario.getDssContainer().getAllDssFiles()
+												 .stream()
+												 .filter(Objects::nonNull)
+												 .map(NamedDssPath::getDssPath)
+												 .filter(Objects::nonNull)
+												 .collect(toList());
+			List<DataReference> allrefs = new ArrayList<>();
+			GeneralRetrievePanel retrievePanel = GuiUtils.getCLGPanel().getRetrievePanel();
+			for(Path path : allDssFiles)
+			{
+				String[] stringParts = retrievePanel.getStringParts();
+				Group dssGroup = AppUtils.openDSSFile(path.toString());
+				if(dssGroup != null)
+				{
+					Group gc = Group.createGroup(dssGroup);
+					DataReference[] refs = AppUtils.createRefs(stringParts, null, gc);
+					if(refs != null)
+					{
+						allrefs.addAll(Arrays.asList(refs));
+					}
+				}
+			}
+			if(allrefs.isEmpty())
+			{
+				_dialogSvc.getOK("No records found using filter", JOptionPane.WARNING_MESSAGE);
+			}
+			retrievePanel.updateTable(allrefs.toArray(new DataReference[0]));
+		}
+		else
+		{
+			_dialogSvc.getOK("DSS not selected! The Base DSS files need to be selected", JOptionPane.WARNING_MESSAGE);
+		}
+
+	}
+
+	@Override
+	public String getJavaHelpId()
+	{
+		return "Custom Results";
+	}
+
 	/**
 	 * Data retrieval for single DSS from Custom Results dashboard; modeled on
 	 * calsim.gui.GeneralRetrievePanel.retrieve()
 	 */
 	private void retrieve()
 	{
-		if(!AppUtils.baseOn)
-		{
-			_dialogSvc.getOK("DSS not selected! The Base DSS files need to be selected", JOptionPane.WARNING_MESSAGE);
-			return;
-		}
 		try
 		{
 			ProjectConfigurationPanel projectConfigurationPanel = ProjectConfigurationPanel.getProjectConfigurationPanel();
-			List<RBListItemBO> scenarios = projectConfigurationPanel.getScenarios();
+			if(projectConfigurationPanel.getBaseScenario() == null)
+			{
+				_dialogSvc.getOK("DSS not selected! The Base DSS files need to be selected", JOptionPane.WARNING_MESSAGE);
+				return;
+			}
 			String noRowsString = "";
 			JTable table = GuiUtils.getCLGPanel().getRetrievePanel().getTable();
 			if(table.getRowCount() == 0)
@@ -159,19 +218,15 @@ public class CustomResultsPanel extends EpptPanel
 				String[] parts2 = parts[2].split("/");
 				parts[2] = "/" + parts2[1] + "/" + parts2[2] + "/" + parts2[3] + "/" + parts[3] + "/" + parts2[5] + "/"
 						+ parts2[6] + "/";
+				EpptScenarioRun baseScenario = projectConfigurationPanel.getBaseScenario();
 				String quickState = projectConfigurationPanel.quickState();
 				Month startMonth = projectConfigurationPanel.getStartMonth();
 				Month endMonth = projectConfigurationPanel.getEndMonth();
-				if(parts[1].toUpperCase().contains(("_SV.DSS")))
-				{
-					_displayHelper.showDisplayFrames(quickState + ";Locs-" + parts[2] + ";Index-"
-							+ parts[2] + ";File-" + parts[1], scenarios, startMonth, endMonth);
-				}
-				else
+				if(baseScenario != null)
 				{
 					_displayHelper.showDisplayFrames(
 							quickState + ";Locs-" + parts[2] + ";Index-" + parts[2],
-							scenarios, startMonth, endMonth);
+							baseScenario, new ArrayList<>(), startMonth, endMonth);
 				}
 			}
 		}
@@ -189,12 +244,6 @@ public class CustomResultsPanel extends EpptPanel
 	private void retrieve2()
 	{
 
-		if(!AppUtils.baseOn)
-		{
-			_dialogSvc.getOK("DSS not selected! The Base DSS files need to be selected", JOptionPane.WARNING_MESSAGE);
-			return;
-		}
-
 		DerivedTimeSeries dts = GuiUtils.getCLGPanel().getDtsTreePanel().getTable().getDTS();
 		MultipleTimeSeries mts = GuiUtils.getCLGPanel().getDtsTreePanel().getTable().getMTS();
 
@@ -209,15 +258,19 @@ public class CustomResultsPanel extends EpptPanel
 		try
 		{
 			ProjectConfigurationPanel projectConfigurationPanel = ProjectConfigurationPanel.getProjectConfigurationPanel();
-			String quickState = projectConfigurationPanel.quickState();
-			Month startMonth = projectConfigurationPanel.getStartMonth();
-			Month endMonth = projectConfigurationPanel.getEndMonth();
-			List<RBListItemBO> scenarios = projectConfigurationPanel.getScenarios();
-			_displayHelper.showDisplayFramesWRIMS(quickState + ";Locs-;Index-;File-", scenarios, dts,
-					mts, startMonth, endMonth);
+			EpptScenarioRun baseScenario = projectConfigurationPanel.getBaseScenario();
+			if(baseScenario != null)
+			{
+				String quickState = projectConfigurationPanel.quickState();
+				Month startMonth = projectConfigurationPanel.getStartMonth();
+				Month endMonth = projectConfigurationPanel.getEndMonth();
+				_displayHelper.showDisplayFramesWRIMS(quickState + ";Locs-;Index-;File-", baseScenario, new ArrayList<>(),
+						dts,
+						mts, startMonth, endMonth);
+			}
 
 		}
-		catch(Exception e)
+		catch(RuntimeException e)
 		{
 			LOGGER.debug("Error in retrieve2() -", e);
 			_errorHandlingSvc.businessErrorHandler(null, e);

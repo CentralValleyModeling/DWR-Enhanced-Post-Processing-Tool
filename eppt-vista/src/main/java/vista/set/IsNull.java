@@ -1,8 +1,13 @@
 /*
- * Copyright (c) 2019
- * California Department of Water Resources
- * All Rights Reserved.  DWR PROPRIETARY/CONFIDENTIAL.
- * Source may not be released without written approval from DWR
+ * Enhanced Post Processing Tool (EPPT) Copyright (c) 2019.
+ *
+ * EPPT is copyrighted by the State of California, Department of Water Resources. It is licensed
+ * under the GNU General Public License, version 2. This means it can be
+ * copied, distributed, and modified freely, but you may not restrict others
+ * in their ability to copy, distribute, and modify it. See the license below
+ * for more details.
+ *
+ * GNU General Public License
  */
 package vista.set;
 
@@ -11,15 +16,18 @@ package vista.set;
  * returns true if object is null. Useful in filtering containers of null
  * values.
  */
-public class IsNull implements Predicate<Object> {
+public class IsNull implements Predicate<Object>
+{
 	/**
 	 * empty constructor
 	 */
-	public IsNull() {
+	public IsNull()
+	{
 	}
 
 	@Override
-	public boolean apply(Object type) {
-		return type==null;
+	public boolean apply(Object type)
+	{
+		return type == null;
 	}
 }

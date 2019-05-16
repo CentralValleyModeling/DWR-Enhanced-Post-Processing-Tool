@@ -1,8 +1,13 @@
 /*
- * Copyright (c) 2019
- * California Department of Water Resources
- * All Rights Reserved.  DWR PROPRIETARY/CONFIDENTIAL.
- * Source may not be released without written approval from DWR
+ * Enhanced Post Processing Tool (EPPT) Copyright (c) 2019.
+ *
+ * EPPT is copyrighted by the State of California, Department of Water Resources. It is licensed
+ * under the GNU General Public License, version 2. This means it can be
+ * copied, distributed, and modified freely, but you may not restrict others
+ * in their ability to copy, distribute, and modify it. See the license below
+ * for more details.
+ *
+ * GNU General Public License
  */
 package vista.graph;
 
@@ -15,41 +20,60 @@ import java.util.ArrayList;
  * sets which are used to come up with that scaling. And the data sets should
  * only be concerned with the data and not the axis to which they might be
  * attached
- * 
+ *
  * @author Nicky Sandhu (DWR).
  * @version $Id: AxisDataSetMediator.java,v 1.1 2003/10/02 20:48:49 redwood Exp
- *          $
+ * $
  */
-public class AxisDataSetMediator {
+public class AxisDataSetMediator
+{
+	/**
+	 *
+	 */
+	private static final boolean DEBUG = false;
+	/**
+	 * The axis which needs to get the information about these data sets
+	 */
+	Axis _axis;
+	/**
+	 * The data sets containing all the data sets attached to the axis
+	 */
+	private ArrayList<CurveDataModel> _cdms;
+
 	/**
 	 * Attaches itself to the particular axis.
 	 */
-	public AxisDataSetMediator(Axis axis) {
+	public AxisDataSetMediator(Axis axis)
+	{
 		_axis = axis;
 		_cdms = new ArrayList<CurveDataModel>();
 	}
 
 	/**
-   *
-   */
-	public void attach(CurveDataModel cdm) {
+	 *
+	 */
+	public void attach(CurveDataModel cdm)
+	{
 		_cdms.add(cdm);
 	}
 
 	/**
-   *
-   */
-	public void detach(CurveDataModel cdm) {
+	 *
+	 */
+	public void detach(CurveDataModel cdm)
+	{
 		_cdms.remove(cdm);
 	}
 
 	/**
-   *
-   */
-	public void setCurveModelMinMax(Scale sc) {
+	 *
+	 */
+	public void setCurveModelMinMax(Scale sc)
+	{
 		double minx = sc.getDataMinimum();
 		double maxx = sc.getDataMaximum();
-		for (CurveDataModel cdm : _cdms) {
+		for(CurveDataModel cdm : _cdms)
+		{
 			cdm.setXViewMax(maxx);
 			cdm.setXViewMin(minx);
 		}
@@ -58,35 +82,43 @@ public class AxisDataSetMediator {
 	/**
 	 * Detach all data sets
 	 */
-	public void detachAll() {
+	public void detachAll()
+	{
 		_cdms.clear();
 	}
 
 	/**
 	 * returns true if atleast one data set is available
 	 */
-	public boolean hasDataSets() {
+	public boolean hasDataSets()
+	{
 		return (_cdms.size() > 0);
 	}
 
 	/**
-   *
-   */
-	public int getNumberOfCurves() {
+	 *
+	 */
+	public int getNumberOfCurves()
+	{
 		return _cdms.size();
 	}
 
 	/**
 	 * returns the minimum of data sets attached to the axis
 	 */
-	public double getMinimum() {
+	public double getMinimum()
+	{
 		double min = Float.MAX_VALUE;
 		int or = _axis.getOrientation();
 
-		for (CurveDataModel cdm : _cdms) {
-			if (or == AxisAttr.HORIZONTAL) {
+		for(CurveDataModel cdm : _cdms)
+		{
+			if(or == AxisAttr.HORIZONTAL)
+			{
 				min = Math.min(min, cdm.getXMin());
-			} else {
+			}
+			else
+			{
 				min = Math.min(min, cdm.getYMin());
 			}
 		}
@@ -96,30 +128,22 @@ public class AxisDataSetMediator {
 	/**
 	 * returns the maximum of data sets attached to the axis
 	 */
-	public double getMaximum() {
+	public double getMaximum()
+	{
 		double max = -Float.MAX_VALUE;
 		int or = _axis.getOrientation();
 
-		for (CurveDataModel cdm : _cdms) {
-			if (or == AxisAttr.HORIZONTAL) {
+		for(CurveDataModel cdm : _cdms)
+		{
+			if(or == AxisAttr.HORIZONTAL)
+			{
 				max = Math.max(max, cdm.getXMax());
-			} else {
+			}
+			else
+			{
 				max = Math.max(max, cdm.getYMax());
 			}
 		}
 		return max;
 	}
-
-	/**
-	 * The axis which needs to get the information about these data sets
-	 */
-	Axis _axis;
-	/**
-	 * The data sets containing all the data sets attached to the axis
-	 */
-	private ArrayList<CurveDataModel> _cdms;
-	/**
-   *
-   */
-	private static final boolean DEBUG = false;
 }

@@ -1,9 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-  ~ Copyright (c) 2019
-  ~ California Department of Water Resources
-  ~ All Rights Reserved.  DWR PROPRIETARY/CONFIDENTIAL.
-  ~ Source may not be released without written approval from DWR
+  ~ Enhanced Post Processing Tool (EPPT) Copyright (c) 2019.
+  ~
+  ~ EPPT is copyrighted by the State of California, Department of Water Resources. It is licensed
+  ~ under the GNU General Public License, version 2. This means it can be
+  ~ copied, distributed, and modified freely, but you may not restrict others
+  ~ in their ability to copy, distribute, and modify it. See the license below
+  ~ for more details.
+  ~
+  ~ GNU General Public License
   -->
 
 <project xmlns="http://maven.apache.org/POM/4.0.0"
@@ -13,22 +18,16 @@
 	<parent>
 		<groupId>gov.ca.water</groupId>
 		<artifactId>eppt-parent</artifactId>
-		<version>1.0.0-SNAPSHOT</version>
+		<version>1.0.1-SNAPSHOT</version>
 		<relativePath>../eppt-parent</relativePath>
 	</parent>
 	<artifactId>eppt-core</artifactId>
 	<name>EPPT Core</name>
 	<dependencies>
 		<dependency>
-			<groupId>org.swixml</groupId>
-			<artifactId>swixml</artifactId>
-			<version>240</version>
-			<classifier>CalLiteGUI_P3</classifier>
-		</dependency>
-		<dependency>
 			<groupId>gov.ca.water</groupId>
 			<artifactId>eppt-calsim-gui</artifactId>
-			<version>1.0.0-SNAPSHOT</version>
+			<version>${project.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>commons-io</groupId>
@@ -42,19 +41,27 @@
 		</dependency>
 		<dependency>
 			<groupId>hecjavadev-core</groupId>
-			<artifactId>hec-data</artifactId>
-			<version>dev-SNAPSHOT</version>
-		</dependency>
-		<dependency>
-			<groupId>hecjavadev-core</groupId>
 			<artifactId>hec-core</artifactId>
-			<version>dev-SNAPSHOT</version>
+			<version>6.0</version>
+			<classifier>DeltaERT-1-4-0-97-Obfuscated</classifier>
+			<exclusions>
+				<exclusion>
+					<groupId>*</groupId>
+					<artifactId>*</artifactId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 		<dependency>
 			<groupId>hec.dataui</groupId>
 			<artifactId>hec-data-ui</artifactId>
-			<version>1.1-SNAPSHOT</version>
-			<scope>runtime</scope>
+			<version>1.1</version>
+			<classifier>DeltaERT-1-4-0-97-Obfuscated</classifier>
+			<exclusions>
+				<exclusion>
+					<groupId>*</groupId>
+					<artifactId>*</artifactId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 		<dependency>
 			<groupId>org.jfree</groupId>
@@ -64,8 +71,7 @@
 		<dependency>
 			<groupId>gov.ca.water</groupId>
 			<artifactId>wrimsv2</artifactId>
-			<version>1.0</version>
-			<classifier>Wrims_Distribution</classifier>
+			<version>3470.bed59cee.master-dirty</version>
 		</dependency>
 		<dependency>
 			<groupId>com.itextpdf</groupId>
@@ -99,6 +105,16 @@
 			<version>5.4.0</version>
 			<scope>test</scope>
 		</dependency>
+		<dependency>
+			<groupId>com.google.guava</groupId>
+			<artifactId>guava</artifactId>
+			<version>27.1-jre</version>
+		</dependency>
+		<dependency>
+			<groupId>com.sunsetsoft</groupId>
+			<artifactId>xaoptimizer</artifactId>
+			<version>V16_x64</version>
+		</dependency>
 	</dependencies>
 	<repositories>
 		<repository>
@@ -124,6 +140,70 @@
 					<forkCount>3</forkCount>
 					<reuseForks>true</reuseForks>
 					<argLine>-Xmx1024m -XX:MaxPermSize=256m</argLine>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-dependency-plugin</artifactId>
+				<version>3.1.1</version>
+				<executions>
+					<execution>
+						<id>copy-dependencies</id>
+						<phase>validate</phase>
+						<goals>
+							<goal>copy</goal>
+						</goals>
+					</execution>
+				</executions>
+				<configuration>
+					<artifactItems>
+						<artifactItem>
+							<groupId>hec</groupId>
+							<artifactId>javaHeclib</artifactId>
+							<version>7-GS</version>
+							<type>dll</type>
+							<destFileName>javaHeclib.dll</destFileName>
+						</artifactItem>
+						<artifactItem>
+							<groupId>dwr</groupId>
+							<artifactId>callite</artifactId>
+							<version>v16</version>
+							<type>dll</type>
+							<destFileName>CalLiteV16.dll</destFileName>
+						</artifactItem>
+						<artifactItem>
+							<groupId>dwr</groupId>
+							<artifactId>callite-xa</artifactId>
+							<version>v16</version>
+							<type>lic</type>
+							<destFileName>CalLiteXAv16.lic</destFileName>
+						</artifactItem>
+						<artifactItem>
+							<groupId>sunsetsoft</groupId>
+							<artifactId>xa</artifactId>
+							<version>v16</version>
+							<classifier>x64</classifier>
+							<type>dll</type>
+							<destFileName>XAV16_x64.dll</destFileName>
+						</artifactItem>
+						<artifactItem>
+							<groupId>dwr</groupId>
+							<artifactId>n2xa</artifactId>
+							<version>v3</version>
+							<type>dll</type>
+							<destFileName>n2xav3.dll</destFileName>
+						</artifactItem>
+						<artifactItem>
+							<groupId>dwr</groupId>
+							<artifactId>cb</artifactId>
+							<version>v16</version>
+							<type>dll</type>
+							<destFileName>cb.dll</destFileName>
+						</artifactItem>
+					</artifactItems>
+					<outputDirectory>${project.build.directory}/lib</outputDirectory>
+					<overWriteReleases>true</overWriteReleases>
+					<overWriteSnapshots>true</overWriteSnapshots>
 				</configuration>
 			</plugin>
 		</plugins>

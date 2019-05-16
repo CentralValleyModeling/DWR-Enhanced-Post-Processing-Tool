@@ -1,5 +1,6 @@
 from calsim.app import DerivedTimeSeries, MultipleTimeSeries
 from calsim.gui import DefaultFrame, DTSTable, MTSTable
+
 dts = DerivedTimeSeries.load("test/dts1-demo.csv")
 dtable = DTSTable(dts)
 mts = MultipleTimeSeries.load("test/mts1-demo.csv")
@@ -19,4 +20,3 @@ for frame in frames:
     frame.pack()
     frame.setVisible(1)
 #
-

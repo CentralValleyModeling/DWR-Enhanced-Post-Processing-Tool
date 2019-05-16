@@ -1,8 +1,13 @@
 /*
- * Copyright (c) 2019
- * California Department of Water Resources
- * All Rights Reserved.  DWR PROPRIETARY/CONFIDENTIAL.
- * Source may not be released without written approval from DWR
+ * Enhanced Post Processing Tool (EPPT) Copyright (c) 2019.
+ *
+ * EPPT is copyrighted by the State of California, Department of Water Resources. It is licensed
+ * under the GNU General Public License, version 2. This means it can be
+ * copied, distributed, and modified freely, but you may not restrict others
+ * in their ability to copy, distribute, and modify it. See the license below
+ * for more details.
+ *
+ * GNU General Public License
  */
 package vista.app.schematic;
 
@@ -22,14 +27,37 @@ import vista.graph.TextLine;
 import vista.graph.TextLineAttr;
 
 /**
-  * 
-   */
-public class FluxElement extends GEContainer implements AnimationObserver {
+ *
+ */
+public class FluxElement extends GEContainer implements AnimationObserver
+{
 	/**
-    * 
-    */
+	 *
+	 */
+	DSMGridElement _grid;
+	/**
+	 *
+	 */
+	BarElement _barElement;
+	/**
+	 *
+	 */
+	TextLine _title;
+	/**
+	 *
+	 */
+	Node _node;
+	/**
+	 *
+	 */
+	FluxInput _input;
+
+	/**
+	 *
+	 */
 	public FluxElement(GEAttr attr, String filename, String pathname,
-			String name) {
+					   String name)
+	{
 		super(attr);
 		_input = new FluxInput(filename, pathname);
 
@@ -53,31 +81,36 @@ public class FluxElement extends GEContainer implements AnimationObserver {
 	}
 
 	/**
-    * 
-    */
-	public void setRange(float min, float max) {
+	 *
+	 */
+	public void setRange(float min, float max)
+	{
 		_barElement.setRange(min, max);
 	}
 
 	/**
-    * 
-    */
-	public void setGrid(DSMGridElement grid) {
+	 *
+	 */
+	public void setGrid(DSMGridElement grid)
+	{
 		_grid = grid;
 	}
 
 	/**
-    * 
-    */
-	public void setBaseNode(int nodeId) {
+	 *
+	 */
+	public void setBaseNode(int nodeId)
+	{
 		_node = _grid.getNetwork().getNode(nodeId);
 	}
 
 	/**
-    * 
-    */
-	public void setBounds(Rectangle r) {
-		if (_grid != null) {
+	 *
+	 */
+	public void setBounds(Rectangle r)
+	{
+		if(_grid != null)
+		{
 			Rectangle rb = getBounds();
 			Scale xS = _grid.getXScale();
 			Scale yS = _grid.getYScale();
@@ -87,52 +120,36 @@ public class FluxElement extends GEContainer implements AnimationObserver {
 			rb.width = 25;
 			rb.height = 70;
 			super.setBounds(rb);
-		} else {
+		}
+		else
+		{
 			super.setBounds(r);
 		}
 	}
 
 	/**
-    *
-    */
-	public void update(AnimationObservable o, Object arg) {
+	 *
+	 */
+	public void update(AnimationObservable o, Object arg)
+	{
 		_barElement.update(o, arg);
 	}
 
 	/**
-    * 
-    */
-	public void animateNext() {
+	 *
+	 */
+	public void animateNext()
+	{
 		// System.out.println(this.getClass().getName() + ".animateNext()");
 		_title.draw();
 		super.animateNext();
 	}
 
 	/**
-    * 
-    */
-	public void resetInput() {
+	 *
+	 */
+	public void resetInput()
+	{
 		_input.resetInput();
 	}
-
-	/**
-    * 
-    */
-	DSMGridElement _grid;
-	/**
-    * 
-    */
-	BarElement _barElement;
-	/**
-    * 
-    */
-	TextLine _title;
-	/**
-    * 
-    */
-	Node _node;
-	/**
-    * 
-    */
-	FluxInput _input;
 }

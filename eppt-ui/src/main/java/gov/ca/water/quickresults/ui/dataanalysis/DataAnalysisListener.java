@@ -1,8 +1,13 @@
 /*
- * Copyright (c) 2019
- * California Department of Water Resources
- * All Rights Reserved.  DWR PROPRIETARY/CONFIDENTIAL.
- * Source may not be released without written approval from DWR
+ * Enhanced Post Processing Tool (EPPT) Copyright (c) 2019.
+ *
+ * EPPT is copyrighted by the State of California, Department of Water Resources. It is licensed
+ * under the GNU General Public License, version 2. This means it can be
+ * copied, distributed, and modified freely, but you may not restrict others
+ * in their ability to copy, distribute, and modify it. See the license below
+ * for more details.
+ *
+ * GNU General Public License
  */
 
 package gov.ca.water.quickresults.ui.dataanalysis;
@@ -11,17 +16,24 @@ import java.awt.Component;
 import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.nio.file.Files;
 import java.util.concurrent.CompletableFuture;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.*;
 
-import gov.ca.water.calgui.bo.FileDialogBO;
 import gov.ca.water.calgui.constant.EpptPreferences;
 import gov.ca.water.calgui.presentation.Report;
-import gov.ca.water.calgui.tech_service.IDialogSvc;
-import gov.ca.water.calgui.tech_service.impl.DialogSvcImpl;
-import gov.ca.water.calgui.tech_service.impl.ErrorHandlingSvcImpl;
-import org.apache.log4j.Logger;
+import gov.ca.water.calgui.techservice.IDialogSvc;
+import gov.ca.water.calgui.techservice.impl.DialogSvcImpl;
+import gov.ca.water.calgui.techservice.impl.ErrorHandlingSvcImpl;
+import gov.ca.water.quickresults.ui.FileDialogBO;
 
 /**
  * Company: Resource Management Associates
@@ -106,7 +118,7 @@ public class DataAnalysisListener implements ActionListener
 	 */
 	private void generateReportAction()
 	{
-		String errorMsg = isInputsValid();
+		String errorMsg = areInputsValid();
 		if(errorMsg != null)
 		{
 			IDialogSvc dialogSvcInstance = DialogSvcImpl.getDialogSvcInstance();
@@ -114,7 +126,8 @@ public class DataAnalysisListener implements ActionListener
 		}
 		else
 		{
-			String filePath = EpptPreferences.getReportsPath().resolve(_dataAnalysisPanel.getOutputTextField().getText()).toString();
+			String filePath = EpptPreferences.getReportsPath().resolve(
+					_dataAnalysisPanel.getOutputTextField().getText()).toString();
 			File outputFile = new File(filePath);
 			if(outputFile.exists())
 			{
@@ -122,11 +135,7 @@ public class DataAnalysisListener implements ActionListener
 				String message = "The output file: '" + outputFile.getAbsolutePath() + "' already exists."
 						+ "\n Would you like to continue and replace the existing file?";
 				String yesNo = dialogSvcInstance.getYesNo(message, JOptionPane.WARNING_MESSAGE);
-				if("Yes".equalsIgnoreCase(yesNo))
-				{
-					int i = 0;
-				}
-				else
+				if(!"Yes".equalsIgnoreCase(yesNo))
 				{
 					return;
 				}
@@ -136,67 +145,94 @@ public class DataAnalysisListener implements ActionListener
 	}
 
 
-
-	private String isInputsValid()
+	private String areInputsValid()
 	{
-		String errorMsg = null;
+		String retval = null;
 		if(_dataAnalysisPanel.getDssResultFileField1().getText().isEmpty())
 		{
-			return "You must specify DSS result file #1";
+			retval = "You must specify DSS result file #1";
 		}
 		else if(_dataAnalysisPanel.getDssResultFileField2().getText().isEmpty())
 		{
-			return "You must specify DSS result file #2";
+			retval = "You must specify DSS result file #2";
 
 		}
 		else if(_dataAnalysisPanel.getOutputTextField().getText().isEmpty())
 		{
-			return "You must specify the report output PDF file";
+			retval = "You must specify the report output PDF file";
 		}
+		else
+		{
 
-		//check to see if the selected output path is a valid file name and path
-		String filePath = EpptPreferences.getReportsPath().resolve(_dataAnalysisPanel.getOutputTextField().getText()).toString();
+			//check to see if the selected output path is a valid file name and path
+			String filePath = EpptPreferences.getReportsPath().resolve(
+					_dataAnalysisPanel.getOutputTextField().getText()).toString();
+			String msg = hasFileWritingPermissions(filePath);
+			if(msg == null)
+			{
+
+				retval = hasValidFontSize(retval);
+			}
+		}
+		return retval;
+	}
+
+	private String hasValidFontSize(String retval)
+	{
+		String fontSize = _dataAnalysisPanel.getReportSize().getText();
+		if(fontSize == null || fontSize.isEmpty())
+		{
+			retval = "You must specify a font size";
+		}
+		else
+		{
+			try
+			{
+				double d = Double.parseDouble(fontSize);
+				if(d % 1 != 0)
+				{
+					retval = "The font size has to be an integer value";
+				}
+				else if(d < 0)
+				{
+					retval = "The font size cannot be negative";
+				}
+				else if(d == 0)
+				{
+					retval = "The font size cannot be zero";
+				}
+			}
+			catch(RuntimeException ex)
+			{
+				retval = "The font size entered could not be converted to a number";
+				LOGGER.log(Level.WARNING, "Font size error", ex);
+			}
+		}
+		return retval;
+	}
+
+	private String hasFileWritingPermissions(String filePath)
+	{
 		File outputFile = new File(filePath);
 		if(!outputFile.exists())
 		{
 			try
 			{
-				outputFile.createNewFile();
-				outputFile.delete();
+				boolean newFile = outputFile.createNewFile();
+				if(!newFile)
+				{
+					throw new IOException("Unable to create file: " + outputFile);
+				}
+				Files.delete(outputFile.toPath());
 			}
-			catch (IOException ex)
+			catch(IOException ex)
 			{
-				return "Error creating the Report Output File: " + outputFile.getName() + "\n" + ex.getMessage();
+				String msg = "Error creating the Report Output File: " + outputFile.getName() + "\n" + ex.getMessage();
+				LOGGER.log(Level.WARNING, msg, ex);
+				return msg;
 			}
 		}
-
-		String fontSize = _dataAnalysisPanel.getReportSize().getText();
-		if(fontSize == null || fontSize.isEmpty())
-		{
-			return "You must specify a font size";
-		}
-
-		try
-		{
-			double d = Double.parseDouble(fontSize);
-			if(d%1 != 0)
-			{
-				errorMsg = "The font size has to be an integer value";
-			}
-			else if(d<0)
-			{
-				errorMsg = "The font size cannot be negative";
-			}
-			else if(d==0)
-			{
-				errorMsg = "The font size cannot be zero";
-			}
-		}
-		catch(Exception ex)
-		{
-			errorMsg = "The font size entered could not be converted to a number";
-		}
-		return errorMsg;
+		return null;
 	}
 
 	private void generateReport()
@@ -210,31 +246,31 @@ public class DataAnalysisListener implements ActionListener
 			theText.append(br.readLine()).append("\n");
 			theText.append(br.readLine()).append("\n");
 			String skipLine = br.readLine();
-			LOGGER.debug("Skip Line: " + skipLine);
+			LOGGER.log(Level.FINE, "Skip Line: {0}", skipLine);
 			theText.append("FILE_BASE\t").append(_dataAnalysisPanel.getDssResultFileField1().getToolTipText()).append(
 					"\n");
 			skipLine = br.readLine();
-			LOGGER.debug("Skip Line: " + skipLine);
+			LOGGER.log(Level.FINE, "Skip Line: {0}", skipLine);
 			theText.append("NAME_BASE\t\"").append(_dataAnalysisPanel.getReportName1().getText()).append("\"\n");
 			skipLine = br.readLine();
-			LOGGER.debug("Skip Line: " + skipLine);
+			LOGGER.log(Level.FINE, "Skip Line: {0}", skipLine);
 			theText.append("FILE_ALT\t").append(_dataAnalysisPanel.getDssResultFileField2().getToolTipText()).append(
 					"\n");
 			skipLine = br.readLine();
-			LOGGER.debug("Skip Line: " + skipLine);
+			LOGGER.log(Level.FINE, "Skip Line: {0}", skipLine);
 			theText.append("NAME_ALT\t\"").append(_dataAnalysisPanel.getReportName2().getText()).append("\"\n");
 			skipLine = br.readLine();
-			LOGGER.debug("Skip Line: " + skipLine);
+			LOGGER.log(Level.FINE, "Skip Line: {0}", skipLine);
 			theText.append("OUTFILE\t").append(_dataAnalysisPanel.getOutputTextField().getToolTipText()).append("\n");
 			skipLine = br.readLine();
-			LOGGER.debug("Skip Line: " + skipLine);
+			LOGGER.log(Level.FINE, "Skip Line: {0}", skipLine);
 			theText.append("NOTE\t\"").append(_dataAnalysisPanel.getReportNotes().getText()).append("\"\n");
 			skipLine = br.readLine();
-			LOGGER.debug("Skip Line: " + skipLine);
+			LOGGER.log(Level.FINE, "Skip Line: {0}", skipLine);
 			theText.append("ASSUMPTIONS\t\"").append(_dataAnalysisPanel.getReportAssumptions().getText()).append(
 					"\"\n");
 			skipLine = br.readLine();
-			LOGGER.debug("Skip Line: " + skipLine);
+			LOGGER.log(Level.FINE, "Skip Line: {0}", skipLine);
 			theText.append("MODELER\t\"").append(_dataAnalysisPanel.getReportModeler().getText()).append("\"\n");
 
 			theText.append("TABLE_FONT_SIZE\t").append(_dataAnalysisPanel.getReportSize().getText()).append("\n");
@@ -255,7 +291,7 @@ public class DataAnalysisListener implements ActionListener
 		}
 		catch(IOException e1)
 		{
-			LOGGER.error(e1.getMessage());
+			LOGGER.severe(e1.getMessage());
 			String messageText = "Unable to display report.";
 			ErrorHandlingSvcImpl errorHandlingSvc = new ErrorHandlingSvcImpl();
 			errorHandlingSvc.businessErrorHandler(messageText, e1);

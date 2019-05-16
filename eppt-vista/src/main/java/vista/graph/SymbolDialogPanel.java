@@ -1,8 +1,13 @@
 /*
- * Copyright (c) 2019
- * California Department of Water Resources
- * All Rights Reserved.  DWR PROPRIETARY/CONFIDENTIAL.
- * Source may not be released without written approval from DWR
+ * Enhanced Post Processing Tool (EPPT) Copyright (c) 2019.
+ *
+ * EPPT is copyrighted by the State of California, Department of Water Resources. It is licensed
+ * under the GNU General Public License, version 2. This means it can be
+ * copied, distributed, and modified freely, but you may not restrict others
+ * in their ability to copy, distribute, and modify it. See the license below
+ * for more details.
+ *
+ * GNU General Public License
  */
 package vista.graph;
 
@@ -11,23 +16,43 @@ import javax.swing.*;
 
 /**
  * An editor for the attributes and state of the Curve object
- * 
- * @see Curve
+ *
  * @author Nicky Sandhu
  * @version $Id: SymbolDialogPanel.java,v 1.1 2003/10/02 20:49:09 redwood Exp $
+ * @see Curve
  */
-public class SymbolDialogPanel extends GEDialogPanel {
+public class SymbolDialogPanel extends GEDialogPanel
+{
+	/**
+	 *
+	 */
+	private final String BASIC = "Basic";
+	/**
+	 *
+	 */
+	private final String SYMBOL = "Symbol";
+	private final String TRIANGLE = "Triangle", SQUARE = "Square",
+			CROSS = "Cross", SLASH = "Slash", X = "X", BUTTERFLY = "ButterFly",
+			HOURGLASS = "Hour Glass";
+	/**
+	 *
+	 */
+	private JTextField textField, symbolSizeField;
+	private JCheckBox symbolFill;
+	private JComboBox symbolType;
 	/**
 	 * constructor
 	 */
-	public SymbolDialogPanel(Symbol symbol) {
+	public SymbolDialogPanel(Symbol symbol)
+	{
 		super(symbol);
 	}
 
 	/**
 	 * creates panels
 	 */
-	protected JPanel createPanel() {
+	protected JPanel createPanel()
+	{
 		JPanel basicPanel = super.createPanel();
 		// text editing
 		Symbol symbol = (Symbol) getGraphicElement();
@@ -62,52 +87,53 @@ public class SymbolDialogPanel extends GEDialogPanel {
 	/**
 	 * apply changes for both the basic graphic element and its specialization
 	 */
-	public void applyChanges() {
+	public void applyChanges()
+	{
 		super.applyChanges();
 		Symbol symbol = (Symbol) getGraphicElement();
 		SymbolAttr attr = (SymbolAttr) symbol.getAttributes();
 		attr._isFilled = symbolFill.isSelected();
 		int size = 2;
-		try {
+		try
+		{
 			size = new Integer(symbolSizeField.getText()).intValue();
-		} catch (NumberFormatException e) {
+		}
+		catch(NumberFormatException e)
+		{
 			JOptionPane.showMessageDialog(this, e);
 		}
 
-		if (symbolType.getSelectedItem().equals(TRIANGLE)) {
+		if(symbolType.getSelectedItem().equals(TRIANGLE))
+		{
 			attr.setSymbol(SymbolFactory.createTriangleShape(size));
-		} else if (symbolType.getSelectedItem().equals(SQUARE)) {
+		}
+		else if(symbolType.getSelectedItem().equals(SQUARE))
+		{
 			attr.setSymbol(SymbolFactory.createSquareShape(size));
-		} else if (symbolType.getSelectedItem().equals(CROSS)) {
+		}
+		else if(symbolType.getSelectedItem().equals(CROSS))
+		{
 			attr.setSymbol(SymbolFactory.createCrossShape(size));
-		} else if (symbolType.getSelectedItem().equals(SLASH)) {
+		}
+		else if(symbolType.getSelectedItem().equals(SLASH))
+		{
 			attr.setSymbol(SymbolFactory.createSlashShape(size));
-		} else if (symbolType.getSelectedItem().equals(X)) {
+		}
+		else if(symbolType.getSelectedItem().equals(X))
+		{
 			attr.setSymbol(SymbolFactory.createXShape(size));
-		} else if (symbolType.getSelectedItem().equals(BUTTERFLY)) {
+		}
+		else if(symbolType.getSelectedItem().equals(BUTTERFLY))
+		{
 			attr.setSymbol(SymbolFactory.createButterflyShape(size));
-		} else if (symbolType.getSelectedItem().equals(HOURGLASS)) {
+		}
+		else if(symbolType.getSelectedItem().equals(HOURGLASS))
+		{
 			attr.setSymbol(SymbolFactory.createHourGlassShape(size));
-		} else {
+		}
+		else
+		{
 			attr.setSymbol(SymbolFactory.createSquareShape(size));
 		}
 	}
-
-	/**
-    *
-    */
-	private JTextField textField, symbolSizeField;
-	private JCheckBox symbolFill;
-	private JComboBox symbolType;
-	/**
- *
- */
-	private final String BASIC = "Basic";
-	/**
- *
- */
-	private final String SYMBOL = "Symbol";
-	private final String TRIANGLE = "Triangle", SQUARE = "Square",
-			CROSS = "Cross", SLASH = "Slash", X = "X", BUTTERFLY = "ButterFly",
-			HOURGLASS = "Hour Glass";
 }

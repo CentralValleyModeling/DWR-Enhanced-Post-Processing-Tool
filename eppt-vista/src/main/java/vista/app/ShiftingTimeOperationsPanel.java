@@ -1,8 +1,13 @@
 /*
- * Copyright (c) 2019
- * California Department of Water Resources
- * All Rights Reserved.  DWR PROPRIETARY/CONFIDENTIAL.
- * Source may not be released without written approval from DWR
+ * Enhanced Post Processing Tool (EPPT) Copyright (c) 2019.
+ *
+ * EPPT is copyrighted by the State of California, Department of Water Resources. It is licensed
+ * under the GNU General Public License, version 2. This means it can be
+ * copied, distributed, and modified freely, but you may not restrict others
+ * in their ability to copy, distribute, and modify it. See the license below
+ * for more details.
+ *
+ * GNU General Public License
  */
 
 package vista.app;
@@ -24,19 +29,21 @@ import vista.time.TimeFactory;
 import vista.time.TimeInterval;
 
 @SuppressWarnings("serial")
-public class ShiftingTimeOperationsPanel extends JPanel {
+public class ShiftingTimeOperationsPanel extends JPanel
+{
 	// FIXME: duplicate of ConversionOperationsPanel (merge them)
-	private static final String[] INTERVALS = new String[] { "15MIN", "1HOUR",
-			"1DAY", "1MON" };
+	private static final String[] INTERVALS = new String[]{"15MIN", "1HOUR",
+			"1DAY", "1MON"};
 	GroupTable groupTable;
 	private JComboBox intervalBox;
 	private JButton shiftForwardButton;
 	private JButton shiftBackwardButton;
 
-	public ShiftingTimeOperationsPanel(GroupTable table) {
+	public ShiftingTimeOperationsPanel(GroupTable table)
+	{
 		this.groupTable = table;
 		this.setBorder(BorderFactory.createTitledBorder(BorderFactory
-				.createEtchedBorder(),
+						.createEtchedBorder(),
 				"Shift selected timeseries using parameters below"));
 		JPanel mainPanel = new JPanel();
 		mainPanel.setLayout(new BoxLayout(mainPanel, BoxLayout.Y_AXIS));
@@ -47,44 +54,54 @@ public class ShiftingTimeOperationsPanel extends JPanel {
 		buttonPanel.add(shiftBackwardButton = new JButton("Shift Backwards"));
 		mainPanel.add(buttonPanel);
 
-		shiftForwardButton.addActionListener(new ActionListener() {
+		shiftForwardButton.addActionListener(new ActionListener()
+		{
 
 			@Override
-			public void actionPerformed(ActionEvent e) {
+			public void actionPerformed(ActionEvent e)
+			{
 				doShift(true);
 			}
 		});
 
-		shiftBackwardButton.addActionListener(new ActionListener() {
+		shiftBackwardButton.addActionListener(new ActionListener()
+		{
 
 			@Override
-			public void actionPerformed(ActionEvent e) {
+			public void actionPerformed(ActionEvent e)
+			{
 				doShift(false);
 			}
 		});
 
 		intervalBox = new JComboBox();
 		intervalBox.setEditable(true);
-		for (int i = 0; i < INTERVALS.length; i++) {
+		for(int i = 0; i < INTERVALS.length; i++)
+		{
 			intervalBox.addItem(INTERVALS[i]);
 		}
 		mainPanel.add(intervalBox);
 		this.add(mainPanel);
 	}
 
-	protected void doShift(boolean forwards) {
+	protected void doShift(boolean forwards)
+	{
 		String intervalStr = intervalBox.getSelectedItem().toString();
-		try {
+		try
+		{
 			TimeInterval timeInterval = TimeFactory.getInstance()
-					.createTimeInterval(intervalStr);
-			if (!forwards){
+												   .createTimeInterval(intervalStr);
+			if(!forwards)
+			{
 				timeInterval = timeInterval.__mul__(-1);
 			}
 			DataReference[] references = groupTable.getSelectedReferences();
-			for (int i = 0; i < references.length; i++) {
+			for(int i = 0; i < references.length; i++)
+			{
 				DataReference ref = references[i];
 				DataSet data = ref.getData();
-				if (!(data instanceof TimeSeries)) {
+				if(!(data instanceof TimeSeries))
+				{
 					JOptionPane
 							.showConfirmDialog(
 									this,
@@ -94,15 +111,19 @@ public class ShiftingTimeOperationsPanel extends JPanel {
 					continue;
 				}
 				TimeSeries shifted = null;
-				if (data instanceof IrregularTimeSeries) {
+				if(data instanceof IrregularTimeSeries)
+				{
 					IrregularTimeSeries its = (IrregularTimeSeries) data;
 					shifted = TimeSeriesMath.createShifted(its, timeInterval);
 
-				} else if (data instanceof RegularTimeSeries) {
+				}
+				else if(data instanceof RegularTimeSeries)
+				{
 					RegularTimeSeries rts = (RegularTimeSeries) data;
 					shifted = TimeSeriesMath.createShifted(rts, timeInterval);
 				}
-				if (shifted != null) {
+				if(shifted != null)
+				{
 					Pathname pathname = Pathname.createPathname(ref
 							.getPathname());
 					pathname.setPart(Pathname.F_PART, pathname
@@ -111,14 +132,18 @@ public class ShiftingTimeOperationsPanel extends JPanel {
 					DataReference newRef = DSSUtil.createDataReference("local",
 							ref.getFilename(), pathname.toString(), shifted);
 					addReferenceToGroup(newRef);
-				} else {
+				}
+				else
+				{
 					JOptionPane.showConfirmDialog(this,
 							"Could not created shifted time series for "
 									+ data.getName(), "Warning",
 							JOptionPane.WARNING_MESSAGE);
 				}
 			}
-		} catch (Exception ex) {
+		}
+		catch(Exception ex)
+		{
 			JOptionPane.showConfirmDialog(this, ex.getMessage(), "Error",
 					JOptionPane.ERROR_MESSAGE);
 			return;
@@ -126,7 +151,8 @@ public class ShiftingTimeOperationsPanel extends JPanel {
 	}
 
 	// FIXME: copied from ConversionOperationsPanel
-	private void addReferenceToGroup(DataReference ref) {
+	private void addReferenceToGroup(DataReference ref)
+	{
 		// add to group and reset reference to null for next operation
 		groupTable.addReferenceAtCurrentSelection(ref);
 		groupTable.updateInfoPanel();

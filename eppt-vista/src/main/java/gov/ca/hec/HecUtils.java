@@ -1,8 +1,13 @@
 /*
- * Copyright (c) 2019
- * California Department of Water Resources
- * All Rights Reserved.  DWR PROPRIETARY/CONFIDENTIAL.
- * Source may not be released without written approval from DWR
+ * Enhanced Post Processing Tool (EPPT) Copyright (c) 2019.
+ *
+ * EPPT is copyrighted by the State of California, Department of Water Resources. It is licensed
+ * under the GNU General Public License, version 2. This means it can be
+ * copied, distributed, and modified freely, but you may not restrict others
+ * in their ability to copy, distribute, and modify it. See the license below
+ * for more details.
+ *
+ * GNU General Public License
  */
 
 package gov.ca.hec;
@@ -22,35 +27,38 @@ import hec.io.TimeSeriesContainer;
 
 /**
  * A few utility functions to access HECDSSVue functionality
- * 
- * @author psandhu
  *
+ * @author psandhu
  */
-public class HecUtils {
+public class HecUtils
+{
 	/**
 	 * opens a dss files only if it exists, else fails
-	 * 
+	 *
 	 * @throws Exception
 	 */
-	public static HecDss openDSS(String dssfile) throws Exception {
+	public static HecDss openDSS(String dssfile) throws Exception
+	{
 		return HecDss.open(dssfile, true);
 	}
 
 	/**
 	 * opens a dss files only if it exists, else fails
-	 * 
+	 *
 	 * @throws Exception
 	 */
-	public static HecDss openDSS(String dssfile, boolean existing) throws Exception {
+	public static HecDss openDSS(String dssfile, boolean existing) throws Exception
+	{
 		return HecDss.open(dssfile, existing);
 	}
 
 	/**
 	 * Takes a handle and closes it
-	 * 
+	 *
 	 * @param dss
 	 */
-	public static void closeDSS(HecDss dss) {
+	public static void closeDSS(HecDss dss)
+	{
 		dss.close();
 	}
 
@@ -60,7 +68,8 @@ public class HecUtils {
 	 * time) Note: setting these windows before accessing dss file can lead to
 	 * some odd truncation of data.
 	 */
-	public static void setWorkingTimewindow(HecDss dss, String stime, String etime) {
+	public static void setWorkingTimewindow(HecDss dss, String stime, String etime)
+	{
 		dss.setTimeWindow(stime, etime);
 	}
 
@@ -70,17 +79,21 @@ public class HecUtils {
 	 * format [/[part string to match| empty] repeated for A-F E.g.
 	 * /OBS/MTZ/STAGE/1HOUR//SENSOR-36/ would be transformed to A=OBS B=MTZ
 	 * C=STAGE D=1HOUR F=SENSOR-36. Note that E part is skipped as it is empty
-	 * 
+	 *
 	 * @return
 	 */
-	public static String createPathPattern(String pathstr) {
+	public static String createPathPattern(String pathstr)
+	{
 		String[] fields = pathstr.split("/");
-		String[] parts = { "A", "B", "C", "D", "E", "F" };
+		String[] parts = {"A", "B", "C", "D", "E", "F"};
 		String pattern = "";
-		for (int part = 0; part < parts.length; part++) {
+		for(int part = 0; part < parts.length; part++)
+		{
 			String partVal = fields[part + 1].trim();
-			if (partVal.length() == 0)
+			if(partVal.length() == 0)
+			{
 				continue;
+			}
 			pattern = pattern + parts[part] + "=" + partVal + " ";
 		}
 		return pattern.trim();
@@ -90,17 +103,21 @@ public class HecUtils {
 	 * Takes a dss handle and a pattern in format of "([part letter
 	 * (A|B|C|D|E|F)]=<string to match> [space])*" e.g. get_matching(obs,'A=OBS
 	 * C=MTZ E=15MIN')
-	 * 
+	 * <p>
 	 * Fails by return None and printing message of failure.
-	 * 
+	 *
 	 * @throws Exception
 	 */
-	public static DataContainer getMatching(HecDss dss, String pattern) throws Exception {
+	public static DataContainer getMatching(HecDss dss, String pattern) throws Exception
+	{
 		@SuppressWarnings("unchecked")
 		Vector<String> matches = dss.getCatalogedPathnames(pattern);
-		if (matches.size() >= 1) {
+		if(matches.size() >= 1)
+		{
 			return dss.get(matches.get(0));
-		} else {
+		}
+		else
+		{
 			System.err.println("No match for: " + pattern + ", " + matches);
 			return null;
 		}
@@ -108,10 +125,11 @@ public class HecUtils {
 
 	/**
 	 * Calculate root mean square error between the two time series and return the value.
+	 *
 	 * @throws HecMathException
-	 * 
 	 */
-	public static double calculateRMS(TimeSeriesContainer model, TimeSeriesContainer obs) throws HecMathException {
+	public static double calculateRMS(TimeSeriesContainer model, TimeSeriesContainer obs) throws HecMathException
+	{
 		TimeSeriesMath modelt = new TimeSeriesMath(model);
 		TimeSeriesMath obst = new TimeSeriesMath(obs);
 		HecMath diff = modelt.subtract(obst);
@@ -121,10 +139,10 @@ public class HecUtils {
 	/**
 	 * Calculate Nash Sutcliffe efficiency between the two time series.
 	 * <a href="https://en.wikipedia.org/wiki/Nash%E2%80%93Sutcliffe_model_efficiency_coefficient">Nash Sutcliffe Efficiency Coefficient</a>
-	 * 
 	 */
 	public static double calculateNashSutcliffeEfficiency(TimeSeriesContainer model, TimeSeriesContainer obs)
-			throws HecMathException {
+			throws HecMathException
+	{
 		TimeSeriesMath modelt = new TimeSeriesMath(model);
 		TimeSeriesMath obst = new TimeSeriesMath(obs);
 		double tavg = obst.abs().sum() / obst.numberValidValues();
@@ -134,22 +152,27 @@ public class HecUtils {
 	}
 
 	/**
-	 *  For the open dss handle and dss path and time window string return the time series container for the request
+	 * For the open dss handle and dss path and time window string return the time series container for the request
 	 */
-	public static DataContainer getMatching(HecDss dss, String dsspath, String twStr) throws Exception {
+	public static DataContainer getMatching(HecDss dss, String dsspath, String twStr) throws Exception
+	{
 		String dsspathRegEx = searchRegex(replaceAndEscape(dsspath), dss);
-		if (dsspathRegEx == null) {
+		if(dsspathRegEx == null)
+		{
 			return null;
 		}
 		String startTime = null;
 		String endTime = null;
-		if (twStr == null || twStr.length() == 0) {
+		if(twStr == null || twStr.length() == 0)
+		{
 			HecTime start = new HecTime();
 			HecTime end = new HecTime();
 			dss.getTimeSeriesExtents(dsspathRegEx, start, end);
 			startTime = start.dateAndTime();
 			endTime = end.dateAndTime();
-		} else {
+		}
+		else
+		{
 			String[] twFields = twStr.split(" ");
 			startTime = twFields[0] + " " + twFields[1];
 			endTime = twFields[2] + " " + twFields[3];
@@ -159,54 +182,68 @@ public class HecUtils {
 	}
 
 	/**
-	 * parse time window from dss path. This is the format that the condensed catalog from HECDSS files of the form 
-	 * 01JAN1990 2400-05JAN1992 0200 
+	 * parse time window from dss path. This is the format that the condensed catalog from HECDSS files of the form
+	 * 01JAN1990 2400-05JAN1992 0200
 	 */
-	public static String parseTimeWindowFromPath(String dsspath) {
+	public static String parseTimeWindowFromPath(String dsspath)
+	{
 		DSSPathname pathname = new DSSPathname(dsspath);
 		String[] fields = pathname.getDPart().split(" - ");
 		return fields[0] + " 0000 " + fields[1] + " 0000";
 	}
 
 	/**
-	 * Search for regular expression in the dss condensed catalog. 
+	 * Search for regular expression in the dss condensed catalog.
+	 *
 	 * @ return first pathname that matches or null
 	 */
-	public static String searchRegex(String regpath, HecDss dss) {
+	public static String searchRegex(String regpath, HecDss dss)
+	{
 		Vector<CondensedReference> condensedCatalog = dss.getCondensedCatalog();
 		Pattern p = Pattern.compile(regpath, Pattern.CASE_INSENSITIVE);
-		for (CondensedReference condensedReference : condensedCatalog) {
+		for(CondensedReference condensedReference : condensedCatalog)
+		{
 			String pathname = condensedReference.getNominalPathname();
-			if (p.matcher(pathname).matches()) {
+			if(p.matcher(pathname).matches())
+			{
 				return pathname;
 			}
 		}
 		return null;
 	}
-	
+
 	/**
 	 * Escaping certain characters in a regular expression for the dss pathname and returning as a string
 	 */
-	public static String replaceAndEscape(String dsspath) {
-		if (dsspath == null)
+	public static String replaceAndEscape(String dsspath)
+	{
+		if(dsspath == null)
+		{
 			return ".*";
+		}
 		String[] fields = dsspath.split("/");
 		StringBuilder sb = new StringBuilder();
 		int slashCount = 0;
-		for (String f : fields) {
+		for(String f : fields)
+		{
 			slashCount++;
-			if (slashCount == 1) {
+			if(slashCount == 1)
+			{
 				sb.append("/");
 				continue;
 			}
-			if (f.length() == 0) {
+			if(f.length() == 0)
+			{
 				sb.append(".*");
-			} else {
+			}
+			else
+			{
 				sb.append(Pattern.quote(f));
 			}
 			sb.append("/");
 		}
-		while (slashCount < 7) {
+		while(slashCount < 7)
+		{
 			sb.append(".*/");
 			slashCount++;
 		}
@@ -215,13 +252,14 @@ public class HecUtils {
 
 	/**
 	 * Average the time series for the given interval (as a string) and return time series
+	 *
 	 * @param dataContainer
-	 * @param intervalAsString
-	 *            e.g., "1DAY" for daily averaging
+	 * @param intervalAsString e.g., "1DAY" for daily averaging
 	 * @return
 	 * @throws HecMathException
 	 */
-	public static DataContainer average(DataContainer dataContainer, String intervalAsString) throws HecMathException {
+	public static DataContainer average(DataContainer dataContainer, String intervalAsString) throws HecMathException
+	{
 		return new TimeSeriesMath((TimeSeriesContainer) dataContainer)
 				.transformTimeSeries(intervalAsString, null, "AVE").getData();
 	}

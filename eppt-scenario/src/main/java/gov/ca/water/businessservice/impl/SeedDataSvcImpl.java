@@ -1,12 +1,18 @@
 /*
- * Copyright (c) 2019
- * California Department of Water Resources
- * All Rights Reserved.  DWR PROPRIETARY/CONFIDENTIAL.
- * Source may not be released without written approval from DWR
+ * Enhanced Post Processing Tool (EPPT) Copyright (c) 2019.
+ *
+ * EPPT is copyrighted by the State of California, Department of Water Resources. It is licensed
+ * under the GNU General Public License, version 2. This means it can be
+ * copied, distributed, and modified freely, but you may not restrict others
+ * in their ability to copy, distribute, and modify it. See the license below
+ * for more details.
+ *
+ * GNU General Public License
  */
 
 package gov.ca.water.businessservice.impl;
 
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -19,8 +25,8 @@ import gov.ca.water.businessservice.ISeedDataSvc;
 import gov.ca.water.calgui.EpptInitializationException;
 import gov.ca.water.calgui.bo.CalLiteGUIException;
 import gov.ca.water.calgui.constant.Constant;
-import gov.ca.water.calgui.tech_service.IFileSystemSvc;
-import gov.ca.water.calgui.tech_service.impl.FileSystemSvcImpl;
+import gov.ca.water.calgui.techservice.IFileSystemSvc;
+import gov.ca.water.calgui.techservice.impl.FileSystemSvcImpl;
 import org.apache.log4j.Logger;
 
 import static gov.ca.water.calgui.constant.Constant.CSV_EXT;
@@ -155,7 +161,7 @@ public class SeedDataSvcImpl implements ISeedDataSvc
 		String errorStr = "";
 		try
 		{
-			List<String> guiLinks4StrList = fileSystemSvc.getFileData(GUI_LINKS4_FILENAME, true,
+			List<String> guiLinks4StrList = fileSystemSvc.getFileData(Paths.get(GUI_LINKS4_FILENAME), true,
 					SeedDataSvcImpl::isNotComments);
 			for(String guiLink4Str : guiLinks4StrList)
 			{
@@ -189,7 +195,7 @@ public class SeedDataSvcImpl implements ISeedDataSvc
 		String errorStr = "";
 		try
 		{
-			List<String> guiLinks2StrList = fileSystemSvc.getFileData(GUI_LINKS2_FILENAME, true,
+			List<String> guiLinks2StrList = fileSystemSvc.getFileData(Paths.get(GUI_LINKS2_FILENAME), true,
 					SeedDataSvcImpl::isNotComments);
 			for(String guiLinks2Str : guiLinks2StrList)
 			{

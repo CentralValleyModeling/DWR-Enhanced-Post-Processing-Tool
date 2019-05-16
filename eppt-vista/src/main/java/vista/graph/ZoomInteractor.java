@@ -1,8 +1,13 @@
 /*
- * Copyright (c) 2019
- * California Department of Water Resources
- * All Rights Reserved.  DWR PROPRIETARY/CONFIDENTIAL.
- * Source may not be released without written approval from DWR
+ * Enhanced Post Processing Tool (EPPT) Copyright (c) 2019.
+ *
+ * EPPT is copyrighted by the State of California, Department of Water Resources. It is licensed
+ * under the GNU General Public License, version 2. This means it can be
+ * copied, distributed, and modified freely, but you may not restrict others
+ * in their ability to copy, distribute, and modify it. See the license below
+ * for more details.
+ *
+ * GNU General Public License
  */
 package vista.graph;
 
@@ -23,81 +28,12 @@ import javax.swing.*;
 /**
  * This class handles interaction of mouse and mouse motion with Graph class and
  * its components.
- * 
+ *
  * @author Nicky Sandhu
  * @version $Id: ZoomInteractor.java,v 1.1 2003/10/02 20:49:12 redwood Exp $
  */
-public class ZoomInteractor extends ElementInteractor {
-	@SuppressWarnings("serial")
-	private final static class PagingAction extends AbstractAction {
-
-		private int axisDirection;
-		private ZoomInteractor zi;
-
-		public PagingAction(ZoomInteractor zi, int axisDirection) {
-			super("", getIcon(axisDirection));
-			this.zi = zi;
-			this.axisDirection = axisDirection;
-			putValue(SHORT_DESCRIPTION, getDescription(axisDirection));
-			putValue(MNEMONIC_KEY, getMnemonicKey(axisDirection));
-		}
-
-		static String getDescription(int axisDirection) {
-			switch (axisDirection) {
-			case AxisAttr.TOP:
-				return "Page Up";
-			case AxisAttr.BOTTOM:
-				return "Page Down";
-			case AxisAttr.LEFT:
-				return "Page Left";
-			case AxisAttr.RIGHT:
-				return "Page Right";
-			default:
-				return "Page Reset";
-			}
-		}
-
-		static Icon getIcon(int axisDirection) {
-			switch (axisDirection) {
-			case AxisAttr.TOP:
-				return new ImageIcon(ZoomInteractor.class
-						.getResource("/vista/images/arrow-up-sharp.gif"));
-			case AxisAttr.BOTTOM:
-				return new ImageIcon(ZoomInteractor.class
-						.getResource("/vista/images/arrow-dn-sharp.gif"));
-			case AxisAttr.LEFT:
-				return new ImageIcon(ZoomInteractor.class
-						.getResource("/vista/images/arrow-lft-sharp.gif"));
-			case AxisAttr.RIGHT:
-				return new ImageIcon(ZoomInteractor.class
-						.getResource("/vista/images/arrow-rit-sharp.gif"));
-			default:
-				return new ImageIcon(ZoomInteractor.class
-						.getResource("/vista/images/center.gif"));
-			}
-		}
-
-		static Integer getMnemonicKey(int axisDirection) {
-			switch (axisDirection) {
-			case AxisAttr.TOP:
-				return new Integer(KeyEvent.VK_UP);
-			case AxisAttr.BOTTOM:
-				return new Integer(KeyEvent.VK_DOWN);
-			case AxisAttr.LEFT:
-				return new Integer(KeyEvent.VK_LEFT);
-			case AxisAttr.RIGHT:
-				return new Integer(KeyEvent.VK_RIGHT);
-			default:
-				return new Integer(KeyEvent.VK_HOME);
-			}
-		}
-
-		@Override
-		public void actionPerformed(ActionEvent e) {
-			zi.pageToPosition(axisDirection);
-		}
-	}
-
+public class ZoomInteractor extends ElementInteractor
+{
 	/**
 	 * for debuggin' purposes
 	 */
@@ -107,10 +43,9 @@ public class ZoomInteractor extends ElementInteractor {
 	private int sensitivity = 25; // a movement of atleast 25 pixels is needed
 	private JButton zob;
 	private JPanel pagingPanel;
-
 	/**
 	 * Controls zooming in/out and storage of state for being able to do so.
-	 * 
+	 *
 	 * @see Zoom
 	 */
 	private Zoom _zoom;
@@ -168,15 +103,16 @@ public class ZoomInteractor extends ElementInteractor {
 	private JButton rightButton;
 	private JButton leftButton;
 	private JButton centerButton;
-
 	/**
 	 * constructor
 	 */
-	public ZoomInteractor(ElementContext gC) {
+	public ZoomInteractor(ElementContext gC)
+	{
 		_gC = gC;
 	}
 
-	public void addZoomControlToolbar(JFrame fr) {
+	public void addZoomControlToolbar(JFrame fr)
+	{
 		JToolBar tb = new JToolBar();
 		tb.setFloatable(false);
 		tb.setFocusable(false);
@@ -184,8 +120,10 @@ public class ZoomInteractor extends ElementInteractor {
 		zob = new JButton(new ImageIcon(getClass().getResource(
 				"/vista/images/zoom-out-icon.png")));
 		zob.setToolTipText("Zoom Out");
-		zob.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent evt) {
+		zob.addActionListener(new ActionListener()
+		{
+			public void actionPerformed(ActionEvent evt)
+			{
 				zoomOut();
 				((JComponent) _gC).requestFocus();
 			}
@@ -223,7 +161,8 @@ public class ZoomInteractor extends ElementInteractor {
 		tb.add(pagingPanel);
 
 		Container contentPane = fr.getContentPane();
-		if (contentPane instanceof JPanel) {
+		if(contentPane instanceof JPanel)
+		{
 			JPanel mainPanel = (JPanel) contentPane;
 			InputMap inputMap = mainPanel
 					.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW);
@@ -249,12 +188,14 @@ public class ZoomInteractor extends ElementInteractor {
 		contentPane.add(tb, BorderLayout.NORTH);
 	}
 
-	public Object getMnemonicKey() {
+	public Object getMnemonicKey()
+	{
 		// TODO Auto-generated method stub
 		return null;
 	}
 
-	public void setZoomOutPagingEnabled(boolean enable) {
+	public void setZoomOutPagingEnabled(boolean enable)
+	{
 		zob.setEnabled(enable);
 		upButton.setEnabled(enable);
 		downButton.setEnabled(enable);
@@ -264,53 +205,72 @@ public class ZoomInteractor extends ElementInteractor {
 	}
 
 	/**
-    *
-    */
-	public void releaseResources() {
+	 *
+	 */
+	public void releaseResources()
+	{
 		_gC = null;
 		_gCImage = null;
 	}
 
 	/**
-   *
-   */
-	private Plot getPlot(int x, int y) {
+	 *
+	 */
+	private Plot getPlot(int x, int y)
+	{
 		Graph graph = (Graph) _gC.getGraphicElement();
 		Plot plot = graph.getPlot();
 		GraphicElement[] leafs = graph.getElements(MultiPlot.class);
-		if (leafs == null) {
+		if(leafs == null)
+		{
 			return plot;
 		}
-		if (leafs.length == 1) {
+		if(leafs.length == 1)
+		{
 			MultiPlot mp = (MultiPlot) leafs[0];
 			leafs = mp.getElements(Plot.class);
 		}
-		if (leafs == null)
+		if(leafs == null)
+		{
 			return plot;
-		for (int i = 0; i < leafs.length; i++) {
-			if (leafs[i] instanceof MultiPlot)
-				continue;
-			Plot p = (Plot) leafs[i];
-			if (p != null && p.contains(x, y))
-				plot = p;
-			if (DEBUG)
-				System.out.println(i + ": " + leafs[i]);
 		}
-		if (DEBUG)
+		for(int i = 0; i < leafs.length; i++)
+		{
+			if(leafs[i] instanceof MultiPlot)
+			{
+				continue;
+			}
+			Plot p = (Plot) leafs[i];
+			if(p != null && p.contains(x, y))
+			{
+				plot = p;
+			}
+			if(DEBUG)
+			{
+				System.out.println(i + ": " + leafs[i]);
+			}
+		}
+		if(DEBUG)
+		{
 			System.out.println("Plot @ " + "(" + x + "," + y + "): "
 					+ plot.getClass().getName() + "@"
 					+ Integer.toHexString(plot.hashCode()));
+		}
 		return plot;
 	}
 
 	/**
-   *
-   */
-	private Zoom getZoomFor(Plot plot) {
-		for (Iterator<Zoom> e = _zooms.iterator(); e.hasNext();) {
+	 *
+	 */
+	private Zoom getZoomFor(Plot plot)
+	{
+		for(Iterator<Zoom> e = _zooms.iterator(); e.hasNext(); )
+		{
 			Zoom z = e.next();
-			if (z.getPlot().equals(plot))
+			if(z.getPlot().equals(plot))
+			{
 				return z;
+			}
 		}
 		Zoom z = new Zoom(plot);
 		_zooms.add(z);
@@ -320,28 +280,36 @@ public class ZoomInteractor extends ElementInteractor {
 	/**
 	 * sets tool tip to current co-ordinates
 	 */
-	public void mouseMoved(MouseEvent e) {
+	public void mouseMoved(MouseEvent e)
+	{
 	}
 
 	/**
 	 * Invoked when a mouse button has been pressed on a component. This sets
 	 * the initial point of the zoom region
 	 */
-	public void mousePressed(MouseEvent e) {
+	public void mousePressed(MouseEvent e)
+	{
 		setInitialPoint(e.getX(), e.getY());
 		// get Plot clicked on...
 		_plot = getPlot(e.getX(), e.getY());
 		// get zoom object for this plot or create a new one for it...
 		_zoom = getZoomFor(_plot);
-		if (DEBUG)
+		if(DEBUG)
+		{
 			System.out.println("Zooming: ");
-		if (DEBUG)
+		}
+		if(DEBUG)
+		{
 			System.out.println("Initial Point: " + e.getX() + ", " + e.getY());
+		}
 		_drawDragRect = true;
 
 		_previouslyDoubleBuffered = _gC.isDoubleBuffered();
-		if (!_previouslyDoubleBuffered)
+		if(!_previouslyDoubleBuffered)
+		{
 			_gC.setDoubleBuffered(true);
+		}
 
 		Rectangle r = _gC.getBounds();
 		_gCImage = _gC.createImage(r.width, r.height);
@@ -355,12 +323,15 @@ public class ZoomInteractor extends ElementInteractor {
 	 * If mouse was clicked without dragging then zoom out is done to the
 	 * previous zoom state.
 	 */
-	public void mouseReleased(MouseEvent e) {
-		if (_mouseDragged) {
+	public void mouseReleased(MouseEvent e)
+	{
+		if(_mouseDragged)
+		{
 			_drawDragRect = false;
 
 			// check sensitivity
-			if (Math.pow(_xf - _xi, 2) + Math.pow(_yf - _yi, 2) < sensitivity) {
+			if(Math.pow(_xf - _xi, 2) + Math.pow(_yf - _yi, 2) < sensitivity)
+			{
 				_mouseDragged = false;
 				_gC.repaint();
 				return;
@@ -368,8 +339,10 @@ public class ZoomInteractor extends ElementInteractor {
 
 			setFinalPoint(e.getX(), e.getY());
 
-			if (_zoomRect.width == 0 || _zoomRect.height == 0)
+			if(_zoomRect.width == 0 || _zoomRect.height == 0)
+			{
 				return;
+			}
 			_zoom.zoomIn(_zoomRect);
 
 			_gC.redoNextPaint();
@@ -378,24 +351,31 @@ public class ZoomInteractor extends ElementInteractor {
 			_mouseDragged = false;
 
 			setZoomOutPagingEnabled(true);
-		} else {
+		}
+		else
+		{
 		}
 	}
 
 	/**
 	 * restores previous zoom
 	 */
-	public void zoomOut() {
-		if (_zoom == null)
+	public void zoomOut()
+	{
+		if(_zoom == null)
+		{
 			return;
-		if (_zoom.zoomOut()) {
+		}
+		if(_zoom.zoomOut())
+		{
 
 			_gC.redoNextPaint();
 			_gC.repaint();
 
 			_mouseDragged = false;
 		}
-		if (_zoom.isZoomedOutAllTheWay()) {
+		if(_zoom.isZoomedOutAllTheWay())
+		{
 			setZoomOutPagingEnabled(false);
 		}
 	}
@@ -408,9 +388,11 @@ public class ZoomInteractor extends ElementInteractor {
 	 * does not draw the complete image when a complicated drawing is done. This
 	 * affects multiple curve plot.
 	 */
-	public void mouseDragged(MouseEvent e) {
+	public void mouseDragged(MouseEvent e)
+	{
 		_mouseDragged = true;
-		if (_drawDragRect) {
+		if(_drawDragRect)
+		{
 			Graphics g = _gCImage.getGraphics();
 			Rectangle bounds = _gC.getBounds();
 			bounds.x = 0;
@@ -425,16 +407,24 @@ public class ZoomInteractor extends ElementInteractor {
 		}
 	}
 
-	public void pageToPosition(int nPos) {
-		if (!_isPageMode)
-			return;
-		if (_zoom == null) {
+	public void pageToPosition(int nPos)
+	{
+		if(!_isPageMode)
+		{
 			return;
 		}
-		if (nPos == -1)
+		if(_zoom == null)
+		{
+			return;
+		}
+		if(nPos == -1)
+		{
 			_zoom.zoomReset();
+		}
 		else
+		{
 			_zoom.nextPage(nPos);
+		}
 		_gC.redoNextPaint();
 		_gC.repaint();
 	}
@@ -442,7 +432,8 @@ public class ZoomInteractor extends ElementInteractor {
 	/**
 	 * Sets initial point of zoom rectangle region
 	 */
-	public void setInitialPoint(int x, int y) {
+	public void setInitialPoint(int x, int y)
+	{
 		_xi = x;
 		_yi = y;
 	}
@@ -451,7 +442,8 @@ public class ZoomInteractor extends ElementInteractor {
 	 * Sets final point of zoom rectangle region. This would be the point
 	 * diagonally opposite the initial point
 	 */
-	public void setFinalPoint(int x, int y) {
+	public void setFinalPoint(int x, int y)
+	{
 		_xf = x;
 		_yf = y;
 		constructRectangle();
@@ -461,20 +453,28 @@ public class ZoomInteractor extends ElementInteractor {
 	 * Constructs rectangle from set of diagonally opposite points. Stores this
 	 * rectangle into a stack
 	 */
-	private void constructRectangle() {
+	private void constructRectangle()
+	{
 		_zoomRect.x = Math.min(_xi, _xf);
 		_zoomRect.y = Math.min(_yi, _yf);
 		_zoomRect.width = Math.abs(_xi - _xf);
 		_zoomRect.height = Math.abs(_yi - _yf);
 
 		Rectangle drawingRegion = _plot.getDrawingRegion();
-		if (DEBUG)
+		if(DEBUG)
+		{
 			System.out.println(drawingRegion);
-		if (DEBUG)
+		}
+		if(DEBUG)
+		{
 			System.out.println(_zoomRect);
-		if (drawingRegion.intersects(_zoomRect)) {
-			if (DEBUG)
+		}
+		if(drawingRegion.intersects(_zoomRect))
+		{
+			if(DEBUG)
+			{
 				System.out.println("Drawing region intersects zoom rectangle");
+			}
 			int x1 = Math.max(drawingRegion.x, _zoomRect.x);
 			int x2 = Math.min(drawingRegion.x + drawingRegion.width,
 					_zoomRect.x + _zoomRect.width);
@@ -485,11 +485,17 @@ public class ZoomInteractor extends ElementInteractor {
 			_zoomRect.y = y1;
 			_zoomRect.width = x2 - x1;
 			_zoomRect.height = y2 - y1;
-			if (_zoomRect.width == 0)
+			if(_zoomRect.width == 0)
+			{
 				_zoomRect.width = 1;
-			if (_zoomRect.height == 0)
+			}
+			if(_zoomRect.height == 0)
+			{
 				_zoomRect.height = 1;
-		} else {
+			}
+		}
+		else
+		{
 			_zoomRect.x = 0;
 			_zoomRect.y = 0;
 			_zoomRect.width = 0;
@@ -501,22 +507,104 @@ public class ZoomInteractor extends ElementInteractor {
 	 * Set the color of the rectangle drawn when zooming in to specify the
 	 * zooming in region
 	 */
-	public void setZoomRectangleColor(Color c) {
+	public void setZoomRectangleColor(Color c)
+	{
 		_zoomRectColor = c;
 	}
 
 	/**
 	 * checks if paging is on
 	 */
-	public boolean isInPagingMode() {
+	public boolean isInPagingMode()
+	{
 		return _isPageMode;
 	}
 
 	/**
 	 * sets the paging mode.
 	 */
-	public void setPagingMode(boolean b) {
+	public void setPagingMode(boolean b)
+	{
 		_isPageMode = b;
+	}
+
+	@SuppressWarnings("serial")
+	private final static class PagingAction extends AbstractAction
+	{
+
+		private int axisDirection;
+		private ZoomInteractor zi;
+
+		public PagingAction(ZoomInteractor zi, int axisDirection)
+		{
+			super("", getIcon(axisDirection));
+			this.zi = zi;
+			this.axisDirection = axisDirection;
+			putValue(SHORT_DESCRIPTION, getDescription(axisDirection));
+			putValue(MNEMONIC_KEY, getMnemonicKey(axisDirection));
+		}
+
+		static String getDescription(int axisDirection)
+		{
+			switch(axisDirection)
+			{
+				case AxisAttr.TOP:
+					return "Page Up";
+				case AxisAttr.BOTTOM:
+					return "Page Down";
+				case AxisAttr.LEFT:
+					return "Page Left";
+				case AxisAttr.RIGHT:
+					return "Page Right";
+				default:
+					return "Page Reset";
+			}
+		}
+
+		static Icon getIcon(int axisDirection)
+		{
+			switch(axisDirection)
+			{
+				case AxisAttr.TOP:
+					return new ImageIcon(ZoomInteractor.class
+							.getResource("/vista/images/arrow-up-sharp.gif"));
+				case AxisAttr.BOTTOM:
+					return new ImageIcon(ZoomInteractor.class
+							.getResource("/vista/images/arrow-dn-sharp.gif"));
+				case AxisAttr.LEFT:
+					return new ImageIcon(ZoomInteractor.class
+							.getResource("/vista/images/arrow-lft-sharp.gif"));
+				case AxisAttr.RIGHT:
+					return new ImageIcon(ZoomInteractor.class
+							.getResource("/vista/images/arrow-rit-sharp.gif"));
+				default:
+					return new ImageIcon(ZoomInteractor.class
+							.getResource("/vista/images/center.gif"));
+			}
+		}
+
+		static Integer getMnemonicKey(int axisDirection)
+		{
+			switch(axisDirection)
+			{
+				case AxisAttr.TOP:
+					return new Integer(KeyEvent.VK_UP);
+				case AxisAttr.BOTTOM:
+					return new Integer(KeyEvent.VK_DOWN);
+				case AxisAttr.LEFT:
+					return new Integer(KeyEvent.VK_LEFT);
+				case AxisAttr.RIGHT:
+					return new Integer(KeyEvent.VK_RIGHT);
+				default:
+					return new Integer(KeyEvent.VK_HOME);
+			}
+		}
+
+		@Override
+		public void actionPerformed(ActionEvent e)
+		{
+			zi.pageToPosition(axisDirection);
+		}
 	}
 
 }

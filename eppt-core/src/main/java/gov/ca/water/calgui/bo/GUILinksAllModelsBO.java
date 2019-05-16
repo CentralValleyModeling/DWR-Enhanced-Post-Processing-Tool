@@ -1,20 +1,27 @@
 /*
- * Copyright (c) 2019
- * California Department of Water Resources
- * All Rights Reserved.  DWR PROPRIETARY/CONFIDENTIAL.
- * Source may not be released without written approval from DWR
+ * Enhanced Post Processing Tool (EPPT) Copyright (c) 2019.
+ *
+ * EPPT is copyrighted by the State of California, Department of Water Resources. It is licensed
+ * under the GNU General Public License, version 2. This means it can be
+ * copied, distributed, and modified freely, but you may not restrict others
+ * in their ability to copy, distribute, and modify it. See the license below
+ * for more details.
+ *
+ * GNU General Public License
  */
 
 package gov.ca.water.calgui.bo;
 
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.Set;
 
-import static java.util.stream.Collectors.toList;
+import static java.util.stream.Collectors.toMap;
 
 /**
  * Company: Resource Management Associates
@@ -58,50 +65,52 @@ public class GUILinksAllModelsBO
 		return _legend;
 	}
 
-	public Optional<ModelData> getModelData(Model model)
+	private Optional<ModelData> getModelData(Model model)
 	{
 		return Optional.ofNullable(_modelMapping.get(model));
 	}
 
-	public void addModelMapping(Model model, String primary, String secondary)
+	public void addModelMapping(String modelString, String primary, String secondary)
 	{
-		if(model == null)
+		if(modelString == null)
 		{
 			throw new IllegalArgumentException("Unable to add null model");
 		}
-		_modelMapping.put(model, new ModelData(primary, secondary));
+		Model model = new Model(modelString);
+		Model.addModel(model);
+		_modelMapping.put(model, new ModelData(primary, secondary, Model.findModel(modelString)));
 	}
 
-	public List<String> getPrimary()
+	public Map<Model, String> getPrimary()
 	{
-		return Arrays.stream(Model.values())
-					 .map(this::getModelData)
-					 .filter(Optional::isPresent)
-					 .map(Optional::get)
-					 .map(ModelData::getPrimary)
-					 .filter(Objects::nonNull)
-					 .collect(toList());
+		return Model.values().stream()
+					.map(this::getModelData)
+					.filter(Optional::isPresent)
+					.map(Optional::get)
+					.filter(data -> data.getPrimary() != null)
+					.collect(toMap(ModelData::getModel, ModelData::getPrimary));
 	}
 
-	public List<String> getSecondary()
+	public Map<Model, String> getSecondary()
 	{
-		return Arrays.stream(Model.values())
-					 .map(this::getModelData)
-					 .filter(Optional::isPresent)
-					 .map(Optional::get)
-					 .map(ModelData::getSecondary)
-					 .filter(Objects::nonNull)
-					 .collect(toList());
+		return Model.values().stream()
+					.map(this::getModelData)
+					.filter(Optional::isPresent)
+					.map(Optional::get)
+					.filter(data -> data.getSecondary() != null)
+					.filter(data -> !data.getSecondary().isEmpty())
+					.collect(toMap(ModelData::getModel, ModelData::getSecondary));
 	}
 
-	public enum Model
+	public static class Model
 	{
-		CAL_LITE("CalLite"), CAL_SIM_2("CalSim2"), CAL_SIM_3("CalSim3");
+		private static final Set<Model> MODELS = new HashSet<>();
 
 		private final String _name;
 
 		Model(String name)
 		{
+			Objects.requireNonNull(name, "Model name connot be null");
 			_name = name;
 		}
 
@@ -110,25 +119,73 @@ public class GUILinksAllModelsBO
 			Model retval = null;
 			for(Model m : Model.values())
 			{
-				if(model.equalsIgnoreCase(m._name))
+				if(m._name.equalsIgnoreCase(model))
 				{
 					retval = m;
 					break;
 				}
 			}
+			if(retval == null)
+			{
+				retval = new Model("CalLite");
+			}
 			return retval;
+		}
+
+		private static void addModel(Model models)
+		{
+			MODELS.add(models);
+		}
+
+		public static List<Model> values()
+		{
+			return new ArrayList<>(MODELS);
+		}
+
+		@Override
+		public String toString()
+		{
+			return _name;
+		}
+
+		@Override
+		public boolean equals(Object o)
+		{
+			if(this == o)
+			{
+				return true;
+			}
+			if(!(o instanceof Model))
+			{
+				return false;
+			}
+			final Model model = (Model) o;
+			return _name.equals(model._name);
+		}
+
+		@Override
+		public int hashCode()
+		{
+			return Objects.hash(_name);
 		}
 	}
 
-	public class ModelData
+	public static class ModelData
 	{
 		private final String _primary;
 		private final String _secondary;
+		private final Model _model;
 
-		private ModelData(String primary, String seconday)
+		private ModelData(String primary, String seconday, Model model)
 		{
 			_primary = primary;
 			_secondary = seconday;
+			_model = model;
+		}
+
+		public Model getModel()
+		{
+			return _model;
 		}
 
 		public String getPrimary()

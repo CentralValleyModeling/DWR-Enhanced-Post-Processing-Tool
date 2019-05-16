@@ -1,19 +1,34 @@
 /*
- * Copyright (c) 2019
- * California Department of Water Resources
- * All Rights Reserved.  DWR PROPRIETARY/CONFIDENTIAL.
- * Source may not be released without written approval from DWR
+ * Enhanced Post Processing Tool (EPPT) Copyright (c) 2019.
+ *
+ * EPPT is copyrighted by the State of California, Department of Water Resources. It is licensed
+ * under the GNU General Public License, version 2. This means it can be
+ * copied, distributed, and modified freely, but you may not restrict others
+ * in their ability to copy, distribute, and modify it. See the license below
+ * for more details.
+ *
+ * GNU General Public License
  */
 package vista.set;
 
 /**
  * A proxy for this session which loads the groups only when operations other
  * than setName() and getName() are requested.
- * 
+ *
  * @author Nicky Sandhu
  * @version $Id: SessionProxy.java,v 1.1 2003/10/02 20:49:31 redwood Exp $
  */
-public abstract class SessionProxy extends Session {
+public abstract class SessionProxy extends Session
+{
+	/**
+	 * true if initialized
+	 */
+	private boolean _initialized = false;
+	/**
+	 * state object listening for initialization on this proxy.
+	 */
+	private SessionProxyState _stateListener;
+
 	/**
 	 * return the initialized session object. This is the session that contains
 	 * the state which is then copied into the proxy objects state to initialize
@@ -24,8 +39,10 @@ public abstract class SessionProxy extends Session {
 	/**
 	 * copies the groups from this session into specified one.
 	 */
-	public void copyInto(Session s) {
-		if (!_initialized) {
+	public void copyInto(Session s)
+	{
+		if(!_initialized)
+		{
 			initializeSession();
 		}
 		super.copyInto(s);
@@ -34,8 +51,10 @@ public abstract class SessionProxy extends Session {
 	/**
 	 * a shallow copy of the name and list of groups
 	 */
-	public Object clone() {
-		if (!_initialized) {
+	public Object clone()
+	{
+		if(!_initialized)
+		{
 			initializeSession();
 		}
 		return super.clone();
@@ -45,8 +64,10 @@ public abstract class SessionProxy extends Session {
 	 * Creates a union of this session with given session. This is basically
 	 * combining the group(s) in both sessions in one session and returning it.
 	 */
-	public Session createUnion(Session s) {
-		if (!_initialized) {
+	public Session createUnion(Session s)
+	{
+		if(!_initialized)
+		{
 			initializeSession();
 		}
 		return super.createUnion(s);
@@ -55,8 +76,10 @@ public abstract class SessionProxy extends Session {
 	/**
 	 * gets the number of groups in the list.
 	 */
-	public int getNumberOfGroups() {
-		if (!_initialized) {
+	public int getNumberOfGroups()
+	{
+		if(!_initialized)
+		{
 			initializeSession();
 		}
 		return super.getNumberOfGroups();
@@ -65,8 +88,10 @@ public abstract class SessionProxy extends Session {
 	/**
 	 * adds group if not already present
 	 */
-	public void addGroup(Group g) {
-		if (!_initialized) {
+	public void addGroup(Group g)
+	{
+		if(!_initialized)
+		{
 			initializeSession();
 		}
 		super.addGroup(g);
@@ -75,8 +100,10 @@ public abstract class SessionProxy extends Session {
 	/**
 	 * removes group from list.
 	 */
-	public void removeGroup(Group g) {
-		if (!_initialized) {
+	public void removeGroup(Group g)
+	{
+		if(!_initialized)
+		{
 			initializeSession();
 		}
 		super.removeGroup(g);
@@ -85,8 +112,10 @@ public abstract class SessionProxy extends Session {
 	/**
 	 * gets the group by index
 	 */
-	public Group getGroup(int index) {
-		if (!_initialized) {
+	public Group getGroup(int index)
+	{
+		if(!_initialized)
+		{
 			initializeSession();
 		}
 		return super.getGroup(index);
@@ -95,8 +124,10 @@ public abstract class SessionProxy extends Session {
 	/**
 	 * gets group by name
 	 */
-	public Group getGroup(String groupName) {
-		if (!_initialized) {
+	public Group getGroup(String groupName)
+	{
+		if(!_initialized)
+		{
 			initializeSession();
 		}
 		return super.getGroup(groupName);
@@ -105,8 +136,10 @@ public abstract class SessionProxy extends Session {
 	/**
 	 * gets all the groups
 	 */
-	public Group[] getAllGroups() {
-		if (!_initialized) {
+	public Group[] getAllGroups()
+	{
+		if(!_initialized)
+		{
 			initializeSession();
 		}
 		return super.getAllGroups();
@@ -115,15 +148,18 @@ public abstract class SessionProxy extends Session {
 	/**
 	 * adds state listener
 	 */
-	void addStateListener(SessionProxyState s) {
+	void addStateListener(SessionProxyState s)
+	{
 		_stateListener = s;
 	}
 
 	/**
 	 * informs state listener that session has been initialized
 	 */
-	void informStateListener() {
-		if (_stateListener != null) {
+	void informStateListener()
+	{
+		if(_stateListener != null)
+		{
 			_stateListener.sessionIsInitialized();
 		}
 	}
@@ -131,19 +167,11 @@ public abstract class SessionProxy extends Session {
 	/**
 	 * initialize session and set initialize to true.
 	 */
-	private void initializeSession() {
+	private void initializeSession()
+	{
 		Session s = getInitializedSession();
 		s.copyInto(this);
 		_initialized = true;
 		informStateListener();
 	}
-
-	/**
-	 * true if initialized
-	 */
-	private boolean _initialized = false;
-	/**
-	 * state object listening for initialization on this proxy.
-	 */
-	private SessionProxyState _stateListener;
 }

@@ -1,8 +1,13 @@
 /*
- * Copyright (c) 2019
- * California Department of Water Resources
- * All Rights Reserved.  DWR PROPRIETARY/CONFIDENTIAL.
- * Source may not be released without written approval from DWR
+ * Enhanced Post Processing Tool (EPPT) Copyright (c) 2019.
+ *
+ * EPPT is copyrighted by the State of California, Department of Water Resources. It is licensed
+ * under the GNU General Public License, version 2. This means it can be
+ * copied, distributed, and modified freely, but you may not restrict others
+ * in their ability to copy, distribute, and modify it. See the license below
+ * for more details.
+ *
+ * GNU General Public License
  */
 package vista.app.schematic;
 
@@ -11,45 +16,8 @@ package vista.app.schematic;
  * the waterbody in which it is and its x,y,z position relative to that
  * waterbody.
  */
-public class Particle {
-	/**
-	 * constructor
-	 */
-	public Particle(int id, int waterbodyId, float x, float y, float z) {
-		setData(id, waterbodyId, x, y, z);
-	}
-
-	/**
-	 * sets the value of data of this particle
-	 */
-	public void setData(int id, int waterbodyId, float x, float y, float z) {
-
-		_id = id;
-		_wbId = waterbodyId;
-		_x = x;
-		_y = y;
-		_z = z;
-
-	}
-
-	/**
-   *
-   */
-	public int getWaterbodyId() {
-		return _wbId;
-	}
-
-	/**
-   *
-   */
-	public float getDistanceFromUpNode() {
-		return _x;
-	}
-	
-	public String toString(){
-		return String.format("Particle: %03d in %d @ (%10.2f,%10.2f,%10.2f)",_id,_wbId,_x,_y,_z);
-	}
-
+public class Particle
+{
 	/**
 	 * Id of this particle
 	 */
@@ -70,4 +38,47 @@ public class Particle {
 	 * normalized z distance from bottom of channel
 	 */
 	public float _z;
+
+	/**
+	 * constructor
+	 */
+	public Particle(int id, int waterbodyId, float x, float y, float z)
+	{
+		setData(id, waterbodyId, x, y, z);
+	}
+
+	/**
+	 * sets the value of data of this particle
+	 */
+	public void setData(int id, int waterbodyId, float x, float y, float z)
+	{
+
+		_id = id;
+		_wbId = waterbodyId;
+		_x = x;
+		_y = y;
+		_z = z;
+
+	}
+
+	/**
+	 *
+	 */
+	public int getWaterbodyId()
+	{
+		return _wbId;
+	}
+
+	/**
+	 *
+	 */
+	public float getDistanceFromUpNode()
+	{
+		return _x;
+	}
+
+	public String toString()
+	{
+		return String.format("Particle: %03d in %d @ (%10.2f,%10.2f,%10.2f)", _id, _wbId, _x, _y, _z);
+	}
 }

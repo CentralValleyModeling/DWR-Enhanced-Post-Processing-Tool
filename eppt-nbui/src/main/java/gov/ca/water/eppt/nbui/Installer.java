@@ -1,8 +1,13 @@
 /*
- * Copyright (c) 2019
- * California Department of Water Resources
- * All Rights Reserved.  DWR PROPRIETARY/CONFIDENTIAL.
- * Source may not be released without written approval from DWR
+ * Enhanced Post Processing Tool (EPPT) Copyright (c) 2019.
+ *
+ * EPPT is copyrighted by the State of California, Department of Water Resources. It is licensed
+ * under the GNU General Public License, version 2. This means it can be
+ * copied, distributed, and modified freely, but you may not restrict others
+ * in their ability to copy, distribute, and modify it. See the license below
+ * for more details.
+ *
+ * GNU General Public License
  */
 package gov.ca.water.eppt.nbui;
 
@@ -19,14 +24,17 @@ import java.util.logging.Logger;
 import javax.swing.*;
 
 import gov.ca.water.calgui.EpptInitializationException;
-import gov.ca.water.calgui.bus_service.impl.GuiLinksSeedDataSvcImpl;
+import gov.ca.water.calgui.busservice.impl.GuiLinksSeedDataSvcImpl;
+import gov.ca.water.calgui.busservice.impl.ThresholdLinksSeedDataSvc;
 import gov.ca.water.calgui.constant.EpptPreferences;
 import gov.ca.water.calgui.presentation.DisplayHelper;
-import gov.ca.water.calgui.tech_service.impl.DialogSvcImpl;
+import gov.ca.water.calgui.techservice.impl.DialogSvcImpl;
+import gov.ca.water.eppt.nbui.actions.RunWreslScript;
 import gov.ca.water.quickresults.ui.projectconfig.ProjectConfigurationPanel;
 import org.openide.modules.ModuleInstall;
 import org.openide.windows.WindowManager;
 
+import hec.heclib.dss.HecDSSFileAccess;
 import rma.swing.logging.DialogLogHandler;
 
 public class Installer extends ModuleInstall
@@ -46,22 +54,26 @@ public class Installer extends ModuleInstall
 		initPlotHandler();
 	}
 
+	@Override
+	public boolean closing()
+	{
+		RunWreslScript.destroyProcesses();
+		return true;
+	}
+
 	private void setMinimumWindowSize()
 	{
-		WindowManager.getDefault().invokeWhenUIReady(() ->
-		{
-			WindowManager.getDefault().getMainWindow().setMinimumSize(new Dimension(545, 630));
-		});
+		WindowManager.getDefault().invokeWhenUIReady(() -> WindowManager.getDefault().getMainWindow().setMinimumSize(new Dimension(545, 630)));
 	}
-	
+
 	private void loadLastProjectConfiguration()
 	{
 		WindowManager.getDefault().invokeWhenUIReady(() ->
 		{
-			ProjectConfigurationPanel projectConfigurationPanel = ProjectConfigurationPanel.getProjectConfigurationPanel();
-			Path lastProjectConfiguration = EpptPreferences.getLastProjectConfiguration();
 			try
 			{
+				ProjectConfigurationPanel projectConfigurationPanel = ProjectConfigurationPanel.getProjectConfigurationPanel();
+				Path lastProjectConfiguration = EpptPreferences.getLastProjectConfiguration();
 				projectConfigurationPanel.loadProjectConfiguration(lastProjectConfiguration);
 				WindowManager.getDefault().getMainWindow().setTitle(
 						MAIN_FRAME_NAME + " - " + projectConfigurationPanel.getProjectName());
@@ -69,10 +81,12 @@ public class Installer extends ModuleInstall
 			catch(IOException | RuntimeException ex)
 			{
 				LOGGER.log(Level.SEVERE,
-						"Unable to load last Project Configuration EPPT Home: " + lastProjectConfiguration, ex);
+						"Unable to load last Project Configuration EPPT Home: " + EpptPreferences.getLastProjectConfiguration(),
+						ex);
 			}
 		});
 	}
+
 	private void initPlotHandler()
 	{
 		WindowManager.getDefault().invokeWhenUIReady(() ->
@@ -82,6 +96,7 @@ public class Installer extends ModuleInstall
 		});
 		DisplayHelper.installPlotHandler(new TopComponentPlotHandler());
 	}
+
 	private void initEpptHome()
 	{
 		createPaths(EpptPreferences.getProjectsPath());
@@ -111,10 +126,11 @@ public class Installer extends ModuleInstall
 		try
 		{
 			GuiLinksSeedDataSvcImpl.createSeedDataSvcImplInstance();
+			ThresholdLinksSeedDataSvc.createSeedDataSvcImplInstance();
 		}
 		catch(EpptInitializationException ex)
 		{
-			LOGGER.log(Level.SEVERE, "Unable to initialize GUI Links", ex);
+			LOGGER.log(Level.SEVERE, "Unable to initialize GUI or Threshold Links", ex);
 		}
 	}
 
@@ -144,6 +160,7 @@ public class Installer extends ModuleInstall
 			newPaths[newPaths.length - 1] = pathToAdd;
 			usrPathsField.set(null, newPaths);
 			System.loadLibrary("javaHeclib");
+			HecDSSFileAccess.setMessageLevel(HecDSSFileAccess.MESS_LEVEL_GENERAL);
 		}
 		catch(NoSuchFieldException | IllegalAccessException ex)
 		{
@@ -161,33 +178,35 @@ public class Installer extends ModuleInstall
 		netbeansLogger.setParent(rootLogger);
 		netbeansLogger.setUseParentHandlers(true);
 
-		WindowManager.getDefault().invokeWhenUIReady(() ->
+		WindowManager.getDefault().invokeWhenUIReady(() ->setupLogHandlers(rootLogger));
+	}
+
+	private void setupLogHandlers(Logger rootLogger)
+	{
+		WindowManager.getDefault().getMainWindow();
+		String publishedLevel = Level.SEVERE.getName();
+		String showDialogLevel = Level.SEVERE.getName();
+
+		DialogLogHandler handler = DialogLogHandler.getInstance();
+		handler.addIgnoredLoggerName("netbeans");
+		handler.addIgnoredSourceClass("org.netbeans");
+		handler.addIgnoredSourceClass("org.openide");
+
+		handler.setLevel(Level.parse(publishedLevel));
+		handler.setShowDialogLevel(Level.parse(showDialogLevel));
+
+		handler.setFrame(true);
+		handler.setTitle("EPPT Error Log");
+		handler.setParentWindow(WindowManager.getDefault().getMainWindow());
+
+		Handler[] handlers = rootLogger.getHandlers();
+		for(Handler defaultHandlers : handlers)
 		{
-			WindowManager.getDefault().getMainWindow();
-			String publishedLevel = Level.SEVERE.getName();
-			String showDialogLevel = Level.SEVERE.getName();
-
-			DialogLogHandler handler = DialogLogHandler.getInstance();
-			handler.addIgnoredLoggerName("netbeans");
-			handler.addIgnoredSourceClass("org.netbeans");
-			handler.addIgnoredSourceClass("org.openide");
-
-			handler.setLevel(Level.parse(publishedLevel));
-			handler.setShowDialogLevel(Level.parse(showDialogLevel));
-
-			handler.setFrame(true);
-			handler.setTitle("EPPT Error Log");
-			handler.setParentWindow(WindowManager.getDefault().getMainWindow());
-
-			Handler[] handlers = rootLogger.getHandlers();
-			for(Handler defaultHandlers : handlers)
+			if(defaultHandlers.getClass().getName().contains("TopLogging"))
 			{
-				if(defaultHandlers.getClass().getName().contains("TopLogging"))
-				{
-					rootLogger.removeHandler(defaultHandlers);
-				}
+				rootLogger.removeHandler(defaultHandlers);
 			}
-			rootLogger.addHandler(handler);
-		});
+		}
+		rootLogger.addHandler(handler);
 	}
 }

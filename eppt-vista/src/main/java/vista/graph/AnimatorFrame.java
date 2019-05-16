@@ -1,8 +1,13 @@
 /*
- * Copyright (c) 2019
- * California Department of Water Resources
- * All Rights Reserved.  DWR PROPRIETARY/CONFIDENTIAL.
- * Source may not be released without written approval from DWR
+ * Enhanced Post Processing Tool (EPPT) Copyright (c) 2019.
+ *
+ * EPPT is copyrighted by the State of California, Department of Water Resources. It is licensed
+ * under the GNU General Public License, version 2. This means it can be
+ * copied, distributed, and modified freely, but you may not restrict others
+ * in their ability to copy, distribute, and modify it. See the license below
+ * for more details.
+ *
+ * GNU General Public License
  */
 package vista.graph;
 
@@ -19,13 +24,14 @@ import javax.swing.*;
  * This class constructs a frame and provides the context with which to interact
  * with the Graph object. The Graph object itself is contained with the
  * GraphCanvas object
- * 
- * @see Graph
- * @see HEC.DSS.GraphCanvas
+ *
  * @author Nicky Sandhu
  * @version $Id: AnimatorFrame.java,v 1.4 2001/03/05 21:46:19 eli2 Exp $
+ * @see Graph
+ * @see HEC.DSS.GraphCanvas
  */
-public class AnimatorFrame extends JFrame {
+public class AnimatorFrame extends JFrame
+{
 	/**
 	 * for debuggin'
 	 */
@@ -34,11 +40,20 @@ public class AnimatorFrame extends JFrame {
 	 * The component on which the graph is drawn.
 	 */
 	public AnimatorCanvas _gC = null;
+	/**
+	 *
+	 */
+	Animator _animator;
+	/**
+	 *
+	 */
+	Properties props = new Properties();
 
 	/**
 	 * Constructor
 	 */
-	public AnimatorFrame(AnimatorCanvas gC, String frameTitle) {
+	public AnimatorFrame(AnimatorCanvas gC, String frameTitle)
+	{
 		super(frameTitle);
 
 		_gC = gC;
@@ -103,111 +118,137 @@ public class AnimatorFrame extends JFrame {
 	/**
 	 * gets the reference to the graph canvas
 	 */
-	public AnimatorCanvas getCanvas() {
+	public AnimatorCanvas getCanvas()
+	{
 		return _gC;
 	}
 
 	/**
-   * 
-   */
-	Animator _animator;
-	/**
-   * 
-   */
-	Properties props = new Properties();
+	 *
+	 */
+	void toggleAnimation()
+	{
+		// System.out.println("Toggling animation");
+		if(_animator.isAnimationRunning())
+		{
+			_animator.stopAnimation();
+		}
+		else
+		{
+			_animator.startAnimation();
+		}
+	}
 
 	/**
-   *
-   */
-	protected class QuitListener implements ActionListener {
+	 *
+	 */
+	void speedUpAnimation()
+	{
+		_animator.setInterval(_animator.getInterval() - 250);
+	}
+
+	/**
+	 *
+	 */
+	void slowDownAnimation()
+	{
+		_animator.setInterval(_animator.getInterval() + 250);
+	}
+
+	/**
+	 *
+	 */
+	void stepAnimation()
+	{
+		_animator.animate();
+		_animator.notifyDisplays();
+	}
+
+	/**
+	 *
+	 */
+	protected class QuitListener implements ActionListener
+	{
 		/**
-   *
-   */
-		public void actionPerformed(ActionEvent e) {
+		 *
+		 */
+		public void actionPerformed(ActionEvent e)
+		{
 			// System.exit(0);
 			dispose();
 		}
 	}
 
 	/**
-   * 
-   */
-	void toggleAnimation() {
-		// System.out.println("Toggling animation");
-		if (_animator.isAnimationRunning())
-			_animator.stopAnimation();
-		else
-			_animator.startAnimation();
-	}
-
-	/**
-   * 
-   */
-	void speedUpAnimation() {
-		_animator.setInterval(_animator.getInterval() - 250);
-	}
-
-	/**
-   * 
-   */
-	void slowDownAnimation() {
-		_animator.setInterval(_animator.getInterval() + 250);
-	}
-
-	/**
-   * 
-   */
-	void stepAnimation() {
-		_animator.animate();
-		_animator.notifyDisplays();
-	}
-
-	/**
-   *
-   */
-	protected class ButtonListener implements ActionListener {
+	 *
+	 */
+	protected class ButtonListener implements ActionListener
+	{
 		/**
-   *
-   */
+		 *
+		 */
 		protected AnimatorFrame _tg;
 
 		/**
-   *
-   */
-		public ButtonListener(AnimatorFrame tg) {
+		 *
+		 */
+		public ButtonListener(AnimatorFrame tg)
+		{
 			_tg = tg;
 		}
 
 		/**
 		 * Handles button events for
 		 */
-		public void actionPerformed(ActionEvent e) {
-			if (e.getSource() instanceof JMenuItem) {
+		public void actionPerformed(ActionEvent e)
+		{
+			if(e.getSource() instanceof JMenuItem)
+			{
 				JMenuItem mItem = (JMenuItem) e.getSource();
 				String label = mItem.getText();
-				if (label.equals("Pause")) {
+				if(label.equals("Pause"))
+				{
 					_tg.toggleAnimation();
-				} else if (label.equals("Quit Window")) {
+				}
+				else if(label.equals("Quit Window"))
+				{
 					System.exit(0);
-				} else if (label.equals("Speed Up")) {
+				}
+				else if(label.equals("Speed Up"))
+				{
 					_tg.speedUpAnimation();
-				} else if (label.equals("Slow Down")) {
+				}
+				else if(label.equals("Slow Down"))
+				{
 					_tg.slowDownAnimation();
-				} else if (label.equals("Step Forward")) {
+				}
+				else if(label.equals("Step Forward"))
+				{
 					_tg.stepAnimation();
 				}
-			} else if (e.getSource() instanceof JButton) {
+			}
+			else if(e.getSource() instanceof JButton)
+			{
 				JButton button = (JButton) e.getSource();
 				String label = button.getText();
-				if (label.equals("Pause")) {
+				if(label.equals("Pause"))
+				{
 					_tg.toggleAnimation();
-				} else if (label.equals("Quit Window")) {
+				}
+				else if(label.equals("Quit Window"))
+				{
 					System.exit(0);
-				} else if (label.equals("Speed Up")) {
+				}
+				else if(label.equals("Speed Up"))
+				{
 					_tg.speedUpAnimation();
-				} else if (label.equals("Slow Down")) {
+				}
+				else if(label.equals("Slow Down"))
+				{
 					_tg.slowDownAnimation();
-				} else if (label.equals("Step Forward")) {
+				}
+				else if(label.equals("Step Forward"))
+				{
 					_tg.stepAnimation();
 				}
 			}

@@ -1,8 +1,13 @@
 /*
- * Copyright (c) 2019
- * California Department of Water Resources
- * All Rights Reserved.  DWR PROPRIETARY/CONFIDENTIAL.
- * Source may not be released without written approval from DWR
+ * Enhanced Post Processing Tool (EPPT) Copyright (c) 2019.
+ *
+ * EPPT is copyrighted by the State of California, Department of Water Resources. It is licensed
+ * under the GNU General Public License, version 2. This means it can be
+ * copied, distributed, and modified freely, but you may not restrict others
+ * in their ability to copy, distribute, and modify it. See the license below
+ * for more details.
+ *
+ * GNU General Public License
  */
 
 package calsim.app;
@@ -47,7 +52,7 @@ public final class AppProps
 		if(!appPropsFile.exists())
 		{
 			// then look in jar file for defaults & save to props file
-			try (InputStream propsStream = AppProps.class.getClassLoader().getResourceAsStream(filename))
+			try(InputStream propsStream = AppProps.class.getClassLoader().getResourceAsStream(filename))
 			{
 				PROPERTIES.load(propsStream);
 				save();
@@ -60,7 +65,7 @@ public final class AppProps
 		else
 		{
 			// read from app.props file
-			try (InputStream propsStream = AppProps.class.getClassLoader().getResourceAsStream(filename))
+			try(InputStream propsStream = AppProps.class.getClassLoader().getResourceAsStream(filename))
 			{
 				// always load defaults and then user customized properties
 				PROPERTIES.load(propsStream);

@@ -1,14 +1,20 @@
 /*
- * Copyright (c) 2019
- * California Department of Water Resources
- * All Rights Reserved.  DWR PROPRIETARY/CONFIDENTIAL.
- * Source may not be released without written approval from DWR
+ * Enhanced Post Processing Tool (EPPT) Copyright (c) 2019.
+ *
+ * EPPT is copyrighted by the State of California, Department of Water Resources. It is licensed
+ * under the GNU General Public License, version 2. This means it can be
+ * copied, distributed, and modified freely, but you may not restrict others
+ * in their ability to copy, distribute, and modify it. See the license below
+ * for more details.
+ *
+ * GNU General Public License
  */
 
 package gov.ca.water.businessservice.impl;
 
 import java.awt.Component;
 import java.awt.Container;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -109,7 +115,8 @@ public class VerifyControlsDeleImp implements IVerifyControlsDele
 		List<String> regulationoptionsStr = new ArrayList<>();
 		List<String> wsidiStatusStr = new ArrayList<>();
 		// Read in the cls file data.
-		scenarioSvc.getCLSData(fileName, controlStrList, dataTableModelStrList, regulationoptionsStr, wsidiStatusStr);
+		scenarioSvc.getCLSData(
+				Paths.get(fileName), controlStrList, dataTableModelStrList, regulationoptionsStr, wsidiStatusStr);
 		Set<String> guiIds = xmlParsingSvc.getIdFromXML();
 		List<String> controlStrings = controlStrList.stream().map((key) -> key.split(Constant.PIPELINE_DELIMITER)[0])
 													.collect(Collectors.toList());

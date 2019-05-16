@@ -1,8 +1,13 @@
 /*
- * Copyright (c) 2019
- * California Department of Water Resources
- * All Rights Reserved.  DWR PROPRIETARY/CONFIDENTIAL.
- * Source may not be released without written approval from DWR
+ * Enhanced Post Processing Tool (EPPT) Copyright (c) 2019.
+ *
+ * EPPT is copyrighted by the State of California, Department of Water Resources. It is licensed
+ * under the GNU General Public License, version 2. This means it can be
+ * copied, distributed, and modified freely, but you may not restrict others
+ * in their ability to copy, distribute, and modify it. See the license below
+ * for more details.
+ *
+ * GNU General Public License
  */
 
 package gov.ca.water.calgui.presentation.display;
@@ -13,8 +18,8 @@ import java.util.List;
 import javax.swing.*;
 
 import gov.ca.water.calgui.presentation.DisplayHelper;
-import gov.ca.water.calgui.tech_service.IErrorHandlingSvc;
-import gov.ca.water.calgui.tech_service.impl.ErrorHandlingSvcImpl;
+import gov.ca.water.calgui.techservice.IErrorHandlingSvc;
+import gov.ca.water.calgui.techservice.impl.ErrorHandlingSvcImpl;
 import org.apache.log4j.Logger;
 
 /**
@@ -93,7 +98,7 @@ public class DefaultPlotHandler implements DisplayHelper.PlotHandler
 			container.add(tabbedpane);
 
 			frame.pack();
-			frame.setTitle("CalLite Results - " + tabbedpane.getName());
+			frame.setTitle("Results - " + tabbedpane.getName());
 			// CalLite icon
 			//			java.net.URL imgURL = Thread.currentThread().getContextClassLoader().getResource("/images/CalLiteIcon.png");
 			//			frame.setIconImage(Toolkit.getDefaultToolkit().getImage(imgURL));
