@@ -65,11 +65,11 @@ public class EPPTReport
 {
     private static final FluentLogger LOGGER = FluentLogger.forEnclosingClass();
 
-    private static final String INIT_COND_CSV = "AssumpChangesInitCond" + CSV_EXT;
-    private static final String STATE_VAR_CSV = "AssumpChangesStateVar" + CSV_EXT;
-    private static final String CODE_CHANGES_CSV = "CodeChangesDSSPaths" + CSV_EXT;
+    private static final String INIT_COND_CSV = "AssumptionChangesIV" + CSV_EXT;
+    private static final String STATE_VAR_CSV = "AssumptionChangesSV" + CSV_EXT;
+    private static final String CODE_CHANGES_CSV = "CodeChanges" + CSV_EXT;
 
-    private static final String MODULES_CSV = CONFIG_DIR + "/ExecutiveReportModulesCSV" + CSV_EXT;
+    private static final String MODULES_CSV = CONFIG_DIR + "/Modules" + CSV_EXT;
     private static final String DETAILS_CSV = CONFIG_DIR + "/Details" + CSV_EXT;
 
     private final Path _wyTypeTable;

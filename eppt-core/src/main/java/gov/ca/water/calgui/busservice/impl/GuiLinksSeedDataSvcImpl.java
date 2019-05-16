@@ -37,7 +37,7 @@ import static gov.ca.water.calgui.constant.Constant.CSV_EXT;
 public final class GuiLinksSeedDataSvcImpl implements IGuiLinksSeedDataSvc
 {
 	private static final Logger LOG = Logger.getLogger(GuiLinksSeedDataSvcImpl.class.getName());
-	private static final String GUI_LINKS_ALL_MODELS_FILENAME = CONFIG_DIR + "/GUI_Links" + CSV_EXT;
+	private static final String GUI_LINKS_ALL_MODELS_FILENAME = CONFIG_DIR + "/GUILinks" + CSV_EXT;
 	private static IGuiLinksSeedDataSvc seedDataSvc;
 	private final Map<Integer, GUILinksAllModelsBO> _guiLinksAllModels = new HashMap<>();
 
