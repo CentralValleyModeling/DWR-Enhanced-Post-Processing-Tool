@@ -32,18 +32,36 @@
 			<artifactId>hec-core</artifactId>
 			<version>6.0</version>
 			<classifier>DeltaERT-1-4-0-97-Obfuscated</classifier>
+			<exclusions>
+				<exclusion>
+					<groupId>*</groupId>
+					<artifactId>*</artifactId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 		<dependency>
 			<groupId>hecjavadev-core</groupId>
 			<artifactId>rma</artifactId>
 			<version>6.0</version>
 			<classifier>DeltaERT-1-4-0-97-Obfuscated</classifier>
+			<exclusions>
+				<exclusion>
+					<groupId>*</groupId>
+					<artifactId>*</artifactId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 		<dependency>
 			<groupId>hec.dssgui</groupId>
 			<artifactId>hec-dssvue</artifactId>
 			<version>3.0.1</version>
 			<classifier>DeltaERT-1-4-0-97-Obfuscated</classifier>
+			<exclusions>
+				<exclusion>
+					<groupId>*</groupId>
+					<artifactId>*</artifactId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 		<dependency>
 			<groupId>org.junit.jupiter</groupId>

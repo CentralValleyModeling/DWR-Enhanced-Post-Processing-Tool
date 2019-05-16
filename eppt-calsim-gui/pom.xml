@@ -27,7 +27,7 @@
 		<dependency>
 			<groupId>gov.ca.water</groupId>
 			<artifactId>eppt-vista</artifactId>
-			<version>1.0.1-SNAPSHOT</version>
+			<version>${project.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>commons-io</groupId>

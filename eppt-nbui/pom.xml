@@ -72,7 +72,7 @@
 		<dependency>
 			<groupId>gov.ca.water</groupId>
 			<artifactId>eppt-ui</artifactId>
-			<version>1.0.1-SNAPSHOT</version>
+			<version>${project.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>com.google.flogger</groupId>
@@ -115,7 +115,7 @@
 		<dependency>
 			<groupId>gov.ca.water</groupId>
 			<artifactId>eppt-calsim-gui</artifactId>
-			<version>1.0.1-SNAPSHOT</version>
+			<version>${project.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>commons-io</groupId>
@@ -132,18 +132,36 @@
 			<artifactId>hec-core</artifactId>
 			<version>6.0</version>
 			<classifier>DeltaERT-1-4-0-97-Obfuscated</classifier>
+			<exclusions>
+				<exclusion>
+					<groupId>*</groupId>
+					<artifactId>*</artifactId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 		<dependency>
 			<groupId>hec.dataui</groupId>
 			<artifactId>hec-data-ui</artifactId>
 			<version>1.1</version>
 			<classifier>DeltaERT-1-4-0-97-Obfuscated</classifier>
+			<exclusions>
+				<exclusion>
+					<groupId>*</groupId>
+					<artifactId>*</artifactId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 		<dependency>
 			<groupId>hec.map</groupId>
 			<artifactId>hec-maps</artifactId>
 			<version>1.1</version>
 			<classifier>DeltaERT-1-4-0-97-Obfuscated</classifier>
+			<exclusions>
+				<exclusion>
+					<groupId>*</groupId>
+					<artifactId>*</artifactId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 		<dependency>
 			<groupId>org.jfree</groupId>
@@ -208,6 +226,12 @@
 			<artifactId>images</artifactId>
 			<version>6.0</version>
 			<classifier>DeltaERT-1-4-0-97-Obfuscated</classifier>
+			<exclusions>
+				<exclusion>
+					<groupId>*</groupId>
+					<artifactId>*</artifactId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 		<dependency>
 			<groupId>org.netbeans.api</groupId>
@@ -254,12 +278,12 @@
 		<dependency>
 			<groupId>gov.ca.water</groupId>
 			<artifactId>eppt-jasper-engine</artifactId>
-			<version>1.0.1-SNAPSHOT</version>
+			<version>${project.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>gov.ca.water</groupId>
 			<artifactId>eppt-report-engine</artifactId>
-			<version>1.0.1-SNAPSHOT</version>
+			<version>${project.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>net.sf.jasperreports</groupId>
