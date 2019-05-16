@@ -55,11 +55,11 @@
 		<band splitType="Stretch"/>
 	</background>
 	<title>
-		<band height="67" splitType="Stretch">
+		<band height="30" splitType="Stretch">
 			<property name="local_mesure_unitheight" value="pixel"/>
 			<property name="com.jaspersoft.studio.unit.height" value="px"/>
 			<textField>
-				<reportElement style="Title" x="0" y="0" width="515" height="50" forecolor="#2F5496" uuid="24731f07-d115-4be4-a22c-aa9a4c3fc786">
+				<reportElement style="Title" x="0" y="0" width="515" height="30" forecolor="#2F5496" uuid="24731f07-d115-4be4-a22c-aa9a4c3fc786">
 					<property name="local_mesure_unitwidth" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				</reportElement>
@@ -67,7 +67,7 @@
 					<topPen lineWidth="0.0" lineColor="#A0D042"/>
 				</box>
 				<textElement textAlignment="Left">
-					<font size="35" isBold="true"/>
+					<font fontName="Arial" size="16" isBold="false"/>
 				</textElement>
 				<textFieldExpression><![CDATA["TABLE OF CONTENTS"]]></textFieldExpression>
 			</textField>
