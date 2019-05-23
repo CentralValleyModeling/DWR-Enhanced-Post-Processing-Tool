@@ -141,13 +141,13 @@ public class WreslRunDialog extends JDialog implements ProcessOutputConsumer
 	{
 		_progressBar.setIndeterminate(false);
 		_progressBar.setVisible(false);
-		_textAreaPrintStreams.forEach(TextAreaPrintStream::close);
-		_processes.forEach(Process::destroyForcibly);
 		_southPanel.remove(_startButton);
 		_southPanel.remove(_stopButton);
 		_southPanel.add(_startButton, BorderLayout.SOUTH);
 		repaint();
 		revalidate();
+		_textAreaPrintStreams.forEach(TextAreaPrintStream::close);
+		_processes.forEach(Process::destroyForcibly);
 	}
 
 	@Override

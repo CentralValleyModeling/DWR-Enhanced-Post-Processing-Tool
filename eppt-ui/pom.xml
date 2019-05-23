@@ -118,6 +118,11 @@
 			<version>${project.version}</version>
 			<!--<scope>runtime</scope>-->
 		</dependency>
+		<dependency>
+			<groupId>gov.ca.water</groupId>
+			<artifactId>eppt-plots</artifactId>
+			<version>${project.version}</version>
+		</dependency>
 	</dependencies>
 	<build>
 		<plugins>

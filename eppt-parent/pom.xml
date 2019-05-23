@@ -33,6 +33,7 @@
 		<module>../eppt-vista</module>
         <module>../eppt-report-engine</module>
 		<module>../eppt-jasper-engine</module>
+		<module>../eppt-plots</module>
     </modules>
 
 	<scm>

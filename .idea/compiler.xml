@@ -8,6 +8,12 @@
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <module name="eppt-jasper-engine" />
+<<<<<<< HEAD
+=======
+        <module name="eppt-nbui" />
+        <module name="eppt-plots" />
+        <module name="eppt-report-engine" />
+>>>>>>> initial dashboard commit
         <module name="eppt-scenario" />
         <module name="eppt-report-engine" />
         <module name="eppt-nbui" />
