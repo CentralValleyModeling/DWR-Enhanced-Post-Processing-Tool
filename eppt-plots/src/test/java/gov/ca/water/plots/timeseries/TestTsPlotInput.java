@@ -12,7 +12,15 @@
 
 package gov.ca.water.plots.timeseries;
 
+import java.util.List;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
 import org.junit.jupiter.api.Test;
+
+import hec.heclib.util.HecTime;
+import hec.heclib.util.HecTimeArray;
+import hec.io.TimeSeriesContainer;
 
 /**
  * Company: Resource Management Associates
@@ -23,8 +31,26 @@ import org.junit.jupiter.api.Test;
 public class TestTsPlotInput
 {
 	@Test
-	public void testPlotInput()
+	public void testPlotInput() throws Exception
 	{
-		
+		TsPlotInput tsPlotInput = new TsPlotInput();
+		List<TsSeriesOption> tsSeriesOptions = tsPlotInput.getTsSeriesOption();
+
+		TimeSeriesContainer tsc = new TimeSeriesContainer();
+		HecTimeArray hecTimeArray = new HecTimeArray();
+		HecTime time1 = new HecTime();
+		time1.setDate("01/05/2019");
+		time1.setTime("0000");
+		hecTimeArray.setElementAt(time1, 0);
+		HecTime time2 = new HecTime();
+		time2.setDate("01 06 2019");
+		time2.setTime("0000");
+		hecTimeArray.setElementAt(time2, 1);
+		tsc.set(new double[]{1.0, 50.0}, hecTimeArray);
+		TsSeriesOption tsSeriesOption = new TsSeriesOption(tsc);
+		tsSeriesOptions.add(tsSeriesOption);
+		ObjectMapper mapper = new ObjectMapper();
+//		mapper.enable(SerializationFeature.WRAP_ROOT_VALUE);
+		System.out.println(mapper.writerWithDefaultPrettyPrinter().writeValueAsString(tsPlotInput));
 	}
 }

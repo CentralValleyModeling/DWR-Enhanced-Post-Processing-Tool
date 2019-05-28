@@ -21,7 +21,7 @@ import com.fasterxml.jackson.annotation.JsonRootName;
  * @author <a href="mailto:adam@rmanet.com">Adam Korynta</a>
  * @since 05-22-2019
  */
-@JsonRootName("legend")
+
 public class TsLegendOption
 {
 	private boolean _enabled = true;

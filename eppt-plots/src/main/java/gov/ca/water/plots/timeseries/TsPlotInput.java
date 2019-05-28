@@ -12,6 +12,13 @@
 
 package gov.ca.water.plots.timeseries;
 
+import java.util.List;
+
+import com.fasterxml.jackson.annotation.JsonGetter;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
+
 /**
  * Company: Resource Management Associates
  *
@@ -20,6 +27,7 @@ package gov.ca.water.plots.timeseries;
  */
 public class TsPlotInput
 {
+	private final TsChartOption _tsChartOption = new TsChartOption();
 	private final TsTitleOption _tsTitleOption = new TsTitleOption();
 	private final TsSubTitleOption _subTitleOption = new TsSubTitleOption();
 	private final TsXAxisOption _tsXAxisOption = new TsXAxisOption();
@@ -27,5 +35,66 @@ public class TsPlotInput
 	private final TsTimeOption _tsTimeOption = new TsTimeOption();
 	private final TsLegendOption _tsLegendOption = new TsLegendOption();
 	private final TsSeriesArrayOption _tsSeriesOption = new TsSeriesArrayOption();
+	private final CreditsOption _creditsOption = new CreditsOption();
 
+	@JsonGetter("chart")
+	public TsChartOption getTsChartOption()
+	{
+		return _tsChartOption;
+	}
+
+	@JsonGetter("legend")
+	public TsLegendOption getTsLegendOption()
+	{
+		return _tsLegendOption;
+	}
+
+	@JsonGetter("series")
+	public List<TsSeriesOption> getTsSeriesOption()
+	{
+		return _tsSeriesOption.getTsSeriesOptions();
+	}
+
+	@JsonGetter("subtitle")
+	public TsSubTitleOption getSubTitleOption()
+	{
+		return _subTitleOption;
+	}
+
+	@JsonGetter("time")
+	public TsTimeOption getTsTimeOption()
+	{
+		return _tsTimeOption;
+	}
+
+	@JsonGetter("title")
+	public TsTitleOption getTsTitleOption()
+	{
+		return _tsTitleOption;
+	}
+
+	@JsonGetter("xAxis")
+	public TsXAxisOption getTsXAxisOption()
+	{
+		return _tsXAxisOption;
+	}
+
+	@JsonGetter("yAxis")
+	public TsYAxisOption getTsYAxisOption()
+	{
+		return _tsYAxisOption;
+	}
+
+	@JsonGetter("credits")
+	public CreditsOption getCreditsOption()
+	{
+		return _creditsOption;
+	}
+
+	public static String toJson(TsPlotInput tsPlotInput) throws JsonProcessingException
+	{
+		ObjectMapper mapper = new ObjectMapper();
+		mapper.enable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
+		return mapper.writeValueAsString(tsPlotInput);
+	}
 }

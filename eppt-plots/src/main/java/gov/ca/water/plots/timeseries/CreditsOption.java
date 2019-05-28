@@ -13,46 +13,51 @@
 package gov.ca.water.plots.timeseries;
 
 import com.fasterxml.jackson.annotation.JsonGetter;
-import com.fasterxml.jackson.annotation.JsonRootName;
+import javafx.geometry.Pos;
 
 /**
  * Company: Resource Management Associates
  *
  * @author <a href="mailto:adam@rmanet.com">Adam Korynta</a>
- * @since 05-22-2019
+ * @since 05-27-2019
  */
-@JsonRootName("chart")
-public class TsChartOption
+public class CreditsOption
 {
-	public enum ZoomType
+	private boolean _enabled = false;
+	private String _creditsText = "";
+	private String _creditsUrl = "";
+
+	@JsonGetter("enabled")
+	public boolean isEnabled()
 	{
-		X("x"), Y("y"), XY("xy");
-		private final String _type;
-
-
-		ZoomType(String type)
-		{
-			_type = type;
-		}
-
-		@Override
-		public String toString()
-		{
-			return _type;
-		}
-
+		return _enabled;
 	}
 
-	private ZoomType _zoomType = ZoomType.XY;
-
-	@JsonGetter("zoomType")
-	public String getZoomeType()
+	public void setEnabled(boolean enabled)
 	{
-		return _zoomType.toString();
+		_enabled = enabled;
 	}
 
-	public void setZoomType(ZoomType zoomType)
+	@JsonGetter("text")
+	public String getCreditsText()
 	{
-		_zoomType = zoomType;
+		return _creditsText;
 	}
+
+	public void setCreditsText(String creditsText)
+	{
+		_creditsText = creditsText;
+	}
+
+	@JsonGetter("href")
+	public String getCreditsUrl()
+	{
+		return _creditsUrl;
+	}
+
+	public void setCreditsUrl(String creditsUrl)
+	{
+		_creditsUrl = creditsUrl;
+	}
+
 }

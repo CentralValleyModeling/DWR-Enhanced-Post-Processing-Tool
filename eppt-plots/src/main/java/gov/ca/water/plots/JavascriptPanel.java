@@ -17,6 +17,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javafx.beans.value.ObservableValue;
+import javafx.concurrent.Worker;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.web.WebView;
 
@@ -39,14 +40,14 @@ public class JavascriptPanel extends BorderPane
 		_webView.getEngine().getLoadWorker().exceptionProperty().addListener(this::handleException);
 		setCenter(_webView);
 		load(url);
-		_webView.getEngine().getLoadWorker().workDoneProperty().addListener(this::callbackScript);
+		_webView.getEngine().getLoadWorker().stateProperty().addListener(this::callbackScript);
 	}
 
-	private void callbackScript(ObservableValue<? extends Number> j, Number o, Number n)
+	private void callbackScript(ObservableValue<? extends Worker.State> observableValue, Worker.State state, Worker.State newValue )
 	{
-		boolean running = _webView.getEngine().getLoadWorker().isRunning();
-		if(!running)
+		if(newValue == Worker.State.SUCCEEDED)
 		{
+			LOGGER.log(Level.INFO, "Executing script: " + _callbackScript);
 			executeScript(_callbackScript);
 		}
 	}

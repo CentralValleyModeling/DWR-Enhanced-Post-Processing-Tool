@@ -15,19 +15,18 @@ package gov.ca.water.plots.timeseries;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.fasterxml.jackson.annotation.JsonRootName;
-
-import hec.io.S;
-
 /**
  * Company: Resource Management Associates
  *
  * @author <a href="mailto:adam@rmanet.com">Adam Korynta</a>
  * @since 05-22-2019
  */
-@JsonRootName("series")
 public class TsSeriesArrayOption
 {
 	private final List<TsSeriesOption> _tsSeriesOptions = new ArrayList<>();
 
+	public List<TsSeriesOption> getTsSeriesOptions()
+	{
+		return _tsSeriesOptions;
+	}
 }

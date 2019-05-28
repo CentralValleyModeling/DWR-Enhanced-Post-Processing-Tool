@@ -14,7 +14,15 @@ package gov.ca.water.plots;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.time.ZonedDateTime;
+import java.util.Calendar;
+import java.util.Collections;
+import java.util.Date;
 import javax.swing.*;
+
+import hec.heclib.util.HecTime;
+import hec.heclib.util.HecTimeArray;
+import hec.io.TimeSeriesContainer;
 
 /**
  * Company: Resource Management Associates
@@ -36,14 +44,23 @@ public class TimeSeriesPlotPanelScaffold
 		{
 			e.printStackTrace();
 		}
-		TimeSeriesPlotPanel epptPanel = new TimeSeriesPlotPanel(null);
+		TimeSeriesContainer tsc = new TimeSeriesContainer();
+		HecTimeArray hecTimeArray = new HecTimeArray(2);
+		Calendar cal = Calendar.getInstance();
+		cal.set(2010, 2, 5, 2, 2, 2);
+		hecTimeArray.set(0, new HecTime(cal));
+		cal.set(Calendar.YEAR, 2015);
+		hecTimeArray.set(1, new HecTime(cal));
+		tsc.set(new double[]{1.0, 50000000.01}, hecTimeArray);
+		tsc.setFullName("Test Data Set");
+		tsc.setType("Storage");
+		TimeSeriesPlotPanel epptPanel = new TimeSeriesPlotPanel(Collections.singletonList(tsc));
 		JFrame jFrame = new JFrame();
 		jFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		SwingUtilities.invokeLater(() ->
 		{
 			jFrame.setLayout(new BorderLayout());
 			jFrame.add(epptPanel, BorderLayout.CENTER);
-			//			jFrame.add(buildUiManagerPanel(jFrame), BorderLayout.NORTH);
 			jFrame.setSize(1000, 700);
 			jFrame.setBackground(Color.WHITE);
 			jFrame.setVisible(true);

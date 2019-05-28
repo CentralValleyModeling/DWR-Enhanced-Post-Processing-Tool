@@ -13,7 +13,6 @@
 package gov.ca.water.plots.timeseries;
 
 import com.fasterxml.jackson.annotation.JsonGetter;
-import com.fasterxml.jackson.annotation.JsonRootName;
 
 /**
  * Company: Resource Management Associates
@@ -21,7 +20,7 @@ import com.fasterxml.jackson.annotation.JsonRootName;
  * @author <a href="mailto:adam@rmanet.com">Adam Korynta</a>
  * @since 05-22-2019
  */
-@JsonRootName("xAxis")
+
 public class TsXAxisOption
 {
 	private final String _axisType = "datetime";
@@ -33,6 +32,7 @@ public class TsXAxisOption
 		return _axisType;
 	}
 
+	@JsonGetter("title")
 	public TitleOption getTitleOption()
 	{
 		return _titleOption;

@@ -15,7 +15,6 @@ package gov.ca.water.plots.timeseries;
 import java.util.TimeZone;
 
 import com.fasterxml.jackson.annotation.JsonGetter;
-import com.fasterxml.jackson.annotation.JsonRootName;
 
 /**
  * Company: Resource Management Associates
@@ -23,7 +22,7 @@ import com.fasterxml.jackson.annotation.JsonRootName;
  * @author <a href="mailto:adam@rmanet.com">Adam Korynta</a>
  * @since 05-22-2019
  */
-@JsonRootName("time")
+
 public class TsTimeOption
 {
 	private TimeZone _timeZone = TimeZone.getDefault();

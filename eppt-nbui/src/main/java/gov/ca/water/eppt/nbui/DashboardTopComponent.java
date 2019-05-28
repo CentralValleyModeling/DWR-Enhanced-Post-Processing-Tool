@@ -42,9 +42,9 @@ import org.openide.windows.TopComponent;
 )
 @Messages(
 		{
-				"CTL_CustomResultsAction=CustomResults",
-				"CTL_DashboardTopComponent=CustomResults Window",
-				"HINT_DashboardTopComponent=This is a CustomResults window"
+				"CTL_DashboardAction=Dashboard",
+				"CTL_DashboardTopComponent=Dashboard Window",
+				"HINT_DashboardTopComponent=This is a Dashboard window"
 		})
 public final class DashboardTopComponent extends EpptTopComponent
 {

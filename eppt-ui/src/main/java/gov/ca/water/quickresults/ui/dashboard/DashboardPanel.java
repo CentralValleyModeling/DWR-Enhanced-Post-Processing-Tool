@@ -93,7 +93,7 @@ public class DashboardPanel extends JFXPanel
 		String url = "highcharts/examples/column-stacked/index.htm";
 		if(_summaryPane == null)
 		{
-			_summaryPane = new JavascriptPanel(url);
+			_summaryPane = new JavascriptPanel(url, "");
 		}
 		loadPane(event, _summaryPane, url);
 	}
@@ -103,7 +103,7 @@ public class DashboardPanel extends JFXPanel
 		String url = "highcharts/examples/line-basic/index.htm";
 		if(_monthlyPane == null)
 		{
-			_monthlyPane = new JavascriptPanel(url);
+			_monthlyPane = new JavascriptPanel(url, "");
 		}
 		loadPane(event, _monthlyPane, url);
 	}
@@ -113,7 +113,7 @@ public class DashboardPanel extends JFXPanel
 		String url = "highcharts/examples/line-time-series/index.htm";
 		if(_timeseriesPane == null)
 		{
-			_timeseriesPane = new JavascriptPanel(url);
+			_timeseriesPane = new JavascriptPanel(url, "");
 		}
 		loadPane(event, _timeseriesPane, url);
 	}
@@ -123,7 +123,7 @@ public class DashboardPanel extends JFXPanel
 		String url = "highcharts/examples/area-basic/index.htm";
 		if(_exceedancePanel == null)
 		{
-			_exceedancePanel = new JavascriptPanel(url);
+			_exceedancePanel = new JavascriptPanel(url, "");
 		}
 		loadPane(event, _exceedancePanel, url);
 	}
@@ -133,7 +133,7 @@ public class DashboardPanel extends JFXPanel
 		String url = "highcharts/examples/polygon/index.htm";
 		if(_waterYearPanel == null)
 		{
-			_waterYearPanel = new JavascriptPanel(url);
+			_waterYearPanel = new JavascriptPanel(url, "");
 		}
 		loadPane(event, _waterYearPanel, url);
 	}
