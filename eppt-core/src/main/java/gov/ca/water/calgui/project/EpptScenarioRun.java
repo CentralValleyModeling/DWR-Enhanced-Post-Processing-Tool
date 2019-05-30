@@ -13,6 +13,7 @@
 package gov.ca.water.calgui.project;
 
 import java.nio.file.Path;
+import java.util.Objects;
 
 import gov.ca.water.calgui.bo.GUILinksAllModelsBO;
 
@@ -29,6 +30,8 @@ public class EpptScenarioRun
 	private final GUILinksAllModelsBO.Model _model;
 	private final Path _outputPath;
 	private final Path _wreslMain;
+	private final Path _waterYearTable;
+	private final Path _waterYearLookup;
 	private final EpptDssContainer _dssContainer;
 
 	/**
@@ -40,13 +43,15 @@ public class EpptScenarioRun
 	 * @param dssContainer
 	 */
 	public EpptScenarioRun(String name, String description, GUILinksAllModelsBO.Model model, Path outputPath,
-						   Path wreslMain, EpptDssContainer dssContainer)
+						   Path wreslMain, Path waterYearTable, Path waterYearLookup, EpptDssContainer dssContainer)
 	{
 		_name = name;
 		_description = description;
 		_model = model;
 		_outputPath = outputPath;
 		_wreslMain = wreslMain;
+		_waterYearTable = waterYearTable;
+		_waterYearLookup = waterYearLookup;
 		_dssContainer = dssContainer;
 	}
 
@@ -115,5 +120,44 @@ public class EpptScenarioRun
 	public String toString()
 	{
 		return getName();
+	}
+
+	public Path getWaterYearLookup()
+	{
+		return _waterYearLookup;
+	}
+
+	public Path getWaterYearTable()
+	{
+		return _waterYearTable;
+	}
+
+	@Override
+	public boolean equals(Object o)
+	{
+		if(this == o)
+		{
+			return true;
+		}
+		if(o == null || getClass() != o.getClass())
+		{
+			return false;
+		}
+		final EpptScenarioRun that = (EpptScenarioRun) o;
+		return Objects.equals(getName(), that.getName()) &&
+				Objects.equals(getDescription(), that.getDescription()) &&
+				Objects.equals(getModel(), that.getModel()) &&
+				Objects.equals(getOutputPath(), that.getOutputPath()) &&
+				Objects.equals(getWreslMain(), that.getWreslMain()) &&
+				Objects.equals(getWaterYearTable(), that.getWaterYearTable()) &&
+				Objects.equals(getWaterYearLookup(), that.getWaterYearLookup()) &&
+				Objects.equals(getDssContainer(), that.getDssContainer());
+	}
+
+	@Override
+	public int hashCode()
+	{
+		return Objects.hash(getName(), getDescription(), getModel(), getOutputPath(), getWreslMain(), getWaterYearTable(), getWaterYearLookup(),
+				getDssContainer());
 	}
 }

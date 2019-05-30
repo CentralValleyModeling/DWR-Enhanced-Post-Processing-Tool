@@ -71,8 +71,6 @@ public class EPPTReport
     private static final String MODULES_CSV = CONFIG_DIR + "/Modules" + CSV_EXT;
     private static final String DETAILS_CSV = CONFIG_DIR + "/Details" + CSV_EXT;
 
-    private final Path _wyTypeTable;
-    private final Path _wyNameLookup;
     private final Path _pathToWriteOut;
     private final EpptScenarioRun _baseRun;
     private final List<EpptScenarioRun> _altRuns = new ArrayList<>();
@@ -84,11 +82,9 @@ public class EPPTReport
 
     private List<DetailedIssue> _allDetailedIssues;
 
-    public EPPTReport(Path wyTypeTable, Path wyNameLookup, Path pathToWriteOut, EpptScenarioRun baseRun, List<EpptScenarioRun> altRuns,
+    public EPPTReport(Path pathToWriteOut, EpptScenarioRun baseRun, List<EpptScenarioRun> altRuns,
                       double tolerance, String author, String subtitle)
     {
-        _wyTypeTable = wyTypeTable;
-        _wyNameLookup = wyNameLookup;
         _pathToWriteOut = pathToWriteOut;
         _baseRun = baseRun;
         _altRuns.addAll(altRuns);
@@ -177,32 +173,6 @@ public class EPPTReport
 
     private void validateReportInputs() throws EpptReportException
     {
-        if(_wyTypeTable == null)
-        {
-            String errorMsg = "Water year type table is null";
-            LOGGER.at(Level.SEVERE).log(errorMsg);
-            throw new EpptReportException(errorMsg);
-        }
-        if(!_wyTypeTable.toFile().exists())
-        {
-            String errorMsg = "Water year type table file could not be found. Path: " + _wyTypeTable;
-            LOGGER.at(Level.SEVERE).log(errorMsg);
-            throw new EpptReportException(errorMsg);
-        }
-
-        if(_wyNameLookup == null)
-        {
-            String errorMsg = "Water year name lookup csv is null";
-            LOGGER.at(Level.SEVERE).log(errorMsg);
-            throw new EpptReportException(errorMsg);
-        }
-        if(!_wyNameLookup.toFile().exists())
-        {
-            String errorMsg = "Water year name lookup file could not be found. Path: " + _wyNameLookup;
-            LOGGER.at(Level.SEVERE).log(errorMsg);
-            throw new EpptReportException(errorMsg);
-        }
-
 
         if(_pathToWriteOut == null)
         {
@@ -231,6 +201,33 @@ public class EPPTReport
 
     private void checkCorrectFilePaths(EpptScenarioRun run) throws EpptReportException
     {
+
+        if(run.getWaterYearTable() == null)
+        {
+            String errorMsg = "Scenario " + run.getName() + ": Water year type table is null";
+            LOGGER.at(Level.SEVERE).log(errorMsg);
+            throw new EpptReportException(errorMsg);
+        }
+        if(!run.getWaterYearTable().toFile().exists())
+        {
+            String errorMsg = "Scenario " + run.getName() + ": Water year type table file could not be found. Path: " + run.getWaterYearTable();
+            LOGGER.at(Level.SEVERE).log(errorMsg);
+            throw new EpptReportException(errorMsg);
+        }
+
+        if(run.getWaterYearLookup() == null)
+        {
+            String errorMsg = "Scenario " + run.getName() + ": Water year name lookup csv is null";
+            LOGGER.at(Level.SEVERE).log(errorMsg);
+            throw new EpptReportException(errorMsg);
+        }
+        if(!run.getWaterYearLookup().toFile().exists())
+        {
+            String errorMsg = "Scenario " + run.getName() + ": Water year name lookup file could not be found. Path: " + run.getWaterYearLookup();
+            LOGGER.at(Level.SEVERE).log(errorMsg);
+            throw new EpptReportException(errorMsg);
+        }
+
         if(run.getPostProcessDss() == null)
         {
             String errorMsg = "Scenario " + run.getName() + " is  missing the post process dss file.";
@@ -337,7 +334,7 @@ public class EPPTReport
         allRuns.add(_baseRun);
         allRuns.addAll(_altRuns);
         DetailedIssueProcessor processor =
-                new DetailedIssueProcessor(_wyTypeTable, _wyNameLookup, runsToFlagViolations, _modules, _allDetailedIssues, allRuns, false);
+                new DetailedIssueProcessor(runsToFlagViolations, _modules, _allDetailedIssues, allRuns, false);
         Map<EpptScenarioRun, Map<Module, List<DetailedIssueViolation>>> runsToDetailedViolations = processor.process();
 
         DetailedIssuesXMLCreator xmlCreator = new DetailedIssuesXMLCreator();

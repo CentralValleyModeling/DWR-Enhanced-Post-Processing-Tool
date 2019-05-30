@@ -22,6 +22,7 @@ import java.util.logging.Level;
 
 import com.google.common.flogger.FluentLogger;
 import gov.ca.water.calgui.project.EpptScenarioRun;
+import gov.ca.water.calgui.project.NamedDssPath;
 import gov.ca.water.reportengine.EpptReportException;
 
 import hec.heclib.dss.DSSPathname;
@@ -45,15 +46,10 @@ public class DTSProcessor
 	public Map<EpptScenarioRun, Map<SubModule, List<FlagViolation>>> processDSSFiles(List<EpptScenarioRun> runs)
 			throws EpptReportException
 	{
-		List<Path> dssFiles = new ArrayList<>();
-		for(EpptScenarioRun run : runs)
-		{
-			dssFiles.add(run.getPostProcessDss());
-		}
-		if(runs.size() != dssFiles.size())
+		if(runs.isEmpty())
 		{
 			throw new EpptReportException(
-					"Different number of DSS files as runs. Number of runs: " + runs.size() + " Number of DSS files: " + dssFiles.size() + ".");
+					"Different number of DSS files as runs. Number of runs: " + runs.size() + " Number of DSS files: " + runs.size() + ".");
 		}
 
 		Map<EpptScenarioRun, Map<SubModule, List<FlagViolation>>> runToViolations = new HashMap<>();
@@ -61,7 +57,7 @@ public class DTSProcessor
 
 		for(int i = 0; i < runs.size(); i++)
 		{
-			Map<SubModule, List<FlagViolation>> subModuleToViolations = processDSSFile(dssFiles.get(i));
+			Map<SubModule, List<FlagViolation>> subModuleToViolations = processDSSFile(runs.get(i));
 			runToViolations.put(runs.get(i), subModuleToViolations);
 		}
 		return runToViolations;
@@ -70,17 +66,17 @@ public class DTSProcessor
 	/**
 	 * Gets the violations from the dssFile and puts them into the correct subModule
 	 *
-	 * @param dssFile Path to dss file with dts records
+	 * @param run scenario for dss file with dts records
 	 * @throws Exception
 	 */
-	private Map<SubModule, List<FlagViolation>> processDSSFile(Path dssFile) throws EpptReportException
+	private Map<SubModule, List<FlagViolation>> processDSSFile(EpptScenarioRun run) throws EpptReportException
 	{
-		LOGGER.at(Level.INFO).log("Processing DTS Records in file %s", dssFile);
+		LOGGER.at(Level.INFO).log("Processing DTS Records in file %s", run.getPostProcessDss());
 		Map<SubModule, List<FlagViolation>> subModToViolations = new HashMap<>();
 		HecDss hD = null;
 		try
 		{
-			hD = HecDss.open(dssFile.toString());
+			hD = HecDss.open(run.getPostProcessDss().toString());
 
 			for(Module mod : _modules)
 			{
@@ -98,14 +94,14 @@ public class DTSProcessor
 				List<SubModule> subModules = mod.getSubModules();
 				for(SubModule sm : subModules)
 				{
-					List<FlagViolation> violations = getViolations(dssFile, hD, sm);
+					List<FlagViolation> violations = getViolations(run, hD, sm);
 					subModToViolations.put(sm, violations);
 				}
 			}
 		}
 		catch(Exception e)
 		{
-			throw new EpptReportException("Unable to open dssFile: " + dssFile, e);
+			throw new EpptReportException("Unable to open dssFile: " + run.getPostProcessDss(), e);
 		}
 		finally
 		{
@@ -117,34 +113,20 @@ public class DTSProcessor
 		return subModToViolations;
 	}
 
-	private List<FlagViolation> getViolations(Path dssFile, HecDss hD, SubModule sm) throws ExecutiveReportException
+	private List<FlagViolation> getViolations(EpptScenarioRun run, HecDss hD, SubModule sm) throws ExecutiveReportException
 	{
+		Path postProcessDss = run.getPostProcessDss();
 		List<FlagViolation> violations = new ArrayList<>();
 		List<String> linkedRecords = sm.getLinkedRecords();
 		SubModule.FlagType flagValue = sm.getFlagValue();
+		NamedDssPath dtsDssFile = run.getDssContainer().getDtsDssFile();
 		for(String lr : linkedRecords)
 		{
 
-			DSSPathname pathName = new DSSPathname();
-			pathName.setAPart("*");
-			pathName.setBPart(lr);
-			pathName.setCPart("*");
-			pathName.setDPart("*");
-			pathName.setEPart("*");
-			pathName.setFPart("*");
-
-
-			String dssPath = pathName.toString();
+			String dssRecord = "/" + dtsDssFile.getAPart() + "/" + lr + "//" + dtsDssFile.getEPart() + "/" + dtsDssFile.getFPart();
 			try
 			{
-
-				Vector catalogedPathnames = hD.getCatalogedPathnames(dssPath);
-				if(!catalogedPathnames.isEmpty())
-				{
-					dssPath = catalogedPathnames.get(0).toString();
-				}
-				TimeSeriesContainer result = (TimeSeriesContainer) hD.get(dssPath, true);
-
+				TimeSeriesContainer result = (TimeSeriesContainer) hD.get(dssRecord, true);
 				FlagViolation flagViolationFromRecord = createFlagViolationFromRecord(result, flagValue, lr);
 				if(flagViolationFromRecord != null)
 				{
@@ -156,12 +138,12 @@ public class DTSProcessor
 			{
 				if(e.getMessage() != null && e.getMessage().contains("Unable to recognize record"))
 				{
-					FluentLogger.forEnclosingClass().at(Level.INFO).withCause(e).log("Skipping record: %s from file: %s", dssPath,
-							dssFile);
+					FluentLogger.forEnclosingClass().at(Level.INFO).withCause(e).log("Skipping record: %s from file: %s", dssRecord,
+							postProcessDss);
 				}
 				else
 				{
-					throw new ExecutiveReportException("Error reading dssFile during executive report generation: " + dssFile.toString(),
+					throw new ExecutiveReportException("Error reading dssFile during executive report generation: " + dtsDssFile.toString(),
 							e);
 				}
 			}

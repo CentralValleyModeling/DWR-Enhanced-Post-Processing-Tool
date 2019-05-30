@@ -70,39 +70,39 @@ public class TestQAQCReportBase
     {
 
         Path ivPath = getInitialConditionsBaseDSSPath();
-        NamedDssPath ivDssFile = new NamedDssPath(ivPath, "INIT");
+        NamedDssPath ivDssFile = new NamedDssPath(ivPath, "INIT", "CALSIM", "1MON", "");
 
         Path svPath = getStateVariableBaseDSSPath();
-        NamedDssPath svDssFile = new NamedDssPath(svPath, "SV");
+        NamedDssPath svDssFile = new NamedDssPath(svPath, "SV", "CALSIM", "1MON", "");
 
         Path dvPath = getDVPath();
-        NamedDssPath dvDssFile = new NamedDssPath(dvPath, "DV");
+        NamedDssPath dvDssFile = new NamedDssPath(dvPath, "DV", "CALSIM", "1MON", "");
 
         List<NamedDssPath> extraDssFiles = Collections.emptyList();
         EpptDssContainer dssContainer = new EpptDssContainer(dvDssFile, svDssFile, ivDssFile, ivDssFile, extraDssFiles);
 
 
         GUILinksAllModelsBO.Model calSim2 = GUILinksAllModelsBO.Model.findModel("CalSim2");// model = new GUILinksAllModelsBO.Model("CalSim2");
-        EpptScenarioRun baseRun = new EpptScenarioRun("baseScenario", "desc", calSim2,null,null, dssContainer);
+        EpptScenarioRun baseRun = new EpptScenarioRun("baseScenario", "desc", calSim2,null,null, null, null, dssContainer);
         return baseRun;
     }
 
     public List<EpptScenarioRun> getAltScenarioRuns()
     {
         Path ivPath = getInitialConditionsAltDSSPath();
-        NamedDssPath ivDssFile = new NamedDssPath(ivPath, "INIT");
+        NamedDssPath ivDssFile = new NamedDssPath(ivPath, "INIT", "CALSIM", "1MON", "");
 
         Path svPath = getStateVariableAltDSSPath();
-        NamedDssPath svDssFile = new NamedDssPath(svPath, "SV");
+        NamedDssPath svDssFile = new NamedDssPath(svPath, "SV", "CALSIM", "1MON", "");
 
         Path dvPath = getDVPath();
-        NamedDssPath dvDssFile = new NamedDssPath(dvPath, "DV");
+        NamedDssPath dvDssFile = new NamedDssPath(dvPath, "DV", "CALSIM", "1MON", "");
 
         List<NamedDssPath> extraDssFiles = Collections.emptyList();
         EpptDssContainer dssContainer = new EpptDssContainer(dvDssFile, svDssFile, ivDssFile, ivDssFile, extraDssFiles);
 
         GUILinksAllModelsBO.Model calSim2 = GUILinksAllModelsBO.Model.findModel("CalSim2");// model = new GUILinksAllModelsBO.Model("CalSim2");
-        EpptScenarioRun alt1Run = new EpptScenarioRun("alt1Scenario", "desc", calSim2,null,null,dssContainer);
+        EpptScenarioRun alt1Run = new EpptScenarioRun("alt1Scenario", "desc", calSim2,null,null,null, null, dssContainer);
 
         List<EpptScenarioRun> altRuns = new ArrayList<>();
         altRuns.add(alt1Run);

@@ -22,6 +22,7 @@ import javax.swing.*;
 import gov.ca.water.calgui.EpptInitializationException;
 import gov.ca.water.calgui.busservice.impl.GuiLinksSeedDataSvcImpl;
 import gov.ca.water.calgui.project.EpptScenarioRun;
+import gov.ca.water.quickresults.ui.projectconfig.scenarioconfig.ScenarioRunEditor;
 
 /**
  * Company: Resource Management Associates

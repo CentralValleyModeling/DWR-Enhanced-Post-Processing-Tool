@@ -24,6 +24,7 @@ import gov.ca.water.calgui.busservice.impl.GuiLinksSeedDataSvcImpl;
 import gov.ca.water.calgui.project.EpptDssContainer;
 import gov.ca.water.calgui.project.EpptScenarioRun;
 import gov.ca.water.calgui.project.NamedDssPath;
+import gov.ca.water.quickresults.ui.projectconfig.scenarioconfig.ScenarioRunEditor;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
@@ -68,13 +69,14 @@ class TestScenarioRunEditor
 		GUILinksAllModelsBO.Model model = GUILinksAllModelsBO.Model.findModel("CalSim2");
 		Path outputPath = Paths.get("OUPUTPATH");
 		Path wreslMain = Paths.get("WRESLMain");
-		NamedDssPath dvDssFile = new NamedDssPath(Paths.get("DV FILE"), "TEST DV");
-		NamedDssPath svDssFile = new NamedDssPath(Paths.get("SV FILE"), "TEST SV");
-		NamedDssPath ivDssFile = new NamedDssPath(Paths.get("IV File"), "TEST IV");
-		List<NamedDssPath> extraDssFiles = Arrays.asList(new NamedDssPath(Paths.get("EXTRA 1"), "EXTRA1"), new NamedDssPath(Paths.get("Extra 2"), "EXTRA2"));
+		NamedDssPath dvDssFile = new NamedDssPath(Paths.get("DV FILE"), "TEST DV", "CALSIM", "1MON", "ABCDEFG");
+		NamedDssPath svDssFile = new NamedDssPath(Paths.get("SV FILE"), "TEST SV", "CALSIM", "1MON", "ABCDEFG");
+		NamedDssPath ivDssFile = new NamedDssPath(Paths.get("IV File"), "TEST IV", "CALSIM", "1MON", "ABCDEFG");
+		List<NamedDssPath> extraDssFiles = Arrays.asList(new NamedDssPath(Paths.get("EXTRA 1"), "EXTRA1", "CALSIM", "1MON", "ABCDEFG"),
+				new NamedDssPath(Paths.get("Extra 2"), "EXTRA2", "CALSIM", "1MON", "ABCDEFG"));
 		EpptDssContainer dssContainer = new EpptDssContainer(dvDssFile, svDssFile, ivDssFile, ivDssFile, extraDssFiles);
 		EpptScenarioRun epptScenarioRun = new EpptScenarioRun(name, description, model, outputPath,
-				wreslMain, dssContainer);
+				wreslMain, Paths.get("table"), Paths.get("lookup"), dssContainer);
 		scenarioRunEditor.fillPanel(epptScenarioRun);
 		assertEquals("Edit Scenario Run: " + epptScenarioRun.getName(), scenarioRunEditor.getTitle(),
 				"Default title should be set");

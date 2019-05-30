@@ -47,11 +47,16 @@ class ProjectConfigurationIO
 	static final String SCENARIO_DSS_FILES = "scenario_dss_files";
 	static final String SCENARIO_DSS_NAME = "scneario_dss_name";
 	static final String SCENARIO_DSS_PATH = "scneario_dss_path";
+	static final String SCENARIO_A_PART = "scneario_a_part";
+	static final String SCENARIO_E_PART = "scneario_e_part";
+	static final String SCENARIO_F_PART = "scneario_f_part";
 	static final String SCENARIO_DV_KEY = "scenario_dv_key";
 	static final String SCENARIO_SV_KEY = "scenario_sv_key";
 	static final String SCENARIO_IV_KEY = "scenario_iv_key";
 	static final String SCENARIO_DTS_KEY = "scenario_dts_key";
 	static final String SCENARIO_DSS_EXTRA = "scenario_dss_extra";
+	static final String SCENARIO_WATER_TABLE = "scenario_water_table";
+	static final String SCENARIO_WATER_LOOKUP = "scenario_water_lookup";
 	static final String FILE_KEY = "file";
 	static final String MODEL_KEY = "model";
 	static final String SELECTED_KEY = "selected";

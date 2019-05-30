@@ -81,13 +81,7 @@ public class ScenarioTablePanel extends JFXPanel
 
 	public void clearScenarios()
 	{
-		Platform.runLater(() ->
-		{
-			if(_scenarioTableModel != null)
-			{
-				_scenarioTableModel.getRows().clear();
-			}
-		});
+		_scenarioTableModel.getRows().clear();
 	}
 
 	public EpptScenarioRun getBaseScenarioRun()

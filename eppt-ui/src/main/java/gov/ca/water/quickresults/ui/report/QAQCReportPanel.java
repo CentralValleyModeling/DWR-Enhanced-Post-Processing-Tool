@@ -63,8 +63,6 @@ import static gov.ca.water.calgui.constant.Constant.WRESL_DIR;
 public class QAQCReportPanel extends RmaJPanel implements ProcessOutputConsumer
 {
 	private static final Logger LOGGER = Logger.getLogger(QAQCReportPanel.class.getName());
-	private static final String WY_TYPES_TABLE = WRESL_DIR + "/lookup/wytypes" + TABLE_EXT;
-	private static final String WY_TYPES_NAME_LOOKUP = WRESL_DIR + "/WYTypesLookup" + CSV_EXT;
 
 	private final StyledDocument _doc;
 	private final Style _style;
@@ -85,10 +83,6 @@ public class QAQCReportPanel extends RmaJPanel implements ProcessOutputConsumer
 	private JCheckBox _coverPageCheckBox;
 	private JCheckBox _standardSummaryStatiticsCheckBox;
 	private JTextField _authorTextField;
-	private JButton _wyTableBtn;
-	private JTextField _waterYearLookup;
-	private JButton _wyLookupBtn;
-	private JTextField _waterYearTable;
 	private JProgressBar _progressBar1;
 	private TextAreaPrintStream _textAreaPrintStream;
 	private boolean _ignoreSelectionChange;
@@ -105,10 +99,6 @@ public class QAQCReportPanel extends RmaJPanel implements ProcessOutputConsumer
 		_doc = (StyledDocument) _textPane1.getDocument();
 		_style = _doc.addStyle("ConsoleStyle", null);
 		Logger.getLogger("").addHandler(new ReportHandler());
-		_waterYearTable.setText(Paths.get(WY_TYPES_TABLE).normalize().toString());
-		_waterYearLookup.setText(Paths.get(WY_TYPES_NAME_LOOKUP).normalize().toString());
-		_wyLookupBtn.addActionListener(e -> chooseWaterYearLookup());
-		_wyTableBtn.addActionListener(e -> chooseWaterYearTable());
 		_baseComboBox.addActionListener(this::scenarioComboboxChanged);
 		_altComboBox.addActionListener(this::scenarioComboboxChanged);
 	}
@@ -157,34 +147,6 @@ public class QAQCReportPanel extends RmaJPanel implements ProcessOutputConsumer
 				filePath += ".pdf";
 			}
 			_pdfOutput.setText(filePath);
-		}
-	}
-
-	private void chooseWaterYearTable()
-	{
-		JFileChooser jFileChooser = new JFileChooser();
-		jFileChooser.setCurrentDirectory(Paths.get(_waterYearTable.getText()).toFile());
-		jFileChooser.setFileFilter(new SimpleFileFilter("TABLE"));
-		jFileChooser.setDialogTitle("Choose Water Year Table File");
-		jFileChooser.showOpenDialog(this);
-		File selectedFile = jFileChooser.getSelectedFile();
-		if(selectedFile != null)
-		{
-			_waterYearTable.setText(selectedFile.toString());
-		}
-	}
-
-	private void chooseWaterYearLookup()
-	{
-		JFileChooser jFileChooser = new JFileChooser();
-		jFileChooser.setCurrentDirectory(Paths.get(_waterYearLookup.getText()).toFile());
-		jFileChooser.setFileFilter(new SimpleFileFilter("CSV"));
-		jFileChooser.setDialogTitle("Choose Water Year Lookup File");
-		jFileChooser.showOpenDialog(this);
-		File selectedFile = jFileChooser.getSelectedFile();
-		if(selectedFile != null)
-		{
-			_waterYearLookup.setText(selectedFile.toString());
 		}
 	}
 
@@ -252,9 +214,7 @@ public class QAQCReportPanel extends RmaJPanel implements ProcessOutputConsumer
 			String author = _authorTextField.getText();
 			EpptPreferences.setUsername(author);
 			String subtitle = _reportSubtitle.getText();
-			Path waterYearTablePath = Paths.get(_waterYearTable.getText());
-			Path waterYearLookupPath = Paths.get(_waterYearLookup.getText());
-			qaqcReportGenerator.generateQAQCReport(waterYearTablePath, waterYearLookupPath, baseRun, altRun, tolerance, author, subtitle,
+			qaqcReportGenerator.generateQAQCReport(baseRun, altRun, tolerance, author, subtitle,
 					pathToWriteOut);
 		}
 		catch(QAQCReportException | RuntimeException e)
@@ -410,63 +370,13 @@ public class QAQCReportPanel extends RmaJPanel implements ProcessOutputConsumer
 		_fileChooserBtn.setText("...");
 		panel6.add(_fileChooserBtn, BorderLayout.EAST);
 		final JLabel label6 = new JLabel();
-		label6.setText("WY Types Table:");
-		gbc = new GridBagConstraints();
-		gbc.gridx = 0;
-		gbc.gridy = 6;
-		gbc.anchor = GridBagConstraints.WEST;
-		gbc.insets = new Insets(5, 5, 5, 5);
-		panel5.add(label6, gbc);
-		final JLabel label7 = new JLabel();
-		label7.setText("WY Name Lookups:");
-		gbc = new GridBagConstraints();
-		gbc.gridx = 0;
-		gbc.gridy = 7;
-		gbc.anchor = GridBagConstraints.WEST;
-		gbc.insets = new Insets(5, 5, 5, 5);
-		panel5.add(label7, gbc);
-		final JPanel panel7 = new JPanel();
-		panel7.setLayout(new BorderLayout(2, 0));
-		gbc = new GridBagConstraints();
-		gbc.gridx = 1;
-		gbc.gridy = 6;
-		gbc.fill = GridBagConstraints.BOTH;
-		gbc.insets = new Insets(5, 5, 5, 5);
-		panel5.add(panel7, gbc);
-		_waterYearTable = new JTextField();
-		_waterYearTable.setEditable(false);
-		_waterYearTable.setPreferredSize(new Dimension(200, 24));
-		_waterYearTable.setText("");
-		panel7.add(_waterYearTable, BorderLayout.CENTER);
-		_wyTableBtn = new JButton();
-		_wyTableBtn.setPreferredSize(new Dimension(30, 24));
-		_wyTableBtn.setText("...");
-		panel7.add(_wyTableBtn, BorderLayout.EAST);
-		final JPanel panel8 = new JPanel();
-		panel8.setLayout(new BorderLayout(2, 0));
-		gbc = new GridBagConstraints();
-		gbc.gridx = 1;
-		gbc.gridy = 7;
-		gbc.fill = GridBagConstraints.BOTH;
-		gbc.insets = new Insets(5, 5, 5, 5);
-		panel5.add(panel8, gbc);
-		_waterYearLookup = new JTextField();
-		_waterYearLookup.setEditable(false);
-		_waterYearLookup.setPreferredSize(new Dimension(200, 24));
-		panel8.add(_waterYearLookup, BorderLayout.CENTER);
-		_wyLookupBtn = new JButton();
-		_wyLookupBtn.setPreferredSize(new Dimension(30, 24));
-		_wyLookupBtn.setSelected(true);
-		_wyLookupBtn.setText("...");
-		panel8.add(_wyLookupBtn, BorderLayout.EAST);
-		final JLabel label8 = new JLabel();
-		label8.setText("Author:");
+		label6.setText("Author:");
 		gbc = new GridBagConstraints();
 		gbc.gridx = 0;
 		gbc.gridy = 1;
 		gbc.anchor = GridBagConstraints.WEST;
 		gbc.insets = new Insets(5, 5, 5, 5);
-		panel5.add(label8, gbc);
+		panel5.add(label6, gbc);
 		_authorTextField = new JTextField();
 		gbc = new GridBagConstraints();
 		gbc.gridx = 1;
@@ -475,11 +385,11 @@ public class QAQCReportPanel extends RmaJPanel implements ProcessOutputConsumer
 		gbc.fill = GridBagConstraints.HORIZONTAL;
 		gbc.insets = new Insets(5, 5, 5, 5);
 		panel5.add(_authorTextField, gbc);
-		final JPanel panel9 = new JPanel();
-		panel9.setLayout(new GridBagLayout());
-		panel9.setPreferredSize(new Dimension(300, 200));
-		panel4.add(panel9, BorderLayout.EAST);
-		panel9.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(), "Modules"));
+		final JPanel panel7 = new JPanel();
+		panel7.setLayout(new GridBagLayout());
+		panel7.setPreferredSize(new Dimension(300, 200));
+		panel4.add(panel7, BorderLayout.EAST);
+		panel7.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(), "Modules"));
 		_excutiveSummaryCheckBox = new JCheckBox();
 		_excutiveSummaryCheckBox.setEnabled(false);
 		_excutiveSummaryCheckBox.setHorizontalAlignment(2);
@@ -490,8 +400,8 @@ public class QAQCReportPanel extends RmaJPanel implements ProcessOutputConsumer
 		gbc.gridy = 2;
 		gbc.weightx = 0.5;
 		gbc.anchor = GridBagConstraints.NORTHWEST;
-		gbc.insets = new Insets(5, 5, 5, 5);
-		panel9.add(_excutiveSummaryCheckBox, gbc);
+		gbc.insets = new Insets(0, 5, 0, 5);
+		panel7.add(_excutiveSummaryCheckBox, gbc);
 		_assumptionChangesCheckBox = new JCheckBox();
 		_assumptionChangesCheckBox.setEnabled(false);
 		_assumptionChangesCheckBox.setHorizontalAlignment(2);
@@ -500,8 +410,8 @@ public class QAQCReportPanel extends RmaJPanel implements ProcessOutputConsumer
 		gbc.gridx = 0;
 		gbc.gridy = 3;
 		gbc.anchor = GridBagConstraints.NORTHWEST;
-		gbc.insets = new Insets(5, 5, 5, 5);
-		panel9.add(_assumptionChangesCheckBox, gbc);
+		gbc.insets = new Insets(0, 5, 0, 5);
+		panel7.add(_assumptionChangesCheckBox, gbc);
 		_codeChangesCheckBox = new JCheckBox();
 		_codeChangesCheckBox.setEnabled(false);
 		_codeChangesCheckBox.setHorizontalAlignment(2);
@@ -510,8 +420,8 @@ public class QAQCReportPanel extends RmaJPanel implements ProcessOutputConsumer
 		gbc.gridx = 0;
 		gbc.gridy = 4;
 		gbc.anchor = GridBagConstraints.NORTHWEST;
-		gbc.insets = new Insets(5, 5, 5, 5);
-		panel9.add(_codeChangesCheckBox, gbc);
+		gbc.insets = new Insets(0, 5, 0, 5);
+		panel7.add(_codeChangesCheckBox, gbc);
 		_detailedIssuesCheckBox = new JCheckBox();
 		_detailedIssuesCheckBox.setEnabled(false);
 		_detailedIssuesCheckBox.setHorizontalAlignment(2);
@@ -521,8 +431,8 @@ public class QAQCReportPanel extends RmaJPanel implements ProcessOutputConsumer
 		gbc.gridx = 0;
 		gbc.gridy = 5;
 		gbc.anchor = GridBagConstraints.NORTHWEST;
-		gbc.insets = new Insets(5, 5, 5, 5);
-		panel9.add(_detailedIssuesCheckBox, gbc);
+		gbc.insets = new Insets(0, 5, 0, 5);
+		panel7.add(_detailedIssuesCheckBox, gbc);
 		_tableOfContentsCheckBox = new JCheckBox();
 		_tableOfContentsCheckBox.setEnabled(false);
 		_tableOfContentsCheckBox.setHorizontalAlignment(2);
@@ -532,8 +442,8 @@ public class QAQCReportPanel extends RmaJPanel implements ProcessOutputConsumer
 		gbc.gridx = 0;
 		gbc.gridy = 1;
 		gbc.anchor = GridBagConstraints.NORTHWEST;
-		gbc.insets = new Insets(5, 5, 5, 5);
-		panel9.add(_tableOfContentsCheckBox, gbc);
+		gbc.insets = new Insets(0, 5, 0, 5);
+		panel7.add(_tableOfContentsCheckBox, gbc);
 		_coverPageCheckBox = new JCheckBox();
 		_coverPageCheckBox.setEnabled(false);
 		_coverPageCheckBox.setHorizontalAlignment(2);
@@ -543,8 +453,8 @@ public class QAQCReportPanel extends RmaJPanel implements ProcessOutputConsumer
 		gbc.gridx = 0;
 		gbc.gridy = 0;
 		gbc.anchor = GridBagConstraints.NORTHWEST;
-		gbc.insets = new Insets(5, 5, 5, 5);
-		panel9.add(_coverPageCheckBox, gbc);
+		gbc.insets = new Insets(0, 5, 0, 5);
+		panel7.add(_coverPageCheckBox, gbc);
 		_standardSummaryStatiticsCheckBox = new JCheckBox();
 		_standardSummaryStatiticsCheckBox.setEnabled(false);
 		_standardSummaryStatiticsCheckBox.setHorizontalAlignment(2);
@@ -553,16 +463,16 @@ public class QAQCReportPanel extends RmaJPanel implements ProcessOutputConsumer
 		gbc.gridx = 0;
 		gbc.gridy = 6;
 		gbc.anchor = GridBagConstraints.NORTHWEST;
-		gbc.insets = new Insets(5, 5, 5, 5);
-		panel9.add(_standardSummaryStatiticsCheckBox, gbc);
-		final JPanel panel10 = new JPanel();
-		panel10.setLayout(new BorderLayout(0, 0));
-		panel10.setPreferredSize(new Dimension(100, 0));
+		gbc.insets = new Insets(0, 5, 0, 5);
+		panel7.add(_standardSummaryStatiticsCheckBox, gbc);
+		final JPanel panel8 = new JPanel();
+		panel8.setLayout(new BorderLayout(0, 0));
+		panel8.setPreferredSize(new Dimension(100, 0));
 		gbc = new GridBagConstraints();
 		gbc.gridx = 1;
 		gbc.gridy = 0;
 		gbc.fill = GridBagConstraints.BOTH;
-		panel9.add(panel10, gbc);
+		panel7.add(panel8, gbc);
 		final JScrollPane scrollPane1 = new JScrollPane();
 		_panel1.add(scrollPane1, BorderLayout.CENTER);
 		_textPane1 = new JTextPane();

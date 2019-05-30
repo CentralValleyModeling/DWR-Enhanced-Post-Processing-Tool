@@ -12,20 +12,17 @@
 
 package gov.ca.water.calgui.wresl;
 
-import java.io.BufferedWriter;
+import java.io.File;
 import java.io.IOException;
-import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
+import gov.ca.water.calgui.constant.EpptPreferences;
 import gov.ca.water.calgui.project.EpptScenarioRun;
 import org.antlr.runtime.RecognitionException;
 import wrimsv2.commondata.wresldata.StudyDataSet;
@@ -72,7 +69,8 @@ public class WreslScriptRunner
 				LOGGER.info(errorString);
 				new PreEvaluator(sds);
 				new PreRunModel(sds);
-				cb.runModelXA(sds);
+//				cb.runModelXA(sds);
+				cb.runModel(sds);
 			}
 			else
 			{
@@ -106,48 +104,21 @@ public class WreslScriptRunner
 					.withEndDate(end)
 					.write()
 					.toAbsolutePath();
-			String separator = System.getProperty("file.separator");
-			String javaLibraryPath = "-Djava.library.path=\"" + Paths.get("dwr_eppt/modules/lib").toAbsolutePath() + "\"";
-			String path = "\"" + System.getProperty("java.home")
-					+ separator + "bin" + separator + "java" + "\"";
-			String classpath = "echo off \n";
-			Path epptDir = Paths.get("dwr_eppt");
-			Path modulesDir = epptDir.resolve("modules");
-			try(Stream<Path> walk = Files.walk(modulesDir, 3))
-			{
-				classpath += walk.filter(p -> p.toFile().isDirectory())
-								 .filter(p -> !p.toString().endsWith("jar"))
-								 .map(Object::toString)
-								 .map(p -> "set classpath=%classpath%;" + p + "/*")
-								 .collect(Collectors.joining("\n")) + "echo on\n";
-			}
+			Path wrimsDir = EpptPreferences.getWrimsPath();
+			String javaExe = wrimsDir.resolve("jre").resolve("bin").resolve("java.exe").toString();
+			Path wrimsLib = wrimsDir.resolve("lib");
+			Path wrimsSys = wrimsLib.resolve("sys");
+			String javaLibraryPath = "-Djava.library.path=" + wrimsLib.toString();
+			String classpath = wrimsLib + File.separator + "*;" + wrimsSys + File.separator + "*";
 
-
-			String[] args = new String[]{path, "-Xmx1472m -Xss1280K", javaLibraryPath, WreslScriptRunner.class.getName(), "-config=\"" + configPath.toString() + "\""};
+			String[] args = new String[]{javaExe, "-Xmx4096m", "-Xss1024K", javaLibraryPath, "-cp", classpath, ControllerBatch.class.getName(), "-config=" + configPath.toString()};
 			String commandLine = String.join(" ", args);
-			Path outputBat = Paths.get("output.bat");
-			try(BufferedWriter bufferedWriter = Files.newBufferedWriter(outputBat))
-			{
-				bufferedWriter.newLine();
-				bufferedWriter.newLine();
-				bufferedWriter.write(classpath);
-				bufferedWriter.newLine();
-				bufferedWriter.write(commandLine);
-				bufferedWriter.flush();
-			}
-			outputBat.toFile().deleteOnExit();
-			ProcessBuilder processBuilder = new ProcessBuilder()
-					.command(outputBat.toString());
 			LOGGER.log(Level.INFO, "Running process: {0}", commandLine);
-			process = processBuilder.start();
+			process = new ProcessBuilder(args).start();
 			_outputStreamConsumer.runStarted(_scenarioRun, process);
 			process.waitFor();
 			int exitValue = process.exitValue();
-			if(exitValue != 0)
-			{
-				throw new WreslScriptException(_scenarioRun.getWreslMain() + " " +
-						"WRESL ERROR Return Code: " + exitValue);
-			}
+			LOGGER.log(Level.WARNING,  "{0} WRESL ERROR Return Code: {1}", new Object[]{_scenarioRun.getWreslMain(), exitValue});
 		}
 		catch(IOException | InterruptedException ex)
 		{

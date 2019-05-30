@@ -10,6 +10,8 @@ package gov.ca.water.eppt.nbui.options;
 import java.awt.BorderLayout;
 import javax.swing.*;
 
+import static org.junit.jupiter.api.Assertions.fail;
+
 /**
  * Company: Resource Management Associates
  *
@@ -20,6 +22,15 @@ public class EPPTOptionsPanelScaffold
 {
 	public static void main(String[] args)
 	{
+
+		try
+		{
+			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+		}
+		catch(ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException e)
+		{
+			fail(e);
+		}
 		JFrame jFrame = new JFrame();
 		jFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		SwingUtilities.invokeLater(() ->

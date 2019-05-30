@@ -27,6 +27,7 @@ import gov.ca.water.calgui.project.EpptDssContainer;
 import gov.ca.water.calgui.project.EpptScenarioRun;
 import gov.ca.water.calgui.project.NamedDssPath;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.fail;
 
@@ -59,26 +60,26 @@ public class TestWreslScriptRunner
 		Path outputPath = Paths.get("");
 		Path wreslMain  = new File(
 				TestWreslScriptRunner.class.getClassLoader().getResource("mainControl.wresl").getFile()).toPath();
-		Path wreslNoop= new File(
-				TestWreslScriptRunner.class.getClassLoader().getResource("logic_Dummy.wresl").getFile()).toPath();
 		Path dvPath = new File(
 				TestWreslScriptRunner.class.getClassLoader().getResource("SampleDV_Base.dss").getFile()).toPath();
-		NamedDssPath dvDssFile = new NamedDssPath(dvPath, "DV");
+		NamedDssPath dvDssFile = new NamedDssPath(dvPath, "DV", "CALSIM", "1MON", "");
 		Path ivPath = new File(
 				TestWreslScriptRunner.class.getClassLoader().getResource("SampleINIT_Base.dss").getFile()).toPath();
-		NamedDssPath ivDssFile = new NamedDssPath(ivPath, "INIT");
+		NamedDssPath ivDssFile = new NamedDssPath(ivPath, "INIT", "CALSIM", "1MON", "");
+		Path dtsPath = Paths.get("DTS2.dss");
+		NamedDssPath dtsDssFile = new NamedDssPath(dtsPath, "DTS", "CALSIM", "1MON", "");
 		Path svPath = new File(
 				TestWreslScriptRunner.class.getClassLoader().getResource("SampleSV_Base.dss").getFile()).toPath();
-		NamedDssPath svDssFile = new NamedDssPath(svPath, "SV");
+		NamedDssPath svDssFile = new NamedDssPath(svPath, "SV", "CALSIM", "1MON", "");
 		List<NamedDssPath> extraDssFiles = Collections.emptyList();
-		EpptDssContainer dssContainer = new EpptDssContainer(dvDssFile, svDssFile, ivDssFile, ivDssFile, extraDssFiles);
-		EPPT_SCENARIO_RUN = new EpptScenarioRun(name, description, model, outputPath,
+		EpptDssContainer dssContainer = new EpptDssContainer(dvDssFile, svDssFile, ivDssFile, dtsDssFile, extraDssFiles);
+		EPPT_SCENARIO_RUN = new EpptScenarioRun(name, description, model, outputPath,Paths.get("table"),Paths.get("lookup"),
 				wreslMain, dssContainer);
-		EPPT_SCENARIO_RUN_NOOP = new EpptScenarioRun(name, description, model, outputPath,
-				wreslNoop, dssContainer);
+		EPPT_SCENARIO_RUN_NOOP = new EpptScenarioRun(name, description, model, outputPath, Paths.get("table"),Paths.get("lookup"),
+				wreslMain, dssContainer);
 	}
 
-//	@Test
+	@Test
 	void testWreslScriptRunnerMain() throws Exception
 	{
 		try
@@ -108,8 +109,8 @@ public class TestWreslScriptRunner
 		}
 	}
 
-//	@Test
-	void testWreslScriptNoop() throws Exception
+	@Test
+	void testWreslScriptNoop()
 	{
 		try
 		{

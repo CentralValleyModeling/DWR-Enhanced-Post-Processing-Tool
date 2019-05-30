@@ -12,7 +12,6 @@
 
 package gov.ca.water.reportengine.detailedissues;
 
-import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -49,14 +48,10 @@ public class DetailedIssueProcessor
 	private final List<DetailedIssue> _allDetailedIssues;
 	private final List<EpptScenarioRun> _runs;
 	private final boolean _isCFS;
-	private final List<WaterYearType> _waterYearTypes;
 
-	public DetailedIssueProcessor(Path waterYearTypeTable, Path waterYearNameLookup,
-								  Map<EpptScenarioRun, Map<SubModule, List<FlagViolation>>> runsToViolations, List<Module> modules,
+	public DetailedIssueProcessor(Map<EpptScenarioRun, Map<SubModule, List<FlagViolation>>> runsToViolations, List<Module> modules,
 								  List<DetailedIssue> allDetailedIssues, List<EpptScenarioRun> runs, boolean isCFS) throws EpptReportException
 	{
-		WaterYearTableReader wyTypeReader = new WaterYearTableReader(waterYearTypeTable, waterYearNameLookup);
-		_waterYearTypes = wyTypeReader.read();
 		_runsToViolations = runsToViolations;
 		_modules = modules;
 		_allDetailedIssues = allDetailedIssues;
@@ -64,7 +59,7 @@ public class DetailedIssueProcessor
 		_isCFS = isCFS;
 	}
 
-	public Map<EpptScenarioRun, Map<Module, List<DetailedIssueViolation>>> process()
+	public Map<EpptScenarioRun, Map<Module, List<DetailedIssueViolation>>> process() throws EpptReportException
 	{
 		Map<EpptScenarioRun, Map<Module, List<DetailedIssueViolation>>> moduleToDIV = new HashMap<>();
 
@@ -79,8 +74,11 @@ public class DetailedIssueProcessor
 				{
 					if(!Objects.equals("Model Inputs",mod.getName()))
 					{
+
+						WaterYearTableReader wyTypeReader = new WaterYearTableReader(run.getWaterYearTable(), run.getWaterYearLookup());
+						List<WaterYearType> waterYearTypes = wyTypeReader.read();
 						LOGGER.at(Level.INFO).log("Processing Detailed Issues for Module: %s", mod.getName());
-						List<DetailedIssueViolation> detailedIssueViolations = processModule(run, subModToViolations, mod);
+						List<DetailedIssueViolation> detailedIssueViolations = processModule(run, subModToViolations, mod, waterYearTypes);
 						modToDIVs.put(mod, detailedIssueViolations);
 					}
 				}
@@ -96,7 +94,8 @@ public class DetailedIssueProcessor
 	}
 
 	private List<DetailedIssueViolation> processModule(EpptScenarioRun run,
-													   Map<SubModule, List<FlagViolation>> subModToViolations, Module mod)
+													   Map<SubModule, List<FlagViolation>> subModToViolations, Module mod,
+													   List<WaterYearType> waterYearTypes)
 	{
 		List<DetailedIssueViolation> dIVsForMod = new ArrayList<>();
 
@@ -107,7 +106,7 @@ public class DetailedIssueProcessor
 				LOGGER.at(Level.INFO).log("Processing Detailed Issues for Sub-Module: %s", subMod.getName());
 				dIVsForMod.addAll(subModToViolations.get(subMod)
 													.stream()
-													.map(violation -> processFlagViolation(run, violation, subMod))
+													.map(violation -> processFlagViolation(run, violation, subMod, waterYearTypes))
 													.filter(Objects::nonNull)
 													.collect(toList()));
 			}
@@ -119,7 +118,8 @@ public class DetailedIssueProcessor
 		return dIVsForMod;
 	}
 
-	private DetailedIssueViolation processFlagViolation(EpptScenarioRun run, FlagViolation violation, SubModule subMod)
+	private DetailedIssueViolation processFlagViolation(EpptScenarioRun run, FlagViolation violation, SubModule subMod,
+														List<WaterYearType> waterYearTypes)
 	{
 		DetailedIssueViolation div = null;
 		DetailedIssue di = getDetailedIssueThatMatchViolation(violation);
@@ -127,7 +127,7 @@ public class DetailedIssueProcessor
 		{
 			if(Const.isValid(di.getGuiLink()) && Const.isValid(di.getThresholdLink()))
 			{
-				div = createDetailedIssueViolation(violation, di.getGuiLink(), di.getThresholdLink(), run, subMod);
+				div = createDetailedIssueViolation(violation, di.getGuiLink(), di.getThresholdLink(), run, subMod, waterYearTypes);
 			}
 			else
 			{
@@ -140,7 +140,9 @@ public class DetailedIssueProcessor
 	}
 
 
-	private DetailedIssueViolation createDetailedIssueViolation(FlagViolation violation, int guiID, int thresholdID, EpptScenarioRun run, SubModule subMod)
+	private DetailedIssueViolation createDetailedIssueViolation(FlagViolation violation, int guiID, int thresholdID, EpptScenarioRun run,
+																SubModule subMod,
+																List<WaterYearType> waterYearTypesFromFile)
 	{
 		//create title
 		GUILinksAllModelsBO guiLink = GuiLinksSeedDataSvcImpl.getSeedDataSvcImplInstance().getObjById(Integer.toString(guiID));
@@ -205,7 +207,7 @@ public class DetailedIssueProcessor
 		}
 		Map<HecTime, Double> actualValues = getActualValues(times, valueContainer);
 		Map<HecTime, Double> thresholdValues = getThresholdValues(times, thresholdSeriesContainer);
-		Map<HecTime, String> waterYearTypes = getWaterYearTypes(times);
+		Map<HecTime, String> waterYearTypes = getWaterYearTypes(times, waterYearTypesFromFile);
 		return new DetailedIssueViolation(times, title, actualValues, thresholdValues, waterYearTypes, valueUnits, standardUnits, violation.getTimes().size());
 	}
 
@@ -237,13 +239,14 @@ public class DetailedIssueProcessor
 		return thresholds;
 	}
 
-	private Map<HecTime, String> getWaterYearTypes(List<HecTime> times)
+	private Map<HecTime, String> getWaterYearTypes(List<HecTime> times,
+												   List<WaterYearType> waterYearTypesFromFile)
 	{
 		Map<HecTime, String> types = new HashMap<>();
 		for(HecTime time : times)
 		{
 			String waterYearTypeString = "Undefined";
-			for(WaterYearType wyt : _waterYearTypes)
+			for(WaterYearType wyt : waterYearTypesFromFile)
 			{
 				if(wyt.getYear() == time.year())
 				{

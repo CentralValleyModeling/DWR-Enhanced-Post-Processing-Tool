@@ -28,8 +28,10 @@ public final class EpptPreferences
 {
 	private static final Preferences ROOT_PREFERENCES = Preferences.userRoot().node("DWR").node("EPPT");
 	private static final Preferences REPORT_NODE = ROOT_PREFERENCES.node("report");
+	private static final Preferences WRIMS_NODE = ROOT_PREFERENCES.node("wrims");
 	private static final Preferences EPPT_HOME = ROOT_PREFERENCES.node("eppt_home");
 	private static final String PROJECT_DIRECTORY = "project_directory";
+	private static final String WRIMS_DIRECTORY = "wrims_directory";
 	private static final String LAST_SCENARIO_CONFIGURATION = "last_scenario_configuration";
 	private static final String REPORT_OUTPUT_LOCATION = "report_output_location";
 	private static final String USERNAME = "eppt_username";
@@ -45,11 +47,15 @@ public final class EpptPreferences
 		File defaultDirectory = FileSystemView.getFileSystemView().getDefaultDirectory();
 		if(defaultDirectory != null)
 		{
-
-			String epptHomeDefault = Paths.get(defaultDirectory.getPath()).resolve("EPPT").toString();
-			retval = EPPT_HOME.get(PROJECT_DIRECTORY, epptHomeDefault);
+			retval = EPPT_HOME.get(PROJECT_DIRECTORY, getDefaultProjectPath().toString());
 		}
 		return Paths.get(retval);
+	}
+
+	public static Path getDefaultProjectPath()
+	{
+		File defaultDirectory = FileSystemView.getFileSystemView().getDefaultDirectory();
+		return Paths.get(defaultDirectory.getPath()).resolve("EPPT");
 	}
 
 	public static void setProjectsPath(String text)
@@ -90,7 +96,12 @@ public final class EpptPreferences
 
 	public static String getResultsOutputLocation()
 	{
-		return REPORT_NODE.get(REPORT_OUTPUT_LOCATION, "editor");
+		return REPORT_NODE.get(REPORT_OUTPUT_LOCATION, getDefaultResultsOutputLocation());
+	}
+
+	public static String getDefaultResultsOutputLocation()
+	{
+		return "editor";
 	}
 
 	public static void setResultsOutputLocation(String path)
@@ -106,5 +117,20 @@ public final class EpptPreferences
 	public static void setUsername(String path)
 	{
 		EPPT_HOME.put(USERNAME, path);
+	}
+
+	public static Path getWrimsPath()
+	{
+		return Paths.get(WRIMS_NODE.get(WRIMS_DIRECTORY, getDefaultWrimsPath().toString()));
+	}
+
+	public static Path getDefaultWrimsPath()
+	{
+		return Paths.get(Constant.WRIMS_DIR);
+	}
+
+	public static void setWrimsPath(Path path)
+	{
+		WRIMS_NODE.put(WRIMS_DIRECTORY, path.toString());
 	}
 }

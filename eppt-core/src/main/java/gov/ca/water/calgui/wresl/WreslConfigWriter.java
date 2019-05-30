@@ -91,19 +91,22 @@ class WreslConfigWriter
 			NamedDssPath svDssFile = dssContainer.getSvDssFile();
 			if(svDssFile != null)
 			{
-				DSSPathname svRecord = getFirstRecord(svDssFile.getDssPath());
-				configText = configText.replace("{SvAPart}", svRecord.getAPart());
-				configText = configText.replace("{SvFPart}", svRecord.getFPart());
+				configText = configText.replace("{SvAPart}", svDssFile.getAPart());
+				configText = configText.replace("{SvFPart}", svDssFile.getFPart());
 				configText = configText.replace("{SvFile}", svDssFile.getDssPath().toString());
 			}
 			NamedDssPath ivDssFile = dssContainer.getIvDssFile();
+			NamedDssPath dvDssFile = dssContainer.getDvDssFile();
 			if(ivDssFile != null)
 			{
-				DSSPathname ivRecord = getFirstRecord(ivDssFile.getDssPath());
-				configText = configText.replace("{IvFPart}", ivRecord.getFPart());
+				configText = configText.replace("{IvFPart}", ivDssFile.getFPart());
 				configText = configText.replace("{IvFile}", ivDssFile.getDssPath().toString());
 			}
-			NamedDssPath dvDssFile = dssContainer.getDvDssFile();
+			else if(dvDssFile != null)
+			{
+				configText = configText.replace("{IvFPart}", dvDssFile.getFPart());
+				configText = configText.replace("{IvFile}", dvDssFile.getDssPath().toString());
+			}
 			if(dvDssFile != null)
 			{
 				configText = configText.replace("{DvFile}", dvDssFile.getDssPath().toString());
@@ -114,7 +117,11 @@ class WreslConfigWriter
 			{
 				configText = configText.replace("{MainFile}", wreslMain.toAbsolutePath().toString());
 			}
-			configText = configText.replace("{PostProcessDss}", _scenarioRun.getPostProcessDss().toString());
+			Path postProcessDss = _scenarioRun.getPostProcessDss();
+			if(postProcessDss != null)
+			{
+				configText = configText.replace("{PostProcessDss}", postProcessDss.toString());
+			}
 
 
 			configText = configText.replace("{StartYear}", Integer.toString(_startDate.getYear()));
@@ -124,7 +131,9 @@ class WreslConfigWriter
 			configText = configText.replace("{EndMonth}", Integer.toString(_endDate.getMonthValue()));
 			configText = configText.replace("{EndDay}", Integer.toString(_endDate.getDayOfMonth()));
 
-			Path configPath = _scenarioRun.getWreslMain().getParent().resolve("WRESL.config");
+			String name = _scenarioRun.getName();
+			name = name.replace(" ", "_");
+			Path configPath = _scenarioRun.getWreslMain().getParent().resolve("WRESL" + name + ".config");
 			try(BufferedWriter bufferedWriter = Files.newBufferedWriter(configPath);
 				PrintWriter configFilePW = new PrintWriter(bufferedWriter))
 			{
@@ -138,38 +147,5 @@ class WreslConfigWriter
 			return configPath;
 		}
 
-		private DSSPathname getFirstRecord(Path path) throws WreslScriptException
-		{
-			HecDss dss = null;
-			try
-			{
-				dss = HecDss.open(path.toString());
-				List<?> pathnameList = dss.getPathnameList();
-				if(!pathnameList.isEmpty())
-				{
-					String record = pathnameList.get(0).toString();
-					return new DSSPathname(record);
-				}
-				else
-				{
-					throw new WreslScriptException("DSS File is empty: " + path);
-				}
-			}
-			catch(WreslScriptException e)
-			{
-				throw e;
-			}
-			catch(Exception e)
-			{
-				throw new WreslScriptException("Unable to process A and F parts for DSS File: " + path, e);
-			}
-			finally
-			{
-				if(dss != null)
-				{
-					dss.close();
-				}
-			}
-		}
 	}
 }
