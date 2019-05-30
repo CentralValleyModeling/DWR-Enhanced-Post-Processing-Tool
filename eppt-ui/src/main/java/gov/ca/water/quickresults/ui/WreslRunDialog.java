@@ -71,7 +71,9 @@ public class WreslRunDialog extends JDialog implements ProcessOutputConsumer
 		_progressBar.setVisible(false);
 		_southPanel.add(_progressBar, BorderLayout.NORTH);
 		add(_southPanel, BorderLayout.SOUTH);
-		Runtime.getRuntime().addShutdownHook(new Thread(this::destroyProcesses));
+		Thread thread = new Thread(this::destroyProcesses);
+		thread.setDaemon(true);
+		Runtime.getRuntime().addShutdownHook(thread);
 	}
 
 	public void buildScenarioPanel(List<EpptScenarioRun> scenarioRuns)

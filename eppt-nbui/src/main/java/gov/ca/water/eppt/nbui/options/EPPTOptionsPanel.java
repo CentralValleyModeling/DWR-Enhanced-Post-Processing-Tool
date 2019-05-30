@@ -35,6 +35,7 @@ final class EPPTOptionsPanel extends JPanel
 	private final JComboBox<Object> _resultsOutputComboBox;
 	private final FileChooserFld _projectDirectoryFileChooserField;
 	private final JTextField _wrimsDirectoryField;
+	private boolean _resetPreferences;
 
 	EPPTOptionsPanel(EPPTOptionsOptionsPanelController controller)
 	{
@@ -48,24 +49,31 @@ final class EPPTOptionsPanel extends JPanel
 
 	private void initListeners()
 	{
-		_resultsOutputComboBox.addActionListener(e -> _controller.changed());
+		_resultsOutputComboBox.addActionListener(e ->
+		{
+			_resetPreferences = false;
+			_controller.changed();
+		});
 		DocumentListener documentListener = new DocumentListener()
 		{
 			@Override
 			public void insertUpdate(DocumentEvent e)
 			{
+				_resetPreferences = false;
 				_controller.changed();
 			}
 
 			@Override
 			public void removeUpdate(DocumentEvent e)
 			{
+				_resetPreferences = false;
 				_controller.changed();
 			}
 
 			@Override
 			public void changedUpdate(DocumentEvent e)
 			{
+				_resetPreferences = false;
 				_controller.changed();
 			}
 		};
@@ -139,6 +147,10 @@ final class EPPTOptionsPanel extends JPanel
 		_projectDirectoryFileChooserField.setDefaultPath(EpptPreferences.getDefaultProjectPath().toString());
 		_resultsOutputComboBox.setSelectedItem(EpptPreferences.getDefaultResultsOutputLocation());
 		_wrimsDirectoryField.setText(EpptPreferences.getDefaultWrimsPath().toString());
+		EpptPreferences.removeProjectsPathPreference();
+		EpptPreferences.removeWrimsPathPreference();
+		EpptPreferences.removeResultsOutputLocation();
+		_resetPreferences = true;
 	}
 
 	private void chooseWrimsDir(ActionEvent e)
@@ -163,9 +175,12 @@ final class EPPTOptionsPanel extends JPanel
 
 	void store()
 	{
-		EpptPreferences.setProjectsPath(_projectDirectoryFileChooserField.getText());
-		EpptPreferences.setResultsOutputLocation(Objects.toString(_resultsOutputComboBox.getSelectedItem()));
-		EpptPreferences.setWrimsPath(Paths.get(_wrimsDirectoryField.getText()));
+		if(!_resetPreferences)
+		{
+			EpptPreferences.setProjectsPath(_projectDirectoryFileChooserField.getText());
+			EpptPreferences.setResultsOutputLocation(Objects.toString(_resultsOutputComboBox.getSelectedItem()));
+			EpptPreferences.setWrimsPath(Paths.get(_wrimsDirectoryField.getText()));
+		}
 	}
 
 	boolean valid()

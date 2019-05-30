@@ -63,6 +63,11 @@ public final class EpptPreferences
 		EPPT_HOME.put(PROJECT_DIRECTORY, text);
 	}
 
+	public static void removeProjectsPathPreference()
+	{
+		EPPT_HOME.remove(PROJECT_DIRECTORY);
+	}
+
 	public static Path getScenariosPaths()
 	{
 		return getProjectsPath().resolve(Constant.SCENARIOS_DIR);
@@ -109,6 +114,11 @@ public final class EpptPreferences
 		REPORT_NODE.put(REPORT_OUTPUT_LOCATION, path);
 	}
 
+	public static void removeResultsOutputLocation()
+	{
+		REPORT_NODE.remove(REPORT_OUTPUT_LOCATION);
+	}
+
 	public static String getUsername()
 	{
 		return EPPT_HOME.get(USERNAME, System.getProperty("user.name"));
@@ -132,5 +142,10 @@ public final class EpptPreferences
 	public static void setWrimsPath(Path path)
 	{
 		WRIMS_NODE.put(WRIMS_DIRECTORY, path.toString());
+	}
+
+	public static void removeWrimsPathPreference()
+	{
+		WRIMS_NODE.remove(WRIMS_DIRECTORY);
 	}
 }

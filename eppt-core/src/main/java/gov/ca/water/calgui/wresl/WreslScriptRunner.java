@@ -12,8 +12,10 @@
 
 package gov.ca.water.calgui.wresl;
 
+import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.IOException;
+import java.lang.reflect.Field;
 import java.nio.file.Path;
 import java.time.Duration;
 import java.time.LocalDate;
@@ -116,6 +118,17 @@ public class WreslScriptRunner
 			LOGGER.log(Level.INFO, "Running process: {0}", commandLine);
 //			process = new ProcessBuilder(args).start();
 			process = Runtime.getRuntime().exec(commandLine);
+			try
+			{
+				Field handle = process.getClass().getDeclaredField("handle");
+				handle.setAccessible(true);
+				Object o = handle.get(process);
+				System.out.println(o);
+			}
+			catch(NoSuchFieldException | IllegalAccessException e)
+			{
+				LOGGER.log(Level.SEVERE, "Error capturing Process PID", e);
+			}
 			_outputStreamConsumer.runStarted(_scenarioRun, process);
 			process.waitFor();
 			int exitValue = process.exitValue();

@@ -35,6 +35,8 @@ import org.openide.modules.ModuleInstall;
 import org.openide.windows.WindowManager;
 
 import hec.heclib.dss.HecDSSFileAccess;
+import hec.heclib.dss.HecDSSFileDataManager;
+import hec.heclib.dss.HecDataManager;
 import rma.swing.logging.DialogLogHandler;
 
 public class Installer extends ModuleInstall
@@ -58,6 +60,7 @@ public class Installer extends ModuleInstall
 	public boolean closing()
 	{
 		RunWreslScript.destroyProcesses();
+		HecDataManager.closeAllFiles();
 		return true;
 	}
 
