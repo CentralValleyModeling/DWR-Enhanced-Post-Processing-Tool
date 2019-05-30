@@ -13,7 +13,6 @@
 package gov.ca.water.quickresults.ui.projectconfig.scenarioconfig;
 
 import java.awt.BorderLayout;
-import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
@@ -28,6 +27,7 @@ import java.util.Date;
 import java.util.Set;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
+import javax.swing.table.TableCellEditor;
 import javax.swing.table.TableCellRenderer;
 
 import gov.ca.water.calgui.bo.GUILinksAllModelsBO;
@@ -41,10 +41,6 @@ import rma.swing.RmaJComboBox;
 import rma.swing.RmaJDescriptionField;
 import rma.swing.RmaJTable;
 import rma.swing.table.RmaCellEditor;
-
-import static gov.ca.water.calgui.constant.Constant.CSV_EXT;
-import static gov.ca.water.calgui.constant.Constant.TABLE_EXT;
-import static gov.ca.water.calgui.constant.Constant.WRESL_DIR;
 
 /**
  * Company: Resource Management Associates
@@ -173,7 +169,7 @@ public class ScenarioEditorPanel
 		final JPanel panel1 = new JPanel();
 		panel1.setLayout(new BorderLayout(0, 0));
 		_panel1.add(panel1, BorderLayout.CENTER);
-		panel1.setBorder(BorderFactory.createTitledBorder(BorderFactory.createLineBorder(Color.black), "DSS Files"));
+		panel1.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(), "DSS Files"));
 		final JPanel panel2 = new JPanel();
 		panel2.setLayout(new FlowLayout(FlowLayout.RIGHT, 5, 5));
 		panel1.add(panel2, BorderLayout.SOUTH);
@@ -413,9 +409,9 @@ public class ScenarioEditorPanel
 		}
 	}
 
-	private EpptDssContainer createDssContainer()
+	private EpptDssContainer createDssContainer(String scenarioName)
 	{
-		return _scenarioDssTableModel.createDssContainer();
+		return _scenarioDssTableModel.createDssContainer(scenarioName);
 	}
 
 	boolean validateRun()
@@ -428,12 +424,17 @@ public class ScenarioEditorPanel
 	 */
 	EpptScenarioRun createRun()
 	{
+		TableCellEditor editor = _dssTable.getCellEditor();
+		if(editor != null)
+		{
+			editor.stopCellEditing();
+		}
 		String name = _nameField.getText();
 		String description = _descriptionField.getText();
 		GUILinksAllModelsBO.Model model = (GUILinksAllModelsBO.Model) _modelCombobox.getSelectedItem();
 		Path outputPath = Paths.get(_outputTextField.getText());
 		Path wreslMain = Paths.get(_wreslTextField.getText());
-		EpptDssContainer dssContainer = createDssContainer();
+		EpptDssContainer dssContainer = createDssContainer(name);
 		Path waterYearLookupPath = Paths.get(_waterYearLookup.getText());
 		Path waterYearTablePath = Paths.get(_waterYearTable.getText());
 		return new EpptScenarioRun(name, description, model, outputPath, wreslMain, waterYearTablePath, waterYearLookupPath,
@@ -553,6 +554,7 @@ public class ScenarioEditorPanel
 		private ComboBoxCellEditor(RmaJComboBox comboBox)
 		{
 			super(comboBox);
+			comboBox.setEditable(true);
 			_comboBox = comboBox;
 		}
 

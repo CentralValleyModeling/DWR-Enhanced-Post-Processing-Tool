@@ -12,7 +12,9 @@
       <grid id="6de58" layout-manager="BorderLayout" hgap="0" vgap="0">
         <constraints border-constraint="Center"/>
         <properties/>
-        <border type="line" title="DSS Files"/>
+        <border type="etched" title="DSS Files">
+          <color color="-16777216"/>
+        </border>
         <children>
           <grid id="a5be" layout-manager="FlowLayout" hgap="5" vgap="5" flow-align="2">
             <constraints border-constraint="South"/>

@@ -89,13 +89,13 @@ class ScenarioDssTableModel extends RmaTableModel
 		loadDssAandFParts(collect);
 	}
 
-	EpptDssContainer createDssContainer()
+	EpptDssContainer createDssContainer(String scenarioName)
 	{
-		NamedDssPath dvDssFile = createNamedDssPath(getRowForType(RowType.DV));
-		NamedDssPath svDssFile = createNamedDssPath(getRowForType(RowType.SV));
-		NamedDssPath ivDssFile = createNamedDssPath(getRowForType(RowType.IV));
-		NamedDssPath dtsDssFile = createNamedDssPath(getRowForType(RowType.DTS));
-		List<NamedDssPath> extraDssFiles = getExtraRows().stream().map(this::createNamedDssPath).collect(toList());
+		NamedDssPath dvDssFile = createNamedDssPath(getRowForType(RowType.DV), scenarioName);
+		NamedDssPath svDssFile = createNamedDssPath(getRowForType(RowType.SV), scenarioName);
+		NamedDssPath ivDssFile = createNamedDssPath(getRowForType(RowType.IV), scenarioName);
+		NamedDssPath dtsDssFile = createNamedDssPath(getRowForType(RowType.DTS), scenarioName);
+		List<NamedDssPath> extraDssFiles = getExtraRows().stream().map((Row row) -> createNamedDssPath(row, scenarioName)).collect(toList());
 		return new EpptDssContainer(dvDssFile, svDssFile, ivDssFile, dtsDssFile, extraDssFiles);
 	}
 
@@ -126,11 +126,16 @@ class ScenarioDssTableModel extends RmaTableModel
 		return retval;
 	}
 
-	private NamedDssPath createNamedDssPath(Row row)
+	private NamedDssPath createNamedDssPath(Row row, String scenarioName)
 	{
 		if(row != null)
 		{
-			return new NamedDssPath(row._dssPath, row._alias, row._aPart, Row.E_PART, row._fPart);
+			String alias = scenarioName;
+			if(row._alias != null && !row._alias.isEmpty())
+			{
+				alias = row._alias;
+			}
+			return new NamedDssPath(row._dssPath, alias, row._aPart, Row.E_PART, row._fPart);
 		}
 		else
 		{
@@ -213,6 +218,7 @@ class ScenarioDssTableModel extends RmaTableModel
 
 	private void loadDss(Path path)
 	{
+		_loadingDss.loadingStart("Loading DSS A and F parts for: " + path);
 		HecDss hecDss = null;
 		try
 		{

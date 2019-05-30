@@ -114,7 +114,8 @@ public class WreslScriptRunner
 			String[] args = new String[]{javaExe, "-Xmx4096m", "-Xss1024K", javaLibraryPath, "-cp", classpath, ControllerBatch.class.getName(), "-config=" + configPath.toString()};
 			String commandLine = String.join(" ", args);
 			LOGGER.log(Level.INFO, "Running process: {0}", commandLine);
-			process = new ProcessBuilder(args).start();
+//			process = new ProcessBuilder(args).start();
+			process = Runtime.getRuntime().exec(commandLine);
 			_outputStreamConsumer.runStarted(_scenarioRun, process);
 			process.waitFor();
 			int exitValue = process.exitValue();

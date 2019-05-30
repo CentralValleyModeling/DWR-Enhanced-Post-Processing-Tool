@@ -13,17 +13,14 @@
 package gov.ca.water.quickresults.ui.projectconfig.scenarioconfig;
 
 import java.awt.BorderLayout;
-import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Frame;
-import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.util.prefs.Preferences;
 import javax.swing.*;
 
 import gov.ca.water.calgui.project.EpptScenarioRun;
-import jdk.nashorn.internal.scripts.JO;
 
 import usace.loading.gui.LoadingGui;
 import usace.loading.gui.LoadingGuiFactory;
@@ -37,14 +34,14 @@ import usace.loading.gui.LoadingGuiFactory;
 public class ScenarioRunEditor extends JDialog implements LoadingDss
 {
 	private final ScenarioEditorPanel _scenarioEditorPanel;
-	private final LoadingGui _loadingGui;
+	private final JProgressBar _progressBar = new JProgressBar();
 	private boolean _canceled = true;
 
 	public ScenarioRunEditor(Frame frame)
 	{
 		super(frame, "New Scenario Run", true);
+		_progressBar.setVisible(false);
 		_scenarioEditorPanel = new ScenarioEditorPanel(this);
-		_loadingGui = LoadingGuiFactory.getLoadingGui(this, Preferences.userRoot());
 		setPreferredSize(new Dimension(650, 500));
 		setMinimumSize(new Dimension(650, 500));
 		initComponents();
@@ -61,13 +58,15 @@ public class ScenarioRunEditor extends JDialog implements LoadingDss
 	private void initComponents()
 	{
 		setLayout(new BorderLayout(5, 5));
-		JLayer layer = new JLayer(_scenarioEditorPanel.$$$getRootComponent$$$(), _loadingGui.getLayer());
-		add(layer, BorderLayout.CENTER);
+		add(_scenarioEditorPanel.$$$getRootComponent$$$(), BorderLayout.CENTER);
 		buildOkCancelButtons();
 	}
 
 	private void buildOkCancelButtons()
 	{
+		JPanel jPanel = new JPanel();
+		jPanel.setLayout(new BorderLayout());
+		jPanel.add(_progressBar, BorderLayout.NORTH);
 		JButton okButton = new JButton("OK");
 		okButton.setDefaultCapable(true);
 		getRootPane().setDefaultButton(okButton);
@@ -77,7 +76,8 @@ public class ScenarioRunEditor extends JDialog implements LoadingDss
 		buttonPanel.add(okButton);
 		okButton.setPreferredSize(cancelButton.getPreferredSize());
 		buttonPanel.add(cancelButton);
-		add(buttonPanel, BorderLayout.SOUTH);
+		jPanel.add(buttonPanel, BorderLayout.CENTER);
+		add(jPanel, BorderLayout.SOUTH);
 		okButton.addActionListener(this::okPerformed);
 		cancelButton.addActionListener(this::cancelPerformed);
 	}
@@ -85,13 +85,16 @@ public class ScenarioRunEditor extends JDialog implements LoadingDss
 	@Override
 	public void loadingStart(String text)
 	{
-		_loadingGui.start(text);
+		_progressBar.setVisible(true);
+		_progressBar.setIndeterminate(true);
+		_progressBar.setToolTipText(text);
 	}
 
 	@Override
 	public void loadingFinished()
 	{
-		_loadingGui.stop();
+		_progressBar.setVisible(false);
+		_progressBar.setIndeterminate(false);
 	}
 
 	public void okPerformed(ActionEvent e)
@@ -101,7 +104,6 @@ public class ScenarioRunEditor extends JDialog implements LoadingDss
 		{
 			setVisible(false);
 			dispose();
-			_loadingGui.shutdown();
 		}
 		else
 		{
@@ -113,7 +115,6 @@ public class ScenarioRunEditor extends JDialog implements LoadingDss
 	{
 		setVisible(false);
 		dispose();
-		_loadingGui.shutdown();
 	}
 
 	/**
