@@ -537,7 +537,7 @@ public class DSSGrabber1SvcImpl implements IDSSGrabber1Svc
 				}
 				else
 				{
-					dssNames[i] = dssNames1[i];
+					dssNames[i] = dssNames1[i].trim();
 				}
 			}
 
