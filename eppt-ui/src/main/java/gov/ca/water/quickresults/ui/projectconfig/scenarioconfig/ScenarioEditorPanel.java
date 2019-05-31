@@ -405,7 +405,12 @@ public class ScenarioEditorPanel
 		File selectedFile = fileChooser.getSelectedFile();
 		if(selectedFile != null)
 		{
-			textField.setText(selectedFile.toString());
+			String fileName = selectedFile.toString();
+			if(!fileName.toLowerCase().endsWith(".dss"))
+			{
+				fileName += ".dss";
+			}
+			textField.setText(fileName);
 		}
 	}
 
