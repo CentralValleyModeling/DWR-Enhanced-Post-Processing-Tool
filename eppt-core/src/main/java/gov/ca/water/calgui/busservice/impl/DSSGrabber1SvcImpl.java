@@ -544,14 +544,9 @@ public class DSSGrabber1SvcImpl implements IDSSGrabber1Svc
 			String hecAPart = dssPath.getAPart();
 			String hecEPart = dssPath.getEPart();
 			String hecFPart = dssPath.getFPart();
-			// TODO: Note hard-coded D- and E-PART
-			HecTime start = new HecTime();
-			start.set(_startTime);
-			HecTime end = new HecTime();
-			end.set(_endTime);
 			String firstPath =  "/" + hecAPart + "/" + dssNames[0] + "//" + hecEPart + "/" + hecFPart + "/";
 
-			result = (TimeSeriesContainer) hecDss.get(firstPath, start.toString(), end.toString());
+			result = (TimeSeriesContainer) hecDss.get(firstPath, true);
 			LOGGER.fine(firstPath);
 			if((result == null) || (result.numberValues < 1))
 			{
