@@ -160,74 +160,6 @@
                   </component>
                 </children>
               </grid>
-              <component id="934e" class="javax.swing.JLabel">
-                <constraints>
-                  <grid row="6" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
-                  <gridbag top="5" left="5" bottom="5" right="5" weightx="0.0" weighty="0.0"/>
-                </constraints>
-                <properties>
-                  <text value="WY Types Table:"/>
-                </properties>
-              </component>
-              <component id="9a2e2" class="javax.swing.JLabel">
-                <constraints>
-                  <grid row="7" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
-                  <gridbag top="5" left="5" bottom="5" right="5" weightx="0.0" weighty="0.0"/>
-                </constraints>
-                <properties>
-                  <text value="WY Name Lookups:"/>
-                </properties>
-              </component>
-              <grid id="59f8c" layout-manager="BorderLayout" hgap="2" vgap="0">
-                <constraints>
-                  <grid row="6" column="1" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
-                  <gridbag top="5" left="5" bottom="5" right="5" weightx="0.0" weighty="0.0"/>
-                </constraints>
-                <properties/>
-                <border type="none"/>
-                <children>
-                  <component id="eb3e" class="javax.swing.JTextField" binding="_waterYearTable">
-                    <constraints border-constraint="Center"/>
-                    <properties>
-                      <editable value="false"/>
-                      <preferredSize width="200" height="24"/>
-                      <text value=""/>
-                    </properties>
-                  </component>
-                  <component id="6b79f" class="javax.swing.JButton" binding="_wyTableBtn">
-                    <constraints border-constraint="East"/>
-                    <properties>
-                      <preferredSize width="30" height="24"/>
-                      <text value="..."/>
-                    </properties>
-                  </component>
-                </children>
-              </grid>
-              <grid id="86385" layout-manager="BorderLayout" hgap="2" vgap="0">
-                <constraints>
-                  <grid row="7" column="1" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
-                  <gridbag top="5" left="5" bottom="5" right="5" weightx="0.0" weighty="0.0"/>
-                </constraints>
-                <properties/>
-                <border type="none"/>
-                <children>
-                  <component id="de842" class="javax.swing.JTextField" binding="_waterYearLookup">
-                    <constraints border-constraint="Center"/>
-                    <properties>
-                      <editable value="false"/>
-                      <preferredSize width="200" height="24"/>
-                    </properties>
-                  </component>
-                  <component id="fca70" class="javax.swing.JButton" binding="_wyLookupBtn">
-                    <constraints border-constraint="East"/>
-                    <properties>
-                      <preferredSize width="30" height="24"/>
-                      <selected value="true"/>
-                      <text value="..."/>
-                    </properties>
-                  </component>
-                </children>
-              </grid>
               <component id="911da" class="javax.swing.JLabel">
                 <constraints>
                   <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
@@ -258,7 +190,7 @@
               <component id="2fd05" class="javax.swing.JCheckBox" binding="_excutiveSummaryCheckBox" default-binding="true">
                 <constraints>
                   <grid row="2" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="9" fill="0" indent="0" use-parent-layout="false"/>
-                  <gridbag top="5" left="5" bottom="5" right="5" weightx="0.5" weighty="0.0"/>
+                  <gridbag top="0" left="5" bottom="0" right="5" weightx="0.5" weighty="0.0"/>
                 </constraints>
                 <properties>
                   <enabled value="false"/>
@@ -270,7 +202,7 @@
               <component id="4bc37" class="javax.swing.JCheckBox" binding="_assumptionChangesCheckBox" default-binding="true">
                 <constraints>
                   <grid row="3" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="9" fill="0" indent="0" use-parent-layout="false"/>
-                  <gridbag top="5" left="5" bottom="5" right="5" weightx="0.0" weighty="0.0"/>
+                  <gridbag top="0" left="5" bottom="0" right="5" weightx="0.0" weighty="0.0"/>
                 </constraints>
                 <properties>
                   <enabled value="false"/>
@@ -281,7 +213,7 @@
               <component id="9950b" class="javax.swing.JCheckBox" binding="_codeChangesCheckBox" default-binding="true">
                 <constraints>
                   <grid row="4" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="9" fill="0" indent="0" use-parent-layout="false"/>
-                  <gridbag top="5" left="5" bottom="5" right="5" weightx="0.0" weighty="0.0"/>
+                  <gridbag top="0" left="5" bottom="0" right="5" weightx="0.0" weighty="0.0"/>
                 </constraints>
                 <properties>
                   <enabled value="false"/>
@@ -292,7 +224,7 @@
               <component id="21e56" class="javax.swing.JCheckBox" binding="_detailedIssuesCheckBox" default-binding="true">
                 <constraints>
                   <grid row="5" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="9" fill="0" indent="0" use-parent-layout="false"/>
-                  <gridbag top="5" left="5" bottom="5" right="5" weightx="0.0" weighty="0.0"/>
+                  <gridbag top="0" left="5" bottom="0" right="5" weightx="0.0" weighty="0.0"/>
                 </constraints>
                 <properties>
                   <enabled value="false"/>
@@ -304,7 +236,7 @@
               <component id="76b71" class="javax.swing.JCheckBox" binding="_tableOfContentsCheckBox" default-binding="true">
                 <constraints>
                   <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="9" fill="0" indent="0" use-parent-layout="false"/>
-                  <gridbag top="5" left="5" bottom="5" right="5" weightx="0.0" weighty="0.0"/>
+                  <gridbag top="0" left="5" bottom="0" right="5" weightx="0.0" weighty="0.0"/>
                 </constraints>
                 <properties>
                   <enabled value="false"/>
@@ -316,7 +248,7 @@
               <component id="668ec" class="javax.swing.JCheckBox" binding="_coverPageCheckBox" default-binding="true">
                 <constraints>
                   <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="9" fill="0" indent="0" use-parent-layout="false"/>
-                  <gridbag top="5" left="5" bottom="5" right="5" weightx="0.0" weighty="0.0"/>
+                  <gridbag top="0" left="5" bottom="0" right="5" weightx="0.0" weighty="0.0"/>
                 </constraints>
                 <properties>
                   <enabled value="false"/>
@@ -328,7 +260,7 @@
               <component id="c69bc" class="javax.swing.JCheckBox" binding="_standardSummaryStatiticsCheckBox" default-binding="true">
                 <constraints>
                   <grid row="6" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="9" fill="0" indent="0" use-parent-layout="false"/>
-                  <gridbag top="5" left="5" bottom="5" right="5" weightx="0.0" weighty="0.0"/>
+                  <gridbag top="0" left="5" bottom="0" right="5" weightx="0.0" weighty="0.0"/>
                 </constraints>
                 <properties>
                   <enabled value="false"/>

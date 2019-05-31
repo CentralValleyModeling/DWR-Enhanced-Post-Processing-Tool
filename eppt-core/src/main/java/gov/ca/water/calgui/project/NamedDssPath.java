@@ -25,11 +25,32 @@ public class NamedDssPath
 {
 	private final Path _dssPath;
 	private final String _aliasName;
+	private final String _aPart;
+	private final String _ePart;
+	private final String _fPart;
 
-	public NamedDssPath(Path dssPath, String aliasName)
+	public NamedDssPath(Path dssPath, String aliasName, String aPart, String ePart, String fPart)
 	{
 		_dssPath = dssPath;
 		_aliasName = aliasName;
+		_aPart = aPart;
+		_ePart = ePart;
+		_fPart = fPart;
+	}
+
+	public String getAPart()
+	{
+		return _aPart;
+	}
+
+	public String getEPart()
+	{
+		return _ePart;
+	}
+
+	public String getFPart()
+	{
+		return _fPart;
 	}
 
 	public Path getDssPath()
@@ -54,16 +75,18 @@ public class NamedDssPath
 			return false;
 		}
 		final NamedDssPath that = (NamedDssPath) o;
-		return getDssPath().equals(that.getDssPath()) &&
-				getAliasName().equals(that.getAliasName());
+		return Objects.equals(getDssPath(), that.getDssPath()) &&
+				Objects.equals(getAliasName(), that.getAliasName()) &&
+				Objects.equals(_aPart, that._aPart) &&
+				Objects.equals(_ePart, that._ePart) &&
+				Objects.equals(_fPart, that._fPart);
 	}
 
 	@Override
 	public int hashCode()
 	{
-		return Objects.hash(getDssPath(), getAliasName());
+		return Objects.hash(getDssPath(), getAliasName(), _aPart, _ePart, _fPart);
 	}
-
 
 	@Override
 	public String toString()

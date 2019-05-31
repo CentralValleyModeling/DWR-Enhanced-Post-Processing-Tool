@@ -1,0 +1,13 @@
+! UserInit.table
+! Yuxiang, DWR, BDO
+! 20190214
+! This file allows user to change study type and define threshold
+! Index 1: study_type: 1 = CalLite, 2 = Calsim2, 3 = CalSim3
+! Index 2.x: user define threshold 
+! /****************Table Start*****************/
+UserInit
+index	IValue
+1	2
+2.1	1
+2.2	0.001
+2.3	0.1

@@ -18,7 +18,7 @@
 	<parent>
 		<artifactId>eppt-parent</artifactId>
 		<groupId>gov.ca.water</groupId>
-		<version>1.0.1-SNAPSHOT</version>
+		<version>1.0.2-SNAPSHOT</version>
 		<relativePath>../eppt-parent/pom.xml</relativePath>
 	</parent>
 	<artifactId>eppt-jasper-engine</artifactId>

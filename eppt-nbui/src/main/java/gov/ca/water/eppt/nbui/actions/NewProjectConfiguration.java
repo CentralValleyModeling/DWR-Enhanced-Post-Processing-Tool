@@ -14,6 +14,7 @@ package gov.ca.water.eppt.nbui.actions;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.FileSystems;
 import java.nio.file.Path;
@@ -22,6 +23,8 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import javax.swing.*;
 
 import gov.ca.water.calgui.constant.Constant;
 import gov.ca.water.calgui.constant.EpptPreferences;
@@ -104,25 +107,33 @@ public class NewProjectConfiguration implements ActionListener
 		nameDialog.setVisible(true);
 		if(!nameDialog.isCanceled())
 		{
-			Path projectPath = EpptPreferences.getProjectsPath().resolve(nameDialog.getName());
-			try
+			JFileChooser fileChooser = new JFileChooser(EpptPreferences.getProjectsPath().toString());
+			fileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+			fileChooser.setDialogTitle("Choose Projects Directory");
+			fileChooser.showSaveDialog(WindowManager.getDefault().getMainWindow());
+			File selectedFile = fileChooser.getSelectedFile();
+			if(selectedFile != null)
 			{
-				ProjectConfigurationPanel.getProjectConfigurationPanel().resetProjectConfiguration();
-			}
-			catch(Exception e)
-			{
-				throw new IOException("Unable to reset Project Configuration to default state");
-			}
-			ProjectConfigurationPanel.getProjectConfigurationPanel().saveConfigurationToPath(projectPath,
-					nameDialog.getName(), nameDialog.getDescription());
-			WindowManager.getDefault().getMainWindow().setTitle(
-					Installer.MAIN_FRAME_NAME + " - " + ProjectConfigurationPanel.getProjectConfigurationPanel().getProjectName());
-			ProjectConfigurationPanel.getProjectConfigurationPanel().setModified(false);
-			Collection<? extends ProjectConfigurationSavable> projectConfigurationSavables = Savable.REGISTRY.lookupAll(
-					ProjectConfigurationSavable.class);
-			for(ProjectConfigurationSavable savable : projectConfigurationSavables)
-			{
-				savable.removeFromLookup();
+				Path projectPath = selectedFile.toPath().resolve(nameDialog.getName());
+				try
+				{
+					ProjectConfigurationPanel.getProjectConfigurationPanel().resetProjectConfiguration();
+				}
+				catch(Exception e)
+				{
+					throw new IOException("Unable to reset Project Configuration to default state");
+				}
+				ProjectConfigurationPanel.getProjectConfigurationPanel().saveConfigurationToPath(projectPath,
+						nameDialog.getName(), nameDialog.getDescription());
+				WindowManager.getDefault().getMainWindow().setTitle(
+						Installer.MAIN_FRAME_NAME + " - " + ProjectConfigurationPanel.getProjectConfigurationPanel().getProjectName());
+				ProjectConfigurationPanel.getProjectConfigurationPanel().setModified(false);
+				Collection<? extends ProjectConfigurationSavable> projectConfigurationSavables = Savable.REGISTRY.lookupAll(
+						ProjectConfigurationSavable.class);
+				for(ProjectConfigurationSavable savable : projectConfigurationSavables)
+				{
+					savable.removeFromLookup();
+				}
 			}
 		}
 	}

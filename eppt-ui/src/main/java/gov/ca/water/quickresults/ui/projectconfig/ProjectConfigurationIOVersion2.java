@@ -28,6 +28,7 @@ import java.util.Objects;
 import javax.swing.*;
 
 import gov.ca.water.calgui.bo.GUILinksAllModelsBO;
+import gov.ca.water.calgui.constant.Constant;
 import gov.ca.water.calgui.project.EpptDssContainer;
 import gov.ca.water.calgui.project.EpptProject;
 import gov.ca.water.calgui.project.EpptScenarioRun;
@@ -121,6 +122,16 @@ class ProjectConfigurationIOVersion2
 			{
 				dssContainerJson.put(SCENARIO_DTS_KEY, namedDssDtsJsonObject);
 			}
+			Path waterYearTable = scenario.getWaterYearTable();
+			if(waterYearTable != null)
+			{
+				jsonObject.put(SCENARIO_WATER_TABLE, waterYearTable.toString());
+			}
+			Path waterYearLookup = scenario.getWaterYearLookup();
+			if(waterYearLookup != null)
+			{
+				jsonObject.put(SCENARIO_WATER_LOOKUP, waterYearLookup.toString());
+			}
 			JSONArray extraDssArray = new JSONArray();
 			dssContainer.getExtraDssFiles().stream()
 						.map(this::createDssJson)
@@ -145,6 +156,16 @@ class ProjectConfigurationIOVersion2
 					scenarioJson.getString(SCENARIO_MODEL));
 			Path outputPath = Paths.get(scenarioJson.getString(SCENARIO_OUTPUT_PATH));
 			Path wreslMain = Paths.get(scenarioJson.getString(SCENARIO_WRESL_MAIN));
+			Path waterYearTable = Paths.get(Constant.WY_TYPES_TABLE);
+			if(scenarioJson.has(SCENARIO_WATER_TABLE))
+			{
+				waterYearTable = Paths.get(scenarioJson.getString(SCENARIO_WATER_TABLE));
+			}
+			Path waterYearLookup = Paths.get(Constant.WY_TYPES_NAME_LOOKUP);
+			if(scenarioJson.has(SCENARIO_WATER_LOOKUP))
+			{
+				waterYearLookup = Paths.get(scenarioJson.getString(SCENARIO_WATER_LOOKUP));
+			}
 			JSONObject jsonObject = scenarioJson.getJSONObject(SCENARIO_DSS_FILES);
 			NamedDssPath dvDssFile = null;
 			if(jsonObject.has(SCENARIO_DV_KEY))
@@ -170,7 +191,7 @@ class ProjectConfigurationIOVersion2
 			List<NamedDssPath> extraDssFiles = readExtraDss(jsonObject);
 			EpptDssContainer dssContainer = new EpptDssContainer(dvDssFile, svDssFile, ivDssFile, dtsDssFile, extraDssFiles);
 			EpptScenarioRun epptScenarioRun = new EpptScenarioRun(name, description,
-					model, outputPath, wreslMain, dssContainer);
+					model, outputPath, wreslMain, waterYearTable, waterYearLookup, dssContainer);
 			retval.add(epptScenarioRun);
 		}
 		return retval;
@@ -194,22 +215,49 @@ class ProjectConfigurationIOVersion2
 	{
 		String aliasName = dssJson.getString(SCENARIO_DSS_NAME);
 		Path dssPath = Paths.get(dssJson.getString(SCENARIO_DSS_PATH));
-		return new NamedDssPath(dssPath, aliasName);
+		String aPart = "";
+		if(dssJson.has(SCENARIO_A_PART))
+		{
+			aPart = dssJson.getString(SCENARIO_A_PART);
+		}
+		String ePart = "";
+		if(dssJson.has(SCENARIO_E_PART))
+		{
+			ePart = dssJson.getString(SCENARIO_E_PART);
+		}
+		String fPart = "";
+		if(dssJson.has(SCENARIO_F_PART))
+		{
+			fPart = dssJson.getString(SCENARIO_F_PART);
+		}
+		return new NamedDssPath(dssPath, aliasName, aPart, ePart, fPart);
 	}
 
-	private JSONObject createDssJson(NamedDssPath dvDssFile)
+	private JSONObject createDssJson(NamedDssPath dssFile)
 	{
 		JSONObject namedDssJsonObject = null;
-		if(dvDssFile != null)
+		if(dssFile != null)
 		{
 			namedDssJsonObject = new JSONObject();
-			if(dvDssFile.getAliasName() != null)
+			if(dssFile.getAliasName() != null)
 			{
-				namedDssJsonObject.put(SCENARIO_DSS_NAME, dvDssFile.getAliasName());
+				namedDssJsonObject.put(SCENARIO_DSS_NAME, dssFile.getAliasName());
 			}
-			if(dvDssFile.getDssPath() != null)
+			if(dssFile.getDssPath() != null)
 			{
-				namedDssJsonObject.put(SCENARIO_DSS_PATH, dvDssFile.getDssPath());
+				namedDssJsonObject.put(SCENARIO_DSS_PATH, dssFile.getDssPath());
+			}
+			if(dssFile.getAPart() != null)
+			{
+				namedDssJsonObject.put(SCENARIO_A_PART, dssFile.getAPart());
+			}
+			if(dssFile.getEPart() != null)
+			{
+				namedDssJsonObject.put(SCENARIO_E_PART, dssFile.getEPart());
+			}
+			if(dssFile.getFPart() != null)
+			{
+				namedDssJsonObject.put(SCENARIO_F_PART, dssFile.getFPart());
 			}
 		}
 		return namedDssJsonObject;

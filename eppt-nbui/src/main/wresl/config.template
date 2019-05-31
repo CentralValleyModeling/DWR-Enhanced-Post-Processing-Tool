@@ -12,7 +12,7 @@ Begin Config
 
 
 MainFile           {MainFile}
-Solver             XA
+Solver             CBC
 DvarFile           {PostProcessDss}
 SvarFile           {DvFile}
 SvarFile2          {SvFile}

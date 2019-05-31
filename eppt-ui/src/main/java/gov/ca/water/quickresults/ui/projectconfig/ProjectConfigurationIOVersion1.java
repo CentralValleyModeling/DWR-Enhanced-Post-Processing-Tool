@@ -20,6 +20,7 @@ import java.util.List;
 import java.util.Map;
 
 import gov.ca.water.calgui.bo.GUILinksAllModelsBO;
+import gov.ca.water.calgui.constant.Constant;
 import gov.ca.water.calgui.project.EpptDssContainer;
 import gov.ca.water.calgui.project.EpptProject;
 import gov.ca.water.calgui.project.EpptScenarioRun;
@@ -91,7 +92,7 @@ class ProjectConfigurationIOVersion1
 		GUILinksAllModelsBO.Model model = GUILinksAllModelsBO.Model.findModel(modelString);
 		Path outputPath = dssPath.getParent();
 		Path wreslMain = null;
-		NamedDssPath dvDssFile = new NamedDssPath(dssPath, dssPath.getFileName().toString());
+		NamedDssPath dvDssFile = new NamedDssPath(dssPath, dssPath.getFileName().toString(), "", "1MON", "");
 		NamedDssPath svDssFile = null;
 		NamedDssPath ivDssFile = null;
 		NamedDssPath dtsDssFile = null;
@@ -99,7 +100,7 @@ class ProjectConfigurationIOVersion1
 		EpptDssContainer dssContainer = new EpptDssContainer(dvDssFile, svDssFile,
 				ivDssFile, dtsDssFile, extraDssFiles);
 		return new EpptScenarioRun(name, description,
-				model, outputPath, wreslMain, dssContainer);
+				model, outputPath, wreslMain, Paths.get(Constant.WY_TYPES_TABLE), Paths.get(Constant.WY_TYPES_NAME_LOOKUP), dssContainer);
 	}
 
 	private Month readStartMonthProperties(JSONObject jsonObject)

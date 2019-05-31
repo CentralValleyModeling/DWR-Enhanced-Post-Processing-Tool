@@ -19,6 +19,7 @@ import javax.swing.*;
 
 import gov.ca.water.calgui.project.EpptScenarioRun;
 import gov.ca.water.quickresults.ui.EpptPanel;
+import gov.ca.water.quickresults.ui.projectconfig.scenarioconfig.ScenarioRunEditor;
 
 
 /**

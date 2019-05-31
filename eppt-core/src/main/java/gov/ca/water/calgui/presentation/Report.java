@@ -15,6 +15,7 @@ package gov.ca.water.calgui.presentation;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -110,8 +111,16 @@ public class Report extends SwingWorker<Void, String>
 		parseTemplateFile(_inputStream);
 
 		publish("Processing DSS files.");
-		doProcessing();
-		publish("Done");
+		try
+		{
+			doProcessing();
+			publish("Done");
+		}
+		catch(RuntimeException ex)
+		{
+			LOG.log(Level.SEVERE, "Error processing report", ex);
+			publish("Error running report: " + ex.getMessage());
+		}
 
 		LOG.fine("Done generating report");
 
@@ -132,7 +141,10 @@ public class Report extends SwingWorker<Void, String>
 		String command = "cmd /c start " + _outputFilename;
 		try
 		{
-			Runtime.getRuntime().exec(command);
+			if(Paths.get(_outputFilename).toFile().exists())
+			{
+				Runtime.getRuntime().exec(command);
+			}
 		}
 		catch(IOException e)
 		{
@@ -163,7 +175,7 @@ public class Report extends SwingWorker<Void, String>
 		InputTable scalarTable = tables.getTableNamed("SCALAR");
 		ArrayList<ArrayList<String>> scalarValues = scalarTable.getValues();
 		int nscalars = scalarValues.size();
-		_scalars = new HashMap<String, String>();
+		_scalars = new HashMap<>();
 		for(int i = 0; i < nscalars; i++)
 		{
 			String name = scalarTable.getValue(i, "NAME");
@@ -174,7 +186,7 @@ public class Report extends SwingWorker<Void, String>
 		InputTable pathnameMappingTable = tables.getTableNamed("PATHNAME_MAPPING");
 		ArrayList<ArrayList<String>> pmap_values = pathnameMappingTable.getValues();
 		int nvalues = pmap_values.size();
-		_pathnameMaps = new ArrayList<PathnameMap>();
+		_pathnameMaps = new ArrayList<>();
 		for(int i = 0; i < nvalues; i++)
 		{
 			String var_name = pathnameMappingTable.getValue(i, "VARIABLE");
@@ -206,7 +218,7 @@ public class Report extends SwingWorker<Void, String>
 		}
 		Group dssGroupBase = opendss(_scalars.get("FILE_BASE"));
 		Group dssGroupAlt = opendss(_scalars.get("FILE_ALT"));
-		ArrayList<TimeWindow> timewindows = new ArrayList<TimeWindow>();
+		ArrayList<TimeWindow> timewindows = new ArrayList<>();
 		for(ArrayList<String> values : _twValues)
 		{
 			String v = values.get(1).replace("\"", "");

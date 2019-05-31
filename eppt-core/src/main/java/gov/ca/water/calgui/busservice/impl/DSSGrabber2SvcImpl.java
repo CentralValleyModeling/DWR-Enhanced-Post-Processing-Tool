@@ -277,35 +277,7 @@ public class DSSGrabber2SvcImpl extends DSSGrabber1SvcImpl
 					// Operand is a DSS time series
 					_primaryDSSName.clear();
 					_primaryDSSName.put(model, dts2.getBPartAt(i) + "/" + dts2.getCPartAt(i));
-					if("DVAR".equals(dts2.getVarTypeAt(i)))
-					{
-						interimResult = getOneSeries(dssPath,
-								(dts2.getBPartAt(i) + "/" + dts2.getCPartAt(i) + "/LOOKUP"), model);
-					}
-					else
-					{
-						//						String svFilename = "";
-
-						//						if(dssFilename.equals(_project.getDVFile()))
-						//						{
-						//							svFilename = _project.getSVFile();
-						//						}
-						//						else if(dssFilename.equals(_project.getDV2File()))
-						//						{
-						//							svFilename = _project.getSV2File();
-						//						}
-						//						else if(dssFilename.equals(_project.getDV3File()))
-						//						{
-						//							svFilename = _project.getSV3File();
-						//						}
-						//						else if(dssFilename.equals(_project.getDV4File()))
-						//						{
-						//							svFilename = _project.getSV4File();
-						//						}
-
-						//						interimResult = getOneSeries(svFilename,
-						//								(dts2.getBPartAt(i) + "/" + dts2.getCPartAt(i) + "/LOOKUP"), model);
-					}
+					interimResult = getOneSeries(dssPath, (dts2.getBPartAt(i) + "/" + dts2.getCPartAt(i)), model);
 				}
 				if(interimResult != null)
 				{

@@ -196,8 +196,14 @@ public final class ProjectConfigurationPanel extends EpptPanel
 	{
 		EpptScenarioRun base = _scenarioTablePanel.getBaseScenarioRun();
 		List<EpptScenarioRun> alternatives = _scenarioTablePanel.getAlternativeScenarioRuns();
-		getRadioButton1().setEnabled(!alternatives.isEmpty() && base != null);
-		getRadioButton2().setEnabled(!alternatives.isEmpty() && base != null);
+		getRadioButtonDiff().setEnabled(!alternatives.isEmpty() && base != null);
+		getRadioButtonComparison().setEnabled(!alternatives.isEmpty() && base != null);
+		if(alternatives.isEmpty())
+		{
+			getRadioButtonBase().setSelected(true);
+			getRadioButtonComparison().setSelected(false);
+			getRadioButtonDiff().setSelected(false);
+		}
 	}
 
 	void deleteScenario()
@@ -453,12 +459,17 @@ public final class ProjectConfigurationPanel extends EpptPanel
 		}
 	}
 
-	private JRadioButton getRadioButton1()
+	private JRadioButton getRadioButtonBase()
+	{
+		return (JRadioButton) getSwingEngine().find("rdbp000");
+	}
+
+	private JRadioButton getRadioButtonComparison()
 	{
 		return (JRadioButton) getSwingEngine().find("rdbp001");
 	}
 
-	private JRadioButton getRadioButton2()
+	private JRadioButton getRadioButtonDiff()
 	{
 		return (JRadioButton) getSwingEngine().find("rdbp002");
 	}

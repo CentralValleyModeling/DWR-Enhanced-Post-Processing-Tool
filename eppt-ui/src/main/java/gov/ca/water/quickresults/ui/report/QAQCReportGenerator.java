@@ -44,16 +44,16 @@ class QAQCReportGenerator
 		_consumer = consumer;
 	}
 
-	void generateQAQCReport(Path waterYearTable, Path waterYearLookup, EpptScenarioRun baseRun, EpptScenarioRun altRun, double tolerance,
+	void generateQAQCReport(EpptScenarioRun baseRun, EpptScenarioRun altRun, double tolerance,
 							String author, String subtitle, Path outputPdf)
 			throws QAQCReportException
 	{
-		Path path = writeReportData(waterYearTable, waterYearLookup, baseRun, altRun, tolerance, author, subtitle);
+		Path path = writeReportData(baseRun, altRun, tolerance, author, subtitle);
 		QAQCProcessRunner processRunner = new QAQCProcessRunner(outputPdf, path, _consumer);
 		processRunner.run();
 	}
 
-	private Path writeReportData(Path waterYearTable, Path waterYearLookup, EpptScenarioRun baseRun, EpptScenarioRun altRun, double tolerance,
+	private Path writeReportData(EpptScenarioRun baseRun, EpptScenarioRun altRun, double tolerance,
 								 String author, String subtitle)
 			throws QAQCReportException
 	{
@@ -66,7 +66,7 @@ class QAQCReportGenerator
 				altRuns = Collections.singletonList(altRun);
 			}
 			Path dataFile = pathToWriteOut.resolve("DWR_QA_QC_Reports").resolve("Datasource").resolve("EPPT_Data.xml");
-			EPPTReport epptReport = new EPPTReport(waterYearTable, waterYearLookup, dataFile,
+			EPPTReport epptReport = new EPPTReport(dataFile,
 					baseRun, altRuns, tolerance, author, subtitle);
 			epptReport.writeReport();
 			return pathToWriteOut.resolve("QAQC_Report.jrxml");

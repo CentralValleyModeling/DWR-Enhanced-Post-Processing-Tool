@@ -51,7 +51,7 @@ public class TestDetailedIssueReport extends TestDetailedIssuesReportBase
 
         Document doc = getDoc();
 
-        DetailedIssueProcessor processor = new DetailedIssueProcessor(getWyTypeTablePath(), getWyTypeNameLookupTablePath(), runsToFlagViolations, modules, allDetailedIssues, allRuns,true);
+        DetailedIssueProcessor processor = new DetailedIssueProcessor(runsToFlagViolations, modules, allDetailedIssues, allRuns, true);
         Map<EpptScenarioRun, Map<Module, List<DetailedIssueViolation>>> runsToDetailedViolations = processor.process();
 
         DetailedIssuesXMLCreator xmlCreator = new DetailedIssuesXMLCreator();
