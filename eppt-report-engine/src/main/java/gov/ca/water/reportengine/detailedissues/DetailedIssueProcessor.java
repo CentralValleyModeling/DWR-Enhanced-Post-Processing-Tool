@@ -70,13 +70,13 @@ public class DetailedIssueProcessor
 				LOGGER.at(Level.INFO).log("Processing Detailed Issues for Scenario Run: %s", run.getName());
 				Map<Module, List<DetailedIssueViolation>> modToDIVs = new HashMap<>();
 				Map<SubModule, List<FlagViolation>> subModToViolations = _runsToViolations.get(run);
+				WaterYearTableReader wyTypeReader = new WaterYearTableReader(run.getWaterYearTable(), run.getWaterYearLookup());
+				List<WaterYearType> waterYearTypes = wyTypeReader.read();
 				for(Module mod : _modules)
 				{
 					if(!Objects.equals("Model Inputs",mod.getName()))
 					{
 
-						WaterYearTableReader wyTypeReader = new WaterYearTableReader(run.getWaterYearTable(), run.getWaterYearLookup());
-						List<WaterYearType> waterYearTypes = wyTypeReader.read();
 						LOGGER.at(Level.INFO).log("Processing Detailed Issues for Module: %s", mod.getName());
 						List<DetailedIssueViolation> detailedIssueViolations = processModule(run, subModToViolations, mod, waterYearTypes);
 						modToDIVs.put(mod, detailedIssueViolations);
