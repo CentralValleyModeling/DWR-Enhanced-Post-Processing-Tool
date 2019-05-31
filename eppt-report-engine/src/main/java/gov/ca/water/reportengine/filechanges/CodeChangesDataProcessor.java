@@ -94,6 +94,11 @@ public class CodeChangesDataProcessor
 		try(Stream<Path> paths = Files.walk(outputDirectory))
 		{
 			allPaths = paths.filter(p -> p.toFile().isFile())
+							.filter(p->
+							{
+								String filename = p.getFileName().toString().toLowerCase();
+								return filename.endsWith(".wresl") || filename.endsWith(".table");
+							})
 							.map(outputDirectory::relativize)
 							.collect(toList());
 
