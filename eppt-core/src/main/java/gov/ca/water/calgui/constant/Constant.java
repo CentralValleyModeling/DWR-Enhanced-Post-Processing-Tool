@@ -31,6 +31,7 @@ public final class Constant
 	public static final String CONFIG_DIR = System.getProperty("user.dir") + "\\dwr_eppt\\config\\";
 	public static final String DOCS_DIR = System.getProperty("user.dir") + "\\dwr_eppt\\docs\\";
 	public static final String WRESL_DIR = System.getProperty("user.dir") + "\\dwr_eppt\\wresl\\";
+	public static final String WRESL_MAIN = System.getProperty("user.dir") + "\\dwr_eppt\\wresl\\run\\mainControl.wresl";
 	public static final String WRIMS_DIR = System.getProperty("user.dir") + "\\dwr_eppt\\wresl\\wrims";
 	public static final String WY_TYPES_TABLE = WRESL_DIR + "/run/lookup/wytypes" + TABLE_EXT;
 	public static final String WY_TYPES_NAME_LOOKUP = WRESL_DIR + "/WYTypesLookup" + CSV_EXT;

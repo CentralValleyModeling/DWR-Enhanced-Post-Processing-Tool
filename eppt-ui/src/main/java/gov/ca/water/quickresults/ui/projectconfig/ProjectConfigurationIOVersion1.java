@@ -100,7 +100,7 @@ class ProjectConfigurationIOVersion1
 		EpptDssContainer dssContainer = new EpptDssContainer(dvDssFile, svDssFile,
 				ivDssFile, dtsDssFile, extraDssFiles);
 		return new EpptScenarioRun(name, description,
-				model, outputPath, wreslMain, Paths.get(Constant.WY_TYPES_TABLE), Paths.get(Constant.WY_TYPES_NAME_LOOKUP), dssContainer);
+				model, outputPath, wreslMain, Paths.get(Constant.WY_TYPES_TABLE), dssContainer);
 	}
 
 	private Month readStartMonthProperties(JSONObject jsonObject)

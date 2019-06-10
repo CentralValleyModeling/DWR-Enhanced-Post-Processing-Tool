@@ -62,9 +62,9 @@ class ScenarioDssTableModel extends RmaTableModel
 		_rows.add(dvRowModel);
 		Row svRowModel = createRowModel(new NamedDssPath(Paths.get(""), "", "", "", ""), RowType.SV);
 		_rows.add(svRowModel);
-		Row ivRowModel = createRowModel(new NamedDssPath(Paths.get(""), "", "", "", ""), RowType.IV);
+		Row ivRowModel = createRowModel(new NamedDssPath(Paths.get(""), "", "", "", ""), RowType.INIT);
 		_rows.add(ivRowModel);
-		Row dtwRowModel = createRowModel(new NamedDssPath(Paths.get(""), "", "", "", ""), RowType.DTS);
+		Row dtwRowModel = createRowModel(new NamedDssPath(Paths.get(""), "", "", "", ""), RowType.QA_QC);
 		_rows.add(dtwRowModel);
 	}
 
@@ -75,9 +75,9 @@ class ScenarioDssTableModel extends RmaTableModel
 		_rows.add(dvRowModel);
 		Row svRowModel = createRowModel(dssContainer.getSvDssFile(), RowType.SV);
 		_rows.add(svRowModel);
-		Row ivRowModel = createRowModel(dssContainer.getIvDssFile(), RowType.IV);
+		Row ivRowModel = createRowModel(dssContainer.getIvDssFile(), RowType.INIT);
 		_rows.add(ivRowModel);
-		Row dtwRowModel = createRowModel(dssContainer.getDtsDssFile(), RowType.DTS);
+		Row dtwRowModel = createRowModel(dssContainer.getDtsDssFile(), RowType.QA_QC);
 		_rows.add(dtwRowModel);
 		_rows.addAll(dssContainer.getExtraDssFiles()
 								 .stream()
@@ -93,8 +93,8 @@ class ScenarioDssTableModel extends RmaTableModel
 	{
 		NamedDssPath dvDssFile = createNamedDssPath(getRowForType(RowType.DV), scenarioName);
 		NamedDssPath svDssFile = createNamedDssPath(getRowForType(RowType.SV), scenarioName);
-		NamedDssPath ivDssFile = createNamedDssPath(getRowForType(RowType.IV), scenarioName);
-		NamedDssPath dtsDssFile = createNamedDssPath(getRowForType(RowType.DTS), scenarioName);
+		NamedDssPath ivDssFile = createNamedDssPath(getRowForType(RowType.INIT), scenarioName);
+		NamedDssPath dtsDssFile = createNamedDssPath(getRowForType(RowType.QA_QC), scenarioName);
 		List<NamedDssPath> extraDssFiles = getExtraRows().stream().map((Row row) -> createNamedDssPath(row, scenarioName)).collect(toList());
 		return new EpptDssContainer(dvDssFile, svDssFile, ivDssFile, dtsDssFile, extraDssFiles);
 	}
@@ -336,7 +336,7 @@ class ScenarioDssTableModel extends RmaTableModel
 
 	enum RowType
 	{
-		DV("DV"), SV("SV"), IV("IV"), DTS("DTS"), EXTRA("Extra");
+		DV("DV"), SV("SV"), INIT("INIT"), QA_QC("QA_QC"), EXTRA("Extra");
 		private final String _render;
 
 		RowType(String render)

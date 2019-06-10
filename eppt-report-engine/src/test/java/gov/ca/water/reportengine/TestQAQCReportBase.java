@@ -83,7 +83,7 @@ public class TestQAQCReportBase
 
 
         GUILinksAllModelsBO.Model calSim2 = GUILinksAllModelsBO.Model.findModel("CalSim2");// model = new GUILinksAllModelsBO.Model("CalSim2");
-        EpptScenarioRun baseRun = new EpptScenarioRun("baseScenario", "desc", calSim2,null,null, null, null, dssContainer);
+        EpptScenarioRun baseRun = new EpptScenarioRun("baseScenario", "desc", calSim2,null,null, null, dssContainer);
         return baseRun;
     }
 
@@ -102,7 +102,7 @@ public class TestQAQCReportBase
         EpptDssContainer dssContainer = new EpptDssContainer(dvDssFile, svDssFile, ivDssFile, ivDssFile, extraDssFiles);
 
         GUILinksAllModelsBO.Model calSim2 = GUILinksAllModelsBO.Model.findModel("CalSim2");// model = new GUILinksAllModelsBO.Model("CalSim2");
-        EpptScenarioRun alt1Run = new EpptScenarioRun("alt1Scenario", "desc", calSim2,null,null,null, null, dssContainer);
+        EpptScenarioRun alt1Run = new EpptScenarioRun("alt1Scenario", "desc", calSim2,null,null,null, dssContainer);
 
         List<EpptScenarioRun> altRuns = new ArrayList<>();
         altRuns.add(alt1Run);
