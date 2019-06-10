@@ -24,10 +24,12 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.nio.file.Files;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.Executors;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.*;
 
+import com.ibm.icu.impl.DontCareFieldPosition;
 import gov.ca.water.calgui.constant.EpptPreferences;
 import gov.ca.water.calgui.presentation.Report;
 import gov.ca.water.calgui.techservice.IDialogSvc;
@@ -285,9 +287,25 @@ public class DataAnalysisListener implements ActionListener
 			ByteArrayInputStream bs = new ByteArrayInputStream(theText.toString().getBytes());
 			Report report = new Report(bs, _dataAnalysisPanel.getOutputTextField().getToolTipText(), getMainWindow());
 			_dataAnalysisPanel.getReportButton().setEnabled(false);
-			CompletableFuture.runAsync(report)
-							 .thenRunAsync(() -> _dataAnalysisPanel.getReportButton().setEnabled(true),
-									 SwingUtilities::invokeLater);
+			SwingWorker<Void, Object> sw = new SwingWorker<Void, Object>()
+			{
+				@Override
+				protected Void doInBackground() throws Exception
+				{
+					report.run();
+					return null;
+				}
+
+				@Override
+				protected void done()
+				{
+					super.done();
+					_dataAnalysisPanel.getReportButton().setEnabled(true);
+				}
+			};
+
+
+			sw.execute();
 		}
 		catch(IOException e1)
 		{
