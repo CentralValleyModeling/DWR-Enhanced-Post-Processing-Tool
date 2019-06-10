@@ -302,14 +302,14 @@ class DisplayFrame
 												new JLabel("No chart - annual totals are only calculated for flows."));
 										tabbedpane.insertTab("Exceedance (Annual Total)", null, panel, null, 0);
 									}
-									if(exceedMonths.contains("ALL") || !plottedOne)
-									{
-										insertPlotPanel(dssGrabber, doDifference, doBase, primaryResults, excResults,
-												sexcResults, dexcResults, tabbedpane, lower, upper,
-												" - Exceedance (all months)", dssGrabber.getYLabel(), 13,
-												dssGrabber.getPlotTitle() + " - Exceedance (all months)",
-												"Exceedance (all)");
-									}
+								}
+								if(exceedMonths.contains("ALL"))
+								{
+									insertPlotPanel(dssGrabber, doDifference, doBase, primaryResults, excResults,
+											sexcResults, dexcResults, tabbedpane, lower, upper,
+											" - Exceedance (all months)", dssGrabber.getYLabel(), 13,
+											dssGrabber.getPlotTitle() + " - Exceedance (all months)",
+											"Exceedance (all)");
 								}
 							}
 							ChartPanel1 cp1;
