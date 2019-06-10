@@ -17,7 +17,7 @@
 	<parent>
 		<groupId>gov.ca.water</groupId>
 		<artifactId>eppt-parent</artifactId>
-		<version>1.0.2-SNAPSHOT</version>
+		<version>1.0.3-SNAPSHOT</version>
 		<relativePath>../eppt-parent</relativePath>
 	</parent>
 
@@ -212,13 +212,14 @@
 									<target>
 										<unzip src="${project.build.directory}\jre-1.8.0_202.zip" dest="${project.build.directory}\dwr_eppt\jre"/>
 										<copy file="${project.basedir}/src/EPPT.exe" todir="${project.build.directory}\dwr_eppt"/>
+										<move file="${project.build.directory}\dwr_eppt" tofile="${project.build.directory}\${zip-dist-name}-${parsedVersion.majorVersion}.${parsedVersion.minorVersion}.${parsedVersion.incrementalVersion}-${maven.build.timestamp}"/>
 										<exec executable="cmd">
 											<arg value="/c"/>
 											<arg value="C:\Program Files\7-Zip\7z.exe"/>
 											<arg value="a"/>
 											<arg value="-sfx"/>
 											<arg value="${project.build.directory}\${zip-dist-name}-${parsedVersion.majorVersion}.${parsedVersion.minorVersion}.${parsedVersion.incrementalVersion}-${maven.build.timestamp}.exe"/>
-											<arg value="${project.build.directory}\dwr_eppt"/>
+											<arg value="${project.build.directory}\${zip-dist-name}-${parsedVersion.majorVersion}.${parsedVersion.minorVersion}.${parsedVersion.incrementalVersion}-${maven.build.timestamp}"/>
 										</exec>
 									</target>
 								</configuration>
