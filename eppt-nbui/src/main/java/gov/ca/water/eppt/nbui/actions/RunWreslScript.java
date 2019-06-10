@@ -73,7 +73,10 @@ public class RunWreslScript implements ActionListener
 
 	public static void destroyProcesses()
 	{
-		wreslRunDialog.destroyProcesses();
+		if(wreslRunDialog != null)
+		{
+			wreslRunDialog.destroyProcesses();
+		}
 	}
 
 }

@@ -18,15 +18,11 @@ import java.io.PrintWriter;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.time.LocalDate;
-import java.util.List;
 
 import gov.ca.water.calgui.constant.Constant;
 import gov.ca.water.calgui.project.EpptDssContainer;
 import gov.ca.water.calgui.project.EpptScenarioRun;
 import gov.ca.water.calgui.project.NamedDssPath;
-
-import hec.heclib.dss.DSSPathname;
-import hec.heclib.dss.HecDss;
 
 /**
  * Company: Resource Management Associates
@@ -132,7 +128,7 @@ class WreslConfigWriter
 			configText = configText.replace("{EndDay}", Integer.toString(_endDate.getDayOfMonth()));
 
 			String name = _scenarioRun.getName();
-			name = name.replace(" ", "_");
+			name = name.replaceAll("[^a-zA-Z0-9\\.\\-]", "_");
 			Path configPath = _scenarioRun.getWreslMain().getParent().resolve("WRESL" + name + ".config");
 			try(BufferedWriter bufferedWriter = Files.newBufferedWriter(configPath);
 				PrintWriter configFilePW = new PrintWriter(bufferedWriter))
