@@ -224,9 +224,10 @@ public class CustomResultsPanel extends EpptPanel
 				Month endMonth = projectConfigurationPanel.getEndMonth();
 				if(baseScenario != null)
 				{
+					List<EpptScenarioRun> alternatives = projectConfigurationPanel.getEpptScenarioAlternatives();
 					_displayHelper.showDisplayFrames(
 							quickState + ";Locs-" + parts[2] + ";Index-" + parts[2],
-							baseScenario, new ArrayList<>(), startMonth, endMonth);
+							baseScenario, alternatives, startMonth, endMonth);
 				}
 			}
 		}
@@ -264,7 +265,8 @@ public class CustomResultsPanel extends EpptPanel
 				String quickState = projectConfigurationPanel.quickState();
 				Month startMonth = projectConfigurationPanel.getStartMonth();
 				Month endMonth = projectConfigurationPanel.getEndMonth();
-				_displayHelper.showDisplayFramesWRIMS(quickState + ";Locs-;Index-;File-", baseScenario, new ArrayList<>(),
+				List<EpptScenarioRun> alternatives = projectConfigurationPanel.getEpptScenarioAlternatives();
+				_displayHelper.showDisplayFramesWRIMS(quickState + ";Locs-;Index-;File-", baseScenario, alternatives,
 						dts,
 						mts, startMonth, endMonth);
 			}

@@ -745,7 +745,10 @@ class DisplayFrame
 				TimeSeriesContainer[] primaryResults = dssGrabber.getPrimarySeries();
 				TimeSeriesContainer[] secondaryResults = dssGrabber.getSecondarySeries();
 
-				dssGrabber.calcTAFforCFS(primaryResults, secondaryResults);
+				if(primaryResults != null)
+				{
+					dssGrabber.calcTAFforCFS(primaryResults, secondaryResults);
+				}
 
 				TimeSeriesContainer[] diffResults = dssGrabber.getDifferenceSeries(primaryResults);
 				TimeSeriesContainer[][] excResults = dssGrabber.getExceedanceSeries(primaryResults);
