@@ -40,6 +40,9 @@ class ScenarioTableModel extends RmaTreeTableModel<ParentRowModel>
 	static final RmaTreeTableColumnSpec WRESL_MAIN_COL_SPEC;
 	static final RmaTreeTableColumnSpec DSS_PATH_COL_SPEC;
 	static final RmaTreeTableColumnSpec TYPE_COL_SPEC;
+	static final RmaTreeTableColumnSpec A_PART_COL_SPEC;
+	static final RmaTreeTableColumnSpec F_PART_COL_SPEC;
+	static final RmaTreeTableColumnSpec WATER_YEAR_PATH_COL_SPEC;
 
 	static
 	{
@@ -79,19 +82,37 @@ class ScenarioTableModel extends RmaTreeTableModel<ParentRowModel>
 				.withSortable(false)
 				.withVisibleByDefault(true)
 				.build();
-		OUTPUT_PATH_COL_SPEC = new RmaTreeTableColumnSpec.Builder("Model Directory")
+		OUTPUT_PATH_COL_SPEC = new RmaTreeTableColumnSpec.Builder("Study Main Directory")
 				.withCanBeHidden(true)
 				.withEditable(false)
 				.withSortable(false)
 				.withVisibleByDefault(false)
 				.build();
-		WRESL_MAIN_COL_SPEC = new RmaTreeTableColumnSpec.Builder("WRESL Main")
+		WRESL_MAIN_COL_SPEC = new RmaTreeTableColumnSpec.Builder("EPPT WRESL Script")
 				.withCanBeHidden(true)
 				.withEditable(false)
 				.withSortable(false)
 				.withVisibleByDefault(false)
 				.build();
 		DSS_PATH_COL_SPEC = new RmaTreeTableColumnSpec.Builder("DSS Path")
+				.withCanBeHidden(true)
+				.withEditable(false)
+				.withSortable(false)
+				.withVisibleByDefault(false)
+				.build();
+		A_PART_COL_SPEC = new RmaTreeTableColumnSpec.Builder("A Part")
+				.withCanBeHidden(true)
+				.withEditable(false)
+				.withSortable(false)
+				.withVisibleByDefault(false)
+				.build();
+		F_PART_COL_SPEC = new RmaTreeTableColumnSpec.Builder("F Part")
+				.withCanBeHidden(true)
+				.withEditable(false)
+				.withSortable(false)
+				.withVisibleByDefault(false)
+				.build();
+		WATER_YEAR_PATH_COL_SPEC = new RmaTreeTableColumnSpec.Builder("Water Year File")
 				.withCanBeHidden(true)
 				.withEditable(false)
 				.withSortable(false)
@@ -109,7 +130,10 @@ class ScenarioTableModel extends RmaTreeTableModel<ParentRowModel>
 		getColumnSpecs().add(DESCRIPTION_COL_SPEC);
 		getColumnSpecs().add(OUTPUT_PATH_COL_SPEC);
 		getColumnSpecs().add(WRESL_MAIN_COL_SPEC);
+		getColumnSpecs().add(WATER_YEAR_PATH_COL_SPEC);
 		getColumnSpecs().add(DSS_PATH_COL_SPEC);
+		getColumnSpecs().add(A_PART_COL_SPEC);
+		getColumnSpecs().add(F_PART_COL_SPEC);
 	}
 
 	synchronized Optional<ScenarioRowModel> getRowForScenarioRun(EpptScenarioRun oldScenarioRun)

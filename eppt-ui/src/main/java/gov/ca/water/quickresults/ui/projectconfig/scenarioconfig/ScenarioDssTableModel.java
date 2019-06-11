@@ -22,6 +22,8 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -54,9 +56,11 @@ class ScenarioDssTableModel extends RmaTableModel
 	private final Map<Path, Set<String>> _fPaths = new ConcurrentHashMap<>();
 	private final Map<Path, Set<String>> _aPaths = new ConcurrentHashMap<>();
 	private final LoadingDss _loadingDss;
+	private final ExecutorService _executor;
 
 	ScenarioDssTableModel(LoadingDss loading)
 	{
+		_executor = Executors.newFixedThreadPool(10);
 		_loadingDss = loading;
 		Row dvRowModel = createRowModel(new NamedDssPath(Paths.get(""), "", "", "", ""), RowType.DV);
 		_rows.add(dvRowModel);
@@ -66,6 +70,11 @@ class ScenarioDssTableModel extends RmaTableModel
 		_rows.add(ivRowModel);
 		Row dtwRowModel = createRowModel(new NamedDssPath(Paths.get(""), "", "", "", ""), RowType.QA_QC);
 		_rows.add(dtwRowModel);
+	}
+
+	void shutdown()
+	{
+		_executor.shutdownNow();
 	}
 
 	void fillModel(EpptDssContainer dssContainer)
@@ -201,7 +210,7 @@ class ScenarioDssTableModel extends RmaTableModel
 
 	private void loadDssAandFParts(List<Path> paths)
 	{
-		CompletableFuture.runAsync(() ->
+		_executor.submit(() ->
 		{
 			try
 			{
@@ -227,6 +236,10 @@ class ScenarioDssTableModel extends RmaTableModel
 			for(CondensedReference condensedReference : condensedReferences)
 			{
 				DSSPathname firstPathname = new DSSPathname(condensedReference.getFirstPathname());
+				if(Thread.currentThread().isInterrupted())
+				{
+					break;
+				}
 				_aPaths.computeIfAbsent(path, e -> new HashSet<>()).add(firstPathname.getAPart());
 				_fPaths.computeIfAbsent(path, e -> new HashSet<>()).add(firstPathname.getFPart());
 			}
