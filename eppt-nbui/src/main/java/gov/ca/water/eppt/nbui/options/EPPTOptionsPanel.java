@@ -16,10 +16,24 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.MalformedURLException;
+import java.net.URISyntaxException;
+import java.net.URL;
+import java.net.URLClassLoader;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.List;
 import java.util.Objects;
+import java.util.Properties;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
@@ -28,13 +42,16 @@ import gov.ca.water.calgui.constant.EpptPreferences;
 
 import hec.client.FileChooserFld;
 
+import static java.util.stream.Collectors.toList;
+
 final class EPPTOptionsPanel extends JPanel
 {
-
+	private final Logger LOGGER = Logger.getLogger(EPPTOptionsPanel.class.getName());
 	private final EPPTOptionsOptionsPanelController _controller;
 	private final JComboBox<Object> _resultsOutputComboBox;
 	private final FileChooserFld _projectDirectoryFileChooserField;
 	private final JTextField _wrimsDirectoryField;
+	private final JLabel _wrimsVersionLabel = new JLabel();
 	private boolean _resetPreferences;
 
 	EPPTOptionsPanel(EPPTOptionsOptionsPanelController controller)
@@ -60,6 +77,7 @@ final class EPPTOptionsPanel extends JPanel
 			public void insertUpdate(DocumentEvent e)
 			{
 				_resetPreferences = false;
+				updateWrimsVersion();
 				_controller.changed();
 			}
 
@@ -67,6 +85,7 @@ final class EPPTOptionsPanel extends JPanel
 			public void removeUpdate(DocumentEvent e)
 			{
 				_resetPreferences = false;
+				updateWrimsVersion();
 				_controller.changed();
 			}
 
@@ -74,6 +93,7 @@ final class EPPTOptionsPanel extends JPanel
 			public void changedUpdate(DocumentEvent e)
 			{
 				_resetPreferences = false;
+				updateWrimsVersion();
 				_controller.changed();
 			}
 		};
@@ -134,8 +154,16 @@ final class EPPTOptionsPanel extends JPanel
 				3, 1, 1, .1, .5,
 				GridBagConstraints.EAST, GridBagConstraints.HORIZONTAL,
 				new Insets(5, 5, 5, 5), 5, 5));
-		panel.add(resetButton, new GridBagConstraints(3,
+		panel.add(new JLabel("WRIMS Version: "), new GridBagConstraints(1,
 				4, 1, 1, .1, .5,
+				GridBagConstraints.WEST, GridBagConstraints.BOTH,
+				new Insets(5, 5, 5, 5), 5, 5));
+		panel.add(_wrimsVersionLabel, new GridBagConstraints(2,
+				4, 2, 1, .1, .5,
+				GridBagConstraints.WEST, GridBagConstraints.BOTH,
+				new Insets(5, 5, 5, 5), 5, 5));
+		panel.add(resetButton, new GridBagConstraints(3,
+				5, 1, 1, .1, .5,
 				GridBagConstraints.EAST, GridBagConstraints.HORIZONTAL,
 				new Insets(5, 5, 5, 5), 5, 5));
 		revalidate();
@@ -171,6 +199,54 @@ final class EPPTOptionsPanel extends JPanel
 		_projectDirectoryFileChooserField.setDefaultPath(EpptPreferences.getProjectsPath().toString());
 		_resultsOutputComboBox.setSelectedItem(EpptPreferences.getResultsOutputLocation());
 		_wrimsDirectoryField.setText(EpptPreferences.getWrimsPath().toString());
+		updateWrimsVersion();
+	}
+
+	private void updateWrimsVersion()
+	{
+		String text = _wrimsDirectoryField.getText();
+		Path wrimsLibDir = Paths.get(text).resolve("lib");
+		if(wrimsLibDir.toFile().exists() && wrimsLibDir.toFile().isDirectory())
+		{
+			try(Stream<Path> walk = Files.walk(wrimsLibDir, 1))
+			{
+				List<URL> urls = walk.filter(f -> f.toString().endsWith(".jar"))
+										.map(this::pathToUrl)
+										.filter(Objects::nonNull)
+										.collect(toList());
+				try(URLClassLoader urlClassLoader = new URLClassLoader(urls.toArray(new URL[0])))
+				{
+					URL resource = urlClassLoader.findResource("wrimsv2/version.props");
+					Properties properties = new Properties();
+					try(InputStream inputStream = resource.openStream())
+					{
+						properties.load(inputStream);
+						Object version = properties.get("version");
+						if(version != null)
+						{
+							_wrimsVersionLabel.setText(version.toString());
+						}
+					}
+				}
+			}
+			catch(IOException ex)
+			{
+				LOGGER.log(Level.WARNING, "Unable to locate WRIMS jar to find version number", ex);
+			}
+		}
+	}
+
+	private URL pathToUrl(Path path)
+	{
+		try
+		{
+			return path.toUri().toURL();
+		}
+		catch(MalformedURLException e)
+		{
+			LOGGER.log(Level.FINE, "Cannot load jar: " + path, e);
+			return null;
+		}
 	}
 
 	void store()
