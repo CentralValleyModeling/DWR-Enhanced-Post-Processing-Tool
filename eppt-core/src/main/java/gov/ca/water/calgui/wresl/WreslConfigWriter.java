@@ -18,6 +18,8 @@ import java.io.PrintWriter;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.time.LocalDate;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import gov.ca.water.calgui.constant.Constant;
 import gov.ca.water.calgui.project.EpptDssContainer;
@@ -32,6 +34,7 @@ import gov.ca.water.calgui.project.NamedDssPath;
  */
 class WreslConfigWriter
 {
+	private static final Logger LOGGER = Logger.getLogger(WreslConfigWriter.class.getName());
 	private final EpptScenarioRun _scenarioRun;
 	private LocalDate _start;
 	private LocalDate _end;
@@ -130,6 +133,7 @@ class WreslConfigWriter
 			String name = _scenarioRun.getName();
 			name = name.replaceAll("[^a-zA-Z0-9\\.\\-]", "_");
 			Path configPath = _scenarioRun.getWreslMain().getParent().resolve("WRESL" + name + ".config");
+			LOGGER.log(Level.INFO, "Writing WRESL config: ", configPath);
 			try(BufferedWriter bufferedWriter = Files.newBufferedWriter(configPath);
 				PrintWriter configFilePW = new PrintWriter(bufferedWriter))
 			{
