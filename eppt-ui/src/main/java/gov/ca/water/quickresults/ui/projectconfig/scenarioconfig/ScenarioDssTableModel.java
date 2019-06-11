@@ -20,6 +20,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.Vector;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutorService;
@@ -27,12 +28,17 @@ import java.util.concurrent.Executors;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import gov.ca.water.calgui.bo.GUILinksAllModelsBO;
+import gov.ca.water.calgui.busservice.IGuiLinksSeedDataSvc;
+import gov.ca.water.calgui.busservice.impl.GuiLinksSeedDataSvcImpl;
 import gov.ca.water.calgui.project.EpptDssContainer;
 import gov.ca.water.calgui.project.NamedDssPath;
 
 import hec.heclib.dss.CondensedReference;
 import hec.heclib.dss.DSSPathname;
+import hec.heclib.dss.HecDSSFileDataManager;
 import hec.heclib.dss.HecDss;
+import hec.heclib.dss.HecDssCatalog;
 import rma.swing.table.RmaTableModel;
 
 import static java.util.stream.Collectors.toList;
@@ -228,10 +234,70 @@ class ScenarioDssTableModel extends RmaTableModel
 	private void loadDss(Path path)
 	{
 		_loadingDss.loadingStart("Loading DSS A and F parts for: " + path);
+		HecDssCatalog hecDssCatalog = null;
+		try
+		{
+			hecDssCatalog = new HecDssCatalog();
+			hecDssCatalog.setDSSFileName(path.toString(), false);
+			Set<String> aParts = _aPaths.computeIfAbsent(path, e -> new HashSet<>());
+			Set<String> fParts = _fPaths.computeIfAbsent(path, e -> new HashSet<>());
+			IGuiLinksSeedDataSvc seedDataSvcImplInstance = GuiLinksSeedDataSvcImpl.getSeedDataSvcImplInstance();
+			List<GUILinksAllModelsBO> guiLinks = getDefaultGuiLinks(seedDataSvcImplInstance);
+			iterateDefaultGuiLinks(hecDssCatalog, guiLinks, aParts, fParts);
+			if(aParts.isEmpty() || fParts.isEmpty())
+			{
+				iterateAllDssPaths(path);
+			}
+		}
+		catch(RuntimeException e)
+		{
+			LOGGER.log(Level.WARNING, "Unable to open DSS file: " + path, e);
+		}
+		finally
+		{
+			if(hecDssCatalog != null)
+			{
+				hecDssCatalog.closeDSSFile();
+			}
+		}
+	}
+
+	private void iterateDefaultGuiLinks(HecDssCatalog hecDssCatalog, List<GUILinksAllModelsBO> guiLinks, Set<String> aParts, Set<String> fParts)
+	{
+		for(GUILinksAllModelsBO link : guiLinks)
+		{
+			Map<GUILinksAllModelsBO.Model, String> primary = link.getPrimary();
+			for(String bAndCParts : primary.values())
+			{
+				String pathWithWildcards = "/*/" + bAndCParts + "/*/*/*";
+				String[] catalog = hecDssCatalog.getCatalog(false, pathWithWildcards);
+				for(Object catPath : catalog)
+				{
+					if(catPath != null)
+					{
+						DSSPathname dssPathname = new DSSPathname(catPath.toString());
+						aParts.add(dssPathname.getAPart());
+						fParts.add(dssPathname.getFPart());
+					}
+				}
+				if(catalog.length > 0)
+				{
+					break;
+				}
+			}
+		}
+	}
+
+	private void iterateAllDssPaths(Path path)
+	{
+
 		HecDss hecDss = null;
 		try
 		{
-			hecDss = HecDss.open(path.toString());
+
+			hecDss = HecDss.open(path.toString(), true, false);
+			Set<String> aParts = _aPaths.computeIfAbsent(path, e -> new HashSet<>());
+			Set<String> fParts = _fPaths.computeIfAbsent(path, e -> new HashSet<>());
 			List<CondensedReference> condensedReferences = hecDss.getCondensedCatalog();
 			for(CondensedReference condensedReference : condensedReferences)
 			{
@@ -240,8 +306,8 @@ class ScenarioDssTableModel extends RmaTableModel
 				{
 					break;
 				}
-				_aPaths.computeIfAbsent(path, e -> new HashSet<>()).add(firstPathname.getAPart());
-				_fPaths.computeIfAbsent(path, e -> new HashSet<>()).add(firstPathname.getFPart());
+				aParts.add(firstPathname.getAPart());
+				fParts.add(firstPathname.getFPart());
 			}
 		}
 		catch(Exception e)
@@ -255,6 +321,18 @@ class ScenarioDssTableModel extends RmaTableModel
 				hecDss.close();
 			}
 		}
+	}
+
+	private List<GUILinksAllModelsBO> getDefaultGuiLinks(IGuiLinksSeedDataSvc seedDataSvcImplInstance)
+	{
+		List<GUILinksAllModelsBO> guiLinks = new ArrayList<>();
+		GUILinksAllModelsBO guiLink310 = seedDataSvcImplInstance.getObjById("310");
+		guiLinks.add(guiLink310);
+		GUILinksAllModelsBO guiLink311 = seedDataSvcImplInstance.getObjById("311");
+		guiLinks.add(guiLink311);
+		GUILinksAllModelsBO guiLink901 = seedDataSvcImplInstance.getObjById("901");
+		guiLinks.add(guiLink901);
+		return guiLinks;
 	}
 
 	@Override

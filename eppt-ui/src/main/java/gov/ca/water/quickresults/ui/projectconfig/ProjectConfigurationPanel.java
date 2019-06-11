@@ -556,6 +556,7 @@ public final class ProjectConfigurationPanel extends EpptPanel
 	void replaceScenario(EpptScenarioRun oldScenarioRun, EpptScenarioRun newScenarioRun)
 	{
 		_scenarioTablePanel.updateScenario(oldScenarioRun, newScenarioRun);
+		updateRadioState();
 		setModified(true);
 	}
 
