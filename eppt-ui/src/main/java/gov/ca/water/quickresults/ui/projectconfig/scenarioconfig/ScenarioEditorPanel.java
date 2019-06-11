@@ -66,7 +66,6 @@ public class ScenarioEditorPanel
 	private JButton _outputPathButton;
 	private JTextField _waterYearTable;
 	private JButton _wyTableBtn;
-	private JButton _wyLookupBtn;
 	private static JFileChooser fileChooser;
 
 	ScenarioEditorPanel(LoadingDss loadingDss)
@@ -432,6 +431,11 @@ public class ScenarioEditorPanel
 		EpptDssContainer dssContainer = scenarioRun.getDssContainer();
 		_scenarioDssTableModel.fillModel(dssContainer);
 		_waterYearTable.setText(scenarioRun.getWaterYearTable().toString());
+	}
+
+	void shutdown()
+	{
+		_scenarioDssTableModel.shutdown();
 	}
 
 	private final class FileChooserEditor extends RmaCellEditor

@@ -17,13 +17,9 @@ import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Frame;
 import java.awt.event.ActionEvent;
-import java.util.prefs.Preferences;
 import javax.swing.*;
 
 import gov.ca.water.calgui.project.EpptScenarioRun;
-
-import usace.loading.gui.LoadingGui;
-import usace.loading.gui.LoadingGuiFactory;
 
 /**
  * Company: Resource Management Associates
@@ -115,6 +111,15 @@ public class ScenarioRunEditor extends JDialog implements LoadingDss
 	{
 		setVisible(false);
 		dispose();
+	}
+
+	@Override
+	public void dispose()
+	{
+		_progressBar.setIndeterminate(false);
+		_progressBar.setVisible(false);
+		_scenarioEditorPanel.shutdown();
+		super.dispose();
 	}
 
 	/**
