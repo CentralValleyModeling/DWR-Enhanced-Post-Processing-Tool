@@ -29,6 +29,7 @@ import static gov.ca.water.quickresults.ui.projectconfig.scenariotable.ScenarioT
 import static gov.ca.water.quickresults.ui.projectconfig.scenariotable.ScenarioTableModel.MODEL_COL_SPEC;
 import static gov.ca.water.quickresults.ui.projectconfig.scenariotable.ScenarioTableModel.NAME_COL_SPEC;
 import static gov.ca.water.quickresults.ui.projectconfig.scenariotable.ScenarioTableModel.OUTPUT_PATH_COL_SPEC;
+import static gov.ca.water.quickresults.ui.projectconfig.scenariotable.ScenarioTableModel.WATER_YEAR_PATH_COL_SPEC;
 import static gov.ca.water.quickresults.ui.projectconfig.scenariotable.ScenarioTableModel.WRESL_MAIN_COL_SPEC;
 
 /**
@@ -47,6 +48,7 @@ class ScenarioRowModel extends ParentRowModel
 	private final SimpleObjectProperty<GUILinksAllModelsBO.Model> _modelProperty;
 	private final SimpleObjectProperty<String> _outputProperty;
 	private final SimpleObjectProperty<String> _wreslMainProperty;
+	private final SimpleObjectProperty<String> _waterYearTableProperty;
 	private final ScenarioTableModel _scenarioRunTableModel;
 
 	ScenarioRowModel(Runnable modified, ScenarioTableModel scenarioRunTableModel, EpptScenarioRun scenarioRun, boolean base, boolean alternative)
@@ -59,6 +61,7 @@ class ScenarioRowModel extends ParentRowModel
 		_modelProperty = new SimpleObjectProperty<>(scenarioRun.getModel());
 		_outputProperty = new SimpleObjectProperty<>(Objects.toString(scenarioRun.getOutputPath()));
 		_wreslMainProperty = new SimpleObjectProperty<>(Objects.toString(scenarioRun.getWreslMain()));
+		_waterYearTableProperty = new SimpleObjectProperty<>(Objects.toString(scenarioRun.getWaterYearTable()));
 		_baseProperty = new SimpleObjectProperty<>(base);
 		_baseProperty.addListener((e, o, n) -> modified.run());
 		_alternativeProperty = new SimpleObjectProperty<>(alternative);
@@ -82,12 +85,12 @@ class ScenarioRowModel extends ParentRowModel
 		NamedDssPath ivDssFile = dssContainer.getIvDssFile();
 		if(ivDssFile != null)
 		{
-			getChildren().add(new DssPathRow(this, ivDssFile, "IV"));
+			getChildren().add(new DssPathRow(this, ivDssFile, "INIT"));
 		}
 		NamedDssPath dtsDssFile = dssContainer.getDtsDssFile();
 		if(dtsDssFile != null)
 		{
-			getChildren().add(new DssPathRow(this, dtsDssFile, "DTS"));
+			getChildren().add(new DssPathRow(this, dtsDssFile, "QA_QC"));
 		}
 		dssContainer.getExtraDssFiles().forEach(child -> getChildren().add(new DssPathRow(this, child, "Extra")));
 	}
@@ -128,6 +131,10 @@ class ScenarioRowModel extends ParentRowModel
 		else if(spec == OUTPUT_PATH_COL_SPEC)
 		{
 			retval = _outputProperty;
+		}
+		else if(spec == WATER_YEAR_PATH_COL_SPEC)
+		{
+			retval = _waterYearTableProperty;
 		}
 		return retval;
 	}

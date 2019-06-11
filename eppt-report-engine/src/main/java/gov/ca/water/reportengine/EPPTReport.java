@@ -215,19 +215,6 @@ public class EPPTReport
             throw new EpptReportException(errorMsg);
         }
 
-        if(run.getWaterYearLookup() == null)
-        {
-            String errorMsg = "Scenario " + run.getName() + ": Water year name lookup csv is null";
-            LOGGER.at(Level.SEVERE).log(errorMsg);
-            throw new EpptReportException(errorMsg);
-        }
-        if(!run.getWaterYearLookup().toFile().exists())
-        {
-            String errorMsg = "Scenario " + run.getName() + ": Water year name lookup file could not be found. Path: " + run.getWaterYearLookup();
-            LOGGER.at(Level.SEVERE).log(errorMsg);
-            throw new EpptReportException(errorMsg);
-        }
-
         if(run.getPostProcessDss() == null)
         {
             String errorMsg = "Scenario " + run.getName() + " is  missing the post process dss file.";

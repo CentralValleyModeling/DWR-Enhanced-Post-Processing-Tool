@@ -12,7 +12,7 @@
       <grid id="6de58" layout-manager="BorderLayout" hgap="0" vgap="0">
         <constraints border-constraint="Center"/>
         <properties/>
-        <border type="etched" title="DSS Files">
+        <border type="etched" title="Required Files">
           <color color="-16777216"/>
         </border>
         <children>
@@ -65,7 +65,7 @@
       <grid id="1e107" layout-manager="BorderLayout" hgap="0" vgap="0">
         <constraints border-constraint="North"/>
         <properties/>
-        <border type="none"/>
+        <border type="etched" title="General Description"/>
         <children>
           <grid id="9eb72" layout-manager="GridBagLayout">
             <constraints border-constraint="Center"/>
@@ -123,7 +123,7 @@
                   <gridbag top="5" left="5" bottom="5" right="5" weightx="0.0" weighty="0.0"/>
                 </constraints>
                 <properties>
-                  <text value="Output Path:"/>
+                  <text value="Study Main Directory:"/>
                 </properties>
               </component>
               <component id="e7fe3" class="javax.swing.JTextField" binding="_outputTextField">
@@ -134,34 +134,6 @@
                   <gridbag top="5" left="5" bottom="5" right="5" weightx="1.0" weighty="0.0"/>
                 </constraints>
                 <properties/>
-              </component>
-              <component id="4c779" class="javax.swing.JLabel">
-                <constraints>
-                  <grid row="4" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
-                  <gridbag top="5" left="5" bottom="5" right="5" weightx="0.0" weighty="0.0"/>
-                </constraints>
-                <properties>
-                  <text value="EPPT WRESL Script"/>
-                </properties>
-              </component>
-              <component id="b1c3e" class="javax.swing.JTextField" binding="_wreslTextField">
-                <constraints>
-                  <grid row="4" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false">
-                    <preferred-size width="150" height="-1"/>
-                  </grid>
-                  <gridbag top="5" left="5" bottom="5" right="5" weightx="1.0" weighty="0.0"/>
-                </constraints>
-                <properties/>
-              </component>
-              <component id="f9c25" class="javax.swing.JButton" binding="_wreslButton">
-                <constraints>
-                  <grid row="4" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
-                  <gridbag top="5" left="5" bottom="5" right="5" weightx="0.0" weighty="0.0"/>
-                </constraints>
-                <properties>
-                  <preferredSize width="45" height="24"/>
-                  <text value="..."/>
-                </properties>
               </component>
               <component id="3080d" class="javax.swing.JComboBox" binding="_modelCombobox">
                 <constraints>
@@ -180,45 +152,41 @@
                   <text value="..."/>
                 </properties>
               </component>
-              <component id="35e64" class="javax.swing.JLabel">
+            </children>
+          </grid>
+        </children>
+      </grid>
+      <grid id="b9595" layout-manager="BorderLayout" hgap="0" vgap="0">
+        <constraints border-constraint="South"/>
+        <properties/>
+        <border type="etched" title="QA/QC Report"/>
+        <children>
+          <grid id="76de9" layout-manager="GridBagLayout">
+            <constraints border-constraint="Center"/>
+            <properties/>
+            <border type="none"/>
+            <children>
+              <component id="4c779" class="javax.swing.JLabel">
                 <constraints>
-                  <grid row="5" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                  <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
                   <gridbag top="5" left="5" bottom="5" right="5" weightx="0.0" weighty="0.0"/>
                 </constraints>
                 <properties>
-                  <text value="Water Year Table File:"/>
+                  <text value="EPPT WRESL Script"/>
                 </properties>
               </component>
-              <component id="465e3" class="javax.swing.JLabel">
+              <component id="b1c3e" class="javax.swing.JTextField" binding="_wreslTextField">
                 <constraints>
-                  <grid row="6" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
-                  <gridbag top="5" left="5" bottom="5" right="5" weightx="0.0" weighty="0.0"/>
-                </constraints>
-                <properties>
-                  <text value="Water Year Lookup File:"/>
-                </properties>
-              </component>
-              <component id="9e1e0" class="javax.swing.JTextField" binding="_waterYearTable">
-                <constraints>
-                  <grid row="5" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
+                  <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false">
                     <preferred-size width="150" height="-1"/>
                   </grid>
-                  <gridbag weightx="0.0" weighty="0.0"/>
+                  <gridbag top="5" left="5" bottom="5" right="5" weightx="1.0" weighty="0.0"/>
                 </constraints>
                 <properties/>
               </component>
-              <component id="3f33b" class="javax.swing.JTextField" binding="_waterYearLookup">
+              <component id="f9c25" class="javax.swing.JButton" binding="_wreslButton">
                 <constraints>
-                  <grid row="6" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
-                    <preferred-size width="150" height="-1"/>
-                  </grid>
-                  <gridbag weightx="0.0" weighty="0.0"/>
-                </constraints>
-                <properties/>
-              </component>
-              <component id="47505" class="javax.swing.JButton" binding="_wyLookupBtn">
-                <constraints>
-                  <grid row="6" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+                  <grid row="0" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
                   <gridbag top="5" left="5" bottom="5" right="5" weightx="0.0" weighty="0.0"/>
                 </constraints>
                 <properties>
@@ -226,9 +194,27 @@
                   <text value="..."/>
                 </properties>
               </component>
+              <component id="35e64" class="javax.swing.JLabel">
+                <constraints>
+                  <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                  <gridbag top="5" left="5" bottom="5" right="5" weightx="0.0" weighty="0.0"/>
+                </constraints>
+                <properties>
+                  <text value="Water Year Table File:"/>
+                </properties>
+              </component>
+              <component id="9e1e0" class="javax.swing.JTextField" binding="_waterYearTable">
+                <constraints>
+                  <grid row="1" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
+                    <preferred-size width="150" height="-1"/>
+                  </grid>
+                  <gridbag top="5" left="5" bottom="5" right="5" weightx="0.0" weighty="0.0"/>
+                </constraints>
+                <properties/>
+              </component>
               <component id="39b2a" class="javax.swing.JButton" binding="_wyTableBtn">
                 <constraints>
-                  <grid row="5" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+                  <grid row="1" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
                   <gridbag top="5" left="5" bottom="5" right="5" weightx="0.0" weighty="0.0"/>
                 </constraints>
                 <properties>

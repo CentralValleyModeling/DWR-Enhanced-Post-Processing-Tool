@@ -121,6 +121,11 @@ public class Report extends SwingWorker<Void, String>
 			LOG.log(Level.SEVERE, "Error processing report", ex);
 			publish("Error running report: " + ex.getMessage());
 		}
+		catch(Throwable ex)
+		{
+			LOG.log(Level.SEVERE, "Error processing report", ex);
+			publish("Error running report: " + ex.getMessage());
+		}
 
 		LOG.fine("Done generating report");
 
@@ -148,7 +153,11 @@ public class Report extends SwingWorker<Void, String>
 		}
 		catch(IOException e)
 		{
-			LOG.log(Level.FINE, "Error thrown processing command: " + command, e);
+			LOG.log(Level.SEVERE, "Error thrown processing command: " + command, e);
+		}
+		catch(RuntimeException e)
+		{
+			LOG.log(Level.SEVERE, "Error thrown processing command: " + command, e);
 		}
 	}
 
@@ -679,10 +688,10 @@ public class Report extends SwingWorker<Void, String>
 				}
 				return ref;
 			}
-			catch(Exception ex)
+			catch(Throwable ex)
 			{
 				addMessage(ex.getMessage());
-				LOG.fine(ex.getMessage());
+				LOG.log(Level.SEVERE, "Error obtaining dataset.", ex);
 				return null;
 			}
 		}
@@ -708,7 +717,6 @@ public class Report extends SwingWorker<Void, String>
 				String msg = "Exception while trying to retrieve " + path + " from " + group;
 				LOG.severe(msg);
 				addMessage(msg);
-				LOG.fine(msg);
 				return null;
 			}
 		}

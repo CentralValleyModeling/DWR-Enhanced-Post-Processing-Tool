@@ -568,7 +568,8 @@ public class DSSUtil
 				client = new DSSRemoteClientImpl();
 				return client;
 			}
-			catch(Exception e)
+			//Catching Throwable as some RMI classes were throwing NoClassDefFoundError and were getting burried.
+			catch(Throwable e)
 			{
 				e.printStackTrace(System.err);
 				throw new InstantiationException(e.getMessage());

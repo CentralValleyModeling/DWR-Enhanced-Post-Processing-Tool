@@ -31,7 +31,6 @@ public class EpptScenarioRun
 	private final Path _outputPath;
 	private final Path _wreslMain;
 	private final Path _waterYearTable;
-	private final Path _waterYearLookup;
 	private final EpptDssContainer _dssContainer;
 
 	/**
@@ -43,7 +42,7 @@ public class EpptScenarioRun
 	 * @param dssContainer
 	 */
 	public EpptScenarioRun(String name, String description, GUILinksAllModelsBO.Model model, Path outputPath,
-						   Path wreslMain, Path waterYearTable, Path waterYearLookup, EpptDssContainer dssContainer)
+						   Path wreslMain, Path waterYearTable, EpptDssContainer dssContainer)
 	{
 		_name = name;
 		_description = description;
@@ -51,7 +50,6 @@ public class EpptScenarioRun
 		_outputPath = outputPath;
 		_wreslMain = wreslMain;
 		_waterYearTable = waterYearTable;
-		_waterYearLookup = waterYearLookup;
 		_dssContainer = dssContainer;
 	}
 
@@ -122,11 +120,6 @@ public class EpptScenarioRun
 		return getName();
 	}
 
-	public Path getWaterYearLookup()
-	{
-		return _waterYearLookup;
-	}
-
 	public Path getWaterYearTable()
 	{
 		return _waterYearTable;
@@ -150,14 +143,13 @@ public class EpptScenarioRun
 				Objects.equals(getOutputPath(), that.getOutputPath()) &&
 				Objects.equals(getWreslMain(), that.getWreslMain()) &&
 				Objects.equals(getWaterYearTable(), that.getWaterYearTable()) &&
-				Objects.equals(getWaterYearLookup(), that.getWaterYearLookup()) &&
 				Objects.equals(getDssContainer(), that.getDssContainer());
 	}
 
 	@Override
 	public int hashCode()
 	{
-		return Objects.hash(getName(), getDescription(), getModel(), getOutputPath(), getWreslMain(), getWaterYearTable(), getWaterYearLookup(),
+		return Objects.hash(getName(), getDescription(), getModel(), getOutputPath(), getWreslMain(), getWaterYearTable(),
 				getDssContainer());
 	}
 }

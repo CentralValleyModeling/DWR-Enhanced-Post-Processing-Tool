@@ -73,9 +73,9 @@ public class TestWreslScriptRunner
 		NamedDssPath svDssFile = new NamedDssPath(svPath, "SV", "CALSIM", "1MON", "");
 		List<NamedDssPath> extraDssFiles = Collections.emptyList();
 		EpptDssContainer dssContainer = new EpptDssContainer(dvDssFile, svDssFile, ivDssFile, dtsDssFile, extraDssFiles);
-		EPPT_SCENARIO_RUN = new EpptScenarioRun(name, description, model, outputPath,Paths.get("table"),Paths.get("lookup"),
+		EPPT_SCENARIO_RUN = new EpptScenarioRun(name, description, model, outputPath,Paths.get("table"),
 				wreslMain, dssContainer);
-		EPPT_SCENARIO_RUN_NOOP = new EpptScenarioRun(name, description, model, outputPath, Paths.get("table"),Paths.get("lookup"),
+		EPPT_SCENARIO_RUN_NOOP = new EpptScenarioRun(name, description, model, outputPath, Paths.get("table"),
 				wreslMain, dssContainer);
 	}
 

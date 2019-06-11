@@ -18,7 +18,9 @@ import javafx.beans.value.ObservableValue;
 
 import com.rma.javafx.treetable.columns.specs.TreeTableColumnSpec;
 
+import static gov.ca.water.quickresults.ui.projectconfig.scenariotable.ScenarioTableModel.A_PART_COL_SPEC;
 import static gov.ca.water.quickresults.ui.projectconfig.scenariotable.ScenarioTableModel.DSS_PATH_COL_SPEC;
+import static gov.ca.water.quickresults.ui.projectconfig.scenariotable.ScenarioTableModel.F_PART_COL_SPEC;
 import static gov.ca.water.quickresults.ui.projectconfig.scenariotable.ScenarioTableModel.NAME_COL_SPEC;
 import static gov.ca.water.quickresults.ui.projectconfig.scenariotable.ScenarioTableModel.TYPE_COL_SPEC;
 
@@ -34,6 +36,8 @@ class DssPathRow extends ParentRowModel
 	private final SimpleObjectProperty<String> _nameProperty;
 	private final SimpleObjectProperty<String> _dssPathProperty;
 	private final SimpleObjectProperty<String> _typeProperty;
+	private final SimpleObjectProperty<String> _aTypeProperty;
+	private final SimpleObjectProperty<String> _fTypeProperty;
 
 	DssPathRow(ParentRowModel parent, NamedDssPath namedDssPath, String type)
 	{
@@ -41,6 +45,8 @@ class DssPathRow extends ParentRowModel
 		_nameProperty = new SimpleObjectProperty<>(namedDssPath.getAliasName());
 		_dssPathProperty = new SimpleObjectProperty<>(namedDssPath.getDssPath().toString());
 		_typeProperty = new SimpleObjectProperty<>(type);
+		_aTypeProperty = new SimpleObjectProperty<>(namedDssPath.getAPart());
+		_fTypeProperty = new SimpleObjectProperty<>(namedDssPath.getFPart());
 	}
 
 	@Override
@@ -58,6 +64,14 @@ class DssPathRow extends ParentRowModel
 		else if(spec == TYPE_COL_SPEC)
 		{
 			retval = _typeProperty;
+		}
+		else if(spec == A_PART_COL_SPEC)
+		{
+			retval = _aTypeProperty;
+		}
+		else if(spec == F_PART_COL_SPEC)
+		{
+			retval = _fTypeProperty;
 		}
 		return retval;
 	}

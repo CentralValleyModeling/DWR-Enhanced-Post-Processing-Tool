@@ -160,19 +160,22 @@ public class DSSGrabber2SvcImpl extends DSSGrabber1SvcImpl
 			{
 				results[0] = dtsContainer.get();
 			}
-			_originalUnits = results[0].units;
-
-			// Then scenarios
-
-			for(int i = 0; i < _alternatives.size(); i++)
+			if(results != null && results[0] != null)
 			{
-				dtsContainer = getDtsContainer(_alternatives.get(i));
-				if(dtsContainer.isPresent())
-				{
-					results[i + 1] = dtsContainer.get();
-				}
-			}
+				_originalUnits = results[0].units;
 
+				// Then scenarios
+
+				for(int i = 0; i < _alternatives.size(); i++)
+				{
+					dtsContainer = getDtsContainer(_alternatives.get(i));
+					if(dtsContainer.isPresent())
+					{
+						results[i + 1] = dtsContainer.get();
+					}
+				}
+
+			}
 			return results;
 		}
 		catch(Exception ex)

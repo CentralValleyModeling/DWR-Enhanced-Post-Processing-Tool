@@ -18,15 +18,13 @@ import java.io.PrintWriter;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.time.LocalDate;
-import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import gov.ca.water.calgui.constant.Constant;
 import gov.ca.water.calgui.project.EpptDssContainer;
 import gov.ca.water.calgui.project.EpptScenarioRun;
 import gov.ca.water.calgui.project.NamedDssPath;
-
-import hec.heclib.dss.DSSPathname;
-import hec.heclib.dss.HecDss;
 
 /**
  * Company: Resource Management Associates
@@ -36,6 +34,7 @@ import hec.heclib.dss.HecDss;
  */
 class WreslConfigWriter
 {
+	private static final Logger LOGGER = Logger.getLogger(WreslConfigWriter.class.getName());
 	private final EpptScenarioRun _scenarioRun;
 	private LocalDate _start;
 	private LocalDate _end;
@@ -132,8 +131,9 @@ class WreslConfigWriter
 			configText = configText.replace("{EndDay}", Integer.toString(_endDate.getDayOfMonth()));
 
 			String name = _scenarioRun.getName();
-			name = name.replace(" ", "_");
+			name = name.replaceAll("[^a-zA-Z0-9\\.\\-]", "_");
 			Path configPath = _scenarioRun.getWreslMain().getParent().resolve("WRESL" + name + ".config");
+			LOGGER.log(Level.INFO, "Writing WRESL config: ", configPath);
 			try(BufferedWriter bufferedWriter = Files.newBufferedWriter(configPath);
 				PrintWriter configFilePW = new PrintWriter(bufferedWriter))
 			{

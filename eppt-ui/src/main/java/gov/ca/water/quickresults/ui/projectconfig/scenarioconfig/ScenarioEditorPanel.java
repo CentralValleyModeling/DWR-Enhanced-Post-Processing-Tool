@@ -65,9 +65,7 @@ public class ScenarioEditorPanel
 	private JComboBox<GUILinksAllModelsBO.Model> _modelCombobox;
 	private JButton _outputPathButton;
 	private JTextField _waterYearTable;
-	private JTextField _waterYearLookup;
 	private JButton _wyTableBtn;
-	private JButton _wyLookupBtn;
 	private static JFileChooser fileChooser;
 
 	ScenarioEditorPanel(LoadingDss loadingDss)
@@ -92,9 +90,8 @@ public class ScenarioEditorPanel
 		_nameField.setText("NewScenarioRun " + time);
 		_nameField.selectAll();
 		_waterYearTable.setText(Paths.get(Constant.WY_TYPES_TABLE).normalize().toString());
-		_waterYearLookup.setText(Paths.get(Constant.WY_TYPES_NAME_LOOKUP).normalize().toString());
 		_wyTableBtn.addActionListener(e -> chooseWaterYearTable());
-		_wyLookupBtn.addActionListener(e -> chooseWaterYearLookup());
+		_wreslTextField.setText(Constant.WRESL_MAIN);
 	}
 
 	private void chooseWaterYearTable()
@@ -108,20 +105,6 @@ public class ScenarioEditorPanel
 		if(selectedFile != null)
 		{
 			_waterYearTable.setText(selectedFile.toString());
-		}
-	}
-
-	private void chooseWaterYearLookup()
-	{
-		JFileChooser jFileChooser = new JFileChooser();
-		jFileChooser.setCurrentDirectory(Paths.get(_waterYearLookup.getText()).toFile());
-		jFileChooser.setFileFilter(new SimpleFileFilter("CSV"));
-		jFileChooser.setDialogTitle("Choose Water Year Lookup File");
-		jFileChooser.showOpenDialog(SwingUtilities.windowForComponent($$$getRootComponent$$$()));
-		File selectedFile = jFileChooser.getSelectedFile();
-		if(selectedFile != null)
-		{
-			_waterYearLookup.setText(selectedFile.toString());
 		}
 	}
 
@@ -169,7 +152,7 @@ public class ScenarioEditorPanel
 		final JPanel panel1 = new JPanel();
 		panel1.setLayout(new BorderLayout(0, 0));
 		_panel1.add(panel1, BorderLayout.CENTER);
-		panel1.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(), "DSS Files"));
+		panel1.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(), "Required Files"));
 		final JPanel panel2 = new JPanel();
 		panel2.setLayout(new FlowLayout(FlowLayout.RIGHT, 5, 5));
 		panel1.add(panel2, BorderLayout.SOUTH);
@@ -191,6 +174,7 @@ public class ScenarioEditorPanel
 		final JPanel panel3 = new JPanel();
 		panel3.setLayout(new BorderLayout(0, 0));
 		_panel1.add(panel3, BorderLayout.NORTH);
+		panel3.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(), "General Description"));
 		final JPanel panel4 = new JPanel();
 		panel4.setLayout(new GridBagLayout());
 		panel3.add(panel4, BorderLayout.CENTER);
@@ -240,7 +224,7 @@ public class ScenarioEditorPanel
 		gbc.insets = new Insets(5, 5, 5, 5);
 		panel4.add(_descriptionField, gbc);
 		final JLabel label4 = new JLabel();
-		label4.setText("Output Path:");
+		label4.setText("Study Main Directory:");
 		gbc = new GridBagConstraints();
 		gbc.gridx = 0;
 		gbc.gridy = 3;
@@ -256,31 +240,6 @@ public class ScenarioEditorPanel
 		gbc.fill = GridBagConstraints.HORIZONTAL;
 		gbc.insets = new Insets(5, 5, 5, 5);
 		panel4.add(_outputTextField, gbc);
-		final JLabel label5 = new JLabel();
-		label5.setText("EPPT WRESL Script");
-		gbc = new GridBagConstraints();
-		gbc.gridx = 0;
-		gbc.gridy = 4;
-		gbc.anchor = GridBagConstraints.WEST;
-		gbc.insets = new Insets(5, 5, 5, 5);
-		panel4.add(label5, gbc);
-		_wreslTextField = new JTextField();
-		gbc = new GridBagConstraints();
-		gbc.gridx = 1;
-		gbc.gridy = 4;
-		gbc.weightx = 1.0;
-		gbc.fill = GridBagConstraints.HORIZONTAL;
-		gbc.insets = new Insets(5, 5, 5, 5);
-		panel4.add(_wreslTextField, gbc);
-		_wreslButton = new JButton();
-		_wreslButton.setPreferredSize(new Dimension(45, 24));
-		_wreslButton.setText("...");
-		gbc = new GridBagConstraints();
-		gbc.gridx = 2;
-		gbc.gridy = 4;
-		gbc.fill = GridBagConstraints.HORIZONTAL;
-		gbc.insets = new Insets(5, 5, 5, 5);
-		panel4.add(_wreslButton, gbc);
 		_modelCombobox = new JComboBox();
 		gbc = new GridBagConstraints();
 		gbc.gridx = 1;
@@ -300,55 +259,64 @@ public class ScenarioEditorPanel
 		gbc.fill = GridBagConstraints.HORIZONTAL;
 		gbc.insets = new Insets(5, 5, 5, 5);
 		panel4.add(_outputPathButton, gbc);
+		final JPanel panel5 = new JPanel();
+		panel5.setLayout(new BorderLayout(0, 0));
+		_panel1.add(panel5, BorderLayout.SOUTH);
+		panel5.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(), "QA/QC Report"));
+		final JPanel panel6 = new JPanel();
+		panel6.setLayout(new GridBagLayout());
+		panel5.add(panel6, BorderLayout.CENTER);
+		final JLabel label5 = new JLabel();
+		label5.setText("EPPT WRESL Script");
+		gbc = new GridBagConstraints();
+		gbc.gridx = 0;
+		gbc.gridy = 0;
+		gbc.anchor = GridBagConstraints.WEST;
+		gbc.insets = new Insets(5, 5, 5, 5);
+		panel6.add(label5, gbc);
+		_wreslTextField = new JTextField();
+		gbc = new GridBagConstraints();
+		gbc.gridx = 1;
+		gbc.gridy = 0;
+		gbc.weightx = 1.0;
+		gbc.fill = GridBagConstraints.HORIZONTAL;
+		gbc.insets = new Insets(5, 5, 5, 5);
+		panel6.add(_wreslTextField, gbc);
+		_wreslButton = new JButton();
+		_wreslButton.setPreferredSize(new Dimension(45, 24));
+		_wreslButton.setText("...");
+		gbc = new GridBagConstraints();
+		gbc.gridx = 2;
+		gbc.gridy = 0;
+		gbc.fill = GridBagConstraints.HORIZONTAL;
+		gbc.insets = new Insets(5, 5, 5, 5);
+		panel6.add(_wreslButton, gbc);
 		final JLabel label6 = new JLabel();
 		label6.setText("Water Year Table File:");
 		gbc = new GridBagConstraints();
 		gbc.gridx = 0;
-		gbc.gridy = 5;
+		gbc.gridy = 1;
 		gbc.anchor = GridBagConstraints.WEST;
 		gbc.insets = new Insets(5, 5, 5, 5);
-		panel4.add(label6, gbc);
-		final JLabel label7 = new JLabel();
-		label7.setText("Water Year Lookup File:");
-		gbc = new GridBagConstraints();
-		gbc.gridx = 0;
-		gbc.gridy = 6;
-		gbc.anchor = GridBagConstraints.WEST;
-		gbc.insets = new Insets(5, 5, 5, 5);
-		panel4.add(label7, gbc);
+		panel6.add(label6, gbc);
 		_waterYearTable = new JTextField();
 		gbc = new GridBagConstraints();
 		gbc.gridx = 1;
-		gbc.gridy = 5;
+		gbc.gridy = 1;
 		gbc.anchor = GridBagConstraints.WEST;
-		gbc.fill = GridBagConstraints.HORIZONTAL;
-		panel4.add(_waterYearTable, gbc);
-		_waterYearLookup = new JTextField();
-		gbc = new GridBagConstraints();
-		gbc.gridx = 1;
-		gbc.gridy = 6;
-		gbc.anchor = GridBagConstraints.WEST;
-		gbc.fill = GridBagConstraints.HORIZONTAL;
-		panel4.add(_waterYearLookup, gbc);
-		_wyLookupBtn = new JButton();
-		_wyLookupBtn.setPreferredSize(new Dimension(45, 24));
-		_wyLookupBtn.setText("...");
-		gbc = new GridBagConstraints();
-		gbc.gridx = 2;
-		gbc.gridy = 6;
 		gbc.fill = GridBagConstraints.HORIZONTAL;
 		gbc.insets = new Insets(5, 5, 5, 5);
-		panel4.add(_wyLookupBtn, gbc);
+		panel6.add(_waterYearTable, gbc);
 		_wyTableBtn = new JButton();
 		_wyTableBtn.setPreferredSize(new Dimension(45, 24));
 		_wyTableBtn.setRolloverEnabled(false);
 		_wyTableBtn.setText("...");
 		gbc = new GridBagConstraints();
 		gbc.gridx = 2;
-		gbc.gridy = 5;
+		gbc.gridy = 1;
 		gbc.fill = GridBagConstraints.HORIZONTAL;
 		gbc.insets = new Insets(5, 5, 5, 5);
-		panel4.add(_wyTableBtn, gbc);
+		panel6.add(_wyTableBtn, gbc);
 	}
 
 	/**
@@ -440,9 +408,8 @@ public class ScenarioEditorPanel
 		Path outputPath = Paths.get(_outputTextField.getText());
 		Path wreslMain = Paths.get(_wreslTextField.getText());
 		EpptDssContainer dssContainer = createDssContainer(name);
-		Path waterYearLookupPath = Paths.get(_waterYearLookup.getText());
 		Path waterYearTablePath = Paths.get(_waterYearTable.getText());
-		return new EpptScenarioRun(name, description, model, outputPath, wreslMain, waterYearTablePath, waterYearLookupPath,
+		return new EpptScenarioRun(name, description, model, outputPath, wreslMain, waterYearTablePath,
 				dssContainer);
 	}
 
@@ -463,8 +430,12 @@ public class ScenarioEditorPanel
 		}
 		EpptDssContainer dssContainer = scenarioRun.getDssContainer();
 		_scenarioDssTableModel.fillModel(dssContainer);
-		_waterYearLookup.setText(scenarioRun.getWaterYearLookup().toString());
 		_waterYearTable.setText(scenarioRun.getWaterYearTable().toString());
+	}
+
+	void shutdown()
+	{
+		_scenarioDssTableModel.shutdown();
 	}
 
 	private final class FileChooserEditor extends RmaCellEditor

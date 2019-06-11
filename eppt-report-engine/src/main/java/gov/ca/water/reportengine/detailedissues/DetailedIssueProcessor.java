@@ -12,6 +12,8 @@
 
 package gov.ca.water.reportengine.detailedissues;
 
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -25,6 +27,7 @@ import gov.ca.water.calgui.bo.ThresholdLinksBO;
 import gov.ca.water.calgui.busservice.impl.DSSGrabber1SvcImpl;
 import gov.ca.water.calgui.busservice.impl.GuiLinksSeedDataSvcImpl;
 import gov.ca.water.calgui.busservice.impl.ThresholdLinksSeedDataSvc;
+import gov.ca.water.calgui.constant.Constant;
 import gov.ca.water.calgui.project.EpptScenarioRun;
 import gov.ca.water.reportengine.EpptReportException;
 import gov.ca.water.reportengine.executivereport.FlagViolation;
@@ -70,7 +73,8 @@ public class DetailedIssueProcessor
 				LOGGER.at(Level.INFO).log("Processing Detailed Issues for Scenario Run: %s", run.getName());
 				Map<Module, List<DetailedIssueViolation>> modToDIVs = new HashMap<>();
 				Map<SubModule, List<FlagViolation>> subModToViolations = _runsToViolations.get(run);
-				WaterYearTableReader wyTypeReader = new WaterYearTableReader(run.getWaterYearTable(), run.getWaterYearLookup());
+				Path nameLookupPath = Paths.get(Constant.WY_TYPES_NAME_LOOKUP);
+				WaterYearTableReader wyTypeReader = new WaterYearTableReader(run.getWaterYearTable(), nameLookupPath);
 				List<WaterYearType> waterYearTypes = wyTypeReader.read();
 				for(Module mod : _modules)
 				{

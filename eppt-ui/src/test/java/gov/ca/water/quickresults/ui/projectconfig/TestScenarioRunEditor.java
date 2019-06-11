@@ -71,12 +71,12 @@ class TestScenarioRunEditor
 		Path wreslMain = Paths.get("WRESLMain");
 		NamedDssPath dvDssFile = new NamedDssPath(Paths.get("DV FILE"), "TEST DV", "CALSIM", "1MON", "ABCDEFG");
 		NamedDssPath svDssFile = new NamedDssPath(Paths.get("SV FILE"), "TEST SV", "CALSIM", "1MON", "ABCDEFG");
-		NamedDssPath ivDssFile = new NamedDssPath(Paths.get("IV File"), "TEST IV", "CALSIM", "1MON", "ABCDEFG");
+		NamedDssPath ivDssFile = new NamedDssPath(Paths.get("INIT File"), "TEST INIT", "CALSIM", "1MON", "ABCDEFG");
 		List<NamedDssPath> extraDssFiles = Arrays.asList(new NamedDssPath(Paths.get("EXTRA 1"), "EXTRA1", "CALSIM", "1MON", "ABCDEFG"),
 				new NamedDssPath(Paths.get("Extra 2"), "EXTRA2", "CALSIM", "1MON", "ABCDEFG"));
 		EpptDssContainer dssContainer = new EpptDssContainer(dvDssFile, svDssFile, ivDssFile, ivDssFile, extraDssFiles);
 		EpptScenarioRun epptScenarioRun = new EpptScenarioRun(name, description, model, outputPath,
-				wreslMain, Paths.get("table"), Paths.get("lookup"), dssContainer);
+				wreslMain, Paths.get("table"), dssContainer);
 		scenarioRunEditor.fillPanel(epptScenarioRun);
 		assertEquals("Edit Scenario Run: " + epptScenarioRun.getName(), scenarioRunEditor.getTitle(),
 				"Default title should be set");
@@ -91,7 +91,7 @@ class TestScenarioRunEditor
 		EpptDssContainer newRunDssContainer = newRun.getDssContainer();
 		assertEquals(dvDssFile, newRunDssContainer.getDvDssFile(), "DV FILE should be set with the new scenario path");
 		assertEquals(svDssFile, newRunDssContainer.getSvDssFile(), "SV FILE should be set with the new scenario path");
-		assertEquals(ivDssFile, newRunDssContainer.getIvDssFile(), "IV FILE should be set with the new scenario path");
+		assertEquals(ivDssFile, newRunDssContainer.getIvDssFile(), "INIT FILE should be set with the new scenario path");
 		assertEquals(extraDssFiles, newRunDssContainer.getExtraDssFiles(), "Extra DSS files should be equivalent");
 	}
 }
