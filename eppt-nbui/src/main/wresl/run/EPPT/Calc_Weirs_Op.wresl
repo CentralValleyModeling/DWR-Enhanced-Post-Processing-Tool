@@ -97,8 +97,8 @@ define Yolo_Weirs_Op_DTS {alias Yolo_weirs_ kind 'DTS-STATUS' Units 'NONE'} !Wat
 define YoloBypass_Weirs_TOT_DTS {alias Weirs_YoloBypass_ kind 'DTS-FLOW-DELIVERY' Units 'CFS'} !Total spills from all 3 weirs
 
 ! check for individual weir status
-!Check if any water spills from Freemont Weir into the Yolo Bypass: No Spills (0) Spills (1)
-define Freemont_Weir_ {
+!Check if any water spills from Fremont Weir into the Yolo Bypass: No Spills (0) Spills (1)
+define Fremont_Weir_ {
 	case nospills{
 	condition D160 == 0
 	Value 0
@@ -108,7 +108,7 @@ define Freemont_Weir_ {
 	Value 1
 	}
 }
-define Freemont_Weir_DTS {alias Freemont_Weir_ kind 'DTS-STATUS' Units 'NONE'} !Water spills? No Spills (0) Spills (1)
+define Fremont_Weir_DTS {alias Fremont_Weir_ kind 'DTS-STATUS' Units 'NONE'} !Water spills? No Spills (0) Spills (1)
 !Check if any water spills from Sacramento Weir into the Yolo Bypass: No Spills (0) Spills (1)
 define Sacramento_Weir_ {
 	case nospills{

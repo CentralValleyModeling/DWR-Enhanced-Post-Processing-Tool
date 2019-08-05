@@ -77,6 +77,7 @@ public class TestWreslScriptRunner
 				wreslMain, dssContainer);
 		EPPT_SCENARIO_RUN_NOOP = new EpptScenarioRun(name, description, model, outputPath, Paths.get("table"),
 				wreslMain, dssContainer);
+
 	}
 
 	@Test

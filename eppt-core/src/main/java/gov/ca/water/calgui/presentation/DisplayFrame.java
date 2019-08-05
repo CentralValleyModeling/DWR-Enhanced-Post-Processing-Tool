@@ -14,12 +14,11 @@ package gov.ca.water.calgui.presentation;
 
 import java.awt.BorderLayout;
 import java.awt.HeadlessException;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
-import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javax.swing.*;
 
@@ -39,10 +38,10 @@ import gov.ca.water.calgui.presentation.display.MonthlyTablePanel2;
 import gov.ca.water.calgui.presentation.display.SummaryTablePanel;
 import gov.ca.water.calgui.presentation.display.SummaryTablePanel2;
 import gov.ca.water.calgui.project.EpptScenarioRun;
+import gov.ca.water.calgui.project.PlotConfigurationState;
 import gov.ca.water.calgui.techservice.IErrorHandlingSvc;
 import gov.ca.water.calgui.techservice.impl.ErrorHandlingSvcImpl;
 import org.apache.log4j.Logger;
-import org.jfree.data.time.Month;
 
 import hec.io.TimeSeriesContainer;
 
@@ -65,114 +64,20 @@ class DisplayFrame
 	 * showDisplayFrames method creates a frame showing multiple charts
 	 * according to parameters.
 	 */
-	static List<JTabbedPane> showDisplayFrames(String displayGroup, EpptScenarioRun baseRun,
-											   List<EpptScenarioRun> alternatives, Month startMonth,
-											   Month endMonth)
+	static List<JTabbedPane> showDisplayFrames(PlotConfigurationState plotConfigurationState, List<String> locationNames, EpptScenarioRun baseRun,
+											   List<EpptScenarioRun> alternatives, LocalDate startMonth,
+											   LocalDate endMonth)
 	{
 		List<JTabbedPane> tabbedPanes = new ArrayList<>();
 		try
 		{
 
 			IDSSGrabber1Svc dssGrabber = new DSSGrabber1SvcImpl();
-			boolean doComparison = false;
-			boolean doDifference = false;
-			boolean doTimeSeries = false;
-			boolean doBase = false;
-			boolean doExceedance = false;
-			boolean doBoxPlot = false;
-			boolean isCFS = false;
-			boolean doMonthlyTable = false;
-			boolean doSummaryTable = false;
-			String exceedMonths = "";
-			String summaryTags = "";
-			String names = "";
-			String locations = "";
-			String dateRange = "";
-			String filename = "";
-
-			String[] groupParts = displayGroup.split(";");
-			String[] monthNames = {"Oct", "Nov", "Dec", "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep",};
-
-			for(final String groupPart : groupParts)
-			{
-				if("Base".equals(groupPart))
-				{
-					doBase = true;
-				}
-				if("Comp".equals(groupPart))
-				{
-					doComparison = true;
-				}
-				else if("Diff".equals(groupPart))
-				{
-					doDifference = true;
-				}
-				else if("TS".equals(groupPart))
-				{
-					doTimeSeries = true;
-				}
-				else if("BP".equals(groupPart))
-				{
-					doBoxPlot = true;
-				}
-				else if(groupPart.startsWith("EX-"))
-				{
-					doExceedance = true;
-					exceedMonths = groupPart.substring(3);
-				}
-				else if("CFS".equals(groupPart))
-				{
-					isCFS = true;
-				}
-				else if("TAF".equals(groupPart))
-				{
-					isCFS = false;
-				}
-				else if("Monthly".equals(groupPart))
-				{
-					doMonthlyTable = true;
-				}
-				else if(groupPart.startsWith("ST-"))
-				{
-					doSummaryTable = true;
-					summaryTags = groupPart.substring(4);
-				}
-				else if(groupPart.startsWith("Locs-"))
-				{
-					names = groupPart.substring(5);
-				}
-				else if(groupPart.startsWith("Index-"))
-				{
-					locations = groupPart.substring(6);
-				}
-				else if(groupPart.startsWith("File-"))
-				{
-					filename = groupPart.substring(5);
-				}
-				else
-				{
-					// Check to see if the groupPart parses as mmmyyyy-mmmyyy
-					Matcher m = GROUP_PATTERN.matcher(groupPart);
-					if(m.find())
-					{
-						dateRange = groupPart;
-					}
-					else
-					{
-						LOG.debug("Unparsed display list component - " + groupPart);
-					}
-				}
-			}
-
-			dssGrabber.setIsCFS(isCFS);
+			dssGrabber.setIsCFS(!plotConfigurationState.isDisplayTaf());
 			dssGrabber.setScenarioRuns(baseRun, alternatives);
 
-			String[] locationNames = locations.split(",");
-			String[] namesText = names.split(",");
-
-			for(int i = 0; i < locationNames.length; i++)
+			for(String locationName : locationNames)
 			{
-				String locationName = locationNames[i];
 				if(locationName == null || locationName.isEmpty())
 				{
 					String message = "No Location selected.";
@@ -184,18 +89,18 @@ class DisplayFrame
 
 					if(dssGrabber.getPrimaryDSSName() == null)
 					{
-						String message = "No GUI_Links3.csv entry found for " + namesText[i] + "/" + locationName + ".";
+						String message = "No GUI_Links3.csv entry found for " + locationName + "/" + locationName + ".";
 						ERROR_HANDLING_SVC.businessErrorHandler(message, message);
 					}
 					else if(dssGrabber.getPrimaryDSSName().isEmpty())
 					{
-						String message = "No DSS time series specified for " + namesText[i] + "/" + locationName + ".";
+						String message = "No DSS time series specified for " + locationName + "/" + locationName + ".";
 						ERROR_HANDLING_SVC.businessErrorHandler(message, message);
 					}
 					else
 					{
 
-						dssGrabber.setDateRange(dateRange);
+						dssGrabber.setDateRange(startMonth, endMonth);
 
 						TimeSeriesContainer[] primaryResults = dssGrabber.getPrimarySeries();
 						TimeSeriesContainer[] secondaryResults = dssGrabber.getSecondarySeries();
@@ -212,28 +117,29 @@ class DisplayFrame
 
 						if(primaryResults != null && primaryResults[0] != null)
 						{
-							if(doSummaryTable)
+							if(plotConfigurationState.isDisplaySummaryTable())
 							{
 								SummaryTablePanel stp;
-								if(doDifference)
+								if(plotConfigurationState.getComparisonType() == PlotConfigurationState.ComparisonType.DIFF)
 								{
 									stp = new SummaryTablePanel(
 											dssGrabber.getPlotTitle() + " - Difference from " + primaryResults[0].fileName,
-											diffResults, null, summaryTags, "", dssGrabber);
+											diffResults, null, plotConfigurationState.getSelectedSummaryTableItems(), "", dssGrabber);
 								}
 								else
 								{
 									stp = new SummaryTablePanel(dssGrabber.getPlotTitle(), primaryResults,
 											secondaryResults,
-											summaryTags, dssGrabber.getSLabel(), dssGrabber, doBase);
+											plotConfigurationState.getSelectedSummaryTableItems(), dssGrabber.getSLabel(), dssGrabber,
+											plotConfigurationState.getComparisonType() == PlotConfigurationState.ComparisonType.BASE);
 								}
 								tabbedpane.insertTab("Summary - " + dssGrabber.getBaseRunName(), null, stp, null, 0);
 							}
 
-							if(doMonthlyTable)
+							if(plotConfigurationState.isDisplayMonthlyTable())
 							{
 								MonthlyTablePanel mtp;
-								if(doDifference)
+								if(plotConfigurationState.getComparisonType() == PlotConfigurationState.ComparisonType.DIFF)
 								{
 									mtp = new MonthlyTablePanel(
 											dssGrabber.getPlotTitle() + " - Difference from " + primaryResults[0].fileName,
@@ -243,54 +149,48 @@ class DisplayFrame
 								{
 									mtp = new MonthlyTablePanel(dssGrabber.getPlotTitle(), primaryResults,
 											secondaryResults,
-											dssGrabber, dssGrabber.getSLabel(), doBase);
+											dssGrabber, dssGrabber.getSLabel(),
+											plotConfigurationState.getComparisonType() == PlotConfigurationState.ComparisonType.BASE);
 								}
 								tabbedpane.insertTab("Monthly - " + dssGrabber.getBaseRunName(), null, mtp, null, 0);
 							}
 
-							Date lower = new Date();
-							lower.setTime(startMonth.getFirstMillisecond());
-
-							Date upper = new Date();
-							upper.setTime(endMonth.getLastMillisecond());
-
-							if(doBoxPlot)
+							if(plotConfigurationState.isDisplayBoxAndWhiskerPlot())
 							{
 								tabbedpane
 										.insertTab("Box Plot", null,
-												new BoxPlotChartPanel(dssGrabber.getPlotTitle(), dssGrabber.getYLabel(),
-														primaryResults, null, lower, upper, dssGrabber.getSLabel(),
-														doBase),
+												new BoxPlotChartPanel(dssGrabber.getPlotTitle(),
+														primaryResults,
+														plotConfigurationState.getComparisonType() == PlotConfigurationState.ComparisonType.BASE),
 												null, 0);
 							}
-							if(doExceedance)
+							if(plotConfigurationState.isDoExceedance())
 							{
-								// Check if any monthly
-								boolean plottedOne;
-								// plots
-								// were
-								// done
+								List<String> exceedMonths = plotConfigurationState.getSelectedExceedancePlotMonths();
 								for(int m1 = 11; m1 >= 0; m1--)
 								{
-									if(exceedMonths.contains(monthNames[m1]) && excResults != null)
+									if(excResults != null)
 									{
 
-										insertTabForMonth(doDifference, doBase, tabbedpane, lower,
-												upper, primaryResults, excResults,
-												sexcResults, dexcResults, m1, monthNames[m1], dssGrabber.getPlotTitle(),
+										insertTabForMonth(plotConfigurationState.getComparisonType() == PlotConfigurationState.ComparisonType.DIFF,
+												plotConfigurationState.getComparisonType() == PlotConfigurationState.ComparisonType.BASE, tabbedpane,
+												primaryResults, excResults,
+												sexcResults, dexcResults, m1, exceedMonths.get(m1), dssGrabber.getPlotTitle(),
 												dssGrabber.getYLabel(),
 												dssGrabber.getSLabel());
 									}
 								}
 
-								if(exceedMonths.contains("Annual"))
+								if(plotConfigurationState.isAnnualFlowExceedancePlots())
 								{
-									plottedOne = true;
 									if("CFS".equals(dssGrabber.getOriginalUnits()))
 									{
-										insertPlotPanel(dssGrabber, doDifference, doBase, primaryResults, excResults,
+										insertPlotPanel(dssGrabber,
+												plotConfigurationState.getComparisonType() == PlotConfigurationState.ComparisonType.DIFF,
+												plotConfigurationState.getComparisonType() == PlotConfigurationState.ComparisonType.BASE,
+												primaryResults, excResults,
 												sexcResults, dexcResults, tabbedpane,
-												lower, upper, " - Exceedance (annual total)",
+												" - Exceedance (annual total)",
 												"Annual Total Volume (TAF)",
 												12, dssGrabber.getPlotTitle() + " - Exceedance (Annual Total)",
 												"Exceedance (annual total)");
@@ -303,11 +203,13 @@ class DisplayFrame
 										tabbedpane.insertTab("Exceedance (Annual Total)", null, panel, null, 0);
 									}
 								}
-								if(exceedMonths.contains("ALL"))
+								if(plotConfigurationState.isPlotAllExceedancePlots())
 								{
-									insertPlotPanel(dssGrabber, doDifference, doBase, primaryResults, excResults,
-											sexcResults, dexcResults, tabbedpane, lower, upper,
-											" - Exceedance (all months)", dssGrabber.getYLabel(), 13,
+									insertPlotPanel(dssGrabber,
+											plotConfigurationState.getComparisonType() == PlotConfigurationState.ComparisonType.DIFF,
+											plotConfigurationState.getComparisonType() == PlotConfigurationState.ComparisonType.BASE, primaryResults,
+											excResults,
+											sexcResults, dexcResults, tabbedpane, " - Exceedance (all months)", dssGrabber.getYLabel(), 13,
 											dssGrabber.getPlotTitle() + " - Exceedance (all months)",
 											"Exceedance (all)");
 								}
@@ -315,7 +217,7 @@ class DisplayFrame
 							ChartPanel1 cp1;
 							ChartPanel1 cp2;
 
-							if(doTimeSeries)
+							if(plotConfigurationState.isDisplayTimeSeriesPlot())
 							{
 								if(locationName.contains(Constant.SCHEMATIC_PREFIX)
 										&& !dssGrabber.getPrimaryDSSName().isEmpty())
@@ -326,18 +228,17 @@ class DisplayFrame
 										titles.add(entry.toString() + " (" + entry.getKey() + ")");
 									}
 									cp2 = new ChartPanel1(Constant.SCHEMATIC_PREFIX + dssGrabber.getPlotTitle(),
-											dssGrabber.getYLabel(), primaryResults, secondaryResults, false, upper,
-											lower,
+											dssGrabber.getYLabel(), primaryResults, secondaryResults, false,
 											String.join(",", titles), false);
 									// abuse slabel to pass individual dataset names
 									tabbedpane.insertTab("Time Series (experimental)", null, cp2, null, 0);
 
 								}
-								else if(doBase)
+								else if(plotConfigurationState.getComparisonType() == PlotConfigurationState.ComparisonType.BASE)
 								{
 									cp2 = new ChartPanel1(dssGrabber.getPlotTitle(), dssGrabber.getYLabel(),
 											primaryResults,
-											secondaryResults, false, upper, lower, dssGrabber.getSLabel(), doBase);
+											secondaryResults, false, dssGrabber.getSLabel(), true);
 									tabbedpane.insertTab("Time Series", null, cp2, null, 0);
 
 								}
@@ -345,24 +246,26 @@ class DisplayFrame
 								{
 									JPanel panel = new JPanel();
 									panel.add(new JLabel("No chart - need two or more time series."));
-									tabbedpane.insertTab(doDifference ? "Difference" : "Comparison", null, panel, null,
+									tabbedpane.insertTab(
+											plotConfigurationState.getComparisonType() == PlotConfigurationState.ComparisonType.DIFF ? "Difference" : "Comparison",
+											null, panel, null,
 											0);
 								}
 								else
 								{
-									if(doDifference)
+									if(plotConfigurationState.getComparisonType() == PlotConfigurationState.ComparisonType.BASE)
 									{
 										cp2 = new ChartPanel1(
 												dssGrabber.getPlotTitle() + " - Difference from " + primaryResults[0].fileName,
-												dssGrabber.getYLabel(), diffResults, null, false, upper, lower,
+												dssGrabber.getYLabel(), diffResults, null, false,
 												dssGrabber.getSLabel());
 										tabbedpane.insertTab("Difference", null, cp2, null, 0);
 									}
-									else if(doComparison)
+									else if(plotConfigurationState.getComparisonType() == PlotConfigurationState.ComparisonType.COMPARISON)
 									{
 										cp1 = new ChartPanel1(dssGrabber.getPlotTitle() + " - Comparison ",
 												dssGrabber.getYLabel(),
-												primaryResults, secondaryResults, false, upper, lower,
+												primaryResults, secondaryResults, false,
 												dssGrabber.getSLabel());
 										tabbedpane.insertTab("Comparison", null, cp1, null, 0);
 									}
@@ -386,7 +289,7 @@ class DisplayFrame
 						}
 						if(showFrame)
 						{
-							String title = baseRun.getName() + " - " + namesText[i];
+							String title = baseRun.getName() + " - " + locationName;
 							tabbedpane.setName(title);
 							tabbedPanes.add(tabbedpane);
 						}
@@ -407,8 +310,8 @@ class DisplayFrame
 	{
 		StringBuilder buffer = new StringBuilder();
 		buffer.append("<html><br>Not all DSS records were found, some results may be missing:<br><br>");
-		missing.entrySet().forEach(id -> buffer.append("Model: ").append(id.getKey()).append("<br>").append(
-				String.join("<br>", id.getValue())).append("<br>"));
+		missing.forEach((key, value) -> buffer.append("Model: ").append(key).append("<br>").append(
+				String.join("<br>", value)).append("<br>"));
 		buffer.append("</html>");
 		JPanel panel = new JPanel();
 		panel.setLayout(new BorderLayout());
@@ -419,7 +322,7 @@ class DisplayFrame
 	private static void insertPlotPanel(IDSSGrabber1Svc dssGrabber, boolean doDifference, boolean doBase,
 										TimeSeriesContainer[] primaryResults, TimeSeriesContainer[][] excResults,
 										TimeSeriesContainer[][] sexcResults, TimeSeriesContainer[][] dexcResults,
-										JTabbedPane tabbedpane, Date lower, Date upper, String s, String s2, int i2,
+										JTabbedPane tabbedpane, String s, String s2, int i2,
 										String s3, String s4)
 	{
 		ChartPanel1 cp3 = null;
@@ -428,16 +331,14 @@ class DisplayFrame
 			cp3 = new ChartPanel1(
 					dssGrabber.getPlotTitle() + s
 							+ " - Difference from " + primaryResults[0].fileName,
-					s2, dexcResults[i2], null, true, upper, lower,
-					dssGrabber.getSLabel());
+					s2, dexcResults[i2], null, true, dssGrabber.getSLabel());
 		}
 		else if(excResults != null)
 		{
 			cp3 = new ChartPanel1(
 					s3,
 					s2, excResults[i2],
-					sexcResults == null ? null : sexcResults[i2], true, upper, lower,
-					dssGrabber.getSLabel(), doBase);
+					sexcResults == null ? null : sexcResults[i2], true, dssGrabber.getSLabel(), doBase);
 		}
 		if(cp3 != null)
 		{
@@ -449,17 +350,17 @@ class DisplayFrame
 	/**
 	 * Creates a frame to display DTS/MTS variables from WRIMS GUI
 	 *
-	 * @param displayGroup
+	 * @param plotConfigurationState
 	 * @param alternatives
 	 * @param dts
 	 * @param mts
 	 */
-	static List<JTabbedPane> showDisplayFramesWRIMS(String displayGroup,
+	static List<JTabbedPane> showDisplayFramesWRIMS(PlotConfigurationState plotConfigurationState,
 													EpptScenarioRun baseRun,
 													List<EpptScenarioRun> alternatives,
 													DerivedTimeSeries dts,
 													MultipleTimeSeries mts,
-													Month startMonth, Month endMonth)
+													LocalDate startMonth, LocalDate endMonth)
 	{
 		List<JTabbedPane> tabbedPanes = new ArrayList<>();
 		try
@@ -476,89 +377,16 @@ class DisplayFrame
 			boolean doMonthlyTable = false;
 			boolean doSummaryTable = false;
 			String exceedMonths = "";
-			String summaryTags = "";
-			String dateRange = "";
-			String filename = "";
-
-			String[] groupParts = displayGroup.split(";");
+			List<String> summaryTags = plotConfigurationState.getSelectedSummaryTableItems();
 			String[] monthNames = {"Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov",
 					"Dec"};
-
-			for(final String groupPart : groupParts)
-			{
-				if("Base".equals(groupPart))
-				{
-					doBase = true;
-				}
-				if("Comp".equals(groupPart))
-				{
-					doComparison = true;
-				}
-				else if("Diff".equals(groupPart))
-				{
-					doDifference = true;
-				}
-				else if("TS".equals(groupPart))
-				{
-					doTimeSeries = true;
-				}
-				else if("BP".equals(groupPart))
-				{
-					doBoxPlot = true;
-				}
-				else if(groupPart.startsWith("EX-"))
-				{
-					doExceedance = true;
-					exceedMonths = groupPart.substring(3);
-				}
-				else if("CFS".equals(groupPart))
-				{
-					isCFS = true;
-				}
-				else if("TAF".equals(groupPart))
-				{
-					isCFS = false;
-				}
-				else if("Monthly".equals(groupPart))
-				{
-					doMonthlyTable = true;
-				}
-				else if(groupPart.startsWith("ST-"))
-				{
-					doSummaryTable = true;
-					summaryTags = groupPart.substring(4);
-				}
-				else if(groupPart.startsWith("File-"))
-				{
-					filename = groupPart.substring(5);
-				}
-				else
-				{
-					// Check to see if the groupPart parses as mmmyyyy-mmmyyy
-					Matcher m = GROUP_PATTERN.matcher(groupPart);
-					if(m.find())
-					{
-						dateRange = groupPart;
-					}
-					else
-					{
-						LOG.debug("Unparsed display list component - " + groupPart);
-					}
-				}
-			}
 
 			JTabbedPane tabbedpane = new JTabbedPane();
 
 			dssGrabber.setIsCFS(isCFS);
 			dssGrabber.setScenarioRuns(baseRun, alternatives);
 
-			dssGrabber.setDateRange(dateRange);
-
-			Date lower = new Date();
-			lower.setTime(startMonth.getFirstMillisecond());
-
-			Date upper = new Date();
-			upper.setTime(endMonth.getLastMillisecond());
+			dssGrabber.setDateRange(startMonth, endMonth);
 
 			if(mts != null)
 			{
@@ -620,8 +448,7 @@ class DisplayFrame
 				if(doBoxPlot)
 				{
 					tabbedpane.insertTab("Box Plot", null, new BoxPlotChartPanel2(dssGrabber.getPlotTitle(),
-									dssGrabber.getYLabel(), results, null, lower, upper, dssGrabber.getSLabel(), doBase, mts),
-							null, 0);
+							results, doBase, mts), null, 0);
 				}
 
 				ChartPanel2 cp3;
@@ -641,13 +468,13 @@ class DisplayFrame
 								cp3 = new ChartPanel2(
 										dssGrabber.getPlotTitle() + " - Exceedance (" + monthNames[m1] + ")"
 												+ " - Difference from " + results[0][0].fileName,
-										dssGrabber.getYLabel(), dexcResults[m1], true, upper, lower, doBase, mts);
+										dssGrabber.getYLabel(), dexcResults[m1], true, doBase, mts);
 							}
 							else
 							{
 								cp3 = new ChartPanel2(
 										dssGrabber.getPlotTitle() + " - Exceedance (" + monthNames[m1] + ")",
-										dssGrabber.getYLabel(), excResults[m1], true, upper, lower, doBase, mts);
+										dssGrabber.getYLabel(), excResults[m1], true, doBase, mts);
 							}
 							plottedOne = true;
 							tabbedpane.insertTab("Exceedance (" + monthNames[m1] + ")", null, cp3, null, 0);
@@ -660,12 +487,12 @@ class DisplayFrame
 							cp3 = new ChartPanel2(
 									dssGrabber.getPlotTitle() + " - Exceedance (all months)" + " - Difference from "
 											+ results[0][0].fileName,
-									dssGrabber.getYLabel(), dexcResults[13], true, upper, lower, mts);
+									dssGrabber.getYLabel(), dexcResults[13], true, mts);
 						}
 						else
 						{
 							cp3 = new ChartPanel2(dssGrabber.getPlotTitle() + " - Exceedance (all months)",
-									dssGrabber.getYLabel(), excResults[13], true, upper, lower, mts);
+									dssGrabber.getYLabel(), excResults[13], true, mts);
 						}
 						tabbedpane.insertTab("Exceedance (all)", null, cp3, null, 0);
 					}
@@ -678,13 +505,13 @@ class DisplayFrame
 								cp3 = new ChartPanel2(
 										dssGrabber.getPlotTitle() + " - Exceedance (annual total)" + " - Difference from "
 												+ results[0][0].fileName,
-										"Annual Total Volume (TAF)", dexcResults[12], true, upper, lower, mts);
+										"Annual Total Volume (TAF)", dexcResults[12], true, mts);
 							}
 							else
 
 							{
 								cp3 = new ChartPanel2(dssGrabber.getPlotTitle() + " - Exceedance (Annual Total)",
-										"Annual Total Volume (TAF)", excResults[12], true, upper, lower, doBase, mts);
+										"Annual Total Volume (TAF)", excResults[12], true, doBase, mts);
 							}
 							tabbedpane.insertTab("Exceedance (annual total)", null, cp3, null, 0);
 						}
@@ -705,8 +532,7 @@ class DisplayFrame
 
 					if(doBase)
 					{
-						cp2 = new ChartPanel2(dssGrabber.getPlotTitle(), dssGrabber.getYLabel(), results, false, upper,
-								lower, doBase, mts);
+						cp2 = new ChartPanel2(dssGrabber.getPlotTitle(), dssGrabber.getYLabel(), results, false, doBase, mts);
 						tabbedpane.insertTab("Time Series", null, cp2, null, 0);
 
 					}
@@ -722,13 +548,13 @@ class DisplayFrame
 						{
 							cp2 = new ChartPanel2(
 									dssGrabber.getPlotTitle() + " - Difference from " + results[0][0].fileName,
-									dssGrabber.getYLabel(), diffResults, false, upper, lower, mts);
+									dssGrabber.getYLabel(), diffResults, false, mts);
 							tabbedpane.insertTab("Difference", null, cp2, null, 0);
 						}
 						else if(doComparison)
 						{
 							cp1 = new ChartPanel2(dssGrabber.getPlotTitle() + " - Comparison ", dssGrabber.getYLabel(),
-									results, false, upper, lower, mts);
+									results, false, mts);
 							tabbedpane.insertTab("Comparison", null, cp1, null, 0);
 						}
 					}
@@ -772,14 +598,12 @@ class DisplayFrame
 				{
 					tabbedpane
 							.insertTab("Box Plot", null,
-									new BoxPlotChartPanel(dssGrabber.getPlotTitle(), dssGrabber.getYLabel(),
-											primaryResults, null, lower, upper, dssGrabber.getSLabel(), doBase),
+									new BoxPlotChartPanel(dssGrabber.getPlotTitle(), primaryResults, doBase),
 									null, 0);
 				}
 				if(doExceedance)
 				{
-					insertExceedancePlots(dssGrabber, doDifference, doBase, exceedMonths, monthNames, tabbedpane, lower,
-							upper,
+					insertExceedancePlots(dssGrabber, doDifference, doBase, exceedMonths, monthNames, tabbedpane,
 							primaryResults, excResults, sexcResults, dexcResults);
 				}
 
@@ -792,7 +616,7 @@ class DisplayFrame
 					if(doBase)
 					{
 						cp2 = new ChartPanel1(dssGrabber.getPlotTitle(), dssGrabber.getYLabel(), primaryResults,
-								secondaryResults, false, upper, lower, dssGrabber.getSLabel(), doBase);
+								secondaryResults, false, dssGrabber.getSLabel(), doBase);
 						tabbedpane.insertTab("Time Series", null, cp2, null, 0);
 
 					}
@@ -808,21 +632,20 @@ class DisplayFrame
 						{
 							cp2 = new ChartPanel1(
 									dssGrabber.getPlotTitle() + " - Difference from " + primaryResults[0].fileName,
-									dssGrabber.getYLabel(), diffResults, null, false, upper, lower,
-									dssGrabber.getSLabel());
+									dssGrabber.getYLabel(), diffResults, null, false, dssGrabber.getSLabel());
 							tabbedpane.insertTab("Difference", null, cp2, null, 0);
 						}
 						else if(doComparison)
 						{
 							cp1 = new ChartPanel1(dssGrabber.getPlotTitle() + " - Comparison ", dssGrabber.getYLabel(),
-									primaryResults, secondaryResults, false, upper, lower, dssGrabber.getSLabel());
+									primaryResults, secondaryResults, false, dssGrabber.getSLabel());
 							tabbedpane.insertTab("Comparison", null, cp1, null, 0);
 						}
 					}
 				}
 			}
 			Map<GUILinksAllModelsBO.Model, List<String>> missing = dssGrabber.getMissingList();
-			boolean showFrame = false;
+			boolean showFrame;
 			if(missing.isEmpty())
 			{
 				showFrame = true;
@@ -853,7 +676,7 @@ class DisplayFrame
 
 	private static void insertExceedancePlots(DSSGrabber2SvcImpl dssGrabber, boolean doDifference, boolean doBase,
 											  String exceedMonths, String[] monthNames, JTabbedPane tabbedpane,
-											  Date lower, Date upper, TimeSeriesContainer[] primaryResults,
+											  TimeSeriesContainer[] primaryResults,
 											  TimeSeriesContainer[][] excResults, TimeSeriesContainer[][] sexcResults,
 											  TimeSeriesContainer[][] dexcResults)
 	{
@@ -867,7 +690,7 @@ class DisplayFrame
 			String monthName = monthNames[m1];
 			if(exceedMonths.contains(monthName))
 			{
-				plottedOne = insertTabForMonth(doDifference, doBase, tabbedpane, lower, upper, primaryResults,
+				plottedOne = insertTabForMonth(doDifference, doBase, tabbedpane, primaryResults,
 						excResults, sexcResults, dexcResults,
 						m1, monthName, dssGrabber.getPlotTitle(), dssGrabber.getYLabel(), dssGrabber.getSLabel());
 			}
@@ -875,7 +698,7 @@ class DisplayFrame
 		if(exceedMonths.contains("ALL") || !plottedOne)
 		{
 			insertPlotPanel(dssGrabber, doDifference, doBase, primaryResults, excResults, sexcResults, dexcResults,
-					tabbedpane, lower, upper, " - Exceedance (all months)", dssGrabber.getYLabel(), 13,
+					tabbedpane, " - Exceedance (all months)", dssGrabber.getYLabel(), 13,
 					dssGrabber.getPlotTitle() + " - Exceedance (all months)", "Exceedance (all)");
 		}
 		if(exceedMonths.contains("Annual"))
@@ -883,7 +706,7 @@ class DisplayFrame
 			if("CFS".equals(dssGrabber.getOriginalUnits()))
 			{
 				insertPlotPanel(dssGrabber, doDifference, doBase, primaryResults, excResults, sexcResults, dexcResults,
-						tabbedpane, lower, upper, " - Exceedance (annual total)", "Annual Total Volume (TAF)", 12,
+						tabbedpane, " - Exceedance (annual total)", "Annual Total Volume (TAF)", 12,
 						dssGrabber.getPlotTitle() + " - Exceedance (Annual Total)", "Exceedance (annual total)");
 			}
 			else
@@ -895,8 +718,7 @@ class DisplayFrame
 		}
 	}
 
-	private static boolean insertTabForMonth(boolean doDifference, boolean doBase, JTabbedPane tabbedpane, Date lower,
-											 Date upper, TimeSeriesContainer[] primaryResults,
+	private static boolean insertTabForMonth(boolean doDifference, boolean doBase, JTabbedPane tabbedpane, TimeSeriesContainer[] primaryResults,
 											 TimeSeriesContainer[][] excResults, TimeSeriesContainer[][] sexcResults,
 											 TimeSeriesContainer[][] dexcResults, int m1, String monthName,
 											 String plotTitle, String yLabel, String sLabel)
@@ -909,16 +731,14 @@ class DisplayFrame
 			cp3 = new ChartPanel1(
 					plotTitle + " - Exceedance (" + monthName + ")"
 							+ " - Difference from " + primaryResults[0].fileName,
-					yLabel, dexcResults[m1], null, true, upper, lower,
-					sLabel);
+					yLabel, dexcResults[m1], null, true, sLabel);
 		}
 		else
 		{
 			cp3 = new ChartPanel1(
 					plotTitle + " - Exceedance (" + monthName + ")",
 					yLabel, excResults[m1],
-					sexcResults == null ? null : sexcResults[m1], true, upper, lower,
-					sLabel, doBase);
+					sexcResults == null ? null : sexcResults[m1], true, sLabel, doBase);
 		}
 		plottedOne = true;
 		tabbedpane.insertTab("Exceedance (" + monthName + ")", null, cp3, null, 0);
@@ -926,7 +746,7 @@ class DisplayFrame
 	}
 
 	private static void insertSummaryTable(DSSGrabber2SvcImpl dssGrabber, boolean doDifference, boolean doBase,
-										   String summaryTags, JTabbedPane tabbedpane,
+										   List<String> summaryTags, JTabbedPane tabbedpane,
 										   TimeSeriesContainer[] primaryResults, TimeSeriesContainer[] secondaryResults,
 										   TimeSeriesContainer[] diffResults)
 	{

@@ -17,8 +17,10 @@ import java.awt.Component;
 import java.awt.Container;
 import java.awt.event.ActionListener;
 import java.nio.file.Path;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 import javax.swing.*;
@@ -32,6 +34,7 @@ import gov.ca.water.calgui.presentation.DisplayHelper;
 import gov.ca.water.calgui.presentation.WRIMSGUILinks;
 import gov.ca.water.calgui.project.EpptScenarioRun;
 import gov.ca.water.calgui.project.NamedDssPath;
+import gov.ca.water.calgui.project.PlotConfigurationState;
 import gov.ca.water.calgui.techservice.IDialogSvc;
 import gov.ca.water.calgui.techservice.IErrorHandlingSvc;
 import gov.ca.water.calgui.techservice.impl.DialogSvcImpl;
@@ -40,7 +43,6 @@ import gov.ca.water.quickresults.ui.EpptPanel;
 import gov.ca.water.quickresults.ui.projectconfig.ProjectConfigurationPanel;
 import gov.ca.water.quickresults.ui.quickresults.QuickResultsPanel;
 import org.apache.log4j.Logger;
-import org.jfree.data.time.Month;
 import vista.set.DataReference;
 import vista.set.Group;
 
@@ -219,14 +221,13 @@ public class CustomResultsPanel extends EpptPanel
 				parts[2] = "/" + parts2[1] + "/" + parts2[2] + "/" + parts2[3] + "/" + parts[3] + "/" + parts2[5] + "/"
 						+ parts2[6] + "/";
 				EpptScenarioRun baseScenario = projectConfigurationPanel.getBaseScenario();
-				String quickState = projectConfigurationPanel.quickState();
-				Month startMonth = projectConfigurationPanel.getStartMonth();
-				Month endMonth = projectConfigurationPanel.getEndMonth();
+				PlotConfigurationState plotConfigurationState = projectConfigurationPanel.plotConfigurationState();
+				LocalDate startMonth = projectConfigurationPanel.getStartMonth();
+				LocalDate endMonth = projectConfigurationPanel.getEndMonth();
 				if(baseScenario != null)
 				{
 					List<EpptScenarioRun> alternatives = projectConfigurationPanel.getEpptScenarioAlternatives();
-					_displayHelper.showDisplayFrames(
-							quickState + ";Locs-" + parts[2] + ";Index-" + parts[2],
+					_displayHelper.showDisplayFrames(plotConfigurationState, Collections.singletonList(parts[2]),
 							baseScenario, alternatives, startMonth, endMonth);
 				}
 			}
@@ -262,11 +263,11 @@ public class CustomResultsPanel extends EpptPanel
 			EpptScenarioRun baseScenario = projectConfigurationPanel.getBaseScenario();
 			if(baseScenario != null)
 			{
-				String quickState = projectConfigurationPanel.quickState();
-				Month startMonth = projectConfigurationPanel.getStartMonth();
-				Month endMonth = projectConfigurationPanel.getEndMonth();
+				PlotConfigurationState plotConfigurationState = projectConfigurationPanel.plotConfigurationState();
+				LocalDate startMonth = projectConfigurationPanel.getStartMonth();
+				LocalDate endMonth = projectConfigurationPanel.getEndMonth();
 				List<EpptScenarioRun> alternatives = projectConfigurationPanel.getEpptScenarioAlternatives();
-				_displayHelper.showDisplayFramesWRIMS(quickState + ";Locs-;Index-;File-", baseScenario, alternatives,
+				_displayHelper.showDisplayFramesWRIMS(plotConfigurationState,  baseScenario, alternatives,
 						dts,
 						mts, startMonth, endMonth);
 			}

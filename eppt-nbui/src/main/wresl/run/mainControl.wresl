@@ -58,7 +58,9 @@ MODEL QAQC_Post {
 	! run Groundwater post processing calculation
 	INCLUDE [LOCAL]'EPPT\Calc_GW.wresl'
 	! run NOD Mass Balance post processing calculation
-	INCLUDE [LOCAL]'EPPT\Calc_NOD_Mass.wresl'
+	INCLUDE [LOCAL]'EPPT\Calc_MassBlnc_NOD.wresl'
+	! run Delta Mass Balance post processing calculation
+	INCLUDE [LOCAL]'EPPT\Calc_MassBlnc_Delta.wresl'
 	! run Phase II post processing calculation
 	!INCLUDE [LOCAL]'EPPT\Calc_PhaseII.wresl'
 	

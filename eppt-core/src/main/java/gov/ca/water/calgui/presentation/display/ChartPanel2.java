@@ -71,18 +71,14 @@ public class ChartPanel2 extends JPanel implements Printable
 	 */
 	private static final long serialVersionUID = 7398804723681056388L;
 	private static Logger LOG = Logger.getLogger(ChartPanel.class.getName());
-	JButton btnScatter;
 	private String buffer;
-	private IErrorHandlingSvc errorHandlingSvc = new ErrorHandlingSvcImpl();
 
-	public ChartPanel2(String title, String yLabel, TimeSeriesContainer[][] mtscs, boolean isExceed, Date lower,
-					   Date upper, MultipleTimeSeries mts)
+	public ChartPanel2(String title, String yLabel, TimeSeriesContainer[][] mtscs, boolean isExceed, MultipleTimeSeries mts)
 	{
-		this(title, yLabel, mtscs, isExceed, lower, upper, false, mts);
+		this(title, yLabel, mtscs, isExceed, false, mts);
 	}
 
-	public ChartPanel2(String title, String yLabel, TimeSeriesContainer[][] mtscs, boolean isExceed, Date lower,
-					   Date upper, boolean isBase, MultipleTimeSeries mts)
+	public ChartPanel2(String title, String yLabel, TimeSeriesContainer[][] mtscs, boolean isExceed, boolean isBase, MultipleTimeSeries mts)
 	{
 
 		super();

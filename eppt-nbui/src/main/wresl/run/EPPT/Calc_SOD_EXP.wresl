@@ -183,6 +183,7 @@ define CVP_EXP_PRAs_ctrl_ {
 }
 define CVP_EXP_PRAs_STATUS_DTS {alias CVP_EXP_PRAs_ctrl_ kind 'DTS-STATUS' units 'NONE'} ! Output of PRAs control status
 
+/*
 ! Jones Control by OMR ? 
 define CVPExpDecUPtoDelta {value D418UP-D418} !export reduction between Upstream cycle and delta cycle 
 define CVPExpDecOMR {value CVP_EXP_DEC_+ 0.5*COMB_EXP_DEC_} !export reduction due to OMR
@@ -197,7 +198,7 @@ define CVP_EXP_OMR_ctrl_ {
 	}
 }
 define CVP_EXP_OMR_STATUS_DTS {alias CVP_EXP_OMR_ctrl_ kind 'DTS-STATUS' units 'NONE'} ! Output of SWP OMR control status
-
+*/
 
 /************************************ SWP EXPORT**************************************/
 ! Control by H&S requirement(300 CFS)? 
@@ -277,6 +278,7 @@ define SWP_EXP_PRAs_ctrl_ {
 }
 define SWP_EXP_PRAs_STATUS_DTS {alias SWP_EXP_PRAs_ctrl_ kind 'DTS-STATUS' units 'NONE'} ! Output of PRAs control status
 
+/*
 ! Banks Control by OMR ? 
 define SWPExpDecUPtoDelta {value D419UP-D419} !export reduction between Upstream cycle and delta cycle 
 define SWPExpDecOMR {value SWP_EXP_DEC_+ 0.5*COMB_EXP_DEC_} !export reduction due to OMR
@@ -291,5 +293,5 @@ define SWP_EXP_OMR_ctrl_ {
 	}
 }
 define SWP_EXP_OMR_STATUS_DTS {alias SWP_EXP_OMR_ctrl_ kind 'DTS-STATUS' units 'NONE'} ! Output of SWP OMR control status
-
+*/
 

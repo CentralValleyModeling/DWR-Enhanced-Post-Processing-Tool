@@ -15,18 +15,21 @@ package gov.ca.water.quickresults.ui.quickresults;
 import java.awt.HeadlessException;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import javax.swing.*;
 
 import gov.ca.water.calgui.presentation.DisplayHelper;
 import gov.ca.water.calgui.project.EpptScenarioRun;
+import gov.ca.water.calgui.project.PlotConfigurationState;
 import gov.ca.water.calgui.techservice.IDialogSvc;
 import gov.ca.water.calgui.techservice.IErrorHandlingSvc;
 import gov.ca.water.calgui.techservice.impl.DialogSvcImpl;
 import gov.ca.water.calgui.techservice.impl.ErrorHandlingSvcImpl;
 import gov.ca.water.quickresults.ui.projectconfig.ProjectConfigurationPanel;
 import org.apache.log4j.Logger;
-import org.jfree.data.time.Month;
 
 /**
  * Company: Resource Management Associates
@@ -70,11 +73,12 @@ class QuickResultsMouseListener extends MouseAdapter
 				else
 				{
 					ProjectConfigurationPanel projectConfigurationPanel = ProjectConfigurationPanel.getProjectConfigurationPanel();
-					String quickState = projectConfigurationPanel.quickState();
-					Month startMonth = projectConfigurationPanel.getStartMonth();
-					Month endMonth = projectConfigurationPanel.getEndMonth();
-					_displayHelper.showDisplayFrames(quickState + ";Locs-" + chk.getText()
-							+ ";Index-" + chk.getName(), baseScenario, alternatives, startMonth, endMonth);
+					PlotConfigurationState plotConfigurationState = projectConfigurationPanel.plotConfigurationState();
+					LocalDate startMonth = projectConfigurationPanel.getStartMonth();
+					LocalDate endMonth = projectConfigurationPanel.getEndMonth();
+					List<String> locations = new ArrayList<>();
+					_displayHelper.showDisplayFrames(plotConfigurationState, Collections.singletonList(chk.getText()), baseScenario, alternatives,
+							startMonth, endMonth);
 				}
 			}
 		}

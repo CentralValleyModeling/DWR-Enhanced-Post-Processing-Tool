@@ -12,11 +12,9 @@
 package gov.ca.water.eppt.nbui;
 
 import java.awt.BorderLayout;
-import javax.swing.*;
+import java.awt.Color;
 
-import gov.ca.water.quickresults.ui.customresults.CustomResultsListener;
-import gov.ca.water.quickresults.ui.customresults.CustomResultsPanel;
-import gov.ca.water.quickresults.ui.dashboard.DashboardPanel;
+import gov.ca.water.trendreporting.TrendReportPanel;
 import org.openide.awt.ActionID;
 import org.openide.awt.ActionReference;
 import org.openide.awt.ActionReferences;
@@ -28,23 +26,23 @@ import org.openide.windows.TopComponent;
  */
 @TopComponent.Description(
 		preferredID = "DashboardTopComponent",
-		iconBase = "gov/ca/water/eppt/nbui/CustomResults.png"
+		iconBase = "gov/ca/water/eppt/nbui/dashboard.png"
 )
-@TopComponent.Registration(mode = "editor", openAtStartup = true, position = 3333)
+@TopComponent.Registration(mode = "editor", openAtStartup = true, position = 5555)
 @ActionID(category = "Window", id = "gov.ca.water.eppt.nbui.DashboardTopComponent")
 @ActionReferences({
-		@ActionReference(path = "Menu/Window", position = 3333),
-		@ActionReference(path = "Toolbars/Window", position = 3333)
+		@ActionReference(path = "Menu/Window", position = 5555),
+		@ActionReference(path = "Toolbars/Window", position = 5555)
 })
 @TopComponent.OpenActionRegistration(
-		displayName = "Custom Results",
+		displayName = "Trend Reporting",
 		preferredID = "DashboardTopComponent"
 )
 @Messages(
 		{
-				"CTL_DashboardAction=Dashboard",
-				"CTL_DashboardTopComponent=Dashboard Window",
-				"HINT_DashboardTopComponent=This is a Dashboard window"
+				"CTL_DashboardAction=Trend Reporting",
+				"CTL_DashboardTopComponent=Trend Reporting Window",
+				"HINT_DashboardTopComponent=This is a Trend Reporting window"
 		})
 public final class DashboardTopComponent extends EpptTopComponent
 {
@@ -52,11 +50,11 @@ public final class DashboardTopComponent extends EpptTopComponent
 
 	public DashboardTopComponent()
 	{
-		setName("Dashboard");
-		DashboardPanel customResultsPanel = new DashboardPanel();
-		JScrollPane scrollPane = new JScrollPane(customResultsPanel);
-		setLayout(new BorderLayout());
-		add(scrollPane, BorderLayout.CENTER);
+		setName("Trend Reporting");
+		TrendReportPanel customResultsPanel = new TrendReportPanel();
+		setLayout(new BorderLayout(15,15));
+		add(customResultsPanel, BorderLayout.CENTER);
+		setBackground(Color.WHITE);
 	}
 
 	@Override

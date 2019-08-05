@@ -19,7 +19,9 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.time.LocalDate;
 import java.time.ZonedDateTime;
+import java.time.temporal.TemporalAdjusters;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -78,11 +80,11 @@ class ProjectConfigurationIOVersion2
 
 		JSONObject jsonObject = new JSONObject();
 		jsonObject.put(START_MONTH_PROPERTY,
-				String.valueOf(projectConfigurationPanel.getStartMonth().getMonth()));
+				String.valueOf(projectConfigurationPanel.getStartMonth().getMonth().getValue()));
 		jsonObject.put(START_YEAR_PROPERTY,
-				String.valueOf(projectConfigurationPanel.getStartMonth().getYearValue()));
-		jsonObject.put(END_MONTH_PROPERTY, String.valueOf(projectConfigurationPanel.getEndMonth().getMonth()));
-		jsonObject.put(END_YEAR_PROPERTY, String.valueOf(projectConfigurationPanel.getEndMonth().getYearValue()));
+				String.valueOf(projectConfigurationPanel.getStartMonth().getYear()));
+		jsonObject.put(END_MONTH_PROPERTY, String.valueOf(projectConfigurationPanel.getEndMonth().getMonth().getValue()));
+		jsonObject.put(END_YEAR_PROPERTY, String.valueOf(projectConfigurationPanel.getEndMonth().getYear()));
 
 		return jsonObject;
 	}
@@ -278,18 +280,18 @@ class ProjectConfigurationIOVersion2
 		}
 	}
 
-	private Month readStartMonthProperties(JSONObject jsonObject)
+	private LocalDate readStartMonthProperties(JSONObject jsonObject)
 	{
 		String startMonth = jsonObject.getString(START_MONTH_PROPERTY);
 		String startYear = jsonObject.getString(START_YEAR_PROPERTY);
-		return new Month(Integer.parseInt(startMonth), Integer.parseInt(startYear));
+		return LocalDate.of(Integer.parseInt(startYear), Integer.parseInt(startMonth), 1);
 	}
 
-	private Month readEndMonthProperties(JSONObject jsonObject)
+	private LocalDate readEndMonthProperties(JSONObject jsonObject)
 	{
 		String endMonth = jsonObject.getString(END_MONTH_PROPERTY);
 		String endYear = jsonObject.getString(END_YEAR_PROPERTY);
-		return new Month(Integer.parseInt(endMonth), Integer.parseInt(endYear));
+		return (LocalDate) TemporalAdjusters.lastDayOfMonth().adjustInto(LocalDate.of(Integer.parseInt(endYear), Integer.parseInt(endMonth), 1));
 	}
 
 	private Map<String, Boolean> readDisplayProperties(JSONArray jsonArray)
@@ -312,8 +314,8 @@ class ProjectConfigurationIOVersion2
 		JSONArray displayOptions = jsonObject.getJSONArray(DISPLAY_OPTIONS_KEY);
 		Map<String, Boolean> selected = readDisplayProperties(displayOptions);
 		JSONObject monthProperties = jsonObject.getJSONObject(MONTH_OPTIONS_KEY);
-		Month start = readStartMonthProperties(monthProperties);
-		Month end = readEndMonthProperties(monthProperties);
+		LocalDate start = readStartMonthProperties(monthProperties);
+		LocalDate end = readEndMonthProperties(monthProperties);
 		JSONArray scenarioPaths = jsonObject.getJSONArray(SCENARIOS_KEY);
 		List<EpptScenarioRun> scenarioRuns = readEpptScenarioRuns(scenarioPaths);
 		String name = jsonObject.getString(NAME_KEY);

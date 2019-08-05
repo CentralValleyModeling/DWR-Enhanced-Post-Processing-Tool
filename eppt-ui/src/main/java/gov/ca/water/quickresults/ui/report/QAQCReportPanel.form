@@ -5,7 +5,7 @@
       <xy x="20" y="20" width="687" height="541"/>
     </constraints>
     <properties>
-      <minimumSize width="100" height="350"/>
+      <minimumSize width="500" height="350"/>
       <preferredSize width="700" height="600"/>
       <requestFocusEnabled value="true"/>
     </properties>
@@ -51,7 +51,9 @@
         <children>
           <grid id="73f88" layout-manager="GridBagLayout">
             <constraints border-constraint="Center"/>
-            <properties/>
+            <properties>
+              <preferredSize width="384" height="204"/>
+            </properties>
             <border type="none"/>
             <children>
               <component id="dc979" class="javax.swing.JLabel">
@@ -71,20 +73,6 @@
                 <properties>
                   <text value="Alternative Scenario Run:"/>
                 </properties>
-              </component>
-              <component id="97b4c" class="javax.swing.JComboBox" binding="_altComboBox">
-                <constraints>
-                  <grid row="3" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="2" anchor="8" fill="1" indent="0" use-parent-layout="false"/>
-                  <gridbag top="5" left="5" bottom="5" right="5" weightx="0.0" weighty="0.0"/>
-                </constraints>
-                <properties/>
-              </component>
-              <component id="65c02" class="javax.swing.JComboBox" binding="_baseComboBox">
-                <constraints>
-                  <grid row="2" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="2" anchor="8" fill="1" indent="0" use-parent-layout="false"/>
-                  <gridbag top="5" left="5" bottom="5" right="5" weightx="0.0" weighty="0.0" ipadx="60"/>
-                </constraints>
-                <properties/>
               </component>
               <component id="3739d" class="javax.swing.JLabel">
                 <constraints>
@@ -178,12 +166,58 @@
                 </constraints>
                 <properties/>
               </component>
+              <grid id="a17eb" layout-manager="BorderLayout" hgap="0" vgap="0">
+                <constraints>
+                  <grid row="2" column="1" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+                  <gridbag top="5" left="5" bottom="5" right="5" weightx="0.0" weighty="0.0"/>
+                </constraints>
+                <properties/>
+                <border type="none"/>
+                <children>
+                  <component id="dfb8c" class="javax.swing.JButton" binding="_runBaseWreslButton">
+                    <constraints border-constraint="East"/>
+                    <properties>
+                      <enabled value="false"/>
+                      <text value="Run WRESL"/>
+                    </properties>
+                  </component>
+                  <component id="22222" class="javax.swing.JTextField" binding="_baseScenarioTextField">
+                    <constraints border-constraint="Center"/>
+                    <properties>
+                      <editable value="false"/>
+                    </properties>
+                  </component>
+                </children>
+              </grid>
+              <grid id="5c3c7" layout-manager="BorderLayout" hgap="0" vgap="0">
+                <constraints>
+                  <grid row="3" column="1" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+                  <gridbag top="5" left="5" bottom="5" right="5" weightx="0.0" weighty="0.0"/>
+                </constraints>
+                <properties/>
+                <border type="none"/>
+                <children>
+                  <component id="3c882" class="javax.swing.JButton" binding="_runAltWreslButton">
+                    <constraints border-constraint="East"/>
+                    <properties>
+                      <enabled value="false"/>
+                      <text value="Run WRESL"/>
+                    </properties>
+                  </component>
+                  <component id="b4bb4" class="javax.swing.JTextField" binding="_altScenarioTextField">
+                    <constraints border-constraint="Center"/>
+                    <properties>
+                      <editable value="false"/>
+                    </properties>
+                  </component>
+                </children>
+              </grid>
             </children>
           </grid>
           <grid id="ee1ef" layout-manager="GridBagLayout">
             <constraints border-constraint="East"/>
             <properties>
-              <preferredSize width="300" height="200"/>
+              <preferredSize width="200" height="200"/>
             </properties>
             <border type="etched" title="Modules"/>
             <children>
@@ -268,35 +302,80 @@
                   <text value="Standard Summary Statitics"/>
                 </properties>
               </component>
-              <grid id="42785" layout-manager="BorderLayout" hgap="0" vgap="0">
-                <constraints>
-                  <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
-                  <gridbag weightx="0.0" weighty="0.0"/>
-                </constraints>
-                <properties>
-                  <preferredSize width="100" height="0"/>
-                </properties>
-                <border type="none"/>
-                <children/>
-              </grid>
             </children>
           </grid>
         </children>
       </grid>
-      <scrollpane id="1b3dd">
+      <tabbedpane id="4d4b5" binding="_tabbedPane1" default-binding="true">
         <constraints border-constraint="Center"/>
         <properties/>
         <border type="none"/>
         <children>
-          <component id="4aa50" class="javax.swing.JTextPane" binding="_textPane1" default-binding="true">
-            <constraints/>
-            <properties>
-              <editable value="false"/>
-              <preferredSize width="800" height="250"/>
-            </properties>
-          </component>
+          <scrollpane id="1ef81">
+            <constraints>
+              <tabbedpane title="Untitled"/>
+            </constraints>
+            <properties/>
+            <border type="none"/>
+            <children>
+              <grid id="a5fb9" layout-manager="BorderLayout" hgap="0" vgap="0">
+                <constraints/>
+                <properties/>
+                <border type="none"/>
+                <children>
+                  <component id="4aa50" class="javax.swing.JTextPane" binding="_qaqcTextPane">
+                    <constraints border-constraint="Center"/>
+                    <properties>
+                      <editable value="false"/>
+                      <preferredSize width="800" height="250"/>
+                    </properties>
+                  </component>
+                </children>
+              </grid>
+            </children>
+          </scrollpane>
+          <scrollpane id="84c36">
+            <constraints>
+              <tabbedpane title="Untitled"/>
+            </constraints>
+            <properties/>
+            <border type="none"/>
+            <children>
+              <grid id="e340" layout-manager="BorderLayout" hgap="0" vgap="0">
+                <constraints/>
+                <properties/>
+                <border type="none"/>
+                <children>
+                  <component id="6aed1" class="javax.swing.JTextPane" binding="_baseWreslTextPane">
+                    <constraints border-constraint="Center"/>
+                    <properties/>
+                  </component>
+                </children>
+              </grid>
+            </children>
+          </scrollpane>
+          <scrollpane id="7e63c">
+            <constraints>
+              <tabbedpane title="Untitled"/>
+            </constraints>
+            <properties/>
+            <border type="none"/>
+            <children>
+              <grid id="6fb4e" layout-manager="BorderLayout" hgap="0" vgap="0">
+                <constraints/>
+                <properties/>
+                <border type="none"/>
+                <children>
+                  <component id="7565f" class="javax.swing.JTextPane" binding="_altWreslTextPane">
+                    <constraints border-constraint="Center"/>
+                    <properties/>
+                  </component>
+                </children>
+              </grid>
+            </children>
+          </scrollpane>
         </children>
-      </scrollpane>
+      </tabbedpane>
     </children>
   </grid>
 </form>

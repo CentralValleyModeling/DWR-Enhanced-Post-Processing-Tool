@@ -24,7 +24,9 @@ import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
 import java.text.DecimalFormat;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Vector;
+import java.util.stream.Collectors;
 import javax.swing.*;
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.DefaultTableCellRenderer;
@@ -93,7 +95,7 @@ public class SummaryTablePanel extends JPanel implements ActionListener, Compone
 	JScrollPane scrollPane;
 	Vector<String> columns;
 
-	public SummaryTablePanel(String title, TimeSeriesContainer[] tscs, TimeSeriesContainer[] stscs, String tagString,
+	public SummaryTablePanel(String title, TimeSeriesContainer[] tscs, TimeSeriesContainer[] stscs, List<String> tagString,
 							 String sName, IDSSGrabber1Svc dss_Grabber)
 	{
 
@@ -101,7 +103,7 @@ public class SummaryTablePanel extends JPanel implements ActionListener, Compone
 
 	}
 
-	public SummaryTablePanel(String title, TimeSeriesContainer[] tscs, TimeSeriesContainer[] stscs, String tagString,
+	public SummaryTablePanel(String title, TimeSeriesContainer[] tscs, TimeSeriesContainer[] stscs, List<String> tagString,
 							 String sName, DSSGrabber2SvcImpl dss_Grabber)
 	{
 
@@ -109,7 +111,7 @@ public class SummaryTablePanel extends JPanel implements ActionListener, Compone
 
 	}
 
-	public SummaryTablePanel(String title, TimeSeriesContainer[] tscs, TimeSeriesContainer[] stscs, String tagString,
+	public SummaryTablePanel(String title, TimeSeriesContainer[] tscs, TimeSeriesContainer[] stscs, List<String> tagString,
 							 String sName, IDSSGrabber1Svc dss_Grabber, boolean isBase)
 	{
 
@@ -117,7 +119,7 @@ public class SummaryTablePanel extends JPanel implements ActionListener, Compone
 
 	}
 
-	public SummaryTablePanel(String title, TimeSeriesContainer[] tscs, TimeSeriesContainer[] stscs, String tagString,
+	public SummaryTablePanel(String title, TimeSeriesContainer[] tscs, TimeSeriesContainer[] stscs, List<String> tagString,
 							 String sName, DSSGrabber2SvcImpl dss_Grabber, boolean isBase)
 	{
 
@@ -125,8 +127,8 @@ public class SummaryTablePanel extends JPanel implements ActionListener, Compone
 
 	}
 
-	public SummaryTablePanel(String title, TimeSeriesContainer[] tscs, TimeSeriesContainer[] stscs, String tagString,
-							 String sName, IDSSGrabber1Svc dss_Grabber, DSSGrabber2SvcImpl dss_Grabber2, boolean isBase)
+	public SummaryTablePanel(String title, TimeSeriesContainer[] tscs, TimeSeriesContainer[] stscs, List<String> tagString,
+							 String sName, IDSSGrabber1Svc dssGrabber, DSSGrabber2SvcImpl dssGrabber2, boolean isBase)
 	{
 
 		super();
@@ -142,7 +144,7 @@ public class SummaryTablePanel extends JPanel implements ActionListener, Compone
 
 		Vector<String>[] data = new Vector[nDatasets];
 
-		columns = new Vector<String>(15);
+		columns = new Vector<>(15);
 		columns.addElement("Year Group");
 		columns.addElement("Statistic");
 		columns.addElement("Oct");
@@ -159,8 +161,8 @@ public class SummaryTablePanel extends JPanel implements ActionListener, Compone
 		columns.addElement("Sep");
 		columns.addElement("All (TAF)");
 
-		boolean isCFS = dss_Grabber == null ? "CFS".equals(dss_Grabber2.getOriginalUnits())
-				: "CFS".equals(dss_Grabber.getOriginalUnits());
+		boolean isCFS = dssGrabber == null ? "CFS".equals(dssGrabber2.getOriginalUnits())
+				: "CFS".equals(dssGrabber.getOriginalUnits());
 
 		// loop over all Primary datasets
 
@@ -259,13 +261,13 @@ public class SummaryTablePanel extends JPanel implements ActionListener, Compone
 						double value;
 						if(title.contains("Difference"))
 						{
-							value = dss_Grabber == null ? dss_Grabber2.getAnnualTAFDiff(t, wy)
-									: dss_Grabber.getAnnualTAFDiff(t, wy);
+							value = dssGrabber == null ? dssGrabber2.getAnnualTAFDiff(t, wy)
+									: dssGrabber.getAnnualTAFDiff(t, wy);
 						}
 						else
 						{
-							value = dss_Grabber == null ? dss_Grabber2.getAnnualTAF(t, wy)
-									: dss_Grabber.getAnnualTAF(t, wy);
+							value = dssGrabber == null ? dssGrabber2.getAnnualTAF(t, wy)
+									: dssGrabber.getAnnualTAF(t, wy);
 						}
 
 						update2(0, 0, value, m);
@@ -296,159 +298,11 @@ public class SummaryTablePanel extends JPanel implements ActionListener, Compone
 				DecimalFormat df1 = new DecimalFormat("#.#");
 
 				// Calculate results
-				for(int i1 = 0; i1 < 6; i1++)
-				{
-					for(int i2 = 0; i2 < 6; i2++)
-					{
-						for(int i3 = 0; i3 < 14; i3++)
-
-						{
-							if((((i1 == 0) && tagString.contains("All years") && (i2 == 0))
-									|| ((i1 == 1) && tagString.contains("40-30-30"))
-									|| ((i1 == 2) && tagString.contains("Shasta"))
-									|| ((i1 == 3) && tagString.contains("Feather"))
-									|| ((i1 == 4) && tagString.contains("SJR Index"))
-									|| ((i1 == 5) && tagString.contains("All dry"))
-									|| ((i1 == 5) && (i2 == 1) && tagString.contains("1934"))
-									|| ((i1 == 5) && (i2 == 2) && tagString.contains("1977"))
-									|| ((i1 == 5) && (i2 == 3) && tagString.contains("1992"))) && (n[i1][i2][i3] > 0))
-							{
-
-								_avg[i1][i2][i3] = _x[i1][i2][i3] / n[i1][i2][i3];
-								_sdev[i1][i2][i3] = Math.sqrt(
-										Math.abs(_xx[i1][i2][i3] / n[i1][i2][i3] - _avg[i1][2][i3] * _avg[i1][2][i3]));
-
-								int nmed = n[i1][i2][i3];
-								double[] medx2 = new double[nmed];
-								if(nmed >= 0)
-								{
-									System.arraycopy(_medx[i1][i2][i3], 0, medx2, 0, nmed);
-								}
-								Arrays.sort(medx2);
-								// TODO fix logic for even sizes
-								nmed = nmed / 2;
-								_med[i1][i2][i3] = medx2[nmed];
-							}
-						}
-					}
-				}
-
+				calculateResults(tagString);
 				// Put into table
-				String[] tagStringList = {"Avg", "StdDev", "Median", "Min", "Max"};
-
-				for(int tag = 0; tag < tagStringList.length; tag++)
-				{
-					if(tagString.contains(tagStringList[tag]))
-					{
-						for(int i1 = 0; i1 < 6; i1++)
-						{
-							boolean groupHasData = false;
-
-							for(int i2 = 0; i2 < 6; i2++)
-
-							{
-								if((((i1 == 0) && tagString.contains("All years") && (i2 == 0))
-										|| ((i1 == 1) && tagString.contains("40-30-30"))
-										|| ((i1 == 2) && tagString.contains("Shasta"))
-										|| ((i1 == 3) && tagString.contains("Feather"))
-										|| ((i1 == 4) && tagString.contains("SJR Index"))
-										|| ((i1 == 5) && tagString.contains("All dry"))
-										|| ((i1 == 5) && (i2 == 1) && tagString.contains("1928"))
-										|| ((i1 == 5) && (i2 == 2) && tagString.contains("1976"))
-										|| ((i1 == 5) && (i2 == 3) && tagString.contains("1986")))
-										&& (n[i1][i2][0] > 0))
-								{
-
-									groupHasData = true;
-
-									String rightPart;
-									if(i1 == 0)
-									{
-										rightPart = ""; // All years
-									}
-									else if(i1 == 1 || i1 == 4)
-									{
-										rightPart = " (" + rightPartsclimate[i2] + ")"; // 40-30-30/SJR
-									}
-									else if(i1 == 2)
-									{
-										rightPart = " (" + rightPartsclimate2[i2] + ")"; // Shasta
-									}
-									else if(i1 <= 4)
-									{
-										rightPart = " " + i2; // Feather
-									}
-									else
-									{
-										rightPart = " (" + rightPartsDry[i2] + ")"; // Dry
-									}
-									// periods
-
-									data[t].addElement(leftPart[i1] + rightPart);
-									data[t].addElement(tagStringList[tag]);
-									for(int i3 = 0; i3 < 13; i3++)
-									{
-
-										int i3m;
-										if(i3 < 3)
-										{
-											i3m = i3 + 10;
-										}
-										else if(i3 < 12)
-										{
-											i3m = i3 - 2;
-										}
-										else if(isCFS)
-										{
-											i3m = 13;
-										}
-										else
-										{
-											i3m = 0;
-										}
-
-										switch(tag)
-										{
-											case 0:
-												data[t].addElement(df1.format(_avg[i1][i2][i3m]));
-												break;
-											case 1:
-												data[t].addElement(df1.format(_sdev[i1][i2][i3m]));
-												break;
-											case 2:
-												data[t].addElement(df1.format(_med[i1][i2][i3m]));
-												break;
-											case 3:
-												data[t].addElement(df1.format(_min[i1][i2][i3m]));
-												break;
-											case 4:
-												data[t].addElement(df1.format(_max[i1][i2][i3m]));
-												break;
-											default:
-										}
-									}
-								}
-							}
-							if(groupHasData)
-							{
-								for(int i3 = 0; i3 < 15; i3++)
-								{
-									data[t].addElement("");
-								}
-							}
-						}
-					}
-				}
-
+				putIntoTable(tagString, data, isCFS, t, leftPart, rightPartsclimate, rightPartsclimate2, rightPartsDry, df1);
 				// Delete extra blank row at end of table
-
-				if(data[t] != null && !data[t].isEmpty())
-				{
-					for(int i = 0; i < 15; i++)
-					{
-						data[t].removeElementAt(data[t].size() - 1);
-					}
-				}
+				deleteBlankRowAtEndOfTable(data[t]);
 
 				SimpleTableModel model = new SimpleTableModel(data[t], columns);
 				JTable table = new JTable(model);
@@ -471,7 +325,7 @@ public class SummaryTablePanel extends JPanel implements ActionListener, Compone
 					}
 					else
 					{
-						if(!sName.equals(""))
+						if(!sName.isEmpty())
 						{
 							labelText = sName;
 						}
@@ -529,6 +383,169 @@ public class SummaryTablePanel extends JPanel implements ActionListener, Compone
 
 		add(box);
 
+	}
+
+	private void calculateResults(List<String> summaryTags)
+	{
+		for(int i1 = 0; i1 < 6; i1++)
+		{
+			for(int i2 = 0; i2 < 6; i2++)
+			{
+				for(int i3 = 0; i3 < 14; i3++)
+
+				{
+					String tagString = String.join("-", summaryTags);
+					if((((i1 == 0) && tagString.contains("All years") && (i2 == 0))
+							|| ((i1 == 1) && tagString.contains("40-30-30"))
+							|| ((i1 == 2) && tagString.contains("Shasta"))
+							|| ((i1 == 3) && tagString.contains("Feather"))
+							|| ((i1 == 4) && tagString.contains("SJR Index"))
+							|| ((i1 == 5) && tagString.contains("All dry"))
+							|| ((i1 == 5) && (i2 == 1) && tagString.contains("1934"))
+							|| ((i1 == 5) && (i2 == 2) && tagString.contains("1977"))
+							|| ((i1 == 5) && (i2 == 3) && tagString.contains("1992"))) && (n[i1][i2][i3] > 0))
+					{
+
+						_avg[i1][i2][i3] = _x[i1][i2][i3] / n[i1][i2][i3];
+						_sdev[i1][i2][i3] = Math.sqrt(
+								Math.abs(_xx[i1][i2][i3] / n[i1][i2][i3] - _avg[i1][2][i3] * _avg[i1][2][i3]));
+
+						int nmed = n[i1][i2][i3];
+						double[] medx2 = new double[nmed];
+						if(nmed >= 0)
+						{
+							System.arraycopy(_medx[i1][i2][i3], 0, medx2, 0, nmed);
+						}
+						Arrays.sort(medx2);
+						// TODO fix logic for even sizes
+						nmed = nmed / 2;
+						_med[i1][i2][i3] = medx2[nmed];
+					}
+				}
+			}
+		}
+	}
+
+	private void deleteBlankRowAtEndOfTable(Vector<String> datum)
+	{
+		if(datum != null && !datum.isEmpty())
+		{
+			for(int i = 0; i < 15; i++)
+			{
+				datum.removeElementAt(datum.size() - 1);
+			}
+		}
+	}
+
+	private void putIntoTable(List<String> summaryTags, Vector<String>[] data, boolean isCFS, int t, String[] leftPart, String[] rightPartsclimate,
+							  String[] rightPartsclimate2, String[] rightPartsDry, DecimalFormat df1)
+	{
+		String[] tagStringList = {"Avg", "StdDev", "Median", "Min", "Max"};
+
+		for(int tag = 0; tag < tagStringList.length; tag++)
+		{
+			String tagString = String.join("-", summaryTags);
+			if(tagString.contains(tagStringList[tag]))
+			{
+				for(int i1 = 0; i1 < 6; i1++)
+				{
+					boolean groupHasData = false;
+
+					for(int i2 = 0; i2 < 6; i2++)
+
+					{
+						if((((i1 == 0) && tagString.contains("All years") && (i2 == 0))
+								|| ((i1 == 1) && tagString.contains("40-30-30"))
+								|| ((i1 == 2) && tagString.contains("Shasta"))
+								|| ((i1 == 3) && tagString.contains("Feather"))
+								|| ((i1 == 4) && tagString.contains("SJR Index"))
+								|| ((i1 == 5) && tagString.contains("All dry"))
+								|| ((i1 == 5) && (i2 == 1) && tagString.contains("1928"))
+								|| ((i1 == 5) && (i2 == 2) && tagString.contains("1976"))
+								|| ((i1 == 5) && (i2 == 3) && tagString.contains("1986")))
+								&& (n[i1][i2][0] > 0))
+						{
+
+							groupHasData = true;
+
+							String rightPart;
+							if(i1 == 0)
+							{
+								rightPart = ""; // All years
+							}
+							else if(i1 == 1 || i1 == 4)
+							{
+								rightPart = " (" + rightPartsclimate[i2] + ")"; // 40-30-30/SJR
+							}
+							else if(i1 == 2)
+							{
+								rightPart = " (" + rightPartsclimate2[i2] + ")"; // Shasta
+							}
+							else if(i1 <= 4)
+							{
+								rightPart = " " + i2; // Feather
+							}
+							else
+							{
+								rightPart = " (" + rightPartsDry[i2] + ")"; // Dry
+							}
+							// periods
+
+							data[t].addElement(leftPart[i1] + rightPart);
+							data[t].addElement(tagStringList[tag]);
+							for(int i3 = 0; i3 < 13; i3++)
+							{
+
+								int i3m;
+								if(i3 < 3)
+								{
+									i3m = i3 + 10;
+								}
+								else if(i3 < 12)
+								{
+									i3m = i3 - 2;
+								}
+								else if(isCFS)
+								{
+									i3m = 13;
+								}
+								else
+								{
+									i3m = 0;
+								}
+
+								switch(tag)
+								{
+									case 0:
+										data[t].addElement(df1.format(_avg[i1][i2][i3m]));
+										break;
+									case 1:
+										data[t].addElement(df1.format(_sdev[i1][i2][i3m]));
+										break;
+									case 2:
+										data[t].addElement(df1.format(_med[i1][i2][i3m]));
+										break;
+									case 3:
+										data[t].addElement(df1.format(_min[i1][i2][i3m]));
+										break;
+									case 4:
+										data[t].addElement(df1.format(_max[i1][i2][i3m]));
+										break;
+									default:
+								}
+							}
+						}
+					}
+					if(groupHasData)
+					{
+						for(int i3 = 0; i3 < 15; i3++)
+						{
+							data[t].addElement("");
+						}
+					}
+				}
+			}
+		}
 	}
 
 	private void update(int i1, int i2, double value, int m)
@@ -591,56 +608,53 @@ public class SummaryTablePanel extends JPanel implements ActionListener, Compone
 		{
 			JButton btn = (JButton) component;
 			String cName = btn.getText();
-			if(cName != null)
+			if(cName != null && cName.startsWith("Copy"))
 			{
-				if(cName.startsWith("Copy"))
+				StringBuilder excelStr = new StringBuilder();
+
+				Component[] components = panel.getComponents();
+
+				for(final Component value : components)
 				{
-					StringBuffer excelStr = new StringBuffer();
-
-					Component[] components = panel.getComponents();
-
-					for(int i = 0; i < components.length; i++)
+					if(value instanceof JTable)
 					{
-						if(components[i] instanceof JTable)
-						{
-							JTable table = (JTable) components[i];
-							int numCols = table.getColumnCount();
-							int numRows = table.getRowCount();
+						JTable table = (JTable) value;
+						int numCols = table.getColumnCount();
+						int numRows = table.getRowCount();
 
-							// get column headers
+						// get column headers
+						for(int k = 0; k < numCols; k++)
+						{
+							excelStr.append(table.getColumnModel().getColumn(k).getHeaderValue());
+							if(k < numCols - 1)
+							{
+								excelStr.append(CELL_BREAK);
+							}
+						}
+						excelStr.append(LINE_BREAK);
+
+						// get cell values
+						for(int j = 0; j < numRows; j++)
+						{
 							for(int k = 0; k < numCols; k++)
 							{
-								excelStr.append(table.getColumnModel().getColumn(k).getHeaderValue());
+								excelStr.append(escape(table.getValueAt(j, k)));
 								if(k < numCols - 1)
 								{
 									excelStr.append(CELL_BREAK);
 								}
 							}
 							excelStr.append(LINE_BREAK);
-
-							// get cell values
-							for(int j = 0; j < numRows; j++)
-							{
-								for(int k = 0; k < numCols; k++)
-								{
-									excelStr.append(escape(table.getValueAt(j, k)));
-									if(k < numCols - 1)
-									{
-										excelStr.append(CELL_BREAK);
-									}
-								}
-								excelStr.append(LINE_BREAK);
-							}
-
-							StringSelection sel = new StringSelection(excelStr.toString());
-							CLIPBOARD.setContents(sel, sel);
 						}
-						else if(components[i] instanceof JLabel)
-						{
-							JLabel label = (JLabel) components[i];
-							excelStr.append(label.getText());
-							excelStr.append(LINE_BREAK);
-						}
+
+						StringSelection sel = new StringSelection(excelStr.toString());
+						CLIPBOARD.setContents(sel, sel);
+					}
+					else if(value instanceof JLabel)
+					{
+						JLabel label = (JLabel) value;
+						excelStr.append(label.getText());
+						excelStr.append(LINE_BREAK);
 					}
 				}
 			}

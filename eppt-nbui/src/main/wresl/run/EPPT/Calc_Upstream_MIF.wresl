@@ -23,6 +23,7 @@ define C100_MIF_CHECK {
 		Value 2
 	}
 }
+define Minflow_C100_DTS {alias Minflow_C100 kind 'DTS-MIF' units 'CFS'}
 define C100_MIF_STATUS_DTS {alias C100_MIF_CHECK kind 'DTS-STATUS' units 'NONE'}
 
 ! Trinity River below Lewiston Capacity (C100)  exceeded (0) / met (1) / Violated (2)
@@ -75,6 +76,7 @@ define C3_MIF_CHECK {
 		Value 2
 	}
 }
+define Minflow_C3_DTS {alias Minflow_C3 kind 'DTS-MIF' units 'CFS'}
 define C3_MIF_STATUS_DTS {alias C3_MIF_CHECK kind 'DTS-STATUS' units 'NONE'}
 
 
@@ -93,6 +95,7 @@ define C5_MIF_CHECK {
 		Value 2
 	}
 }
+define Minflow_C5_DTS {alias Minflow_C5 kind 'DTS-MIF' units 'CFS'}
 define C5_MIF_STATUS_DTS {alias C5_MIF_CHECK kind 'DTS-STATUS' units 'NONE'}
 
 ! Sacramento River near Red Bluff MIF (C112) requirement exceeded (0) / met (1) / Violated (2)
@@ -110,9 +113,10 @@ define C112_MIF_CHECK {
 		Value 2
 	}
 }
+define Minflow_C112_DTS {alias Minflow_C112 kind 'DTS-MIF' units 'CFS'}
 define C112_MIF_STATUS_DTS {alias C112_MIF_CHECK kind 'DTS-STATUS' units 'NONE'}
 
-! Sacramento River near HAMILTON CITY MIF (C112) requirement exceeded (0) / met (1) / Violated (2)
+! Sacramento River near HAMILTON CITY MIF (C114) requirement exceeded (0) / met (1) / Violated (2)
 define C114_MIF_CHECK {
 	case meet {
 		Condition abs(C114 - Minflow_C114) < abs_threshold
@@ -127,6 +131,7 @@ define C114_MIF_CHECK {
 		Value 2
 	}
 }
+define Minflow_C114_DTS {alias Minflow_C114 kind 'DTS-MIF' units 'CFS'}
 define C114_MIF_STATUS_DTS {alias C114_MIF_CHECK kind 'DTS-STATUS' units 'NONE'}
 
 ! Sacramento River near Wilkins Slough MIF (C129) requirement exceeded (0) / met (1) / Violated (2)
@@ -144,9 +149,10 @@ define C129_MIF_CHECK {
 		Value 2
 	}
 }
+define Minflow_C129_DTS {alias Minflow_C129 kind 'DTS-MIF' units 'CFS'}
 define C129_MIF_STATUS_DTS {alias C129_MIF_CHECK kind 'DTS-STATUS' units 'NONE'}
 
-! Sacramento River near Freeport MIF (C129) requirement exceeded (0) / met (1) / Violated (2)
+! Sacramento River near Freeport MIF (C169) requirement exceeded (0) / met (1) / Violated (2)
 define C169_MIF_CHECK {
 	case meet {
 		Condition abs(C169 - Minflow_C169) < abs_threshold
@@ -161,9 +167,10 @@ define C169_MIF_CHECK {
 		Value 2
 	}
 }
+define Minflow_C169_DTS {alias Minflow_C169 kind 'DTS-MIF' units 'CFS'}
 define C169_MIF_STATUS_DTS {alias C169_MIF_CHECK kind 'DTS-STATUS' units 'NONE'}
 
-! Thermolito low flow channel MIF (C129) requirement exceeded (0) / met (1) / Violated (2)
+! Thermolito low flow channel MIF (C200A) requirement exceeded (0) / met (1) / Violated (2)
 define C200A_MIF_CHECK {
 	case meet {
 		Condition abs(C200A - Minflow_C200A) < abs_threshold
@@ -178,16 +185,17 @@ define C200A_MIF_CHECK {
 		Value 2
 	}
 }
+define Minflow_C200A_DTS {alias Minflow_C200A kind 'DTS-MIF' units 'CFS'}
 define C200A_MIF_STATUS_DTS {alias C200A_MIF_CHECK kind 'DTS-STATUS' units 'NONE'}
 
-! Feather River below Thermalito Complex MIF (C129) requirement exceeded (0) / met (1) / Violated (2)
+! Feather River below Thermalito Complex MIF (C203) requirement exceeded (0) / met (1) / Violated (2)
 define C203_MIF_CHECK {
 	case meet {
-		Condition abs(C203 - C203min) < abs_threshold !goal meetC203Minflow {C203_MIF < max(minflow_C203, minflow_c223)} - minflow_c223 is in SV file
+		Condition abs(C203 - minflow_C203) < abs_threshold !goal meetC203Minflow {C203_MIF < max(minflow_C203, minflow_c223)} - minflow_c223 is in SV file
 		Value 1                                       !define C203min {alias minflow_C203 kind 'CHANNEL-MINFLOW' units 'CFS'}
 	}
 	case exceeded {
-		Condition C203 - C203min > abs_threshold 
+		Condition C203 - minflow_C203 > abs_threshold 
 		Value 0
 	}
 	Case Violated {
@@ -195,6 +203,7 @@ define C203_MIF_CHECK {
 		Value 2
 	}
 }
+define Minflow_C203_DTS {alias minflow_C203 kind 'DTS-MIF' units 'CFS'}
 define C203_MIF_STATUS_DTS {alias C203_MIF_CHECK kind 'DTS-STATUS' units 'NONE'}
 
 
@@ -202,11 +211,11 @@ define C203_MIF_STATUS_DTS {alias C203_MIF_CHECK kind 'DTS-STATUS' units 'NONE'}
 ! minflow_C223 is in SV
 define C223_MIF_CHECK {
 	case meet {
-		Condition abs(C223 - C223_MIF /*minflow_C223*/) < abs_threshold
+		Condition abs(C223 - /* C223_MIF */ minflow_C223) < abs_threshold
 		Value 1
 	}
 	case exceeded {
-		Condition C223 - C223_MIF /*minflow_C223*/ > abs_threshold 
+		Condition C223 - /* C223_MIF */ minflow_C223 > abs_threshold 
 		Value 0
 	}
 	Case Violated {
@@ -214,6 +223,7 @@ define C223_MIF_CHECK {
 		Value 2
 	}
 }
+define Minflow_C223_DTS {alias minflow_C223 kind 'DTS-MIF' units 'CFS'}
 define C223_MIF_STATUS_DTS {alias C223_MIF_CHECK kind 'DTS-STATUS' units 'NONE'}
 
 
@@ -232,6 +242,7 @@ define C9_MIF_CHECK {
 		Value 2
 	}
 }
+define Minflow_C9_DTS {alias minflow_C9 kind 'DTS-MIF' units 'CFS'}
 define C9_MIF_STATUS_DTS {alias C9_MIF_CHECK kind 'DTS-STATUS' units 'NONE'}
 
 
@@ -250,6 +261,7 @@ define C303_MIF_CHECK {
 		Value 2
 	}
 }
+define Minflow_C303_DTS {alias minflow_C303 kind 'DTS-MIF' units 'CFS'}
 define C303_MIF_STATUS_DTS {alias C303_MIF_CHECK kind 'DTS-STATUS' units 'NONE'}
 
 

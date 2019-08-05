@@ -1,0 +1,268 @@
+/************************************
+
+Calc_NOD_Mass.wresl
+
+Yuxiang, DWR, BDO
+2019/03/25
+
+This file post process data for NOD Mass Balances
+
+In this NOD mass balance calculation, NOD is divided into 3 regions:
+NOD_R1. Sac Valley Colusa Basin
+NOD_R2. FRSA
+NOD_R3. America river 
+
+Mass Balance: 	Reervoir releases 
+				+ Local Inflow 
+				+ Net GW pumping 
+				- Consumptive use (delivery) 
+				- System Loss 
+				- System Outflow 
+				+ Accretion-Depletion Term
+				= 0
+
+**************************************/
+
+
+/************************************* Sac River Colusa Basin ******************************************/
+	/*Sac River Colusa Basin - Reservori releases*/
+	define NOD_R1_RR {value
+		 C3  !Whiskeytown Lake 
+		+C5  !Shasta/Keswich 
+		!+C42 !Black Butte
+		!+D42 !Black Butte
+		+c17301
+		+C17602 !NODOS
+		+C17603 !NODOS
+	}
+	
+	/*Sac River Colusa Basin - local Inflow*/
+	define NOD_R1_LI {value
+		 I10801 /*Cow Creek*/
+		+I10802 /*Cottonwood Creek*/
+		+I10803 /*Battle Creek*/
+		+I11001 /*Poynee Creek*/
+		+I112   /*Red Bank Creek*/
+		+I11303 /*Elder Creek*/
+		+I11304 /*Thornes Creek*/
+		+I11307 /*Antelope Creek*/
+		+I11308 /*Mill Creek*/
+		+I11309 /*Deer Creek*/
+		+I11501 /*Big Chico Creek*/
+		+I180   /**/
+		+I182   /**/
+		+I184   /**/
+	}
+
+	/*Sac River Colusa Basin - Groundwater*/ !need to ddl check 
+	define NOD_R1_GW {value
+		 GP60 -GR60AW -GS60 /*DSA 58 net GW Pumping and SW-to-GW interaction*/
+		+GP61 -GR61AW -GS61 /*DSA 12 net GW Pumping and SW-to-GW interaction*/
+		+GP62 -GR62AW -GS62 /*DSA 10 net GW Pumping and SW-to-GW interaction*/
+		+GP63 -GR63AW -GS63 /*DSA 15 net GW Pumping and SW-to-GW interaction*/
+		+GP64 -GR64AW -GS64 /*DSA 65 net GW Pumping and SW-to-GW interaction*/
+	}
+	
+	/*	define NOD_R1_GW {value
+		 GP60 -GR60AW -GS61 !DSA 58 net GW Pumping and SW-to-GW interaction
+		+GP17201 +GP17401 +GP17801 +GP17101 !GW Pumping
+		+GP11302 +GP11306 +GP131 +GP14301 !GW Pumping
+		+GP14302 +GP14501 +GP18201 +GP18301 !GW Pumping
+		-GS61 !DSA 10 SW-to-GW interaction
+		-GS63 !DSA 15 SW-to-GW interaction
+		+GP64 -GR64AW -GS64 !DSA 65 net GW Pumping and SW-to-GW interaction
+	}
+	*/	
+	
+	/*Sac River Colusa Basin - Consumptive Use (Diversion - Return Flow)*/ !need to ddl check
+	define 	NOD_R1_CU {Value	
+		 D107 !-R109  /*demand node 107*/ ! ddl check for R109
+		+D11302 !-R114B /*demand node 11302*/
+		+D17101 !-R113  /*demand node 17101*/
+		+D17201 !-R114C /*demand node 17201*/
+		+D11306 !-R114A /*demand node 11306*/
+		+D17401 !-R182A /*demand node 17401*/
+		+D14301 !-R181A /*demand note 14301*/
+		+D14302 !-R181B /*demand note 14302*/
+		+D17801 !-R182B /*demand node 17801*/
+		+D18201 !-R184B /*demand node 18201*/
+		+D18301 !-R134-R18302 /*demand node 18301*/
+		+D14501 !-R184A /*demand node 14501*/
+		+D131 !-R160 /*demand node 131*/
+		+D155 !-R156 /*demand node 155*/
+		+L172+L143+L173+L142 +L17201 +L17401 /*Misc Loss Terms*/
+		+L17801 +L17101 +L11302 +L11306 +L128 /*Misc Loss Terms*/
+		+L143A +L180A +L122A +L143B +L145A /*Misc Loss Terms*/ 
+		+L122B +L182A +L145B +L183 +L129A /*Misc Loss Terms*/
+		+D143A_WTS +D128_WTS +D122A_WTS +D122B_WTS +D145A_WTS /*Water Transfer Terms*/
+		}
+		
+	/*Sac River Colusa Basin - Conveyance loss*/
+	define NOD_R1_LS {value
+		L142 + L172 + L173
+		}
+		
+	/*Sac River Colusa Basin - Accretion-Depletion Terms*/	
+	define NOD_R1_AD {value
+		 I109 /*DSA58 projected gain in*/
+		-D109 /*DSA58 projected gain out*/
+		+I118 /*DSA10 projected gain in*/
+		-D118 /*DSA10 projected gain out*/
+		+I123 /*DSA15 projected gain in*/
+		-D123 /*DSA15 projected gain out*/
+		-D134 /*DSA12 projected gain out (no projected gain in)*/
+		+I152 /*DSA65 projected gain in*/
+		-D152 /*DSA65 projected gain out*/
+		+I166 /*DSA65 projected gain in*/
+		-D166B/*DSA65 projected gain out*/				
+		} 
+		
+	/*Sac River Colusa Basin - Regional Outflow*/	
+	Define NOD_R1_RO {value
+		 C157 	/*Yolo Bypass*/
+		+C169 	/*Sacramento River @ before Hood*/
+		+D17501	/*NODOS*/
+		+D124A	/*NODOS*/
+		
+	}	
+	
+	
+	
+	
+/************************************* FRSA ******************************************/		
+	/*FRSA - Reservori releases*/	
+	define NOD_R2_RR {value
+		 D6		!Polermo Canel 
+		+D201	!Butte County
+		+D202	!Thermolito ID
+		+D7A	!Western Canal
+		+D7B	!Joint Canal
+		+C203	!Thermolito Complex (High flow channel)
+		+I230	!Yuba River Upstream Inflow
+		+I285	!Bear River Upstream Inflow
+		+I225 	!Bear River (Gold Hill/Combie Canal+Bear River Canal+Boardman Canal)
+	}
+
+		
+	/*FRSA - local Inflow*/	
+	define NOD_R2_LI {value 	 
+		 I217		! Butte Creek
+		+I282		! Local	
+		+I204_WTS 	! Water Transfer
+		+R135C_DCMP !	/*Rice decomp return flows, diversions for rice decomp (D7C) part of SWPDS term*/
+		!+I204_EWA
+	}	
+		
+	/*FRSA - Groundwater*/		
+	define NOD_R2_GW {value
+		GP65 -GR65AW -GS65 /*DSA 69 net GW Pumping and SW-to-GW interaction*/
+	}
+		
+	
+	/*FRSA - Consumptive Use (Diversion - Return Flow)*/		
+	define NOD_R2_CU {value	
+		 D210 !-R223		/*demand node 210*/
+		+D218 !-R135A 	/*Gray Lodge (demand node 218)*/
+		+D222 !-R137		/*Sutter Refuge (demand node 222)*/
+		+D226 !-R135B	/*Butte Sink (demand node 226)*/
+		+D204_REOP 		/*Misc water transfer terms*/
+		+D230_LRYA 		/*Misc water transfer terms*/
+	}
+	
+	/*FRSA - Accretion-Depletion Terms*/	
+	define NOD_R2_AD {value
+		 I207  /*DSA69 projected gain in*/
+		-D207B /*DSA69 projected gain out*/
+	}
+	/*FRSA - Regional Outflow*/	!- No Regional Outflow for FRSA	
+	
+	
+	
+	
+		
+	/************************************* American River ******************************************/	
+
+	/*American River Basin - Reservori releases*/	
+	define NOD_R3_RR {value
+		 I300	 !American River Upstream Inflow
+		+D8	!Folsom Lake to PCWA
+		+C9	!Folsom Lake/lake Natoma Release
+		+D9	!Folsom South Canal
+	}		
+		
+	/*American River Basin - local Inflow*/	
+	define NOD_R3_LI {value
+		 I302
+	}	
+		
+	/*American River Basin - Groundwater*/		
+	define NOD_R3_GW {value
+		GP66 -GR66AW -GS66 /*DSA 69 net GW Pumping and SW-to-GW interaction*/
+	}	
+	
+	/*American River Basin - Consumptive Use (Diversion - Return Flow)*/		
+	define NOD_R3_CU {value	
+		 D307 !-R169		/*demand node 307*/
+		+D309B			/*Export to DSA59*/
+	}
+		
+	/*American River Basin - Accretion-Depletion Terms*/	
+
+	
+	/*American River Basin - Regional Outflow*/	
+	Define NOD_R3_RO {value
+		 C300 	/*Auburn Reservoir site to Flosom Lake*/
+		+D308A 	/*PCWA & GDPUD Auburn Portion to North Fork AR @ North Fork Dam*/
+	
+	}	
+	
+	
+! define NOD total Reservori releases
+define NOD_RR {value NOD_R1_RR + NOD_R2_RR + NOD_R3_RR}
+! define NOD total Local Inflow
+define NOD_LI {value NOD_R1_LI + NOD_R2_LI + NOD_R3_LI}
+! define NOD total Groundwater pumping
+define NOD_GW {value NOD_R1_GW + NOD_R2_GW + NOD_R3_GW}
+! define NOD total Comsumptive Use
+define NOD_CU {value NOD_R1_CU + NOD_R2_CU + NOD_R3_CU}
+! define NOD total Loss
+define NOD_LS {value NOD_R1_LS }
+! define NOD total Region outflow
+define NOD_RO {value NOD_R1_RO 			   + NOD_R3_RO}
+! define NOD total Accretion-Depletion Term
+define NOD_AD {value NOD_R1_AD + NOD_R2_AD }
+
+/* Mass Balance: 	Reervoir releases 
+				+ Local Inflow 
+				+ GW pumping 
+				- Consumptive use 
+				- Loss 
+				- Regional Outflow 
+				+ Accretion-Depletion Term
+				= 0
+*/
+
+define NOD_MB {value NOD_RR +NOD_LI +NOD_GW -NOD_CU -NOD_LS -NOD_RO +NOD_AD}	
+define NOD_MB_DTS {alias NOD_MB kind 'DTS-1' units 'CFS'}
+
+define NOD_MB_Check {
+	case balanced {
+	condition abs(NOD_MB) < abs_threshold
+	value 0
+	}
+	case notBalanced{
+	condition always
+	value 0 ! underreview - mass balance under review for miss arcs
+	!value 1
+	}
+}
+
+define NOD_MB_STATUS_DTS {alias NOD_MB_Check kind 'DTS-Status' units 'NONE'}
+!define Delta_MB_STATUS_DTS {alias NOD_MB_Check kind 'DTS-Status' units 'NONE'} !underreview
+define SOD_MB_STATUS_DTS {alias NOD_MB_Check kind 'DTS-Status' units 'NONE'} !underreview 
+
+define FRSA_MB {value NOD_R2_RR +NOD_R2_LI +NOD_R2_GW -NOD_R2_CU +NOD_R2_AD -(C225+C223+C217A+R135A+R135B+R135C_DCMP)}
+define FRSA_MB_DTS {alias FRSA_MB}
+
+define AMER_MB {value NOD_R3_RR +NOD_R3_LI +NOD_R3_GW -NOD_R3_CU +NOD_R3_RO -(C308+C303+R169-C225-D162-D167-D168)}
+define AMER_MB_DTS {alias AMER_MB}

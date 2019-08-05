@@ -24,6 +24,7 @@ import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
 import java.text.DecimalFormat;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Vector;
 import javax.swing.*;
 import javax.swing.table.AbstractTableModel;
@@ -99,7 +100,7 @@ public class SummaryTablePanel2 extends JPanel implements ActionListener, Compon
 	JScrollPane scrollPane;
 	Vector<String> columns;
 
-	public SummaryTablePanel2(String title, TimeSeriesContainer[][] results, String summaryTags, String sLabel,
+	public SummaryTablePanel2(String title, TimeSeriesContainer[][] results, List<String> summaryTags, String sLabel,
 							  DSSGrabber2SvcImpl dssGrabber, boolean doBase, MultipleTimeSeries mts)
 	{
 		this(title, results, null, summaryTags, sLabel, null, dssGrabber, doBase, mts); // TODO
@@ -109,7 +110,7 @@ public class SummaryTablePanel2 extends JPanel implements ActionListener, Compon
 	}
 
 	public SummaryTablePanel2(String title, TimeSeriesContainer[][] mtscs, TimeSeriesContainer[] stscs,
-							  String tagString, String sName, IDSSGrabber1Svc dss_Grabber,
+							  List<String> tagString, String sName, IDSSGrabber1Svc dss_Grabber,
 							  DSSGrabber2SvcImpl dss_Grabber2,
 							  boolean isBase, MultipleTimeSeries mts)
 	{

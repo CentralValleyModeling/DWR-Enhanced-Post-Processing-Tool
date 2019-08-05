@@ -91,7 +91,7 @@ define C200A_MIF {timeseries 'C200A_MIF' kind 'FLOW-MIN-INSTREAM' units 'CFS'} !
 
 ! Feather River below Thermalito Complex 
 define C203 {timeseries 'C203' kind 'FLOW-CHANNEL' units 'CFS'} ! Feather River below Thermalito Complex 
-define C203min {timeseries kind 'CHANNEL-MINFLOW' units 'CFS'} !Minflow_C203
+define minflow_C203 {timeseries 'C203min' kind 'CHANNEL-MINFLOW' units 'CFS'} !=Minflow_C203
 define C203_MIF {timeseries 'C203_MIF' kind 'FLOW-MIN-INSTREAM' units 'CFS'} ! Feather River below Thermalito Complex MIF 
 ! Feather River near Verona 
 define C223 {timeseries 'C223' kind 'FLOW-CHANNEL' units 'CFS'} ! Feather River near Verona 
@@ -139,17 +139,17 @@ define MAXEXP_RPADV {timeseries 'MAXEXP_RPADV' kind 'EXPORT-LIMIT' units 'CFS'}
 define EXPORT_DEC {timeseries 'EXPORT_DEC_' kind 'TEMP' units 'CFS'} 
 define C408_LBOUND {timeseries 'C408_LBOUND' kind 'FLOW-LBOUND' units 'CFS'} !OMR flow restrictions
 define C408_NoEXP1 {timeseries 'C408_NoEXP1' kind 'FLOW-CHANNEL' units 'CFS'} !OMR flows w/o Exports
-define COMB_EXP_DEC_ {timeseries 'COMB_EXP_DEC_' kind 'TEMP' units 'CFS'}
+!define COMB_EXP_DEC_ {timeseries 'COMB_EXP_DEC_' kind 'TEMP' units 'CFS'}
 ! 2. SWP SOD EXPORT CONTROL INPUTS
 define APRMAYBANKSCTRL {timeseries 'APRMAYBANKSCTRL' kind 'EXPORT-CTRL-APRMAY' units 'CFS'} 
 define MAXEXP_RPA_SWPDV {timeseries 'MAXEXP_RPA_SWPDV' kind 'EXPORT-LIMIT' units 'CFS'} 
-define SWP_EXP_DEC_ {timeseries 'SWP_EXP_DEC_' kind 'TEMP' units 'CFS'}
+!define SWP_EXP_DEC_ {timeseries 'SWP_EXP_DEC_' kind 'TEMP' units 'CFS'}
 define BANKSALLOWOUT {timeseries 'BANKSALLOWOUT' kind 'FLOW-ALLOW-BANKS' units 'CFS'}
 define D419UP {timeseries 'D419UP' kind 'FLOW-DELIVERY' units 'CFS'}
 ! 3. CVP SOD EXPORT CONTROL INPUTS
 define APRMAYTRACYCTRL {timeseries 'APRMAYTRACYCTRL' kind 'EXPORT-CTRL-APRMAY' units 'CFS'} 
 define MAXEXP_RPA_CVPDV {timeseries 'MAXEXP_RPA_CVPDV' kind 'EXPORT-LIMIT' units 'CFS'} 
-define CVP_EXP_DEC_ {timeseries 'CVP_EXP_DEC_' kind 'TEMP' units 'CFS'}
+!define CVP_EXP_DEC_ {timeseries 'CVP_EXP_DEC_' kind 'TEMP' units 'CFS'}
 define JONESALLOWOUT {timeseries 'JONESALLOWOUT' kind 'EXPORT-CTRL-JONES' units 'CFS'}
 define D418UP {timeseries 'D418UP' kind 'FLOW-DELIVERY' units 'CFS'}
 
@@ -186,6 +186,8 @@ define SHORT_SWP_PLS {timeseries 'SHORT_SWP_PLS' kind 'DELIVERY-SHORTAGE-SWP' un
 define D407 {timeseries 'D407' kind 'FLOW-DELIVERY' units 'CFS'} !MRDO - Minimum Required Delta Outflow (contain NDOI and X2 component)
 define C407 {timeseries 'C407' kind 'FLOW-CHANNEL' units 'CFS'} ! Regulations and Operations required Delta Outflow additional to the Delta Outflow required by NDOI & X2 
 define C407_whlcv {timeseries 'C407_whlcv' kind 'FLOW-CHANNEL' units 'CFS'}
+define C407_whljp {timeseries 'C407_whljp' kind 'FLOW-CHANNEL' units 'CFS'}
+define C407_WTS {timeseries 'C407_WTS' kind 'FLOW-CHANNEL' units 'CFS'}
 define C405 {timeseries 'C405' kind 'FLOW-CHANNEL' units 'CFS'} ! Flow @ Rio Vista
 define Rio_req {  ! Minimum Flow required @ Rio Vista
        select       river_q
@@ -251,6 +253,7 @@ define D419_EXP1 {timeseries 'D419_EXP1' kind 'FLOW-DELIVERY' units 'CFS'}
 define D419_EXP2 {timeseries 'D419_EXP2' kind 'FLOW-DELIVERY' units 'CFS'}
 define D419_CVP {timeseries 'D419_CVP' kind 'FLOW-DELIVERY' units 'CFS'}
 define D419_SWP {timeseries 'D419_SWP' kind 'FLOW-DELIVERY' units 'CFS'}
+define D419_WTS {timeseries 'D419_WTS' kind 'FLOW-DELIVERY' units 'CFS'}
 
 /****************************** INPUTS FOR **********************************/
 /****************************** Reservoirs **********************************/
@@ -417,8 +420,6 @@ define GS66 {timeseries kind 'FLOW-CHANNEL' units 'CFS'} !DSA70 Stream - Groundw
 
 /****************************** INPUTS FOR **********************************/
 /**************************** NOD Mass Balance ******************************/
-
-
 define C42 {timeseries kind 'FLOW-CHANNEL' units 'CFS'}
 define C157 {timeseries kind 'FLOW-CHANNEL' units 'CFS'}
 define C17301 {timeseries kind 'FLOW-CHANNEL' units 'CFS'}
@@ -510,7 +511,7 @@ define R156 {timeseries kind 'FLOW-RETURN' units 'CFS'}
 define R135C_DCMP {timeseries kind 'RETURN-FLOW' units 'CFS'}
 
 
-define R223 {timeseries kind 'FLOW-RETURN' units 'CFS'}
+
 define R135A {timeseries kind 'FLOW-RETURN' units 'CFS'}
 define R137 {timeseries kind 'FLOW-RETURN' units 'CFS'}
 define R135B {timeseries kind 'FLOW-RETURN' units 'CFS'}
@@ -536,15 +537,36 @@ define L145B {timeseries kind 'FLOW-DELIVERY' units 'CFS'}
 define L183 {timeseries kind 'FLOW-DELIVERY' units 'CFS'}
 define L129A {timeseries kind 'FLOW-DELIVERY' units 'CFS'}
 
-
-
 define L142 {timeseries kind 'FLOW-DELIVERY' units 'CFS'} !Reach 3 Losses
 define L172 {timeseries kind 'FLOW-DELIVERY' units 'CFS'}
 define L173 {timeseries kind 'FLOW-DELIVERY' units 'CFS'}
 
 
+/****************************** INPUTS FOR **********************************/
+/**************************** Delta Mass Balance ******************************/
+define C504 {timeseries kind 'FLOW-CHANNEL' units 'CFS'}
+define C644 {timeseries kind 'FLOW-CHANNEL' units 'CFS'}
+define C508 {timeseries kind 'FLOW-CHANNEL' units 'CFS'}
+
+define R514 {timeseries kind 'FLOW-RETURN' units 'CFS'}
+define R514A {timeseries kind 'FLOW-RETURN' units 'CFS'}
+define R514B {timeseries kind 'FLOW-RETURN' units 'CFS'}
+define R223 {timeseries kind 'FLOW-RETURN' units 'CFS'}
 
 
+define D514A {timeseries kind 'FLOW-DELIVERY' units 'CFS'}
+define D514B {timeseries kind 'FLOW-DELIVERY' units 'CFS'}
+define C402B {timeseries kind 'FLOW-CHANNEL' units 'CFS'}
+define D408 {timeseries kind 'FLOW-DELIVERY' units 'CFS'}
+define D408_RS {timeseries kind 'FLOW-DELIVERY' units 'CFS'}
+define D404 {timeseries kind 'FLOW-DELIVERY' units 'CFS'}
+define D406 {timeseries kind 'FLOW-DELIVERY' units 'CFS'}
+define D410 {timeseries kind 'FLOW-DELIVERY' units 'CFS'}
+!define D409 {timeseries kind 'FLOW-DELIVERY' units 'CFS'}
+define D413 {timeseries kind 'FLOW-DELIVERY' units 'CFS'}
+define D406B {timeseries kind 'FLOW-DELIVERY' units 'CFS'}
+define D409b {timeseries kind 'FLOW-DELIVERY' units 'CFS'}
+define D412 {timeseries kind 'FLOW-DELIVERY' units 'CFS'}
 
 
 /****************************** INPUTS FOR **********************************/

@@ -131,9 +131,9 @@ class WreslConfigWriter
 			configText = configText.replace("{EndDay}", Integer.toString(_endDate.getDayOfMonth()));
 
 			String name = _scenarioRun.getName();
-			name = name.replaceAll("[^a-zA-Z0-9\\.\\-]", "_");
+			name = name.replaceAll("[^a-zA-Z0-9.\\-]", "_");
 			Path configPath = _scenarioRun.getWreslMain().getParent().resolve("WRESL" + name + ".config");
-			LOGGER.log(Level.INFO, "Writing WRESL config: ", configPath);
+			LOGGER.log(Level.INFO, "Writing WRESL config: {0}", configPath);
 			try(BufferedWriter bufferedWriter = Files.newBufferedWriter(configPath);
 				PrintWriter configFilePW = new PrintWriter(bufferedWriter))
 			{

@@ -13,6 +13,9 @@
 package gov.ca.water.calgui.constant;
 
 
+import java.nio.file.Path;
+import java.nio.file.Paths;
+
 /**
  * This class is used to hold all the constant values required for the
  * application.
@@ -29,6 +32,7 @@ public final class Constant
 	public static final String TXT_EXT = ".txt";
 	public static final String DV_NAME = "_DV";
 	public static final String CONFIG_DIR = System.getProperty("user.dir") + "\\dwr_eppt\\config\\";
+	public static final Path QA_QC_CHARTS_PATH = Paths.get(System.getProperty("user.dir")).resolve("dwr_eppt").resolve("config");
 	public static final String DOCS_DIR = System.getProperty("user.dir") + "\\dwr_eppt\\docs\\";
 	public static final String WRESL_DIR = System.getProperty("user.dir") + "\\dwr_eppt\\wresl\\";
 	public static final String WRESL_MAIN = System.getProperty("user.dir") + "\\dwr_eppt\\wresl\\run\\mainControl.wresl";

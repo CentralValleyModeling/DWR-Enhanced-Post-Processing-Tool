@@ -31,11 +31,11 @@ import gov.ca.water.calgui.presentation.DisplayHelper;
 import gov.ca.water.calgui.techservice.impl.DialogSvcImpl;
 import gov.ca.water.eppt.nbui.actions.RunWreslScript;
 import gov.ca.water.quickresults.ui.projectconfig.ProjectConfigurationPanel;
+import gov.ca.water.calgui.compute.EpptReportingMonths;
 import org.openide.modules.ModuleInstall;
 import org.openide.windows.WindowManager;
 
 import hec.heclib.dss.HecDSSFileAccess;
-import hec.heclib.dss.HecDSSFileDataManager;
 import hec.heclib.dss.HecDataManager;
 import rma.swing.logging.DialogLogHandler;
 
@@ -130,6 +130,7 @@ public class Installer extends ModuleInstall
 		{
 			GuiLinksSeedDataSvcImpl.createSeedDataSvcImplInstance();
 			ThresholdLinksSeedDataSvc.createSeedDataSvcImplInstance();
+			EpptReportingMonths.createTrendReportingMonthsInstance();
 		}
 		catch(EpptInitializationException ex)
 		{

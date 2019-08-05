@@ -12,6 +12,7 @@
 
 package gov.ca.water.calgui.project;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -28,14 +29,14 @@ import org.jfree.data.time.Month;
 public class EpptProject
 {
 	private final List<EpptScenarioRun> _scenarioRuns;
-	private final Month _startMonth;
-	private final Month _endMonth;
+	private final LocalDate _startMonth;
+	private final LocalDate _endMonth;
 	private final Map<String, Boolean> _selectedComponents;
 	private String _description;
 	private String _name;
 
-	public EpptProject(String name, String description, List<EpptScenarioRun> scenarioRuns, Month startMonth,
-					   Month endMonth, Map<String, Boolean> selectedComponents)
+	public EpptProject(String name, String description, List<EpptScenarioRun> scenarioRuns, LocalDate startMonth,
+					   LocalDate endMonth, Map<String, Boolean> selectedComponents)
 	{
 		_name = name;
 		_description = description;
@@ -45,12 +46,12 @@ public class EpptProject
 		_selectedComponents = new HashMap<>(selectedComponents);
 	}
 
-	public Month getStartMonth()
+	public LocalDate getStartMonth()
 	{
 		return _startMonth;
 	}
 
-	public Month getEndMonth()
+	public LocalDate getEndMonth()
 	{
 		return _endMonth;
 	}

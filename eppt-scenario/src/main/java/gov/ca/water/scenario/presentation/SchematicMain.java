@@ -14,6 +14,8 @@ package gov.ca.water.scenario.presentation;
 
 import java.awt.Toolkit;
 import java.awt.geom.AffineTransform;
+import java.time.LocalDate;
+import java.util.Collections;
 import java.util.List;
 import javax.swing.*;
 
@@ -21,6 +23,7 @@ import gov.ca.water.businessservice.impl.XMLParsingSvcImpl;
 import gov.ca.water.calgui.constant.Constant;
 import gov.ca.water.calgui.presentation.DisplayHelper;
 import gov.ca.water.calgui.project.EpptScenarioRun;
+import gov.ca.water.calgui.project.PlotConfigurationState;
 import gov.ca.water.calgui.techservice.IErrorHandlingSvc;
 import gov.ca.water.calgui.techservice.impl.ErrorHandlingSvcImpl;
 import gov.ca.water.quickresults.ui.projectconfig.ProjectConfigurationPanel;
@@ -32,7 +35,6 @@ import org.apache.batik.swing.gvt.GVTTreeRendererEvent;
 import org.apache.batik.swing.svg.SVGLoadEventDispatcherAdapter;
 import org.apache.batik.swing.svg.SVGLoadEventDispatcherEvent;
 import org.apache.log4j.Logger;
-import org.jfree.data.time.Month;
 import org.swixml.SwingEngine;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -224,11 +226,11 @@ public class SchematicMain
 					if(baseScenario != null)
 					{
 						List<EpptScenarioRun> alternatives = projectConfigurationPanel.getEpptScenarioAlternatives();
-						String quickState = projectConfigurationPanel.quickState();
-						Month startMonth = projectConfigurationPanel.getStartMonth();
-						Month endMonth = projectConfigurationPanel.getEndMonth();
-						_displayHelper.showDisplayFrames(quickState + ";Locs-" + label + ";Index-"
-								+ Constant.SCHEMATIC_PREFIX + label, baseScenario, alternatives, startMonth, endMonth);
+						PlotConfigurationState plotConfigurationState = projectConfigurationPanel.plotConfigurationState();
+						LocalDate startMonth = projectConfigurationPanel.getStartMonth();
+						LocalDate endMonth = projectConfigurationPanel.getEndMonth();
+						_displayHelper.showDisplayFrames(plotConfigurationState, Collections.singletonList(label), baseScenario, alternatives,
+								startMonth, endMonth);
 					}
 				}
 			}

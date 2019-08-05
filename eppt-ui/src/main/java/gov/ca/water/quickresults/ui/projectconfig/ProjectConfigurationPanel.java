@@ -16,26 +16,31 @@ import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Container;
 import java.io.IOException;
+import java.lang.ref.WeakReference;
 import java.nio.file.Path;
+import java.time.LocalDate;
+import java.time.temporal.TemporalAdjusters;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
 import gov.ca.water.calgui.bo.ResultUtilsBO;
+import gov.ca.water.calgui.busservice.ScenarioChangeListener;
 import gov.ca.water.calgui.constant.Constant;
 import gov.ca.water.calgui.constant.EpptPreferences;
 import gov.ca.water.calgui.project.EpptProject;
 import gov.ca.water.calgui.project.EpptScenarioRun;
-import gov.ca.water.calgui.techservice.IErrorHandlingSvc;
-import gov.ca.water.calgui.techservice.impl.ErrorHandlingSvcImpl;
+import gov.ca.water.calgui.project.PlotConfigurationState;
 import gov.ca.water.quickresults.ui.EpptPanel;
 import gov.ca.water.quickresults.ui.projectconfig.scenariotable.ScenarioTablePanel;
+import gov.ca.water.quickresults.ui.quickresults.PlotConfigurationStateBuilder;
 import javafx.application.Platform;
 import org.apache.log4j.Logger;
-import org.jfree.data.time.Month;
 
 import rma.util.RMAUtil;
 
@@ -50,7 +55,7 @@ public final class ProjectConfigurationPanel extends EpptPanel
 	private static final Logger LOGGER = Logger.getLogger(ProjectConfigurationPanel.class.getName());
 	private static final String SCENARIO_CONFIGURATION_XML_FILE = "Project_Configuration.xml";
 	private static final ProjectConfigurationPanel SINGLETON = new ProjectConfigurationPanel();
-	private static IErrorHandlingSvc errorHandlingSvc = new ErrorHandlingSvcImpl();
+	private final Set<ScenarioChangeListener> _scenarioChangeListeners = new HashSet<>();
 	private final ProjectConfigurationIO _projectConfigurationIO = new ProjectConfigurationIO();
 	private final ScenarioTablePanel _scenarioTablePanel = new ScenarioTablePanel();
 	private boolean _ignoreModifiedEvents = false;
@@ -189,11 +194,11 @@ public final class ProjectConfigurationPanel extends EpptPanel
 	{
 		_scenarioTablePanel.clearScenarios();
 		setModified(true);
-
 	}
 
 	private void updateRadioState()
 	{
+		_scenarioChangeListeners.forEach(this::postScenarioChanged);
 		EpptScenarioRun base = _scenarioTablePanel.getBaseScenarioRun();
 		List<EpptScenarioRun> alternatives = _scenarioTablePanel.getAlternativeScenarioRuns();
 		getRadioButtonDiff().setEnabled(!alternatives.isEmpty() && base != null);
@@ -206,137 +211,37 @@ public final class ProjectConfigurationPanel extends EpptPanel
 		}
 	}
 
+	private void postScenarioChanged(ScenarioChangeListener scenarioChangeListener)
+	{
+		EpptScenarioRun base = _scenarioTablePanel.getBaseScenarioRun();
+		List<EpptScenarioRun> alternatives = _scenarioTablePanel.getAlternativeScenarioRuns();
+		if(scenarioChangeListener != null)
+		{
+			scenarioChangeListener.fillScenarioRuns(base, alternatives);
+		}
+	}
+
+	public void addScenarioChangedListener(ScenarioChangeListener scenarioChangeListener)
+	{
+		_scenarioChangeListeners.add(scenarioChangeListener);
+	}
+
 	void deleteScenario()
 	{
 		_scenarioTablePanel.deleteSelectedScenarioRun();
 		setModified(true);
 	}
 
-	public String quickState()
+	public String quickStateString()
 	{
-
-		QuickStateBuilder builder = new QuickStateBuilder();
-
-
-		try
-		{
-			String cAdd = "";
-			// Base, Comparison and Difference
-			JRadioButton rdb = (JRadioButton) getSwingEngine().find("rdbp000");
-			if(rdb.isSelected())
-			{
-				cAdd = cAdd + "Base";
-				builder.withComparisonType(QuickState.ComparisonType.BASE);
-			}
-
-			rdb = (JRadioButton) getSwingEngine().find("rdbp001");
-			if(rdb.isSelected())
-			{
-				cAdd = cAdd + "Comp";
-				builder.withComparisonType(QuickState.ComparisonType.COMP);
-
-			}
-
-			rdb = (JRadioButton) getSwingEngine().find("rdbp002");
-			if(rdb.isSelected())
-			{
-				cAdd = cAdd + "Diff";
-				builder.withComparisonType(QuickState.ComparisonType.DIFF);
-
-			}
-			// Units
-			rdb = (JRadioButton) getSwingEngine().find("rdbCFS");
-			if(rdb.isSelected())
-			{
-				cAdd = cAdd + ";CFS";
-				builder.withDisplayCFS();
-			}
-			else
-			{
-				cAdd = cAdd + ";TAF";
-				builder.withDisplayTAF();
-			}
-
-			// Date
-			JSpinner spnSM = (JSpinner) getSwingEngine().find("spnStartMonth");
-			JSpinner spnEM = (JSpinner) getSwingEngine().find("spnEndMonth");
-			JSpinner spnSY = (JSpinner) getSwingEngine().find("spnStartYear");
-			JSpinner spnEY = (JSpinner) getSwingEngine().find("spnEndYear");
-
-			String cDate = spnSM.getValue().toString() + spnSY.getValue().toString();
-			cDate = cDate + "-" + spnEM.getValue().toString() + spnEY.getValue().toString();
-			cAdd = cAdd + ";" + cDate;
-
-			// Time Series
-			JCheckBox ckb = (JCheckBox) getSwingEngine().find("RepckbTimeSeriesPlot");
-			if(ckb.isSelected())
-			{
-				cAdd = cAdd + ";TS";
-				builder.withDisplayTimeSeriesPlot();
-			}
-
-			// Exceedance Plot
-			// Modify processing to reflect deprecation of "Exceedance plot"
-			// checkbox - Tad 2/23/17
-
-			StringBuilder cST = new StringBuilder();
-			Component[] controls2 = ((JPanel) getSwingEngine().find("controls2")).getComponents();
-			addExceedancePlots(cST, controls2);
-			builder.withExceedancePlots(controls2);
-			if(cST.length() > 0)
-			{
-				cAdd = cAdd + ";EX-" + cST;
-			}
-
-			// Boxplot
-			if(((JCheckBox) getSwingEngine().find("RepckbBAWPlot")).isSelected())
-			{
-				cAdd = cAdd + ";BP";
-				builder.withDisplayBoxAndWhiskerPlot();
-			}
-			// Monthly Table
-			ckb = (JCheckBox) getSwingEngine().find("RepckbMonthlyTable");
-			if(ckb.isSelected())
-			{
-				cAdd = cAdd + ";Monthly";
-			}
-
-			// Summary Table
-			JPanel controls3 = (JPanel) getSwingEngine().find("controls3");
-			Component[] components = controls3.getComponents();
-			ckb = (JCheckBox) getSwingEngine().find("RepckbSummaryTable");
-			if(ckb.isSelected())
-			{
-				cST = new StringBuilder(";ST-");
-				addSummaryTables(cST, components);
-				cAdd = cAdd + cST;
-			}
-
-			return cAdd;
-		}
-		catch(RuntimeException e)
-		{
-			LOGGER.error(e.getMessage(), e);
-			String messageText = "Unable to display frame.";
-			errorHandlingSvc.businessErrorHandler(messageText, e);
-		}
-
-		return null;
+		PlotConfigurationStateBuilder builder = new PlotConfigurationStateBuilder(getSwingEngine());
+		return builder.createQuickStateString();
 	}
 
-	private void addExceedancePlots(StringBuilder cST, Component[] components)
+	public PlotConfigurationState plotConfigurationState()
 	{
-		for(Component c : components)
-		{
-			if(c instanceof JCheckBox && ((JCheckBox) c).isSelected())
-			{
-				cST.append(",").append(((JCheckBox) c).getText());
-			}
-			else if(c instanceof Container)
-			{
-				addExceedancePlots(cST, ((Container) c).getComponents());
-			}
-		}
+		PlotConfigurationStateBuilder builder = new PlotConfigurationStateBuilder(getSwingEngine());
+		return builder.createPlotConfigurationState();
 	}
 
 	@Override
@@ -350,41 +255,21 @@ public final class ProjectConfigurationPanel extends EpptPanel
 		}
 	}
 
-	private void addSummaryTables(StringBuilder cST, Component[] components)
-	{
-		for(final Component component : components)
-		{
-			if(component instanceof JCheckBox)
-			{
-				JCheckBox c = (JCheckBox) component;
-				if(c.isSelected())
-				{
-					String cName = c.getText();
-					cST.append(",").append(cName);
-				}
-			}
-			else if(component instanceof Container)
-			{
-				addSummaryTables(cST, ((Container) component).getComponents());
-			}
-		}
-	}
-
-	public Month getStartMonth()
+	public LocalDate getStartMonth()
 	{
 		JSpinner monthSpinner = (JSpinner) getSwingEngine().find("spnStartMonth");
 		int month = ResultUtilsBO.getResultUtilsInstance().monthToInt(monthSpinner.getValue().toString());
 		JSpinner yearSpinner = (JSpinner) getSwingEngine().find("spnStartYear");
 		int year = Integer.parseInt(yearSpinner.getValue().toString());
-		return new Month(month, year);
+		return LocalDate.of(year, month, 1);
 	}
 
-	private void setStartMonth(Month start)
+	private void setStartMonth(LocalDate start)
 	{
 		JSpinner monthSpinner = (JSpinner) getSwingEngine().find("spnStartMonth");
-		monthSpinner.setValue(ResultUtilsBO.getResultUtilsInstance().intToMonth(start.getMonth()));
+		monthSpinner.setValue(ResultUtilsBO.getResultUtilsInstance().intToMonth(start.getMonth().getValue()));
 		JSpinner yearSpinner = (JSpinner) getSwingEngine().find("spnStartYear");
-		yearSpinner.setValue(start.getYearValue());
+		yearSpinner.setValue(start.getYear());
 	}
 
 	public void saveConfigurationToPath(Path selectedPath, String projectName, String projectDescription)
@@ -428,7 +313,7 @@ public final class ProjectConfigurationPanel extends EpptPanel
 					addScenario(scenarioRun);
 				}
 				//Need to ensure this is called after scenarios are added to TreeTable model
-				Platform.runLater(() ->SwingUtilities.invokeLater(this::updateRadioState));
+				Platform.runLater(() -> SwingUtilities.invokeLater(this::updateRadioState));
 			}
 			catch(RuntimeException ex)
 			{
@@ -474,21 +359,21 @@ public final class ProjectConfigurationPanel extends EpptPanel
 		return (JRadioButton) getSwingEngine().find("rdbp002");
 	}
 
-	public Month getEndMonth()
+	public LocalDate getEndMonth()
 	{
 		JSpinner monthSpinner = (JSpinner) getSwingEngine().find("spnEndMonth");
 		int month = ResultUtilsBO.getResultUtilsInstance().monthToInt(monthSpinner.getValue().toString());
 		JSpinner yearSpinner = (JSpinner) getSwingEngine().find("spnEndYear");
 		int year = Integer.parseInt(yearSpinner.getValue().toString());
-		return new Month(month, year);
+		return (LocalDate) TemporalAdjusters.lastDayOfMonth().adjustInto(LocalDate.of(year, month, 1));
 	}
 
-	void setEndMonth(Month end)
+	private void setEndMonth(LocalDate end)
 	{
 		JSpinner monthSpinner = (JSpinner) getSwingEngine().find("spnEndMonth");
-		monthSpinner.setValue(ResultUtilsBO.getResultUtilsInstance().intToMonth(end.getMonth()));
+		monthSpinner.setValue(ResultUtilsBO.getResultUtilsInstance().intToMonth(end.getMonth().getValue()));
 		JSpinner yearSpinner = (JSpinner) getSwingEngine().find("spnEndYear");
-		yearSpinner.setValue(end.getYearValue());
+		yearSpinner.setValue(end.getYear());
 	}
 
 	public String getProjectName()

@@ -20,14 +20,15 @@ import java.awt.FlowLayout;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
-import java.awt.event.ActionEvent;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.logging.Handler;
 import java.util.logging.Level;
 import java.util.logging.LogRecord;
@@ -42,6 +43,8 @@ import gov.ca.water.calgui.bo.SimpleFileFilter;
 import gov.ca.water.calgui.constant.EpptPreferences;
 import gov.ca.water.calgui.project.EpptScenarioRun;
 import gov.ca.water.calgui.wresl.ProcessOutputConsumer;
+import gov.ca.water.calgui.wresl.WreslScriptException;
+import gov.ca.water.calgui.wresl.WreslScriptRunner;
 import gov.ca.water.quickresults.ui.TextAreaPrintStream;
 import gov.ca.water.quickresults.ui.projectconfig.ProjectConfigurationPanel;
 import gov.ca.water.reportengine.EPPTReport;
@@ -50,27 +53,23 @@ import gov.ca.water.reportengine.QAQCReportException;
 import rma.swing.RmaJDecimalField;
 import rma.swing.RmaJPanel;
 
-import static gov.ca.water.calgui.constant.Constant.CSV_EXT;
-import static gov.ca.water.calgui.constant.Constant.TABLE_EXT;
-import static gov.ca.water.calgui.constant.Constant.WRESL_DIR;
-
 /**
  * Company: Resource Management Associates
  *
  * @author <a href="mailto:adam@rmanet.com">Adam Korynta</a>
  * @since 05-13-2019
  */
-public class QAQCReportPanel extends RmaJPanel implements ProcessOutputConsumer
+public class QAQCReportPanel extends RmaJPanel
 {
 	private static final Logger LOGGER = Logger.getLogger(QAQCReportPanel.class.getName());
+	private static final QAQCReportPanel INSTANCE = new QAQCReportPanel();
 
 	private final StyledDocument _doc;
 	private final Style _style;
+	private final AtomicInteger _processesRunning = new AtomicInteger(0);
 	private JPanel _panel1;
 	private JButton _generateReportButton;
-	private JTextPane _textPane1 = new JTextPane();
-	private JComboBox<EpptScenarioRun> _altComboBox;
-	private JComboBox<EpptScenarioRun> _baseComboBox;
+	private JTextPane _qaqcTextPane;
 	private JTextField _toleranceTextField;
 	private JTextField _reportSubtitle;
 	private JTextField _pdfOutput;
@@ -84,51 +83,101 @@ public class QAQCReportPanel extends RmaJPanel implements ProcessOutputConsumer
 	private JCheckBox _standardSummaryStatiticsCheckBox;
 	private JTextField _authorTextField;
 	private JProgressBar _progressBar1;
-	private TextAreaPrintStream _textAreaPrintStream;
-	private boolean _ignoreSelectionChange;
+	private JButton _runAltWreslButton;
+	private JButton _runBaseWreslButton;
+	private JTextField _altScenarioTextField;
+	private JTextField _baseScenarioTextField;
+	private JTabbedPane _tabbedPane1;
+	private JTextPane _baseWreslTextPane;
+	private JTextPane _altWreslTextPane;
+	private EpptScenarioRun _baseRun;
+	private EpptScenarioRun _altRun;
 
-	public QAQCReportPanel()
+	private QAQCReportPanel()
 	{
 		$$$setupUI$$$();
-		addListeners();
+		_generateReportButton.addActionListener(e -> generateReport());
+		_runBaseWreslButton.addActionListener(e -> CompletableFuture.runAsync(this::runBaseWresl));
+		_runAltWreslButton.addActionListener(e -> CompletableFuture.runAsync(this::runAltWresl));
 		setLayout(new BorderLayout());
 		add($$$getRootComponent$$$(), BorderLayout.CENTER);
 		_authorTextField.setText(EpptPreferences.getUsername());
 		((RmaJDecimalField) _toleranceTextField).setValue(0.01);
 		_fileChooserBtn.addActionListener(e -> chooseReportFile());
-		_doc = (StyledDocument) _textPane1.getDocument();
+		_doc = (StyledDocument) _qaqcTextPane.getDocument();
 		_style = _doc.addStyle("ConsoleStyle", null);
 		Logger.getLogger("").addHandler(new ReportHandler());
-		_baseComboBox.addActionListener(this::scenarioComboboxChanged);
-		_altComboBox.addActionListener(this::scenarioComboboxChanged);
+		ProjectConfigurationPanel.getProjectConfigurationPanel().addScenarioChangedListener(
+				(base, alternatives) -> fillScenarioRuns(base, alternatives));
 	}
 
-	private void scenarioComboboxChanged(ActionEvent e)
+	private void runAltWresl()
 	{
-		if(!_ignoreSelectionChange)
+		try
 		{
-			_ignoreSelectionChange = true;
-			Object selectedBaseItem = _baseComboBox.getSelectedItem();
-			Object selectedAltItem = _altComboBox.getSelectedItem();
-			_baseComboBox.removeAllItems();
-			_altComboBox.removeAllItems();
-			_altComboBox.addItem(null);
-			ProjectConfigurationPanel projectConfigurationPanel = ProjectConfigurationPanel.getProjectConfigurationPanel();
-			List<EpptScenarioRun> allEpptScenarioRuns = projectConfigurationPanel.getAllEpptScenarioRuns();
-			allEpptScenarioRuns.forEach(s -> _baseComboBox.addItem(s));
-			allEpptScenarioRuns.forEach(s -> _altComboBox.addItem(s));
-			if(selectedAltItem != null)
-			{
-				_baseComboBox.removeItem(selectedAltItem);
-			}
-			if(selectedBaseItem != null)
-			{
-				_altComboBox.removeItem(selectedBaseItem);
-			}
-			_baseComboBox.setSelectedItem(selectedBaseItem);
-			_altComboBox.setSelectedItem(selectedAltItem);
-			_ignoreSelectionChange = false;
+			startProcessAsync(_runAltWreslButton);
+			runWresl(_altRun, _altWreslTextPane);
 		}
+		finally
+		{
+			stopProcessAsync(_runAltWreslButton);
+		}
+	}
+
+	private void runBaseWresl()
+	{
+		try
+		{
+			startProcessAsync(_runBaseWreslButton);
+			runWresl(_baseRun, _baseWreslTextPane);
+		}
+		finally
+		{
+			stopProcessAsync(_runBaseWreslButton);
+		}
+	}
+
+	private void runWresl(EpptScenarioRun scenarioRun, JTextPane textPane)
+	{
+		try
+		{
+			ProjectConfigurationPanel projectConfigurationPanel = ProjectConfigurationPanel.getProjectConfigurationPanel();
+			LocalDate startMonth = projectConfigurationPanel.getStartMonth();
+			LocalDate endMonth = projectConfigurationPanel.getEndMonth();
+			LocalDate start = LocalDate.of(startMonth.getYear(), startMonth.getMonth(), 1);
+			start = start.withDayOfMonth(start.lengthOfMonth());
+			LocalDate end = LocalDate.of(endMonth.getYear(), endMonth.getMonth(), 1);
+			end = end.withDayOfMonth(end.lengthOfMonth());
+			WreslScriptRunner wreslScriptRunner = new WreslScriptRunner(scenarioRun, new WreslProcessConsumer(textPane));
+			wreslScriptRunner.run(start, end);
+		}
+		catch(WreslScriptException | RuntimeException e1)
+		{
+			LOGGER.log(Level.SEVERE, "Error in WRESL Script Run", e1);
+		}
+	}
+
+	private void stopProcessAsync(JButton button)
+	{
+		SwingUtilities.invokeLater(() ->
+		{
+			button.setEnabled(true);
+			stopProgress();
+		});
+	}
+
+	private void startProcessAsync(JButton button)
+	{
+		SwingUtilities.invokeLater(() ->
+		{
+			button.setEnabled(false);
+			startProgress();
+		});
+	}
+
+	public static QAQCReportPanel getInstance()
+	{
+		return INSTANCE;
 	}
 
 	private void chooseReportFile()
@@ -147,31 +196,14 @@ public class QAQCReportPanel extends RmaJPanel implements ProcessOutputConsumer
 				filePath += ".pdf";
 			}
 			_pdfOutput.setText(filePath);
+			_tabbedPane1.setTitleAt(0, Paths.get(filePath).getFileName().toString() + " QA/QC");
 		}
-	}
-
-	private void addListeners()
-	{
-		_generateReportButton.addActionListener(e -> generateReport());
-		_altComboBox.addActionListener(e ->
-		{
-			boolean canCompare = false;
-			EpptScenarioRun baseRun = (EpptScenarioRun) _baseComboBox.getSelectedItem();
-			EpptScenarioRun altRun = (EpptScenarioRun) _altComboBox.getSelectedItem();
-			if(baseRun != null && altRun != null)
-			{
-				canCompare = Objects.equals(baseRun.getModel(), altRun.getModel());
-			}
-			_codeChangesCheckBox.setSelected(canCompare);
-			_assumptionChangesCheckBox.setSelected(canCompare);
-		});
 	}
 
 	private void generateReport()
 	{
-		_textPane1.setText("");
-		EpptScenarioRun baseRun = (EpptScenarioRun) _baseComboBox.getSelectedItem();
-		if(baseRun != null)
+		_qaqcTextPane.setText("");
+		if(_baseRun != null)
 		{
 			boolean exists = Paths.get(_pdfOutput.getText()).toFile().exists();
 			if(exists)
@@ -198,23 +230,14 @@ public class QAQCReportPanel extends RmaJPanel implements ProcessOutputConsumer
 	{
 		try
 		{
-			SwingUtilities.invokeLater(() ->
-			{
-				_generateReportButton.setEnabled(false);
-				_progressBar1.setVisible(true);
-				_progressBar1.setIndeterminate(true);
-				repaint();
-				revalidate();
-			});
+			startProcessAsync(_generateReportButton);
 			Path pathToWriteOut = Paths.get(_pdfOutput.getText());
-			EpptScenarioRun baseRun = (EpptScenarioRun) _baseComboBox.getSelectedItem();
-			EpptScenarioRun altRun = (EpptScenarioRun) _altComboBox.getSelectedItem();
-			QAQCReportGenerator qaqcReportGenerator = new QAQCReportGenerator(this);
+			QAQCReportGenerator qaqcReportGenerator = new QAQCReportGenerator(new QaQcProcessConsumer());
 			double tolerance = Double.parseDouble(_toleranceTextField.getText());
 			String author = _authorTextField.getText();
 			EpptPreferences.setUsername(author);
 			String subtitle = _reportSubtitle.getText();
-			qaqcReportGenerator.generateQAQCReport(baseRun, altRun, tolerance, author, subtitle,
+			qaqcReportGenerator.generateQAQCReport(_baseRun, _altRun, tolerance, author, subtitle,
 					pathToWriteOut);
 		}
 		catch(QAQCReportException | RuntimeException e)
@@ -224,14 +247,27 @@ public class QAQCReportPanel extends RmaJPanel implements ProcessOutputConsumer
 		}
 		finally
 		{
-			SwingUtilities.invokeLater(() ->
-			{
-				_generateReportButton.setEnabled(true);
-				_progressBar1.setVisible(false);
-				_progressBar1.setIndeterminate(false);
-				repaint();
-				revalidate();
-			});
+			stopProcessAsync(_generateReportButton);
+		}
+	}
+
+	private void startProgress()
+	{
+		_processesRunning.incrementAndGet();
+		_progressBar1.setVisible(true);
+		_progressBar1.setIndeterminate(true);
+		repaint();
+		revalidate();
+	}
+
+	private void stopProgress()
+	{
+		if(0 == _processesRunning.decrementAndGet())
+		{
+			_progressBar1.setVisible(false);
+			_progressBar1.setIndeterminate(false);
+			repaint();
+			revalidate();
 		}
 	}
 
@@ -252,7 +288,7 @@ public class QAQCReportPanel extends RmaJPanel implements ProcessOutputConsumer
 		createUIComponents();
 		_panel1 = new JPanel();
 		_panel1.setLayout(new BorderLayout(5, 2));
-		_panel1.setMinimumSize(new Dimension(100, 350));
+		_panel1.setMinimumSize(new Dimension(500, 350));
 		_panel1.setPreferredSize(new Dimension(700, 600));
 		_panel1.setRequestFocusEnabled(true);
 		final JPanel panel1 = new JPanel();
@@ -275,6 +311,7 @@ public class QAQCReportPanel extends RmaJPanel implements ProcessOutputConsumer
 		_panel1.add(panel4, BorderLayout.NORTH);
 		final JPanel panel5 = new JPanel();
 		panel5.setLayout(new GridBagLayout());
+		panel5.setPreferredSize(new Dimension(384, 204));
 		panel4.add(panel5, BorderLayout.CENTER);
 		final JLabel label1 = new JLabel();
 		label1.setText("Base Scenario Run:");
@@ -293,23 +330,6 @@ public class QAQCReportPanel extends RmaJPanel implements ProcessOutputConsumer
 		gbc.anchor = GridBagConstraints.WEST;
 		gbc.insets = new Insets(5, 5, 5, 5);
 		panel5.add(label2, gbc);
-		_altComboBox = new JComboBox();
-		gbc = new GridBagConstraints();
-		gbc.gridx = 1;
-		gbc.gridy = 3;
-		gbc.anchor = GridBagConstraints.WEST;
-		gbc.fill = GridBagConstraints.HORIZONTAL;
-		gbc.insets = new Insets(5, 5, 5, 5);
-		panel5.add(_altComboBox, gbc);
-		_baseComboBox = new JComboBox();
-		gbc = new GridBagConstraints();
-		gbc.gridx = 1;
-		gbc.gridy = 2;
-		gbc.anchor = GridBagConstraints.WEST;
-		gbc.fill = GridBagConstraints.HORIZONTAL;
-		gbc.ipadx = 60;
-		gbc.insets = new Insets(5, 5, 5, 5);
-		panel5.add(_baseComboBox, gbc);
 		final JLabel label3 = new JLabel();
 		label3.setText("DSS Compare Tolerance:");
 		gbc = new GridBagConstraints();
@@ -386,10 +406,40 @@ public class QAQCReportPanel extends RmaJPanel implements ProcessOutputConsumer
 		gbc.insets = new Insets(5, 5, 5, 5);
 		panel5.add(_authorTextField, gbc);
 		final JPanel panel7 = new JPanel();
-		panel7.setLayout(new GridBagLayout());
-		panel7.setPreferredSize(new Dimension(300, 200));
-		panel4.add(panel7, BorderLayout.EAST);
-		panel7.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(), "Modules"));
+		panel7.setLayout(new BorderLayout(0, 0));
+		gbc = new GridBagConstraints();
+		gbc.gridx = 1;
+		gbc.gridy = 2;
+		gbc.fill = GridBagConstraints.BOTH;
+		gbc.insets = new Insets(5, 5, 5, 5);
+		panel5.add(panel7, gbc);
+		_runBaseWreslButton = new JButton();
+		_runBaseWreslButton.setEnabled(false);
+		_runBaseWreslButton.setText("Run WRESL");
+		panel7.add(_runBaseWreslButton, BorderLayout.EAST);
+		_baseScenarioTextField = new JTextField();
+		_baseScenarioTextField.setEditable(false);
+		panel7.add(_baseScenarioTextField, BorderLayout.CENTER);
+		final JPanel panel8 = new JPanel();
+		panel8.setLayout(new BorderLayout(0, 0));
+		gbc = new GridBagConstraints();
+		gbc.gridx = 1;
+		gbc.gridy = 3;
+		gbc.fill = GridBagConstraints.BOTH;
+		gbc.insets = new Insets(5, 5, 5, 5);
+		panel5.add(panel8, gbc);
+		_runAltWreslButton = new JButton();
+		_runAltWreslButton.setEnabled(false);
+		_runAltWreslButton.setText("Run WRESL");
+		panel8.add(_runAltWreslButton, BorderLayout.EAST);
+		_altScenarioTextField = new JTextField();
+		_altScenarioTextField.setEditable(false);
+		panel8.add(_altScenarioTextField, BorderLayout.CENTER);
+		final JPanel panel9 = new JPanel();
+		panel9.setLayout(new GridBagLayout());
+		panel9.setPreferredSize(new Dimension(200, 200));
+		panel4.add(panel9, BorderLayout.EAST);
+		panel9.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(), "Modules"));
 		_excutiveSummaryCheckBox = new JCheckBox();
 		_excutiveSummaryCheckBox.setEnabled(false);
 		_excutiveSummaryCheckBox.setHorizontalAlignment(2);
@@ -401,7 +451,7 @@ public class QAQCReportPanel extends RmaJPanel implements ProcessOutputConsumer
 		gbc.weightx = 0.5;
 		gbc.anchor = GridBagConstraints.NORTHWEST;
 		gbc.insets = new Insets(0, 5, 0, 5);
-		panel7.add(_excutiveSummaryCheckBox, gbc);
+		panel9.add(_excutiveSummaryCheckBox, gbc);
 		_assumptionChangesCheckBox = new JCheckBox();
 		_assumptionChangesCheckBox.setEnabled(false);
 		_assumptionChangesCheckBox.setHorizontalAlignment(2);
@@ -411,7 +461,7 @@ public class QAQCReportPanel extends RmaJPanel implements ProcessOutputConsumer
 		gbc.gridy = 3;
 		gbc.anchor = GridBagConstraints.NORTHWEST;
 		gbc.insets = new Insets(0, 5, 0, 5);
-		panel7.add(_assumptionChangesCheckBox, gbc);
+		panel9.add(_assumptionChangesCheckBox, gbc);
 		_codeChangesCheckBox = new JCheckBox();
 		_codeChangesCheckBox.setEnabled(false);
 		_codeChangesCheckBox.setHorizontalAlignment(2);
@@ -421,7 +471,7 @@ public class QAQCReportPanel extends RmaJPanel implements ProcessOutputConsumer
 		gbc.gridy = 4;
 		gbc.anchor = GridBagConstraints.NORTHWEST;
 		gbc.insets = new Insets(0, 5, 0, 5);
-		panel7.add(_codeChangesCheckBox, gbc);
+		panel9.add(_codeChangesCheckBox, gbc);
 		_detailedIssuesCheckBox = new JCheckBox();
 		_detailedIssuesCheckBox.setEnabled(false);
 		_detailedIssuesCheckBox.setHorizontalAlignment(2);
@@ -432,7 +482,7 @@ public class QAQCReportPanel extends RmaJPanel implements ProcessOutputConsumer
 		gbc.gridy = 5;
 		gbc.anchor = GridBagConstraints.NORTHWEST;
 		gbc.insets = new Insets(0, 5, 0, 5);
-		panel7.add(_detailedIssuesCheckBox, gbc);
+		panel9.add(_detailedIssuesCheckBox, gbc);
 		_tableOfContentsCheckBox = new JCheckBox();
 		_tableOfContentsCheckBox.setEnabled(false);
 		_tableOfContentsCheckBox.setHorizontalAlignment(2);
@@ -443,7 +493,7 @@ public class QAQCReportPanel extends RmaJPanel implements ProcessOutputConsumer
 		gbc.gridy = 1;
 		gbc.anchor = GridBagConstraints.NORTHWEST;
 		gbc.insets = new Insets(0, 5, 0, 5);
-		panel7.add(_tableOfContentsCheckBox, gbc);
+		panel9.add(_tableOfContentsCheckBox, gbc);
 		_coverPageCheckBox = new JCheckBox();
 		_coverPageCheckBox.setEnabled(false);
 		_coverPageCheckBox.setHorizontalAlignment(2);
@@ -454,7 +504,7 @@ public class QAQCReportPanel extends RmaJPanel implements ProcessOutputConsumer
 		gbc.gridy = 0;
 		gbc.anchor = GridBagConstraints.NORTHWEST;
 		gbc.insets = new Insets(0, 5, 0, 5);
-		panel7.add(_coverPageCheckBox, gbc);
+		panel9.add(_coverPageCheckBox, gbc);
 		_standardSummaryStatiticsCheckBox = new JCheckBox();
 		_standardSummaryStatiticsCheckBox.setEnabled(false);
 		_standardSummaryStatiticsCheckBox.setHorizontalAlignment(2);
@@ -464,21 +514,32 @@ public class QAQCReportPanel extends RmaJPanel implements ProcessOutputConsumer
 		gbc.gridy = 6;
 		gbc.anchor = GridBagConstraints.NORTHWEST;
 		gbc.insets = new Insets(0, 5, 0, 5);
-		panel7.add(_standardSummaryStatiticsCheckBox, gbc);
-		final JPanel panel8 = new JPanel();
-		panel8.setLayout(new BorderLayout(0, 0));
-		panel8.setPreferredSize(new Dimension(100, 0));
-		gbc = new GridBagConstraints();
-		gbc.gridx = 1;
-		gbc.gridy = 0;
-		gbc.fill = GridBagConstraints.BOTH;
-		panel7.add(panel8, gbc);
+		panel9.add(_standardSummaryStatiticsCheckBox, gbc);
+		_tabbedPane1 = new JTabbedPane();
+		_panel1.add(_tabbedPane1, BorderLayout.CENTER);
 		final JScrollPane scrollPane1 = new JScrollPane();
-		_panel1.add(scrollPane1, BorderLayout.CENTER);
-		_textPane1 = new JTextPane();
-		_textPane1.setEditable(false);
-		_textPane1.setPreferredSize(new Dimension(800, 250));
-		scrollPane1.setViewportView(_textPane1);
+		_tabbedPane1.addTab("Untitled", scrollPane1);
+		final JPanel panel10 = new JPanel();
+		panel10.setLayout(new BorderLayout(0, 0));
+		scrollPane1.setViewportView(panel10);
+		_qaqcTextPane = new JTextPane();
+		_qaqcTextPane.setEditable(false);
+		_qaqcTextPane.setPreferredSize(new Dimension(800, 250));
+		panel10.add(_qaqcTextPane, BorderLayout.CENTER);
+		final JScrollPane scrollPane2 = new JScrollPane();
+		_tabbedPane1.addTab("Untitled", scrollPane2);
+		final JPanel panel11 = new JPanel();
+		panel11.setLayout(new BorderLayout(0, 0));
+		scrollPane2.setViewportView(panel11);
+		_baseWreslTextPane = new JTextPane();
+		panel11.add(_baseWreslTextPane, BorderLayout.CENTER);
+		final JScrollPane scrollPane3 = new JScrollPane();
+		_tabbedPane1.addTab("Untitled", scrollPane3);
+		final JPanel panel12 = new JPanel();
+		panel12.setLayout(new BorderLayout(0, 0));
+		scrollPane3.setViewportView(panel12);
+		_altWreslTextPane = new JTextPane();
+		panel12.add(_altWreslTextPane, BorderLayout.CENTER);
 	}
 
 	/**
@@ -489,34 +550,56 @@ public class QAQCReportPanel extends RmaJPanel implements ProcessOutputConsumer
 		return _panel1;
 	}
 
-	public void fillComboScenarioRuns()
+	public void fillScenarioRuns(EpptScenarioRun baseRun, List<EpptScenarioRun> alternatives)
 	{
-		_ignoreSelectionChange = true;
-		_textPane1.setText("");
-		_baseComboBox.removeAllItems();
-		_altComboBox.removeAllItems();
-		ProjectConfigurationPanel projectConfigurationPanel = ProjectConfigurationPanel.getProjectConfigurationPanel();
-		List<EpptScenarioRun> allEpptScenarioRuns = projectConfigurationPanel.getAllEpptScenarioRuns();
-		EpptScenarioRun baseScenario = projectConfigurationPanel.getBaseScenario();
-		allEpptScenarioRuns.forEach(s -> _baseComboBox.addItem(s));
-		_altComboBox.addItem(null);
-		allEpptScenarioRuns.forEach(s -> _altComboBox.addItem(s));
-		if(baseScenario != null)
+		_qaqcTextPane.setText("");
+		_baseRun = baseRun;
+		if(alternatives.isEmpty())
 		{
-			_baseComboBox.setSelectedItem(baseScenario);
+			_altRun = null;
+			_altScenarioTextField.setText("");
+			_tabbedPane1.setTitleAt(2, "Alternative WRESL");
+			_tabbedPane1.setEnabledAt(2, false);
+			_runAltWreslButton.setEnabled(false);
 		}
-		_altComboBox.setSelectedItem(null);
-		_altComboBox.removeItem(baseScenario);
-		_ignoreSelectionChange = false;
+		else
+		{
+			_altRun = alternatives.get(0);
+			_altScenarioTextField.setText(_altRun.getName());
+			_tabbedPane1.setTitleAt(2, _altRun.getName() + " WRESL");
+			_tabbedPane1.setEnabledAt(2, true);
+			_runAltWreslButton.setEnabled(true);
+		}
+		if(baseRun == null)
+		{
+			_baseScenarioTextField.setText("");
+			_tabbedPane1.setTitleAt(1, "Base WRESL");
+			_tabbedPane1.setEnabledAt(1, false);
+			_runBaseWreslButton.setEnabled(false);
+		}
+		else
+		{
+			_baseScenarioTextField.setText(baseRun.getName());
+			_tabbedPane1.setTitleAt(1, baseRun.getName() + " WRESL");
+			_tabbedPane1.setEnabledAt(1, true);
+			_runBaseWreslButton.setEnabled(true);
+		}
+		_tabbedPane1.setSelectedIndex(0);
+		_runBaseWreslButton.setEnabled(baseRun != null);
+		_generateReportButton.setEnabled(baseRun != null);
+		_runAltWreslButton.setEnabled(_altRun != null);
+		boolean canCompare = false;
+		if(baseRun != null && _altRun != null)
+		{
+			canCompare = Objects.equals(baseRun.getModel(), _altRun.getModel());
+		}
+		_codeChangesCheckBox.setSelected(canCompare);
+		_assumptionChangesCheckBox.setSelected(canCompare);
+		ProjectConfigurationPanel projectConfigurationPanel = ProjectConfigurationPanel.getProjectConfigurationPanel();
 		Path currentProject = EpptPreferences.getLastProjectConfiguration().getParent();
 		Path reportPath = currentProject.resolve("Reports").resolve(projectConfigurationPanel.getProjectName() + ".pdf");
 		_pdfOutput.setText(reportPath.toString());
-	}
-
-	@Override
-	public void runStarted(EpptScenarioRun scenarioRun, Process process)
-	{
-		_textAreaPrintStream = new TextAreaPrintStream(_textPane1, process.getInputStream(), process.getErrorStream());
+		_tabbedPane1.setTitleAt(0, reportPath.getFileName().toString() + " QA/QC");
 	}
 
 
@@ -544,31 +627,11 @@ public class QAQCReportPanel extends RmaJPanel implements ProcessOutputConsumer
 		{
 			int length = _doc.getLength();
 			_doc.insertString(length, "\n" + str, _style);
-			_textPane1.setCaretPosition(length + 1);
+			_qaqcTextPane.setCaretPosition(length + 1);
 		}
 		catch(BadLocationException e)
 		{
 			LOGGER.log(Level.SEVERE, "Error appending text", e);
-		}
-	}
-
-	@Override
-	public void runFinished(Process process)
-	{
-		if(process.exitValue() == 0)
-		{
-			try
-			{
-				Desktop.getDesktop().open(new File(_pdfOutput.getText()));
-			}
-			catch(IOException e)
-			{
-				LOGGER.log(Level.WARNING, "Desktop not supported. PDF will not be displayed", e);
-			}
-		}
-		if(_textAreaPrintStream != null)
-		{
-			_textAreaPrintStream.close();
 		}
 	}
 
@@ -579,7 +642,7 @@ public class QAQCReportPanel extends RmaJPanel implements ProcessOutputConsumer
 		public void publish(LogRecord record)
 		{
 			String loggerName = record.getLoggerName();
-			if(loggerName.startsWith(EPPTReport.class.getPackage().getName()))
+			if(loggerName != null && loggerName.startsWith(EPPTReport.class.getPackage().getName()))
 			{
 				if(record.getLevel().equals(Level.WARNING) || record.getLevel().equals(Level.SEVERE))
 				{
@@ -617,6 +680,64 @@ public class QAQCReportPanel extends RmaJPanel implements ProcessOutputConsumer
 		public void close()
 		{
 			LOGGER.log(Level.FINE, "NO-OP");
+		}
+	}
+
+	private class QaQcProcessConsumer implements ProcessOutputConsumer
+	{
+
+		private TextAreaPrintStream _textAreaPrintStreamQaQc;
+
+		@Override
+		public void runStarted(EpptScenarioRun scenarioRun, Process process)
+		{
+			_textAreaPrintStreamQaQc = new TextAreaPrintStream(_qaqcTextPane, process.getInputStream(), process.getErrorStream());
+		}
+
+		@Override
+		public void runFinished(Process process)
+		{
+			if(process.exitValue() == 0)
+			{
+				try
+				{
+					Desktop.getDesktop().open(new File(_pdfOutput.getText()));
+				}
+				catch(IOException e)
+				{
+					LOGGER.log(Level.WARNING, "Desktop not supported. PDF will not be displayed", e);
+				}
+			}
+			if(_textAreaPrintStreamQaQc != null)
+			{
+				_textAreaPrintStreamQaQc.close();
+			}
+		}
+	}
+
+	private class WreslProcessConsumer implements ProcessOutputConsumer
+	{
+		private final JTextPane _textPane;
+		private TextAreaPrintStream _printStream;
+
+		private WreslProcessConsumer(JTextPane textPane)
+		{
+			_textPane = textPane;
+		}
+
+		@Override
+		public void runStarted(EpptScenarioRun scenarioRun, Process process)
+		{
+			_printStream = new TextAreaPrintStream(_textPane, process.getInputStream(), process.getErrorStream());
+		}
+
+		@Override
+		public void runFinished(Process process)
+		{
+			if(_printStream != null)
+			{
+				_printStream.close();
+			}
 		}
 	}
 }
