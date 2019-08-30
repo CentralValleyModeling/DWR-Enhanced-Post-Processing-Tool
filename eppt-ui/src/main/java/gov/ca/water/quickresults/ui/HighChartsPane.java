@@ -12,7 +12,6 @@
 
 package gov.ca.water.quickresults.ui;
 
-import java.awt.Desktop;
 import java.io.File;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;

@@ -26,6 +26,7 @@ import javax.swing.*;
 import gov.ca.water.calgui.EpptInitializationException;
 import gov.ca.water.calgui.busservice.impl.GuiLinksSeedDataSvcImpl;
 import gov.ca.water.calgui.busservice.impl.ThresholdLinksSeedDataSvc;
+import gov.ca.water.calgui.busservice.impl.WaterYearDefinitionSvc;
 import gov.ca.water.calgui.constant.EpptPreferences;
 import gov.ca.water.calgui.presentation.DisplayHelper;
 import gov.ca.water.calgui.techservice.impl.DialogSvcImpl;
@@ -131,6 +132,7 @@ public class Installer extends ModuleInstall
 			GuiLinksSeedDataSvcImpl.createSeedDataSvcImplInstance();
 			ThresholdLinksSeedDataSvc.createSeedDataSvcImplInstance();
 			EpptReportingMonths.createTrendReportingMonthsInstance();
+			WaterYearDefinitionSvc.createSeedDataSvcImplInstance();
 		}
 		catch(EpptInitializationException ex)
 		{

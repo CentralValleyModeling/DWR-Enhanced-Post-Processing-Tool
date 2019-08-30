@@ -20,13 +20,16 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
+import java.beans.PropertyChangeEvent;
 import java.io.File;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Date;
+import java.util.Objects;
 import java.util.Set;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
+import javax.swing.event.ChangeEvent;
 import javax.swing.table.TableCellEditor;
 import javax.swing.table.TableCellRenderer;
 
@@ -36,7 +39,9 @@ import gov.ca.water.calgui.constant.Constant;
 import gov.ca.water.calgui.constant.EpptPreferences;
 import gov.ca.water.calgui.project.EpptDssContainer;
 import gov.ca.water.calgui.project.EpptScenarioRun;
+import javafx.scene.paint.Color;
 
+import rma.swing.RmaJColorChooserButton;
 import rma.swing.RmaJComboBox;
 import rma.swing.RmaJDescriptionField;
 import rma.swing.RmaJTable;
@@ -50,6 +55,7 @@ import rma.swing.table.RmaCellEditor;
  */
 public class ScenarioEditorPanel
 {
+	private static JFileChooser fileChooser;
 	private final ScenarioDssTableModel _scenarioDssTableModel;
 	private JPanel _panel1;
 	private JTable _dssTable;
@@ -66,7 +72,8 @@ public class ScenarioEditorPanel
 	private JButton _outputPathButton;
 	private JTextField _waterYearTable;
 	private JButton _wyTableBtn;
-	private static JFileChooser fileChooser;
+	private JTextField _colorHexTextField;
+	private RmaJColorChooserButton _colorChooserButton;
 
 	ScenarioEditorPanel(LoadingDss loadingDss)
 	{
@@ -92,6 +99,17 @@ public class ScenarioEditorPanel
 		_waterYearTable.setText(Paths.get(Constant.WY_TYPES_TABLE).normalize().toString());
 		_wyTableBtn.addActionListener(e -> chooseWaterYearTable());
 		_wreslTextField.setText(Constant.WRESL_MAIN);
+		_colorChooserButton.addSampleListener(this::chooseColor);
+	}
+
+	private void chooseColor(PropertyChangeEvent actionEvent)
+	{
+		if(Objects.equals(RmaJColorChooserButton.PROPERTY_COLOR, actionEvent.getPropertyName()))
+		{
+			java.awt.Color color = _colorChooserButton.getColor();
+			_colorHexTextField.setText(String.format("#%02x%02x%02x", color.getRed(), color.getGreen(), color.getBlue()));
+			_colorChooserButton.setColor(color);
+		}
 	}
 
 	private void chooseWaterYearTable()
@@ -259,6 +277,30 @@ public class ScenarioEditorPanel
 		gbc.fill = GridBagConstraints.HORIZONTAL;
 		gbc.insets = new Insets(5, 5, 5, 5);
 		panel4.add(_outputPathButton, gbc);
+		final JLabel label5 = new JLabel();
+		label5.setText("Scenario Color");
+		gbc = new GridBagConstraints();
+		gbc.gridx = 0;
+		gbc.gridy = 4;
+		gbc.anchor = GridBagConstraints.WEST;
+		gbc.insets = new Insets(5, 5, 5, 5);
+		panel4.add(label5, gbc);
+		_colorHexTextField = new JTextField();
+		gbc = new GridBagConstraints();
+		gbc.gridx = 1;
+		gbc.gridy = 4;
+		gbc.weightx = 1.0;
+		gbc.anchor = GridBagConstraints.WEST;
+		gbc.fill = GridBagConstraints.HORIZONTAL;
+		gbc.insets = new Insets(5, 5, 5, 5);
+		panel4.add(_colorHexTextField, gbc);
+		_colorChooserButton = new RmaJColorChooserButton();
+		_colorChooserButton.setPreferredSize(new Dimension(45, 24));
+		gbc = new GridBagConstraints();
+		gbc.gridx = 2;
+		gbc.gridy = 4;
+		gbc.insets = new Insets(5, 5, 5, 5);
+		panel4.add(_colorChooserButton, gbc);
 		final JPanel panel5 = new JPanel();
 		panel5.setLayout(new BorderLayout(0, 0));
 		_panel1.add(panel5, BorderLayout.SOUTH);
@@ -266,14 +308,14 @@ public class ScenarioEditorPanel
 		final JPanel panel6 = new JPanel();
 		panel6.setLayout(new GridBagLayout());
 		panel5.add(panel6, BorderLayout.CENTER);
-		final JLabel label5 = new JLabel();
-		label5.setText("EPPT WRESL Script");
+		final JLabel label6 = new JLabel();
+		label6.setText("EPPT WRESL Script");
 		gbc = new GridBagConstraints();
 		gbc.gridx = 0;
 		gbc.gridy = 0;
 		gbc.anchor = GridBagConstraints.WEST;
 		gbc.insets = new Insets(5, 5, 5, 5);
-		panel6.add(label5, gbc);
+		panel6.add(label6, gbc);
 		_wreslTextField = new JTextField();
 		gbc = new GridBagConstraints();
 		gbc.gridx = 1;
@@ -291,14 +333,14 @@ public class ScenarioEditorPanel
 		gbc.fill = GridBagConstraints.HORIZONTAL;
 		gbc.insets = new Insets(5, 5, 5, 5);
 		panel6.add(_wreslButton, gbc);
-		final JLabel label6 = new JLabel();
-		label6.setText("Water Year Table File:");
+		final JLabel label7 = new JLabel();
+		label7.setText("Water Year Table File:");
 		gbc = new GridBagConstraints();
 		gbc.gridx = 0;
 		gbc.gridy = 1;
 		gbc.anchor = GridBagConstraints.WEST;
 		gbc.insets = new Insets(5, 5, 5, 5);
-		panel6.add(label6, gbc);
+		panel6.add(label7, gbc);
 		_waterYearTable = new JTextField();
 		gbc = new GridBagConstraints();
 		gbc.gridx = 1;
@@ -409,8 +451,9 @@ public class ScenarioEditorPanel
 		Path wreslMain = Paths.get(_wreslTextField.getText());
 		EpptDssContainer dssContainer = createDssContainer(name);
 		Path waterYearTablePath = Paths.get(_waterYearTable.getText());
+		String text = _colorHexTextField.getText();
 		return new EpptScenarioRun(name, description, model, outputPath, wreslMain, waterYearTablePath,
-				dssContainer);
+				dssContainer, Color.web(text));
 	}
 
 	void fillPanel(EpptScenarioRun scenarioRun)
@@ -431,6 +474,8 @@ public class ScenarioEditorPanel
 		EpptDssContainer dssContainer = scenarioRun.getDssContainer();
 		_scenarioDssTableModel.fillModel(dssContainer);
 		_waterYearTable.setText(scenarioRun.getWaterYearTable().toString());
+		_colorHexTextField.setText(Constant.colorToHex(scenarioRun.getColor()));
+		_colorChooserButton.setColor(java.awt.Color.decode(Constant.colorToHex(scenarioRun.getColor())));
 	}
 
 	void shutdown()

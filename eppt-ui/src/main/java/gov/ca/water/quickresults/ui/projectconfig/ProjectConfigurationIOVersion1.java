@@ -48,7 +48,7 @@ class ProjectConfigurationIOVersion1
 		{
 
 			JSONObject jsonObject = jsonArray.getJSONObject(i);
-			final EpptScenarioRun scenarioRun = createScenarioRunFromJson(selectedPath, jsonObject);
+			final EpptScenarioRun scenarioRun = createScenarioRunFromJson(selectedPath, i, jsonObject);
 			if(scenarioRun != null)
 			{
 				scenarioRuns.add(scenarioRun);
@@ -57,7 +57,7 @@ class ProjectConfigurationIOVersion1
 		return scenarioRuns;
 	}
 
-	private EpptScenarioRun createScenarioRunFromJson(Path selectedPath, JSONObject jsonObject)
+	private EpptScenarioRun createScenarioRunFromJson(Path selectedPath, int index, JSONObject jsonObject)
 	{
 		EpptScenarioRun scenarioRun = null;
 		String path;
@@ -80,13 +80,13 @@ class ProjectConfigurationIOVersion1
 				{
 					modelString = jsonObject.getString(MODEL_KEY);
 				}
-				scenarioRun = buildScenarioRun(dssPath, modelString);
+				scenarioRun = buildScenarioRun(dssPath, modelString, index);
 			}
 		}
 		return scenarioRun;
 	}
 
-	private EpptScenarioRun buildScenarioRun(Path dssPath, String modelString)
+	private EpptScenarioRun buildScenarioRun(Path dssPath, String modelString, int index)
 	{
 		String name = dssPath.getFileName().toString();
 		String description = "";
@@ -101,7 +101,7 @@ class ProjectConfigurationIOVersion1
 		EpptDssContainer dssContainer = new EpptDssContainer(dvDssFile, svDssFile,
 				ivDssFile, dtsDssFile, extraDssFiles);
 		return new EpptScenarioRun(name, description,
-				model, outputPath, wreslMain, Paths.get(Constant.WY_TYPES_TABLE), dssContainer);
+				model, outputPath, wreslMain, Paths.get(Constant.WY_TYPES_TABLE), dssContainer, Constant.getPlotlyDefaultColor(index));
 	}
 
 	private LocalDate readStartMonthProperties(JSONObject jsonObject)

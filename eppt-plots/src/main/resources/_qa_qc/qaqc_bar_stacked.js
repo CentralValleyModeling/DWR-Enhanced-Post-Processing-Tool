@@ -10,41 +10,28 @@
  * GNU General Public License
  */
 function test() {
-    return plot({
-        "categories": ["EXP1 VS EXP2", "SWP VS CVP"],
+
+    TESTER = document.getElementById('tester');
+    Plotly.plot( TESTER, [{
+        x: [1, 2, 3, 4, 5],
+        y: [1, 2, 4, 8, 16] }], {
+        margin: { t: 0 } } );
+
+    plot({
         "scenario_run_data": [
-            {
-                name: "EXP2",
-                data: [220.3, 0],
-            }, {
-                name: "EXP1",
-                data: [3621.6, 0],
-            }, {
-                name: "CVP",
-                data: [0, 92.3],
-            }, {
-                name: "SWP",
-                data: [0, 3713.9],
-            }],
-        "gui_link_title": "Trinity Reservoir Storage",
-        "taf": false,
-        "month_period_title": "January - December",
-        "statistics": "Averages"
+            {"data": [25], "name": "CVP"},
+            {"data": [40], "name": "SVP"},
+            {"data": [null, 40], "name": "LVP"},
+            {"data": [null, 90], "name": "TVP"}
+        ],
+        "y_axis": "Y Axis Test",
+        "x_axis": "X AXIS Test",
+        "categories": ["First stack", "Second stack"],
+        "title": "Test Stack"
     });
 }
 
-function getUnits(data) {
-    var units;
-    if (data['taf']) {
-        units = 'TAF';
-    } else {
-        units = 'CFS';
-    }
-    return units;
-}
-
 function plot(data) {
-    let units = getUnits(data);
     let series = data['scenario_run_data'];
     let categories = data['categories'];
     let container = document.createElement('div');
@@ -54,18 +41,18 @@ function plot(data) {
             renderTo: container
         },
         title: {
-            text: data['gui_link_title']
+            text: data['title']
         },
         xAxis: {
             title: {
-                text: 'Period',
+                text: data['x_axis'],
                 align: 'middle'
             },
             categories: categories
         },
         yAxis: {
             title: {
-                text: 'Volume (' + units + ')',
+                text: data['y_axis'],
                 align: 'middle'
             }
         },
@@ -80,16 +67,17 @@ function plot(data) {
                 }
             }
         },
-        tooltip: {
-            valueSuffix: ' ' + units
-        },
         legend: {
             enabled: true,
             layout: 'vertical',
             verticalAlign: 'middle',
             align: 'right'
         },
+        credits: {
+            enabled: false
+        },
+        exporting: {enabled: false},
         series: series
     });
-    return chart.getSVG();
+    // return chart.getSVG();
 }

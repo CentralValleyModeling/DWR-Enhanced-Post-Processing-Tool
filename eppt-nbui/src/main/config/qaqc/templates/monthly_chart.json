@@ -1,0 +1,36 @@
+{
+  "data": [
+    {
+      "x": [],
+      "y": [],
+      "type": "scatter",
+      "marker": {
+        "color": ""
+      },
+      "name": ""
+    }
+  ],
+  "layout": {
+    "font": {
+      "family": "Lucida Grande,Lucida Sans Unicode, Verdana, Arial, Helvetica, sans-serif",
+      "color": "black"
+    },
+    "xaxis": {
+      "showgrid": false,
+      "title": {
+        "text": ""
+      }
+    },
+    "yaxis": {
+      "title": {
+        "text": ""
+      }
+    },
+    "title": {
+      "text": "",
+      "font": {
+        "size": 20
+      }
+    }
+  }
+}

@@ -1,0 +1,123 @@
+/************************************
+
+Calc_Weirs_Op.wresl
+
+Yuxiang, DWR, BDO
+2019/02/07
+
+This file post process the weirs operation during each timestep   
+**************************************/
+
+/***************************************** Sutter Bypass ************************************/
+!Weirs Operation for Sutter Bypass
+!Check if any water spills into the Sutter Bypass: No Spills (0) Spills (1)
+define Sutter_weirs_ {
+	case nospills{
+	condition D117 + D124 + D125 + D126   == 0
+	Value 300 !0
+	}
+	case spills {
+	condition always
+	Value 200 !1
+	}
+}
+!Total spills from all 3 weirs + overflow into Sutter bypass
+define Weirs_SutterBypass_ {value D117 + D124 + D125 + D126}
+!Outputs for Sutter Bypass Weirs Operation
+define Sutter_Weirs_Op_DTS {alias Sutter_weirs_ kind 'DTS-STATUS' Units 'NONE'} !Water spills? No Spills (0) Spills (1)
+define SutterBypass_Weirs_TOT_DTS {alias Weirs_SutterBypass_ kind 'DTS-FLOW-DELIVERY' Units 'CFS'} !Total spills from all 3 weirs
+
+! check for individual weir status
+!Check if any water spills from overflow into the Sutter Bypass: No Spills (0) Spills (1)
+define Sutter_overflow_ {
+	case nospills{
+	condition D117 == 0
+	Value 300 !0
+	}
+	case spills {
+	condition always
+	Value 200 !1
+	}
+}
+define Sutter_overflow_DTS {alias Sutter_overflow_ kind 'DTS-STATUS' Units 'NONE'} !Water spills? No Spills (0) Spills (1)
+!Check if any water spills from Moulton Weir into the Sutter Bypass: No Spills (0) Spills (1)
+define Moulton_Weir_ {
+	case nospills{
+	condition D124 == 0
+	Value 300 !0
+	}
+	case spills {
+	condition always
+	Value 200 !1
+	}
+}
+define Moulton_Weir_DTS {alias Moulton_Weir_ kind 'DTS-STATUS' Units 'NONE'} !Water spills? No Spills (0) Spills (1)
+!Check if any water spills from Colusa Weir into the Sutter Bypass: No Spills (0) Spills (1)
+define Colusa_Weir_ {
+	case nospills{
+	condition D125 == 0
+	Value 300 !0
+	}
+	case spills {
+	condition always
+	Value 200 !1
+	}
+}
+define Colusa_Weir_DTS {alias Colusa_Weir_ kind 'DTS-STATUS' Units 'NONE'} !Water spills? No Spills (0) Spills (1)
+!Check if any water spills from Tisdale Weir into the Sutter Bypass: No Spills (0) Spills (1)
+define Tisdale_Weir_ {
+	case nospills{
+	condition D126 == 0
+	Value 300 !0
+	}
+	case spills {
+	condition always
+	Value 200 !1
+	}
+}
+define Tisdale_Weir_DTS {alias Tisdale_Weir_ kind 'DTS-STATUS' Units 'NONE'} !Water spills? No Spills (0) Spills (1)
+
+/***************************************** Yolo Bypass ************************************/
+!Weirs Operation for Yolo Bypass
+!Check if any water spills into the Yolo Bypass: No Spills (0) Spills (1)
+define Yolo_weirs_ {
+	case nospills{
+	condition D160 + D166A == 0
+	Value 300 !0
+	}
+	case spills {
+	condition always
+	Value 200 !1
+	}
+}
+!Total spills from all 2 weirs in to YOLO bypass
+define Weirs_YoloBypass_ {value D160 + D166A}
+!Outputs for Yolo Bypass Weirs Operation
+define Yolo_Weirs_Op_DTS {alias Yolo_weirs_ kind 'DTS-STATUS' Units 'NONE'} !Water spills? No Spills (0) Spills (1)
+define YoloBypass_Weirs_TOT_DTS {alias Weirs_YoloBypass_ kind 'DTS-FLOW-DELIVERY' Units 'CFS'} !Total spills from all 3 weirs
+
+! check for individual weir status
+!Check if any water spills from Fremont Weir into the Yolo Bypass: No Spills (0) Spills (1)
+define Fremont_Weir_ {
+	case nospills{
+	condition D160 == 0
+	Value 300 !0
+	}
+	case spills {
+	condition always
+	Value 200 !1
+	}
+}
+define Fremont_Weir_DTS {alias Fremont_Weir_ kind 'DTS-STATUS' Units 'NONE'} !Water spills? No Spills (0) Spills (1)
+!Check if any water spills from Sacramento Weir into the Yolo Bypass: No Spills (0) Spills (1)
+define Sacramento_Weir_ {
+	case nospills{
+	condition D166A == 0
+	Value 300 !0
+	}
+	case spills {
+	condition always
+	Value 200 !1
+	}
+}
+define Sacramento_Weir_DTS {alias Sacramento_Weir_ kind 'DTS-STATUS' Units 'NONE'} !Water spills? No Spills (0) Spills (1)

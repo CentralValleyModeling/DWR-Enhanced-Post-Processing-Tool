@@ -147,10 +147,10 @@ public class QuickResultsListener implements ActionListener
 	private List<String> parseLocations(String elementAt)
 	{
 		List<String> retval = new ArrayList<>();
-		String[] split = elementAt.split("Locs-");
-		if(split.length > 0)
+		String[] split = elementAt.split("Index-");
+		if(split.length > 1)
 		{
-			split = split[0].split(";");
+			split = split[1].split(";");
 			if(split.length > 0)
 			{
 				retval = Arrays.asList(split[0].split(","));

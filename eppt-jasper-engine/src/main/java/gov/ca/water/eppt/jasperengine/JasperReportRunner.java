@@ -24,7 +24,10 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.ConsoleHandler;
+import java.util.logging.Handler;
 import java.util.logging.Level;
+import java.util.logging.LogRecord;
 import java.util.logging.Logger;
 import java.util.stream.Stream;
 
@@ -61,6 +64,10 @@ public class JasperReportRunner implements ReportRunner
 
 	public static void main(String[] args)
 	{
+		Logger parentLogger = Logger.getLogger("");
+		Handler[] handlers = parentLogger.getHandlers();
+		Arrays.asList(handlers).forEach(parentLogger::removeHandler);
+		parentLogger.addHandler(new QaQcReportHandler());
 		if(args.length != 2)
 		{
 			LOGGER.log(Level.SEVERE, "input 1: expected jrxml file; input 2: expected output path");
@@ -165,6 +172,39 @@ public class JasperReportRunner implements ReportRunner
 		catch(JRException | IOException ex)
 		{
 			throw new QAQCReportException("Unable to generate Jasper Report PDF: " + jrxmlPath, ex);
+		}
+	}
+
+	private static class StdOutHandler extends ConsoleHandler
+	{
+		private StdOutHandler()
+		{
+			super();
+			setOutputStream(System.out);
+		}
+	}
+
+	private static class QaQcReportHandler extends ConsoleHandler
+	{
+		private final StdOutHandler _stdOutHandler;
+
+		private QaQcReportHandler()
+		{
+			_stdOutHandler = new StdOutHandler();
+		}
+
+		@Override
+		public void publish(LogRecord record)
+		{
+			Level level = record.getLevel();
+			if(level == null || level.intValue() < Level.WARNING.intValue())
+			{
+				_stdOutHandler.publish(record);
+			}
+			else
+			{
+				super.publish(record);
+			}
 		}
 	}
 }

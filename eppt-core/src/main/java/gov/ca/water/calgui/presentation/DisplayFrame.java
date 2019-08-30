@@ -28,6 +28,7 @@ import gov.ca.water.calgui.bo.GUILinksAllModelsBO;
 import gov.ca.water.calgui.busservice.IDSSGrabber1Svc;
 import gov.ca.water.calgui.busservice.impl.DSSGrabber1SvcImpl;
 import gov.ca.water.calgui.busservice.impl.DSSGrabber2SvcImpl;
+import gov.ca.water.calgui.busservice.impl.GuiLinksSeedDataSvcImpl;
 import gov.ca.water.calgui.constant.Constant;
 import gov.ca.water.calgui.presentation.display.BoxPlotChartPanel;
 import gov.ca.water.calgui.presentation.display.BoxPlotChartPanel2;
@@ -289,7 +290,10 @@ class DisplayFrame
 						}
 						if(showFrame)
 						{
-							String title = baseRun.getName() + " - " + locationName;
+
+							GUILinksAllModelsBO guiLinksAllModelsBO = GuiLinksSeedDataSvcImpl.getSeedDataSvcImplInstance()
+																							 .getObjById(locationName);
+							String title = baseRun.getName() + " - " + guiLinksAllModelsBO.getPlotTitle();
 							tabbedpane.setName(title);
 							tabbedPanes.add(tabbedpane);
 						}

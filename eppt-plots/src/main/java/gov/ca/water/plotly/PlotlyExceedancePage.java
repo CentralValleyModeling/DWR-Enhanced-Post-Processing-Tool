@@ -1,0 +1,194 @@
+/*
+ * Enhanced Post Processing Tool (EPPT) Copyright (c) 2019.
+ *
+ * EPPT is copyrighted by the State of California, Department of Water Resources. It is licensed
+ * under the GNU General Public License, version 2. This means it can be
+ * copied, distributed, and modified freely, but you may not restrict others
+ * in their ability to copy, distribute, and modify it. See the license below
+ * for more details.
+ *
+ * GNU General Public License
+ */
+
+package gov.ca.water.plotly;
+
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.time.Month;
+import java.time.format.TextStyle;
+import java.util.EnumMap;
+import java.util.Locale;
+import java.util.Map;
+import java.util.NavigableMap;
+
+import gov.ca.water.calgui.constant.Constant;
+import gov.ca.water.calgui.project.EpptScenarioRun;
+import javafx.scene.paint.Color;
+import org.json.JSONArray;
+import org.json.JSONObject;
+
+/**
+ * Company: Resource Management Associates
+ *
+ * @author <a href="mailto:adam@rmanet.com">Adam Korynta</a>
+ * @since 08-19-2019
+ */
+public class PlotlyExceedancePage extends PlotlyChart
+{
+	private static final Path TEMPLATE = Constant.QA_QC_TEMPLATE_PATH.resolve("exceedance_page_chart.json");
+
+	private final String _title;
+	private final String _yAxis;
+	private final Map<EpptScenarioRun, ExceedanceMonthData> _exceedanceData;
+
+	public PlotlyExceedancePage(String title, String yAxis, Map<EpptScenarioRun, ExceedanceMonthData> exceedanceData)
+	{
+		_title = title;
+		_yAxis = yAxis;
+		_exceedanceData = exceedanceData;
+	}
+
+	@Override
+	protected Path getTemplatePath()
+	{
+		return TEMPLATE;
+	}
+
+	@Override
+	protected JSONObject buildLayout(JSONObject template)
+	{
+		template.put("title", _title);
+		JSONObject xAxis = template.getJSONObject("xaxis");
+		JSONObject yAxis = template.getJSONObject("yaxis");
+		JSONObject xAxisTitle = xAxis.getJSONObject("title");
+		xAxisTitle.put("text", Month.JANUARY.getDisplayName(TextStyle.FULL, Locale.getDefault()));
+		JSONObject yAxisTitle = yAxis.getJSONObject("title");
+		yAxisTitle.put("text", _yAxis);
+		template.put("xaxis", xAxis);
+		template.put("yaxis", yAxis);
+		for(int i = 2; i <= 12; i++)
+		{
+			xAxis = new JSONObject(xAxis.toString());
+			xAxisTitle = xAxis.getJSONObject("title");
+			xAxisTitle.put("text", Month.values()[i - 1].getDisplayName(TextStyle.FULL, Locale.getDefault()));
+			template.put("xaxis" + i, xAxis);
+			template.put("yaxis" + i, yAxis);
+		}
+		return template;
+	}
+
+	@Override
+	protected JSONArray buildDataArray(JSONArray template)
+	{
+		JSONArray dataArray = new JSONArray();
+		JSONObject templateTrace = template.getJSONObject(0);
+
+		for(Map.Entry<EpptScenarioRun, ExceedanceMonthData> entry : _exceedanceData.entrySet())
+		{
+			addMonthData(dataArray, templateTrace, entry.getKey(), entry.getValue());
+		}
+		return dataArray;
+	}
+
+	private void addMonthData(JSONArray dataArray, JSONObject templateTrace, EpptScenarioRun scenarioRun,
+							  ExceedanceMonthData value)
+	{
+		EnumMap<Month, ExceedanceData> monthlyData = value._data;
+		int gridIndex = 1;
+		for(Map.Entry<Month, ExceedanceData> entry : monthlyData.entrySet())
+		{
+			Month month = entry.getKey();
+			ExceedanceData exceedanceData = entry.getValue();
+			JSONObject baseTrace = buildPrimaryTrace(templateTrace, scenarioRun.getName(), scenarioRun, exceedanceData, gridIndex);
+			dataArray.put(baseTrace);
+			int index = 0;
+			for(NavigableMap<Double, Double> thresholdData : exceedanceData.getThresholdData())
+			{
+				dataArray.put(buildThresholdTrace(templateTrace, scenarioRun.getName(), scenarioRun, thresholdData, index, gridIndex));
+				index++;
+			}
+			gridIndex++;
+		}
+	}
+
+	private JSONObject buildThresholdTrace(JSONObject template, String scenarioName, EpptScenarioRun scenarioRun, NavigableMap<Double, Double> data,
+										   int thresholdIndex, int gridIndex)
+	{
+		JSONObject retval = new JSONObject(template.toString());
+		JSONArray xArray = new JSONArray();
+		JSONArray yArray = new JSONArray();
+		for(NavigableMap.Entry<Double, Double> entry : data.entrySet())
+		{
+			xArray.put(entry.getKey());
+			yArray.put(entry.getValue());
+		}
+		JSONObject marker = buildMarker(template.getJSONObject("marker"), scenarioRun);
+		retval.put("name", scenarioName);
+		retval.put("x", xArray);
+		retval.put("y", yArray);
+		retval.put("marker", marker);
+		JSONObject line = new JSONObject();
+		line.put("width", 1);
+		line.put("dash", Constant.getPlotlyThresholdLineDash(thresholdIndex));
+		retval.put("line", line);
+		retval.put("xaxis", "x" + gridIndex);
+		retval.put("yaxis", "y" + gridIndex);
+		retval.put("showlegend", gridIndex == 1);
+		return retval;
+	}
+
+
+	private JSONObject buildPrimaryTrace(JSONObject template, String scenarioName, EpptScenarioRun scenarioRun,
+										 ExceedanceData exceedanceData, int gridIndex)
+	{
+		JSONObject retval = new JSONObject(template.toString());
+		JSONArray xArray = new JSONArray();
+		JSONArray yArray = new JSONArray();
+		for(NavigableMap.Entry<Double, Double> entry : exceedanceData.getPrimaryData().entrySet())
+		{
+			xArray.put(entry.getKey());
+			yArray.put(entry.getValue());
+		}
+		JSONObject marker = buildMarker(template.getJSONObject("marker"), scenarioRun);
+		retval.put("name", scenarioName);
+		retval.put("x", xArray);
+		retval.put("y", yArray);
+		retval.put("xaxis", "x" + gridIndex);
+		retval.put("yaxis", "y" + gridIndex);
+		retval.put("marker", marker);
+		retval.put("showlegend", gridIndex == 1);
+		return retval;
+	}
+
+	private JSONObject buildMarker(JSONObject templateMarker, EpptScenarioRun scenarioRun)
+	{
+		JSONObject marker = new JSONObject(templateMarker.toString());
+		Color color = scenarioRun.getColor();
+		marker.put("color", Constant.colorToHex(color));
+		return marker;
+	}
+
+	@Override
+	public int getWidth()
+	{
+		return 2000;
+	}
+
+	@Override
+	public int getHeight()
+	{
+		return 1200;
+	}
+
+	public static class ExceedanceMonthData
+	{
+
+		private final EnumMap<Month, ExceedanceData> _data;
+
+		public ExceedanceMonthData(EnumMap<Month, ExceedanceData> data)
+		{
+			_data = data;
+		}
+	}
+
+}

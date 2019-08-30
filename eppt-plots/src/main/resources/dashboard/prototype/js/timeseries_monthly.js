@@ -30,40 +30,57 @@ function getMonthlySeries(datum) {
     return series;
 }
 
+function getPlotlyMonthlySeries(datum) {
+    var series = [];
+    for (var i = 0; i < datum.length; i++) {
+        let timeSeries = datum[i]['full_time_series'];
+        let x = [];
+        let y = [];
+        for(var j =0; j < timeSeries.length; j++){
+            x.push(new Date(timeSeries[j][0]));
+            y.push(timeSeries[j][1]);
+        }
+        series.push({
+            name:datum[i]['scenario_name'],
+            x: x,
+            y: y,
+            line: {color: PLOTLY_COLORS[i]}
+        });
+    }
+    return series;
+}
+
 function plotMonthly(data) {
     var datum = data['scenario_run_data'];
     var series = getMonthlySeries(datum);
     var units = getMonthlyUnits(data);
-    var chart = Highcharts.chart('container_monthly', {
-        chart: {
-            type: 'line',
-            zoomKey: 'shift',
-            zoomType: 'xy',
-            panning: 'true'
-        },
-        title: {
-            text: data['gui_link_title']
-        },
-        xAxis: {
-            type: 'datetime',
-            title: {
-                text: 'Date',
-                align: 'middle'
-            }
-        },
-        yAxis: {
+    var layout = {
+        font: PLOTLY_FONT,
+        yaxis: {
             title: {
                 text: 'Volume (' + units + ')',
-                align: 'middle'
-            },
-            labels: {
-                overflow: 'justify'
             }
         },
+        showlegend: true,
         legend: {
-            enabled: true
+            orientation: 'h',
+            xanchor: 'center',
+            x: 0.5,
+            font: {
+                size: 10,
+            }
         },
-        series: series
+        title: {
+            text: data['gui_link_title'],
+            font: {
+                size: 20,
+            }
+        }
+    };
+    Plotly.newPlot('container_monthly_tester', getPlotlyMonthlySeries(datum), layout, {
+        displaylogo: false,
+        modeBarButtonsToRemove: ['toImage', 'sendDataToCloud', 'editInChartStudio', 'lasso2d', 'select2d', 'resetScale2d'],
+        scrollZoom: true,
+        responsive: true
     });
-    postInit(chart);
 }

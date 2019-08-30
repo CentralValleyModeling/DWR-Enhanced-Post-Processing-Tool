@@ -18,6 +18,7 @@ import gov.ca.water.quickresults.ui.HighChartsPane;
 import javafx.geometry.Pos;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.TilePane;
 import javafx.scene.paint.Color;
@@ -30,13 +31,12 @@ import javafx.scene.paint.Color;
  */
 class TrendReportFlowPane
 {
-	private final TilePane _flowPane;
+	private final BorderPane _flowPane;
 	private final TrendReportingAnimator _animator;
 
 	TrendReportFlowPane()
 	{
-		_flowPane = new TilePane();
-		_flowPane.alignmentProperty().set(Pos.CENTER);
+		_flowPane = new BorderPane();
 		_flowPane.setBackground(new Background(new BackgroundFill(Color.WHITE, null, null)));
 		_animator = new TrendReportingAnimator();
 		_animator.observe(_flowPane.getChildren());
@@ -50,7 +50,7 @@ class TrendReportFlowPane
 	void addDashboardPane(Path path, String callback)
 	{
 		HighChartsPane javascriptPanel = new HighChartsPane(path, callback);
-		_flowPane.getChildren().add(javascriptPanel);
+		_flowPane.setCenter(javascriptPanel);
 	}
 
 	void removeDashboardPanes()

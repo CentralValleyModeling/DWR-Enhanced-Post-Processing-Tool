@@ -24,6 +24,7 @@ import gov.ca.water.calgui.EpptInitializationException;
 import gov.ca.water.calgui.bo.GUILinksAllModelsBO;
 import gov.ca.water.calgui.busservice.impl.GuiLinksSeedDataSvcImpl;
 import gov.ca.water.calgui.busservice.impl.ThresholdLinksSeedDataSvc;
+import gov.ca.water.calgui.busservice.impl.WaterYearDefinitionSvc;
 import gov.ca.water.calgui.project.EpptDssContainer;
 import gov.ca.water.calgui.project.EpptScenarioRun;
 import gov.ca.water.calgui.project.NamedDssPath;
@@ -56,6 +57,7 @@ public class QAQCScaffold
 			Assertions.fail(e);
 		}
 		GuiLinksSeedDataSvcImpl.createSeedDataSvcImplInstance();
+		WaterYearDefinitionSvc.createSeedDataSvcImplInstance();
 		NamedDssPath namedDssPath = new NamedDssPath(
 				Paths.get("J:\\DWR\\QA_QC\\SupportingDocs040219\\EPPTSupportingDoc040219\\SampleDSS_V1.01\\Inputs\\SampleDV_Base.dss"), "test",
 				"CALSIM", "1MON", "2020D09E");
@@ -65,9 +67,9 @@ public class QAQCScaffold
 				namedDssPath,
 				Collections.emptyList());
 		EpptScenarioRun baseRun = new EpptScenarioRun("Base", "desc", GUILinksAllModelsBO.Model.findModel("CalSim2"),
-				Paths.get("Test.pdf"), Paths.get("mainWresl.wresl"), Paths.get(""), dssContainer);
+				Paths.get("Test.pdf"), Paths.get("mainWresl.wresl"), Paths.get("target\\test-classes\\dwr_eppt\\wresl\\lookup\\wytypes.table"), dssContainer, javafx.scene.paint.Color.PINK);
 		EpptScenarioRun altRun = new EpptScenarioRun("Alt", "desc", GUILinksAllModelsBO.Model.findModel("CalSim2"),
-				Paths.get("Test.pdf"), Paths.get("mainWresl.wresl"), Paths.get(""), dssContainer);
+				Paths.get("Test.pdf"), Paths.get("mainWresl.wresl"), Paths.get(""), dssContainer, javafx.scene.paint.Color.PINK);
 		QAQCReportPanel epptPanel = QAQCReportPanel.getInstance();
 		epptPanel.fillScenarioRuns(baseRun, Collections.singletonList(altRun));
 		JFrame jFrame = new JFrame();

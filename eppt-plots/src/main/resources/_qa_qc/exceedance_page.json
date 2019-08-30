@@ -1,0 +1,2710 @@
+{
+  "data": [
+    {
+      "x": [
+        0.01,
+        0.2,
+        0.25,
+        0.29,
+        0.4,
+        0.9,
+        0.95
+      ],
+      "y": [
+        9999,
+        9999,
+        999,
+        99,
+        50,
+        9,
+        2
+      ],
+      "type": "scatter",
+      "xaxis": "x",
+      "yaxis": "y",
+      "marker": {
+        "color": "rgb(76,126,238)"
+      },
+      "name": "Base (Jan)",
+      "legendgroup": "Base (Jan)",
+      "textfont": {
+        "color": "white"
+      }
+    },
+    {
+      "x": [
+        0.09,
+        0.24,
+        0.45,
+        0.55,
+        0.66,
+        0.78,
+        0.96
+      ],
+      "y": [
+        8888,
+        887,
+        250,
+        87,
+        45,
+        8,
+        2.5
+      ],
+      "type": "scatter",
+      "mode": "lines",
+      "xaxis": "x",
+      "yaxis": "y",
+      "legendgroup": "Base (Jan)",
+      "marker": {
+        "color": "rgb(76,126,238)"
+      },
+      "line": {
+        "dash": "dash",
+        "width": 1
+      },
+      "name": "Regulatory Value (Jan)",
+      "textfont": {
+        "color": "white"
+      }
+    },
+    {
+      "x": [
+        0.01,
+        0.2,
+        0.25,
+        0.29,
+        0.4,
+        0.9,
+        0.95
+      ],
+      "y": [
+        9999,
+        9999,
+        999,
+        99,
+        50,
+        9,
+        2
+      ],
+      "type": "scatter",
+      "mode": "lines",
+      "xaxis": "x",
+      "yaxis": "y",
+      "legendgroup": "Base (Jan)",
+      "marker": {
+        "color": "rgb(76,126,238)"
+      },
+      "line": {
+        "dash": "dashdot",
+        "width": 1
+      },
+      "name": "Operational Standard (Jan)",
+      "textfont": {
+        "color": "white"
+      }
+    },
+    {
+      "x": [
+        0.2,
+        0.25,
+        0.29,
+        0.4,
+        0.9,
+        0.99
+      ],
+      "y": [
+        6000,
+        5000,
+        500,
+        50,
+        5,
+        1
+      ],
+      "type": "scatter",
+      "xaxis": "x",
+      "yaxis": "y",
+      "marker": {
+        "color": "rgb(3,201,140)"
+      },
+      "name": "Alt (Jan)",
+      "legendgroup": "Alt (Jan)",
+      "textfont": {
+        "color": "white"
+      }
+    },
+    {
+      "x": [
+        0.09,
+        0.24,
+        0.45,
+        0.55,
+        0.66,
+        0.78,
+        0.96
+      ],
+      "y": [
+        5858,
+        585,
+        258,
+        85,
+        58,
+        8,
+        5
+      ],
+      "type": "scatter",
+      "mode": "lines",
+      "xaxis": "x",
+      "yaxis": "y",
+      "legendgroup": "Alt (Jan)",
+      "marker": {
+        "color": "rgb(3,201,140)"
+      },
+      "line": {
+        "dash": "dash",
+        "width": 1
+      },
+      "name": "Regulatory Value (Jan)",
+      "textfont": {
+        "color": "white"
+      }
+    },
+    {
+      "x": [
+        0.01,
+        0.2,
+        0.25,
+        0.29,
+        0.4,
+        0.9,
+        0.95
+      ],
+      "y": [
+        8787,
+        7878,
+        787,
+        87,
+        78,
+        8,
+        7
+      ],
+      "type": "scatter",
+      "mode": "lines",
+      "xaxis": "x",
+      "yaxis": "y",
+      "legendgroup": "Alt (Jan)",
+      "marker": {
+        "color": "rgb(3,201,140)"
+      },
+      "line": {
+        "dash": "dashdot",
+        "width": 1
+      },
+      "name": "Operational Standard (Jan)",
+      "textfont": {
+        "color": "white"
+      }
+    },
+    {
+      "x": [
+        0.01,
+        0.2,
+        0.25,
+        0.29,
+        0.4,
+        0.9,
+        0.95
+      ],
+      "y": [
+        9999,
+        9999,
+        999,
+        99,
+        50,
+        9,
+        2
+      ],
+      "type": "scatter",
+      "xaxis": "x2",
+      "yaxis": "y2",
+      "marker": {
+        "color": "rgb(76,126,238)"
+      },
+      "name": "Base (Feb)",
+      "legendgroup": "Base (Feb)",
+      "textfont": {
+        "color": "white"
+      }
+    },
+    {
+      "x": [
+        0.09,
+        0.24,
+        0.45,
+        0.55,
+        0.66,
+        0.78,
+        0.96
+      ],
+      "y": [
+        8888,
+        887,
+        250,
+        87,
+        45,
+        8,
+        2.5
+      ],
+      "type": "scatter",
+      "mode": "lines",
+      "xaxis": "x2",
+      "yaxis": "y2",
+      "legendgroup": "Base (Feb)",
+      "marker": {
+        "color": "rgb(76,126,238)"
+      },
+      "line": {
+        "dash": "dash",
+        "width": 1
+      },
+      "name": "Regulatory Value (Feb)",
+      "textfont": {
+        "color": "white"
+      }
+    },
+    {
+      "x": [
+        0.01,
+        0.2,
+        0.25,
+        0.29,
+        0.4,
+        0.9,
+        0.95
+      ],
+      "y": [
+        9999,
+        9999,
+        999,
+        99,
+        50,
+        9,
+        2
+      ],
+      "type": "scatter",
+      "mode": "lines",
+      "xaxis": "x2",
+      "yaxis": "y2",
+      "legendgroup": "Base (Feb)",
+      "marker": {
+        "color": "rgb(76,126,238)"
+      },
+      "line": {
+        "dash": "dashdot",
+        "width": 1
+      },
+      "name": "Operational Standard (Feb)",
+      "textfont": {
+        "color": "white"
+      }
+    },
+    {
+      "x": [
+        0.2,
+        0.25,
+        0.29,
+        0.4,
+        0.9,
+        0.99
+      ],
+      "y": [
+        6000,
+        5000,
+        500,
+        50,
+        5,
+        1
+      ],
+      "type": "scatter",
+      "xaxis": "x2",
+      "yaxis": "y2",
+      "marker": {
+        "color": "rgb(3,201,140)"
+      },
+      "name": "Alt (Feb)",
+      "legendgroup": "Alt (Feb)",
+      "textfont": {
+        "color": "white"
+      }
+    },
+    {
+      "x": [
+        0.09,
+        0.24,
+        0.45,
+        0.55,
+        0.66,
+        0.78,
+        0.96
+      ],
+      "y": [
+        5858,
+        585,
+        258,
+        85,
+        58,
+        8,
+        5
+      ],
+      "type": "scatter",
+      "mode": "lines",
+      "xaxis": "x2",
+      "yaxis": "y2",
+      "legendgroup": "Alt (Feb)",
+      "marker": {
+        "color": "rgb(3,201,140)"
+      },
+      "line": {
+        "dash": "dash",
+        "width": 1
+      },
+      "name": "Regulatory Value (Feb)",
+      "textfont": {
+        "color": "white"
+      }
+    },
+    {
+      "x": [
+        0.01,
+        0.2,
+        0.25,
+        0.29,
+        0.4,
+        0.9,
+        0.95
+      ],
+      "y": [
+        8787,
+        7878,
+        787,
+        87,
+        78,
+        8,
+        7
+      ],
+      "type": "scatter",
+      "mode": "lines",
+      "xaxis": "x2",
+      "yaxis": "y2",
+      "legendgroup": "Alt (Feb)",
+      "marker": {
+        "color": "rgb(3,201,140)"
+      },
+      "line": {
+        "dash": "dashdot",
+        "width": 1
+      },
+      "name": "Operational Standard (Feb)",
+      "textfont": {
+        "color": "white"
+      }
+    },
+    {
+      "x": [
+        0.01,
+        0.2,
+        0.25,
+        0.29,
+        0.4,
+        0.9,
+        0.95
+      ],
+      "y": [
+        9999,
+        9999,
+        999,
+        99,
+        50,
+        9,
+        2
+      ],
+      "type": "scatter",
+      "xaxis": "x3",
+      "yaxis": "y3",
+      "marker": {
+        "color": "rgb(76,126,238)"
+      },
+      "name": "Base (Mar)",
+      "legendgroup": "Base (Mar)",
+      "textfont": {
+        "color": "white"
+      }
+    },
+    {
+      "x": [
+        0.09,
+        0.24,
+        0.45,
+        0.55,
+        0.66,
+        0.78,
+        0.96
+      ],
+      "y": [
+        8888,
+        887,
+        250,
+        87,
+        45,
+        8,
+        2.5
+      ],
+      "type": "scatter",
+      "mode": "lines",
+      "xaxis": "x3",
+      "yaxis": "y3",
+      "legendgroup": "Base (Mar)",
+      "marker": {
+        "color": "rgb(76,126,238)"
+      },
+      "line": {
+        "dash": "dash",
+        "width": 1
+      },
+      "name": "Regulatory Value (Mar)",
+      "textfont": {
+        "color": "white"
+      }
+    },
+    {
+      "x": [
+        0.01,
+        0.2,
+        0.25,
+        0.29,
+        0.4,
+        0.9,
+        0.95
+      ],
+      "y": [
+        9999,
+        9999,
+        999,
+        99,
+        50,
+        9,
+        2
+      ],
+      "type": "scatter",
+      "mode": "lines",
+      "xaxis": "x3",
+      "yaxis": "y3",
+      "legendgroup": "Base (Mar)",
+      "marker": {
+        "color": "rgb(76,126,238)"
+      },
+      "line": {
+        "dash": "dashdot",
+        "width": 1
+      },
+      "name": "Operational Standard (Mar)",
+      "textfont": {
+        "color": "white"
+      }
+    },
+    {
+      "x": [
+        0.2,
+        0.25,
+        0.29,
+        0.4,
+        0.9,
+        0.99
+      ],
+      "y": [
+        6000,
+        5000,
+        500,
+        50,
+        5,
+        1
+      ],
+      "type": "scatter",
+      "xaxis": "x3",
+      "yaxis": "y3",
+      "marker": {
+        "color": "rgb(3,201,140)"
+      },
+      "name": "Alt (Mar)",
+      "legendgroup": "Alt (Mar)",
+      "textfont": {
+        "color": "white"
+      }
+    },
+    {
+      "x": [
+        0.09,
+        0.24,
+        0.45,
+        0.55,
+        0.66,
+        0.78,
+        0.96
+      ],
+      "y": [
+        5858,
+        585,
+        258,
+        85,
+        58,
+        8,
+        5
+      ],
+      "type": "scatter",
+      "mode": "lines",
+      "xaxis": "x3",
+      "yaxis": "y3",
+      "legendgroup": "Alt (Mar)",
+      "marker": {
+        "color": "rgb(3,201,140)"
+      },
+      "line": {
+        "dash": "dash",
+        "width": 1
+      },
+      "name": "Regulatory Value (Mar)",
+      "textfont": {
+        "color": "white"
+      }
+    },
+    {
+      "x": [
+        0.01,
+        0.2,
+        0.25,
+        0.29,
+        0.4,
+        0.9,
+        0.95
+      ],
+      "y": [
+        8787,
+        7878,
+        787,
+        87,
+        78,
+        8,
+        7
+      ],
+      "type": "scatter",
+      "mode": "lines",
+      "xaxis": "x3",
+      "yaxis": "y3",
+      "legendgroup": "Alt (Mar)",
+      "marker": {
+        "color": "rgb(3,201,140)"
+      },
+      "line": {
+        "dash": "dashdot",
+        "width": 1
+      },
+      "name": "Operational Standard (Mar)",
+      "textfont": {
+        "color": "white"
+      }
+    },
+    {
+      "x": [
+        0.01,
+        0.2,
+        0.25,
+        0.29,
+        0.4,
+        0.9,
+        0.95
+      ],
+      "y": [
+        9999,
+        9999,
+        999,
+        99,
+        50,
+        9,
+        2
+      ],
+      "type": "scatter",
+      "xaxis": "x4",
+      "yaxis": "y4",
+      "marker": {
+        "color": "rgb(76,126,238)"
+      },
+      "name": "Base (April)",
+      "legendgroup": "Base (April)",
+      "textfont": {
+        "color": "white"
+      }
+    },
+    {
+      "x": [
+        0.09,
+        0.24,
+        0.45,
+        0.55,
+        0.66,
+        0.78,
+        0.96
+      ],
+      "y": [
+        8888,
+        887,
+        250,
+        87,
+        45,
+        8,
+        2.5
+      ],
+      "type": "scatter",
+      "mode": "lines",
+      "xaxis": "x4",
+      "yaxis": "y4",
+      "legendgroup": "Base (April)",
+      "marker": {
+        "color": "rgb(76,126,238)"
+      },
+      "line": {
+        "dash": "dash",
+        "width": 1
+      },
+      "name": "Regulatory Value (April)",
+      "textfont": {
+        "color": "white"
+      }
+    },
+    {
+      "x": [
+        0.01,
+        0.2,
+        0.25,
+        0.29,
+        0.4,
+        0.9,
+        0.95
+      ],
+      "y": [
+        9999,
+        9999,
+        999,
+        99,
+        50,
+        9,
+        2
+      ],
+      "type": "scatter",
+      "mode": "lines",
+      "xaxis": "x4",
+      "yaxis": "y4",
+      "legendgroup": "Base (April)",
+      "marker": {
+        "color": "rgb(76,126,238)"
+      },
+      "line": {
+        "dash": "dashdot",
+        "width": 1
+      },
+      "name": "Operational Standard (April)",
+      "textfont": {
+        "color": "white"
+      }
+    },
+    {
+      "x": [
+        0.2,
+        0.25,
+        0.29,
+        0.4,
+        0.9,
+        0.99
+      ],
+      "y": [
+        6000,
+        5000,
+        500,
+        50,
+        5,
+        1
+      ],
+      "type": "scatter",
+      "xaxis": "x4",
+      "yaxis": "y4",
+      "marker": {
+        "color": "rgb(3,201,140)"
+      },
+      "name": "Alt (April)",
+      "legendgroup": "Alt (April)",
+      "textfont": {
+        "color": "white"
+      }
+    },
+    {
+      "x": [
+        0.09,
+        0.24,
+        0.45,
+        0.55,
+        0.66,
+        0.78,
+        0.96
+      ],
+      "y": [
+        5858,
+        585,
+        258,
+        85,
+        58,
+        8,
+        5
+      ],
+      "type": "scatter",
+      "mode": "lines",
+      "xaxis": "x4",
+      "yaxis": "y4",
+      "legendgroup": "Alt (April)",
+      "marker": {
+        "color": "rgb(3,201,140)"
+      },
+      "line": {
+        "dash": "dash",
+        "width": 1
+      },
+      "name": "Regulatory Value (April)",
+      "textfont": {
+        "color": "white"
+      }
+    },
+    {
+      "x": [
+        0.01,
+        0.2,
+        0.25,
+        0.29,
+        0.4,
+        0.9,
+        0.95
+      ],
+      "y": [
+        8787,
+        7878,
+        787,
+        87,
+        78,
+        8,
+        7
+      ],
+      "type": "scatter",
+      "mode": "lines",
+      "xaxis": "x4",
+      "yaxis": "y4",
+      "legendgroup": "Alt (April)",
+      "marker": {
+        "color": "rgb(3,201,140)"
+      },
+      "line": {
+        "dash": "dashdot",
+        "width": 1
+      },
+      "name": "Operational Standard (April)",
+      "textfont": {
+        "color": "white"
+      }
+    },
+    {
+      "x": [
+        0.01,
+        0.2,
+        0.25,
+        0.29,
+        0.4,
+        0.9,
+        0.95
+      ],
+      "y": [
+        9999,
+        9999,
+        999,
+        99,
+        50,
+        9,
+        2
+      ],
+      "type": "scatter",
+      "xaxis": "x5",
+      "yaxis": "y5",
+      "marker": {
+        "color": "rgb(76,126,238)"
+      },
+      "name": "Base (May)",
+      "legendgroup": "Base (May)",
+      "textfont": {
+        "color": "white"
+      }
+    },
+    {
+      "x": [
+        0.09,
+        0.24,
+        0.45,
+        0.55,
+        0.66,
+        0.78,
+        0.96
+      ],
+      "y": [
+        8888,
+        887,
+        250,
+        87,
+        45,
+        8,
+        2.5
+      ],
+      "type": "scatter",
+      "mode": "lines",
+      "xaxis": "x5",
+      "yaxis": "y5",
+      "legendgroup": "Base (May)",
+      "marker": {
+        "color": "rgb(76,126,238)"
+      },
+      "line": {
+        "dash": "dash",
+        "width": 1
+      },
+      "name": "Regulatory Value (May)",
+      "textfont": {
+        "color": "white"
+      }
+    },
+    {
+      "x": [
+        0.01,
+        0.2,
+        0.25,
+        0.29,
+        0.4,
+        0.9,
+        0.95
+      ],
+      "y": [
+        9999,
+        9999,
+        999,
+        99,
+        50,
+        9,
+        2
+      ],
+      "type": "scatter",
+      "mode": "lines",
+      "xaxis": "x5",
+      "yaxis": "y5",
+      "legendgroup": "Base (May)",
+      "marker": {
+        "color": "rgb(76,126,238)"
+      },
+      "line": {
+        "dash": "dashdot",
+        "width": 1
+      },
+      "name": "Operational Standard (May)",
+      "textfont": {
+        "color": "white"
+      }
+    },
+    {
+      "x": [
+        0.2,
+        0.25,
+        0.29,
+        0.4,
+        0.9,
+        0.99
+      ],
+      "y": [
+        6000,
+        5000,
+        500,
+        50,
+        5,
+        1
+      ],
+      "type": "scatter",
+      "xaxis": "x5",
+      "yaxis": "y5",
+      "marker": {
+        "color": "rgb(3,201,140)"
+      },
+      "name": "Alt (May)",
+      "legendgroup": "Alt (May)",
+      "textfont": {
+        "color": "white"
+      }
+    },
+    {
+      "x": [
+        0.09,
+        0.24,
+        0.45,
+        0.55,
+        0.66,
+        0.78,
+        0.96
+      ],
+      "y": [
+        5858,
+        585,
+        258,
+        85,
+        58,
+        8,
+        5
+      ],
+      "type": "scatter",
+      "mode": "lines",
+      "xaxis": "x5",
+      "yaxis": "y5",
+      "legendgroup": "Alt (May)",
+      "marker": {
+        "color": "rgb(3,201,140)"
+      },
+      "line": {
+        "dash": "dash",
+        "width": 1
+      },
+      "name": "Regulatory Value (May)",
+      "textfont": {
+        "color": "white"
+      }
+    },
+    {
+      "x": [
+        0.01,
+        0.2,
+        0.25,
+        0.29,
+        0.4,
+        0.9,
+        0.95
+      ],
+      "y": [
+        8787,
+        7878,
+        787,
+        87,
+        78,
+        8,
+        7
+      ],
+      "type": "scatter",
+      "mode": "lines",
+      "xaxis": "x5",
+      "yaxis": "y5",
+      "legendgroup": "Alt (May)",
+      "marker": {
+        "color": "rgb(3,201,140)"
+      },
+      "line": {
+        "dash": "dashdot",
+        "width": 1
+      },
+      "name": "Operational Standard (May)",
+      "textfont": {
+        "color": "white"
+      }
+    },
+    {
+      "x": [
+        0.01,
+        0.2,
+        0.25,
+        0.29,
+        0.4,
+        0.9,
+        0.95
+      ],
+      "y": [
+        9999,
+        9999,
+        999,
+        99,
+        50,
+        9,
+        2
+      ],
+      "type": "scatter",
+      "xaxis": "x6",
+      "yaxis": "y6",
+      "marker": {
+        "color": "rgb(76,126,238)"
+      },
+      "name": "Base (June)",
+      "legendgroup": "Base (June)",
+      "textfont": {
+        "color": "white"
+      }
+    },
+    {
+      "x": [
+        0.09,
+        0.24,
+        0.45,
+        0.55,
+        0.66,
+        0.78,
+        0.96
+      ],
+      "y": [
+        8888,
+        887,
+        250,
+        87,
+        45,
+        8,
+        2.5
+      ],
+      "type": "scatter",
+      "mode": "lines",
+      "xaxis": "x6",
+      "yaxis": "y6",
+      "legendgroup": "Base (June)",
+      "marker": {
+        "color": "rgb(76,126,238)"
+      },
+      "line": {
+        "dash": "dash",
+        "width": 1
+      },
+      "name": "Regulatory Value (June)",
+      "textfont": {
+        "color": "white"
+      }
+    },
+    {
+      "x": [
+        0.01,
+        0.2,
+        0.25,
+        0.29,
+        0.4,
+        0.9,
+        0.95
+      ],
+      "y": [
+        9999,
+        9999,
+        999,
+        99,
+        50,
+        9,
+        2
+      ],
+      "type": "scatter",
+      "mode": "lines",
+      "xaxis": "x6",
+      "yaxis": "y6",
+      "legendgroup": "Base (June)",
+      "marker": {
+        "color": "rgb(76,126,238)"
+      },
+      "line": {
+        "dash": "dashdot",
+        "width": 1
+      },
+      "name": "Operational Standard (June)",
+      "textfont": {
+        "color": "white"
+      }
+    },
+    {
+      "x": [
+        0.2,
+        0.25,
+        0.29,
+        0.4,
+        0.9,
+        0.99
+      ],
+      "y": [
+        6000,
+        5000,
+        500,
+        50,
+        5,
+        1
+      ],
+      "type": "scatter",
+      "xaxis": "x6",
+      "yaxis": "y6",
+      "marker": {
+        "color": "rgb(3,201,140)"
+      },
+      "name": "Alt (June)",
+      "legendgroup": "Alt (June)",
+      "textfont": {
+        "color": "white"
+      }
+    },
+    {
+      "x": [
+        0.09,
+        0.24,
+        0.45,
+        0.55,
+        0.66,
+        0.78,
+        0.96
+      ],
+      "y": [
+        5858,
+        585,
+        258,
+        85,
+        58,
+        8,
+        5
+      ],
+      "type": "scatter",
+      "mode": "lines",
+      "xaxis": "x6",
+      "yaxis": "y6",
+      "legendgroup": "Alt (June)",
+      "marker": {
+        "color": "rgb(3,201,140)"
+      },
+      "line": {
+        "dash": "dash",
+        "width": 1
+      },
+      "name": "Regulatory Value (June)",
+      "textfont": {
+        "color": "white"
+      }
+    },
+    {
+      "x": [
+        0.01,
+        0.2,
+        0.25,
+        0.29,
+        0.4,
+        0.9,
+        0.95
+      ],
+      "y": [
+        8787,
+        7878,
+        787,
+        87,
+        78,
+        8,
+        7
+      ],
+      "type": "scatter",
+      "mode": "lines",
+      "xaxis": "x6",
+      "yaxis": "y6",
+      "legendgroup": "Alt (June)",
+      "marker": {
+        "color": "rgb(3,201,140)"
+      },
+      "line": {
+        "dash": "dashdot",
+        "width": 1
+      },
+      "name": "Operational Standard (June)",
+      "textfont": {
+        "color": "white"
+      }
+    },
+    {
+      "x": [
+        0.01,
+        0.2,
+        0.25,
+        0.29,
+        0.4,
+        0.9,
+        0.95
+      ],
+      "y": [
+        9999,
+        9999,
+        999,
+        99,
+        50,
+        9,
+        2
+      ],
+      "type": "scatter",
+      "xaxis": "x7",
+      "yaxis": "y7",
+      "marker": {
+        "color": "rgb(76,126,238)"
+      },
+      "name": "Base (July)",
+      "legendgroup": "Base (July)",
+      "textfont": {
+        "color": "white"
+      }
+    },
+    {
+      "x": [
+        0.09,
+        0.24,
+        0.45,
+        0.55,
+        0.66,
+        0.78,
+        0.96
+      ],
+      "y": [
+        8888,
+        887,
+        250,
+        87,
+        45,
+        8,
+        2.5
+      ],
+      "type": "scatter",
+      "mode": "lines",
+      "xaxis": "x7",
+      "yaxis": "y7",
+      "legendgroup": "Base (July)",
+      "marker": {
+        "color": "rgb(76,126,238)"
+      },
+      "line": {
+        "dash": "dash",
+        "width": 1
+      },
+      "name": "Regulatory Value (July)",
+      "textfont": {
+        "color": "white"
+      }
+    },
+    {
+      "x": [
+        0.01,
+        0.2,
+        0.25,
+        0.29,
+        0.4,
+        0.9,
+        0.95
+      ],
+      "y": [
+        9999,
+        9999,
+        999,
+        99,
+        50,
+        9,
+        2
+      ],
+      "type": "scatter",
+      "mode": "lines",
+      "xaxis": "x7",
+      "yaxis": "y7",
+      "legendgroup": "Base (July)",
+      "marker": {
+        "color": "rgb(76,126,238)"
+      },
+      "line": {
+        "dash": "dashdot",
+        "width": 1
+      },
+      "name": "Operational Standard (July)",
+      "textfont": {
+        "color": "white"
+      }
+    },
+    {
+      "x": [
+        0.2,
+        0.25,
+        0.29,
+        0.4,
+        0.9,
+        0.99
+      ],
+      "y": [
+        6000,
+        5000,
+        500,
+        50,
+        5,
+        1
+      ],
+      "type": "scatter",
+      "xaxis": "x7",
+      "yaxis": "y7",
+      "marker": {
+        "color": "rgb(3,201,140)"
+      },
+      "name": "Alt (July)",
+      "legendgroup": "Alt (July)",
+      "textfont": {
+        "color": "white"
+      }
+    },
+    {
+      "x": [
+        0.09,
+        0.24,
+        0.45,
+        0.55,
+        0.66,
+        0.78,
+        0.96
+      ],
+      "y": [
+        5858,
+        585,
+        258,
+        85,
+        58,
+        8,
+        5
+      ],
+      "type": "scatter",
+      "mode": "lines",
+      "xaxis": "x7",
+      "yaxis": "y7",
+      "legendgroup": "Alt (July)",
+      "marker": {
+        "color": "rgb(3,201,140)"
+      },
+      "line": {
+        "dash": "dash",
+        "width": 1
+      },
+      "name": "Regulatory Value (July)",
+      "textfont": {
+        "color": "white"
+      }
+    },
+    {
+      "x": [
+        0.01,
+        0.2,
+        0.25,
+        0.29,
+        0.4,
+        0.9,
+        0.95
+      ],
+      "y": [
+        8787,
+        7878,
+        787,
+        87,
+        78,
+        8,
+        7
+      ],
+      "type": "scatter",
+      "mode": "lines",
+      "xaxis": "x7",
+      "yaxis": "y7",
+      "legendgroup": "Alt (July)",
+      "marker": {
+        "color": "rgb(3,201,140)"
+      },
+      "line": {
+        "dash": "dashdot",
+        "width": 1
+      },
+      "name": "Operational Standard (July)",
+      "textfont": {
+        "color": "white"
+      }
+    },
+    {
+      "x": [
+        0.01,
+        0.2,
+        0.25,
+        0.29,
+        0.4,
+        0.9,
+        0.95
+      ],
+      "y": [
+        9999,
+        9999,
+        999,
+        99,
+        50,
+        9,
+        2
+      ],
+      "type": "scatter",
+      "xaxis": "x8",
+      "yaxis": "y8",
+      "marker": {
+        "color": "rgb(76,126,238)"
+      },
+      "name": "Base (Aug)",
+      "legendgroup": "Base (Aug)",
+      "textfont": {
+        "color": "white"
+      }
+    },
+    {
+      "x": [
+        0.09,
+        0.24,
+        0.45,
+        0.55,
+        0.66,
+        0.78,
+        0.96
+      ],
+      "y": [
+        8888,
+        887,
+        250,
+        87,
+        45,
+        8,
+        2.5
+      ],
+      "type": "scatter",
+      "mode": "lines",
+      "xaxis": "x8",
+      "yaxis": "y8",
+      "legendgroup": "Base (Aug)",
+      "marker": {
+        "color": "rgb(76,126,238)"
+      },
+      "line": {
+        "dash": "dash",
+        "width": 1
+      },
+      "name": "Regulatory Value (Aug)",
+      "textfont": {
+        "color": "white"
+      }
+    },
+    {
+      "x": [
+        0.01,
+        0.2,
+        0.25,
+        0.29,
+        0.4,
+        0.9,
+        0.95
+      ],
+      "y": [
+        9999,
+        9999,
+        999,
+        99,
+        50,
+        9,
+        2
+      ],
+      "type": "scatter",
+      "mode": "lines",
+      "xaxis": "x8",
+      "yaxis": "y8",
+      "legendgroup": "Base (Aug)",
+      "marker": {
+        "color": "rgb(76,126,238)"
+      },
+      "line": {
+        "dash": "dashdot",
+        "width": 1
+      },
+      "name": "Operational Standard (Aug)",
+      "textfont": {
+        "color": "white"
+      }
+    },
+    {
+      "x": [
+        0.2,
+        0.25,
+        0.29,
+        0.4,
+        0.9,
+        0.99
+      ],
+      "y": [
+        6000,
+        5000,
+        500,
+        50,
+        5,
+        1
+      ],
+      "type": "scatter",
+      "xaxis": "x8",
+      "yaxis": "y8",
+      "marker": {
+        "color": "rgb(3,201,140)"
+      },
+      "name": "Alt (Aug)",
+      "legendgroup": "Alt (Aug)",
+      "textfont": {
+        "color": "white"
+      }
+    },
+    {
+      "x": [
+        0.09,
+        0.24,
+        0.45,
+        0.55,
+        0.66,
+        0.78,
+        0.96
+      ],
+      "y": [
+        5858,
+        585,
+        258,
+        85,
+        58,
+        8,
+        5
+      ],
+      "type": "scatter",
+      "mode": "lines",
+      "xaxis": "x8",
+      "yaxis": "y8",
+      "legendgroup": "Alt (Aug)",
+      "marker": {
+        "color": "rgb(3,201,140)"
+      },
+      "line": {
+        "dash": "dash",
+        "width": 1
+      },
+      "name": "Regulatory Value (Aug)",
+      "textfont": {
+        "color": "white"
+      }
+    },
+    {
+      "x": [
+        0.01,
+        0.2,
+        0.25,
+        0.29,
+        0.4,
+        0.9,
+        0.95
+      ],
+      "y": [
+        8787,
+        7878,
+        787,
+        87,
+        78,
+        8,
+        7
+      ],
+      "type": "scatter",
+      "mode": "lines",
+      "xaxis": "x8",
+      "yaxis": "y8",
+      "legendgroup": "Alt (Aug)",
+      "marker": {
+        "color": "rgb(3,201,140)"
+      },
+      "line": {
+        "dash": "dashdot",
+        "width": 1
+      },
+      "name": "Operational Standard (Aug)",
+      "textfont": {
+        "color": "white"
+      }
+    },
+    {
+      "x": [
+        0.01,
+        0.2,
+        0.25,
+        0.29,
+        0.4,
+        0.9,
+        0.95
+      ],
+      "y": [
+        9999,
+        9999,
+        999,
+        99,
+        50,
+        9,
+        2
+      ],
+      "type": "scatter",
+      "xaxis": "x9",
+      "yaxis": "y9",
+      "marker": {
+        "color": "rgb(76,126,238)"
+      },
+      "name": "Base (Sept)",
+      "legendgroup": "Base (Sept)",
+      "textfont": {
+        "color": "white"
+      }
+    },
+    {
+      "x": [
+        0.09,
+        0.24,
+        0.45,
+        0.55,
+        0.66,
+        0.78,
+        0.96
+      ],
+      "y": [
+        8888,
+        887,
+        250,
+        87,
+        45,
+        8,
+        2.5
+      ],
+      "type": "scatter",
+      "mode": "lines",
+      "xaxis": "x9",
+      "yaxis": "y9",
+      "legendgroup": "Base (Sept)",
+      "marker": {
+        "color": "rgb(76,126,238)"
+      },
+      "line": {
+        "dash": "dash",
+        "width": 1
+      },
+      "name": "Regulatory Value (Sept)",
+      "textfont": {
+        "color": "white"
+      }
+    },
+    {
+      "x": [
+        0.01,
+        0.2,
+        0.25,
+        0.29,
+        0.4,
+        0.9,
+        0.95
+      ],
+      "y": [
+        9999,
+        9999,
+        999,
+        99,
+        50,
+        9,
+        2
+      ],
+      "type": "scatter",
+      "mode": "lines",
+      "xaxis": "x9",
+      "yaxis": "y9",
+      "legendgroup": "Base (Sept)",
+      "marker": {
+        "color": "rgb(76,126,238)"
+      },
+      "line": {
+        "dash": "dashdot",
+        "width": 1
+      },
+      "name": "Operational Standard (Sept)",
+      "textfont": {
+        "color": "white"
+      }
+    },
+    {
+      "x": [
+        0.2,
+        0.25,
+        0.29,
+        0.4,
+        0.9,
+        0.99
+      ],
+      "y": [
+        6000,
+        5000,
+        500,
+        50,
+        5,
+        1
+      ],
+      "type": "scatter",
+      "xaxis": "x9",
+      "yaxis": "y9",
+      "marker": {
+        "color": "rgb(3,201,140)"
+      },
+      "name": "Alt (Sept)",
+      "legendgroup": "Alt (Sept)",
+      "textfont": {
+        "color": "white"
+      }
+    },
+    {
+      "x": [
+        0.09,
+        0.24,
+        0.45,
+        0.55,
+        0.66,
+        0.78,
+        0.96
+      ],
+      "y": [
+        5858,
+        585,
+        258,
+        85,
+        58,
+        8,
+        5
+      ],
+      "type": "scatter",
+      "mode": "lines",
+      "xaxis": "x9",
+      "yaxis": "y9",
+      "legendgroup": "Alt (Sept)",
+      "marker": {
+        "color": "rgb(3,201,140)"
+      },
+      "line": {
+        "dash": "dash",
+        "width": 1
+      },
+      "name": "Regulatory Value (Sept)",
+      "textfont": {
+        "color": "white"
+      }
+    },
+    {
+      "x": [
+        0.01,
+        0.2,
+        0.25,
+        0.29,
+        0.4,
+        0.9,
+        0.95
+      ],
+      "y": [
+        8787,
+        7878,
+        787,
+        87,
+        78,
+        8,
+        7
+      ],
+      "type": "scatter",
+      "mode": "lines",
+      "xaxis": "x9",
+      "yaxis": "y9",
+      "legendgroup": "Alt (Sept)",
+      "marker": {
+        "color": "rgb(3,201,140)"
+      },
+      "line": {
+        "dash": "dashdot",
+        "width": 1
+      },
+      "name": "Operational Standard (Sept)",
+      "textfont": {
+        "color": "white"
+      }
+    },
+    {
+      "x": [
+        0.01,
+        0.2,
+        0.25,
+        0.29,
+        0.4,
+        0.9,
+        0.95
+      ],
+      "y": [
+        9999,
+        9999,
+        999,
+        99,
+        50,
+        9,
+        2
+      ],
+      "type": "scatter",
+      "xaxis": "x10",
+      "yaxis": "y10",
+      "marker": {
+        "color": "rgb(76,126,238)"
+      },
+      "name": "Base (Oct)",
+      "legendgroup": "Base (Oct)",
+      "textfont": {
+        "color": "white"
+      }
+    },
+    {
+      "x": [
+        0.09,
+        0.24,
+        0.45,
+        0.55,
+        0.66,
+        0.78,
+        0.96
+      ],
+      "y": [
+        8888,
+        887,
+        250,
+        87,
+        45,
+        8,
+        2.5
+      ],
+      "type": "scatter",
+      "mode": "lines",
+      "xaxis": "x10",
+      "yaxis": "y10",
+      "legendgroup": "Base (Oct)",
+      "marker": {
+        "color": "rgb(76,126,238)"
+      },
+      "line": {
+        "dash": "dash",
+        "width": 1
+      },
+      "name": "Regulatory Value (Oct)",
+      "textfont": {
+        "color": "white"
+      }
+    },
+    {
+      "x": [
+        0.01,
+        0.2,
+        0.25,
+        0.29,
+        0.4,
+        0.9,
+        0.95
+      ],
+      "y": [
+        9999,
+        9999,
+        999,
+        99,
+        50,
+        9,
+        2
+      ],
+      "type": "scatter",
+      "mode": "lines",
+      "xaxis": "x10",
+      "yaxis": "y10",
+      "legendgroup": "Base (Oct)",
+      "marker": {
+        "color": "rgb(76,126,238)"
+      },
+      "line": {
+        "dash": "dashdot",
+        "width": 1
+      },
+      "name": "Operational Standard (Oct)",
+      "textfont": {
+        "color": "white"
+      }
+    },
+    {
+      "x": [
+        0.2,
+        0.25,
+        0.29,
+        0.4,
+        0.9,
+        0.99
+      ],
+      "y": [
+        6000,
+        5000,
+        500,
+        50,
+        5,
+        1
+      ],
+      "type": "scatter",
+      "xaxis": "x10",
+      "yaxis": "y10",
+      "marker": {
+        "color": "rgb(3,201,140)"
+      },
+      "name": "Alt (Oct)",
+      "legendgroup": "Alt (Oct)",
+      "textfont": {
+        "color": "white"
+      }
+    },
+    {
+      "x": [
+        0.09,
+        0.24,
+        0.45,
+        0.55,
+        0.66,
+        0.78,
+        0.96
+      ],
+      "y": [
+        5858,
+        585,
+        258,
+        85,
+        58,
+        8,
+        5
+      ],
+      "type": "scatter",
+      "mode": "lines",
+      "xaxis": "x10",
+      "yaxis": "y10",
+      "legendgroup": "Alt (Oct)",
+      "marker": {
+        "color": "rgb(3,201,140)"
+      },
+      "line": {
+        "dash": "dash",
+        "width": 1
+      },
+      "name": "Regulatory Value (Oct)",
+      "textfont": {
+        "color": "white"
+      }
+    },
+    {
+      "x": [
+        0.01,
+        0.2,
+        0.25,
+        0.29,
+        0.4,
+        0.9,
+        0.95
+      ],
+      "y": [
+        8787,
+        7878,
+        787,
+        87,
+        78,
+        8,
+        7
+      ],
+      "type": "scatter",
+      "mode": "lines",
+      "xaxis": "x10",
+      "yaxis": "y10",
+      "legendgroup": "Alt (Oct)",
+      "marker": {
+        "color": "rgb(3,201,140)"
+      },
+      "line": {
+        "dash": "dashdot",
+        "width": 1
+      },
+      "name": "Operational Standard (Oct)",
+      "textfont": {
+        "color": "white"
+      }
+    },
+    {
+      "x": [
+        0.01,
+        0.2,
+        0.25,
+        0.29,
+        0.4,
+        0.9,
+        0.95
+      ],
+      "y": [
+        9999,
+        9999,
+        999,
+        99,
+        50,
+        9,
+        2
+      ],
+      "type": "scatter",
+      "xaxis": "x11",
+      "yaxis": "y11",
+      "marker": {
+        "color": "rgb(76,126,238)"
+      },
+      "name": "Base (Nov)",
+      "legendgroup": "Base (Nov)",
+      "textfont": {
+        "color": "white"
+      }
+    },
+    {
+      "x": [
+        0.09,
+        0.24,
+        0.45,
+        0.55,
+        0.66,
+        0.78,
+        0.96
+      ],
+      "y": [
+        8888,
+        887,
+        250,
+        87,
+        45,
+        8,
+        2.5
+      ],
+      "type": "scatter",
+      "mode": "lines",
+      "xaxis": "x11",
+      "yaxis": "y11",
+      "legendgroup": "Base (Nov)",
+      "marker": {
+        "color": "rgb(76,126,238)"
+      },
+      "line": {
+        "dash": "dash",
+        "width": 1
+      },
+      "name": "Regulatory Value (Nov)",
+      "textfont": {
+        "color": "white"
+      }
+    },
+    {
+      "x": [
+        0.01,
+        0.2,
+        0.25,
+        0.29,
+        0.4,
+        0.9,
+        0.95
+      ],
+      "y": [
+        9999,
+        9999,
+        999,
+        99,
+        50,
+        9,
+        2
+      ],
+      "type": "scatter",
+      "mode": "lines",
+      "xaxis": "x11",
+      "yaxis": "y11",
+      "legendgroup": "Base (Nov)",
+      "marker": {
+        "color": "rgb(76,126,238)"
+      },
+      "line": {
+        "dash": "dashdot",
+        "width": 1
+      },
+      "name": "Operational Standard (Nov)",
+      "textfont": {
+        "color": "white"
+      }
+    },
+    {
+      "x": [
+        0.2,
+        0.25,
+        0.29,
+        0.4,
+        0.9,
+        0.99
+      ],
+      "y": [
+        6000,
+        5000,
+        500,
+        50,
+        5,
+        1
+      ],
+      "type": "scatter",
+      "xaxis": "x11",
+      "yaxis": "y11",
+      "marker": {
+        "color": "rgb(3,201,140)"
+      },
+      "name": "Alt (Nov)",
+      "legendgroup": "Alt (Nov)",
+      "textfont": {
+        "color": "white"
+      }
+    },
+    {
+      "x": [
+        0.09,
+        0.24,
+        0.45,
+        0.55,
+        0.66,
+        0.78,
+        0.96
+      ],
+      "y": [
+        5858,
+        585,
+        258,
+        85,
+        58,
+        8,
+        5
+      ],
+      "type": "scatter",
+      "mode": "lines",
+      "xaxis": "x11",
+      "yaxis": "y11",
+      "legendgroup": "Alt (Nov)",
+      "marker": {
+        "color": "rgb(3,201,140)"
+      },
+      "line": {
+        "dash": "dash",
+        "width": 1
+      },
+      "name": "Regulatory Value (Nov)",
+      "textfont": {
+        "color": "white"
+      }
+    },
+    {
+      "x": [
+        0.01,
+        0.2,
+        0.25,
+        0.29,
+        0.4,
+        0.9,
+        0.95
+      ],
+      "y": [
+        8787,
+        7878,
+        787,
+        87,
+        78,
+        8,
+        7
+      ],
+      "type": "scatter",
+      "mode": "lines",
+      "xaxis": "x11",
+      "yaxis": "y11",
+      "legendgroup": "Alt (Nov)",
+      "marker": {
+        "color": "rgb(3,201,140)"
+      },
+      "line": {
+        "dash": "dashdot",
+        "width": 1
+      },
+      "name": "Operational Standard (Nov)",
+      "textfont": {
+        "color": "white"
+      }
+    },
+    {
+      "x": [
+        0.01,
+        0.2,
+        0.25,
+        0.29,
+        0.4,
+        0.9,
+        0.95
+      ],
+      "y": [
+        9999,
+        9999,
+        999,
+        99,
+        50,
+        9,
+        2
+      ],
+      "type": "scatter",
+      "xaxis": "x12",
+      "yaxis": "y12",
+      "marker": {
+        "color": "rgb(76,126,238)"
+      },
+      "name": "Base (Dec)",
+      "legendgroup": "Base (Dec)",
+      "textfont": {
+        "color": "white"
+      }
+    },
+    {
+      "x": [
+        0.09,
+        0.24,
+        0.45,
+        0.55,
+        0.66,
+        0.78,
+        0.96
+      ],
+      "y": [
+        8888,
+        887,
+        250,
+        87,
+        45,
+        8,
+        2.5
+      ],
+      "type": "scatter",
+      "mode": "lines",
+      "xaxis": "x12",
+      "yaxis": "y12",
+      "legendgroup": "Base (Dec)",
+      "marker": {
+        "color": "rgb(76,126,238)"
+      },
+      "line": {
+        "dash": "dash",
+        "width": 1
+      },
+      "name": "Regulatory Value (Dec)",
+      "textfont": {
+        "color": "white"
+      }
+    },
+    {
+      "x": [
+        0.01,
+        0.2,
+        0.25,
+        0.29,
+        0.4,
+        0.9,
+        0.95
+      ],
+      "y": [
+        9999,
+        9999,
+        999,
+        99,
+        50,
+        9,
+        2
+      ],
+      "type": "scatter",
+      "mode": "lines",
+      "xaxis": "x12",
+      "yaxis": "y12",
+      "legendgroup": "Base (Dec)",
+      "marker": {
+        "color": "rgb(76,126,238)"
+      },
+      "line": {
+        "dash": "dashdot",
+        "width": 1
+      },
+      "name": "Operational Standard (Dec)",
+      "textfont": {
+        "color": "white"
+      }
+    },
+    {
+      "x": [
+        0.2,
+        0.25,
+        0.29,
+        0.4,
+        0.9,
+        0.99
+      ],
+      "y": [
+        6000,
+        5000,
+        500,
+        50,
+        5,
+        1
+      ],
+      "type": "scatter",
+      "xaxis": "x12",
+      "yaxis": "y12",
+      "marker": {
+        "color": "rgb(3,201,140)"
+      },
+      "name": "Alt (Dec)",
+      "legendgroup": "Alt (Dec)",
+      "textfont": {
+        "color": "white"
+      }
+    },
+    {
+      "x": [
+        0.09,
+        0.24,
+        0.45,
+        0.55,
+        0.66,
+        0.78,
+        0.96
+      ],
+      "y": [
+        5858,
+        585,
+        258,
+        85,
+        58,
+        8,
+        5
+      ],
+      "type": "scatter",
+      "mode": "lines",
+      "xaxis": "x12",
+      "yaxis": "y12",
+      "legendgroup": "Alt (Dec)",
+      "marker": {
+        "color": "rgb(3,201,140)"
+      },
+      "line": {
+        "dash": "dash",
+        "width": 1
+      },
+      "name": "Regulatory Value (Dec)",
+      "textfont": {
+        "color": "white"
+      }
+    },
+    {
+      "x": [
+        0.01,
+        0.2,
+        0.25,
+        0.29,
+        0.4,
+        0.9,
+        0.95
+      ],
+      "y": [
+        8787,
+        7878,
+        787,
+        87,
+        78,
+        8,
+        7
+      ],
+      "type": "scatter",
+      "mode": "lines",
+      "xaxis": "x12",
+      "yaxis": "y12",
+      "legendgroup": "Alt (Dec)",
+      "marker": {
+        "color": "rgb(3,201,140)"
+      },
+      "line": {
+        "dash": "dashdot",
+        "width": 1
+      },
+      "name": "Operational Standard (Dec)",
+      "textfont": {
+        "color": "white"
+      }
+    }
+  ],
+  "layout": {
+    "font": {
+      "family": "Lucida Grande,Lucida Sans Unicode, Verdana, Arial, Helvetica, sans-serif",
+      "color": "black"
+    },
+    "xaxis": {
+      "showgrid": false,
+      "tickformat": ",.0%",
+      "title": {
+        "text": "Exceedance Probability"
+      },
+      "reversed": true,
+      "range": [
+        1.01,
+        0.001
+      ]
+    },
+    "xaxis2": {
+      "showgrid": false,
+      "tickformat": ",.0%",
+      "title": {
+        "text": "Exceedance Probability"
+      },
+      "reversed": true,
+      "range": [
+        1.01,
+        0.001
+      ]
+    },
+    "xaxis3": {
+      "showgrid": false,
+      "tickformat": ",.0%",
+      "title": {
+        "text": "Exceedance Probability"
+      },
+      "reversed": true,
+      "range": [
+        1.01,
+        0.001
+      ]
+    },
+    "xaxis4": {
+      "showgrid": false,
+      "tickformat": ",.0%",
+      "title": {
+        "text": "Exceedance Probability"
+      },
+      "reversed": true,
+      "range": [
+        1.01,
+        0.001
+      ]
+    },
+    "xaxis5": {
+      "showgrid": false,
+      "tickformat": ",.0%",
+      "title": {
+        "text": "Exceedance Probability"
+      },
+      "reversed": true,
+      "range": [
+        1.01,
+        0.001
+      ]
+    },
+    "xaxis6": {
+      "showgrid": false,
+      "tickformat": ",.0%",
+      "title": {
+        "text": "Exceedance Probability"
+      },
+      "reversed": true,
+      "range": [
+        1.01,
+        0.001
+      ]
+    },
+    "xaxis7": {
+      "showgrid": false,
+      "tickformat": ",.0%",
+      "title": {
+        "text": "Exceedance Probability"
+      },
+      "reversed": true,
+      "range": [
+        1.01,
+        0.001
+      ]
+    },
+    "xaxis8": {
+      "showgrid": false,
+      "tickformat": ",.0%",
+      "title": {
+        "text": "Exceedance Probability"
+      },
+      "reversed": true,
+      "range": [
+        1.01,
+        0.001
+      ]
+    },
+    "xaxis9": {
+      "showgrid": false,
+      "tickformat": ",.0%",
+      "title": {
+        "text": "Exceedance Probability"
+      },
+      "reversed": true,
+      "range": [
+        1.01,
+        0.001
+      ]
+    },
+    "xaxis10": {
+      "showgrid": false,
+      "tickformat": ",.0%",
+      "title": {
+        "text": "Exceedance Probability"
+      },
+      "reversed": true,
+      "range": [
+        1.01,
+        0.001
+      ]
+    },
+    "xaxis11": {
+      "showgrid": false,
+      "tickformat": ",.0%",
+      "title": {
+        "text": "Exceedance Probability"
+      },
+      "reversed": true,
+      "range": [
+        1.01,
+        0.001
+      ]
+    },
+    "xaxis12": {
+      "showgrid": false,
+      "tickformat": ",.0%",
+      "title": {
+        "text": "Exceedance Probability"
+      },
+      "reversed": true,
+      "range": [
+        1.01,
+        0.001
+      ]
+    },
+    "yaxis": {
+      "type": "log",
+      "dtick": 1,
+      "autorange": true,
+      "title": {
+        "text": "CFS"
+      }
+    },
+    "yaxis2": {
+      "type": "log",
+      "dtick": 1,
+      "autorange": true,
+      "title": {
+        "text": "CFS"
+      }
+    },
+    "yaxis3": {
+      "type": "log",
+      "dtick": 1,
+      "autorange": true,
+      "title": {
+        "text": "CFS"
+      }
+    },
+    "yaxis4": {
+      "type": "log",
+      "dtick": 1,
+      "autorange": true,
+      "title": {
+        "text": "CFS"
+      }
+    },
+    "yaxis5": {
+      "type": "log",
+      "dtick": 1,
+      "autorange": true,
+      "title": {
+        "text": "CFS"
+      }
+    },
+    "yaxis6": {
+      "type": "log",
+      "dtick": 1,
+      "autorange": true,
+      "title": {
+        "text": "CFS"
+      }
+    },
+    "yaxis7": {
+      "type": "log",
+      "dtick": 1,
+      "autorange": true,
+      "title": {
+        "text": "CFS"
+      }
+    },
+    "yaxis8": {
+      "type": "log",
+      "dtick": 1,
+      "autorange": true,
+      "title": {
+        "text": "CFS"
+      }
+    },
+    "yaxis9": {
+      "type": "log",
+      "dtick": 1,
+      "autorange": true,
+      "title": {
+        "text": "CFS"
+      }
+    },
+    "yaxis10": {
+      "type": "log",
+      "dtick": 1,
+      "autorange": true,
+      "title": {
+        "text": "CFS"
+      }
+    },
+    "yaxis11": {
+      "type": "log",
+      "dtick": 1,
+      "autorange": true,
+      "title": {
+        "text": "CFS"
+      }
+    },
+    "yaxis12": {
+      "type": "log",
+      "dtick": 1,
+      "autorange": true,
+      "title": {
+        "text": "CFS"
+      }
+    },
+    "grid": {
+      "rows": 4,
+      "columns": 3,
+      "pattern": "independent"
+    },
+    "showlegend": false,
+    "title": {
+      "text": "Probability of Exceedance",
+      "font": {
+        "size": 20
+      }
+    }
+  }
+}

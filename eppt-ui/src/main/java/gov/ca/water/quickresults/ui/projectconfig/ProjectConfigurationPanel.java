@@ -41,6 +41,7 @@ import gov.ca.water.quickresults.ui.projectconfig.scenariotable.ScenarioTablePan
 import gov.ca.water.quickresults.ui.quickresults.PlotConfigurationStateBuilder;
 import javafx.application.Platform;
 import org.apache.log4j.Logger;
+import org.apache.log4j.Priority;
 
 import rma.util.RMAUtil;
 
@@ -217,7 +218,14 @@ public final class ProjectConfigurationPanel extends EpptPanel
 		List<EpptScenarioRun> alternatives = _scenarioTablePanel.getAlternativeScenarioRuns();
 		if(scenarioChangeListener != null)
 		{
-			scenarioChangeListener.fillScenarioRuns(base, alternatives);
+			try
+			{
+				scenarioChangeListener.fillScenarioRuns(base, alternatives);
+			}
+			catch(RuntimeException e)
+			{
+				LOGGER.error(e);
+			}
 		}
 	}
 

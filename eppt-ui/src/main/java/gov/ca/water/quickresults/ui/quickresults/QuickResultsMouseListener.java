@@ -76,8 +76,7 @@ class QuickResultsMouseListener extends MouseAdapter
 					PlotConfigurationState plotConfigurationState = projectConfigurationPanel.plotConfigurationState();
 					LocalDate startMonth = projectConfigurationPanel.getStartMonth();
 					LocalDate endMonth = projectConfigurationPanel.getEndMonth();
-					List<String> locations = new ArrayList<>();
-					_displayHelper.showDisplayFrames(plotConfigurationState, Collections.singletonList(chk.getText()), baseScenario, alternatives,
+					_displayHelper.showDisplayFrames(plotConfigurationState, Collections.singletonList(chk.getName()), baseScenario, alternatives,
 							startMonth, endMonth);
 				}
 			}

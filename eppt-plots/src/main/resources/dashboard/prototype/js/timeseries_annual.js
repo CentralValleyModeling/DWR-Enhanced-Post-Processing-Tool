@@ -21,58 +21,57 @@ function getAnnualUnits(data) {
     return units;
 }
 
-function getAnnualSeries(datum) {
-    var series = new Array(datum.length);
+function getPlotlyAnnualSeries(datum) {
+    var series = [];
     for (var i = 0; i < datum.length; i++) {
-        series[i] = {
-            name: datum[i]['scenario_name'],
-            data: datum[i]['period_filtered_time_series']
-        };
+        let timeSeries = datum[i]['period_filtered_time_series'];
+        let x = [];
+        let y = [];
+        for(var j =0; j < timeSeries.length; j++){
+            x.push(new Date(timeSeries[j][0]));
+            y.push(timeSeries[j][1]);
+        }
+        series.push({
+            name:datum[i]['scenario_name'],
+            x: x,
+            y: y,
+            line: {color: PLOTLY_COLORS[i]}
+        });
     }
     return series;
 }
 
 function plotAnnual(data) {
     var datum = data['scenario_run_data'];
-    var series = getAnnualSeries(datum);
     var units = getAnnualUnits(data);
-    var chart = Highcharts.chart('container_annual', {
-        chart: {
-            type: 'line',
-            panKey: 'shift',
-            zoomKey: 'ctrl',
-            zoomType: 'xy',
-            panning: true
-        },
-        title: {
-            text: 'Annual Timeseries ' + data['month_period_title'] + ' ' + data['gui_link_title'],
-        },
-        xAxis: {
-            type: 'datetime',
-            title: {
-                text: 'Date',
-                align: 'middle'
-            },
-            dateTimeLabelFormats: {
-                second: '%Y-%m-%d<br/>%H:%M:%S',
-                minute: '%Y-%m-%d<br/>%H:%M',
-                hour: '%Y-%m-%d<br/>%H:%M',
-                day: '%Y<br/>%m-%d',
-                week: '%Y<br/>%m-%d',
-                month: '%Y-%m',
-                year: '%Y'
-            }
-        },
-        yAxis: {
+
+    var layout = {
+        font: PLOTLY_FONT,
+        yaxis: {
             title: {
                 text: 'Volume (' + units + ')',
-                align: 'middle'
-            },
-            labels: {
-                overflow: 'justify'
-            },
+            }
         },
-        series: series
+        showlegend: true,
+        legend: {
+            orientation: 'h',
+            xanchor: 'center',
+            x: 0.5,
+            font: {
+                size: 10,
+            }
+        },
+        title: {
+            text: data['gui_link_title'],
+            font: {
+                size: 20,
+            }
+        }
+    };
+    Plotly.newPlot('container_annual_tester', getPlotlyAnnualSeries(datum), layout, {
+        displaylogo: false,
+        modeBarButtonsToRemove: ['toImage', 'sendDataToCloud', 'editInChartStudio', 'lasso2d', 'select2d', 'resetScale2d'],
+        scrollZoom: true,
+        responsive: true
     });
-    postInit(chart);
 }

@@ -50,7 +50,7 @@ public final class QAQCTopComponent extends EpptTopComponent
 
 	public QAQCTopComponent()
 	{
-		setName("Dashboard");
+		setName("QA/QC Report");
 		QAQCReportPanel qaqcPanel = QAQCReportPanel.getInstance();
 		JScrollPane scrollPane = new JScrollPane(qaqcPanel);
 		setLayout(new BorderLayout());
@@ -60,6 +60,6 @@ public final class QAQCTopComponent extends EpptTopComponent
 	@Override
 	public String getJavaHelpId()
 	{
-		return "Dashboard";
+		return "QAQCReport";
 	}
 }

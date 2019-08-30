@@ -35,7 +35,7 @@ import gov.ca.water.calgui.project.EpptDssContainer;
 import gov.ca.water.calgui.project.EpptProject;
 import gov.ca.water.calgui.project.EpptScenarioRun;
 import gov.ca.water.calgui.project.NamedDssPath;
-import org.jfree.data.time.Month;
+import javafx.scene.paint.Color;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -102,6 +102,7 @@ class ProjectConfigurationIOVersion2
 			jsonObject.put(SCENARIO_MODEL, scenario.getModel().toString());
 			jsonObject.put(SCENARIO_OUTPUT_PATH, scenario.getOutputPath());
 			jsonObject.put(SCENARIO_WRESL_MAIN, scenario.getWreslMain());
+			jsonObject.put(SCENARIO_COLOR_KEY, Constant.colorToHex(scenario.getColor()));
 			EpptDssContainer dssContainer = scenario.getDssContainer();
 			JSONObject dssContainerJson = new JSONObject();
 			JSONObject namedDssDvJsonObject = createDssJson(dssContainer.getDvDssFile());
@@ -179,11 +180,16 @@ class ProjectConfigurationIOVersion2
 			{
 				dtsDssFile = readDssJson(jsonObject.getJSONObject(SCENARIO_DTS_KEY));
 			}
+			Color color = Constant.getPlotlyDefaultColor(i);
+			if(jsonObject.has(SCENARIO_COLOR_KEY))
+			{
+				color = Color.web(jsonObject.getString(SCENARIO_COLOR_KEY));
+			}
 
 			List<NamedDssPath> extraDssFiles = readExtraDss(jsonObject);
 			EpptDssContainer dssContainer = new EpptDssContainer(dvDssFile, svDssFile, ivDssFile, dtsDssFile, extraDssFiles);
 			EpptScenarioRun epptScenarioRun = new EpptScenarioRun(name, description,
-					model, outputPath, wreslMain, waterYearTable, dssContainer);
+					model, outputPath, wreslMain, waterYearTable, dssContainer, color);
 			retval.add(epptScenarioRun);
 		}
 		return retval;

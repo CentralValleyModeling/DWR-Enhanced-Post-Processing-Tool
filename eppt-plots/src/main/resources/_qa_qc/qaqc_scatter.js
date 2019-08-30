@@ -12,13 +12,12 @@
 function test() {
     return plot({
         "scenario_run_data": [{
-            "data": [["Jan", 1396.3445271643088], ["Feb", 1458.825340095423], ["Mar", 1569.013079128303], ["Apr", 1692.711896350799], ["May", 1841.6618916308717], ["Jun", 1835.029623785408], ["Jul", 1797.7170578847126], ["Aug", 1660.2221874591778], ["Sep", 1521.8104733953267], ["Oct", 1400.7485390792303], ["Nov", 1330.3366163520498], ["Dec", 1345.1052102615438]],
-            "scenario_name": "Base",
-        }],
-        "gui_link_title": "Trinity Reservoir Storage",
-        "taf": false,
-        "month_period_title": "January - December",
-        "statistics": "Averages"
+            "data": [[20, 6000], [25, 5000], [29, 500], [40, 50], [90, 5], [99, 1]],
+            "name": "Alt"
+        }, {"data": [[1, 9999], [20, 9999], [25, 999], [29, 99], [40, 50], [90, 9], [95, 2]], "name": "Base"}],
+        "y_axis": "Y Axis Test",
+        "x_axis": "X AXIS Test",
+        "title": "Test Stack"
     });
 }
 
@@ -27,25 +26,14 @@ function getSeries(datum) {
     for (var i = 0; i < datum.length; i++) {
         var timeSeries = datum[i]['data'];
         series[i] = {
-            name: datum[i]['scenario_name'],
+            name: datum[i]['name'],
             data: timeSeries,
         };
     }
     return series;
 }
 
-function getUnits(data) {
-    var units;
-    if (data['taf']) {
-        units = 'TAF';
-    } else {
-        units = 'CFS';
-    }
-    return units;
-}
-
 function plot(data) {
-    let units = getUnits(data);
     let datum = data['scenario_run_data'];
     let series = getSeries(datum);
     let container = document.createElement('div');
@@ -55,26 +43,27 @@ function plot(data) {
             renderTo: container
         },
         title: {
-            text: data['gui_link_title']
+            text: data['title']
         },
         xAxis: {
             title: {
-                text: 'Period',
+                text: data['x_axis'],
                 align: 'middle'
             }
         },
         yAxis: {
             title: {
-                text: 'Volume (' + units + ')',
+                text: data['y_axis'],
                 align: 'middle'
             }
-        },
-        tooltip: {
-            valueSuffix: ' ' + units
         },
         legend: {
             enabled: true
         },
+        credits: {
+            enabled: false
+        },
+        exporting: {enabled: false},
         series: series
     });
     return chart.getSVG();

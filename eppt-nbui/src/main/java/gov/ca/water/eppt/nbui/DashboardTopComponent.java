@@ -60,6 +60,6 @@ public final class DashboardTopComponent extends EpptTopComponent
 	@Override
 	public String getJavaHelpId()
 	{
-		return "Dashboard";
+		return "TrendReporting";
 	}
 }

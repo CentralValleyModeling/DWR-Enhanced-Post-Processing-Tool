@@ -177,7 +177,7 @@ public class TrendReportPanel extends JFXPanel
 	{
 		IGuiLinksSeedDataSvc seedDataSvcImplInstance = GuiLinksSeedDataSvcImpl.getSeedDataSvcImplInstance();
 		_parameterListView.getItems().addAll(seedDataSvcImplInstance.getAllGuiLinks());
-		_parameterListView.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
+		_parameterListView.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
 		_parameterListView.getSelectionModel().select(0);
 		_parameterListView.getSelectionModel().selectedItemProperty().addListener(this::inputsChanged);
 		_parameterListView.setPrefHeight(125);
@@ -209,7 +209,7 @@ public class TrendReportPanel extends JFXPanel
 	{
 		Collection<? extends Statistics> statistics = Lookup.getDefault().lookupAll(Statistics.class);
 		_statisticsListView.getItems().addAll(statistics);
-		_statisticsListView.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
+		_statisticsListView.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
 		_statisticsListView.getSelectionModel().select(0);
 		_statisticsListView.getSelectionModel().selectedItemProperty().addListener(this::inputsChanged);
 		_statisticsListView.setCellFactory(param -> new ListCell<Statistics>()
@@ -243,7 +243,7 @@ public class TrendReportPanel extends JFXPanel
 	{
 		List<EpptReportingMonths.MonthPeriod> allMonthPeriods = EpptReportingMonths.getAllMonthPeriods();
 		_seasonalPeriodListView.getItems().addAll(allMonthPeriods);
-		_seasonalPeriodListView.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
+		_seasonalPeriodListView.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
 		_seasonalPeriodListView.getSelectionModel().select(0);
 		_seasonalPeriodListView.getSelectionModel().selectedItemProperty().addListener(this::inputsChanged);
 		_seasonalPeriodListView.setPrefHeight(125);
@@ -399,7 +399,9 @@ public class TrendReportPanel extends JFXPanel
 				for(EpptReportingMonths.MonthPeriod monthPeriod : monthPeriods)
 				{
 					EpptReportingComputedSet epptReportingComputedSet = computeForMetrics(guiLink, statistic, monthPeriod);
-					retval.add(epptReportingComputedSet.toJson());
+					JSONObject jsonObject = epptReportingComputedSet.toJson();
+					LOGGER.log(Level.INFO, jsonObject.toString());
+					retval.add(jsonObject);
 				}
 			}
 		}

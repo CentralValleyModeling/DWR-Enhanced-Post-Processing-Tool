@@ -89,7 +89,14 @@ public class ScenarioTablePanel extends JFXPanel
 
 	public EpptScenarioRun getBaseScenarioRun()
 	{
-		return _scenarioTableModel.getBaseScenarioRun();
+		if(_scenarioTableModel != null)
+		{
+			return _scenarioTableModel.getBaseScenarioRun();
+		}
+		else
+		{
+			return null;
+		}
 	}
 
 	public List<EpptScenarioRun> getAlternativeScenarioRuns()

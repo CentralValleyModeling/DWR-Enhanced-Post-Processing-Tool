@@ -26,6 +26,7 @@ import gov.ca.water.calgui.project.EpptScenarioRun;
 import gov.ca.water.calgui.wresl.ProcessOutputConsumer;
 import gov.ca.water.reportengine.EPPTReport;
 import gov.ca.water.reportengine.QAQCReportException;
+import gov.ca.water.reportengine.ReportParameters;
 
 import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
 
@@ -44,17 +45,15 @@ class QAQCReportGenerator
 		_consumer = consumer;
 	}
 
-	void generateQAQCReport(EpptScenarioRun baseRun, EpptScenarioRun altRun, double tolerance,
-							String author, String subtitle, Path outputPdf)
+	void generateQAQCReport(EpptScenarioRun baseRun, EpptScenarioRun altRun, ReportParameters reportParameters, Path outputPdf)
 			throws QAQCReportException
 	{
-		Path path = writeReportData(baseRun, altRun, tolerance, author, subtitle);
+		Path path = writeReportData(baseRun, altRun, reportParameters);
 		QAQCProcessRunner processRunner = new QAQCProcessRunner(outputPdf, path, _consumer);
 		processRunner.run();
 	}
 
-	private Path writeReportData(EpptScenarioRun baseRun, EpptScenarioRun altRun, double tolerance,
-								 String author, String subtitle)
+	private Path writeReportData(EpptScenarioRun baseRun, EpptScenarioRun altRun, ReportParameters reportParameters)
 			throws QAQCReportException
 	{
 		try
@@ -67,7 +66,7 @@ class QAQCReportGenerator
 			}
 			Path dataFile = pathToWriteOut.resolve("DWR_QA_QC_Reports").resolve("Datasource").resolve("EPPT_Data.xml");
 			EPPTReport epptReport = new EPPTReport(dataFile,
-					baseRun, altRuns, tolerance, author, subtitle);
+					baseRun, altRuns, reportParameters);
 			epptReport.writeReport();
 			return pathToWriteOut.resolve("QAQC_Report.jrxml");
 		}

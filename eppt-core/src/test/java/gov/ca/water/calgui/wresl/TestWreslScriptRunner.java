@@ -26,6 +26,7 @@ import gov.ca.water.calgui.busservice.impl.GuiLinksSeedDataSvcImpl;
 import gov.ca.water.calgui.project.EpptDssContainer;
 import gov.ca.water.calgui.project.EpptScenarioRun;
 import gov.ca.water.calgui.project.NamedDssPath;
+import javafx.scene.paint.Color;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
@@ -74,9 +75,9 @@ public class TestWreslScriptRunner
 		List<NamedDssPath> extraDssFiles = Collections.emptyList();
 		EpptDssContainer dssContainer = new EpptDssContainer(dvDssFile, svDssFile, ivDssFile, dtsDssFile, extraDssFiles);
 		EPPT_SCENARIO_RUN = new EpptScenarioRun(name, description, model, outputPath,Paths.get("table"),
-				wreslMain, dssContainer);
+				wreslMain, dssContainer, Color.BLUE);
 		EPPT_SCENARIO_RUN_NOOP = new EpptScenarioRun(name, description, model, outputPath, Paths.get("table"),
-				wreslMain, dssContainer);
+				wreslMain, dssContainer, Color.PINK);
 
 	}
 

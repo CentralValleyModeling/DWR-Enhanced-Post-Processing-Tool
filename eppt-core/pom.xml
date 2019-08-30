@@ -64,6 +64,17 @@
 			</exclusions>
 		</dependency>
 		<dependency>
+			<groupId>com.google.flogger</groupId>
+			<artifactId>flogger</artifactId>
+			<version>0.3.1</version>
+		</dependency>
+		<dependency>
+			<groupId>com.google.flogger</groupId>
+			<artifactId>flogger-system-backend</artifactId>
+			<version>0.3.1</version>
+			<scope>compile</scope>
+		</dependency>
+		<dependency>
 			<groupId>org.jfree</groupId>
 			<artifactId>jfreechart</artifactId>
 			<version>1.0.19</version>

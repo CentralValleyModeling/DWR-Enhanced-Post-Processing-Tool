@@ -1,0 +1,67 @@
+/************************************
+ 
+mainControl.wresl
+
+Yuxiang, DWR, BDO
+20190206
+
+Post processing script for EPPT QAQC Report
+**************************************/
+! Load user selected study type inputs
+INITIAL { 
+	svar stdtype {select IValue from UserInit where index = 1}    !IValue = 3 for CS3
+	}
+	
+	
+SEQUENCE CYCLE1 {  
+    model   QAQC_Post
+    order   1
+}
+	
+
+MODEL QAQC_Post { 
+
+
+    ! Load water year type definition
+	INCLUDE [LOCAL]'EPPT\wytypes.wresl'
+	! Load input variables (SV and DV needed for post-processing) based on study type 1 = CalLite	2 = CalSimII 3 = CalSim3
+	If stdtype == 1 {
+	INCLUDE [LOCAL]'EPPT\InputSV_CL.wresl' !underreview - place holder 
+	INCLUDE [LOCAL]'EPPT\InputDV_CL.wresl' !underreview - place holder 
+	}	
+	If stdtype == 2 {
+	INCLUDE [LOCAL]'EPPT\InputSV_CSII.wresl'
+	INCLUDE [LOCAL]'EPPT\InputDV_CSII.wresl'
+	}
+	If stdtype == 3 {
+	INCLUDE [LOCAL]'EPPT\InputSV_CS3.wresl' !underreview - place holder
+	INCLUDE [LOCAL]'EPPT\InputDV_CS3.wresl' !underreview - place holder
+	}
+	! run dummy logic to pass through solver
+    INCLUDE [LOCAL]'logic_Dummy.wresl'
+	! run Upstream_MIF post processing calculation
+	INCLUDE [LOCAL]'EPPT\Calc_Upstream_MIF.wresl'
+	! run Weirs Operation post processing calculation
+	INCLUDE [LOCAL]'EPPT\Calc_Weirs_Op.wresl'
+	! run COA Operation post processing calculation
+	INCLUDE [LOCAL]'EPPT\Calc_COA.wresl'
+	! run SOD Export post processing calculation
+	INCLUDE [LOCAL]'EPPT\Calc_SOD_EXP.wresl'
+	! run Shortage post processing calculation
+	INCLUDE [LOCAL]'EPPT\Calc_Shortage.wresl'
+	! run Delta Control post processing calculation
+	INCLUDE [LOCAL]'EPPT\Calc_Delta_Control.wresl'
+	! run Delta Operation post processing calculation
+	INCLUDE [LOCAL]'EPPT\Calc_Delta_Op.wresl'
+	! run Reservoir Operation post processing calculation
+	INCLUDE [LOCAL]'EPPT\Calc_Reservoir_Op.wresl'
+	! run Groundwater post processing calculation
+	!INCLUDE [LOCAL]'EPPT\Calc_GW.wresl'
+	! run NOD Mass Balance post processing calculation
+	!INCLUDE [LOCAL]'EPPT\Calc_MassBlnc_NOD.wresl'
+	! run Delta Mass Balance post processing calculation
+	!INCLUDE [LOCAL]'EPPT\Calc_MassBlnc_Delta.wresl'
+	! run Phase II post processing calculation
+	!INCLUDE [LOCAL]'EPPT\Calc_PhaseII.wresl'
+	
+}
