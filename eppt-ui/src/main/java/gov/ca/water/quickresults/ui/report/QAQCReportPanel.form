@@ -47,7 +47,7 @@
       <grid id="bee11" layout-manager="BorderLayout" hgap="0" vgap="0">
         <constraints border-constraint="North"/>
         <properties>
-          <preferredSize width="800" height="400"/>
+          <preferredSize width="850" height="400"/>
         </properties>
         <border type="none"/>
         <children>
@@ -292,7 +292,7 @@
                     <children>
                       <component id="2fd05" class="javax.swing.JCheckBox" binding="_excutiveSummaryCheckBox" default-binding="true">
                         <constraints>
-                          <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="9" fill="0" indent="0" use-parent-layout="false"/>
+                          <grid row="2" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="9" fill="0" indent="0" use-parent-layout="false"/>
                           <gridbag top="0" left="5" bottom="0" right="5" weightx="0.5" weighty="0.0"/>
                         </constraints>
                         <properties>
@@ -304,7 +304,7 @@
                       </component>
                       <component id="4bc37" class="javax.swing.JCheckBox" binding="_assumptionChangesCheckBox" default-binding="true">
                         <constraints>
-                          <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="9" fill="0" indent="0" use-parent-layout="false"/>
+                          <grid row="3" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="9" fill="0" indent="0" use-parent-layout="false"/>
                           <gridbag top="0" left="5" bottom="0" right="5" weightx="0.0" weighty="0.0"/>
                         </constraints>
                         <properties>
@@ -315,7 +315,7 @@
                       </component>
                       <component id="9950b" class="javax.swing.JCheckBox" binding="_codeChangesCheckBox" default-binding="true">
                         <constraints>
-                          <grid row="2" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="9" fill="0" indent="0" use-parent-layout="false"/>
+                          <grid row="4" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="9" fill="0" indent="0" use-parent-layout="false"/>
                           <gridbag top="0" left="5" bottom="0" right="5" weightx="0.0" weighty="0.0"/>
                         </constraints>
                         <properties>
@@ -326,30 +326,6 @@
                       </component>
                       <component id="21e56" class="javax.swing.JCheckBox" binding="_detailedIssuesCheckBox" default-binding="true">
                         <constraints>
-                          <grid row="3" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="9" fill="0" indent="0" use-parent-layout="false"/>
-                          <gridbag top="0" left="5" bottom="0" right="5" weightx="0.0" weighty="0.0"/>
-                        </constraints>
-                        <properties>
-                          <enabled value="true"/>
-                          <horizontalAlignment value="2"/>
-                          <selected value="true"/>
-                          <text value="Detailed Issues"/>
-                        </properties>
-                      </component>
-                      <component id="76b71" class="javax.swing.JCheckBox" binding="_tableOfContentsCheckBox" default-binding="true">
-                        <constraints>
-                          <grid row="4" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="9" fill="0" indent="0" use-parent-layout="false"/>
-                          <gridbag top="0" left="5" bottom="0" right="5" weightx="0.0" weighty="0.0"/>
-                        </constraints>
-                        <properties>
-                          <enabled value="true"/>
-                          <horizontalAlignment value="2"/>
-                          <selected value="true"/>
-                          <text value="Table of Contents"/>
-                        </properties>
-                      </component>
-                      <component id="668ec" class="javax.swing.JCheckBox" binding="_coverPageCheckBox" default-binding="true">
-                        <constraints>
                           <grid row="5" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="9" fill="0" indent="0" use-parent-layout="false"/>
                           <gridbag top="0" left="5" bottom="0" right="5" weightx="0.0" weighty="0.0"/>
                         </constraints>
@@ -357,7 +333,7 @@
                           <enabled value="true"/>
                           <horizontalAlignment value="2"/>
                           <selected value="true"/>
-                          <text value="Cover Page"/>
+                          <text value="Detailed Issues"/>
                         </properties>
                       </component>
                       <component id="c69bc" class="javax.swing.JCheckBox" binding="_standardSummaryStatiticsCheckBox" default-binding="true">
@@ -372,86 +348,39 @@
                           <text value="Standard Summary Statitics"/>
                         </properties>
                       </component>
-                      <component id="bb71f" class="javax.swing.JCheckBox" binding="_reservoirOperations">
+                      <component id="668ec" class="javax.swing.JCheckBox" binding="_coverPageCheckBox" default-binding="true">
                         <constraints>
-                          <grid row="7" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
-                          <gridbag top="0" left="25" bottom="0" right="5" weightx="0.0" weighty="0.0"/>
+                          <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="9" fill="0" indent="0" use-parent-layout="false"/>
+                          <gridbag top="0" left="5" bottom="0" right="5" weightx="0.0" weighty="0.0"/>
                         </constraints>
                         <properties>
+                          <enabled value="true"/>
+                          <horizontalAlignment value="2"/>
                           <selected value="true"/>
-                          <text value="Reservoir Operations"/>
+                          <text value="Cover Page"/>
                         </properties>
                       </component>
-                      <component id="9e8ad" class="javax.swing.JCheckBox" binding="_upstreamMinimumFlow">
+                      <component id="76b71" class="javax.swing.JCheckBox" binding="_tableOfContentsCheckBox" default-binding="true">
                         <constraints>
-                          <grid row="8" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
-                          <gridbag top="0" left="25" bottom="0" right="5" weightx="0.0" weighty="0.0"/>
+                          <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="9" fill="0" indent="0" use-parent-layout="false"/>
+                          <gridbag top="0" left="5" bottom="0" right="5" weightx="0.0" weighty="0.0"/>
                         </constraints>
                         <properties>
+                          <enabled value="true"/>
+                          <horizontalAlignment value="2"/>
                           <selected value="true"/>
-                          <text value="Upstream Minimum Flow Requirements"/>
+                          <text value="Table of Contents"/>
                         </properties>
                       </component>
-                      <component id="10e0e" class="javax.swing.JCheckBox" binding="_northOfDeltaWeirCheckBox" default-binding="true">
+                      <grid id="75f6f" binding="_summaryModulesPanel" layout-manager="FlowLayout" hgap="5" vgap="5" flow-align="0">
                         <constraints>
-                          <grid row="9" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
-                          <gridbag top="0" left="25" bottom="0" right="5" weightx="0.0" weighty="0.0"/>
+                          <grid row="7" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+                          <gridbag top="5" left="25" bottom="5" right="5" weightx="0.0" weighty="0.0"/>
                         </constraints>
-                        <properties>
-                          <selected value="true"/>
-                          <text value="North of Delta Weir &amp; Bypass Operations"/>
-                        </properties>
-                      </component>
-                      <component id="f649c" class="javax.swing.JCheckBox" binding="_northOfDeltaGroundwaterCheckBox" default-binding="true">
-                        <constraints>
-                          <grid row="10" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
-                          <gridbag top="0" left="25" bottom="0" right="5" weightx="0.0" weighty="0.0"/>
-                        </constraints>
-                        <properties>
-                          <selected value="true"/>
-                          <text value="North of Delta Groundwater Pumping"/>
-                        </properties>
-                      </component>
-                      <component id="41eae" class="javax.swing.JCheckBox" binding="_deltaOperationsCheckBox" default-binding="true">
-                        <constraints>
-                          <grid row="11" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
-                          <gridbag top="0" left="25" bottom="0" right="5" weightx="0.0" weighty="0.0"/>
-                        </constraints>
-                        <properties>
-                          <selected value="true"/>
-                          <text value="Delta Operations"/>
-                        </properties>
-                      </component>
-                      <component id="4734a" class="javax.swing.JCheckBox" binding="_coordinatedOperationsAgreementCheckBox" default-binding="true">
-                        <constraints>
-                          <grid row="12" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
-                          <gridbag top="0" left="25" bottom="0" right="5" weightx="0.0" weighty="0.0"/>
-                        </constraints>
-                        <properties>
-                          <selected value="true"/>
-                          <text value="Coordinated Operations Agreement"/>
-                        </properties>
-                      </component>
-                      <component id="e7b7d" class="javax.swing.JCheckBox" binding="_allocationsAndDeliveriesCheckBox" default-binding="true">
-                        <constraints>
-                          <grid row="13" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
-                          <gridbag top="0" left="25" bottom="0" right="5" weightx="0.0" weighty="0.0"/>
-                        </constraints>
-                        <properties>
-                          <selected value="true"/>
-                          <text value="Allocations and Deliveries"/>
-                        </properties>
-                      </component>
-                      <component id="b19ae" class="javax.swing.JCheckBox" binding="_massBalanceCheckBox" default-binding="true">
-                        <constraints>
-                          <grid row="14" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
-                          <gridbag top="0" left="25" bottom="0" right="5" weightx="0.0" weighty="0.0"/>
-                        </constraints>
-                        <properties>
-                          <selected value="true"/>
-                          <text value="Mass Balance"/>
-                        </properties>
-                      </component>
+                        <properties/>
+                        <border type="none"/>
+                        <children/>
+                      </grid>
                     </children>
                   </grid>
                 </children>
@@ -513,7 +442,9 @@
                       </grid>
                       <component id="3762f" class="gov.ca.water.quickresults.ui.report.WaterYearPeriodsPanel" binding="_waterYearPeriodsPanel" custom-create="true">
                         <constraints border-constraint="Center"/>
-                        <properties/>
+                        <properties>
+                          <enabled value="true"/>
+                        </properties>
                       </component>
                     </children>
                   </grid>

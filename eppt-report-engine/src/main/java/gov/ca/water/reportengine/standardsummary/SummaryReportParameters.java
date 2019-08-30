@@ -47,9 +47,11 @@ public class SummaryReportParameters
 	private final PercentDiffStyle _percentDiffStyle;
 	private final TwoColorColorContour _positiveContour;
 	private final TwoColorColorContour _negativeContour;
+	private final List<String> _disabledSummaryModules;
 
 	public SummaryReportParameters(WaterYearDefinition waterYearDefinition, WaterYearIndex waterYearIndex, WaterYearPeriodRange longTermRange,
-								   Map<WaterYearPeriod, List<WaterYearPeriodRange>> waterYearPeriodRanges, PercentDiffStyle percentDiffStyle)
+								   Map<WaterYearPeriod, List<WaterYearPeriodRange>> waterYearPeriodRanges, PercentDiffStyle percentDiffStyle,
+								   List<String> disabledSummaryModules)
 			throws EpptReportException
 	{
 		_waterYearDefinition = waterYearDefinition;
@@ -57,6 +59,7 @@ public class SummaryReportParameters
 		_longTermRange = longTermRange;
 		_waterYearPeriodRanges = waterYearPeriodRanges;
 		_percentDiffStyle = percentDiffStyle;
+		_disabledSummaryModules = disabledSummaryModules;
 		_positiveContour = createContour(Paths.get(Constant.POSITIVE_CONTOUR_FILE));
 		_negativeContour = createContour(Paths.get(Constant.NEGATIVE_CONTOUR_FILE));
 	}
@@ -119,5 +122,11 @@ public class SummaryReportParameters
 	public WaterYearPeriodRange getLongTermRange()
 	{
 		return _longTermRange;
+	}
+
+
+	public List<String> getDisabledSummaryModules()
+	{
+return _disabledSummaryModules;
 	}
 }

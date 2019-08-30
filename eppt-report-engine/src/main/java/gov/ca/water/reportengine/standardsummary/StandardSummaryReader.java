@@ -114,4 +114,19 @@ public class StandardSummaryReader
 	}
 
 
+	public List<String> getModules() throws EpptReportException
+	{
+		try(Stream<String> lines = Files.lines(_csvPath))
+		{
+			return parseLines(lines)
+					.map(line -> line[MODULE_INDEX])
+					.map(String::trim)
+					.distinct()
+					.collect(toList());
+		}
+		catch(IOException | RuntimeException ex)
+		{
+			throw new EpptReportException("Error processing Standard Summary Statistics configuration file: " + _csvPath, ex);
+		}
+	}
 }

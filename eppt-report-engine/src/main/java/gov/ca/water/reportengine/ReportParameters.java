@@ -12,6 +12,8 @@
 
 package gov.ca.water.reportengine;
 
+import java.util.List;
+
 import gov.ca.water.reportengine.standardsummary.SummaryReportParameters;
 
 /**
@@ -26,13 +28,15 @@ public class ReportParameters
 	private final String _author;
 	private final String _subtitle;
 	private final SummaryReportParameters _summaryReportParameters;
+	private final List<String> _disabledModules;
 
-	public ReportParameters(double tolerance, String author, String subtitle, SummaryReportParameters summaryReportParameters)
+	public ReportParameters(double tolerance, String author, String subtitle, SummaryReportParameters summaryReportParameters,List<String> disabledModules)
 	{
 		_tolerance = tolerance;
 		_author = author;
 		_subtitle = subtitle;
 		_summaryReportParameters = summaryReportParameters;
+		_disabledModules = disabledModules;
 	}
 
 	public SummaryReportParameters getSummaryReportParameters()
@@ -53,5 +57,10 @@ public class ReportParameters
 	public double getTolerance()
 	{
 		return _tolerance;
+	}
+
+	public List<String> getDisabledReportModules()
+	{
+		return _disabledModules;
 	}
 }

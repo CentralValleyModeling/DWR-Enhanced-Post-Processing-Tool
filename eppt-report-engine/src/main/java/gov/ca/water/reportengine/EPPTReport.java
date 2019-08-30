@@ -19,6 +19,7 @@ import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -72,6 +73,14 @@ public class EPPTReport
 	public static final int GREATER_THAN_CONSTANT = 200;
 	public static final int EQUAL_TO_CONSTANT = 300;
 
+	public static final String EXECUTIVE_SUMMARY = "Executive Summary";
+	public static final String ASSUMPTION_CHANGES = "Assumption Changes";
+	public static final String CODE_CHANGES = "Code Changes";
+	public static final String DETAILED_ISSUES = "Detailed Issues";
+	public static final String TABLE_OF_CONTENTS = "Table of Contents";
+	public static final String COVER_PAGE = "Cover Page";
+	public static final String STANDARD_SUMMARY_STATISTICS = "Standard Summary Statistics";
+
 	private static final String INIT_COND_CSV = "AssumptionChangesIV" + CSV_EXT;
 	private static final FluentLogger LOGGER = FluentLogger.forEnclosingClass();
 
@@ -80,7 +89,7 @@ public class EPPTReport
 
 	private static final String MODULES_CSV = QA_QC_DIR + "/Modules" + CSV_EXT;
 	private static final String DETAILS_CSV = QA_QC_DIR + "/Details" + CSV_EXT;
-    private static final String SUMMARY_CSV = QA_QC_DIR + "/Summary" + CSV_EXT;
+    public static final String SUMMARY_CSV = QA_QC_DIR + "/Summary" + CSV_EXT;
 
 	private final Path _pathToWriteOut;
 	private final EpptScenarioRun _baseRun;
@@ -107,20 +116,12 @@ public class EPPTReport
 		try
 		{
 			LOGGER.at(Level.INFO).log("============= Starting Report Processor: %s =============", start);
-
-
-			LOGGER.at(Level.INFO).log("Validating report inputs");
 			validateReportInputs();
-
 			Document doc = createDoc();
-
-			//do some up front processing
-
 			//create the modules
 			ModuleCreator mc = new ModuleCreator();
 			_modules = mc.createModules(Paths.get(MODULES_CSV), Paths.get(DETAILS_CSV));
 			_allDetailedIssues = mc.getAllDetailedIssues();
-			StandardSummaryReader standardSummaryReader = new StandardSummaryReader(Paths.get(SUMMARY_CSV));
 
 			//create the file change stats. One for each alt to the base in order of alts
 			List<FileChangesStatistics> fileChangeStats = getFileChangeStatsList();
@@ -128,53 +129,21 @@ public class EPPTReport
 			List<EpptScenarioRun> allRuns = new ArrayList<>();
 			allRuns.add(_baseRun);
 			allRuns.addAll(_altRuns);
-			DTSProcessor dtsProcessor = new DTSProcessor(_modules);
-			Map<EpptScenarioRun, Map<SubModule, List<FlagViolation>>> runsToFlagViolations =
-					dtsProcessor.processDSSFiles(allRuns);
+			Map<EpptScenarioRun, Map<SubModule, List<FlagViolation>>> runsToFlagViolations = processDtsViolations(allRuns);
 
-			//create the rootnode
-			Element rootElement = doc.createElement("qaqc-report");
-			rootElement.setAttribute("alternative-count", Integer.toString(_altRuns.size()));
-			rootElement.setAttribute("show-assumption-changes", Boolean.toString(canShowAssumptionChanges()));
-			doc.appendChild(rootElement);
-
-			//create and add the report title page
-			LOGGER.at(Level.INFO).log("Generate QAQC Title page data");
-			rootElement.appendChild(createTitlePageElem(doc));
-
+			Element rootElement = printRootElement(doc);
+			printCoverPage(doc, rootElement);
 			//code changes and assump have to be the same model
-
-			//create and add the executive report
-			LOGGER.at(Level.INFO).log("Generate QAQC Executive Summary data");
-			rootElement.appendChild(createExecutiveReportElem(runsToFlagViolations, fileChangeStats, doc));
-
-			//create and add the detailed issues
-			LOGGER.at(Level.INFO).log("Generate QAQC Detailed Issues data");
-			rootElement.appendChild(createDetailedIssueReportElem(runsToFlagViolations, doc));
+			printExecutiveSummary(doc, fileChangeStats, runsToFlagViolations, rootElement);
+			printDetailedIssues(doc, runsToFlagViolations, rootElement);
 
 			//create and add the assumption changes
 			if(!fileChangeStats.isEmpty())
 			{
-				LOGGER.at(Level.INFO).log("Generate QAQC Assumption Changes data");
-				rootElement.appendChild(createAssumptionChangesElem(fileChangeStats.get(0), doc));
-
-				//create and add the code changes
-				LOGGER.at(Level.INFO).log("Generate QAQC Code Changes data");
-				rootElement.appendChild(createCodeChangesElem(_baseRun.getOutputPath(), _altRuns.get(0), doc));
+				printAssumptionChanges(doc, fileChangeStats, rootElement);
+				printCodeChanges(doc, rootElement);
 			}
-
-			LOGGER.at(Level.INFO).log("Generate Standard Summary Statistic");
-
-            SummaryReportParameters summaryReportParameters = _reportParameters.getSummaryReportParameters();
-            Path imagesDir = _pathToWriteOut.getParent().resolve("images");
-            StandardSummaryWriter standardSummaryWriter = new StandardSummaryWriter(doc, _baseRun, _altRuns, summaryReportParameters, imagesDir);
-            List<String> orderedChartIds = standardSummaryReader.getOrderedChartIds();
-            Map<String, EpptChart> stringEpptChartMap = standardSummaryReader.readLines();
-            List<EpptChart> collect = orderedChartIds.stream()
-                                                     .map(stringEpptChartMap::get)
-                                                     .filter(Objects::nonNull)
-                                                     .collect(toList());
-			rootElement.appendChild(standardSummaryWriter.write(collect));
+			appendSummaryStats(doc, rootElement);
 
 			LOGGER.at(Level.INFO).log("Writing data to XML: %s", _pathToWriteOut);
 			writeXmlFile(doc);
@@ -193,9 +162,138 @@ public class EPPTReport
 		}
 	}
 
+	private void printCodeChanges(Document doc, Element rootElement) throws IOException, EpptReportException
+	{
+		if(canPrintCodeChanges())
+		{
+			//create and add the code changes
+			LOGGER.at(Level.INFO).log("Generate QAQC Code Changes data");
+			rootElement.appendChild(createCodeChangesElem(_baseRun.getOutputPath(), _altRuns.get(0), doc));
+		}
+	}
+
+	private void printAssumptionChanges(Document doc, List<FileChangesStatistics> fileChangeStats, Element rootElement)
+	{
+		if(canPrintAssumptionChanges())
+		{
+			LOGGER.at(Level.INFO).log("Generate QAQC Assumption Changes data");
+			rootElement.appendChild(createAssumptionChangesElem(fileChangeStats.get(0), doc));
+		}
+	}
+
+	private void printDetailedIssues(Document doc, Map<EpptScenarioRun, Map<SubModule, List<FlagViolation>>> runsToFlagViolations,
+									 Element rootElement) throws EpptReportException
+	{
+		if(canPrintDetailedIssues())
+		{
+			//create and add the detailed issues
+			LOGGER.at(Level.INFO).log("Generate QAQC Detailed Issues data");
+			rootElement.appendChild(createDetailedIssueReportElem(runsToFlagViolations, doc));
+		}
+	}
+
+	private Map<EpptScenarioRun, Map<SubModule, List<FlagViolation>>> processDtsViolations(List<EpptScenarioRun> allRuns) throws EpptReportException
+	{
+		if(canPrintDetailedIssues() || canPrintExecutiveSummary())
+		{
+
+			DTSProcessor dtsProcessor = new DTSProcessor(_modules);
+			return dtsProcessor.processDSSFiles(allRuns);
+		}
+		else
+		{
+			return new HashMap<>();
+		}
+	}
+
+	private Element printRootElement(Document doc)
+	{
+		//create the rootnode
+		Element rootElement = doc.createElement("qaqc-report");
+		rootElement.setAttribute("alternative-count", Integer.toString(_altRuns.size()));
+		rootElement.setAttribute("show-assumption-changes", Boolean.toString(canShowAssumptionChanges()));
+		doc.appendChild(rootElement);
+		return rootElement;
+	}
+
+	private void printCoverPage(Document doc, Element rootElement)
+	{
+		if(canPrintCoverPage())
+		{
+			//create and add the report title page
+			LOGGER.at(Level.INFO).log("Generate QAQC Title page data");
+			rootElement.appendChild(createTitlePageElem(doc));
+		}
+	}
+
+	private void printExecutiveSummary(Document doc, List<FileChangesStatistics> fileChangeStats,
+									   Map<EpptScenarioRun, Map<SubModule, List<FlagViolation>>> runsToFlagViolations, Element rootElement)
+	{
+		if(canPrintExecutiveSummary())
+		{
+			//create and add the executive report
+			LOGGER.at(Level.INFO).log("Generate QAQC Executive Summary data");
+			rootElement.appendChild(createExecutiveReportElem(runsToFlagViolations, fileChangeStats, doc));
+		}
+	}
+
+	private void appendSummaryStats(Document doc, Element rootElement) throws EpptReportException
+	{
+		if(canPrintStandardSummary())
+		{
+			StandardSummaryReader standardSummaryReader = new StandardSummaryReader(Paths.get(SUMMARY_CSV));
+			Path imagesDir = _pathToWriteOut.getParent().resolve("images");
+			SummaryReportParameters summaryReportParameters = _reportParameters.getSummaryReportParameters();
+			LOGGER.at(Level.INFO).log("Generate Standard Summary Statistic");
+			StandardSummaryWriter standardSummaryWriter = new StandardSummaryWriter(doc, _baseRun, _altRuns, summaryReportParameters, imagesDir);
+			List<String> orderedChartIds = standardSummaryReader.getOrderedChartIds();
+			Map<String, EpptChart> stringEpptChartMap = standardSummaryReader.readLines();
+			List<EpptChart> collect = orderedChartIds.stream()
+													 .map(stringEpptChartMap::get)
+													 .filter(Objects::nonNull)
+													 .collect(toList());
+			rootElement.appendChild(standardSummaryWriter.write(collect));
+		}
+	}
+
+	private boolean canPrintStandardSummary()
+	{
+		return !_reportParameters.getDisabledReportModules().contains(STANDARD_SUMMARY_STATISTICS);
+	}
+
+	private boolean canPrintExecutiveSummary()
+	{
+		return !_reportParameters.getDisabledReportModules().contains(EXECUTIVE_SUMMARY);
+	}
+
+	private boolean canPrintAssumptionChanges()
+	{
+		return !_reportParameters.getDisabledReportModules().contains(ASSUMPTION_CHANGES);
+	}
+
+	private boolean canPrintCodeChanges()
+	{
+		return !_reportParameters.getDisabledReportModules().contains(CODE_CHANGES);
+	}
+
+	private boolean canPrintDetailedIssues()
+	{
+		return !_reportParameters.getDisabledReportModules().contains(DETAILED_ISSUES);
+	}
+
+	private boolean canPrintTableOfContents()
+	{
+		return !_reportParameters.getDisabledReportModules().contains(TABLE_OF_CONTENTS);
+	}
+
+	private boolean canPrintCoverPage()
+	{
+		return !_reportParameters.getDisabledReportModules().contains(COVER_PAGE);
+	}
+
 	private void validateReportInputs() throws EpptReportException
 	{
-
+		LOGGER.at(Level.INFO).log("Validating report inputs");
 		if(_pathToWriteOut == null)
 		{
 			String errorMsg = "The selected path to write the report to is null";
@@ -405,31 +503,34 @@ public class EPPTReport
 	{
 		List<FileChangesStatistics> statsForAllAlternatives = new ArrayList<>();
 
-		Path baseInitDSSPath = _baseRun.getDssContainer().getIvDssFile().getDssPath();
-		Path baseStateVarDSSPath = _baseRun.getDssContainer().getSvDssFile().getDssPath();
-		Path baseOutputPath = _baseRun.getOutputPath();
-		for(EpptScenarioRun altRun : _altRuns)
+		if(canPrintExecutiveSummary() || canPrintAssumptionChanges())
 		{
-
-			if(Objects.equals(altRun.getModel(), _baseRun.getModel()))
+			Path baseInitDSSPath = _baseRun.getDssContainer().getIvDssFile().getDssPath();
+			Path baseStateVarDSSPath = _baseRun.getDssContainer().getSvDssFile().getDssPath();
+			Path baseOutputPath = _baseRun.getOutputPath();
+			for(EpptScenarioRun altRun : _altRuns)
 			{
-                double tolerance = _reportParameters.getTolerance();
-                LOGGER.at(Level.INFO).log("Processing Assumption Changes Initial Conditions for: %s", altRun.getName());
-				AssumptionChangesDataProcessor initProcessor = new AssumptionChangesDataProcessor(getInitialConditionsCsv(), tolerance);
-				AssumptionChangesStatistics initCondStats =
-						initProcessor.processAssumptionChanges(baseInitDSSPath, altRun.getDssContainer().getIvDssFile().getDssPath());
 
-				LOGGER.at(Level.INFO).log("Processing Assumption State Variables for: %s", altRun.getName());
-				AssumptionChangesDataProcessor stateVarProcessor = new AssumptionChangesDataProcessor(getStateVariableCsv(), tolerance);
-				AssumptionChangesStatistics stateVarStats =
-						stateVarProcessor.processAssumptionChanges(baseStateVarDSSPath, altRun.getDssContainer().getSvDssFile().getDssPath());
+				if(Objects.equals(altRun.getModel(), _baseRun.getModel()))
+				{
+					double tolerance = _reportParameters.getTolerance();
+					LOGGER.at(Level.INFO).log("Processing Assumption Changes Initial Conditions for: %s", altRun.getName());
+					AssumptionChangesDataProcessor initProcessor = new AssumptionChangesDataProcessor(getInitialConditionsCsv(), tolerance);
+					AssumptionChangesStatistics initCondStats =
+							initProcessor.processAssumptionChanges(baseInitDSSPath, altRun.getDssContainer().getIvDssFile().getDssPath());
 
-				LOGGER.at(Level.INFO).log("Processing Code Changes for: %s", altRun.getName());
-				CodeChangesDataProcessor processor = new CodeChangesDataProcessor(getCodeChangesCsv());
-				CodeChangesStatistics codeChangeStats = processor.processCodeChanges(baseOutputPath, altRun.getOutputPath());
+					LOGGER.at(Level.INFO).log("Processing Assumption State Variables for: %s", altRun.getName());
+					AssumptionChangesDataProcessor stateVarProcessor = new AssumptionChangesDataProcessor(getStateVariableCsv(), tolerance);
+					AssumptionChangesStatistics stateVarStats =
+							stateVarProcessor.processAssumptionChanges(baseStateVarDSSPath, altRun.getDssContainer().getSvDssFile().getDssPath());
 
-				FileChangesStatistics fileChangesStatistics = new FileChangesStatistics(initCondStats, stateVarStats, codeChangeStats);
-				statsForAllAlternatives.add(fileChangesStatistics);
+					LOGGER.at(Level.INFO).log("Processing Code Changes for: %s", altRun.getName());
+					CodeChangesDataProcessor processor = new CodeChangesDataProcessor(getCodeChangesCsv());
+					CodeChangesStatistics codeChangeStats = processor.processCodeChanges(baseOutputPath, altRun.getOutputPath());
+
+					FileChangesStatistics fileChangesStatistics = new FileChangesStatistics(initCondStats, stateVarStats, codeChangeStats);
+					statsForAllAlternatives.add(fileChangesStatistics);
+				}
 			}
 		}
 

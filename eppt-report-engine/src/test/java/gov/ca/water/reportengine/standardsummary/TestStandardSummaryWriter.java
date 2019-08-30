@@ -111,7 +111,8 @@ public class TestStandardSummaryWriter
 				new WaterYearType(1965, wetPeriod)));
 		waterYearPeriodRanges.put(dryPeriod, dryRanges);
 		waterYearPeriodRanges.put(wetPeriod, wetRanges);
-		SummaryReportParameters reportParameters = new SummaryReportParameters(waterYearDefinition, waterYearIndex, longTermRange, waterYearPeriodRanges, PercentDiffStyle.FULL);
+		List<String> disabledStandardSummaryModules = new ArrayList<>();
+		SummaryReportParameters reportParameters = new SummaryReportParameters(waterYearDefinition, waterYearIndex, longTermRange, waterYearPeriodRanges, PercentDiffStyle.FULL, disabledStandardSummaryModules);
 		Path imagePath = Constant.QAQC_IMAGE_PATH;
 		imagePath.toFile().delete();
 		StandardSummaryWriter standardSummaryWriter = new StandardSummaryWriter(document, baseRun, Collections.singletonList(altRun),
@@ -132,6 +133,7 @@ public class TestStandardSummaryWriter
 			LOGGER.log(Level.INFO, "Output XML to: " + ugly.toAbsolutePath());
 		}
 	}
+
 	private void printUgly(Document document, BufferedWriter writer) throws TransformerException
 	{
 		Transformer transformer = TransformerFactory.newInstance().newTransformer();

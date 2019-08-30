@@ -53,6 +53,7 @@ public class StandardSummaryWriter
 	private static final String CHART_ORDER_ATTRIBUTE = "chart-order";
 	private static final String CHART_NAME_ATTRIBUTE = "chart-name";
 	private final Document _document;
+	private final SummaryReportParameters _reportParameters;
 	private final Path _imageDirectory;
 	private final ListBuilder _listBuilder;
 	private final BaseAltDiffTableBuilder _baseAltDiffTableBuilder;
@@ -68,6 +69,7 @@ public class StandardSummaryWriter
 								 Path imageDir)
 	{
 		_document = document;
+		_reportParameters = reportParameters;
 		_imageDirectory = imageDir.toAbsolutePath();
 		_listBuilder = new ListBuilder(document, base, alternatives, reportParameters);
 		_baseAltDiffTableBuilder = new BaseAltDiffTableBuilder(document, base, alternatives, reportParameters);
@@ -90,9 +92,12 @@ public class StandardSummaryWriter
 		for(int i = 0; i < moduleList.size(); i++)
 		{
 			String moduleName = moduleList.get(i);
-			Element module = writeModule(moduleName, charts);
-			module.setAttribute(MODULE_ORDER_ATTRIBUTE, String.valueOf(i));
-			retval.appendChild(module);
+			if(!_reportParameters.getDisabledSummaryModules().contains(moduleName))
+			{
+				Element module = writeModule(moduleName, charts);
+				module.setAttribute(MODULE_ORDER_ATTRIBUTE, String.valueOf(i));
+				retval.appendChild(module);
+			}
 		}
 
 		printSvgPlots();
