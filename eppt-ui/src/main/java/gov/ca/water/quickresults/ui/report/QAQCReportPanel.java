@@ -28,6 +28,7 @@ import java.nio.file.Paths;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -783,6 +784,11 @@ public class QAQCReportPanel extends RmaJPanel
 
 	public void fillScenarioRuns(EpptScenarioRun baseRun, List<EpptScenarioRun> alternatives)
 	{
+		if(Objects.equals(_baseRun, baseRun) && alternatives.contains(_altRun))
+		{
+			return;
+		}
+
 		_qaqcTextPane.setText("");
 		_baseRun = baseRun;
 		if(alternatives.isEmpty())
@@ -844,6 +850,8 @@ public class QAQCReportPanel extends RmaJPanel
 		}
 		_codeChangesCheckBox.setSelected(canCompare);
 		_assumptionChangesCheckBox.setSelected(canCompare);
+		_codeChangesCheckBox.setEnabled(canCompare);
+		_assumptionChangesCheckBox.setEnabled(canCompare);
 	}
 
 	private void updateEnabledState()
