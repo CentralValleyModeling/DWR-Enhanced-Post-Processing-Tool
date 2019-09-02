@@ -106,9 +106,13 @@ public class ScenarioEditorPanel
 	{
 		if(Objects.equals(RmaJColorChooserButton.PROPERTY_COLOR, actionEvent.getPropertyName()))
 		{
-			java.awt.Color color = _colorChooserButton.getColor();
-			_colorHexTextField.setText(String.format("#%02x%02x%02x", color.getRed(), color.getGreen(), color.getBlue()));
-			_colorChooserButton.setColor(color);
+			Object newValue = actionEvent.getNewValue();
+			if(newValue instanceof java.awt.Color)
+			{
+				java.awt.Color color = (java.awt.Color) newValue;
+				_colorHexTextField.setText(String.format("#%02x%02x%02x", color.getRed(), color.getGreen(), color.getBlue()));
+				_colorChooserButton.setColor(color);
+			}
 		}
 	}
 

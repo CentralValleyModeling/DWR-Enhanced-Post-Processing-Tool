@@ -19,8 +19,6 @@
 .dateButton {
     -fx-font-size: 1px;
     -fx-background-color: null;
-    /* -fx-background-image: url("../../../../images/calendar.png"); */ /* Sets image to the button*/
-    /* -fx-padding: 10 7 7 10; */
     -fx-cursor: hand;
 }
 
@@ -38,7 +36,7 @@
 }
 
 .calendarButton {
-    -fx-background-color: -fx-outer-border, -fx-inner-border, -fx-body-color;
+    /*-fx-background-color: -fx-outer-border, -fx-inner-border, -fx-body-color;*/
     -fx-background-insets: 0, 1, 2;
     -fx-background-radius: 5, 4, 3;
     -fx-padding: 0.166667em 0.833333em 0.25em 0.833333em; /* 2 10 3 10 */
@@ -52,7 +50,7 @@
 
 .calendarButton:focused {
     -fx-color: -fx-focused-base;
-    -fx-background-color: -fx-outer-border, -fx-inner-border, -fx-body-color;
+    /*-fx-background-color: -fx-outer-border, -fx-inner-border, -fx-body-color;*/
     -fx-background-insets: 0, 1, 2;
     -fx-background-radius: 5, 4, 3;
 }
@@ -65,14 +63,14 @@
     -fx-background-color: #FFFFFF;
     -fx-background-radius: 2 2 0 0;
     -fx-border-radius: 4 4 0 0;
-    -fx-border-color: #5D5B59; /*#7792B7; */
+    -fx-border-color: #000000;
     -fx-border-width: 0.466667em 0.162222em 0.162222em 0.162222em;
     -fx-cursor: hand;
 }
 
 .calendar-image-line {
-    -fx-stroke: #C0C0C0;
-    -fx-stroke-width: 0.062222em;
+    -fx-stroke: #000000;
+    -fx-stroke-width: 0.172222em;
 }
 
 .calendar-image-circle {
@@ -87,7 +85,7 @@
  ******************************************************************************/
 
 .fx-calendar-navigator {
-    -fx-background-color: linear-gradient(to bottom, derive(-fx-base, 8%) 0%, derive(-fx-base, 4%) 25%, derive(-fx-base, 0%) 50%, derive(-fx-base, -2%) 98%, derive(-fx-base, -5%) 100%);
+    /*-fx-background-color: linear-gradient(to bottom, derive(-fx-base, 8%) 0%, derive(-fx-base, 4%) 25%, derive(-fx-base, 0%) 50%, derive(-fx-base, -2%) 98%, derive(-fx-base, -5%) 100%);*/
     -fx-border-width: 0.043333em 0.043333em 0.0em 0.043333em;
     -fx-border-color: derive(-fx-base, 10%) derive(-fx-base, 10%) transparent derive(-fx-base, 10%);
 }
@@ -102,7 +100,7 @@
 }
 
 .fx-calendar-navigator-btn {
-    -fx-fill: linear-gradient(to bottom, derive(-fx-base, 40%) 0%, derive(-fx-base, 20%) 25%, derive(-fx-base, 0%) 50%, derive(-fx-base, -2%) 98%, derive(-fx-base, -5%) 100%);
+    /*-fx-fill: linear-gradient(to bottom, derive(-fx-base, 40%) 0%, derive(-fx-base, 20%) 25%, derive(-fx-base, 0%) 50%, derive(-fx-base, -2%) 98%, derive(-fx-base, -5%) 100%);*/
     /*-fx-stroke-width: 0.043333em 0.043333em 0.0em 0.043333em;*/
     -fx-stroke: derive(-fx-base, 10%);
     -fx-arc-height: 3.5;
@@ -125,7 +123,7 @@
  ******************************************************************************/
 
 .fx-calendar-weekpane {
-    -fx-background-color: linear-gradient(to bottom, derive(-fx-base, 150%) 0%, derive(-fx-base, 140%) 25%, derive(-fx-base, 130%) 50%, derive(-fx-base, 120%) 98%, derive(-fx-base, 115%) 100%);
+    /*-fx-background-color: linear-gradient(to bottom, derive(-fx-base, 150%) 0%, derive(-fx-base, 140%) 25%, derive(-fx-base, 130%) 50%, derive(-fx-base, 120%) 98%, derive(-fx-base, 115%) 100%);*/
     -fx-border-width: 0.0em 0.043333em 0.0em 0.043333em;
     -fx-border-color: transparent derive(-fx-base, 10%) transparent derive(-fx-base, 10%);
 }

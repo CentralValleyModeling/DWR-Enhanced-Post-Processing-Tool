@@ -37,6 +37,7 @@ import gov.ca.water.calgui.compute.EpptReportingComputed;
 import gov.ca.water.calgui.compute.EpptReportingComputedSet;
 import gov.ca.water.calgui.compute.EpptReportingComputer;
 import gov.ca.water.calgui.compute.EpptReportingMonths;
+import gov.ca.water.calgui.constant.Constant;
 import gov.ca.water.calgui.project.EpptScenarioRun;
 import gov.ca.water.quickresults.ui.projectconfig.ProjectConfigurationPanel;
 import gov.ca.water.trendreporting.monthpicker.FXCalendar;
@@ -85,7 +86,6 @@ import static java.util.stream.Collectors.toList;
  */
 public class TrendReportPanel extends JFXPanel
 {
-	private static final String DASHBOARD_PANELS = "C:\\Git\\DWR\\EPPT\\DWR-Enhanced-Post-Processing-Tool\\eppt-plots\\src\\main\\resources\\dashboard\\prototype";
 	private static final Logger LOGGER = Logger.getLogger(TrendReportPanel.class.getName());
 
 	private final List<EpptScenarioRun> _scenarioRuns = new ArrayList<>();
@@ -115,12 +115,18 @@ public class TrendReportPanel extends JFXPanel
 		_seasonalPeriodListView = new ListView<>();
 		_tafCheckbox = new CheckBox("CFS -> TAF/mon");
 
+		Insets insets = new Insets(10);
 		BorderPane mainPane = new BorderPane();
 		mainPane.setBackground(new Background(new BackgroundFill(Color.WHITE, null, null)));
-		mainPane.setCenter(buildJavascriptPane());
-		mainPane.setTop(buildParameterControls());
-		mainPane.setBottom(buildProgressControls());
-
+		BorderPane center = buildJavascriptPane();
+		BorderPane.setMargin(center,insets);
+		mainPane.setCenter(center);
+		Pane top = buildParameterControls();
+		BorderPane.setMargin(top,insets);
+		mainPane.setTop(top);
+		Node bottom = buildProgressControls();
+		BorderPane.setMargin(bottom,insets);
+		mainPane.setBottom(bottom);
 		Scene scene = new Scene(mainPane);
 		setScene(scene);
 		ProjectConfigurationPanel.getProjectConfigurationPanel().addScenarioChangedListener(this::setScenarioRuns);
@@ -161,7 +167,7 @@ public class TrendReportPanel extends JFXPanel
 		gridPane.add(_startCalendar, 1, 0);
 		gridPane.add(new Label("End: "), 0, 1);
 		gridPane.add(_endCalendar, 1, 1);
-		gridPane.add(_tafCheckbox, 0, 3, 2, 1);
+//		gridPane.add(_tafCheckbox, 0, 3, 2, 1);
 		gridPane.setHgap(10);
 		gridPane.setVgap(10);
 		gridPane.setPrefHeight(125);
@@ -276,7 +282,7 @@ public class TrendReportPanel extends JFXPanel
 
 	private Pane buildToggleControls()
 	{
-		try(Stream<Path> paths = Files.walk(Paths.get(DASHBOARD_PANELS)))
+		try(Stream<Path> paths = Files.walk(Paths.get(Constant.TREND_REPORTING_DIR)))
 		{
 			paths.filter(path -> path.toString().endsWith(".htm") || path.toString().endsWith(".html"))
 				 .map(this::buildToggleButton)

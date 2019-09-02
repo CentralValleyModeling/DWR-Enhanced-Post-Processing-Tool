@@ -34,6 +34,7 @@ public class EpptReportingComputedSet
 	private static final String STATISTICS = "statistics";
 	private static final String MONTH_PERIOD = "month_period_title";
 	private static final String PERIOD_MONTHS = "period_months";
+	private static final String UNITS = "units";
 	private static final String TAF = "taf";
 	private final GUILinksAllModelsBO _guiLink;
 	private final Statistics _statistics;
@@ -58,6 +59,10 @@ public class EpptReportingComputedSet
 		JSONArray jsonArray = new JSONArray();
 		jsonObject.put(GUI_LINK_TITLE, _guiLink.getPlotTitle());
 		jsonObject.put(STATISTICS, _statistics.getName());
+		if(!_epptReportingComputed.isEmpty())
+		{
+			jsonObject.put(UNITS, _epptReportingComputed.get(0));
+		}
 		jsonObject.put(MONTH_PERIOD, _monthPeriod.toString());
 		jsonObject.put(SCENARIO_RUN_DATA, jsonArray);
 		jsonObject.put(TAF, _taf);

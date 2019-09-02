@@ -159,6 +159,11 @@ class ProjectConfigurationIOVersion2
 			{
 				waterYearTable = Paths.get(scenarioJson.getString(SCENARIO_WATER_TABLE));
 			}
+			Color color = Constant.getPlotlyDefaultColor(i);
+			if(scenarioJson.has(SCENARIO_COLOR_KEY))
+			{
+				color = Color.web(scenarioJson.getString(SCENARIO_COLOR_KEY));
+			}
 			JSONObject jsonObject = scenarioJson.getJSONObject(SCENARIO_DSS_FILES);
 			NamedDssPath dvDssFile = null;
 			if(jsonObject.has(SCENARIO_DV_KEY))
@@ -179,11 +184,6 @@ class ProjectConfigurationIOVersion2
 			if(jsonObject.has(SCENARIO_DTS_KEY))
 			{
 				dtsDssFile = readDssJson(jsonObject.getJSONObject(SCENARIO_DTS_KEY));
-			}
-			Color color = Constant.getPlotlyDefaultColor(i);
-			if(jsonObject.has(SCENARIO_COLOR_KEY))
-			{
-				color = Color.web(jsonObject.getString(SCENARIO_COLOR_KEY));
 			}
 
 			List<NamedDssPath> extraDssFiles = readExtraDss(jsonObject);

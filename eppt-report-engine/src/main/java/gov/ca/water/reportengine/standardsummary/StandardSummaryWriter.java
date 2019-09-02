@@ -217,9 +217,9 @@ public class StandardSummaryWriter
 		Path imagePath = _imageDirectory.resolve(chartId + ".svg");
 		try
 		{
-			retval = _document.createElement(CHART_ELEMENT);
+			retval = _document.createElement(chartId);
 			retval.setAttribute(CHART_ORDER_ATTRIBUTE, String.valueOf(index));
-			retval.setAttribute(CHART_NAME_ATTRIBUTE, String.valueOf(chartId));
+//			retval.setAttribute(CHART_NAME_ATTRIBUTE, String.valueOf(chartId));
 			ChartType chartType = epptChart.getChartType();
 			switch(chartType)
 			{

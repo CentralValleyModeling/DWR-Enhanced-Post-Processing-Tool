@@ -975,7 +975,7 @@ public class QAQCReportPanel extends RmaJPanel
 		}
 	}
 
-	private class WreslProcessConsumer implements ProcessOutputConsumer
+	private static final class WreslProcessConsumer implements ProcessOutputConsumer
 	{
 		private final JTextPane _textPane;
 		private TextAreaPrintStream _printStream;

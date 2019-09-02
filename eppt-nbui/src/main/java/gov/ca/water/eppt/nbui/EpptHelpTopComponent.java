@@ -48,7 +48,7 @@ public final class EpptHelpTopComponent extends TopComponent
 		_helpViewer = new HelpPanel();
 		setLayout(new BorderLayout());
 		add(_helpViewer, BorderLayout.CENTER);
-		initListener();
+//		initListener();
 	}
 
 	private void initListener()

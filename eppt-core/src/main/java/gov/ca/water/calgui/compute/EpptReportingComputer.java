@@ -74,9 +74,11 @@ public class EpptReportingComputer
 		int offset = (int) TimeUnit.MILLISECONDS.toMinutes(TimeZone.getDefault().getRawOffset());
 		Map<LocalDateTime, Double> retval = new HashMap<>();
 		TimeSeriesContainer[] primarySeries = dssGrabber.getPrimarySeries();
+		String units = "";
 		if(primarySeries != null && primarySeries.length > 0 && primarySeries[0] != null)
 		{
 			TimeSeriesContainer tsc = primarySeries[0];
+			units = tsc.getUnits();
 			for(int i = 0; i < tsc.getNumberValues(); i++)
 			{
 				HecTime hecTime = tsc.getHecTime(i);
@@ -90,7 +92,7 @@ public class EpptReportingComputer
 		}
 		Map<LocalDateTime, Double> filteredPeriod = filterPeriod(retval);
 		Map<Month, Double> calculate = _statistics.calculate(_guiLink, filteredPeriod);
-		return new EpptReportingComputed(scenarioRun, retval, filteredPeriod, sort(calculate));
+		return new EpptReportingComputed(scenarioRun, retval, filteredPeriod, sort(calculate), units);
 	}
 
 	private SortedMap<Month, Double> sort(Map<Month, Double> calculate)

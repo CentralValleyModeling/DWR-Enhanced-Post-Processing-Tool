@@ -23,6 +23,7 @@ import java.util.NavigableMap;
 import java.util.SortedMap;
 import java.util.TreeMap;
 
+import gov.ca.water.calgui.constant.Constant;
 import gov.ca.water.calgui.project.EpptScenarioRun;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -41,18 +42,22 @@ public class EpptReportingComputed
 	private static final String FULL_TIME_SERIES = "full_time_series";
 	private static final String PERIOD_FILTERED_TIME_SERIES = "period_filtered_time_series";
 	private static final String STATISTICALLY_COMPUTED_TIME_SERIES = "statistically_computed_time_series";
+	private static final String SCENARIO_COLOR = "scenario_color";
 	private final EpptScenarioRun _epptScenarioRun;
 	private final NavigableMap<LocalDateTime, Double> _fullTimeSeries;
 	private final NavigableMap<LocalDateTime, Double> _periodFilteredTimeSeries;
 	private final NavigableMap<Month, Double> _statisticallyComputedTimeSeries;
+	private final String _units;
 
 	public EpptReportingComputed(EpptScenarioRun epptScenarioRun, Map<LocalDateTime, Double> fullTimeSeries,
-						  Map<LocalDateTime, Double> periodFilteredTimeSeries, SortedMap<Month, Double> statisticallyComputedTimeSeries)
+								 Map<LocalDateTime, Double> periodFilteredTimeSeries, SortedMap<Month, Double> statisticallyComputedTimeSeries,
+								 String units)
 	{
 		_epptScenarioRun = epptScenarioRun;
 		_fullTimeSeries = new TreeMap<>(fullTimeSeries);
 		_periodFilteredTimeSeries = new TreeMap<>(periodFilteredTimeSeries);
 		_statisticallyComputedTimeSeries = new TreeMap<>(statisticallyComputedTimeSeries);
+		_units = units;
 	}
 
 	public JSONObject toJson()
@@ -62,7 +67,13 @@ public class EpptReportingComputed
 		jsonObject.put(FULL_TIME_SERIES, buildTimeSeriesMap(_fullTimeSeries));
 		jsonObject.put(PERIOD_FILTERED_TIME_SERIES, buildTimeSeriesMap(_periodFilteredTimeSeries));
 		jsonObject.put(STATISTICALLY_COMPUTED_TIME_SERIES, buildMonthMap(_statisticallyComputedTimeSeries));
+		jsonObject.put(SCENARIO_COLOR, Constant.colorToHex(_epptScenarioRun.getColor()));
 		return jsonObject;
+	}
+
+	public String getUnits()
+	{
+		return _units;
 	}
 
 	private JSONArray buildTimeSeriesMap(Map<LocalDateTime, Double> fullTimeSeries)

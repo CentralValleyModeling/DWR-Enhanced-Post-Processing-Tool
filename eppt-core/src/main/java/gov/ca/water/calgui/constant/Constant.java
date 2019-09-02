@@ -38,7 +38,8 @@ public final class Constant
 	public static final String TXT_EXT = ".txt";
 	public static final String DV_NAME = "_DV";
 	public static final String CONFIG_DIR = System.getProperty("user.dir") + "\\dwr_eppt\\config\\";
-	public static final Path ORCA_EXE = Paths.get("C:\\Git\\DWR\\EPPT\\DWR-Enhanced-Post-Processing-Tool\\eppt-nbui\\src\\main\\config\\qaqc\\orca\\orca.exe");
+	public static final Path ORCA_EXE = Paths.get(
+			"C:\\Git\\DWR\\EPPT\\DWR-Enhanced-Post-Processing-Tool\\eppt-nbui\\src\\main\\config\\qaqc\\orca\\orca.exe");
 	public static final Path QA_QC_PATH = Paths.get(System.getProperty("user.dir")).resolve("dwr_eppt").resolve("config").resolve("qaqc");
 	public static final Path QA_QC_TEMPLATE_PATH = QA_QC_PATH.resolve("templates");
 	public static final Path QAQC_IMAGE_PATH = Paths.get("images");
@@ -60,6 +61,7 @@ public final class Constant
 	public static final String MODEL_W2_WRESL_LOOKUP_DIR = MODEL_W2_WRESL_DIR + LOOKUP_DIR;
 	public static final String GENERATED_DIR = "//Generated//";
 	public static final String RUN_DIR = "Run";
+	public static final String TREND_REPORTING_DIR = CONFIG_DIR + "trendreporting\\prototype\\";
 	// File Names.
 	public static final String GUI_XML_FILENAME = System.getProperty("user.dir") + "//Config//GUI.xml";
 
@@ -146,17 +148,6 @@ public final class Constant
 		throw new AssertionError("Utility class");
 	}
 
-	public static List<String> getPlotlyColorsHex()
-	{
-		return Arrays.asList(PLOTLY_COLORS);
-	}
-
-
-	public static List<Color> getPlotlyColors()
-	{
-		return Arrays.stream(PLOTLY_COLORS).map(Color::web).collect(Collectors.toList());
-	}
-
 	public static Color getPlotlyDefaultColor(int index)
 	{
 		return Color.web(PLOTLY_COLORS[index % PLOTLY_COLORS.length]);
@@ -169,17 +160,19 @@ public final class Constant
 
 	public static String colorToHex(Color color)
 	{
-		return String.format("#%02X%02X%02X",
+		return String.format("#%02X%02X%02X%02X",
 				(int) (color.getRed() * 255),
 				(int) (color.getGreen() * 255),
-				(int) (color.getBlue() * 255));
+				(int) (color.getBlue() * 255),
+				(int) (color.getOpacity() * 255));
 	}
 
 	public static String colorToHex(java.awt.Color color)
 	{
-		return String.format("#%02X%02X%02X",
+		return String.format("#%02X%02X%02X%02X",
 				color.getRed(),
 				color.getGreen(),
-				color.getBlue());
+				color.getBlue(),
+				color.getAlpha());
 	}
 }

@@ -366,7 +366,7 @@ public class TopPane extends Group
 		footerPane.setPrefHeight(32);
 		footerPane.getStyleClass().add("fx-calendar-footer");
 
-		NormalButton okBtn = new FXCalendarControls().new NormalButton("Ok");
+		NormalButton okBtn = new FXCalendarControls().new NormalButton("OK");
 		/**
 		 * Event triggering to set the current date of the system.
 		 */
