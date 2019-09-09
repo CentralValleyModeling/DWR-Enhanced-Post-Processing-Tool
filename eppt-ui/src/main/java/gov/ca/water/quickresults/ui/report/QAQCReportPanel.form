@@ -225,7 +225,7 @@
                       <gridbag top="5" left="5" bottom="5" right="5" weightx="0.0" weighty="0.0"/>
                     </constraints>
                     <properties>
-                      <text value="Percent Full Format:"/>
+                      <text value="Percent Diff Format:"/>
                     </properties>
                   </component>
                   <component id="590cf" class="javax.swing.JLabel">

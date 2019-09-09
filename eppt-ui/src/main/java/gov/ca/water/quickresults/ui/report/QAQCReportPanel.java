@@ -573,7 +573,7 @@ public class QAQCReportPanel extends RmaJPanel
 		gbc.insets = new Insets(5, 5, 5, 5);
 		panel6.add(_reportSubtitle, gbc);
 		final JLabel label7 = new JLabel();
-		label7.setText("Percent Full Format:");
+		label7.setText("Percent Diff Format:");
 		gbc = new GridBagConstraints();
 		gbc.gridx = 0;
 		gbc.gridy = 6;
