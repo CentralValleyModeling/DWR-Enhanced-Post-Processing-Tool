@@ -60,6 +60,6 @@ public final class QAQCTopComponent extends EpptTopComponent
 	@Override
 	public String getJavaHelpId()
 	{
-		return "QAQCReport";
+		return "Generating the QA/QC Report";
 	}
 }

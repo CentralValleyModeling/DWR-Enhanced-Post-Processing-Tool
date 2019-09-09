@@ -24,6 +24,8 @@ import java.util.Map;
 import java.util.NavigableMap;
 import java.util.TreeMap;
 
+import gov.ca.water.calgui.EpptInitializationException;
+import gov.ca.water.calgui.busservice.impl.WaterYearDefinitionSvc;
 import gov.ca.water.calgui.constant.Constant;
 import gov.ca.water.calgui.project.EpptScenarioRun;
 import org.junit.jupiter.api.Test;
@@ -38,6 +40,20 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  */
 public class TestPlotlyChartsToSvg
 {
+	static
+	{
+		String original = System.getProperty("user.dir");
+		System.setProperty("user.dir", original + "\\target\\test-classes");
+		try
+		{
+			WaterYearDefinitionSvc.createSeedDataSvcImplInstance();
+		}
+		catch(EpptInitializationException e)
+		{
+			e.printStackTrace();
+		}
+	}
+
 	@Test
 	public void testPlotlyBubbleToSvgFromTemplate() throws Exception
 	{
@@ -49,8 +65,11 @@ public class TestPlotlyChartsToSvg
 		alternativeData.put(alt, buildBubbleData());
 		PlotlyBubble bubble = new PlotlyBubble("CVP San Luis vs CVP NOD EOS Carryover Storage", "CVP North of Delta", "CVP San Luis", base,
 				buildBubbleData(), alternativeData);
-		PlotlySvgPrinter.printSvgToPath(path, bubble);
-		assertTrue(Files.exists(path));
+		PlotlySvgPrinter.printJsonToPath(path, bubble);
+		PlotlySvgPrinter.printSvg(path.toAbsolutePath().getParent());
+		assertTrue(Files.exists(path.toAbsolutePath().getParent().resolve("svg").resolve(path)));
+		Files.deleteIfExists(path);
+//		Files.deleteIfExists(Paths.get(path.toString().replace("svg", "json")));
 	}
 
 	@Test
@@ -64,8 +83,11 @@ public class TestPlotlyChartsToSvg
 		alternativeData.put(alt, buildAltExceedanceData());
 		PlotlyExceedance bubble = new PlotlyExceedance("CVP San Luis vs CVP NOD EOS Carryover Storage", "CVP North of Delta", "CVP San Luis", base,
 				buildBaseExceedanceData(), alternativeData);
-		PlotlySvgPrinter.printSvgToPath(path, bubble);
-		assertTrue(Files.exists(path));
+		PlotlySvgPrinter.printJsonToPath(path, bubble);
+		PlotlySvgPrinter.printSvg(path.toAbsolutePath().getParent());
+		assertTrue(Files.exists(path.toAbsolutePath().getParent().resolve("svg").resolve(path)));
+		Files.deleteIfExists(path);
+//		Files.deleteIfExists(Paths.get(path.toString().replace("svg", "json")));
 	}
 
 	@Test
@@ -79,8 +101,11 @@ public class TestPlotlyChartsToSvg
 		Map<EpptScenarioRun, List<List<PlotlyMonthly.MonthlyData>>> thresholdData = buildAltMonthlyData(base, alt);
 		PlotlyMonthly bubble = new PlotlyMonthly("Trinity Imports", "", "Storage",
 				primaryData, thresholdData);
-		PlotlySvgPrinter.printSvgToPath(path, bubble);
-		assertTrue(Files.exists(path));
+		PlotlySvgPrinter.printJsonToPath(path, bubble);
+		PlotlySvgPrinter.printSvg(path.toAbsolutePath().getParent());
+		assertTrue(Files.exists(path.toAbsolutePath().getParent().resolve("svg").resolve(path)));
+		Files.deleteIfExists(path);
+//		Files.deleteIfExists(Paths.get(path.toString().replace("svg", "json")));
 	}
 
 	private Map<EpptScenarioRun, List<PlotlyMonthly.MonthlyData>> buildPrimaryMonthlyData(EpptScenarioRun base, EpptScenarioRun alt)
@@ -124,10 +149,13 @@ public class TestPlotlyChartsToSvg
 		Map<EpptScenarioRun, PlotlyExceedancePage.ExceedanceMonthData> exceedanceData = new HashMap<>();
 		exceedanceData.put(base, buildBaseExceedanceMonthData());
 		exceedanceData.put(alt, buildAltExceedanceMonthData());
-		PlotlyExceedancePage bubble = new PlotlyExceedancePage("CVP San Luis vs CVP NOD EOS Carryover Storage", "CVP North of Delta",
+		PlotlyExceedancePage exceedancePage = new PlotlyExceedancePage("CVP San Luis vs CVP NOD EOS Carryover Storage", "CVP North of Delta",
 				exceedanceData);
-		PlotlySvgPrinter.printSvgToPath(path, bubble);
-		assertTrue(Files.exists(path));
+		PlotlySvgPrinter.printJsonToPath(path, exceedancePage);
+		PlotlySvgPrinter.printSvg(path.toAbsolutePath().getParent());
+		assertTrue(Files.exists(path.toAbsolutePath().getParent().resolve("svg").resolve(path)));
+		Files.deleteIfExists(path);
+//		Files.deleteIfExists(Paths.get(path.toString().replace("svg", "json")));
 	}
 
 	private PlotlyExceedancePage.ExceedanceMonthData buildBaseExceedanceMonthData()

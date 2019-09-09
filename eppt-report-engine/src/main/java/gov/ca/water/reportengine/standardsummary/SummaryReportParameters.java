@@ -23,6 +23,7 @@ import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
 
+import gov.ca.water.calgui.bo.CommonPeriodFilter;
 import gov.ca.water.calgui.bo.WaterYearDefinition;
 import gov.ca.water.calgui.bo.WaterYearIndex;
 import gov.ca.water.calgui.bo.WaterYearPeriod;
@@ -48,10 +49,11 @@ public class SummaryReportParameters
 	private final TwoColorColorContour _positiveContour;
 	private final TwoColorColorContour _negativeContour;
 	private final List<String> _disabledSummaryModules;
+	private final CommonPeriodFilter _commonPeriodFilter;
 
 	public SummaryReportParameters(WaterYearDefinition waterYearDefinition, WaterYearIndex waterYearIndex, WaterYearPeriodRange longTermRange,
 								   Map<WaterYearPeriod, List<WaterYearPeriodRange>> waterYearPeriodRanges, PercentDiffStyle percentDiffStyle,
-								   List<String> disabledSummaryModules)
+								   List<String> disabledSummaryModules, CommonPeriodFilter commonPeriodFilter)
 			throws EpptReportException
 	{
 		_waterYearDefinition = waterYearDefinition;
@@ -60,6 +62,7 @@ public class SummaryReportParameters
 		_waterYearPeriodRanges = waterYearPeriodRanges;
 		_percentDiffStyle = percentDiffStyle;
 		_disabledSummaryModules = disabledSummaryModules;
+		_commonPeriodFilter = commonPeriodFilter;
 		_positiveContour = createContour(Paths.get(Constant.POSITIVE_CONTOUR_FILE));
 		_negativeContour = createContour(Paths.get(Constant.NEGATIVE_CONTOUR_FILE));
 	}
@@ -128,5 +131,10 @@ public class SummaryReportParameters
 	public List<String> getDisabledSummaryModules()
 	{
 return _disabledSummaryModules;
+	}
+
+	public CommonPeriodFilter getCommonPeriodFilter()
+	{
+		return _commonPeriodFilter;
 	}
 }

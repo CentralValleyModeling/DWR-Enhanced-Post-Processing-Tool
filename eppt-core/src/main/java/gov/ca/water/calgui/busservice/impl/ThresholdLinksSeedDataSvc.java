@@ -161,7 +161,7 @@ public final class ThresholdLinksSeedDataSvc
 		ThresholdLinksBO thresholdLinksBO = _thresholdLinks.get(id);
 		if(thresholdLinksBO == null)
 		{
-			LOGGER.info("There is no Threshold Link data for this id = " + id);
+			LOGGER.fine("There is no Threshold Link data for this id = " + id);
 		}
 		return thresholdLinksBO;
 	}

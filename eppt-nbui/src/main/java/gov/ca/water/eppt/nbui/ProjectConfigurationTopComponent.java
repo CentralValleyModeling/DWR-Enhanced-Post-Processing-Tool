@@ -121,6 +121,6 @@ public final class ProjectConfigurationTopComponent extends EpptTopComponent
 	@Override
 	public String getJavaHelpId()
 	{
-		return "ProjectConfiguration";
+		return ProjectConfigurationPanel.getProjectConfigurationPanel().getJavaHelpId();
 	}
 }

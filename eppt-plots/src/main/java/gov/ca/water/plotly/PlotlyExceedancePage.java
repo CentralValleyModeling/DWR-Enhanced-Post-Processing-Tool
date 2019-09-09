@@ -13,13 +13,15 @@
 package gov.ca.water.plotly;
 
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.time.Month;
 import java.time.format.TextStyle;
+import java.util.Collection;
+import java.util.DoubleSummaryStatistics;
 import java.util.EnumMap;
 import java.util.Locale;
 import java.util.Map;
 import java.util.NavigableMap;
+import java.util.Objects;
 
 import gov.ca.water.calgui.constant.Constant;
 import gov.ca.water.calgui.project.EpptScenarioRun;
@@ -61,6 +63,7 @@ public class PlotlyExceedancePage extends PlotlyChart
 		JSONObject xAxis = template.getJSONObject("xaxis");
 		JSONObject yAxis = template.getJSONObject("yaxis");
 		JSONObject xAxisTitle = xAxis.getJSONObject("title");
+		yAxis.put("range", buildRange());
 		xAxisTitle.put("text", Month.JANUARY.getDisplayName(TextStyle.FULL, Locale.getDefault()));
 		JSONObject yAxisTitle = yAxis.getJSONObject("title");
 		yAxisTitle.put("text", _yAxis);
@@ -69,12 +72,38 @@ public class PlotlyExceedancePage extends PlotlyChart
 		for(int i = 2; i <= 12; i++)
 		{
 			xAxis = new JSONObject(xAxis.toString());
+			yAxis = new JSONObject(yAxis.toString());
+			yAxisTitle = yAxis.getJSONObject("title");
 			xAxisTitle = xAxis.getJSONObject("title");
 			xAxisTitle.put("text", Month.values()[i - 1].getDisplayName(TextStyle.FULL, Locale.getDefault()));
 			template.put("xaxis" + i, xAxis);
 			template.put("yaxis" + i, yAxis);
+			if(((i - 1) % 4) == 0)
+			{
+				yAxisTitle.put("text", _yAxis);
+			}
+			else
+			{
+				yAxisTitle.remove("text");
+			}
 		}
 		return template;
+	}
+
+	private JSONArray buildRange()
+	{
+		DoubleSummaryStatistics summaryStatistics = _exceedanceData.values()
+																   .stream()
+																   .map(ExceedanceMonthData::getData)
+																   .map(Map::values)
+																   .flatMap(Collection::stream)
+																   .map(ExceedanceData::getPrimaryData)
+																   .map(Map::values)
+																   .flatMap(Collection::stream)
+																   .filter(Objects::nonNull)
+																   .mapToDouble(v -> v)
+																   .summaryStatistics();
+		return new JSONArray(new double[]{summaryStatistics.getMin() - 10, summaryStatistics.getMax() + 10});
 	}
 
 	@Override
@@ -93,11 +122,10 @@ public class PlotlyExceedancePage extends PlotlyChart
 	private void addMonthData(JSONArray dataArray, JSONObject templateTrace, EpptScenarioRun scenarioRun,
 							  ExceedanceMonthData value)
 	{
-		EnumMap<Month, ExceedanceData> monthlyData = value._data;
+		Map<Month, ExceedanceData> monthlyData = value._data;
 		int gridIndex = 1;
 		for(Map.Entry<Month, ExceedanceData> entry : monthlyData.entrySet())
 		{
-			Month month = entry.getKey();
 			ExceedanceData exceedanceData = entry.getValue();
 			JSONObject baseTrace = buildPrimaryTrace(templateTrace, scenarioRun.getName(), scenarioRun, exceedanceData, gridIndex);
 			dataArray.put(baseTrace);
@@ -183,11 +211,16 @@ public class PlotlyExceedancePage extends PlotlyChart
 	public static class ExceedanceMonthData
 	{
 
-		private final EnumMap<Month, ExceedanceData> _data;
+		private final Map<Month, ExceedanceData> _data;
 
-		public ExceedanceMonthData(EnumMap<Month, ExceedanceData> data)
+		public ExceedanceMonthData(Map<Month, ExceedanceData> data)
 		{
 			_data = data;
+		}
+
+		public Map<Month, ExceedanceData> getData()
+		{
+			return _data;
 		}
 	}
 

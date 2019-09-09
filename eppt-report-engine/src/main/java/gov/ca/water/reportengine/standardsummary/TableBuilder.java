@@ -18,6 +18,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
 
+import gov.ca.water.calgui.bo.CommonPeriodFilter;
 import gov.ca.water.calgui.project.EpptScenarioRun;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -56,9 +57,10 @@ abstract class TableBuilder extends StandardSummaryChartBuilder
 		}
 	}
 
-	private Element buildTitle(String title, List<ChartComponent> componentsForTitle, Function<ChartComponent, Element> valueFunction)
+	Element buildTitle(String title, List<ChartComponent> componentsForTitle, Function<ChartComponent, Element> valueFunction)
 	{
 		Element retval = getDocument().createElement(TITLE_ELEMENT);
+		retval.setAttribute(TITLE_NAME_ATTRIBUTE, title);
 		if(!title.isEmpty())
 		{
 			appendTitlePlaceholder(title, componentsForTitle, valueFunction, retval);
@@ -97,6 +99,7 @@ abstract class TableBuilder extends StandardSummaryChartBuilder
 	private Element buildHeader(String header, List<ChartComponent> componentsForHeader, Function<ChartComponent, Element> valueFunction)
 	{
 		Element retval = getDocument().createElement(HEADER_ELEMENT);
+		retval.setAttribute(HEADER_NAME_ATTRIBUTE, header);
 		if(!header.isEmpty())
 		{
 			appendHeaderPlaceholder(header, componentsForHeader, valueFunction, retval);
@@ -104,7 +107,7 @@ abstract class TableBuilder extends StandardSummaryChartBuilder
 		Map<String, List<ChartComponent>> groupedBySubheaders = componentsForHeader.stream().distinct().collect(
 				groupingBy(ChartComponent::getSubHeader));
 		int i = 0;
-		for(String subHeader : componentsForHeader.stream().map(ChartComponent::getSubHeader).collect(toList()))
+		for(String subHeader : componentsForHeader.stream().map(ChartComponent::getSubHeader).distinct().collect(toList()))
 		{
 			List<ChartComponent> componentsForSubHeaders = groupedBySubheaders.getOrDefault(subHeader, new ArrayList<>());
 			Element subHeaderElement = buildSubHeader(subHeader, componentsForSubHeaders, valueFunction);
@@ -133,6 +136,7 @@ abstract class TableBuilder extends StandardSummaryChartBuilder
 	private Element buildSubHeader(String subHeader, List<ChartComponent> componentsForSubHeaders, Function<ChartComponent, Element> valueFunction)
 	{
 		Element retval = getDocument().createElement(SUBHEADER_ELEMENT);
+		retval.setAttribute(SUBHEADER_NAME_ATTRIBUTE, subHeader);
 		if(!subHeader.isEmpty())
 		{
 			appendSubHeaderPlaceholder(subHeader, componentsForSubHeaders, valueFunction, retval);
@@ -175,6 +179,7 @@ abstract class TableBuilder extends StandardSummaryChartBuilder
 	private Element buildComponent(ChartComponent component, Function<ChartComponent, Element> valueFunction)
 	{
 		Element retval = getDocument().createElement(COMPONENT_ELEMENT);
+		retval.setAttribute(COMPONENT_NAME_ATTRIBUTE, component.getComponent());
 		buildRowLabel(component.getComponent(), retval);
 		buildValue(retval, component, valueFunction);
 		return retval;

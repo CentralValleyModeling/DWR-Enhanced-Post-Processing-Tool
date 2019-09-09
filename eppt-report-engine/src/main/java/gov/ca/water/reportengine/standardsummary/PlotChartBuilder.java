@@ -16,6 +16,7 @@ import java.nio.file.Path;
 import java.util.List;
 import java.util.regex.Pattern;
 
+import gov.ca.water.calgui.bo.CommonPeriodFilter;
 import gov.ca.water.calgui.project.EpptScenarioRun;
 import gov.ca.water.plotly.PlotlyChart;
 import gov.ca.water.plotly.PlotlyPrintException;
@@ -49,13 +50,13 @@ abstract class PlotChartBuilder extends StandardSummaryChartBuilder
 		printChart(imagePath, plotlyExceedance);
 	}
 
-	abstract PlotlyChart buildChart(List<ChartComponent> chartComponents);
+	abstract PlotlyChart buildChart(List<ChartComponent> chartComponents) throws EpptReportException;
 
 	private void printChart(Path imagePath, PlotlyChart plotlyExceedance) throws EpptReportException
 	{
 		try
 		{
-			PlotlySvgPrinter.printSvgToPath(imagePath, plotlyExceedance);
+			PlotlySvgPrinter.printJsonToPath(imagePath, plotlyExceedance);
 		}
 		catch(PlotlyPrintException e)
 		{

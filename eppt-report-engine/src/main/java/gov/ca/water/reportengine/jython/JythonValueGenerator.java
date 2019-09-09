@@ -13,21 +13,16 @@
 package gov.ca.water.reportengine.jython;
 
 import java.time.Month;
-import java.util.Arrays;
-import java.util.EnumMap;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.NavigableMap;
-import java.util.TreeMap;
-import java.util.concurrent.ThreadLocalRandom;
-import java.util.function.Function;
-import java.util.stream.IntStream;
+import javax.script.ScriptException;
 
+import gov.ca.water.calgui.bo.CommonPeriodFilter;
+import gov.ca.water.calgui.bo.PeriodFilter;
 import gov.ca.water.calgui.project.EpptScenarioRun;
-
-import static java.util.stream.Collectors.toList;
-import static java.util.stream.Collectors.toMap;
+import gov.ca.water.calgui.scripts.JythonScriptRunner;
+import gov.ca.water.reportengine.EpptReportException;
 
 /**
  * Company: Resource Management Associates
@@ -40,72 +35,125 @@ public class JythonValueGenerator
 	private final PeriodFilter _periodFilter;
 	private final EpptScenarioRun _scenarioRun;
 	private final String _function;
+	private final JythonScriptRunner _scriptRunner;
 
-	public JythonValueGenerator(EpptScenarioRun scenarioRun, String function)
+	public JythonValueGenerator(EpptScenarioRun scenarioRun, String function, CommonPeriodFilter commonPeriodFilter) throws ScriptException
 	{
-		this(input -> input, scenarioRun, function);
+		this(input -> true, scenarioRun, function, commonPeriodFilter);
 	}
 
-	public JythonValueGenerator(PeriodFilter periodFilter,EpptScenarioRun base, String function)
+	public JythonValueGenerator(PeriodFilter periodFilter, EpptScenarioRun base, String function, CommonPeriodFilter commonPeriodFilter)
+			throws ScriptException
 	{
 		_scenarioRun = base;
-		_function = function;
+		_function = JythonScriptBuilder.getInstance().buildFunctionFromTemplate(function);
 		_periodFilter = periodFilter;
+		_scriptRunner = new JythonScriptRunner(_scenarioRun, commonPeriodFilter);
 	}
 
-	public Object generateObjectValue()
+	public Double generateValue() throws EpptReportException
 	{
-		return Math.random() * 1000;
+		try
+		{
+			Object o = _scriptRunner.runScript(_function);
+			return (Double) o;
+		}
+		catch(ScriptException e)
+		{
+			throw new EpptReportException("Error running script: " + _function);
+		}
+		catch(ClassCastException e)
+		{
+			throw new EpptReportException("Incorrect return type from function: " + _function +
+					" Required: " + Double.class, e);
+		}
 	}
 
-	public Double generateValue()
+	public Object generateObjectValue() throws EpptReportException
 	{
-		return (double) ThreadLocalRandom.current().nextInt(-4, 4);
+		try
+		{
+			return _scriptRunner.runScript(_function);
+		}
+		catch(ScriptException e)
+		{
+			throw new EpptReportException("Error running script: " + _function);
+		}
 	}
 
-	public List<Double> generateValues()
+	@SuppressWarnings("unchecked")
+	public List<Double> generateValues() throws EpptReportException
 	{
-		return IntStream.generate(() -> ThreadLocalRandom.current().nextInt(1, 3 + 1))
-						.limit(100)
-						.map(i -> i * 100)
-						.mapToObj(i -> (double) i)
-						.collect(toList());
+		try
+		{
+			Object o = _scriptRunner.runScript(_function);
+			return (List<Double>) o;
+		}
+		catch(ScriptException e)
+		{
+			throw new EpptReportException("Error running script: " + _function);
+		}
+		catch(ClassCastException e)
+		{
+			throw new EpptReportException("Incorrect return type from function: " + _function +
+					" Required: " + List.class, e);
+		}
 	}
 
-	public NavigableMap<Double, Double> generateExceedanceValues()
+	@SuppressWarnings("unchecked")
+	public NavigableMap<Double, Double> generateExceedanceValues() throws EpptReportException
 	{
-		List<Double> collect = IntStream.generate(() -> ThreadLocalRandom.current().nextInt(1, 3 + 1))
-										.limit(100)
-										.map(i -> i * 100)
-										.mapToObj(i -> (double) i).sorted()
-										.collect(toList());
-		return new TreeMap<>(IntStream.iterate(0, i -> i + 1)
-									  .limit(100)
-									  .mapToObj(i -> (double) i)
-									  .collect(toMap(Function.identity(), i -> collect.get(((Double) i).intValue()))));
+		try
+		{
+			Object o = _scriptRunner.runScript(_function);
+			return (NavigableMap<Double, Double>) o;
+		}
+		catch(ScriptException e)
+		{
+			throw new EpptReportException("Error running script: " + _function);
+		}
+		catch(ClassCastException e)
+		{
+			throw new EpptReportException("Incorrect return type from function: " + _function +
+					" Required: " + List.class, e);
+		}
 	}
 
-	public Map<Integer, Double> generateAnnualValues()
+	@SuppressWarnings("unchecked")
+	public Map<Integer, Double> generateAnnualValues() throws EpptReportException
 	{
-		List<Double> collect = IntStream.generate(() -> ThreadLocalRandom.current().nextInt(1, 3 + 1))
-										.limit(100)
-										.map(i -> i * 100)
-										.mapToObj(i -> (double) i).sorted()
-										.collect(toList());
-		return new HashMap<>(IntStream.iterate(0, i -> i + 1)
-									  .limit(75)
-									  .boxed()
-									  .collect(toMap(i -> i + 1921, collect::get)));
+		try
+		{
+			Object o = _scriptRunner.runScript(_function);
+			return (Map<Integer, Double>) o;
+		}
+		catch(ScriptException e)
+		{
+			throw new EpptReportException("Error running script: " + _function);
+		}
+		catch(ClassCastException e)
+		{
+			throw new EpptReportException("Incorrect return type from function: " + _function +
+					" Required: " + List.class, e);
+		}
 	}
 
-	public Map<Month, Double> generateMonthlyValues()
+	@SuppressWarnings("unchecked")
+	public Map<Month, Double> generateMonthlyValues() throws EpptReportException
 	{
-		List<Double> collect = Arrays.stream(Month.values())
-									 .map(i -> (double)ThreadLocalRandom.current().nextInt(1, 6) * 200)
-									 .collect(toList());
-		return IntStream.iterate(0, i -> i + 1)
-									  .limit(Month.values().length)
-									  .boxed()
-									  .collect(toMap(i->Month.values()[i], collect::get));
+		try
+		{
+			Object o = _scriptRunner.runScript(_function);
+			return (Map<Month, Double>) o;
+		}
+		catch(ScriptException e)
+		{
+			throw new EpptReportException("Error running script: " + _function);
+		}
+		catch(ClassCastException e)
+		{
+			throw new EpptReportException("Incorrect return type from function: " + _function +
+					" Required: ", e);
+		}
 	}
 }

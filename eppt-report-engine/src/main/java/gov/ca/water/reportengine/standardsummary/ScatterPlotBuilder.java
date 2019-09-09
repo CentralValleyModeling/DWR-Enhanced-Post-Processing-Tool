@@ -20,6 +20,7 @@ import java.util.Map;
 import gov.ca.water.calgui.project.EpptScenarioRun;
 import gov.ca.water.plotly.PlotlyBubble;
 import gov.ca.water.plotly.PlotlyChart;
+import gov.ca.water.reportengine.EpptReportException;
 import org.w3c.dom.Document;
 
 /**
@@ -38,7 +39,7 @@ public class ScatterPlotBuilder extends PlotChartBuilder
 	}
 
 	@Override
-	PlotlyChart buildChart(List<ChartComponent> chartComponents)
+	PlotlyChart buildChart(List<ChartComponent> chartComponents) throws EpptReportException
 	{
 		String title = getTitleForComponents(chartComponents);
 		String yAxisLabel = getYAxisLabelForComponents(chartComponents);
@@ -52,7 +53,7 @@ public class ScatterPlotBuilder extends PlotChartBuilder
 		return new PlotlyBubble(title, xAxisLabel, yAxisLabel, getBase(), baseData, alternativeData);
 	}
 
-	private PlotlyBubble.BubbleData buildBubleData(EpptScenarioRun base, List<ChartComponent> chartComponents)
+	private PlotlyBubble.BubbleData buildBubleData(EpptScenarioRun base, List<ChartComponent> chartComponents) throws EpptReportException
 	{
 		List<Double> xData = new ArrayList<>();
 		List<Double> yData = new ArrayList<>();

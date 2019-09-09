@@ -38,10 +38,12 @@ public final class Constant
 	public static final String TXT_EXT = ".txt";
 	public static final String DV_NAME = "_DV";
 	public static final String CONFIG_DIR = System.getProperty("user.dir") + "\\dwr_eppt\\config\\";
-	public static final Path ORCA_EXE = Paths.get(
-			"C:\\Git\\DWR\\EPPT\\DWR-Enhanced-Post-Processing-Tool\\eppt-nbui\\src\\main\\config\\qaqc\\orca\\orca.exe");
+	public static final Path ORCA_EXE = Paths.get(CONFIG_DIR).resolve("qaqc").resolve("orca").resolve("orca.exe");
 	public static final Path QA_QC_PATH = Paths.get(System.getProperty("user.dir")).resolve("dwr_eppt").resolve("config").resolve("qaqc");
+	public static final Path FUNCTIONS_PATH = QA_QC_PATH.resolve("Functions" + CSV_EXT);
 	public static final Path QA_QC_TEMPLATE_PATH = QA_QC_PATH.resolve("templates");
+	public static final Path QA_QC_SCRIPT_DIRECTORY = QA_QC_PATH.resolve("scripts");
+	public static final Path DETAILS_CSV = QA_QC_PATH.resolve("Details" + CSV_EXT);
 	public static final Path QAQC_IMAGE_PATH = Paths.get("images");
 	public static final String DOCS_DIR = System.getProperty("user.dir") + "\\dwr_eppt\\config\\";
 	public static final String QA_QC_DIR = CONFIG_DIR + "qaqc";

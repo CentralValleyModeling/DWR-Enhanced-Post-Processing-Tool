@@ -12,6 +12,7 @@
 
 package gov.ca.water.reportengine.detailedissues;
 
+import gov.ca.water.calgui.bo.DetailedIssue;
 import gov.ca.water.calgui.project.EpptScenarioRun;
 import gov.ca.water.reportengine.ModuleCreator;
 import gov.ca.water.reportengine.executivereport.DTSProcessor;

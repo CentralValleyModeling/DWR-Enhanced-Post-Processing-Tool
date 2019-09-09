@@ -36,8 +36,9 @@ import javax.xml.transform.stream.StreamResult;
 
 import com.google.common.flogger.FluentLogger;
 import gov.ca.water.calgui.bo.GUILinksAllModelsBO;
+import gov.ca.water.calgui.constant.Constant;
 import gov.ca.water.calgui.project.EpptScenarioRun;
-import gov.ca.water.reportengine.detailedissues.DetailedIssue;
+import gov.ca.water.calgui.bo.DetailedIssue;
 import gov.ca.water.reportengine.detailedissues.DetailedIssueProcessor;
 import gov.ca.water.reportengine.detailedissues.DetailedIssueViolation;
 import gov.ca.water.reportengine.detailedissues.DetailedIssuesXMLCreator;
@@ -88,7 +89,6 @@ public class EPPTReport
 	private static final String CODE_CHANGES_CSV = "CodeChanges" + CSV_EXT;
 
 	private static final String MODULES_CSV = QA_QC_DIR + "/Modules" + CSV_EXT;
-	private static final String DETAILS_CSV = QA_QC_DIR + "/Details" + CSV_EXT;
     public static final String SUMMARY_CSV = QA_QC_DIR + "/Summary" + CSV_EXT;
 
 	private final Path _pathToWriteOut;
@@ -120,7 +120,7 @@ public class EPPTReport
 			Document doc = createDoc();
 			//create the modules
 			ModuleCreator mc = new ModuleCreator();
-			_modules = mc.createModules(Paths.get(MODULES_CSV), Paths.get(DETAILS_CSV));
+			_modules = mc.createModules(Paths.get(MODULES_CSV), Constant.DETAILS_CSV);
 			_allDetailedIssues = mc.getAllDetailedIssues();
 
 			//create the file change stats. One for each alt to the base in order of alts

@@ -1,0 +1,46 @@
+<!--<?xml version='1.0' encoding='UTF-8' ?>
+
+  ~ Enhanced Post Processing Tool (EPPT) Copyright (c) 2019.
+  ~
+  ~ EPPT is copyrighted by the State of California, Department of Water Resources. It is licensed
+  ~ under the GNU General Public License, version 2. This means it can be
+  ~ copied, distributed, and modified freely, but you may not restrict others
+  ~ in their ability to copy, distribute, and modify it. See the license below
+  ~ for more details.
+  ~
+  ~ GNU General Public License
+
+
+<!DOCTYPE map PUBLIC "-//Sun Microsystems Inc.//DTD JavaHelp Map Version 1.0//EN" "http://java.sun.com/products/javahelp/map_1_0.dtd">
+
+<map version="1.0">
+	<mapID target="Introduction" url="EPPT_HTM/1_Introduction.htm"/>
+	<mapID target="Options" url="EPPT_HTM/2_Main_Menu_Options.htm"/>
+	<mapID target="Project Configuration" url="EPPT_HTM/3_Project_Configuration.htm"/>
+	<mapID target="Results" url="EPPT_HTM/4_0_Results.htm"/>
+	<mapID target="Quick Results" url="EPPT_HTM/4_1_Quick_Results.htm"/>
+	<mapID target="Custom Results" url="EPPT_HTM/4_2_Custom_Results.htm"/>
+	<mapID target="Data Analysis" url="EPPT_HTM/4_3_Data_Analysis.htm"/>
+	<mapID target="Tutorial" url="EPPT_HTM/5_0_Tutorial.htm"/>
+	<mapID target="Viewing Results" url="EPPT_HTM/5_1_Viewing_Results.htm"/>
+</map>
+  -->
+<?xml version="1.0" encoding="utf-8" ?>
+<!--RoboML: Table of Content-->
+
+
+<map version="1.0">
+      <mapID target="Introduction" url="EPPT_HTM/1_Introduction.htm"/>
+      <mapID target="Main Menu Options" url="EPPT_HTM/2_MainMenuOptions.htm"/>
+      <mapID target="EPPT Windows" url="EPPT_HTM/3.0_Windows.htm" >
+      <mapID target="Project Configuration" url="EPPT_HTM/3.1_ProjectConfiguration.htm"/>
+      <mapID target="Quick Results" url="EPPT_HTM/3.2_QuickResults.htm"/>
+      <mapID target="Custom Results" url="EPPT_HTM/3.3_CustomResults.htm"/>
+      <mapID target="Data Analysis" url="EPPT_HTM/3.4_DataAnalysis.htm"/>
+      <mapID target="Tutorial" url="EPPT_HTM/4.0_Tutorial.htm"/>
+      <mapID target="Adding Scenarios" url="EPPT_HTM/4.1_AddingScenarios.htm"/>
+      <mapID target="Viewing Results" url="EPPT_HTM/4.2_ViewingResults.htm"/>
+      <mapID target="Generating Data Analysis PDF" url="EPPT_HTM/4.3_DataAnalysis.htm"/>
+      <mapID target="Running the WRESL Script" url="EPPT_HTM/4.4_WRESLScript.htm"/>
+      <mapID target="Generating the QA/QC Report" url="EPPT_HTM/4.5_QAQCReport.htm"/>  
+</map>

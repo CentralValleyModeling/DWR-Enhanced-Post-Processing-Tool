@@ -110,7 +110,7 @@ public class ScenarioEditorPanel
 			if(newValue instanceof java.awt.Color)
 			{
 				java.awt.Color color = (java.awt.Color) newValue;
-				_colorHexTextField.setText(String.format("#%02x%02x%02x", color.getRed(), color.getGreen(), color.getBlue()));
+				_colorHexTextField.setText(Constant.colorToHex(color));
 				_colorChooserButton.setColor(color);
 			}
 		}
@@ -478,8 +478,18 @@ public class ScenarioEditorPanel
 		EpptDssContainer dssContainer = scenarioRun.getDssContainer();
 		_scenarioDssTableModel.fillModel(dssContainer);
 		_waterYearTable.setText(scenarioRun.getWaterYearTable().toString());
-		_colorHexTextField.setText(Constant.colorToHex(scenarioRun.getColor()));
-		_colorChooserButton.setColor(java.awt.Color.decode(Constant.colorToHex(scenarioRun.getColor())));
+		String hex = Constant.colorToHex(scenarioRun.getColor());
+		_colorHexTextField.setText(hex);
+		try
+		{
+			_colorChooserButton.setColor(java.awt.Color.decode(hex));
+		}
+		catch(NumberFormatException ex)
+		{
+			java.awt.Color decode = java.awt.Color.decode(hex.substring(0, 7));
+			decode = new java.awt.Color(decode.getRed(), decode.getGreen(), decode.getBlue(), Integer.parseInt(hex.substring(7, 9), 16));
+			_colorChooserButton.setColor(decode);
+		}
 	}
 
 	void shutdown()

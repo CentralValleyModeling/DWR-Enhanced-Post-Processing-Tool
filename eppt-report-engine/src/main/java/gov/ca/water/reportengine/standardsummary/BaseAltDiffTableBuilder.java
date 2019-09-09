@@ -21,13 +21,14 @@ import java.util.function.Function;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import gov.ca.water.calgui.bo.PeriodFilter;
 import gov.ca.water.calgui.bo.WaterYearPeriod;
+import gov.ca.water.calgui.bo.WaterYearPeriodFilter;
 import gov.ca.water.calgui.bo.WaterYearPeriodRange;
+import gov.ca.water.calgui.bo.WaterYearPeriodRangeFilter;
 import gov.ca.water.calgui.bo.WaterYearType;
 import gov.ca.water.calgui.project.EpptScenarioRun;
-import gov.ca.water.reportengine.jython.PeriodFilter;
-import gov.ca.water.reportengine.jython.WaterYearPeriodFilter;
-import gov.ca.water.reportengine.jython.WaterYearPeriodRangeFilter;
+import gov.ca.water.reportengine.EpptReportException;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
@@ -184,44 +185,52 @@ class BaseAltDiffTableBuilder extends TableBuilder
 	{
 		Element retval = getDocument().createElement(VALUE_ELEMENT);
 		EpptScenarioRun base = getBase();
-		Double baseValue = createJythonValueGenerator(filter, base, v.getFunction()).generateValue();
-		Double altValue = createJythonValueGenerator(filter,alternative, v.getFunction()).generateValue();
-		if(baseValue == null)
+		try
 		{
-			LOGGER.log(Level.WARNING, "Unable to generate diff value for: {0} value is null for scenario: {1}", new Object[]{v, base.getName()});
-		}
-		else if(altValue == null)
-		{
-			LOGGER.log(Level.WARNING, "Unable to generate diff value for: {0} value is null for scenario: {1}",
-					new Object[]{v, alternative.getName()});
-		}
-		else if(!RMAConst.isValidValue(baseValue))
-		{
-			LOGGER.log(Level.WARNING, "Unable to generate diff value for: {0} value is invalid ({1}) for scenario: {2}",
-					new Object[]{v, baseValue, base.getName()});
-		}
-		else if(!RMAConst.isValidValue(altValue))
-		{
-			LOGGER.log(Level.WARNING, "Unable to generate diff value for: {0} value is invalid ({1}) for scenario: {2}",
-					new Object[]{v, baseValue, alternative.getName()});
-		}
-		else
-		{
-			double absoluteDiff = baseValue - altValue;
-			String absoluteText = String.valueOf(absoluteDiff);
-			retval.setTextContent(absoluteText);
-			double percentValue = ((altValue / baseValue) - 1) * -100;
-			long percentRounded = Math.round(percentValue);
-			long absoluteRounded = Math.round(absoluteDiff);
-			PercentDiffStyle percentDiffStyle = getReportParameters().getPercentDiffStyle();
-			if(percentDiffStyle == PercentDiffStyle.PERCENT)
+			Double baseValue = createJythonValueGenerator(filter, base, v.getFunction()).generateValue();
+
+			Double altValue = createJythonValueGenerator(filter, alternative, v.getFunction()).generateValue();
+			if(baseValue == null)
 			{
-				retval.setAttribute(VALUE_PERCENT_TEXT_ATTRIBUTE, String.valueOf(percentRounded));
+				LOGGER.log(Level.WARNING, "Unable to generate diff value for: {0} value is null for scenario: {1}", new Object[]{v, base.getName()});
 			}
-			else if(percentDiffStyle == PercentDiffStyle.FULL)
+			else if(altValue == null)
 			{
-				retval.setAttribute(VALUE_FULL_TEXT_ATTRIBUTE, absoluteRounded + " (" + percentRounded + "%)");
+				LOGGER.log(Level.WARNING, "Unable to generate diff value for: {0} value is null for scenario: {1}",
+						new Object[]{v, alternative.getName()});
 			}
+			else if(!RMAConst.isValidValue(baseValue))
+			{
+				LOGGER.log(Level.WARNING, "Unable to generate diff value for: {0} value is invalid ({1}) for scenario: {2}",
+						new Object[]{v, baseValue, base.getName()});
+			}
+			else if(!RMAConst.isValidValue(altValue))
+			{
+				LOGGER.log(Level.WARNING, "Unable to generate diff value for: {0} value is invalid ({1}) for scenario: {2}",
+						new Object[]{v, baseValue, alternative.getName()});
+			}
+			else
+			{
+				double absoluteDiff = baseValue - altValue;
+				String absoluteText = String.valueOf(absoluteDiff);
+				retval.setTextContent(absoluteText);
+				double percentValue = ((altValue / baseValue) - 1) * -100;
+				long percentRounded = Math.round(percentValue);
+				long absoluteRounded = Math.round(absoluteDiff);
+				PercentDiffStyle percentDiffStyle = getReportParameters().getPercentDiffStyle();
+				if(percentDiffStyle == PercentDiffStyle.PERCENT)
+				{
+					retval.setAttribute(VALUE_PERCENT_TEXT_ATTRIBUTE, String.valueOf(percentRounded));
+				}
+				else if(percentDiffStyle == PercentDiffStyle.FULL)
+				{
+					retval.setAttribute(VALUE_FULL_TEXT_ATTRIBUTE, absoluteRounded + " (" + percentRounded + "%)");
+				}
+			}
+		}
+		catch(EpptReportException e)
+		{
+			LOGGER.log(Level.SEVERE, "Error running jython script", e);
 		}
 		return retval;
 	}
@@ -229,21 +238,29 @@ class BaseAltDiffTableBuilder extends TableBuilder
 	private Element buildValueForChart(EpptScenarioRun scenarioRun, ChartComponent v, PeriodFilter filter)
 	{
 		Element retval = getDocument().createElement(VALUE_ELEMENT);
-		Double value = createJythonValueGenerator(filter,scenarioRun, v.getFunction()).generateValue();
-		if(value == null)
+		try
 		{
-			LOGGER.log(Level.WARNING, "Unable to generate scenario value for: {0} value is null for scenario: {1}",
-					new Object[]{v, scenarioRun.getName()});
+			Double value = createJythonValueGenerator(filter, scenarioRun, v.getFunction()).generateValue();
+
+			if(value == null)
+			{
+				LOGGER.log(Level.WARNING, "Unable to generate scenario value for: {0} value is null for scenario: {1}",
+						new Object[]{v, scenarioRun.getName()});
+			}
+			else if(!RMAConst.isValidValue(value))
+			{
+				LOGGER.log(Level.WARNING, "Unable to generate scenario value for: {0} value is invalid ({1}) for scenario: {2}",
+						new Object[]{v, value, scenarioRun.getName()});
+			}
+			else
+			{
+				String textRaw = String.valueOf(value);
+				retval.setTextContent(textRaw);
+			}
 		}
-		else if(!RMAConst.isValidValue(value))
+		catch(EpptReportException e)
 		{
-			LOGGER.log(Level.WARNING, "Unable to generate scenario value for: {0} value is invalid ({1}) for scenario: {2}",
-					new Object[]{v, value, scenarioRun.getName()});
-		}
-		else
-		{
-			String textRaw = String.valueOf(value);
-			retval.setTextContent(textRaw);
+			LOGGER.log(Level.SEVERE, "Error running jython script", e);
 		}
 		return retval;
 	}

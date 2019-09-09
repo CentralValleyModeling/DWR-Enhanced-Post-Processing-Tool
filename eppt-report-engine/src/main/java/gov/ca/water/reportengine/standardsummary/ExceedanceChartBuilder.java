@@ -18,9 +18,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.NavigableMap;
 
+import gov.ca.water.calgui.bo.CommonPeriodFilter;
 import gov.ca.water.calgui.project.EpptScenarioRun;
 import gov.ca.water.plotly.ExceedanceData;
 import gov.ca.water.plotly.PlotlyExceedance;
+import gov.ca.water.reportengine.EpptReportException;
 import org.w3c.dom.Document;
 
 /**
@@ -39,7 +41,7 @@ class ExceedanceChartBuilder extends PlotChartBuilder
 	}
 
 	@Override
-	PlotlyExceedance buildChart(List<ChartComponent> chartComponents)
+	PlotlyExceedance buildChart(List<ChartComponent> chartComponents) throws EpptReportException
 	{
 		String title = getTitleForComponents(chartComponents);
 		String yAxisLabel = getYAxisLabelForComponents(chartComponents);
@@ -54,7 +56,7 @@ class ExceedanceChartBuilder extends PlotChartBuilder
 				getBase(), baseData, alternativeData);
 	}
 
-	private ExceedanceData createDataForScenario(List<ChartComponent> chartComponents, EpptScenarioRun scenarioRun)
+	private ExceedanceData createDataForScenario(List<ChartComponent> chartComponents, EpptScenarioRun scenarioRun) throws EpptReportException
 	{
 		ChartComponent chartComponent = chartComponents.get(0);
 		NavigableMap<Double, Double> primaryData = createJythonValueGenerator(scenarioRun,

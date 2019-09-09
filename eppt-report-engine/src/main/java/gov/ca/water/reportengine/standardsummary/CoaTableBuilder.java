@@ -20,6 +20,7 @@ import java.util.logging.Logger;
 import java.util.regex.Pattern;
 
 import gov.ca.water.calgui.project.EpptScenarioRun;
+import gov.ca.water.reportengine.EpptReportException;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
@@ -97,20 +98,20 @@ class CoaTableBuilder extends TableBuilder
 	private String getCvpName(EpptChart epptChart)
 	{
 		return epptChart.getChartComponents().stream()
-				 .map(chart->chart.getSubHeader())
-				 .map(DOUBLE_PIPE_PATTERN::split)
-				 .map(s->s[0])
-				 .findAny()
-				 .orElse("");
+						.map(chart -> chart.getSubHeader())
+						.map(DOUBLE_PIPE_PATTERN::split)
+						.map(s -> s[0])
+						.findAny()
+						.orElse("");
 	}
 
 	private String getSwpName(EpptChart epptChart)
 	{
 		return epptChart.getChartComponents().stream()
-						.map(chart->chart.getSubHeader())
+						.map(chart -> chart.getSubHeader())
 						.map(DOUBLE_PIPE_PATTERN::split)
-						.filter(s->s.length > 1)
-						.map(s->s[1])
+						.filter(s -> s.length > 1)
+						.map(s -> s[1])
 						.findAny()
 						.orElse("");
 	}
@@ -137,31 +138,41 @@ class CoaTableBuilder extends TableBuilder
 	{
 		Element retval = getDocument().createElement(VALUE_ELEMENT);
 		EpptScenarioRun base = getBase();
-		Object baseValue = createJythonValueGenerator(base, v.getFunction()).generateObjectValue();
-		Object altValue = createJythonValueGenerator(alternative, v.getFunction()).generateObjectValue();
-		if(baseValue == null)
+		try
 		{
-			LOGGER.log(Level.WARNING, "Unable to generate diff value for: {0} value is null for scenario: {1}", new Object[]{v, base.getName()});
+			Object baseValue = createJythonValueGenerator(base, v.getFunction()).generateObjectValue();
+
+			Object altValue = createJythonValueGenerator(alternative, v.getFunction()).generateObjectValue();
+			if(baseValue == null)
+			{
+				LOGGER.log(Level.WARNING, "Unable to generate diff value for: {0} value is null for scenario: {1}", new Object[]{v, base.getName()});
+			}
+			else if(altValue == null)
+			{
+				LOGGER.log(Level.WARNING, "Unable to generate diff value for: {0} value is null for scenario: {1}",
+						new Object[]{v, alternative.getName()});
+			}
+			else if(baseValue instanceof Double && !RMAConst.isValidValue((Double) baseValue))
+			{
+				LOGGER.log(Level.WARNING, "Unable to generate diff value for: {0} value is invalid ({1}) for scenario: {2}",
+						new Object[]{v, baseValue, base.getName()});
+			}
+			else if(altValue instanceof Double && !RMAConst.isValidValue((Double) altValue))
+			{
+				LOGGER.log(Level.WARNING, "Unable to generate diff value for: {0} value is invalid ({1}) for scenario: {2}",
+						new Object[]{v, baseValue, alternative.getName()});
+			}
+			else if(baseValue instanceof Double && altValue instanceof Double)
+			{
+				double total = (double) baseValue + (double) altValue;
+				retval.setTextContent(String.valueOf(total));
+			}
 		}
-		else if(altValue == null)
+
+		catch(
+				EpptReportException e)
 		{
-			LOGGER.log(Level.WARNING, "Unable to generate diff value for: {0} value is null for scenario: {1}",
-					new Object[]{v, alternative.getName()});
-		}
-		else if(baseValue instanceof Double && !RMAConst.isValidValue((Double) baseValue))
-		{
-			LOGGER.log(Level.WARNING, "Unable to generate diff value for: {0} value is invalid ({1}) for scenario: {2}",
-					new Object[]{v, baseValue, base.getName()});
-		}
-		else if(altValue instanceof Double && !RMAConst.isValidValue((Double) altValue))
-		{
-			LOGGER.log(Level.WARNING, "Unable to generate diff value for: {0} value is invalid ({1}) for scenario: {2}",
-					new Object[]{v, baseValue, alternative.getName()});
-		}
-		else if(baseValue instanceof Double && altValue instanceof Double)
-		{
-			double total = (double) baseValue + (double) altValue;
-			retval.setTextContent(String.valueOf(total));
+			LOGGER.log(Level.SEVERE, "Error running jython script", e);
 		}
 		return retval;
 	}
@@ -169,21 +180,29 @@ class CoaTableBuilder extends TableBuilder
 	private Element buildValueForChart(EpptScenarioRun scenarioRun, ChartComponent v)
 	{
 		Element retval = getDocument().createElement(VALUE_ELEMENT);
-		Object value = createJythonValueGenerator(scenarioRun, v.getFunction()).generateObjectValue();
-		if(value == null)
+		try
 		{
-			LOGGER.log(Level.WARNING, "Unable to generate scenario value for: {0} value is null for scenario: {1}",
-					new Object[]{v, scenarioRun.getName()});
+			Object value = createJythonValueGenerator(scenarioRun, v.getFunction()).generateObjectValue();
+
+			if(value == null)
+			{
+				LOGGER.log(Level.WARNING, "Unable to generate scenario value for: {0} value is null for scenario: {1}",
+						new Object[]{v, scenarioRun.getName()});
+			}
+			else if(value instanceof Double && !RMAConst.isValidValue((Double) value))
+			{
+				LOGGER.log(Level.WARNING, "Unable to generate scenario value for: {0} value is invalid ({1}) for scenario: {2}",
+						new Object[]{v, value, scenarioRun.getName()});
+			}
+			else
+			{
+				String textRaw = String.valueOf(value);
+				retval.setTextContent(textRaw);
+			}
 		}
-		else if(value instanceof Double && !RMAConst.isValidValue((Double) value))
+		catch(EpptReportException e)
 		{
-			LOGGER.log(Level.WARNING, "Unable to generate scenario value for: {0} value is invalid ({1}) for scenario: {2}",
-					new Object[]{v, value, scenarioRun.getName()});
-		}
-		else
-		{
-			String textRaw = String.valueOf(value);
-			retval.setTextContent(textRaw);
+			LOGGER.log(Level.SEVERE, "Error running jython script", e);
 		}
 		return retval;
 	}

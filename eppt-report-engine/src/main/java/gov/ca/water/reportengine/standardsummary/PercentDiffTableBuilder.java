@@ -22,9 +22,10 @@ import java.util.function.Function;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import gov.ca.water.calgui.bo.PeriodFilter;
 import gov.ca.water.calgui.constant.Constant;
 import gov.ca.water.calgui.project.EpptScenarioRun;
-import gov.ca.water.reportengine.jython.PeriodFilter;
+import gov.ca.water.reportengine.EpptReportException;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
@@ -107,36 +108,43 @@ class PercentDiffTableBuilder extends BaseAltDiffTableBuilder
 	{
 		Element retval = getDocument().createElement(VALUE_ELEMENT);
 		EpptScenarioRun base = getBase();
-		Double baseValue = createJythonValueGenerator(filter,base, v.getFunction()).generateValue();
-		Double altValue = createJythonValueGenerator(filter,alternative, v.getFunction()).generateValue();
-		if(baseValue == null)
+		try
 		{
-			LOGGER.log(Level.WARNING, "Unable to generate diff value for: {0} value is null for scenario: {1}", new Object[]{v, base.getName()});
-		}
-		else if(altValue == null)
-		{
-			LOGGER.log(Level.WARNING, "Unable to generate diff value for: {0} value is null for scenario: {1}",
-					new Object[]{v, alternative.getName()});
-		}
-		else if(!RMAConst.isValidValue(baseValue))
-		{
-			LOGGER.log(Level.WARNING, "Unable to generate diff value for: {0} value is invalid ({1}) for scenario: {2}",
-					new Object[]{v, baseValue, base.getName()});
-		}
-		else if(!RMAConst.isValidValue(altValue))
-		{
-			LOGGER.log(Level.WARNING, "Unable to generate diff value for: {0} value is invalid ({1}) for scenario: {2}",
-					new Object[]{v, baseValue, alternative.getName()});
-		}
-		else
-		{
-			if(baseValue != 0)
+			Double baseValue = createJythonValueGenerator(filter, base, v.getFunction()).generateValue();
+			Double altValue = createJythonValueGenerator(filter, alternative, v.getFunction()).generateValue();
+			if(baseValue == null)
 			{
-				double percentValue = ((altValue / baseValue) - 1) * -100;
-				long percentRounded = Math.round(percentValue);
-				retval.setTextContent(String.valueOf(percentRounded));
-				_valueElements.put(retval, percentValue);
+				LOGGER.log(Level.WARNING, "Unable to generate diff value for: {0} value is null for scenario: {1}", new Object[]{v, base.getName()});
 			}
+			else if(altValue == null)
+			{
+				LOGGER.log(Level.WARNING, "Unable to generate diff value for: {0} value is null for scenario: {1}",
+						new Object[]{v, alternative.getName()});
+			}
+			else if(!RMAConst.isValidValue(baseValue))
+			{
+				LOGGER.log(Level.WARNING, "Unable to generate diff value for: {0} value is invalid ({1}) for scenario: {2}",
+						new Object[]{v, baseValue, base.getName()});
+			}
+			else if(!RMAConst.isValidValue(altValue))
+			{
+				LOGGER.log(Level.WARNING, "Unable to generate diff value for: {0} value is invalid ({1}) for scenario: {2}",
+						new Object[]{v, baseValue, alternative.getName()});
+			}
+			else
+			{
+				if(baseValue != 0)
+				{
+					double percentValue = ((altValue / baseValue) - 1) * -100;
+					long percentRounded = Math.round(percentValue);
+					retval.setTextContent(String.valueOf(percentRounded));
+					_valueElements.put(retval, percentValue);
+				}
+			}
+		}
+		catch(EpptReportException e)
+		{
+			LOGGER.log(Level.SEVERE, "Error executing jython script: " + e);
 		}
 		return retval;
 	}

@@ -28,7 +28,7 @@ import org.openide.windows.TopComponent;
 		preferredID = "DashboardTopComponent",
 		iconBase = "gov/ca/water/eppt/nbui/dashboard.png"
 )
-@TopComponent.Registration(mode = "editor", openAtStartup = true, position = 5555)
+@TopComponent.Registration(mode = "editor", openAtStartup = false, position = 5555)
 @ActionID(category = "Window", id = "gov.ca.water.eppt.nbui.DashboardTopComponent")
 @ActionReferences({
 		@ActionReference(path = "Menu/Window", position = 5555),
@@ -60,6 +60,6 @@ public final class DashboardTopComponent extends EpptTopComponent
 	@Override
 	public String getJavaHelpId()
 	{
-		return "TrendReporting";
+		return "Trend Reporting";
 	}
 }

@@ -19,13 +19,16 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.NavigableMap;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
+import gov.ca.water.calgui.bo.MonthPeriodFilter;
+import gov.ca.water.calgui.bo.PeriodFilter;
 import gov.ca.water.calgui.project.EpptScenarioRun;
 import gov.ca.water.plotly.ExceedanceData;
 import gov.ca.water.plotly.PlotlyChart;
 import gov.ca.water.plotly.PlotlyExceedancePage;
-import gov.ca.water.reportengine.jython.MonthPeriodFilter;
-import gov.ca.water.reportengine.jython.PeriodFilter;
+import gov.ca.water.reportengine.EpptReportException;
 import org.w3c.dom.Document;
 
 /**
@@ -37,6 +40,7 @@ import org.w3c.dom.Document;
 class ExceedanceChartPageBuilder extends PlotChartBuilder
 {
 
+	private static final Logger LOGGER = Logger.getLogger(ExceedanceChartPageBuilder.class.getName());
 
 	ExceedanceChartPageBuilder(Document document, EpptScenarioRun base, List<EpptScenarioRun> alternatives,
 							   SummaryReportParameters reportParameters)
@@ -51,21 +55,35 @@ class ExceedanceChartPageBuilder extends PlotChartBuilder
 		String yAxisLabel = getYAxisLabelForComponents(chartComponents);
 		Map<EpptScenarioRun, PlotlyExceedancePage.ExceedanceMonthData> exceedanceData = new HashMap<>();
 		exceedanceData.put(getBase(), buildMonthData(getBase(), chartComponents));
+		for(EpptScenarioRun alternative : getAlternatives())
+		{
+			exceedanceData.put(alternative, buildMonthData(alternative, chartComponents));
+		}
 		return new PlotlyExceedancePage(title, yAxisLabel, exceedanceData);
 	}
 
 	private PlotlyExceedancePage.ExceedanceMonthData buildMonthData(EpptScenarioRun base, List<ChartComponent> chartComponents)
 	{
+
 		EnumMap<Month, ExceedanceData> data = new EnumMap<>(Month.class);
-		for(Month month : Month.values())
+		try
 		{
-			MonthPeriodFilter monthPeriodFilter = new MonthPeriodFilter(month);
-			data.put(month, buildExceedanceData(monthPeriodFilter, base, chartComponents));
+			for(Month month : Month.values())
+			{
+				MonthPeriodFilter monthPeriodFilter = new MonthPeriodFilter(month);
+				data.put(month, buildExceedanceData(monthPeriodFilter, base, chartComponents));
+			}
+
+		}
+		catch(EpptReportException e)
+		{
+			LOGGER.log(Level.SEVERE, "Error running jython script", e);
 		}
 		return new PlotlyExceedancePage.ExceedanceMonthData(data);
 	}
 
 	private ExceedanceData buildExceedanceData(PeriodFilter periodFilter, EpptScenarioRun base, List<ChartComponent> chartComponents)
+			throws EpptReportException
 	{
 		ChartComponent chartComponent = chartComponents.get(0);
 		NavigableMap<Double, Double> primaryData = createJythonValueGenerator(base, chartComponent.getFunction()).generateExceedanceValues();

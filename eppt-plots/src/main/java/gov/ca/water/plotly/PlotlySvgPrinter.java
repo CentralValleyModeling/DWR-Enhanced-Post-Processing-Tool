@@ -19,8 +19,12 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import org.json.JSONObject;
+
+import static gov.ca.water.calgui.constant.Constant.ORCA_EXE;
 
 /**
  * Company: Resource Management Associates
@@ -37,13 +41,13 @@ public final class PlotlySvgPrinter
 		throw new AssertionError("Utility class");
 	}
 
-	public static void printSvgToPath(Path path, PlotlyChart plotlyChart) throws PlotlyPrintException
+	public static void printJsonToPath(Path path, PlotlyChart plotlyChart) throws PlotlyPrintException
 	{
 		JSONObject jsonObject = plotlyChart.buildJSON();
-		printSvg(path, jsonObject, plotlyChart.getWidth(), plotlyChart.getHeight());
+		printJson(path, jsonObject, plotlyChart.getWidth(), plotlyChart.getHeight());
 	}
 
-	static void printSvg(Path path, JSONObject jsonObject, int width, int height) throws PlotlyPrintException
+	static void printJson(Path path, JSONObject jsonObject, int width, int height) throws PlotlyPrintException
 	{
 		try
 		{
@@ -70,4 +74,48 @@ public final class PlotlySvgPrinter
 			throw new PlotlyPrintException("Unable to create plot: " + path, e);
 		}
 	}
+
+	public static void printSvg(Path imageDirectory) throws PlotlyPrintException
+	{
+		String jsonFiles;
+		try(Stream<Path> files = Files.walk(imageDirectory, 1))
+		{
+			jsonFiles = files.filter(p -> p.toString().endsWith(".json"))
+							 .map(imageDirectory.getParent()::relativize)
+							 .map(Path::toString)
+							 .map(s -> "\"" + s + "\"")
+							 .collect(Collectors.joining(" "));
+		}
+		catch(IOException e)
+		{
+			throw new PlotlyPrintException("Unable to export plots to SVG, cannot read JSON file directory: " + imageDirectory, e);
+		}
+		String orcaCommandline = "\"" + ORCA_EXE + "\" graph " + jsonFiles + " --format svg --output-dir \"" + imageDirectory.getParent().relativize(
+				imageDirectory.resolve("svg")) + "\"";
+		try
+		{
+			LOGGER.log(Level.FINE, "Plotly SVG generation command line: {0}", orcaCommandline);
+			Process exec = new ProcessBuilder()
+					.directory(imageDirectory.getParent().toFile())
+					.command(orcaCommandline)
+					.start();
+			exec.waitFor();
+			int exitCode = exec.exitValue();
+			if(exitCode != 0)
+			{
+				throw new PlotlyPrintException("Unable to create plots: " + imageDirectory + "\n Exit code: " + exitCode);
+			}
+		}
+		catch(InterruptedException e)
+		{
+			Thread.currentThread().interrupt();
+			throw new PlotlyPrintException("Plotly SVG generation process interrupted", e);
+		}
+		catch(IOException e)
+		{
+			throw new PlotlyPrintException("Unable to export plots to SVG", e);
+		}
+	}
+
+
 }

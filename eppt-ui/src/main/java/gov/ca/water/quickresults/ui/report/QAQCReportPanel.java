@@ -26,6 +26,8 @@ import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.Month;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -48,6 +50,7 @@ import javax.swing.text.StyleConstants;
 import javax.swing.text.StyledDocument;
 
 import gov.ca.water.calgui.EpptInitializationException;
+import gov.ca.water.calgui.bo.CommonPeriodFilter;
 import gov.ca.water.calgui.bo.SimpleFileFilter;
 import gov.ca.water.calgui.bo.WaterYearDefinition;
 import gov.ca.water.calgui.bo.WaterYearIndex;
@@ -190,6 +193,7 @@ public class QAQCReportPanel extends RmaJPanel
 	{
 		try
 		{
+			_tabbedPane1.setSelectedIndex(2);
 			startProcessAsync(_runAltWreslButton);
 			runWresl(_altRun, _altWreslTextPane);
 		}
@@ -203,6 +207,7 @@ public class QAQCReportPanel extends RmaJPanel
 	{
 		try
 		{
+			_tabbedPane1.setSelectedIndex(1);
 			startProcessAsync(_runBaseWreslButton);
 			runWresl(_baseRun, _baseWreslTextPane);
 		}
@@ -216,6 +221,7 @@ public class QAQCReportPanel extends RmaJPanel
 	{
 		try
 		{
+			textPane.setText("");
 			ProjectConfigurationPanel projectConfigurationPanel = ProjectConfigurationPanel.getProjectConfigurationPanel();
 			LocalDate startMonth = projectConfigurationPanel.getStartMonth();
 			LocalDate endMonth = projectConfigurationPanel.getEndMonth();
@@ -305,6 +311,8 @@ public class QAQCReportPanel extends RmaJPanel
 	{
 		try
 		{
+			_tabbedPane1.setSelectedIndex(0);
+			_qaqcTextPane.setText("");
 			startProcessAsync(_generateReportButton);
 			Path pathToWriteOut = Paths.get(_pdfOutput.getText());
 			QAQCReportGenerator qaqcReportGenerator = new QAQCReportGenerator(new QaQcProcessConsumer());
@@ -318,8 +326,10 @@ public class QAQCReportPanel extends RmaJPanel
 			WaterYearDefinition waterYearDefinition = (WaterYearDefinition) _waterYearDefinitionCombo.getSelectedItem();
 			WaterYearIndex waterYearIndex = (WaterYearIndex) _waterYearIndexCombo.getSelectedItem();
 			List<String> disabledSummaryModules = getDisabledSummaryModules();
+			CommonPeriodFilter commonPeriodFilter = new CommonPeriodFilter(LocalDateTime.of(1950, Month.JULY, 1, 0, 0),
+					LocalDateTime.of(1999, Month.JULY, 1, 0, 0));
 			SummaryReportParameters summaryReportParameters = new SummaryReportParameters(waterYearDefinition, waterYearIndex,
-					longTermRange, waterYearPeriodRanges, percentDiffStyle, disabledSummaryModules);
+					longTermRange, waterYearPeriodRanges, percentDiffStyle, disabledSummaryModules, commonPeriodFilter);
 			List<String> disabledReportModules = getDisabledReportModules();
 			ReportParameters reportParameters = new ReportParameters(tolerance, author, subtitle, summaryReportParameters,
 					disabledReportModules);

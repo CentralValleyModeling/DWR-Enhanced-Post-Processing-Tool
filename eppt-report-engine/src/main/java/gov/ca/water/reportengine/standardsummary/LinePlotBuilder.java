@@ -17,10 +17,13 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import gov.ca.water.calgui.project.EpptScenarioRun;
 import gov.ca.water.plotly.PlotlyChart;
 import gov.ca.water.plotly.PlotlyMonthly;
+import gov.ca.water.reportengine.EpptReportException;
 import org.w3c.dom.Document;
 
 import static java.util.stream.Collectors.toList;
@@ -33,6 +36,9 @@ import static java.util.stream.Collectors.toList;
  */
 class LinePlotBuilder extends PlotChartBuilder
 {
+
+	private static final Logger LOGGER = Logger.getLogger(LinePlotBuilder.class.getName());
+
 	LinePlotBuilder(Document document, EpptScenarioRun base, List<EpptScenarioRun> alternatives,
 					SummaryReportParameters reportParameters)
 	{
@@ -74,10 +80,17 @@ class LinePlotBuilder extends PlotChartBuilder
 	private List<PlotlyMonthly.MonthlyData> buildData(EpptScenarioRun base, ChartComponent chartComponent)
 	{
 		List<PlotlyMonthly.MonthlyData> retval = new ArrayList<>();
-		Map<Month, Double> values = createJythonValueGenerator(base, chartComponent.getFunction()).generateMonthlyValues();
-		for(Map.Entry<Month, Double> entry : values.entrySet())
+		try
 		{
-			retval.add(new PlotlyMonthly.MonthlyData(entry.getKey(), entry.getValue()));
+			Map<Month, Double> values = createJythonValueGenerator(base, chartComponent.getFunction()).generateMonthlyValues();
+			for(Map.Entry<Month, Double> entry : values.entrySet())
+			{
+				retval.add(new PlotlyMonthly.MonthlyData(entry.getKey(), entry.getValue()));
+			}
+		}
+		catch(EpptReportException e)
+		{
+			LOGGER.log(Level.SEVERE, "Error running jython script", e);
 		}
 		return retval;
 	}

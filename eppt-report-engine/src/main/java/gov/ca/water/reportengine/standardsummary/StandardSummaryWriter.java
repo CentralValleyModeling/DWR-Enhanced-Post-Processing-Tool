@@ -15,6 +15,7 @@ package gov.ca.water.reportengine.standardsummary;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.logging.Level;
@@ -23,11 +24,14 @@ import java.util.stream.Stream;
 
 import com.google.common.flogger.FluentLogger;
 import gov.ca.water.calgui.project.EpptScenarioRun;
+import gov.ca.water.plotly.PlotlyPrintException;
+import gov.ca.water.plotly.PlotlySvgPrinter;
 import gov.ca.water.reportengine.EpptReportException;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 import static gov.ca.water.calgui.constant.Constant.ORCA_EXE;
+import static java.util.stream.Collectors.joining;
 import static java.util.stream.Collectors.toList;
 
 /**
@@ -55,6 +59,7 @@ public class StandardSummaryWriter
 	private final Document _document;
 	private final SummaryReportParameters _reportParameters;
 	private final Path _imageDirectory;
+	private final Path _rotatedImageDirectory;
 	private final ListBuilder _listBuilder;
 	private final BaseAltDiffTableBuilder _baseAltDiffTableBuilder;
 	private final ScatterPlotBuilder _scatterPlotBuilder;
@@ -71,6 +76,7 @@ public class StandardSummaryWriter
 		_document = document;
 		_reportParameters = reportParameters;
 		_imageDirectory = imageDir.toAbsolutePath();
+		_rotatedImageDirectory = _imageDirectory.resolve("rotated");
 		_listBuilder = new ListBuilder(document, base, alternatives, reportParameters);
 		_baseAltDiffTableBuilder = new BaseAltDiffTableBuilder(document, base, alternatives, reportParameters);
 		_coaTableBuilder = new CoaTableBuilder(document, base, alternatives, reportParameters);
@@ -106,43 +112,34 @@ public class StandardSummaryWriter
 
 	private void printSvgPlots() throws EpptReportException
 	{
-		String jsonFiles;
-		try(Stream<Path> files = Files.walk(_imageDirectory, 1))
-		{
-			jsonFiles = files.filter(p -> p.toString().endsWith(".json"))
-							 .map(_imageDirectory.getParent()::relativize)
-							 .map(Path::toString)
-							 .map(s -> "\"" + s + "\"")
-							 .collect(Collectors.joining(" "));
-		}
-		catch(IOException e)
-		{
-			throw new EpptReportException("Unable to export plots to SVG, cannot read JSON file directory: " + _imageDirectory, e);
-		}
-		String orcaCommandline = "\"" + ORCA_EXE + "\" graph " + jsonFiles + " --format svg --output-dir \"" + _imageDirectory.getParent().relativize(
-				_imageDirectory.resolve("svg")) + "\"";
 		try
 		{
-			LOGGER.at(Level.FINE).log("Plotly SVG generation command line: %s", orcaCommandline);
-			Process exec = new ProcessBuilder()
-					.directory(_imageDirectory.getParent().toFile())
-					.command(orcaCommandline)
-					.start();
-			exec.waitFor();
-			int exitCode = exec.exitValue();
-			if(exitCode != 0)
+			PlotlySvgPrinter.printSvg(_imageDirectory);
+			PlotlySvgPrinter.printSvg(_rotatedImageDirectory);
+			rotateImages();
+		}
+		catch(PlotlyPrintException | IOException e)
+		{
+			throw new EpptReportException("Unable to print SVG files for JSON directory: " + _imageDirectory, e);
+		}
+	}
+
+	private void rotateImages() throws IOException
+	{
+		List<Path> svgPaths;
+		try(Stream<Path> stream = Files.walk(_rotatedImageDirectory.resolve("svg"), 1))
+		{
+			svgPaths = stream.filter(p->!p.toFile().isDirectory()).filter(p -> p.toString().endsWith("svg")).collect(toList());
+		}
+		for(Path path : svgPaths)
+		{
+			String newText;
+			try(Stream<String> lines = Files.lines(path))
 			{
-				throw new EpptReportException("Unable to create plots: " + _imageDirectory + "\n Exit code: " + exitCode);
+				String collect = lines.collect(joining("\n"));
+				newText = collect.replaceFirst("<svg", "<svg transform=\"rotate(90, 0, 150)\"");
 			}
-		}
-		catch(InterruptedException e)
-		{
-			Thread.currentThread().interrupt();
-			throw new EpptReportException("Plotly SVG generation process interrupted", e);
-		}
-		catch(IOException e)
-		{
-			throw new EpptReportException("Unable to export plots to SVG", e);
+			Files.write(path, Collections.singleton(newText));
 		}
 	}
 
@@ -214,43 +211,48 @@ public class StandardSummaryWriter
 		String chartId = epptChart.getChartId();
 		LOGGER.at(Level.INFO).log("Standard Summary Statistics: Building XML for chart: %s", chartId);
 		Element retval = null;
-		Path imagePath = _imageDirectory.resolve(chartId + ".svg");
 		try
 		{
-			retval = _document.createElement(chartId);
-			retval.setAttribute(CHART_ORDER_ATTRIBUTE, String.valueOf(index));
-//			retval.setAttribute(CHART_NAME_ATTRIBUTE, String.valueOf(chartId));
+			Element chart = _document.createElement(chartId);
+			chart.setAttribute(CHART_ORDER_ATTRIBUTE, String.valueOf(index));
 			ChartType chartType = epptChart.getChartType();
 			switch(chartType)
 			{
 				case LIST:
-					_listBuilder.buildList(retval, epptChart);
+					_listBuilder.buildList(chart, epptChart);
 					break;
 				case BASE_ALT_DIFF_TABLE:
-					_baseAltDiffTableBuilder.buildTable(retval, epptChart);
+					_baseAltDiffTableBuilder.buildTable(chart, epptChart);
 					break;
 				case COA_TABLE:
-					_coaTableBuilder.buildTable(retval, epptChart);
+					_coaTableBuilder.buildTable(chart, epptChart);
 					break;
 				case CONTROL_TABLE:
-					_controlTableBuilder.buildTable(retval, epptChart);
+					_controlTableBuilder.buildTable(chart, epptChart);
 					break;
 				case EXCEEDANCE:
-					_exceedanceChartBuilder.buildChart(imagePath, retval, epptChart);
+					Path imagePath = _imageDirectory.resolve(chartId + ".svg");
+					_exceedanceChartBuilder.buildChart(imagePath, chart, epptChart);
 					break;
 				case EXCEEDANCE_PAGE:
-					_exceedanceChartPageBuilder.buildChart(imagePath, retval, epptChart);
+					imagePath = _rotatedImageDirectory.resolve(chartId + ".svg");
+					_exceedanceChartPageBuilder.buildChart(imagePath, chart, epptChart);
 					break;
 				case LINE_PLOT:
-					_linePlotBuilder.buildChart(imagePath, retval, epptChart);
+					imagePath = _imageDirectory.resolve(chartId + ".svg");
+					_linePlotBuilder.buildChart(imagePath, chart, epptChart);
 					break;
 				case PERCENT_DIFF_TABLE:
-					_percentDiffTableBuilder.buildTable(retval, epptChart);
+					_percentDiffTableBuilder.buildTable(chart, epptChart);
 					break;
 				case SCATTER_PLOT:
-					_scatterPlotBuilder.buildChart(imagePath, retval, epptChart);
+					imagePath = _imageDirectory.resolve(chartId + ".svg");
+					_scatterPlotBuilder.buildChart(imagePath, chart, epptChart);
 					break;
 			}
+			retval = _document.createElement(CHART_ELEMENT);
+			retval.setAttribute(CHART_NAME_ATTRIBUTE, chartId);
+			retval.appendChild(chart);
 		}
 		catch(RuntimeException | EpptReportException e)
 		{

@@ -18,6 +18,8 @@ import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.time.LocalDateTime;
+import java.time.Month;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -35,6 +37,7 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
+import gov.ca.water.calgui.bo.CommonPeriodFilter;
 import gov.ca.water.calgui.bo.GUILinksAllModelsBO;
 import gov.ca.water.calgui.bo.WaterYearDefinition;
 import gov.ca.water.calgui.bo.WaterYearIndex;
@@ -45,6 +48,7 @@ import gov.ca.water.calgui.busservice.impl.WaterYearDefinitionSvc;
 import gov.ca.water.calgui.busservice.impl.WaterYearTableReader;
 import gov.ca.water.calgui.constant.Constant;
 import gov.ca.water.calgui.project.EpptScenarioRun;
+import javafx.scene.paint.Color;
 import org.junit.jupiter.api.Test;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -70,7 +74,7 @@ public class TestStandardSummaryWriter
 		System.setProperty("user.dir", original + "\\target\\test-classes");
 		WaterYearDefinitionSvc.createSeedDataSvcImplInstance();
 		System.setProperty("user.dir", original);
-		URL resource = TestStandardSummaryReader.class.getClassLoader().getResource("dwr_eppt/config/SummaryComponents_Types-Draft_8-26.csv");
+		URL resource = TestStandardSummaryReader.class.getClassLoader().getResource("dwr_eppt/config/Summary.csv");
 		assertNotNull(resource,"Standard Summary Statistics configuration file must exist");
 		URI uri = resource.toURI();
 		Path path = Paths.get(uri);
@@ -88,7 +92,7 @@ public class TestStandardSummaryWriter
 				Paths.get("Test.pdf"), Paths.get("mainWresl.wresl"), Paths.get("dwr_eppt\\wresl\\lookup\\wytypes.table"),
 				null, javafx.scene.paint.Color.PINK);
 		EpptScenarioRun altRun = new EpptScenarioRun("Alt", "desc", GUILinksAllModelsBO.Model.findModel("CalSim2"),
-				Paths.get("Test.pdf"), Paths.get("mainWresl.wresl"), Paths.get(""), null, javafx.scene.paint.Color.PINK);
+				Paths.get("Test.pdf"), Paths.get("mainWresl.wresl"), Paths.get(""), null, Color.BLUE);
 
 		WaterYearDefinition waterYearDefinition = WaterYearDefinitionSvc.getWaterYearDefinitionSvc().getDefinitions().get(0);
 		WaterYearIndex waterYearIndex = new WaterYearTableReader(baseRun.getWaterYearTable()).read().get(0);
@@ -112,7 +116,10 @@ public class TestStandardSummaryWriter
 		waterYearPeriodRanges.put(dryPeriod, dryRanges);
 		waterYearPeriodRanges.put(wetPeriod, wetRanges);
 		List<String> disabledStandardSummaryModules = new ArrayList<>();
-		SummaryReportParameters reportParameters = new SummaryReportParameters(waterYearDefinition, waterYearIndex, longTermRange, waterYearPeriodRanges, PercentDiffStyle.FULL, disabledStandardSummaryModules);
+		CommonPeriodFilter commonPeriodFilter = new CommonPeriodFilter(LocalDateTime.of(1950, Month.JULY, 1, 0, 0),
+				LocalDateTime.of(1999, Month.JULY, 1, 0, 0));
+		SummaryReportParameters reportParameters = new SummaryReportParameters(waterYearDefinition, waterYearIndex, longTermRange, waterYearPeriodRanges, PercentDiffStyle.FULL, disabledStandardSummaryModules,
+				commonPeriodFilter);
 		Path imagePath = Constant.QAQC_IMAGE_PATH;
 		imagePath.toFile().delete();
 		StandardSummaryWriter standardSummaryWriter = new StandardSummaryWriter(document, baseRun, Collections.singletonList(altRun),

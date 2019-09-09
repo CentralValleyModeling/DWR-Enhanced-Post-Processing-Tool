@@ -87,7 +87,18 @@ public class StandardSummaryReader
 
 	private Stream<String[]> parseLines(Stream<String> lines)
 	{
-		return lines.filter(FilePredicates.commentFilter()).map(CSV_PATTERN::split).filter(s -> s.length >= 10);
+		return lines.filter(FilePredicates.commentFilter()).map(CSV_PATTERN::split)
+					.filter(s -> s.length >= 10)
+					.map(this::replaceCommas);
+	}
+
+	private String[] replaceCommas(String[] input)
+	{
+		for(int i = 0; i < input.length; i++)
+		{
+			input[i] = input[i].replace("%2C", ",");
+		}
+		return input;
 	}
 
 	private EpptChart linesToChart(List<String[]> lines)

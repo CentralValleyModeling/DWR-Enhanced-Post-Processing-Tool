@@ -12,13 +12,12 @@
 
 package gov.ca.water.reportengine.standardsummary;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.function.Function;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import gov.ca.water.calgui.project.EpptScenarioRun;
+import gov.ca.water.reportengine.EpptReportException;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
@@ -41,58 +40,47 @@ class ListBuilder extends TableBuilder
 
 	void buildList(Element retval, EpptChart epptChart)
 	{
-		appendScenarios(retval, epptChart);
+		appendTitles(retval, epptChart);
 	}
 
-	private void appendScenarios(Element retval, EpptChart epptChart)
+	void appendTitles(Element retval, EpptChart epptChart)
 	{
-		List<Element> elements = buildScenarios(epptChart);
-		for(int i = 0; i < elements.size(); i++)
+		int i = 0;
+		List<ChartComponent> componentsForTitle = epptChart.getChartComponents();
+		Element titleElement = buildTitle(BASE_NAME, componentsForTitle, v -> buildValueForChart(getBase(), v));
+		titleElement.setAttribute(TITLE_ORDER_ATTRIBUTE, String.valueOf(i));
+		retval.appendChild(titleElement);
+		i++;
+		for(EpptScenarioRun scenarioRun : getAlternatives())
 		{
-			Element element = elements.get(i);
-			element.setAttribute(SCENARIO_ORDER_ATTRIBUTE, String.valueOf(i));
-			retval.appendChild(element);
+			Element altTitle = buildTitle(ALT_NAME, componentsForTitle, v -> buildValueForChart(scenarioRun, v));
+			altTitle.setAttribute(TITLE_ORDER_ATTRIBUTE, String.valueOf(i));
+			retval.appendChild(altTitle);
+			i++;
 		}
-	}
-
-	private List<Element> buildScenarios(EpptChart epptChart)
-	{
-		List<Element> retval = new ArrayList<>();
-		EpptScenarioRun base = getBase();
-		Element baseElement = buildScenarioElement(BASE_NAME, base, epptChart);
-		retval.add(baseElement);
-		for(int i = 0; i < getAlternatives().size(); i++)
-		{
-			EpptScenarioRun alternative = getAlternatives().get(i);
-			Element altElement = buildScenarioElement(ALT_NAME, alternative, epptChart);
-			altElement.setAttribute(SCENARIO_ORDER_ATTRIBUTE, String.valueOf(i + 1));
-			retval.add(altElement);
-		}
-		return retval;
-	}
-
-	private Element buildScenarioElement(String name, EpptScenarioRun scenarioRun, EpptChart epptChart)
-	{
-		Element retval = getDocument().createElement(SCENARIO_ELEMENT);
-		retval.setAttribute(SCENARIO_NAME_ATTRIBUTE, name);
-		Function<ChartComponent, Element> valueFunction = v -> buildValueForChart(scenarioRun, v);
-		appendTitles(retval, epptChart, valueFunction);
-		return retval;
 	}
 
 	private Element buildValueForChart(EpptScenarioRun scenarioRun, ChartComponent v)
 	{
 		Element retval = getDocument().createElement(VALUE_ELEMENT);
-		Object value = createJythonValueGenerator(scenarioRun, v.getFunction()).generateObjectValue();
-		if(value == null)
+		try
 		{
-			LOGGER.log(Level.WARNING, "Unable to generate scenario value for: {0} value is null for scenario: {1}",
-					new Object[]{v, scenarioRun.getName()});
+			Object value = createJythonValueGenerator(scenarioRun, v.getFunction()).generateObjectValue();
+
+			if(value == null)
+			{
+				LOGGER.log(Level.WARNING, "Unable to generate scenario value for: {0} value is null for scenario: {1}",
+						new Object[]{v, scenarioRun.getName()});
+			}
+			else
+			{
+				String textRaw = String.valueOf(value);
+				retval.setTextContent(textRaw);
+			}
 		}
-		else
+		catch(EpptReportException e)
 		{
-			String textRaw = String.valueOf(value);
-			retval.setTextContent(textRaw);
+			LOGGER.log(Level.SEVERE, "Error running jython script", e);
 		}
 		return retval;
 	}

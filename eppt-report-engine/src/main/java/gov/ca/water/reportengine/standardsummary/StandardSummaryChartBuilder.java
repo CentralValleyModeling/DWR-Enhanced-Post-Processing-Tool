@@ -13,10 +13,12 @@
 package gov.ca.water.reportengine.standardsummary;
 
 import java.util.List;
+import javax.script.ScriptException;
 
+import gov.ca.water.calgui.bo.PeriodFilter;
 import gov.ca.water.calgui.project.EpptScenarioRun;
+import gov.ca.water.reportengine.EpptReportException;
 import gov.ca.water.reportengine.jython.JythonValueGenerator;
-import gov.ca.water.reportengine.jython.PeriodFilter;
 import org.w3c.dom.Document;
 
 /**
@@ -47,12 +49,16 @@ abstract class StandardSummaryChartBuilder
 	static final String SCENARIO_ORDER_ATTRIBUTE = "scenario-order";
 	static final String TITLE_ELEMENT = "title";
 	static final String TITLE_ORDER_ATTRIBUTE = "title-order";
+	static final String TITLE_NAME_ATTRIBUTE = "title-name";
 	static final String HEADER_ELEMENT = "header";
 	static final String HEADER_ORDER_ATTRIBUTE = "header-order";
+	static final String HEADER_NAME_ATTRIBUTE = "header-name";
 	static final String SUBHEADER_ELEMENT = "sub-header";
 	static final String SUBHEADER_ORDER_ATTRIBUTE = "sub-header-order";
+	static final String SUBHEADER_NAME_ATTRIBUTE = "sub-header-name";
 	static final String COMPONENT_ELEMENT = "component";
 	static final String COMPONENT_ORDER_ATTRIBUTE = "component-order";
+	static final String COMPONENT_NAME_ATTRIBUTE = "component-name";
 	static final String ROW_LABEL_ELEMENT = "row-label";
 	static final String VALUE_ELEMENT = "value";
 	static final String VALUE_FULL_TEXT_ATTRIBUTE = "value-full-text";
@@ -98,13 +104,27 @@ abstract class StandardSummaryChartBuilder
 		return _reportParameters;
 	}
 
-	JythonValueGenerator createJythonValueGenerator(PeriodFilter filter, EpptScenarioRun epptScenarioRun, String function)
+	JythonValueGenerator createJythonValueGenerator(PeriodFilter filter, EpptScenarioRun epptScenarioRun, String function) throws EpptReportException
 	{
-		return new JythonValueGenerator(filter, epptScenarioRun, function);
+		try
+		{
+			return new JythonValueGenerator(filter, epptScenarioRun, function, _reportParameters.getCommonPeriodFilter());
+		}
+		catch(ScriptException e)
+		{
+			throw new EpptReportException("Error initializing Jythong script runner");
+		}
 	}
 
-	JythonValueGenerator createJythonValueGenerator(EpptScenarioRun epptScenarioRun, String function)
+	JythonValueGenerator createJythonValueGenerator(EpptScenarioRun epptScenarioRun, String function) throws EpptReportException
 	{
-		return new JythonValueGenerator(epptScenarioRun, function);
+		try
+		{
+			return new JythonValueGenerator(epptScenarioRun, function, _reportParameters.getCommonPeriodFilter());
+		}
+		catch(ScriptException e)
+		{
+			throw new EpptReportException("Error initializing Jythong script runner");
+		}
 	}
 }

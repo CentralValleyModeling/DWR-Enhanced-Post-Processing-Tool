@@ -17,8 +17,11 @@ import java.util.List;
 import java.util.Objects;
 import java.util.function.Function;
 import java.util.function.IntFunction;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import gov.ca.water.calgui.project.EpptScenarioRun;
+import gov.ca.water.reportengine.EpptReportException;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
@@ -34,6 +37,7 @@ import static gov.ca.water.reportengine.EPPTReport.LESS_THAN_CONSTANT;
  */
 class ControlTableBuilder extends TableBuilder
 {
+	private static final Logger LOGGER = Logger.getLogger(ControlTableBuilder.class.getName());
 
 	ControlTableBuilder(Document document, EpptScenarioRun base, List<EpptScenarioRun> alternatives,
 						SummaryReportParameters reportParameters)
@@ -123,38 +127,53 @@ class ControlTableBuilder extends TableBuilder
 	{
 		Element retval = getDocument().createElement(VALUE_ELEMENT);
 		EpptScenarioRun base = getBase();
-		long baseValue = createJythonValueGenerator(base, v.getFunction()).generateValues()
-													 .stream()
-													 .filter(Objects::nonNull)
-													 .mapToDouble(i -> i)
-													 .filter(i -> i == comparisonValue)
-													 .count();
-		long altValue = createJythonValueGenerator(alternative, v.getFunction()).generateValues()
-													.stream()
-													.filter(Objects::nonNull)
-													.mapToDouble(i -> i)
-													.filter(i -> i == comparisonValue)
-													.count();
+		try
+		{
+			long baseValue = createJythonValueGenerator(base, v.getFunction()).generateValues()
+																			  .stream()
+																			  .filter(Objects::nonNull)
+																			  .mapToDouble(i -> i)
+																			  .filter(i -> i == comparisonValue)
+																			  .count();
 
-		long diff = baseValue - altValue;
-		String textRaw = String.valueOf(diff);
-		retval.setTextContent(textRaw);
-		retval.setAttribute(VALUE_FULL_TEXT_ATTRIBUTE, textRaw);
-		retval.setAttribute(VALUE_PERCENT_TEXT_ATTRIBUTE, textRaw);
+			long altValue = createJythonValueGenerator(alternative, v.getFunction()).generateValues()
+																					.stream()
+																					.filter(Objects::nonNull)
+																					.mapToDouble(i -> i)
+																					.filter(i -> i == comparisonValue)
+																					.count();
+
+			long diff = baseValue - altValue;
+			String textRaw = String.valueOf(diff);
+			retval.setTextContent(textRaw);
+			retval.setAttribute(VALUE_FULL_TEXT_ATTRIBUTE, textRaw);
+			retval.setAttribute(VALUE_PERCENT_TEXT_ATTRIBUTE, textRaw);
+		}
+		catch(EpptReportException e)
+		{
+			LOGGER.log(Level.SEVERE, "Error running jython script", e);
+		}
 		return retval;
 	}
 
 	private Element buildValueForChart(EpptScenarioRun scenarioRun, ChartComponent v, int comparisonValue)
 	{
 		Element retval = getDocument().createElement(VALUE_ELEMENT);
-		long count = createJythonValueGenerator(scenarioRun, v.getFunction()).generateValues()
-												 .stream()
-												 .filter(Objects::nonNull)
-												 .mapToDouble(i -> i)
-												 .filter(i -> i == comparisonValue)
-												 .count();
-		String textRaw = String.valueOf(count);
-		retval.setTextContent(textRaw);
+		try
+		{
+			long count = createJythonValueGenerator(scenarioRun, v.getFunction()).generateValues()
+																				 .stream()
+																				 .filter(Objects::nonNull)
+																				 .mapToDouble(i -> i)
+																				 .filter(i -> i == comparisonValue)
+																				 .count();
+			String textRaw = String.valueOf(count);
+			retval.setTextContent(textRaw);
+		}
+		catch(EpptReportException e)
+		{
+			LOGGER.log(Level.SEVERE, "Error running jython script", e);
+		}
 		return retval;
 	}
 

@@ -68,7 +68,7 @@ public class QuickResultsPanel extends EpptPanel
 	@Override
 	public String getJavaHelpId()
 	{
-		return "QuickResults";
+		return "Quick Results";
 	}
 
 	private void setCheckBoxorMouseListener(Component component, Object mouseListener)

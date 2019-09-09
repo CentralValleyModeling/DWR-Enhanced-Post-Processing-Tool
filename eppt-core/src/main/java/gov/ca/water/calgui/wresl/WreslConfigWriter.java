@@ -134,6 +134,7 @@ class WreslConfigWriter
 			name = name.replaceAll("[^a-zA-Z0-9.\\-]", "_");
 			Path configPath = _scenarioRun.getWreslMain().getParent().resolve("WRESL" + name + ".config");
 			LOGGER.log(Level.INFO, "Writing WRESL config: {0}", configPath);
+			configPath.getParent().toFile().mkdirs();
 			try(BufferedWriter bufferedWriter = Files.newBufferedWriter(configPath);
 				PrintWriter configFilePW = new PrintWriter(bufferedWriter))
 			{

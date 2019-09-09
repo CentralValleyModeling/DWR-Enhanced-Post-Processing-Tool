@@ -24,6 +24,7 @@ import java.util.logging.Logger;
 import javax.swing.*;
 
 import gov.ca.water.calgui.EpptInitializationException;
+import gov.ca.water.calgui.busservice.impl.DetailedIssuesReader;
 import gov.ca.water.calgui.busservice.impl.GuiLinksSeedDataSvcImpl;
 import gov.ca.water.calgui.busservice.impl.ThresholdLinksSeedDataSvc;
 import gov.ca.water.calgui.busservice.impl.WaterYearDefinitionSvc;
@@ -33,6 +34,7 @@ import gov.ca.water.calgui.techservice.impl.DialogSvcImpl;
 import gov.ca.water.eppt.nbui.actions.RunWreslScript;
 import gov.ca.water.quickresults.ui.projectconfig.ProjectConfigurationPanel;
 import gov.ca.water.calgui.compute.EpptReportingMonths;
+import gov.ca.water.reportengine.jython.JythonScriptBuilder;
 import org.openide.modules.ModuleInstall;
 import org.openide.windows.WindowManager;
 
@@ -133,6 +135,8 @@ public class Installer extends ModuleInstall
 			ThresholdLinksSeedDataSvc.createSeedDataSvcImplInstance();
 			EpptReportingMonths.createTrendReportingMonthsInstance();
 			WaterYearDefinitionSvc.createSeedDataSvcImplInstance();
+			DetailedIssuesReader.createDetailedIssues();
+			JythonScriptBuilder.createInstance();
 		}
 		catch(EpptInitializationException ex)
 		{

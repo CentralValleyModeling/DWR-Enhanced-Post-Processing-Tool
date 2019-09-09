@@ -18,10 +18,10 @@ import java.util.List;
 import java.util.logging.Level;
 
 import com.google.common.flogger.FluentLogger;
-import gov.ca.water.reportengine.detailedissues.DetailedIssue;
+import gov.ca.water.calgui.bo.DetailedIssue;
+import gov.ca.water.calgui.busservice.impl.DetailedIssuesReader;
 import gov.ca.water.reportengine.executivereport.Module;
 import gov.ca.water.reportengine.executivereport.SubModule;
-import gov.ca.water.reportengine.reportreaders.DetailedIssuesReader;
 import gov.ca.water.reportengine.reportreaders.ModulesReader;
 
 public class ModuleCreator
@@ -33,9 +33,7 @@ public class ModuleCreator
 	public List<Module> createModules(Path moduleCSVPath, Path detailedIssuesCSVPath) throws EpptReportException
 	{
 		LOGGER.at(Level.INFO).log("Reading Detailed Issues Configuration");
-		DetailedIssuesReader diReader = new DetailedIssuesReader(detailedIssuesCSVPath);
-		_detailedIssues.addAll(diReader.read());
-
+		_detailedIssues.addAll(DetailedIssuesReader.getInstance().getDetailedIssues());
 		LOGGER.at(Level.INFO).log("Reading Modules Configuration");
 		ModulesReader modulesReader = new ModulesReader(moduleCSVPath);
 		_modules.addAll(modulesReader.read());

@@ -15,6 +15,8 @@ package gov.ca.water.reportengine.detailedissues;
 import java.util.ArrayList;
 import java.util.List;
 
+import gov.ca.water.calgui.bo.DetailedIssue;
+
 public class DetailedIssueContainer
 {
 

@@ -24,6 +24,7 @@ import java.util.logging.Level;
 
 import com.google.common.flogger.FluentLogger;
 import gov.ca.water.calgui.EpptInitializationException;
+import gov.ca.water.calgui.bo.DetailedIssue;
 import gov.ca.water.calgui.bo.GUILinksAllModelsBO;
 import gov.ca.water.calgui.bo.ThresholdLinksBO;
 import gov.ca.water.calgui.bo.WaterYearIndex;
