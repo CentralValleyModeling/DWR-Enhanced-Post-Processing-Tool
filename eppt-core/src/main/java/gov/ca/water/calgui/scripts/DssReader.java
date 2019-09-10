@@ -16,23 +16,21 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.Collections;
 import java.util.Date;
-import java.util.List;
+import java.util.Map;
 import java.util.NavigableMap;
 import java.util.Objects;
 import java.util.TimeZone;
 import java.util.TreeMap;
 import java.util.concurrent.TimeUnit;
+import java.util.logging.Level;
 import java.util.regex.Pattern;
 
 import com.google.common.flogger.FluentLogger;
 import gov.ca.water.calgui.bo.DetailedIssue;
-import gov.ca.water.calgui.bo.ThresholdLinksBO;
 import gov.ca.water.calgui.busservice.impl.DSSGrabber1SvcImpl;
 import gov.ca.water.calgui.busservice.impl.DetailedIssuesReader;
-import gov.ca.water.calgui.busservice.impl.ThresholdLinksSeedDataSvc;
 import gov.ca.water.calgui.project.EpptScenarioRun;
 import gov.ca.water.calgui.project.NamedDssPath;
-import vista.set.TimeSeries;
 
 import hec.heclib.dss.DSSPathname;
 import hec.heclib.dss.HecDss;
@@ -59,9 +57,16 @@ public class DssReader
 
 	public NavigableMap<LocalDateTime, Double> getGuiLinkData(int guiID)
 	{
-		DSSGrabber1SvcImpl dssGrabber1Svc = buildDssGrabber(_scenarioRun, guiID, 0);
-		TimeSeriesContainer[] primarySeries = dssGrabber1Svc.getPrimarySeries();
-		return timeSeriesContainerToMap(primarySeries);
+		DssCache instance = DssCache.getInstance();
+		NavigableMap<LocalDateTime, Double> retval = instance.readGuiLinkFromCache(_scenarioRun, guiID);
+		if(retval == null)
+		{
+			DSSGrabber1SvcImpl dssGrabber1Svc = buildDssGrabber(_scenarioRun, guiID, 0);
+			TimeSeriesContainer[] primarySeries = dssGrabber1Svc.getPrimarySeries();
+			retval = timeSeriesContainerToMap(primarySeries);
+			instance.addGuiLinkToCache(_scenarioRun, guiID, retval);
+		}
+		return retval;
 	}
 
 	private NavigableMap<LocalDateTime, Double> timeSeriesContainerToMap(TimeSeriesContainer[] primarySeries)
@@ -96,55 +101,68 @@ public class DssReader
 		return grabber1Svc;
 	}
 
-	public NavigableMap<LocalDateTime, Double> getDtsData(int guiID)
+	@SuppressWarnings("unchecked")
+	public NavigableMap<LocalDateTime, Double> getDtsData(int dtsId)
 	{
-		NavigableMap<LocalDateTime, Double> retval = new TreeMap<>();
-		String bPart = DetailedIssuesReader.getInstance().getDetailedIssues()
-										   .stream()
-										   .filter(di -> di.getDetailedIssueId() == guiID)
-										   .map(DetailedIssue::getLinkedVar)
-										   .findAny()
-										   .orElse("");
-		NamedDssPath dtsDssFile = _scenarioRun.getDssContainer().getDtsDssFile();
-		String aPart = dtsDssFile.getAPart();
-		String fPart = dtsDssFile.getFPart();
-		String ePart = dtsDssFile.getEPart();
-		DSSPathname pathname = new DSSPathname();
-		pathname.setAPart(aPart);
-		pathname.setFPart(fPart);
-		pathname.setEPart(ePart);
-		pathname.setBPart(bPart);
-		pathname.setCPart("*");
-		String fileName = dtsDssFile.getDssPath().toString();
-		HecDss hecDss = null;
-		try
+		DssCache instance = DssCache.getInstance();
+		NavigableMap<LocalDateTime, Double> retval = instance.readDtsLinkFromCache(_scenarioRun, dtsId);
+		if(retval == null)
 		{
-			hecDss = HecDss.open(fileName);
-			String dssPath = hecDss.getCatalogedPathnames()
-								 .stream()
-								 .filter(Objects::nonNull)
-								 .map(s -> new DSSPathname(s.toString()))
-								 .filter(d -> ((DSSPathname) d).getAPart().equalsIgnoreCase(aPart))
-								   .filter(d -> ((DSSPathname) d).getBPart().equalsIgnoreCase(bPart))
-								 .filter(d -> ((DSSPathname) d).getFPart().equalsIgnoreCase(fPart))
-								 .findAny()
-								 .orElse(new DSSPathname().toString())
-								 .toString();
-			DataContainer dataContainer = hecDss.get(dssPath);
-			if(dataContainer instanceof TimeSeriesContainer)
+			retval = new TreeMap<>();
+			String bPart = DetailedIssuesReader.getInstance().getDetailedIssues()
+											   .stream()
+											   .filter(di -> di.getDetailedIssueId() == dtsId)
+											   .map(DetailedIssue::getLinkedVar)
+											   .findAny()
+											   .orElse("");
+			NamedDssPath dtsDssFile = _scenarioRun.getDssContainer().getDtsDssFile();
+			String aPart = dtsDssFile.getAPart();
+			String fPart = dtsDssFile.getFPart();
+			String ePart = dtsDssFile.getEPart();
+			DSSPathname pathname = new DSSPathname();
+			pathname.setAPart(aPart);
+			pathname.setFPart(fPart);
+			pathname.setEPart(ePart);
+			pathname.setBPart(bPart);
+			String fileName = dtsDssFile.getDssPath().toString();
+			HecDss hecDss = null;
+			try
 			{
-				retval = timeSeriesContainerToMap(new TimeSeriesContainer[]{(TimeSeriesContainer)dataContainer});
+				hecDss = HecDss.open(fileName);
+				String dssPath = hecDss.getCatalogedPathnames()
+									   .stream()
+									   .filter(Objects::nonNull)
+									   .map(s -> new DSSPathname(s.toString()))
+									   .filter(d -> ((DSSPathname) d).getAPart().equalsIgnoreCase(aPart))
+									   .filter(d -> ((DSSPathname) d).getBPart().equalsIgnoreCase(bPart))
+									   .filter(d -> ((DSSPathname) d).getFPart().equalsIgnoreCase(fPart))
+									   .findAny()
+									   .orElse("")
+									   .toString();
+				if(!dssPath.isEmpty())
+				{
+					DataContainer dataContainer = hecDss.get(dssPath);
+					if(dataContainer instanceof TimeSeriesContainer)
+					{
+						retval = timeSeriesContainerToMap(new TimeSeriesContainer[]{(TimeSeriesContainer) dataContainer});
+						instance.addDtsLinkToCache(_scenarioRun, dtsId, retval);
+					}
+				}
+				else
+				{
+					LOGGER.atWarning().log("Unable to find matching DTS path for: %s", bPart);
+				}
 			}
-		}
-		catch(Exception e)
-		{
-			LOGGER.atSevere().withCause(e).log("Unable to read DSS file: %s", fileName);
-		}
-		finally
-		{
-			if(hecDss != null)
+			catch(Exception e)
 			{
-				hecDss.close();
+				LOGGER.atSevere().withCause(e).log("Unable to read DSS file: %s", fileName);
+			}
+			finally
+			{
+				if(hecDss != null)
+				{
+//					hecDss.close();
+				}
 			}
 		}
 		return retval;
@@ -152,8 +170,15 @@ public class DssReader
 
 	public NavigableMap<LocalDateTime, Double> getThresholdData(int thresholdId)
 	{
-		DSSGrabber1SvcImpl dssGrabber1Svc = buildDssGrabber(_scenarioRun, 102, thresholdId);
-		TimeSeriesContainer[] threshold = dssGrabber1Svc.getThresholdTimeSeries();
-		return timeSeriesContainerToMap(threshold);
+		DssCache instance = DssCache.getInstance();
+		NavigableMap<LocalDateTime, Double> retval = instance.readThresholdLinkFromCache(_scenarioRun, thresholdId);
+		if(retval == null)
+		{
+			DSSGrabber1SvcImpl dssGrabber1Svc = buildDssGrabber(_scenarioRun, 102, thresholdId);
+			TimeSeriesContainer[] threshold = dssGrabber1Svc.getThresholdTimeSeries();
+			retval = timeSeriesContainerToMap(threshold);
+			instance.addThresholdLinkToCache(_scenarioRun, thresholdId, retval);
+		}
+		return retval;
 	}
 }

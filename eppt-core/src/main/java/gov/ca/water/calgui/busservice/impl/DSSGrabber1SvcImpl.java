@@ -705,7 +705,7 @@ public class DSSGrabber1SvcImpl implements IDSSGrabber1Svc
 		{
 			if(hecDss != null)
 			{
-				hecDss.close();
+//				hecDss.close();
 			}
 		}
 

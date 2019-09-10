@@ -27,6 +27,14 @@
                   <text value="Generate Report"/>
                 </properties>
               </component>
+              <component id="aceab" class="javax.swing.JButton" binding="_cancelButton" default-binding="true">
+                <constraints/>
+                <properties>
+                  <enabled value="false"/>
+                  <preferredSize width="115" height="24"/>
+                  <text value="Cancel"/>
+                </properties>
+              </component>
             </children>
           </grid>
           <grid id="88195" layout-manager="BorderLayout" hgap="0" vgap="0">

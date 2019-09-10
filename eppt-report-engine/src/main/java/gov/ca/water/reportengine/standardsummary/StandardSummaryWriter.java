@@ -31,6 +31,7 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 import static gov.ca.water.calgui.constant.Constant.ORCA_EXE;
+import static gov.ca.water.reportengine.EPPTReport.checkInterrupt;
 import static java.util.stream.Collectors.joining;
 import static java.util.stream.Collectors.toList;
 
@@ -97,6 +98,7 @@ public class StandardSummaryWriter
 										.collect(toList());
 		for(int i = 0; i < moduleList.size(); i++)
 		{
+			checkInterrupt();
 			String moduleName = moduleList.get(i);
 			if(!_reportParameters.getDisabledSummaryModules().contains(moduleName))
 			{
@@ -143,7 +145,7 @@ public class StandardSummaryWriter
 		}
 	}
 
-	private Element writeModule(String moduleName, List<EpptChart> charts)
+	private Element writeModule(String moduleName, List<EpptChart> charts) throws EpptReportException
 	{
 		LOGGER.at(Level.INFO).log("Standard Summary Statistics: Building XML for Module: %s", moduleName);
 		Element retval = _document.createElement(MODULE_ELEMENT);
@@ -153,6 +155,7 @@ public class StandardSummaryWriter
 										 .map(EpptChart::getSection).distinct().collect(toList());
 		for(int i = 0; i < sectionList.size(); i++)
 		{
+			checkInterrupt();
 			String sectionName = sectionList.get(i);
 			Element section = writeSection(moduleName, sectionName, charts);
 			section.setAttribute(SECTION_ORDER_ATTRIBUTE, String.valueOf(i));
@@ -161,7 +164,7 @@ public class StandardSummaryWriter
 		return retval;
 	}
 
-	private Element writeSection(String moduleName, String sectionName, List<EpptChart> charts)
+	private Element writeSection(String moduleName, String sectionName, List<EpptChart> charts) throws EpptReportException
 	{
 		LOGGER.at(Level.INFO).log("Standard Summary Statistics: Building XML for section: %s", sectionName);
 		Element retval = _document.createElement(SECTION_ELEMENT);
@@ -172,6 +175,7 @@ public class StandardSummaryWriter
 										   .map(EpptChart::getSubModule).distinct().collect(toList());
 		for(int i = 0; i < subModuleList.size(); i++)
 		{
+			checkInterrupt();
 			String subModuleName = subModuleList.get(i);
 			Element subModule = writeSubModule(moduleName, sectionName, subModuleName, charts);
 			subModule.setAttribute(SUB_MODULE_ORDER_ATTRIBUTE, String.valueOf(i));
@@ -180,7 +184,7 @@ public class StandardSummaryWriter
 		return retval;
 	}
 
-	private Element writeSubModule(String moduleName, String sectionName, String subModuleName, List<EpptChart> charts)
+	private Element writeSubModule(String moduleName, String sectionName, String subModuleName, List<EpptChart> charts) throws EpptReportException
 	{
 		LOGGER.at(Level.INFO).log("Standard Summary Statistics: Building XML for Sub-Module: %s", subModuleName);
 		Element retval = _document.createElement(SUB_MODULE_ELEMENT);
@@ -192,6 +196,7 @@ public class StandardSummaryWriter
 										 .map(EpptChart::getChartId).distinct().collect(toList());
 		for(int i = 0; i < chartIdList.size(); i++)
 		{
+			checkInterrupt();
 			int index = i;
 			String chartId = chartIdList.get(i);
 			charts.stream()
@@ -200,6 +205,7 @@ public class StandardSummaryWriter
 				  .filter(c -> c.getSubModule().equals(subModuleName))
 				  .filter(c -> c.getChartId().equals(chartId))
 				  .findAny()
+				  .filter(f->!Thread.currentThread().isInterrupted())
 				  .flatMap(epptChart -> buildChart(epptChart, index))
 				  .ifPresent(retval::appendChild);
 		}

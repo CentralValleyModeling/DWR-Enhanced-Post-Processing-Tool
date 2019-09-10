@@ -30,20 +30,22 @@ import java.time.LocalDateTime;
 import java.time.Month;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.Executor;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 import java.util.concurrent.atomic.AtomicInteger;
-import java.util.function.Function;
 import java.util.logging.Handler;
 import java.util.logging.Level;
 import java.util.logging.LogRecord;
 import java.util.logging.Logger;
-import java.util.stream.Collectors;
 import javax.swing.*;
+import javax.swing.event.ChangeEvent;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Style;
 import javax.swing.text.StyleConstants;
@@ -79,7 +81,6 @@ import rma.swing.RmaJIntegerField;
 import rma.swing.RmaJPanel;
 
 import static java.util.stream.Collectors.toList;
-import static java.util.stream.Collectors.toMap;
 
 /**
  * Company: Resource Management Associates
@@ -126,17 +127,22 @@ public class QAQCReportPanel extends RmaJPanel
 	private RmaJIntegerField _longTermEndYear;
 	private RmaJIntegerField _longTermStartYear;
 	private JPanel _summaryModulesPanel;
+	private JButton _cancelButton;
 	private EpptScenarioRun _baseRun;
 	private EpptScenarioRun _altRun;
 	private final Map<JCheckBox, String> _reportModules = new HashMap<>();
+	private Future<?> _baseWreslFuture;
+	private Future<?> _altWreslFuture;
+	private Future<?> _qaqcReportFuture;
+	private final ExecutorService _executor = Executors.newFixedThreadPool(5);
 
 	private QAQCReportPanel()
 	{
 		_waterYearPeriodsPanel = new WaterYearPeriodsPanel();
 		$$$setupUI$$$();
 		_generateReportButton.addActionListener(e -> generateReport());
-		_runBaseWreslButton.addActionListener(e -> CompletableFuture.runAsync(this::runBaseWresl));
-		_runAltWreslButton.addActionListener(e -> CompletableFuture.runAsync(this::runAltWresl));
+		_runBaseWreslButton.addActionListener(e -> runBaseWresl());
+		_runAltWreslButton.addActionListener(e -> runAltWresl());
 		setLayout(new BorderLayout());
 		add($$$getRootComponent$$$(), BorderLayout.CENTER);
 		_authorTextField.setText(EpptPreferences.getUsername());
@@ -168,6 +174,77 @@ public class QAQCReportPanel extends RmaJPanel
 		_summaryModules = buildStandardSummaryModules();
 		_summaryModulesPanel.setLayout(new BoxLayout(_summaryModulesPanel, BoxLayout.Y_AXIS));
 		_summaryModules.forEach(_summaryModulesPanel::add);
+		_tabbedPane1.addChangeListener(this::tabChanged);
+		_cancelButton.addActionListener(this::cancelRunningTask);
+	}
+
+	private void tabChanged(ChangeEvent e)
+	{
+		int selectedIndex = _tabbedPane1.getSelectedIndex();
+		boolean taskRunning = false;
+		switch(selectedIndex)
+		{
+			case 0:
+				if(_qaqcReportFuture != null)
+				{
+					taskRunning = !_qaqcReportFuture.isDone();
+				}
+				break;
+			case 1:
+				if(_baseWreslFuture != null)
+				{
+					taskRunning = !_baseWreslFuture.isDone();
+				}
+				break;
+			case 2:
+				if(_altWreslFuture != null)
+				{
+					taskRunning = !_altWreslFuture.isDone();
+				}
+				break;
+		}
+		_cancelButton.setEnabled(taskRunning);
+	}
+
+	private void cancelRunningTask(ActionEvent e)
+	{
+		int selectedIndex = _tabbedPane1.getSelectedIndex();
+		switch(selectedIndex)
+		{
+			case 0:
+				cancelQaQcTask();
+				break;
+			case 1:
+				cancelBaseWresl();
+				break;
+			case 2:
+				cancelAltWresl();
+				break;
+		}
+	}
+
+	private void cancelAltWresl()
+	{
+		if(_altWreslFuture != null)
+		{
+			_altWreslFuture.cancel(true);
+		}
+	}
+
+	private void cancelBaseWresl()
+	{
+		if(_baseWreslFuture != null)
+		{
+			_baseWreslFuture.cancel(true);
+		}
+	}
+
+	private void cancelQaQcTask()
+	{
+		if(_qaqcReportFuture != null)
+		{
+			_qaqcReportFuture.cancel(true);
+		}
 	}
 
 	private void waterYearDefinitionChanged(ActionEvent e)
@@ -191,30 +268,50 @@ public class QAQCReportPanel extends RmaJPanel
 
 	private void runAltWresl()
 	{
-		try
+		_altWreslFuture = _executor.submit(() ->
 		{
-			_tabbedPane1.setSelectedIndex(2);
-			startProcessAsync(_runAltWreslButton);
-			runWresl(_altRun, _altWreslTextPane);
-		}
-		finally
-		{
-			stopProcessAsync(_runAltWreslButton);
-		}
+			try
+			{
+				_tabbedPane1.setSelectedIndex(2);
+				startProcessAsync(_runAltWreslButton);
+				runWresl(_altRun, _altWreslTextPane);
+			}
+			finally
+			{
+				SwingUtilities.invokeLater(() ->
+				{
+					if(_tabbedPane1.getSelectedIndex() == 2)
+					{
+						_cancelButton.setEnabled(false);
+					}
+				});
+				stopProcessAsync(_runAltWreslButton);
+			}
+		});
 	}
 
 	private void runBaseWresl()
 	{
-		try
+		_baseWreslFuture = _executor.submit(() ->
 		{
-			_tabbedPane1.setSelectedIndex(1);
-			startProcessAsync(_runBaseWreslButton);
-			runWresl(_baseRun, _baseWreslTextPane);
-		}
-		finally
-		{
-			stopProcessAsync(_runBaseWreslButton);
-		}
+			try
+			{
+				_tabbedPane1.setSelectedIndex(1);
+				startProcessAsync(_runBaseWreslButton);
+				runWresl(_baseRun, _baseWreslTextPane);
+			}
+			finally
+			{
+				SwingUtilities.invokeLater(() ->
+				{
+					if(_tabbedPane1.getSelectedIndex() == 1)
+					{
+						_cancelButton.setEnabled(false);
+					}
+				});
+				stopProcessAsync(_runBaseWreslButton);
+			}
+		});
 	}
 
 	private void runWresl(EpptScenarioRun scenarioRun, JTextPane textPane)
@@ -251,6 +348,7 @@ public class QAQCReportPanel extends RmaJPanel
 	{
 		SwingUtilities.invokeLater(() ->
 		{
+			_cancelButton.setEnabled(true);
 			button.setEnabled(false);
 			startProgress();
 		});
@@ -293,12 +391,12 @@ public class QAQCReportPanel extends RmaJPanel
 						"Warning", JOptionPane.YES_NO_OPTION);
 				if(warning == JOptionPane.YES_OPTION)
 				{
-					CompletableFuture.runAsync(this::generateQAQCReport);
+					_qaqcReportFuture = _executor.submit(this::generateQAQCReport);
 				}
 			}
 			else
 			{
-				CompletableFuture.runAsync(this::generateQAQCReport);
+				_qaqcReportFuture = _executor.submit(this::generateQAQCReport);
 			}
 		}
 		else
@@ -343,6 +441,13 @@ public class QAQCReportPanel extends RmaJPanel
 		}
 		finally
 		{
+			SwingUtilities.invokeLater(() ->
+			{
+				if(_tabbedPane1.getSelectedIndex() == 0)
+				{
+					_cancelButton.setEnabled(false);
+				}
+			});
 			stopProcessAsync(_generateReportButton);
 		}
 	}
@@ -431,6 +536,11 @@ public class QAQCReportPanel extends RmaJPanel
 		_generateReportButton = new JButton();
 		_generateReportButton.setText("Generate Report");
 		panel2.add(_generateReportButton);
+		_cancelButton = new JButton();
+		_cancelButton.setEnabled(false);
+		_cancelButton.setPreferredSize(new Dimension(115, 24));
+		_cancelButton.setText("Cancel");
+		panel2.add(_cancelButton);
 		final JPanel panel3 = new JPanel();
 		panel3.setLayout(new BorderLayout(0, 0));
 		panel1.add(panel3, BorderLayout.NORTH);
@@ -830,6 +940,10 @@ public class QAQCReportPanel extends RmaJPanel
 			_tabbedPane1.setEnabledAt(1, true);
 			fillWaterYearIndex();
 		}
+		Path currentProject = EpptPreferences.getLastProjectConfiguration().getParent();
+		Path reportPath = currentProject.resolve("Reports").resolve(
+				ProjectConfigurationPanel.getProjectConfigurationPanel().getProjectName() + ".pdf");
+		_pdfOutput.setText(reportPath.toString());
 		_tabbedPane1.setSelectedIndex(0);
 		updateCompareState();
 		updateEnabledState();

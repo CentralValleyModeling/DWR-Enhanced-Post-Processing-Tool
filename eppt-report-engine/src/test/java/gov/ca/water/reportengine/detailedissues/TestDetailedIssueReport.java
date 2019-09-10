@@ -44,7 +44,7 @@ public class TestDetailedIssueReport extends TestDetailedIssuesReportBase
         allRuns.addAll(altScenarioRuns);
 
         ModuleCreator mc = new ModuleCreator();
-        List<Module> modules = mc.createModules(getCSVPath(), getModuleLinkingCSVPath());
+        List<Module> modules = mc.createModules(getCSVPath());
         List<DetailedIssue> allDetailedIssues = mc.getAllDetailedIssues();
 
         DTSProcessor dtsProcessor = new DTSProcessor(modules);

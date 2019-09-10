@@ -46,10 +46,22 @@ public class JythonScriptRunner
 
 	public JythonScriptRunner(EpptScenarioRun epptScenarioRun, CommonPeriodFilter commonPeriodFilter) throws ScriptException
 	{
+
 		_epptScenarioRun = epptScenarioRun;
 		_engine = new ScriptEngineManager().getEngineByName("python");
-		initializeGlobalVariables(commonPeriodFilter);
-		initializeScriptDirectory();
+		if(_engine == null)
+		{
+			throw new IllegalArgumentException("Unable to find jython engine");
+		}
+		try
+		{
+			initializeGlobalVariables(commonPeriodFilter);
+			initializeScriptDirectory();
+		}
+		catch(ScriptException ex)
+		{
+			throw new IllegalArgumentException("Error initializing jython engine", ex);
+		}
 	}
 
 	private void initializeScriptDirectory() throws ScriptException
@@ -67,9 +79,7 @@ public class JythonScriptRunner
 		}
 		catch(IOException e)
 		{
-			ScriptException scriptException = new ScriptException("Unable to read script directory: " + Constant.QA_QC_SCRIPT_DIRECTORY);
-			scriptException.initCause(e);
-			throw scriptException;
+			throw new IllegalArgumentException("Unable to read script directory: " + Constant.QA_QC_SCRIPT_DIRECTORY, e);
 		}
 	}
 

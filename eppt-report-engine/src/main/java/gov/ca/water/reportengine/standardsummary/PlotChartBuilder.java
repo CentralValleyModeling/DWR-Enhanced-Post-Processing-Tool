@@ -25,6 +25,8 @@ import gov.ca.water.reportengine.EpptReportException;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
+import static gov.ca.water.reportengine.EPPTReport.checkInterrupt;
+
 /**
  * Company: Resource Management Associates
  *
@@ -45,6 +47,7 @@ abstract class PlotChartBuilder extends StandardSummaryChartBuilder
 	void buildChart(Path imagePath, Element retval, EpptChart epptChart) throws EpptReportException
 	{
 		List<ChartComponent> chartComponents = epptChart.getChartComponents();
+		checkInterrupt();
 		PlotlyChart plotlyExceedance = buildChart(chartComponents);
 		retval.setAttribute(SVG_FILE_LOCATION_ATTRIBUTE, imagePath.toString());
 		printChart(imagePath, plotlyExceedance);

@@ -15,6 +15,7 @@ package gov.ca.water.reportengine.jython;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
@@ -24,7 +25,6 @@ import java.util.stream.Stream;
 import gov.ca.water.calgui.EpptInitializationException;
 import gov.ca.water.calgui.constant.Constant;
 import gov.ca.water.calgui.techservice.impl.FilePredicates;
-import org.jfree.data.io.CSV;
 
 import static java.util.stream.Collectors.toList;
 
@@ -109,6 +109,16 @@ public final class JythonScriptBuilder
 
 	public String buildFunctionFromTemplate(String functionReference)
 	{
+//		try
+//		{
+//			List<Script> scripts = readJythonScripts();
+//			_scripts.clear();
+//			_scripts.addAll(scripts);
+//		}
+//		catch(EpptInitializationException e)
+//		{
+//			e.printStackTrace();
+//		}
 		String[] nameSplit = OPEN_PAREN_PATTERN.split(functionReference);
 		return _scripts.stream().filter(f -> f._name.equals(nameSplit[0]))
 					   .map(f -> buildFunctionFromTemplate(f, functionReference))
@@ -125,10 +135,15 @@ public final class JythonScriptBuilder
 			String[] arguments = CLOSED_PAREN_PATTERN.split(split[1]);
 			String argumentsList = arguments[0];
 			String[] arg = CSV_PATTERN.split(argumentsList);
+			if(arg.length != script._arguments.size())
+			{
+				throw new IllegalArgumentException(
+						"Function: " + script._name + " Arguments length differs from template length. Arguments: " + Arrays.toString(arg) + " Template: " + script._arguments);
+			}
 			for(int i = 0; i < arg.length; i++)
 			{
 				String s = script._arguments.get(i);
-				retval = retval.replace("${" + s + "}", arg[i]);
+				retval = retval.replace(s, arg[i]);
 			}
 		}
 		return retval;

@@ -85,6 +85,11 @@ public abstract class ProcessRunner
 			process.waitFor();
 			processExitValue(process);
 		}
+		catch(InterruptedException ex)
+		{
+			LOGGER.log(Level.SEVERE, "Error running external process", ex);
+			Thread.currentThread().interrupt();
+		}
 		catch(Exception ex)
 		{
 			LOGGER.log(Level.SEVERE, "Error running external process", ex);

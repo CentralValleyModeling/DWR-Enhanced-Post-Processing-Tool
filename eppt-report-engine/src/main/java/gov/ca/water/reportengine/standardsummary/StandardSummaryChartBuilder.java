@@ -112,7 +112,7 @@ abstract class StandardSummaryChartBuilder
 		}
 		catch(ScriptException e)
 		{
-			throw new EpptReportException("Error initializing Jythong script runner");
+			throw new EpptReportException("Error initializing Jython script runner", e);
 		}
 	}
 
@@ -124,7 +124,19 @@ abstract class StandardSummaryChartBuilder
 		}
 		catch(ScriptException e)
 		{
-			throw new EpptReportException("Error initializing Jythong script runner");
+			throw new EpptReportException("Error initializing Jython script runner", e);
+		}
+	}
+
+	JythonValueGenerator createJythonValueGenerator(EpptScenarioRun epptScenarioRun, String function, int comparisonValue) throws EpptReportException
+	{
+		try
+		{
+			return new JythonValueGenerator(epptScenarioRun, function, _reportParameters.getCommonPeriodFilter(), comparisonValue);
+		}
+		catch(ScriptException e)
+		{
+			throw new EpptReportException("Error initializing Jython script runner", e);
 		}
 	}
 }

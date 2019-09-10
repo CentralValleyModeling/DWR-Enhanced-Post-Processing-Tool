@@ -12,6 +12,7 @@
 
 package gov.ca.water.reportengine.jython;
 
+import java.math.BigInteger;
 import java.time.Month;
 import java.util.List;
 import java.util.Map;
@@ -49,6 +50,14 @@ public class JythonValueGenerator
 		_function = JythonScriptBuilder.getInstance().buildFunctionFromTemplate(function);
 		_periodFilter = periodFilter;
 		_scriptRunner = new JythonScriptRunner(_scenarioRun, commonPeriodFilter);
+		_scriptRunner.setPeriodFilter(_periodFilter);
+	}
+
+	public JythonValueGenerator(EpptScenarioRun epptScenarioRun, String function, CommonPeriodFilter commonPeriodFilter, int comparisonValue)
+			throws ScriptException
+	{
+		this(epptScenarioRun, function, commonPeriodFilter);
+		_scriptRunner.setComparisonValue(comparisonValue);
 	}
 
 	public Double generateValue() throws EpptReportException
@@ -56,11 +65,20 @@ public class JythonValueGenerator
 		try
 		{
 			Object o = _scriptRunner.runScript(_function);
-			return (Double) o;
+			Double retval;
+			if(o instanceof BigInteger)
+			{
+				retval = ((BigInteger) o).doubleValue();
+			}
+			else
+			{
+				retval = (Double) o;
+			}
+			return retval;
 		}
 		catch(ScriptException e)
 		{
-			throw new EpptReportException("Error running script: " + _function);
+			throw new EpptReportException("Error running script: " + _function, e);
 		}
 		catch(ClassCastException e)
 		{
@@ -77,7 +95,7 @@ public class JythonValueGenerator
 		}
 		catch(ScriptException e)
 		{
-			throw new EpptReportException("Error running script: " + _function);
+			throw new EpptReportException("Error running script: " + _function, e);
 		}
 	}
 
@@ -91,7 +109,7 @@ public class JythonValueGenerator
 		}
 		catch(ScriptException e)
 		{
-			throw new EpptReportException("Error running script: " + _function);
+			throw new EpptReportException("Error running script: " + _function, e);
 		}
 		catch(ClassCastException e)
 		{
@@ -110,7 +128,7 @@ public class JythonValueGenerator
 		}
 		catch(ScriptException e)
 		{
-			throw new EpptReportException("Error running script: " + _function);
+			throw new EpptReportException("Error running script: " + _function, e);
 		}
 		catch(ClassCastException e)
 		{
@@ -129,7 +147,7 @@ public class JythonValueGenerator
 		}
 		catch(ScriptException e)
 		{
-			throw new EpptReportException("Error running script: " + _function);
+			throw new EpptReportException("Error running script: " + _function, e);
 		}
 		catch(ClassCastException e)
 		{
@@ -144,11 +162,15 @@ public class JythonValueGenerator
 		try
 		{
 			Object o = _scriptRunner.runScript(_function);
+			if(o == null)
+			{
+				throw new ScriptException("Script returned null collection: " + _function);
+			}
 			return (Map<Month, Double>) o;
 		}
 		catch(ScriptException e)
 		{
-			throw new EpptReportException("Error running script: " + _function);
+			throw new EpptReportException("Error running script: " + _function, e);
 		}
 		catch(ClassCastException e)
 		{

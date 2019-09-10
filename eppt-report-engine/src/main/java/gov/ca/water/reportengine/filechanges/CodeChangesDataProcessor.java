@@ -29,6 +29,7 @@ import com.google.common.flogger.FluentLogger;
 import gov.ca.water.reportengine.EpptReportException;
 import org.apache.commons.io.FileUtils;
 
+import static gov.ca.water.reportengine.EPPTReport.checkInterrupt;
 import static java.util.stream.Collectors.toList;
 
 public class CodeChangesDataProcessor
@@ -62,6 +63,7 @@ public class CodeChangesDataProcessor
 
 		for(Path basePath : basePaths)
 		{
+			checkInterrupt();
 			if(altPaths.contains(basePath))
 			{
 				Path base = baseOutputPath.resolve(basePath);
@@ -79,6 +81,7 @@ public class CodeChangesDataProcessor
 
 		for(Path altPath : altPaths)
 		{
+			checkInterrupt();
 			if(!basePaths.contains(altPath))
 			{
 				addedInAlt.add(altPath);

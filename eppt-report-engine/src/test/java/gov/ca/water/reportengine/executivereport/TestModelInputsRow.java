@@ -45,7 +45,7 @@ public class TestModelInputsRow extends ExecutiveReportTestBase
         allRuns.add(baseScenarioRun);
 
         ModuleCreator mc = new ModuleCreator();
-        List<Module> modules = mc.createModules(getCSVPath(), getModuleLinkingCSVPath());
+        List<Module> modules = mc.createModules(getCSVPath());
 
         DTSProcessor dtsProcessor = new DTSProcessor(modules);
         Map<EpptScenarioRun, Map<SubModule, List<FlagViolation>>> runsToViolations = dtsProcessor.processDSSFiles(allRuns);

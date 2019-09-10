@@ -24,18 +24,21 @@ import gov.ca.water.reportengine.executivereport.Module;
 import gov.ca.water.reportengine.executivereport.SubModule;
 import gov.ca.water.reportengine.reportreaders.ModulesReader;
 
+import static gov.ca.water.reportengine.EPPTReport.checkInterrupt;
+
 public class ModuleCreator
 {
 	private static final FluentLogger LOGGER = FluentLogger.forEnclosingClass();
 	private final List<DetailedIssue> _detailedIssues = new ArrayList<>();
 	private final List<Module> _modules = new ArrayList<>();
 
-	public List<Module> createModules(Path moduleCSVPath, Path detailedIssuesCSVPath) throws EpptReportException
+	public List<Module> createModules(Path moduleCSVPath) throws EpptReportException
 	{
 		LOGGER.at(Level.INFO).log("Reading Detailed Issues Configuration");
 		_detailedIssues.addAll(DetailedIssuesReader.getInstance().getDetailedIssues());
 		LOGGER.at(Level.INFO).log("Reading Modules Configuration");
 		ModulesReader modulesReader = new ModulesReader(moduleCSVPath);
+		checkInterrupt();
 		_modules.addAll(modulesReader.read());
 
 		LOGGER.at(Level.INFO).log("Reading Linked Variables Configuration");
@@ -50,12 +53,13 @@ public class ModuleCreator
 		return _detailedIssues;
 	}
 
-	private void addLinkedVariablesToSubModules()
+	private void addLinkedVariablesToSubModules() throws EpptReportException
 	{
 		for(Module mod : _modules)
 		{
 			for(SubModule sub : mod.getSubModules())
 			{
+				checkInterrupt();
 				int id = sub.getId();
 				List<String> linkedFiles = getLinkedFilesFromID(id);
 				sub.addLinkedRecords(linkedFiles);

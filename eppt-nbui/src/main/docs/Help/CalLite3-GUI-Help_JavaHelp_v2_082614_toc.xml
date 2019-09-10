@@ -9,22 +9,6 @@
   ~ for more details.
   ~
   ~ GNU General Public License
-
-
-<!DOCTYPE toc PUBLIC "-//Sun Microsystems Inc.//DTD JavaHelp TOC Version 2.0//EN" "http://java.sun.com/products/javahelp/toc_2_0.dtd">
-<toc version="2.0">
-	<tocitem text="1. Introduction" target="Introduction"/>
-	<tocitem text="2. Main Menu Options" target="Options"/>
-	<tocitem text="3. Project Configuration" target="Project Configuration"/>
-	<tocitem text="4. Results" target="Results">
-		<tocitem text="4.1. Quick Results" target="Quick Results"/>
-		<tocitem text="4.2. Custom Results" target="Custom Results"/>
-		<tocitem text="4.4. Data Analysis" target="Data Analysis"/>
-	</tocitem>
-	<tocitem text="5. Tutorial" target="Tutorial">
-		<tocitem text="5.1. Viewing Results" target="Viewing Results"/>
-	</tocitem>
-</toc>
   -->
  <!DOCTYPE toc PUBLIC "-//Sun Microsystems Inc.//DTD JavaHelp TOC Version 2.0//EN" "http://java.sun.com/products/javahelp/toc_2_0.dtd">
  <toc version="2.0">

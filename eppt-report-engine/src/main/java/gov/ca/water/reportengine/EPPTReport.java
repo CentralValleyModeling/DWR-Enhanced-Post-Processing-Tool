@@ -39,6 +39,7 @@ import gov.ca.water.calgui.bo.GUILinksAllModelsBO;
 import gov.ca.water.calgui.constant.Constant;
 import gov.ca.water.calgui.project.EpptScenarioRun;
 import gov.ca.water.calgui.bo.DetailedIssue;
+import gov.ca.water.calgui.scripts.DssCache;
 import gov.ca.water.reportengine.detailedissues.DetailedIssueProcessor;
 import gov.ca.water.reportengine.detailedissues.DetailedIssueViolation;
 import gov.ca.water.reportengine.detailedissues.DetailedIssuesXMLCreator;
@@ -107,6 +108,7 @@ public class EPPTReport
 		_baseRun = baseRun;
         _reportParameters = reportParameters;
         _altRuns.addAll(altRuns);
+		DssCache.getInstance().clearCache();
 	}
 
 	//what about base only vs alt vs alts
@@ -120,11 +122,13 @@ public class EPPTReport
 			Document doc = createDoc();
 			//create the modules
 			ModuleCreator mc = new ModuleCreator();
-			_modules = mc.createModules(Paths.get(MODULES_CSV), Constant.DETAILS_CSV);
+			_modules = mc.createModules(Paths.get(MODULES_CSV));
 			_allDetailedIssues = mc.getAllDetailedIssues();
+			checkInterrupt();
 
 			//create the file change stats. One for each alt to the base in order of alts
 			List<FileChangesStatistics> fileChangeStats = getFileChangeStatsList();
+			checkInterrupt();
 
 			List<EpptScenarioRun> allRuns = new ArrayList<>();
 			allRuns.add(_baseRun);
@@ -135,13 +139,17 @@ public class EPPTReport
 			printCoverPage(doc, rootElement);
 			//code changes and assump have to be the same model
 			printExecutiveSummary(doc, fileChangeStats, runsToFlagViolations, rootElement);
+			checkInterrupt();
 			printDetailedIssues(doc, runsToFlagViolations, rootElement);
+			checkInterrupt();
 
 			//create and add the assumption changes
 			if(!fileChangeStats.isEmpty())
 			{
 				printAssumptionChanges(doc, fileChangeStats, rootElement);
+				checkInterrupt();
 				printCodeChanges(doc, rootElement);
+				checkInterrupt();
 			}
 			appendSummaryStats(doc, rootElement);
 
@@ -150,7 +158,7 @@ public class EPPTReport
 		}
 		catch(RuntimeException | IOException | EpptReportException | ParserConfigurationException | TransformerException e)
 		{
-			throw new QAQCReportException("Error in report generation", e);
+			throw new QAQCReportException(e.getMessage(), e);
 		}
 		finally
 		{
@@ -159,6 +167,14 @@ public class EPPTReport
 			long minutes = ChronoUnit.MINUTES.between(start, end);
 			long seconds = Duration.between(start, end).minus(minutes, ChronoUnit.MINUTES).getSeconds();
 			LOGGER.at(Level.INFO).log("============= Report Processing Took: %smin %ssec =============", minutes, seconds);
+		}
+	}
+
+	public static void checkInterrupt() throws EpptReportException
+	{
+		if(Thread.currentThread().isInterrupted())
+		{
+			throw new EpptReportException("Task interrupted");
 		}
 	}
 
@@ -248,6 +264,7 @@ public class EPPTReport
 			StandardSummaryWriter standardSummaryWriter = new StandardSummaryWriter(doc, _baseRun, _altRuns, summaryReportParameters, imagesDir);
 			List<String> orderedChartIds = standardSummaryReader.getOrderedChartIds();
 			Map<String, EpptChart> stringEpptChartMap = standardSummaryReader.readLines();
+			checkInterrupt();
 			List<EpptChart> collect = orderedChartIds.stream()
 													 .map(stringEpptChartMap::get)
 													 .filter(Objects::nonNull)
@@ -510,6 +527,7 @@ public class EPPTReport
 			Path baseOutputPath = _baseRun.getOutputPath();
 			for(EpptScenarioRun altRun : _altRuns)
 			{
+				checkInterrupt();
 
 				if(Objects.equals(altRun.getModel(), _baseRun.getModel()))
 				{
@@ -519,15 +537,18 @@ public class EPPTReport
 					AssumptionChangesStatistics initCondStats =
 							initProcessor.processAssumptionChanges(baseInitDSSPath, altRun.getDssContainer().getIvDssFile().getDssPath());
 
+					checkInterrupt();
 					LOGGER.at(Level.INFO).log("Processing Assumption State Variables for: %s", altRun.getName());
 					AssumptionChangesDataProcessor stateVarProcessor = new AssumptionChangesDataProcessor(getStateVariableCsv(), tolerance);
 					AssumptionChangesStatistics stateVarStats =
 							stateVarProcessor.processAssumptionChanges(baseStateVarDSSPath, altRun.getDssContainer().getSvDssFile().getDssPath());
 
+					checkInterrupt();
 					LOGGER.at(Level.INFO).log("Processing Code Changes for: %s", altRun.getName());
 					CodeChangesDataProcessor processor = new CodeChangesDataProcessor(getCodeChangesCsv());
 					CodeChangesStatistics codeChangeStats = processor.processCodeChanges(baseOutputPath, altRun.getOutputPath());
 
+					checkInterrupt();
 					FileChangesStatistics fileChangesStatistics = new FileChangesStatistics(initCondStats, stateVarStats, codeChangeStats);
 					statsForAllAlternatives.add(fileChangesStatistics);
 				}

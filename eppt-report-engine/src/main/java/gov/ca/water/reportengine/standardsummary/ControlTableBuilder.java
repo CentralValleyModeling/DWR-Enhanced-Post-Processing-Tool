@@ -129,14 +129,14 @@ class ControlTableBuilder extends TableBuilder
 		EpptScenarioRun base = getBase();
 		try
 		{
-			long baseValue = createJythonValueGenerator(base, v.getFunction()).generateValues()
+			long baseValue = createJythonValueGenerator(base, v.getFunction(), comparisonValue).generateValues()
 																			  .stream()
 																			  .filter(Objects::nonNull)
 																			  .mapToDouble(i -> i)
 																			  .filter(i -> i == comparisonValue)
 																			  .count();
 
-			long altValue = createJythonValueGenerator(alternative, v.getFunction()).generateValues()
+			long altValue = createJythonValueGenerator(alternative, v.getFunction(), comparisonValue).generateValues()
 																					.stream()
 																					.filter(Objects::nonNull)
 																					.mapToDouble(i -> i)
@@ -161,7 +161,7 @@ class ControlTableBuilder extends TableBuilder
 		Element retval = getDocument().createElement(VALUE_ELEMENT);
 		try
 		{
-			long count = createJythonValueGenerator(scenarioRun, v.getFunction()).generateValues()
+			long count = createJythonValueGenerator(scenarioRun, v.getFunction(), comparisonValue).generateValues()
 																				 .stream()
 																				 .filter(Objects::nonNull)
 																				 .mapToDouble(i -> i)

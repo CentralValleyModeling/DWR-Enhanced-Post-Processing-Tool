@@ -24,6 +24,8 @@ import gov.ca.water.reportengine.executivereport.ExecutiveReportException;
 import gov.ca.water.reportengine.executivereport.Module;
 import gov.ca.water.reportengine.executivereport.SubModule;
 
+import static gov.ca.water.reportengine.EPPTReport.checkInterrupt;
+
 public class ModulesReader
 {
 

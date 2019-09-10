@@ -1,5 +1,4 @@
-<!--<?xml version='1.0' encoding='UTF-8' ?>
-
+<!--
   ~ Enhanced Post Processing Tool (EPPT) Copyright (c) 2019.
   ~
   ~ EPPT is copyrighted by the State of California, Department of Water Resources. It is licensed
@@ -9,21 +8,6 @@
   ~ for more details.
   ~
   ~ GNU General Public License
-
-
-<!DOCTYPE map PUBLIC "-//Sun Microsystems Inc.//DTD JavaHelp Map Version 1.0//EN" "http://java.sun.com/products/javahelp/map_1_0.dtd">
-
-<map version="1.0">
-	<mapID target="Introduction" url="EPPT_HTM/1_Introduction.htm"/>
-	<mapID target="Options" url="EPPT_HTM/2_Main_Menu_Options.htm"/>
-	<mapID target="Project Configuration" url="EPPT_HTM/3_Project_Configuration.htm"/>
-	<mapID target="Results" url="EPPT_HTM/4_0_Results.htm"/>
-	<mapID target="Quick Results" url="EPPT_HTM/4_1_Quick_Results.htm"/>
-	<mapID target="Custom Results" url="EPPT_HTM/4_2_Custom_Results.htm"/>
-	<mapID target="Data Analysis" url="EPPT_HTM/4_3_Data_Analysis.htm"/>
-	<mapID target="Tutorial" url="EPPT_HTM/5_0_Tutorial.htm"/>
-	<mapID target="Viewing Results" url="EPPT_HTM/5_1_Viewing_Results.htm"/>
-</map>
   -->
 <?xml version="1.0" encoding="utf-8" ?>
 <!--RoboML: Table of Content-->
