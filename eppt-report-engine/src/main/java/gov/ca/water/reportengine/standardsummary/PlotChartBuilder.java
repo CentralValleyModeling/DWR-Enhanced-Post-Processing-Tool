@@ -78,7 +78,8 @@ abstract class PlotChartBuilder extends StandardSummaryChartBuilder
 							  .map(ChartComponent::getHeader)
 							  .filter(s -> !s.isEmpty())
 							  .map(DOUBLE_PIPE_PATTERN::split)
-							  .map(s -> s[0])
+							  .filter(s -> s.length > 1)
+							  .map(s -> s[1])
 							  .findAny()
 							  .orElse("");
 	}
@@ -89,8 +90,7 @@ abstract class PlotChartBuilder extends StandardSummaryChartBuilder
 							  .map(ChartComponent::getHeader)
 							  .filter(s -> !s.isEmpty())
 							  .map(DOUBLE_PIPE_PATTERN::split)
-							  .filter(s -> s.length > 1)
-							  .map(s -> s[1])
+							  .map(s -> s[0])
 							  .findAny()
 							  .orElse("");
 	}

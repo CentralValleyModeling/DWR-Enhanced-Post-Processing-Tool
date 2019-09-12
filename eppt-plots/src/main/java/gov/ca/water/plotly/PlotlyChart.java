@@ -13,6 +13,8 @@
 package gov.ca.water.plotly;
 
 import java.io.IOException;
+import java.io.UncheckedIOException;
+import java.nio.channels.ClosedByInterruptException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.stream.Collectors;
@@ -39,6 +41,17 @@ public abstract class PlotlyChart
 			jsonObject.put("data", dataArray);
 			jsonObject.put("layout", layout);
 			return jsonObject;
+		}
+		catch(UncheckedIOException e)
+		{
+			if(e.getCause() instanceof ClosedByInterruptException)
+			{
+				throw new PlotlyPrintException("Task Interrupted");
+			}
+			else
+			{
+				throw new PlotlyPrintException("Unable to build JSON object", e);
+			}
 		}
 		catch(IOException | RuntimeException e)
 		{

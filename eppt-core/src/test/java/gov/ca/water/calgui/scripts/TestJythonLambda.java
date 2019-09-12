@@ -30,6 +30,7 @@ import java.util.NavigableMap;
 import java.util.Optional;
 import java.util.TreeMap;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 import java.util.stream.DoubleStream;
 
 import gov.ca.water.calgui.bo.CommonPeriodFilter;
@@ -59,6 +60,7 @@ import rma.stats.EmpiricalDist;
 import static java.util.stream.Collectors.averagingDouble;
 import static java.util.stream.Collectors.collectingAndThen;
 import static java.util.stream.Collectors.groupingBy;
+import static java.util.stream.Collectors.mapping;
 import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toMap;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -570,8 +572,7 @@ class TestJythonLambda
 		Path ivPath = new File(
 				TestJythonLambda.class.getClassLoader().getResource("SampleINIT_Base.dss").getFile()).toPath();
 		NamedDssPath ivDssFile = new NamedDssPath(ivPath, "INIT", "CALSIM", "1MON", "2020D09E");
-		Path dtsPath = new File(
-				TestJythonLambda.class.getClassLoader().getResource("CalSim2_PostProc.dss").getFile()).toPath();
+		Path dtsPath = Paths.get("C:\\Users\\adam\\Documents\\EPPT\\Project1\\ScenarioRuns\\CalSim2_Base\\SampleDTS.dss");
 		NamedDssPath dtsDssFile = new NamedDssPath(dtsPath, "DTS", "CALSIM", "1MON", "2020D09E");
 		Path svPath = new File(
 				TestJythonLambda.class.getClassLoader().getResource("SampleSV_Base.dss").getFile()).toPath();
@@ -596,7 +597,7 @@ class TestJythonLambda
 	private static NavigableMap<Double, Double> calculateExceedance(Collection<Double> values)
 	{
 		NavigableMap<Double, Double> retval = new TreeMap<>();
-		double[] doubles = values.stream().mapToDouble(v -> v).toArray();
+		double[] doubles = values.stream().mapToDouble(v -> v).sorted().toArray();
 		EmpiricalDist empiricalDist = new EmpiricalDist(EmpiricalDist.InterpType.LINEAR, doubles);
 		for(int i = 0; i < doubles.length; i++)
 		{

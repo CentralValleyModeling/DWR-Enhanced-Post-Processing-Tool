@@ -21,7 +21,7 @@ def getPeriodStartYear(date, startOfPeriod):
 
 def calculateExceedance(values):
     retval = TreeMap()
-    doubles = values.stream().mapToDouble(jdf(lambda v: v)).toArray()
+    doubles = values.stream().mapToDouble(jdf(lambda v: v)).sorted().toArray()
     empiricalDist = EmpiricalDist(EmpiricalDist.InterpType.LINEAR, doubles)
     i = 0
     while i < len(doubles):

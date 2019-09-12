@@ -258,7 +258,7 @@ public class EPPTReport
 		if(canPrintStandardSummary())
 		{
 			StandardSummaryReader standardSummaryReader = new StandardSummaryReader(Paths.get(SUMMARY_CSV));
-			Path imagesDir = _pathToWriteOut.getParent().resolve("images");
+			Path imagesDir = _pathToWriteOut.getParent().getParent().resolve("Images");
 			SummaryReportParameters summaryReportParameters = _reportParameters.getSummaryReportParameters();
 			LOGGER.at(Level.INFO).log("Generate Standard Summary Statistic");
 			StandardSummaryWriter standardSummaryWriter = new StandardSummaryWriter(doc, _baseRun, _altRuns, summaryReportParameters, imagesDir);

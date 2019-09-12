@@ -117,10 +117,10 @@ public class StandardSummaryWriter
 		try
 		{
 			PlotlySvgPrinter.printSvg(_imageDirectory);
-			PlotlySvgPrinter.printSvg(_rotatedImageDirectory);
-			rotateImages();
+//			PlotlySvgPrinter.printSvg(_rotatedImageDirectory);
+//			rotateImages();
 		}
-		catch(PlotlyPrintException | IOException e)
+		catch(PlotlyPrintException e)
 		{
 			throw new EpptReportException("Unable to print SVG files for JSON directory: " + _imageDirectory, e);
 		}
@@ -241,7 +241,7 @@ public class StandardSummaryWriter
 					_exceedanceChartBuilder.buildChart(imagePath, chart, epptChart);
 					break;
 				case EXCEEDANCE_PAGE:
-					imagePath = _rotatedImageDirectory.resolve(chartId + ".svg");
+					imagePath = _imageDirectory.resolve(chartId + ".svg");
 					_exceedanceChartPageBuilder.buildChart(imagePath, chart, epptChart);
 					break;
 				case LINE_PLOT:
