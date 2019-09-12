@@ -760,11 +760,16 @@ public class QAQCReportPanel extends RmaJPanel
 		gbc.insets = new Insets(5, 5, 5, 5);
 		panel6.add(panel10, gbc);
 		_startDateChooser = new RmaJDateTimeField();
+		_startDateChooser.setEnabled(true);
+		_startDateChooser.setPreferredSize(new Dimension(120, 18));
+		_startDateChooser.setText("01Nov1921 0000");
 		panel10.add(_startDateChooser);
 		final JLabel label11 = new JLabel();
 		label11.setText("Start");
 		panel10.add(label11);
 		_endDateChooser = new RmaJDateTimeField();
+		_endDateChooser.setPreferredSize(new Dimension(120, 18));
+		_endDateChooser.setText("01Oct2003 0100");
 		panel10.add(_endDateChooser);
 		final JLabel label12 = new JLabel();
 		label12.setText("End");

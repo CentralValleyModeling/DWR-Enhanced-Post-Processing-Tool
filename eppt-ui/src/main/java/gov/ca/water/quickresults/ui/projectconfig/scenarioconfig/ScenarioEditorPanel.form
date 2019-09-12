@@ -35,18 +35,6 @@
                   <text value="-"/>
                 </properties>
               </component>
-              <component id="9e32f" class="javax.swing.JButton" binding="_upButton" custom-create="true">
-                <constraints/>
-                <properties>
-                  <preferredSize width="45" height="24"/>
-                </properties>
-              </component>
-              <component id="e9699" class="javax.swing.JButton" binding="_downButton" custom-create="true">
-                <constraints/>
-                <properties>
-                  <preferredSize width="45" height="24"/>
-                </properties>
-              </component>
             </children>
           </grid>
           <scrollpane id="3b7ec">

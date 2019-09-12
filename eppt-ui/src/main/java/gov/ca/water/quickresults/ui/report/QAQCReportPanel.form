@@ -294,7 +294,11 @@
                     <children>
                       <component id="d2201" class="rma.swing.RmaJDateTimeField" binding="_startDateChooser">
                         <constraints/>
-                        <properties/>
+                        <properties>
+                          <enabled value="true"/>
+                          <preferredSize width="120" height="18"/>
+                          <text value="01Nov1921 0000"/>
+                        </properties>
                       </component>
                       <component id="164a5" class="javax.swing.JLabel">
                         <constraints/>
@@ -304,7 +308,10 @@
                       </component>
                       <component id="10c02" class="rma.swing.RmaJDateTimeField" binding="_endDateChooser">
                         <constraints/>
-                        <properties/>
+                        <properties>
+                          <preferredSize width="120" height="18"/>
+                          <text value="01Oct2003 0100"/>
+                        </properties>
                       </component>
                       <component id="18d08" class="javax.swing.JLabel">
                         <constraints/>

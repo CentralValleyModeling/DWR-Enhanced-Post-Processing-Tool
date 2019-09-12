@@ -186,10 +186,6 @@ public class ScenarioEditorPanel
 		_removeButton.setPreferredSize(new Dimension(45, 24));
 		_removeButton.setText("-");
 		panel2.add(_removeButton);
-		_upButton.setPreferredSize(new Dimension(45, 24));
-		panel2.add(_upButton);
-		_downButton.setPreferredSize(new Dimension(45, 24));
-		panel2.add(_downButton);
 		final JScrollPane scrollPane1 = new JScrollPane();
 		panel1.add(scrollPane1, BorderLayout.CENTER);
 		scrollPane1.setViewportView(_dssTable);
@@ -480,16 +476,16 @@ public class ScenarioEditorPanel
 		_waterYearTable.setText(scenarioRun.getWaterYearTable().toString());
 		String hex = Constant.colorToHex(scenarioRun.getColor());
 		_colorHexTextField.setText(hex);
-//		try
-//		{
-//			_colorChooserButton.setColor(java.awt.Color.decode(hex));
-//		}
-//		catch(NumberFormatException ex)
-//		{
-			java.awt.Color decode = java.awt.Color.decode(hex.substring(0, 7));
-			decode = new java.awt.Color(decode.getRed(), decode.getGreen(), decode.getBlue(), Integer.parseInt(hex.substring(7, 9), 16));
-			_colorChooserButton.setColor(decode);
-//		}
+		//		try
+		//		{
+		//			_colorChooserButton.setColor(java.awt.Color.decode(hex));
+		//		}
+		//		catch(NumberFormatException ex)
+		//		{
+		java.awt.Color decode = java.awt.Color.decode(hex.substring(0, 7));
+		decode = new java.awt.Color(decode.getRed(), decode.getGreen(), decode.getBlue(), Integer.parseInt(hex.substring(7, 9), 16));
+		_colorChooserButton.setColor(decode);
+		//		}
 	}
 
 	void shutdown()
