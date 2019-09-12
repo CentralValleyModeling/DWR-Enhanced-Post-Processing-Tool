@@ -180,6 +180,13 @@ public class QAQCReportPanel extends RmaJPanel
 		_summaryModules.forEach(_summaryModulesPanel::add);
 		_tabbedPane1.addChangeListener(this::tabChanged);
 		_cancelButton.addActionListener(this::cancelRunningTask);
+		_standardSummaryStatiticsCheckBox.addActionListener(e->
+		{
+			if(!_standardSummaryStatiticsCheckBox.isSelected())
+			{
+				_summaryModules.forEach(c->c.setSelected(false));
+			}
+		});
 	}
 
 	private void tabChanged(ChangeEvent e)
