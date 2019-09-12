@@ -96,10 +96,22 @@ public class ScenarioEditorPanel
 		String time = Long.toString(new Date().getTime()).substring(6);
 		_nameField.setText("NewScenarioRun " + time);
 		_nameField.selectAll();
-		_waterYearTable.setText(Paths.get(Constant.WY_TYPES_TABLE).normalize().toString());
 		_wyTableBtn.addActionListener(e -> chooseWaterYearTable());
-		_wreslTextField.setText(Constant.WRESL_MAIN);
 		_colorChooserButton.addSampleListener(this::chooseColor);
+		_modelCombobox.addActionListener(e -> modelComboChanged());
+		_waterYearTable.setText(Paths.get(Constant.WRESL_DIR).resolve("CalLite").resolve(Constant.WY_TYPES_TABLE).toString());
+		_wreslTextField.setText(Paths.get(Constant.WRESL_DIR).resolve("CalLite").resolve(Constant.WRESL_MAIN).toString());
+	}
+
+	private void modelComboChanged()
+	{
+		Object selectedItem = _modelCombobox.getSelectedItem();
+		if(selectedItem instanceof GUILinksAllModelsBO.Model)
+		{
+			_waterYearTable.setText(Paths.get(Constant.WRESL_DIR).resolve(selectedItem.toString()).resolve(Constant.WY_TYPES_TABLE).toString());
+			_wreslTextField.setText(Paths.get(Constant.WRESL_DIR).resolve(selectedItem.toString()).resolve(Constant.WRESL_MAIN).toString());
+		}
+
 	}
 
 	private void chooseColor(PropertyChangeEvent actionEvent)

@@ -50,9 +50,9 @@ public final class Constant
 	public static final String NEGATIVE_CONTOUR_FILE = QA_QC_DIR + "\\negativeContour.xml";
 	public static final String POSITIVE_CONTOUR_FILE = QA_QC_DIR + "\\positiveContour.xml";
 	public static final String WRESL_DIR = System.getProperty("user.dir") + "\\dwr_eppt\\wresl\\";
-	public static final String WRESL_MAIN = System.getProperty("user.dir") + "\\dwr_eppt\\wresl\\run\\mainControl.wresl";
+	public static final String WRESL_MAIN = "mainControl.wresl";
 	public static final String WRIMS_DIR = System.getProperty("user.dir") + "\\dwr_eppt\\wresl\\wrims";
-	public static final String WY_TYPES_TABLE = WRESL_DIR + "/run/lookup/wytypes" + TABLE_EXT;
+	public static final String WY_TYPES_TABLE = "lookup/wytypes" + TABLE_EXT;
 	public static final String WY_TYPES_NAME_LOOKUP = CONFIG_DIR + "/WYTypesLookup" + CSV_EXT;
 	public static final String JASPER_DIR = System.getProperty("user.dir") + "\\dwr_eppt\\jasper\\";
 	public static final String MODEL_W2_DIR = System.getProperty("user.dir") + "//Model_w2//";
