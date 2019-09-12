@@ -182,7 +182,7 @@ public final class ProjectConfigurationPanel extends EpptPanel
 	@Override
 	public String getJavaHelpId()
 	{
-		return "Project Configuration";
+		return "3.1_ProjectConfiguration.htm";
 	}
 
 	JPanel getControls2()

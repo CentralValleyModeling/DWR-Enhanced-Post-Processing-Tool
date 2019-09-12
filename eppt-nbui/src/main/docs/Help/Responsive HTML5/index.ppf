@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ppfml version="2.00" project="EPPT Help 1.0.3" type="4">
+  <contextmap>
+    
+  </contextmap>
+  <topiclist defaulttopic="1_Introduction.htm">
+    
+    <topic>
+      1_Introduction.htm
+    </topic>
+    
+    <topic>
+      2_MainMenuOptions.htm
+    </topic>
+    
+    <topic>
+      3.0_Windows.htm
+    </topic>
+    
+    <topic>
+      3.1_ProjectConfiguration.htm
+    </topic>
+    
+    <topic>
+      3.2_QuickResults.htm
+    </topic>
+    
+    <topic>
+      3.3_CustomResults.htm
+    </topic>
+    
+    <topic>
+      3.4_DataAnalysis.htm
+    </topic>
+    
+    <topic>
+      4.0_Tutorial.htm
+    </topic>
+    
+    <topic>
+      4.1_AddingScenarios.htm
+    </topic>
+    
+    <topic>
+      4.2_ViewingResults.htm
+    </topic>
+    
+    <topic>
+      4.3_DataAnalysis.htm
+    </topic>
+    
+    <topic>
+      4.4_WRESLScript.htm
+    </topic>
+    
+    <topic>
+      4.5_QAQCReport.htm
+    </topic>
+    
+    <topic>
+      1_Introduction.htm
+    </topic>
+    
+    <topic>
+      2_MainMenuOptions.htm
+    </topic>
+    
+    <topic>
+      3.0_Windows.htm
+    </topic>
+    
+    <topic>
+      3.1_ProjectConfiguration.htm
+    </topic>
+    
+    <topic>
+      3.2_QuickResults.htm
+    </topic>
+    
+    <topic>
+      3.3_CustomResults.htm
+    </topic>
+    
+    <topic>
+      3.4_DataAnalysis.htm
+    </topic>
+    
+    <topic>
+      4.0_Tutorial.htm
+    </topic>
+    
+    <topic>
+      4.1_AddingScenarios.htm
+    </topic>
+    
+    <topic>
+      4.2_ViewingResults.htm
+    </topic>
+    
+    <topic>
+      4.3_DataAnalysis.htm
+    </topic>
+    
+    <topic>
+      4.4_WRESLScript.htm
+    </topic>
+    
+    <topic>
+      4.5_QAQCReport.htm
+    </topic>
+    
+  </topiclist>
+  <filenamemap>
+    <filenameentry moniker="wh_languagetype">
+      <filename>
+        en_US
+      </filename>
+    </filenameentry>
+    <filenameentry moniker="startpage">
+      <filename>
+        coverpage.htm
+      </filename>
+    </filenameentry>
+        
+  </filenamemap>
+</ppfml>

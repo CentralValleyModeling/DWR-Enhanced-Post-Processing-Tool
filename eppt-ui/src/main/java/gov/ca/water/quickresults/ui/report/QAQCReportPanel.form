@@ -275,6 +275,45 @@
                     </constraints>
                     <properties/>
                   </component>
+                  <component id="b36d" class="javax.swing.JLabel">
+                    <constraints>
+                      <grid row="9" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+                      <gridbag top="5" left="5" bottom="5" right="5" weightx="0.0" weighty="0.0"/>
+                    </constraints>
+                    <properties>
+                      <text value="Common Period:"/>
+                    </properties>
+                  </component>
+                  <grid id="70dd5" layout-manager="FlowLayout" hgap="5" vgap="5" flow-align="0">
+                    <constraints>
+                      <grid row="9" column="1" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+                      <gridbag top="5" left="5" bottom="5" right="5" weightx="0.0" weighty="0.0"/>
+                    </constraints>
+                    <properties/>
+                    <border type="none"/>
+                    <children>
+                      <component id="d2201" class="rma.swing.RmaJDateTimeField" binding="_startDateChooser">
+                        <constraints/>
+                        <properties/>
+                      </component>
+                      <component id="164a5" class="javax.swing.JLabel">
+                        <constraints/>
+                        <properties>
+                          <text value="Start"/>
+                        </properties>
+                      </component>
+                      <component id="10c02" class="rma.swing.RmaJDateTimeField" binding="_endDateChooser">
+                        <constraints/>
+                        <properties/>
+                      </component>
+                      <component id="18d08" class="javax.swing.JLabel">
+                        <constraints/>
+                        <properties>
+                          <text value="End"/>
+                        </properties>
+                      </component>
+                    </children>
+                  </grid>
                 </children>
               </grid>
             </children>

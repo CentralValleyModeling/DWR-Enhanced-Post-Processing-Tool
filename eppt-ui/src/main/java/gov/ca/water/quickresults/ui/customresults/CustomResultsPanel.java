@@ -177,7 +177,7 @@ public class CustomResultsPanel extends EpptPanel
 	@Override
 	public String getJavaHelpId()
 	{
-		return "Custom Results";
+		return "3.3_CustomResults.htm";
 	}
 
 	/**

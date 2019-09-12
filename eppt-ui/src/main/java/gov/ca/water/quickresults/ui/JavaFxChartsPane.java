@@ -34,14 +34,14 @@ import sun.misc.BASE64Decoder;
  * @author <a href="mailto:adam@rmanet.com">Adam Korynta</a>
  * @since 05-22-2019
  */
-public class HighChartsPane extends BorderPane
+public class JavaFxChartsPane extends BorderPane
 {
-	private static final Logger LOGGER = Logger.getLogger(HighChartsPane.class.getName());
+	private static final Logger LOGGER = Logger.getLogger(JavaFxChartsPane.class.getName());
 	private final WebView _webView;
 	private final String _callbackScript;
 	private final Path _outputPath;
 
-	public HighChartsPane(Path path, String callbackScript)
+	public JavaFxChartsPane(Path path, String callbackScript)
 	{
 		_callbackScript = callbackScript;
 		_outputPath = null;
@@ -53,7 +53,7 @@ public class HighChartsPane extends BorderPane
 		load(path);
 	}
 
-	public HighChartsPane(Path path, String callbackScript, Path outputPath)
+	public JavaFxChartsPane(Path path, String callbackScript, Path outputPath)
 	{
 		_callbackScript = callbackScript;
 		_outputPath = outputPath;

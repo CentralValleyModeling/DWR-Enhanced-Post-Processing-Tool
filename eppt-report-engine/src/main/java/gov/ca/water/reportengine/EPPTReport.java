@@ -228,6 +228,8 @@ public class EPPTReport
 		Element rootElement = doc.createElement("qaqc-report");
 		rootElement.setAttribute("alternative-count", Integer.toString(_altRuns.size()));
 		rootElement.setAttribute("show-assumption-changes", Boolean.toString(canShowAssumptionChanges()));
+		rootElement.setAttribute("print-toc", Boolean.toString(_reportParameters.printToc()));
+		rootElement.setAttribute("print-title", Boolean.toString(_reportParameters.printCoverPage()));
 		doc.appendChild(rootElement);
 		return rootElement;
 	}

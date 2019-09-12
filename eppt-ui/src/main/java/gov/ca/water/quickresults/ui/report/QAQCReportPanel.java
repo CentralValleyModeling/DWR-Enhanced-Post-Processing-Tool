@@ -27,15 +27,15 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.Month;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.NavigableMap;
 import java.util.Objects;
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.Executor;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
@@ -63,6 +63,7 @@ import gov.ca.water.calgui.busservice.impl.WaterYearDefinitionSvc;
 import gov.ca.water.calgui.busservice.impl.WaterYearTableReader;
 import gov.ca.water.calgui.constant.EpptPreferences;
 import gov.ca.water.calgui.project.EpptScenarioRun;
+import gov.ca.water.calgui.scripts.DssReader;
 import gov.ca.water.calgui.wresl.ProcessOutputConsumer;
 import gov.ca.water.calgui.wresl.WreslScriptException;
 import gov.ca.water.calgui.wresl.WreslScriptRunner;
@@ -76,6 +77,7 @@ import gov.ca.water.reportengine.standardsummary.PercentDiffStyle;
 import gov.ca.water.reportengine.standardsummary.StandardSummaryReader;
 import gov.ca.water.reportengine.standardsummary.SummaryReportParameters;
 
+import rma.swing.RmaJDateTimeField;
 import rma.swing.RmaJDecimalField;
 import rma.swing.RmaJIntegerField;
 import rma.swing.RmaJPanel;
@@ -128,6 +130,8 @@ public class QAQCReportPanel extends RmaJPanel
 	private RmaJIntegerField _longTermStartYear;
 	private JPanel _summaryModulesPanel;
 	private JButton _cancelButton;
+	private RmaJDateTimeField _startDateChooser;
+	private RmaJDateTimeField _endDateChooser;
 	private EpptScenarioRun _baseRun;
 	private EpptScenarioRun _altRun;
 	private final Map<JCheckBox, String> _reportModules = new HashMap<>();
@@ -424,20 +428,31 @@ public class QAQCReportPanel extends RmaJPanel
 			WaterYearDefinition waterYearDefinition = (WaterYearDefinition) _waterYearDefinitionCombo.getSelectedItem();
 			WaterYearIndex waterYearIndex = (WaterYearIndex) _waterYearIndexCombo.getSelectedItem();
 			List<String> disabledSummaryModules = getDisabledSummaryModules();
-			CommonPeriodFilter commonPeriodFilter = new CommonPeriodFilter(LocalDateTime.of(1950, Month.JULY, 1, 0, 0),
-					LocalDateTime.of(1999, Month.JULY, 1, 0, 0));
+			Date startDate = _startDateChooser.getDate();
+			Date endDate = _endDateChooser.getDate();
+			CommonPeriodFilter commonPeriodFilter = new CommonPeriodFilter(LocalDateTime.ofInstant(startDate.toInstant(), ZoneId.systemDefault()),
+					LocalDateTime.ofInstant(endDate.toInstant(), ZoneId.systemDefault()));
 			SummaryReportParameters summaryReportParameters = new SummaryReportParameters(waterYearDefinition, waterYearIndex,
 					longTermRange, waterYearPeriodRanges, percentDiffStyle, disabledSummaryModules, commonPeriodFilter);
 			List<String> disabledReportModules = getDisabledReportModules();
 			ReportParameters reportParameters = new ReportParameters(tolerance, author, subtitle, summaryReportParameters,
-					disabledReportModules);
+					disabledReportModules, _coverPageCheckBox.isSelected(), _tableOfContentsCheckBox.isSelected());
 			qaqcReportGenerator.generateQAQCReport(_baseRun, _altRun, reportParameters,
 					pathToWriteOut);
 		}
 		catch(QAQCReportException | RuntimeException | EpptReportException e)
 		{
-			LOGGER.log(Level.SEVERE, "Unable to generate Report PDF", e);
-			appendErrorText("Error: " + e);
+			if(e.getCause() instanceof InterruptedException)
+			{
+				String msg = "Report generation interrupted";
+				LOGGER.log(Level.WARNING, msg, e);
+				appendErrorText(msg);
+			}
+			else
+			{
+				LOGGER.log(Level.SEVERE, "Unable to generate Report PDF", e);
+				appendErrorText("Error: " + e);
+			}
 		}
 		finally
 		{
@@ -728,18 +743,44 @@ public class QAQCReportPanel extends RmaJPanel
 		gbc.fill = GridBagConstraints.HORIZONTAL;
 		gbc.insets = new Insets(5, 5, 5, 5);
 		panel6.add(_longTermEndYear, gbc);
+		final JLabel label10 = new JLabel();
+		label10.setText("Common Period:");
+		gbc = new GridBagConstraints();
+		gbc.gridx = 0;
+		gbc.gridy = 9;
+		gbc.fill = GridBagConstraints.HORIZONTAL;
+		gbc.insets = new Insets(5, 5, 5, 5);
+		panel6.add(label10, gbc);
 		final JPanel panel10 = new JPanel();
-		panel10.setLayout(new BorderLayout(0, 0));
-		panel10.setPreferredSize(new Dimension(500, 200));
-		panel4.add(panel10, BorderLayout.CENTER);
-		panel10.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(), "QA/QC Report Controls"));
+		panel10.setLayout(new FlowLayout(FlowLayout.LEFT, 5, 5));
+		gbc = new GridBagConstraints();
+		gbc.gridx = 1;
+		gbc.gridy = 9;
+		gbc.fill = GridBagConstraints.BOTH;
+		gbc.insets = new Insets(5, 5, 5, 5);
+		panel6.add(panel10, gbc);
+		_startDateChooser = new RmaJDateTimeField();
+		panel10.add(_startDateChooser);
+		final JLabel label11 = new JLabel();
+		label11.setText("Start");
+		panel10.add(label11);
+		_endDateChooser = new RmaJDateTimeField();
+		panel10.add(_endDateChooser);
+		final JLabel label12 = new JLabel();
+		label12.setText("End");
+		panel10.add(label12);
 		final JPanel panel11 = new JPanel();
 		panel11.setLayout(new BorderLayout(0, 0));
-		panel11.setPreferredSize(new Dimension(300, 270));
-		panel10.add(panel11, BorderLayout.WEST);
+		panel11.setPreferredSize(new Dimension(500, 200));
+		panel4.add(panel11, BorderLayout.CENTER);
+		panel11.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(), "QA/QC Report Controls"));
 		final JPanel panel12 = new JPanel();
-		panel12.setLayout(new GridBagLayout());
-		panel11.add(panel12, BorderLayout.NORTH);
+		panel12.setLayout(new BorderLayout(0, 0));
+		panel12.setPreferredSize(new Dimension(300, 270));
+		panel11.add(panel12, BorderLayout.WEST);
+		final JPanel panel13 = new JPanel();
+		panel13.setLayout(new GridBagLayout());
+		panel12.add(panel13, BorderLayout.NORTH);
 		_excutiveSummaryCheckBox = new JCheckBox();
 		_excutiveSummaryCheckBox.setEnabled(true);
 		_excutiveSummaryCheckBox.setHorizontalAlignment(2);
@@ -751,7 +792,7 @@ public class QAQCReportPanel extends RmaJPanel
 		gbc.weightx = 0.5;
 		gbc.anchor = GridBagConstraints.NORTHWEST;
 		gbc.insets = new Insets(0, 5, 0, 5);
-		panel12.add(_excutiveSummaryCheckBox, gbc);
+		panel13.add(_excutiveSummaryCheckBox, gbc);
 		_assumptionChangesCheckBox = new JCheckBox();
 		_assumptionChangesCheckBox.setEnabled(true);
 		_assumptionChangesCheckBox.setHorizontalAlignment(2);
@@ -761,7 +802,7 @@ public class QAQCReportPanel extends RmaJPanel
 		gbc.gridy = 3;
 		gbc.anchor = GridBagConstraints.NORTHWEST;
 		gbc.insets = new Insets(0, 5, 0, 5);
-		panel12.add(_assumptionChangesCheckBox, gbc);
+		panel13.add(_assumptionChangesCheckBox, gbc);
 		_codeChangesCheckBox = new JCheckBox();
 		_codeChangesCheckBox.setEnabled(true);
 		_codeChangesCheckBox.setHorizontalAlignment(2);
@@ -771,7 +812,7 @@ public class QAQCReportPanel extends RmaJPanel
 		gbc.gridy = 4;
 		gbc.anchor = GridBagConstraints.NORTHWEST;
 		gbc.insets = new Insets(0, 5, 0, 5);
-		panel12.add(_codeChangesCheckBox, gbc);
+		panel13.add(_codeChangesCheckBox, gbc);
 		_detailedIssuesCheckBox = new JCheckBox();
 		_detailedIssuesCheckBox.setEnabled(true);
 		_detailedIssuesCheckBox.setHorizontalAlignment(2);
@@ -782,7 +823,7 @@ public class QAQCReportPanel extends RmaJPanel
 		gbc.gridy = 5;
 		gbc.anchor = GridBagConstraints.NORTHWEST;
 		gbc.insets = new Insets(0, 5, 0, 5);
-		panel12.add(_detailedIssuesCheckBox, gbc);
+		panel13.add(_detailedIssuesCheckBox, gbc);
 		_standardSummaryStatiticsCheckBox = new JCheckBox();
 		_standardSummaryStatiticsCheckBox.setEnabled(true);
 		_standardSummaryStatiticsCheckBox.setHorizontalAlignment(2);
@@ -793,7 +834,7 @@ public class QAQCReportPanel extends RmaJPanel
 		gbc.gridy = 6;
 		gbc.anchor = GridBagConstraints.NORTHWEST;
 		gbc.insets = new Insets(0, 5, 0, 5);
-		panel12.add(_standardSummaryStatiticsCheckBox, gbc);
+		panel13.add(_standardSummaryStatiticsCheckBox, gbc);
 		_coverPageCheckBox = new JCheckBox();
 		_coverPageCheckBox.setEnabled(true);
 		_coverPageCheckBox.setHorizontalAlignment(2);
@@ -804,7 +845,7 @@ public class QAQCReportPanel extends RmaJPanel
 		gbc.gridy = 0;
 		gbc.anchor = GridBagConstraints.NORTHWEST;
 		gbc.insets = new Insets(0, 5, 0, 5);
-		panel12.add(_coverPageCheckBox, gbc);
+		panel13.add(_coverPageCheckBox, gbc);
 		_tableOfContentsCheckBox = new JCheckBox();
 		_tableOfContentsCheckBox.setEnabled(true);
 		_tableOfContentsCheckBox.setHorizontalAlignment(2);
@@ -815,7 +856,7 @@ public class QAQCReportPanel extends RmaJPanel
 		gbc.gridy = 1;
 		gbc.anchor = GridBagConstraints.NORTHWEST;
 		gbc.insets = new Insets(0, 5, 0, 5);
-		panel12.add(_tableOfContentsCheckBox, gbc);
+		panel13.add(_tableOfContentsCheckBox, gbc);
 		_summaryModulesPanel = new JPanel();
 		_summaryModulesPanel.setLayout(new FlowLayout(FlowLayout.LEFT, 5, 5));
 		gbc = new GridBagConstraints();
@@ -823,33 +864,33 @@ public class QAQCReportPanel extends RmaJPanel
 		gbc.gridy = 7;
 		gbc.fill = GridBagConstraints.BOTH;
 		gbc.insets = new Insets(5, 25, 5, 5);
-		panel12.add(_summaryModulesPanel, gbc);
-		final JPanel panel13 = new JPanel();
-		panel13.setLayout(new BorderLayout(0, 0));
-		panel10.add(panel13, BorderLayout.CENTER);
+		panel13.add(_summaryModulesPanel, gbc);
 		final JPanel panel14 = new JPanel();
 		panel14.setLayout(new BorderLayout(0, 0));
-		panel14.setPreferredSize(new Dimension(350, 300));
-		panel13.add(panel14, BorderLayout.WEST);
+		panel11.add(panel14, BorderLayout.CENTER);
 		final JPanel panel15 = new JPanel();
-		panel15.setLayout(new GridBagLayout());
-		panel14.add(panel15, BorderLayout.NORTH);
-		final JLabel label10 = new JLabel();
-		label10.setText("Water Year Definition:");
+		panel15.setLayout(new BorderLayout(0, 0));
+		panel15.setPreferredSize(new Dimension(350, 300));
+		panel14.add(panel15, BorderLayout.WEST);
+		final JPanel panel16 = new JPanel();
+		panel16.setLayout(new GridBagLayout());
+		panel15.add(panel16, BorderLayout.NORTH);
+		final JLabel label13 = new JLabel();
+		label13.setText("Water Year Definition:");
 		gbc = new GridBagConstraints();
 		gbc.gridx = 0;
 		gbc.gridy = 0;
 		gbc.anchor = GridBagConstraints.WEST;
 		gbc.insets = new Insets(5, 5, 5, 5);
-		panel15.add(label10, gbc);
-		final JLabel label11 = new JLabel();
-		label11.setText("Water Year Index:");
+		panel16.add(label13, gbc);
+		final JLabel label14 = new JLabel();
+		label14.setText("Water Year Index:");
 		gbc = new GridBagConstraints();
 		gbc.gridx = 0;
 		gbc.gridy = 1;
 		gbc.anchor = GridBagConstraints.WEST;
 		gbc.insets = new Insets(5, 5, 5, 5);
-		panel15.add(label11, gbc);
+		panel16.add(label14, gbc);
 		_waterYearDefinitionCombo = new JComboBox();
 		_waterYearDefinitionCombo.setEnabled(true);
 		gbc = new GridBagConstraints();
@@ -859,7 +900,7 @@ public class QAQCReportPanel extends RmaJPanel
 		gbc.anchor = GridBagConstraints.WEST;
 		gbc.fill = GridBagConstraints.HORIZONTAL;
 		gbc.insets = new Insets(5, 5, 5, 5);
-		panel15.add(_waterYearDefinitionCombo, gbc);
+		panel16.add(_waterYearDefinitionCombo, gbc);
 		_waterYearIndexCombo = new JComboBox();
 		_waterYearIndexCombo.setEnabled(false);
 		gbc = new GridBagConstraints();
@@ -869,9 +910,9 @@ public class QAQCReportPanel extends RmaJPanel
 		gbc.anchor = GridBagConstraints.WEST;
 		gbc.fill = GridBagConstraints.HORIZONTAL;
 		gbc.insets = new Insets(5, 5, 5, 5);
-		panel15.add(_waterYearIndexCombo, gbc);
+		panel16.add(_waterYearIndexCombo, gbc);
 		_waterYearPeriodsPanel.setEnabled(true);
-		panel14.add(_waterYearPeriodsPanel, BorderLayout.CENTER);
+		panel15.add(_waterYearPeriodsPanel, BorderLayout.CENTER);
 		_tabbedPane1 = new JTabbedPane();
 		_panel1.add(_tabbedPane1, BorderLayout.CENTER);
 		final JScrollPane scrollPane1 = new JScrollPane();
@@ -948,6 +989,66 @@ public class QAQCReportPanel extends RmaJPanel
 		_tabbedPane1.setSelectedIndex(0);
 		updateCompareState();
 		updateEnabledState();
+		initializeCommonPeriod();
+	}
+
+	private void initializeCommonPeriod()
+	{
+		if(_baseRun == null)
+		{
+			_startDateChooser.setText("");
+			_endDateChooser.setText("");
+		}
+		else if(_altRun == null)
+		{
+			_startDateChooser.setDate(getStartDate(_baseRun));
+			_endDateChooser.setDate(getEndDate(_baseRun));
+		}
+		else
+		{
+			Date startDate = getStartDate(_baseRun);
+			Date endDate = getEndDate(_baseRun);
+			Date altStartDate = getStartDate(_altRun);
+			Date altEndDate = getEndDate(_altRun);
+			if(startDate.before(altStartDate))
+			{
+				startDate = altStartDate;
+			}
+			if(endDate.after(altEndDate))
+			{
+				endDate = altEndDate;
+			}
+			_startDateChooser.setDate(startDate);
+			_endDateChooser.setDate(endDate);
+		}
+	}
+
+	private Date getEndDate(EpptScenarioRun baseRun)
+	{
+		NavigableMap<LocalDateTime, Double> guiLinkData = new DssReader(baseRun).getGuiLinkData(102);
+		if(!guiLinkData.isEmpty())
+		{
+			LocalDateTime localDateTime = guiLinkData.lastKey();
+			return Date.from(localDateTime.atZone(ZoneId.systemDefault()).toInstant());
+		}
+		else
+		{
+			return new Date();
+		}
+	}
+
+	private Date getStartDate(EpptScenarioRun baseRun)
+	{
+		NavigableMap<LocalDateTime, Double> guiLinkData = new DssReader(baseRun).getGuiLinkData(102);
+		if(!guiLinkData.isEmpty())
+		{
+			LocalDateTime localDateTime = guiLinkData.firstKey();
+			return Date.from(localDateTime.atZone(ZoneId.systemDefault()).toInstant());
+		}
+		else
+		{
+			return new Date();
+		}
 	}
 
 	private void fillWaterYearIndex()

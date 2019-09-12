@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+  xmlns:image="http://www.google.com/schemas/sitemap-image/1.1"
+  xmlns:video="http://www.google.com/schemas/sitemap-video/1.1">
+
+  
+    <url>
+      <loc>1_Introduction.htm</loc>
+      <lastmod>2019-09-11</lastmod>
+      <changefreq></changefreq>
+    </url>
+  
+    <url>
+      <loc>2_MainMenuOptions.htm</loc>
+      <lastmod>2019-09-11</lastmod>
+      <changefreq></changefreq>
+    </url>
+  
+    <url>
+      <loc>3.0_Windows.htm</loc>
+      <lastmod>2019-09-11</lastmod>
+      <changefreq></changefreq>
+    </url>
+  
+    <url>
+      <loc>3.1_ProjectConfiguration.htm</loc>
+      <lastmod>2019-09-11</lastmod>
+      <changefreq></changefreq>
+    </url>
+  
+    <url>
+      <loc>3.2_QuickResults.htm</loc>
+      <lastmod>2019-09-11</lastmod>
+      <changefreq></changefreq>
+    </url>
+  
+    <url>
+      <loc>3.3_CustomResults.htm</loc>
+      <lastmod>2019-09-11</lastmod>
+      <changefreq></changefreq>
+    </url>
+  
+    <url>
+      <loc>3.4_DataAnalysis.htm</loc>
+      <lastmod>2019-09-11</lastmod>
+      <changefreq></changefreq>
+    </url>
+  
+    <url>
+      <loc>4.0_Tutorial.htm</loc>
+      <lastmod>2019-09-11</lastmod>
+      <changefreq></changefreq>
+    </url>
+  
+    <url>
+      <loc>4.1_AddingScenarios.htm</loc>
+      <lastmod>2019-09-11</lastmod>
+      <changefreq></changefreq>
+    </url>
+  
+    <url>
+      <loc>4.2_ViewingResults.htm</loc>
+      <lastmod>2019-09-11</lastmod>
+      <changefreq></changefreq>
+    </url>
+  
+    <url>
+      <loc>4.3_DataAnalysis.htm</loc>
+      <lastmod>2019-09-11</lastmod>
+      <changefreq></changefreq>
+    </url>
+  
+    <url>
+      <loc>4.4_WRESLScript.htm</loc>
+      <lastmod>2019-09-11</lastmod>
+      <changefreq></changefreq>
+    </url>
+  
+    <url>
+      <loc>4.5_QAQCReport.htm</loc>
+      <lastmod>2019-09-11</lastmod>
+      <changefreq></changefreq>
+    </url>
+  
+
+</urlset>
