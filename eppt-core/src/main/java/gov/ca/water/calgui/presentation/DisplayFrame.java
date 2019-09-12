@@ -259,7 +259,7 @@ class DisplayFrame
 								}
 								else
 								{
-									if(plotConfigurationState.getComparisonType() == PlotConfigurationState.ComparisonType.BASE)
+									if(plotConfigurationState.getComparisonType() == PlotConfigurationState.ComparisonType.DIFF)
 									{
 										cp2 = new ChartPanel1(
 												dssGrabber.getPlotTitle() + " - Difference from " + primaryResults[0].fileName,
