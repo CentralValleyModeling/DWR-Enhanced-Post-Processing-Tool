@@ -84,10 +84,12 @@ public class PlotlyMonthly extends PlotlyChart
 		{
 			EpptScenarioRun key = entry.getKey();
 			List<MonthlyData> value = entry.getValue();
-			JSONObject altTrace = buildPrimaryTrace(templateTrace, key, value);
+			JSONObject primaryTrace = buildPrimaryTrace(templateTrace, key, value);
+			dataArray.put(primaryTrace);
 			Optional<List<List<MonthlyData>>> thresholdsOpt = _thresholdData.keySet().stream()
 																			.filter(k -> Objects.equals(k.getName(), key.getName())).findAny()
 																			.map(_thresholdData::get);
+
 			if(thresholdsOpt.isPresent())
 			{
 				int index = 0;
@@ -96,7 +98,6 @@ public class PlotlyMonthly extends PlotlyChart
 					dataArray.put(buildThresholdTrace(templateTrace, key, thresholdData, index));
 					index++;
 				}
-				dataArray.put(altTrace);
 			}
 		}
 		return dataArray;
