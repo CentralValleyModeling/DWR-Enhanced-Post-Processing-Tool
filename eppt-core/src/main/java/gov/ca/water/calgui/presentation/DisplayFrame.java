@@ -16,6 +16,7 @@ import java.awt.BorderLayout;
 import java.awt.HeadlessException;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
@@ -43,6 +44,7 @@ import gov.ca.water.calgui.project.PlotConfigurationState;
 import gov.ca.water.calgui.techservice.IErrorHandlingSvc;
 import gov.ca.water.calgui.techservice.impl.ErrorHandlingSvcImpl;
 import org.apache.log4j.Logger;
+import vista.report.MonthlyReport;
 
 import hec.io.TimeSeriesContainer;
 
@@ -170,13 +172,16 @@ class DisplayFrame
 								List<String> exceedMonths = plotConfigurationState.getSelectedExceedancePlotMonths();
 								for(int m1 = 11; m1 >= 0; m1--)
 								{
-									if(excResults != null)
+									if(m1 < exceedMonths.size() && excResults != null)
 									{
-
-										insertTabForMonth(plotConfigurationState.getComparisonType() == PlotConfigurationState.ComparisonType.DIFF,
-												plotConfigurationState.getComparisonType() == PlotConfigurationState.ComparisonType.BASE, tabbedpane,
+										String monthName = exceedMonths.get(m1);
+										int index = Arrays.asList(MonthlyReport.months).indexOf(monthName.toUpperCase());
+										insertTabForMonth(
+												plotConfigurationState.getComparisonType() == PlotConfigurationState.ComparisonType.DIFF,
+												plotConfigurationState.getComparisonType() == PlotConfigurationState.ComparisonType.BASE,
+												tabbedpane,
 												primaryResults, excResults,
-												sexcResults, dexcResults, m1, exceedMonths.get(m1), dssGrabber.getPlotTitle(),
+												sexcResults, dexcResults, index, monthName, dssGrabber.getPlotTitle(),
 												dssGrabber.getYLabel(),
 												dssGrabber.getSLabel());
 									}

@@ -12,6 +12,7 @@
 
 package gov.ca.water.quickresults.ui.projectconfig.scenariotable;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
@@ -101,7 +102,14 @@ public class ScenarioTablePanel extends JFXPanel
 
 	public List<EpptScenarioRun> getAlternativeScenarioRuns()
 	{
-		return _scenarioTableModel.getAlternativeScenarioRuns();
+		if(_scenarioTableModel != null)
+		{
+			return _scenarioTableModel.getAlternativeScenarioRuns();
+		}
+		else
+		{
+			return new ArrayList<>();
+		}
 	}
 
 	public void deleteSelectedScenarioRun()

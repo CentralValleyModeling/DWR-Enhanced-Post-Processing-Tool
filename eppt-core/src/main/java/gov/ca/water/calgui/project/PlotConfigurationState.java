@@ -16,6 +16,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import vista.report.MonthlyReport;
+
 public class PlotConfigurationState
 {
 
@@ -167,10 +169,15 @@ public class PlotConfigurationState
 		List<String> selectedMonths = new ArrayList<>();
 		for(String name : _exceedancePlotComponents)
 		{
-			if(!"Annual Flow".equals(name) && "ALL".equals(name))
+			if(!"Annual Flow".equals(name) && !"ALL".equals(name))
 			{
 				selectedMonths.add(name);
 			}
+		}
+		if(_exceedancePlotComponents.contains("ALL"))
+		{
+			selectedMonths.clear();
+			selectedMonths.addAll(Arrays.asList(MonthlyReport.months));
 		}
 		return selectedMonths;
 	}
@@ -182,7 +189,7 @@ public class PlotConfigurationState
 
 	public boolean isDoExceedance()
 	{
-		return !getSelectedExceedancePlotMonths().isEmpty() && !isAnnualFlowExceedancePlots() && !isPlotAllExceedancePlots();
+		return !getSelectedExceedancePlotMonths().isEmpty() || isAnnualFlowExceedancePlots() || isPlotAllExceedancePlots();
 	}
 
 	public enum ComparisonType
