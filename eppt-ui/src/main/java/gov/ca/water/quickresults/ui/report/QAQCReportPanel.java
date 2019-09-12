@@ -944,6 +944,7 @@ public class QAQCReportPanel extends RmaJPanel
 		Path reportPath = currentProject.resolve("Reports").resolve(
 				ProjectConfigurationPanel.getProjectConfigurationPanel().getProjectName() + ".pdf");
 		_pdfOutput.setText(reportPath.toString());
+		_tabbedPane1.setTitleAt(0, reportPath.getFileName().toString() + " QA/QC");
 		_tabbedPane1.setSelectedIndex(0);
 		updateCompareState();
 		updateEnabledState();
