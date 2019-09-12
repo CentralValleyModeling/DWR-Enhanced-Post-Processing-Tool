@@ -120,7 +120,7 @@ public class CodeChangesDataProcessor
 
 	private void loadCodeChangesCSV(Path csvPath) throws EpptReportException
 	{
-		LOGGER.at(Level.INFO).log("Loading Code Changes configurationg from: %s", csvPath);
+		LOGGER.at(Level.INFO).log("Loading Code Changes configuration from: %s", csvPath);
 
 		String line = "";
 		String csvSplitBy = ",";

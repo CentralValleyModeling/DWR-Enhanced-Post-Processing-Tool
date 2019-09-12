@@ -114,22 +114,21 @@ class PercentDiffTableBuilder extends BaseAltDiffTableBuilder
 			Double altValue = createJythonValueGenerator(filter, alternative, v.getFunction()).generateValue();
 			if(baseValue == null)
 			{
-				LOGGER.log(Level.WARNING, "Unable to generate diff value for: {0} value is null for scenario: {1}", new Object[]{v, base.getName()});
+				LOGGER.log(Level.WARNING, "Unable to generate diff value for: " + v + " value is null for scenario: " + base.getName());
 			}
 			else if(altValue == null)
 			{
-				LOGGER.log(Level.WARNING, "Unable to generate diff value for: {0} value is null for scenario: {1}",
-						new Object[]{v, alternative.getName()});
+				LOGGER.log(Level.WARNING, "Unable to generate diff value for: " + v + " value is null for scenario: " + alternative.getName());
 			}
 			else if(!RMAConst.isValidValue(baseValue))
 			{
-				LOGGER.log(Level.WARNING, "Unable to generate diff value for: {0} value is invalid ({1}) for scenario: {2}",
-						new Object[]{v, baseValue, base.getName()});
+				LOGGER.log(Level.WARNING,
+						"Unable to generate diff value for: " + v + " value is invalid (" + baseValue + ") for scenario: " + base.getName());
 			}
 			else if(!RMAConst.isValidValue(altValue))
 			{
-				LOGGER.log(Level.WARNING, "Unable to generate diff value for: {0} value is invalid ({1}) for scenario: {2}",
-						new Object[]{v, baseValue, alternative.getName()});
+				LOGGER.log(Level.WARNING,
+						"Unable to generate diff value for: " + v + " value is invalid (" + baseValue + ") for scenario: " + alternative.getName());
 			}
 			else
 			{
@@ -144,7 +143,7 @@ class PercentDiffTableBuilder extends BaseAltDiffTableBuilder
 		}
 		catch(EpptReportException e)
 		{
-			LOGGER.log(Level.SEVERE, "Error executing jython script: " + e);
+			LOGGER.log(Level.SEVERE, "Error executing jython script: " + e, e);
 		}
 		return retval;
 	}

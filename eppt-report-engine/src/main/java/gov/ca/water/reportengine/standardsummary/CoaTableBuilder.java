@@ -145,22 +145,19 @@ class CoaTableBuilder extends TableBuilder
 			Object altValue = createJythonValueGenerator(alternative, v.getFunction()).generateObjectValue();
 			if(baseValue == null)
 			{
-				LOGGER.log(Level.WARNING, "Unable to generate diff value for: {0} value is null for scenario: {1}", new Object[]{v, base.getName()});
+				LOGGER.log(Level.WARNING, "Unable to generate diff value for: " + v + " value is null for scenario: " + base.getName());
 			}
 			else if(altValue == null)
 			{
-				LOGGER.log(Level.WARNING, "Unable to generate diff value for: {0} value is null for scenario: {1}",
-						new Object[]{v, alternative.getName()});
+				LOGGER.log(Level.WARNING, "Unable to generate diff value for: " + v + " value is null for scenario: " + alternative.getName());
 			}
 			else if(baseValue instanceof Double && !RMAConst.isValidValue((Double) baseValue))
 			{
-				LOGGER.log(Level.WARNING, "Unable to generate diff value for: {0} value is invalid ({1}) for scenario: {2}",
-						new Object[]{v, baseValue, base.getName()});
+				LOGGER.log(Level.WARNING, "Unable to generate diff value for: " + v + " value is invalid (" + baseValue + ") for scenario: " + base.getName());
 			}
 			else if(altValue instanceof Double && !RMAConst.isValidValue((Double) altValue))
 			{
-				LOGGER.log(Level.WARNING, "Unable to generate diff value for: {0} value is invalid ({1}) for scenario: {2}",
-						new Object[]{v, baseValue, alternative.getName()});
+				LOGGER.log(Level.WARNING, "Unable to generate diff value for: " + v + " value is invalid (" + baseValue + ") for scenario: " + alternative.getName());
 			}
 			else if(baseValue instanceof Double && altValue instanceof Double)
 			{
@@ -186,13 +183,11 @@ class CoaTableBuilder extends TableBuilder
 
 			if(value == null)
 			{
-				LOGGER.log(Level.WARNING, "Unable to generate scenario value for: {0} value is null for scenario: {1}",
-						new Object[]{v, scenarioRun.getName()});
+				LOGGER.log(Level.WARNING, "Unable to generate scenario value for: " + v + " value is null for scenario: " + scenarioRun.getName());
 			}
 			else if(value instanceof Double && !RMAConst.isValidValue((Double) value))
 			{
-				LOGGER.log(Level.WARNING, "Unable to generate scenario value for: {0} value is invalid ({1}) for scenario: {2}",
-						new Object[]{v, value, scenarioRun.getName()});
+				LOGGER.log(Level.WARNING, "Unable to generate scenario value for: " + v + " value is invalid (" + value + ") for scenario: " + scenarioRun.getName());
 			}
 			else
 			{

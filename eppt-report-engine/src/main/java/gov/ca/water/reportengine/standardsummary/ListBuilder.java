@@ -79,8 +79,7 @@ class ListBuilder extends TableBuilder
 
 			if(value == null)
 			{
-				LOGGER.log(Level.WARNING, "Unable to generate scenario value for: {0} value is null for scenario: {1}",
-						new Object[]{v, scenarioRun.getName()});
+				LOGGER.log(Level.WARNING, "Unable to generate scenario value for: " + v + " value is null for scenario: " + scenarioRun.getName());
 			}
 			else if(value instanceof List)
 			{
