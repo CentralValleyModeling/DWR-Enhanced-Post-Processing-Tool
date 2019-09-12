@@ -180,11 +180,11 @@ public class QAQCReportPanel extends RmaJPanel
 		_summaryModules.forEach(_summaryModulesPanel::add);
 		_tabbedPane1.addChangeListener(this::tabChanged);
 		_cancelButton.addActionListener(this::cancelRunningTask);
-		_standardSummaryStatiticsCheckBox.addActionListener(e->
+		_standardSummaryStatiticsCheckBox.addActionListener(e ->
 		{
 			if(!_standardSummaryStatiticsCheckBox.isSelected())
 			{
-				_summaryModules.forEach(c->c.setSelected(false));
+				_summaryModules.forEach(c -> c.setSelected(false));
 			}
 		});
 	}
@@ -393,6 +393,9 @@ public class QAQCReportPanel extends RmaJPanel
 	private void generateReport()
 	{
 		_qaqcTextPane.setText("");
+		Path lastProjectConfiguration = EpptPreferences.getLastProjectConfiguration();
+		Path jrXmlPath = lastProjectConfiguration.getParent().resolve("Reports").resolve("QAQC_Report.jrxml");
+		boolean jrXmlExists = jrXmlPath.toFile().exists();
 		if(_baseRun != null)
 		{
 			boolean exists = Paths.get(_pdfOutput.getText()).toFile().exists();
@@ -402,12 +405,14 @@ public class QAQCReportPanel extends RmaJPanel
 						"Warning", JOptionPane.YES_NO_OPTION);
 				if(warning == JOptionPane.YES_OPTION)
 				{
-					_qaqcReportFuture = _executor.submit(this::generateQAQCReport);
+					boolean forceCopy = checkForceCopyJrXml(jrXmlPath, jrXmlExists);
+					_qaqcReportFuture = _executor.submit(() -> generateQAQCReport(forceCopy));
 				}
 			}
 			else
 			{
-				_qaqcReportFuture = _executor.submit(this::generateQAQCReport);
+				boolean forceCopy = checkForceCopyJrXml(jrXmlPath, jrXmlExists);
+				_qaqcReportFuture = _executor.submit(() -> generateQAQCReport(forceCopy));
 			}
 		}
 		else
@@ -416,7 +421,22 @@ public class QAQCReportPanel extends RmaJPanel
 		}
 	}
 
-	private void generateQAQCReport()
+	private boolean checkForceCopyJrXml(Path jrXmlPath, boolean jrXmlExists)
+	{
+		boolean forceCopy = false;
+		if(jrXmlExists)
+		{
+			int replaceReponse = JOptionPane.showConfirmDialog(this, "Jasper report files exist: " + jrXmlPath + "\n Do you wish to overwrite?",
+					"Warning", JOptionPane.YES_NO_OPTION);
+			if(replaceReponse == JOptionPane.YES_OPTION)
+			{
+				forceCopy = true;
+			}
+		}
+		return forceCopy;
+	}
+
+	private void generateQAQCReport(boolean forceCopyJrxml)
 	{
 		try
 		{
@@ -445,7 +465,7 @@ public class QAQCReportPanel extends RmaJPanel
 			ReportParameters reportParameters = new ReportParameters(tolerance, author, subtitle, summaryReportParameters,
 					disabledReportModules, _coverPageCheckBox.isSelected(), _tableOfContentsCheckBox.isSelected());
 			qaqcReportGenerator.generateQAQCReport(_baseRun, _altRun, reportParameters,
-					pathToWriteOut);
+					pathToWriteOut, forceCopyJrxml);
 		}
 		catch(QAQCReportException | RuntimeException | EpptReportException e)
 		{

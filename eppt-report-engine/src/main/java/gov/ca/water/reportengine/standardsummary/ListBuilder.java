@@ -13,6 +13,7 @@
 package gov.ca.water.reportengine.standardsummary;
 
 import java.util.List;
+import java.util.function.Function;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -21,6 +22,8 @@ import gov.ca.water.calgui.project.EpptScenarioRun;
 import gov.ca.water.reportengine.EpptReportException;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 
 /**
  * Company: Resource Management Associates
@@ -50,20 +53,26 @@ class ListBuilder extends TableBuilder
 		List<ChartComponent> componentsForTitle = epptChart.getChartComponents();
 		Element titleElement = buildTitle(BASE_NAME, componentsForTitle, v -> buildValueForChart(getBase(), v));
 		titleElement.setAttribute(TITLE_ORDER_ATTRIBUTE, String.valueOf(i));
-		retval.appendChild(titleElement);
+		if(titleElement.getChildNodes().getLength() > 0)
+		{
+			retval.appendChild(titleElement);
+		}
 		i++;
 		for(EpptScenarioRun scenarioRun : getAlternatives())
 		{
 			Element altTitle = buildTitle(ALT_NAME, componentsForTitle, v -> buildValueForChart(scenarioRun, v));
 			altTitle.setAttribute(TITLE_ORDER_ATTRIBUTE, String.valueOf(i));
-			retval.appendChild(altTitle);
+			if(altTitle.getChildNodes().getLength() > 0)
+			{
+				retval.appendChild(altTitle);
+			}
 			i++;
 		}
 	}
 
 	private Element buildValueForChart(EpptScenarioRun scenarioRun, ChartComponent v)
 	{
-		Element retval = getDocument().createElement(VALUE_ELEMENT);
+		Element retval = getDocument().createElement("placeholder");
 		try
 		{
 			Object value = createJythonValueGenerator(scenarioRun, v.getFunction(), getReportParameters().getWaterYearIndex()).generateObjectValue();
@@ -73,10 +82,16 @@ class ListBuilder extends TableBuilder
 				LOGGER.log(Level.WARNING, "Unable to generate scenario value for: {0} value is null for scenario: {1}",
 						new Object[]{v, scenarioRun.getName()});
 			}
-			else
+			else if(value instanceof List)
 			{
-				String textRaw = String.valueOf(value);
-				retval.setTextContent(textRaw);
+				List rows = (List) value;
+				for(Object row : rows)
+				{
+					Element valueElem = getDocument().createElement(VALUE_ELEMENT);
+					String textRaw = String.valueOf(row);
+					valueElem.setTextContent(textRaw);
+					retval.appendChild(valueElem);
+				}
 			}
 		}
 		catch(EpptReportException e)
@@ -84,5 +99,34 @@ class ListBuilder extends TableBuilder
 			LOGGER.log(Level.SEVERE, "Error running jython script", e);
 		}
 		return retval;
+	}
+
+	@Override
+	Element buildComponent(ChartComponent component, Function<ChartComponent, Element> valueFunction)
+	{
+		Element retval = getDocument().createElement(COMPONENT_ELEMENT);
+		retval.setAttribute(COMPONENT_NAME_ATTRIBUTE, component.getComponent());
+		buildRowLabel(component.getComponent(), retval);
+		buildValue(retval, component, valueFunction);
+		return retval;
+	}
+
+	@Override
+	void buildValue(Element componentElement, ChartComponent e, Function<ChartComponent, Element> valueFunction)
+	{
+		Element apply = valueFunction.apply(e);
+		if(apply != null)
+		{
+			NodeList childNodes = apply.getChildNodes();
+			for(int i = 0; i < childNodes.getLength(); i++)
+			{
+				Node item = childNodes.item(i);
+				if(item instanceof Element)
+				{
+					((Element) item).setAttribute(VALUE_ORDER_ATTRIBUTE, String.valueOf(i));
+					componentElement.appendChild(item);
+				}
+			}
+		}
 	}
 }

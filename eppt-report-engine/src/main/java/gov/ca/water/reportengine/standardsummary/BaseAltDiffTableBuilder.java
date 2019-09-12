@@ -245,13 +245,11 @@ class BaseAltDiffTableBuilder extends TableBuilder
 
 			if(value == null)
 			{
-				LOGGER.log(Level.WARNING, "Unable to generate scenario value for: {0} value is null for scenario: {1}",
-						new Object[]{v, scenarioRun.getName()});
+				LOGGER.log(Level.WARNING, "Unable to generate scenario value for: " + v + " value is null for scenario: " + scenarioRun.getName());
 			}
 			else if(!RMAConst.isValidValue(value))
 			{
-				LOGGER.log(Level.WARNING, "Unable to generate scenario value for: {0} value is invalid ({1}) for scenario: {2}",
-						new Object[]{v, value, scenarioRun.getName()});
+				LOGGER.log(Level.WARNING, "Unable to generate scenario value for: " + v + " value is invalid (" + value + ") for scenario: " + scenarioRun.getName());
 			}
 			else
 			{

@@ -65,6 +65,7 @@ abstract class StandardSummaryChartBuilder
 	static final String COMPONENT_NAME_ATTRIBUTE = "component-name";
 	static final String ROW_LABEL_ELEMENT = "row-label";
 	static final String VALUE_ELEMENT = "value";
+	static final String VALUE_ORDER_ATTRIBUTE = "value-order";
 	static final String VALUE_FULL_TEXT_ATTRIBUTE = "value-full-text";
 	static final String VALUE_PERCENT_TEXT_ATTRIBUTE = "value-percent-text";
 	static final String COMPARISON_ELEMENT = "less-than-greater-than-equal-to";

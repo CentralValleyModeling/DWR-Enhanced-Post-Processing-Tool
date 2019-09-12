@@ -45,20 +45,20 @@ class QAQCReportGenerator
 		_consumer = consumer;
 	}
 
-	void generateQAQCReport(EpptScenarioRun baseRun, EpptScenarioRun altRun, ReportParameters reportParameters, Path outputPdf)
+	void generateQAQCReport(EpptScenarioRun baseRun, EpptScenarioRun altRun, ReportParameters reportParameters, Path outputPdf, boolean forceCopyJrxml)
 			throws QAQCReportException
 	{
-		Path path = writeReportData(baseRun, altRun, reportParameters);
+		Path path = writeReportData(baseRun, altRun, reportParameters, forceCopyJrxml);
 		QAQCProcessRunner processRunner = new QAQCProcessRunner(outputPdf, path, _consumer);
 		processRunner.run();
 	}
 
-	private Path writeReportData(EpptScenarioRun baseRun, EpptScenarioRun altRun, ReportParameters reportParameters)
+	private Path writeReportData(EpptScenarioRun baseRun, EpptScenarioRun altRun, ReportParameters reportParameters, boolean forceCopyJrxml)
 			throws QAQCReportException
 	{
 		try
 		{
-			Path pathToWriteOut = copyJasperPaths();
+			Path pathToWriteOut = copyJasperPaths(forceCopyJrxml);
 			List<EpptScenarioRun> altRuns = Collections.emptyList();
 			if(altRun != null)
 			{
@@ -79,12 +79,14 @@ class QAQCReportGenerator
 		}
 	}
 
-	private Path copyJasperPaths() throws IOException
+	private Path copyJasperPaths(boolean forceCopyJrxml) throws IOException
 	{
 		String jasperDir = Constant.JASPER_DIR;
 		Path lastProjectConfiguration = EpptPreferences.getLastProjectConfiguration();
 		Path reports = lastProjectConfiguration.getParent().resolve("Reports");
-		if(!reports.toFile().exists() || !reports.resolve("QAQC_Report.jrxml").toFile().exists())
+		if(!reports.toFile().exists() ||
+				!reports.resolve("QAQC_Report.jrxml").toFile().exists() ||
+				forceCopyJrxml)
 		{
 			copyFolder(Paths.get(jasperDir), reports);
 		}
@@ -111,7 +113,10 @@ class QAQCReportGenerator
 					throw new IOException("Unable to create directory for: " + dest);
 				}
 			}
-			Files.copy(source, dest, REPLACE_EXISTING);
+			if(source.toFile().isFile())
+			{
+				Files.copy(source, dest, REPLACE_EXISTING);
+			}
 		}
 		catch(IOException e)
 		{

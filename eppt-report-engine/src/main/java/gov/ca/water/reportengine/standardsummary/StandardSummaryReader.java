@@ -86,7 +86,7 @@ public class StandardSummaryReader
 					.collect(groupingBy(line -> line[CHART_ID_INDEX], mapping(line -> line,
 							collectingAndThen(toList(), this::linesToChart))));
 		}
-		catch(IOException | RuntimeException ex)
+		catch(Throwable ex)
 		{
 			throw new EpptReportException("Error processing Standard Summary Statistics configuration file: " + _csvPath, ex);
 		}

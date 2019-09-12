@@ -51,7 +51,7 @@ public class JythonScriptRunner
 		{
 			initializeScriptDirectory();
 		}
-		catch(ScriptException e)
+		catch(Throwable e)
 		{
 			LOGGER.atSevere().withCause(e).log("Unable to initialize utility scripts");
 		}

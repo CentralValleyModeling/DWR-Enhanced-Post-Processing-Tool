@@ -132,8 +132,7 @@ public class WaterYearPeriodsPanel extends JFXPanel
 				totalSelectedProperty.set(Math.max(0, totalSelectedProperty.getValue() - 1));
 			}
 		});
-		totalSelectedProperty.addListener(
-				(e, o, n) -> waterYearPeriodRangeRow.disabledProperty().setValue(!retval.isSelected() && n.intValue() >= MAX_PERIODS));
+		totalSelectedProperty.addListener((e, o, n) -> waterYearPeriodRangeRow.disabledProperty().setValue(!retval.isSelected() && n.intValue() >= MAX_PERIODS));
 		return retval;
 	}
 
@@ -173,21 +172,27 @@ public class WaterYearPeriodsPanel extends JFXPanel
 		Map<WaterYearPeriod, List<WaterYearPeriodRange>> retval = new HashMap<>();
 		for(TreeItem<WaterYearPeriodDefinitionsRow> treeItem : _treeView.getRoot().getChildren())
 		{
-			WaterYearPeriodDefinitionsRow parentValue = treeItem.getValue();
-			if(parentValue instanceof WaterYearPeriodRow)
+			if(treeItem instanceof CheckBoxTreeItem && ((CheckBoxTreeItem<WaterYearPeriodDefinitionsRow>) treeItem).isSelected())
 			{
-				List<WaterYearPeriodRange> ranges = new ArrayList<>();
-				for(TreeItem<WaterYearPeriodDefinitionsRow> child : treeItem.getChildren())
+				WaterYearPeriodDefinitionsRow parentValue = treeItem.getValue();
+				if(parentValue instanceof WaterYearPeriodRow)
 				{
-					WaterYearPeriodDefinitionsRow childValue = child.getValue();
-					if(childValue instanceof WaterYearPeriodRangeRow)
+					List<WaterYearPeriodRange> ranges = new ArrayList<>();
+					for(TreeItem<WaterYearPeriodDefinitionsRow> child : treeItem.getChildren())
 					{
-						ranges.add(((WaterYearPeriodRangeRow) childValue)._range);
+						if(child instanceof CheckBoxTreeItem && ((CheckBoxTreeItem<WaterYearPeriodDefinitionsRow>) child).isSelected())
+						{
+							WaterYearPeriodDefinitionsRow childValue = child.getValue();
+							if(childValue instanceof WaterYearPeriodRangeRow)
+							{
+								ranges.add(((WaterYearPeriodRangeRow) childValue)._range);
+							}
+						}
 					}
-				}
-				if(!ranges.isEmpty())
-				{
-					retval.put(((WaterYearPeriodRow)parentValue)._period, ranges);
+					if(!ranges.isEmpty())
+					{
+						retval.put(((WaterYearPeriodRow) parentValue)._period, ranges);
+					}
 				}
 			}
 		}

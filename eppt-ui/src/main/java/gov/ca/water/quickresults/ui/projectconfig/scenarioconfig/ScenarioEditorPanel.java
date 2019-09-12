@@ -27,6 +27,8 @@ import java.nio.file.Paths;
 import java.util.Date;
 import java.util.Objects;
 import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import javax.swing.event.ChangeEvent;
@@ -56,6 +58,7 @@ import rma.swing.table.RmaCellEditor;
 public class ScenarioEditorPanel
 {
 	private static JFileChooser fileChooser;
+	private static final Logger LOGGER = Logger.getLogger(ScenarioEditorPanel.class.getName());
 	private final ScenarioDssTableModel _scenarioDssTableModel;
 	private JPanel _panel1;
 	private JTable _dssTable;
@@ -101,6 +104,13 @@ public class ScenarioEditorPanel
 		_modelCombobox.addActionListener(e -> modelComboChanged());
 		_waterYearTable.setText(Paths.get(Constant.WRESL_DIR).resolve("CalLite").resolve(Constant.WY_TYPES_TABLE).toString());
 		_wreslTextField.setText(Paths.get(Constant.WRESL_DIR).resolve("CalLite").resolve(Constant.WRESL_MAIN).toString());
+		Color plotlyDefaultColor = Constant.getPlotlyDefaultColor(0);
+		String hex = Constant.colorToHex(plotlyDefaultColor);
+		_colorHexTextField.setText(hex);
+
+		java.awt.Color decode = java.awt.Color.decode(hex.substring(0, 7));
+		decode = new java.awt.Color(decode.getRed(), decode.getGreen(), decode.getBlue(), Integer.parseInt(hex.substring(7, 9), 16));
+		_colorChooserButton.setColor(decode);
 	}
 
 	private void modelComboChanged()
@@ -463,9 +473,19 @@ public class ScenarioEditorPanel
 		Path wreslMain = Paths.get(_wreslTextField.getText());
 		EpptDssContainer dssContainer = createDssContainer(name);
 		Path waterYearTablePath = Paths.get(_waterYearTable.getText());
+		Color web;
 		String text = _colorHexTextField.getText();
+		try
+		{
+			web = Color.web(text);
+		}
+		catch(IllegalArgumentException ex)
+		{
+			LOGGER.log(Level.SEVERE, "Invalid hex color: " + text, ex);
+			web = Constant.getPlotlyDefaultColor(0);
+		}
 		return new EpptScenarioRun(name, description, model, outputPath, wreslMain, waterYearTablePath,
-				dssContainer, Color.web(text));
+				dssContainer, web);
 	}
 
 	void fillPanel(EpptScenarioRun scenarioRun)

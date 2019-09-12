@@ -165,19 +165,23 @@ abstract class TableBuilder extends StandardSummaryChartBuilder
 							   .ifPresent(e -> buildValue(componentPlaceholder, e, valueFunction));
 	}
 
-	private void buildValue(Element componentElement, ChartComponent e, Function<ChartComponent, Element> valueFunction)
+	void buildValue(Element componentElement, ChartComponent e, Function<ChartComponent, Element> valueFunction)
 	{
-		componentElement.appendChild(valueFunction.apply(e));
+		Element apply = valueFunction.apply(e);
+		if(apply != null)
+		{
+			componentElement.appendChild(apply);
+		}
 	}
 
-	private void buildRowLabel(String text, Element retval)
+	void buildRowLabel(String text, Element retval)
 	{
 		Element rowLabel = getDocument().createElement(ROW_LABEL_ELEMENT);
 		retval.appendChild(rowLabel);
 		rowLabel.setTextContent(text);
 	}
 
-	private Element buildComponent(ChartComponent component, Function<ChartComponent, Element> valueFunction)
+	Element buildComponent(ChartComponent component, Function<ChartComponent, Element> valueFunction)
 	{
 		Element retval = getDocument().createElement(COMPONENT_ELEMENT);
 		retval.setAttribute(COMPONENT_NAME_ATTRIBUTE, component.getComponent());

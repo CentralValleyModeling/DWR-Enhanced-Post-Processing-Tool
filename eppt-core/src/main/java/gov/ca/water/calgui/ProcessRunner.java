@@ -63,7 +63,7 @@ public abstract class ProcessRunner
 			}
 
 
-			String[] args = new String[]{path, "-Xmx3000m -Xss1280K", javaLibraryPath, getMain().getName()};
+			String[] args = new String[]{path, "-Xmx4000m -Xss1280K", javaLibraryPath, getMain().getName()};
 			String commandLine = String.join(" ", args);
 			commandLine += " " + String.join(" ", getExtraArgs());
 			Path outputBat = Paths.get("output" + new Date().getTime() + ".bat");
@@ -94,6 +94,13 @@ public abstract class ProcessRunner
 		catch(Exception ex)
 		{
 			LOGGER.log(Level.SEVERE, "Error running external process", ex);
+			if(process != null)
+			{
+				process.destroyForcibly();
+			}
+		}
+		finally
+		{
 			if(process != null)
 			{
 				process.destroyForcibly();
