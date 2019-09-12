@@ -480,16 +480,16 @@ public class ScenarioEditorPanel
 		_waterYearTable.setText(scenarioRun.getWaterYearTable().toString());
 		String hex = Constant.colorToHex(scenarioRun.getColor());
 		_colorHexTextField.setText(hex);
-		try
-		{
-			_colorChooserButton.setColor(java.awt.Color.decode(hex));
-		}
-		catch(NumberFormatException ex)
-		{
+//		try
+//		{
+//			_colorChooserButton.setColor(java.awt.Color.decode(hex));
+//		}
+//		catch(NumberFormatException ex)
+//		{
 			java.awt.Color decode = java.awt.Color.decode(hex.substring(0, 7));
 			decode = new java.awt.Color(decode.getRed(), decode.getGreen(), decode.getBlue(), Integer.parseInt(hex.substring(7, 9), 16));
 			_colorChooserButton.setColor(decode);
-		}
+//		}
 	}
 
 	void shutdown()

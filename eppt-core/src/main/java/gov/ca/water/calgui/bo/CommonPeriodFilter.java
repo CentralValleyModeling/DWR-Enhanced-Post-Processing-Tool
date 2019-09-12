@@ -41,4 +41,14 @@ public class CommonPeriodFilter implements PeriodFilter
 		return (e.getKey().isEqual(_start) || e.getKey().isAfter(_start)) &&
 				(e.getKey().isEqual(_end) || e.getKey().isBefore(_end));
 	}
+
+	public LocalDateTime getStart()
+	{
+		return _start;
+	}
+
+	public LocalDateTime getEnd()
+	{
+		return _end;
+	}
 }

@@ -16,6 +16,7 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import gov.ca.water.calgui.bo.WaterYearPeriod;
 import gov.ca.water.calgui.project.EpptScenarioRun;
 import gov.ca.water.reportengine.EpptReportException;
 import org.w3c.dom.Document;
@@ -65,7 +66,7 @@ class ListBuilder extends TableBuilder
 		Element retval = getDocument().createElement(VALUE_ELEMENT);
 		try
 		{
-			Object value = createJythonValueGenerator(scenarioRun, v.getFunction()).generateObjectValue();
+			Object value = createJythonValueGenerator(scenarioRun, v.getFunction(), getReportParameters().getWaterYearIndex()).generateObjectValue();
 
 			if(value == null)
 			{

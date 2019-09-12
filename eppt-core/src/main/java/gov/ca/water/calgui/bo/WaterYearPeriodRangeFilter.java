@@ -49,4 +49,9 @@ public class WaterYearPeriodRangeFilter implements PeriodFilter
 		return inputYearMonth.equals(start) || inputYearMonth.equals(end)
 				 || (start.isBefore(inputYearMonth) && end.isAfter(inputYearMonth));
 	}
+
+	public WaterYearPeriodRange getWaterYearPeriodRange()
+	{
+		return _waterYearPeriodRange;
+	}
 }

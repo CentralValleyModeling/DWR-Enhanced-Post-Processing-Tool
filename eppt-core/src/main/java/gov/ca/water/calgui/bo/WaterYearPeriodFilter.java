@@ -49,4 +49,14 @@ public class WaterYearPeriodFilter implements PeriodFilter
 											.collect(toSet());
 		return years.contains(input.getKey().getYear());
 	}
+
+	public WaterYearIndex getWaterYearIndex()
+	{
+		return _waterYearIndex;
+	}
+
+	public WaterYearPeriod getWaterYearPeriod()
+	{
+		return _waterYearPeriod;
+	}
 }

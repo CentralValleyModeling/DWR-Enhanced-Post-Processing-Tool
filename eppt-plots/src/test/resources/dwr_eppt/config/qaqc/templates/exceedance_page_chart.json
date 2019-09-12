@@ -35,8 +35,8 @@
     "font": {
       "color": "black"
     },
-    "width": 1200,
-    "height": 900,
+    "width": 648,
+    "height": 504,
     "xaxis": {
       "tickformat": ",.0%",
       "title": {

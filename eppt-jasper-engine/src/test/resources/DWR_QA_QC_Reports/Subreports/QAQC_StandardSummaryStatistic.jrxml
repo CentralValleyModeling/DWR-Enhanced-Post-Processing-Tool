@@ -1,9 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Created with Jaspersoft Studio version 6.2.2.final using JasperReports Library version 6.2.2  -->
-<!-- 2019-05-10T08:20:03 -->
+<!-- Created with Jaspersoft Studio version 6.8.0.final using JasperReports Library version 6.8.0-2ed8dfabb690ff337a5797129f2cd92902b0c87b  -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="QAQC_StandardSummaryStatistic" language="groovy" pageWidth="612" pageHeight="792" columnWidth="504" leftMargin="54" rightMargin="54" topMargin="54" bottomMargin="54" uuid="fdf29854-1cab-4c3d-99e9-a38b49852a26">
 	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
-	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="QAQC_Datasource"/>
+	<property name="net.sf.jasperreports.data.adapter" value="QAQC_Datasource.xml"/>
 	<property name="net.sf.jasperreports.export.xls.collapse.row.span" value="true"/>
 	<property name="net.sf.jasperreports.print.create.bookmarks" value="true"/>
 	<property name="com.jaspersoft.studio.unit.pageHeight" value="pixel"/>
@@ -287,6 +286,7 @@
 							<reportElement mode="Opaque" x="0" y="0" width="144" height="15" backcolor="#DADADA" uuid="c2b16f9f-e8a5-4c6c-93d4-13bc7dbbbbc7">
 								<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
 							</reportElement>
+							<box leftPadding="3"/>
 							<textElement>
 								<font fontName="Arial" isBold="true"/>
 							</textElement>
@@ -303,7 +303,7 @@
 						</box>
 						<textField>
 							<reportElement x="0" y="0" width="144" height="40" uuid="504d5924-acf5-4a97-8f3c-93f444e14354"/>
-							<box>
+							<box leftPadding="3">
 								<topPen lineWidth="0.0"/>
 							</box>
 							<textElement textAlignment="Center" verticalAlignment="Bottom"/>
@@ -355,7 +355,7 @@
 								<reportElement mode="Opaque" x="0" y="0" width="25" height="14" backcolor="rgba(255, 255, 255, 0.49803922)" uuid="51d8ac34-e2d0-44f6-bc92-4955b859a3a4">
 									<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
 								</reportElement>
-								<box>
+								<box leftPadding="3">
 									<topPen lineWidth="0.0" lineColor="rgba(189, 215, 238, 0.0)"/>
 								</box>
 								<textElement textAlignment="Right">
@@ -377,7 +377,7 @@
 								<reportElement mode="Opaque" x="0" y="0" width="144" height="14" backcolor="#BDD7EE" uuid="da2a9495-923b-47e3-ba52-78ea285f7ee8">
 									<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 								</reportElement>
-								<box leftPadding="25">
+								<box leftPadding="3">
 									<topPen lineWidth="0.0" lineColor="#FFFFFF"/>
 									<bottomPen lineWidth="0.0" lineColor="#FFFFFF"/>
 								</box>
@@ -416,7 +416,7 @@
 							</box>
 							<textField isStretchWithOverflow="true">
 								<reportElement mode="Opaque" x="0" y="0" width="119" height="14" uuid="89c7f6f6-bd1d-488e-a680-985de01e68bb"/>
-								<box leftPadding="0" rightPadding="3"/>
+								<box leftPadding="3" rightPadding="3"/>
 								<textElement textAlignment="Left"/>
 								<textFieldExpression><![CDATA[$V{reservoir-order}=="1" ? "\n" + $V{reservor} :$V{reservor}]]></textFieldExpression>
 							</textField>
@@ -454,7 +454,7 @@
 							</box>
 							<textField isStretchWithOverflow="true">
 								<reportElement stretchType="ContainerBottom" mode="Transparent" x="0" y="0" width="36" height="20" uuid="f462894c-2718-4c44-9b67-b18c54c4f042"/>
-								<box bottomPadding="1">
+								<box leftPadding="3" bottomPadding="1">
 									<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 									<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 									<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -498,7 +498,7 @@
 							</box>
 							<textField>
 								<reportElement style="RunHeaderBorders" mode="Opaque" x="0" y="0" width="36" height="20" backcolor="#DADADA" uuid="f4e7f9a6-61e0-499a-84fe-b840c6912169"/>
-								<box bottomPadding="1">
+								<box leftPadding="3" bottomPadding="1">
 									<leftPen lineWidth="1.0"/>
 									<rightPen lineWidth="1.0"/>
 								</box>
@@ -528,7 +528,7 @@
 						</box>
 						<textField isStretchWithOverflow="true" pattern="#,##0.###;(#,##0.###-)">
 							<reportElement style="RunBorders" mode="Transparent" x="0" y="0" width="36" height="14" uuid="96aecb6b-d64a-4cf3-8d02-49cb0c0a4026"/>
-							<box>
+							<box leftPadding="3">
 								<leftPen lineWidth="1.0"/>
 								<rightPen lineWidth="1.0"/>
 							</box>
@@ -581,7 +581,7 @@
 						</box>
 						<textField pattern="#,##0.###;(#,##0.###-)">
 							<reportElement style="TotalBorders" mode="Opaque" x="0" y="0" width="36" height="14" backcolor="#BDD7EE" uuid="629dd9c1-c716-4a0c-bf67-efbd1d2ca42c"/>
-							<box>
+							<box leftPadding="3">
 								<leftPen lineWidth="1.0"/>
 								<bottomPen lineWidth="0.0" lineColor="#FFFFFF"/>
 								<rightPen lineWidth="1.0"/>

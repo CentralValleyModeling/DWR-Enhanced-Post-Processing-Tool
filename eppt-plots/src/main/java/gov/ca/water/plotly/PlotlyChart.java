@@ -40,7 +40,7 @@ public abstract class PlotlyChart
 			jsonObject.put("layout", layout);
 			return jsonObject;
 		}
-		catch(IOException e)
+		catch(IOException | RuntimeException e)
 		{
 			throw new PlotlyPrintException("Unable to build JSON object", e);
 		}

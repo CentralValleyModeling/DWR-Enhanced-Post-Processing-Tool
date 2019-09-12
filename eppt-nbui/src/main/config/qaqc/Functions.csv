@@ -1,4 +1,4 @@
-﻿!,Functions List,,,
+!,Functions List,,,
 !,,,,
 1,AnnualExceedanceWYD(${guiLinkId}%2C ${month}),,,dssReader.getGuiLinkData(${guiLinkId}).entrySet().stream().collect(collectingAndThen(groupingBy(mapToPeriodStartYear(${month})%2C averagingDouble(jdf(lambda e : e.getValue())))%2CgenerateExceedanceValues()))
 2,DtsTitleFunction(${dtsId}),,,titleReader.getDtsTitle(${dtsId})
@@ -12,7 +12,7 @@
 10,PeriodAverageDtsFunction(${dtsId}),,,dssReader.getDtsData(${dtsId}).entrySet().stream().filter(periodFilter).mapToDouble(jdf(lambda e : e.getValue())).average().orElse(Double.NaN)
 11,PeriodAverageDtsFunctionOneMonth(${dtsId}%2C ${month}),,,dssReader.getDtsData(${dtsId}).entrySet().stream().filter(periodFilter).filter(MonthPeriodFilter(${month})).mapToDouble(jdf(lambda e : e.getValue())).average().orElse(0)
 12,PeriodAverageFunction(${guiLinkId}),,,dssReader.getGuiLinkData(${guiLinkId}).entrySet().stream().filter(periodFilter).mapToDouble(jdf(lambda e : e.getValue())).average().orElse(0)
-13,PeriodAnnualAverageFunction(${guiLinkId}%2C ${month}),,,dssReader.getGuiLinkData(${guiLinkId}).entrySet().stream().filter(buildPeriodFilterForEndMonth(waterYearPeriodRange%2C ${month})).mapToDouble(jdf(lambda e : e.getValue())).average().orElse(Double.NaN)
+13,PeriodAnnualAverageFunction(${guiLinkId}%2C ${month}),,,dssReader.getGuiLinkData(${guiLinkId}).entrySet().stream().filter(buildPeriodFilterForEndMonth(waterYearPeriodRanges%2C ${month})).mapToDouble(jdf(lambda e : e.getValue())).average().orElse(Double.NaN)
 14,PeriodAverageFunctionOneMonth(${guiLinkId}%2C ${month}),,,dssReader.getGuiLinkData(${guiLinkId}).entrySet().stream().filter(periodFilter).filter(MonthPeriodFilter(${month})).mapToDouble(jdf(lambda e : e.getValue())).average().orElse(0)
 15,PeriodGreaterThan0AverageFunction(${dtsId}),,,dssReader.getDtsData(${dtsId}).entrySet().stream().filter(commonPeriodFilter).mapToDouble(jdf(lambda e : e.getValue())).filter(jpDouble(lambda v : v > 0)).count()
 16,PeriodLessThan0AverageFunction(${dtsId}),,,dssReader.getDtsData(${dtsId}).entrySet().stream().filter(commonPeriodFilter).mapToDouble(jdf(lambda e : e.getValue())).filter(jpDouble(lambda v : v < 0)).count()
@@ -26,5 +26,6 @@
 24,ReportThresholdWhenDtsLessThan(${dtsId}%2C thresholdId),,,"dssReader.getDtsData(${dtsId}).entrySet().stream().filter(periodFilter).filter(jp(lambda e: e.getValue() < dssReader.getThresholdData(${thresholdId}).get(e.getKey()))).map(jf(lambda e : buildListPrefix(e) + String.join(\""%2C\""%2C String.valueOf(e.getValue())%2C String.valueOf(dssReader.getThresholdData(${thresholdId}).get(e.getKey()))))).collect(toList())"
 25,ReportMonthWhenUnbalanced(${dtsId}),,,dssReader.getDtsData(${dtsId}).entrySet().stream().filter(periodFilter).filter(jp(lambda e: e.getValue() != 0)).map(jf(lambda e : buildListPrefix(e))).collect(toList())
 26,ReportValueWhenDtsNotEqual(${dtsId1}%2C dtsId2),,,"dssReader.getDtsData(${dtsId1}).entrySet().stream().filter(periodFilter).filter(jp(lambda e: e.getValue() != dssReader.getThresholdData(${dtsId2}).get(e.getKey()))).map(jf(lambda e : buildListPrefix(e) + String.join(\""%2C\""%2C String.valueOf(e.getValue())%2C String.valueOf(dssReader.getThresholdData(${dtsId2}).get(e.getKey()))))).collect(toList())"
-27,RetrieveDv(${guiLinkId}),,,dssReader.getGuiLinkData(${guiLinkId})
-28,RetrieveDts(${dtsId}),,,dssReader.getDtsData(${dtsId})
+27,RetrieveAnnualDvForMonthly(${guiLinkId}%2C${month}),,,dssReader.getGuiLinkData(${guiLinkId}).entrySet().stream().filter(jp(lambda e : e.getKey().getMonth().equals(${month}))).collect(toMap(jf(lambda e : e.getKey().getYear())%2C jf(lambda e: e.getValue())))
+28,RetrieveAnnualDtsForMonthly(${dtsId}%2C${month}),,,dssReader.getDtsData(${dtsId}).entrySet().stream().filter(jp(lambda e : e.getKey().getMonth().equals(${month}))).collect(toMap(jf(lambda e : e.getKey().getYear())%2C jf(lambda e: e.getValue())))
+

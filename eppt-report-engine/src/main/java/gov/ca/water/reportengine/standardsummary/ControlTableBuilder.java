@@ -129,19 +129,9 @@ class ControlTableBuilder extends TableBuilder
 		EpptScenarioRun base = getBase();
 		try
 		{
-			long baseValue = createJythonValueGenerator(base, v.getFunction(), comparisonValue).generateValues()
-																			  .stream()
-																			  .filter(Objects::nonNull)
-																			  .mapToDouble(i -> i)
-																			  .filter(i -> i == comparisonValue)
-																			  .count();
+			long baseValue = createJythonValueGenerator(base, v.getFunction(), comparisonValue).generateCount();
 
-			long altValue = createJythonValueGenerator(alternative, v.getFunction(), comparisonValue).generateValues()
-																					.stream()
-																					.filter(Objects::nonNull)
-																					.mapToDouble(i -> i)
-																					.filter(i -> i == comparisonValue)
-																					.count();
+			long altValue = createJythonValueGenerator(alternative, v.getFunction(), comparisonValue).generateCount();
 
 			long diff = baseValue - altValue;
 			String textRaw = String.valueOf(diff);
@@ -161,12 +151,7 @@ class ControlTableBuilder extends TableBuilder
 		Element retval = getDocument().createElement(VALUE_ELEMENT);
 		try
 		{
-			long count = createJythonValueGenerator(scenarioRun, v.getFunction(), comparisonValue).generateValues()
-																				 .stream()
-																				 .filter(Objects::nonNull)
-																				 .mapToDouble(i -> i)
-																				 .filter(i -> i == comparisonValue)
-																				 .count();
+			long count = createJythonValueGenerator(scenarioRun, v.getFunction(), comparisonValue).generateCount();
 			String textRaw = String.valueOf(count);
 			retval.setTextContent(textRaw);
 		}

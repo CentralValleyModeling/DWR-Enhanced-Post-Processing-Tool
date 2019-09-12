@@ -14,6 +14,7 @@ package gov.ca.water.eppt.nbui;
 import java.awt.BorderLayout;
 import java.awt.Color;
 
+import gov.ca.water.quickresults.ui.projectconfig.ProjectConfigurationPanel;
 import gov.ca.water.trendreporting.TrendReportPanel;
 import org.openide.awt.ActionID;
 import org.openide.awt.ActionReference;
@@ -48,13 +49,25 @@ public final class DashboardTopComponent extends EpptTopComponent
 {
 
 
+	private final TrendReportPanel _trendReportPanel;
+
 	public DashboardTopComponent()
 	{
 		setName("Trend Reporting");
-		TrendReportPanel customResultsPanel = new TrendReportPanel();
+		_trendReportPanel = new TrendReportPanel();
 		setLayout(new BorderLayout(15,15));
-		add(customResultsPanel, BorderLayout.CENTER);
+		add(_trendReportPanel, BorderLayout.CENTER);
 		setBackground(Color.WHITE);
+	}
+
+
+	@Override
+	protected void componentOpened()
+	{
+		super.componentOpened();
+		ProjectConfigurationPanel projectConfigurationPanel = ProjectConfigurationPanel.getProjectConfigurationPanel();
+		_trendReportPanel.setScenarioRuns(projectConfigurationPanel.getBaseScenario(),
+				projectConfigurationPanel.getEpptScenarioAlternatives());
 	}
 
 	@Override

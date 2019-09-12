@@ -30,7 +30,6 @@ import java.util.NavigableMap;
 import java.util.Optional;
 import java.util.TreeMap;
 import java.util.function.Function;
-import java.util.stream.Collectors;
 import java.util.stream.DoubleStream;
 
 import gov.ca.water.calgui.bo.CommonPeriodFilter;
@@ -41,6 +40,7 @@ import gov.ca.water.calgui.bo.WaterYearIndex;
 import gov.ca.water.calgui.bo.WaterYearPeriod;
 import gov.ca.water.calgui.bo.WaterYearPeriodRange;
 import gov.ca.water.calgui.bo.WaterYearPeriodRangeFilter;
+import gov.ca.water.calgui.bo.WaterYearPeriodRangesFilter;
 import gov.ca.water.calgui.bo.WaterYearType;
 import gov.ca.water.calgui.busservice.impl.DetailedIssuesReader;
 import gov.ca.water.calgui.busservice.impl.GuiLinksSeedDataSvcImpl;
@@ -49,7 +49,6 @@ import gov.ca.water.calgui.busservice.impl.WaterYearDefinitionSvc;
 import gov.ca.water.calgui.project.EpptDssContainer;
 import gov.ca.water.calgui.project.EpptScenarioRun;
 import gov.ca.water.calgui.project.NamedDssPath;
-import gov.ca.water.calgui.wresl.TestWreslScriptRunner;
 import javafx.scene.paint.Color;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
@@ -61,6 +60,7 @@ import static java.util.stream.Collectors.averagingDouble;
 import static java.util.stream.Collectors.collectingAndThen;
 import static java.util.stream.Collectors.groupingBy;
 import static java.util.stream.Collectors.toList;
+import static java.util.stream.Collectors.toMap;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -115,7 +115,7 @@ class TestJythonLambda
 	{
 		EpptScenarioRun scenarioRun = buildRun();
 
-		TitleReader titleReader = new TitleReader(scenarioRun);
+		TitleReader titleReader = new TitleReader();
 		String dtsTitle = titleReader.getDtsTitle(170);
 		Assertions.assertEquals("Negative Carriage Water", dtsTitle);
 		JythonScriptRunner runner = new JythonScriptRunner(scenarioRun, new CommonPeriodFilter(LocalDateTime.now(),LocalDateTime.now()));
@@ -128,7 +128,7 @@ class TestJythonLambda
 	{
 		EpptScenarioRun scenarioRun = buildRun();
 
-		TitleReader titleReader = new TitleReader(scenarioRun);
+		TitleReader titleReader = new TitleReader();
 		String dtsTitle = titleReader.getGuiLinkId(102);
 		Assertions.assertEquals("Trinity Reservoir Storage", dtsTitle);
 		JythonScriptRunner runner = new JythonScriptRunner(scenarioRun, new CommonPeriodFilter(LocalDateTime.now(),LocalDateTime.now()));
@@ -426,14 +426,15 @@ class TestJythonLambda
 		DssReader dssReader = new DssReader(scenarioRun);
 		CommonPeriodFilter periodFilter = new CommonPeriodFilter(LocalDateTime.of(1950, Month.JULY, 1, 0, 0),
 				LocalDateTime.of(1999, Month.JULY, 1, 0, 0));
-		WaterYearIndex waterYearIndex = new WaterYearIndex("Sac", new ArrayList<>());
-		WaterYearPeriod waterYearType = new WaterYearPeriod("Wet");
-		NavigableMap<LocalDateTime, Double> collect = dssReader.getGuiLinkData(102);
+//		WaterYearIndex waterYearIndex = new WaterYearIndex("Sac", new ArrayList<>());
+//		WaterYearPeriod waterYearType = new WaterYearPeriod("Wet");
+		Month month = Month.MARCH;
+//		WaterYearDefinition waterYearDefinition = new WaterYearDefinition("", month, month.minus(1));
+//		LocalDateTime date = LocalDateTime.of(1950, 1, 1, 0, 0, 0);
+//		int year = waterYearDefinition.getYear(date);
+		Map<Integer, Double> collect = dssReader.getGuiLinkData(102).entrySet().stream().filter(e->e.getKey().getMonth().equals(month)).collect(toMap(e->e.getKey().getYear(), e->e.getValue()));
 		JythonScriptRunner runner = new JythonScriptRunner(scenarioRun, periodFilter);
-		runner.setPeriodFilter(periodFilter);
-		runner.setWaterYearIndex(waterYearIndex);
-		runner.setWaterYearType(waterYearType);
-		Object o = runner.runScript("dssReader.getGuiLinkData(102)");
+		Object o = runner.runScript("dssReader.getGuiLinkData(102).entrySet().stream().filter(jp(lambda e : e.getKey().getMonth().equals(Month.MARCH))).collect(toMap(jf(lambda e : e.getKey().getYear()), jf(lambda e: e.getValue())))");
 		assertEquals(collect, o);
 	}
 
@@ -444,14 +445,10 @@ class TestJythonLambda
 		DssReader dssReader = new DssReader(scenarioRun);
 		CommonPeriodFilter periodFilter = new CommonPeriodFilter(LocalDateTime.of(1950, Month.JULY, 1, 0, 0),
 				LocalDateTime.of(1999, Month.JULY, 1, 0, 0));
-		WaterYearIndex waterYearIndex = new WaterYearIndex("Sac", new ArrayList<>());
-		WaterYearPeriod waterYearType = new WaterYearPeriod("Wet");
-		NavigableMap<LocalDateTime, Double> collect = dssReader.getDtsData(170);
+		Month month = Month.MARCH;
+		Map<Integer, Double> collect = dssReader.getDtsData(296).entrySet().stream().filter(e->e.getKey().getMonth().equals(month)).collect(toMap(e->e.getKey().getYear(), e->e.getValue()));
 		JythonScriptRunner runner = new JythonScriptRunner(scenarioRun, periodFilter);
-		runner.setPeriodFilter(periodFilter);
-		runner.setWaterYearIndex(waterYearIndex);
-		runner.setWaterYearType(waterYearType);
-		Object o = runner.runScript("dssReader.getDtsData(170)");
+		Object o = runner.runScript("dssReader.getDtsData(296).entrySet().stream().filter(jp(lambda e : e.getKey().getMonth().equals(Month.MARCH))).collect(toMap(jf(lambda e : e.getKey().getYear()), jf(lambda e: e.getValue())))");
 		assertEquals(collect, o);
 	}
 
@@ -530,7 +527,7 @@ class TestJythonLambda
 		Double collect = dssReader.getGuiLinkData(102)
 								  .entrySet()
 								  .stream()
-								  .filter(buildPeriodFilterForEndMonth(endOfPeriodMonth, waterYearPeriodRange))
+								  .filter(buildPeriodFilterForEndMonth(endOfPeriodMonth, Collections.singletonList(waterYearPeriodRange)))
 								  .mapToDouble(Map.Entry::getValue)
 								  .average()
 								  .orElse(Double.NaN);
@@ -538,14 +535,14 @@ class TestJythonLambda
 		assertFalse(collect.isNaN());
 		JythonScriptRunner runner = new JythonScriptRunner(scenarioRun, periodFilter);
 		runner.setPeriodFilter(periodFilter);
-		runner.setWaterYearPeriodRange(waterYearPeriodRange);
-		Object o = runner.runScript("dssReader.getGuiLinkData(102).entrySet().stream().filter(buildPeriodFilterForEndMonth(waterYearPeriodRange, Month.SEPTEMBER)).mapToDouble(jdf(lambda e : e.getValue())).average().orElse(Double.NaN)");
+		runner.setWaterYearPeriodRanges(Collections.singletonList(waterYearPeriodRange));
+		Object o = runner.runScript("dssReader.getGuiLinkData(102).entrySet().stream().filter(buildPeriodFilterForEndMonth(waterYearPeriodRanges, Month.SEPTEMBER)).mapToDouble(jdf(lambda e : e.getValue())).average().orElse(Double.NaN)");
 		assertEquals(collect, o);
 	}
 
-	private WaterYearPeriodRangeFilter buildPeriodFilterForEndMonth(Month endOfPeriodMonth, WaterYearPeriodRange waterYearPeriodRange)
+	private WaterYearPeriodRangesFilter buildPeriodFilterForEndMonth(Month endOfPeriodMonth, List<WaterYearPeriodRange> waterYearPeriodRange)
 	{
-		return new WaterYearPeriodRangeFilter(waterYearPeriodRange, new WaterYearDefinition("", endOfPeriodMonth.plus(1), endOfPeriodMonth));
+		return new WaterYearPeriodRangesFilter(waterYearPeriodRange, new WaterYearDefinition("", endOfPeriodMonth.plus(1), endOfPeriodMonth));
 	}
 
 	@Test
@@ -566,18 +563,18 @@ class TestJythonLambda
 	{
 		Path outputPath = Paths.get("");
 		Path wreslMain = new File(
-				TestWreslScriptRunner.class.getClassLoader().getResource("mainControl.wresl").getFile()).toPath();
+				TestJythonLambda.class.getClassLoader().getResource("mainControl.wresl").getFile()).toPath();
 		Path dvPath = new File(
-				TestWreslScriptRunner.class.getClassLoader().getResource("SampleDV_Base.dss").getFile()).toPath();
+				TestJythonLambda.class.getClassLoader().getResource("SampleDV_Base.dss").getFile()).toPath();
 		NamedDssPath dvDssFile = new NamedDssPath(dvPath, "DV", "CALSIM", "1MON", "2020D09E");
 		Path ivPath = new File(
-				TestWreslScriptRunner.class.getClassLoader().getResource("SampleINIT_Base.dss").getFile()).toPath();
+				TestJythonLambda.class.getClassLoader().getResource("SampleINIT_Base.dss").getFile()).toPath();
 		NamedDssPath ivDssFile = new NamedDssPath(ivPath, "INIT", "CALSIM", "1MON", "2020D09E");
 		Path dtsPath = new File(
-				TestWreslScriptRunner.class.getClassLoader().getResource("CalSim2_PostProc.dss").getFile()).toPath();
+				TestJythonLambda.class.getClassLoader().getResource("CalSim2_PostProc.dss").getFile()).toPath();
 		NamedDssPath dtsDssFile = new NamedDssPath(dtsPath, "DTS", "CALSIM", "1MON", "2020D09E");
 		Path svPath = new File(
-				TestWreslScriptRunner.class.getClassLoader().getResource("SampleSV_Base.dss").getFile()).toPath();
+				TestJythonLambda.class.getClassLoader().getResource("SampleSV_Base.dss").getFile()).toPath();
 		NamedDssPath svDssFile = new NamedDssPath(svPath, "SV", "CALSIM", "1MON", "2020D09E");
 		List<NamedDssPath> extraDssFiles = Collections.emptyList();
 		EpptDssContainer dssContainer = new EpptDssContainer(dvDssFile, svDssFile, ivDssFile, dtsDssFile, extraDssFiles);

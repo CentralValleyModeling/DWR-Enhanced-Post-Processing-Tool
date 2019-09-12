@@ -67,7 +67,10 @@ class QAQCReportGenerator
 			Path dataFile = pathToWriteOut.resolve("DWR_QA_QC_Reports").resolve("Datasource").resolve("EPPT_Data.xml");
 			EPPTReport epptReport = new EPPTReport(dataFile,
 					baseRun, altRuns, reportParameters);
-			epptReport.writeReport();
+//			if(false)
+			{
+				epptReport.writeReport();
+			}
 			return pathToWriteOut.resolve("QAQC_Report.jrxml");
 		}
 		catch(IOException | RuntimeException ex)
@@ -100,6 +103,14 @@ class QAQCReportGenerator
 	{
 		try
 		{
+			if(!dest.toFile().exists())
+			{
+				boolean mkdirs = dest.toFile().mkdirs();
+				if(!mkdirs)
+				{
+					throw new IOException("Unable to create directory for: " + dest);
+				}
+			}
 			Files.copy(source, dest, REPLACE_EXISTING);
 		}
 		catch(IOException e)

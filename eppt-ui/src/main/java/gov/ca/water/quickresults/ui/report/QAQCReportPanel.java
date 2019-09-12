@@ -524,7 +524,7 @@ public class QAQCReportPanel extends RmaJPanel
 		createUIComponents();
 		_panel1 = new JPanel();
 		_panel1.setLayout(new BorderLayout(5, 2));
-		_panel1.setMinimumSize(new Dimension(600, 350));
+		_panel1.setMinimumSize(new Dimension(1150, 350));
 		_panel1.setPreferredSize(new Dimension(1000, 800));
 		_panel1.setRequestFocusEnabled(false);
 		final JPanel panel1 = new JPanel();
@@ -744,7 +744,7 @@ public class QAQCReportPanel extends RmaJPanel
 		_excutiveSummaryCheckBox.setEnabled(true);
 		_excutiveSummaryCheckBox.setHorizontalAlignment(2);
 		_excutiveSummaryCheckBox.setSelected(true);
-		_excutiveSummaryCheckBox.setText("Excutive Summary");
+		_excutiveSummaryCheckBox.setText("Executive Summary");
 		gbc = new GridBagConstraints();
 		gbc.gridx = 0;
 		gbc.gridy = 2;
@@ -787,7 +787,7 @@ public class QAQCReportPanel extends RmaJPanel
 		_standardSummaryStatiticsCheckBox.setEnabled(true);
 		_standardSummaryStatiticsCheckBox.setHorizontalAlignment(2);
 		_standardSummaryStatiticsCheckBox.setSelected(true);
-		_standardSummaryStatiticsCheckBox.setText("Standard Summary Statitics");
+		_standardSummaryStatiticsCheckBox.setText("Standard Summary Statistics");
 		gbc = new GridBagConstraints();
 		gbc.gridx = 0;
 		gbc.gridy = 6;

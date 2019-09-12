@@ -22,7 +22,7 @@ import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
 import javax.script.ScriptException;
 
-import gov.ca.water.calgui.EpptInitializationException;
+import com.google.common.flogger.FluentLogger;
 import gov.ca.water.calgui.bo.CommonPeriodFilter;
 import gov.ca.water.calgui.bo.PeriodFilter;
 import gov.ca.water.calgui.bo.WaterYearIndex;
@@ -41,30 +41,36 @@ import static java.util.stream.Collectors.toList;
  */
 public class JythonScriptRunner
 {
-	private final ScriptEngine _engine;
+	private static final ScriptEngine PYTHON_ENGINE = new ScriptEngineManager().getEngineByName("python");
 	private final EpptScenarioRun _epptScenarioRun;
+	private static final FluentLogger LOGGER = FluentLogger.forEnclosingClass();
 
-	public JythonScriptRunner(EpptScenarioRun epptScenarioRun, CommonPeriodFilter commonPeriodFilter) throws ScriptException
+	static
 	{
-
-		_epptScenarioRun = epptScenarioRun;
-		_engine = new ScriptEngineManager().getEngineByName("python");
-		if(_engine == null)
-		{
-			throw new IllegalArgumentException("Unable to find jython engine");
-		}
 		try
 		{
-			initializeGlobalVariables(commonPeriodFilter);
 			initializeScriptDirectory();
 		}
-		catch(ScriptException ex)
+		catch(ScriptException e)
 		{
-			throw new IllegalArgumentException("Error initializing jython engine", ex);
+			LOGGER.atSevere().withCause(e).log("Unable to initialize utility scripts");
 		}
 	}
 
-	private void initializeScriptDirectory() throws ScriptException
+	public JythonScriptRunner(EpptScenarioRun epptScenarioRun, CommonPeriodFilter commonPeriodFilter)
+	{
+
+		_epptScenarioRun = epptScenarioRun;
+		if(PYTHON_ENGINE == null)
+		{
+			throw new IllegalArgumentException("Unable to find jython engine");
+		}
+		//			LocalDateTime s1 = LocalDateTime.now();
+		initializeGlobalVariables(commonPeriodFilter);
+		//			System.out.println("Python script runner instantiation takes" + ChronoUnit.MILLIS.between(s1, LocalDateTime.now()));
+	}
+
+	private static void initializeScriptDirectory() throws ScriptException
 	{
 		try(Stream<Path> stream = Files.walk(Constant.QA_QC_SCRIPT_DIRECTORY, 1))
 		{
@@ -73,7 +79,7 @@ public class JythonScriptRunner
 			{
 				try(BufferedReader reader = Files.newBufferedReader(path))
 				{
-					_engine.eval(reader);
+					PYTHON_ENGINE.eval(reader);
 				}
 			}
 		}
@@ -83,55 +89,42 @@ public class JythonScriptRunner
 		}
 	}
 
-	private void initializeGlobalVariables(CommonPeriodFilter commonPeriodFilter) throws ScriptException
+	private void initializeGlobalVariables(CommonPeriodFilter commonPeriodFilter)
 	{
 		DssReader dssReader = new DssReader(_epptScenarioRun);
-		try
-		{
-			TitleReader titleReader = new TitleReader(_epptScenarioRun);
-			_engine.put("dssReader", dssReader);
-			_engine.put("titleReader", titleReader);
-			_engine.eval("from gov.ca.water.calgui.scripts import JythonScriptRunner");
-			_engine.eval("from gov.ca.water.calgui.scripts.JythonScriptRunner import *");
-			_engine.eval("from java.util.stream.Collectors import *");
-			_engine.eval("from java.time import Month");
-			_engine.put("commonPeriodFilter", commonPeriodFilter);
-		}
-		catch(EpptInitializationException e)
-		{
-			ScriptException scriptException = new ScriptException("Unable to create Title Reader");
-			scriptException.initCause(e);
-			throw scriptException;
-		}
+		TitleReader titleReader = new TitleReader();
+		PYTHON_ENGINE.put("dssReader", dssReader);
+		PYTHON_ENGINE.put("titleReader", titleReader);
+		PYTHON_ENGINE.put("commonPeriodFilter", commonPeriodFilter);
 	}
 
 	public void setPeriodFilter(PeriodFilter periodFilter)
 	{
-		_engine.put("periodFilter", periodFilter);
+		PYTHON_ENGINE.put("periodFilter", periodFilter);
 	}
 
 	public Object runScript(String script) throws ScriptException
 	{
-		return _engine.eval(script);
+		return PYTHON_ENGINE.eval(script);
 	}
 
-	public void setWaterYearPeriodRange(WaterYearPeriodRange waterYearPeriodRange)
+	public void setWaterYearPeriodRanges(List<WaterYearPeriodRange> waterYearPeriodRanges)
 	{
-		_engine.put("waterYearPeriodRange", waterYearPeriodRange);
+		PYTHON_ENGINE.put("waterYearPeriodRanges", waterYearPeriodRanges);
 	}
 
 	public void setComparisonValue(double comparisonValue)
 	{
-		_engine.put("comparisonValue", comparisonValue);
+		PYTHON_ENGINE.put("comparisonValue", comparisonValue);
 	}
 
 	public void setWaterYearType(WaterYearPeriod waterYearType)
 	{
-		_engine.put("waterYearType", waterYearType);
+		PYTHON_ENGINE.put("waterYearType", waterYearType);
 	}
 
 	public void setWaterYearIndex(WaterYearIndex waterYearIndex)
 	{
-		_engine.put("waterYearIndex", waterYearIndex);
+		PYTHON_ENGINE.put("waterYearIndex", waterYearIndex);
 	}
 }

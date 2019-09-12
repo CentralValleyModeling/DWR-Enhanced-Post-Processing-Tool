@@ -103,7 +103,7 @@ public class SchematicMain
 					// At this time the document is available...
 					document = canvas.getSVGDocument();
 					// ...and the window object too.
-					window = canvas.getUpdateManager().getScriptingEnvironment().createWindow();
+//					window = canvas.getUpdateManager().getScriptingEnvironment().getWindow();
 					// Registers the listeners on the document
 					// just before the SVGLoad event is
 					// dispatched.

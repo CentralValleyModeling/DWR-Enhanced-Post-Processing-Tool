@@ -20,6 +20,7 @@ import java.util.function.Function;
 
 import gov.ca.water.calgui.bo.CommonPeriodFilter;
 import gov.ca.water.calgui.project.EpptScenarioRun;
+import gov.ca.water.reportengine.jython.JythonScriptBuilder;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 

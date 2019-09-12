@@ -16,13 +16,11 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.Collections;
 import java.util.Date;
-import java.util.Map;
 import java.util.NavigableMap;
 import java.util.Objects;
 import java.util.TimeZone;
 import java.util.TreeMap;
 import java.util.concurrent.TimeUnit;
-import java.util.logging.Level;
 import java.util.regex.Pattern;
 
 import com.google.common.flogger.FluentLogger;
@@ -61,10 +59,17 @@ public class DssReader
 		NavigableMap<LocalDateTime, Double> retval = instance.readGuiLinkFromCache(_scenarioRun, guiID);
 		if(retval == null)
 		{
-			DSSGrabber1SvcImpl dssGrabber1Svc = buildDssGrabber(_scenarioRun, guiID, 0);
-			TimeSeriesContainer[] primarySeries = dssGrabber1Svc.getPrimarySeries();
-			retval = timeSeriesContainerToMap(primarySeries);
-			instance.addGuiLinkToCache(_scenarioRun, guiID, retval);
+			try
+			{
+				DSSGrabber1SvcImpl dssGrabber1Svc = buildDssGrabber(_scenarioRun, guiID, 0);
+				TimeSeriesContainer[] primarySeries = dssGrabber1Svc.getPrimarySeries();
+				retval = timeSeriesContainerToMap(primarySeries);
+				instance.addGuiLinkToCache(_scenarioRun, guiID, retval);
+			}
+			catch(RuntimeException e)
+			{
+				LOGGER.atSevere().withCause(e).log("Error reading GUI Links Data: " + guiID);
+			}
 		}
 		return retval;
 	}
@@ -141,7 +146,7 @@ public class DssReader
 									   .toString();
 				if(!dssPath.isEmpty())
 				{
-					DataContainer dataContainer = hecDss.get(dssPath);
+					DataContainer dataContainer = hecDss.get(dssPath, true);
 					if(dataContainer instanceof TimeSeriesContainer)
 					{
 						retval = timeSeriesContainerToMap(new TimeSeriesContainer[]{(TimeSeriesContainer) dataContainer});
@@ -161,7 +166,7 @@ public class DssReader
 			{
 				if(hecDss != null)
 				{
-//					hecDss.close();
+					hecDss.close();
 				}
 			}
 		}
@@ -174,10 +179,17 @@ public class DssReader
 		NavigableMap<LocalDateTime, Double> retval = instance.readThresholdLinkFromCache(_scenarioRun, thresholdId);
 		if(retval == null)
 		{
-			DSSGrabber1SvcImpl dssGrabber1Svc = buildDssGrabber(_scenarioRun, 102, thresholdId);
-			TimeSeriesContainer[] threshold = dssGrabber1Svc.getThresholdTimeSeries();
-			retval = timeSeriesContainerToMap(threshold);
-			instance.addThresholdLinkToCache(_scenarioRun, thresholdId, retval);
+			try
+			{
+				DSSGrabber1SvcImpl dssGrabber1Svc = buildDssGrabber(_scenarioRun, 102, thresholdId);
+				TimeSeriesContainer[] threshold = dssGrabber1Svc.getThresholdTimeSeries();
+				retval = timeSeriesContainerToMap(threshold);
+				instance.addThresholdLinkToCache(_scenarioRun, thresholdId, retval);
+			}
+			catch(RuntimeException e)
+			{
+				LOGGER.atSevere().withCause(e).log("Error reading Threshold Links Data: " + thresholdId);
+			}
 		}
 		return retval;
 	}

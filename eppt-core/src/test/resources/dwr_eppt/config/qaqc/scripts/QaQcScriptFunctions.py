@@ -1,4 +1,4 @@
-from gov.ca.water.calgui.bo import WaterYearDefinition, WaterYearPeriodRangeFilter, WaterYearPeriod, \
+from gov.ca.water.calgui.bo import WaterYearDefinition, WaterYearPeriodRangesFilter, WaterYearPeriod, \
     WaterYearPeriodRange, WaterYearType, MonthPeriodFilter
 from java.util import ArrayList
 from java.util import TreeMap
@@ -7,7 +7,9 @@ from java.time.format import TextStyle
 from java.util import Locale
 from java.lang import String, Double
 from rma.stats import EmpiricalDist
-
+from gov.ca.water.calgui.scripts import JythonScriptRunner
+from gov.ca.water.calgui.scripts.JythonScriptRunner import *
+from java.time import Month
 
 def getPeriodStartYear(date, startOfPeriod):
     period = WaterYearPeriod("")
@@ -36,11 +38,11 @@ def mapToPeriodStartYear(startOfPeriodMonth):
 
 
 def buildPeriodFilterForEndMonth(waterYearPeriodRange, endMonth):
-    return WaterYearPeriodRangeFilter(waterYearPeriodRange, WaterYearDefinition("", endMonth.plus(1), endMonth))
+    return WaterYearPeriodRangesFilter(waterYearPeriodRange, WaterYearDefinition("", endMonth.plus(1), endMonth))
 
 def getMatchingGuiLinkEntry(guiLinkId, entry):
     return dssReader.getGuiLinkData(guiLinkId).entrySet().stream().filter(jf(lambda e : e.getKey().equals(entry.getKey()))).findAny()
 
 def buildListPrefix(entry):
     return entry.getKey().getMonth().getDisplayName(TextStyle.FULL,
-                                                Locale.getDefault()) + " " + String.valueOf(entry.getKey().getYear()) + "(" + waterYearIndex.toString() + " " + waterYearType.getPeriodName() + "): "
+                                                    Locale.getDefault()) + " " + String.valueOf(entry.getKey().getYear()) + "(" + waterYearIndex.toString() + " " + waterYearType.getPeriodName() + "): "

@@ -211,7 +211,7 @@ public class WaterYearPeriodsPanel extends JFXPanel
 		@Override
 		public String toString()
 		{
-			return _period.toString() + " Periods";
+			return _period.toString();
 		}
 	}
 

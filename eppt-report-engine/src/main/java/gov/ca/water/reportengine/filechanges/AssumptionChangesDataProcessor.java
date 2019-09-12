@@ -74,11 +74,11 @@ public class AssumptionChangesDataProcessor
 		{
 			if(baseFile != null)
 			{
-//				baseFile.close();
+				baseFile.close();
 			}
 			if(altFile != null)
 			{
-//				altFile.close();
+				altFile.close();
 			}
 		}
 

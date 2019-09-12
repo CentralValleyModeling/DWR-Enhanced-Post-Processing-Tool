@@ -340,7 +340,7 @@ public class TrendReportPanel extends JFXPanel
 		return toggleButton;
 	}
 
-	void setScenarioRuns(EpptScenarioRun baseRun, List<EpptScenarioRun> alternatives)
+	public void setScenarioRuns(EpptScenarioRun baseRun, List<EpptScenarioRun> alternatives)
 	{
 		_scenarioRuns.clear();
 		_scenarioRuns.add(baseRun);

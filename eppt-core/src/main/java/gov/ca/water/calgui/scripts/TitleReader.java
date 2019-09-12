@@ -30,12 +30,6 @@ import gov.ca.water.calgui.project.EpptScenarioRun;
  */
 public class TitleReader
 {
-	private final EpptScenarioRun _epptScenarioRun;
-
-	public TitleReader(EpptScenarioRun epptScenarioRun) throws EpptInitializationException
-	{
-		_epptScenarioRun = epptScenarioRun;
-	}
 
 	public String getDtsTitle(int detailsLink)
 	{

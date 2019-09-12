@@ -43,8 +43,7 @@ public enum ChartType
 
 	public static ChartType getChartTypeForId(String id) throws EpptReportException
 	{
-		return Arrays.asList(values())
-					 .stream()
+		return Arrays.stream(values())
 					 .filter(v -> v._id.equals(id))
 					 .findAny()
 					 .orElseThrow(() -> new EpptReportException("Unable to find matching Chart Type: " + id));

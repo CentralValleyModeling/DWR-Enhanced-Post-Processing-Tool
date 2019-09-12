@@ -16,6 +16,10 @@ import java.util.List;
 import javax.script.ScriptException;
 
 import gov.ca.water.calgui.bo.PeriodFilter;
+import gov.ca.water.calgui.bo.WaterYearDefinition;
+import gov.ca.water.calgui.bo.WaterYearIndex;
+import gov.ca.water.calgui.bo.WaterYearPeriod;
+import gov.ca.water.calgui.bo.WaterYearPeriodRange;
 import gov.ca.water.calgui.project.EpptScenarioRun;
 import gov.ca.water.reportengine.EpptReportException;
 import gov.ca.water.reportengine.jython.JythonValueGenerator;
@@ -121,6 +125,18 @@ abstract class StandardSummaryChartBuilder
 		try
 		{
 			return new JythonValueGenerator(epptScenarioRun, function, _reportParameters.getCommonPeriodFilter());
+		}
+		catch(ScriptException e)
+		{
+			throw new EpptReportException("Error initializing Jython script runner", e);
+		}
+	}
+
+	JythonValueGenerator createJythonValueGenerator(EpptScenarioRun epptScenarioRun, String function, WaterYearIndex waterYearIndex) throws EpptReportException
+	{
+		try
+		{
+			return new JythonValueGenerator(epptScenarioRun, function, _reportParameters.getCommonPeriodFilter(), waterYearIndex);
 		}
 		catch(ScriptException e)
 		{

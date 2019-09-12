@@ -13,7 +13,11 @@
 package gov.ca.water.reportengine.jython;
 
 import java.math.BigInteger;
+import java.time.LocalDateTime;
 import java.time.Month;
+import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.NavigableMap;
@@ -21,6 +25,12 @@ import javax.script.ScriptException;
 
 import gov.ca.water.calgui.bo.CommonPeriodFilter;
 import gov.ca.water.calgui.bo.PeriodFilter;
+import gov.ca.water.calgui.bo.WaterYearDefinition;
+import gov.ca.water.calgui.bo.WaterYearIndex;
+import gov.ca.water.calgui.bo.WaterYearPeriod;
+import gov.ca.water.calgui.bo.WaterYearPeriodFilter;
+import gov.ca.water.calgui.bo.WaterYearPeriodRange;
+import gov.ca.water.calgui.bo.WaterYearPeriodRangeFilter;
 import gov.ca.water.calgui.project.EpptScenarioRun;
 import gov.ca.water.calgui.scripts.JythonScriptRunner;
 import gov.ca.water.reportengine.EpptReportException;
@@ -51,6 +61,30 @@ public class JythonValueGenerator
 		_periodFilter = periodFilter;
 		_scriptRunner = new JythonScriptRunner(_scenarioRun, commonPeriodFilter);
 		_scriptRunner.setPeriodFilter(_periodFilter);
+		setWaterYearPeriodRange();
+	}
+
+	public JythonValueGenerator(EpptScenarioRun epptScenarioRun, String function, CommonPeriodFilter commonPeriodFilter,
+								WaterYearIndex waterYearIndex) throws ScriptException
+	{
+		this(epptScenarioRun, function, commonPeriodFilter);
+		_scriptRunner.setWaterYearIndex(waterYearIndex);
+	}
+
+	private void setWaterYearPeriodRange()
+	{
+		if(_periodFilter instanceof WaterYearPeriodRangeFilter)
+		{
+			WaterYearPeriodRangeFilter waterYearPeriodRangeFilter = (WaterYearPeriodRangeFilter) _periodFilter;
+			_scriptRunner.setWaterYearPeriodRanges(Collections.singletonList(waterYearPeriodRangeFilter.getWaterYearPeriodRange()));
+		}
+		else if(_periodFilter instanceof WaterYearPeriodFilter)
+		{
+			WaterYearPeriodFilter waterYearPeriodFilter = (WaterYearPeriodFilter) _periodFilter;
+			List<WaterYearPeriodRange> waterYearPeriodRanges = waterYearPeriodFilter.getWaterYearIndex().getWaterYearPeriodRanges().getOrDefault(
+					waterYearPeriodFilter.getWaterYearPeriod(), new ArrayList<>());
+			_scriptRunner.setWaterYearPeriodRanges(waterYearPeriodRanges);
+		}
 	}
 
 	public JythonValueGenerator(EpptScenarioRun epptScenarioRun, String function, CommonPeriodFilter commonPeriodFilter, int comparisonValue)
@@ -100,12 +134,12 @@ public class JythonValueGenerator
 	}
 
 	@SuppressWarnings("unchecked")
-	public List<Double> generateValues() throws EpptReportException
+	public long generateCount() throws EpptReportException
 	{
 		try
 		{
 			Object o = _scriptRunner.runScript(_function);
-			return (List<Double>) o;
+			return ((BigInteger) o).longValue();
 		}
 		catch(ScriptException e)
 		{
@@ -114,7 +148,7 @@ public class JythonValueGenerator
 		catch(ClassCastException e)
 		{
 			throw new EpptReportException("Incorrect return type from function: " + _function +
-					" Required: " + List.class, e);
+					" Required: " + BigInteger.class, e);
 		}
 	}
 
@@ -124,6 +158,10 @@ public class JythonValueGenerator
 		try
 		{
 			Object o = _scriptRunner.runScript(_function);
+			if(o == null)
+			{
+				throw new ScriptException("Script returned null collection: " + _function);
+			}
 			return (NavigableMap<Double, Double>) o;
 		}
 		catch(ScriptException e)
@@ -143,6 +181,10 @@ public class JythonValueGenerator
 		try
 		{
 			Object o = _scriptRunner.runScript(_function);
+			if(o == null)
+			{
+				throw new ScriptException("Script returned null collection: " + _function);
+			}
 			return (Map<Integer, Double>) o;
 		}
 		catch(ScriptException e)

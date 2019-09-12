@@ -3,7 +3,6 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/.idea/DWR-Enhanced-Post-Processing-Tool.iml" filepath="$PROJECT_DIR$/.idea/DWR-Enhanced-Post-Processing-Tool.iml" />
-      <module fileurl="file://$PROJECT_DIR$/../../Help/test/test.iml" filepath="$PROJECT_DIR$/../../Help/test/test.iml" />
     </modules>
   </component>
 </project>

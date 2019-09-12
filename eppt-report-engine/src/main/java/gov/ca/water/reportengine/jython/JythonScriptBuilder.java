@@ -19,6 +19,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.regex.Pattern;
 import java.util.stream.Stream;
 
@@ -109,21 +110,26 @@ public final class JythonScriptBuilder
 
 	public String buildFunctionFromTemplate(String functionReference)
 	{
-//		try
-//		{
-//			List<Script> scripts = readJythonScripts();
-//			_scripts.clear();
-//			_scripts.addAll(scripts);
-//		}
-//		catch(EpptInitializationException e)
-//		{
-//			e.printStackTrace();
-//		}
+//				try
+//				{
+//					List<Script> scripts = readJythonScripts();
+//					_scripts.clear();
+//					_scripts.addAll(scripts);
+//				}
+//				catch(EpptInitializationException e)
+//				{
+//					e.printStackTrace();
+//				}
+		return getMatchingScriptTemplate(functionReference)
+					   .orElseThrow(() -> new IllegalArgumentException("Illegal script: " + functionReference));
+	}
+
+	private Optional<String> getMatchingScriptTemplate(String functionReference)
+	{
 		String[] nameSplit = OPEN_PAREN_PATTERN.split(functionReference);
 		return _scripts.stream().filter(f -> f._name.equals(nameSplit[0]))
 					   .map(f -> buildFunctionFromTemplate(f, functionReference))
-					   .findAny()
-					   .orElse("");
+					   .findAny();
 	}
 
 	private String buildFunctionFromTemplate(Script script, String functionReference)
@@ -138,15 +144,21 @@ public final class JythonScriptBuilder
 			if(arg.length != script._arguments.size())
 			{
 				throw new IllegalArgumentException(
-						"Function: " + script._name + " Arguments length differs from template length. Arguments: " + Arrays.toString(arg) + " Template: " + script._arguments);
+						"Function: " + script._name + " Arguments length differs from template length. Arguments: " + Arrays.toString(
+								arg) + " Template: " + script._arguments);
 			}
 			for(int i = 0; i < arg.length; i++)
 			{
 				String s = script._arguments.get(i);
-				retval = retval.replace(s, arg[i]);
+				retval = retval.replace(s.trim(), arg[i].trim());
 			}
 		}
 		return retval;
+	}
+
+	public Optional<String> getScript(String reference)
+	{
+		return getMatchingScriptTemplate(reference);
 	}
 
 	private final class Script

@@ -19,11 +19,17 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.regex.Pattern;
 import java.util.stream.Stream;
 
+import javax.script.ScriptException;
+
+import com.google.common.flogger.FluentLogger;
+import gov.ca.water.calgui.scripts.JythonScriptRunner;
 import gov.ca.water.calgui.techservice.impl.FilePredicates;
 import gov.ca.water.reportengine.EpptReportException;
+import gov.ca.water.reportengine.jython.JythonScriptBuilder;
 
 import static java.util.stream.Collectors.collectingAndThen;
 import static java.util.stream.Collectors.groupingBy;
@@ -38,6 +44,7 @@ import static java.util.stream.Collectors.toList;
  */
 public class StandardSummaryReader
 {
+	private static final FluentLogger LOGGER = FluentLogger.forEnclosingClass();
 	private static final Pattern CSV_PATTERN = Pattern.compile(",");
 	private static final int MODULE_INDEX = 0;
 	private static final int SECTION_INDEX = 1;
@@ -107,7 +114,11 @@ public class StandardSummaryReader
 		List<ChartComponent> chartComponents = new ArrayList<>();
 		for(String[] line : lines)
 		{
-			ChartComponent chartComponent = new ChartComponent(line[TITLE_INDEX], line[HEADER_INDEX], line[SUB_HEADER_INDEX], line[COMPONENT_INDEX],
+			String title = attemptFunction(line[TITLE_INDEX]);
+			String header = attemptFunction(line[HEADER_INDEX]);
+			String subHeader = attemptFunction(line[SUB_HEADER_INDEX]);
+			String component = attemptFunction(line[COMPONENT_INDEX]);
+			ChartComponent chartComponent = new ChartComponent(title, header, subHeader, component,
 					line[FUNCTION_INDEX]);
 			chartComponents.add(chartComponent);
 		}
@@ -116,12 +127,37 @@ public class StandardSummaryReader
 		{
 			chartType = ChartType.getChartTypeForId(firstLine[CHART_TYPE_INDEX]);
 		}
+		catch(IllegalArgumentException e)
+		{
+			throw e;
+		}
 		catch(EpptReportException e)
 		{
 			throw new IllegalArgumentException("Error processing line: " + Arrays.toString(firstLine), e);
 		}
 		return new EpptChart(firstLine[MODULE_INDEX], firstLine[SECTION_INDEX], firstLine[SUB_MODULE_INDEX], chartType,
 				firstLine[CHART_ID_INDEX], chartComponents);
+	}
+
+	private String attemptFunction(String reference)
+	{
+		Optional<String> script = JythonScriptBuilder.getInstance().getScript(reference);
+		return script.map(this::runTitleScript).orElse(reference);
+	}
+
+	private String runTitleScript(String script)
+	{
+		String retval = script;
+		JythonScriptRunner runner = new JythonScriptRunner(null, null);
+		try
+		{
+			retval = runner.runScript(script).toString();
+		}
+		catch(ScriptException | RuntimeException e)
+		{
+			LOGGER.atSevere().withCause(e).log("Error running title script: " + script);
+		}
+		return retval;
 	}
 
 

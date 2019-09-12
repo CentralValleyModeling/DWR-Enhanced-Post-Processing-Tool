@@ -1,0 +1,301 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.9.0.final using JasperReports Library version 6.9.0-cb8f9004be492ccc537180b49c026951f4220bf3  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="QAQC_Reservoir Operations" language="groovy" pageWidth="612" pageHeight="792" columnWidth="504" leftMargin="54" rightMargin="54" topMargin="54" bottomMargin="54" isSummaryWithPageHeaderAndFooter="true" whenResourceMissingType="Empty" uuid="fdf29854-1cab-4c3d-99e9-a38b49852a26">
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<property name="net.sf.jasperreports.export.xls.collapse.row.span" value="true"/>
+	<property name="net.sf.jasperreports.print.create.bookmarks" value="true"/>
+	<property name="net.sf.jasperreports.xml.source" value="QAQC_Datasource"/>
+	<property name="com.jaspersoft.studio.unit.topMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.bottomMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.leftMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.rightMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.columnWidth" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.columnSpacing" value="pixel"/>
+	<parameter name="XML_DATA_DOCUMENT" class="org.w3c.dom.Document" isForPrompting="false"/>
+	<queryString language="XPath">
+		<![CDATA[/qaqc-report/summary/module/section/sub-module/chart]]>
+	</queryString>
+	<field name="module-order" class="java.lang.Integer">
+		<property name="net.sf.jasperreports.xpath.field.expression" value="ancestor::module/@module-order"/>
+		<fieldDescription><![CDATA[ancestor::module/@module-order]]></fieldDescription>
+	</field>
+	<field name="module-name" class="java.lang.String">
+		<property name="net.sf.jasperreports.xpath.field.expression" value="ancestor::module/@module-name"/>
+		<fieldDescription><![CDATA[ancestor::module/@module-name]]></fieldDescription>
+	</field>
+	<field name="chart-name" class="java.lang.String">
+		<property name="net.sf.jasperreports.xpath.field.expression" value="@chart-name"/>
+		<fieldDescription><![CDATA[@chart-name]]></fieldDescription>
+	</field>
+	<variable name="Section_Group_Footer_2" class="java.lang.String">
+		<variableExpression><![CDATA["coa-summary-sharing-ratios"]]></variableExpression>
+	</variable>
+	<variable name="Section_Group_Footer_3" class="java.lang.String">
+		<variableExpression><![CDATA["coa-summary-sharing-central-valley"]]></variableExpression>
+	</variable>
+	<variable name="Section_Group_Footer_4" class="java.lang.String">
+		<variableExpression><![CDATA["coa-summary-sharing-central-annual-supplies"]]></variableExpression>
+	</variable>
+	<variable name="Section_Group_Footer_5" class="java.lang.String">
+		<variableExpression><![CDATA["resops-control-all"]]></variableExpression>
+	</variable>
+	<variable name="Section_Group_Footer_6" class="java.lang.String">
+		<variableExpression><![CDATA["resops-list-spill-events"]]></variableExpression>
+	</variable>
+	<filterExpression><![CDATA[$F{module-name}=="Reservoir Operations"]]></filterExpression>
+	<group name="Module">
+		<groupExpression><![CDATA[$F{module-order}]]></groupExpression>
+		<groupFooter>
+			<band height="18">
+				<textField isStretchWithOverflow="true" evaluationTime="Group" evaluationGroup="Module" pattern="" bookmarkLevel="3">
+					<reportElement mode="Transparent" x="40" y="0" width="360" height="18" forecolor="#2F5496" backcolor="#FFFFFF" uuid="049050de-875e-482b-bd60-f06236626452">
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+						<property name="com.jaspersoft.studio.unit.y" value="px"/>
+						<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					</reportElement>
+					<box padding="2">
+						<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Left" verticalAlignment="Middle">
+						<font fontName="Arial" size="12"/>
+					</textElement>
+					<textFieldExpression><![CDATA["6.a. Summary of Coordinated Operations Agreement"]]></textFieldExpression>
+					<anchorNameExpression><![CDATA["6.a. Summary of Coordinated Operations Agreement"]]></anchorNameExpression>
+				</textField>
+			</band>
+			<band height="19">
+				<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				<subreport>
+					<reportElement stretchType="ElementGroupHeight" x="0" y="18" width="504" height="1" uuid="bff17dc4-ad70-4580-b5fe-051fc0f485b2">
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+						<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					</reportElement>
+					<subreportParameter name="XML_DATA_DOCUMENT">
+						<subreportParameterExpression><![CDATA[$P{XML_DATA_DOCUMENT}]]></subreportParameterExpression>
+					</subreportParameter>
+					<subreportParameter name="p_report_name">
+						<subreportParameterExpression><![CDATA[$V{Section_Group_Footer_2}]]></subreportParameterExpression>
+					</subreportParameter>
+					<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+					<subreportExpression><![CDATA["/DWR_QA_QC_Reports/Subreports/base-alt-diff-table/"+$V{Section_Group_Footer_2}+".jasper"]]></subreportExpression>
+				</subreport>
+				<textField isStretchWithOverflow="true" evaluationTime="Report" pattern="" bookmarkLevel="4">
+					<reportElement mode="Transparent" x="0" y="0" width="360" height="18" forecolor="#2F5496" backcolor="#FFFFFF" uuid="cc15bc3f-8379-4147-939b-83c1a491755f">
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+						<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					</reportElement>
+					<box padding="2">
+						<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Left" verticalAlignment="Middle">
+						<font fontName="Arial" size="12"/>
+					</textElement>
+					<textFieldExpression><![CDATA["Sharing Ratios Summary"]]></textFieldExpression>
+					<anchorNameExpression><![CDATA["Sharing Ratios Summary"]]></anchorNameExpression>
+				</textField>
+			</band>
+			<band height="29">
+				<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				<subreport>
+					<reportElement stretchType="ElementGroupHeight" x="0" y="28" width="504" height="1" uuid="c2516652-2b3a-46e6-aa24-3f6032c67ef7">
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+						<property name="com.jaspersoft.studio.unit.x" value="px"/>
+						<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					</reportElement>
+					<subreportParameter name="XML_DATA_DOCUMENT">
+						<subreportParameterExpression><![CDATA[$P{XML_DATA_DOCUMENT}]]></subreportParameterExpression>
+					</subreportParameter>
+					<subreportParameter name="p_report_name">
+						<subreportParameterExpression><![CDATA[$V{Section_Group_Footer_3}]]></subreportParameterExpression>
+					</subreportParameter>
+					<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+					<subreportExpression><![CDATA["/DWR_QA_QC_Reports/Subreports/coa-table/"+$V{Section_Group_Footer_3}+".jasper"]]></subreportExpression>
+				</subreport>
+				<textField isStretchWithOverflow="true" evaluationTime="Report" pattern="" bookmarkLevel="4">
+					<reportElement mode="Transparent" x="0" y="10" width="360" height="18" forecolor="#2F5496" backcolor="#FFFFFF" uuid="92327d96-1afe-480c-92a4-d01545a6e796">
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+						<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					</reportElement>
+					<box padding="2">
+						<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Left" verticalAlignment="Middle">
+						<font fontName="Arial" size="12"/>
+					</textElement>
+					<textFieldExpression><![CDATA["Sharing of Central Valley Supplies during Balanced Conditions"]]></textFieldExpression>
+					<anchorNameExpression><![CDATA["Sharing of Central Valley Supplies during Balanced Conditions"]]></anchorNameExpression>
+				</textField>
+			</band>
+			<band height="1">
+				<subreport>
+					<reportElement stretchType="ElementGroupHeight" x="0" y="0" width="504" height="1" uuid="be0cbc9b-b4bc-43e0-9462-4e72ea6c8e15">
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+						<property name="com.jaspersoft.studio.unit.x" value="px"/>
+						<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					</reportElement>
+					<subreportParameter name="XML_DATA_DOCUMENT">
+						<subreportParameterExpression><![CDATA[$P{XML_DATA_DOCUMENT}]]></subreportParameterExpression>
+					</subreportParameter>
+					<subreportParameter name="p_report_name">
+						<subreportParameterExpression><![CDATA[$V{Section_Group_Footer_4}]]></subreportParameterExpression>
+					</subreportParameter>
+					<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+					<subreportExpression><![CDATA["/DWR_QA_QC_Reports/Subreports/base-alt-diff-table/"+$V{Section_Group_Footer_4}+".jasper"]]></subreportExpression>
+				</subreport>
+			</band>
+			<band height="47">
+				<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				<textField isStretchWithOverflow="true" evaluationTime="Group" evaluationGroup="Module" pattern="" bookmarkLevel="3">
+					<reportElement mode="Transparent" x="40" y="10" width="360" height="18" forecolor="#2F5496" backcolor="#FFFFFF" uuid="049050de-875e-482b-bd60-f06236626452">
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+						<property name="com.jaspersoft.studio.unit.y" value="px"/>
+						<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					</reportElement>
+					<box padding="2">
+						<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Left" verticalAlignment="Middle">
+						<font fontName="Arial" size="12"/>
+					</textElement>
+					<textFieldExpression><![CDATA["6.b. Control for Coordinated Operations Agreement"]]></textFieldExpression>
+					<anchorNameExpression><![CDATA["6.b. Control for Coordinated Operations Agreement"]]></anchorNameExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" evaluationTime="Report" pattern="" bookmarkLevel="4">
+					<reportElement mode="Transparent" x="0" y="28" width="360" height="18" forecolor="#2F5496" backcolor="#FFFFFF" uuid="879396cd-0ddc-40a4-bfc4-29c14a9d3e0f">
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+						<property name="com.jaspersoft.studio.unit.y" value="px"/>
+						<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					</reportElement>
+					<box padding="2">
+						<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Left" verticalAlignment="Middle">
+						<font fontName="Arial" size="12"/>
+					</textElement>
+					<textFieldExpression><![CDATA["Sharing Ratios based on the Dec 2018 Addnedum to 1986 COA"]]></textFieldExpression>
+					<anchorNameExpression><![CDATA["Sharing Ratios based on the Dec 2018 Addnedum to 1986 COA"]]></anchorNameExpression>
+				</textField>
+				<subreport>
+					<reportElement stretchType="ElementGroupHeight" x="0" y="46" width="504" height="1" uuid="be0cbc9b-b4bc-43e0-9462-4e72ea6c8e15">
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+						<property name="com.jaspersoft.studio.unit.x" value="px"/>
+						<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					</reportElement>
+					<subreportParameter name="XML_DATA_DOCUMENT">
+						<subreportParameterExpression><![CDATA[$P{XML_DATA_DOCUMENT}]]></subreportParameterExpression>
+					</subreportParameter>
+					<subreportParameter name="p_report_name">
+						<subreportParameterExpression><![CDATA[$V{Section_Group_Footer_5}]]></subreportParameterExpression>
+					</subreportParameter>
+					<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+					<subreportExpression><![CDATA["/DWR_QA_QC_Reports/Subreports/control-table/"+$V{Section_Group_Footer_5}+".jasper"]]></subreportExpression>
+				</subreport>
+			</band>
+			<band height="27">
+				<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				<textField isStretchWithOverflow="true" evaluationTime="Report" pattern="" bookmarkLevel="4">
+					<reportElement mode="Transparent" x="0" y="8" width="360" height="18" forecolor="#2F5496" backcolor="#FFFFFF" uuid="b7350e3b-2a6f-414d-bf0a-1f02dcc3af55">
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+						<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					</reportElement>
+					<box padding="2">
+						<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Left" verticalAlignment="Middle">
+						<font fontName="Arial" size="12"/>
+					</textElement>
+					<textFieldExpression><![CDATA["Central Valley Project and State Water Project Annual Supplies"]]></textFieldExpression>
+					<anchorNameExpression><![CDATA["Central Valley Project and State Water Project Annual Supplies"]]></anchorNameExpression>
+				</textField>
+				<subreport>
+					<reportElement stretchType="ElementGroupHeight" x="0" y="26" width="504" height="1" uuid="be0cbc9b-b4bc-43e0-9462-4e72ea6c8e15">
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+						<property name="com.jaspersoft.studio.unit.x" value="px"/>
+						<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					</reportElement>
+					<subreportParameter name="XML_DATA_DOCUMENT">
+						<subreportParameterExpression><![CDATA[$P{XML_DATA_DOCUMENT}]]></subreportParameterExpression>
+					</subreportParameter>
+					<subreportParameter name="p_report_name">
+						<subreportParameterExpression><![CDATA[$V{Section_Group_Footer_6}]]></subreportParameterExpression>
+					</subreportParameter>
+					<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+					<subreportExpression><![CDATA["/DWR_QA_QC_Reports/Subreports/list/"+$V{Section_Group_Footer_6}+".jasper"]]></subreportExpression>
+				</subreport>
+			</band>
+		</groupFooter>
+	</group>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="23" splitType="Stretch">
+			<property name="com.jaspersoft.studio.unit.height" value="px"/>
+			<textField pattern="" bookmarkLevel="2">
+				<reportElement mode="Transparent" x="20" y="0" width="380" height="23" forecolor="#2F5496" backcolor="#FFFFFF" uuid="da316ce9-8cf1-4a05-9f20-e75814bab6f1">
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+				</reportElement>
+				<box padding="2">
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="Arial" size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA["6. Coordinated Operations Agreement"]]></textFieldExpression>
+				<anchorNameExpression><![CDATA["6. Coordinated Operations Agreement"]]></anchorNameExpression>
+			</textField>
+		</band>
+	</title>
+	<columnHeader>
+		<band splitType="Stretch">
+			<printWhenExpression><![CDATA[1==0]]></printWhenExpression>
+		</band>
+	</columnHeader>
+	<detail>
+		<band splitType="Stretch">
+			<property name="com.jaspersoft.studio.unit.height" value="px"/>
+			<printWhenExpression><![CDATA[1==0]]></printWhenExpression>
+		</band>
+	</detail>
+	<pageFooter>
+		<band height="15">
+			<property name="com.jaspersoft.studio.unit.height" value="px"/>
+			<textField evaluationTime="Master">
+				<reportElement mode="Transparent" x="0" y="0" width="504" height="15" uuid="ca7e0d15-42ed-43b2-ac43-83c7149fadf0">
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA["Page | " + ($V{MASTER_CURRENT_PAGE}-1)]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageFooter>
+	<summary>
+		<band>
+			<property name="com.jaspersoft.studio.unit.height" value="px"/>
+			<printWhenExpression><![CDATA[1==0]]></printWhenExpression>
+		</band>
+	</summary>
+</jasperReport>

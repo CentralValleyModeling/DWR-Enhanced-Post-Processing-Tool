@@ -117,7 +117,7 @@ public class DTSProcessor
 		{
 			if(hD != null)
 			{
-//				hD.close();
+				hD.close();
 			}
 		}
 		return subModToViolations;
