@@ -48,11 +48,11 @@ define Delta_MB_DTS {alias Delta_MB kind 'DTS-1' units 'CFS'}
 define Delta_MB_Check {
 	case balanced {
 	condition abs(Delta_MB) < abs_threshold
-	value 0
+	value 100
 	}
 	case notBalance {
 	condition always
-	value 1
+	value 200
 	}
 }
 define Delta_MB_STATUS_DTS {alias Delta_MB_Check kind 'DTS-STATUS' units 'NONE'}

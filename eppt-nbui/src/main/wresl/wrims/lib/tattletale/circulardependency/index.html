@@ -1,0 +1,53 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN""http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+  <title>JBoss Tattletale 1.2.0.Beta2: Circular Dependency</title>
+  <meta http-equiv="Content-Type" content="text/html;charset=utf-8">
+  <link rel="stylesheet" type="text/css" href="../style.css">
+</head>
+<body>
+
+<h1>Circular Dependency</h1>
+<a href="../index.html">Main</a>
+<p>
+<table>
+  <tr>
+     <th>Archive</th>
+     <th>Circular Dependencies</th>
+  </tr>
+  <tr class="rowodd">
+     <td><a href="../jar/data.jar.html">data.jar</a></td>
+     <td><a href="../jar/codebase.jar.html">codebase.jar</a>, <a href="../jar/commons-io-2.1.jar.html">commons-io-2.1.jar</a>, <a href="../jar/dom4j-1.6.1.jar.html">dom4j-1.6.1.jar</a>, <a href="../jar/hec.jar.html">hec.jar (*)</a>, <a href="../jar/jai_codec.jar.html">jai_codec.jar</a>, <a href="../jar/jai_core.jar.html">jai_core.jar</a>, <a href="../jar/jai_imageio.jar.html">jai_imageio.jar</a>, <a href="../jar/jcommon.jar.html">jcommon.jar</a>, <a href="../jar/jdom.jar.html">jdom.jar</a>, <a href="../jar/jfreechart.jar.html">jfreechart.jar</a>, <a href="../jar/jh.jar.html">jh.jar</a>, <a href="../jar/jpy.jar.html">jpy.jar</a>, <a href="../jar/lookup.jar.html">lookup.jar</a>, <a href="../jar/misc.jar.html">misc.jar</a>, <a href="../jar/poi-3.8-20120326.jar.html">poi-3.8-20120326.jar</a>, <a href="../jar/poi-ooxml-3.8-20120326.jar.html">poi-ooxml-3.8-20120326.jar</a>, <a href="../jar/poi-ooxml-schemas-3.8-20120326.jar.html">poi-ooxml-schemas-3.8-20120326.jar</a>, <a href="../jar/rma.jar.html">rma.jar (*)</a>, <a href="../jar/stax-api-1.0.1.jar.html">stax-api-1.0.1.jar</a>, <a href="../jar/xmlbeans-2.3.0.jar.html">xmlbeans-2.3.0.jar</a></td>
+  </tr>
+  <tr class="roweven">
+     <td><a href="../jar/hec.jar.html">hec.jar</a></td>
+     <td><a href="../jar/codebase.jar.html">codebase.jar</a>, <a href="../jar/commons-io-2.1.jar.html">commons-io-2.1.jar</a>, <a href="../jar/data.jar.html">data.jar (*)</a>, <a href="../jar/dom4j-1.6.1.jar.html">dom4j-1.6.1.jar</a>, <a href="../jar/jai_codec.jar.html">jai_codec.jar</a>, <a href="../jar/jai_core.jar.html">jai_core.jar</a>, <a href="../jar/jai_imageio.jar.html">jai_imageio.jar</a>, <a href="../jar/jcommon.jar.html">jcommon.jar</a>, <a href="../jar/jdom.jar.html">jdom.jar</a>, <a href="../jar/jfreechart.jar.html">jfreechart.jar</a>, <a href="../jar/jh.jar.html">jh.jar</a>, <a href="../jar/jpy.jar.html">jpy.jar</a>, <a href="../jar/lookup.jar.html">lookup.jar</a>, <a href="../jar/misc.jar.html">misc.jar</a>, <a href="../jar/poi-3.8-20120326.jar.html">poi-3.8-20120326.jar</a>, <a href="../jar/poi-ooxml-3.8-20120326.jar.html">poi-ooxml-3.8-20120326.jar</a>, <a href="../jar/poi-ooxml-schemas-3.8-20120326.jar.html">poi-ooxml-schemas-3.8-20120326.jar</a>, <a href="../jar/rma.jar.html">rma.jar (*)</a>, <a href="../jar/stax-api-1.0.1.jar.html">stax-api-1.0.1.jar</a>, <a href="../jar/xmlbeans-2.3.0.jar.html">xmlbeans-2.3.0.jar</a></td>
+  </tr>
+  <tr class="rowodd">
+     <td><a href="../jar/jai_codec.jar.html">jai_codec.jar</a></td>
+     <td><a href="../jar/jai_core.jar.html">jai_core.jar (*)</a></td>
+  </tr>
+  <tr class="roweven">
+     <td><a href="../jar/jai_core.jar.html">jai_core.jar</a></td>
+     <td><a href="../jar/jai_codec.jar.html">jai_codec.jar (*)</a></td>
+  </tr>
+  <tr class="rowodd">
+     <td><a href="../jar/rma.jar.html">rma.jar</a></td>
+     <td><a href="../jar/codebase.jar.html">codebase.jar</a>, <a href="../jar/commons-io-2.1.jar.html">commons-io-2.1.jar</a>, <a href="../jar/data.jar.html">data.jar (*)</a>, <a href="../jar/dom4j-1.6.1.jar.html">dom4j-1.6.1.jar</a>, <a href="../jar/hec.jar.html">hec.jar (*)</a>, <a href="../jar/jai_codec.jar.html">jai_codec.jar</a>, <a href="../jar/jai_core.jar.html">jai_core.jar</a>, <a href="../jar/jai_imageio.jar.html">jai_imageio.jar</a>, <a href="../jar/jcommon.jar.html">jcommon.jar</a>, <a href="../jar/jdom.jar.html">jdom.jar</a>, <a href="../jar/jfreechart.jar.html">jfreechart.jar</a>, <a href="../jar/jh.jar.html">jh.jar</a>, <a href="../jar/jpy.jar.html">jpy.jar</a>, <a href="../jar/lookup.jar.html">lookup.jar</a>, <a href="../jar/misc.jar.html">misc.jar</a>, <a href="../jar/poi-3.8-20120326.jar.html">poi-3.8-20120326.jar</a>, <a href="../jar/poi-ooxml-3.8-20120326.jar.html">poi-ooxml-3.8-20120326.jar</a>, <a href="../jar/poi-ooxml-schemas-3.8-20120326.jar.html">poi-ooxml-schemas-3.8-20120326.jar</a>, <a href="../jar/stax-api-1.0.1.jar.html">stax-api-1.0.1.jar</a>, <a href="../jar/xmlbeans-2.3.0.jar.html">xmlbeans-2.3.0.jar</a></td>
+  </tr>
+  <tr class="roweven">
+     <td><a href="../jar/slf4j-api-1.7.5.jar.html">slf4j-api-1.7.5.jar</a></td>
+     <td><a href="../jar/slf4j-nop-1.7.5.jar.html">slf4j-nop-1.7.5.jar (*)</a></td>
+  </tr>
+  <tr class="rowodd">
+     <td><a href="../jar/slf4j-nop-1.7.5.jar.html">slf4j-nop-1.7.5.jar</a></td>
+     <td><a href="../jar/slf4j-api-1.7.5.jar.html">slf4j-api-1.7.5.jar (*)</a></td>
+  </tr>
+</table>
+
+<p/>
+<hr/>
+Generated by: <a href="http://www.jboss.org/tattletale">JBoss Tattletale 1.2.0.Beta2</a>
+
+</body>
+</html>

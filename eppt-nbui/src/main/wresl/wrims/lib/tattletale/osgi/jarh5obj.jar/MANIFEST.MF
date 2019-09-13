@@ -1,0 +1,16 @@
+Manifest-Version: 1.0
+Created-By: 1.7.0_40 (Oracle Corporation)
+
+
+### OSGi information
+Bundle-ManifestVersion: 2
+Bundle-SymbolicName: ncsa.hdf.object.h5
+Bundle-Description: jarh5obj
+Bundle-Name: jarh5obj
+Bundle-Version: 0.0.0
+Export-Package: ncsa.hdf.object.h5;uses:="ncsa.hdf.hdf5lib,ncsa.hdf.hd
+ f5lib.exceptions,ncsa.hdf.hdf5lib.structs,ncsa.hdf.object,org.slf4j"
+Import-Package: java.io,java.lang,java.lang.reflect,java.util,javax.sw
+ ing.tree,ncsa.hdf.hdf5lib;version="0.0.0",ncsa.hdf.hdf5lib.exceptions
+ ;version="0.0.0",ncsa.hdf.hdf5lib.structs;version="0.0.0",ncsa.hdf.ob
+ ject;version="0.0.0",org.slf4j;version="1.7.5"

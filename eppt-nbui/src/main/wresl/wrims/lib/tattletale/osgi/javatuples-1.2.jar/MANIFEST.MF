@@ -1,0 +1,16 @@
+Manifest-Version: 1.0
+Archiver-Version: Plexus Archiver
+Built-By: daniel
+Created-By: Apache Maven
+Build-Jdk: 1.6.0_25
+
+
+### OSGi information
+Bundle-ManifestVersion: 2
+Bundle-SymbolicName: org.javatuples
+Bundle-Description: javatuples-1.2
+Bundle-Name: javatuples-1.2
+Bundle-Version: 0.0.0
+Export-Package: org.javatuples;uses:="org.javatuples.valueintf",org.ja
+ vatuples.valueintf
+Import-Package: java.io,java.lang,java.util

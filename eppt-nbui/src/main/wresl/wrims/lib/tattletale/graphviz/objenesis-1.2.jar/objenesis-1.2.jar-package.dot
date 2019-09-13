@@ -1,0 +1,22 @@
+digraph objenesis_1_2_package_dependencies {
+  node [shape = box, fontsize=10.0];
+  org_objenesis -> org_objenesis_instantiator;
+  org_objenesis -> org_objenesis_strategy;
+  org_objenesis_instantiator_basic -> org_objenesis;
+  org_objenesis_instantiator_basic -> org_objenesis_instantiator;
+  org_objenesis_instantiator_gcj -> org_objenesis;
+  org_objenesis_instantiator_gcj -> org_objenesis_instantiator;
+  org_objenesis_instantiator_jrockit -> org_objenesis;
+  org_objenesis_instantiator_jrockit -> org_objenesis_instantiator;
+  org_objenesis_instantiator_perc -> org_objenesis;
+  org_objenesis_instantiator_perc -> org_objenesis_instantiator;
+  org_objenesis_instantiator_sun -> org_objenesis;
+  org_objenesis_instantiator_sun -> org_objenesis_instantiator;
+  org_objenesis_strategy -> org_objenesis;
+  org_objenesis_strategy -> org_objenesis_instantiator;
+  org_objenesis_strategy -> org_objenesis_instantiator_basic;
+  org_objenesis_strategy -> org_objenesis_instantiator_gcj;
+  org_objenesis_strategy -> org_objenesis_instantiator_jrockit;
+  org_objenesis_strategy -> org_objenesis_instantiator_perc;
+  org_objenesis_strategy -> org_objenesis_instantiator_sun;
+}

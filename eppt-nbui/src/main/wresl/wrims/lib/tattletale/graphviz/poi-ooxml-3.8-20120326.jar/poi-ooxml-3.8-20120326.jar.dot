@@ -1,0 +1,9 @@
+digraph poi_ooxml_3_8_20120326_dependencies {
+  node [shape = box, fontsize=10.0];
+  poi_ooxml_3_8_20120326 -> dom4j_1_6_1;
+  poi_ooxml_3_8_20120326 -> misc;
+  poi_ooxml_3_8_20120326 -> poi_3_8_20120326;
+  poi_ooxml_3_8_20120326 -> poi_ooxml_schemas_3_8_20120326;
+  poi_ooxml_3_8_20120326 -> stax_api_1_0_1;
+  poi_ooxml_3_8_20120326 -> xmlbeans_2_3_0;
+}

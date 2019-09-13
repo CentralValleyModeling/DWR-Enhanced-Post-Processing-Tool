@@ -1,0 +1,78 @@
+Manifest-Version: 1.0
+Ant-Version: Apache Ant 1.5.2 
+Created-By: 1.2.2 (Sun Microsystems Inc.)
+
+Name: org/jdom/
+Specification-Title: JDOM Classes
+Implementation-Title: org.jdom
+Implementation-Version: 1.0
+Specification-Version: 1.0
+Specification-Vendor: jdom.org
+Implementation-Vendor: jdom.org
+
+Name: org/jdom/xpath/
+Specification-Title: JDOM XPath Classes
+Implementation-Title: org.jdom.xpath
+Implementation-Version: 1.0
+Specification-Version: 1.0
+Specification-Vendor: jdom.org
+Implementation-Vendor: jdom.org
+
+Name: org/jdom/output/
+Specification-Title: JDOM Output Classes
+Implementation-Title: org.jdom.output
+Implementation-Version: 1.0
+Specification-Version: 1.0
+Specification-Vendor: jdom.org
+Implementation-Vendor: jdom.org
+
+Name: org/jdom/adapters/
+Specification-Title: JDOM Adapter Classes
+Implementation-Title: org.jdom.adapters
+Implementation-Version: 1.0
+Specification-Version: 1.0
+Specification-Vendor: jdom.org
+Implementation-Vendor: jdom.org
+
+Name: org/jdom/filter/
+Specification-Title: JDOM Filter Classes
+Implementation-Title: org.jdom.filter
+Implementation-Version: 1.0
+Specification-Version: 1.0
+Specification-Vendor: jdom.org
+Implementation-Vendor: jdom.org
+
+Name: org/jdom/transform/
+Specification-Title: JDOM Transformation Classes
+Implementation-Title: org.jdom.transform
+Implementation-Version: 1.0
+Specification-Version: 1.0
+Specification-Vendor: jdom.org
+Implementation-Vendor: jdom.org
+
+Name: org/jdom/input/
+Specification-Title: JDOM Input Classes
+Implementation-Title: org.jdom.input
+Implementation-Version: 1.0
+Specification-Version: 1.0
+Specification-Vendor: jdom.org
+Implementation-Vendor: jdom.org
+
+
+### OSGi information
+Bundle-ManifestVersion: 2
+Bundle-SymbolicName: org.jdom
+Bundle-Description: jdom
+Bundle-Name: jdom
+Bundle-Version: 1.0
+Export-Package: org.jdom;uses:="org.jdom.filter,org.jdom.output",org.j
+ dom.adapters;uses:="org.jdom,org.jdom.input",org.jdom.filter;uses:="o
+ rg.jdom",org.jdom.input;uses:="org.jdom",org.jdom.output;uses:="org.j
+ dom,org.jdom.adapters",org.jdom.transform;uses:="org.jdom,org.jdom.in
+ put,org.jdom.output",org.jdom.xpath;uses:="org.jaxen,org.jaxen.jdom,o
+ rg.jdom"
+Import-Package: java.io,java.lang,java.lang.reflect,java.net,java.rmi,
+ java.sql,java.util,java.util.jar,java.util.zip,javax.xml.parsers,java
+ x.xml.transform,javax.xml.transform.sax,javax.xml.transform.stream,or
+ g.jaxen,org.jaxen.jdom,org.w3c.dom;version="0.0.0",org.xml.sax;versio
+ n="0.0.0",org.xml.sax.ext,org.xml.sax.helpers;version="0.0.0"

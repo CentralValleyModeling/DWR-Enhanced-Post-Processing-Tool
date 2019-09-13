@@ -1,0 +1,12 @@
+digraph commons_io_2_1_package_dependencies {
+  node [shape = box, fontsize=10.0];
+  org_apache_commons_io -> org_apache_commons_io_filefilter;
+  org_apache_commons_io -> org_apache_commons_io_output;
+  org_apache_commons_io_comparator -> org_apache_commons_io;
+  org_apache_commons_io_filefilter -> org_apache_commons_io;
+  org_apache_commons_io_input -> org_apache_commons_io;
+  org_apache_commons_io_monitor -> org_apache_commons_io;
+  org_apache_commons_io_monitor -> org_apache_commons_io_comparator;
+  org_apache_commons_io_output -> org_apache_commons_io;
+  org_apache_commons_io_output -> org_apache_commons_io_input;
+}

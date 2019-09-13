@@ -1,0 +1,6 @@
+digraph xml_package_dependencies {
+  node [shape = box, fontsize=10.0];
+  com_sun_xml_parser -> com_sun_xml_util;
+  com_sun_xml_tree -> com_sun_xml_parser;
+  com_sun_xml_tree -> com_sun_xml_util;
+}

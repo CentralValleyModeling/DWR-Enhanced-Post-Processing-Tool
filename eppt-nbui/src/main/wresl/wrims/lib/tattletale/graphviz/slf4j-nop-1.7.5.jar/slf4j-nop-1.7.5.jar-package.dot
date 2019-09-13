@@ -1,0 +1,6 @@
+digraph slf4j_nop_1_7_5_package_dependencies {
+  node [shape = box, fontsize=10.0];
+  org_slf4j_impl -> org_slf4j;
+  org_slf4j_impl -> org_slf4j_helpers;
+  org_slf4j_impl -> org_slf4j_spi;
+}

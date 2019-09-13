@@ -1,0 +1,45 @@
+Manifest-Version: 1.0
+Ant-Version: Apache Ant 1.8.4
+Created-By: 1.7.0_80-b15 (Oracle Corporation)
+
+
+### OSGi information
+Bundle-ManifestVersion: 2
+Bundle-SymbolicName: hec.data
+Bundle-Description: hecData
+Bundle-Name: hecData
+Bundle-Version: 0.0.0
+Export-Package: hec.data;uses:="hec.data.cwmsRating,hec.data.location,
+ hec.data.textFilter,hec.data.tx,hec.heclib.dss,hec.heclib.util,hec.he
+ cmath,hec.io,hec.lang,hec.util,org.jdom,rma.util,rma.util.lookup",hec
+ .data.cache,hec.data.cwmsRating;uses:="hec.data,hec.data.cwmsRating.i
+ o,hec.data.location,hec.data.rating,hec.heclib.util,hec.hecmath,hec.h
+ ecmath.computation,hec.io,hec.lang,hec.util,rma.lang",hec.data.cwmsRa
+ ting.io;uses:="hec.data,hec.data.cwmsRating,hec.heclib.util,hec.io,he
+ c.util,org.jdom,org.jdom.filter,org.jdom.input,org.jdom.output",hec.d
+ ata.extractpost;uses:="hec.data,hec.data.tx,hec.heclib.dss,rma.util",
+ hec.data.level;uses:="hec.data,hec.data.location,hec.lang,hec.lang.an
+ notation,hec.util,java.util,org.jdom,org.jdom.input,org.jdom.xpath,rm
+ a.lang,rma.util",hec.data.location;uses:="hec.data,hec.data.meta,hec.
+ lang,hec.lang.annotation,hec.util,org.jdom,rma.util",hec.data.meta;us
+ es:="hec.data,hec.data.location,hec.data.tx,rma.util",hec.data.rating
+ ;uses:="hec.data,hec.data.location",hec.data.textFilter;uses:="hec.da
+ ta,hec.util",hec.data.timeSeriesText;uses:="hec.data,hec.data.cache,h
+ ec.data.location,java.util,rma.util.lookup",hec.data.tx;uses:="hec.da
+ ta,hec.data.location,hec.data.meta,hec.heclib.dss,hec.heclib.util,hec
+ .io,hec.lang,java.util,rma.swing,rma.util,rma.util.lookup",hec.data.u
+ sgsRating;uses:="hec.data,hec.data.meta,hec.data.tx,hec.io,hec.lang"
+Import-Package: hec.heclib.dss;version="3.0.0.44G",hec.heclib.util;ver
+ sion="3.0.0.44G",hec.hecmath;version="3.0.0.44G",hec.hecmath.computat
+ ion;version="3.0.0.44G",hec.io;version="3.0.0.44G",hec.lang;version="
+ 3.0.0.44G",hec.lang.annotation;version="3.0.0.44G",hec.util;version="
+ 3.0.0.44G",java.awt,java.awt.geom,java.io,java.lang,java.lang.ref,jav
+ a.lang.reflect,java.math,java.sql,java.text,java.util,java.util.loggi
+ ng,java.util.prefs,java.util.regex,java.util.zip,javax.swing,javax.sw
+ ing.event,javax.swing.table,javax.xml.namespace;version="1.0.1",javax
+ .xml.parsers,javax.xml.xpath,org.jdom;version="1.0",org.jdom.filter;v
+ ersion="1.0",org.jdom.input;version="1.0",org.jdom.output;version="1.
+ 0",org.jdom.xpath;version="1.0",org.w3c.dom;version="0.0.0",org.xml.s
+ ax;version="0.0.0",org.xml.sax.helpers,rma.lang;version="3.0.0.44G",r
+ ma.swing;version="3.0.0.44G",rma.util;version="3.0.0.44G",rma.util.lo
+ okup;version="0.0.0"

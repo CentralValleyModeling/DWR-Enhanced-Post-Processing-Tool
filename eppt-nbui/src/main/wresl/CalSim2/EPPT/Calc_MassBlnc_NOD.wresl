@@ -248,11 +248,11 @@ define NOD_MB_DTS {alias NOD_MB kind 'DTS-1' units 'CFS'}
 define NOD_MB_Check {
 	case balanced {
 	condition abs(NOD_MB) < abs_threshold
-	value 0
+	value 100
 	}
 	case notBalanced{
 	condition always
-	value 0 ! underreview - mass balance under review for miss arcs
+	value 200 ! underreview - mass balance under review for miss arcs
 	!value 1
 	}
 }

@@ -1,0 +1,10 @@
+digraph vista_dependencies {
+  node [shape = box, fontsize=10.0];
+  vista -> dsm2_input_model;
+  vista -> hec;
+  vista -> jarh5obj;
+  vista -> jarhdf5_2_10_0;
+  vista -> jarhdfobj;
+  vista -> jpy;
+  vista -> slf4j_api_1_7_5;
+}

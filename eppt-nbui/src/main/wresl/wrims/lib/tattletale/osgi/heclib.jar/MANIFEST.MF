@@ -1,0 +1,43 @@
+Manifest-Version: 1.0
+Ant-Version: Apache Ant 1.8.4
+Implementation-Title: Cavi
+Implementation-Version: 3.1.00.29C-May 2 2016
+Specification-Vendor: HEC
+Specification-Title: Cavi Classes
+Created-By: 1.7.0_80-b15 (Oracle Corporation)
+Specification-Version: CWMS3.0.1-04/01/2016
+
+Name: NAME
+Implementation-Vendor: BANG
+
+
+### OSGi information
+Bundle-ManifestVersion: 2
+Bundle-SymbolicName: hec.heclib.dss
+Bundle-Description: heclib
+Bundle-Name: heclib
+Bundle-Version: 0.0.0
+Export-Package: hec.heclib.dss;uses:="hec.client,hec.csinterface,hec.d
+ ata,hec.data.cwmsRating,hec.data.cwmsRating.io,hec.dssgui,hec.heclib.
+ util,hec.hecmath,hec.importExport.shef,hec.io,hec.lang,hec.login,hec.
+ util,rma.util",hec.heclib.grid;uses:="hec.csinterface,hec.heclib.dss,
+ hec.heclib.util,hec.io,hec.lang,rma.util",hec.heclib.grid.UnifiedGrid
+ Loader;uses:="hec.heclib.dss,hec.heclib.grid,hec.heclib.util,org.apac
+ he.commons.beanutils,org.apache.commons.cli,org.apache.commons.digest
+ er,org.apache.commons.io,org.apache.commons.io.filefilter,ucar.ma2,uc
+ ar.nc2",hec.heclib.util;uses:="hec.data,hec.heclib.dss,hec.io,hec.lan
+ g,hec.lang.annotation,rma.util"
+Import-Package: hec.client;version="3.0.0.44G",hec.csinterface,hec.dat
+ a;version="3.0.0.44G",hec.data.cwmsRating;version="3.0.0.44G",hec.dat
+ a.cwmsRating.io;version="3.0.0.44G",hec.dssgui;version="3.0.0.44G",he
+ c.hecmath;version="3.0.0.44G",hec.importExport.shef,hec.io;version="3
+ .0.0.44G",hec.lang;version="3.0.0.44G",hec.lang.annotation;version="3
+ .0.0.44G",hec.login,hec.util;version="3.0.0.44G",java.awt,java.awt.im
+ age,java.io,java.lang,java.lang.reflect,java.nio,java.rmi,java.text,j
+ ava.util,java.util.concurrent,java.util.logging,java.util.regex,java.
+ util.zip,javax.xml.parsers,javax.xml.transform,javax.xml.transform.st
+ ream,javax.xml.validation,org.apache.commons.beanutils,org.apache.com
+ mons.cli,org.apache.commons.digester,org.apache.commons.io;version="2
+ .1",org.apache.commons.io.filefilter;version="2.1",org.xml.sax;versio
+ n="0.0.0",org.xml.sax.helpers,rma.util;version="3.0.0.44G",ucar.ma2,u
+ car.nc2

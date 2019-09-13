@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<jboss-deployment-structure>
+  <deployment>
+     <dependencies>
+        <module name="javax.xml.bind.api"/>
+        <module name="org.apache.commons.beanutils"/>
+        <module name="org.apache.commons.cli"/>
+        <module name="org.apache.commons.io"/>
+        <module name="org.jdom"/>
+        <module name="org.python.jython.standalone"/>
+        <module name="system"/>
+     </dependencies>
+  </deployment>
+</jboss-deployment-structure>

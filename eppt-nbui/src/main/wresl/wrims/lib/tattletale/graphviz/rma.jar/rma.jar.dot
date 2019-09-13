@@ -1,0 +1,9 @@
+digraph rma_dependencies {
+  node [shape = box, fontsize=10.0];
+  rma -> codebase;
+  rma -> data;
+  rma -> hec;
+  rma -> jdom;
+  rma -> jpy;
+  rma -> misc;
+}

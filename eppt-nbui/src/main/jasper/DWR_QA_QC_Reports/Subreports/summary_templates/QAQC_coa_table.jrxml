@@ -6,7 +6,7 @@
 	<property name="net.sf.jasperreports.print.create.bookmarks" value="true"/>
 	<property name="com.jaspersoft.studio.unit.pageHeight" value="inch"/>
 	<property name="com.jaspersoft.studio.unit.pageWidth" value="inch"/>
-	<property name="net.sf.jasperreports.data.adapter" value="QAQC_Datasource.xml"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="QAQC_Datasource"/>
 	<property name="com.jaspersoft.studio.unit." value="pixel"/>
 	<style name="row-label" mode="Transparent" hTextAlign="Left" fontSize="10" isBold="false" isItalic="false" isUnderline="false">
 		<conditionalStyle>

@@ -30,15 +30,15 @@ underreview - need to establish theshold to determine when GW is over pumping, c
 define GP60_MinPump_CHECK {
 	case meet {
 		Condition abs(GP60 - mingw_58) < abs_threshold
-		value 200}!1
+		Value 1
 	}
 	case exceeded {
 		Condition GP60 - mingw_58 > abs_threshold 
-		value 300}!0
+		Value 0
 	}
 	Case Violated {
 		Condition always 
-		value 100}!2
+		Value 2
 	}
 }
 define GP60_MinPump_STATUS_DTS {alias GP60_MinPump_CHECK kind 'DTS-STATUS' units 'NONE'}
@@ -50,11 +50,11 @@ define GP60_OverPump_CHECK {
 	case Excesive {
 		Condition GP60 - mingw_58*taf_cfs > 20  
 		!condition *(GP60 - mingw_58)/mingw_58 > percetage_threshold*
-		value 200}!1
+		Value 1
 	}
 	case noExcesive {
 		Condition always
-		value 300}!0
+		Value 0
 	}
 }
 define GP60_OverPump_STATUS_DTS {alias GP60_OverPump_CHECK kind 'DTS-STATUS' units 'NONE'}
@@ -65,15 +65,15 @@ define GP60_OverPump_STATUS_DTS {alias GP60_OverPump_CHECK kind 'DTS-STATUS' uni
 define GP64_MinPump_CHECK {
 	case meet {
 		Condition abs(GP64 - mingw_65) < abs_threshold
-		value 200}!1
+		Value 1
 	}
 	case exceeded {
 		Condition GP64 - mingw_65 > abs_threshold 
-		value 300}!0
+		Value 0
 	}
 	Case Violated {
 		Condition always 
-		value 100}!2
+		Value 2
 	}
 }
 define GP64_MinPump_STATUS_DTS {alias GP64_MinPump_CHECK kind 'DTS-STATUS' units 'NONE'}
@@ -85,11 +85,11 @@ define GP64_OverPump_CHECK {
 	case Excesive {
 		Condition GP64 - mingw_65*taf_cfs > 20 
 		!Condition (GP64 - mingw_65)/mingw_65 > percetage_threshold
-		value 200}!1
+		Value 1
 	}
 	case noExcesive {
 		Condition always
-		value 300}!0
+		Value 0
 	}
 }
 define GP64_OverPump_STATUS_DTS {alias GP64_OverPump_CHECK kind 'DTS-STATUS' units 'NONE'}
@@ -99,15 +99,15 @@ define GP64_OverPump_STATUS_DTS {alias GP64_OverPump_CHECK kind 'DTS-STATUS' uni
 define GP65_MinPump_CHECK {
 	case meet {
 		Condition abs(GP65 - mingw_69) < abs_threshold
-		value 200}!1
+		Value 1
 	}
 	case exceeded {
 		Condition GP65 - mingw_69 > abs_threshold 
-		value 300}!0
+		Value 0
 	}
 	Case Violated {
 		Condition always 
-		value 100}!2
+		Value 2
 	}
 }
 define GP65_MinPump_STATUS_DTS {alias GP65_MinPump_CHECK kind 'DTS-STATUS' units 'NONE'}
@@ -119,11 +119,11 @@ define GP65_OverPump_CHECK {
 	case Excesive {
 		Condition GP65 - mingw_69*taf_cfs > 20 
 		!Condition (GP65 - mingw_69)/mingw_69 > percetage_threshold
-		value 200}!1
+		Value 1
 	}
 	case noExcesive {
 		Condition always
-		value 300}!0
+		Value 0
 	}
 }
 define GP65_OverPump_STATUS_DTS {alias GP65_OverPump_CHECK kind 'DTS-STATUS' units 'NONE'}
@@ -133,15 +133,15 @@ define GP65_OverPump_STATUS_DTS {alias GP65_OverPump_CHECK kind 'DTS-STATUS' uni
 define GP66_MinPump_CHECK {
 	case meet {
 		Condition abs(GP66 - mingw_70) < abs_threshold
-		value 200}!1
+		Value 1
 	}
 	case exceeded {
 		Condition GP66 - mingw_70 > abs_threshold 
-		value 300}!0
+		Value 0
 	}
 	Case Violated {
 		Condition always 
-		value 100}!2
+		Value 2
 	}
 }
 define GP66_MinPump_STATUS_DTS {alias GP66_MinPump_CHECK kind 'DTS-STATUS' units 'NONE'}
@@ -153,11 +153,11 @@ define GP66_OverPump_CHECK {
 	case Excesive {
 		Condition GP66 - mingw_70*taf_cfs > 20 
 		!Condition (GP66 - mingw_70)/mingw_70 > percetage_threshold
-		value 200}!1
+		Value 1
 	}
 	case noExcesive {
 		Condition always
-		value 300}!0
+		Value 0
 	}
 }
 define GP66_OverPump_STATUS_DTS {alias GP66_OverPump_CHECK kind 'DTS-STATUS' units 'NONE'}

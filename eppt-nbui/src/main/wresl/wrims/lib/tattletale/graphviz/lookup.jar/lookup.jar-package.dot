@@ -1,0 +1,5 @@
+digraph lookup_package_dependencies {
+  node [shape = box, fontsize=10.0];
+  rma_util_lookup -> rma_util_lookup_implspi;
+  rma_util_lookup_implspi -> rma_util_lookup;
+}

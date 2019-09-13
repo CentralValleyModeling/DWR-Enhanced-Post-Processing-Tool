@@ -17,15 +17,15 @@ define TOT_DO_ {value C407 + D407}
 define NDOI_CHECK_ {
 	case Violated {
 	condition DO_req_flow_out - TOT_DO_ > abs_threshold
-	value 2
+	value 300
 	}
 	case Control {
 	condition abs(DO_req_flow_out - TOT_DO_) < abs_threshold
-	value 1
+	value 200
 	}
 	case notControl {
 	condition always
-	value 0
+	value 100
 	}
 }
 
@@ -36,75 +36,75 @@ define MRDO_WQ_ {value max(JP_MRDO,EM_MRDO,RS_MRDO_1,RS_MRDO_2,RS_MRDO_3,CO_MRDO
 define ANN_CHECK_ {
 	case violated {
 	condition MRDO_WQ_ - TOT_DO_ > abs_threshold
-	value 2
+	value 300
 	}
 	case Control {
 	condition abs(MRDO_WQ_ - TOT_DO_) < abs_threshold
-	value 1
+	value 200
 	}
 	case notControl {
 	condition always
-	value 0
+	value 100
 	}
 }
 ! Check If Jersey point is in control of DO
 define JP_Check_ {
 	case Violated {
 	condition JP_MRDO - TOT_DO_ > abs_threshold
-	value 2
+	value 300
 	}
 	case Control {
 	condition abs(JP_MRDO - TOT_DO_) < abs_threshold .and. C407_ANN > abs_threshold
-	value 1
+	value 200
 	}
 	case notControl {
 	condition always
-	value 0
+	value 100
 	}
 }
 ! Check If Emmaton is in control of DO
 define EM_Check_ {
 	case Violated {
 	condition EM_MRDO - TOT_DO_ > abs_threshold
-	value 2
+	value 300
 	}
 	case Control {
 	condition abs(EM_MRDO - TOT_DO_) < abs_threshold .and. C407_ANN > abs_threshold
-	value 1
+	value 200
 	}
 	case notControl {
 	condition always
-	value 0
+	value 100
 	}
 }
 ! Check If Rock Slough is in control of DO
 define RS_Check_ {
 	case Violated {
 	condition max(RS_MRDO_1,RS_MRDO_2,RS_MRDO_3) - TOT_DO_ > abs_threshold
-	value 2
+	value 300
 	}
 	case Control {
 	condition abs(max(RS_MRDO_1,RS_MRDO_2,RS_MRDO_3) - TOT_DO_) < abs_threshold .and. C407_ANN > abs_threshold
-	value 1
+	value 200
 	}
 	case notControl {
 	condition always
-	value 0
+	value 100
 	}
 }
 ! Check If Collinsville is in control of DO
 define CO_Check_ {
 	case Violated {
 	condition CO_MRDO - TOT_DO_ > abs_threshold
-	value 2
+	value 300
 	}
 	case Control {
 	condition abs(CO_MRDO - TOT_DO_) < abs_threshold .and. C407_ANN > abs_threshold
-	value 1
+	value 200
 	}
 	case notControl {
 	condition always
-	value 0
+	value 100
 	}
 }
 
@@ -113,22 +113,22 @@ define CO_Check_ {
 define FX2_Check_ {
 	case control {
 	condition month >= SEP .and. month <= NOV .and. D407 - DO_req_flow_out > abs_threshold
-	value 1
+	value 200
 	}
 	case notcontrol {
 	condition always
-	value 0
+	value 100
 	}
 }
 ! Check if Spring X2 is in control of DO
 define SX2_Check_ {
 	case control {
 	condition month >= FEB .and. month <= JUN .and. D407 - DO_req_flow_out > abs_threshold
-	value 1
+	value 200
 	}
 	case notcontrol {
 	condition always
-	value 0
+	value 100
 	}
 }
 /********************** Rio Vista MIF **********************/
@@ -136,15 +136,15 @@ define SX2_Check_ {
 define RV_Check_ {
 	case at {
 	condition abs(Rio_req - C405) < abs_threshold  
-	value 1
+	value 200
 	}
 	case Violated {
 	condition Rio_req - C405 > abs_threshold 
-	value 2
+	value 300
 	}
 	case above {
 	condition always
-	value 0
+	value 100
 	}
 }
 /********************** QWEST required Flow **********************/
@@ -152,15 +152,15 @@ define RV_Check_ {
 define QWEST_Check_ {
 	case at {
 	condition abs(qwest_std - C416A) < abs_threshold  
-	value 1
+	value 200
 	}
 	case Violated {
 	condition qwest_std - C416A > abs_threshold 
-	value 2
+	value 300
 	}
 	case above {
 	condition always
-	value 0
+	value 100
 	}
 }
 
@@ -169,15 +169,15 @@ define DO_Surplus_EI_ {value (EIEXPCTRL - D418 - D419)/EXPRATIO} !SURPLUS WITH R
 define EI_CHECK_{
 	case Violated {
 	condition DO_Surplus_EI_ < -abs_threshold
-	value 2
+	value 300
 	}
 	case Control {
 	condition abs(DO_Surplus_EI_) < abs_threshold
-	value 1
+	value 200
 	}
 	case notControl {
 	condition always
-	value 0
+	value 100
 	}
 }
 /*************************** OMR ***************************/
@@ -197,11 +197,11 @@ define OMR_ALLOWED_ {
 define OMR_CHECK_ {                         !SF and AA 06212019 A check is required here for OMR control criteria   "underreview"
 	case Violated {
 	condition C408 - C408_LBOUND < - abs_threshold  !TOT_DO_ - OMR_ALLOWED_ > abs_threshold        
-	value 2
+	value 300
 	}
 	case Control {
 	condition abs(C408 - C408_LBOUND) < abs_threshold !.and. D409_Upstream - D409_Delta > abs_threshold !abs(TOT_DO_ - OMR_ALLOWED_) < abs_threshold .and. D409_Upstream - D409_Delta < C406_Delta - C406_Upstream
-	value 1
+	value 200
 	}
 	/*case notVerifiedControl {
 	condition abs(TOT_DO_ - OMR_ALLOWED_) < abs_threshold .and. D409_Upstream - D409_Delta >  C406_Delta - C406_Upstream
@@ -209,7 +209,7 @@ define OMR_CHECK_ {                         !SF and AA 06212019 A check is requi
 	}*/    									 !SF and AA 06212019 A check is required here for OMR control criteria   "underreview" 
 	case notControl {
 	condition always
-	value 0
+	value 100
 	}
 }
 
@@ -219,15 +219,15 @@ define OMR_CHECK_ {                         !SF and AA 06212019 A check is requi
 define SJRIE_CHECK_ {
 	case violated {
 	condition D418_TD + D419_TD - NMFS_MaxExpdv > abs_threshold
-	value 2
+	value 300
 	}
 	case Control {
 	condition abs(NMFS_MaxExpdv - D418_TD + D419_TD) < abs_threshold
-	value 1
+	value 200
 	}
 	case notControl {
 	condition always
-	value 0
+	value 100
 	}
 }
 /*************************** NMFS ***************************/
@@ -235,15 +235,15 @@ define SJRIE_CHECK_ {
 define DCC_CHECK_ {
 	case violated {
 	condition D418_TD + D419_TD - NMFS_MaxExpDCCdv > abs_threshold
-	value 2
+	value 300
 	}
 	case Control {
 	condition abs(NMFS_MaxExpDCCdv - D418_TD + D419_TD) < abs_threshold
-	value 1
+	value 200
 	}
 	case notControl {
 	condition always
-	value 0
+	value 100
 	}
 }
 /************** MRDO due to different controls ***************/
@@ -292,69 +292,69 @@ define DO_Surplus_MIN_ {value min(DO_Surplus_ANN_, DO_Surplus_X2_, DO_Surplus_ND
 define DO_Surplus_TRUE_ {value DO_Surplus_MIN_ - MRDO_Increase_ + D168C_EXC_NTDEP}
 
 /**************Delta Condition **************/
-/* 0 - Balance; 1 - Excess with restrictions; 2 - Excess*/
+/* 100 - Balance; 200 - Excess with restrictions; 300 - Excess*/
 define Delta_Condtn {
 	case Balanced {
 	condition C407-C407_whlcv-C407_whljp-C407_WTS-C407_ANN < abs_threshold !.or. INFLW - TOTAL_EXP/EXPRATIO < abs_threshold .or. C407 < abs_threshold 
-	value 0}
+	value 100}
 	case Excess_Restriction {
 	condition abs(C406_Delta - C406_Upstream) > abs_threshold .and. abs(D409_Upstream - D409_Delta) > abs_threshold
-	value 1}
+	value 200}
 	case Excess {
 	condition always
-	value 2}
+	value 300}
 	
 }
 
 /* Controling factor in Excess with restrictions delta condition*/
 !is fall X2 position the restrictions in Excess with restrictions delta condition
-! 1 - excess condition with FX2 restrictions; 0 - other condition 
+! 200 - excess condition with FX2 restrictions; 100 - other condition 
 define Excess_FX2 { 
 	case Excess_FX2_control {
-	condition Delta_Condtn == 1 .and. FX2_Check_ ==  1
-	value 1
+	condition Delta_Condtn == 200 .and. FX2_Check_ ==  200
+	value 200
 	}
 	case not {
 	condition always
-	value 0}
+	value 100}
 }
 !is OMR the restrictions in Excess with restrictions delta condition
-! 1 - excess condition with OMR restrictions; 0 - other condition
+! 200 - excess condition with OMR restrictions; 100 - other condition
 define Excess_OMR { 
 	case Excess_OMR_control {
-	condition Delta_Condtn == 1 .and. OMR_CHECK_ > 0.5
-	value 1
+	condition Delta_Condtn == 200 .and. OMR_CHECK_ > 150
+	value 200
 	}
 	case not {
 	condition always
-	value 0}
+	value 100}
 }
 !is Vernalis 4:1 (SJIE) the restrictions in Excess with restrictions delta condition
 ! 1 - excess condition with OMR restrictions; 0 - other condition
 define Excess_Vernalis { 
 	case Excess_Vernalis_control {
-	condition Delta_Condtn == 1 .and. SOD_EXP_Vern_ctrl_ > 0.5
-	value 1
+	condition Delta_Condtn == 200 .and. SOD_EXP_Vern_ctrl_ > 150
+	value 200
 	}
 	case not {
 	condition always
-	value 0}
+	value 100}
 }
 
 !identify what is the restrictions during Excess with restrictions delta condition
-!0 - FX2; 1 - OMR; 2 - Vernalis 4:1 (SJIE)
+!100 - FX2; 200 - OMR; 300 - Vernalis 4:1 (SJIE)
 define Excess_Restriction {
 	case Excess_FX2 {
-	condition delta_Condtn == 1 .and. Excess_FX2 == 1
-	value 0
+	condition delta_Condtn == 200 .and. Excess_FX2 == 200
+	value 100
 	}
 	case Excess_OMR {
-	condition delta_Condtn == 1 .and. Excess_OMR == 1
-	value 1
+	condition delta_Condtn == 200 .and. Excess_OMR == 200
+	value 200
 	}
 	case Excess_Vernalis {
-	condition delta_Condtn == 1 .and. Excess_Vernalis == 1
-	value 2
+	condition delta_Condtn == 200 .and. Excess_Vernalis == 200
+	value 300
 	}
 	case notApplied {
 	condition always
@@ -364,7 +364,7 @@ define Excess_Restriction {
 
 
 /************** Outputs for Delta Control ***************/
-! Status Check regards to each constraint(0-Not Controling)(1-Controling)(2-Violated)
+! Status Check regards to each constraint(100-Not Controling)(200-Controling)(300-Violated)
 define ANN_STATUS_DTS {alias ANN_CHECK_ kind 'DTS-STATUS' units 'NONE'}
 define JP_STATUS_DTS {alias JP_CHECK_ kind 'DTS-STATUS' units 'NONE'}
 define EM_STATUS_DTS {alias EM_CHECK_ kind 'DTS-STATUS' units 'NONE'}

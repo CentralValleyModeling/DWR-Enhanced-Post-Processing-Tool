@@ -1,0 +1,70 @@
+Manifest-Version: 1.0
+Ant-Version: Apache Ant 1.8.4
+Implementation-Title: DSSLib-dev
+Implementation-Version: 3.0.0.44G-June 30 2016
+Specification-Vendor: HEC
+Specification-Title: DSSLib-dev Classes
+Created-By: 1.7.0_80-b15 (Oracle Corporation)
+Specification-Version: 3.0.0.44G
+
+Name: NAME
+Implementation-Vendor: BANG
+
+
+### OSGi information
+Bundle-ManifestVersion: 2
+Bundle-SymbolicName: rma.swing
+Bundle-Description: rma
+Bundle-Name: rma
+Bundle-Version: 3.0.0.44G
+Export-Package: rma.examples;uses:="hec.client,rma.swing,rma.swing.tab
+ le",rma.io,rma.lang;uses:="rma.util",rma.net;uses:="hec.server",rma.s
+ ervices;uses:="rma.services.tz,rma.services.tz.impl,rma.services.unit
+ s,rma.services.units.impl",rma.services.tz,rma.services.tz.impl;uses:
+ ="rma.services.tz,rma.swing",rma.services.units,rma.services.units.im
+ pl;uses:="hec.data,rma.services.units",rma.stats;uses:="hec.stats,hec
+ .util,java.lang,org.jdom,rma.util",rma.stats.model;uses:="hec.heclib.
+ dss,hec.io,rma.stats,rma.util",rma.swing;uses:="hec.appInterface,hec.
+ client,hec.csinterface,hec.data,hec.event,hec.heclib.util,hec.io,hec.
+ map,hec.map.appInterface,hec.model,hec.server,rma.lang,rma.services,r
+ ma.services.tz,rma.services.units,rma.swing.border,rma.swing.event,rm
+ a.swing.list,rma.swing.print,rma.swing.table,rma.swing.text,rma.text,
+ rma.util",rma.swing.action;uses:="rma.swing",rma.swing.border,rma.swi
+ ng.buttongroup,rma.swing.colorchooser;uses:="rma.swing",rma.swing.eve
+ nt;uses:="rma.swing.text,rma.swing.tree",rma.swing.list;uses:="rma.sw
+ ing,rma.swing.text,rma.util",rma.swing.logging;uses:="org.jdom,org.jd
+ om.output,rma.swing,rma.util",rma.swing.plaf.basic;uses:="rma.swing,r
+ ma.swing.table",rma.swing.print,rma.swing.table;uses:="hec.client,hec
+ .data,hec.gui,hec.heclib.util,hec.lang,rma.swing,rma.swing.list,rma.u
+ til",rma.swing.table.editableheader;uses:="rma.swing.table",rma.swing
+ .text;uses:="rma.swing,rma.swing.event,rma.util",rma.swing.tree;uses:
+ ="rma.lang,rma.swing,rma.swing.event,rma.util",rma.swing.wheel;uses:=
+ "rma.swing",rma.text;uses:="rma.swing",rma.tools.doclets;uses:="com.s
+ un.javadoc,com.sun.tools.doclets",rma.util;uses:="codebase,hec.csinte
+ rface,hec.data,hec.gui,hec.io,hec.map,hec.model,hec.rmi,org.jdom,org.
+ jdom.input,org.jdom.output,org.python.core,org.python.util,rma.lang,r
+ ma.swing,rma.swing.colorchooser,rma.swing.event,rma.swing.list,rma.sw
+ ing.wheel",rma.util.logging,rma.util.png,rma.util.postscript,rma.util
+ .wmf;uses:="rma.swing"
+Import-Package: codebase;version="0.0.0",com.sun.java.swing.plaf.windo
+ ws,com.sun.javadoc,com.sun.tools.doclets,hec.appInterface;version="3.
+ 0.0.44G",hec.client;version="3.0.0.44G",hec.csinterface,hec.data;vers
+ ion="0.0.0",hec.event;version="3.0.0.44G",hec.gui;version="3.0.0.44G"
+ ,hec.heclib.dss;version="3.0.0.44G",hec.heclib.util;version="3.0.0.44
+ G",hec.io;version="3.0.0.44G",hec.lang;version="3.0.0.44G",hec.map;ve
+ rsion="3.0.0.44G",hec.map.appInterface;version="3.0.0.44G",hec.model;
+ version="3.0.0.44G",hec.rmi,hec.server,hec.stats,hec.util;version="3.
+ 0.0.44G",java.awt,java.awt.color,java.awt.datatransfer,java.awt.dnd,j
+ ava.awt.event,java.awt.font,java.awt.geom,java.awt.image,java.awt.ima
+ ge.renderable,java.awt.print,java.beans,java.io,java.lang,java.lang.m
+ anagement,java.lang.ref,java.lang.reflect,java.net,java.nio.channels,
+ java.rmi,java.security,java.text,java.util,java.util.logging,java.uti
+ l.prefs,java.util.regex,java.util.zip,javax.accessibility,javax.image
+ io,javax.management,javax.management.remote,javax.swing,javax.swing.b
+ order,javax.swing.colorchooser,javax.swing.event,javax.swing.filechoo
+ ser,javax.swing.plaf,javax.swing.plaf.basic,javax.swing.plaf.metal,ja
+ vax.swing.table,javax.swing.text,javax.swing.text.html,javax.swing.tr
+ ee,javax.swing.undo,javax.xml.parsers,org.jdom;version="1.0",org.jdom
+ .input;version="1.0",org.jdom.output;version="1.0",org.python.core;ve
+ rsion="0.0.0",org.python.util;version="0.0.0",org.xml.sax;version="0.
+ 0.0",org.xml.sax.helpers,sun.awt.image

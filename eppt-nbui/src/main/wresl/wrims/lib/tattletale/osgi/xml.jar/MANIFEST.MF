@@ -1,0 +1,71 @@
+Manifest-Version: 1.0
+Specification-Vendor: Sun Microsystems
+Specification-Title:  Java Project X Core
+Created-By: 1.2 (Sun Microsystems Inc.)
+Specification-Version: 0.8.0
+
+Name: com/sun/xml/tree
+Package-Version: 0.8.0
+Package-Title: com.sun.xml.tree
+Sealed: true
+Specification-Vendor: Sun Microsystems
+Specification-Title:  Sun DOM Implementation
+Package-Vendor: Sun Microsystems, Inc.
+Specification-Version: 0.8.0
+
+Name: com/sun/xml/parser
+Package-Version: 0.8.0
+Package-Title: com.sun.xml.parser
+Sealed: true
+Specification-Vendor: Sun Microsystems
+Specification-Title:  Sun XML Parsers
+Package-Vendor: Sun Microsystems, Inc.
+Specification-Version: 0.8.0
+
+Name: org/xml/sax
+Package-Version: 1.0.0
+Package-Title: org.xml.sax
+Sealed: true
+Specification-Vendor: David Megginson
+Specification-Title:  Simple API to XML
+Specification-Version: 1.0.0
+Package-Vendor: Sun Microsystems, Inc.
+
+Name: com/sun/xml/parser/resources
+Package-Version: 0.8.0
+Package-Title: com.sun.xml.parser.resources
+Sealed: false
+Specification-Vendor: Sun Microsystems
+Specification-Title:  Sun XML Parser Localization Resources
+Package-Vendor: Sun Microsystems, Inc.
+Specification-Version: 0.8.0
+
+Name: org/xml/sax/helpers
+Package-Version: 1.0.0
+Package-Title: org.xml.sax.helpers
+Sealed: true
+Specification-Vendor: David Megginson
+Specification-Title:  Simple API to XML
+Package-Vendor: Sun Microsystems, Inc.
+Specification-Version: 1.0.0
+
+Name: org/w3c/dom
+Package-Version: 1.0.0
+Package-Title:  org.w3c.dom
+Sealed: true
+Specification-Vendor: World Wide Web Consortium
+Specification-Title:  Document Object Model, Level 1 Core
+Package-Vendor: Sun Microsystems, Inc.
+Specification-Version: 1.0.0
+
+
+### OSGi information
+Bundle-ManifestVersion: 2
+Bundle-SymbolicName: com.sun.xml.tree
+Bundle-Description: xml
+Bundle-Name: xml
+Bundle-Version: 0.8.0
+Export-Package: com.sun.xml.parser;uses:="com.sun.xml.util",com.sun.xm
+ l.tree;uses:="com.sun.xml.parser,com.sun.xml.util",com.sun.xml.util,o
+ rg.w3c.dom,org.xml.sax,org.xml.sax.helpers
+Import-Package: java.io,java.lang,java.net,java.text,java.util

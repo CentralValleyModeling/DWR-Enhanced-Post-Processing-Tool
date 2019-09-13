@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.8.0.final using JasperReports Library version 6.8.0-2ed8dfabb690ff337a5797129f2cd92902b0c87b  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="QAQC_Reservoir Operations" language="groovy" pageWidth="612" pageHeight="792" columnWidth="504" leftMargin="54" rightMargin="54" topMargin="54" bottomMargin="54" isSummaryWithPageHeaderAndFooter="true" whenResourceMissingType="Empty" uuid="fdf29854-1cab-4c3d-99e9-a38b49852a26">
+	<property name="net.sf.jasperreports.data.adapter" value="QAQC_Datasource.xml"/>
+	<property name="net.sf.jasperreports.export.xls.collapse.row.span" value="true"/>
+	<property name="net.sf.jasperreports.print.create.bookmarks" value="true"/>
+	<property name="com.jaspersoft.studio.unit.topMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.bottomMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.leftMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.rightMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.columnWidth" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.columnSpacing" value="pixel"/>
+	<parameter name="XML_DATA_DOCUMENT" class="org.w3c.dom.Document" isForPrompting="false"/>
+	<queryString language="XPath">
+		<![CDATA[/qaqc-report/summary/module/section/sub-module/chart]]>
+	</queryString>
+	<field name="module-order" class="java.lang.Integer">
+		<property name="net.sf.jasperreports.xpath.field.expression" value="ancestor::module/@module-order"/>
+		<fieldDescription><![CDATA[ancestor::module/@module-order]]></fieldDescription>
+	</field>
+	<field name="module-name" class="java.lang.String">
+		<property name="net.sf.jasperreports.xpath.field.expression" value="ancestor::module/@module-name"/>
+		<fieldDescription><![CDATA[ancestor::module/@module-name]]></fieldDescription>
+	</field>
+	<field name="chart-name" class="java.lang.String">
+		<property name="net.sf.jasperreports.xpath.field.expression" value="@chart-name"/>
+		<fieldDescription><![CDATA[@chart-name]]></fieldDescription>
+	</field>
+	<field name="section-name" class="java.lang.String">
+		<property name="net.sf.jasperreports.xpath.field.expression" value="ancestor::section/@section-name"/>
+		<fieldDescription><![CDATA[ancestor::section/@section-name]]></fieldDescription>
+	</field>
+	<variable name="Section_Group_Footer_9" class="java.lang.String">
+		<variableExpression><![CDATA["resops-summary-nod-cvp-swp-exceed-annual"]]></variableExpression>
+	</variable>
+	<variable name="Section_Group_Footer_10" class="java.lang.String">
+		<variableExpression><![CDATA["resops-summary-nod-cvp-swp-stor-month"]]></variableExpression>
+	</variable>
+	<filterExpression><![CDATA[$F{module-name}=="Reservoir Operations"]]></filterExpression>
+	<group name="Module" isReprintHeaderOnEachPage="true">
+		<groupExpression><![CDATA[$F{module-order}]]></groupExpression>
+		<groupFooter>
+			<band height="1">
+				<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				<subreport>
+					<reportElement stretchType="ElementGroupHeight" x="0" y="0" width="504" height="1" uuid="be0cbc9b-b4bc-43e0-9462-4e72ea6c8e15">
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+						<property name="com.jaspersoft.studio.unit.x" value="px"/>
+						<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					</reportElement>
+					<subreportParameter name="XML_DATA_DOCUMENT">
+						<subreportParameterExpression><![CDATA[$P{XML_DATA_DOCUMENT}]]></subreportParameterExpression>
+					</subreportParameter>
+					<subreportParameter name="p_report_name">
+						<subreportParameterExpression><![CDATA[$V{Section_Group_Footer_9}]]></subreportParameterExpression>
+					</subreportParameter>
+					<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+					<subreportExpression><![CDATA["/DWR_QA_QC_Reports/Subreports/exceedance/"+$V{Section_Group_Footer_9}+".jasper"]]></subreportExpression>
+				</subreport>
+			</band>
+			<band height="1">
+				<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				<subreport>
+					<reportElement stretchType="ElementGroupHeight" x="0" y="0" width="504" height="1" uuid="be0cbc9b-b4bc-43e0-9462-4e72ea6c8e15">
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+						<property name="com.jaspersoft.studio.unit.x" value="px"/>
+						<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					</reportElement>
+					<subreportParameter name="XML_DATA_DOCUMENT">
+						<subreportParameterExpression><![CDATA[$P{XML_DATA_DOCUMENT}]]></subreportParameterExpression>
+					</subreportParameter>
+					<subreportParameter name="p_report_name">
+						<subreportParameterExpression><![CDATA[$V{Section_Group_Footer_10}]]></subreportParameterExpression>
+					</subreportParameter>
+					<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+					<subreportExpression><![CDATA["/DWR_QA_QC_Reports/Subreports/line-plot/"+$V{Section_Group_Footer_10}+".jasper"]]></subreportExpression>
+				</subreport>
+			</band>
+		</groupFooter>
+	</group>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="47" splitType="Stretch">
+			<property name="com.jaspersoft.studio.unit.height" value="px"/>
+			<printWhenExpression><![CDATA[1==0]]></printWhenExpression>
+		</band>
+	</title>
+	<columnHeader>
+		<band splitType="Stretch">
+			<printWhenExpression><![CDATA[1==0]]></printWhenExpression>
+		</band>
+	</columnHeader>
+	<detail>
+		<band splitType="Stretch">
+			<property name="com.jaspersoft.studio.unit.height" value="px"/>
+			<printWhenExpression><![CDATA[1==0]]></printWhenExpression>
+		</band>
+	</detail>
+	<pageFooter>
+		<band height="15">
+			<property name="com.jaspersoft.studio.unit.height" value="px"/>
+			<textField evaluationTime="Master">
+				<reportElement mode="Transparent" x="0" y="0" width="504" height="15" uuid="e9b890f7-64c4-46cb-99af-57b17107bc84">
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA["Page | " + ($V{MASTER_CURRENT_PAGE}-1)]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageFooter>
+	<summary>
+		<band>
+			<property name="com.jaspersoft.studio.unit.height" value="px"/>
+			<printWhenExpression><![CDATA[1==0]]></printWhenExpression>
+		</band>
+	</summary>
+</jasperReport>

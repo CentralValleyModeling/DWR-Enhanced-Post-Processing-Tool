@@ -1,0 +1,15 @@
+
+### OSGi information
+Bundle-ManifestVersion: 2
+Bundle-SymbolicName: org.python.core
+Bundle-Description: jpy
+Bundle-Name: jpy
+Bundle-Version: 0.0.0
+Export-Package: JNumeric;uses:="org.python.core",com.oroinc.text.regex
+ ,org.python.compiler;uses:="org.python.core,org.python.parser",org.py
+ thon.core;uses:="org.python.compiler,org.python.modules,org.python.pa
+ rser,org.python.util",org.python.modules;uses:="com.oroinc.text.regex
+ ,org.python.core,org.python.parser",org.python.parser,org.python.rmi,
+ org.python.util;uses:="org.python.core,org.python.modules"
+Import-Package: java.io,java.lang,java.lang.reflect,java.math,java.rmi
+ ,java.rmi.server,java.text,java.util,java.util.zip

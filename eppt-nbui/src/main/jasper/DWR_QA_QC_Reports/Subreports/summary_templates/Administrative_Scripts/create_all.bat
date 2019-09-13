@@ -1,9 +1,0 @@
-C:\Users\bryan\AppData\Local\Continuum\Anaconda3\python.exe C:\Users\bryan\JaspersoftWorkspace\MyReports\DWR_QA_QC_Reports\Subreports\summary_templates\Administrative_Scripts\Scripts\create_base-alt-diff_tables.py
-C:\Users\bryan\AppData\Local\Continuum\Anaconda3\python.exe C:\Users\bryan\JaspersoftWorkspace\MyReports\DWR_QA_QC_Reports\Subreports\summary_templates\Administrative_Scripts\Scripts\create_coa_tables.py
-C:\Users\bryan\AppData\Local\Continuum\Anaconda3\python.exe C:\Users\bryan\JaspersoftWorkspace\MyReports\DWR_QA_QC_Reports\Subreports\summary_templates\Administrative_Scripts\Scripts\create_controls_tables.py
-C:\Users\bryan\AppData\Local\Continuum\Anaconda3\python.exe C:\Users\bryan\JaspersoftWorkspace\MyReports\DWR_QA_QC_Reports\Subreports\summary_templates\Administrative_Scripts\Scripts\create_exceedance_pages.py
-C:\Users\bryan\AppData\Local\Continuum\Anaconda3\python.exe C:\Users\bryan\JaspersoftWorkspace\MyReports\DWR_QA_QC_Reports\Subreports\summary_templates\Administrative_Scripts\Scripts\create_exceedance-page_pages.py
-C:\Users\bryan\AppData\Local\Continuum\Anaconda3\python.exe C:\Users\bryan\JaspersoftWorkspace\MyReports\DWR_QA_QC_Reports\Subreports\summary_templates\Administrative_Scripts\Scripts\create_line-plot_pages.py
-C:\Users\bryan\AppData\Local\Continuum\Anaconda3\python.exe C:\Users\bryan\JaspersoftWorkspace\MyReports\DWR_QA_QC_Reports\Subreports\summary_templates\Administrative_Scripts\Scripts\create_list_tables.py
-C:\Users\bryan\AppData\Local\Continuum\Anaconda3\python.exe C:\Users\bryan\JaspersoftWorkspace\MyReports\DWR_QA_QC_Reports\Subreports\summary_templates\Administrative_Scripts\Scripts\create_percent-diff_tables.py
-C:\Users\bryan\AppData\Local\Continuum\Anaconda3\python.exe C:\Users\bryan\JaspersoftWorkspace\MyReports\DWR_QA_QC_Reports\Subreports\summary_templates\Administrative_Scripts\Scripts\create_scatter-plot_pages.py

@@ -1,0 +1,1750 @@
+Manifest-Version: 1.0
+
+Name: printing/PrintMenu.class
+SHA-Digest: /HoWWje4GDjfDuj4rl1bGw+J2FQ=
+MD5-Digest: nLJJUVomwtQCQ9oU5cOqUA==
+Digest-Algorithms: SHA MD5 
+
+Name: Acme/Serve/servlet/ServletResponse.class
+SHA-Digest: Gkf3l9RF9HdsPlLH/9svq14bgVQ=
+MD5-Digest: Bx8VJWk7920AeF1s9LEy2Q==
+Digest-Algorithms: SHA MD5 
+
+Name: COM/objectspace/jgl/Filling.class
+SHA-Digest: IFgmqA04tXWgC4Z0jwrgsk4SwWs=
+MD5-Digest: Z5uQW1YLyHLD6jL8wMRv+Q==
+Digest-Algorithms: SHA MD5 
+
+Name: Acme/Serve/ServeConnection.class
+SHA-Digest: fx0Y1UNbkGAtQ8zpkMZhAdrjX4c=
+MD5-Digest: PaS5imbzwKE6fdptZL/pJA==
+Digest-Algorithms: SHA MD5 
+
+Name: Acme/JPM/Filters/Shrink.class
+SHA-Digest: 8ERf9/IDkqGRjCriydnmZjRJibQ=
+MD5-Digest: SUHpMRfdMI01IaKHqnUtWA==
+Digest-Algorithms: SHA MD5 
+
+Name: COM/objectspace/jgl/NegativeNumber.class
+SHA-Digest: KUlvSZ9/3n9QXA0XFgLV31rgXzs=
+MD5-Digest: aSQlQu4Z7BWbQ8KhTEJoJA==
+Digest-Algorithms: SHA MD5 
+
+Name: Acme/PsgPathItem.class
+SHA-Digest: jVAfCDUFvAzNKpFvo1IIPdJNONQ=
+MD5-Digest: hJAD9ENehAHSHGwK4Ju+GA==
+Digest-Algorithms: SHA MD5 
+
+Name: Acme/JPM/Filters/EdgeDetect.class
+SHA-Digest: /Z8bnCaIL0YT3IPKxLFWI8vdnm8=
+MD5-Digest: eGENOzD5Spe8JWN0V7qdHQ==
+Digest-Algorithms: SHA MD5 
+
+Name: Acme/MediaTracker.class
+SHA-Digest: qgUi6wAZwLCO/dPi3EopANr+HRM=
+MD5-Digest: 4pkD0FYduZMnuDLH9osHSQ==
+Digest-Algorithms: SHA MD5 
+
+Name: COM/objectspace/jgl/DList$DListNode.class
+SHA-Digest: 94d9SMTjfHvlKmzk4H+48XsM9bo=
+MD5-Digest: 4fK5FS2PtmG1IPA2UKqGfg==
+Digest-Algorithms: SHA MD5 
+
+Name: Acme/TimeKiller.class
+SHA-Digest: hU49d9mp18oW4id44AfeUdGjm0k=
+MD5-Digest: zF2YyLxFpTQUiG3zPwG17Q==
+Digest-Algorithms: SHA MD5 
+
+Name: Acme/Serve/servlet/ServletInputStream.class
+SHA-Digest: yBIHTsLI1e1ErGA9yYXswbV47Zw=
+MD5-Digest: vJfjIMHHlpDJs6Roo8juOA==
+Digest-Algorithms: SHA MD5 
+
+Name: COM/objectspace/jgl/InsertIterator.class
+SHA-Digest: ncZHwvrPuhYvKh+uMKsRj0PbZmQ=
+MD5-Digest: XvcEn7Ady9DHInXmoMnMvw==
+Digest-Algorithms: SHA MD5 
+
+Name: Acme/SerialUtils.class
+SHA-Digest: U7aSTIRoR2Q7cKspTw88CnlZlfw=
+MD5-Digest: legDg212/5Oj6sEn6rmWeg==
+Digest-Algorithms: SHA MD5 
+
+Name: COM/objectspace/jgl/HashMap.class
+SHA-Digest: YEOHzuCBkehpqmoQ1+/FHaC6mFg=
+MD5-Digest: Bpv3P8SKEdr8P5fl/CW7XQ==
+Digest-Algorithms: SHA MD5 
+
+Name: COM/objectspace/jgl/Print.class
+SHA-Digest: 8fbrxz3kyIqQOxt4HO6+DJ2dDwE=
+MD5-Digest: CXZIJdYKfjEgP8sFxgbXrQ==
+Digest-Algorithms: SHA MD5 
+
+Name: COM/objectspace/jgl/Map.class
+SHA-Digest: 69q6RzWgCVBSxVAGl2z/FRA60gY=
+MD5-Digest: wAZxFMyKHZMpAmEaRRq2XQ==
+Digest-Algorithms: SHA MD5 
+
+Name: COM/objectspace/jgl/UnaryPredicateFunction.class
+SHA-Digest: tsnK4RpjJE4+rsbxkmO2HP4ZObo=
+MD5-Digest: sltcD7j9RVl4lugYMC27pQ==
+Digest-Algorithms: SHA MD5 
+
+Name: Acme/Serve/servlet/http/HttpServletRequest.class
+SHA-Digest: 90Z4UU54DnSPXW0wRVBOUlJL2K0=
+MD5-Digest: I5zED1d5iHBm9ahxJXRQ+g==
+Digest-Algorithms: SHA MD5 
+
+Name: COM/objectspace/jgl/IdenticalTo.class
+SHA-Digest: 2u+PJVDAsv5ExHo7cprstG6hB1o=
+MD5-Digest: djrri6JjUmtnRWJGCVcz4g==
+Digest-Algorithms: SHA MD5 
+
+Name: COM/objectspace/jgl/NotEqualCollationKey.class
+SHA-Digest: 3FLh8QFOabcJF/62ZlA775la90c=
+MD5-Digest: NY4d0Lcwpd2IQYodF5807Q==
+Digest-Algorithms: SHA MD5 
+
+Name: Acme/Primes.class
+SHA-Digest: F3CCoeo2cYLIP9QXgCsja5zjZYw=
+MD5-Digest: 24LlZYMnAID6NwJ/RAka8Q==
+Digest-Algorithms: SHA MD5 
+
+Name: COM/objectspace/jgl/LogicalAnd.class
+SHA-Digest: L3Jut9XYahD5zfHgxS4qsO5fqRs=
+MD5-Digest: AhexO4YNAbQkDeMrKLfcqw==
+Digest-Algorithms: SHA MD5 
+
+Name: COM/objectspace/jgl/BinaryPredicate.class
+SHA-Digest: GC9dJZiu8e7t74WXKJpxcomwxwU=
+MD5-Digest: y+3v65tA4a9iJc2allcyBw==
+Digest-Algorithms: SHA MD5 
+
+Name: Acme/RefFloat.class
+SHA-Digest: hss5A5Ia/GHVUJ4x6o48qBzgdXE=
+MD5-Digest: Z6L3e0QsMrihwff15jaRFA==
+Digest-Algorithms: SHA MD5 
+
+Name: Acme/Serve/AdaptiveAudioInputStream.class
+SHA-Digest: ZkBzH06ikHUxmpFB+NOi+VJocdQ=
+MD5-Digest: T+PQeeB9mrvrnKmh+XeFTg==
+Digest-Algorithms: SHA MD5 
+
+Name: Acme/Fmt.class
+SHA-Digest: FFM7RfjzoddOj9FeGZeTOeouXcU=
+MD5-Digest: P6WR/fd2A4gpsxF9sqrZtA==
+Digest-Algorithms: SHA MD5 
+
+Name: COM/objectspace/jgl/BindSecond.class
+SHA-Digest: J+lX/5CDQ9CwZxrU6vdrF1RlaiY=
+MD5-Digest: Y4xRIiQ2NtkWlv08X4b0QA==
+Digest-Algorithms: SHA MD5 
+
+Name: Acme/JPM/Filters/Smooth.class
+SHA-Digest: WuCzs3fZ82JTXoaWrCLPxh5INow=
+MD5-Digest: PwC5Jxdo3bQvLJuDJjvesw==
+Digest-Algorithms: SHA MD5 
+
+Name: Acme/Nnrpd/LocalNewsDb.class
+SHA-Digest: kdC0OaM0phtVlCwvVLIrjboZT+U=
+MD5-Digest: GkTCgJvC56SnZ98WTlLaRQ==
+Digest-Algorithms: SHA MD5 
+
+Name: COM/objectspace/jgl/ObjectOutputStreamIterator.class
+SHA-Digest: ln/BuqKmoiHtfiKIt2F8vNiJJ4M=
+MD5-Digest: 5GQoQVaxqk3KBVVV9RfeaQ==
+Digest-Algorithms: SHA MD5 
+
+Name: Acme/HtmlScanner.class
+SHA-Digest: yUAPW96RysydOAl7bD+3x49uNNw=
+MD5-Digest: gLExd643r6NPKpcaCqg+SQ==
+Digest-Algorithms: SHA MD5 
+
+Name: Acme/Chat/ChatAppletWhoThread.class
+SHA-Digest: 9KYFk3pjmt+jsHYfVVwNI9qyrHw=
+MD5-Digest: adMIAoED8BWi0lib4djVIw==
+Digest-Algorithms: SHA MD5 
+
+Name: Acme/RefLong.class
+SHA-Digest: eallUBaK42+36ig0YXpbF9M6BA4=
+MD5-Digest: M2PlWTK7sBUchn2WdB3bXg==
+Digest-Algorithms: SHA MD5 
+
+Name: Acme/SerialUtilsTest.class
+SHA-Digest: WVghAZ9zRXfxEmc4f3KD0OsdD48=
+MD5-Digest: 3kmyb//fLLV5IkxKM3ezqQ==
+Digest-Algorithms: SHA MD5 
+
+Name: COM/objectspace/jgl/HashSetIterator.class
+SHA-Digest: q/ocxQBclNQAiiYFxEqNtiHd7uM=
+MD5-Digest: ZseMwMytk2wgeOUG6+mVLg==
+Digest-Algorithms: SHA MD5 
+
+Name: Acme/TaskTimer.class
+SHA-Digest: fHiJe/g6XUWwix0bOifOQIIBhT0=
+MD5-Digest: 3zLP4Nu02t7hAeOlxNLRvQ==
+Digest-Algorithms: SHA MD5 
+
+Name: COM/objectspace/jgl/Hash.class
+SHA-Digest: Ag6BzLxcP246x83eKFOVKAUr1RI=
+MD5-Digest: jO10RjwSJmPQj5Adligz5w==
+Digest-Algorithms: SHA MD5 
+
+Name: COM/objectspace/jgl/OrderedMultiMap.class
+SHA-Digest: tXH5hHlIPwyqOGmLQMFJEPwfIkY=
+MD5-Digest: ZsrHqNu+YloYnJwtu6H9OA==
+Digest-Algorithms: SHA MD5 
+
+Name: COM/objectspace/jgl/Sequence.class
+SHA-Digest: WPQQjgQ1+z4kB2bewpeptsOQZgE=
+MD5-Digest: Xr+iDg4oWrMfbQmTiJNhIw==
+Digest-Algorithms: SHA MD5 
+
+Name: Acme/SpiderConnection.class
+SHA-Digest: N43POw0rvtP7nhwi9n/6xW7MSOE=
+MD5-Digest: cJFi/vjT8J6WEctFs5Cjbg==
+Digest-Algorithms: SHA MD5 
+
+Name: Acme/JPM/Encoders/PpmEncoder.class
+SHA-Digest: eTei/qiSIwpLlhU7XQE8wfmr4w0=
+MD5-Digest: ChxY5bu95TofrXqEg6k1Ww==
+Digest-Algorithms: SHA MD5 
+
+Name: COM/objectspace/jgl/UnaryPredicate.class
+SHA-Digest: Rb8qkHEMA3vErAKSRSZZ7woatkA=
+MD5-Digest: lJTdSenkmVAjU7v66DtfTg==
+Digest-Algorithms: SHA MD5 
+
+Name: Acme/JPM/StubImage.class
+SHA-Digest: ktANoSr8tdUYX7Stq8YJjVmtRWU=
+MD5-Digest: HNW6oUvoltn5VIbebFBJ3Q==
+Digest-Algorithms: SHA MD5 
+
+Name: COM/objectspace/jgl/OrderedSetOperations.class
+SHA-Digest: TfbCNpHl0F0ENK9TugeNWGOCABs=
+MD5-Digest: Bbm2trcs+POJpZNiPbwBZQ==
+Digest-Algorithms: SHA MD5 
+
+Name: Acme/ApplicationApplet.class
+SHA-Digest: 1ORql8iR35IxpYaxwbBG0VpPkhg=
+MD5-Digest: 3L1a8ky05tUb50ktvlK4sg==
+Digest-Algorithms: SHA MD5 
+
+Name: Acme/JPM/StubToolkit.class
+SHA-Digest: Ojcyz0Bl/T5pN70RvKn4l+fMuEo=
+MD5-Digest: mkIOXhQ3p1U9RJ8tax0+4A==
+Digest-Algorithms: SHA MD5 
+
+Name: COM/objectspace/jgl/ModulusNumber.class
+SHA-Digest: HFY7oeD4u9aFKUSpSHpnjBj/Vrc=
+MD5-Digest: ickwQgunNLgqv50sidZj4g==
+Digest-Algorithms: SHA MD5 
+
+Name: Acme/PsgState.class
+SHA-Digest: EP86PZetM5K4qMPS8TBTTP0ew84=
+MD5-Digest: q2NYkE7TLCf0viQL6cJpZQ==
+Digest-Algorithms: SHA MD5 
+
+Name: COM/objectspace/jgl/ToString.class
+SHA-Digest: yPS8ntvaDGoJpqSTAdMoRtgun+4=
+MD5-Digest: fTd6V2qIqe2u+l3O+SfEVw==
+Digest-Algorithms: SHA MD5 
+
+Name: Acme/HtmlObserver.class
+SHA-Digest: wsvkd42F8bp6Ha9VOdX2xGx+gdU=
+MD5-Digest: VchrHLHa06gOvHtyPHaaGw==
+Digest-Algorithms: SHA MD5 
+
+Name: Acme/Crypto/EncryptedOutputStream.class
+SHA-Digest: EN+/z9zZUZhod7s4jKUUOLCdZIY=
+MD5-Digest: vQtTtUc8FjjofUVP/HUNiQ==
+Digest-Algorithms: SHA MD5 
+
+Name: COM/objectspace/jgl/Heap.class
+SHA-Digest: 2FPz57JByKhY1EEyK1cBbM97XAE=
+MD5-Digest: Wq2rqA/qveGvBRO+44YhNg==
+Digest-Algorithms: SHA MD5 
+
+Name: COM/objectspace/jgl/HashSet.class
+SHA-Digest: +YQyIgPqDkYGEqxnNwyDFxmf96Y=
+MD5-Digest: ikR1HZATviLpPkrDXuhTBA==
+Digest-Algorithms: SHA MD5 
+
+Name: Acme/LruHashtable.class
+SHA-Digest: W3SuFqIvGEUUtDUM6coRM36ozX8=
+MD5-Digest: VoVFY6XlfhgAfoHlyk3ONg==
+Digest-Algorithms: SHA MD5 
+
+Name: COM/objectspace/jgl/ShortIterator.class
+SHA-Digest: 5gwiAXQTOJwsaHV+xTuz3kDm20U=
+MD5-Digest: /3LTh7JviJ31E2BdeBuZ2A==
+Digest-Algorithms: SHA MD5 
+
+Name: COM/objectspace/jgl/BindSecondPredicate.class
+SHA-Digest: rZXKR0XqyfmcWeBwXskUsh9/0xo=
+MD5-Digest: /uw8haX7robyZlJt4REeYg==
+Digest-Algorithms: SHA MD5 
+
+Name: COM/objectspace/jgl/VectorArray.class
+SHA-Digest: S0813Y7hKIzPKqvd0vsB2Ic/wyI=
+MD5-Digest: VdcnCKtIVEk47LUN9/77Ew==
+Digest-Algorithms: SHA MD5 
+
+Name: COM/objectspace/jgl/HashSet$HashSetNode.class
+SHA-Digest: 906L37Bsg5EQuAII/SXbpuVWoaU=
+MD5-Digest: Yor2CdlvBZG5MZuMyX7d1w==
+Digest-Algorithms: SHA MD5 
+
+Name: Acme/Nnrpd/NewsDbGroup.class
+SHA-Digest: 7BpKPHneyUuDjBuoXEEDwgOfBhA=
+MD5-Digest: W86mD9sWSwCM3N7SI6AV4A==
+Digest-Algorithms: SHA MD5 
+
+Name: COM/objectspace/jgl/Sorting.class
+SHA-Digest: 1vEmb47JHeasE9kIUuN4IJdbKNU=
+MD5-Digest: P2Vodb6F9/vhUe0PWZTx8g==
+Digest-Algorithms: SHA MD5 
+
+Name: Acme/Chat/ChatServlet.class
+SHA-Digest: hZOZ5gdZAlC/WGcfamcRSPmkRbI=
+MD5-Digest: tgTEZvTmdhuBTkNnlAP7Jg==
+Digest-Algorithms: SHA MD5 
+
+Name: COM/objectspace/jgl/Applying.class
+SHA-Digest: idGOYdFJxdtWft9T5Ofa1XLD0B0=
+MD5-Digest: EaxRnFnSHuBSQZl7Xv67vA==
+Digest-Algorithms: SHA MD5 
+
+Name: Acme/Serve/servlet/Servlet.class
+SHA-Digest: Ai4EojtAO7KmnlTKEqDDDEjw+7Y=
+MD5-Digest: ezeFCJ9LkQABqn6kcLSIgA==
+Digest-Algorithms: SHA MD5 
+
+Name: Acme/Serve/ServeOutputStream.class
+SHA-Digest: xNvzFyUTesG8My8/KQfhaDmfdRs=
+MD5-Digest: +7ydQ8fESFiIrro+daB+4w==
+Digest-Algorithms: SHA MD5 
+
+Name: COM/objectspace/jgl/LessEqualString.class
+SHA-Digest: AIozwR+FOvLVc6MgO8qGZ+N3Edg=
+MD5-Digest: 34PMRzHeOnPrg3M4ItjWUA==
+Digest-Algorithms: SHA MD5 
+
+Name: COM/objectspace/jgl/PlusNumber.class
+SHA-Digest: L6zTIGP7jBsBSmhm0s+xdQKoaFQ=
+MD5-Digest: mxLrGVWZ86SelkD3YNtIwQ==
+Digest-Algorithms: SHA MD5 
+
+Name: COM/objectspace/jgl/GreaterEqualCollationKey.class
+SHA-Digest: q5Re67ny00XePMgXDTcu0PvmRHM=
+MD5-Digest: G4jtJUjN+wFFkXm01xOZyQ==
+Digest-Algorithms: SHA MD5 
+
+Name: COM/objectspace/jgl/LogicalNot.class
+SHA-Digest: w6A8X+XEmY4ohM4vZAfwepPJ+gw=
+MD5-Digest: whgVHoH2dTtiIThORsEw3A==
+Digest-Algorithms: SHA MD5 
+
+Name: Acme/TextcompInputStream.class
+SHA-Digest: w6apqcxBKFvyb/oVaiApmtg6Bwc=
+MD5-Digest: MVlJWwK3MeTaoRkXz6mIJQ==
+Digest-Algorithms: SHA MD5 
+
+Name: Acme/Crypto/Rc4Cipher.class
+SHA-Digest: N5WSc9rO/uSlkGDnpRuNIOkr6yw=
+MD5-Digest: UKOXc8l+pUhGxEmKZfK9kw==
+Digest-Algorithms: SHA MD5 
+
+Name: Acme/Nnrpd/NnrpdSession.class
+SHA-Digest: fs/5Ak6z2Qaiyr6Hd/0mN49mrHg=
+MD5-Digest: GWFE81pO6wN5DiuSEaY69w==
+Digest-Algorithms: SHA MD5 
+
+Name: Acme/Nnrpd/OverviewCache.class
+SHA-Digest: FYFUvA0qh7Fd6GwHLrf/CR5BeMM=
+MD5-Digest: qoVf60VGXefrNEJ/rK9cWg==
+Digest-Algorithms: SHA MD5 
+
+Name: Acme/Widgets/WidgetUtils.class
+SHA-Digest: lMd/pElEQU1GtqMf1kAD5mjh59k=
+MD5-Digest: tf1ZQITRNxAPKqAeUtR3pQ==
+Digest-Algorithms: SHA MD5 
+
+Name: COM/objectspace/jgl/BinaryPredicateFunction.class
+SHA-Digest: AzIp8jj92onplkXEhZKDE+x5XiE=
+MD5-Digest: ppB7S0G+IKmfsNbj9mzdQg==
+Digest-Algorithms: SHA MD5 
+
+Name: Acme/HtmlEditObserver.class
+SHA-Digest: 59p202mOjK9+w79GTH1dGNGfSoI=
+MD5-Digest: OCCNfNGd1ob2TcP1IdVE7g==
+Digest-Algorithms: SHA MD5 
+
+Name: Acme/Serve/servlet/http/ChunkedInputStream.class
+SHA-Digest: oYLnuJrizgHLfFbyJRbaqjZ7JeM=
+MD5-Digest: vdJRHlMh/1khD5c5vwWpBQ==
+Digest-Algorithms: SHA MD5 
+
+Name: COM/objectspace/jgl/NegateNumber.class
+SHA-Digest: MStYRs5vTu8Yb8XO6uRl/mLDFxg=
+MD5-Digest: rSiJjUnp/VhmkCzSPEhflw==
+Digest-Algorithms: SHA MD5 
+
+Name: Acme/Crypto/Crc16Hash.class
+SHA-Digest: Aojzr7j/Q85fmWsuc7kzQyAzPLs=
+MD5-Digest: SWEuW9oYqN2mL0ORoXCpIw==
+Digest-Algorithms: SHA MD5 
+
+Name: Acme/Serve/Serve.class
+SHA-Digest: TiOXls4vD9++GCMzxp63iZJr2Cs=
+MD5-Digest: aoP9O3ILg4S4PKHVQzDK2g==
+Digest-Algorithms: SHA MD5 
+
+Name: COM/objectspace/jgl/ForwardIterator.class
+SHA-Digest: 6BhZtf5z+esQzhinTTK9tT4yXKk=
+MD5-Digest: eEm/Mttl+FyEz0F/irV5Iw==
+Digest-Algorithms: SHA MD5 
+
+Name: COM/objectspace/jgl/ShortArray.class
+SHA-Digest: OtyxmAPR8jVaGmwoo6Ri/1rzsZ0=
+MD5-Digest: H7wi4aUk9KK1gpZQhnxm+g==
+Digest-Algorithms: SHA MD5 
+
+Name: Acme/Pair.class
+SHA-Digest: ge22/PSFKzD9qh6y0isccUDVDU4=
+MD5-Digest: 2SOhxemu8ik8Kjzr0QxdnQ==
+Digest-Algorithms: SHA MD5 
+
+Name: COM/objectspace/jgl/OrderedMultiSet.class
+SHA-Digest: +U8y9iXxWTUXnZkfuR+eCuQ6q5M=
+MD5-Digest: Vq8vMCBDDS+rL15agFUBxg==
+Digest-Algorithms: SHA MD5 
+
+Name: Acme/FlexVector.class
+SHA-Digest: VKUXyEIhxwJvuN/jmRuJ33QX4Eg=
+MD5-Digest: gIEKWkVJci1bpJ1bfjPgSw==
+Digest-Algorithms: SHA MD5 
+
+Name: Acme/JPM/StubGraphics.class
+SHA-Digest: 1fueZUyJMJk9JiocZNkHVP00FPM=
+MD5-Digest: cqLKIOEw8h6wV7X44750/w==
+Digest-Algorithms: SHA MD5 
+
+Name: COM/objectspace/jgl/Filtering.class
+SHA-Digest: ZhSQweWFqaZWyUtRP9jb6YMvfEo=
+MD5-Digest: zA+AVZ3dhpQPS8WRSIzljA==
+Digest-Algorithms: SHA MD5 
+
+Name: Acme/Application.class
+SHA-Digest: Y+6HHYL6yNKg1upw4jZI1fNaxGA=
+MD5-Digest: 0v81qO8FyH+J/MycBpEV9g==
+Digest-Algorithms: SHA MD5 
+
+Name: Acme/MainFrame.class
+SHA-Digest: dbEAPklcOVUQxGlxSr+fX7VBQ88=
+MD5-Digest: CgHSfpZEYm/UlE6zv2llgg==
+Digest-Algorithms: SHA MD5 
+
+Name: Acme/Spider.class
+SHA-Digest: zatpZ8COTIhzF3DW1ZfFLWxVGd8=
+MD5-Digest: TlwTCUkD6VF/vhJm2C//NA==
+Digest-Algorithms: SHA MD5 
+
+Name: COM/objectspace/jgl/SwappedBinaryPredicate.class
+SHA-Digest: XYlM2aEuVzhLw7jWRNFawF3ZeSo=
+MD5-Digest: 02qHkJp10Eaumi5ZSeo5fw==
+Digest-Algorithms: SHA MD5 
+
+Name: Acme/Serve/ServeStub.class
+SHA-Digest: XHpO9gjMZgYi+hDT0EYPHHBO44Q=
+MD5-Digest: u3YUvtDiWmuKw9HguxJO8w==
+Digest-Algorithms: SHA MD5 
+
+Name: COM/objectspace/jgl/EqualCollationKey.class
+SHA-Digest: GEYZwLIeF/MHkynNq7vzPUNC7dE=
+MD5-Digest: MSmkaPUdhPYj34zpbiGiwA==
+Digest-Algorithms: SHA MD5 
+
+Name: Acme/Serve/servlet/ServletContext.class
+SHA-Digest: cBCdmpaGbZx7O+ElRD/KNVD4gtQ=
+MD5-Digest: pNsspnj/+pUX1tHJ8iqf3A==
+Digest-Algorithms: SHA MD5 
+
+Name: Acme/PsgTest.class
+SHA-Digest: 4jW2515DpEbnCkWgs0uJIG/M90Q=
+MD5-Digest: II3f6UebUl45WvrzLf+IpA==
+Digest-Algorithms: SHA MD5 
+
+Name: Acme/Widgets/YesNoCancelBox.class
+SHA-Digest: fg6OhmRbP7Rzm4MYyGKEaHXlH8s=
+MD5-Digest: DQt6bH+4HPoQy+wgcUn07A==
+Digest-Algorithms: SHA MD5 
+
+Name: COM/objectspace/jgl/Benchmark.class
+SHA-Digest: CY8Bgk9Qxlw8wyoLk81pbmVezTA=
+MD5-Digest: lGKbxmqf3fIuC6TTcRHHTA==
+Digest-Algorithms: SHA MD5 
+
+Name: Acme/Widgets/WarningBox.class
+SHA-Digest: 4EUH26sCenQuM7fPymMTqqVnayc=
+MD5-Digest: BQ1dnU9rBZ6efQjUG4mOLQ==
+Digest-Algorithms: SHA MD5 
+
+Name: Acme/Crypto/CryptoUtils.class
+SHA-Digest: o+ps0qIStwjtbvla/++kXmfCsRk=
+MD5-Digest: lgwZhG/OANDCfDOHMMSR/g==
+Digest-Algorithms: SHA MD5 
+
+Name: COM/objectspace/jgl/NotEqualNumber.class
+SHA-Digest: 2CvsOHwviJZa5OukTfacrlhqfGM=
+MD5-Digest: TBNATmD0to5IpKcZcNvX8A==
+Digest-Algorithms: SHA MD5 
+
+Name: COM/objectspace/jgl/HashMultiMap.class
+SHA-Digest: T0AYrsiWMN2D7X9FnMkcdvTOtxE=
+MD5-Digest: w6mEfl8gMKrTonJ/XkMydw==
+Digest-Algorithms: SHA MD5 
+
+Name: Acme/Serve/ThrottleItem.class
+SHA-Digest: zSgXyIHjGuI5fhfr98hniOIDBZQ=
+MD5-Digest: I2lgUbVAoeaTEeUO3xwvcQ==
+Digest-Algorithms: SHA MD5 
+
+Name: Acme/JPM/Encoders/GifEncoderHashitem.class
+SHA-Digest: 1lyYvW6KfRcB3Dq34DEYrj7I1qI=
+MD5-Digest: Hjp54mNv4t31sp9a69NahQ==
+Digest-Algorithms: SHA MD5 
+
+Name: Acme/DQueue.class
+SHA-Digest: 8B1rv/yzM4rhLG7P42cpIAoF/vQ=
+MD5-Digest: VrPa1mxf/mOUDJ5iFfvHZg==
+Digest-Algorithms: SHA MD5 
+
+Name: Acme/RefDouble.class
+SHA-Digest: xs0+ODuK3QuYf5hNjApd2+lqryE=
+MD5-Digest: GgMbcuPrrbGv8IfpIniYxA==
+Digest-Algorithms: SHA MD5 
+
+Name: COM/objectspace/jgl/GreaterString.class
+SHA-Digest: H3wTECGmxWH3AYD7Xx39BVC/u3Q=
+MD5-Digest: dUNY1vzysd1ztZo1CTSHcg==
+Digest-Algorithms: SHA MD5 
+
+Name: COM/objectspace/jgl/HashMap$HashMapNode.class
+SHA-Digest: DbW06FxU3B/qOTyRJgZlCoC/0Ts=
+MD5-Digest: oGV1ni6TBGKWEtDbwywbSA==
+Digest-Algorithms: SHA MD5 
+
+Name: COM/objectspace/jgl/UnaryComposePredicate.class
+SHA-Digest: f+ev9IumvGSyKG0ctn3x1qfySSY=
+MD5-Digest: kOD0MXQCmT1QOZTwc6lKwQ==
+Digest-Algorithms: SHA MD5 
+
+Name: COM/objectspace/jgl/ModulusInteger.class
+SHA-Digest: 9jCO0xVqL3KC0Qxl7uJYAe6iZWo=
+MD5-Digest: dZn799yf4EjQaU6qpjnx2Q==
+Digest-Algorithms: SHA MD5 
+
+Name: Acme/Mirrorable.class
+SHA-Digest: VrKcMGNif/5QiQIjrrvtvHPpP2w=
+MD5-Digest: a8M7xZU1osAuTgvmw5hdWg==
+Digest-Algorithms: SHA MD5 
+
+Name: COM/objectspace/jgl/GreaterCollationKey.class
+SHA-Digest: popWLlFRuJdp0teg/LyXSEm3ScU=
+MD5-Digest: uEVguzuUO87flT8061wf9w==
+Digest-Algorithms: SHA MD5 
+
+Name: COM/objectspace/jgl/ArrayIterator.class
+SHA-Digest: bNL8+EK7TnNbNrIb/X5iSwa1uy8=
+MD5-Digest: yRpJzMzhjKSv9Il+AlxZFA==
+Digest-Algorithms: SHA MD5 
+
+Name: COM/objectspace/jgl/HashComparator.class
+SHA-Digest: kEAjk0vH4lMyMJ+l49Df0opREpc=
+MD5-Digest: riMWhoT1jD0z4BAigS/JUQ==
+Digest-Algorithms: SHA MD5 
+
+Name: Acme/JPM/JPMUtils.class
+SHA-Digest: j8fYAJymo80xSIwa/FsFXreL1N0=
+MD5-Digest: lAlaOOpf78iSs4J/0EhutQ==
+Digest-Algorithms: SHA MD5 
+
+Name: COM/objectspace/jgl/LogicalOr.class
+SHA-Digest: 0J2qPMiXNEI8kA9GNfE598DRylA=
+MD5-Digest: zDMNhQhOfPeEYhL/BIttNA==
+Digest-Algorithms: SHA MD5 
+
+Name: Acme/Nnrpd/NewsDb.class
+SHA-Digest: i2eivj1qJ/wurMUsoXXycBbXAFE=
+MD5-Digest: aMYhesBcQsrGHBF/6/QSmw==
+Digest-Algorithms: SHA MD5 
+
+Name: COM/objectspace/jgl/NotEqualString.class
+SHA-Digest: GVmQeT70zhAc1TDogpEMSZ8YIiI=
+MD5-Digest: jtt+vl3Sb/SbDbO4ploLWQ==
+Digest-Algorithms: SHA MD5 
+
+Name: Acme/JPM/Filters/RGBBlockFilter.class
+SHA-Digest: vH/8CmFaUXVmc5wAUIoaO28kfDA=
+MD5-Digest: TCvHyG2b1y5ir5lPiW7Qgg==
+Digest-Algorithms: SHA MD5 
+
+Name: Acme/Dbz.class
+SHA-Digest: ye4oZBKJWiZFl2wjfKjsV3fA2sA=
+MD5-Digest: CYlO0Tx6QoCzJ6k+XmleEw==
+Digest-Algorithms: SHA MD5 
+
+Name: COM/objectspace/jgl/Allocator.class
+SHA-Digest: 0b2bxjWq1hRldfHIZzsdoJeMD1U=
+MD5-Digest: 1rfo7k8IvXsn05RHisqTMA==
+Digest-Algorithms: SHA MD5 
+
+Name: Acme/JPM/Filters/ScaleCopy.class
+SHA-Digest: Pq9ZQkG5LA8sfrnSlgXOAhqxryA=
+MD5-Digest: w3kI7Ws/Z4wzg9lng3HDDQ==
+Digest-Algorithms: SHA MD5 
+
+Name: Acme/Serve/servlet/ServletOutputStream.class
+SHA-Digest: 1LxL+SOOQqb2vlorQSzpATlrOhw=
+MD5-Digest: gjYaJ6i/mu64YbUh5rQ4IA==
+Digest-Algorithms: SHA MD5 
+
+Name: COM/objectspace/jgl/LessEqualCollationKey.class
+SHA-Digest: YIeDLwE37n7ponHu1zNhtZeypug=
+MD5-Digest: dm9zxP0NP7GJoQHKByGJRA==
+Digest-Algorithms: SHA MD5 
+
+Name: Acme/Serve/ThrottledOutputStream.class
+SHA-Digest: Z1K/PTOi/l0Y+xK3AE4jgq+FuVc=
+MD5-Digest: 7KN+aimlLONV01Pe65lgZQ==
+Digest-Algorithms: SHA MD5 
+
+Name: COM/objectspace/jgl/GreaterNumber.class
+SHA-Digest: 0bQNIxDXtuc7ufzzFdiUILGyNcs=
+MD5-Digest: 2i8jOWVgCEMgwcD1Iu4G0Q==
+Digest-Algorithms: SHA MD5 
+
+Name: COM/objectspace/jgl/TimesNumber.class
+SHA-Digest: zwUj1X/rHChdsBEmUkVFeACP23o=
+MD5-Digest: LpvlFOsMRsC8yTQ33ZzD1g==
+Digest-Algorithms: SHA MD5 
+
+Name: Acme/Crypto/Cipher.class
+SHA-Digest: VzIOFfDDbYVo8ZAiGNDN3+LyQD8=
+MD5-Digest: sv7k61ROGPoCL60XAzMSUQ==
+Digest-Algorithms: SHA MD5 
+
+Name: COM/objectspace/jgl/LessEqualInteger.class
+SHA-Digest: YgWqUM+SgrT6Q75+Wk0AsGitOc0=
+MD5-Digest: mBd+AToiHfQeXrF1GY11jQ==
+Digest-Algorithms: SHA MD5 
+
+Name: COM/objectspace/jgl/ReverseIterator.class
+SHA-Digest: MN91Ukb9j4ZVGZQsQLHSvlbAWuE=
+MD5-Digest: fgoKBHAlEi6JP5/tvVfcbw==
+Digest-Algorithms: SHA MD5 
+
+Name: COM/objectspace/jgl/LessEqualCollator.class
+SHA-Digest: ZJ+N5/pKb/Rv0tMOMZsfuBKoFgo=
+MD5-Digest: q62NbIkWSQVLHb36CyHevw==
+Digest-Algorithms: SHA MD5 
+
+Name: COM/objectspace/jgl/FloatIterator.class
+SHA-Digest: HbY99oSSOX8HInt35YBmIP5kRbM=
+MD5-Digest: ID3BRpKE3kKl6SHPMfRTBg==
+Digest-Algorithms: SHA MD5 
+
+Name: COM/objectspace/jgl/GreaterEqualNumber.class
+SHA-Digest: 9bh98dDrMA1txTpaHQ2NdBxJ0rA=
+MD5-Digest: ObCjUZbMpTfPwm5MRzkZ5Q==
+Digest-Algorithms: SHA MD5 
+
+Name: COM/objectspace/jgl/UnaryFunction.class
+SHA-Digest: vfUQSBDXWg9X7z2c7Bg94moisfM=
+MD5-Digest: dcJL9+CuAPSuVXHRTusF3Q==
+Digest-Algorithms: SHA MD5 
+
+Name: COM/objectspace/jgl/OrderedSetIterator.class
+SHA-Digest: D0dFyJmI7JEjtj11Y8iLGoHkwmE=
+MD5-Digest: QYLzGtAoIVN9Yj9zz+hpcA==
+Digest-Algorithms: SHA MD5 
+
+Name: Acme/Serve/servlet/GenericServlet.class
+SHA-Digest: FGzJp3Xx/US/rgMHHzYOXvhj5CQ=
+MD5-Digest: ytUBlisHuN16aoVnbGk9jw==
+Digest-Algorithms: SHA MD5 
+
+Name: Acme/RefInt.class
+SHA-Digest: uy5hHCkwspPZ3gekN9DRiZofwBQ=
+MD5-Digest: IY9B0V/KHD4VNMJSeFYbpg==
+Digest-Algorithms: SHA MD5 
+
+Name: COM/objectspace/jgl/EqualString.class
+SHA-Digest: TO0WI218FME/LuhUgUhrX5D8d4E=
+MD5-Digest: xAe9JGpBoO/RSCwxcuR6NQ==
+Digest-Algorithms: SHA MD5 
+
+Name: Acme/IntGlide.class
+SHA-Digest: ZZrMkhCOUMBPezdPWz8NAX8AhSU=
+MD5-Digest: rIibPeVjzRvr4afY87MmjA==
+Digest-Algorithms: SHA MD5 
+
+Name: COM/objectspace/jgl/PlusInteger.class
+SHA-Digest: ryFPeJtw3puPiPe42Zy4g+nVdpA=
+MD5-Digest: Pb1b8RFpfxUN3f0G0Thz0A==
+Digest-Algorithms: SHA MD5 
+
+Name: Acme/Nnrpd/MultiplexNewsDb.class
+SHA-Digest: UDCC2k1wnuhVO2Ux3Dps+pMvfWQ=
+MD5-Digest: NlTSNBA8le0I0GCk23Q9vw==
+Digest-Algorithms: SHA MD5 
+
+Name: Acme/Widgets/ButtonDialog.class
+SHA-Digest: 5Rn+p35z6tNsu3fzghZ5YvlGjAE=
+MD5-Digest: 0cophwrfwv6taxBN8DcUvA==
+Digest-Algorithms: SHA MD5 
+
+Name: Acme/Widgets/OkDialog.class
+SHA-Digest: 0Z6+1qM9qPy+jzivTvDHVaLDHF0=
+MD5-Digest: yi/4bVbMyNfU4924yFKcWw==
+Digest-Algorithms: SHA MD5 
+
+Name: COM/objectspace/jgl/Replacing.class
+SHA-Digest: plVygBMqcMF69T8tWDgFcIFEb3s=
+MD5-Digest: 5tANHQKJS5nSJBVrxkXZKw==
+Digest-Algorithms: SHA MD5 
+
+Name: COM/objectspace/jgl/LongIterator.class
+SHA-Digest: /DTSpd9dHS6PpLxSJwaUjotd9HA=
+MD5-Digest: ln7bkPHbP8oAdx7gtGHUVw==
+Digest-Algorithms: SHA MD5 
+
+Name: Acme/NoRobots.class
+SHA-Digest: yPMawDHqRgwKKnQpsbGzdsBG/4U=
+MD5-Digest: +O5rSHXOlGd9q5UhbAkNEw==
+Digest-Algorithms: SHA MD5 
+
+Name: Acme/Widgets/ErrorBox.class
+SHA-Digest: huUIu80gMoPeP+P0N8uGai3Pr+U=
+MD5-Digest: RU8jq1pbDxZZ7MnQcWZ64w==
+Digest-Algorithms: SHA MD5 
+
+Name: COM/objectspace/jgl/PositiveNumber.class
+SHA-Digest: ni80SdAhoWmsq1ZdZLeF80HSsYk=
+MD5-Digest: W27Ls9da8JXtu3xNI8QTig==
+Digest-Algorithms: SHA MD5 
+
+Name: Acme/UnixUser.class
+SHA-Digest: dI5imQ8InaIsnUVluE1c/R6IivE=
+MD5-Digest: 1NDvOhrAvqBoCWvHasYjDA==
+Digest-Algorithms: SHA MD5 
+
+Name: COM/objectspace/jgl/LessEqualNumber.class
+SHA-Digest: TwUItljwTzZWI7Mveb7+jasz/Es=
+MD5-Digest: Cb5kwDZsoCivRjEcgBzCTg==
+Digest-Algorithms: SHA MD5 
+
+Name: COM/objectspace/jgl/SetOperations.class
+SHA-Digest: B2Y+qVWsbLg4R1LVMLpoH//F878=
+MD5-Digest: CPecQNzrggtWk67H6CRyog==
+Digest-Algorithms: SHA MD5 
+
+Name: COM/objectspace/jgl/Hashing.class
+SHA-Digest: fZPiRYnLuDsDcCZfXTddAw3Mfhw=
+MD5-Digest: smcpQUvwPfoJusWTjTGY3w==
+Digest-Algorithms: SHA MD5 
+
+Name: Acme/FlexVectorEnumerator.class
+SHA-Digest: zXo+04myCzW1oBBjdqXf4SCU3Ec=
+MD5-Digest: bAj1/q1zjFNgkJXQgY2/rg==
+Digest-Algorithms: SHA MD5 
+
+Name: Acme/Chat/ChatAppletName.class
+SHA-Digest: 65xQ2729tnZMgAalnfuqRQuDBZM=
+MD5-Digest: I6Sug5ajjr5R7GkMpBARKw==
+Digest-Algorithms: SHA MD5 
+
+Name: Acme/APrintStream.class
+SHA-Digest: WhcL9KcbxE4ltA2oKHhOqLI0CMQ=
+MD5-Digest: xackJGLqy5QkOvIvDbuLJg==
+Digest-Algorithms: SHA MD5 
+
+Name: COM/objectspace/jgl/OutputIterator.class
+SHA-Digest: gIMgLkTvfiayXl94E8m/PjDD4rg=
+MD5-Digest: VsUKA5Fjz18ge3PtpmQb+w==
+Digest-Algorithms: SHA MD5 
+
+Name: Acme/Serve/servlet/http/HttpServletResponse.class
+SHA-Digest: 6zQmk5HYrw4GiGEvvWtF0UzHds4=
+MD5-Digest: 3CxlgY73Su3aqGD6qK5F8A==
+Digest-Algorithms: SHA MD5 
+
+Name: Acme/DbzKeyEnumerator.class
+SHA-Digest: dvBU4efP1CRW+N1Gi0wDEwF1k24=
+MD5-Digest: KSy9i6pZn4gl2ACiP/yQxQ==
+Digest-Algorithms: SHA MD5 
+
+Name: COM/objectspace/jgl/Deque.class
+SHA-Digest: 2UGuLDHk/z4qACZt/f1xybFzI/w=
+MD5-Digest: UPudGHz+gmrlbK0yiDnHjw==
+Digest-Algorithms: SHA MD5 
+
+Name: Acme/Nnrpd/NnrpdException.class
+SHA-Digest: DIZ3tYtHNG4FuJ0vH10w5/YWdn4=
+MD5-Digest: FyJc3GXv+VbpcYZKEhTDFg==
+Digest-Algorithms: SHA MD5 
+
+Name: Acme/Serve/FileServlet.class
+SHA-Digest: bad/3KNG9EINRWmG5/3uyj870jw=
+MD5-Digest: KyYzNnHi9N09yiC9UDCikg==
+Digest-Algorithms: SHA MD5 
+
+Name: Acme/SpiderItem.class
+SHA-Digest: XQx06rvbgEH3niTGsvdke75r9BU=
+MD5-Digest: CDUNhaq7YT38sOIUyhS3RQ==
+Digest-Algorithms: SHA MD5 
+
+Name: Acme/Utils.class
+SHA-Digest: dIPhSnMjgoVvNOvi0JTShelIa0s=
+MD5-Digest: qoB9H+00Ar+3JB1TQH3J2g==
+Digest-Algorithms: SHA MD5 
+
+Name: COM/objectspace/jgl/NotEqualCollator.class
+SHA-Digest: sVsAXU8xTZlUE2tpRYuFLf7r5q8=
+MD5-Digest: j9Qb/zPi2b6LyIr3I5cVVQ==
+Digest-Algorithms: SHA MD5 
+
+Name: COM/objectspace/jgl/ByteIterator.class
+SHA-Digest: CJcNGyPl2U4DUJKKUDRWf+Hd3MM=
+MD5-Digest: SpLcUV5KhGpTUlsAlVlFnQ==
+Digest-Algorithms: SHA MD5 
+
+Name: COM/objectspace/jgl/ObjectArray.class
+SHA-Digest: G0UhqwVKZgONYoAcXfns9bxE3v8=
+MD5-Digest: prSS9CkltM4HLOlFa5rIVw==
+Digest-Algorithms: SHA MD5 
+
+Name: COM/objectspace/jgl/Shuffling.class
+SHA-Digest: iQJiZN37eqSS2+p2TLDBoZ0y0xs=
+MD5-Digest: FBX/TWSCd4TjIh/pOkkB0Q==
+Digest-Algorithms: SHA MD5 
+
+Name: Acme/DbzSearcher.class
+SHA-Digest: A3FRED1JqR5WbVexTB+3nlzt68I=
+MD5-Digest: i4viUr0dbkfhXrbpOkEkqg==
+Digest-Algorithms: SHA MD5 
+
+Name: Acme/JPM/Filters/Gamma.class
+SHA-Digest: k7A5WlVzHs6UcO8s5fh2izznuBI=
+MD5-Digest: iW7DIyRoy71oFbQTiJ0vug==
+Digest-Algorithms: SHA MD5 
+
+Name: Acme/Serve/ServeUtils.class
+SHA-Digest: ifugVD45PhRffZ/NoWwm+tLCLcY=
+MD5-Digest: vlScppktaiMhknZEvkcfMg==
+Digest-Algorithms: SHA MD5 
+
+Name: COM/objectspace/jgl/DoubleIterator.class
+SHA-Digest: fxV5O3ovYDZIOsK+pYWLthVB79g=
+MD5-Digest: PTEQUKA3lDZwftXW9MEtxg==
+Digest-Algorithms: SHA MD5 
+
+Name: COM/objectspace/jgl/Set.class
+SHA-Digest: +ckZsB/UIpa3nhaSUB7XlH1UoLI=
+MD5-Digest: PQ1nw8SOPGMPl/g7tj41hA==
+Digest-Algorithms: SHA MD5 
+
+Name: Acme/Widgets/OkCancelBox.class
+SHA-Digest: XMZ/bZKtx27EDGEvnDsjJdzc7LI=
+MD5-Digest: 59keU/vZcaZvNHpZgqyhAA==
+Digest-Algorithms: SHA MD5 
+
+Name: Acme/Chat/ChatAppletNameThread.class
+SHA-Digest: Nh9jZW2Uhs9Een5WF4KjPOIKc7s=
+MD5-Digest: WWIPgKWuDmq+Bfd22eJMyw==
+Digest-Algorithms: SHA MD5 
+
+Name: COM/objectspace/jgl/GreaterInteger.class
+SHA-Digest: PD20vJzHbh8+o/x0xfOK4JWQc7A=
+MD5-Digest: grLUQM1bxHOGlJ68cQRMQA==
+Digest-Algorithms: SHA MD5 
+
+Name: COM/objectspace/jgl/Tree$TreeNode.class
+SHA-Digest: j9FKD8ENP0LppQ8SqgiT8L0qeG4=
+MD5-Digest: 3WFsQf+K98PIWYCtFJXVMw==
+Digest-Algorithms: SHA MD5 
+
+Name: Acme/JPM/Encoders/GifEncoder.class
+SHA-Digest: +0aT2svwWDv+edvkQH9Mdy0drts=
+MD5-Digest: +cVZqNHeGyY/77Bar+mx3Q==
+Digest-Algorithms: SHA MD5 
+
+Name: COM/objectspace/jgl/GreaterCollator.class
+SHA-Digest: afoNMOiwVGU5GRK/+MU42h797D8=
+MD5-Digest: pBvyu52hyCvwOgwdo4WE9Q==
+Digest-Algorithms: SHA MD5 
+
+Name: Acme/Crypto/Des3Cipher.class
+SHA-Digest: Xwnuvu2zwDaI2SOngCQFOfNTWjk=
+MD5-Digest: FrBPKAiNnwEa2MrMeZTNsg==
+Digest-Algorithms: SHA MD5 
+
+Name: Acme/Nnrpd/NewsDbArticle.class
+SHA-Digest: 1YpxI6s1CC6t7p9JUiG4zXmKBOU=
+MD5-Digest: eY8FvmjbqQZPriWJt8j9PQ==
+Digest-Algorithms: SHA MD5 
+
+Name: COM/objectspace/jgl/OrderedMapIterator.class
+SHA-Digest: 8LXDAPniC0xzHmxVpP9e95j8iL4=
+MD5-Digest: csngYoVreOvM8ogNF3VYMA==
+Digest-Algorithms: SHA MD5 
+
+Name: Acme/Widgets/BorderPanel.class
+SHA-Digest: GYM7yaWvNnzNckebGZHVLuLt24Y=
+MD5-Digest: 5MaOIUC8M7lWftvMkuRPwQ==
+Digest-Algorithms: SHA MD5 
+
+Name: Acme/Crypto/DesCipher.class
+SHA-Digest: V/MUBctLK+HYC2ZjK3J9S5bmD5o=
+MD5-Digest: U36qN3AzfrhkjE8xKCybsQ==
+Digest-Algorithms: SHA MD5 
+
+Name: COM/objectspace/jgl/BinaryComposePredicate.class
+SHA-Digest: k2gR7eGo3Pg+e2FtkAJEpmkQ+Bc=
+MD5-Digest: Uk5kaEfRzf8gRb57ZJ3ztA==
+Digest-Algorithms: SHA MD5 
+
+Name: Acme/Crypto/EncryptedInputStream.class
+SHA-Digest: do/DetA8jMOdF7pnW5TldLeiPlQ=
+MD5-Digest: jtMCAGiuR4GxcynFxa2OaA==
+Digest-Algorithms: SHA MD5 
+
+Name: COM/objectspace/jgl/InvalidOperationException.class
+SHA-Digest: ZXwqYRkFu+wvmHAda/0YA5MaEXI=
+MD5-Digest: jRQ2tPpOg2GR00XByu37lA==
+Digest-Algorithms: SHA MD5 
+
+Name: Acme/SynthAudioClip.class
+SHA-Digest: 8IE0E0fikNxUyx90+gdTyCAj+Qk=
+MD5-Digest: En53/sMmAWovYh4ayAJGtw==
+Digest-Algorithms: SHA MD5 
+
+Name: COM/objectspace/jgl/RandomAccessIterator.class
+SHA-Digest: bSO7UybkpoE2cFsCTOdUtBZFibw=
+MD5-Digest: J+UNO8UbsiZu/gkffirq9Q==
+Digest-Algorithms: SHA MD5 
+
+Name: Acme/Widgets/NoticeBox.class
+SHA-Digest: qslL9OKIIjVgH/tnmpLxWtgkjbQ=
+MD5-Digest: D3sAwqr/vhLxgHGydu0PHg==
+Digest-Algorithms: SHA MD5 
+
+Name: COM/objectspace/jgl/Permuting.class
+SHA-Digest: OSSZZvnpdocErnJStdaTvn4U+Hc=
+MD5-Digest: 0TaEG4Vq6Ay53Sp0q0X30g==
+Digest-Algorithms: SHA MD5 
+
+Name: Acme/Serve/servlet/http/ChunkedOutputStream.class
+SHA-Digest: cPNJentaWjgRFbMfRUG7MgrdD64=
+MD5-Digest: yHQdinQMiEn/R5R4JNYeSQ==
+Digest-Algorithms: SHA MD5 
+
+Name: Acme/Serve/ServeInputStream.class
+SHA-Digest: +tMAqDrYgpi67Ev491EQqXfw6tA=
+MD5-Digest: pLIGH+qyTJhCFnzWTOahJg==
+Digest-Algorithms: SHA MD5 
+
+Name: Acme/PsgMatrix.class
+SHA-Digest: GtXW/XHnSr4VGTE9bcDRbWIrVxU=
+MD5-Digest: 58696S9YfMLHQf+vtOI+Xw==
+Digest-Algorithms: SHA MD5 
+
+Name: COM/objectspace/jgl/NegateInteger.class
+SHA-Digest: nOtbfJSYo+uA5LsFrC4CV/VYVyM=
+MD5-Digest: RhIX2JvtXExvtri9I6JSVg==
+Digest-Algorithms: SHA MD5 
+
+Name: Acme/JPM/Filters/RGBAllFilter.class
+SHA-Digest: t2WyUUfBSP7lfUN5sS00dxE2TYc=
+MD5-Digest: sYyDw9j2oYzC43mdDRyFRQ==
+Digest-Algorithms: SHA MD5 
+
+Name: Acme/JPM/Filters/Tile.class
+SHA-Digest: 8ersB/YKH2Ay3D0JFsybkvmrs7Y=
+MD5-Digest: mhkOa2P9mrJH6KEOYM1lOg==
+Digest-Algorithms: SHA MD5 
+
+Name: Acme/Crypto/StreamCipher.class
+SHA-Digest: 94W5gBeOJGrDndjYo6lTuAYpZ5w=
+MD5-Digest: eqS5WktIUgXcOgHcqx+4zg==
+Digest-Algorithms: SHA MD5 
+
+Name: COM/objectspace/jgl/BindFirst.class
+SHA-Digest: 1AtArxPXU8b1AIFG5mXUoynqP0g=
+MD5-Digest: 32Mmd+ID+cjKI40OCuXiIg==
+Digest-Algorithms: SHA MD5 
+
+Name: COM/objectspace/jgl/Queue.class
+SHA-Digest: 8WRclK4FKgrKQK2aT30Hq4/Qe5U=
+MD5-Digest: 2ssA1UU2Kzu4reILBrB6vQ==
+Digest-Algorithms: SHA MD5 
+
+Name: Acme/Serve/AdaptiveAudioServlet.class
+SHA-Digest: TexRkfvJq3UgcD2fjZy+ltUQ+wg=
+MD5-Digest: xVRdpQoS5ZjMcYbUg76f2Q==
+Digest-Algorithms: SHA MD5 
+
+Name: Acme/Phase.class
+SHA-Digest: r2WWzvdh3F66vIWCqMOOb86SLEc=
+MD5-Digest: Jx0uY30LzvutTEAzV1b1mg==
+Digest-Algorithms: SHA MD5 
+
+Name: COM/objectspace/jgl/LessString.class
+SHA-Digest: KY7yaNTnBh+wCGRZ5x6ni6yg3sg=
+MD5-Digest: ANfrf1TrX99QzVhztiopIg==
+Digest-Algorithms: SHA MD5 
+
+Name: COM/objectspace/jgl/BindFirstPredicate.class
+SHA-Digest: MNfqr6fEwaaqZEKHdgYMoqzFGBo=
+MD5-Digest: VPpiCieTeyROXF5SRsvTdA==
+Digest-Algorithms: SHA MD5 
+
+Name: Acme/UtilsBrokenImageSource.class
+SHA-Digest: FIirVoM7NJcc5z1gpA6k5ZWeuug=
+MD5-Digest: IDnMiNgcxFpIWjR86jD6kg==
+Digest-Algorithms: SHA MD5 
+
+Name: COM/objectspace/jgl/Finding.class
+SHA-Digest: MJuJmXX6paOqHKV/+mUciWQ4QVU=
+MD5-Digest: cmAElkVwQMWQ/gySkriDMQ==
+Digest-Algorithms: SHA MD5 
+
+Name: COM/objectspace/jgl/OrderedMap.class
+SHA-Digest: q7Q87bLqhYj1zqT8VpguUywpuvA=
+MD5-Digest: 6lrTSI04+qqXye1KhcAKFQ==
+Digest-Algorithms: SHA MD5 
+
+Name: Acme/Nnrpd/MultiplexNewsDbGroups.class
+SHA-Digest: eCS0goQztCTd4ep+qVGvmAc2A1U=
+MD5-Digest: yhj8W8L7NgXuyPFkpVtCAQ==
+Digest-Algorithms: SHA MD5 
+
+Name: Acme/Crypto/BlowfishCipher.class
+SHA-Digest: /utbGAtzk52lCpg6BIzaAqaczR0=
+MD5-Digest: H/cG2L7bCO97v3x1TM+nlw==
+Digest-Algorithms: SHA MD5 
+
+Name: COM/objectspace/jgl/BooleanArray.class
+SHA-Digest: no5jNAvIlS8m78OmnBlavt3Kd7g=
+MD5-Digest: 13nRt/9Kl628FZ6cBUKjYA==
+Digest-Algorithms: SHA MD5 
+
+Name: Acme/GenericCloneable.class
+SHA-Digest: qIm9Et/x+9AUWm4krQ7TyT2rOxs=
+MD5-Digest: bT9k9oiRkIYXGz2D3WwS3A==
+Digest-Algorithms: SHA MD5 
+
+Name: COM/objectspace/jgl/HashMapIterator.class
+SHA-Digest: M9A69IWRqxhMYJ5nPZD2oWATIpE=
+MD5-Digest: mxemXIWADDuI9rCsbpQwJQ==
+Digest-Algorithms: SHA MD5 
+
+Name: Acme/Task.class
+SHA-Digest: b+cpoR6M/+X40StmzQu2q6lG2A0=
+MD5-Digest: ZASFnJyabauuqayOFEhhpQ==
+Digest-Algorithms: SHA MD5 
+
+Name: COM/objectspace/jgl/IntIterator.class
+SHA-Digest: 3x+yt8TQ6ElX3EajUbJtgqawZds=
+MD5-Digest: aCi6OV95iWPTz4SSWPE5JA==
+Digest-Algorithms: SHA MD5 
+
+Name: Acme/Serve/servlet/http/HttpServlet.class
+SHA-Digest: ihEqyiJQt+yIsDmjnddleAtTxds=
+MD5-Digest: 8SvOEq4kkfRRjxQydFBE/w==
+Digest-Algorithms: SHA MD5 
+
+Name: Acme/Nnrpd/MultiplexNewsDbMessageIds.class
+SHA-Digest: hPgbTUmLx1xOQE0pLWm84E9u324=
+MD5-Digest: u5zMZm6tdcCg2j2bfAiQKw==
+Digest-Algorithms: SHA MD5 
+
+Name: Acme/WildcardDictionary.class
+SHA-Digest: vYXlqkFgiJisJcBhtpg9l/J6F/Y=
+MD5-Digest: HaJ16hhBF7Ddj493/h9ukA==
+Digest-Algorithms: SHA MD5 
+
+Name: COM/objectspace/jgl/ByteArray.class
+SHA-Digest: Ysh0rcc/cfxBYiG9FdHrpL5wfY4=
+MD5-Digest: G7TyTOg7/RqxgsboUXRiJg==
+Digest-Algorithms: SHA MD5 
+
+Name: COM/objectspace/jgl/UnaryCompose.class
+SHA-Digest: rcbM+fN+thav1/hkNiHPY00mtlY=
+MD5-Digest: msxJ1qrG/kzj9pw/rL+/zw==
+Digest-Algorithms: SHA MD5 
+
+Name: Acme/Widgets/WidgetTest.class
+SHA-Digest: O7YfCvFIZl5OPzCNUO4r6lMt0bw=
+MD5-Digest: 2r/bZFQpaK5l7jG4gyhoDQ==
+Digest-Algorithms: SHA MD5 
+
+Name: Acme/Crypto/NullCipher.class
+SHA-Digest: TfSi6ZaOoRSS4EK8hexPD9yF1hc=
+MD5-Digest: +hl1CFAvdTYt/PcR0F5jdA==
+Digest-Algorithms: SHA MD5 
+
+Name: COM/objectspace/jgl/ObjectIterator.class
+SHA-Digest: Z9hs/F1y8dcTEC95PN93ZTj+HZ8=
+MD5-Digest: wrls6Ikt60YffiCsKuLInw==
+Digest-Algorithms: SHA MD5 
+
+Name: COM/objectspace/jgl/DoubleArray.class
+SHA-Digest: djQDDj+8SqGeYrQG6+8NvHvhnWs=
+MD5-Digest: qwNN/dceWzWTspOAB8nN8g==
+Digest-Algorithms: SHA MD5 
+
+Name: Acme/JPM/Encoders/ImageEncoder.class
+SHA-Digest: 7WMqg51byFFIDs5v6ZmMoHgZbWg=
+MD5-Digest: 2f4ZyKFHFDnVDT/FOxRYTg==
+Digest-Algorithms: SHA MD5 
+
+Name: COM/objectspace/jgl/Range.class
+SHA-Digest: FTHOpBf3K/nEyBCVj9acDE6gcf8=
+MD5-Digest: YW2CB681tEkud5dBhMilAg==
+Digest-Algorithms: SHA MD5 
+
+Name: Acme/Serializable.class
+SHA-Digest: IdZCH0QrH8zrjpWU2ia2jUNPfR8=
+MD5-Digest: WvCTSjcD68zVP5SR0IC/FQ==
+Digest-Algorithms: SHA MD5 
+
+Name: Acme/Serve/servlet/ServletRequest.class
+SHA-Digest: tUjn55pTkue9Fn2dhcyiK6cVKpQ=
+MD5-Digest: rRdq8dMv2f8OKReqOsh7xA==
+Digest-Algorithms: SHA MD5 
+
+Name: COM/objectspace/jgl/Tree$InsertResult.class
+SHA-Digest: 7oMrISIgKmXoZNEI9T9poUSQw4E=
+MD5-Digest: LMHNxNcpPCTNCmiKfJTcPg==
+Digest-Algorithms: SHA MD5 
+
+Name: Acme/Widgets/Slider.class
+SHA-Digest: l79r1JSybWdDB+QMV4F2b3J9aVc=
+MD5-Digest: gha3HS1FbQVm8EXaeEiB2A==
+Digest-Algorithms: SHA MD5 
+
+Name: COM/objectspace/jgl/SList.class
+SHA-Digest: 6qoO8AuDMlF8xNKatQ4SGNVV1MI=
+MD5-Digest: 6ccU6pjd0KNpmutdoeVmbQ==
+Digest-Algorithms: SHA MD5 
+
+Name: COM/objectspace/jgl/OrderedSet.class
+SHA-Digest: Sk6Nm9GYRknqk7kx5I+xXFZ2bi8=
+MD5-Digest: otEhEnvCZbGhaayCAOFwng==
+Digest-Algorithms: SHA MD5 
+
+Name: Acme/Chat/ChatApplet.class
+SHA-Digest: AWdATeLPAAo3qyOMjOqvseNdR3I=
+MD5-Digest: i4PDEK4lniXnt5DlQo8Q7w==
+Digest-Algorithms: SHA MD5 
+
+Name: COM/objectspace/jgl/NumberHelper.class
+SHA-Digest: 2XdWf2FAHsdcJqK+31kKHsyWpWk=
+MD5-Digest: moDLEASQ30jbD2kg6HFURw==
+Digest-Algorithms: SHA MD5 
+
+Name: Acme/Serve/CgiServlet.class
+SHA-Digest: NhG3T+mgpdrblImEvbR6MkEH6r8=
+MD5-Digest: Hd8l4UQXQKoNcLWmxHMcuQ==
+Digest-Algorithms: SHA MD5 
+
+Name: Acme/Widgets/Spacer.class
+SHA-Digest: kMxLvHPi3uSycqLvlCbI5/1iGRk=
+MD5-Digest: OEId8H9Zeq0yhsvgdaBxqQ==
+Digest-Algorithms: SHA MD5 
+
+Name: Acme/JPM/Decoders/ImageDecoder.class
+SHA-Digest: yM/BwP4G+jasx+0FUEsdZ8k482I=
+MD5-Digest: H5/ImDGaQ6XVFrykOsQMRw==
+Digest-Algorithms: SHA MD5 
+
+Name: printing/PSGr.class
+SHA-Digest: PcPCw56FL8Iyryr3P+wiPij74bU=
+MD5-Digest: bN7rqaP6CunIusCggGNWzQ==
+Digest-Algorithms: SHA MD5 
+
+Name: Acme/Versioned.class
+SHA-Digest: yMi/JM2u89FoeWcVmr7H0N7xuh8=
+MD5-Digest: mZn4jUkad15hKIs1annvAQ==
+Digest-Algorithms: SHA MD5 
+
+Name: Acme/JPM/Filters/Enlarge.class
+SHA-Digest: k6Y+Fqht1dGuAZ2vIDCpMZDLGSM=
+MD5-Digest: pbsCDSbtA3UaO5HEBgmLsA==
+Digest-Algorithms: SHA MD5 
+
+Name: COM/objectspace/jgl/CharArray.class
+SHA-Digest: 75ScFUyfKsVBMPHI17Jbwushpuc=
+MD5-Digest: 9VbAbDR2r1/U5Dhpvlq1qg==
+Digest-Algorithms: SHA MD5 
+
+Name: COM/objectspace/jgl/UnaryNot.class
+SHA-Digest: bP1YswhLiVlSMl80p4UdExAIYAs=
+MD5-Digest: hwz9XL6Bhwu12OJSarVABw==
+Digest-Algorithms: SHA MD5 
+
+Name: Acme/JPM/Filters/Oil.class
+SHA-Digest: f7BECeh9riAGbsb1x6ocVZAlNOQ=
+MD5-Digest: aC3Z3c7K0Fv6UuaVnid0sQ==
+Digest-Algorithms: SHA MD5 
+
+Name: Acme/Nnrpd/CrLfOutputStream.class
+SHA-Digest: gN6wYvZBy1InwfObdj0/D8Z1e/Y=
+MD5-Digest: UFZSxtgZQwT39fO3lL/1JQ==
+Digest-Algorithms: SHA MD5 
+
+Name: Acme/Chat/ChatServletUser.class
+SHA-Digest: cPPdS75BkJlRhhdLxN+6jShS9u8=
+MD5-Digest: faJiJbMY3uy8ZTUbqz6m3Q==
+Digest-Algorithms: SHA MD5 
+
+Name: COM/objectspace/jgl/BinaryNot.class
+SHA-Digest: iy9e+W1t4gsxtBC/gQwd/Q6PHAc=
+MD5-Digest: 5nSCu6pgMU30mNWC4pov5w==
+Digest-Algorithms: SHA MD5 
+
+Name: COM/objectspace/jgl/DividesNumber.class
+SHA-Digest: Oc7fWTdOZPSPW1wWpgiK4e2XITU=
+MD5-Digest: PpVEIj+t2YSsrs2PtAgMDw==
+Digest-Algorithms: SHA MD5 
+
+Name: printing/Jlpr.class
+SHA-Digest: 863jAVRfriPxrXsPAAB+zK7lfXQ=
+MD5-Digest: puRhlipQeQzoKGLKsgMCCQ==
+Digest-Algorithms: SHA MD5 
+
+Name: Acme/Nnrpd/NnrpdUtils.class
+SHA-Digest: dFDVP8BMortR2yqjD4f5kpcpkXA=
+MD5-Digest: HhG1q0UgThJnQ0gclHUhXA==
+Digest-Algorithms: SHA MD5 
+
+Name: COM/objectspace/jgl/IntArray.class
+SHA-Digest: OujjTT/US+Kg2GsWy+cXf2zv9WE=
+MD5-Digest: gbEIVlBsXanBP5s6sK4zQw==
+Digest-Algorithms: SHA MD5 
+
+Name: COM/objectspace/jgl/Swapping.class
+SHA-Digest: 5wYqERAPeB9qrbDWTRbhLNGqq6E=
+MD5-Digest: A305IEz6fJurWXodo4hhlg==
+Digest-Algorithms: SHA MD5 
+
+Name: COM/objectspace/jgl/LengthString.class
+SHA-Digest: gLC9GGVUxWVKlw9KXL6tXB+0y/M=
+MD5-Digest: /MKRq/4hNHvtLQ02pG0W7Q==
+Digest-Algorithms: SHA MD5 
+
+Name: COM/objectspace/jgl/SListIterator.class
+SHA-Digest: uVARClQaei5R6fjcuCYzo7pCPF8=
+MD5-Digest: ij3Q0mZcaL8hkQbMXY3uyg==
+Digest-Algorithms: SHA MD5 
+
+Name: COM/objectspace/jgl/BinaryCompose.class
+SHA-Digest: ixoxq/uKtk7Ha/nep9k4+oRCtjI=
+MD5-Digest: al3AKHDRQrjfmrzzkGXoVg==
+Digest-Algorithms: SHA MD5 
+
+Name: COM/objectspace/jgl/CharIterator.class
+SHA-Digest: 83y3R+1+PAXASiyDQlKTxUqq4g4=
+MD5-Digest: LPTvPy1qFIrR3gwrUItWhg==
+Digest-Algorithms: SHA MD5 
+
+Name: Acme/TaskRunner.class
+SHA-Digest: aFYZAsPmc0NWT9DOn2Ve9u/8TpA=
+MD5-Digest: DdgLW+KywpXXzKrBOtiLrA==
+Digest-Algorithms: SHA MD5 
+
+Name: COM/objectspace/jgl/DList.class
+SHA-Digest: 5Wjcp3QDdKBVejzipYvuBkz7oGk=
+MD5-Digest: 4b/Qnin+mHYb61zCR0I59Q==
+Digest-Algorithms: SHA MD5 
+
+Name: Acme/Nnrpd/ProxyNewsDb.class
+SHA-Digest: vTzh0aE8/9Mf+rxGkpQjowMx0VI=
+MD5-Digest: mN7P4dWsMDPvWg7LhNpc4g==
+Digest-Algorithms: SHA MD5 
+
+Name: Acme/PostURLConnection.class
+SHA-Digest: kO5jCIuczvw98Xqf3pnV3LpLmNU=
+MD5-Digest: sOiB3zAraGG7KEqJfC3G/g==
+Digest-Algorithms: SHA MD5 
+
+Name: Acme/Widgets/BusyBox.class
+SHA-Digest: BqMjP4YgaqRKea0P07VnAs251ko=
+MD5-Digest: ha8v2B6cisCVECv3EM/PVg==
+Digest-Algorithms: SHA MD5 
+
+Name: COM/objectspace/jgl/BooleanIterator.class
+SHA-Digest: Pbj0aFvm0y2vRKegbDHs11JC4ho=
+MD5-Digest: AWMlu7c9shLc6v85+J9NWA==
+Digest-Algorithms: SHA MD5 
+
+Name: COM/objectspace/jgl/SelectSecond.class
+SHA-Digest: pY2W8rGKMbiyxkq9vLPnlQlJskI=
+MD5-Digest: +B8KSoiDyMFr6Li6j+Pakg==
+Digest-Algorithms: SHA MD5 
+
+Name: COM/objectspace/jgl/ArrayAdapter.class
+SHA-Digest: OAMfRtzotma86VvuRbRDLWwuHak=
+MD5-Digest: 2S1nvpd00Ap8qE821LA9jQ==
+Digest-Algorithms: SHA MD5 
+
+Name: COM/objectspace/jgl/NegativeInteger.class
+SHA-Digest: 8v8CBv8HeFzbS5cqZ33iYuXgffA=
+MD5-Digest: Hyz0ToGRI54mfdKRSScgbg==
+Digest-Algorithms: SHA MD5 
+
+Name: Acme/DbzElementEnumerator.class
+SHA-Digest: yiKOru7a1FQ8xkgt38bsKZvqb7Q=
+MD5-Digest: 4ulm7eQxJqF0Tysrv+VQJg==
+Digest-Algorithms: SHA MD5 
+
+Name: COM/objectspace/jgl/BinaryFunction.class
+SHA-Digest: MMHoJB7Co3DmB5KbNmN054BgK1o=
+MD5-Digest: Z2hl21DR8yeU6notNqzBGw==
+Digest-Algorithms: SHA MD5 
+
+Name: Acme/Queue.class
+SHA-Digest: 1bJ79jX/71cfLGhESPCbJak+Joo=
+MD5-Digest: yTDyfbnUmuGhDjVPbYTZTg==
+Digest-Algorithms: SHA MD5 
+
+Name: COM/objectspace/jgl/LongArray.class
+SHA-Digest: oobXcYs3/EWGTEosbXKdueZfHBc=
+MD5-Digest: Az7Ur7ah24BeEr8Z5JsBQw==
+Digest-Algorithms: SHA MD5 
+
+Name: COM/objectspace/jgl/SelectFirst.class
+SHA-Digest: lKmCzoVTiMALBFDq8XnueuSceZg=
+MD5-Digest: QOoRl+sVbkBT3Dy5HxLtWg==
+Digest-Algorithms: SHA MD5 
+
+Name: Acme/NullInputStream.class
+SHA-Digest: Yl4d7iXpWukx+A3AZChV65k5AcI=
+MD5-Digest: vAfanhcSpWXkm1xu9VRH5A==
+Digest-Algorithms: SHA MD5 
+
+Name: COM/objectspace/jgl/NotEqualTo.class
+SHA-Digest: AvLeJTWGZmbHKk7ubqOyHzVngU8=
+MD5-Digest: KHu4rG36X5vPwy188go9TA==
+Digest-Algorithms: SHA MD5 
+
+Name: COM/objectspace/jgl/MinusInteger.class
+SHA-Digest: AapihO8RkdjCeZ3U3m57K+PVYMA=
+MD5-Digest: rHokYzMJANAF2A2NVOeXIQ==
+Digest-Algorithms: SHA MD5 
+
+Name: COM/objectspace/jgl/GreaterEqualInteger.class
+SHA-Digest: OJ0lh4hQc7I7B9+cOpIGfXJbtcE=
+MD5-Digest: e8R5Yo4cdbr877X4ne4ZAw==
+Digest-Algorithms: SHA MD5 
+
+Name: COM/objectspace/jgl/LessInteger.class
+SHA-Digest: lLe5UbC9D5VSoEDjp0Kjh9fgGTA=
+MD5-Digest: 0SC2pNvjIKAOvig0z3d+wg==
+Digest-Algorithms: SHA MD5 
+
+Name: Acme/JPM/Decoders/PpmDecoder.class
+SHA-Digest: oEkt9if4wc8Y7OnPktVOEaIkEr4=
+MD5-Digest: aUGb7YNXi41y7jIz7I9MDA==
+Digest-Algorithms: SHA MD5 
+
+Name: Acme/Crypto/IdeaCipher.class
+SHA-Digest: BM8N/n8B8YU9pCWac0MZCmp67g8=
+MD5-Digest: 3nqlcapu/WZ06TxvlSM7UA==
+Digest-Algorithms: SHA MD5 
+
+Name: Acme/Serve/servlet/ServletException.class
+SHA-Digest: Y3hRb0Lf44YVAOeg+X1yIJqvRLA=
+MD5-Digest: ds8G8lEFtRUZAuiHTDddcg==
+Digest-Algorithms: SHA MD5 
+
+Name: COM/objectspace/jgl/Array.class
+SHA-Digest: isvoNgi0UQiUu3WW+oy/1Je+C7U=
+MD5-Digest: J4SY11LNWHYrJq5+TJ+cTg==
+Digest-Algorithms: SHA MD5 
+
+Name: Acme/Serve/SampleServlet.class
+SHA-Digest: 1c3zc0zA2Igbr6MwC15hWJq3xf8=
+MD5-Digest: HrCOaA5ufFK7UamIJq0zEA==
+Digest-Algorithms: SHA MD5 
+
+Name: Acme/Nnrpd/NewsDbException.class
+SHA-Digest: gYj61f0afAM5wVJIgeuMnfD/EFc=
+MD5-Digest: ka0Q1GnO2kkYqPrKXBTrhw==
+Digest-Algorithms: SHA MD5 
+
+Name: Acme/Serve/TestServlet.class
+SHA-Digest: Zb/2YWPedfP8Ey69MS32L/P6uDs=
+MD5-Digest: si9xbNGdk9G/say5wAkX7g==
+Digest-Algorithms: SHA MD5 
+
+Name: COM/objectspace/jgl/PlusString.class
+SHA-Digest: /V3oNuqQKS2EAuUY7yQm3pF3qZc=
+MD5-Digest: uqT8bIpPkQsraia8OqMwvQ==
+Digest-Algorithms: SHA MD5 
+
+Name: Acme/Chat/ChatUtils.class
+SHA-Digest: p3juxVcM/2W2oyVaCFhoaH2UAUY=
+MD5-Digest: 2Vy3WkT3oJyQZomRsWM3AQ==
+Digest-Algorithms: SHA MD5 
+
+Name: COM/objectspace/jgl/InstanceOf.class
+SHA-Digest: WKguYHgAfhMVB+HBYYDmIGQSor0=
+MD5-Digest: U5ZQMKaQPj2b/fjx5JxrBA==
+Digest-Algorithms: SHA MD5 
+
+Name: Acme/Nnrpd/ArticleCache.class
+SHA-Digest: qTSZHNsXDSRQT4z27LQTpXfdbzM=
+MD5-Digest: IGjOJ4fViDL6MvLQ67UFxg==
+Digest-Algorithms: SHA MD5 
+
+Name: COM/objectspace/jgl/Comparing.class
+SHA-Digest: n4uTnjd4zUw51+wHylmn8EYwQcA=
+MD5-Digest: q0B+tY/MRwyuFlEjSflDbQ==
+Digest-Algorithms: SHA MD5 
+
+Name: COM/objectspace/jgl/NotIdenticalTo.class
+SHA-Digest: XknZyqBBs2TDSanzKr0QgCmhHgc=
+MD5-Digest: nBW23FNPnsLI+iFYFnDbEA==
+Digest-Algorithms: SHA MD5 
+
+Name: COM/objectspace/jgl/DequeIterator.class
+SHA-Digest: N+PCiGGs4qZCA1O5JsCki8nJjE4=
+MD5-Digest: pEzMwVaHHoDdnRGRJedn/Q==
+Digest-Algorithms: SHA MD5 
+
+Name: COM/objectspace/jgl/InputIterator.class
+SHA-Digest: Mz0SqAueuhUJTNgEuQdmOscxsqo=
+MD5-Digest: 8i2tb2l5CpRQl4ski43T3Q==
+Digest-Algorithms: SHA MD5 
+
+Name: COM/objectspace/jgl/LessCollationKey.class
+SHA-Digest: neS3V8Ir8vbW5wQMvYhBfdfP9+0=
+MD5-Digest: oVSGv7CUJnqsYc6LOTvWkg==
+Digest-Algorithms: SHA MD5 
+
+Name: Acme/Psg.class
+SHA-Digest: mXxZMt0le0u8gx4x2JaDdgIfU8o=
+MD5-Digest: jD/0h4uamcfYnbMKDGAtRA==
+Digest-Algorithms: SHA MD5 
+
+Name: COM/objectspace/jgl/Copying.class
+SHA-Digest: e899BqAX4msI9yaLU6QDJIMG/uw=
+MD5-Digest: 35tchTW7AQF1JBQyKLEpug==
+Digest-Algorithms: SHA MD5 
+
+Name: COM/objectspace/jgl/SList$SListNode.class
+SHA-Digest: XoO4usccLbGD8q94qyqgZQjqB6o=
+MD5-Digest: Iuttkw6MkGDboIXrpvc1bQ==
+Digest-Algorithms: SHA MD5 
+
+Name: Acme/Crypto/CbcBlockCipher.class
+SHA-Digest: NQGASPdPzuYh/VrsjAxPrhCgX30=
+MD5-Digest: hp1LM1XtgZINJvTaqOFMHA==
+Digest-Algorithms: SHA MD5 
+
+Name: Acme/Serve/servlet/ServletStub.class
+SHA-Digest: NvdSy7YdgAck1RoFftj1w89zU+g=
+MD5-Digest: 6jczx9nQc9pC2gs4zPcNIg==
+Digest-Algorithms: SHA MD5 
+
+Name: COM/objectspace/jgl/Transforming.class
+SHA-Digest: yAWkLjeP6CrHD4Cbl77lqqbxbJI=
+MD5-Digest: lU2mgu0uB8VFsSfWEDdr4g==
+Digest-Algorithms: SHA MD5 
+
+Name: COM/objectspace/jgl/PositiveInteger.class
+SHA-Digest: anEPrm61R46yzYMrt178oFxKMtM=
+MD5-Digest: yvSecT9z9NQWIb9lrCucvg==
+Digest-Algorithms: SHA MD5 
+
+Name: printing/PixelConsumer.class
+SHA-Digest: hFFoTdw8vcrV/UQXVXXAAIwl5m4=
+MD5-Digest: N64P74e16tWE0EopIT+f6A==
+Digest-Algorithms: SHA MD5 
+
+Name: Acme/JPM/Decoders/ImageDecoderRead.class
+SHA-Digest: Z4JwP7UbWbGGq7zr6K5DVzRt/ZQ=
+MD5-Digest: P53uk3EXL70j1tttZgV4aw==
+Digest-Algorithms: SHA MD5 
+
+Name: COM/objectspace/jgl/Tree.class
+SHA-Digest: 7wLaxtKBHN/zLQT2yYvC/c70oCY=
+MD5-Digest: +W/LsqbBDJGAGro1VmrPrw==
+Digest-Algorithms: SHA MD5 
+
+Name: COM/objectspace/jgl/MinMax.class
+SHA-Digest: BgY6z2o3349HyGDDp8AsNLl8Kuc=
+MD5-Digest: HPDZP2xRjokCF5ak4iFzKg==
+Digest-Algorithms: SHA MD5 
+
+Name: COM/objectspace/jgl/VectorIterator.class
+SHA-Digest: i3fRVNRQCf3gtbcrF/iDV8NwR9c=
+MD5-Digest: 0CrqvalXeSD3cX61iBdrUw==
+Digest-Algorithms: SHA MD5 
+
+Name: Acme/Syslog.class
+SHA-Digest: uCmI1ZZ/Kqedn2WYzhV6dNqVGrE=
+MD5-Digest: tekvKFek3ItledfiKock+Q==
+Digest-Algorithms: SHA MD5 
+
+Name: COM/objectspace/jgl/DividesInteger.class
+SHA-Digest: 3aJn71CmMyWKRalHb0n8zEBOO1I=
+MD5-Digest: BegeRsL9Yo0XYUw8TTv6iw==
+Digest-Algorithms: SHA MD5 
+
+Name: COM/objectspace/jgl/Container.class
+SHA-Digest: CKtI2P5PScg5Kn0IPdQpTLbpjGA=
+MD5-Digest: QAPrSCUtGtnYLojlr/K2ew==
+Digest-Algorithms: SHA MD5 
+
+Name: COM/objectspace/jgl/Printing.class
+SHA-Digest: ZwtIOYhvTvPb7q74OJiCnZ9vNmo=
+MD5-Digest: xR4sgImjLk8bm8b5fvJc9Q==
+Digest-Algorithms: SHA MD5 
+
+Name: Acme/SyslogException.class
+SHA-Digest: 3oz1dbe33AZzZowtcy+eGDfcmQs=
+MD5-Digest: BJeuAOhARZy4nL8hWB934Q==
+Digest-Algorithms: SHA MD5 
+
+Name: Acme/PsgException.class
+SHA-Digest: sD+W/mKwTOAxwiPQ72QzNfm0qGU=
+MD5-Digest: QI7KiAKWQfXPhWSDBP/+8Q==
+Digest-Algorithms: SHA MD5 
+
+Name: COM/objectspace/jgl/BidirectionalIterator.class
+SHA-Digest: MuHf0WTllO5PkW6b2qSp56bhtTU=
+MD5-Digest: 1YcdVUWD1hQcXxZrlcYTdA==
+Digest-Algorithms: SHA MD5 
+
+Name: COM/objectspace/jgl/PriorityQueue.class
+SHA-Digest: zcDE3mMHi6udRInOebaFWU0efqY=
+MD5-Digest: BINUxZE+fhNF1XnjjrBlCQ==
+Digest-Algorithms: SHA MD5 
+
+Name: COM/objectspace/jgl/LessCollator.class
+SHA-Digest: 9evDrdwNqUBL/2/oMO2Ta0PpeHE=
+MD5-Digest: 8BcBQe9vzta3Q96qFnhBnQ==
+Digest-Algorithms: SHA MD5 
+
+Name: COM/objectspace/jgl/Removing.class
+SHA-Digest: 93akybds9JAJhnetKLtOrfPHWAo=
+MD5-Digest: 7RHXxv2tQ1y1xWO6pbuxKQ==
+Digest-Algorithms: SHA MD5 
+
+Name: Acme/HtmlEditScanner.class
+SHA-Digest: QkEUEoZl7c7RmI9rl9t1VdsytLw=
+MD5-Digest: jbhaK6BdTF1+eJZBih2/9g==
+Digest-Algorithms: SHA MD5 
+
+Name: COM/objectspace/jgl/DListIterator.class
+SHA-Digest: KUnb6A6ehwfPpFMtTtqmnWIhWIk=
+MD5-Digest: T604VhqyBHojwCU7g3TT6A==
+Digest-Algorithms: SHA MD5 
+
+Name: COM/objectspace/jgl/Randomizer.class
+SHA-Digest: 7mBYfT+Es1kEVwuclkT8lqaU/+c=
+MD5-Digest: u0kpWGfbEJYp1Hr7MI9FNw==
+Digest-Algorithms: SHA MD5 
+
+Name: COM/objectspace/jgl/Rotating.class
+SHA-Digest: /z8mk5J8qF2x7cvlhVOvAltruXA=
+MD5-Digest: 5zmpwZ197Vzw2NmdIfJCGg==
+Digest-Algorithms: SHA MD5 
+
+Name: COM/objectspace/jgl/OutputStreamIterator.class
+SHA-Digest: xa2n+pOKOVHs3hh4wNoRK+d5fQA=
+MD5-Digest: 98JL37+sCyXaIVG/Q5AHEw==
+Digest-Algorithms: SHA MD5 
+
+Name: Acme/TextcompOutputStream.class
+SHA-Digest: mAbP6Kjn66Vq6fMFNEMGSgt05aY=
+MD5-Digest: 3iuPNcwudHuvk4QK8pYb+g==
+Digest-Algorithms: SHA MD5 
+
+Name: Acme/JPM/JPMTest.class
+SHA-Digest: 05AHFKmjwBNsuq6rFKJku5QSdms=
+MD5-Digest: RwdGD65NJ3ToABidfjNLUQ==
+Digest-Algorithms: SHA MD5 
+
+Name: Acme/Widgets/YesNoBox.class
+SHA-Digest: an8yDNsoCs6jmFC0EwNZzjfOXm4=
+MD5-Digest: c+ebs19yGMjzPVKsvq78Nw==
+Digest-Algorithms: SHA MD5 
+
+Name: Acme/Crypto/Hash.class
+SHA-Digest: DXxT3+OOnH5tAHA6PB0L3HiprOA=
+MD5-Digest: uybESd/hhcJujhrZfgfAOg==
+Digest-Algorithms: SHA MD5 
+
+Name: Acme/Crypto/Rot13Cipher.class
+SHA-Digest: z/zioTDKm7hqXnuZl1t2FnLIOOk=
+MD5-Digest: LWWwVcCholn3P62Vatpj3A==
+Digest-Algorithms: SHA MD5 
+
+Name: COM/objectspace/jgl/GreaterEqualString.class
+SHA-Digest: xAiiJyhBThYyoVdQ3YNVV9gnBgQ=
+MD5-Digest: oRZExH8UnUWKcSQPpSdGmA==
+Digest-Algorithms: SHA MD5 
+
+Name: Acme/Crypto/BlockCipher.class
+SHA-Digest: AxXpmUxmHdlytZWGTQNCNExfWK4=
+MD5-Digest: ivjAAW+vedlbJLZsavsvtQ==
+Digest-Algorithms: SHA MD5 
+
+Name: Acme/Crypto/ShaHash.class
+SHA-Digest: AyEX45UAcKRroGLMV8zn1k3ZmYU=
+MD5-Digest: QDOfPMSROkVzsQU/yTVHng==
+Digest-Algorithms: SHA MD5 
+
+Name: Acme/Widgets/ImageLabel.class
+SHA-Digest: NKTZc1rmSq/bMugkvBEiyHwo+Yo=
+MD5-Digest: rZ0StMwe+tisR0OY+8lszQ==
+Digest-Algorithms: SHA MD5 
+
+Name: Acme/Nnrpd/Nnrpd.class
+SHA-Digest: LiIgnQQ/Bflkqv859rhW8vkZRvo=
+MD5-Digest: FLRSzdiaJLBLyC13zRRRZg==
+Digest-Algorithms: SHA MD5 
+
+Name: COM/objectspace/jgl/Counting.class
+SHA-Digest: aA4PifQlYmf3nX68WFt6vq9BI6w=
+MD5-Digest: iFtdz+QuBEPpag5C9IHh7w==
+Digest-Algorithms: SHA MD5 
+
+Name: Acme/GuiUtils.class
+SHA-Digest: Coa8ZmbVdeZQs9pyc7OzAWURbR4=
+MD5-Digest: wJkkjOA4wUBtvaL0ElK51A==
+Digest-Algorithms: SHA MD5 
+
+Name: Acme/ImageMediaEntry.class
+SHA-Digest: tdnCkTwV00Mdub+QPvcaZ1ZUgHs=
+MD5-Digest: NTAsmZaa0ikRsW+UfZss8A==
+Digest-Algorithms: SHA MD5 
+
+Name: Acme/JPM/Filters/ImageFilterPlus.class
+SHA-Digest: T7n6We5iFXb3IHjFtbDoFy56YFw=
+MD5-Digest: dqHMY7poDJzRdTe3lMK/Gw==
+Digest-Algorithms: SHA MD5 
+
+Name: Acme/Crypto/Crc32Hash.class
+SHA-Digest: hXTNC/UJQZS1rFRVthQlP4tmgVI=
+MD5-Digest: IW3DCMSMqVGcAyts/cSZPQ==
+Digest-Algorithms: SHA MD5 
+
+Name: COM/objectspace/jgl/HashMultiSet.class
+SHA-Digest: bBg3ih4uDRZ9lgtSw34jAv251O4=
+MD5-Digest: 5HHAexUOs3Acoa/67DUw6A==
+Digest-Algorithms: SHA MD5 
+
+Name: COM/objectspace/jgl/LessNumber.class
+SHA-Digest: YPpJvdk5neKvXJkqxnSPeqgENbk=
+MD5-Digest: OHpDDVX/jGm5ttchH6jWow==
+Digest-Algorithms: SHA MD5 
+
+Name: Acme/JPM/Encoders/JpegEncoder.class
+SHA-Digest: gKykQVZk54gCpCrYw3b3TjB+Vtk=
+MD5-Digest: JJHW2KUcZ4dv11EtNliyew==
+Digest-Algorithms: SHA MD5 
+
+Name: Acme/LruHashtableEnumerator.class
+SHA-Digest: u39F+ycOYSjj0QBABaWrP35kpTg=
+MD5-Digest: RPQ78kyv5Iryj5xY/7leTA==
+Digest-Algorithms: SHA MD5 
+
+Name: Acme/MediaEntry.class
+SHA-Digest: rrvb/Mv2Yqj5zB2uTXvShWPikOk=
+MD5-Digest: WYhrzr5nFKSkyrPGbGNUQg==
+Digest-Algorithms: SHA MD5 
+
+Name: COM/objectspace/jgl/Pair.class
+SHA-Digest: IKUV0oaI1uRZFrHSisE9UzBGMwU=
+MD5-Digest: sBoeFPhfxaObv7A93osTMQ==
+Digest-Algorithms: SHA MD5 
+
+Name: COM/objectspace/jgl/MinusNumber.class
+SHA-Digest: aTNKxG/KzlG5uL/jhXc8TitX1Rs=
+MD5-Digest: cgXpMV9D6ldy/djgVeSAEQ==
+Digest-Algorithms: SHA MD5 
+
+Name: COM/objectspace/jgl/EqualNumber.class
+SHA-Digest: 4bgXB3tE8Bickr8lUn+IG8JozKU=
+MD5-Digest: VuAQmCXYUhPPuvbvDQYibw==
+Digest-Algorithms: SHA MD5 
+
+Name: COM/objectspace/jgl/GreaterEqualCollator.class
+SHA-Digest: O4+OK0YDLcs1pMTLjQk3y/OHgkQ=
+MD5-Digest: WfdVKxb+9Fz5qkILGexyKQ==
+Digest-Algorithms: SHA MD5 
+
+Name: COM/objectspace/jgl/Stack.class
+SHA-Digest: xoFMxEhslvRLnYAY3sKBVerqgC4=
+MD5-Digest: e/Te6DG8k6stvkwDhe3mjA==
+Digest-Algorithms: SHA MD5 
+
+Name: COM/objectspace/jgl/FloatArray.class
+SHA-Digest: 8vQo2KEzxmKgLDSe3K14tLa/WOM=
+MD5-Digest: aLtGaNYI+c47MSDnFWPQ0Q==
+Digest-Algorithms: SHA MD5 
+
+Name: COM/objectspace/jgl/Reversing.class
+SHA-Digest: YP8ezBsp5RQTpUQlYuK2rXaX6K4=
+MD5-Digest: Pm+Xbir9kC9ty11vaiyR4g==
+Digest-Algorithms: SHA MD5 
+
+Name: COM/objectspace/jgl/TimesInteger.class
+SHA-Digest: b09P/Qd+NAEoZ+4BdHGOZfcjClk=
+MD5-Digest: 3zwELEp2bZFP+cl8PwgVNQ==
+Digest-Algorithms: SHA MD5 
+
+Name: Acme/DoublePoint.class
+SHA-Digest: xoZmQQZdvi1Ir+e5dJA4+PFxfNc=
+MD5-Digest: amf7J+WwOmgF2YdETEMNqg==
+Digest-Algorithms: SHA MD5 
+
+Name: COM/objectspace/jgl/EqualTo.class
+SHA-Digest: glgkPOeMSnefIzYgebAEZfy1vH8=
+MD5-Digest: BfQ0K60L9bYEZz00qTBkbg==
+Digest-Algorithms: SHA MD5 
+
+Name: Acme/ArrayEnumerator.class
+SHA-Digest: xLxwuYU5DPjuVpNzv5oyHxEfSJc=
+MD5-Digest: bq834flOWt8sqy8a0zumqQ==
+Digest-Algorithms: SHA MD5 
+
+Name: COM/objectspace/jgl/EqualCollator.class
+SHA-Digest: ETGrXg0IYyLqYJqFcRt096PWS08=
+MD5-Digest: 822VJUcuPn0Ce75+gTN+jQ==
+Digest-Algorithms: SHA MD5 
+
+
+### OSGi information
+Bundle-ManifestVersion: 2
+Bundle-SymbolicName: COM.objectspace.jgl
+Bundle-Description: pd
+Bundle-Name: pd
+Bundle-Version: 0.0.0
+Export-Package: Acme;uses:="Acme.Widgets",Acme.Chat;uses:="Acme,Acme.S
+ erve,Acme.Serve.servlet,Acme.Serve.servlet.http,Acme.Widgets",Acme.Cr
+ ypto;uses:="Acme",Acme.JPM;uses:="Acme,Acme.JPM.Filters,Acme.Widgets,
+ sun.awt.image",Acme.JPM.Decoders,Acme.JPM.Encoders,Acme.JPM.Filters;u
+ ses:="Acme.JPM.Decoders,Acme.JPM.Encoders",Acme.Nnrpd;uses:="Acme",Ac
+ me.Serve;uses:="Acme,Acme.Serve.servlet,Acme.Serve.servlet.http",Acme
+ .Serve.servlet,Acme.Serve.servlet.http;uses:="Acme.Serve.servlet",Acm
+ e.Widgets;uses:="Acme",COM.objectspace.jgl,printing
+Import-Package: java.applet,java.awt,java.awt.image,java.awt.peer,java
+ .io,java.lang,java.math,java.net,java.text,java.util,sun.applet,sun.a
+ udio,sun.awt.image

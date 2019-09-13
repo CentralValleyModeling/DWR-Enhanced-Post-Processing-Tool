@@ -1,0 +1,4 @@
+digraph poi_3_8_20120326_dependencies {
+  node [shape = box, fontsize=10.0];
+  poi_3_8_20120326 -> misc;
+}

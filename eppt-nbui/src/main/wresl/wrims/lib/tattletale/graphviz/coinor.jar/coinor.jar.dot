@@ -1,0 +1,5 @@
+digraph coinor_dependencies {
+  node [shape = box, fontsize=10.0];
+  coinor -> CalLiteV16;
+  coinor -> commons_io_2_1;
+}

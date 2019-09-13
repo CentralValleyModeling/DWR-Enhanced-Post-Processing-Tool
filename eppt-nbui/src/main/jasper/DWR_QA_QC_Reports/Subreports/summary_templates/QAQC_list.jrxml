@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Created with Jaspersoft Studio version 6.9.0.final using JasperReports Library version 6.9.0-cb8f9004be492ccc537180b49c026951f4220bf3  -->
+<!-- Created with Jaspersoft Studio version 6.8.0.final using JasperReports Library version 6.8.0-2ed8dfabb690ff337a5797129f2cd92902b0c87b  -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="QAQC_AlternativeIssuesReport" language="groovy" pageWidth="504" pageHeight="684" whenNoDataType="BlankPage" columnWidth="504" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" whenResourceMissingType="Empty" uuid="da75db69-3924-4f44-998a-80195014db99">
-	<property name="net.sf.jasperreports.data.adapter" value="QAQC_Datasource.xml"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="QAQC_Datasource"/>
 	<property name="net.sf.jasperreports.print.create.bookmarks" value="true"/>
 	<property name="com.jaspersoft.studio.unit." value="pixel"/>
 	<parameter name="XML_DATA_DOCUMENT" class="org.w3c.dom.Document" isForPrompting="false"/>
@@ -67,9 +67,9 @@
 		<groupHeader>
 			<band height="18">
 				<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
-				<printWhenExpression><![CDATA[LEN($F{title-name})>0]]></printWhenExpression>
-				<textField isStretchWithOverflow="true" pattern="">
-					<reportElement mode="Transparent" x="0" y="0" width="380" height="18" forecolor="#000000" backcolor="#FFFFFF" uuid="a4dbd067-7cc1-43fb-82b8-e4352a033bf3">
+				<printWhenExpression><![CDATA[$F{title-name} != null && $F{title-name}!=""]]></printWhenExpression>
+				<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true">
+					<reportElement mode="Transparent" x="0" y="0" width="380" height="18" isRemoveLineWhenBlank="true" forecolor="#000000" backcolor="#FFFFFF" uuid="a4dbd067-7cc1-43fb-82b8-e4352a033bf3">
 						<property name="com.jaspersoft.studio.unit.x" value="px"/>
 						<property name="com.jaspersoft.studio.unit.y" value="px"/>
 						<property name="com.jaspersoft.studio.unit.height" value="px"/>
@@ -98,9 +98,9 @@
 		<groupExpression><![CDATA[$F{header-name}]]></groupExpression>
 		<groupHeader>
 			<band height="14">
-				<printWhenExpression><![CDATA[LEN($F{header-name})>0]]></printWhenExpression>
-				<textField isStretchWithOverflow="true" evaluationTime="Group" evaluationGroup="Header">
-					<reportElement x="0" y="0" width="444" height="14" printWhenGroupChanges="Header" forecolor="#000000" uuid="19a6d988-05e3-49d9-8988-9570eb6683ae">
+				<printWhenExpression><![CDATA[$F{header-name} != null && $F{header-name}!=""]]></printWhenExpression>
+				<textField isStretchWithOverflow="true" evaluationTime="Group" evaluationGroup="Header" isBlankWhenNull="true">
+					<reportElement x="0" y="0" width="444" height="14" isRemoveLineWhenBlank="true" printWhenGroupChanges="Header" forecolor="#000000" uuid="19a6d988-05e3-49d9-8988-9570eb6683ae">
 						<property name="com.jaspersoft.studio.unit.x" value="px"/>
 						<property name="com.jaspersoft.studio.unit.y" value="px"/>
 						<property name="com.jaspersoft.studio.unit.height" value="px"/>
@@ -123,10 +123,11 @@
 	<group name="Sub-Header">
 		<groupExpression><![CDATA[$F{sub-header-name}]]></groupExpression>
 		<groupHeader>
-			<band height="14">
-				<printWhenExpression><![CDATA[LEN($F{sub-header-name})>0]]></printWhenExpression>
-				<textField isStretchWithOverflow="true" evaluationTime="Group" evaluationGroup="Sub-Header">
-					<reportElement x="-1" y="0" width="261" height="14" uuid="c5dfd7d4-6b42-45aa-b96f-2d0779445317">
+			<band height="16">
+				<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				<printWhenExpression><![CDATA[$F{sub-header-name} != null && $F{sub-header-name}!=""]]></printWhenExpression>
+				<textField isStretchWithOverflow="true" evaluationTime="Group" evaluationGroup="Sub-Header" isBlankWhenNull="true">
+					<reportElement x="-1" y="0" width="491" height="16" isRemoveLineWhenBlank="true" uuid="c5dfd7d4-6b42-45aa-b96f-2d0779445317">
 						<property name="com.jaspersoft.studio.unit.x" value="px"/>
 						<property name="com.jaspersoft.studio.unit.y" value="px"/>
 						<property name="com.jaspersoft.studio.unit.height" value="px"/>
@@ -149,16 +150,10 @@
 	<group name="Component">
 		<groupExpression><![CDATA[$F{component-name}]]></groupExpression>
 		<groupHeader>
-			<band>
-				<property name="com.jaspersoft.studio.unit.height" value="px"/>
-				<printWhenExpression><![CDATA[1==0]]></printWhenExpression>
-			</band>
-		</groupHeader>
-		<groupFooter>
 			<band height="14">
-				<printWhenExpression><![CDATA[$F{component-order}!=null]]></printWhenExpression>
-				<textField isStretchWithOverflow="true" evaluationTime="Group" evaluationGroup="Component">
-					<reportElement x="0" y="0" width="280" height="14" uuid="91be670e-881b-419e-915e-8d729c225a8e">
+				<printWhenExpression><![CDATA[$F{component-name} != null && $F{component-name}!=""]]></printWhenExpression>
+				<textField isStretchWithOverflow="true" evaluationTime="Group" evaluationGroup="Component" isBlankWhenNull="true">
+					<reportElement x="0" y="0" width="280" height="14" isRemoveLineWhenBlank="true" uuid="5f9d85c1-d1a7-46c4-8da8-2c8ab6c67eff">
 						<property name="com.jaspersoft.studio.unit.x" value="px"/>
 						<property name="com.jaspersoft.studio.unit.y" value="px"/>
 						<property name="com.jaspersoft.studio.unit.height" value="px"/>
@@ -166,6 +161,11 @@
 					<box topPadding="0" leftPadding="1" bottomPadding="0" rightPadding="0"/>
 					<textFieldExpression><![CDATA[$F{component-name}]]></textFieldExpression>
 				</textField>
+			</band>
+		</groupHeader>
+		<groupFooter>
+			<band>
+				<printWhenExpression><![CDATA[1==0]]></printWhenExpression>
 			</band>
 		</groupFooter>
 	</group>
@@ -190,8 +190,17 @@
 		</band>
 	</columnHeader>
 	<detail>
-		<band splitType="Stretch">
-			<printWhenExpression><![CDATA[1==0]]></printWhenExpression>
+		<band height="14" splitType="Stretch">
+			<printWhenExpression><![CDATA[$F{value} != null && $F{value}!=""]]></printWhenExpression>
+			<textField isStretchWithOverflow="true" evaluationTime="Group" evaluationGroup="Component" isBlankWhenNull="true">
+				<reportElement x="20" y="0" width="484" height="14" isRemoveLineWhenBlank="true" uuid="53369d80-a223-409b-9afe-b4b0ac908a59">
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<box topPadding="0" leftPadding="1" bottomPadding="0" rightPadding="0"/>
+				<textFieldExpression><![CDATA[$F{value}]]></textFieldExpression>
+			</textField>
 		</band>
 	</detail>
 	<columnFooter>
@@ -201,17 +210,8 @@
 		</band>
 	</columnFooter>
 	<pageFooter>
-		<band height="15" splitType="Stretch">
-			<property name="com.jaspersoft.studio.unit.height" value="px"/>
-			<textField evaluationTime="Master">
-				<reportElement mode="Transparent" x="0" y="0" width="504" height="15" uuid="650a1c30-4e9b-462d-b11d-9f03bf602ffe">
-					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
-					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
-					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
-				</reportElement>
-				<textElement textAlignment="Right"/>
-				<textFieldExpression><![CDATA["Page | " + ($V{MASTER_CURRENT_PAGE}-1)]]></textFieldExpression>
-			</textField>
+		<band splitType="Stretch">
+			<printWhenExpression><![CDATA[1==0]]></printWhenExpression>
 		</band>
 	</pageFooter>
 	<summary>

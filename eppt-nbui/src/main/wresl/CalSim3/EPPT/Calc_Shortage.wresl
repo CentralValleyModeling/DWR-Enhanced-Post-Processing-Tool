@@ -13,11 +13,11 @@ This file post process the shortage during each timestep
 define SHORT_CVP_CHECK_ {
 	case short { 
 	condition SHORT_CVP_TOT_N > abs_threshold .or. SHORT_CVP_TOT_S > abs_threshold
-	value 200 !1
+	value 1
 	}
 	case noshort {
 	condition always 
-	value 300 !0
+	value 0
 	}
 }
 define SHORT_CVP_TOT_ {value SHORT_CVP_TOT_N + SHORT_CVP_TOT_S}
@@ -25,22 +25,22 @@ define SHORT_CVP_TOT_ {value SHORT_CVP_TOT_N + SHORT_CVP_TOT_S}
 define SHORT_CVP_N_CHECK_ {
 	case short { 
 	condition SHORT_CVP_TOT_N > abs_threshold
-	value 200 !1
+	value 1
 	}
 	case noshort {
 	condition always 
-	value 300 !0
+	value 0
 	}
 }
 !CHECK IF THERE IS SHORTAGE IN CVP NOD AND WHAT IS THE SHORTAGE AMOUNT
 define SHORT_CVP_S_CHECK_ {
 	case short { 
 	condition SHORT_CVP_TOT_S > abs_threshold
-	value 200 !1
+	value 1
 	}
 	case noshort {
 	condition always 
-	value 300 !0
+	value 0
 	}
 }
 !Output variable
@@ -54,11 +54,11 @@ define SHORT_CVP_TOT_S_DTS {alias SHORT_CVP_TOT_S kind 'DTS-DELIVERY-SHORTAGE-CV
 define SHORT_SWP_CHECK_ {
 	case short { 
 	condition SHORT_SWP_TOT_N > abs_threshold .or. SHORT_SWP_TOT_S > abs_threshold
-	value 200 !1
+	value 1
 	}
 	case noshort {
 	condition always 
-	value 300 !0
+	value 0
 	}
 }
 define SHORT_SWP_TOT_ {value SHORT_SWP_TOT_N + SHORT_SWP_TOT_S}
@@ -66,22 +66,22 @@ define SHORT_SWP_TOT_ {value SHORT_SWP_TOT_N + SHORT_SWP_TOT_S}
 define SHORT_SWP_N_CHECK_ {
 	case short { 
 	condition SHORT_SWP_TOT_N > abs_threshold
-	value 200 !1
+	value 1
 	}
 	case noshort {
 	condition always 
-	value 300 !0
+	value 0
 	}
 }
 !CHECK IF THERE IS SHORTAGE IN SWP NOD AND WHAT IS THE SHORTAGE AMOUNT
 define SHORT_SWP_S_CHECK_ {
 	case short { 
 	condition SHORT_SWP_TOT_S > abs_threshold
-	value 200 !1
+	value 1
 	}
 	case noshort {
 	condition always 
-	value 300 !0
+	value 0
 	}
 }
 !Output variable

@@ -1,0 +1,27 @@
+digraph kryo_2_24_0_package_dependencies {
+  node [shape = box, fontsize=10.0];
+  com_esotericsoftware_kryo -> com_esotericsoftware_kryo_factories;
+  com_esotericsoftware_kryo -> com_esotericsoftware_kryo_io;
+  com_esotericsoftware_kryo -> com_esotericsoftware_kryo_serializers;
+  com_esotericsoftware_kryo -> com_esotericsoftware_kryo_util;
+  com_esotericsoftware_kryo -> com_esotericsoftware_minlog;
+  com_esotericsoftware_kryo -> com_esotericsoftware_reflectasm;
+  com_esotericsoftware_kryo -> org_objenesis_instantiator;
+  com_esotericsoftware_kryo -> org_objenesis_strategy;
+  com_esotericsoftware_kryo_factories -> com_esotericsoftware_kryo;
+  com_esotericsoftware_kryo_factories -> com_esotericsoftware_kryo_util;
+  com_esotericsoftware_kryo_io -> com_esotericsoftware_kryo;
+  com_esotericsoftware_kryo_io -> com_esotericsoftware_kryo_util;
+  com_esotericsoftware_kryo_io -> com_esotericsoftware_minlog;
+  com_esotericsoftware_kryo_pool -> com_esotericsoftware_kryo;
+  com_esotericsoftware_kryo_serializers -> com_esotericsoftware_kryo;
+  com_esotericsoftware_kryo_serializers -> com_esotericsoftware_kryo_factories;
+  com_esotericsoftware_kryo_serializers -> com_esotericsoftware_kryo_io;
+  com_esotericsoftware_kryo_serializers -> com_esotericsoftware_kryo_util;
+  com_esotericsoftware_kryo_serializers -> com_esotericsoftware_minlog;
+  com_esotericsoftware_kryo_serializers -> com_esotericsoftware_reflectasm;
+  com_esotericsoftware_kryo_util -> com_esotericsoftware_kryo;
+  com_esotericsoftware_kryo_util -> com_esotericsoftware_kryo_io;
+  com_esotericsoftware_kryo_util -> com_esotericsoftware_minlog;
+  com_esotericsoftware_reflectasm -> com_esotericsoftware_reflectasm_shaded_org_objectweb_asm;
+}

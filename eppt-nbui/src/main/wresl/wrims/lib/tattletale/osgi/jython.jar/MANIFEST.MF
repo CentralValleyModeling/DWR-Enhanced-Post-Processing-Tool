@@ -1,0 +1,63 @@
+Manifest-Version: 1.0
+Ant-Version: Apache Ant 1.6.5
+Built-By: groves
+Created-By: 1.5.0_07-87 ("Apple Computer, Inc.")
+Main-Class: org.python.util.jython
+
+Name: Build-Info
+jdbc3_0: true
+oracle: true
+build-compiler: modern
+debug: off
+servlet: true
+jdbc: true
+version: 2.2.1
+jdk-target-version: 1.4
+threadlocal: true
+informix: true
+secureclassloader: true
+postgresql: true
+optimize: on
+jline: true
+svn-build: true
+jndi: true
+mysql: true
+readline: true
+
+
+### OSGi information
+Bundle-ManifestVersion: 2
+Bundle-SymbolicName: org.python.core
+Bundle-Description: jython
+Bundle-Name: jython
+Bundle-Version: 2.2.1
+Export-Package: com.ziclix.python.sql;uses:="com.ziclix.python.sql.uti
+ l,org.python.core",com.ziclix.python.sql.connect;uses:="com.ziclix.py
+ thon.sql,com.ziclix.python.sql.util,org.python.core",com.ziclix.pytho
+ n.sql.handler;uses:="com.informix.jdbc,com.ziclix.python.sql,com.zicl
+ ix.python.sql.procedure,oracle.jdbc.driver,oracle.sql,org.python.core
+ ",com.ziclix.python.sql.pipe;uses:="com.ziclix.python.sql,com.ziclix.
+ python.sql.util,org.python.core",com.ziclix.python.sql.pipe.csv;uses:
+ ="com.ziclix.python.sql.pipe,org.python.core",com.ziclix.python.sql.p
+ ipe.db;uses:="com.ziclix.python.sql,com.ziclix.python.sql.pipe,org.py
+ thon.core",com.ziclix.python.sql.procedure;uses:="com.ziclix.python.s
+ ql,org.python.core",com.ziclix.python.sql.util;uses:="com.ziclix.pyth
+ on.sql,com.ziclix.python.sql.pipe,com.ziclix.python.sql.pipe.db,org.p
+ ython.core",javatests,jxxload_help;uses:="org.python.core",org.python
+ .compiler;uses:="org.python.core,org.python.parser,org.python.parser.
+ ast",org.python.core;uses:="org.python.compiler,org.python.core.adapt
+ er,org.python.modules,org.python.parser,org.python.parser.ast",org.py
+ thon.core.adapter;uses:="org.python.core",org.python.modules;uses:="o
+ rg.python.core,org.python.modules.sre",org.python.modules.sets;uses:=
+ "org.python.core",org.python.modules.sre;uses:="org.python.core",org.
+ python.modules.time;uses:="org.python.core",org.python.parser;uses:="
+ org.python.core,org.python.parser.ast",org.python.parser.ast;uses:="o
+ rg.python.parser",org.python.rmi,org.python.util;uses:="javax.servlet
+ ,javax.servlet.http,jline,org.apache.tools.ant,org.apache.tools.ant.t
+ askdefs,org.apache.tools.ant.types,org.gnu.readline,org.python.core"
+Import-Package: com.informix.jdbc,java.io,java.lang,java.lang.ref,java
+ .lang.reflect,java.math,java.net,java.nio.charset,java.rmi,java.rmi.s
+ erver,java.security,java.sql,java.text,java.util,java.util.jar,java.u
+ til.zip,javax.naming,javax.servlet,javax.servlet.http,javax.sql,jline
+ ,oracle.jdbc.driver,oracle.sql,org.apache.tools.ant,org.apache.tools.
+ ant.taskdefs,org.apache.tools.ant.types,org.gnu.readline

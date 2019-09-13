@@ -29,6 +29,7 @@ import gov.ca.water.reportengine.QAQCReportException;
 import gov.ca.water.reportengine.ReportParameters;
 
 import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
+import static java.util.stream.Collectors.toList;
 
 /**
  * Company: Resource Management Associates
@@ -89,6 +90,16 @@ class QAQCReportGenerator
 				forceCopyJrxml)
 		{
 			copyFolder(Paths.get(jasperDir), reports);
+		}
+		try(Stream<Path> walk = Files.walk(reports, 7))
+		{
+			List<Path> jasper = walk.filter(p -> p.getFileName().toString().endsWith("jasper"))
+									.collect(toList());
+			for(Path path : jasper)
+			{
+				Files.deleteIfExists(path);
+
+			}
 		}
 		return reports;
 	}

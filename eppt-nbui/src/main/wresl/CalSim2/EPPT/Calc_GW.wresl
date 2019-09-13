@@ -26,138 +26,138 @@ underreview - need to establish theshold to determine when GW is over pumping, c
 !the following section require SV Timeseries mingw_58/GW-PUMPING-MIN; mingw_65/GW-PUMPING-MIN; mingw_69/GW-PUMPING-MIN; mingw_70/GW-PUMPING-MIN;
 
 ! DSA 58 
-! Minimum GW pumping - exceeded (0) / met (1) / Violated (2)
+! Minimum GW pumping - exceeded (100) / met (200) / Violated (300)
 define GP60_MinPump_CHECK {
 	case meet {
 		Condition abs(GP60 - mingw_58) < abs_threshold
-		Value 1
+		Value 200
 	}
 	case exceeded {
 		Condition GP60 - mingw_58 > abs_threshold 
-		Value 0
+		Value 100
 	}
 	Case Violated {
 		Condition always 
-		Value 2
+		Value 300
 	}
 }
 define GP60_MinPump_STATUS_DTS {alias GP60_MinPump_CHECK kind 'DTS-STATUS' units 'NONE'}
 
 ! Check when Actual Pumping is more than 10%(Set in user init table - index 2.3) of minimum groundwater pumping 
 ! Excesive GW pumping indicate insufficient surface water supply 
-! 0 = No excesive pumping, 1 = excesive GW pumping
+! 100 = No excesive pumping, 200 = excesive GW pumping
 define GP60_OverPump_CHECK {
 	case Excesive {
 		Condition GP60 - mingw_58*taf_cfs > 20  
 		!condition *(GP60 - mingw_58)/mingw_58 > percetage_threshold*
-		Value 1
+		Value 200
 	}
 	case noExcesive {
 		Condition always
-		Value 0
+		Value 100
 	}
 }
 define GP60_OverPump_STATUS_DTS {alias GP60_OverPump_CHECK kind 'DTS-STATUS' units 'NONE'}
 
 
 ! DSA 65 
-! Minimum GW pumping - exceeded (0) / met (1) / Violated (2)
+! Minimum GW pumping - exceeded (100) / met (200) / Violated (300)
 define GP64_MinPump_CHECK {
 	case meet {
 		Condition abs(GP64 - mingw_65) < abs_threshold
-		Value 1
+		Value 200
 	}
 	case exceeded {
 		Condition GP64 - mingw_65 > abs_threshold 
-		Value 0
+		Value 100
 	}
 	Case Violated {
 		Condition always 
-		Value 2
+		Value 300
 	}
 }
 define GP64_MinPump_STATUS_DTS {alias GP64_MinPump_CHECK kind 'DTS-STATUS' units 'NONE'}
 
 ! Check when Actual Pumping is more than 10%(Set in user init table - index 2.3) of minimum groundwater pumping 
 ! Excesive GW pumping indicate insufficient surface water supply 
-! 0 = No excesive pumping, 1 = excesive GW pumping
+! 100 = No excesive pumping, 200 = excesive GW pumping
 define GP64_OverPump_CHECK {
 	case Excesive {
 		Condition GP64 - mingw_65*taf_cfs > 20 
 		!Condition (GP64 - mingw_65)/mingw_65 > percetage_threshold
-		Value 1
+		Value 200
 	}
 	case noExcesive {
 		Condition always
-		Value 0
+		Value 100
 	}
 }
 define GP64_OverPump_STATUS_DTS {alias GP64_OverPump_CHECK kind 'DTS-STATUS' units 'NONE'}
 
 ! DSA 69 
-! Minimum GW pumping - exceeded (0) / met (1) / Violated (2)
+! Minimum GW pumping - exceeded (100) / met (200) / Violated (300)
 define GP65_MinPump_CHECK {
 	case meet {
 		Condition abs(GP65 - mingw_69) < abs_threshold
-		Value 1
+		Value 200
 	}
 	case exceeded {
 		Condition GP65 - mingw_69 > abs_threshold 
-		Value 0
+		Value 100
 	}
 	Case Violated {
 		Condition always 
-		Value 2
+		Value 300
 	}
 }
 define GP65_MinPump_STATUS_DTS {alias GP65_MinPump_CHECK kind 'DTS-STATUS' units 'NONE'}
 
 ! Check when Actual Pumping is more than 10%(Set in user init table - index 2.3) of minimum groundwater pumping 
 ! Excesive GW pumping indicate insufficient surface water supply 
-! 0 = No excesive pumping, 1 = excesive GW pumping
+! 100 = No excesive pumping, 200 = excesive GW pumping
 define GP65_OverPump_CHECK {
 	case Excesive {
 		Condition GP65 - mingw_69*taf_cfs > 20 
 		!Condition (GP65 - mingw_69)/mingw_69 > percetage_threshold
-		Value 1
+		Value 200
 	}
 	case noExcesive {
 		Condition always
-		Value 0
+		Value 100
 	}
 }
 define GP65_OverPump_STATUS_DTS {alias GP65_OverPump_CHECK kind 'DTS-STATUS' units 'NONE'}
 
 ! DSA 70 
-! Minimum GW pumping - exceeded (0) / met (1) / Violated (2)
+! Minimum GW pumping - exceeded (100) / met (200) / Violated (300)
 define GP66_MinPump_CHECK {
 	case meet {
 		Condition abs(GP66 - mingw_70) < abs_threshold
-		Value 1
+		Value 200
 	}
 	case exceeded {
 		Condition GP66 - mingw_70 > abs_threshold 
-		Value 0
+		Value 100
 	}
 	Case Violated {
 		Condition always 
-		Value 2
+		Value 300
 	}
 }
 define GP66_MinPump_STATUS_DTS {alias GP66_MinPump_CHECK kind 'DTS-STATUS' units 'NONE'}
 
 ! Check when Actual Pumping is more than 10%(Set in user init table - index 2.3) of minimum groundwater pumping 
 ! Excesive GW pumping indicate insufficient surface water supply 
-! 0 = No excesive pumping, 1 = excesive GW pumping
+! 100 = No excesive pumping, 200 = excesive GW pumping
 define GP66_OverPump_CHECK {
 	case Excesive {
 		Condition GP66 - mingw_70*taf_cfs > 20 
 		!Condition (GP66 - mingw_70)/mingw_70 > percetage_threshold
-		Value 1
+		Value 200
 	}
 	case noExcesive {
 		Condition always
-		Value 0
+		Value 100
 	}
 }
 define GP66_OverPump_STATUS_DTS {alias GP66_OverPump_CHECK kind 'DTS-STATUS' units 'NONE'}

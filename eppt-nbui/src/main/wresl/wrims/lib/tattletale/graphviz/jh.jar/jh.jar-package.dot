@@ -1,0 +1,25 @@
+digraph jh_package_dependencies {
+  node [shape = box, fontsize=10.0];
+  com_sun_java_help_impl -> javax_help;
+  com_sun_java_help_search -> javax_help;
+  com_sun_java_help_search -> javax_help_search;
+  javax_help -> com_sun_java_help_impl;
+  javax_help -> javax_help_event;
+  javax_help -> javax_help_plaf;
+  javax_help -> javax_help_search;
+  javax_help_event -> javax_help;
+  javax_help_plaf -> javax_help;
+  javax_help_plaf_basic -> com_sun_java_help_impl;
+  javax_help_plaf_basic -> javax_help;
+  javax_help_plaf_basic -> javax_help_event;
+  javax_help_plaf_basic -> javax_help_plaf;
+  javax_help_plaf_basic -> javax_help_search;
+  javax_help_plaf_basic -> org_jdesktop_jdic_browser;
+  javax_help_search -> javax_help;
+  javax_help_search -> javax_help_event;
+  javax_help_tagext -> javax_help;
+  javax_help_tagext -> javax_help_search;
+  javax_help_tagext -> javax_servlet;
+  javax_help_tagext -> javax_servlet_jsp;
+  javax_help_tagext -> javax_servlet_jsp_tagext;
+}

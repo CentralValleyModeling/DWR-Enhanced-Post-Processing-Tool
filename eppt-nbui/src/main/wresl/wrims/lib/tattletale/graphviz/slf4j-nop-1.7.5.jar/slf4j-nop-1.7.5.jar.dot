@@ -1,0 +1,4 @@
+digraph slf4j_nop_1_7_5_dependencies {
+  node [shape = box, fontsize=10.0];
+  slf4j_nop_1_7_5 -> slf4j_api_1_7_5;
+}

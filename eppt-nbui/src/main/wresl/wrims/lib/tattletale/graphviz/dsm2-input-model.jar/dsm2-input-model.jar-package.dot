@@ -1,0 +1,8 @@
+digraph dsm2_input_model_package_dependencies {
+  node [shape = box, fontsize=10.0];
+  gov_ca_dsm2_input_json -> gov_ca_dsm2_input_model;
+  gov_ca_dsm2_input_json -> org_json_simple;
+  gov_ca_dsm2_input_model_calculator -> gov_ca_dsm2_input_model;
+  gov_ca_dsm2_input_model_diff -> gov_ca_dsm2_input_model;
+  gov_ca_dsm2_input_parser -> gov_ca_dsm2_input_model;
+}

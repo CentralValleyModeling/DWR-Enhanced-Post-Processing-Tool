@@ -1,0 +1,4 @@
+digraph jarhdf_2_10_0_dependencies {
+  node [shape = box, fontsize=10.0];
+  jarhdf_2_10_0 -> slf4j_api_1_7_5;
+}

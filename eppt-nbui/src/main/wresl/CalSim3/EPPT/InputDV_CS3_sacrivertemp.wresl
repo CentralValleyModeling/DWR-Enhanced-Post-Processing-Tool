@@ -1,0 +1,1109 @@
+/************************************
+
+Calc_InputDV_CSII.wresl
+
+Yuxiang, DWR, BDO
+2019/02/07
+
+This file lists CSII arcs used to calculate EPPT QAQC Post-Processing 
+**************************************/
+
+
+
+define Neg_Flt_Max {value - 3.402823466 * pow(10,38) }
+define Neg_FLT {alias Neg_Flt_Max kind 'system' units 'NONE'}
+/****************************** Define User Input Threshold *******************************/
+define abs_threshold {
+	select IValue
+	from UserInit
+	where index=2.1}
+	
+define none_zero_threshold {
+	select IValue
+	from UserInit
+	where index=2.2}
+
+define percetage_threshold {
+	select IValue
+	from UserInit
+	where index=2.3}	
+
+/****************************** INPUTS FOR  **********************************/
+/**************************Upstream MIN-INSTREAM  ****************************/
+!Trinity River Below Lewiston
+! Get the minimum flow required at TRINITY (C100)
+define Minflow_C100 { 
+       select       river_q
+       from         Trinitymin
+       where        month=month, wyt_TRIN=wyt_TRIN}
+define C100 {timeseries 'C_LWSTN' kind 'CHANNEL' units 'CFS'} ! Trinity River below Lewiston 
+define C100_MIF {timeseries 'C_LWSTN_MIF' kind 'FLOW-MIN-INSTREAM' units 'CFS'} ! Trinity River below Lewiston MIF
+! Clear Creek Below Whiskeytown 
+define minflow_C3 {timeseries 'minflow_ClearCk' kind 'FLOW-MIN-REQUIRED' units 'CFS'} ! Get the minimum flow required at Clear Creek (C3)
+define C3 {timeseries 'C_WKYTN' kind 'CHANNEL' units 'CFS'} ! Clear Creek Below Whiskeytown MIF
+define C3_MIF {timeseries 'C_WKYTN_MIF' kind 'FLOW-MIN-INSTREAM' units 'CFS'} ! Clear Creek Below Whiskeytown 
+! Sacramento River Below Keswick 
+define Minflow_C5 {timeseries 'KESWICK_MIN' kind 'Alias' units 'CFS'} ! Get the minimum flow required at Keswick (C5)
+define C5 {timeseries 'C_KSWCK' kind 'CHANNEL' units 'CFS'} ! Sacramento River Below Keswick 
+define C5_MIF {timeseries 'C_KSWCK_MIF' kind 'FLOW-MIN-INSTREAM' units 'CFS'} ! Sacramento River Below Keswick MIF
+! Sacramento River near Red Bluff
+define Minflow_C112_O {select RedMin
+               from   Redbluff_base
+               where  month=month, ShastaIndx=wyt_SHASTA_cvp} ! Get the minimum flow required at Red Bluff
+define Minflow_C112_daily {timeseries 'flow_adj_rb' kind 'FLOW' units 'CFS'}
+define Minflow_C112 {value Minflow_C112_O + Minflow_C112_daily}
+define C112 {timeseries 'C_SAC240' kind 'CHANNEL' units 'CFS'} ! Sacramento River near Red Bluff  
+define C112_MIF {timeseries 'C_SAC240_MIF' kind 'FLOW-MIN-INSTREAM' units 'CFS'} ! Sacramento River near Red Bluff MIF 
+! Sacramento River near Wilkins Slough (NCP)
+define Minflow_C129_O {timeseries 'minflowC_SAC097' kind 'FLOW-MIN-REQUIRED' units 'CFS'} ! Get the minimum flow required at NCP
+define Minflow_C129_daily {timeseries 'flow_adj_wlk' kind 'FLOW' units 'CFS'}
+define Minflow_C129 {value Minflow_C129_O + Minflow_C129_daily}
+define C129 {timeseries 'C_SAC097' kind 'CHANNEL' units 'CFS'} ! Sacramento River near Wilkins Slough  
+define C129_MIF {timeseries 'C_SAC097_MIF' kind 'FLOW-MIN-INSTREAM' units 'CFS'} ! Sacramento River near Wilkins Slough MIF 
+! Sacramento River near Freeport!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!define Minflow_C169 {timeseries 'ERP_C169MIFDV' kind 'FLOW-TARGET' units 'CFS'} ! Get the minimum flow required at Freeport
+define Minflow_C169 {VALUE 0.}  !-No C3 equivalent
+define C169 {timeseries 'C_SAC049' kind 'CHANNEL' units 'CFS'} ! Sacramento River near Freeport
+!define C169_MIF {timeseries 'C169_MIF' kind 'FLOW-MIN-INSTREAM' units 'CFS'} ! Sacramento River near Freeport -No C3 equivalent
+define C169_MIF {VALUE 0.} 
+!Sacramento River near HAMILTON CITY 
+! Get the minimum flow required at HAMILTON CITY
+  ! con_114GCID is in SV DSS
+! define con_114GCID {timeseries kind 'DEMAND' units 'taf' convert 'cfs'} !!!this TS is in SV file, defined in InputSV_**.wresl
+define HC_min {
+    case WBA8NNDemand {
+        condition con_114GCID > 100.     !if there is a significant diversion
+        value 4000. }                    !require the bypass flow
+    case other {
+        condition always
+        value 0. }
+}
+!define ERP_C114mifDV {timeseries 'ERP_C114mifDV' kind 'FLOW-TARGET' units 'CFS'} -Not used
+define ERP_C114mifDV {VALUE 0.} 
+define minflow_C114_O {value max(HC_min,ERP_C114mifDV)}
+define minflow_C114_daily {timeseries 'flow_adj_hc' kind 'FLOW' units 'CFS'}
+define minflow_C114 {value minflow_C114_O + minflow_C114_daily}
+!define Minflow_C114 {timeseries 'C114_MIF' kind 'FLOW-MIN-INSTREAM' units 'CFS'} ! Get the minimum flow required at HAMILTON CITY
+define C114 {timeseries 'C_SAC201' kind 'CHANNEL' units 'CFS'} ! Sacramento River near HAMILTON CITY 
+define C114_MIF {timeseries 'C_SAC201_MIF' kind 'FLOW-MIN-INSTREAM' units 'CFS'} ! Sacramento River near HAMILTON CITY 
+
+!!Thermolito low flow channel !
+define minflow_C200A {select minflow from minflow where C_arc=200.1,month=month}
+define C200A {timeseries 'C_FTR068' kind 'CHANNEL' units 'CFS'} ! Thermolito low flow channel 
+define C200A_MIF {timeseries 'C_FTR068_MIF' kind 'FLOW-MIN-INSTREAM' units 'CFS'} ! Thermalito low flow channel MIF 
+
+! Feather River below Thermalito Complex 
+define C203 {timeseries 'C_FTR059' kind 'CHANNEL' units 'CFS'} ! Feather River below Thermalito Complex 
+define minflow_C203 {timeseries 'minflowFeather' kind 'FLOW-MIN-REQUIRED' units 'CFS'} !=Minflow_C203
+define C203_MIF {timeseries 'C_FTR059_MIF' kind 'FLOW-MIN-INSTREAM' units 'CFS'} ! Feather River below Thermalito Complex MIF 
+! Feather River near Verona 
+define C223 {timeseries 'C_FTR003' kind 'CHANNEL' units 'CFS'} ! Feather River near Verona 
+define C223_MIF {timeseries 'C_FTR003_MIF' kind 'FLOW-MIN-INSTREAM' units 'CFS'} ! Feather River near Verona MIF 
+!define minflow_C223 {} in SV file
+! American River below Nimbus  
+define C9 {timeseries 'C_NTOMA' kind 'CHANNEL' units 'CFS'} ! American River below Nimbus 
+define Minflow_C9 {timeseries 'C_NTOMA_fmp' kind 'FLOW' units 'CFS'} 
+define C9_MIF {timeseries 'C_NTOMA_MIF' kind 'FLOW-MIN-INSTREAM' units 'CFS'} ! American River below Nimbus MIF 
+! American River at H St 
+define C303 {timeseries 'C_AMR004' kind 'CHANNEL' units 'CFS'} ! American River at H St  
+define C303_MIF {timeseries 'C_AMR004_MIF' kind 'FLOW-MIN-INSTREAM' units 'CFS'} ! American River at H St MIF 
+define Minflow_C303 {select HStMin
+             from   HSt_base
+             where  month=month, AmerD893=wyt_AMERd893_cvp
+}
+
+
+/****************************** INPUTS FOR **********************************/
+/****************************** WEIRS FLOW **********************************/
+!Weirs flow into Sutter Bypass  
+define D117 {timeseries 'SP_SAC193_BTC003' kind 'RIVER-SPILLS' units 'CFS'} !Overflow Spills into Sutter bypass ?
+define D124 {timeseries 'SP_SAC159_BTC003' kind 'RIVER-SPILLS' units 'CFS'} !Moulton Weirs Spills
+define D125 {timeseries 'SP_SAC148_BTC003' kind 'RIVER-SPILLS' units 'CFS'} !Colusa Weirs Spills
+define D126 {timeseries 'SP_SAC122_SBP021' kind 'RIVER-SPILLS' units 'CFS'} !Tisdale Weirs Spills
+!Weirs flow into Yolo bypass
+define D160 {timeseries 'SP_SAC083_YBP037' kind 'RIVER-SPILLS' units 'CFS'} !Fremont Weirs Spills
+define D166A {timeseries 'SP_SAC066_YBP020' kind 'RIVER-SPILLS' units 'CFS'} !Sacramento Weirs Spills
+
+
+/****************************** INPUTS FOR **********************************/
+/****************************** SOD EXPORT **********************************/
+! 1. TOTAL SOD EXPORT CONTROL INPUTS
+define D418 {timeseries 'C_DMC000' kind 'CHANNEL' units 'CFS'} !Tracy PP
+define D419 {timeseries 'C_CAA003' kind 'CHANNEL' units 'CFS'} !Banks PP
+!define D409PRE {timeseries 'D409PRE' kind 'DEBUG' units 'CFS'} !D409 In Pre-setup Cycle     No C3 equivalent
+define D409UP {timeseries 'EXP_TD_UPSTREAM' kind 'FLOW-DELIVERY' units 'CFS'} !D409 In Upstream Cycle        
+define EIEXPCTRL {timeseries 'EIEXPCTRL' kind 'EXPORT-CTRL-EI' units 'CFS'} 
+!define EIEXPCTRLUP {timeseries 'EIEXPCTRLUP' kind 'DEBUG' units 'CFS'} 
+define APRMAYEXPCTRL {timeseries 'APRMAYEXPCTRL' kind 'EXPORT-CTRL-APRMAY' units 'CFS'} 
+!define APRMAYEXPCTRLUP {timeseries 'APRMAYEXPCTRLUP' kind 'DEBUG' units 'CFS'} -not used
+define D409 {timeseries 'EXP_TD' kind 'FLOW-DELIVERY' units 'CFS'} !D409                    
+define C408 {timeseries 'C_OMR014' kind 'CHANNEL' units 'CFS'} !D408
+define MAXEXP_RPADV {timeseries 'MAXEXP_RPA_DV' kind 'EXPORT-LIMIT' units 'CFS'} 
+define EXPORT_DEC {timeseries 'EXPORT_DEC_' kind 'TEMP' units 'CFS'} 
+define C408_LBOUND {timeseries 'C_OMR014_LBOUND' kind 'FLOW-LBOUND' units 'CFS'} !OMR flow restrictions
+define C408_NoEXP1 {timeseries 'C_OMR014_NoEXP1' kind 'FLOW-CHANNEL' units 'CFS'} !OMR flows w/o Exports
+!define COMB_EXP_DEC_ {timeseries 'COMB_EXP_DEC_' kind 'TEMP' units 'CFS'}
+! 2. SWP SOD EXPORT CONTROL INPUTS
+define APRMAYBANKSCTRL {timeseries 'APRMAYBANKSCTRL' kind 'EXPORT-CTRL-APRMAY' units 'CFS'} 
+define MAXEXP_RPA_SWPDV {timeseries 'MAXEXP_RPA_SWPDV' kind 'EXPORT-LIMIT' units 'CFS'} 
+!define SWP_EXP_DEC_ {timeseries 'SWP_EXP_DEC_' kind 'TEMP' units 'CFS'}
+define BANKSALLOWOUT {timeseries 'BANKSALLOWOUT' kind 'FLOW-ALLOW-BANKS' units 'CFS'}
+!define D419UP {timeseries 'D419UP' kind 'FLOW-DELIVERY' units 'CFS'} -not used
+! 3. CVP SOD EXPORT CONTROL INPUTS
+define APRMAYTRACYCTRL {timeseries 'APRMAYTRACYCTRL' kind 'EXPORT-CTRL-APRMAY' units 'CFS'} 
+define MAXEXP_RPA_CVPDV {timeseries 'MAXEXP_RPA_CVPDV' kind 'EXPORT-LIMIT' units 'CFS'} 
+!define CVP_EXP_DEC_ {timeseries 'CVP_EXP_DEC_' kind 'TEMP' units 'CFS'}
+define JONESALLOWOUT {timeseries 'TracyAllowOut' kind 'FLOW-ALLOW-TRACY' units 'CFS'}
+!define D418UP {timeseries 'D418UP' kind 'FLOW-DELIVERY' units 'CFS'} -not used
+
+
+
+/****************************** INPUTS FOR **********************************/
+/******************************* SHORTAGE ***********************************/
+!NOD CVP
+define SHORT_CVP_TOT_N {timeseries 'SHORT_CVP_TOT_N' kind 'DELIVERY-SHORTAGE-CVP' units 'CFS'} !TOTAL NOD SHORTAGE
+define SHORT_CVP_PAG_N {timeseries 'SHORT_CVP_PAG_N' kind 'DELIVERY-SHORTAGE-CVP' units 'CFS'} !AG NOD SHORTAGE
+define SHORT_CVP_PMI_N {timeseries 'SHORT_CVP_PMI_N' kind 'DELIVERY-SHORTAGE-CVP' units 'CFS'} !M&I NOD SHORTAGE 
+define SHORT_CVP_PRF_N {timeseries 'SHORT_CVP_PRF_N' kind 'DELIVERY-SHORTAGE-CVP' units 'CFS'} !REFUGES NOD SHORTAGE
+define SHORT_CVP_PSC_N {timeseries 'SHORT_CVP_PSC_N' kind 'DELIVERY-SHORTAGE-CVP' units 'CFS'} !SETTLEMENT NOD SHORTAGE
+!SOD CVP
+define SHORT_CVP_TOT_S {timeseries 'SHORT_CVP_TOT_S' kind 'DELIVERY-SHORTAGE-CVP' units 'CFS'} !TOTAL SOD SHORTAGE
+define SHORT_CVP_PAG_S {timeseries 'SHORT_CVP_PAG_S' kind 'DELIVERY-SHORTAGE-CVP' units 'CFS'} !AG SOD SHORTAGE
+define SHORT_CVP_PMI_S {timeseries 'SHORT_CVP_PMI_S' kind 'DELIVERY-SHORTAGE-CVP' units 'CFS'} !M&I SOD SHORTAGE 
+define SHORT_CVP_PRF_S {timeseries 'SHORT_CVP_PRF_S' kind 'DELIVERY-SHORTAGE-CVP' units 'CFS'} !REFUGES SOD SHORTAGE
+define SHORT_CVP_PEX_S {timeseries 'SHORT_CVP_PEX_S' kind 'DELIVERY-SHORTAGE-CVP' units 'CFS'} 
+define SHORT_CVP_PLS_S {timeseries 'SHORT_CVP_PLS_S' kind 'DELIVERY-SHORTAGE-CVP' units 'CFS'} !PROJECT LOSS SOD SHORTAGE
+!NOD SWP
+define SHORT_SWP_PAG_N {timeseries 'SHORT_SWP_PAG_N' kind 'DELIVERY-SHORTAGE-SWP' units 'CFS'} !AG NOD SHORTAGE
+define SHORT_SWP_PMI_N {timeseries 'SHORT_SWP_PMI_N' kind 'DELIVERY-SHORTAGE-SWP' units 'CFS'} !M&I NOD SHORTAGE 
+define SHORT_SWP_TOT_N {VALUE SHORT_SWP_PAG_N + SHORT_SWP_PMI_N} !TOTAL NOD SHORTAGE
+!define SHORT_SWP_PWR {timeseries 'SHORT_SWP_PWR' kind 'DELIVERY-SHORTAGE-SWP' units 'CFS'}
+!SOD SWP
+define SHORT_SWP_TOT_S {timeseries 'SHORT_SWP_TOT_S' kind 'DELIVERY-SHORTAGE-SWP' units 'CFS'} !TOTAL SOD SHORTAGE
+define SHORT_SWP_PAG_S {timeseries 'SHORT_SWP_PAG_S' kind 'DELIVERY-SHORTAGE-SWP' units 'CFS'} !AG SOD SHORTAGE
+define SHORT_SWP_PMI_S {timeseries 'SHORT_SWP_PMI_S' kind 'DELIVERY-SHORTAGE-SWP' units 'CFS'} !M&I SOD SHORTAGE 
+define SHORT_SWP_PLS {timeseries 'SHORT_SWP_PLS' kind 'DELIVERY-SHORTAGE-SWP' units 'CFS'} !LOSS SOD SHORTAGE
+
+/****************************** INPUTS FOR **********************************/
+/***************************** Delta Control ********************************/
+define D407 {timeseries 'C_SAC000_MIN' kind 'CHANNEL' units 'CFS'} !MRDO - Minimum Required Delta Outflow (contain NDOI and X2 component)
+define C407 {timeseries 'C_SAC000_ADD' kind 'CHANNEL' units 'CFS'} ! Regulations and Operations required Delta Outflow additional to the Delta Outflow required by NDOI & X2 
+define C407_whlcv {timeseries 'C_SAC000_ADD_WHLCV' kind 'FLOW-CHANNEL' units 'CFS'}
+define C407_whljp {timeseries 'C_SAC000_ADD_whljp' kind 'FLOW-CHANNEL' units 'CFS'}
+define C407_WTS {timeseries 'C_SAC000_ADD_WTS' kind 'FLOW-CHANNEL' units 'CFS'}
+define C405 {timeseries 'C_SAC017' kind 'CHANNEL' units 'CFS'} ! Flow @ Rio Vista
+define Rio_req {  ! Minimum Flow required @ Rio Vista
+       select       river_q
+       from         riovista
+       where        month=month, wyt_SAC=wyt_SAC}
+define C405_MIF {timeseries 'C_SAC017_MIF' kind 'FLOW-MIN-INSTREAM' units 'CFS'} !Minimum Flow met @ Rio Vista
+define C416A {timeseries 'C_SJR013' kind 'CHANNEL' units 'CFS'}  ! SJR to the confluence with SAC (QWEST)
+define qwest_std { ! Minimum Flow required @ QWEST
+		select 		QWESTstd 
+		from 		qwest 
+		where 		month=month, WYT=wyt_SAC}
+
+!define D168C_EXC_NTDEP {timeseries 'D168C_EXC_NTDEP' kind 'FLOW' units 'CFS'} !Excess from Freeport; returned to D.O. -No C3 equivalent
+!Tracy and Bank Thru Delta Exports!
+define D418_TD {timeseries 'C_DMC000_TD' kind 'FLOW-DELIVERY' units 'CFS'}
+define D419_TD {timeseries 'C_CAA003_TD' kind 'FLOW-DELIVERY' units 'CFS'}
+!Export Ratio
+define EXPRATIO {timeseries 'EXPRATIO_' kind 'EI-RATIO-STD' units 'NONE'}
+!FWS OMR Inputs
+!D409_ is defined earlier
+define D409_Delta {timeseries 'EXP_TD_Delta' kind 'FLOW-DELIVERY' units 'CFS'}
+define D409_Upstream {timeseries 'EXP_TD_Upstream' kind 'FLOW-DELIVERY' units 'CFS'}
+define C_SAC000_ADD {timeseries kind 'CHANNEL' units 'CFS'}
+define C_SAC000_MIN {timeseries kind 'CHANNEL' units 'CFS'}
+define C406 {value C_SAC000_ADD + C_SAC000_MIN} 
+define C406_Delta {timeseries 'C_SAC000_DELTA' kind 'FLOW-CHANNEL' units 'CFS'}
+define C406_Upstream {timeseries 'C_SAC000_UPSTREAM' kind 'FLOW-CHANNEL' units 'CFS'}
+define OMR_INCREASE {timeseries 'OMR_INCREASE_' kind 'TEMP' units 'CFS'} !Increase in MRDO due to OMR Restriction
+define EXP_DEC_RPA {timeseries 'EXPORT_DEC_RPA_' kind 'TEMP' units 'CFS'} !Decrease in exports due to RPA restrictions
+!MRDO for WQ at control at Jersey Point, Emmaton, Rock Slough and Collinsville
+define JP_MRDO {timeseries 'JP_MRDO' kind 'FLOW' units 'CFS'} ! Minimum Required Delta Outflow for Jersey Point WQ
+define EM_MRDO {timeseries 'EM_MRDO' kind 'FLOW' units 'CFS'} ! Minimum Required Delta Outflow for Emmaton WQ
+define RS_MRDO_1 {timeseries 'RS_MRDO_1' kind 'FLOW' units 'CFS'} ! Minimum Required Delta Outflow for Rock Slough Location 1 WQ
+define RS_MRDO_2 {timeseries 'RS_MRDO_2' kind 'FLOW' units 'CFS'} ! Minimum Required Delta Outflow for Rock Slough Location 2 WQ
+define RS_MRDO_3 {timeseries 'RS_MRDO_3' kind 'FLOW' units 'CFS'} ! Minimum Required Delta Outflow for Rock Slough Location 3 WQ
+define CO_MRDO {timeseries 'CO_MRDO' kind 'FLOW' units 'CFS'} ! Minimum Required Delta Outflow for Collinsville WQ
+define C407_ANN {timeseries 'C_SAC000_ADD_ANN' kind 'FLOW-CHANNEL' units 'CFS'} !Outflow due to salinity 
+!MROD for X2 (spring and fall) >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+define DO_req_flow_out {timeseries 'DO_req_flow_out' kind 'FLOW-REQ-NDOI' units 'CFS'}! "NDOI Note: X2 requirements averaged into TS"
+!NMFS SJR I/E Inputs
+define NMFS_MaxExpdv {timeseries 'NMFS_MaxExpdv' kind 'NMFS' units 'CFS'}
+!NMFS DCC Inputs
+define NMFS_MaxExpDCCdv {timeseries 'NMFS_MaxExpDCCdv' kind 'EXPORT-LIMIT' units 'CFS'}
+
+/****************************** INPUTS FOR **********************************/
+/***************************** Delta Operation ********************************/
+define C400 {timeseries 'C_SAC041' kind 'CHANNEL' units 'CFS'}
+define JP_M {timeseries 'JP_M' kind 'SLOPE' units 'NONE'}
+define JP_B {timeseries 'JP_B' kind 'INTERCEPT' units 'NONE'}
+define EM_M {timeseries 'EM_M' kind 'SLOPE' units 'NONE'}
+define EM_B {timeseries 'EM_B' kind 'INTERCEPT' units 'NONE'}
+define CO_M {timeseries 'CO_M' kind 'SLOPE' units 'NONE'}
+define CO_B {timeseries 'CO_B' kind 'INTERCEPT' units 'NONE'}
+define RS_M_1 {timeseries 'RS_M_1' kind 'SLOPE' units 'NONE'}
+define RS_B_1 {timeseries 'RS_B_1' kind 'INTERCEPT' units 'NONE'}
+define RS_M_2 {timeseries 'RS_M_2' kind 'SLOPE' units 'NONE'}
+define RS_B_2 {timeseries 'RS_B_2' kind 'INTERCEPT' units 'NONE'}
+define RS_M_3 {timeseries 'RS_M_3' kind 'SLOPE' units 'NONE'}
+define RS_B_3 {timeseries 'RS_B_3' kind 'INTERCEPT' units 'NONE'}
+define D418_EXP1 {timeseries 'C_DMC000_EXP1' kind 'FLOW-DELIVERY' units 'CFS'}
+define D418_EXP2 {timeseries 'C_DMC000_EXP2' kind 'FLOW-DELIVERY' units 'CFS'}
+define D418_CVP {timeseries 'C_DMC000_CVP' kind 'FLOW-DELIVERY' units 'CFS'}
+!define D418_SWP {timeseries 'D418_SWP' kind 'FLOW-DELIVERY' units 'CFS'}
+define D419_EXP1 {timeseries 'C_CAA003_EXP1' kind 'FLOW-DELIVERY' units 'CFS'}
+define D419_EXP2 {timeseries 'C_CAA003_EXP2' kind 'FLOW-DELIVERY' units 'CFS'}
+define D419_CVP {timeseries 'C_CAA003_CVP' kind 'FLOW-DELIVERY' units 'CFS'}
+define D419_SWP {timeseries 'C_CAA003_SWP' kind 'FLOW-DELIVERY' units 'CFS'}
+define D419_WTS {timeseries 'C_CAA003_WTS' kind 'FLOW-DELIVERY' units 'CFS'}
+
+/****************************** INPUTS FOR **********************************/
+/****************************** Reservoirs **********************************/
+!!!!!!!!Trinity!!!!!!!! 
+! Trinity storage
+define S1 {timeseries 'S_TRNTY' kind 'STORAGE' units 'TAF'} 
+! Trinity Spills
+define F1 {timeseries 'C_TRNTY_FLOOD' kind 'SPILL' units 'CFS'}
+! Trinity storage at Capacity 
+!define S1LEVEL5DV {timeseries 'S1LEVEL5DV' kind 'Storage-level' units 'TAF'}  !No C3 equivalent
+define S1LEVEL5DV {value 2447.} 
+! Trinity storage at flood level 
+!define S1LEVEL4DV {timeseries 'S1LEVEL4DV' kind 'Storage-level' units 'TAF'}  !No C3 equivalent
+! Trinity storage at RC level 
+define S1LEVEL3DV {timeseries 'S_TRNTYLEVEL3DV' kind 'Storage-level' units 'TAF'} 
+! Trinity storage at Dead Pool level 
+!define S1LEVEL1DV {timeseries 'S1LEVEL1DV' kind 'Storage-level' units 'TAF'}  !No C3 equivalent
+define S1LEVEL1DV {value 240.}
+! Clear Creek Tunnel 
+define D100 {timeseries 'D_LWSTN_CCT011' kind 'DIVERSION' units 'CFS'}
+! Clear Creek Tunnel import met
+define D100_import {timeseries 'D_LWSTN_import' kind 'FLOW-DELIVERY' units 'CFS'}
+! D100_import Minimum requirement
+define trin_impdv {timeseries kind 'undefined' units 'cfs'}
+!!!!!!!!Shasta!!!!!!!!
+! Shasta storage
+define S4 {timeseries 'S_SHSTA' kind 'STORAGE' units 'TAF'} 
+! Shasta Spills
+define F4 {timeseries 'C_SHSTA_FLOOD' kind 'SPILL' units 'CFS'}
+! Shasta storage at Capacity
+!define S4LEVEL6DV {timeseries 'S4LEVEL6DV' kind 'Storage-level' units 'TAF'}    !No C3 equivalent
+define S4LEVEL6DV {VALUE 4552.}    
+! Shasta storage at flood level 
+define S4LEVEL5DV {timeseries 'S_SHSTALEVEL5DV' kind 'Storage-level' units 'TAF'} 
+! Shasta storage at RC level 
+define S4LEVEL3DV {timeseries 'S_SHSTAlevel3dv' kind 'Storage-level' units 'TAF'} 
+! Shasta storage at Dead Pool level 
+!define S4LEVEL1DV {timeseries 'S4LEVEL1DV' kind 'Storage-level' units 'TAF'}    !No C3 equivalent
+define S4LEVEL1DV {VALUE 550.}    						!No C3 equivalent
+!!!!!!!!Oroville!!!!!!!!
+! OROVILLE storage
+define S6 {timeseries 'S_OROVL' kind 'STORAGE' units 'TAF'} 
+! OROVILLE Spills
+define F6 {timeseries 'C_OROVL_FLOOD' kind 'SPILL' units 'CFS'}
+! OROVILLE storage at Capacity
+!define S6LEVEL6DV {timeseries 'S6LEVEL6DV' kind 'Storage-level' units 'TAF'}   !No C3 equivalent
+define S6LEVEL6DV {VALUE 3538.} 
+! OROVILLE storage at flood level 
+define S6LEVEL5DV {timeseries 'S_OROVLLEVEL5DV' kind 'Storage-level' units 'TAF'} 
+! OROVILLE storage at RC level 
+define S6LEVEL3DV {timeseries 'S_OROVLLEVEL3DV' kind 'Storage-level' units 'TAF'}
+! OROVILLE storage at Dead Pool level 
+!define S6LEVEL1DV {timeseries 'S6LEVEL1DV' kind 'Storage-level' units 'TAF'}    !No C3 equivalent
+define S6LEVEL1DV {VALUE 29.6}
+!!!!!!!!Folsom!!!!!!!!
+! Folsom storage
+define S8 {timeseries 'S_FOLSM' kind 'STORAGE' units 'TAF'}
+! Folsom Spills
+define F8 {timeseries 'C_FOLSM_FLOOD' kind 'SPILL' units 'CFS'}
+! Folsom storage at Capacity
+!define S8LEVEL6DV {timeseries 'S8LEVEL6DV' kind 'Storage-level' units 'TAF'}   !No C3 equivalent
+define S8LEVEL6DV {VALUE 966.83}   !No C3 equivalent
+! Folsom storage at flood level timeseries 'S8LEVEL6DV' kind 'Storage-level' units 'TAF'
+define S8LEVEL5DV {timeseries 'S_FOLSMLEVEL5DV' kind 'Storage-level' units 'TAF'} 
+! Folsom storage at RC level 
+define S8LEVEL3DV {timeseries 'S_FOLSMLEVEL3DV' kind 'Storage-level' units 'TAF'} 
+! Folsom storage at Dead Pool level 
+!define S8LEVEL1DV {timeseries 'S8LEVEL1DV' kind 'Storage-level' units 'TAF'}    !No C3 equivalent
+define S8LEVEL1DV {VALUE 90.}    						!No C3 equivalent
+!!!!!!!!San Luis Reservoir!!!!!!!!
+! San Luis storage for CVP
+define S11 {timeseries 'S_SLUIS_CVP' kind 'STORAGE' units 'TAF'} 
+! San Luis storage maximum capacity for CVP 
+define S11_MAX {value 972} 
+! San Luis storage minimum capacity for CVP 
+define S11_DP {value 45} 
+! San Luis storage for CVP based on Rule Curve
+define S11_RC {timeseries 'CVPRULECV' kind 'RULECURVE' units 'TAF'}
+! San Luis storage at flood level for CVP
+!define S11LEVEL4DV {timeseries 'S11LEVEL4DV' kind 'Storage-level' units 'TAF'}    !No C3 equivalent
+define S11LEVEL4DV {VALUE 972.}    !No C3 equivalent
+! San Luis storage at Dead Pool level for CVP
+!define S11LEVEL1DV {timeseries 'S11LEVEL1DV' kind 'Storage-level' units 'TAF'}      !No C3 equivalent
+define S11LEVEL1DV {VALUE 45.}
+! San Luis storage for SWP
+define S12 {timeseries 'S_SLUIS_SWP' kind 'STORAGE' units 'TAF'} 
+! San Luis storage maximum capacity for SWP 
+define S12_MAX {value 1067} 
+! San Luis storage minimum capacity for SWP 
+define S12_DP {value 55} 
+! San Luis storage for SWP based on Rule Curve
+define S12_RC {timeseries 'SWPRULECV' kind 'RULECURVE' units 'TAF'}
+! San Luis storage at flood level for SWP
+!define S12LEVEL4DV {timeseries 'S12LEVEL4DV' kind 'Storage-level' units 'TAF'}    !No C3 equivalent
+define S12LEVEL4DV {VALUE 1067.}
+! San Luis storage at Dead Pool level for SWP
+!define S12LEVEL1DV {timeseries 'S12LEVEL1DV' kind 'Storage-level' units 'TAF'}    !No C3 equivalent
+define S12LEVEL1DV {VALUE 55.}
+/****************************** INPUTS FOR **********************************/
+/************************** COA Sharing Percentage **************************/
+!NOD Storage 
+define FOLDS {timeseries 'FOLDS' kind 'STORAGE-CHANGE' units 'CFS'} ! Folsom Storage change
+define SWPDS {timeseries 'SWPDS' kind 'STORAGE-CHANGE' units 'CFS'} ! Oroville Storage change (coa_BO.wresl)
+define SHADS {timeseries 'SHADS' kind 'STORAGE-CHANGE' units 'CFS'} ! shasta storage Change
+define WHSSW {timeseries 'WHSSW' kind 'STORAGE-WDL' UNITS 'CFS'} ! Whiskeytown storage withdrawal
+define WHSSI {timeseries 'WHSSI' kind 'STORAGE-INC' UNITS 'CFS'} ! Whiskeytown storage increase  
+!Delta
+define int_IBU_UWFE {timeseries 'INT_IBU_UWFE' kind 'INTEGER' units 'NONE'} !IBU or UWFE status check
+define INFLW {timeseries 'INFLOW' kind 'INFLOW-DELTA' UNITS 'CFS'} !
+! Exports
+define TOTAL_EXP {timeseries 'TOTAL_EXP' kind 'FLOW-DELIVERY' units 'CFS'} !Total Export (D418+D419)
+! Exports - CVP
+! Export at Jones Pumping Plant defined as D418
+define EXP_JNS_TRCY {timeseries 'C_DMC000_EXP1' kind 'FLOW-DELIVERY' units 'CFS'} ! CVP pumping Split at Tracy
+define D419_CVPDED_EXP1 {timeseries 'C_CAA003_CVPDED_EXP1' kind 'FLOW-DELIVERY' units 'CFS'} ! CVP Export - what type?
+define D408_CVP {timeseries 'D408_CVP' kind 'flow-delivery' units 'cfs'}! CCWD CVP intake diversions by water right.
+define D408_DS_EXP1 {timeseries 'D408_DS_EXP1' kind 'FLOW-DELIVERY' units 'CFS'}   ! CCWD diversion of Delta surplus under LV water right.
+define D408_P_STR_CVP {timeseries 'D408_P_STR_CVP' kind 'FLOW-DELIVERY' units 'cfs'}! COA split for diversion of surplus to storage or for delivery
+define D408_P_DEL_CVP {timeseries 'D408_P_DEL_CVP' kind 'FLOW-DELIVERY' units 'cfs'} 
+define D408_P_WHL_SF_e1 {timeseries 'D408_P_WHL_SF_e1' kind 'FLOW-DELIVERY' units 'cfs'} ! COA split for wheeling unused CVP and SWP water 
+!define D168B_EXP1 {timeseries 'D168B_EXP1' kind 'FLOW-DELIVERY' units 'CFS'} ! Delta Exporter study of Freeport Project- RSR              No C3 equivalent
+! Export - SWP
+! Export at Banks Pumping Plant defined as D419
+!define D419_EXP1 {timeseries 'D419_EXP1' kind 'FLOW-DELIVERY' units 'CFS'} ! Export Split at SWP
+define D403B {timeseries 'D_BKR004_NBA009_NAPA' kind 'DIVERSION' units 'CFS'} ! Diversion to Napa
+define D403C {timeseries 'D_BKR004_NBA009_SCWA' kind 'DIVERSION' units 'CFS'} ! Diversion to Solano
+define D408_P_WHL_SB_E1 {timeseries 'D408_P_WHL_SB_E1' kind 'FLOW-DELIVERY' units 'CFS'}
+define D408_P_DEL_SWP {timeseries 'D408_P_DEL_SWP' kind 'FLOW-DELIVERY' units 'CFS'}
+define D408_P_STR_SWP {timeseries 'D408_P_STR_SWP' kind 'FLOW-DELIVERY' units 'CFS'}
+! COA Agreed Share 
+define CVP_share {timeseries kind 'percent-COA' units 'NONE'} !COA Agreed CVP Share
+define SWP_share {timeseries kind 'percent-COA' units 'NONE'} !COA Agreed SWP Share
+
+
+/****************************** INPUTS FOR **********************************/
+/*************************** Groundwater Pumping ****************************/
+/*
+!DSA 58
+define GP60 {timeseries kind 'FLOW-DELIVERY' units 'CFS'} !DSA58 Groundwater Pumping
+define GR60AW {timeseries kind 'FLOW-CHANNEL' units 'CFS'} !Deep percolation of AW
+define GS60 {timeseries kind 'FLOW-CHANNEL' units 'CFS'} !DSA58 Stream - Groundwater Interaction
+!define mingw_58 {timeseries kind 'GW-PUMPING-MIN' units 'TAF'} ! in InputSV_CSII.wresl
+
+!DSA 12
+define GP61 {timeseries kind 'FLOW-DELIVERY' units 'CFS'} !DSA12 Groundwater Pumping
+define GR61AW {timeseries kind 'FLOW-CHANNEL' units 'CFS'} !Deep percolation of AW
+define GS61 {timeseries kind 'FLOW-CHANNEL' units 'CFS'} !DSA12 Stream - Groundwater Interaction
+
+!DSA 10
+define GP62 {timeseries kind 'FLOW-DELIVERY' units 'CFS'} !DSA10 Groundwater Pumping
+define GR62AW {timeseries kind 'FLOW-CHANNEL' units 'CFS'} !Deep percolation of AW
+define GS62 {timeseries kind 'FLOW-CHANNEL' units 'CFS'} ! DSA10 Stream - Groundwater Interaction
+
+!DSA 15
+define GP63 {timeseries kind 'FLOW-DELIVERY' units 'CFS'} !DSA15 Groundwater Pumping
+define GR63AW {timeseries kind 'FLOW-CHANNEL' units 'CFS'} !Deep percolation of AW
+define GS63 {timeseries kind 'FLOW-CHANNEL' units 'CFS'} !DSA15 Stream - Groundwater Interaction
+
+!DSA 65
+define GP64 {timeseries kind 'FLOW-DELIVERY' units 'CFS'} !DSA65 Groundwater Pumping
+define GR64AW {timeseries kind 'FLOW-CHANNEL' units 'CFS'} !Deep percolation of AW
+define GS64 {timeseries kind 'FLOW-CHANNEL' units 'CFS'} !DSA65 Stream - Groundwater Interaction
+!define mingw_65 {timeseries kind 'GW-PUMPING-MIN' units 'TAF'} ! in InputSV_CSII.wresl
+
+!DSA 69
+define GP65 {timeseries kind 'FLOW-DELIVERY' units 'CFS'} !DSA69 Groundwater Pumping
+define GR65AW {timeseries kind 'FLOW-CHANNEL' units 'CFS'} !Deep percolation of AW
+define GS65 {timeseries kind 'FLOW-CHANNEL' units 'CFS'} !DSA69 Stream - Groundwater Interaction
+!define mingw_69 {timeseries kind 'GW-PUMPING-MIN' units 'TAF'} ! in InputSV_CSII.wresl
+
+!DSA 70
+define GP66 {timeseries kind 'FLOW-DELIVERY' units 'CFS'} !DSA70 Groundwater Pumping
+define GR66AW {timeseries kind 'FLOW-CHANNEL' units 'CFS'} !Deep percolation of AW
+define GS66 {timeseries kind 'FLOW-CHANNEL' units 'CFS'} !DSA70 Stream - Groundwater Interaction
+!define mingw_70 {timeseries kind 'GW-PUMPING-MIN' units 'TAF'} ! in InputSV_CSII.wresl
+
+!****************************** INPUTS FOR **********************************
+!**************************** NOD Mass Balance ******************************
+define C42 {timeseries 'C_Blkbt' kind 'CHANNEL' units 'CFS'}
+define C157 {timeseries 'C_CSL005' kind 'CHANNEL' units 'CFS'}
+define C17301 {timeseries 'C_STN021' kind 'CHANNEL' units 'CFS'}
+!define C17602 {timeseries kind 'FLOW-CHANNEL' units 'CFS'}   !No C3 Equivalent, NODOS off
+define C17602 {VALUE 0.}
+!define C17603 {timeseries kind 'FLOW-CHANNEL' units 'CFS'}    !No C3 Equivalent, NODOS off
+define C17603 {VALUE 0.} 
+define C225 {timeseries kind 'FLOW-CHANNEL' units 'CFS'}
+define C300 {timeseries 'C_NFA016' 'kind 'CHANNEL' units 'CFS'}
+!define C303 {timeseries kind 'FLOW-CHANNEL' units 'CFS'}
+define C308 {timeseries kind 'FLOW-CHANNEL' units 'CFS'}
+define C217A {timeseries 'C_BTC007' kind 'CHANNEL' units 'CFS'}   !C3 approximate
+
+define I204_WTS{timeseries kind 'FLOW-INFLOW' units 'CFS'} !Water Transfer from Yuba River
+
+define D42 {timeseries 'D_STN026_06_PA' kind 'DIVERSION' units 'CFS'}
+define D107 {timeseries kind 'FLOW-DELIVERY' units 'CFS'}
+define D11302 {timeseries kind 'FLOW-DELIVERY' units 'CFS'}
+define D17101 {timeseries kind 'FLOW-DELIVERY' units 'CFS'}
+define D17201 {timeseries kind 'FLOW-DELIVERY' units 'CFS'}
+define D11306 {timeseries kind 'FLOW-DELIVERY' units 'CFS'}
+define D17401 {timeseries kind 'FLOW-DELIVERY' units 'CFS'}
+define D14301 {timeseries kind 'FLOW-DELIVERY' units 'CFS'}
+define D14302 {timeseries kind 'FLOW-DELIVERY' units 'CFS'}
+define D17801 {timeseries kind 'FLOW-DELIVERY' units 'CFS'}
+define D18201 {timeseries kind 'FLOW-DELIVERY' units 'CFS'}
+define D18301 {timeseries kind 'FLOW-DELIVERY' units 'CFS'}
+define D14501 {timeseries kind 'FLOW-DELIVERY' units 'CFS'}
+define D131 {timeseries kind 'FLOW-DELIVERY' units 'CFS'}
+define D155 {timeseries kind 'FLOW-DELIVERY' units 'CFS'}
+define D143A_WTS {timeseries kind 'FLOW-DELIVERY' units 'CFS'}
+define D128_WTS {timeseries kind 'FLOW-DELIVERY' units 'CFS'}
+define D122A_WTS {timeseries kind 'FLOW-DELIVERY' units 'CFS'}
+define D122B_WTS {timeseries kind 'FLOW-DELIVERY' units 'CFS'}
+define D145A_WTS {timeseries kind 'FLOW-DELIVERY' units 'CFS'}
+define D162 {timeseries kind 'FLOW-DELIVERY' units 'CFS'}
+define D167 {timeseries kind 'FLOW-DELIVERY' units 'CFS'}
+define D168 {timeseries kind 'FLOW-DELIVERY' units 'CFS'}
+
+
+define D109 {timeseries kind 'FLOW-DELIVERY' units 'CFS'}
+define D118 {timeseries kind 'FLOW-DELIVERY' units 'CFS'}
+define D123 {timeseries kind 'FLOW-DELIVERY' units 'CFS'}
+define D134 {timeseries kind 'FLOW-DELIVERY' units 'CFS'}
+define D152 {timeseries kind 'FLOW-DELIVERY' units 'CFS'}
+define D166B {timeseries kind 'FLOW-DELIVERY' units 'CFS'}
+define D17501 {timeseries kind 'FLOW-DELIVERY' units 'CFS'}
+define D124A {timeseries kind 'FLOW-DELIVERY' units 'CFS'}
+
+define D6 {timeseries kind 'FLOW-DELIVERY' units 'CFS'}
+define D201 {timeseries kind 'FLOW-DELIVERY' units 'CFS'}
+define D202 {timeseries kind 'FLOW-DELIVERY' units 'CFS'}
+define D7A {timeseries kind 'FLOW-DELIVERY' units 'CFS'}
+define D7B {timeseries kind 'FLOW-DELIVERY' units 'CFS'}
+
+define D210 {timeseries kind 'FLOW-DELIVERY' units 'CFS'}
+define D218 {timeseries kind 'FLOW-DELIVERY' units 'CFS'}
+define D222 {timeseries kind 'FLOW-DELIVERY' units 'CFS'}
+define D226 {timeseries kind 'FLOW-DELIVERY' units 'CFS'}
+define D204_REOP {timeseries kind 'FLOW-DELIVERY' units 'CFS'}
+define D230_LYRA {timeseries kind 'FLOW-TRANSFERABLE' units 'CFS'}
+
+define D207B {timeseries kind 'FLOW-DELIVERY' units 'CFS'}
+
+define D8 {timeseries kind 'FLOW-DELIVERY' units 'CFS'}
+define D9 {timeseries kind 'FLOW-DELIVERY' units 'CFS'}
+
+define D307 {timeseries kind 'FLOW-DELIVERY' units 'CFS'}
+define D309B {timeseries kind 'FLOW-DELIVERY' units 'CFS'}
+define D308A {timeseries kind 'FLOW-DELIVERY' units 'CFS'}
+
+
+
+
+define R109 {timeseries kind 'FLOW-RETURN' units 'CFS'} !DSA58 return Flow
+define R114B {timeseries kind 'FLOW-RETURN' units 'CFS'}
+define R113 {timeseries kind 'FLOW-RETURN' units 'CFS'}
+define R114C {timeseries kind 'FLOW-RETURN' units 'CFS'}
+define R114A {timeseries kind 'FLOW-RETURN' units 'CFS'}
+define R182A {timeseries kind 'FLOW-RETURN' units 'CFS'}
+define R181A {timeseries kind 'FLOW-RETURN' units 'CFS'}
+define R181B {timeseries kind 'FLOW-RETURN' units 'CFS'}
+define R182B {timeseries kind 'FLOW-RETURN' units 'CFS'}
+define R184A {timeseries kind 'FLOW-RETURN' units 'CFS'}
+define R184B {timeseries kind 'FLOW-RETURN' units 'CFS'}
+define R134 {timeseries kind 'FLOW-RETURN' units 'CFS'}
+define R18302 {timeseries kind 'FLOW-RETURN' units 'CFS'}
+define R160 {timeseries kind 'FLOW-RETURN' units 'CFS'}
+define R156 {timeseries kind 'FLOW-RETURN' units 'CFS'}
+
+define R135C_DCMP {timeseries kind 'RETURN-FLOW' units 'CFS'}
+
+
+!define R223 {timeseries kind 'FLOW-RETURN' units 'CFS'}
+define R135A {timeseries kind 'FLOW-RETURN' units 'CFS'}
+define R137 {timeseries kind 'FLOW-RETURN' units 'CFS'}
+define R135B {timeseries kind 'FLOW-RETURN' units 'CFS'}
+
+define R169 {timeseries kind 'FLOW-RETURN' units 'CFS'}
+
+define L143 {timeseries kind 'FLOW-DELIVERY' units 'CFS'}
+define L17201 {timeseries kind 'FLOW-DELIVERY' units 'CFS'}
+define L17401 {timeseries kind 'FLOW-DELIVERY' units 'CFS'}
+define L17801 {timeseries kind 'FLOW-DELIVERY' units 'CFS'}
+define L17101 {timeseries kind 'FLOW-DELIVERY' units 'CFS'}
+define L11302 {timeseries kind 'FLOW-DELIVERY' units 'CFS'}
+define L11306 {timeseries kind 'FLOW-DELIVERY' units 'CFS'}
+define L128 {timeseries kind 'FLOW-DELIVERY' units 'CFS'}
+define L143A {timeseries kind 'FLOW-DELIVERY' units 'CFS'}
+define L180A {timeseries kind 'FLOW-DELIVERY' units 'CFS'}
+define L122A {timeseries kind 'FLOW-DELIVERY' units 'CFS'}
+define L143B {timeseries kind 'FLOW-DELIVERY' units 'CFS'}
+define L145A {timeseries kind 'FLOW-DELIVERY' units 'CFS'}
+define L122B {timeseries kind 'FLOW-DELIVERY' units 'CFS'}
+define L182A {timeseries kind 'FLOW-DELIVERY' units 'CFS'}
+define L145B {timeseries kind 'FLOW-DELIVERY' units 'CFS'}
+define L183 {timeseries kind 'FLOW-DELIVERY' units 'CFS'}
+define L129A {timeseries kind 'FLOW-DELIVERY' units 'CFS'}
+
+define L142 {timeseries kind 'FLOW-DELIVERY' units 'CFS'} !Reach 3 Losses
+define L172 {timeseries kind 'FLOW-DELIVERY' units 'CFS'}
+define L173 {timeseries kind 'FLOW-DELIVERY' units 'CFS'}
+
+
+!****************************** INPUTS FOR **********************************
+!**************************** Delta Mass Balance ******************************
+define C504 {timeseries kind 'FLOW-CHANNEL' units 'CFS'}
+define C644 {timeseries kind 'FLOW-CHANNEL' units 'CFS'}
+define C508 {timeseries kind 'FLOW-CHANNEL' units 'CFS'}
+
+define R514 {timeseries kind 'FLOW-RETURN' units 'CFS'}
+define R514A {timeseries kind 'FLOW-RETURN' units 'CFS'}
+define R514B {timeseries kind 'FLOW-RETURN' units 'CFS'}
+define R223 {timeseries kind 'FLOW-RETURN' units 'CFS'}
+
+
+define D514A {timeseries 'D_SJR028_WTPDWS' kind 'FLOW-DELIVERY' units 'CFS'}
+define D514B {timeseries kind 'FLOW-DELIVERY' units 'CFS'}
+define C402B {timeseries 'D_BKR004_NBA009' kind 'DIVERSION' units 'CFS'}
+define D408 {timeseries kind 'FLOW-DELIVERY' units 'CFS'}
+define D408_RS {timeseries kind 'FLOW-DELIVERY' units 'CFS'}
+define D404 {timeseries kind 'FLOW-DELIVERY' units 'CFS'}
+define D406 {timeseries kind 'FLOW-DELIVERY' units 'CFS'}
+define D410 {timeseries kind 'FLOW-DELIVERY' units 'CFS'}
+!define D409 {timeseries kind 'FLOW-DELIVERY' units 'CFS'}
+define D413 {timeseries kind 'FLOW-DELIVERY' units 'CFS'}
+define D406B {timeseries kind 'FLOW-DELIVERY' units 'CFS'}
+define D409b {timeseries kind 'FLOW-DELIVERY' units 'CFS'}
+define D412 {timeseries kind 'FLOW-DELIVERY' units 'CFS'}
+
+*/
+!****************************** INPUTS FOR **********************************
+!************************* Phase II Post Processing *************************
+! 1. Clair Lake (Trinity)
+define C100_EXC {timeseries 'C_LWSTN_ADD' kind 'FLOW-ADDITIONAL-INSTREAM' units 'CFS'} !Trinity River below Lewiston EXCESS-INSTREAM
+define D100_EXC {timeseries 'D_LWSTN_ADD' kind 'FLOW-DELIVERY' units 'CFS'} !Clear Creek Tunnel EXCESS-INSTREAM
+
+!**********************  CALSIM 3.0 MASS BALANCE *****************************
+!TRINITY RIVER	
+define D_LWSTN_CCT011   {timeseries 'D_LWSTN_CCT011' kind 'DIVERSION' units 'cfs' convert 'taf'}
+define I_TRNTY  {timeseries 'I_TRNTY' kind 'INFLOW' units 'TAF'}! convert 'CFS'}
+define I_LWSTN  {timeseries 'I_LWSTN' kind 'INFLOW' units 'TAF'}! convert 'CFS'}
+define E_LWSTN  {timeseries 'E_LWSTN' kind 'EVAPORATION' units 'cfs' convert 'taf'}
+define E_TRNTY  {timeseries 'E_TRNTY' kind 'EVAPORATION' units 'cfs' convert 'taf'}
+define S_LWSTN  {timeseries 'S_LWSTN' kind 'STORAGE' units 'TAF'} !
+define S_TRNTY  {timeseries 'S_TRNTY' kind 'STORAGE' units 'TAF'} !CLAIR ENGLE LAKE
+define C_TRN111 {timeseries 'C_TRN111' kind 'CHANNEL' units 'CFS' convert 'taf'}
+
+!Trinity balance
+define trinity_bal {value I_TRNTY+I_LWSTN-E_LWSTN-E_TRNTY-S_TRNTY+S_TRNTY(-1)-C_TRN111-D_LWSTN_CCT011}
+
+!AMERICAN RIVER
+define D_NNA013_LVC001  {timeseries 'D_NNA013_LVC001' kind 'DIVERSION' units 'CFS' convert 'TAF'}
+!define D_NFA016_ABT002  {timeseries 'D_NFA016_ABT002' kind 'DIVERSION' units 'CFS' convert 'TAF'}
+define D_ABT002_STH001  {timeseries 'D_ABT002_STH001' kind 'DIVERSION' units 'CFS' convert 'TAF'}
+!define D_WTPFSS_24_NU2  {timeseries 'D_WTPFSS_24_NU2' kind 'DIVERSION' units 'CFS' convert 'TAF'}   !Auburn ravine
+!define D_FOLSM_WTPRSV   {timeseries 'D_FOLSM_WTPRSV' kind 'DIVERSION' units 'CFS' convert 'TAF'}
+!define D_FOLSM_WTPSJP   {timeseries 'D_FOLSM_WTPSJP' kind 'DIVERSION' units 'CFS' convert 'TAF'}
+!define D_FOLSM_WTPFOL   {timeseries 'D_FOLSM_WTPFOL' kind 'DIVERSION' units 'CFS' convert 'TAF'}
+!define D_FOLSM_WTPEDH   {timeseries 'D_FOLSM_WTPEDH' kind 'DIVERSION' units 'CFS' convert 'TAF'}
+define D_WTPEDH_EIDEH   {timeseries 'D_WTPEDH_EIDEH' kind 'DIVERSION' units 'CFS' convert 'TAF'}
+define D_NTOMA_FSC003   {timeseries 'D_NTOMA_FSC003' kind 'DIVERSION' units 'CFS' convert 'TAF'}
+!define D_AMR017_WTPBJM  {timeseries 'D_AMR017_WTPBJM' kind 'DIVERSION' units 'CFS' convert 'TAF'}
+!define D_AMR007_WTPFBN  {timeseries 'D_AMR007_WTPFBN' kind 'DIVERSION' units 'CFS' convert 'TAF'}
+!define D_FSC003_FSCLOS  {timeseries 'D_FSC003_FSCLOS' kind 'DIVERSION' units 'CFS' convert 'TAF'}    !Folsom south canal
+define D_WTPBJM_26N_NU2  {timeseries 'D_WTPBJM_26N_NU2' kind 'DIVERSION' units 'CFS' convert 'TAF'}
+define D_WTPFBN_26N_NU1  {timeseries 'D_WTPFBN_26N_NU1' kind 'DIVERSION' units 'CFS' convert 'TAF'}
+define D_WTPFBN_26N_NU3  {timeseries 'D_WTPFBN_26N_NU3' kind 'DIVERSION' units 'CFS' convert 'TAF'}
+define D_WTPFBN_26N_NU4  {timeseries 'D_WTPFBN_26N_NU4' kind 'DIVERSION' units 'CFS' convert 'TAF'}
+define D_WTPFBN_26S_NU2  {timeseries 'D_WTPFBN_26S_NU2' kind 'DIVERSION' units 'CFS' convert 'TAF'}
+define D_WTPFBN_26S_NU1  {timeseries 'D_WTPFBN_26S_NU1' kind 'DIVERSION' units 'CFS' convert 'TAF'}
+define D_WTPFOL_26S_PU1  {timeseries 'D_WTPFOL_26S_PU1' kind 'DIVERSION' units 'CFS' convert 'TAF'}
+define D_WTPRSV_26N_PU1  {timeseries 'D_WTPRSV_26N_PU1' kind 'DIVERSION' units 'CFS' convert 'TAF'}
+define D_WTPSJP_26N_PU2  {timeseries 'D_WTPSJP_26N_PU2' kind 'DIVERSION' units 'CFS' convert 'TAF'}
+define D_WTPSJP_26N_PU3  {timeseries 'D_WTPSJP_26N_PU3' kind 'DIVERSION' units 'CFS' convert 'TAF'}
+define D_WTPSJP_26N_NU1  {timeseries 'D_WTPSJP_26N_NU1' kind 'DIVERSION' units 'CFS' convert 'TAF'}
+define D_FSC003_WTPCOL   {timeseries 'D_FSC003_WTPCOL' kind 'DIVERSION' units 'CFS' convert 'TAF'}!Coloma WTP
+define D_WTPCOL_26S_PU2  {timeseries 'D_WTPCOL_26S_PU2' kind 'DIVERSION' units 'CFS' convert 'TAF'}
+define D_FOLSM_26S_PU3   {timeseries 'D_FOLSM_26S_PU3' kind 'DIVERSION' units 'CFS' convert 'TAF'}
+define D_FOLSM_26S_NU4   {timeseries 'D_FOLSM_26S_NU4' kind 'DIVERSION' units 'CFS' convert 'TAF'}
+
+define I_FOLSM  {timeseries 'I_FOLSM' kind 'INFLOW' units 'TAF'}! convert 'CFS'}
+define I_LKVLY  {timeseries 'I_LKVLY' kind 'INFLOW' units 'TAF'}! convert 'CFS'}
+define I_NFA054 {timeseries 'I_NFA054' kind 'INFLOW' units 'TAF'}! convert 'CFS'}
+define I_NFA022 {timeseries 'I_NFA022' kind 'INFLOW' units 'TAF'}! convert 'CFS'}
+define I_MFA023 {timeseries 'I_MFA023' kind 'INFLOW' units 'TAF'}! convert 'CFS'}
+define I_MFA001 {timeseries 'I_MFA001' kind 'INFLOW' units 'TAF'}! convert 'CFS'}
+define I_SFA030 {timeseries 'I_SFA030' kind 'INFLOW' units 'TAF'}! convert 'CFS'}
+define CT_FairOaks {timeseries 'CT_FairOaks' kind 'CLOSURE-TERM' units 'CFS' convert 'TAF'}
+
+!define C_LKVLY  {timeseries ' kind 'CHANNEL' units 'CFS'}
+!define C_FOLSM  {timeseries ' kind 'CHANNEL' units 'CFS'}    
+!define C_NTOMA	{timeseries ' kind 'CHANNEL' units 'CFS'} !define C_NTOMA_NCF {lower 0 upper 7071*taf_cfs ' kind 'CHANNEL' units 'CFS'} !in constraints-FloodSpill.wresl !@jmg 2017v13
+!define C_AMR022 {timeseries ' kind 'CHANNEL' units 'CFS'}
+!define C_AMR020 {timeseries ' kind 'CHANNEL' units 'CFS'}    
+!define C_AMR017 {timeseries ' kind 'CHANNEL' units 'CFS'}    
+!define C_AMR015 {timeseries ' kind 'CHANNEL' units 'CFS'}    
+!define C_AMR009 {timeseries ' kind 'CHANNEL' units 'CFS'}        
+!define C_AMR007 {timeseries ' kind 'CHANNEL' units 'CFS'}
+!define C_AMR006 {timeseries ' kind 'CHANNEL' units 'CFS'}
+define C_AMR004 {timeseries 'C_AMR004' kind 'CHANNEL' units 'CFS' convert 'TAF'}   !American and Sac River     
+define C_ABT002 {timeseries 'C_ABT002' kind 'CHANNEL' units 'CFS' convert 'TAF'}   !American and Auburn ravine
+!define C_SFA030 {timeseries ' kind 'CHANNEL' units 'CFS'}
+!define C_MFA023 {timeseries ' kind 'CHANNEL' units 'CFS'}
+!define C_MFA001 {timeseries ' kind 'CHANNEL' units 'CFS'}
+!define C_NNA013 {timeseries ' kind 'CHANNEL' units 'CFS'}
+!define C_NFA054 {timeseries ' kind 'CHANNEL' units 'CFS'}
+!define C_NFA048 {timeseries ' kind 'CHANNEL' units 'CFS'}
+!define C_NFA022 {timeseries ' kind 'CHANNEL' units 'CFS'}
+!define C_NFA019 {timeseries ' kind 'CHANNEL' units 'CFS'}
+!define C_NFA016 {timeseries ' kind 'CHANNEL' units 'CFS'}
+!define C_NFA011 {timeseries ' kind 'CHANNEL' units 'CFS'}
+define C_EMD001 {timeseries 'C_EMD001' kind 'CHANNEL' units 'CFS' convert 'TAF'}  !American and Sac River
+!define C_EMD007 {timeseries ' kind 'CHANNEL' units 'CFS'}
+!define C_SCR002 {timeseries ' kind 'CHANNEL' units 'CFS'} !Miner's and Secret ravines
+define C_DCK012 {timeseries 'C_DCK012' kind 'CHANNEL' units 'CFS' convert 'TAF'}  !American and Miner's and Secret ravines
+!define C_CBC000 {timeseries ' kind 'CHANNEL' units 'CFS'}  !Lower Boardman
+define C_CYN009 {timeseries 'C_CYN009' kind 'CHANNEL' units 'CFS' convert 'TAF'} !American and Bear River
+define C_STH007 {timeseries 'C_STH007' kind 'CHANNEL' units 'CFS' convert 'TAF' }
+define C_MRM001 {timeseries 'C_MRM001' kind 'CHANNEL' units 'CFS' convert 'TAF'}
+
+define SR_24_EMD007     {timeseries 'SR_24_EMD007' kind 'SURFACE-RUNOFF' units 'CFS' convert 'TAF'}
+define SR_26N_AMR004    {timeseries 'SR_26N_AMR004' kind 'SURFACE-RUNOFF' units 'CFS' convert 'TAF'}
+!define SR_26N_CRC002    {timeseries ' kind 'SURFACE-RUNOFF' units 'CFS' convert 'TAF'}  !Auburn ravine
+define SR_26N_EMD001    {timeseries 'SR_26N_EMD001' kind 'SURFACE-RUNOFF' units 'CFS' convert 'TAF'}
+define SR_26N_EMD007    {timeseries 'SR_26N_EMD007' kind 'SURFACE-RUNOFF' units 'CFS' convert 'TAF'}
+define SR_26N_NTOMA     {timeseries 'SR_26N_NTOMA' kind 'SURFACE-RUNOFF' units 'CFS' convert 'TAF'}
+define SR_26S_AMR007    {timeseries 'SR_26S_AMR007' kind 'SURFACE-RUNOFF' units 'CFS' convert 'TAF'}
+!define SR_26S_MOK014    {timeseries ' kind 'SURFACE-RUNOFF' units 'CFS' convert 'TAF'} !@jmg 2017.06.27 - in EastsideStreams
+define SR_26S_NTOMA     {timeseries 'SR_26S_NTOMA' kind 'SURFACE-RUNOFF' units 'CFS' convert 'TAF'}
+
+define SG374_FOLSM_66  {timeseries 'SG374_FOLSM_66' kind 'STREAM-GAIN' units 'CFS' convert 'TAF'} 
+define SG375_NTOMA_66  {timeseries 'SG375_NTOMA_66' kind 'STREAM-GAIN' units 'CFS' convert 'TAF'}
+define SG376_AMR020_66 {timeseries 'SG376_AMR020_66' kind 'STREAM-GAIN' units 'CFS' convert 'TAF'}
+define SG377_AMR015_66 {timeseries 'SG377_AMR015_66' kind 'STREAM-GAIN' units 'CFS' convert 'TAF'}
+define SG378_AMR009_66 {timeseries 'SG378_AMR009_66' kind 'STREAM-GAIN' units 'CFS' convert 'TAF'}
+define SG379_AMR004_66 {timeseries 'SG379_AMR004_66' kind 'STREAM-GAIN' units 'CFS' convert 'TAF'}
+define SG380_AMR004_66 {timeseries 'SG380_AMR004_66' kind 'STREAM-GAIN' units 'CFS' convert 'TAF'}
+
+define S_LKVLY {timeseries 'S_LKVLY' kind 'STORAGE' units 'TAF'} !
+define S_NTOMA {timeseries 'S_NTOMA' kind 'STORAGE' units 'TAF'} !LAKE NATOMA
+define S_FOLSM {timeseries 'S_FOLSM' kind 'STORAGE' units 'TAF'}
+
+define E_LKVLY {value 0.0}
+define E_FOLSM {timeseries 'E_FOLSM' kind 'EVAPORATION' units 'CFS' convert 'TAF'}
+define E_NTOMA {timeseries 'E_NTOMA' kind 'EVAPORATION' units 'CFS' convert 'TAF'}
+
+define R_RFS22_EMD001   {timeseries 'R_RFS22_EMD001' kind 'RETURN-FLOW' units 'CFS' convert 'TAF'} !American and split returns
+define R_RFS26N_DCWWTP  {timeseries 'R_RFS26N_DCWWTP' kind 'RETURN-FLOW' units 'CFS' convert 'TAF'} !American and split returns
+define R_RFS26N_PGWWTP  {timeseries 'R_RFS26N_PGWWTP' kind 'RETURN-FLOW' units 'CFS' convert 'TAF'} !American and split returns
+define R_PGWWTP_CRC002  {timeseries 'R_PGWWTP_CRC002' kind 'RETURN-FLOW' units 'CFS' convert 'TAF'} !American and Auburn ravine
+define R_DCWWTP_DCK012  {timeseries 'R_DCWWTP_DCK012' kind 'RETURN-FLOW' units 'CFS' convert 'TAF'} !American and Miner's and Secret ravines
+define R_26N_NA_EMD007  {timeseries 'R_26N_NA_EMD007' kind 'RETURN-FLOW' units 'CFS' convert 'TAF'}
+define R_EIDEH_EDWWTP   {timeseries 'R_EIDEH_EDWWTP' kind 'RETURN-FLOW' units 'CFS' convert 'TAF'}
+define R_EIDWE_EDWWTP   {timeseries 'R_EIDWE_EDWWTP' kind 'RETURN-FLOW' units 'CFS' convert 'TAF'}
+define R_RFS26S_AMR020  {timeseries 'R_RFS26S_AMR020' kind 'RETURN-FLOW' units 'CFS' convert 'TAF'}
+define R_EDWWTP_DEE020  {timeseries 'R_EDWWTP_DEE020' kind 'RETURN-FLOW' units 'CFS' convert 'TAF'} !defined in Cosumnes River
+
+define amer_bal {value I_FOLSM+I_LKVLY+I_NFA054+I_NFA022+I_MFA023+I_MFA001+I_SFA030-D_NNA013_LVC001-D_ABT002_STH001-
+			D_WTPEDH_EIDEH-D_NTOMA_FSC003-D_WTPBJM_26N_NU2-D_WTPFBN_26N_NU1-D_WTPFBN_26N_NU3-D_WTPFOL_26S_PU1-D_WTPRSV_26N_PU1-
+			D_WTPSJP_26N_PU2-D_WTPSJP_26N_PU3-D_WTPSJP_26N_NU1-D_FSC003_WTPCOL-D_WTPCOL_26S_PU2-D_FOLSM_26S_PU3-D_FOLSM_26S_NU4-
+			C_AMR004-C_ABT002-C_EMD001-C_DCK012+SR_24_EMD007+SR_26N_AMR004+SR_26N_EMD001+SR_26N_EMD007+SR_26N_NTOMA+SR_26S_AMR007+
+			SR_26S_NTOMA+SG374_FOLSM_66+SG375_NTOMA_66+SG376_AMR020_66+SG377_AMR015_66+SG378_AMR009_66+SG379_AMR004_66+SG380_AMR004_66+
+			R_RFS22_EMD001+R_RFS26N_DCWWTP+R_RFS26N_PGWWTP+R_PGWWTP_CRC002+R_DCWWTP_DCK012+R_26N_NA_EMD007+R_EIDEH_EDWWTP+R_EIDWE_EDWWTP+
+			R_RFS26S_AMR020+R_EDWWTP_DEE020-E_LKVLY-E_FOLSM-E_NTOMA-S_LKVLY+S_LKVLY(-1)-S_NTOMA+S_NTOMA(-1)-S_FOLSM+S_FOLSM(-1)+C_CYN009+
+			C_STH007+C_MRM001-D_WTPFBN_26N_NU4-D_WTPFBN_26S_NU2-D_WTPFBN_26S_NU1+CT_FairOaks}
+			
+define amer_baldv {alias amer_bal kind 'debug' units 'taf'}
+
+!FEATHER RIVER
+define D_OROVL_13_NU1   {timeseries 'D_OROVL_13_NU1' kind 'DIVERSION' units 'CFS' convert 'TAF'} !Estimate of current canal capacity from SFWPA  !save
+!define D_FTR068_THRMF   {std kind 'DIVERSION' units 'CFS'}
+define D_THRMF_11_NU1   {timeseries 'D_THRMF_11_NU1' kind 'DIVERSION' units 'CFS' convert 'TAF'}!save
+define D_THRMF_12_NU1   {timeseries 'D_THRMF_12_NU1' kind 'DIVERSION' units 'CFS' convert 'TAF'}!save
+define D_THRMA_WEC000   {timeseries 'D_THRMA_WEC000' kind 'DIVERSION' units 'CFS' convert 'TAF'}!save
+define D_THRMA_JBC000   {timeseries 'D_THRMA_JBC000' kind 'DIVERSION' units 'CFS' convert 'TAF'}!save
+define D_THRMA_RVC000   {timeseries 'D_THRMA_RVC000' kind 'DIVERSION' units 'CFS' convert 'TAF'}!save
+/*
+define D_WEC005_BTC032  {std kind 'DIVERSION' units 'CFS'}
+define D_WEC005_11_SA1  {std kind 'DIVERSION' units 'CFS'}
+define D_JBC002_RVC005  {std kind 'DIVERSION' units 'CFS'}
+define D_JBC004_11_SA3  {std kind 'DIVERSION' units 'CFS'}
+define D_WEC005_11_PR   {std kind 'DIVERSION' units 'CFS'}
+define D_RVC005_11_PR   {std kind 'DIVERSION' units 'CFS'}
+define D_RVC005_11_SA2  {std kind 'DIVERSION' units 'CFS'}
+define D_JBC002_17N_PR  {std kind 'DIVERSION' units 'CFS'}*/
+define D_FTR059_12_SA   {timeseries 'D_FTR059_12_SA' kind 'DIVERSION' units 'CFS' convert 'TAF'}  !save
+define D_FTR045_15N_SA  {timeseries 'D_FTR045_15N_SA' kind 'DIVERSION' units 'CFS' convert 'TAF'}!save
+
+define D_FTR039_SEC009  {timeseries 'D_FTR039_SEC009' kind 'DIVERSION' units 'CFS' convert 'TAF'}
+/*
+define D_SEC009_11_SA4  {std kind 'DIVERSION' units 'CFS'}
+define D_SEC009_17S_PR  {std kind 'DIVERSION' units 'CFS'}*/
+define D_FTR031_WTPCYC  {timeseries 'D_FTR031_WTPCYC' kind 'DIVERSION' units 'CFS' convert 'TAF'}!save  Feather and Sly Creek
+define D_FTR028_15S_SA  {timeseries 'D_FTR028_15S_SA' kind 'DIVERSION' units 'CFS' convert 'TAF'}!save
+!define D_WTPCYC_16_PU   {std kind 'DIVERSION' units 'CFS'}
+define D_FTR018_15S_SA  {timeseries 'D_FTR018_15S_SA' kind 'DIVERSION' units 'CFS' convert 'TAF'}!save
+define D_FTR021_16_PA   {timeseries 'D_FTR021_16_PA' kind 'DIVERSION' units 'CFS' convert 'TAF'}!save
+define D_FTR021_16_SA   {timeseries 'D_FTR021_16_SA' kind 'DIVERSION' units 'CFS' convert 'TAF'}! Oswald WD   !save
+define D_FTR018_16_SA   {timeseries 'D_FTR018_16_SA' kind 'DIVERSION' units 'CFS' convert 'TAF'}! Tudor MWC !save
+define D_FTR014_16_SA   {timeseries 'D_FTR014_16_SA' kind 'DIVERSION' units 'CFS' convert 'TAF'}! Garden Highway MWC  !save
+define D_FTR003_22_SA2  {timeseries 'D_FTR003_22_SA2' kind 'DIVERSION' units 'CFS' convert 'TAF'}!save
+define D_FTR008_16_SA   {timeseries 'D_FTR008_16_SA' kind 'DIVERSION' units 'CFS' convert 'TAF'}!save
+define D_FTR003_17S_SA  {timeseries 'D_FTR003_17S_SA' kind 'DIVERSION' units 'CFS' convert 'TAF'}!save
+/*
+define D_MNRRH_13_NA    {std kind 'DIVERSION' units 'CFS'}
+define D_SFF029_SFT000  {std kind 'DIVERSION' units 'CFS'}
+define D_SFF011_MNRRH   {std kind 'DIVERSION' units 'CFS'}
+define D_MNRRH_WTPMNR   {std kind 'DIVERSION' units 'CFS'}
+define D_WTPMNR_13_NU1  {std kind 'DIVERSION' units 'CFS'}
+define D_MNRRH_13_NU2   {std kind 'DIVERSION' units 'CFS'}
+define D_OWC000_13_NA   {std kind 'DIVERSION' units 'CFS'}
+define D_LST004_OWC000  {std kind 'DIVERSION' units 'CFS'}
+define D_WBF030_HKC002  {lower 0.0 upper 125.0 kind 'DIVERSION' units 'CFS'}
+define D_WBF015_MIO023  {lower 0.0 upper 65.0 kind 'DIVERSION' units 'CFS'}
+define D_MIO023_12_NU1  {std kind 'DIVERSION' units 'CFS'}
+define D_MIO023_10_NA       {std kind 'DIVERSION' units 'CFS'}
+define D_MIO023_LDC021  {std kind 'DIVERSION' units 'CFS'}
+define D_LDC007_11_SA2  {std kind 'DIVERSION' units 'CFS'}*/
+/*
+define I_SFF011     {timeseries kind 'INFLOW' units 'TAF' convert 'CFS'}
+define I_SFF008     {timeseries kind 'INFLOW' units 'TAF' convert 'CFS'}
+define I_NFF027     {timeseries kind 'INFLOW' units 'TAF' convert 'CFS'}
+define I_MFF019     {timeseries kind 'INFLOW' units 'TAF' convert 'CFS'}
+define I_RVPHB  {timeseries kind 'INFLOW' units 'TAF' convert 'CFS'}
+define I_WBF030     {timeseries kind 'INFLOW' units 'TAF' convert 'CFS'}
+define I_WBF015     {timeseries kind 'INFLOW' units 'TAF' convert 'CFS'}
+define I_WBF006     {timeseries kind 'INFLOW' units 'TAF' convert 'CFS'}
+define I_LGRSV  {timeseries kind 'INFLOW' units 'TAF' convert 'CFS'}
+define I_LST007     {timeseries kind 'INFLOW' units 'TAF' convert 'CFS'}*/
+define I_OROVL  {timeseries kind 'INFLOW' units 'TAF'}! convert 'CFS'}!save
+
+define C_SFF002 {timeseries 'C_SFF002' kind 'CHANNEL' units 'CFS' convert 'TAF'} !Feather and South Fork Feather
+define C_NFF008 {timeseries 'C_NFF008' kind 'CHANNEL' units 'CFS' convert 'TAF'} !Feather and North Fork Feather
+define C_HON004 {timeseries 'C_HON004' kind 'CHANNEL' units 'CFS' convert 'TAF'} !Feather and Honcut Creek
+define C_YUB002 {timeseries 'C_YUB002' kind 'CHANNEL' units 'CFS' convert 'TAF'} !Feather and Yuba
+define C_BRR004 {timeseries 'C_BRR004' kind 'CHANNEL' units 'CFS' convert 'TAF'} !Feather and Bear
+define C_FTR003 {timeseries 'C_FTR003' kind 'CHANNEL' units 'CFS' convert 'TAF'}
+define C_FTR039 {timeseries 'C_FTR039' kind 'CHANNEL' units 'CFS' convert 'TAF'}
+define C_FTR036 {timeseries 'C_FTR036' kind 'CHANNEL' units 'CFS' convert 'TAF'}
+
+define SR_15N_JCK002    {timeseries 'SR_15N_JCK002' kind 'SURFACE-RUNOFF' units 'CFS' convert 'TAF'}
+define SR_15S_FTR012    {timeseries 'SR_15S_FTR012' kind 'SURFACE-RUNOFF' units 'CFS' convert 'TAF'}
+define SR_15N_FTR029    {timeseries 'SR_15N_FTR029' kind 'SURFACE-RUNOFF' units 'CFS' convert 'TAF'}
+define SR_11_FTR059     {timeseries 'SR_11_FTR059' kind 'SURFACE-RUNOFF' units 'CFS' convert 'TAF'}
+define SR_14_JCK002     {timeseries 'SR_14_JCK002' kind 'SURFACE-RUNOFF' units 'CFS' convert 'TAF'}
+
+define  SG341_FTR068_59 {timeseries 'SG341_FTR068_59' kind 'STREAM-GAIN' units 'CFS' convert 'TAF'}
+define  SG342_FTR063_59 {timeseries 'SG342_FTR063_59' kind 'STREAM-GAIN' units 'CFS' convert 'TAF'}    
+define  SG343_FTR059_59 {timeseries 'SG343_FTR059_59' kind 'STREAM-GAIN' units 'CFS' convert 'TAF'}
+define  SG344_FTR053_59 {timeseries 'SG344_FTR053_59' kind 'STREAM-GAIN' units 'CFS' convert 'TAF'}
+define  SG345_FTR048_59 {timeseries 'SG345_FTR048_59' kind 'STREAM-GAIN' units 'CFS' convert 'TAF'}
+define  SG346_FTR045_59 {timeseries 'SG346_FTR045_59' kind 'STREAM-GAIN' units 'CFS' convert 'TAF'}
+define  SG347_FTR036_59 {timeseries 'SG347_FTR036_59' kind 'STREAM-GAIN' units 'CFS' convert 'TAF'}
+define  SG348_FTR029_59 {timeseries 'SG348_FTR029_59' kind 'STREAM-GAIN' units 'CFS' convert 'TAF'}
+define  SG352_FTR029_61 {timeseries 'SG352_FTR029_61' kind 'STREAM-GAIN' units 'CFS' convert 'TAF'}
+define  SG353_FTR025_61 {timeseries 'SG353_FTR025_61' kind 'STREAM-GAIN' units 'CFS' convert 'TAF'}
+define  SG354_FTR021_61 {timeseries 'SG354_FTR021_61' kind 'STREAM-GAIN' units 'CFS' convert 'TAF'}
+define  SG355_FTR016_61 {timeseries 'SG355_FTR016_61' kind 'STREAM-GAIN' units 'CFS' convert 'TAF'}
+define  SG356_FTR012_61 {timeseries 'SG356_FTR012_61' kind 'STREAM-GAIN' units 'CFS' convert 'TAF'}
+define  SG362_FTR012_63 {timeseries 'SG362_FTR012_63' kind 'STREAM-GAIN' units 'CFS' convert 'TAF'}
+define  SG363_FTR008_63 {timeseries 'SG363_FTR008_63' kind 'STREAM-GAIN' units 'CFS' convert 'TAF'}
+define  SG364_FTR008_64 {timeseries 'SG364_FTR008_64' kind 'STREAM-GAIN' units 'CFS' convert 'TAF'}
+define  SG365_FTR003_64 {timeseries 'SG365_FTR003_64' kind 'STREAM-GAIN' units 'CFS' convert 'TAF'}
+define  SG366_FTR003_64 {timeseries 'SG366_FTR003_64' kind 'STREAM-GAIN' units 'CFS' convert 'TAF'} 
+
+!define R_11_NU1_ORWWTP  {timeseries ' kind 'RETURN-FLOW' units 'CFS' convert 'TAF'}
+!define R_11_SA3_RFS11       {timeseries ' kind 'RETURN-FLOW' units 'CFS' convert 'TAF'}
+!define R_12_NU1_ORWWTP  {timeseries ' kind 'RETURN-FLOW' units 'CFS' convert 'TAF'}
+define R_12_SA_FTR045       {timeseries 'R_12_SA_FTR045' kind 'RETURN-FLOW' units 'CFS' convert 'TAF'}!save
+!define R_13_NU1_ORWWTP  {timeseries ' kind 'RETURN-FLOW' units 'CFS' convert 'TAF'}
+define R_RFS14_JCK002       {timeseries 'R_RFS14_JCK002' kind 'RETURN-FLOW' units 'CFS' convert 'TAF'} !save
+define R_15N_NA1_FTR031 {timeseries 'R_15N_NA1_FTR031' kind 'RETURN-FLOW' units 'CFS' convert 'TAF'}!save
+define R_15N_NA2_JCK002 {timeseries 'R_15N_NA2_JCK002' kind 'RETURN-FLOW' units 'CFS' convert 'TAF'}!save
+define R_15N_SA_FTR031  {timeseries 'R_15N_SA_FTR031' kind 'RETURN-FLOW' units 'CFS' convert 'TAF'}!save
+!define R_15N_NU_LCWWTP  {timeseries ' kind 'RETURN-FLOW' units 'CFS' convert 'TAF'}
+!define R_16_PU_YCWWTP   {timeseries ' kind 'RETURN-FLOW' units 'CFS' convert 'TAF'}
+define R_15S_SA_FTR014  {timeseries 'R_15S_SA_FTR014' kind 'RETURN-FLOW' units 'CFS' convert 'TAF'}!save
+!define R_15S_NA1_DHC001 {timeseries ' kind 'RETURN-FLOW' units 'CFS' convert 'TAF'}
+!define R_15S_NA2_DHC001 {timeseries ' kind 'RETURN-FLOW' units 'CFS' convert 'TAF'}
+!define R_15S_NU_DHC001  {timeseries ' kind 'RETURN-FLOW' units 'CFS' convert 'TAF'}
+!define R_15S_NU_LCWWTP  {timeseries ' kind 'RETURN-FLOW' units 'CFS' convert 'TAF'}
+define R_LCWWTP_FTR025  {timeseries 'R_LCWWTP_FTR025' kind 'RETURN-FLOW' units 'CFS' convert 'TAF'}!save
+define R_MNRRH_FTR072   {timeseries 'R_MNRRH_FTR072' kind 'RETURN-FLOW' units 'CFS' convert 'TAF'}!save
+define R_ORWWTP_FTR063  {timeseries 'R_ORWWTP_FTR063' kind 'RETURN-FLOW' units 'CFS' convert 'TAF'}!save
+define R_YCWWTP_FTR028  {timeseries 'R_YCWWTP_FTR028' kind 'RETURN-FLOW' units 'CFS' convert 'TAF'}!save
+define R_JBC008_FTR048  {timeseries 'R_JBC008_FTR048' kind 'RETURN-FLOW' units 'CFS' convert 'TAF'}! Cox spill !save
+
+define S_OROVL       {timeseries 'S_OROVL' kind 'STORAGE' units 'TAF'} !LAKE OROVILLE
+define S_THRMF       {timeseries 'S_THRMF' kind 'STORAGE' units 'TAF'} !
+define S_THRMA       {timeseries 'S_THRMA' kind 'STORAGE' units 'TAF'}
+define E_THRMA       {timeseries 'E_THRMA' kind 'EVAPORATION' units 'CFS' convert 'TAF'}
+define E_THRMF       {timeseries 'E_THRMF' kind 'EVAPORATION' units 'CFS' convert 'TAF'} !@jmg 2017v13
+define E_OROVL       {timeseries 'E_OROVL' kind 'EVAPORATION' units 'CFS' convert 'TAF'}
+define CT_Oroville  {timeseries 'CT_Oroville' kind 'CLOSURE-TERM' units 'CFS' convert 'TAF'}
+define CT_Nicolaus  {timeseries 'CT_Nicolaus' kind 'CLOSURE-TERM' units 'CFS' convert 'TAF'}
+
+define Feather_bal {value I_OROVL-D_OROVL_13_NU1-D_THRMF_11_NU1-D_THRMF_12_NU1-D_THRMA_WEC000-D_THRMA_JBC000-D_THRMA_RVC000-
+			D_FTR059_12_SA-D_FTR045_15N_SA-D_FTR039_SEC009-D_FTR031_WTPCYC-D_FTR028_15S_SA-D_FTR021_16_PA-
+			D_FTR021_16_SA-D_FTR018_16_SA-D_FTR018_15S_SA-D_FTR014_16_SA-D_FTR008_16_SA-D_FTR003_17S_SA-D_FTR003_22_SA2+
+			C_SFF002+C_NFF008+C_HON004+C_YUB002+C_BRR004+SR_15N_JCK002+SR_15S_FTR012+SR_15N_FTR029+SR_11_FTR059+
+			SR_14_JCK002+SG341_FTR068_59+SG342_FTR063_59+SG343_FTR059_59+SG344_FTR053_59+SG345_FTR048_59+SG346_FTR045_59+
+			SG347_FTR036_59+SG348_FTR029_59+SG352_FTR029_61+SG353_FTR025_61+SG354_FTR021_61+SG355_FTR016_61+SG356_FTR012_61+
+			SG362_FTR012_63+SG363_FTR008_63+SG364_FTR008_64+SG365_FTR003_64+SG366_FTR003_64+R_12_SA_FTR045+R_RFS14_JCK002+
+			R_15N_NA1_FTR031+R_15N_NA2_JCK002+R_15N_SA_FTR031+R_15S_SA_FTR014+R_LCWWTP_FTR025+R_MNRRH_FTR072+R_ORWWTP_FTR063+
+			R_YCWWTP_FTR028+R_JBC008_FTR048-E_OROVL-E_THRMF-E_THRMA-S_OROVL+S_OROVL(-1)-S_THRMF+S_THRMF(-1)-S_THRMA+S_THRMA(-1)+
+			CT_Oroville+CT_Nicolaus-C_FTR003}
+			
+define Feath_baldv {alias feather_bal kind 'debug' units 'taf'}	
+define contFTR036 {value C_FTR039 + SG347_FTR036_59 - C_FTR036}
+define contFTR036dv {alias contFTR036 kind 'debug' units 'taf'}
+
+!SACRAMENTO RIVER
+define I_SHSTA  {timeseries 'I_SHSTA' kind 'INFLOW' units 'TAF' convert 'CFS'}
+define E_SHSTA       {timeseries 'E_SHSTA' kind 'EVAPORATION' units 'CFS' convert 'TAF'}
+define D_WKYTN_SPT003   {timeseries 'D_WKYTN_SPT003' kind 'DIVERSION' units 'CFS' convert 'TAF'}
+define D_WTPJMS_03_PU1  {timeseries 'D_WTPJMS_03_PU1' kind 'DIVERSION' units 'CFS' convert 'TAF'}
+define SR_02_KSWCK  {timeseries 'SR_02_KSWCK' kind 'SURFACE-RUNOFF' units 'CFS' convert 'TAF'}
+define SR_03_KSWCK  {timeseries 'SR_03_KSWCK' kind 'SURFACE-RUNOFF' units 'CFS' convert 'TAF'}
+define R_03_PU1_KSWCK   {timeseries 'R_03_PU1_KSWCK' kind 'RETURN-FLOW' units 'CFS' convert 'TAF'}
+define E_KSWCK       {timeseries 'E_KSWCK' kind 'EVAPORATION' units 'CFS' convert 'TAF'}
+define S_KSWCK       {timeseries 'S_KSWCK' kind 'STORAGE' units 'TAF'} !KESWICK RESERVOIR
+define  SG205_SAC296_32 {timeseries 'SG205_SAC296_32' kind 'STREAM-GAIN' units 'CFS' convert 'TAF'}
+define D_SAC296_02_SA   {timeseries 'D_SAC296_02_SA' kind 'DIVERSION' units 'CFS' convert 'TAF'}
+define  SG206_SAC294_32 {timeseries 'SG206_SAC294_32' kind 'STREAM-GAIN' units 'CFS' convert 'TAF'}
+define D_SAC294_03_PA   {timeseries 'D_SAC294_03_PA' kind 'DIVERSION' units 'CFS' convert 'TAF'}
+define D_WTPBLV_03_PU2  {timeseries 'D_WTPBLV_03_PU2' kind 'DIVERSION' units 'CFS' convert 'TAF'}
+define  SG207_SAC289_32 {timeseries 'SG207_SAC289_32' kind 'STREAM-GAIN' units 'CFS' convert 'TAF'}
+define D_SAC289_03_SA   {timeseries 'D_SAC289_03_SA' kind 'DIVERSION' units 'CFS' convert 'TAF'}
+define D_WTPFTH_03_SU   {timeseries 'D_WTPFTH_03_SU' kind 'DIVERSION' units 'CFS' convert 'TAF'}
+define D_WTPFTH_02_SU   {timeseries 'D_WTPFTH_02_SU' kind 'DIVERSION' units 'CFS' convert 'TAF'}
+define R_03_SU_SWWWTP   {timeseries 'R_03_SU_SWWWTP' kind 'RETURN-FLOW' units 'CFS' convert 'TAF'}
+define R_03_PU2_SWWWTP  {timeseries 'R_03_PU2_SWWWTP' kind 'RETURN-FLOW' units 'CFS' convert 'TAF'}
+define R_03_PU3_SWWWTP  {timeseries 'R_03_PU3_SWWWTP' kind 'RETURN-FLOW' units 'CFS' convert 'TAF'}
+define R_SWWWTP_SAC281  {timeseries 'R_SWWWTP_SAC281' kind 'RETURN-FLOW' units 'CFS' convert 'TAF'}
+define  SG208_SAC287_32 {timeseries 'SG208_SAC287_32' kind 'STREAM-GAIN' units 'CFS' convert 'TAF'}
+define C_CLR009 {timeseries 'C_CLR009' kind 'CHANNEL' units 'CFS' convert 'TAF'}    
+define R_03_PA_SAC287       {timeseries 'R_03_PA_SAC287' kind 'RETURN-FLOW' units 'CFS' convert 'TAF'}
+define R_CCWWTP_SAC287  {timeseries 'R_CCWWTP_SAC287' kind 'RETURN-FLOW' units 'CFS' convert 'TAF'}
+define  SG209_SAC281_32 {timeseries 'SG209_SAC281_32' kind 'STREAM-GAIN' units 'CFS' convert 'TAF'}
+define R_02_NU_SAC281   {timeseries 'R_02_NU_SAC281' kind 'RETURN-FLOW' units 'CFS' convert 'TAF'}
+define R_03_SA_SAC281       {timeseries 'R_03_SA_SAC281' kind 'RETURN-FLOW' units 'CFS' convert 'TAF'}
+define D_SAC281_02_NA       {timeseries 'D_SAC281_02_NA' kind 'DIVERSION' units 'CFS' convert 'TAF'}
+define  SG210_SAC277_32 {timeseries 'SG210_SAC277_32' kind 'STREAM-GAIN' units 'CFS' convert 'TAF'}
+define  SG215_SAC277_34 {timeseries 'SG215_SAC277_34' kind 'STREAM-GAIN' units 'CFS' convert 'TAF'}
+define SR_03_SAC277     {timeseries 'SR_03_SAC277' kind 'SURFACE-RUNOFF' units 'CFS' convert 'TAF'}
+define C_COW003 {timeseries 'C_COW003' kind 'CHANNEL' units 'CFS' convert 'TAF'}
+define  SG216_SAC275_34 {timeseries 'SG216_SAC275_34' kind 'STREAM-GAIN' units 'CFS' convert 'TAF'}
+define C_BCN005 {timeseries 'C_BCN005' kind 'CHANNEL' units 'CFS' convert 'TAF'}
+define R_02_SA_SAC273       {timeseries 'R_02_SA_SAC273' kind 'RETURN-FLOW' units 'CFS' convert 'TAF'}
+define R_02_PA_SAC273       {timeseries 'R_02_PA_SAC273' kind 'RETURN-FLOW' units 'CFS' convert 'TAF'}
+define D_SAC273_03_NA   {timeseries 'D_SAC273_03_NA' kind 'DIVERSION' units 'CFS' convert 'TAF'}
+define C_CWD003 {timeseries 'C_CWD003' kind 'CHANNEL' units 'CFS' convert 'TAF'}
+define SR_02_SAC271     {timeseries 'SR_02_SAC271' kind 'SURFACE-RUNOFF' units 'CFS' convert 'TAF'}
+define  SG217_SAC269_34 {timeseries 'SG217_SAC269_34' kind 'STREAM-GAIN' units 'CFS' convert 'TAF'}
+define  SG222_SAC269_37 {timeseries 'SG222_SAC269_37' kind 'STREAM-GAIN' units 'CFS' convert 'TAF'}
+define C_BTL006 {timeseries 'C_BTL006' kind 'CHANNEL' units 'CFS' convert 'TAF'}
+define R_03_NA_SAC269       {timeseries 'R_03_NA_SAC269' kind 'RETURN-FLOW' units 'CFS' convert 'TAF'}
+define  SG223_SAC265_37 {timeseries 'SG223_SAC265_37' kind 'STREAM-GAIN' units 'CFS' convert 'TAF'}
+define SR_03_SAC265     {timeseries 'SR_03_SAC265' kind 'SURFACE-RUNOFF' units 'CFS' convert 'TAF'}
+define  SG224_SAC259_37 {timeseries 'SG224_SAC259_37' kind 'STREAM-GAIN' units 'CFS' convert 'TAF'}
+define  SG227_SAC259_39 {timeseries 'SG227_SAC259_39' kind 'STREAM-GAIN' units 'CFS' convert 'TAF'}
+define SR_02_SAC257     {timeseries 'SR_02_SAC257' kind 'SURFACE-RUNOFF' units 'CFS' convert 'TAF'}
+define CT_BendBridge  {timeseries 'CT_BendBridge' kind 'CLOSURE-TERM' units 'CFS' convert 'TAF'}
+define  SG228_SAC254_39 {timeseries 'SG228_SAC254_39' kind 'STREAM-GAIN' units 'CFS' convert 'TAF'}
+define  SG229_SAC250_39 {timeseries 'SG229_SAC250_39' kind 'STREAM-GAIN' units 'CFS' convert 'TAF'}
+define C_PYN001 {timeseries 'C_PYN001' kind 'CHANNEL' units 'CFS' convert 'TAF'}
+define  SG230_SAC247_39 {timeseries 'SG230_SAC247_39' kind 'STREAM-GAIN' units 'CFS' convert 'TAF'}
+define  SG231_SAC240_39 {timeseries 'SG231_SAC240_39' kind 'STREAM-GAIN' units 'CFS' convert 'TAF'}
+define D_SAC240_TCC001  {timeseries 'D_SAC240_TCC001' kind 'DIVERSION' units 'CFS' convert 'TAF'}
+define D_SAC240_05_NA   {timeseries 'D_SAC240_05_NA' kind 'DIVERSION' units 'CFS' convert 'TAF'}
+define R_04_NU1_SAC240  {timeseries 'R_04_NU1_SAC240' kind 'RETURN-FLOW' units 'CFS' convert 'TAF'}
+define  SG232_SAC232_39 {timeseries 'SG232_SAC232_39' kind 'STREAM-GAIN' units 'CFS' convert 'TAF'}
+define  SG235_SAC232_41 {timeseries 'SG235_SAC232_41' kind 'STREAM-GAIN' units 'CFS' convert 'TAF'}
+define C_ANT010 {timeseries 'C_ANT010' kind 'CHANNEL' units 'CFS' convert 'TAF'}
+define C_ELD005 {timeseries 'C_ELD005' kind 'CHANNEL' units 'CFS' convert 'TAF'}    
+define  SG236_SAC228_41 {timeseries 'SG236_SAC228_41' kind 'STREAM-GAIN' units 'CFS' convert 'TAF'}
+define  SG246_SAC228_44 {timeseries 'SG246_SAC228_44' kind 'STREAM-GAIN' units 'CFS' convert 'TAF'}
+define C_MLC004 {timeseries 'C_MLC004' kind 'CHANNEL' units 'CFS' convert 'TAF'}
+define  SG247_SAC224_44 {timeseries 'SG247_SAC224_44' kind 'STREAM-GAIN' units 'CFS' convert 'TAF'}
+define  SG254_SAC224_46 {timeseries 'SG254_SAC224_46' kind 'STREAM-GAIN' units 'CFS' convert 'TAF'}
+define C_THM005 {timeseries 'C_THM005' kind 'CHANNEL' units 'CFS' convert 'TAF'}    
+define D_SAC224_04_NA   {timeseries 'D_SAC224_04_NA' kind 'DIVERSION' units 'CFS' convert 'TAF'}
+define  SG255_SAC218_46 {timeseries 'SG255_SAC218_46' kind 'STREAM-GAIN' units 'CFS' convert 'TAF'}
+define  SG259_SAC218_48 {timeseries 'SG259_SAC218_48' kind 'STREAM-GAIN' units 'CFS' convert 'TAF'}
+define C_DRC005 {timeseries 'C_DRC005' kind 'CHANNEL' units 'CFS' convert 'TAF'}
+define R_04_NU2_SAC217  {timeseries 'R_04_NU2_SAC217' kind 'RETURN-FLOW' units 'CFS' convert 'TAF'}
+define SR_04_SAC217     {timeseries 'SR_04_SAC217' kind 'SURFACE-RUNOFF' units 'CFS' convert 'TAF'}
+define SR_05_SAC217     {timeseries 'SR_05_SAC217' kind 'SURFACE-RUNOFF' units 'CFS' convert 'TAF'}
+define  SG260_SAC214_48 {timeseries 'SG260_SAC214_48' kind 'STREAM-GAIN' units 'CFS' convert 'TAF'}
+define C_MNS000 {timeseries 'C_MNS000' kind 'CHANNEL' units 'CFS' convert 'TAF'}
+define  SG261_SAC207_48 {timeseries 'SG261_SAC207_48' kind 'STREAM-GAIN' units 'CFS' convert 'TAF'}
+define SR_04_SAC207     {timeseries 'SR_04_SAC207' kind 'SURFACE-RUNOFF' units 'CFS' convert 'TAF'}
+define R_04_NA_SAC207       {timeseries 'R_04_NA_SAC207' kind 'RETURN-FLOW' units 'CFS' convert 'TAF'}
+define R_04_PA2_SAC207  {timeseries 'R_04_PA2_SAC207' kind 'RETURN-FLOW' units 'CFS' convert 'TAF'}
+define R_05_NA_SAC201       {timeseries 'R_05_NA_SAC201' kind 'RETURN-FLOW' units 'CFS' convert 'TAF'}
+define SR_05_SAC201     {timeseries 'SR_05_SAC201' kind 'SURFACE-RUNOFF' units 'CFS' convert 'TAF'}
+define  SG262_SAC196_48 {timeseries 'SG262_SAC196_48' kind 'STREAM-GAIN' units 'CFS' convert 'TAF'}
+define  SG273_SAC196_51 {timeseries 'SG273_SAC196_51' kind 'STREAM-GAIN' units 'CFS' convert 'TAF'}
+define SR_05_SAC196     {timeseries 'SR_05_SAC196' kind 'SURFACE-RUNOFF' units 'CFS' convert 'TAF'}
+define SR_10_SAC196     {timeseries 'SR_10_SAC196' kind 'SURFACE-RUNOFF' units 'CFS' convert 'TAF'}
+define C_BCC004 {timeseries 'C_BCC004' kind 'CHANNEL' units 'CFS' convert 'TAF'}    
+define D_MTC000_09_PR   {timeseries 'D_MTC000_09_PR' kind 'DIVERSION' units 'CFS' convert 'TAF'}
+define D_MTC000_09_NA   {timeseries 'D_MTC000_09_NA' kind 'DIVERSION' units 'CFS' convert 'TAF'}
+define D_MTC000_09_SA1  {timeseries 'D_MTC000_09_SA1' kind 'DIVERSION' units 'CFS' convert 'TAF'}
+define R_10_NU1_CHWWTP  {timeseries 'R_10_NU1_CHWWTP' kind 'RETURN-FLOW' units 'CFS' convert 'TAF'}
+define  SG274_SAC193_51 {timeseries 'SG274_SAC193_51' kind 'STREAM-GAIN' units 'CFS' convert 'TAF'}
+define C_STN004 {timeseries 'C_STN004' kind 'CHANNEL' units 'CFS' convert 'TAF'}    
+define	SP_SAC193_BTC003 {timeseries 'SP_SAC193_BTC003' kind 'RIVER-SPILLS' units 'CFS' convert 'TAF'}
+define  SG275_SAC188_51 {timeseries 'SG275_SAC188_51' kind 'STREAM-GAIN' units 'CFS' convert 'TAF'}
+define	SP_SAC188_BTC003 {timeseries 'SP_SAC188_BTC003' kind 'RIVER-SPILLS' units 'CFS' convert 'TAF'}
+define SR_06_SAC185     {timeseries 'SR_06_SAC185' kind 'SURFACE-RUNOFF' units 'CFS' convert 'TAF'}
+define SR_07N_SAC185    {timeseries 'SR_07N_SAC185' kind 'SURFACE-RUNOFF' units 'CFS' convert 'TAF'}
+define SR_08N_SAC185    {timeseries 'SR_08N_SAC185' kind 'SURFACE-RUNOFF' units 'CFS' convert 'TAF'}
+define SR_09_SAC185     {timeseries 'SR_09_SAC185' kind 'SURFACE-RUNOFF' units 'CFS' convert 'TAF'}
+define D_SAC185_08N_NA  {timeseries 'D_SAC185_08N_NA' kind 'DIVERSION' units 'CFS' convert 'TAF'}
+define D_SAC185_09_NA   {timeseries 'D_SAC185_09_NA' kind 'DIVERSION' units 'CFS' convert 'TAF'}
+define  SG276_SAC182_51 {timeseries 'SG276_SAC182_51' kind 'STREAM-GAIN' units 'CFS' convert 'TAF'}
+define  SG277_SAC178_51 {timeseries 'SG277_SAC178_51' kind 'STREAM-GAIN' units 'CFS' convert 'TAF'}
+define D_SAC178_08N_SA1     {timeseries 'D_SAC178_08N_SA1' kind 'DIVERSION' units 'CFS' convert 'TAF'}
+define	SP_SAC178_BTC003	{timeseries 'SP_SAC178_BTC003' kind 'RIVER-SPILLS' units 'CFS' convert 'TAF'}
+define  SG278_SAC174_51 {timeseries 'SG278_SAC174_51' kind 'STREAM-GAIN' units 'CFS' convert 'TAF'}
+define CT_ButteCity  {timeseries 'CT_ButteCity' kind 'CLOSURE-TERM' units 'CFS' convert 'TAF'}
+define  SG279_SAC168_51 {timeseries 'SG279_SAC168_51' kind 'STREAM-GAIN' units 'CFS' convert 'TAF'}
+define  SG280_SAC162_51 {timeseries 'SG280_SAC162_51' kind 'STREAM-GAIN' units 'CFS' convert 'TAF'}
+define D_SAC162_09_SA2  {timeseries 'D_SAC162_09_SA2' kind 'DIVERSION' units 'CFS' convert 'TAF'}
+define D_SAC159_08S_SA1     {timeseries 'D_SAC159_08S_SA1' kind 'DIVERSION' units 'CFS' convert 'TAF'}
+define D_SAC159_08N_SA1     {timeseries 'D_SAC159_08N_SA1' kind 'DIVERSION' units 'CFS' convert 'TAF'}
+define	SP_SAC159_BTC003	{timeseries 'SP_SAC159_BTC003' kind 'RIVER-SPILLS' units 'CFS' convert 'TAF'}
+define  SG281_SAC154_51 {timeseries 'SG281_SAC154_51' kind 'STREAM-GAIN' units 'CFS' convert 'TAF'}
+define SR_08N_SAC154    {timeseries 'SR_08N_SAC154' kind 'SURFACE-RUNOFF' units 'CFS' convert 'TAF'}
+define  SG282_SAC148_51 {timeseries 'SG282_SAC148_51' kind 'STREAM-GAIN' units 'CFS' convert 'TAF'}
+define  SG293_SAC148_53 {timeseries 'SG293_SAC148_53' kind 'STREAM-GAIN' units 'CFS' convert 'TAF'}
+define	SP_SAC148_BTC003	{timeseries 'SP_SAC148_BTC003' kind 'RIVER-SPILLS' units 'CFS' convert 'TAF'}
+define SR_08S_SAC146    {timeseries 'SR_08S_SAC146' kind 'SURFACE-RUNOFF' units 'CFS' convert 'TAF'}
+define D_SAC146_08S_NA1     {timeseries 'D_SAC146_08S_NA1' kind 'DIVERSION' units 'CFS' convert 'TAF'}
+define  SG294_SAC141_53 {timeseries 'SG294_SAC141_53' kind 'STREAM-GAIN' units 'CFS' convert 'TAF'}
+define D_BSL000_SAC141  {timeseries 'D_BSL000_SAC141' kind 'DIVERSION' units 'CFS' convert 'TAF'}
+define SR_09_SAC141     {timeseries 'SR_09_SAC141' kind 'SURFACE-RUNOFF' units 'CFS' convert 'TAF'}
+define D_SAC136_18_NA   {timeseries 'D_SAC136_18_NA' kind 'DIVERSION' units 'CFS' convert 'TAF'}
+define D_SAC136_18_SA   {timeseries 'D_SAC136_18_SA' kind 'DIVERSION' units 'CFS' convert 'TAF'}
+define  SG295_SAC134_53 {timeseries 'SG295_SAC134_53' kind 'STREAM-GAIN' units 'CFS' convert 'TAF'}
+define  SG296_SAC129_53 {timeseries 'SG296_SAC129_53' kind 'STREAM-GAIN' units 'CFS' convert 'TAF'}
+define D_SAC129_08S_NA2     {timeseries 'D_SAC129_08S_NA2' kind 'DIVERSION' units 'CFS' convert 'TAF'}
+define  SG297_SAC122_53 {timeseries 'SG297_SAC122_53' kind 'STREAM-GAIN' units 'CFS' convert 'TAF'}
+define R_RFS18_SAC122       {timeseries 'R_RFS18_SAC122' kind 'RETURN-FLOW' units 'CFS' convert 'TAF'}
+define D_SAC122_19_SA   {timeseries 'D_SAC122_19_SA' kind 'DIVERSION' units 'CFS' convert 'TAF'}
+define	SP_SAC122_SBP021	{timeseries 'SP_SAC122_SBP021' kind 'RIVER-SPILLS' units 'CFS' convert 'TAF'}
+define D_SAC121_08S_SA3     {timeseries 'D_SAC121_08S_SA3' kind 'DIVERSION' units 'CFS' convert 'TAF'}
+define CT_WilkinsSl  {timeseries 'CT_WilkinsSl' kind 'CLOSURE-TERM' units 'CFS' convert 'TAF'}
+define  SG298_SAC115_53 {timeseries 'SG298_SAC115_53' kind 'STREAM-GAIN' units 'CFS' convert 'TAF'}
+define D_SAC115_19_SA   {timeseries 'D_SAC115_19_SA' kind 'DIVERSION' units 'CFS' convert 'TAF'}
+define D_SAC109_08S_SA3     {timeseries 'D_SAC109_08S_SA3' kind 'DIVERSION' units 'CFS' convert 'TAF'}
+define D_SAC109_19_SA   {timeseries 'D_SAC109_19_SA' kind 'DIVERSION' units 'CFS' convert 'TAF'}
+define  SG299_SAC106_53 {timeseries 'SG299_SAC106_53' kind 'STREAM-GAIN' units 'CFS' convert 'TAF'}
+define D_SAC099_19_SA   {timeseries 'D_SAC099_19_SA' kind 'DIVERSION' units 'CFS' convert 'TAF'}
+define  SG300_SAC097_53 {timeseries 'SG300_SAC097_53' kind 'STREAM-GAIN' units 'CFS' convert 'TAF'}
+define R_RFS8S_SAC097       {timeseries 'R_RFS8S_SAC097' kind 'RETURN-FLOW' units 'CFS' convert 'TAF'}
+define C_CBD000 {timeseries 'C_CBD000' kind 'CHANNEL' units 'CFS' convert 'TAF'} 
+define R_RFS8S_SAC093       {timeseries 'R_RFS8S_SAC093' kind 'RETURN-FLOW' units 'CFS' convert 'TAF'}
+define  SG301_SAC092_53 {timeseries 'SG301_SAC092_53' kind 'STREAM-GAIN' units 'CFS' convert 'TAF'}
+define  SG330_SAC092_57 {timeseries 'SG330_SAC092_57' kind 'STREAM-GAIN' units 'CFS' convert 'TAF'}
+define D_SAC091_19_SA   {timeseries 'D_SAC091_19_SA' kind 'DIVERSION' units 'CFS' convert 'TAF'}
+define  SG331_SAC085_57 {timeseries 'SG331_SAC085_57' kind 'STREAM-GAIN' units 'CFS' convert 'TAF'}
+define C_SSL001 {timeseries 'C_SSL001' kind 'CHANNEL' units 'CFS' convert 'TAF'}
+define R_17S_SA_SAC085  {timeseries 'R_17S_SA_SAC085' kind 'RETURN-FLOW' units 'CFS' convert 'TAF'}
+define CT_Verona  {timeseries 'CT_Verona' kind 'CLOSURE-TERM' units 'CFS' convert 'TAF'}
+define  SG332_SAC083_57 {timeseries 'SG332_SAC083_57' kind 'STREAM-GAIN' units 'CFS' convert 'TAF'}
+define  SG367_SAC083_65 {timeseries 'SG367_SAC083_65' kind 'STREAM-GAIN' units 'CFS' convert 'TAF'}
+!define C_FTR003 {timeseries 'C_FTR003' kind 'CHANNEL' units 'CFS' convert 'TAF'}   
+define R_22_SA2_SAC083  {timeseries 'R_22_SA2_SAC083' kind 'RETURN-FLOW' units 'CFS' convert 'TAF'}
+define D_SAC083_21_SA   {timeseries 'D_SAC083_21_SA' kind 'DIVERSION' units 'CFS' convert 'TAF'}
+define	SP_SAC083_YBP037	{timeseries 'SP_SAC083_YBP037' kind 'RIVER-SPILLS' units 'CFS' convert 'TAF'}
+define  SG368_SAC082_65 {timeseries 'SG368_SAC082_65' kind 'STREAM-GAIN' units 'CFS' convert 'TAF'}
+define C_CRC002 {timeseries 'C_CRC002' kind 'CHANNEL' units 'CFS' convert 'TAF'}
+define D_SAC082_22_SA1  {timeseries 'D_SAC082_22_SA1' kind 'DIVERSION' units 'CFS' convert 'TAF'}
+define  SG369_SAC081_65 {timeseries 'SG369_SAC081_65' kind 'STREAM-GAIN' units 'CFS' convert 'TAF'}
+define D_SAC081_21_NA   {timeseries 'D_SAC081_21_NA' kind 'DIVERSION' units 'CFS' convert 'TAF'}
+define  SG370_SAC078_65 {timeseries 'SG370_SAC078_65' kind 'STREAM-GAIN' units 'CFS' convert 'TAF'}
+define D_SAC078_22_SA1  {timeseries 'D_SAC078_22_SA1' kind 'DIVERSION' units 'CFS' convert 'TAF'}
+define D_WTPSRW_24_NU2  {timeseries 'D_WTPSRW_24_NU2' kind 'DIVERSION' units 'CFS' convert 'TAF'}
+define D_WTPSRW_26N_NU1     {timeseries 'D_WTPSRW_26N_NU1' kind 'DIVERSION' units 'CFS' convert 'TAF'}
+define D_WTPSRW_26N_PU1     {timeseries 'D_WTPSRW_26N_PU1' kind 'DIVERSION' units 'CFS' convert 'TAF'}
+define D_WTPSRW_26N_NU3     {timeseries 'D_WTPSRW_26N_NU3' kind 'DIVERSION' units 'CFS' convert 'TAF'}
+define  SG371_SAC075_65 {timeseries 'SG371_SAC075_65' kind 'STREAM-GAIN' units 'CFS' convert 'TAF'}
+define D_SAC075_22_NA   {timeseries 'D_SAC075_22_NA' kind 'DIVERSION' units 'CFS' convert 'TAF'}
+define D_SAC074_21_SA   {timeseries 'D_SAC074_21_SA' kind 'DIVERSION' units 'CFS' convert 'TAF'}
+define D_WTPDWP_20_NU1  {timeseries 'D_WTPDWP_20_NU1' kind 'DIVERSION' units 'CFS' convert 'TAF'}
+define  SG372_SAC066_65 {timeseries 'SG372_SAC066_65' kind 'STREAM-GAIN' units 'CFS' convert 'TAF'}
+define SR_22_SAC066     {timeseries 'SR_22_SAC066' kind 'SURFACE-RUNOFF' units 'CFS' convert 'TAF'}
+define R_RFS22_SAC066       {timeseries 'R_RFS22_SAC066' kind 'RETURN-FLOW' units 'CFS' convert 'TAF'}
+define	SP_SAC066_YBP020	{timeseries 'SP_SAC066_YBP020' kind 'RIVER-SPILLS' units 'CFS' convert 'TAF'}
+define D_WTPBTB_21_PU   {timeseries 'D_WTPBTB_21_PU' kind 'DIVERSION' units 'CFS' convert 'TAF'}
+!define C_EMD001 {timeseries 'C_EMD001' kind 'CHANNEL' units 'CFS' convert 'TAF'}
+!define C_AMR004 {timeseries 'C_AMR004' kind 'CHANNEL' units 'CFS' convert 'TAF'}        
+define  SG373_SAC063_65 {timeseries 'SG373_SAC063_65' kind 'STREAM-GAIN' units 'CFS' convert 'TAF'}
+define  SG381_SAC063_67 {timeseries 'SG381_SAC063_67' kind 'STREAM-GAIN' units 'CFS' convert 'TAF'}
+define D_WTPSAC_26S_NU1     {timeseries 'D_WTPSAC_26S_NU1' kind 'DIVERSION' units 'CFS' convert 'TAF'}
+define D_WTPSAC_26S_PU4     {timeseries 'D_WTPSAC_26S_PU4' kind 'DIVERSION' units 'CFS' convert 'TAF'}
+define D_WTPSAC_26N_NU3     {timeseries 'D_WTPSAC_26N_NU3' kind 'DIVERSION' units 'CFS' convert 'TAF'}
+define  SG382_SAC057_67 {timeseries 'SG382_SAC057_67' kind 'STREAM-GAIN' units 'CFS' convert 'TAF'}
+define  SG383_SAC053_67 {timeseries 'SG383_SAC053_67' kind 'STREAM-GAIN' units 'CFS' convert 'TAF'}
+define R_26N_PU2_SRWWTP {timeseries 'R_26N_PU2_SRWWTP' kind 'RETURN-FLOW' units 'CFS' convert 'TAF'}
+define R_26N_PU3_SRWWTP {timeseries 'R_26N_PU3_SRWWTP' kind 'RETURN-FLOW' units 'CFS' convert 'TAF'}
+define R_26N_NU1_SRWWTP {timeseries 'R_26N_NU1_SRWWTP' kind 'RETURN-FLOW' units 'CFS' convert 'TAF'}
+define R_26N_NU2_SRWWTP {timeseries 'R_26N_NU2_SRWWTP' kind 'RETURN-FLOW' units 'CFS' convert 'TAF'}
+define R_26N_NU3_SRWWTP {timeseries 'R_26N_NU3_SRWWTP' kind 'RETURN-FLOW' units 'CFS' convert 'TAF'}
+define R_26N_NU4_SRWWTP {timeseries 'R_26N_NU4_SRWWTP' kind 'RETURN-FLOW' units 'CFS' convert 'TAF'}
+define R_26N_NU5_SRWWTP {timeseries 'R_26N_NU5_SRWWTP' kind 'RETURN-FLOW' units 'CFS' convert 'TAF'}
+define R_26S_PU1_SRWWTP {timeseries 'R_26S_PU1_SRWWTP' kind 'RETURN-FLOW' units 'CFS' convert 'TAF'}
+define R_26S_PU2_SRWWTP {timeseries 'R_26S_PU2_SRWWTP' kind 'RETURN-FLOW' units 'CFS' convert 'TAF'}
+define R_26S_NU1_SRWWTP {timeseries 'R_26S_NU1_SRWWTP' kind 'RETURN-FLOW' units 'CFS' convert 'TAF'}
+define R_26S_PU4_SRWWTP {timeseries 'R_26S_PU4_SRWWTP' kind 'RETURN-FLOW' units 'CFS' convert 'TAF'}
+define R_26S_NU2_SRWWTP {timeseries 'R_26S_NU2_SRWWTP' kind 'RETURN-FLOW' units 'CFS' convert 'TAF'}
+define R_26S_PU5_SRWWTP {timeseries 'R_26S_PU5_SRWWTP' kind 'RETURN-FLOW' units 'CFS' convert 'TAF'}
+define R_26S_PU6_SRWWTP {timeseries 'R_26S_PU6_SRWWTP' kind 'RETURN-FLOW' units 'CFS' convert 'TAF'}
+define R_26S_NU3_SRWWTP {timeseries 'R_26S_NU3_SRWWTP' kind 'RETURN-FLOW' units 'CFS' convert 'TAF'}
+define R_RFS26S_SRWWTP  {timeseries 'R_RFS26S_SRWWTP' kind 'RETURN-FLOW' units 'CFS' convert 'TAF'}
+define R_21_PU_SRWWTP   {timeseries 'R_21_PU_SRWWTP' kind 'RETURN-FLOW' units 'CFS' convert 'TAF'}
+define R_SRWWTP_SAC048  {timeseries 'R_SRWWTP_SAC048' kind 'RETURN-FLOW' units 'CFS' convert 'TAF'}
+define D_SAC050_FPT013  {timeseries 'D_SAC050_FPT013' kind 'DIVERSION' units 'CFS' convert 'TAF'}
+define CT_Freeport  {timeseries 'CT_Freeport' kind 'CLOSURE-TERM' units 'CFS' convert 'TAF'}
+define  SG384_SAC048_67 {timeseries 'SG384_SAC048_67' kind 'STREAM-GAIN' units 'CFS' convert 'TAF'}
+define SR_26S_SAC048    {timeseries 'SR_26S_SAC048' kind 'SURFACE-RUNOFF' units 'CFS' convert 'TAF'}
+define  SG385_SAC041_67 {timeseries 'SG385_SAC041_67' kind 'STREAM-GAIN' units 'CFS' convert 'TAF'}
+define DA_SACN_SAC041   {timeseries 'DA_SACN_SAC041' kind 'DELTA-ACCRETION' units 'TAF' convert 'CFS'}
+define D_SAC041_ISF001  {timeseries 'D_SAC041_ISF001' kind 'DIVERSION' units 'CFS' convert 'TAF'}
+define DD_SAC041_SACN   {timeseries 'DD_SAC041_SACN' kind 'DIVERSION' units 'CFS' convert 'TAF'}
+define DD_21_PU_adj {timeseries 'DD_21_PU_adj' kind 'DELTA-DEPLETION-ADJ' units 'CFS' convert 'TAF'}  
+define DD_26S_NU1_adj {timeseries 'DD_26S_NU1_adj' kind 'DELTA-DEPLETION-ADJ' units 'CFS' convert 'TAF'}       	  
+define  SG386_SAC036_67 {timeseries 'SG386_SAC036_67' kind 'STREAM-GAIN' units 'CFS' convert 'TAF'}
+define  SG387_SAC030_67 {timeseries 'SG387_SAC030_67' kind 'STREAM-GAIN' units 'CFS' convert 'TAF'}
+define D_SAC030_MOK014      {timeseries 'D_SAC030_MOK014' kind 'DIVERSION' units 'CFS' convert 'TAF'}   ! Cross-channel diversion  !@jmg 2017.06.27 - adding here; doing all MOK in EastsideStreams
+define C_SAC029B    {timeseries 'C_SAC029B' kind 'CHANNEL' units 'CFS' convert 'TAF'}  
+define  SG388_SAC022_67 {timeseries 'SG388_SAC022_67' kind 'STREAM-GAIN' units 'CFS' convert 'TAF'}
+define  SG389_SAC017_67 {timeseries 'SG389_SAC017_67' kind 'STREAM-GAIN' units 'CFS' convert 'TAF'}
+define  SG413_SAC017_71 {timeseries 'SG413_SAC017_71' kind 'STREAM-GAIN' units 'CFS' convert 'TAF'}
+define C_CSL004A    {timeseries 'C_CSL004A' kind 'CHANNEL' units 'CFS' convert 'TAF'}
+define DA_SACS_SAC017   {timeseries 'DA_SACS_SAC017' kind 'DELTA-ACCRETION' units 'TAF' convert 'CFS'}
+define DD_SAC017_SACS   {timeseries 'DD_SAC017_SACS' kind 'DIVERSION' units 'CFS' convert 'TAF'}
+define  SG414_SAC011_71 {timeseries 'SG414_SAC011_71' kind 'STREAM-GAIN' units 'CFS' convert 'TAF'}
+define  SG415_SAC007_71 {timeseries 'SG415_SAC007_71' kind 'STREAM-GAIN' units 'CFS' convert 'TAF'}
+define  SG416_SAC003_71 {timeseries 'SG416_SAC003_71' kind 'STREAM-GAIN' units 'CFS' convert 'TAF'}
+define  SG417_SAC000_71 {timeseries 'SG417_SAC000_71' kind 'STREAM-GAIN' units 'CFS' convert 'TAF'}
+define  SG418_SAC000_72 {timeseries 'SG418_SAC000_72' kind 'STREAM-GAIN' units 'CFS' convert 'TAF'}
+define C_SJR006 {timeseries 'C_SJR006' kind 'CHANNEL' units 'CFS' convert 'TAF'}
+define DA_SACW_SAC000   {timeseries 'DA_SACW_SAC000' kind 'DELTA-ACCRETION' units 'TAF' convert 'CFS'}
+!define C_SAC000_MIN {timeseries 'C_SAC000_MIN' kind 'CHANNEL' units 'CFS' convert 'TAF'}
+!define C_SAC000_ADD {timeseries 'C_SAC000_ADD' kind 'CHANNEL' units 'CFS' convert 'TAF'}
+define DD_SAC000_SACW   {timeseries 'DD_SAC000_SACW' kind 'DIVERSION' units 'CFS' convert 'TAF'}

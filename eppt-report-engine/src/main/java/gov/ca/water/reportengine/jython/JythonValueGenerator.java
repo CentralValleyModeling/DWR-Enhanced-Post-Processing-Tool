@@ -91,7 +91,7 @@ public class JythonValueGenerator
 			throws ScriptException
 	{
 		this(epptScenarioRun, function, commonPeriodFilter);
-		_scriptRunner.setComparisonValue(comparisonValue);
+		_scriptRunner.setComparisonValue((double)comparisonValue);
 	}
 
 	public Double generateValue() throws EpptReportException

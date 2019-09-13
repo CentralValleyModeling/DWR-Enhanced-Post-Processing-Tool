@@ -1,0 +1,37 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN""http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+  <title>JBoss Tattletale 1.2.0.Beta2: OSGi - WRIMSv2.jar</title>
+  <meta http-equiv="Content-Type" content="text/html;charset=utf-8">
+  <link rel="stylesheet" type="text/css" href="../../style.css">
+</head>
+<body>
+
+<h1>OSGi - WRIMSv2.jar</h1>
+<a href="../index.html">Back</a>
+<p>
+<table>
+  <tr>
+     <th>Field</th>
+     <th>Value</th>
+  </tr>
+  <tr class="rowodd">
+     <td>OSGi</td>
+     <td style="color: red;">No</td>
+  </tr>
+  <tr class="roweven">
+     <td>Manifest</td>
+     <td><pre>Manifest-Version: 1.0<br>Class-Path: .<br>Main-Class: wrimsv2.components.Controller<br><br></pre></td>
+  </tr>
+  <tr class="rowodd">
+     <td>OSGi Manifest</td>
+     <td><pre>Bundle-ManifestVersion: 2<br>Bundle-SymbolicName: wrimsv2.wreslplus.grammar<br>Bundle-Description: WRIMSv2<br>Bundle-Name: WRIMSv2<br>Bundle-Version: 0.0.0<br>Export-Package: org.antlr.runtime;uses:="org.antlr.runtime.misc,org.antlr.runtime.tree",org.antlr.runtime.debug;uses:="org.antlr.runtime,org.antlr.runtime.misc,org.antlr.runtime.tree",org.antlr.runtime.misc,org.antlr.runtime.tree;uses:="org.antlr.runtime,org.antlr.runtime.misc,org.antlr.stringtemplate",wrimsv2.commondata.solverdata,wrimsv2.commondata.tabledata,wrimsv2.commondata.wresldata;uses:="org.antlr.runtime,wrimsv2.commondata.solverdata,wrimsv2.components,wrimsv2.evaluator",wrimsv2.components;uses:="com.sunsetsoft.xa,gurobi,org.antlr.runtime,org.apache.commons.io,vista.db.dss,vista.set,wrimsv2.commondata.solverdata,wrimsv2.commondata.wresldata,wrimsv2.config,wrimsv2.debug,wrimsv2.evaluator,wrimsv2.external,wrimsv2.hdf5,wrimsv2.ilp,wrimsv2.solver,wrimsv2.solver.Gurobi,wrimsv2.solver.mpmodel,wrimsv2.solver.ortools,wrimsv2.sql,wrimsv2.tools,wrimsv2.wreslparser.elements,wrimsv2.wreslparser.grammar,wrimsv2.wreslplus.elements,wrimsv2.wreslplus.elements.procedures,wrimsv2.wreslplus.grammar",wrimsv2.config;uses:="org.antlr.runtime,org.apache.commons.io,wrimsv2.components,wrimsv2.evaluator,wrimsv2.ilp,wrimsv2.solver,wrimsv2.wreslparser.elements,wrimsv2.wreslplus.elements,wrimsv2.wreslplus.grammar",wrimsv2.debug;uses:="org.apache.commons.io,vista.db.dss,vista.set,wrimsv2.commondata.wresldata,wrimsv2.components,wrimsv2.evaluator,wrimsv2.external,wrimsv2.solver,wrimsv2.wreslparser.elements",wrimsv2.evaluator;uses:="org.antlr.runtime,org.antlr.runtime.tree,vista.db.dss,vista.set,vista.time,wrimsv2.commondata.solverdata,wrimsv2.commondata.wresldata,wrimsv2.components,wrimsv2.external,wrimsv2.hdf5",wrimsv2.exception,wrimsv2.external;uses:="wrimsv2.components,wrimsv2.ilp",wrimsv2.hdf5;uses:="ncsa.hdf.hdf5lib,ncsa.hdf.hdf5lib.exceptions,vista.db.dss,vista.set,vista.time,wrimsv2.commondata.solverdata,wrimsv2.commondata.wresldata,wrimsv2.components,wrimsv2.config,wrimsv2.evaluator",wrimsv2.ilp;uses:="com.google.ortools.linearsolver,com.sunsetsoft.xa,wrimsv2.commondata.solverdata,wrimsv2.commondata.wresldata,wrimsv2.components,wrimsv2.evaluator,wrimsv2.solver,wrimsv2.solver.Gurobi,wrimsv2.solver.mpmodel,wrimsv2.solver.ortools,wrimsv2.wreslparser.elements",wrimsv2.solver;uses:="com.google.common.collect,com.sunsetsoft.xa,lpsolve,org.apache.commons.io,org.coinor.cbc,org.coinor.clp,wrimsv2.commondata.solverdata,wrimsv2.commondata.wresldata,wrimsv2.components,wrimsv2.evaluator,wrimsv2.ilp,wrimsv2.solver.Gurobi,wrimsv2.solver.cbc,wrimsv2.solver.clp,wrimsv2.wreslplus.elements",wrimsv2.solver.Gurobi;uses:="gurobi,wrimsv2.commondata.solverdata,wrimsv2.commondata.wresldata,wrimsv2.components,wrimsv2.evaluator",wrimsv2.solver.cbc,wrimsv2.solver.clp,wrimsv2.solver.mpmodel;uses:="wrimsv2.solver.mpmodel.export,wrimsv2.wreslparser.elements",wrimsv2.solver.mpmodel.export;uses:="wrimsv2.commondata.solverdata,wrimsv2.commondata.wresldata,wrimsv2.components,wrimsv2.evaluator,wrimsv2.solver.mpmodel",wrimsv2.solver.ortools;uses:="com.google.ortools.linearsolver,wrimsv2.commondata.solverdata,wrimsv2.commondata.wresldata,wrimsv2.components,wrimsv2.evaluator,wrimsv2.solver.mpmodel",wrimsv2.sql;uses:="vista.db.dss,vista.set,vista.time,wrimsv2.components,wrimsv2.evaluator,wrimsv2.sql.socket,wrimsv2.tools",wrimsv2.sql.socket,wrimsv2.tools;uses:="java.util,wrimsv2.commondata.solverdata,wrimsv2.commondata.wresldata,wrimsv2.components,wrimsv2.evaluator,wrimsv2.wreslplus.elements",wrimsv2.tools.solutionRangeFinder;uses:="com.google.ortools.linearsolver,org.apache.commons.io,wrimsv2.solver.mpmodel,wrimsv2.solver.ortools,wrimsv2.wreslplus.elements",wrimsv2.wreslparser.elements;uses:="com.esotericsoftware.kryo,com.esotericsoftware.kryo.io,org.antlr.runtime,org.antlr.runtime.tree,org.apache.commons.io,org.testng,wrimsv2.commondata.wresldata,wrimsv2.components,wrimsv2.tools,wrimsv2.wreslparser.grammar,wrimsv2.wreslplus.elements,wrimsv2.wreslplus.elements.procedures",wrimsv2.wreslparser.grammar;uses:="org.antlr.runtime,org.antlr.runtime.tree,wrimsv2.commondata.wresldata,wrimsv2.wreslparser.elements,wrimsv2.wreslplus.elements",wrimsv2.wreslplus.elements;uses:="com.google.common.collect,org.antlr.runtime,org.apache.commons.io,wrimsv2.commondata.wresldata,wrimsv2.components,wrimsv2.config,wrimsv2.wreslparser.elements,wrimsv2.wreslplus.elements.procedures,wrimsv2.wreslplus.grammar",wrimsv2.wreslplus.elements.procedures;uses:="com.google.common.collect,org.antlr.runtime,wrimsv2.commondata.wresldata,wrimsv2.components,wrimsv2.config,wrimsv2.evaluator,wrimsv2.wreslparser.elements,wrimsv2.wreslplus.elements",wrimsv2.wreslplus.grammar;uses:="org.antlr.runtime,org.antlr.runtime.tree,wrimsv2.commondata.wresldata,wrimsv2.wreslparser.elements,wrimsv2.wreslplus.elements"<br>Import-Package: com.esotericsoftware.kryo;version="0.0.0",com.esotericsoftware.kryo.io;version="0.0.0",com.google.common.collect;version="0.0.0",com.google.ortools.linearsolver,com.sunsetsoft.xa;version="0.0.0",gurobi;version="5.0",java.io,java.lang,java.net,java.nio.charset,java.security,java.security.spec,java.sql,java.text,java.util,java.util.regex,javax.crypto,javax.crypto.spec,lpsolve;version="0.0.0",ncsa.hdf.hdf5lib;version="0.0.0",ncsa.hdf.hdf5lib.exceptions;version="0.0.0",org.antlr.stringtemplate,org.apache.commons.io;version="2.1",org.coinor.cbc;version="0.0.0",org.coinor.clp;version="0.0.0",org.testng,vista.db.dss;version="0.0.0",vista.set;version="0.0.0",vista.time;version="0.0.0"<br></pre></td>
+  </tr>
+</table>
+
+<p>
+<hr>
+Generated by: <a href="http://www.jboss.org/tattletale">JBoss Tattletale 1.2.0.Beta2</a>
+
+</body>
+</html>

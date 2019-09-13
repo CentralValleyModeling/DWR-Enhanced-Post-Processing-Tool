@@ -1,0 +1,45 @@
+Manifest-Version: 1.0
+Ant-Version: Apache Ant 1.5.3 
+Implementation-Title: org.dom4j
+Package: org.dom4j
+Implementation-Version: 1.6.1
+Built-By: Maarten
+Specification-Vendor: MetaStuff Ltd.
+Specification-Title: dom4j : XML framework for Java
+Extension-Name: dom4j
+Created-By: Apache Maven
+Build-Jdk: 1.4.2_02
+Implementation-Vendor: MetaStuff Ltd.
+
+
+### OSGi information
+Bundle-ManifestVersion: 2
+Bundle-SymbolicName: org.dom4j.tree
+Bundle-Description: dom4j-1.6.1
+Bundle-Name: dom4j-1.6.1
+Bundle-Version: 1.6.1
+Export-Package: org.dom4j;uses:="org.dom4j.io,org.dom4j.rule,org.dom4j
+ .tree,org.dom4j.util,org.dom4j.xpath,org.jaxen",org.dom4j.bean;uses:=
+ "org.dom4j,org.dom4j.tree",org.dom4j.datatype;uses:="com.sun.msv.data
+ type,com.sun.msv.datatype.xsd,org.dom4j,org.dom4j.io,org.dom4j.tree,o
+ rg.dom4j.util,org.relaxng.datatype",org.dom4j.dom;uses:="org.dom4j,or
+ g.dom4j.tree,org.dom4j.util",org.dom4j.dtd,org.dom4j.io;uses:="org.do
+ m4j,org.dom4j.dtd,org.dom4j.tree,org.dom4j.xpp,org.gjt.xpp,org.xmlpul
+ l.v1",org.dom4j.jaxb;uses:="org.dom4j,org.dom4j.dom,org.dom4j.io",org
+ .dom4j.rule;uses:="org.dom4j,org.dom4j.rule.pattern,org.jaxen",org.do
+ m4j.rule.pattern;uses:="org.dom4j,org.dom4j.rule",org.dom4j.swing;use
+ s:="org.dom4j,org.jaxen",org.dom4j.tree;uses:="org.dom4j,org.dom4j.io
+ ,org.dom4j.rule",org.dom4j.util;uses:="org.dom4j,org.dom4j.rule,org.d
+ om4j.tree,org.jaxen",org.dom4j.xpath;uses:="org.dom4j,org.dom4j.rule,
+ org.jaxen,org.jaxen.dom4j,org.jaxen.pattern,org.jaxen.saxpath",org.do
+ m4j.xpp;uses:="org.dom4j,org.dom4j.tree,org.gjt.xpp"
+Import-Package: com.sun.msv.datatype,com.sun.msv.datatype.xsd,java.bea
+ ns,java.io,java.lang,java.lang.ref,java.lang.reflect,java.net,java.ni
+ o.charset,java.util,javax.swing.table,javax.swing.tree,javax.xml.bind
+ ,javax.xml.namespace;version="1.0.1",javax.xml.parsers,javax.xml.stre
+ am;version="1.0.1",javax.xml.stream.events;version="1.0.1",javax.xml.
+ stream.util;version="1.0.1",javax.xml.transform,javax.xml.transform.s
+ ax,javax.xml.transform.stream,org.gjt.xpp,org.jaxen,org.jaxen.dom4j,o
+ rg.jaxen.pattern,org.jaxen.saxpath,org.relaxng.datatype,org.w3c.dom;v
+ ersion="0.0.0",org.xml.sax;version="0.0.0",org.xml.sax.ext,org.xml.sa
+ x.helpers;version="0.0.0",org.xmlpull.v1

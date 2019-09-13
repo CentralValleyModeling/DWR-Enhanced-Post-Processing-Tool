@@ -1,0 +1,13 @@
+Manifest-Version: 1.0
+Created-By: 1.3beta (Sun Microsystems Inc.)
+
+
+### OSGi information
+Bundle-ManifestVersion: 2
+Bundle-SymbolicName: jnios
+Bundle-Description: jnios
+Bundle-Name: jnios
+Bundle-Version: 0.0.0
+Export-Package: jnios;uses:="org.python.core"
+Import-Package: java.io,java.lang,java.util,org.python.core;version="0
+ .0.0"

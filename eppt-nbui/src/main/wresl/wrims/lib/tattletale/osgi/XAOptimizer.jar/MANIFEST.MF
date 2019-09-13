@@ -1,0 +1,13 @@
+Manifest-Version: 1.0
+Created-By: 1.6.0_43 (Sun Microsystems Inc.)
+
+
+### OSGi information
+Bundle-ManifestVersion: 2
+Bundle-SymbolicName: com.sunsetsoft.xa
+Bundle-Description: XAOptimizer
+Bundle-Name: XAOptimizer
+Bundle-Version: 0.0.0
+Export-Package: com.sunsetsoft.xa
+Import-Package: java.io,java.lang,java.net,java.util,java.util.concurr
+ ent,java.util.zip

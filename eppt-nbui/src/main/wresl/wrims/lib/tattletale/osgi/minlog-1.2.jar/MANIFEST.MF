@@ -1,0 +1,12 @@
+Manifest-Version: 1.0
+Created-By: 1.6.0_16 (Sun Microsystems Inc.)
+
+
+### OSGi information
+Bundle-ManifestVersion: 2
+Bundle-SymbolicName: com.esotericsoftware.minlog
+Bundle-Description: minlog-1.2
+Bundle-Name: minlog-1.2
+Bundle-Version: 0.0.0
+Export-Package: com.esotericsoftware.minlog
+Import-Package: java.io,java.lang,java.util

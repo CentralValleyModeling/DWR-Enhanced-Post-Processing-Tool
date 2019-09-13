@@ -1,0 +1,5 @@
+digraph kryo_2_24_0_dependencies {
+  node [shape = box, fontsize=10.0];
+  kryo_2_24_0 -> minlog_1_2;
+  kryo_2_24_0 -> objenesis_1_2;
+}

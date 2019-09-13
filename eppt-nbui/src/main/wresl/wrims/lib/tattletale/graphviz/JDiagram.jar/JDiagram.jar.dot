@@ -1,0 +1,4 @@
+digraph JDiagram_dependencies {
+  node [shape = box, fontsize=10.0];
+  JDiagram -> misc;
+}

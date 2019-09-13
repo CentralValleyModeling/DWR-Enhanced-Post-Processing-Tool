@@ -1,0 +1,4 @@
+digraph jfreechart_dependencies {
+  node [shape = box, fontsize=10.0];
+  jfreechart -> misc;
+}

@@ -13,15 +13,15 @@ This file post process the South of Delta Export Controls during each timestep
 define SOD_EXP_HandS_ctrl_ {
 	case not_control {
 	condition D418 + D419 - 1500. > abs_threshold
-	value 0
+	value 100
 	}
 	case control {
 	condition ABS(D418 + D419 - 1500.) < abs_threshold
-	value 1
+	value 200
 	}
 	case violated {
 	condition always
-	value 2
+	value 300
 	}
 }
 define SOD_EXP_HandS_STATUS_DTS {alias SOD_EXP_HandS_ctrl_ kind 'DTS-STATUS' units 'NONE'} ! Output of HandS control status
@@ -30,15 +30,15 @@ define SOD_EXP_HandS_STATUS_DTS {alias SOD_EXP_HandS_ctrl_ kind 'DTS-STATUS' uni
 define SOD_EXP_EI_ctrl_ {
 	case not_control {
 	condition D418 + D419 - EIEXPCTRL < -abs_threshold
-	value 0
+	value 100
 	}
 	case control {
 	condition ABS(D418 + D419 - EIEXPCTRL) < abs_threshold
-	value 1
+	value 200
 	}
 	case violated {
 	condition always
-	value 2
+	value 300
 	}
 }
 define SOD_EXP_EI_STATUS_DTS {alias SOD_EXP_EI_ctrl_ kind 'DTS-STATUS' units 'NONE'} ! Output of EI Ratio control status
@@ -51,15 +51,15 @@ define SOD_EXP_Vern_ctrl_ {
 	}
 	case not_control {
 	condition D409 - APRMAYEXPCTRL < -abs_threshold 
-	value 0
+	value 100
 	}
 	case control {
 	condition ABS(D409 - APRMAYEXPCTRL) < abs_threshold 
-	value 1
+	value 200
 	}
 	case violated {
 	condition always
-	value 2
+	value 300
 	}
 }
 define SOD_EXP_Vern_STATUS_DTS {alias SOD_EXP_Vern_ctrl_ kind 'DTS-STATUS' units 'NONE'} ! Output of Vernalis control status
@@ -72,15 +72,15 @@ define SOD_EXP_PRAs_ctrl_ {
 	}
 	case not_control {
 	condition D409 - MAXEXP_RPADV < -abs_threshold 
-	value 0
+	value 100
 	}
 	case control {
 	condition ABS(D409 - MAXEXP_RPADV) < abs_threshold 
-	value 1
+	value 200
 	}
 	case violated {
 	condition always
-	value 2
+	value 300
 	}
 }
 define SOD_EXP_PRAs_STATUS_DTS {alias SOD_EXP_PRAs_ctrl_ kind 'DTS-STATUS' units 'NONE'} ! Output of PRAs control status
@@ -93,15 +93,15 @@ define SOD_EXP_OMR_ctrl_ {
 	}
 	case not_control {
 	condition C408 - C408_LBOUND > abs_threshold 
-	value 0
+	value 100
 	}
 	case control {
 	condition ABS(C408 - C408_LBOUND) < abs_threshold 
-	value 1
+	value 200
 	}
 	case violated {
 	condition always
-	value 2
+	value 300
 	}	
 }
 define SOD_EXP_OMR_STATUS_DTS {alias SOD_EXP_OMR_ctrl_ kind 'DTS-STATUS' units 'NONE'} ! Output of PRAs control status
@@ -111,15 +111,15 @@ define SOD_EXP_OMR_STATUS_DTS {alias SOD_EXP_OMR_ctrl_ kind 'DTS-STATUS' units '
 define CVP_EXP_HandS_ctrl_ {
 	case not_control {
 	condition D418 - 800. > abs_threshold
-	value 0
+	value 100
 	}
 	case control {
 	condition ABS(D418 - 800.) < abs_threshold
-	value 1
+	value 200
 	}
 	case violated {
 	condition always
-	value 2
+	value 300
 	}
 }
 define CVP_EXP_HandS_STATUS_DTS {alias CVP_EXP_HandS_ctrl_ kind 'DTS-STATUS' units 'NONE'} ! Output of HandS control status
@@ -128,15 +128,15 @@ define CVP_EXP_HandS_STATUS_DTS {alias CVP_EXP_HandS_ctrl_ kind 'DTS-STATUS' uni
 define CVP_EXP_CAP_ctrl_ {
 	case not_control {
 	condition JONESALLOWOUT - D418 > abs_threshold
-	value 0
+	value 100
 	}
 	case control {
 	condition ABS(D418 - JONESALLOWOUT) < abs_threshold
-	value 1
+	value 200
 	}
 	case violated {
 	condition always
-	value 2
+	value 300
 	}
 }
 define CVP_EXP_CAP_STATUS_DTS {alias CVP_EXP_CAP_ctrl_ kind 'DTS-STATUS' units 'NONE'} ! Output of Jones capacity control status
@@ -149,15 +149,15 @@ define CVP_EXP_Vern_ctrl_ {
 	}
 	case not_control {
 	condition D418 - APRMAYTRACYCTRL < -abs_threshold 
-	value 0
+	value 100
 	}
 	case control {
 	condition ABS(D418 - APRMAYTRACYCTRL) < abs_threshold 
-	value 1
+	value 200
 	}
 	case violated {
 	condition always
-	value 2
+	value 300
 	}
 }
 define CVP_EXP_Vern_STATUS_DTS {alias CVP_EXP_Vern_ctrl_ kind 'DTS-STATUS' units 'NONE'} ! Output of Vernalis control status
@@ -170,15 +170,15 @@ define CVP_EXP_PRAs_ctrl_ {
 	}
 	case not_control {
 	condition D418 - MAXEXP_RPA_CVPDV < -abs_threshold 
-	value 0
+	value 100
 	}
 	case control {
 	condition ABS(D418 - MAXEXP_RPA_CVPDV) < abs_threshold 
-	value 1
+	value 200
 	}
 	case violated {
 	condition always
-	value 2
+	value 300
 	}
 }
 define CVP_EXP_PRAs_STATUS_DTS {alias CVP_EXP_PRAs_ctrl_ kind 'DTS-STATUS' units 'NONE'} ! Output of PRAs control status
@@ -205,15 +205,15 @@ define CVP_EXP_OMR_STATUS_DTS {alias CVP_EXP_OMR_ctrl_ kind 'DTS-STATUS' units '
 define SWP_EXP_HandS_ctrl_ {
 	case not_control {
 	condition D419 - 300. > abs_threshold
-	value 0
+	value 100
 	}
 	case control {
 	condition ABS(D419 - 300.) < abs_threshold
-	value 1
+	value 200
 	}
 	case violated {
 	condition always
-	value 2
+	value 300
 	}
 }
 define SWP_EXP_HandS_STATUS_DTS {alias SWP_EXP_HandS_ctrl_ kind 'DTS-STATUS' units 'NONE'} ! Output of HandS control status
@@ -222,15 +222,15 @@ define SWP_EXP_HandS_STATUS_DTS {alias SWP_EXP_HandS_ctrl_ kind 'DTS-STATUS' uni
 define SWP_EXP_CAP_ctrl_ {
 	case not_control {
 	condition BANKSALLOWOUT - D419 > abs_threshold
-	value 0
+	value 100
 	}
 	case control {
 	condition ABS(D419 - BANKSALLOWOUT) < abs_threshold
-	value 1
+	value 200
 	}
 	case violated {
 	condition always
-	value 2
+	value 300
 	}
 }
 define SWP_EXP_CAP_ctrl__EXP_CAP_STATUS_DTS {alias SWP_EXP_CAP_ctrl_ kind 'DTS-STATUS' units 'NONE'} ! Output of Banks capacity control status
@@ -244,15 +244,15 @@ define SWP_EXP_Vern_ctrl_ {
 	}
 	case not_control {
 	condition D419 - APRMAYBANKSCTRL < -abs_threshold 
-	value 0
+	value 100
 	}
 	case control {
 	condition ABS(D419 - APRMAYBANKSCTRL) < abs_threshold 
-	value 1
+	value 200
 	}
 	case violated {
 	condition always
-	value 2
+	value 300
 	}
 }
 define SWP_EXP_Vern_STATUS_DTS {alias SWP_EXP_Vern_ctrl_ kind 'DTS-STATUS' units 'NONE'} ! Output of Vernalis control status
@@ -265,15 +265,15 @@ define SWP_EXP_PRAs_ctrl_ {
 	}
 	case not_control {
 	condition D419 - MAXEXP_RPA_SWPDV < -abs_threshold 
-	value 0
+	value 100
 	}
 	case control {
 	condition ABS(D419 - MAXEXP_RPA_SWPDV) < abs_threshold 
-	value 1
+	value 200
 	}
 	case violated {
 	condition always
-	value 2
+	value 300
 	}
 }
 define SWP_EXP_PRAs_STATUS_DTS {alias SWP_EXP_PRAs_ctrl_ kind 'DTS-STATUS' units 'NONE'} ! Output of PRAs control status

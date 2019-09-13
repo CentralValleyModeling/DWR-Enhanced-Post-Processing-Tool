@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Created with Jaspersoft Studio version 6.8.0.final using JasperReports Library version 6.8.0-2ed8dfabb690ff337a5797129f2cd92902b0c87b  -->
+<!-- Created with Jaspersoft Studio version 6.9.0.final using JasperReports Library version 6.9.0-cb8f9004be492ccc537180b49c026951f4220bf3  -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="QAQC_Executive_Summary" language="groovy" pageWidth="612" pageHeight="792" columnWidth="504" leftMargin="54" rightMargin="54" topMargin="54" bottomMargin="54" whenResourceMissingType="Error" uuid="da75db69-3924-4f44-998a-80195014db99">
 	<property name="com.jaspersoft.studio.unit." value="pixel"/>
 	<property name="net.sf.jasperreports.print.create.bookmarks" value="true"/>
@@ -11,9 +11,9 @@
 	<property name="com.jaspersoft.studio.unit.rightMargin" value="pixel"/>
 	<property name="com.jaspersoft.studio.unit.columnWidth" value="pixel"/>
 	<property name="com.jaspersoft.studio.unit.columnSpacing" value="pixel"/>
-	<property name="net.sf.jasperreports.data.adapter" value="QAQC_Datasource.xml"/>
+	<property name="net.sf.jasperreports.xml.source" value="DWR_QA_QC_Reports\Datasource\QAQC_Datasource_TEST.xml"/>
 	<subDataset name="ExecutiveReportTable" uuid="a23916fc-7643-47c7-94e2-f0cc8ded7e23">
-		<property name="com.jaspersoft.studio.data.defaultdataadapter" value="QAQC_Datasource"/>
+		<property name="net.sf.jasperreports.data.adapter" value="QAQC_Datasource.xml"/>
 		<queryString language="xPath">
 			<![CDATA[/qaqc-report/executive-report/executive-report-table/module]]>
 		</queryString>

@@ -14,19 +14,19 @@ This file post process data for COA Share percentage
 !Resolved 3/27/2019 - not outputing var
 **************************************/
 
-! Check if delta is in IBU or UWFE (0 = IBU, 1 = UWFE)
+! Check if delta is in IBU or UWFE (100 = IBU, 200 = UWFE)
 define IBU_UWFE_DTS {alias int_IBU_UWFE kind 'DTS-STATUS' units 'NONE'} !Delta condition 
 
-! Check if Delta is in Excess or Balanced Condition base on DO for each Time Step (0 = Excess 1 = Balanced)
+! Check if Delta is in Excess or Balanced Condition base on DO for each Time Step (100 = Excess 200 = Balanced)
 define Delta_Cndtn {
 	case Balanced {
 	condition abs(C407-C407_ANN) < abs_threshold !.or. INFLW - TOTAL_EXP/EXPRATIO < abs_threshold .or. C407 < abs_threshold 
-	value 1}
+	value 200}
 	case Excess {
 	condition always 
-	value 0}
+	value 100}
 }
-!define Delta_Cndtn_DTS {alias Delta_Cndtn kind 'DTS-STATUS' units 'NONE'} ! Outputs for Delta condition 0 = Excess, 1 = Balanced
+!define Delta_Cndtn_DTS {alias Delta_Cndtn kind 'DTS-STATUS' units 'NONE'} ! Outputs for Delta condition 100 = Excess, 200 = Balanced
 !Calculate actual COA sharing percentage for each time step
 ! 1. Total Storage Withdraw/Increase of CVP storage
 define SW_CVP {value WHSSW + max(0.0, FOLDS) + max(0.0, SHADS)} !Storage Withdrawal for CVP storage 
@@ -52,58 +52,58 @@ define SW_Exp_CVP {value min(SW_CVP, TOT_EXP_CVP)}
 define SW_IBU_CVP {value max(0.0, SW_CVP - TOT_EXP_CVP)}
 define SW_Exp_SWP {value min(SW_SWP, TOT_EXP_SWP)}
 define SW_IBU_SWP {value max(0.0, SW_SWP - TOT_EXP_SWP)}
-! 7. Check IBU/UWFE status for individual projects 0 = IBU, 1 = UWFE
+! 7. Check IBU/UWFE status for individual projects 100 = IBU, 200 = UWFE
 ! 7.a. IBU/UWFE status when Delta under Balanced condition 
 define CVP_IU_Bal { !underreview - AA noticed the definition of IBU and UWFW is wrong here (resolved 6/14/19 - SF)
 	case IBU {
-	condition Delta_Cndtn == 1 .and. TOT_EXP_CVP - SW_CVP < abs_threshold
-	value 0 
+	condition Delta_Cndtn == 200 .and. TOT_EXP_CVP - SW_CVP < abs_threshold
+	value 100 
 	}
 	case UWFE {
 	condition always
-	value 1
+	value 200
 	}
 }
 define SWP_IU_Bal { !underreview - AA noticed the definition of IBU and UWFW is wrong here (resolved 6/14/19 - SF)
 	case IBU {
-	condition Delta_Cndtn == 1 .and. TOT_EXP_SWP - SW_SWP < abs_threshold
-	value 0
+	condition Delta_Cndtn == 200 .and. TOT_EXP_SWP - SW_SWP < abs_threshold
+	value 100
 	}
 	case UWFE {
 	condition always
-	value 1
+	value 200
 	}
 }
 ! 7.b. IBU/UWFE status when Delta under Surplus condition
 define CVP_IU_Surp { !underreview - AA noticed the definition of IBU and UWFW is wrong here (resolved 6/14/19 - SF)
 	case IBU {
-	condition Delta_Cndtn == 0 .and. TOT_EXP_CVP - SW_CVP < abs_threshold
-	value 0
+	condition Delta_Cndtn == 100 .and. TOT_EXP_CVP - SW_CVP < abs_threshold
+	value 100
 	}
 	case UWFE {
 	condition always
-	value 1
+	value 200
 	}
 }
 define SWP_IU_Surp { !underreview - AA noticed the definition of IBU and UWFW is wrong here (resolved 6/14/19 - SF)
 	case IBU {
-	condition Delta_Cndtn == 0 .and. TOT_EXP_SWP - SW_SWP < abs_threshold
-	value 0
+	condition Delta_Cndtn == 100 .and. TOT_EXP_SWP - SW_SWP < abs_threshold
+	value 100
 	}
 	case UWFE {
 	condition always
-	value 1
+	value 200
 	}
 }
 ! 7.c. Check during which timestep CVP/SWP Operation (IBU/UWFE) do not match delta condition (IBU/UWFE) 0 = match, 1 = not match, Neg_Flt_Max = not applicable
 define CVP_IBU_CHECK {
 	case match {
-	condition Delta_Cndtn == 1 .and. CVP_IU_Bal == int_IBU_UWFE
-	value 0
+	condition Delta_Cndtn == 200 .and. CVP_IU_Bal == int_IBU_UWFE
+	value 100
 	}
 	case notMatch {
-	condition Delta_Cndtn == 1 .and. abs(CVP_IU_Bal - int_IBU_UWFE) > none_zero_threshold
-	value 1
+	condition Delta_Cndtn == 200 .and. abs(CVP_IU_Bal - int_IBU_UWFE) > none_zero_threshold
+	value 200
 	}
 	case surplus {
 	condition always
@@ -112,12 +112,12 @@ define CVP_IBU_CHECK {
 }
 define SWP_IBU_CHECK {
 	case match {
-	condition Delta_Cndtn == 1 .and. SWP_IU_Bal == int_IBU_UWFE
-	value 0
+	condition Delta_Cndtn == 200 .and. SWP_IU_Bal == int_IBU_UWFE
+	value 100
 	}
 	case notMatch {
-	condition Delta_Cndtn == 1 .and. abs(SWP_IU_Bal - int_IBU_UWFE) > none_zero_threshold
-	value 1
+	condition Delta_Cndtn == 200 .and. abs(SWP_IU_Bal - int_IBU_UWFE) > none_zero_threshold
+	value 200
 	}
 	case surplus {
 	condition always
@@ -127,7 +127,7 @@ define SWP_IBU_CHECK {
 ! 8. IBU or UWFE amount  (Total/CVP/SWP)
 define IBU_TOT {
 	case balanced {
-	condition Delta_Cndtn == 1
+	condition Delta_Cndtn == 200
 	value max(0.0, SW_TOT - TOTAL_EXP)}
 	case surplus {
 	condition always
@@ -135,7 +135,7 @@ define IBU_TOT {
 }	
 define IBU_CVP {
 	case balanced {
-	condition Delta_Cndtn == 1
+	condition Delta_Cndtn == 200
 	value max(0.0, SW_CVP - TOT_EXP_CVP)}
 	case surplus {
 	condition always
@@ -143,7 +143,7 @@ define IBU_CVP {
 }	
 define IBU_SWP {
 	case balanced {
-	condition Delta_Cndtn == 1
+	condition Delta_Cndtn == 200
 	value max(0.0, SW_SWP - TOT_EXP_SWP)}
 	case surplus {
 	condition always
@@ -151,7 +151,7 @@ define IBU_SWP {
 }	
 define UWFE_TOT {
 	case balanced {
-	condition Delta_Cndtn == 1
+	condition Delta_Cndtn == 200
 	value max(0.0, TOT_EXP_CVP - SW_CVP)}
 	case surplus {
 	condition always
@@ -159,7 +159,7 @@ define UWFE_TOT {
 }
 define UWFE_CVP {
 	case balanced {
-	condition Delta_Cndtn == 1
+	condition Delta_Cndtn == 200
 	value max(0.0, TOT_EXP_CVP - SW_CVP)}
 	case surplus {
 	condition always
@@ -167,7 +167,7 @@ define UWFE_CVP {
 }
 define UWFE_SWP {
 	case balanced {
-	condition Delta_Cndtn == 1
+	condition Delta_Cndtn == 200
 	value max(0.0, TOT_EXP_SWP - SW_SWP)}
 	case surplus {
 	condition always
@@ -178,7 +178,7 @@ define UWFE_SWP {
 ! 9.a. IBU sharing ratio 
 define IBU_Ratio_CVP {
 	case balanced {
-	condition Delta_Cndtn == 1 .and. IBU_CVP+IBU_SWP > none_zero_threshold
+	condition Delta_Cndtn == 200 .and. IBU_CVP+IBU_SWP > none_zero_threshold
 	value IBU_CVP/(IBU_CVP+IBU_SWP)}
 	case surplus {
 	condition always
@@ -186,7 +186,7 @@ define IBU_Ratio_CVP {
 }
 define IBU_Ratio_SWP {
 	case balanced {
-	condition Delta_Cndtn == 1 .and. IBU_CVP+IBU_SWP > none_zero_threshold
+	condition Delta_Cndtn == 200 .and. IBU_CVP+IBU_SWP > none_zero_threshold
 	value 1-IBU_Ratio_CVP}
 	case surplus {
 	condition always
@@ -195,7 +195,7 @@ define IBU_Ratio_SWP {
 ! 9.b. UWFE sharing ratio
 define UWFE_Ratio_CVP {
 	case balanced {
-	condition Delta_Cndtn == 1 .and. UWFE_CVP+UWFE_SWP > none_zero_threshold
+	condition Delta_Cndtn == 200 .and. UWFE_CVP+UWFE_SWP > none_zero_threshold
 	value UWFE_CVP/(UWFE_CVP+UWFE_SWP)}
 	case surplus {
 	condition always
@@ -203,7 +203,7 @@ define UWFE_Ratio_CVP {
 }
 define UWFE_Ratio_SWP {
 	case balanced {
-	condition Delta_Cndtn == 1 .and. UWFE_CVP+UWFE_SWP > none_zero_threshold
+	condition Delta_Cndtn == 200 .and. UWFE_CVP+UWFE_SWP > none_zero_threshold
 	value 1-UWFE_Ratio_CVP}
 	case surplus {
 	condition always
@@ -220,7 +220,7 @@ define Ratio_SWP {value max(IBU_Ratio_SWP,UWFE_Ratio_SWP)}
 ! 10.a. Absolute differentce between Actual and Agreed sharing ratio
 define CVP_COA_diff {
 	case balanced {
-	condition Delta_Cndtn == 1
+	condition Delta_Cndtn == 200
 	value Ratio_CVP - CVP_Share}
 	case surplus {
 	condition always
@@ -228,7 +228,7 @@ define CVP_COA_diff {
 }
 define SWP_COA_diff { 
 	case balanced {
-	condition Delta_Cndtn == 1
+	condition Delta_Cndtn == 200
 	value Ratio_SWP - SWP_Share}
 	case surplus {
 	condition always

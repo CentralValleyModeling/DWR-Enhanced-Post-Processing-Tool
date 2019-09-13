@@ -96,6 +96,11 @@ public class JythonScriptRunner
 		PYTHON_ENGINE.put("dssReader", dssReader);
 		PYTHON_ENGINE.put("titleReader", titleReader);
 		PYTHON_ENGINE.put("commonPeriodFilter", commonPeriodFilter);
+		setWaterYearType(null);
+		setWaterYearIndex(null);
+		setWaterYearPeriodRanges(null);
+		setPeriodFilter(null);
+		setComparisonValue(null);
 	}
 
 	public void setPeriodFilter(PeriodFilter periodFilter)
@@ -113,7 +118,7 @@ public class JythonScriptRunner
 		PYTHON_ENGINE.put("waterYearPeriodRanges", waterYearPeriodRanges);
 	}
 
-	public void setComparisonValue(double comparisonValue)
+	public void setComparisonValue(Double comparisonValue)
 	{
 		PYTHON_ENGINE.put("comparisonValue", comparisonValue);
 	}

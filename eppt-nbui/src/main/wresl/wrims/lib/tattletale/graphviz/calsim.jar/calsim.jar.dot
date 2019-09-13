@@ -1,0 +1,7 @@
+digraph calsim_dependencies {
+  node [shape = box, fontsize=10.0];
+  calsim -> jh;
+  calsim -> misc;
+  calsim -> pd;
+  calsim -> vista;
+}

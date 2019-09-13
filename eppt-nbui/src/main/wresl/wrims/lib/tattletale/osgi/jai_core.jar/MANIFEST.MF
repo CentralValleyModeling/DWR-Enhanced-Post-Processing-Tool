@@ -1,0 +1,54 @@
+Manifest-Version: 1.0
+Ant-Version: Apache Ant 1.6.2
+Implementation-Title: javax.media.jai
+Implementation-Version: 1.1.3
+Sealed: true
+Specification-Vendor: Sun Microsystems, Inc.
+Specification-Title: Java Advanced Imaging
+Extension-Name: javax.media.jai
+Created-By: 1.4.2_12-b03 (Sun Microsystems Inc.)
+Specification-Version: 1.1-mr
+Implementation-Vendor: Sun Microsystems, Inc.
+
+
+### OSGi information
+Bundle-ManifestVersion: 2
+Bundle-SymbolicName: com.sun.media.jai.opimage
+Bundle-Description: jai_core
+Bundle-Name: jai_core
+Bundle-Version: 0.0.0
+Export-Package: com.sun.media.jai.iterator;uses:="com.sun.media.jai.ut
+ il,javax.media.jai,javax.media.jai.iterator",com.sun.media.jai.mlib;u
+ ses:="com.sun.media.jai.opimage,com.sun.media.jai.util,com.sun.medial
+ ib.mlib,javax.media.jai,javax.media.jai.operator,javax.media.jai.util
+ ",com.sun.media.jai.opimage;uses:="com.sun.media.jai.codec,com.sun.me
+ dia.jai.util,javax.media.jai,javax.media.jai.iterator,javax.media.jai
+ .operator,javax.media.jai.registry,javax.media.jai.util",com.sun.medi
+ a.jai.remote;uses:="javax.media.jai",com.sun.media.jai.rmi;uses:="com
+ .sun.media.jai.remote,com.sun.media.jai.util,javax.media.jai,javax.me
+ dia.jai.registry,javax.media.jai.remote,javax.media.jai.tilecodec,jav
+ ax.media.jai.util",com.sun.media.jai.tilecodec;uses:="com.sun.media.j
+ ai.util,javax.media.jai,javax.media.jai.remote,javax.media.jai.tileco
+ dec,javax.media.jai.util",com.sun.media.jai.util;uses:="javax.media.j
+ ai,javax.media.jai.remote,javax.media.jai.util",com.sun.media.jai.wid
+ get,javax.media.jai;uses:="com.sun.media.jai.rmi,com.sun.media.jai.ut
+ il,javax.media.jai.iterator,javax.media.jai.registry,javax.media.jai.
+ remote,javax.media.jai.util",javax.media.jai.iterator;uses:="com.sun.
+ media.jai.iterator,com.sun.media.jai.util",javax.media.jai.operator;u
+ ses:="com.sun.media.jai.codec,com.sun.media.jai.util,javax.media.jai,
+ javax.media.jai.util",javax.media.jai.registry;uses:="com.sun.media.j
+ ai.util,javax.media.jai,javax.media.jai.remote,javax.media.jai.tileco
+ dec,javax.media.jai.util",javax.media.jai.remote;uses:="com.sun.media
+ .jai.rmi,com.sun.media.jai.util,javax.media.jai,javax.media.jai.regis
+ try,javax.media.jai.tilecodec,javax.media.jai.util",javax.media.jai.t
+ ilecodec;uses:="com.sun.media.jai.tilecodec,com.sun.media.jai.util,ja
+ vax.media.jai,javax.media.jai.remote,javax.media.jai.util",javax.medi
+ a.jai.util;uses:="com.sun.media.jai.util",javax.media.jai.widget;uses
+ :="com.sun.media.jai.util,javax.media.jai"
+Import-Package: com.sun.image.codec.jpeg,com.sun.media.jai.codec;versi
+ on="0.0.0",com.sun.medialib.mlib,java.awt,java.awt.color,java.awt.eve
+ nt,java.awt.font,java.awt.geom,java.awt.image,java.awt.image.renderab
+ le,java.beans,java.io,java.lang,java.lang.ref,java.lang.reflect,java.
+ math,java.net,java.rmi,java.rmi.server,java.security,java.text,java.u
+ til,java.util.jar,java.util.zip,javax.swing,sun.awt.image,sun.awt.ima
+ ge.codec

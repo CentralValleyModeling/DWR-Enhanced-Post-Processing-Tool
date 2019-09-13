@@ -1,0 +1,41 @@
+Manifest-Version: 1.0
+Ant-Version: Apache Ant 1.8.4
+Created-By: 1.6.0_45-b06 (Sun Microsystems Inc.)
+
+
+### OSGi information
+Bundle-ManifestVersion: 2
+Bundle-SymbolicName: vista.app
+Bundle-Description: vista
+Bundle-Name: vista
+Bundle-Version: 0.0.0
+Export-Package: com.ibm.util,gov.ca.dsm2.input.datum;uses:="gov.ca.dsm
+ 2.input.gis,gov.ca.dsm2.input.model,gov.ca.dsm2.input.parser",vista.a
+ pp;uses:="net.miginfocom.swing,org.python.core,org.python.util,vista.
+ app.commands,vista.app.schematic,vista.db.dss,vista.db.hdf5,vista.db.
+ jdbc.bdat,vista.graph,vista.gui,vista.set,vista.time",vista.app.comma
+ nds;uses:="vista.app,vista.db.dss,vista.db.hdf5,vista.db.jdbc.bdat,vi
+ sta.graph,vista.gui,vista.report,vista.set,vista.time",vista.app.sche
+ matic;uses:="vista.app,vista.db.dss,vista.graph,vista.set,vista.time"
+ ,vista.db.dss;uses:="hec.heclib.util,hec.io,vista.app,vista.gui,vista
+ .set,vista.time",vista.db.hdf5;uses:="hec.heclib.util,ncsa.hdf.hdf5li
+ b.exceptions,ncsa.hdf.object,ncsa.hdf.object.h5,org.slf4j,vista.set,v
+ ista.time",vista.db.jdbc.bdat;uses:="oracle.jdbc.pool,vista.set,vista
+ .time",vista.graph;uses:="vista.app,vista.gui,vista.time",vista.gui,v
+ ista.report;uses:="vista.app,vista.db.dss,vista.graph,vista.gui,vista
+ .set,vista.time",vista.set;uses:="org.python.core,vista.db.dss,vista.
+ time",vista.time;uses:="org.python.core"
+Import-Package: gov.ca.dsm2.input.gis,gov.ca.dsm2.input.model;version=
+ "0.0.0",gov.ca.dsm2.input.parser;version="0.0.0",hec.heclib.util;vers
+ ion="3.0.0.44G",hec.io;version="3.0.0.44G",java.awt,java.awt.datatran
+ sfer,java.awt.dnd,java.awt.event,java.awt.geom,java.awt.image,java.aw
+ t.print,java.io,java.lang,java.lang.ref,java.lang.reflect,java.net,ja
+ va.rmi,java.rmi.server,java.sql,java.text,java.util,java.util.logging
+ ,java.util.prefs,java.util.regex,java.util.zip,javax.imageio,javax.sw
+ ing,javax.swing.border,javax.swing.event,javax.swing.filechooser,java
+ x.swing.plaf,javax.swing.plaf.basic,javax.swing.plaf.metal,javax.swin
+ g.table,javax.swing.text,javax.swing.text.html,javax.swing.tree,ncsa.
+ hdf.hdf5lib.exceptions;version="0.0.0",ncsa.hdf.object;version="0.0.0
+ ",ncsa.hdf.object.h5;version="0.0.0",net.miginfocom.swing,oracle.jdbc
+ .pool,org.python.core;version="0.0.0",org.python.util;version="0.0.0"
+ ,org.slf4j;version="1.7.5",sun.rmi.registry

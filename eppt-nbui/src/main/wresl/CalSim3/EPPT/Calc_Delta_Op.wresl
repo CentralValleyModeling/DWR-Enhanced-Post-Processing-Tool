@@ -16,7 +16,7 @@ This file post process the delta operation during each timestep
 ! Negative Carriage Water for JP 
 define NegativeCW_JP_CHECK {
 	case yes {
-	condition JP_Check_ == 200 .and. JP_M > 1 + none_zero_threshold
+	condition JP_Check_ == 1 .and. JP_M > 1 + none_zero_threshold
 	value 1
 	}
 	case no {
@@ -26,7 +26,7 @@ define NegativeCW_JP_CHECK {
 }
 define NegativeCW_EM_CHECK {
 	case yes {
-	condition EM_Check_ == 200 .and. EM_M > 1 + none_zero_threshold
+	condition EM_Check_ == 1 .and. EM_M > 1 + none_zero_threshold
 	value 1
 	}
 	case no {
@@ -36,7 +36,7 @@ define NegativeCW_EM_CHECK {
 }
 define NegativeCW_CO_CHECK {
 	case yes {
-	condition CO_Check_ == 200 .and. CO_M > 1 + none_zero_threshold
+	condition CO_Check_ == 1 .and. CO_M > 1 + none_zero_threshold
 	value 1
 	}
 	case no {
@@ -72,7 +72,7 @@ define NegativeCW {
 	}
 	case no {
 	condition always
-	value 300 !0
+	value 0
 	}
 }
 
@@ -81,11 +81,11 @@ define NegativeCW {
 define D419_EXP2_CHECK {
 	case yes {
 	condition D419_EXP2 > abs_threshold
-	value 200 !1
+	value 1
 	}
 	case no {
 	condition always
-	value 300 !0
+	value 0
 	}
 }
 
@@ -93,24 +93,17 @@ define D419_EXP2_CHECK {
 define D418_EXP2_CHECK {
 	case yes {
 	condition D418_EXP2 > abs_threshold
-	value 200 !1
+	value 1
 	}
 	case no {
 	condition always
-	value 300 !0
+	value 0
 	}
 }
-define NegativeCW_CHECK_out {
-     case zero  {
-        condition NegativeCW_CHECK == 0
-        value 300}
-     case otherwise {
-        condition always
-        value 200}
-        }
+
 /****************** Outputs **********************/
 !Negative Carriage Water
-define NegativeCW_STATUS_DTS {alias NegativeCW_CHECK_out kind 'DTS-STATUS' units 'NONE'}
+define NegativeCW_STATUS_DTS {alias NegativeCW_CHECK kind 'DTS-STATUS' units 'NONE'}
 define NegativeCW_DTS {alias NegativeCW kind 'FLOW' units 'CFS'}
 define D418_EXP2_STATUS_DTS {alias D418_EXP2_CHECK kind 'DTS-STATUS' units 'NONE'}
 define D419_EXP2_STATUS_DTS {alias D419_EXP2_CHECK kind 'DTS-STATUS' units 'NONE'}
