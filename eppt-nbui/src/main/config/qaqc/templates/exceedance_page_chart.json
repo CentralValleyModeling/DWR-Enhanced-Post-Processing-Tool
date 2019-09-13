@@ -36,6 +36,8 @@
       "family": "Lucida Grande,Lucida Sans Unicode, Verdana, Arial, Helvetica, sans-serif",
       "color": "black"
     },
+    "width": 1200,
+    "height": 800,
     "xaxis": {
       "tickformat": ",.0%",
       "title": {
