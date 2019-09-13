@@ -71,9 +71,9 @@ import static java.util.stream.Collectors.toList;
 
 public class EPPTReport
 {
-	public static final int LESS_THAN_CONSTANT = 100;
-	public static final int GREATER_THAN_CONSTANT = 200;
-	public static final int EQUAL_TO_CONSTANT = 300;
+	public static final int EQUAL_TO_CONSTANT = 200;
+	public static final int LESS_THAN_CONSTANT = 300;
+	public static final int GREATER_THAN_CONSTANT = 100;
 
 	public static final String EXECUTIVE_SUMMARY = "Executive Summary";
 	public static final String ASSUMPTION_CHANGES = "Assumption Changes";

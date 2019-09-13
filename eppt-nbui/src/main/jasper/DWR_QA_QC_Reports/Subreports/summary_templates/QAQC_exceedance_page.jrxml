@@ -80,7 +80,7 @@
 				<reportElement x="0" y="0" width="756" height="535" isRemoveLineWhenBlank="true" uuid="c0aa42ac-a1f2-4323-80ae-17c2b1a73358">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				</reportElement>
-				<imageExpression><![CDATA["C:/Users/bryan/JaspersoftWorkspace/MyReports/DWR_QA_QC_Reports/Images/"+$P{p_report_name}+".svg"]]></imageExpression>
+				<imageExpression><![CDATA["/DWR_QA_QC_Reports/Images/"+$P{p_report_name}+".svg"]]></imageExpression>
 			</image>
 		</band>
 	</summary>

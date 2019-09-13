@@ -137,7 +137,29 @@ class ControlTableBuilder extends TableBuilder
 			String textRaw = String.valueOf(diff);
 			retval.setTextContent(textRaw);
 			retval.setAttribute(VALUE_FULL_TEXT_ATTRIBUTE, textRaw);
-			retval.setAttribute(VALUE_PERCENT_TEXT_ATTRIBUTE, textRaw);
+			if(getReportParameters().getPercentDiffStyle() == PercentDiffStyle.PERCENT)
+			{
+
+				if(baseValue != 0)
+				{
+					retval.setAttribute(VALUE_PERCENT_TEXT_ATTRIBUTE, ((altValue - baseValue) / baseValue) * 100 + "%");
+				}
+				else
+				{
+					retval.setAttribute(VALUE_PERCENT_TEXT_ATTRIBUTE, "N/A");
+				}
+			}
+			else if(getReportParameters().getPercentDiffStyle() == PercentDiffStyle.FULL)
+			{
+				if(baseValue != 0)
+				{
+					retval.setAttribute(VALUE_PERCENT_TEXT_ATTRIBUTE, textRaw + " (" + ((altValue - baseValue) / baseValue) * 100 + "%)");
+				}
+				else
+				{
+					retval.setAttribute(VALUE_PERCENT_TEXT_ATTRIBUTE, textRaw + " (N/A)");
+				}
+			}
 		}
 		catch(EpptReportException e)
 		{

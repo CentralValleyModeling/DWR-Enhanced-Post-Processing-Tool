@@ -300,16 +300,16 @@
 	</style>
 	<style name="scenario_color">
 		<conditionalStyle>
-			<conditionExpression><![CDATA[$V{scenario-order}=="0"]]></conditionExpression>
+			<conditionExpression><![CDATA[$V{scenario-order}==0]]></conditionExpression>
 			<style mode="Opaque" forecolor="#B50000"/>
 		</conditionalStyle>
 		<conditionalStyle>
-			<conditionExpression><![CDATA[$V{scenario-order}=="1"]]></conditionExpression>
+			<conditionExpression><![CDATA[$V{scenario-order}==1]]></conditionExpression>
 			<style mode="Opaque" forecolor="#0000FF"/>
 		</conditionalStyle>
 	</style>
 	<parameter name="p_report_name" class="java.lang.String" isForPrompting="false">
-		<defaultValueExpression><![CDATA["coa-controls"]]></defaultValueExpression>
+		<defaultValueExpression><![CDATA["resops-control-all"]]></defaultValueExpression>
 	</parameter>
 	<queryString language="XPath">
 		<![CDATA[/qaqc-report/summary/module/section/sub-module/chart/$P{p_report_name}/scenario/less-than-greater-than-equal-to/title/header/sub-header/component]]>
@@ -490,7 +490,7 @@
 								<leftPen lineWidth="1.0" lineColor="#000000"/>
 							</box>
 							<textField>
-								<reportElement x="0" y="0" width="44" height="16" uuid="aa134c6f-a9a0-4673-9a01-6bc0125e8ea0">
+								<reportElement style="scenario_color" x="0" y="0" width="44" height="16" uuid="aa134c6f-a9a0-4673-9a01-6bc0125e8ea0">
 									<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 								</reportElement>
 								<box>
