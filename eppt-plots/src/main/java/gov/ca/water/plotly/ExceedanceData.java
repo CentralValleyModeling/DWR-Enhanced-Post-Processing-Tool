@@ -13,6 +13,7 @@
 package gov.ca.water.plotly;
 
 import java.util.List;
+import java.util.Map;
 import java.util.NavigableMap;
 
 /**
@@ -27,9 +28,9 @@ public class ExceedanceData
 
 	private final String _scenarioName;
 	private final NavigableMap<Double, Double> _primaryData;
-	private final List<NavigableMap<Double, Double>> _thresholdData;
+	private final Map<String, NavigableMap<Double, Double>> _thresholdData;
 
-	public ExceedanceData(String scenarioName, NavigableMap<Double, Double> primaryData, List<NavigableMap<Double, Double>> thresholdData)
+	public ExceedanceData(String scenarioName, NavigableMap<Double, Double> primaryData, Map<String, NavigableMap<Double, Double>> thresholdData)
 	{
 		_scenarioName = scenarioName;
 		_primaryData = primaryData;
@@ -46,7 +47,7 @@ public class ExceedanceData
 		return _primaryData;
 	}
 
-	public List<NavigableMap<Double, Double>> getThresholdData()
+	public Map<String, NavigableMap<Double, Double>> getThresholdData()
 	{
 		return _thresholdData;
 	}

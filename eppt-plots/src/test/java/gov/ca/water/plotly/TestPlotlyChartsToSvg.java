@@ -98,7 +98,7 @@ public class TestPlotlyChartsToSvg
 		EpptScenarioRun base = new EpptScenarioRun("base", null, null, null, null, null, null, Constant.getPlotlyDefaultColor(0));
 		EpptScenarioRun alt = new EpptScenarioRun("alt", null, null, null, null, null, null, Constant.getPlotlyDefaultColor(1));
 		Map<EpptScenarioRun, List<PlotlyMonthly.MonthlyData>> primaryData = buildPrimaryMonthlyData(base, alt);
-		Map<EpptScenarioRun, List<List<PlotlyMonthly.MonthlyData>>> thresholdData = buildAltMonthlyData(base, alt);
+		Map<EpptScenarioRun, Map<String, List<PlotlyMonthly.MonthlyData>>> thresholdData = buildThresholdMonthlyData(base, alt);
 		PlotlyMonthly bubble = new PlotlyMonthly("Trinity Imports", "", "Storage",
 				primaryData, thresholdData);
 		PlotlySvgPrinter.printJsonToPath(path, bubble);
@@ -121,15 +121,15 @@ public class TestPlotlyChartsToSvg
 		return retval;
 	}
 
-	private Map<EpptScenarioRun, List<List<PlotlyMonthly.MonthlyData>>> buildAltMonthlyData(EpptScenarioRun base, EpptScenarioRun alt)
+	private Map<EpptScenarioRun, Map<String, List<PlotlyMonthly.MonthlyData>>> buildThresholdMonthlyData(EpptScenarioRun base, EpptScenarioRun alt)
 	{
-		Map<EpptScenarioRun, List<List<PlotlyMonthly.MonthlyData>>> retval = new HashMap<>();
-		List<List<PlotlyMonthly.MonthlyData>> baseThresholds = retval.computeIfAbsent(base, (k) -> new ArrayList<>());
+		Map<EpptScenarioRun, Map<String, List<PlotlyMonthly.MonthlyData>>> retval = new HashMap<>();
+		Map<String, List<PlotlyMonthly.MonthlyData>> baseThresholds = retval.computeIfAbsent(base, (k) -> new HashMap<>());
 		List<PlotlyMonthly.MonthlyData> baseThreshold = new ArrayList<>();
-		baseThresholds.add(baseThreshold);
-		List<List<PlotlyMonthly.MonthlyData>> altThresholds = retval.computeIfAbsent(alt, (k) -> new ArrayList<>());
+		baseThresholds.put("BaseThresh", baseThreshold);
+		Map<String, List<PlotlyMonthly.MonthlyData>> altThresholds = retval.computeIfAbsent(alt, (k) -> new HashMap<>());
 		List<PlotlyMonthly.MonthlyData> altThreshold = new ArrayList<>();
-		altThresholds.add(altThreshold);
+		altThresholds.put("AltThresh", altThreshold);
 		for(Month month : Month.values())
 		{
 			baseThreshold.add(new PlotlyMonthly.MonthlyData(month, Math.random() * 100));
@@ -188,7 +188,7 @@ public class TestPlotlyChartsToSvg
 		primaryData.put(.11, 2500.0);
 		primaryData.put(.06, 3000.0);
 		primaryData.put(.02, 5000.0);
-		List<NavigableMap<Double, Double>> thresholdData = new ArrayList<>();
+		Map<String, NavigableMap<Double, Double>> thresholdData = new HashMap<>();
 		NavigableMap<Double, Double> threshold = new TreeMap<>();
 		threshold.put(.99, 1200.0);
 		threshold.put(.88, 2000.0);
@@ -197,7 +197,7 @@ public class TestPlotlyChartsToSvg
 		threshold.put(.11, 5000.0);
 		threshold.put(.06, 5100.0);
 		threshold.put(.01, 5200.0);
-		thresholdData.add(threshold);
+		thresholdData.put("BaseThresh", threshold);
 		return new ExceedanceData("Base", primaryData, thresholdData);
 	}
 
@@ -211,7 +211,7 @@ public class TestPlotlyChartsToSvg
 		primaryData.put(.29, 4200.0);
 		primaryData.put(.19, 5100.0);
 		primaryData.put(.15, 6010.0);
-		List<NavigableMap<Double, Double>> thresholdData = new ArrayList<>();
+		Map<String, NavigableMap<Double, Double>> thresholdData = new HashMap<>();
 		NavigableMap<Double, Double> threshold = new TreeMap<>();
 		threshold.put(.99, 4000.0);
 		threshold.put(.88, 4000.0);
@@ -220,7 +220,7 @@ public class TestPlotlyChartsToSvg
 		threshold.put(.11, 4000.0);
 		threshold.put(.56, 4000.0);
 		threshold.put(.1, 4000.0);
-		thresholdData.add(threshold);
+		thresholdData.put("AltThresh", threshold);
 		return new ExceedanceData("Alt", primaryData, thresholdData);
 	}
 

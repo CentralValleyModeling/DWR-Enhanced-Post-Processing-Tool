@@ -77,23 +77,23 @@ public class PlotlyExceedance extends PlotlyChart
 	{
 		JSONArray dataArray = new JSONArray();
 		JSONObject templateTrace = template.getJSONObject(0);
-		JSONObject baseTrace = buildPrimaryTrace(templateTrace, "Base", _base, _baseData);
+		JSONObject baseTrace = buildPrimaryTrace(templateTrace, _base, _baseData);
 		dataArray.put(baseTrace);
 		int index = 0;
-		for(NavigableMap<Double, Double> thresholdData : _baseData.getThresholdData())
+		for(Map.Entry<String, NavigableMap<Double, Double>> thresholdData : _baseData.getThresholdData().entrySet())
 		{
-			dataArray.put(buildThresholdTrace(templateTrace, "Base", _base, thresholdData, index));
+			dataArray.put(buildThresholdTrace(templateTrace, thresholdData.getKey(), _base, thresholdData.getValue(), index));
 			index++;
 		}
 		for(Map.Entry<EpptScenarioRun, ExceedanceData> entry : _alternativeData.entrySet())
 		{
 			EpptScenarioRun key = entry.getKey();
 			ExceedanceData value = entry.getValue();
-			JSONObject altTrace = buildPrimaryTrace(templateTrace, "Alt", key, value);
+			JSONObject altTrace = buildPrimaryTrace(templateTrace, key, value);
 			index = 0;
-			for(NavigableMap<Double, Double> thresholdData : value.getThresholdData())
+			for(Map.Entry<String, NavigableMap<Double, Double>> thresholdData : value.getThresholdData().entrySet())
 			{
-				dataArray.put(buildThresholdTrace(templateTrace, "Alt", key, thresholdData, index));
+				dataArray.put(buildThresholdTrace(templateTrace, thresholdData.getKey(), key, thresholdData.getValue(), index));
 				index++;
 			}
 			dataArray.put(altTrace);

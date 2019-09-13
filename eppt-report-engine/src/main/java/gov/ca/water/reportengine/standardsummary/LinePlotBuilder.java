@@ -27,6 +27,7 @@ import gov.ca.water.reportengine.EpptReportException;
 import org.w3c.dom.Document;
 
 import static java.util.stream.Collectors.toList;
+import static java.util.stream.Collectors.toMap;
 
 /**
  * Company: Resource Management Associates
@@ -52,7 +53,7 @@ class LinePlotBuilder extends PlotChartBuilder
 		String yAxisLabel = getYAxisLabelForComponents(chartComponents);
 		String xAxisLabel = getXAxisLabelForComponents(chartComponents);
 		Map<EpptScenarioRun, List<PlotlyMonthly.MonthlyData>> primaryData = new HashMap<>();
-		Map<EpptScenarioRun, List<List<PlotlyMonthly.MonthlyData>>> thresholdData = new HashMap<>();
+		Map<EpptScenarioRun, Map<String, List<PlotlyMonthly.MonthlyData>>> thresholdData = new HashMap<>();
 		if(!chartComponents.isEmpty())
 		{
 			primaryData.put(getBase(), buildData(getBase(), chartComponents.get(0)));
@@ -72,9 +73,9 @@ class LinePlotBuilder extends PlotChartBuilder
 		return new PlotlyMonthly(title, xAxisLabel, yAxisLabel, primaryData, thresholdData);
 	}
 
-	private List<List<PlotlyMonthly.MonthlyData>> buildData(EpptScenarioRun scenarioRun, List<ChartComponent> chartComponents)
+	private Map<String, List<PlotlyMonthly.MonthlyData>> buildData(EpptScenarioRun scenarioRun, List<ChartComponent> chartComponents)
 	{
-		return chartComponents.stream().map(c -> buildData(scenarioRun, c)).collect(toList());
+		return chartComponents.stream().collect(toMap(ChartComponent::getComponent, c -> buildData(scenarioRun, c)));
 	}
 
 	private List<PlotlyMonthly.MonthlyData> buildData(EpptScenarioRun base, ChartComponent chartComponent)

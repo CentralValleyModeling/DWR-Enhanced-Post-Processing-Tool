@@ -249,6 +249,10 @@ public class StandardSummaryWriter
 					_linePlotBuilder.buildChart(imagePath, chart, epptChart);
 					break;
 				case PERCENT_DIFF_TABLE:
+					if(_percentDiffTableBuilder.getAlternatives().isEmpty())
+					{
+						return Optional.empty();
+					}
 					_percentDiffTableBuilder.buildTable(chart, epptChart);
 					break;
 				case SCATTER_PLOT:

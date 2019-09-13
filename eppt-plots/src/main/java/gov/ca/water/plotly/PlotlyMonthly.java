@@ -42,10 +42,10 @@ public class PlotlyMonthly extends PlotlyChart
 	private final String _xAxis;
 	private final String _yAxis;
 	private final Map<EpptScenarioRun, List<MonthlyData>> _monthlyData;
-	private final Map<EpptScenarioRun, List<List<MonthlyData>>> _thresholdData;
+	private final Map<EpptScenarioRun, Map<String, List<MonthlyData>>> _thresholdData;
 
 	public PlotlyMonthly(String title, String xAxis, String yAxis, Map<EpptScenarioRun, List<MonthlyData>> primaryData,
-						 Map<EpptScenarioRun, List<List<MonthlyData>>> thresholdData)
+						 Map<EpptScenarioRun, Map<String, List<MonthlyData>>> thresholdData)
 	{
 		_title = title;
 		_xAxis = xAxis;
@@ -86,16 +86,16 @@ public class PlotlyMonthly extends PlotlyChart
 			List<MonthlyData> value = entry.getValue();
 			JSONObject primaryTrace = buildPrimaryTrace(templateTrace, key, value);
 			dataArray.put(primaryTrace);
-			Optional<List<List<MonthlyData>>> thresholdsOpt = _thresholdData.keySet().stream()
+			Optional<Map<String, List<MonthlyData>>> thresholdsOpt = _thresholdData.keySet().stream()
 																			.filter(k -> Objects.equals(k.getName(), key.getName())).findAny()
 																			.map(_thresholdData::get);
 
 			if(thresholdsOpt.isPresent())
 			{
 				int index = 0;
-				for(List<MonthlyData> thresholdData : thresholdsOpt.get())
+				for(Map.Entry<String, List<MonthlyData>> thresholdData : thresholdsOpt.get().entrySet())
 				{
-					dataArray.put(buildThresholdTrace(templateTrace, key, thresholdData, index));
+					dataArray.put(buildThresholdTrace(templateTrace, key, thresholdData.getKey(), thresholdData.getValue(), index));
 					index++;
 				}
 			}
@@ -103,7 +103,7 @@ public class PlotlyMonthly extends PlotlyChart
 		return dataArray;
 	}
 
-	private JSONObject buildThresholdTrace(JSONObject template, EpptScenarioRun scenarioRun, List<MonthlyData> data, int index)
+	private JSONObject buildThresholdTrace(JSONObject template, EpptScenarioRun epptScenarioRun, String thresholdName, List<MonthlyData> data, int index)
 	{
 		JSONObject retval = new JSONObject(template.toString());
 		JSONArray xArray = new JSONArray();
@@ -113,8 +113,8 @@ public class PlotlyMonthly extends PlotlyChart
 			xArray.put(entry._month.getDisplayName(TextStyle.SHORT, Locale.getDefault()));
 			yArray.put(entry._data);
 		}
-		JSONObject marker = buildMarker(template.getJSONObject("marker"), scenarioRun);
-		retval.put("name", scenarioRun.getName());
+		JSONObject marker = buildMarker(template.getJSONObject("marker"), epptScenarioRun);
+		retval.put("name", thresholdName);
 		retval.put("x", xArray);
 		retval.put("y", yArray);
 		retval.put("marker", marker);

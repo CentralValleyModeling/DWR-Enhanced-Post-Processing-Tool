@@ -61,12 +61,12 @@ class ExceedanceChartBuilder extends PlotChartBuilder
 		ChartComponent chartComponent = chartComponents.get(0);
 		NavigableMap<Double, Double> primaryData = createJythonValueGenerator(scenarioRun,
 				chartComponent.getFunction()).generateExceedanceValues();
-		List<NavigableMap<Double, Double>> thresholdData = new ArrayList<>();
+		Map<String, NavigableMap<Double, Double>> thresholdData = new HashMap<>();
 		for(int i = 1; i < chartComponents.size(); i++)
 		{
 			NavigableMap<Double, Double> threshold = createJythonValueGenerator(getBase(),
 					chartComponents.get(i).getFunction()).generateExceedanceValues();
-			thresholdData.add(threshold);
+			thresholdData.put(chartComponents.get(i).getComponent(), threshold);
 		}
 		return new ExceedanceData(scenarioRun.getName(), primaryData, thresholdData);
 	}

@@ -130,9 +130,9 @@ public class PlotlyExceedancePage extends PlotlyChart
 			JSONObject baseTrace = buildPrimaryTrace(templateTrace, scenarioRun.getName(), scenarioRun, exceedanceData, gridIndex);
 			dataArray.put(baseTrace);
 			int index = 0;
-			for(NavigableMap<Double, Double> thresholdData : exceedanceData.getThresholdData())
+			for(Map.Entry<String, NavigableMap<Double, Double>> thresholdData : exceedanceData.getThresholdData().entrySet())
 			{
-				dataArray.put(buildThresholdTrace(templateTrace, scenarioRun.getName(), scenarioRun, thresholdData, index, gridIndex));
+				dataArray.put(buildThresholdTrace(templateTrace, thresholdData.getKey(), scenarioRun, thresholdData.getValue(), index, gridIndex));
 				index++;
 			}
 			gridIndex++;
