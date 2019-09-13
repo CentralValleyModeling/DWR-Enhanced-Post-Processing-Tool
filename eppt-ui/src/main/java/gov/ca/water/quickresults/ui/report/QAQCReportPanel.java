@@ -168,8 +168,8 @@ public class QAQCReportPanel extends RmaJPanel
 		_longTermStartYear.setValue(1921);
 		_longTermEndYear.setValue(2003);
 		Arrays.asList(PercentDiffStyle.values()).forEach(_percentDiffStyle::addItem);
-		_reportModules.put(_coverPageCheckBox, EPPTReport.COVER_PAGE);
-		_reportModules.put(_tableOfContentsCheckBox, EPPTReport.TABLE_OF_CONTENTS);
+		//		_reportModules.put(_coverPageCheckBox, EPPTReport.COVER_PAGE);
+		//		_reportModules.put(_tableOfContentsCheckBox, EPPTReport.TABLE_OF_CONTENTS);
 		_reportModules.put(_excutiveSummaryCheckBox, EPPTReport.EXECUTIVE_SUMMARY);
 		_reportModules.put(_assumptionChangesCheckBox, EPPTReport.ASSUMPTION_CHANGES);
 		_reportModules.put(_codeChangesCheckBox, EPPTReport.CODE_CHANGES);
@@ -496,7 +496,8 @@ public class QAQCReportPanel extends RmaJPanel
 
 	private List<String> getDisabledReportModules()
 	{
-		return _reportModules.entrySet().stream().filter(k -> !k.getKey().isSelected()).map(Map.Entry::getValue).collect(toList());
+		return _reportModules.entrySet().stream().filter(k -> !k.getKey().isSelected()).map(
+				Map.Entry::getValue).collect(toList());
 	}
 
 	private List<String> getDisabledSummaryModules()

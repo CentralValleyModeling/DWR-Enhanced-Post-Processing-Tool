@@ -142,7 +142,7 @@ class PercentDiffTableBuilder extends BaseAltDiffTableBuilder
 
 					if(baseValue != 0)
 					{
-						retval.setAttribute(VALUE_PERCENT_TEXT_ATTRIBUTE, ((altValue - baseValue) / baseValue) * 100 + "%");
+						retval.setAttribute(VALUE_PERCENT_TEXT_ATTRIBUTE, ((int)((altValue - baseValue) / baseValue) * 100) + "%");
 					}
 					else
 					{
@@ -153,7 +153,7 @@ class PercentDiffTableBuilder extends BaseAltDiffTableBuilder
 				{
 					if(baseValue != 0)
 					{
-						retval.setAttribute(VALUE_PERCENT_TEXT_ATTRIBUTE, textRaw + " (" + ((altValue - baseValue) / baseValue) * 100 + "%)");
+						retval.setAttribute(VALUE_PERCENT_TEXT_ATTRIBUTE, textRaw + " (" + ((int)((altValue - baseValue) / baseValue) * 100) + "%)");
 					}
 					else
 					{
