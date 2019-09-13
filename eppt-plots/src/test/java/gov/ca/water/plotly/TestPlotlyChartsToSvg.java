@@ -198,7 +198,7 @@ public class TestPlotlyChartsToSvg
 		threshold.put(.06, 5100.0);
 		threshold.put(.01, 5200.0);
 		thresholdData.add(threshold);
-		return new ExceedanceData(primaryData, thresholdData);
+		return new ExceedanceData("Base", primaryData, thresholdData);
 	}
 
 	private ExceedanceData buildAltExceedanceData()
@@ -221,7 +221,7 @@ public class TestPlotlyChartsToSvg
 		threshold.put(.56, 4000.0);
 		threshold.put(.1, 4000.0);
 		thresholdData.add(threshold);
-		return new ExceedanceData(primaryData, thresholdData);
+		return new ExceedanceData("Alt", primaryData, thresholdData);
 	}
 
 	private PlotlyBubble.BubbleData buildBubbleData()

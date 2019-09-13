@@ -25,13 +25,20 @@ public class ExceedanceData
 {
 
 
+	private final String _scenarioName;
 	private final NavigableMap<Double, Double> _primaryData;
 	private final List<NavigableMap<Double, Double>> _thresholdData;
 
-	public ExceedanceData(NavigableMap<Double, Double> primaryData, List<NavigableMap<Double, Double>> thresholdData)
+	public ExceedanceData(String scenarioName, NavigableMap<Double, Double> primaryData, List<NavigableMap<Double, Double>> thresholdData)
 	{
+		_scenarioName = scenarioName;
 		_primaryData = primaryData;
 		_thresholdData = thresholdData;
+	}
+
+	public String getScenarioName()
+	{
+		return _scenarioName;
 	}
 
 	public NavigableMap<Double, Double> getPrimaryData()

@@ -124,7 +124,7 @@ public class PlotlyExceedance extends PlotlyChart
 	}
 
 
-	private JSONObject buildPrimaryTrace(JSONObject template, String scenarioName, EpptScenarioRun scenarioRun,
+	private JSONObject buildPrimaryTrace(JSONObject template, EpptScenarioRun scenarioRun,
 										 ExceedanceData exceedanceData)
 	{
 		JSONObject retval = new JSONObject(template.toString());
@@ -136,7 +136,7 @@ public class PlotlyExceedance extends PlotlyChart
 			yArray.put(entry.getValue());
 		}
 		JSONObject marker = buildMarker(template.getJSONObject("marker"), scenarioRun);
-		retval.put("name", scenarioName);
+		retval.put("name", exceedanceData.getScenarioName());
 		retval.put("x", xArray);
 		retval.put("y", yArray);
 		retval.put("marker", marker);

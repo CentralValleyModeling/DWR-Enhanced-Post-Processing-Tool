@@ -68,6 +68,6 @@ class ExceedanceChartBuilder extends PlotChartBuilder
 					chartComponents.get(i).getFunction()).generateExceedanceValues();
 			thresholdData.add(threshold);
 		}
-		return new ExceedanceData(primaryData, thresholdData);
+		return new ExceedanceData(scenarioRun.getName(), primaryData, thresholdData);
 	}
 }

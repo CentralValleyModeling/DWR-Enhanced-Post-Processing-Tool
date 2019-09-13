@@ -62,7 +62,7 @@ class ExceedanceChartPageBuilder extends PlotChartBuilder
 		return new PlotlyExceedancePage(title, yAxisLabel, exceedanceData);
 	}
 
-	private PlotlyExceedancePage.ExceedanceMonthData buildMonthData(EpptScenarioRun base, List<ChartComponent> chartComponents)
+	private PlotlyExceedancePage.ExceedanceMonthData buildMonthData(EpptScenarioRun scenarioRun, List<ChartComponent> chartComponents)
 	{
 
 		EnumMap<Month, ExceedanceData> data = new EnumMap<>(Month.class);
@@ -71,7 +71,7 @@ class ExceedanceChartPageBuilder extends PlotChartBuilder
 			for(Month month : Month.values())
 			{
 				MonthPeriodFilter monthPeriodFilter = new MonthPeriodFilter(month);
-				data.put(month, buildExceedanceData(monthPeriodFilter, base, chartComponents));
+				data.put(month, buildExceedanceData(monthPeriodFilter, scenarioRun, chartComponents));
 			}
 
 		}
@@ -82,11 +82,11 @@ class ExceedanceChartPageBuilder extends PlotChartBuilder
 		return new PlotlyExceedancePage.ExceedanceMonthData(data);
 	}
 
-	private ExceedanceData buildExceedanceData(PeriodFilter periodFilter, EpptScenarioRun base, List<ChartComponent> chartComponents)
+	private ExceedanceData buildExceedanceData(PeriodFilter periodFilter, EpptScenarioRun scenarioRun, List<ChartComponent> chartComponents)
 			throws EpptReportException
 	{
 		ChartComponent chartComponent = chartComponents.get(0);
-		NavigableMap<Double, Double> primaryData = createJythonValueGenerator(base, chartComponent.getFunction()).generateExceedanceValues();
+		NavigableMap<Double, Double> primaryData = createJythonValueGenerator(scenarioRun, chartComponent.getFunction()).generateExceedanceValues();
 		List<NavigableMap<Double, Double>> thresholdData = new ArrayList<>();
 		for(int i = 1; i < chartComponents.size(); i++)
 		{
@@ -94,6 +94,6 @@ class ExceedanceChartPageBuilder extends PlotChartBuilder
 					chartComponents.get(i).getFunction()).generateExceedanceValues();
 			thresholdData.add(threshold);
 		}
-		return new ExceedanceData(primaryData, thresholdData);
+		return new ExceedanceData(scenarioRun.getName(), primaryData, thresholdData);
 	}
 }
