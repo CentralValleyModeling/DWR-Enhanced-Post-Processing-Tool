@@ -62,7 +62,7 @@ class LinePlotBuilder extends PlotChartBuilder
 			}
 			for(EpptScenarioRun alternative : getAlternatives())
 			{
-				primaryData.put(getBase(), buildData(alternative, chartComponents.get(0)));
+				primaryData.put(alternative, buildData(alternative, chartComponents.get(0)));
 				if(chartComponents.size() > 1)
 				{
 					thresholdData.put(alternative, buildData(alternative, chartComponents.subList(1, chartComponents.size())));
