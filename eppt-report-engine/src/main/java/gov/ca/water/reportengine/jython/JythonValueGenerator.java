@@ -18,6 +18,7 @@ import java.time.Month;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
 import java.util.NavigableMap;
@@ -208,7 +209,7 @@ public class JythonValueGenerator
 			{
 				throw new ScriptException("Script returned null collection: " + _function);
 			}
-			return (Map<Month, Double>) o;
+			return new EnumMap((Map<Month, Double>) o);
 		}
 		catch(ScriptException e)
 		{
