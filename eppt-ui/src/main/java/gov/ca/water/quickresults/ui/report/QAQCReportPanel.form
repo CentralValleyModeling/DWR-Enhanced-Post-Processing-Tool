@@ -16,25 +16,45 @@
         <properties/>
         <border type="none"/>
         <children>
-          <grid id="8f87e" layout-manager="FlowLayout" hgap="5" vgap="5" flow-align="2">
+          <grid id="8f87e" layout-manager="BorderLayout" hgap="0" vgap="0">
             <constraints border-constraint="Center"/>
             <properties/>
             <border type="none"/>
             <children>
-              <component id="74b35" class="javax.swing.JButton" binding="_generateReportButton" default-binding="true">
-                <constraints/>
-                <properties>
-                  <text value="Generate Report"/>
-                </properties>
-              </component>
-              <component id="aceab" class="javax.swing.JButton" binding="_cancelButton" default-binding="true">
-                <constraints/>
-                <properties>
-                  <enabled value="false"/>
-                  <preferredSize width="115" height="24"/>
-                  <text value="Cancel"/>
-                </properties>
-              </component>
+              <grid id="d1623" layout-manager="FlowLayout" hgap="5" vgap="5" flow-align="0">
+                <constraints border-constraint="West"/>
+                <properties/>
+                <border type="none"/>
+                <children>
+                  <component id="cfdad" class="javax.swing.JButton" binding="_overwriteJRXMLButton" default-binding="true">
+                    <constraints/>
+                    <properties>
+                      <text value="Overwrite JRXML"/>
+                    </properties>
+                  </component>
+                </children>
+              </grid>
+              <grid id="c823e" layout-manager="FlowLayout" hgap="5" vgap="5" flow-align="2">
+                <constraints border-constraint="Center"/>
+                <properties/>
+                <border type="none"/>
+                <children>
+                  <component id="74b35" class="javax.swing.JButton" binding="_generateReportButton" default-binding="true">
+                    <constraints/>
+                    <properties>
+                      <text value="Generate Report"/>
+                    </properties>
+                  </component>
+                  <component id="aceab" class="javax.swing.JButton" binding="_cancelButton" default-binding="true">
+                    <constraints/>
+                    <properties>
+                      <enabled value="false"/>
+                      <preferredSize width="115" height="24"/>
+                      <text value="Cancel"/>
+                    </properties>
+                  </component>
+                </children>
+              </grid>
             </children>
           </grid>
           <grid id="88195" layout-manager="BorderLayout" hgap="0" vgap="0">

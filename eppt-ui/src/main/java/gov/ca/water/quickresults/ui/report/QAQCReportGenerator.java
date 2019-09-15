@@ -46,20 +46,20 @@ class QAQCReportGenerator
 		_consumer = consumer;
 	}
 
-	void generateQAQCReport(EpptScenarioRun baseRun, EpptScenarioRun altRun, ReportParameters reportParameters, Path outputPdf, boolean forceCopyJrxml)
+	void generateQAQCReport(EpptScenarioRun baseRun, EpptScenarioRun altRun, ReportParameters reportParameters, Path outputPdf)
 			throws QAQCReportException
 	{
-		Path path = writeReportData(baseRun, altRun, reportParameters, forceCopyJrxml);
+		Path path = writeReportData(baseRun, altRun, reportParameters);
 		QAQCProcessRunner processRunner = new QAQCProcessRunner(outputPdf, path, _consumer);
 		processRunner.run();
 	}
 
-	private Path writeReportData(EpptScenarioRun baseRun, EpptScenarioRun altRun, ReportParameters reportParameters, boolean forceCopyJrxml)
+	private Path writeReportData(EpptScenarioRun baseRun, EpptScenarioRun altRun, ReportParameters reportParameters)
 			throws QAQCReportException
 	{
 		try
 		{
-			Path pathToWriteOut = copyJasperPaths(forceCopyJrxml);
+			Path pathToWriteOut = copyJasperPaths();
 			List<EpptScenarioRun> altRuns = Collections.emptyList();
 			if(altRun != null)
 			{
@@ -80,14 +80,13 @@ class QAQCReportGenerator
 		}
 	}
 
-	private Path copyJasperPaths(boolean forceCopyJrxml) throws IOException
+	public static Path copyJasperPaths() throws IOException
 	{
 		String jasperDir = Constant.JASPER_DIR;
 		Path lastProjectConfiguration = EpptPreferences.getLastProjectConfiguration();
 		Path reports = lastProjectConfiguration.getParent().resolve("Reports");
 		if(!reports.toFile().exists() ||
-				!reports.resolve("QAQC_Report.jrxml").toFile().exists() ||
-				forceCopyJrxml)
+				!reports.resolve("QAQC_Report.jrxml").toFile().exists())
 		{
 			copyFolder(Paths.get(jasperDir), reports);
 		}
@@ -104,7 +103,7 @@ class QAQCReportGenerator
 		return reports;
 	}
 
-	private void copyFolder(Path src, Path dest) throws IOException
+	private static void copyFolder(Path src, Path dest) throws IOException
 	{
 		try(Stream<Path> walk = Files.walk(src))
 		{
@@ -112,7 +111,7 @@ class QAQCReportGenerator
 		}
 	}
 
-	private void copy(Path source, Path dest)
+	private static void copy(Path source, Path dest)
 	{
 		try
 		{

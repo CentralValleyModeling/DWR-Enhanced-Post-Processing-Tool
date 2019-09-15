@@ -132,6 +132,7 @@ public class QAQCReportPanel extends RmaJPanel
 	private JButton _cancelButton;
 	private RmaJDateTimeField _startDateChooser;
 	private RmaJDateTimeField _endDateChooser;
+	private JButton _overwriteJRXMLButton;
 	private EpptScenarioRun _baseRun;
 	private EpptScenarioRun _altRun;
 	private final Map<JCheckBox, String> _reportModules = new HashMap<>();
@@ -187,6 +188,7 @@ public class QAQCReportPanel extends RmaJPanel
 				_summaryModules.forEach(c -> c.setSelected(false));
 			}
 		});
+		_overwriteJRXMLButton.addActionListener((e) -> checkForceCopyJrXml());
 	}
 
 	private void tabChanged(ChangeEvent e)
@@ -393,9 +395,6 @@ public class QAQCReportPanel extends RmaJPanel
 	private void generateReport()
 	{
 		_qaqcTextPane.setText("");
-		Path lastProjectConfiguration = EpptPreferences.getLastProjectConfiguration();
-		Path jrXmlPath = lastProjectConfiguration.getParent().resolve("Reports").resolve("QAQC_Report.jrxml");
-		boolean jrXmlExists = jrXmlPath.toFile().exists();
 		if(_baseRun != null)
 		{
 			boolean exists = Paths.get(_pdfOutput.getText()).toFile().exists();
@@ -405,14 +404,12 @@ public class QAQCReportPanel extends RmaJPanel
 						"Warning", JOptionPane.YES_NO_OPTION);
 				if(warning == JOptionPane.YES_OPTION)
 				{
-					boolean forceCopy = checkForceCopyJrXml(jrXmlPath, jrXmlExists);
-					_qaqcReportFuture = _executor.submit(() -> generateQAQCReport(forceCopy));
+					_qaqcReportFuture = _executor.submit(this::generateQAQCReport);
 				}
 			}
 			else
 			{
-				boolean forceCopy = checkForceCopyJrXml(jrXmlPath, jrXmlExists);
-				_qaqcReportFuture = _executor.submit(() -> generateQAQCReport(forceCopy));
+				_qaqcReportFuture = _executor.submit(this::generateQAQCReport);
 			}
 		}
 		else
@@ -421,22 +418,26 @@ public class QAQCReportPanel extends RmaJPanel
 		}
 	}
 
-	private boolean checkForceCopyJrXml(Path jrXmlPath, boolean jrXmlExists)
+	private void checkForceCopyJrXml()
 	{
-		boolean forceCopy = false;
-		if(jrXmlExists)
+		Path lastProjectConfiguration = EpptPreferences.getLastProjectConfiguration();
+		Path jrXmlPath = lastProjectConfiguration.getParent().resolve("Reports").resolve("QAQC_Report.jrxml");
+		int replaceReponse = JOptionPane.showConfirmDialog(this, "Jasper report files exist: " + jrXmlPath + "\n Do you wish to overwrite?",
+				"Warning", JOptionPane.YES_NO_OPTION);
+		if(replaceReponse == JOptionPane.YES_OPTION)
 		{
-			int replaceReponse = JOptionPane.showConfirmDialog(this, "Jasper report files exist: " + jrXmlPath + "\n Do you wish to overwrite?",
-					"Warning", JOptionPane.YES_NO_OPTION);
-			if(replaceReponse == JOptionPane.YES_OPTION)
+			try
 			{
-				forceCopy = true;
+				QAQCReportGenerator.copyJasperPaths();
+			}
+			catch(IOException e)
+			{
+				LOGGER.log(Level.SEVERE, "Error copying JRXML files", e);
 			}
 		}
-		return forceCopy;
 	}
 
-	private void generateQAQCReport(boolean forceCopyJrxml)
+	private void generateQAQCReport()
 	{
 		try
 		{
@@ -465,7 +466,7 @@ public class QAQCReportPanel extends RmaJPanel
 			ReportParameters reportParameters = new ReportParameters(tolerance, author, subtitle, summaryReportParameters,
 					disabledReportModules, true, true);
 			qaqcReportGenerator.generateQAQCReport(_baseRun, _altRun, reportParameters,
-					pathToWriteOut, forceCopyJrxml);
+					pathToWriteOut);
 		}
 		catch(QAQCReportException | RuntimeException | EpptReportException e)
 		{
@@ -574,33 +575,42 @@ public class QAQCReportPanel extends RmaJPanel
 		panel1.setLayout(new BorderLayout(0, 0));
 		_panel1.add(panel1, BorderLayout.SOUTH);
 		final JPanel panel2 = new JPanel();
-		panel2.setLayout(new FlowLayout(FlowLayout.RIGHT, 5, 5));
+		panel2.setLayout(new BorderLayout(0, 0));
 		panel1.add(panel2, BorderLayout.CENTER);
+		final JPanel panel3 = new JPanel();
+		panel3.setLayout(new FlowLayout(FlowLayout.LEFT, 5, 5));
+		panel2.add(panel3, BorderLayout.WEST);
+		_overwriteJRXMLButton = new JButton();
+		_overwriteJRXMLButton.setText("Overwrite JRXML");
+		panel3.add(_overwriteJRXMLButton);
+		final JPanel panel4 = new JPanel();
+		panel4.setLayout(new FlowLayout(FlowLayout.RIGHT, 5, 5));
+		panel2.add(panel4, BorderLayout.CENTER);
 		_generateReportButton = new JButton();
 		_generateReportButton.setText("Generate Report");
-		panel2.add(_generateReportButton);
+		panel4.add(_generateReportButton);
 		_cancelButton = new JButton();
 		_cancelButton.setEnabled(false);
 		_cancelButton.setPreferredSize(new Dimension(115, 24));
 		_cancelButton.setText("Cancel");
-		panel2.add(_cancelButton);
-		final JPanel panel3 = new JPanel();
-		panel3.setLayout(new BorderLayout(0, 0));
-		panel1.add(panel3, BorderLayout.NORTH);
-		_progressBar1 = new JProgressBar();
-		_progressBar1.setVisible(false);
-		panel3.add(_progressBar1, BorderLayout.CENTER);
-		final JPanel panel4 = new JPanel();
-		panel4.setLayout(new BorderLayout(0, 0));
-		panel4.setPreferredSize(new Dimension(850, 400));
-		_panel1.add(panel4, BorderLayout.NORTH);
+		panel4.add(_cancelButton);
 		final JPanel panel5 = new JPanel();
 		panel5.setLayout(new BorderLayout(0, 0));
-		panel5.setPreferredSize(new Dimension(475, 204));
-		panel4.add(panel5, BorderLayout.WEST);
+		panel1.add(panel5, BorderLayout.NORTH);
+		_progressBar1 = new JProgressBar();
+		_progressBar1.setVisible(false);
+		panel5.add(_progressBar1, BorderLayout.CENTER);
 		final JPanel panel6 = new JPanel();
-		panel6.setLayout(new GridBagLayout());
-		panel5.add(panel6, BorderLayout.NORTH);
+		panel6.setLayout(new BorderLayout(0, 0));
+		panel6.setPreferredSize(new Dimension(850, 400));
+		_panel1.add(panel6, BorderLayout.NORTH);
+		final JPanel panel7 = new JPanel();
+		panel7.setLayout(new BorderLayout(0, 0));
+		panel7.setPreferredSize(new Dimension(475, 204));
+		panel6.add(panel7, BorderLayout.WEST);
+		final JPanel panel8 = new JPanel();
+		panel8.setLayout(new GridBagLayout());
+		panel7.add(panel8, BorderLayout.NORTH);
 		final JLabel label1 = new JLabel();
 		label1.setText("Alternative Scenario Run:");
 		GridBagConstraints gbc;
@@ -609,22 +619,22 @@ public class QAQCReportPanel extends RmaJPanel
 		gbc.gridy = 1;
 		gbc.fill = GridBagConstraints.HORIZONTAL;
 		gbc.insets = new Insets(5, 5, 5, 5);
-		panel6.add(label1, gbc);
-		final JPanel panel7 = new JPanel();
-		panel7.setLayout(new BorderLayout(0, 0));
+		panel8.add(label1, gbc);
+		final JPanel panel9 = new JPanel();
+		panel9.setLayout(new BorderLayout(0, 0));
 		gbc = new GridBagConstraints();
 		gbc.gridx = 1;
 		gbc.gridy = 1;
 		gbc.fill = GridBagConstraints.BOTH;
 		gbc.insets = new Insets(5, 5, 5, 5);
-		panel6.add(panel7, gbc);
+		panel8.add(panel9, gbc);
 		_runAltWreslButton = new JButton();
 		_runAltWreslButton.setEnabled(false);
 		_runAltWreslButton.setText("Run WRESL");
-		panel7.add(_runAltWreslButton, BorderLayout.EAST);
+		panel9.add(_runAltWreslButton, BorderLayout.EAST);
 		_altScenarioTextField = new JTextField();
 		_altScenarioTextField.setEditable(false);
-		panel7.add(_altScenarioTextField, BorderLayout.CENTER);
+		panel9.add(_altScenarioTextField, BorderLayout.CENTER);
 		final JLabel label2 = new JLabel();
 		label2.setText("Base Scenario Run:");
 		gbc = new GridBagConstraints();
@@ -632,22 +642,22 @@ public class QAQCReportPanel extends RmaJPanel
 		gbc.gridy = 0;
 		gbc.fill = GridBagConstraints.HORIZONTAL;
 		gbc.insets = new Insets(5, 5, 5, 5);
-		panel6.add(label2, gbc);
-		final JPanel panel8 = new JPanel();
-		panel8.setLayout(new BorderLayout(0, 0));
+		panel8.add(label2, gbc);
+		final JPanel panel10 = new JPanel();
+		panel10.setLayout(new BorderLayout(0, 0));
 		gbc = new GridBagConstraints();
 		gbc.gridx = 1;
 		gbc.gridy = 0;
 		gbc.fill = GridBagConstraints.BOTH;
 		gbc.insets = new Insets(5, 5, 5, 5);
-		panel6.add(panel8, gbc);
+		panel8.add(panel10, gbc);
 		_runBaseWreslButton = new JButton();
 		_runBaseWreslButton.setEnabled(false);
 		_runBaseWreslButton.setText("Run WRESL");
-		panel8.add(_runBaseWreslButton, BorderLayout.EAST);
+		panel10.add(_runBaseWreslButton, BorderLayout.EAST);
 		_baseScenarioTextField = new JTextField();
 		_baseScenarioTextField.setEditable(false);
-		panel8.add(_baseScenarioTextField, BorderLayout.CENTER);
+		panel10.add(_baseScenarioTextField, BorderLayout.CENTER);
 		final JLabel label3 = new JLabel();
 		label3.setText("Output File:");
 		gbc = new GridBagConstraints();
@@ -655,24 +665,24 @@ public class QAQCReportPanel extends RmaJPanel
 		gbc.gridy = 4;
 		gbc.fill = GridBagConstraints.HORIZONTAL;
 		gbc.insets = new Insets(5, 5, 5, 5);
-		panel6.add(label3, gbc);
-		final JPanel panel9 = new JPanel();
-		panel9.setLayout(new BorderLayout(2, 0));
+		panel8.add(label3, gbc);
+		final JPanel panel11 = new JPanel();
+		panel11.setLayout(new BorderLayout(2, 0));
 		gbc = new GridBagConstraints();
 		gbc.gridx = 1;
 		gbc.gridy = 4;
 		gbc.fill = GridBagConstraints.BOTH;
 		gbc.insets = new Insets(5, 5, 5, 5);
-		panel6.add(panel9, gbc);
+		panel8.add(panel11, gbc);
 		_pdfOutput = new JTextField();
 		_pdfOutput.setEditable(false);
 		_pdfOutput.setPreferredSize(new Dimension(200, 24));
 		_pdfOutput.setText("");
-		panel9.add(_pdfOutput, BorderLayout.CENTER);
+		panel11.add(_pdfOutput, BorderLayout.CENTER);
 		_fileChooserBtn = new JButton();
 		_fileChooserBtn.setPreferredSize(new Dimension(30, 24));
 		_fileChooserBtn.setText("...");
-		panel9.add(_fileChooserBtn, BorderLayout.EAST);
+		panel11.add(_fileChooserBtn, BorderLayout.EAST);
 		final JLabel label4 = new JLabel();
 		label4.setText("DSS Compare Tolerance:");
 		gbc = new GridBagConstraints();
@@ -680,7 +690,7 @@ public class QAQCReportPanel extends RmaJPanel
 		gbc.gridy = 5;
 		gbc.fill = GridBagConstraints.HORIZONTAL;
 		gbc.insets = new Insets(5, 5, 5, 5);
-		panel6.add(label4, gbc);
+		panel8.add(label4, gbc);
 		_toleranceTextField.setText("");
 		gbc = new GridBagConstraints();
 		gbc.gridx = 1;
@@ -688,7 +698,7 @@ public class QAQCReportPanel extends RmaJPanel
 		gbc.anchor = GridBagConstraints.WEST;
 		gbc.fill = GridBagConstraints.HORIZONTAL;
 		gbc.insets = new Insets(5, 5, 5, 5);
-		panel6.add(_toleranceTextField, gbc);
+		panel8.add(_toleranceTextField, gbc);
 		final JLabel label5 = new JLabel();
 		label5.setText("Author:");
 		gbc = new GridBagConstraints();
@@ -697,7 +707,7 @@ public class QAQCReportPanel extends RmaJPanel
 		gbc.weightx = 0.1;
 		gbc.fill = GridBagConstraints.HORIZONTAL;
 		gbc.insets = new Insets(5, 5, 5, 5);
-		panel6.add(label5, gbc);
+		panel8.add(label5, gbc);
 		_authorTextField = new JTextField();
 		gbc = new GridBagConstraints();
 		gbc.gridx = 1;
@@ -706,7 +716,7 @@ public class QAQCReportPanel extends RmaJPanel
 		gbc.anchor = GridBagConstraints.WEST;
 		gbc.fill = GridBagConstraints.HORIZONTAL;
 		gbc.insets = new Insets(5, 5, 5, 5);
-		panel6.add(_authorTextField, gbc);
+		panel8.add(_authorTextField, gbc);
 		final JLabel label6 = new JLabel();
 		label6.setText("QA/QC Report Subtitle:");
 		gbc = new GridBagConstraints();
@@ -714,7 +724,7 @@ public class QAQCReportPanel extends RmaJPanel
 		gbc.gridy = 3;
 		gbc.fill = GridBagConstraints.HORIZONTAL;
 		gbc.insets = new Insets(5, 5, 5, 5);
-		panel6.add(label6, gbc);
+		panel8.add(label6, gbc);
 		_reportSubtitle = new JTextField();
 		_reportSubtitle.setText("Subtitle");
 		gbc = new GridBagConstraints();
@@ -724,7 +734,7 @@ public class QAQCReportPanel extends RmaJPanel
 		gbc.anchor = GridBagConstraints.WEST;
 		gbc.fill = GridBagConstraints.HORIZONTAL;
 		gbc.insets = new Insets(5, 5, 5, 5);
-		panel6.add(_reportSubtitle, gbc);
+		panel8.add(_reportSubtitle, gbc);
 		final JLabel label7 = new JLabel();
 		label7.setText("Percent Diff Format:");
 		gbc = new GridBagConstraints();
@@ -732,7 +742,7 @@ public class QAQCReportPanel extends RmaJPanel
 		gbc.gridy = 6;
 		gbc.fill = GridBagConstraints.HORIZONTAL;
 		gbc.insets = new Insets(5, 5, 5, 5);
-		panel6.add(label7, gbc);
+		panel8.add(label7, gbc);
 		final JLabel label8 = new JLabel();
 		label8.setText("Long Term Start Year:");
 		gbc = new GridBagConstraints();
@@ -740,7 +750,7 @@ public class QAQCReportPanel extends RmaJPanel
 		gbc.gridy = 7;
 		gbc.fill = GridBagConstraints.HORIZONTAL;
 		gbc.insets = new Insets(5, 5, 5, 5);
-		panel6.add(label8, gbc);
+		panel8.add(label8, gbc);
 		final JLabel label9 = new JLabel();
 		label9.setText("Long Term End Year:");
 		gbc = new GridBagConstraints();
@@ -748,7 +758,7 @@ public class QAQCReportPanel extends RmaJPanel
 		gbc.gridy = 8;
 		gbc.fill = GridBagConstraints.HORIZONTAL;
 		gbc.insets = new Insets(5, 5, 5, 5);
-		panel6.add(label9, gbc);
+		panel8.add(label9, gbc);
 		_percentDiffStyle = new JComboBox();
 		gbc = new GridBagConstraints();
 		gbc.gridx = 1;
@@ -756,21 +766,21 @@ public class QAQCReportPanel extends RmaJPanel
 		gbc.anchor = GridBagConstraints.WEST;
 		gbc.fill = GridBagConstraints.HORIZONTAL;
 		gbc.insets = new Insets(5, 5, 5, 5);
-		panel6.add(_percentDiffStyle, gbc);
+		panel8.add(_percentDiffStyle, gbc);
 		_longTermStartYear = new RmaJIntegerField();
 		gbc = new GridBagConstraints();
 		gbc.gridx = 1;
 		gbc.gridy = 7;
 		gbc.fill = GridBagConstraints.HORIZONTAL;
 		gbc.insets = new Insets(5, 5, 5, 5);
-		panel6.add(_longTermStartYear, gbc);
+		panel8.add(_longTermStartYear, gbc);
 		_longTermEndYear = new RmaJIntegerField();
 		gbc = new GridBagConstraints();
 		gbc.gridx = 1;
 		gbc.gridy = 8;
 		gbc.fill = GridBagConstraints.HORIZONTAL;
 		gbc.insets = new Insets(5, 5, 5, 5);
-		panel6.add(_longTermEndYear, gbc);
+		panel8.add(_longTermEndYear, gbc);
 		final JLabel label10 = new JLabel();
 		label10.setText("Common Period:");
 		gbc = new GridBagConstraints();
@@ -778,42 +788,42 @@ public class QAQCReportPanel extends RmaJPanel
 		gbc.gridy = 9;
 		gbc.fill = GridBagConstraints.HORIZONTAL;
 		gbc.insets = new Insets(5, 5, 5, 5);
-		panel6.add(label10, gbc);
-		final JPanel panel10 = new JPanel();
-		panel10.setLayout(new FlowLayout(FlowLayout.LEFT, 5, 5));
+		panel8.add(label10, gbc);
+		final JPanel panel12 = new JPanel();
+		panel12.setLayout(new FlowLayout(FlowLayout.LEFT, 5, 5));
 		gbc = new GridBagConstraints();
 		gbc.gridx = 1;
 		gbc.gridy = 9;
 		gbc.fill = GridBagConstraints.BOTH;
 		gbc.insets = new Insets(5, 5, 5, 5);
-		panel6.add(panel10, gbc);
+		panel8.add(panel12, gbc);
 		_startDateChooser = new RmaJDateTimeField();
 		_startDateChooser.setEnabled(true);
 		_startDateChooser.setPreferredSize(new Dimension(120, 18));
 		_startDateChooser.setText("01Nov1921 0000");
-		panel10.add(_startDateChooser);
+		panel12.add(_startDateChooser);
 		final JLabel label11 = new JLabel();
 		label11.setText("Start");
-		panel10.add(label11);
+		panel12.add(label11);
 		_endDateChooser = new RmaJDateTimeField();
 		_endDateChooser.setPreferredSize(new Dimension(120, 18));
 		_endDateChooser.setText("01Oct2003 0100");
-		panel10.add(_endDateChooser);
+		panel12.add(_endDateChooser);
 		final JLabel label12 = new JLabel();
 		label12.setText("End");
-		panel10.add(label12);
-		final JPanel panel11 = new JPanel();
-		panel11.setLayout(new BorderLayout(0, 0));
-		panel11.setPreferredSize(new Dimension(500, 200));
-		panel4.add(panel11, BorderLayout.CENTER);
-		panel11.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(), "QA/QC Report Controls"));
-		final JPanel panel12 = new JPanel();
-		panel12.setLayout(new BorderLayout(0, 0));
-		panel12.setPreferredSize(new Dimension(300, 270));
-		panel11.add(panel12, BorderLayout.WEST);
+		panel12.add(label12);
 		final JPanel panel13 = new JPanel();
-		panel13.setLayout(new GridBagLayout());
-		panel12.add(panel13, BorderLayout.NORTH);
+		panel13.setLayout(new BorderLayout(0, 0));
+		panel13.setPreferredSize(new Dimension(500, 200));
+		panel6.add(panel13, BorderLayout.CENTER);
+		panel13.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(), "QA/QC Report Controls"));
+		final JPanel panel14 = new JPanel();
+		panel14.setLayout(new BorderLayout(0, 0));
+		panel14.setPreferredSize(new Dimension(300, 270));
+		panel13.add(panel14, BorderLayout.WEST);
+		final JPanel panel15 = new JPanel();
+		panel15.setLayout(new GridBagLayout());
+		panel14.add(panel15, BorderLayout.NORTH);
 		_excutiveSummaryCheckBox = new JCheckBox();
 		_excutiveSummaryCheckBox.setEnabled(true);
 		_excutiveSummaryCheckBox.setHorizontalAlignment(2);
@@ -825,7 +835,7 @@ public class QAQCReportPanel extends RmaJPanel
 		gbc.weightx = 0.5;
 		gbc.anchor = GridBagConstraints.NORTHWEST;
 		gbc.insets = new Insets(0, 5, 0, 5);
-		panel13.add(_excutiveSummaryCheckBox, gbc);
+		panel15.add(_excutiveSummaryCheckBox, gbc);
 		_assumptionChangesCheckBox = new JCheckBox();
 		_assumptionChangesCheckBox.setEnabled(true);
 		_assumptionChangesCheckBox.setHorizontalAlignment(2);
@@ -835,7 +845,7 @@ public class QAQCReportPanel extends RmaJPanel
 		gbc.gridy = 1;
 		gbc.anchor = GridBagConstraints.NORTHWEST;
 		gbc.insets = new Insets(0, 5, 0, 5);
-		panel13.add(_assumptionChangesCheckBox, gbc);
+		panel15.add(_assumptionChangesCheckBox, gbc);
 		_codeChangesCheckBox = new JCheckBox();
 		_codeChangesCheckBox.setEnabled(true);
 		_codeChangesCheckBox.setHorizontalAlignment(2);
@@ -845,7 +855,7 @@ public class QAQCReportPanel extends RmaJPanel
 		gbc.gridy = 2;
 		gbc.anchor = GridBagConstraints.NORTHWEST;
 		gbc.insets = new Insets(0, 5, 0, 5);
-		panel13.add(_codeChangesCheckBox, gbc);
+		panel15.add(_codeChangesCheckBox, gbc);
 		_detailedIssuesCheckBox = new JCheckBox();
 		_detailedIssuesCheckBox.setEnabled(true);
 		_detailedIssuesCheckBox.setHorizontalAlignment(2);
@@ -856,7 +866,7 @@ public class QAQCReportPanel extends RmaJPanel
 		gbc.gridy = 3;
 		gbc.anchor = GridBagConstraints.NORTHWEST;
 		gbc.insets = new Insets(0, 5, 0, 5);
-		panel13.add(_detailedIssuesCheckBox, gbc);
+		panel15.add(_detailedIssuesCheckBox, gbc);
 		_standardSummaryStatiticsCheckBox = new JCheckBox();
 		_standardSummaryStatiticsCheckBox.setEnabled(true);
 		_standardSummaryStatiticsCheckBox.setHorizontalAlignment(2);
@@ -867,7 +877,7 @@ public class QAQCReportPanel extends RmaJPanel
 		gbc.gridy = 4;
 		gbc.anchor = GridBagConstraints.NORTHWEST;
 		gbc.insets = new Insets(0, 5, 0, 5);
-		panel13.add(_standardSummaryStatiticsCheckBox, gbc);
+		panel15.add(_standardSummaryStatiticsCheckBox, gbc);
 		_summaryModulesPanel = new JPanel();
 		_summaryModulesPanel.setLayout(new FlowLayout(FlowLayout.LEFT, 5, 5));
 		gbc = new GridBagConstraints();
@@ -875,17 +885,17 @@ public class QAQCReportPanel extends RmaJPanel
 		gbc.gridy = 5;
 		gbc.fill = GridBagConstraints.BOTH;
 		gbc.insets = new Insets(5, 25, 5, 5);
-		panel13.add(_summaryModulesPanel, gbc);
-		final JPanel panel14 = new JPanel();
-		panel14.setLayout(new BorderLayout(0, 0));
-		panel11.add(panel14, BorderLayout.CENTER);
-		final JPanel panel15 = new JPanel();
-		panel15.setLayout(new BorderLayout(0, 0));
-		panel15.setPreferredSize(new Dimension(350, 300));
-		panel14.add(panel15, BorderLayout.WEST);
+		panel15.add(_summaryModulesPanel, gbc);
 		final JPanel panel16 = new JPanel();
-		panel16.setLayout(new GridBagLayout());
-		panel15.add(panel16, BorderLayout.NORTH);
+		panel16.setLayout(new BorderLayout(0, 0));
+		panel13.add(panel16, BorderLayout.CENTER);
+		final JPanel panel17 = new JPanel();
+		panel17.setLayout(new BorderLayout(0, 0));
+		panel17.setPreferredSize(new Dimension(350, 300));
+		panel16.add(panel17, BorderLayout.WEST);
+		final JPanel panel18 = new JPanel();
+		panel18.setLayout(new GridBagLayout());
+		panel17.add(panel18, BorderLayout.NORTH);
 		final JLabel label13 = new JLabel();
 		label13.setText("Water Year Definition:");
 		gbc = new GridBagConstraints();
@@ -893,7 +903,7 @@ public class QAQCReportPanel extends RmaJPanel
 		gbc.gridy = 0;
 		gbc.anchor = GridBagConstraints.WEST;
 		gbc.insets = new Insets(5, 5, 5, 5);
-		panel16.add(label13, gbc);
+		panel18.add(label13, gbc);
 		final JLabel label14 = new JLabel();
 		label14.setText("Water Year Index:");
 		gbc = new GridBagConstraints();
@@ -901,7 +911,7 @@ public class QAQCReportPanel extends RmaJPanel
 		gbc.gridy = 1;
 		gbc.anchor = GridBagConstraints.WEST;
 		gbc.insets = new Insets(5, 5, 5, 5);
-		panel16.add(label14, gbc);
+		panel18.add(label14, gbc);
 		_waterYearDefinitionCombo = new JComboBox();
 		_waterYearDefinitionCombo.setEnabled(true);
 		gbc = new GridBagConstraints();
@@ -911,7 +921,7 @@ public class QAQCReportPanel extends RmaJPanel
 		gbc.anchor = GridBagConstraints.WEST;
 		gbc.fill = GridBagConstraints.HORIZONTAL;
 		gbc.insets = new Insets(5, 5, 5, 5);
-		panel16.add(_waterYearDefinitionCombo, gbc);
+		panel18.add(_waterYearDefinitionCombo, gbc);
 		_waterYearIndexCombo = new JComboBox();
 		_waterYearIndexCombo.setEnabled(false);
 		gbc = new GridBagConstraints();
@@ -921,9 +931,9 @@ public class QAQCReportPanel extends RmaJPanel
 		gbc.anchor = GridBagConstraints.WEST;
 		gbc.fill = GridBagConstraints.HORIZONTAL;
 		gbc.insets = new Insets(5, 5, 5, 5);
-		panel16.add(_waterYearIndexCombo, gbc);
+		panel18.add(_waterYearIndexCombo, gbc);
 		_waterYearPeriodsPanel.setEnabled(true);
-		panel15.add(_waterYearPeriodsPanel, BorderLayout.CENTER);
+		panel17.add(_waterYearPeriodsPanel, BorderLayout.CENTER);
 		_tabbedPane1 = new JTabbedPane();
 		_panel1.add(_tabbedPane1, BorderLayout.CENTER);
 		final JScrollPane scrollPane1 = new JScrollPane();
