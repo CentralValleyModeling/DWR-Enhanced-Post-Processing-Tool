@@ -2,11 +2,11 @@
 <form xmlns="http://www.intellij.com/uidesigner/form/" version="1" bind-to-class="gov.ca.water.quickresults.ui.report.QAQCReportPanel">
   <grid id="27dc6" binding="_panel1" default-binding="true" layout-manager="BorderLayout" hgap="5" vgap="2">
     <constraints>
-      <xy x="20" y="20" width="1150" height="717"/>
+      <xy x="20" y="20" width="1450" height="717"/>
     </constraints>
     <properties>
       <minimumSize width="1150" height="350"/>
-      <preferredSize width="1000" height="800"/>
+      <preferredSize width="1150" height="800"/>
       <requestFocusEnabled value="false"/>
     </properties>
     <border type="none"/>
