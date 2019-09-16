@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Created with Jaspersoft Studio version 6.9.0.final using JasperReports Library version 6.9.0-cb8f9004be492ccc537180b49c026951f4220bf3  -->
+<!-- Created with Jaspersoft Studio version 6.8.0.final using JasperReports Library version 6.8.0-2ed8dfabb690ff337a5797129f2cd92902b0c87b  -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="QAQC_Upstream_Minimum_Flow_Requirements" language="groovy" pageWidth="612" pageHeight="792" columnWidth="504" leftMargin="54" rightMargin="54" topMargin="54" bottomMargin="54" isSummaryWithPageHeaderAndFooter="true" whenResourceMissingType="Empty" uuid="fdf29854-1cab-4c3d-99e9-a38b49852a26">
 	<property name="net.sf.jasperreports.xml.source" value=""/>
 	<property name="net.sf.jasperreports.export.xls.collapse.row.span" value="true"/>
 	<property name="net.sf.jasperreports.print.create.bookmarks" value="true"/>
-	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="QAQC_Datasource"/>
+	<property name="net.sf.jasperreports.data.adapter" value="QAQC_Datasource.xml"/>
 	<property name="com.jaspersoft.studio.unit.topMargin" value="pixel"/>
 	<property name="com.jaspersoft.studio.unit.bottomMargin" value="pixel"/>
 	<property name="com.jaspersoft.studio.unit.leftMargin" value="pixel"/>
@@ -23,6 +23,10 @@
 		<property name="net.sf.jasperreports.xpath.field.expression" value="ancestor::module/@module-name"/>
 		<fieldDescription><![CDATA[ancestor::module/@module-name]]></fieldDescription>
 	</field>
+	<field name="chart-name" class="java.lang.String">
+		<property name="net.sf.jasperreports.xpath.field.expression" value="@chart-name"/>
+		<fieldDescription><![CDATA[@chart-name]]></fieldDescription>
+	</field>
 	<variable name="Section_Group_Footer_2" class="java.lang.String">
 		<variableExpression><![CDATA["nod-up-min-flow-summary-annual"]]></variableExpression>
 	</variable>
@@ -34,6 +38,9 @@
 	</variable>
 	<variable name="Section_Group_Footer_5" class="java.lang.String">
 		<variableExpression><![CDATA["nod-up-min-flow-list"]]></variableExpression>
+	</variable>
+	<variable name="chart-name" class="java.lang.String" resetType="None">
+		<variableExpression><![CDATA[$F{chart-name}==$V{Section_Group_Footer_3}||$V{chart-name}=="print"?"print":$F{chart-name}]]></variableExpression>
 	</variable>
 	<filterExpression><![CDATA[$F{module-name}=="Upstream Minimum Flow Requirements"]]></filterExpression>
 	<group name="Module">
@@ -109,7 +116,7 @@
 					<textElement textAlignment="Left" verticalAlignment="Middle">
 						<font fontName="Arial" size="12"/>
 					</textElement>
-					<textFieldExpression><![CDATA["Percent Difference in Reservoir Release Control"]]></textFieldExpression>
+					<textFieldExpression><![CDATA["Percent Difference in Upstream Minimum Flow Requirements"]]></textFieldExpression>
 					<anchorNameExpression><![CDATA["Percent Difference in Reservoir Release Control"]]></anchorNameExpression>
 				</textField>
 				<subreport>
@@ -197,7 +204,7 @@
 					<textElement textAlignment="Left" verticalAlignment="Middle">
 						<font fontName="Arial" size="12"/>
 					</textElement>
-					<textFieldExpression><![CDATA["Non-recoverable Spill Events"]]></textFieldExpression>
+					<textFieldExpression><![CDATA["Required Flow Not Met"]]></textFieldExpression>
 					<anchorNameExpression><![CDATA["Non-recoverable Spill Events"]]></anchorNameExpression>
 				</textField>
 				<subreport>
@@ -215,6 +222,19 @@
 					<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
 					<subreportExpression><![CDATA["/DWR_QA_QC_Reports/Subreports/list/"+$V{Section_Group_Footer_5}+".jasper"]]></subreportExpression>
 				</subreport>
+			</band>
+		</groupFooter>
+	</group>
+	<group name="chart-name">
+		<groupExpression><![CDATA[$V{chart-name}]]></groupExpression>
+		<groupHeader>
+			<band>
+				<printWhenExpression><![CDATA[1==0]]></printWhenExpression>
+			</band>
+		</groupHeader>
+		<groupFooter>
+			<band>
+				<printWhenExpression><![CDATA[1==0]]></printWhenExpression>
 			</band>
 		</groupFooter>
 	</group>

@@ -41,7 +41,7 @@ public final class JythonScriptBuilder
 	private static final Pattern OPEN_PAREN_PATTERN = Pattern.compile("\\(");
 	private static final Pattern CLOSED_PAREN_PATTERN = Pattern.compile("\\)");
 	private static final int FUNCTION_NAME_INDEX = 1;
-	private static final int FUNCTION_TEMPLATE_INDEX = 4;
+	private static final int FUNCTION_TEMPLATE_INDEX = 2;
 	private static JythonScriptBuilder instance;
 
 	private final List<Script> _scripts;
@@ -68,9 +68,9 @@ public final class JythonScriptBuilder
 		Script retval = null;
 		String[] split = CSV_PATTERN.split(line);
 		replaceCommas(split);
-		if(split.length > 4)
+		if(FUNCTION_TEMPLATE_INDEX < split.length)
 		{
-			String fullFunctionName = split[1];
+			String fullFunctionName = split[FUNCTION_NAME_INDEX];
 			String[] nameSplit = OPEN_PAREN_PATTERN.split(fullFunctionName);
 			List<String> arguments = new ArrayList<>();
 			if(nameSplit.length > 1)

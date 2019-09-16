@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Created with Jaspersoft Studio version 6.8.0.final using JasperReports Library version 6.8.0-2ed8dfabb690ff337a5797129f2cd92902b0c87b  -->
+<!-- Created with Jaspersoft Studio version 6.9.0.final using JasperReports Library version 6.9.0-cb8f9004be492ccc537180b49c026951f4220bf3  -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="QAQC_Reservoir Operations" language="groovy" pageWidth="612" pageHeight="792" columnWidth="504" leftMargin="54" rightMargin="54" topMargin="54" bottomMargin="54" isSummaryWithPageHeaderAndFooter="true" whenResourceMissingType="Empty" uuid="fdf29854-1cab-4c3d-99e9-a38b49852a26">
 	<property name="net.sf.jasperreports.xml.source" value=""/>
 	<property name="net.sf.jasperreports.export.xls.collapse.row.span" value="true"/>
 	<property name="net.sf.jasperreports.print.create.bookmarks" value="true"/>
-	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="QAQC_Datasource"/>
+	<property name="net.sf.jasperreports.data.adapter" value="QAQC_Datasource.xml"/>
 	<property name="com.jaspersoft.studio.unit.topMargin" value="pixel"/>
 	<property name="com.jaspersoft.studio.unit.bottomMargin" value="pixel"/>
 	<property name="com.jaspersoft.studio.unit.leftMargin" value="pixel"/>
@@ -34,7 +34,7 @@
 	<variable name="Section_Group_Footer_36" class="java.lang.String">
 		<variableExpression><![CDATA["resops-summary-trinity-imports-stor-month"]]></variableExpression>
 	</variable>
-	<variable name="Section_Group_Footer_37" class="java.lang.String">
+	<variable name="Section_Group_Footer_37" class="java.lang.String" resetType="Group" resetGroup="chart_name">
 		<variableExpression><![CDATA["resops-control-summary"]]></variableExpression>
 	</variable>
 	<variable name="Section_Group_Footer_38" class="java.lang.String">
@@ -42,6 +42,9 @@
 	</variable>
 	<variable name="Section_Group_Footer_39" class="java.lang.String">
 		<variableExpression><![CDATA["resops-list-spill-events"]]></variableExpression>
+	</variable>
+	<variable name="chart-name" class="java.lang.String" resetType="None">
+		<variableExpression><![CDATA[$F{chart-name}==$V{Section_Group_Footer_37}||$V{chart-name}=="print"?"print":$F{chart-name}]]></variableExpression>
 	</variable>
 	<filterExpression><![CDATA[$F{module-name}=="Reservoir Operations"]]></filterExpression>
 	<group name="Module" isReprintHeaderOnEachPage="true">
@@ -72,6 +75,7 @@
 						<property name="com.jaspersoft.studio.unit.height" value="px"/>
 						<property name="com.jaspersoft.studio.unit.y" value="px"/>
 						<property name="com.jaspersoft.studio.unit.x" value="px"/>
+						<printWhenExpression><![CDATA[$V{chart-name}=="print"]]></printWhenExpression>
 					</reportElement>
 					<box padding="2">
 						<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -190,6 +194,20 @@
 					<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
 					<subreportExpression><![CDATA["/DWR_QA_QC_Reports/Subreports/list/"+$V{Section_Group_Footer_39}+".jasper"]]></subreportExpression>
 				</subreport>
+			</band>
+		</groupFooter>
+	</group>
+	<group name="chart_name">
+		<groupExpression><![CDATA[$F{chart-name}]]></groupExpression>
+		<groupHeader>
+			<band>
+				<printWhenExpression><![CDATA[1==0]]></printWhenExpression>
+			</band>
+		</groupHeader>
+		<groupFooter>
+			<band>
+				<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				<printWhenExpression><![CDATA[1==0]]></printWhenExpression>
 			</band>
 		</groupFooter>
 	</group>

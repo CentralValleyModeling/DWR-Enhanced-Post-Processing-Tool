@@ -4,7 +4,7 @@
 	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
 	<property name="net.sf.jasperreports.export.xls.collapse.row.span" value="true"/>
 	<property name="net.sf.jasperreports.print.create.bookmarks" value="true"/>
-	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="QAQC_Datasource"/>
+	<property name="net.sf.jasperreports.data.adapter" value="QAQC_Datasource.xml"/>
 	<property name="com.jaspersoft.studio.unit.topMargin" value="pixel"/>
 	<property name="com.jaspersoft.studio.unit.bottomMargin" value="pixel"/>
 	<property name="com.jaspersoft.studio.unit.leftMargin" value="pixel"/>
@@ -544,7 +544,7 @@
 								<reportElement style="less-greater-equal-label" stretchType="ContainerHeight" x="0" y="0" width="44" height="16" uuid="367d5c99-718e-4075-83b6-cefd091de368">
 									<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 								</reportElement>
-								<box topPadding="2" leftPadding="1" bottomPadding="1" rightPadding="2"/>
+								<box topPadding="2" leftPadding="2" bottomPadding="1" rightPadding="2"/>
 								<textElement textAlignment="Center" verticalAlignment="Middle">
 									<font size="10"/>
 								</textElement>

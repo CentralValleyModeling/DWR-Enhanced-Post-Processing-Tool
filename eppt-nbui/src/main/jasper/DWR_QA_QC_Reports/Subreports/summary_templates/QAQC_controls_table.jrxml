@@ -544,7 +544,7 @@
 								<reportElement style="less-greater-equal-label" stretchType="ContainerHeight" x="0" y="0" width="44" height="16" uuid="367d5c99-718e-4075-83b6-cefd091de368">
 									<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 								</reportElement>
-								<box topPadding="2" leftPadding="1" bottomPadding="1" rightPadding="2"/>
+								<box topPadding="2" leftPadding="2" bottomPadding="1" rightPadding="2"/>
 								<textElement textAlignment="Center" verticalAlignment="Middle">
 									<font size="10"/>
 								</textElement>

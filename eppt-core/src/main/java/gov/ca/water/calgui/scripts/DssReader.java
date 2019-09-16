@@ -21,6 +21,7 @@ import java.util.Objects;
 import java.util.TimeZone;
 import java.util.TreeMap;
 import java.util.concurrent.TimeUnit;
+import java.util.logging.Level;
 import java.util.regex.Pattern;
 
 import com.google.common.flogger.FluentLogger;
@@ -35,6 +36,7 @@ import hec.heclib.dss.HecDss;
 import hec.heclib.util.HecTime;
 import hec.io.DataContainer;
 import hec.io.TimeSeriesContainer;
+import rma.util.RMAConst;
 
 /**
  * Company: Resource Management Associates
@@ -90,7 +92,15 @@ public class DssReader
 					int offset = (int) TimeUnit.MILLISECONDS.toMinutes(TimeZone.getDefault().getRawOffset());
 					Date javaDate = hecTime.getJavaDate(offset);
 					LocalDateTime localDateTime = LocalDateTime.ofInstant(javaDate.toInstant(), ZoneId.systemDefault());
-					retval.put(localDateTime, value);
+					if(RMAConst.isValidValue(value))
+					{
+						retval.put(localDateTime, value);
+					}
+					else
+					{
+						retval.put(localDateTime, Double.NaN);
+						LOGGER.at(Level.FINE).log("Invalid value %d found at: %s", localDateTime);
+					}
 				}
 			}
 		}

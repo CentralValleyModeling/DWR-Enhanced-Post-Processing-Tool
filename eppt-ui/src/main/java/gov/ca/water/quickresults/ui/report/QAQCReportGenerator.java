@@ -59,20 +59,26 @@ class QAQCReportGenerator
 	{
 		try
 		{
-			Path pathToWriteOut = copyJasperPaths();
+			Path lastProjectConfiguration = EpptPreferences.getLastProjectConfiguration();
+			Path reports = lastProjectConfiguration.getParent().resolve("Reports");
+			if(!reports.toFile().exists() ||
+					!reports.resolve("QAQC_Report.jrxml").toFile().exists())
+			{
+				copyJasperPaths();
+			}
 			List<EpptScenarioRun> altRuns = Collections.emptyList();
 			if(altRun != null)
 			{
 				altRuns = Collections.singletonList(altRun);
 			}
-			Path dataFile = pathToWriteOut.resolve("DWR_QA_QC_Reports").resolve("Datasource").resolve("EPPT_Data.xml");
+			Path dataFile = reports.resolve("DWR_QA_QC_Reports").resolve("Datasource").resolve("EPPT_Data.xml");
 			EPPTReport epptReport = new EPPTReport(dataFile,
 					baseRun, altRuns, reportParameters);
-//			if(false)
+			//			if(false)
 			{
 				epptReport.writeReport();
 			}
-			return pathToWriteOut.resolve("QAQC_Report.jrxml");
+			return reports.resolve("QAQC_Report.jrxml");
 		}
 		catch(IOException | RuntimeException ex)
 		{
@@ -83,13 +89,10 @@ class QAQCReportGenerator
 	public static Path copyJasperPaths() throws IOException
 	{
 		String jasperDir = Constant.JASPER_DIR;
+
 		Path lastProjectConfiguration = EpptPreferences.getLastProjectConfiguration();
 		Path reports = lastProjectConfiguration.getParent().resolve("Reports");
-		if(!reports.toFile().exists() ||
-				!reports.resolve("QAQC_Report.jrxml").toFile().exists())
-		{
-			copyFolder(Paths.get(jasperDir), reports);
-		}
+		copyFolder(Paths.get(jasperDir), reports);
 		try(Stream<Path> walk = Files.walk(reports, 7))
 		{
 			List<Path> jasper = walk.filter(p -> p.getFileName().toString().endsWith("jasper"))

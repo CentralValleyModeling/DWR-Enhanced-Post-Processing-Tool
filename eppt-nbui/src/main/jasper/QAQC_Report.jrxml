@@ -4,7 +4,7 @@
 	<property name="net.sf.jasperreports.print.create.bookmarks" value="true"/>
 	<property name="com.jaspersoft.studio.book.group.cover.header" value="Cover and Table of Contents"/>
 	<property name="com.jaspersoft.studio.book.group.cover.footer" value="Backcover"/>
-	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="QAQC_Datasource"/>
+	<property name="net.sf.jasperreports.data.adapter" value="QAQC_Datasource.xml"/>
 	<queryString language="XPath">
 		<![CDATA[/qaqc-report]]>
 	</queryString>
