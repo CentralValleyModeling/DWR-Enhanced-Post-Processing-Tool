@@ -294,25 +294,25 @@ public class DTSProcessor
 		{
 			switch(value)
 			{
-				case 0:
+				case 100:
 				{
-					if(flagType == SubModule.FlagType.ZERO)
+					if(flagType == SubModule.FlagType.VALUE_100)
 					{
 						violationTimes.add(hecTime);
 					}
 					break;
 				}
-				case 1:
+				case 200:
 				{
-					if(flagType == SubModule.FlagType.ONE)
+					if(flagType == SubModule.FlagType.VALUE_200)
 					{
 						violationTimes.add(hecTime);
 					}
 					break;
 				}
-				case 2:
+				case 300:
 				{
-					if(flagType == SubModule.FlagType.TWO)
+					if(flagType == SubModule.FlagType.VALUE_300)
 					{
 						violationTimes.add(hecTime);
 					}

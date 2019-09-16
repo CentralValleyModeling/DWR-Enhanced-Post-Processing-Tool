@@ -89,9 +89,9 @@ public class SubModule
 
 	public enum FlagType
 	{
-		ZERO,
-		ONE,
-		TWO,
+		VALUE_100,
+		VALUE_200,
+		VALUE_300,
 		NEGATIVE_INFINITY,
 		OTHER
 	}
