@@ -16,13 +16,15 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.function.Function;
+import java.util.stream.IntStream;
 
-import gov.ca.water.calgui.bo.CommonPeriodFilter;
 import gov.ca.water.calgui.project.EpptScenarioRun;
-import gov.ca.water.reportengine.jython.JythonScriptBuilder;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 
 import static java.util.stream.Collectors.groupingBy;
 import static java.util.stream.Collectors.toList;
@@ -53,8 +55,12 @@ abstract class TableBuilder extends StandardSummaryChartBuilder
 			List<ChartComponent> componentsForTitle = groupedByTitle.getOrDefault(title, new ArrayList<>());
 			Element titleElement = buildTitle(title, componentsForTitle, valueFunction);
 			titleElement.setAttribute(TITLE_ORDER_ATTRIBUTE, String.valueOf(i));
-			retval.appendChild(titleElement);
-			i++;
+			boolean hasContent = hasValueContent(titleElement);
+			if(hasContent)
+			{
+				retval.appendChild(titleElement);
+				i++;
+			}
 		}
 	}
 
@@ -73,10 +79,23 @@ abstract class TableBuilder extends StandardSummaryChartBuilder
 			List<ChartComponent> componentsForHeader = groupedByHeaders.getOrDefault(header, new ArrayList<>());
 			Element headerElement = buildHeader(header, componentsForHeader, valueFunction);
 			headerElement.setAttribute(HEADER_ORDER_ATTRIBUTE, String.valueOf(i));
-			retval.appendChild(headerElement);
-			i++;
+
+			boolean hasContent = hasValueContent(headerElement);
+			if(hasContent)
+			{
+				retval.appendChild(headerElement);
+				i++;
+			}
 		}
 		return retval;
+	}
+
+	public static boolean hasValueContent(Element element)
+	{
+		NodeList value = element.getElementsByTagName("value");
+		return IntStream.iterate(0, iter -> iter + 1).limit(value.getLength()).mapToObj(value::item).map(
+				Node::getTextContent).filter(
+				Objects::nonNull).anyMatch(v -> !v.isEmpty());
 	}
 
 	private void appendTitlePlaceholder(String title, List<ChartComponent> componentsForTitle, Function<ChartComponent, Element> valueFunction,
@@ -112,9 +131,13 @@ abstract class TableBuilder extends StandardSummaryChartBuilder
 		{
 			List<ChartComponent> componentsForSubHeaders = groupedBySubheaders.getOrDefault(subHeader, new ArrayList<>());
 			Element subHeaderElement = buildSubHeader(subHeader, componentsForSubHeaders, valueFunction);
+			boolean hasContent = hasValueContent(subHeaderElement);
 			subHeaderElement.setAttribute(SUBHEADER_ORDER_ATTRIBUTE, String.valueOf(i));
-			retval.appendChild(subHeaderElement);
-			i++;
+			if(hasContent)
+			{
+				retval.appendChild(subHeaderElement);
+				i++;
+			}
 		}
 		return retval;
 	}
@@ -146,9 +169,15 @@ abstract class TableBuilder extends StandardSummaryChartBuilder
 		for(ChartComponent component : componentsForSubHeaders)
 		{
 			Element componentElement = buildComponent(component, valueFunction);
-			componentElement.setAttribute(COMPONENT_ORDER_ATTRIBUTE, String.valueOf(i));
-			retval.appendChild(componentElement);
-			i++;
+			if(componentElement != null)
+			{
+				componentElement.setAttribute(COMPONENT_ORDER_ATTRIBUTE, String.valueOf(i));
+				if(hasValueContent(componentElement))
+				{
+					retval.appendChild(componentElement);
+					i++;
+				}
+			}
 		}
 		return retval;
 	}

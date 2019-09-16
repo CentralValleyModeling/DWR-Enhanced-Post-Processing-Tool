@@ -12,9 +12,9 @@
 	<property name="com.jaspersoft.studio.unit.columnWidth" value="pixel"/>
 	<property name="com.jaspersoft.studio.unit.columnSpacing" value="pixel"/>
 	<property name="net.sf.jasperreports.xml.source" value="DWR_QA_QC_Reports\Datasource\QAQC_Datasource_TEST.xml"/>
-	<property name="net.sf.jasperreports.data.adapter" value="QAQC_Datasource.xml"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="QAQC_Datasource"/>
 	<subDataset name="ExecutiveReportTable" uuid="a23916fc-7643-47c7-94e2-f0cc8ded7e23">
-		<property name="net.sf.jasperreports.data.adapter" value="QAQC_Datasource.xml"/>
+		<property name="com.jaspersoft.studio.data.defaultdataadapter" value="QAQC_Datasource"/>
 		<queryString language="xPath">
 			<![CDATA[/qaqc-report/executive-report/executive-report-table/module]]>
 		</queryString>

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Created with Jaspersoft Studio version 6.8.0.final using JasperReports Library version 6.8.0-2ed8dfabb690ff337a5797129f2cd92902b0c87b  -->
+<!-- Created with Jaspersoft Studio version 6.9.0.final using JasperReports Library version 6.9.0-cb8f9004be492ccc537180b49c026951f4220bf3  -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="QAQC_sumary_table" language="groovy" pageWidth="504" pageHeight="684" columnWidth="504" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" isSummaryWithPageHeaderAndFooter="true" whenResourceMissingType="Empty" uuid="fdf29854-1cab-4c3d-99e9-a38b49852a26">
 	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
 	<property name="net.sf.jasperreports.export.xls.collapse.row.span" value="true"/>
@@ -510,7 +510,7 @@
 								<rightPen lineWidth="1.0"/>
 							</box>
 							<textField>
-								<reportElement style="Crosstab_CH" x="0" y="0" width="20" height="20" uuid="0a40e038-8aa2-45c1-a9c0-050fc6894132"/>
+								<reportElement style="Crosstab_CH" x="0" y="0" width="30" height="20" uuid="0a40e038-8aa2-45c1-a9c0-050fc6894132"/>
 								<textElement textAlignment="Center" verticalAlignment="Middle">
 									<font size="11" isBold="true"/>
 								</textElement>
@@ -546,7 +546,7 @@
 								<rightPen lineWidth="0.0"/>
 							</box>
 							<textField isStretchWithOverflow="true">
-								<reportElement style="seasonal_type_top_border" stretchType="ContainerHeight" x="0" y="0" width="20" height="20" uuid="7c72ed3e-2e74-4e33-a6e1-4c4685d3cada"/>
+								<reportElement style="seasonal_type_top_border" stretchType="ContainerHeight" x="0" y="0" width="30" height="20" uuid="7c72ed3e-2e74-4e33-a6e1-4c4685d3cada"/>
 								<box>
 									<leftPen lineWidth="1.0"/>
 									<rightPen lineWidth="1.0"/>
@@ -583,7 +583,7 @@
 						<cellContents mode="Transparent" style="Scenario_Color">
 							<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 							<textField>
-								<reportElement style="Scenario_Color" stretchType="ContainerHeight" mode="Transparent" x="0" y="0" width="20" height="30" uuid="9af966a8-1ed5-4b02-b8fb-d612a223563f"/>
+								<reportElement style="Scenario_Color" stretchType="ContainerHeight" mode="Transparent" x="0" y="0" width="30" height="30" uuid="9af966a8-1ed5-4b02-b8fb-d612a223563f"/>
 								<textElement textAlignment="Center" verticalAlignment="Middle" rotation="Left"/>
 								<textFieldExpression><![CDATA[$V{scenario-name}]]></textFieldExpression>
 							</textField>
@@ -596,7 +596,7 @@
 				<measure name="value_MEASURE" class="java.lang.Integer">
 					<measureExpression><![CDATA[$F{value}]]></measureExpression>
 				</measure>
-				<crosstabCell width="20" height="16">
+				<crosstabCell width="30" height="16">
 					<cellContents mode="Transparent" style="Crosstab_CD">
 						<property name="com.jaspersoft.studio.unit.height" value="px"/>
 						<property name="com.jaspersoft.studio.unit.width" value="px"/>
@@ -607,8 +607,9 @@
 							<rightPen lineWidth="0.0" lineColor="#CCCCCC"/>
 						</box>
 						<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-							<reportElement style="Value_Color" stretchType="ContainerHeight" x="0" y="0" width="20" height="16" backcolor="rgba(255, 255, 255, 0.0)" uuid="257e3cc2-420d-4c2e-9a84-cd586398ad0b">
+							<reportElement style="Value_Color" stretchType="ContainerHeight" x="0" y="0" width="30" height="16" backcolor="rgba(255, 255, 255, 0.0)" uuid="257e3cc2-420d-4c2e-9a84-cd586398ad0b">
 								<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+								<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
 							</reportElement>
 							<textElement textAlignment="Center" verticalAlignment="Middle">
 								<font size="8"/>
@@ -635,7 +636,7 @@
 				<crosstabCell width="0" height="16" columnTotalGroup="period-type-order">
 					<cellContents mode="Opaque" style="Crosstab_CT"/>
 				</crosstabCell>
-				<crosstabCell width="20" height="0" rowTotalGroup="row-label">
+				<crosstabCell width="30" height="0" rowTotalGroup="row-label">
 					<cellContents mode="Opaque" style="Crosstab_CG"/>
 				</crosstabCell>
 				<crosstabCell width="0" height="0" rowTotalGroup="row-label" columnTotalGroup="scenario-name">
@@ -656,7 +657,7 @@
 				<crosstabCell width="0" height="0" rowTotalGroup="row-label" columnTotalGroup="period-type-order">
 					<cellContents mode="Opaque" style="Crosstab_CT"/>
 				</crosstabCell>
-				<crosstabCell width="20" height="0" rowTotalGroup="component-order">
+				<crosstabCell width="30" height="0" rowTotalGroup="component-order">
 					<cellContents mode="Opaque" style="Crosstab_CG"/>
 				</crosstabCell>
 				<crosstabCell width="0" height="0" rowTotalGroup="component-order" columnTotalGroup="scenario-name">
@@ -677,7 +678,7 @@
 				<crosstabCell width="0" height="0" rowTotalGroup="component-order" columnTotalGroup="period-type-order">
 					<cellContents mode="Opaque" style="Crosstab_CT"/>
 				</crosstabCell>
-				<crosstabCell width="20" height="0" rowTotalGroup="sub-header-order">
+				<crosstabCell width="30" height="0" rowTotalGroup="sub-header-order">
 					<cellContents mode="Opaque" style="Crosstab_CG"/>
 				</crosstabCell>
 				<crosstabCell width="0" height="0" rowTotalGroup="sub-header-order" columnTotalGroup="scenario-name">
@@ -698,7 +699,7 @@
 				<crosstabCell width="0" height="0" rowTotalGroup="sub-header-order" columnTotalGroup="period-type-order">
 					<cellContents mode="Opaque" style="Crosstab_CT"/>
 				</crosstabCell>
-				<crosstabCell width="20" height="0" rowTotalGroup="header-order">
+				<crosstabCell width="30" height="0" rowTotalGroup="header-order">
 					<cellContents mode="Opaque" style="Crosstab_CG"/>
 				</crosstabCell>
 				<crosstabCell width="0" height="0" rowTotalGroup="header-order" columnTotalGroup="scenario-name">
@@ -719,7 +720,7 @@
 				<crosstabCell width="0" height="0" rowTotalGroup="header-order" columnTotalGroup="period-type-order">
 					<cellContents mode="Opaque" style="Crosstab_CT"/>
 				</crosstabCell>
-				<crosstabCell width="20" height="0" rowTotalGroup="title-order">
+				<crosstabCell width="30" height="0" rowTotalGroup="title-order">
 					<cellContents mode="Opaque" style="Crosstab_CT"/>
 				</crosstabCell>
 				<crosstabCell width="0" height="0" rowTotalGroup="title-order" columnTotalGroup="scenario-name">

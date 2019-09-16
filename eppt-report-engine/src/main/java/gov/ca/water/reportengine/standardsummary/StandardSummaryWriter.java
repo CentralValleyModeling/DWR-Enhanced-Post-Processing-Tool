@@ -178,8 +178,11 @@ public class StandardSummaryWriter
 			checkInterrupt();
 			String subModuleName = subModuleList.get(i);
 			Element subModule = writeSubModule(moduleName, sectionName, subModuleName, charts);
-			subModule.setAttribute(SUB_MODULE_ORDER_ATTRIBUTE, String.valueOf(i));
-			retval.appendChild(subModule);
+			if(subModule.getChildNodes().getLength() > 0)
+			{
+				subModule.setAttribute(SUB_MODULE_ORDER_ATTRIBUTE, String.valueOf(i));
+				retval.appendChild(subModule);
+			}
 		}
 		return retval;
 	}
@@ -226,6 +229,10 @@ public class StandardSummaryWriter
 			{
 				case LIST:
 					_listBuilder.buildList(chart, epptChart);
+					if(!TableBuilder.hasValueContent(chart))
+					{
+						return Optional.empty();
+					}
 					break;
 				case BASE_ALT_DIFF_TABLE:
 					_baseAltDiffTableBuilder.buildTable(chart, epptChart);

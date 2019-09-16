@@ -33,6 +33,8 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.DoubleStream;
 
+import javax.script.ScriptException;
+
 import gov.ca.water.calgui.bo.CommonPeriodFilter;
 import gov.ca.water.calgui.bo.GUILinksAllModelsBO;
 import gov.ca.water.calgui.bo.MonthPeriodFilter;
@@ -614,5 +616,23 @@ class TestJythonLambda
 	private static Function<Map.Entry<LocalDateTime, Double>, Integer> mapToPeriodStartYear(Month startOfPeriodMonth)
 	{
 		return v -> getPeriodStartYear(v.getKey(), startOfPeriodMonth);
+	}
+
+	@Test
+	public void testFunction() throws ScriptException
+	{
+			EpptScenarioRun scenarioRun = buildRun();
+			DssReader dssReader = new DssReader(scenarioRun);
+			CommonPeriodFilter periodFilter = new CommonPeriodFilter(LocalDateTime.of(1950, Month.JULY, 1, 0, 0),
+					LocalDateTime.of(1999, Month.JULY, 1, 0, 0));
+			Month endOfPeriodMonth = Month.SEPTEMBER;
+			WaterYearPeriod annual = new WaterYearPeriod("Annual");
+			WaterYearPeriodRange waterYearPeriodRange = new WaterYearPeriodRange(annual, new WaterYearType(1925, annual),
+					new WaterYearType(1928, annual));
+		String function = "dssReader.getDtsData(237).entrySet().stream().filter(periodFilter).filter(jp(lambda e: e.getValue() != dssReader.getThresholdData(237).get(e.getKey()))).map(jf(lambda e : buildListPrefix(e) + String.join(\",\", String.valueOf(e.getValue()), String.valueOf(dssReader.getThresholdData(237).get(e.getKey()))))).collect(toList())";
+
+		JythonScriptRunner runner = new JythonScriptRunner(scenarioRun, periodFilter);
+		runner.setPeriodFilter(periodFilter);
+		System.out.println(runner.runScript(function));
 	}
 }

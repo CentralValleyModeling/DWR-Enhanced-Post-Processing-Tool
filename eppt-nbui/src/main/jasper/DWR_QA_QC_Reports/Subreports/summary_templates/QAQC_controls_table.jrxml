@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Created with Jaspersoft Studio version 6.8.0.final using JasperReports Library version 6.8.0-2ed8dfabb690ff337a5797129f2cd92902b0c87b  -->
+<!-- Created with Jaspersoft Studio version 6.9.0.final using JasperReports Library version 6.9.0-cb8f9004be492ccc537180b49c026951f4220bf3  -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="QAQC_controls_table" language="groovy" pageWidth="504" pageHeight="684" columnWidth="504" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="fdf29854-1cab-4c3d-99e9-a38b49852a26">
 	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
 	<property name="net.sf.jasperreports.export.xls.collapse.row.span" value="true"/>
@@ -354,6 +354,10 @@
 		<property name="net.sf.jasperreports.xpath.field.expression" value="value"/>
 		<fieldDescription><![CDATA[value]]></fieldDescription>
 	</field>
+	<field name="value-full-text" class="java.lang.String">
+		<property name="net.sf.jasperreports.xpath.field.expression" value="value/@value-full-text"/>
+		<fieldDescription><![CDATA[value/@value-full-text]]></fieldDescription>
+	</field>
 	<background>
 		<band splitType="Stretch"/>
 	</background>
@@ -457,9 +461,11 @@
 					<crosstabRowHeader>
 						<cellContents mode="Opaque" style="row-label">
 							<textField>
-								<reportElement style="row-label" x="0" y="0" width="100" height="16" uuid="7ee8f37b-a075-4965-820c-63bf247cf439"/>
-								<box leftPadding="3"/>
-								<textElement verticalAlignment="Middle"/>
+								<reportElement style="row-label" stretchType="ContainerHeight" x="0" y="0" width="100" height="16" uuid="7ee8f37b-a075-4965-820c-63bf247cf439"/>
+								<box leftPadding="3" rightPadding="2"/>
+								<textElement verticalAlignment="Middle">
+									<font size="9"/>
+								</textElement>
 								<textFieldExpression><![CDATA[$V{row-label}]]></textFieldExpression>
 							</textField>
 						</cellContents>
@@ -553,6 +559,9 @@
 				<measure name="value_MEASURE" class="java.lang.Integer">
 					<measureExpression><![CDATA[$F{value}]]></measureExpression>
 				</measure>
+				<measure name="value-full-text" class="java.lang.String">
+					<measureExpression><![CDATA[$F{value-full-text}]]></measureExpression>
+				</measure>
 				<crosstabCell width="44" height="16">
 					<cellContents mode="Opaque" style="Crosstab_CD">
 						<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
@@ -563,16 +572,16 @@
 							<bottomPen lineWidth="0.0"/>
 							<rightPen lineWidth="0.0"/>
 						</box>
-						<textField>
-							<reportElement style="value_color" x="0" y="0" width="44" height="16" uuid="6354cefb-ce20-4dcf-9394-0da33213df9a"/>
-							<box>
+						<textField isStretchWithOverflow="true">
+							<reportElement style="value_color" stretchType="ContainerHeight" x="0" y="0" width="44" height="16" uuid="6354cefb-ce20-4dcf-9394-0da33213df9a"/>
+							<box topPadding="2" bottomPadding="2">
 								<topPen lineWidth="1.0" lineColor="#000000"/>
 								<bottomPen lineWidth="1.0" lineColor="#000000"/>
 							</box>
 							<textElement textAlignment="Center" verticalAlignment="Middle">
-								<font size="11"/>
+								<font size="9"/>
 							</textElement>
-							<textFieldExpression><![CDATA[$V{value_MEASURE}==null?"":($V{value_MEASURE}>0&&$V{scenario-order}==2?"+"+$V{value_MEASURE}:$V{value_MEASURE})]]></textFieldExpression>
+							<textFieldExpression><![CDATA[$V{value-full-text}==null?($V{value_MEASURE}==null?"N/A":$V{value_MEASURE}):$V{value-full-text}]]></textFieldExpression>
 						</textField>
 					</cellContents>
 				</crosstabCell>

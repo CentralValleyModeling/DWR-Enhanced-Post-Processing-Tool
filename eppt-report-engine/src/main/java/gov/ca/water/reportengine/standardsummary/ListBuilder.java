@@ -52,27 +52,30 @@ class ListBuilder extends TableBuilder
 		int i = 0;
 		List<ChartComponent> componentsForTitle = epptChart.getChartComponents();
 		Element titleElement = buildTitle(BASE_NAME, componentsForTitle, v -> buildValueForChart(getBase(), v));
-		titleElement.setAttribute(TITLE_ORDER_ATTRIBUTE, String.valueOf(i));
-		if(titleElement.getChildNodes().getLength() > 0)
+		if(titleElement != null)
 		{
-			retval.appendChild(titleElement);
-		}
-		i++;
-		for(EpptScenarioRun scenarioRun : getAlternatives())
-		{
-			Element altTitle = buildTitle(ALT_NAME, componentsForTitle, v -> buildValueForChart(scenarioRun, v));
-			altTitle.setAttribute(TITLE_ORDER_ATTRIBUTE, String.valueOf(i));
-			if(altTitle.getChildNodes().getLength() > 0)
+			titleElement.setAttribute(TITLE_ORDER_ATTRIBUTE, String.valueOf(i));
+			if(titleElement.getChildNodes().getLength() > 0)
 			{
-				retval.appendChild(altTitle);
+				retval.appendChild(titleElement);
 			}
 			i++;
+			for(EpptScenarioRun scenarioRun : getAlternatives())
+			{
+				Element altTitle = buildTitle(ALT_NAME, componentsForTitle, v -> buildValueForChart(scenarioRun, v));
+				altTitle.setAttribute(TITLE_ORDER_ATTRIBUTE, String.valueOf(i));
+				if(altTitle.getChildNodes().getLength() > 0)
+				{
+					retval.appendChild(altTitle);
+				}
+				i++;
+			}
 		}
 	}
 
 	private Element buildValueForChart(EpptScenarioRun scenarioRun, ChartComponent v)
 	{
-		Element retval = getDocument().createElement("placeholder");
+		Element retval = null;
 		try
 		{
 			Object value = createJythonValueGenerator(scenarioRun, v.getFunction(), getReportParameters().getWaterYearIndex()).generateObjectValue();
@@ -86,6 +89,10 @@ class ListBuilder extends TableBuilder
 				List rows = (List) value;
 				for(Object row : rows)
 				{
+					if(retval == null)
+					{
+						retval = getDocument().createElement("placeholder");
+					}
 					Element valueElem = getDocument().createElement(VALUE_ELEMENT);
 					String textRaw = String.valueOf(row);
 					valueElem.setTextContent(textRaw);
@@ -105,8 +112,8 @@ class ListBuilder extends TableBuilder
 	{
 		Element retval = getDocument().createElement(COMPONENT_ELEMENT);
 		retval.setAttribute(COMPONENT_NAME_ATTRIBUTE, component.getComponent());
-		buildRowLabel(component.getComponent(), retval);
 		buildValue(retval, component, valueFunction);
+		buildRowLabel(component.getComponent(), retval);
 		return retval;
 	}
 
