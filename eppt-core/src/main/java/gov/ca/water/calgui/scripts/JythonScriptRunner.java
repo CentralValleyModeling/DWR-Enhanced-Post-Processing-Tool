@@ -110,6 +110,7 @@ public class JythonScriptRunner
 
 	public Object runScript(String script) throws ScriptException
 	{
+//		initializeScriptDirectory();
 		return PYTHON_ENGINE.eval(script);
 	}
 

@@ -32,9 +32,12 @@ import gov.ca.water.calgui.bo.WaterYearPeriod;
 import gov.ca.water.calgui.bo.WaterYearPeriodFilter;
 import gov.ca.water.calgui.bo.WaterYearPeriodRange;
 import gov.ca.water.calgui.bo.WaterYearPeriodRangeFilter;
+import gov.ca.water.calgui.bo.WaterYearType;
 import gov.ca.water.calgui.project.EpptScenarioRun;
 import gov.ca.water.calgui.scripts.JythonScriptRunner;
 import gov.ca.water.reportengine.EpptReportException;
+
+import static java.util.stream.Collectors.toList;
 
 /**
  * Company: Resource Management Associates
@@ -82,8 +85,12 @@ public class JythonValueGenerator
 		else if(_periodFilter instanceof WaterYearPeriodFilter)
 		{
 			WaterYearPeriodFilter waterYearPeriodFilter = (WaterYearPeriodFilter) _periodFilter;
-			List<WaterYearPeriodRange> waterYearPeriodRanges = waterYearPeriodFilter.getWaterYearIndex().getWaterYearPeriodRanges().getOrDefault(
-					waterYearPeriodFilter.getWaterYearPeriod(), new ArrayList<>());
+			List<WaterYearPeriodRange> waterYearPeriodRanges = waterYearPeriodFilter.getWaterYearIndex()
+																					.getWaterYearTypes()
+																					.stream()
+																					.filter(e -> e.getWaterYearPeriod().equals(waterYearPeriodFilter.getWaterYearPeriod()))
+																					.map(e->new WaterYearPeriodRange(e.getWaterYearPeriod(), new WaterYearType(e.getYear(), e.getWaterYearPeriod()),new WaterYearType(e.getYear(), e.getWaterYearPeriod())))
+																					.collect(toList());
 			_scriptRunner.setWaterYearPeriodRanges(waterYearPeriodRanges);
 		}
 	}
@@ -92,7 +99,7 @@ public class JythonValueGenerator
 			throws ScriptException
 	{
 		this(epptScenarioRun, function, commonPeriodFilter);
-		_scriptRunner.setComparisonValue((double)comparisonValue);
+		_scriptRunner.setComparisonValue((double) comparisonValue);
 	}
 
 	public Double generateValue() throws EpptReportException

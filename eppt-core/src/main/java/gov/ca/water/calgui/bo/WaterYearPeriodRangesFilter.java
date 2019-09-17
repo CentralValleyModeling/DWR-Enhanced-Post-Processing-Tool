@@ -14,6 +14,7 @@ package gov.ca.water.calgui.bo;
 
 import java.time.LocalDateTime;
 import java.time.YearMonth;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -41,13 +42,13 @@ public class WaterYearPeriodRangesFilter implements PeriodFilter
 	public boolean test(Map.Entry<LocalDateTime, Double> input)
 	{
 		boolean retval = false;
+		//Shifting the ranges because values are EOP
+		LocalDateTime key = input.getKey();
+		YearMonth inputYearMonth = YearMonth.of(key.getYear(), key.getMonth()).minus(1, ChronoUnit.MONTHS);
 		for(WaterYearPeriodRange range : _waterYearPeriodRanges)
 		{
-
 			YearMonth start = range.getStart(_waterYearDefinition);
 			YearMonth end = range.getEnd(_waterYearDefinition);
-			LocalDateTime key = input.getKey();
-			YearMonth inputYearMonth = YearMonth.of(key.getYear(), key.getMonth());
 			retval = inputYearMonth.equals(start) || inputYearMonth.equals(end)
 					|| (start.isBefore(inputYearMonth) && end.isAfter(inputYearMonth));
 			if(retval)
