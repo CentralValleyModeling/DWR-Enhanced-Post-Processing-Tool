@@ -110,16 +110,16 @@ public final class JythonScriptBuilder
 
 	public String buildFunctionFromTemplate(String functionReference)
 	{
-//				try
-//				{
-//					List<Script> scripts = readJythonScripts();
-//					_scripts.clear();
-//					_scripts.addAll(scripts);
-//				}
-//				catch(EpptInitializationException e)
-//				{
-//					e.printStackTrace();
-//				}
+				try
+				{
+					List<Script> scripts = readJythonScripts();
+					_scripts.clear();
+					_scripts.addAll(scripts);
+				}
+				catch(EpptInitializationException e)
+				{
+					e.printStackTrace();
+				}
 		return getMatchingScriptTemplate(functionReference)
 					   .orElseThrow(() -> new IllegalArgumentException("Illegal script: " + functionReference));
 	}
