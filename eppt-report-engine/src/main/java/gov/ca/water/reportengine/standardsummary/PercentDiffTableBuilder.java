@@ -132,34 +132,10 @@ class PercentDiffTableBuilder extends BaseAltDiffTableBuilder
 			}
 			else
 			{
-
-				long diff = (long)(baseValue - altValue);
-				String textRaw = String.valueOf(diff);
-				retval.setTextContent(textRaw);
-				retval.setAttribute(VALUE_FULL_TEXT_ATTRIBUTE, textRaw);
-				if(getReportParameters().getPercentDiffStyle() == PercentDiffStyle.PERCENT)
-				{
-
-					if(baseValue != 0)
-					{
-						retval.setAttribute(VALUE_PERCENT_TEXT_ATTRIBUTE, ((int)((altValue - baseValue) / baseValue) * 100) + "%");
-					}
-					else
-					{
-						retval.setAttribute(VALUE_PERCENT_TEXT_ATTRIBUTE, "N/A");
-					}
-				}
-				else if(getReportParameters().getPercentDiffStyle() == PercentDiffStyle.FULL)
-				{
-					if(baseValue != 0)
-					{
-						retval.setAttribute(VALUE_PERCENT_TEXT_ATTRIBUTE, textRaw + " (" + ((int)((altValue - baseValue) / baseValue) * 100) + "%)");
-					}
-					else
-					{
-						retval.setAttribute(VALUE_PERCENT_TEXT_ATTRIBUTE, textRaw + " (N/A)");
-					}
-				}
+				int percent = (int) ((altValue - baseValue) / baseValue) * 100;
+				String textRaw = String.valueOf(percent);
+				retval.setTextContent(textRaw + "%");
+				_valueElements.put(retval, (double) percent);
 			}
 		}
 		catch(EpptReportException e)

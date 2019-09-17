@@ -142,7 +142,8 @@ class ControlTableBuilder extends TableBuilder
 
 				if(baseValue != 0)
 				{
-					retval.setAttribute(VALUE_PERCENT_TEXT_ATTRIBUTE, ((int)((altValue - baseValue) / baseValue) * 100) + "%");
+					int percent = (int) ((altValue - baseValue) / baseValue) * 100;
+					retval.setAttribute(VALUE_PERCENT_TEXT_ATTRIBUTE, percent + "%");
 				}
 				else
 				{
@@ -153,11 +154,12 @@ class ControlTableBuilder extends TableBuilder
 			{
 				if(baseValue != 0)
 				{
-					retval.setAttribute(VALUE_PERCENT_TEXT_ATTRIBUTE, textRaw + " (" + ((int)((altValue - baseValue) / baseValue) * 100) + "%)");
+					int percent = (int) ((altValue - baseValue) / baseValue) * 100;
+					retval.setAttribute(VALUE_FULL_TEXT_ATTRIBUTE, " (" + percent + "%)");
 				}
 				else
 				{
-					retval.setAttribute(VALUE_PERCENT_TEXT_ATTRIBUTE, textRaw + " (N/A)");
+					retval.setAttribute(VALUE_FULL_TEXT_ATTRIBUTE, " (N/A)");
 				}
 			}
 		}

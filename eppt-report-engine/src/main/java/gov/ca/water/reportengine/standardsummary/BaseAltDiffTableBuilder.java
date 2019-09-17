@@ -212,20 +212,33 @@ class BaseAltDiffTableBuilder extends TableBuilder
 			}
 			else
 			{
-				double absoluteDiff = baseValue - altValue;
+				long absoluteDiff = Math.round(baseValue - altValue);
 				String absoluteText = String.valueOf(absoluteDiff);
 				retval.setTextContent(absoluteText);
-				double percentValue = ((altValue / baseValue) - 1) * -100;
-				long percentRounded = Math.round(percentValue);
-				long absoluteRounded = Math.round(absoluteDiff);
-				PercentDiffStyle percentDiffStyle = getReportParameters().getPercentDiffStyle();
-				if(percentDiffStyle == PercentDiffStyle.PERCENT)
+				if(getReportParameters().getPercentDiffStyle() == PercentDiffStyle.PERCENT)
 				{
-					retval.setAttribute(VALUE_PERCENT_TEXT_ATTRIBUTE, String.valueOf(percentRounded));
+
+					if(baseValue != 0)
+					{
+						int percent = (int) ((altValue - baseValue) / baseValue) * 100;
+						retval.setAttribute(VALUE_PERCENT_TEXT_ATTRIBUTE, percent + "%");
+					}
+					else
+					{
+						retval.setAttribute(VALUE_PERCENT_TEXT_ATTRIBUTE, "N/A");
+					}
 				}
-				else if(percentDiffStyle == PercentDiffStyle.FULL)
+				else if(getReportParameters().getPercentDiffStyle() == PercentDiffStyle.FULL)
 				{
-					retval.setAttribute(VALUE_FULL_TEXT_ATTRIBUTE, absoluteRounded + " (" + percentRounded + "%)");
+					if(baseValue != 0)
+					{
+						int percent = (int) ((altValue - baseValue) / baseValue) * 100;
+						retval.setAttribute(VALUE_FULL_TEXT_ATTRIBUTE, " (" + percent + "%)");
+					}
+					else
+					{
+						retval.setAttribute(VALUE_FULL_TEXT_ATTRIBUTE, " (N/A)");
+					}
 				}
 			}
 		}
