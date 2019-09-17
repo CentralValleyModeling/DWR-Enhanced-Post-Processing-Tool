@@ -133,21 +133,20 @@ class ControlTableBuilder extends TableBuilder
 
 			long altValue = createJythonValueGenerator(alternative, v.getFunction(), comparisonValue).generateCount();
 
-			long diff = baseValue - altValue;
-			String textRaw = String.valueOf(diff);
-			retval.setTextContent(textRaw);
-			retval.setAttribute(VALUE_FULL_TEXT_ATTRIBUTE, textRaw);
+			long diff = Math.round(baseValue - altValue);
+			String absoluteText = String.valueOf(diff);
+			retval.setTextContent(absoluteText);
 			if(getReportParameters().getPercentDiffStyle() == PercentDiffStyle.PERCENT)
 			{
 
 				if(baseValue != 0)
 				{
 					int percent = (int) ((altValue - baseValue) / baseValue) * 100;
-					retval.setAttribute(VALUE_PERCENT_TEXT_ATTRIBUTE, percent + "%");
+					retval.setAttribute(VALUE_FULL_TEXT_ATTRIBUTE, percent + "%");
 				}
 				else
 				{
-					retval.setAttribute(VALUE_PERCENT_TEXT_ATTRIBUTE, "N/A");
+					retval.setAttribute(VALUE_FULL_TEXT_ATTRIBUTE, "N/A");
 				}
 			}
 			else if(getReportParameters().getPercentDiffStyle() == PercentDiffStyle.FULL)
@@ -155,11 +154,11 @@ class ControlTableBuilder extends TableBuilder
 				if(baseValue != 0)
 				{
 					int percent = (int) ((altValue - baseValue) / baseValue) * 100;
-					retval.setAttribute(VALUE_FULL_TEXT_ATTRIBUTE, " (" + percent + "%)");
+					retval.setAttribute(VALUE_FULL_TEXT_ATTRIBUTE, absoluteText + "\n(" + percent + "%)");
 				}
 				else
 				{
-					retval.setAttribute(VALUE_FULL_TEXT_ATTRIBUTE, " (N/A)");
+					retval.setAttribute(VALUE_FULL_TEXT_ATTRIBUTE, absoluteText + "\n(N/A)");
 				}
 			}
 		}
