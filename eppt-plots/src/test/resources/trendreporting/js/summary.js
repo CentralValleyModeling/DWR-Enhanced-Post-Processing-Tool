@@ -224,8 +224,10 @@ function buildTable(units, data, seriesData) {
 
     let table = new Tabulator("#table", {
         layout: 'fitColumns',
+        clipboardCopySelector:"table",
         selectable: false,
         columnVertAlign: 'center',
+        clipboard:"copy",
         columns: [
             {
                 titleFormatter: formatHeader,
@@ -257,17 +259,10 @@ function buildTable(units, data, seriesData) {
     function openContextMenu(e) {
         // prevent the browsers default context menu form appearing.
         e.preventDefault();
-        // e.stopImmediatePropagation();
         $.contextMenu({
             selector: '#table',
             build: function($triggerElement, e) {
-                console.log($triggerElement);
                 return {
-                    callback: function(key, options) {
-                        var m = "clicked: " + key;
-                        console.log(m);
-                        console.log(options);
-                    },
                     items: {
                         "export": {
                             name: "Export",
@@ -284,7 +279,13 @@ function buildTable(units, data, seriesData) {
                                 }
                             }
                         },
-                        "copy": {name: "Copy", icon: "copy"},
+                        "copy": {
+                            name: "Copy",
+                            icon: "copy",
+                            callback: function(key, options) {
+                                table.copyToClipboard("table", true);
+                            }
+                        },
                     }
                 }
 
