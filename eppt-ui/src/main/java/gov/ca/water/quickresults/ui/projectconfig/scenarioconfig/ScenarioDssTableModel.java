@@ -28,6 +28,8 @@ import java.util.concurrent.Executors;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import javax.swing.*;
+
 import gov.ca.water.calgui.bo.GUILinksAllModelsBO;
 import gov.ca.water.calgui.busservice.IGuiLinksSeedDataSvc;
 import gov.ca.water.calgui.busservice.impl.GuiLinksSeedDataSvcImpl;
@@ -220,20 +222,20 @@ class ScenarioDssTableModel extends RmaTableModel
 		{
 			try
 			{
-				_loadingDss.loadingStart("Loading DSS A and F parts");
+				SwingUtilities.invokeLater(()->_loadingDss.loadingStart("Loading DSS A and F parts"));
 				paths.stream().filter(path->path != null && path.toFile().exists() && !_aPaths.containsKey(path))
 					 .parallel().forEach(this::loadDss);
 			}
 			finally
 			{
-				_loadingDss.loadingFinished();
+				SwingUtilities.invokeLater(_loadingDss::loadingFinished);
 			}
 		});
 	}
 
 	private void loadDss(Path path)
 	{
-		_loadingDss.loadingStart("Loading DSS A and F parts for: " + path);
+		SwingUtilities.invokeLater(()->_loadingDss.loadingStart("Loading DSS A and F parts for: " + path));
 		HecDssCatalog hecDssCatalog = null;
 		try
 		{
