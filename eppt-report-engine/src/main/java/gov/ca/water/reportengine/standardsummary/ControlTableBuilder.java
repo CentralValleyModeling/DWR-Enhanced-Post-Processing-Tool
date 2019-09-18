@@ -133,7 +133,7 @@ class ControlTableBuilder extends TableBuilder
 
 			long altValue = createJythonValueGenerator(alternative, v.getFunction(), comparisonValue).generateCount();
 
-			long diff = Math.round(baseValue - altValue);
+			long diff = Math.round(altValue - baseValue);
 			String absoluteText = String.valueOf(diff);
 			retval.setTextContent(absoluteText);
 			if(getReportParameters().getPercentDiffStyle() == PercentDiffStyle.PERCENT)
@@ -141,7 +141,7 @@ class ControlTableBuilder extends TableBuilder
 
 				if(baseValue != 0)
 				{
-					int percent = (int) ((altValue - baseValue) / baseValue) * 100;
+					int percent = (int) (((altValue - baseValue) / baseValue) * 100);
 					retval.setAttribute(VALUE_FULL_TEXT_ATTRIBUTE, percent + "%");
 				}
 				else
@@ -153,7 +153,7 @@ class ControlTableBuilder extends TableBuilder
 			{
 				if(baseValue != 0)
 				{
-					int percent = (int) ((altValue - baseValue) / baseValue) * 100;
+					int percent = Math.round(((altValue - baseValue) / baseValue) * 100);
 					retval.setAttribute(VALUE_FULL_TEXT_ATTRIBUTE, absoluteText + "\n(" + percent + "%)");
 				}
 				else

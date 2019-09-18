@@ -66,7 +66,7 @@ public class PlotlyExceedancePage extends PlotlyChart
 		yAxis.put("range", buildRange());
 		xAxisTitle.put("text", Month.JANUARY.getDisplayName(TextStyle.FULL, Locale.getDefault()));
 		JSONObject yAxisTitle = yAxis.getJSONObject("title");
-		yAxisTitle.put("text", _yAxis);
+//		yAxisTitle.put("text", _yAxis);
 		template.put("xaxis", xAxis);
 		template.put("yaxis", yAxis);
 		for(int i = 2; i <= 12; i++)
@@ -78,7 +78,7 @@ public class PlotlyExceedancePage extends PlotlyChart
 			xAxisTitle.put("text", Month.values()[i - 1].getDisplayName(TextStyle.FULL, Locale.getDefault()));
 			template.put("xaxis" + i, xAxis);
 			template.put("yaxis" + i, yAxis);
-			if(((i - 1) % 4) == 0)
+			if(i == 7)
 			{
 				yAxisTitle.put("text", _yAxis);
 			}

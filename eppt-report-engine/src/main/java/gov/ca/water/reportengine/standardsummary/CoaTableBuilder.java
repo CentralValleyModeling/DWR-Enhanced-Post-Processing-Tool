@@ -161,13 +161,11 @@ class CoaTableBuilder extends TableBuilder
 			}
 			else if(baseValue instanceof Double && altValue instanceof Double)
 			{
-				double total = (double) baseValue + (double) altValue;
+				long total = Math.round((double)baseValue + (double) altValue);
 				retval.setTextContent(String.valueOf(total));
 			}
 		}
-
-		catch(
-				EpptReportException e)
+		catch(EpptReportException e)
 		{
 			LOGGER.log(Level.SEVERE, "Error running jython script", e);
 		}

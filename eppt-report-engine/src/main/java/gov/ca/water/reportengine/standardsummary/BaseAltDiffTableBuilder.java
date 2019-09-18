@@ -212,15 +212,17 @@ class BaseAltDiffTableBuilder extends TableBuilder
 			}
 			else
 			{
-				long absoluteDiff = Math.round(baseValue - altValue);
+				long baseValueRounded = Math.round(baseValue);
+				long altValueRounded = Math.round(altValue);
+				long absoluteDiff = altValueRounded - baseValueRounded;
 				String absoluteText = String.valueOf(absoluteDiff);
 				retval.setTextContent(absoluteText);
 				if(getReportParameters().getPercentDiffStyle() == PercentDiffStyle.PERCENT)
 				{
 
-					if(baseValue != 0)
+					if(baseValueRounded != 0)
 					{
-						int percent = (int) ((altValue - baseValue) / baseValue) * 100;
+						long percent = Math.round(((altValueRounded - baseValueRounded) / baseValueRounded) * 100);
 						retval.setAttribute(VALUE_FULL_TEXT_ATTRIBUTE, percent + "%");
 					}
 					else
@@ -230,9 +232,9 @@ class BaseAltDiffTableBuilder extends TableBuilder
 				}
 				else if(getReportParameters().getPercentDiffStyle() == PercentDiffStyle.FULL)
 				{
-					if(baseValue != 0)
+					if(baseValueRounded != 0)
 					{
-						int percent = (int) ((altValue - baseValue) / baseValue) * 100;
+						long percent = Math.round(((altValueRounded - baseValueRounded) / baseValueRounded) * 100);
 						retval.setAttribute(VALUE_FULL_TEXT_ATTRIBUTE, absoluteText + "\n(" + percent + "%)");
 					}
 					else

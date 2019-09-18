@@ -53,7 +53,7 @@
       "type": "log",
       "autorange": true,
       "title": {
-        "text": "CFS"
+        "text": ""
       }
     },
     "grid": {
