@@ -285,7 +285,7 @@
 								<rightPen lineWidth="1.0"/>
 							</box>
 							<textField isStretchWithOverflow="true">
-								<reportElement x="0" y="0" width="34" height="16" uuid="da45f067-0168-4411-92c5-8a5539ce1295"/>
+								<reportElement x="0" y="0" width="38" height="16" uuid="da45f067-0168-4411-92c5-8a5539ce1295"/>
 								<textElement textAlignment="Center" verticalAlignment="Middle">
 									<font size="14" isBold="true" isUnderline="true"/>
 								</textElement>
@@ -322,7 +322,7 @@
 								<rightPen lineWidth="1.0"/>
 							</box>
 							<textField isStretchWithOverflow="true" isBlankWhenNull="false">
-								<reportElement stretchType="RelativeToTallestObject" x="0" y="0" width="34" height="16" uuid="e7fff6bf-cd10-4e75-a29c-dfc1a9168d69"/>
+								<reportElement stretchType="RelativeToTallestObject" x="0" y="0" width="38" height="16" uuid="e7fff6bf-cd10-4e75-a29c-dfc1a9168d69"/>
 								<textElement textAlignment="Center" verticalAlignment="Middle">
 									<font size="11" isBold="true" isItalic="false"/>
 								</textElement>
@@ -360,7 +360,7 @@
 								<rightPen lineWidth="1.0"/>
 							</box>
 							<textField isStretchWithOverflow="true">
-								<reportElement mode="Transparent" x="0" y="0" width="34" height="16" uuid="72824ee2-e137-47bf-98e0-54965a486832"/>
+								<reportElement mode="Transparent" x="0" y="0" width="38" height="16" uuid="72824ee2-e137-47bf-98e0-54965a486832"/>
 								<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None">
 									<font size="11" isItalic="true"/>
 								</textElement>
@@ -399,7 +399,7 @@
 								<rightPen lineWidth="1.0"/>
 							</box>
 							<textField isStretchWithOverflow="true">
-								<reportElement stretchType="ElementGroupHeight" x="0" y="0" width="34" height="35" uuid="334271a1-89b5-45fa-9630-65eef08081bc">
+								<reportElement stretchType="ElementGroupHeight" x="0" y="0" width="38" height="35" uuid="334271a1-89b5-45fa-9630-65eef08081bc">
 									<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
 								</reportElement>
 								<textElement textAlignment="Center" verticalAlignment="Middle" rotation="Left"/>
@@ -420,7 +420,7 @@
 				<measure name="value-full-text" class="java.lang.String">
 					<measureExpression><![CDATA[$F{value-full-text}]]></measureExpression>
 				</measure>
-				<crosstabCell width="34" height="16">
+				<crosstabCell width="38" height="16">
 					<cellContents backcolor="#FFFFFF">
 						<property name="com.jaspersoft.studio.unit.width" value="px"/>
 						<box>
@@ -430,7 +430,7 @@
 							<rightPen lineWidth="1.0"/>
 						</box>
 						<textField isStretchWithOverflow="true" isBlankWhenNull="false">
-							<reportElement stretchType="ContainerHeight" mode="Opaque" x="0" y="0" width="34" height="16" uuid="d8a91046-30b0-46e3-9631-30970b13b289">
+							<reportElement stretchType="ContainerHeight" mode="Opaque" x="0" y="0" width="38" height="16" uuid="d8a91046-30b0-46e3-9631-30970b13b289">
 								<propertyExpression name="net.sf.jasperreports.style.backcolor"><![CDATA[$V{background-color}]]></propertyExpression>
 							</reportElement>
 							<box topPadding="2" bottomPadding="2"/>
@@ -465,7 +465,7 @@
 				<crosstabCell width="0" height="16" columnTotalGroup="component-name">
 					<cellContents mode="Opaque"/>
 				</crosstabCell>
-				<crosstabCell width="34" height="0" rowTotalGroup="period-type-order">
+				<crosstabCell width="38" height="0" rowTotalGroup="period-type-order">
 					<cellContents mode="Opaque">
 						<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					</cellContents>
@@ -494,7 +494,7 @@
 				<crosstabCell width="0" height="0" rowTotalGroup="period-type-order" columnTotalGroup="component-name">
 					<cellContents mode="Opaque"/>
 				</crosstabCell>
-				<crosstabCell width="34" height="0" rowTotalGroup="period-type-name">
+				<crosstabCell width="38" height="0" rowTotalGroup="period-type-name">
 					<cellContents mode="Opaque">
 						<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					</cellContents>
@@ -523,7 +523,7 @@
 				<crosstabCell width="0" height="0" rowTotalGroup="period-type-name" columnTotalGroup="component-name">
 					<cellContents mode="Opaque"/>
 				</crosstabCell>
-				<crosstabCell width="34" height="0" rowTotalGroup="seasonal-type-order">
+				<crosstabCell width="38" height="0" rowTotalGroup="seasonal-type-order">
 					<cellContents mode="Opaque"/>
 				</crosstabCell>
 				<crosstabCell width="0" height="0" rowTotalGroup="seasonal-type-order" columnTotalGroup="title-order">
@@ -550,7 +550,7 @@
 				<crosstabCell width="0" height="0" rowTotalGroup="seasonal-type-order" columnTotalGroup="component-name">
 					<cellContents mode="Opaque"/>
 				</crosstabCell>
-				<crosstabCell width="34" height="0" rowTotalGroup="seasonal-type-name">
+				<crosstabCell width="38" height="0" rowTotalGroup="seasonal-type-name">
 					<cellContents mode="Opaque">
 						<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					</cellContents>
