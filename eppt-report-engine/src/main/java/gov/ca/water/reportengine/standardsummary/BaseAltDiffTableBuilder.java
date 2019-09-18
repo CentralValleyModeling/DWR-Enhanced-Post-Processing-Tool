@@ -60,7 +60,18 @@ class BaseAltDiffTableBuilder extends TableBuilder
 		retval.setAttribute(UNITS_ATTRIBUTE, units);
 		String startMonth = reportParameters.getWaterYearDefinition().getStartMonth().getDisplayName(TextStyle.SHORT, Locale.getDefault());
 		String endMonth = reportParameters.getWaterYearDefinition().getEndMonth().getDisplayName(TextStyle.SHORT, Locale.getDefault());
-		retval.setAttribute(WATER_YEAR_DEF_ATTRIBUTE, startMonth + "-" + endMonth);
+		if(epptChart.getChartId().equalsIgnoreCase("resops-summary-may"))
+		{
+			retval.setAttribute(WATER_YEAR_DEF_ATTRIBUTE, "End of May");
+		}
+		else if(epptChart.getChartId().equalsIgnoreCase("resops-summary-sept"))
+		{
+			retval.setAttribute(WATER_YEAR_DEF_ATTRIBUTE, "End of September");
+		}
+		else
+		{
+			retval.setAttribute(WATER_YEAR_DEF_ATTRIBUTE, startMonth + "-" + endMonth);
+		}
 		List<Element> periodElements = new ArrayList<>();
 		periodElements.add(buildPeriod("Long Term", Collections.singletonList(reportParameters.getLongTermRange()), epptChart));
 		if(reportParameters.getWaterYearIndex() != null)
