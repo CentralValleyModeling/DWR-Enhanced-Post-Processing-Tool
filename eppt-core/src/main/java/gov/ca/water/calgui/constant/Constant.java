@@ -63,7 +63,7 @@ public final class Constant
 	public static final String MODEL_W2_WRESL_LOOKUP_DIR = MODEL_W2_WRESL_DIR + LOOKUP_DIR;
 	public static final String GENERATED_DIR = "//Generated//";
 	public static final String RUN_DIR = "Run";
-	public static final String TREND_REPORTING_DIR = CONFIG_DIR + "trendreporting\\prototype\\";
+	public static final String TREND_REPORTING_DIR = CONFIG_DIR + "trendreporting\\";
 	// File Names.
 	public static final String GUI_XML_FILENAME = System.getProperty("user.dir") + "//Config//GUI.xml";
 
