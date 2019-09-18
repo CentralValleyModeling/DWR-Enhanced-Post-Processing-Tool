@@ -35,6 +35,7 @@ public final class EpptPreferences
 	private static final String LAST_SCENARIO_CONFIGURATION = "last_scenario_configuration";
 	private static final String REPORT_OUTPUT_LOCATION = "report_output_location";
 	private static final String USERNAME = "eppt_username";
+	private static final String USE_PLOTLY_PREF = "use-plotly-pref";
 
 	private EpptPreferences()
 	{
@@ -147,5 +148,15 @@ public final class EpptPreferences
 	public static void removeWrimsPathPreference()
 	{
 		WRIMS_NODE.remove(WRIMS_DIRECTORY);
+	}
+
+	public static boolean usePlotly()
+	{
+		return WRIMS_NODE.getBoolean(USE_PLOTLY_PREF, false);
+	}
+
+	public static void setUsePlotly(boolean selected)
+	{
+		WRIMS_NODE.putBoolean(USE_PLOTLY_PREF, selected);
 	}
 }
