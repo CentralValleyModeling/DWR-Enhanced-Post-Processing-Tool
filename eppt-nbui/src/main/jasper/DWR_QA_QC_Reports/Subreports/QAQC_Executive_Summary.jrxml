@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Created with Jaspersoft Studio version 6.9.0.final using JasperReports Library version 6.9.0-cb8f9004be492ccc537180b49c026951f4220bf3  -->
-<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="QAQC_Executive_Summary" language="groovy" pageWidth="612" pageHeight="792" whenNoDataType="NoPages" columnWidth="504" leftMargin="54" rightMargin="54" topMargin="54" bottomMargin="54" whenResourceMissingType="Error" uuid="da75db69-3924-4f44-998a-80195014db99">
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="QAQC_Executive_Report" language="groovy" pageWidth="612" pageHeight="792" whenNoDataType="NoPages" columnWidth="504" leftMargin="54" rightMargin="54" topMargin="54" bottomMargin="54" whenResourceMissingType="Error" uuid="da75db69-3924-4f44-998a-80195014db99">
 	<property name="com.jaspersoft.studio.unit." value="pixel"/>
 	<property name="net.sf.jasperreports.print.create.bookmarks" value="true"/>
 	<property name="com.jaspersoft.studio.unit.pageHeight" value="pixel"/>
@@ -44,7 +44,7 @@
 			<fieldDescription><![CDATA[/qaqc-report/report-header/alternatives/alternative/@name]]></fieldDescription>
 		</field>
 	</subDataset>
-	<parameter name="Executive_Summary" class="java.lang.String" isForPrompting="false">
+	<parameter name="Executive_Report" class="java.lang.String" isForPrompting="false">
 		<defaultValueExpression><![CDATA["Executive Summary"]]></defaultValueExpression>
 	</parameter>
 	<queryString language="XPath">
@@ -96,7 +96,7 @@
 		</band>
 	</detail>
 	<columnFooter>
-		<band height="149" splitType="Stretch">
+		<band splitType="Stretch">
 			<printWhenExpression><![CDATA[1==0]]></printWhenExpression>
 		</band>
 	</columnFooter>
@@ -129,7 +129,7 @@
 					<font fontName="Arial" size="16"/>
 				</textElement>
 				<textFieldExpression><![CDATA["Executive Report"]]></textFieldExpression>
-				<anchorNameExpression><![CDATA[$P{Executive_Summary}]]></anchorNameExpression>
+				<anchorNameExpression><![CDATA["Executive Report"]]></anchorNameExpression>
 			</textField>
 			<crosstab horizontalPosition="Left" ignoreWidth="true">
 				<reportElement positionType="Float" x="0" y="24" width="504" height="120" forecolor="#4472C4" uuid="3c2f9907-3910-499a-a9c3-b53a72d19ec6">
@@ -147,7 +147,7 @@
 				</box>
 				<crosstabDataset>
 					<dataset>
-						<datasetRun subDataset="ExecutiveReportTable" uuid="ef2873f8-47a8-4e25-88c6-e919fc1228a4">
+						<datasetRun subDataset="ExecutiveReportTable" uuid="9b1a12af-e50c-4c1f-b7a4-67302023e216">
 							<datasetParameter name="XML_DATA_DOCUMENT">
 								<datasetParameterExpression><![CDATA[$P{XML_DATA_DOCUMENT}]]></datasetParameterExpression>
 							</datasetParameter>

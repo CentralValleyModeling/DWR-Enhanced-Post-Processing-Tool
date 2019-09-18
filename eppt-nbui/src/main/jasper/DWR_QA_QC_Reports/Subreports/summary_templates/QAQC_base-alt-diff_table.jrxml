@@ -356,6 +356,10 @@
 		<property name="net.sf.jasperreports.xpath.field.expression" value="value"/>
 		<fieldDescription><![CDATA[value]]></fieldDescription>
 	</field>
+	<field name="value-full-text" class="java.lang.String">
+		<property name="net.sf.jasperreports.xpath.field.expression" value="value/@value-full-text"/>
+		<fieldDescription><![CDATA[value/@value-full-text]]></fieldDescription>
+	</field>
 	<background>
 		<band splitType="Stretch"/>
 	</background>
@@ -478,7 +482,7 @@
 								<reportElement style="Labels" stretchType="ContainerBottom" isPrintRepeatedValues="false" x="0" y="0" width="140" height="16" uuid="b15f59ce-f57a-43dd-a3a2-1cf1904476fe">
 									<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 								</reportElement>
-								<box leftPadding="3" rightPadding="3"/>
+								<box topPadding="2" leftPadding="3" bottomPadding="2" rightPadding="3"/>
 								<textElement verticalAlignment="Middle">
 									<font fontName="Arial"/>
 								</textElement>
@@ -599,11 +603,14 @@
 						<cellContents mode="Opaque" style="Crosstab_CG"/>
 					</crosstabTotalColumnHeader>
 				</columnGroup>
-				<measure name="value_MEASURE" class="java.lang.Integer">
+				<measure name="value_MEASURE" class="java.math.BigDecimal">
 					<measureExpression><![CDATA[$F{value}]]></measureExpression>
 				</measure>
 				<measure name="v_max_scenario-order_MEASURE" class="java.lang.Integer">
 					<measureExpression><![CDATA[MAX($F{scenario-order})]]></measureExpression>
+				</measure>
+				<measure name="value-full-text" class="java.lang.String">
+					<measureExpression><![CDATA[$F{value-full-text}]]></measureExpression>
 				</measure>
 				<crosstabCell width="38" height="16">
 					<cellContents mode="Transparent" style="Crosstab_CD">
@@ -620,10 +627,11 @@
 								<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 								<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
 							</reportElement>
+							<box topPadding="2" bottomPadding="2"/>
 							<textElement textAlignment="Center" verticalAlignment="Middle">
 								<font fontName="Arial" size="8"/>
 							</textElement>
-							<textFieldExpression><![CDATA[($V{value_MEASURE}==null && $V{component-order}>-1)?"N/A" : ($V{value_MEASURE}>0&&$V{scenario-order}==2?"+"+$V{value_MEASURE}:$V{value_MEASURE})]]></textFieldExpression>
+							<textFieldExpression><![CDATA[$V{value-full-text}==null?($V{value_MEASURE}==null&&$V{component-order}>0?"N/A":($V{value_MEASURE}>0&&$V{scenario-order}==2?"+"+$V{value_MEASURE}:$V{value_MEASURE})):($V{value_MEASURE}>0&&$V{scenario-order}==2?"+"+$V{value-full-text}:$V{value-full-text})]]></textFieldExpression>
 						</textField>
 					</cellContents>
 				</crosstabCell>
