@@ -58,6 +58,10 @@
 		<property name="net.sf.jasperreports.xpath.field.expression" value="@component-name"/>
 		<fieldDescription><![CDATA[@component-name]]></fieldDescription>
 	</field>
+	<field name="sub-module-name" class="java.lang.String">
+		<property name="net.sf.jasperreports.xpath.field.expression" value="ancestor::sub-module/@sub-module-name"/>
+		<fieldDescription><![CDATA[ancestor::sub-module/@sub-module-name]]></fieldDescription>
+	</field>
 	<variable name="v_groupcount" class="java.lang.Integer" incrementType="Group" incrementGroup="Header" calculation="Count">
 		<variableExpression><![CDATA[$V{v_groupcount}+1]]></variableExpression>
 		<initialValueExpression><![CDATA[0]]></initialValueExpression>
@@ -173,8 +177,25 @@
 		<band splitType="Stretch"/>
 	</background>
 	<title>
-		<band splitType="Stretch">
-			<printWhenExpression><![CDATA[1==0]]></printWhenExpression>
+		<band height="18" splitType="Stretch">
+			<textField isStretchWithOverflow="true" evaluationTime="Report" pattern="" bookmarkLevel="4">
+				<reportElement mode="Transparent" x="0" y="0" width="360" height="18" forecolor="#2F5496" backcolor="#FFFFFF" uuid="d3f33482-b6b7-463b-a0af-bc99731f98a2">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+				</reportElement>
+				<box padding="2">
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="Arial" size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{sub-module-name}]]></textFieldExpression>
+				<anchorNameExpression><![CDATA["Non-recoverable Spill Events"]]></anchorNameExpression>
+			</textField>
 		</band>
 	</title>
 	<pageHeader>

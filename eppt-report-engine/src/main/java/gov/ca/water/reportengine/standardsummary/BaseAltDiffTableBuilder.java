@@ -268,7 +268,7 @@ class BaseAltDiffTableBuilder extends TableBuilder
 			}
 			else
 			{
-				String textRaw = String.valueOf(value);
+				String textRaw = String.valueOf(Math.round(value));
 				retval.setTextContent(textRaw);
 			}
 		}
