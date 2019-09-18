@@ -38,8 +38,9 @@ public class CommonPeriodFilter implements PeriodFilter
 	@Override
 	public boolean test(Map.Entry<LocalDateTime, Double> e)
 	{
-		return (e.getKey().isEqual(_start) || e.getKey().isAfter(_start)) &&
-				(e.getKey().isEqual(_end) || e.getKey().isBefore(_end));
+		LocalDateTime key = e.getKey();
+		return (key.isEqual(_start) || key.isAfter(_start)) &&
+				(key.isEqual(_end) || key.isBefore(_end));
 	}
 
 	public LocalDateTime getStart()

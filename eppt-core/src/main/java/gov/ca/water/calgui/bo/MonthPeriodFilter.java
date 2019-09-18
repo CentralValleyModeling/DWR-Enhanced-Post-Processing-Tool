@@ -38,6 +38,8 @@ public class MonthPeriodFilter implements PeriodFilter
 	@Override
 	public boolean test(Map.Entry<LocalDateTime, Double> input)
 	{
-		return input.getKey().getMonth().equals(_month);
+		//Shifting the ranges because values are EOP
+		LocalDateTime key = input.getKey().minusMonths(1);
+		return key.getMonth().equals(_month);
 	}
 }
