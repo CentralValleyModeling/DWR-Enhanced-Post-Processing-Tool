@@ -29,9 +29,9 @@ import gov.ca.water.calgui.project.EpptScenarioRun;
 public class DssCache
 {
 	private static final DssCache INSTANCE = new DssCache();
-	private final ConcurrentHashMap<Key, NavigableMap<LocalDateTime, Double>> GUI_LINK_CACHE = new ConcurrentHashMap();
-	private final ConcurrentHashMap<Key, NavigableMap<LocalDateTime, Double>> THRESHOLD_CACHE = new ConcurrentHashMap();
-	private final ConcurrentHashMap<Key, NavigableMap<LocalDateTime, Double>> DTS_CACHE = new ConcurrentHashMap();
+	private final ConcurrentHashMap<Key, NavigableMap<LocalDateTime, Double>> GUI_LINK_CACHE = new ConcurrentHashMap<>();
+	private final ConcurrentHashMap<Key, NavigableMap<LocalDateTime, Double>> THRESHOLD_CACHE = new ConcurrentHashMap<>();
+	private final ConcurrentHashMap<Key, NavigableMap<LocalDateTime, Double>> DTS_CACHE = new ConcurrentHashMap<>();
 
 	/**
 	 *  Class is not thread safe
