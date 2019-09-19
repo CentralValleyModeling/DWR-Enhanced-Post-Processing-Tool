@@ -85,7 +85,7 @@ public class DSSGrabber1SvcImpl implements IDSSGrabber1Svc
 	private static Logger LOGGER = Logger.getLogger(DSSGrabber1SvcImpl.class.getName());
 	final Map<GUILinksAllModelsBO.Model, String> _primaryDSSName = new HashMap<>();
 	final Map<GUILinksAllModelsBO.Model, String> _secondaryDSSName = new HashMap<>();
-	final Map<GUILinksAllModelsBO.Model, String> _thresholdDSSName = new HashMap<>();
+	private final Map<GUILinksAllModelsBO.Model, String> _thresholdDSSName = new HashMap<>();
 	final List<EpptScenarioRun> _alternatives = new ArrayList<>();
 	private final IGuiLinksSeedDataSvc _seedDataSvc = GuiLinksSeedDataSvcImpl.getSeedDataSvcImplInstance();
 	private final ThresholdLinksSeedDataSvc _thresholdLinksSeedDataSvc = ThresholdLinksSeedDataSvc.getSeedDataSvcImplInstance();
@@ -1133,7 +1133,7 @@ public class DSSGrabber1SvcImpl implements IDSSGrabber1Svc
 		TimeSeriesContainer[][] results;
 		try
 		{
-			boolean valid = isValid(timeSeriesResults);
+			boolean valid = timeSeriesResults != null && isValid(timeSeriesResults);
 			if(!valid)
 			{
 				results = null;
@@ -1270,7 +1270,7 @@ public class DSSGrabber1SvcImpl implements IDSSGrabber1Svc
 		TimeSeriesContainer[][] results = null;
 		try
 		{
-			boolean valid = isValid(timeSeriesResults);
+			boolean valid = timeSeriesResults != null && isValid(timeSeriesResults);
 			if(valid)
 			{
 				results = new TimeSeriesContainer[14][_alternatives.size()];

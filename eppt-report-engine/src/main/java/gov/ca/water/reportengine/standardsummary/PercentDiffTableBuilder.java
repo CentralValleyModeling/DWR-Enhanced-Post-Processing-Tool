@@ -139,6 +139,15 @@ class PercentDiffTableBuilder extends BaseAltDiffTableBuilder
 					retval.setTextContent(textRaw + "%");
 					_valueElements.put(retval, (double) percent);
 				}
+				else if(altValue == 0)
+				{
+					retval.setTextContent("0%");
+					_valueElements.put(retval, 0.0);
+				}
+				else
+				{
+					retval.setTextContent("B=0");
+				}
 			}
 		}
 		catch(EpptReportException e)
