@@ -3,21 +3,21 @@
 !%2C (HTML standard value) is a String replacement for comma literals as commas are not valid characters in CSV formatted files,,,,,,,,,
 !Distinguishes primary outline numbering,Summary or Control sections of the module,Entry that will show up in the TOC and is the header to the table or series of plots,Key to determine kind of chart,Unique charts that map to jasper xml,Title used in chart,Header used in chart,Sub-header used in chart,Component used in chart,
 !Double pipe (||) used to differentiate between X-axis and Y-axis labels,,,,,,,,,
-!Functions are supported in Title Header Sub-Header and Component columns, definitions found in Functions.csv,,,,,,,,,
+!Functions are supported in Title Header Sub-Header and Component columns, definitions found in Functions.csv,,,,,,,,
 !,,,,,,,,,
-Reservoir Operations,Summary,Summary%2C End of May,base-alt-diff-table,resops-summary-may,CVP & SWP Project Reservoirs,North of Delta,CVP Reservoirs,GuiLinkTitle(102),DvPeriodAnnualAverage(102%2C Month.MAY)
-Reservoir Operations,Summary,Summary%2C End of May,base-alt-diff-table,resops-summary-may,CVP & SWP Project Reservoirs,North of Delta,CVP Reservoirs,GuiLinkTitle(112),DvPeriodAnnualAverage(112%2C Month.MAY)
-Reservoir Operations,Summary,Summary%2C End of May,base-alt-diff-table,resops-summary-may,CVP & SWP Project Reservoirs,North of Delta,CVP Reservoirs,GuiLinkTitle(104),DvPeriodAnnualAverage(104%2C Month.MAY)
-Reservoir Operations,Summary,Summary%2C End of May,base-alt-diff-table,resops-summary-may,CVP & SWP Project Reservoirs,North of Delta,SWP Reservoir,GuiLinkTitle(107),DvPeriodAnnualAverage(107%2C Month.MAY)
-Reservoir Operations,Summary,Summary%2C End of May,base-alt-diff-table,resops-summary-may,CVP & SWP Project Reservoirs,South of Delta,San Luis,GuiLinkTitle(106),DvPeriodAnnualAverage(106%2C Month.MAY)
-Reservoir Operations,Summary,Summary%2C End of May,base-alt-diff-table,resops-summary-may,CVP & SWP Project Reservoirs,South of Delta,San Luis,GuiLinkTitle(108),DvPeriodAnnualAverage(108%2C Month.MAY)
+Reservoir Operations,Summary,Summary%2C End of May,base-alt-diff-table,resops-summary-may,CVP & SWP Project Reservoirs,North of Delta,CVP Reservoirs,GuiLinkTitle(102),DvPeriodAverageOneMonth(102%2C Month.MAY)
+Reservoir Operations,Summary,Summary%2C End of May,base-alt-diff-table,resops-summary-may,CVP & SWP Project Reservoirs,North of Delta,CVP Reservoirs,GuiLinkTitle(112),DvPeriodAverageOneMonth(112%2C Month.MAY)
+Reservoir Operations,Summary,Summary%2C End of May,base-alt-diff-table,resops-summary-may,CVP & SWP Project Reservoirs,North of Delta,CVP Reservoirs,GuiLinkTitle(104),DvPeriodAverageOneMonth(104%2C Month.MAY)
+Reservoir Operations,Summary,Summary%2C End of May,base-alt-diff-table,resops-summary-may,CVP & SWP Project Reservoirs,North of Delta,SWP Reservoir,GuiLinkTitle(107),DvPeriodAverageOneMonth(107%2C Month.MAY)
+Reservoir Operations,Summary,Summary%2C End of May,base-alt-diff-table,resops-summary-may,CVP & SWP Project Reservoirs,South of Delta,San Luis,GuiLinkTitle(106),DvPeriodAverageOneMonth(106%2C Month.MAY)
+Reservoir Operations,Summary,Summary%2C End of May,base-alt-diff-table,resops-summary-may,CVP & SWP Project Reservoirs,South of Delta,San Luis,GuiLinkTitle(108),DvPeriodAverageOneMonth(108%2C Month.MAY)
 !,,,,,,,,,
-Reservoir Operations,Summary,Summary%2C End of September,base-alt-diff-table,resops-summary-sept,CVP & SWP Project Reservoirs,North of Delta,CVP Reservoirs,GuiLinkTitle(102),DvPeriodAnnualAverage(102%2C Month.SEPTEMBER)
-Reservoir Operations,Summary,Summary%2C End of September,base-alt-diff-table,resops-summary-sept,CVP & SWP Project Reservoirs,North of Delta,CVP Reservoirs,GuiLinkTitle(112),DvPeriodAnnualAverage(112%2C Month.SEPTEMBER)
-Reservoir Operations,Summary,Summary%2C End of September,base-alt-diff-table,resops-summary-sept,CVP & SWP Project Reservoirs,North of Delta,CVP Reservoirs,GuiLinkTitle(104),DvPeriodAnnualAverage(104%2C Month.SEPTEMBER)
-Reservoir Operations,Summary,Summary%2C End of September,base-alt-diff-table,resops-summary-sept,CVP & SWP Project Reservoirs,North of Delta,SWP Reservoir,GuiLinkTitle(107),DvPeriodAnnualAverage(107%2C Month.SEPTEMBER)
-Reservoir Operations,Summary,Summary%2C End of September,base-alt-diff-table,resops-summary-sept,CVP & SWP Project Reservoirs,South of Delta,San Luis,GuiLinkTitle(106),DvPeriodAnnualAverage(106%2C Month.SEPTEMBER)
-Reservoir Operations,Summary,Summary%2C End of September,base-alt-diff-table,resops-summary-sept,CVP & SWP Project Reservoirs,South of Delta,San Luis,GuiLinkTitle(108),DvPeriodAnnualAverage(108%2C Month.SEPTEMBER)
+Reservoir Operations,Summary,Summary%2C End of September,base-alt-diff-table,resops-summary-sept,CVP & SWP Project Reservoirs,North of Delta,CVP Reservoirs,GuiLinkTitle(102),DvPeriodAverageOneMonth(102%2C Month.SEPTEMBER)
+Reservoir Operations,Summary,Summary%2C End of September,base-alt-diff-table,resops-summary-sept,CVP & SWP Project Reservoirs,North of Delta,CVP Reservoirs,GuiLinkTitle(112),DvPeriodAverageOneMonth(112%2C Month.SEPTEMBER)
+Reservoir Operations,Summary,Summary%2C End of September,base-alt-diff-table,resops-summary-sept,CVP & SWP Project Reservoirs,North of Delta,CVP Reservoirs,GuiLinkTitle(104),DvPeriodAverageOneMonth(104%2C Month.SEPTEMBER)
+Reservoir Operations,Summary,Summary%2C End of September,base-alt-diff-table,resops-summary-sept,CVP & SWP Project Reservoirs,North of Delta,SWP Reservoir,GuiLinkTitle(107),DvPeriodAverageOneMonth(107%2C Month.SEPTEMBER)
+Reservoir Operations,Summary,Summary%2C End of September,base-alt-diff-table,resops-summary-sept,CVP & SWP Project Reservoirs,South of Delta,San Luis,GuiLinkTitle(106),DvPeriodAverageOneMonth(106%2C Month.SEPTEMBER)
+Reservoir Operations,Summary,Summary%2C End of September,base-alt-diff-table,resops-summary-sept,CVP & SWP Project Reservoirs,South of Delta,San Luis,GuiLinkTitle(108),DvPeriodAverageOneMonth(108%2C Month.SEPTEMBER)
 !,,,,,,,,,
 Reservoir Operations,Summary,Change in Storage,base-alt-diff-table,resops-summary-change-storage,CVP & SWP Project Reservoirs,North of Delta,GuiLinkTitle(102),Fill-up,DvGreaterThan0PeriodAverage(105)
 Reservoir Operations,Summary,Change in Storage,base-alt-diff-table,resops-summary-change-storage,CVP & SWP Project Reservoirs,North of Delta,GuiLinkTitle(102),Drawdown,DvLessThan0PeriodAverage(105)
