@@ -224,10 +224,11 @@ function buildTable(units, data, seriesData) {
 
     let table = new Tabulator("#table", {
         layout: 'fitColumns',
-        clipboardCopySelector:"table",
+        // clipboardCopySelector:"table",
+        // clipboardCopyHeader:true,
         selectable: false,
         columnVertAlign: 'center',
-        clipboard:"copy",
+        clipboard:'copy',
         columns: [
             {
                 titleFormatter: formatHeader,
@@ -283,7 +284,7 @@ function buildTable(units, data, seriesData) {
                             name: "Copy",
                             icon: "copy",
                             callback: function(key, options) {
-                                table.copyToClipboard("table", true);
+                                table.copyToClipboard("active", true);
                             }
                         },
                     }
