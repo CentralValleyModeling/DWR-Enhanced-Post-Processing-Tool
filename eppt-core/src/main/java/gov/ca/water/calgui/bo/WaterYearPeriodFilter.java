@@ -47,7 +47,9 @@ public class WaterYearPeriodFilter implements PeriodFilter
 											.filter(f -> f.getWaterYearPeriod().equals(_waterYearPeriod))
 											.map(WaterYearType::getYear)
 											.collect(toSet());
-		return years.contains(input.getKey().getYear());
+		//Shifting the ranges because values are EOP
+		LocalDateTime key = input.getKey().minusMonths(1);
+		return years.contains(key.getYear());
 	}
 
 	public WaterYearIndex getWaterYearIndex()

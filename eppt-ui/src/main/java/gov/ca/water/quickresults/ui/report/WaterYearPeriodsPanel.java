@@ -172,7 +172,7 @@ public class WaterYearPeriodsPanel extends JFXPanel
 		Map<WaterYearPeriod, List<WaterYearPeriodRange>> retval = new HashMap<>();
 		for(TreeItem<WaterYearPeriodDefinitionsRow> treeItem : _treeView.getRoot().getChildren())
 		{
-			if(treeItem instanceof CheckBoxTreeItem && ((CheckBoxTreeItem<WaterYearPeriodDefinitionsRow>) treeItem).isSelected())
+			if(treeItem instanceof CheckBoxTreeItem)
 			{
 				WaterYearPeriodDefinitionsRow parentValue = treeItem.getValue();
 				if(parentValue instanceof WaterYearPeriodRow)
