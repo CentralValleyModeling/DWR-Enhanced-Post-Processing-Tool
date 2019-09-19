@@ -132,7 +132,7 @@
 						<font fontName="Arial" size="12"/>
 					</textElement>
 					<textFieldExpression><![CDATA["2.b. Control for Upstream Minimum Flow Requirements"]]></textFieldExpression>
-					<anchorNameExpression><![CDATA["2.b. Controls for Reservoir Operations"]]></anchorNameExpression>
+					<anchorNameExpression><![CDATA["2.b. Control for Upstream Minimum Flow Requirements"]]></anchorNameExpression>
 				</textField>
 				<textField isStretchWithOverflow="true" evaluationTime="Report" pattern="" bookmarkLevel="4">
 					<reportElement mode="Transparent" x="0" y="28" width="360" height="18" forecolor="#2F5496" backcolor="#FFFFFF" uuid="879396cd-0ddc-40a4-bfc4-29c14a9d3e0f">
@@ -148,8 +148,8 @@
 					<textElement textAlignment="Left" verticalAlignment="Middle">
 						<font fontName="Arial" size="12"/>
 					</textElement>
-					<textFieldExpression><![CDATA["Reservoir Operations Controls"]]></textFieldExpression>
-					<anchorNameExpression><![CDATA["Reservoir Operations Controls"]]></anchorNameExpression>
+					<textFieldExpression><![CDATA["Minimum Flow Requirements Controls"]]></textFieldExpression>
+					<anchorNameExpression><![CDATA["Minimum Flow Requirements Controls"]]></anchorNameExpression>
 				</textField>
 				<subreport>
 					<reportElement stretchType="ElementGroupHeight" x="0" y="46" width="504" height="1" uuid="be0cbc9b-b4bc-43e0-9462-4e72ea6c8e15">

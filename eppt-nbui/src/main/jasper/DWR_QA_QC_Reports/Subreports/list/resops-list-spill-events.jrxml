@@ -20,8 +20,12 @@
 		<defaultValueExpression><![CDATA["resops-list-spill-events"]]></defaultValueExpression>
 	</parameter>
 	<queryString language="XPath">
-		<![CDATA[/qaqc-report/summary/module/section/sub-module/chart/$P{p_report_name}/title/header/sub-header/component]]>
+		<![CDATA[/qaqc-report/summary/module/section/sub-module/chart/$P{p_report_name}/title/header/sub-header/component/value]]>
 	</queryString>
+	<field name="title-name" class="java.lang.String">
+		<property name="net.sf.jasperreports.xpath.field.expression" value="ancestor::title/@title-name"/>
+		<fieldDescription><![CDATA[ancestor::title/@title-name]]></fieldDescription>
+	</field>
 	<field name="header-order" class="java.lang.String">
 		<property name="net.sf.jasperreports.xpath.field.expression" value="ancestor::header/@header-order"/>
 		<fieldDescription><![CDATA[ancestor::header/@header-order]]></fieldDescription>
@@ -31,20 +35,8 @@
 		<fieldDescription><![CDATA[ancestor::sub-header/@sub-header-order]]></fieldDescription>
 	</field>
 	<field name="component-order" class="java.lang.String">
-		<property name="net.sf.jasperreports.xpath.field.expression" value="@component-order"/>
-		<fieldDescription><![CDATA[@component-order]]></fieldDescription>
-	</field>
-	<field name="row-label" class="java.lang.String">
-		<property name="net.sf.jasperreports.xpath.field.expression" value="row-label"/>
-		<fieldDescription><![CDATA[row-label]]></fieldDescription>
-	</field>
-	<field name="value" class="java.lang.String">
-		<property name="net.sf.jasperreports.xpath.field.expression" value="value"/>
-		<fieldDescription><![CDATA[value]]></fieldDescription>
-	</field>
-	<field name="title-name" class="java.lang.String">
-		<property name="net.sf.jasperreports.xpath.field.expression" value="ancestor::title/@title-name"/>
-		<fieldDescription><![CDATA[ancestor::title/@title-name]]></fieldDescription>
+		<property name="net.sf.jasperreports.xpath.field.expression" value="ancestor::component/@component-order"/>
+		<fieldDescription><![CDATA[ancestor::component/@component-order]]></fieldDescription>
 	</field>
 	<field name="header-name" class="java.lang.String">
 		<property name="net.sf.jasperreports.xpath.field.expression" value="ancestor::header/@header-name"/>
@@ -55,11 +47,15 @@
 		<fieldDescription><![CDATA[ancestor::sub-header/@sub-header-name]]></fieldDescription>
 	</field>
 	<field name="component-name" class="java.lang.String">
-		<property name="net.sf.jasperreports.xpath.field.expression" value="@component-name"/>
-		<fieldDescription><![CDATA[@component-name]]></fieldDescription>
+		<property name="net.sf.jasperreports.xpath.field.expression" value="ancestor::component/@component-name"/>
+		<fieldDescription><![CDATA[ancestor::component/@component-name]]></fieldDescription>
+	</field>
+	<field name="value" class="java.lang.String">
+		<property name="net.sf.jasperreports.xpath.field.expression" value="child::text()"/>
+		<fieldDescription><![CDATA[child::text()]]></fieldDescription>
 	</field>
 	<field name="sub-module-name" class="java.lang.String">
-		<property name="net.sf.jasperreports.xpath.field.expression" value="ancestor::sub-module/@sub-module-name"/>
+		<property name="net.sf.jasperreports.xpath.field.expression" value="/qaqc-report/summary/module/section/sub-module/@sub-module-name"/>
 		<fieldDescription><![CDATA[ancestor::sub-module/@sub-module-name]]></fieldDescription>
 	</field>
 	<variable name="v_groupcount" class="java.lang.Integer" incrementType="Group" incrementGroup="Header" calculation="Count">
@@ -173,6 +169,28 @@
 			</band>
 		</groupFooter>
 	</group>
+	<group name="value">
+		<groupExpression><![CDATA[$F{value}]]></groupExpression>
+		<groupHeader>
+			<band>
+				<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				<printWhenExpression><![CDATA[1==0]]></printWhenExpression>
+			</band>
+		</groupHeader>
+		<groupFooter>
+			<band height="14">
+				<textField isStretchWithOverflow="true" evaluationTime="Group" evaluationGroup="value" isBlankWhenNull="true">
+					<reportElement x="20" y="0" width="484" height="14" isRemoveLineWhenBlank="true" uuid="b2be4b27-04ff-4be3-adec-6ef3283b743c">
+						<property name="com.jaspersoft.studio.unit.x" value="px"/>
+						<property name="com.jaspersoft.studio.unit.y" value="px"/>
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					</reportElement>
+					<box topPadding="0" leftPadding="1" bottomPadding="0" rightPadding="0"/>
+					<textFieldExpression><![CDATA[$F{value}]]></textFieldExpression>
+				</textField>
+			</band>
+		</groupFooter>
+	</group>
 	<background>
 		<band splitType="Stretch"/>
 	</background>
@@ -211,17 +229,9 @@
 		</band>
 	</columnHeader>
 	<detail>
-		<band height="14" splitType="Stretch">
-			<printWhenExpression><![CDATA[$F{value} != null && $F{value}!=""]]></printWhenExpression>
-			<textField isStretchWithOverflow="true" evaluationTime="Group" evaluationGroup="Component" isBlankWhenNull="true">
-				<reportElement x="20" y="0" width="484" height="14" isRemoveLineWhenBlank="true" uuid="53369d80-a223-409b-9afe-b4b0ac908a59">
-					<property name="com.jaspersoft.studio.unit.x" value="px"/>
-					<property name="com.jaspersoft.studio.unit.y" value="px"/>
-					<property name="com.jaspersoft.studio.unit.height" value="px"/>
-				</reportElement>
-				<box topPadding="0" leftPadding="1" bottomPadding="0" rightPadding="0"/>
-				<textFieldExpression><![CDATA[$F{value}]]></textFieldExpression>
-			</textField>
+		<band splitType="Stretch">
+			<property name="com.jaspersoft.studio.unit.height" value="px"/>
+			<printWhenExpression><![CDATA[1==0]]></printWhenExpression>
 		</band>
 	</detail>
 	<columnFooter>
