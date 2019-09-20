@@ -20,6 +20,7 @@ import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import gov.ca.water.calgui.bo.WaterYearDefinition;
 import gov.ca.water.calgui.project.EpptScenarioRun;
 import gov.ca.water.plotly.PlotlyChart;
 import gov.ca.water.plotly.PlotlyMonthly;
@@ -84,9 +85,15 @@ class LinePlotBuilder extends PlotChartBuilder
 		try
 		{
 			Map<Month, Double> values = createJythonValueGenerator(base, chartComponent.getFunction()).generateMonthlyValues();
-			for(Map.Entry<Month, Double> entry : values.entrySet())
+			WaterYearDefinition waterYearDefinition = getReportParameters().getWaterYearDefinition();
+			for(int i = 0; i < Month.values().length; i++)
 			{
-				retval.add(new PlotlyMonthly.MonthlyData(entry.getKey(), entry.getValue()));
+				Month month = waterYearDefinition.getStartMonth().plus(i);
+				Double value = values.get(month);
+				if(value != null)
+				{
+					retval.add(new PlotlyMonthly.MonthlyData(month, value));
+				}
 			}
 		}
 		catch(EpptReportException e)
