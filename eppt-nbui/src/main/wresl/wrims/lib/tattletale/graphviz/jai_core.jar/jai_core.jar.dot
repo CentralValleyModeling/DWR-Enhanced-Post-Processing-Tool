@@ -1,4 +1,0 @@
-digraph jai_core_dependencies {
-  node [shape = box, fontsize=10.0];
-  jai_core -> jai_codec;
-}

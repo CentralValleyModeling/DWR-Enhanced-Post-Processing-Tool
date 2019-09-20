@@ -1,6 +1,0 @@
-digraph gridUtil_dependencies {
-  node [shape = box, fontsize=10.0];
-  gridUtil -> data;
-  gridUtil -> hec;
-  gridUtil -> rma;
-}

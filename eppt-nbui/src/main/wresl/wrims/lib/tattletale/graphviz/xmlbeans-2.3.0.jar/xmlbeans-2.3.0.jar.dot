@@ -1,5 +1,0 @@
-digraph xmlbeans_2_3_0_dependencies {
-  node [shape = box, fontsize=10.0];
-  xmlbeans_2_3_0 -> misc;
-  xmlbeans_2_3_0 -> stax_api_1_0_1;
-}

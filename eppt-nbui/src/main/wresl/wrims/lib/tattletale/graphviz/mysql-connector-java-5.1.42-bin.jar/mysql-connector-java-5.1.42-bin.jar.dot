@@ -1,6 +1,0 @@
-digraph mysql_connector_java_5_1_42_bin_dependencies {
-  node [shape = box, fontsize=10.0];
-  mysql_connector_java_5_1_42_bin -> misc;
-  mysql_connector_java_5_1_42_bin -> slf4j_api_1_7_5;
-  mysql_connector_java_5_1_42_bin -> stax_api_1_0_1;
-}
