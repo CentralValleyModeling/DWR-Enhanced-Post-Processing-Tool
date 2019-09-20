@@ -12,6 +12,7 @@
 
 package gov.ca.water.reportengine.detailedissues;
 
+import gov.ca.water.calgui.bo.DetailedIssue;
 import gov.ca.water.calgui.project.EpptScenarioRun;
 import gov.ca.water.reportengine.ModuleCreator;
 import gov.ca.water.reportengine.executivereport.DTSProcessor;
@@ -43,7 +44,7 @@ public class TestDetailedIssueReport extends TestDetailedIssuesReportBase
         allRuns.addAll(altScenarioRuns);
 
         ModuleCreator mc = new ModuleCreator();
-        List<Module> modules = mc.createModules(getCSVPath(), getModuleLinkingCSVPath());
+        List<Module> modules = mc.createModules(getCSVPath());
         List<DetailedIssue> allDetailedIssues = mc.getAllDetailedIssues();
 
         DTSProcessor dtsProcessor = new DTSProcessor(modules);

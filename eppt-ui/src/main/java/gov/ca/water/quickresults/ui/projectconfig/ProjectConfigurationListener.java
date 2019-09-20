@@ -77,6 +77,7 @@ public class ProjectConfigurationListener implements ActionListener
 		ScenarioRunEditor scenarioRunEditor = new ScenarioRunEditor(
 				(Frame) SwingUtilities.windowForComponent(_projectConfigurationPanel));
 		scenarioRunEditor.setVisible(true);
+		scenarioRunEditor.dispose();
 		EpptScenarioRun scenarioRun = scenarioRunEditor.createRun();
 		if(scenarioRun != null)
 		{
@@ -93,6 +94,7 @@ public class ProjectConfigurationListener implements ActionListener
 					(Frame) SwingUtilities.windowForComponent(_projectConfigurationPanel));
 			scenarioRunEditor.fillPanel(oldScenarioRun);
 			scenarioRunEditor.setVisible(true);
+			scenarioRunEditor.dispose();
 			EpptScenarioRun newScenarioRun = scenarioRunEditor.createRun();
 			if(newScenarioRun != null)
 			{

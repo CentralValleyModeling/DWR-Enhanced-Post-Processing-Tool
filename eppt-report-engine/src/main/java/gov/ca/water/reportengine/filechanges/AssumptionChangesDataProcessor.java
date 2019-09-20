@@ -28,6 +28,8 @@ import hec.heclib.dss.DSSPathname;
 import hec.heclib.dss.HecDss;
 import hec.io.TimeSeriesContainer;
 
+import static gov.ca.water.reportengine.EPPTReport.checkInterrupt;
+
 public class AssumptionChangesDataProcessor
 {
 	private static final FluentLogger LOGGER = FluentLogger.forEnclosingClass();
@@ -57,9 +59,8 @@ public class AssumptionChangesDataProcessor
 			baseFile = HecDss.open(basePath.toString());
 			altFile = HecDss.open(altPath.toString());
 
+			checkInterrupt();
 			return processAssumptionChangesStatistics(baseFile, altFile);
-
-
 		}
 		catch(EpptReportException epptException)
 		{
@@ -94,6 +95,8 @@ public class AssumptionChangesDataProcessor
 		altFile.getPathnameList();
 		for(DSSPathname pathName : _csvMasterPathList)
 		{
+			checkInterrupt();
+			LOGGER.atInfo().log("Comparing path: %s", pathName);
 			processDSSDifferences(changes, baseRecordsOnly, altRecordsOnly, baseFile, altFile, pathName);
 		}
 
@@ -108,6 +111,7 @@ public class AssumptionChangesDataProcessor
 		Vector baseCatalog = baseFile.getCatalogedPathnames(pathFromMaster.toString());
 		boolean baseHasFile = !baseCatalog.isEmpty();
 
+		checkInterrupt();
 		Vector altCatalog = altFile.getCatalogedPathnames(pathFromMaster.toString());
 		boolean altHasFile = !altCatalog.isEmpty();
 

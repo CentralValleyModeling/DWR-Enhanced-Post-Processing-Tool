@@ -13,9 +13,12 @@
 package gov.ca.water.calgui.busservice.impl;
 
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.NavigableMap;
+import java.util.TreeMap;
 
 import gov.ca.water.calgui.EpptInitializationException;
 import gov.ca.water.calgui.bo.CalLiteGUIException;
@@ -39,7 +42,7 @@ public final class GuiLinksSeedDataSvcImpl implements IGuiLinksSeedDataSvc
 	private static final Logger LOG = Logger.getLogger(GuiLinksSeedDataSvcImpl.class.getName());
 	private static final String GUI_LINKS_ALL_MODELS_FILENAME = CONFIG_DIR + "/GUILinks" + CSV_EXT;
 	private static IGuiLinksSeedDataSvc seedDataSvc;
-	private final Map<Integer, GUILinksAllModelsBO> _guiLinksAllModels = new HashMap<>();
+	private final NavigableMap<Integer, GUILinksAllModelsBO> _guiLinksAllModels = new TreeMap<>();
 
 	/**
 	 * This will read the gui_links.csv files and build the list and maps of {@link GUILinksAllModelsBO}
@@ -69,6 +72,11 @@ public final class GuiLinksSeedDataSvcImpl implements IGuiLinksSeedDataSvc
 		}
 	}
 
+	public List<GUILinksAllModelsBO> getAllGuiLinks()
+	{
+		return new ArrayList<>(_guiLinksAllModels.values());
+	}
+
 	public static void createSeedDataSvcImplInstance() throws EpptInitializationException
 	{
 		if(seedDataSvc == null)
@@ -83,7 +91,7 @@ public final class GuiLinksSeedDataSvcImpl implements IGuiLinksSeedDataSvc
 	 * @param line The line to be checked.
 	 * @return Will return true if the line id not comment.
 	 */
-	private static boolean isNotComments(String line)
+	public static boolean isNotComments(String line)
 	{
 		return !line.startsWith(Constant.EXCLAMATION);
 	}

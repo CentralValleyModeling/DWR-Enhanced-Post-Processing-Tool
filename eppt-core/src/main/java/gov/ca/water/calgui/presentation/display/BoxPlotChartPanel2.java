@@ -16,8 +16,6 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.datatransfer.StringSelection;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.print.PageFormat;
 import java.awt.print.Printable;
 import java.awt.print.PrinterException;
@@ -61,12 +59,9 @@ public class BoxPlotChartPanel2 extends JPanel implements Printable
 	 */
 	private static final long serialVersionUID = 7398804723681056388L;
 	private static Logger LOG = Logger.getLogger(ChartPanel.class.getName());
-	JButton btnScatter;
-	private String buffer;
-	private IErrorHandlingSvc errorHandlingSvc = new ErrorHandlingSvcImpl();
 
-	public BoxPlotChartPanel2(String title, String yLabel, TimeSeriesContainer[][] mtscs,
-							  TimeSeriesContainer[][] mstscs, Date lower, Date upper, String sLabel, boolean isBase,
+	public BoxPlotChartPanel2(String title, TimeSeriesContainer[][] mtscs,
+							  boolean isBase,
 							  MultipleTimeSeries mts)
 	{
 
@@ -170,29 +165,7 @@ public class BoxPlotChartPanel2 extends JPanel implements Printable
 
 					JPopupMenu popupmenu = p1.getPopupMenu();
 					JMenuItem item0 = popupmenu.add("Reset Axes");
-					item0.addActionListener(new ActionListener()
-					{
-						@Override
-						public void actionPerformed(ActionEvent e)
-						{
-							p1.restoreAutoBounds();
-						}
-					});
-
-					JMenuItem item = popupmenu.add("Copy Data");
-					item.addActionListener(new ActionListener()
-					{
-						@Override
-						public void actionPerformed(ActionEvent e)
-						{
-							if(buffer == null)
-							{
-								return;
-							}
-							StringSelection clipString = new StringSelection(buffer);
-							getToolkit().getSystemClipboard().setContents(clipString, clipString);
-						}
-					});
+					item0.addActionListener(e -> p1.restoreAutoBounds());
 
 					// Finish up window
 

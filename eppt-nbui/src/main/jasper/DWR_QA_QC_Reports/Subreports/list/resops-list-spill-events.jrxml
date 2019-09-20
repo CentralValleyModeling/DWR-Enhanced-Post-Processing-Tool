@@ -1,0 +1,253 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.9.0.final using JasperReports Library version 6.9.0-cb8f9004be492ccc537180b49c026951f4220bf3  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="QAQC_AlternativeIssuesReport" language="groovy" pageWidth="504" pageHeight="684" whenNoDataType="BlankPage" columnWidth="504" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" whenResourceMissingType="Empty" uuid="da75db69-3924-4f44-998a-80195014db99">
+	<property name="net.sf.jasperreports.data.adapter" value="QAQC_Datasource.xml"/>
+	<property name="net.sf.jasperreports.print.create.bookmarks" value="true"/>
+	<property name="com.jaspersoft.studio.unit." value="pixel"/>
+	<parameter name="XML_DATA_DOCUMENT" class="org.w3c.dom.Document" isForPrompting="false"/>
+	<parameter name="XML_INPUT_STREAM" class="java.io.InputStream" isForPrompting="false"/>
+	<parameter name="XML_FILE" class="java.io.File" isForPrompting="false"/>
+	<parameter name="net.sf.jasperreports.xml.source" class="java.lang.String" isForPrompting="false"/>
+	<parameter name="XML_DATE_PATTERN" class="java.lang.String" isForPrompting="false"/>
+	<parameter name="XML_NUMBER_PATTERN" class="java.lang.String" isForPrompting="false"/>
+	<parameter name="XML_LOCALE" class="java.util.Locale" isForPrompting="false"/>
+	<parameter name="XML_TIME_ZONE" class="java.util.TimeZone" isForPrompting="false"/>
+	<parameter name="AlternativeIssuesReport" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["Alternative Issues Report"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="p_report_name" class="java.lang.String" isForPrompting="false" evaluationTime="Early">
+		<parameterDescription><![CDATA["The report name should come from a field in the main report"]]></parameterDescription>
+		<defaultValueExpression><![CDATA["resops-list-spill-events"]]></defaultValueExpression>
+	</parameter>
+	<queryString language="XPath">
+		<![CDATA[/qaqc-report/summary/module/section/sub-module/chart/$P{p_report_name}/title/header/sub-header/component/value]]>
+	</queryString>
+	<field name="title-name" class="java.lang.String">
+		<property name="net.sf.jasperreports.xpath.field.expression" value="ancestor::title/@title-name"/>
+		<fieldDescription><![CDATA[ancestor::title/@title-name]]></fieldDescription>
+	</field>
+	<field name="header-order" class="java.lang.String">
+		<property name="net.sf.jasperreports.xpath.field.expression" value="ancestor::header/@header-order"/>
+		<fieldDescription><![CDATA[ancestor::header/@header-order]]></fieldDescription>
+	</field>
+	<field name="sub-header-order" class="java.lang.String">
+		<property name="net.sf.jasperreports.xpath.field.expression" value="ancestor::sub-header/@sub-header-order"/>
+		<fieldDescription><![CDATA[ancestor::sub-header/@sub-header-order]]></fieldDescription>
+	</field>
+	<field name="component-order" class="java.lang.String">
+		<property name="net.sf.jasperreports.xpath.field.expression" value="ancestor::component/@component-order"/>
+		<fieldDescription><![CDATA[ancestor::component/@component-order]]></fieldDescription>
+	</field>
+	<field name="header-name" class="java.lang.String">
+		<property name="net.sf.jasperreports.xpath.field.expression" value="ancestor::header/@header-name"/>
+		<fieldDescription><![CDATA[ancestor::header/@header-name]]></fieldDescription>
+	</field>
+	<field name="sub-header-name" class="java.lang.String">
+		<property name="net.sf.jasperreports.xpath.field.expression" value="ancestor::sub-header/@sub-header-name"/>
+		<fieldDescription><![CDATA[ancestor::sub-header/@sub-header-name]]></fieldDescription>
+	</field>
+	<field name="component-name" class="java.lang.String">
+		<property name="net.sf.jasperreports.xpath.field.expression" value="ancestor::component/@component-name"/>
+		<fieldDescription><![CDATA[ancestor::component/@component-name]]></fieldDescription>
+	</field>
+	<field name="value" class="java.lang.String">
+		<property name="net.sf.jasperreports.xpath.field.expression" value="child::text()"/>
+		<fieldDescription><![CDATA[child::text()]]></fieldDescription>
+	</field>
+	<field name="sub-module-name" class="java.lang.String">
+		<property name="net.sf.jasperreports.xpath.field.expression" value="ancestor::sub-module/@sub-module-name"/>
+		<fieldDescription><![CDATA[ancestor::sub-module/@sub-module-name]]></fieldDescription>
+	</field>
+	<variable name="v_groupcount" class="java.lang.Integer" incrementType="Group" incrementGroup="Header" calculation="Count">
+		<variableExpression><![CDATA[$V{v_groupcount}+1]]></variableExpression>
+		<initialValueExpression><![CDATA[0]]></initialValueExpression>
+	</variable>
+	<group name="Title">
+		<groupExpression><![CDATA[$F{title-name}]]></groupExpression>
+		<groupHeader>
+			<band height="18">
+				<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				<printWhenExpression><![CDATA[$F{title-name} != null && $F{title-name}!=""]]></printWhenExpression>
+				<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true">
+					<reportElement mode="Transparent" x="0" y="0" width="380" height="18" isRemoveLineWhenBlank="true" forecolor="#000000" backcolor="#FFFFFF" uuid="a4dbd067-7cc1-43fb-82b8-e4352a033bf3">
+						<property name="com.jaspersoft.studio.unit.x" value="px"/>
+						<property name="com.jaspersoft.studio.unit.y" value="px"/>
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					</reportElement>
+					<box topPadding="0" leftPadding="1" bottomPadding="0" rightPadding="0">
+						<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Left" verticalAlignment="Middle">
+						<font size="12" isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{title-name}]]></textFieldExpression>
+				</textField>
+			</band>
+		</groupHeader>
+		<groupFooter>
+			<band>
+				<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				<printWhenExpression><![CDATA[1==0]]></printWhenExpression>
+			</band>
+		</groupFooter>
+	</group>
+	<group name="Header">
+		<groupExpression><![CDATA[$F{header-name}]]></groupExpression>
+		<groupHeader>
+			<band height="14">
+				<printWhenExpression><![CDATA[$F{header-name} != null && $F{header-name}!=""]]></printWhenExpression>
+				<textField isStretchWithOverflow="true" evaluationTime="Group" evaluationGroup="Header" isBlankWhenNull="true">
+					<reportElement x="0" y="0" width="444" height="14" isRemoveLineWhenBlank="true" printWhenGroupChanges="Header" forecolor="#000000" uuid="19a6d988-05e3-49d9-8988-9570eb6683ae">
+						<property name="com.jaspersoft.studio.unit.x" value="px"/>
+						<property name="com.jaspersoft.studio.unit.y" value="px"/>
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					</reportElement>
+					<box topPadding="0" leftPadding="1" bottomPadding="0" rightPadding="0"/>
+					<textElement>
+						<font size="10" isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{header-name}]]></textFieldExpression>
+				</textField>
+			</band>
+		</groupHeader>
+		<groupFooter>
+			<band>
+				<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				<printWhenExpression><![CDATA[1==0]]></printWhenExpression>
+			</band>
+		</groupFooter>
+	</group>
+	<group name="Sub-Header">
+		<groupExpression><![CDATA[$F{sub-header-name}]]></groupExpression>
+		<groupHeader>
+			<band height="16">
+				<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				<printWhenExpression><![CDATA[$F{sub-header-name} != null && $F{sub-header-name}!=""]]></printWhenExpression>
+				<textField isStretchWithOverflow="true" evaluationTime="Group" evaluationGroup="Sub-Header" isBlankWhenNull="true">
+					<reportElement x="-1" y="0" width="491" height="16" isRemoveLineWhenBlank="true" uuid="c5dfd7d4-6b42-45aa-b96f-2d0779445317">
+						<property name="com.jaspersoft.studio.unit.x" value="px"/>
+						<property name="com.jaspersoft.studio.unit.y" value="px"/>
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					</reportElement>
+					<box topPadding="0" leftPadding="1" bottomPadding="0" rightPadding="0"/>
+					<textElement>
+						<font isItalic="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{sub-header-name}]]></textFieldExpression>
+				</textField>
+			</band>
+		</groupHeader>
+		<groupFooter>
+			<band>
+				<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				<printWhenExpression><![CDATA[1==0]]></printWhenExpression>
+			</band>
+		</groupFooter>
+	</group>
+	<group name="Component">
+		<groupExpression><![CDATA[$F{component-name}]]></groupExpression>
+		<groupHeader>
+			<band height="14">
+				<printWhenExpression><![CDATA[$F{component-name} != null && $F{component-name}!=""]]></printWhenExpression>
+				<textField isStretchWithOverflow="true" evaluationTime="Group" evaluationGroup="Component" isBlankWhenNull="true">
+					<reportElement x="0" y="0" width="280" height="14" isRemoveLineWhenBlank="true" uuid="5f9d85c1-d1a7-46c4-8da8-2c8ab6c67eff">
+						<property name="com.jaspersoft.studio.unit.x" value="px"/>
+						<property name="com.jaspersoft.studio.unit.y" value="px"/>
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					</reportElement>
+					<box topPadding="0" leftPadding="1" bottomPadding="0" rightPadding="0"/>
+					<textFieldExpression><![CDATA[$F{component-name}]]></textFieldExpression>
+				</textField>
+			</band>
+		</groupHeader>
+		<groupFooter>
+			<band>
+				<printWhenExpression><![CDATA[1==0]]></printWhenExpression>
+			</band>
+		</groupFooter>
+	</group>
+	<group name="value">
+		<groupExpression><![CDATA[$F{value}]]></groupExpression>
+		<groupHeader>
+			<band>
+				<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				<printWhenExpression><![CDATA[1==0]]></printWhenExpression>
+			</band>
+		</groupHeader>
+		<groupFooter>
+			<band height="14">
+				<textField isStretchWithOverflow="true" evaluationTime="Group" evaluationGroup="value" isBlankWhenNull="true">
+					<reportElement x="20" y="0" width="484" height="14" isRemoveLineWhenBlank="true" uuid="b2be4b27-04ff-4be3-adec-6ef3283b743c">
+						<property name="com.jaspersoft.studio.unit.x" value="px"/>
+						<property name="com.jaspersoft.studio.unit.y" value="px"/>
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					</reportElement>
+					<box topPadding="0" leftPadding="1" bottomPadding="0" rightPadding="0"/>
+					<textFieldExpression><![CDATA[$F{value}]]></textFieldExpression>
+				</textField>
+			</band>
+		</groupFooter>
+	</group>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="20" splitType="Stretch">
+			<textField isStretchWithOverflow="true" evaluationTime="Report" pattern="" bookmarkLevel="4">
+				<reportElement mode="Transparent" x="0" y="0" width="360" height="20" forecolor="#2F5496" backcolor="#FFFFFF" uuid="d3f33482-b6b7-463b-a0af-bc99731f98a2">
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<box padding="2">
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{sub-module-name}]]></textFieldExpression>
+				<anchorNameExpression><![CDATA[$F{sub-module-name}]]></anchorNameExpression>
+			</textField>
+		</band>
+	</title>
+	<pageHeader>
+		<band splitType="Stretch">
+			<property name="com.jaspersoft.studio.unit.height" value="px"/>
+			<printWhenExpression><![CDATA[1==0]]></printWhenExpression>
+		</band>
+	</pageHeader>
+	<columnHeader>
+		<band splitType="Stretch">
+			<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+			<printWhenExpression><![CDATA[1==0]]></printWhenExpression>
+		</band>
+	</columnHeader>
+	<detail>
+		<band splitType="Stretch">
+			<property name="com.jaspersoft.studio.unit.height" value="px"/>
+			<printWhenExpression><![CDATA[1==0]]></printWhenExpression>
+		</band>
+	</detail>
+	<columnFooter>
+		<band splitType="Stretch">
+			<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+			<printWhenExpression><![CDATA[1==0]]></printWhenExpression>
+		</band>
+	</columnFooter>
+	<pageFooter>
+		<band splitType="Stretch">
+			<printWhenExpression><![CDATA[1==0]]></printWhenExpression>
+		</band>
+	</pageFooter>
+	<summary>
+		<band splitType="Stretch">
+			<printWhenExpression><![CDATA[1==0]]></printWhenExpression>
+		</band>
+	</summary>
+</jasperReport>

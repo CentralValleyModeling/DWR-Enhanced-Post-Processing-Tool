@@ -1,0 +1,394 @@
+/************************************
+
+Calc_Delta_Control.wresl
+
+Yuxiang, DWR, BDO
+2019/02/09
+
+This file post process the delta control during each timestep   
+**************************************/
+
+
+/******************* Total Delta Outflow *******************/
+define TOT_DO_ {value C407 + D407}
+
+/******************** NDOI **********************/
+!check if NDOI is in control
+define NDOI_CHECK_ {
+	case Violated {
+	condition DO_req_flow_out - TOT_DO_ > abs_threshold
+	value 300
+	}
+	case Control {
+	condition abs(DO_req_flow_out - TOT_DO_) < abs_threshold
+	value 200
+	}
+	case notControl {
+	condition always
+	value 100
+	}
+}
+
+/******************** WQ - Salinity - ANN **********************/
+! check if WQ (Salinity ANN) is in control 
+! MRDO due to WQ (Salinity ANN) 
+define MRDO_WQ_ {value max(JP_MRDO,EM_MRDO,RS_MRDO_1,RS_MRDO_2,RS_MRDO_3,CO_MRDO)}
+define ANN_CHECK_ {
+	case violated {
+	condition MRDO_WQ_ - TOT_DO_ > abs_threshold
+	value 300
+	}
+	case Control {
+	condition abs(MRDO_WQ_ - TOT_DO_) < abs_threshold
+	value 200
+	}
+	case notControl {
+	condition always
+	value 100
+	}
+}
+! Check If Jersey point is in control of DO
+define JP_Check_ {
+	case Violated {
+	condition JP_MRDO - TOT_DO_ > abs_threshold
+	value 300
+	}
+	case Control {
+	condition abs(JP_MRDO - TOT_DO_) < abs_threshold .and. C407_ANN > abs_threshold
+	value 200
+	}
+	case notControl {
+	condition always
+	value 100
+	}
+}
+! Check If Emmaton is in control of DO
+define EM_Check_ {
+	case Violated {
+	condition EM_MRDO - TOT_DO_ > abs_threshold
+	value 300
+	}
+	case Control {
+	condition abs(EM_MRDO - TOT_DO_) < abs_threshold .and. C407_ANN > abs_threshold
+	value 200
+	}
+	case notControl {
+	condition always
+	value 100
+	}
+}
+! Check If Rock Slough is in control of DO
+define RS_Check_ {
+	case Violated {
+	condition max(RS_MRDO_1,RS_MRDO_2,RS_MRDO_3) - TOT_DO_ > abs_threshold
+	value 300
+	}
+	case Control {
+	condition abs(max(RS_MRDO_1,RS_MRDO_2,RS_MRDO_3) - TOT_DO_) < abs_threshold .and. C407_ANN > abs_threshold
+	value 200
+	}
+	case notControl {
+	condition always
+	value 100
+	}
+}
+! Check If Collinsville is in control of DO
+define CO_Check_ {
+	case Violated {
+	condition CO_MRDO - TOT_DO_ > abs_threshold
+	value 300
+	}
+	case Control {
+	condition abs(CO_MRDO - TOT_DO_) < abs_threshold .and. C407_ANN > abs_threshold
+	value 200
+	}
+	case notControl {
+	condition always
+	value 100
+	}
+}
+
+/*************************** X2 ***************************/
+! Check if Fall X2 is in control of DO
+define FX2_Check_ {
+	case control {
+	condition month >= SEP .and. month <= NOV .and. D407 - DO_req_flow_out > abs_threshold
+	value 200
+	}
+	case notcontrol {
+	condition always
+	value 100
+	}
+}
+! Check if Spring X2 is in control of DO
+define SX2_Check_ {
+	case control {
+	condition month >= FEB .and. month <= JUN .and. D407 - DO_req_flow_out > abs_threshold
+	value 200
+	}
+	case notcontrol {
+	condition always
+	value 100
+	}
+}
+/********************** Rio Vista MIF **********************/
+!Check if Rio Vista MIF is in control
+define RV_Check_ {
+	case at {
+	condition abs(Rio_req - C405) < abs_threshold  
+	value 200
+	}
+	case Violated {
+	condition Rio_req - C405 > abs_threshold 
+	value 300
+	}
+	case above {
+	condition always
+	value 100
+	}
+}
+/********************** QWEST required Flow **********************/
+!Check if QWEST is in control
+define QWEST_Check_ {
+	case at {
+	condition abs(qwest_std - C416A) < abs_threshold  
+	value 200
+	}
+	case Violated {
+	condition qwest_std - C416A > abs_threshold 
+	value 300
+	}
+	case above {
+	condition always
+	value 100
+	}
+}
+
+/********************** EI **********************/
+define DO_Surplus_EI_ {value (EIEXPCTRL - D418 - D419)/EXPRATIO} !SURPLUS WITH RESPECT TO EI RATIO
+define EI_CHECK_{
+	case Violated {
+	condition DO_Surplus_EI_ < -abs_threshold
+	value 300
+	}
+	case Control {
+	condition abs(DO_Surplus_EI_) < abs_threshold
+	value 200
+	}
+	case notControl {
+	condition always
+	value 100
+	}
+}
+/*************************** OMR ***************************/
+! Allowed Export Due to OMR
+define OMR_ALLOWED_ {
+	case notApplied {
+	condition C408_LBOUND == 99999
+	value Neg_Flt_Max
+	}
+	case Applied {
+	condition always
+	value C408_NoEXP1 - C408_LBOUND
+	}
+}
+
+! Check if OMR is in control
+define OMR_CHECK_ {                         !SF and AA 06212019 A check is required here for OMR control criteria   "underreview"
+	case Violated {
+	condition C408 - C408_LBOUND < - abs_threshold  !TOT_DO_ - OMR_ALLOWED_ > abs_threshold        
+	value 300
+	}
+	case Control {
+	condition abs(C408 - C408_LBOUND) < abs_threshold !.and. D409_Upstream - D409_Delta > abs_threshold !abs(TOT_DO_ - OMR_ALLOWED_) < abs_threshold .and. D409_Upstream - D409_Delta < C406_Delta - C406_Upstream
+	value 200
+	}
+	/*case notVerifiedControl {
+	condition abs(TOT_DO_ - OMR_ALLOWED_) < abs_threshold .and. D409_Upstream - D409_Delta >  C406_Delta - C406_Upstream
+	value 0
+	}*/    									 !SF and AA 06212019 A check is required here for OMR control criteria   "underreview" 
+	case notControl {
+	condition always
+	value 100
+	}
+}
+
+/*************************** NMFS ***************************/
+/************************* SJR I/E **************************/
+!Check if SJR I/E is in control 
+define SJRIE_CHECK_ {
+	case violated {
+	condition D418_TD + D419_TD - NMFS_MaxExpdv > abs_threshold
+	value 300
+	}
+	case Control {
+	condition abs(NMFS_MaxExpdv - D418_TD + D419_TD) < abs_threshold
+	value 200
+	}
+	case notControl {
+	condition always
+	value 100
+	}
+}
+/*************************** NMFS ***************************/
+/*************************** DCC ****************************/
+define DCC_CHECK_ {
+	case violated {
+	condition D418_TD + D419_TD - NMFS_MaxExpDCCdv > abs_threshold
+	value 300
+	}
+	case Control {
+	condition abs(NMFS_MaxExpDCCdv - D418_TD + D419_TD) < abs_threshold
+	value 200
+	}
+	case notControl {
+	condition always
+	value 100
+	}
+}
+/************** MRDO due to different controls ***************/
+! MRDO due to NDOI
+define MRDO_NDOI_ {value DO_req_flow_out}
+! MRDO due to WQ (Salinity ANN) 
+define MRDO_ANN_ {value max(JP_MRDO,EM_MRDO,RS_MRDO_1,RS_MRDO_2,RS_MRDO_3,CO_MRDO)}
+! MRDO due to X2 
+define MRDO_X2_ {value D407 - DO_req_flow_out kind 'FLOW-REQ-X2' units 'CFS'}
+define MRDO_FX2_ {
+	case InFall {
+	condition month >= SEP .and. month <= NOV
+	value MRDO_X2_
+	}
+	case NotInFall {
+	condition always
+	value 0
+	}
+}
+define MRDO_SX2_ {
+	case InSpring {
+	condition month >= FEB .and. month <= JUN
+	value MRDO_X2_
+	}
+	case NotInSpring {
+	condition always
+	value 0
+	}
+}
+
+!Increase in MRDO due to OMR/SJRIE/DCC control 
+define MRDO_Increase_ {value min(D409_Upstream - D409_Delta, C406_Upstream - C406_Delta)}
+
+/************** SURPLUS WITH RESPECT TO EACH CONSTRAINT ***************/
+define DO_Surplus_ANN_ {value TOT_DO_ - MRDO_ANN_} ! SURPLUS WITH RESPECT TO ANN 
+define DO_Surplus_X2_ {value TOT_DO_ - MRDO_X2_} ! SURPLUS WITH RESPECT TO X2
+define DO_Surplus_NDOI_ {value TOT_DO_ - MRDO_NDOI_} !SURPLUS WITH RESPECT TO NDOI
+!define DO_Surplus_EI_ {value (EIEXPCTRL_ - D409_)/EXPRATIO_} !SURPLUS WITH RESPECT TO EI RATIO
+
+
+/************** Min. Surplus due to Ag WQ  and FWS Req. ***************/
+/**************Surplus after accounting only for direct outflow restrictions***************/
+define DO_Surplus_MIN_ {value min(DO_Surplus_ANN_, DO_Surplus_X2_, DO_Surplus_NDOI_, DO_Surplus_EI_)}
+! Account for indirect Delta outflow requirements due to Export Restrictions
+! 
+define DO_Surplus_TRUE_ {value DO_Surplus_MIN_ - MRDO_Increase_ + D168C_EXC_NTDEP}
+
+/**************Delta Condition **************/
+/* 100 - Balance; 200 - Excess with restrictions; 300 - Excess*/
+define Delta_Condtn {
+	case Balanced {
+	condition C407-C407_whlcv-C407_whljp-C407_WTS-C407_ANN < abs_threshold !.or. INFLW - TOTAL_EXP/EXPRATIO < abs_threshold .or. C407 < abs_threshold 
+	value 100}
+	case Excess_Restriction {
+	condition abs(C406_Delta - C406_Upstream) > abs_threshold .and. abs(D409_Upstream - D409_Delta) > abs_threshold
+	value 200}
+	case Excess {
+	condition always
+	value 300}
+	
+}
+
+/* Controling factor in Excess with restrictions delta condition*/
+!is fall X2 position the restrictions in Excess with restrictions delta condition
+! 200 - excess condition with FX2 restrictions; 100 - other condition 
+define Excess_FX2 { 
+	case Excess_FX2_control {
+	condition Delta_Condtn == 200 .and. FX2_Check_ ==  200
+	value 200
+	}
+	case not {
+	condition always
+	value 100}
+}
+!is OMR the restrictions in Excess with restrictions delta condition
+! 200 - excess condition with OMR restrictions; 100 - other condition
+define Excess_OMR { 
+	case Excess_OMR_control {
+	condition Delta_Condtn == 200 .and. OMR_CHECK_ > 150
+	value 200
+	}
+	case not {
+	condition always
+	value 100}
+}
+!is Vernalis 4:1 (SJIE) the restrictions in Excess with restrictions delta condition
+! 1 - excess condition with OMR restrictions; 0 - other condition
+define Excess_Vernalis { 
+	case Excess_Vernalis_control {
+	condition Delta_Condtn == 200 .and. SOD_EXP_Vern_ctrl_ > 150
+	value 200
+	}
+	case not {
+	condition always
+	value 100}
+}
+
+!identify what is the restrictions during Excess with restrictions delta condition
+!100 - FX2; 200 - OMR; 300 - Vernalis 4:1 (SJIE)
+define Excess_Restriction {
+	case Excess_FX2 {
+	condition delta_Condtn == 200 .and. Excess_FX2 == 200
+	value 100
+	}
+	case Excess_OMR {
+	condition delta_Condtn == 200 .and. Excess_OMR == 200
+	value 200
+	}
+	case Excess_Vernalis {
+	condition delta_Condtn == 200 .and. Excess_Vernalis == 200
+	value 300
+	}
+	case notApplied {
+	condition always
+	value 9999
+	}
+}
+
+
+/************** Outputs for Delta Control ***************/
+! Status Check regards to each constraint(100-Not Controling)(200-Controling)(300-Violated)
+define ANN_STATUS_DTS {alias ANN_CHECK_ kind 'DTS-STATUS' units 'NONE'}
+define JP_STATUS_DTS {alias JP_CHECK_ kind 'DTS-STATUS' units 'NONE'}
+define EM_STATUS_DTS {alias EM_CHECK_ kind 'DTS-STATUS' units 'NONE'}
+define RS_STATUS_DTS {alias RS_CHECK_ kind 'DTS-STATUS' units 'NONE'}
+define CO_STATUS_DTS {alias CO_CHECK_ kind 'DTS-STATUS' units 'NONE'}
+define FX2_STATUS_DTS {alias FX2_CHECK_ kind 'DTS-STATUS' units 'NONE'}
+define SX2_STATUS_DTS {alias SX2_CHECK_ kind 'DTS-STATUS' units 'NONE'}
+define EI_STATUS_DTS {alias EI_CHECK_ kind 'DTS-STATUS' units 'NONE'}
+define RV_STATUS_DTS {alias RV_CHECK_ kind 'DTS-STATUS' units 'NONE'}
+define QWEST_STATUS_DTS {alias QWEST_CHECK_ kind 'DTS-STATUS' units 'NONE'}
+define OMR_STATUS_DTS {alias OMR_CHECK_ kind 'DTS-STATUS' units 'NONE'}
+define SJRIE_STATUS_DTS {alias SJRIE_CHECK_ kind 'DTS-STATUS' units 'NONE'}
+define DCC_STATUS_DTS {alias DCC_CHECK_ kind 'DTS-STATUS' units 'NONE'}
+define NDOI_STATUS_DTS {alias NDOI_CHECK_ kind 'DTS-STATUS' units 'NONE'}
+!MRDO due to each constrains
+define MRDO_NDOI_DTS {alias MRDO_NDOI_ kind 'DTS-MRDO' units 'CFS'}
+define MRDO_ANN_DTS {alias MRDO_ANN_ kind 'DTS-MRDO' units 'CFS'}
+define MRDO_X2_DTS {alias MRDO_X2_ kind 'DTS-MRDO' units 'CFS'}
+define MRDO_FX2_DTS {alias MRDO_FX2_ kind 'DTS-MRDO' units 'CFS'}
+define MRDO_SX2_DTS {alias MRDO_SX2_ kind 'DTS-MRDO' units 'CFS'}
+!Final: D-1641 + BO True Surplus
+define TRUE_DO_SURPLUS_DTS {alias DO_Surplus_TRUE_ kind 'DTS-DO-Surplus' units 'CFS'}
+define Delta_Condtn_DTS {alias Delta_Condtn kind 'DTS-STATUS' units 'NONE'}
+define Excess_FX2_DTS {alias Excess_FX2 kind 'DTS-STATUS' units 'NONE'}
+define Excess_OMR_DTS {alias Excess_OMR kind 'DTS-STATUS' units 'NONE'}
+define Excess_Vernalis_DTS {alias Excess_Vernalis kind 'DTS-STATUS' units 'NONE'}
+define Excess_Restriction_DTS {alias Excess_Restriction kind 'DTS-STATUS' units 'NONE'}

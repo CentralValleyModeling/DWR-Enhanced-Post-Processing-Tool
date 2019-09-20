@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8" ?>
+
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"><head><script type="text/javascript" language="JavaScript">
+  //<![CDATA[
+  function reDo() {
+    if (innerWidth != origWidth || innerHeight != origHeight)
+      location.reload();
+  }
+  if ((parseInt(navigator.appVersion) == 4) && (navigator.appName == "Netscape")) {
+    origWidth = innerWidth;
+    origHeight = innerHeight;
+    onresize = reDo;
+  }
+  onerror = null;
+  //]]>
+</script>
+<style type="text/css">/*<![CDATA[*/
+
+  <!-- div.WebHelpPopupMenu {
+    position: absolute;
+    left: 0px;
+    top: 0px;
+    z-index: 4;
+    visibility: hidden;
+  }
+
+  p.WebHelpNavBar {
+    text-align: right;
+  }
+
+  -->
+
+/*]]>*/</style>
+
+<script type="text/javascript">//<![CDATA[
+
+  gRootRelPath = ".";
+  gCommonRootRelPath = ".";
+  gTopicId = "2.0_1";
+
+//]]></script>
+
+<script type="text/javascript" src="./template/scripts/rh.min.js"></script>
+<script type="text/javascript" src="./template/scripts/common.min.js"></script>
+<script type="text/javascript" src="./template/scripts/topic.min.js"></script>
+<script type="text/javascript" src="./template/scripts/topicwidgets.min.js"></script>
+<link rel="stylesheet" type="text/css" href="./template/styles/topic.min.css"/>
+
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+  <meta name="generator" content="Adobe RoboHelp 2019"/>
+  <title>4.1_AddingScenarios</title>
+  <meta name="topic-status" content="Draft"/>
+  <link rel="stylesheet" type="text/css" href="assets/css/default.css"/>
+  <meta name="rh-index-keywords" content="Alias,Scenario,Configuration,Cycles"/>
+</head>
+<body>
+  <h2>4.1. Adding Scenarios</h2>
+  <p>Clicking “Add” in the Scenarios panel will open the following window shown in Figure 4-2.</p>
+  <p> </p>
+  <p style="text-align: center">
+    <img alt="Picture 9" src="assets/images/DWR_EPPT_HelpDocumentation_MainDoc_Draft_20190621_TrackChanges_files/Fig4-2_NewScenarioRun.png" style="text-align: center; width: 100%; max-width: 1066px;"/>
+  </p>
+  <p style="text-align: center"><span style="text-align:center;"><strong>Figure 4-2. New Scenario Run Window.</strong></span></p>
+  <p> </p>
+  <p>A default Scenario Name (1) is provided but can be modified. A Description can also be added (2) (optional). For this tutorial, CalSim 2 is the Model (3). <a>CalLite and CalSim 3 models may also be loaded.</a></p>
+  <p><a>Study Main directory refers to the folder in which the study is located. For example, Figure 4-3 shows the example file path which is “…\DCR2017_noCC_x64_original.”</a></p>
+  <p style="text-align: center"><img alt="Study Main" src="assets/images/DWR_EPPT_HelpDocumentation_MainDoc_Draft_20190621_TrackChanges_files/Fig4-3_StudyMain.png" style="width: 100%; max-width: 407px;"/></p>
+  <p style="text-align: center"><span style="text-align:center;"><strong>Figure 4-3. Study Main Directory example location.</strong></span></p>
+  <p> </p>
+  <p>Figure 4-4 shows the Required Files. File paths for DV, SV, and INIT study files to be designated. The QA_QC file will be generated after running the WRESL Script, described in Appendix C from the EPPT Appendices. The QA_QC file name and location can be chosen.</p>
+  <p><a>Alias Names are short descriptors for the required </a>files. Lastly, the DSS A Part and F Part are to be defined. <a>The A Part ranges from CALSIM to CALSIM_CYCLE1 to CALSIM_CYCLE13 The DSS F Part is typically “2020D09E.”.</a>  This can be verified by opening the DSS files with HEC-DSSVue.</p>
+  <p style="text-align: center"><img alt="Picture 32" src="assets/images/DWR_EPPT_HelpDocumentation_MainDoc_Draft_20190621_TrackChanges_files/Fig4-4_RequiredFiles.png" style="width: 100%; max-width: 632px;"/></p>
+  <p style="text-align: center"><span style="text-align:center;"><strong>Figure 4-4. Required Files.</strong></span></p>
+  <p> </p>
+  <p>The last section of the Edit Scenario Run window relates to the QA/QC Report shown in Figure 4-5.</p>
+  <p>The EPPT WRESL Script can be left unchanged. The Water Year Table file should refer to the study “wytypes.table” file path.</p>
+  <p style="text-align: center"><img alt="Picture 33" src="assets/images/DWR_EPPT_HelpDocumentation_MainDoc_Draft_20190621_TrackChanges_files/Fig4-5_QAQCReport.png" style="width: 100%; max-width: 633px;"/></p>
+  <p style="text-align: center"><span style="text-align:center;"><strong style="text-align: center">Figure 4-5. QA-QC Report.</strong></span></p>
+  <p> </p>
+  <p>After completing the fields, the Scenario Run window should look similar to Figure 4-6.</p>
+  <p> </p>
+  <p style="text-align: center"><img alt="Picture 36" src="assets/images/DWR_EPPT_HelpDocumentation_MainDoc_Draft_20190621_TrackChanges_files/Fig4-6_FilledOut.png" style="width: 100%; max-width: 636px;"/></p>
+  <p style="text-align: center"><span style="text-align:center;"><strong>Figure 4-6. Filled out Scenario Run window.</strong></span></p>
+  <p> </p>
+  <p>For more detailed description of the Scenarios window, see Appendix B in the EPPT Appendices.</p>
+
+</body></html>

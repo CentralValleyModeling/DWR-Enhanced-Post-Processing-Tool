@@ -12,10 +12,10 @@
   -->
 
 <!-- Created with Jaspersoft Studio version 6.8.0.final using JasperReports Library version 6.8.0-2ed8dfabb690ff337a5797129f2cd92902b0c87b  -->
-<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="QAQC_TableOfContents" language="groovy" pageWidth="612" pageHeight="792" whenNoDataType="AllSectionsNoDetail" columnWidth="504" leftMargin="54" rightMargin="54" topMargin="54" bottomMargin="54" uuid="6e74177b-d551-4a75-ae51-6cdde3f284ce">
-	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="TocData"/>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="QAQC_TableOfContents" language="groovy" pageWidth="612" pageHeight="792" columnWidth="504" leftMargin="54" rightMargin="54" topMargin="54" bottomMargin="54" uuid="6e74177b-d551-4a75-ae51-6cdde3f284ce">
 	<property name="net.sf.jasperreports.print.create.bookmarks" value="false"/>
 	<property name="com.jaspersoft.studio.report.description" value=""/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="TocData"/>
 	<style name="Title" hTextAlign="Right" hImageAlign="Right" fontSize="32">
 		<box>
 			<topPen lineWidth="1.0"/>
@@ -42,8 +42,8 @@
 	</style>
 	<style name="HeadingLabel3" style="Heading3"/>
 	<style name="HeadingIndex3" style="Heading3"/>
-	<queryString>
-		<![CDATA[]]>
+	<queryString language="SQL">
+		<![CDATA[/qaqc-report]]>
 	</queryString>
 	<field name="level" class="java.lang.Integer"/>
 	<field name="label" class="java.lang.String"/>
@@ -59,14 +59,14 @@
 			<property name="local_mesure_unitheight" value="pixel"/>
 			<property name="com.jaspersoft.studio.unit.height" value="px"/>
 			<textField>
-				<reportElement style="Title" x="0" y="0" width="515" height="30" forecolor="#2F5496" uuid="24731f07-d115-4be4-a22c-aa9a4c3fc786">
+				<reportElement style="Title" mode="Opaque" x="0" y="0" width="190" height="30" forecolor="#2F5496" uuid="24731f07-d115-4be4-a22c-aa9a4c3fc786">
 					<property name="local_mesure_unitwidth" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				</reportElement>
 				<box>
 					<topPen lineWidth="0.0" lineColor="#A0D042"/>
 				</box>
-				<textElement textAlignment="Left">
+				<textElement textAlignment="Left" markup="styled">
 					<font fontName="Arial" size="16" isBold="false"/>
 				</textElement>
 				<textFieldExpression><![CDATA["TABLE OF CONTENTS"]]></textFieldExpression>
@@ -74,66 +74,94 @@
 		</band>
 	</title>
 	<detail>
-		<band height="25" splitType="Stretch">
+		<band height="20" splitType="Stretch">
 			<property name="local_mesure_unitheight" value="pixel"/>
 			<property name="com.jaspersoft.studio.unit.height" value="px"/>
-			<printWhenExpression><![CDATA[$F{level} == 1]]></printWhenExpression>
-			<textField hyperlinkType="LocalAnchor">
-				<reportElement stretchType="ContainerBottom" x="0" y="5" width="470" height="20" uuid="379fcff2-021d-4761-a89a-eeb772723b1b">
-					<property name="local_mesure_unitheight" value="pixel"/>
+			<printWhenExpression><![CDATA[$F{level} == 1 && $F{label}!=null]]></printWhenExpression>
+			<staticText>
+				<reportElement stretchType="ContainerBottom" mode="Transparent" x="0" y="0" width="470" height="15" uuid="b64ef3dd-6a47-402d-a35c-4d10ee6c1e7e">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+				</reportElement>
+				<textElement verticalAlignment="Bottom"/>
+				<text><![CDATA[. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .]]></text>
+			</staticText>
+			<textField hyperlinkType="LocalAnchor">
+				<reportElement stretchType="ContainerBottom" mode="Transparent" x="0" y="0" width="470" height="15" uuid="379fcff2-021d-4761-a89a-eeb772723b1b">
+					<property name="local_mesure_unitheight" value="pixel"/>
 					<property name="local_mesure_unity" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				</reportElement>
-				<textFieldExpression><![CDATA[$F{label}]]></textFieldExpression>
+				<textElement textAlignment="Left" verticalAlignment="Bottom" markup="styled"/>
+				<textFieldExpression><![CDATA["<style backcolor='white'>"+$F{label}+"</style>"]]></textFieldExpression>
 				<hyperlinkAnchorExpression><![CDATA[$F{label}]]></hyperlinkAnchorExpression>
 			</textField>
 			<textField evaluationTime="Auto" hyperlinkType="LocalAnchor">
-				<reportElement x="470" y="5" width="45" height="20" uuid="a31e80f3-f1fa-4643-adbe-77a61c7b9051">
+				<reportElement x="470" y="0" width="45" height="15" uuid="a31e80f3-f1fa-4643-adbe-77a61c7b9051">
 					<property name="local_mesure_unitheight" value="pixel"/>
-					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				</reportElement>
-				<textElement textAlignment="Right" verticalAlignment="Bottom"/>
-				<textFieldExpression><![CDATA[$V{PAGE_NUMBER} + $F{pageIndex} + 1]]></textFieldExpression>
+				<textElement textAlignment="Right" verticalAlignment="Top" markup="styled"/>
+				<textFieldExpression><![CDATA["<style backcolor='white'>"+($V{PAGE_NUMBER} + $F{pageIndex} + 1)+"</style>"]]></textFieldExpression>
 				<hyperlinkAnchorExpression><![CDATA[$F{label}]]></hyperlinkAnchorExpression>
 			</textField>
 		</band>
-		<band height="25" splitType="Stretch">
+		<band height="20" splitType="Stretch">
 			<property name="local_mesure_unitheight" value="pixel"/>
 			<property name="com.jaspersoft.studio.unit.height" value="px"/>
-			<printWhenExpression><![CDATA[$F{level} == 2]]></printWhenExpression>
-			<textField evaluationTime="Auto" hyperlinkType="LocalAnchor">
-				<reportElement x="20" y="5" width="430" height="20" uuid="379fcff2-021d-4761-a89a-eeb772723b1b">
-					<property name="local_mesure_unitheight" value="pixel"/>
+			<printWhenExpression><![CDATA[$F{level} == 2 && $F{label}!=null]]></printWhenExpression>
+			<staticText>
+				<reportElement stretchType="ContainerBottom" mode="Transparent" x="20" y="0" width="450" height="15" uuid="b64ef3dd-6a47-402d-a35c-4d10ee6c1e7e">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+				</reportElement>
+				<textElement verticalAlignment="Bottom"/>
+				<text><![CDATA[. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .]]></text>
+			</staticText>
+			<textField evaluationTime="Auto" hyperlinkType="LocalAnchor">
+				<reportElement x="20" y="0" width="430" height="15" uuid="379fcff2-021d-4761-a89a-eeb772723b1b">
+					<property name="local_mesure_unitheight" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				</reportElement>
-				<textFieldExpression><![CDATA[$F{label}]]></textFieldExpression>
+				<textElement textAlignment="Left" verticalAlignment="Bottom" markup="styled"/>
+				<textFieldExpression><![CDATA["<style backcolor='white'>"+$F{label}+"</style>"]]></textFieldExpression>
 				<hyperlinkAnchorExpression><![CDATA[$F{label}]]></hyperlinkAnchorExpression>
 			</textField>
 			<textField evaluationTime="Auto" hyperlinkType="LocalAnchor">
-				<reportElement x="470" y="5" width="45" height="20" uuid="a31e80f3-f1fa-4643-adbe-77a61c7b9051">
+				<reportElement x="470" y="0" width="45" height="20" uuid="a31e80f3-f1fa-4643-adbe-77a61c7b9051">
 					<property name="local_mesure_unitheight" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
 				</reportElement>
-				<textElement textAlignment="Right" verticalAlignment="Bottom"/>
-				<textFieldExpression><![CDATA[$V{PAGE_NUMBER} + $F{pageIndex} + 1]]></textFieldExpression>
+				<textElement textAlignment="Right" verticalAlignment="Top" markup="styled"/>
+				<textFieldExpression><![CDATA["<style backcolor='white'>"+($V{PAGE_NUMBER} + $F{pageIndex} + 1)+"</style>"]]></textFieldExpression>
 				<hyperlinkAnchorExpression><![CDATA[$F{label}]]></hyperlinkAnchorExpression>
 			</textField>
 		</band>
-		<band height="15" splitType="Stretch">
+		<band height="20" splitType="Stretch">
 			<property name="local_mesure_unitheight" value="pixel"/>
 			<property name="com.jaspersoft.studio.unit.height" value="px"/>
-			<printWhenExpression><![CDATA[$F{level} == 3]]></printWhenExpression>
+			<printWhenExpression><![CDATA[$F{level} == 3 && $F{label}!=null]]></printWhenExpression>
+			<staticText>
+				<reportElement stretchType="ContainerBottom" mode="Transparent" x="40" y="0" width="430" height="15" uuid="b64ef3dd-6a47-402d-a35c-4d10ee6c1e7e">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+				</reportElement>
+				<textElement verticalAlignment="Bottom"/>
+				<text><![CDATA[. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .]]></text>
+			</staticText>
 			<textField hyperlinkType="LocalAnchor">
-				<reportElement x="41" y="0" width="429" height="15" uuid="379fcff2-021d-4761-a89a-eeb772723b1b">
+				<reportElement x="40" y="0" width="430" height="15" uuid="379fcff2-021d-4761-a89a-eeb772723b1b">
 					<property name="local_mesure_unitheight" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 				</reportElement>
-				<textFieldExpression><![CDATA[$F{label}]]></textFieldExpression>
+				<textElement markup="styled"/>
+				<textFieldExpression><![CDATA["<style backcolor='white'>"+$F{label}+"</style>"]]></textFieldExpression>
 				<hyperlinkAnchorExpression><![CDATA[$F{label}]]></hyperlinkAnchorExpression>
 			</textField>
 			<textField evaluationTime="Auto" hyperlinkType="LocalAnchor">
@@ -141,8 +169,38 @@
 					<property name="local_mesure_unitheight" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				</reportElement>
-				<textElement textAlignment="Right" verticalAlignment="Bottom"/>
-				<textFieldExpression><![CDATA[$V{PAGE_NUMBER} + $F{pageIndex} + 1]]></textFieldExpression>
+				<textElement textAlignment="Right" verticalAlignment="Bottom" markup="styled"/>
+				<textFieldExpression><![CDATA["<style backcolor='white'>"+($V{PAGE_NUMBER} + $F{pageIndex} + 1)+"</style>"]]></textFieldExpression>
+				<hyperlinkAnchorExpression><![CDATA[$F{label}]]></hyperlinkAnchorExpression>
+			</textField>
+		</band>
+		<band height="20">
+			<property name="com.jaspersoft.studio.unit.height" value="px"/>
+			<printWhenExpression><![CDATA[$F{level} == 4 && $F{label}!=null]]></printWhenExpression>
+			<staticText>
+				<reportElement stretchType="ContainerBottom" mode="Transparent" x="60" y="0" width="410" height="15" uuid="fe783928-cdcd-4e31-9169-356fd6679704">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement verticalAlignment="Bottom"/>
+				<text><![CDATA[. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .]]></text>
+			</staticText>
+			<textField hyperlinkType="LocalAnchor">
+				<reportElement x="60" y="0" width="409" height="15" uuid="9fa6667a-caba-46be-8da3-110b4e238f7d">
+					<property name="local_mesure_unitheight" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+				</reportElement>
+				<textElement markup="styled"/>
+				<textFieldExpression><![CDATA["<style backcolor='white'>"+$F{label}+"</style>"]]></textFieldExpression>
+				<hyperlinkAnchorExpression><![CDATA[$F{label}]]></hyperlinkAnchorExpression>
+			</textField>
+			<textField evaluationTime="Auto" hyperlinkType="LocalAnchor">
+				<reportElement x="470" y="0" width="45" height="15" uuid="7b8d2e3e-e228-4000-a748-ca6d2b1af72f">
+					<property name="local_mesure_unitheight" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Right" verticalAlignment="Bottom" markup="styled"/>
+				<textFieldExpression><![CDATA["<style backcolor='white'>"+($V{PAGE_NUMBER} + $F{pageIndex} + 1)+"</style>"]]></textFieldExpression>
 				<hyperlinkAnchorExpression><![CDATA[$F{label}]]></hyperlinkAnchorExpression>
 			</textField>
 		</band>

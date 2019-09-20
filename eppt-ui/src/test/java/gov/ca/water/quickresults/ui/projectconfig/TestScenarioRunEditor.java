@@ -25,6 +25,7 @@ import gov.ca.water.calgui.project.EpptDssContainer;
 import gov.ca.water.calgui.project.EpptScenarioRun;
 import gov.ca.water.calgui.project.NamedDssPath;
 import gov.ca.water.quickresults.ui.projectconfig.scenarioconfig.ScenarioRunEditor;
+import javafx.scene.paint.Color;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
@@ -76,7 +77,7 @@ class TestScenarioRunEditor
 				new NamedDssPath(Paths.get("Extra 2"), "EXTRA2", "CALSIM", "1MON", "ABCDEFG"));
 		EpptDssContainer dssContainer = new EpptDssContainer(dvDssFile, svDssFile, ivDssFile, ivDssFile, extraDssFiles);
 		EpptScenarioRun epptScenarioRun = new EpptScenarioRun(name, description, model, outputPath,
-				wreslMain, Paths.get("table"), dssContainer);
+				wreslMain, Paths.get("table"), dssContainer, Color.PINK);
 		scenarioRunEditor.fillPanel(epptScenarioRun);
 		assertEquals("Edit Scenario Run: " + epptScenarioRun.getName(), scenarioRunEditor.getTitle(),
 				"Default title should be set");

@@ -21,20 +21,24 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.logging.Level;
+
 import com.google.common.flogger.FluentLogger;
+import gov.ca.water.calgui.EpptInitializationException;
+import gov.ca.water.calgui.bo.DetailedIssue;
 import gov.ca.water.calgui.bo.GUILinksAllModelsBO;
 import gov.ca.water.calgui.bo.ThresholdLinksBO;
+import gov.ca.water.calgui.bo.WaterYearIndex;
+import gov.ca.water.calgui.bo.WaterYearType;
 import gov.ca.water.calgui.busservice.impl.DSSGrabber1SvcImpl;
 import gov.ca.water.calgui.busservice.impl.GuiLinksSeedDataSvcImpl;
 import gov.ca.water.calgui.busservice.impl.ThresholdLinksSeedDataSvc;
+import gov.ca.water.calgui.busservice.impl.WaterYearTableReader;
 import gov.ca.water.calgui.constant.Constant;
 import gov.ca.water.calgui.project.EpptScenarioRun;
 import gov.ca.water.reportengine.EpptReportException;
 import gov.ca.water.reportengine.executivereport.FlagViolation;
 import gov.ca.water.reportengine.executivereport.Module;
 import gov.ca.water.reportengine.executivereport.SubModule;
-import gov.ca.water.reportengine.reportreaders.WaterYearTableReader;
-import gov.ca.water.reportengine.reportreaders.WaterYearType;
 
 import hec.heclib.util.HecTime;
 import hec.io.TimeSeriesContainer;
@@ -74,19 +78,27 @@ public class DetailedIssueProcessor
 				Map<Module, List<DetailedIssueViolation>> modToDIVs = new HashMap<>();
 				Map<SubModule, List<FlagViolation>> subModToViolations = _runsToViolations.get(run);
 				Path nameLookupPath = Paths.get(Constant.WY_TYPES_NAME_LOOKUP);
-				WaterYearTableReader wyTypeReader = new WaterYearTableReader(run.getWaterYearTable(), nameLookupPath);
-				List<WaterYearType> waterYearTypes = wyTypeReader.read();
-				for(Module mod : _modules)
+				WaterYearTableReader wyTypeReader = new WaterYearTableReader(run.getWaterYearTable());
+				try
 				{
-					if(!Objects.equals("Model Inputs",mod.getName()))
+					List<WaterYearIndex> waterYearTypes = wyTypeReader.read();
+					for(Module mod : _modules)
 					{
+						if(!Objects.equals("Model Inputs", mod.getName()))
+						{
 
-						LOGGER.at(Level.INFO).log("Processing Detailed Issues for Module: %s", mod.getName());
-						List<DetailedIssueViolation> detailedIssueViolations = processModule(run, subModToViolations, mod, waterYearTypes);
-						modToDIVs.put(mod, detailedIssueViolations);
+							LOGGER.at(Level.INFO).log("Processing Detailed Issues for Module: %s", mod.getName());
+							List<DetailedIssueViolation> detailedIssueViolations = processModule(run, subModToViolations, mod,
+									waterYearTypes.get(0).getWaterYearTypes());
+							modToDIVs.put(mod, detailedIssueViolations);
+						}
 					}
+					moduleToDIV.put(run, modToDIVs);
 				}
-				moduleToDIV.put(run, modToDIVs);
+				catch(EpptInitializationException e)
+				{
+					throw new EpptReportException("Unable to process water year types from: " + run.getWaterYearTable(), e);
+				}
 			}
 			else
 			{
@@ -196,9 +208,9 @@ public class DetailedIssueProcessor
 			LOGGER.at(Level.INFO).log("Showing first 10 violations. Total violation count: %s", violationTimes.size());
 		}
 		List<HecTime> times = violationTimes
-									   .stream()
-									   .limit(10)
-									   .collect(toList());
+				.stream()
+				.limit(10)
+				.collect(toList());
 		String valueUnits = "";
 		if(valueContainer != null)
 		{
@@ -212,7 +224,8 @@ public class DetailedIssueProcessor
 		Map<HecTime, Double> actualValues = getActualValues(times, valueContainer);
 		Map<HecTime, Double> thresholdValues = getThresholdValues(times, thresholdSeriesContainer);
 		Map<HecTime, String> waterYearTypes = getWaterYearTypes(times, waterYearTypesFromFile);
-		return new DetailedIssueViolation(times, title, actualValues, thresholdValues, waterYearTypes, valueUnits, standardUnits, violation.getTimes().size());
+		return new DetailedIssueViolation(times, title, actualValues, thresholdValues, waterYearTypes, valueUnits, standardUnits,
+				violation.getTimes().size());
 	}
 
 	private Map<HecTime, Double> getActualValues(List<HecTime> times, TimeSeriesContainer tsc)
@@ -254,7 +267,7 @@ public class DetailedIssueProcessor
 			{
 				if(wyt.getYear() == time.year())
 				{
-					waterYearTypeString = wyt.getWaterYearType();
+					waterYearTypeString = wyt.getWaterYearPeriod().toString();
 					break;
 				}
 			}

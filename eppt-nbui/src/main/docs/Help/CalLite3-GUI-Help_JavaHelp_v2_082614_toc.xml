@@ -1,4 +1,4 @@
-<?xml version='1.0' encoding='UTF-8' ?>
+<?xml version="1.0" encoding="utf-8" ?>
 <!--
   ~ Enhanced Post Processing Tool (EPPT) Copyright (c) 2019.
   ~
@@ -10,18 +10,21 @@
   ~
   ~ GNU General Public License
   -->
-
-<!DOCTYPE toc PUBLIC "-//Sun Microsystems Inc.//DTD JavaHelp TOC Version 2.0//EN" "http://java.sun.com/products/javahelp/toc_2_0.dtd">
-<toc version="2.0">
-	<tocitem text="1. Introduction" target="Introduction"/>
-	<tocitem text="2. Main Menu Options" target="Options"/>
-	<tocitem text="3. Project Configuration" target="Project Configuration"/>
-	<tocitem text="4. Results" target="Results">
-		<tocitem text="4.1. Quick Results" target="Quick Results"/>
-		<tocitem text="4.2. Custom Results" target="Custom Results"/>
-		<tocitem text="4.4. Data Analysis" target="Data Analysis"/>
-	</tocitem>
-	<tocitem text="5. Tutorial" target="Tutorial">
-		<tocitem text="5.1. Viewing Results" target="Viewing Results"/>
-	</tocitem>
+ <!DOCTYPE toc PUBLIC "-//Sun Microsystems Inc.//DTD JavaHelp TOC Version 2.0//EN" "http://java.sun.com/products/javahelp/toc_2_0.dtd">
+ <toc version="2.0">
+      <tocitem text="1. Introduction" target="Introduction"/>
+      <tocitem text="2. Main Menu Options" target="Main Menu Options"/>
+      <tocitem text="3. EPPT Windows" target="EPPT Windows" >
+			<tocitem text="3.1. Project Configuration" target="Project Configuration"/>
+			<tocitem text="3.2. Quick Results" target="Quick Results"/>
+			<tocitem text="3.3. Custom Results" target="Custom Results"/>
+			<tocitem text="3.4. Data Analysis" target="Data Analysis"/>
+      </tocitem>
+      <tocitem text="4. Tutorial" target="Tutorial" >
+			<tocitem text="4.1. Adding Scenarios" target="Adding Scenarios"/>
+			<tocitem text="4.2. Viewing Results" target="Viewing Results"/>
+			<tocitem text="4.3. Generating Data Analysis PDF" target="Generating Data Analysis PDF"/>
+			<tocitem text="4.4. Running the WRESL Script" target="Running the WRESL Script"/>
+			<tocitem text="4.5. Generating the QA/QC Report" target="Generating the QA/QC Report"/>
+      </tocitem>
 </toc>

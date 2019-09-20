@@ -17,7 +17,9 @@ import java.awt.Container;
 import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import javax.swing.*;
@@ -25,6 +27,7 @@ import javax.swing.*;
 import gov.ca.water.calgui.bo.ResultUtilsBO;
 import gov.ca.water.calgui.presentation.DisplayHelper;
 import gov.ca.water.calgui.project.EpptScenarioRun;
+import gov.ca.water.calgui.project.PlotConfigurationState;
 import gov.ca.water.calgui.techservice.IDialogSvc;
 import gov.ca.water.calgui.techservice.IErrorHandlingSvc;
 import gov.ca.water.calgui.techservice.impl.DialogSvcImpl;
@@ -32,7 +35,6 @@ import gov.ca.water.calgui.techservice.impl.ErrorHandlingSvcImpl;
 import gov.ca.water.quickresults.ui.EpptPanel;
 import gov.ca.water.quickresults.ui.projectconfig.ProjectConfigurationPanel;
 import org.apache.log4j.Logger;
-import org.jfree.data.time.Month;
 
 
 /**
@@ -128,16 +130,33 @@ public class QuickResultsListener implements ActionListener
 			if(component instanceof JList)
 			{
 				JList<String> lstReports = (JList<String>) component;
-				Month startMonth = projectConfigurationPanel.getStartMonth();
-				Month endMonth = projectConfigurationPanel.getEndMonth();
+				LocalDate startMonth = projectConfigurationPanel.getStartMonth();
+				LocalDate endMonth = projectConfigurationPanel.getEndMonth();
 				for(int i = 0; i < lstReports.getModel().getSize(); i++)
 				{
+					String elementAt = lstReports.getModel().getElementAt(i);
+					PlotConfigurationState plotConfigurationState = PlotConfigurationState.fromString(elementAt);
+					List<String> locations = parseLocations(elementAt);
 					DisplayHelper displayHelper = _quickResultsPanel.getDisplayHelper();
-					displayHelper.showDisplayFrames((lstReports.getModel().getElementAt(i)),
-							baseScenario, alternatives, startMonth, endMonth);
+					displayHelper.showDisplayFrames(plotConfigurationState, locations, baseScenario, alternatives, startMonth, endMonth);
 				}
 			}
 		}
+	}
+
+	private List<String> parseLocations(String elementAt)
+	{
+		List<String> retval = new ArrayList<>();
+		String[] split = elementAt.split("Index-");
+		if(split.length > 1)
+		{
+			split = split[1].split(";");
+			if(split.length > 0)
+			{
+				retval = Arrays.asList(split[0].split(","));
+			}
+		}
+		return retval;
 	}
 
 	private List<String> getReports()
@@ -214,7 +233,7 @@ public class QuickResultsListener implements ActionListener
 		StringBuilder cSTORIdx = new StringBuilder(";Index-");
 		Component[] components = _quickResultsPanel.getVariables().getComponents();
 		extractCheckBoxes(cSTOR, cSTORIdx, components);
-		return ProjectConfigurationPanel.getProjectConfigurationPanel().quickState() + cSTOR + cSTORIdx;
+		return ProjectConfigurationPanel.getProjectConfigurationPanel().quickStateString() + cSTOR + cSTORIdx;
 	}
 
 	private void extractCheckBoxes(StringBuilder cSTOR, StringBuilder cSTORIdx, Component[] components)

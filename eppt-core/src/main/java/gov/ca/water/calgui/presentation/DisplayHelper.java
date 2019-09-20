@@ -14,6 +14,7 @@ package gov.ca.water.calgui.presentation;
 
 import java.awt.Component;
 import java.awt.Cursor;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
@@ -25,13 +26,13 @@ import calsim.app.DerivedTimeSeries;
 import calsim.app.MultipleTimeSeries;
 import gov.ca.water.calgui.presentation.display.DefaultPlotHandler;
 import gov.ca.water.calgui.project.EpptScenarioRun;
+import gov.ca.water.calgui.project.PlotConfigurationState;
 import org.apache.log4j.Logger;
-import org.jfree.data.time.Month;
 
 public class DisplayHelper
 {
 	private static final Logger LOGGER = Logger.getLogger(DisplayHelper.class.getName());
-	private static PlotHandler _topComponentPlotHandler = new DefaultPlotHandler();
+	private static PlotHandler topComponentPlotHandler = new DefaultPlotHandler();
 	private final ExecutorService _executorService;
 	private final Component _component;
 
@@ -43,7 +44,7 @@ public class DisplayHelper
 
 	public static void installPlotHandler(PlotHandler plotHandler)
 	{
-		_topComponentPlotHandler = plotHandler;
+		topComponentPlotHandler = plotHandler;
 	}
 
 	private static Thread newThread(Runnable r)
@@ -51,45 +52,45 @@ public class DisplayHelper
 		return new Thread(r, "DisplayHelperThread");
 	}
 
-	public void showDisplayFrames(String displayGroup, EpptScenarioRun baseRun, List<EpptScenarioRun> scenarios,
-								  Month startMonth,
-								  Month endMonth)
+	public void showDisplayFrames(PlotConfigurationState plotConfigurationState, List<String> locations, EpptScenarioRun baseRun, List<EpptScenarioRun> scenarios,
+								  LocalDate startMonth,
+								  LocalDate endMonth)
 	{
-		displayFramesOnBackground(displayGroup, baseRun, scenarios, startMonth, endMonth);
+		displayFramesOnBackground(plotConfigurationState, locations, baseRun, scenarios, startMonth, endMonth);
 	}
 
-	public void showDisplayFramesWRIMS(String displayGroup, EpptScenarioRun baseRun, List<EpptScenarioRun> lstScenarios,
+	public void showDisplayFramesWRIMS(PlotConfigurationState plotConfigurationState, EpptScenarioRun baseRun, List<EpptScenarioRun> lstScenarios,
 									   DerivedTimeSeries dts,
-									   MultipleTimeSeries mts, Month startMonth, Month endMonth)
+									   MultipleTimeSeries mts, LocalDate startMonth, LocalDate endMonth)
 	{
-		displayFramesWRIMSOnBackground(displayGroup, baseRun, lstScenarios, dts, mts, startMonth, endMonth);
+		displayFramesWRIMSOnBackground(plotConfigurationState, baseRun, lstScenarios, dts, mts, startMonth, endMonth);
 	}
 
 
-	private void displayFramesOnBackground(String displayGroup, EpptScenarioRun baseRun,
-										   List<EpptScenarioRun> scenarios, Month startMonth,
-										   Month endMonth)
+	private void displayFramesOnBackground(PlotConfigurationState plotConfigurationState, List<String> locations, EpptScenarioRun baseRun,
+										   List<EpptScenarioRun> scenarios, LocalDate startMonth,
+										   LocalDate endMonth)
 	{
-		CompletableFuture.supplyAsync(() -> getTabbedPanes(displayGroup, baseRun, scenarios, startMonth, endMonth),
+		CompletableFuture.supplyAsync(() -> getTabbedPanes(plotConfigurationState, locations, baseRun, scenarios, startMonth, endMonth),
 				_executorService)
-						 .thenAcceptAsync(tabbedPanes -> _topComponentPlotHandler.openPlots(tabbedPanes), SwingUtilities::invokeLater);
+						 .thenAcceptAsync(tabbedPanes -> topComponentPlotHandler.openPlots(tabbedPanes), SwingUtilities::invokeLater);
 
 
 	}
 
-	private List<JTabbedPane> getTabbedPanes(String displayGroup, EpptScenarioRun baseRun,
-											 List<EpptScenarioRun> scenarios, Month startMonth, Month endMonth)
+	private List<JTabbedPane> getTabbedPanes(PlotConfigurationState plotConfigurationState, List<String> locations, EpptScenarioRun baseRun,
+											 List<EpptScenarioRun> scenarios, LocalDate startMonth, LocalDate endMonth)
 	{
 		List<JTabbedPane> jTabbedPanes = new ArrayList<>();
 		try
 		{
 			setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
 
-			jTabbedPanes = DisplayFrame.showDisplayFrames(displayGroup, baseRun, scenarios, startMonth, endMonth);
+			jTabbedPanes = DisplayFrame.showDisplayFrames(plotConfigurationState, locations, baseRun, scenarios, startMonth, endMonth);
 		}
 		catch(RuntimeException ex)
 		{
-			LOGGER.error("An error occurred while trying to display the ");
+			LOGGER.error("An error occurred while trying to display results", ex);
 		}
 		finally
 		{
@@ -104,31 +105,31 @@ public class DisplayHelper
 		SwingUtilities.invokeLater(() -> _component.setCursor(cursor));
 	}
 
-	private void displayFramesWRIMSOnBackground(String displayGroup, EpptScenarioRun baseRun,
+	private void displayFramesWRIMSOnBackground(PlotConfigurationState plotConfigurationState, EpptScenarioRun baseRun,
 												List<EpptScenarioRun> lstScenarios, DerivedTimeSeries dts,
-												MultipleTimeSeries mts, Month startMonth, Month endMonth)
+												MultipleTimeSeries mts, LocalDate startMonth, LocalDate endMonth)
 	{
 		CompletableFuture.supplyAsync(
-				() -> getTabbedPanesWRIMS(displayGroup, baseRun, lstScenarios, dts, mts, startMonth, endMonth), _executorService)
-						 .thenAcceptAsync(_topComponentPlotHandler::openPlots, SwingUtilities::invokeLater);
+				() -> getTabbedPanesWRIMS(plotConfigurationState, baseRun, lstScenarios, dts, mts, startMonth, endMonth), _executorService)
+						 .thenAcceptAsync(topComponentPlotHandler::openPlots, SwingUtilities::invokeLater);
 
 
 	}
 
-	private List<JTabbedPane> getTabbedPanesWRIMS(String displayGroup, EpptScenarioRun baseRun,
+	private List<JTabbedPane> getTabbedPanesWRIMS(PlotConfigurationState plotConfigurationState, EpptScenarioRun baseRun,
 												  List<EpptScenarioRun> lstScenarios, DerivedTimeSeries dts,
-												  MultipleTimeSeries mts, Month startMonth, Month endMonth)
+												  MultipleTimeSeries mts, LocalDate startMonth, LocalDate endMonth)
 	{
 		List<JTabbedPane> jTabbedPanes = new ArrayList<>();
 		try
 		{
 			setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
-			jTabbedPanes = DisplayFrame.showDisplayFramesWRIMS(displayGroup, baseRun, lstScenarios, dts, mts,
+			jTabbedPanes = DisplayFrame.showDisplayFramesWRIMS(plotConfigurationState, baseRun, lstScenarios, dts, mts,
 					startMonth, endMonth);
 		}
 		catch(RuntimeException ex)
 		{
-
+			LOGGER.error("An error occurred while trying to display results", ex);
 		}
 		finally
 		{

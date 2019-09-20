@@ -31,6 +31,8 @@ import hec.heclib.util.HecTimeArray;
 import hec.io.TimeSeriesContainer;
 import hec.lang.Const;
 
+import static gov.ca.water.reportengine.EPPTReport.checkInterrupt;
+
 public class DTSProcessor
 {
 	private static final FluentLogger LOGGER = FluentLogger.forEnclosingClass();
@@ -48,6 +50,7 @@ public class DTSProcessor
 		List<Path> dssFiles = new ArrayList<>();
 		for(EpptScenarioRun run : runs)
 		{
+			checkInterrupt();
 			dssFiles.add(run.getPostProcessDss());
 		}
 		if(runs.size() != dssFiles.size())
@@ -61,6 +64,7 @@ public class DTSProcessor
 
 		for(int i = 0; i < runs.size(); i++)
 		{
+			checkInterrupt();
 			Map<SubModule, List<FlagViolation>> subModuleToViolations = processDSSFile(dssFiles.get(i));
 			runToViolations.put(runs.get(i), subModuleToViolations);
 		}
@@ -84,6 +88,7 @@ public class DTSProcessor
 
 			for(Module mod : _modules)
 			{
+				checkInterrupt();
 
 				if("COA".equalsIgnoreCase(mod.getName()))
 				{
@@ -98,6 +103,7 @@ public class DTSProcessor
 				List<SubModule> subModules = mod.getSubModules();
 				for(SubModule sm : subModules)
 				{
+					checkInterrupt();
 					List<FlagViolation> violations = getViolations(dssFile, hD, sm);
 					subModToViolations.put(sm, violations);
 				}
@@ -117,7 +123,7 @@ public class DTSProcessor
 		return subModToViolations;
 	}
 
-	private List<FlagViolation> getViolations(Path dssFile, HecDss hD, SubModule sm) throws ExecutiveReportException
+	private List<FlagViolation> getViolations(Path dssFile, HecDss hD, SubModule sm) throws EpptReportException
 	{
 		List<FlagViolation> violations = new ArrayList<>();
 		List<String> linkedRecords = sm.getLinkedRecords();
@@ -125,6 +131,7 @@ public class DTSProcessor
 		for(String lr : linkedRecords)
 		{
 
+			checkInterrupt();
 			DSSPathname pathName = new DSSPathname();
 			pathName.setAPart("*");
 			pathName.setBPart(lr);
@@ -202,7 +209,7 @@ public class DTSProcessor
 		{
 			if (hD != null)
 			{
-				hD.close();
+//				hD.close();
 			}
 		}
 		return subModToViolations;
@@ -287,25 +294,25 @@ public class DTSProcessor
 		{
 			switch(value)
 			{
-				case 0:
+				case 100:
 				{
-					if(flagType == SubModule.FlagType.ZERO)
+					if(flagType == SubModule.FlagType.VALUE_100)
 					{
 						violationTimes.add(hecTime);
 					}
 					break;
 				}
-				case 1:
+				case 200:
 				{
-					if(flagType == SubModule.FlagType.ONE)
+					if(flagType == SubModule.FlagType.VALUE_200)
 					{
 						violationTimes.add(hecTime);
 					}
 					break;
 				}
-				case 2:
+				case 300:
 				{
-					if(flagType == SubModule.FlagType.TWO)
+					if(flagType == SubModule.FlagType.VALUE_300)
 					{
 						violationTimes.add(hecTime);
 					}

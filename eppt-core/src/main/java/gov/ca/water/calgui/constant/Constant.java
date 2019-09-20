@@ -13,6 +13,15 @@
 package gov.ca.water.calgui.constant;
 
 
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
+
+import javafx.scene.paint.Color;
+
+
 /**
  * This class is used to hold all the constant values required for the
  * application.
@@ -29,12 +38,22 @@ public final class Constant
 	public static final String TXT_EXT = ".txt";
 	public static final String DV_NAME = "_DV";
 	public static final String CONFIG_DIR = System.getProperty("user.dir") + "\\dwr_eppt\\config\\";
-	public static final String DOCS_DIR = System.getProperty("user.dir") + "\\dwr_eppt\\docs\\";
+	public static final Path ORCA_EXE = Paths.get(CONFIG_DIR).resolve("qaqc").resolve("orca").resolve("orca.exe");
+	public static final Path QA_QC_PATH = Paths.get(System.getProperty("user.dir")).resolve("dwr_eppt").resolve("config").resolve("qaqc");
+	public static final Path FUNCTIONS_PATH = QA_QC_PATH.resolve("Functions" + CSV_EXT);
+	public static final Path QA_QC_TEMPLATE_PATH = QA_QC_PATH.resolve("templates");
+	public static final Path QA_QC_SCRIPT_DIRECTORY = QA_QC_PATH.resolve("scripts");
+	public static final Path DETAILS_CSV = QA_QC_PATH.resolve("Details" + CSV_EXT);
+	public static final Path QAQC_IMAGE_PATH = Paths.get("images");
+	public static final String DOCS_DIR = System.getProperty("user.dir") + "\\dwr_eppt\\config\\";
+	public static final String QA_QC_DIR = CONFIG_DIR + "qaqc";
+	public static final String NEGATIVE_CONTOUR_FILE = QA_QC_DIR + "\\negativeContour.xml";
+	public static final String POSITIVE_CONTOUR_FILE = QA_QC_DIR + "\\positiveContour.xml";
 	public static final String WRESL_DIR = System.getProperty("user.dir") + "\\dwr_eppt\\wresl\\";
-	public static final String WRESL_MAIN = System.getProperty("user.dir") + "\\dwr_eppt\\wresl\\run\\mainControl.wresl";
+	public static final String WRESL_MAIN = "mainControl.wresl";
 	public static final String WRIMS_DIR = System.getProperty("user.dir") + "\\dwr_eppt\\wresl\\wrims";
-	public static final String WY_TYPES_TABLE = WRESL_DIR + "/run/lookup/wytypes" + TABLE_EXT;
-	public static final String WY_TYPES_NAME_LOOKUP = WRESL_DIR + "/WYTypesLookup" + CSV_EXT;
+	public static final String WY_TYPES_TABLE = "lookup/wytypes" + TABLE_EXT;
+	public static final String WY_TYPES_NAME_LOOKUP = CONFIG_DIR + "/WYTypesLookup" + CSV_EXT;
 	public static final String JASPER_DIR = System.getProperty("user.dir") + "\\dwr_eppt\\jasper\\";
 	public static final String MODEL_W2_DIR = System.getProperty("user.dir") + "//Model_w2//";
 	public static final String RUN_DETAILS_DIR = "Run_Details";
@@ -44,6 +63,7 @@ public final class Constant
 	public static final String MODEL_W2_WRESL_LOOKUP_DIR = MODEL_W2_WRESL_DIR + LOOKUP_DIR;
 	public static final String GENERATED_DIR = "//Generated//";
 	public static final String RUN_DIR = "Run";
+	public static final String TREND_REPORTING_DIR = CONFIG_DIR + "trendreporting\\prototype\\";
 	// File Names.
 	public static final String GUI_XML_FILENAME = System.getProperty("user.dir") + "//Config//GUI.xml";
 
@@ -118,12 +138,43 @@ public final class Constant
 	public static final String VAMP_NOT_SELECTED_TEXT = "Access regulation table (where applicable) by selecting or right-clicking on a regulation name.";
 
 	public static final String SCENARIOS_DIR = "Scenarios";
+	private static final String[] PLOTLY_COLORS = new String[]{"#4c7eee", "#03c98c", "#d62e82", "#62d2fa", "#a3f244", "#cf79dd", "#80f4e1"};
+	private static final String[] PLOTLY_THRESHOLD_LINE_DASH = new String[]{"dash", "dashdot", "dot"};
 	static final String MODEL_DIR = "Model_w2";
 	static final String MODEL_DSS_DIR = "DSS_Files";
 	static final String REPORTS_DIR = "Reports";
 
+
 	private Constant()
 	{
 		throw new AssertionError("Utility class");
+	}
+
+	public static Color getPlotlyDefaultColor(int index)
+	{
+		return Color.web(PLOTLY_COLORS[index % PLOTLY_COLORS.length]);
+	}
+
+	public static String getPlotlyThresholdLineDash(int index)
+	{
+		return PLOTLY_THRESHOLD_LINE_DASH[index % PLOTLY_THRESHOLD_LINE_DASH.length];
+	}
+
+	public static String colorToHex(Color color)
+	{
+		return String.format("#%02X%02X%02X%02X",
+				(int) (color.getRed() * 255),
+				(int) (color.getGreen() * 255),
+				(int) (color.getBlue() * 255),
+				(int) (color.getOpacity() * 255));
+	}
+
+	public static String colorToHex(java.awt.Color color)
+	{
+		return String.format("#%02X%02X%02X%02X",
+				color.getRed(),
+				color.getGreen(),
+				color.getBlue(),
+				color.getAlpha());
 	}
 }

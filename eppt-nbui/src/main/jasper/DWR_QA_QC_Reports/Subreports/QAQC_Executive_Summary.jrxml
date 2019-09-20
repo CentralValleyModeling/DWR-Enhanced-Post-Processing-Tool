@@ -11,8 +11,8 @@
   ~ GNU General Public License
   -->
 
-<!-- Created with Jaspersoft Studio version 6.8.0.final using JasperReports Library version 6.8.0-2ed8dfabb690ff337a5797129f2cd92902b0c87b  -->
-<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="QAQC_Executive_Summary" language="groovy" pageWidth="612" pageHeight="792" columnWidth="504" leftMargin="54" rightMargin="54" topMargin="54" bottomMargin="54" whenResourceMissingType="Error" uuid="da75db69-3924-4f44-998a-80195014db99">
+<!-- Created with Jaspersoft Studio version 6.9.0.final using JasperReports Library version 6.9.0-cb8f9004be492ccc537180b49c026951f4220bf3  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="QAQC_Executive_Report" language="groovy" pageWidth="612" pageHeight="792" whenNoDataType="NoPages" columnWidth="504" leftMargin="54" rightMargin="54" topMargin="54" bottomMargin="54" whenResourceMissingType="Error" uuid="da75db69-3924-4f44-998a-80195014db99">
 	<property name="com.jaspersoft.studio.unit." value="pixel"/>
 	<property name="net.sf.jasperreports.print.create.bookmarks" value="true"/>
 	<property name="com.jaspersoft.studio.unit.pageHeight" value="pixel"/>
@@ -25,7 +25,7 @@
 	<property name="com.jaspersoft.studio.unit.columnSpacing" value="pixel"/>
 	<property name="net.sf.jasperreports.data.adapter" value="QAQC_Datasource.xml"/>
 	<subDataset name="ExecutiveReportTable" uuid="a23916fc-7643-47c7-94e2-f0cc8ded7e23">
-		<property name="com.jaspersoft.studio.data.defaultdataadapter" value="QAQC_Datasource"/>
+		<property name="net.sf.jasperreports.data.adapter" value="QAQC_Datasource.xml"/>
 		<queryString language="xPath">
 			<![CDATA[/qaqc-report/executive-report/executive-report-table/module]]>
 		</queryString>
@@ -56,25 +56,30 @@
 			<fieldDescription><![CDATA[/qaqc-report/report-header/alternatives/alternative/@name]]></fieldDescription>
 		</field>
 	</subDataset>
-	<parameter name="Executive_Summary" class="java.lang.String" isForPrompting="false">
+	<parameter name="Executive_Report" class="java.lang.String" isForPrompting="false">
 		<defaultValueExpression><![CDATA["Executive Summary"]]></defaultValueExpression>
 	</parameter>
 	<queryString language="XPath">
-		<![CDATA[/qaqc-report/report-header]]>
+		<![CDATA[/qaqc-report/executive-report/executive-report-table]]>
 	</queryString>
 	<field name="author" class="java.lang.String">
-		<fieldDescription><![CDATA[author]]></fieldDescription>
+		<property name="net.sf.jasperreports.xpath.field.expression" value="/qaqc-report/report-header/author"/>
+		<fieldDescription><![CDATA[/qaqc-report/report-header/author]]></fieldDescription>
 	</field>
 	<field name="subtitle" class="java.lang.String">
-		<fieldDescription><![CDATA[subtitle]]></fieldDescription>
+		<property name="net.sf.jasperreports.xpath.field.expression" value="/qaqc-report/report-header/subtitle"/>
+		<fieldDescription><![CDATA[/qaqc-report/report-header/subtitle]]></fieldDescription>
 	</field>
 	<field name="name" class="java.lang.String">
-		<fieldDescription><![CDATA[base/@name]]></fieldDescription>
+		<property name="net.sf.jasperreports.xpath.field.expression" value="/qaqc-report/report-header/base/@name"/>
+		<fieldDescription><![CDATA[/qaqc-report/report-header/base/@name]]></fieldDescription>
 	</field>
 	<field name="alternative-count" class="java.lang.String">
+		<property name="net.sf.jasperreports.xpath.field.expression" value="ancestor::qaqc-report/@alternative-count"/>
 		<fieldDescription><![CDATA[ancestor::qaqc-report/@alternative-count]]></fieldDescription>
 	</field>
-	<field name="show-assumption-changes" class="java.lang.Boolean">
+	<field name="show-assumption-changes" class="java.lang.String">
+		<property name="net.sf.jasperreports.xpath.field.expression" value="ancestor::qaqc-report/@show-assumption-changes"/>
 		<fieldDescription><![CDATA[ancestor::qaqc-report/@show-assumption-changes]]></fieldDescription>
 	</field>
 	<background>
@@ -97,11 +102,33 @@
 		</band>
 	</columnHeader>
 	<detail>
-		<band height="144" splitType="Stretch">
+		<band splitType="Stretch">
 			<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
-			<printWhenExpression><![CDATA[1==1]]></printWhenExpression>
+			<printWhenExpression><![CDATA[1==0]]></printWhenExpression>
+		</band>
+	</detail>
+	<columnFooter>
+		<band splitType="Stretch">
+			<printWhenExpression><![CDATA[1==0]]></printWhenExpression>
+		</band>
+	</columnFooter>
+	<pageFooter>
+		<band height="15" splitType="Stretch">
+			<textField evaluationTime="Master">
+				<reportElement mode="Transparent" x="0" y="0" width="504" height="15" uuid="07f1c11e-6c6b-46b8-a3af-89692eb0c34d">
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA["Page | " + ($V{MASTER_CURRENT_PAGE}-1)]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageFooter>
+	<summary>
+		<band height="154" splitType="Stretch">
 			<textField pattern="" bookmarkLevel="1">
-				<reportElement mode="Transparent" x="0" y="1" width="380" height="23" forecolor="#2F5496" backcolor="#FFFFFF" uuid="34cd1ab7-f2de-41ed-b305-a38360a83411">
+				<reportElement mode="Transparent" x="0" y="1" width="380" height="23" forecolor="#2F5496" backcolor="#FFFFFF" uuid="63b2985b-f2cd-4cc5-b82f-e346138d55b2">
 					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
 				</reportElement>
 				<box padding="2">
@@ -114,10 +141,10 @@
 					<font fontName="Arial" size="16"/>
 				</textElement>
 				<textFieldExpression><![CDATA["Executive Report"]]></textFieldExpression>
-				<anchorNameExpression><![CDATA[$P{Executive_Summary}]]></anchorNameExpression>
+				<anchorNameExpression><![CDATA["Executive Report"]]></anchorNameExpression>
 			</textField>
 			<crosstab horizontalPosition="Left" ignoreWidth="true">
-				<reportElement positionType="Float" x="0" y="24" width="504" height="120" forecolor="#4472C4" uuid="dc5aeea9-f21a-45b7-beb7-756cfea9f7fb">
+				<reportElement positionType="Float" x="0" y="24" width="504" height="120" forecolor="#4472C4" uuid="3c2f9907-3910-499a-a9c3-b53a72d19ec6">
 					<property name="com.jaspersoft.studio.layout" value="com.jaspersoft.studio.editor.layout.FreeLayout"/>
 					<property name="com.jaspersoft.studio.crosstab.style.header" value="Crosstab_CH"/>
 					<property name="com.jaspersoft.studio.crosstab.style.group" value="Crosstab_CG"/>
@@ -132,7 +159,7 @@
 				</box>
 				<crosstabDataset>
 					<dataset>
-						<datasetRun subDataset="ExecutiveReportTable" uuid="2e714552-1981-4ed7-90a0-2d5d10135e4a">
+						<datasetRun subDataset="ExecutiveReportTable" uuid="9b1a12af-e50c-4c1f-b7a4-67302023e216">
 							<datasetParameter name="XML_DATA_DOCUMENT">
 								<datasetParameterExpression><![CDATA[$P{XML_DATA_DOCUMENT}]]></datasetParameterExpression>
 							</datasetParameter>
@@ -149,7 +176,7 @@
 							<rightPen lineWidth="1.0" lineColor="#4472C4"/>
 						</box>
 						<textField>
-							<reportElement x="0" y="0" width="118" height="80" forecolor="#2F5496" uuid="044bdec5-ea45-46bd-8be9-e47bff896463"/>
+							<reportElement x="0" y="0" width="118" height="80" forecolor="#2F5496" uuid="d43991cf-92ed-4fb7-8d8f-175136b3329b"/>
 							<box topPadding="2" leftPadding="2" rightPadding="2"/>
 							<textElement textAlignment="Center">
 								<font isBold="true"/>
@@ -185,7 +212,7 @@
 								<rightPen lineWidth="1.0"/>
 							</box>
 							<textField>
-								<reportElement mode="Transparent" x="0" y="0" width="118" height="40" forecolor="#2F5496" uuid="5a99d7fc-d51e-4e2e-9420-136987f9322c">
+								<reportElement mode="Transparent" x="0" y="0" width="118" height="40" forecolor="#2F5496" uuid="0d4af9e9-9cda-4d11-8eec-e5b95069eb81">
 									<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 								</reportElement>
 								<box topPadding="2" leftPadding="2" rightPadding="2">
@@ -219,7 +246,7 @@
 								<rightPen lineWidth="1.0" lineColor="#4472C4"/>
 							</box>
 							<textField>
-								<reportElement positionType="Float" mode="Transparent" x="0" y="0" width="193" height="40" forecolor="#2F5496" uuid="e7f2461b-9d3e-4812-aff3-0b7fc428409f">
+								<reportElement positionType="Float" mode="Transparent" x="0" y="0" width="193" height="40" forecolor="#2F5496" uuid="08d7235d-6c6a-4d1d-b27e-b6347f548554">
 									<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
 								</reportElement>
 								<box topPadding="2" leftPadding="2" rightPadding="2">
@@ -276,7 +303,7 @@
 								<rightPen lineWidth="1.0" lineColor="#4472C4"/>
 							</box>
 							<textField>
-								<reportElement mode="Transparent" x="0" y="0" width="193" height="20" forecolor="#2F5496" uuid="d71b720e-61f1-48c5-9dd5-efc5ecbf0aa7">
+								<reportElement mode="Transparent" x="0" y="0" width="193" height="20" forecolor="#2F5496" uuid="e2635ae8-5909-4b76-b8b6-b237cbc652f0">
 									<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 								</reportElement>
 								<box topPadding="2" leftPadding="2" rightPadding="2">
@@ -291,7 +318,7 @@
 								<textFieldExpression><![CDATA[$V{study}]]></textFieldExpression>
 							</textField>
 							<textField>
-								<reportElement x="0" y="20" width="193" height="20" forecolor="#2F5496" uuid="7c280554-d05f-4c5c-ae26-9211753c31f3"/>
+								<reportElement x="0" y="20" width="193" height="20" forecolor="#2F5496" uuid="1b452d7d-ec65-4320-8fdd-56bffdae4a8d"/>
 								<box leftPadding="2" rightPadding="2"/>
 								<textElement textAlignment="Center"/>
 								<textFieldExpression><![CDATA[$V{study-order_Measure}==1 ? $V{base_name}:$V{alternative_name}]]></textFieldExpression>
@@ -324,7 +351,7 @@
 							<rightPen lineWidth="1.0" lineColor="#4472C4"/>
 						</box>
 						<textField isStretchWithOverflow="true">
-							<reportElement mode="Transparent" x="0" y="0" width="193" height="40" forecolor="#2F5496" uuid="e887a8ef-5a3f-4969-aa0e-4f5555ed6c3f"/>
+							<reportElement mode="Transparent" x="0" y="0" width="193" height="40" forecolor="#2F5496" uuid="e77edd53-55b5-41f2-b5f2-1e8dcc157029"/>
 							<box topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2">
 								<topPen lineWidth="0.0"/>
 								<leftPen lineWidth="0.0"/>
@@ -374,29 +401,6 @@
 					</cellContents>
 				</crosstabCell>
 			</crosstab>
-		</band>
-	</detail>
-	<columnFooter>
-		<band splitType="Stretch">
-			<printWhenExpression><![CDATA[1==0]]></printWhenExpression>
-		</band>
-	</columnFooter>
-	<pageFooter>
-		<band height="15" splitType="Stretch">
-			<textField evaluationTime="Master">
-				<reportElement mode="Transparent" x="0" y="0" width="504" height="15" uuid="07f1c11e-6c6b-46b8-a3af-89692eb0c34d">
-					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
-					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
-					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
-				</reportElement>
-				<textElement textAlignment="Right"/>
-				<textFieldExpression><![CDATA["Page | " + ($V{MASTER_CURRENT_PAGE}-1)]]></textFieldExpression>
-			</textField>
-		</band>
-	</pageFooter>
-	<summary>
-		<band height="42" splitType="Stretch">
-			<printWhenExpression><![CDATA[1==0]]></printWhenExpression>
 		</band>
 	</summary>
 </jasperReport>

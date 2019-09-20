@@ -73,14 +73,14 @@ public class ChartPanel1 extends JPanel implements Printable
 	private String _buffer;
 
 	public ChartPanel1(String title, String yLabel, TimeSeriesContainer[] tscs, TimeSeriesContainer[] stscs,
-					   boolean isExceed, Date lower, Date upper, String sLabel)
+					   boolean isExceed, String sLabel)
 	{
-		this(title, yLabel, tscs, stscs, isExceed, lower, upper, sLabel, false);
+		this(title, yLabel, tscs, stscs, isExceed, sLabel, false);
 	}
 
 
 	public ChartPanel1(String title, String yLabel, TimeSeriesContainer[] tscs, TimeSeriesContainer[] stscs,
-					   boolean isExceed, Date lower, Date upper, String sLabel, boolean isBase)
+					   boolean isExceed, String sLabel, boolean isBase)
 	{
 
 		super();

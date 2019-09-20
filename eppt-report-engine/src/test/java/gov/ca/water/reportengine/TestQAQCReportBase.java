@@ -21,6 +21,8 @@ import gov.ca.water.calgui.project.EpptScenarioRun;
 import gov.ca.water.calgui.project.NamedDssPath;
 import gov.ca.water.reportengine.executivereport.ExecutiveReportXMLCreator;
 import hec.data.meta.RatingCatalogQuery;
+
+import javafx.scene.paint.Color;
 import org.junit.jupiter.api.BeforeAll;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -83,7 +85,7 @@ public class TestQAQCReportBase
 
 
         GUILinksAllModelsBO.Model calSim2 = GUILinksAllModelsBO.Model.findModel("CalSim2");// model = new GUILinksAllModelsBO.Model("CalSim2");
-        EpptScenarioRun baseRun = new EpptScenarioRun("baseScenario", "desc", calSim2,null,null, null, dssContainer);
+        EpptScenarioRun baseRun = new EpptScenarioRun("baseScenario", "desc", calSim2,null,null, null, dssContainer, Color.PINK);
         return baseRun;
     }
 
@@ -102,7 +104,7 @@ public class TestQAQCReportBase
         EpptDssContainer dssContainer = new EpptDssContainer(dvDssFile, svDssFile, ivDssFile, ivDssFile, extraDssFiles);
 
         GUILinksAllModelsBO.Model calSim2 = GUILinksAllModelsBO.Model.findModel("CalSim2");// model = new GUILinksAllModelsBO.Model("CalSim2");
-        EpptScenarioRun alt1Run = new EpptScenarioRun("alt1Scenario", "desc", calSim2,null,null,null, dssContainer);
+        EpptScenarioRun alt1Run = new EpptScenarioRun("alt1Scenario", "desc", calSim2,null,null,null, dssContainer, Color.PINK);
 
         List<EpptScenarioRun> altRuns = new ArrayList<>();
         altRuns.add(alt1Run);

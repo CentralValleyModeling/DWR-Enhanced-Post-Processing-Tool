@@ -85,6 +85,7 @@ public class ModulesReader
 				// int modID = Integer.parseInt(row[ID_COLUMN]);
 				//List<String> linkedFiles = getLinkedFilesFromID(modID, moduleLinkingCSVPath);
 				updateSubModules(mod, row);
+				i++;
 			}
 
 			//we have finished creating all the mods and sub mods. Now add the linked variables to the submods
@@ -179,17 +180,17 @@ public class ModulesReader
 	private SubModule.FlagType convertStringToFlagType(String flag)
 	{
 		SubModule.FlagType retVal = SubModule.FlagType.NEGATIVE_INFINITY;
-		if("0".equalsIgnoreCase(flag))
+		if("100".equalsIgnoreCase(flag))
 		{
-			retVal = SubModule.FlagType.ZERO;
+			retVal = SubModule.FlagType.VALUE_100;
 		}
-		else if("1".equalsIgnoreCase(flag))
+		else if("200".equalsIgnoreCase(flag))
 		{
-			retVal = SubModule.FlagType.ONE;
+			retVal = SubModule.FlagType.VALUE_200;
 		}
-		else if("2".equalsIgnoreCase(flag))
+		else if("300".equalsIgnoreCase(flag))
 		{
-			retVal = SubModule.FlagType.TWO;
+			retVal = SubModule.FlagType.VALUE_300;
 		}
 		return retVal;
 	}

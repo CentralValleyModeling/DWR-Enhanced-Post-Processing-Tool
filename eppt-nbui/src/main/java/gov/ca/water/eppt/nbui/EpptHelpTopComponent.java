@@ -13,8 +13,8 @@ package gov.ca.water.eppt.nbui;
 
 import java.awt.BorderLayout;
 import java.net.MalformedURLException;
-import java.net.URL;
-import javax.help.BadIDException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import javax.help.HelpSet;
 import javax.help.HelpSetException;
 import javax.help.JHelp;
@@ -22,6 +22,7 @@ import javax.swing.*;
 
 import gov.ca.water.calgui.EpptInitializationException;
 import gov.ca.water.calgui.constant.Constant;
+import gov.ca.water.quickresults.ui.HelpPanel;
 import org.apache.log4j.Logger;
 import org.openide.awt.ActionID;
 import org.openide.awt.ActionReference;
@@ -44,24 +45,27 @@ import org.openide.windows.WindowManager;
 )
 public final class EpptHelpTopComponent extends TopComponent
 {
-	private final JHelp _helpViewer;
+	private static final Logger LOGGER = Logger.getLogger(EpptHelpTopComponent.class.getName());
+
+//	private final JHelp _helpViewer;
+	private final HelpPanel _helpViewHtml5;
 
 	public EpptHelpTopComponent() throws EpptInitializationException
 	{
 		setName("EPPT Help");
-		try
-		{
-			String path = Constant.DOCS_DIR + "\\Help\\CalLite3-GUI-Help_JavaHelp_V2_082614.hs";
-			URL url = new URL("file:///" + path);
-			_helpViewer = new JHelp(new HelpSet(null, url));
+		Path path = Paths.get(Constant.DOCS_DIR).toAbsolutePath().getParent().resolve("docs").resolve("Help").resolve(
+				"CalLite3-GUI-Help_JavaHelp_v2_082614.hs");
+//		try
+//		{
+//			_helpViewer = new JHelp(new HelpSet(null, path.toUri().toURL()));
+			_helpViewHtml5 = new HelpPanel();
 			setLayout(new BorderLayout());
-			add(_helpViewer, BorderLayout.CENTER);
-			initListener();
-		}
-		catch(MalformedURLException | HelpSetException ex)
-		{
-			throw new EpptInitializationException("Unable to establish EPPT Help", ex);
-		}
+			add(this._helpViewHtml5, BorderLayout.CENTER);
+//		}
+//		catch(MalformedURLException | HelpSetException ex)
+//		{
+//			throw new EpptInitializationException("Error initializing Java Help", ex);
+//		}
 	}
 
 	private void initListener()
@@ -79,16 +83,11 @@ public final class EpptHelpTopComponent extends TopComponent
 		}
 	}
 
-	void selectCurrentHelperId(String id)
+	void selectCurrentHelperId(String page)
 	{
-		try
-		{
-			_helpViewer.setCurrentID(id);
-		}
-		catch(BadIDException ex)
-		{
-			Logger.getLogger(EpptHelpTopComponent.class.getName()).debug(ex);
-		}
+//		System.out.println(page);
+//		_helpViewer.setCurrentID(page);
+		_helpViewHtml5.loadHelp(page);
 	}
 
 	@Override

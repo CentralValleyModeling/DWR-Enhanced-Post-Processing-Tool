@@ -47,7 +47,7 @@ public class ExecutiveReportTestBase extends TestQAQCReportBase
         allRuns.add(baseScenarioRun);
 
         ModuleCreator mc = new ModuleCreator();
-        List<Module> modules = mc.createModules(getCSVPath(), getModuleLinkingCSVPath());
+        List<Module> modules = mc.createModules(getCSVPath());
 
         DTSProcessor dtsProcessor = new DTSProcessor(modules);
         Map<EpptScenarioRun, Map<SubModule, List<FlagViolation>>> runsToViolations = dtsProcessor.processDSSFiles(allRuns);
@@ -86,7 +86,7 @@ public class ExecutiveReportTestBase extends TestQAQCReportBase
         List<FileChangesStatistics> statsForAllAlternatives = getFileChangeStatsList();
 
         ModuleCreator mc = new ModuleCreator();
-        List<Module> modules = mc.createModules(getCSVPath(), getModuleLinkingCSVPath());
+        List<Module> modules = mc.createModules(getCSVPath());
 
         EpptScenarioRun baseScenarioRun = getBaseScenarioRun();
         List<EpptScenarioRun> altScenarioRuns = getAltScenarioRuns();

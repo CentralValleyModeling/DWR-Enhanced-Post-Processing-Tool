@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Created with Jaspersoft Studio version 6.8.0.final using JasperReports Library version 6.8.0-2ed8dfabb690ff337a5797129f2cd92902b0c87b  -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="QAQC_BaseIssuesReport" language="groovy" pageWidth="612" pageHeight="792" whenNoDataType="BlankPage" columnWidth="504" leftMargin="54" rightMargin="54" topMargin="54" bottomMargin="54" whenResourceMissingType="Empty" uuid="da75db69-3924-4f44-998a-80195014db99">
-	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="QAQC_Datasource"/>
+	<property name="net.sf.jasperreports.data.adapter" value="QAQC_Datasource.xml"/>
 	<property name="com.jaspersoft.studio.unit.pageHeight" value="pixel"/>
 	<property name="com.jaspersoft.studio.unit.pageWidth" value="pixel"/>
 	<property name="com.jaspersoft.studio.unit.topMargin" value="pixel"/>
@@ -26,20 +26,23 @@
 		<![CDATA[/qaqc-report/issues-report/base/issue-type/location/issue]]>
 	</queryString>
 	<field name="name" class="java.lang.String">
+		<property name="net.sf.jasperreports.xpath.field.expression" value="ancestor::issue-type/@name"/>
 		<fieldDescription><![CDATA[ancestor::issue-type/@name]]></fieldDescription>
 	</field>
+	<field name="number-of-issues" class="java.lang.Integer">
+		<property name="net.sf.jasperreports.xpath.field.expression" value="ancestor::issue-type/@number-of-issues"/>
+		<fieldDescription><![CDATA[ancestor::issue-type/@number-of-issues]]></fieldDescription>
+	</field>
 	<field name="location" class="java.lang.String">
+		<property name="net.sf.jasperreports.xpath.field.expression" value="ancestor::location/@location"/>
 		<fieldDescription><![CDATA[ancestor::location/@location]]></fieldDescription>
 	</field>
 	<field name="issue" class="java.lang.String">
+		<property name="net.sf.jasperreports.xpath.field.expression" value="child::text()"/>
 		<fieldDescription><![CDATA[child::text()]]></fieldDescription>
 	</field>
 	<variable name="v_groupcount" class="java.lang.Integer" incrementType="Group" incrementGroup="name" calculation="Count">
 		<variableExpression><![CDATA[$V{v_groupcount}+1]]></variableExpression>
-		<initialValueExpression><![CDATA[0]]></initialValueExpression>
-	</variable>
-	<variable name="v_issuescount" class="java.lang.Integer" resetType="Group" resetGroup="name" incrementType="Group" incrementGroup="issue">
-		<variableExpression><![CDATA[$V{v_issuescount} + (LEN($F{issue}) > 0 ? 1 : 0)]]></variableExpression>
 		<initialValueExpression><![CDATA[0]]></initialValueExpression>
 	</variable>
 	<group name="Header">
@@ -81,7 +84,7 @@
 					<textElement>
 						<font size="12"/>
 					</textElement>
-					<textFieldExpression><![CDATA[$V{v_groupcount} + ".   " +$F{name} + " - " + $V{v_issuescount} + " issue" + (($V{v_issuescount}==0 || $V{v_issuescount} > 1) ? "s" : "")]]></textFieldExpression>
+					<textFieldExpression><![CDATA[$V{v_groupcount} + ".   " +$F{name} + " - " + $F{number-of-issues} + " issue" + (($F{number-of-issues}==0 || $F{number-of-issues} > 1) ? "s" : "")]]></textFieldExpression>
 				</textField>
 			</band>
 		</groupHeader>

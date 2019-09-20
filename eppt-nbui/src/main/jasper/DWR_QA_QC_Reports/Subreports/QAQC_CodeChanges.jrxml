@@ -11,8 +11,7 @@
   ~ GNU General Public License
   -->
 
-<!-- Created with Jaspersoft Studio version 6.2.2.final using JasperReports Library version 6.2.2  -->
-<!-- 2019-05-15T08:22:28 -->
+<!-- Created with Jaspersoft Studio version 6.9.0.final using JasperReports Library version 6.9.0-cb8f9004be492ccc537180b49c026951f4220bf3  -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="QAQC_CodeChanges" language="groovy" pageWidth="612" pageHeight="792" columnWidth="504" leftMargin="54" rightMargin="54" topMargin="54" bottomMargin="54" isFloatColumnFooter="true" whenResourceMissingType="Empty" uuid="da75db69-3924-4f44-998a-80195014db99">
 	<property name="net.sf.jasperreports.data.adapter" value="QAQC_Datasource.xml"/>
 	<property name="net.sf.jasperreports.print.create.bookmarks" value="true"/>
@@ -112,26 +111,11 @@
 					<subreportParameter name="XML_INPUT_STREAM">
 						<subreportParameterExpression><![CDATA[$P{XML_INPUT_STREAM}]]></subreportParameterExpression>
 					</subreportParameter>
-					<subreportParameter name="XML_FILE">
-						<subreportParameterExpression><![CDATA[$P{XML_FILE}]]></subreportParameterExpression>
-					</subreportParameter>
 					<subreportParameter name="net.sf.jasperreports.xml.source">
 						<subreportParameterExpression><![CDATA[$P{net.sf.jasperreports.xml.source}]]></subreportParameterExpression>
 					</subreportParameter>
-					<subreportParameter name="XML_DATE_PATTERN">
-						<subreportParameterExpression><![CDATA[$P{XML_DATE_PATTERN}]]></subreportParameterExpression>
-					</subreportParameter>
-					<subreportParameter name="XML_NUMBER_PATTERN">
-						<subreportParameterExpression><![CDATA[$P{XML_NUMBER_PATTERN}]]></subreportParameterExpression>
-					</subreportParameter>
-					<subreportParameter name="XML_LOCALE">
-						<subreportParameterExpression><![CDATA[$P{XML_LOCALE}]]></subreportParameterExpression>
-					</subreportParameter>
-					<subreportParameter name="XML_TIME_ZONE">
-						<subreportParameterExpression><![CDATA[$P{XML_TIME_ZONE}]]></subreportParameterExpression>
-					</subreportParameter>
 					<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
-					<subreportExpression><![CDATA["Subreports/QAQC_CodeChangesCategory.jasper"]]></subreportExpression>
+					<subreportExpression><![CDATA["/Subreports/QAQC_CodeChangesCategory.jasper"]]></subreportExpression>
 				</subreport>
 				<line>
 					<reportElement stretchType="ContainerBottom" mode="Transparent" x="0" y="0" width="1" height="15" isPrintWhenDetailOverflows="true" uuid="841b6cbc-bd59-4ee8-a140-a8a5ad428142">

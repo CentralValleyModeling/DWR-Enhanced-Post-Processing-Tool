@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.8.0.final using JasperReports Library version 6.8.0-2ed8dfabb690ff337a5797129f2cd92902b0c87b  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="QAQC_CodeChangesFile" language="groovy" pageWidth="346" pageHeight="684" columnWidth="346" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="fdf29854-1cab-4c3d-99e9-a38b49852a26">
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<property name="net.sf.jasperreports.data.adapter" value="QAQC_Datasource.xml"/>
+	<property name="net.sf.jasperreports.export.xls.collapse.row.span" value="true"/>
+	<property name="com.jaspersoft.studio.unit.pageHeight" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.pageWidth" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.topMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.bottomMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.leftMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.rightMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.columnWidth" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.columnSpacing" value="pixel"/>
+	<parameter name="p_section-name" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["modified"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="p_change-type" class="java.lang.String" isForPrompting="false">
+		<parameterDescription><![CDATA["Hydrology"]]></parameterDescription>
+		<defaultValueExpression><![CDATA["Demands"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="p_change-subtype" class="java.lang.String" isForPrompting="false">
+		<parameterDescription><![CDATA["Climate"]]></parameterDescription>
+		<defaultValueExpression><![CDATA["San Joaquin River"]]></defaultValueExpression>
+	</parameter>
+	<queryString language="XPath">
+		<![CDATA[/qaqc-report/code-changes/section/type/subtype/change]]>
+	</queryString>
+	<field name="section-name" class="java.lang.String">
+		<property name="net.sf.jasperreports.xpath.field.expression" value="ancestor::section/@section-name"/>
+		<fieldDescription><![CDATA[ancestor::section/@section-name]]></fieldDescription>
+	</field>
+	<field name="change-type" class="java.lang.String">
+		<property name="net.sf.jasperreports.xpath.field.expression" value="ancestor::type/@change-type"/>
+		<fieldDescription><![CDATA[ancestor::type/@change-type]]></fieldDescription>
+	</field>
+	<field name="change-subtype" class="java.lang.String">
+		<property name="net.sf.jasperreports.xpath.field.expression" value="ancestor::subtype/@change-subtype"/>
+		<fieldDescription><![CDATA[ancestor::subtype/@change-subtype]]></fieldDescription>
+	</field>
+	<field name="change" class="java.lang.String">
+		<property name="net.sf.jasperreports.xpath.field.expression" value="child::text()"/>
+		<fieldDescription><![CDATA[child::text()]]></fieldDescription>
+	</field>
+	<variable name="v_updated" class="java.lang.Integer" resetType="Group" resetGroup="section-name" incrementType="Group" incrementGroup="change">
+		<variableExpression><![CDATA[$V{v_updated} + 1]]></variableExpression>
+		<initialValueExpression><![CDATA[0]]></initialValueExpression>
+	</variable>
+	<variable name="v_updated_lable" class="java.lang.Integer" resetType="Group" resetGroup="change-subtype" incrementType="Group" incrementGroup="change">
+		<variableExpression><![CDATA[$V{v_updated_lable}+ 1]]></variableExpression>
+		<initialValueExpression><![CDATA[0]]></initialValueExpression>
+	</variable>
+	<group name="section-name">
+		<groupExpression><![CDATA[$F{section-name}]]></groupExpression>
+	</group>
+	<group name="change-type">
+		<groupExpression><![CDATA[$F{change-type}]]></groupExpression>
+	</group>
+	<group name="change-subtype">
+		<groupExpression><![CDATA[$F{change-subtype}]]></groupExpression>
+		<groupFooter>
+			<band>
+				<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				<printWhenExpression><![CDATA[1==0]]></printWhenExpression>
+			</band>
+		</groupFooter>
+	</group>
+	<group name="change">
+		<groupExpression><![CDATA[$F{change}]]></groupExpression>
+		<groupHeader>
+			<band>
+				<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				<printWhenExpression><![CDATA[1==0]]></printWhenExpression>
+			</band>
+		</groupHeader>
+		<groupFooter>
+			<band height="15" splitType="Immediate">
+				<printWhenExpression><![CDATA[$P{p_section-name}== $F{section-name} && $P{p_change-type} == $F{change-type} && $P{p_change-subtype} == $F{change-subtype}]]></printWhenExpression>
+				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+					<reportElement positionType="Float" stretchType="RelativeToBandHeight" x="0" y="0" width="346" height="15" uuid="215fb55c-1821-42f5-aa22-3c84a4062f19">
+						<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					</reportElement>
+					<box leftPadding="5" rightPadding="5">
+						<topPen lineWidth="0.0"/>
+						<bottomPen lineWidth="0.0"/>
+					</box>
+					<textFieldExpression><![CDATA[$V{v_updated} + ".   " + $F{change}]]></textFieldExpression>
+				</textField>
+			</band>
+		</groupFooter>
+	</group>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band splitType="Stretch">
+			<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+			<printWhenExpression><![CDATA[1==0]]></printWhenExpression>
+		</band>
+	</title>
+	<columnHeader>
+		<band splitType="Stretch">
+			<printWhenExpression><![CDATA[1==0]]></printWhenExpression>
+		</band>
+	</columnHeader>
+	<detail>
+		<band splitType="Stretch">
+			<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+			<printWhenExpression><![CDATA[1==0]]></printWhenExpression>
+		</band>
+	</detail>
+</jasperReport>

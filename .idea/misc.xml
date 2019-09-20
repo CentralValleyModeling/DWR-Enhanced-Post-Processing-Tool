@@ -4,6 +4,9 @@
   <component name="JavaScriptSettings">
     <option name="languageLevel" value="ES6" />
   </component>
+  <component name="JavadocGenerationManager">
+    <option name="OUTPUT_DIRECTORY" value="J:/DWR/Javadoc" />
+  </component>
   <component name="MavenProjectsManager">
     <option name="originalFiles">
       <list>
@@ -17,6 +20,7 @@
         <option value="$PROJECT_DIR$/eppt-vista/pom.xml" />
         <option value="$PROJECT_DIR$/eppt-calsim-gui/pom.xml" />
         <option value="$PROJECT_DIR$/eppt-jasper-engine/pom.xml" />
+        <option value="$PROJECT_DIR$/eppt-plots/pom.xml" />
       </list>
     </option>
     <option name="ignoredFiles">

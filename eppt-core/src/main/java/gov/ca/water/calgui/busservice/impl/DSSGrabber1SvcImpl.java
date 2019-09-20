@@ -17,6 +17,7 @@ package gov.ca.water.calgui.busservice.impl;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
@@ -43,6 +44,7 @@ import gov.ca.water.calgui.project.EpptScenarioRun;
 import gov.ca.water.calgui.project.NamedDssPath;
 import gov.ca.water.calgui.techservice.IDialogSvc;
 import gov.ca.water.calgui.techservice.impl.DialogSvcImpl;
+import org.jfree.data.time.Month;
 
 import hec.heclib.dss.DSSPathname;
 import hec.heclib.dss.HecDataManager;
@@ -83,7 +85,7 @@ public class DSSGrabber1SvcImpl implements IDSSGrabber1Svc
 	private static Logger LOGGER = Logger.getLogger(DSSGrabber1SvcImpl.class.getName());
 	final Map<GUILinksAllModelsBO.Model, String> _primaryDSSName = new HashMap<>();
 	final Map<GUILinksAllModelsBO.Model, String> _secondaryDSSName = new HashMap<>();
-	final Map<GUILinksAllModelsBO.Model, String> _thresholdDSSName = new HashMap<>();
+	private final Map<GUILinksAllModelsBO.Model, String> _thresholdDSSName = new HashMap<>();
 	final List<EpptScenarioRun> _alternatives = new ArrayList<>();
 	private final IGuiLinksSeedDataSvc _seedDataSvc = GuiLinksSeedDataSvcImpl.getSeedDataSvcImplInstance();
 	private final ThresholdLinksSeedDataSvc _thresholdLinksSeedDataSvc = ThresholdLinksSeedDataSvc.getSeedDataSvcImplInstance();
@@ -109,7 +111,6 @@ public class DSSGrabber1SvcImpl implements IDSSGrabber1Svc
 	// Number of scenarios passed in list parameter
 	private double[][] _annualTAFs;
 	private double[][] _annualTAFsDiff;
-	private IDialogSvc _dialogSvc = DialogSvcImpl.getDialogSvcInstance();
 	private boolean _stopOnMissing;
 	private ThresholdLinksBO _threshold;
 
@@ -179,29 +180,31 @@ public class DSSGrabber1SvcImpl implements IDSSGrabber1Svc
 	 * lang.String)
 	 */
 	@Override
-	public void setDateRange(String dateRange)
+	public void setDateRange(LocalDate startMonth, LocalDate endMonth)
 	{
 
 		try
 		{
 			HecTime ht = new HecTime();
 
-			int m = ResultUtilsBO.getResultUtilsInstance().monthToInt(dateRange.substring(0, 3));
-			int y = Integer.parseInt(dateRange.substring(3, 7));
-			ht.setYearMonthDay(m == 12 ? y + 1 : y, m == 12 ? 1 : m + 1, 1, 0);
+			int m = startMonth.getMonth().getValue();
+			int y = startMonth.getYear();
+			ht.setYearMonthDay(m == 12 ? (y + 1) : y, m == 12 ? 1 : (m + 1), 1, 0);
 			_startTime = ht.value();
-			_startWY = (m < 10) ? y : y + 1; // Water year
+			if(m < 10)
+			{
+				_startWY = y;
+			}
+			else
+			{
+				_startWY = y + 1;
+			} // Water year
 
-			m = ResultUtilsBO.getResultUtilsInstance().monthToInt(dateRange.substring(8, 11));
-			y = new Integer(dateRange.substring(11, 15));
-			ht.setYearMonthDay(m == 12 ? y + 1 : y, m == 12 ? 1 : m + 1, 1, 0);
+			m = endMonth.getMonth().getValue();
+			y = endMonth.getYear();
+			ht.setYearMonthDay(m == 12 ? (y + 1) : y, m == 12 ? 1 : (m + 1), 1, 0);
 			_endTime = ht.value();
-			_endWY = (m < 10) ? y : y + 1;
-		}
-		catch(UnsatisfiedLinkError | NoClassDefFoundError ex)
-		{
-			LOGGER.log(Level.SEVERE,
-					"Possible javaheclib.dll issue javaHecLib.dll may be the wrong version or missing.", ex);
+			_endWY = (m < 10) ? y : (y + 1);
 		}
 		catch(RuntimeException ex)
 		{
@@ -702,7 +705,7 @@ public class DSSGrabber1SvcImpl implements IDSSGrabber1Svc
 		{
 			if(hecDss != null)
 			{
-				hecDss.close();
+//				hecDss.close();
 			}
 		}
 
@@ -1130,18 +1133,7 @@ public class DSSGrabber1SvcImpl implements IDSSGrabber1Svc
 		TimeSeriesContainer[][] results;
 		try
 		{
-			boolean valid = timeSeriesResults != null;
-			if(valid)
-			{
-				for(TimeSeriesContainer tsc : timeSeriesResults)
-				{
-					valid = tsc != null && tsc.times != null;
-					if(!valid)
-					{
-						break;
-					}
-				}
-			}
+			boolean valid = timeSeriesResults != null && isValid(timeSeriesResults);
 			if(!valid)
 			{
 				results = null;
@@ -1240,6 +1232,23 @@ public class DSSGrabber1SvcImpl implements IDSSGrabber1Svc
 		return null;
 	}
 
+	private boolean isValid(TimeSeriesContainer[] timeSeriesResults)
+	{
+		boolean valid = timeSeriesResults != null;
+		if(valid)
+		{
+			for(TimeSeriesContainer tsc : timeSeriesResults)
+			{
+				valid = tsc != null && tsc.times != null;
+				if(!valid)
+				{
+					break;
+				}
+			}
+		}
+		return valid;
+	}
+
 	/*
 	 * (non-Javadoc)
 	 *
@@ -1258,26 +1267,11 @@ public class DSSGrabber1SvcImpl implements IDSSGrabber1Svc
 		 * should be recombined with getExceedanceSeriesWithMultipleTimeSeries
 		 */
 
+		TimeSeriesContainer[][] results = null;
 		try
 		{
-			TimeSeriesContainer[][] results;
-			boolean valid = timeSeriesResults != null;
+			boolean valid = timeSeriesResults != null && isValid(timeSeriesResults);
 			if(valid)
-			{
-				for(TimeSeriesContainer tsc : timeSeriesResults)
-				{
-					valid = tsc != null && tsc.times != null;
-					if(!valid)
-					{
-						break;
-					}
-				}
-			}
-			if(!valid)
-			{
-				results = null;
-			}
-			else
 			{
 				results = new TimeSeriesContainer[14][_alternatives.size()];
 
@@ -1377,7 +1371,7 @@ public class DSSGrabber1SvcImpl implements IDSSGrabber1Svc
 		{
 			LOGGER.log(Level.SEVERE, "Unable to get time-series.", ex);
 		}
-		return null;
+		return results;
 	}
 
 	/*

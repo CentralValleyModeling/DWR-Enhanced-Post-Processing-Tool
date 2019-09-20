@@ -20,6 +20,8 @@ import gov.ca.water.calgui.project.EpptScenarioRun;
 import gov.ca.water.calgui.project.NamedDssPath;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ObservableValue;
+import javafx.scene.Node;
+import javafx.scene.shape.Rectangle;
 
 import com.rma.javafx.treetable.columns.specs.TreeTableColumnSpec;
 
@@ -67,6 +69,19 @@ class ScenarioRowModel extends ParentRowModel
 		_alternativeProperty = new SimpleObjectProperty<>(alternative);
 		_alternativeProperty.addListener((e, o, n) -> modified.run());
 		addDssPathChildren();
+	}
+
+	@Override
+	public Node getCellGraphic(TreeTableColumnSpec spec)
+	{
+		if(spec == NAME_COL_SPEC)
+		{
+			return new Rectangle(12, 12, _scenarioRun.getColor());
+		}
+		else
+		{
+			return super.getCellGraphic(spec);
+		}
 	}
 
 	private void addDssPathChildren()

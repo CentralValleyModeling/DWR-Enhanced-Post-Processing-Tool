@@ -55,7 +55,7 @@ class ProjectConfigurationPanelTest
 		ProjectConfigurationPanel projectConfigurationPanel = ProjectConfigurationPanel.createProjectConfigurationPanel();
 		JRadioButton radioButton = (JRadioButton) projectConfigurationPanel.getSwingEngine().find("rdbp000");
 		radioButton.setSelected(true);
-		String quickState = projectConfigurationPanel.quickState();
+		String quickState = projectConfigurationPanel.quickStateString();
 		assertEquals("Base;TAF;Oct1921-Sep2003;TS;ST-,Avg,All years", quickState);
 	}
 
@@ -65,7 +65,7 @@ class ProjectConfigurationPanelTest
 		ProjectConfigurationPanel projectConfigurationPanel = ProjectConfigurationPanel.createProjectConfigurationPanel();
 		JRadioButton radioButton = (JRadioButton) projectConfigurationPanel.getSwingEngine().find("rdbp001");
 		radioButton.setSelected(true);
-		String quickState = projectConfigurationPanel.quickState();
+		String quickState = projectConfigurationPanel.quickStateString();
 		assertEquals("Comp;TAF;Oct1921-Sep2003;TS;ST-,Avg,All years", quickState);
 	}
 
@@ -75,7 +75,7 @@ class ProjectConfigurationPanelTest
 		ProjectConfigurationPanel projectConfigurationPanel = ProjectConfigurationPanel.createProjectConfigurationPanel();
 		JRadioButton radioButton = (JRadioButton) projectConfigurationPanel.getSwingEngine().find("rdbp002");
 		radioButton.setSelected(true);
-		String quickState = projectConfigurationPanel.quickState();
+		String quickState = projectConfigurationPanel.quickStateString();
 		assertEquals("Diff;TAF;Oct1921-Sep2003;TS;ST-,Avg,All years", quickState);
 	}
 
@@ -86,7 +86,7 @@ class ProjectConfigurationPanelTest
 		JCheckBox repckbTimeSeriesPlot = (JCheckBox) projectConfigurationPanel.getSwingEngine().find(
 				"RepckbTimeSeriesPlot");
 		repckbTimeSeriesPlot.setSelected(true);
-		String quickState = projectConfigurationPanel.quickState();
+		String quickState = projectConfigurationPanel.quickStateString();
 		assertEquals("Base;TAF;Oct1921-Sep2003;TS;ST-,Avg,All years", quickState);
 	}
 
@@ -97,7 +97,7 @@ class ProjectConfigurationPanelTest
 		JCheckBox repckbTimeSeriesPlot = (JCheckBox) projectConfigurationPanel.getSwingEngine().find(
 				"RepckbBAWPlot");
 		repckbTimeSeriesPlot.setSelected(true);
-		String quickState = projectConfigurationPanel.quickState();
+		String quickState = projectConfigurationPanel.quickStateString();
 		assertEquals("Base;TAF;Oct1921-Sep2003;TS;BP;ST-,Avg,All years", quickState);
 	}
 }

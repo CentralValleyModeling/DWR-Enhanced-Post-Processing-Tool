@@ -124,10 +124,14 @@ public class WreslScriptRunner
 				LOGGER.log(Level.WARNING,  "{0} WRESL ERROR Return Code: {1}", new Object[]{_scenarioRun.getWreslMain(), exitValue});
 			}
 		}
-		catch(IOException | InterruptedException ex)
+		catch(InterruptedException ex)
+		{
+			LOGGER.log(Level.WARNING, "WRESL Script JVM interrupted", ex);
+			Thread.currentThread().interrupt();
+		}
+		catch(IOException ex)
 		{
 			LOGGER.log(Level.SEVERE, "Error starting WRESL script JVM", ex);
-			Thread.currentThread().interrupt();
 		}
 		finally
 		{

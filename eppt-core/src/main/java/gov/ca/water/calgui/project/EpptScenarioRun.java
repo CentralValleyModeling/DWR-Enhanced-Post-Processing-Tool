@@ -16,6 +16,7 @@ import java.nio.file.Path;
 import java.util.Objects;
 
 import gov.ca.water.calgui.bo.GUILinksAllModelsBO;
+import javafx.scene.paint.Color;
 
 /**
  * Company: Resource Management Associates
@@ -32,6 +33,7 @@ public class EpptScenarioRun
 	private final Path _wreslMain;
 	private final Path _waterYearTable;
 	private final EpptDssContainer _dssContainer;
+	private final Color _color;
 
 	/**
 	 * @param name         name descriptor meta data for scenario run
@@ -42,7 +44,7 @@ public class EpptScenarioRun
 	 * @param dssContainer
 	 */
 	public EpptScenarioRun(String name, String description, GUILinksAllModelsBO.Model model, Path outputPath,
-						   Path wreslMain, Path waterYearTable, EpptDssContainer dssContainer)
+						   Path wreslMain, Path waterYearTable, EpptDssContainer dssContainer, Color color)
 	{
 		_name = name;
 		_description = description;
@@ -51,6 +53,7 @@ public class EpptScenarioRun
 		_wreslMain = wreslMain;
 		_waterYearTable = waterYearTable;
 		_dssContainer = dssContainer;
+		_color = color;
 	}
 
 	/**
@@ -125,6 +128,11 @@ public class EpptScenarioRun
 		return _waterYearTable;
 	}
 
+	public Color getColor()
+	{
+		return _color;
+	}
+
 	@Override
 	public boolean equals(Object o)
 	{
@@ -143,13 +151,14 @@ public class EpptScenarioRun
 				Objects.equals(getOutputPath(), that.getOutputPath()) &&
 				Objects.equals(getWreslMain(), that.getWreslMain()) &&
 				Objects.equals(getWaterYearTable(), that.getWaterYearTable()) &&
-				Objects.equals(getDssContainer(), that.getDssContainer());
+				Objects.equals(getDssContainer(), that.getDssContainer()) &&
+				Objects.equals(getColor(), that.getColor());
 	}
 
 	@Override
 	public int hashCode()
 	{
-		return Objects.hash(getName(), getDescription(), getModel(), getOutputPath(), getWreslMain(), getWaterYearTable(),
-				getDssContainer());
+		return Objects.hash(getName(), getDescription(), getModel(), getOutputPath(), getWreslMain(), getWaterYearTable(), getDssContainer(),
+				getColor());
 	}
 }

@@ -1,0 +1,393 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ Enhanced Post Processing Tool (EPPT) Copyright (c) 2019.
+  ~
+  ~ EPPT is copyrighted by the State of California, Department of Water Resources. It is licensed
+  ~ under the GNU General Public License, version 2. This means it can be
+  ~ copied, distributed, and modified freely, but you may not restrict others
+  ~ in their ability to copy, distribute, and modify it. See the license below
+  ~ for more details.
+  ~
+  ~ GNU General Public License
+  -->
+
+<!-- Created with Jaspersoft Studio version 6.9.0.final using JasperReports Library version 6.9.0-cb8f9004be492ccc537180b49c026951f4220bf3  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="QAQC_Delta_Operations" language="groovy" pageWidth="792" pageHeight="612" orientation="Landscape" columnWidth="756" leftMargin="18" rightMargin="18" topMargin="18" bottomMargin="18" isSummaryWithPageHeaderAndFooter="true" whenResourceMissingType="Empty" uuid="fdf29854-1cab-4c3d-99e9-a38b49852a26">
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<property name="net.sf.jasperreports.export.xls.collapse.row.span" value="true"/>
+	<property name="net.sf.jasperreports.print.create.bookmarks" value="true"/>
+	<property name="net.sf.jasperreports.data.adapter" value="QAQC_Datasource.xml"/>
+	<property name="com.jaspersoft.studio.unit." value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.pageHeight" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.pageWidth" value="pixel"/>
+	<parameter name="XML_DATA_DOCUMENT" class="org.w3c.dom.Document" isForPrompting="false"/>
+	<queryString language="XPath">
+		<![CDATA[/qaqc-report/summary/module/section/sub-module/chart]]>
+	</queryString>
+	<field name="module-order" class="java.lang.Integer">
+		<property name="net.sf.jasperreports.xpath.field.expression" value="ancestor::module/@module-order"/>
+		<fieldDescription><![CDATA[ancestor::module/@module-order]]></fieldDescription>
+	</field>
+	<field name="module-name" class="java.lang.String">
+		<property name="net.sf.jasperreports.xpath.field.expression" value="ancestor::module/@module-name"/>
+		<fieldDescription><![CDATA[ancestor::module/@module-name]]></fieldDescription>
+	</field>
+	<variable name="Section_Group_Footer_5" class="java.lang.String">
+		<variableExpression><![CDATA["delta-ops-summary-cross-exceedance-month"]]></variableExpression>
+	</variable>
+	<variable name="Section_Group_Footer_6" class="java.lang.String">
+		<variableExpression><![CDATA["delta-ops-summary-x2-k-m-exceedance-month"]]></variableExpression>
+	</variable>
+	<variable name="Section_Group_Footer_7" class="java.lang.String">
+		<variableExpression><![CDATA["delta-ops-summary-x2-ann-exceedance-month"]]></variableExpression>
+	</variable>
+	<variable name="Section_Group_Footer_8" class="java.lang.String">
+		<variableExpression><![CDATA["delta-ops-summary-x2-old-middle-exceedance-month"]]></variableExpression>
+	</variable>
+	<variable name="Section_Group_Footer_9" class="java.lang.String">
+		<variableExpression><![CDATA["delta-ops-summary-x2-ec-rock-exceedance-month"]]></variableExpression>
+	</variable>
+	<variable name="Section_Group_Footer_10" class="java.lang.String">
+		<variableExpression><![CDATA["delta-ops-summary-x2-jersey-exceedance-month"]]></variableExpression>
+	</variable>
+	<variable name="Section_Group_Footer_11" class="java.lang.String">
+		<variableExpression><![CDATA["delta-ops-summary-x2-emmaton-exceedance-month"]]></variableExpression>
+	</variable>
+	<variable name="Section_Group_Footer_12" class="java.lang.String">
+		<variableExpression><![CDATA["delta-ops-summary-x2-collinsville-exceedance-month"]]></variableExpression>
+	</variable>
+	<filterExpression><![CDATA[$F{module-name}=="Delta Operations"]]></filterExpression>
+	<group name="Module" isResetPageNumber="true">
+		<groupExpression><![CDATA[$F{module-order}]]></groupExpression>
+		<groupFooter>
+			<band height="20" splitType="Prevent">
+				<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				<textField isStretchWithOverflow="true" evaluationTime="Report" pattern="" bookmarkLevel="4">
+					<reportElement mode="Transparent" x="0" y="1" width="360" height="18" forecolor="#2F5496" backcolor="#FFFFFF" uuid="879396cd-0ddc-40a4-bfc4-29c14a9d3e0f">
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+						<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					</reportElement>
+					<box padding="2">
+						<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Left" verticalAlignment="Middle">
+						<font fontName="Arial" size="12"/>
+					</textElement>
+					<textFieldExpression><![CDATA["Delta Cross Channel Exceedance"]]></textFieldExpression>
+					<anchorNameExpression><![CDATA["Delta Cross Channel Exceedance"]]></anchorNameExpression>
+				</textField>
+				<subreport>
+					<reportElement stretchType="ElementGroupHeight" x="0" y="19" width="756" height="1" uuid="be0cbc9b-b4bc-43e0-9462-4e72ea6c8e15">
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+						<property name="com.jaspersoft.studio.unit.x" value="px"/>
+						<property name="com.jaspersoft.studio.unit.y" value="px"/>
+						<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					</reportElement>
+					<subreportParameter name="XML_DATA_DOCUMENT">
+						<subreportParameterExpression><![CDATA[$P{XML_DATA_DOCUMENT}]]></subreportParameterExpression>
+					</subreportParameter>
+					<subreportParameter name="p_report_name">
+						<subreportParameterExpression><![CDATA[$V{Section_Group_Footer_5}]]></subreportParameterExpression>
+					</subreportParameter>
+					<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+					<subreportExpression><![CDATA["/DWR_QA_QC_Reports/Subreports/exceedance-page/"+$V{Section_Group_Footer_5}+".jasper"]]></subreportExpression>
+				</subreport>
+			</band>
+			<band height="20" splitType="Prevent">
+				<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				<textField isStretchWithOverflow="true" evaluationTime="Report" pattern="" bookmarkLevel="4">
+					<reportElement mode="Transparent" x="0" y="1" width="360" height="18" forecolor="#2F5496" backcolor="#FFFFFF" uuid="879396cd-0ddc-40a4-bfc4-29c14a9d3e0f">
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+						<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					</reportElement>
+					<box padding="2">
+						<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Left" verticalAlignment="Middle">
+						<font fontName="Arial" size="12"/>
+					</textElement>
+					<textFieldExpression><![CDATA["X2 Location Exceedance - K-M"]]></textFieldExpression>
+					<anchorNameExpression><![CDATA["X2 Location Exceedance - K-M"]]></anchorNameExpression>
+				</textField>
+				<subreport>
+					<reportElement stretchType="ElementGroupHeight" x="0" y="19" width="756" height="1" uuid="be0cbc9b-b4bc-43e0-9462-4e72ea6c8e15">
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+						<property name="com.jaspersoft.studio.unit.x" value="px"/>
+						<property name="com.jaspersoft.studio.unit.y" value="px"/>
+						<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					</reportElement>
+					<subreportParameter name="XML_DATA_DOCUMENT">
+						<subreportParameterExpression><![CDATA[$P{XML_DATA_DOCUMENT}]]></subreportParameterExpression>
+					</subreportParameter>
+					<subreportParameter name="p_report_name">
+						<subreportParameterExpression><![CDATA[$V{Section_Group_Footer_6}]]></subreportParameterExpression>
+					</subreportParameter>
+					<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+					<subreportExpression><![CDATA["/DWR_QA_QC_Reports/Subreports/exceedance-page/"+$V{Section_Group_Footer_6}+".jasper"]]></subreportExpression>
+				</subreport>
+			</band>
+			<band height="20" splitType="Prevent">
+				<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				<textField isStretchWithOverflow="true" evaluationTime="Report" pattern="" bookmarkLevel="4">
+					<reportElement mode="Transparent" x="0" y="1" width="360" height="18" forecolor="#2F5496" backcolor="#FFFFFF" uuid="879396cd-0ddc-40a4-bfc4-29c14a9d3e0f">
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+						<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					</reportElement>
+					<box padding="2">
+						<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Left" verticalAlignment="Middle">
+						<font fontName="Arial" size="12"/>
+					</textElement>
+					<textFieldExpression><![CDATA["X2 Location Exceedance - ANN"]]></textFieldExpression>
+					<anchorNameExpression><![CDATA["X2 Location Exceedance - ANN"]]></anchorNameExpression>
+				</textField>
+				<subreport>
+					<reportElement stretchType="ElementGroupHeight" x="0" y="19" width="756" height="1" uuid="be0cbc9b-b4bc-43e0-9462-4e72ea6c8e15">
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+						<property name="com.jaspersoft.studio.unit.x" value="px"/>
+						<property name="com.jaspersoft.studio.unit.y" value="px"/>
+						<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					</reportElement>
+					<subreportParameter name="XML_DATA_DOCUMENT">
+						<subreportParameterExpression><![CDATA[$P{XML_DATA_DOCUMENT}]]></subreportParameterExpression>
+					</subreportParameter>
+					<subreportParameter name="p_report_name">
+						<subreportParameterExpression><![CDATA[$V{Section_Group_Footer_7}]]></subreportParameterExpression>
+					</subreportParameter>
+					<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+					<subreportExpression><![CDATA["/DWR_QA_QC_Reports/Subreports/exceedance-page/"+$V{Section_Group_Footer_7}+".jasper"]]></subreportExpression>
+				</subreport>
+			</band>
+			<band height="20" splitType="Prevent">
+				<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				<textField isStretchWithOverflow="true" evaluationTime="Report" pattern="" bookmarkLevel="4">
+					<reportElement mode="Transparent" x="0" y="1" width="360" height="18" forecolor="#2F5496" backcolor="#FFFFFF" uuid="879396cd-0ddc-40a4-bfc4-29c14a9d3e0f">
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+						<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					</reportElement>
+					<box padding="2">
+						<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Left" verticalAlignment="Middle">
+						<font fontName="Arial" size="12"/>
+					</textElement>
+					<textFieldExpression><![CDATA["Old and Middle River Exceedance"]]></textFieldExpression>
+					<anchorNameExpression><![CDATA["Old and Middle River Exceedance"]]></anchorNameExpression>
+				</textField>
+				<subreport>
+					<reportElement stretchType="ElementGroupHeight" x="0" y="19" width="756" height="1" uuid="be0cbc9b-b4bc-43e0-9462-4e72ea6c8e15">
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+						<property name="com.jaspersoft.studio.unit.x" value="px"/>
+						<property name="com.jaspersoft.studio.unit.y" value="px"/>
+						<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					</reportElement>
+					<subreportParameter name="XML_DATA_DOCUMENT">
+						<subreportParameterExpression><![CDATA[$P{XML_DATA_DOCUMENT}]]></subreportParameterExpression>
+					</subreportParameter>
+					<subreportParameter name="p_report_name">
+						<subreportParameterExpression><![CDATA[$V{Section_Group_Footer_8}]]></subreportParameterExpression>
+					</subreportParameter>
+					<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+					<subreportExpression><![CDATA["/DWR_QA_QC_Reports/Subreports/exceedance-page/"+$V{Section_Group_Footer_8}+".jasper"]]></subreportExpression>
+				</subreport>
+			</band>
+			<band height="20" splitType="Prevent">
+				<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				<textField isStretchWithOverflow="true" evaluationTime="Report" pattern="" bookmarkLevel="4">
+					<reportElement mode="Transparent" x="0" y="1" width="360" height="18" forecolor="#2F5496" backcolor="#FFFFFF" uuid="879396cd-0ddc-40a4-bfc4-29c14a9d3e0f">
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+						<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					</reportElement>
+					<box padding="2">
+						<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Left" verticalAlignment="Middle">
+						<font fontName="Arial" size="12"/>
+					</textElement>
+					<textFieldExpression><![CDATA["Electrical Conductivity at Rock Slough Exceedance"]]></textFieldExpression>
+					<anchorNameExpression><![CDATA["Electrical Conductivity at Rock Slough Exceedance"]]></anchorNameExpression>
+				</textField>
+				<subreport>
+					<reportElement stretchType="ElementGroupHeight" x="0" y="19" width="756" height="1" uuid="be0cbc9b-b4bc-43e0-9462-4e72ea6c8e15">
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+						<property name="com.jaspersoft.studio.unit.x" value="px"/>
+						<property name="com.jaspersoft.studio.unit.y" value="px"/>
+						<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					</reportElement>
+					<subreportParameter name="XML_DATA_DOCUMENT">
+						<subreportParameterExpression><![CDATA[$P{XML_DATA_DOCUMENT}]]></subreportParameterExpression>
+					</subreportParameter>
+					<subreportParameter name="p_report_name">
+						<subreportParameterExpression><![CDATA[$V{Section_Group_Footer_9}]]></subreportParameterExpression>
+					</subreportParameter>
+					<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+					<subreportExpression><![CDATA["/DWR_QA_QC_Reports/Subreports/exceedance-page/"+$V{Section_Group_Footer_9}+".jasper"]]></subreportExpression>
+				</subreport>
+			</band>
+			<band height="20" splitType="Prevent">
+				<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				<textField isStretchWithOverflow="true" evaluationTime="Report" pattern="" bookmarkLevel="4">
+					<reportElement mode="Transparent" x="0" y="1" width="360" height="18" forecolor="#2F5496" backcolor="#FFFFFF" uuid="879396cd-0ddc-40a4-bfc4-29c14a9d3e0f">
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+						<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					</reportElement>
+					<box padding="2">
+						<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Left" verticalAlignment="Middle">
+						<font fontName="Arial" size="12"/>
+					</textElement>
+					<textFieldExpression><![CDATA["Electrical Conductivity at Jersey Point Exceedance"]]></textFieldExpression>
+					<anchorNameExpression><![CDATA["Electrical Conductivity at Jersey Point Exceedance"]]></anchorNameExpression>
+				</textField>
+				<subreport>
+					<reportElement stretchType="ElementGroupHeight" x="0" y="19" width="756" height="1" uuid="be0cbc9b-b4bc-43e0-9462-4e72ea6c8e15">
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+						<property name="com.jaspersoft.studio.unit.x" value="px"/>
+						<property name="com.jaspersoft.studio.unit.y" value="px"/>
+						<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					</reportElement>
+					<subreportParameter name="XML_DATA_DOCUMENT">
+						<subreportParameterExpression><![CDATA[$P{XML_DATA_DOCUMENT}]]></subreportParameterExpression>
+					</subreportParameter>
+					<subreportParameter name="p_report_name">
+						<subreportParameterExpression><![CDATA[$V{Section_Group_Footer_10}]]></subreportParameterExpression>
+					</subreportParameter>
+					<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+					<subreportExpression><![CDATA["/DWR_QA_QC_Reports/Subreports/exceedance-page/"+$V{Section_Group_Footer_10}+".jasper"]]></subreportExpression>
+				</subreport>
+			</band>
+			<band height="20" splitType="Prevent">
+				<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				<textField isStretchWithOverflow="true" evaluationTime="Report" pattern="" bookmarkLevel="4">
+					<reportElement mode="Transparent" x="0" y="1" width="360" height="18" forecolor="#2F5496" backcolor="#FFFFFF" uuid="879396cd-0ddc-40a4-bfc4-29c14a9d3e0f">
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+						<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					</reportElement>
+					<box padding="2">
+						<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Left" verticalAlignment="Middle">
+						<font fontName="Arial" size="12"/>
+					</textElement>
+					<textFieldExpression><![CDATA["Electrical Conductivity at Emmaton Exceedance"]]></textFieldExpression>
+					<anchorNameExpression><![CDATA["Electrical Conductivity at Emmaton Exceedance"]]></anchorNameExpression>
+				</textField>
+				<subreport>
+					<reportElement stretchType="ElementGroupHeight" x="0" y="19" width="756" height="1" uuid="be0cbc9b-b4bc-43e0-9462-4e72ea6c8e15">
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+						<property name="com.jaspersoft.studio.unit.x" value="px"/>
+						<property name="com.jaspersoft.studio.unit.y" value="px"/>
+						<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					</reportElement>
+					<subreportParameter name="XML_DATA_DOCUMENT">
+						<subreportParameterExpression><![CDATA[$P{XML_DATA_DOCUMENT}]]></subreportParameterExpression>
+					</subreportParameter>
+					<subreportParameter name="p_report_name">
+						<subreportParameterExpression><![CDATA[$V{Section_Group_Footer_11}]]></subreportParameterExpression>
+					</subreportParameter>
+					<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+					<subreportExpression><![CDATA["/DWR_QA_QC_Reports/Subreports/exceedance-page/"+$V{Section_Group_Footer_11}+".jasper"]]></subreportExpression>
+				</subreport>
+			</band>
+			<band height="20" splitType="Prevent">
+				<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				<textField isStretchWithOverflow="true" evaluationTime="Report" pattern="" bookmarkLevel="4">
+					<reportElement mode="Transparent" x="0" y="1" width="360" height="18" forecolor="#2F5496" backcolor="#FFFFFF" uuid="879396cd-0ddc-40a4-bfc4-29c14a9d3e0f">
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+						<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					</reportElement>
+					<box padding="2">
+						<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Left" verticalAlignment="Middle">
+						<font fontName="Arial" size="12"/>
+					</textElement>
+					<textFieldExpression><![CDATA["Electrical Conductivity at Collinsville Exceedance"]]></textFieldExpression>
+					<anchorNameExpression><![CDATA["Electrical Conductivity at Collinsville Exceedance"]]></anchorNameExpression>
+				</textField>
+				<subreport>
+					<reportElement stretchType="ElementGroupHeight" x="0" y="19" width="756" height="1" uuid="be0cbc9b-b4bc-43e0-9462-4e72ea6c8e15">
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+						<property name="com.jaspersoft.studio.unit.x" value="px"/>
+						<property name="com.jaspersoft.studio.unit.y" value="px"/>
+						<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					</reportElement>
+					<subreportParameter name="XML_DATA_DOCUMENT">
+						<subreportParameterExpression><![CDATA[$P{XML_DATA_DOCUMENT}]]></subreportParameterExpression>
+					</subreportParameter>
+					<subreportParameter name="p_report_name">
+						<subreportParameterExpression><![CDATA[$V{Section_Group_Footer_12}]]></subreportParameterExpression>
+					</subreportParameter>
+					<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+					<subreportExpression><![CDATA["/DWR_QA_QC_Reports/Subreports/exceedance-page/"+$V{Section_Group_Footer_12}+".jasper"]]></subreportExpression>
+				</subreport>
+			</band>
+		</groupFooter>
+	</group>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band splitType="Stretch">
+			<property name="com.jaspersoft.studio.unit.height" value="px"/>
+			<printWhenExpression><![CDATA[1==0]]></printWhenExpression>
+		</band>
+	</title>
+	<columnHeader>
+		<band splitType="Stretch">
+			<printWhenExpression><![CDATA[1==0]]></printWhenExpression>
+		</band>
+	</columnHeader>
+	<detail>
+		<band splitType="Stretch">
+			<property name="com.jaspersoft.studio.unit.height" value="px"/>
+			<printWhenExpression><![CDATA[1==0]]></printWhenExpression>
+		</band>
+	</detail>
+	<pageFooter>
+		<band height="15">
+			<property name="com.jaspersoft.studio.unit.height" value="px"/>
+			<textField evaluationTime="Master">
+				<reportElement mode="Transparent" x="0" y="0" width="504" height="15" uuid="72834111-debf-448e-87f8-030f2630f3c6">
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA["Page | " + ($V{MASTER_CURRENT_PAGE}-1)]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageFooter>
+	<summary>
+		<band>
+			<property name="com.jaspersoft.studio.unit.height" value="px"/>
+			<printWhenExpression><![CDATA[1==0]]></printWhenExpression>
+		</band>
+	</summary>
+</jasperReport>

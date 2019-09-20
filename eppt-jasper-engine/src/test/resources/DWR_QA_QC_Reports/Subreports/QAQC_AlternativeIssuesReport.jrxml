@@ -29,6 +29,10 @@
 		<property name="net.sf.jasperreports.xpath.field.expression" value="ancestor::issue-type/@name"/>
 		<fieldDescription><![CDATA[ancestor::issue-type/@name]]></fieldDescription>
 	</field>
+	<field name="number-of-issues" class="java.lang.Integer">
+		<property name="net.sf.jasperreports.xpath.field.expression" value="ancestor::issue-type/@number-of-issues"/>
+		<fieldDescription><![CDATA[ancestor::issue-type/@number-of-issues]]></fieldDescription>
+	</field>
 	<field name="location" class="java.lang.String">
 		<property name="net.sf.jasperreports.xpath.field.expression" value="ancestor::location/@location"/>
 		<fieldDescription><![CDATA[ancestor::location/@location]]></fieldDescription>
@@ -43,10 +47,6 @@
 	</field>
 	<variable name="v_groupcount" class="java.lang.Integer" incrementType="Group" incrementGroup="name" calculation="Count">
 		<variableExpression><![CDATA[$V{v_groupcount}+1]]></variableExpression>
-		<initialValueExpression><![CDATA[0]]></initialValueExpression>
-	</variable>
-	<variable name="v_issuescount" class="java.lang.Integer" resetType="Group" resetGroup="name" incrementType="Group" incrementGroup="issue">
-		<variableExpression><![CDATA[$V{v_issuescount} + (LEN($F{issue}) > 0 ? 1 : 0)]]></variableExpression>
 		<initialValueExpression><![CDATA[0]]></initialValueExpression>
 	</variable>
 	<group name="Header">
@@ -88,7 +88,7 @@
 					<textElement>
 						<font size="12"/>
 					</textElement>
-					<textFieldExpression><![CDATA[$V{v_groupcount} + ".   " +$F{name} + " - " + $V{v_issuescount} + " issue" + (($V{v_issuescount}==0 || $V{v_issuescount} > 1) ? "s" : "")]]></textFieldExpression>
+					<textFieldExpression><![CDATA[$V{v_groupcount} + ".   " +$F{name} + " - " + $F{number-of-issues} + " issue" + (($F{number-of-issues}==0 || $F{number-of-issues} > 1) ? "s" : "")]]></textFieldExpression>
 				</textField>
 			</band>
 		</groupHeader>

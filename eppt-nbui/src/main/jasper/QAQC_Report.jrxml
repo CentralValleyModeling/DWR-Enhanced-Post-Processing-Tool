@@ -1,25 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!--
-  ~ Enhanced Post Processing Tool (EPPT) Copyright (c) 2019.
-  ~
-  ~ EPPT is copyrighted by the State of California, Department of Water Resources. It is licensed
-  ~ under the GNU General Public License, version 2. This means it can be
-  ~ copied, distributed, and modified freely, but you may not restrict others
-  ~ in their ability to copy, distribute, and modify it. See the license below
-  ~ for more details.
-  ~
-  ~ GNU General Public License
-  -->
-
-<!-- Created with Jaspersoft Studio version 6.8.0.final using JasperReports Library version 6.8.0-2ed8dfabb690ff337a5797129f2cd92902b0c87b  -->
-<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="QAQC_Report" language="groovy" pageWidth="595" pageHeight="842" sectionType="Part" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="30" bottomMargin="30" uuid="d2716064-8ae4-40cf-a575-33afba400e3a">
-	<property name="net.sf.jasperreports.data.adapter" value="QAQC_Datasource.xml"/>
+<!-- Created with Jaspersoft Studio version 6.9.0.final using JasperReports Library version 6.9.0-cb8f9004be492ccc537180b49c026951f4220bf3  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="QAQC_Report" language="groovy" pageWidth="595" pageHeight="842" sectionType="Part" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="30" bottomMargin="30" whenResourceMissingType="Empty" uuid="d2716064-8ae4-40cf-a575-33afba400e3a">
 	<property name="net.sf.jasperreports.print.create.bookmarks" value="true"/>
 	<property name="com.jaspersoft.studio.book.group.cover.header" value="Cover and Table of Contents"/>
 	<property name="com.jaspersoft.studio.book.group.cover.footer" value="Backcover"/>
+	<property name="net.sf.jasperreports.data.adapter" value="QAQC_Datasource.xml"/>
 	<queryString language="XPath">
 		<![CDATA[/qaqc-report]]>
 	</queryString>
+	<field name="print-title" class="java.lang.String">
+		<property name="net.sf.jasperreports.xpath.field.expression" value="@print-title"/>
+		<fieldDescription><![CDATA[@print-title]]></fieldDescription>
+	</field>
+	<field name="print-toc" class="java.lang.String">
+		<property name="net.sf.jasperreports.xpath.field.expression" value="@print-toc"/>
+		<fieldDescription><![CDATA[@print-toc]]></fieldDescription>
+	</field>
+	<variable name="Module" class="java.lang.String" resetType="None">
+		<variableExpression><![CDATA["Reservoir_Operations"]]></variableExpression>
+		<initialValueExpression><![CDATA["resops-summary-may"]]></initialValueExpression>
+	</variable>
 	<group name="cover">
 		<groupHeader>
 			<part uuid="7aed05b9-1301-4a53-b47e-34289560bc0c">
@@ -27,13 +27,13 @@
 					<subreportParameter name="XML_DATA_DOCUMENT">
 						<subreportParameterExpression><![CDATA[$P{XML_DATA_DOCUMENT}]]></subreportParameterExpression>
 					</subreportParameter>
-					<subreportExpression><![CDATA["Subreports/QAQC_TitlePage.jasper"]]></subreportExpression>
+					<subreportExpression><![CDATA["/DWR_QA_QC_Reports/Subreports/QAQC_TitlePage.jasper"]]></subreportExpression>
 				</p:subreportPart>
 			</part>
 			<part evaluationTime="Report" uuid="56ab525c-754f-4f48-a52c-7cc23934be3d">
 				<property name="net.sf.jasperreports.bookmarks.data.source.parameter" value="REPORT_DATA_SOURCE"/>
 				<p:subreportPart xmlns:p="http://jasperreports.sourceforge.net/jasperreports/parts" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/parts http://jasperreports.sourceforge.net/xsd/parts.xsd">
-					<subreportExpression><![CDATA["Subreports/QAQC_TableOfContents.jasper"]]></subreportExpression>
+					<subreportExpression><![CDATA["/DWR_QA_QC_Reports/Subreports/QAQC_TableOfContents.jasper"]]></subreportExpression>
 				</p:subreportPart>
 			</part>
 		</groupHeader>
@@ -73,37 +73,494 @@
 				<subreportExpression><![CDATA["/DWR_QA_QC_Reports/Subreports/QAQC_AlternativeIssuesReport.jasper"]]></subreportExpression>
 			</p:subreportPart>
 		</part>
-		<part uuid="d05e68b6-23a4-4603-af03-150a559d7282">
-			<p:subreportPart xmlns:p="http://jasperreports.sourceforge.net/jasperreports/parts" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/parts http://jasperreports.sourceforge.net/xsd/parts.xsd">
-				<subreportParameter name="REPORT_CONNECTION">
-					<subreportParameterExpression><![CDATA[$P{REPORT_CONNECTION}]]></subreportParameterExpression>
+		<part evaluationTime="Now" uuid="ca7cdb06-28aa-45d5-b186-e40f5475f052">
+			<p:subreportPart xmlns:p="http://jasperreports.sourceforge.net/jasperreports/parts" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/parts http://jasperreports.sourceforge.net/xsd/parts.xsd" usingCache="false">
+				<subreportParameter name="p_report_name">
+					<subreportParameterExpression><![CDATA[$V{Module}]]></subreportParameterExpression>
 				</subreportParameter>
 				<subreportParameter name="XML_DATA_DOCUMENT">
 					<subreportParameterExpression><![CDATA[$P{XML_DATA_DOCUMENT}]]></subreportParameterExpression>
 				</subreportParameter>
-				<subreportExpression><![CDATA["/DWR_QA_QC_Reports/Subreports/QAQC_StandardSummaryStatistic.jasper"]]></subreportExpression>
+				<subreportParameter name="REPORT_CONNECTION">
+					<subreportParameterExpression><![CDATA[$P{REPORT_CONNECTION}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportExpression><![CDATA["/DWR_QA_QC_Reports/Subreports/QAQC_Reservoir_Operations_1.jasper"]]></subreportExpression>
 			</p:subreportPart>
 		</part>
-		<part uuid="02c334f6-40d9-4b8d-833b-ea63b09cc8cc">
-			<p:subreportPart xmlns:p="http://jasperreports.sourceforge.net/jasperreports/parts" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/parts http://jasperreports.sourceforge.net/xsd/parts.xsd">
-				<subreportParameter name="REPORT_CONNECTION">
-					<subreportParameterExpression><![CDATA[$P{REPORT_CONNECTION}]]></subreportParameterExpression>
+		<part evaluationTime="Now" uuid="ca7cdb06-28aa-45d5-b186-e40f5475f052">
+			<p:subreportPart xmlns:p="http://jasperreports.sourceforge.net/jasperreports/parts" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/parts http://jasperreports.sourceforge.net/xsd/parts.xsd" usingCache="false">
+				<subreportParameter name="p_report_name">
+					<subreportParameterExpression><![CDATA[$V{Module}]]></subreportParameterExpression>
 				</subreportParameter>
 				<subreportParameter name="XML_DATA_DOCUMENT">
 					<subreportParameterExpression><![CDATA[$P{XML_DATA_DOCUMENT}]]></subreportParameterExpression>
 				</subreportParameter>
-				<subreportExpression><![CDATA["/DWR_QA_QC_Reports/Subreports/QAQC_StandardSummaryStatisticImages.jasper"]]></subreportExpression>
+				<subreportParameter name="REPORT_CONNECTION">
+					<subreportParameterExpression><![CDATA[$P{REPORT_CONNECTION}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportExpression><![CDATA["/DWR_QA_QC_Reports/Subreports/QAQC_Reservoir_Operations_2.jasper"]]></subreportExpression>
 			</p:subreportPart>
 		</part>
-		<part uuid="385f5055-66bb-4061-bfc2-5cbb8092a7de">
-			<p:subreportPart xmlns:p="http://jasperreports.sourceforge.net/jasperreports/parts" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/parts http://jasperreports.sourceforge.net/xsd/parts.xsd">
-				<subreportParameter name="REPORT_CONNECTION">
-					<subreportParameterExpression><![CDATA[$P{REPORT_CONNECTION}]]></subreportParameterExpression>
+		<part evaluationTime="Now" uuid="ca7cdb06-28aa-45d5-b186-e40f5475f052">
+			<p:subreportPart xmlns:p="http://jasperreports.sourceforge.net/jasperreports/parts" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/parts http://jasperreports.sourceforge.net/xsd/parts.xsd" usingCache="true">
+				<subreportParameter name="p_report_name">
+					<subreportParameterExpression><![CDATA[$V{Module}]]></subreportParameterExpression>
 				</subreportParameter>
 				<subreportParameter name="XML_DATA_DOCUMENT">
 					<subreportParameterExpression><![CDATA[$P{XML_DATA_DOCUMENT}]]></subreportParameterExpression>
 				</subreportParameter>
-				<subreportExpression><![CDATA["/DWR_QA_QC_Reports/Subreports/QAQC_StandardSummaryStatisticImages2.jasper"]]></subreportExpression>
+				<subreportParameter name="REPORT_CONNECTION">
+					<subreportParameterExpression><![CDATA[$P{REPORT_CONNECTION}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportExpression><![CDATA["/DWR_QA_QC_Reports/Subreports/QAQC_Reservoir_Operations_3.jasper"]]></subreportExpression>
+			</p:subreportPart>
+		</part>
+		<part evaluationTime="Now" uuid="ca7cdb06-28aa-45d5-b186-e40f5475f052">
+			<p:subreportPart xmlns:p="http://jasperreports.sourceforge.net/jasperreports/parts" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/parts http://jasperreports.sourceforge.net/xsd/parts.xsd" usingCache="true">
+				<subreportParameter name="p_report_name">
+					<subreportParameterExpression><![CDATA[$V{Module}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="XML_DATA_DOCUMENT">
+					<subreportParameterExpression><![CDATA[$P{XML_DATA_DOCUMENT}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="REPORT_CONNECTION">
+					<subreportParameterExpression><![CDATA[$P{REPORT_CONNECTION}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportExpression><![CDATA["/DWR_QA_QC_Reports/Subreports/QAQC_Reservoir_Operations_4.jasper"]]></subreportExpression>
+			</p:subreportPart>
+		</part>
+		<part evaluationTime="Now" uuid="ca7cdb06-28aa-45d5-b186-e40f5475f052">
+			<p:subreportPart xmlns:p="http://jasperreports.sourceforge.net/jasperreports/parts" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/parts http://jasperreports.sourceforge.net/xsd/parts.xsd" usingCache="true">
+				<subreportParameter name="p_report_name">
+					<subreportParameterExpression><![CDATA[$V{Module}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="XML_DATA_DOCUMENT">
+					<subreportParameterExpression><![CDATA[$P{XML_DATA_DOCUMENT}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="REPORT_CONNECTION">
+					<subreportParameterExpression><![CDATA[$P{REPORT_CONNECTION}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportExpression><![CDATA["/DWR_QA_QC_Reports/Subreports/QAQC_Reservoir_Operations_5.jasper"]]></subreportExpression>
+			</p:subreportPart>
+		</part>
+		<part evaluationTime="Now" uuid="ca7cdb06-28aa-45d5-b186-e40f5475f052">
+			<p:subreportPart xmlns:p="http://jasperreports.sourceforge.net/jasperreports/parts" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/parts http://jasperreports.sourceforge.net/xsd/parts.xsd" usingCache="true">
+				<subreportParameter name="p_report_name">
+					<subreportParameterExpression><![CDATA[$V{Module}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="XML_DATA_DOCUMENT">
+					<subreportParameterExpression><![CDATA[$P{XML_DATA_DOCUMENT}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="REPORT_CONNECTION">
+					<subreportParameterExpression><![CDATA[$P{REPORT_CONNECTION}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportExpression><![CDATA["/DWR_QA_QC_Reports/Subreports/QAQC_Reservoir_Operations_6.jasper"]]></subreportExpression>
+			</p:subreportPart>
+		</part>
+		<part evaluationTime="Now" uuid="ca7cdb06-28aa-45d5-b186-e40f5475f052">
+			<p:subreportPart xmlns:p="http://jasperreports.sourceforge.net/jasperreports/parts" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/parts http://jasperreports.sourceforge.net/xsd/parts.xsd" usingCache="true">
+				<subreportParameter name="p_report_name">
+					<subreportParameterExpression><![CDATA[$V{Module}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="XML_DATA_DOCUMENT">
+					<subreportParameterExpression><![CDATA[$P{XML_DATA_DOCUMENT}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="REPORT_CONNECTION">
+					<subreportParameterExpression><![CDATA[$P{REPORT_CONNECTION}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportExpression><![CDATA["/DWR_QA_QC_Reports/Subreports/QAQC_Reservoir_Operations_7.jasper"]]></subreportExpression>
+			</p:subreportPart>
+		</part>
+		<part evaluationTime="Now" uuid="ca7cdb06-28aa-45d5-b186-e40f5475f052">
+			<p:subreportPart xmlns:p="http://jasperreports.sourceforge.net/jasperreports/parts" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/parts http://jasperreports.sourceforge.net/xsd/parts.xsd" usingCache="true">
+				<subreportParameter name="p_report_name">
+					<subreportParameterExpression><![CDATA[$V{Module}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="XML_DATA_DOCUMENT">
+					<subreportParameterExpression><![CDATA[$P{XML_DATA_DOCUMENT}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="REPORT_CONNECTION">
+					<subreportParameterExpression><![CDATA[$P{REPORT_CONNECTION}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportExpression><![CDATA["/DWR_QA_QC_Reports/Subreports/QAQC_Reservoir_Operations_8.jasper"]]></subreportExpression>
+			</p:subreportPart>
+		</part>
+		<part evaluationTime="Now" uuid="ca7cdb06-28aa-45d5-b186-e40f5475f052">
+			<p:subreportPart xmlns:p="http://jasperreports.sourceforge.net/jasperreports/parts" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/parts http://jasperreports.sourceforge.net/xsd/parts.xsd" usingCache="true">
+				<subreportParameter name="p_report_name">
+					<subreportParameterExpression><![CDATA[$V{Module}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="XML_DATA_DOCUMENT">
+					<subreportParameterExpression><![CDATA[$P{XML_DATA_DOCUMENT}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="REPORT_CONNECTION">
+					<subreportParameterExpression><![CDATA[$P{REPORT_CONNECTION}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportExpression><![CDATA["/DWR_QA_QC_Reports/Subreports/QAQC_Reservoir_Operations_9.jasper"]]></subreportExpression>
+			</p:subreportPart>
+		</part>
+		<part evaluationTime="Now" uuid="ca7cdb06-28aa-45d5-b186-e40f5475f052">
+			<p:subreportPart xmlns:p="http://jasperreports.sourceforge.net/jasperreports/parts" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/parts http://jasperreports.sourceforge.net/xsd/parts.xsd" usingCache="true">
+				<subreportParameter name="p_report_name">
+					<subreportParameterExpression><![CDATA[$V{Module}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="XML_DATA_DOCUMENT">
+					<subreportParameterExpression><![CDATA[$P{XML_DATA_DOCUMENT}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="REPORT_CONNECTION">
+					<subreportParameterExpression><![CDATA[$P{REPORT_CONNECTION}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportExpression><![CDATA["/DWR_QA_QC_Reports/Subreports/QAQC_Reservoir_Operations_10.jasper"]]></subreportExpression>
+			</p:subreportPart>
+		</part>
+		<part evaluationTime="Now" uuid="ca7cdb06-28aa-45d5-b186-e40f5475f052">
+			<p:subreportPart xmlns:p="http://jasperreports.sourceforge.net/jasperreports/parts" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/parts http://jasperreports.sourceforge.net/xsd/parts.xsd" usingCache="true">
+				<subreportParameter name="p_report_name">
+					<subreportParameterExpression><![CDATA[$V{Module}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="XML_DATA_DOCUMENT">
+					<subreportParameterExpression><![CDATA[$P{XML_DATA_DOCUMENT}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="REPORT_CONNECTION">
+					<subreportParameterExpression><![CDATA[$P{REPORT_CONNECTION}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportExpression><![CDATA["/DWR_QA_QC_Reports/Subreports/QAQC_Reservoir_Operations_11.jasper"]]></subreportExpression>
+			</p:subreportPart>
+		</part>
+		<part evaluationTime="Now" uuid="ca7cdb06-28aa-45d5-b186-e40f5475f052">
+			<p:subreportPart xmlns:p="http://jasperreports.sourceforge.net/jasperreports/parts" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/parts http://jasperreports.sourceforge.net/xsd/parts.xsd" usingCache="true">
+				<subreportParameter name="p_report_name">
+					<subreportParameterExpression><![CDATA[$V{Module}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="XML_DATA_DOCUMENT">
+					<subreportParameterExpression><![CDATA[$P{XML_DATA_DOCUMENT}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="REPORT_CONNECTION">
+					<subreportParameterExpression><![CDATA[$P{REPORT_CONNECTION}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportExpression><![CDATA["/DWR_QA_QC_Reports/Subreports/QAQC_Reservoir_Operations_12.jasper"]]></subreportExpression>
+			</p:subreportPart>
+		</part>
+		<part evaluationTime="Now" uuid="ca7cdb06-28aa-45d5-b186-e40f5475f052">
+			<p:subreportPart xmlns:p="http://jasperreports.sourceforge.net/jasperreports/parts" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/parts http://jasperreports.sourceforge.net/xsd/parts.xsd" usingCache="true">
+				<subreportParameter name="p_report_name">
+					<subreportParameterExpression><![CDATA[$V{Module}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="XML_DATA_DOCUMENT">
+					<subreportParameterExpression><![CDATA[$P{XML_DATA_DOCUMENT}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="REPORT_CONNECTION">
+					<subreportParameterExpression><![CDATA[$P{REPORT_CONNECTION}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportExpression><![CDATA["/DWR_QA_QC_Reports/Subreports/QAQC_Reservoir_Operations_13.jasper"]]></subreportExpression>
+			</p:subreportPart>
+		</part>
+		<part evaluationTime="Now" uuid="ca7cdb06-28aa-45d5-b186-e40f5475f052">
+			<p:subreportPart xmlns:p="http://jasperreports.sourceforge.net/jasperreports/parts" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/parts http://jasperreports.sourceforge.net/xsd/parts.xsd" usingCache="true">
+				<subreportParameter name="p_report_name">
+					<subreportParameterExpression><![CDATA[$V{Module}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="XML_DATA_DOCUMENT">
+					<subreportParameterExpression><![CDATA[$P{XML_DATA_DOCUMENT}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="REPORT_CONNECTION">
+					<subreportParameterExpression><![CDATA[$P{REPORT_CONNECTION}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportExpression><![CDATA["/DWR_QA_QC_Reports/Subreports/QAQC_Reservoir_Operations_14.jasper"]]></subreportExpression>
+			</p:subreportPart>
+		</part>
+		<part evaluationTime="Now" uuid="ca7cdb06-28aa-45d5-b186-e40f5475f052">
+			<p:subreportPart xmlns:p="http://jasperreports.sourceforge.net/jasperreports/parts" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/parts http://jasperreports.sourceforge.net/xsd/parts.xsd" usingCache="true">
+				<subreportParameter name="p_report_name">
+					<subreportParameterExpression><![CDATA[$V{Module}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="XML_DATA_DOCUMENT">
+					<subreportParameterExpression><![CDATA[$P{XML_DATA_DOCUMENT}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="REPORT_CONNECTION">
+					<subreportParameterExpression><![CDATA[$P{REPORT_CONNECTION}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportExpression><![CDATA["/DWR_QA_QC_Reports/Subreports/QAQC_Reservoir_Operations_15.jasper"]]></subreportExpression>
+			</p:subreportPart>
+		</part>
+		<part evaluationTime="Now" uuid="ca7cdb06-28aa-45d5-b186-e40f5475f052">
+			<p:subreportPart xmlns:p="http://jasperreports.sourceforge.net/jasperreports/parts" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/parts http://jasperreports.sourceforge.net/xsd/parts.xsd" usingCache="true">
+				<subreportParameter name="p_report_name">
+					<subreportParameterExpression><![CDATA[$V{Module}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="XML_DATA_DOCUMENT">
+					<subreportParameterExpression><![CDATA[$P{XML_DATA_DOCUMENT}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="REPORT_CONNECTION">
+					<subreportParameterExpression><![CDATA[$P{REPORT_CONNECTION}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportExpression><![CDATA["/DWR_QA_QC_Reports/Subreports/QAQC_Reservoir_Operations_16.jasper"]]></subreportExpression>
+			</p:subreportPart>
+		</part>
+		<part evaluationTime="Now" uuid="ca7cdb06-28aa-45d5-b186-e40f5475f052">
+			<p:subreportPart xmlns:p="http://jasperreports.sourceforge.net/jasperreports/parts" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/parts http://jasperreports.sourceforge.net/xsd/parts.xsd" usingCache="true">
+				<subreportParameter name="p_report_name">
+					<subreportParameterExpression><![CDATA[$V{Module}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="XML_DATA_DOCUMENT">
+					<subreportParameterExpression><![CDATA[$P{XML_DATA_DOCUMENT}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="REPORT_CONNECTION">
+					<subreportParameterExpression><![CDATA[$P{REPORT_CONNECTION}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportExpression><![CDATA["/DWR_QA_QC_Reports/Subreports/QAQC_Reservoir_Operations_17.jasper"]]></subreportExpression>
+			</p:subreportPart>
+		</part>
+		<part evaluationTime="Now" uuid="ca7cdb06-28aa-45d5-b186-e40f5475f052">
+			<p:subreportPart xmlns:p="http://jasperreports.sourceforge.net/jasperreports/parts" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/parts http://jasperreports.sourceforge.net/xsd/parts.xsd" usingCache="true">
+				<subreportParameter name="p_report_name">
+					<subreportParameterExpression><![CDATA[$V{Module}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="XML_DATA_DOCUMENT">
+					<subreportParameterExpression><![CDATA[$P{XML_DATA_DOCUMENT}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="REPORT_CONNECTION">
+					<subreportParameterExpression><![CDATA[$P{REPORT_CONNECTION}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportExpression><![CDATA["/DWR_QA_QC_Reports/Subreports/QAQC_Reservoir_Operations_18.jasper"]]></subreportExpression>
+			</p:subreportPart>
+		</part>
+		<part evaluationTime="Now" uuid="ca7cdb06-28aa-45d5-b186-e40f5475f052">
+			<p:subreportPart xmlns:p="http://jasperreports.sourceforge.net/jasperreports/parts" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/parts http://jasperreports.sourceforge.net/xsd/parts.xsd" usingCache="true">
+				<subreportParameter name="p_report_name">
+					<subreportParameterExpression><![CDATA[$V{Module}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="XML_DATA_DOCUMENT">
+					<subreportParameterExpression><![CDATA[$P{XML_DATA_DOCUMENT}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="REPORT_CONNECTION">
+					<subreportParameterExpression><![CDATA[$P{REPORT_CONNECTION}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportExpression><![CDATA["/DWR_QA_QC_Reports/Subreports/QAQC_Reservoir_Operations_19.jasper"]]></subreportExpression>
+			</p:subreportPart>
+		</part>
+		<part evaluationTime="Now" uuid="ca7cdb06-28aa-45d5-b186-e40f5475f052">
+			<p:subreportPart xmlns:p="http://jasperreports.sourceforge.net/jasperreports/parts" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/parts http://jasperreports.sourceforge.net/xsd/parts.xsd" usingCache="true">
+				<subreportParameter name="p_report_name">
+					<subreportParameterExpression><![CDATA[$V{Module}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="XML_DATA_DOCUMENT">
+					<subreportParameterExpression><![CDATA[$P{XML_DATA_DOCUMENT}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="REPORT_CONNECTION">
+					<subreportParameterExpression><![CDATA[$P{REPORT_CONNECTION}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportExpression><![CDATA["/DWR_QA_QC_Reports/Subreports/QAQC_Reservoir_Operations_20.jasper"]]></subreportExpression>
+			</p:subreportPart>
+		</part>
+		<part evaluationTime="Now" uuid="ca7cdb06-28aa-45d5-b186-e40f5475f052">
+			<p:subreportPart xmlns:p="http://jasperreports.sourceforge.net/jasperreports/parts" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/parts http://jasperreports.sourceforge.net/xsd/parts.xsd" usingCache="true">
+				<subreportParameter name="p_report_name">
+					<subreportParameterExpression><![CDATA[$V{Module}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="XML_DATA_DOCUMENT">
+					<subreportParameterExpression><![CDATA[$P{XML_DATA_DOCUMENT}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="REPORT_CONNECTION">
+					<subreportParameterExpression><![CDATA[$P{REPORT_CONNECTION}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportExpression><![CDATA["/DWR_QA_QC_Reports/Subreports/QAQC_Reservoir_Operations_21.jasper"]]></subreportExpression>
+			</p:subreportPart>
+		</part>
+		<part evaluationTime="Now" uuid="ca7cdb06-28aa-45d5-b186-e40f5475f052">
+			<p:subreportPart xmlns:p="http://jasperreports.sourceforge.net/jasperreports/parts" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/parts http://jasperreports.sourceforge.net/xsd/parts.xsd" usingCache="true">
+				<subreportParameter name="p_report_name">
+					<subreportParameterExpression><![CDATA[$V{Module}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="XML_DATA_DOCUMENT">
+					<subreportParameterExpression><![CDATA[$P{XML_DATA_DOCUMENT}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="REPORT_CONNECTION">
+					<subreportParameterExpression><![CDATA[$P{REPORT_CONNECTION}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportExpression><![CDATA["/DWR_QA_QC_Reports/Subreports/QAQC_Reservoir_Operations_22.jasper"]]></subreportExpression>
+			</p:subreportPart>
+		</part>
+		<part evaluationTime="Now" uuid="ca7cdb06-28aa-45d5-b186-e40f5475f052">
+			<p:subreportPart xmlns:p="http://jasperreports.sourceforge.net/jasperreports/parts" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/parts http://jasperreports.sourceforge.net/xsd/parts.xsd" usingCache="true">
+				<subreportParameter name="p_report_name">
+					<subreportParameterExpression><![CDATA[$V{Module}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="XML_DATA_DOCUMENT">
+					<subreportParameterExpression><![CDATA[$P{XML_DATA_DOCUMENT}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="REPORT_CONNECTION">
+					<subreportParameterExpression><![CDATA[$P{REPORT_CONNECTION}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportExpression><![CDATA["/DWR_QA_QC_Reports/Subreports/QAQC_Reservoir_Operations_23.jasper"]]></subreportExpression>
+			</p:subreportPart>
+		</part>
+		<part evaluationTime="Now" uuid="ca7cdb06-28aa-45d5-b186-e40f5475f052">
+			<p:subreportPart xmlns:p="http://jasperreports.sourceforge.net/jasperreports/parts" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/parts http://jasperreports.sourceforge.net/xsd/parts.xsd" usingCache="true">
+				<subreportParameter name="p_report_name">
+					<subreportParameterExpression><![CDATA[$V{Module}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="XML_DATA_DOCUMENT">
+					<subreportParameterExpression><![CDATA[$P{XML_DATA_DOCUMENT}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="REPORT_CONNECTION">
+					<subreportParameterExpression><![CDATA[$P{REPORT_CONNECTION}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportExpression><![CDATA["/DWR_QA_QC_Reports/Subreports/QAQC_Upstream_Minimum_Flow_Requirements.jasper"]]></subreportExpression>
+			</p:subreportPart>
+		</part>
+		<part evaluationTime="Now" uuid="ca7cdb06-28aa-45d5-b186-e40f5475f052">
+			<p:subreportPart xmlns:p="http://jasperreports.sourceforge.net/jasperreports/parts" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/parts http://jasperreports.sourceforge.net/xsd/parts.xsd" usingCache="true">
+				<subreportParameter name="p_report_name">
+					<subreportParameterExpression><![CDATA[$V{Module}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="XML_DATA_DOCUMENT">
+					<subreportParameterExpression><![CDATA[$P{XML_DATA_DOCUMENT}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="REPORT_CONNECTION">
+					<subreportParameterExpression><![CDATA[$P{REPORT_CONNECTION}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportExpression><![CDATA["/DWR_QA_QC_Reports/Subreports/QAQC_North_of_Delta_Weir_and_Bypass_Operations_1.jasper"]]></subreportExpression>
+			</p:subreportPart>
+		</part>
+		<part evaluationTime="Now" uuid="ca7cdb06-28aa-45d5-b186-e40f5475f052">
+			<p:subreportPart xmlns:p="http://jasperreports.sourceforge.net/jasperreports/parts" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/parts http://jasperreports.sourceforge.net/xsd/parts.xsd" usingCache="true">
+				<subreportParameter name="p_report_name">
+					<subreportParameterExpression><![CDATA[$V{Module}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="XML_DATA_DOCUMENT">
+					<subreportParameterExpression><![CDATA[$P{XML_DATA_DOCUMENT}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="REPORT_CONNECTION">
+					<subreportParameterExpression><![CDATA[$P{REPORT_CONNECTION}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportExpression><![CDATA["/DWR_QA_QC_Reports/Subreports/QAQC_North_of_Delta_Weir_and_Bypass_Operations_2.jasper"]]></subreportExpression>
+			</p:subreportPart>
+		</part>
+		<part evaluationTime="Now" uuid="ca7cdb06-28aa-45d5-b186-e40f5475f052">
+			<p:subreportPart xmlns:p="http://jasperreports.sourceforge.net/jasperreports/parts" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/parts http://jasperreports.sourceforge.net/xsd/parts.xsd" usingCache="true">
+				<subreportParameter name="p_report_name">
+					<subreportParameterExpression><![CDATA[$V{Module}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="XML_DATA_DOCUMENT">
+					<subreportParameterExpression><![CDATA[$P{XML_DATA_DOCUMENT}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="REPORT_CONNECTION">
+					<subreportParameterExpression><![CDATA[$P{REPORT_CONNECTION}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportExpression><![CDATA["/DWR_QA_QC_Reports/Subreports/QAQC_North_of_Delta_Weir_and_Bypass_Operations_3.jasper"]]></subreportExpression>
+			</p:subreportPart>
+		</part>
+		<part evaluationTime="Now" uuid="ca7cdb06-28aa-45d5-b186-e40f5475f052">
+			<p:subreportPart xmlns:p="http://jasperreports.sourceforge.net/jasperreports/parts" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/parts http://jasperreports.sourceforge.net/xsd/parts.xsd" usingCache="true">
+				<subreportParameter name="p_report_name">
+					<subreportParameterExpression><![CDATA[$V{Module}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="XML_DATA_DOCUMENT">
+					<subreportParameterExpression><![CDATA[$P{XML_DATA_DOCUMENT}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="REPORT_CONNECTION">
+					<subreportParameterExpression><![CDATA[$P{REPORT_CONNECTION}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportExpression><![CDATA["/DWR_QA_QC_Reports/Subreports/QAQC_North_of_Delta_Groundwater_Pumping_1.jasper"]]></subreportExpression>
+			</p:subreportPart>
+		</part>
+		<part evaluationTime="Now" uuid="ca7cdb06-28aa-45d5-b186-e40f5475f052">
+			<p:subreportPart xmlns:p="http://jasperreports.sourceforge.net/jasperreports/parts" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/parts http://jasperreports.sourceforge.net/xsd/parts.xsd" usingCache="true">
+				<subreportParameter name="p_report_name">
+					<subreportParameterExpression><![CDATA[$V{Module}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="XML_DATA_DOCUMENT">
+					<subreportParameterExpression><![CDATA[$P{XML_DATA_DOCUMENT}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="REPORT_CONNECTION">
+					<subreportParameterExpression><![CDATA[$P{REPORT_CONNECTION}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportExpression><![CDATA["/DWR_QA_QC_Reports/Subreports/QAQC_North_of_Delta_Groundwater_Pumping_2.jasper"]]></subreportExpression>
+			</p:subreportPart>
+		</part>
+		<part evaluationTime="Now" uuid="ca7cdb06-28aa-45d5-b186-e40f5475f052">
+			<p:subreportPart xmlns:p="http://jasperreports.sourceforge.net/jasperreports/parts" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/parts http://jasperreports.sourceforge.net/xsd/parts.xsd" usingCache="true">
+				<subreportParameter name="p_report_name">
+					<subreportParameterExpression><![CDATA[$V{Module}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="XML_DATA_DOCUMENT">
+					<subreportParameterExpression><![CDATA[$P{XML_DATA_DOCUMENT}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="REPORT_CONNECTION">
+					<subreportParameterExpression><![CDATA[$P{REPORT_CONNECTION}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportExpression><![CDATA["/DWR_QA_QC_Reports/Subreports/QAQC_Delta_Operations_1.jasper"]]></subreportExpression>
+			</p:subreportPart>
+		</part>
+		<part evaluationTime="Now" uuid="ca7cdb06-28aa-45d5-b186-e40f5475f052">
+			<p:subreportPart xmlns:p="http://jasperreports.sourceforge.net/jasperreports/parts" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/parts http://jasperreports.sourceforge.net/xsd/parts.xsd" usingCache="true">
+				<subreportParameter name="p_report_name">
+					<subreportParameterExpression><![CDATA[$V{Module}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="XML_DATA_DOCUMENT">
+					<subreportParameterExpression><![CDATA[$P{XML_DATA_DOCUMENT}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="REPORT_CONNECTION">
+					<subreportParameterExpression><![CDATA[$P{REPORT_CONNECTION}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportExpression><![CDATA["/DWR_QA_QC_Reports/Subreports/QAQC_Delta_Operations_2.jasper"]]></subreportExpression>
+			</p:subreportPart>
+		</part>
+		<part evaluationTime="Now" uuid="ca7cdb06-28aa-45d5-b186-e40f5475f052">
+			<p:subreportPart xmlns:p="http://jasperreports.sourceforge.net/jasperreports/parts" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/parts http://jasperreports.sourceforge.net/xsd/parts.xsd" usingCache="true">
+				<subreportParameter name="p_report_name">
+					<subreportParameterExpression><![CDATA[$V{Module}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="XML_DATA_DOCUMENT">
+					<subreportParameterExpression><![CDATA[$P{XML_DATA_DOCUMENT}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="REPORT_CONNECTION">
+					<subreportParameterExpression><![CDATA[$P{REPORT_CONNECTION}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportExpression><![CDATA["/DWR_QA_QC_Reports/Subreports/QAQC_Delta_Operations_3.jasper"]]></subreportExpression>
+			</p:subreportPart>
+		</part>
+		<part evaluationTime="Now" uuid="ca7cdb06-28aa-45d5-b186-e40f5475f052">
+			<p:subreportPart xmlns:p="http://jasperreports.sourceforge.net/jasperreports/parts" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/parts http://jasperreports.sourceforge.net/xsd/parts.xsd" usingCache="true">
+				<subreportParameter name="p_report_name">
+					<subreportParameterExpression><![CDATA[$V{Module}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="XML_DATA_DOCUMENT">
+					<subreportParameterExpression><![CDATA[$P{XML_DATA_DOCUMENT}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="REPORT_CONNECTION">
+					<subreportParameterExpression><![CDATA[$P{REPORT_CONNECTION}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportExpression><![CDATA["/DWR_QA_QC_Reports/Subreports/QAQC_Coordinated_Operations_Agreement.jasper"]]></subreportExpression>
+			</p:subreportPart>
+		</part>
+		<part evaluationTime="Now" uuid="ca7cdb06-28aa-45d5-b186-e40f5475f052">
+			<p:subreportPart xmlns:p="http://jasperreports.sourceforge.net/jasperreports/parts" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/parts http://jasperreports.sourceforge.net/xsd/parts.xsd" usingCache="true">
+				<subreportParameter name="p_report_name">
+					<subreportParameterExpression><![CDATA[$V{Module}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="XML_DATA_DOCUMENT">
+					<subreportParameterExpression><![CDATA[$P{XML_DATA_DOCUMENT}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="REPORT_CONNECTION">
+					<subreportParameterExpression><![CDATA[$P{REPORT_CONNECTION}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportExpression><![CDATA["/DWR_QA_QC_Reports/Subreports/QAQC_Allocations_and_Deliveries.jasper"]]></subreportExpression>
+			</p:subreportPart>
+		</part>
+		<part evaluationTime="Now" uuid="ca7cdb06-28aa-45d5-b186-e40f5475f052">
+			<p:subreportPart xmlns:p="http://jasperreports.sourceforge.net/jasperreports/parts" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/parts http://jasperreports.sourceforge.net/xsd/parts.xsd" usingCache="true">
+				<subreportParameter name="p_report_name">
+					<subreportParameterExpression><![CDATA[$V{Module}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="XML_DATA_DOCUMENT">
+					<subreportParameterExpression><![CDATA[$P{XML_DATA_DOCUMENT}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="REPORT_CONNECTION">
+					<subreportParameterExpression><![CDATA[$P{REPORT_CONNECTION}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportExpression><![CDATA["/DWR_QA_QC_Reports/Subreports/QAQC_Mass_Balance.jasper"]]></subreportExpression>
 			</p:subreportPart>
 		</part>
 		<part uuid="9d62a426-5fd4-4991-816d-795825a2bf7b">
@@ -118,8 +575,7 @@
 				<subreportExpression><![CDATA["/DWR_QA_QC_Reports/Subreports/QAQC_AssumptionChanges.jasper"]]></subreportExpression>
 			</p:subreportPart>
 		</part>
-		<part uuid="5d55b28a-b96c-4d32-b457-5b6b41c16607">
-			<partNameExpression><![CDATA["QAQC_CodeChanges"]]></partNameExpression>
+		<part uuid="62b3bff5-0dcd-4706-b187-e9f9899d3487">
 			<p:subreportPart xmlns:p="http://jasperreports.sourceforge.net/jasperreports/parts" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/parts http://jasperreports.sourceforge.net/xsd/parts.xsd">
 				<subreportParameter name="REPORT_CONNECTION">
 					<subreportParameterExpression><![CDATA[$P{REPORT_CONNECTION}]]></subreportParameterExpression>

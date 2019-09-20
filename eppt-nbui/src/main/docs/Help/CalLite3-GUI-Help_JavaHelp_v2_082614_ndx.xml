@@ -1,4 +1,4 @@
-<?xml version='1.0' encoding='UTF-8' ?>
+<?xml version="1.0" encoding="utf-8" ?>
 <!--
   ~ Enhanced Post Processing Tool (EPPT) Copyright (c) 2019.
   ~
@@ -13,21 +13,48 @@
 
 <!DOCTYPE index PUBLIC "-//Sun Microsystems Inc.//DTD JavaHelp Index Version 2.0//EN" "http://java.sun.com/products/javahelp/index_2_0.dtd">
 <index version="2.0">
-	<indexitem text="Accretion/depletion" target="Run Settings"/>
-	<indexitem text="Map Display" target="Web Map (Beta)"/>
-	<indexitem text="Run Settings" target="Run Settings"/>
-	<indexitem text="ANN X2" target="Hydroclimate"/>
-	<indexitem text="Article 21" target="Demands"/>
-	<indexitem text="Article 56" target="Demands"/>
-	<indexitem text="Artificial Neural Network" target="Hydroclimate"/>
-	<indexitem text="Biological Opinions" target="Other regulations"/>
-	<indexitem text="BO" target="D1641/D1485 Regulations"/>
-	<indexitem text="BO RPA" target="D1641/D1485 Regulations"/>
-	<indexitem text="California Aqueduct" target="Operations"/>
-	<indexitem text="CalLite Google Map" target="Web Map (Beta)"/>
-	<indexitem text="CalLite GUI:1. Introduction" target="Introduction"/>
-	<indexitem text="CalLite Results window" target="Tutorial"/>
-	<indexitem text="CalLite Scenario" target="Run Settings"/>
+	<indexitem text="Alias" target="Adding Scenarios"/>
+	<indexitem text="Base Results" target="Viewing Results"/>
+	<indexitem text="Comparison Results" target="Viewing Results"/>
+	<indexitem text="Configuration" target="Adding Scenarios"/>
+	<indexitem text="Corroboration" target="Data Analysis"/>
+	<indexitem text="Custom Results" target="Custom Results"/>
+	<indexitem text="Cycles" target="Adding Scenarios"/>
+	<indexitem text="Data Analysis" target="Data Analysis"/>
+	<indexitem text="Difference Results" target="Viewing Results"/>
+	<indexitem text="DTS" target="Custom Results"/>
+	<indexitem text="Exceedance" target="Viewing Results"/>
+	<indexitem text="Excel" target="Viewing Results"/>
+	<indexitem text="File" target="Main Menu Options"/>
+	<indexitem text="Help" target="Main Menu Options"/>
+	<indexitem text="INP" target="Data Analysis"/>
+	<indexitem text="Installation" target="Introduction"/>
+	<indexitem text="Introduction" target="Introduction"/>
+	<indexitem text="Main Menu" target="Main Menu Options"/>
+	<indexitem text="Monthly Table" target="Viewing Results"/>
+	<indexitem text="Navigate" target="Main Menu Options"/>
+	<indexitem text="PDF" target="Data Analysis"/>
+	<indexitem text="Period" target="Viewing Results"/>
+	<indexitem text="Plots" target="Viewing Results"/>
+	<indexitem text="Project" target="Tutorial"/>
+	<indexitem text="QA/QC Report" target="Generating the QA/QC Report"/>
+	<indexitem text="Quick Results" target="Quick Results"/>
+	<indexitem text="Sacramento Index" target="Quick Results"/>
+	<indexitem text="San Joaquin Index" target="Quick Results"/>
+	<indexitem text="Scenario" target="Adding Scenarios"/>
+	<indexitem text="Shasta Index" target="Quick Results"/>
+	<indexitem text="Statistics" target="Viewing Results"/>
+	<indexitem text="Summary Table" target="Viewing Results"/>
+	<indexitem text="Tabulation" target="Viewing Results"/>
+	<indexitem text="Tools" target="Main Menu Options"/>
+	<indexitem text="Tutorial" target="Tutorial"/>
+	<indexitem text="View" target="Main Menu Options"/>
+	<indexitem text="Water Year" target="Quick Results"/>
+	<indexitem text="Windows" target="EPPT Windows"/>
+	<indexitem text="WRESL Script" target="Running the WRESL Script"/>
+<!--
+	<indexitem text="Plots" target="Run Settings"/>
+
 	<indexitem text="CALSIM:1. Introduction" target="Introduction"/>
 	<indexitem text="CALSIM:4.4. External PDF" target="External PDF"/>
 	<indexitem text="CalSim II:1. Introduction" target="Introduction"/>
@@ -79,4 +106,5 @@
 	<indexitem text="WRIMS" target="Introduction"/>
 	<indexitem text="WRIMS II" target="Introduction"/>
 	<indexitem text="X2" target="Hydroclimate"/>
+  -->
 </index>

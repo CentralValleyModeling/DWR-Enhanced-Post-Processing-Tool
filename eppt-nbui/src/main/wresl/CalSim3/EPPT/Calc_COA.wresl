@@ -1,0 +1,316 @@
+/************************************
+
+Calc_COA.wresl
+
+Yuxiang, DWR, BDO
+2019/03/04
+
+This file post process data for COA Share percentage 
+
+!Resolved 3/9/2019 - SOD export ratio between CVP/SWP D419_SWP, D419_CVP+D418_CVP (sharing cap in different regulation - COA 2018)
+!Resolved 3/9/2019 - ratio only apply on balanced condition 
+!Resolved 3/9/2019 - under Excess - IBU vs UWFE times in control (count # of times: Excess: IBU/UWFE Balanced: IBU/UWFE)
+!Resolved 3/9/2019 - individual project for the above point
+!Resolved 3/27/2019 - not outputing var
+**************************************/
+
+! Check if delta is in IBU or UWFE (0 = IBU, 1 = UWFE)
+define IBU_UWFE_DTS {alias int_IBU_UWFE kind 'DTS-STATUS' units 'NONE'} !Delta condition 
+
+! Check if Delta is in Excess or Balanced Condition base on DO for each Time Step (0 = Excess 1 = Balanced)
+define Delta_Cndtn {
+	case Balanced {
+	condition abs(C407-C407_ANN) < abs_threshold !.or. INFLW - TOTAL_EXP/EXPRATIO < abs_threshold .or. C407 < abs_threshold 
+	value 1}
+	case Excess {
+	condition always 
+	value 0}
+}
+!define Delta_Cndtn_DTS {alias Delta_Cndtn kind 'DTS-STATUS' units 'NONE'} ! Outputs for Delta condition 0 = Excess, 1 = Balanced
+!Calculate actual COA sharing percentage for each time step
+! 1. Total Storage Withdraw/Increase of CVP storage
+define SW_CVP {value WHSSW + max(0.0, FOLDS) + max(0.0, SHADS)} !Storage Withdrawal for CVP storage 
+define SI_CVP {value WHSSI + abs(min(0.0, FOLDS)) + abs(min(0.0, SHADS))} !Storage increase for CVP storage 
+define SW_CVP_DTS {alias SW_CVP kind 'DTS-Storage-withdraw' units 'CFS'} !outputs for 1. Storage Withdrawal for CVP storage 
+define SI_CVP_DTS {alias SI_CVP kind 'DTS-Storage-Increase' units 'CFS'} !outputs for 1. Storage increase for CVP storage 
+! 2. Total Storage Withdraw/Increase of SWP storage 
+define SW_SWP {value max(0.0, SWPDS)} !Storage Withdrawal for SWP storage 
+define SI_SWP {value abs(min(0.0, SWPDS))} !Storage increase for SWP storage 
+define SW_SWP_DTS {alias SW_SWP kind 'DTS-Storage-withdraw' units 'CFS'} !outputs for 2. Storage Withdrawal for SWP storage 
+define SI_SWP_DTS {alias SI_SWP kind 'DTS-Storage-Increase' units 'CFS'} !outputs for 2. Storage increase for SWP storage 
+! 3. Total Storage Withdraw/Increase 
+define SW_TOT {value max(0.0, SW_CVP + SW_SWP - SI_CVP - SI_SWP)}
+define SI_TOT {value abs(min(0.0, SW_CVP + SW_SWP - SI_CVP - SI_SWP))}
+! 4. Total CVP Export (defined in COA)
+define TOT_EXP_CVP {value D418_EXP1 + D419_CVPDED_EXP1 + D408_CVP + D408_DS_EXP1 + D408_P_STR_CVP + D408_P_DEL_CVP + D408_P_WHL_SF_e1 /*+ D168B_EXP1*/} /*+ D400_CVP*/
+! 5. Total SWP Export
+define TOT_EXP_SWP {value D419_EXP1 + (D403B + D403C)*2/3 + D408_P_WHL_SB_E1 + D408_P_DEL_SWP + D408_P_STR_SWP} /*+ D400_SWP*/
+! 6. Storage withdraw for export/IBU (Total/CVP/SWP)
+define SW_Exp_TOT {value min(SW_TOT, TOTAL_EXP)}
+define SW_IBU_TOT {value max(0.0, SW_TOT - TOTAL_EXP)}
+define SW_Exp_CVP {value min(SW_CVP, TOT_EXP_CVP)}
+define SW_IBU_CVP {value max(0.0, SW_CVP - TOT_EXP_CVP)}
+define SW_Exp_SWP {value min(SW_SWP, TOT_EXP_SWP)}
+define SW_IBU_SWP {value max(0.0, SW_SWP - TOT_EXP_SWP)}
+! 7. Check IBU/UWFE status for individual projects 0 = IBU, 1 = UWFE
+! 7.a. IBU/UWFE status when Delta under Balanced condition 
+define CVP_IU_Bal { !underreview - AA noticed the definition of IBU and UWFW is wrong here (resolved 6/14/19 - SF)
+	case IBU {
+	condition Delta_Cndtn == 1 .and. TOT_EXP_CVP - SW_CVP < abs_threshold
+	value 0 
+	}
+	case UWFE {
+	condition always
+	value 1
+	}
+}
+define SWP_IU_Bal { !underreview - AA noticed the definition of IBU and UWFW is wrong here (resolved 6/14/19 - SF)
+	case IBU {
+	condition Delta_Cndtn == 1 .and. TOT_EXP_SWP - SW_SWP < abs_threshold
+	value 0
+	}
+	case UWFE {
+	condition always
+	value 1
+	}
+}
+! 7.b. IBU/UWFE status when Delta under Surplus condition
+define CVP_IU_Surp { !underreview - AA noticed the definition of IBU and UWFW is wrong here (resolved 6/14/19 - SF)
+	case IBU {
+	condition Delta_Cndtn == 0 .and. TOT_EXP_CVP - SW_CVP < abs_threshold
+	value 0
+	}
+	case UWFE {
+	condition always
+	value 1
+	}
+}
+define SWP_IU_Surp { !underreview - AA noticed the definition of IBU and UWFW is wrong here (resolved 6/14/19 - SF)
+	case IBU {
+	condition Delta_Cndtn == 0 .and. TOT_EXP_SWP - SW_SWP < abs_threshold
+	value 0
+	}
+	case UWFE {
+	condition always
+	value 1
+	}
+}
+! 7.c. Check during which timestep CVP/SWP Operation (IBU/UWFE) do not match delta condition (IBU/UWFE) 0 = match, 1 = not match, Neg_Flt_Max = not applicable
+define CVP_IBU_CHECK {
+	case match {
+	condition Delta_Cndtn == 1 .and. CVP_IU_Bal == int_IBU_UWFE
+	value 0
+	}
+	case notMatch {
+	condition Delta_Cndtn == 1 .and. abs(CVP_IU_Bal - int_IBU_UWFE) > none_zero_threshold
+	value 1
+	}
+	case surplus {
+	condition always
+	value Neg_Flt_Max
+	}
+}
+define SWP_IBU_CHECK {
+	case match {
+	condition Delta_Cndtn == 1 .and. SWP_IU_Bal == int_IBU_UWFE
+	value 0
+	}
+	case notMatch {
+	condition Delta_Cndtn == 1 .and. abs(SWP_IU_Bal - int_IBU_UWFE) > none_zero_threshold
+	value 1
+	}
+	case surplus {
+	condition always
+	value Neg_Flt_Max
+	}
+}
+! 8. IBU or UWFE amount  (Total/CVP/SWP)
+define IBU_TOT {
+	case balanced {
+	condition Delta_Cndtn == 1
+	value max(0.0, SW_TOT - TOTAL_EXP)}
+	case surplus {
+	condition always
+	value Neg_Flt_Max}
+}	
+define IBU_CVP {
+	case balanced {
+	condition Delta_Cndtn == 1
+	value max(0.0, SW_CVP - TOT_EXP_CVP)}
+	case surplus {
+	condition always
+	value Neg_Flt_Max}
+}	
+define IBU_SWP {
+	case balanced {
+	condition Delta_Cndtn == 1
+	value max(0.0, SW_SWP - TOT_EXP_SWP)}
+	case surplus {
+	condition always
+	value Neg_Flt_Max}
+}	
+define UWFE_TOT {
+	case balanced {
+	condition Delta_Cndtn == 1
+	value max(0.0, TOT_EXP_CVP - SW_CVP)}
+	case surplus {
+	condition always
+	value Neg_Flt_Max}
+}
+define UWFE_CVP {
+	case balanced {
+	condition Delta_Cndtn == 1
+	value max(0.0, TOT_EXP_CVP - SW_CVP)}
+	case surplus {
+	condition always
+	value Neg_Flt_Max}
+}
+define UWFE_SWP {
+	case balanced {
+	condition Delta_Cndtn == 1
+	value max(0.0, TOT_EXP_SWP - SW_SWP)}
+	case surplus {
+	condition always
+	value Neg_Flt_Max}
+}
+
+! 9. Actual COA Sharing percentage
+! 9.a. IBU sharing ratio 
+define IBU_Ratio_CVP {
+	case balanced {
+	condition Delta_Cndtn == 1 .and. IBU_CVP+IBU_SWP > none_zero_threshold
+	value IBU_CVP/(IBU_CVP+IBU_SWP)}
+	case surplus {
+	condition always
+	value Neg_Flt_Max}
+}
+define IBU_Ratio_SWP {
+	case balanced {
+	condition Delta_Cndtn == 1 .and. IBU_CVP+IBU_SWP > none_zero_threshold
+	value 1-IBU_Ratio_CVP}
+	case surplus {
+	condition always
+	value Neg_Flt_Max}
+}
+! 9.b. UWFE sharing ratio
+define UWFE_Ratio_CVP {
+	case balanced {
+	condition Delta_Cndtn == 1 .and. UWFE_CVP+UWFE_SWP > none_zero_threshold
+	value UWFE_CVP/(UWFE_CVP+UWFE_SWP)}
+	case surplus {
+	condition always
+	value Neg_Flt_Max}
+}
+define UWFE_Ratio_SWP {
+	case balanced {
+	condition Delta_Cndtn == 1 .and. UWFE_CVP+UWFE_SWP > none_zero_threshold
+	value 1-UWFE_Ratio_CVP}
+	case surplus {
+	condition always
+	value Neg_Flt_Max}
+}
+! 9.c. CVP and SWP Actual COA Sharing Ratio
+define Ratio_CVP {value max(IBU_Ratio_CVP,UWFE_Ratio_CVP)}
+define Ratio_SWP {value max(IBU_Ratio_SWP,UWFE_Ratio_SWP)}
+
+! 10.0 Agreed COA Sharing Percentage 
+! Agreed COA sharing ratio is captured in CVP_Share and SWP_Share 
+
+! 10. Difference between Actual and Agreed Sharing Percentage 
+! 10.a. Absolute differentce between Actual and Agreed sharing ratio
+define CVP_COA_diff {
+	case balanced {
+	condition Delta_Cndtn == 1
+	value Ratio_CVP - CVP_Share}
+	case surplus {
+	condition always
+	value Neg_Flt_Max}
+}
+define SWP_COA_diff { 
+	case balanced {
+	condition Delta_Cndtn == 1
+	value Ratio_SWP - SWP_Share}
+	case surplus {
+	condition always
+	value Neg_Flt_Max}
+}
+! 10.b. Percentage difference between Actual and Agreed sharing ratio
+!define CVP_COA_P_diff {value CVP_COA_diff/CVP_Share}
+!define SWP_COA_P_diff {value SWP_COA_diff/CVP_Share}
+
+
+
+
+
+
+
+! Other sharing ratio
+! Export capacity usage sharing ratio ratio between CVP and SWP
+define CVPExpCapRatio {
+	case zero_exp {
+	condition TOTAL_EXP == 0
+	value 0}
+	case otherwise {
+	condition always
+	value (D418_CVP + D419_CVP) / TOTAL_EXP}
+}
+
+define SWPExpCapRatio {
+	case zero_exp {
+	condition TOTAL_EXP == 0
+	value 0}
+	case otherwise {
+	condition always
+	value D419_SWP / TOTAL_EXP}
+}
+
+
+! Banks Capacity sharing between SWP and CVP
+define SWPBanksSharing {
+     case zero_Bank {
+	condition D419 == 0. 
+	value 0.  }
+     case otherwise {
+	condition always 
+	value D419_SWP/D419}
+	}
+define CVPBanksSharing {
+     case zero_Jones {
+	condition D419 == 0. 
+	value 0.  }
+     case otherwise {
+	condition always 
+	value D419_CVP/D419}
+	}
+
+!Outputs
+define SW_TOT_DTS {alias SW_TOT kind 'DTS-Storage-withdraw' units 'CFS'} !outputs for 3. Storage Withdrawal for total storage 
+define SI_TOT_DTS {alias SI_TOT kind 'DTS-Storage-Increase' units 'CFS'} !outputs for 3. Storage increase for total storage 
+define TOT_EXP_CVP_DTS {alias TOT_EXP_CVP kind 'DTS-FLOW-Delivery' units 'CFS'} !outputs for 4. total CVP export
+define TOT_EXP_SWP_DTS {alias TOT_EXP_SWP kind 'DTS-FLOW-Delivery' units 'CFS'} !outputs for 5. total SWP export
+define SW_Exp_TOT_DTS {alias SW_Exp_TOT kind 'DTS-Storage-withdraw' units 'CFS'}! outputs for 6. Storage withdraw for export/IBU (Total/CVP/SWP)
+define SW_IBU_TOT_DTS {alias SW_IBU_TOT kind 'DTS-Storage-withdraw' units 'CFS'}
+define SW_Exp_CVP_DTS {alias SW_Exp_CVP kind 'DTS-Storage-withdraw' units 'CFS'}
+define SW_IBU_CVP_DTS {alias SW_IBU_CVP kind 'DTS-Storage-withdraw' units 'CFS'}
+define SW_Exp_SWP_DTS {alias SW_Exp_SWP kind 'DTS-Storage-withdraw' units 'CFS'}
+define SW_IBU_SWP_DTS {alias SW_IBU_SWP kind 'DTS-Storage-withdraw' units 'CFS'}
+define CVP_IU_Bal_DTS {alias CVP_IU_Bal kind 'DTS-STATUS' units 'NONE'} !Outputs for 7.a CVP IBU/UWFE status in balanced condition 0 = IBU, 1 = UWFE
+define SWP_IU_Bal_DTS {alias SWP_IU_Bal kind 'DTS-STATUS' units 'NONE'} !Outputs for 7.a SWP IBU/UWFE status in balanced condition 0 = IBU, 1 = UWFE
+define CVP_IU_Surp_DTS {alias CVP_IU_Surp kind 'DTS-STATUS' units 'NONE'} !Outputs for 7.b CVP IBU/UWFE status in surplus condition  0 = IBU, 1 = UWFE
+define SWP_IU_Surp_DTS {alias SWP_IU_Surp kind 'DTS-STATUS' units 'NONE'} !Outputs for 7.b SWP IBU/UWFE status in surplus condition  0 = IBU, 1 = UWFE
+define CVP_IBU_Check_DTS {alias CVP_IBU_Check kind 'DTS-STATUS' units 'NONE'} !Outputs for 7.c CVP operation vs delta IBU/UWFE condition  0 = match, 1 = not match, Neg_Flt_Max = not applicable
+define SWP_IBU_Check_DTS {alias SWP_IBU_Check kind 'DTS-STATUS' units 'NONE'} !Outputs for 7.c SWP operation vs delta IBU/UWFE condition  0 = match, 1 = not match, Neg_Flt_Max = not applicable
+define IBU_TOT_DTS {alias IBU_TOT kind 'DTS-FLOW-IBU' units 'CFS'} !Outputs for 8 total IBU Q
+define IBU_CVP_DTS {alias IBU_CVP kind 'DTS-FLOW-IBU' units 'CFS'} !Outputs for 8 CVP IBU Q
+define IBU_SWP_DTS {alias IBU_SWP kind 'DTS-FLOW-IBU' units 'CFS'} !Outputs for 8 SWP IBU Q
+define UWFE_TOT_DTS {alias UWFE_TOT kind 'DTS-FLOW-UWFE' units 'CFS'} !Outputs for 8 total UWFE Q
+define UWFE_CVP_DTS {alias UWFE_CVP kind 'DTS-FLOW-UWFE' units 'CFS'} !Outputs for 8 CVP UWFE Q
+define UWFE_SWP_DTS {alias UWFE_SWP kind 'DTS-FLOW-UWFE' units 'CFS'} !Outputs for 8 SWP UWFE Q
+define Ratio_CVP_DTS {alias Ratio_CVP kind 'DTS-Ratio' units 'NONE'} !output for 9 actual COA sharing ratio for CVP
+define Ratio_SWP_DTS {alias Ratio_SWP kind 'DTS-Ratio' units 'NONE'} !output for 9 actual COA sharing ratio for SWP
+define CVP_COA_diff_DTS {alias CVP_COA_diff kind 'DTS-TEMP' units 'NONE'} !outputs from 10 numberic different between actual and agreed COA Share for CVP
+define SWP_COA_diff_DTS {alias SWP_COA_diff kind 'DTS-TEMP' units 'NONE'} !outputs from 10 numberic different between actual and agreed COA Share for SWP
+!define CVP_COA_P_diff_DTS {alias CVP_COA_P_diff kind 'DTS-TEMP' units 'NONE'} !outputs from 10 percentage different between actual and agreed COA Share for CVP
+!define SWP_COA_P_diff_DTS {alias SWP_COA_P_diff kind 'DTS-TEMP' units 'NONE'} !outputs from 10 percentage different between actual and agreed COA Share for SWP
+define Ratio_CVPExp_DTS {alias CVPExpCapRatio kind 'DTS-Ratio' units 'NONE'}
+define Ratio_SWPExp_DTS {alias SWPExpCapRatio kind 'DTS-Ratio' units 'NONE'}

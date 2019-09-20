@@ -52,6 +52,6 @@ public class PlotTopComponent extends EpptTopComponent
 	@Override
 	public String getJavaHelpId()
 	{
-		return "Viewing Results";
+		return "4.2_ViewingResults.htm";
 	}
 }

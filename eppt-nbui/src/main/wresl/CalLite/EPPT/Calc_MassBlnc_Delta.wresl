@@ -1,0 +1,56 @@
+/************************************
+
+Calc_NOD_Mass.wresl
+
+Yuxiang, DWR, BDO
+2019/03/25
+
+This file post process data for Delta Mass Balances
+
+Delta Mass Balance:
+
+Delta Inflow = Delta Outflow + Export
+
+**************************************/
+
+/************************************** Delta Inflow **************************************/
+define Delta_inflow {value 
+		 C400 !Sacramento R @ Hood
+		!+D400 !Isolated facility 
+		+C157 !Yolo Bypass
+		+AD_Mokelmne !Mokelumne R
+		+C644 !San Joaquin R d/s Calaveras
+		+I406 !Marsh Creek Inflow
+		+AD_Calaveras !Calaveras River
+	}
+
+/************************************** Delta Outflow **************************************/		
+define Delta_outflow {value C406}
+
+/************************************** Export **************************************/	
+define Delta_export {value
+		D419_SWP	!Banks SWP
+		+D419_CVP	!Banks CVP
+		!+D419_WTS	!Banks WTS
+		!D419
+		+D418	!Jones CVP
+		+C402B	!Diversion NBAY
+		+D408 +D408_RS	!CCWD
+		+NET_DICU
+		+D406B	!Diversion Antioch
+}
+
+define Delta_MB {value Delta_inflow -Delta_outflow -Delta_export}
+define Delta_MB_DTS {alias Delta_MB kind 'DTS-1' units 'CFS'}
+
+define Delta_MB_Check {
+	case balanced {
+	condition abs(Delta_MB) < abs_threshold
+	value 0
+	}
+	case notBalance {
+	condition always
+	value 1
+	}
+}
+define Delta_MB_STATUS_DTS {alias Delta_MB_Check kind 'DTS-STATUS' units 'NONE'}

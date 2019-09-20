@@ -12,11 +12,13 @@
 
 package gov.ca.water.calgui.busservice;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
 
 import gov.ca.water.calgui.bo.GUILinksAllModelsBO;
 import gov.ca.water.calgui.project.EpptScenarioRun;
+import org.jfree.data.time.Month;
 
 import hec.io.TimeSeriesContainer;
 
@@ -35,11 +37,8 @@ public interface IDSSGrabber1Svc
 	 * Sets the date range. Results are trimmed to the date range when read in
 	 * GetOneSeries method.
 	 *
-	 * @param dateRange string describing the date range in format mmmyyyy-mmmyyyy.
-	 *                  For example, the string "Apr1961-Mar1962" sets the date range
-	 *                  to run from April 1961 to March 1962.
 	 */
-	void setDateRange(String dateRange);
+	void setDateRange(LocalDate start, LocalDate end);
 
 	/**
 	 * Gets name part of base scenario file in baseName.

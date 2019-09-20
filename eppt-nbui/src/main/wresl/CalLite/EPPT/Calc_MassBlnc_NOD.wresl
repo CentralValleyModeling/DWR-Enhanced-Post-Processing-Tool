@@ -1,0 +1,76 @@
+/************************************
+
+Calc_NOD_Mass.wresl
+
+Yuxiang, DWR, BDO
+2019/03/25
+
+This file post process data for NOD Mass Balances
+
+In this NOD mass balance calculation, NOD is divided into 3 regions:
+NOD_R1. Sac Valley Colusa Basin
+NOD_R2. FRSA
+NOD_R3. America river 
+
+Mass Balance: 	Reervoir releases 
+				+ Local Inflow 
+				+ Net GW pumping 
+				- Consumptive use (delivery) 
+				- System Loss 
+				- System Outflow 
+				+ Accretion-Depletion Term
+				= 0
+
+**************************************/
+
+
+/************************************* Sacramento River******************************************/
+/*Upstream of Red Bluff*/
+	define NOD_RedBlf {value
+		 I100+C1-C100
+		 +D3+C3-D100
+		 +C4+AD_KSWCK+AD_REDBLF-D109
+	}
+	
+/*Upstream of Wilkins SLough*/
+	define NOD_Wilkins {value
+		 NOD_RedBlf+AD_WILKNS-D134
+	}	
+	
+/*Yuba and Feather Rivers*/
+	define NOD_YubFea {value
+		 C6+AD_THERM-D_THERM 
+		 +I_YUBA-D_DAGUER+AD_YUBFEA-D_YUBFEA
+	}
+
+/*American river*/ 
+	define NOD_HSt {value
+		 C8+AD_NIMBUS-D9+AD_HST-D302
+	}
+
+/*AT Hoods*/ 
+	define NOD_Hood {value
+		 NOD_Wilkins+NOD_YubFea+NOD_HSt
+		 +AD_SACFEA-D160+AD_SACAME-D166A-D166B+I400-C400-D400
+	}	
+	
+
+define NOD_MB {value NOD_Hood}	
+define NOD_MB_DTS {alias NOD_MB kind 'DTS-1' units 'CFS'}
+
+define NOD_MB_Check {
+	case balanced {
+	condition abs(NOD_MB) < abs_threshold
+	value 0
+	}
+	case notBalanced{
+	condition always
+	value 0 ! underreview - mass balance under review for miss arcs
+	!value 1
+	}
+}
+
+define NOD_MB_STATUS_DTS {alias NOD_MB_Check kind 'DTS-Status' units 'NONE'}
+!define Delta_MB_STATUS_DTS {alias NOD_MB_Check kind 'DTS-Status' units 'NONE'} !underreview
+define SOD_MB_STATUS_DTS {alias NOD_MB_Check kind 'DTS-Status' units 'NONE'} !underreview 
+

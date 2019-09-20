@@ -18,11 +18,13 @@ import java.util.List;
 import java.util.logging.Level;
 
 import com.google.common.flogger.FluentLogger;
-import gov.ca.water.reportengine.detailedissues.DetailedIssue;
+import gov.ca.water.calgui.bo.DetailedIssue;
+import gov.ca.water.calgui.busservice.impl.DetailedIssuesReader;
 import gov.ca.water.reportengine.executivereport.Module;
 import gov.ca.water.reportengine.executivereport.SubModule;
-import gov.ca.water.reportengine.reportreaders.DetailedIssuesReader;
 import gov.ca.water.reportengine.reportreaders.ModulesReader;
+
+import static gov.ca.water.reportengine.EPPTReport.checkInterrupt;
 
 public class ModuleCreator
 {
@@ -30,14 +32,13 @@ public class ModuleCreator
 	private final List<DetailedIssue> _detailedIssues = new ArrayList<>();
 	private final List<Module> _modules = new ArrayList<>();
 
-	public List<Module> createModules(Path moduleCSVPath, Path detailedIssuesCSVPath) throws EpptReportException
+	public List<Module> createModules(Path moduleCSVPath) throws EpptReportException
 	{
 		LOGGER.at(Level.INFO).log("Reading Detailed Issues Configuration");
-		DetailedIssuesReader diReader = new DetailedIssuesReader(detailedIssuesCSVPath);
-		_detailedIssues.addAll(diReader.read());
-
+		_detailedIssues.addAll(DetailedIssuesReader.getInstance().getDetailedIssues());
 		LOGGER.at(Level.INFO).log("Reading Modules Configuration");
 		ModulesReader modulesReader = new ModulesReader(moduleCSVPath);
+		checkInterrupt();
 		_modules.addAll(modulesReader.read());
 
 		LOGGER.at(Level.INFO).log("Reading Linked Variables Configuration");
@@ -52,12 +53,13 @@ public class ModuleCreator
 		return _detailedIssues;
 	}
 
-	private void addLinkedVariablesToSubModules()
+	private void addLinkedVariablesToSubModules() throws EpptReportException
 	{
 		for(Module mod : _modules)
 		{
 			for(SubModule sub : mod.getSubModules())
 			{
+				checkInterrupt();
 				int id = sub.getId();
 				List<String> linkedFiles = getLinkedFilesFromID(id);
 				sub.addLinkedRecords(linkedFiles);

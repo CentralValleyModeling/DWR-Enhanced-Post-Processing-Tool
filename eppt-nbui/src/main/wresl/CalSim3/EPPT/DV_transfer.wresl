@@ -1,0 +1,291 @@
+/************************************
+
+DV_transfer.wresl
+
+Yuxiang, DWR, BDO
+2019/03/27
+
+This file output the post process script's input variables 
+-Transfer input DV files variables to post processd DSS
+
+ 
+**************************************/
+
+/***********************************************Output all Input variables****************************************************/
+define Minflow_C100_DV {alias Minflow_C100 kind 'FLOW-REQUIREMENT' units 'CFS'}
+define C100_DV {alias C100 kind 'FLOW-CHANNEL' units 'CFS'} ! Trinity River below Lewiston 
+define C100_MIF_DV {alias C100_MIF kind 'FLOW-MIN-INSTREAM' units 'CFS'} ! Trinity River below Lewiston MIF
+! Clear Creek Below Whiskeytown 
+define Minflow_C3_DV {alias Minflow_C3 kind 'FLOW-MIN-REQUIRED' units 'CFS'} ! Get the minimum flow required at Clear Creek (C3)
+define C3_DV {alias C3 kind 'FLOW-CHANNEL' units 'CFS'} ! Clear Creek Below Whiskeytown MIF
+define C3_MIF_DV {alias C3_MIF kind 'FLOW-MIN-INSTREAM' units 'CFS'} ! Clear Creek Below Whiskeytown 
+! Sacramento River Below Keswick 
+define Minflow_C5_DV {alias Minflow_C5 kind 'FLOW-REQUIREMENT' units 'CFS'} ! Get the minimum flow required at Keswick (C5)
+define C5_DV {alias C5 kind 'FLOW-CHANNEL' units 'CFS'} ! Sacramento River Below Keswick 
+define C5_MIF_DV {alias C5_MIF kind 'FLOW-MIN-INSTREAM' units 'CFS'} ! Sacramento River Below Keswick MIF
+! Sacramento River near Red Bluff
+define Minflow_C112_DV {alias Minflow_C112 kind 'FLOW-REQUIREMENT' units 'CFS'}
+define C112_DV {alias C112 kind 'FLOW-CHANNEL' units 'CFS'} ! Sacramento River near Red Bluff  
+define C112_MIF_DV {alias C112_MIF kind 'FLOW-MIN-INSTREAM' units 'CFS'} ! Sacramento River near Red Bluff MIF 
+! Sacramento River near Wilkins Slough (NCP)
+define Minflow_C129_DV {alias Minflow_C129 kind 'FLOW-MIN-REQUIRED' units 'CFS'} ! Get the minimum flow required at NCP
+define C129_DV {alias C129 kind 'FLOW-CHANNEL' units 'CFS'} ! Sacramento River near Wilkins Slough  
+define C129_MIF_DV {alias C129_MIF kind 'FLOW-MIN-INSTREAM' units 'CFS'} ! Sacramento River near Wilkins Slough MIF 
+
+! Feather River below Thermalito Complex 
+define C203_DV {alias C203 kind 'FLOW-CHANNEL' units 'CFS'} ! Feather River below Thermalito Complex 
+define C203_MIF_DV {alias C203_MIF kind 'FLOW-MIN-INSTREAM' units 'CFS'} ! Feather River below Thermalito Complex MIF 
+! Feather River near Verona 
+define C223_DV {alias C223 kind 'FLOW-CHANNEL' units 'CFS'} ! Feather River near Verona 
+define C223_MIF_DV {alias C223_MIF kind 'FLOW-MIN-INSTREAM' units 'CFS'} ! Feather River near Verona MIF 
+! American River below Nimbus  
+define C9_DV {alias C9 kind 'FLOW-CHANNEL' units 'CFS'} ! American River below Nimbus  
+define C9_MIF_DV {alias C9_MIF kind 'FLOW-MIN-INSTREAM' units 'CFS'} ! American River below Nimbus MIF 
+! American River at H St 
+define C303_DV {alias C303 kind 'FLOW-CHANNEL' units 'CFS'} ! American River at H St  
+define C303_MIF_DV {alias C303_MIF kind 'FLOW-MIN-INSTREAM' units 'CFS'} ! American River at H St MIF 
+!Weirs flow into Sutter Bypass  
+define D124_DV {alias D124 kind 'FLOW-DELIVERY' units 'CFS'} !Moulton Weirs Spills
+define D125_DV {alias D125 kind 'FLOW-DELIVERY' units 'CFS'} !Colusa Weirs Spills
+define D126_DV {alias D126 kind 'FLOW-DELIVERY' units 'CFS'} !Tisdale Weirs Spills
+!Weirs flow into Yolo bypass
+define D160_DV {alias D160 kind 'FLOW-DELIVERY' units 'CFS'} !Fremont Weirs Spills
+define D165_DV {alias D165 kind 'FLOW-DELIVERY' units 'CFS'} !Sacramento Weirs Spills
+! 1. TOTAL SOD EXPORT CONTROL OUTPUTS
+define D418_DV {alias D418 kind 'FLOW-DELIVERY' units 'CFS'} !Tracy PP
+define D419_DV {alias D419 kind 'FLOW-DELIVERY' units 'CFS'} !Banks PP
+!define D409PRE_DV {alias D409PRE kind 'DEBUG' units 'CFS'} !D409 In Pre-setup Cycle     -No C3 equivalent
+define D409UP_DV {alias EXP_TD_UPSTREAM kind 'DEBUG' units 'CFS'} !D409 In Upstream Cycle        
+define EIEXPCTRL_DV {alias EIEXPCTRL kind 'EXPORT-CTRL-EI' units 'CFS'} 
+define EIEXPCTRLUP_DV {alias EIEXPCTRLUP kind 'DEBUG' units 'CFS'} 
+define APRMAYEXPCTRL_DV {alias APRMAYEXPCTRL kind 'EXPORT-CTRL-APRMAY' units 'CFS'} 
+!define APRMAYEXPCTRLUP_DV {alias APRMAYEXPCTRLUP kind 'DEBUG' units 'CFS'} 
+define D409_DV {alias EXP_TD kind 'FLOW-DELIVERY' units 'CFS'} !D409 
+define C408_DV {alias C408 kind 'FLOW-CHANNEL' units 'CFS'} !D408
+define MAXEXP_RPADV_DV {alias MAXEXP_RPADV kind 'EXPORT-LIMIT' units 'CFS'} 
+define EXPORT_DEC_DV {alias EXPORT_DEC kind 'TEMP' units 'CFS'} 
+define C408_LBOUND_DV {alias C408_LBOUND kind 'FLOW-LBOUND' units 'CFS'} !OMR flow restrictions
+define C408_NoEXP1_DV {alias C408_NoEXP1 kind 'FLOW-CHANNEL' units 'CFS'} !OMR flows w/o Exports
+!define COMB_EXP_DEC_DV {alias COMB_EXP_DEC_ kind 'TEMP' units 'CFS'}
+! 2. SWP SOD EXPORT CONTROL OUTPUTS
+define APRMAYBANKSCTRL_DV {alias APRMAYBANKSCTRL kind 'EXPORT-CTRL-APRMAY' units 'CFS'} 
+define MAXEXP_RPA_SWPDV_DV {alias MAXEXP_RPA_SWPDV kind 'EXPORT-LIMIT' units 'CFS'} 
+!define SWP_EXP_DEC_DV {alias SWP_EXP_DEC_ kind 'TEMP' units 'CFS'}
+define BANKSALLOWOUT_DV {alias BANKSALLOWOUT kind 'FLOW-ALLOW-BANKS' units 'CFS'}
+define D419UP_DV {alias D419UP kind 'FLOW-DELIVERY' units 'CFS'}
+! 3. CVP SOD EXPORT CONTROL OUTPUTS
+define APRMAYTRACYCTRL_DV {alias APRMAYTRACYCTRL kind 'EXPORT-CTRL-APRMAY' units 'CFS'} 
+define MAXEXP_RPA_CVPDV_DV {alias MAXEXP_RPA_CVPDV kind 'EXPORT-LIMIT' units 'CFS'} 
+!define CVP_EXP_DEC__DV {alias CVP_EXP_DEC_ kind 'TEMP' units 'CFS'}
+define JONESALLOWOUT_DV {alias JONESALLOWOUT kind 'EXPORT-CTRL-JONES' units 'CFS'}
+define D418UP_DV {alias D418UP kind 'FLOW-DELIVERY' units 'CFS'}
+
+
+
+/****************************** OUTPUTS FOR **********************************/
+/******************************* SHORTAGE ***********************************/
+!NOD CVP
+define SHORT_CVP_TOT_N_DV {alias SHORT_CVP_TOT_N kind 'DELIVERY-SHORTAGE-CVP' units 'CFS'} !TOTAL NOD SHORTAGE
+define SHORT_CVP_PAG_N_DV {alias SHORT_CVP_PAG_N kind 'DELIVERY-SHORTAGE-CVP' units 'CFS'} !AG NOD SHORTAGE
+define SHORT_CVP_PMI_N_DV {alias SHORT_CVP_PMI_N kind 'DELIVERY-SHORTAGE-CVP' units 'CFS'} !M&I NOD SHORTAGE 
+define SHORT_CVP_PRF_N_DV {alias SHORT_CVP_PRF_N kind 'DELIVERY-SHORTAGE-CVP' units 'CFS'} !REFUGES NOD SHORTAGE
+define SHORT_CVP_PSC_N_DV {alias SHORT_CVP_PSC_N kind 'DELIVERY-SHORTAGE-CVP' units 'CFS'} !SETTLEMENT NOD SHORTAGE
+!SOD CVP
+define SHORT_CVP_TOT_S_DV {alias SHORT_CVP_TOT_S kind 'DELIVERY-SHORTAGE-CVP' units 'CFS'} !TOTAL SOD SHORTAGE
+define SHORT_CVP_PAG_S_DV {alias SHORT_CVP_PAG_S kind 'DELIVERY-SHORTAGE-CVP' units 'CFS'} !AG SOD SHORTAGE
+define SHORT_CVP_PMI_S_DV {alias SHORT_CVP_PMI_S kind 'DELIVERY-SHORTAGE-CVP' units 'CFS'} !M&I SOD SHORTAGE 
+define SHORT_CVP_PRF_S_DV {alias SHORT_CVP_PRF_S kind 'DELIVERY-SHORTAGE-CVP' units 'CFS'} !REFUGES SOD SHORTAGE
+define SHORT_CVP_PEX_S_DV {alias SHORT_CVP_PEX_S kind 'DELIVERY-SHORTAGE-CVP' units 'CFS'} 
+define SHORT_CVP_PLS_S_DV {alias SHORT_CVP_PLS_S kind 'DELIVERY-SHORTAGE-CVP' units 'CFS'} !PROJECT LOSS SOD SHORTAGE
+!NOD SWP
+define SHORT_SWP_TOT_N_DV {alias SHORT_SWP_TOT_N kind 'DELIVERY-SHORTAGE-SWP' units 'CFS'} !TOTAL NOD SHORTAGE
+define SHORT_SWP_PAG_N_DV {alias SHORT_SWP_PAG_N kind 'DELIVERY-SHORTAGE-SWP' units 'CFS'} !AG NOD SHORTAGE
+define SHORT_SWP_PMI_N_DV {alias SHORT_SWP_PMI_N kind 'DELIVERY-SHORTAGE-SWP' units 'CFS'} !M&I NOD SHORTAGE 
+!define SHORT_SWP_PWR_DV {alias SHORT_SWP_PWR kind 'DELIVERY-SHORTAGE-SWP' units 'CFS'}
+!SOD SWP
+define SHORT_SWP_TOT_S_DV {alias SHORT_SWP_TOT_S kind 'DELIVERY-SHORTAGE-SWP' units 'CFS'} !TOTAL SOD SHORTAGE
+define SHORT_SWP_PAG_S_DV {alias SHORT_SWP_PAG_S kind 'DELIVERY-SHORTAGE-SWP' units 'CFS'} !AG SOD SHORTAGE
+define SHORT_SWP_PMI_S_DV {alias SHORT_SWP_PMI_S kind 'DELIVERY-SHORTAGE-SWP' units 'CFS'} !M&I SOD SHORTAGE 
+define SHORT_SWP_PLS_DV {alias SHORT_SWP_PLS kind 'DELIVERY-SHORTAGE-SWP' units 'CFS'} !LOSS SOD SHORTAGE
+
+/****************************** OUTPUTS FOR **********************************/
+/***************************** Delta Control ********************************/
+define D407_DV {alias D407 kind 'FLOW-DELIVERY' units 'CFS'} !MRDO - Minimum Required Delta Outflow (contain NDOI and X2 component)
+define C407_DV {alias C407 kind 'FLOW-CHANNEL' units 'CFS'} ! Regulations and Operations required Delta Outflow additional to the Delta Outflow required by NDOI & X2 
+define C407_whlcv_DV {alias C407_whlcv kind 'FLOW-CHANNEL' units 'CFS'}
+define C405_DV {alias C405 kind 'FLOW-CHANNEL' units 'CFS'} !Actual Flow @ Rio Vista
+define C405_MIF_DV {alias C405_MIF kind 'FLOW-MIN-INSTREAM' units 'CFS'} !Minimum Flow @ Rio Vista
+!define D168C_EXC_NTDEP_DV {alias D168C_EXC_NTDEP kind 'FLOW' units 'CFS'} !Excess from Freeport; returned to D.O. in wheeling cycle
+!Tracy and Bank Thru Delta Exports
+define D418_TD_DV {alias D418_TD kind 'FLOW-DELIVERY' units 'CFS'}
+define D419_TD_DV {alias D419_TD kind 'FLOW-DELIVERY' units 'CFS'}
+!Export Ratio
+define EXPRATIO_DV {alias EXPRATIO kind 'EI-RATIO-STD' units 'NONE'}
+!FWS OMR OUTPUTs
+!D409_ is defined earlier
+define D409_Delta_DV {alias D409_Delta kind 'FLOW-DELIVERY' units 'CFS'}
+define D409_Upstream_DV {alias D409_Upstream kind 'FLOW-DELIVERY' units 'CFS'}
+define C406_DV {alias C406 kind 'FLOW-CHANNEL' units 'CFS'} 
+define C406_Delta_DV {alias C406_Delta kind 'FLOW-CHANNEL' units 'CFS'}
+define C406_Upstream_DV {alias C406_Upstream kind 'FLOW-CHANNEL' units 'CFS'}
+define OMR_INCREASE_DV {alias OMR_INCREASE kind 'TEMP' units 'CFS'} !Increase in MRDO due to OMR Restriction
+define EXP_DEC_RPA_DV {alias EXP_DEC_RPA kind 'TEMP' units 'CFS'} !Decrease in exports due to RPA restrictions
+!MRDO for WQ at control at Jersey Point, Emmaton, Rock Slough and Collinsville
+define JP_MRDO_DV {alias JP_MRDO kind 'FLOW' units 'CFS'} ! Minimum Required Delta Outflow for Jersey Point WQ
+define EM_MRDO_DV {alias EM_MRDO kind 'FLOW' units 'CFS'} ! Minimum Required Delta Outflow for Emmaton WQ
+define RS_MRDO_1_DV {alias RS_MRDO_1 kind 'FLOW' units 'CFS'} ! Minimum Required Delta Outflow for Rock Slough Location 1 WQ
+define RS_MRDO_2_DV {alias RS_MRDO_2 kind 'FLOW' units 'CFS'} ! Minimum Required Delta Outflow for Rock Slough Location 2 WQ
+define RS_MRDO_3_DV {alias RS_MRDO_3 kind 'FLOW' units 'CFS'} ! Minimum Required Delta Outflow for Rock Slough Location 3 WQ
+define CO_MRDO_DV {alias CO_MRDO kind 'FLOW' units 'CFS'} ! Minimum Required Delta Outflow for Collinsville WQ
+define C407_ANN_DV {alias C407_ANN kind 'FLOW-CHANNEL' units 'CFS'} !Outflow due to salinity 
+!MROD for X2 (spring and fall)
+define DO_req_flow_out_DV {alias DO_req_flow_out kind 'FLOW-REQ-NDOI' units 'CFS'}! "NDOI Note: X2 requirements averaged into TS"
+!NMFS SJR I/E OUTPUTs
+define NMFS_MaxExpdv_DV {alias NMFS_MaxExpdv kind 'NMFS' units 'CFS'}
+!NMFS DCC OUTPUTs
+define NMFS_MaxExpDCCdv_DV {alias NMFS_MaxExpDCCdv kind 'EXPORT-LIMIT' units 'CFS'}
+
+/****************************** OUTPUTS FOR **********************************/
+/***************************** Delta Operation ********************************/
+define C400_DV {alias C400 kind 'FLOW-CHANNEL' units 'CFS'}
+define JP_M_DV {alias JP_M kind 'SLOPE' units 'NONE'}
+define JP_B_DV {alias JP_B kind 'INTERCEPT' units 'NONE'}
+define EM_M_DV {alias EM_M kind 'SLOPE' units 'NONE'}
+define EM_B_DV {alias EM_B kind 'INTERCEPT' units 'NONE'}
+define CO_M_DV {alias CO_M kind 'SLOPE' units 'NONE'}
+define CO_B_DV {alias CO_B kind 'INTERCEPT' units 'NONE'}
+define RS_M_1_DV {alias RS_M_1 kind 'SLOPE' units 'NONE'}
+define RS_B_1_DV {alias RS_B_1 kind 'INTERCEPT' units 'NONE'}
+define RS_M_2_DV {alias RS_M_2 kind 'SLOPE' units 'NONE'}
+define RS_B_2_DV {alias RS_B_2 kind 'INTERCEPT' units 'NONE'}
+define RS_M_3_DV {alias RS_M_3 kind 'SLOPE' units 'NONE'}
+define RS_B_3_DV {alias RS_B_3 kind 'INTERCEPT' units 'NONE'}
+define D418_EXP1_DV {alias D418_EXP1 kind 'FLOW-DELIVERY' units 'CFS'}
+define D418_EXP2_DV {alias D418_EXP2 kind 'FLOW-DELIVERY' units 'CFS'}
+define D418_CVP_DV {alias D418_CVP kind 'FLOW-DELIVERY' units 'CFS'}
+!define D418_SWP_DV {alias D418_SWP kind 'FLOW-DELIVERY' units 'CFS'}
+define D419_EXP1_DV {alias D419_EXP1 kind 'FLOW-DELIVERY' units 'CFS'}
+define D419_EXP2_DV {alias D419_EXP2 kind 'FLOW-DELIVERY' units 'CFS'}
+define D419_CVP_DV {alias D419_CVP kind 'FLOW-DELIVERY' units 'CFS'}
+define D419_SWP_DV {alias D419_SWP kind 'FLOW-DELIVERY' units 'CFS'}
+
+/****************************** OUTPUTS FOR **********************************/
+/****************************** Reservoirs **********************************/
+!!!!!!!!Trinity!!!!!!!! 
+! Trinity storage
+define S1_DV {alias S1 kind 'STORAGE' units 'TAF'} 
+! Trinity Spills
+define F1_DV {alias F1 kind 'FLOW-SPILL-NON-RECOV' units 'CFS'}
+! Trinity storage at Capacity 
+!define S1LEVEL5DV_DV {alias S1LEVEL5DV kind 'Storage-level' units 'TAF'} 
+! Trinity storage at flood level 
+!define S1LEVEL4DV_DV {alias S1LEVEL4DV kind 'Storage-level' units 'TAF'} 
+! Trinity storage at RC level 
+define S1LEVEL3DV_DV {alias S1LEVEL3DV kind 'Storage-level' units 'TAF'} 
+! Trinity storage at Dead Pool level 
+define S1LEVEL1DV_DV {alias S1LEVEL1DV kind 'Storage-level' units 'TAF'}
+!!!!!!!!Shasta!!!!!!!! 
+! Shasta storage
+define S4_DV {alias S4 kind 'STORAGE' units 'TAF'} 
+! Shasta storage at Capacity
+define S4LEVEL6DV_DV {alias S4LEVEL6DV kind 'Storage-level' units 'TAF'} 
+! Shasta storage at flood level 
+define S4LEVEL5DV_DV {alias S4LEVEL5DV kind 'Storage-level' units 'TAF'} 
+! Shasta storage at RC level 
+define S4LEVEL3DV_DV {alias S4LEVEL3DV kind 'Storage-level' units 'TAF'} 
+! Shasta storage at Dead Pool level 
+define S4LEVEL1DV_DV {alias S4LEVEL1DV kind 'Storage-level' units 'TAF'}
+!!!!!!!!Oroville!!!!!!!!
+! OROVILLE storage
+define S6_DV {alias S6 kind 'STORAGE' units 'TAF'} 
+! OROVILLE storage at Capacity
+define S6LEVEL6DV_DV {alias S6LEVEL6DV kind 'Storage-level' units 'TAF'} 
+! OROVILLE storage at flood level 
+define S6LEVEL5DV_DV {alias S6LEVEL5DV kind 'Storage-level' units 'TAF'} 
+! OROVILLE storage at RC level 
+define S6LEVEL3DV_DV {alias S6LEVEL3DV kind 'Storage-level' units 'TAF'}
+! OROVILLE storage at Dead Pool level 
+define S6LEVEL1DV_DV {alias S6LEVEL1DV kind 'Storage-level' units 'TAF'} 
+!!!!!!!!Folsom!!!!!!!!
+! Folsom storage
+define S8_DV {alias S8 kind 'STORAGE' units 'TAF'}
+! Folsom storage at Capacity
+define S8LEVEL6DV_DV {alias S8LEVEL6DV kind 'Storage-level' units 'TAF'}  
+! Folsom storage at flood level 
+define S8LEVEL5DV_DV {alias S8LEVEL5DV kind 'Storage-level' units 'TAF'} 
+! Folsom storage at RC level 
+define S8LEVEL3DV_DV {alias S8LEVEL3DV kind 'Storage-level' units 'TAF'} 
+! Folsom storage at Dead Pool level 
+define S8LEVEL1DV_DV {alias S8LEVEL1DV kind 'Storage-level' units 'TAF'} 
+!!!!!!!!San Luis Reservoir!!!!!!!!
+! San Luis storage for CVP
+define S_11_DV {alias S_11 kind 'STORAGE' units 'TAF'} 
+! San Luis storage maximum capacity for CVP 
+define S_11_MAX_DV {alias S_11_MAX kind 'STORAGE' units 'TAF'}
+! San Luis storage minimum capacity for CVP 
+define S_11_DP_DV {alias S_11_DP kind 'STORAGE' units 'TAF'}
+! San Luis storage for CVP based on Rule Curve
+define S_11_RC_DV {alias S_11_RC kind 'RULECURVE' units 'TAF'}
+! San Luis storage at flood level for CVP
+define S11LEVEL4DV_DV {alias S11LEVEL4DV kind 'Storage-level' units 'TAF'} 
+! San Luis storage at Dead Pool level for CVP
+define S11LEVEL1DV_DV {alias S11LEVEL1DV kind 'Storage-level' units 'TAF'} 
+! San Luis storage for SWP
+define S_12_DV {alias S_12 kind 'STORAGE' units 'TAF'} 
+! San Luis storage maximum capacity for SWP 
+define S_12_MAX_DV {alias S_12_MAX kind 'STORAGE' units 'TAF'} 
+! San Luis storage minimum capacity for SWP 
+define S_12_DP_DV {alias S_12_DP kind 'STORAGE' units 'TAF'} 
+! San Luis storage for SWP based on Rule Curve
+define S_12_RC_DV {alias S_12_RC kind 'RULECURVE' units 'TAF'}
+! San Luis storage at flood level for SWP
+define S12LEVEL4DV_DV {alias S12LEVEL4DV kind 'Storage-level' units 'TAF'} 
+! San Luis storage at Dead Pool level for SWP
+define S12LEVEL1DV_DV {alias S12LEVEL1DV kind 'Storage-level' units 'TAF'} 
+
+/****************************** OUTPUTS FOR **********************************/
+/************************** COA Sharing Percentage **************************/
+!NOD Storage 
+define FOLDS_DV {alias FOLDS kind 'STORAGE-CHANGE' units 'CFS'} ! Folsom Storage change
+define SWPDS_DV {alias SWPDS kind 'STORAGE-CHANGE' units 'CFS'} ! Oroville Storage change (coa_BO.wresl)
+define SHADS_DV {alias SHADS kind 'STORAGE-CHANGE' units 'CFS'} ! shasta storage Change
+define WHSSW_DV {alias WHSSW kind 'STORAGE-WDL' UNITS 'CFS'} ! Whiskeytown storage withdrawal
+define WHSSI_DV {alias WHSSI kind 'STORAGE-INC' UNITS 'CFS'} ! Whiskeytown storage increase  
+!Delta
+define int_IBU_UWFE_DV {alias INT_IBU_UWFE kind 'INTEGER' units 'NONE'} !IBU or UWFE status check
+define INFLW_DV {alias INFLW kind 'INFLOW-DELTA' UNITS 'CFS'} !
+! Exports
+define TOTAL_EXP_DV {alias TOTAL_EXP kind 'FLOW-DELIVERY' units 'CFS'} !Total Export (D418+D419)
+! Exports - CVP
+! Export at Jones Pumping Plant defined as D418
+define EXP_JNS_TRCY_DV {alias D418_EXP1 kind 'FLOW-DELIVERY' units 'CFS'} ! CVP pumping Split at Tracy
+define D419_CVPDED_EXP1_DV {alias D419_CVPDED_EXP1 kind 'FLOW-DELIVERY' units 'CFS'} ! CVP Export - what type?
+define D408_CVP_DV {alias D408_CVP kind 'flow-delivery' units 'cfs'}! CCWD CVP intake diversions by water right.
+define D408_DS_EXP1_DV {alias D408_DS_EXP1 kind 'FLOW-DELIVERY' units 'CFS'}   ! CCWD diversion of Delta surplus under LV water right.
+define D408_P_STR_CVP_DV {alias D408_P_STR_CVP kind 'FLOW-DELIVERY' units 'cfs'}! COA split for diversion of surplus to storage or for delivery
+define D408_P_DEL_CVP_DV {alias D408_P_DEL_CVP kind 'FLOW-DELIVERY' units 'cfs'} 
+define D408_P_WHL_SF_e1_DV {alias D408_P_WHL_SF_e1 kind 'FLOW-DELIVERY' units 'cfs'} ! COA split for wheeling unused CVP and SWP water 
+!define D168B_EXP1_DV {alias D168B_EXP1 kind 'FLOW-DELIVERY' units 'CFS'} ! Delta Exporter study of Freeport Project- RSR                    -No C3 equivalent
+! Export - SWP
+! Export at Banks Pumping Plant defined as D419
+!define D419_EXP1_DV {alias D419_EXP1 kind 'FLOW-DELIVERY' units 'CFS'} ! Export Split at SWP
+define D403B_DV {alias D403B kind 'FLOW-DELIVERY' units 'CFS'} ! Diversion to Napa
+define D403C_DV {alias D403C kind 'FLOW-DELIVERY' units 'CFS'} ! Diversion to Solano
+define D408_P_WHL_SB_E1_DV {alias D408_P_WHL_SB_E1 kind 'FLOW-DELIVERY' units 'CFS'}
+define D408_P_DEL_SWP_DV {alias D408_P_DEL_SWP kind 'FLOW-DELIVERY' units 'CFS'}
+define D408_P_STR_SWP_DV {alias D408_P_STR_SWP kind 'FLOW-DELIVERY' units 'CFS'}
+! COA Agreed Share 
+define CVP_share_DV {alias CVP_share kind 'percent-COA' units 'NONE'} !COA Agreed CVP Share
+define SWP_share_DV {alias SWP_share kind 'percent-COA' units 'NONE'} !COA Agreed SWP Share
+
+
+/****************************** OUTPUTS FOR **********************************/
+/*************************** Groundwater Pumping ****************************/
+
+/****************************** OUTPUTS FOR **********************************/
+/************************* Phase II Post Processing *************************/
+! 1. Clair Lake (Trinity)
+define C100_EXC_DV {alias C100_EXC kind 'FLOW-EXCESS-INSTREAM' units 'CFS'} !Trinity River below Lewiston EXCESS-INSTREAM
+define D100_EXC_DV {alias D100_EXC kind 'FLOW-DELIVERY' units 'CFS'} !Clear Creek Tunnel EXCESS-INSTREAM
+
+

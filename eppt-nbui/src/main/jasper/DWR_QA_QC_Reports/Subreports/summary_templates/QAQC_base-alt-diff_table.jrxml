@@ -1,0 +1,763 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.9.0.final using JasperReports Library version 6.9.0-cb8f9004be492ccc537180b49c026951f4220bf3  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="QAQC_sumary_table" language="groovy" pageWidth="504" pageHeight="684" columnWidth="504" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" isSummaryWithPageHeaderAndFooter="true" whenResourceMissingType="Empty" uuid="fdf29854-1cab-4c3d-99e9-a38b49852a26">
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<property name="net.sf.jasperreports.export.xls.collapse.row.span" value="true"/>
+	<property name="net.sf.jasperreports.print.create.bookmarks" value="true"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="QAQC_Datasource"/>
+	<property name="com.jaspersoft.studio.unit.pageHeight" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.pageWidth" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.topMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.bottomMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.leftMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.rightMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.columnWidth" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.columnSpacing" value="pixel"/>
+	<style name="Scenario_Color" mode="Transparent">
+		<box>
+			<topPen lineWidth="1.0" lineColor="#000000"/>
+			<leftPen lineWidth="0.0" lineColor="#CCCCCC"/>
+			<bottomPen lineWidth="1.0" lineColor="#000000"/>
+			<rightPen lineWidth="0.0" lineColor="#000000"/>
+		</box>
+		<conditionalStyle>
+			<conditionExpression><![CDATA[$V{scenario-order}==0]]></conditionExpression>
+			<style mode="Transparent" forecolor="#0000FF">
+				<box>
+					<pen lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineColor="#000000"/>
+				</box>
+			</style>
+		</conditionalStyle>
+		<conditionalStyle>
+			<conditionExpression><![CDATA[$V{scenario-order}==1]]></conditionExpression>
+			<style mode="Transparent" forecolor="#B50000">
+				<box>
+					<pen lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<rightPen lineWidth="1.0" lineColor="#CCCCCC"/>
+				</box>
+			</style>
+		</conditionalStyle>
+		<conditionalStyle>
+			<conditionExpression><![CDATA[$V{scenario-order}==2]]></conditionExpression>
+			<style mode="Transparent" forecolor="#000000">
+				<box>
+					<pen lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<rightPen lineWidth="1.0" lineColor="#000000"/>
+				</box>
+			</style>
+		</conditionalStyle>
+	</style>
+	<style name="Value_Color" forecolor="#C6C5CF" backcolor="rgba(255, 255, 255, 0.0)">
+		<conditionalStyle>
+			<conditionExpression><![CDATA[$V{scenario-order}==2&&$V{header-order}<0]]></conditionExpression>
+			<style forecolor="#F06063" scaleImage="FillFrame">
+				<box>
+					<topPen lineWidth="1.0" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<bottomPen lineWidth="1.0" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineColor="#000000"/>
+				</box>
+			</style>
+		</conditionalStyle>
+		<conditionalStyle>
+			<conditionExpression><![CDATA[$V{scenario-order}==1&&$V{header-order}<0]]></conditionExpression>
+			<style forecolor="#000000" scaleImage="FillFrame">
+				<box>
+					<topPen lineWidth="1.0" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<bottomPen lineWidth="1.0" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineColor="#CCCCCC"/>
+				</box>
+			</style>
+		</conditionalStyle>
+		<conditionalStyle>
+			<conditionExpression><![CDATA[$V{scenario-order}==0&&$V{header-order}<0]]></conditionExpression>
+			<style forecolor="#000000" scaleImage="FillFrame">
+				<box>
+					<topPen lineWidth="1.0" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineColor="#000000"/>
+				</box>
+			</style>
+		</conditionalStyle>
+		<conditionalStyle>
+			<conditionExpression><![CDATA[$V{value_MEASURE}<0&&$V{scenario-order}==2&&$V{period-type-order}>=0]]></conditionExpression>
+			<style forecolor="#F06063" scaleImage="FillFrame">
+				<box>
+					<topPen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<leftPen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<bottomPen lineWidth="1.0" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineColor="#000000"/>
+				</box>
+			</style>
+		</conditionalStyle>
+		<conditionalStyle>
+			<conditionExpression><![CDATA[$V{value_MEASURE}>0&&$V{scenario-order}==2&&$V{period-type-order}>=0]]></conditionExpression>
+			<style forecolor="#6DC07F">
+				<box>
+					<topPen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<leftPen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<bottomPen lineWidth="1.0" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineColor="#000000"/>
+				</box>
+			</style>
+		</conditionalStyle>
+		<conditionalStyle>
+			<conditionExpression><![CDATA[$V{value_MEASURE}==0&&$V{scenario-order}==2&&$V{period-type-order}>=0]]></conditionExpression>
+			<style forecolor="#C6C5CF">
+				<box>
+					<topPen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<leftPen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<bottomPen lineWidth="1.0" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineColor="#000000"/>
+				</box>
+			</style>
+		</conditionalStyle>
+		<conditionalStyle>
+			<conditionExpression><![CDATA[$V{value_MEASURE}<0&&$V{scenario-order}==0&&$V{header-order}>-1]]></conditionExpression>
+			<style forecolor="#000000" scaleImage="FillFrame">
+				<box>
+					<topPen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<leftPen lineWidth="1.0" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineColor="#000000"/>
+				</box>
+			</style>
+		</conditionalStyle>
+		<conditionalStyle>
+			<conditionExpression><![CDATA[$V{value_MEASURE}>0&&$V{scenario-order}==0]]></conditionExpression>
+			<style forecolor="#000000">
+				<box>
+					<topPen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<leftPen lineWidth="1.0" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineColor="#000000"/>
+				</box>
+			</style>
+		</conditionalStyle>
+		<conditionalStyle>
+			<conditionExpression><![CDATA[$V{value_MEASURE}==0&&$V{scenario-order}==0]]></conditionExpression>
+			<style forecolor="#000000">
+				<box>
+					<topPen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<leftPen lineWidth="1.0" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineColor="#000000"/>
+				</box>
+			</style>
+		</conditionalStyle>
+		<conditionalStyle>
+			<conditionExpression><![CDATA[$V{value_MEASURE}<0&&$V{header-order}>-1]]></conditionExpression>
+			<style forecolor="#000000">
+				<box>
+					<topPen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<leftPen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<bottomPen lineWidth="1.0" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineColor="#CCCCCC"/>
+				</box>
+			</style>
+		</conditionalStyle>
+		<conditionalStyle>
+			<conditionExpression><![CDATA[$V{value_MEASURE}>0]]></conditionExpression>
+			<style forecolor="#000000">
+				<box>
+					<topPen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<leftPen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<bottomPen lineWidth="1.0" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineColor="#CCCCCC"/>
+				</box>
+			</style>
+		</conditionalStyle>
+		<conditionalStyle>
+			<conditionExpression><![CDATA[$V{value_MEASURE}==0]]></conditionExpression>
+			<style forecolor="#000000">
+				<box>
+					<topPen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<leftPen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<bottomPen lineWidth="1.0" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineColor="#CCCCCC"/>
+				</box>
+			</style>
+		</conditionalStyle>
+	</style>
+	<style name="seasonal_type_top_border">
+		<conditionalStyle>
+			<conditionExpression><![CDATA[$V{period-type-order}>0]]></conditionExpression>
+			<style fontSize="14" isBold="false" isUnderline="false">
+				<box>
+					<topPen lineWidth="1.0" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineColor="#000000"/>
+				</box>
+			</style>
+		</conditionalStyle>
+	</style>
+	<style name="Crosstab_CG" mode="Opaque" backcolor="#FFFFFF">
+		<box>
+			<pen lineWidth="1.0" lineColor="#000000"/>
+			<topPen lineWidth="1.0" lineColor="#000000"/>
+			<leftPen lineWidth="1.0" lineColor="#000000"/>
+			<bottomPen lineWidth="1.0" lineColor="#000000"/>
+			<rightPen lineWidth="1.0" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="Crosstab_CD" mode="Opaque" backcolor="#FFFFFF">
+		<box>
+			<pen lineWidth="1.0" lineColor="#000000"/>
+			<topPen lineWidth="0.0" lineColor="#000000"/>
+			<leftPen lineWidth="0.0" lineColor="#000000"/>
+			<bottomPen lineWidth="0.0" lineColor="#000000"/>
+			<rightPen lineWidth="0.0" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="Crosstab_CH" mode="Opaque" backcolor="#FFFFFF">
+		<box>
+			<pen lineWidth="1.0" lineColor="#000000"/>
+			<topPen lineWidth="0.0" lineColor="#000000"/>
+			<leftPen lineWidth="0.0" lineColor="#000000"/>
+			<bottomPen lineWidth="0.0" lineColor="#000000"/>
+			<rightPen lineWidth="0.0" lineColor="#000000"/>
+		</box>
+		<conditionalStyle>
+			<conditionExpression><![CDATA[$V{period-type-order}>0]]></conditionExpression>
+			<style fontSize="14" isBold="false" isUnderline="false">
+				<box>
+					<topPen lineWidth="0.0" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineColor="#000000"/>
+				</box>
+			</style>
+		</conditionalStyle>
+	</style>
+	<style name="Crosstab_CT" mode="Opaque" backcolor="#FFFFFF">
+		<box>
+			<pen lineWidth="1.0" lineColor="#000000"/>
+			<topPen lineWidth="1.0" lineColor="#000000"/>
+			<leftPen lineWidth="1.0" lineColor="#000000"/>
+			<bottomPen lineWidth="1.0" lineColor="#000000"/>
+			<rightPen lineWidth="1.0" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="Labels" hTextAlign="Right" fontSize="8">
+		<box>
+			<topPen lineWidth="1.0" lineColor="#CCCCCC"/>
+			<leftPen lineWidth="1.0" lineColor="#000000"/>
+			<bottomPen lineWidth="1.0" lineColor="#000000"/>
+			<rightPen lineWidth="1.0" lineColor="#000000"/>
+		</box>
+		<conditionalStyle>
+			<conditionExpression><![CDATA[$V{header-order}==-1&&$V{sub-header-order}==-1&&$V{component-order}==-1]]></conditionExpression>
+			<style hTextAlign="Left" fontSize="14" isBold="true" isUnderline="true">
+				<box>
+					<topPen lineWidth="1.0" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineColor="#000000"/>
+				</box>
+			</style>
+		</conditionalStyle>
+		<conditionalStyle>
+			<conditionExpression><![CDATA[$V{row-label}==null]]></conditionExpression>
+			<style hTextAlign="Left" fontSize="11" isBold="false" isItalic="true" isUnderline="false">
+				<box>
+					<topPen lineWidth="1.0" lineColor="#FFFFFF"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+			</style>
+		</conditionalStyle>
+		<conditionalStyle>
+			<conditionExpression><![CDATA[$V{sub-header-order}==-1&&$V{component-order}==-1]]></conditionExpression>
+			<style hTextAlign="Left" fontSize="11" isBold="true" isUnderline="false">
+				<box>
+					<pen lineColor="#CCCCCC"/>
+					<leftPen lineWidth="1.0" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineColor="#000000"/>
+				</box>
+			</style>
+		</conditionalStyle>
+		<conditionalStyle>
+			<conditionExpression><![CDATA[$V{header-order}>-1&&$V{sub-header-order}>-1&&$V{component-order}==-1]]></conditionExpression>
+			<style hTextAlign="Left" fontSize="11" isBold="false" isItalic="true" isUnderline="false">
+				<box>
+					<topPen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+			</style>
+		</conditionalStyle>
+	</style>
+	<parameter name="XML_DATA_DOCUMENT" class="org.w3c.dom.Document" isForPrompting="false"/>
+	<parameter name="p_report_name" class="java.lang.String" isForPrompting="false" evaluationTime="Early">
+		<parameterDescription><![CDATA["The report name should come from a field in the main report"]]></parameterDescription>
+		<defaultValueExpression><![CDATA["nod-ground-summary-weir-ops"]]></defaultValueExpression>
+	</parameter>
+	<queryString language="XPath">
+		<![CDATA[/qaqc-report/summary/module/section/sub-module/chart/$P{p_report_name}/period-type/seasonal-type/scenario/title/header/sub-header/component]]>
+	</queryString>
+	<field name="water-year-def" class="java.lang.String">
+		<property name="net.sf.jasperreports.xpath.field.expression" value="ancestor::period-type/../@water-year-def"/>
+		<fieldDescription><![CDATA[ancestor::period-type/../@water-year-def]]></fieldDescription>
+	</field>
+	<field name="units" class="java.lang.String">
+		<property name="net.sf.jasperreports.xpath.field.expression" value="ancestor::period-type/../@units"/>
+		<fieldDescription><![CDATA[ancestor::period-type/../@units]]></fieldDescription>
+	</field>
+	<field name="period-type-order" class="java.lang.Integer">
+		<property name="net.sf.jasperreports.xpath.field.expression" value="ancestor::period-type/@period-type-order"/>
+		<fieldDescription><![CDATA[ancestor::period-type/@period-type-order]]></fieldDescription>
+	</field>
+	<field name="period-type-name" class="java.lang.String">
+		<property name="net.sf.jasperreports.xpath.field.expression" value="ancestor::period-type/@period-type-name"/>
+		<fieldDescription><![CDATA[ancestor::period-type/@period-type-name]]></fieldDescription>
+	</field>
+	<field name="seasonal-type-order" class="java.lang.Integer">
+		<property name="net.sf.jasperreports.xpath.field.expression" value="ancestor::seasonal-type/@seasonal-type-order"/>
+		<fieldDescription><![CDATA[ancestor::seasonal-type/@seasonal-type-order]]></fieldDescription>
+	</field>
+	<field name="seasonal-type-name" class="java.lang.String">
+		<property name="net.sf.jasperreports.xpath.field.expression" value="ancestor::seasonal-type/@seasonal-type-name"/>
+		<fieldDescription><![CDATA[ancestor::seasonal-type/@seasonal-type-name]]></fieldDescription>
+	</field>
+	<field name="scenario-order" class="java.lang.Integer">
+		<property name="net.sf.jasperreports.xpath.field.expression" value="ancestor::scenario/@scenario-order"/>
+		<fieldDescription><![CDATA[ancestor::scenario/@scenario-order]]></fieldDescription>
+	</field>
+	<field name="scenario-name" class="java.lang.String">
+		<property name="net.sf.jasperreports.xpath.field.expression" value="ancestor::scenario/@scenario-name"/>
+		<fieldDescription><![CDATA[ancestor::scenario/@scenario-name]]></fieldDescription>
+	</field>
+	<field name="title-order" class="java.lang.Integer">
+		<property name="net.sf.jasperreports.xpath.field.expression" value="ancestor::title/@title-order"/>
+		<fieldDescription><![CDATA[ancestor::title/@title-order]]></fieldDescription>
+	</field>
+	<field name="header-order" class="java.lang.Integer">
+		<property name="net.sf.jasperreports.xpath.field.expression" value="ancestor::header/@header-order"/>
+		<fieldDescription><![CDATA[ancestor::header/@header-order]]></fieldDescription>
+	</field>
+	<field name="sub-header-order" class="java.lang.Integer">
+		<property name="net.sf.jasperreports.xpath.field.expression" value="ancestor::sub-header/@sub-header-order"/>
+		<fieldDescription><![CDATA[ancestor::sub-header/@sub-header-order]]></fieldDescription>
+	</field>
+	<field name="component-order" class="java.lang.Integer">
+		<property name="net.sf.jasperreports.xpath.field.expression" value="@component-order"/>
+		<fieldDescription><![CDATA[@component-order]]></fieldDescription>
+	</field>
+	<field name="row-label" class="java.lang.String">
+		<property name="net.sf.jasperreports.xpath.field.expression" value="row-label"/>
+		<fieldDescription><![CDATA[row-label]]></fieldDescription>
+	</field>
+	<field name="value" class="java.math.BigDecimal">
+		<property name="net.sf.jasperreports.xpath.field.expression" value="value"/>
+		<fieldDescription><![CDATA[value]]></fieldDescription>
+	</field>
+	<field name="value-full-text" class="java.lang.String">
+		<property name="net.sf.jasperreports.xpath.field.expression" value="value/@value-full-text"/>
+		<fieldDescription><![CDATA[value/@value-full-text]]></fieldDescription>
+	</field>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band splitType="Stretch">
+			<property name="com.jaspersoft.studio.unit.height" value="px"/>
+			<printWhenExpression><![CDATA[1==0]]></printWhenExpression>
+		</band>
+	</title>
+	<columnHeader>
+		<band splitType="Stretch">
+			<printWhenExpression><![CDATA[1==0]]></printWhenExpression>
+		</band>
+	</columnHeader>
+	<detail>
+		<band splitType="Stretch">
+			<printWhenExpression><![CDATA[1==0]]></printWhenExpression>
+		</band>
+	</detail>
+	<pageFooter>
+		<band>
+			<property name="com.jaspersoft.studio.unit.height" value="px"/>
+			<printWhenExpression><![CDATA[1==0]]></printWhenExpression>
+		</band>
+	</pageFooter>
+	<summary>
+		<band height="100">
+			<property name="com.jaspersoft.studio.unit.height" value="px"/>
+			<crosstab>
+				<reportElement x="0" y="0" width="504" height="100" uuid="768cb845-0280-4d2b-be41-b1a230247b59">
+					<property name="com.jaspersoft.studio.layout" value="com.jaspersoft.studio.editor.layout.VerticalRowLayout"/>
+					<property name="com.jaspersoft.studio.crosstab.style.header" value="Crosstab_CH"/>
+					<property name="com.jaspersoft.studio.crosstab.style.group" value="Crosstab_CG"/>
+					<property name="com.jaspersoft.studio.crosstab.style.total" value="Crosstab_CT"/>
+					<property name="com.jaspersoft.studio.crosstab.style.detail" value="Crosstab_CD"/>
+					<property name="net.sf.jasperreports.export.headertoolbar.table.name" value=""/>
+				</reportElement>
+				<crosstabParameter name="p_units">
+					<parameterValueExpression><![CDATA[$F{units}]]></parameterValueExpression>
+				</crosstabParameter>
+				<crosstabParameter name="p_water-year-def">
+					<parameterValueExpression><![CDATA[$F{water-year-def}]]></parameterValueExpression>
+				</crosstabParameter>
+				<crosstabHeaderCell>
+					<cellContents>
+						<box>
+							<topPen lineWidth="1.0"/>
+							<leftPen lineWidth="1.0"/>
+							<bottomPen lineWidth="1.0"/>
+							<rightPen lineWidth="1.0"/>
+						</box>
+						<textField>
+							<reportElement x="0" y="0" width="140" height="56" uuid="88fbeabd-4b81-49f0-8d30-279d06beda74"/>
+							<textElement textAlignment="Center" verticalAlignment="Middle"/>
+							<textFieldExpression><![CDATA[$P{p_units}+"\n"+$P{p_water-year-def}]]></textFieldExpression>
+						</textField>
+					</cellContents>
+				</crosstabHeaderCell>
+				<rowGroup name="title-order" width="0" totalPosition="End">
+					<bucket class="java.lang.Integer">
+						<bucketExpression><![CDATA[$F{title-order}==null?-1:$F{title-order}]]></bucketExpression>
+					</bucket>
+					<crosstabRowHeader>
+						<cellContents mode="Opaque" style="Crosstab_CH"/>
+					</crosstabRowHeader>
+					<crosstabTotalRowHeader>
+						<cellContents mode="Opaque" style="Crosstab_CT"/>
+					</crosstabTotalRowHeader>
+				</rowGroup>
+				<rowGroup name="header-order" width="0" totalPosition="End">
+					<bucket class="java.lang.Integer">
+						<bucketExpression><![CDATA[$F{header-order}==null?-1:$F{header-order}]]></bucketExpression>
+					</bucket>
+					<crosstabRowHeader>
+						<cellContents mode="Opaque" style="Crosstab_CH"/>
+					</crosstabRowHeader>
+					<crosstabTotalRowHeader>
+						<cellContents mode="Opaque" style="Crosstab_CG"/>
+					</crosstabTotalRowHeader>
+				</rowGroup>
+				<rowGroup name="sub-header-order" width="0" totalPosition="End">
+					<bucket class="java.lang.Integer">
+						<bucketExpression><![CDATA[$F{sub-header-order}==null?-1:$F{sub-header-order}]]></bucketExpression>
+					</bucket>
+					<crosstabRowHeader>
+						<cellContents mode="Opaque" style="Crosstab_CH"/>
+					</crosstabRowHeader>
+					<crosstabTotalRowHeader>
+						<cellContents mode="Opaque" style="Crosstab_CG"/>
+					</crosstabTotalRowHeader>
+				</rowGroup>
+				<rowGroup name="component-order" width="0" totalPosition="End">
+					<bucket class="java.lang.Integer">
+						<bucketExpression><![CDATA[$F{component-order}==null?-1:$F{component-order}]]></bucketExpression>
+					</bucket>
+					<crosstabRowHeader>
+						<cellContents mode="Opaque" style="Crosstab_CH">
+							<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+						</cellContents>
+					</crosstabRowHeader>
+					<crosstabTotalRowHeader>
+						<cellContents mode="Opaque" style="Crosstab_CG"/>
+					</crosstabTotalRowHeader>
+				</rowGroup>
+				<rowGroup name="row-label" width="140" totalPosition="End" mergeHeaderCells="true">
+					<bucket class="java.lang.String">
+						<bucketExpression><![CDATA[$F{row-label}]]></bucketExpression>
+					</bucket>
+					<crosstabRowHeader>
+						<cellContents mode="Transparent" style="Crosstab_CH">
+							<box>
+								<topPen lineWidth="0.0" lineColor="#CCCCCC"/>
+								<leftPen lineWidth="1.0"/>
+								<bottomPen lineWidth="0.0"/>
+								<rightPen lineWidth="1.0"/>
+							</box>
+							<textField isStretchWithOverflow="true" isBlankWhenNull="false">
+								<reportElement style="Labels" stretchType="ContainerBottom" x="0" y="0" width="140" height="16" uuid="b15f59ce-f57a-43dd-a3a2-1cf1904476fe">
+									<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+								</reportElement>
+								<box topPadding="2" leftPadding="3" bottomPadding="2" rightPadding="3"/>
+								<textElement verticalAlignment="Middle"/>
+								<textFieldExpression><![CDATA[$V{row-label}==null?"":$V{row-label}]]></textFieldExpression>
+							</textField>
+						</cellContents>
+					</crosstabRowHeader>
+					<crosstabTotalRowHeader>
+						<cellContents mode="Opaque" style="Crosstab_CG"/>
+					</crosstabTotalRowHeader>
+				</rowGroup>
+				<columnGroup name="period-type-order" height="0" totalPosition="End">
+					<bucket class="java.lang.Integer">
+						<bucketExpression><![CDATA[$F{period-type-order}]]></bucketExpression>
+					</bucket>
+					<crosstabColumnHeader>
+						<cellContents mode="Opaque" style="Crosstab_CH"/>
+					</crosstabColumnHeader>
+					<crosstabTotalColumnHeader>
+						<cellContents mode="Opaque" style="Crosstab_CT"/>
+					</crosstabTotalColumnHeader>
+				</columnGroup>
+				<columnGroup name="period-type-name" height="20" totalPosition="End" headerPosition="Stretch" mergeHeaderCells="true">
+					<bucket class="java.lang.String">
+						<bucketExpression><![CDATA[$F{period-type-name}]]></bucketExpression>
+					</bucket>
+					<crosstabColumnHeader>
+						<cellContents mode="Opaque" style="Crosstab_CH">
+							<box>
+								<topPen lineWidth="1.0"/>
+								<leftPen lineWidth="1.0"/>
+								<bottomPen lineWidth="0.0"/>
+								<rightPen lineWidth="1.0"/>
+							</box>
+							<textField isStretchWithOverflow="true">
+								<reportElement style="Crosstab_CH" x="0" y="0" width="38" height="20" uuid="0a40e038-8aa2-45c1-a9c0-050fc6894132"/>
+								<textElement textAlignment="Center" verticalAlignment="Middle">
+									<font size="11" isBold="true"/>
+								</textElement>
+								<textFieldExpression><![CDATA[$V{period-type-name}]]></textFieldExpression>
+							</textField>
+						</cellContents>
+					</crosstabColumnHeader>
+					<crosstabTotalColumnHeader>
+						<cellContents mode="Opaque" style="Crosstab_CG"/>
+					</crosstabTotalColumnHeader>
+				</columnGroup>
+				<columnGroup name="seasonal-type-order" height="0" totalPosition="End">
+					<bucket class="java.lang.Integer">
+						<bucketExpression><![CDATA[$F{seasonal-type-order}]]></bucketExpression>
+					</bucket>
+					<crosstabColumnHeader>
+						<cellContents mode="Opaque" style="Crosstab_CH"/>
+					</crosstabColumnHeader>
+					<crosstabTotalColumnHeader>
+						<cellContents mode="Opaque" style="Crosstab_CG"/>
+					</crosstabTotalColumnHeader>
+				</columnGroup>
+				<columnGroup name="seasonal-type-name" height="20" totalPosition="End" headerPosition="Stretch" mergeHeaderCells="true">
+					<bucket class="java.lang.String">
+						<bucketExpression><![CDATA[$F{seasonal-type-name}]]></bucketExpression>
+					</bucket>
+					<crosstabColumnHeader>
+						<cellContents mode="Opaque" style="Crosstab_CH">
+							<box>
+								<topPen lineWidth="0.0"/>
+								<leftPen lineWidth="0.0"/>
+								<bottomPen lineWidth="1.0"/>
+								<rightPen lineWidth="0.0"/>
+							</box>
+							<textField isStretchWithOverflow="true">
+								<reportElement style="seasonal_type_top_border" stretchType="ContainerHeight" x="0" y="0" width="38" height="20" uuid="7c72ed3e-2e74-4e33-a6e1-4c4685d3cada"/>
+								<box topPadding="2" bottomPadding="2">
+									<leftPen lineWidth="1.0"/>
+									<rightPen lineWidth="1.0"/>
+								</box>
+								<textElement textAlignment="Center" verticalAlignment="Middle">
+									<font size="9"/>
+								</textElement>
+								<textFieldExpression><![CDATA[$V{period-type-order}==0?"":($V{seasonal-type-name}==null?"":$V{seasonal-type-name})]]></textFieldExpression>
+							</textField>
+						</cellContents>
+					</crosstabColumnHeader>
+					<crosstabTotalColumnHeader>
+						<cellContents mode="Opaque" style="Crosstab_CG"/>
+					</crosstabTotalColumnHeader>
+				</columnGroup>
+				<columnGroup name="scenario-order" height="0" totalPosition="End">
+					<bucket class="java.lang.Integer">
+						<bucketExpression><![CDATA[$F{scenario-order}]]></bucketExpression>
+					</bucket>
+					<crosstabColumnHeader>
+						<cellContents mode="Opaque" style="Crosstab_CH">
+							<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+						</cellContents>
+					</crosstabColumnHeader>
+					<crosstabTotalColumnHeader>
+						<cellContents mode="Opaque" style="Crosstab_CG"/>
+					</crosstabTotalColumnHeader>
+				</columnGroup>
+				<columnGroup name="scenario-name" height="16" totalPosition="End">
+					<bucket class="java.lang.String">
+						<bucketExpression><![CDATA[$F{scenario-name}]]></bucketExpression>
+					</bucket>
+					<crosstabColumnHeader>
+						<cellContents mode="Transparent" style="Scenario_Color">
+							<property name="com.jaspersoft.studio.unit.height" value="px"/>
+							<textField>
+								<reportElement style="Scenario_Color" stretchType="ContainerHeight" mode="Transparent" x="0" y="0" width="38" height="16" uuid="9af966a8-1ed5-4b02-b8fb-d612a223563f"/>
+								<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None">
+									<font size="9"/>
+								</textElement>
+								<textFieldExpression><![CDATA[$V{scenario-name}]]></textFieldExpression>
+							</textField>
+						</cellContents>
+					</crosstabColumnHeader>
+					<crosstabTotalColumnHeader>
+						<cellContents mode="Opaque" style="Crosstab_CG"/>
+					</crosstabTotalColumnHeader>
+				</columnGroup>
+				<measure name="value_MEASURE" class="java.math.BigDecimal">
+					<measureExpression><![CDATA[$F{value}]]></measureExpression>
+				</measure>
+				<measure name="v_max_scenario-order_MEASURE" class="java.lang.Integer">
+					<measureExpression><![CDATA[MAX($F{scenario-order})]]></measureExpression>
+				</measure>
+				<measure name="value-full-text" class="java.lang.String">
+					<measureExpression><![CDATA[$F{value-full-text}]]></measureExpression>
+				</measure>
+				<crosstabCell width="38" height="16">
+					<cellContents mode="Transparent" style="Crosstab_CD">
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+						<property name="com.jaspersoft.studio.unit.width" value="px"/>
+						<box>
+							<topPen lineWidth="0.0" lineColor="#CCCCCC"/>
+							<leftPen lineWidth="0.0"/>
+							<bottomPen lineWidth="0.0"/>
+							<rightPen lineWidth="0.0" lineColor="#CCCCCC"/>
+						</box>
+						<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+							<reportElement style="Value_Color" stretchType="ContainerHeight" x="0" y="0" width="38" height="16" backcolor="rgba(255, 255, 255, 0.0)" uuid="257e3cc2-420d-4c2e-9a84-cd586398ad0b">
+								<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+								<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+							</reportElement>
+							<box topPadding="2" bottomPadding="2"/>
+							<textElement textAlignment="Center" verticalAlignment="Middle">
+								<font size="8"/>
+							</textElement>
+							<textFieldExpression><![CDATA[$V{value-full-text}==null?($V{value_MEASURE}==""?"N/A":($V{value_MEASURE}>0&&$V{scenario-order}==2?"+"+$V{value_MEASURE}:$V{value_MEASURE})):($V{value_MEASURE}>0&&$V{scenario-order}==2?"+"+$V{value-full-text}:$V{value-full-text})]]></textFieldExpression>
+						</textField>
+					</cellContents>
+				</crosstabCell>
+				<crosstabCell width="0" height="16" columnTotalGroup="scenario-name">
+					<cellContents mode="Opaque" style="Crosstab_CG"/>
+				</crosstabCell>
+				<crosstabCell width="0" height="16" columnTotalGroup="scenario-order">
+					<cellContents mode="Opaque" style="Crosstab_CG"/>
+				</crosstabCell>
+				<crosstabCell width="0" height="16" columnTotalGroup="seasonal-type-name">
+					<cellContents mode="Opaque" style="Crosstab_CG"/>
+				</crosstabCell>
+				<crosstabCell width="0" height="16" columnTotalGroup="seasonal-type-order">
+					<cellContents mode="Opaque" style="Crosstab_CG"/>
+				</crosstabCell>
+				<crosstabCell width="0" height="16" columnTotalGroup="period-type-name">
+					<cellContents mode="Opaque" style="Crosstab_CG"/>
+				</crosstabCell>
+				<crosstabCell width="0" height="16" columnTotalGroup="period-type-order">
+					<cellContents mode="Opaque" style="Crosstab_CT"/>
+				</crosstabCell>
+				<crosstabCell width="38" height="0" rowTotalGroup="row-label">
+					<cellContents mode="Opaque" style="Crosstab_CG"/>
+				</crosstabCell>
+				<crosstabCell width="0" height="0" rowTotalGroup="row-label" columnTotalGroup="scenario-name">
+					<cellContents mode="Opaque" style="Crosstab_CG"/>
+				</crosstabCell>
+				<crosstabCell width="0" height="0" rowTotalGroup="row-label" columnTotalGroup="scenario-order">
+					<cellContents mode="Opaque" style="Crosstab_CG"/>
+				</crosstabCell>
+				<crosstabCell width="0" height="0" rowTotalGroup="row-label" columnTotalGroup="seasonal-type-name">
+					<cellContents mode="Opaque" style="Crosstab_CG"/>
+				</crosstabCell>
+				<crosstabCell width="0" height="0" rowTotalGroup="row-label" columnTotalGroup="seasonal-type-order">
+					<cellContents mode="Opaque" style="Crosstab_CG"/>
+				</crosstabCell>
+				<crosstabCell width="0" height="0" rowTotalGroup="row-label" columnTotalGroup="period-type-name">
+					<cellContents mode="Opaque" style="Crosstab_CG"/>
+				</crosstabCell>
+				<crosstabCell width="0" height="0" rowTotalGroup="row-label" columnTotalGroup="period-type-order">
+					<cellContents mode="Opaque" style="Crosstab_CT"/>
+				</crosstabCell>
+				<crosstabCell width="38" height="0" rowTotalGroup="component-order">
+					<cellContents mode="Opaque" style="Crosstab_CG"/>
+				</crosstabCell>
+				<crosstabCell width="0" height="0" rowTotalGroup="component-order" columnTotalGroup="scenario-name">
+					<cellContents mode="Opaque" style="Crosstab_CG"/>
+				</crosstabCell>
+				<crosstabCell width="0" height="0" rowTotalGroup="component-order" columnTotalGroup="scenario-order">
+					<cellContents mode="Opaque" style="Crosstab_CG"/>
+				</crosstabCell>
+				<crosstabCell width="0" height="0" rowTotalGroup="component-order" columnTotalGroup="seasonal-type-name">
+					<cellContents mode="Opaque" style="Crosstab_CG"/>
+				</crosstabCell>
+				<crosstabCell width="0" height="0" rowTotalGroup="component-order" columnTotalGroup="seasonal-type-order">
+					<cellContents mode="Opaque" style="Crosstab_CG"/>
+				</crosstabCell>
+				<crosstabCell width="0" height="0" rowTotalGroup="component-order" columnTotalGroup="period-type-name">
+					<cellContents mode="Opaque" style="Crosstab_CG"/>
+				</crosstabCell>
+				<crosstabCell width="0" height="0" rowTotalGroup="component-order" columnTotalGroup="period-type-order">
+					<cellContents mode="Opaque" style="Crosstab_CT"/>
+				</crosstabCell>
+				<crosstabCell width="38" height="0" rowTotalGroup="sub-header-order">
+					<cellContents mode="Opaque" style="Crosstab_CG"/>
+				</crosstabCell>
+				<crosstabCell width="0" height="0" rowTotalGroup="sub-header-order" columnTotalGroup="scenario-name">
+					<cellContents mode="Opaque" style="Crosstab_CG"/>
+				</crosstabCell>
+				<crosstabCell width="0" height="0" rowTotalGroup="sub-header-order" columnTotalGroup="scenario-order">
+					<cellContents mode="Opaque" style="Crosstab_CG"/>
+				</crosstabCell>
+				<crosstabCell width="0" height="0" rowTotalGroup="sub-header-order" columnTotalGroup="seasonal-type-name">
+					<cellContents mode="Opaque" style="Crosstab_CG"/>
+				</crosstabCell>
+				<crosstabCell width="0" height="0" rowTotalGroup="sub-header-order" columnTotalGroup="seasonal-type-order">
+					<cellContents mode="Opaque" style="Crosstab_CG"/>
+				</crosstabCell>
+				<crosstabCell width="0" height="0" rowTotalGroup="sub-header-order" columnTotalGroup="period-type-name">
+					<cellContents mode="Opaque" style="Crosstab_CG"/>
+				</crosstabCell>
+				<crosstabCell width="0" height="0" rowTotalGroup="sub-header-order" columnTotalGroup="period-type-order">
+					<cellContents mode="Opaque" style="Crosstab_CT"/>
+				</crosstabCell>
+				<crosstabCell width="38" height="0" rowTotalGroup="header-order">
+					<cellContents mode="Opaque" style="Crosstab_CG"/>
+				</crosstabCell>
+				<crosstabCell width="0" height="0" rowTotalGroup="header-order" columnTotalGroup="scenario-name">
+					<cellContents mode="Opaque" style="Crosstab_CG"/>
+				</crosstabCell>
+				<crosstabCell width="0" height="0" rowTotalGroup="header-order" columnTotalGroup="scenario-order">
+					<cellContents mode="Opaque" style="Crosstab_CG"/>
+				</crosstabCell>
+				<crosstabCell width="0" height="0" rowTotalGroup="header-order" columnTotalGroup="seasonal-type-name">
+					<cellContents mode="Opaque" style="Crosstab_CG"/>
+				</crosstabCell>
+				<crosstabCell width="0" height="0" rowTotalGroup="header-order" columnTotalGroup="seasonal-type-order">
+					<cellContents mode="Opaque" style="Crosstab_CG"/>
+				</crosstabCell>
+				<crosstabCell width="0" height="0" rowTotalGroup="header-order" columnTotalGroup="period-type-name">
+					<cellContents mode="Opaque" style="Crosstab_CG"/>
+				</crosstabCell>
+				<crosstabCell width="0" height="0" rowTotalGroup="header-order" columnTotalGroup="period-type-order">
+					<cellContents mode="Opaque" style="Crosstab_CT"/>
+				</crosstabCell>
+				<crosstabCell width="38" height="0" rowTotalGroup="title-order">
+					<cellContents mode="Opaque" style="Crosstab_CT"/>
+				</crosstabCell>
+				<crosstabCell width="0" height="0" rowTotalGroup="title-order" columnTotalGroup="scenario-name">
+					<cellContents mode="Opaque" style="Crosstab_CT"/>
+				</crosstabCell>
+				<crosstabCell width="0" height="0" rowTotalGroup="title-order" columnTotalGroup="scenario-order">
+					<cellContents mode="Opaque" style="Crosstab_CT"/>
+				</crosstabCell>
+				<crosstabCell width="0" height="0" rowTotalGroup="title-order" columnTotalGroup="seasonal-type-name">
+					<cellContents mode="Opaque" style="Crosstab_CT"/>
+				</crosstabCell>
+				<crosstabCell width="0" height="0" rowTotalGroup="title-order" columnTotalGroup="seasonal-type-order">
+					<cellContents mode="Opaque" style="Crosstab_CT"/>
+				</crosstabCell>
+				<crosstabCell width="0" height="0" rowTotalGroup="title-order" columnTotalGroup="period-type-name">
+					<cellContents mode="Opaque" style="Crosstab_CT"/>
+				</crosstabCell>
+				<crosstabCell width="0" height="0" rowTotalGroup="title-order" columnTotalGroup="period-type-order">
+					<cellContents mode="Opaque" style="Crosstab_CT">
+						<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					</cellContents>
+				</crosstabCell>
+			</crosstab>
+		</band>
+	</summary>
+</jasperReport>

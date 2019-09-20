@@ -98,7 +98,6 @@ public class ScenarioRunEditor extends JDialog implements LoadingDss
 		_canceled = false;
 		if(_scenarioEditorPanel.validateRun())
 		{
-			setVisible(false);
 			dispose();
 		}
 		else
@@ -109,13 +108,13 @@ public class ScenarioRunEditor extends JDialog implements LoadingDss
 
 	private void cancelPerformed(ActionEvent e)
 	{
-		setVisible(false);
 		dispose();
 	}
 
 	@Override
 	public void dispose()
 	{
+		setVisible(false);
 		_progressBar.setIndeterminate(false);
 		_progressBar.setVisible(false);
 		_scenarioEditorPanel.shutdown();

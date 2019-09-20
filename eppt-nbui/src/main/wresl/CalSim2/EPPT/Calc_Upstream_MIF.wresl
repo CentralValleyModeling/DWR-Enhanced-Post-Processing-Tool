@@ -1,0 +1,278 @@
+/************************************
+
+Logic_Upstream MIF.wresl
+
+Yuxiang, DWR, BDO
+2019/02/07
+
+This file post process the MIF requirements on upstream during each timestep   
+**************************************/
+
+! Trinity River below Lewiston MIF (C100) requirement exceeded (100) / met (200) / Violated (300)
+define C100_MIF_CHECK {
+	case meet {
+		Condition ABS(C100 - Minflow_C100) < abs_threshold
+		Value 200
+	}
+	case exceeded {
+		Condition C100 - Minflow_C100 > abs_threshold 
+		Value 100
+	}
+	Case Violated {
+		Condition always 
+		Value 300
+	}
+}
+define Minflow_C100_DTS {alias Minflow_C100 kind 'DTS-MIF' units 'CFS'}
+define C100_MIF_STATUS_DTS {alias C100_MIF_CHECK kind 'DTS-STATUS' units 'NONE'}
+
+! Trinity River below Lewiston Capacity (C100)  exceeded (100) / met (200) / Violated (300)
+define C100_CAP_CHECK {
+	case meet {
+		Condition ABS(C100 - 6000) < abs_threshold
+		Value 200
+	}
+	case exceeded {
+		Condition C100 - 6000 > abs_threshold 
+		Value 100
+	}
+	Case Violated {
+		Condition always 
+		Value 300
+	}
+}
+define C100_CAP_STATUS_DTS {alias C100_CAP_CHECK kind 'DTS-STATUS' units 'NONE'}
+
+! Trinity River below Lewiston Dry (C100)  exceeded (100) / met (200) / Violated (300)
+define C100_DRY_CHECK {
+	case meet {
+		Condition ABS(C100) < abs_threshold
+		Value 200
+	}
+	case exceeded {
+		Condition C100 > abs_threshold 
+		Value 100
+	}
+	Case Violated {
+		Condition always 
+		Value 300
+	}
+}
+define C100_DRY_STATUS_DTS {alias C100_DRY_CHECK kind 'DTS-STATUS' units 'NONE'}
+
+
+! Clear Creek Below Whiskeytown MIF (C3) requirement exceeded (100) / met (200) / Violated (300)
+define C3_MIF_CHECK {
+	case meet {
+		Condition ABS(C3 - Minflow_C3) < abs_threshold
+		Value 200
+	}
+	case exceeded {
+		Condition C3 - Minflow_C3 > abs_threshold 
+		Value 100
+	}
+	Case Violated {
+		Condition always 
+		Value 300
+	}
+}
+define Minflow_C3_DTS {alias Minflow_C3 kind 'DTS-MIF' units 'CFS'}
+define C3_MIF_STATUS_DTS {alias C3_MIF_CHECK kind 'DTS-STATUS' units 'NONE'}
+
+
+! Sacramento River Below Keswick MIF (C5) requirement exceeded (100) / met (200) / Violated (300)
+define C5_MIF_CHECK {
+	case meet {
+		Condition abs(C5 - Minflow_C5) < abs_threshold
+		Value 200
+	}
+	case exceeded {
+		Condition C5 - Minflow_C5 > abs_threshold 
+		Value 100
+	}
+	Case Violated {
+		Condition always 
+		Value 300
+	}
+}
+define Minflow_C5_DTS {alias Minflow_C5 kind 'DTS-MIF' units 'CFS'}
+define C5_MIF_STATUS_DTS {alias C5_MIF_CHECK kind 'DTS-STATUS' units 'NONE'}
+
+! Sacramento River near Red Bluff MIF (C112) requirement exceeded (100) / met (200) / Violated (300)
+define C112_MIF_CHECK {
+	case meet {
+		Condition abs(C112 - Minflow_C112) < abs_threshold
+		Value 200
+	}
+	case exceeded {
+		Condition C112 - Minflow_C112 > abs_threshold 
+		Value 100
+	}
+	Case Violated {
+		Condition always 
+		Value 300
+	}
+}
+define Minflow_C112_DTS {alias Minflow_C112 kind 'DTS-MIF' units 'CFS'}
+define C112_MIF_STATUS_DTS {alias C112_MIF_CHECK kind 'DTS-STATUS' units 'NONE'}
+
+! Sacramento River near HAMILTON CITY MIF (C114) requirement exceeded (100) / met (200) / Violated (300)
+define C114_MIF_CHECK {
+	case meet {
+		Condition abs(C114 - Minflow_C114) < abs_threshold
+		Value 200
+	}
+	case exceeded {
+		Condition C114 - Minflow_C114 > abs_threshold 
+		Value 100
+	}
+	Case Violated {
+		Condition always 
+		Value 300
+	}
+}
+define Minflow_C114_DTS {alias Minflow_C114 kind 'DTS-MIF' units 'CFS'}
+define C114_MIF_STATUS_DTS {alias C114_MIF_CHECK kind 'DTS-STATUS' units 'NONE'}
+
+! Sacramento River near Wilkins Slough MIF (C129) requirement exceeded (100) / met (200) / Violated (300)
+define C129_MIF_CHECK {
+	case meet {
+		Condition abs(C129 - Minflow_C129) < abs_threshold
+		Value 200
+	}
+	case exceeded {
+		Condition C129 - Minflow_C129 > abs_threshold 
+		Value 100
+	}
+	Case Violated {
+		Condition always 
+		Value 300
+	}
+}
+define Minflow_C129_DTS {alias Minflow_C129 kind 'DTS-MIF' units 'CFS'}
+define C129_MIF_STATUS_DTS {alias C129_MIF_CHECK kind 'DTS-STATUS' units 'NONE'}
+
+! Sacramento River near Freeport MIF (C169) requirement exceeded (100) / met (200) / Violated (300)
+define C169_MIF_CHECK {
+	case meet {
+		Condition abs(C169 - Minflow_C169) < abs_threshold
+		Value 200
+	}
+	case exceeded {
+		Condition C169 - Minflow_C169 > abs_threshold 
+		Value 100
+	}
+	Case Violated {
+		Condition always 
+		Value 300
+	}
+}
+define Minflow_C169_DTS {alias Minflow_C169 kind 'DTS-MIF' units 'CFS'}
+define C169_MIF_STATUS_DTS {alias C169_MIF_CHECK kind 'DTS-STATUS' units 'NONE'}
+
+! Thermolito low flow channel MIF (C200A) requirement exceeded (100) / met (200) / Violated (300)
+define C200A_MIF_CHECK {
+	case meet {
+		Condition abs(C200A - Minflow_C200A) < abs_threshold
+		Value 200
+	}
+	case exceeded {
+		Condition C200A - Minflow_C200A > abs_threshold 
+		Value 100
+	}
+	Case Violated {
+		Condition always 
+		Value 300
+	}
+}
+define Minflow_C200A_DTS {alias Minflow_C200A kind 'DTS-MIF' units 'CFS'}
+define C200A_MIF_STATUS_DTS {alias C200A_MIF_CHECK kind 'DTS-STATUS' units 'NONE'}
+
+! Feather River below Thermalito Complex MIF (C203) requirement exceeded (100) / met (200) / Violated (300)
+define C203_MIF_CHECK {
+	case meet {
+		Condition abs(C203 - minflow_C203) < abs_threshold !goal meetC203Minflow {C203_MIF < max(minflow_C203, minflow_c223)} - minflow_c223 is in SV file
+		Value 200                                       !define C203min {alias minflow_C203 kind 'CHANNEL-MINFLOW' units 'CFS'}
+	}
+	case exceeded {
+		Condition C203 - minflow_C203 > abs_threshold 
+		Value 100
+	}
+	Case Violated {
+		Condition always 
+		Value 300
+	}
+}
+define Minflow_C203_DTS {alias minflow_C203 kind 'DTS-MIF' units 'CFS'}
+define C203_MIF_STATUS_DTS {alias C203_MIF_CHECK kind 'DTS-STATUS' units 'NONE'}
+
+
+! Feather River near Verona MIF (C223) requirement exceeded (100) / met (200) / Violated (300)
+! minflow_C223 is in SV
+define C223_MIF_CHECK {
+	case meet {
+		Condition abs(C223 - /* C223_MIF */ minflow_C223) < abs_threshold
+		Value 200
+	}
+	case exceeded {
+		Condition C223 - /* C223_MIF */ minflow_C223 > abs_threshold 
+		Value 100
+	}
+	Case Violated {
+		Condition always 
+		Value 300
+	}
+}
+define Minflow_C223_DTS {alias minflow_C223 kind 'DTS-MIF' units 'CFS'}
+define C223_MIF_STATUS_DTS {alias C223_MIF_CHECK kind 'DTS-STATUS' units 'NONE'}
+
+
+! American River below Nimbus MIF (C9) requirement exceeded (100) / met (200) / Violated (300)
+define C9_MIF_CHECK {
+	case meet {
+		Condition abs(C9 - Minflow_C9) < abs_threshold
+		Value 200
+	}
+	case exceeded {
+		Condition C9 - Minflow_C9 > abs_threshold 
+		Value 100
+	}
+	Case Violated {
+		Condition always 
+		Value 300
+	}
+}
+define Minflow_C9_DTS {alias minflow_C9 kind 'DTS-MIF' units 'CFS'}
+define C9_MIF_STATUS_DTS {alias C9_MIF_CHECK kind 'DTS-STATUS' units 'NONE'}
+
+
+! American River at H St MIF (C303) requirement exceeded (100) / met (200) / Violated (300)
+define C303_MIF_CHECK {
+	case meet {
+		Condition abs(C303 - Minflow_C303) < abs_threshold
+		Value 200
+	}
+	case exceeded {
+		Condition C303 - Minflow_C303 > abs_threshold 
+		Value 100
+	}
+	Case Violated {
+		Condition always 
+		Value 300
+	}
+}
+define Minflow_C303_DTS {alias minflow_C303 kind 'DTS-MIF' units 'CFS'}
+define C303_MIF_STATUS_DTS {alias C303_MIF_CHECK kind 'DTS-STATUS' units 'NONE'}
+
+
+
+
+
+
+
+
+
+
+
+
+

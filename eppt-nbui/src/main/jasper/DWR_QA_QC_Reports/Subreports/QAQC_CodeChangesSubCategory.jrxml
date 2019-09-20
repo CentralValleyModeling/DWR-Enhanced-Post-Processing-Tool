@@ -11,7 +11,7 @@
   ~ GNU General Public License
   -->
 
-<!-- Created with Jaspersoft Studio version 6.8.0.final using JasperReports Library version 6.8.0-2ed8dfabb690ff337a5797129f2cd92902b0c87b  -->
+<!-- Created with Jaspersoft Studio version 6.9.0.final using JasperReports Library version 6.9.0-cb8f9004be492ccc537180b49c026951f4220bf3  -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="QAQC_CodeChangesSubCategory" language="groovy" pageWidth="427" pageHeight="684" columnWidth="427" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" whenResourceMissingType="Empty" uuid="da75db69-3924-4f44-998a-80195014db99">
 	<property name="net.sf.jasperreports.data.adapter" value="QAQC_Datasource.xml"/>
 	<property name="com.jaspersoft.studio.unit.pageHeight" value="pixel"/>
@@ -104,7 +104,10 @@
 					<textFieldExpression><![CDATA[$F{change-subtype}]]></textFieldExpression>
 				</textField>
 				<subreport isUsingCache="false" runToBottom="false" overflowType="Stretch">
-					<reportElement positionType="Float" stretchType="RelativeToBandHeight" isPrintRepeatedValues="false" x="81" y="1" width="346" height="15" printWhenGroupChanges="change-subtype" uuid="7a131b2f-c13b-4bac-a46e-0c09de459bc5"/>
+					<reportElement positionType="Float" stretchType="RelativeToTallestObject" isPrintRepeatedValues="false" x="81" y="1" width="346" height="15" printWhenGroupChanges="change-subtype" uuid="7a131b2f-c13b-4bac-a46e-0c09de459bc5">
+						<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+					</reportElement>
 					<subreportParameter name="p_change-subtype">
 						<subreportParameterExpression><![CDATA[$F{change-subtype}]]></subreportParameterExpression>
 					</subreportParameter>
@@ -120,26 +123,8 @@
 					<subreportParameter name="XML_INPUT_STREAM">
 						<subreportParameterExpression><![CDATA[$P{XML_INPUT_STREAM}]]></subreportParameterExpression>
 					</subreportParameter>
-					<subreportParameter name="XML_FILE">
-						<subreportParameterExpression><![CDATA[$P{XML_FILE}]]></subreportParameterExpression>
-					</subreportParameter>
-					<subreportParameter name="net.sf.jasperreports.xml.source">
-						<subreportParameterExpression><![CDATA[$P{net.sf.jasperreports.xml.source}]]></subreportParameterExpression>
-					</subreportParameter>
-					<subreportParameter name="XML_DATE_PATTERN">
-						<subreportParameterExpression><![CDATA[$P{XML_DATE_PATTERN}]]></subreportParameterExpression>
-					</subreportParameter>
-					<subreportParameter name="XML_NUMBER_PATTERN">
-						<subreportParameterExpression><![CDATA[$P{XML_NUMBER_PATTERN}]]></subreportParameterExpression>
-					</subreportParameter>
-					<subreportParameter name="XML_LOCALE">
-						<subreportParameterExpression><![CDATA[$P{XML_LOCALE}]]></subreportParameterExpression>
-					</subreportParameter>
-					<subreportParameter name="XML_TIME_ZONE">
-						<subreportParameterExpression><![CDATA[$P{XML_TIME_ZONE}]]></subreportParameterExpression>
-					</subreportParameter>
 					<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
-					<subreportExpression><![CDATA["Subreports/QAQC_CodeChangesFile.jasper"]]></subreportExpression>
+					<subreportExpression><![CDATA["/Subreports/QAQC_CodeChangesFile.jasper"]]></subreportExpression>
 				</subreport>
 				<line>
 					<reportElement mode="Transparent" x="0" y="0" width="427" height="1" uuid="91c702ec-d271-431e-b3c8-9f03b98da5f5"/>
