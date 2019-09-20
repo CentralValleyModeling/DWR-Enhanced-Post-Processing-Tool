@@ -406,7 +406,7 @@ public class TrendReportPanel extends JFXPanel
 				{
 					EpptReportingComputedSet epptReportingComputedSet = computeForMetrics(guiLink, statistic, monthPeriod);
 					JSONObject jsonObject = epptReportingComputedSet.toJson();
-					LOGGER.log(Level.INFO, jsonObject.toString());
+					LOGGER.log(Level.INFO, jsonObject + "");
 					retval.add(jsonObject);
 				}
 			}

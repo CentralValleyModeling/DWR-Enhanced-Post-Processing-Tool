@@ -16,9 +16,11 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.Month;
 import java.time.ZoneId;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
+import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -28,6 +30,7 @@ import java.util.TreeMap;
 import java.util.concurrent.TimeUnit;
 
 import gov.ca.water.calgui.bo.GUILinksAllModelsBO;
+import gov.ca.water.calgui.bo.WaterYearDefinition;
 import gov.ca.water.calgui.busservice.impl.DSSGrabber1SvcImpl;
 import gov.ca.water.calgui.compute.stats.Statistics;
 import gov.ca.water.calgui.project.EpptScenarioRun;
@@ -49,12 +52,15 @@ public class EpptReportingComputer
 	private final GUILinksAllModelsBO _guiLink;
 	private final Statistics _statistics;
 	private final EpptReportingMonths.MonthPeriod _monthPeriod;
+	private final WaterYearDefinition _waterYearDefinition;
 
-	public EpptReportingComputer(GUILinksAllModelsBO guiLink, Statistics statistics, EpptReportingMonths.MonthPeriod monthPeriod)
+	public EpptReportingComputer(GUILinksAllModelsBO guiLink, Statistics statistics, EpptReportingMonths.MonthPeriod monthPeriod,
+								 WaterYearDefinition waterYearDefinition)
 	{
 		_guiLink = guiLink;
 		_statistics = statistics;
 		_monthPeriod = monthPeriod;
+		_waterYearDefinition = waterYearDefinition;
 	}
 
 	public EpptReportingComputed computeCfs(EpptScenarioRun scenarioRun, LocalDate start, LocalDate end)
@@ -92,13 +98,28 @@ public class EpptReportingComputer
 		}
 		Map<LocalDateTime, Double> filteredPeriod = filterPeriod(retval);
 		Map<Month, Double> calculate = _statistics.calculate(_guiLink, filteredPeriod);
-		return new EpptReportingComputed(scenarioRun, retval, filteredPeriod, sort(calculate), units);
+		Map<Month, Double> calculateEop = new EnumMap<>(Month.class);
+		for(Map.Entry<Month, Double> entry : calculate.entrySet())
+		{
+			calculateEop.put(entry.getKey().minus(1), entry.getValue());
+		}
+		return new EpptReportingComputed(scenarioRun, retval, filteredPeriod, sort(calculateEop), units);
 	}
 
 	private SortedMap<Month, Double> sort(Map<Month, Double> calculate)
 	{
 		List<Month> months = EpptReportingMonths.getMonths(_monthPeriod);
-		SortedMap<Month, Double> retval = new TreeMap<>(Comparator.comparingInt(months::indexOf));
+		List<Month> monthsSorted = new ArrayList<>();
+		Month startMonth = _waterYearDefinition.getStartMonth();
+		for(int i = 0; i < Month.values().length;i++)
+		{
+			Month month = startMonth.plus(0);
+			if(months.contains(month))
+			{
+				monthsSorted.add(month);
+			}
+		}
+		SortedMap<Month, Double> retval = new TreeMap<>(Comparator.comparingInt(monthsSorted::indexOf));
 		retval.putAll(calculate);
 		return retval;
 	}
@@ -108,7 +129,7 @@ public class EpptReportingComputer
 		List<Month> months = EpptReportingMonths.getMonths(_monthPeriod);
 		return values.entrySet()
 					 .stream()
-					 .filter(e -> months.contains(e.getKey().getMonth()))
+					 .filter(e -> months.contains(e.getKey().getMonth().minus(1)))
 					 .collect(toMap(Map.Entry::getKey, Map.Entry::getValue));
 	}
 
