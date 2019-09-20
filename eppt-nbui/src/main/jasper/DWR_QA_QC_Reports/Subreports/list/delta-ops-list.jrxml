@@ -212,7 +212,7 @@
 					<font size="12"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{sub-module-name}]]></textFieldExpression>
-				<anchorNameExpression><![CDATA["Non-recoverable Spill Events"]]></anchorNameExpression>
+				<anchorNameExpression><![CDATA[$F{sub-module-name}]]></anchorNameExpression>
 			</textField>
 		</band>
 	</title>
