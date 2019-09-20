@@ -295,7 +295,7 @@
 	<parameter name="XML_DATA_DOCUMENT" class="org.w3c.dom.Document" isForPrompting="false"/>
 	<parameter name="p_report_name" class="java.lang.String" isForPrompting="false" evaluationTime="Early">
 		<parameterDescription><![CDATA["The report name should come from a field in the main report"]]></parameterDescription>
-		<defaultValueExpression><![CDATA["resops-summary-may"]]></defaultValueExpression>
+		<defaultValueExpression><![CDATA["nod-ground-summary-weir-ops"]]></defaultValueExpression>
 	</parameter>
 	<queryString language="XPath">
 		<![CDATA[/qaqc-report/summary/module/section/sub-module/chart/$P{p_report_name}/period-type/seasonal-type/scenario/title/header/sub-header/component]]>
@@ -477,7 +477,7 @@
 								<rightPen lineWidth="1.0"/>
 							</box>
 							<textField isStretchWithOverflow="true" isBlankWhenNull="false">
-								<reportElement style="Labels" stretchType="ContainerBottom" isPrintRepeatedValues="false" x="0" y="0" width="140" height="16" uuid="b15f59ce-f57a-43dd-a3a2-1cf1904476fe">
+								<reportElement style="Labels" stretchType="ContainerBottom" x="0" y="0" width="140" height="16" uuid="b15f59ce-f57a-43dd-a3a2-1cf1904476fe">
 									<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 								</reportElement>
 								<box topPadding="2" leftPadding="3" bottomPadding="2" rightPadding="3"/>

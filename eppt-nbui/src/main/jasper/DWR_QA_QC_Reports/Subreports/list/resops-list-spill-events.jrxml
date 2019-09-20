@@ -55,7 +55,7 @@
 		<fieldDescription><![CDATA[child::text()]]></fieldDescription>
 	</field>
 	<field name="sub-module-name" class="java.lang.String">
-		<property name="net.sf.jasperreports.xpath.field.expression" value="/qaqc-report/summary/module/section/sub-module/@sub-module-name"/>
+		<property name="net.sf.jasperreports.xpath.field.expression" value="ancestor::sub-module/@sub-module-name"/>
 		<fieldDescription><![CDATA[ancestor::sub-module/@sub-module-name]]></fieldDescription>
 	</field>
 	<variable name="v_groupcount" class="java.lang.Integer" incrementType="Group" incrementGroup="Header" calculation="Count">
@@ -195,12 +195,12 @@
 		<band splitType="Stretch"/>
 	</background>
 	<title>
-		<band height="18" splitType="Stretch">
+		<band height="20" splitType="Stretch">
 			<textField isStretchWithOverflow="true" evaluationTime="Report" pattern="" bookmarkLevel="4">
-				<reportElement mode="Transparent" x="0" y="0" width="360" height="18" forecolor="#2F5496" backcolor="#FFFFFF" uuid="d3f33482-b6b7-463b-a0af-bc99731f98a2">
-					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				<reportElement mode="Transparent" x="0" y="0" width="360" height="20" forecolor="#2F5496" backcolor="#FFFFFF" uuid="d3f33482-b6b7-463b-a0af-bc99731f98a2">
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				</reportElement>
 				<box padding="2">
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>

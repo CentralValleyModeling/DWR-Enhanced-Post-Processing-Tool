@@ -103,7 +103,18 @@ public class PlotlyExceedancePage extends PlotlyChart
 																   .filter(Objects::nonNull)
 																   .mapToDouble(v -> v)
 																   .summaryStatistics();
-		return new JSONArray(new double[]{summaryStatistics.getMin() - 10, summaryStatistics.getMax() + 10});
+		double min = summaryStatistics.getMin();
+		double max = summaryStatistics.getMax();
+		if(min == Double.POSITIVE_INFINITY || min == Double.NEGATIVE_INFINITY)
+		{
+			min = 0;
+		}
+		if(max == Double.POSITIVE_INFINITY || max == Double.NEGATIVE_INFINITY)
+		{
+			max = 100;
+		}
+
+		return new JSONArray(new double[]{min - 10, max + 10});
 	}
 
 	@Override

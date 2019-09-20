@@ -119,7 +119,7 @@ class TestJythonLambda
 	{
 		EpptScenarioRun scenarioRun = buildRun();
 
-		TitleReader titleReader = new TitleReader();
+		TitleReader titleReader = new TitleReader(scenarioRun);
 		String dtsTitle = titleReader.getDtsTitle(170);
 		Assertions.assertEquals("Negative Carriage Water", dtsTitle);
 		JythonScriptRunner runner = new JythonScriptRunner(scenarioRun, new CommonPeriodFilter(LocalDateTime.now(),LocalDateTime.now()));
@@ -132,7 +132,7 @@ class TestJythonLambda
 	{
 		EpptScenarioRun scenarioRun = buildRun();
 
-		TitleReader titleReader = new TitleReader();
+		TitleReader titleReader = new TitleReader(scenarioRun);
 		String dtsTitle = titleReader.getGuiLinkId(102);
 		Assertions.assertEquals("Trinity Reservoir Storage", dtsTitle);
 		JythonScriptRunner runner = new JythonScriptRunner(scenarioRun, new CommonPeriodFilter(LocalDateTime.now(),LocalDateTime.now()));

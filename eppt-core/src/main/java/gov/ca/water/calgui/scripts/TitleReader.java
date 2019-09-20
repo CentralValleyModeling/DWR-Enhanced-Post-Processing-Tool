@@ -12,6 +12,7 @@
 
 package gov.ca.water.calgui.scripts;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import gov.ca.water.calgui.EpptInitializationException;
@@ -20,6 +21,7 @@ import gov.ca.water.calgui.bo.GUILinksAllModelsBO;
 import gov.ca.water.calgui.busservice.impl.DetailedIssuesReader;
 import gov.ca.water.calgui.busservice.impl.GuiLinksSeedDataSvcImpl;
 import gov.ca.water.calgui.constant.Constant;
+import gov.ca.water.calgui.constant.EpptPreferences;
 import gov.ca.water.calgui.project.EpptScenarioRun;
 
 /**
@@ -30,14 +32,28 @@ import gov.ca.water.calgui.project.EpptScenarioRun;
  */
 public class TitleReader
 {
+	private final EpptScenarioRun _scenarioRun;
+
+	public TitleReader(EpptScenarioRun scenarioRun)
+	{
+		_scenarioRun = scenarioRun;
+	}
 
 	public String getDtsTitle(int detailsLink)
 	{
 		return DetailedIssuesReader.getInstance().getDetailedIssues().stream()
-							  .filter(di -> di.getDetailedIssueId() == detailsLink)
-							  .map(DetailedIssue::getTitle)
-							  .findAny()
-							  .orElse("");
+								   .filter(di -> di.getDetailedIssueId() == detailsLink)
+								   .map(detailedIssue ->
+								   {
+									   String title = detailedIssue.getTitle();
+									   if(title == null || title.isEmpty())
+									   {
+										   title = detailedIssue.getLinkedVar();
+									   }
+									   return title;
+								   })
+								   .findAny()
+								   .orElse("");
 	}
 
 	public String getGuiLinkId(int i)
@@ -45,7 +61,19 @@ public class TitleReader
 		GUILinksAllModelsBO objById = GuiLinksSeedDataSvcImpl.getSeedDataSvcImplInstance().getObjById(String.valueOf(i));
 		if(objById != null)
 		{
-			return objById.getPlotTitle();
+			String plotTitle = objById.getPlotTitle();
+			if(plotTitle == null || plotTitle.isEmpty())
+			{
+				if(_scenarioRun != null)
+				{
+					plotTitle = objById.getPrimary().get(_scenarioRun.getModel());
+				}
+				else
+				{
+					plotTitle = objById.getPrimary().values().stream().findAny().orElse("");
+				}
+			}
+			return plotTitle;
 		}
 		else
 		{

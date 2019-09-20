@@ -179,7 +179,7 @@ class ProjectConfigurationIOVersion2
 			String description = scenarioJson.getString(SCENARIO_DESCRIPTION);
 			GUILinksAllModelsBO.Model model = GUILinksAllModelsBO.Model.findModel(
 					scenarioJson.getString(SCENARIO_MODEL));
-			Path outputPath = Paths.get(scenarioJson.getString(SCENARIO_OUTPUT_PATH));
+			Path outputPath =  resolvePath(selectedPath, Paths.get(scenarioJson.getString(SCENARIO_OUTPUT_PATH)));
 			Path wreslMain = resolvePath(selectedPath, Paths.get(scenarioJson.getString(SCENARIO_WRESL_MAIN)));
 			Path waterYearTable = resolvePath(selectedPath, Paths.get(Constant.WY_TYPES_TABLE));
 			if(scenarioJson.has(SCENARIO_WATER_TABLE))

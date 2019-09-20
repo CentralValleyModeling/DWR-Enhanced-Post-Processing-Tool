@@ -121,11 +121,11 @@
 		</band>
 	</title>
 	<columnHeader>
-		<band height="18" splitType="Stretch">
+		<band height="20" splitType="Stretch">
 			<textField isStretchWithOverflow="true" evaluationTime="Report" pattern="" bookmarkLevel="4">
-				<reportElement mode="Transparent" x="0" y="0" width="360" height="18" forecolor="#2F5496" backcolor="#FFFFFF" uuid="3bbef2d1-2a50-47df-92c8-55788c8a1e3b">
-					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				<reportElement mode="Transparent" x="0" y="0" width="360" height="20" forecolor="#2F5496" backcolor="#FFFFFF" uuid="3bbef2d1-2a50-47df-92c8-55788c8a1e3b">
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				</reportElement>
 				<box padding="2">
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>

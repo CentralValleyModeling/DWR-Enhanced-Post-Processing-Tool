@@ -1,16 +1,4 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!--
-  ~ Enhanced Post Processing Tool (EPPT) Copyright (c) 2019.
-  ~
-  ~ EPPT is copyrighted by the State of California, Department of Water Resources. It is licensed
-  ~ under the GNU General Public License, version 2. This means it can be
-  ~ copied, distributed, and modified freely, but you may not restrict others
-  ~ in their ability to copy, distribute, and modify it. See the license below
-  ~ for more details.
-  ~
-  ~ GNU General Public License
-  -->
-
 <!-- Created with Jaspersoft Studio version 6.9.0.final using JasperReports Library version 6.9.0-cb8f9004be492ccc537180b49c026951f4220bf3  -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="QAQC_AlternativeIssuesReport" language="groovy" pageWidth="504" pageHeight="684" whenNoDataType="BlankPage" columnWidth="504" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" whenResourceMissingType="Empty" uuid="da75db69-3924-4f44-998a-80195014db99">
 	<property name="net.sf.jasperreports.data.adapter" value="QAQC_Datasource.xml"/>
@@ -67,7 +55,7 @@
 		<fieldDescription><![CDATA[child::text()]]></fieldDescription>
 	</field>
 	<field name="sub-module-name" class="java.lang.String">
-		<property name="net.sf.jasperreports.xpath.field.expression" value="/qaqc-report/summary/module/section/sub-module/@sub-module-name"/>
+		<property name="net.sf.jasperreports.xpath.field.expression" value="ancestor::sub-module/@sub-module-name"/>
 		<fieldDescription><![CDATA[ancestor::sub-module/@sub-module-name]]></fieldDescription>
 	</field>
 	<variable name="v_groupcount" class="java.lang.Integer" incrementType="Group" incrementGroup="Header" calculation="Count">
@@ -207,12 +195,12 @@
 		<band splitType="Stretch"/>
 	</background>
 	<title>
-		<band height="18" splitType="Stretch">
+		<band height="20" splitType="Stretch">
 			<textField isStretchWithOverflow="true" evaluationTime="Report" pattern="" bookmarkLevel="4">
-				<reportElement mode="Transparent" x="0" y="0" width="360" height="18" forecolor="#2F5496" backcolor="#FFFFFF" uuid="d3f33482-b6b7-463b-a0af-bc99731f98a2">
-					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				<reportElement mode="Transparent" x="0" y="0" width="360" height="20" forecolor="#2F5496" backcolor="#FFFFFF" uuid="d3f33482-b6b7-463b-a0af-bc99731f98a2">
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				</reportElement>
 				<box padding="2">
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>

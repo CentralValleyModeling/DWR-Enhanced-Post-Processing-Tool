@@ -135,10 +135,10 @@
 					<anchorNameExpression><![CDATA["Sharing of Central Valley Supplies during Balanced Conditions"]]></anchorNameExpression>
 				</textField>
 			</band>
-			<band height="19">
+			<band height="29">
 				<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				<subreport>
-					<reportElement stretchType="ElementGroupHeight" x="0" y="18" width="504" height="1" uuid="be0cbc9b-b4bc-43e0-9462-4e72ea6c8e15">
+					<reportElement stretchType="ElementGroupHeight" x="0" y="28" width="504" height="1" uuid="be0cbc9b-b4bc-43e0-9462-4e72ea6c8e15">
 						<property name="com.jaspersoft.studio.unit.height" value="px"/>
 						<property name="com.jaspersoft.studio.unit.x" value="px"/>
 						<property name="com.jaspersoft.studio.unit.y" value="px"/>
@@ -152,6 +152,23 @@
 					<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
 					<subreportExpression><![CDATA["/DWR_QA_QC_Reports/Subreports/base-alt-diff-table/"+$V{Section_Group_Footer_4}+".jasper"]]></subreportExpression>
 				</subreport>
+				<textField isStretchWithOverflow="true" evaluationTime="Report" pattern="" bookmarkLevel="4">
+					<reportElement mode="Transparent" x="0" y="10" width="360" height="18" forecolor="#2F5496" backcolor="#FFFFFF" uuid="cd011a02-17db-436e-a40b-a9cd6bc0f17f">
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+						<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					</reportElement>
+					<box padding="2">
+						<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Left" verticalAlignment="Middle">
+						<font fontName="Arial" size="12"/>
+					</textElement>
+					<textFieldExpression><![CDATA["Central Valley Project and State Water Project Annual Supplies"]]></textFieldExpression>
+					<anchorNameExpression><![CDATA["Central Valley Project and State Water Project Annual Supplies"]]></anchorNameExpression>
+				</textField>
 			</band>
 			<band height="47">
 				<property name="com.jaspersoft.studio.unit.height" value="px"/>

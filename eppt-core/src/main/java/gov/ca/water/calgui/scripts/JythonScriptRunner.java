@@ -92,7 +92,7 @@ public class JythonScriptRunner
 	private void initializeGlobalVariables(CommonPeriodFilter commonPeriodFilter)
 	{
 		DssReader dssReader = new DssReader(_epptScenarioRun);
-		TitleReader titleReader = new TitleReader();
+		TitleReader titleReader = new TitleReader(_epptScenarioRun);
 		PYTHON_ENGINE.put("dssReader", dssReader);
 		PYTHON_ENGINE.put("titleReader", titleReader);
 		PYTHON_ENGINE.put("commonPeriodFilter", commonPeriodFilter);
