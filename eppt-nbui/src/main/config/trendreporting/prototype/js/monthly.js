@@ -105,7 +105,7 @@ function plot(data) {
         },
         yaxis: {
             title: {
-                text: 'Volume (' + units + ')',
+                text: 'Volume (CFS)',
             }
         },
         showlegend: true,
