@@ -85,7 +85,7 @@ class ProjectConfigurationIO
 			else if(VERSION_2_0.equalsIgnoreCase(jsonObject.getString(VERSION_KEY)))
 			{
 				ProjectConfigurationIOVersion2 projectConfigurationIOVersion1 = new ProjectConfigurationIOVersion2();
-				return projectConfigurationIOVersion1.loadConfiguration(selectedPath, jsonObject);
+				return projectConfigurationIOVersion1.loadConfiguration(jsonObject);
 			}
 			else
 			{
