@@ -26,15 +26,19 @@ import java.util.concurrent.CompletableFuture;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Stream;
+import javax.swing.*;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
+import gov.ca.water.calgui.EpptInitializationException;
 import gov.ca.water.calgui.bo.GUILinksAllModelsBO;
 import gov.ca.water.calgui.bo.WaterYearDefinition;
+import gov.ca.water.calgui.bo.WaterYearIndex;
 import gov.ca.water.calgui.busservice.IGuiLinksSeedDataSvc;
 import gov.ca.water.calgui.busservice.impl.GuiLinksSeedDataSvcImpl;
 import gov.ca.water.calgui.busservice.impl.WaterYearDefinitionSvc;
+import gov.ca.water.calgui.busservice.impl.WaterYearTableReader;
 import gov.ca.water.calgui.compute.EpptReportingComputed;
 import gov.ca.water.calgui.compute.EpptReportingComputedSet;
 import gov.ca.water.calgui.compute.EpptReportingComputer;
@@ -54,6 +58,7 @@ import javafx.scene.Cursor;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.CheckBox;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
@@ -97,6 +102,7 @@ public class TrendReportPanel extends JFXPanel
 	private ListView<Statistics> _statisticsListView;
 	private ListView<EpptReportingMonths.MonthPeriod> _seasonalPeriodListView;
 	private CheckBox _tafCheckbox;
+	private ComboBox<WaterYearIndex> _waterYearIndexJComboBox;
 	private FXCalendar _startCalendar;
 	private FXCalendar _endCalendar;
 	private Path _currentScript;
@@ -116,6 +122,7 @@ public class TrendReportPanel extends JFXPanel
 		_statisticsListView = new ListView<>();
 		_seasonalPeriodListView = new ListView<>();
 		_tafCheckbox = new CheckBox("CFS -> TAF/mon");
+		_waterYearIndexJComboBox = new ComboBox<>();
 
 		Insets insets = new Insets(10);
 		BorderPane mainPane = new BorderPane();
@@ -169,7 +176,8 @@ public class TrendReportPanel extends JFXPanel
 		gridPane.add(_startCalendar, 1, 0);
 		gridPane.add(new Label("End: "), 0, 1);
 		gridPane.add(_endCalendar, 1, 1);
-//		gridPane.add(_tafCheckbox, 0, 3, 2, 1);
+		gridPane.add(new Label("Water Year Index: "), 0, 2);
+		gridPane.add(_waterYearIndexJComboBox, 1, 2);
 		gridPane.setHgap(10);
 		gridPane.setVgap(10);
 		gridPane.setPrefHeight(125);
@@ -347,7 +355,37 @@ public class TrendReportPanel extends JFXPanel
 		_scenarioRuns.clear();
 		_scenarioRuns.add(baseRun);
 		_scenarioRuns.addAll(alternatives);
-		Platform.runLater(this::reload);
+		Platform.runLater(() ->
+		{
+			fillWaterYearIndexCombo(baseRun);
+			reload();
+		});
+	}
+
+	private void fillWaterYearIndexCombo(EpptScenarioRun baseRun)
+	{
+		try
+		{
+			WaterYearTableReader waterYearTableReader = new WaterYearTableReader(baseRun.getWaterYearTable());
+			WaterYearIndex selectedItem = _waterYearIndexJComboBox.selectionModelProperty().get().getSelectedItem();
+			List<WaterYearIndex> indices = waterYearTableReader.read();
+			_waterYearIndexJComboBox.itemsProperty().get().clear();
+			_waterYearIndexJComboBox.itemsProperty().get().addAll(indices);
+			if(selectedItem == null)
+			{
+				_waterYearIndexJComboBox.selectionModelProperty().get().select(0);
+			}
+			else
+			{
+				WaterYearIndex waterYearIndex = indices.stream().filter(f -> f.toString().equals(selectedItem.toString()))
+													   .findAny().orElse(indices.get(0));
+				_waterYearIndexJComboBox.selectionModelProperty().get().select(waterYearIndex);
+			}
+		}
+		catch(EpptInitializationException e)
+		{
+			LOGGER.log(Level.SEVERE, "Error reading water year table from: " + baseRun.getName(), e);
+		}
 	}
 
 	private void loadPane(boolean selected, Path path)
