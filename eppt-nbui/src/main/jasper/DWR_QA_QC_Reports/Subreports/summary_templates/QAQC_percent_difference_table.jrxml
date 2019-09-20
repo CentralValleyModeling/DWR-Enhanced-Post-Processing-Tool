@@ -134,7 +134,7 @@
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 				</box>
 				<textElement textAlignment="Left" verticalAlignment="Middle">
-					<font fontName="Arial" size="12"/>
+					<font size="12"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{sub-module-name}]]></textFieldExpression>
 				<anchorNameExpression><![CDATA[$F{sub-module-name}]]></anchorNameExpression>

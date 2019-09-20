@@ -11,7 +11,7 @@
 	<style name="row-label" mode="Transparent" hTextAlign="Left" fontSize="10" isBold="false" isItalic="false" isUnderline="false">
 		<conditionalStyle>
 			<conditionExpression><![CDATA[$V{sub-header-order}<0]]></conditionExpression>
-			<style hTextAlign="Left" fontName="Arial" fontSize="10" isBold="true" isItalic="false" isUnderline="false"/>
+			<style hTextAlign="Left" fontSize="10" isBold="true" isItalic="false" isUnderline="false"/>
 		</conditionalStyle>
 	</style>
 	<style name="Crosstab_CH" mode="Opaque" backcolor="#FFFFFF">
