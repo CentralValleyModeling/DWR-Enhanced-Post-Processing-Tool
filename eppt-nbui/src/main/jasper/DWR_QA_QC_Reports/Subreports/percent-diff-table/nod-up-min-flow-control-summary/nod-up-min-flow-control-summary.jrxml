@@ -34,7 +34,7 @@
 		</conditionalStyle>
 	</style>
 	<parameter name="p_report_name" class="java.lang.String" isForPrompting="false">
-		<defaultValueExpression><![CDATA["delta-ops-control-percent-diff"]]></defaultValueExpression>
+		<defaultValueExpression><![CDATA["nod-up-min-flow-control-summary"]]></defaultValueExpression>
 	</parameter>
 	<queryString language="XPath">
 		<![CDATA[/qaqc-report/summary/module/section/sub-module/chart/$P{p_report_name}/period-type/seasonal-type/scenario/title/header/sub-header/component]]>
@@ -111,7 +111,7 @@
 		<property name="net.sf.jasperreports.xpath.field.expression" value="ancestor::sub-module/@sub-module-name"/>
 		<fieldDescription><![CDATA[ancestor::sub-module/@sub-module-name]]></fieldDescription>
 	</field>
-	<filterExpression><![CDATA[$F{component-order}!=null]]></filterExpression>
+	<filterExpression><![CDATA[$F{sub-header-name}!=null]]></filterExpression>
 	<background>
 		<band splitType="Stretch"/>
 	</background>
