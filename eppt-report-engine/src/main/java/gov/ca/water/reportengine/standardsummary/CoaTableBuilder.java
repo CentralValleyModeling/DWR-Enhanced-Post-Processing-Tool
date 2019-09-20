@@ -14,6 +14,7 @@ package gov.ca.water.reportengine.standardsummary;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.function.Function;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -80,12 +81,31 @@ class CoaTableBuilder extends TableBuilder
 		Element retval = getDocument().createElement(SCENARIO_ELEMENT);
 		retval.setAttribute(SCENARIO_NAME_ATTRIBUTE, name);
 
-		String cvpName = getCvpName(epptChart);
-		String swpName = getSwpName(epptChart);
+		String cvpName = "CVP"; getCvpName(epptChart);
+		String swpName = "SWP";getSwpName(epptChart);
 
-		Element cvpElement = buildRegionElement(cvpName, scenarioRun, epptChart);
-		Element swpElement = buildRegionElement(swpName, scenarioRun, epptChart);
-		Element totalElement = buildRegionTotalElement(scenarioRun, epptChart);
+
+		epptChart.getChartComponents();
+		List<ChartComponent> cvpChartComponents = new ArrayList<>();
+		List<ChartComponent> swpChartComponents = new ArrayList<>();
+		for(int i = 0; i < epptChart.getChartComponents().size(); i++)
+		{
+			if(i % 2 == 0)
+			{
+				cvpChartComponents.add(epptChart.getChartComponents().get(i));
+			}
+			else
+			{
+				swpChartComponents.add(epptChart.getChartComponents().get(i));
+			}
+		}
+		EpptChart cvpChart = new EpptChart(epptChart.getModule(), epptChart.getSection(), epptChart.getSubModule(), epptChart.getChartType(),
+				epptChart.getChartId(), cvpChartComponents);
+		EpptChart swpChart = new EpptChart(epptChart.getModule(), epptChart.getSection(), epptChart.getSubModule(), epptChart.getChartType(),
+				epptChart.getChartId(), swpChartComponents);
+		Element cvpElement = buildRegionElement(cvpName, scenarioRun, cvpChart);
+		Element swpElement = buildRegionElement(swpName, scenarioRun, swpChart);
+		Element totalElement = buildRegionTotalElement(scenarioRun, cvpChart, swpChart);
 		cvpElement.setAttribute(REGION_ORDER_ATTRIBUTE, String.valueOf(0));
 		swpElement.setAttribute(REGION_ORDER_ATTRIBUTE, String.valueOf(1));
 		totalElement.setAttribute(REGION_ORDER_ATTRIBUTE, String.valueOf(2));
@@ -125,13 +145,41 @@ class CoaTableBuilder extends TableBuilder
 		return retval;
 	}
 
-	private Element buildRegionTotalElement(EpptScenarioRun scenarioRun, EpptChart epptChart)
+	private Element buildRegionTotalElement(EpptScenarioRun scenarioRun, EpptChart cvpChart, EpptChart swpChart)
 	{
 		Element retval = getDocument().createElement(REGION_ELEMENT);
-		retval.setAttribute(COMPARISON_NAME_ATTRIBUTE, TOTAL_NAME);
-		Function<ChartComponent, Element> valueFunction = v -> buildTotalValueForChart(scenarioRun, v);
-		appendTitles(retval, epptChart, valueFunction);
+		retval.setAttribute(REGION_NAME_ATTRIBUTE, TOTAL_NAME);
+		Function<ChartComponent, Element> valueFunction = v -> buildTotalValue(scenarioRun, swpChart, v);
+		appendTitles(retval, cvpChart, valueFunction);
 		return retval;
+	}
+
+	private Element buildTotalValue(EpptScenarioRun scenarioRun, EpptChart swpChart, ChartComponent v)
+	{
+		List<ChartComponent> chartComponents = swpChart.getChartComponents();
+		for(ChartComponent component : chartComponents)
+		{
+			if(Objects.equals(component.getComponent(), v.getComponent()))
+			{
+				try
+				{
+					Object vObj = createJythonValueGenerator(scenarioRun, v.getFunction()).generateObjectValue();
+					Object cObj = createJythonValueGenerator(scenarioRun, component.getFunction()).generateObjectValue();
+					if(vObj instanceof Number && cObj instanceof Number)
+					{
+						Element totalElem = getDocument().createElement(VALUE_ELEMENT);
+						totalElem.setTextContent(String.valueOf(Math.round(((Number)vObj).doubleValue() + ((Number)cObj).doubleValue())));
+						return totalElem;
+					}
+				}
+				catch(EpptReportException e)
+				{
+					LOGGER.log(Level.SEVERE, "Error running Script for total", e);
+				}
+				return getDocument().createElement(VALUE_ELEMENT);
+			}
+		}
+		return buildTotalValueForChart(scenarioRun, v);
 	}
 
 	private Element buildTotalValueForChart(EpptScenarioRun alternative, ChartComponent v)

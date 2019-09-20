@@ -44,8 +44,11 @@ def getMatchingGuiLinkEntry(guiLinkId, entry):
     return dssReader.getGuiLinkData(guiLinkId).entrySet().stream().filter(jf(lambda e : e.getKey().equals(entry.getKey()))).findAny()
 
 def buildListPrefix(entry):
-    return entry.getKey().getMonth().getDisplayName(TextStyle.FULL,
-                                                    Locale.getDefault()) + " " + String.valueOf(entry.getKey().getYear()) + ": "
+    return buildMonthYearEntry(entry) + ":"
+
+def buildMonthYearEntry(entry):
+    return entry.getKey().getMonth().minus(1).getDisplayName(TextStyle.FULL,
+                                                             Locale.getDefault()) + " " + String.valueOf(entry.getKey().getYear())
 
 def formatAsString(value):
     return " " + String.format("%.0f", value) + " (TAF)"

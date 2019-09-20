@@ -187,6 +187,7 @@ public class QAQCReportPanel extends RmaJPanel
 			{
 				_summaryModules.forEach(c -> c.setSelected(false));
 			}
+			_summaryModules.forEach(c -> c.setEnabled(_standardSummaryStatiticsCheckBox.isSelected()));
 		});
 		_overwriteJRXMLButton.addActionListener((e) -> checkForceCopyJrXml());
 	}

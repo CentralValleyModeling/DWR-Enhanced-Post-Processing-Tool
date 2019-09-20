@@ -225,34 +225,7 @@ class BaseAltDiffTableBuilder extends TableBuilder
 			{
 				long baseValueRounded = Math.round(baseValue);
 				long altValueRounded = Math.round(altValue);
-				long absoluteDiff = altValueRounded - baseValueRounded;
-				String absoluteText = String.valueOf(absoluteDiff);
-				retval.setTextContent(absoluteText);
-				if(getReportParameters().getPercentDiffStyle() == PercentDiffStyle.PERCENT)
-				{
-
-					if(baseValueRounded != 0)
-					{
-						long percent = Math.round(((altValueRounded - baseValueRounded) / baseValueRounded) * 100);
-						retval.setAttribute(VALUE_FULL_TEXT_ATTRIBUTE, percent + "%");
-					}
-					else
-					{
-						retval.setAttribute(VALUE_FULL_TEXT_ATTRIBUTE, "N/A");
-					}
-				}
-				else if(getReportParameters().getPercentDiffStyle() == PercentDiffStyle.FULL)
-				{
-					if(baseValueRounded != 0)
-					{
-						long percent = Math.round(((altValueRounded - baseValueRounded) / baseValueRounded) * 100);
-						retval.setAttribute(VALUE_FULL_TEXT_ATTRIBUTE, absoluteText + "\n(" + percent + "%)");
-					}
-					else
-					{
-						retval.setAttribute(VALUE_FULL_TEXT_ATTRIBUTE, absoluteText + "\n(N/A)");
-					}
-				}
+				applyPercentDiffStyles(retval, baseValueRounded, altValueRounded);
 			}
 		}
 		catch(EpptReportException e)
@@ -260,6 +233,46 @@ class BaseAltDiffTableBuilder extends TableBuilder
 			LOGGER.log(Level.SEVERE, "Error running jython script", e);
 		}
 		return retval;
+	}
+
+	private void applyPercentDiffStyles(Element retval, long baseValueRounded, long altValueRounded)
+	{
+		long absoluteDiff = altValueRounded - baseValueRounded;
+		String absoluteText = String.valueOf(absoluteDiff);
+		retval.setTextContent(absoluteText);
+		if(getReportParameters().getPercentDiffStyle() == PercentDiffStyle.PERCENT)
+		{
+
+			if(baseValueRounded != 0)
+			{
+				long percent = ((altValueRounded - baseValueRounded) / baseValueRounded) * 100;
+				retval.setAttribute(VALUE_FULL_TEXT_ATTRIBUTE, percent + "%");
+			}
+			else if(altValueRounded == 0)
+			{
+				retval.setAttribute(VALUE_FULL_TEXT_ATTRIBUTE, "0%");
+			}
+			else
+			{
+				retval.setAttribute(VALUE_FULL_TEXT_ATTRIBUTE, "B=0");
+			}
+		}
+		else if(getReportParameters().getPercentDiffStyle() == PercentDiffStyle.FULL)
+		{
+			if(baseValueRounded != 0)
+			{
+				long percent = ((altValueRounded - baseValueRounded) / baseValueRounded) * 100;
+				retval.setAttribute(VALUE_FULL_TEXT_ATTRIBUTE, absoluteText + "\n(" + percent + "%)");
+			}
+			else if(altValueRounded == 0)
+			{
+				retval.setAttribute(VALUE_FULL_TEXT_ATTRIBUTE, absoluteText + "\n(0%)");
+			}
+			else
+			{
+				retval.setAttribute(VALUE_FULL_TEXT_ATTRIBUTE, absoluteText + "\n(B=0)");
+			}
+		}
 	}
 
 	private Element buildValueForChart(EpptScenarioRun scenarioRun, ChartComponent v, PeriodFilter filter)

@@ -572,7 +572,7 @@
 							<bottomPen lineWidth="0.0"/>
 							<rightPen lineWidth="0.0"/>
 						</box>
-						<textField isStretchWithOverflow="true">
+						<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 							<reportElement style="value_color" stretchType="ContainerHeight" x="0" y="0" width="44" height="16" uuid="6354cefb-ce20-4dcf-9394-0da33213df9a"/>
 							<box topPadding="2" bottomPadding="2">
 								<topPen lineWidth="1.0" lineColor="#000000"/>
@@ -581,7 +581,7 @@
 							<textElement textAlignment="Center" verticalAlignment="Middle">
 								<font size="9"/>
 							</textElement>
-							<textFieldExpression><![CDATA[$V{value-full-text}==null?($V{value_MEASURE}==null?"N/A":$V{value_MEASURE}):$V{value-full-text}]]></textFieldExpression>
+							<textFieldExpression><![CDATA[$V{value-full-text}==null?($V{value_MEASURE}==""?"N/A":($V{value_MEASURE}>0&&$V{scenario-order}==2?"+"+$V{value_MEASURE}:$V{value_MEASURE})):($V{value_MEASURE}>0&&$V{scenario-order}==2?"+"+$V{value-full-text}:$V{value-full-text})]]></textFieldExpression>
 						</textField>
 					</cellContents>
 				</crosstabCell>

@@ -95,11 +95,11 @@ public class JavaFxChartsPane extends BorderPane
 				}
 				catch(UnsupportedEncodingException e)
 				{
-					e.printStackTrace();
+					LOGGER.log(Level.SEVERE, "Error decoding: " + s, e);
 				}
 				catch(IOException e)
 				{
-					e.printStackTrace();
+					LOGGER.log(Level.SEVERE, "Error saving file: " + _outputPath, e);
 				}
 			}
 			else

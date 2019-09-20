@@ -13,6 +13,7 @@
 package gov.ca.water.reportengine.standardsummary;
 
 import java.awt.Color;
+import java.time.Month;
 import java.util.ArrayList;
 import java.util.DoubleSummaryStatistics;
 import java.util.HashMap;
@@ -138,6 +139,15 @@ class PercentDiffTableBuilder extends BaseAltDiffTableBuilder
 					String textRaw = String.valueOf(percent);
 					retval.setTextContent(textRaw + "%");
 					_valueElements.put(retval, (double) percent);
+				}
+				else if(altValue == 0)
+				{
+					retval.setTextContent("0%");
+					_valueElements.put(retval, 0.0);
+				}
+				else
+				{
+					retval.setTextContent("B=0");
 				}
 			}
 		}

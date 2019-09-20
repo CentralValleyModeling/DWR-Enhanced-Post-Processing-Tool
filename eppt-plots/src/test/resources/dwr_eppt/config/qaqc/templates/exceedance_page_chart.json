@@ -33,10 +33,11 @@
   ],
   "layout": {
     "font": {
+      "family": "Lucida Grande,Lucida Sans Unicode, Verdana, Arial, Helvetica, sans-serif",
       "color": "black"
     },
-    "width": 648,
-    "height": 504,
+    "width": 1600,
+    "height": 1200,
     "xaxis": {
       "tickformat": ",.0%",
       "title": {
@@ -56,13 +57,16 @@
       }
     },
     "grid": {
-      "rows": 3,
-      "columns": 4,
+      "rows": 4,
+      "columns": 3,
       "pattern": "independent"
     },
     "showlegend": true,
     "title": {
-      "text": "Probability of Exceedance"
+      "text": "Exceedance",
+      "font": {
+        "size": 20
+      }
     }
   }
 }
