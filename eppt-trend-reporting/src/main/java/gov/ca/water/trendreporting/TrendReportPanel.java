@@ -31,8 +31,10 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
 import gov.ca.water.calgui.bo.GUILinksAllModelsBO;
+import gov.ca.water.calgui.bo.WaterYearDefinition;
 import gov.ca.water.calgui.busservice.IGuiLinksSeedDataSvc;
 import gov.ca.water.calgui.busservice.impl.GuiLinksSeedDataSvcImpl;
+import gov.ca.water.calgui.busservice.impl.WaterYearDefinitionSvc;
 import gov.ca.water.calgui.compute.EpptReportingComputed;
 import gov.ca.water.calgui.compute.EpptReportingComputedSet;
 import gov.ca.water.calgui.compute.EpptReportingComputer;
@@ -417,7 +419,8 @@ public class TrendReportPanel extends JFXPanel
 	private EpptReportingComputedSet computeForMetrics(GUILinksAllModelsBO guiLink, Statistics statistic,
 													   EpptReportingMonths.MonthPeriod monthPeriod)
 	{
-		EpptReportingComputer trendReportingComputer = new EpptReportingComputer(guiLink, statistic, monthPeriod);
+		WaterYearDefinition waterYearDefinition = WaterYearDefinitionSvc.getWaterYearDefinitionSvc().getDefinitions().get(0);
+		EpptReportingComputer trendReportingComputer = new EpptReportingComputer(guiLink, statistic, monthPeriod, waterYearDefinition);
 		List<EpptReportingComputed> trendReportingComputed = new ArrayList<>();
 
 		for(EpptScenarioRun scenarioRun : _scenarioRuns)
