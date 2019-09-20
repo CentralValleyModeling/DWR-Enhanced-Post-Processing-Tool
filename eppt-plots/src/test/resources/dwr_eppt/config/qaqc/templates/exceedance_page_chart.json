@@ -36,11 +36,10 @@
       "family": "Lucida Grande,Lucida Sans Unicode, Verdana, Arial, Helvetica, sans-serif",
       "color": "black"
     },
-    "width": 1200,
-    "height": 800,
+    "width": 1600,
+    "height": 1200,
     "xaxis": {
       "tickformat": ",.0%",
-      "side": "top",
       "title": {
         "text": "Exceedance Probability"
       },
@@ -64,7 +63,7 @@
     },
     "showlegend": true,
     "title": {
-      "text": "Probability of Exceedance",
+      "text": "Exceedance",
       "font": {
         "size": 20
       }
