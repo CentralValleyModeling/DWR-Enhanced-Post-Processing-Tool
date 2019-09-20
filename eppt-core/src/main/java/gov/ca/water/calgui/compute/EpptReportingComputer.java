@@ -109,17 +109,7 @@ public class EpptReportingComputer
 	private SortedMap<Month, Double> sort(Map<Month, Double> calculate)
 	{
 		List<Month> months = EpptReportingMonths.getMonths(_monthPeriod);
-		List<Month> monthsSorted = new ArrayList<>();
-		Month startMonth = _waterYearDefinition.getStartMonth();
-		for(int i = 0; i < Month.values().length;i++)
-		{
-			Month month = startMonth.plus(0);
-			if(months.contains(month))
-			{
-				monthsSorted.add(month);
-			}
-		}
-		SortedMap<Month, Double> retval = new TreeMap<>(Comparator.comparingInt(monthsSorted::indexOf));
+		SortedMap<Month, Double> retval = new TreeMap<>(Comparator.comparingInt(months::indexOf));
 		retval.putAll(calculate);
 		return retval;
 	}
