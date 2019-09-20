@@ -15,7 +15,7 @@
 4,DtsEntirePeriodExceedanceAllMonths(${dtsId}),calculateExceedance(ArrayList(dssReader.getDtsData(${dtsId}).values()))
 5,DvEntirePeriodExceedancePerMonth(${guiLinkId}),calculateExceedance(dssReader.getGuiLinkData(${guiLinkId}).entrySet().stream().filter(periodFilter).map(jf(lambda x : x.getValue())).collect(toList()))
 6,DvEntirePeriodMonthlyAverage(${guiLinkId}),dssReader.getGuiLinkData(${guiLinkId}).entrySet().stream().filter(commonPeriodFilter).collect(groupingBy(jf(lambda k : k.getKey().getMonth())%2C averagingDouble(jdf(lambda e : e.getValue()))))
-7,DtsEntirePeriodMonthlyAverage(${dtsId}),dssReader.getDtsData(${dtsId}).entrySet().stream().filter(commonPeriodFilter).collect(groupingBy(jf(lambda e : e.getKey().getMonth())%2C averagingDouble(jdf(lambda e : e.getValue()))))
+7,DtsEntirePeriodMonthlyAverage(${dtsId}),dssReader.getDtsData(${dtsId}).entrySet().stream().filter(commonPeriodFilter).collect(groupingBy(jf(lambda e : e.getKey().getMonth().minus(1))%2C averagingDouble(jdf(lambda e : e.getValue()))))
 8,DvExceedanceSingleMonth(${guiLinkId}%2C ${month}),calculateExceedance(dssReader.getGuiLinkData(${guiLinkId}).entrySet().stream().filter(MonthPeriodFilter(${month})).map(jf(lambda x : x.getValue())).collect(toList()))
 9,GuiLinkTitle(${guiLinkId}),titleReader.getGuiLinkId(${guiLinkId})
 10,DtsPeriodAverage(${dtsId}),dssReader.getDtsData(${dtsId}).entrySet().stream().filter(periodFilter).filter(commonPeriodFilter).mapToDouble(jdf(lambda e : e.getValue())).average().orElse(0)

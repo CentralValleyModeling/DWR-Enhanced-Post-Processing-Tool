@@ -168,14 +168,17 @@ abstract class TableBuilder extends StandardSummaryChartBuilder
 		int i = 0;
 		for(ChartComponent component : componentsForSubHeaders)
 		{
-			Element componentElement = buildComponent(component, valueFunction);
-			if(componentElement != null)
+			if(!component.getComponent().isEmpty())
 			{
-				componentElement.setAttribute(COMPONENT_ORDER_ATTRIBUTE, String.valueOf(i));
-				if(hasValueContent(componentElement))
+				Element componentElement = buildComponent(component, valueFunction);
+				if(componentElement != null)
 				{
-					retval.appendChild(componentElement);
-					i++;
+					componentElement.setAttribute(COMPONENT_ORDER_ATTRIBUTE, String.valueOf(i));
+					if(hasValueContent(componentElement))
+					{
+						retval.appendChild(componentElement);
+						i++;
+					}
 				}
 			}
 		}
