@@ -1,5 +1,0 @@
-digraph sqljdbc4_2_0_dependencies {
-  node [shape = box, fontsize=10.0];
-  sqljdbc4_2_0 -> misc;
-  sqljdbc4_2_0 -> stax_api_1_0_1;
-}

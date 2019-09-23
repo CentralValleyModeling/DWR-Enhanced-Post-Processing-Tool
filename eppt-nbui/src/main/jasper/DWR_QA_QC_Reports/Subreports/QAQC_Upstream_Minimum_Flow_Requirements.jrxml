@@ -59,7 +59,7 @@
 						<font fontName="Arial" size="12"/>
 					</textElement>
 					<textFieldExpression><![CDATA["2.a. Summary of Upstream Minimum Flow Requirements"]]></textFieldExpression>
-					<anchorNameExpression><![CDATA["2.a. Summary of Reservoir Operations"]]></anchorNameExpression>
+					<anchorNameExpression><![CDATA["2.a. Summary of Upstream Minimum Flow Requirements"]]></anchorNameExpression>
 				</textField>
 			</band>
 			<band height="20">
@@ -112,7 +112,7 @@
 						<subreportParameterExpression><![CDATA[$V{Section_Group_Footer_3}]]></subreportParameterExpression>
 					</subreportParameter>
 					<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
-					<subreportExpression><![CDATA["/DWR_QA_QC_Reports/Subreports/percent-diff-table/"+$V{Section_Group_Footer_3}+".jasper"]]></subreportExpression>
+					<subreportExpression><![CDATA["/DWR_QA_QC_Reports/Subreports/percent-diff-table/nod-up-min-flow-control-summary/"+$V{Section_Group_Footer_3}+".jasper"]]></subreportExpression>
 				</subreport>
 			</band>
 			<band height="47">

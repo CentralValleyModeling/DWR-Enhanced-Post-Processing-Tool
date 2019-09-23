@@ -61,7 +61,7 @@ public class EpptReportingComputedSet
 		jsonObject.put(STATISTICS, _statistics.getName());
 		if(!_epptReportingComputed.isEmpty())
 		{
-			jsonObject.put(UNITS, _epptReportingComputed.get(0));
+			jsonObject.put(UNITS, _epptReportingComputed.get(0).getUnits());
 		}
 		jsonObject.put(MONTH_PERIOD, _monthPeriod.toString());
 		jsonObject.put(SCENARIO_RUN_DATA, jsonArray);

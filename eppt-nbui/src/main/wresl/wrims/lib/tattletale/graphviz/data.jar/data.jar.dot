@@ -1,6 +1,0 @@
-digraph data_dependencies {
-  node [shape = box, fontsize=10.0];
-  data -> hec;
-  data -> misc;
-  data -> rma;
-}

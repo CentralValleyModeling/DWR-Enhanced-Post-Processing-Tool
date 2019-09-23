@@ -1,8 +1,0 @@
-digraph heclib_dependencies {
-  node [shape = box, fontsize=10.0];
-  heclib -> commons_io_2_1;
-  heclib -> data;
-  heclib -> hec;
-  heclib -> misc;
-  heclib -> rma;
-}

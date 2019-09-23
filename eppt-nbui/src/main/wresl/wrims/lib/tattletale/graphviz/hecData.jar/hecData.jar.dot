@@ -1,9 +1,0 @@
-digraph hecData_dependencies {
-  node [shape = box, fontsize=10.0];
-  hecData -> hec;
-  hecData -> jdom;
-  hecData -> lookup;
-  hecData -> misc;
-  hecData -> rma;
-  hecData -> stax_api_1_0_1;
-}

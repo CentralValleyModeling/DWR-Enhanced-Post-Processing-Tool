@@ -1,4 +1,0 @@
-digraph javatuples_1_2_package_dependencies {
-  node [shape = box, fontsize=10.0];
-  org_javatuples -> org_javatuples_valueintf;
-}

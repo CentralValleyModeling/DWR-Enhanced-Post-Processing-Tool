@@ -1,6 +1,0 @@
-digraph jarh5obj_dependencies {
-  node [shape = box, fontsize=10.0];
-  jarh5obj -> jarhdf5_2_10_0;
-  jarh5obj -> jarhdfobj;
-  jarh5obj -> slf4j_api_1_7_5;
-}

@@ -1,5 +1,0 @@
-digraph dom4j_1_6_1_dependencies {
-  node [shape = box, fontsize=10.0];
-  dom4j_1_6_1 -> misc;
-  dom4j_1_6_1 -> stax_api_1_0_1;
-}

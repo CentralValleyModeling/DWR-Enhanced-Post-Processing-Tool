@@ -1,4 +1,0 @@
-digraph jdom_dependencies {
-  node [shape = box, fontsize=10.0];
-  jdom -> misc;
-}

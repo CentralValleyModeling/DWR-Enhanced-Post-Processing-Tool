@@ -1,5 +1,0 @@
-digraph jai_imageio_dependencies {
-  node [shape = box, fontsize=10.0];
-  jai_imageio -> jai_core;
-  jai_imageio -> misc;
-}

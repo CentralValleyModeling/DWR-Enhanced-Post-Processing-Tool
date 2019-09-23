@@ -1,8 +1,0 @@
-digraph jarh5obj_package_dependencies {
-  node [shape = box, fontsize=10.0];
-  ncsa_hdf_object_h5 -> ncsa_hdf_hdf5lib;
-  ncsa_hdf_object_h5 -> ncsa_hdf_hdf5lib_exceptions;
-  ncsa_hdf_object_h5 -> ncsa_hdf_hdf5lib_structs;
-  ncsa_hdf_object_h5 -> ncsa_hdf_object;
-  ncsa_hdf_object_h5 -> org_slf4j;
-}

@@ -180,7 +180,7 @@
 						<subreportParameterExpression><![CDATA[$P{XML_DATA_DOCUMENT}]]></subreportParameterExpression>
 					</subreportParameter>
 					<subreportParameter name="p_report_name">
-						<subreportParameterExpression><![CDATA[$V{Section_Group_Footer_4}]]></subreportParameterExpression>
+						<subreportParameterExpression><![CDATA[$V{Section_Group_Footer_5}]]></subreportParameterExpression>
 					</subreportParameter>
 					<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
 					<subreportExpression><![CDATA["/DWR_QA_QC_Reports/Subreports/base-alt-diff-table/"+$V{Section_Group_Footer_5}+".jasper"]]></subreportExpression>
