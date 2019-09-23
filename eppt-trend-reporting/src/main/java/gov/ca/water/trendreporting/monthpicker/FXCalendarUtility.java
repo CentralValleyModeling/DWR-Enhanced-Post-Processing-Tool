@@ -22,15 +22,15 @@ public class FXCalendarUtility
 {
 
 	private static final Logger LOG = Logger.getLogger(FXCalendarUtility.class.getCanonicalName());
-	private static int MILLIS_IN_DAY = 1000 * 60 * 60 * 24;
-	private static SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("MM/yyyy");
-	private SimpleDateFormat DISPLAY_DATE_FORMAT = new SimpleDateFormat("MMM/yyyy");
-	private DateTimeFormatter MONTH_YEAR_FORMATTER = DateTimeFormatter.ofPattern("MMM/yyyy");
-	private String[] SHORTEST_WEEK_DAYS;  // {"","S","M","T","W","T","F","S"}
-	private String[] SHORT_WEEK_DAYS;     // {"","Sun","Mon","Tue","Wed","Thu","Fri","Sat"}
-	private String[] WEEK_DAYS;           // {"","Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"}
-	private String[] SHORT_MONTHS;        // {"Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec",""}
-	private String[] MONTHS;              // {"January","February","March","April","May","June","July","August","September","October","November","December",""}
+	private static final int MILLIS_IN_DAY = 1000 * 60 * 60 * 24;
+	private static final String DATE_FORMAT = "MM/yyyy";
+	private final SimpleDateFormat _displayDateFormat = new SimpleDateFormat("MMM/yyyy");
+	private final DateTimeFormatter _monthYearFormatter = DateTimeFormatter.ofPattern("MMM/yyyy");
+	private String[] _shortestWeekDays;  // "","S","M","T","W","T","F","S"
+	private String[] _shortWeekDays;     // "","Sun","Mon","Tue","Wed","Thu","Fri","Sat"
+	private String[] _weekDays;           // "","Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"
+	private String[] _shortMonths;        // "Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec",""
+	private String[] _months;              // "January","February","March","April","May","June","July","August","September","October","November","December",""
 
 	public static Calendar getCalendar()
 	{
@@ -63,25 +63,25 @@ public class FXCalendarUtility
 
 	public static String getCurrentFormattedDate()
 	{
-		return DATE_FORMAT.format(getCurrentTime());
+		return new SimpleDateFormat(DATE_FORMAT).format(getCurrentTime());
 	}
 
 	public static String getPreviousDate()
 	{
-		return DATE_FORMAT.format(getCurrentTime() - MILLIS_IN_DAY);
+		return new SimpleDateFormat(DATE_FORMAT).format(getCurrentTime() - MILLIS_IN_DAY);
 	}
 
 	public static String getNextDate()
 	{
-		return DATE_FORMAT.format(getCurrentTime() + MILLIS_IN_DAY);
+		return new SimpleDateFormat(DATE_FORMAT).format(getCurrentTime() + MILLIS_IN_DAY);
 	}
 
 	public static Calendar getDate(Integer day, Integer month, Integer year)
 	{
 		try
 		{
-			String str_date = day + "/" + (month + 1) + "/" + year;
-			Date date = DATE_FORMAT.parse(str_date);
+			String strDate = day + "/" + (month + 1) + "/" + year;
+			Date date = new SimpleDateFormat(DATE_FORMAT).parse(strDate);
 			Calendar c = getCalendar();
 			c.setTime(date);
 			return c;
@@ -162,7 +162,7 @@ public class FXCalendarUtility
 	{
 		try
 		{
-			return DISPLAY_DATE_FORMAT.parse(str);
+			return _displayDateFormat.parse(str);
 		}
 		catch(ParseException e)
 		{
@@ -174,115 +174,115 @@ public class FXCalendarUtility
 	public String getFormattedDate(Integer day, Integer month, Integer year)
 	{
 		LocalDate date = LocalDate.of(year, month, day);
-		return MONTH_YEAR_FORMATTER.format(date);
+		return _monthYearFormatter.format(date);
 	}
 
 	public void resetShortestWeekDays(Locale locale)
 	{
-		SHORTEST_WEEK_DAYS = null;
+		_shortestWeekDays = null;
 		getShortestWeekDays(locale);
 	}
 
 	public String[] getShortestWeekDays(Locale locale)
 	{
-		if(SHORTEST_WEEK_DAYS == null || SHORTEST_WEEK_DAYS.length == 0)
+		if(_shortestWeekDays == null || _shortestWeekDays.length == 0)
 		{
-			SHORTEST_WEEK_DAYS = getDayNames("xs", locale);
+			_shortestWeekDays = getDayNames("xs", locale);
 			// If Monday is first day of week.
 			if(Calendar.getInstance(locale).getFirstDayOfWeek() == 2)
 			{
-				String dum = SHORTEST_WEEK_DAYS[1];
+				String dum = _shortestWeekDays[1];
 				for(int i = 1; i < 7; i++)
 				{
-					SHORTEST_WEEK_DAYS[i] = SHORTEST_WEEK_DAYS[i + 1];
+					_shortestWeekDays[i] = _shortestWeekDays[i + 1];
 				}
-				SHORTEST_WEEK_DAYS[7] = dum;
+				_shortestWeekDays[7] = dum;
 			}
 		}
-		return SHORTEST_WEEK_DAYS;
+		return _shortestWeekDays;
 	}
 
 	public String[] getShortWeekDays(Locale locale)
 	{
-		if(SHORT_WEEK_DAYS == null || SHORT_WEEK_DAYS.length == 0)
+		if(_shortWeekDays == null || _shortWeekDays.length == 0)
 		{
-			SHORT_WEEK_DAYS = getDayNames("s", locale);
+			_shortWeekDays = getDayNames("s", locale);
 		}
 		// If Monday is first day of week.
 		if(Calendar.getInstance(locale).getFirstDayOfWeek() == 2)
 		{
-			String dum = SHORT_WEEK_DAYS[1];
+			String dum = _shortWeekDays[1];
 			for(int i = 1; i < 7; i++)
 			{
-				SHORT_WEEK_DAYS[i] = SHORT_WEEK_DAYS[i + 1];
+				_shortWeekDays[i] = _shortWeekDays[i + 1];
 			}
-			SHORT_WEEK_DAYS[7] = dum;
+			_shortWeekDays[7] = dum;
 		}
-		return SHORT_WEEK_DAYS;
+		return _shortWeekDays;
 	}
 
 	public String[] getWeekDays(Locale locale)
 	{
-		if(WEEK_DAYS == null || WEEK_DAYS.length == 0)
+		if(_weekDays == null || _weekDays.length == 0)
 		{
-			WEEK_DAYS = getDayNames(null, locale);
+			_weekDays = getDayNames(null, locale);
 		}
 		// If Monday is first day of week.
 		if(Calendar.getInstance(locale).getFirstDayOfWeek() == 2)
 		{
-			String dum = WEEK_DAYS[1];
+			String dum = _weekDays[1];
 			for(int i = 1; i < 7; i++)
 			{
-				WEEK_DAYS[i] = WEEK_DAYS[i + 1];
+				_weekDays[i] = _weekDays[i + 1];
 			}
-			WEEK_DAYS[7] = dum;
+			_weekDays[7] = dum;
 		}
-		return WEEK_DAYS;
+		return _weekDays;
 	}
 
 	public void resetShortMonths(Locale locale)
 	{
-		SHORT_MONTHS = null;
+		_shortMonths = null;
 		getShortMonths(locale);
 	}
 
 	public String[] getShortMonths(Locale locale)
 	{
-		if(SHORT_MONTHS == null || SHORT_MONTHS.length == 0)
+		if(_shortMonths == null || _shortMonths.length == 0)
 		{
-			SHORT_MONTHS = getMonthNames("s", locale);
+			_shortMonths = getMonthNames("s", locale);
 		}
-		return SHORT_MONTHS;
+		return _shortMonths;
 	}
 
 	public void resetMonths(Locale locale)
 	{
-		MONTHS = null;
+		_months = null;
 		getMonths(locale);
 	}
 
 	public String[] getMonths(Locale locale)
 	{
-		if(MONTHS == null || MONTHS.length == 0)
+		if(_months == null || _months.length == 0)
 		{
-			MONTHS = getMonthNames(null, locale);
+			_months = getMonthNames(null, locale);
 		}
-		return MONTHS;
+		return _months;
 	}
 
 	private String[] getDayNames(String type, Locale locale)
 	{
-		if(type != null && type.equalsIgnoreCase("xs"))
+		if("xs".equalsIgnoreCase(type))
 		{
 			String[] days = new DateFormatSymbols(locale).getShortWeekdays();
 			String[] xsDays = new String[days.length];
 			for(int i = 0; i < days.length; i++)
 			{
-				xsDays[i] = (days[i].equals("")) ? days[i] : days[i].charAt(0) + "";
+				xsDays[i] = ("".equals(days[i])) ? days[i] : (days[i].charAt(0) + "");
 			}
 			return xsDays;
 		}
-		if(type != null && type.equalsIgnoreCase("s"))
+		if("s".equalsIgnoreCase(type))
 		{
 			return new DateFormatSymbols(locale).getShortWeekdays();
 		}
@@ -294,7 +294,7 @@ public class FXCalendarUtility
 
 	private String[] getMonthNames(String type, Locale locale)
 	{
-		if(type != null && type.equalsIgnoreCase("s"))
+		if("s".equalsIgnoreCase(type))
 		{
 			return new DateFormatSymbols(locale).getShortMonths();
 		}

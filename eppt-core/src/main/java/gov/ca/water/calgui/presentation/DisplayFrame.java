@@ -43,6 +43,7 @@ import gov.ca.water.calgui.project.EpptScenarioRun;
 import gov.ca.water.calgui.project.PlotConfigurationState;
 import gov.ca.water.calgui.techservice.IErrorHandlingSvc;
 import gov.ca.water.calgui.techservice.impl.ErrorHandlingSvcImpl;
+import javatests.TestSupport;
 import org.apache.log4j.Logger;
 import vista.report.MonthlyReport;
 
@@ -55,13 +56,17 @@ import static java.util.stream.Collectors.toList;
  *
  * @author tslawecki
  */
-class DisplayFrame
+final class DisplayFrame
 {
 
 	private static final Logger LOG = Logger.getLogger(DisplayFrame.class.getName());
 	private static final IErrorHandlingSvc ERROR_HANDLING_SVC = new ErrorHandlingSvcImpl();
 	private static final Pattern GROUP_PATTERN = Pattern.compile("\\w\\w\\w\\d\\d\\d\\d-\\w\\w\\w\\d\\d\\d\\d");
 
+	private DisplayFrame()
+	{
+		throw new TestSupport.AssertionError("Utility class");
+	}
 
 	/**
 	 * showDisplayFrames method creates a frame showing multiple charts
@@ -376,15 +381,15 @@ class DisplayFrame
 		{
 
 			DSSGrabber2SvcImpl dssGrabber = new DSSGrabber2SvcImpl(dts, mts);
-			boolean doComparison = false;
-			boolean doDifference = false;
-			boolean doTimeSeries = false;
-			boolean doBase = false;
-			boolean doExceedance = false;
-			boolean doBoxPlot = false;
-			boolean isCFS = false;
-			boolean doMonthlyTable = false;
-			boolean doSummaryTable = false;
+			boolean doComparison = plotConfigurationState.getComparisonType() == PlotConfigurationState.ComparisonType.COMPARISON;
+			boolean doDifference = plotConfigurationState.getComparisonType() == PlotConfigurationState.ComparisonType.DIFF;
+			boolean doTimeSeries = plotConfigurationState.isDisplayTimeSeriesPlot();
+			boolean doBase = plotConfigurationState.getComparisonType() == PlotConfigurationState.ComparisonType.BASE;
+			boolean doExceedance = plotConfigurationState.isDoExceedance();
+			boolean doBoxPlot = plotConfigurationState.isDisplayBoxAndWhiskerPlot();
+			boolean isCFS = !plotConfigurationState.isDisplayTaf();
+			boolean doMonthlyTable = plotConfigurationState.isDisplayMonthlyTable();
+			boolean doSummaryTable = plotConfigurationState.isDisplaySummaryTable();
 			String exceedMonths = "";
 			List<String> summaryTags = plotConfigurationState.getSelectedSummaryTableItems();
 			String[] monthNames = {"Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov",
