@@ -1,0 +1,53 @@
+/************************************
+
+Calc_PhaseII.wresl
+
+Yuxiang, DWR, BDO
+2019/02/07
+
+This file post process data to respond to specific question of the system   
+**************************************/
+
+!	Check Trinity River flows and spills:
+!	1. Is there too much water spilling down the Trinity above the minimum in-stream flow requirements?
+!   2. Is water being imported from the Trinity when Shasta and Folsom storages are low?
+!   3. Releases in the Trinity River for flood control should be imported to the Sacramento basin unless the Clear Creek tunnel is at its capacity.
+
+
+/*
+•	Check reservoir balance
+	between the CVP reservoirs: Shasta, Folsom and Trinity
+	between CVP NOD and San Luis
+	between SWP NOD and San Luis
+•	Check minimum carryover storage (end-of-Sep) requirements
+	1.9 MAF in Shasta
+*/
+!Check minimum carryover storage (end-of-Sep) requirements
+	1.9 MAF in Shasta
+define S4_EOS_Check {
+	case aboveRequirement {
+	condition S4 - 1900 > abs_threshold .and. month == SEP
+	value 0
+	}
+	case atRequirement {
+	condition abs(S4-1900) < abs_threshold .and. month == SEP
+	value 1
+	}
+	case belowRequirment {
+	condition S4 - 1900 < abs_threshold .and. month == SEP
+	value 2
+	}
+	case notInSep {
+	condition always
+	value 99
+	}
+}
+define S4_EOS_DTS {alias S4_EOS_Check kind 'DTS-STATUS' units 'NONE'}
+/*
+•	Is there any instance of reservoir releases to benefit from negative carriage water during Dry and Critical water years?
+•	How often is SWP exporting EXP2 water when CVP upstream reservoirs are not controlled by mandatory releases – MIF or Flood operations?
+•	How often is CVP exporting EXP2 water when SWP upstream reservoir is not controlled by mandatory releases – MIF or Flood operations?
+*/
+
+
+

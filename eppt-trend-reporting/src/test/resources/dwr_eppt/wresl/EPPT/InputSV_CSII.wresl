@@ -1,0 +1,50 @@
+/************************************
+
+Calc_InputEPPT_CSII.wresl
+
+Yuxiang, DWR, BDO
+2019/02/07
+
+This file lists SV variables used to calculate EPPT QAQC Post-Processing 
+**************************************/
+
+
+/********************** Upstream MIF *************************/
+define minflow_C223 {timeseries kind 'FLOW-MIN-REQUIRED' units 'CFS'} ! minimum flow requirement for Feather River near Verona
+define con_114GCID {timeseries kind 'DEMAND' units 'taf' convert 'cfs'} ! DEMAND at not 114 for GCID (Glen Colusa Irrigation District)
+
+/********************** NOD GW *************************/
+define mingw_58 {timeseries kind 'GW-PUMPING-MIN' units 'TAF'} ! DSA 58 Minimum groundwater pumping
+define mingw_65 {timeseries kind 'GW-PUMPING-MIN' units 'TAF'} ! DSA 65 Minimum groundwater pumping 
+define mingw_69 {timeseries kind 'GW-PUMPING-MIN' units 'TAF'} ! DSA 69 Minimum groundwater pumping  
+define mingw_70 {timeseries kind 'GW-PUMPING-MIN' units 'TAF'} ! DSA 70 Minimum groundwater pumping
+
+/********************** NOD Mass Balance *************************/
+define I10801 {timeseries kind 'FLOW-INFLOW' units 'TAF' convert 'CFS'} !Cow Creek Inflow
+define I10802 {timeseries kind 'FLOW-INFLOW' units 'TAF' convert 'CFS'} !Cottonwood Creek Inflow
+define I10803 {timeseries kind 'FLOW-INFLOW' units 'TAF' convert 'CFS'} !Battle Creek Inflow
+define I11001 {timeseries kind 'FLOW-INFLOW' units 'TAF' convert 'CFS'} !Poynee Creek Inflow
+
+define I109 {timeseries kind 'FLOW-INFLOW' units 'TAF' convert 'CFS'} 
+define I112 {timeseries kind 'FLOW-INFLOW' units 'TAF' convert 'CFS'} !Red Bank Creek Inflow
+define I11303 {timeseries kind 'FLOW-INFLOW' units 'TAF' convert 'CFS'} !Elder Creek Inflow
+define I11304 {timeseries kind 'FLOW-INFLOW' units 'TAF' convert 'CFS'} !Thornes Creek Inflow
+define I11307 {timeseries kind 'FLOW-INFLOW' units 'TAF' convert 'CFS'} !Antelope Creek Inflow
+define I11308 {timeseries kind 'FLOW-INFLOW' units 'TAF' convert 'CFS'} !Mill Creek Inflow
+define I11309 {timeseries kind 'FLOW-INFLOW' units 'TAF' convert 'CFS'} !Deer Creek Inflow
+define I11501 {timeseries kind 'FLOW-INFLOW' units 'TAF' convert 'CFS'} !Big Chico Creek Inflow
+define I118 {timeseries kind 'FLOW-INFLOW' units 'TAF' convert 'CFS'} 
+define I123 {timeseries kind 'FLOW-INFLOW' units 'TAF' convert 'CFS'} 
+define I152 {timeseries kind 'FLOW-INFLOW' units 'TAF' convert 'CFS'} 
+define I166 {timeseries kind 'FLOW-INFLOW' units 'TAF' convert 'CFS'} 
+define I180 {timeseries kind 'FLOW-INFLOW' units 'TAF' convert 'CFS'} 
+define I182 {timeseries kind 'FLOW-INFLOW' units 'TAF' convert 'CFS'} 
+define I184 {timeseries kind 'FLOW-INFLOW' units 'TAF' convert 'CFS'}
+define I207 {timeseries kind 'FLOW-INFLOW' units 'TAF' convert 'CFS'} 
+define I217 {timeseries kind 'FLOW-INFLOW' units 'TAF' convert 'CFS'} 
+define I225 {timeseries kind 'FLOW-INFLOW' units 'TAF' convert 'CFS'} 
+define I230 {timeseries kind 'FLOW-INFLOW' units 'CFS'} 
+define I282 {timeseries kind 'FLOW-INFLOW' units 'TAF' convert 'CFS'} 
+define I285 {timeseries kind 'FLOW-INFLOW' units 'TAF' convert 'CFS'} 
+define I300 {timeseries kind 'FLOW-INFLOW' units 'CFS'} 
+define I302 {timeseries kind 'FLOW-INFLOW' units 'TAF' convert 'CFS'} 

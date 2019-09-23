@@ -24,7 +24,7 @@ import gov.ca.water.calgui.EpptInitializationException;
 import gov.ca.water.calgui.bo.GUILinksAllModelsBO;
 import gov.ca.water.calgui.busservice.impl.GuiLinksSeedDataSvcImpl;
 import gov.ca.water.calgui.busservice.impl.ThresholdLinksSeedDataSvc;
-import gov.ca.water.calgui.compute.EpptReportingMonths;
+import gov.ca.water.calgui.busservice.impl.WaterYearDefinitionSvc;
 import gov.ca.water.calgui.project.EpptDssContainer;
 import gov.ca.water.calgui.project.EpptScenarioRun;
 import gov.ca.water.calgui.project.NamedDssPath;
@@ -47,6 +47,7 @@ public class TrendReportScaffold
 		HecDSSFileAccess.setMessageLevel(HecDSSFileAccess.MESS_LEVEL_CRITICAL);
 		Path target = Paths.get(System.getProperty("user.dir")).resolve("target").resolve("test-classes");
 		System.setProperty("user.dir", target.toString());
+		WaterYearDefinitionSvc.createSeedDataSvcImplInstance();
 		GuiLinksSeedDataSvcImpl.createSeedDataSvcImplInstance();
 		ThresholdLinksSeedDataSvc.createSeedDataSvcImplInstance();
 		EpptReportingMonths.createTrendReportingMonthsInstance();
@@ -70,7 +71,7 @@ public class TrendReportScaffold
 				namedDssPath,
 				Collections.emptyList());
 		EpptScenarioRun baseRun = new EpptScenarioRun("Base", "desc", GUILinksAllModelsBO.Model.findModel("CalSim2"),
-				Paths.get(""), Paths.get(""), Paths.get(""), dssContainer, javafx.scene.paint.Color.PINK);
+				Paths.get(""), Paths.get(""), Paths.get("C:\\Git\\DWR\\EPPT\\DWR-Enhanced-Post-Processing-Tool\\eppt-trend-reporting\\src\\test\\resources\\dwr_eppt\\wresl\\lookup\\wytypes.table"), dssContainer, javafx.scene.paint.Color.PINK);
 		epptPanel.setScenarioRuns(baseRun, new ArrayList<>());
 		JFrame jFrame = new JFrame();
 		jFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

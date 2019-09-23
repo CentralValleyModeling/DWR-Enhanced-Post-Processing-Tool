@@ -20,13 +20,12 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.Month;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
+import java.util.Objects;
 import java.util.concurrent.CompletableFuture;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Stream;
-import javax.swing.*;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -39,15 +38,10 @@ import gov.ca.water.calgui.busservice.IGuiLinksSeedDataSvc;
 import gov.ca.water.calgui.busservice.impl.GuiLinksSeedDataSvcImpl;
 import gov.ca.water.calgui.busservice.impl.WaterYearDefinitionSvc;
 import gov.ca.water.calgui.busservice.impl.WaterYearTableReader;
-import gov.ca.water.calgui.compute.EpptReportingComputed;
-import gov.ca.water.calgui.compute.EpptReportingComputedSet;
-import gov.ca.water.calgui.compute.EpptReportingComputer;
-import gov.ca.water.calgui.compute.EpptReportingMonths;
 import gov.ca.water.calgui.constant.Constant;
 import gov.ca.water.calgui.project.EpptScenarioRun;
 import gov.ca.water.quickresults.ui.projectconfig.ProjectConfigurationPanel;
 import gov.ca.water.trendreporting.monthpicker.FXCalendar;
-import gov.ca.water.calgui.compute.stats.Statistics;
 import javafx.application.Platform;
 import javafx.beans.value.ObservableValue;
 import javafx.embed.swing.JFXPanel;
@@ -81,8 +75,6 @@ import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
-import rma.util.lookup.Lookup;
-
 import static java.util.stream.Collectors.toList;
 
 /**
@@ -99,7 +91,7 @@ public class TrendReportPanel extends JFXPanel
 	private final ToggleGroup _toggleGroup = new ToggleGroup();
 	private TrendReportFlowPane _javascriptPane;
 	private ListView<GUILinksAllModelsBO> _parameterListView;
-	private ListView<Statistics> _statisticsListView;
+	private ListView<TrendStatistics> _statisticsListView;
 	private ListView<EpptReportingMonths.MonthPeriod> _seasonalPeriodListView;
 	private CheckBox _tafCheckbox;
 	private ComboBox<WaterYearIndex> _waterYearIndexJComboBox;
@@ -128,17 +120,24 @@ public class TrendReportPanel extends JFXPanel
 		BorderPane mainPane = new BorderPane();
 		mainPane.setBackground(new Background(new BackgroundFill(Color.WHITE, null, null)));
 		BorderPane center = buildJavascriptPane();
-		BorderPane.setMargin(center,insets);
+		BorderPane.setMargin(center, insets);
 		mainPane.setCenter(center);
 		Pane top = buildParameterControls();
-		BorderPane.setMargin(top,insets);
+		BorderPane.setMargin(top, insets);
 		mainPane.setTop(top);
 		Node bottom = buildProgressControls();
-		BorderPane.setMargin(bottom,insets);
+		BorderPane.setMargin(bottom, insets);
 		mainPane.setBottom(bottom);
 		Scene scene = new Scene(mainPane);
 		setScene(scene);
-		ProjectConfigurationPanel.getProjectConfigurationPanel().addScenarioChangedListener(this::setScenarioRuns);
+		try
+		{
+			ProjectConfigurationPanel.getProjectConfigurationPanel().addScenarioChangedListener(this::setScenarioRuns);
+		}
+		catch(RuntimeException e)
+		{
+			LOGGER.log(Level.SEVERE, "Error listening to scenario configuration changes", e);
+		}
 	}
 
 	private Node buildProgressControls()
@@ -223,15 +222,15 @@ public class TrendReportPanel extends JFXPanel
 
 	private Pane buildStatisticsListView()
 	{
-		Collection<? extends Statistics> statistics = Lookup.getDefault().lookupAll(Statistics.class);
+		List<TrendStatistics> statistics = getTrendStatistics();
 		_statisticsListView.getItems().addAll(statistics);
 		_statisticsListView.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
 		_statisticsListView.getSelectionModel().select(0);
 		_statisticsListView.getSelectionModel().selectedItemProperty().addListener(this::inputsChanged);
-		_statisticsListView.setCellFactory(param -> new ListCell<Statistics>()
+		_statisticsListView.setCellFactory(param -> new ListCell<TrendStatistics>()
 		{
 			@Override
-			protected void updateItem(Statistics item, boolean empty)
+			protected void updateItem(TrendStatistics item, boolean empty)
 			{
 				super.updateItem(item, empty);
 
@@ -241,8 +240,6 @@ public class TrendReportPanel extends JFXPanel
 				}
 				else
 				{
-					setDisable(item.isDisabled());
-					setTextFill(item.isDisabled() ? Color.GRAY : Color.BLACK);
 					setText(item.getName());
 				}
 			}
@@ -253,6 +250,11 @@ public class TrendReportPanel extends JFXPanel
 		borderPane.setCenter(_statisticsListView);
 		borderPane.setTop(new Label("Statistic"));
 		return borderPane;
+	}
+
+	private List<TrendStatistics> getTrendStatistics()
+	{
+		return new ArrayList<>();
 	}
 
 	private Pane buildSeasonalPeriodListView()
@@ -296,6 +298,7 @@ public class TrendReportPanel extends JFXPanel
 		{
 			paths.filter(path -> path.toString().endsWith(".htm") || path.toString().endsWith(".html"))
 				 .map(this::buildToggleButton)
+				 .filter(Objects::nonNull)
 				 .forEach(_toggleGroup.getToggles()::add);
 		}
 		catch(IOException ex)
@@ -322,7 +325,6 @@ public class TrendReportPanel extends JFXPanel
 
 	private ToggleButton buildToggleButton(Path path)
 	{
-		String text = path.getFileName().toString();
 		try(BufferedReader reader = Files.newBufferedReader(path))
 		{
 			DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
@@ -333,21 +335,56 @@ public class TrendReportPanel extends JFXPanel
 			dbf.setExpandEntityReferences(false);
 			DocumentBuilder db = dbf.newDocumentBuilder();
 			Document parse = db.parse(new InputSource(reader));
-			NodeList head = parse.getElementsByTagName("head");
-			if(head != null && head.getLength() > 0)
-			{
-				text = head.item(0).getTextContent();
-			}
+			String text = getHtmlTitle(parse, path.getFileName().toString());
+			boolean statsDisabled = attributeDisabled(parse, "support-statistic");
+			boolean seasonalPeriodDisabled = attributeDisabled(parse, "support-seasonal-period");
+			ToggleButton toggleButton = new ToggleButton(text.trim());
+			toggleButton.setMaxWidth(Double.MAX_VALUE);
+			toggleButton.selectedProperty().addListener((o, old, n) -> loadPane(n, path, statsDisabled, seasonalPeriodDisabled));
+			return toggleButton;
 		}
 		catch(IOException | RuntimeException | ParserConfigurationException | SAXException ex)
 		{
 			LOGGER.log(Level.SEVERE, "Unable to extract toggle button text from: " + path, ex);
+			return null;
 		}
+	}
 
-		ToggleButton toggleButton = new ToggleButton(text.trim());
-		toggleButton.setMaxWidth(Double.MAX_VALUE);
-		toggleButton.selectedProperty().addListener((o, old, n) -> loadPane(n, path));
-		return toggleButton;
+	private String getHtmlTitle(Document parse, String filename)
+	{
+		String text;
+		NodeList head = parse.getElementsByTagName("title");
+		if(head != null && head.getLength() > 0)
+		{
+			text = head.item(0).getTextContent();
+		}
+		else
+		{
+			text = filename;
+		}
+		return text;
+	}
+
+	private boolean attributeDisabled(Document parse, String attribute)
+	{
+		boolean attributeDisabled = true;
+		NodeList meta = parse.getElementsByTagName("meta");
+		for(int i = 0; i < meta.getLength(); i++)
+		{
+			org.w3c.dom.Node item = meta.item(i);
+			org.w3c.dom.Node name = item.getAttributes().getNamedItem("name");
+			if(name != null)
+			{
+				String metaName = name.getTextContent();
+				org.w3c.dom.Node content = item.getAttributes().getNamedItem("content");
+				if(content != null && attribute.equals(metaName))
+				{
+					attributeDisabled = !Boolean.parseBoolean(content.getTextContent());
+					break;
+				}
+			}
+		}
+		return attributeDisabled;
 	}
 
 	public void setScenarioRuns(EpptScenarioRun baseRun, List<EpptScenarioRun> alternatives)
@@ -388,10 +425,12 @@ public class TrendReportPanel extends JFXPanel
 		}
 	}
 
-	private void loadPane(boolean selected, Path path)
+	private void loadPane(boolean selected, Path path, boolean statsDisabled, boolean seasonalPeriodDisabled)
 	{
 		if(selected)
 		{
+			_statisticsListView.setDisable(statsDisabled);
+			_seasonalPeriodListView.setDisable(seasonalPeriodDisabled);
 			loadJavascript(path);
 		}
 	}
@@ -414,19 +453,26 @@ public class TrendReportPanel extends JFXPanel
 		_javascriptPane.removeDashboardPanes();
 		_currentScript = path;
 		List<GUILinksAllModelsBO> guiLink = _parameterListView.getSelectionModel().getSelectedItems();
-		List<Statistics> statistic = _statisticsListView.getSelectionModel().getSelectedItems();
+		List<TrendStatistics> statistic = _statisticsListView.getSelectionModel().getSelectedItems();
 		List<EpptReportingMonths.MonthPeriod> monthPeriod = _seasonalPeriodListView.getSelectionModel().getSelectedItems();
-		if(!guiLink.isEmpty() && !statistic.isEmpty() && !monthPeriod.isEmpty() && !_scenarioRuns.contains(null))
+		if(!_scenarioRuns.isEmpty() && !guiLink.isEmpty() && !statistic.isEmpty() && !monthPeriod.isEmpty() && !_scenarioRuns.contains(null))
 		{
 
 			_progressBar.setVisible(true);
 			getScene().setCursor(Cursor.WAIT);
 			CompletableFuture.supplyAsync(() -> computeScenarios(guiLink, statistic, monthPeriod))
-							 .thenAcceptAsync(jsonObjects ->
+							 .whenCompleteAsync((jsonObjects, t) ->
 							 {
-								 for(JSONObject jsonObject : jsonObjects)
+								 if(t != null)
 								 {
-									 _javascriptPane.addDashboardPane(path, "plot(" + jsonObject + ");");
+									 LOGGER.log(Level.SEVERE, "Error plotting Trend Report", t);
+								 }
+								 if(jsonObjects != null)
+								 {
+									 for(JSONObject jsonObject : jsonObjects)
+									 {
+										 _javascriptPane.addDashboardPane(path, "plot(" + jsonObject + ");");
+									 }
 								 }
 								 _progressBar.setVisible(false);
 								 getScene().setCursor(Cursor.DEFAULT);
@@ -434,13 +480,13 @@ public class TrendReportPanel extends JFXPanel
 		}
 	}
 
-	private List<JSONObject> computeScenarios(List<GUILinksAllModelsBO> guiLinks, List<Statistics> statistics,
+	private List<JSONObject> computeScenarios(List<GUILinksAllModelsBO> guiLinks, List<TrendStatistics> statistics,
 											  List<EpptReportingMonths.MonthPeriod> monthPeriods)
 	{
 		List<JSONObject> retval = new ArrayList<>();
 		for(GUILinksAllModelsBO guiLink : guiLinks)
 		{
-			for(Statistics statistic : statistics)
+			for(TrendStatistics statistic : statistics)
 			{
 				for(EpptReportingMonths.MonthPeriod monthPeriod : monthPeriods)
 				{
@@ -454,7 +500,7 @@ public class TrendReportPanel extends JFXPanel
 		return retval;
 	}
 
-	private EpptReportingComputedSet computeForMetrics(GUILinksAllModelsBO guiLink, Statistics statistic,
+	private EpptReportingComputedSet computeForMetrics(GUILinksAllModelsBO guiLink, TrendStatistics statistic,
 													   EpptReportingMonths.MonthPeriod monthPeriod)
 	{
 		WaterYearDefinition waterYearDefinition = WaterYearDefinitionSvc.getWaterYearDefinitionSvc().getDefinitions().get(0);
