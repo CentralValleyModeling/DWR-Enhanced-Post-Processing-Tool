@@ -141,16 +141,7 @@ public class DetailedIssueProcessor
 		DetailedIssue di = getDetailedIssueThatMatchViolation(violation);
 		if(di != null)
 		{
-			if(Const.isValid(di.getGuiLink()) && Const.isValid(di.getThresholdLink()))
-			{
-				div = createDetailedIssueViolation(violation, di.getGuiLink(), di.getThresholdLink(), run, subMod, waterYearTypes);
-			}
-			else
-			{
-				LOGGER.at(Level.WARNING).log(
-						"Could not create a detailed issue violation because the gui link or the threshold link was not a valid number for %s",
-						di.getLinkedVar());
-			}
+			div = createDetailedIssueViolation(violation, di.getGuiLink(), di.getThresholdLink(), run, subMod, waterYearTypes);
 		}
 		return div;
 	}
@@ -161,8 +152,16 @@ public class DetailedIssueProcessor
 																List<WaterYearType> waterYearTypesFromFile)
 	{
 		//create title
-		GUILinksAllModelsBO guiLink = GuiLinksSeedDataSvcImpl.getSeedDataSvcImplInstance().getObjById(Integer.toString(guiID));
-		ThresholdLinksBO thresholdLink = ThresholdLinksSeedDataSvc.getSeedDataSvcImplInstance().getObjById(thresholdID);
+		GUILinksAllModelsBO guiLink = null;
+		if(Const.isValid(guiID))
+		{
+			guiLink = GuiLinksSeedDataSvcImpl.getSeedDataSvcImplInstance().getObjById(Integer.toString(guiID));
+		}
+		ThresholdLinksBO thresholdLink = null;
+		if(Const.isValid(thresholdID))
+		{
+			thresholdLink = ThresholdLinksSeedDataSvc.getSeedDataSvcImplInstance().getObjById(thresholdID);
+		}
 		String title = subMod.getTitle();
 		if(guiLink != null)
 		{
@@ -172,6 +171,10 @@ public class DetailedIssueProcessor
 				guiLinkTitle = violation.getDtsFileName();
 			}
 			title = title.replace("%title%", guiLinkTitle);
+		}
+		else
+		{
+			title = title.replace("%title%", violation.getDtsFileName());
 		}
 		if(thresholdLink != null)
 		{

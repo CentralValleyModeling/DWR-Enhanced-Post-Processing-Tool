@@ -1085,7 +1085,9 @@ public class QAQCReportPanel extends RmaJPanel
 		}
 		catch(EpptInitializationException e)
 		{
-			LOGGER.log(Level.SEVERE, "Error processing water year table for the base scenario", e);
+			String msg = "Error processing water year table for the base scenario for the QA/QC report, please ensure the path is correct: "
+					+ waterYearTable;
+			LOGGER.log(Level.SEVERE, msg, e);
 		}
 	}
 
