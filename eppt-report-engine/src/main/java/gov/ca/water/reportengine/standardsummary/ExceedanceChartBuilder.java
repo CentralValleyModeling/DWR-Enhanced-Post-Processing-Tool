@@ -12,16 +12,14 @@
 
 package gov.ca.water.reportengine.standardsummary;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.NavigableMap;
 
-import gov.ca.water.calgui.bo.CommonPeriodFilter;
 import gov.ca.water.calgui.project.EpptScenarioRun;
 import gov.ca.water.plotly.ExceedanceData;
-import gov.ca.water.plotly.PlotlyExceedance;
+import gov.ca.water.plotly.qaqc.PlotlyExceedance;
 import gov.ca.water.reportengine.EpptReportException;
 import org.w3c.dom.Document;
 

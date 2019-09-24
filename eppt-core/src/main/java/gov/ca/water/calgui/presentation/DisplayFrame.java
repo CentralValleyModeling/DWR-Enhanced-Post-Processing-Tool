@@ -293,7 +293,7 @@ final class DisplayFrame
 						{
 							showFrame = true;
 						}
-						else if(!dssGrabber.getStopOnMissing())
+						else
 						{
 							insertEmptyTab(tabbedpane, missing);
 							showFrame = true;
@@ -663,10 +663,6 @@ final class DisplayFrame
 			if(missing.isEmpty())
 			{
 				showFrame = true;
-			}
-			else if(dssGrabber.getStopOnMissing())
-			{
-				showFrame = false;
 			}
 			else
 			{

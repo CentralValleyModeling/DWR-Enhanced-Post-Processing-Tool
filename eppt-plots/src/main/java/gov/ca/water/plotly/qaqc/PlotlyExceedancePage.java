@@ -10,7 +10,7 @@
  * GNU General Public License
  */
 
-package gov.ca.water.plotly;
+package gov.ca.water.plotly.qaqc;
 
 import java.nio.file.Path;
 import java.time.Month;
@@ -25,6 +25,8 @@ import java.util.Objects;
 
 import gov.ca.water.calgui.constant.Constant;
 import gov.ca.water.calgui.project.EpptScenarioRun;
+import gov.ca.water.plotly.ExceedanceData;
+import gov.ca.water.plotly.PlotlyChart;
 import javafx.scene.paint.Color;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -205,18 +207,6 @@ public class PlotlyExceedancePage extends PlotlyChart
 		Color color = scenarioRun.getColor();
 		marker.put("color", Constant.colorToHex(color));
 		return marker;
-	}
-
-	@Override
-	public int getWidth()
-	{
-		return 2000;
-	}
-
-	@Override
-	public int getHeight()
-	{
-		return 1200;
 	}
 
 	public static class ExceedanceMonthData

@@ -115,10 +115,10 @@ public class DetailedIssuesReader
 					}
 
 					//only use rows that have a section id of "ED"
-					//					if(!row[SECTION_ID].contains(EXEC_DETAILS_REPORT))
-					//					{
-					//						continue;
-					//					}
+					if(!row[SECTION_ID].contains(EXEC_DETAILS_REPORT))
+					{
+						continue;
+					}
 				}
 
 				int detailsId = Integer.parseInt(row[DETAILS_ID]);

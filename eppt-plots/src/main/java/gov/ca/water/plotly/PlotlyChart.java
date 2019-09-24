@@ -72,8 +72,4 @@ public abstract class PlotlyChart
 	protected abstract JSONObject buildLayout(JSONObject template);
 
 	protected abstract JSONArray buildDataArray(JSONArray arrayTemplate);
-
-	public abstract int getWidth();
-
-	public abstract int getHeight();
 }

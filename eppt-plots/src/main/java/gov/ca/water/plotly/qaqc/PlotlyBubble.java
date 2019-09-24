@@ -10,15 +10,15 @@
  * GNU General Public License
  */
 
-package gov.ca.water.plotly;
+package gov.ca.water.plotly.qaqc;
 
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.List;
 import java.util.Map;
 
 import gov.ca.water.calgui.constant.Constant;
 import gov.ca.water.calgui.project.EpptScenarioRun;
+import gov.ca.water.plotly.PlotlyChart;
 import javafx.scene.paint.Color;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -158,18 +158,6 @@ public class PlotlyBubble extends PlotlyChart
 		line.put("width", "2");
 		marker.put("line", line);
 		return marker;
-	}
-
-	@Override
-	public int getWidth()
-	{
-		return 1200;
-	}
-
-	@Override
-	public int getHeight()
-	{
-		return 800;
 	}
 
 	public static class BubbleData

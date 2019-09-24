@@ -23,11 +23,10 @@ import java.util.logging.Logger;
 import gov.ca.water.calgui.bo.WaterYearDefinition;
 import gov.ca.water.calgui.project.EpptScenarioRun;
 import gov.ca.water.plotly.PlotlyChart;
-import gov.ca.water.plotly.PlotlyMonthly;
+import gov.ca.water.plotly.qaqc.PlotlyMonthly;
 import gov.ca.water.reportengine.EpptReportException;
 import org.w3c.dom.Document;
 
-import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toMap;
 
 /**

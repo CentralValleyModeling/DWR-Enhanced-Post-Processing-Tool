@@ -42,6 +42,7 @@ public final class Constant
 	public static final Path QA_QC_PATH = Paths.get(System.getProperty("user.dir")).resolve("dwr_eppt").resolve("config").resolve("qaqc");
 	public static final Path FUNCTIONS_PATH = QA_QC_PATH.resolve("Functions" + CSV_EXT);
 	public static final Path QA_QC_TEMPLATE_PATH = QA_QC_PATH.resolve("templates");
+	public static final Path PLOTLY_TEMPLATE_PATH = Paths.get(CONFIG_DIR).resolve("plotly").resolve("templates");
 	public static final Path QA_QC_SCRIPT_DIRECTORY = QA_QC_PATH.resolve("scripts");
 	public static final Path DETAILS_CSV = QA_QC_PATH.resolve("Details" + CSV_EXT);
 	public static final Path QAQC_IMAGE_PATH = Paths.get("images");

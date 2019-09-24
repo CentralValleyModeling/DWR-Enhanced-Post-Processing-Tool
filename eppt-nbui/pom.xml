@@ -364,6 +364,13 @@
 							</includes>
 						</nbmResource>
 						<nbmResource>
+							<directory>${project.basedir}/src/main/lib</directory>
+							<targetPath>lib</targetPath>
+							<includes>
+								<include>**</include>
+							</includes>
+						</nbmResource>
+						<nbmResource>
 							<directory>${project.basedir}/src/main/wresl</directory>
 							<targetPath>wresl</targetPath>
 							<includes>
