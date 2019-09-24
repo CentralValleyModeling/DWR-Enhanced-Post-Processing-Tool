@@ -58,6 +58,12 @@ public class ThresholdLinksBO
 		_modelMapping.put(model, new ModelData(primary, model));
 	}
 
+	@Override
+	public String toString()
+	{
+		return "Threshold ID: " + _id  + " Label: " + _label;
+	}
+
 	public static class ModelData
 	{
 		private final String _primary;

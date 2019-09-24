@@ -721,8 +721,9 @@ public class DSSGrabber1SvcImpl implements IDSSGrabber1Svc
 		LOGGER.log(Level.FINE, result);
 		if(result != null)
 		{
-			throw new IllegalStateException(result);
+//			throw new IllegalStateException(result);
 		}
+
 	}
 
 	/*
@@ -916,7 +917,9 @@ public class DSSGrabber1SvcImpl implements IDSSGrabber1Svc
 		}
 		catch(RuntimeException ex)
 		{
-			LOGGER.log(Level.SEVERE, "Unable to get time series.", ex);
+			String msg = "Unable to get time series for threshold: " + _threshold;
+			LOGGER.log(Level.INFO, msg);
+			LOGGER.log(Level.FINE, msg, ex);
 		}
 
 		return results;
