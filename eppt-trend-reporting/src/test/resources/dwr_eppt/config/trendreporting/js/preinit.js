@@ -15,3 +15,70 @@ const PLOTLY_FONT = {
     family: 'Lucida Grande", "Lucida Sans Unicode", "Verdana", "Arial", "Helvetica", "sans-serif',
     color: 'black',
 };
+
+
+function openContextMenu(id, e, copyToClipboard, plotlyExportToFormat) {
+    // prevent the browsers default context menu form appearing.
+    e.preventDefault();
+    $.contextMenu({
+        selector: id,
+        build: function ($triggerElement, e) {
+            return {
+                items: {
+                    "export": {
+                        name: "Export",
+                        items: {
+                            "SVG": {
+                                name: "To SVG",
+                                callback: function (key, options) {
+                                    plotlyExportToFormat('svg');
+                                }
+                            },
+                            "PNG": {
+                                name: "To PNG",
+                                callback: function (key, options) {
+                                    plotlyExportToFormat('png');
+                                }
+                            },
+                            "JPEG": {
+                                name: "To JPEG",
+                                callback: function (key, options) {
+                                    plotlyExportToFormat('jpeg');
+                                }
+                            }
+                        }
+                    },
+                    "copy": {
+                        name: "Copy",
+                        callback: function (key, options) {
+                            copyToClipboard();
+                        }
+                    },
+                }
+            }
+
+
+        }
+    });
+
+}
+
+
+function plotlyExportFunction(plot) {
+    return (format) => {
+        var width = plot.offsetWidth;
+        var height = plot.offsetHeight;
+        Plotly.downloadImage(plot, {format: format, height: height, width: width});
+    }
+}
+
+function copyTextToClipboard(text) {
+    var textArea = document.createElement("textarea");
+    textArea.value = text;
+    document.body.appendChild(textArea);
+    textArea.focus();
+    textArea.select();
+    document.execCommand('copy');
+    document.body.removeChild(textArea);
+}
+

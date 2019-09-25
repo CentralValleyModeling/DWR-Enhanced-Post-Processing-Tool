@@ -65,7 +65,7 @@ function getPlotlySeries(datum) {
         let xData = [];
         let yData = [];
         for (var k = 0; k < dataOnly.length; k++) {
-            let exceedance = 1 - ((k+ 0.5)/dataOnly.length);
+            let exceedance = 1 - ((k + 0.5) / dataOnly.length);
             xData.push(exceedance);
             yData.push(dataOnly[k]);
         }
@@ -73,7 +73,7 @@ function getPlotlySeries(datum) {
             x: xData,
             y: yData,
             marker: {
-                color:  datum[i]['scenario_color']
+                color: datum[i]['scenario_color']
             },
             name: datum[i]['scenario_name']
         };
@@ -88,7 +88,7 @@ function plot(data) {
         font: PLOTLY_FONT,
         xaxis: {
             tickformat: ',.0%',
-            range: [1,0],
+            range: [1, 0],
             zeroline: false
         },
         yaxis: {
@@ -115,11 +115,37 @@ function plot(data) {
             }
         }
     };
-
-    Plotly.newPlot('tester', getPlotlySeries(datum), layout, {
+    Plotly.newPlot('tester', getPlotlySeries(datum, table), layout, {
         displaylogo: false,
         modeBarButtonsToRemove: ['toImage', 'sendDataToCloud', 'editInChartStudio', 'lasso2d', 'select2d', 'resetScale2d'],
         scrollZoom: true,
-        responsive: true
+        responsive: true,
     });
+    $("#tester").mousedown((ev) => {
+        if (ev.which === 3) {
+            openContextMenu('#tester', ev, plotlyCopyToClipboard, plotlyExportFunction(document.getElementById("tester")));
+        }
+    })
+}
+
+function plotlyCopyToClipboard() {
+    let plot = document.getElementById("tester");
+    let layout = plot.layout;
+    let data1 = plot.data;
+    var text = layout['title']['text'] + '\n' + 'Percent\t' + layout['yaxis']['title']['text'] + '\n';
+    for (var i = 0; i < data1.length; i++) {
+        text += '\t' + data1[i]['name']
+    }
+    text += '\n';
+    let datum = data1[0];
+    let xarr = datum['x'];
+    for (var j = 0; j < xarr.length; j++) {
+        text += (xarr[j] * 100);
+        for (var k = 0; k < data1.length; k++) {
+            let yarr = data1[k]['y'];
+            text += '\t' + yarr[k]
+        }
+        text += '\n';
+    }
+    copyTextToClipboard(text);
 }

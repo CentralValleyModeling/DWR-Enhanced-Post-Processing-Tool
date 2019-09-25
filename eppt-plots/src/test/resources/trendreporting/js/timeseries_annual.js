@@ -74,4 +74,10 @@ function plotAnnual(data) {
         scrollZoom: true,
         responsive: true
     });
+
+    $("#container_annual_tester").mousedown((ev) => {
+        if (ev.which === 3) {
+            openContextMenu(ev);
+        }
+    })
 }

@@ -46,6 +46,7 @@ public class JavaFxChartsPane extends BorderPane
 		_callbackScript = callbackScript;
 		_outputPath = null;
 		_webView = new WebView();
+		_webView.setContextMenuEnabled(true);
 		_webView.getEngine().getLoadWorker().exceptionProperty().addListener(this::handleException);
 		_webView.getEngine().getLoadWorker().stateProperty().addListener(this::callbackScript);
 		setPrefWidth(900);

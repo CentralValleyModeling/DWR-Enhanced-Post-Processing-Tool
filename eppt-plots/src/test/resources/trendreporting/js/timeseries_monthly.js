@@ -83,4 +83,9 @@ function plotMonthly(data) {
         scrollZoom: true,
         responsive: true
     });
+    $("#container_monthly_tester").mousedown((ev) => {
+        if (ev.which === 3) {
+            openContextMenu(ev);
+        }
+    })
 }

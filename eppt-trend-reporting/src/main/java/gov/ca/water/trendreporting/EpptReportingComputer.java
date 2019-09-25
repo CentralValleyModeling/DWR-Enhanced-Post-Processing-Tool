@@ -30,6 +30,7 @@ import java.util.concurrent.TimeUnit;
 
 import gov.ca.water.calgui.bo.GUILinksAllModelsBO;
 import gov.ca.water.calgui.bo.WaterYearDefinition;
+import gov.ca.water.calgui.bo.WaterYearIndex;
 import gov.ca.water.calgui.busservice.impl.DSSGrabber1SvcImpl;
 import gov.ca.water.calgui.project.EpptScenarioRun;
 
@@ -51,14 +52,16 @@ public class EpptReportingComputer
 	private final TrendStatistics _statistics;
 	private final EpptReportingMonths.MonthPeriod _monthPeriod;
 	private final WaterYearDefinition _waterYearDefinition;
+	private final WaterYearIndex _waterYearIndex;
 
 	public EpptReportingComputer(GUILinksAllModelsBO guiLink, TrendStatistics statistics, EpptReportingMonths.MonthPeriod monthPeriod,
-								 WaterYearDefinition waterYearDefinition)
+								 WaterYearDefinition waterYearDefinition, WaterYearIndex waterYearIndex)
 	{
 		_guiLink = guiLink;
 		_statistics = statistics;
 		_monthPeriod = monthPeriod;
 		_waterYearDefinition = waterYearDefinition;
+		_waterYearIndex = waterYearIndex;
 	}
 
 	public EpptReportingComputed computeCfs(EpptScenarioRun scenarioRun, LocalDate start, LocalDate end)
@@ -95,7 +98,7 @@ public class EpptReportingComputer
 			}
 		}
 		Map<LocalDateTime, Double> filteredPeriod = filterPeriod(retval);
-		Map<Month, Double> calculate = _statistics.calculate(filteredPeriod);
+		Map<Month, Double> calculate = _statistics.calculate(filteredPeriod, _waterYearDefinition, _waterYearIndex);
 		Map<Month, Double> calculateEop = new EnumMap<>(Month.class);
 		for(Map.Entry<Month, Double> entry : calculate.entrySet())
 		{

@@ -166,13 +166,13 @@ function getPlotlySeries(datum) {
 }
 
 function buildChart(data, units) {
-
     var layout = {
         font: PLOTLY_FONT,
         yaxis: {
             title: {
                 text: 'Volume (' + units + ')',
             },
+            range: yrange,
             autorange: true,
             rangemode: 'normal'
         },
@@ -185,14 +185,14 @@ function buildChart(data, units) {
             }
         },
         title: {
-            text: data['gui_link_title'],
+            text: plotlyData['gui_link_title'],
             font: {
                 size: 20,
             }
         }
     };
 
-    Plotly.newPlot('tester', [getPlotlySeries(data['scenario_run_data'])], layout, {
+    Plotly.newPlot('tester', [plotlyData], layout, {
         displaylogo: false,
         modeBarButtonsToRemove: ['toImage', 'sendDataToCloud', 'editInChartStudio', 'lasso2d', 'select2d', 'resetScale2d'],
         scrollZoom: true,

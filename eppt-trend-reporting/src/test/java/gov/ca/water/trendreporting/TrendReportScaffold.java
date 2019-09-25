@@ -79,7 +79,7 @@ public class TrendReportScaffold
 		{
 			jFrame.setLayout(new BorderLayout());
 			jFrame.add(epptPanel, BorderLayout.CENTER);
-			jFrame.setSize(1500,700);
+			jFrame.setSize(1600,700);
 			jFrame.setBackground(Color.WHITE);
 			jFrame.setVisible(true);
 		});

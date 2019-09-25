@@ -106,4 +106,9 @@ function plot(data) {
         scrollZoom: true,
         responsive: true
     });
+    $("#tester").mousedown((ev) => {
+        if (ev.which === 3) {
+            openContextMenu(ev);
+        }
+    })
 }

@@ -135,7 +135,7 @@ function plot(data) {
         units = 'CFS';
     }
     buildChart(data, units);
-    buildDataTable(data, seriesData);
+    // buildDataTable(data, seriesData);
     // buildTable(units, data, seriesData);
 }
 
@@ -167,14 +167,15 @@ function getPlotlySeries(datum) {
 
 function buildChart(data, units) {
 
+    let plotlyData = getPlotlySeries(data['scenario_run_data']);
+    var yrange = [Math.min.apply(null, plotlyData['y']) - 20, Math.max.apply(null, plotlyData['y']) + 20];
     var layout = {
         font: PLOTLY_FONT,
         yaxis: {
             title: {
                 text: 'Volume (' + units + ')',
             },
-            autorange: true,
-            rangemode: 'normal'
+            range: yrange
         },
         legend: {
             orientation: 'h',
@@ -192,12 +193,33 @@ function buildChart(data, units) {
         }
     };
 
-    Plotly.newPlot('tester', [getPlotlySeries(data['scenario_run_data'])], layout, {
+    Plotly.newPlot('tester', [plotlyData], layout, {
         displaylogo: false,
         modeBarButtonsToRemove: ['toImage', 'sendDataToCloud', 'editInChartStudio', 'lasso2d', 'select2d', 'resetScale2d'],
         scrollZoom: true,
         responsive: true
     });
+    $("#tester").mousedown((ev) => {
+        if (ev.which === 3) {
+            openContextMenu('#tester', ev, plotlyCopyToClipboard, plotlyExportFunction(document.getElementById("tester")));
+        }
+    });
+}
+
+function plotlyCopyToClipboard() {
+    let plot = document.getElementById("tester");
+    let layout = plot.layout;
+    let data1 = plot.data;
+    var text = layout['title']['text'] + '\n' + 'Scenario\t' + layout['yaxis']['title']['text'] + '\n';
+    for (var i = 0; i < data1.length; i++) {
+        let datum = data1[i];
+        let xarr = datum['x'];
+        let yarr = datum['y'];
+        for (var j = 0; j < xarr.length && j < yarr.length; j++) {
+            text += xarr[j] + '\t' + yarr[j] + '\n';
+        }
+    }
+    copyTextToClipboard(text);
 }
 
 function buildTable(units, data, seriesData) {
@@ -317,45 +339,6 @@ function buildTable(units, data, seriesData) {
             openContextMenu(e);
         }
     });
-
-    function openContextMenu(e) {
-        // prevent the browsers default context menu form appearing.
-        e.preventDefault();
-        $.contextMenu({
-            selector: '#table',
-            build: function ($triggerElement, e) {
-                return {
-                    items: {
-                        "export": {
-                            name: "Export",
-                            icon: "download",
-                            items: {
-                                "PDF": {
-                                    name: "To PDF"
-                                },
-                                "PNG": {
-                                    name: "To PNG"
-                                },
-                                "Excel": {
-                                    name: "To Excel"
-                                }
-                            }
-                        },
-                        "copy": {
-                            name: "Copy",
-                            icon: "copy",
-                            callback: function (key, options) {
-                                table.copyToClipboard("active", true);
-                            }
-                        },
-                    }
-                }
-
-
-            }
-        });
-
-    }
 
 }
 

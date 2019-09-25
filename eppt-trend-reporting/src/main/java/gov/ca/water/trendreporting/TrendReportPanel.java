@@ -13,7 +13,6 @@
 package gov.ca.water.trendreporting;
 
 
-import java.io.BufferedReader;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -26,8 +25,6 @@ import java.util.concurrent.CompletableFuture;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Stream;
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
 import gov.ca.water.calgui.EpptInitializationException;
@@ -70,9 +67,6 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.TilePane;
 import javafx.scene.paint.Color;
 import org.json.JSONObject;
-import org.w3c.dom.Document;
-import org.w3c.dom.NodeList;
-import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
 import static java.util.stream.Collectors.toList;
@@ -94,10 +88,10 @@ public class TrendReportPanel extends JFXPanel
 	private ListView<TrendStatistics> _statisticsListView;
 	private ListView<EpptReportingMonths.MonthPeriod> _seasonalPeriodListView;
 	private CheckBox _tafCheckbox;
-	private ComboBox<WaterYearIndex> _waterYearIndexJComboBox;
+	private ComboBox<WaterYearIndex> _waterYearIndexComboBox;
+	private ComboBox<WaterYearDefinition> _waterYearDefinitionComboBox;
 	private FXCalendar _startCalendar;
 	private FXCalendar _endCalendar;
-	private Path _currentScript;
 	private ProgressBar _progressBar;
 
 	public TrendReportPanel()
@@ -113,8 +107,15 @@ public class TrendReportPanel extends JFXPanel
 		_parameterListView = new ListView<>();
 		_statisticsListView = new ListView<>();
 		_seasonalPeriodListView = new ListView<>();
+
+		_parameterListView.setStyle("-fx-selection-bar:-fx-focus-color ;-fx-selection-bar-non-focused: -fx-focus-color ;");
+		_statisticsListView.setStyle("-fx-selection-bar:-fx-focus-color ;-fx-selection-bar-non-focused: -fx-focus-color ;");
+		_seasonalPeriodListView.setStyle("-fx-selection-bar:-fx-focus-color ;-fx-selection-bar-non-focused: -fx-focus-color ;");
+
 		_tafCheckbox = new CheckBox("CFS -> TAF/mon");
-		_waterYearIndexJComboBox = new ComboBox<>();
+		_waterYearIndexComboBox = new ComboBox<>();
+		_waterYearDefinitionComboBox = new ComboBox<>();
+		fillWaterYearDefinitionCombo();
 
 		Insets insets = new Insets(10);
 		BorderPane mainPane = new BorderPane();
@@ -176,10 +177,14 @@ public class TrendReportPanel extends JFXPanel
 		gridPane.add(new Label("End: "), 0, 1);
 		gridPane.add(_endCalendar, 1, 1);
 		gridPane.add(new Label("Water Year Index: "), 0, 2);
-		gridPane.add(_waterYearIndexJComboBox, 1, 2);
+		gridPane.add(_waterYearIndexComboBox, 1, 2);
+		gridPane.add(new Label("Water Year Definition: "), 0, 3);
+		gridPane.add(_waterYearDefinitionComboBox, 1, 3);
 		gridPane.setHgap(10);
 		gridPane.setVgap(10);
 		gridPane.setPrefHeight(125);
+		_waterYearIndexComboBox.setMaxWidth(Double.MAX_VALUE);
+		_waterYearDefinitionComboBox.setMaxWidth(Double.MAX_VALUE);
 		_tafCheckbox.selectedProperty().addListener(this::inputsChanged);
 		_startCalendar.selectedMonthProperty().addListener(this::inputsChanged);
 		_startCalendar.selectedYearProperty().addListener(this::inputsChanged);
@@ -254,7 +259,19 @@ public class TrendReportPanel extends JFXPanel
 
 	private List<TrendStatistics> getTrendStatistics()
 	{
-		return new ArrayList<>();
+		List<TrendStatistics> retval = new ArrayList<>();
+		Path jython = Paths.get(Constant.TREND_REPORTING_DIR).resolve("jython");
+		try(Stream<Path> stream = Files.walk(jython, 5))
+		{
+			retval = stream.filter(p -> p.toFile().isFile()).filter(p -> p.toString().endsWith("py"))
+						   .map(TrendStatistics::new)
+						   .collect(toList());
+		}
+		catch(IOException e)
+		{
+			LOGGER.log(Level.SEVERE, "Unable to load Statistics for Trend Reporting dashboard", e);
+		}
+		return retval;
 	}
 
 	private Pane buildSeasonalPeriodListView()
@@ -325,66 +342,18 @@ public class TrendReportPanel extends JFXPanel
 
 	private ToggleButton buildToggleButton(Path path)
 	{
-		try(BufferedReader reader = Files.newBufferedReader(path))
+		try
 		{
-			DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
-			dbf.setValidating(false);
-			dbf.setNamespaceAware(true);
-			dbf.setIgnoringComments(false);
-			dbf.setIgnoringElementContentWhitespace(false);
-			dbf.setExpandEntityReferences(false);
-			DocumentBuilder db = dbf.newDocumentBuilder();
-			Document parse = db.parse(new InputSource(reader));
-			String text = getHtmlTitle(parse, path.getFileName().toString());
-			boolean statsDisabled = attributeDisabled(parse, "support-statistic");
-			boolean seasonalPeriodDisabled = attributeDisabled(parse, "support-seasonal-period");
-			ToggleButton toggleButton = new ToggleButton(text.trim());
-			toggleButton.setMaxWidth(Double.MAX_VALUE);
-			toggleButton.selectedProperty().addListener((o, old, n) -> loadPane(n, path, statsDisabled, seasonalPeriodDisabled));
-			return toggleButton;
+			TrendReportTabConfig trendReportTabConfig = new TrendReportTabConfig(path);
+			TrendReportToggleButton trendReportToggleButton = new TrendReportToggleButton(trendReportTabConfig);
+			trendReportToggleButton.selectedProperty().addListener((o, old, n) -> loadPane());
+			return trendReportToggleButton;
 		}
 		catch(IOException | RuntimeException | ParserConfigurationException | SAXException ex)
 		{
 			LOGGER.log(Level.SEVERE, "Unable to extract toggle button text from: " + path, ex);
 			return null;
 		}
-	}
-
-	private String getHtmlTitle(Document parse, String filename)
-	{
-		String text;
-		NodeList head = parse.getElementsByTagName("title");
-		if(head != null && head.getLength() > 0)
-		{
-			text = head.item(0).getTextContent();
-		}
-		else
-		{
-			text = filename;
-		}
-		return text;
-	}
-
-	private boolean attributeDisabled(Document parse, String attribute)
-	{
-		boolean attributeDisabled = true;
-		NodeList meta = parse.getElementsByTagName("meta");
-		for(int i = 0; i < meta.getLength(); i++)
-		{
-			org.w3c.dom.Node item = meta.item(i);
-			org.w3c.dom.Node name = item.getAttributes().getNamedItem("name");
-			if(name != null)
-			{
-				String metaName = name.getTextContent();
-				org.w3c.dom.Node content = item.getAttributes().getNamedItem("content");
-				if(content != null && attribute.equals(metaName))
-				{
-					attributeDisabled = !Boolean.parseBoolean(content.getTextContent());
-					break;
-				}
-			}
-		}
-		return attributeDisabled;
 	}
 
 	public void setScenarioRuns(EpptScenarioRun baseRun, List<EpptScenarioRun> alternatives)
@@ -395,7 +364,7 @@ public class TrendReportPanel extends JFXPanel
 		Platform.runLater(() ->
 		{
 			fillWaterYearIndexCombo(baseRun);
-			reload();
+			loadPane();
 		});
 	}
 
@@ -404,19 +373,19 @@ public class TrendReportPanel extends JFXPanel
 		try
 		{
 			WaterYearTableReader waterYearTableReader = new WaterYearTableReader(baseRun.getWaterYearTable());
-			WaterYearIndex selectedItem = _waterYearIndexJComboBox.selectionModelProperty().get().getSelectedItem();
+			WaterYearIndex selectedItem = _waterYearIndexComboBox.selectionModelProperty().get().getSelectedItem();
 			List<WaterYearIndex> indices = waterYearTableReader.read();
-			_waterYearIndexJComboBox.itemsProperty().get().clear();
-			_waterYearIndexJComboBox.itemsProperty().get().addAll(indices);
+			_waterYearIndexComboBox.itemsProperty().get().clear();
+			_waterYearIndexComboBox.itemsProperty().get().addAll(indices);
 			if(selectedItem == null)
 			{
-				_waterYearIndexJComboBox.selectionModelProperty().get().select(0);
+				_waterYearIndexComboBox.selectionModelProperty().get().select(0);
 			}
 			else
 			{
 				WaterYearIndex waterYearIndex = indices.stream().filter(f -> f.toString().equals(selectedItem.toString()))
 													   .findAny().orElse(indices.get(0));
-				_waterYearIndexJComboBox.selectionModelProperty().get().select(waterYearIndex);
+				_waterYearIndexComboBox.selectionModelProperty().get().select(waterYearIndex);
 			}
 		}
 		catch(EpptInitializationException e)
@@ -425,33 +394,51 @@ public class TrendReportPanel extends JFXPanel
 		}
 	}
 
-	private void loadPane(boolean selected, Path path, boolean statsDisabled, boolean seasonalPeriodDisabled)
+	private void fillWaterYearDefinitionCombo()
 	{
-		if(selected)
+		WaterYearDefinition selectedItem = _waterYearDefinitionComboBox.selectionModelProperty().get().getSelectedItem();
+		List<WaterYearDefinition> definitions = WaterYearDefinitionSvc.getWaterYearDefinitionSvc().getDefinitions();
+		_waterYearDefinitionComboBox.itemsProperty().get().clear();
+		_waterYearDefinitionComboBox.itemsProperty().get().addAll(definitions);
+		if(selectedItem == null)
 		{
-			_statisticsListView.setDisable(statsDisabled);
-			_seasonalPeriodListView.setDisable(seasonalPeriodDisabled);
-			loadJavascript(path);
+			_waterYearDefinitionComboBox.selectionModelProperty().get().select(0);
+		}
+		else
+		{
+			WaterYearDefinition waterYearIndex = definitions.stream().filter(f -> f.toString().equals(selectedItem.toString()))
+															.findAny().orElse(definitions.get(0));
+			_waterYearDefinitionComboBox.selectionModelProperty().get().select(waterYearIndex);
 		}
 	}
 
-	private void reload()
+	private void loadPane()
 	{
-		if(_currentScript != null)
+		TrendReportToggleButton button = (TrendReportToggleButton) _toggleGroup.getSelectedToggle();
+		if(button != null)
 		{
-			loadJavascript(_currentScript);
+			TrendReportTabConfig trendReportTabConfig = button.getTrendReportTabConfig();
+			boolean statUsesWaterYearDefinition = _statisticsListView.getSelectionModel().getSelectedItems()
+																	 .stream()
+																	 .map(TrendStatistics::usesWaterYearDefinition)
+																	 .findAny()
+																	 .orElse(true);
+			_statisticsListView.setDisable(trendReportTabConfig.isStatsDisabled());
+			_seasonalPeriodListView.setDisable(trendReportTabConfig.isSeasonalPeriodDisabled());
+			_waterYearIndexComboBox.setDisable(trendReportTabConfig.isWaterYearIndexDisabled());
+			_waterYearDefinitionComboBox.setDisable(trendReportTabConfig.isStatsDisabled() || !statUsesWaterYearDefinition);
+			loadJavascript(trendReportTabConfig.getPath());
 		}
 	}
 
 	private void inputsChanged(ObservableValue<?> e, Object o, Object n)
 	{
-		reload();
+		loadPane();
 	}
 
 	private void loadJavascript(Path path)
 	{
 		_javascriptPane.removeDashboardPanes();
-		_currentScript = path;
 		List<GUILinksAllModelsBO> guiLink = _parameterListView.getSelectionModel().getSelectedItems();
 		List<TrendStatistics> statistic = _statisticsListView.getSelectionModel().getSelectedItems();
 		List<EpptReportingMonths.MonthPeriod> monthPeriod = _seasonalPeriodListView.getSelectionModel().getSelectedItems();
@@ -492,7 +479,7 @@ public class TrendReportPanel extends JFXPanel
 				{
 					EpptReportingComputedSet epptReportingComputedSet = computeForMetrics(guiLink, statistic, monthPeriod);
 					JSONObject jsonObject = epptReportingComputedSet.toJson();
-					LOGGER.log(Level.INFO, jsonObject + "");
+					LOGGER.log(Level.INFO, "{0}", jsonObject);
 					retval.add(jsonObject);
 				}
 			}
@@ -503,8 +490,10 @@ public class TrendReportPanel extends JFXPanel
 	private EpptReportingComputedSet computeForMetrics(GUILinksAllModelsBO guiLink, TrendStatistics statistic,
 													   EpptReportingMonths.MonthPeriod monthPeriod)
 	{
-		WaterYearDefinition waterYearDefinition = WaterYearDefinitionSvc.getWaterYearDefinitionSvc().getDefinitions().get(0);
-		EpptReportingComputer trendReportingComputer = new EpptReportingComputer(guiLink, statistic, monthPeriod, waterYearDefinition);
+		WaterYearDefinition waterYearDefinition = _waterYearDefinitionComboBox.getSelectionModel().getSelectedItem();
+		WaterYearIndex waterYearIndex = _waterYearIndexComboBox.getSelectionModel().getSelectedItem();
+		EpptReportingComputer trendReportingComputer = new EpptReportingComputer(guiLink, statistic, monthPeriod, waterYearDefinition,
+				waterYearIndex);
 		List<EpptReportingComputed> trendReportingComputed = new ArrayList<>();
 
 		for(EpptScenarioRun scenarioRun : _scenarioRuns)
