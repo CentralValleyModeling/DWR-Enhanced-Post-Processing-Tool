@@ -114,10 +114,10 @@ public class ScenarioRunEditor extends JDialog implements LoadingDss
 	@Override
 	public void dispose()
 	{
-		setVisible(false);
 		_progressBar.setIndeterminate(false);
 		_progressBar.setVisible(false);
 		_scenarioEditorPanel.shutdown();
+		setVisible(false);
 		super.dispose();
 	}
 
