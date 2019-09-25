@@ -74,4 +74,31 @@ function plotAnnual(data) {
         scrollZoom: true,
         responsive: true
     });
+    $("#container_annual_tester").mousedown((ev) => {
+        if (ev.which === 3) {
+            openContextMenu('#container_annual_tester', ev, plotlyCopyToClipboardAnnual, plotlyExportFunction(document.getElementById("container_annual_tester")));
+        }
+    });
+}
+
+function plotlyCopyToClipboardAnnual() {
+    let plot = document.getElementById("container_monthly_tester");
+    let layout = plot.layout;
+    let data1 = plot.data;
+    var text = layout['title']['text'] + '\n' + 'Date\t' + layout['yaxis']['title']['text'] + '\n';
+    for(var i = 0; i < data1.length; i++){
+        text += '\t' + data1[i]['name']
+    }
+    text += '\n';
+    let datum = data1[0];
+    let xarr = datum['x'];
+    for (var j = 0; j < xarr.length; j++) {
+        text += xarr[j];
+        for(var k = 0; k < data1.length; k++){
+            let yarr = data1[k]['y'];
+            text += '\t' + yarr[k]
+        }
+        text += '\n';
+    }
+    copyTextToClipboard(text);
 }
