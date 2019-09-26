@@ -35,10 +35,10 @@ import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
 import com.google.common.flogger.FluentLogger;
-import gov.ca.water.calgui.bo.GUILinksAllModelsBO;
-import gov.ca.water.calgui.constant.Constant;
-import gov.ca.water.calgui.project.EpptScenarioRun;
 import gov.ca.water.calgui.bo.DetailedIssue;
+import gov.ca.water.calgui.bo.GUILinksAllModelsBO;
+import gov.ca.water.calgui.bo.WaterYearIndex;
+import gov.ca.water.calgui.project.EpptScenarioRun;
 import gov.ca.water.calgui.scripts.DssCache;
 import gov.ca.water.reportengine.detailedissues.DetailedIssueProcessor;
 import gov.ca.water.reportengine.detailedissues.DetailedIssueViolation;
@@ -90,12 +90,12 @@ public class EPPTReport
 	private static final String CODE_CHANGES_CSV = "CodeChanges" + CSV_EXT;
 
 	private static final String MODULES_CSV = QA_QC_DIR + "/Modules" + CSV_EXT;
-    public static final String SUMMARY_CSV = QA_QC_DIR + "/Summary" + CSV_EXT;
+	public static final String SUMMARY_CSV = QA_QC_DIR + "/Summary" + CSV_EXT;
 
 	private final Path _pathToWriteOut;
 	private final EpptScenarioRun _baseRun;
-    private final ReportParameters _reportParameters;
-    private final List<EpptScenarioRun> _altRuns = new ArrayList<>();
+	private final ReportParameters _reportParameters;
+	private final List<EpptScenarioRun> _altRuns = new ArrayList<>();
 	private List<Module> _modules;
 
 
@@ -106,8 +106,8 @@ public class EPPTReport
 	{
 		_pathToWriteOut = pathToWriteOut;
 		_baseRun = baseRun;
-        _reportParameters = reportParameters;
-        _altRuns.addAll(altRuns);
+		_reportParameters = reportParameters;
+		_altRuns.addAll(altRuns);
 		DssCache.getInstance().clearCache();
 	}
 
@@ -334,7 +334,13 @@ public class EPPTReport
 			LOGGER.at(Level.SEVERE).log(errorMsg);
 			throw new EpptReportException(errorMsg);
 		}
-
+		WaterYearIndex waterYearIndex = _reportParameters.getSummaryReportParameters().getWaterYearIndex();
+		if(waterYearIndex == null)
+		{
+			String message = "Water Year Index is undefined";
+			LOGGER.at(Level.SEVERE).log(message);
+			throw new EpptReportException(message);
+		}
 		List<EpptScenarioRun> allRuns = new ArrayList<>();
 		allRuns.add(_baseRun);
 		allRuns.addAll(_altRuns);
@@ -510,9 +516,9 @@ public class EPPTReport
 		{
 			altNames.add(altRun.getName());
 		}
-        String author = _reportParameters.getAuthor();
-        String subtitle = _reportParameters.getSubtitle();
-        ReportHeader rh = new ReportHeader(author, subtitle, _baseRun.getName(), altNames);
+		String author = _reportParameters.getAuthor();
+		String subtitle = _reportParameters.getSubtitle();
+		ReportHeader rh = new ReportHeader(author, subtitle, _baseRun.getName(), altNames);
 		ReportHeaderXMLCreator rhWriter = new ReportHeaderXMLCreator();
 		return rhWriter.createReportHeaderElement(rh, doc);
 	}
