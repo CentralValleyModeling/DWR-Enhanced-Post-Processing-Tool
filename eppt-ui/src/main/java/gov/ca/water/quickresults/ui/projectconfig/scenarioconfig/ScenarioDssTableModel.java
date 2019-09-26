@@ -218,24 +218,27 @@ class ScenarioDssTableModel extends RmaTableModel
 
 	private void loadDssAandFParts(List<Path> paths)
 	{
-		_executor.submit(() ->
+		if(!_executor.isShutdown())
 		{
-			try
+			_executor.submit(() ->
 			{
-				SwingUtilities.invokeLater(()->_loadingDss.loadingStart("Loading DSS A and F parts"));
-				paths.stream().filter(path->path != null && path.toFile().exists() && !_aPaths.containsKey(path))
-					 .parallel().forEach(this::loadDss);
-			}
-			finally
-			{
-				SwingUtilities.invokeLater(_loadingDss::loadingFinished);
-			}
-		});
+				try
+				{
+					SwingUtilities.invokeLater(() -> _loadingDss.loadingStart("Loading DSS A and F parts"));
+					paths.stream().filter(path -> path != null && path.toFile().exists() && !_aPaths.containsKey(path))
+						 .parallel().forEach(this::loadDss);
+				}
+				finally
+				{
+					SwingUtilities.invokeLater(_loadingDss::loadingFinished);
+				}
+			});
+		}
 	}
 
 	private void loadDss(Path path)
 	{
-		SwingUtilities.invokeLater(()->_loadingDss.loadingStart("Loading DSS A and F parts for: " + path));
+		SwingUtilities.invokeLater(() -> _loadingDss.loadingStart("Loading DSS A and F parts for: " + path));
 		HecDssCatalog hecDssCatalog = null;
 		try
 		{

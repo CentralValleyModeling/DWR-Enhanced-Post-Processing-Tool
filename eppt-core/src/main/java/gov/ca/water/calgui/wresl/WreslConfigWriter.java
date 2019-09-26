@@ -15,12 +15,17 @@ package gov.ca.water.calgui.wresl;
 import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.io.UncheckedIOException;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.time.LocalDate;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.stream.Stream;
 
+import gov.ca.water.calgui.EpptInitializationException;
 import gov.ca.water.calgui.constant.Constant;
 import gov.ca.water.calgui.project.EpptDssContainer;
 import gov.ca.water.calgui.project.EpptScenarioRun;
@@ -83,6 +88,11 @@ class WreslConfigWriter
 
 		private Path write() throws WreslScriptException
 		{
+			if(_scenarioRun == null)
+			{
+				throw new WreslScriptException("Error running WRESL Script. Please ensure the Scenario Run is setup correctly");
+			}
+
 			String configText = wrimsv2.wreslparser.elements.Tools
 					.readFileAsString(Constant.WRESL_DIR + "\\config.template");
 			EpptDssContainer dssContainer = _scenarioRun.getDssContainer();
@@ -93,6 +103,7 @@ class WreslConfigWriter
 				configText = configText.replace("{SvAPart}", svDssFile.getAPart());
 				configText = configText.replace("{SvFPart}", svDssFile.getFPart());
 				configText = configText.replace("{SvFile}", svDssFile.getDssPath().toString());
+				deleteCorruptCatalogFile(svDssFile);
 			}
 			NamedDssPath ivDssFile = dssContainer.getIvDssFile();
 			NamedDssPath dvDssFile = dssContainer.getDvDssFile();
@@ -100,6 +111,7 @@ class WreslConfigWriter
 			{
 				configText = configText.replace("{IvFPart}", ivDssFile.getFPart());
 				configText = configText.replace("{IvFile}", ivDssFile.getDssPath().toString());
+				deleteCorruptCatalogFile(ivDssFile);
 			}
 			else if(dvDssFile != null)
 			{
@@ -109,12 +121,17 @@ class WreslConfigWriter
 			if(dvDssFile != null)
 			{
 				configText = configText.replace("{DvFile}", dvDssFile.getDssPath().toString());
+				deleteCorruptCatalogFile(dvDssFile);
 			}
 
 			Path wreslMain = _scenarioRun.getWreslMain();
 			if(wreslMain != null)
 			{
 				configText = configText.replace("{MainFile}", wreslMain.toAbsolutePath().toString());
+			}
+			else
+			{
+				throw new WreslScriptException("No WRESL Main file defined for the Scenario Run");
 			}
 			Path postProcessDss = _scenarioRun.getPostProcessDss();
 			if(postProcessDss != null)
@@ -132,7 +149,7 @@ class WreslConfigWriter
 
 			String name = _scenarioRun.getName();
 			name = name.replaceAll("[^a-zA-Z0-9.\\-]", "_");
-			Path configPath = _scenarioRun.getWreslMain().getParent().resolve("WRESL" + name + ".config");
+			Path configPath = _scenarioRun.getWreslMain().toAbsolutePath().getParent().resolve("WRESL" + name + ".config");
 			LOGGER.log(Level.INFO, "Writing WRESL config: {0}", configPath);
 			configPath.getParent().toFile().mkdirs();
 			try(BufferedWriter bufferedWriter = Files.newBufferedWriter(configPath);
@@ -148,5 +165,37 @@ class WreslConfigWriter
 			return configPath;
 		}
 
+	}
+
+	private void deleteCorruptCatalogFile(NamedDssPath namedDssPath)
+	{
+		if(namedDssPath != null)
+		{
+			Path dssPath = namedDssPath.getDssPath();
+			if(dssPath != null)
+			{
+				Path path = Paths.get(dssPath.toString().replace(".dss", ".dsc"));
+				boolean delete = false;
+				try
+				{
+					try(Stream<String> lines = Files.lines(path, StandardCharsets.UTF_16))
+					{
+						String findLine = lines.filter(l -> !l.isEmpty()).findAny().orElse("");
+						if(findLine.isEmpty())
+						{
+							delete = true;
+						}
+					}
+					if(delete)
+					{
+						Files.deleteIfExists(path);
+					}
+				}
+				catch(IOException | UncheckedIOException e)
+				{
+					LOGGER.log(Level.SEVERE, "Unable to clear empty DSS catalog file: " + path + " Manual deletion may be necessary.", e);
+				}
+			}
+		}
 	}
 }
