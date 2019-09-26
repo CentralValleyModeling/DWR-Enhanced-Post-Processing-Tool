@@ -15,11 +15,15 @@ package gov.ca.water.calgui.wresl;
 import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.io.UncheckedIOException;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.time.LocalDate;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.stream.Stream;
 
 import gov.ca.water.calgui.constant.Constant;
 import gov.ca.water.calgui.project.EpptDssContainer;
@@ -93,6 +97,7 @@ class WreslConfigWriter
 				configText = configText.replace("{SvAPart}", svDssFile.getAPart());
 				configText = configText.replace("{SvFPart}", svDssFile.getFPart());
 				configText = configText.replace("{SvFile}", svDssFile.getDssPath().toString());
+				deleteCorruptCatalogFile(svDssFile);
 			}
 			NamedDssPath ivDssFile = dssContainer.getIvDssFile();
 			NamedDssPath dvDssFile = dssContainer.getDvDssFile();
@@ -100,6 +105,7 @@ class WreslConfigWriter
 			{
 				configText = configText.replace("{IvFPart}", ivDssFile.getFPart());
 				configText = configText.replace("{IvFile}", ivDssFile.getDssPath().toString());
+				deleteCorruptCatalogFile(ivDssFile);
 			}
 			else if(dvDssFile != null)
 			{
@@ -109,6 +115,7 @@ class WreslConfigWriter
 			if(dvDssFile != null)
 			{
 				configText = configText.replace("{DvFile}", dvDssFile.getDssPath().toString());
+				deleteCorruptCatalogFile(dvDssFile);
 			}
 
 			Path wreslMain = _scenarioRun.getWreslMain();
@@ -148,5 +155,37 @@ class WreslConfigWriter
 			return configPath;
 		}
 
+	}
+
+	private void deleteCorruptCatalogFile(NamedDssPath namedDssPath)
+	{
+		if(namedDssPath != null)
+		{
+			Path dssPath = namedDssPath.getDssPath();
+			if(dssPath != null)
+			{
+				Path path = Paths.get(dssPath.toString().replace(".dss", ".dsc"));
+				boolean delete = false;
+				try
+				{
+					try(Stream<String> lines = Files.lines(path, StandardCharsets.UTF_16))
+					{
+						String findLine = lines.filter(l -> !l.isEmpty()).findAny().orElse("");
+						if(findLine.isEmpty())
+						{
+							delete = true;
+						}
+					}
+					if(delete)
+					{
+						Files.deleteIfExists(path);
+					}
+				}
+				catch(IOException | UncheckedIOException e)
+				{
+					LOGGER.log(Level.SEVERE, "Unable to clear empty DSS catalog file: " + path + " Manual deletion may be necessary.", e);
+				}
+			}
+		}
 	}
 }
