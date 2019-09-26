@@ -106,13 +106,13 @@ class ScenarioDssTableModel extends RmaTableModel
 		loadDssAandFParts(collect);
 	}
 
-	EpptDssContainer createDssContainer(String scenarioName)
+	EpptDssContainer createDssContainer(String scenarioName, Path outputPath)
 	{
-		NamedDssPath dvDssFile = createNamedDssPath(getRowForType(RowType.DV), scenarioName);
-		NamedDssPath svDssFile = createNamedDssPath(getRowForType(RowType.SV), scenarioName);
-		NamedDssPath ivDssFile = createNamedDssPath(getRowForType(RowType.INIT), scenarioName);
-		NamedDssPath dtsDssFile = createNamedDssPath(getRowForType(RowType.QA_QC), scenarioName);
-		List<NamedDssPath> extraDssFiles = getExtraRows().stream().map((Row row) -> createNamedDssPath(row, scenarioName)).collect(toList());
+		NamedDssPath dvDssFile = createNamedDssPath(getRowForType(RowType.DV), scenarioName, outputPath);
+		NamedDssPath svDssFile = createNamedDssPath(getRowForType(RowType.SV), scenarioName, outputPath);
+		NamedDssPath ivDssFile = createNamedDssPath(getRowForType(RowType.INIT), scenarioName, outputPath);
+		NamedDssPath dtsDssFile = createNamedDssPath(getRowForType(RowType.QA_QC), scenarioName, outputPath);
+		List<NamedDssPath> extraDssFiles = getExtraRows().stream().map((Row row) -> createNamedDssPath(row, scenarioName, outputPath)).collect(toList());
 		return new EpptDssContainer(dvDssFile, svDssFile, ivDssFile, dtsDssFile, extraDssFiles);
 	}
 
@@ -143,8 +143,9 @@ class ScenarioDssTableModel extends RmaTableModel
 		return retval;
 	}
 
-	private NamedDssPath createNamedDssPath(Row row, String scenarioName)
+	private NamedDssPath createNamedDssPath(Row row, String scenarioName, Path outputPath)
 	{
+		NamedDssPath retval = null;
 		if(row != null)
 		{
 			String alias = scenarioName;
@@ -152,12 +153,21 @@ class ScenarioDssTableModel extends RmaTableModel
 			{
 				alias = row._alias;
 			}
-			return new NamedDssPath(row._dssPath, alias, row._aPart, Row.E_PART, row._fPart);
+			Path dssPath = row._dssPath;
+			if(dssPath != null && !dssPath.toFile().isDirectory())
+			{
+				if(!dssPath.isAbsolute())
+				{
+					dssPath = outputPath.resolve(dssPath);
+				}
+				if(!dssPath.toString().endsWith(".dss"))
+				{
+					dssPath = Paths.get(dssPath.toString() + ".dss");
+				}
+				retval  = new NamedDssPath(dssPath, alias, row._aPart, Row.E_PART, row._fPart);
+			}
 		}
-		else
-		{
-			return null;
-		}
+		return retval;
 	}
 
 	private Row createRowModel(NamedDssPath dvDssFile, RowType rowType)

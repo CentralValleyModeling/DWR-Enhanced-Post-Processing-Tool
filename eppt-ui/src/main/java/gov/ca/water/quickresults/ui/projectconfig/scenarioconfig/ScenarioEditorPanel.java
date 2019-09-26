@@ -446,11 +446,6 @@ public class ScenarioEditorPanel
 		}
 	}
 
-	private EpptDssContainer createDssContainer(String scenarioName)
-	{
-		return _scenarioDssTableModel.createDssContainer(scenarioName);
-	}
-
 	boolean validateRun()
 	{
 		return !_nameField.getText().isEmpty();
@@ -470,8 +465,12 @@ public class ScenarioEditorPanel
 		String description = _descriptionField.getText();
 		GUILinksAllModelsBO.Model model = (GUILinksAllModelsBO.Model) _modelCombobox.getSelectedItem();
 		Path outputPath = Paths.get(_outputTextField.getText());
+		if(!outputPath.isAbsolute())
+		{
+			outputPath = EpptPreferences.getLastProjectConfiguration().getParent().resolve(outputPath);
+		}
 		Path wreslMain = Paths.get(_wreslTextField.getText());
-		EpptDssContainer dssContainer = createDssContainer(name);
+		EpptDssContainer dssContainer = _scenarioDssTableModel.createDssContainer(name, outputPath);
 		Path waterYearTablePath = Paths.get(_waterYearTable.getText());
 		Color web;
 		String text = _colorHexTextField.getText();
