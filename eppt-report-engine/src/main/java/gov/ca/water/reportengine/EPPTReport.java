@@ -61,6 +61,7 @@ import gov.ca.water.reportengine.standardsummary.EpptChart;
 import gov.ca.water.reportengine.standardsummary.StandardSummaryReader;
 import gov.ca.water.reportengine.standardsummary.StandardSummaryWriter;
 import gov.ca.water.reportengine.standardsummary.SummaryReportParameters;
+import org.omg.CORBA.DynAnyPackage.Invalid;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
@@ -380,6 +381,18 @@ public class EPPTReport
 			LOGGER.at(Level.SEVERE).log(errorMsg);
 			throw new EpptReportException(errorMsg);
 		}
+		if(run.getDssContainer().getDtsDssFile().getAPart() == null || run.getDssContainer().getDtsDssFile().getAPart().isEmpty())
+		{
+			String errorMsg = "Scenario " + run.getName() + " is  missing the A Part for the post process dss file: " + run.getPostProcessDss();
+			LOGGER.at(Level.SEVERE).log(errorMsg);
+			throw new EpptReportException(errorMsg);
+		}
+		if(run.getDssContainer().getDtsDssFile().getFPart() == null || run.getDssContainer().getDtsDssFile().getFPart().isEmpty())
+		{
+			String errorMsg = "Scenario " + run.getName() + " is  missing the F Part for the post process dss file: " + run.getPostProcessDss();
+			LOGGER.at(Level.SEVERE).log(errorMsg);
+			throw new EpptReportException(errorMsg);
+		}
 
 
 		if(run.getDssContainer().getIvDssFile() == null)
@@ -421,6 +434,18 @@ public class EPPTReport
 			throw new EpptReportException(errorMsg);
 		}
 
+		if(run.getDssContainer().getDvDssFile().getAPart() == null || run.getDssContainer().getDvDssFile().getAPart().isEmpty())
+		{
+			String errorMsg = "Scenario " + run.getName() + " is  missing the A Part for the DV dss file: " + run.getDssContainer().getDvDssFile().getDssPath();
+			LOGGER.at(Level.SEVERE).log(errorMsg);
+			throw new EpptReportException(errorMsg);
+		}
+		if(run.getDssContainer().getDvDssFile().getFPart() == null || run.getDssContainer().getDvDssFile().getFPart().isEmpty())
+		{
+			String errorMsg = "Scenario " + run.getName() + " is  missing the F Part for the DV dss file: "  + run.getDssContainer().getDvDssFile().getDssPath();
+			LOGGER.at(Level.SEVERE).log(errorMsg);
+			throw new EpptReportException(errorMsg);
+		}
 
 		if(run.getOutputPath() == null)
 		{
