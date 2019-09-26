@@ -33,6 +33,7 @@ import javax.swing.*;
 import gov.ca.water.calgui.bo.GUILinksAllModelsBO;
 import gov.ca.water.calgui.busservice.IGuiLinksSeedDataSvc;
 import gov.ca.water.calgui.busservice.impl.GuiLinksSeedDataSvcImpl;
+import gov.ca.water.calgui.constant.EpptPreferences;
 import gov.ca.water.calgui.project.EpptDssContainer;
 import gov.ca.water.calgui.project.NamedDssPath;
 
@@ -158,6 +159,10 @@ class ScenarioDssTableModel extends RmaTableModel
 			{
 				if(!dssPath.isAbsolute())
 				{
+					if(outputPath.toString().isEmpty())
+					{
+						outputPath = EpptPreferences.getLastProjectConfiguration().getParent();
+					}
 					dssPath = outputPath.resolve(dssPath);
 				}
 				if(!dssPath.toString().endsWith(".dss"))
