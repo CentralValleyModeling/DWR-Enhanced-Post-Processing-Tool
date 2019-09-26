@@ -172,28 +172,23 @@ class WreslConfigWriter
 		if(namedDssPath != null)
 		{
 			Path dssPath = namedDssPath.getDssPath();
-			if(dssPath != null)
+			if(dssPath != null && dssPath.toFile().exists())
 			{
 				Path path = Paths.get(dssPath.toString().replace(".dss", ".dsc"));
-				boolean delete = false;
-				try
+				if(path.toFile().exists())
 				{
-					try(Stream<String> lines = Files.lines(path, StandardCharsets.UTF_16))
+					try
 					{
-						String findLine = lines.filter(l -> !l.isEmpty()).findAny().orElse("");
-						if(findLine.isEmpty())
+						long size = Files.size(path);
+						if(size == 0)
 						{
-							delete = true;
+							Files.deleteIfExists(path);
 						}
 					}
-					if(delete)
+					catch(IOException | UncheckedIOException e)
 					{
-						Files.deleteIfExists(path);
+						LOGGER.log(Level.WARNING, "Unable to clear empty DSS catalog file: " + path + " Manual deletion may be necessary.", e);
 					}
-				}
-				catch(IOException | UncheckedIOException e)
-				{
-					LOGGER.log(Level.SEVERE, "Unable to clear empty DSS catalog file: " + path + " Manual deletion may be necessary.", e);
 				}
 			}
 		}
