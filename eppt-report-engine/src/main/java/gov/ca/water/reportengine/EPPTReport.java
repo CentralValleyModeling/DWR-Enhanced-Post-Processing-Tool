@@ -337,7 +337,7 @@ public class EPPTReport
 		WaterYearIndex waterYearIndex = _reportParameters.getSummaryReportParameters().getWaterYearIndex();
 		if(waterYearIndex == null)
 		{
-			String message = "Water Year Index is undefined";
+			String message = "Water Year Index is undefined. Ensure that the Base Water Year Table file is defined correctly: " + _baseRun.getWaterYearTable();
 			LOGGER.at(Level.SEVERE).log(message);
 			throw new EpptReportException(message);
 		}
