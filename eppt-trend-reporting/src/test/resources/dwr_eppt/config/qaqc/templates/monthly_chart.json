@@ -1,0 +1,34 @@
+{
+  "data": [
+    {
+      "x": [],
+      "y": [],
+      "type": "scatter",
+      "marker": {
+        "color": ""
+      },
+      "name": ""
+    }
+  ],
+  "layout": {
+    "width": 900,
+    "height": 600,
+    "font": {
+      "color": "black"
+    },
+    "xaxis": {
+      "showgrid": false,
+      "title": {
+        "text": ""
+      }
+    },
+    "yaxis": {
+      "title": {
+        "text": ""
+      }
+    },
+    "title": {
+      "text": ""
+    }
+  }
+}

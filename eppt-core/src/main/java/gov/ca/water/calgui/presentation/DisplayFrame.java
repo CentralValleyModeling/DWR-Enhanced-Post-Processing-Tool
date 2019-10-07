@@ -303,7 +303,15 @@ final class DisplayFrame
 
 							GUILinksAllModelsBO guiLinksAllModelsBO = GuiLinksSeedDataSvcImpl.getSeedDataSvcImplInstance()
 																							 .getObjById(locationName);
-							String title = baseRun.getName() + " - " + guiLinksAllModelsBO.getPlotTitle();
+							String title;
+							if(guiLinksAllModelsBO != null)
+							{
+								title = baseRun.getName() + " - " + guiLinksAllModelsBO.getPlotTitle();
+							}
+							else
+							{
+								title = locationName;
+							}
 							tabbedpane.setName(title);
 							tabbedPanes.add(tabbedpane);
 						}
