@@ -29,11 +29,18 @@ public class WaterYearIndex
 {
 	private final String _name;
 	private final List<WaterYearType> _waterYearTypes;
+	private List<WaterYearPeriod> _waterYearPeriods;
 
-	public WaterYearIndex(String name, List<WaterYearType> waterYearTypes)
+	public WaterYearIndex(String name, List<WaterYearType> waterYearTypes, List<WaterYearPeriod> waterYearPeriods)
 	{
 		_name = name;
 		_waterYearTypes = waterYearTypes;
+		_waterYearPeriods = waterYearPeriods;
+	}
+
+	public List<WaterYearPeriod> getSortedPeriods()
+	{
+		return _waterYearPeriods;
 	}
 
 	public List<WaterYearType> getWaterYearTypes()

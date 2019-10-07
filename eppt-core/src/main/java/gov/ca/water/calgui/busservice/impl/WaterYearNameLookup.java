@@ -12,22 +12,28 @@
 
 package gov.ca.water.calgui.busservice.impl;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
-public class WaterYearNameLookup
+import gov.ca.water.calgui.bo.WaterYearPeriod;
+
+import static java.util.stream.Collectors.toList;
+
+class WaterYearNameLookup
 {
 
 
 	private final Map<String, List<String>> _colHeadersToValues;
 
-	public WaterYearNameLookup(Map<String, List<String>> colHeadersToValues)
+	WaterYearNameLookup(Map<String, List<String>> colHeadersToValues)
 	{
 
 		_colHeadersToValues = colHeadersToValues;
 	}
 
-	public String getWaterYearType(int waterYearTypeNum, String columnHeader)
+	String getWaterYearType(int waterYearTypeNum, String columnHeader)
 	{
 		String retval = "Undefined";
 		if(_colHeadersToValues.containsKey(columnHeader))
@@ -41,4 +47,15 @@ public class WaterYearNameLookup
 		return retval;
 	}
 
+	List<WaterYearPeriod> getSortedWaterYearPeriods(String waterYearIndexColHeader)
+	{
+		return _colHeadersToValues.getOrDefault(waterYearIndexColHeader, new ArrayList<>())
+								  .stream()
+								  .filter(Objects::nonNull)
+								  .filter(s -> !s.isEmpty())
+								  .filter(s->!s.equalsIgnoreCase("Undefined"))
+								  .map(WaterYearPeriod::new)
+								  .collect(toList());
+
+	}
 }

@@ -9,18 +9,6 @@
  *
  * GNU General Public License
  */
-
-
-function getAnnualUnits(data) {
-    var units;
-    if (data['taf']) {
-        units = 'TAF';
-    } else {
-        units = 'CFS';
-    }
-    return units;
-}
-
 function getPlotlyAnnualSeries(datum) {
     var series = [];
     for (var i = 0; i < datum.length; i++) {
@@ -28,7 +16,7 @@ function getPlotlyAnnualSeries(datum) {
         let x = [];
         let y = [];
         for(var j =0; j < timeSeries.length; j++){
-            x.push(new Date(timeSeries[j][0]));
+            x.push(new Date(timeSeries[j][0] - 1));
             y.push(timeSeries[j][1]);
         }
         series.push({
@@ -43,13 +31,12 @@ function getPlotlyAnnualSeries(datum) {
 
 function plotAnnual(data) {
     var datum = data['scenario_run_data'];
-    var units = getAnnualUnits(data);
 
     var layout = {
         font: PLOTLY_FONT,
         yaxis: {
             title: {
-                text: 'Volume (' + units + ')',
+                text: data['units'],
             }
         },
         showlegend: true,
@@ -62,7 +49,7 @@ function plotAnnual(data) {
             }
         },
         title: {
-            text: data['gui_link_title'],
+            text: data['month_period_title'] + ' ' + data['gui_link_title'],
             font: {
                 size: 20,
             }

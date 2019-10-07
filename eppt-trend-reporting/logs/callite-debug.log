@@ -656,3 +656,66 @@ java.io.IOException: Resource could not be found ui/Project_Configuration.xml
 	at com.sun.glass.ui.win.WinApplication._runLoop(Native Method)
 	at com.sun.glass.ui.win.WinApplication.lambda$null$152(WinApplication.java:177)
 	at java.lang.Thread.run(Unknown Source)
+2019-09-30 09:15:12,084 [main] ERROR gov.ca.water.quickresults.ui.projectconfig.ProjectConfigurationPanel - Error setting up quick results swing xml: Project_Configuration.xml
+java.io.IOException: Resource could not be found ui/Project_Configuration.xml
+	at org.swixml.SwingEngine.render(Unknown Source)
+	at gov.ca.water.quickresults.ui.EpptPanel.renderSwixml(EpptPanel.java:93)
+	at gov.ca.water.quickresults.ui.projectconfig.ProjectConfigurationPanel.<init>(ProjectConfigurationPanel.java:67)
+	at gov.ca.water.quickresults.ui.projectconfig.ProjectConfigurationPanel.<clinit>(ProjectConfigurationPanel.java:56)
+	at gov.ca.water.trendreporting.TrendReportPanel.setScenarioRuns(TrendReportPanel.java:350)
+	at gov.ca.water.trendreporting.TrendReportScaffold.initScaffold(TrendReportScaffold.java:75)
+	at gov.ca.water.trendreporting.TrendReportScaffold.main(TrendReportScaffold.java:90)
+2019-10-02 14:25:19,658 [main] ERROR gov.ca.water.quickresults.ui.projectconfig.ProjectConfigurationPanel - Error setting up quick results swing xml: Project_Configuration.xml
+java.io.IOException: Resource could not be found ui/Project_Configuration.xml
+	at org.swixml.SwingEngine.render(Unknown Source)
+	at gov.ca.water.quickresults.ui.EpptPanel.renderSwixml(EpptPanel.java:93)
+	at gov.ca.water.quickresults.ui.projectconfig.ProjectConfigurationPanel.<init>(ProjectConfigurationPanel.java:67)
+	at gov.ca.water.quickresults.ui.projectconfig.ProjectConfigurationPanel.<clinit>(ProjectConfigurationPanel.java:56)
+	at gov.ca.water.trendreporting.TrendReportPanel.setScenarioRuns(TrendReportPanel.java:350)
+	at gov.ca.water.trendreporting.TrendReportScaffold.initScaffold(TrendReportScaffold.java:75)
+	at gov.ca.water.trendreporting.TrendReportScaffold.main(TrendReportScaffold.java:90)
+2019-10-02 14:26:39,644 [main] ERROR gov.ca.water.quickresults.ui.projectconfig.ProjectConfigurationPanel - Error setting up quick results swing xml: Project_Configuration.xml
+java.io.IOException: Resource could not be found ui/Project_Configuration.xml
+	at org.swixml.SwingEngine.render(Unknown Source)
+	at gov.ca.water.quickresults.ui.EpptPanel.renderSwixml(EpptPanel.java:93)
+	at gov.ca.water.quickresults.ui.projectconfig.ProjectConfigurationPanel.<init>(ProjectConfigurationPanel.java:67)
+	at gov.ca.water.quickresults.ui.projectconfig.ProjectConfigurationPanel.<clinit>(ProjectConfigurationPanel.java:56)
+	at gov.ca.water.trendreporting.TrendReportPanel.setScenarioRuns(TrendReportPanel.java:350)
+	at gov.ca.water.trendreporting.TrendReportScaffold.initScaffold(TrendReportScaffold.java:75)
+	at gov.ca.water.trendreporting.TrendReportScaffold.main(TrendReportScaffold.java:90)
+2019-10-02 14:27:05,607 [main] ERROR gov.ca.water.quickresults.ui.projectconfig.ProjectConfigurationPanel - Error setting up quick results swing xml: Project_Configuration.xml
+java.io.IOException: Resource could not be found ui/Project_Configuration.xml
+	at org.swixml.SwingEngine.render(Unknown Source)
+	at gov.ca.water.quickresults.ui.EpptPanel.renderSwixml(EpptPanel.java:93)
+	at gov.ca.water.quickresults.ui.projectconfig.ProjectConfigurationPanel.<init>(ProjectConfigurationPanel.java:67)
+	at gov.ca.water.quickresults.ui.projectconfig.ProjectConfigurationPanel.<clinit>(ProjectConfigurationPanel.java:56)
+	at gov.ca.water.trendreporting.TrendReportPanel.setScenarioRuns(TrendReportPanel.java:350)
+	at gov.ca.water.trendreporting.TrendReportScaffold.initScaffold(TrendReportScaffold.java:75)
+	at gov.ca.water.trendreporting.TrendReportScaffold.main(TrendReportScaffold.java:90)
+2019-10-02 14:27:49,966 [main] ERROR gov.ca.water.quickresults.ui.projectconfig.ProjectConfigurationPanel - Error setting up quick results swing xml: Project_Configuration.xml
+java.io.IOException: Resource could not be found ui/Project_Configuration.xml
+	at org.swixml.SwingEngine.render(Unknown Source)
+	at gov.ca.water.quickresults.ui.EpptPanel.renderSwixml(EpptPanel.java:93)
+	at gov.ca.water.quickresults.ui.projectconfig.ProjectConfigurationPanel.<init>(ProjectConfigurationPanel.java:67)
+	at gov.ca.water.quickresults.ui.projectconfig.ProjectConfigurationPanel.<clinit>(ProjectConfigurationPanel.java:56)
+	at gov.ca.water.trendreporting.TrendReportPanel.setScenarioRuns(TrendReportPanel.java:350)
+	at gov.ca.water.trendreporting.TrendReportScaffold.initScaffold(TrendReportScaffold.java:75)
+	at gov.ca.water.trendreporting.TrendReportScaffold.main(TrendReportScaffold.java:90)
+2019-10-02 14:28:16,202 [main] ERROR gov.ca.water.quickresults.ui.projectconfig.ProjectConfigurationPanel - Error setting up quick results swing xml: Project_Configuration.xml
+java.io.IOException: Resource could not be found ui/Project_Configuration.xml
+	at org.swixml.SwingEngine.render(Unknown Source)
+	at gov.ca.water.quickresults.ui.EpptPanel.renderSwixml(EpptPanel.java:93)
+	at gov.ca.water.quickresults.ui.projectconfig.ProjectConfigurationPanel.<init>(ProjectConfigurationPanel.java:67)
+	at gov.ca.water.quickresults.ui.projectconfig.ProjectConfigurationPanel.<clinit>(ProjectConfigurationPanel.java:56)
+	at gov.ca.water.trendreporting.TrendReportPanel.setScenarioRuns(TrendReportPanel.java:350)
+	at gov.ca.water.trendreporting.TrendReportScaffold.initScaffold(TrendReportScaffold.java:75)
+	at gov.ca.water.trendreporting.TrendReportScaffold.main(TrendReportScaffold.java:90)
+2019-10-02 14:28:58,146 [main] ERROR gov.ca.water.quickresults.ui.projectconfig.ProjectConfigurationPanel - Error setting up quick results swing xml: Project_Configuration.xml
+java.io.IOException: Resource could not be found ui/Project_Configuration.xml
+	at org.swixml.SwingEngine.render(Unknown Source)
+	at gov.ca.water.quickresults.ui.EpptPanel.renderSwixml(EpptPanel.java:93)
+	at gov.ca.water.quickresults.ui.projectconfig.ProjectConfigurationPanel.<init>(ProjectConfigurationPanel.java:67)
+	at gov.ca.water.quickresults.ui.projectconfig.ProjectConfigurationPanel.<clinit>(ProjectConfigurationPanel.java:56)
+	at gov.ca.water.trendreporting.TrendReportPanel.setScenarioRuns(TrendReportPanel.java:350)
+	at gov.ca.water.trendreporting.TrendReportScaffold.initScaffold(TrendReportScaffold.java:75)
+	at gov.ca.water.trendreporting.TrendReportScaffold.main(TrendReportScaffold.java:90)

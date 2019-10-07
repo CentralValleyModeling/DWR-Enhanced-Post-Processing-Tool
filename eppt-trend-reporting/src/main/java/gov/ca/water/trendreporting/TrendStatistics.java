@@ -34,6 +34,7 @@ import javax.script.ScriptException;
 import gov.ca.water.calgui.bo.WaterYearDefinition;
 import gov.ca.water.calgui.bo.WaterYearIndex;
 import gov.ca.water.calgui.constant.Constant;
+import javafx.collections.ObservableList;
 
 /**
  * Company: Resource Management Associates
@@ -48,11 +49,12 @@ class TrendStatistics
 	private final Path _jythonFilePath;
 	private final String _name;
 
-	TrendStatistics(Path jythonFilePath)
+	TrendStatistics(Path jythonFilePath, List<WaterYearIndex> waterYearIndices)
 	{
 		_jythonFilePath = jythonFilePath;
 		_name = loadStatisticName();
 		setupScriptEngine();
+		_scriptEngine.put("waterYearIndices", waterYearIndices);
 	}
 
 	private void setupScriptEngine()

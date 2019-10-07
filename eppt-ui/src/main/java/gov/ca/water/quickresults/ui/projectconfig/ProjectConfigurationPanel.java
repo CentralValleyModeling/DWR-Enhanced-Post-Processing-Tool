@@ -16,7 +16,6 @@ import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Container;
 import java.io.IOException;
-import java.lang.ref.WeakReference;
 import java.nio.file.Path;
 import java.time.LocalDate;
 import java.time.temporal.TemporalAdjusters;
@@ -41,7 +40,6 @@ import gov.ca.water.quickresults.ui.projectconfig.scenariotable.ScenarioTablePan
 import gov.ca.water.quickresults.ui.quickresults.PlotConfigurationStateBuilder;
 import javafx.application.Platform;
 import org.apache.log4j.Logger;
-import org.apache.log4j.Priority;
 
 import rma.util.RMAUtil;
 
@@ -350,6 +348,11 @@ public final class ProjectConfigurationPanel extends EpptPanel
 				((JRadioButton) component).setSelected(selected);
 			}
 		}
+	}
+
+	public boolean isTaf()
+	{
+		return ((JRadioButton)getSwingEngine().find("rdbTAF")).isSelected();
 	}
 
 	private JRadioButton getRadioButtonBase()

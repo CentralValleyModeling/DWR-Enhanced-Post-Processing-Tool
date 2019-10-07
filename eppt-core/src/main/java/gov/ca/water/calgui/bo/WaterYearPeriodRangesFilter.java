@@ -15,11 +15,8 @@ package gov.ca.water.calgui.bo;
 import java.time.LocalDateTime;
 import java.time.YearMonth;
 import java.time.temporal.ChronoUnit;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-
-import static java.util.stream.Collectors.toMap;
 
 /**
  * Company: Resource Management Associates

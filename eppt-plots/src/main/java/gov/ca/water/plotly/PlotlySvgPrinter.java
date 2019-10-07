@@ -90,7 +90,7 @@ public final class PlotlySvgPrinter
 		{
 			throw new PlotlyPrintException("Unable to export plots to SVG, cannot read JSON file directory: " + imageDirectory, e);
 		}
-		String orcaCommandline = "\"" + ORCA_EXE + "\" graph " + jsonFiles + " --format svg --output-dir \"" + imageDirectory.getParent().relativize(
+		String orcaCommandline = "\"" + ORCA_EXE + "\" graph \"" + jsonFiles + "\" --format svg --output-dir \"" + imageDirectory.getParent().relativize(
 				imageDirectory) + "\"";
 		try
 		{

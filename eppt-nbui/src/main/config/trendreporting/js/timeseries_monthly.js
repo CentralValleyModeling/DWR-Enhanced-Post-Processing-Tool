@@ -9,26 +9,6 @@
  *
  * GNU General Public License
  */
-function getMonthlyUnits(data) {
-    var units;
-    if (data['taf']) {
-        units = 'TAF';
-    } else {
-        units = 'CFS';
-    }
-    return units;
-}
-
-function getMonthlySeries(datum) {
-    var series = new Array(datum.length);
-    for (var i = 0; i < datum.length; i++) {
-        series[i] = {
-            name: datum[i]['scenario_name'],
-            data: datum[i]['full_time_series']
-        };
-    }
-    return series;
-}
 
 function getPlotlyMonthlySeries(datum) {
     var series = [];
@@ -36,12 +16,12 @@ function getPlotlyMonthlySeries(datum) {
         let timeSeries = datum[i]['full_time_series'];
         let x = [];
         let y = [];
-        for(var j =0; j < timeSeries.length; j++){
-            x.push(new Date(timeSeries[j][0]));
+        for (var j = 0; j < timeSeries.length; j++) {
+            x.push(new Date(timeSeries[j][0] - 1));
             y.push(timeSeries[j][1]);
         }
         series.push({
-            name:datum[i]['scenario_name'],
+            name: datum[i]['scenario_name'],
             x: x,
             y: y,
             line: {color: datum[i]['scenario_color']}
@@ -52,13 +32,11 @@ function getPlotlyMonthlySeries(datum) {
 
 function plotMonthly(data) {
     var datum = data['scenario_run_data'];
-    var series = getMonthlySeries(datum);
-    var units = getMonthlyUnits(data);
     var layout = {
         font: PLOTLY_FONT,
         yaxis: {
             title: {
-                text: 'Volume (' + units + ')',
+                text: data['units'],
             }
         },
         showlegend: true,
@@ -83,4 +61,31 @@ function plotMonthly(data) {
         scrollZoom: true,
         responsive: true
     });
+    $("#container_monthly_tester").mousedown((ev) => {
+        if (ev.which === 3) {
+            openContextMenu('#container_monthly_tester', ev, plotlyCopyToClipboardMonthly, plotlyExportFunction(document.getElementById("container_monthly_tester")));
+        }
+    });
+}
+
+function plotlyCopyToClipboardMonthly() {
+    let plot = document.getElementById("container_monthly_tester");
+    let layout = plot.layout;
+    let data1 = plot.data;
+    var text = layout['title']['text'] + '\n' + 'Date\t' + layout['yaxis']['title']['text'] + '\n';
+    for (var i = 0; i < data1.length; i++) {
+        text += '\t' + data1[i]['name']
+    }
+    text += '\n';
+    let datum = data1[0];
+    let xarr = datum['x'];
+    for (var j = 0; j < xarr.length; j++) {
+        text += xarr[j];
+        for (var k = 0; k < data1.length; k++) {
+            let yarr = data1[k]['y'];
+            text += '\t' + yarr[k]
+        }
+        text += '\n';
+    }
+    copyTextToClipboard(text);
 }

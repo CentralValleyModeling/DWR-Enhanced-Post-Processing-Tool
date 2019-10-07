@@ -70,17 +70,23 @@ public class TrendReportScaffold
 				namedDssPath,
 				namedDssPath,
 				Collections.emptyList());
+
 		EpptScenarioRun baseRun = new EpptScenarioRun("Base", "desc", GUILinksAllModelsBO.Model.findModel("CalSim2"),
-				Paths.get(""), Paths.get(""), Paths.get("C:\\Git\\DWR\\EPPT\\DWR-Enhanced-Post-Processing-Tool\\eppt-trend-reporting\\src\\test\\resources\\dwr_eppt\\wresl\\lookup\\wytypes.table"), dssContainer, javafx.scene.paint.Color.PINK);
-		epptPanel.setScenarioRuns(baseRun, new ArrayList<>());
+				Paths.get("Test.pdf"), Paths.get("mainWresl.wresl"), Paths.get("C:\\Git\\DWR\\EPPT\\DWR-Enhanced-Post-Processing-Tool\\eppt-trend-reporting\\src\\test\\resources\\dwr_eppt\\wresl\\lookup\\wytypes.table"), dssContainer, javafx.scene.paint.Color.BLUEVIOLET);
+		EpptScenarioRun altRun = new EpptScenarioRun("Alt", "desc", GUILinksAllModelsBO.Model.findModel("CalSim2"),
+				Paths.get("Test.pdf"), Paths.get("mainWresl.wresl"), Paths.get(""), dssContainer, javafx.scene.paint.Color.MEDIUMAQUAMARINE);
+		epptPanel.setScenarioRuns(baseRun, Collections.singletonList(altRun));
 		JFrame jFrame = new JFrame();
 		jFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		SwingUtilities.invokeLater(() ->
 		{
 			jFrame.setLayout(new BorderLayout());
-			jFrame.add(epptPanel, BorderLayout.CENTER);
+			JScrollPane scrollPane = new JScrollPane();
+			scrollPane.setViewportView(epptPanel);
+			jFrame.add(scrollPane, BorderLayout.CENTER);
 			jFrame.setSize(1600,700);
 			jFrame.setBackground(Color.WHITE);
+			jFrame.setExtendedState( jFrame.getExtendedState()|JFrame.MAXIMIZED_BOTH );
 			jFrame.setVisible(true);
 		});
 	}

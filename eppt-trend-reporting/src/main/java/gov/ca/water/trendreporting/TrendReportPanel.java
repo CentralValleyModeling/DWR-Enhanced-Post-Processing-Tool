@@ -17,6 +17,8 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.Month;
 import java.util.ArrayList;
 import java.util.List;
@@ -90,8 +92,6 @@ public class TrendReportPanel extends JFXPanel
 	private CheckBox _tafCheckbox;
 	private ComboBox<WaterYearIndex> _waterYearIndexComboBox;
 	private ComboBox<WaterYearDefinition> _waterYearDefinitionComboBox;
-	private FXCalendar _startCalendar;
-	private FXCalendar _endCalendar;
 	private ProgressBar _progressBar;
 
 	public TrendReportPanel()
@@ -165,17 +165,7 @@ public class TrendReportPanel extends JFXPanel
 
 	private GridPane buildTimeWindowControls()
 	{
-		_startCalendar = new FXCalendar();
-		_startCalendar.setSelectedMonth(Month.OCTOBER.getValue());
-		_startCalendar.setSelectedYear(1921);
-		_endCalendar = new FXCalendar();
-		_endCalendar.setSelectedMonth(Month.SEPTEMBER.getValue());
-		_endCalendar.setSelectedYear(2007);
 		GridPane gridPane = new GridPane();
-		gridPane.add(new Label("Start: "), 0, 0);
-		gridPane.add(_startCalendar, 1, 0);
-		gridPane.add(new Label("End: "), 0, 1);
-		gridPane.add(_endCalendar, 1, 1);
 		gridPane.add(new Label("Water Year Index: "), 0, 2);
 		gridPane.add(_waterYearIndexComboBox, 1, 2);
 		gridPane.add(new Label("Water Year Definition: "), 0, 3);
@@ -186,10 +176,6 @@ public class TrendReportPanel extends JFXPanel
 		_waterYearIndexComboBox.setMaxWidth(Double.MAX_VALUE);
 		_waterYearDefinitionComboBox.setMaxWidth(Double.MAX_VALUE);
 		_tafCheckbox.selectedProperty().addListener(this::inputsChanged);
-		_startCalendar.selectedMonthProperty().addListener(this::inputsChanged);
-		_startCalendar.selectedYearProperty().addListener(this::inputsChanged);
-		_endCalendar.selectedMonthProperty().addListener(this::inputsChanged);
-		_endCalendar.selectedYearProperty().addListener(this::inputsChanged);
 		return gridPane;
 	}
 
@@ -215,7 +201,12 @@ public class TrendReportPanel extends JFXPanel
 				}
 				else
 				{
-					setText(item.getPlotTitle());
+					String plotTitle = item.getPlotTitle();
+					if(plotTitle == null || plotTitle.isEmpty())
+					{
+						plotTitle = item.getPrimary().values().stream().filter(p->!p.isEmpty()).findAny().orElse("");
+					}
+					setText(plotTitle);
 				}
 			}
 		});
@@ -264,7 +255,7 @@ public class TrendReportPanel extends JFXPanel
 		try(Stream<Path> stream = Files.walk(jython, 5))
 		{
 			retval = stream.filter(p -> p.toFile().isFile()).filter(p -> p.toString().endsWith("py"))
-						   .map(TrendStatistics::new)
+						   .map(jythonFilePath -> new TrendStatistics(jythonFilePath, _waterYearIndexComboBox.getItems()))
 						   .collect(toList());
 		}
 		catch(IOException e)
@@ -311,7 +302,7 @@ public class TrendReportPanel extends JFXPanel
 
 	private Pane buildToggleControls()
 	{
-		try(Stream<Path> paths = Files.walk(Paths.get(Constant.TREND_REPORTING_DIR)))
+		try(Stream<Path> paths = Files.walk(Paths.get(Constant.TREND_REPORTING_DIR), 1))
 		{
 			paths.filter(path -> path.toString().endsWith(".htm") || path.toString().endsWith(".html"))
 				 .map(this::buildToggleButton)
@@ -346,7 +337,13 @@ public class TrendReportPanel extends JFXPanel
 		{
 			TrendReportTabConfig trendReportTabConfig = new TrendReportTabConfig(path);
 			TrendReportToggleButton trendReportToggleButton = new TrendReportToggleButton(trendReportTabConfig);
-			trendReportToggleButton.selectedProperty().addListener((o, old, n) -> loadPane());
+			trendReportToggleButton.selectedProperty().addListener((o, old, n) ->
+			{
+				if(n)
+				{
+					inputsChanged(null, null, null);
+				}
+			});
 			return trendReportToggleButton;
 		}
 		catch(IOException | RuntimeException | ParserConfigurationException | SAXException ex)
@@ -361,10 +358,13 @@ public class TrendReportPanel extends JFXPanel
 		_scenarioRuns.clear();
 		_scenarioRuns.add(baseRun);
 		_scenarioRuns.addAll(alternatives);
+		boolean taf = ProjectConfigurationPanel.getProjectConfigurationPanel().isTaf();
+		LocalDate startMonth = ProjectConfigurationPanel.getProjectConfigurationPanel().getStartMonth();
+		LocalDate endMonth = ProjectConfigurationPanel.getProjectConfigurationPanel().getEndMonth();
 		Platform.runLater(() ->
 		{
 			fillWaterYearIndexCombo(baseRun);
-			loadPane();
+			loadPane(startMonth, endMonth, taf);
 		});
 	}
 
@@ -372,20 +372,23 @@ public class TrendReportPanel extends JFXPanel
 	{
 		try
 		{
-			WaterYearTableReader waterYearTableReader = new WaterYearTableReader(baseRun.getWaterYearTable());
-			WaterYearIndex selectedItem = _waterYearIndexComboBox.selectionModelProperty().get().getSelectedItem();
-			List<WaterYearIndex> indices = waterYearTableReader.read();
-			_waterYearIndexComboBox.itemsProperty().get().clear();
-			_waterYearIndexComboBox.itemsProperty().get().addAll(indices);
-			if(selectedItem == null)
+			if(baseRun != null)
 			{
-				_waterYearIndexComboBox.selectionModelProperty().get().select(0);
-			}
-			else
-			{
-				WaterYearIndex waterYearIndex = indices.stream().filter(f -> f.toString().equals(selectedItem.toString()))
-													   .findAny().orElse(indices.get(0));
-				_waterYearIndexComboBox.selectionModelProperty().get().select(waterYearIndex);
+				WaterYearTableReader waterYearTableReader = new WaterYearTableReader(baseRun.getWaterYearTable());
+				WaterYearIndex selectedItem = _waterYearIndexComboBox.selectionModelProperty().get().getSelectedItem();
+				List<WaterYearIndex> indices = waterYearTableReader.read();
+				_waterYearIndexComboBox.itemsProperty().get().clear();
+				_waterYearIndexComboBox.itemsProperty().get().addAll(indices);
+				if(selectedItem == null)
+				{
+					_waterYearIndexComboBox.selectionModelProperty().get().select(0);
+				}
+				else
+				{
+					WaterYearIndex waterYearIndex = indices.stream().filter(f -> f.toString().equals(selectedItem.toString()))
+														   .findAny().orElse(indices.get(0));
+					_waterYearIndexComboBox.selectionModelProperty().get().select(waterYearIndex);
+				}
 			}
 		}
 		catch(EpptInitializationException e)
@@ -412,7 +415,7 @@ public class TrendReportPanel extends JFXPanel
 		}
 	}
 
-	private void loadPane()
+	private void loadPane(LocalDate start, LocalDate end, boolean taf)
 	{
 		TrendReportToggleButton button = (TrendReportToggleButton) _toggleGroup.getSelectedToggle();
 		if(button != null)
@@ -427,27 +430,32 @@ public class TrendReportPanel extends JFXPanel
 			_seasonalPeriodListView.setDisable(trendReportTabConfig.isSeasonalPeriodDisabled());
 			_waterYearIndexComboBox.setDisable(trendReportTabConfig.isWaterYearIndexDisabled());
 			_waterYearDefinitionComboBox.setDisable(trendReportTabConfig.isStatsDisabled() || !statUsesWaterYearDefinition);
-			loadJavascript(trendReportTabConfig.getPath());
+			loadJavascript(trendReportTabConfig.getPath(), start, end, taf);
 		}
 	}
 
 	private void inputsChanged(ObservableValue<?> e, Object o, Object n)
 	{
-		loadPane();
+		LocalDate startMonth = ProjectConfigurationPanel.getProjectConfigurationPanel().getStartMonth();
+		LocalDate endMonth = ProjectConfigurationPanel.getProjectConfigurationPanel().getEndMonth();
+		boolean taf = ProjectConfigurationPanel.getProjectConfigurationPanel().isTaf();
+		loadPane(startMonth, endMonth, taf);
 	}
 
-	private void loadJavascript(Path path)
+	private void loadJavascript(Path path, LocalDate start, LocalDate end, boolean taf)
 	{
 		_javascriptPane.removeDashboardPanes();
 		List<GUILinksAllModelsBO> guiLink = _parameterListView.getSelectionModel().getSelectedItems();
 		List<TrendStatistics> statistic = _statisticsListView.getSelectionModel().getSelectedItems();
 		List<EpptReportingMonths.MonthPeriod> monthPeriod = _seasonalPeriodListView.getSelectionModel().getSelectedItems();
-		if(!_scenarioRuns.isEmpty() && !guiLink.isEmpty() && !statistic.isEmpty() && !monthPeriod.isEmpty() && !_scenarioRuns.contains(null))
+		WaterYearIndex waterYearIndex = _waterYearIndexComboBox.getSelectionModel().getSelectedItem();
+		if(!_scenarioRuns.isEmpty() && !guiLink.isEmpty() && !statistic.isEmpty() && !monthPeriod.isEmpty() && !_scenarioRuns.contains(null)
+				&& waterYearIndex != null)
 		{
 
 			_progressBar.setVisible(true);
 			getScene().setCursor(Cursor.WAIT);
-			CompletableFuture.supplyAsync(() -> computeScenarios(guiLink, statistic, monthPeriod))
+			CompletableFuture.supplyAsync(() -> computeScenarios(guiLink, statistic, monthPeriod, start, end, taf))
 							 .whenCompleteAsync((jsonObjects, t) ->
 							 {
 								 if(t != null)
@@ -468,7 +476,8 @@ public class TrendReportPanel extends JFXPanel
 	}
 
 	private List<JSONObject> computeScenarios(List<GUILinksAllModelsBO> guiLinks, List<TrendStatistics> statistics,
-											  List<EpptReportingMonths.MonthPeriod> monthPeriods)
+											  List<EpptReportingMonths.MonthPeriod> monthPeriods, LocalDate start,
+											  LocalDate end, boolean taf)
 	{
 		List<JSONObject> retval = new ArrayList<>();
 		for(GUILinksAllModelsBO guiLink : guiLinks)
@@ -477,7 +486,8 @@ public class TrendReportPanel extends JFXPanel
 			{
 				for(EpptReportingMonths.MonthPeriod monthPeriod : monthPeriods)
 				{
-					EpptReportingComputedSet epptReportingComputedSet = computeForMetrics(guiLink, statistic, monthPeriod);
+					EpptReportingComputedSet epptReportingComputedSet = computeForMetrics(guiLink, statistic, monthPeriod,
+							start, end, taf);
 					JSONObject jsonObject = epptReportingComputedSet.toJson();
 					LOGGER.log(Level.INFO, "{0}", jsonObject);
 					retval.add(jsonObject);
@@ -488,7 +498,8 @@ public class TrendReportPanel extends JFXPanel
 	}
 
 	private EpptReportingComputedSet computeForMetrics(GUILinksAllModelsBO guiLink, TrendStatistics statistic,
-													   EpptReportingMonths.MonthPeriod monthPeriod)
+													   EpptReportingMonths.MonthPeriod monthPeriod, LocalDate start,
+													   LocalDate end, boolean taf)
 	{
 		WaterYearDefinition waterYearDefinition = _waterYearDefinitionComboBox.getSelectionModel().getSelectedItem();
 		WaterYearIndex waterYearIndex = _waterYearIndexComboBox.getSelectionModel().getSelectedItem();
@@ -498,15 +509,13 @@ public class TrendReportPanel extends JFXPanel
 
 		for(EpptScenarioRun scenarioRun : _scenarioRuns)
 		{
-			if(_tafCheckbox.isSelected())
+			if(taf)
 			{
-				trendReportingComputed.add(trendReportingComputer.computeTaf(scenarioRun, _startCalendar.getLocalDate(),
-						_endCalendar.getLocalDate()));
+				trendReportingComputed.add(trendReportingComputer.computeTaf(scenarioRun, start, end));
 			}
 			else
 			{
-				trendReportingComputed.add(trendReportingComputer.computeCfs(scenarioRun, _startCalendar.getLocalDate(),
-						_endCalendar.getLocalDate()));
+				trendReportingComputed.add(trendReportingComputer.computeCfs(scenarioRun, start, end));
 			}
 		}
 		return new EpptReportingComputedSet(guiLink, statistic, monthPeriod,

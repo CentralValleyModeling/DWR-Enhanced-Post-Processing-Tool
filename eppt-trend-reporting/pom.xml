@@ -22,6 +22,7 @@
 		<relativePath>../eppt-parent/pom.xml</relativePath>
 	</parent>
 	<artifactId>eppt-trend-reporting</artifactId>
+	<name>EPPT Trend Reporting</name>
 	<dependencies>
 		<dependency>
 			<groupId>gov.ca.water</groupId>
