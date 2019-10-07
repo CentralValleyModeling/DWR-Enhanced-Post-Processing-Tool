@@ -1098,8 +1098,11 @@ public class QAQCReportPanel extends RmaJPanel
 		{
 			canCompare = Objects.equals(_baseRun.getModel(), _altRun.getModel());
 		}
-		_codeChangesCheckBox.setSelected(canCompare);
-		_assumptionChangesCheckBox.setSelected(canCompare);
+		if(!canCompare)
+		{
+			_codeChangesCheckBox.setSelected(false);
+			_assumptionChangesCheckBox.setSelected(false);
+		}
 		_codeChangesCheckBox.setEnabled(canCompare);
 		_assumptionChangesCheckBox.setEnabled(canCompare);
 	}

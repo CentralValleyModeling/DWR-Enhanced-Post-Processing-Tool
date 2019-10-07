@@ -93,6 +93,7 @@ class BaseAltDiffTableBuilder extends TableBuilder
 	{
 		Element retval = getDocument().createElement(PERIOD_TYPE_ELEMENT);
 		retval.setAttribute(PERIOD_TYPE_NAME_ATTRIBUTE, getReportParameters().getWaterYearIndex().toString());
+		getReportParameters().getWaterYearIndex().getWaterYearTypes();
 		List<Element> collect = getReportParameters().getWaterYearIndex().getWaterYearTypes().stream().map(
 				WaterYearType::getWaterYearPeriod).distinct()
 													 .map(e -> buildSeasonalType(e, epptChart))

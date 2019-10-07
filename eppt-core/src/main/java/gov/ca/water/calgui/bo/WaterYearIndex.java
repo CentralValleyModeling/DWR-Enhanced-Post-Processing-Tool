@@ -13,6 +13,7 @@
 package gov.ca.water.calgui.bo;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -35,6 +36,7 @@ public class WaterYearIndex
 	{
 		_name = name;
 		_waterYearTypes = waterYearTypes;
+		_waterYearTypes.sort(Comparator.comparingInt(t->waterYearPeriods.indexOf(t.getWaterYearPeriod())));
 		_waterYearPeriods = waterYearPeriods;
 	}
 
