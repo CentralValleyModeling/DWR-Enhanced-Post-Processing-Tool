@@ -33,17 +33,6 @@
 			<version>${project.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>com.rma.javafx</groupId>
-			<artifactId>rmaJavaFx</artifactId>
-			<version>v1.2.12</version>
-			<exclusions>
-				<exclusion>
-					<groupId>*</groupId>
-					<artifactId>*</artifactId>
-				</exclusion>
-			</exclusions>
-		</dependency>
-		<dependency>
 			<groupId>org.swixml</groupId>
 			<artifactId>swixml</artifactId>
 			<version>240</version>
