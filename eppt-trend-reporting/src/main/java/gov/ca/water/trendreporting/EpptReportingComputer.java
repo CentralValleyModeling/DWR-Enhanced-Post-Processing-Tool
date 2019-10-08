@@ -57,30 +57,32 @@ public class EpptReportingComputer
 	private final EpptReportingMonths.MonthPeriod _monthPeriod;
 	private final WaterYearDefinition _waterYearDefinition;
 	private final WaterYearIndex _waterYearIndex;
+	private final List<WaterYearIndex> _waterYearIndices;
 
 	EpptReportingComputer(GUILinksAllModelsBO guiLink, TrendStatistics statistics, EpptReportingMonths.MonthPeriod monthPeriod,
-								 WaterYearDefinition waterYearDefinition, WaterYearIndex waterYearIndex)
+								 WaterYearDefinition waterYearDefinition, WaterYearIndex waterYearIndex, List<WaterYearIndex> waterYearIndices)
 	{
 		_guiLink = guiLink;
 		_statistics = statistics;
 		_monthPeriod = monthPeriod;
 		_waterYearDefinition = waterYearDefinition;
 		_waterYearIndex = waterYearIndex;
+		_waterYearIndices = waterYearIndices;
 	}
 
 	EpptReportingComputed computeCfs(EpptScenarioRun scenarioRun, LocalDate start, LocalDate end)
 	{
 		DSSGrabber1SvcImpl dssGrabber = buildDssGrabber(scenarioRun, true, start, end);
-		return compute(scenarioRun, dssGrabber);
+		return compute(scenarioRun, dssGrabber, false);
 	}
 
 	EpptReportingComputed computeTaf(EpptScenarioRun scenarioRun, LocalDate start, LocalDate end)
 	{
 		DSSGrabber1SvcImpl dssGrabber = buildDssGrabber(scenarioRun, false, start, end);
-		return compute(scenarioRun, dssGrabber);
+		return compute(scenarioRun, dssGrabber, true);
 	}
 
-	private EpptReportingComputed compute(EpptScenarioRun scenarioRun, DSSGrabber1SvcImpl dssGrabber)
+	private EpptReportingComputed compute(EpptScenarioRun scenarioRun, DSSGrabber1SvcImpl dssGrabber, boolean convertTaf)
 	{
 		int offset = (int) TimeUnit.MILLISECONDS.toMinutes(TimeZone.getDefault().getRawOffset());
 		Map<LocalDateTime, Double> retval = new HashMap<>();
@@ -88,6 +90,10 @@ public class EpptReportingComputer
 		String units = "";
 		if(primarySeries != null && primarySeries.length > 0 && primarySeries[0] != null)
 		{
+			if(convertTaf)
+			{
+				dssGrabber.calcTAFforCFS(primarySeries, null);
+			}
 			TimeSeriesContainer tsc = primarySeries[0];
 			units = tsc.getParameterName() + " (" + tsc.getUnits() +")";
 			for(int i = 0; i < tsc.getNumberValues(); i++)
@@ -103,7 +109,7 @@ public class EpptReportingComputer
 		}
 		Map<LocalDateTime, Double> filteredPeriod = filterPeriod(retval);
 		Map<WaterYearPeriod, SortedMap<Month, Double>> waterYearPeriodGrouped = groupWaterYearPeriod(filteredPeriod);
-		Map<Month, Double> calculate = _statistics.calculate(filteredPeriod, _waterYearDefinition, _waterYearIndex);
+		Map<Month, Double> calculate = _statistics.calculate(filteredPeriod, _waterYearDefinition, _waterYearIndex, _waterYearIndices);
 		return new EpptReportingComputed(scenarioRun, retval, filteredPeriod, sort(calculate), waterYearPeriodGrouped, units);
 	}
 
@@ -119,7 +125,7 @@ public class EpptReportingComputer
 					.stream()
 					.filter(waterYearPeriodRangesFilter)
 					.collect(toMap(Map.Entry::getKey, Map.Entry::getValue, (o, n)->n, TreeMap::new));
-			Map<Month, Double> calculate = _statistics.calculate(grouped, _waterYearDefinition, _waterYearIndex);
+			Map<Month, Double> calculate = _statistics.calculate(grouped, _waterYearDefinition, _waterYearIndex, _waterYearIndices);
 			retval.put(waterYearPeriod, sort(calculate));
 		}
 		return retval;

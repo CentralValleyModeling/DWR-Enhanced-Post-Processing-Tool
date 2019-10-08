@@ -43,6 +43,7 @@ import gov.ca.water.quickresults.ui.projectconfig.ProjectConfigurationPanel;
 import gov.ca.water.trendreporting.monthpicker.FXCalendar;
 import javafx.application.Platform;
 import javafx.beans.value.ObservableValue;
+import javafx.collections.ObservableList;
 import javafx.embed.swing.JFXPanel;
 import javafx.geometry.Insets;
 import javafx.geometry.Orientation;
@@ -96,9 +97,24 @@ public class TrendReportPanel extends JFXPanel
 
 	public TrendReportPanel()
 	{
-		setBackground(java.awt.Color.WHITE);
 		Platform.setImplicitExit(false);
 		Platform.runLater(this::init);
+		CompletableFuture.supplyAsync(this::getTrendStatistics)
+						 .whenComplete((o,t)->
+						 {
+						 	if(t != null)
+							{
+								LOGGER.log(Level.SEVERE, "Error loading Trend Report Statistics", t);
+							}
+						 	else
+							{
+								Platform.runLater(()->
+								{
+									_statisticsListView.getItems().addAll(o);
+									_statisticsListView.getSelectionModel().select(0);
+								});
+							}
+						 });
 	}
 
 	private void init()
@@ -176,6 +192,8 @@ public class TrendReportPanel extends JFXPanel
 		_waterYearIndexComboBox.setMaxWidth(Double.MAX_VALUE);
 		_waterYearDefinitionComboBox.setMaxWidth(Double.MAX_VALUE);
 		_tafCheckbox.selectedProperty().addListener(this::inputsChanged);
+		_waterYearIndexComboBox.selectionModelProperty().addListener(this::inputsChanged);
+		_waterYearDefinitionComboBox.selectionModelProperty().addListener(this::inputsChanged);
 		return gridPane;
 	}
 
@@ -218,8 +236,6 @@ public class TrendReportPanel extends JFXPanel
 
 	private Pane buildStatisticsListView()
 	{
-		List<TrendStatistics> statistics = getTrendStatistics();
-		_statisticsListView.getItems().addAll(statistics);
 		_statisticsListView.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
 		_statisticsListView.getSelectionModel().select(0);
 		_statisticsListView.getSelectionModel().selectedItemProperty().addListener(this::inputsChanged);
@@ -254,13 +270,18 @@ public class TrendReportPanel extends JFXPanel
 		Path jython = Paths.get(Constant.TREND_REPORTING_DIR).resolve("jython");
 		try(Stream<Path> stream = Files.walk(jython, 5))
 		{
+			Platform.runLater(()->_progressBar.setVisible(true));
 			retval = stream.filter(p -> p.toFile().isFile()).filter(p -> p.toString().endsWith("py"))
-						   .map(jythonFilePath -> new TrendStatistics(jythonFilePath, _waterYearIndexComboBox.getItems()))
+						   .map(TrendStatistics::new)
 						   .collect(toList());
 		}
 		catch(IOException e)
 		{
 			LOGGER.log(Level.SEVERE, "Unable to load Statistics for Trend Reporting dashboard", e);
+		}
+		finally
+		{
+			Platform.runLater(()->_progressBar.setVisible(false));
 		}
 		return retval;
 	}
@@ -503,8 +524,9 @@ public class TrendReportPanel extends JFXPanel
 	{
 		WaterYearDefinition waterYearDefinition = _waterYearDefinitionComboBox.getSelectionModel().getSelectedItem();
 		WaterYearIndex waterYearIndex = _waterYearIndexComboBox.getSelectionModel().getSelectedItem();
+		ObservableList<WaterYearIndex> waterYearIndices = _waterYearIndexComboBox.getItems();
 		EpptReportingComputer trendReportingComputer = new EpptReportingComputer(guiLink, statistic, monthPeriod, waterYearDefinition,
-				waterYearIndex);
+				waterYearIndex, waterYearIndices);
 		List<EpptReportingComputed> trendReportingComputed = new ArrayList<>();
 
 		for(EpptScenarioRun scenarioRun : _scenarioRuns)

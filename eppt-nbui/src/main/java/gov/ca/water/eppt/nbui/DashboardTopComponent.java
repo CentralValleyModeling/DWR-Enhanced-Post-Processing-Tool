@@ -14,6 +14,8 @@ package gov.ca.water.eppt.nbui;
 import java.awt.BorderLayout;
 import java.awt.Color;
 
+import javax.swing.*;
+
 import gov.ca.water.quickresults.ui.projectconfig.ProjectConfigurationPanel;
 import gov.ca.water.trendreporting.TrendReportPanel;
 import org.openide.awt.ActionID;
@@ -55,8 +57,10 @@ public final class DashboardTopComponent extends EpptTopComponent
 	{
 		setName("Trend Reporting");
 		_trendReportPanel = new TrendReportPanel();
+		JScrollPane scrollPane = new JScrollPane();
+		scrollPane.setViewportView(_trendReportPanel);
 		setLayout(new BorderLayout(15,15));
-		add(_trendReportPanel, BorderLayout.CENTER);
+		add(scrollPane, BorderLayout.CENTER);
 		setBackground(Color.WHITE);
 	}
 
