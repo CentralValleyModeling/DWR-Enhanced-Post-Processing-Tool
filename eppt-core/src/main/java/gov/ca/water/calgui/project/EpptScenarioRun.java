@@ -34,6 +34,8 @@ public class EpptScenarioRun
 	private final Path _waterYearTable;
 	private final EpptDssContainer _dssContainer;
 	private final Color _color;
+	private boolean _baseSelected;
+	private boolean _altSelected;
 
 	/**
 	 * @param name         name descriptor meta data for scenario run
@@ -160,5 +162,25 @@ public class EpptScenarioRun
 	{
 		return Objects.hash(getName(), getDescription(), getModel(), getOutputPath(), getWreslMain(), getWaterYearTable(), getDssContainer(),
 				getColor());
+	}
+
+	public void setBaseSelected(boolean baseSelected)
+	{
+		_baseSelected = baseSelected;
+	}
+
+	public void setAltSelected(boolean altSelected)
+	{
+		_altSelected = altSelected;
+	}
+
+	public boolean isBaseSelected()
+	{
+		return _baseSelected;
+	}
+
+	public boolean isAltSelected()
+	{
+		return _altSelected;
 	}
 }

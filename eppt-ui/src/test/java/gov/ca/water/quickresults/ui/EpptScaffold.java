@@ -14,6 +14,9 @@ import javax.swing.*;
 
 import gov.ca.water.calgui.EpptInitializationException;
 import gov.ca.water.calgui.busservice.impl.GuiLinksSeedDataSvcImpl;
+import gov.ca.water.calgui.busservice.impl.ThresholdLinksSeedDataSvc;
+import gov.ca.water.calgui.busservice.impl.WaterYearDefinitionSvc;
+import gov.ca.water.calgui.techservice.impl.DialogSvcImpl;
 
 import static org.junit.jupiter.api.Assertions.fail;
 
@@ -28,7 +31,7 @@ public abstract class EpptScaffold
 	static
 	{
 		String userDir = Paths.get(System.getProperty("user.dir")).resolve(
-				"eppt-ui/target/test-classes").toAbsolutePath().toString();
+				"target/test-classes").toAbsolutePath().toString();
 		System.setProperty("user.dir", userDir);
 	}
 
@@ -46,11 +49,14 @@ public abstract class EpptScaffold
 			fail(e);
 		}
 		GuiLinksSeedDataSvcImpl.createSeedDataSvcImplInstance();
+		WaterYearDefinitionSvc.createSeedDataSvcImplInstance();
+		ThresholdLinksSeedDataSvc.createSeedDataSvcImplInstance();
 		EpptPanel epptPanel = buildEpptPanel();
 		JFrame jFrame = new JFrame();
 		jFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		SwingUtilities.invokeLater(() ->
 		{
+			DialogSvcImpl.installMainFrame(jFrame);
 			jFrame.setLayout(new BorderLayout());
 			jFrame.add(epptPanel, BorderLayout.CENTER);
 //			jFrame.add(buildUiManagerPanel(jFrame), BorderLayout.NORTH);
