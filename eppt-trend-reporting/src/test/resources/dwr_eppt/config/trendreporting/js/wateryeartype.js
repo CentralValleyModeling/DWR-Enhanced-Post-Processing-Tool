@@ -216,11 +216,12 @@ function plotGraph(data) {
         modeBarButtonsToRemove: ['toImage', 'sendDataToCloud', 'editInChartStudio', 'lasso2d', 'select2d', 'resetScale2d'],
         scrollZoom: true,
         responsive: true,
+        staticPlot: true,
         grid: {rows: 2, columns: 1, pattern: 'independent'}
     });
     $("#tester").mousedown((ev) => {
         if (ev.which === 3) {
-            openContextMenu('#tester', ev, plotlyCopyToClipboard, plotlyExportFunction(plot));
+            openContextMenu('#tester', ev, () => plotlyCopyToClipboard('tester'), plotlyExportFunction(plot));
         }
     });
 }
@@ -293,11 +294,13 @@ function tabulateWaterYearPeriod(waterYearPeriod, data, tableValues, i) {
     Plotly.newPlot('water-year-matrix' + i, [tableData], layout, {
         displaylogo: false,
         displayModeBar: false,
-        responsive: true
+        responsive: true,
+        staticPlot: true
     });
-    $("#water-year-matrix" + i).mousedown((ev) => {
+    let elementid = "water-year-matrix" + i;
+    $("#" + elementid).mousedown((ev) => {
         if (ev.which === 3) {
-            openContextMenu('#water-year-matrix' + i, ev, plotlyCopyTableClipboard, plotlyExportFunction(document.getElementById("water-year-matrix")));
+            openContextMenu("#" + elementid, ev, () => plotlyCopyToClipboard(elementid), plotlyExportFunction(document.getElementById(elementid)));
         }
     });
 }
@@ -354,22 +357,27 @@ function plot(data) {
     plotMatrix(data);
 }
 
-function plotlyCopyToClipboard() {
-    let plot = document.getElementById("tester");
+function plotlyCopyToClipboard(element) {
+    let plot = document.getElementById(element);
     let layout = plot.layout;
     let data1 = plot.data;
-    let text = layout['title']['text'] + '\n' + 'Date\t' + layout['yaxis']['title']['text'] + '\n';
-    for (let i = 0; i < data1.length; i++) {
-        text += '\t' + data1[i]['name']
+    let yaxisTitle = layout['yaxis']['title'];
+    var text = layout['title']['text'] + '\n' + 'Scenario\t';
+    if (yaxisTitle) {
+        text += yaxisTitle['text'];
     }
     text += '\n';
-    let datum = data1[0];
-    let xarr = datum['x'];
-    for (let j = 0; j < xarr.length; j++) {
-        text += xarr[j];
-        for (let k = 0; k < data1.length; k++) {
-            let yarr = data1[k]['y'];
-            text += '\t' + yarr[k]
+    let datum = data1[data1.length - 1];
+    for (var i = 0; i < datum['header']['values'].length; i++) {
+        let header = datum['header']['values'][i].replace(/<br>/g, ' ').replace(/<b>/g, '').replace(/<\/b>/g, '');
+        text += header + '\t';
+    }
+    text += '\n';
+    let values = datum['cells']['values'];
+    var rows = values[0].length;
+    for (var j = 0; j < rows; j++) {
+        for(var k = 0; k < values.length; k++){
+            text += values[k][j] + '\t';
         }
         text += '\n';
     }
