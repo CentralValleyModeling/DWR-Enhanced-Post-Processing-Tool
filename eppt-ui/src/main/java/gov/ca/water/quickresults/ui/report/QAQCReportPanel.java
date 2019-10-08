@@ -1085,7 +1085,9 @@ public class QAQCReportPanel extends RmaJPanel
 		}
 		catch(EpptInitializationException e)
 		{
-			LOGGER.log(Level.SEVERE, "Error processing water year table for the base scenario", e);
+			String msg = "Error processing water year table for the base scenario for the QA/QC report, please ensure the path is correct: "
+					+ waterYearTable;
+			LOGGER.log(Level.WARNING, msg, e);
 		}
 	}
 
@@ -1096,8 +1098,11 @@ public class QAQCReportPanel extends RmaJPanel
 		{
 			canCompare = Objects.equals(_baseRun.getModel(), _altRun.getModel());
 		}
-		_codeChangesCheckBox.setSelected(canCompare);
-		_assumptionChangesCheckBox.setSelected(canCompare);
+		if(!canCompare)
+		{
+			_codeChangesCheckBox.setSelected(false);
+			_assumptionChangesCheckBox.setSelected(false);
+		}
 		_codeChangesCheckBox.setEnabled(canCompare);
 		_assumptionChangesCheckBox.setEnabled(canCompare);
 	}

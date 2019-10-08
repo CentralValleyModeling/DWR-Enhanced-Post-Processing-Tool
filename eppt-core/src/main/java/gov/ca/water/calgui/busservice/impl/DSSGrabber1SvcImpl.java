@@ -111,7 +111,6 @@ public class DSSGrabber1SvcImpl implements IDSSGrabber1Svc
 	// Number of scenarios passed in list parameter
 	private double[][] _annualTAFs;
 	private double[][] _annualTAFsDiff;
-	private boolean _stopOnMissing;
 	private ThresholdLinksBO _threshold;
 
 	public DSSGrabber1SvcImpl()
@@ -121,12 +120,10 @@ public class DSSGrabber1SvcImpl implements IDSSGrabber1Svc
 		{
 			Properties properties = new Properties();
 			properties.load(ModelRunSvcImpl.class.getClassLoader().getResourceAsStream(propertiesFile));
-			_stopOnMissing = Boolean.parseBoolean(properties.getProperty("stop.display.on.null"));
 		}
 		catch(IOException | RuntimeException ex)
 		{
 			LOGGER.log(Level.WARNING, "Unable to read properties file from: " + propertiesFile, ex);
-			_stopOnMissing = true;
 		}
 		clearMissingList();
 	}
@@ -147,17 +144,6 @@ public class DSSGrabber1SvcImpl implements IDSSGrabber1Svc
 	public Map<GUILinksAllModelsBO.Model, List<String>> getMissingList()
 	{
 		return _missingDSSRecords;
-	}
-
-	/**
-	 * Provide access to stopOnMissing flag read from callite-gui.properties
-	 *
-	 * @return true = stop display task when missing a record, false = continue
-	 * with task
-	 */
-	public boolean getStopOnMissing()
-	{
-		return _stopOnMissing;
 	}
 
 	/*
@@ -547,7 +533,7 @@ public class DSSGrabber1SvcImpl implements IDSSGrabber1Svc
 			String hecAPart = dssPath.getAPart();
 			String hecEPart = dssPath.getEPart();
 			String hecFPart = dssPath.getFPart();
-			String firstPath =  "/" + hecAPart + "/" + dssNames[0] + "//" + hecEPart + "/" + hecFPart + "/";
+			String firstPath = "/" + hecAPart + "/" + dssNames[0] + "//" + hecEPart + "/" + hecFPart + "/";
 
 			result = (TimeSeriesContainer) hecDss.get(firstPath, true);
 			LOGGER.fine(firstPath);
@@ -626,10 +612,7 @@ public class DSSGrabber1SvcImpl implements IDSSGrabber1Svc
 						result2 = null;
 						String message = String.format("Could not find %s in %s - attempted to retrieve path: %s",
 								dssNames[0], dssPath.getDssPath(), pathName);
-						if(_stopOnMissing)
-						{
-							JOptionPane.showMessageDialog(null, message, "Error", JOptionPane.ERROR_MESSAGE);
-						}
+						JOptionPane.showMessageDialog(null, message, "Error", JOptionPane.ERROR_MESSAGE);
 					}
 					else
 					{
@@ -705,7 +688,7 @@ public class DSSGrabber1SvcImpl implements IDSSGrabber1Svc
 		{
 			if(hecDss != null)
 			{
-//				hecDss.close();
+				//				hecDss.close();
 			}
 		}
 
@@ -738,8 +721,9 @@ public class DSSGrabber1SvcImpl implements IDSSGrabber1Svc
 		LOGGER.log(Level.FINE, result);
 		if(result != null)
 		{
-			throw new IllegalStateException(result);
+//			throw new IllegalStateException(result);
 		}
+
 	}
 
 	/*
@@ -933,7 +917,9 @@ public class DSSGrabber1SvcImpl implements IDSSGrabber1Svc
 		}
 		catch(RuntimeException ex)
 		{
-			LOGGER.log(Level.SEVERE, "Unable to get time series.", ex);
+			String msg = "Unable to get time series for threshold: " + _threshold;
+			LOGGER.log(Level.INFO, msg);
+			LOGGER.log(Level.FINE, msg, ex);
 		}
 
 		return results;

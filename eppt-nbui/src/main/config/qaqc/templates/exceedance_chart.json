@@ -28,7 +28,6 @@
       ]
     },
     "yaxis": {
-      "type": "log",
       "title": {
         "text": ""
       }

@@ -42,6 +42,7 @@ public final class Constant
 	public static final Path QA_QC_PATH = Paths.get(System.getProperty("user.dir")).resolve("dwr_eppt").resolve("config").resolve("qaqc");
 	public static final Path FUNCTIONS_PATH = QA_QC_PATH.resolve("Functions" + CSV_EXT);
 	public static final Path QA_QC_TEMPLATE_PATH = QA_QC_PATH.resolve("templates");
+	public static final Path PLOTLY_TEMPLATE_PATH = Paths.get(CONFIG_DIR).resolve("plotly").resolve("templates");
 	public static final Path QA_QC_SCRIPT_DIRECTORY = QA_QC_PATH.resolve("scripts");
 	public static final Path DETAILS_CSV = QA_QC_PATH.resolve("Details" + CSV_EXT);
 	public static final Path QAQC_IMAGE_PATH = Paths.get("images");
@@ -63,7 +64,7 @@ public final class Constant
 	public static final String MODEL_W2_WRESL_LOOKUP_DIR = MODEL_W2_WRESL_DIR + LOOKUP_DIR;
 	public static final String GENERATED_DIR = "//Generated//";
 	public static final String RUN_DIR = "Run";
-	public static final String TREND_REPORTING_DIR = CONFIG_DIR + "trendreporting\\prototype\\";
+	public static final String TREND_REPORTING_DIR = CONFIG_DIR + "trendreporting\\";
 	// File Names.
 	public static final String GUI_XML_FILENAME = System.getProperty("user.dir") + "//Config//GUI.xml";
 

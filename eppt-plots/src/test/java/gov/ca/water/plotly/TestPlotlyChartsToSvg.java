@@ -28,6 +28,10 @@ import gov.ca.water.calgui.EpptInitializationException;
 import gov.ca.water.calgui.busservice.impl.WaterYearDefinitionSvc;
 import gov.ca.water.calgui.constant.Constant;
 import gov.ca.water.calgui.project.EpptScenarioRun;
+import gov.ca.water.plotly.qaqc.PlotlyBubble;
+import gov.ca.water.plotly.qaqc.PlotlyExceedance;
+import gov.ca.water.plotly.qaqc.PlotlyExceedancePage;
+import gov.ca.water.plotly.qaqc.PlotlyMonthly;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;

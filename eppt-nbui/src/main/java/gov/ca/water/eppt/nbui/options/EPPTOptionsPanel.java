@@ -53,6 +53,7 @@ final class EPPTOptionsPanel extends JPanel
 	private final JTextField _wrimsDirectoryField;
 	private final JLabel _wrimsVersionLabel = new JLabel();
 	private boolean _resetPreferences;
+	private JCheckBox _usePlotlyCheckbox;
 
 	EPPTOptionsPanel(EPPTOptionsOptionsPanelController controller)
 	{
@@ -116,6 +117,7 @@ final class EPPTOptionsPanel extends JPanel
 		_resultsOutputComboBox.addItem("properties");
 		_resultsOutputComboBox.addItem("editor");
 		_resultsOutputComboBox.addItem("explorer");
+		_usePlotlyCheckbox = new JCheckBox("Use Plotly for Plots");
 
 		setLayout(new GridBagLayout());
 
@@ -162,6 +164,10 @@ final class EPPTOptionsPanel extends JPanel
 				4, 2, 1, .1, .5,
 				GridBagConstraints.WEST, GridBagConstraints.BOTH,
 				new Insets(5, 5, 5, 5), 5, 5));
+		panel.add(_usePlotlyCheckbox, new GridBagConstraints(3,
+				5, 1, 1, .1, .5,
+				GridBagConstraints.WEST, GridBagConstraints.HORIZONTAL,
+				new Insets(5, 5, 5, 5), 5, 5));
 		panel.add(resetButton, new GridBagConstraints(3,
 				5, 1, 1, .1, .5,
 				GridBagConstraints.EAST, GridBagConstraints.HORIZONTAL,
@@ -174,6 +180,7 @@ final class EPPTOptionsPanel extends JPanel
 		_projectDirectoryFileChooserField.setText(EpptPreferences.getDefaultProjectPath().toString());
 		_projectDirectoryFileChooserField.setDefaultPath(EpptPreferences.getDefaultProjectPath().toString());
 		_resultsOutputComboBox.setSelectedItem(EpptPreferences.getDefaultResultsOutputLocation());
+		_usePlotlyCheckbox.setSelected(false);
 		_wrimsDirectoryField.setText(EpptPreferences.getDefaultWrimsPath().toString());
 		EpptPreferences.removeProjectsPathPreference();
 		EpptPreferences.removeWrimsPathPreference();
@@ -199,6 +206,7 @@ final class EPPTOptionsPanel extends JPanel
 		_projectDirectoryFileChooserField.setDefaultPath(EpptPreferences.getProjectsPath().toString());
 		_resultsOutputComboBox.setSelectedItem(EpptPreferences.getResultsOutputLocation());
 		_wrimsDirectoryField.setText(EpptPreferences.getWrimsPath().toString());
+		_usePlotlyCheckbox.setSelected(EpptPreferences.usePlotly());
 		updateWrimsVersion();
 	}
 
@@ -256,6 +264,7 @@ final class EPPTOptionsPanel extends JPanel
 			EpptPreferences.setProjectsPath(_projectDirectoryFileChooserField.getText());
 			EpptPreferences.setResultsOutputLocation(Objects.toString(_resultsOutputComboBox.getSelectedItem()));
 			EpptPreferences.setWrimsPath(Paths.get(_wrimsDirectoryField.getText()));
+			EpptPreferences.setUsePlotly(_usePlotlyCheckbox.isSelected());
 		}
 	}
 

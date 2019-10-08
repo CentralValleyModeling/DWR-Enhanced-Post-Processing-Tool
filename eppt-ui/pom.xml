@@ -18,7 +18,7 @@
 	<parent>
 		<groupId>gov.ca.water</groupId>
 		<artifactId>eppt-parent</artifactId>
-		<version>1.1.0-SNAPSHOT</version>
+		<version>1.1.1-SNAPSHOT</version>
 		<relativePath>../eppt-parent</relativePath>
 	</parent>
 	<artifactId>eppt-ui</artifactId>
@@ -35,7 +35,7 @@
 		<dependency>
 			<groupId>com.rma.javafx</groupId>
 			<artifactId>rmaJavaFx</artifactId>
-			<version>v1.2.12</version>
+			<version>v1.2.13</version>
 			<exclusions>
 				<exclusion>
 					<groupId>*</groupId>

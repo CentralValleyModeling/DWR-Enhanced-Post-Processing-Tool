@@ -293,7 +293,7 @@ final class DisplayFrame
 						{
 							showFrame = true;
 						}
-						else if(!dssGrabber.getStopOnMissing())
+						else
 						{
 							insertEmptyTab(tabbedpane, missing);
 							showFrame = true;
@@ -303,7 +303,15 @@ final class DisplayFrame
 
 							GUILinksAllModelsBO guiLinksAllModelsBO = GuiLinksSeedDataSvcImpl.getSeedDataSvcImplInstance()
 																							 .getObjById(locationName);
-							String title = baseRun.getName() + " - " + guiLinksAllModelsBO.getPlotTitle();
+							String title;
+							if(guiLinksAllModelsBO != null)
+							{
+								title = baseRun.getName() + " - " + guiLinksAllModelsBO.getPlotTitle();
+							}
+							else
+							{
+								title = locationName;
+							}
 							tabbedpane.setName(title);
 							tabbedPanes.add(tabbedpane);
 						}
@@ -663,10 +671,6 @@ final class DisplayFrame
 			if(missing.isEmpty())
 			{
 				showFrame = true;
-			}
-			else if(dssGrabber.getStopOnMissing())
-			{
-				showFrame = false;
 			}
 			else
 			{

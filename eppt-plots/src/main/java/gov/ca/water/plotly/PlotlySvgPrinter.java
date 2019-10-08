@@ -44,10 +44,10 @@ public final class PlotlySvgPrinter
 	public static void printJsonToPath(Path path, PlotlyChart plotlyChart) throws PlotlyPrintException
 	{
 		JSONObject jsonObject = plotlyChart.buildJSON();
-		printJson(path, jsonObject, plotlyChart.getWidth(), plotlyChart.getHeight());
+		printJson(path, jsonObject);
 	}
 
-	static void printJson(Path path, JSONObject jsonObject, int width, int height) throws PlotlyPrintException
+	static void printJson(Path path, JSONObject jsonObject) throws PlotlyPrintException
 	{
 		try
 		{
@@ -94,7 +94,7 @@ public final class PlotlySvgPrinter
 				imageDirectory) + "\"";
 		try
 		{
-			LOGGER.log(Level.FINE, "Plotly SVG generation command line: {0}", orcaCommandline);
+			LOGGER.log(Level.INFO, "Plotly SVG generation command line: {0}", orcaCommandline);
 			Process exec = new ProcessBuilder()
 					.directory(imageDirectory.getParent().toFile())
 					.command(orcaCommandline)

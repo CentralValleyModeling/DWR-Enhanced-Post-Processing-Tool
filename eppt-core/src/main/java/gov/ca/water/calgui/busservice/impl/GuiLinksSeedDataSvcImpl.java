@@ -218,10 +218,18 @@ public final class GuiLinksSeedDataSvcImpl implements IGuiLinksSeedDataSvc
 
 	public GUILinksAllModelsBO getObjById(String id)
 	{
-		GUILinksAllModelsBO guiLinks3BO = _guiLinksAllModels.get(extractCheckboxId(id));
-		if(guiLinks3BO == null)
+		GUILinksAllModelsBO guiLinks3BO = null;
+		try
 		{
-			LOG.info("There is no GUI Links data for this id = " + id);
+			guiLinks3BO = _guiLinksAllModels.get(extractCheckboxId(id));
+			if(guiLinks3BO == null)
+			{
+				LOG.debug("There is no GUI Links data for this id = " + id);
+			}
+		}
+		catch(RuntimeException e)
+		{
+			LOG.debug("Error obtaining GUI Link", e);
 		}
 		return guiLinks3BO;
 	}

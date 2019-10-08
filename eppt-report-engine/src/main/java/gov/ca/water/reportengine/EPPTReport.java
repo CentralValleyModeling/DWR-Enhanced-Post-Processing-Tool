@@ -35,10 +35,10 @@ import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
 import com.google.common.flogger.FluentLogger;
-import gov.ca.water.calgui.bo.GUILinksAllModelsBO;
-import gov.ca.water.calgui.constant.Constant;
-import gov.ca.water.calgui.project.EpptScenarioRun;
 import gov.ca.water.calgui.bo.DetailedIssue;
+import gov.ca.water.calgui.bo.GUILinksAllModelsBO;
+import gov.ca.water.calgui.bo.WaterYearIndex;
+import gov.ca.water.calgui.project.EpptScenarioRun;
 import gov.ca.water.calgui.scripts.DssCache;
 import gov.ca.water.reportengine.detailedissues.DetailedIssueProcessor;
 import gov.ca.water.reportengine.detailedissues.DetailedIssueViolation;
@@ -61,6 +61,7 @@ import gov.ca.water.reportengine.standardsummary.EpptChart;
 import gov.ca.water.reportengine.standardsummary.StandardSummaryReader;
 import gov.ca.water.reportengine.standardsummary.StandardSummaryWriter;
 import gov.ca.water.reportengine.standardsummary.SummaryReportParameters;
+import org.omg.CORBA.DynAnyPackage.Invalid;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
@@ -90,12 +91,12 @@ public class EPPTReport
 	private static final String CODE_CHANGES_CSV = "CodeChanges" + CSV_EXT;
 
 	private static final String MODULES_CSV = QA_QC_DIR + "/Modules" + CSV_EXT;
-    public static final String SUMMARY_CSV = QA_QC_DIR + "/Summary" + CSV_EXT;
+	public static final String SUMMARY_CSV = QA_QC_DIR + "/Summary" + CSV_EXT;
 
 	private final Path _pathToWriteOut;
 	private final EpptScenarioRun _baseRun;
-    private final ReportParameters _reportParameters;
-    private final List<EpptScenarioRun> _altRuns = new ArrayList<>();
+	private final ReportParameters _reportParameters;
+	private final List<EpptScenarioRun> _altRuns = new ArrayList<>();
 	private List<Module> _modules;
 
 
@@ -106,8 +107,8 @@ public class EPPTReport
 	{
 		_pathToWriteOut = pathToWriteOut;
 		_baseRun = baseRun;
-        _reportParameters = reportParameters;
-        _altRuns.addAll(altRuns);
+		_reportParameters = reportParameters;
+		_altRuns.addAll(altRuns);
 		DssCache.getInstance().clearCache();
 	}
 
@@ -334,7 +335,13 @@ public class EPPTReport
 			LOGGER.at(Level.SEVERE).log(errorMsg);
 			throw new EpptReportException(errorMsg);
 		}
-
+		WaterYearIndex waterYearIndex = _reportParameters.getSummaryReportParameters().getWaterYearIndex();
+		if(waterYearIndex == null)
+		{
+			String message = "Water Year Index is undefined. Ensure that the Base Water Year Table file is defined correctly: " + _baseRun.getWaterYearTable();
+			LOGGER.at(Level.SEVERE).log(message);
+			throw new EpptReportException(message);
+		}
 		List<EpptScenarioRun> allRuns = new ArrayList<>();
 		allRuns.add(_baseRun);
 		allRuns.addAll(_altRuns);
@@ -371,6 +378,18 @@ public class EPPTReport
 		if(!run.getPostProcessDss().toFile().exists())
 		{
 			String errorMsg = "Scenario " + run.getName() + " is  missing the post process dss file. Invalid path: " + run.getPostProcessDss();
+			LOGGER.at(Level.SEVERE).log(errorMsg);
+			throw new EpptReportException(errorMsg);
+		}
+		if(run.getDssContainer().getDtsDssFile().getAPart() == null || run.getDssContainer().getDtsDssFile().getAPart().isEmpty())
+		{
+			String errorMsg = "Scenario " + run.getName() + " is  missing the A Part for the post process dss file: " + run.getPostProcessDss();
+			LOGGER.at(Level.SEVERE).log(errorMsg);
+			throw new EpptReportException(errorMsg);
+		}
+		if(run.getDssContainer().getDtsDssFile().getFPart() == null || run.getDssContainer().getDtsDssFile().getFPart().isEmpty())
+		{
+			String errorMsg = "Scenario " + run.getName() + " is  missing the F Part for the post process dss file: " + run.getPostProcessDss();
 			LOGGER.at(Level.SEVERE).log(errorMsg);
 			throw new EpptReportException(errorMsg);
 		}
@@ -415,6 +434,18 @@ public class EPPTReport
 			throw new EpptReportException(errorMsg);
 		}
 
+		if(run.getDssContainer().getDvDssFile().getAPart() == null || run.getDssContainer().getDvDssFile().getAPart().isEmpty())
+		{
+			String errorMsg = "Scenario " + run.getName() + " is  missing the A Part for the DV dss file: " + run.getDssContainer().getDvDssFile().getDssPath();
+			LOGGER.at(Level.SEVERE).log(errorMsg);
+			throw new EpptReportException(errorMsg);
+		}
+		if(run.getDssContainer().getDvDssFile().getFPart() == null || run.getDssContainer().getDvDssFile().getFPart().isEmpty())
+		{
+			String errorMsg = "Scenario " + run.getName() + " is  missing the F Part for the DV dss file: "  + run.getDssContainer().getDvDssFile().getDssPath();
+			LOGGER.at(Level.SEVERE).log(errorMsg);
+			throw new EpptReportException(errorMsg);
+		}
 
 		if(run.getOutputPath() == null)
 		{
@@ -510,9 +541,9 @@ public class EPPTReport
 		{
 			altNames.add(altRun.getName());
 		}
-        String author = _reportParameters.getAuthor();
-        String subtitle = _reportParameters.getSubtitle();
-        ReportHeader rh = new ReportHeader(author, subtitle, _baseRun.getName(), altNames);
+		String author = _reportParameters.getAuthor();
+		String subtitle = _reportParameters.getSubtitle();
+		ReportHeader rh = new ReportHeader(author, subtitle, _baseRun.getName(), altNames);
 		ReportHeaderXMLCreator rhWriter = new ReportHeaderXMLCreator();
 		return rhWriter.createReportHeaderElement(rh, doc);
 	}

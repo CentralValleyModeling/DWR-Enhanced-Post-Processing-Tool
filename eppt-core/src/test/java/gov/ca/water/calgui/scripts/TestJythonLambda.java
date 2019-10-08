@@ -49,6 +49,7 @@ import gov.ca.water.calgui.busservice.impl.DetailedIssuesReader;
 import gov.ca.water.calgui.busservice.impl.GuiLinksSeedDataSvcImpl;
 import gov.ca.water.calgui.busservice.impl.ThresholdLinksSeedDataSvc;
 import gov.ca.water.calgui.busservice.impl.WaterYearDefinitionSvc;
+import gov.ca.water.calgui.busservice.impl.WaterYearTableReader;
 import gov.ca.water.calgui.project.EpptDssContainer;
 import gov.ca.water.calgui.project.EpptScenarioRun;
 import gov.ca.water.calgui.project.NamedDssPath;
@@ -93,7 +94,7 @@ class TestJythonLambda
 	void testStaticImport() throws Exception
 	{
 		EpptScenarioRun scenarioRun = buildRun();
-		JythonScriptRunner runner = new JythonScriptRunner(scenarioRun, new CommonPeriodFilter(LocalDateTime.now(),LocalDateTime.now()));
+		JythonScriptRunner runner = new JythonScriptRunner(scenarioRun, new CommonPeriodFilter(LocalDateTime.now(), LocalDateTime.now()));
 		List<Double> collect = DoubleStream.of(1.0).boxed().collect(toList());
 		runner.runScript("from java.util.stream import DoubleStream");
 		Object o = runner.runScript("DoubleStream.of(1.0).boxed().collect(toList())");
@@ -106,11 +107,14 @@ class TestJythonLambda
 		EpptScenarioRun scenarioRun = buildRun();
 
 		Month startOfPeriodMonth = Month.MARCH;
-		JythonScriptRunner runner = new JythonScriptRunner(scenarioRun, new CommonPeriodFilter(LocalDateTime.now(),LocalDateTime.now()));
+		JythonScriptRunner runner = new JythonScriptRunner(scenarioRun, new CommonPeriodFilter(LocalDateTime.now(), LocalDateTime.now()));
 		DssReader dssReader = new DssReader(scenarioRun);
-		NavigableMap<Double, Double> collect = dssReader.getGuiLinkData(102).entrySet().stream().collect(collectingAndThen(groupingBy(mapToPeriodStartYear(startOfPeriodMonth), averagingDouble(v->v.getValue())),generateExceedanceValues()));
+		NavigableMap<Double, Double> collect = dssReader.getGuiLinkData(102).entrySet().stream().collect(
+				collectingAndThen(groupingBy(mapToPeriodStartYear(startOfPeriodMonth), averagingDouble(v -> v.getValue())),
+						generateExceedanceValues()));
 		assertFalse(collect.isEmpty());
-		Object o = runner.runScript("dssReader.getGuiLinkData(102).entrySet().stream().collect(collectingAndThen(groupingBy(mapToPeriodStartYear(Month.MARCH), averagingDouble(jdf(lambda e : e.getValue()))),generateExceedanceValues()))");
+		Object o = runner.runScript(
+				"dssReader.getGuiLinkData(102).entrySet().stream().collect(collectingAndThen(groupingBy(mapToPeriodStartYear(Month.MARCH), averagingDouble(jdf(lambda e : e.getValue()))),generateExceedanceValues()))");
 		assertEquals(collect, o);
 	}
 
@@ -122,7 +126,7 @@ class TestJythonLambda
 		TitleReader titleReader = new TitleReader(scenarioRun);
 		String dtsTitle = titleReader.getDtsTitle(170);
 		Assertions.assertEquals("Negative Carriage Water", dtsTitle);
-		JythonScriptRunner runner = new JythonScriptRunner(scenarioRun, new CommonPeriodFilter(LocalDateTime.now(),LocalDateTime.now()));
+		JythonScriptRunner runner = new JythonScriptRunner(scenarioRun, new CommonPeriodFilter(LocalDateTime.now(), LocalDateTime.now()));
 		Object o = runner.runScript("titleReader.getDtsTitle(170)");
 		assertEquals(dtsTitle, o);
 	}
@@ -135,7 +139,7 @@ class TestJythonLambda
 		TitleReader titleReader = new TitleReader(scenarioRun);
 		String dtsTitle = titleReader.getGuiLinkId(102);
 		Assertions.assertEquals("Trinity Reservoir Storage", dtsTitle);
-		JythonScriptRunner runner = new JythonScriptRunner(scenarioRun, new CommonPeriodFilter(LocalDateTime.now(),LocalDateTime.now()));
+		JythonScriptRunner runner = new JythonScriptRunner(scenarioRun, new CommonPeriodFilter(LocalDateTime.now(), LocalDateTime.now()));
 		Object o = runner.runScript("titleReader.getGuiLinkId(102)");
 		assertEquals(dtsTitle, o);
 	}
@@ -144,7 +148,7 @@ class TestJythonLambda
 	void testEntirePeriodExceedanceAllMonths() throws Exception
 	{
 		EpptScenarioRun scenarioRun = buildRun();
-		JythonScriptRunner runner = new JythonScriptRunner(scenarioRun, new CommonPeriodFilter(LocalDateTime.now(),LocalDateTime.now()));
+		JythonScriptRunner runner = new JythonScriptRunner(scenarioRun, new CommonPeriodFilter(LocalDateTime.now(), LocalDateTime.now()));
 		DssReader dssReader = new DssReader(scenarioRun);
 		NavigableMap<Double, Double> collect = calculateExceedance(dssReader.getGuiLinkData(102).values());
 		assertFalse(collect.isEmpty());
@@ -156,7 +160,7 @@ class TestJythonLambda
 	void testEntirePeriodExceedanceDtsAllMonths() throws Exception
 	{
 		EpptScenarioRun scenarioRun = buildRun();
-		JythonScriptRunner runner = new JythonScriptRunner(scenarioRun, new CommonPeriodFilter(LocalDateTime.now(),LocalDateTime.now()));
+		JythonScriptRunner runner = new JythonScriptRunner(scenarioRun, new CommonPeriodFilter(LocalDateTime.now(), LocalDateTime.now()));
 		DssReader dssReader = new DssReader(scenarioRun);
 		NavigableMap<Double, Double> collect = calculateExceedance(dssReader.getDtsData(170).values());
 		assertFalse(collect.isEmpty());
@@ -170,11 +174,13 @@ class TestJythonLambda
 		EpptScenarioRun scenarioRun = buildRun();
 		DssReader dssReader = new DssReader(scenarioRun);
 		MonthPeriodFilter periodFilter = new MonthPeriodFilter(Month.JULY);
-		Map<Double, Double> collect = calculateExceedance(dssReader.getDtsData(170).entrySet().stream().filter(periodFilter).map(Map.Entry::getValue).collect(toList()));
+		Map<Double, Double> collect = calculateExceedance(
+				dssReader.getDtsData(170).entrySet().stream().filter(periodFilter).map(Map.Entry::getValue).collect(toList()));
 		assertFalse(collect.isEmpty());
-		JythonScriptRunner runner = new JythonScriptRunner(scenarioRun, new CommonPeriodFilter(LocalDateTime.now(),LocalDateTime.now()));
+		JythonScriptRunner runner = new JythonScriptRunner(scenarioRun, new CommonPeriodFilter(LocalDateTime.now(), LocalDateTime.now()));
 		runner.setPeriodFilter(periodFilter);
-		Object o = runner.runScript("calculateExceedance(dssReader.getDtsData(170).entrySet().stream().filter(periodFilter).map(jf(lambda x : x.getValue())).collect(toList()))");
+		Object o = runner.runScript(
+				"calculateExceedance(dssReader.getDtsData(170).entrySet().stream().filter(periodFilter).map(jf(lambda x : x.getValue())).collect(toList()))");
 		assertEquals(collect, o);
 	}
 
@@ -184,11 +190,14 @@ class TestJythonLambda
 		EpptScenarioRun scenarioRun = buildRun();
 		DssReader dssReader = new DssReader(scenarioRun);
 		MonthPeriodFilter periodFilter = new MonthPeriodFilter(Month.JULY);
-		Map<Double, Double> collect = calculateExceedance(dssReader.getGuiLinkData(102).entrySet().stream().filter(new MonthPeriodFilter(Month.JULY)).map(Map.Entry::getValue).collect(toList()));
+		Map<Double, Double> collect = calculateExceedance(
+				dssReader.getGuiLinkData(102).entrySet().stream().filter(new MonthPeriodFilter(Month.JULY)).map(Map.Entry::getValue).collect(
+						toList()));
 		assertFalse(collect.isEmpty());
-		JythonScriptRunner runner = new JythonScriptRunner(scenarioRun, new CommonPeriodFilter(LocalDateTime.now(),LocalDateTime.now()));
+		JythonScriptRunner runner = new JythonScriptRunner(scenarioRun, new CommonPeriodFilter(LocalDateTime.now(), LocalDateTime.now()));
 		runner.setPeriodFilter(periodFilter);
-		Object o = runner.runScript("calculateExceedance(dssReader.getGuiLinkData(102).entrySet().stream().filter(MonthPeriodFilter(Month.JULY)).map(jf(lambda x : x.getValue())).collect(toList()))");
+		Object o = runner.runScript(
+				"calculateExceedance(dssReader.getGuiLinkData(102).entrySet().stream().filter(MonthPeriodFilter(Month.JULY)).map(jf(lambda x : x.getValue())).collect(toList()))");
 		assertEquals(collect, o);
 	}
 
@@ -198,11 +207,13 @@ class TestJythonLambda
 		EpptScenarioRun scenarioRun = buildRun();
 		DssReader dssReader = new DssReader(scenarioRun);
 		MonthPeriodFilter periodFilter = new MonthPeriodFilter(Month.JULY);
-		Map<Double, Double> collect = calculateExceedance(dssReader.getGuiLinkData(102).entrySet().stream().filter(periodFilter).map(Map.Entry::getValue).collect(toList()));
+		Map<Double, Double> collect = calculateExceedance(
+				dssReader.getGuiLinkData(102).entrySet().stream().filter(periodFilter).map(Map.Entry::getValue).collect(toList()));
 		assertFalse(collect.isEmpty());
-		JythonScriptRunner runner = new JythonScriptRunner(scenarioRun, new CommonPeriodFilter(LocalDateTime.now(),LocalDateTime.now()));
+		JythonScriptRunner runner = new JythonScriptRunner(scenarioRun, new CommonPeriodFilter(LocalDateTime.now(), LocalDateTime.now()));
 		runner.setPeriodFilter(periodFilter);
-		Object o = runner.runScript("calculateExceedance(dssReader.getGuiLinkData(102).entrySet().stream().filter(periodFilter).map(jf(lambda x : x.getValue())).collect(toList()))");
+		Object o = runner.runScript(
+				"calculateExceedance(dssReader.getGuiLinkData(102).entrySet().stream().filter(periodFilter).map(jf(lambda x : x.getValue())).collect(toList()))");
 		assertEquals(collect, o);
 	}
 
@@ -213,11 +224,13 @@ class TestJythonLambda
 		DssReader dssReader = new DssReader(scenarioRun);
 		CommonPeriodFilter commonPeriodFilter = new CommonPeriodFilter(LocalDateTime.of(1950, Month.JULY, 1, 0, 0),
 				LocalDateTime.of(1999, Month.JULY, 1, 0, 0));
-		Map<Month, Double> collect = dssReader.getGuiLinkData(102).entrySet().stream().filter(commonPeriodFilter).collect(groupingBy(k -> k.getKey().getMonth(), averagingDouble(
-				Map.Entry::getValue)));
+		Map<Month, Double> collect = dssReader.getGuiLinkData(102).entrySet().stream().filter(commonPeriodFilter).collect(
+				groupingBy(k -> k.getKey().getMonth(), averagingDouble(
+						Map.Entry::getValue)));
 		assertFalse(collect.isEmpty());
 		JythonScriptRunner runner = new JythonScriptRunner(scenarioRun, commonPeriodFilter);
-		Object o = runner.runScript("dssReader.getGuiLinkData(102).entrySet().stream().filter(commonPeriodFilter).collect(groupingBy(jf(lambda k : k.getKey().getMonth()), averagingDouble(jdf(lambda e : e.getValue()))))");
+		Object o = runner.runScript(
+				"dssReader.getGuiLinkData(102).entrySet().stream().filter(commonPeriodFilter).collect(groupingBy(jf(lambda k : k.getKey().getMonth()), averagingDouble(jdf(lambda e : e.getValue()))))");
 		assertEquals(collect, o);
 	}
 
@@ -228,12 +241,14 @@ class TestJythonLambda
 		DssReader dssReader = new DssReader(scenarioRun);
 		CommonPeriodFilter commonPeriodFilter = new CommonPeriodFilter(LocalDateTime.of(1950, Month.JULY, 1, 0, 0),
 				LocalDateTime.of(1999, Month.JULY, 1, 0, 0));
-		Double collect = dssReader.getDtsData(170).entrySet().stream().filter(commonPeriodFilter).mapToDouble(Map.Entry::getValue).average().orElse(Double.NaN);
+		Double collect = dssReader.getDtsData(170).entrySet().stream().filter(commonPeriodFilter).mapToDouble(Map.Entry::getValue).average().orElse(
+				Double.NaN);
 		assertNotNull(collect);
 		assertFalse(collect.isNaN());
 		JythonScriptRunner runner = new JythonScriptRunner(scenarioRun, commonPeriodFilter);
 		runner.setPeriodFilter(commonPeriodFilter);
-		Object o = runner.runScript("dssReader.getDtsData(170).entrySet().stream().filter(periodFilter).mapToDouble(jdf(lambda e : e.getValue())).average().orElse(0)");
+		Object o = runner.runScript(
+				"dssReader.getDtsData(170).entrySet().stream().filter(periodFilter).mapToDouble(jdf(lambda e : e.getValue())).average().orElse(0)");
 		assertEquals(collect, o);
 	}
 
@@ -244,12 +259,14 @@ class TestJythonLambda
 		DssReader dssReader = new DssReader(scenarioRun);
 		CommonPeriodFilter periodFilter = new CommonPeriodFilter(LocalDateTime.of(1950, Month.JULY, 1, 0, 0),
 				LocalDateTime.of(1999, Month.JULY, 1, 0, 0));
-		Double collect = dssReader.getDtsData(170).entrySet().stream().filter(periodFilter).filter(new MonthPeriodFilter(Month.JULY)).mapToDouble(Map.Entry::getValue).average().orElse(Double.NaN);
+		Double collect = dssReader.getDtsData(170).entrySet().stream().filter(periodFilter).filter(new MonthPeriodFilter(Month.JULY)).mapToDouble(
+				Map.Entry::getValue).average().orElse(Double.NaN);
 		assertNotNull(collect);
 		assertFalse(collect.isNaN());
 		JythonScriptRunner runner = new JythonScriptRunner(scenarioRun, periodFilter);
 		runner.setPeriodFilter(periodFilter);
-		Object o = runner.runScript("dssReader.getDtsData(170).entrySet().stream().filter(periodFilter).filter(MonthPeriodFilter(Month.JULY)).mapToDouble(jdf(lambda e : e.getValue())).average().orElse(0)");
+		Object o = runner.runScript(
+				"dssReader.getDtsData(170).entrySet().stream().filter(periodFilter).filter(MonthPeriodFilter(Month.JULY)).mapToDouble(jdf(lambda e : e.getValue())).average().orElse(0)");
 		assertEquals(collect, o);
 	}
 
@@ -260,11 +277,12 @@ class TestJythonLambda
 		DssReader dssReader = new DssReader(scenarioRun);
 		CommonPeriodFilter periodFilter = new CommonPeriodFilter(LocalDateTime.of(1950, Month.JULY, 1, 0, 0),
 				LocalDateTime.of(1999, Month.JULY, 1, 0, 0));
-		long collect = dssReader.getDtsData(170).entrySet().stream().filter(periodFilter).mapToDouble(Map.Entry::getValue).filter(v->v > 0).count();
+		long collect = dssReader.getDtsData(170).entrySet().stream().filter(periodFilter).mapToDouble(Map.Entry::getValue).filter(v -> v > 0).count();
 		JythonScriptRunner runner = new JythonScriptRunner(scenarioRun, periodFilter);
 		runner.setPeriodFilter(periodFilter);
-		Object o = runner.runScript("dssReader.getDtsData(170).entrySet().stream().filter(commonPeriodFilter).mapToDouble(jdf(lambda e : e.getValue())).filter(jpDouble(lambda v : v > 0)).count()");
-		assertEquals(collect, ((BigInteger)o).longValue());
+		Object o = runner.runScript(
+				"dssReader.getDtsData(170).entrySet().stream().filter(commonPeriodFilter).mapToDouble(jdf(lambda e : e.getValue())).filter(jpDouble(lambda v : v > 0)).count()");
+		assertEquals(collect, ((BigInteger) o).longValue());
 	}
 
 	@Test
@@ -274,11 +292,12 @@ class TestJythonLambda
 		DssReader dssReader = new DssReader(scenarioRun);
 		CommonPeriodFilter periodFilter = new CommonPeriodFilter(LocalDateTime.of(1950, Month.JULY, 1, 0, 0),
 				LocalDateTime.of(1999, Month.JULY, 1, 0, 0));
-		long collect = dssReader.getDtsData(170).entrySet().stream().filter(periodFilter).mapToDouble(Map.Entry::getValue).filter(v->v > 0).count();
+		long collect = dssReader.getDtsData(170).entrySet().stream().filter(periodFilter).mapToDouble(Map.Entry::getValue).filter(v -> v > 0).count();
 		JythonScriptRunner runner = new JythonScriptRunner(scenarioRun, periodFilter);
 		runner.setPeriodFilter(periodFilter);
-		Object o = runner.runScript("dssReader.getDtsData(170).entrySet().stream().filter(commonPeriodFilter).mapToDouble(jdf(lambda e : e.getValue())).filter(jpDouble(lambda v : v < 0)).count()");
-		assertEquals(collect, ((BigInteger)o).longValue());
+		Object o = runner.runScript(
+				"dssReader.getDtsData(170).entrySet().stream().filter(commonPeriodFilter).mapToDouble(jdf(lambda e : e.getValue())).filter(jpDouble(lambda v : v < 0)).count()");
+		assertEquals(collect, ((BigInteger) o).longValue());
 	}
 
 	@Test
@@ -289,12 +308,14 @@ class TestJythonLambda
 		CommonPeriodFilter periodFilter = new CommonPeriodFilter(LocalDateTime.of(1950, Month.JULY, 1, 0, 0),
 				LocalDateTime.of(1999, Month.JULY, 1, 0, 0));
 		double comparisonValue = 100;
-		long collect = dssReader.getDtsData(170).entrySet().stream().filter(periodFilter).mapToDouble(Map.Entry::getValue).filter(v->v == comparisonValue).count();
+		long collect = dssReader.getDtsData(170).entrySet().stream().filter(periodFilter).mapToDouble(Map.Entry::getValue).filter(
+				v -> v == comparisonValue).count();
 		JythonScriptRunner runner = new JythonScriptRunner(scenarioRun, periodFilter);
 		runner.setPeriodFilter(periodFilter);
 		runner.setComparisonValue(comparisonValue);
-		Object o = runner.runScript("dssReader.getDtsData(170).entrySet().stream().filter(commonPeriodFilter).mapToDouble(jdf(lambda e : e.getValue())).filter(jpDouble(lambda v : v == comparisonValue)).count()");
-		assertEquals(collect, ((BigInteger)o).longValue());
+		Object o = runner.runScript(
+				"dssReader.getDtsData(170).entrySet().stream().filter(commonPeriodFilter).mapToDouble(jdf(lambda e : e.getValue())).filter(jpDouble(lambda v : v == comparisonValue)).count()");
+		assertEquals(collect, ((BigInteger) o).longValue());
 	}
 
 	@Test
@@ -304,14 +325,17 @@ class TestJythonLambda
 		DssReader dssReader = new DssReader(scenarioRun);
 		CommonPeriodFilter periodFilter = new CommonPeriodFilter(LocalDateTime.of(1950, Month.JULY, 1, 0, 0),
 				LocalDateTime.of(1999, Month.JULY, 1, 0, 0));
-		WaterYearIndex waterYearIndex = new WaterYearIndex("Sac", new ArrayList<>());
+		WaterYearIndex waterYearIndex = new WaterYearIndex("Sac", new ArrayList<>(), new ArrayList<>());
 		WaterYearPeriod waterYearType = new WaterYearPeriod("Wet");
-		List<String> collect = dssReader.getDtsData(170).entrySet().stream().filter(periodFilter).filter(v->v.getValue() == 300).map(v-> getMatchingGuiLinkEntry(dssReader,102, v)).filter(Optional::isPresent).map(Optional::get).map(e-> buildListPrefix(e, waterYearIndex, waterYearType) + e.getValue()).collect(toList());
+		List<String> collect = dssReader.getDtsData(170).entrySet().stream().filter(periodFilter).filter(v -> v.getValue() == 300).map(
+				v -> getMatchingGuiLinkEntry(dssReader, 102, v)).filter(Optional::isPresent).map(Optional::get).map(
+				e -> buildListPrefix(e, waterYearIndex, waterYearType) + e.getValue()).collect(toList());
 		JythonScriptRunner runner = new JythonScriptRunner(scenarioRun, periodFilter);
 		runner.setPeriodFilter(periodFilter);
 		runner.setWaterYearIndex(waterYearIndex);
 		runner.setWaterYearType(waterYearType);
-		Object o = runner.runScript("dssReader.getDtsData(170).entrySet().stream().filter(periodFilter).filter(jp(lambda v: v.getValue() == 300)).map(jf(lambda v:  getMatchingGuiLinkEntry(102, v))).filter(jp(lambda o : o.isPresent())).map(jf(lambda o : o.get())).map(jf(lambda e : buildListPrefix(e) + String.valueOf(e.getValue()))).collect(toList())");
+		Object o = runner.runScript(
+				"dssReader.getDtsData(170).entrySet().stream().filter(periodFilter).filter(jp(lambda v: v.getValue() == 300)).map(jf(lambda v:  getMatchingGuiLinkEntry(102, v))).filter(jp(lambda o : o.isPresent())).map(jf(lambda o : o.get())).map(jf(lambda e : buildListPrefix(e) + String.valueOf(e.getValue()))).collect(toList())");
 		assertEquals(collect, o);
 	}
 
@@ -322,14 +346,17 @@ class TestJythonLambda
 		DssReader dssReader = new DssReader(scenarioRun);
 		CommonPeriodFilter periodFilter = new CommonPeriodFilter(LocalDateTime.of(1950, Month.JULY, 1, 0, 0),
 				LocalDateTime.of(1999, Month.JULY, 1, 0, 0));
-		WaterYearIndex waterYearIndex = new WaterYearIndex("Sac", new ArrayList<>());
+		WaterYearIndex waterYearIndex = new WaterYearIndex("Sac", new ArrayList<>(), new ArrayList<>());
 		WaterYearPeriod waterYearType = new WaterYearPeriod("Wet");
-		List<String> collect = dssReader.getDtsData(170).entrySet().stream().filter(periodFilter).filter(v->v.getValue() == 200).map(v-> getMatchingGuiLinkEntry(dssReader, 102, v)).filter(Optional::isPresent).map(Optional::get).map(e-> buildListPrefix(e, waterYearIndex, waterYearType) + e.getValue()).collect(toList());
+		List<String> collect = dssReader.getDtsData(170).entrySet().stream().filter(periodFilter).filter(v -> v.getValue() == 200).map(
+				v -> getMatchingGuiLinkEntry(dssReader, 102, v)).filter(Optional::isPresent).map(Optional::get).map(
+				e -> buildListPrefix(e, waterYearIndex, waterYearType) + e.getValue()).collect(toList());
 		JythonScriptRunner runner = new JythonScriptRunner(scenarioRun, periodFilter);
 		runner.setPeriodFilter(periodFilter);
 		runner.setWaterYearIndex(waterYearIndex);
 		runner.setWaterYearType(waterYearType);
-		Object o = runner.runScript("dssReader.getDtsData(170).entrySet().stream().filter(periodFilter).filter(jp(lambda v: v.getValue() == 200)).map(jf(lambda v:  getMatchingGuiLinkEntry(102, v))).filter(jp(lambda o : o.isPresent())).map(jf(lambda o : o.get())).map(jf(lambda e : buildListPrefix(e) + String.valueOf(e.getValue()))).collect(toList())");
+		Object o = runner.runScript(
+				"dssReader.getDtsData(170).entrySet().stream().filter(periodFilter).filter(jp(lambda v: v.getValue() == 200)).map(jf(lambda v:  getMatchingGuiLinkEntry(102, v))).filter(jp(lambda o : o.isPresent())).map(jf(lambda o : o.get())).map(jf(lambda e : buildListPrefix(e) + String.valueOf(e.getValue()))).collect(toList())");
 		assertEquals(collect, o);
 	}
 
@@ -340,14 +367,17 @@ class TestJythonLambda
 		DssReader dssReader = new DssReader(scenarioRun);
 		CommonPeriodFilter periodFilter = new CommonPeriodFilter(LocalDateTime.of(1950, Month.JULY, 1, 0, 0),
 				LocalDateTime.of(1999, Month.JULY, 1, 0, 0));
-		WaterYearIndex waterYearIndex = new WaterYearIndex("Sac", new ArrayList<>());
+		WaterYearIndex waterYearIndex = new WaterYearIndex("Sac", new ArrayList<>(), new ArrayList<>());
 		WaterYearPeriod waterYearType = new WaterYearPeriod("Wet");
-		List<String> collect = dssReader.getDtsData(170).entrySet().stream().filter(periodFilter).filter(v->v.getValue() == 200).map(v-> getMatchingGuiLinkEntry(dssReader, 102, v)).filter(Optional::isPresent).map(Optional::get).map(e-> buildListPrefix(e, waterYearIndex, waterYearType) + e.getValue()).collect(toList());
+		List<String> collect = dssReader.getDtsData(170).entrySet().stream().filter(periodFilter).filter(v -> v.getValue() == 200).map(
+				v -> getMatchingGuiLinkEntry(dssReader, 102, v)).filter(Optional::isPresent).map(Optional::get).map(
+				e -> buildListPrefix(e, waterYearIndex, waterYearType) + e.getValue()).collect(toList());
 		JythonScriptRunner runner = new JythonScriptRunner(scenarioRun, periodFilter);
 		runner.setPeriodFilter(periodFilter);
 		runner.setWaterYearIndex(waterYearIndex);
 		runner.setWaterYearType(waterYearType);
-		Object o = runner.runScript("dssReader.getDtsData(170).entrySet().stream().filter(periodFilter).filter(jp(lambda v: v.getValue() == 100)).map(jf(lambda v:  getMatchingGuiLinkEntry(102, v))).filter(jp(lambda o : o.isPresent())).map(jf(lambda o : o.get())).map(jf(lambda e : buildListPrefix(e) + String.valueOf(e.getValue()))).collect(toList())");
+		Object o = runner.runScript(
+				"dssReader.getDtsData(170).entrySet().stream().filter(periodFilter).filter(jp(lambda v: v.getValue() == 100)).map(jf(lambda v:  getMatchingGuiLinkEntry(102, v))).filter(jp(lambda o : o.isPresent())).map(jf(lambda o : o.get())).map(jf(lambda e : buildListPrefix(e) + String.valueOf(e.getValue()))).collect(toList())");
 		assertEquals(collect, o);
 	}
 
@@ -358,14 +388,16 @@ class TestJythonLambda
 		DssReader dssReader = new DssReader(scenarioRun);
 		CommonPeriodFilter periodFilter = new CommonPeriodFilter(LocalDateTime.of(1950, Month.JULY, 1, 0, 0),
 				LocalDateTime.of(1999, Month.JULY, 1, 0, 0));
-		WaterYearIndex waterYearIndex = new WaterYearIndex("Sac", new ArrayList<>());
+		WaterYearIndex waterYearIndex = new WaterYearIndex("Sac", new ArrayList<>(), new ArrayList<>());
 		WaterYearPeriod waterYearType = new WaterYearPeriod("Wet");
-		List<String> collect = dssReader.getGuiLinkData(102).entrySet().stream().filter(periodFilter).filter(v->v.getValue() > 0).map(e-> buildListPrefix(e, waterYearIndex, waterYearType) + e.getValue()).collect(toList());
+		List<String> collect = dssReader.getGuiLinkData(102).entrySet().stream().filter(periodFilter).filter(v -> v.getValue() > 0).map(
+				e -> buildListPrefix(e, waterYearIndex, waterYearType) + e.getValue()).collect(toList());
 		JythonScriptRunner runner = new JythonScriptRunner(scenarioRun, periodFilter);
 		runner.setPeriodFilter(periodFilter);
 		runner.setWaterYearIndex(waterYearIndex);
 		runner.setWaterYearType(waterYearType);
-		Object o = runner.runScript("dssReader.getGuiLinkData(102).entrySet().stream().filter(periodFilter).filter(jp(lambda v: v.getValue() > 0)).map(jf(lambda e : buildListPrefix(e) + String.valueOf(e.getValue()))).collect(toList())");
+		Object o = runner.runScript(
+				"dssReader.getGuiLinkData(102).entrySet().stream().filter(periodFilter).filter(jp(lambda v: v.getValue() > 0)).map(jf(lambda e : buildListPrefix(e) + String.valueOf(e.getValue()))).collect(toList())");
 		assertEquals(collect, o);
 	}
 
@@ -376,14 +408,18 @@ class TestJythonLambda
 		DssReader dssReader = new DssReader(scenarioRun);
 		CommonPeriodFilter periodFilter = new CommonPeriodFilter(LocalDateTime.of(1950, Month.JULY, 1, 0, 0),
 				LocalDateTime.of(1999, Month.JULY, 1, 0, 0));
-		WaterYearIndex waterYearIndex = new WaterYearIndex("Sac", new ArrayList<>());
+		WaterYearIndex waterYearIndex = new WaterYearIndex("Sac", new ArrayList<>(), new ArrayList<>());
 		WaterYearPeriod waterYearType = new WaterYearPeriod("Wet");
-		List<String> collect = dssReader.getDtsData(170).entrySet().stream().filter(periodFilter).filter(e->e.getValue() > dssReader.getThresholdData(2).get(e.getKey())).map(e-> buildListPrefix(e, waterYearIndex, waterYearType) + String.join(",", String.valueOf(e.getValue()), String.valueOf(dssReader.getThresholdData(2).get(e.getKey())))).collect(toList());
+		List<String> collect = dssReader.getDtsData(170).entrySet().stream().filter(periodFilter).filter(
+				e -> e.getValue() > dssReader.getThresholdData(2).get(e.getKey())).map(
+				e -> buildListPrefix(e, waterYearIndex, waterYearType) + String.join(",", String.valueOf(e.getValue()),
+						String.valueOf(dssReader.getThresholdData(2).get(e.getKey())))).collect(toList());
 		JythonScriptRunner runner = new JythonScriptRunner(scenarioRun, periodFilter);
 		runner.setPeriodFilter(periodFilter);
 		runner.setWaterYearIndex(waterYearIndex);
 		runner.setWaterYearType(waterYearType);
-		Object o = runner.runScript("dssReader.getDtsData(170).entrySet().stream().filter(periodFilter).filter(jp(lambda e: e.getValue() > dssReader.getThresholdData(2).get(e.getKey()))).map(jf(lambda e : buildListPrefix(e) + String.join(\",\", String.valueOf(e.getValue()), String.valueOf(dssReader.getThresholdData(2).get(e.getKey()))))).collect(toList())");
+		Object o = runner.runScript(
+				"dssReader.getDtsData(170).entrySet().stream().filter(periodFilter).filter(jp(lambda e: e.getValue() > dssReader.getThresholdData(2).get(e.getKey()))).map(jf(lambda e : buildListPrefix(e) + String.join(\",\", String.valueOf(e.getValue()), String.valueOf(dssReader.getThresholdData(2).get(e.getKey()))))).collect(toList())");
 		assertEquals(collect, o);
 	}
 
@@ -394,14 +430,18 @@ class TestJythonLambda
 		DssReader dssReader = new DssReader(scenarioRun);
 		CommonPeriodFilter periodFilter = new CommonPeriodFilter(LocalDateTime.of(1950, Month.JULY, 1, 0, 0),
 				LocalDateTime.of(1999, Month.JULY, 1, 0, 0));
-		WaterYearIndex waterYearIndex = new WaterYearIndex("Sac", new ArrayList<>());
+		WaterYearIndex waterYearIndex = new WaterYearIndex("Sac", new ArrayList<>(), new ArrayList<>());
 		WaterYearPeriod waterYearType = new WaterYearPeriod("Wet");
-		List<String> collect = dssReader.getDtsData(170).entrySet().stream().filter(periodFilter).filter(e->e.getValue() < dssReader.getThresholdData(2).get(e.getKey())).map(e-> buildListPrefix(e, waterYearIndex, waterYearType) + String.join(",", String.valueOf(e.getValue()), String.valueOf(dssReader.getThresholdData(2).get(e.getKey())))).collect(toList());
+		List<String> collect = dssReader.getDtsData(170).entrySet().stream().filter(periodFilter).filter(
+				e -> e.getValue() < dssReader.getThresholdData(2).get(e.getKey())).map(
+				e -> buildListPrefix(e, waterYearIndex, waterYearType) + String.join(",", String.valueOf(e.getValue()),
+						String.valueOf(dssReader.getThresholdData(2).get(e.getKey())))).collect(toList());
 		JythonScriptRunner runner = new JythonScriptRunner(scenarioRun, periodFilter);
 		runner.setPeriodFilter(periodFilter);
 		runner.setWaterYearIndex(waterYearIndex);
 		runner.setWaterYearType(waterYearType);
-		Object o = runner.runScript("dssReader.getDtsData(170).entrySet().stream().filter(periodFilter).filter(jp(lambda e: e.getValue() < dssReader.getThresholdData(2).get(e.getKey()))).map(jf(lambda e : buildListPrefix(e) + String.join(\",\", String.valueOf(e.getValue()), String.valueOf(dssReader.getThresholdData(2).get(e.getKey()))))).collect(toList())");
+		Object o = runner.runScript(
+				"dssReader.getDtsData(170).entrySet().stream().filter(periodFilter).filter(jp(lambda e: e.getValue() < dssReader.getThresholdData(2).get(e.getKey()))).map(jf(lambda e : buildListPrefix(e) + String.join(\",\", String.valueOf(e.getValue()), String.valueOf(dssReader.getThresholdData(2).get(e.getKey()))))).collect(toList())");
 		assertEquals(collect, o);
 	}
 
@@ -412,14 +452,18 @@ class TestJythonLambda
 		DssReader dssReader = new DssReader(scenarioRun);
 		CommonPeriodFilter periodFilter = new CommonPeriodFilter(LocalDateTime.of(1950, Month.JULY, 1, 0, 0),
 				LocalDateTime.of(1999, Month.JULY, 1, 0, 0));
-		WaterYearIndex waterYearIndex = new WaterYearIndex("Sac", new ArrayList<>());
+		WaterYearIndex waterYearIndex = new WaterYearIndex("Sac", new ArrayList<>(), new ArrayList<>());
 		WaterYearPeriod waterYearType = new WaterYearPeriod("Wet");
-		List<String> collect = dssReader.getDtsData(170).entrySet().stream().filter(periodFilter).filter(e->e.getValue() < dssReader.getThresholdData(2).get(e.getKey())).map(e-> buildListPrefix(e, waterYearIndex, waterYearType) + String.join(",", String.valueOf(e.getValue()), String.valueOf(dssReader.getThresholdData(2).get(e.getKey())))).collect(toList());
+		List<String> collect = dssReader.getDtsData(170).entrySet().stream().filter(periodFilter).filter(
+				e -> e.getValue() < dssReader.getThresholdData(2).get(e.getKey())).map(
+				e -> buildListPrefix(e, waterYearIndex, waterYearType) + String.join(",", String.valueOf(e.getValue()),
+						String.valueOf(dssReader.getThresholdData(2).get(e.getKey())))).collect(toList());
 		JythonScriptRunner runner = new JythonScriptRunner(scenarioRun, periodFilter);
 		runner.setPeriodFilter(periodFilter);
 		runner.setWaterYearIndex(waterYearIndex);
 		runner.setWaterYearType(waterYearType);
-		Object o = runner.runScript("dssReader.getDtsData(170).entrySet().stream().filter(periodFilter).filter(jp(lambda e: e.getValue() != dssReader.getThresholdData(2).get(e.getKey()))).map(jf(lambda e : buildListPrefix(e) + String.join(\",\", String.valueOf(e.getValue()), String.valueOf(dssReader.getThresholdData(2).get(e.getKey()))))).collect(toList())");
+		Object o = runner.runScript(
+				"dssReader.getDtsData(170).entrySet().stream().filter(periodFilter).filter(jp(lambda e: e.getValue() != dssReader.getThresholdData(2).get(e.getKey()))).map(jf(lambda e : buildListPrefix(e) + String.join(\",\", String.valueOf(e.getValue()), String.valueOf(dssReader.getThresholdData(2).get(e.getKey()))))).collect(toList())");
 		assertEquals(collect, o);
 	}
 
@@ -430,15 +474,17 @@ class TestJythonLambda
 		DssReader dssReader = new DssReader(scenarioRun);
 		CommonPeriodFilter periodFilter = new CommonPeriodFilter(LocalDateTime.of(1950, Month.JULY, 1, 0, 0),
 				LocalDateTime.of(1999, Month.JULY, 1, 0, 0));
-//		WaterYearIndex waterYearIndex = new WaterYearIndex("Sac", new ArrayList<>());
-//		WaterYearPeriod waterYearType = new WaterYearPeriod("Wet");
+		//		WaterYearIndex waterYearIndex = new WaterYearIndex("Sac", new ArrayList<>());
+		//		WaterYearPeriod waterYearType = new WaterYearPeriod("Wet");
 		Month month = Month.MARCH;
-//		WaterYearDefinition waterYearDefinition = new WaterYearDefinition("", month, month.minus(1));
-//		LocalDateTime date = LocalDateTime.of(1950, 1, 1, 0, 0, 0);
-//		int year = waterYearDefinition.getYear(date);
-		Map<Integer, Double> collect = dssReader.getGuiLinkData(102).entrySet().stream().filter(e->e.getKey().getMonth().equals(month)).collect(toMap(e->e.getKey().getYear(), e->e.getValue()));
+		//		WaterYearDefinition waterYearDefinition = new WaterYearDefinition("", month, month.minus(1));
+		//		LocalDateTime date = LocalDateTime.of(1950, 1, 1, 0, 0, 0);
+		//		int year = waterYearDefinition.getYear(date);
+		Map<Integer, Double> collect = dssReader.getGuiLinkData(102).entrySet().stream().filter(e -> e.getKey().getMonth().equals(month)).collect(
+				toMap(e -> e.getKey().getYear(), e -> e.getValue()));
 		JythonScriptRunner runner = new JythonScriptRunner(scenarioRun, periodFilter);
-		Object o = runner.runScript("dssReader.getGuiLinkData(102).entrySet().stream().filter(jp(lambda e : e.getKey().getMonth().equals(Month.MARCH))).collect(toMap(jf(lambda e : e.getKey().getYear()), jf(lambda e: e.getValue())))");
+		Object o = runner.runScript(
+				"dssReader.getGuiLinkData(102).entrySet().stream().filter(jp(lambda e : e.getKey().getMonth().equals(Month.MARCH))).collect(toMap(jf(lambda e : e.getKey().getYear()), jf(lambda e: e.getValue())))");
 		assertEquals(collect, o);
 	}
 
@@ -450,9 +496,11 @@ class TestJythonLambda
 		CommonPeriodFilter periodFilter = new CommonPeriodFilter(LocalDateTime.of(1950, Month.JULY, 1, 0, 0),
 				LocalDateTime.of(1999, Month.JULY, 1, 0, 0));
 		Month month = Month.MARCH;
-		Map<Integer, Double> collect = dssReader.getDtsData(296).entrySet().stream().filter(e->e.getKey().getMonth().equals(month)).collect(toMap(e->e.getKey().getYear(), e->e.getValue()));
+		Map<Integer, Double> collect = dssReader.getDtsData(296).entrySet().stream().filter(e -> e.getKey().getMonth().equals(month)).collect(
+				toMap(e -> e.getKey().getYear(), e -> e.getValue()));
 		JythonScriptRunner runner = new JythonScriptRunner(scenarioRun, periodFilter);
-		Object o = runner.runScript("dssReader.getDtsData(296).entrySet().stream().filter(jp(lambda e : e.getKey().getMonth().equals(Month.MARCH))).collect(toMap(jf(lambda e : e.getKey().getYear()), jf(lambda e: e.getValue())))");
+		Object o = runner.runScript(
+				"dssReader.getDtsData(296).entrySet().stream().filter(jp(lambda e : e.getKey().getMonth().equals(Month.MARCH))).collect(toMap(jf(lambda e : e.getKey().getYear()), jf(lambda e: e.getValue())))");
 		assertEquals(collect, o);
 	}
 
@@ -463,14 +511,16 @@ class TestJythonLambda
 		DssReader dssReader = new DssReader(scenarioRun);
 		CommonPeriodFilter periodFilter = new CommonPeriodFilter(LocalDateTime.of(1950, Month.JULY, 1, 0, 0),
 				LocalDateTime.of(1999, Month.JULY, 1, 0, 0));
-		WaterYearIndex waterYearIndex = new WaterYearIndex("Sac", new ArrayList<>());
+		WaterYearIndex waterYearIndex = new WaterYearIndex("Sac", new ArrayList<>(), new ArrayList<>());
 		WaterYearPeriod waterYearType = new WaterYearPeriod("Wet");
-		List<String> collect = dssReader.getDtsData(170).entrySet().stream().filter(periodFilter).filter(e->e.getValue() != 0).map(e-> buildListPrefix(e, waterYearIndex, waterYearType)).collect(toList());
+		List<String> collect = dssReader.getDtsData(170).entrySet().stream().filter(periodFilter).filter(e -> e.getValue() != 0).map(
+				e -> buildListPrefix(e, waterYearIndex, waterYearType)).collect(toList());
 		JythonScriptRunner runner = new JythonScriptRunner(scenarioRun, periodFilter);
 		runner.setPeriodFilter(periodFilter);
 		runner.setWaterYearIndex(waterYearIndex);
 		runner.setWaterYearType(waterYearType);
-		Object o = runner.runScript("dssReader.getDtsData(170).entrySet().stream().filter(periodFilter).filter(jp(lambda e: e.getValue() != 0)).map(jf(lambda e : buildListPrefix(e))).collect(toList())");
+		Object o = runner.runScript(
+				"dssReader.getDtsData(170).entrySet().stream().filter(periodFilter).filter(jp(lambda e: e.getValue() != 0)).map(jf(lambda e : buildListPrefix(e))).collect(toList())");
 		assertEquals(collect, o);
 	}
 
@@ -482,7 +532,7 @@ class TestJythonLambda
 
 	private Optional<Map.Entry<LocalDateTime, Double>> getMatchingGuiLinkEntry(DssReader dssReader, int guiLinkId, Map.Entry<LocalDateTime, Double> v)
 	{
-		return dssReader.getGuiLinkData(guiLinkId).entrySet().stream().filter(e->e.getKey().equals(v.getKey())).findAny();
+		return dssReader.getGuiLinkData(guiLinkId).entrySet().stream().filter(e -> e.getKey().equals(v.getKey())).findAny();
 	}
 
 	@Test
@@ -492,12 +542,14 @@ class TestJythonLambda
 		DssReader dssReader = new DssReader(scenarioRun);
 		CommonPeriodFilter periodFilter = new CommonPeriodFilter(LocalDateTime.of(1950, Month.JULY, 1, 0, 0),
 				LocalDateTime.of(1999, Month.JULY, 1, 0, 0));
-		Double collect = dssReader.getGuiLinkData(102).entrySet().stream().filter(periodFilter).filter(new MonthPeriodFilter(Month.JULY)).mapToDouble(Map.Entry::getValue).average().orElse(Double.NaN);
+		Double collect = dssReader.getGuiLinkData(102).entrySet().stream().filter(periodFilter).filter(new MonthPeriodFilter(Month.JULY)).mapToDouble(
+				Map.Entry::getValue).average().orElse(Double.NaN);
 		assertNotNull(collect);
 		assertFalse(collect.isNaN());
 		JythonScriptRunner runner = new JythonScriptRunner(scenarioRun, periodFilter);
 		runner.setPeriodFilter(periodFilter);
-		Object o = runner.runScript("dssReader.getGuiLinkData(102).entrySet().stream().filter(periodFilter).filter(MonthPeriodFilter(Month.JULY)).mapToDouble(jdf(lambda e : e.getValue())).average().orElse(0)");
+		Object o = runner.runScript(
+				"dssReader.getGuiLinkData(102).entrySet().stream().filter(periodFilter).filter(MonthPeriodFilter(Month.JULY)).mapToDouble(jdf(lambda e : e.getValue())).average().orElse(0)");
 		assertEquals(collect, o);
 	}
 
@@ -508,12 +560,14 @@ class TestJythonLambda
 		DssReader dssReader = new DssReader(scenarioRun);
 		CommonPeriodFilter periodFilter = new CommonPeriodFilter(LocalDateTime.of(1950, Month.JULY, 1, 0, 0),
 				LocalDateTime.of(1999, Month.JULY, 1, 0, 0));
-		Double collect = dssReader.getGuiLinkData(102).entrySet().stream().filter(periodFilter).filter(new MonthPeriodFilter(Month.JULY)).mapToDouble(Map.Entry::getValue).average().orElse(Double.NaN);
+		Double collect = dssReader.getGuiLinkData(102).entrySet().stream().filter(periodFilter).filter(new MonthPeriodFilter(Month.JULY)).mapToDouble(
+				Map.Entry::getValue).average().orElse(Double.NaN);
 		assertNotNull(collect);
 		assertFalse(collect.isNaN());
 		JythonScriptRunner runner = new JythonScriptRunner(scenarioRun, periodFilter);
 		runner.setPeriodFilter(periodFilter);
-		Object o = runner.runScript("dssReader.getGuiLinkData(102).entrySet().stream().filter(periodFilter).filter(MonthPeriodFilter(Month.JULY)).mapToDouble(jdf(lambda e : e.getValue())).average().orElse(Double.NaN)");
+		Object o = runner.runScript(
+				"dssReader.getGuiLinkData(102).entrySet().stream().filter(periodFilter).filter(MonthPeriodFilter(Month.JULY)).mapToDouble(jdf(lambda e : e.getValue())).average().orElse(Double.NaN)");
 		assertEquals(collect, o);
 	}
 
@@ -540,7 +594,8 @@ class TestJythonLambda
 		JythonScriptRunner runner = new JythonScriptRunner(scenarioRun, periodFilter);
 		runner.setPeriodFilter(periodFilter);
 		runner.setWaterYearPeriodRanges(Collections.singletonList(waterYearPeriodRange));
-		Object o = runner.runScript("dssReader.getGuiLinkData(102).entrySet().stream().filter(buildPeriodFilterForEndMonth(waterYearPeriodRanges, Month.SEPTEMBER)).mapToDouble(jdf(lambda e : e.getValue())).average().orElse(Double.NaN)");
+		Object o = runner.runScript(
+				"dssReader.getGuiLinkData(102).entrySet().stream().filter(buildPeriodFilterForEndMonth(waterYearPeriodRanges, Month.SEPTEMBER)).mapToDouble(jdf(lambda e : e.getValue())).average().orElse(Double.NaN)");
 		assertEquals(collect, o);
 	}
 
@@ -556,10 +611,12 @@ class TestJythonLambda
 		DssReader dssReader = new DssReader(scenarioRun);
 		CommonPeriodFilter commonPeriodFilter = new CommonPeriodFilter(LocalDateTime.of(1950, Month.JULY, 1, 0, 0),
 				LocalDateTime.of(1999, Month.JULY, 1, 0, 0));
-		Map<Month, Double> collect = dssReader.getDtsData(170).entrySet().stream().filter(commonPeriodFilter).collect(groupingBy(k -> k.getKey().getMonth(), averagingDouble(v->v.getValue())));
+		Map<Month, Double> collect = dssReader.getDtsData(170).entrySet().stream().filter(commonPeriodFilter).collect(
+				groupingBy(k -> k.getKey().getMonth(), averagingDouble(v -> v.getValue())));
 		assertFalse(collect.isEmpty());
 		JythonScriptRunner runner = new JythonScriptRunner(scenarioRun, commonPeriodFilter);
-		Object o = runner.runScript("dssReader.getDtsData(170).entrySet().stream().filter(commonPeriodFilter).collect(groupingBy(jf(lambda e : e.getKey().getMonth()), averagingDouble(jdf(lambda e : e.getValue()))))");
+		Object o = runner.runScript(
+				"dssReader.getDtsData(170).entrySet().stream().filter(commonPeriodFilter).collect(groupingBy(jf(lambda e : e.getKey().getMonth()), averagingDouble(jdf(lambda e : e.getValue()))))");
 		assertEquals(collect, o);
 	}
 
@@ -582,8 +639,8 @@ class TestJythonLambda
 		List<NamedDssPath> extraDssFiles = Collections.emptyList();
 		EpptDssContainer dssContainer = new EpptDssContainer(dvDssFile, svDssFile, ivDssFile, dtsDssFile, extraDssFiles);
 		return new EpptScenarioRun("Test", "", GUILinksAllModelsBO.Model.findModel("CalSim2"), outputPath,
-				Paths.get("table"),
-				wreslMain, dssContainer, Color.BLUE);
+				wreslMain, Paths.get("C:\\Git\\DWR\\EPPT\\DWR-Enhanced-Post-Processing-Tool\\eppt-core\\src\\test\\resources\\lookup\\wytypes.table"),
+				dssContainer, Color.BLUE);
 	}
 
 	private static int getPeriodStartYear(LocalDateTime date, Month startOfPeriod)
@@ -621,18 +678,45 @@ class TestJythonLambda
 	@Test
 	public void testFunction() throws ScriptException
 	{
-			EpptScenarioRun scenarioRun = buildRun();
-			DssReader dssReader = new DssReader(scenarioRun);
-			CommonPeriodFilter periodFilter = new CommonPeriodFilter(LocalDateTime.of(1950, Month.JULY, 1, 0, 0),
-					LocalDateTime.of(1999, Month.JULY, 1, 0, 0));
-			Month endOfPeriodMonth = Month.SEPTEMBER;
-			WaterYearPeriod annual = new WaterYearPeriod("Annual");
-			WaterYearPeriodRange waterYearPeriodRange = new WaterYearPeriodRange(annual, new WaterYearType(1925, annual),
-					new WaterYearType(1928, annual));
+		EpptScenarioRun scenarioRun = buildRun();
+		DssReader dssReader = new DssReader(scenarioRun);
+		CommonPeriodFilter periodFilter = new CommonPeriodFilter(LocalDateTime.of(1950, Month.JULY, 1, 0, 0),
+				LocalDateTime.of(1999, Month.JULY, 1, 0, 0));
+		Month endOfPeriodMonth = Month.SEPTEMBER;
+		WaterYearPeriod annual = new WaterYearPeriod("Annual");
+		WaterYearPeriodRange waterYearPeriodRange = new WaterYearPeriodRange(annual, new WaterYearType(1925, annual),
+				new WaterYearType(1928, annual));
 		String function = "dssReader.getDtsData(237).entrySet().stream().filter(periodFilter).filter(jp(lambda e: e.getValue() != dssReader.getThresholdData(237).get(e.getKey()))).map(jf(lambda e : buildListPrefix(e) + String.join(\",\", String.valueOf(e.getValue()), String.valueOf(dssReader.getThresholdData(237).get(e.getKey()))))).collect(toList())";
 
 		JythonScriptRunner runner = new JythonScriptRunner(scenarioRun, periodFilter);
 		runner.setPeriodFilter(periodFilter);
 		System.out.println(runner.runScript(function));
+	}
+
+	@Test
+	public void testTrendFunction() throws Exception
+	{
+		EpptScenarioRun scenarioRun = buildRun();
+		DssReader dssReader = new DssReader(scenarioRun);
+		WaterYearDefinition waterYearDefinition = WaterYearDefinitionSvc.getWaterYearDefinitionSvc().getDefinitions().get(0);
+		NavigableMap<LocalDateTime, Double> dtsData = dssReader.getDtsData(237);
+		WaterYearTableReader waterYearTableReader = new WaterYearTableReader(scenarioRun.getWaterYearTable());
+		List<WaterYearIndex> waterYearIndices = waterYearTableReader.read();
+		WaterYearIndex waterYearIndex = waterYearIndices.stream()
+											.filter(p -> p.toString().equalsIgnoreCase("SAC Index"))
+											.findAny()
+											.orElseThrow(() -> new Exception("No SAC index"));
+		List<WaterYearPeriodRange> criticallyDry = waterYearIndex.getWaterYearPeriodRanges().getOrDefault(new WaterYearPeriod("Critical"),
+				new ArrayList<>());
+		WaterYearPeriodRangesFilter waterYearPeriodRangesFilter = new WaterYearPeriodRangesFilter(criticallyDry, waterYearDefinition);
+		TreeMap<LocalDateTime, Double> filteredData = new TreeMap<>(dtsData.entrySet().stream()
+																		   .filter(waterYearPeriodRangesFilter)
+																		   .collect(toMap(e -> e.getKey(), e -> e.getValue())));
+
+		//		String function = "dssReader.getDtsData(237).entrySet().stream().filter(periodFilter).filter(jp(lambda e: e.getValue() != dssReader.getThresholdData(237).get(e.getKey()))).map(jf(lambda e : buildListPrefix(e) + String.join(\",\", String.valueOf(e.getValue()), String.valueOf(dssReader.getThresholdData(237).get(e.getKey()))))).collect(toList())";
+		//
+		////		JythonScriptRunner runner = new JythonScriptRunner(scenarioRun, periodFilter);
+		////		runner.setPeriodFilter(periodFilter);
+		//		System.out.println(runner.runScript(function));
 	}
 }

@@ -12,21 +12,34 @@
 
 package gov.ca.water.quickresults.ui;
 
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.Objects;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import javax.swing.*;
+
+import gov.ca.water.plotly.PlotlyPrintException;
+import javafx.application.Platform;
 import javafx.beans.value.ObservableValue;
 import javafx.concurrent.Worker;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.web.WebView;
 import netscape.javascript.JSException;
+import netscape.javascript.JSObject;
 import org.apache.commons.io.FileUtils;
+import org.json.JSONObject;
 import sun.misc.BASE64Decoder;
+
+import static gov.ca.water.calgui.constant.Constant.ORCA_EXE;
 
 /**
  * Company: Resource Management Associates
@@ -46,20 +59,10 @@ public class JavaFxChartsPane extends BorderPane
 		_callbackScript = callbackScript;
 		_outputPath = null;
 		_webView = new WebView();
+		_webView.setContextMenuEnabled(true);
 		_webView.getEngine().getLoadWorker().exceptionProperty().addListener(this::handleException);
 		_webView.getEngine().getLoadWorker().stateProperty().addListener(this::callbackScript);
-		setPrefWidth(900);
-		setCenter(_webView);
-		load(path);
-	}
-
-	public JavaFxChartsPane(Path path, String callbackScript, Path outputPath)
-	{
-		_callbackScript = callbackScript;
-		_outputPath = outputPath;
-		_webView = new WebView();
-		_webView.getEngine().getLoadWorker().exceptionProperty().addListener(this::handleException);
-		_webView.getEngine().getLoadWorker().stateProperty().addListener(this::callbackScript);
+		_webView.setMinHeight(600);
 		setPrefWidth(900);
 		setCenter(_webView);
 		load(path);
@@ -67,45 +70,53 @@ public class JavaFxChartsPane extends BorderPane
 
 	private void callbackScript(ObservableValue<? extends Worker.State> observableValue, Worker.State state, Worker.State newValue)
 	{
-		LOGGER.log(Level.FINE, _webView.getEngine().getLocation());
-		LOGGER.log(Level.FINE, newValue.toString());
+		JSObject document = (JSObject) _webView.getEngine().executeScript("window");
+		if(document != null)
+		{
+			document.setMember("javaObj", new JavaApp());
+		}
 		if(newValue == Worker.State.SUCCEEDED)
 		{
 			executeScript(_callbackScript);
 		}
 		else if(newValue == Worker.State.CANCELLED)
 		{
-			String location = _webView.getEngine().getLocation();
-			if(location.contains("base64,"))
-			{
-				if(location.contains("pdf"))
-				{
-					handlePdf(location);
-				}
+			handleCancel();
+		}
+	}
 
-			}
-			else if(location.contains("svg+xml"))
+	private void handleCancel()
+	{
+		String location = _webView.getEngine().getLocation();
+		if(location.contains("base64,"))
+		{
+			if(location.contains("pdf"))
 			{
-				String s = location.split("charset=UTF-8,")[1];
-				String result = null;
-				try
-				{
-					result = java.net.URLDecoder.decode(s, StandardCharsets.UTF_8.name());
-					FileUtils.writeStringToFile(new File(_outputPath.toString() + ".svg"), result, StandardCharsets.UTF_8.name());
-				}
-				catch(UnsupportedEncodingException e)
-				{
-					LOGGER.log(Level.SEVERE, "Error decoding: " + s, e);
-				}
-				catch(IOException e)
-				{
-					LOGGER.log(Level.SEVERE, "Error saving file: " + _outputPath, e);
-				}
+				handlePdf(location);
 			}
-			else
+
+		}
+		else if(location.contains("svg+xml"))
+		{
+			String s = location.split("charset=UTF-8,")[1];
+			String result = null;
+			try
 			{
-				LOGGER.log(Level.INFO, location);
+				result = java.net.URLDecoder.decode(s, StandardCharsets.UTF_8.name());
+				FileUtils.writeStringToFile(new File(_outputPath.toString() + ".svg"), result, StandardCharsets.UTF_8.name());
 			}
+			catch(UnsupportedEncodingException e)
+			{
+				LOGGER.log(Level.SEVERE, "Error decoding: " + s, e);
+			}
+			catch(IOException e)
+			{
+				LOGGER.log(Level.SEVERE, "Error saving file: " + _outputPath, e);
+			}
+		}
+		else
+		{
+			LOGGER.log(Level.INFO, location);
 		}
 	}
 
@@ -160,6 +171,61 @@ public class JavaFxChartsPane extends BorderPane
 			catch(JSException ex)
 			{
 				LOGGER.log(Level.FINE, "Error in script", ex);
+			}
+		}
+	}
+
+	public static class JavaApp
+	{
+
+		public void interruptFunction(String format, Object dataJson, Object layoutJson)
+		{
+			if(format != null && dataJson != null && layoutJson != null)
+			{
+				try
+				{
+					Path jsonPath = Paths.get("C:\\Users\\adam\\Documents\\EPPT\\DezireeProject\\Reports\\DWR_QA_QC_Reports\\test.json");
+					Path outputPath = Paths.get("C:\\Users\\adam\\Documents\\EPPT\\DezireeProject\\Reports\\DWR_QA_QC_Reports\\test.svg");
+					writeToJson(jsonPath, dataJson, layoutJson);
+					exportToFormat(jsonPath, outputPath, format);
+				}
+				catch(InterruptedException e)
+				{
+					Thread.currentThread().interrupt();
+					LOGGER.log(Level.SEVERE, "Error exporting to: " + format);
+				}
+				catch(IOException e)
+				{
+					LOGGER.log(Level.SEVERE, "Error exporting to: " + format, e);
+				}
+			}
+		}
+
+		private void exportToFormat(Path jsonPath, Path outputPath, String format) throws IOException, InterruptedException
+		{
+			String orcaCommandline = "\"" + ORCA_EXE + "\" graph " + jsonPath + " --format " + format + " \"" + outputPath + "\"";
+			LOGGER.log(Level.INFO, "Plotly SVG generation command line: {0}", orcaCommandline);
+			Process exec = new ProcessBuilder()
+					.directory(jsonPath.getParent().toFile())
+					.inheritIO()
+					.command(orcaCommandline)
+					.start();
+			exec.waitFor();
+			int exitCode = exec.exitValue();
+			if(exitCode != 0)
+			{
+				throw new IOException("Unable to create plot: " + outputPath + "\n Exit code: " + exitCode);
+			}
+		}
+
+		private void writeToJson(Path json, Object dataJson, Object layoutJson) throws IOException
+		{
+			JSONObject jsonObject = new JSONObject();
+			jsonObject.put("layout", new JSONObject(layoutJson.toString()));
+			jsonObject.put("data", new JSONObject(dataJson.toString()));
+			try(BufferedWriter writer = Files.newBufferedWriter(json))
+			{
+				jsonObject.write(writer);
 			}
 		}
 	}

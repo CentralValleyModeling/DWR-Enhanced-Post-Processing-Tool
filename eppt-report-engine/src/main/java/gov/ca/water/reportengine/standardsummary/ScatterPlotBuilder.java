@@ -18,7 +18,7 @@ import java.util.List;
 import java.util.Map;
 
 import gov.ca.water.calgui.project.EpptScenarioRun;
-import gov.ca.water.plotly.PlotlyBubble;
+import gov.ca.water.plotly.qaqc.PlotlyBubble;
 import gov.ca.water.plotly.PlotlyChart;
 import gov.ca.water.reportengine.EpptReportException;
 import org.w3c.dom.Document;

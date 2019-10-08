@@ -7,5 +7,6 @@
         <language minSize="47" name="Java" />
       </Languages>
     </inspection_tool>
+    <inspection_tool class="PyInterpreterInspection" enabled="false" level="WARNING" enabled_by_default="false" />
   </profile>
 </component>

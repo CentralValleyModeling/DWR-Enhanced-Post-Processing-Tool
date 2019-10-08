@@ -13,7 +13,6 @@
 package gov.ca.water.reportengine.standardsummary;
 
 import java.time.Month;
-import java.util.ArrayList;
 import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.List;
@@ -27,7 +26,7 @@ import gov.ca.water.calgui.bo.PeriodFilter;
 import gov.ca.water.calgui.project.EpptScenarioRun;
 import gov.ca.water.plotly.ExceedanceData;
 import gov.ca.water.plotly.PlotlyChart;
-import gov.ca.water.plotly.PlotlyExceedancePage;
+import gov.ca.water.plotly.qaqc.PlotlyExceedancePage;
 import gov.ca.water.reportengine.EpptReportException;
 import org.w3c.dom.Document;
 
