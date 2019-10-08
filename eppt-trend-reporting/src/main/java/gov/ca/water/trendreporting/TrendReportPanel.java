@@ -473,10 +473,10 @@ public class TrendReportPanel extends JFXPanel
 		if(!_scenarioRuns.isEmpty() && !guiLink.isEmpty() && !statistic.isEmpty() && !monthPeriod.isEmpty() && !_scenarioRuns.contains(null)
 				&& waterYearIndex != null)
 		{
-
+			List<EpptScenarioRun> scenarioRuns = new ArrayList<>(_scenarioRuns);
 			_progressBar.setVisible(true);
 			getScene().setCursor(Cursor.WAIT);
-			CompletableFuture.supplyAsync(() -> computeScenarios(guiLink, statistic, monthPeriod, start, end, taf))
+			CompletableFuture.supplyAsync(() -> computeScenarios(guiLink, statistic, monthPeriod, start, end, taf, scenarioRuns))
 							 .whenCompleteAsync((jsonObjects, t) ->
 							 {
 								 if(t != null)
@@ -498,7 +498,7 @@ public class TrendReportPanel extends JFXPanel
 
 	private List<JSONObject> computeScenarios(List<GUILinksAllModelsBO> guiLinks, List<TrendStatistics> statistics,
 											  List<EpptReportingMonths.MonthPeriod> monthPeriods, LocalDate start,
-											  LocalDate end, boolean taf)
+											  LocalDate end, boolean taf, List<EpptScenarioRun> scenarioRuns)
 	{
 		List<JSONObject> retval = new ArrayList<>();
 		for(GUILinksAllModelsBO guiLink : guiLinks)
@@ -508,7 +508,7 @@ public class TrendReportPanel extends JFXPanel
 				for(EpptReportingMonths.MonthPeriod monthPeriod : monthPeriods)
 				{
 					EpptReportingComputedSet epptReportingComputedSet = computeForMetrics(guiLink, statistic, monthPeriod,
-							start, end, taf);
+							start, end, taf, scenarioRuns);
 					JSONObject jsonObject = epptReportingComputedSet.toJson();
 					LOGGER.log(Level.INFO, "{0}", jsonObject);
 					retval.add(jsonObject);
@@ -520,7 +520,7 @@ public class TrendReportPanel extends JFXPanel
 
 	private EpptReportingComputedSet computeForMetrics(GUILinksAllModelsBO guiLink, TrendStatistics statistic,
 													   EpptReportingMonths.MonthPeriod monthPeriod, LocalDate start,
-													   LocalDate end, boolean taf)
+													   LocalDate end, boolean taf, List<EpptScenarioRun> scenarioRuns)
 	{
 		WaterYearDefinition waterYearDefinition = _waterYearDefinitionComboBox.getSelectionModel().getSelectedItem();
 		WaterYearIndex waterYearIndex = _waterYearIndexComboBox.getSelectionModel().getSelectedItem();
@@ -529,7 +529,7 @@ public class TrendReportPanel extends JFXPanel
 				waterYearIndex, waterYearIndices);
 		List<EpptReportingComputed> trendReportingComputed = new ArrayList<>();
 
-		for(EpptScenarioRun scenarioRun : _scenarioRuns)
+		for(EpptScenarioRun scenarioRun : scenarioRuns)
 		{
 			if(taf)
 			{
