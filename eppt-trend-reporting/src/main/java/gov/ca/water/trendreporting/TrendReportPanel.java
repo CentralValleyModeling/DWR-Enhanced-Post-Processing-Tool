@@ -192,8 +192,8 @@ public class TrendReportPanel extends JFXPanel
 		_waterYearIndexComboBox.setMaxWidth(Double.MAX_VALUE);
 		_waterYearDefinitionComboBox.setMaxWidth(Double.MAX_VALUE);
 		_tafCheckbox.selectedProperty().addListener(this::inputsChanged);
-		_waterYearIndexComboBox.selectionModelProperty().addListener(this::inputsChanged);
-		_waterYearDefinitionComboBox.selectionModelProperty().addListener(this::inputsChanged);
+		_waterYearIndexComboBox.getSelectionModel().selectedIndexProperty().addListener(this::inputsChanged);
+		_waterYearDefinitionComboBox.getSelectionModel().selectedIndexProperty().addListener(this::inputsChanged);
 		return gridPane;
 	}
 

@@ -45,7 +45,7 @@ import javafx.collections.ObservableList;
 class TrendStatistics
 {
 	private static final Logger LOGGER = Logger.getLogger(TrendStatistics.class.getName());
-	private final ScriptEngine _scriptEngine = new ScriptEngineManager().getEngineByName("python");
+	private final ScriptEngine _scriptEngine = new ScriptEngineManager(getClass().getClassLoader()).getEngineByName("python");
 	private final Path _jythonFilePath;
 	private final String _name;
 
