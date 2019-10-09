@@ -137,6 +137,11 @@ class ProjectConfigurationIOVersion2
 						.forEach(extraDssArray::put);
 			dssContainerJson.put(SCENARIO_DSS_EXTRA, extraDssArray);
 			jsonObject.put(SCENARIO_DSS_FILES, dssContainerJson);
+
+			EpptScenarioRun baseScenario = projectConfigurationPanel.getBaseScenario();
+			List<EpptScenarioRun> allEpptScenarioRuns = projectConfigurationPanel.getEpptScenarioAlternatives();
+			jsonObject.put(BASE_SELECTED_KEY, Objects.equals(scenario, baseScenario));
+			jsonObject.put(ALT_SELECTED_KEY, allEpptScenarioRuns.contains(scenario));
 			jsonArray.put(jsonObject);
 		}
 		return jsonArray;
@@ -190,6 +195,22 @@ class ProjectConfigurationIOVersion2
 			EpptDssContainer dssContainer = new EpptDssContainer(dvDssFile, svDssFile, ivDssFile, dtsDssFile, extraDssFiles);
 			EpptScenarioRun epptScenarioRun = new EpptScenarioRun(name, description,
 					model, outputPath, wreslMain, waterYearTable, dssContainer, color);
+
+			boolean baseSelected = false;
+			if(scenarioJson.has(BASE_SELECTED_KEY))
+			{
+				baseSelected = scenarioJson.getBoolean(BASE_SELECTED_KEY);
+			}
+			boolean altSelected = false;
+			if(scenarioJson.has(ALT_SELECTED_KEY))
+			{
+				altSelected = scenarioJson.getBoolean(ALT_SELECTED_KEY);
+			}
+			epptScenarioRun.setBaseSelected(baseSelected);
+			if(!baseSelected)
+			{
+				epptScenarioRun.setAltSelected(altSelected);
+			}
 			retval.add(epptScenarioRun);
 		}
 		return retval;

@@ -53,7 +53,7 @@ class ScenarioRowModel extends ParentRowModel
 	private final SimpleObjectProperty<String> _waterYearTableProperty;
 	private final ScenarioTableModel _scenarioRunTableModel;
 
-	ScenarioRowModel(Runnable modified, ScenarioTableModel scenarioRunTableModel, EpptScenarioRun scenarioRun, boolean base, boolean alternative)
+	ScenarioRowModel(Runnable modified, ScenarioTableModel scenarioRunTableModel, EpptScenarioRun scenarioRun)
 	{
 		super(null);
 		_scenarioRunTableModel = scenarioRunTableModel;
@@ -64,10 +64,18 @@ class ScenarioRowModel extends ParentRowModel
 		_outputProperty = new SimpleObjectProperty<>(Objects.toString(scenarioRun.getOutputPath()));
 		_wreslMainProperty = new SimpleObjectProperty<>(Objects.toString(scenarioRun.getWreslMain()));
 		_waterYearTableProperty = new SimpleObjectProperty<>(Objects.toString(scenarioRun.getWaterYearTable()));
-		_baseProperty = new SimpleObjectProperty<>(base);
-		_baseProperty.addListener((e, o, n) -> modified.run());
-		_alternativeProperty = new SimpleObjectProperty<>(alternative);
-		_alternativeProperty.addListener((e, o, n) -> modified.run());
+		_baseProperty = new SimpleObjectProperty<>(scenarioRun.isBaseSelected());
+		_baseProperty.addListener((e, o, n) ->
+		{
+			scenarioRun.setBaseSelected(n);
+			modified.run();
+		});
+		_alternativeProperty = new SimpleObjectProperty<>(scenarioRun.isAltSelected());
+		_alternativeProperty.addListener((e, o, n) ->
+		{
+			scenarioRun.setAltSelected(n);
+			modified.run();
+		});
 		addDssPathChildren();
 	}
 

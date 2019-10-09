@@ -124,7 +124,6 @@ function plot(data) {
             zeroline: false
         },
         yaxis: {
-            type: 'log',
             title: {
                 text: data['units'],
             },

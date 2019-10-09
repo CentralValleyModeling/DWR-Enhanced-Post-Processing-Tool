@@ -54,6 +54,8 @@ class ProjectConfigurationIO
 	static final String SCENARIO_SV_KEY = "scenario_sv_key";
 	static final String SCENARIO_IV_KEY = "scenario_iv_key";
 	static final String SCENARIO_DTS_KEY = "scenario_dts_key";
+	static final String BASE_SELECTED_KEY = "base_selected_key";
+	static final String ALT_SELECTED_KEY = "alt_selected_key";
 	static final String SCENARIO_COLOR_KEY = "scenario_color";
 	static final String SCENARIO_DSS_EXTRA = "scenario_dss_extra";
 	static final String SCENARIO_WATER_TABLE = "scenario_water_table";

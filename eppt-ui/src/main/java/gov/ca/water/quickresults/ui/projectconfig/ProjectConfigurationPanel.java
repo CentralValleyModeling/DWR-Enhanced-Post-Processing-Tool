@@ -288,10 +288,6 @@ public final class ProjectConfigurationPanel extends EpptPanel
 		}
 		Path projectFile = selectedPath.resolve(projectName + "." + Constant.EPPT_EXT);
 		_projectConfigurationIO.saveConfiguration(projectFile, projectName, projectDescription);
-		JTextField projectNameField = (JTextField) getSwingEngine().find("prj_name");
-		JTextField descriptionField = (JTextField) getSwingEngine().find("prj_desc");
-		projectNameField.setText(projectName);
-		descriptionField.setText(projectDescription);
 		EpptPreferences.setLastProjectConfiguration(projectFile);
 	}
 
@@ -314,10 +310,23 @@ public final class ProjectConfigurationPanel extends EpptPanel
 				setEndMonth(project.getEndMonth());
 				updateSelectedComponents(project.getSelectedComponents());
 				_scenarioTablePanel.clearScenarios();
-				for(EpptScenarioRun scenarioRun : project.getScenarioRuns())
+				List<EpptScenarioRun> scenarioRuns = project.getScenarioRuns();
+				boolean hasBase = scenarioRuns.stream().anyMatch(EpptScenarioRun::isBaseSelected);
+				boolean hasAlt = scenarioRuns.stream().anyMatch(EpptScenarioRun::isAltSelected);
+
+				if(!hasBase && !scenarioRuns.isEmpty())
+				{
+					scenarioRuns.get(0).setBaseSelected(true);
+				}
+				if(!hasAlt && scenarioRuns.size() > 1)
+				{
+					scenarioRuns.get(1).setAltSelected(true);
+				}
+				for(EpptScenarioRun scenarioRun : scenarioRuns)
 				{
 					addScenario(scenarioRun);
 				}
+
 				//Need to ensure this is called after scenarios are added to TreeTable model
 				Platform.runLater(() -> SwingUtilities.invokeLater(this::updateRadioState));
 			}
@@ -447,6 +456,11 @@ public final class ProjectConfigurationPanel extends EpptPanel
 	public List<EpptScenarioRun> getAllEpptScenarioRuns()
 	{
 		return new ArrayList<>(_scenarioTablePanel.getAllScenarioRuns());
+	}
+
+	public ScenarioTablePanel getScenarioTablePanel()
+	{
+		return _scenarioTablePanel;
 	}
 
 	void replaceScenario(EpptScenarioRun oldScenarioRun, EpptScenarioRun newScenarioRun)

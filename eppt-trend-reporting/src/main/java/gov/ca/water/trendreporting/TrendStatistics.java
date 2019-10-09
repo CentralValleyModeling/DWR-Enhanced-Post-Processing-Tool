@@ -45,16 +45,15 @@ import javafx.collections.ObservableList;
 class TrendStatistics
 {
 	private static final Logger LOGGER = Logger.getLogger(TrendStatistics.class.getName());
-	private final ScriptEngine _scriptEngine = new ScriptEngineManager().getEngineByName("python");
+	private final ScriptEngine _scriptEngine = new ScriptEngineManager(getClass().getClassLoader()).getEngineByName("python");
 	private final Path _jythonFilePath;
 	private final String _name;
 
-	TrendStatistics(Path jythonFilePath, List<WaterYearIndex> waterYearIndices)
+	TrendStatistics(Path jythonFilePath)
 	{
 		_jythonFilePath = jythonFilePath;
 		_name = loadStatisticName();
 		setupScriptEngine();
-		_scriptEngine.put("waterYearIndices", waterYearIndices);
 	}
 
 	private void setupScriptEngine()
@@ -84,8 +83,9 @@ class TrendStatistics
 
 	@SuppressWarnings(value = "unchecked")
 	Map<Month, Double> calculate(Map<LocalDateTime, Double> data, WaterYearDefinition waterYearDefinition,
-										WaterYearIndex waterYearIndex)
+										WaterYearIndex waterYearIndex, List<WaterYearIndex> waterYearIndices)
 	{
+		_scriptEngine.put("waterYearIndices", waterYearIndices);
 		Map<Month, Double> retval = new EnumMap<>(Month.class);
 		try(BufferedReader bufferedReader = Files.newBufferedReader(_jythonFilePath))
 		{

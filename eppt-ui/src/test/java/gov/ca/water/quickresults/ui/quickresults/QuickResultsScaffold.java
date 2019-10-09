@@ -8,16 +8,22 @@
 package gov.ca.water.quickresults.ui.quickresults;
 
 import java.awt.Component;
+import java.nio.file.Paths;
+import java.util.Collections;
 import java.util.List;
 import javax.swing.*;
 
 import gov.ca.water.calgui.EpptInitializationException;
 import gov.ca.water.calgui.bo.GUILinksAllModelsBO;
 import gov.ca.water.calgui.bo.RBListItemBO;
+import gov.ca.water.calgui.constant.EpptPreferences;
+import gov.ca.water.calgui.project.EpptDssContainer;
 import gov.ca.water.calgui.project.EpptScenarioRun;
+import gov.ca.water.calgui.project.NamedDssPath;
 import gov.ca.water.quickresults.ui.EpptPanel;
 import gov.ca.water.quickresults.ui.EpptScaffold;
 import gov.ca.water.quickresults.ui.projectconfig.ProjectConfigurationPanel;
+import gov.ca.water.quickresults.ui.report.QAQCReportPanel;
 
 /**
  * Company: Resource Management Associates
@@ -37,31 +43,20 @@ public class QuickResultsScaffold extends EpptScaffold
 	private static void addScenarios()
 	{
 		ProjectConfigurationPanel projectConfigurationPanel = ProjectConfigurationPanel.getProjectConfigurationPanel();
-		JRadioButton radioButton = (JRadioButton) projectConfigurationPanel.getSwingEngine().find("rdbp001");
-		radioButton.setSelected(true);
-		Component component = projectConfigurationPanel.getSwingEngine().find("SelectedList");
-		if(component instanceof JList)
-		{
-			JList<RBListItemBO> lstScenarios = (JList<RBListItemBO>) component;
-			List<EpptScenarioRun> currentScenarios = projectConfigurationPanel.getEpptScenarioRuns();
-//			String baseFile = Thread.currentThread().getContextClassLoader().getResource(
-//					"Base.dss").getFile().substring(1);
-//			RBListItemBO base = new RBListItemBO(baseFile, "Base.dss", GUILinksAllModelsBO.Model.findModel("CalLite"));
-//			base.setSelected(true);
-//			currentScenarios.add(base);
-//			String altFile = Thread.currentThread().getContextClassLoader().getResource(
-//					"Alternative.dss").getFile().substring(1);
-//			currentScenarios.add(new RBListItemBO(altFile, "Alternative.dss", GUILinksAllModelsBO.Model.findModel("CalLite")));
-//			String cs2 = Thread.currentThread().getContextClassLoader().getResource(
-//					"CSII_DCR2017_Base_DV.dss").getFile().substring(1);
-//			currentScenarios.add(new RBListItemBO(cs2, "CSII_DCR2017_Base_DV.dss",  GUILinksAllModelsBO.Model.findModel("CalSim2")));
-//			DefaultListModel<RBListItemBO> defaultModel = new DefaultListModel<>();
-//			for(RBListItemBO item : currentScenarios)
-//			{
-//				defaultModel.addElement(item);
-//			}
-//			lstScenarios.setModel(defaultModel);
-		}
+		NamedDssPath namedDssPath = new NamedDssPath(
+				Paths.get("J:\\DWR\\QA_QC\\SupportingDocs040219\\EPPTSupportingDoc040219\\SampleDSS_V1.01\\Inputs\\SampleDV_Base.dss"), "test",
+				"CALSIM", "1MON", "2020D09E");
+		EpptDssContainer dssContainer = new EpptDssContainer(namedDssPath,
+				namedDssPath,
+				namedDssPath,
+				namedDssPath,
+				Collections.emptyList());
+		EpptScenarioRun baseRun = new EpptScenarioRun("Base", "desc", GUILinksAllModelsBO.Model.findModel("CalSim2"),
+				Paths.get("Test.pdf"), Paths.get("mainWresl.wresl"), Paths.get("target\\test-classes\\dwr_eppt\\wresl\\lookup\\wytypes.table"), dssContainer, javafx.scene.paint.Color.PINK);
+		EpptScenarioRun altRun = new EpptScenarioRun("Alt", "desc", GUILinksAllModelsBO.Model.findModel("CalSim2"),
+				Paths.get("Test.pdf"), Paths.get("mainWresl.wresl"), Paths.get(""), dssContainer, javafx.scene.paint.Color.PINK);
+		projectConfigurationPanel.getScenarioTablePanel().addScenarioRun(baseRun);
+		projectConfigurationPanel.getScenarioTablePanel().addScenarioRun(altRun);
 	}
 
 	@Override
