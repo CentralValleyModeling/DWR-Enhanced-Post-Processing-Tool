@@ -41,6 +41,7 @@ import gov.ca.water.calgui.constant.Constant;
 import gov.ca.water.calgui.constant.EpptPreferences;
 import gov.ca.water.calgui.project.EpptDssContainer;
 import gov.ca.water.calgui.project.EpptScenarioRun;
+import gov.ca.water.calgui.project.EpptScenarioRunValidator;
 import javafx.scene.paint.Color;
 
 import rma.swing.RmaJColorChooserButton;
@@ -446,11 +447,6 @@ public class ScenarioEditorPanel
 		}
 	}
 
-	boolean validateRun()
-	{
-		return !_nameField.getText().isEmpty();
-	}
-
 	/**
 	 * @return null if canceled, builds a new Scenario Run otherwise
 	 */
@@ -609,7 +605,7 @@ public class ScenarioEditorPanel
 		}
 	}
 
-	private class ComboBoxCellEditor extends DefaultCellEditor implements TableCellRenderer
+	private class ComboBoxCellEditor extends RmaCellEditor implements TableCellRenderer
 	{
 		private final RmaJComboBox<String> _comboBox;
 
@@ -618,6 +614,19 @@ public class ScenarioEditorPanel
 			super(comboBox);
 			comboBox.setEditable(true);
 			_comboBox = comboBox;
+		}
+
+		@Override
+		public boolean stopCellEditing()
+		{
+			Component editorComponent = _comboBox.getEditor().getEditorComponent();
+			if(editorComponent instanceof JTextField)
+			{
+				JTextField textField = (JTextField) editorComponent;
+				String text = textField.getText();
+ 				_comboBox.setSelectedItem(text);
+			}
+			return super.stopCellEditing();
 		}
 
 		@Override

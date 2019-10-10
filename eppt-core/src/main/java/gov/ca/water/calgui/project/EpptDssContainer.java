@@ -15,6 +15,7 @@ package gov.ca.water.calgui.project;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * Company: Resource Management Associates
@@ -54,6 +55,31 @@ public class EpptDssContainer
 	public NamedDssPath getSvDssFile()
 	{
 		return _svDssFile;
+	}
+
+	@Override
+	public boolean equals(Object o)
+	{
+		if(this == o)
+		{
+			return true;
+		}
+		if(o == null || getClass() != o.getClass())
+		{
+			return false;
+		}
+		final EpptDssContainer that = (EpptDssContainer) o;
+		return Objects.equals(getDvDssFile(), that.getDvDssFile()) &&
+				Objects.equals(getSvDssFile(), that.getSvDssFile()) &&
+				Objects.equals(getIvDssFile(), that.getIvDssFile()) &&
+				Objects.equals(getDtsDssFile(), that.getDtsDssFile()) &&
+				Objects.equals(getExtraDssFiles(), that.getExtraDssFiles());
+	}
+
+	@Override
+	public int hashCode()
+	{
+		return Objects.hash(getDvDssFile(), getSvDssFile(), getIvDssFile(), getDtsDssFile(), getExtraDssFiles());
 	}
 
 	public NamedDssPath getIvDssFile()

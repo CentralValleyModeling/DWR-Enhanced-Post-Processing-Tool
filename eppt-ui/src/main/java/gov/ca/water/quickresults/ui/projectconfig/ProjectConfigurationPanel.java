@@ -15,6 +15,7 @@ package gov.ca.water.quickresults.ui.projectconfig;
 import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Container;
+import java.awt.Frame;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.time.LocalDate;
@@ -23,10 +24,12 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
+import javax.swing.text.DefaultFormatter;
 
 import gov.ca.water.calgui.bo.ResultUtilsBO;
 import gov.ca.water.calgui.busservice.ScenarioChangeListener;
@@ -34,8 +37,10 @@ import gov.ca.water.calgui.constant.Constant;
 import gov.ca.water.calgui.constant.EpptPreferences;
 import gov.ca.water.calgui.project.EpptProject;
 import gov.ca.water.calgui.project.EpptScenarioRun;
+import gov.ca.water.calgui.project.EpptScenarioRunValidator;
 import gov.ca.water.calgui.project.PlotConfigurationState;
 import gov.ca.water.quickresults.ui.EpptPanel;
+import gov.ca.water.quickresults.ui.projectconfig.scenarioconfig.ScenarioRunEditor;
 import gov.ca.water.quickresults.ui.projectconfig.scenariotable.ScenarioTablePanel;
 import gov.ca.water.quickresults.ui.quickresults.PlotConfigurationStateBuilder;
 import javafx.application.Platform;
@@ -175,6 +180,29 @@ public final class ProjectConfigurationPanel extends EpptPanel
 		ResultUtilsBO.SetNumberModelAndIndex(spnSY, 1921, 1921, 2003, 1, "####", null, true);
 		JSpinner spnEY = (JSpinner) getSwingEngine().find("spnEndYear");
 		ResultUtilsBO.SetNumberModelAndIndex(spnEY, 2003, 1921, 2003, 1, "####", null, true);
+		makeSpinnerCommitOnEdit(spnSM);
+		makeSpinnerCommitOnEdit(spnEM);
+		makeSpinnerCommitOnEdit(spnSY);
+		makeSpinnerCommitOnEdit(spnEY);
+	}
+
+	private void makeSpinnerCommitOnEdit(JSpinner spinner)
+	{
+		JComponent comp = spinner.getEditor();
+		if(comp.getComponents().length > 0)
+		{
+			Component component = comp.getComponent(0);
+			if(component instanceof JFormattedTextField)
+			{
+				JFormattedTextField field = (JFormattedTextField) component;
+				JFormattedTextField.AbstractFormatter formatter = field.getFormatter();
+				if(formatter instanceof DefaultFormatter)
+				{
+					DefaultFormatter defaultFormatter = (DefaultFormatter) formatter;
+					defaultFormatter.setCommitsOnValidEdit(true);
+				}
+			}
+		}
 	}
 
 	@Override
@@ -197,6 +225,7 @@ public final class ProjectConfigurationPanel extends EpptPanel
 
 	private void updateRadioState()
 	{
+		checkValidScenarioRuns();
 		_scenarioChangeListeners.forEach(this::postScenarioChanged);
 		EpptScenarioRun base = _scenarioTablePanel.getBaseScenarioRun();
 		List<EpptScenarioRun> alternatives = _scenarioTablePanel.getAlternativeScenarioRuns();
@@ -223,6 +252,31 @@ public final class ProjectConfigurationPanel extends EpptPanel
 			catch(RuntimeException e)
 			{
 				LOGGER.error(e);
+			}
+		}
+	}
+
+	private void checkValidScenarioRuns()
+	{
+		for(EpptScenarioRun epptScenarioRun : _scenarioTablePanel.getAllScenarioRuns())
+		{
+			EpptScenarioRunValidator validator = new EpptScenarioRunValidator(epptScenarioRun);
+			if(!validator.isValid())
+			{
+				StringBuilder builder = new StringBuilder("Scenario Run: ")
+						.append(epptScenarioRun.getName())
+						.append(" is invalid. Would you like to edit?");
+				validator.getErrors().forEach(s -> builder.append("\n").append(s));
+				Frame frame = Frame.getFrames()[0];
+				int response = JOptionPane.showConfirmDialog(frame, builder.toString(), "Misconfigured Scenario Run",
+						JOptionPane.YES_NO_OPTION);
+				if(response == JOptionPane.YES_OPTION)
+				{
+					ScenarioRunEditor scenarioRunEditor = new ScenarioRunEditor(frame);
+					scenarioRunEditor.fillPanel(epptScenarioRun);
+					scenarioRunEditor.setVisible(true);
+					replaceScenario(epptScenarioRun, scenarioRunEditor.createRun());
+				}
 			}
 		}
 	}
@@ -361,7 +415,7 @@ public final class ProjectConfigurationPanel extends EpptPanel
 
 	public boolean isTaf()
 	{
-		return ((JRadioButton)getSwingEngine().find("rdbTAF")).isSelected();
+		return ((JRadioButton) getSwingEngine().find("rdbTAF")).isSelected();
 	}
 
 	private JRadioButton getRadioButtonBase()
@@ -467,7 +521,10 @@ public final class ProjectConfigurationPanel extends EpptPanel
 	{
 		_scenarioTablePanel.updateScenario(oldScenarioRun, newScenarioRun);
 		updateRadioState();
-		setModified(true);
+		if(!Objects.equals(oldScenarioRun, newScenarioRun))
+		{
+			setModified(true);
+		}
 	}
 
 	void moveSelectedScenarioUp()
