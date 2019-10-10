@@ -60,7 +60,7 @@
 			<scrollpane id="Display" border="null" PreferredSize="410,400" constraints="BorderLayout.CENTER">
 				<panel layout="FlowLayout(FlowLayout.LEFT)">
 					<panel layout="GridBagLayout">
-						<panel layout="GridBagLayout">
+						<panel border="TitledBorder(Global Controls)" layout="GridBagLayout" >
 							<gridbagconstraints insets="0,5,5,3" anchor="GridBagConstraints.NORTHWEST" gridx="1" gridy="1"/>
 							<label text="Month">
 								<gridbagconstraints insets="0,5,5,0" anchor="GridBagConstraints.NORTHWEST" gridx="1" gridy="0"/>

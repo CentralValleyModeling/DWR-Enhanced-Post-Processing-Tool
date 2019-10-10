@@ -13,17 +13,19 @@
 package gov.ca.water.trendreporting;
 
 
+import java.awt.Dimension;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.Month;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
+import java.util.concurrent.CancellationException;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.CompletionException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Stream;
@@ -40,7 +42,6 @@ import gov.ca.water.calgui.busservice.impl.WaterYearTableReader;
 import gov.ca.water.calgui.constant.Constant;
 import gov.ca.water.calgui.project.EpptScenarioRun;
 import gov.ca.water.quickresults.ui.projectconfig.ProjectConfigurationPanel;
-import gov.ca.water.trendreporting.monthpicker.FXCalendar;
 import javafx.application.Platform;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.ObservableList;
@@ -64,6 +65,7 @@ import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
@@ -94,26 +96,28 @@ public class TrendReportPanel extends JFXPanel
 	private ComboBox<WaterYearIndex> _waterYearIndexComboBox;
 	private ComboBox<WaterYearDefinition> _waterYearDefinitionComboBox;
 	private ProgressBar _progressBar;
+	private Label _progressTextLabel;
+	private CompletableFuture<Void> _waitFuture;
 
 	public TrendReportPanel()
 	{
 		Platform.setImplicitExit(false);
 		Platform.runLater(this::init);
 		CompletableFuture.supplyAsync(this::getTrendStatistics)
-						 .whenComplete((o,t)->
+						 .whenComplete((o, t) ->
 						 {
-						 	if(t != null)
-							{
-								LOGGER.log(Level.SEVERE, "Error loading Trend Report Statistics", t);
-							}
-						 	else
-							{
-								Platform.runLater(()->
-								{
-									_statisticsListView.getItems().addAll(o);
-									_statisticsListView.getSelectionModel().select(0);
-								});
-							}
+							 if(t != null)
+							 {
+								 LOGGER.log(Level.SEVERE, "Error loading Trend Report Statistics", t);
+							 }
+							 else
+							 {
+								 Platform.runLater(() ->
+								 {
+									 _statisticsListView.getItems().addAll(o);
+									 _statisticsListView.getSelectionModel().select(0);
+								 });
+							 }
 						 });
 	}
 
@@ -133,7 +137,7 @@ public class TrendReportPanel extends JFXPanel
 		_waterYearDefinitionComboBox = new ComboBox<>();
 		fillWaterYearDefinitionCombo();
 
-		Insets insets = new Insets(10);
+		Insets insets = new Insets(4);
 		BorderPane mainPane = new BorderPane();
 		mainPane.setBackground(new Background(new BackgroundFill(Color.WHITE, null, null)));
 		BorderPane center = buildJavascriptPane();
@@ -162,8 +166,10 @@ public class TrendReportPanel extends JFXPanel
 		FlowPane flowPane = new FlowPane(Orientation.HORIZONTAL);
 		_progressBar = new ProgressBar();
 		_progressBar.setVisible(false);
-		flowPane.getChildren().add(_progressBar);
-		flowPane.setAlignment(Pos.BOTTOM_RIGHT);
+		_progressTextLabel = new Label();
+		flowPane.setHgap(10);
+		flowPane.getChildren().addAll(_progressBar, _progressTextLabel);
+		flowPane.setAlignment(Pos.BOTTOM_LEFT);
 		return flowPane;
 	}
 
@@ -173,7 +179,7 @@ public class TrendReportPanel extends JFXPanel
 		flowPane.alignmentProperty().set(Pos.CENTER);
 		TilePane tilePane = new TilePane(Orientation.HORIZONTAL, 10.0, 5.0);
 		tilePane.alignmentProperty().set(Pos.CENTER);
-		tilePane.setMinWidth(800);
+//		tilePane.setBackground(new Background(new BackgroundFill(Color.PINK, CornerRadii.EMPTY, Insets.EMPTY)));
 		tilePane.getChildren().addAll(buildParameterListView(), buildStatisticsListView(), buildSeasonalPeriodListView(), buildTimeWindowControls());
 		flowPane.getChildren().addAll(tilePane);
 		return flowPane;
@@ -194,6 +200,7 @@ public class TrendReportPanel extends JFXPanel
 		_tafCheckbox.selectedProperty().addListener(this::inputsChanged);
 		_waterYearIndexComboBox.getSelectionModel().selectedIndexProperty().addListener(this::inputsChanged);
 		_waterYearDefinitionComboBox.getSelectionModel().selectedIndexProperty().addListener(this::inputsChanged);
+//		gridPane.setBackground(new Background(new BackgroundFill(Color.BURLYWOOD, CornerRadii.EMPTY, Insets.EMPTY)));
 		return gridPane;
 	}
 
@@ -222,7 +229,7 @@ public class TrendReportPanel extends JFXPanel
 					String plotTitle = item.getPlotTitle();
 					if(plotTitle == null || plotTitle.isEmpty())
 					{
-						plotTitle = item.getPrimary().values().stream().filter(p->!p.isEmpty()).findAny().orElse("");
+						plotTitle = item.getPrimary().values().stream().filter(p -> !p.isEmpty()).findAny().orElse("");
 					}
 					setText(plotTitle);
 				}
@@ -231,6 +238,7 @@ public class TrendReportPanel extends JFXPanel
 		BorderPane borderPane = new BorderPane();
 		borderPane.setCenter(_parameterListView);
 		borderPane.setTop(new Label("Parameter"));
+//		borderPane.setBackground(new Background(new BackgroundFill(Color.GREEN, CornerRadii.EMPTY, Insets.EMPTY)));
 		return borderPane;
 	}
 
@@ -261,6 +269,7 @@ public class TrendReportPanel extends JFXPanel
 		BorderPane borderPane = new BorderPane();
 		borderPane.setCenter(_statisticsListView);
 		borderPane.setTop(new Label("Statistic"));
+//		borderPane.setBackground(new Background(new BackgroundFill(Color.RED, CornerRadii.EMPTY, Insets.EMPTY)));
 		return borderPane;
 	}
 
@@ -270,7 +279,7 @@ public class TrendReportPanel extends JFXPanel
 		Path jython = Paths.get(Constant.TREND_REPORTING_DIR).resolve("jython");
 		try(Stream<Path> stream = Files.walk(jython, 5))
 		{
-			Platform.runLater(()->_progressBar.setVisible(true));
+			Platform.runLater(() -> _progressBar.setVisible(true));
 			retval = stream.filter(p -> p.toFile().isFile()).filter(p -> p.toString().endsWith("py"))
 						   .map(TrendStatistics::new)
 						   .collect(toList());
@@ -281,7 +290,7 @@ public class TrendReportPanel extends JFXPanel
 		}
 		finally
 		{
-			Platform.runLater(()->_progressBar.setVisible(false));
+			Platform.runLater(() -> _progressBar.setVisible(false));
 		}
 		return retval;
 	}
@@ -298,6 +307,7 @@ public class TrendReportPanel extends JFXPanel
 		BorderPane borderPane = new BorderPane();
 		borderPane.setCenter(_seasonalPeriodListView);
 		borderPane.setTop(new Label("Seasonal Period"));
+//		borderPane.setBackground(new Background(new BackgroundFill(Color.CYAN, CornerRadii.EMPTY, Insets.EMPTY)));
 		return borderPane;
 	}
 
@@ -305,20 +315,12 @@ public class TrendReportPanel extends JFXPanel
 	{
 		BorderPane borderPane = new BorderPane();
 		borderPane.setTop(buildToggleControls());
-		borderPane.setCenter(buildJavascriptControls());
-		borderPane.setBackground(new Background(new BackgroundFill(Color.WHITE, null, null)));
+		borderPane.setCenter(_javascriptPane.getDashboardPane());
+//		borderPane.setBackground(new Background(new BackgroundFill(Color.BISQUE, null, null)));
 		BorderPane.setMargin(borderPane, new Insets(5.0, 0, 0, 0));
-		return borderPane;
-	}
 
-	private ScrollPane buildJavascriptControls()
-	{
-		ScrollPane scrollPane = new ScrollPane();
-		scrollPane.setBackground(new Background(new BackgroundFill(Color.WHITE, null, null)));
-		scrollPane.setContent(_javascriptPane.getDashboardPane());
-		scrollPane.setFitToWidth(true);
-		scrollPane.setFitToHeight(true);
-		return scrollPane;
+		borderPane.setMaxWidth(1300);
+		return borderPane;
 	}
 
 	private Pane buildToggleControls()
@@ -349,6 +351,7 @@ public class TrendReportPanel extends JFXPanel
 							.findAny()
 							.ifPresent(b -> b.setSelected(true))
 		);
+//		tilePane.setBackground(new Background(new BackgroundFill(Color.HONEYDEW, CornerRadii.EMPTY, Insets.EMPTY)));
 		return tilePane;
 	}
 
@@ -465,40 +468,113 @@ public class TrendReportPanel extends JFXPanel
 
 	private void loadJavascript(Path path, LocalDate start, LocalDate end, boolean taf)
 	{
-		_javascriptPane.removeDashboardPanes();
 		List<GUILinksAllModelsBO> guiLink = new ArrayList<>(_parameterListView.getSelectionModel().getSelectedItems());
 		List<TrendStatistics> statistic = new ArrayList<>(_statisticsListView.getSelectionModel().getSelectedItems());
 		List<EpptReportingMonths.MonthPeriod> monthPeriod = new ArrayList<>(_seasonalPeriodListView.getSelectionModel().getSelectedItems());
 		WaterYearIndex waterYearIndex = _waterYearIndexComboBox.getSelectionModel().getSelectedItem();
-		if(!_scenarioRuns.isEmpty() && !guiLink.isEmpty() && !statistic.isEmpty() && !monthPeriod.isEmpty() && !_scenarioRuns.contains(null)
-				&& waterYearIndex != null)
+		List<EpptScenarioRun> scenarioRuns = _scenarioRuns.stream().filter(Objects::nonNull).collect(toList());
+		Optional<String> error = getError(guiLink, statistic, monthPeriod, waterYearIndex);
+		if(!error.isPresent())
 		{
-			List<EpptScenarioRun> scenarioRuns = new ArrayList<>(_scenarioRuns);
-			_progressBar.setVisible(true);
-			getScene().setCursor(Cursor.WAIT);
-			CompletableFuture.supplyAsync(() -> computeScenarios(guiLink, statistic, monthPeriod, start, end, taf, scenarioRuns))
-							 .whenCompleteAsync((jsonObjects, t) ->
-							 {
-								 if(t != null)
-								 {
-									 LOGGER.log(Level.SEVERE, "Error plotting Trend Report", t);
-								 }
-								 if(jsonObjects != null)
-								 {
-									 for(JSONObject jsonObject : jsonObjects)
-									 {
-										 _javascriptPane.addDashboardPane(path, "plot(" + jsonObject + ");");
-									 }
-								 }
-								 _progressBar.setVisible(false);
-								 getScene().setCursor(Cursor.DEFAULT);
-							 }, Platform::runLater);
+			setUiLoading(true, Cursor.WAIT, "Loading...");
+			if(_waitFuture != null)
+			{
+				try
+				{
+					_waitFuture.cancel(true);
+				}
+				catch(CancellationException ex)
+				{
+					LOGGER.log(Level.FINE, "Future canceled", ex);
+				}
+			}
+			_waitFuture = CompletableFuture.runAsync(() ->
+			{
+				try
+				{
+					Thread.sleep(800L);
+				}
+				catch(InterruptedException e)
+				{
+					Thread.currentThread().interrupt();
+					LOGGER.log(Level.FINE, "Thread interrupted", e);
+				}
+			});
+			_waitFuture.thenRunAsync(() -> setUiLoading(true, Cursor.WAIT, "Loading..."), Platform::runLater)
+					   .thenApplyAsync(e -> computeScenarios(guiLink, statistic, monthPeriod, start, end, taf, scenarioRuns))
+					   .whenCompleteAsync((jsonObjects, t) ->
+					   {
+						   handleWhenComplete(path, jsonObjects, t);
+						   setUiLoading(false, Cursor.DEFAULT, null);
+					   }, Platform::runLater);
+		}
+		else
+		{
+			_progressTextLabel.setText(error.get());
 		}
 	}
 
-	private List<JSONObject> computeScenarios(List<GUILinksAllModelsBO> guiLinks, List<TrendStatistics> statistics,
-											  List<EpptReportingMonths.MonthPeriod> monthPeriods, LocalDate start,
-											  LocalDate end, boolean taf, List<EpptScenarioRun> scenarioRuns)
+	private Optional<String> getError(List<GUILinksAllModelsBO> guiLink, List<TrendStatistics> statistic,
+									  List<EpptReportingMonths.MonthPeriod> monthPeriod,
+									  WaterYearIndex waterYearIndex)
+	{
+		Optional<String> retval = Optional.empty();
+		if(_scenarioRuns.isEmpty())
+		{
+			retval = Optional.of("No Scenario Runs defined");
+		}
+		else if(guiLink.isEmpty())
+		{
+			retval = Optional.of("No Parameter defined");
+		}
+		else if(statistic.isEmpty())
+		{
+			retval = Optional.of("No Statistic defined");
+		}
+		else if(monthPeriod.isEmpty())
+		{
+			retval = Optional.of("No Water Year Definition defined");
+		}
+		else if(waterYearIndex == null)
+		{
+			retval = Optional.of("No Water Year Index defined");
+		}
+		return retval;
+	}
+
+	private void handleWhenComplete(Path path, List<JSONObject> jsonObjects, Throwable t)
+	{
+		if(t != null)
+		{
+			if(t instanceof CompletionException)
+			{
+				LOGGER.log(Level.FINE, "Plotting canceled", t);
+			}
+			else
+			{
+				LOGGER.log(Level.SEVERE, "Error plotting Trend Report", t);
+			}
+		}
+		if(jsonObjects != null)
+		{
+			_javascriptPane.removeDashboardPanes();
+			for(JSONObject jsonObject : jsonObjects)
+			{
+				_javascriptPane.addDashboardPane(path, "plot(" + jsonObject + ");");
+			}
+		}
+	}
+
+	private void setUiLoading(boolean progresBar, Cursor cursorType, String text)
+	{
+		_progressBar.setVisible(progresBar);
+		getScene().setCursor(cursorType);
+		_progressTextLabel.setText(text);
+	}
+
+	private synchronized List<JSONObject> computeScenarios(List<GUILinksAllModelsBO> guiLinks, List<TrendStatistics> statistics,
+														   List<EpptReportingMonths.MonthPeriod> monthPeriods, LocalDate start,
+														   LocalDate end, boolean taf, List<EpptScenarioRun> scenarioRuns)
 	{
 		List<JSONObject> retval = new ArrayList<>();
 		for(GUILinksAllModelsBO guiLink : guiLinks)
