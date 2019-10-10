@@ -387,7 +387,18 @@ public class TrendReportPanel extends JFXPanel
 		LocalDate endMonth = ProjectConfigurationPanel.getProjectConfigurationPanel().getEndMonth();
 		Platform.runLater(() ->
 		{
-			fillWaterYearIndexCombo(baseRun);
+			if(baseRun != null)
+			{
+				fillWaterYearIndexCombo(baseRun);
+			}
+			else if(!alternatives.isEmpty())
+			{
+				fillWaterYearIndexCombo(alternatives.get(0));
+			}
+			else
+			{
+				_waterYearIndexComboBox.getItems().clear();
+			}
 			loadPane(startMonth, endMonth, taf);
 		});
 	}
