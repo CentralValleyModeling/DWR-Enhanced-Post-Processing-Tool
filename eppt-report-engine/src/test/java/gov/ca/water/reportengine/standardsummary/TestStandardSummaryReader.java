@@ -42,7 +42,7 @@ public class TestStandardSummaryReader
 		URI uri = resource.toURI();
 		Path path = Paths.get(
 				uri);
-		StandardSummaryReader standardSummaryReader = new StandardSummaryReader(path);
+		StandardSummaryReader standardSummaryReader = new StandardSummaryReader(path, new StandardSummaryErrors());
 		List<String> orderedChartIds = standardSummaryReader.getOrderedChartIds();
 		Map<String, EpptChart> stringEpptChartMap = standardSummaryReader.readLines();
 		assertEquals(170, stringEpptChartMap.size());

@@ -40,18 +40,18 @@
 				<panel id="ScenarioTree" constraints="BorderLayout.CENTER" preferredsize="410,300" layout="BorderLayout"/>
 				<panel constraints="BorderLayout.SOUTH" layout="BorderLayout">
 					<panel constraints="BorderLayout.WEST" layout="FlowLayout(FlowLayout.LEFT)">
-					<buttongroup>
-						<radiobutton name="rdbp000" id="rdbp000" text="Base" selected="true">
-						</radiobutton>
-						<radiobutton name="rdbp001" id="rdbp001" text="Comparison" enabled="false">
-						</radiobutton>
-						<radiobutton name="rdbp002" id="rdbp002" text="Difference" enabled="false">
-						</radiobutton>
-					</buttongroup>
+						<buttongroup>
+							<radiobutton name="rdbp000" id="rdbp000" text="Base" selected="true">
+							</radiobutton>
+							<radiobutton name="rdbp001" id="rdbp001" text="Comparison" enabled="false">
+							</radiobutton>
+							<radiobutton name="rdbp002" id="rdbp002" text="Difference" enabled="false">
+							</radiobutton>
+						</buttongroup>
 					</panel>
 					<panel constraints="BorderLayout.EAST" layout="FlowLayout(FlowLayout.RIGHT)">
-					<button id="moveUp" name="moveUp" text="&#9650;" ActionCommand="moveUp" PreferredSize="80,24"/>
-					<button id="moveDown" name="moveDown" text="&#9660;" ActionCommand="moveDown" PreferredSize="80,24"/>
+						<button id="moveUp" name="moveUp" text="&#9650;" ActionCommand="moveUp" PreferredSize="80,24"/>
+						<button id="moveDown" name="moveDown" text="&#9660;" ActionCommand="moveDown" PreferredSize="80,24"/>
 					</panel>
 				</panel>
 			</panel>
@@ -60,7 +60,7 @@
 			<scrollpane id="Display" border="null" PreferredSize="410,400" constraints="BorderLayout.CENTER">
 				<panel layout="FlowLayout(FlowLayout.LEFT)">
 					<panel layout="GridBagLayout">
-						<panel layout="GridBagLayout">
+						<panel border="TitledBorder(Global Controls)" layout="GridBagLayout" >
 							<gridbagconstraints insets="0,5,5,3" anchor="GridBagConstraints.NORTHWEST" gridx="1" gridy="1"/>
 							<label text="Month">
 								<gridbagconstraints insets="0,5,5,0" anchor="GridBagConstraints.NORTHWEST" gridx="1" gridy="0"/>

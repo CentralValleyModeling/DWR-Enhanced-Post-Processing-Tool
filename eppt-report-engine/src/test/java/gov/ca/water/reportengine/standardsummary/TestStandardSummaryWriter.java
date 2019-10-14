@@ -78,7 +78,7 @@ public class TestStandardSummaryWriter
 		assertNotNull(resource,"Standard Summary Statistics configuration file must exist");
 		URI uri = resource.toURI();
 		Path path = Paths.get(uri);
-		StandardSummaryReader standardSummaryReader = new StandardSummaryReader(path);
+		StandardSummaryReader standardSummaryReader = new StandardSummaryReader(path, new StandardSummaryErrors());
 		List<String> orderedChartIds = standardSummaryReader.getOrderedChartIds();
 		Map<String, EpptChart> stringEpptChartMap = standardSummaryReader.readLines();
 		List<EpptChart> collect = orderedChartIds.stream()
@@ -123,7 +123,7 @@ public class TestStandardSummaryWriter
 		Path imagePath = Constant.QAQC_IMAGE_PATH;
 		imagePath.toFile().delete();
 		StandardSummaryWriter standardSummaryWriter = new StandardSummaryWriter(document, baseRun, Collections.singletonList(altRun),
-				reportParameters, imagePath);
+				reportParameters, imagePath, new StandardSummaryErrors());
 		Element write = standardSummaryWriter.write(collect);
 		document.appendChild(write);
 

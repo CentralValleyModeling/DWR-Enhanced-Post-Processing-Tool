@@ -33,9 +33,10 @@ class ExceedanceChartBuilder extends PlotChartBuilder
 {
 
 	ExceedanceChartBuilder(Document document, EpptScenarioRun base, List<EpptScenarioRun> alternatives,
-						   SummaryReportParameters reportParameters)
+						   SummaryReportParameters reportParameters,
+						   StandardSummaryErrors standardSummaryErrors)
 	{
-		super(document, base, alternatives, reportParameters);
+		super(document, base, alternatives, reportParameters, standardSummaryErrors);
 	}
 
 	@Override

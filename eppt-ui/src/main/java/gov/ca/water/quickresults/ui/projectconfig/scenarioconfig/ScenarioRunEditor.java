@@ -20,6 +20,7 @@ import java.awt.event.ActionEvent;
 import javax.swing.*;
 
 import gov.ca.water.calgui.project.EpptScenarioRun;
+import gov.ca.water.calgui.project.EpptScenarioRunValidator;
 
 /**
  * Company: Resource Management Associates
@@ -96,13 +97,16 @@ public class ScenarioRunEditor extends JDialog implements LoadingDss
 	public void okPerformed(ActionEvent e)
 	{
 		_canceled = false;
-		if(_scenarioEditorPanel.validateRun())
+		EpptScenarioRunValidator epptScenarioRunValidator = new EpptScenarioRunValidator(createRun());
+		if(epptScenarioRunValidator.isValid())
 		{
 			dispose();
 		}
 		else
 		{
-			JOptionPane.showMessageDialog(this, "Scenario Run must have a name", "Error", JOptionPane.WARNING_MESSAGE);
+			StringBuilder builder = new StringBuilder("Scenario Run is not valid: ");
+			epptScenarioRunValidator.getErrors().forEach(s->builder.append("\n").append(s));
+			JOptionPane.showMessageDialog(this, builder.toString(), "Error", JOptionPane.WARNING_MESSAGE);
 		}
 	}
 
@@ -127,7 +131,7 @@ public class ScenarioRunEditor extends JDialog implements LoadingDss
 	public EpptScenarioRun createRun()
 	{
 		EpptScenarioRun retval = null;
-		if(!_canceled && _scenarioEditorPanel.validateRun())
+		if(!_canceled)
 		{
 			retval = _scenarioEditorPanel.createRun();
 		}

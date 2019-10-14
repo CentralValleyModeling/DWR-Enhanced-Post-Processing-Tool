@@ -33,9 +33,10 @@ public class ScatterPlotBuilder extends PlotChartBuilder
 {
 
 	ScatterPlotBuilder(Document document, EpptScenarioRun base, List<EpptScenarioRun> alternatives,
-					   SummaryReportParameters reportParameters)
+					   SummaryReportParameters reportParameters,
+					   StandardSummaryErrors standardSummaryErrors)
 	{
-		super(document, base, alternatives, reportParameters);
+		super(document, base, alternatives, reportParameters, standardSummaryErrors);
 	}
 
 	@Override

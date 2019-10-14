@@ -12,6 +12,8 @@
 
 package gov.ca.water.quickresults.ui;
 
+import java.awt.Desktop;
+import java.awt.Frame;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.IOException;
@@ -26,6 +28,10 @@ import java.util.logging.Logger;
 
 import javax.swing.*;
 
+import gov.ca.water.calgui.bo.SimpleFileFilter;
+import gov.ca.water.calgui.constant.Constant;
+import gov.ca.water.calgui.constant.EpptPreferences;
+import gov.ca.water.calgui.techservice.impl.FileSystemSvcImpl;
 import gov.ca.water.plotly.PlotlyPrintException;
 import javafx.application.Platform;
 import javafx.beans.value.ObservableValue;
@@ -36,6 +42,7 @@ import javafx.scene.web.WebView;
 import netscape.javascript.JSException;
 import netscape.javascript.JSObject;
 import org.apache.commons.io.FileUtils;
+import org.json.JSONArray;
 import org.json.JSONObject;
 import sun.misc.BASE64Decoder;
 
@@ -63,7 +70,6 @@ public class JavaFxChartsPane extends BorderPane
 		_webView.getEngine().getLoadWorker().exceptionProperty().addListener(this::handleException);
 		_webView.getEngine().getLoadWorker().stateProperty().addListener(this::callbackScript);
 		_webView.setMinHeight(600);
-		setPrefWidth(900);
 		setCenter(_webView);
 		load(path);
 	}
@@ -184,17 +190,37 @@ public class JavaFxChartsPane extends BorderPane
 			{
 				try
 				{
-					Path jsonPath = Paths.get("C:\\Users\\adam\\Documents\\EPPT\\DezireeProject\\Reports\\DWR_QA_QC_Reports\\test.json");
-					Path outputPath = Paths.get("C:\\Users\\adam\\Documents\\EPPT\\DezireeProject\\Reports\\DWR_QA_QC_Reports\\test.svg");
-					writeToJson(jsonPath, dataJson, layoutJson);
-					exportToFormat(jsonPath, outputPath, format);
+					JFileChooser fileChooser = new JFileChooser(EpptPreferences.getLastProjectConfiguration().toFile());
+					fileChooser.setFileFilter(new SimpleFileFilter(format, "Export " + format + " file"));
+					fileChooser.setMultiSelectionEnabled(false);
+					fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
+					fileChooser.setDialogType(JFileChooser.OPEN_DIALOG);
+					fileChooser.setSelectedFile(EpptPreferences.getLastProjectConfiguration().getParent().resolve("Export." + format).toFile());
+					fileChooser.showOpenDialog(Frame.getFrames()[0]);
+					File selectedFile = fileChooser.getSelectedFile();
+					if(selectedFile != null)
+					{
+						Path outputPath = selectedFile.toPath();
+						String jsonFilename = outputPath.getFileName().toString().replace(format, "json");
+						Path jsonPath = outputPath.getParent().resolve(jsonFilename);
+						if(!jsonPath.getFileName().endsWith("json"))
+						{
+							jsonPath = Paths.get(jsonPath.toString() + ".json");
+						}
+						if(!outputPath.getFileName().endsWith(format))
+						{
+							outputPath = Paths.get(outputPath.toString() + "." + format);
+						}
+						writeToJson(jsonPath, dataJson, layoutJson);
+						exportToFormat(jsonPath, outputPath, format);
+					}
 				}
 				catch(InterruptedException e)
 				{
 					Thread.currentThread().interrupt();
 					LOGGER.log(Level.SEVERE, "Error exporting to: " + format);
 				}
-				catch(IOException e)
+				catch(IOException | RuntimeException e)
 				{
 					LOGGER.log(Level.SEVERE, "Error exporting to: " + format, e);
 				}
@@ -211,18 +237,15 @@ public class JavaFxChartsPane extends BorderPane
 					.command(orcaCommandline)
 					.start();
 			exec.waitFor();
-			int exitCode = exec.exitValue();
-			if(exitCode != 0)
-			{
-				throw new IOException("Unable to create plot: " + outputPath + "\n Exit code: " + exitCode);
-			}
+			Desktop.getDesktop().open(outputPath.toFile());
 		}
 
 		private void writeToJson(Path json, Object dataJson, Object layoutJson) throws IOException
 		{
 			JSONObject jsonObject = new JSONObject();
 			jsonObject.put("layout", new JSONObject(layoutJson.toString()));
-			jsonObject.put("data", new JSONObject(dataJson.toString()));
+			JSONArray jsonArray = new JSONArray(dataJson.toString());
+			jsonObject.put("data", jsonArray);
 			try(BufferedWriter writer = Files.newBufferedWriter(json))
 			{
 				jsonObject.write(writer);

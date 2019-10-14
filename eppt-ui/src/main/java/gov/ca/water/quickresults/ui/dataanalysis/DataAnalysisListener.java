@@ -67,10 +67,10 @@ public class DataAnalysisListener implements ActionListener
 						selectTemplateFile(e);
 						break;
 					case "btnGetReportFile1":
-						selectDssFile(e, _dataAnalysisPanel.getDssResultFileField1());
+						selectDssFile(e, _dataAnalysisPanel.getDssResultPathBaseField());
 						break;
 					case "btnGetReportFile2":
-						selectDssFile(e, _dataAnalysisPanel.getDssResultFileField2());
+						selectDssFile(e, _dataAnalysisPanel.getDssResultPathAltField());
 						break;
 					case "btnGetReportFile3":
 						selectOutputFile(e);
@@ -147,11 +147,11 @@ public class DataAnalysisListener implements ActionListener
 	private String areInputsValid()
 	{
 		String retval = null;
-		if(_dataAnalysisPanel.getDssResultFileField1().getText().isEmpty())
+		if(_dataAnalysisPanel.getDssResultPathBaseField().getText().isEmpty())
 		{
 			retval = "You must specify DSS result file #1";
 		}
-		else if(_dataAnalysisPanel.getDssResultFileField2().getText().isEmpty())
+		else if(_dataAnalysisPanel.getDssResultPathAltField().getText().isEmpty())
 		{
 			retval = "You must specify DSS result file #2";
 
@@ -246,14 +246,14 @@ public class DataAnalysisListener implements ActionListener
 			theText.append(br.readLine()).append("\n");
 			String skipLine = br.readLine();
 			LOGGER.log(Level.FINE, "Skip Line: {0}", skipLine);
-			theText.append("FILE_BASE\t").append(_dataAnalysisPanel.getDssResultFileField1().getToolTipText()).append(
+			theText.append("FILE_BASE\t").append(_dataAnalysisPanel.getDssResultPathBaseField().getToolTipText()).append(
 					"\n");
 			skipLine = br.readLine();
 			LOGGER.log(Level.FINE, "Skip Line: {0}", skipLine);
 			theText.append("NAME_BASE\t\"").append(_dataAnalysisPanel.getReportName1().getText()).append("\"\n");
 			skipLine = br.readLine();
 			LOGGER.log(Level.FINE, "Skip Line: {0}", skipLine);
-			theText.append("FILE_ALT\t").append(_dataAnalysisPanel.getDssResultFileField2().getToolTipText()).append(
+			theText.append("FILE_ALT\t").append(_dataAnalysisPanel.getDssResultPathAltField().getToolTipText()).append(
 					"\n");
 			skipLine = br.readLine();
 			LOGGER.log(Level.FINE, "Skip Line: {0}", skipLine);
@@ -287,7 +287,7 @@ public class DataAnalysisListener implements ActionListener
 			SwingWorker<Void, Object> sw = new SwingWorker<Void, Object>()
 			{
 				@Override
-				protected Void doInBackground() throws Exception
+				protected Void doInBackground()
 				{
 					report.run();
 					return null;

@@ -49,7 +49,7 @@ function openContextMenu(id, e, copyToClipboard, plotlyExportToFormat) {
                         }
                     },
                     "copy": {
-                        name: "Copy",
+                        name: "Copy Data",
                         callback: function (key, options) {
                             copyToClipboard();
                         }

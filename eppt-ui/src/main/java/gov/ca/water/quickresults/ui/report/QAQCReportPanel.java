@@ -74,6 +74,7 @@ import gov.ca.water.reportengine.EpptReportException;
 import gov.ca.water.reportengine.QAQCReportException;
 import gov.ca.water.reportengine.ReportParameters;
 import gov.ca.water.reportengine.standardsummary.PercentDiffStyle;
+import gov.ca.water.reportengine.standardsummary.StandardSummaryErrors;
 import gov.ca.water.reportengine.standardsummary.StandardSummaryReader;
 import gov.ca.water.reportengine.standardsummary.SummaryReportParameters;
 
@@ -509,7 +510,7 @@ public class QAQCReportPanel extends RmaJPanel
 
 	private List<JCheckBox> buildStandardSummaryModules()
 	{
-		StandardSummaryReader reader = new StandardSummaryReader(Paths.get(EPPTReport.SUMMARY_CSV));
+		StandardSummaryReader reader = new StandardSummaryReader(Paths.get(EPPTReport.SUMMARY_CSV), new StandardSummaryErrors());
 		try
 		{
 			return reader.getModules()

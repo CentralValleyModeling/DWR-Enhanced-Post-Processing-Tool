@@ -39,9 +39,10 @@ class ControlTableBuilder extends TableBuilder
 	private static final Logger LOGGER = Logger.getLogger(ControlTableBuilder.class.getName());
 
 	ControlTableBuilder(Document document, EpptScenarioRun base, List<EpptScenarioRun> alternatives,
-						SummaryReportParameters reportParameters)
+						SummaryReportParameters reportParameters,
+						StandardSummaryErrors standardSummaryErrors)
 	{
-		super(document, base, alternatives, reportParameters);
+		super(document, base, alternatives, reportParameters, standardSummaryErrors);
 	}
 
 	void buildTable(Element retval, EpptChart epptChart)
@@ -163,7 +164,7 @@ class ControlTableBuilder extends TableBuilder
 		}
 		catch(EpptReportException e)
 		{
-			LOGGER.log(Level.SEVERE, "Error running jython script", e);
+			getStandardSummaryErrors().addError(LOGGER, Level.SEVERE, "Error running jython script", e);
 		}
 		return retval;
 	}
@@ -179,7 +180,7 @@ class ControlTableBuilder extends TableBuilder
 		}
 		catch(EpptReportException e)
 		{
-			LOGGER.log(Level.SEVERE, "Error running jython script", e);
+			getStandardSummaryErrors().addError(LOGGER, Level.SEVERE, "Error running jython script", e);
 		}
 		return retval;
 	}

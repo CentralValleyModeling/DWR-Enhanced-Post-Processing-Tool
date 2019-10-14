@@ -41,9 +41,9 @@ class LinePlotBuilder extends PlotChartBuilder
 	private static final Logger LOGGER = Logger.getLogger(LinePlotBuilder.class.getName());
 
 	LinePlotBuilder(Document document, EpptScenarioRun base, List<EpptScenarioRun> alternatives,
-					SummaryReportParameters reportParameters)
+					SummaryReportParameters reportParameters, StandardSummaryErrors standardSummaryErrors)
 	{
-		super(document, base, alternatives, reportParameters);
+		super(document, base, alternatives, reportParameters, standardSummaryErrors);
 	}
 
 	@Override
@@ -97,7 +97,7 @@ class LinePlotBuilder extends PlotChartBuilder
 		}
 		catch(EpptReportException e)
 		{
-			LOGGER.log(Level.SEVERE, "Error running jython script", e);
+			getStandardSummaryErrors().addError(LOGGER, Level.SEVERE, "Error running jython script", e);
 		}
 		return retval;
 	}

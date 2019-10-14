@@ -210,7 +210,7 @@ public class Report extends SwingWorker<Void, String>
 			{
 				path_map._pathAlt = path_map._pathBase;
 			}
-			path_map._plot = pathnameMappingTable.getValue(i, "PLOT").equalsIgnoreCase("Y");
+			path_map._plot = "Y".equalsIgnoreCase(pathnameMappingTable.getValue(i, "PLOT"));
 			path_map._units = pathnameMappingTable.getValue(i, "UNIT");
 			_pathnameMaps.add(path_map);
 		}

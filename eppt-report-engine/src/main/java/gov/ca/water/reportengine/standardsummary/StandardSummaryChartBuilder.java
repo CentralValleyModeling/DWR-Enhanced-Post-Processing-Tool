@@ -80,13 +80,21 @@ abstract class StandardSummaryChartBuilder
 	private final EpptScenarioRun _base;
 	private final List<EpptScenarioRun> _alternatives;
 	private final SummaryReportParameters _reportParameters;
+	private final StandardSummaryErrors _standardSummaryErrors;
 
-	StandardSummaryChartBuilder(Document document, EpptScenarioRun base, List<EpptScenarioRun> alternatives, SummaryReportParameters reportParameters)
+	StandardSummaryChartBuilder(Document document, EpptScenarioRun base, List<EpptScenarioRun> alternatives, SummaryReportParameters reportParameters,
+								StandardSummaryErrors standardSummaryErrors)
 	{
 		_document = document;
 		_base = base;
 		_alternatives = alternatives;
 		_reportParameters = reportParameters;
+		_standardSummaryErrors = standardSummaryErrors;
+	}
+
+	public StandardSummaryErrors getStandardSummaryErrors()
+	{
+		return _standardSummaryErrors;
 	}
 
 	Document getDocument()

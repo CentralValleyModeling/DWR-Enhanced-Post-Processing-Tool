@@ -41,9 +41,10 @@ abstract class TableBuilder extends StandardSummaryChartBuilder
 
 	TableBuilder(Document document, EpptScenarioRun base,
 				 List<EpptScenarioRun> alternatives,
-				 SummaryReportParameters reportParameters)
+				 SummaryReportParameters reportParameters,
+				 StandardSummaryErrors standardSummaryErrors)
 	{
-		super(document, base, alternatives, reportParameters);
+		super(document, base, alternatives, reportParameters, standardSummaryErrors);
 	}
 
 	void appendTitles(Element retval, EpptChart epptChart, Function<ChartComponent, Element> valueFunction)
