@@ -11,3 +11,21 @@ gov.ca.water.calgui.bo.CalLiteGUIExceptionFatal: File missing : C:\Git\DWR\EPPT\
 Caused by: java.io.FileNotFoundException: File missing : C:\Git\DWR\EPPT\DWR-Enhanced-Post-Processing-Tool\eppt-ui\eppt-ui\target\test-classes\dwr_eppt\config\GUILinks.csv
 	at gov.ca.water.calgui.techservice.impl.FileSystemSvcImpl.getFileData(FileSystemSvcImpl.java:74)
 	... 5 more
+2019-10-14 14:28:21,503 [main] ERROR gov.ca.water.quickresults.ui.quickresults.QuickResultsPanel - Error setting up quick results swing xml: Data_Analysis.xml
+java.lang.Exception: Invalid SwiXML Descriptor.
+	at org.swixml.SwingEngine.render(Unknown Source)
+	at org.swixml.SwingEngine.render(Unknown Source)
+	at gov.ca.water.quickresults.ui.EpptPanel.renderSwixml(EpptPanel.java:93)
+	at gov.ca.water.quickresults.ui.dataanalysis.DataAnalysisPanel.<init>(DataAnalysisPanel.java:43)
+	at gov.ca.water.quickresults.ui.dataanalysis.DataAnalysisPanelScaffold.buildEpptPanel(DataAnalysisPanelScaffold.java:36)
+	at gov.ca.water.quickresults.ui.EpptScaffold.initScaffold(EpptScaffold.java:54)
+	at gov.ca.water.quickresults.ui.dataanalysis.DataAnalysisPanelScaffold.main(DataAnalysisPanelScaffold.java:30)
+2019-10-14 14:28:49,044 [main] ERROR gov.ca.water.quickresults.ui.quickresults.QuickResultsPanel - Error setting up quick results swing xml: Data_Analysis.xml
+java.lang.Exception: Invalid SwiXML Descriptor.
+	at org.swixml.SwingEngine.render(Unknown Source)
+	at org.swixml.SwingEngine.render(Unknown Source)
+	at gov.ca.water.quickresults.ui.EpptPanel.renderSwixml(EpptPanel.java:93)
+	at gov.ca.water.quickresults.ui.dataanalysis.DataAnalysisPanel.<init>(DataAnalysisPanel.java:43)
+	at gov.ca.water.quickresults.ui.dataanalysis.DataAnalysisPanelScaffold.buildEpptPanel(DataAnalysisPanelScaffold.java:36)
+	at gov.ca.water.quickresults.ui.EpptScaffold.initScaffold(EpptScaffold.java:54)
+	at gov.ca.water.quickresults.ui.dataanalysis.DataAnalysisPanelScaffold.main(DataAnalysisPanelScaffold.java:30)
