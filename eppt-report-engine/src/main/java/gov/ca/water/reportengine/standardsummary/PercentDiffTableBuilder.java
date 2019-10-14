@@ -13,7 +13,6 @@
 package gov.ca.water.reportengine.standardsummary;
 
 import java.awt.Color;
-import java.time.Month;
 import java.util.ArrayList;
 import java.util.DoubleSummaryStatistics;
 import java.util.HashMap;
@@ -45,9 +44,10 @@ class PercentDiffTableBuilder extends BaseAltDiffTableBuilder
 	private final Map<Element, Double> _valueElements = new HashMap<>();
 
 	PercentDiffTableBuilder(Document document, EpptScenarioRun base, List<EpptScenarioRun> alternatives,
-							SummaryReportParameters reportParameters)
+							SummaryReportParameters reportParameters,
+							StandardSummaryErrors standardSummaryErrors)
 	{
-		super(document, base, alternatives, reportParameters);
+		super(document, base, alternatives, reportParameters, standardSummaryErrors);
 	}
 
 	@Override
@@ -115,20 +115,22 @@ class PercentDiffTableBuilder extends BaseAltDiffTableBuilder
 			Double altValue = createJythonValueGenerator(filter, alternative, v.getFunction()).generateValue();
 			if(baseValue == null)
 			{
-				LOGGER.log(Level.WARNING, "Unable to generate diff value for: " + v + " value is null for scenario: " + base.getName());
+				getStandardSummaryErrors().addError(LOGGER, Level.WARNING,
+						"Unable to generate diff value for: " + v + " value is null for scenario: " + base.getName());
 			}
 			else if(altValue == null)
 			{
-				LOGGER.log(Level.WARNING, "Unable to generate diff value for: " + v + " value is null for scenario: " + alternative.getName());
+				getStandardSummaryErrors().addError(LOGGER, Level.WARNING,
+						"Unable to generate diff value for: " + v + " value is null for scenario: " + alternative.getName());
 			}
 			else if(!RMAConst.isValidValue(baseValue))
 			{
-				LOGGER.log(Level.WARNING,
+				getStandardSummaryErrors().addError(LOGGER, Level.WARNING,
 						"Unable to generate diff value for: " + v + " value is invalid (" + baseValue + ") for scenario: " + base.getName());
 			}
 			else if(!RMAConst.isValidValue(altValue))
 			{
-				LOGGER.log(Level.WARNING,
+				getStandardSummaryErrors().addError(LOGGER, Level.WARNING,
 						"Unable to generate diff value for: " + v + " value is invalid (" + baseValue + ") for scenario: " + alternative.getName());
 			}
 			else
@@ -153,7 +155,7 @@ class PercentDiffTableBuilder extends BaseAltDiffTableBuilder
 		}
 		catch(EpptReportException e)
 		{
-			LOGGER.log(Level.SEVERE, "Error executing jython script: " + e, e);
+			getStandardSummaryErrors().addError(LOGGER, Level.SEVERE, "Error executing jython script: " + e, e);
 		}
 		return retval;
 	}

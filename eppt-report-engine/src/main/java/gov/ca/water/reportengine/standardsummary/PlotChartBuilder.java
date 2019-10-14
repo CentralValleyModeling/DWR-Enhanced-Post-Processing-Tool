@@ -39,9 +39,10 @@ abstract class PlotChartBuilder extends StandardSummaryChartBuilder
 
 	PlotChartBuilder(Document document, EpptScenarioRun base,
 					 List<EpptScenarioRun> alternatives,
-					 SummaryReportParameters reportParameters)
+					 SummaryReportParameters reportParameters,
+					 StandardSummaryErrors standardSummaryErrors)
 	{
-		super(document, base, alternatives, reportParameters);
+		super(document, base, alternatives, reportParameters, standardSummaryErrors);
 	}
 
 	void buildChart(Path imagePath, Element retval, EpptChart epptChart) throws EpptReportException

@@ -20,6 +20,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.logging.Level;
 import java.util.regex.Pattern;
 import java.util.stream.Stream;
 
@@ -57,10 +58,12 @@ public class StandardSummaryReader
 	private static final int COMPONENT_INDEX = 8;
 	private static final int FUNCTION_INDEX = 9;
 	private final Path _csvPath;
+	private final StandardSummaryErrors _standardSummaryErrors;
 
-	public StandardSummaryReader(Path csvPath)
+	public StandardSummaryReader(Path csvPath, StandardSummaryErrors standardSummaryErrors)
 	{
 		_csvPath = csvPath;
+		_standardSummaryErrors = standardSummaryErrors;
 	}
 
 	public List<String> getOrderedChartIds() throws EpptReportException
@@ -86,7 +89,7 @@ public class StandardSummaryReader
 					.collect(groupingBy(line -> line[CHART_ID_INDEX], mapping(line -> line,
 							collectingAndThen(toList(), this::linesToChart))));
 		}
-		catch(Throwable ex)
+		catch(IOException | RuntimeException ex)
 		{
 			throw new EpptReportException("Error processing Standard Summary Statistics configuration file: " + _csvPath, ex);
 		}
@@ -155,7 +158,7 @@ public class StandardSummaryReader
 		}
 		catch(ScriptException | RuntimeException e)
 		{
-			LOGGER.atSevere().withCause(e).log("Error running title script: " + script);
+			_standardSummaryErrors.addError(LOGGER, Level.SEVERE, "Error running title script: " + script, e);
 		}
 		return retval;
 	}

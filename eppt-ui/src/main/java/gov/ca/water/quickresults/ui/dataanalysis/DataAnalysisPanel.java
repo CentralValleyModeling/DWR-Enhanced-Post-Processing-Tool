@@ -66,14 +66,14 @@ public class DataAnalysisPanel extends EpptPanel
 		return (JTextField) getSwingEngine().find("tfTemplateFILE");
 	}
 
-	JTextField getDssResultFileField1()
+	Path getDssResultPathBase()
 	{
-		return (JTextField) getSwingEngine().find("tfReportFILE1");
+		return Paths.get(((JTextField) getSwingEngine().find("tfReportFILE1")).getToolTipText());
 	}
 
-	JTextField getDssResultFileField2()
+	Path getDssResultPathAlt()
 	{
-		return (JTextField) getSwingEngine().find("tfReportFILE2");
+		return Paths.get(((JTextField) getSwingEngine().find("tfReportFILE2")).getToolTipText());
 	}
 
 	JTextField getOutputTextField()

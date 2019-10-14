@@ -17,7 +17,6 @@ import java.util.function.Function;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import gov.ca.water.calgui.bo.WaterYearPeriod;
 import gov.ca.water.calgui.project.EpptScenarioRun;
 import gov.ca.water.reportengine.EpptReportException;
 import org.w3c.dom.Document;
@@ -36,9 +35,9 @@ class ListBuilder extends TableBuilder
 	private static final Logger LOGGER = Logger.getLogger(ListBuilder.class.getName());
 
 	ListBuilder(Document document, EpptScenarioRun base, List<EpptScenarioRun> alternatives,
-				SummaryReportParameters reportParameters)
+				SummaryReportParameters reportParameters, StandardSummaryErrors standardSummaryErrors)
 	{
-		super(document, base, alternatives, reportParameters);
+		super(document, base, alternatives, reportParameters, standardSummaryErrors);
 	}
 
 
@@ -82,7 +81,8 @@ class ListBuilder extends TableBuilder
 
 			if(value == null)
 			{
-				LOGGER.log(Level.WARNING, "Unable to generate scenario value for: " + v + " value is null for scenario: " + scenarioRun.getName());
+				getStandardSummaryErrors().addError(LOGGER, Level.WARNING,
+						"Unable to generate scenario value for: " + v + " value is null for scenario: " + scenarioRun.getName());
 			}
 			else if(value instanceof List)
 			{
@@ -102,7 +102,7 @@ class ListBuilder extends TableBuilder
 		}
 		catch(EpptReportException e)
 		{
-			LOGGER.log(Level.SEVERE, "Error running jython script", e);
+			getStandardSummaryErrors().addError(LOGGER, Level.SEVERE, "Error running jython script", e);
 		}
 		return retval;
 	}

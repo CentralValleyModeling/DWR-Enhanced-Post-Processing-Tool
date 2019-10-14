@@ -58,6 +58,7 @@ import gov.ca.water.reportengine.filechanges.FileChangesStatistics;
 import gov.ca.water.reportengine.reportheader.ReportHeader;
 import gov.ca.water.reportengine.reportheader.ReportHeaderXMLCreator;
 import gov.ca.water.reportengine.standardsummary.EpptChart;
+import gov.ca.water.reportengine.standardsummary.StandardSummaryErrors;
 import gov.ca.water.reportengine.standardsummary.StandardSummaryReader;
 import gov.ca.water.reportengine.standardsummary.StandardSummaryWriter;
 import gov.ca.water.reportengine.standardsummary.SummaryReportParameters;
@@ -93,6 +94,7 @@ public class EPPTReport
 	private static final String MODULES_CSV = QA_QC_DIR + "/Modules" + CSV_EXT;
 	public static final String SUMMARY_CSV = QA_QC_DIR + "/Summary" + CSV_EXT;
 
+	private final StandardSummaryErrors _standardSummaryErrors;
 	private final Path _pathToWriteOut;
 	private final EpptScenarioRun _baseRun;
 	private final ReportParameters _reportParameters;
@@ -103,11 +105,12 @@ public class EPPTReport
 	private List<DetailedIssue> _allDetailedIssues;
 
 	public EPPTReport(Path pathToWriteOut, EpptScenarioRun baseRun, List<EpptScenarioRun> altRuns,
-					  ReportParameters reportParameters)
+					  ReportParameters reportParameters, StandardSummaryErrors standardSummaryErrors)
 	{
 		_pathToWriteOut = pathToWriteOut;
 		_baseRun = baseRun;
 		_reportParameters = reportParameters;
+		_standardSummaryErrors = standardSummaryErrors;
 		_altRuns.addAll(altRuns);
 		DssCache.getInstance().clearCache();
 	}
@@ -268,11 +271,12 @@ public class EPPTReport
 	{
 		if(canPrintStandardSummary())
 		{
-			StandardSummaryReader standardSummaryReader = new StandardSummaryReader(Paths.get(SUMMARY_CSV));
+			StandardSummaryReader standardSummaryReader = new StandardSummaryReader(Paths.get(SUMMARY_CSV), _standardSummaryErrors);
 			Path imagesDir = _pathToWriteOut.getParent().getParent().resolve("Images");
 			SummaryReportParameters summaryReportParameters = _reportParameters.getSummaryReportParameters();
 			LOGGER.at(Level.INFO).log("Generate Standard Summary Statistic");
-			StandardSummaryWriter standardSummaryWriter = new StandardSummaryWriter(doc, _baseRun, _altRuns, summaryReportParameters, imagesDir);
+			StandardSummaryWriter standardSummaryWriter = new StandardSummaryWriter(doc, _baseRun, _altRuns, summaryReportParameters, imagesDir,
+					_standardSummaryErrors);
 			List<String> orderedChartIds = standardSummaryReader.getOrderedChartIds();
 			Map<String, EpptChart> stringEpptChartMap = standardSummaryReader.readLines();
 			checkInterrupt();
@@ -442,7 +446,7 @@ public class EPPTReport
 		}
 		if(run.getDssContainer().getDvDssFile().getFPart() == null || run.getDssContainer().getDvDssFile().getFPart().isEmpty())
 		{
-			String errorMsg = "Scenario " + run.getName() + " is  missing the F Part for the DV dss file: "  + run.getDssContainer().getDvDssFile().getDssPath();
+			String errorMsg = "Scenario " + run.getName() + " is  missing the F Part for the DV dss file: " + run.getDssContainer().getDvDssFile().getDssPath();
 			LOGGER.at(Level.SEVERE).log(errorMsg);
 			throw new EpptReportException(errorMsg);
 		}

@@ -68,8 +68,6 @@ public class ProjectConfigurationListener implements ActionListener
 				break;
 			default:
 		}
-		ProjectConfigurationPanel projectConfigurationPanel = ProjectConfigurationPanel.getProjectConfigurationPanel();
-		projectConfigurationPanel.setModified(true);
 	}
 
 	private void launchFileDialogToAddScenario(ActionEvent e)
@@ -114,6 +112,7 @@ public class ProjectConfigurationListener implements ActionListener
 	{
 		JPanel controls2 = _projectConfigurationPanel.getControls2();
 		EpptPanel.setCheckboxesSelectedRecusive(b, controls2);
+		_projectConfigurationPanel.setModified(true);
 	}
 
 }
