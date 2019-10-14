@@ -175,7 +175,7 @@ class ProjectConfigurationIOVersion2
 	{
 		if(isChild(originalPath, modelPath))
 		{
-			return Paths.get(RELATIVE_TO_MODEL).resolve(modelPath.resolve(originalPath)).toString();
+			return Paths.get(RELATIVE_TO_MODEL).resolve(modelPath.toAbsolutePath().relativize(originalPath)).toString();
 		}
 		return originalPath.toString();
 	}

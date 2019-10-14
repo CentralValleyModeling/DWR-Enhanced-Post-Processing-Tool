@@ -99,6 +99,7 @@ public class ProjectConfigurationListener implements ActionListener
 			if(newScenarioRun != null)
 			{
 				_projectConfigurationPanel.replaceScenario(oldScenarioRun, newScenarioRun);
+				_projectConfigurationPanel.updateRadioState();
 			}
 		}
 	}
