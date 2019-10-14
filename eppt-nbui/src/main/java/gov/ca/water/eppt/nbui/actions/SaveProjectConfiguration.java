@@ -157,9 +157,9 @@ public final class SaveProjectConfiguration extends AbstractAction implements Pr
 		{
 			saveCurrentConfiguration();
 		}
-		catch(IOException ex)
+		catch(IOException | RuntimeException ex)
 		{
-			LOGGER.log(Level.SEVERE, "Error saving current Project Configuration to:", ex);
+			LOGGER.log(Level.SEVERE, "Error saving current Project Configuration to:" + EpptPreferences.getLastProjectConfiguration(), ex);
 		}
 	}
 
