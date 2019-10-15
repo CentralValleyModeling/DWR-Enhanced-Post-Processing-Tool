@@ -13,7 +13,6 @@
 package gov.ca.water.plotly.qaqc;
 
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.time.Month;
 import java.time.format.TextStyle;
 import java.util.List;
@@ -164,5 +163,11 @@ public class PlotlyMonthly extends PlotlyChart
 			_month = month;
 			_data = data;
 		}
+	}
+
+	@Override
+	public String getPlotType()
+	{
+		return "Monthly Plot";
 	}
 }

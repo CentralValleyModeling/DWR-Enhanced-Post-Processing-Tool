@@ -13,7 +13,6 @@
 package gov.ca.water.plotly.qaqc;
 
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.Map;
 import java.util.NavigableMap;
 
@@ -151,5 +150,11 @@ public class PlotlyExceedance extends PlotlyChart
 		Color color = scenarioRun.getColor();
 		marker.put("color", Constant.colorToHex(color));
 		return marker;
+	}
+
+	@Override
+	public String getPlotType()
+	{
+		return "Exceedance Plot";
 	}
 }

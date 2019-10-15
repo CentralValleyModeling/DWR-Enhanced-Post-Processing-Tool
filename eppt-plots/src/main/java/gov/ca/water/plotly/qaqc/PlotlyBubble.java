@@ -22,6 +22,7 @@ import gov.ca.water.plotly.PlotlyChart;
 import javafx.scene.paint.Color;
 import org.json.JSONArray;
 import org.json.JSONObject;
+import sun.security.pkcs11.wrapper.CK_X9_42_DH1_DERIVE_PARAMS;
 
 /**
  * Company: Resource Management Associates
@@ -99,8 +100,16 @@ public class PlotlyBubble extends PlotlyChart
 				{
 					JSONObject annotation = new JSONObject(annotations.getJSONObject(0).toString());
 					BubbleData value = entry.getValue();
-					annotation.put("x", value._xData.get(value._xData.size() / 2));
-					annotation.put("y", value._yData.get(value._yData.size() / 2));
+					int annotationX = value._xData.size() / 2;
+					if(value._xData.size() > annotationX)
+					{
+						annotation.put("x", value._xData.get(annotationX));
+					}
+					int annotationY = value._yData.size() / 2;
+					if(value._yData.size() > annotationY)
+					{
+						annotation.put("y", value._yData.get(annotationY));
+					}
 					annotation.put("xref", "x" + (i + 1));
 					annotation.put("text", "Year");
 					annotations.put(annotation);
@@ -172,5 +181,11 @@ public class PlotlyBubble extends PlotlyChart
 			_yData = yData;
 			_markers = markers;
 		}
+	}
+
+	@Override
+	public String getPlotType()
+	{
+		return "Scatter Plot";
 	}
 }
