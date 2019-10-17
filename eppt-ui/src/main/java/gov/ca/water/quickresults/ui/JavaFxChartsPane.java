@@ -198,10 +198,9 @@ public class JavaFxChartsPane extends BorderPane
 					fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
 					fileChooser.setDialogType(JFileChooser.OPEN_DIALOG);
 					fileChooser.setSelectedFile(EpptPreferences.getLastProjectConfiguration().getParent().resolve("Export." + format).toFile());
-					fileChooser.showOpenDialog(Frame.getFrames()[0]);
-					File selectedFile = fileChooser.getSelectedFile();
-					if(selectedFile != null)
+					if(JFileChooser.APPROVE_OPTION == fileChooser.showSaveDialog(Frame.getFrames()[0]))
 					{
+						File selectedFile = fileChooser.getSelectedFile();
 						Path outputPath = selectedFile.toPath();
 						String jsonFilename = outputPath.getFileName().toString().replace(format, "json");
 						Path jsonPath = outputPath.getParent().resolve(jsonFilename);
