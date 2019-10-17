@@ -29,3 +29,23 @@ java.lang.Exception: Invalid SwiXML Descriptor.
 	at gov.ca.water.quickresults.ui.dataanalysis.DataAnalysisPanelScaffold.buildEpptPanel(DataAnalysisPanelScaffold.java:36)
 	at gov.ca.water.quickresults.ui.EpptScaffold.initScaffold(EpptScaffold.java:54)
 	at gov.ca.water.quickresults.ui.dataanalysis.DataAnalysisPanelScaffold.main(DataAnalysisPanelScaffold.java:30)
+2019-10-17 09:52:24,738 [main] ERROR gov.ca.water.quickresults.ui.projectconfig.ProjectConfigurationPanel - Error setting up quick results swing xml: Project_Configuration.xml
+java.lang.Exception: Invalid SwiXML Descriptor.
+	at org.swixml.SwingEngine.render(Unknown Source)
+	at org.swixml.SwingEngine.render(Unknown Source)
+	at gov.ca.water.quickresults.ui.EpptPanel.renderSwixml(EpptPanel.java:93)
+	at gov.ca.water.quickresults.ui.projectconfig.ProjectConfigurationPanel.<init>(ProjectConfigurationPanel.java:73)
+	at gov.ca.water.quickresults.ui.projectconfig.ProjectConfigurationPanel.<clinit>(ProjectConfigurationPanel.java:62)
+	at gov.ca.water.quickresults.ui.projectconfig.ProjectConfigurationScaffold.buildEpptPanel(ProjectConfigurationScaffold.java:36)
+	at gov.ca.water.quickresults.ui.EpptScaffold.initScaffold(EpptScaffold.java:54)
+	at gov.ca.water.quickresults.ui.projectconfig.ProjectConfigurationScaffold.main(ProjectConfigurationScaffold.java:30)
+2019-10-17 09:58:33,639 [main] ERROR gov.ca.water.quickresults.ui.projectconfig.ProjectConfigurationPanel - Error setting up quick results swing xml: Project_Configuration.xml
+java.lang.Exception: Invalid SwiXML Descriptor.
+	at org.swixml.SwingEngine.render(Unknown Source)
+	at org.swixml.SwingEngine.render(Unknown Source)
+	at gov.ca.water.quickresults.ui.EpptPanel.renderSwixml(EpptPanel.java:93)
+	at gov.ca.water.quickresults.ui.projectconfig.ProjectConfigurationPanel.<init>(ProjectConfigurationPanel.java:73)
+	at gov.ca.water.quickresults.ui.projectconfig.ProjectConfigurationPanel.<clinit>(ProjectConfigurationPanel.java:62)
+	at gov.ca.water.quickresults.ui.projectconfig.ProjectConfigurationScaffold.buildEpptPanel(ProjectConfigurationScaffold.java:36)
+	at gov.ca.water.quickresults.ui.EpptScaffold.initScaffold(EpptScaffold.java:54)
+	at gov.ca.water.quickresults.ui.projectconfig.ProjectConfigurationScaffold.main(ProjectConfigurationScaffold.java:30)
