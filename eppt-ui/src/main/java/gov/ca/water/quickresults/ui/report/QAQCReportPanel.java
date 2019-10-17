@@ -134,6 +134,7 @@ public class QAQCReportPanel extends RmaJPanel
 	private RmaJDateTimeField _startDateChooser;
 	private RmaJDateTimeField _endDateChooser;
 	private JButton _overwriteJRXMLButton;
+	private JButton _openReportButton;
 	private EpptScenarioRun _baseRun;
 	private EpptScenarioRun _altRun;
 	private final Map<JCheckBox, String> _reportModules = new HashMap<>();
@@ -162,6 +163,7 @@ public class QAQCReportPanel extends RmaJPanel
 		Path currentProject = EpptPreferences.getLastProjectConfiguration().getParent();
 		Path reportPath = currentProject.resolve("Reports").resolve(projectConfigurationPanel.getProjectName() + ".pdf");
 		_pdfOutput.setText(reportPath.toString());
+		_openReportButton.setEnabled(reportPath.toFile().exists());
 		_tabbedPane1.setTitleAt(0, reportPath.getFileName().toString() + " QA/QC");
 		WaterYearDefinitionSvc.getWaterYearDefinitionSvc().getDefinitions()
 							  .forEach(_waterYearDefinitionCombo::addItem);
@@ -191,6 +193,7 @@ public class QAQCReportPanel extends RmaJPanel
 			_summaryModules.forEach(c -> c.setEnabled(_standardSummaryStatiticsCheckBox.isSelected()));
 		});
 		_overwriteJRXMLButton.addActionListener((e) -> checkForceCopyJrXml());
+		_openReportButton.addActionListener(this::openPdf);
 	}
 
 	private void tabChanged(ChangeEvent e)
@@ -390,6 +393,7 @@ public class QAQCReportPanel extends RmaJPanel
 				filePath += ".pdf";
 			}
 			_pdfOutput.setText(filePath);
+			_openReportButton.setEnabled(Paths.get(filePath).toFile().exists());
 			_tabbedPane1.setTitleAt(0, Paths.get(filePath).getFileName().toString() + " QA/QC");
 		}
 	}
@@ -441,12 +445,12 @@ public class QAQCReportPanel extends RmaJPanel
 
 	private void generateQAQCReport()
 	{
+		Path pathToWriteOut = Paths.get(_pdfOutput.getText());
 		try
 		{
 			_tabbedPane1.setSelectedIndex(0);
 			_qaqcTextPane.setText("");
 			startProcessAsync(_generateReportButton);
-			Path pathToWriteOut = Paths.get(_pdfOutput.getText());
 			QAQCReportGenerator qaqcReportGenerator = new QAQCReportGenerator(new QaQcProcessConsumer());
 			double tolerance = Double.parseDouble(_toleranceTextField.getText());
 			String author = _authorTextField.getText();
@@ -492,6 +496,7 @@ public class QAQCReportPanel extends RmaJPanel
 				{
 					_cancelButton.setEnabled(false);
 				}
+				_openReportButton.setEnabled(pathToWriteOut.toFile().exists());
 			});
 			stopProcessAsync(_generateReportButton);
 		}
@@ -583,7 +588,7 @@ public class QAQCReportPanel extends RmaJPanel
 		panel3.setLayout(new FlowLayout(FlowLayout.LEFT, 5, 5));
 		panel2.add(panel3, BorderLayout.WEST);
 		_overwriteJRXMLButton = new JButton();
-		_overwriteJRXMLButton.setText("Overwrite JRXML");
+		_overwriteJRXMLButton.setText("Update Report Templates");
 		panel3.add(_overwriteJRXMLButton);
 		final JPanel panel4 = new JPanel();
 		panel4.setLayout(new FlowLayout(FlowLayout.RIGHT, 5, 5));
@@ -1008,6 +1013,7 @@ public class QAQCReportPanel extends RmaJPanel
 		Path reportPath = currentProject.resolve("Reports").resolve(
 				ProjectConfigurationPanel.getProjectConfigurationPanel().getProjectName() + ".pdf");
 		_pdfOutput.setText(reportPath.toString());
+		_openReportButton.setEnabled(reportPath.toFile().exists());
 		_tabbedPane1.setTitleAt(0, reportPath.getFileName().toString() + " QA/QC");
 		_tabbedPane1.setSelectedIndex(0);
 		updateCompareState();
@@ -1146,6 +1152,22 @@ public class QAQCReportPanel extends RmaJPanel
 		catch(BadLocationException e)
 		{
 			LOGGER.log(Level.SEVERE, "Error appending text", e);
+		}
+	}
+
+	private void openPdf(ActionEvent e)
+	{
+		Path path = Paths.get(_pdfOutput.getText());
+		if(path.toFile().exists())
+		{
+			try
+			{
+				Desktop.getDesktop().open(path.toFile());
+			}
+			catch(IOException ex)
+			{
+				LOGGER.log(Level.SEVERE, "Unable to open file: " + path, ex);
+			}
 		}
 	}
 

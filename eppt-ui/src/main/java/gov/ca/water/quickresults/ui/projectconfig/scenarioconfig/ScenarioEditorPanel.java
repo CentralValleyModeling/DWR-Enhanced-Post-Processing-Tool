@@ -460,14 +460,10 @@ public class ScenarioEditorPanel
 		String name = _nameField.getText();
 		String description = _descriptionField.getText();
 		GUILinksAllModelsBO.Model model = (GUILinksAllModelsBO.Model) _modelCombobox.getSelectedItem();
-		Path outputPath = Paths.get(_outputTextField.getText());
-		if(!outputPath.isAbsolute())
-		{
-			outputPath = EpptPreferences.getLastProjectConfiguration().getParent().resolve(outputPath);
-		}
-		Path wreslMain = Paths.get(_wreslTextField.getText());
+		Path outputPath = relativizeToProject(_outputTextField.getText());
+		Path wreslMain = relativizeToInstaller(_wreslTextField.getText());
 		EpptDssContainer dssContainer = _scenarioDssTableModel.createDssContainer(name, outputPath);
-		Path waterYearTablePath = Paths.get(_waterYearTable.getText());
+		Path waterYearTablePath = relativizeToInstaller(_waterYearTable.getText());
 		Color web;
 		String text = _colorHexTextField.getText();
 		try
@@ -481,6 +477,27 @@ public class ScenarioEditorPanel
 		}
 		return new EpptScenarioRun(name, description, model, outputPath, wreslMain, waterYearTablePath,
 				dssContainer, web);
+	}
+
+	private Path relativizeToProject(String text)
+	{
+		Path retval = Paths.get(text);
+		if(!retval.isAbsolute())
+		{
+			retval = EpptPreferences.getLastProjectConfiguration().getParent().resolve(retval);
+		}
+		return retval;
+	}
+
+	private Path relativizeToInstaller(String text)
+	{
+		Path retval = Paths.get(text);
+		if(!retval.isAbsolute())
+		{
+			retval = Paths.get("").toAbsolutePath().resolve(retval);
+		}
+		return retval;
+
 	}
 
 	void fillPanel(EpptScenarioRun scenarioRun)
@@ -503,16 +520,9 @@ public class ScenarioEditorPanel
 		_waterYearTable.setText(scenarioRun.getWaterYearTable().toString());
 		String hex = Constant.colorToHex(scenarioRun.getColor());
 		_colorHexTextField.setText(hex);
-		//		try
-		//		{
-		//			_colorChooserButton.setColor(java.awt.Color.decode(hex));
-		//		}
-		//		catch(NumberFormatException ex)
-		//		{
 		java.awt.Color decode = java.awt.Color.decode(hex.substring(0, 7));
 		decode = new java.awt.Color(decode.getRed(), decode.getGreen(), decode.getBlue(), Integer.parseInt(hex.substring(7, 9), 16));
 		_colorChooserButton.setColor(decode);
-		//		}
 	}
 
 	void shutdown()

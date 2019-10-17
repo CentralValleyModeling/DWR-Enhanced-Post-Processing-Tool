@@ -64,7 +64,7 @@ abstract class PlotChartBuilder extends StandardSummaryChartBuilder
 		}
 		catch(PlotlyPrintException e)
 		{
-			throw new EpptReportException("Unable to generate Exceedance Plot: " + imagePath, e);
+			throw new EpptReportException("Unable to generate " + plotlyExceedance.getPlotType() + ": " + imagePath, e);
 		}
 	}
 

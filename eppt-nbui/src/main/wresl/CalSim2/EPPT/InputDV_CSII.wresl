@@ -23,7 +23,7 @@ define none_zero_threshold {
 	from UserInit
 	where index=2.2}
 
-define percetage_threshold {
+define percentage_threshold {
 	select IValue
 	from UserInit
 	where index=2.3}	
@@ -152,7 +152,7 @@ define MAXEXP_RPA_CVPDV {timeseries 'MAXEXP_RPA_CVPDV' kind 'EXPORT-LIMIT' units
 !define CVP_EXP_DEC_ {timeseries 'CVP_EXP_DEC_' kind 'TEMP' units 'CFS'}
 define JONESALLOWOUT {timeseries 'JONESALLOWOUT' kind 'EXPORT-CTRL-JONES' units 'CFS'}
 define D418UP {timeseries 'D418UP' kind 'FLOW-DELIVERY' units 'CFS'}
-
+!define do_req_flow_out {timeseries 'do_req_flow_out' kind 'flow-req-ndoi' units 'cfs'}
 
 
 /****************************** INPUTS FOR **********************************/
@@ -248,12 +248,13 @@ define RS_B_3 {timeseries 'RS_B_3' kind 'INTERCEPT' units 'NONE'}
 define D418_EXP1 {timeseries 'D418_EXP1' kind 'FLOW-DELIVERY' units 'CFS'}
 define D418_EXP2 {timeseries 'D418_EXP2' kind 'FLOW-DELIVERY' units 'CFS'}
 define D418_CVP {timeseries 'D418_CVP' kind 'FLOW-DELIVERY' units 'CFS'}
+define D418_WTS {timeseries 'D418_WTS' kind 'FLOW-DELIVERY' units 'CFS'}
 !define D418_SWP {timeseries 'D418_SWP' kind 'FLOW-DELIVERY' units 'CFS'}
 define D419_EXP1 {timeseries 'D419_EXP1' kind 'FLOW-DELIVERY' units 'CFS'}
 define D419_EXP2 {timeseries 'D419_EXP2' kind 'FLOW-DELIVERY' units 'CFS'}
-define D419_CVP {timeseries 'D419_CVP' kind 'FLOW-DELIVERY' units 'CFS'}
-define D419_SWP {timeseries 'D419_SWP' kind 'FLOW-DELIVERY' units 'CFS'}
-define D419_WTS {timeseries 'D419_WTS' kind 'FLOW-DELIVERY' units 'CFS'}
+define D419_CVP {timeseries 'D419_CVP' kind 'FLOW-DELIVERY' units 'CFS' convert 'taf'}
+define D419_SWP {timeseries 'D419_SWP' kind 'FLOW-DELIVERY' units 'CFS' convert 'taf'}
+define D419_WTS {timeseries 'D419_WTS' kind 'FLOW-DELIVERY' units 'CFS' convert 'taf'}
 
 /****************************** INPUTS FOR **********************************/
 /****************************** Reservoirs **********************************/
@@ -511,7 +512,7 @@ define R156 {timeseries kind 'FLOW-RETURN' units 'CFS'}
 define R135C_DCMP {timeseries kind 'RETURN-FLOW' units 'CFS'}
 
 
-
+!define R223 {timeseries kind 'FLOW-RETURN' units 'CFS'}
 define R135A {timeseries kind 'FLOW-RETURN' units 'CFS'}
 define R137 {timeseries kind 'FLOW-RETURN' units 'CFS'}
 define R135B {timeseries kind 'FLOW-RETURN' units 'CFS'}
@@ -574,5 +575,94 @@ define D412 {timeseries kind 'FLOW-DELIVERY' units 'CFS'}
 ! 1. Clair Lake (Trinity)
 define C100_EXC {timeseries 'C100_EXC' kind 'FLOW-EXCESS-INSTREAM' units 'CFS'} !Trinity River below Lewiston EXCESS-INSTREAM
 define D100_EXC {timeseries 'D100_EXC' kind 'FLOW-DELIVERY' units 'CFS'} !Clear Creek Tunnel EXCESS-INSTREAM
+
+/****************************** New components *******************************/
+define swp_ta_total {timeseries 'swp_ta_total' kind 'swp_delivery' units 'cfs' convert 'taf'}
+define swp_ta_feath {timeseries 'swp_ta_feath' kind 'swp_delivery' units 'cfs' convert 'taf'}
+define swp_in_total {timeseries 'swp_in_total' kind 'swp_delivery' units 'cfs' convert 'taf'}
+define swp_co_total {timeseries 'swp_co_total' kind 'swp_delivery' units 'cfs' convert 'taf'}
+define cvptotaldel {timeseries 'cvptotaldel' kind 'flow-delivery' units 'cfs' convert 'taf'}
+!define I406 {timeseries 'I406' kind 'flow-inflow' units 'cfs'}
+define C514 {timeseries 'C514' kind 'flow-channel' units 'cfs'}
+define C417A {timeseries 'C417A' kind 'flow-channel' units 'cfs'}
+define net_dicu {timeseries 'net_dicu' kind 'dicu_flow' units 'cfs'}
+!define D406B {timeseries 'D406B' kind 'flow-delivery' units 'cfs'}
+define I860 {timeseries 'I860' kind 'flow-inflow' units 'taf'}
+define d607a {timeseries 'd607a' kind 'flow-delivery' units 'cfs' convert 'taf'}
+define d607b {timeseries 'd607b' kind 'flow-delivery' units 'cfs' convert 'taf'}
+define d607c {timeseries 'd607c' kind 'flow-delivery' units 'cfs' convert 'taf'}
+define d607d {timeseries 'd607d' kind 'flow-delivery' units 'cfs' convert 'taf'}
+define d608b {timeseries 'd608b' kind 'flow-delivery' units 'cfs' convert 'taf'}
+define d608c {timeseries 'd608c' kind 'flow-delivery' units 'cfs' convert 'taf'}
+define c708 {timeseries 'c708' kind 'flow-channel' units 'cfs' convert 'taf'}
+define swp_loss {timeseries 'swp_loss' kind 'swp_delivery' units 'cfs' convert 'taf'}
+define d855 {timeseries 'd855' kind 'flow-delivery' units 'cfs' convert 'taf'}
+define e11 {timeseries 'e11' kind 'evaporation' units 'cfs' convert 'taf' }
+define e12 {timeseries 'e12' kind 'evaporation' units 'cfs' convert 'taf'}
+define e15 {timeseries 'e15' kind 'evaporation' units 'cfs' convert 'taf'}
+define e25 {timeseries 'e25' kind 'evaporation' units 'cfs' convert 'taf'}
+define e27 {timeseries 'e27' kind 'evaporation' units 'cfs' convert 'taf'}
+define e28 {timeseries 'e28' kind 'evaporation' units 'cfs' convert 'taf'}
+define e29 {timeseries 'e29' kind 'evaporation' units 'cfs' convert 'taf'}
+define s15 {timeseries 's15' kind 'storage' units 'taf'}
+define s25 {timeseries 's25' kind 'storage' units 'taf'}
+define s27 {timeseries 's27' kind 'storage' units 'taf'}
+define s28 {timeseries 's28' kind 'storage' units 'taf'}
+define s29 {timeseries 's29' kind 'storage' units 'taf'}
+define d7c {timeseries 'd7c' kind 'flow-delivery' units 'cfs'}
+!define sod_exp {value d418+d419}
+define sod_exp_maxcap {value banksallowout+jonesallowout}
+define fws_x2_limit {timeseries 'FWS_MaxExpX2dv' kind 'export-limit' units 'cfs'}
+define nmfs_dcc_limit {timeseries 'NMFS_MaxExpDCCdv' kind 'export-limit' units 'cfs'}
+define c400_exc {timeseries 'c400_exc' kind 'flow-excess-instream' units 'cfs'}
+define c157_exc {timeseries 'c157_exc' kind 'flow-excess-instream' units 'cfs'}
+define x2_prv {timeseries 'x2_prv' kind 'x2-position-prev' units 'km'}
+define OMR_RPA14d {timeseries 'OMR_RPA14d' kind 'flow-reg' units 'cfs'}
+define rs_ec_month {timeseries 'rs_ec_month' kind 'salinity' units 'umhos/cm'}
+define em_ec_month {timeseries 'em_ec_month' kind 'salinity' units 'umhos/cm'}
+define jp_ec_month {timeseries 'jp_ec_month' kind 'salinity' units 'umhos/cm'}
+define co_ec_month {timeseries 'co_ec_month' kind 'salinity' units 'umhos/cm'}
+define rs_ec_std {timeseries 'rs_ec_std' kind 'salinity' units 'umhos/cm'}
+define em_ec_std {timeseries 'em_ec_std' kind 'salinity' units 'umhos/cm'}
+define jp_ec_std {timeseries 'jp_ec_std' kind 'salinity' units 'umhos/cm'}
+define co_ec_std {timeseries 'co_ec_std' kind 'salinity' units 'umhos/cm'}
+define unused_fs {timeseries 'unused_fs' kind 'unused-fs' units 'cfs'}
+define unused_ss {timeseries 'unused_ss' kind 'unused-ss' units 'cfs'}
+!define d230_lrya {timeseries 'd230_lyra' kind 'flow-transferable' units 'cfs'}
+define perdv_cvpag_sys {timeseries 'perdv_cvpag_sys' kind 'percent-delivery' units 'none'}
+define perdv_cvpmi_sys {timeseries 'perdv_cvpmi_sys' kind 'percent-delivery' units 'none'}
+define perdv_cvprf_sys {timeseries 'perdv_cvprf_sys' kind 'percent-delivery' units 'none'}
+define perdv_cvpsc_sys {timeseries 'perdv_cvpsc_sys' kind 'percent-delivery' units 'none'}
+define perdv_cvpag_s {timeseries 'perdv_cvpag_s' kind 'percent-delivery' units 'none'}
+define perdv_cvpmi_s {timeseries 'perdv_cvpmi_s' kind 'percent-delivery' units 'none'}
+define perdv_cvprf_s {timeseries 'perdv_cvprf_s' kind 'percent-delivery' units 'none'}
+define perdv_cvpex_s {timeseries 'perdv_cvpex_s' kind 'percent-delivery' units 'none'}
+
+define del_cvp_pag_n {timeseries 'del_cvp_pag_n' kind 'delivery-cvp' units 'cfs'}
+define del_cvp_pmi_n {timeseries 'del_cvp_pmi_n' kind 'delivery-cvp' units 'cfs'}
+define del_cvp_prf_n {timeseries 'del_cvp_prf_n' kind 'delivery-cvp' units 'cfs'}
+define del_cvp_psc_n {timeseries 'del_cvp_psc_n' kind 'delivery-cvp' units 'cfs'}
+define del_cvp_pag_s {timeseries 'del_cvp_pag_s' kind 'delivery-cvp' units 'cfs'}
+define del_cvp_pmi_s {timeseries 'del_cvp_pmi_s' kind 'delivery-cvp' units 'cfs'}
+define del_cvp_prf_s {timeseries 'del_cvp_prf_s' kind 'delivery-cvp' units 'cfs'}
+define del_cvp_pex_s {timeseries 'del_cvp_pex_s' kind 'delivery-cvp' units 'cfs'}
+define del_cvp_pls_s {timeseries 'del_cvp_pls_s' kind 'delivery-cvp' units 'cfs' convert 'taf'}
+
+define swp_perdeldv_yuba {timeseries 'swp_perdeldv_yuba' kind 'swp-delivery' units 'none'}
+define swp_perdeldv_butt {timeseries 'swp_perdeldv_butt' kind 'swp-delivery' units 'none'}
+define swp_perdeldv_napa {timeseries 'swp_perdeldv_napa' kind 'swp-delivery' units 'none'}
+define swp_perdeldv_solano {timeseries 'swp_perdeldv_solano' kind 'swp-delivery' units 'none'}
+define swp_perdel_SOD_dv {timeseries 'swp_perdel_SOD_dv' kind 'swp-delivery' units 'none'}
+define swp_frsa {timeseries 'swp_frsa' kind 'swp_delivery' units 'cfs'}
+define perdv_swp_fsc {timeseries 'perdv_swp_fsc' kind 'percent-delivery' units 'none'}
+!define D7C {timeseries 'D7C' kind 'flow-delivery' units 'cfs'}
+define f11 {timeseries 'f11' kind 'flow-spill-non-recov' units 'cfs'}
+define f12 {timeseries 'f12' kind 'flow-spill-non-recov' units 'cfs'}
+define DEL_CVP_TOTAL_S {timeseries 'DEL_CVP_TOTAL_S' kind 'delivery-cvp' units 'cfs'}
+define DEL_CVP_TOTAL_N {timeseries 'DEL_CVP_TOTAL_N' kind 'delivery-cvp' units 'cfs'}
+define DEL_CVP_TOTAL {timeseries 'DEL_CVP_TOTAL' kind 'delivery-cvp' units 'cfs'}
+
+
+
 
 

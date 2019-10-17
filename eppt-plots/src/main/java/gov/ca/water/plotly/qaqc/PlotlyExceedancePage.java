@@ -17,7 +17,6 @@ import java.time.Month;
 import java.time.format.TextStyle;
 import java.util.Collection;
 import java.util.DoubleSummaryStatistics;
-import java.util.EnumMap;
 import java.util.Locale;
 import java.util.Map;
 import java.util.NavigableMap;
@@ -225,4 +224,9 @@ public class PlotlyExceedancePage extends PlotlyChart
 		}
 	}
 
+	@Override
+	public String getPlotType()
+	{
+		return "Exceedance Page Plot";
+	}
 }

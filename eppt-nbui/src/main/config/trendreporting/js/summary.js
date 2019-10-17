@@ -151,7 +151,8 @@ function buildChart(data, plotlyData) {
             title: {
                 text: data['units'],
             },
-            range: yrange
+            range: yrange,
+            gridcolor: '#CCCCCC'
         },
         legend: {
             orientation: 'h',
@@ -230,7 +231,7 @@ function buildPlotlyTable(data) {
             align: ['left', 'center'],
             height: 30,
             line: {color: "black", width: 1},
-            font: {family: PLOTLY_FONT['family'], color: colors, size:16}
+            font: {family: PLOTLY_FONT['family'], color: colors, size: 16}
         }
     }];
 
@@ -261,7 +262,7 @@ function plotlyCopyTableClipboard() {
     let values = data['cells']['values'];
     var rows = values[0].length;
     for (var j = 0; j < rows; j++) {
-        for(var k = 0; k < values.length; k++){
+        for (var k = 0; k < values.length; k++) {
             text += values[k][j] + '\t';
         }
         text += '\n';

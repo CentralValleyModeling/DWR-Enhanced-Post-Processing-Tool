@@ -17,6 +17,7 @@ import java.awt.Component;
 import java.awt.Container;
 import java.awt.Frame;
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 import java.nio.file.Path;
 import java.time.LocalDate;
 import java.time.temporal.TemporalAdjusters;
@@ -217,15 +218,8 @@ public final class ProjectConfigurationPanel extends EpptPanel
 	}
 
 
-	void clearAllScenarios()
+	void updateRadioState()
 	{
-		_scenarioTablePanel.clearScenarios();
-		setModified(true);
-	}
-
-	private void updateRadioState()
-	{
-		checkValidScenarioRuns();
 		_scenarioChangeListeners.forEach(this::postScenarioChanged);
 		EpptScenarioRun base = _scenarioTablePanel.getBaseScenarioRun();
 		List<EpptScenarioRun> alternatives = _scenarioTablePanel.getAlternativeScenarioRuns();
@@ -237,6 +231,12 @@ public final class ProjectConfigurationPanel extends EpptPanel
 			getRadioButtonComparison().setSelected(false);
 			getRadioButtonDiff().setSelected(false);
 		}
+	}
+
+	void clearAllScenarios()
+	{
+		_scenarioTablePanel.clearScenarios();
+		setModified(true);
 	}
 
 	private void postScenarioChanged(ScenarioChangeListener scenarioChangeListener)
@@ -272,10 +272,25 @@ public final class ProjectConfigurationPanel extends EpptPanel
 						JOptionPane.YES_NO_OPTION);
 				if(response == JOptionPane.YES_OPTION)
 				{
-					ScenarioRunEditor scenarioRunEditor = new ScenarioRunEditor(frame);
-					scenarioRunEditor.fillPanel(epptScenarioRun);
-					scenarioRunEditor.setVisible(true);
-					replaceScenario(epptScenarioRun, scenarioRunEditor.createRun());
+					try
+					{
+						SwingUtilities.invokeAndWait(()->
+						{
+							ScenarioRunEditor scenarioRunEditor = new ScenarioRunEditor(frame);
+							scenarioRunEditor.fillPanel(epptScenarioRun);
+							scenarioRunEditor.setVisible(true);
+							replaceScenario(epptScenarioRun, scenarioRunEditor.createRun());
+						});
+					}
+					catch(InterruptedException e)
+					{
+						LOGGER.info("Thread interrupted", e);
+						Thread.currentThread().interrupt();
+					}
+					catch(InvocationTargetException e)
+					{
+						LOGGER.error("Error updating Scenario run: " + epptScenarioRun, e);
+					}
 				}
 			}
 		}
@@ -376,10 +391,7 @@ public final class ProjectConfigurationPanel extends EpptPanel
 				{
 					scenarioRuns.get(1).setAltSelected(true);
 				}
-				for(EpptScenarioRun scenarioRun : scenarioRuns)
-				{
-					addScenario(scenarioRun);
-				}
+				addScenarios(scenarioRuns);
 
 				//Need to ensure this is called after scenarios are added to TreeTable model
 				Platform.runLater(() -> SwingUtilities.invokeLater(this::updateRadioState));
@@ -393,6 +405,20 @@ public final class ProjectConfigurationPanel extends EpptPanel
 				_ignoreModifiedEvents = false;
 			}
 		}
+	}
+
+	private void addScenarios(List<EpptScenarioRun> scenarioRuns)
+	{
+		scenarioRuns.forEach(_scenarioTablePanel::addScenarioRun);
+		Platform.runLater(() ->
+		{
+			checkValidScenarioRuns();
+			SwingUtilities.invokeLater(()->
+			{
+				updateRadioState();
+				setModified(true);
+			});
+		});
 	}
 
 	private void updateSelectedComponents(Map<String, Boolean> selectedComponents)
@@ -520,7 +546,6 @@ public final class ProjectConfigurationPanel extends EpptPanel
 	void replaceScenario(EpptScenarioRun oldScenarioRun, EpptScenarioRun newScenarioRun)
 	{
 		_scenarioTablePanel.updateScenario(oldScenarioRun, newScenarioRun);
-		updateRadioState();
 		if(!Objects.equals(oldScenarioRun, newScenarioRun))
 		{
 			setModified(true);

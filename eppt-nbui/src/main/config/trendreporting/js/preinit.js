@@ -45,6 +45,12 @@ function openContextMenu(id, e, copyToClipboard, plotlyExportToFormat) {
                                 callback: function (key, options) {
                                     plotlyExportToFormat('jpeg');
                                 }
+                            },
+                            "PDF": {
+                                name: "To PDF",
+                                callback: function (key, options) {
+                                    plotlyExportToFormat('pdf');
+                                }
                             }
                         }
                     },

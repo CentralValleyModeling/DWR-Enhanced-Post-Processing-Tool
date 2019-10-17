@@ -70,6 +70,8 @@ public class JavaFxChartsPane extends BorderPane
 		_webView.getEngine().getLoadWorker().exceptionProperty().addListener(this::handleException);
 		_webView.getEngine().getLoadWorker().stateProperty().addListener(this::callbackScript);
 		_webView.setMinHeight(600);
+		setPrefWidth(1200);
+		_webView.setMinWidth(1000);
 		setCenter(_webView);
 		load(path);
 	}
@@ -196,18 +198,17 @@ public class JavaFxChartsPane extends BorderPane
 					fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
 					fileChooser.setDialogType(JFileChooser.OPEN_DIALOG);
 					fileChooser.setSelectedFile(EpptPreferences.getLastProjectConfiguration().getParent().resolve("Export." + format).toFile());
-					fileChooser.showOpenDialog(Frame.getFrames()[0]);
-					File selectedFile = fileChooser.getSelectedFile();
-					if(selectedFile != null)
+					if(JFileChooser.APPROVE_OPTION == fileChooser.showSaveDialog(Frame.getFrames()[0]))
 					{
+						File selectedFile = fileChooser.getSelectedFile();
 						Path outputPath = selectedFile.toPath();
 						String jsonFilename = outputPath.getFileName().toString().replace(format, "json");
 						Path jsonPath = outputPath.getParent().resolve(jsonFilename);
-						if(!jsonPath.getFileName().endsWith("json"))
+						if(!jsonPath.getFileName().toString().endsWith(".json"))
 						{
 							jsonPath = Paths.get(jsonPath.toString() + ".json");
 						}
-						if(!outputPath.getFileName().endsWith(format))
+						if(!outputPath.getFileName().toString().endsWith("." + format))
 						{
 							outputPath = Paths.get(outputPath.toString() + "." + format);
 						}
