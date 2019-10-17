@@ -29,7 +29,7 @@
                   <component id="cfdad" class="javax.swing.JButton" binding="_overwriteJRXMLButton" default-binding="true">
                     <constraints/>
                     <properties>
-                      <text value="Overwrite JRXML"/>
+                      <text value="Update Report Templates"/>
                     </properties>
                   </component>
                 </children>

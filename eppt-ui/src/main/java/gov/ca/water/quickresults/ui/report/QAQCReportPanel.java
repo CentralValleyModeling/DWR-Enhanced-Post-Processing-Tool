@@ -583,7 +583,7 @@ public class QAQCReportPanel extends RmaJPanel
 		panel3.setLayout(new FlowLayout(FlowLayout.LEFT, 5, 5));
 		panel2.add(panel3, BorderLayout.WEST);
 		_overwriteJRXMLButton = new JButton();
-		_overwriteJRXMLButton.setText("Overwrite JRXML");
+		_overwriteJRXMLButton.setText("Update Report Templates");
 		panel3.add(_overwriteJRXMLButton);
 		final JPanel panel4 = new JPanel();
 		panel4.setLayout(new FlowLayout(FlowLayout.RIGHT, 5, 5));
