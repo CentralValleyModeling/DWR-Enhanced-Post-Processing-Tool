@@ -37,7 +37,11 @@ function plotMonthly(data) {
         yaxis: {
             title: {
                 text: data['units'],
-            }
+            },
+            gridcolor: '#CCCCCC'
+        },
+        xaxis:{
+            gridcolor: '#CCCCCC'
         },
         showlegend: true,
         legend: {

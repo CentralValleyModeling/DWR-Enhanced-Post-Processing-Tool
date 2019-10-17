@@ -121,14 +121,16 @@ function plot(data) {
         xaxis: {
             tickformat: ',.0%',
             range: [1, 0],
-            zeroline: false
+            zeroline: false,
+            gridcolor: '#CCCCCC'
         },
         yaxis: {
             title: {
                 text: data['units'],
             },
             autorange: true,
-            zeroline: false
+            zeroline: false,
+            gridcolor: '#CCCCCC'
         },
         showlegend: true,
         legend: {
