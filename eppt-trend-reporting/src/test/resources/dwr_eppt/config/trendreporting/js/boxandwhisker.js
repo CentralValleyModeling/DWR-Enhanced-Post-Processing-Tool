@@ -119,7 +119,8 @@ function plot(data) {
                 text: data['units']
             },
             automargin: true,
-            zeroline: false
+            zeroline: false,
+            gridcolor: '#DDDDDD'
         },
         xaxis: {
             automargin: true

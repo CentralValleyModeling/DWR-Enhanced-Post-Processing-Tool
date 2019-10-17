@@ -222,7 +222,11 @@ function plotGraph(data) {
             title: {
                 text: data['units'],
             },
-            domain: [0.35, 1.0]
+            domain: [0.35, 1.0],
+            gridcolor: '#CCCCCC'
+        },
+        xaxis:{
+            gridcolor: '#CCCCCC'
         },
         showlegend: false,
         title: {

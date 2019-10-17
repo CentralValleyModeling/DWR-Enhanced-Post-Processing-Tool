@@ -134,7 +134,11 @@ function plot(data) {
         yaxis: {
             title: {
                 text: data['units']
-            }
+            },
+            gridcolor: '#CCCCCC'
+        },
+        xaxis:{
+            gridcolor: '#CCCCCC'
         },
         legend: {
             orientation: 'h',
