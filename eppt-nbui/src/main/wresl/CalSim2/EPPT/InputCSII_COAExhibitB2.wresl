@@ -1,0 +1,175 @@
+/***********************
+CVP-SWP Coordinated Operations Agreement 1986
+Exhibit B-2
+
+Karandev Singh, BDO, DWR	| 08/15/2018
+Karandev Singh, BDO, DWR	| 01/14/2019
+
+This files lists CSII arcs used to calculate CVP and SWP annual supplies.
+************************/
+
+!********** SACRAMENTO BASIN USE **********
+!Sacramento R below Shasta
+
+!!CVP - Ag Service Contract
+define D104_PAG_ {timeseries 'D104_PAG' kind 'FLOW-DELIVERY' units 'CFS'} !Anderson Cottonwood WD
+define D171_PAG_ {timeseries 'D171_PAG' kind 'FLOW-DELIVERY' units 'CFS'} !Corning Canal Contractors
+define D172_PAG_ {timeseries 'D172_PAG' kind 'FLOW-DELIVERY' units 'CFS'} !Tehama Colusa Canal Contractors
+define D174_PAG_ {timeseries 'D174_PAG' kind 'FLOW-DELIVERY' units 'CFS'} !Tehama Colusa Canal Contractors
+define D178_PAG_ {timeseries 'D178_PAG' kind 'FLOW-DELIVERY' units 'CFS'} !Tehama Colusa Canal Contractors
+
+!!CVP - MI Service Contract
+define D104_PMI_ {timeseries 'D104_PMI' kind 'FLOW-DELIVERY' units 'CFS'} !Anderson Cottonwood WD
+!-KS. define D162_PMI_ {timeseries 'D162_PMI' kind 'FLOW-DELIVERY' units 'CFS'} !DSA 70 Sac R Users; double counted; arc removed in DCR 2017
+
+!!CVP - Settlement Contractors
+define D104_PSC_ {timeseries 'D104_PSC' kind 'FLOW-DELIVERY' units 'CFS'} !Anderson Cottonwood WD
+define D122A_PSC_ {timeseries 'D122A_PSC' kind 'FLOW-DELIVERY' units 'CFS'} !Sac R West bank divertors
+define D122B_PSC_ {timeseries 'D122B_PSC' kind 'FLOW-DELIVERY' units 'CFS'} !Sac R West bank divertors
+define D128_PSC_ {timeseries 'D128_PSC' kind 'FLOW-DELIVERY' units 'CFS'} !DSA 15
+define D129A_PSC_ {timeseries 'D129A_PSC' kind 'FLOW-DELIVERY' units 'CFS'} !DSA 15
+define D143A_PSC_ {timeseries 'D143A_PSC' kind 'FLOW-DELIVERY' units 'CFS'} !Glenn Colusa ID
+define D145A_PSC_ {timeseries 'D145A_PSC' kind 'FLOW-DELIVERY' units 'CFS'} !Glenn Colusa ID
+define D180_PSC_ {timeseries 'D180_PSC' kind 'FLOW-DELIVERY' units 'CFS'} !Colusa Basin M.W.C.
+define D182A_ {timeseries 'D182A' kind 'FLOW-DELIVERY' units 'CFS'} !Colusa Basin M.W.C.
+define D183_PSC_ {timeseries 'D183_PSC' kind 'FLOW-DELIVERY' units 'CFS'} !Colusa Basin M.W.C.
+define D18302_ {timeseries 'D18302' kind 'FLOW-DELIVERY' units 'CFS'} !Colusa Basin M.W.C.
+define D162_PSC_ {timeseries 'D162_PSC' kind 'FLOW-DELIVERY' units 'CFS'} !DSA 70 Sac R Users
+define D163_PSC_ {timeseries 'D163_PSC' kind 'FLOW-DELIVERY' units 'CFS'} !DSA 65 Sac R Misc. Users
+define D165_PSC_ {timeseries 'D165_PSC' kind 'FLOW-DELIVERY' units 'CFS'} !West Sacramento, City of
+
+!!CVP - Refuge Level 2
+define C136B_ {timeseries 'C136B' kind 'FLOW-CHANNEL' units 'CFS'} !Sutter NWR
+define C216B_ {timeseries 'C216B' kind 'FLOW-CHANNEL' units 'CFS'} !Gray Lodge WMA
+define C221_ {timeseries 'C221' kind 'FLOW-CHANNEL' units 'CFS'} !Butte Sinks Duck Clubs
+define D143B_PRF_ {timeseries 'D143B_PRF' kind 'FLOW-DELIVERY' units 'CFS'} !Sacramento NWR
+define D145B_PRF_ {timeseries 'D145B_PRF' kind 'FLOW-DELIVERY' units 'CFS'} !Delevan & Colusa NWR
+define D182B_PRF_ {timeseries 'D182B_PRF' kind 'FLOW-DELIVERY' units 'CFS'} !Delevan & Colusa NWR via Colusa Basin Drain
+
+!!Non Project/ Water Right
+define D104_NP_ {timeseries 'D104_NP' kind 'FLOW-DELIVERY' units 'CFS'} !Anderson Cottonwood WD
+define D113A_ {timeseries 'D113A' kind 'FLOW-DELIVERY' units 'CFS'} !DSA 10/ WBA 4 Sac R Misc. Users
+define D113B_ {timeseries 'D113B' kind 'FLOW-DELIVERY' units 'CFS'} !DSA 10/ WBA 5 Sac R Misc. Users
+define D162_NP_ {timeseries 'D162_NP' kind 'FLOW-DELIVERY' units 'CFS'} !DSA 70 Sac R Users
+
+!!Other Miscellaneous water users
+define D165B_ {timeseries 'D165B' kind 'FLOW-DELIVERY' units 'CFS'} !Woodland-Davis Municipal Project
+
+    
+!American R Basin (CVP)
+
+!!CVP - Ag Service Contract
+define D9_PAG_ {timeseries 'D9_PAG' kind 'FLOW-DELIVERY' units 'CFS'} !Folsom South Canal diverions
+
+!!CVP - MI Service Contract
+define D8_PMI_ {timeseries 'D8_PMI' kind 'FLOW-DELIVERY' units 'CFS'} !Folsom Reservoir diversions
+define D9_PMI_ {timeseries 'D9_PMI' kind 'FLOW-DELIVERY' units 'CFS'} !Folsom South Canal diverions
+define D167_PMI_ {timeseries 'D167_PMI' kind 'FLOW-DELIVERY' units 'CFS'} !Sacramento, City of
+define D168C_FRWP_PMI_ {timeseries 'D168C_FRWP_PMI' kind 'FLOW-DELIVERY' units 'CFS'} !SCWA via FRWP
+
+!!CVP - Losses
+define D9_PLS_ {timeseries 'D9_PLS' kind 'FLOW-DELIVERY' units 'CFS'} !Folsom South Canal diverions
+
+!!Non Project/ Water Right
+define D300_NP_ {timeseries 'D300_NP' kind 'FLOW-DELIVERY' units 'CFS'} !Placer County Water Agency
+define D8_NP_ {timeseries 'D8_NP' kind 'FLOW-DELIVERY' units 'CFS'} !Folsom Reservoir diversions
+define D9_NP_ {timeseries 'D9_NP' kind 'FLOW-DELIVERY' units 'CFS'} !Folsom South Canal diverions
+define D302_NP_ {timeseries 'D302_NP' kind 'FLOW-DELIVERY' units 'CFS'} !Lower American R diverions by Sacramento, City of
+define D167_NP_ {timeseries 'D167_NP' kind 'FLOW-DELIVERY' units 'CFS'} !Sacramento, City of
+
+!!Other Miscellaneous water users
+define D168A_ {timeseries 'D168A' kind 'FLOW-DELIVERY' units 'CFS'} !DSA 70 Sacramento R diversions
+define D168C_EXCESS_PMI_ {timeseries 'D168C_EXCESS_PMI' kind 'FLOW-DELIVERY' units 'CFS'} !Sacramento County Water Agency
+define D168C_OTHER_PMI_ {timeseries 'D168C_OTHER_PMI' kind 'FLOW-DELIVERY' units 'CFS'} !Sacramento County Water Agency
+
+
+!Feather R below Oroville
+
+!!SWP - MI Service Contract
+define D201_PMI_ {timeseries 'D201_PMI' kind 'FLOW-DELIVERY' units 'CFS'} !Butte, County of
+define D204_PMI_ {timeseries 'D204_PMI' kind 'FLOW-DELIVERY' units 'CFS'} !Yuba City, City of
+
+!!SWP - FRSA Contractors
+define D7A_PAG_ {timeseries 'D7A_PAG' kind 'FLOW-DELIVERY' units 'CFS'} !Western Canal
+define D7B_PAG_ {timeseries 'D7B_PAG' kind 'FLOW-DELIVERY' units 'CFS'} !Joint Board
+define D206A_PAG_ {timeseries 'D206A_PAG' kind 'FLOW-DELIVERY' units 'CFS'} !Feather WD
+define D206B_PAG_ {timeseries 'D206B_PAG' kind 'FLOW-DELIVERY' units 'CFS'} !Garden, Oswald, Joint Board
+define D206C_PAG_ {timeseries 'D206C_PAG' kind 'FLOW-DELIVERY' units 'CFS'} !Plumas, Tudor
+
+!!SWP - Water Rights
+define D6_PWR_ {timeseries 'D6_PWR' kind 'FLOW-DELIVERY' units 'CFS'} !Palermo
+define D202_PWR_ {timeseries 'D202_PWR' kind 'FLOW-DELIVERY' units 'CFS'} !Thermalito
+define D7A_PWR_ {timeseries 'D7A_PWR' kind 'FLOW-DELIVERY' units 'CFS'} !Western Canal
+define D7B_PWR_ {timeseries 'D7B_PWR' kind 'FLOW-DELIVERY' units 'CFS'} !Joint Board
+define D206B_PWR_ {timeseries 'D206B_PWR' kind 'FLOW-DELIVERY' units 'CFS'} !Garden, Oswald, Joint Board
+define D206C_PWR_ {timeseries 'D206C_PWR' kind 'FLOW-DELIVERY' units 'CFS'} !Plumas, Tudor
+
+!!SWP - Rice decomposition/ Winter Water
+define D7C_ {timeseries 'D7C' kind 'FLOW-DELIVERY' units 'CFS'} !DSA 69 rice decomposition
+
+!!Other Miscellaneous water users
+define D230_ {timeseries 'D230' kind 'FLOW-DELIVERY' units 'CFS'} !Yuba County Water Agency
+define D285_ {timeseries 'D285' kind 'FLOW-DELIVERY' units 'CFS'} !Camp Far West ID
+define D223_ {timeseries 'D223' kind 'FLOW-DELIVERY' units 'CFS'} !DSA 70 Exports from Feather R
+define D283_ {timeseries 'D283' kind 'FLOW-DELIVERY' units 'CFS'} !DSA 70 Exports from Bear R
+define D207A_ {timeseries 'D207A' kind 'FLOW-DELIVERY' units 'CFS'} !DSA 69 Feather R diversions
+define D217_ {timeseries 'D217' kind 'FLOW-DELIVERY' units 'CFS'} !DSA 69 Butte Creek diversions
+
+
+!********** EXPORT **********
+!Tracy Pumping Plant (Jones PP)
+define D418_CVP_ {timeseries 'D418_CVP' kind 'FLOW-DELIVERY' units 'CFS'}
+
+!CVP South Delta Exports via Banks
+define D419_CVP_ {timeseries 'D419_CVP' kind 'FLOW-DELIVERY' units 'CFS'}
+define D419_CVC_ {timeseries 'D419_CVC' kind 'FLOW-DELIVERY' units 'CFS'}	!Cross Valley Canal deliveries via Banks/ CA Aqueduct
+define D419_CVPDED_ {timeseries 'D419_CVPDED' kind 'FLOW-DELIVERY' units 'CFS'}	!CVP wheeling via dedicated capacity at Banks
+define D419_CVPWHL_ {timeseries 'D419_CVPWHL' kind 'FLOW-DELIVERY' units 'CFS'}	!Other CVP wheeling via Banks
+
+!Contra Costa Pumping Plant
+define D408_CVP_ {timeseries 'D408_CVP' kind 'FLOW-DELIVERY' units 'CFS'}
+
+!Freeport Regional Water Project (FRWP)
+!-KS, 7/16/18. SCWA diversions via FRWP included as part of American R Basin. SCWA would have diverted the water regardless of FRWP; it is economical for them to use FRWP.
+define D168B_CCWD_ {timeseries 'D168B_CCWD' kind 'FLOW-DELIVERY' units 'CFS'}		!Contra Costa WD via Freeport Regional Water Project
+define D168B_EBMUD_ {timeseries 'D168B_EBMUD' kind 'FLOW-DELIVERY' units 'CFS'}		!EBMUD via Freeport Regional Water Project
+
+!Delta Pumping Plant (Banks PP)
+define D419_SWP_ {timeseries 'D419_SWP' kind 'FLOW-DELIVERY' units 'CFS'}
+
+!North Bay Aqueduct
+define D403B_ {timeseries 'D403B' kind 'FLOW-DELIVERY' units 'CFS'}
+define D403C_ {timeseries 'D403C' kind 'FLOW-DELIVERY' units 'CFS'}
+
+!!Water Transfers via Jones and Banks PP
+define D418_WTS_ {timeseries 'D418_WTS' kind 'FLOW-DELIVERY' units 'CFS'}
+define D419_WTS_ {timeseries 'D419_WTS' kind 'FLOW-DELIVERY' units 'CFS'}
+
+!********** DELTA AREA AND OUTFLOW **********
+!Delta In-basin Consumptive Use
+!-KS, 7/16/18. Does not include I400 and D400B; considered upstream of Delta.
+define NET_DICU_ {timeseries 'NET_DICU' kind 'DICU_FLOW' units 'CFS'}
+
+
+!Required Delta Outflow
+define C407_ANN_ {timeseries 'C407_ANN' kind 'FLOW-CHANNEL' units 'CFS'}
+define D407_ {timeseries 'D407' kind 'FLOW-DELIVERY' units 'CFS'}
+
+
+!Other Delta Pumping
+
+!!Water Right deliveries via North Bay Aqueduct
+define D403A_ {timeseries 'D403A' kind 'FLOW-DELIVERY' units 'CFS'}	!City of Vallejo
+define D403D_ {timeseries 'D403D' kind 'FLOW-DELIVERY' units 'CFS'}	!Fairfield-Vacaville-Benecia Settlement Water
+
+!!City of Antioch
+define D406B_ {timeseries 'D406B' kind 'FLOW-DELIVERY' units 'CFS'}
+
+!!CCWD Water Rights and Partners
+define D406A_MS_ {timeseries 'D406A_MS' kind 'FLOW-DELIVERY' units 'CFS'} !CCWD diversions via Mallard Slough
+define D408_DS_ {timeseries 'D408_DS' kind 'FLOW-DELIVERY' units 'CFS'} !CCWD diversions of Surplus Delta Outflow
+define D408_ECC_ {timeseries 'D408_ECC' kind 'FLOW-DELIVERY' units 'CFS'} !East Contra Costa Irrigation District
+define D408_P_ {timeseries 'D408_P' kind 'FLOW-DELIVERY' units 'CFS'} !CCWD Partners
+define D408_TX_ {timeseries 'D408_TX' kind 'FLOW-DELIVERY' units 'CFS'} !CCWD Delta transfers
+ 
+			

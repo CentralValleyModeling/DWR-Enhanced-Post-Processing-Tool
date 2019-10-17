@@ -1,0 +1,677 @@
+/************************************
+
+Summ_compnts.wresl
+
+AAli, CQ DWR, BDO
+2019/08/23
+
+This file manipulates the summary components for the EPPT QAQC Post-Processing 
+**************************************/
+
+
+/****************************** San Luis Storage *******************************/
+! San Luis total storage
+
+define San_Luis_tot_storage {value S11 + S12}
+
+/****************************** Aggregated storage *******************************/
+
+define CVP_SWP_storage {value S1 + S4 + S6 + S8 + S11 + S12 }  			!total storage
+define NOD_CVP_SWP_storage {value S1 + S4 + S6 + S8 }  !NOD cvp and swp
+define NOD_CVP_storage {value S1 + S4 + S8  } !NOD cvp
+
+/****************************** Change in Storage (General Summary Table), Table 2 *******************************/
+
+!obtain the Fill-up (positive change in storage), Drawdown (negative change in storage), and total change in storage 
+
+! Trinity
+define TRNTY_Fill_up {value max(S1 - S1(-1),0) } 			
+define TRNTY_drawdown {value min(S1 - S1(-1),0) }			
+define TRNTY_chng_in_strge {value TRNTY_Fill_up + TRNTY_drawdown } 	
+
+! Shasta
+define SHST_Fill_up {value max(S4 - S4(-1),0) } 		
+define SHST_drawdown {value min(S4 - S4(-1),0) }		
+define SHST_chng_in_strge {value SHST_Fill_up + SHST_drawdown } 
+
+! Folsom
+define FLSM_Fill_up {value max(S8 - S8(-1),0) } 		
+define FLSM_drawdown {value min(S8 - S8(-1),0) }		
+define FLSM_chng_in_strge {value FLSM_Fill_up + FLSM_drawdown } 
+
+! Oroville
+define OROV_Fill_up {value max(S6 - S6(-1),0) } 		
+define OROV_drawdown {value min(S6 - S6(-1),0) }		
+define OROV_chng_in_strge {value OROV_Fill_up + OROV_drawdown } 
+
+! CVP San Luis
+define SLCVP_Fill_up {value max(S11 - S11(-1),0) } 		
+define SLCVP_drawdown {value min(S11 - S11(-1),0) }		
+define SLCVP_chng_in_strge {value SLCVP_Fill_up + SLCVP_drawdown } 
+
+! SWP San Luis
+define SLSWP_Fill_up {value max(S12 - S12(-1),0) } 		
+define SLSWP_drawdown {value min(S12 - S12(-1),0) }		
+define SLSWP_chng_in_strge {value SLSWP_Fill_up + SLSWP_drawdown } 
+
+!San Luis Total change in storage
+define SL_chng_in_strge {value SLCVP_chng_in_strge + SLSWP_chng_in_strge} 
+
+/******************************Minimum flow check for reservoirs *******************************/
+define TRNTY_MIF_CHECK {
+	case min_occurs {
+		Condition C100_MIF_CHECK == 200 .OR. ClrCkTnnl_import_CHECK_ == 200 
+		Value 200}
+
+	Case not_min {
+		Condition always 
+		Value 300
+	}
+}
+
+define SHASTA_MIF_CHECK {
+	case min_occurs {
+		Condition C5_MIF_CHECK == 200 .OR. C112_MIF_CHECK == 200 .OR. C129_MIF_CHECK == 200
+		Value 200}
+
+	Case not_min {
+		Condition always 
+		Value 300
+	}
+}
+
+define OROV_MIF_CHECK {
+	case min_occurs {
+		Condition C203_MIF_CHECK == 200 .OR. C223_MIF_CHECK == 200 
+		Value 200}
+
+	Case not_min {
+		Condition always 
+		Value 300
+	}
+}
+
+define FLSM_MIF_CHECK {
+	case min_occurs {
+		Condition C9_MIF_CHECK == 200 .OR. C303_MIF_CHECK == 200 
+		Value 200}
+
+	Case not_min {
+		Condition always 
+		Value 300
+	}
+}
+/******************************SHASTA CVPIA (b)(2) *******************************/
+! CVPIA (b)(2) @ Shasta
+define CVPIA_B_2_CHECK {
+	case meet {
+		Condition abs(S4 - 1600) < abs_threshold
+		Value 200
+	}
+	case exceeded {
+		Condition S4 - 1600 > abs_threshold 
+		Value 100
+	}
+	Case Below {
+		Condition always 
+		Value 300
+	}
+}
+
+
+/****************************** Spill for CVP San Luis and SWP San Luis *******************************/
+!determines during which timestep CVP_San_Luis reservoir has unrecoverable spills
+define SLCVP_Spill_CHECK {
+	case spill {
+	condition F11 > abs_threshold
+	value 200}
+	case noSpill {
+	condition always
+	value 100}
+}
+
+!determines during which timestep SWP_San_Luis reservoir has unrecoverable spills
+define SLSWP_Spill_CHECK {
+	case spill {
+	condition F12 > abs_threshold
+	value 200}
+	case noSpill {
+	condition always
+	value 100}
+}
+
+/****************************** Trinity Imports zero flows check *******************************/
+
+!determines was Clear Creek Tunnel at zero flow
+define ClrCkTnnl_zeroflow_CHECK_ {
+	case zero {
+		condition D100 <= abs_threshold
+		value 200
+	}
+	case non_zero{
+		condition D100 > abs_threshold
+		value 100
+	}
+}
+
+/****************************** North of Delta Upstream Excess flow *******************************/
+!excess flow below Lewiston
+define C100_excess {value max(C100 - Minflow_C100,0) }
+
+!excess flow below Whiskeytown
+define C3_excess {value max(C3 - Minflow_C3,0) }
+
+!excess flow below Keswick
+define C5_excess {value max(C5 - Minflow_C5,0) }
+
+!excess flow Red Bluff
+define C112_excess {value max(C112 - Minflow_C112,0) }
+
+!excess flow Hamilton
+define C114_excess {value max(C114 - Minflow_C114,0) }
+
+!excess flow Wilkins Slough
+define C129_excess {value max(C129 - Minflow_C129,0) }
+
+!excess flow Low Flow Channel
+define C200A_excess {value max(C200A - Minflow_C200A,0) }
+
+!excess flow below Thermalito
+define C203_excess {value max(C203 - Minflow_C203,0) }
+
+!excess flow Verona
+define C223_excess {value max(C223 - Minflow_C223,0) }
+
+!excess flow below Nimbus
+define C9_excess {value max(C9 - Minflow_C9,0) }
+
+!excess flow at H Street
+define C303_excess {value max(C303 - Minflow_C303,0) }
+
+!Sacramento River at Hood
+define Minflow_C400 {timeseries 'C400_MIF' kind 'FLOW-MIN-INSTREAM' units 'CFS'}  !from the DV file
+define C400_excess {value max(C400 - Minflow_C400,0) }
+
+!Yolo Bypass Flow into Delta
+define Minflow_C157 {timeseries 'C157_MIF' kind 'FLOW-MIN-INSTREAM' units 'CFS'}  !from the DV file
+define C157_excess {value max(C157 - Minflow_C157,0) }
+
+!excess Rio Vista
+define C405_excess {value max(C405 - C405_MIF,0) }
+/****************************** How many times the North of Delta Upstream flow hit the minimum *******************************/
+! Hood flow at min
+define C400_MIF_CHECK {
+	case meet {
+		Condition abs(C400 - Minflow_C400) < abs_threshold
+		Value 200
+	}
+	case exceeded {
+		Condition C400 - Minflow_C400 > abs_threshold 
+		Value 100
+	}
+	Case Violated {
+		Condition always 
+		Value 300
+	}
+}
+
+! Bypass flow at min
+define C157_MIF_CHECK {
+	case meet {
+		Condition abs(C157 - Minflow_C157) < abs_threshold
+		Value 200
+	}
+	case exceeded {
+		Condition C157 - Minflow_C157 > abs_threshold 
+		Value 100
+	}
+	Case Violated {
+		Condition always 
+		Value 300
+	}
+}
+
+
+! Rio Vista at min
+define C405_MIF_CHECK {
+	case meet {
+		Condition abs(C405 - C405_MIF) < abs_threshold
+		Value 200
+	}
+	case exceeded {
+		Condition C405 - C405_MIF > abs_threshold 
+		Value 100
+	}
+	Case Violated {
+		Condition always 
+		Value 300
+	}
+}
+/****************************** South Delta Exports Control ******************************
+define export_dec_up {value d409up-d409}
+
+
+!Jones at Capacity
+define SOD_EXP_CAP_CHECK {
+	case equals {
+		condition sod_exp-sod_exp_maxcap < abs_threshold
+		value 200}
+	case above {
+		condition sod_exp-sod_exp_maxcap > abs_threshold
+		value 100}
+	case below {
+		condition always
+		value 300}
+	}
+!Health & Safety	
+define sod_exp_HS_CHECK {
+	case equals {
+		condition sod_exp-1500.<abs_threshold
+		value 200}
+	case above {
+		condition sod_exp-1500.>abs_threshold
+		value 100}
+	case below {
+		condition always
+		value 300}
+	}
+	
+!Export-Inflow	
+define sod_exp_EI_CHECK {
+	case equals {
+		condition sod_exp-EIEXPCTRL<abs_threshold
+		value 200}
+	case above {
+		condition d409-EIEXPCTRL>abs_threshold
+		value 100}
+	case below {
+		condition always
+		value 300}
+	}
+!Vernalis 1:1	
+define D409_VERN_CHECK {
+	case equals {
+		condition d409-APRMAYEXPCTRL < abs_threshold
+		value 200}
+	case above {
+		condition d409-APRMAYEXPCTRL > abs_threshold
+		value 100}
+	case below {
+		condition always
+		value 300}
+	}
+	
+!RPA Check	
+define D409_RPA_CHECK {
+	case equals {
+		condition export_dec_up>0 .and. d409-MAXEXP_RPADV<abs_threshold
+		value 200}
+	case above {
+		condition export_dec_up>0 .and. d409-APRMAYEXPCTRL>abs_threshold
+		value 100}
+	case below {
+		condition always
+		value 300}
+	
+	}
+	
+!OMR Check	
+define D409_OMR_CHECK {
+	case equals {
+		condition d409up - d409>0 .and. export_dec>0 .and. d409up - d409-export_dec < abs_threshold
+		value 200}
+	case above {
+		condition d409up - d409>0 .and. export_dec>0 .and. d409up - d409-export_dec >abs_threshold
+		value 100}
+	case below {
+		condition always
+		value 300}
+	}
+	
+
+define D409_RPA_CHECK {
+	case equals {
+		condition d409up - d409 >0 .and. d409-MAXEXP_RPADV <abs_threshold
+		value 200}
+	case above {
+		condition d409up - d409>0 .and. d409-MAXEXP_RPADV >abs_threshold
+		value 100}
+	case below {
+		condition always
+		value 300}
+	
+	
+/****************************** Jones Export Control ******************************
+!Jones at Capacity
+define D418_CAP_CHECK {
+	case equals {
+		condition abs(d418-jonesallowout)<abs_threshold
+		value 200}
+	case above {
+		condition abs(d418-jonesallowout)>abs_threshold
+		value 100}
+	case below {
+		condition always
+		value 300}
+	}
+	
+define D418_HS_CHECK {
+	case equals {
+		condition abs(d418-300.)<abs_threshold
+		value 200}
+	case above {
+		condition abs(d418-300.)>abs_threshold
+		value 100}
+	case below {
+		condition always
+		value 300}
+	}
+	
+define D418_EI_CHECK {
+	case equals {
+		condition abs(d418-300.)<abs_threshold
+		value 200}
+	case above {
+		condition abs(d418-300.)>abs_threshold
+		value 100}
+	case below {
+		condition always
+		value 300}
+	}*/
+
+/****************************** GW calculations (amending) ******************************/
+!Colusa basin gw pumping
+define Colusa_GP {value GP61 + GP62 + GP63 }
+
+!North of Delta gw pumping
+define NOD_GWP {value GP60 + Colusa_GP + GP64 + GP65 + GP66 }
+
+/****************************** South of Delta Export ******************************/
+!Central Valley project
+define CVProject {value D418_EXP1 + D418_EXP2 }
+!State Water project
+define SWProject {value D419_EXP1 + D419_EXP2 + D419_CVP + D419_WTS}
+!Water Transfers
+define Water_transfer {value D418_WTS + D419_WTS }
+
+/****************************** New Components ******************************/
+!SWP SOD TA delivery without carryover
+define SWP_TA_SOD_DEL {value SWP_TA_TOTAL - SWP_TA_FEATH}
+define Delta_Inflow {value C400+C157+C644+C504}
+define SWP_DELIVERIES {value swp_ta_total+swp_in_total+swp_co_total}
+define calaveras_db {value C514-C417A}
+define ccwd_db {value D408+D408_RS}
+define delta_inf_db {value C400+C157+C504+C644+I406+Calaveras_db}
+define delta_out_db {value C406+D419_swp+D419_cvp+D419_wts+D418+D514A+CCWD_DB+Net_DICU*D406B}
+define delta_mass_bal {value delta_inf_db-delta_out_db}
+define MP_Inflow {value d607a+d607b+d607c+d607d+d608b+d608c}
+define MP_Local_Inflow {value MP_Inflow - min(C708,MP_Inflow)}
+define swp_term_evap {value e12+e15+e25+e27+e28+e29}
+define sod_evap {value e11+swp_term_evap}
+define swp_sod_del {value swp_ta_total+swp_in_total+swp_co_total+swp_loss}
+define swp_sl_term_stor {value s12+s15+s25+s27+s28+s29}
+define swp_sl_term_stor_ {alias swp_sl_term_stor kind 'output' units 'taf'}
+define cvp_nod_stor {value S1+S4+S8}
+define cvp_tot_stor {value S1+S4+S8+S11}
+define swp_tot_stor {value S6+S12}
+
+/********************** Net SWP SOD Storage Release **************************/
+define SWP_SOD_Init_Stor {
+	case Oct1922 {
+	  condition month==oct .and. wateryear==1922
+	  value 841.}
+	case other {
+	  condition always
+	  value swp_sl_term_stor_(-1)}
+	}
+define Net_SWP_Sod_Rel {value swp_sl_term_stor-swp_sod_init_stor}
+
+/*********************** Net CVP SOD Storage Release **************************/
+define CVP_SOD_Init_Stor {
+	case Oct1922 {
+	  condition month==oct .and. wateryear==1922
+	  value 300.}
+	case other {
+	  condition always
+	  value s11(-1)}
+	}
+define Net_CVP_sl_Rel {value s11 - cvp_sod_init_stor}
+/***************************** New Components ********************************/
+define Other_Inflows {value I860+MP_Local_Inflow+Net_swp_sod_rel+Net_cvp_sl_rel}
+define swp_sod_exp_inf {value D419_swp+D419_wts+I860+Net_SWP_SOD_Rel-swp_term_evap}
+define swp_sod_bal {value swp_sod_exp_inf-swp_sod_del}
+define cvp_sod_exp_inf {value d419_cvp+d418+MP_Local_Inflow+Net_cvp_sl_rel-e11}
+define cvp_sod_bal {value cvp_sod_exp_inf-cvptotaldel}
+define sod_exp_inf {value swp_sod_exp_inf+cvp_sod_exp_inf}
+define sod_del {value swp_sod_del+cvptotaldel}
+define sod_balance {value swp_sod_bal+cvp_sod_bal}
+define short_sod_ta {value short_swp_pag_s+short_swp_pmi_s}
+define short_frsa {value short_swp_pag_n+short_swp_pwr}
+define short_swp_ta {value short_swp_pag_s+short_swp_pmi_s+short_swp_pmi_n}
+define short_cvp_tot {value short_cvp_tot_n+short_cvp_tot_s}
+
+/************************** Unbalanced months ******************/
+define sod_bal_check_ {
+	case balanced {
+		condition sod_balance < abs_threshold
+		value 200
+		}
+	case unbalanced {
+		condition always
+		value 999
+		}
+}
+define delta_bal_check_ {
+	case balance {
+		condition delta_mass_bal < abs_threshold
+		value 200
+		}
+	case unbalanced {
+		condition always
+		value 999
+		}
+}
+/************************** Outputs ***************************/
+define CVP_SWP_storage_DTS {alias CVP_SWP_storage kind ' STORAGE ' units 'TAF' }  			!total storage
+define NOD_CVP_SWP_storage_DTS {alias NOD_CVP_SWP_STORAGE kind ' STORAGE ' units 'TAF'}  !NOD cvp and swp
+define NOD_CVP_storage_DTS {alias NOD_CVP_storage kind ' STORAGE ' units 'TAF' } !NOD cvp
+
+!Trinity 
+define TRNTY_Fill_up_DTS {alias TRNTY_Fill_up kind ' STORAGE-CHANGE ' units 'TAF' }
+define TRNTY_drawdown_DTS {alias TRNTY_drawdown kind ' STORAGE-CHANGE ' units 'TAF' }
+define TRNTY_chng_in_strge_DTS {alias TRNTY_chng_in_strge kind ' STORAGE-CHANGE ' units 'TAF' }
+define TRNTY_zeroflow_DTS {alias ClrCkTnnl_zeroflow_CHECK_ kind ' STORAGE-CHANGE ' units 'TAF' }
+
+!Shasta
+define SHST_Fill_up_DTS {alias SHST_Fill_up kind ' STORAGE-CHANGE ' units 'TAF' }
+define SHST_drawdown_DTS { alias SHST_drawdown kind ' STORAGE-CHANGE ' units 'TAF'}
+define SHST_chng_in_strge_DTS {alias SHST_chng_in_strge kind ' STORAGE-CHANGE ' units 'TAF' }
+
+! Folsom
+define FLSM_Fill_up_DTS {alias FLSM_Fill_up kind ' STORAGE-CHANGE ' units 'TAF' }
+define FLSM_drawdown_DTS {alias FLSM_drawdown kind ' STORAGE-CHANGE ' units 'TAF'} 
+define FLSM_chng_in_strge_DTS {alias FLSM_chng_in_strge kind ' STORAGE-CHANGE ' units 'TAF' }
+
+! Oroville
+define OROV_Fill_up_DTS {alias OROV_Fill_up kind ' STORAGE-CHANGE ' units 'TAF' }
+define OROV_drawdown_DTS {alias OROV_drawdown kind ' STORAGE-CHANGE ' units 'TAF'} 
+define OROV_chng_in_strge_DTS {alias OROV_chng_in_strge kind ' STORAGE-CHANGE ' units 'TAF' }
+
+! CVP San Luis
+define SLCVP_Fill_up_DTS {alias SLCVP_Fill_up kind ' STORAGE-CHANGE ' units 'TAF' } 
+define SLCVP_drawdown_DTS {alias SLCVP_drawdown kind ' STORAGE-CHANGE ' units 'TAF'}
+define SLCVP_chng_in_strge_DTS {alias SLCVP_chng_in_strge kind ' STORAGE-CHANGE ' units 'TAF' }
+define SLCVP_Spill_STATUS_DTS {alias SLCVP_Spill_CHECK kind 'DTS-STATUS' units 'NONE'}
+
+! SWP San Luis
+define SLSWP_Fill_up_DTS {alias SLSWP_Fill_up kind ' STORAGE-CHANGE ' units 'TAF' } 
+define SLSWP_drawdown_DTS { alias SLSWP_drawdown kind ' STORAGE-CHANGE ' units 'TAF'}
+define SLSWP_chng_in_strge_DTS {alias SLSWP_chng_in_strge kind ' STORAGE-CHANGE ' units 'TAF' }
+define SLSWP_Spill_STATUS_DTS {alias SLSWP_Spill_CHECK kind 'DTS-STATUS' units 'NONE'}
+
+/******************************SHASTA CVPIA (b)(2) *******************************/
+! CVPIA (b)(2) @ Shasta
+define CVPIA_B_2_CHECK_DTS {alias CVPIA_B_2_CHECK kind 'DTS-STATUS' units 'NONE'}
+!Minimum flow check for reservoirs
+define TRNTY_MIF_CHECK_DTS {alias TRNTY_MIF_CHECK kind 'DTS-STATUS' units 'NONE'}
+define SHASTA_MIF_CHECK_DTS {alias SHASTA_MIF_CHECK kind 'DTS-STATUS' units 'NONE'}
+define OROV_MIF_CHECK_DTS {alias OROV_MIF_CHECK kind 'DTS-STATUS' units 'NONE'}
+define FLSM_MIF_CHECK_DTS {alias FLSM_MIF_CHECK kind 'DTS-STATUS' units 'NONE'}
+
+!San Luis Total change in storage
+define SL_chng_in_strge_DTS {alias SL_chng_in_strge kind ' STORAGE-CHANGE ' units 'TAF' }
+ 
+!San Luis Total Storage
+define San_Luis_tot {alias San_Luis_tot_storage kind ' STORAGE' units 'TAF' }
+
+!excess flow below Lewiston
+define C100_excess_DTS {alias C100_excess kind 'DTS-STATUS' units 'NONE'}
+
+!excess flow below Whiskeytown
+define C3_excess_DTS {alias C3_excess kind 'DTS-STATUS' units 'NONE'}
+
+!excess flow below Keswick
+define C5_excess_DTS {alias C5_excess kind 'DTS-STATUS' units 'NONE'}
+
+!excess flow Red Bluff
+define C112_excess_DTS {alias C112_excess kind 'DTS-STATUS' units 'NONE'}
+
+!excess flow Hamilton
+define C114_excess_DTS {alias C114_excess kind 'DTS-STATUS' units 'NONE'}
+
+!excess flow Wilkins Slough
+define C129_excess_DTS {alias C129_excess kind 'DTS-STATUS' units 'NONE'}
+
+!excess flow Low Flow Channel
+define C200A_excess_DTS {alias C200A_excess kind 'DTS-STATUS' units 'NONE'}
+
+!excess flow below Thermalito
+define C203_excess_DTS {alias C203_excess kind 'DTS-STATUS' units 'NONE'}
+
+!excess flow Verona
+define C223_excess_DTS {alias C223_excess kind 'DTS-STATUS' units 'NONE'}
+
+!excess flow below Nimbus
+define C9_excess_DTS {alias C9_excess kind 'DTS-STATUS' units 'NONE'}
+
+!excess flow at H Street
+define C303_excess_DTS {alias C303_excess kind 'DTS-STATUS' units 'NONE'}
+
+!Sacramento River at Hood
+define C400_excess_DTS {alias C400_excess kind 'DTS-STATUS' units 'NONE'}
+
+!Yolo Bypass Flow into Delta
+define C157_excess_DTS {alias C157_excess kind 'DTS-STATUS' units 'NONE'}
+
+!excess Rio Vista
+define C405_excess_DTS {alias C405_excess kind 'DTS-STATUS' units 'NONE'}
+
+!number of times to hit the minimum at Hood, Yolo Bypass, and Rio Vista
+define C400_MIF_STATUS_DTS {alias C400_MIF_CHECK kind 'DTS-STATUS' units 'NONE'}
+define C157_MIF_STATUS_DTS {alias C157_MIF_CHECK kind 'DTS-STATUS' units 'NONE'}
+define C405_MIF_STATUS_DTS {alias C405_MIF_CHECK kind 'DTS-STATUS' units 'NONE'}
+
+!Colusa Vasin Groundwater Pumping
+define Colusa_GP_ {alias Colusa_GP kind 'FLOW-DELIVERY' units 'CFS'}
+!North of Delta gw pumping
+define NOD_GWP_ {alias NOD_GWP kind 'FLOW-DELIVERY' units 'CFS'}
+
+!Central Valley project
+define CVProject_DV {alias CVProject kind 'FLOW-DELIVERY' units 'CFS'}
+!State Water project
+define SWProject_DV {alias SWProject kind 'FLOW-DELIVERY' units 'CFS'}
+!Water Transfers
+define Water_transfer_DV {alias Water_transfer kind 'FLOW-DELIVERY' units 'CFS'}
+
+/******************New Components *****************************/
+!SWP TA SOD Delivery
+define SWP_TA_SOD_DEL_DV {alias SWP_TA_SOD_DEL kind 'FLOW-DELIVERY' units 'CFS'}
+!Delta Inflow/outflow
+define Delta_Inflow_DV {alias Delta_Inflow kind 'flow-channel' units 'cfs'}! convert 'taf'}
+define Delta_Inf_db_dv {alias Delta_Inf_db kind 'delta-inflow' units 'cfs'}
+define Delta_Out_db_dv {alias Delta_Out_db kind 'delta-outflow' units 'cfs'}
+!SWP_Deliveries
+define SWP_DELIVERIES_DV {alias swp_deliveries kind 'swp_delivery' units 'cfs'}
+!Total Delta Outflow
+define total_delta_out_dv {alias C406 kind 'flow-channel' units 'cfs'}
+!Calaveras River for Delta Balance
+define calaveras_db_dv {alias calaveras_db kind 'flow-channel' units 'cfs'}
+!Delta Mass Balance
+define delta_mass_bal_dv {alias delta_mass_bal kind 'calc' units 'cfs'}
+!MP Local Inflow
+define mp_local_inflow_dv {alias mp_local_inflow kind 'local-inflow' units 'taf'}
+!SWP and Terminal Res Evap
+define swp_term_evap_dv {alias swp_term_evap kind 'evaporation' units 'taf'}
+!SOD Evaporation from storage
+define sod_evap_dv {alias sod_evap kind 'evaporation' units 'taf'}
+!SWP SOD Deliveries
+define swp_sod_del_dv {alias swp_sod_del kind 'swp_delivery' units 'taf'}
+!Net SWP SOD Storage Release
+define Net_swp_sod_rel_dv {alias Net_swp_sod_rel kind 'storage-release' units 'taf'}
+define Net_cvp_sl_rel_dv {alias Net_cvp_sl_rel kind 'storage-release' units 'taf'}
+define Other_Inflow_dv {alias Other_Inflows kind 'flow-inflow' units 'taf'}
+define swp_sod_bal_dv {alias swp_sod_bal kind 'swp-sod-bal' units 'taf'}
+define cvp_sod_bal_dv {alias cvp_sod_bal kind 'cvp-sod-bal' units 'taf'}
+define cvp_sod_exp_inf_dv {alias cvp_sod_exp_inf kind 'cvp-sod-bal' units 'taf'}
+define swp_sod_exp_inf_dv {alias swp_sod_exp_inf kind 'swp-sod-bal' units 'taf'}
+define sod_exp_inf_dv {alias sod_exp_inf kind 'sod-balance' units 'taf'}
+define sod_del_dv {alias sod_del kind 'sod-balance' units 'taf'}
+define sod_balance_dv {alias sod_balance kind 'sod-balance' units 'taf'}
+define short_sod_ta_dv {alias short_sod_ta kind 'shortage' units 'cfs'}
+define short_frsa_dv {alias short_frsa kind 'shortage' units 'cfs'}
+define cvp_nod_stor_dv {alias cvp_nod_stor kind 'storage' units 'taf'}
+define cvp_tot_stor_dv {alias cvp_tot_stor kind 'storage' units 'taf'}
+define swp_tot_stor_dv {alias swp_tot_stor kind 'storage' units 'taf'}
+define short_swp_ta_dv {alias short_swp_ta kind 'shortage' units 'cfs'}
+define short_cvp_tot_dv {alias short_cvp_tot kind 'shortage' units 'cfs'}
+define sod_bal_status_dts {alias sod_bal_check_ kind 'dts-status' units 'none'}
+define delta_bal_status_dts {alias delta_bal_check_ kind 'dts-status' units 'none'}
+
+define perdv_cvpag_sys_ {alias perdv_cvpag_sys kind 'percent-delivery' units 'none'}
+define perdv_cvpmi_sys_ {alias perdv_cvpmi_sys kind 'percent-delivery' units 'none'}
+define perdv_cvprf_sys_ {alias perdv_cvprf_sys kind 'percent-delivery' units 'none'}
+define perdv_cvpsc_sys_ {alias perdv_cvpsc_sys kind 'percent-delivery' units 'none'}
+define perdv_cvpag_s_ {alias perdv_cvpag_s kind 'percent-delivery' units 'none'}
+define perdv_cvpmi_s_ {alias perdv_cvpmi_s kind 'percent-delivery' units 'none'}
+define perdv_cvprf_s_ {alias perdv_cvprf_s kind 'percent-delivery' units 'none'}
+define perdv_cvpex_s_ {alias perdv_cvpex_s kind 'percent-delivery' units 'none'}
+
+define del_cvp_pag_n_ {alias del_cvp_pag_n kind 'delivery-cvp' units 'cfs'}
+define del_cvp_pmi_n_ {alias del_cvp_pmi_n kind 'delivery-cvp' units 'cfs'}
+define del_cvp_prf_n_ {alias del_cvp_prf_n kind 'delivery-cvp' units 'cfs'}
+define del_cvp_psc_n_ {alias del_cvp_psc_n kind 'delivery-cvp' units 'cfs'}
+define del_cvp_pag_s_ {alias del_cvp_pag_s kind 'delivery-cvp' units 'cfs'}
+define del_cvp_pmi_s_ {alias del_cvp_pmi_s kind 'delivery-cvp' units 'cfs'}
+define del_cvp_prf_s_ {alias del_cvp_prf_s kind 'delivery-cvp' units 'cfs'}
+define del_cvp_pex_s_ {alias del_cvp_pex_s kind 'delivery-cvp' units 'cfs'}
+define del_cvp_pls_s_ {alias del_cvp_pls_s kind 'delivery-cvp' units 'cfs'}! convert 'taf'}
+
+define swp_perdeldv_yuba_ {alias swp_perdeldv_yuba kind 'swp-delivery' units 'none'}
+define swp_perdeldv_butt_ {alias swp_perdeldv_butt kind 'swp-delivery' units 'none'}
+define swp_perdeldv_napa_ {alias swp_perdeldv_napa kind 'swp-delivery' units 'none'}
+define swp_perdeldv_solano_ {alias swp_perdeldv_solano kind 'swp-delivery' units 'none'}
+define swp_perdel_SOD_dv_ {alias swp_perdel_SOD_dv kind 'swp-delivery' units 'none'}
+define swp_frsa_ {alias swp_frsa kind 'swp_delivery' units 'cfs'}
+define swp_ta_feath_ {alias swp_ta_feath kind 'swp_delivery' units 'cfs'}
+define perdv_swp_fsc_ {alias perdv_swp_fsc kind 'percent-delivery' units 'none'}
+define swp_in_total_ {alias swp_in_total kind 'swp_delivery' units 'cfs'}
+define swp_co_total_ {alias swp_co_total kind 'swp_delivery' units 'cfs'}
+define D7C_dv {alias D7C kind 'flow-delivery' units 'cfs'}
+define short_swp_pmi_n_ {alias short_swp_pmi_n kind 'delivery-shortage-swp' units 'cfs'}
+define short_swp_pag_s_ {alias short_swp_pag_s kind 'delivery-shortage-swp' units 'cfs'}
+define short_swp_pmi_s_ {alias short_swp_pmi_s kind 'delivery-shortage-swp' units 'cfs'}
+define DEL_CVP_TOTAL_S_ {alias DEL_CVP_TOTAL_S kind 'delivery-cvp' units 'cfs'}
+define DEL_CVP_TOTAL_N_ {alias DEL_CVP_TOTAL_N kind 'delivery-cvp' units 'cfs'}
+define DEL_CVP_TOTAL_ {alias DEL_CVP_TOTAL kind 'delivery-cvp' units 'cfs'}
+
+define S11_ {alias S11 kind 'storage' units 'taf'}
+define S12_ {alias S12 kind 'storage' units 'taf'}
+define SWP_TA_TOTAL_ {alias SWP_TA_TOTAL kind 'swp_delivery' units 'cfs'}
+define short_cvp_prf_s_ {alias short_cvp_prf_s kind 'delivery-shortage-cvp' units 'cfs'}
+define short_cvp_pex_s_ {alias short_cvp_pex_s kind 'delivery-shortage-cvp' units 'cfs'}
+define short_cvp_pag_n_ {alias short_cvp_pag_n kind 'delivery-shortage-cvp' units 'cfs'}
+define short_cvp_pmi_n_ {alias short_cvp_pmi_n kind 'delivery-shortage-cvp' units 'cfs'}
+define short_cvp_prf_n_ {alias short_cvp_prf_n kind 'delivery-shortage-cvp' units 'cfs'}
+define short_cvp_psc_n_ {alias short_cvp_psc_n kind 'delivery-shortage-cvp' units 'cfs'}
+define short_cvp_pag_s_ {alias short_cvp_pag_s kind 'delivery-shortage-cvp' units 'cfs'}
+define short_cvp_pmi_s_ {alias short_cvp_pmi_s kind 'delivery-shortage-cvp' units 'cfs'}

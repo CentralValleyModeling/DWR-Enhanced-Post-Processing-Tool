@@ -17,7 +17,7 @@ This file post process the delta operation during each timestep
 define NegativeCW_JP_CHECK {
 	case yes {
 	condition JP_Check_ == 200 .and. JP_M > 1 + none_zero_threshold
-	value 200
+	value 200!1
 	}
 	case no {
 	condition always
@@ -27,7 +27,7 @@ define NegativeCW_JP_CHECK {
 define NegativeCW_EM_CHECK {
 	case yes {
 	condition EM_Check_ == 200 .and. EM_M > 1 + none_zero_threshold
-	value 200
+	value 200!1
 	}
 	case no {
 	condition always
@@ -47,15 +47,15 @@ define NegativeCW_CO_CHECK {
 define NegativeCW_RS_CHECK {
 	case yes1 {
 	condition abs(RS_MRDO_1 - TOT_DO_) < abs_threshold .and. RS_M_1 > 1 + none_zero_threshold
-	value 200
+	value 200!1
 	}
 	case yes2 {
 	condition abs(RS_MRDO_2 - TOT_DO_) < abs_threshold .and. RS_M_2 > 1 + none_zero_threshold
-	value 200
+	value 200!1
 	}	
 	case yes3 {
 	condition abs(RS_MRDO_3 - TOT_DO_) < abs_threshold .and. RS_M_3 > 1 + none_zero_threshold
-	value 200
+	value 200!1
 	}	
 	case no {
 	condition always
