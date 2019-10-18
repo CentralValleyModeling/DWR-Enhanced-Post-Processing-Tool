@@ -22,22 +22,18 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.Objects;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
 import javax.swing.*;
 
 import gov.ca.water.calgui.bo.SimpleFileFilter;
-import gov.ca.water.calgui.constant.Constant;
 import gov.ca.water.calgui.constant.EpptPreferences;
-import gov.ca.water.calgui.techservice.impl.FileSystemSvcImpl;
-import gov.ca.water.plotly.PlotlyPrintException;
-import javafx.application.Platform;
 import javafx.beans.value.ObservableValue;
 import javafx.concurrent.Worker;
-import javafx.scene.control.ScrollPane;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.paint.Color;
 import javafx.scene.web.WebView;
 import netscape.javascript.JSException;
 import netscape.javascript.JSObject;
@@ -69,9 +65,8 @@ public class JavaFxChartsPane extends BorderPane
 		_webView.setContextMenuEnabled(true);
 		_webView.getEngine().getLoadWorker().exceptionProperty().addListener(this::handleException);
 		_webView.getEngine().getLoadWorker().stateProperty().addListener(this::callbackScript);
-		_webView.setMinHeight(600);
-		setPrefWidth(1200);
-		_webView.setMinWidth(1000);
+		_webView.setMaxWidth(Double.MAX_VALUE);
+		setMaxWidth(Double.MAX_VALUE);
 		setCenter(_webView);
 		load(path);
 	}
