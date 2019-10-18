@@ -141,7 +141,6 @@ function plot(data) {
     });
 }
 
-
 function plotlyCopyToClipboard() {
     let plot = document.getElementById("tester");
     let layout = plot.layout;
@@ -156,8 +155,12 @@ function plotlyCopyToClipboard() {
         text += '\n';
         for (var k = 0; k < calcdatum.length; k++) {
             let boxdatum = calcdatum[k];
-            let boxName = boxdatum['trace']['x'][boxdatum.pts[0]['i']];
-            text += '\t' + boxName + '\t' + boxdatum.min + '\t' + boxdatum.max + '\t' + boxdatum.med + '\t';
+            text += '\t';
+            if (calcdatum[0]['trace']) {
+                let boxName = calcdatum[0]['trace']['x'][boxdatum.pts[0]['i']];
+                text += boxName;
+            }
+            text += '\t' + boxdatum.min + '\t' + boxdatum.max + '\t' + boxdatum.med + '\t';
             text += boxdatum.mean + '\t' + boxdatum.q1 + '\t' + boxdatum.q3 + '\t' + boxdatum.sd;
             text += '\n';
         }
