@@ -36,7 +36,6 @@ class TrendReportFlowPane
 	{
 		_flowPane = new BorderPane();
 		_flowPane.setBackground(new Background(new BackgroundFill(Color.WHITE, null, null)));
-		_flowPane.setMaxWidth(1300);
 		_animator = new TrendReportingAnimator();
 		_animator.observe(_flowPane.getChildren());
 	}
