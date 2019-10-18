@@ -176,6 +176,7 @@ public class TrendReportPanel extends JFXPanel
 		flowPane.alignmentProperty().set(Pos.CENTER);
 		TilePane tilePane = new TilePane(Orientation.HORIZONTAL, 10.0, 5.0);
 		tilePane.alignmentProperty().set(Pos.CENTER);
+//		tilePane.setBackground(new Background(new BackgroundFill(Color.PINK, CornerRadii.EMPTY, Insets.EMPTY)));
 		tilePane.getChildren().addAll(buildParameterListView(), buildStatisticsListView(), buildSeasonalPeriodListView(), buildTimeWindowControls());
 		flowPane.getChildren().addAll(tilePane);
 		return flowPane;
@@ -208,7 +209,7 @@ public class TrendReportPanel extends JFXPanel
 		_parameterListView.getSelectionModel().select(0);
 		_parameterListView.getSelectionModel().selectedItemProperty().addListener(this::inputsChanged);
 		_parameterListView.setPrefHeight(125);
-		_parameterListView.setPrefWidth(200);
+		_parameterListView.setPrefWidth(250);
 		_parameterListView.setCellFactory(param -> new ListCell<GUILinksAllModelsBO>()
 		{
 			@Override
@@ -303,6 +304,7 @@ public class TrendReportPanel extends JFXPanel
 		BorderPane borderPane = new BorderPane();
 		borderPane.setCenter(_seasonalPeriodListView);
 		borderPane.setTop(new Label("Seasonal Period"));
+//		borderPane.setBackground(new Background(new BackgroundFill(Color.CYAN, CornerRadii.EMPTY, Insets.EMPTY)));
 		return borderPane;
 	}
 
@@ -311,7 +313,10 @@ public class TrendReportPanel extends JFXPanel
 		BorderPane borderPane = new BorderPane();
 		borderPane.setTop(buildToggleControls());
 		borderPane.setCenter(_javascriptPane.getDashboardPane());
+//		borderPane.setBackground(new Background(new BackgroundFill(Color.BISQUE, null, null)));
 		BorderPane.setMargin(borderPane, new Insets(5.0, 0, 0, 0));
+
+		borderPane.setMaxWidth(1300);
 		return borderPane;
 	}
 
@@ -589,7 +594,7 @@ public class TrendReportPanel extends JFXPanel
 					EpptReportingComputedSet epptReportingComputedSet = computeForMetrics(guiLink, statistic, monthPeriod,
 							start, end, taf, scenarioRuns);
 					JSONObject jsonObject = epptReportingComputedSet.toJson();
-					LOGGER.log(Level.FINE, "{0}", jsonObject);
+					LOGGER.log(Level.INFO, "{0}", jsonObject);
 					retval.add(jsonObject);
 				}
 			}

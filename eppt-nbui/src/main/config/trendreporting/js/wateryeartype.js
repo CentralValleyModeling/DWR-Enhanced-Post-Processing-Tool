@@ -384,29 +384,30 @@ function plot(data) {
     plotMatrix(data);
 }
 
+
 function plotlyCopyToClipboard(element) {
     let plot = document.getElementById(element);
     let layout = plot.layout;
     let data1 = plot.data;
-    let yaxisTitle = layout['yaxis']['title'];
-    var text = layout['title']['text'] + '\n' + 'Scenario\t';
-    if (yaxisTitle) {
-        text += yaxisTitle['text'];
+    var text = layout['title']['text'];
+    if (layout['yaxis'] && layout['yaxis']['title']) {
+        text += '\nScenario\t' + layout['yaxis']['title']['text'];
     }
     text += '\n';
     let datum = data1[data1.length - 1];
     for (var i = 0; i < datum['header']['values'].length; i++) {
-        let header = datum['header']['values'][i].replace(/<br>/g, ' ').replace(/<b>/g, '').replace(/<\/b>/g, '');
-        text += header + '\t';
+        var name = datum['header']['values'][i] + "";
+        text += name + '\t';
     }
     text += '\n';
     let values = datum['cells']['values'];
     var rows = values[0].length;
     for (var j = 0; j < rows; j++) {
         for (var k = 0; k < values.length; k++) {
-            text += values[k][j] + '\t';
+            var val = values[k][j] + '\t';
+            text += val;
         }
         text += '\n';
     }
-    copyTextToClipboard(text);
+    copyTextToClipboard(text.replace(/<br>/g, ' ').replace(/<b>/g, '').replace(/<\/b>/g, ''));
 }
