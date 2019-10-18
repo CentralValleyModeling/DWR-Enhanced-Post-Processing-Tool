@@ -186,7 +186,7 @@ public class JavaFxChartsPane extends BorderPane
 	public static class JavaApp
 	{
 
-		public void interruptFunction(String format, Object dataJson, Object layoutJson)
+		public void interruptFunction(String format, Object dataJson, Object layoutJson, Object width, Object height)
 		{
 			if(format != null && dataJson != null && layoutJson != null)
 			{
@@ -213,7 +213,7 @@ public class JavaFxChartsPane extends BorderPane
 							outputPath = Paths.get(outputPath.toString() + "." + format);
 						}
 						writeToJson(jsonPath, dataJson, layoutJson);
-						exportToFormat(jsonPath, outputPath, format);
+						exportToFormat(jsonPath, outputPath, format, width, height);
 					}
 				}
 				catch(InterruptedException e)
@@ -228,9 +228,9 @@ public class JavaFxChartsPane extends BorderPane
 			}
 		}
 
-		private void exportToFormat(Path jsonPath, Path outputPath, String format) throws IOException, InterruptedException
+		private void exportToFormat(Path jsonPath, Path outputPath, String format, Object width, Object height) throws IOException, InterruptedException
 		{
-			String orcaCommandline = "\"" + ORCA_EXE + "\" graph " + jsonPath + " --format " + format + " \"" + outputPath + "\"";
+			String orcaCommandline = "\"" + ORCA_EXE + "\" graph " + jsonPath + " --width " + width + " --height " + height + " --format " + format + " \"" + outputPath + "\"" ;
 			LOGGER.log(Level.INFO, "Plotly SVG generation command line: {0}", orcaCommandline);
 			Process exec = new ProcessBuilder()
 					.directory(jsonPath.getParent().toFile())

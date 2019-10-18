@@ -594,7 +594,7 @@ public class TrendReportPanel extends JFXPanel
 					EpptReportingComputedSet epptReportingComputedSet = computeForMetrics(guiLink, statistic, monthPeriod,
 							start, end, taf, scenarioRuns);
 					JSONObject jsonObject = epptReportingComputedSet.toJson();
-					LOGGER.log(Level.INFO, "{0}", jsonObject);
+					LOGGER.log(Level.FINE, "{0}", jsonObject);
 					retval.add(jsonObject);
 				}
 			}
