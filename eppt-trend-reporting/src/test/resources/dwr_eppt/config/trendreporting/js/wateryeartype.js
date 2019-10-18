@@ -238,7 +238,7 @@ function plotGraph(data) {
     };
     let datum = data['scenario_run_data'];
 
-    let plot = Plotly.newPlot('tester', getPlotlySeries(datum), layout, {
+    Plotly.newPlot('tester', getPlotlySeries(datum), layout, {
         displaylogo: false,
         modeBarButtonsToRemove: ['toImage', 'sendDataToCloud', 'editInChartStudio', 'lasso2d', 'select2d', 'resetScale2d'],
         scrollZoom: true,
@@ -248,7 +248,7 @@ function plotGraph(data) {
     });
     $("#tester").mousedown((ev) => {
         if (ev.which === 3) {
-            openContextMenu('#tester', ev, () => plotlyCopyToClipboard('tester'), plotlyExportFunction(plot));
+            openContextMenu('#tester', ev, () => plotlyCopyToClipboard('tester'), plotlyExportFunction(document.getElementById('tester')));
         }
     });
 }

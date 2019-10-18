@@ -243,6 +243,10 @@ public class JavaFxChartsPane extends BorderPane
 
 		private void writeToJson(Path json, Object dataJson, Object layoutJson) throws IOException
 		{
+			if("undefined".equals(layoutJson) || "undefined".equals(dataJson))
+			{
+				throw new IOException("Unable to write JSON object with undefined Plotly data or layout");
+			}
 			JSONObject jsonObject = new JSONObject();
 			jsonObject.put("layout", new JSONObject(layoutJson.toString()));
 			JSONArray jsonArray = new JSONArray(dataJson.toString());
