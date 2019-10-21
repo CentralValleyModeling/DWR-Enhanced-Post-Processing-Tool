@@ -61,11 +61,11 @@ class BaseAltDiffTableBuilder extends TableBuilder
 		retval.setAttribute(UNITS_ATTRIBUTE, units);
 		String startMonth = reportParameters.getWaterYearDefinition().getStartMonth().getDisplayName(TextStyle.SHORT, Locale.getDefault());
 		String endMonth = reportParameters.getWaterYearDefinition().getEndMonth().getDisplayName(TextStyle.SHORT, Locale.getDefault());
-		if(epptChart.getChartId().equalsIgnoreCase("resops-summary-may"))
+		if("resops-summary-may".equalsIgnoreCase(epptChart.getChartId()))
 		{
 			retval.setAttribute(WATER_YEAR_DEF_ATTRIBUTE, "End of May");
 		}
-		else if(epptChart.getChartId().equalsIgnoreCase("resops-summary-sept"))
+		else if("resops-summary-sept".equalsIgnoreCase(epptChart.getChartId()))
 		{
 			retval.setAttribute(WATER_YEAR_DEF_ATTRIBUTE, "End of September");
 		}
@@ -94,7 +94,6 @@ class BaseAltDiffTableBuilder extends TableBuilder
 	{
 		Element retval = getDocument().createElement(PERIOD_TYPE_ELEMENT);
 		retval.setAttribute(PERIOD_TYPE_NAME_ATTRIBUTE, getReportParameters().getWaterYearIndex().toString());
-		getReportParameters().getWaterYearIndex().getWaterYearTypes();
 		List<Element> collect = getReportParameters().getWaterYearIndex().getWaterYearTypes().stream().map(
 				WaterYearType::getWaterYearPeriod).distinct()
 													 .map(e -> buildSeasonalType(e, epptChart))
