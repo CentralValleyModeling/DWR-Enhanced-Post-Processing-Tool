@@ -102,7 +102,7 @@ class WreslConfigWriter
 			{
 				configText = configText.replace("{SvAPart}", svDssFile.getAPart());
 				configText = configText.replace("{SvFPart}", svDssFile.getFPart());
-				configText = configText.replace("{SvFile}", svDssFile.getDssPath().toString());
+				configText = configText.replace("{SvFile}", "\"" + svDssFile.getDssPath().toString() + "\"");
 				deleteCorruptCatalogFile(svDssFile);
 			}
 			NamedDssPath ivDssFile = dssContainer.getIvDssFile();
@@ -110,24 +110,24 @@ class WreslConfigWriter
 			if(ivDssFile != null)
 			{
 				configText = configText.replace("{IvFPart}", ivDssFile.getFPart());
-				configText = configText.replace("{IvFile}", ivDssFile.getDssPath().toString());
+				configText = configText.replace("{IvFile}", "\"" + ivDssFile.getDssPath().toString() + "\"");
 				deleteCorruptCatalogFile(ivDssFile);
 			}
 			else if(dvDssFile != null)
 			{
 				configText = configText.replace("{IvFPart}", dvDssFile.getFPart());
-				configText = configText.replace("{IvFile}", dvDssFile.getDssPath().toString());
+				configText = configText.replace("{IvFile}", "\"" + dvDssFile.getDssPath().toString() + "\"");
 			}
 			if(dvDssFile != null)
 			{
-				configText = configText.replace("{DvFile}", dvDssFile.getDssPath().toString());
+				configText = configText.replace("{DvFile}", "\"" + dvDssFile.getDssPath().toString() + "\"");
 				deleteCorruptCatalogFile(dvDssFile);
 			}
 
 			Path wreslMain = _scenarioRun.getWreslMain();
 			if(wreslMain != null)
 			{
-				configText = configText.replace("{MainFile}", wreslMain.toAbsolutePath().toString());
+				configText = configText.replace("{MainFile}", "\"" + wreslMain.toAbsolutePath().toString() + "\"");
 			}
 			else
 			{
@@ -136,7 +136,7 @@ class WreslConfigWriter
 			Path postProcessDss = _scenarioRun.getPostProcessDss();
 			if(postProcessDss != null)
 			{
-				configText = configText.replace("{PostProcessDss}", postProcessDss.toString());
+				configText = configText.replace("{PostProcessDss}", "\"" + postProcessDss.toString() + "\"");
 			}
 
 
