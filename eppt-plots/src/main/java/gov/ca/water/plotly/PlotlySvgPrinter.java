@@ -77,6 +77,14 @@ public final class PlotlySvgPrinter
 
 	public static void printSvg(Path imageDirectory) throws PlotlyPrintException
 	{
+		try
+		{
+			Files.createDirectory(imageDirectory);
+		}
+		catch(IOException e)
+		{
+			LOGGER.log(Level.FINE, "Error creating images directory", e);
+		}
 		String jsonFiles;
 		try(Stream<Path> files = Files.walk(imageDirectory, 1))
 		{

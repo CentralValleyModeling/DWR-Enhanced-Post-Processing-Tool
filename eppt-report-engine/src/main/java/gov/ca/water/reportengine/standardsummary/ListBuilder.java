@@ -12,6 +12,7 @@
 
 package gov.ca.water.reportengine.standardsummary;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.function.Function;
 import java.util.logging.Level;
@@ -124,13 +125,15 @@ class ListBuilder extends TableBuilder
 		if(apply != null)
 		{
 			NodeList childNodes = apply.getChildNodes();
-			for(int i = 0; i < childNodes.getLength(); i++)
+			int i = 0;
+			while(childNodes.getLength() > 0)
 			{
-				Node item = childNodes.item(i);
+				Node item = childNodes.item(0);
 				if(item instanceof Element)
 				{
 					((Element) item).setAttribute(VALUE_ORDER_ATTRIBUTE, String.valueOf(i));
 					componentElement.appendChild(item);
+					i++;
 				}
 			}
 		}
