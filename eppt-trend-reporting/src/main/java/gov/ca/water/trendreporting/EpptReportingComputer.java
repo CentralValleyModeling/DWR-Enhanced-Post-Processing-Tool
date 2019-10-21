@@ -24,6 +24,8 @@ import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.NavigableMap;
+import java.util.Set;
 import java.util.SortedMap;
 import java.util.TimeZone;
 import java.util.TreeMap;
@@ -85,7 +87,7 @@ public class EpptReportingComputer
 	private EpptReportingComputed compute(EpptScenarioRun scenarioRun, DSSGrabber1SvcImpl dssGrabber, boolean convertTaf)
 	{
 		int offset = (int) TimeUnit.MILLISECONDS.toMinutes(TimeZone.getDefault().getRawOffset());
-		Map<LocalDateTime, Double> retval = new HashMap<>();
+		NavigableMap<LocalDateTime, Double> retval = new TreeMap<>();
 		TimeSeriesContainer[] primarySeries = dssGrabber.getPrimarySeries();
 		String units = "";
 		if(primarySeries != null && primarySeries.length > 0 && primarySeries[0] != null)
@@ -144,9 +146,35 @@ public class EpptReportingComputer
 		return retval;
 	}
 
-	private Map<LocalDateTime, Double> filterPeriod(Map<LocalDateTime, Double> values)
+	private Map<LocalDateTime, Double> filterPeriod(NavigableMap<LocalDateTime, Double> values)
 	{
 		List<Month> months = EpptReportingMonths.getMonths(_monthPeriod);
+		if(!values.isEmpty())
+		{
+			LocalDateTime start = values.firstKey();
+			LocalDateTime end = values.lastKey();
+			Set<LocalDateTime> ascendinding = values.keySet();
+			for(LocalDateTime date : ascendinding)
+			{
+				Month month = date.getMonth().minus(1);
+				if(months.get(0) == month)
+				{
+					start = date;
+					break;
+				}
+			}
+			Set<LocalDateTime> descending = values.descendingKeySet();
+			for(LocalDateTime date : descending)
+			{
+				Month month = date.getMonth().minus(1);
+				if(months.get(months.size() - 1) == month)
+				{
+					end = date;
+					break;
+				}
+			}
+			values = values.subMap(start, true, end, true);
+		}
 		return values.entrySet()
 					 .stream()
 					 .filter(e -> months.contains(e.getKey().getMonth().minus(1)))
