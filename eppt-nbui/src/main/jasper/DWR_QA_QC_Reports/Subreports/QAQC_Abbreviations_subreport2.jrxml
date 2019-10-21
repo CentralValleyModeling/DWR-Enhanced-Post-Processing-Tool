@@ -1,0 +1,230 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.10.0.final using JasperReports Library version 6.10.0-unknown  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="QAQC_Abbreviations_subreport2" language="groovy" pageWidth="504" pageHeight="116" whenNoDataType="NoPages" columnWidth="504" leftMargin="0" rightMargin="0" topMargin="7" bottomMargin="0" whenResourceMissingType="Error" uuid="da75db69-3924-4f44-998a-80195014db99">
+	<property name="net.sf.jasperreports.data.adapter" value="QAQC_Datasource.xml"/>
+	<property name="net.sf.jasperreports.print.create.bookmarks" value="true"/>
+	<property name="com.jaspersoft.studio.unit." value="pixel"/>
+	<parameter name="XML_DATA_DOCUMENT" class="org.w3c.dom.Document" isForPrompting="false"/>
+	<parameter name="XML_INPUT_STREAM" class="java.io.InputStream" isForPrompting="false"/>
+	<parameter name="XML_FILE" class="java.io.File" isForPrompting="false"/>
+	<parameter name="net.sf.jasperreports.xml.source" class="java.lang.String" isForPrompting="false"/>
+	<parameter name="XML_DATE_PATTERN" class="java.lang.String" isForPrompting="false"/>
+	<parameter name="XML_NUMBER_PATTERN" class="java.lang.String" isForPrompting="false"/>
+	<parameter name="XML_LOCALE" class="java.util.Locale" isForPrompting="false"/>
+	<parameter name="XML_TIME_ZONE" class="java.util.TimeZone" isForPrompting="false"/>
+	<parameter name="BaseIssuesReport" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["Base Issues Report"]]></defaultValueExpression>
+	</parameter>
+	<queryString language="XPath">
+		<![CDATA[/qaqc-report]]>
+	</queryString>
+	<field name="alternative-count" class="java.lang.Integer">
+		<property name="net.sf.jasperreports.xpath.field.expression" value="@alternative-count"/>
+		<fieldDescription><![CDATA[@alternative-count]]></fieldDescription>
+	</field>
+	<field name="print-title" class="java.lang.String">
+		<property name="net.sf.jasperreports.xpath.field.expression" value="@print-title"/>
+		<fieldDescription><![CDATA[@print-title]]></fieldDescription>
+	</field>
+	<field name="print-toc" class="java.lang.String">
+		<property name="net.sf.jasperreports.xpath.field.expression" value="@print-toc"/>
+		<fieldDescription><![CDATA[@print-toc]]></fieldDescription>
+	</field>
+	<field name="show-assumption-changes" class="java.lang.String">
+		<property name="net.sf.jasperreports.xpath.field.expression" value="@show-assumption-changes"/>
+		<fieldDescription><![CDATA[@show-assumption-changes]]></fieldDescription>
+	</field>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band splitType="Stretch">
+			<printWhenExpression><![CDATA[1==0]]></printWhenExpression>
+		</band>
+	</title>
+	<pageHeader>
+		<band splitType="Stretch">
+			<property name="com.jaspersoft.studio.unit.height" value="px"/>
+			<printWhenExpression><![CDATA[1==0]]></printWhenExpression>
+		</band>
+	</pageHeader>
+	<columnHeader>
+		<band splitType="Stretch">
+			<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+			<printWhenExpression><![CDATA[1==1]]></printWhenExpression>
+		</band>
+	</columnHeader>
+	<detail>
+		<band splitType="Stretch">
+			<printWhenExpression><![CDATA[1==0]]></printWhenExpression>
+		</band>
+	</detail>
+	<columnFooter>
+		<band splitType="Stretch">
+			<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+			<printWhenExpression><![CDATA[1==0]]></printWhenExpression>
+		</band>
+	</columnFooter>
+	<pageFooter>
+		<band splitType="Stretch">
+			<property name="com.jaspersoft.studio.unit.height" value="px"/>
+		</band>
+	</pageFooter>
+	<summary>
+		<band height="86" splitType="Stretch">
+			<property name="com.jaspersoft.studio.unit.height" value="px"/>
+			<printWhenExpression><![CDATA[1==1]]></printWhenExpression>
+			<staticText>
+				<reportElement x="38" y="58" width="100" height="14" uuid="2cdb2a22-1b75-4179-a131-e28e96e33672">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<box topPadding="1" leftPadding="6" bottomPadding="1" rightPadding="1">
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font size="9"/>
+				</textElement>
+				<text><![CDATA[EXP_BAL]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="16" y="0" width="444" height="16" forecolor="#2F5496" uuid="f8d2acd9-e38c-4829-bcd9-f405cbace5d6">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement verticalAlignment="Middle">
+					<font size="12"/>
+				</textElement>
+				<text><![CDATA[Controls for COA]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="138" y="16" width="366" height="14" uuid="32ff539f-cee6-4733-9401-29d631fcf373"/>
+				<box topPadding="1" leftPadding="6" bottomPadding="1" rightPadding="1">
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font size="9" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Description]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="38" y="16" width="100" height="14" uuid="e6951c31-c79c-4038-8476-7af2066e5d77">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<box topPadding="1" leftPadding="6" bottomPadding="1" rightPadding="1">
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font size="9" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Abbreviation]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="38" y="72" width="100" height="14" uuid="ffd4eb86-4bd1-4bb1-a338-42b4dfd4868f">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<box topPadding="1" leftPadding="6" bottomPadding="1" rightPadding="1">
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font size="9"/>
+				</textElement>
+				<text><![CDATA[EXP_EXC]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="38" y="30" width="100" height="14" uuid="de973e40-f647-41d4-a068-b6e8223143ed">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<box topPadding="1" leftPadding="6" bottomPadding="1" rightPadding="1">
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font size="9"/>
+				</textElement>
+				<text><![CDATA[IBU]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="138" y="30" width="366" height="14" uuid="c8b00632-f1eb-417c-8648-771241778ece"/>
+				<box topPadding="1" leftPadding="6" bottomPadding="1" rightPadding="1">
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font size="9"/>
+				</textElement>
+				<text><![CDATA[In Basin Use]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="138" y="72" width="366" height="14" uuid="9a60ce87-f2b7-40f8-8696-de763db02d4f"/>
+				<box topPadding="1" leftPadding="6" bottomPadding="1" rightPadding="1">
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font size="9"/>
+				</textElement>
+				<text><![CDATA[Available Export Capacity under Excess Conditions]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="138" y="58" width="366" height="14" uuid="1befa451-1ca6-4c88-a0bc-e5314fa6b556"/>
+				<box topPadding="1" leftPadding="6" bottomPadding="1" rightPadding="1">
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font size="9"/>
+				</textElement>
+				<text><![CDATA[Available Export Capacity under Balanced Conditions]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="38" y="44" width="100" height="14" uuid="a76f1ac6-0a93-4422-aea9-bd300eeda4d7">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<box topPadding="1" leftPadding="6" bottomPadding="1" rightPadding="1">
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font size="9"/>
+				</textElement>
+				<text><![CDATA[UWFE]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="138" y="44" width="366" height="14" uuid="ad8e9f46-2ea0-4fab-bbb5-38b80c3d6d04">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<box topPadding="1" leftPadding="6" bottomPadding="1" rightPadding="1">
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font size="9"/>
+				</textElement>
+				<text><![CDATA[Unstored Water For Export]]></text>
+			</staticText>
+		</band>
+	</summary>
+</jasperReport>
