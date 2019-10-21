@@ -21,7 +21,6 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.EnumMap;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.NavigableMap;
@@ -44,6 +43,7 @@ import hec.heclib.util.HecTime;
 import hec.io.TimeSeriesContainer;
 import rma.util.RMAConst;
 
+import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toMap;
 
 /**
@@ -121,7 +121,10 @@ public class EpptReportingComputer
 		Map<WaterYearPeriod, SortedMap<Month, Double>> retval = new TreeMap<>(Comparator.comparingInt(sortedPeriods::indexOf));
 		for(WaterYearPeriod waterYearPeriod : sortedPeriods)
 		{
-			List<WaterYearPeriodRange> periodRange = _waterYearIndex.getWaterYearPeriodRanges().getOrDefault(waterYearPeriod, new ArrayList<>());
+			List<WaterYearPeriodRange> periodRange = _waterYearIndex.getWaterYearTypeGroups().getOrDefault(waterYearPeriod, new ArrayList<>())
+																	.stream()
+																	.map(e->new WaterYearPeriodRange(e.getWaterYearPeriod(), e, e))
+																	.collect(toList());
 			WaterYearPeriodRangesFilter waterYearPeriodRangesFilter = new WaterYearPeriodRangesFilter(periodRange, _waterYearDefinition);
 			SortedMap<LocalDateTime, Double> grouped = filteredPeriod.entrySet()
 					.stream()

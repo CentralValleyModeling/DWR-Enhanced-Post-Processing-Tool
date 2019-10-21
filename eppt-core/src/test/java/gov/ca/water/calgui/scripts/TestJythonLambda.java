@@ -30,7 +30,6 @@ import java.util.NavigableMap;
 import java.util.Optional;
 import java.util.TreeMap;
 import java.util.function.Function;
-import java.util.stream.Collectors;
 import java.util.stream.DoubleStream;
 
 import javax.script.ScriptException;
@@ -42,7 +41,6 @@ import gov.ca.water.calgui.bo.WaterYearDefinition;
 import gov.ca.water.calgui.bo.WaterYearIndex;
 import gov.ca.water.calgui.bo.WaterYearPeriod;
 import gov.ca.water.calgui.bo.WaterYearPeriodRange;
-import gov.ca.water.calgui.bo.WaterYearPeriodRangeFilter;
 import gov.ca.water.calgui.bo.WaterYearPeriodRangesFilter;
 import gov.ca.water.calgui.bo.WaterYearType;
 import gov.ca.water.calgui.busservice.impl.DetailedIssuesReader;
@@ -63,7 +61,6 @@ import rma.stats.EmpiricalDist;
 import static java.util.stream.Collectors.averagingDouble;
 import static java.util.stream.Collectors.collectingAndThen;
 import static java.util.stream.Collectors.groupingBy;
-import static java.util.stream.Collectors.mapping;
 import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toMap;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -706,7 +703,7 @@ class TestJythonLambda
 											.filter(p -> p.toString().equalsIgnoreCase("SAC Index"))
 											.findAny()
 											.orElseThrow(() -> new Exception("No SAC index"));
-		List<WaterYearPeriodRange> criticallyDry = waterYearIndex.getWaterYearPeriodRanges().getOrDefault(new WaterYearPeriod("Critical"),
+		List<WaterYearPeriodRange> criticallyDry = waterYearIndex.getLongWaterYearPeriodRanges().getOrDefault(new WaterYearPeriod("Critical"),
 				new ArrayList<>());
 		WaterYearPeriodRangesFilter waterYearPeriodRangesFilter = new WaterYearPeriodRangesFilter(criticallyDry, waterYearDefinition);
 		TreeMap<LocalDateTime, Double> filteredData = new TreeMap<>(dtsData.entrySet().stream()

@@ -55,17 +55,25 @@ public class WaterYearIndex
 		return _name;
 	}
 
-	private Map<WaterYearPeriod, List<WaterYearType>> getWaterYearTypeRanges()
+	/**
+	 *
+	 * @return all water year type groups for all years
+	 */
+	public Map<WaterYearPeriod, List<WaterYearType>> getWaterYearTypeGroups()
 	{
 		return getWaterYearTypes()
 				.stream()
 				.collect(Collectors.groupingBy(WaterYearType::getWaterYearPeriod));
 	}
 
-	public Map<WaterYearPeriod, List<WaterYearPeriodRange>> getWaterYearPeriodRanges()
+	/**
+	 *
+	 * @return This method returns ranges that are two year periods or longer
+	 */
+	public Map<WaterYearPeriod, List<WaterYearPeriodRange>> getLongWaterYearPeriodRanges()
 	{
 		Map<WaterYearPeriod, List<WaterYearPeriodRange>> retval = new HashMap<>();
-		for(Map.Entry<WaterYearPeriod, List<WaterYearType>> entry : getWaterYearTypeRanges().entrySet())
+		for(Map.Entry<WaterYearPeriod, List<WaterYearType>> entry : getWaterYearTypeGroups().entrySet())
 		{
 			int start = 0;
 			WaterYearPeriod key = entry.getKey();
