@@ -167,6 +167,18 @@ public final class ProjectConfigurationPanel extends EpptPanel
 		JTextField descriptionField = (JTextField) getSwingEngine().find("prj_desc");
 		projectNameField.getDocument().addDocumentListener(documentListener);
 		descriptionField.getDocument().addDocumentListener(documentListener);
+		JSpinner spnSM = (JSpinner) getSwingEngine().find("spnStartMonth");
+		spnSM.addChangeListener(e->setModified(true));
+		JSpinner spnEM = (JSpinner) getSwingEngine().find("spnEndMonth");
+		spnEM.addChangeListener(e->setModified(true));
+		JSpinner spnSY = (JSpinner) getSwingEngine().find("spnStartYear");
+		spnSY.addChangeListener(e->setModified(true));
+		JSpinner spnEY = (JSpinner) getSwingEngine().find("spnEndYear");
+		spnEY.addChangeListener(e->setModified(true));
+		JRadioButton tafButton =  ((JRadioButton) getSwingEngine().find("rdbTAF"));
+		tafButton.addActionListener(e->setModified(true));
+		JRadioButton cfsButton =  ((JRadioButton) getSwingEngine().find("rdbCFS"));
+		cfsButton.addActionListener(e->setModified(true));
 	}
 
 	private void initializeSpinners()

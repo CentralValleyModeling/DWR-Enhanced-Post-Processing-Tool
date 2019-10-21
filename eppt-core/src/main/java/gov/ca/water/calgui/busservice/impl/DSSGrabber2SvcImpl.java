@@ -521,7 +521,8 @@ public class DSSGrabber2SvcImpl extends DSSGrabber1SvcImpl
 						}
 						if(!_isCFS)
 						{
-							primaryResults[mtsi][i].units = "TAF per year";
+							primaryResults[mtsi][i].units = "TAF";
+							primaryResults[mtsi][i].type = "PER-CUM";
 						}
 					}
 				}

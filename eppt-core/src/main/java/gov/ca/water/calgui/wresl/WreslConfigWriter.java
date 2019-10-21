@@ -174,7 +174,7 @@ class WreslConfigWriter
 			Path dssPath = namedDssPath.getDssPath();
 			if(dssPath != null && dssPath.toFile().exists())
 			{
-				Path path = Paths.get(dssPath.toString().replace(".dss", ".dsc"));
+				Path path = Paths.get(dssPath.toString().toLowerCase().replace(".dss", ".dsc"));
 				if(path.toFile().exists())
 				{
 					try

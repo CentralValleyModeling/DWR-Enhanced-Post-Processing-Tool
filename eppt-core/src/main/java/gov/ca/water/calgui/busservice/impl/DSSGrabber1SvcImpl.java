@@ -1019,7 +1019,8 @@ public class DSSGrabber1SvcImpl implements IDSSGrabber1Svc
 						}
 						if(!_isCFS)
 						{
-							primaryResults[i].units = "TAF per year";
+							primaryResults[i].units = "TAF";
+							primaryResults[i].type = "PER-CUM";
 						}
 					}
 				}
@@ -1064,7 +1065,8 @@ public class DSSGrabber1SvcImpl implements IDSSGrabber1Svc
 							}
 							if(!_isCFS)
 							{
-								secondaryResults[i].units = "TAF per year";
+								secondaryResults[i].units = "TAF";
+								secondaryResults[i].type = "PER-CUM";
 							}
 						}
 					}

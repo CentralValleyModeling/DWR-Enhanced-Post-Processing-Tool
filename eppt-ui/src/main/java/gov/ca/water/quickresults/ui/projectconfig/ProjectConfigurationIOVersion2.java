@@ -268,7 +268,7 @@ class ProjectConfigurationIOVersion2
 	{
 		if(path.startsWith(RELATIVE_TO_PROJECT))
 		{
-			return projectPath.getParent().toAbsolutePath().resolve(path.replace(RELATIVE_TO_PROJECT + "\\", ""));
+			return projectPath.getParent().toAbsolutePath().resolve(path.replace(RELATIVE_TO_PROJECT + "\\", "").replace(RELATIVE_TO_PROJECT,""));
 		}
 		return Paths.get(path);
 	}

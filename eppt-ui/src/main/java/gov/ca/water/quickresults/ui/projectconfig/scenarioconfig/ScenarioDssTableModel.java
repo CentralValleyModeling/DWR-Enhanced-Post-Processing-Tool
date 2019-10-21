@@ -165,7 +165,7 @@ class ScenarioDssTableModel extends RmaTableModel
 					}
 					dssPath = outputPath.resolve(dssPath);
 				}
-				if(!dssPath.toString().endsWith(".dss"))
+				if(!dssPath.toString().toLowerCase().endsWith(".dss"))
 				{
 					dssPath = Paths.get(dssPath.toString() + ".dss");
 				}

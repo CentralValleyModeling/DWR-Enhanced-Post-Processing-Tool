@@ -176,7 +176,7 @@ function plotlyCopyToClipboard() {
         text += (xarr[j] * 100);
         for (var k = 0; k < data1.length; k++) {
             let yarr = data1[k]['y'];
-            text += '\t' + yarr[k]
+            text += '\t' + yarr[j]
         }
         text += '\n';
     }

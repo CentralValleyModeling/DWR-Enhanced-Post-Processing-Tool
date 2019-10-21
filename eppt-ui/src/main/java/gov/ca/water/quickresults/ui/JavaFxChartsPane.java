@@ -22,18 +22,22 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Objects;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
 import javax.swing.*;
 
 import gov.ca.water.calgui.bo.SimpleFileFilter;
+import gov.ca.water.calgui.constant.Constant;
 import gov.ca.water.calgui.constant.EpptPreferences;
+import gov.ca.water.calgui.techservice.impl.FileSystemSvcImpl;
+import gov.ca.water.plotly.PlotlyPrintException;
+import javafx.application.Platform;
 import javafx.beans.value.ObservableValue;
 import javafx.concurrent.Worker;
-import javafx.scene.layout.Background;
-import javafx.scene.layout.BackgroundFill;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.paint.Color;
 import javafx.scene.web.WebView;
 import netscape.javascript.JSException;
 import netscape.javascript.JSObject;
@@ -65,8 +69,9 @@ public class JavaFxChartsPane extends BorderPane
 		_webView.setContextMenuEnabled(true);
 		_webView.getEngine().getLoadWorker().exceptionProperty().addListener(this::handleException);
 		_webView.getEngine().getLoadWorker().stateProperty().addListener(this::callbackScript);
-		_webView.setMaxWidth(Double.MAX_VALUE);
-		setMaxWidth(Double.MAX_VALUE);
+		_webView.setMinHeight(600);
+		setPrefWidth(1200);
+		_webView.setMinWidth(1000);
 		setCenter(_webView);
 		load(path);
 	}
@@ -181,7 +186,7 @@ public class JavaFxChartsPane extends BorderPane
 	public static class JavaApp
 	{
 
-		public void interruptFunction(String format, Object dataJson, Object layoutJson)
+		public void interruptFunction(String format, Object dataJson, Object layoutJson, Object width, Object height)
 		{
 			if(format != null && dataJson != null && layoutJson != null)
 			{
@@ -208,7 +213,7 @@ public class JavaFxChartsPane extends BorderPane
 							outputPath = Paths.get(outputPath.toString() + "." + format);
 						}
 						writeToJson(jsonPath, dataJson, layoutJson);
-						exportToFormat(jsonPath, outputPath, format);
+						exportToFormat(jsonPath, outputPath, format, width, height);
 					}
 				}
 				catch(InterruptedException e)
@@ -223,9 +228,9 @@ public class JavaFxChartsPane extends BorderPane
 			}
 		}
 
-		private void exportToFormat(Path jsonPath, Path outputPath, String format) throws IOException, InterruptedException
+		private void exportToFormat(Path jsonPath, Path outputPath, String format, Object width, Object height) throws IOException, InterruptedException
 		{
-			String orcaCommandline = "\"" + ORCA_EXE + "\" graph " + jsonPath + " --format " + format + " \"" + outputPath + "\"";
+			String orcaCommandline = "\"" + ORCA_EXE + "\" graph " + jsonPath + " --width " + width + " --height " + height + " --format " + format + " \"" + outputPath + "\"" ;
 			LOGGER.log(Level.INFO, "Plotly SVG generation command line: {0}", orcaCommandline);
 			Process exec = new ProcessBuilder()
 					.directory(jsonPath.getParent().toFile())
@@ -238,6 +243,10 @@ public class JavaFxChartsPane extends BorderPane
 
 		private void writeToJson(Path json, Object dataJson, Object layoutJson) throws IOException
 		{
+			if("undefined".equals(layoutJson) || "undefined".equals(dataJson))
+			{
+				throw new IOException("Unable to write JSON object with undefined Plotly data or layout");
+			}
 			JSONObject jsonObject = new JSONObject();
 			jsonObject.put("layout", new JSONObject(layoutJson.toString()));
 			JSONArray jsonArray = new JSONArray(dataJson.toString());
