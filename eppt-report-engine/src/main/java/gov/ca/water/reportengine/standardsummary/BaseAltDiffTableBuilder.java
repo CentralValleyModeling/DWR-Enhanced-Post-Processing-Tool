@@ -204,22 +204,22 @@ class BaseAltDiffTableBuilder extends TableBuilder
 			Double altValue = createJythonValueGenerator(filter, alternative, v.getFunction()).generateValue();
 			if(baseValue == null)
 			{
-				getStandardSummaryErrors().addError(LOGGER, Level.WARNING,
+				getStandardSummaryErrors().addError(LOGGER,
 						"Unable to generate diff value for: " + v + " value is null for scenario: " + base.getName());
 			}
 			else if(altValue == null)
 			{
-				getStandardSummaryErrors().addError(LOGGER, Level.WARNING,
+				getStandardSummaryErrors().addError(LOGGER,
 						"Unable to generate diff value for: " + v + " value is null for scenario: " + alternative.getName());
 			}
 			else if(!RMAConst.isValidValue(baseValue))
 			{
-				getStandardSummaryErrors().addError(LOGGER, Level.WARNING,
+				getStandardSummaryErrors().addError(LOGGER,
 						"Unable to generate diff value for: " + v + " value is invalid (" + baseValue + ") for scenario: " + base.getName());
 			}
 			else if(!RMAConst.isValidValue(altValue))
 			{
-				getStandardSummaryErrors().addError(LOGGER, Level.WARNING,
+				getStandardSummaryErrors().addError(LOGGER,
 						"Unable to generate diff value for: " + v + " value is invalid (" + altValue + ") for scenario: " + alternative.getName());
 			}
 			else
@@ -285,12 +285,12 @@ class BaseAltDiffTableBuilder extends TableBuilder
 
 			if(value == null)
 			{
-				getStandardSummaryErrors().addError(LOGGER, Level.WARNING,
+				getStandardSummaryErrors().addError(LOGGER,
 						"Unable to generate scenario value for: " + v + " value is null for scenario: " + scenarioRun.getName());
 			}
 			else if(!RMAConst.isValidValue(value))
 			{
-				getStandardSummaryErrors().addError(LOGGER, Level.WARNING,
+				getStandardSummaryErrors().addError(LOGGER,
 						"Unable to generate scenario value for: " + v + " value is invalid (" + value + ") for scenario: " + scenarioRun.getName());
 			}
 			else

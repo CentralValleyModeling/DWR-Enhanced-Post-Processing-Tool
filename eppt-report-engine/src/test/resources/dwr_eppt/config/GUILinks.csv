@@ -848,10 +848,10 @@
 2865,CalLite,,,Flow,Old and Middle River,OMR Flow Criteria
 2865,CalSim2,OMR_RPA14d/FLOW-REG,,,,
 2865,CalSim3,,,,,
-2866,CalLite,,,,K-M Equation,
+2866,CalLite,,,,X2 (K-M equation),
 2866,CalSim2,,,,,
 2866,CalSim3,,,,,
-2867,CalLite,,,,Calculated using ANN,
+2867,CalLite,,,,X2 (ANN output),
 2867,CalSim2,DEL_CVP_TOTAL_S/DELIVERY-CVP,,,,
 2867,CalSim3,,,,,
 2868,CalLite,,,,,

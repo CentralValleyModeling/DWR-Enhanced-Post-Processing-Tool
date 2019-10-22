@@ -219,7 +219,7 @@ public class JythonValueGenerator
 			}
 			else if(o instanceof Map && ((Map) o).isEmpty())
 			{
-				throw new ScriptException("No data found");
+				throw new ScriptException("No data found for Scenario Run: " + _scenarioRun);
 			}
 			return new EnumMap((Map<Month, Double>) o);
 		}

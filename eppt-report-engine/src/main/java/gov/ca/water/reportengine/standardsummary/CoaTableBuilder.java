@@ -176,7 +176,7 @@ class CoaTableBuilder extends TableBuilder
 				}
 				catch(EpptReportException e)
 				{
-					getStandardSummaryErrors().addError(LOGGER, Level.SEVERE, "Error running Script for total", e);
+					getStandardSummaryErrors().addError(LOGGER, "Error running Script for total", e);
 				}
 				return getDocument().createElement(VALUE_ELEMENT);
 			}
@@ -195,20 +195,22 @@ class CoaTableBuilder extends TableBuilder
 			Object altValue = createJythonValueGenerator(alternative, v.getFunction()).generateObjectValue();
 			if(baseValue == null)
 			{
-				getStandardSummaryErrors().addError(LOGGER, Level.WARNING, "Unable to generate diff value for: " + v + " value is null for scenario: " + base.getName());
+				getStandardSummaryErrors().addError(LOGGER,
+						"Unable to generate diff value for: " + v + " value is null for scenario: " + base.getName());
 			}
 			else if(altValue == null)
 			{
-				getStandardSummaryErrors().addError(LOGGER, Level.WARNING, "Unable to generate diff value for: " + v + " value is null for scenario: " + alternative.getName());
+				getStandardSummaryErrors().addError(LOGGER,
+						"Unable to generate diff value for: " + v + " value is null for scenario: " + alternative.getName());
 			}
 			else if(baseValue instanceof Double && !RMAConst.isValidValue((Double) baseValue))
 			{
-				getStandardSummaryErrors().addError(LOGGER, Level.WARNING,
+				getStandardSummaryErrors().addError(LOGGER,
 						"Unable to generate diff value for: " + v + " value is invalid (" + baseValue + ") for scenario: " + base.getName());
 			}
 			else if(altValue instanceof Double && !RMAConst.isValidValue((Double) altValue))
 			{
-				getStandardSummaryErrors().addError(LOGGER, Level.WARNING,
+				getStandardSummaryErrors().addError(LOGGER,
 						"Unable to generate diff value for: " + v + " value is invalid (" + baseValue + ") for scenario: " + alternative.getName());
 			}
 			else if(baseValue instanceof Double && altValue instanceof Double)
@@ -233,11 +235,12 @@ class CoaTableBuilder extends TableBuilder
 
 			if(value == null)
 			{
-				getStandardSummaryErrors().addError(LOGGER, Level.WARNING, "Unable to generate scenario value for: " + v + " value is null for scenario: " + scenarioRun.getName());
+				getStandardSummaryErrors().addError(LOGGER,
+						"Unable to generate scenario value for: " + v + " value is null for scenario: " + scenarioRun.getName());
 			}
 			else if(value instanceof Double && !RMAConst.isValidValue((Double) value))
 			{
-				getStandardSummaryErrors().addError(LOGGER, Level.WARNING,
+				getStandardSummaryErrors().addError(LOGGER,
 						"Unable to generate scenario value for: " + v + " value is invalid (" + value + ") for scenario: " + scenarioRun.getName());
 			}
 			else

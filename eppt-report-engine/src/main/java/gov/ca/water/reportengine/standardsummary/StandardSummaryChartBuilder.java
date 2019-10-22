@@ -169,6 +169,6 @@ abstract class StandardSummaryChartBuilder
 
 	void logScriptException(Logger logger, ChartComponent v, EpptReportException e)
 	{
-		getStandardSummaryErrors().addError(logger, Level.SEVERE, "Error in Summary configuration - " + v + "\nError running jython script for: " + v.getFunction(), e);
+		getStandardSummaryErrors().addError(logger, "Error in Summary configuration - " + v + "\nError running jython script for: " + v.getFunction(), e);
 	}
 }

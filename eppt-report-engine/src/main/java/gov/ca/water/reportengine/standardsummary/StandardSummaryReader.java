@@ -158,7 +158,7 @@ public class StandardSummaryReader
 		}
 		catch(ScriptException | RuntimeException e)
 		{
-			_standardSummaryErrors.addError(LOGGER, Level.SEVERE, "Error running title script: " + script, e);
+			_standardSummaryErrors.addError(LOGGER, "Error running title script: " + script, e);
 		}
 		return retval;
 	}
