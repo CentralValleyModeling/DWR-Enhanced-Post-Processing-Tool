@@ -1,0 +1,50 @@
+/*
+ * Enhanced Post Processing Tool (EPPT) Copyright (c) 2019.
+ *
+ * EPPT is copyrighted by the State of California, Department of Water Resources. It is licensed
+ * under the GNU General Public License, version 2. This means it can be
+ * copied, distributed, and modified freely, but you may not restrict others
+ * in their ability to copy, distribute, and modify it. See the license below
+ * for more details.
+ *
+ * GNU General Public License
+ */
+
+package gov.ca.water.calgui.bo;
+
+import java.util.List;
+import java.util.Map;
+
+/**
+ * Company: Resource Management Associates
+ *
+ * @author <a href="mailto:adam@rmanet.com">Adam Korynta</a>
+ * @since 10-22-2019
+ */
+public class WaterYearAnnualPeriodRangesFilter implements AnnualPeriodFilter
+{
+	private final List<WaterYearPeriodRange> _waterYearPeriodRanges;
+
+	public WaterYearAnnualPeriodRangesFilter(List<WaterYearPeriodRange> waterYearPeriodRanges)
+	{
+		_waterYearPeriodRanges = waterYearPeriodRanges;
+	}
+
+	@Override
+	public boolean test(Map.Entry<Integer, Double> input)
+	{
+		boolean retval = false;
+		for(WaterYearPeriodRange range : _waterYearPeriodRanges)
+		{
+			int endRange = range.getEndYear().getYear();
+			int startRange = range.getStartYear().getYear();
+			Integer inputYear = input.getKey();
+			retval = startRange <= inputYear && endRange >= inputYear;
+			if(retval)
+			{
+				break;
+			}
+		}
+		return retval;
+	}
+}

@@ -1,30 +1,27 @@
 from rma.stats import EmpiricalDist
-from java.util.stream.Collectors import mapping
-from java.util.stream.Collectors import collectingAndThen
-from java.util.stream.Collectors import toList
-from java.util.stream.Collectors import groupingBy
+from java.util import ArrayList
 
 
 def usesWaterYearDefinition():
-    return False
+	return False
+
 
 def calculate(input):
-    return input.entrySet().stream().collect(groupingBy(jf(lambda e: e.getKey().getMonth()), mapping(
-        jf(lambda e: e.getValue()), collectingAndThen(toList(), jf(lambda e: toExceedance(e))))))
+	return toExceedance(ArrayList(input.values()))
 
 
 def calculateExceedance(doubles):
-    empiricalDist = EmpiricalDist(EmpiricalDist.InterpType.LINEAR, doubles)
-    return empiricalDist.invCDF(getCdfPercent())
+	empiricalDist = EmpiricalDist(EmpiricalDist.InterpType.LINEAR, doubles)
+	return empiricalDist.invCDF(getCdfPercent())
 
 
 def toExceedance(v):
-    return calculateExceedance(v.stream().mapToDouble(jdf(lambda d: d)).toArray())
+	return calculateExceedance(v.stream().mapToDouble(jdf(lambda d: d)).toArray())
 
 
 def getName():
-    return "50% Exceedence Probability"
+	return "50% Exceedence Probability"
 
 
 def getCdfPercent():
-    return .5
+	return .5
