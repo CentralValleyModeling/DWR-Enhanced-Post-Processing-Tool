@@ -77,7 +77,7 @@ class ExceedanceChartPageBuilder extends PlotChartBuilder
 		}
 		catch(EpptReportException e)
 		{
-			getStandardSummaryErrors().addError(LOGGER, Level.SEVERE, "Error in chart:" + chartComponents.get(0) + "\nError running jython script for: " + chartComponents.get(0).getFunction(), e);
+			logScriptException(LOGGER, chartComponents.get(0), e);
 		}
 		return new PlotlyExceedancePage.ExceedanceMonthData(data);
 	}

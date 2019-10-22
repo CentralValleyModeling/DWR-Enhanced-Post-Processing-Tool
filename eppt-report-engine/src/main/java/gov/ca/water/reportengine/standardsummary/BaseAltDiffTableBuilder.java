@@ -231,7 +231,7 @@ class BaseAltDiffTableBuilder extends TableBuilder
 		}
 		catch(EpptReportException e)
 		{
-			getStandardSummaryErrors().addError(LOGGER, Level.SEVERE, "Error in chart:" + v + "\nError running jython script for: " + v.getFunction(), e);
+			logScriptException(LOGGER, v, e);
 		}
 		return retval;
 	}
@@ -301,7 +301,7 @@ class BaseAltDiffTableBuilder extends TableBuilder
 		}
 		catch(EpptReportException e)
 		{
-			getStandardSummaryErrors().addError(LOGGER, Level.SEVERE, "Error in chart:" + v + "\nError running jython script for: " + v.getFunction(), e);
+			logScriptException(LOGGER, v, e);
 		}
 		return retval;
 	}
