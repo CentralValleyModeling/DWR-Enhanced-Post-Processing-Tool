@@ -566,9 +566,16 @@ public class TrendReportPanel extends JFXPanel
 		if(jsonObjects != null)
 		{
 			_javascriptPane.removeDashboardPanes();
-			for(JSONObject jsonObject : jsonObjects)
+			try
 			{
-				_javascriptPane.addDashboardPane(path, "plot(" + jsonObject + ");");
+				for(JSONObject jsonObject : jsonObjects)
+				{
+					_javascriptPane.addDashboardPane(path, "plot(" + jsonObject.toString(0) + ");");
+				}
+			}
+			catch(RuntimeException e)
+			{
+				LOGGER.log(Level.SEVERE, "Error plotting Trend Report with serialized JSON object", e);
 			}
 		}
 	}
@@ -594,7 +601,7 @@ public class TrendReportPanel extends JFXPanel
 					EpptReportingComputedSet epptReportingComputedSet = computeForMetrics(guiLink, statistic, monthPeriod,
 							start, end, taf, scenarioRuns);
 					JSONObject jsonObject = epptReportingComputedSet.toJson();
-					LOGGER.log(Level.FINE, "{0}", jsonObject);
+					LOGGER.log(Level.INFO, "{0}", jsonObject);
 					retval.add(jsonObject);
 				}
 			}

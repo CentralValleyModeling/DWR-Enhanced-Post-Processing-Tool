@@ -15,6 +15,7 @@ package gov.ca.water.trendreporting;
 import java.nio.file.Paths;
 import java.time.LocalDate;
 import java.time.Month;
+import java.time.YearMonth;
 import java.time.format.DateTimeFormatter;
 import java.time.format.TextStyle;
 import java.time.temporal.ChronoUnit;
@@ -33,6 +34,7 @@ import gov.ca.water.calgui.constant.Constant;
 import gov.ca.water.calgui.techservice.IFileSystemSvc;
 import gov.ca.water.calgui.techservice.impl.FileSystemSvcImpl;
 import org.apache.log4j.Logger;
+import org.joda.time.Months;
 
 import static gov.ca.water.calgui.constant.Constant.CONFIG_DIR;
 import static gov.ca.water.calgui.constant.Constant.CSV_EXT;
@@ -208,6 +210,16 @@ public final class EpptReportingMonths
 			_end = end;
 		}
 
+		public Month getStart()
+		{
+			return _start;
+		}
+
+		public Month getEnd()
+		{
+			return _end;
+		}
+
 		@Override
 		public String toString()
 		{
@@ -224,6 +236,36 @@ public final class EpptReportingMonths
 		private String formatMonth(Month month)
 		{
 			return month.getDisplayName(TextStyle.FULL, Locale.US);
+		}
+
+		public List<YearMonth> getYearMonths(int year)
+		{
+			List<YearMonth> retval = new ArrayList<>();
+			retval.add(YearMonth.of(year, _start));
+			if(_start != _end)
+			{
+				if(needLookback())
+				{
+					year--;
+				}
+				int i = 1;
+				while(_start.plus(i) != _end.plus(1))
+				{
+					if(_start.plus(i) == Month.JANUARY)
+					{
+						year++;
+					}
+					retval.add(YearMonth.of(year, _start.plus(i)));
+					i++;
+				}
+			}
+			return retval;
+		}
+
+		private boolean needLookback()
+		{
+			return _start.getValue() < _end.getValue()
+					&& Month.values().length + 1 - _start.getValue() < _end.getValue();
 		}
 	}
 }
