@@ -12,7 +12,6 @@
 
 package gov.ca.water.calgui.bo;
 
-import java.time.LocalDateTime;
 import java.util.Map;
 import java.util.function.Predicate;
 

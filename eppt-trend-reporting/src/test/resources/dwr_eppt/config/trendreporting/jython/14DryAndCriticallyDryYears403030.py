@@ -1,7 +1,7 @@
 from java.lang import RuntimeException
 from java.util import ArrayList
 from java.util.stream.Collectors import groupingBy, averagingDouble
-from gov.ca.water.calgui.bo import WaterYearPeriodRangesFilter, WaterYearPeriod
+from gov.ca.water.calgui.bo import WaterYearAnnualPeriodRangesFilter, WaterYearPeriod
 
 
 def usesWaterYearDefinition():
@@ -12,13 +12,12 @@ def getName():
     return "Dry and Critically Dry Years (40-30-30, ELT)"
 
 
-def calculate(input):
+def calculate(data):
     waterYearIndex = waterYearIndices.stream().filter(
         jp(lambda p: p.toString() == "SAC Index")).findAny().orElseThrow(
         js(lambda: RuntimeException("No SAC index")))
-    dry = waterYearIndex.getWaterYearPeriodRanges().getOrDefault(WaterYearPeriod("Dry"), ArrayList <> ())
-    dryFilter = WaterYearPeriodRangesFilter(dry, waterYearDefinition)
-    critical = waterYearIndex.getWaterYearPeriodRanges().getOrDefault(WaterYearPeriod("Critical"), ArrayList <> ())
-    criticalFilter = WaterYearPeriodRangesFilter(critical, waterYearDefinition)
-    return input.entrySet().stream().filter(criticalFilter.or(dryFilter)).collect(groupingBy(
-        jf(lambda e: e.getKey().getMonth()), averagingDouble(jdf(lambda e: e.getValue()))))
+    dry = waterYearIndex.getAllLongWaterYearPeriodRanges().getOrDefault(WaterYearPeriod("Dry"), ArrayList <> ())
+    dryFilter = WaterYearAnnualPeriodRangesFilter(dry)
+    critical = waterYearIndex.getAllLongWaterYearPeriodRanges().getOrDefault(WaterYearPeriod("Critical"), ArrayList <> ())
+    criticalFilter = WaterYearAnnualPeriodRangesFilter(critical)
+    return data.entrySet().stream().filter(criticalFilter.or(dryFilter)).mapToDouble(jdf(lambda e:e.getValue())).average()

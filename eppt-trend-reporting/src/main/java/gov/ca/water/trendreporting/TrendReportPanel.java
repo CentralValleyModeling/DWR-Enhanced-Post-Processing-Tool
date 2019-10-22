@@ -187,8 +187,8 @@ public class TrendReportPanel extends JFXPanel
 		GridPane gridPane = new GridPane();
 		gridPane.add(new Label("Water Year Index: "), 0, 2);
 		gridPane.add(_waterYearIndexComboBox, 1, 2);
-		gridPane.add(new Label("Water Year Definition: "), 0, 3);
-		gridPane.add(_waterYearDefinitionComboBox, 1, 3);
+//		gridPane.add(new Label("Water Year Definition: "), 0, 3);
+//		gridPane.add(_waterYearDefinitionComboBox, 1, 3);
 		gridPane.setHgap(10);
 		gridPane.setVgap(10);
 		gridPane.setPrefHeight(125);
