@@ -29,24 +29,24 @@ public class StandardSummaryErrors
 {
 	private final List<Runnable> _loggingStatements = new ArrayList<>();
 
-	void addError(Logger logger, Level level, String message)
+	void addError(Logger logger, String message)
 	{
-		_loggingStatements.add(()->logger.log(level, message));
+		_loggingStatements.add(()->logger.log(Level.WARNING, message));
 	}
 
-	void addError(Logger logger, Level level, String message, Exception exception)
+	void addError(Logger logger, String message, Exception exception)
 	{
-		_loggingStatements.add(()->logger.log(level, message, exception));
+		_loggingStatements.add(()->logger.log(Level.WARNING, message, exception));
 	}
 
-	void addError(FluentLogger logger, Level level, String message)
+	void addError(FluentLogger logger, String message)
 	{
-		_loggingStatements.add(()->logger.at(level).log(message));
+		_loggingStatements.add(()->logger.at(Level.WARNING).log(message));
 	}
 
-	void addError(FluentLogger logger, Level level, String message, Exception exception)
+	void addError(FluentLogger logger, String message, Exception exception)
 	{
-		_loggingStatements.add(()->logger.at(level).withCause(exception).log(message));
+		_loggingStatements.add(()->logger.at(Level.WARNING).withCause(exception).log(message));
 	}
 
 	public void log()

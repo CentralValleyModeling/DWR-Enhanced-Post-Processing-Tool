@@ -273,7 +273,7 @@ public class StandardSummaryWriter
 		}
 		catch(RuntimeException | EpptReportException e)
 		{
-			_standardSummaryErrors.addError(LOGGER, Level.SEVERE,"Error writing data for: " + epptChart, e);
+			_standardSummaryErrors.addError(LOGGER, "Error writing data for: " + epptChart, e);
 		}
 		return Optional.ofNullable(retval);
 	}
