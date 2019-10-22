@@ -155,7 +155,7 @@ public class EpptReportingComputer
 					OptionalDouble average = dataMap.values().stream().mapToDouble(e -> e).average();
 					int y = year;
 					Logger.getLogger(EpptReportingComputer.class.getName())
-						  .log(Level.INFO, "Average for " + y + ": " + average.getAsDouble());
+						  .log(Level.FINE, "Average for " + y + ": " + average.getAsDouble());
 					average.ifPresent(a -> retval.put(y, a));
 				}
 				year++;
