@@ -80,8 +80,16 @@ public class PlotlyBubble extends PlotlyChart
 			if(annotations.length() > 0)
 			{
 				JSONObject annotation = annotations.getJSONObject(0);
-				annotation.put("x", _baseData._xData.get(_baseData._xData.size() / 2));
-				annotation.put("y", _baseData._yData.get(_baseData._yData.size() / 2));
+				int xIndex = _baseData._xData.size() / 2;
+				if(xIndex < _baseData._xData.size())
+				{
+					annotation.put("x", _baseData._xData.get(xIndex));
+				}
+				int yIndex = _baseData._yData.size() / 2;
+				if(yIndex < _baseData._yData.size())
+				{
+					annotation.put("y", _baseData._yData.get(yIndex));
+				}
 				annotation.put("xref", "x");
 				annotation.put("yref", "y");
 				annotation.put("text", "Year");

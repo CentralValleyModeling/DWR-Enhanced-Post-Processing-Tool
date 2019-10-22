@@ -1189,8 +1189,11 @@ public class QAQCReportPanel extends RmaJPanel
 			{
 				if(record.getLevel().equals(Level.WARNING) || record.getLevel().equals(Level.SEVERE))
 				{
-					appendErrorText(record.getMessage());
 					Throwable thrown = record.getThrown();
+					if(thrown == null)
+					{
+						appendErrorText(record.getMessage());
+					}
 					appendThrowable(thrown);
 				}
 				else
