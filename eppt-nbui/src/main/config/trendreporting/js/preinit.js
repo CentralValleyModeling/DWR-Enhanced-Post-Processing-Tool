@@ -76,7 +76,7 @@ function plotlyExportFunction(plot) {
         Plotly.downloadImage(plot, {format: format, height: height, width: width});
         //javaObj instantiated from JavaFX
         if(javaObj){
-            javaObj.interruptFunction(format, JSON.stringify(plot.data), JSON.stringify(plot.layout));
+            javaObj.interruptFunction(format, JSON.stringify(plot.data), JSON.stringify(plot.layout), width, height);
         }
     }
 }
