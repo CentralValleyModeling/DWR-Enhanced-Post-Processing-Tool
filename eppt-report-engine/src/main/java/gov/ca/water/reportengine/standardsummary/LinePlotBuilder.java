@@ -97,8 +97,7 @@ class LinePlotBuilder extends PlotChartBuilder
 		}
 		catch(EpptReportException e)
 		{
-			getStandardSummaryErrors().addError(LOGGER, Level.SEVERE,
-					"Error in chart:" + chartComponent + "\nError running jython script for: " + chartComponent.getFunction(), e);
+			logScriptException(LOGGER, chartComponent, e);
 		}
 		return retval;
 	}
