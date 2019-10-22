@@ -1,6 +1,4 @@
-from java.util.stream.Collectors import summarizingDouble
-from java.util.stream.Collectors import collectingAndThen
-from java.util.stream.Collectors import groupingBy
+from java.util import ArrayList
 
 def usesWaterYearDefinition():
     return False
@@ -10,6 +8,4 @@ def getName():
 
 
 def calculate(input):
-    return input.entrySet().stream().collect(groupingBy(jf(lambda e: e.getKey().getMonth()),
-                                                        collectingAndThen(summarizingDouble(
-                                                            jdf(lambda e: e.getValue())), jf(lambda s: s.getMin()))))
+    return ArrayList(input.values()).stream().mapToDouble(jdf(lambda e:e)).min()

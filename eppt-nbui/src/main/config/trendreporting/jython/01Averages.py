@@ -1,5 +1,4 @@
-from java.util.stream.Collectors import averagingDouble
-from java.util.stream.Collectors import groupingBy
+from java.util import ArrayList
 
 
 def usesWaterYearDefinition():
@@ -11,5 +10,4 @@ def getName():
 
 
 def calculate(input):
-    return input.entrySet().stream().collect(
-        groupingBy(jf(lambda e: e.getKey().getMonth()), averagingDouble(jdf(lambda e: e.getValue()))))
+    return ArrayList(input.values()).stream().mapToDouble(jdf(lambda e:e)).average()
