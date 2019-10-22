@@ -30,6 +30,8 @@ import java.util.SortedMap;
 import java.util.TimeZone;
 import java.util.TreeMap;
 import java.util.concurrent.TimeUnit;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import gov.ca.water.calgui.bo.GUILinksAllModelsBO;
 import gov.ca.water.calgui.bo.WaterYearAnnualPeriodRangesFilter;
@@ -111,7 +113,7 @@ public class EpptReportingComputer
 			}
 		}
 		NavigableMap<Integer, Double> filteredPeriodYearly = filterPeriodYearly(fullSeries);
-		SortedMap<Month, NavigableMap<Integer,Double>> filteredPeriodMonthly = filterPeriodMonthly(fullSeries);
+		SortedMap<Month, NavigableMap<Integer, Double>> filteredPeriodMonthly = filterPeriodMonthly(fullSeries);
 		SortedMap<WaterYearPeriod, Double> waterYearPeriodGroupedYearly = groupWaterYearPeriod(filteredPeriodYearly);
 		SortedMap<Month, Double> monthly = _statistics.calculateMonthly(filteredPeriodMonthly, _waterYearDefinition, _waterYearIndex,
 				_waterYearIndices,
@@ -133,20 +135,29 @@ public class EpptReportingComputer
 			{
 				NavigableMap<LocalDateTime, Double> dataMap = new TreeMap<>();
 				List<YearMonth> yearMonths = _monthPeriod.getYearMonths(year);
-				for(Map.Entry<LocalDateTime, Double> entry : input.entrySet())
+				for(YearMonth yearMonth : yearMonths)
 				{
-					for(YearMonth yearMonth : yearMonths)
+					for(Map.Entry<LocalDateTime, Double> entry : input.entrySet())
 					{
-						LocalDateTime key = entry.getKey();
-						if(key.getMonth().minus(1) == yearMonth.getMonth() && key.getYear() == yearMonth.getYear())
+						LocalDateTime key = entry.getKey().minusMonths(1);
+						if(key.getMonth() == yearMonth.getMonth() && key.getYear() == yearMonth.getYear())
 						{
+							Logger.getLogger(EpptReportingComputer.class.getName())
+								  .log(Level.FINE, "Value for " + year + ": " + entry.getValue() + " YearMonth: " + YearMonth.of(key.getYear(),
+										  key.getMonth()));
 							dataMap.put(entry.getKey(), entry.getValue());
+							break;
 						}
 					}
 				}
-				OptionalDouble average = dataMap.values().stream().mapToDouble(e -> e).average();
-				int y = year;
-				average.ifPresent(a -> retval.put(y, a));
+				if(dataMap.size() == yearMonths.size())
+				{
+					OptionalDouble average = dataMap.values().stream().mapToDouble(e -> e).average();
+					int y = year;
+					Logger.getLogger(EpptReportingComputer.class.getName())
+						  .log(Level.INFO, "Average for " + y + ": " + average.getAsDouble());
+					average.ifPresent(a -> retval.put(y, a));
+				}
 				year++;
 			}
 		}
@@ -175,14 +186,14 @@ public class EpptReportingComputer
 		return retval;
 	}
 
-	private SortedMap<Month, NavigableMap<Integer,Double>> filterPeriodMonthly(NavigableMap<LocalDateTime, Double> input)
+	private SortedMap<Month, NavigableMap<Integer, Double>> filterPeriodMonthly(NavigableMap<LocalDateTime, Double> input)
 	{
 		List<Month> months = EpptReportingMonths.getMonths(_monthPeriod);
 
-		SortedMap<Month, NavigableMap<Integer,Double>> retval = new TreeMap<>();
+		SortedMap<Month, NavigableMap<Integer, Double>> retval = new TreeMap<>();
 		for(Month month : months)
 		{
-			NavigableMap<Integer,Double> yearlyMap = new TreeMap<>();
+			NavigableMap<Integer, Double> yearlyMap = new TreeMap<>();
 			retval.put(month, yearlyMap);
 			if(!input.isEmpty())
 			{
@@ -195,8 +206,8 @@ public class EpptReportingComputer
 					{
 						for(YearMonth yearMonth : yearMonths)
 						{
-							LocalDateTime key = entry.getKey();
-							Month entryMonth = key.getMonth().minus(1);
+							LocalDateTime key = entry.getKey().minusMonths(1);
+							Month entryMonth = key.getMonth();
 							if(entryMonth == month && key.getYear() == yearMonth.getYear())
 							{
 								yearlyMap.put(yearMonth.getYear(), entry.getValue());
