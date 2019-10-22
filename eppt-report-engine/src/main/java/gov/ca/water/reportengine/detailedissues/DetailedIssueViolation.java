@@ -102,9 +102,9 @@ public class DetailedIssueViolation
 				standardValue += String.format("%.2f", _standard) + " " + _standardUnits;
 			}
 			String values = "";
-			if(!actualValue.isEmpty() && !standardValue.isEmpty())
+			if(!actualValue.isEmpty())
 			{
-                values = " @ " + actualValue + " " + _valueUnits + standardValue;
+                values = " @ " + actualValue + " " + standardValue;
 			}
 			String formattedTime = _time.month() + "/" + _time.year();
 			return formattedTime + " " + _waterYearType + values;
