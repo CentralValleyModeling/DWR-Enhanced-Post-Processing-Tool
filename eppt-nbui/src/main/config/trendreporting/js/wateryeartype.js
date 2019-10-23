@@ -237,14 +237,14 @@ function buildMatrixData(data, tableValues) {
             values: header,
             align: "center",
             line: {width: 1, color: 'black'},
-            font: {family: PLOTLY_FONT['family'], size: 9}
+            font: {family: PLOTLY_FONT['family'], size: 8}
         },
         cells: {
             values: values,
             align: ['left', 'center'],
             height: 8,
             line: {color: "black", width: 1},
-            font: {family: PLOTLY_FONT['family'], color: colors, size: [9, 12]}
+            font: {family: PLOTLY_FONT['family'], color: colors, size: [8, 11]}
         }
     };
 }
