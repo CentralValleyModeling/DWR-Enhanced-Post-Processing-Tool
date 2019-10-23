@@ -86,7 +86,7 @@ public class DisplayHelper
 		{
 			setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
 
-			jTabbedPanes = DisplayPlotlyFrames.showDisplayFrames(plotConfigurationState, locations, baseRun, scenarios, startMonth, endMonth);
+			jTabbedPanes = DisplayFrame.showDisplayFrames(plotConfigurationState, locations, baseRun, scenarios, startMonth, endMonth);
 		}
 		catch(RuntimeException ex)
 		{
@@ -124,7 +124,7 @@ public class DisplayHelper
 		try
 		{
 			setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
-			jTabbedPanes = DisplayPlotlyFrames.showDisplayFramesWRIMS(plotConfigurationState, baseRun, lstScenarios, dts, mts,
+			jTabbedPanes = DisplayFrame.showDisplayFramesWRIMS(plotConfigurationState, baseRun, lstScenarios, dts, mts,
 					startMonth, endMonth);
 		}
 		catch(RuntimeException ex)
