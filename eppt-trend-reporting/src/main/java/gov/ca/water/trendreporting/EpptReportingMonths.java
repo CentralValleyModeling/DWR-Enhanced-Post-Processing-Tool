@@ -262,10 +262,9 @@ public final class EpptReportingMonths
 			return retval;
 		}
 
-		private boolean needLookback()
+		public boolean needLookback()
 		{
-			return _start.getValue() < _end.getValue()
-					&& Month.values().length + 1 - _start.getValue() < _end.getValue();
+			return Month.values().length + 1 - _start.getValue() < _end.getValue();
 		}
 	}
 }

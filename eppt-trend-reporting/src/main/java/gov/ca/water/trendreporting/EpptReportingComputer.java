@@ -32,6 +32,7 @@ import java.util.TreeMap;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 
 import gov.ca.water.calgui.bo.GUILinksAllModelsBO;
 import gov.ca.water.calgui.bo.WaterYearAnnualPeriodRangesFilter;
@@ -153,7 +154,16 @@ public class EpptReportingComputer
 				if(dataMap.size() == yearMonths.size())
 				{
 					OptionalDouble average = dataMap.values().stream().mapToDouble(e -> e).average();
-					int y = year;
+					Map<Integer, List<YearMonth>> collect = yearMonths.stream().collect(Collectors.groupingBy(YearMonth::getYear));
+					List<YearMonth> biggestList = new ArrayList<>();
+					for(List<YearMonth> list : collect.values())
+					{
+						if(list.size() >= biggestList.size())
+						{
+							biggestList = list;
+						}
+					}
+					int y = biggestList.get(0).getYear();
 					Logger.getLogger(EpptReportingComputer.class.getName())
 						  .log(Level.FINE, "Average for " + y + ": " + average.getAsDouble());
 					average.ifPresent(a -> retval.put(y, a));
