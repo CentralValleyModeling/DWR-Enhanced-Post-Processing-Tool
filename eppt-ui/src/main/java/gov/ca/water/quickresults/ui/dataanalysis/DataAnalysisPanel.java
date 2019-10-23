@@ -70,7 +70,10 @@ public class DataAnalysisPanel extends EpptPanel
 	@SuppressWarnings("unchecked")
 	private void updateScenarios(EpptScenarioRun base, List<EpptScenarioRun> alternatives)
 	{
-		List<EpptScenarioRun> scenarioRuns = ProjectConfigurationPanel.getProjectConfigurationPanel().getAllEpptScenarioRuns();
+		List<EpptScenarioRun> scenarioRuns = new ArrayList<>();
+		scenarioRuns.add(base);
+		scenarioRuns.addAll(alternatives);
+		scenarioRuns.removeIf(Objects::isNull);
 		JComboBox<EpptScenarioRun> baseScenarioCombo = (JComboBox<EpptScenarioRun>) getSwingEngine().find("baseScenarioCombo");
 		baseScenarioCombo.removeAllItems();
 		scenarioRuns.stream().filter(Objects::nonNull).forEach(baseScenarioCombo::addItem);
