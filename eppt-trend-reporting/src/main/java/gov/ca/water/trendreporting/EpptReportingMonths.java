@@ -241,13 +241,13 @@ public final class EpptReportingMonths
 		public List<YearMonth> getYearMonths(int year)
 		{
 			List<YearMonth> retval = new ArrayList<>();
-			retval.add(YearMonth.of(year, _start));
 			if(_start != _end)
 			{
 				if(needLookback())
 				{
 					year--;
 				}
+				retval.add(YearMonth.of(year, _start));
 				int i = 1;
 				while(_start.plus(i) != _end.plus(1))
 				{
