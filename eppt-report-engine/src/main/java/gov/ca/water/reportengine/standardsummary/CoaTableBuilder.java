@@ -39,9 +39,9 @@ class CoaTableBuilder extends TableBuilder
 	private static final Pattern DOUBLE_PIPE_PATTERN = Pattern.compile("\\|\\|");
 
 	CoaTableBuilder(Document document, EpptScenarioRun base, List<EpptScenarioRun> alternatives,
-					SummaryReportParameters reportParameters)
+					SummaryReportParameters reportParameters, StandardSummaryErrors standardSummaryErrors)
 	{
-		super(document, base, alternatives, reportParameters);
+		super(document, base, alternatives, reportParameters, standardSummaryErrors);
 	}
 
 	void buildTable(Element retval, EpptChart epptChart)
@@ -81,8 +81,10 @@ class CoaTableBuilder extends TableBuilder
 		Element retval = getDocument().createElement(SCENARIO_ELEMENT);
 		retval.setAttribute(SCENARIO_NAME_ATTRIBUTE, name);
 
-		String cvpName = "CVP"; getCvpName(epptChart);
-		String swpName = "SWP";getSwpName(epptChart);
+		String cvpName = "CVP";
+		getCvpName(epptChart);
+		String swpName = "SWP";
+		getSwpName(epptChart);
 
 
 		epptChart.getChartComponents();
@@ -168,13 +170,13 @@ class CoaTableBuilder extends TableBuilder
 					if(vObj instanceof Number && cObj instanceof Number)
 					{
 						Element totalElem = getDocument().createElement(VALUE_ELEMENT);
-						totalElem.setTextContent(String.valueOf(Math.round(((Number)vObj).doubleValue() + ((Number)cObj).doubleValue())));
+						totalElem.setTextContent(String.valueOf(Math.round(((Number) vObj).doubleValue() + ((Number) cObj).doubleValue())));
 						return totalElem;
 					}
 				}
 				catch(EpptReportException e)
 				{
-					LOGGER.log(Level.SEVERE, "Error running Script for total", e);
+					getStandardSummaryErrors().addError(LOGGER, "Error running Script for total", e);
 				}
 				return getDocument().createElement(VALUE_ELEMENT);
 			}
@@ -193,29 +195,33 @@ class CoaTableBuilder extends TableBuilder
 			Object altValue = createJythonValueGenerator(alternative, v.getFunction()).generateObjectValue();
 			if(baseValue == null)
 			{
-				LOGGER.log(Level.WARNING, "Unable to generate diff value for: " + v + " value is null for scenario: " + base.getName());
+				getStandardSummaryErrors().addError(LOGGER,
+						"Unable to generate diff value for: " + v + " value is null for scenario: " + base.getName());
 			}
 			else if(altValue == null)
 			{
-				LOGGER.log(Level.WARNING, "Unable to generate diff value for: " + v + " value is null for scenario: " + alternative.getName());
+				getStandardSummaryErrors().addError(LOGGER,
+						"Unable to generate diff value for: " + v + " value is null for scenario: " + alternative.getName());
 			}
 			else if(baseValue instanceof Double && !RMAConst.isValidValue((Double) baseValue))
 			{
-				LOGGER.log(Level.WARNING, "Unable to generate diff value for: " + v + " value is invalid (" + baseValue + ") for scenario: " + base.getName());
+				getStandardSummaryErrors().addError(LOGGER,
+						"Unable to generate diff value for: " + v + " value is invalid (" + baseValue + ") for scenario: " + base.getName());
 			}
 			else if(altValue instanceof Double && !RMAConst.isValidValue((Double) altValue))
 			{
-				LOGGER.log(Level.WARNING, "Unable to generate diff value for: " + v + " value is invalid (" + baseValue + ") for scenario: " + alternative.getName());
+				getStandardSummaryErrors().addError(LOGGER,
+						"Unable to generate diff value for: " + v + " value is invalid (" + baseValue + ") for scenario: " + alternative.getName());
 			}
 			else if(baseValue instanceof Double && altValue instanceof Double)
 			{
-				long total = Math.round((double)baseValue + (double) altValue);
+				long total = Math.round((double) baseValue + (double) altValue);
 				retval.setTextContent(String.valueOf(total));
 			}
 		}
 		catch(EpptReportException e)
 		{
-			LOGGER.log(Level.SEVERE, "Error running jython script", e);
+			logScriptException(LOGGER, v, e);
 		}
 		return retval;
 	}
@@ -229,11 +235,13 @@ class CoaTableBuilder extends TableBuilder
 
 			if(value == null)
 			{
-				LOGGER.log(Level.WARNING, "Unable to generate scenario value for: " + v + " value is null for scenario: " + scenarioRun.getName());
+				getStandardSummaryErrors().addError(LOGGER,
+						"Unable to generate scenario value for: " + v + " value is null for scenario: " + scenarioRun.getName());
 			}
 			else if(value instanceof Double && !RMAConst.isValidValue((Double) value))
 			{
-				LOGGER.log(Level.WARNING, "Unable to generate scenario value for: " + v + " value is invalid (" + value + ") for scenario: " + scenarioRun.getName());
+				getStandardSummaryErrors().addError(LOGGER,
+						"Unable to generate scenario value for: " + v + " value is invalid (" + value + ") for scenario: " + scenarioRun.getName());
 			}
 			else
 			{
@@ -243,7 +251,7 @@ class CoaTableBuilder extends TableBuilder
 		}
 		catch(EpptReportException e)
 		{
-			LOGGER.log(Level.SEVERE, "Error running jython script", e);
+			logScriptException(LOGGER, v, e);
 		}
 		return retval;
 	}

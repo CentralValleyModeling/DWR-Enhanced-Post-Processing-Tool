@@ -29,11 +29,11 @@ import org.openide.windows.TopComponent;
 		preferredID = "DataAnalysisTopComponent",
 		iconBase = "gov/ca/water/eppt/nbui/DataAnalysis.png"
 )
-@TopComponent.Registration(mode = "editor", openAtStartup = true, position = 4444)
+@TopComponent.Registration(mode = "editor", openAtStartup = true, position = 5000)
 @ActionID(category = "Window", id = "gov.ca.water.eppt.nbui.DataAnalysisTopComponent")
 @ActionReferences({
-		@ActionReference(path = "Menu/Window", position = 4444),
-		@ActionReference(path = "Toolbars/Window", position = 4444)
+		@ActionReference(path = "Menu/Window", position = 5000),
+		@ActionReference(path = "Toolbars/Window", position = 5000)
 })
 
 @TopComponent.OpenActionRegistration(

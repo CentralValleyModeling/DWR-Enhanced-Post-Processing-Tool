@@ -18,10 +18,11 @@
 	<parent>
 		<artifactId>eppt-parent</artifactId>
 		<groupId>gov.ca.water</groupId>
-		<version>1.1.0-SNAPSHOT</version>
+		<version>1.1.1-SNAPSHOT</version>
 		<relativePath>../eppt-parent/pom.xml</relativePath>
 	</parent>
 	<artifactId>eppt-trend-reporting</artifactId>
+	<name>EPPT Trend Reporting</name>
 	<dependencies>
 		<dependency>
 			<groupId>gov.ca.water</groupId>
@@ -59,7 +60,7 @@
 		<dependency>
 			<groupId>gov.ca.water</groupId>
 			<artifactId>eppt-core</artifactId>
-			<version>1.1.0-SNAPSHOT</version>
+			<version>${project.version}</version>
 			<scope>compile</scope>
 		</dependency>
 		<dependency>

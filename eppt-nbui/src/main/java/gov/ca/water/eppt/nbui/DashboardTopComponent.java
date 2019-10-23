@@ -14,6 +14,8 @@ package gov.ca.water.eppt.nbui;
 import java.awt.BorderLayout;
 import java.awt.Color;
 
+import javax.swing.*;
+
 import gov.ca.water.quickresults.ui.projectconfig.ProjectConfigurationPanel;
 import gov.ca.water.trendreporting.TrendReportPanel;
 import org.openide.awt.ActionID;
@@ -29,11 +31,11 @@ import org.openide.windows.TopComponent;
 		preferredID = "DashboardTopComponent",
 		iconBase = "gov/ca/water/eppt/nbui/dashboard.png"
 )
-@TopComponent.Registration(mode = "editor", openAtStartup = false, position = 5555)
+@TopComponent.Registration(mode = "editor", openAtStartup = true, position = 2000)
 @ActionID(category = "Window", id = "gov.ca.water.eppt.nbui.DashboardTopComponent")
 @ActionReferences({
-		@ActionReference(path = "Menu/Window", position = 5555),
-		@ActionReference(path = "Toolbars/Window", position = 5555)
+		@ActionReference(path = "Menu/Window", position = 2000),
+		@ActionReference(path = "Toolbars/Window", position = 2000)
 })
 @TopComponent.OpenActionRegistration(
 		displayName = "Trend Reporting",
@@ -55,8 +57,10 @@ public final class DashboardTopComponent extends EpptTopComponent
 	{
 		setName("Trend Reporting");
 		_trendReportPanel = new TrendReportPanel();
+		JScrollPane scrollPane = new JScrollPane();
+		scrollPane.setViewportView(_trendReportPanel);
 		setLayout(new BorderLayout(15,15));
-		add(_trendReportPanel, BorderLayout.CENTER);
+		add(scrollPane, BorderLayout.CENTER);
 		setBackground(Color.WHITE);
 	}
 

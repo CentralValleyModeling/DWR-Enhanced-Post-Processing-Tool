@@ -47,9 +47,10 @@ class BaseAltDiffTableBuilder extends TableBuilder
 	private static final Logger LOGGER = Logger.getLogger(BaseAltDiffTableBuilder.class.getName());
 
 	BaseAltDiffTableBuilder(Document document, EpptScenarioRun base, List<EpptScenarioRun> alternatives,
-							SummaryReportParameters reportParameters)
+							SummaryReportParameters reportParameters,
+							StandardSummaryErrors standardSummaryErrors)
 	{
-		super(document, base, alternatives, reportParameters);
+		super(document, base, alternatives, reportParameters, standardSummaryErrors);
 	}
 
 
@@ -60,11 +61,11 @@ class BaseAltDiffTableBuilder extends TableBuilder
 		retval.setAttribute(UNITS_ATTRIBUTE, units);
 		String startMonth = reportParameters.getWaterYearDefinition().getStartMonth().getDisplayName(TextStyle.SHORT, Locale.getDefault());
 		String endMonth = reportParameters.getWaterYearDefinition().getEndMonth().getDisplayName(TextStyle.SHORT, Locale.getDefault());
-		if(epptChart.getChartId().equalsIgnoreCase("resops-summary-may"))
+		if("resops-summary-may".equalsIgnoreCase(epptChart.getChartId()))
 		{
 			retval.setAttribute(WATER_YEAR_DEF_ATTRIBUTE, "End of May");
 		}
-		else if(epptChart.getChartId().equalsIgnoreCase("resops-summary-sept"))
+		else if("resops-summary-sept".equalsIgnoreCase(epptChart.getChartId()))
 		{
 			retval.setAttribute(WATER_YEAR_DEF_ATTRIBUTE, "End of September");
 		}
@@ -203,22 +204,22 @@ class BaseAltDiffTableBuilder extends TableBuilder
 			Double altValue = createJythonValueGenerator(filter, alternative, v.getFunction()).generateValue();
 			if(baseValue == null)
 			{
-				LOGGER.log(Level.WARNING,
+				getStandardSummaryErrors().addError(LOGGER,
 						"Unable to generate diff value for: " + v + " value is null for scenario: " + base.getName());
 			}
 			else if(altValue == null)
 			{
-				LOGGER.log(Level.WARNING,
+				getStandardSummaryErrors().addError(LOGGER,
 						"Unable to generate diff value for: " + v + " value is null for scenario: " + alternative.getName());
 			}
 			else if(!RMAConst.isValidValue(baseValue))
 			{
-				LOGGER.log(Level.WARNING,
+				getStandardSummaryErrors().addError(LOGGER,
 						"Unable to generate diff value for: " + v + " value is invalid (" + baseValue + ") for scenario: " + base.getName());
 			}
 			else if(!RMAConst.isValidValue(altValue))
 			{
-				LOGGER.log(Level.WARNING,
+				getStandardSummaryErrors().addError(LOGGER,
 						"Unable to generate diff value for: " + v + " value is invalid (" + altValue + ") for scenario: " + alternative.getName());
 			}
 			else
@@ -230,7 +231,7 @@ class BaseAltDiffTableBuilder extends TableBuilder
 		}
 		catch(EpptReportException e)
 		{
-			LOGGER.log(Level.SEVERE, "Error running jython script", e);
+			logScriptException(LOGGER, v, e);
 		}
 		return retval;
 	}
@@ -284,11 +285,13 @@ class BaseAltDiffTableBuilder extends TableBuilder
 
 			if(value == null)
 			{
-				LOGGER.log(Level.WARNING, "Unable to generate scenario value for: " + v + " value is null for scenario: " + scenarioRun.getName());
+				getStandardSummaryErrors().addError(LOGGER,
+						"Unable to generate scenario value for: " + v + " value is null for scenario: " + scenarioRun.getName());
 			}
 			else if(!RMAConst.isValidValue(value))
 			{
-				LOGGER.log(Level.WARNING, "Unable to generate scenario value for: " + v + " value is invalid (" + value + ") for scenario: " + scenarioRun.getName());
+				getStandardSummaryErrors().addError(LOGGER,
+						"Unable to generate scenario value for: " + v + " value is invalid (" + value + ") for scenario: " + scenarioRun.getName());
 			}
 			else
 			{
@@ -298,7 +301,7 @@ class BaseAltDiffTableBuilder extends TableBuilder
 		}
 		catch(EpptReportException e)
 		{
-			LOGGER.log(Level.SEVERE, "Error running jython script", e);
+			logScriptException(LOGGER, v, e);
 		}
 		return retval;
 	}

@@ -18,7 +18,7 @@ import java.util.List;
 import java.util.Map;
 
 import gov.ca.water.calgui.project.EpptScenarioRun;
-import gov.ca.water.plotly.PlotlyBubble;
+import gov.ca.water.plotly.qaqc.PlotlyBubble;
 import gov.ca.water.plotly.PlotlyChart;
 import gov.ca.water.reportengine.EpptReportException;
 import org.w3c.dom.Document;
@@ -33,9 +33,10 @@ public class ScatterPlotBuilder extends PlotChartBuilder
 {
 
 	ScatterPlotBuilder(Document document, EpptScenarioRun base, List<EpptScenarioRun> alternatives,
-					   SummaryReportParameters reportParameters)
+					   SummaryReportParameters reportParameters,
+					   StandardSummaryErrors standardSummaryErrors)
 	{
-		super(document, base, alternatives, reportParameters);
+		super(document, base, alternatives, reportParameters, standardSummaryErrors);
 	}
 
 	@Override

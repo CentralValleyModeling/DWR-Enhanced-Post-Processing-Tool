@@ -55,7 +55,7 @@ public abstract class PlotlyChart
 		}
 		catch(IOException | RuntimeException e)
 		{
-			throw new PlotlyPrintException("Unable to build JSON object", e);
+			throw new PlotlyPrintException("Unable to build JSON object for " + getPlotType(), e);
 		}
 	}
 
@@ -73,7 +73,5 @@ public abstract class PlotlyChart
 
 	protected abstract JSONArray buildDataArray(JSONArray arrayTemplate);
 
-	public abstract int getWidth();
-
-	public abstract int getHeight();
+	public abstract String getPlotType();
 }

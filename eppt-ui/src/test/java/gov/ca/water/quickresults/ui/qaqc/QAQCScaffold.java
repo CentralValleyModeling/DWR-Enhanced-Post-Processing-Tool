@@ -57,6 +57,7 @@ public class QAQCScaffold
 			Assertions.fail(e);
 		}
 		GuiLinksSeedDataSvcImpl.createSeedDataSvcImplInstance();
+		ThresholdLinksSeedDataSvc.createSeedDataSvcImplInstance();
 		WaterYearDefinitionSvc.createSeedDataSvcImplInstance();
 		NamedDssPath namedDssPath = new NamedDssPath(
 				Paths.get("J:\\DWR\\QA_QC\\SupportingDocs040219\\EPPTSupportingDoc040219\\SampleDSS_V1.01\\Inputs\\SampleDV_Base.dss"), "test",

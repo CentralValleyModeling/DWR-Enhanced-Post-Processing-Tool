@@ -13,6 +13,8 @@
 package gov.ca.water.reportengine.standardsummary;
 
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.script.ScriptException;
 
 import gov.ca.water.calgui.bo.PeriodFilter;
@@ -80,13 +82,21 @@ abstract class StandardSummaryChartBuilder
 	private final EpptScenarioRun _base;
 	private final List<EpptScenarioRun> _alternatives;
 	private final SummaryReportParameters _reportParameters;
+	private final StandardSummaryErrors _standardSummaryErrors;
 
-	StandardSummaryChartBuilder(Document document, EpptScenarioRun base, List<EpptScenarioRun> alternatives, SummaryReportParameters reportParameters)
+	StandardSummaryChartBuilder(Document document, EpptScenarioRun base, List<EpptScenarioRun> alternatives, SummaryReportParameters reportParameters,
+								StandardSummaryErrors standardSummaryErrors)
 	{
 		_document = document;
 		_base = base;
 		_alternatives = alternatives;
 		_reportParameters = reportParameters;
+		_standardSummaryErrors = standardSummaryErrors;
+	}
+
+	public StandardSummaryErrors getStandardSummaryErrors()
+	{
+		return _standardSummaryErrors;
 	}
 
 	Document getDocument()
@@ -155,5 +165,10 @@ abstract class StandardSummaryChartBuilder
 		{
 			throw new EpptReportException("Error initializing Jython script runner", e);
 		}
+	}
+
+	void logScriptException(Logger logger, ChartComponent v, EpptReportException e)
+	{
+		getStandardSummaryErrors().addError(logger, "Error in Summary configuration - " + v + "\nError running jython script for: " + v.getFunction(), e);
 	}
 }

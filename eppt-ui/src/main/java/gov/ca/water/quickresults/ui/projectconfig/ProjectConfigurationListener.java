@@ -68,8 +68,6 @@ public class ProjectConfigurationListener implements ActionListener
 				break;
 			default:
 		}
-		ProjectConfigurationPanel projectConfigurationPanel = ProjectConfigurationPanel.getProjectConfigurationPanel();
-		projectConfigurationPanel.setModified(true);
 	}
 
 	private void launchFileDialogToAddScenario(ActionEvent e)
@@ -94,11 +92,14 @@ public class ProjectConfigurationListener implements ActionListener
 					(Frame) SwingUtilities.windowForComponent(_projectConfigurationPanel));
 			scenarioRunEditor.fillPanel(oldScenarioRun);
 			scenarioRunEditor.setVisible(true);
-			scenarioRunEditor.dispose();
 			EpptScenarioRun newScenarioRun = scenarioRunEditor.createRun();
+			scenarioRunEditor.setVisible(false);
+			scenarioRunEditor.dispose();
+
 			if(newScenarioRun != null)
 			{
 				_projectConfigurationPanel.replaceScenario(oldScenarioRun, newScenarioRun);
+				_projectConfigurationPanel.updateRadioState();
 			}
 		}
 	}
@@ -112,6 +113,7 @@ public class ProjectConfigurationListener implements ActionListener
 	{
 		JPanel controls2 = _projectConfigurationPanel.getControls2();
 		EpptPanel.setCheckboxesSelectedRecusive(b, controls2);
+		_projectConfigurationPanel.setModified(true);
 	}
 
 }

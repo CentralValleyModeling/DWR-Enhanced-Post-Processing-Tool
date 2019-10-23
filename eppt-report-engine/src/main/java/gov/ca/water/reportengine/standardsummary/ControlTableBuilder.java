@@ -14,7 +14,6 @@ package gov.ca.water.reportengine.standardsummary;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 import java.util.function.Function;
 import java.util.function.IntFunction;
 import java.util.logging.Level;
@@ -40,9 +39,10 @@ class ControlTableBuilder extends TableBuilder
 	private static final Logger LOGGER = Logger.getLogger(ControlTableBuilder.class.getName());
 
 	ControlTableBuilder(Document document, EpptScenarioRun base, List<EpptScenarioRun> alternatives,
-						SummaryReportParameters reportParameters)
+						SummaryReportParameters reportParameters,
+						StandardSummaryErrors standardSummaryErrors)
 	{
-		super(document, base, alternatives, reportParameters);
+		super(document, base, alternatives, reportParameters, standardSummaryErrors);
 	}
 
 	void buildTable(Element retval, EpptChart epptChart)
@@ -133,7 +133,7 @@ class ControlTableBuilder extends TableBuilder
 
 			long altValue = createJythonValueGenerator(alternative, v.getFunction(), comparisonValue).generateCount();
 
-			long diff = Math.round(altValue - baseValue);
+			long diff = altValue - baseValue;
 			String absoluteText = String.valueOf(diff);
 			retval.setTextContent(absoluteText);
 			if(getReportParameters().getPercentDiffStyle() == PercentDiffStyle.PERCENT)
@@ -153,7 +153,7 @@ class ControlTableBuilder extends TableBuilder
 			{
 				if(baseValue != 0)
 				{
-					int percent = Math.round(((altValue - baseValue) / baseValue) * 100);
+					long percent = Math.round(((altValue - (double) baseValue) / baseValue) * 100);
 					retval.setAttribute(VALUE_FULL_TEXT_ATTRIBUTE, absoluteText + "\n(" + percent + "%)");
 				}
 				else
@@ -164,7 +164,7 @@ class ControlTableBuilder extends TableBuilder
 		}
 		catch(EpptReportException e)
 		{
-			LOGGER.log(Level.SEVERE, "Error running jython script", e);
+			logScriptException(LOGGER, v, e);
 		}
 		return retval;
 	}
@@ -180,7 +180,7 @@ class ControlTableBuilder extends TableBuilder
 		}
 		catch(EpptReportException e)
 		{
-			LOGGER.log(Level.SEVERE, "Error running jython script", e);
+			logScriptException(LOGGER, v, e);
 		}
 		return retval;
 	}

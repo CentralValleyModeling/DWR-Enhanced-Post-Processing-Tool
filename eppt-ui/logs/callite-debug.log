@@ -1,0 +1,51 @@
+2019-10-07 15:08:03,048 [main] ERROR gov.ca.water.calgui.techservice.impl.FileSystemSvcImpl - File missing : C:\Git\DWR\EPPT\DWR-Enhanced-Post-Processing-Tool\eppt-ui\target\test-classes\dwr_eppt\config\ThresholdLinks.csv
+2019-10-10 11:19:02,277 [main] ERROR gov.ca.water.calgui.techservice.impl.FileSystemSvcImpl - File missing : C:\Git\DWR\EPPT\DWR-Enhanced-Post-Processing-Tool\eppt-ui\eppt-ui\target\test-classes\dwr_eppt\config\GUILinks.csv
+2019-10-10 11:19:02,280 [main] ERROR gov.ca.water.calgui.busservice.impl.GuiLinksSeedDataSvcImpl - File missing : C:\Git\DWR\EPPT\DWR-Enhanced-Post-Processing-Tool\eppt-ui\eppt-ui\target\test-classes\dwr_eppt\config\GUILinks.csv
+gov.ca.water.calgui.bo.CalLiteGUIExceptionFatal: File missing : C:\Git\DWR\EPPT\DWR-Enhanced-Post-Processing-Tool\eppt-ui\eppt-ui\target\test-classes\dwr_eppt\config\GUILinks.csv
+	at gov.ca.water.calgui.techservice.impl.FileSystemSvcImpl.getFileData(FileSystemSvcImpl.java:77)
+	at gov.ca.water.calgui.techservice.impl.FileSystemSvcImpl.getFileData(FileSystemSvcImpl.java:92)
+	at gov.ca.water.calgui.busservice.impl.GuiLinksSeedDataSvcImpl.initGuiLinksAllModels(GuiLinksSeedDataSvcImpl.java:105)
+	at gov.ca.water.calgui.busservice.impl.GuiLinksSeedDataSvcImpl.<init>(GuiLinksSeedDataSvcImpl.java:53)
+	at gov.ca.water.calgui.busservice.impl.GuiLinksSeedDataSvcImpl.createSeedDataSvcImplInstance(GuiLinksSeedDataSvcImpl.java:84)
+	at gov.ca.water.quickresults.ui.projectconfig.ScenarioRunEditorScaffold.main(ScenarioRunEditorScaffold.java:50)
+Caused by: java.io.FileNotFoundException: File missing : C:\Git\DWR\EPPT\DWR-Enhanced-Post-Processing-Tool\eppt-ui\eppt-ui\target\test-classes\dwr_eppt\config\GUILinks.csv
+	at gov.ca.water.calgui.techservice.impl.FileSystemSvcImpl.getFileData(FileSystemSvcImpl.java:74)
+	... 5 more
+2019-10-14 14:28:21,503 [main] ERROR gov.ca.water.quickresults.ui.quickresults.QuickResultsPanel - Error setting up quick results swing xml: Data_Analysis.xml
+java.lang.Exception: Invalid SwiXML Descriptor.
+	at org.swixml.SwingEngine.render(Unknown Source)
+	at org.swixml.SwingEngine.render(Unknown Source)
+	at gov.ca.water.quickresults.ui.EpptPanel.renderSwixml(EpptPanel.java:93)
+	at gov.ca.water.quickresults.ui.dataanalysis.DataAnalysisPanel.<init>(DataAnalysisPanel.java:43)
+	at gov.ca.water.quickresults.ui.dataanalysis.DataAnalysisPanelScaffold.buildEpptPanel(DataAnalysisPanelScaffold.java:36)
+	at gov.ca.water.quickresults.ui.EpptScaffold.initScaffold(EpptScaffold.java:54)
+	at gov.ca.water.quickresults.ui.dataanalysis.DataAnalysisPanelScaffold.main(DataAnalysisPanelScaffold.java:30)
+2019-10-14 14:28:49,044 [main] ERROR gov.ca.water.quickresults.ui.quickresults.QuickResultsPanel - Error setting up quick results swing xml: Data_Analysis.xml
+java.lang.Exception: Invalid SwiXML Descriptor.
+	at org.swixml.SwingEngine.render(Unknown Source)
+	at org.swixml.SwingEngine.render(Unknown Source)
+	at gov.ca.water.quickresults.ui.EpptPanel.renderSwixml(EpptPanel.java:93)
+	at gov.ca.water.quickresults.ui.dataanalysis.DataAnalysisPanel.<init>(DataAnalysisPanel.java:43)
+	at gov.ca.water.quickresults.ui.dataanalysis.DataAnalysisPanelScaffold.buildEpptPanel(DataAnalysisPanelScaffold.java:36)
+	at gov.ca.water.quickresults.ui.EpptScaffold.initScaffold(EpptScaffold.java:54)
+	at gov.ca.water.quickresults.ui.dataanalysis.DataAnalysisPanelScaffold.main(DataAnalysisPanelScaffold.java:30)
+2019-10-17 09:52:24,738 [main] ERROR gov.ca.water.quickresults.ui.projectconfig.ProjectConfigurationPanel - Error setting up quick results swing xml: Project_Configuration.xml
+java.lang.Exception: Invalid SwiXML Descriptor.
+	at org.swixml.SwingEngine.render(Unknown Source)
+	at org.swixml.SwingEngine.render(Unknown Source)
+	at gov.ca.water.quickresults.ui.EpptPanel.renderSwixml(EpptPanel.java:93)
+	at gov.ca.water.quickresults.ui.projectconfig.ProjectConfigurationPanel.<init>(ProjectConfigurationPanel.java:73)
+	at gov.ca.water.quickresults.ui.projectconfig.ProjectConfigurationPanel.<clinit>(ProjectConfigurationPanel.java:62)
+	at gov.ca.water.quickresults.ui.projectconfig.ProjectConfigurationScaffold.buildEpptPanel(ProjectConfigurationScaffold.java:36)
+	at gov.ca.water.quickresults.ui.EpptScaffold.initScaffold(EpptScaffold.java:54)
+	at gov.ca.water.quickresults.ui.projectconfig.ProjectConfigurationScaffold.main(ProjectConfigurationScaffold.java:30)
+2019-10-17 09:58:33,639 [main] ERROR gov.ca.water.quickresults.ui.projectconfig.ProjectConfigurationPanel - Error setting up quick results swing xml: Project_Configuration.xml
+java.lang.Exception: Invalid SwiXML Descriptor.
+	at org.swixml.SwingEngine.render(Unknown Source)
+	at org.swixml.SwingEngine.render(Unknown Source)
+	at gov.ca.water.quickresults.ui.EpptPanel.renderSwixml(EpptPanel.java:93)
+	at gov.ca.water.quickresults.ui.projectconfig.ProjectConfigurationPanel.<init>(ProjectConfigurationPanel.java:73)
+	at gov.ca.water.quickresults.ui.projectconfig.ProjectConfigurationPanel.<clinit>(ProjectConfigurationPanel.java:62)
+	at gov.ca.water.quickresults.ui.projectconfig.ProjectConfigurationScaffold.buildEpptPanel(ProjectConfigurationScaffold.java:36)
+	at gov.ca.water.quickresults.ui.EpptScaffold.initScaffold(EpptScaffold.java:54)
+	at gov.ca.water.quickresults.ui.projectconfig.ProjectConfigurationScaffold.main(ProjectConfigurationScaffold.java:30)

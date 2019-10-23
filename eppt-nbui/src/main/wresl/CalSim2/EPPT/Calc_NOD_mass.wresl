@@ -245,19 +245,19 @@ define NOD_AD {value NOD_R1_AD + NOD_R2_AD }
 define NOD_MB {value NOD_RR +NOD_LI +NOD_GW -NOD_CU -NOD_LS -NOD_RO +NOD_AD}	
 define NOD_MB_DTS {alias NOD_MB kind 'DTS-1' units 'CFS'}
 
-define NOD_MB_Check {
-	case balanced {
-	condition abs(NOD_MB) < abs_threshold
-	value 100
+define NOD_UNBAL_Check {
+	case unBalanced {
+	condition abs(NOD_MB) > abs_threshold
+	value 200
 	}
-	case notBalanced{
+	case Balanced{
 	condition always
-	value 200 ! underreview - mass balance under review for miss arcs
+	value 100 ! underreview - mass balance under review for miss arcs
 	!value 1
 	}
 }
 
-define NOD_MB_STATUS_DTS {alias NOD_MB_Check kind 'DTS-Status' units 'NONE'}
+define NOD_UNBAL_STATUS_DTS {alias NOD_MB_Check kind 'DTS-Status' units 'NONE'}
 define Delta_MB_STATUS_DTS {alias NOD_MB_Check kind 'DTS-Status' units 'NONE'} !underreview
 define SOD_MB_STATUS_DTS {alias NOD_MB_Check kind 'DTS-Status' units 'NONE'} !underreview 
 

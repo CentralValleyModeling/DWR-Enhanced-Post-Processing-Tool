@@ -36,6 +36,7 @@ import gov.ca.water.calgui.bo.WaterYearType;
 import gov.ca.water.calgui.project.EpptScenarioRun;
 import gov.ca.water.calgui.scripts.JythonScriptRunner;
 import gov.ca.water.reportengine.EpptReportException;
+import sun.font.Script;
 
 import static java.util.stream.Collectors.toList;
 
@@ -215,6 +216,10 @@ public class JythonValueGenerator
 			if(o == null)
 			{
 				throw new ScriptException("Script returned null collection: " + _function);
+			}
+			else if(o instanceof Map && ((Map) o).isEmpty())
+			{
+				throw new ScriptException("No data found for Scenario Run: " + _scenarioRun);
 			}
 			return new EnumMap((Map<Month, Double>) o);
 		}

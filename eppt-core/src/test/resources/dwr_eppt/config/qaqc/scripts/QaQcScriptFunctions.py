@@ -21,7 +21,7 @@ def getPeriodStartYear(date, startOfPeriod):
 
 def calculateExceedance(values):
     retval = TreeMap()
-    doubles = values.stream().mapToDouble(jdf(lambda v: v)).toArray()
+    doubles = values.stream().mapToDouble(jdf(lambda v: v)).sorted().toArray()
     empiricalDist = EmpiricalDist(EmpiricalDist.InterpType.LINEAR, doubles)
     i = 0
     while i < len(doubles):
@@ -44,5 +44,12 @@ def getMatchingGuiLinkEntry(guiLinkId, entry):
     return dssReader.getGuiLinkData(guiLinkId).entrySet().stream().filter(jf(lambda e : e.getKey().equals(entry.getKey()))).findAny()
 
 def buildListPrefix(entry):
-    return entry.getKey().getMonth().getDisplayName(TextStyle.FULL,
-                                                    Locale.getDefault()) + " " + String.valueOf(entry.getKey().getYear()) + "(" + waterYearIndex.toString() + " " + waterYearType.getPeriodName() + "): "
+    return buildMonthYearEntry(entry) + ":"
+
+def buildMonthYearEntry(entry):
+    localDate = entry.getKey().minusMonths(1)
+    return localDate.getMonth().getDisplayName(TextStyle.FULL,
+                                                    Locale.getDefault()) + " " + String.valueOf(localDate.getYear())
+
+def formatAsString(value):
+    return " " + String.format("%.0f", value) + " (TAF)"

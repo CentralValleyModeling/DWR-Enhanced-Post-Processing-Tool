@@ -13,10 +13,16 @@
 package gov.ca.water.calgui.bo;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
+
+import static java.util.stream.Collectors.groupingBy;
+import static java.util.stream.Collectors.toList;
+import static java.util.stream.Collectors.toMap;
 
 
 /**
@@ -29,11 +35,19 @@ public class WaterYearIndex
 {
 	private final String _name;
 	private final List<WaterYearType> _waterYearTypes;
+	private List<WaterYearPeriod> _waterYearPeriods;
 
-	public WaterYearIndex(String name, List<WaterYearType> waterYearTypes)
+	public WaterYearIndex(String name, List<WaterYearType> waterYearTypes, List<WaterYearPeriod> waterYearPeriods)
 	{
 		_name = name;
 		_waterYearTypes = waterYearTypes;
+		_waterYearTypes.sort(Comparator.comparingInt(t -> waterYearPeriods.indexOf(t.getWaterYearPeriod())));
+		_waterYearPeriods = waterYearPeriods;
+	}
+
+	public List<WaterYearPeriod> getSortedPeriods()
+	{
+		return _waterYearPeriods;
 	}
 
 	public List<WaterYearType> getWaterYearTypes()
@@ -46,17 +60,37 @@ public class WaterYearIndex
 		return _name;
 	}
 
-	private Map<WaterYearPeriod, List<WaterYearType>> getWaterYearTypeRanges()
+	/**
+	 * @return all water year type groups for all years
+	 */
+	public Map<WaterYearPeriod, List<WaterYearType>> getWaterYearTypeGroups()
 	{
 		return getWaterYearTypes()
 				.stream()
-				.collect(Collectors.groupingBy(WaterYearType::getWaterYearPeriod));
+				.collect(groupingBy(WaterYearType::getWaterYearPeriod));
 	}
 
-	public Map<WaterYearPeriod, List<WaterYearPeriodRange>> getWaterYearPeriodRanges()
+	/**
+	 * @return all water year type groups for all years
+	 */
+	public Map<WaterYearPeriod, List<WaterYearPeriodRange>> getAllLongWaterYearPeriodRanges()
+	{
+		return getWaterYearTypes()
+				.stream()
+				.collect(groupingBy(WaterYearType::getWaterYearPeriod))
+				.entrySet()
+				.stream()
+				.collect(toMap(Map.Entry::getKey,
+						e -> e.getValue().stream().map(v->new WaterYearPeriodRange(v.getWaterYearPeriod(), v, v)).collect(toList())));
+	}
+
+	/**
+	 * @return This method returns ranges that are two year periods or longer
+	 */
+	public Map<WaterYearPeriod, List<WaterYearPeriodRange>> getLongWaterYearPeriodRanges()
 	{
 		Map<WaterYearPeriod, List<WaterYearPeriodRange>> retval = new HashMap<>();
-		for(Map.Entry<WaterYearPeriod, List<WaterYearType>> entry : getWaterYearTypeRanges().entrySet())
+		for(Map.Entry<WaterYearPeriod, List<WaterYearType>> entry : getWaterYearTypeGroups().entrySet())
 		{
 			int start = 0;
 			WaterYearPeriod key = entry.getKey();

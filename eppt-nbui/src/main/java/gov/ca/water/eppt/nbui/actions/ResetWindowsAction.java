@@ -36,7 +36,7 @@ import org.openide.util.NbBundle;
 		iconBase = "gov/ca/water/eppt/nbui/actions/ResetWindows.png",
 		displayName = "Reset Windows"
 )
-@ActionReference(path = "Toolbars/Window", position = 5555)
+@ActionReference(path = "Toolbars/Window", position = 10_000)
 @NbBundle.Messages("CTL_ResetWindowsAction=Reset Windows")
 public class ResetWindowsAction implements ActionListener
 {

@@ -42,24 +42,24 @@ define TRNTY_Storage_CHECK_ {
 define TRNTY_Spill_CHECK_ {
 	case spill {
 	condition F1 > abs_threshold
-	value 200}
+	value 200}!1
 	case noSpill {
 	condition always
-	value 100}
+	value 100} !0
 }
 !determines during which timestep Trinity reservoir was at maximum capacity 
 define TRNTY_CAP_CHECK_ {
 	case AtCapacity {
 		condition abs(S1 - S1LEVEL5DV) <= abs_threshold
-		value 200
+		value 200 !1
 	}
 	case notAtCapacity{
 		condition always
-		value 100
+		value 100 !0
 	}
 }
 !determines during which timesteps flood release controls Trinity reservoir release
-define TRNTY_FLD_CHECK_ {
+/*define TRNTY_FLD_CHECK_ {
 	case atFlood {
 		condition abs(S1 - S1LEVEL4DV) <= abs_threshold
 		value 200
@@ -72,7 +72,7 @@ define TRNTY_FLD_CHECK_ {
 		condition always 
 		value 100
 	}
-}
+}*/
 
 !determines was Trinity reservoir storage above/at/below Rule curve in each timestep
 define TRNTY_RC_CHECK_ {
@@ -146,20 +146,20 @@ define ClrCkTnnl_Cap_CHECK_ {
 define SHST_Spill_CHECK_ {
 	case spill {
 	condition F4 > abs_threshold
-	value 200}
+	value 200} !1
 	case noSpill {
 	condition always
-	value 100}
+	value 100} !0
 }
 !determines during which timesteps Shasta reservoir was at maximum capacity 
 define SHST_CAP_CHECK_{
 	case Capacity {
 		condition abs(S4 - S4LEVEL6DV) <= abs_threshold
-		value 200
+		value 200 !1
 	}
 	case notCapacity{
 		condition always
-		value 100
+		value 100 !0
 	}
 }
 !determines during which timesteps flood release controls Shasta reservoir release
@@ -214,20 +214,20 @@ define SHST_DP_CHECK_{
 define FLSM_Spill_CHECK_ {
 	case spill {
 	condition F8 > abs_threshold
-	value 200}
+	value 200} !1
 	case noSpill {
 	condition always
-	value 100}
+	value 100} !0
 }
 !determines during which timesteps Folsom reservoir was at maximum capacity 
 define FLSM_CAP_CHECK_{
 	case Capacity {
 		condition abs(S8 - S8LEVEL6DV) <= abs_threshold
-		value 200
+		value 200 !1
 	}
 	case notCapacity{
 		condition always
-		value 100
+		value 100 !0
 	}
 }
 !determines during which timesteps flood release controls Folsom reservoir release
@@ -283,20 +283,20 @@ define FLSM_DP_CHECK_{
 define OROV_Spill_CHECK_ {
 	case spill {
 	condition F6 > abs_threshold
-	value 200}
+	value 200} !1
 	case noSpill {
 	condition always
-	value 100}
+	value 100}!0
 }
 !determines during which timesteps Oroville reservoir was at maximum capacity 
 define OROV_CAP_CHECK_{
 	case Capacity {
 		condition abs(S6 - S6LEVEL6DV) <= abs_threshold
-		value 200
+		value 200 !1
 	}
 	case notCapacity{
 		condition always
-		value 100
+		value 100 !0
 	}
 }
 !determines during which timesteps flood release controls Oroville reservoir release
@@ -352,11 +352,11 @@ define OROV_DP_CHECK_{
 define SLCVP_CAP_CHECK_{
 	case Capacity {
 		condition abs(S11 - S11_MAX) <= abs_threshold
-		value 200
+		value 200 !1
 	}
 	case notCapacity{
 		condition always
-		value 100
+		value 100 !0
 	}
 }
 
@@ -402,11 +402,11 @@ define SLCVP_DP_CHECK_{
 define SLSWP_CAP_CHECK_{
 	case Capacity {
 		condition abs(S12 - S12_MAX) <= abs_threshold
-		value 200
+		value 200 !1
 	}
 	case notCapacity{
 		condition always
-		value 100
+		value 100 !0
 	}
 }
 
@@ -447,7 +447,7 @@ define SLSWP_DP_CHECK_{
 !Outputs for Trinity
 define TRNTY_Spill_STATUS_DTS {alias TRNTY_Spill_CHECK_ kind 'DTS-STATUS' units 'NONE'}
 define TRNTY_CAP_STATUS_DTS {alias TRNTY_CAP_CHECK_ kind 'DTS-STATUS' units 'NONE'}
-define TRNTY_FLD_STATUS_DTS {alias TRNTY_FLD_CHECK_ kind 'DTS-STATUS' units 'NONE'}
+!define TRNTY_FLD_STATUS_DTS {alias TRNTY_FLD_CHECK_ kind 'DTS-STATUS' units 'NONE'}
 define TRNTY_RC_STATUS_DTS {alias TRNTY_RC_CHECK_ kind 'DTS-STATUS' units 'NONE'}
 define TRNTY_DP_STATUS_DTS {alias TRNTY_DP_CHECK_ kind 'DTS-STATUS' units 'NONE'}
 define ClrCkTnnl_import_STATUS_DTS {alias ClrCkTnnl_import_CHECK_ kind 'DTS-STATUS' units 'NONE'}
@@ -480,5 +480,8 @@ define SLSWP_DP_STATUS_DTS {alias SLSWP_DP_CHECK_ kind 'DTS-STATUS' units 'NONE'
 define SLCVP_CAP_STATUS_DTS {alias SLCVP_CAP_CHECK_ kind 'DTS-STATUS' units 'NONE'}
 define SLCVP_RC_STATUS_DTS {alias SLCVP_RC_CHECK_ kind 'DTS-STATUS' units 'NONE'}
 define SLCVP_DP_STATUS_DTS {alias SLCVP_DP_CHECK_ kind 'DTS-STATUS' units 'NONE'}
+
+!define trinity_baldv {alias trinity_bal kind 'debug' units 'taf'}
+
 
 

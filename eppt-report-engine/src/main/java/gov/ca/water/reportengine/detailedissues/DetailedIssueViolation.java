@@ -22,84 +22,93 @@ import hec.heclib.util.HecTime;
 
 public class DetailedIssueViolation
 {
-    private static final Logger LOGGER = Logger.getLogger(DetailedIssueViolation.class.getName());
+	private static final Logger LOGGER = Logger.getLogger(DetailedIssueViolation.class.getName());
 
-    private final String _title;
-    private final int _totalNumberOfViolations;
-    private final List<Issue> _issues = new ArrayList<>();
+	private final String _title;
+	private final int _totalNumberOfViolations;
+	private final List<Issue> _issues = new ArrayList<>();
 
-    DetailedIssueViolation(List<HecTime> times, String title, Map<HecTime, Double> actualValues,
-                           Map<HecTime, Double> thresholdValues, Map<HecTime, String> waterYearType, String valueUnits,
-                           String standardUnits, int totalNumberOfViolations)
-    {
+	DetailedIssueViolation(List<HecTime> times, String title, Map<HecTime, Double> actualValues,
+						   Map<HecTime, Double> thresholdValues, Map<HecTime, String> waterYearType, String valueUnits,
+						   String standardUnits, int totalNumberOfViolations)
+	{
 
-        _title = title;
-        _totalNumberOfViolations = totalNumberOfViolations;
+		_title = title;
+		_totalNumberOfViolations = totalNumberOfViolations;
 
-        for (HecTime time : times)
-        {
-            String waterYear = waterYearType.get(time);
-            Double value = actualValues.get(time);
-            Double standard = thresholdValues.get(time);
+		for(HecTime time : times)
+		{
+			String waterYear = waterYearType.get(time);
+			Double value = actualValues.get(time);
+			Double standard = thresholdValues.get(time);
 
-            Issue issue = new Issue(time, waterYear, value, valueUnits, standard, standardUnits);
-            _issues.add(issue);
-        }
-    }
+			Issue issue = new Issue(time, waterYear, value, valueUnits, standard, standardUnits);
+			_issues.add(issue);
+		}
+	}
 
-    int getTotalNumberOfViolations()
-    {
-        return _totalNumberOfViolations;
-    }
-    public String getTitle()
-    {
-        return _title;
-    }
+	int getTotalNumberOfViolations()
+	{
+		return _totalNumberOfViolations;
+	}
 
-    public List<Issue> getIssues()
-    {
-        return _issues;
-    }
+	public String getTitle()
+	{
+		return _title;
+	}
 
-    static class Issue
-    {
+	public List<Issue> getIssues()
+	{
+		return _issues;
+	}
 
-        private final HecTime _time;
-        private final String _waterYearType;
-        private final Double _value;
-        private final String _valueUnits;
-        private final Double _standard;
-        private final String _standardUnits;
+	static class Issue
+	{
 
-        Issue(HecTime time, String waterYearType, Double value, String valueUnits, Double standard, String standardUnits)
-        {
+		private final HecTime _time;
+		private final String _waterYearType;
+		private final Double _value;
+		private final String _valueUnits;
+		private final Double _standard;
+		private final String _standardUnits;
 
-            _time = time;
-            _waterYearType = waterYearType;
-            _value = value;
-            _valueUnits = valueUnits;
-            _standard = standard;
-            _standardUnits = standardUnits;
-        }
+		Issue(HecTime time, String waterYearType, Double value, String valueUnits, Double standard, String standardUnits)
+		{
 
-        @Override
-        public String toString()
-        {
+			_time = time;
+			_waterYearType = waterYearType;
+			_value = value;
+			_valueUnits = valueUnits;
+			_standard = standard;
+			_standardUnits = standardUnits;
+		}
 
-            String actualValue = "N/A";
-            if (_value != null)
-            {
-                actualValue = String.format("%.2f", _value);
-            }
-            String standardValue = "";
-            if (_standard != null)
-            {
-                standardValue = " | " + String.format("%.2f",  _standard) + " " + _standardUnits;
-            }
+		@Override
+		public String toString()
+		{
 
-            String formattedTime = _time.month() + "/" + _time.year();
-            return formattedTime + " " + _waterYearType + " @ " + actualValue + " " + _valueUnits  + standardValue;
-        }
-    }
+			String actualValue = "";
+			if(_value != null)
+			{
+				actualValue = String.format("%.2f", _value) + " " + _valueUnits;
+			}
+			String standardValue = "";
+			if(_standard != null)
+			{
+				if(!actualValue.isEmpty())
+				{
+					standardValue += " | ";
+				}
+				standardValue += String.format("%.2f", _standard) + " " + _standardUnits;
+			}
+			String values = "";
+			if(!actualValue.isEmpty())
+			{
+                values = " @ " + actualValue + " " + standardValue;
+			}
+			String formattedTime = _time.month() + "/" + _time.year();
+			return formattedTime + " " + _waterYearType + values;
+		}
+	}
 
 }

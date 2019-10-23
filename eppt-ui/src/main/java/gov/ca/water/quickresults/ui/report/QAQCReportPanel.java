@@ -74,6 +74,7 @@ import gov.ca.water.reportengine.EpptReportException;
 import gov.ca.water.reportengine.QAQCReportException;
 import gov.ca.water.reportengine.ReportParameters;
 import gov.ca.water.reportengine.standardsummary.PercentDiffStyle;
+import gov.ca.water.reportengine.standardsummary.StandardSummaryErrors;
 import gov.ca.water.reportengine.standardsummary.StandardSummaryReader;
 import gov.ca.water.reportengine.standardsummary.SummaryReportParameters;
 
@@ -133,6 +134,7 @@ public class QAQCReportPanel extends RmaJPanel
 	private RmaJDateTimeField _startDateChooser;
 	private RmaJDateTimeField _endDateChooser;
 	private JButton _overwriteJRXMLButton;
+	private JButton _openReportButton;
 	private EpptScenarioRun _baseRun;
 	private EpptScenarioRun _altRun;
 	private final Map<JCheckBox, String> _reportModules = new HashMap<>();
@@ -161,6 +163,7 @@ public class QAQCReportPanel extends RmaJPanel
 		Path currentProject = EpptPreferences.getLastProjectConfiguration().getParent();
 		Path reportPath = currentProject.resolve("Reports").resolve(projectConfigurationPanel.getProjectName() + ".pdf");
 		_pdfOutput.setText(reportPath.toString());
+		_openReportButton.setEnabled(reportPath.toFile().exists());
 		_tabbedPane1.setTitleAt(0, reportPath.getFileName().toString() + " QA/QC");
 		WaterYearDefinitionSvc.getWaterYearDefinitionSvc().getDefinitions()
 							  .forEach(_waterYearDefinitionCombo::addItem);
@@ -190,6 +193,7 @@ public class QAQCReportPanel extends RmaJPanel
 			_summaryModules.forEach(c -> c.setEnabled(_standardSummaryStatiticsCheckBox.isSelected()));
 		});
 		_overwriteJRXMLButton.addActionListener((e) -> checkForceCopyJrXml());
+		_openReportButton.addActionListener(this::openPdf);
 	}
 
 	private void tabChanged(ChangeEvent e)
@@ -389,6 +393,7 @@ public class QAQCReportPanel extends RmaJPanel
 				filePath += ".pdf";
 			}
 			_pdfOutput.setText(filePath);
+			_openReportButton.setEnabled(Paths.get(filePath).toFile().exists());
 			_tabbedPane1.setTitleAt(0, Paths.get(filePath).getFileName().toString() + " QA/QC");
 		}
 	}
@@ -440,12 +445,12 @@ public class QAQCReportPanel extends RmaJPanel
 
 	private void generateQAQCReport()
 	{
+		Path pathToWriteOut = Paths.get(_pdfOutput.getText());
 		try
 		{
 			_tabbedPane1.setSelectedIndex(0);
 			_qaqcTextPane.setText("");
 			startProcessAsync(_generateReportButton);
-			Path pathToWriteOut = Paths.get(_pdfOutput.getText());
 			QAQCReportGenerator qaqcReportGenerator = new QAQCReportGenerator(new QaQcProcessConsumer());
 			double tolerance = Double.parseDouble(_toleranceTextField.getText());
 			String author = _authorTextField.getText();
@@ -491,6 +496,7 @@ public class QAQCReportPanel extends RmaJPanel
 				{
 					_cancelButton.setEnabled(false);
 				}
+				_openReportButton.setEnabled(pathToWriteOut.toFile().exists());
 			});
 			stopProcessAsync(_generateReportButton);
 		}
@@ -509,7 +515,7 @@ public class QAQCReportPanel extends RmaJPanel
 
 	private List<JCheckBox> buildStandardSummaryModules()
 	{
-		StandardSummaryReader reader = new StandardSummaryReader(Paths.get(EPPTReport.SUMMARY_CSV));
+		StandardSummaryReader reader = new StandardSummaryReader(Paths.get(EPPTReport.SUMMARY_CSV), new StandardSummaryErrors());
 		try
 		{
 			return reader.getModules()
@@ -582,7 +588,7 @@ public class QAQCReportPanel extends RmaJPanel
 		panel3.setLayout(new FlowLayout(FlowLayout.LEFT, 5, 5));
 		panel2.add(panel3, BorderLayout.WEST);
 		_overwriteJRXMLButton = new JButton();
-		_overwriteJRXMLButton.setText("Overwrite JRXML");
+		_overwriteJRXMLButton.setText("Update Report Templates");
 		panel3.add(_overwriteJRXMLButton);
 		final JPanel panel4 = new JPanel();
 		panel4.setLayout(new FlowLayout(FlowLayout.RIGHT, 5, 5));
@@ -688,14 +694,14 @@ public class QAQCReportPanel extends RmaJPanel
 		label4.setText("DSS Compare Tolerance:");
 		gbc = new GridBagConstraints();
 		gbc.gridx = 0;
-		gbc.gridy = 5;
+		gbc.gridy = 6;
 		gbc.fill = GridBagConstraints.HORIZONTAL;
 		gbc.insets = new Insets(5, 5, 5, 5);
 		panel8.add(label4, gbc);
 		_toleranceTextField.setText("");
 		gbc = new GridBagConstraints();
 		gbc.gridx = 1;
-		gbc.gridy = 5;
+		gbc.gridy = 6;
 		gbc.anchor = GridBagConstraints.WEST;
 		gbc.fill = GridBagConstraints.HORIZONTAL;
 		gbc.insets = new Insets(5, 5, 5, 5);
@@ -740,7 +746,7 @@ public class QAQCReportPanel extends RmaJPanel
 		label7.setText("Percent Diff Format:");
 		gbc = new GridBagConstraints();
 		gbc.gridx = 0;
-		gbc.gridy = 6;
+		gbc.gridy = 7;
 		gbc.fill = GridBagConstraints.HORIZONTAL;
 		gbc.insets = new Insets(5, 5, 5, 5);
 		panel8.add(label7, gbc);
@@ -748,7 +754,7 @@ public class QAQCReportPanel extends RmaJPanel
 		label8.setText("Long Term Start Year:");
 		gbc = new GridBagConstraints();
 		gbc.gridx = 0;
-		gbc.gridy = 7;
+		gbc.gridy = 8;
 		gbc.fill = GridBagConstraints.HORIZONTAL;
 		gbc.insets = new Insets(5, 5, 5, 5);
 		panel8.add(label8, gbc);
@@ -756,14 +762,14 @@ public class QAQCReportPanel extends RmaJPanel
 		label9.setText("Long Term End Year:");
 		gbc = new GridBagConstraints();
 		gbc.gridx = 0;
-		gbc.gridy = 8;
+		gbc.gridy = 9;
 		gbc.fill = GridBagConstraints.HORIZONTAL;
 		gbc.insets = new Insets(5, 5, 5, 5);
 		panel8.add(label9, gbc);
 		_percentDiffStyle = new JComboBox();
 		gbc = new GridBagConstraints();
 		gbc.gridx = 1;
-		gbc.gridy = 6;
+		gbc.gridy = 7;
 		gbc.anchor = GridBagConstraints.WEST;
 		gbc.fill = GridBagConstraints.HORIZONTAL;
 		gbc.insets = new Insets(5, 5, 5, 5);
@@ -771,14 +777,14 @@ public class QAQCReportPanel extends RmaJPanel
 		_longTermStartYear = new RmaJIntegerField();
 		gbc = new GridBagConstraints();
 		gbc.gridx = 1;
-		gbc.gridy = 7;
+		gbc.gridy = 8;
 		gbc.fill = GridBagConstraints.HORIZONTAL;
 		gbc.insets = new Insets(5, 5, 5, 5);
 		panel8.add(_longTermStartYear, gbc);
 		_longTermEndYear = new RmaJIntegerField();
 		gbc = new GridBagConstraints();
 		gbc.gridx = 1;
-		gbc.gridy = 8;
+		gbc.gridy = 9;
 		gbc.fill = GridBagConstraints.HORIZONTAL;
 		gbc.insets = new Insets(5, 5, 5, 5);
 		panel8.add(_longTermEndYear, gbc);
@@ -786,7 +792,7 @@ public class QAQCReportPanel extends RmaJPanel
 		label10.setText("Common Period:");
 		gbc = new GridBagConstraints();
 		gbc.gridx = 0;
-		gbc.gridy = 9;
+		gbc.gridy = 10;
 		gbc.fill = GridBagConstraints.HORIZONTAL;
 		gbc.insets = new Insets(5, 5, 5, 5);
 		panel8.add(label10, gbc);
@@ -794,7 +800,7 @@ public class QAQCReportPanel extends RmaJPanel
 		panel12.setLayout(new FlowLayout(FlowLayout.LEFT, 5, 5));
 		gbc = new GridBagConstraints();
 		gbc.gridx = 1;
-		gbc.gridy = 9;
+		gbc.gridy = 10;
 		gbc.fill = GridBagConstraints.BOTH;
 		gbc.insets = new Insets(5, 5, 5, 5);
 		panel8.add(panel12, gbc);
@@ -813,6 +819,13 @@ public class QAQCReportPanel extends RmaJPanel
 		final JLabel label12 = new JLabel();
 		label12.setText("End");
 		panel12.add(label12);
+		_openReportButton = new JButton();
+		_openReportButton.setText("Open Report");
+		gbc = new GridBagConstraints();
+		gbc.gridx = 1;
+		gbc.gridy = 5;
+		gbc.anchor = GridBagConstraints.EAST;
+		panel8.add(_openReportButton, gbc);
 		final JPanel panel13 = new JPanel();
 		panel13.setLayout(new BorderLayout(0, 0));
 		panel13.setPreferredSize(new Dimension(500, 200));
@@ -1007,6 +1020,7 @@ public class QAQCReportPanel extends RmaJPanel
 		Path reportPath = currentProject.resolve("Reports").resolve(
 				ProjectConfigurationPanel.getProjectConfigurationPanel().getProjectName() + ".pdf");
 		_pdfOutput.setText(reportPath.toString());
+		_openReportButton.setEnabled(reportPath.toFile().exists());
 		_tabbedPane1.setTitleAt(0, reportPath.getFileName().toString() + " QA/QC");
 		_tabbedPane1.setSelectedIndex(0);
 		updateCompareState();
@@ -1085,7 +1099,9 @@ public class QAQCReportPanel extends RmaJPanel
 		}
 		catch(EpptInitializationException e)
 		{
-			LOGGER.log(Level.SEVERE, "Error processing water year table for the base scenario", e);
+			String msg = "Error processing water year table for the base scenario for the QA/QC report, please ensure the path is correct: "
+					+ waterYearTable;
+			LOGGER.log(Level.WARNING, msg, e);
 		}
 	}
 
@@ -1096,8 +1112,11 @@ public class QAQCReportPanel extends RmaJPanel
 		{
 			canCompare = Objects.equals(_baseRun.getModel(), _altRun.getModel());
 		}
-		_codeChangesCheckBox.setSelected(canCompare);
-		_assumptionChangesCheckBox.setSelected(canCompare);
+		if(!canCompare)
+		{
+			_codeChangesCheckBox.setSelected(false);
+			_assumptionChangesCheckBox.setSelected(false);
+		}
 		_codeChangesCheckBox.setEnabled(canCompare);
 		_assumptionChangesCheckBox.setEnabled(canCompare);
 	}
@@ -1143,6 +1162,22 @@ public class QAQCReportPanel extends RmaJPanel
 		}
 	}
 
+	private void openPdf(ActionEvent e)
+	{
+		Path path = Paths.get(_pdfOutput.getText());
+		if(path.toFile().exists())
+		{
+			try
+			{
+				Desktop.getDesktop().open(path.toFile());
+			}
+			catch(IOException ex)
+			{
+				LOGGER.log(Level.SEVERE, "Unable to open file: " + path, ex);
+			}
+		}
+	}
+
 	private final class ReportHandler extends Handler
 	{
 
@@ -1154,8 +1189,11 @@ public class QAQCReportPanel extends RmaJPanel
 			{
 				if(record.getLevel().equals(Level.WARNING) || record.getLevel().equals(Level.SEVERE))
 				{
-					appendErrorText(record.getMessage());
 					Throwable thrown = record.getThrown();
+					if(thrown == null)
+					{
+						appendErrorText(record.getMessage());
+					}
 					appendThrowable(thrown);
 				}
 				else

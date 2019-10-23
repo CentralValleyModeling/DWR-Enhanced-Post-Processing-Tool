@@ -50,7 +50,6 @@
       ]
     },
     "yaxis": {
-      "type": "log",
       "autorange": true,
       "title": {
         "text": ""

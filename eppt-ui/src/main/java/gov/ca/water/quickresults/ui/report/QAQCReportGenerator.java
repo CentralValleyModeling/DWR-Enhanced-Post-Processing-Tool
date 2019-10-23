@@ -27,6 +27,7 @@ import gov.ca.water.calgui.wresl.ProcessOutputConsumer;
 import gov.ca.water.reportengine.EPPTReport;
 import gov.ca.water.reportengine.QAQCReportException;
 import gov.ca.water.reportengine.ReportParameters;
+import gov.ca.water.reportengine.standardsummary.StandardSummaryErrors;
 
 import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
 import static java.util.stream.Collectors.toList;
@@ -49,12 +50,15 @@ class QAQCReportGenerator
 	void generateQAQCReport(EpptScenarioRun baseRun, EpptScenarioRun altRun, ReportParameters reportParameters, Path outputPdf)
 			throws QAQCReportException
 	{
-		Path path = writeReportData(baseRun, altRun, reportParameters);
+		StandardSummaryErrors standardSummaryErrors = new StandardSummaryErrors();
+		Path path = writeReportData(baseRun, altRun, reportParameters, standardSummaryErrors);
 		QAQCProcessRunner processRunner = new QAQCProcessRunner(outputPdf, path, _consumer);
 		processRunner.run();
+		standardSummaryErrors.log();
 	}
 
-	private Path writeReportData(EpptScenarioRun baseRun, EpptScenarioRun altRun, ReportParameters reportParameters)
+	private Path writeReportData(EpptScenarioRun baseRun, EpptScenarioRun altRun, ReportParameters reportParameters,
+								 StandardSummaryErrors standardSummaryErrors)
 			throws QAQCReportException
 	{
 		try
@@ -73,7 +77,7 @@ class QAQCReportGenerator
 			}
 			Path dataFile = reports.resolve("DWR_QA_QC_Reports").resolve("Datasource").resolve("EPPT_Data.xml");
 			EPPTReport epptReport = new EPPTReport(dataFile,
-					baseRun, altRuns, reportParameters);
+					baseRun, altRuns, reportParameters, standardSummaryErrors);
 			//			if(false)
 			{
 				epptReport.writeReport();

@@ -120,9 +120,8 @@ public class ScenarioTablePanel extends JFXPanel
 
 	public void addScenarioRun(EpptScenarioRun scenarioRun)
 	{
-		Platform.runLater(() -> _scenarioTableModel.getRows().add(
-				new ScenarioRowModel(this::setModified, _scenarioTableModel, scenarioRun,
-						getBaseScenarioRun() == null, getBaseScenarioRun() != null && getAlternativeScenarioRuns().isEmpty())));
+		Platform.runLater(() ->
+				_scenarioTableModel.getRows().add(new ScenarioRowModel(this::setModified, _scenarioTableModel, scenarioRun)));
 	}
 
 	private void setModified()
@@ -141,9 +140,9 @@ public class ScenarioTablePanel extends JFXPanel
 				ScenarioRowModel oldModel = scenarioRowModel.get();
 				int i = _scenarioTableModel.getRows().indexOf(oldModel);
 				_scenarioTableModel.getRows().remove(i);
-				_scenarioTableModel.getRows().add(i,
-						new ScenarioRowModel(this::setModified, _scenarioTableModel, newScenarioRun, oldModel.isBase(),
-								oldModel.isAlternative()));
+				newScenarioRun.setBaseSelected(oldModel.isBase());
+				newScenarioRun.setAltSelected(oldModel.isAlternative());
+				_scenarioTableModel.getRows().add(i, new ScenarioRowModel(this::setModified, _scenarioTableModel, newScenarioRun));
 
 			}
 		});

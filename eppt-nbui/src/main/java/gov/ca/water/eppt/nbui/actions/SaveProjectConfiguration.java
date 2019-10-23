@@ -36,6 +36,7 @@ import org.openide.util.Lookup;
 import org.openide.util.NbBundle.Messages;
 import org.openide.util.Utilities;
 import org.openide.util.actions.Presenter;
+import org.openide.windows.Mode;
 import org.openide.windows.WindowManager;
 
 @ActionID(
@@ -82,15 +83,11 @@ public final class SaveProjectConfiguration extends AbstractAction implements Pr
 		ProjectConfigurationPanel projectConfigurationPanel = ProjectConfigurationPanel.getProjectConfigurationPanel();
 		if(lastProjectConfiguration.toFile().exists())
 		{
-			Path projectDir = lastProjectConfiguration.getParent();
+			Path projectDir = lastProjectConfiguration.toAbsolutePath().getParent();
 			//For backwards compatibility
 			if(projectDir.normalize().equals(EpptPreferences.getProjectsPath()))
 			{
 				projectDir = projectDir.resolve(projectConfigurationPanel.getProjectName());
-			}
-			else if(!projectDir.getParent().getFileName().toString().contains(projectConfigurationPanel.getProjectName()))
-			{
-				projectDir = EpptPreferences.getProjectsPath().resolve(projectConfigurationPanel.getProjectName());
 			}
 			projectConfigurationPanel.saveConfigurationToPath(projectDir,
 					projectConfigurationPanel.getProjectName(), projectConfigurationPanel.getProjectDescription());
@@ -107,7 +104,7 @@ public final class SaveProjectConfiguration extends AbstractAction implements Pr
 		{
 			WindowManager.getDefault().getModes()
 						 .stream()
-						 .map(m -> m.getTopComponents())
+						 .map(Mode::getTopComponents)
 						 .map(Arrays::asList)
 						 .flatMap(Collection::stream)
 						 .filter(t -> t instanceof ProjectConfigurationTopComponent)
@@ -160,9 +157,9 @@ public final class SaveProjectConfiguration extends AbstractAction implements Pr
 		{
 			saveCurrentConfiguration();
 		}
-		catch(IOException ex)
+		catch(IOException | RuntimeException ex)
 		{
-			LOGGER.log(Level.SEVERE, "Error saving current Project Configuration to:", ex);
+			LOGGER.log(Level.SEVERE, "Error saving current Project Configuration to:" + EpptPreferences.getLastProjectConfiguration(), ex);
 		}
 	}
 

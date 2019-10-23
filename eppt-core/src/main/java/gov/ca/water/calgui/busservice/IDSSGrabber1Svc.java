@@ -176,12 +176,4 @@ public interface IDSSGrabber1Svc
 	 */
 	Map<GUILinksAllModelsBO.Model, List<String>> getMissingList();
 
-	/**
-	 * Provide access to stopOnMissing flag read from callite-gui.properties
-	 *
-	 * @return true = stop display task when missing a record, false = continue
-	 * with task
-	 */
-	boolean getStopOnMissing();
-
 }

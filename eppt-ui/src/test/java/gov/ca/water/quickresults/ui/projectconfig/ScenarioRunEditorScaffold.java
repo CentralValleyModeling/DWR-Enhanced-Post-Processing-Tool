@@ -36,7 +36,7 @@ public class ScenarioRunEditorScaffold
 
 	public static void main(String[] args) throws EpptInitializationException
 	{
-		Path target = Paths.get(System.getProperty("user.dir")).resolve("eppt-ui").resolve("target").resolve(
+		Path target = Paths.get(System.getProperty("user.dir")).resolve("target").resolve(
 				"test-classes");
 		System.setProperty("user.dir", target.toString());
 		try

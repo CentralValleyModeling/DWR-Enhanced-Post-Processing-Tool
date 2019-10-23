@@ -20,6 +20,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.regex.Pattern;
 import java.util.stream.Stream;
 
@@ -37,6 +39,7 @@ import static java.util.stream.Collectors.toList;
  */
 public final class JythonScriptBuilder
 {
+	private static final Logger LOGGER = Logger.getLogger(JythonScriptBuilder.class.getName());
 	private static final Pattern CSV_PATTERN = Pattern.compile(",");
 	private static final Pattern OPEN_PAREN_PATTERN = Pattern.compile("\\(");
 	private static final Pattern CLOSED_PAREN_PATTERN = Pattern.compile("\\)");
@@ -110,18 +113,8 @@ public final class JythonScriptBuilder
 
 	public String buildFunctionFromTemplate(String functionReference)
 	{
-//		try
-//		{
-//			List<Script> scripts = readJythonScripts();
-//			_scripts.clear();
-//			_scripts.addAll(scripts);
-//		}
-//		catch(EpptInitializationException e)
-//		{
-//			e.printStackTrace();
-//		}
 		return getMatchingScriptTemplate(functionReference)
-				.orElseThrow(() -> new IllegalArgumentException("Illegal script: " + functionReference));
+				.orElseThrow(() -> new IllegalArgumentException("No matching script defined in " + Constant.FUNCTIONS_PATH + ": " + functionReference));
 	}
 
 	private Optional<String> getMatchingScriptTemplate(String functionReference)
@@ -139,19 +132,30 @@ public final class JythonScriptBuilder
 		if(split.length > 1)
 		{
 			String[] arguments = CLOSED_PAREN_PATTERN.split(split[1]);
-			String argumentsList = arguments[0];
-			String[] arg = CSV_PATTERN.split(argumentsList);
-			if(arg.length != script._arguments.size())
+			if(arguments.length > 0)
 			{
-				throw new IllegalArgumentException(
-						"Function: " + script._name + " Arguments length differs from template length. Arguments: " + Arrays.toString(
-								arg) + " Template: " + script._arguments);
+				String argumentsList = arguments[0];
+				String[] arg = CSV_PATTERN.split(argumentsList);
+				if(arg.length != script._arguments.size())
+				{
+					throw new IllegalArgumentException(
+							"Function: " + script._name + " Arguments length differs from template length. Arguments: " + Arrays.toString(
+									arg) + " Template: " + script._arguments);
+				}
+				for(int i = 0; i < arg.length; i++)
+				{
+					String s = script._arguments.get(i);
+					retval = retval.replace(s.trim(), arg[i].trim());
+				}
 			}
-			for(int i = 0; i < arg.length; i++)
+			else
 			{
-				String s = script._arguments.get(i);
-				retval = retval.replace(s.trim(), arg[i].trim());
+				LOGGER.log(Level.WARNING, "Missing closed parenthesis in function: {0}", retval);
 			}
+		}
+		else
+		{
+			LOGGER.log(Level.WARNING, "Missing open parenthesis in function: {0}", retval);
 		}
 		return retval;
 	}
@@ -161,7 +165,7 @@ public final class JythonScriptBuilder
 		return getMatchingScriptTemplate(reference);
 	}
 
-	private final class Script
+	private static class Script
 	{
 		private final String _name;
 		private final List<String> _arguments;

@@ -29,11 +29,11 @@ import org.openide.windows.TopComponent;
 		preferredID = "QAQCTopComponent",
 		iconBase = "gov/ca/water/eppt/nbui/qaqc.png"
 )
-@TopComponent.Registration(mode = "editor", openAtStartup = true, position = 4444)
+@TopComponent.Registration(mode = "editor", openAtStartup = true, position = 6000)
 @ActionID(category = "Window", id = "gov.ca.water.eppt.nbui.QAQCTopComponent")
 @ActionReferences({
-		@ActionReference(path = "Menu/Window", position = 4444),
-		@ActionReference(path = "Toolbars/Window", position = 4444)
+		@ActionReference(path = "Menu/Window", position = 6000),
+		@ActionReference(path = "Toolbars/Window", position = 6000)
 })
 @TopComponent.OpenActionRegistration(
 		displayName = "QA/QC Report",

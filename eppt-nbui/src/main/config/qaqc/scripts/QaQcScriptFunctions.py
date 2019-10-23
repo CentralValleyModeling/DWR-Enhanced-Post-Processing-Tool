@@ -47,8 +47,9 @@ def buildListPrefix(entry):
     return buildMonthYearEntry(entry) + ":"
 
 def buildMonthYearEntry(entry):
-    return entry.getKey().getMonth().minus(1).getDisplayName(TextStyle.FULL,
-                                                             Locale.getDefault()) + " " + String.valueOf(entry.getKey().getYear())
+    localDate = entry.getKey().minusMonths(1)
+    return localDate.getMonth().getDisplayName(TextStyle.FULL,
+                                               Locale.getDefault()) + " " + String.valueOf(localDate.getYear())
 
 def formatAsString(value):
     return " " + String.format("%.0f", value) + " (TAF)"

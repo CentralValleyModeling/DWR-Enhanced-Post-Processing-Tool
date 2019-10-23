@@ -29,31 +29,31 @@ import javafx.stage.Popup;
 public class FXCalendar extends HBox
 {
 
-	private final SimpleObjectProperty<Color> baseColor = new SimpleObjectProperty<Color>();
-	private final SimpleObjectProperty<Locale> locale = new SimpleObjectProperty<Locale>();
-	private final String DEFAULT_STYLE_CLASS = "fx-calendar";
-	private SimpleIntegerProperty selectedDate = new SimpleIntegerProperty(1);
-	private SimpleIntegerProperty selectedMonth = new SimpleIntegerProperty();
-	private SimpleIntegerProperty selectedYear = new SimpleIntegerProperty();
-	private SimpleBooleanProperty triggered = new SimpleBooleanProperty();
-	private SimpleDoubleProperty dateTextWidth = new SimpleDoubleProperty(74);
-	private SimpleObjectProperty<Date> value = new SimpleObjectProperty<Date>();
-	private boolean showWeekNumber;
-	private FXCalendarUtility fxCalendarUtility;
-	private DateTextField dateTxtField;
-	private ChangeListener<Boolean> focusOutListener;
-	private Popup popup;
-	private DatePicker datePicker;
+	private static final String DEFAULT_STYLE_CLASS = "fx-calendar";
+	private final SimpleObjectProperty<Color> _baseColor = new SimpleObjectProperty<>();
+	private final SimpleObjectProperty<Locale> _locale = new SimpleObjectProperty<>();
+	private SimpleIntegerProperty _selectedDate = new SimpleIntegerProperty(1);
+	private SimpleIntegerProperty _selectedMonth = new SimpleIntegerProperty();
+	private SimpleIntegerProperty _selectedYear = new SimpleIntegerProperty();
+	private SimpleBooleanProperty _triggered = new SimpleBooleanProperty();
+	private SimpleDoubleProperty _dateTextWidth = new SimpleDoubleProperty(74);
+	private SimpleObjectProperty<Date> _value = new SimpleObjectProperty<>();
+	private boolean _showWeekNumber;
+	private FXCalendarUtility _fxCalendarUtility;
+	private DateTextField _dateTxtField;
+	private ChangeListener<Boolean> _focusOutListener;
+	private Popup _popup;
+	private DatePicker _datePicker;
 
 	public FXCalendar()
 	{
 		super();
 		super.getStylesheets().add("gov/ca/water/trendreporting/monthpicker/styles/calendar_styles.css");
 		super.getStyleClass().add(DEFAULT_STYLE_CLASS);
-		this.locale.set(Locale.ENGLISH);
-		this.baseColor.set(Color.web("#313131"));
+		this._locale.set(Locale.ENGLISH);
+		this._baseColor.set(Color.web("#313131"));
 		//setSpacing(6);
-		setAlignment(Pos.CENTER);
+		setAlignment(Pos.CENTER_LEFT);
 		configureCalendar();
 		configureListeners();
 	}
@@ -61,12 +61,12 @@ public class FXCalendar extends HBox
 	private void configureCalendar()
 	{
 		final DateFormatValidator dateFormatValidator = new DateFormatValidator();
-		fxCalendarUtility = new FXCalendarUtility();
+		_fxCalendarUtility = new FXCalendarUtility();
 
-		popup = new Popup();
-		popup.setAutoHide(true);
-		popup.setAutoFix(true);
-		popup.setHideOnEscape(true);
+		_popup = new Popup();
+		_popup.setAutoHide(true);
+		_popup.setAutoFix(true);
+		_popup.setHideOnEscape(true);
 
 		addEventFilter(KeyEvent.KEY_PRESSED, new EventHandler<KeyEvent>()
 		{
@@ -85,10 +85,10 @@ public class FXCalendar extends HBox
 		});
 
 		/* Creating the date text field. */
-		dateTxtField = new DateTextField();
-		dateTxtField.prefWidthProperty().bind(dateTextWidth);
-		this.prefWidthProperty().bind(dateTextWidth.add(26));
-		this.focusOutListener = new ChangeListener<Boolean>()
+		_dateTxtField = new DateTextField();
+		_dateTxtField.prefWidthProperty().bind(_dateTextWidth);
+		this.prefWidthProperty().bind(_dateTextWidth.add(26));
+		this._focusOutListener = new ChangeListener<Boolean>()
 		{
 			@Override
 			public void changed(ObservableValue<? extends Boolean> arg0, Boolean arg1, Boolean arg2)
@@ -96,14 +96,14 @@ public class FXCalendar extends HBox
 				// Handling only when focus is out.
 				if(!arg2)
 				{
-					String value = dateTxtField.getText();
+					String value = _dateTxtField.getText();
 					if(!dateFormatValidator.isValid(value))
 					{
-						dateTxtField.setText(value);
+						_dateTxtField.setText(value);
 					}
 					else
 					{
-						Date date = fxCalendarUtility.convertStringtoDate(value);
+						Date date = _fxCalendarUtility.convertStringtoDate(value);
 						if(date != null)
 						{
 							setValue(date);
@@ -118,7 +118,7 @@ public class FXCalendar extends HBox
 				}
 			}
 		};
-		dateTxtField.focusedProperty().addListener(this.focusOutListener);
+		_dateTxtField.focusedProperty().addListener(this._focusOutListener);
 
 		/* Creating the date button. */
 		Button popupButton = new Button();
@@ -135,7 +135,7 @@ public class FXCalendar extends HBox
 			}
 		});
 
-		getChildren().addAll(dateTxtField, popupButton);
+		getChildren().addAll(_dateTxtField, popupButton);
 	}
 
 	private void configureListeners()
@@ -187,7 +187,7 @@ public class FXCalendar extends HBox
 			@Override
 			public void changed(ObservableValue<? extends Locale> arg0, Locale arg1, Locale arg2)
 			{
-				if(datePicker != null)
+				if(_datePicker != null)
 				{
 					refreshLocale(arg2);
 				}
@@ -201,13 +201,13 @@ public class FXCalendar extends HBox
 			@Override
 			public void onChanged(javafx.collections.ListChangeListener.Change<? extends String> paramChange)
 			{
-				dateTxtField.getStyleClass().clear();
-				dateTxtField.getStyleClass().addAll("text-input", "text-field");
+				_dateTxtField.getStyleClass().clear();
+				_dateTxtField.getStyleClass().addAll("text-input", "text-field");
 				for(String clazz : getStyleClass())
 				{
 					if(!clazz.equals(DEFAULT_STYLE_CLASS))
 					{
-						dateTxtField.getStyleClass().add(clazz);
+						_dateTxtField.getStyleClass().add(clazz);
 					}
 				}
 			}
@@ -221,11 +221,11 @@ public class FXCalendar extends HBox
 		int year = selectedYearProperty().get();
 		if(date != 0 && month > 0 && year != 0)
 		{
-			dateTxtField.setText(this.fxCalendarUtility.getFormattedDate(date, month, year));
+			_dateTxtField.setText(this._fxCalendarUtility.getFormattedDate(date, month, year));
 		}
 		else
 		{
-			dateTxtField.setText("");
+			_dateTxtField.setText("");
 		}
 	}
 
@@ -236,12 +236,12 @@ public class FXCalendar extends HBox
 
 	public void refreshLocale(Locale locale)
 	{
-		fxCalendarUtility.resetShortestWeekDays(locale);
-		fxCalendarUtility.resetShortMonths(locale);
-		fxCalendarUtility.resetMonths(locale);
-		datePicker.getBasePane().setLabelText();
-		datePicker.getBasePane().setWeekLabels();
-		datePicker.getTopPane().setTopMonths();
+		_fxCalendarUtility.resetShortestWeekDays(locale);
+		_fxCalendarUtility.resetShortMonths(locale);
+		_fxCalendarUtility.resetMonths(locale);
+		_datePicker.getBasePane().setLabelText();
+		_datePicker.getBasePane().setWeekLabels();
+		_datePicker.getTopPane().setTopMonths();
 	}
 
 	/**
@@ -249,30 +249,30 @@ public class FXCalendar extends HBox
 	 */
 	private void initiatePopUp()
 	{
-		if(datePicker == null)
+		if(_datePicker == null)
 		{
-			datePicker = new DatePicker(FXCalendar.this);
-			popup.getContent().add(datePicker);
+			_datePicker = new DatePicker(FXCalendar.this);
+			_popup.getContent().add(_datePicker);
 		}
 
 		// If there is no date selected, then setting the system date.
 		if(FXCalendar.this.getSelectedYear() == 0)
 		{
 			Calendar currentDate = FXCalendarUtility.getCurrentDateCalendar();
-			datePicker.selectedDateProperty().set(currentDate.get(Calendar.DAY_OF_MONTH));
-			datePicker.selectedMonthProperty().set(currentDate.get(Calendar.MONTH));
-			datePicker.selectedYearProperty().set(currentDate.get(Calendar.YEAR));
+			_datePicker.selectedDateProperty().set(currentDate.get(Calendar.DAY_OF_MONTH));
+			_datePicker.selectedMonthProperty().set(currentDate.get(Calendar.MONTH));
+			_datePicker.selectedYearProperty().set(currentDate.get(Calendar.YEAR));
 		}
 		else
 		{
 			// Copying the date from calendar to date picker.
-			datePicker.selectedDateProperty().set(selectedDateProperty().get());
-			datePicker.selectedMonthProperty().set(selectedMonthProperty().get());
-			datePicker.selectedYearProperty().set(selectedYearProperty().get());
+			_datePicker.selectedDateProperty().set(selectedDateProperty().get());
+			_datePicker.selectedMonthProperty().set(selectedMonthProperty().get());
+			_datePicker.selectedYearProperty().set(selectedYearProperty().get());
 		}
 
-		datePicker.getBasePane().generateDates();
-		datePicker.showTopPane();
+		_datePicker.getBasePane().generateDates();
+		_datePicker.showTopPane();
 	}
 
 	/**
@@ -285,7 +285,7 @@ public class FXCalendar extends HBox
 		Bounds parentBounds = parent.localToScene(parent.getBoundsInLocal());
 		double layoutX = childBounds.getMinX() + parentBounds.getMinX() + parent.getScene().getX() + parent.getScene().getWindow().getX();
 		double layoutY = childBounds.getMaxY() + parentBounds.getMinY() + parent.getScene().getY() + parent.getScene().getWindow().getY();
-		popup.show(this, layoutX, layoutY);
+		_popup.show(this, layoutX, layoutY);
 	}
 
 	/**
@@ -293,7 +293,7 @@ public class FXCalendar extends HBox
 	 */
 	public void hidePopup()
 	{
-		popup.hide();
+		_popup.hide();
 	}
 
 	/**
@@ -301,7 +301,7 @@ public class FXCalendar extends HBox
 	 */
 	public Color getBaseColor()
 	{
-		return baseColor.get();
+		return _baseColor.get();
 	}
 
 	/**
@@ -309,7 +309,7 @@ public class FXCalendar extends HBox
 	 */
 	public void setBaseColor(Color color)
 	{
-		this.baseColor.set(color);
+		this._baseColor.set(color);
 	}
 
 	/**
@@ -317,7 +317,7 @@ public class FXCalendar extends HBox
 	 */
 	public SimpleObjectProperty<Color> baseColorProperty()
 	{
-		return baseColor;
+		return _baseColor;
 	}
 
 	/**
@@ -325,7 +325,7 @@ public class FXCalendar extends HBox
 	 */
 	public Locale getLocale()
 	{
-		return locale.get();
+		return _locale.get();
 	}
 
 	/**
@@ -333,7 +333,7 @@ public class FXCalendar extends HBox
 	 */
 	public void setLocale(Locale locale)
 	{
-		this.locale.set(locale);
+		this._locale.set(locale);
 	}
 
 	/**
@@ -341,7 +341,7 @@ public class FXCalendar extends HBox
 	 */
 	public SimpleObjectProperty<Locale> localeProperty()
 	{
-		return locale;
+		return _locale;
 	}
 
 	/**
@@ -349,7 +349,7 @@ public class FXCalendar extends HBox
 	 */
 	public Double getDateTextWidth()
 	{
-		return dateTextWidth.get();
+		return _dateTextWidth.get();
 	}
 
 	/**
@@ -357,7 +357,7 @@ public class FXCalendar extends HBox
 	 */
 	public void setDateTextWidth(Double width)
 	{
-		this.dateTextWidth.set(width);
+		this._dateTextWidth.set(width);
 	}
 
 	/**
@@ -365,62 +365,62 @@ public class FXCalendar extends HBox
 	 */
 	public SimpleDoubleProperty dateTextWidthProperty()
 	{
-		return dateTextWidth;
+		return _dateTextWidth;
 	}
 
 	public int getSelectedDate()
 	{
-		return selectedDate.get();
+		return _selectedDate.get();
 	}
 
 	public void setSelectedDate(int selectedDate)
 	{
-		this.selectedDate.set(selectedDate);
+		this._selectedDate.set(selectedDate);
 	}
 
 	public int getSelectedMonth()
 	{
-		return selectedMonth.get();
+		return _selectedMonth.get();
 	}
 
 	public void setSelectedMonth(int selectedMonth)
 	{
-		this.selectedMonth.set(selectedMonth);
+		this._selectedMonth.set(selectedMonth);
 	}
 
 	public int getSelectedYear()
 	{
-		return selectedYear.get();
+		return _selectedYear.get();
 	}
 
 	public void setSelectedYear(int selectedYear)
 	{
-		this.selectedYear.set(selectedYear);
+		this._selectedYear.set(selectedYear);
 	}
 
 	public SimpleIntegerProperty selectedDateProperty()
 	{
-		return selectedDate;
+		return _selectedDate;
 	}
 
 	public SimpleIntegerProperty selectedMonthProperty()
 	{
-		return selectedMonth;
+		return _selectedMonth;
 	}
 
 	public SimpleIntegerProperty selectedYearProperty()
 	{
-		return selectedYear;
+		return _selectedYear;
 	}
 
 	public boolean getShowWeekNumber()
 	{
-		return showWeekNumber;
+		return _showWeekNumber;
 	}
 
 	public void setShowWeekNumber(boolean showWeekNumber)
 	{
-		this.showWeekNumber = showWeekNumber;
+		this._showWeekNumber = showWeekNumber;
 	}
 
 	/**
@@ -428,7 +428,7 @@ public class FXCalendar extends HBox
 	 */
 	public Date getValue()
 	{
-		return this.value.get();
+		return this._value.get();
 	}
 
 	/**
@@ -436,7 +436,7 @@ public class FXCalendar extends HBox
 	 */
 	public void setValue(Date date)
 	{
-		this.value.set(date);
+		this._value.set(date);
 		if(date != null)
 		{
 			Calendar c = FXCalendarUtility.getDateCalendar(date);
@@ -462,32 +462,32 @@ public class FXCalendar extends HBox
 
 	public SimpleObjectProperty<Date> valueProperty()
 	{
-		return value;
+		return _value;
 	}
 
 	public FXCalendarUtility getFXCalendarUtility()
 	{
-		return fxCalendarUtility;
+		return _fxCalendarUtility;
 	}
 
 	public void setTriggered(Boolean triggered)
 	{
-		this.triggered.set(triggered);
+		this._triggered.set(triggered);
 	}
 
 	public SimpleBooleanProperty triggeredProperty()
 	{
-		return triggered;
+		return _triggered;
 	}
 
 	public TextField getTextField()
 	{
-		return dateTxtField;
+		return _dateTxtField;
 	}
 
 	public ChangeListener<Boolean> getFocusOutListener()
 	{
-		return this.focusOutListener;
+		return this._focusOutListener;
 	}
 
 	/**

@@ -111,7 +111,7 @@
 		<property name="net.sf.jasperreports.xpath.field.expression" value="ancestor::sub-module/@sub-module-name"/>
 		<fieldDescription><![CDATA[ancestor::sub-module/@sub-module-name]]></fieldDescription>
 	</field>
-	<filterExpression><![CDATA[$F{component-order}!=null]]></filterExpression>
+	<filterExpression><![CDATA[$F{sub-header-name}!=null]]></filterExpression>
 	<background>
 		<band splitType="Stretch"/>
 	</background>

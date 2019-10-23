@@ -41,6 +41,7 @@ import gov.ca.water.calgui.constant.Constant;
 import gov.ca.water.calgui.constant.EpptPreferences;
 import gov.ca.water.calgui.project.EpptDssContainer;
 import gov.ca.water.calgui.project.EpptScenarioRun;
+import gov.ca.water.calgui.project.EpptScenarioRunValidator;
 import javafx.scene.paint.Color;
 
 import rma.swing.RmaJColorChooserButton;
@@ -446,16 +447,6 @@ public class ScenarioEditorPanel
 		}
 	}
 
-	private EpptDssContainer createDssContainer(String scenarioName)
-	{
-		return _scenarioDssTableModel.createDssContainer(scenarioName);
-	}
-
-	boolean validateRun()
-	{
-		return !_nameField.getText().isEmpty();
-	}
-
 	/**
 	 * @return null if canceled, builds a new Scenario Run otherwise
 	 */
@@ -469,10 +460,10 @@ public class ScenarioEditorPanel
 		String name = _nameField.getText();
 		String description = _descriptionField.getText();
 		GUILinksAllModelsBO.Model model = (GUILinksAllModelsBO.Model) _modelCombobox.getSelectedItem();
-		Path outputPath = Paths.get(_outputTextField.getText());
-		Path wreslMain = Paths.get(_wreslTextField.getText());
-		EpptDssContainer dssContainer = createDssContainer(name);
-		Path waterYearTablePath = Paths.get(_waterYearTable.getText());
+		Path outputPath = relativizeToProject(_outputTextField.getText());
+		Path wreslMain = relativizeToInstaller(_wreslTextField.getText());
+		EpptDssContainer dssContainer = _scenarioDssTableModel.createDssContainer(name, outputPath);
+		Path waterYearTablePath = relativizeToInstaller(_waterYearTable.getText());
 		Color web;
 		String text = _colorHexTextField.getText();
 		try
@@ -486,6 +477,27 @@ public class ScenarioEditorPanel
 		}
 		return new EpptScenarioRun(name, description, model, outputPath, wreslMain, waterYearTablePath,
 				dssContainer, web);
+	}
+
+	private Path relativizeToProject(String text)
+	{
+		Path retval = Paths.get(text);
+		if(!retval.isAbsolute())
+		{
+			retval = EpptPreferences.getLastProjectConfiguration().getParent().resolve(retval);
+		}
+		return retval;
+	}
+
+	private Path relativizeToInstaller(String text)
+	{
+		Path retval = Paths.get(text);
+		if(!retval.isAbsolute())
+		{
+			retval = Paths.get("").toAbsolutePath().resolve(retval);
+		}
+		return retval;
+
 	}
 
 	void fillPanel(EpptScenarioRun scenarioRun)
@@ -508,16 +520,9 @@ public class ScenarioEditorPanel
 		_waterYearTable.setText(scenarioRun.getWaterYearTable().toString());
 		String hex = Constant.colorToHex(scenarioRun.getColor());
 		_colorHexTextField.setText(hex);
-		//		try
-		//		{
-		//			_colorChooserButton.setColor(java.awt.Color.decode(hex));
-		//		}
-		//		catch(NumberFormatException ex)
-		//		{
 		java.awt.Color decode = java.awt.Color.decode(hex.substring(0, 7));
 		decode = new java.awt.Color(decode.getRed(), decode.getGreen(), decode.getBlue(), Integer.parseInt(hex.substring(7, 9), 16));
 		_colorChooserButton.setColor(decode);
-		//		}
 	}
 
 	void shutdown()
@@ -610,7 +615,7 @@ public class ScenarioEditorPanel
 		}
 	}
 
-	private class ComboBoxCellEditor extends DefaultCellEditor implements TableCellRenderer
+	private class ComboBoxCellEditor extends RmaCellEditor implements TableCellRenderer
 	{
 		private final RmaJComboBox<String> _comboBox;
 
@@ -619,6 +624,19 @@ public class ScenarioEditorPanel
 			super(comboBox);
 			comboBox.setEditable(true);
 			_comboBox = comboBox;
+		}
+
+		@Override
+		public boolean stopCellEditing()
+		{
+			Component editorComponent = _comboBox.getEditor().getEditorComponent();
+			if(editorComponent instanceof JTextField)
+			{
+				JTextField textField = (JTextField) editorComponent;
+				String text = textField.getText();
+ 				_comboBox.setSelectedItem(text);
+			}
+			return super.stopCellEditing();
 		}
 
 		@Override

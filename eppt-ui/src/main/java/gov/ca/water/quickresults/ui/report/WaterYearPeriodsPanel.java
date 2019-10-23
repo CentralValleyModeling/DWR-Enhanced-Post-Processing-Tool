@@ -102,7 +102,7 @@ public class WaterYearPeriodsPanel extends JFXPanel
 	private void buildWaterYearTypeRangeRows(WaterYearIndex waterYearIndex)
 	{
 		TreeItem<WaterYearPeriodDefinitionsRow> root = _treeView.getRoot();
-		for(Map.Entry<WaterYearPeriod, List<WaterYearPeriodRange>> entry : waterYearIndex.getWaterYearPeriodRanges().entrySet())
+		for(Map.Entry<WaterYearPeriod, List<WaterYearPeriodRange>> entry : waterYearIndex.getLongWaterYearPeriodRanges().entrySet())
 		{
 			CheckBoxTreeItem<WaterYearPeriodDefinitionsRow> parent = new CheckBoxTreeItem<>(new WaterYearPeriodRow(entry.getKey()),
 					null, false, true);

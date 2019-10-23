@@ -173,24 +173,6 @@ public class BoxPlotChartPanel extends JPanel implements Printable
 			p1.setPreferredSize(new Dimension(800, 600));
 			this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 			this.add(p1);
-			//			smallest observation (sample minimum),
-			//			lower quartile (Q1),
-			//			median (Q2),
-			//			upper quartile (Q3), and
-			//			largest observation (sample maximum)
-			for(int column = 0; column < dataset.getColumnCount(); column++)
-			{
-				String join = String.join(",",
-						dataset.getMinRegularValue(0, column).toString(),
-						dataset.getQ1Value(0, column).toString(),
-						dataset.getMedianValue(0, column).toString(),
-						dataset.getQ3Value(0, column).toString(),
-						dataset.getMaxRegularValue(0, column).toString());
-				//				System.out.println("[" + join + "]");
-				//				System.out.println("Max Outlier" + dataset.getMaxOutlier(0, column));
-				//				System.out.println("Min Outlier" + dataset.getMinOutlier(0, column));
-				System.out.println(dataset.getMeanValue(0, column));
-			}
 		}
 
 	}

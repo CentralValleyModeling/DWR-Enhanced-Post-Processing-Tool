@@ -19,7 +19,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.logging.Level;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import com.google.common.flogger.FluentLogger;
@@ -30,7 +29,6 @@ import gov.ca.water.reportengine.EpptReportException;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
-import static gov.ca.water.calgui.constant.Constant.ORCA_EXE;
 import static gov.ca.water.reportengine.EPPTReport.checkInterrupt;
 import static java.util.stream.Collectors.joining;
 import static java.util.stream.Collectors.toList;
@@ -57,6 +55,7 @@ public class StandardSummaryWriter
 	private static final String CHART_ELEMENT = "chart";
 	private static final String CHART_ORDER_ATTRIBUTE = "chart-order";
 	private static final String CHART_NAME_ATTRIBUTE = "chart-name";
+	private final StandardSummaryErrors _standardSummaryErrors;
 	private final Document _document;
 	private final SummaryReportParameters _reportParameters;
 	private final Path _imageDirectory;
@@ -72,21 +71,22 @@ public class StandardSummaryWriter
 	private final PercentDiffTableBuilder _percentDiffTableBuilder;
 
 	public StandardSummaryWriter(Document document, EpptScenarioRun base, List<EpptScenarioRun> alternatives, SummaryReportParameters reportParameters,
-								 Path imageDir)
+								 Path imageDir, StandardSummaryErrors standardSummaryErrors)
 	{
 		_document = document;
 		_reportParameters = reportParameters;
 		_imageDirectory = imageDir.toAbsolutePath();
+		_standardSummaryErrors = standardSummaryErrors;
 		_rotatedImageDirectory = _imageDirectory.resolve("rotated");
-		_listBuilder = new ListBuilder(document, base, alternatives, reportParameters);
-		_baseAltDiffTableBuilder = new BaseAltDiffTableBuilder(document, base, alternatives, reportParameters);
-		_coaTableBuilder = new CoaTableBuilder(document, base, alternatives, reportParameters);
-		_controlTableBuilder = new ControlTableBuilder(document, base, alternatives, reportParameters);
-		_exceedanceChartBuilder = new ExceedanceChartBuilder(document, base, alternatives, reportParameters);
-		_exceedanceChartPageBuilder = new ExceedanceChartPageBuilder(document, base, alternatives, reportParameters);
-		_linePlotBuilder = new LinePlotBuilder(document, base, alternatives, reportParameters);
-		_percentDiffTableBuilder = new PercentDiffTableBuilder(document, base, alternatives, reportParameters);
-		_scatterPlotBuilder = new ScatterPlotBuilder(document, base, alternatives, reportParameters);
+		_listBuilder = new ListBuilder(document, base, alternatives, reportParameters, _standardSummaryErrors);
+		_baseAltDiffTableBuilder = new BaseAltDiffTableBuilder(document, base, alternatives, reportParameters,_standardSummaryErrors);
+		_coaTableBuilder = new CoaTableBuilder(document, base, alternatives, reportParameters,_standardSummaryErrors);
+		_controlTableBuilder = new ControlTableBuilder(document, base, alternatives, reportParameters,_standardSummaryErrors);
+		_exceedanceChartBuilder = new ExceedanceChartBuilder(document, base, alternatives, reportParameters,_standardSummaryErrors);
+		_exceedanceChartPageBuilder = new ExceedanceChartPageBuilder(document, base, alternatives, reportParameters,_standardSummaryErrors);
+		_linePlotBuilder = new LinePlotBuilder(document, base, alternatives, reportParameters,_standardSummaryErrors);
+		_percentDiffTableBuilder = new PercentDiffTableBuilder(document, base, alternatives, reportParameters,_standardSummaryErrors);
+		_scatterPlotBuilder = new ScatterPlotBuilder(document, base, alternatives, reportParameters,_standardSummaryErrors);
 	}
 
 	public Element write(List<EpptChart> charts) throws EpptReportException
@@ -273,7 +273,7 @@ public class StandardSummaryWriter
 		}
 		catch(RuntimeException | EpptReportException e)
 		{
-			LOGGER.at(Level.SEVERE).withCause(e).log("Error writing data for Chart ID: %s", epptChart);
+			_standardSummaryErrors.addError(LOGGER, "Error writing data for: " + epptChart, e);
 		}
 		return Optional.ofNullable(retval);
 	}

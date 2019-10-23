@@ -115,19 +115,21 @@ public class NewProjectConfiguration implements ActionListener
 			if(selectedFile != null)
 			{
 				Path projectPath = selectedFile.toPath().resolve(nameDialog.getName());
+				ProjectConfigurationPanel projectConfigurationPanel = ProjectConfigurationPanel.getProjectConfigurationPanel();
 				try
 				{
-					ProjectConfigurationPanel.getProjectConfigurationPanel().resetProjectConfiguration();
+					projectConfigurationPanel.resetProjectConfiguration();
 				}
 				catch(Exception e)
 				{
 					throw new IOException("Unable to reset Project Configuration to default state");
 				}
-				ProjectConfigurationPanel.getProjectConfigurationPanel().saveConfigurationToPath(projectPath,
+				projectConfigurationPanel.saveConfigurationToPath(projectPath,
 						nameDialog.getName(), nameDialog.getDescription());
+				projectConfigurationPanel.loadProjectConfiguration(EpptPreferences.getLastProjectConfiguration());
 				WindowManager.getDefault().getMainWindow().setTitle(
-						Installer.MAIN_FRAME_NAME + " - " + ProjectConfigurationPanel.getProjectConfigurationPanel().getProjectName());
-				ProjectConfigurationPanel.getProjectConfigurationPanel().setModified(false);
+						Installer.MAIN_FRAME_NAME + " - " + projectConfigurationPanel.getProjectName());
+				projectConfigurationPanel.setModified(false);
 				Collection<? extends ProjectConfigurationSavable> projectConfigurationSavables = Savable.REGISTRY.lookupAll(
 						ProjectConfigurationSavable.class);
 				for(ProjectConfigurationSavable savable : projectConfigurationSavables)

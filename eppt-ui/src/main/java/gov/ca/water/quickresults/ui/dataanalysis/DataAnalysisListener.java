@@ -67,10 +67,10 @@ public class DataAnalysisListener implements ActionListener
 						selectTemplateFile(e);
 						break;
 					case "btnGetReportFile1":
-						selectDssFile(e, _dataAnalysisPanel.getDssResultFileField1());
+						selectDssFile(e, _dataAnalysisPanel.getDssResultPathBaseField());
 						break;
 					case "btnGetReportFile2":
-						selectDssFile(e, _dataAnalysisPanel.getDssResultFileField2());
+						selectDssFile(e, _dataAnalysisPanel.getDssResultPathAltField());
 						break;
 					case "btnGetReportFile3":
 						selectOutputFile(e);
@@ -79,8 +79,8 @@ public class DataAnalysisListener implements ActionListener
 						generateReportAction();
 						break;
 					default:
-						LOGGER.info("Action Command " + e.getActionCommand());
-						LOGGER.info("Action Source " + component.getName());
+						LOGGER.finer("Action Command " + e.getActionCommand());
+						LOGGER.finer("Action Source " + component.getName());
 				}
 			}
 		}
@@ -147,13 +147,13 @@ public class DataAnalysisListener implements ActionListener
 	private String areInputsValid()
 	{
 		String retval = null;
-		if(_dataAnalysisPanel.getDssResultFileField1().getText().isEmpty())
+		if(!_dataAnalysisPanel.getDssResultPathBase().toFile().exists())
 		{
-			retval = "You must specify DSS result file #1";
+			retval = "You must specify DSS source for Result #1";
 		}
-		else if(_dataAnalysisPanel.getDssResultFileField2().getText().isEmpty())
+		else if(!_dataAnalysisPanel.getDssResultPathAlt().toFile().exists())
 		{
-			retval = "You must specify DSS result file #2";
+			retval = "You must specify DSS source for Result #2";
 
 		}
 		else if(_dataAnalysisPanel.getOutputTextField().getText().isEmpty())
@@ -246,14 +246,14 @@ public class DataAnalysisListener implements ActionListener
 			theText.append(br.readLine()).append("\n");
 			String skipLine = br.readLine();
 			LOGGER.log(Level.FINE, "Skip Line: {0}", skipLine);
-			theText.append("FILE_BASE\t").append(_dataAnalysisPanel.getDssResultFileField1().getToolTipText()).append(
+			theText.append("FILE_BASE\t").append(_dataAnalysisPanel.getDssResultPathBase().toString()).append(
 					"\n");
 			skipLine = br.readLine();
 			LOGGER.log(Level.FINE, "Skip Line: {0}", skipLine);
 			theText.append("NAME_BASE\t\"").append(_dataAnalysisPanel.getReportName1().getText()).append("\"\n");
 			skipLine = br.readLine();
 			LOGGER.log(Level.FINE, "Skip Line: {0}", skipLine);
-			theText.append("FILE_ALT\t").append(_dataAnalysisPanel.getDssResultFileField2().getToolTipText()).append(
+			theText.append("FILE_ALT\t").append(_dataAnalysisPanel.getDssResultPathAlt().toString()).append(
 					"\n");
 			skipLine = br.readLine();
 			LOGGER.log(Level.FINE, "Skip Line: {0}", skipLine);
@@ -287,7 +287,7 @@ public class DataAnalysisListener implements ActionListener
 			SwingWorker<Void, Object> sw = new SwingWorker<Void, Object>()
 			{
 				@Override
-				protected Void doInBackground() throws Exception
+				protected Void doInBackground()
 				{
 					report.run();
 					return null;

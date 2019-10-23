@@ -13,7 +13,6 @@
 package gov.ca.water.reportengine.standardsummary;
 
 import java.time.Month;
-import java.util.ArrayList;
 import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.List;
@@ -27,7 +26,7 @@ import gov.ca.water.calgui.bo.PeriodFilter;
 import gov.ca.water.calgui.project.EpptScenarioRun;
 import gov.ca.water.plotly.ExceedanceData;
 import gov.ca.water.plotly.PlotlyChart;
-import gov.ca.water.plotly.PlotlyExceedancePage;
+import gov.ca.water.plotly.qaqc.PlotlyExceedancePage;
 import gov.ca.water.reportengine.EpptReportException;
 import org.w3c.dom.Document;
 
@@ -43,9 +42,10 @@ class ExceedanceChartPageBuilder extends PlotChartBuilder
 	private static final Logger LOGGER = Logger.getLogger(ExceedanceChartPageBuilder.class.getName());
 
 	ExceedanceChartPageBuilder(Document document, EpptScenarioRun base, List<EpptScenarioRun> alternatives,
-							   SummaryReportParameters reportParameters)
+							   SummaryReportParameters reportParameters,
+							   StandardSummaryErrors standardSummaryErrors)
 	{
-		super(document, base, alternatives, reportParameters);
+		super(document, base, alternatives, reportParameters, standardSummaryErrors);
 	}
 
 	@Override
@@ -77,7 +77,7 @@ class ExceedanceChartPageBuilder extends PlotChartBuilder
 		}
 		catch(EpptReportException e)
 		{
-			LOGGER.log(Level.SEVERE, "Error running jython script", e);
+			logScriptException(LOGGER, chartComponents.get(0), e);
 		}
 		return new PlotlyExceedancePage.ExceedanceMonthData(data);
 	}

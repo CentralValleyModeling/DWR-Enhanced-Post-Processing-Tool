@@ -1,0 +1,135 @@
+/***********************
+CVP-SWP Coordinated Operations Agreement 1986
+Exhibit B-2
+
+Karandev Singh, BDO, DWR	| 08/15/2018
+Karandev Singh, BDO, DWR	| 01/14/2019
+
+This files calculates CVP and SWP annual supplies.
+************************/
+
+!********** SACRAMENTO BASIN USE **********
+!Sacramento R below Shasta
+
+!!CVP - Ag Service Contract
+define BASIN_USE_SCRMNTO_CVP_AG {value (D104_PAG_ + D171_PAG_ + D172_PAG_ + D174_PAG_ + D178_PAG_)*cfs_TAF}
+	define BASIN_USE_SCRMNTO_CVP_AG_ {alias BASIN_USE_SCRMNTO_CVP_AG kind 'DTS_COA_EXHBTB2' units 'TAF'}
+
+!!CVP - MI Service Contract
+define BASIN_USE_SCRMNTO_CVP_MI {value (D104_PMI_ /* + D162_PMI_*/)*cfs_TAF}
+	define BASIN_USE_SCRMNTO_CVP_MI_ {alias BASIN_USE_SCRMNTO_CVP_MI kind 'DTS_COA_EXHBTB2' units 'TAF'}
+
+!!CVP - Settlement Contractors
+define BASIN_USE_SCRMNTO_CVP_SC {value (D104_PSC_ + D122A_PSC_ + D122B_PSC_ + D128_PSC_ + D129A_PSC_ + D143A_PSC_ + D145A_PSC_ + D180_PSC_ + D182A_ + D183_PSC_ + D18302_ + D162_PSC_ + D163_PSC_ + D165_PSC_)*cfs_TAF}
+	define BASIN_USE_SCRMNTO_CVP_SC_ {alias BASIN_USE_SCRMNTO_CVP_SC kind 'DTS_COA_EXHBTB2' units 'TAF'}
+
+!!CVP - Refuge Level 2
+define BASIN_USE_SCRMNTO_CVP_RF {value (C136B_ + C216B_ + C221_ + D143B_PRF_ + D145B_PRF_ + D182B_PRF_)*cfs_TAF}
+	define BASIN_USE_SCRMNTO_CVP_RF_ {alias BASIN_USE_SCRMNTO_CVP_RF kind 'DTS_COA_EXHBTB2' units 'TAF'}
+
+!!Non Project/ Water Right
+define BASIN_USE_SCRMNTO_NP_WR {value (D104_NP_ + D113A_ + D113B_ + D162_NP_)*cfs_TAF}
+	define BASIN_USE_SCRMNTO_NP_WR_ {alias BASIN_USE_SCRMNTO_NP_WR kind 'DTS_COA_EXHBTB2' units 'TAF'}
+
+define BASIN_USE_SCRMNTO {value (BASIN_USE_SCRMNTO_CVP_AG + BASIN_USE_SCRMNTO_CVP_MI + BASIN_USE_SCRMNTO_CVP_SC + BASIN_USE_SCRMNTO_CVP_RF + BASIN_USE_SCRMNTO_NP_WR)}
+	define BASIN_USE_SCRMNTO_ {alias BASIN_USE_SCRMNTO kind 'DTS_COA_EXHBTB2' units 'TAF'}
+
+!American R Basin
+
+!!CVP - Ag Service Contract
+define BASIN_USE_AMRCN_CVP_AG {value (D9_PAG_)*cfs_TAF}
+	define BASIN_USE_AMRCN_CVP_AG_ {alias BASIN_USE_AMRCN_CVP_AG kind 'DTS_COA_EXHBTB2' units 'TAF'}
+
+!!CVP - MI Service Contract
+define BASIN_USE_AMRCN_CVP_MI {value (D8_PMI_ + D9_PMI_ + D167_PMI_ + D168C_FRWP_PMI_)*cfs_TAF}
+	define BASIN_USE_AMRCN_CVP_MI_ {alias BASIN_USE_AMRCN_CVP_MI kind 'DTS_COA_EXHBTB2' units 'TAF'}
+
+!!CVP - Losses
+define BASIN_USE_AMRCN_CVP_LS {value (D9_PLS_)*cfs_TAF}
+	define BASIN_USE_AMRCN_CVP_LS_ {alias BASIN_USE_AMRCN_CVP_LS kind 'DTS_COA_EXHBTB2' units 'TAF'}
+
+!!Non Project/ Water Right
+define BASIN_USE_AMRCN_NP_WR {value (D300_NP_ + D8_NP_ + D9_NP_ + D302_NP_ + D167_NP_)*cfs_TAF}
+	define BASIN_USE_AMRCN_NP_WR_ {alias BASIN_USE_AMRCN_NP_WR kind 'DTS_COA_EXHBTB2' units 'TAF'}
+	
+define BASIN_USE_AMRCN {value (BASIN_USE_AMRCN_CVP_AG + BASIN_USE_AMRCN_CVP_MI + BASIN_USE_AMRCN_CVP_LS + BASIN_USE_AMRCN_NP_WR)}
+	define BASIN_USE_AMRCN_ {alias BASIN_USE_AMRCN kind 'DTS_COA_EXHBTB2' units 'TAF'}
+	
+!Feather R below Oroville
+
+!!SWP - MI Service Contract
+define BASIN_USE_FTHR_SWP_MI {value (D201_PMI_ + D204_PMI_)*cfs_TAF}
+	define BASIN_USE_FTHR_SWP_MI_ {alias BASIN_USE_FTHR_SWP_MI kind 'DTS_COA_EXHBTB2' units 'TAF'}
+
+!!SWP - FRSA
+define BASIN_USE_FTHR_FRSA {value (D7A_PAG_ + D7B_PAG_ + D206A_PAG_ + D206B_PAG_ + D206C_PAG_)*cfs_TAF}
+	define BASIN_USE_FTHR_FRSA_ {alias BASIN_USE_FTHR_FRSA kind 'DTS_COA_EXHBTB2' units 'TAF'}
+
+!!SWP - Water Rights
+define BASIN_USE_FTHR_SWP_WR {value (D6_PWR_ + D202_PWR_ + D7A_PWR_ + D7B_PWR_ + D206B_PWR_ + D206C_PWR_)*cfs_TAF}
+	define BASIN_USE_FTHR_SWP_WR_ {alias BASIN_USE_FTHR_SWP_WR kind 'DTS_COA_EXHBTB2' units 'TAF'}
+
+!!FRSA Rice Decomp (Winter Water)
+define BASIN_USE_FTHR_DCMP {value (D7C_)*cfs_TAF}
+	define BASIN_USE_FTHR_DCMP_ {alias BASIN_USE_FTHR_DCMP kind 'DTS_COA_EXHBTB2' units 'TAF'}
+	
+define BASIN_USE_FTHR {value (BASIN_USE_FTHR_SWP_MI + BASIN_USE_FTHR_FRSA + BASIN_USE_FTHR_SWP_WR + BASIN_USE_FTHR_DCMP)}
+	define BASIN_USE_FTHR_ {alias BASIN_USE_FTHR kind 'DTS_COA_EXHBTB2' units 'TAF'}
+
+!Miscellaneous water users
+
+!!Sacramento R below Shasta
+define BASIN_USE_SCRMNTO_MISC {value (D165B_)*cfs_TAF}
+	define BASIN_USE_SCRMNTO_MISC_ {alias BASIN_USE_SCRMNTO_MISC kind 'DTS_COA_EXHBTB2' units 'TAF'}
+
+!!American R Basin
+define BASIN_USE_AMRCN_MISC {value (D168A_ + D168C_EXCESS_PMI_ + D168C_OTHER_PMI_)*cfs_TAF}
+	define BASIN_USE_AMRCN_MISC_ {alias BASIN_USE_AMRCN_MISC kind 'DTS_COA_EXHBTB2' units 'TAF'}
+
+!!Feather R below Oroville
+define BASIN_USE_FTHR_MISC {value (D230_ + D285_ + D223_ + D283_ + D207A_ + D217_)*cfs_TAF}
+	define BASIN_USE_FTHR_MISC_ {alias BASIN_USE_FTHR_MISC kind 'DTS_COA_EXHBTB2' units 'TAF'}
+
+define BASIN_USE_MISC {value (BASIN_USE_SCRMNTO_MISC + BASIN_USE_AMRCN_MISC + BASIN_USE_FTHR_MISC)}
+	define BASIN_USE_MISC_ {alias BASIN_USE_MISC kind 'DTS_COA_EXHBTB2' units 'TAF'}
+
+!********** EXPORT **********
+!Tracy Pumping Plant (Jones PP)
+define EXPORT_TRACY {alias (D418_CVP_)*cfs_TAF kind 'DTS_COA_EXHBTB2' units 'TAF'}
+
+!Freeport Regional Water Project
+define EXPORT_FRWP {alias (D168B_CCWD_ + D168B_EBMUD_)*cfs_TAF kind 'DTS_COA_EXHBTB2' units 'TAF'}
+
+!Contra Costa Pumping Plant
+define EXPORT_CCWD {alias (D408_CVP_)*cfs_TAF kind 'DTS_COA_EXHBTB2' units 'TAF'}
+
+!CVP Wheeling via Banks
+define EXPORT_CVP_Banks {alias (D419_CVP_)*cfs_TAF kind 'DTS_COA_EXHBTB2' units 'TAF'}	!Total CVP wheeling via Banks
+define EXPORT_CVC_Banks {alias (D419_CVC_)*cfs_TAF kind 'DTS_COA_EXHBTB2' units 'TAF'}	!Cross Valley Canal
+define EXPORT_OtherCVP_Banks {alias (D419_CVPDED_ + D419_CVPWHL_)*cfs_TAF kind 'DTS_COA_EXHBTB2' units 'TAF'}	!Other CVP Wheeling via Banks
+
+!Delta Pumping Plant (Banks PP)
+define EXPORT_SWP_SOD {alias (D419_SWP_)*cfs_TAF kind 'DTS_COA_EXHBTB2' units 'TAF'}
+
+!North Bay Aqueduct
+define EXPORT_NBA {alias (D403B_ + D403C_)*cfs_TAF kind 'DTS_COA_EXHBTB2' units 'TAF'}
+
+!Water Transfers
+define EXPORT_WTS {alias (D418_WTS_ + D419_WTS_)*cfs_TAF kind 'DTS_COA_EXHBTB2' units 'TAF'}
+
+
+!********** DELTA AREA AND OUTFLOW **********
+!Delta In-Basin Consumptive Use
+define BASIN_USE_DELTA_DICU {value (NET_DICU_)*cfs_TAF}
+define BASIN_USE_DELTA_DICU_ {alias BASIN_USE_DELTA_DICU kind 'DTS_COA_EXHBTB2' units 'TAF'}
+
+!Required Delta Outflow
+define BASIN_USE_DELTA_REQ_DO {value (C407_ANN_ + D407_)*cfs_TAF}
+define BASIN_USE_DELTA_REQ_DO_ {alias BASIN_USE_DELTA_REQ_DO kind 'DTS_COA_EXHBTB2' units 'TAF'}
+
+!Other Delta Diversions
+define BASIN_USE_DELTA_OTHER {value (D403A_ + D403D_ + D406B_ + D406A_MS_ + D408_DS_ + D408_ECC_ + D408_P_ + D408_TX_)*cfs_TAF}
+define BASIN_USE_DELTA_OTHER_ {alias BASIN_USE_DELTA_OTHER kind 'DTS_COA_EXHBTB2' units 'TAF'}
+
+!Total Delta Basin Use
+define BASIN_USE_DELTA_ {alias BASIN_USE_DELTA_DICU_ + BASIN_USE_DELTA_REQ_DO_ + BASIN_USE_DELTA_OTHER_ kind 'DTS_COA_EXHBTB2' units 'TAF'}
