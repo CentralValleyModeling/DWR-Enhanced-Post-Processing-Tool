@@ -15,6 +15,8 @@ package gov.ca.water.calgui.presentation;
 import java.awt.BorderLayout;
 import java.awt.HeadlessException;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoField;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -25,6 +27,7 @@ import javax.swing.*;
 
 import calsim.app.DerivedTimeSeries;
 import calsim.app.MultipleTimeSeries;
+import calsim.msw.MYDate;
 import gov.ca.water.calgui.bo.GUILinksAllModelsBO;
 import gov.ca.water.calgui.busservice.IDSSGrabber1Svc;
 import gov.ca.water.calgui.busservice.impl.DSSGrabber1SvcImpl;
@@ -45,6 +48,7 @@ import gov.ca.water.calgui.techservice.IErrorHandlingSvc;
 import gov.ca.water.calgui.techservice.impl.ErrorHandlingSvcImpl;
 import javatests.TestSupport;
 import org.apache.log4j.Logger;
+import org.jfree.data.time.Month;
 import vista.report.MonthlyReport;
 
 import hec.io.TimeSeriesContainer;
@@ -181,6 +185,7 @@ final class DisplayFrame
 									{
 										String monthName = exceedMonths.get(m1);
 										int index = Arrays.asList(MonthlyReport.months).indexOf(monthName.toUpperCase());
+										index = DateTimeFormatter.ofPattern("MMMyy").parse(monthName + "11").get(ChronoField.MONTH_OF_YEAR) - 1;
 										insertTabForMonth(
 												plotConfigurationState.getComparisonType() == PlotConfigurationState.ComparisonType.DIFF,
 												plotConfigurationState.getComparisonType() == PlotConfigurationState.ComparisonType.BASE,
