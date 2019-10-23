@@ -152,14 +152,9 @@ class TrendStatistics
 
 	private SortedMap<Month, Double> sort(Map<Month, Double> calculate, EpptReportingMonths.MonthPeriod monthPeriod)
 	{
-		Map<Month, Double> calculateEop = new EnumMap<>(Month.class);
-		for(Map.Entry<Month, Double> entry : calculate.entrySet())
-		{
-			calculateEop.put(entry.getKey().minus(1), entry.getValue());
-		}
 		List<Month> months = EpptReportingMonths.getMonths(monthPeriod);
 		SortedMap<Month, Double> retval = new TreeMap<>(Comparator.comparingInt(months::indexOf));
-		retval.putAll(calculateEop);
+		retval.putAll(calculate);
 		return retval;
 	}
 
