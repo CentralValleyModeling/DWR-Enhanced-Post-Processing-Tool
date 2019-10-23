@@ -137,14 +137,14 @@ function buildPlotlyTable(data) {
             values: header,
             align: "center",
             line: {width: 1, color: 'black'},
-            font: PLOTLY_FONT
+            font: {family: PLOTLY_FONT['family'], size: 11}
         },
         cells: {
             values: values,
             align: ['left', 'center'],
             height: 30,
             line: {color: "black", width: 1},
-            font: {family: PLOTLY_FONT['family'], color: colors, size: 16}
+            font: {family: PLOTLY_FONT['family'], color: colors, size: [11, 13]}
         }
     }];
 
