@@ -259,6 +259,10 @@ public final class EpptReportingMonths
 					i++;
 				}
 			}
+			else
+			{
+				retval.add(YearMonth.of(year, _start));
+			}
 			return retval;
 		}
 

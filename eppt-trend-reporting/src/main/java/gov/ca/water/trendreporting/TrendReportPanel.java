@@ -554,7 +554,7 @@ public class TrendReportPanel extends JFXPanel
 	{
 		if(t != null)
 		{
-			if(t instanceof CompletionException)
+			if(t.getCause() instanceof CancellationException)
 			{
 				LOGGER.log(Level.FINE, "Plotting canceled", t);
 			}
