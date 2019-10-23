@@ -70,8 +70,8 @@ public class JavaFxChartsPane extends BorderPane
 		_webView.getEngine().getLoadWorker().exceptionProperty().addListener(this::handleException);
 		_webView.getEngine().getLoadWorker().stateProperty().addListener(this::callbackScript);
 		_webView.setMinHeight(600);
-		setPrefWidth(1200);
-		_webView.setMinWidth(1000);
+		setPrefWidth(1380);
+		_webView.setMinWidth(1380);
 		setCenter(_webView);
 		load(path);
 	}

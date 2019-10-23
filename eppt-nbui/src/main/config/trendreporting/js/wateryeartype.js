@@ -270,8 +270,7 @@ function tabulateWaterYearPeriod(waterYearPeriod, data, tableValues, i) {
     Plotly.newPlot('water-year-matrix' + i, [tableData], layout, {
         displaylogo: false,
         displayModeBar: false,
-        responsive: true,
-        staticPlot: true
+        responsive: true
     });
     let elementid = "water-year-matrix" + i;
     $("#" + elementid).mousedown((ev) => {
