@@ -40,6 +40,7 @@ import org.openide.windows.WindowManager;
 
 import hec.heclib.dss.HecDSSFileAccess;
 import hec.heclib.dss.HecDataManager;
+import hec.heclib.util.Heclib;
 import rma.swing.logging.DialogLogHandler;
 
 public class Installer extends ModuleInstall
@@ -171,6 +172,7 @@ public class Installer extends ModuleInstall
 			usrPathsField.set(null, newPaths);
 			System.loadLibrary("javaHeclib");
 			HecDSSFileAccess.setMessageLevel(HecDSSFileAccess.MESS_LEVEL_GENERAL);
+			Heclib.Hec_zset("ALLV", "", 6);
 		}
 		catch(NoSuchFieldException | IllegalAccessException ex)
 		{
