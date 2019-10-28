@@ -32,6 +32,7 @@ import gov.ca.water.calgui.project.EpptScenarioRun;
 import gov.ca.water.calgui.project.NamedDssPath;
 
 import hec.heclib.dss.DSSPathname;
+import hec.heclib.dss.HecDataManager;
 import hec.heclib.dss.HecDss;
 import hec.heclib.util.HecTime;
 import hec.io.DataContainer;
@@ -143,29 +144,32 @@ public class DssReader
 			HecDss hecDss = null;
 			try
 			{
-				hecDss = HecDss.open(fileName);
-				String dssPath = hecDss.getCatalogedPathnames()
-									   .stream()
-									   .filter(Objects::nonNull)
-									   .map(s -> new DSSPathname(s.toString()))
-									   .filter(d -> ((DSSPathname) d).getAPart().equalsIgnoreCase(aPart))
-									   .filter(d -> ((DSSPathname) d).getBPart().equalsIgnoreCase(bPart))
-									   .filter(d -> ((DSSPathname) d).getFPart().equalsIgnoreCase(fPart))
-									   .findAny()
-									   .orElse("")
-									   .toString();
-				if(!dssPath.isEmpty())
+				if(HecDataManager.doesDSSFileExist(fileName))
 				{
-					DataContainer dataContainer = hecDss.get(dssPath, true);
-					if(dataContainer instanceof TimeSeriesContainer)
+					hecDss = HecDss.open(fileName);
+					String dssPath = hecDss.getCatalogedPathnames()
+										   .stream()
+										   .filter(Objects::nonNull)
+										   .map(s -> new DSSPathname(s.toString()))
+										   .filter(d -> ((DSSPathname) d).getAPart().equalsIgnoreCase(aPart))
+										   .filter(d -> ((DSSPathname) d).getBPart().equalsIgnoreCase(bPart))
+										   .filter(d -> ((DSSPathname) d).getFPart().equalsIgnoreCase(fPart))
+										   .findAny()
+										   .orElse("")
+										   .toString();
+					if(!dssPath.isEmpty())
 					{
-						retval = timeSeriesContainerToMap(new TimeSeriesContainer[]{(TimeSeriesContainer) dataContainer});
-						instance.addDtsLinkToCache(_scenarioRun, dtsId, retval);
+						DataContainer dataContainer = hecDss.get(dssPath, true);
+						if(dataContainer instanceof TimeSeriesContainer)
+						{
+							retval = timeSeriesContainerToMap(new TimeSeriesContainer[]{(TimeSeriesContainer) dataContainer});
+							instance.addDtsLinkToCache(_scenarioRun, dtsId, retval);
+						}
 					}
-				}
-				else
-				{
-					LOGGER.atWarning().log("Unable to find matching DTS path for: %s", bPart);
+					else
+					{
+						LOGGER.atWarning().log("Unable to find matching DTS path for: %s", bPart);
+					}
 				}
 			}
 			catch(Exception e)

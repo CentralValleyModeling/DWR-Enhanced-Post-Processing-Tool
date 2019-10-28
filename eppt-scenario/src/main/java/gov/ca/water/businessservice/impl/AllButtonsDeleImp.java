@@ -63,6 +63,7 @@ import org.apache.commons.io.FilenameUtils;
 import org.apache.log4j.Logger;
 import org.swixml.SwingEngine;
 
+import hec.heclib.dss.HecDataManager;
 import hec.heclib.dss.HecDss;
 
 /**
@@ -717,21 +718,24 @@ public class AllButtonsDeleImp implements IAllButtonsDele
 				// Read all pathnames from the DSS file and set the F-PART
 				// textfield as
 				// "NOT FOUND","MULTIPLE F-PARTS", or the first F-PART found.
-				HecDss hecDss = HecDss.open(fileFullName);
-				Vector<String> pathNames = hecDss.getCatalogedPathnames();
-				String lastFPart = "";
-				for(int i = 0; i < pathNames.size(); i++)
+				if(HecDataManager.doesDSSFileExist(fileFullName))
 				{
-					String[] parts = pathNames.elementAt(0).split("/");
-					String newFPart = ((parts.length < 7) || (parts[6] == null)) ? "NOT FOUND" : parts[6];
-					if(i == 0)
+					HecDss hecDss = HecDss.open(fileFullName);
+					Vector<String> pathNames = hecDss.getCatalogedPathnames();
+					String lastFPart = "";
+					for(int i = 0; i < pathNames.size(); i++)
 					{
-						lastFPart = newFPart;
-						fPartResult = newFPart;
-					}
-					else if(!lastFPart.equals(newFPart) && !newFPart.equals("NOT FOUND"))
-					{
-						fPartResult = "MULTIPLE F-PARTS";
+						String[] parts = pathNames.elementAt(0).split("/");
+						String newFPart = ((parts.length < 7) || (parts[6] == null)) ? "NOT FOUND" : parts[6];
+						if(i == 0)
+						{
+							lastFPart = newFPart;
+							fPartResult = newFPart;
+						}
+						else if(!lastFPart.equals(newFPart) && !newFPart.equals("NOT FOUND"))
+						{
+							fPartResult = "MULTIPLE F-PARTS";
+						}
 					}
 				}
 			}

@@ -58,7 +58,6 @@ public class AssumptionChangesDataProcessor
 		{
 			baseFile = HecDss.open(basePath.toString());
 			altFile = HecDss.open(altPath.toString());
-
 			checkInterrupt();
 			return processAssumptionChangesStatistics(baseFile, altFile);
 		}

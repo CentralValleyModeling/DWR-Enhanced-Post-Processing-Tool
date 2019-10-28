@@ -23,8 +23,10 @@ import java.util.logging.Level;
 import com.google.common.flogger.FluentLogger;
 import gov.ca.water.calgui.project.EpptScenarioRun;
 import gov.ca.water.reportengine.EpptReportException;
+import org.python.antlr.base.mod;
 
 import hec.heclib.dss.DSSPathname;
+import hec.heclib.dss.HecDataManager;
 import hec.heclib.dss.HecDss;
 import hec.heclib.util.HecTime;
 import hec.heclib.util.HecTimeArray;
@@ -84,28 +86,31 @@ public class DTSProcessor
 		HecDss hD = null;
 		try
 		{
-			hD = HecDss.open(dssFile.toString());
-
-			for(Module mod : _modules)
+			if(HecDataManager.doesDSSFileExist(dssFile.toString()))
 			{
-				checkInterrupt();
+				hD = HecDss.open(dssFile.toString());
 
-				if("COA".equalsIgnoreCase(mod.getName()))
-				{
-					Map<SubModule, List<FlagViolation>> subModuleListMap = setMaxValueForCOAModuleFromDssFile(mod, hD);
-					for(Map.Entry<SubModule, List<FlagViolation>> entry : subModuleListMap.entrySet())
-					{
-						subModToViolations.put(entry.getKey(), entry.getValue());
-					}
-					continue;
-				}
-
-				List<SubModule> subModules = mod.getSubModules();
-				for(SubModule sm : subModules)
+				for(Module mod : _modules)
 				{
 					checkInterrupt();
-					List<FlagViolation> violations = getViolations(dssFile, hD, sm);
-					subModToViolations.put(sm, violations);
+
+					if("COA".equalsIgnoreCase(mod.getName()))
+					{
+						Map<SubModule, List<FlagViolation>> subModuleListMap = setMaxValueForCOAModuleFromDssFile(mod, hD);
+						for(Map.Entry<SubModule, List<FlagViolation>> entry : subModuleListMap.entrySet())
+						{
+							subModToViolations.put(entry.getKey(), entry.getValue());
+						}
+						continue;
+					}
+
+					List<SubModule> subModules = mod.getSubModules();
+					for(SubModule sm : subModules)
+					{
+						checkInterrupt();
+						List<FlagViolation> violations = getViolations(dssFile, hD, sm);
+						subModToViolations.put(sm, violations);
+					}
 				}
 			}
 		}

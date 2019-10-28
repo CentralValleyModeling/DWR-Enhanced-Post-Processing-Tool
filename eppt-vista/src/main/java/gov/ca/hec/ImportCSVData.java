@@ -14,10 +14,10 @@ package gov.ca.hec;
 
 import java.io.File;
 import java.io.FileReader;
-import java.io.FilenameFilter;
 import java.io.LineNumberReader;
 import java.util.ArrayList;
 
+import hec.heclib.dss.HecDataManager;
 import hec.heclib.dss.HecDss;
 import hec.heclib.util.HecTime;
 import hec.io.TimeSeriesContainer;
@@ -33,46 +33,49 @@ public class ImportCSVData
 	{
 		String dir = "d:/wk-ann/anns/";
 		String dssFilename = dir + "import_csv.dss";
-		HecDss hdss = HecDss.open(dssFilename);
-		File[] csvFiles = new File(dir).listFiles(new FilenameFilter()
+		if(HecDataManager.doesDSSFileExist(dssFilename))
 		{
-
-			@Override
-			public boolean accept(File dir, String name)
+			HecDss hdss = HecDss.open(dssFilename);
+			File[] csvFiles = new File(dir).listFiles((dir1, name) -> name.toLowerCase().endsWith(".csv"));
+			if(csvFiles != null)
 			{
-				return name.toLowerCase().endsWith(".csv");
-			}
-		});
-		for(File f : csvFiles)
-		{
-			TimeSeriesContainer[] atsc = readTimeSeries(f);
-			// 1st time series is target, 2nd is prediction
-			if(atsc.length > 1)
-			{
-				TimeSeriesContainer tsc = atsc[1];
-				tsc.fileName = dssFilename;
-				String fpart = f.getName().split("\\.")[0];
-				tsc.fullName = "/RNN/RSAC054/EC//1DAY/" + fpart + "/";
-				//tsc.type="PER-AVER";
-				tsc.type = "INST-VAL";
-				tsc.interval = 24 * 60; // 1DAY
-				String startTimeString = guessFromFilename(f.getName());
-				tsc.startTime = new HecTime(startTimeString, "2400").value();
-				tsc.numberValues = tsc.values.length;
-				tsc.times = new int[tsc.numberValues];
-				for(int i = 0; i < tsc.times.length; i++)
+				for(File f : csvFiles)
 				{
-					tsc.times[i] = tsc.startTime + (i * tsc.interval);
+					readFile(dssFilename, hdss, f);
 				}
-				tsc.units = "UMHOS/CM";
-				hdss.write(tsc);
-			}
-			else
-			{
-				System.err.println("No predictions found, 2nd series is missing in csv file: " + f.getAbsolutePath());
 			}
 		}
 
+	}
+
+	private static void readFile(String dssFilename, HecDss hdss, File f) throws Exception
+	{
+		TimeSeriesContainer[] atsc = readTimeSeries(f);
+		// 1st time series is target, 2nd is prediction
+		if(atsc.length > 1)
+		{
+			TimeSeriesContainer tsc = atsc[1];
+			tsc.fileName = dssFilename;
+			String fpart = f.getName().split("\\.")[0];
+			tsc.fullName = "/RNN/RSAC054/EC//1DAY/" + fpart + "/";
+			//tsc.type="PER-AVER";
+			tsc.type = "INST-VAL";
+			tsc.interval = 24 * 60; // 1DAY
+			String startTimeString = guessFromFilename(f.getName());
+			tsc.startTime = new HecTime(startTimeString, "2400").value();
+			tsc.numberValues = tsc.values.length;
+			tsc.times = new int[tsc.numberValues];
+			for(int i = 0; i < tsc.times.length; i++)
+			{
+				tsc.times[i] = tsc.startTime + (i * tsc.interval);
+			}
+			tsc.units = "UMHOS/CM";
+			hdss.write(tsc);
+		}
+		else
+		{
+			System.err.println("No predictions found, 2nd series is missing in csv file: " + f.getAbsolutePath());
+		}
 	}
 
 	/**
