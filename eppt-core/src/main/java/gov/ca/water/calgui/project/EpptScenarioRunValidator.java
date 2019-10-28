@@ -134,7 +134,7 @@ public class EpptScenarioRunValidator
 
 	private boolean isContainerInvalid(NamedDssPath namedDssPath)
 	{
-		if(namedDssPath == null)
+		if(namedDssPath == null || namedDssPath.toString().isEmpty())
 		{
 			return true;
 		}
