@@ -20,7 +20,7 @@
 			<button text="Select File ..." id="btnGetTemplateFile" name="btnGetTemplateFile">
 				<gridbagconstraints insets="5,5,5,5" anchor="GridBagConstraints.WEST" gridx="2" gridy="5"/>
 			</button>
-			<label text="Result #1">
+			<label text="Base">
 				<gridbagconstraints insets="5,5,5,5" anchor="GridBagConstraints.WEST" gridx="0" gridy="10"/>
 			</label>
 			<label text="Alias:">
@@ -44,7 +44,7 @@
 			<button text="Select File ..." id="btnGetReportFile1" name="btnGetReportFile1">
 				<gridbagconstraints insets="5,5,5,5" anchor="GridBagConstraints.WEST" gridx="2" gridy="13"/>
 			</button>
-			<label text="Result #2">
+			<label text="Alt">
 				<gridbagconstraints insets="5,5,5,5" anchor="GridBagConstraints.WEST" gridx="0" gridy="30"/>
 			</label>
 			<label text="Alias:">
