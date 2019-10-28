@@ -425,11 +425,7 @@ public final class ProjectConfigurationPanel extends EpptPanel
 		Platform.runLater(() ->
 		{
 			checkValidScenarioRuns();
-			SwingUtilities.invokeLater(()->
-			{
-				updateRadioState();
-				setModified(true);
-			});
+			SwingUtilities.invokeLater(ProjectConfigurationPanel.this::updateRadioState);
 		});
 	}
 

@@ -41,10 +41,7 @@ function plot(data) {
     let datum = data['scenario_run_data'];
 
     var layout = {
-        font: {
-            family: 'Lucida Grande", "Lucida Sans Unicode", "Verdana", "Arial", "Helvetica", "sans-serif',
-            color: 'black',
-        },
+        font: PLOTLY_FONT,
         yaxis: {
             title: {
                 text: data['units']

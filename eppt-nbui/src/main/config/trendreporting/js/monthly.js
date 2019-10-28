@@ -41,10 +41,7 @@ function plot(data) {
     let datum = data['scenario_run_data'];
 
     var layout = {
-        font: {
-            family: 'Lucida Grande", "Lucida Sans Unicode", "Verdana", "Arial", "Helvetica", "sans-serif',
-            color: 'black',
-        },
+        font: PLOTLY_FONT,
         yaxis: {
             title: {
                 text: data['units']
@@ -63,7 +60,7 @@ function plot(data) {
         title: {
             text: data['month_period_title'] + ' ' + data['gui_link_title'] + '<br>(' + data['statistics'] + ')',
             font: {
-                family: 'Lucida Grande", "Lucida Sans Unicode", "Verdana", "Arial", "Helvetica", "sans-serif',
+                family: PLOTLY_FONT['family'],
                 size: 20,
                 color: 'black',
             }
