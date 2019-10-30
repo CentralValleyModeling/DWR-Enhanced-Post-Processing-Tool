@@ -97,7 +97,13 @@ public final class ProjectConfigurationPanel extends EpptPanel
 	{
 		if(instance == null)
 		{
-			instance = new ProjectConfigurationPanel();
+			synchronized(ProjectConfigurationPanel.class)
+			{
+				if(instance == null)
+				{
+					instance = new ProjectConfigurationPanel();
+				}
+			}
 		}
 		return instance;
 	}

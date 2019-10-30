@@ -35,6 +35,8 @@ import gov.ca.water.eppt.nbui.actions.RunWreslScript;
 import gov.ca.water.quickresults.ui.projectconfig.ProjectConfigurationPanel;
 import gov.ca.water.trendreporting.EpptReportingMonths;
 import gov.ca.water.reportengine.jython.JythonScriptBuilder;
+import javafx.application.Platform;
+import javafx.embed.swing.JFXPanel;
 import org.openide.modules.ModuleInstall;
 import org.openide.windows.WindowManager;
 
@@ -138,6 +140,9 @@ public class Installer extends ModuleInstall
 			WaterYearDefinitionSvc.createSeedDataSvcImplInstance();
 			DetailedIssuesReader.createDetailedIssues();
 			JythonScriptBuilder.createInstance();
+			//This is done so that the JFXPanels created on startup have already loaded up the Platform thread.
+			Platform.setImplicitExit(false);
+			new JFXPanel();
 		}
 		catch(EpptInitializationException ex)
 		{
