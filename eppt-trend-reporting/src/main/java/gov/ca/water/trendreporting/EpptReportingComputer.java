@@ -25,7 +25,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.NavigableMap;
 import java.util.OptionalDouble;
-import java.util.Set;
 import java.util.SortedMap;
 import java.util.TimeZone;
 import java.util.TreeMap;
@@ -33,6 +32,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
+import java.util.stream.DoubleStream;
 
 import gov.ca.water.calgui.bo.GUILinksAllModelsBO;
 import gov.ca.water.calgui.bo.WaterYearAnnualPeriodRangesFilter;
@@ -58,6 +58,7 @@ import static java.util.stream.Collectors.toMap;
  */
 public class EpptReportingComputer
 {
+	private static final Logger LOGGER = Logger.getLogger(EpptReportingComputer.class.getName());
 	private final GUILinksAllModelsBO _guiLink;
 	private final TrendStatistics _statistics;
 	private final EpptReportingMonths.MonthPeriod _monthPeriod;
@@ -94,10 +95,12 @@ public class EpptReportingComputer
 		NavigableMap<LocalDateTime, Double> fullSeries = new TreeMap<>();
 		TimeSeriesContainer[] primarySeries = dssGrabber.getPrimarySeries();
 		String units = "";
+		boolean aggregateYearly = false;
 		if(primarySeries != null && primarySeries.length > 0 && primarySeries[0] != null)
 		{
 			if(convertTaf)
 			{
+				aggregateYearly = "CFS".equalsIgnoreCase(primarySeries[0].getUnits());
 				dssGrabber.calcTAFforCFS(primarySeries, null);
 			}
 			TimeSeriesContainer tsc = primarySeries[0];
@@ -113,7 +116,7 @@ public class EpptReportingComputer
 				}
 			}
 		}
-		NavigableMap<Integer, Double> filteredPeriodYearly = filterPeriodYearly(fullSeries);
+		NavigableMap<Integer, Double> filteredPeriodYearly = filterPeriodYearly(fullSeries, aggregateYearly);
 		SortedMap<Month, NavigableMap<Integer, Double>> filteredPeriodMonthly = filterPeriodMonthly(fullSeries);
 		SortedMap<WaterYearPeriod, Double> waterYearPeriodGroupedYearly = groupWaterYearPeriod(filteredPeriodYearly);
 		SortedMap<Month, Double> monthly = _statistics.calculateMonthly(filteredPeriodMonthly, _waterYearDefinition, _waterYearIndex,
@@ -125,7 +128,7 @@ public class EpptReportingComputer
 				units);
 	}
 
-	private NavigableMap<Integer, Double> filterPeriodYearly(NavigableMap<LocalDateTime, Double> input)
+	private NavigableMap<Integer, Double> filterPeriodYearly(NavigableMap<LocalDateTime, Double> input, boolean aggregateYearly)
 	{
 		NavigableMap<Integer, Double> retval = new TreeMap<>();
 		if(!input.isEmpty())
@@ -143,9 +146,8 @@ public class EpptReportingComputer
 						LocalDateTime key = entry.getKey().minusMonths(1);
 						if(key.getMonth() == yearMonth.getMonth() && key.getYear() == yearMonth.getYear())
 						{
-							Logger.getLogger(EpptReportingComputer.class.getName())
-								  .log(Level.FINE, "Value for " + year + ": " + entry.getValue() + " YearMonth: " + YearMonth.of(key.getYear(),
-										  key.getMonth()));
+							LOGGER.log(Level.FINE, "Value for {0}: {1} YearMonth: {2}",
+										  new Object[]{year, entry.getValue(), YearMonth.of(key.getYear(), key.getMonth())});
 							dataMap.put(entry.getKey(), entry.getValue());
 							break;
 						}
@@ -153,7 +155,16 @@ public class EpptReportingComputer
 				}
 				if(dataMap.size() == yearMonths.size())
 				{
-					OptionalDouble average = dataMap.values().stream().mapToDouble(e -> e).average();
+					DoubleStream doubleStream = dataMap.values().stream().mapToDouble(e -> e);
+					OptionalDouble rollup;
+					if(aggregateYearly)
+					{
+						rollup = OptionalDouble.of(doubleStream.sum());
+					}
+					else
+					{
+						rollup = doubleStream.average();
+					}
 					Map<Integer, List<YearMonth>> collect = yearMonths.stream().collect(Collectors.groupingBy(YearMonth::getYear));
 					List<YearMonth> biggestList = new ArrayList<>();
 					for(List<YearMonth> list : collect.values())
@@ -165,8 +176,8 @@ public class EpptReportingComputer
 					}
 					int y = biggestList.get(0).getYear();
 					Logger.getLogger(EpptReportingComputer.class.getName())
-						  .log(Level.FINE, "Average for " + y + ": " + average.getAsDouble());
-					average.ifPresent(a -> retval.put(y, a));
+						  .log(Level.FINE, "Average for " + y + ": " + rollup.getAsDouble());
+					rollup.ifPresent(a -> retval.put(y, a));
 				}
 				year++;
 			}
