@@ -102,7 +102,6 @@
 			<groupId>org.netbeans.api</groupId>
 			<artifactId>org-openide-modules</artifactId>
 			<version>${netbeans.version}</version>
-			<!--<type>nbm</type>-->
 		</dependency>
 		<dependency>
 			<groupId>hec</groupId>

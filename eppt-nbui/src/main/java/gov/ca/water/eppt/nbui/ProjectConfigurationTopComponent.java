@@ -12,6 +12,8 @@
 package gov.ca.water.eppt.nbui;
 
 import java.awt.BorderLayout;
+import java.io.IOException;
+import java.io.ObjectInput;
 import javax.swing.*;
 
 import gov.ca.water.eppt.nbui.actions.ProjectConfigurationSavable;
@@ -62,36 +64,7 @@ public final class ProjectConfigurationTopComponent extends EpptTopComponent
 	{
 		setName(TOP_COMPONENT_NAME);
 		associateLookup(new AbstractLookup(_instanceContent));
-		RmaJPanel rmaJPanel = new RmaJPanel()
-		{
-			@Override
-			public void setModified(boolean b)
-			{
-				if(b)
-				{
-					topComponentNameModified();
-					ProjectConfigurationSavable savable = getLookup().lookup(ProjectConfigurationSavable.class);
-					if(savable == null)
-					{
-						_instanceContent.add(
-								new ProjectConfigurationSavable(ProjectConfigurationTopComponent.this));
-					}
-				}
-				else
-				{
-					setName(TOP_COMPONENT_NAME);
-				}
-			}
-		};
-		ProjectConfigurationPanel projectConfigurationPanel = ProjectConfigurationPanel.getProjectConfigurationPanel();
-		ProjectConfigurationListener projectConfigurationListener = new ProjectConfigurationListener(
-				projectConfigurationPanel);
-		projectConfigurationPanel.setActionListener(projectConfigurationListener);
-		rmaJPanel.setLayout(new BorderLayout());
-		rmaJPanel.add(projectConfigurationPanel, BorderLayout.CENTER);
-		JScrollPane scrollPane = new JScrollPane(rmaJPanel);
-		setLayout(new BorderLayout());
-		add(scrollPane, BorderLayout.CENTER);
+		initComponents();
 	}
 
 	/**
@@ -122,5 +95,47 @@ public final class ProjectConfigurationTopComponent extends EpptTopComponent
 	public String getJavaHelpId()
 	{
 		return ProjectConfigurationPanel.getProjectConfigurationPanel().getJavaHelpId();
+	}
+
+	@Override
+	public void readExternal(ObjectInput in) throws IOException, ClassNotFoundException
+	{
+		super.readExternal(in);
+		removeAll();
+		initComponents();
+	}
+
+	private void initComponents()
+	{
+		RmaJPanel rmaJPanel = new RmaJPanel()
+		{
+			@Override
+			public void setModified(boolean b)
+			{
+				if(b)
+				{
+					topComponentNameModified();
+					ProjectConfigurationSavable savable = getLookup().lookup(ProjectConfigurationSavable.class);
+					if(savable == null)
+					{
+						_instanceContent.add(
+								new ProjectConfigurationSavable(ProjectConfigurationTopComponent.this));
+					}
+				}
+				else
+				{
+					setName(TOP_COMPONENT_NAME);
+				}
+			}
+		};
+		ProjectConfigurationPanel projectConfigurationPanel = ProjectConfigurationPanel.getProjectConfigurationPanel();
+		ProjectConfigurationListener projectConfigurationListener = new ProjectConfigurationListener(
+				projectConfigurationPanel);
+		projectConfigurationPanel.setActionListener(projectConfigurationListener);
+		rmaJPanel.setLayout(new BorderLayout());
+		rmaJPanel.add(projectConfigurationPanel, BorderLayout.CENTER);
+		JScrollPane scrollPane = new JScrollPane(rmaJPanel);
+		setLayout(new BorderLayout());
+		add(scrollPane, BorderLayout.CENTER);
 	}
 }

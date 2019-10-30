@@ -84,6 +84,7 @@
 			<groupId>${project.groupId}</groupId>
 			<artifactId>eppt-nbui</artifactId>
 			<version>${project.version}</version>
+			<type>nbm</type>
 		</dependency>
 		<dependency>
 			<groupId>org.junit.jupiter</groupId>

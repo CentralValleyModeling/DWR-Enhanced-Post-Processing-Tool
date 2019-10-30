@@ -22,6 +22,7 @@ import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import gov.ca.water.calgui.constant.Constant;
 import org.json.JSONObject;
 
 import static gov.ca.water.calgui.constant.Constant.ORCA_EXE;
@@ -99,7 +100,8 @@ public final class PlotlySvgPrinter
 			throw new PlotlyPrintException("Unable to export plots to SVG, cannot read JSON file directory: " + imageDirectory, e);
 		}
 		String orcaCommandline = "\"" + ORCA_EXE + "\" graph " + jsonFiles + " --format svg --output-dir \"" + imageDirectory.getParent().relativize(
-				imageDirectory) + "\"";
+				imageDirectory) + "\""+ " --plotly \"" +
+				Paths.get(Constant.CONFIG_DIR).getParent().resolve("lib").resolve("plotly").resolve("dist").resolve("plotly.min.js") + "\"";
 		try
 		{
 			LOGGER.log(Level.INFO, "Plotly SVG generation command line: {0}", orcaCommandline);

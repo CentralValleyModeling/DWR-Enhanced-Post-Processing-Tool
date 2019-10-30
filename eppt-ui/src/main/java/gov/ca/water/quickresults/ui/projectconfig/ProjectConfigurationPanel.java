@@ -97,7 +97,13 @@ public final class ProjectConfigurationPanel extends EpptPanel
 	{
 		if(instance == null)
 		{
-			instance = new ProjectConfigurationPanel();
+			synchronized(ProjectConfigurationPanel.class)
+			{
+				if(instance == null)
+				{
+					instance = new ProjectConfigurationPanel();
+				}
+			}
 		}
 		return instance;
 	}
@@ -236,17 +242,20 @@ public final class ProjectConfigurationPanel extends EpptPanel
 
 	void updateRadioState()
 	{
-		_scenarioChangeListeners.forEach(this::postScenarioChanged);
-		EpptScenarioRun base = _scenarioTablePanel.getBaseScenarioRun();
-		List<EpptScenarioRun> alternatives = _scenarioTablePanel.getAlternativeScenarioRuns();
-		getRadioButtonDiff().setEnabled(!alternatives.isEmpty() && base != null);
-		getRadioButtonComparison().setEnabled(!alternatives.isEmpty() && base != null);
-		if(alternatives.isEmpty())
+		SwingUtilities.invokeLater(() ->
 		{
-			getRadioButtonBase().setSelected(true);
-			getRadioButtonComparison().setSelected(false);
-			getRadioButtonDiff().setSelected(false);
-		}
+			_scenarioChangeListeners.forEach(this::postScenarioChanged);
+			EpptScenarioRun base = _scenarioTablePanel.getBaseScenarioRun();
+			List<EpptScenarioRun> alternatives = _scenarioTablePanel.getAlternativeScenarioRuns();
+			getRadioButtonDiff().setEnabled(!alternatives.isEmpty() && base != null);
+			getRadioButtonComparison().setEnabled(!alternatives.isEmpty() && base != null);
+			if(alternatives.isEmpty())
+			{
+				getRadioButtonBase().setSelected(true);
+				getRadioButtonComparison().setSelected(false);
+				getRadioButtonDiff().setSelected(false);
+			}
+		});
 	}
 
 	void clearAllScenarios()

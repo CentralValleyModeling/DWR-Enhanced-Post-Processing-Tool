@@ -141,15 +141,16 @@ public class ScenarioEditorPanel
 
 	private void chooseWaterYearTable()
 	{
-		JFileChooser jFileChooser = new JFileChooser();
-		jFileChooser.setCurrentDirectory(Paths.get(_waterYearTable.getText()).toFile());
+		JFileChooser jFileChooser = getFileChooser("Choose Water Year Table File");
 		jFileChooser.setFileFilter(new SimpleFileFilter("TABLE"));
-		jFileChooser.setDialogTitle("Choose Water Year Table File");
-		jFileChooser.showOpenDialog(SwingUtilities.windowForComponent($$$getRootComponent$$$()));
-		File selectedFile = jFileChooser.getSelectedFile();
-		if(selectedFile != null)
+		jFileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
+		if(JFileChooser.APPROVE_OPTION == jFileChooser.showOpenDialog(SwingUtilities.windowForComponent($$$getRootComponent$$$())))
 		{
-			_waterYearTable.setText(selectedFile.toString());
+			File selectedFile = jFileChooser.getSelectedFile();
+			if(selectedFile != null)
+			{
+				_waterYearTable.setText(selectedFile.toString());
+			}
 		}
 	}
 
@@ -169,6 +170,7 @@ public class ScenarioEditorPanel
 			fileChooser = new JFileChooser(s);
 			fileChooser.setCurrentDirectory(EpptPreferences.getLastProjectConfiguration().getParent().toFile());
 		}
+		fileChooser.setDialogTitle("Choose Water Year Table File");
 		return fileChooser;
 	}
 
@@ -406,44 +408,51 @@ public class ScenarioEditorPanel
 
 	private void selectWreslMain(ActionEvent actionEvent)
 	{
-		JFileChooser fileChooser = getFileChooser("Select WRESL Main");
-		fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
-		fileChooser.setFileFilter(new SimpleFileFilter("WRESL"));
-		fileChooser.showDialog(SwingUtilities.windowForComponent($$$getRootComponent$$$()), "Select");
-		File selectedFile = fileChooser.getSelectedFile();
-		if(selectedFile != null)
+		JFileChooser jFileChooser = getFileChooser("Select WRESL Main");
+		jFileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
+		jFileChooser.setFileFilter(new SimpleFileFilter("WRESL"));
+		if(JFileChooser.APPROVE_OPTION == jFileChooser.showDialog(SwingUtilities.windowForComponent($$$getRootComponent$$$()), "Select"))
 		{
-			_wreslTextField.setText(selectedFile.toString());
+			File selectedFile = jFileChooser.getSelectedFile();
+			if(selectedFile != null)
+			{
+				_wreslTextField.setText(selectedFile.toString());
+			}
 		}
 	}
 
 	private void selectOutputPath(ActionEvent actionEvent)
 	{
-		JFileChooser fileChooser = getFileChooser("Select Scenario Run Directory");
-		fileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
-		fileChooser.showDialog(SwingUtilities.windowForComponent($$$getRootComponent$$$()), "Select");
-		File selectedFile = fileChooser.getSelectedFile();
-		if(selectedFile != null)
+		JFileChooser jFileChooser = getFileChooser("Select Scenario Run Directory");
+		jFileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+		if(JFileChooser.APPROVE_OPTION == jFileChooser.showDialog(SwingUtilities.windowForComponent($$$getRootComponent$$$()), "Select"))
 		{
-			_outputTextField.setText(selectedFile.toString());
+			File selectedFile = jFileChooser.getSelectedFile();
+			if(selectedFile != null)
+			{
+				jFileChooser.setCurrentDirectory(selectedFile);
+				_outputTextField.setText(selectedFile.toString());
+			}
 		}
 	}
 
 	private void selectDss(RmaJDescriptionField textField)
 	{
-		JFileChooser fileChooser = getFileChooser("Select Scenario Run Directory");
-		fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
-		fileChooser.setFileFilter(new SimpleFileFilter("DSS"));
-		fileChooser.showDialog(SwingUtilities.windowForComponent($$$getRootComponent$$$()), "Select");
-		File selectedFile = fileChooser.getSelectedFile();
-		if(selectedFile != null)
+		JFileChooser jFileChooser = getFileChooser("Select Scenario Run Directory");
+		jFileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
+		jFileChooser.setFileFilter(new SimpleFileFilter("DSS"));
+		if(JFileChooser.APPROVE_OPTION == jFileChooser.showDialog(SwingUtilities.windowForComponent($$$getRootComponent$$$()), "Select"))
 		{
-			String fileName = selectedFile.toString();
-			if(!fileName.toLowerCase().endsWith(".dss"))
+			File selectedFile = jFileChooser.getSelectedFile();
+			if(selectedFile != null)
 			{
-				fileName += ".dss";
+				String fileName = selectedFile.toString();
+				if(!fileName.toLowerCase().endsWith(".dss"))
+				{
+					fileName += ".dss";
+				}
+				textField.setText(fileName);
 			}
-			textField.setText(fileName);
 		}
 	}
 
