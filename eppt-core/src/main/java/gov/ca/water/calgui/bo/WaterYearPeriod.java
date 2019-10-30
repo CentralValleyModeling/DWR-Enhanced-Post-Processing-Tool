@@ -60,4 +60,14 @@ public class WaterYearPeriod
 	{
 		return Objects.hash(_period);
 	}
+
+	public boolean isDry()
+	{
+		return "dry".equalsIgnoreCase(_period);
+	}
+
+	public boolean isCritical()
+	{
+		return "critical".equalsIgnoreCase(_period);
+	}
 }

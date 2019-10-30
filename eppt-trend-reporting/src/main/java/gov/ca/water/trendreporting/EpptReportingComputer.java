@@ -188,6 +188,10 @@ public class EpptReportingComputer
 	private SortedMap<WaterYearPeriod, Double> groupWaterYearPeriod(NavigableMap<Integer, Double> filteredYearlyPeriod)
 	{
 		List<WaterYearPeriod> sortedPeriods = _waterYearIndex.getSortedPeriods();
+		if(sortedPeriods.stream().anyMatch(WaterYearPeriod::isDry) && sortedPeriods.stream().anyMatch(WaterYearPeriod::isCritical))
+		{
+			sortedPeriods.add(new WaterYearPeriod("Dry & Critical"));
+		}
 		SortedMap<WaterYearPeriod, Double> retval = new TreeMap<>(Comparator.comparingInt(sortedPeriods::indexOf));
 		for(WaterYearPeriod waterYearPeriod : sortedPeriods)
 		{

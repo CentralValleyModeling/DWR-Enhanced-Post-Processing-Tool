@@ -13,10 +13,12 @@
 package gov.ca.water.calgui.bo;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -33,8 +35,8 @@ import static java.util.stream.Collectors.toMap;
  */
 public class WaterYearIndex
 {
-	private final String _name;
 	private final List<WaterYearType> _waterYearTypes;
+	private final String _name;
 	private List<WaterYearPeriod> _waterYearPeriods;
 
 	public WaterYearIndex(String name, List<WaterYearType> waterYearTypes, List<WaterYearPeriod> waterYearPeriods)
@@ -65,9 +67,22 @@ public class WaterYearIndex
 	 */
 	public Map<WaterYearPeriod, List<WaterYearType>> getWaterYearTypeGroups()
 	{
-		return getWaterYearTypes()
+		List<WaterYearType> waterYearTypes = getWaterYearTypes();
+		Map<WaterYearPeriod, List<WaterYearType>> groups = waterYearTypes
 				.stream()
 				.collect(groupingBy(WaterYearType::getWaterYearPeriod));
+		Optional<WaterYearPeriod> dryPeriod = groups.keySet().stream().filter(WaterYearPeriod::isDry).findAny();
+		Optional<WaterYearPeriod> criticalPeriod = groups.keySet().stream().filter(WaterYearPeriod::isCritical).findAny();
+		if(dryPeriod.isPresent() && criticalPeriod.isPresent())
+		{
+			WaterYearPeriod dryAndCritical = new WaterYearPeriod("Dry & Critical");
+			List<WaterYearType> dryAndCriticalTypes = new ArrayList<>();
+			dryAndCriticalTypes.addAll(groups.get(dryPeriod.get()));
+			dryAndCriticalTypes.addAll(groups.get(criticalPeriod.get()));
+			dryAndCriticalTypes.sort(Comparator.comparingInt(WaterYearType::getYear));
+			groups.put(dryAndCritical, dryAndCriticalTypes);
+		}
+		return groups;
 	}
 
 	/**
