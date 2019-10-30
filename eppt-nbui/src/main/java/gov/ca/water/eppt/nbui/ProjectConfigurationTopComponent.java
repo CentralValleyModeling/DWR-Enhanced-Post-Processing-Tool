@@ -97,14 +97,6 @@ public final class ProjectConfigurationTopComponent extends EpptTopComponent
 		return ProjectConfigurationPanel.getProjectConfigurationPanel().getJavaHelpId();
 	}
 
-	@Override
-	public void readExternal(ObjectInput in) throws IOException, ClassNotFoundException
-	{
-		super.readExternal(in);
-		removeAll();
-		initComponents();
-	}
-
 	private void initComponents()
 	{
 		RmaJPanel rmaJPanel = new RmaJPanel()

@@ -315,6 +315,7 @@ function buildDryAndCritical(data) {
     for (let i = 0; i < data['scenario_run_data'].length; i++) {
         let waterYearPeriods = data['scenario_run_data'][i]['statistically_computed_time_series_wyt'];
         let addition;
+        let count = 0;
         for (let j = 0; j < waterYearPeriods.length; j++) {
             let waterYearPeriod = waterYearPeriods[j]['water_year_period'];
             if (waterYearPeriod === 'Dry' || waterYearPeriod === 'Critical') {
@@ -323,9 +324,15 @@ function buildDryAndCritical(data) {
                     addition = 0;
                 }
                 addition += val;
+                count++;
             }
         }
-        retval.push(Math.round(addition));
+        if(count > 0){
+            retval.push(Math.round(addition)/count);
+        }
+        else{
+            retval.push(NaN);
+        }
     }
     return retval;
 }
