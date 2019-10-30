@@ -68,9 +68,6 @@ function getHeaders(data, allData) {
         let waterYearPeriod = firstIndexData[j]['water_year_period'];
         headers.push('<b>' + getAcronym(waterYearPeriod) + '</b>');
     }
-    if (hasDryAndCritical(allData)) {
-        headers.push('<b>D & C</b>');
-    }
     return headers;
 }
 
@@ -87,22 +84,13 @@ function buildTable(data, allData) {
         colors.push(data[i]['scenario_color']);
         scenarioArr.push(data[i]['scenario_name']);
         let timeSeries = data[i]['statistically_computed_time_series_wyt'];
-        var k = 0;
+        let k = 0;
         for (; k < timeSeries.length; k++) {
             let val = timeSeries[k]['water_year_period_values'];
             let periodValues = values[1 + k];
             if (!periodValues) {
                 periodValues = [];
                 values[1 + k] = periodValues;
-            }
-            periodValues.push(Math.round(val));
-        }
-        if (hasDryAndCritical(allData)) {
-            var val = buildDryAndCritical(allData)[i];
-            let periodValues = values[k + 1];
-            if (!periodValues) {
-                periodValues = [];
-                values[k + 1] = periodValues;
             }
             periodValues.push(Math.round(val));
         }
@@ -145,11 +133,6 @@ function getPlotlySeries(allData) {
         for (let k = 0; k < timeSeries.length; k++) {
             let val = timeSeries[k]['water_year_period_values'];
             yarr.push(val);
-        }
-        if (hasDryAndCritical(allData)) {
-            xarr.push('D & C');
-            let dAndC = buildDryAndCritical(allData);
-            yarr.push(dAndC[i]);
         }
         series.push({
             type: 'bar',
@@ -289,53 +272,8 @@ function plotMatrix(data) {
             tabulateWaterYearPeriod(waterYearPeriod, data, tableValues, i);
         }
     }
-    if (hasDryAndCritical(data)) {
-        tableValues.push(buildDryAndCritical(data, tableValues));
-        tabulateWaterYearPeriod('Dry & Critical', data, tableValues, tableValues.length - 2);
-    }
 }
 
-function hasDryAndCritical(data) {
-    let headers = data['scenario_run_data'][0]['statistically_computed_time_series_wyt'];
-    let foundDry = false;
-    let foundCritical = false;
-    for (let i = 0; i < headers.length; i++) {
-        if (headers[i]['water_year_period'] === 'Dry') {
-            foundDry = true;
-        }
-        if (headers[i]['water_year_period'] === 'Critical') {
-            foundCritical = true;
-        }
-    }
-    return foundDry && foundCritical;
-}
-
-function buildDryAndCritical(data) {
-    let retval = [];
-    for (let i = 0; i < data['scenario_run_data'].length; i++) {
-        let waterYearPeriods = data['scenario_run_data'][i]['statistically_computed_time_series_wyt'];
-        let addition;
-        let count = 0;
-        for (let j = 0; j < waterYearPeriods.length; j++) {
-            let waterYearPeriod = waterYearPeriods[j]['water_year_period'];
-            if (waterYearPeriod === 'Dry' || waterYearPeriod === 'Critical') {
-                let val = waterYearPeriods[j]['water_year_period_values'];
-                if (!addition && val) {
-                    addition = 0;
-                }
-                addition += val;
-                count++;
-            }
-        }
-        if(count > 0){
-            retval.push(Math.round(addition)/count);
-        }
-        else{
-            retval.push(NaN);
-        }
-    }
-    return retval;
-}
 
 function plot(data) {
     plotGraph(data);

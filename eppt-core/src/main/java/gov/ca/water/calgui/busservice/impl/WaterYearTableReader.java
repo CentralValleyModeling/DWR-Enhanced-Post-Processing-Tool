@@ -79,7 +79,8 @@ public class WaterYearTableReader
 							waterYearTypes.add(new WaterYearType(Integer.parseInt(row[0]), new WaterYearPeriod(waterYearType)));
 						}
 					}
-					waterYearIndices.add(new WaterYearIndex(headers[i], waterYearTypes, _waterYearNameLookupTable.getSortedWaterYearPeriods(headers[i])));
+					List<WaterYearPeriod> waterYearPeriods = _waterYearNameLookupTable.getSortedWaterYearPeriods(headers[i]);
+					waterYearIndices.add(new WaterYearIndex(headers[i], waterYearTypes, waterYearPeriods));
 				}
 			}
 		}
