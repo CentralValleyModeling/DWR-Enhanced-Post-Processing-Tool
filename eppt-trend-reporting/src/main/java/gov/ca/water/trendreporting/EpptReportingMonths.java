@@ -191,14 +191,6 @@ public final class EpptReportingMonths
 						 .collect(toList());
 	}
 
-	public static List<Month> getMonths(List<MonthPeriod> monthPeriod)
-	{
-		return monthPeriod.stream()
-						  .map(EpptReportingMonths::getMonths)
-						  .flatMap(Collection::stream)
-						  .collect(toList());
-	}
-
 	public static class MonthPeriod
 	{
 		private final Month _start;
@@ -243,32 +235,40 @@ public final class EpptReportingMonths
 			List<YearMonth> retval = new ArrayList<>();
 			if(_start != _end)
 			{
-				if(needLookback())
+				int i = 0;
+				long between = ChronoUnit.MONTHS.between(YearMonth.of(2001, _start), YearMonth.of(2010, _end));
+				between = between % 12;
+				while(retval.size() < between + 1)
 				{
-					year--;
-				}
-				retval.add(YearMonth.of(year, _start));
-				int i = 1;
-				while(_start.plus(i) != _end.plus(1))
-				{
-					if(_start.plus(i) == Month.JANUARY)
+					Month month = _start.plus(i);
+					if(isPreviousYear(month))
 					{
-						year++;
+						retval.add(YearMonth.of(year - 1, month));
 					}
-					retval.add(YearMonth.of(year, _start.plus(i)));
+					else
+					{
+						retval.add(YearMonth.of(year, month));
+					}
 					i++;
 				}
 			}
 			else
 			{
-				retval.add(YearMonth.of(year, _start));
+				if(isPreviousYear(_start))
+				{
+					retval.add(YearMonth.of(year - 1, _start));
+				}
+				else
+				{
+					retval.add(YearMonth.of(year, _start));
+				}
 			}
 			return retval;
 		}
 
-		public boolean needLookback()
+		private boolean isPreviousYear(Month month)
 		{
-			return Month.values().length + 1 - _start.getValue() < _end.getValue();
+			return month == Month.OCTOBER || month == Month.NOVEMBER || month == Month.DECEMBER;
 		}
 	}
 }

@@ -92,10 +92,7 @@ function plot(data) {
     let datum = data['scenario_run_data'];
     let periodMonths = data['period_months'];
     var layout = {
-        font: {
-            family: 'Lucida Grande", "Lucida Sans Unicode", "Verdana", "Arial", "Helvetica", "sans-serif',
-            color: 'black',
-        },
+        font: PLOTLY_FONT,
         title: {
             text: data['month_period_title'] + ' ' + data['gui_link_title'] + '<br>(' + data['statistics'] + ')',
             font: {

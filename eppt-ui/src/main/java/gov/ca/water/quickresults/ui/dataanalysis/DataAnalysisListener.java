@@ -149,11 +149,11 @@ public class DataAnalysisListener implements ActionListener
 		String retval = null;
 		if(!_dataAnalysisPanel.getDssResultPathBase().toFile().exists())
 		{
-			retval = "You must specify DSS source for Result #1";
+			retval = "You must specify DSS source for Base";
 		}
 		else if(!_dataAnalysisPanel.getDssResultPathAlt().toFile().exists())
 		{
-			retval = "You must specify DSS source for Result #2";
+			retval = "You must specify DSS source for Alt";
 
 		}
 		else if(_dataAnalysisPanel.getOutputTextField().getText().isEmpty())

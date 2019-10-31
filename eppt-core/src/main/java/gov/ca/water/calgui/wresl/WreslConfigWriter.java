@@ -31,6 +31,10 @@ import gov.ca.water.calgui.project.EpptDssContainer;
 import gov.ca.water.calgui.project.EpptScenarioRun;
 import gov.ca.water.calgui.project.NamedDssPath;
 
+import hec.heclib.dss.HecDSSFileDataManager;
+import hec.heclib.dss.HecDss;
+import hec.heclib.util.Heclib;
+
 /**
  * Company: Resource Management Associates
  *
@@ -136,6 +140,7 @@ class WreslConfigWriter
 			Path postProcessDss = _scenarioRun.getPostProcessDss();
 			if(postProcessDss != null)
 			{
+				deleteCorruptCatalogFile(_scenarioRun.getDssContainer().getDtsDssFile());
 				configText = configText.replace("{PostProcessDss}", "\"" + postProcessDss.toString() + "\"");
 			}
 
@@ -174,6 +179,7 @@ class WreslConfigWriter
 			Path dssPath = namedDssPath.getDssPath();
 			if(dssPath != null && dssPath.toFile().exists())
 			{
+				deleteEmptyDss7Files(dssPath);
 				Path path = Paths.get(dssPath.toString().toLowerCase().replace(".dss", ".dsc"));
 				if(path.toFile().exists())
 				{
@@ -189,6 +195,35 @@ class WreslConfigWriter
 					{
 						LOGGER.log(Level.WARNING, "Unable to clear empty DSS catalog file: " + path + " Manual deletion may be necessary.", e);
 					}
+				}
+			}
+		}
+	}
+
+	private void deleteEmptyDss7Files(Path dssPath)
+	{
+		int version = Heclib.Hec_zgetFileVersion(dssPath.toString());
+		if(version == 7)
+		{
+			HecDss open = null;
+			try
+			{
+				open = HecDss.open(dssPath.toString());
+				if(open.getCatalogedPathnames().isEmpty())
+				{
+					open.close();
+					Files.deleteIfExists(dssPath);
+				}
+			}
+			catch(Exception e)
+			{
+				LOGGER.log(Level.FINE, "Unable to open dss file: " + dssPath, e);
+			}
+			finally
+			{
+				if(open != null)
+				{
+					open.close();
 				}
 			}
 		}

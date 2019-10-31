@@ -155,7 +155,7 @@ class ScenarioDssTableModel extends RmaTableModel
 				alias = row._alias;
 			}
 			Path dssPath = row._dssPath;
-			if(dssPath != null && !dssPath.toFile().isDirectory())
+			if(dssPath != null && !dssPath.toString().isEmpty() && !dssPath.toFile().isDirectory())
 			{
 				if(!dssPath.isAbsolute())
 				{

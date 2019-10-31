@@ -59,7 +59,7 @@ public final class ProjectConfigurationPanel extends EpptPanel
 {
 	private static final Logger LOGGER = Logger.getLogger(ProjectConfigurationPanel.class.getName());
 	private static final String SCENARIO_CONFIGURATION_XML_FILE = "Project_Configuration.xml";
-	private static final ProjectConfigurationPanel SINGLETON = new ProjectConfigurationPanel();
+	private static ProjectConfigurationPanel instance;
 	private final Set<ScenarioChangeListener> _scenarioChangeListeners = new HashSet<>();
 	private final ProjectConfigurationIO _projectConfigurationIO = new ProjectConfigurationIO();
 	private final ScenarioTablePanel _scenarioTablePanel = new ScenarioTablePanel();
@@ -93,9 +93,19 @@ public final class ProjectConfigurationPanel extends EpptPanel
 		return new ProjectConfigurationPanel();
 	}
 
-	public static ProjectConfigurationPanel getProjectConfigurationPanel()
+	public static synchronized ProjectConfigurationPanel getProjectConfigurationPanel()
 	{
-		return SINGLETON;
+		if(instance == null)
+		{
+			synchronized(ProjectConfigurationPanel.class)
+			{
+				if(instance == null)
+				{
+					instance = new ProjectConfigurationPanel();
+				}
+			}
+		}
+		return instance;
 	}
 
 	private void initComponents()
@@ -168,17 +178,17 @@ public final class ProjectConfigurationPanel extends EpptPanel
 		projectNameField.getDocument().addDocumentListener(documentListener);
 		descriptionField.getDocument().addDocumentListener(documentListener);
 		JSpinner spnSM = (JSpinner) getSwingEngine().find("spnStartMonth");
-		spnSM.addChangeListener(e->setModified(true));
+		spnSM.addChangeListener(e -> setModified(true));
 		JSpinner spnEM = (JSpinner) getSwingEngine().find("spnEndMonth");
-		spnEM.addChangeListener(e->setModified(true));
+		spnEM.addChangeListener(e -> setModified(true));
 		JSpinner spnSY = (JSpinner) getSwingEngine().find("spnStartYear");
-		spnSY.addChangeListener(e->setModified(true));
+		spnSY.addChangeListener(e -> setModified(true));
 		JSpinner spnEY = (JSpinner) getSwingEngine().find("spnEndYear");
-		spnEY.addChangeListener(e->setModified(true));
-		JRadioButton tafButton =  ((JRadioButton) getSwingEngine().find("rdbTAF"));
-		tafButton.addActionListener(e->setModified(true));
-		JRadioButton cfsButton =  ((JRadioButton) getSwingEngine().find("rdbCFS"));
-		cfsButton.addActionListener(e->setModified(true));
+		spnEY.addChangeListener(e -> setModified(true));
+		JRadioButton tafButton = ((JRadioButton) getSwingEngine().find("rdbTAF"));
+		tafButton.addActionListener(e -> setModified(true));
+		JRadioButton cfsButton = ((JRadioButton) getSwingEngine().find("rdbCFS"));
+		cfsButton.addActionListener(e -> setModified(true));
 	}
 
 	private void initializeSpinners()
@@ -232,17 +242,20 @@ public final class ProjectConfigurationPanel extends EpptPanel
 
 	void updateRadioState()
 	{
-		_scenarioChangeListeners.forEach(this::postScenarioChanged);
-		EpptScenarioRun base = _scenarioTablePanel.getBaseScenarioRun();
-		List<EpptScenarioRun> alternatives = _scenarioTablePanel.getAlternativeScenarioRuns();
-		getRadioButtonDiff().setEnabled(!alternatives.isEmpty() && base != null);
-		getRadioButtonComparison().setEnabled(!alternatives.isEmpty() && base != null);
-		if(alternatives.isEmpty())
+		SwingUtilities.invokeLater(() ->
 		{
-			getRadioButtonBase().setSelected(true);
-			getRadioButtonComparison().setSelected(false);
-			getRadioButtonDiff().setSelected(false);
-		}
+			_scenarioChangeListeners.forEach(this::postScenarioChanged);
+			EpptScenarioRun base = _scenarioTablePanel.getBaseScenarioRun();
+			List<EpptScenarioRun> alternatives = _scenarioTablePanel.getAlternativeScenarioRuns();
+			getRadioButtonDiff().setEnabled(!alternatives.isEmpty() && base != null);
+			getRadioButtonComparison().setEnabled(!alternatives.isEmpty() && base != null);
+			if(alternatives.isEmpty())
+			{
+				getRadioButtonBase().setSelected(true);
+				getRadioButtonComparison().setSelected(false);
+				getRadioButtonDiff().setSelected(false);
+			}
+		});
 	}
 
 	void clearAllScenarios()
@@ -286,7 +299,7 @@ public final class ProjectConfigurationPanel extends EpptPanel
 				{
 					try
 					{
-						SwingUtilities.invokeAndWait(()->
+						SwingUtilities.invokeAndWait(() ->
 						{
 							ScenarioRunEditor scenarioRunEditor = new ScenarioRunEditor(frame);
 							scenarioRunEditor.fillPanel(epptScenarioRun);
@@ -425,11 +438,7 @@ public final class ProjectConfigurationPanel extends EpptPanel
 		Platform.runLater(() ->
 		{
 			checkValidScenarioRuns();
-			SwingUtilities.invokeLater(()->
-			{
-				updateRadioState();
-				setModified(true);
-			});
+			SwingUtilities.invokeLater(ProjectConfigurationPanel.this::updateRadioState);
 		});
 	}
 
