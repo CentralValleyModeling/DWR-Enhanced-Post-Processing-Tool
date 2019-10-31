@@ -165,19 +165,17 @@ public class EpptReportingComputer
 					{
 						rollup = doubleStream.average();
 					}
-					Map<Integer, List<YearMonth>> collect = yearMonths.stream().collect(Collectors.groupingBy(YearMonth::getYear));
-					List<YearMonth> biggestList = new ArrayList<>();
-					for(List<YearMonth> list : collect.values())
+					YearMonth lastYearMonth = yearMonths.get(0);
+					Month lastMonth = lastYearMonth.getMonth();
+					int y = lastYearMonth.getYear();
+					if(lastMonth == Month.OCTOBER || lastMonth == Month.NOVEMBER || lastMonth == Month.DECEMBER)
 					{
-						if(list.size() >= biggestList.size())
-						{
-							biggestList = list;
-						}
+						y++;
 					}
-					int y = biggestList.get(0).getYear();
 					Logger.getLogger(EpptReportingComputer.class.getName())
 						  .log(Level.FINE, "Average for " + y + ": " + rollup.getAsDouble());
-					rollup.ifPresent(a -> retval.put(y, a));
+					int yearForOctSepDefinition = y;
+					rollup.ifPresent(a -> retval.put(yearForOctSepDefinition, a));
 				}
 				year++;
 			}
