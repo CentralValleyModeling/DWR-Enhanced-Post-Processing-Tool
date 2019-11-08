@@ -9,7 +9,7 @@ def usesWaterYearDefinition():
 
 
 def getName():
-    return "Dry and Critically Dry Years (60-20-20, ELT)"
+    return "Dry and Critically Dry Years (60-20-20)"
 
 
 def calculate(data):

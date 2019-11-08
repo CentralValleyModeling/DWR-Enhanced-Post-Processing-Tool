@@ -9,7 +9,7 @@ def usesWaterYearDefinition():
 
 
 def getName():
-    return "Wet Years (40-30-30, ELT Q5)"
+    return "Wet Years (40-30-30)"
 
 
 def calculate(data):

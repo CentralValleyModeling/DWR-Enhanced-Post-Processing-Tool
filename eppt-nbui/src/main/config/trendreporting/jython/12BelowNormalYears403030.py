@@ -9,7 +9,7 @@ def usesWaterYearDefinition():
 
 
 def getName():
-    return "Below Normal Years (40-30-30, ELT)"
+    return "Below Normal Years (40-30-30)"
 
 
 def calculate(data):
