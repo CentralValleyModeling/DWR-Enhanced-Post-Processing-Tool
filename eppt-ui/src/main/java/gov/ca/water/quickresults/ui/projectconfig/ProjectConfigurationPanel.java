@@ -260,8 +260,13 @@ public final class ProjectConfigurationPanel extends EpptPanel
 
 	void clearAllScenarios()
 	{
-		_scenarioTablePanel.clearScenarios();
-		setModified(true);
+		if(JOptionPane.YES_OPTION == JOptionPane.showConfirmDialog(SwingUtilities.windowForComponent(this),
+				"Are you sure you want to delete all Scenario Runs?\nThis operation cannot be undone.",
+				"Clear All", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE))
+		{
+			_scenarioTablePanel.clearScenarios();
+			setModified(true);
+		}
 	}
 
 	private void postScenarioChanged(ScenarioChangeListener scenarioChangeListener)
@@ -328,8 +333,19 @@ public final class ProjectConfigurationPanel extends EpptPanel
 
 	void deleteScenario()
 	{
-		_scenarioTablePanel.deleteSelectedScenarioRun();
-		setModified(true);
+		EpptScenarioRun selectedScenario = _scenarioTablePanel.getSelectedScenario();
+		if(selectedScenario != null)
+		{
+			int clear = JOptionPane.showConfirmDialog(SwingUtilities.windowForComponent(this),
+					"Are you sure you want to delete Scenario Runs: " + selectedScenario
+							+ "?\nThis operation cannot be undone.",
+					"Clear", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
+			if(JOptionPane.YES_OPTION == clear)
+			{
+				_scenarioTablePanel.deleteSelectedScenarioRun();
+				setModified(true);
+			}
+		}
 	}
 
 	public String quickStateString()
