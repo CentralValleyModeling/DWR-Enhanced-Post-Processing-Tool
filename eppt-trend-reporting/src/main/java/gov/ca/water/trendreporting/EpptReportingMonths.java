@@ -20,7 +20,7 @@ import java.time.format.DateTimeFormatter;
 import java.time.format.TextStyle;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
-import java.util.Collection;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
@@ -34,7 +34,6 @@ import gov.ca.water.calgui.constant.Constant;
 import gov.ca.water.calgui.techservice.IFileSystemSvc;
 import gov.ca.water.calgui.techservice.impl.FileSystemSvcImpl;
 import org.apache.log4j.Logger;
-import org.joda.time.Months;
 
 import static gov.ca.water.calgui.constant.Constant.CONFIG_DIR;
 import static gov.ca.water.calgui.constant.Constant.CSV_EXT;
@@ -127,26 +126,24 @@ public final class EpptReportingMonths
 
 				String[] list = guiLinkString.split(Constant.DELIMITER);
 				Month start = null;
-				Month end;
+				Month end = null;
 				DateTimeFormatter.ofPattern("MMM");
+				int index = 0;
 				if(list.length > 0)
 				{
-					start = Month.valueOf(list[0].toUpperCase());
+					index = Integer.parseInt(list[0]);
 				}
 				if(list.length > 1)
 				{
-					end = Month.valueOf(list[1].toUpperCase());
+					start = Month.valueOf(list[1].toUpperCase());
 				}
-				else
+				if(list.length > 2)
 				{
-					end = start;
+					end = Month.valueOf(list[2].toUpperCase());
 				}
-				if(start == null)
-				{
-					throw new IllegalArgumentException("Start Month cannot be null");
-				}
-				MONTH_PERIODS.add(new MonthPeriod(start, end));
+				MONTH_PERIODS.add(new MonthPeriod(index, start, end));
 			}
+			MONTH_PERIODS.sort(Comparator.comparingInt(MonthPeriod::getIndex));
 		}
 		catch(ArrayIndexOutOfBoundsException ex)
 		{
@@ -179,25 +176,31 @@ public final class EpptReportingMonths
 
 	public static List<Month> getMonths(MonthPeriod monthPeriod)
 	{
-		long between = ChronoUnit.MONTHS.between(LocalDate.now().withDayOfMonth(1).withMonth(monthPeriod._start.getValue()),
-				LocalDate.now().withDayOfMonth(1).withMonth(monthPeriod._end.getValue()));
+		if(monthPeriod.getStart() == null || monthPeriod.getEnd() == null)
+		{
+			return new ArrayList<>();
+		}
+		long between = ChronoUnit.MONTHS.between(LocalDate.now().withDayOfMonth(1).withMonth(monthPeriod.getStart().getValue()),
+				LocalDate.now().withDayOfMonth(1).withMonth(monthPeriod.getEnd().getValue()));
 		if(between < 0)
 		{
 			between += 12;
 		}
 		return LongStream.iterate(0, i -> ++i)
 						 .limit(between + 1)
-						 .mapToObj(monthPeriod._start::plus)
+						 .mapToObj(monthPeriod.getStart()::plus)
 						 .collect(toList());
 	}
 
-	public static class MonthPeriod
+	public static final class MonthPeriod
 	{
+		private final int _index;
 		private final Month _start;
 		private final Month _end;
 
-		private MonthPeriod(Month start, Month end)
+		private MonthPeriod(int index, Month start, Month end)
 		{
+			_index = index;
 			_start = start;
 			_end = end;
 		}
@@ -227,12 +230,23 @@ public final class EpptReportingMonths
 
 		private String formatMonth(Month month)
 		{
-			return month.getDisplayName(TextStyle.FULL, Locale.US);
+			if(month != null)
+			{
+				return month.getDisplayName(TextStyle.FULL, Locale.US);
+			}
+			else
+			{
+				return "";
+			}
 		}
 
-		public List<YearMonth> getYearMonths(int year)
+		List<YearMonth> getYearMonths(int year)
 		{
 			List<YearMonth> retval = new ArrayList<>();
+			if(_start == null || _end == null)
+			{
+				return retval;
+			}
 			if(_start != _end)
 			{
 				int i = 0;
@@ -269,6 +283,11 @@ public final class EpptReportingMonths
 		private boolean isPreviousYear(Month month)
 		{
 			return month == Month.OCTOBER || month == Month.NOVEMBER || month == Month.DECEMBER;
+		}
+
+		public int getIndex()
+		{
+			return _index;
 		}
 	}
 }

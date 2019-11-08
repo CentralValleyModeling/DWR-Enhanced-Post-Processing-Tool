@@ -139,43 +139,46 @@ public class EpptReportingComputer
 			{
 				NavigableMap<LocalDateTime, Double> dataMap = new TreeMap<>();
 				List<YearMonth> yearMonths = _monthPeriod.getYearMonths(year);
-				for(YearMonth yearMonth : yearMonths)
+				if(!yearMonths.isEmpty())
 				{
-					for(Map.Entry<LocalDateTime, Double> entry : input.entrySet())
+					for(YearMonth yearMonth : yearMonths)
 					{
-						LocalDateTime key = entry.getKey().minusMonths(1);
-						if(key.getMonth() == yearMonth.getMonth() && key.getYear() == yearMonth.getYear())
+						for(Map.Entry<LocalDateTime, Double> entry : input.entrySet())
 						{
-							LOGGER.log(Level.FINE, "Value for {0}: {1} YearMonth: {2}",
-										  new Object[]{year, entry.getValue(), YearMonth.of(key.getYear(), key.getMonth())});
-							dataMap.put(entry.getKey(), entry.getValue());
-							break;
+							LocalDateTime key = entry.getKey().minusMonths(1);
+							if(key.getMonth() == yearMonth.getMonth() && key.getYear() == yearMonth.getYear())
+							{
+								LOGGER.log(Level.FINE, "Value for {0}: {1} YearMonth: {2}",
+										new Object[]{year, entry.getValue(), YearMonth.of(key.getYear(), key.getMonth())});
+								dataMap.put(entry.getKey(), entry.getValue());
+								break;
+							}
 						}
 					}
-				}
-				if(dataMap.size() == yearMonths.size())
-				{
-					DoubleStream doubleStream = dataMap.values().stream().mapToDouble(e -> e);
-					OptionalDouble rollup;
-					if(aggregateYearly)
+					if(dataMap.size() == yearMonths.size())
 					{
-						rollup = OptionalDouble.of(doubleStream.sum());
+						DoubleStream doubleStream = dataMap.values().stream().mapToDouble(e -> e);
+						OptionalDouble rollup;
+						if(aggregateYearly)
+						{
+							rollup = OptionalDouble.of(doubleStream.sum());
+						}
+						else
+						{
+							rollup = doubleStream.average();
+						}
+						YearMonth lastYearMonth = yearMonths.get(0);
+						Month lastMonth = lastYearMonth.getMonth();
+						int y = lastYearMonth.getYear();
+						if(lastMonth == Month.OCTOBER || lastMonth == Month.NOVEMBER || lastMonth == Month.DECEMBER)
+						{
+							y++;
+						}
+						Logger.getLogger(EpptReportingComputer.class.getName())
+							  .log(Level.FINE, "Average for " + y + ": " + rollup.getAsDouble());
+						int yearForOctSepDefinition = y;
+						rollup.ifPresent(a -> retval.put(yearForOctSepDefinition, a));
 					}
-					else
-					{
-						rollup = doubleStream.average();
-					}
-					YearMonth lastYearMonth = yearMonths.get(0);
-					Month lastMonth = lastYearMonth.getMonth();
-					int y = lastYearMonth.getYear();
-					if(lastMonth == Month.OCTOBER || lastMonth == Month.NOVEMBER || lastMonth == Month.DECEMBER)
-					{
-						y++;
-					}
-					Logger.getLogger(EpptReportingComputer.class.getName())
-						  .log(Level.FINE, "Average for " + y + ": " + rollup.getAsDouble());
-					int yearForOctSepDefinition = y;
-					rollup.ifPresent(a -> retval.put(yearForOctSepDefinition, a));
 				}
 				year++;
 			}

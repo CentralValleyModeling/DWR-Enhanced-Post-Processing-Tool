@@ -24,7 +24,6 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.concurrent.CancellationException;
 import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.CompletionException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Stream;
@@ -176,7 +175,6 @@ public class TrendReportPanel extends JFXPanel
 		flowPane.alignmentProperty().set(Pos.CENTER);
 		TilePane tilePane = new TilePane(Orientation.HORIZONTAL, 10.0, 5.0);
 		tilePane.alignmentProperty().set(Pos.CENTER);
-//		tilePane.setBackground(new Background(new BackgroundFill(Color.PINK, CornerRadii.EMPTY, Insets.EMPTY)));
 		tilePane.getChildren().addAll(buildParameterListView(), buildStatisticsListView(), buildSeasonalPeriodListView(), buildTimeWindowControls());
 		flowPane.getChildren().addAll(tilePane);
 		return flowPane;
@@ -187,8 +185,6 @@ public class TrendReportPanel extends JFXPanel
 		GridPane gridPane = new GridPane();
 		gridPane.add(new Label("Water Year Index: "), 0, 2);
 		gridPane.add(_waterYearIndexComboBox, 1, 2);
-//		gridPane.add(new Label("Water Year Definition: "), 0, 3);
-//		gridPane.add(_waterYearDefinitionComboBox, 1, 3);
 		gridPane.setHgap(10);
 		gridPane.setVgap(10);
 		gridPane.setPrefHeight(125);
@@ -197,7 +193,6 @@ public class TrendReportPanel extends JFXPanel
 		_tafCheckbox.selectedProperty().addListener(this::inputsChanged);
 		_waterYearIndexComboBox.getSelectionModel().selectedIndexProperty().addListener(this::inputsChanged);
 		_waterYearDefinitionComboBox.getSelectionModel().selectedIndexProperty().addListener(this::inputsChanged);
-//		gridPane.setBackground(new Background(new BackgroundFill(Color.BURLYWOOD, CornerRadii.EMPTY, Insets.EMPTY)));
 		return gridPane;
 	}
 
@@ -235,7 +230,6 @@ public class TrendReportPanel extends JFXPanel
 		BorderPane borderPane = new BorderPane();
 		borderPane.setCenter(_parameterListView);
 		borderPane.setTop(new Label("Parameter"));
-//		borderPane.setBackground(new Background(new BackgroundFill(Color.GREEN, CornerRadii.EMPTY, Insets.EMPTY)));
 		return borderPane;
 	}
 
@@ -266,7 +260,6 @@ public class TrendReportPanel extends JFXPanel
 		BorderPane borderPane = new BorderPane();
 		borderPane.setCenter(_statisticsListView);
 		borderPane.setTop(new Label("Statistic"));
-//		borderPane.setBackground(new Background(new BackgroundFill(Color.RED, CornerRadii.EMPTY, Insets.EMPTY)));
 		return borderPane;
 	}
 
@@ -304,7 +297,6 @@ public class TrendReportPanel extends JFXPanel
 		BorderPane borderPane = new BorderPane();
 		borderPane.setCenter(_seasonalPeriodListView);
 		borderPane.setTop(new Label("Seasonal Period"));
-//		borderPane.setBackground(new Background(new BackgroundFill(Color.CYAN, CornerRadii.EMPTY, Insets.EMPTY)));
 		return borderPane;
 	}
 
@@ -313,7 +305,6 @@ public class TrendReportPanel extends JFXPanel
 		BorderPane borderPane = new BorderPane();
 		borderPane.setTop(buildToggleControls());
 		borderPane.setCenter(_javascriptPane.getDashboardPane());
-//		borderPane.setBackground(new Background(new BackgroundFill(Color.BISQUE, null, null)));
 		BorderPane.setMargin(borderPane, new Insets(5.0, 0, 0, 0));
 
 		borderPane.setMaxWidth(1300);
@@ -348,7 +339,6 @@ public class TrendReportPanel extends JFXPanel
 							.findAny()
 							.ifPresent(b -> b.setSelected(true))
 		);
-//		tilePane.setBackground(new Background(new BackgroundFill(Color.HONEYDEW, CornerRadii.EMPTY, Insets.EMPTY)));
 		return tilePane;
 	}
 
@@ -453,15 +443,9 @@ public class TrendReportPanel extends JFXPanel
 		if(button != null)
 		{
 			TrendReportTabConfig trendReportTabConfig = button.getTrendReportTabConfig();
-			boolean statUsesWaterYearDefinition = _statisticsListView.getSelectionModel().getSelectedItems()
-																	 .stream()
-																	 .map(TrendStatistics::usesWaterYearDefinition)
-																	 .findAny()
-																	 .orElse(true);
 			_statisticsListView.setDisable(trendReportTabConfig.isStatsDisabled());
 			_seasonalPeriodListView.setDisable(trendReportTabConfig.isSeasonalPeriodDisabled());
 			_waterYearIndexComboBox.setDisable(trendReportTabConfig.isWaterYearIndexDisabled());
-			_waterYearDefinitionComboBox.setDisable(trendReportTabConfig.isStatsDisabled() || !statUsesWaterYearDefinition);
 			loadJavascript(trendReportTabConfig.getPath(), start, end, taf);
 		}
 	}
@@ -535,13 +519,13 @@ public class TrendReportPanel extends JFXPanel
 		{
 			retval = Optional.of("No Parameter defined");
 		}
-		else if(statistic.isEmpty())
+		else if(statistic.isEmpty() || statistic.get(0).getName().isEmpty())
 		{
 			retval = Optional.of("No Statistic defined");
 		}
-		else if(monthPeriod.isEmpty())
+		else if(monthPeriod.isEmpty() || monthPeriod.get(0).getStart() == null)
 		{
-			retval = Optional.of("No Water Year Definition defined");
+			retval = Optional.of("No Seasonal Period Defined");
 		}
 		else if(waterYearIndex == null)
 		{
