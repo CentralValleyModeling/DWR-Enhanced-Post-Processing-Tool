@@ -12,6 +12,7 @@
 
 package gov.ca.water.quickresults.ui.projectconfig.scenariotable;
 
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -158,6 +159,21 @@ public class ScenarioTablePanel extends JFXPanel
 			if(parentRowModel instanceof ScenarioRowModel)
 			{
 				retval = ((ScenarioRowModel) parentRowModel).getScenarioRun();
+			}
+		}
+		return retval;
+	}
+
+	public Path getSelectedDssFile()
+	{
+		Path retval = null;
+		List<ParentRowModel> selectedRowModels = TreeTableViewSelectionUtilities.getSelectedRowModels(_treeTable);
+		if(selectedRowModels.size() == 1)
+		{
+			ParentRowModel parentRowModel = selectedRowModels.get(0);
+			if(parentRowModel instanceof DssPathRow)
+			{
+				retval = ((DssPathRow) parentRowModel).getDssPath();
 			}
 		}
 		return retval;

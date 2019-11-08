@@ -269,6 +269,11 @@ public final class ProjectConfigurationPanel extends EpptPanel
 		}
 	}
 
+	public Path getSelectedDssPath()
+	{
+		return _scenarioTablePanel.getSelectedDssFile();
+	}
+
 	private void postScenarioChanged(ScenarioChangeListener scenarioChangeListener)
 	{
 		EpptScenarioRun base = _scenarioTablePanel.getBaseScenarioRun();

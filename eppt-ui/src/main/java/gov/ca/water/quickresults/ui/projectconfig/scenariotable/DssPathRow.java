@@ -12,9 +12,12 @@
 
 package gov.ca.water.quickresults.ui.projectconfig.scenariotable;
 
+import java.nio.file.Path;
+
 import gov.ca.water.calgui.project.NamedDssPath;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ObservableValue;
+import org.w3c.css.sac.ElementSelector;
 
 import com.rma.javafx.treetable.columns.specs.TreeTableColumnSpec;
 
@@ -35,6 +38,7 @@ class DssPathRow extends ParentRowModel
 
 	private final SimpleObjectProperty<String> _nameProperty;
 	private final SimpleObjectProperty<String> _dssPathProperty;
+	private final NamedDssPath _namedDssPath;
 	private final SimpleObjectProperty<String> _typeProperty;
 	private final SimpleObjectProperty<String> _aTypeProperty;
 	private final SimpleObjectProperty<String> _fTypeProperty;
@@ -44,9 +48,22 @@ class DssPathRow extends ParentRowModel
 		super(parent);
 		_nameProperty = new SimpleObjectProperty<>(namedDssPath.getAliasName());
 		_dssPathProperty = new SimpleObjectProperty<>(namedDssPath.getDssPath().toString());
+		_namedDssPath = namedDssPath;
 		_typeProperty = new SimpleObjectProperty<>(type);
 		_aTypeProperty = new SimpleObjectProperty<>(namedDssPath.getAPart());
 		_fTypeProperty = new SimpleObjectProperty<>(namedDssPath.getFPart());
+	}
+
+	public Path getDssPath()
+	{
+		if(_namedDssPath != null)
+		{
+			return _namedDssPath.getDssPath();
+		}
+		else
+		{
+			return null;
+		}
 	}
 
 	@Override
