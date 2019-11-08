@@ -167,10 +167,10 @@ public class ScenarioEditorPanel
 	{
 		if(fileChooser == null)
 		{
-			fileChooser = new JFileChooser(s);
+			fileChooser = new JFileChooser();
 			fileChooser.setCurrentDirectory(EpptPreferences.getLastProjectConfiguration().getParent().toFile());
 		}
-		fileChooser.setDialogTitle("Choose Water Year Table File");
+		fileChooser.setDialogTitle(s);
 		return fileChooser;
 	}
 
@@ -438,7 +438,7 @@ public class ScenarioEditorPanel
 
 	private void selectDss(RmaJDescriptionField textField)
 	{
-		JFileChooser jFileChooser = getFileChooser("Select Scenario Run Directory");
+		JFileChooser jFileChooser = getFileChooser("Select DSS File");
 		jFileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
 		jFileChooser.setFileFilter(new SimpleFileFilter("DSS"));
 		if(JFileChooser.APPROVE_OPTION == jFileChooser.showDialog(SwingUtilities.windowForComponent($$$getRootComponent$$$()), "Select"))
