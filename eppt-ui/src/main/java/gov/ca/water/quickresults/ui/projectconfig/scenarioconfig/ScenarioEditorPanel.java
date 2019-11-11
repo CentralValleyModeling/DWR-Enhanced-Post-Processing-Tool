@@ -29,6 +29,7 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import javax.swing.event.ChangeEvent;
@@ -42,6 +43,7 @@ import gov.ca.water.calgui.constant.EpptPreferences;
 import gov.ca.water.calgui.project.EpptDssContainer;
 import gov.ca.water.calgui.project.EpptScenarioRun;
 import gov.ca.water.calgui.project.EpptScenarioRunValidator;
+import gov.ca.water.quickresults.ui.projectconfig.ProjectConfigurationPanel;
 import javafx.scene.paint.Color;
 
 import rma.swing.RmaJColorChooserButton;
@@ -49,6 +51,8 @@ import rma.swing.RmaJComboBox;
 import rma.swing.RmaJDescriptionField;
 import rma.swing.RmaJTable;
 import rma.swing.table.RmaCellEditor;
+
+import static java.util.stream.Collectors.toList;
 
 /**
  * Company: Resource Management Associates
@@ -105,10 +109,13 @@ public class ScenarioEditorPanel
 		_modelCombobox.addActionListener(e -> modelComboChanged());
 		_waterYearTable.setText(Paths.get(Constant.WRESL_DIR).resolve("CalLite").resolve(Constant.WY_TYPES_TABLE).toString());
 		_wreslTextField.setText(Paths.get(Constant.WRESL_DIR).resolve("CalLite").resolve(Constant.WRESL_MAIN).toString());
-		Color plotlyDefaultColor = Constant.getPlotlyDefaultColor(0);
+		Color plotlyDefaultColor = Constant.getColorNotInList(ProjectConfigurationPanel.getProjectConfigurationPanel()
+																					   .getAllEpptScenarioRuns()
+																					   .stream()
+																					   .map(EpptScenarioRun::getColor)
+																					   .collect(toList()));
 		String hex = Constant.colorToHex(plotlyDefaultColor);
 		_colorHexTextField.setText(hex);
-
 		java.awt.Color decode = java.awt.Color.decode(hex.substring(0, 7));
 		decode = new java.awt.Color(decode.getRed(), decode.getGreen(), decode.getBlue(), Integer.parseInt(hex.substring(7, 9), 16));
 		_colorChooserButton.setColor(decode);
@@ -643,7 +650,7 @@ public class ScenarioEditorPanel
 			{
 				JTextField textField = (JTextField) editorComponent;
 				String text = textField.getText();
- 				_comboBox.setSelectedItem(text);
+				_comboBox.setSelectedItem(text);
 			}
 			return super.stopCellEditing();
 		}

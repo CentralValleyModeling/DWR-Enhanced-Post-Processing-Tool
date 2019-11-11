@@ -156,6 +156,15 @@ public final class Constant
 		return Color.web(PLOTLY_COLORS[index % PLOTLY_COLORS.length]);
 	}
 
+	public static Color getColorNotInList(List<Color> colors)
+	{
+		return Arrays.stream(PLOTLY_COLORS)
+					 .map(Color::web)
+					 .filter(o -> !colors.contains(o))
+					 .findAny()
+					 .orElse(getPlotlyDefaultColor(colors.size()));
+	}
+
 	public static String getPlotlyThresholdLineDash(int index)
 	{
 		return PLOTLY_THRESHOLD_LINE_DASH[index % PLOTLY_THRESHOLD_LINE_DASH.length];
