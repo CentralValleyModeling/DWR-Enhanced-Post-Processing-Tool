@@ -606,13 +606,21 @@ public class TrendReportPanel extends JFXPanel
 
 		for(EpptScenarioRun scenarioRun : scenarioRuns)
 		{
-			if(taf)
+			try
 			{
-				trendReportingComputed.add(trendReportingComputer.computeTaf(scenarioRun, start, end));
+
+				if(taf)
+				{
+					trendReportingComputed.add(trendReportingComputer.computeTaf(scenarioRun, start, end));
+				}
+				else
+				{
+					trendReportingComputed.add(trendReportingComputer.computeCfs(scenarioRun, start, end));
+				}
 			}
-			else
+			catch(EpptInitializationException e)
 			{
-				trendReportingComputed.add(trendReportingComputer.computeCfs(scenarioRun, start, end));
+				LOGGER.log(Level.SEVERE, "Error calculating Trend Reporting for scenario run: " + scenarioRun, e);
 			}
 		}
 		return new EpptReportingComputedSet(guiLink, statistic, monthPeriod,
