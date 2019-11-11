@@ -16,6 +16,9 @@ import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Container;
 import java.awt.Frame;
+import java.awt.KeyboardFocusManager;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.nio.file.Path;
@@ -28,6 +31,8 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 import javax.swing.*;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.text.DefaultFormatter;
@@ -207,6 +212,14 @@ public final class ProjectConfigurationPanel extends EpptPanel
 		makeSpinnerCommitOnEdit(spnEM);
 		makeSpinnerCommitOnEdit(spnSY);
 		makeSpinnerCommitOnEdit(spnEY);
+		JFormattedTextField textField = ((JSpinner.DefaultEditor) spnSM.getEditor()).getTextField();
+		textField.addKeyListener(new MyKeyAdapter(textField));
+		JFormattedTextField textField1 = ((JSpinner.DefaultEditor) spnEM.getEditor()).getTextField();
+		textField1.addKeyListener(new MyKeyAdapter(textField1));
+		JFormattedTextField textField2 = ((JSpinner.DefaultEditor) spnSY.getEditor()).getTextField();
+		textField2.addKeyListener(new MyKeyAdapter(textField2));
+		JFormattedTextField textField3 = ((JSpinner.DefaultEditor) spnEY.getEditor()).getTextField();
+		textField3.addKeyListener(new MyKeyAdapter(textField3));
 	}
 
 	private void makeSpinnerCommitOnEdit(JSpinner spinner)
@@ -563,18 +576,6 @@ public final class ProjectConfigurationPanel extends EpptPanel
 		return _scenarioTablePanel.getAlternativeScenarioRuns();
 	}
 
-	public List<EpptScenarioRun> getEpptScenarioRuns()
-	{
-		List<EpptScenarioRun> retval = new ArrayList<>();
-		EpptScenarioRun baseScenarioRun = _scenarioTablePanel.getBaseScenarioRun();
-		if(baseScenarioRun != null)
-		{
-			retval.add(baseScenarioRun);
-			retval.addAll(_scenarioTablePanel.getAlternativeScenarioRuns());
-		}
-		return retval;
-	}
-
 	public List<EpptScenarioRun> getAllEpptScenarioRuns()
 	{
 		return new ArrayList<>(_scenarioTablePanel.getAllScenarioRuns());
@@ -604,5 +605,35 @@ public final class ProjectConfigurationPanel extends EpptPanel
 	{
 		_scenarioTablePanel.moveSelectedScenarioDown();
 		setModified(true);
+	}
+
+	private static final class MyKeyAdapter extends KeyAdapter
+	{
+		private final Component _component;
+
+		private MyKeyAdapter(Component component)
+		{
+			_component = component;
+		}
+
+		@Override
+		public void keyPressed(KeyEvent evt)
+		{
+			int key = evt.getKeyCode();
+			if(key == KeyEvent.VK_ENTER
+					|| key == KeyEvent.VK_TAB)
+			{
+				_component.transferFocus();
+				SwingUtilities.invokeLater(() ->
+				{
+					Component focusOwner = KeyboardFocusManager.getCurrentKeyboardFocusManager().getFocusOwner();
+					if(focusOwner instanceof JTextField)
+					{
+						JTextField textField = (JTextField) focusOwner;
+						textField.selectAll();
+					}
+				});
+			}
+		}
 	}
 }
