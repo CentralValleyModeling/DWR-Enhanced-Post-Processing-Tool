@@ -31,6 +31,7 @@ import org.openide.awt.ActionID;
 import org.openide.awt.ActionReference;
 import org.openide.awt.ActionReferences;
 import org.openide.awt.ActionRegistration;
+import org.openide.awt.DropDownButtonFactory;
 import org.openide.util.ContextAwareAction;
 import org.openide.util.Lookup;
 import org.openide.util.NbBundle.Messages;
@@ -44,7 +45,7 @@ import org.openide.windows.WindowManager;
 		id = "gov.ca.water.eppt.nbui.actions.SaveProjectConfiguration"
 )
 @ActionRegistration(
-		iconBase = "gov/ca/water/eppt/nbui/actions/HecDssVue.png",
+		iconBase = "gov/ca/water/eppt/nbui/actions/save.png",
 		displayName = "Save"
 )
 @ActionReferences(
@@ -94,7 +95,7 @@ public final class SaveProjectConfiguration extends AbstractAction implements Pr
 		}
 		else
 		{
-			new NewProjectConfiguration().saveAs();
+			new NewProjectConfiguration().createNew();
 		}
 		WindowManager.getDefault().getMainWindow().setTitle(
 				Installer.MAIN_FRAME_NAME + " - " + projectConfigurationPanel.getProjectName());
@@ -125,9 +126,24 @@ public final class SaveProjectConfiguration extends AbstractAction implements Pr
 	public Component getToolbarPresenter()
 	{
 		ImageIcon imageIcon = getSaveIcon("save24.png");
-		JButton dropDownToggleButton = new JButton(imageIcon);
+		JPopupMenu menu = new JPopupMenu();
+		menu.add(createSaveAsAction());
+		JToggleButton dropDownToggleButton = DropDownButtonFactory.createDropDownToggleButton(imageIcon, menu);
 		dropDownToggleButton.addActionListener(e -> performSave());
 		return dropDownToggleButton;
+	}
+
+	private JMenuItem createSaveAsAction()
+	{
+		ImageIcon imageIcon = getSaveIcon("save24.png");
+		JMenuItem retval = new JMenuItem("Save As...", imageIcon);
+		retval.addActionListener(e -> saveAs());
+		return retval;
+	}
+
+	private void saveAs()
+	{
+		new SaveAsProjectConfiguration().actionPerformed(null);
 	}
 
 	@Override

@@ -87,7 +87,7 @@ public class NewProjectConfiguration implements ActionListener
 	{
 		try
 		{
-			saveAs();
+			createNew();
 		}
 		catch(IOException ex)
 		{
@@ -95,7 +95,12 @@ public class NewProjectConfiguration implements ActionListener
 		}
 	}
 
-	void saveAs() throws IOException
+	void createNew() throws IOException
+	{
+		createNew(true);
+	}
+
+	void createNew(boolean resetConfigurationBeforeSave) throws IOException
 	{
 		NameDialog nameDialog = new NameDialog(WindowManager.getDefault().getMainWindow());
 		String substring = String.valueOf(new Date().getTime()).substring(8);
@@ -110,22 +115,26 @@ public class NewProjectConfiguration implements ActionListener
 			JFileChooser fileChooser = new JFileChooser(EpptPreferences.getProjectsPath().toString());
 			fileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
 			fileChooser.setDialogTitle("Choose Projects Directory");
-			fileChooser.showSaveDialog(WindowManager.getDefault().getMainWindow());
-			File selectedFile = fileChooser.getSelectedFile();
-			if(selectedFile != null)
+			int saveDialog = fileChooser.showSaveDialog(WindowManager.getDefault().getMainWindow());
+			if(saveDialog == JFileChooser.APPROVE_OPTION)
 			{
-				Path projectPath = selectedFile.toPath().resolve(nameDialog.getName());
+				File selectedFile = fileChooser.getSelectedFile();
+				String name = nameDialog.getName();
+				Path projectPath = selectedFile.toPath().resolve(name);
 				ProjectConfigurationPanel projectConfigurationPanel = ProjectConfigurationPanel.getProjectConfigurationPanel();
-				try
+				if(resetConfigurationBeforeSave)
 				{
-					projectConfigurationPanel.resetProjectConfiguration();
-				}
-				catch(Exception e)
-				{
-					throw new IOException("Unable to reset Project Configuration to default state");
+					try
+					{
+						projectConfigurationPanel.resetProjectConfiguration();
+					}
+					catch(Exception e)
+					{
+						throw new IOException("Unable to reset Project Configuration to default state", e);
+					}
 				}
 				projectConfigurationPanel.saveConfigurationToPath(projectPath,
-						nameDialog.getName(), nameDialog.getDescription());
+						name, nameDialog.getDescription());
 				projectConfigurationPanel.loadProjectConfiguration(EpptPreferences.getLastProjectConfiguration());
 				WindowManager.getDefault().getMainWindow().setTitle(
 						Installer.MAIN_FRAME_NAME + " - " + projectConfigurationPanel.getProjectName());

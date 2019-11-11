@@ -113,29 +113,23 @@ public final class OpenProjectConfiguration extends AbstractAction
 	@Override
 	public Component getToolbarPresenter()
 	{
-		ImageIcon imageIcon = getSaveIcon("open24.png");
-		JPopupMenu menu = new JPopupMenu();
-		createMenuItems(menu);
-		JToggleButton button = DropDownButtonFactory.createDropDownToggleButton(imageIcon, menu);
+		ImageIcon imageIcon = getIcon("open24.png");
+		JButton button = new JButton(imageIcon);
 		button.setToolTipText("Open Project Configuration");
 		button.addActionListener(this);
 		return button;
 	}
 
-	private void createMenuItems(JPopupMenu menu)
-	{
-	}
-
 	@Override
 	public JMenuItem getMenuPresenter()
 	{
-		ImageIcon imageIcon = getSaveIcon("open.png");
+		ImageIcon imageIcon = getIcon("open.png");
 		JMenuItem jMenuItem = new JMenuItem("Open...", imageIcon);
 		jMenuItem.addActionListener(this);
 		return jMenuItem;
 	}
 
-	private ImageIcon getSaveIcon(String iconName)
+	private ImageIcon getIcon(String iconName)
 	{
 		ImageIcon imageIcon = new ImageIcon("");
 		URL saveImg = Thread.currentThread().getContextClassLoader().getResource(
