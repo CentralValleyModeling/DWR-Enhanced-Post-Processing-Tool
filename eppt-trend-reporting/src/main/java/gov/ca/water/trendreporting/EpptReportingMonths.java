@@ -48,26 +48,16 @@ import static java.util.stream.Collectors.toList;
 public final class EpptReportingMonths
 {
 	private static final List<MonthPeriod> MONTH_PERIODS = new ArrayList<>();
-	private static final Logger LOG = Logger.getLogger(GuiLinksSeedDataSvcImpl.class.getName());
-	private static final String MONTH_PERIODS_FILENAME = CONFIG_DIR + "/TrendReportingPeriod" + CSV_EXT;
+	private static final Logger LOG = Logger.getLogger(EpptReportingMonths.class.getName());
+	private static final String MONTH_PERIODS_FILENAME = CONFIG_DIR + "trendreporting/TrendReportingPeriod" + CSV_EXT;
 	private static EpptReportingMonths seedDataSvc;
 
-	/**
-	 * This will read the gui_links.csv files and build the list and maps of {@link GUILinksAllModelsBO}
-	 */
 	private EpptReportingMonths() throws EpptInitializationException
 	{
 		LOG.debug("Building SeedDataSvcImpl Object.");
 		initMonthPeriods();
 	}
 
-	/**
-	 * This method is for implementing the singleton. It will return the
-	 * instance of this class if it is empty it will create one.
-	 *
-	 * @return Will return the instance of this class if it is empty it will
-	 * create one.
-	 */
 	public static EpptReportingMonths getTrendReportingMonths()
 	{
 		if(seedDataSvc == null)
@@ -86,17 +76,6 @@ public final class EpptReportingMonths
 		{
 			seedDataSvc = new EpptReportingMonths();
 		}
-	}
-
-	/**
-	 * This will tell whether the line is comment or not.
-	 *
-	 * @param line The line to be checked.
-	 * @return Will return true if the line id not comment.
-	 */
-	private static boolean isNotComments(String line)
-	{
-		return !line.startsWith(Constant.EXCLAMATION);
 	}
 
 	private void initMonthPeriods() throws EpptInitializationException
@@ -127,7 +106,6 @@ public final class EpptReportingMonths
 				String[] list = guiLinkString.split(Constant.DELIMITER);
 				Month start = null;
 				Month end = null;
-				DateTimeFormatter.ofPattern("MMM");
 				int index = 0;
 				if(list.length > 0)
 				{

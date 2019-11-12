@@ -51,6 +51,7 @@ public class TrendReportScaffold
 		GuiLinksSeedDataSvcImpl.createSeedDataSvcImplInstance();
 		ThresholdLinksSeedDataSvc.createSeedDataSvcImplInstance();
 		EpptReportingMonths.createTrendReportingMonthsInstance();
+		TrendReportingParameters.createTrendReportingParametersInstance();
 
 		try
 		{

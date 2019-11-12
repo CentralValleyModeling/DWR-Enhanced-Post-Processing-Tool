@@ -85,7 +85,7 @@ public class TrendReportPanel extends JFXPanel
 	private final List<EpptScenarioRun> _scenarioRuns = new ArrayList<>();
 	private final ToggleGroup _toggleGroup = new ToggleGroup();
 	private TrendReportFlowPane _javascriptPane;
-	private ListView<GUILinksAllModelsBO> _parameterListView;
+	private ListView<TrendReportingParameters.TrendParameter> _parameterListView;
 	private ListView<TrendStatistics> _statisticsListView;
 	private ListView<EpptReportingMonths.MonthPeriod> _seasonalPeriodListView;
 	private CheckBox _tafCheckbox;
@@ -164,7 +164,7 @@ public class TrendReportPanel extends JFXPanel
 		_progressBar.setVisible(false);
 		_progressTextLabel = new Label();
 		flowPane.setHgap(10);
-		flowPane.getChildren().addAll(_progressBar, _progressTextLabel);
+		flowPane.getChildren().addAll(_progressTextLabel, _progressBar);
 		flowPane.setAlignment(Pos.BOTTOM_LEFT);
 		return flowPane;
 	}
@@ -198,31 +198,27 @@ public class TrendReportPanel extends JFXPanel
 
 	private Pane buildParameterListView()
 	{
-		IGuiLinksSeedDataSvc seedDataSvcImplInstance = GuiLinksSeedDataSvcImpl.getSeedDataSvcImplInstance();
-		_parameterListView.getItems().addAll(seedDataSvcImplInstance.getAllGuiLinks());
+		TrendReportingParameters trendReportingParameters = TrendReportingParameters.getTrendReportingParameters();
+		_parameterListView.getItems().addAll(trendReportingParameters.getTrendParameters());
 		_parameterListView.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
 		_parameterListView.getSelectionModel().select(0);
 		_parameterListView.getSelectionModel().selectedItemProperty().addListener(this::inputsChanged);
 		_parameterListView.setPrefHeight(125);
 		_parameterListView.setPrefWidth(250);
-		_parameterListView.setCellFactory(param -> new ListCell<GUILinksAllModelsBO>()
+		_parameterListView.setCellFactory(param -> new ListCell<TrendReportingParameters.TrendParameter>()
 		{
 			@Override
-			protected void updateItem(GUILinksAllModelsBO item, boolean empty)
+			protected void updateItem(TrendReportingParameters.TrendParameter item, boolean empty)
 			{
 				super.updateItem(item, empty);
 
-				if(empty || item == null || item.getPlotTitle() == null)
+				if(empty || item == null || item.getTitle() == null)
 				{
 					setText(null);
 				}
 				else
 				{
-					String plotTitle = item.getPlotTitle();
-					if(plotTitle == null || plotTitle.isEmpty())
-					{
-						plotTitle = item.getPrimary().values().stream().filter(p -> !p.isEmpty()).findAny().orElse("");
-					}
+					String plotTitle = item.getTitle();
 					setText(plotTitle);
 				}
 			}
@@ -280,7 +276,13 @@ public class TrendReportPanel extends JFXPanel
 		}
 		finally
 		{
-			Platform.runLater(() -> _progressBar.setVisible(false));
+			Platform.runLater(() ->
+			{
+				if(_progressBar != null)
+				{
+					_progressBar.setVisible(false);
+				}
+			});
 		}
 		return retval;
 	}
@@ -460,7 +462,7 @@ public class TrendReportPanel extends JFXPanel
 
 	private void loadJavascript(Path path, LocalDate start, LocalDate end, boolean taf)
 	{
-		List<GUILinksAllModelsBO> guiLink = new ArrayList<>(_parameterListView.getSelectionModel().getSelectedItems());
+		List<TrendReportingParameters.TrendParameter> guiLink = new ArrayList<>(_parameterListView.getSelectionModel().getSelectedItems());
 		List<TrendStatistics> statistic = new ArrayList<>(_statisticsListView.getSelectionModel().getSelectedItems());
 		List<EpptReportingMonths.MonthPeriod> monthPeriod = new ArrayList<>(_seasonalPeriodListView.getSelectionModel().getSelectedItems());
 		WaterYearIndex waterYearIndex = _waterYearIndexComboBox.getSelectionModel().getSelectedItem();
@@ -502,11 +504,14 @@ public class TrendReportPanel extends JFXPanel
 		}
 		else
 		{
-			_progressTextLabel.setText(error.get());
+			if(_progressTextLabel != null)
+			{
+				_progressTextLabel.setText(error.get());
+			}
 		}
 	}
 
-	private Optional<String> getError(List<GUILinksAllModelsBO> guiLink, List<TrendStatistics> statistic,
+	private Optional<String> getError(List<TrendReportingParameters.TrendParameter> guiLink, List<TrendStatistics> statistic,
 									  List<EpptReportingMonths.MonthPeriod> monthPeriod,
 									  WaterYearIndex waterYearIndex)
 	{
@@ -515,7 +520,7 @@ public class TrendReportPanel extends JFXPanel
 		{
 			retval = Optional.of("No Scenario Runs defined");
 		}
-		else if(guiLink.isEmpty())
+		else if(guiLink.isEmpty() || guiLink.get(0).getGuiLink() == null)
 		{
 			retval = Optional.of("No Parameter defined");
 		}
@@ -571,18 +576,18 @@ public class TrendReportPanel extends JFXPanel
 		_progressTextLabel.setText(text);
 	}
 
-	private synchronized List<JSONObject> computeScenarios(List<GUILinksAllModelsBO> guiLinks, List<TrendStatistics> statistics,
+	private synchronized List<JSONObject> computeScenarios(List<TrendReportingParameters.TrendParameter> parameters, List<TrendStatistics> statistics,
 														   List<EpptReportingMonths.MonthPeriod> monthPeriods, LocalDate start,
 														   LocalDate end, boolean taf, List<EpptScenarioRun> scenarioRuns)
 	{
 		List<JSONObject> retval = new ArrayList<>();
-		for(GUILinksAllModelsBO guiLink : guiLinks)
+		for(TrendReportingParameters.TrendParameter parameter : parameters)
 		{
 			for(TrendStatistics statistic : statistics)
 			{
 				for(EpptReportingMonths.MonthPeriod monthPeriod : monthPeriods)
 				{
-					EpptReportingComputedSet epptReportingComputedSet = computeForMetrics(guiLink, statistic, monthPeriod,
+					EpptReportingComputedSet epptReportingComputedSet = computeForMetrics(parameter.getGuiLink(), statistic, monthPeriod,
 							start, end, taf, scenarioRuns);
 					JSONObject jsonObject = epptReportingComputedSet.toJson();
 					LOGGER.log(Level.FINE, "{0}", jsonObject);
