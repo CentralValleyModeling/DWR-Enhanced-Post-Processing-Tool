@@ -552,6 +552,8 @@ public final class ProjectConfigurationPanel extends EpptPanel
 		initModels();
 		_scenarioTablePanel.clearScenarios();
 		setActionListener(getActionListener());
+		JSplitPane splitPane = (JSplitPane)getSwingEngine().find("split_pane");
+		splitPane.setDividerLocation(350);
 	}
 
 	public EpptScenarioRun getBaseScenario()

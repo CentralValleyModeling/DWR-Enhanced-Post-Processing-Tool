@@ -11,7 +11,7 @@
   -->
 
 <panel id="ProjectConfiguration" name="ProjectConfiguration" layout="BorderLayout">
-	<splitpane Orientation="JSplitPane.VERTICAL_SPLIT" DividerLocation="350" DividerSize="3">
+	<splitpane id="split_pane" Orientation="JSplitPane.VERTICAL_SPLIT" DividerLocation="350" DividerSize="3">
 		<panel layout="BorderLayout">
 			<panel constraints="BorderLayout.NORTH" layout="GridBagLayout">
 				<label text="Project Name:">
