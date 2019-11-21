@@ -15,12 +15,15 @@ package gov.ca.water.calgui.presentation;
 import java.awt.BorderLayout;
 import java.awt.HeadlessException;
 import java.time.LocalDate;
+import java.time.YearMonth;
 import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeFormatterBuilder;
 import java.time.temporal.ChronoField;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.regex.Pattern;
 import javax.swing.*;
@@ -184,8 +187,11 @@ final class DisplayFrame
 									if(m1 < exceedMonths.size() && excResults != null)
 									{
 										String monthName = exceedMonths.get(m1);
-										int index = Arrays.asList(MonthlyReport.months).indexOf(monthName.toUpperCase());
-										index = DateTimeFormatter.ofPattern("MMMyy").parse(monthName + "11").get(ChronoField.MONTH_OF_YEAR) - 1;
+										DateTimeFormatter dateTimeFormatter = new DateTimeFormatterBuilder()
+												.parseCaseInsensitive()
+												.appendPattern("MMMyy")
+												.toFormatter(Locale.ENGLISH);
+										int index = YearMonth.parse(monthName + "11", dateTimeFormatter).getMonthValue() - 1;
 										insertTabForMonth(
 												plotConfigurationState.getComparisonType() == PlotConfigurationState.ComparisonType.DIFF,
 												plotConfigurationState.getComparisonType() == PlotConfigurationState.ComparisonType.BASE,
