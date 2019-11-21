@@ -190,10 +190,8 @@ public final class ProjectConfigurationPanel extends EpptPanel
 		spnSY.addChangeListener(e -> setModified(true));
 		JSpinner spnEY = (JSpinner) getSwingEngine().find("spnEndYear");
 		spnEY.addChangeListener(e -> setModified(true));
-		JRadioButton tafButton = ((JRadioButton) getSwingEngine().find("rdbTAF"));
-		tafButton.addActionListener(e -> setModified(true));
-		JRadioButton cfsButton = ((JRadioButton) getSwingEngine().find("rdbCFS"));
-		cfsButton.addActionListener(e -> setModified(true));
+		JCheckBox tafCheckBox = ((JCheckBox) getSwingEngine().find("chkTAF"));
+		tafCheckBox.addActionListener(e -> setModified(true));
 	}
 
 	private void initializeSpinners()
@@ -496,7 +494,7 @@ public final class ProjectConfigurationPanel extends EpptPanel
 
 	public boolean isTaf()
 	{
-		return ((JRadioButton) getSwingEngine().find("rdbTAF")).isSelected();
+		return ((JCheckBox) getSwingEngine().find("chkTAF")).isSelected();
 	}
 
 	private JRadioButton getRadioButtonBase()
