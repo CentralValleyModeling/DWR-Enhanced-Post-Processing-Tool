@@ -1,17 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!--
-  ~ Enhanced Post Processing Tool (EPPT) Copyright (c) 2019.
-  ~
-  ~ EPPT is copyrighted by the State of California, Department of Water Resources. It is licensed
-  ~ under the GNU General Public License, version 2. This means it can be
-  ~ copied, distributed, and modified freely, but you may not restrict others
-  ~ in their ability to copy, distribute, and modify it. See the license below
-  ~ for more details.
-  ~
-  ~ GNU General Public License
-  -->
-
-<!-- Created with Jaspersoft Studio version 6.9.0.final using JasperReports Library version 6.9.0-cb8f9004be492ccc537180b49c026951f4220bf3  -->
+<!-- Created with Jaspersoft Studio version 6.8.0.final using JasperReports Library version 6.8.0-2ed8dfabb690ff337a5797129f2cd92902b0c87b  -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="QAQC_Allocations_and_Deliveries" language="groovy" pageWidth="612" pageHeight="792" columnWidth="504" leftMargin="54" rightMargin="54" topMargin="54" bottomMargin="54" isSummaryWithPageHeaderAndFooter="true" whenResourceMissingType="Empty" uuid="fdf29854-1cab-4c3d-99e9-a38b49852a26">
 	<property name="net.sf.jasperreports.xml.source" value=""/>
 	<property name="net.sf.jasperreports.export.xls.collapse.row.span" value="true"/>
@@ -123,49 +111,49 @@
 		<variableExpression><![CDATA["alloc-ag-nod-exceed-annual-shortages"]]></variableExpression>
 	</variable>
 	<variable name="Section_Group_Footer_31" class="java.lang.String">
-		<variableExpression><![CDATA["alloc-ag-nod-exceed-mar-feb-shortagers"]]></variableExpression>
+		<variableExpression><![CDATA["alloc-ag-nod-exceed-mar-feb-shortages"]]></variableExpression>
 	</variable>
 	<variable name="Section_Group_Footer_32" class="java.lang.String">
-		<variableExpression><![CDATA["alloc-mi-nod-exceed-annual-shortagers"]]></variableExpression>
+		<variableExpression><![CDATA["alloc-mi-nod-exceed-annual-shortages"]]></variableExpression>
 	</variable>
 	<variable name="Section_Group_Footer_33" class="java.lang.String">
-		<variableExpression><![CDATA["alloc-mi-nod-exceed-mar-feb-shortagers"]]></variableExpression>
+		<variableExpression><![CDATA["alloc-mi-nod-exceed-mar-feb-shortages"]]></variableExpression>
 	</variable>
 	<variable name="Section_Group_Footer_34" class="java.lang.String">
-		<variableExpression><![CDATA["alloc-refuge-nod-exceed-annual-shortagers"]]></variableExpression>
+		<variableExpression><![CDATA["alloc-refuge-nod-exceed-annual-shortages"]]></variableExpression>
 	</variable>
 	<variable name="Section_Group_Footer_35" class="java.lang.String">
-		<variableExpression><![CDATA["alloc-refuge-nod-exceed-mar-feb-shortagers"]]></variableExpression>
+		<variableExpression><![CDATA["alloc-refuge-nod-exceed-mar-feb-shortages"]]></variableExpression>
 	</variable>
 	<variable name="Section_Group_Footer_36" class="java.lang.String">
-		<variableExpression><![CDATA["alloc-settlement-nod-exceed-annual-shortagers"]]></variableExpression>
+		<variableExpression><![CDATA["alloc-settlement-nod-exceed-annual-shortages"]]></variableExpression>
 	</variable>
 	<variable name="Section_Group_Footer_37" class="java.lang.String">
-		<variableExpression><![CDATA["alloc-settlement-nod-exceed-mar-feb-shortagers"]]></variableExpression>
+		<variableExpression><![CDATA["alloc-settlement-nod-exceed-mar-feb-shortages"]]></variableExpression>
 	</variable>
 	<variable name="Section_Group_Footer_38" class="java.lang.String">
-		<variableExpression><![CDATA["alloc-ag-sod-exceed-annual-shortagers"]]></variableExpression>
+		<variableExpression><![CDATA["alloc-ag-sod-exceed-annual-shortages"]]></variableExpression>
 	</variable>
 	<variable name="Section_Group_Footer_39" class="java.lang.String">
-		<variableExpression><![CDATA["alloc-ag-sod-exceed-mar-feb-shortagers"]]></variableExpression>
+		<variableExpression><![CDATA["alloc-ag-sod-exceed-mar-feb-shortages"]]></variableExpression>
 	</variable>
 	<variable name="Section_Group_Footer_40" class="java.lang.String">
-		<variableExpression><![CDATA["alloc-mi-sod-exceed-annual-shortagers"]]></variableExpression>
+		<variableExpression><![CDATA["alloc-mi-sod-exceed-annual-shortages"]]></variableExpression>
 	</variable>
 	<variable name="Section_Group_Footer_41" class="java.lang.String">
-		<variableExpression><![CDATA["alloc-mi-sod-exceed-mar-feb-shortagers"]]></variableExpression>
+		<variableExpression><![CDATA["alloc-mi-sod-exceed-mar-feb-shortages"]]></variableExpression>
 	</variable>
 	<variable name="Section_Group_Footer_42" class="java.lang.String">
-		<variableExpression><![CDATA["alloc-refuge-sod-exceed-annual-shortagers"]]></variableExpression>
+		<variableExpression><![CDATA["alloc-refuge-sod-exceed-annual-shortages"]]></variableExpression>
 	</variable>
 	<variable name="Section_Group_Footer_43" class="java.lang.String">
-		<variableExpression><![CDATA["alloc-refuge-sod-exceed-mar-feb-shortagers"]]></variableExpression>
+		<variableExpression><![CDATA["alloc-refuge-sod-exceed-mar-feb-shortages"]]></variableExpression>
 	</variable>
 	<variable name="Section_Group_Footer_44" class="java.lang.String">
-		<variableExpression><![CDATA["alloc-settlement-sod-exceed-annual-shortagers"]]></variableExpression>
+		<variableExpression><![CDATA["alloc-settlement-sod-exceed-annual-shortages"]]></variableExpression>
 	</variable>
 	<variable name="Section_Group_Footer_45" class="java.lang.String">
-		<variableExpression><![CDATA["alloc-settlement-sod-exceed-mar-feb-shortagers"]]></variableExpression>
+		<variableExpression><![CDATA["alloc-settlement-sod-exceed-mar-feb-shortages"]]></variableExpression>
 	</variable>
 	<variable name="Section_Group_Footer_46" class="java.lang.String">
 		<variableExpression><![CDATA["alloc-yuba-exceedance"]]></variableExpression>

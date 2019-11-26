@@ -462,10 +462,8 @@
 						<cellContents mode="Opaque" style="row-label">
 							<property name="com.jaspersoft.studio.unit.width" value="px"/>
 							<textField isStretchWithOverflow="true">
-								<reportElement style="row-label" stretchType="ContainerHeight" x="0" y="0" width="70" height="22" uuid="7ee8f37b-a075-4965-820c-63bf247cf439">
-									<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
-								</reportElement>
-								<box padding="5"/>
+								<reportElement style="row-label" stretchType="ContainerHeight" x="0" y="0" width="70" height="16" uuid="7ee8f37b-a075-4965-820c-63bf247cf439"/>
+								<box leftPadding="3" rightPadding="2"/>
 								<textElement verticalAlignment="Middle">
 									<font size="9"/>
 								</textElement>
@@ -565,7 +563,7 @@
 				<measure name="value-full-text" class="java.lang.String">
 					<measureExpression><![CDATA[$F{value-full-text}]]></measureExpression>
 				</measure>
-				<crosstabCell width="48" height="22">
+				<crosstabCell width="48" height="16">
 					<cellContents mode="Opaque" style="Crosstab_CD">
 						<property name="com.jaspersoft.studio.unit.height" value="px"/>
 						<property name="com.jaspersoft.studio.unit.width" value="px"/>
@@ -576,7 +574,7 @@
 							<rightPen lineWidth="0.0"/>
 						</box>
 						<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-							<reportElement style="value_color" stretchType="ContainerHeight" x="0" y="0" width="48" height="22" uuid="6354cefb-ce20-4dcf-9394-0da33213df9a"/>
+							<reportElement style="value_color" stretchType="ContainerHeight" x="0" y="0" width="48" height="16" uuid="6354cefb-ce20-4dcf-9394-0da33213df9a"/>
 							<box topPadding="2" bottomPadding="2">
 								<topPen lineWidth="1.0" lineColor="#000000"/>
 								<bottomPen lineWidth="1.0" lineColor="#000000"/>
@@ -588,16 +586,16 @@
 						</textField>
 					</cellContents>
 				</crosstabCell>
-				<crosstabCell width="0" height="22" columnTotalGroup="scenario-order">
+				<crosstabCell width="0" height="16" columnTotalGroup="scenario-order">
 					<cellContents mode="Opaque" style="Crosstab_CT"/>
 				</crosstabCell>
-				<crosstabCell width="0" height="22" columnTotalGroup="scenario-name">
+				<crosstabCell width="0" height="16" columnTotalGroup="scenario-name">
 					<cellContents mode="Opaque" style="Crosstab_CG"/>
 				</crosstabCell>
-				<crosstabCell width="0" height="22" columnTotalGroup="less-greater-equal-order">
+				<crosstabCell width="0" height="16" columnTotalGroup="less-greater-equal-order">
 					<cellContents mode="Opaque" style="Crosstab_CG"/>
 				</crosstabCell>
-				<crosstabCell width="0" height="22" columnTotalGroup="less-greater-equal-label">
+				<crosstabCell width="0" height="16" columnTotalGroup="less-greater-equal-label">
 					<cellContents mode="Opaque" style="Crosstab_CG"/>
 				</crosstabCell>
 				<crosstabCell width="48" height="0" rowTotalGroup="title-order">
