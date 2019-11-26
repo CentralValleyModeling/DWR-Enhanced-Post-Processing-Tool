@@ -86,11 +86,11 @@ class ExceedanceChartPageBuilder extends PlotChartBuilder
 			throws EpptReportException
 	{
 		ChartComponent chartComponent = chartComponents.get(0);
-		NavigableMap<Double, Double> primaryData = createJythonValueGenerator(scenarioRun, chartComponent.getFunction()).generateExceedanceValues();
+		NavigableMap<Double, Double> primaryData = createJythonValueGenerator(periodFilter, scenarioRun, chartComponent.getFunction()).generateExceedanceValues();
 		Map<String, NavigableMap<Double, Double>> thresholdData = new HashMap<>();
 		for(int i = 1; i < chartComponents.size(); i++)
 		{
-			NavigableMap<Double, Double> threshold = createJythonValueGenerator(periodFilter, getBase(),
+			NavigableMap<Double, Double> threshold = createJythonValueGenerator(periodFilter, scenarioRun,
 					chartComponents.get(i).getFunction()).generateExceedanceValues();
 			thresholdData.put(chartComponents.get(i).getComponent(), threshold);
 		}
