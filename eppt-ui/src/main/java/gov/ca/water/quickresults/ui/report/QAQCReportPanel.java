@@ -27,6 +27,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.Month;
 import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -1061,7 +1062,8 @@ public class QAQCReportPanel extends RmaJPanel
 
 	private Date getEndDate(EpptScenarioRun baseRun)
 	{
-		NavigableMap<LocalDateTime, Double> guiLinkData = new DssReader(baseRun).getGuiLinkData(102);
+		NavigableMap<LocalDateTime, Double> guiLinkData = new DssReader(baseRun, LocalDateTime.of(1850, Month.JANUARY, 1, 0, 0),
+				LocalDateTime.of(2150, Month.JANUARY, 1, 0, 0)).getGuiLinkData(102);
 		if(!guiLinkData.isEmpty())
 		{
 			LocalDateTime localDateTime = guiLinkData.lastKey();
@@ -1075,7 +1077,8 @@ public class QAQCReportPanel extends RmaJPanel
 
 	private Date getStartDate(EpptScenarioRun baseRun)
 	{
-		NavigableMap<LocalDateTime, Double> guiLinkData = new DssReader(baseRun).getGuiLinkData(102);
+		NavigableMap<LocalDateTime, Double> guiLinkData = new DssReader(baseRun, LocalDateTime.of(1850, Month.JANUARY, 1, 0, 0),
+				LocalDateTime.of(2150, Month.JANUARY, 1, 0, 0)).getGuiLinkData(102);
 		if(!guiLinkData.isEmpty())
 		{
 			LocalDateTime localDateTime = guiLinkData.firstKey();

@@ -27,6 +27,8 @@ import gov.ca.water.reportengine.EpptReportException;
 import gov.ca.water.reportengine.jython.JythonValueGenerator;
 import org.w3c.dom.Document;
 
+import hec.lang.Const;
+
 /**
  * Company: Resource Management Associates
  *
@@ -78,7 +80,7 @@ abstract class StandardSummaryChartBuilder
 	static final String REGION_NAME_ATTRIBUTE = "region-label";
 	static final String BACKGROUND_COLOR_ATTRIBUTE = "background-color";
 	static final String SVG_FILE_LOCATION_ATTRIBUTE = "svg-file";
-	static final String NO_RECORD_TEXT = "NR";
+	static final String NO_RECORD_TEXT = Long.toString(Const.UNDEFINED_INT);
 	private final Document _document;
 	private final EpptScenarioRun _base;
 	private final List<EpptScenarioRun> _alternatives;

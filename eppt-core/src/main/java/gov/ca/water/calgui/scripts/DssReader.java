@@ -12,7 +12,9 @@
 
 package gov.ca.water.calgui.scripts;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.YearMonth;
 import java.time.ZoneId;
 import java.util.Collections;
 import java.util.Date;
@@ -50,11 +52,15 @@ public class DssReader
 	private static final FluentLogger LOGGER = FluentLogger.forEnclosingClass();
 	private static final Pattern DSS_PATH_SPLITTER_PATTERN = Pattern.compile("/");
 	private final EpptScenarioRun _scenarioRun;
+	private final LocalDateTime _start;
+	private final LocalDateTime _end;
 	private String _units;
 
-	public DssReader(EpptScenarioRun scenarioRun)
+	public DssReader(EpptScenarioRun scenarioRun, LocalDateTime start, LocalDateTime end)
 	{
 		_scenarioRun = scenarioRun;
+		_start = start;
+		_end = end;
 	}
 
 	public NavigableMap<LocalDateTime, Double> getGuiLinkData(int guiID)
@@ -67,6 +73,7 @@ public class DssReader
 			{
 				DSSGrabber1SvcImpl dssGrabber1Svc = buildDssGrabber(_scenarioRun, guiID, 0);
 				TimeSeriesContainer[] primarySeries = dssGrabber1Svc.getPrimarySeries();
+				primarySeries = mapToTaf(primarySeries, dssGrabber1Svc);
 				retval = timeSeriesContainerToMap(primarySeries);
 				instance.addGuiLinkToCache(_scenarioRun, guiID, retval);
 			}
@@ -78,6 +85,15 @@ public class DssReader
 		return retval;
 	}
 
+	private TimeSeriesContainer[] mapToTaf(TimeSeriesContainer[] primarySeries, DSSGrabber1SvcImpl dssGrabber1Svc)
+	{
+		if(primarySeries != null && primarySeries[0] != null)
+		{
+			dssGrabber1Svc.calcTAFforCFS(primarySeries, null);
+		}
+		return primarySeries;
+	}
+
 	private NavigableMap<LocalDateTime, Double> timeSeriesContainerToMap(TimeSeriesContainer[] primarySeries)
 	{
 		NavigableMap<LocalDateTime, Double> retval = new TreeMap<>();
@@ -86,7 +102,11 @@ public class DssReader
 			TimeSeriesContainer tsc = primarySeries[0];
 			if(tsc.times != null)
 			{
-				_units = tsc.getUnits();
+				String units = tsc.getUnits();
+				if(units != null)
+				{
+					_units = units;
+				}
 				for(int i = 0; i < tsc.times.length; i++)
 				{
 					HecTime hecTime = new HecTime();
@@ -117,9 +137,11 @@ public class DssReader
 	private DSSGrabber1SvcImpl buildDssGrabber(EpptScenarioRun epptScenarioRun, int guiID, int thresholdId)
 	{
 		DSSGrabber1SvcImpl grabber1Svc = new DSSGrabber1SvcImpl();
+		grabber1Svc.setDateRange(_start.toLocalDate(), _end.toLocalDate());
 		grabber1Svc.setScenarioRuns(epptScenarioRun, Collections.emptyList());
 		grabber1Svc.setLocation(Integer.toString(guiID));
 		grabber1Svc.setThresholdId(thresholdId);
+		grabber1Svc.setIsCFS(false);
 		return grabber1Svc;
 	}
 

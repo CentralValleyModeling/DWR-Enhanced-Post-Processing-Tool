@@ -47,7 +47,7 @@ import static java.util.stream.Collectors.toList;
 class BaseAltDiffTableBuilder extends TableBuilder
 {
 	private static final Logger LOGGER = Logger.getLogger(BaseAltDiffTableBuilder.class.getName());
-	private String _units = "TAF";
+	private String _units;
 
 	BaseAltDiffTableBuilder(Document document, EpptScenarioRun base, List<EpptScenarioRun> alternatives,
 							SummaryReportParameters reportParameters,
@@ -59,6 +59,7 @@ class BaseAltDiffTableBuilder extends TableBuilder
 
 	void buildTable(Element retval, EpptChart epptChart)
 	{
+		_units = null;
 		SummaryReportParameters reportParameters = getReportParameters();
 		String startMonth = reportParameters.getWaterYearDefinition().getStartMonth().getDisplayName(TextStyle.SHORT, Locale.getDefault());
 		String endMonth = reportParameters.getWaterYearDefinition().getEndMonth().getDisplayName(TextStyle.SHORT, Locale.getDefault());
@@ -92,6 +93,10 @@ class BaseAltDiffTableBuilder extends TableBuilder
 		if(_units != null)
 		{
 			retval.setAttribute(UNITS_ATTRIBUTE, _units);
+		}
+		else
+		{
+			retval.setAttribute(UNITS_ATTRIBUTE, "");
 		}
 	}
 
@@ -233,10 +238,14 @@ class BaseAltDiffTableBuilder extends TableBuilder
 				long baseValueRounded = Math.round(baseValue);
 				long altValueRounded = Math.round(altValue);
 				applyPercentDiffStyles(retval, baseValueRounded, altValueRounded);
-				_units = baseValueGenerator.getUnits();
-				if(_units == null)
+				String units = baseValueGenerator.getUnits();
+				if(units == null)
 				{
-					_units = altValueGenerator.getUnits();
+					units = altValueGenerator.getUnits();
+				}
+				if(units != null && _units == null)
+				{
+					_units = units;
 				}
 			}
 		}
@@ -314,14 +323,17 @@ class BaseAltDiffTableBuilder extends TableBuilder
 			{
 				String textRaw = String.valueOf(Math.round(value));
 				retval.setTextContent(textRaw);
-				_units = jythonValueGenerator.getUnits();
+				String units = jythonValueGenerator.getUnits();
+				if(units != null && _units == null)
+				{
+					_units = units;
+				}
 			}
 		}
 		catch(DssMissingRecordException e)
 		{
 			LOGGER.log(Level.FINE, "Missing record, displaying as NR", e);
-			//			retval.setTextContent(NO_RECORD_TEXT);
-			retval.setTextContent("NR");
+			retval.setTextContent(NO_RECORD_TEXT);
 
 		}
 		catch(EpptReportException e)
