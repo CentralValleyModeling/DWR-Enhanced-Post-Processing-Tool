@@ -19,6 +19,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import gov.ca.water.calgui.project.EpptScenarioRun;
+import gov.ca.water.calgui.scripts.DssMissingRecordException;
 import gov.ca.water.reportengine.EpptReportException;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -75,7 +76,7 @@ class ListBuilder extends TableBuilder
 
 	private Element buildValueForChart(EpptScenarioRun scenarioRun, ChartComponent v)
 	{
-		Element retval = null;
+		Element retval = getDocument().createElement("placeholder");
 		try
 		{
 			Object value = createJythonValueGenerator(scenarioRun, v.getFunction(), getReportParameters().getWaterYearIndex()).generateObjectValue();
@@ -90,16 +91,20 @@ class ListBuilder extends TableBuilder
 				List rows = (List) value;
 				for(Object row : rows)
 				{
-					if(retval == null)
-					{
-						retval = getDocument().createElement("placeholder");
-					}
 					Element valueElem = getDocument().createElement(VALUE_ELEMENT);
 					String textRaw = String.valueOf(row);
 					valueElem.setTextContent(textRaw);
 					retval.appendChild(valueElem);
 				}
 			}
+		}
+		catch(DssMissingRecordException e)
+		{
+			LOGGER.log(Level.FINE, "Missing record, displaying as NR", e);
+			retval.setTextContent(NO_RECORD_TEXT);
+			Element valueElem = getDocument().createElement(VALUE_ELEMENT);
+			valueElem.setTextContent(NO_RECORD_TEXT);
+			retval.appendChild(valueElem);
 		}
 		catch(EpptReportException e)
 		{

@@ -78,6 +78,7 @@ abstract class StandardSummaryChartBuilder
 	static final String REGION_NAME_ATTRIBUTE = "region-label";
 	static final String BACKGROUND_COLOR_ATTRIBUTE = "background-color";
 	static final String SVG_FILE_LOCATION_ATTRIBUTE = "svg-file";
+	static final String NO_RECORD_TEXT = "NR";
 	private final Document _document;
 	private final EpptScenarioRun _base;
 	private final List<EpptScenarioRun> _alternatives;
@@ -167,7 +168,7 @@ abstract class StandardSummaryChartBuilder
 		}
 	}
 
-	void logScriptException(Logger logger, ChartComponent v, EpptReportException e)
+	void logScriptException(Logger logger, ChartComponent v, Exception e)
 	{
 		getStandardSummaryErrors().addError(logger, "Error in Summary configuration - " + v + "\nError running jython script for: " + v.getFunction(), e);
 	}

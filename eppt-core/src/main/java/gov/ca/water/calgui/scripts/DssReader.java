@@ -50,6 +50,7 @@ public class DssReader
 	private static final FluentLogger LOGGER = FluentLogger.forEnclosingClass();
 	private static final Pattern DSS_PATH_SPLITTER_PATTERN = Pattern.compile("/");
 	private final EpptScenarioRun _scenarioRun;
+	private String _units;
 
 	public DssReader(EpptScenarioRun scenarioRun)
 	{
@@ -85,6 +86,7 @@ public class DssReader
 			TimeSeriesContainer tsc = primarySeries[0];
 			if(tsc.times != null)
 			{
+				_units = tsc.getUnits();
 				for(int i = 0; i < tsc.times.length; i++)
 				{
 					HecTime hecTime = new HecTime();
@@ -95,6 +97,10 @@ public class DssReader
 					LocalDateTime localDateTime = LocalDateTime.ofInstant(javaDate.toInstant(), ZoneId.systemDefault());
 					if(RMAConst.isValidValue(value))
 					{
+						if(tsc.getParameterName().toLowerCase().contains("percent"))
+						{
+							value *= 100;
+						}
 						retval.put(localDateTime, value);
 					}
 					else
@@ -118,7 +124,7 @@ public class DssReader
 	}
 
 	@SuppressWarnings("unchecked")
-	public NavigableMap<LocalDateTime, Double> getDtsData(int dtsId)
+	public NavigableMap<LocalDateTime, Double> getDtsData(int dtsId) throws DssMissingRecordException
 	{
 		DssCache instance = DssCache.getInstance();
 		NavigableMap<LocalDateTime, Double> retval = instance.readDtsLinkFromCache(_scenarioRun, dtsId);
@@ -165,12 +171,20 @@ public class DssReader
 							retval = timeSeriesContainerToMap(new TimeSeriesContainer[]{(TimeSeriesContainer) dataContainer});
 							instance.addDtsLinkToCache(_scenarioRun, dtsId, retval);
 						}
+						else
+						{
+							throw new DssMissingRecordException("Unable to find matching DTS path for: " + bPart);
+						}
 					}
 					else
 					{
-						LOGGER.atWarning().log("Unable to find matching DTS path for: %s", bPart);
+						throw new DssMissingRecordException("Unable to find matching DTS path for: " + bPart);
 					}
 				}
+			}
+			catch(DssMissingRecordException e)
+			{
+				throw e;
 			}
 			catch(Exception e)
 			{
@@ -206,5 +220,10 @@ public class DssReader
 			}
 		}
 		return retval;
+	}
+
+	public String getUnits()
+	{
+		return _units;
 	}
 }

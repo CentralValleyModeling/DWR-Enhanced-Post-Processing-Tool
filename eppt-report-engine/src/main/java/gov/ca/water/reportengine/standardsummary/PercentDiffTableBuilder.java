@@ -25,6 +25,7 @@ import java.util.logging.Logger;
 import gov.ca.water.calgui.bo.PeriodFilter;
 import gov.ca.water.calgui.constant.Constant;
 import gov.ca.water.calgui.project.EpptScenarioRun;
+import gov.ca.water.calgui.scripts.DssMissingRecordException;
 import gov.ca.water.reportengine.EpptReportException;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -152,6 +153,11 @@ class PercentDiffTableBuilder extends BaseAltDiffTableBuilder
 					retval.setTextContent("B=0");
 				}
 			}
+		}
+		catch(DssMissingRecordException e)
+		{
+			LOGGER.log(Level.FINE, "Missing record, displaying as NR", e);
+			retval.setTextContent(NO_RECORD_TEXT);
 		}
 		catch(EpptReportException e)
 		{

@@ -57,6 +57,8 @@ public class JythonScriptRunner
 		}
 	}
 
+	private DssReader _dssReader;
+
 	public JythonScriptRunner(EpptScenarioRun epptScenarioRun, CommonPeriodFilter commonPeriodFilter)
 	{
 
@@ -91,9 +93,9 @@ public class JythonScriptRunner
 
 	private void initializeGlobalVariables(CommonPeriodFilter commonPeriodFilter)
 	{
-		DssReader dssReader = new DssReader(_epptScenarioRun);
+		_dssReader = new DssReader(_epptScenarioRun);
 		TitleReader titleReader = new TitleReader(_epptScenarioRun);
-		PYTHON_ENGINE.put("dssReader", dssReader);
+		PYTHON_ENGINE.put("dssReader", _dssReader);
 		PYTHON_ENGINE.put("titleReader", titleReader);
 		PYTHON_ENGINE.put("commonPeriodFilter", commonPeriodFilter);
 		setWaterYearType(null);
@@ -132,5 +134,10 @@ public class JythonScriptRunner
 	public void setWaterYearIndex(WaterYearIndex waterYearIndex)
 	{
 		PYTHON_ENGINE.put("waterYearIndex", waterYearIndex);
+	}
+
+	public String getUnits()
+	{
+		return _dssReader.getUnits();
 	}
 }
