@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="CompilerConfiguration">
+    <annotationProcessing>
+      <profile name="Maven default annotation processors profile" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <module name="eppt-jasper-engine" />
+        <module name="eppt-plots" />
+        <module name="eppt-report-engine" />
+        <module name="eppt-vista" />
+        <module name="eppt-nbui" />
+        <module name="eppt-core" />
+        <module name="eppt-calsim-gui" />
+        <module name="eppt-scenario" />
+        <module name="eppt-trend-reporting" />
+        <module name="eppt-ui" />
+        <module name="eppt-branding" />
+        <module name="eppt-app" />
+      </profile>
+    </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="eppt-app" target="1.8" />
+      <module name="eppt-branding" target="1.8" />
+      <module name="eppt-calsim-gui" target="1.8" />
+      <module name="eppt-core" target="1.8" />
+      <module name="eppt-jasper-engine" target="1.8" />
+      <module name="eppt-nbui" target="1.8" />
+      <module name="eppt-parent" target="1.8" />
+      <module name="eppt-plots" target="1.8" />
+      <module name="eppt-report-engine" target="1.8" />
+      <module name="eppt-scenario" target="1.8" />
+      <module name="eppt-trend-reporting" target="1.8" />
+      <module name="eppt-ui" target="1.8" />
+      <module name="eppt-vista" target="1.8" />
+    </bytecodeTargetLevel>
+  </component>
+</project>

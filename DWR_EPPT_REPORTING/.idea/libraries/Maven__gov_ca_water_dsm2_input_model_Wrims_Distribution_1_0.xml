@@ -1,0 +1,13 @@
+<component name="libraryTable">
+  <library name="Maven: gov.ca.water:dsm2-input-model:Wrims_Distribution:1.0">
+    <CLASSES>
+      <root url="jar://$MAVEN_REPOSITORY$/gov/ca/water/dsm2-input-model/1.0/dsm2-input-model-1.0-Wrims_Distribution.jar!/" />
+    </CLASSES>
+    <JAVADOC>
+      <root url="jar://$MAVEN_REPOSITORY$/gov/ca/water/dsm2-input-model/1.0/dsm2-input-model-1.0-javadoc.jar!/" />
+    </JAVADOC>
+    <SOURCES>
+      <root url="jar://$MAVEN_REPOSITORY$/gov/ca/water/dsm2-input-model/1.0/dsm2-input-model-1.0-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

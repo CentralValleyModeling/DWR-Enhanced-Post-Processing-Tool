@@ -1,0 +1,13 @@
+<component name="libraryTable">
+  <library name="Maven: org.swixml:swixml:CalLiteGUI_P3:240">
+    <CLASSES>
+      <root url="jar://$MAVEN_REPOSITORY$/org/swixml/swixml/240/swixml-240-CalLiteGUI_P3.jar!/" />
+    </CLASSES>
+    <JAVADOC>
+      <root url="jar://$MAVEN_REPOSITORY$/org/swixml/swixml/240/swixml-240-javadoc.jar!/" />
+    </JAVADOC>
+    <SOURCES>
+      <root url="jar://$MAVEN_REPOSITORY$/org/swixml/swixml/240/swixml-240-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

@@ -1,0 +1,13 @@
+<component name="libraryTable">
+  <library name="Maven: ncsa.hdf:jhdfobj:Vista_Distribution:1.0">
+    <CLASSES>
+      <root url="jar://$MAVEN_REPOSITORY$/ncsa/hdf/jhdfobj/1.0/jhdfobj-1.0-Vista_Distribution.jar!/" />
+    </CLASSES>
+    <JAVADOC>
+      <root url="jar://$MAVEN_REPOSITORY$/ncsa/hdf/jhdfobj/1.0/jhdfobj-1.0-javadoc.jar!/" />
+    </JAVADOC>
+    <SOURCES>
+      <root url="jar://$MAVEN_REPOSITORY$/ncsa/hdf/jhdfobj/1.0/jhdfobj-1.0-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>
