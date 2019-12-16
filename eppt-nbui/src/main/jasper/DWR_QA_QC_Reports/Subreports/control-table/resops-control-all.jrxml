@@ -581,7 +581,7 @@
 							<textElement textAlignment="Center" verticalAlignment="Middle">
 								<font size="9"/>
 							</textElement>
-							<textFieldExpression><![CDATA[$V{value-full-text}==null?($V{value_MEASURE}==""?"N/A":($V{value_MEASURE}>0&&$V{scenario-order}==2?"+"+$V{value_MEASURE}:$V{value_MEASURE})):($V{value_MEASURE}>0&&$V{scenario-order}==2?"+"+$V{value-full-text}:$V{value-full-text})]]></textFieldExpression>
+							<textFieldExpression><![CDATA[$V{value_MEASURE}==-2147483648?"NR":($V{value-full-text}==null?($V{value_MEASURE}==""?"N/A":($V{value_MEASURE}>0&&$V{scenario-order}==2?"+"+$V{value_MEASURE}:$V{value_MEASURE})):($V{value_MEASURE}>0&&$V{scenario-order}==2?"+"+$V{value-full-text}:$V{value-full-text}))]]></textFieldExpression>
 						</textField>
 					</cellContents>
 				</crosstabCell>
