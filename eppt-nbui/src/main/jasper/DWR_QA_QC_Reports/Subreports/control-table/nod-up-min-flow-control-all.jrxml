@@ -4,7 +4,7 @@
 	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
 	<property name="net.sf.jasperreports.export.xls.collapse.row.span" value="true"/>
 	<property name="net.sf.jasperreports.print.create.bookmarks" value="true"/>
-	<property name="net.sf.jasperreports.data.adapter" value="QAQC_Datasource.xml"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="QAQC_Datasource"/>
 	<property name="com.jaspersoft.studio.unit.topMargin" value="pixel"/>
 	<property name="com.jaspersoft.studio.unit.bottomMargin" value="pixel"/>
 	<property name="com.jaspersoft.studio.unit.leftMargin" value="pixel"/>
@@ -381,7 +381,7 @@
 		<band/>
 	</pageFooter>
 	<summary>
-		<band height="100">
+		<band height="60">
 			<property name="com.jaspersoft.studio.unit.height" value="px"/>
 			<crosstab>
 				<reportElement x="0" y="-1" width="504" height="61" uuid="0234ba63-fc75-4a2f-90a9-e28aa409e9c5">

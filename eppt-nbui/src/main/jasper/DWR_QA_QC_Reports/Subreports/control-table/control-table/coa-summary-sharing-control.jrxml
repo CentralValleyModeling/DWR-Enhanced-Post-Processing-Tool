@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Created with Jaspersoft Studio version 6.10.0.final using JasperReports Library version 6.10.0-unknown  -->
+<!-- Created with Jaspersoft Studio version 6.8.0.final using JasperReports Library version 6.8.0-2ed8dfabb690ff337a5797129f2cd92902b0c87b  -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="QAQC_controls_table" language="groovy" pageWidth="504" pageHeight="684" columnWidth="504" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="fdf29854-1cab-4c3d-99e9-a38b49852a26">
 	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
 	<property name="net.sf.jasperreports.export.xls.collapse.row.span" value="true"/>
 	<property name="net.sf.jasperreports.print.create.bookmarks" value="true"/>
-	<property name="net.sf.jasperreports.data.adapter" value="QAQC_Datasource.xml"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="QAQC_Datasource"/>
 	<property name="com.jaspersoft.studio.unit.topMargin" value="pixel"/>
 	<property name="com.jaspersoft.studio.unit.bottomMargin" value="pixel"/>
 	<property name="com.jaspersoft.studio.unit.leftMargin" value="pixel"/>
@@ -381,7 +381,7 @@
 		<band/>
 	</pageFooter>
 	<summary>
-		<band height="100">
+		<band height="60">
 			<property name="com.jaspersoft.studio.unit.height" value="px"/>
 			<crosstab>
 				<reportElement x="0" y="-1" width="504" height="61" uuid="0234ba63-fc75-4a2f-90a9-e28aa409e9c5">
@@ -582,7 +582,7 @@
 							<textElement textAlignment="Center" verticalAlignment="Middle">
 								<font size="9"/>
 							</textElement>
-							<textFieldExpression><![CDATA[$V{value-full-text}==null?($V{value_MEASURE}==""?"N/A":($V{value_MEASURE}>0&&$V{scenario-order}==2?"+"+$V{value_MEASURE}:$V{value_MEASURE})):($V{value_MEASURE}>0&&$V{scenario-order}==2?"+"+$V{value-full-text}:$V{value-full-text})]]></textFieldExpression>
+							<textFieldExpression><![CDATA[$V{value_MEASURE}==-2147483648?"NR":($V{value-full-text}==null?($V{value_MEASURE}==""?"N/A":($V{value_MEASURE}>0&&$V{scenario-order}==2?"+"+$V{value_MEASURE}:$V{value_MEASURE})):($V{value_MEASURE}>0&&$V{scenario-order}==2?"+"+$V{value-full-text}:$V{value-full-text}))]]></textFieldExpression>
 						</textField>
 					</cellContents>
 				</crosstabCell>
