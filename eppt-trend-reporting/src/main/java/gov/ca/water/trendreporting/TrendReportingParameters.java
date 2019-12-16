@@ -13,7 +13,6 @@
 package gov.ca.water.trendreporting;
 
 import java.nio.file.Paths;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -169,7 +168,7 @@ public class TrendReportingParameters
 			IGuiLinksSeedDataSvc guiLinkService = GuiLinksSeedDataSvcImpl.getSeedDataSvcImplInstance();
 			if(_guiLinkId != null)
 			{
-				return guiLinkService.getObjById(_guiLinkId.toString());
+				return guiLinkService.getGuiLink(_guiLinkId.toString());
 			}
 			else
 			{

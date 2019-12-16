@@ -227,7 +227,7 @@ public class CustomResultsPanel extends EpptPanel
 				if(baseScenario != null)
 				{
 					List<EpptScenarioRun> alternatives = projectConfigurationPanel.getEpptScenarioAlternatives();
-					_displayHelper.showDisplayFrames(plotConfigurationState, Collections.singletonList(parts[2]),
+					_displayHelper.showDisplayFramesLocations(plotConfigurationState, Collections.singletonList(parts[2]),
 							baseScenario, alternatives, startMonth, endMonth);
 				}
 			}

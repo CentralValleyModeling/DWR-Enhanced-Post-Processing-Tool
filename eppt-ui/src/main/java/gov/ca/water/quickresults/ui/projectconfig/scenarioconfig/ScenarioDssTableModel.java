@@ -20,8 +20,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.Vector;
-import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -39,7 +37,6 @@ import gov.ca.water.calgui.project.NamedDssPath;
 
 import hec.heclib.dss.CondensedReference;
 import hec.heclib.dss.DSSPathname;
-import hec.heclib.dss.HecDSSFileDataManager;
 import hec.heclib.dss.HecDss;
 import hec.heclib.dss.HecDssCatalog;
 import rma.swing.table.RmaTableModel;
@@ -351,11 +348,11 @@ class ScenarioDssTableModel extends RmaTableModel
 	private List<GUILinksAllModelsBO> getDefaultGuiLinks(IGuiLinksSeedDataSvc seedDataSvcImplInstance)
 	{
 		List<GUILinksAllModelsBO> guiLinks = new ArrayList<>();
-		GUILinksAllModelsBO guiLink310 = seedDataSvcImplInstance.getObjById("310");
+		GUILinksAllModelsBO guiLink310 = seedDataSvcImplInstance.getGuiLink("310");
 		guiLinks.add(guiLink310);
-		GUILinksAllModelsBO guiLink311 = seedDataSvcImplInstance.getObjById("311");
+		GUILinksAllModelsBO guiLink311 = seedDataSvcImplInstance.getGuiLink("311");
 		guiLinks.add(guiLink311);
-		GUILinksAllModelsBO guiLink901 = seedDataSvcImplInstance.getObjById("901");
+		GUILinksAllModelsBO guiLink901 = seedDataSvcImplInstance.getGuiLink("901");
 		guiLinks.add(guiLink901);
 		return guiLinks;
 	}

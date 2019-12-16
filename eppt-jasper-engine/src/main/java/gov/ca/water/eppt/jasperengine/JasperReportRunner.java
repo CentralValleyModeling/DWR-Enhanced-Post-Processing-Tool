@@ -192,7 +192,7 @@ public class JasperReportRunner implements ReportRunner
 					try
 					{
 						Path jasperFile = jrxmlFile.getParent().resolve(jrxmlFile.getFileName().toString().replace("jrxml", "jasper"));
-						if(Files.getLastModifiedTime(jasperFile).compareTo(Files.getLastModifiedTime(jrxmlFile)) < 0)
+						if(!Files.exists(jasperFile) || Files.getLastModifiedTime(jasperFile).compareTo(Files.getLastModifiedTime(jrxmlFile)) < 0)
 						{
 							LOGGER.log(Level.INFO, "Compiling Subreport {0}", jrxmlFile);
 							JasperCompileManager.compileReportToFile(jrxmlFile.toString(),

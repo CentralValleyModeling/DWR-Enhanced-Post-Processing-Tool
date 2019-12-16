@@ -230,19 +230,26 @@ public class DSSGrabber1SvcImpl implements IDSSGrabber1Svc
 		_alternatives.addAll(alternatives);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see
-	 * gov.ca.water.calgui.busservice.impl.IDSSGrabber1Svc#setLocation(java.
-	 * lang.String)
-	 */
+	@Override
+	public void setGuiLink(GUILinksAllModelsBO guiLinksAllModelsBO)
+	{
+		if(guiLinksAllModelsBO != null)
+		{
+			_primaryDSSName.clear();
+			_primaryDSSName.putAll(guiLinksAllModelsBO.getPrimary());
+			_thresholdDSSName.clear();
+			_secondaryDSSName.clear();
+			_secondaryDSSName.putAll(guiLinksAllModelsBO.getSecondary());
+			_axisLabel = guiLinksAllModelsBO.getPlotAxisLabel();
+			_plotTitle = guiLinksAllModelsBO.getPlotTitle();
+			_legend = guiLinksAllModelsBO.getLegend();
+		}
+	}
+
 	@Override
 	public void setLocation(String locationName)
 	{
-
 		locationName = locationName.trim();
-
 		if(locationName.startsWith("/"))
 		{
 			// Handle names passed from WRIMS GUI
@@ -254,33 +261,12 @@ public class DSSGrabber1SvcImpl implements IDSSGrabber1Svc
 			_axisLabel = "";
 			_legend = "";
 		}
-		else
-		{
-			// Location name is otherwise assumed coded as "ckpbxxx"
-
-			GUILinksAllModelsBO guiLinksAllModelsBO = _seedDataSvc.getObjById(locationName);
-			if(guiLinksAllModelsBO != null)
-			{
-				_primaryDSSName.clear();
-				_primaryDSSName.putAll(guiLinksAllModelsBO.getPrimary());
-				_thresholdDSSName.clear();
-				_secondaryDSSName.clear();
-				_secondaryDSSName.putAll(guiLinksAllModelsBO.getSecondary());
-				_axisLabel = guiLinksAllModelsBO.getPlotAxisLabel();
-				_plotTitle = guiLinksAllModelsBO.getPlotTitle();
-				_legend = guiLinksAllModelsBO.getLegend();
-			}
-		}
 	}
 
-	public void setThresholdId(int id)
+	@Override
+	public void setThresholdLink(ThresholdLinksBO objById)
 	{
-
-		ThresholdLinksBO objById = _thresholdLinksSeedDataSvc.getObjById(id);
-		if(objById != null)
-		{
-			_threshold = objById;
-		}
+		_threshold = objById;
 	}
 
 	/*

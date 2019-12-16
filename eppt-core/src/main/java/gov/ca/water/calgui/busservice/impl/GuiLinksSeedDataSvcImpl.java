@@ -216,7 +216,7 @@ public final class GuiLinksSeedDataSvcImpl implements IGuiLinksSeedDataSvc
 		return id;
 	}
 
-	public GUILinksAllModelsBO getObjById(String id)
+	public GUILinksAllModelsBO getGuiLink(String id)
 	{
 		GUILinksAllModelsBO guiLinks3BO = null;
 		try

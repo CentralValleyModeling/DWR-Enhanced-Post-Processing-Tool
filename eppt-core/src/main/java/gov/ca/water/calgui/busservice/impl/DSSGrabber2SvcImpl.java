@@ -116,7 +116,7 @@ public class DSSGrabber2SvcImpl extends DSSGrabber1SvcImpl
 			{
 				// Location name is otherwise assumed coded as "ckpbxxx"
 
-				GUILinksAllModelsBO guiLinksAllModelsBO = _seedDataSvc.getObjById(locationName);
+				GUILinksAllModelsBO guiLinksAllModelsBO = _seedDataSvc.getGuiLink(locationName);
 				if(guiLinksAllModelsBO != null)
 				{
 					_primaryDSSName.clear();

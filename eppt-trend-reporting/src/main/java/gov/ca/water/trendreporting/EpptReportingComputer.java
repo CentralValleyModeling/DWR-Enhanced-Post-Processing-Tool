@@ -41,6 +41,7 @@ import gov.ca.water.calgui.bo.WaterYearIndex;
 import gov.ca.water.calgui.bo.WaterYearPeriod;
 import gov.ca.water.calgui.bo.WaterYearPeriodRange;
 import gov.ca.water.calgui.busservice.impl.DSSGrabber1SvcImpl;
+import gov.ca.water.calgui.busservice.impl.GuiLinksSeedDataSvcImpl;
 import gov.ca.water.calgui.busservice.impl.WaterYearTableReader;
 import gov.ca.water.calgui.project.EpptScenarioRun;
 
@@ -278,7 +279,8 @@ class EpptReportingComputer
 		DSSGrabber1SvcImpl dssGrabber = new DSSGrabber1SvcImpl();
 		dssGrabber.setIsCFS(isCFS);
 		dssGrabber.setScenarioRuns(epptScenarioRun, Collections.emptyList());
-		dssGrabber.setLocation(_guiLink.getCheckboxId());
+		GUILinksAllModelsBO guiLink = GuiLinksSeedDataSvcImpl.getSeedDataSvcImplInstance().getGuiLink(_guiLink.getCheckboxId());
+		dssGrabber.setGuiLink(guiLink);
 		dssGrabber.setDateRange(start, end);
 		return dssGrabber;
 	}

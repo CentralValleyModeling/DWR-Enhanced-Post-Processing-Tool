@@ -17,6 +17,7 @@ import java.util.List;
 import java.util.Map;
 
 import gov.ca.water.calgui.bo.GUILinksAllModelsBO;
+import gov.ca.water.calgui.bo.ThresholdLinksBO;
 import gov.ca.water.calgui.project.EpptScenarioRun;
 import org.jfree.data.time.Month;
 
@@ -56,6 +57,8 @@ public interface IDSSGrabber1Svc
 	 */
 	void setScenarioRuns(EpptScenarioRun scenarioRun, List<EpptScenarioRun> alternatives);
 
+	void setGuiLink(GUILinksAllModelsBO guiLinksAllModelsBO);
+
 	/**
 	 * Sets dataset (DSS) names to read from scenario DSS files, title, and axis
 	 * labels according to location specified using a coded string. The string
@@ -66,6 +69,8 @@ public interface IDSSGrabber1Svc
 	 * @param locationName
 	 */
 	void setLocation(String locationName);
+
+	void setThresholdLink(ThresholdLinksBO objById);
 
 	/**
 	 * Gets primary y-axis label assigned by DSS_Grabber to the results read in

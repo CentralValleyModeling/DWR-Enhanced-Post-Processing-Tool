@@ -12,9 +12,7 @@
 
 package gov.ca.water.calgui.scripts;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.YearMonth;
 import java.time.ZoneId;
 import java.util.Collections;
 import java.util.Date;
@@ -24,12 +22,15 @@ import java.util.TimeZone;
 import java.util.TreeMap;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
-import java.util.regex.Pattern;
 
 import com.google.common.flogger.FluentLogger;
 import gov.ca.water.calgui.bo.DetailedIssue;
+import gov.ca.water.calgui.bo.GUILinksAllModelsBO;
+import gov.ca.water.calgui.bo.ThresholdLinksBO;
 import gov.ca.water.calgui.busservice.impl.DSSGrabber1SvcImpl;
 import gov.ca.water.calgui.busservice.impl.DetailedIssuesReader;
+import gov.ca.water.calgui.busservice.impl.GuiLinksSeedDataSvcImpl;
+import gov.ca.water.calgui.busservice.impl.ThresholdLinksSeedDataSvc;
 import gov.ca.water.calgui.project.EpptScenarioRun;
 import gov.ca.water.calgui.project.NamedDssPath;
 
@@ -149,8 +150,10 @@ public class DssReader
 		DSSGrabber1SvcImpl grabber1Svc = new DSSGrabber1SvcImpl();
 		grabber1Svc.setDateRange(_start.toLocalDate(), _end.toLocalDate());
 		grabber1Svc.setScenarioRuns(epptScenarioRun, Collections.emptyList());
-		grabber1Svc.setLocation(Integer.toString(guiID));
-		grabber1Svc.setThresholdId(thresholdId);
+		GUILinksAllModelsBO guiLink = GuiLinksSeedDataSvcImpl.getSeedDataSvcImplInstance().getGuiLink(Integer.toString(guiID));
+		grabber1Svc.setGuiLink(guiLink);
+		ThresholdLinksBO thresholdLink = ThresholdLinksSeedDataSvc.getSeedDataSvcImplInstance().getObjById(thresholdId);
+		grabber1Svc.setThresholdLink(thresholdLink);
 		grabber1Svc.setIsCFS(false);
 		return grabber1Svc;
 	}

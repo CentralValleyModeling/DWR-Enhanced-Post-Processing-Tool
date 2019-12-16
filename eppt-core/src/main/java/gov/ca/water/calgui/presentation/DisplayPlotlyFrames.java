@@ -179,7 +179,7 @@ final class DisplayPlotlyFrames
 			insertEmptyTab(tabbedpane, missing);
 		}
 		GUILinksAllModelsBO guiLinksAllModelsBO = GuiLinksSeedDataSvcImpl.getSeedDataSvcImplInstance()
-																		 .getObjById(displayInput.getLocationName());
+																		 .getGuiLink(displayInput.getLocationName());
 		String title = baseRun.getName() + " - " + guiLinksAllModelsBO.getPlotTitle();
 		tabbedpane.setName(title);
 		return tabbedpane;
