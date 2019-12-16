@@ -145,7 +145,7 @@ class ListBuilder extends TableBuilder
 				}
 				else
 				{
-					Element elem = getDocument().createElement(item.getNodeName());
+					Element elem = getDocument().createElement(VALUE_ELEMENT);
 					elem.setAttribute(VALUE_ORDER_ATTRIBUTE, String.valueOf(index));
 					componentElement.appendChild(elem);
 					elem.setTextContent(item.getTextContent());
