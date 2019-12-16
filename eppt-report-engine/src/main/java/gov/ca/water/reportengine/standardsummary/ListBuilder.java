@@ -21,6 +21,7 @@ import java.util.logging.Logger;
 import gov.ca.water.calgui.project.EpptScenarioRun;
 import gov.ca.water.calgui.scripts.DssMissingRecordException;
 import gov.ca.water.reportengine.EpptReportException;
+import org.python.apache.xerces.dom.TextImpl;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -130,15 +131,26 @@ class ListBuilder extends TableBuilder
 		if(apply != null)
 		{
 			NodeList childNodes = apply.getChildNodes();
-			int i = 0;
-			while(childNodes.getLength() > 0)
+			int index = 0;
+			int node = 0;
+			while(childNodes.getLength() > 0 && node < childNodes.getLength())
 			{
-				Node item = childNodes.item(0);
+				Node item = childNodes.item(node);
 				if(item instanceof Element)
 				{
-					((Element) item).setAttribute(VALUE_ORDER_ATTRIBUTE, String.valueOf(i));
+					((Element) item).setAttribute(VALUE_ORDER_ATTRIBUTE, String.valueOf(index));
 					componentElement.appendChild(item);
-					i++;
+					index++;
+					node = 0;
+				}
+				else
+				{
+					Element elem = getDocument().createElement(item.getNodeName());
+					elem.setAttribute(VALUE_ORDER_ATTRIBUTE, String.valueOf(index));
+					componentElement.appendChild(elem);
+					elem.setTextContent(item.getTextContent());
+					index++;
+					node++;
 				}
 			}
 		}

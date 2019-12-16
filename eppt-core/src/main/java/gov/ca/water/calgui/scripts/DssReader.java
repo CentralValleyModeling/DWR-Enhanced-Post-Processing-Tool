@@ -39,6 +39,7 @@ import hec.heclib.dss.HecDss;
 import hec.heclib.util.HecTime;
 import hec.io.DataContainer;
 import hec.io.TimeSeriesContainer;
+import hec.lang.annotation.Scriptable;
 import rma.util.RMAConst;
 
 /**
@@ -50,7 +51,6 @@ import rma.util.RMAConst;
 public class DssReader
 {
 	private static final FluentLogger LOGGER = FluentLogger.forEnclosingClass();
-	private static final Pattern DSS_PATH_SPLITTER_PATTERN = Pattern.compile("/");
 	private final EpptScenarioRun _scenarioRun;
 	private final LocalDateTime _start;
 	private final LocalDateTime _end;
@@ -63,7 +63,14 @@ public class DssReader
 		_end = end;
 	}
 
+	@Scriptable
 	public NavigableMap<LocalDateTime, Double> getGuiLinkData(int guiID)
+	{
+		return getGuiLinkData(guiID, true);
+	}
+
+	@Scriptable
+	public NavigableMap<LocalDateTime, Double> getGuiLinkData(int guiID, boolean mapToTaf)
 	{
 		DssCache instance = DssCache.getInstance();
 		NavigableMap<LocalDateTime, Double> retval = instance.readGuiLinkFromCache(_scenarioRun, guiID);
@@ -73,7 +80,10 @@ public class DssReader
 			{
 				DSSGrabber1SvcImpl dssGrabber1Svc = buildDssGrabber(_scenarioRun, guiID, 0);
 				TimeSeriesContainer[] primarySeries = dssGrabber1Svc.getPrimarySeries();
-				primarySeries = mapToTaf(primarySeries, dssGrabber1Svc);
+				if(mapToTaf)
+				{
+					primarySeries = mapToTaf(primarySeries, dssGrabber1Svc);
+				}
 				retval = timeSeriesContainerToMap(primarySeries);
 				instance.addGuiLinkToCache(_scenarioRun, guiID, retval);
 			}
@@ -146,6 +156,7 @@ public class DssReader
 	}
 
 	@SuppressWarnings("unchecked")
+	@Scriptable
 	public NavigableMap<LocalDateTime, Double> getDtsData(int dtsId) throws DssMissingRecordException
 	{
 		DssCache instance = DssCache.getInstance();
@@ -195,12 +206,12 @@ public class DssReader
 						}
 						else
 						{
-							throw new DssMissingRecordException("Unable to find matching DTS path for: " + bPart);
+							throw new DssMissingRecordException("Unable to find matching DTS path for: B-Part" + bPart + " and DTS ID: " + dtsId);
 						}
 					}
 					else
 					{
-						throw new DssMissingRecordException("Unable to find matching DTS path for: " + bPart);
+						throw new DssMissingRecordException("Unable to find matching DTS path for: " + bPart + " and DTS ID: " + dtsId);
 					}
 				}
 			}
@@ -223,7 +234,14 @@ public class DssReader
 		return retval;
 	}
 
+	@Scriptable
 	public NavigableMap<LocalDateTime, Double> getThresholdData(int thresholdId)
+	{
+		return getThresholdData(thresholdId, true);
+	}
+
+	@Scriptable
+	public NavigableMap<LocalDateTime, Double> getThresholdData(int thresholdId, boolean mapToTaf)
 	{
 		DssCache instance = DssCache.getInstance();
 		NavigableMap<LocalDateTime, Double> retval = instance.readThresholdLinkFromCache(_scenarioRun, thresholdId);
@@ -233,6 +251,10 @@ public class DssReader
 			{
 				DSSGrabber1SvcImpl dssGrabber1Svc = buildDssGrabber(_scenarioRun, 102, thresholdId);
 				TimeSeriesContainer[] threshold = dssGrabber1Svc.getThresholdTimeSeries();
+				if(mapToTaf)
+				{
+					threshold = mapToTaf(threshold, dssGrabber1Svc);
+				}
 				retval = timeSeriesContainerToMap(threshold);
 				instance.addThresholdLinkToCache(_scenarioRun, thresholdId, retval);
 			}
