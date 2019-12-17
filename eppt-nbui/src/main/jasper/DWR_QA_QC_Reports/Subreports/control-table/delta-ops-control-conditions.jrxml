@@ -4,7 +4,7 @@
 	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
 	<property name="net.sf.jasperreports.export.xls.collapse.row.span" value="true"/>
 	<property name="net.sf.jasperreports.print.create.bookmarks" value="true"/>
-	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="QAQC_Datasource"/>
+	<property name="net.sf.jasperreports.data.adapter" value="QAQC_Datasource.xml"/>
 	<property name="com.jaspersoft.studio.unit.topMargin" value="pixel"/>
 	<property name="com.jaspersoft.studio.unit.bottomMargin" value="pixel"/>
 	<property name="com.jaspersoft.studio.unit.leftMargin" value="pixel"/>
@@ -111,7 +111,7 @@
 			<leftPen lineWidth="1.0" lineColor="#CCCCCC"/>
 		</box>
 		<conditionalStyle>
-			<conditionExpression><![CDATA[$V{value_MEASURE}<0&&$V{less-greater-equal-order}==2&&$V{scenario-order}==2]]></conditionExpression>
+			<conditionExpression><![CDATA[$V{value_MEASURE}<0&&$V{value_MEASURE}!=-2147483648&&$V{less-greater-equal-order}==2&&$V{scenario-order}==2]]></conditionExpression>
 			<style forecolor="#F06063" scaleImage="FillFrame">
 				<box>
 					<topPen lineWidth="0.0" lineColor="#000000"/>
@@ -144,7 +144,7 @@
 			</style>
 		</conditionalStyle>
 		<conditionalStyle>
-			<conditionExpression><![CDATA[$V{value_MEASURE}<0&&$V{less-greater-equal-order}==0&&$V{scenario-order}==2]]></conditionExpression>
+			<conditionExpression><![CDATA[$V{value_MEASURE}<0&&$V{less-greater-equal-order}==0&&$V{value_MEASURE}!=-2147483648&&$V{scenario-order}==2]]></conditionExpression>
 			<style forecolor="#F06063" scaleImage="FillFrame">
 				<box>
 					<topPen lineWidth="0.0" lineColor="#000000"/>
@@ -177,7 +177,7 @@
 			</style>
 		</conditionalStyle>
 		<conditionalStyle>
-			<conditionExpression><![CDATA[$V{value_MEASURE}<0&&$V{scenario-order}==2]]></conditionExpression>
+			<conditionExpression><![CDATA[$V{value_MEASURE}<0&&$V{value_MEASURE}!=-2147483648&&$V{scenario-order}==2]]></conditionExpression>
 			<style forecolor="#F06063">
 				<box>
 					<topPen lineWidth="0.0"/>

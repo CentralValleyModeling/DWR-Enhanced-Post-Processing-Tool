@@ -111,7 +111,7 @@
 			<leftPen lineWidth="1.0" lineColor="#CCCCCC"/>
 		</box>
 		<conditionalStyle>
-			<conditionExpression><![CDATA[$V{value_MEASURE}<0&&$V{less-greater-equal-order}==2&&$V{scenario-order}==2]]></conditionExpression>
+			<conditionExpression><![CDATA[$V{value_MEASURE}<0&&$V{value_MEASURE}!=-2147483648&&$V{less-greater-equal-order}==2&&$V{scenario-order}==2&&$V{value_MEASURE}!=-2147483648]]></conditionExpression>
 			<style forecolor="#F06063" scaleImage="FillFrame">
 				<box>
 					<topPen lineWidth="0.0" lineColor="#000000"/>
@@ -144,7 +144,7 @@
 			</style>
 		</conditionalStyle>
 		<conditionalStyle>
-			<conditionExpression><![CDATA[$V{value_MEASURE}<0&&$V{less-greater-equal-order}==0&&$V{scenario-order}==2]]></conditionExpression>
+			<conditionExpression><![CDATA[$V{value_MEASURE}<0&&$V{less-greater-equal-order}==0&&$V{value_MEASURE}!=-2147483648&&$V{scenario-order}==2]]></conditionExpression>
 			<style forecolor="#F06063" scaleImage="FillFrame">
 				<box>
 					<topPen lineWidth="0.0" lineColor="#000000"/>
@@ -177,7 +177,7 @@
 			</style>
 		</conditionalStyle>
 		<conditionalStyle>
-			<conditionExpression><![CDATA[$V{value_MEASURE}<0&&$V{scenario-order}==2]]></conditionExpression>
+			<conditionExpression><![CDATA[$V{value_MEASURE}<0&&$V{value_MEASURE}!=-2147483648&&$V{scenario-order}==2]]></conditionExpression>
 			<style forecolor="#F06063">
 				<box>
 					<topPen lineWidth="0.0"/>
@@ -381,7 +381,7 @@
 		<band/>
 	</pageFooter>
 	<summary>
-		<band height="100">
+		<band height="60">
 			<property name="com.jaspersoft.studio.unit.height" value="px"/>
 			<crosstab>
 				<reportElement x="0" y="-1" width="504" height="61" uuid="0234ba63-fc75-4a2f-90a9-e28aa409e9c5">

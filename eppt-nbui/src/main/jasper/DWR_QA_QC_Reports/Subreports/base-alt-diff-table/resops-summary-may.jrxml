@@ -86,7 +86,7 @@
 			</style>
 		</conditionalStyle>
 		<conditionalStyle>
-			<conditionExpression><![CDATA[$V{value_MEASURE}<0&&$V{scenario-order}==2&&$V{period-type-order}>=0]]></conditionExpression>
+			<conditionExpression><![CDATA[$V{value_MEASURE}<0&&$V{scenario-order}==2&&$V{period-type-order}>=0&&$V{value_MEASURE}!=-2147483648]]></conditionExpression>
 			<style forecolor="#F06063" scaleImage="FillFrame">
 				<box>
 					<topPen lineWidth="1.0" lineColor="#CCCCCC"/>
