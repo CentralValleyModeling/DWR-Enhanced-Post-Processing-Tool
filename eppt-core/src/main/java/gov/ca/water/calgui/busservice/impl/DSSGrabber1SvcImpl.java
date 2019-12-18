@@ -18,6 +18,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.time.LocalDate;
+import java.time.Month;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
@@ -45,7 +46,6 @@ import gov.ca.water.calgui.project.EpptScenarioRun;
 import gov.ca.water.calgui.project.NamedDssPath;
 import gov.ca.water.calgui.techservice.IDialogSvc;
 import gov.ca.water.calgui.techservice.impl.DialogSvcImpl;
-import org.jfree.data.time.Month;
 
 import hec.dssgui.CombinedDataManager;
 import hec.heclib.dss.DSSPathname;
@@ -90,7 +90,6 @@ public class DSSGrabber1SvcImpl implements IDSSGrabber1Svc
 	private static Logger LOGGER = Logger.getLogger(DSSGrabber1SvcImpl.class.getName());
 	final Map<GUILinksAllModelsBO.Model, String> _primaryDSSName = new HashMap<>();
 	final Map<GUILinksAllModelsBO.Model, String> _secondaryDSSName = new HashMap<>();
-	private final Map<GUILinksAllModelsBO.Model, String> _thresholdDSSName = new HashMap<>();
 	final List<EpptScenarioRun> _alternatives = new ArrayList<>();
 	private final IGuiLinksSeedDataSvc _seedDataSvc = GuiLinksSeedDataSvcImpl.getSeedDataSvcImplInstance();
 	private final ThresholdLinksSeedDataSvc _thresholdLinksSeedDataSvc = ThresholdLinksSeedDataSvc.getSeedDataSvcImplInstance();
@@ -130,6 +129,8 @@ public class DSSGrabber1SvcImpl implements IDSSGrabber1Svc
 			LOGGER.log(Level.WARNING, "Unable to read properties file from: " + propertiesFile, ex);
 		}
 		clearMissingList();
+		setDateRange(LocalDate.of(1850, java.time.Month.JANUARY, 1),
+				LocalDate.of(2150, Month.JANUARY, 1));
 	}
 
 	/**
@@ -237,7 +238,6 @@ public class DSSGrabber1SvcImpl implements IDSSGrabber1Svc
 		{
 			_primaryDSSName.clear();
 			GUILinksAllModelsBO.Model.values().forEach(m -> _primaryDSSName.put(m, dtsLink.getLinkedVar()));
-			_thresholdDSSName.clear();
 			_secondaryDSSName.clear();
 			_axisLabel = "";
 			_plotTitle = dtsLink.getTitle();
@@ -252,7 +252,6 @@ public class DSSGrabber1SvcImpl implements IDSSGrabber1Svc
 		{
 			_primaryDSSName.clear();
 			_primaryDSSName.putAll(guiLinksAllModelsBO.getPrimary());
-			_thresholdDSSName.clear();
 			_secondaryDSSName.clear();
 			_secondaryDSSName.putAll(guiLinksAllModelsBO.getSecondary());
 			_axisLabel = guiLinksAllModelsBO.getPlotAxisLabel();
@@ -290,8 +289,8 @@ public class DSSGrabber1SvcImpl implements IDSSGrabber1Svc
 			GUILinksAllModelsBO.Model.values()
 									 .stream()
 									 .map(objById::getModelData)
+									 .filter(Objects::nonNull)
 									 .forEach(d -> _primaryDSSName.put(d.getModel(), d.getPrimary()));
-			_thresholdDSSName.clear();
 			_secondaryDSSName.clear();
 			_axisLabel = objById.getLabel();
 			_plotTitle = "";

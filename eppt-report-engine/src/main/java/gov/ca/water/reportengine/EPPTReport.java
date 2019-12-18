@@ -196,7 +196,7 @@ public class EPPTReport
 	{
 		if(canPrintAssumptionChanges())
 		{
-			LOGGER.at(Level.INFO).log("Generate QAQC Assumption Changes data");
+			LOGGER.at(Level.INFO).log("Generate QA/QC Assumption Changes data");
 			rootElement.appendChild(createAssumptionChangesElem(fileChangeStats.get(0), doc));
 		}
 	}
@@ -207,7 +207,7 @@ public class EPPTReport
 		if(canPrintDetailedIssues())
 		{
 			//create and add the detailed issues
-			LOGGER.at(Level.INFO).log("Generate QAQC Detailed Issues data");
+			LOGGER.at(Level.INFO).log("Generate QA/QC Detailed Issues data");
 			rootElement.appendChild(createDetailedIssueReportElem(runsToFlagViolations, doc));
 		}
 	}

@@ -209,7 +209,7 @@ public class DssReader
 				if(primarySeries == null || primarySeries[0] == null)
 				{
 					throw new DssMissingRecordException(
-							"Unable to find matching DTS path for B-Part: " + detailedIssue.getLinkedVar() + " and DTS ID: " + dtsId);
+							"Unable to find matching DTS ID: "  + dtsId + " and DSS Path: " + detailedIssue.getLinkedVar());
 				}
 				retval = timeSeriesContainerToMap(primarySeries);
 				instance.addDtsLinkToCache(_scenarioRun, dtsId, retval);

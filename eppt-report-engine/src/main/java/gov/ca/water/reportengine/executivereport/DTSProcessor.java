@@ -12,6 +12,9 @@
 
 package gov.ca.water.reportengine.executivereport;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.Month;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -102,22 +105,26 @@ public class DTSProcessor
 		SubModule.FlagType flagValue = sm.getFlagValue();
 		for(DetailedIssue detailedIssue : linkedRecords)
 		{
-
+			LOGGER.at(Level.INFO).log("Processing DTS ID: %s and DTS Record Path: %s ",
+					detailedIssue.getDetailedIssueId(), detailedIssue.getLinkedVar());
 			checkInterrupt();
 			DSSGrabber1SvcImpl dssGrabber1Svc = buildDssGrabber(epptScenarioRun, detailedIssue);
 			TimeSeriesContainer[] primarySeries = dssGrabber1Svc.getPrimarySeries();
-			if(primarySeries != null && primarySeries[0] != null)
+			if(primarySeries != null && primarySeries[0] != null && primarySeries[0].values.length > 0)
 			{
 				TimeSeriesContainer result = primarySeries[0];
-
-
 				FlagViolation flagViolationFromRecord = createFlagViolationFromRecord(result, flagValue, detailedIssue);
 				if(flagViolationFromRecord != null)
 				{
 					violations.add(flagViolationFromRecord);
 				}
 			}
-
+			else
+			{
+				_standardSummaryErrors.addError(LOGGER,
+						"Unable to process flagged violations for DTS ID: "
+								+ detailedIssue.getDetailedIssueId() + " DTS record: " + detailedIssue.getLinkedVar());
+			}
 		}
 		return violations;
 	}
@@ -198,20 +205,25 @@ public class DTSProcessor
 
 	private FlagViolation createFlagViolationFromRecord(TimeSeriesContainer tsc, SubModule.FlagType flagType, DetailedIssue detailedIssue)
 	{
-		List<HecTime> violationTimes = new ArrayList<>();
-		HecTimeArray times = tsc.getTimes();
-		for(int i = 0; i < times.numberElements(); i++)
+		FlagViolation retval = null;
+		try
 		{
-			addTimeIfInViolation(tsc, flagType, violationTimes, times, i);
+			List<HecTime> violationTimes = new ArrayList<>();
+			HecTimeArray times = tsc.getTimes();
+			for(int i = 0; i < times.numberElements(); i++)
+			{
+				addTimeIfInViolation(tsc, flagType, violationTimes, times, i);
+			}
+			if(!violationTimes.isEmpty())
+			{
+				retval = new FlagViolation(violationTimes, detailedIssue.getLinkedVar());
+			}
 		}
-		if(violationTimes.isEmpty())
+		catch(RuntimeException e)
 		{
-			return null;
+			_standardSummaryErrors.addError(LOGGER, "Error processing flagged violation", e);
 		}
-		else
-		{
-			return new FlagViolation(violationTimes, detailedIssue.getLinkedVar());
-		}
+		return retval;
 	}
 
 	private void addTimeIfInViolation(TimeSeriesContainer tsc, SubModule.FlagType flagType, List<HecTime> violationTimes, HecTimeArray times, int i)

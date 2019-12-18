@@ -23,6 +23,7 @@ import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalDate;
@@ -406,14 +407,25 @@ public class QAQCReportPanel extends RmaJPanel
 		_qaqcTextPane.setText("");
 		if(_baseRun != null)
 		{
-			boolean exists = Paths.get(_pdfOutput.getText()).toFile().exists();
+			Path reportPath = Paths.get(_pdfOutput.getText());
+			boolean exists = reportPath.toFile().exists();
 			if(exists)
 			{
 				int warning = JOptionPane.showConfirmDialog(this, "PDF: " + _pdfOutput.getText() + " already exists. Do you wish to overwrite?",
 						"Warning", JOptionPane.YES_NO_OPTION);
 				if(warning == JOptionPane.YES_OPTION)
 				{
-					_qaqcReportFuture = _executor.submit(this::generateQAQCReport);
+					try
+					{
+						Files.deleteIfExists(reportPath);
+						_qaqcReportFuture = _executor.submit(this::generateQAQCReport);
+					}
+					catch(IOException e)
+					{
+						LOGGER.log(Level.WARNING, "Unable to delete existing report", e);
+						JOptionPane.showMessageDialog(this, "Unable to delete report.\n\n" + e.getMessage(),
+								"Error", JOptionPane.ERROR_MESSAGE);
+					}
 				}
 			}
 			else
@@ -1228,7 +1240,14 @@ public class QAQCReportPanel extends RmaJPanel
 		{
 			if(thrown != null)
 			{
-				appendErrorText("\t" + thrown.getMessage());
+				if(thrown instanceof RuntimeException)
+				{
+					appendErrorText("\t" + thrown.toString());
+				}
+				else
+				{
+					appendErrorText("\t" + thrown.getMessage());
+				}
 				Throwable cause = thrown.getCause();
 				if(cause != null)
 				{
