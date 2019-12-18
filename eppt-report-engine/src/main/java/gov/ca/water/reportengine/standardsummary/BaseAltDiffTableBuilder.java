@@ -334,7 +334,6 @@ class BaseAltDiffTableBuilder extends TableBuilder
 		{
 			LOGGER.log(Level.FINE, "Missing record, displaying as NR", e);
 			retval.setTextContent(NO_RECORD_TEXT);
-
 		}
 		catch(EpptReportException e)
 		{

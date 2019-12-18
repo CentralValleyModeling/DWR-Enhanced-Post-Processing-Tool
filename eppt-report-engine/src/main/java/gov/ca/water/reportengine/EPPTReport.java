@@ -217,7 +217,7 @@ public class EPPTReport
 		if(canPrintDetailedIssues() || canPrintExecutiveSummary())
 		{
 
-			DTSProcessor dtsProcessor = new DTSProcessor(_modules);
+			DTSProcessor dtsProcessor = new DTSProcessor(_modules, _standardSummaryErrors);
 			return dtsProcessor.processDSSFiles(allRuns);
 		}
 		else

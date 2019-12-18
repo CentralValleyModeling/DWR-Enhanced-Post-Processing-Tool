@@ -34,6 +34,7 @@ import java.util.logging.Logger;
 import javax.swing.*;
 
 import calsim.app.Project;
+import gov.ca.water.calgui.bo.DetailedIssue;
 import gov.ca.water.calgui.bo.GUILinksAllModelsBO;
 import gov.ca.water.calgui.bo.ResultUtilsBO;
 import gov.ca.water.calgui.bo.ThresholdLinksBO;
@@ -115,7 +116,6 @@ public class DSSGrabber1SvcImpl implements IDSSGrabber1Svc
 	// Number of scenarios passed in list parameter
 	private double[][] _annualTAFs;
 	private double[][] _annualTAFsDiff;
-	private ThresholdLinksBO _threshold;
 
 	public DSSGrabber1SvcImpl()
 	{
@@ -231,6 +231,21 @@ public class DSSGrabber1SvcImpl implements IDSSGrabber1Svc
 	}
 
 	@Override
+	public void setDtsLink(DetailedIssue dtsLink)
+	{
+		if(dtsLink != null)
+		{
+			_primaryDSSName.clear();
+			GUILinksAllModelsBO.Model.values().forEach(m -> _primaryDSSName.put(m, dtsLink.getLinkedVar()));
+			_thresholdDSSName.clear();
+			_secondaryDSSName.clear();
+			_axisLabel = "";
+			_plotTitle = dtsLink.getTitle();
+			_legend = dtsLink.getLinkedVar();
+		}
+	}
+
+	@Override
 	public void setGuiLink(GUILinksAllModelsBO guiLinksAllModelsBO)
 	{
 		if(guiLinksAllModelsBO != null)
@@ -249,24 +264,39 @@ public class DSSGrabber1SvcImpl implements IDSSGrabber1Svc
 	@Override
 	public void setLocation(String locationName)
 	{
-		locationName = locationName.trim();
-		if(locationName.startsWith("/"))
+		if(locationName != null)
 		{
-			// Handle names passed from WRIMS GUI
-			String[] parts = locationName.split("/");
-			_plotTitle = locationName;
-			_primaryDSSName.clear();
-			_primaryDSSName.put(_baseScenarioRun.getModel(), parts[2] + "/" + parts[3]);
-			_secondaryDSSName.clear();
-			_axisLabel = "";
-			_legend = "";
+			locationName = locationName.trim();
+			if(locationName.startsWith("/"))
+			{
+				// Handle names passed from WRIMS GUI
+				String[] parts = locationName.split("/");
+				_plotTitle = locationName;
+				_primaryDSSName.clear();
+				_primaryDSSName.put(_baseScenarioRun.getModel(), parts[2] + "/" + parts[3]);
+				_secondaryDSSName.clear();
+				_axisLabel = "";
+				_legend = "";
+			}
 		}
 	}
 
 	@Override
 	public void setThresholdLink(ThresholdLinksBO objById)
 	{
-		_threshold = objById;
+		if(objById != null)
+		{
+			_primaryDSSName.clear();
+			GUILinksAllModelsBO.Model.values()
+									 .stream()
+									 .map(objById::getModelData)
+									 .forEach(d -> _primaryDSSName.put(d.getModel(), d.getPrimary()));
+			_thresholdDSSName.clear();
+			_secondaryDSSName.clear();
+			_axisLabel = objById.getLabel();
+			_plotTitle = "";
+			_legend = "";
+		}
 	}
 
 	/*
@@ -512,13 +542,15 @@ public class DSSGrabber1SvcImpl implements IDSSGrabber1Svc
 				// Assign F-Part for each DSS - use default if not specified,
 				// otherwise last part in supplied name.
 
+				boolean missingBOrCPart = false;
 				String[] dssNames = new String[dssNames1.length];
 				for(int i = 0; i < dssNames1.length; i++)
 				{
 					String[] nameParts = dssNames1[i].split("/");
 					if(nameParts.length < 2)
 					{
-						dssNames[i] = "MISSING_B/OR_CPART";
+						dssNames[i] = nameParts[0] + "/*";
+						missingBOrCPart = true;
 					}
 					else
 					{
@@ -531,8 +563,10 @@ public class DSSGrabber1SvcImpl implements IDSSGrabber1Svc
 				String hecFPart = dssPath.getFPart();
 				String firstPath = "/" + hecAPart + "/" + dssNames[0] + "//" + hecEPart + "/" + hecFPart + "/";
 
-				result = (TimeSeriesContainer) hecDss.get(firstPath, true);
-				LOGGER.fine(firstPath);
+				if(!missingBOrCPart)
+				{
+					result = (TimeSeriesContainer) hecDss.get(firstPath, true);
+				}
 				String message = null;
 				if((result == null) || (result.numberValues < 1))
 				{
@@ -778,11 +812,6 @@ public class DSSGrabber1SvcImpl implements IDSSGrabber1Svc
 					}
 				}
 			}
-			else
-			{
-				LOGGER.log(Level.WARNING, "No matching DV GUI Links record in Model: {0} because the path is null",
-						new Object[]{baseModel});
-			}
 		}
 		catch(RuntimeException ex)
 		{
@@ -866,63 +895,6 @@ public class DSSGrabber1SvcImpl implements IDSSGrabber1Svc
 						new Object[]{baseModel, baseDssPathName});
 			}
 		}
-		return results;
-	}
-
-	public TimeSeriesContainer[] getThresholdTimeSeries()
-	{
-
-		TimeSeriesContainer[] results = null;
-
-		try
-		{
-			checkReadiness();
-
-			// Store number of scenarios
-			results = new TimeSeriesContainer[_alternatives.size() + 1];
-			GUILinksAllModelsBO.Model baseModel = _baseScenarioRun.getModel();
-			ThresholdLinksBO.ModelData modelData = _threshold.getModelData(baseModel);
-			if(modelData != null)
-			{
-				String baseDssPathName = modelData.getPrimary();
-				// Base first
-				EpptDssContainer dssContainer = _baseScenarioRun.getDssContainer();
-				TimeSeriesContainer oneSeries = getOneTimeSeriesFromAllModels(dssContainer,
-						_baseScenarioRun.getModel(), baseDssPathName);
-				results[0] = oneSeries;
-
-				// Then scenarios
-
-				for(int i = 0; i < _alternatives.size(); i++)
-				{
-					EpptScenarioRun epptScenarioRun = _alternatives.get(i);
-					TimeSeriesContainer tsc = null;
-
-					GUILinksAllModelsBO.Model altModel = epptScenarioRun.getModel();
-					ThresholdLinksBO.ModelData altModelData = _threshold.getModelData(altModel);
-					if(altModelData != null)
-					{
-						String altDssPathName = altModelData.getPrimary();
-
-						tsc = getOneTimeSeriesFromAllModels(epptScenarioRun.getDssContainer(),
-								epptScenarioRun.getModel(), altDssPathName);
-					}
-					results[i + 1] = tsc;
-				}
-			}
-			else
-			{
-				LOGGER.log(Level.WARNING, "No matching Threshold Links record in for Model: {0} with path: {1}",
-						new Object[]{baseModel, baseModel});
-			}
-		}
-		catch(RuntimeException ex)
-		{
-			String msg = "Unable to get time series for threshold: " + _threshold;
-			LOGGER.log(Level.INFO, msg);
-			LOGGER.log(Level.FINE, msg, ex);
-		}
-
 		return results;
 	}
 

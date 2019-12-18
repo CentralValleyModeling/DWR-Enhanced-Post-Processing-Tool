@@ -189,7 +189,7 @@ public class DetailedIssueProcessor
 		DSSGrabber1SvcImpl grabber1Svc = buildDssGrabber(run, guiID, thresholdID);
 
 		//get the specific container for the threshold values
-		TimeSeriesContainer[] thresholdTimeSeries = grabber1Svc.getThresholdTimeSeries();
+		TimeSeriesContainer[] thresholdTimeSeries = grabber1Svc.getPrimarySeries();
 		TimeSeriesContainer thresholdSeriesContainer = null;
 		if(thresholdTimeSeries != null && thresholdTimeSeries.length > 0)
 		{

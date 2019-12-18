@@ -425,9 +425,29 @@ class TestJythonLambda
 		WaterYearIndex waterYearIndex = new WaterYearIndex("Sac", new ArrayList<>(), new ArrayList<>());
 		WaterYearPeriod waterYearType = new WaterYearPeriod("Wet");
 		List<String> collect = dssReader.getDtsData(170).entrySet().stream().filter(periodFilter).filter(
-				e -> e.getValue() > dssReader.getThresholdData(2).get(e.getKey())).map(
-				e -> buildListPrefix(e, waterYearIndex, waterYearType) + String.join(",", String.valueOf(e.getValue()),
-						String.valueOf(dssReader.getThresholdData(2).get(e.getKey())))).collect(toList());
+				e -> {
+					try
+					{
+						return e.getValue() > dssReader.getThresholdData(2).get(e.getKey());
+					}
+					catch(DssMissingRecordException ex)
+					{
+						ex.printStackTrace();
+						return false;
+					}
+				}).map(
+				e -> {
+					try
+					{
+						return buildListPrefix(e, waterYearIndex, waterYearType) + String.join(",", String.valueOf(e.getValue()),
+								String.valueOf(dssReader.getThresholdData(2).get(e.getKey())));
+					}
+					catch(DssMissingRecordException ex)
+					{
+						ex.printStackTrace();
+						return "";
+					}
+				}).collect(toList());
 		JythonScriptRunner runner = new JythonScriptRunner(scenarioRun, periodFilter);
 		runner.setPeriodFilter(periodFilter);
 		runner.setWaterYearIndex(waterYearIndex);
@@ -448,9 +468,29 @@ class TestJythonLambda
 		WaterYearIndex waterYearIndex = new WaterYearIndex("Sac", new ArrayList<>(), new ArrayList<>());
 		WaterYearPeriod waterYearType = new WaterYearPeriod("Wet");
 		List<String> collect = dssReader.getDtsData(170).entrySet().stream().filter(periodFilter).filter(
-				e -> e.getValue() < dssReader.getThresholdData(2).get(e.getKey())).map(
-				e -> buildListPrefix(e, waterYearIndex, waterYearType) + String.join(",", String.valueOf(e.getValue()),
-						String.valueOf(dssReader.getThresholdData(2).get(e.getKey())))).collect(toList());
+				e -> {
+					try
+					{
+						return e.getValue() < dssReader.getThresholdData(2).get(e.getKey());
+					}
+					catch(DssMissingRecordException ex)
+					{
+						ex.printStackTrace();
+						return false;
+					}
+				}).map(
+				e -> {
+					try
+					{
+						return buildListPrefix(e, waterYearIndex, waterYearType) + String.join(",", String.valueOf(e.getValue()),
+								String.valueOf(dssReader.getThresholdData(2).get(e.getKey())));
+					}
+					catch(DssMissingRecordException ex)
+					{
+						ex.printStackTrace();
+						return "";
+					}
+				}).collect(toList());
 		JythonScriptRunner runner = new JythonScriptRunner(scenarioRun, periodFilter);
 		runner.setPeriodFilter(periodFilter);
 		runner.setWaterYearIndex(waterYearIndex);
@@ -471,9 +511,29 @@ class TestJythonLambda
 		WaterYearIndex waterYearIndex = new WaterYearIndex("Sac", new ArrayList<>(), new ArrayList<>());
 		WaterYearPeriod waterYearType = new WaterYearPeriod("Wet");
 		List<String> collect = dssReader.getDtsData(170).entrySet().stream().filter(periodFilter).filter(
-				e -> e.getValue() < dssReader.getThresholdData(2).get(e.getKey())).map(
-				e -> buildListPrefix(e, waterYearIndex, waterYearType) + String.join(",", String.valueOf(e.getValue()),
-						String.valueOf(dssReader.getThresholdData(2).get(e.getKey())))).collect(toList());
+				e -> {
+					try
+					{
+						return e.getValue() < dssReader.getThresholdData(2).get(e.getKey());
+					}
+					catch(DssMissingRecordException ex)
+					{
+						ex.printStackTrace();
+						return false;
+					}
+				}).map(
+				e -> {
+					try
+					{
+						return buildListPrefix(e, waterYearIndex, waterYearType) + String.join(",", String.valueOf(e.getValue()),
+								String.valueOf(dssReader.getThresholdData(2).get(e.getKey())));
+					}
+					catch(DssMissingRecordException ex)
+					{
+						ex.printStackTrace();
+						return "";
+					}
+				}).collect(toList());
 		JythonScriptRunner runner = new JythonScriptRunner(scenarioRun, periodFilter);
 		runner.setPeriodFilter(periodFilter);
 		runner.setWaterYearIndex(waterYearIndex);
@@ -551,7 +611,15 @@ class TestJythonLambda
 
 	private Optional<Map.Entry<LocalDateTime, Double>> getMatchingGuiLinkEntry(DssReader dssReader, int guiLinkId, Map.Entry<LocalDateTime, Double> v)
 	{
-		return dssReader.getGuiLinkData(guiLinkId).entrySet().stream().filter(e -> e.getKey().equals(v.getKey())).findAny();
+		try
+		{
+			return dssReader.getGuiLinkData(guiLinkId).entrySet().stream().filter(e -> e.getKey().equals(v.getKey())).findAny();
+		}
+		catch(DssMissingRecordException e)
+		{
+			e.printStackTrace();
+			return Optional.empty();
+		}
 	}
 
 	@Test

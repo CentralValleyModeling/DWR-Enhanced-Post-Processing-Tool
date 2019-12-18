@@ -16,6 +16,7 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
 
+import gov.ca.water.calgui.bo.DetailedIssue;
 import gov.ca.water.calgui.bo.GUILinksAllModelsBO;
 import gov.ca.water.calgui.bo.ThresholdLinksBO;
 import gov.ca.water.calgui.project.EpptScenarioRun;
@@ -56,6 +57,8 @@ public interface IDSSGrabber1Svc
 	 * @param scenarioRun scenario to use as base.
 	 */
 	void setScenarioRuns(EpptScenarioRun scenarioRun, List<EpptScenarioRun> alternatives);
+
+	void setDtsLink(DetailedIssue dtsLink);
 
 	void setGuiLink(GUILinksAllModelsBO guiLinksAllModelsBO);
 

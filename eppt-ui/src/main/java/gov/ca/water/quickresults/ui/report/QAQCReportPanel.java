@@ -37,6 +37,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.NavigableMap;
 import java.util.Objects;
+import java.util.TreeMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
@@ -64,6 +65,7 @@ import gov.ca.water.calgui.busservice.impl.WaterYearDefinitionSvc;
 import gov.ca.water.calgui.busservice.impl.WaterYearTableReader;
 import gov.ca.water.calgui.constant.EpptPreferences;
 import gov.ca.water.calgui.project.EpptScenarioRun;
+import gov.ca.water.calgui.scripts.DssMissingRecordException;
 import gov.ca.water.calgui.scripts.DssReader;
 import gov.ca.water.calgui.wresl.ProcessOutputConsumer;
 import gov.ca.water.calgui.wresl.WreslScriptException;
@@ -1062,8 +1064,16 @@ public class QAQCReportPanel extends RmaJPanel
 
 	private Date getEndDate(EpptScenarioRun baseRun)
 	{
-		NavigableMap<LocalDateTime, Double> guiLinkData = new DssReader(baseRun, LocalDateTime.of(1850, Month.JANUARY, 1, 0, 0),
-				LocalDateTime.of(2150, Month.JANUARY, 1, 0, 0)).getGuiLinkData(102);
+		NavigableMap<LocalDateTime, Double> guiLinkData = new TreeMap<>();
+		try
+		{
+			guiLinkData = new DssReader(baseRun, LocalDateTime.of(1850, Month.JANUARY, 1, 0, 0),
+					LocalDateTime.of(2150, Month.JANUARY, 1, 0, 0)).getGuiLinkData(102);
+		}
+		catch(DssMissingRecordException e)
+		{
+			LOGGER.log(Level.FINE, "Missing GUILink for ID 102", e);
+		}
 		if(!guiLinkData.isEmpty())
 		{
 			LocalDateTime localDateTime = guiLinkData.lastKey();
@@ -1077,8 +1087,16 @@ public class QAQCReportPanel extends RmaJPanel
 
 	private Date getStartDate(EpptScenarioRun baseRun)
 	{
-		NavigableMap<LocalDateTime, Double> guiLinkData = new DssReader(baseRun, LocalDateTime.of(1850, Month.JANUARY, 1, 0, 0),
-				LocalDateTime.of(2150, Month.JANUARY, 1, 0, 0)).getGuiLinkData(102);
+		NavigableMap<LocalDateTime, Double> guiLinkData = new TreeMap<>();
+		try
+		{
+			guiLinkData = new DssReader(baseRun, LocalDateTime.of(1850, Month.JANUARY, 1, 0, 0),
+					LocalDateTime.of(2150, Month.JANUARY, 1, 0, 0)).getGuiLinkData(102);
+		}
+		catch(DssMissingRecordException e)
+		{
+			LOGGER.log(Level.FINE, "Missing GUILink for ID 102", e);
+		}
 		if(!guiLinkData.isEmpty())
 		{
 			LocalDateTime localDateTime = guiLinkData.firstKey();

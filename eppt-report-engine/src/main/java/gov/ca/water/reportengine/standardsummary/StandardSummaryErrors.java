@@ -29,22 +29,22 @@ public class StandardSummaryErrors
 {
 	private final List<Runnable> _loggingStatements = new ArrayList<>();
 
-	void addError(Logger logger, String message)
+	public void addError(Logger logger, String message)
 	{
 		_loggingStatements.add(()->logger.log(Level.WARNING, message));
 	}
 
-	void addError(Logger logger, String message, Exception exception)
+	public void addError(Logger logger, String message, Exception exception)
 	{
 		_loggingStatements.add(()->logger.log(Level.WARNING, message, exception));
 	}
 
-	void addError(FluentLogger logger, String message)
+	public void addError(FluentLogger logger, String message)
 	{
 		_loggingStatements.add(()->logger.at(Level.WARNING).log(message));
 	}
 
-	void addError(FluentLogger logger, String message, Exception exception)
+	public void addError(FluentLogger logger, String message, Exception exception)
 	{
 		_loggingStatements.add(()->logger.at(Level.WARNING).withCause(exception).log(message));
 	}

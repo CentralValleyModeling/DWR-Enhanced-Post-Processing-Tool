@@ -19,6 +19,7 @@ import gov.ca.water.reportengine.executivereport.DTSProcessor;
 import gov.ca.water.reportengine.executivereport.FlagViolation;
 import gov.ca.water.reportengine.executivereport.Module;
 import gov.ca.water.reportengine.executivereport.SubModule;
+import gov.ca.water.reportengine.standardsummary.StandardSummaryErrors;
 import org.junit.jupiter.api.Test;
 import org.w3c.dom.Document;
 
@@ -47,7 +48,7 @@ public class TestDetailedIssueReport extends TestDetailedIssuesReportBase
         List<Module> modules = mc.createModules(getCSVPath());
         List<DetailedIssue> allDetailedIssues = mc.getAllDetailedIssues();
 
-        DTSProcessor dtsProcessor = new DTSProcessor(modules);
+        DTSProcessor dtsProcessor = new DTSProcessor(modules, new StandardSummaryErrors());
         Map<EpptScenarioRun, Map<SubModule, List<FlagViolation>>> runsToFlagViolations = dtsProcessor.processDSSFiles(allRuns);
 
         Document doc = getDoc();
