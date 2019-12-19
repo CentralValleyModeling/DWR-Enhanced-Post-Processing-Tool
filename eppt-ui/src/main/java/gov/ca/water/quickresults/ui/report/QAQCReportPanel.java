@@ -22,6 +22,7 @@ import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -108,6 +109,7 @@ public class QAQCReportPanel extends RmaJPanel
 	private JButton _generateReportButton;
 	private JTextPane _qaqcTextPane;
 	private JTextField _toleranceTextField;
+	private JTextField _reportTitle;
 	private JTextField _reportSubtitle;
 	private JTextField _pdfOutput;
 	private JButton _fileChooserBtn;
@@ -415,16 +417,16 @@ public class QAQCReportPanel extends RmaJPanel
 						"Warning", JOptionPane.YES_NO_OPTION);
 				if(warning == JOptionPane.YES_OPTION)
 				{
-					try
+					try(FileOutputStream f = new FileOutputStream(reportPath.toString()))
 					{
-						Files.deleteIfExists(reportPath);
 						_qaqcReportFuture = _executor.submit(this::generateQAQCReport);
 					}
 					catch(IOException e)
 					{
 						LOGGER.log(Level.WARNING, "Unable to delete existing report", e);
-						JOptionPane.showMessageDialog(this, "Unable to delete report.\n\n" + e.getMessage(),
-								"Error", JOptionPane.ERROR_MESSAGE);
+						JOptionPane.showMessageDialog(this, "Error while creating the pdf file: " + reportPath.getFileName()
+										+ "\nIf the file is already open, please close it and try again.\n" + e.getMessage(),
+								"Error", JOptionPane.WARNING_MESSAGE);
 					}
 				}
 			}
@@ -470,6 +472,7 @@ public class QAQCReportPanel extends RmaJPanel
 			double tolerance = Double.parseDouble(_toleranceTextField.getText());
 			String author = _authorTextField.getText();
 			EpptPreferences.setUsername(author);
+			String title = _reportTitle.getText();
 			String subtitle = _reportSubtitle.getText();
 			WaterYearPeriodRange longTermRange = getLongTermRange();
 			Map<WaterYearPeriod, List<WaterYearPeriodRange>> waterYearPeriodRanges = _waterYearPeriodsPanel.getWaterYearPeriodRanges();
@@ -484,7 +487,7 @@ public class QAQCReportPanel extends RmaJPanel
 			SummaryReportParameters summaryReportParameters = new SummaryReportParameters(waterYearDefinition, waterYearIndex,
 					longTermRange, waterYearPeriodRanges, percentDiffStyle, disabledSummaryModules, commonPeriodFilter);
 			List<String> disabledReportModules = getDisabledReportModules();
-			ReportParameters reportParameters = new ReportParameters(tolerance, author, subtitle, summaryReportParameters,
+			ReportParameters reportParameters = new ReportParameters(tolerance, author, title, subtitle, summaryReportParameters,
 					disabledReportModules, true, true);
 			qaqcReportGenerator.generateQAQCReport(_baseRun, _altRun, reportParameters,
 					pathToWriteOut);
@@ -684,7 +687,7 @@ public class QAQCReportPanel extends RmaJPanel
 		label3.setText("Output File:");
 		gbc = new GridBagConstraints();
 		gbc.gridx = 0;
-		gbc.gridy = 4;
+		gbc.gridy = 5;
 		gbc.fill = GridBagConstraints.HORIZONTAL;
 		gbc.insets = new Insets(5, 5, 5, 5);
 		panel8.add(label3, gbc);
@@ -692,7 +695,7 @@ public class QAQCReportPanel extends RmaJPanel
 		panel11.setLayout(new BorderLayout(2, 0));
 		gbc = new GridBagConstraints();
 		gbc.gridx = 1;
-		gbc.gridy = 4;
+		gbc.gridy = 5;
 		gbc.fill = GridBagConstraints.BOTH;
 		gbc.insets = new Insets(5, 5, 5, 5);
 		panel8.add(panel11, gbc);
@@ -709,14 +712,14 @@ public class QAQCReportPanel extends RmaJPanel
 		label4.setText("DSS Compare Tolerance:");
 		gbc = new GridBagConstraints();
 		gbc.gridx = 0;
-		gbc.gridy = 6;
+		gbc.gridy = 7;
 		gbc.fill = GridBagConstraints.HORIZONTAL;
 		gbc.insets = new Insets(5, 5, 5, 5);
 		panel8.add(label4, gbc);
 		_toleranceTextField.setText("");
 		gbc = new GridBagConstraints();
 		gbc.gridx = 1;
-		gbc.gridy = 6;
+		gbc.gridy = 7;
 		gbc.anchor = GridBagConstraints.WEST;
 		gbc.fill = GridBagConstraints.HORIZONTAL;
 		gbc.insets = new Insets(5, 5, 5, 5);
@@ -743,15 +746,15 @@ public class QAQCReportPanel extends RmaJPanel
 		label6.setText("QA/QC Report Subtitle:");
 		gbc = new GridBagConstraints();
 		gbc.gridx = 0;
-		gbc.gridy = 3;
+		gbc.gridy = 4;
 		gbc.fill = GridBagConstraints.HORIZONTAL;
 		gbc.insets = new Insets(5, 5, 5, 5);
 		panel8.add(label6, gbc);
 		_reportSubtitle = new JTextField();
-		_reportSubtitle.setText("Subtitle");
+		_reportSubtitle.setText("");
 		gbc = new GridBagConstraints();
 		gbc.gridx = 1;
-		gbc.gridy = 3;
+		gbc.gridy = 4;
 		gbc.weightx = 1.0;
 		gbc.anchor = GridBagConstraints.WEST;
 		gbc.fill = GridBagConstraints.HORIZONTAL;
@@ -761,7 +764,7 @@ public class QAQCReportPanel extends RmaJPanel
 		label7.setText("Percent Diff Format:");
 		gbc = new GridBagConstraints();
 		gbc.gridx = 0;
-		gbc.gridy = 7;
+		gbc.gridy = 8;
 		gbc.fill = GridBagConstraints.HORIZONTAL;
 		gbc.insets = new Insets(5, 5, 5, 5);
 		panel8.add(label7, gbc);
@@ -769,7 +772,7 @@ public class QAQCReportPanel extends RmaJPanel
 		label8.setText("Long Term Start Year:");
 		gbc = new GridBagConstraints();
 		gbc.gridx = 0;
-		gbc.gridy = 8;
+		gbc.gridy = 9;
 		gbc.fill = GridBagConstraints.HORIZONTAL;
 		gbc.insets = new Insets(5, 5, 5, 5);
 		panel8.add(label8, gbc);
@@ -777,14 +780,14 @@ public class QAQCReportPanel extends RmaJPanel
 		label9.setText("Long Term End Year:");
 		gbc = new GridBagConstraints();
 		gbc.gridx = 0;
-		gbc.gridy = 9;
+		gbc.gridy = 10;
 		gbc.fill = GridBagConstraints.HORIZONTAL;
 		gbc.insets = new Insets(5, 5, 5, 5);
 		panel8.add(label9, gbc);
 		_percentDiffStyle = new JComboBox();
 		gbc = new GridBagConstraints();
 		gbc.gridx = 1;
-		gbc.gridy = 7;
+		gbc.gridy = 8;
 		gbc.anchor = GridBagConstraints.WEST;
 		gbc.fill = GridBagConstraints.HORIZONTAL;
 		gbc.insets = new Insets(5, 5, 5, 5);
@@ -792,14 +795,14 @@ public class QAQCReportPanel extends RmaJPanel
 		_longTermStartYear = new RmaJIntegerField();
 		gbc = new GridBagConstraints();
 		gbc.gridx = 1;
-		gbc.gridy = 8;
+		gbc.gridy = 9;
 		gbc.fill = GridBagConstraints.HORIZONTAL;
 		gbc.insets = new Insets(5, 5, 5, 5);
 		panel8.add(_longTermStartYear, gbc);
 		_longTermEndYear = new RmaJIntegerField();
 		gbc = new GridBagConstraints();
 		gbc.gridx = 1;
-		gbc.gridy = 9;
+		gbc.gridy = 10;
 		gbc.fill = GridBagConstraints.HORIZONTAL;
 		gbc.insets = new Insets(5, 5, 5, 5);
 		panel8.add(_longTermEndYear, gbc);
@@ -807,7 +810,7 @@ public class QAQCReportPanel extends RmaJPanel
 		label10.setText("Common Period:");
 		gbc = new GridBagConstraints();
 		gbc.gridx = 0;
-		gbc.gridy = 10;
+		gbc.gridy = 11;
 		gbc.fill = GridBagConstraints.HORIZONTAL;
 		gbc.insets = new Insets(5, 5, 5, 5);
 		panel8.add(label10, gbc);
@@ -815,7 +818,7 @@ public class QAQCReportPanel extends RmaJPanel
 		panel12.setLayout(new FlowLayout(FlowLayout.LEFT, 5, 5));
 		gbc = new GridBagConstraints();
 		gbc.gridx = 1;
-		gbc.gridy = 10;
+		gbc.gridy = 11;
 		gbc.fill = GridBagConstraints.BOTH;
 		gbc.insets = new Insets(5, 5, 5, 5);
 		panel8.add(panel12, gbc);
@@ -838,9 +841,27 @@ public class QAQCReportPanel extends RmaJPanel
 		_openReportButton.setText("Open Report");
 		gbc = new GridBagConstraints();
 		gbc.gridx = 1;
-		gbc.gridy = 5;
+		gbc.gridy = 6;
 		gbc.anchor = GridBagConstraints.EAST;
 		panel8.add(_openReportButton, gbc);
+		final JLabel label13 = new JLabel();
+		label13.setText("QA/QC Report Title:");
+		gbc = new GridBagConstraints();
+		gbc.gridx = 0;
+		gbc.gridy = 3;
+		gbc.fill = GridBagConstraints.HORIZONTAL;
+		gbc.insets = new Insets(5, 5, 5, 5);
+		panel8.add(label13, gbc);
+		_reportTitle = new JTextField();
+		_reportTitle.setText("EPPT QA/QC Report");
+		gbc = new GridBagConstraints();
+		gbc.gridx = 1;
+		gbc.gridy = 3;
+		gbc.weightx = 1.0;
+		gbc.anchor = GridBagConstraints.WEST;
+		gbc.fill = GridBagConstraints.HORIZONTAL;
+		gbc.insets = new Insets(5, 5, 5, 5);
+		panel8.add(_reportTitle, gbc);
 		final JPanel panel13 = new JPanel();
 		panel13.setLayout(new BorderLayout(0, 0));
 		panel13.setPreferredSize(new Dimension(500, 200));
@@ -925,22 +946,22 @@ public class QAQCReportPanel extends RmaJPanel
 		final JPanel panel18 = new JPanel();
 		panel18.setLayout(new GridBagLayout());
 		panel17.add(panel18, BorderLayout.NORTH);
-		final JLabel label13 = new JLabel();
-		label13.setText("Water Year Definition:");
+		final JLabel label14 = new JLabel();
+		label14.setText("Water Year Definition:");
 		gbc = new GridBagConstraints();
 		gbc.gridx = 0;
 		gbc.gridy = 0;
 		gbc.anchor = GridBagConstraints.WEST;
 		gbc.insets = new Insets(5, 5, 5, 5);
-		panel18.add(label13, gbc);
-		final JLabel label14 = new JLabel();
-		label14.setText("Water Year Index:");
+		panel18.add(label14, gbc);
+		final JLabel label15 = new JLabel();
+		label15.setText("Water Year Index:");
 		gbc = new GridBagConstraints();
 		gbc.gridx = 0;
 		gbc.gridy = 1;
 		gbc.anchor = GridBagConstraints.WEST;
 		gbc.insets = new Insets(5, 5, 5, 5);
-		panel18.add(label14, gbc);
+		panel18.add(label15, gbc);
 		_waterYearDefinitionCombo = new JComboBox();
 		_waterYearDefinitionCombo.setEnabled(true);
 		gbc = new GridBagConstraints();

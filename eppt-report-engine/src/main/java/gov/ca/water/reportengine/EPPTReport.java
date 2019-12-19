@@ -546,8 +546,9 @@ public class EPPTReport
 			altNames.add(altRun.getName());
 		}
 		String author = _reportParameters.getAuthor();
+		String title = _reportParameters.getTitle();
 		String subtitle = _reportParameters.getSubtitle();
-		ReportHeader rh = new ReportHeader(author, subtitle, _baseRun.getName(), altNames);
+		ReportHeader rh = new ReportHeader(author, title, subtitle, _baseRun.getName(), altNames);
 		ReportHeaderXMLCreator rhWriter = new ReportHeaderXMLCreator();
 		return rhWriter.createReportHeaderElement(rh, doc);
 	}

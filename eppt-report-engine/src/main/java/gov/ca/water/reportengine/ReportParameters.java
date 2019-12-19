@@ -26,17 +26,19 @@ public class ReportParameters
 {
 	private final double _tolerance;
 	private final String _author;
+	private final String _title;
 	private final String _subtitle;
 	private final SummaryReportParameters _summaryReportParameters;
 	private final List<String> _disabledModules;
 	private final boolean _printCoverPage;
 	private final boolean _printToc;
 
-	public ReportParameters(double tolerance, String author, String subtitle, SummaryReportParameters summaryReportParameters,List<String> disabledModules,
+	public ReportParameters(double tolerance, String author, String title, String subtitle, SummaryReportParameters summaryReportParameters,List<String> disabledModules,
 							boolean printCoverPage, boolean printToc)
 	{
 		_tolerance = tolerance;
 		_author = author;
+		_title = title;
 		_subtitle = subtitle;
 		_summaryReportParameters = summaryReportParameters;
 		_disabledModules = disabledModules;
@@ -52,6 +54,11 @@ public class ReportParameters
 	public String getAuthor()
 	{
 		return _author;
+	}
+
+	public String getTitle()
+	{
+		return _title;
 	}
 
 	public String getSubtitle()
