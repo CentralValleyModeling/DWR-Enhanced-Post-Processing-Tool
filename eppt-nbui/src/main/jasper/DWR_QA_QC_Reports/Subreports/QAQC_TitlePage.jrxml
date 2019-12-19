@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Created with Jaspersoft Studio version 6.9.0.final using JasperReports Library version 6.9.0-cb8f9004be492ccc537180b49c026951f4220bf3  -->
+<!-- Created with Jaspersoft Studio version 6.10.0.final using JasperReports Library version 6.10.0-unknown  -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="QAQC_TitlePage" language="groovy" pageWidth="612" pageHeight="792" columnWidth="504" leftMargin="54" rightMargin="54" topMargin="54" bottomMargin="54" whenResourceMissingType="Empty" uuid="da75db69-3924-4f44-998a-80195014db99">
 	<property name="com.jaspersoft.studio.unit." value="pixel"/>
 	<property name="net.sf.jasperreports.print.create.bookmarks" value="true"/>
@@ -60,6 +60,9 @@
 	<field name="subtitle" class="java.lang.String">
 		<fieldDescription><![CDATA[subtitle]]></fieldDescription>
 	</field>
+	<field name="title" class="java.lang.String">
+		<fieldDescription><![CDATA[title]]></fieldDescription>
+	</field>
 	<field name="name" class="java.lang.String">
 		<fieldDescription><![CDATA[base/@name]]></fieldDescription>
 	</field>
@@ -109,7 +112,7 @@
 					<pen lineWidth="0.0"/>
 				</graphicElement>
 			</rectangle>
-			<textField pattern="">
+			<textField pattern="" isBlankWhenNull="true">
 				<reportElement mode="Transparent" x="0" y="168" width="380" height="70" backcolor="#FFFFFF" uuid="6d4da10e-e54b-4b42-8a46-e202ddbc63e2"/>
 				<box padding="2">
 					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
@@ -120,10 +123,10 @@
 				<textElement textAlignment="Left" verticalAlignment="Middle">
 					<font fontName="Arial" size="48"/>
 				</textElement>
-				<textFieldExpression><![CDATA["Demo QA/QC"]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{title}]]></textFieldExpression>
 				<anchorNameExpression><![CDATA[$P{TitlePage}]]></anchorNameExpression>
 			</textField>
-			<textField isStretchWithOverflow="true" pattern="">
+			<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true">
 				<reportElement mode="Transparent" x="0" y="238" width="380" height="39" backcolor="#FFFFFF" uuid="3a383d57-397e-447b-8828-7fd3fcff6026"/>
 				<box padding="2">
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
