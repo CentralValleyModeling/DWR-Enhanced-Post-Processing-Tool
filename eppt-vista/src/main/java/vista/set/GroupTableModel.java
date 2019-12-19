@@ -11,6 +11,16 @@
  */
 package vista.set;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Map;
+import java.util.NavigableMap;
+import java.util.Set;
+import java.util.TreeMap;
+import java.util.concurrent.ConcurrentHashMap;
 import javax.swing.table.AbstractTableModel;
 
 import vista.time.TimeWindow;
@@ -25,17 +35,38 @@ import vista.time.TimeWindow;
  */
 public class GroupTableModel extends AbstractTableModel
 {
+	private final List<DataReference> _combinedTwReferences = new ArrayList<>();
 	/**
 	 * the group
 	 */
-	private Group _group;
 
 	/**
 	 * Construct a table
 	 */
-	public GroupTableModel(Group g)
+	public GroupTableModel(Group group)
 	{
-		_group = g;
+		DataReference[] dataReferences = group.getAllDataReferences();
+		NavigableMap<Pathname, List<DataReference>> ref = new TreeMap<>(Comparator.comparing(Pathname::getFullPath));
+		for(DataReference dataReference : dataReferences)
+		{
+			Pathname pathname = Pathname.createPathname(dataReference.getPathname());
+			pathname.setPart(Pathname.D_PART, "");
+			List<DataReference> refsForPath = ref.computeIfAbsent(pathname, e -> new ArrayList<>());
+			refsForPath.add(dataReference);
+		}
+		for(List<DataReference> entry : ref.values())
+		{
+			if(!entry.isEmpty())
+			{
+				DataReference expandedRef = entry.get(0);
+				for(int i = 1; i < entry.size(); i++)
+				{
+					TimeWindow union = entry.get(i).getTimeWindow().union(expandedRef.getTimeWindow());
+					expandedRef = DataReference.createExpanded(expandedRef, union);
+				}
+				_combinedTwReferences.add(expandedRef);
+			}
+		}
 	}
 
 	/**
@@ -43,7 +74,7 @@ public class GroupTableModel extends AbstractTableModel
 	 */
 	public int getRowCount()
 	{
-		return _group.getNumberOfDataReferences();
+		return _combinedTwReferences.size();
 	}
 
 	/**
@@ -79,31 +110,22 @@ public class GroupTableModel extends AbstractTableModel
 			return new Integer(rowIndex + 1).toString();
 		}
 		columnIndex = columnIndex - 1;
-		if(columnIndex != Pathname.D_PART)
+		if(rowIndex < _combinedTwReferences.size())
 		{
-			// FIXME: can throw null pointer exception.
-			if(_group.getDataReference(rowIndex).getPathname() != null)
+			DataReference dataReference = _combinedTwReferences.get(rowIndex);
+			if(dataReference != null)
 			{
-				return _group.getDataReference(rowIndex).getPathname().getPart(
-						columnIndex);
-			}
-			else
-			{
-				return "";
+				if(columnIndex == Pathname.D_PART)
+				{
+					return dataReference.getTimeWindow();
+				}
+				else
+				{
+					return dataReference.getPathname().getPart(columnIndex);
+				}
 			}
 		}
-		else
-		{
-			TimeWindow tw = _group.getDataReference(rowIndex).getTimeWindow();
-			if(tw != null)
-			{
-				return tw.toString();
-			}
-			else
-			{
-				return "";
-			}
-		}
+		return null;
 	}
 
 	/**
