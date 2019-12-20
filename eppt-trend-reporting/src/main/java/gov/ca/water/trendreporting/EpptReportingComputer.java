@@ -149,8 +149,8 @@ class EpptReportingComputer
 					{
 						for(Map.Entry<LocalDateTime, Double> entry : input.entrySet())
 						{
-							LocalDateTime key = entry.getKey().minusMonths(1);
-							if(key.getMonth() == yearMonth.getMonth() && key.getYear() == yearMonth.getYear())
+							LocalDateTime key = entry.getKey();
+							if(key.getMonth() == yearMonth.plusMonths(1).getMonth() && key.getYear() == yearMonth.plusMonths(1).getYear())
 							{
 								LOGGER.log(Level.FINE, "Value for {0}: {1} YearMonth: {2}",
 										new Object[]{year, entry.getValue(), YearMonth.of(key.getYear(), key.getMonth())});
@@ -159,6 +159,7 @@ class EpptReportingComputer
 							}
 						}
 					}
+					Collections.sort(yearMonths);
 					if(dataMap.size() == yearMonths.size())
 					{
 						DoubleStream doubleStream = dataMap.values().stream().mapToDouble(e -> e);
@@ -171,16 +172,9 @@ class EpptReportingComputer
 						{
 							rollup = doubleStream.average();
 						}
-						YearMonth lastYearMonth = yearMonths.get(0);
-						Month lastMonth = lastYearMonth.getMonth();
-						int y = lastYearMonth.getYear();
-						if(lastMonth == Month.OCTOBER || lastMonth == Month.NOVEMBER || lastMonth == Month.DECEMBER)
-						{
-							y++;
-						}
 						Logger.getLogger(EpptReportingComputer.class.getName())
-							  .log(Level.FINE, "Average for " + y + ": " + rollup.getAsDouble());
-						int yearForOctSepDefinition = y;
+							  .log(Level.FINE, "Average for " + year + ": " + rollup.getAsDouble());
+						int yearForOctSepDefinition = year;
 						rollup.ifPresent(a -> retval.put(yearForOctSepDefinition, a));
 					}
 				}
