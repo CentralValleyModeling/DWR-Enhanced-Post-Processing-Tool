@@ -18,8 +18,11 @@ import java.awt.event.ActionListener;
 import javax.swing.*;
 
 import gov.ca.water.calgui.project.EpptScenarioRun;
+import gov.ca.water.calgui.project.EpptScenarioRunValidator;
 import gov.ca.water.quickresults.ui.EpptPanel;
 import gov.ca.water.quickresults.ui.projectconfig.scenarioconfig.ScenarioRunEditor;
+
+import hec.gui.NameDialog;
 
 
 /**
@@ -54,6 +57,9 @@ public class ProjectConfigurationListener implements ActionListener
 			case "btnEditScenario":
 				launchFileDialogToEditScenario(e);
 				break;
+			case "btnCopyScenario":
+				launchFileDialogToCopyScenario(e);
+				break;
 			case "btnDelScenario":
 				_projectConfigurationPanel.deleteScenario();
 				break;
@@ -80,6 +86,28 @@ public class ProjectConfigurationListener implements ActionListener
 		if(scenarioRun != null)
 		{
 			_projectConfigurationPanel.addScenario(scenarioRun);
+		}
+	}
+
+	private void launchFileDialogToCopyScenario(ActionEvent e)
+	{
+		EpptScenarioRun oldScenarioRun = _projectConfigurationPanel.getSelectedScenario();
+		if(oldScenarioRun != null)
+		{
+			NameDialog nameDialog = new NameDialog((Frame) SwingUtilities.windowForComponent(_projectConfigurationPanel), true);
+			nameDialog.setTitle("Copy Scenario Run");
+			nameDialog.setName(oldScenarioRun.getName() + " (Copy)");
+			nameDialog.setDescription(oldScenarioRun.getDescription());
+			nameDialog.setVisible(true);
+			if(!nameDialog.isCanceled())
+			{
+				String name = nameDialog.getName();
+				String description = nameDialog.getDescription();
+				EpptScenarioRun newScenarioRun = new EpptScenarioRun(name, description, oldScenarioRun);
+				_projectConfigurationPanel.addScenario(newScenarioRun);
+				_projectConfigurationPanel.updateRadioState();
+			}
+			nameDialog.dispose();
 		}
 	}
 

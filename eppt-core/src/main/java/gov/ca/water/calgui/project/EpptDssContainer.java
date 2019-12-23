@@ -41,6 +41,15 @@ public class EpptDssContainer
 		_extraDssFiles = Collections.unmodifiableList(extraDssFiles);
 	}
 
+	public EpptDssContainer(EpptDssContainer epptDssContainer)
+	{
+		_dvDssFile = epptDssContainer.getDvDssFile();
+		_svDssFile = epptDssContainer.getSvDssFile();
+		_ivDssFile = epptDssContainer.getIvDssFile();
+		_dtsDssFile = epptDssContainer.getDtsDssFile();
+		_extraDssFiles = Collections.unmodifiableList(new ArrayList<>(epptDssContainer.getExtraDssFiles()));
+	}
+
 	/**
 	 * @return path to the Derived Variable DSS file path
 	 */
