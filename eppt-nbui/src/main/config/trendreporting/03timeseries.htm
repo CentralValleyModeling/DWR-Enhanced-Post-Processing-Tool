@@ -30,27 +30,27 @@
 <body>
 <div class="btn-group btn-group-justified" data-toggle="buttons" id="toggle_group" style="margin-left:auto;margin-right:auto;width:25%">
     <label class="btn btn-primary active">
-        <input type="radio" name="plot_toggle" id="annual_plots" value="annual"/> Aggregate
+        <input type="radio" name="plot_toggle" id="aggregate_plots" value="aggregate"/> Aggregate
     </label>
     <label class="btn btn-primary">
-        <input type="radio" name="plot_toggle" id="monthly_plots" value="monthly"/> Discrete
+        <input type="radio" name="plot_toggle" id="discrete_plots" value="discrete"/> Discrete
     </label>
 </div>
-<div id="container_annual_tester" style="width:95%;height:84vh;"></div>
-<div id="container_monthly_tester" style="width:95%;height:84vh;"></div>
+<div id="container_aggregate_tester" style="width:95%;height:84vh;"></div>
+<div id="container_discrete_tester" style="width:95%;height:84vh;"></div>
 <script src="js/preinit.js"></script>
-<script src="js/timeseries_annual.js"></script>
-<script src="js/timeseries_monthly.js"></script>
+<script src="js/timeseries_aggregate.js"></script>
+<script src="js/timeseries_discrete.js"></script>
 <script src="js/timeseries.js"></script>
 <script type="text/javascript">
 
     $(document).ready(function () {
-        $("#container_monthly_tester").hide(500);
+        $("#container_discrete_tester").hide(500);
         $("#toggle_group :input").change(function() {
-            $("#container_annual").hide(500);
-            $("#container_annual_tester").hide(500);
-            $("#container_monthly").hide(500);
-            $("#container_monthly_tester").hide(500);
+            $("#container_aggregate").hide(500);
+            $("#container_aggregate_tester").hide(500);
+            $("#container_discrete").hide(500);
+            $("#container_discrete_tester").hide(500);
             $("#container_" + $(this).val()).show(500);
             $("#container_" + $(this).val() + '_tester').show(500);
         });

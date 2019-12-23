@@ -9,19 +9,19 @@
  *
  * GNU General Public License
  */
-function getPlotlyAnnualSeries(datum) {
+
+function getPlotlyMonthlySeries(datum) {
     var series = [];
     for (var i = 0; i < datum.length; i++) {
-        let timeSeries = datum[i]['period_filtered_time_series'];
+        let timeSeries = datum[i]['full_time_series'];
         let x = [];
         let y = [];
-        for(var j =0; j < timeSeries.length; j++){
-            x.push(timeSeries[j][0]);
+        for (var j = 0; j < timeSeries.length; j++) {
+            x.push(new Date(timeSeries[j][0]));
             y.push(timeSeries[j][1]);
         }
         series.push({
-            name:datum[i]['scenario_name'],
-            type: 'scatter',
+            name: datum[i]['scenario_name'],
             x: x,
             y: y,
             line: {color: datum[i]['scenario_color']}
@@ -30,9 +30,8 @@ function getPlotlyAnnualSeries(datum) {
     return series;
 }
 
-function plotAnnual(data) {
+function plotDiscrete(data) {
     var datum = data['scenario_run_data'];
-
     var layout = {
         font: PLOTLY_FONT,
         yaxis: {
@@ -54,31 +53,31 @@ function plotAnnual(data) {
             }
         },
         title: {
-            text: data['month_period_title'] + ' ' + data['gui_link_title'],
+            text: data['gui_link_title'],
             font: {
                 size: 20,
             }
         }
     };
-    Plotly.newPlot('container_annual_tester', getPlotlyAnnualSeries(datum), layout, {
+    Plotly.newPlot('container_discrete_tester', getPlotlyMonthlySeries(datum), layout, {
         displaylogo: false,
         modeBarButtonsToRemove: ['toImage', 'sendDataToCloud', 'editInChartStudio', 'lasso2d', 'select2d', 'resetScale2d'],
         scrollZoom: true,
         responsive: true
     });
-    $("#container_annual_tester").mousedown((ev) => {
+    $("#container_discrete_tester").mousedown((ev) => {
         if (ev.which === 3) {
-            openContextMenu('#container_annual_tester', ev, plotlyCopyToClipboardAnnual, plotlyExportFunction(document.getElementById("container_annual_tester")));
+            openContextMenu('#container_discrete_tester', ev, plotlyCopyToClipboardMonthly, plotlyExportFunction(document.getElementById("container_discrete_tester")));
         }
     });
 }
 
-function plotlyCopyToClipboardAnnual() {
-    let plot = document.getElementById("container_annual_tester");
+function plotlyCopyToClipboardMonthly() {
+    let plot = document.getElementById("container_discrete_tester");
     let layout = plot.layout;
     let data1 = plot.data;
-    var text = layout['title']['text'] + '\n' + 'Year\t' + layout['yaxis']['title']['text'] + '\n';
-    for(var i = 0; i < data1.length; i++){
+    var text = layout['title']['text'] + '\n' + 'Date\t' + layout['yaxis']['title']['text'] + '\n';
+    for (var i = 0; i < data1.length; i++) {
         text += '\t' + data1[i]['name']
     }
     text += '\n';
@@ -86,7 +85,7 @@ function plotlyCopyToClipboardAnnual() {
     let xarr = datum['x'];
     for (var j = 0; j < xarr.length; j++) {
         text += xarr[j];
-        for(var k = 0; k < data1.length; k++){
+        for (var k = 0; k < data1.length; k++) {
             let yarr = data1[k]['y'];
             text += '\t' + yarr[j];
         }
