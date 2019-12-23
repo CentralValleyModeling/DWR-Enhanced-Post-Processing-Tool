@@ -17,6 +17,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
+import static java.util.stream.Collectors.toList;
+
 /**
  * Company: Resource Management Associates
  *
@@ -43,11 +45,13 @@ public class EpptDssContainer
 
 	public EpptDssContainer(EpptDssContainer epptDssContainer)
 	{
-		_dvDssFile = epptDssContainer.getDvDssFile();
-		_svDssFile = epptDssContainer.getSvDssFile();
-		_ivDssFile = epptDssContainer.getIvDssFile();
-		_dtsDssFile = epptDssContainer.getDtsDssFile();
-		_extraDssFiles = Collections.unmodifiableList(new ArrayList<>(epptDssContainer.getExtraDssFiles()));
+		_dvDssFile = new NamedDssPath(epptDssContainer.getDvDssFile());
+		_svDssFile = new NamedDssPath(epptDssContainer.getSvDssFile());
+		_ivDssFile = new NamedDssPath(epptDssContainer.getIvDssFile());
+		_dtsDssFile = new NamedDssPath(epptDssContainer.getDtsDssFile());
+		_extraDssFiles = Collections.unmodifiableList(epptDssContainer.getExtraDssFiles().stream()
+																	  .map(NamedDssPath::new)
+																	  .collect(toList()));
 	}
 
 	/**
