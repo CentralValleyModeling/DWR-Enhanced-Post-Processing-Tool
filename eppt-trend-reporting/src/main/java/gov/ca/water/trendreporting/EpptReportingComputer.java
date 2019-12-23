@@ -273,8 +273,7 @@ class EpptReportingComputer
 		DSSGrabber1SvcImpl dssGrabber = new DSSGrabber1SvcImpl();
 		dssGrabber.setIsCFS(isCFS);
 		dssGrabber.setScenarioRuns(epptScenarioRun, Collections.emptyList());
-		GUILinksAllModelsBO guiLink = GuiLinksSeedDataSvcImpl.getSeedDataSvcImplInstance().getGuiLink(_guiLink.getCheckboxId());
-		dssGrabber.setGuiLink(guiLink);
+		dssGrabber.setGuiLink(_guiLink);
 		dssGrabber.setDateRange(start, end);
 		return dssGrabber;
 	}

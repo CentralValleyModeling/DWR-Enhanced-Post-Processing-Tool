@@ -153,27 +153,39 @@ public class TrendReportingParameters
 	public static class TrendParameter
 	{
 		private final int _index;
-		private final Integer _guiLinkId;
+		private final GUILinksAllModelsBO _guiLink;
 		private final String _titleOverride;
 
 		private TrendParameter(int index, Integer guiLinkId, String titleOverride)
 		{
 			_index = index;
-			_guiLinkId = guiLinkId;
+			IGuiLinksSeedDataSvc guiLinkService = GuiLinksSeedDataSvcImpl.getSeedDataSvcImplInstance();
+			if(guiLinkId != null)
+			{
+				_guiLink =  guiLinkService.getGuiLink(guiLinkId.toString());
+			}
+			else
+			{
+				_guiLink = null;
+			}
 			_titleOverride = titleOverride;
+		}
+
+		private TrendParameter(int index, GUILinksAllModelsBO guiLink, String title)
+		{
+			_index = index;
+			_guiLink = guiLink;
+			_titleOverride = title;
+		}
+
+		public static TrendParameter create(int index, GUILinksAllModelsBO guiLink, String titleOverride)
+		{
+			return new TrendParameter(index, guiLink, titleOverride);
 		}
 
 		public GUILinksAllModelsBO getGuiLink()
 		{
-			IGuiLinksSeedDataSvc guiLinkService = GuiLinksSeedDataSvcImpl.getSeedDataSvcImplInstance();
-			if(_guiLinkId != null)
-			{
-				return guiLinkService.getGuiLink(_guiLinkId.toString());
-			}
-			else
-			{
-				return null;
-			}
+			return _guiLink;
 		}
 
 		public String getTitle()
