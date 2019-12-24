@@ -917,7 +917,7 @@ public class DSSGrabber1SvcImpl implements IDSSGrabber1Svc
 				if(timeSeriesResult != null)
 				{
 					results[i] = (TimeSeriesContainer) timeSeriesResult.clone();
-					for(int j = 0; j < results[i].numberValues; j++)
+					for(int j = 0; j < results[i].values.length && j < timeSeriesResults[0].values.length; j++)
 					{
 						results[i].values[j] = results[i].values[j] - timeSeriesResults[0].values[j];
 					}

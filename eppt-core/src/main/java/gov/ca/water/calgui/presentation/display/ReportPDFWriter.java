@@ -48,6 +48,7 @@ import gov.ca.water.calgui.techservice.IErrorHandlingSvc;
 import gov.ca.water.calgui.techservice.impl.DialogSvcImpl;
 import gov.ca.water.calgui.techservice.impl.ErrorHandlingSvcImpl;
 import org.apache.log4j.Logger;
+import org.apache.log4j.Priority;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.JFreeChart;
 import org.jfree.chart.axis.ValueAxis;
@@ -124,14 +125,14 @@ public class ReportPDFWriter implements Writer
 		}
 		catch(DocumentException de)
 		{
-			LOG.debug(de.getMessage());
+			LOG.debug(de.getMessage(), de);
 			dialogSvc.getOK("Error while creating the pdf file: " + (new File(filename).getName()) + ". " + de.getMessage(),
 					JOptionPane.WARNING_MESSAGE);
 			return false;
 		}
 		catch(IOException ioe)
 		{
-			LOG.debug(ioe.getMessage());
+			LOG.debug(ioe.getMessage(), ioe);
 			dialogSvc.getOK("Error while creating the pdf file: " + (new File(
 							filename).getName()) + "\nIf the file is already open, please close it and try again.\n" + ioe.getMessage(),
 					JOptionPane.WARNING_MESSAGE);

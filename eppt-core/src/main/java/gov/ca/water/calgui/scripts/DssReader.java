@@ -68,9 +68,9 @@ public class DssReader
 	@Scriptable
 	public NavigableMap<LocalDateTime, Double> getGuiLinkData(int guiID, boolean mapToTaf) throws DssMissingRecordException
 	{
-		_units = null;
 		DssCache instance = DssCache.getInstance();
 		NavigableMap<LocalDateTime, Double> retval = instance.readGuiLinkFromCache(_scenarioRun, guiID);
+		_units = instance.readGuiLinkUnitsFromCache(_scenarioRun, guiID);
 		if(retval == null)
 		{
 			try
@@ -95,6 +95,7 @@ public class DssReader
 				retval = new TreeMap<>();
 			}
 		}
+		instance.addGuiLinkUnitsToCache(_scenarioRun, guiID, _units);
 		return retval;
 	}
 
@@ -116,10 +117,8 @@ public class DssReader
 			if(tsc.times != null)
 			{
 				String units = tsc.getUnits();
-				if(units != null)
-				{
-					_units = units;
-				}
+				LOGGER.at(Level.FINER).log("Timeseries %s units are %s", tsc.getShortName(), units);
+				_units = units;
 				for(int i = 0; i < tsc.times.length; i++)
 				{
 					HecTime hecTime = new HecTime();
@@ -187,9 +186,9 @@ public class DssReader
 	@Scriptable
 	public NavigableMap<LocalDateTime, Double> getDtsData(int dtsId, boolean mapToTaf) throws DssMissingRecordException
 	{
-		_units = null;
 		DssCache instance = DssCache.getInstance();
 		NavigableMap<LocalDateTime, Double> retval = instance.readDtsLinkFromCache(_scenarioRun, dtsId);
+		_units = instance.readDtsLinkUnitsFromCache(_scenarioRun, dtsId);
 		if(retval == null)
 		{
 			try
@@ -209,7 +208,7 @@ public class DssReader
 				if(primarySeries == null || primarySeries[0] == null)
 				{
 					throw new DssMissingRecordException(
-							"Unable to find matching DTS ID: "  + dtsId + " and DSS Path: " + detailedIssue.getLinkedVar());
+							"Unable to find matching DTS ID: " + dtsId + " and DSS Path: " + detailedIssue.getLinkedVar());
 				}
 				retval = timeSeriesContainerToMap(primarySeries);
 				instance.addDtsLinkToCache(_scenarioRun, dtsId, retval);
@@ -220,6 +219,7 @@ public class DssReader
 				retval = new TreeMap<>();
 			}
 		}
+		instance.addDtsLinkUnitsToCache(_scenarioRun, dtsId, _units);
 		return retval;
 	}
 
@@ -232,9 +232,9 @@ public class DssReader
 	@Scriptable
 	public NavigableMap<LocalDateTime, Double> getThresholdData(int thresholdId, boolean mapToTaf) throws DssMissingRecordException
 	{
-		_units = null;
 		DssCache instance = DssCache.getInstance();
 		NavigableMap<LocalDateTime, Double> retval = instance.readThresholdLinkFromCache(_scenarioRun, thresholdId);
+		_units = instance.readThresholdLinkUnitsFromCache(_scenarioRun, thresholdId);
 		if(retval == null)
 		{
 			try
@@ -262,9 +262,11 @@ public class DssReader
 
 			}
 		}
+		instance.addThresholdLinkUnitsToCache(_scenarioRun, thresholdId, _units);
 		return retval;
 	}
 
+	@Scriptable
 	public String getUnits()
 	{
 		return _units;

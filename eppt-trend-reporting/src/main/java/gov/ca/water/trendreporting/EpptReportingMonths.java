@@ -228,19 +228,20 @@ public final class EpptReportingMonths
 			if(_start != _end)
 			{
 				int i = 0;
-				long between = ChronoUnit.MONTHS.between(YearMonth.of(2001, _start), YearMonth.of(2010, _end));
-				between = between % 12;
+				long between = ChronoUnit.MONTHS.between(YearMonth.of(2001, _start), YearMonth.of(2010, _end)) % 12;
+				Month month = _start.plus(i);
+				YearMonth yearMonth;
+				if(isPreviousYear(month))
+				{
+					yearMonth = YearMonth.of(year - 1, month);
+				}
+				else
+				{
+					yearMonth = YearMonth.of(year, month);
+				}
 				while(retval.size() < between + 1)
 				{
-					Month month = _start.plus(i);
-					if(isPreviousYear(month))
-					{
-						retval.add(YearMonth.of(year - 1, month));
-					}
-					else
-					{
-						retval.add(YearMonth.of(year, month));
-					}
+					retval.add(yearMonth.plusMonths(i));
 					i++;
 				}
 			}
@@ -260,6 +261,11 @@ public final class EpptReportingMonths
 
 		private boolean isPreviousYear(Month month)
 		{
+			long totalMonths = 1 + ChronoUnit.MONTHS.between(YearMonth.of(2001, _start), YearMonth.of(2010, _end)) % 12;
+			if(totalMonths == 12 && _start == Month.JANUARY)
+			{
+				return false;
+			}
 			return month == Month.OCTOBER || month == Month.NOVEMBER || month == Month.DECEMBER;
 		}
 

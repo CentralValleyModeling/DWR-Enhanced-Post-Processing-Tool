@@ -32,6 +32,9 @@ public class DssCache
 	private final ConcurrentHashMap<Key, NavigableMap<LocalDateTime, Double>> GUI_LINK_CACHE = new ConcurrentHashMap<>();
 	private final ConcurrentHashMap<Key, NavigableMap<LocalDateTime, Double>> THRESHOLD_CACHE = new ConcurrentHashMap<>();
 	private final ConcurrentHashMap<Key, NavigableMap<LocalDateTime, Double>> DTS_CACHE = new ConcurrentHashMap<>();
+	private final ConcurrentHashMap<Key, String> GUI_LINK_UNITS_CACHE = new ConcurrentHashMap<>();
+	private final ConcurrentHashMap<Key, String> THRESHOLD_UNITS_CACHE = new ConcurrentHashMap<>();
+	private final ConcurrentHashMap<Key, String> DTS_UNITS_CACHE = new ConcurrentHashMap<>();
 
 	/**
 	 *  Class is not thread safe
@@ -47,6 +50,9 @@ public class DssCache
 		GUI_LINK_CACHE.clear();
 		THRESHOLD_CACHE.clear();
 		DTS_CACHE.clear();
+		GUI_LINK_UNITS_CACHE.clear();
+		THRESHOLD_UNITS_CACHE.clear();
+		DTS_UNITS_CACHE.clear();
 	}
 
 	public NavigableMap<LocalDateTime, Double> readGuiLinkFromCache(EpptScenarioRun epptScenarioRun, int guiLink)
@@ -59,6 +65,16 @@ public class DssCache
 		GUI_LINK_CACHE.put(new Key(epptScenarioRun, guiLink), data);
 	}
 
+	public String readGuiLinkUnitsFromCache(EpptScenarioRun epptScenarioRun, int guiLink)
+	{
+		return GUI_LINK_UNITS_CACHE.get(new Key(epptScenarioRun, guiLink));
+	}
+
+	public void addGuiLinkUnitsToCache(EpptScenarioRun epptScenarioRun, int guiLink, String units)
+	{
+		GUI_LINK_UNITS_CACHE.put(new Key(epptScenarioRun, guiLink), units);
+	}
+
 	public NavigableMap<LocalDateTime, Double> readDtsLinkFromCache(EpptScenarioRun epptScenarioRun, int dtsLink)
 	{
 		return DTS_CACHE.get(new Key(epptScenarioRun, dtsLink));
@@ -69,6 +85,16 @@ public class DssCache
 		DTS_CACHE.put(new Key(epptScenarioRun, dtsLink), data);
 	}
 
+	public String readDtsLinkUnitsFromCache(EpptScenarioRun epptScenarioRun, int dtsLink)
+	{
+		return DTS_UNITS_CACHE.get(new Key(epptScenarioRun, dtsLink));
+	}
+
+	public void addDtsLinkUnitsToCache(EpptScenarioRun epptScenarioRun, int dtsLink, String units)
+	{
+		DTS_UNITS_CACHE.put(new Key(epptScenarioRun, dtsLink), units);
+	}
+
 	public NavigableMap<LocalDateTime, Double> readThresholdLinkFromCache(EpptScenarioRun epptScenarioRun, int dtsLink)
 	{
 		return THRESHOLD_CACHE.get(new Key(epptScenarioRun, dtsLink));
@@ -77,6 +103,16 @@ public class DssCache
 	public void addThresholdLinkToCache(EpptScenarioRun epptScenarioRun, int thresholdLink, NavigableMap<LocalDateTime, Double> data)
 	{
 		THRESHOLD_CACHE.put(new Key(epptScenarioRun, thresholdLink), data);
+	}
+
+	public String readThresholdLinkUnitsFromCache(EpptScenarioRun epptScenarioRun, int dtsLink)
+	{
+		return THRESHOLD_UNITS_CACHE.get(new Key(epptScenarioRun, dtsLink));
+	}
+
+	public void addThresholdLinkUnitsToCache(EpptScenarioRun epptScenarioRun, int thresholdLink, String units)
+	{
+		THRESHOLD_UNITS_CACHE.put(new Key(epptScenarioRun, thresholdLink), units);
 	}
 
 	private static final class Key

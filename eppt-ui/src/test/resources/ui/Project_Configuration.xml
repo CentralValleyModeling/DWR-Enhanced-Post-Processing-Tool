@@ -33,6 +33,7 @@
 				<panel constraints="BorderLayout.NORTH" layout="FlowLayout(FlowLayout.LEFT)">
 					<button id="btnAddScenario" name="btnAddScenario" text="Add" ActionCommand="btnAddScenario" PreferredSize="80,24"/>
 					<button id="btnEditScenario" name="btnEditScenario" text="Edit" ActionCommand="btnEditScenario" PreferredSize="80,24"/>
+					<button id="btnCopyScenario" name="btnCopyScenario" text="Copy" ActionCommand="btnCopyScenario" PreferredSize="80,24"/>
 					<button id="btnDelScenario" name="btnDelScenario" text="Clear" ActionCommand="btnDelScenario" PreferredSize="80,24"/>
 					<button id="btnClearScenario" name="btnClearScenario" text="Clear All" ActionCommand="btnClearScenario" PreferredSize="80,24"/>
 

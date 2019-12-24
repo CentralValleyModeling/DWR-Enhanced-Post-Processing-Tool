@@ -15,6 +15,8 @@ package calsim.gui;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.GridLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import javax.swing.*;
@@ -76,8 +78,7 @@ public class GeneralRetrievePanel extends JPanel
 		JPanel filterPanel = new JPanel();
 		filterPanel.setLayout(new GridLayout(1, 7));
 		filterPanel.setBackground(new Color(207, 220, 200));
-		_varTypeBox = new JComboBox(
-				new String[]{AppUtils.DVAR, AppUtils.SVAR});
+		_varTypeBox = new JComboBox(new String[]{AppUtils.DVAR, AppUtils.SVAR});
 		_varTypeBox.setBorder(BorderFactory.createTitledBorder(
 				BorderFactory.createLineBorder(Color.lightGray), "TYPE"));
 		_pathText = new JTextField[6];
@@ -99,6 +100,16 @@ public class GeneralRetrievePanel extends JPanel
 		_pathText[5] = new JTextField(30);
 		_pathText[5].setBorder(BorderFactory.createTitledBorder(
 				BorderFactory.createLineBorder(Color.lightGray), "F"));
+		for(JTextField textField : _pathText)
+		{
+			textField.addActionListener(e ->
+			{
+				for(ActionListener listener : _filterBtn.getActionListeners())
+				{
+					listener.actionPerformed(new ActionEvent(GeneralRetrievePanel.this, 0, "Enter Filter"));
+				}
+			});
+		}
 		//
 		for(int i = 0; i < NUM_PATH_PARTS; i++)
 		{
@@ -117,15 +128,14 @@ public class GeneralRetrievePanel extends JPanel
 				filter();
 			}
 		});
-		_retrieveBtn
-				.addActionListener(new GuiTaskListener("Retrieving data...")
-				{
-					public void doWork()
-					{
-						retrieve();
-					}
+		_retrieveBtn.addActionListener(new GuiTaskListener("Retrieving data...")
+		{
+			public void doWork()
+			{
+				retrieve();
+			}
 
-				});
+		});
 		Box btnPanel = new Box(BoxLayout.X_AXIS);
 		btnPanel.add(Box.createHorizontalGlue());
 		btnPanel.add(_filterBtn);

@@ -82,7 +82,12 @@ import gov.ca.water.reportengine.standardsummary.PercentDiffStyle;
 import gov.ca.water.reportengine.standardsummary.StandardSummaryErrors;
 import gov.ca.water.reportengine.standardsummary.StandardSummaryReader;
 import gov.ca.water.reportengine.standardsummary.SummaryReportParameters;
+import jdk.nashorn.internal.scripts.JO;
 
+import hec.heclib.dss.HecDSSFileAccess;
+import hec.heclib.dss.HecDataManager;
+import hec.heclib.dss.HecDss;
+import hec.heclib.util.Heclib;
 import rma.swing.RmaJDateTimeField;
 import rma.swing.RmaJDecimalField;
 import rma.swing.RmaJIntegerField;
@@ -292,50 +297,81 @@ public class QAQCReportPanel extends RmaJPanel
 
 	private void runAltWresl()
 	{
-		_altWreslFuture = _executor.submit(() ->
+		if(checkIfDssFileIsOpen(_altRun))
 		{
-			try
+			_altWreslFuture = _executor.submit(() ->
 			{
-				_tabbedPane1.setSelectedIndex(2);
-				startProcessAsync(_runAltWreslButton);
-				runWresl(_altRun, _altWreslTextPane);
-			}
-			finally
-			{
-				SwingUtilities.invokeLater(() ->
+				try
 				{
-					if(_tabbedPane1.getSelectedIndex() == 2)
+					_tabbedPane1.setSelectedIndex(2);
+					startProcessAsync(_runAltWreslButton);
+					runWresl(_altRun, _altWreslTextPane);
+				}
+				finally
+				{
+					SwingUtilities.invokeLater(() ->
 					{
-						_cancelButton.setEnabled(false);
-					}
-				});
-				stopProcessAsync(_runAltWreslButton);
-			}
-		});
+						if(_tabbedPane1.getSelectedIndex() == 2)
+						{
+							_cancelButton.setEnabled(false);
+						}
+					});
+					stopProcessAsync(_runAltWreslButton);
+				}
+			});
+		}
 	}
 
 	private void runBaseWresl()
 	{
-		_baseWreslFuture = _executor.submit(() ->
+		if(checkIfDssFileIsOpen(_baseRun))
 		{
-			try
+			_baseWreslFuture = _executor.submit(() ->
 			{
-				_tabbedPane1.setSelectedIndex(1);
-				startProcessAsync(_runBaseWreslButton);
-				runWresl(_baseRun, _baseWreslTextPane);
-			}
-			finally
-			{
-				SwingUtilities.invokeLater(() ->
+				try
 				{
-					if(_tabbedPane1.getSelectedIndex() == 1)
+					_tabbedPane1.setSelectedIndex(1);
+					startProcessAsync(_runBaseWreslButton);
+					runWresl(_baseRun, _baseWreslTextPane);
+				}
+				finally
+				{
+					SwingUtilities.invokeLater(() ->
 					{
-						_cancelButton.setEnabled(false);
-					}
-				});
-				stopProcessAsync(_runBaseWreslButton);
+						if(_tabbedPane1.getSelectedIndex() == 1)
+						{
+							_cancelButton.setEnabled(false);
+						}
+					});
+					stopProcessAsync(_runBaseWreslButton);
+				}
+			});
+		}
+	}
+
+	private boolean checkIfDssFileIsOpen(EpptScenarioRun epptScenarioRun)
+	{
+		boolean retval = false;
+		if(epptScenarioRun != null)
+		{
+			Path postProcessDss = epptScenarioRun.getPostProcessDss();
+			if(postProcessDss != null)
+			{
+				HecDSSFileAccess hecDSSFileAccess = new HecDSSFileAccess(postProcessDss.toString());
+				if(!hecDSSFileAccess.writeAccess())
+				{
+					JOptionPane.showConfirmDialog(this,
+							"DSS File inaccessible. Ensure it is not being written to in another process:\n" + postProcessDss,
+							"DSS File Error", JOptionPane.OK_OPTION, JOptionPane.WARNING_MESSAGE);
+				}
+				else
+				{
+					hecDSSFileAccess.close();
+					retval = true;
+				}
 			}
-		});
+		}
+		return retval;
 	}
 
 	private void runWresl(EpptScenarioRun scenarioRun, JTextPane textPane)

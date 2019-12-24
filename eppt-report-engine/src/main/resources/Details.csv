@@ -103,22 +103,22 @@
 102,14,NOD_MB_STATUS_DTS/DTS-STATUS,ED|ST,,108,Mass balance
 103,14,Delta_BAL_STATUS_DTS/DTS-STATUS,ED|ST,,109,Mass balance
 104,14,SOD_BAL_STATUS_DTS/DTS-STATUS,ED|ST,,110,Mass balance
-105,,TRNTY_chng_in_strge_DTS/DTS-STATUS,ST,N/A,N/A,Trinity Annual Storage Change
-106,,SHST_chng_in_strge_DTS/DTS-STATUS,ST,N/A,N/A,Shasta Annual Storage Change
-107,,FLSM_chng_in_strge_DTS/DTS-STATUS,ST,N/A,N/A,Folsom Annual Storage Change
-108,,OROV_chng_in_strge_DTS/DTS-STATUS,ST,N/A,N/A,Oroville Annual Storage Change
-109,,SLCVP_chng_in_strge_DTS/DTS-STATUS,ST,N/A,N/A,CVP San Luis Annual Storage Change
-110,,SLSWP_chng_in_strge_DTS/DTS-STATUS,ST,N/A,N/A,SWP San Luis Annual Storage Change
-111,,CVP_SWP_STORAGE_DTS/DTS-STATUS,ST,N/A,N/A,CVP & SWP
-112,,CVP_SWP_STORAGE_DTS/DTS-STATUS,ST,N/A,N/A,CVP & SWP
-113,,CVP_SWP_STORAGE_DTS/DTS-STATUS,ST,N/A,N/A,CVP & SWP
-114,,NOD_CVP_SWP_STORAGE_DTS/DTS-STATUS,ST,N/A,N/A,North of Delta CVP & SWP
-115,,NOD_CVP_SWP_STORAGE_DTS/DTS-STATUS,ST,N/A,N/A,North of Delta CVP & SWP
-116,,NOD_CVP_SWP_STORAGE_DTS/DTS-STATUS,ST,N/A,N/A,North of Delta CVP & SWP
-117,,NOD_CVP_STORAGE_DTS/DTS-STATUS,ST,N/A,N/A,North of Delta CVP Reservoirs
-118,,NOD_CVP_STORAGE_DTS/DTS-STATUS,ST,N/A,N/A,North of Delta CVP Reservoirs
-119,,NOD_CVP_STORAGE_DTS/DTS-STATUS,ST,N/A,N/A,North of Delta CVP Reservoirs
-120,,SL_chng_in_strge_DTS/DTS-STATUS,ST,N/A,N/A,San Luis Annual Storage Change
+105,,TRNTY_chng_in_strge_DTS/STORAGE-CHANGE,ST,N/A,N/A,Trinity Annual Storage Change
+106,,SHST_chng_in_strge_DTS/STORAGE-CHANGE,ST,N/A,N/A,Shasta Annual Storage Change
+107,,FLSM_chng_in_strge_DTS/STORAGE-CHANGE,ST,N/A,N/A,Folsom Annual Storage Change
+108,,OROV_chng_in_strge_DTS/STORAGE-CHANGE,ST,N/A,N/A,Oroville Annual Storage Change
+109,,SLCVP_chng_in_strge_DTS/STORAGE-CHANGE,ST,N/A,N/A,CVP San Luis Annual Storage Change
+110,,SLSWP_chng_in_strge_DTS/STORAGE-CHANGE,ST,N/A,N/A,SWP San Luis Annual Storage Change
+111,,CVP_SWP_STORAGE_DTS/STORAGE,ST,N/A,N/A,CVP & SWP
+112,,CVP_SWP_STORAGE_DTS/STORAGE,ST,N/A,N/A,CVP & SWP
+113,,CVP_SWP_STORAGE_DTS/STORAGE,ST,N/A,N/A,CVP & SWP
+114,,NOD_CVP_SWP_STORAGE_DTS/STORAGE,ST,N/A,N/A,North of Delta CVP & SWP
+115,,NOD_CVP_SWP_STORAGE_DTS/STORAGE,ST,N/A,N/A,North of Delta CVP & SWP
+116,,NOD_CVP_SWP_STORAGE_DTS/STORAGE,ST,N/A,N/A,North of Delta CVP & SWP
+117,,NOD_CVP_STORAGE_DTS/STORAGE,ST,N/A,N/A,North of Delta CVP Reservoirs
+118,,NOD_CVP_STORAGE_DTS/STORAGE,ST,N/A,N/A,North of Delta CVP Reservoirs
+119,,NOD_CVP_STORAGE_DTS/STORAGE,ST,N/A,N/A,North of Delta CVP Reservoirs
+120,,SL_chng_in_strge_DTS/STORAGE-CHANGE,ST,N/A,N/A,San Luis Annual Storage Change
 121,,Minflow_C5_DTS/DTS-STATUS,ST,N/A,N/A,Shasta Minimum Instream Flow
 122,,,ST,N/A,N/A,CVPIA (b)(2) Storage Target
 123,,Minflow_C203_DTS/DTS-STATUS,ST,N/A,N/A,Oroville Minimum Instream Flow
@@ -137,12 +137,12 @@
 136,,Butte_Creek_DTS/DTS-STATUS,ST,N/A,N/A,Butte Creek Outflow
 137,,Knights_landing_DTS/DTS-STATUS,ST,N/A,N/A,Inflow at Knights Landing
 138,,,ST,N/A,N/A,MinimumPumping at Colusa Basin
-139,,NOD_GWP_,ST,N/A,N/A,North of Delta Total Groundwater Pumping
-140,,GP60,ST,N/A,N/A,Upper Sacramento River (DSA 58) Groundwater Pumping
-141,,Colusa_GP_,ST,N/A,N/A,Colusa Basin Groundwater Pumping
-142,,GP65,ST,N/A,N/A,Feather River Watershed (DSA 69) Groundwater Pumping
-143,,GP66,ST,N/A,N/A,American River Watershed (DSA 70) Groundwater Pumping
-144,,GP64,ST,N/A,N/A,Lower Sacramento River (DSA 65) Groundwater Pumping
+139,,NOD_GWP_/FLOW-DELIVERY,ST,N/A,N/A,North of Delta Total Groundwater Pumping
+140,,GP60/FLOW-DELIVERY,ST,N/A,N/A,Upper Sacramento River (DSA 58) Groundwater Pumping
+141,,Colusa_GP_/FLOW-DELIVERY,ST,N/A,N/A,Colusa Basin Groundwater Pumping
+142,,GP65/FLOW-DELIVERY,ST,N/A,N/A,Feather River Watershed (DSA 69) Groundwater Pumping
+143,,GP66/FLOW-DELIVERY,ST,N/A,N/A,American River Watershed (DSA 70) Groundwater Pumping
+144,,GP64/FLOW-DELIVERY,ST,N/A,N/A,Lower Sacramento River (DSA 65) Groundwater Pumping
 145,,,ST,N/A,N/A,X2 Required Location (K-M)
 146,,66.3,ST,N/A,N/A,X2 Required Location (ANN)
 147,,IBU_TOT_STATUS_DTS/DTS-STATUS,ST,N/A,N/A,Delta Conditions In Basin Use
@@ -267,8 +267,8 @@
 266,,SHORT_SWP_PMI_N,ST,N/A,N/A,Table A
 267,,SHORT_SWP_PAG_N,ST,N/A,N/A,FRSA Contractors
 268,,SHORT_SOD_TA_DV,ST,N/A,N/A,Table A
-269,,NOD_CVP_SWP_STORAGE_DTS/DTS-STATUS,ST,N/A,N/A,North of Delta
-270,,San_Luis_Tot,ST,N/A,N/A,San Luis
+269,,NOD_CVP_SWP_STORAGE_DTS/STORAGE,ST,N/A,N/A,North of Delta
+270,,San_Luis_Tot/STORAGE,ST,N/A,N/A,San Luis
 271,,,ST,N/A,N/A,
 272,,,ST,N/A,N/A,
 273,,CVProject_DV,ST,N/A,N/A,Central Vallery Project
@@ -283,20 +283,20 @@
 282,,,ST,N/A,N/A,COA Placeholder
 283,,,ST,N/A,N/A,COA Placeholder
 284,,,ST,N/A,N/A,
-285,,GP60,ST,N/A,N/A,Upper Sacramento River
-286,,Colusa_GP_,ST,N/A,N/A,Colusa Basin
-287,,GP65,ST,N/A,N/A,Feather River Watershed
-288,,GP66,ST,N/A,N/A,American River Watershed
-289,,GP64,ST,N/A,N/A,Lower Sacramento River
-290,,CVP_TOT_STOR_DV,ST,N/A,N/A,Total Storage
-291,,DEL_CVP_TOTAL_,ST,N/A,N/A,Total Deliveries
-292,,DEL_CVP_TOTAL_N_,ST,N/A,N/A,NOD Deliveries
-293,,DEL_CVP_TOTAL_S_,ST,N/A,N/A,SOD Deliveries
-294,,SHORT_CVP_TOT_DV,ST,N/A,N/A,Total Shortage
+285,,GP60/FLOW-DELIVERY,ST,N/A,N/A,Upper Sacramento River
+286,,Colusa_GP_/FLOW-DELIVERY,ST,N/A,N/A,Colusa Basin
+287,,GP65/FLOW-DELIVERY,ST,N/A,N/A,Feather River Watershed
+288,,GP66/FLOW-DELIVERY,ST,N/A,N/A,American River Watershed
+289,,GP64/FLOW-DELIVERY,ST,N/A,N/A,Lower Sacramento River
+290,,CVP_TOT_STOR_DV/STORAGE,ST,N/A,N/A,Total Storage
+291,,DEL_CVP_TOTAL_/DELIVERY-CVP,ST,N/A,N/A,Total Deliveries
+292,,DEL_CVP_TOTAL_N_/DELIVERY-CVP,ST,N/A,N/A,NOD Deliveries
+293,,DEL_CVP_TOTAL_S_/DELIVERY-CVP,ST,N/A,N/A,SOD Deliveries
+294,,SHORT_CVP_TOT_DV/SHORTAGE,ST,N/A,N/A,Total Shortage
 295,,,ST,N/A,N/A,NOD Shortage
-296,,SWP_TOT_STOR_DV,ST,N/A,N/A,Total Storage
+296,,SWP_TOT_STOR_DV/STORAGE,ST,N/A,N/A,Total Storage
 297,,,ST,N/A,N/A,Total Table A Deliveries
-298,,SHORT_SWP_TA_DV,ST,N/A,N/A,Total Table A Shortage
+298,,SHORT_SWP_TA_DV/SHORTAGE,ST,N/A,N/A,Total Table A Shortage
 299,,nod_mb_status_dts,ST,N/A,N/A,
 300,,,ST,N/A,N/A,Reservoir Releases
 301,,,ST,N/A,N/A,Local Inflow
@@ -335,9 +335,9 @@
 334,,NET_SWP_SOD_REL_DV,ST,N/A,N/A,Net Storage Release (SWP SOD)
 335,,NET_CVP_SL_REL_DV,ST,N/A,N/A,Net Storage Release (CVPSL)
 336,,SWP_SOD_DEL_DV,ST,N/A,N/A,
-337,,SWP_TA_Total_,ST,N/A,N/A,Table A
-338,,SWP_IN_Total,ST,N/A,N/A,Article 21
-339,,SWP_CO_Total,ST,N/A,N/A,Article 56
+337,,SWP_TA_Total_/SWP_DELIVERY,ST,N/A,N/A,Table A
+338,,SWP_IN_Total/SWP_DELIVERY,ST,N/A,N/A,Article 21
+339,,SWP_CO_Total/SWP_DELIVERY,ST,N/A,N/A,Article 56
 340,,SWP_Loss,ST,N/A,N/A,SWP SOD Loss
 341,,CVPTOTALDEL,ST,N/A,N/A,
 342,,DEL_CVP_PAG_S_,ST,N/A,N/A,CVP SOD Deliveries PAG
@@ -370,8 +370,8 @@
 369,,,ST,N/A,N/A,EXP_EXC
 370,,S11,ST,N/A,N/A,San Luis
 371,,SHORT_FRSA_DV,ST,N/A,N/A,FRSA Contractors
-372,,CVP_NOD_STOR_DV,ST,N/A,N/A,
-373,,SHORT_CVP_TOT_DV,ST,N/A,N/A,
+372,,CVP_NOD_STOR_DV/STORAGE,ST,N/A,N/A,
+373,,SHORT_CVP_TOT_DV/SHORTAGE,ST,N/A,N/A,
 374,,SWP_TOT_STOR_DV,ST,N/A,N/A,
 375,,delta_inflow_dv,ST,N/A,N/A,
 376,,TOTAL_DELTA_OUT_DV,ST,N/A,N/A,

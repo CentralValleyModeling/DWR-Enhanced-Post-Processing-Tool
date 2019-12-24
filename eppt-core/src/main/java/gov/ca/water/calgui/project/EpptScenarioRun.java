@@ -59,6 +59,25 @@ public class EpptScenarioRun
 	}
 
 	/**
+	 * Copy ctor
+	 *
+	 * @param name         name descriptor meta data for scenario run
+	 * @param description  description meta data for
+	 * @param epptScenarioRun scenario run to copy
+	 */
+	public EpptScenarioRun(String name, String description, EpptScenarioRun epptScenarioRun)
+	{
+		_name = name;
+		_description = description;
+		_model = epptScenarioRun.getModel();
+		_outputPath = epptScenarioRun.getOutputPath();
+		_wreslMain = epptScenarioRun.getWreslMain();
+		_waterYearTable = epptScenarioRun.getWaterYearTable();
+		_dssContainer = new EpptDssContainer(epptScenarioRun.getDssContainer());
+		_color = epptScenarioRun.getColor();
+	}
+
+	/**
 	 * @return path to the main script for running WRESL Post Processor
 	 */
 	public Path getWreslMain()
