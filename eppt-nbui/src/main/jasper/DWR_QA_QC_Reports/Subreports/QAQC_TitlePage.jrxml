@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Created with Jaspersoft Studio version 6.10.0.final using JasperReports Library version 6.10.0-unknown  -->
+<!-- Created with Jaspersoft Studio version 6.8.0.final using JasperReports Library version 6.8.0-2ed8dfabb690ff337a5797129f2cd92902b0c87b  -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="QAQC_TitlePage" language="groovy" pageWidth="612" pageHeight="792" columnWidth="504" leftMargin="54" rightMargin="54" topMargin="54" bottomMargin="54" whenResourceMissingType="Empty" uuid="da75db69-3924-4f44-998a-80195014db99">
 	<property name="com.jaspersoft.studio.unit." value="pixel"/>
 	<property name="net.sf.jasperreports.print.create.bookmarks" value="true"/>
@@ -150,7 +150,7 @@
 				<textElement textAlignment="Left" verticalAlignment="Bottom">
 					<font fontName="Arial" size="12"/>
 				</textElement>
-				<textFieldExpression><![CDATA["BASE STUDY - " + $F{name} + " (BENCHMARK STUDY)"]]></textFieldExpression>
+				<textFieldExpression><![CDATA["BASE STUDY - " + $F{name}]]></textFieldExpression>
 			</textField>
 			<textField pattern="">
 				<reportElement mode="Transparent" x="0" y="529" width="430" height="19" forecolor="#FFFFFF" backcolor="#FFFFFF" uuid="f9748407-c2ad-4d96-a04e-601ee196153b"/>
