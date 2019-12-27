@@ -86,6 +86,17 @@
 			</style>
 		</conditionalStyle>
 		<conditionalStyle>
+			<conditionExpression><![CDATA[$V{value_MEASURE}==-2147483648&&$V{scenario-order}==2&&$V{period-type-order}>=0]]></conditionExpression>
+			<style forecolor="#000000" scaleImage="FillFrame">
+				<box>
+					<topPen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<leftPen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<bottomPen lineWidth="1.0" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineColor="#000000"/>
+				</box>
+			</style>
+		</conditionalStyle>
+		<conditionalStyle>
 			<conditionExpression><![CDATA[$V{value_MEASURE}<0&&$V{scenario-order}==2&&$V{period-type-order}>=0&&$V{value_MEASURE}!=-2147483648]]></conditionExpression>
 			<style forecolor="#F06063" scaleImage="FillFrame">
 				<box>

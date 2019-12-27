@@ -216,9 +216,10 @@
 				<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				<printWhenExpression><![CDATA[1==1]]></printWhenExpression>
 				<subreport>
-					<reportElement stretchType="ElementGroupHeight" x="0" y="0" width="504" height="1" uuid="3f3b5834-2e28-4081-9b8e-3cd034c2b109">
+					<reportElement stretchType="ElementGroupHeight" x="0" y="0" width="504" height="1" printWhenGroupChanges="Component" uuid="3f3b5834-2e28-4081-9b8e-3cd034c2b109">
 						<property name="com.jaspersoft.studio.unit.y" value="px"/>
 						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+						<printWhenExpression><![CDATA[$F{component-name}!=null]]></printWhenExpression>
 					</reportElement>
 					<subreportParameter name="XML_DATA_DOCUMENT">
 						<subreportParameterExpression><![CDATA[$P{XML_DATA_DOCUMENT}]]></subreportParameterExpression>
@@ -230,7 +231,7 @@
 						<subreportParameterExpression><![CDATA[$P{p_report_name}]]></subreportParameterExpression>
 					</subreportParameter>
 					<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
-					<subreportExpression><![CDATA["QAQC_list_Table_Subreport.jasper"]]></subreportExpression>
+					<subreportExpression><![CDATA[$P{p_report_name}"_Subreport.jasper"]]></subreportExpression>
 				</subreport>
 			</band>
 		</groupFooter>

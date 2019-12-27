@@ -6,6 +6,11 @@
         <option value="$PROJECT_DIR$/../eppt-parent/pom.xml" />
       </list>
     </option>
+    <option name="ignoredFiles">
+      <set>
+        <option value="$PROJECT_DIR$/../eppt-scenario/pom.xml" />
+      </set>
+    </option>
   </component>
   <component name="ProjectRootManager" version="2" languageLevel="JDK_12" default="false" project-jdk-name="1.8 (2)" project-jdk-type="JavaSDK" />
 </project>

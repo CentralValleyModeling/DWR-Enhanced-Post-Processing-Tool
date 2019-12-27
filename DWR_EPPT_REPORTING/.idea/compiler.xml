@@ -7,16 +7,15 @@
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <module name="eppt-jasper-engine" />
-        <module name="eppt-plots" />
-        <module name="eppt-report-engine" />
-        <module name="eppt-vista" />
-        <module name="eppt-nbui" />
-        <module name="eppt-core" />
-        <module name="eppt-calsim-gui" />
-        <module name="eppt-scenario" />
-        <module name="eppt-trend-reporting" />
         <module name="eppt-ui" />
+        <module name="eppt-report-engine" />
         <module name="eppt-branding" />
+        <module name="eppt-nbui" />
+        <module name="eppt-vista" />
+        <module name="eppt-calsim-gui" />
+        <module name="eppt-trend-reporting" />
+        <module name="eppt-core" />
+        <module name="eppt-plots" />
         <module name="eppt-app" />
       </profile>
     </annotationProcessing>
