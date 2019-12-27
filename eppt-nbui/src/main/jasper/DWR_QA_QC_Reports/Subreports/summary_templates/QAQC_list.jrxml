@@ -231,7 +231,7 @@
 						<subreportParameterExpression><![CDATA[$P{p_report_name}]]></subreportParameterExpression>
 					</subreportParameter>
 					<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
-					<subreportExpression><![CDATA[$P{p_report_name}"_Subreport.jasper"]]></subreportExpression>
+					<subreportExpression><![CDATA[$P{p_report_name}+"_Subreport.jasper"]]></subreportExpression>
 				</subreport>
 			</band>
 		</groupFooter>
