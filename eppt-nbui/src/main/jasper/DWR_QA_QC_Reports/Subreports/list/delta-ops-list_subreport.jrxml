@@ -70,7 +70,7 @@
 		<property name="net.sf.jasperreports.xpath.field.expression" value="."/>
 		<fieldDescription><![CDATA[.]]></fieldDescription>
 	</field>
-	<field name="name-order" class="java.lang.Integer">
+	<field name="name-order" class="java.lang.String">
 		<property name="net.sf.jasperreports.xpath.field.expression" value="ancestor::list-header/@name-order"/>
 		<fieldDescription><![CDATA[ancestor::list-header/@name-order]]></fieldDescription>
 	</field>
@@ -190,7 +190,7 @@
 								<textElement verticalAlignment="Middle">
 									<font size="8"/>
 								</textElement>
-								<textFieldExpression><![CDATA[$V{date}]]></textFieldExpression>
+								<textFieldExpression><![CDATA[$V{date}==-2147483648?"NR":$V{date}]]></textFieldExpression>
 							</textField>
 						</cellContents>
 					</crosstabRowHeader>
@@ -212,7 +212,7 @@
 					</crosstabTotalColumnHeader>
 				</columnGroup>
 				<columnGroup name="name-order" height="0" totalPosition="End">
-					<bucket class="java.lang.Integer">
+					<bucket class="java.lang.String">
 						<bucketExpression><![CDATA[$F{name-order}]]></bucketExpression>
 					</bucket>
 					<crosstabColumnHeader>

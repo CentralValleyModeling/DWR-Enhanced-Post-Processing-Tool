@@ -190,7 +190,7 @@
 								<textElement verticalAlignment="Middle">
 									<font size="8"/>
 								</textElement>
-								<textFieldExpression><![CDATA[$V{date}]]></textFieldExpression>
+								<textFieldExpression><![CDATA[$V{date}==-2147483648?"NR":$V{date}]]></textFieldExpression>
 							</textField>
 						</cellContents>
 					</crosstabRowHeader>

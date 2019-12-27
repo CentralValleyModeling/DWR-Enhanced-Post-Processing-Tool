@@ -181,7 +181,7 @@
 					</reportElement>
 					<box topPadding="0" leftPadding="0" bottomPadding="0" rightPadding="0"/>
 					<textElement verticalAlignment="Middle">
-						<font isItalic="true"/>
+						<font isItalic="false"/>
 					</textElement>
 					<textFieldExpression><![CDATA[$F{sub-header-name}]]></textFieldExpression>
 				</textField>
