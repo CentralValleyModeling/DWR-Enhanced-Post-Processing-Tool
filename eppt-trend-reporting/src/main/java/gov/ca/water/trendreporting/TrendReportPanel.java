@@ -203,6 +203,7 @@ public class TrendReportPanel extends JFXPanel
 		addExpansionListener(parametersPane, parametersPane, statisticsListView, seasonalPeriodListView);
 		addExpansionListener(statisticsListView, parametersPane, statisticsListView, seasonalPeriodListView);
 		addExpansionListener(seasonalPeriodListView, parametersPane, statisticsListView, seasonalPeriodListView);
+		_trendTypes.removeIf(t -> _backingParameters.stream().noneMatch(n->t.matchesGuiLink(n.getGuiLink())));
 		updateTrendTypes();
 		return flowPane;
 	}
@@ -387,10 +388,6 @@ public class TrendReportPanel extends JFXPanel
 	{
 		TrendType selectedItem = _typeListView.getSelectionModel().getSelectedItem();
 		_trendTypes.removeIf(t -> t.getTitle() == null || t.getTitle().isEmpty());
-		if(_backingParameters != null)
-		{
-			_trendTypes.removeIf(t -> _backingParameters.stream().noneMatch(n->t.matchesGuiLink(n.getGuiLink())));
-		}
 		_typeListView.getItems().clear();
 		_typeListView.getItems().add(ALL_TREND_TYPE);
 		_typeListView.getItems().addAll(_trendTypes);
