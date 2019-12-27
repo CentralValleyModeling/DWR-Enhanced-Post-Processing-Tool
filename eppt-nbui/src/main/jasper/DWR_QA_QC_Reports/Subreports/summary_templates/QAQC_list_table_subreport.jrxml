@@ -78,7 +78,7 @@
 		<property name="net.sf.jasperreports.xpath.field.expression" value="ancestor::list-header/@name"/>
 		<fieldDescription><![CDATA[ancestor::list-header/@name]]></fieldDescription>
 	</field>
-	<field name="date-order" class="java.lang.String">
+	<field name="date-order" class="java.lang.Integer">
 		<property name="net.sf.jasperreports.xpath.field.expression" value="@date-order"/>
 		<fieldDescription><![CDATA[@date-order]]></fieldDescription>
 	</field>
@@ -163,7 +163,7 @@
 					</cellContents>
 				</crosstabHeaderCell>
 				<rowGroup name="date-order" width="0" totalPosition="End">
-					<bucket class="java.lang.String">
+					<bucket class="java.lang.Integer">
 						<bucketExpression><![CDATA[$F{date-order}]]></bucketExpression>
 					</bucket>
 					<crosstabRowHeader>

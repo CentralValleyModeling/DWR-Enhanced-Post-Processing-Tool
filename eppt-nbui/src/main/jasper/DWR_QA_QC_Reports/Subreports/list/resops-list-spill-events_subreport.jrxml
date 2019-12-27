@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Created with Jaspersoft Studio version 6.8.0.final using JasperReports Library version 6.8.0-2ed8dfabb690ff337a5797129f2cd92902b0c87b  -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="QAQC_AlternativeIssuesReport" language="groovy" pageWidth="504" pageHeight="684" whenNoDataType="BlankPage" columnWidth="504" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" whenResourceMissingType="Empty" uuid="da75db69-3924-4f44-998a-80195014db99">
-	<property name="net.sf.jasperreports.data.adapter" value="QAQC_Datasource.xml"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="QAQC_Datasource"/>
 	<property name="net.sf.jasperreports.print.create.bookmarks" value="true"/>
 	<property name="com.jaspersoft.studio.unit." value="pixel"/>
 	<style name="Crosstab_CH" mode="Opaque" backcolor="#FFFFFF">
@@ -70,7 +70,7 @@
 		<property name="net.sf.jasperreports.xpath.field.expression" value="."/>
 		<fieldDescription><![CDATA[.]]></fieldDescription>
 	</field>
-	<field name="name-order" class="java.lang.String">
+	<field name="name-order" class="java.lang.Integer">
 		<property name="net.sf.jasperreports.xpath.field.expression" value="ancestor::list-header/@name-order"/>
 		<fieldDescription><![CDATA[ancestor::list-header/@name-order]]></fieldDescription>
 	</field>
@@ -78,7 +78,7 @@
 		<property name="net.sf.jasperreports.xpath.field.expression" value="ancestor::list-header/@name"/>
 		<fieldDescription><![CDATA[ancestor::list-header/@name]]></fieldDescription>
 	</field>
-	<field name="date-order" class="java.lang.String">
+	<field name="date-order" class="java.lang.Integer">
 		<property name="net.sf.jasperreports.xpath.field.expression" value="@date-order"/>
 		<fieldDescription><![CDATA[@date-order]]></fieldDescription>
 	</field>
@@ -163,7 +163,7 @@
 					</cellContents>
 				</crosstabHeaderCell>
 				<rowGroup name="date-order" width="0" totalPosition="End">
-					<bucket class="java.lang.String">
+					<bucket class="java.lang.Integer">
 						<bucketExpression><![CDATA[$F{date-order}]]></bucketExpression>
 					</bucket>
 					<crosstabRowHeader>
@@ -212,7 +212,7 @@
 					</crosstabTotalColumnHeader>
 				</columnGroup>
 				<columnGroup name="name-order" height="0" totalPosition="End">
-					<bucket class="java.lang.String">
+					<bucket class="java.lang.Integer">
 						<bucketExpression><![CDATA[$F{name-order}]]></bucketExpression>
 					</bucket>
 					<crosstabColumnHeader>
