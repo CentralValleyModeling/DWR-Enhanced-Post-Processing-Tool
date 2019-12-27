@@ -465,14 +465,14 @@ Delta Operations,Control,Delta Operations Controls,control-table,delta-ops-contr
 Delta Operations,Control,Delta Operations Controls,control-table,delta-ops-control-x2,,X2 Controls,,X2_REQ,DtsPeriodCount(168)
 Delta Operations,Control,Delta Operations Controls,control-table,delta-ops-control-old-middle,,Old and Middle River Controls,,OMR,DtsPeriodCount(169)
 !,,,,,,,,,
-Delta Operations,Control,Delta Operations Control List,list,delta-ops-list,,Gate Operations,,Delta Cross Channel,DtsLessThanReportDv(279%2C 2778%2C 2864)
-Delta Operations,Control,Delta Operations Control List,list,delta-ops-list,,X2 Location (km),,Calculated using ANN,DtsGreaterThanReportDv(146%2C 2780%2C 2867)
-Delta Operations,Control,Delta Operations Control List,list,delta-ops-list,,Flow,,Old and Middle River,DtsLessThanReportDv(169%2C 218%2C 2865 )
-Delta Operations,Control,Delta Operations Control List,list,delta-ops-list,,Electrical Conductivity,,Rock Slough,DtsGreaterThanReportDv(226%2C 2781%2C 411)
-Delta Operations,Control,Delta Operations Control List,list,delta-ops-list,,Electrical Conductivity,,Jersey Point,DtsGreaterThanReportDv(228%2C 2872%2C 410)
-Delta Operations,Control,Delta Operations Control List,list,delta-ops-list,,Electrical Conductivity,,Emmaton,DtsGreaterThanReportDv(227%2C 2783%2C 412)
-Delta Operations,Control,Delta Operations Control List,list,delta-ops-list,,Electrical Conductivity,,Collinsville,DtsGreaterThanReportDv(229%2C 2784%2C 413)
-Delta Operations,Control,Delta Operations Control List,list,delta-ops-list,,Negative Carriage Water,,Storage Conditions during Negative Carriage Water Conditions,DtsEqualsReportDv8(170%2C 102%2C 112%2C 107%2C 104%2C 106%2C 108%2C 2744%2C 2745)
+Delta Operations,Control,Delta Operations Control List,list,delta-ops-list,,Gate Operations,Header 1%2CHeader 2,Delta Cross Channel,DtsLessThanReportDv(279%2C 2778%2C 2864)
+Delta Operations,Control,Delta Operations Control List,list,delta-ops-list,,X2 Location (km),Header 1%2CHeader 2,Calculated using ANN,DtsGreaterThanReportDv(146%2C 2780%2C 2867)
+Delta Operations,Control,Delta Operations Control List,list,delta-ops-list,,Flow,Header 1%2CHeader 2,Old and Middle River,DtsLessThanReportDv(169%2C 218%2C 2865 )
+Delta Operations,Control,Delta Operations Control List,list,delta-ops-list,,Electrical Conductivity,Header 1%2CHeader 2,Rock Slough,DtsGreaterThanReportDv(226%2C 2781%2C 411)
+Delta Operations,Control,Delta Operations Control List,list,delta-ops-list,,Electrical Conductivity,Header 1%2CHeader 2,Jersey Point,DtsGreaterThanReportDv(228%2C 2872%2C 410)
+Delta Operations,Control,Delta Operations Control List,list,delta-ops-list,,Electrical Conductivity,Header 1%2CHeader 2,Emmaton,DtsGreaterThanReportDv(227%2C 2783%2C 412)
+Delta Operations,Control,Delta Operations Control List,list,delta-ops-list,,Electrical Conductivity,Header 1%2CHeader 2,Collinsville,DtsGreaterThanReportDv(229%2C 2784%2C 413)
+Delta Operations,Control,Delta Operations Control List,list,delta-ops-list,,Negative Carriage Water,Header 1%2CHeader 2%2CHeader 3%2CHeader 4%2CHeader 5%2CHeader 6%2CHeader 7%2CHeader 8,Storage Conditions during Negative Carriage Water Conditions,DtsEqualsReportDv8(170%2C 102%2C 112%2C 107%2C 104%2C 106%2C 108%2C 2744%2C 2745)
 Delta Operations,Control,Delta Operations Control List,list,delta-ops-list,,Zero Flow Conditions,,Banks PP,
 Delta Operations,Control,Delta Operations Control List,list,delta-ops-list,,Zero Flow Conditions,,Jones PP,
 Delta Operations,Control,Delta Operations Control List,list,delta-ops-list,,Zero Flow Conditions,,Delta Outflow,

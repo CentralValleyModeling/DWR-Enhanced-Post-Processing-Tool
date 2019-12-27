@@ -27,6 +27,7 @@ import com.google.common.flogger.FluentLogger;
  */
 public class StandardSummaryErrors
 {
+	private static final Logger LOGGER = Logger.getLogger(StandardSummaryErrors.class.getName());
 	private final List<Runnable> _loggingStatements = new ArrayList<>();
 
 	public void addError(Logger logger, String message)
@@ -51,7 +52,11 @@ public class StandardSummaryErrors
 
 	public void log()
 	{
-		_loggingStatements.forEach(Runnable::run);
-		_loggingStatements.clear();
+		if(!_loggingStatements.isEmpty())
+		{
+			LOGGER.log(Level.WARNING, "The QA/QC Report ran with the following errors:");
+			_loggingStatements.forEach(Runnable::run);
+			_loggingStatements.clear();
+		}
 	}
 }

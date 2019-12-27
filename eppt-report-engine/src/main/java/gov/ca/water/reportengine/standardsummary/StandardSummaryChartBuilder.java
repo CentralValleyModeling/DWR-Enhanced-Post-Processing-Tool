@@ -80,6 +80,11 @@ abstract class StandardSummaryChartBuilder
 	static final String REGION_NAME_ATTRIBUTE = "region-label";
 	static final String BACKGROUND_COLOR_ATTRIBUTE = "background-color";
 	static final String SVG_FILE_LOCATION_ATTRIBUTE = "svg-file";
+	static final String LIST_HEADER_ELEMENT = "list-header";
+	static final String LIST_NAME_ATTRIBUTE = "name";
+	static final String NAME_ORDER_ATTRIBUTE = "name-order";
+	static final String DATE_ORDER_ATTRIBUTE = "date-order";
+	static final String DATE_ATTRIBUTE = "date";
 	static final String NO_RECORD_TEXT = Long.toString(Const.UNDEFINED_INT);
 	private final Document _document;
 	private final EpptScenarioRun _base;

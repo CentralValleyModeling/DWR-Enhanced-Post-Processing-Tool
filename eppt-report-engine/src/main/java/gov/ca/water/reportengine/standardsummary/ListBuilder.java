@@ -12,20 +12,22 @@
 
 package gov.ca.water.reportengine.standardsummary;
 
-import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 import java.util.function.Function;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import gov.ca.water.calgui.project.EpptScenarioRun;
 import gov.ca.water.calgui.scripts.DssMissingRecordException;
 import gov.ca.water.reportengine.EpptReportException;
-import org.python.apache.xerces.dom.TextImpl;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
+
+import static java.util.stream.Collectors.toList;
 
 /**
  * Company: Resource Management Associates
@@ -49,7 +51,7 @@ class ListBuilder extends TableBuilder
 		appendTitles(retval, epptChart);
 	}
 
-	void appendTitles(Element retval, EpptChart epptChart)
+	private void appendTitles(Element retval, EpptChart epptChart)
 	{
 		int i = 0;
 		List<ChartComponent> componentsForTitle = epptChart.getChartComponents();
@@ -73,6 +75,21 @@ class ListBuilder extends TableBuilder
 				i++;
 			}
 		}
+	}
+
+	@Override
+	void appendHeaderPlaceholder(String header, List<ChartComponent> componentsForHeader, Function<ChartComponent, Element> valueFunction,
+								 Element retval)
+	{
+		//No-op
+	}
+
+	@Override
+	Element buildSubHeader(String subHeader, List<ChartComponent> componentsForSubHeaders, Function<ChartComponent, Element> valueFunction)
+	{
+		Element retval = getDocument().createElement(SUBHEADER_ELEMENT);
+		buildComponents(componentsForSubHeaders, valueFunction, retval);
+		return retval;
 	}
 
 	private Element buildValueForChart(EpptScenarioRun scenarioRun, ChartComponent v)
@@ -101,8 +118,7 @@ class ListBuilder extends TableBuilder
 		}
 		catch(DssMissingRecordException e)
 		{
-			LOGGER.log(Level.FINE, "Missing record, displaying as NR", e);
-			retval.setTextContent(NO_RECORD_TEXT);
+			getStandardSummaryErrors().addError(LOGGER, "Missing record for list, displaying as NR", e);
 			Element valueElem = getDocument().createElement(VALUE_ELEMENT);
 			valueElem.setTextContent(NO_RECORD_TEXT);
 			retval.appendChild(valueElem);
@@ -120,8 +136,19 @@ class ListBuilder extends TableBuilder
 		Element retval = getDocument().createElement(COMPONENT_ELEMENT);
 		retval.setAttribute(COMPONENT_NAME_ATTRIBUTE, component.getComponent());
 		buildValue(retval, component, valueFunction);
-		buildRowLabel(component.getComponent(), retval);
 		return retval;
+	}
+
+	@Override
+	void appendSubHeaderPlaceholder(String subHeader, List<ChartComponent> componentsForSubHeaders,
+									Function<ChartComponent, Element> valueFunction, Element retval)
+	{
+		Element componentPlaceholder = getDocument().createElement(COMPONENT_ELEMENT);
+		retval.appendChild(componentPlaceholder);
+		componentsForSubHeaders.stream()
+							   .filter(c -> c.getComponent().isEmpty())
+							   .findAny()
+							   .ifPresent(e -> buildValue(componentPlaceholder, e, valueFunction));
 	}
 
 	@Override
@@ -130,27 +157,55 @@ class ListBuilder extends TableBuilder
 		Element apply = valueFunction.apply(e);
 		if(apply != null)
 		{
+			List<String> headers = Arrays.asList(e.getSubHeader().split(","));
+			List<List<String>> rows = new ArrayList<>();
 			NodeList childNodes = apply.getChildNodes();
-			int index = 0;
-			int node = 0;
-			while(childNodes.getLength() > 0 && node < childNodes.getLength())
+			for(int i = 0; i < childNodes.getLength(); i++)
 			{
-				Node item = childNodes.item(node);
-				if(item instanceof Element)
+				Node item = childNodes.item(i);
+				String textContent = item.getTextContent();
+				if(Objects.equals(textContent, NO_RECORD_TEXT))
 				{
-					((Element) item).setAttribute(VALUE_ORDER_ATTRIBUTE, String.valueOf(index));
-					componentElement.appendChild(item);
-					index++;
-					node = 0;
+					//Fill everything in the row with NO_RECORD_TEXT
+					List<String> nrRow = headers.stream().map(f -> NO_RECORD_TEXT).collect(toList());
+					nrRow.add(NO_RECORD_TEXT);
+					rows.add(nrRow);
 				}
 				else
 				{
-					Element elem = getDocument().createElement(VALUE_ELEMENT);
-					elem.setAttribute(VALUE_ORDER_ATTRIBUTE, String.valueOf(index));
-					componentElement.appendChild(elem);
-					elem.setTextContent(item.getTextContent());
-					index++;
-					node++;
+					String[] split = textContent.split(":");
+					if(split.length > 1)
+					{
+						List<String> row = new ArrayList<>();
+						String date = split[0];
+						row.add(date);
+						String text = split[1];
+						String[] columns = text.split(",");
+						row.addAll(Arrays.asList(columns));
+						rows.add(row);
+					}
+				}
+			}
+			if(!rows.isEmpty() && !rows.get(0).isEmpty())
+			{
+				for(int i = 0; i < headers.size(); i++)
+				{
+					Element element = getDocument().createElement(LIST_HEADER_ELEMENT);
+					element.setAttribute(NAME_ORDER_ATTRIBUTE, Integer.toString(i));
+					element.setAttribute(LIST_NAME_ATTRIBUTE, headers.get(i));
+					componentElement.appendChild(element);
+					for(int j = 0; j < rows.size(); j++)
+					{
+						List<String> row = rows.get(j);
+						if(i + 1 < row.size())
+						{
+							Element value = getDocument().createElement(VALUE_ELEMENT);
+							value.setAttribute(DATE_ORDER_ATTRIBUTE, Integer.toString(j));
+							value.setAttribute(DATE_ATTRIBUTE, row.get(0));
+							value.setTextContent(row.get(i + 1));
+							element.appendChild(value);
+						}
+					}
 				}
 			}
 		}

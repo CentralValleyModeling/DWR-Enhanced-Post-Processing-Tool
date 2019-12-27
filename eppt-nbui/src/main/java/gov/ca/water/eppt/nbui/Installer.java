@@ -140,7 +140,6 @@ public class Installer extends ModuleInstall
 			EpptReportingMonths.createTrendReportingMonthsInstance();
 			WaterYearDefinitionSvc.createSeedDataSvcImplInstance();
 			DetailedIssuesReader.createDetailedIssues();
-			JythonScriptBuilder.createInstance();
 			TrendReportingParameters.createTrendReportingParametersInstance();
 			//This is done so that the JFXPanels created on startup have already loaded up the Platform thread.
 			Platform.setImplicitExit(false);
