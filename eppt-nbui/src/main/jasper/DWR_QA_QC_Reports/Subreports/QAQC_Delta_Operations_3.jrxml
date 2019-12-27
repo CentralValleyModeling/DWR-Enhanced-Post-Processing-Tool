@@ -60,7 +60,7 @@
 		<variableExpression><![CDATA["delta-ops-list"]]></variableExpression>
 	</variable>
 	<filterExpression><![CDATA[$F{module-name}=="Delta Operations"]]></filterExpression>
-	<group name="Module" isResetPageNumber="true" minDetailsToStartFromTop="3">
+	<group name="Module" isResetPageNumber="true">
 		<groupExpression><![CDATA[$F{module-order}]]></groupExpression>
 		<groupFooter>
 			<band height="1">
