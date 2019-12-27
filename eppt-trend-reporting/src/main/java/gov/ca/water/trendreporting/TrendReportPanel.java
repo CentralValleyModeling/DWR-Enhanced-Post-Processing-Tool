@@ -203,6 +203,7 @@ public class TrendReportPanel extends JFXPanel
 		addExpansionListener(parametersPane, parametersPane, statisticsListView, seasonalPeriodListView);
 		addExpansionListener(statisticsListView, parametersPane, statisticsListView, seasonalPeriodListView);
 		addExpansionListener(seasonalPeriodListView, parametersPane, statisticsListView, seasonalPeriodListView);
+		updateTrendTypes();
 		return flowPane;
 	}
 
@@ -252,19 +253,21 @@ public class TrendReportPanel extends JFXPanel
 		List<GUILinksAllModelsBO> allGuiLinks = GuiLinksSeedDataSvcImpl.getSeedDataSvcImplInstance().getAllGuiLinks();
 		for(GUILinksAllModelsBO guiLink : allGuiLinks)
 		{
-			retval.add(new TrendType(guiLink.getPlotAxisLabel()));
-		}
-		//Done in two iterations as we want plot axis label to take precedence in the unique check
-		for(GUILinksAllModelsBO guiLink : allGuiLinks)
-		{
-			retval.add(new TrendType(guiLink));
+			String plotAxisLabel = guiLink.getPlotAxisLabel();
+			if(plotAxisLabel != null && !plotAxisLabel.isEmpty())
+			{
+				retval.add(new TrendType(plotAxisLabel));
+			}
+			else
+			{
+				retval.add(new TrendType(guiLink));
+			}
 		}
 		return retval;
 	}
 
 	private Pane buildTypeListView()
 	{
-		updateTrendTypes();
 		_typeListView.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
 		_typeListView.getSelectionModel().select(0);
 		_typeListView.getSelectionModel().selectedItemProperty().addListener(this::typeSelected);
@@ -384,6 +387,10 @@ public class TrendReportPanel extends JFXPanel
 	{
 		TrendType selectedItem = _typeListView.getSelectionModel().getSelectedItem();
 		_trendTypes.removeIf(t -> t.getTitle() == null || t.getTitle().isEmpty());
+		if(_backingParameters != null)
+		{
+			_trendTypes.removeIf(t -> _backingParameters.stream().noneMatch(n->t.matchesGuiLink(n.getGuiLink())));
+		}
 		_typeListView.getItems().clear();
 		_typeListView.getItems().add(ALL_TREND_TYPE);
 		_typeListView.getItems().addAll(_trendTypes);
