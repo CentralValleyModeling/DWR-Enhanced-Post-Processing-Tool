@@ -48,8 +48,8 @@ def buildListPrefix(entry):
 
 def buildMonthYearEntry(entry):
     localDate = entry.getKey().minusMonths(1)
-    return localDate.getMonth().getDisplayName(TextStyle.FULL,
-                                               Locale.getDefault()) + " " + String.valueOf(localDate.getYear())
+    return String.valueOf(localDate.getYear()) + " " + \
+           localDate.getMonth().getDisplayName(TextStyle.FULL, Locale.getDefault())
 
 def formatAsString(value, units):
     if units is None:

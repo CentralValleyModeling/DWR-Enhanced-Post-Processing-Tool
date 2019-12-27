@@ -35,6 +35,7 @@ import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
 import com.google.common.flogger.FluentLogger;
+import gov.ca.water.calgui.EpptInitializationException;
 import gov.ca.water.calgui.bo.DetailedIssue;
 import gov.ca.water.calgui.bo.GUILinksAllModelsBO;
 import gov.ca.water.calgui.bo.WaterYearIndex;
@@ -160,7 +161,7 @@ public class EPPTReport
 			LOGGER.at(Level.INFO).log("Writing data to XML: %s", _pathToWriteOut);
 			writeXmlFile(doc);
 		}
-		catch(RuntimeException | IOException | EpptReportException | ParserConfigurationException | TransformerException e)
+		catch(RuntimeException | IOException | EpptReportException | ParserConfigurationException | TransformerException | EpptInitializationException e)
 		{
 			throw new QAQCReportException(e.getMessage(), e);
 		}
@@ -267,7 +268,7 @@ public class EPPTReport
 		}
 	}
 
-	private void appendSummaryStats(Document doc, Element rootElement) throws EpptReportException
+	private void appendSummaryStats(Document doc, Element rootElement) throws EpptReportException, EpptInitializationException
 	{
 		if(canPrintStandardSummary())
 		{

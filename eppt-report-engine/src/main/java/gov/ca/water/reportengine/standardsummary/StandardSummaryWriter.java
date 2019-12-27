@@ -12,25 +12,22 @@
 
 package gov.ca.water.reportengine.standardsummary;
 
-import java.io.IOException;
-import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.logging.Level;
-import java.util.stream.Stream;
 
 import com.google.common.flogger.FluentLogger;
+import gov.ca.water.calgui.EpptInitializationException;
 import gov.ca.water.calgui.project.EpptScenarioRun;
 import gov.ca.water.plotly.PlotlyPrintException;
 import gov.ca.water.plotly.PlotlySvgPrinter;
 import gov.ca.water.reportengine.EpptReportException;
+import gov.ca.water.reportengine.jython.JythonScriptBuilder;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 import static gov.ca.water.reportengine.EPPTReport.checkInterrupt;
-import static java.util.stream.Collectors.joining;
 import static java.util.stream.Collectors.toList;
 
 /**
@@ -59,7 +56,6 @@ public class StandardSummaryWriter
 	private final Document _document;
 	private final SummaryReportParameters _reportParameters;
 	private final Path _imageDirectory;
-	private final Path _rotatedImageDirectory;
 	private final ListBuilder _listBuilder;
 	private final BaseAltDiffTableBuilder _baseAltDiffTableBuilder;
 	private final ScatterPlotBuilder _scatterPlotBuilder;
@@ -71,13 +67,12 @@ public class StandardSummaryWriter
 	private final PercentDiffTableBuilder _percentDiffTableBuilder;
 
 	public StandardSummaryWriter(Document document, EpptScenarioRun base, List<EpptScenarioRun> alternatives, SummaryReportParameters reportParameters,
-								 Path imageDir, StandardSummaryErrors standardSummaryErrors)
+								 Path imageDir, StandardSummaryErrors standardSummaryErrors) throws EpptInitializationException
 	{
 		_document = document;
 		_reportParameters = reportParameters;
 		_imageDirectory = imageDir.toAbsolutePath();
 		_standardSummaryErrors = standardSummaryErrors;
-		_rotatedImageDirectory = _imageDirectory.resolve("rotated");
 		_listBuilder = new ListBuilder(document, base, alternatives, reportParameters, _standardSummaryErrors);
 		_baseAltDiffTableBuilder = new BaseAltDiffTableBuilder(document, base, alternatives, reportParameters,_standardSummaryErrors);
 		_coaTableBuilder = new CoaTableBuilder(document, base, alternatives, reportParameters,_standardSummaryErrors);
@@ -87,6 +82,7 @@ public class StandardSummaryWriter
 		_linePlotBuilder = new LinePlotBuilder(document, base, alternatives, reportParameters,_standardSummaryErrors);
 		_percentDiffTableBuilder = new PercentDiffTableBuilder(document, base, alternatives, reportParameters,_standardSummaryErrors);
 		_scatterPlotBuilder = new ScatterPlotBuilder(document, base, alternatives, reportParameters,_standardSummaryErrors);
+		JythonScriptBuilder.createInstance();
 	}
 
 	public Element write(List<EpptChart> charts) throws EpptReportException
@@ -117,31 +113,10 @@ public class StandardSummaryWriter
 		try
 		{
 			PlotlySvgPrinter.printSvg(_imageDirectory);
-//			PlotlySvgPrinter.printSvg(_rotatedImageDirectory);
-//			rotateImages();
 		}
 		catch(PlotlyPrintException e)
 		{
 			throw new EpptReportException("Unable to print SVG files for JSON directory: " + _imageDirectory, e);
-		}
-	}
-
-	private void rotateImages() throws IOException
-	{
-		List<Path> svgPaths;
-		try(Stream<Path> stream = Files.walk(_rotatedImageDirectory.resolve("svg"), 1))
-		{
-			svgPaths = stream.filter(p->!p.toFile().isDirectory()).filter(p -> p.toString().endsWith("svg")).collect(toList());
-		}
-		for(Path path : svgPaths)
-		{
-			String newText;
-			try(Stream<String> lines = Files.lines(path))
-			{
-				String collect = lines.collect(joining("\n"));
-				newText = collect.replaceFirst("<svg", "<svg transform=\"rotate(90, 0, 150)\"");
-			}
-			Files.write(path, Collections.singleton(newText));
 		}
 	}
 
