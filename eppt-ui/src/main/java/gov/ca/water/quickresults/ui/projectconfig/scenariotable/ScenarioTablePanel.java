@@ -17,11 +17,15 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.*;
 
+import gov.ca.water.calgui.project.EpptDssContainer;
 import gov.ca.water.calgui.project.EpptScenarioRun;
+import gov.ca.water.calgui.project.NamedDssPath;
 import javafx.application.Platform;
 import javafx.collections.ObservableList;
 import javafx.embed.swing.JFXPanel;
@@ -41,6 +45,7 @@ import com.rma.javafx.treetable.cells.views.RmaCheckBoxCellView;
 import static gov.ca.water.quickresults.ui.projectconfig.scenariotable.ScenarioTableModel.ALTERNATIVE_COL_SPEC;
 import static gov.ca.water.quickresults.ui.projectconfig.scenariotable.ScenarioTableModel.BASE_COL_SPEC;
 import static gov.ca.water.quickresults.ui.projectconfig.scenariotable.ScenarioTableModel.NAME_COL_SPEC;
+import static java.util.stream.Collectors.toList;
 
 /**
  * Company: Resource Management Associates
@@ -131,9 +136,9 @@ public class ScenarioTablePanel extends JFXPanel
 		SwingUtilities.invokeLater(() -> RMAUtil.setParentModified(this));
 	}
 
-	public void updateScenario(EpptScenarioRun oldScenarioRun, EpptScenarioRun newScenarioRun)
+	public CompletableFuture<Void> updateScenario(EpptScenarioRun oldScenarioRun, EpptScenarioRun newScenarioRun)
 	{
-		Platform.runLater(() ->
+		return CompletableFuture.runAsync(()->
 		{
 			Optional<ScenarioRowModel> scenarioRowModel = _scenarioTableModel.getRowForScenarioRun(oldScenarioRun);
 			if(scenarioRowModel.isPresent())
@@ -144,9 +149,8 @@ public class ScenarioTablePanel extends JFXPanel
 				newScenarioRun.setBaseSelected(oldModel.isBase());
 				newScenarioRun.setAltSelected(oldModel.isAlternative());
 				_scenarioTableModel.getRows().add(i, new ScenarioRowModel(this::setModified, _scenarioTableModel, newScenarioRun));
-
 			}
-		});
+		}, Platform::runLater);
 	}
 
 	public EpptScenarioRun getSelectedScenario()
@@ -218,6 +222,73 @@ public class ScenarioTablePanel extends JFXPanel
 				}
 			}
 		}
+	}
+
+	public void relativizeScenariosToNewProject(Path newProjectPath, Path oldProjectPath)
+	{
+		List<EpptScenarioRun> allScenarioRuns = _scenarioTableModel.getAllScenarioRuns();
+		for(EpptScenarioRun epptScenarioRun : allScenarioRuns)
+		{
+			EpptScenarioRun newRun = relativizeScenarioToNewProject(epptScenarioRun, newProjectPath, oldProjectPath);
+			try
+			{
+				updateScenario(epptScenarioRun, newRun).get();
+			}
+			catch(InterruptedException e)
+			{
+				Thread.currentThread().interrupt();
+				LOGGER.log(Level.FINE, "Error relativizing project files", e);
+			}
+			catch(ExecutionException e)
+			{
+				LOGGER.log(Level.SEVERE, "Error relativizing project files", e);
+			}
+		}
+	}
+
+	private EpptScenarioRun relativizeScenarioToNewProject(EpptScenarioRun scenarioRun, Path newProjectPath, Path oldProjectPath)
+	{
+		EpptDssContainer oldDssContainer = scenarioRun.getDssContainer();
+		List<NamedDssPath> extra = oldDssContainer.getExtraDssFiles()
+												  .stream()
+												  .map(e -> copyDssToNewProjectFolder(newProjectPath, oldProjectPath, e))
+												  .collect(toList());
+		NamedDssPath ivDssPath = copyDssToNewProjectFolder(newProjectPath, oldProjectPath, oldDssContainer.getIvDssFile());
+		NamedDssPath dvDssPath = copyDssToNewProjectFolder(newProjectPath, oldProjectPath, oldDssContainer.getDvDssFile());
+		NamedDssPath svDssPath = copyDssToNewProjectFolder(newProjectPath, oldProjectPath, oldDssContainer.getSvDssFile());
+		NamedDssPath dtsDssPath = copyDssToNewProjectFolder(newProjectPath, oldProjectPath, oldDssContainer.getDtsDssFile());
+		EpptDssContainer newDssContainer = new EpptDssContainer(ivDssPath,
+				dvDssPath,
+				svDssPath,
+				dtsDssPath,
+				extra);
+		return new EpptScenarioRun(scenarioRun.getName(),
+				scenarioRun.getDescription(),
+				scenarioRun.getModel(),
+				makeRelativeToNewProject(scenarioRun.getOutputPath(), newProjectPath, oldProjectPath),
+				makeRelativeToNewProject(scenarioRun.getWreslMain(), newProjectPath, oldProjectPath),
+				makeRelativeToNewProject(scenarioRun.getWaterYearTable(), newProjectPath, oldProjectPath),
+				newDssContainer,
+				scenarioRun.getColor());
+	}
+
+	private NamedDssPath copyDssToNewProjectFolder(Path newProjectPath, Path oldProjectPath, NamedDssPath dvDssFile)
+	{
+		return new NamedDssPath(makeRelativeToNewProject(dvDssFile.getDssPath(), newProjectPath, oldProjectPath),
+				dvDssFile.getAliasName(),
+				dvDssFile.getAPart(),
+				dvDssFile.getEPart(),
+				dvDssFile.getFPart());
+	}
+
+	private Path makeRelativeToNewProject(Path outputPath, Path newProjectPath, Path oldProjectPath)
+	{
+		if(outputPath.startsWith(oldProjectPath))
+		{
+			Path relativize = oldProjectPath.relativize(outputPath);
+			return newProjectPath.resolve(relativize);
+		}
+		return outputPath;
 	}
 
 	private static class ScenarioCheckboxView extends RmaCheckBoxCellView

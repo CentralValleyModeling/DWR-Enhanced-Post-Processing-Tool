@@ -12,11 +12,17 @@
 
 package gov.ca.water.quickresults.ui.projectconfig;
 
+import java.awt.Desktop;
 import java.awt.Frame;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.IOException;
+import java.nio.file.Path;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.*;
 
+import gov.ca.water.calgui.constant.EpptPreferences;
 import gov.ca.water.calgui.project.EpptScenarioRun;
 import gov.ca.water.calgui.project.EpptScenarioRunValidator;
 import gov.ca.water.quickresults.ui.EpptPanel;
@@ -33,6 +39,7 @@ import hec.gui.NameDialog;
  */
 public class ProjectConfigurationListener implements ActionListener
 {
+	private static final Logger LOGGER = Logger.getLogger(ProjectConfigurationListener.class.getName());
 	private final ProjectConfigurationPanel _projectConfigurationPanel;
 
 	public ProjectConfigurationListener(ProjectConfigurationPanel projectConfigurationPanel)
@@ -72,7 +79,27 @@ public class ProjectConfigurationListener implements ActionListener
 			case "moveDown":
 				_projectConfigurationPanel.moveSelectedScenarioDown();
 				break;
+			case "openProject":
+				openCurrentProject();
+				break;
 			default:
+		}
+	}
+
+	private void openCurrentProject()
+	{
+		Path lastProjectConfiguration = EpptPreferences.getLastProjectConfiguration();
+		if(!lastProjectConfiguration.toString().isEmpty())
+		{
+			Path projectFolder = lastProjectConfiguration.getParent();
+			try
+			{
+				Desktop.getDesktop().open(projectFolder.toFile());
+			}
+			catch(IOException e)
+			{
+				LOGGER.log(Level.SEVERE, "Error opening project folder: " + projectFolder);
+			}
 		}
 	}
 

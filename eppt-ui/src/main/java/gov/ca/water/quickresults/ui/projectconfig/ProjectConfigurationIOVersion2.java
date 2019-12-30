@@ -110,10 +110,10 @@ class ProjectConfigurationIOVersion2
 			jsonObject.put(SCENARIO_COLOR_KEY, Constant.colorToHex(scenario.getColor()));
 			EpptDssContainer dssContainer = scenario.getDssContainer();
 			JSONObject dssContainerJson = new JSONObject();
-			JSONObject namedDssDvJsonObject = createDssJson(dssContainer.getDvDssFile(), modelOutputPath);
-			JSONObject namedDssSvJsonObject = createDssJson(dssContainer.getSvDssFile(), modelOutputPath);
-			JSONObject namedDssIvJsonObject = createDssJson(dssContainer.getIvDssFile(), modelOutputPath);
-			JSONObject namedDssDtsJsonObject = createDssJson(dssContainer.getDtsDssFile(), modelOutputPath);
+			JSONObject namedDssDvJsonObject = createDssJson(dssContainer.getDvDssFile(), modelOutputPath, selectedPath);
+			JSONObject namedDssSvJsonObject = createDssJson(dssContainer.getSvDssFile(), modelOutputPath, selectedPath);
+			JSONObject namedDssIvJsonObject = createDssJson(dssContainer.getIvDssFile(), modelOutputPath, selectedPath);
+			JSONObject namedDssDtsJsonObject = createDssJson(dssContainer.getDtsDssFile(), modelOutputPath, selectedPath);
 			if(namedDssDvJsonObject != null)
 			{
 				dssContainerJson.put(SCENARIO_DV_KEY, namedDssDvJsonObject);
@@ -137,7 +137,7 @@ class ProjectConfigurationIOVersion2
 			}
 			JSONArray extraDssArray = new JSONArray();
 			dssContainer.getExtraDssFiles().stream()
-						.map((NamedDssPath dssFile) -> createDssJson(dssFile, modelOutputPath))
+						.map((NamedDssPath dssFile) -> createDssJson(dssFile, modelOutputPath, selectedPath))
 						.filter(Objects::nonNull)
 						.forEach(extraDssArray::put);
 			dssContainerJson.put(SCENARIO_DSS_EXTRA, extraDssArray);
@@ -171,13 +171,16 @@ class ProjectConfigurationIOVersion2
 		return originalPath.toString();
 	}
 
-	private String relativizeToModel(Path originalPath, Path modelPath)
+	private String relativizeToModel(Path originalPath, Path modelPath, Path projectPath)
 	{
 		if(isChild(originalPath, modelPath))
 		{
 			return Paths.get(RELATIVE_TO_MODEL).resolve(modelPath.toAbsolutePath().relativize(originalPath)).toString();
 		}
-		return originalPath.toString();
+		else
+		{
+			return relativizeToProject(originalPath, projectPath);
+		}
 	}
 
 	private static boolean isChild(Path child, Path parent)
@@ -318,7 +321,7 @@ class ProjectConfigurationIOVersion2
 		return new NamedDssPath(dssPath, aliasName, aPart, ePart, fPart);
 	}
 
-	private JSONObject createDssJson(NamedDssPath dssFile, Path modelOutputPath)
+	private JSONObject createDssJson(NamedDssPath dssFile, Path modelOutputPath, Path projectPath)
 	{
 		JSONObject namedDssJsonObject = null;
 		if(dssFile != null)
@@ -330,7 +333,7 @@ class ProjectConfigurationIOVersion2
 			}
 			if(dssFile.getDssPath() != null)
 			{
-				namedDssJsonObject.put(SCENARIO_DSS_PATH, relativizeToModel(dssFile.getDssPath(), modelOutputPath));
+				namedDssJsonObject.put(SCENARIO_DSS_PATH, relativizeToModel(dssFile.getDssPath(), modelOutputPath, projectPath));
 			}
 			if(dssFile.getAPart() != null)
 			{

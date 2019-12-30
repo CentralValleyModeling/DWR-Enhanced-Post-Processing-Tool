@@ -18,14 +18,17 @@
 					<gridbagconstraints insets="5,5,5,5" anchor="GridBagConstraints.WEST" gridx="0" gridy="0"/>
 				</label>
 				<textfield id="prj_name">
-					<gridbagconstraints insets="5,5,5,5" anchor="GridBagConstraints.WEST" weightx="1.0" gridwidth="GridBagConstraints.REMAINDER" fill="GridBagConstraints.HORIZONTAL" gridx="1"
+					<gridbagconstraints insets="5,5,5,5" anchor="GridBagConstraints.WEST" weightx="0.8" fill="GridBagConstraints.HORIZONTAL" gridx="1"
 										gridy="0"/>
 				</textfield>
+				<button id="btnOpenProject" name="btnOpenProject" text="Open" ActionCommand="openProject">
+					<gridbagconstraints insets="5,5,5,5" anchor="GridBagConstraints.WEST" gridwidth="1" gridx="2" gridy="0"/>
+				</button>
 				<label text="Description:">
 					<gridbagconstraints insets="5,5,5,5" anchor="GridBagConstraints.WEST" gridx="0" gridy="1"/>
 				</label>
 				<textfield id="prj_desc">
-					<gridbagconstraints insets="5,5,5,5" anchor="GridBagConstraints.WEST" weightx="1.0" gridwidth="GridBagConstraints.REMAINDER" fill="GridBagConstraints.HORIZONTAL" gridx="1"
+					<gridbagconstraints insets="5,5,5,5" anchor="GridBagConstraints.WEST" weightx="1.0" fill="GridBagConstraints.HORIZONTAL" gridx="1"
 										gridy="1"/>
 				</textfield>
 			</panel>

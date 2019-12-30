@@ -22,6 +22,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.*;
 
+import gov.ca.water.calgui.constant.Constant;
 import gov.ca.water.calgui.constant.EpptPreferences;
 import gov.ca.water.eppt.nbui.Installer;
 import gov.ca.water.eppt.nbui.ProjectConfigurationTopComponent;
@@ -84,19 +85,19 @@ public final class SaveProjectConfiguration extends AbstractAction implements Pr
 		ProjectConfigurationPanel projectConfigurationPanel = ProjectConfigurationPanel.getProjectConfigurationPanel();
 		if(lastProjectConfiguration.toFile().exists())
 		{
-			Path projectDir = lastProjectConfiguration.toAbsolutePath().getParent();
-			//For backwards compatibility
-			if(projectDir.normalize().equals(EpptPreferences.getProjectsPath()))
-			{
-				projectDir = projectDir.resolve(projectConfigurationPanel.getProjectName());
-			}
-			projectConfigurationPanel.saveConfigurationToPath(projectDir,
+			projectConfigurationPanel.saveConfigurationToPath(lastProjectConfiguration,
 					projectConfigurationPanel.getProjectName(), projectConfigurationPanel.getProjectDescription());
 		}
 		else
 		{
 			new NewProjectConfiguration().createNew();
 		}
+		clearSaveCookie();
+	}
+
+	static void clearSaveCookie()
+	{
+		ProjectConfigurationPanel projectConfigurationPanel = ProjectConfigurationPanel.getProjectConfigurationPanel();
 		WindowManager.getDefault().getMainWindow().setTitle(
 				Installer.MAIN_FRAME_NAME + " - " + projectConfigurationPanel.getProjectName());
 		Collection<? extends ProjectConfigurationSavable> projectConfigurationSavables = Savable.REGISTRY.lookupAll(
@@ -128,9 +129,9 @@ public final class SaveProjectConfiguration extends AbstractAction implements Pr
 		ImageIcon imageIcon = getSaveIcon("save24.png");
 		JPopupMenu menu = new JPopupMenu();
 		menu.add(createSaveAsAction());
-		JToggleButton dropDownToggleButton = DropDownButtonFactory.createDropDownToggleButton(imageIcon, menu);
-		dropDownToggleButton.addActionListener(e -> performSave());
-		return dropDownToggleButton;
+		JButton dropDownButton = DropDownButtonFactory.createDropDownButton(imageIcon, menu);
+		dropDownButton.addActionListener(e -> performSave());
+		return dropDownButton;
 	}
 
 	private JMenuItem createSaveAsAction()

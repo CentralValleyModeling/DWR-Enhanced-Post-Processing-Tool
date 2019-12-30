@@ -11,25 +11,42 @@
  */
 package gov.ca.water.eppt.nbui.actions;
 
+import java.awt.BorderLayout;
+import java.awt.Frame;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.Collection;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.stream.Stream;
 
-import gov.ca.water.eppt.nbui.Installer;
-import gov.ca.water.eppt.nbui.ProjectConfigurationTopComponent;
+import javax.swing.*;
+
+import gov.ca.water.calgui.constant.EpptPreferences;
+import gov.ca.water.calgui.project.EpptProject;
+import gov.ca.water.calgui.project.EpptScenarioRun;
 import gov.ca.water.quickresults.ui.projectconfig.ProjectConfigurationPanel;
-import org.netbeans.api.actions.Savable;
 import org.openide.awt.ActionID;
 import org.openide.awt.ActionReference;
 import org.openide.awt.ActionReferences;
 import org.openide.awt.ActionRegistration;
 import org.openide.util.NbBundle.Messages;
-import org.openide.windows.Mode;
 import org.openide.windows.WindowManager;
+
+import hec.heclib.dss.HecDSSFileAccess;
+import hec.heclib.dss.HecDSSFileData;
+import hec.heclib.dss.HecDSSFileDataManager;
+import hec.heclib.util.Heclib;
+
+import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
+import static java.util.stream.Collectors.toList;
 
 @ActionID(
 		category = "EPPT",
@@ -64,28 +81,83 @@ public final class SaveAsProjectConfiguration implements ActionListener
 	private void saveAs() throws IOException
 	{
 		ProjectConfigurationPanel projectConfigurationPanel = ProjectConfigurationPanel.getProjectConfigurationPanel();
-		new NewProjectConfiguration().createNew(false);
-		WindowManager.getDefault().getMainWindow().setTitle(
-				Installer.MAIN_FRAME_NAME + " - " + projectConfigurationPanel.getProjectName());
-		Collection<? extends ProjectConfigurationSavable> projectConfigurationSavables = Savable.REGISTRY.lookupAll(
-				ProjectConfigurationSavable.class);
-		if(projectConfigurationSavables.isEmpty())
+		NewProjectDialog newProjectDialog = new NewProjectDialog();
+		String newProjectName = projectConfigurationPanel.getProjectName() + " (1)";
+		newProjectDialog.setTitle("Clone Project");
+		newProjectDialog.setName(newProjectName);
+		newProjectDialog.setDescription(projectConfigurationPanel.getProjectDescription());
+		newProjectDialog.setVisible(true);
+		if(!newProjectDialog.isCanceled())
 		{
-			WindowManager.getDefault().getModes()
-						 .stream()
-						 .map(Mode::getTopComponents)
-						 .map(Arrays::asList)
-						 .flatMap(Collection::stream)
-						 .filter(t -> t instanceof ProjectConfigurationTopComponent)
-						 .map(t -> (ProjectConfigurationTopComponent) t)
-						 .forEach(ProjectConfigurationTopComponent::topComponentNameUnmodified);
-		}
-		else
-		{
-			for(ProjectConfigurationSavable savable : projectConfigurationSavables)
+			Path lastConfigurationParentFolder = EpptPreferences.getLastProjectConfiguration().getParent();
+			Path projectPath = newProjectDialog.getProjectDirectory();
+			HecDSSFileAccess.closeAllFiles();
+			try(Stream<Path> walk = Files.walk(lastConfigurationParentFolder))
 			{
-				savable.removeFromLookup();
+				List<Path> collect = walk.collect(toList());
+				Frame mainWindow = WindowManager.getDefault().getMainWindow();
+				JDialog jDialog = new JDialog(mainWindow, "Copying...", true);
+				JProgressBar jProgressBar = new JProgressBar(0, collect.size());
+				jProgressBar.setStringPainted(true);
+				jDialog.add(jProgressBar, BorderLayout.CENTER);
+				jDialog.pack();
+				jDialog.setSize(790, 72);
+				jDialog.setLocationRelativeTo(mainWindow);
+				List<Path> blacklist = projectConfigurationPanel.getAllEpptScenarioRuns()
+																.stream()
+																.map(EpptScenarioRun::getPostProcessDss)
+																.filter(Objects::nonNull)
+																.collect(java.util.stream.Collectors.toList());
+				blacklist.add(lastConfigurationParentFolder.resolve("Reports"));
+				CompletableFuture.runAsync(() ->
+				{
+					AtomicInteger i = new AtomicInteger(0);
+					collect.stream()
+						   .filter(s -> !blacklist.contains(s))
+						   .forEach(source -> copy(source, projectPath.resolve(lastConfigurationParentFolder.relativize(source)),
+								   jProgressBar, i));
+				}).whenComplete((b, t) ->
+				{
+					jDialog.setVisible(false);
+					if(t != null)
+					{
+						LOGGER.log(Level.SEVERE, "Error copying project", t);
+					}
+				});
+				jDialog.setVisible(true);
 			}
+			projectConfigurationPanel.saveAsConfigurationToPath(projectPath, newProjectDialog.getName(), newProjectDialog.getDescription());
+			projectConfigurationPanel.loadProjectConfiguration(EpptPreferences.getLastProjectConfiguration());
+			SaveProjectConfiguration.clearSaveCookie();
+		}
+	}
+
+	private static void copy(Path source, Path dest, JProgressBar jProgressBar, AtomicInteger i)
+	{
+		try
+		{
+			if(!dest.toFile().exists() && !source.getFileName().toString().endsWith(".eppt"))
+			{
+				SwingUtilities.invokeLater(() ->
+				{
+					jProgressBar.setToolTipText("Copying: " + source);
+					jProgressBar.setString("Copying: " + source.getFileName());
+					jProgressBar.setValue(i.getAndAdd(1));
+				});
+				boolean mkdirs = dest.toFile().mkdirs();
+				if(!mkdirs)
+				{
+					throw new IOException("Unable to create directory for: " + dest);
+				}
+				else if(source.toFile().isFile())
+				{
+					Files.copy(source, dest, REPLACE_EXISTING);
+				}
+			}
+		}
+		catch(IOException e)
+		{
+			LOGGER.log(Level.SEVERE, "Error copying file: " + source, e);
 		}
 	}
 }

@@ -31,8 +31,6 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 import javax.swing.*;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.text.DefaultFormatter;
@@ -407,12 +405,26 @@ public final class ProjectConfigurationPanel extends EpptPanel
 	public void saveConfigurationToPath(Path selectedPath, String projectName, String projectDescription)
 			throws IOException
 	{
-		boolean mkdirs = selectedPath.toFile().mkdirs();
+		boolean mkdirs = selectedPath.getParent().toFile().mkdirs();
 		if(!mkdirs)
 		{
 			LOGGER.debug("Path not created: " + selectedPath);
 		}
-		Path projectFile = selectedPath.resolve(projectName + "." + Constant.EPPT_EXT);
+		_projectConfigurationIO.saveConfiguration(selectedPath, projectName, projectDescription);
+		EpptPreferences.setLastProjectConfiguration(selectedPath);
+	}
+
+	public void saveAsConfigurationToPath(Path newProjectPath, String projectName, String projectDescription)
+			throws IOException
+	{
+		boolean mkdirs = newProjectPath.toFile().mkdirs();
+		if(!mkdirs)
+		{
+			LOGGER.debug("Path not created: " + newProjectPath);
+		}
+		Path projectFile = newProjectPath.resolve(projectName + "." + Constant.EPPT_EXT);
+		Path oldProjectPath = EpptPreferences.getLastProjectConfiguration().getParent();
+		_scenarioTablePanel.relativizeScenariosToNewProject(newProjectPath, oldProjectPath);
 		_projectConfigurationIO.saveConfiguration(projectFile, projectName, projectDescription);
 		EpptPreferences.setLastProjectConfiguration(projectFile);
 	}

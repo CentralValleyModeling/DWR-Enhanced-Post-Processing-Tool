@@ -76,7 +76,7 @@ class ProjectConfigurationIO
 	EpptProject loadConfiguration(Path selectedPath) throws IOException
 	{
 		String collect = String.join("\n", Files.readAllLines(selectedPath));
-		if(collect != null && !collect.isEmpty())
+		if(!collect.isEmpty())
 		{
 			JSONObject jsonObject = new JSONObject(collect);
 			if(VERSION_1_0.equalsIgnoreCase(jsonObject.getString(VERSION_KEY)))
