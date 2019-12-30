@@ -205,6 +205,7 @@ public class TrendReportPanel extends JFXPanel
 		addExpansionListener(seasonalPeriodListView, parametersPane, statisticsListView, seasonalPeriodListView);
 		_trendTypes.removeIf(t -> _backingParameters.stream().noneMatch(n->t.matchesGuiLink(n.getGuiLink())));
 		updateTrendTypes();
+		_typeListView.getSelectionModel().select(0);
 		return flowPane;
 	}
 
