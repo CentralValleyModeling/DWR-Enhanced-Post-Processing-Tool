@@ -108,9 +108,13 @@ public final class SaveAsProjectConfiguration implements ActionListener
 																.map(EpptScenarioRun::getPostProcessDss)
 																.filter(Objects::nonNull)
 																.collect(java.util.stream.Collectors.toList());
-				try(Stream<Path> reports = Files.walk(lastConfigurationParentFolder.resolve("Reports")))
+				Path reportsDir = lastConfigurationParentFolder.resolve("Reports");
+				if(reportsDir.toFile().exists())
 				{
-					blacklist.addAll(reports.collect(toList()));
+					try(Stream<Path> reports = Files.walk(reportsDir))
+					{
+						blacklist.addAll(reports.collect(toList()));
+					}
 				}
 				CompletableFuture.runAsync(() ->
 				{
