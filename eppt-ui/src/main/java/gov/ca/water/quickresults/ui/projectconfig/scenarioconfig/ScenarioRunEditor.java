@@ -21,6 +21,7 @@ import javax.swing.*;
 
 import gov.ca.water.calgui.project.EpptScenarioRun;
 import gov.ca.water.calgui.project.EpptScenarioRunValidator;
+import gov.ca.water.quickresults.ui.projectconfig.ProjectConfigurationPanel;
 
 /**
  * Company: Resource Management Associates
@@ -97,15 +98,28 @@ public class ScenarioRunEditor extends JDialog implements LoadingDss
 	public void okPerformed(ActionEvent e)
 	{
 		_canceled = false;
-		EpptScenarioRunValidator epptScenarioRunValidator = new EpptScenarioRunValidator(createRun());
+		EpptScenarioRun run = createRun();
+		EpptScenarioRunValidator epptScenarioRunValidator = new EpptScenarioRunValidator(run);
 		if(epptScenarioRunValidator.isValid())
 		{
-			dispose();
+			boolean duplicateName = ProjectConfigurationPanel.getProjectConfigurationPanel().getAllEpptScenarioRuns()
+															 .stream()
+															 .map(EpptScenarioRun::getName)
+															 .anyMatch(s -> s.equalsIgnoreCase(run.getName()));
+			if(duplicateName)
+			{
+				JOptionPane.showMessageDialog(this, "Duplicate Scenario Run Name: " + run.getName(),
+						"Error", JOptionPane.WARNING_MESSAGE);
+			}
+			else
+			{
+				dispose();
+			}
 		}
 		else
 		{
 			StringBuilder builder = new StringBuilder("Scenario Run is not valid: ");
-			epptScenarioRunValidator.getErrors().forEach(s->builder.append("\n").append(s));
+			epptScenarioRunValidator.getErrors().forEach(s -> builder.append("\n").append(s));
 			JOptionPane.showMessageDialog(this, builder.toString(), "Error", JOptionPane.WARNING_MESSAGE);
 		}
 	}
