@@ -16,6 +16,7 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import gov.ca.water.calgui.EpptInitializationException;
@@ -162,7 +163,7 @@ public class TrendReportingParameters
 			IGuiLinksSeedDataSvc guiLinkService = GuiLinksSeedDataSvcImpl.getSeedDataSvcImplInstance();
 			if(guiLinkId != null)
 			{
-				_guiLink =  guiLinkService.getGuiLink(guiLinkId.toString());
+				_guiLink = guiLinkService.getGuiLink(guiLinkId.toString());
 			}
 			else
 			{
@@ -183,12 +184,18 @@ public class TrendReportingParameters
 			return new TrendParameter(index, guiLink, titleOverride);
 		}
 
-		public GUILinksAllModelsBO getGuiLink()
+		GUILinksAllModelsBO getGuiLink()
 		{
 			return _guiLink;
 		}
 
-		public String getTitle()
+		private int getIndex()
+		{
+			return _index;
+		}
+
+		@Override
+		public String toString()
 		{
 			String title = _titleOverride;
 			GUILinksAllModelsBO guiLink = getGuiLink();
@@ -208,12 +215,7 @@ public class TrendReportingParameters
 								   .orElse("");
 				}
 			}
-			return title;
-		}
-
-		public int getIndex()
-		{
-			return _index;
+			return Optional.ofNullable(title).orElse("");
 		}
 	}
 }

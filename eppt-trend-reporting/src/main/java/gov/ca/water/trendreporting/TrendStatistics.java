@@ -208,4 +208,10 @@ class TrendStatistics
 		}
 		return retval;
 	}
+
+	@Override
+	public String toString()
+	{
+		return getName();
+	}
 }

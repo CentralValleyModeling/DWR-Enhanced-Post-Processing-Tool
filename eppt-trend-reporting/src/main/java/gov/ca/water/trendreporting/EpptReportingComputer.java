@@ -67,12 +67,12 @@ class EpptReportingComputer
 	private final List<WaterYearIndex> _waterYearIndices;
 
 	EpptReportingComputer(GUILinksAllModelsBO guiLink, TrendStatistics statistics, MonthPeriod monthPeriod,
-						  WaterYearDefinition waterYearDefinition, WaterYearIndex waterYearIndex, List<WaterYearIndex> waterYearIndices)
+						  WaterYearIndex waterYearIndex, List<WaterYearIndex> waterYearIndices)
 	{
 		_guiLink = guiLink;
 		_statistics = statistics;
 		_monthPeriod = monthPeriod;
-		_waterYearDefinition = waterYearDefinition;
+		_waterYearDefinition = new WaterYearDefinition("Default", Month.OCTOBER, Month.SEPTEMBER);
 		_waterYearIndex = waterYearIndex;
 		_waterYearIndices = waterYearIndices;
 	}

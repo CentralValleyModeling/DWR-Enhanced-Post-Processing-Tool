@@ -110,4 +110,10 @@ public class TrendType
 	{
 		return Objects.hash(getTitle().toLowerCase());
 	}
+
+	@Override
+	public String toString()
+	{
+		return getTitle();
+	}
 }
