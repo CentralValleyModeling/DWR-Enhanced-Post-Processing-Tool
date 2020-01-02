@@ -97,7 +97,6 @@ public class ScenarioRunEditor extends JDialog implements LoadingDss
 
 	public void okPerformed(ActionEvent e)
 	{
-		_canceled = false;
 		EpptScenarioRun run = createRun();
 		EpptScenarioRunValidator epptScenarioRunValidator = new EpptScenarioRunValidator(run);
 		if(epptScenarioRunValidator.isValid())
@@ -113,6 +112,7 @@ public class ScenarioRunEditor extends JDialog implements LoadingDss
 			}
 			else
 			{
+				_canceled = false;
 				dispose();
 			}
 		}
