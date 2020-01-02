@@ -18,7 +18,7 @@
 	<parent>
 		<artifactId>eppt-parent</artifactId>
 		<groupId>gov.ca.water</groupId>
-		<version>1.1.2-SNAPSHOT</version>
+		<version>1.1.3-SNAPSHOT</version>
 		<relativePath>../eppt-parent/pom.xml</relativePath>
 	</parent>
 	<artifactId>eppt-report-engine</artifactId>

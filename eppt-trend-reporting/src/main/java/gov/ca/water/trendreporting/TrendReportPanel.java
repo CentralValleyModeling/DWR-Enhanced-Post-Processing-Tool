@@ -13,28 +13,32 @@
 package gov.ca.water.trendreporting;
 
 
+import java.awt.Frame;
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.Set;
+import java.util.TreeSet;
 import java.util.concurrent.CancellationException;
 import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.CompletionException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Stream;
+import javax.swing.*;
 import javax.xml.parsers.ParserConfigurationException;
 
 import gov.ca.water.calgui.EpptInitializationException;
 import gov.ca.water.calgui.bo.GUILinksAllModelsBO;
 import gov.ca.water.calgui.bo.WaterYearDefinition;
 import gov.ca.water.calgui.bo.WaterYearIndex;
-import gov.ca.water.calgui.busservice.IGuiLinksSeedDataSvc;
 import gov.ca.water.calgui.busservice.impl.GuiLinksSeedDataSvcImpl;
 import gov.ca.water.calgui.busservice.impl.WaterYearDefinitionSvc;
 import gov.ca.water.calgui.busservice.impl.WaterYearTableReader;
@@ -43,14 +47,18 @@ import gov.ca.water.calgui.project.EpptScenarioRun;
 import gov.ca.water.quickresults.ui.projectconfig.ProjectConfigurationPanel;
 import javafx.application.Platform;
 import javafx.beans.value.ObservableValue;
+import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.collections.transformation.FilteredList;
 import javafx.embed.swing.JFXPanel;
+import javafx.event.ActionEvent;
 import javafx.geometry.Insets;
 import javafx.geometry.Orientation;
 import javafx.geometry.Pos;
 import javafx.scene.Cursor;
 import javafx.scene.Node;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
@@ -58,6 +66,7 @@ import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import javafx.scene.control.ProgressBar;
 import javafx.scene.control.SelectionMode;
+import javafx.scene.control.TitledPane;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.Background;
@@ -65,12 +74,15 @@ import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.TilePane;
+import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import org.json.JSONObject;
 import org.xml.sax.SAXException;
 
+import static gov.ca.water.trendreporting.TrendType.ALL_TREND_TYPE;
 import static java.util.stream.Collectors.toList;
 
 /**
@@ -85,8 +97,9 @@ public class TrendReportPanel extends JFXPanel
 
 	private final List<EpptScenarioRun> _scenarioRuns = new ArrayList<>();
 	private final ToggleGroup _toggleGroup = new ToggleGroup();
+	private final Set<TrendType> _trendTypes = getTrendTypes();
 	private TrendReportFlowPane _javascriptPane;
-	private ListView<GUILinksAllModelsBO> _parameterListView;
+	private ListView<TrendReportingParameters.TrendParameter> _parameterListView;
 	private ListView<TrendStatistics> _statisticsListView;
 	private ListView<EpptReportingMonths.MonthPeriod> _seasonalPeriodListView;
 	private CheckBox _tafCheckbox;
@@ -95,6 +108,9 @@ public class TrendReportPanel extends JFXPanel
 	private ProgressBar _progressBar;
 	private Label _progressTextLabel;
 	private CompletableFuture<Void> _waitFuture;
+	private ListView<TrendType> _typeListView;
+	private FilteredList<TrendReportingParameters.TrendParameter> _filteredParameters;
+	private ObservableList<TrendReportingParameters.TrendParameter> _backingParameters;
 
 	public TrendReportPanel()
 	{
@@ -121,10 +137,12 @@ public class TrendReportPanel extends JFXPanel
 	private void init()
 	{
 		_javascriptPane = new TrendReportFlowPane();
+		_typeListView = new ListView<>();
 		_parameterListView = new ListView<>();
 		_statisticsListView = new ListView<>();
 		_seasonalPeriodListView = new ListView<>();
 
+		_typeListView.setStyle("-fx-selection-bar:-fx-focus-color ;-fx-selection-bar-non-focused: -fx-focus-color ;");
 		_parameterListView.setStyle("-fx-selection-bar:-fx-focus-color ;-fx-selection-bar-non-focused: -fx-focus-color ;");
 		_statisticsListView.setStyle("-fx-selection-bar:-fx-focus-color ;-fx-selection-bar-non-focused: -fx-focus-color ;");
 		_seasonalPeriodListView.setStyle("-fx-selection-bar:-fx-focus-color ;-fx-selection-bar-non-focused: -fx-focus-color ;");
@@ -140,7 +158,8 @@ public class TrendReportPanel extends JFXPanel
 		BorderPane center = buildJavascriptPane();
 		BorderPane.setMargin(center, insets);
 		mainPane.setCenter(center);
-		Pane top = buildParameterControls();
+		Pane top = buildControls();
+		top.setPrefHeight(30);
 		BorderPane.setMargin(top, insets);
 		mainPane.setTop(top);
 		Node bottom = buildProgressControls();
@@ -165,81 +184,241 @@ public class TrendReportPanel extends JFXPanel
 		_progressBar.setVisible(false);
 		_progressTextLabel = new Label();
 		flowPane.setHgap(10);
-		flowPane.getChildren().addAll(_progressBar, _progressTextLabel);
+		flowPane.getChildren().addAll(_progressTextLabel, _progressBar);
 		flowPane.setAlignment(Pos.BOTTOM_LEFT);
 		return flowPane;
 	}
 
-	private Pane buildParameterControls()
+	private Pane buildControls()
 	{
-		FlowPane flowPane = new FlowPane(Orientation.HORIZONTAL);
-		flowPane.alignmentProperty().set(Pos.CENTER);
-		TilePane tilePane = new TilePane(Orientation.HORIZONTAL, 10.0, 5.0);
-		tilePane.alignmentProperty().set(Pos.CENTER);
-//		tilePane.setBackground(new Background(new BackgroundFill(Color.PINK, CornerRadii.EMPTY, Insets.EMPTY)));
-		tilePane.getChildren().addAll(buildParameterListView(), buildStatisticsListView(), buildSeasonalPeriodListView(), buildTimeWindowControls());
-		flowPane.getChildren().addAll(tilePane);
+		FlowPane flowPane = new FlowPane(Orientation.HORIZONTAL, 10.0, 5.0);
+		flowPane.alignmentProperty().set(Pos.TOP_CENTER);
+		TitledPane parametersPane = buildParametersPane();
+		TitledPane statisticsListView = buildStatisticsListView();
+		TitledPane seasonalPeriodListView = buildSeasonalPeriodListView();
+		HBox timeWindowControls = buildTimeWindowControls();
+		flowPane.getChildren().addAll(parametersPane, statisticsListView, seasonalPeriodListView, timeWindowControls);
+		parametersPane.expandedProperty().bindBidirectional(statisticsListView.expandedProperty());
+		parametersPane.expandedProperty().bindBidirectional(seasonalPeriodListView.expandedProperty());
+		addExpansionListener(parametersPane, parametersPane, statisticsListView, seasonalPeriodListView);
+		addExpansionListener(statisticsListView, parametersPane, statisticsListView, seasonalPeriodListView);
+		addExpansionListener(seasonalPeriodListView, parametersPane, statisticsListView, seasonalPeriodListView);
+		_trendTypes.removeIf(t -> _backingParameters.stream().noneMatch(n->t.matchesGuiLink(n.getGuiLink())));
+		updateTrendTypes();
+		_typeListView.getSelectionModel().select(0);
 		return flowPane;
 	}
 
-	private GridPane buildTimeWindowControls()
+	private void addExpansionListener(TitledPane pane, TitledPane parametersPane, TitledPane statisticsListView, TitledPane seasonalPeriodListView)
 	{
-		GridPane gridPane = new GridPane();
-		gridPane.add(new Label("Water Year Index: "), 0, 2);
-		gridPane.add(_waterYearIndexComboBox, 1, 2);
-//		gridPane.add(new Label("Water Year Definition: "), 0, 3);
-//		gridPane.add(_waterYearDefinitionComboBox, 1, 3);
-		gridPane.setHgap(10);
-		gridPane.setVgap(10);
-		gridPane.setPrefHeight(125);
+		pane.expandedProperty().addListener((e, o, n) ->
+		{
+			if(pane.isExpanded())
+			{
+				double max = Math.max(20,
+						Math.max(Math.max(parametersPane.getHeight(), statisticsListView.getHeight()), seasonalPeriodListView.getHeight()));
+				pane.setPrefHeight(max);
+			}
+			else
+			{
+				pane.setPrefHeight(20);
+			}
+		});
+	}
+
+	private HBox buildTimeWindowControls()
+	{
 		_waterYearIndexComboBox.setMaxWidth(Double.MAX_VALUE);
 		_waterYearDefinitionComboBox.setMaxWidth(Double.MAX_VALUE);
 		_tafCheckbox.selectedProperty().addListener(this::inputsChanged);
 		_waterYearIndexComboBox.getSelectionModel().selectedIndexProperty().addListener(this::inputsChanged);
 		_waterYearDefinitionComboBox.getSelectionModel().selectedIndexProperty().addListener(this::inputsChanged);
-//		gridPane.setBackground(new Background(new BackgroundFill(Color.BURLYWOOD, CornerRadii.EMPTY, Insets.EMPTY)));
-		return gridPane;
+		Label label = new Label("Water Year Index: ");
+		label.setAlignment(Pos.CENTER_LEFT);
+		HBox hBox = new HBox(10, label, _waterYearIndexComboBox);
+		hBox.setAlignment(Pos.CENTER_LEFT);
+		return hBox;
 	}
 
-	private Pane buildParameterListView()
+	private TitledPane buildParametersPane()
 	{
-		IGuiLinksSeedDataSvc seedDataSvcImplInstance = GuiLinksSeedDataSvcImpl.getSeedDataSvcImplInstance();
-		_parameterListView.getItems().addAll(seedDataSvcImplInstance.getAllGuiLinks());
-		_parameterListView.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
-		_parameterListView.getSelectionModel().select(0);
-		_parameterListView.getSelectionModel().selectedItemProperty().addListener(this::inputsChanged);
-		_parameterListView.setPrefHeight(125);
-		_parameterListView.setPrefWidth(250);
-		_parameterListView.setCellFactory(param -> new ListCell<GUILinksAllModelsBO>()
+		TilePane innerPane = new TilePane(Orientation.VERTICAL, 5, 5, buildTypeListView(), buildParameterListView());
+		TitledPane titledPane = new TitledPane("Parameters", innerPane);
+		titledPane.setPrefWidth(525);
+		titledPane.setPrefHeight(200);
+		return titledPane;
+	}
+
+	private static Set<TrendType> getTrendTypes()
+	{
+		Set<TrendType> retval = new TreeSet<>(Comparator.comparing(trendType -> trendType.getTitle().toLowerCase()));
+		List<GUILinksAllModelsBO> allGuiLinks = GuiLinksSeedDataSvcImpl.getSeedDataSvcImplInstance().getAllGuiLinks();
+		for(GUILinksAllModelsBO guiLink : allGuiLinks)
+		{
+			String plotAxisLabel = guiLink.getPlotAxisLabel();
+			if(plotAxisLabel != null && !plotAxisLabel.isEmpty())
+			{
+				retval.add(new TrendType(plotAxisLabel));
+			}
+			else
+			{
+				retval.add(new TrendType(guiLink));
+			}
+		}
+		return retval;
+	}
+
+	private Pane buildTypeListView()
+	{
+		_typeListView.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
+		_typeListView.getSelectionModel().select(0);
+		_typeListView.getSelectionModel().selectedItemProperty().addListener(this::typeSelected);
+		_typeListView.setCellFactory(param -> new ListCell<TrendType>()
 		{
 			@Override
-			protected void updateItem(GUILinksAllModelsBO item, boolean empty)
+			protected void updateItem(TrendType item, boolean empty)
 			{
 				super.updateItem(item, empty);
 
-				if(empty || item == null || item.getPlotTitle() == null)
+				if(empty || item == null || item.getTitle() == null)
 				{
 					setText(null);
 				}
 				else
 				{
-					String plotTitle = item.getPlotTitle();
-					if(plotTitle == null || plotTitle.isEmpty())
-					{
-						plotTitle = item.getPrimary().values().stream().filter(p -> !p.isEmpty()).findAny().orElse("");
-					}
+					String title = item.getTitle();
+					setText(title);
+				}
+			}
+		});
+		BorderPane borderPane = new BorderPane();
+		Label typeLabel = new Label("Type Name");
+		typeLabel.setPrefHeight(20);
+		borderPane.setLeft(typeLabel);
+		//Invisible spacer button
+		Button addButton = new Button("");
+		borderPane.setRight(addButton);
+		addButton.setVisible(false);
+		VBox vBox = new VBox(5, borderPane, _typeListView);
+		vBox.setPrefHeight(200);
+		return vBox;
+	}
+
+	private void typeSelected(ObservableValue<? extends TrendType> e, TrendType o, TrendType n)
+	{
+		_filteredParameters.setPredicate(trendParameter ->
+		{
+			boolean retval = false;
+			if(n != null)
+			{
+				retval = n.matchesGuiLink(trendParameter.getGuiLink());
+			}
+			return retval;
+		});
+	}
+
+	private Pane buildParameterListView()
+	{
+		TrendReportingParameters trendReportingParameters = TrendReportingParameters.getTrendReportingParameters();
+		_backingParameters = FXCollections.observableArrayList(trendReportingParameters.getTrendParameters());
+		_filteredParameters = new FilteredList<>(_backingParameters, s -> true);
+		_parameterListView.setItems(_filteredParameters);
+		_parameterListView.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
+		_parameterListView.getSelectionModel().select(0);
+		_parameterListView.getSelectionModel().selectedItemProperty().addListener(this::inputsChanged);
+		_parameterListView.setCellFactory(param -> new ListCell<TrendReportingParameters.TrendParameter>()
+		{
+			@Override
+			protected void updateItem(TrendReportingParameters.TrendParameter item, boolean empty)
+			{
+				super.updateItem(item, empty);
+
+				if(empty || item == null || item.getTitle() == null)
+				{
+					setText(null);
+				}
+				else
+				{
+					String plotTitle = item.getTitle();
 					setText(plotTitle);
 				}
 			}
 		});
 		BorderPane borderPane = new BorderPane();
-		borderPane.setCenter(_parameterListView);
-		borderPane.setTop(new Label("Parameter"));
-//		borderPane.setBackground(new Background(new BackgroundFill(Color.GREEN, CornerRadii.EMPTY, Insets.EMPTY)));
-		return borderPane;
+		Label parameterLabel = new Label("Parameter Name");
+		parameterLabel.setPrefHeight(20);
+		borderPane.setLeft(parameterLabel);
+		Button addButton = new Button("Add");
+		addButton.setOnAction(this::addParameter);
+		borderPane.setRight(addButton);
+		VBox vBox = new VBox(5, borderPane, _parameterListView);
+		vBox.setPrefHeight(200);
+		return vBox;
 	}
 
-	private Pane buildStatisticsListView()
+	private void addParameter(ActionEvent e)
+	{
+		try
+		{
+			GUILinksAllModelsBO guiLink = createGuiLink();
+			if(guiLink != null)
+			{
+				//Both elements should be added to the list
+				boolean added1 = _trendTypes.add(new TrendType(guiLink.getPlotAxisLabel()));
+				boolean added2 = _trendTypes.add(new TrendType(guiLink));
+				if(added1 || added2)
+				{
+					updateTrendTypes();
+				}
+				int size = _backingParameters.size();
+				_backingParameters.add(TrendReportingParameters.TrendParameter.create(size, guiLink, ""));
+			}
+		}
+		catch(InterruptedException ex)
+		{
+			LOGGER.log(Level.FINE, "Swing thread interrupted. Unable to create new parameter", ex);
+			Thread.currentThread().interrupt();
+		}
+		catch(InvocationTargetException | RuntimeException ex)
+		{
+			LOGGER.log(Level.SEVERE, "Error creating new parameter", ex);
+		}
+	}
+
+	private void updateTrendTypes()
+	{
+		TrendType selectedItem = _typeListView.getSelectionModel().getSelectedItem();
+		_trendTypes.removeIf(t -> t.getTitle() == null || t.getTitle().isEmpty());
+		_typeListView.getItems().clear();
+		_typeListView.getItems().add(ALL_TREND_TYPE);
+		_typeListView.getItems().addAll(_trendTypes);
+		if(selectedItem != null)
+		{
+			_typeListView.getSelectionModel().select(selectedItem);
+		}
+	}
+
+	private GUILinksAllModelsBO createGuiLink() throws InvocationTargetException, InterruptedException
+	{
+		AddParameterDialog addParameterDialog = new AddParameterDialog((Frame) SwingUtilities.windowForComponent(this));
+		SwingUtilities.invokeAndWait(() -> addParameterDialog.setVisible(true));
+		if(!addParameterDialog.isCanceled())
+		{
+			String type = addParameterDialog.getDataType();
+			String parameter = addParameterDialog.getParameter();
+			String bAndCPart = addParameterDialog.getBAndCPart();
+			GUILinksAllModelsBO guiLink = new GUILinksAllModelsBO("", type, parameter, "");
+			GUILinksAllModelsBO.Model.values()
+									 .forEach(m -> guiLink.addModelMapping(m.toString(), bAndCPart, ""));
+			return guiLink;
+		}
+		else
+		{
+			return null;
+		}
+	}
+
+	private TitledPane buildStatisticsListView()
 	{
 		_statisticsListView.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
 		_statisticsListView.getSelectionModel().select(0);
@@ -261,13 +440,14 @@ public class TrendReportPanel extends JFXPanel
 				}
 			}
 		});
-		_statisticsListView.setPrefHeight(125);
-		_statisticsListView.setPrefWidth(225);
-		BorderPane borderPane = new BorderPane();
-		borderPane.setCenter(_statisticsListView);
-		borderPane.setTop(new Label("Statistic"));
-//		borderPane.setBackground(new Background(new BackgroundFill(Color.RED, CornerRadii.EMPTY, Insets.EMPTY)));
-		return borderPane;
+		VBox vBox = new VBox(_statisticsListView);
+		vBox.setPrefWidth(250);
+		vBox.setPrefHeight(200);
+		TilePane innerPane = new TilePane(Orientation.VERTICAL, 5, 5, vBox);
+		TitledPane titledPane = new TitledPane("Statistic", innerPane);
+		titledPane.setPrefWidth(250);
+		titledPane.setPrefHeight(200);
+		return titledPane;
 	}
 
 	private List<TrendStatistics> getTrendStatistics()
@@ -287,25 +467,31 @@ public class TrendReportPanel extends JFXPanel
 		}
 		finally
 		{
-			Platform.runLater(() -> _progressBar.setVisible(false));
+			Platform.runLater(() ->
+			{
+				if(_progressBar != null)
+				{
+					_progressBar.setVisible(false);
+				}
+			});
 		}
 		return retval;
 	}
 
-	private Pane buildSeasonalPeriodListView()
+	private TitledPane buildSeasonalPeriodListView()
 	{
 		List<EpptReportingMonths.MonthPeriod> allMonthPeriods = EpptReportingMonths.getAllMonthPeriods();
 		_seasonalPeriodListView.getItems().addAll(allMonthPeriods);
 		_seasonalPeriodListView.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
 		_seasonalPeriodListView.getSelectionModel().select(0);
 		_seasonalPeriodListView.getSelectionModel().selectedItemProperty().addListener(this::inputsChanged);
-		_seasonalPeriodListView.setPrefHeight(125);
-		_seasonalPeriodListView.setPrefWidth(200);
-		BorderPane borderPane = new BorderPane();
-		borderPane.setCenter(_seasonalPeriodListView);
-		borderPane.setTop(new Label("Seasonal Period"));
-//		borderPane.setBackground(new Background(new BackgroundFill(Color.CYAN, CornerRadii.EMPTY, Insets.EMPTY)));
-		return borderPane;
+		VBox vBox = new VBox(_seasonalPeriodListView);
+		vBox.setPrefHeight(200);
+		TilePane innerPane = new TilePane(Orientation.VERTICAL, 5, 5, vBox);
+		TitledPane titledPane = new TitledPane("Seasonal Period", innerPane);
+		titledPane.setPrefWidth(200);
+		titledPane.setPrefHeight(200);
+		return titledPane;
 	}
 
 	private BorderPane buildJavascriptPane()
@@ -313,7 +499,6 @@ public class TrendReportPanel extends JFXPanel
 		BorderPane borderPane = new BorderPane();
 		borderPane.setTop(buildToggleControls());
 		borderPane.setCenter(_javascriptPane.getDashboardPane());
-//		borderPane.setBackground(new Background(new BackgroundFill(Color.BISQUE, null, null)));
 		BorderPane.setMargin(borderPane, new Insets(5.0, 0, 0, 0));
 
 		borderPane.setMaxWidth(1300);
@@ -348,7 +533,6 @@ public class TrendReportPanel extends JFXPanel
 							.findAny()
 							.ifPresent(b -> b.setSelected(true))
 		);
-//		tilePane.setBackground(new Background(new BackgroundFill(Color.HONEYDEW, CornerRadii.EMPTY, Insets.EMPTY)));
 		return tilePane;
 	}
 
@@ -453,15 +637,9 @@ public class TrendReportPanel extends JFXPanel
 		if(button != null)
 		{
 			TrendReportTabConfig trendReportTabConfig = button.getTrendReportTabConfig();
-			boolean statUsesWaterYearDefinition = _statisticsListView.getSelectionModel().getSelectedItems()
-																	 .stream()
-																	 .map(TrendStatistics::usesWaterYearDefinition)
-																	 .findAny()
-																	 .orElse(true);
 			_statisticsListView.setDisable(trendReportTabConfig.isStatsDisabled());
 			_seasonalPeriodListView.setDisable(trendReportTabConfig.isSeasonalPeriodDisabled());
 			_waterYearIndexComboBox.setDisable(trendReportTabConfig.isWaterYearIndexDisabled());
-			_waterYearDefinitionComboBox.setDisable(trendReportTabConfig.isStatsDisabled() || !statUsesWaterYearDefinition);
 			loadJavascript(trendReportTabConfig.getPath(), start, end, taf);
 		}
 	}
@@ -476,7 +654,7 @@ public class TrendReportPanel extends JFXPanel
 
 	private void loadJavascript(Path path, LocalDate start, LocalDate end, boolean taf)
 	{
-		List<GUILinksAllModelsBO> guiLink = new ArrayList<>(_parameterListView.getSelectionModel().getSelectedItems());
+		List<TrendReportingParameters.TrendParameter> guiLink = new ArrayList<>(_parameterListView.getSelectionModel().getSelectedItems());
 		List<TrendStatistics> statistic = new ArrayList<>(_statisticsListView.getSelectionModel().getSelectedItems());
 		List<EpptReportingMonths.MonthPeriod> monthPeriod = new ArrayList<>(_seasonalPeriodListView.getSelectionModel().getSelectedItems());
 		WaterYearIndex waterYearIndex = _waterYearIndexComboBox.getSelectionModel().getSelectedItem();
@@ -518,11 +696,14 @@ public class TrendReportPanel extends JFXPanel
 		}
 		else
 		{
-			_progressTextLabel.setText(error.get());
+			if(_progressTextLabel != null)
+			{
+				_progressTextLabel.setText(error.get());
+			}
 		}
 	}
 
-	private Optional<String> getError(List<GUILinksAllModelsBO> guiLink, List<TrendStatistics> statistic,
+	private Optional<String> getError(List<TrendReportingParameters.TrendParameter> guiLink, List<TrendStatistics> statistic,
 									  List<EpptReportingMonths.MonthPeriod> monthPeriod,
 									  WaterYearIndex waterYearIndex)
 	{
@@ -531,17 +712,17 @@ public class TrendReportPanel extends JFXPanel
 		{
 			retval = Optional.of("No Scenario Runs defined");
 		}
-		else if(guiLink.isEmpty())
+		else if(guiLink.isEmpty() || guiLink.get(0).getGuiLink() == null)
 		{
 			retval = Optional.of("No Parameter defined");
 		}
-		else if(statistic.isEmpty())
+		else if(statistic.isEmpty() || statistic.get(0).getName().isEmpty())
 		{
 			retval = Optional.of("No Statistic defined");
 		}
-		else if(monthPeriod.isEmpty())
+		else if(monthPeriod.isEmpty() || monthPeriod.get(0).getStart() == null)
 		{
-			retval = Optional.of("No Water Year Definition defined");
+			retval = Optional.of("No Seasonal Period Defined");
 		}
 		else if(waterYearIndex == null)
 		{
@@ -587,21 +768,21 @@ public class TrendReportPanel extends JFXPanel
 		_progressTextLabel.setText(text);
 	}
 
-	private synchronized List<JSONObject> computeScenarios(List<GUILinksAllModelsBO> guiLinks, List<TrendStatistics> statistics,
+	private synchronized List<JSONObject> computeScenarios(List<TrendReportingParameters.TrendParameter> parameters, List<TrendStatistics> statistics,
 														   List<EpptReportingMonths.MonthPeriod> monthPeriods, LocalDate start,
 														   LocalDate end, boolean taf, List<EpptScenarioRun> scenarioRuns)
 	{
 		List<JSONObject> retval = new ArrayList<>();
-		for(GUILinksAllModelsBO guiLink : guiLinks)
+		for(TrendReportingParameters.TrendParameter parameter : parameters)
 		{
 			for(TrendStatistics statistic : statistics)
 			{
 				for(EpptReportingMonths.MonthPeriod monthPeriod : monthPeriods)
 				{
-					EpptReportingComputedSet epptReportingComputedSet = computeForMetrics(guiLink, statistic, monthPeriod,
+					EpptReportingComputedSet epptReportingComputedSet = computeForMetrics(parameter.getGuiLink(), statistic, monthPeriod,
 							start, end, taf, scenarioRuns);
 					JSONObject jsonObject = epptReportingComputedSet.toJson();
-					LOGGER.log(Level.INFO, "{0}", jsonObject);
+					LOGGER.log(Level.FINE, "{0}", jsonObject);
 					retval.add(jsonObject);
 				}
 			}
@@ -622,13 +803,21 @@ public class TrendReportPanel extends JFXPanel
 
 		for(EpptScenarioRun scenarioRun : scenarioRuns)
 		{
-			if(taf)
+			try
 			{
-				trendReportingComputed.add(trendReportingComputer.computeTaf(scenarioRun, start, end));
+
+				if(taf)
+				{
+					trendReportingComputed.add(trendReportingComputer.computeTaf(scenarioRun, start, end));
+				}
+				else
+				{
+					trendReportingComputed.add(trendReportingComputer.computeCfs(scenarioRun, start, end));
+				}
 			}
-			else
+			catch(EpptInitializationException e)
 			{
-				trendReportingComputed.add(trendReportingComputer.computeCfs(scenarioRun, start, end));
+				LOGGER.log(Level.SEVERE, "Error calculating Trend Reporting for scenario run: " + scenarioRun, e);
 			}
 		}
 		return new EpptReportingComputedSet(guiLink, statistic, monthPeriod,

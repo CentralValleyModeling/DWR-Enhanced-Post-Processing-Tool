@@ -53,7 +53,7 @@ public class WaterYearTableReader
 	public List<WaterYearIndex> read() throws EpptInitializationException
 	{
 		readNameLookupTable();
-		LOGGER.at(Level.INFO).log("Reading Water Year Type Table: %s", _waterYearTypeTable);
+		LOGGER.at(Level.FINE).log("Reading Water Year Type Table: %s", _waterYearTypeTable);
 
 		List<WaterYearIndex> waterYearIndices = new ArrayList<>();
 		try(Stream<String> lines = Files.lines(_waterYearTypeTable))
@@ -93,7 +93,7 @@ public class WaterYearTableReader
 
 	private void readNameLookupTable() throws EpptInitializationException
 	{
-		LOGGER.at(Level.INFO).log("Reading Water Year Type Name Lookup: %s", WATER_YEAR_TYPE_NAMES);
+		LOGGER.at(Level.FINE).log("Reading Water Year Type Name Lookup: %s", WATER_YEAR_TYPE_NAMES);
 		String line = "";
 		String csvSplitBy = ",";
 

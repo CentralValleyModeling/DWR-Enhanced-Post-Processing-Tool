@@ -12,6 +12,8 @@
 
 package gov.ca.water.calgui.presentation;
 
+import java.awt.Desktop;
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -25,6 +27,7 @@ import java.util.List;
 import java.util.TimeZone;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 import javax.swing.*;
 
 import gov.ca.dsm2.input.parser.InputTable;
@@ -143,21 +146,21 @@ public class Report extends SwingWorker<Void, String>
 	protected void done()
 	{
 
-		String command = "cmd /c start " + _outputFilename;
 		try
 		{
-			if(Paths.get(_outputFilename).toFile().exists())
+			File file = Paths.get(_outputFilename).toFile();
+			if(file.exists())
 			{
-				Runtime.getRuntime().exec(command);
+				Desktop.getDesktop().open(file);
 			}
 		}
 		catch(IOException e)
 		{
-			LOG.log(Level.SEVERE, "Error thrown processing command: " + command, e);
+			LOG.log(Level.SEVERE, "Unable to open file: " + _outputFilename, e);
 		}
 		catch(RuntimeException e)
 		{
-			LOG.log(Level.SEVERE, "Error thrown processing command: " + command, e);
+			LOG.log(Level.SEVERE, "Unable to open file: " + _outputFilename, e);
 		}
 	}
 
@@ -187,8 +190,12 @@ public class Report extends SwingWorker<Void, String>
 		_scalars = new HashMap<>();
 		for(int i = 0; i < nscalars; i++)
 		{
-			String name = scalarTable.getValue(i, "NAME");
-			String value = scalarTable.getValue(i, "VALUE");
+			ArrayList<String> row = scalarTable.getValues().get(i);
+			int index = scalarTable.getHeaders().indexOf("NAME");
+			String name = row.get(index);
+			ArrayList<String> copy = new ArrayList<>(row);
+			copy.remove(index);
+			String value = copy.stream().collect(Collectors.joining(" "));
 			_scalars.put(name, value);
 		}
 		// load pathname mapping into a map
@@ -700,7 +707,7 @@ public class Report extends SwingWorker<Void, String>
 			try
 			{
 				DataReference[] refs = findpath(group, path, true);
-				if(refs == null)
+				if(refs == null || refs.length == 0)
 				{
 					String msg = "No data found for " + group + " and " + path;
 					addMessage(msg);
@@ -715,7 +722,7 @@ public class Report extends SwingWorker<Void, String>
 			catch(Exception ex)
 			{
 				String msg = "Exception while trying to retrieve " + path + " from " + group;
-				LOG.severe(msg);
+				LOG.log(Level.SEVERE,msg, ex);
 				addMessage(msg);
 				return null;
 			}

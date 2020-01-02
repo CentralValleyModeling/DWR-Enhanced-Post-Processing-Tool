@@ -229,7 +229,7 @@ public class SchematicMain
 						PlotConfigurationState plotConfigurationState = projectConfigurationPanel.plotConfigurationState();
 						LocalDate startMonth = projectConfigurationPanel.getStartMonth();
 						LocalDate endMonth = projectConfigurationPanel.getEndMonth();
-						_displayHelper.showDisplayFrames(plotConfigurationState, Collections.singletonList(label), baseScenario, alternatives,
+						_displayHelper.showDisplayFramesLocations(plotConfigurationState, Collections.singletonList(label), baseScenario, alternatives,
 								startMonth, endMonth);
 					}
 				}

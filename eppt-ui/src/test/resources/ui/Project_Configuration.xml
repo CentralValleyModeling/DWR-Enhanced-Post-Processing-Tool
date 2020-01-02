@@ -11,21 +11,24 @@
   -->
 
 <panel id="ProjectConfiguration" name="ProjectConfiguration" layout="BorderLayout">
-	<splitpane Orientation="JSplitPane.VERTICAL_SPLIT" DividerLocation="350" DividerSize="3">
+	<splitpane id="split_pane" Orientation="JSplitPane.VERTICAL_SPLIT" DividerLocation="350" DividerSize="3">
 		<panel layout="BorderLayout">
 			<panel constraints="BorderLayout.NORTH" layout="GridBagLayout">
 				<label text="Project Name:">
 					<gridbagconstraints insets="5,5,5,5" anchor="GridBagConstraints.WEST" gridx="0" gridy="0"/>
 				</label>
 				<textfield id="prj_name">
-					<gridbagconstraints insets="5,5,5,5" anchor="GridBagConstraints.WEST" weightx="1.0" gridwidth="GridBagConstraints.REMAINDER" fill="GridBagConstraints.HORIZONTAL" gridx="1"
+					<gridbagconstraints insets="5,5,5,5" anchor="GridBagConstraints.WEST" weightx="0.8" fill="GridBagConstraints.HORIZONTAL" gridx="1"
 										gridy="0"/>
 				</textfield>
+				<button id="btnOpenProject" name="btnOpenProject" text="Open" ActionCommand="openProject">
+					<gridbagconstraints insets="5,5,5,5" anchor="GridBagConstraints.WEST" gridwidth="1" gridx="2" gridy="0"/>
+				</button>
 				<label text="Description:">
 					<gridbagconstraints insets="5,5,5,5" anchor="GridBagConstraints.WEST" gridx="0" gridy="1"/>
 				</label>
 				<textfield id="prj_desc">
-					<gridbagconstraints insets="5,5,5,5" anchor="GridBagConstraints.WEST" weightx="1.0" gridwidth="GridBagConstraints.REMAINDER" fill="GridBagConstraints.HORIZONTAL" gridx="1"
+					<gridbagconstraints insets="5,5,5,5" anchor="GridBagConstraints.WEST" weightx="1.0" fill="GridBagConstraints.HORIZONTAL" gridx="1"
 										gridy="1"/>
 				</textfield>
 			</panel>
@@ -33,6 +36,7 @@
 				<panel constraints="BorderLayout.NORTH" layout="FlowLayout(FlowLayout.LEFT)">
 					<button id="btnAddScenario" name="btnAddScenario" text="Add" ActionCommand="btnAddScenario" PreferredSize="80,24"/>
 					<button id="btnEditScenario" name="btnEditScenario" text="Edit" ActionCommand="btnEditScenario" PreferredSize="80,24"/>
+					<button id="btnCopyScenario" name="btnCopyScenario" text="Copy" ActionCommand="btnCopyScenario" PreferredSize="80,24"/>
 					<button id="btnDelScenario" name="btnDelScenario" text="Clear" ActionCommand="btnDelScenario" PreferredSize="80,24"/>
 					<button id="btnClearScenario" name="btnClearScenario" text="Clear All" ActionCommand="btnClearScenario" PreferredSize="80,24"/>
 
@@ -89,16 +93,9 @@
 									<spinner id="spnEndYear" name="spnEndYear" preferredsize="75,25">
 										<gridbagconstraints insets="0,0,5,3" anchor="GridBagConstraints.WEST" gridx="2" gridy="2"/>
 									</spinner>
-									<label text="Display Units for Flows: ">
+									<checkbox name="chkTAF" id="chkTAF" enabled="true" text="Convert CFS to TAF">
 										<gridbagconstraints anchor="GridBagConstraints.WEST" gridx="0" gridy="3" gridwidth="2"/>
-									</label>
-									<panel layout="FlowLayout(FlowLayout.LEFT)">
-										<gridbagconstraints anchor="GridBagConstraints.WEST" gridx="2" gridy="3" />
-										<buttongroup id="rep4">
-											<radiobutton id="rdbCFS" name="rdbCFS" text="CFS"/>
-											<radiobutton id="rdbTAF" name="rdbTAF" text="TAF" selected="true"/>
-										</buttongroup>
-									</panel>
+									</checkbox>
 								</panel>
 							</panel>
 						</panel>

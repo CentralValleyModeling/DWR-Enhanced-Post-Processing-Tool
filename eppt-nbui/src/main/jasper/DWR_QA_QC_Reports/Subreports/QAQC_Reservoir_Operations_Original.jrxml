@@ -1,16 +1,4 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!--
-  ~ Enhanced Post Processing Tool (EPPT) Copyright (c) 2019.
-  ~
-  ~ EPPT is copyrighted by the State of California, Department of Water Resources. It is licensed
-  ~ under the GNU General Public License, version 2. This means it can be
-  ~ copied, distributed, and modified freely, but you may not restrict others
-  ~ in their ability to copy, distribute, and modify it. See the license below
-  ~ for more details.
-  ~
-  ~ GNU General Public License
-  -->
-
 <!-- Created with Jaspersoft Studio version 6.9.0.final using JasperReports Library version 6.9.0-cb8f9004be492ccc537180b49c026951f4220bf3  -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="QAQC_Reservoir Operations" language="groovy" pageWidth="612" pageHeight="792" columnWidth="504" leftMargin="54" rightMargin="54" topMargin="54" bottomMargin="54" isSummaryWithPageHeaderAndFooter="true" whenResourceMissingType="Empty" uuid="fdf29854-1cab-4c3d-99e9-a38b49852a26">
 	<property name="net.sf.jasperreports.xml.source" value=""/>

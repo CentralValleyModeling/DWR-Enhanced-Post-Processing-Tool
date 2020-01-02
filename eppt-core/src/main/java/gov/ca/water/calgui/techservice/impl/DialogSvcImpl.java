@@ -125,7 +125,7 @@ public class DialogSvcImpl implements IDialogSvc
 	private String common(String message, int messageType, int optionType, Object[] options)
 	{
 		JOptionPane optionPane = new JOptionPane(message, messageType, optionType, null, options, options[0]);
-		JDialog dialog = optionPane.createDialog(_mainFrame, "CalLite GUI");
+		JDialog dialog = optionPane.createDialog(_mainFrame, "EPPT GUI");
 		dialog.setIconImage(_mainFrame.getIconImage());
 		dialog.setResizable(false);
 		dialog.setVisible(true);

@@ -1,0 +1,13 @@
+<component name="libraryTable">
+  <library name="Maven: com.sun:xml:Wrims_Distribution:1.0">
+    <CLASSES>
+      <root url="jar://$MAVEN_REPOSITORY$/com/sun/xml/1.0/xml-1.0-Wrims_Distribution.jar!/" />
+    </CLASSES>
+    <JAVADOC>
+      <root url="jar://$MAVEN_REPOSITORY$/com/sun/xml/1.0/xml-1.0-javadoc.jar!/" />
+    </JAVADOC>
+    <SOURCES>
+      <root url="jar://$MAVEN_REPOSITORY$/com/sun/xml/1.0/xml-1.0-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

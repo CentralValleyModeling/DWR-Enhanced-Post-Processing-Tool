@@ -35,6 +35,7 @@ import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
 import com.google.common.flogger.FluentLogger;
+import gov.ca.water.calgui.EpptInitializationException;
 import gov.ca.water.calgui.bo.DetailedIssue;
 import gov.ca.water.calgui.bo.GUILinksAllModelsBO;
 import gov.ca.water.calgui.bo.WaterYearIndex;
@@ -160,7 +161,7 @@ public class EPPTReport
 			LOGGER.at(Level.INFO).log("Writing data to XML: %s", _pathToWriteOut);
 			writeXmlFile(doc);
 		}
-		catch(RuntimeException | IOException | EpptReportException | ParserConfigurationException | TransformerException e)
+		catch(RuntimeException | IOException | EpptReportException | ParserConfigurationException | TransformerException | EpptInitializationException e)
 		{
 			throw new QAQCReportException(e.getMessage(), e);
 		}
@@ -196,7 +197,7 @@ public class EPPTReport
 	{
 		if(canPrintAssumptionChanges())
 		{
-			LOGGER.at(Level.INFO).log("Generate QAQC Assumption Changes data");
+			LOGGER.at(Level.INFO).log("Generate QA/QC Assumption Changes data");
 			rootElement.appendChild(createAssumptionChangesElem(fileChangeStats.get(0), doc));
 		}
 	}
@@ -207,7 +208,7 @@ public class EPPTReport
 		if(canPrintDetailedIssues())
 		{
 			//create and add the detailed issues
-			LOGGER.at(Level.INFO).log("Generate QAQC Detailed Issues data");
+			LOGGER.at(Level.INFO).log("Generate QA/QC Detailed Issues data");
 			rootElement.appendChild(createDetailedIssueReportElem(runsToFlagViolations, doc));
 		}
 	}
@@ -217,7 +218,7 @@ public class EPPTReport
 		if(canPrintDetailedIssues() || canPrintExecutiveSummary())
 		{
 
-			DTSProcessor dtsProcessor = new DTSProcessor(_modules);
+			DTSProcessor dtsProcessor = new DTSProcessor(_modules, _standardSummaryErrors);
 			return dtsProcessor.processDSSFiles(allRuns);
 		}
 		else
@@ -267,7 +268,7 @@ public class EPPTReport
 		}
 	}
 
-	private void appendSummaryStats(Document doc, Element rootElement) throws EpptReportException
+	private void appendSummaryStats(Document doc, Element rootElement) throws EpptReportException, EpptInitializationException
 	{
 		if(canPrintStandardSummary())
 		{
@@ -546,8 +547,9 @@ public class EPPTReport
 			altNames.add(altRun.getName());
 		}
 		String author = _reportParameters.getAuthor();
+		String title = _reportParameters.getTitle();
 		String subtitle = _reportParameters.getSubtitle();
-		ReportHeader rh = new ReportHeader(author, subtitle, _baseRun.getName(), altNames);
+		ReportHeader rh = new ReportHeader(author, title, subtitle, _baseRun.getName(), altNames);
 		ReportHeaderXMLCreator rhWriter = new ReportHeaderXMLCreator();
 		return rhWriter.createReportHeaderElement(rh, doc);
 	}

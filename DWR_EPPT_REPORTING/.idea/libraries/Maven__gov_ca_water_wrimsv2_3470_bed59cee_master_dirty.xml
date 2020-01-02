@@ -1,0 +1,13 @@
+<component name="libraryTable">
+  <library name="Maven: gov.ca.water:wrimsv2:3470.bed59cee.master-dirty">
+    <CLASSES>
+      <root url="jar://$MAVEN_REPOSITORY$/gov/ca/water/wrimsv2/3470.bed59cee.master-dirty/wrimsv2-3470.bed59cee.master-dirty.jar!/" />
+    </CLASSES>
+    <JAVADOC>
+      <root url="jar://$MAVEN_REPOSITORY$/gov/ca/water/wrimsv2/3470.bed59cee.master-dirty/wrimsv2-3470.bed59cee.master-dirty-javadoc.jar!/" />
+    </JAVADOC>
+    <SOURCES>
+      <root url="jar://$MAVEN_REPOSITORY$/gov/ca/water/wrimsv2/3470.bed59cee.master-dirty/wrimsv2-3470.bed59cee.master-dirty-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

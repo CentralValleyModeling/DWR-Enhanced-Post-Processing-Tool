@@ -23,6 +23,10 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
+import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.function.Function;
+import java.util.function.Predicate;
 import javax.swing.*;
 
 import calsim.app.AppUtils;
@@ -45,6 +49,8 @@ import gov.ca.water.quickresults.ui.quickresults.QuickResultsPanel;
 import org.apache.log4j.Logger;
 import vista.set.DataReference;
 import vista.set.Group;
+import vista.set.Pathname;
+import vista.time.TimeWindow;
 
 import static java.util.stream.Collectors.toList;
 
@@ -147,6 +153,7 @@ public class CustomResultsPanel extends EpptPanel
 												 .collect(toList());
 			List<DataReference> allrefs = new ArrayList<>();
 			GeneralRetrievePanel retrievePanel = GuiUtils.getCLGPanel().getRetrievePanel();
+			TimeWindow timeWindow = AppUtils.getCurrentProject().getTimeWindow();
 			for(Path path : allDssFiles)
 			{
 				String[] stringParts = retrievePanel.getStringParts();
@@ -154,7 +161,7 @@ public class CustomResultsPanel extends EpptPanel
 				if(dssGroup != null)
 				{
 					Group gc = Group.createGroup(dssGroup);
-					DataReference[] refs = AppUtils.createRefs(stringParts, null, gc);
+					DataReference[] refs = AppUtils.createRefs(stringParts, timeWindow, gc);
 					if(refs != null)
 					{
 						allrefs.addAll(Arrays.asList(refs));
@@ -227,7 +234,7 @@ public class CustomResultsPanel extends EpptPanel
 				if(baseScenario != null)
 				{
 					List<EpptScenarioRun> alternatives = projectConfigurationPanel.getEpptScenarioAlternatives();
-					_displayHelper.showDisplayFrames(plotConfigurationState, Collections.singletonList(parts[2]),
+					_displayHelper.showDisplayFramesLocations(plotConfigurationState, Collections.singletonList(parts[2]),
 							baseScenario, alternatives, startMonth, endMonth);
 				}
 			}
@@ -267,7 +274,7 @@ public class CustomResultsPanel extends EpptPanel
 				LocalDate startMonth = projectConfigurationPanel.getStartMonth();
 				LocalDate endMonth = projectConfigurationPanel.getEndMonth();
 				List<EpptScenarioRun> alternatives = projectConfigurationPanel.getEpptScenarioAlternatives();
-				_displayHelper.showDisplayFramesWRIMS(plotConfigurationState,  baseScenario, alternatives,
+				_displayHelper.showDisplayFramesWRIMS(plotConfigurationState, baseScenario, alternatives,
 						dts,
 						mts, startMonth, endMonth);
 			}

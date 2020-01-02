@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Created with Jaspersoft Studio version 6.9.0.final using JasperReports Library version 6.9.0-cb8f9004be492ccc537180b49c026951f4220bf3  -->
+<!-- Created with Jaspersoft Studio version 6.8.0.final using JasperReports Library version 6.8.0-2ed8dfabb690ff337a5797129f2cd92902b0c87b  -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="QAQC_Percent_Difference_in_Minimum_Instream_Flow_Controls" language="groovy" pageWidth="504" pageHeight="684" whenNoDataType="NoDataSection" columnWidth="504" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="fdf29854-1cab-4c3d-99e9-a38b49852a26">
 	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
 	<property name="net.sf.jasperreports.export.xls.collapse.row.span" value="true"/>
@@ -209,7 +209,7 @@
 						<cellContents mode="Transparent" style="Long_Term_Borders">
 							<property name="com.jaspersoft.studio.unit.width" value="px"/>
 							<textField isStretchWithOverflow="true">
-								<reportElement style="Long_Term_Borders" x="0" y="0" width="35" height="16" uuid="a97e394b-2c1f-49a6-8cfb-32e4eeb23864"/>
+								<reportElement style="Long_Term_Borders" x="0" y="0" width="35" height="0" uuid="a97e394b-2c1f-49a6-8cfb-32e4eeb23864"/>
 								<textElement textAlignment="Center" verticalAlignment="Middle" rotation="Left">
 									<font size="11" isBold="true"/>
 								</textElement>
@@ -242,7 +242,7 @@
 						<cellContents mode="Transparent">
 							<property name="com.jaspersoft.studio.unit.width" value="px"/>
 							<textField isStretchWithOverflow="true">
-								<reportElement style="Long_Term_Bold" stretchType="ContainerHeight" x="0" y="0" width="81" height="16" uuid="efa95aaa-beba-4f57-8f21-fe5623334e65"/>
+								<reportElement style="Long_Term_Bold" stretchType="ContainerHeight" x="0" y="0" width="81" height="0" uuid="efa95aaa-beba-4f57-8f21-fe5623334e65"/>
 								<box leftPadding="2" rightPadding="2">
 									<topPen lineWidth="1.0"/>
 									<leftPen lineWidth="0.0"/>
@@ -373,6 +373,21 @@
 						<cellContents mode="Opaque"/>
 					</crosstabTotalColumnHeader>
 				</columnGroup>
+				<columnGroup name="component-order" height="0" totalPosition="End">
+					<bucket class="java.lang.String">
+						<bucketExpression><![CDATA[$F{component-order}]]></bucketExpression>
+					</bucket>
+					<crosstabColumnHeader>
+						<cellContents>
+							<property name="com.jaspersoft.studio.unit.height" value="px"/>
+						</cellContents>
+					</crosstabColumnHeader>
+					<crosstabTotalColumnHeader>
+						<cellContents>
+							<property name="com.jaspersoft.studio.unit.width" value="px"/>
+						</cellContents>
+					</crosstabTotalColumnHeader>
+				</columnGroup>
 				<columnGroup name="component-name" height="35" totalPosition="End" headerPosition="Stretch">
 					<bucket class="java.lang.String">
 						<bucketExpression><![CDATA[$F{component-name}]]></bucketExpression>
@@ -418,7 +433,7 @@
 				<measure name="value-full-text" class="java.lang.String">
 					<measureExpression><![CDATA[$F{value-full-text}]]></measureExpression>
 				</measure>
-				<crosstabCell width="62" height="16">
+				<crosstabCell width="62" height="0">
 					<cellContents backcolor="#FFFFFF">
 						<property name="com.jaspersoft.studio.unit.width" value="px"/>
 						<box>
@@ -428,36 +443,36 @@
 							<rightPen lineWidth="1.0"/>
 						</box>
 						<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-							<reportElement stretchType="ContainerHeight" mode="Opaque" x="0" y="0" width="62" height="16" uuid="d8a91046-30b0-46e3-9631-30970b13b289">
+							<reportElement stretchType="ContainerHeight" mode="Opaque" x="0" y="0" width="62" height="0" uuid="d8a91046-30b0-46e3-9631-30970b13b289">
 								<propertyExpression name="net.sf.jasperreports.style.backcolor"><![CDATA[$V{background-color}]]></propertyExpression>
 							</reportElement>
 							<box topPadding="2" bottomPadding="2"/>
 							<textElement textAlignment="Center" verticalAlignment="Middle">
 								<font size="8"/>
 							</textElement>
-							<textFieldExpression><![CDATA[$V{value_MEASURE}]]></textFieldExpression>
+							<textFieldExpression><![CDATA[$V{value_MEASURE}==-2147483648?"NR":$V{value_MEASURE}]]></textFieldExpression>
 						</textField>
 					</cellContents>
 				</crosstabCell>
-				<crosstabCell width="0" height="16" columnTotalGroup="title-order">
+				<crosstabCell width="0" height="0" columnTotalGroup="title-order">
 					<cellContents mode="Opaque"/>
 				</crosstabCell>
-				<crosstabCell width="0" height="16" columnTotalGroup="title-name">
+				<crosstabCell width="0" height="0" columnTotalGroup="title-name">
 					<cellContents mode="Opaque"/>
 				</crosstabCell>
-				<crosstabCell width="0" height="16" columnTotalGroup="header-order">
+				<crosstabCell width="0" height="0" columnTotalGroup="header-order">
 					<cellContents mode="Opaque"/>
 				</crosstabCell>
-				<crosstabCell width="0" height="16" columnTotalGroup="header-name">
+				<crosstabCell width="0" height="0" columnTotalGroup="header-name">
 					<cellContents mode="Opaque"/>
 				</crosstabCell>
-				<crosstabCell width="0" height="16" columnTotalGroup="sub-header-order">
+				<crosstabCell width="0" height="0" columnTotalGroup="sub-header-order">
 					<cellContents mode="Opaque"/>
 				</crosstabCell>
-				<crosstabCell width="0" height="16" columnTotalGroup="sub-header-name">
+				<crosstabCell width="0" height="0" columnTotalGroup="sub-header-name">
 					<cellContents mode="Opaque"/>
 				</crosstabCell>
-				<crosstabCell width="0" height="16" columnTotalGroup="component-name">
+				<crosstabCell width="0" height="0" columnTotalGroup="component-name">
 					<cellContents mode="Opaque"/>
 				</crosstabCell>
 				<crosstabCell width="62" height="0" rowTotalGroup="period-type-order">
@@ -563,6 +578,31 @@
 					<cellContents mode="Opaque">
 						<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
 						<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					</cellContents>
+				</crosstabCell>
+				<crosstabCell width="0" height="0" columnTotalGroup="component-order">
+					<cellContents>
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					</cellContents>
+				</crosstabCell>
+				<crosstabCell width="0" height="0" rowTotalGroup="period-type-order" columnTotalGroup="component-order">
+					<cellContents>
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					</cellContents>
+				</crosstabCell>
+				<crosstabCell width="0" height="0" rowTotalGroup="period-type-name" columnTotalGroup="component-order">
+					<cellContents>
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					</cellContents>
+				</crosstabCell>
+				<crosstabCell width="0" height="0" rowTotalGroup="seasonal-type-order" columnTotalGroup="component-order">
+					<cellContents>
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					</cellContents>
+				</crosstabCell>
+				<crosstabCell width="0" height="0" rowTotalGroup="seasonal-type-name" columnTotalGroup="component-order">
+					<cellContents>
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					</cellContents>
 				</crosstabCell>
 			</crosstab>

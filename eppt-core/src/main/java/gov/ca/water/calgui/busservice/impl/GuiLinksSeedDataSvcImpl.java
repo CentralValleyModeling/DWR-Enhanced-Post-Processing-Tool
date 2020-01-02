@@ -172,17 +172,17 @@ public final class GuiLinksSeedDataSvcImpl implements IGuiLinksSeedDataSvc
 		String yTitle = "";
 		if(list.length > 4)
 		{
-			yTitle = list[4];
+			yTitle = list[4].replace("%2C", ",");
 		}
 		String title = "";
 		if(list.length > 5)
 		{
-			title = list[5];
+			title = list[5].replace("%2C", ",");
 		}
 		String sLegend = "";
 		if(list.length > 6)
 		{
-			sLegend = list[6];
+			sLegend = list[6].replace("%2C", ",");
 		}
 		String id = extractCheckboxId(checkboxId);
 		return new GUILinksAllModelsBO(id, yTitle, title, sLegend);
@@ -216,7 +216,7 @@ public final class GuiLinksSeedDataSvcImpl implements IGuiLinksSeedDataSvc
 		return id;
 	}
 
-	public GUILinksAllModelsBO getObjById(String id)
+	public GUILinksAllModelsBO getGuiLink(String id)
 	{
 		GUILinksAllModelsBO guiLinks3BO = null;
 		try

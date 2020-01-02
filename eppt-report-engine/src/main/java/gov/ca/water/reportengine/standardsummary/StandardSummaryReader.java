@@ -15,6 +15,8 @@ package gov.ca.water.reportengine.standardsummary;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.time.LocalDateTime;
+import java.time.Month;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -27,6 +29,7 @@ import java.util.stream.Stream;
 import javax.script.ScriptException;
 
 import com.google.common.flogger.FluentLogger;
+import gov.ca.water.calgui.bo.CommonPeriodFilter;
 import gov.ca.water.calgui.scripts.JythonScriptRunner;
 import gov.ca.water.calgui.techservice.impl.FilePredicates;
 import gov.ca.water.reportengine.EpptReportException;
@@ -151,7 +154,8 @@ public class StandardSummaryReader
 	private String runTitleScript(String script)
 	{
 		String retval = script;
-		JythonScriptRunner runner = new JythonScriptRunner(null, null);
+		JythonScriptRunner runner = new JythonScriptRunner(null, new CommonPeriodFilter(LocalDateTime.of(1850, Month.JANUARY, 1, 0, 0),
+				LocalDateTime.of(2150, Month.JANUARY, 1, 0, 0)));
 		try
 		{
 			retval = runner.runScript(script).toString();

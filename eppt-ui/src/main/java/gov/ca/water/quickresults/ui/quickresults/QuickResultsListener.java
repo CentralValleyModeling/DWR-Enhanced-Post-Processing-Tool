@@ -24,7 +24,9 @@ import java.util.List;
 import java.util.Optional;
 import javax.swing.*;
 
+import gov.ca.water.calgui.bo.GUILinksAllModelsBO;
 import gov.ca.water.calgui.bo.ResultUtilsBO;
+import gov.ca.water.calgui.busservice.impl.GuiLinksSeedDataSvcImpl;
 import gov.ca.water.calgui.presentation.DisplayHelper;
 import gov.ca.water.calgui.project.EpptScenarioRun;
 import gov.ca.water.calgui.project.PlotConfigurationState;
@@ -35,6 +37,8 @@ import gov.ca.water.calgui.techservice.impl.ErrorHandlingSvcImpl;
 import gov.ca.water.quickresults.ui.EpptPanel;
 import gov.ca.water.quickresults.ui.projectconfig.ProjectConfigurationPanel;
 import org.apache.log4j.Logger;
+
+import static java.util.stream.Collectors.toList;
 
 
 /**
@@ -138,7 +142,10 @@ public class QuickResultsListener implements ActionListener
 					PlotConfigurationState plotConfigurationState = PlotConfigurationState.fromString(elementAt);
 					List<String> locations = parseLocations(elementAt);
 					DisplayHelper displayHelper = _quickResultsPanel.getDisplayHelper();
-					displayHelper.showDisplayFrames(plotConfigurationState, locations, baseScenario, alternatives, startMonth, endMonth);
+					List<GUILinksAllModelsBO> guiLinks = locations.stream()
+																  .map(GuiLinksSeedDataSvcImpl.getSeedDataSvcImplInstance()::getGuiLink)
+																  .collect(toList());
+					displayHelper.showDisplayFramesGuiLink(plotConfigurationState, guiLinks, baseScenario, alternatives, startMonth, endMonth);
 				}
 			}
 		}

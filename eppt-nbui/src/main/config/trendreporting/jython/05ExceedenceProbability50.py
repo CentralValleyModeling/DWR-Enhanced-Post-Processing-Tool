@@ -2,10 +2,6 @@ from rma.stats import EmpiricalDist
 from java.util import ArrayList
 
 
-def usesWaterYearDefinition():
-	return False
-
-
 def calculate(input):
 	return toExceedance(ArrayList(input.values()))
 

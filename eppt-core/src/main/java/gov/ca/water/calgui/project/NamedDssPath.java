@@ -38,6 +38,15 @@ public class NamedDssPath
 		_fPart = fPart;
 	}
 
+	public NamedDssPath(NamedDssPath ivDssFile)
+	{
+		_dssPath = ivDssFile.getDssPath();
+		_aliasName = ivDssFile.getAliasName();
+		_aPart = ivDssFile.getAPart();
+		_ePart = ivDssFile.getEPart();
+		_fPart = ivDssFile.getFPart();
+	}
+
 	public String getAPart()
 	{
 		return _aPart;

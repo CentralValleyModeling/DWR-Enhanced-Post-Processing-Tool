@@ -118,37 +118,14 @@ public class JasperReportRunner implements ReportRunner
 	@Override
 	public void runReportWithOutputFile(Path pdfOutputPath, Path jrxmlPath) throws QAQCReportException
 	{
-//		Appender console = new ConsoleAppender();
-//		org.apache.log4j.Logger root = org.apache.log4j.Logger.getLogger("net.sf.jasperreports");
-//		root.setLevel(org.apache.log4j.Level.DEBUG);
-//		root.addAppender(console);
+		//		Appender console = new ConsoleAppender();
+		//		org.apache.log4j.Logger root = org.apache.log4j.Logger.getLogger("net.sf.jasperreports");
+		//		root.setLevel(org.apache.log4j.Level.DEBUG);
+		//		root.addAppender(console);
 		try
 		{
 
-			Path subreportDir = jrxmlPath.getParent().resolve("DWR_QA_QC_Reports/Subreports");
-			if(subreportDir.toFile().isDirectory())
-			{
-				try(Stream<Path> paths = Files.walk(subreportDir, 5))
-				{
-					List<Path> subreports = paths.filter(subreport -> subreport.toFile().isFile())
-												 .filter(subreport -> subreport.toString().endsWith("jrxml"))
-												 .collect(toList());
-					for(Path subreport : subreports)
-					{
-						LOGGER.log(Level.INFO, "Compiling Subreport {0}", subreport);
-						try
-						{
-							JasperCompileManager.compileReportToFile(subreport.toString(),
-									subreport.getParent().resolve(subreport.getFileName().toString().replace("jrxml", "jasper")).toString());
-						}
-						catch(JRException e)
-						{
-							throw new QAQCReportException("Unable to process subreport: " + subreport, e);
-						}
-					}
-				}
-			}
-
+			Path subreportDir = compileSubreports(jrxmlPath);
 			// compiles jrxml
 			Path dataDir = jrxmlPath.getParent().resolve("DWR_QA_QC_Reports/Datasource");
 			Path imagesDir = jrxmlPath.getParent().resolve("DWR_QA_QC_Reports/Images");
@@ -198,6 +175,38 @@ public class JasperReportRunner implements ReportRunner
 		{
 			throw new QAQCReportException("Unable to generate Jasper Report PDF: " + jrxmlPath, ex);
 		}
+	}
+
+	private Path compileSubreports(Path jrxmlParentPath) throws IOException, QAQCReportException
+	{
+		Path subreportDir = jrxmlParentPath.getParent().resolve("DWR_QA_QC_Reports/Subreports");
+		if(subreportDir.toFile().isDirectory())
+		{
+			try(Stream<Path> paths = Files.walk(subreportDir, 5))
+			{
+				List<Path> subreports = paths.filter(subreport -> subreport.toFile().isFile())
+											 .filter(subreport -> subreport.toString().endsWith("jrxml"))
+											 .collect(toList());
+				for(Path jrxmlFile : subreports)
+				{
+					try
+					{
+						Path jasperFile = jrxmlFile.getParent().resolve(jrxmlFile.getFileName().toString().replace("jrxml", "jasper"));
+						if(!jasperFile.toFile().exists() || Files.getLastModifiedTime(jasperFile).compareTo(Files.getLastModifiedTime(jrxmlFile)) < 0)
+						{
+							LOGGER.log(Level.INFO, "Compiling Subreport {0}", jrxmlFile);
+							JasperCompileManager.compileReportToFile(jrxmlFile.toString(),
+									jasperFile.toString());
+						}
+					}
+					catch(JRException e)
+					{
+						throw new QAQCReportException("Unable to process subreport: " + jrxmlFile, e);
+					}
+				}
+			}
+		}
+		return subreportDir;
 	}
 
 	private static class StdOutHandler extends ConsoleHandler

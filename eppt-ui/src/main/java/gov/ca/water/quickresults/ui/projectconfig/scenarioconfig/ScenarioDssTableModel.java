@@ -20,8 +20,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.Vector;
-import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -39,7 +37,6 @@ import gov.ca.water.calgui.project.NamedDssPath;
 
 import hec.heclib.dss.CondensedReference;
 import hec.heclib.dss.DSSPathname;
-import hec.heclib.dss.HecDSSFileDataManager;
 import hec.heclib.dss.HecDss;
 import hec.heclib.dss.HecDssCatalog;
 import rma.swing.table.RmaTableModel;
@@ -71,13 +68,17 @@ class ScenarioDssTableModel extends RmaTableModel
 	{
 		_executor = Executors.newFixedThreadPool(10);
 		_loadingDss = loading;
-		Row dvRowModel = createRowModel(new NamedDssPath(Paths.get(""), "", "", "", ""), RowType.DV);
+		Row dvRowModel = createRowModel(new NamedDssPath(Paths.get("EPPT_DEFAULT.dss"), "", "EPPT_DEFAULT", "1MON", "EPPT_DEFAULT"),
+				RowType.DV);
 		_rows.add(dvRowModel);
-		Row svRowModel = createRowModel(new NamedDssPath(Paths.get(""), "", "", "", ""), RowType.SV);
+		Row svRowModel = createRowModel(new NamedDssPath(Paths.get("EPPT_DEFAULT.dss"), "", "EPPT_DEFAULT", "1MON", "EPPT_DEFAULT"),
+				RowType.SV);
 		_rows.add(svRowModel);
-		Row ivRowModel = createRowModel(new NamedDssPath(Paths.get(""), "", "", "", ""), RowType.INIT);
+		Row ivRowModel = createRowModel(new NamedDssPath(Paths.get("EPPT_DEFAULT.dss"), "", "EPPT_DEFAULT", "1MON", "EPPT_DEFAULT"),
+				RowType.INIT);
 		_rows.add(ivRowModel);
-		Row dtwRowModel = createRowModel(new NamedDssPath(Paths.get(""), "", "", "", ""), RowType.QA_QC);
+		Row dtwRowModel = createRowModel(new NamedDssPath(Paths.get("EPPT_DEFAULT.dss"), "", "EPPT_DEFAULT", "1MON", "EPPT_DEFAULT"),
+				RowType.QA_QC);
 		_rows.add(dtwRowModel);
 	}
 
@@ -113,7 +114,8 @@ class ScenarioDssTableModel extends RmaTableModel
 		NamedDssPath svDssFile = createNamedDssPath(getRowForType(RowType.SV), scenarioName, outputPath);
 		NamedDssPath ivDssFile = createNamedDssPath(getRowForType(RowType.INIT), scenarioName, outputPath);
 		NamedDssPath dtsDssFile = createNamedDssPath(getRowForType(RowType.QA_QC), scenarioName, outputPath);
-		List<NamedDssPath> extraDssFiles = getExtraRows().stream().map((Row row) -> createNamedDssPath(row, scenarioName, outputPath)).collect(toList());
+		List<NamedDssPath> extraDssFiles = getExtraRows().stream().map((Row row) -> createNamedDssPath(row, scenarioName, outputPath)).collect(
+				toList());
 		return new EpptDssContainer(dvDssFile, svDssFile, ivDssFile, dtsDssFile, extraDssFiles);
 	}
 
@@ -169,7 +171,7 @@ class ScenarioDssTableModel extends RmaTableModel
 				{
 					dssPath = Paths.get(dssPath.toString() + ".dss");
 				}
-				retval  = new NamedDssPath(dssPath, alias, row._aPart, Row.E_PART, row._fPart);
+				retval = new NamedDssPath(dssPath, alias, row._aPart, Row.E_PART, row._fPart);
 			}
 		}
 		return retval;
@@ -346,11 +348,11 @@ class ScenarioDssTableModel extends RmaTableModel
 	private List<GUILinksAllModelsBO> getDefaultGuiLinks(IGuiLinksSeedDataSvc seedDataSvcImplInstance)
 	{
 		List<GUILinksAllModelsBO> guiLinks = new ArrayList<>();
-		GUILinksAllModelsBO guiLink310 = seedDataSvcImplInstance.getObjById("310");
+		GUILinksAllModelsBO guiLink310 = seedDataSvcImplInstance.getGuiLink("310");
 		guiLinks.add(guiLink310);
-		GUILinksAllModelsBO guiLink311 = seedDataSvcImplInstance.getObjById("311");
+		GUILinksAllModelsBO guiLink311 = seedDataSvcImplInstance.getGuiLink("311");
 		guiLinks.add(guiLink311);
-		GUILinksAllModelsBO guiLink901 = seedDataSvcImplInstance.getObjById("901");
+		GUILinksAllModelsBO guiLink901 = seedDataSvcImplInstance.getGuiLink("901");
 		guiLinks.add(guiLink901);
 		return guiLinks;
 	}

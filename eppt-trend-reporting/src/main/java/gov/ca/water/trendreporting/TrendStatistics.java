@@ -174,24 +174,6 @@ class TrendStatistics
 		return retval;
 	}
 
-	boolean usesWaterYearDefinition()
-	{
-		boolean retval = false;
-
-		try(BufferedReader bufferedReader = Files.newBufferedReader(_jythonFilePath))
-		{
-			_scriptEngine.eval(bufferedReader);
-			retval = Boolean.parseBoolean(Objects.toString(_scriptEngine.eval("usesWaterYearDefinition()")));
-		}
-		catch(IOException | ScriptException e)
-		{
-			LOGGER.log(Level.SEVERE,
-					"Error getting water year definition support from Jython script: " + _jythonFilePath + " ensure method usesWaterYearDefinition() is defined",
-					e);
-		}
-		return retval;
-	}
-
 	public Double calculateYearly(SortedMap<Integer, Double> data,
 													  WaterYearDefinition waterYearDefinition,
 													  WaterYearIndex waterYearIndex, List<WaterYearIndex> waterYearIndices)

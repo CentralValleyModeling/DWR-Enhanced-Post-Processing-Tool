@@ -21,6 +21,7 @@ import java.util.logging.Logger;
 import java.util.regex.Pattern;
 
 import gov.ca.water.calgui.project.EpptScenarioRun;
+import gov.ca.water.calgui.scripts.DssMissingRecordException;
 import gov.ca.water.reportengine.EpptReportException;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -163,22 +164,27 @@ class CoaTableBuilder extends TableBuilder
 		{
 			if(Objects.equals(component.getComponent(), v.getComponent()))
 			{
+				Element totalElem = getDocument().createElement(VALUE_ELEMENT);
 				try
 				{
 					Object vObj = createJythonValueGenerator(scenarioRun, v.getFunction()).generateObjectValue();
 					Object cObj = createJythonValueGenerator(scenarioRun, component.getFunction()).generateObjectValue();
 					if(vObj instanceof Number && cObj instanceof Number)
 					{
-						Element totalElem = getDocument().createElement(VALUE_ELEMENT);
 						totalElem.setTextContent(String.valueOf(Math.round(((Number) vObj).doubleValue() + ((Number) cObj).doubleValue())));
 						return totalElem;
 					}
+				}
+				catch(DssMissingRecordException e)
+				{
+					LOGGER.log(Level.FINE, "Missing record, displaying as NR", e);
+					totalElem.setTextContent(NO_RECORD_TEXT);
 				}
 				catch(EpptReportException e)
 				{
 					getStandardSummaryErrors().addError(LOGGER, "Error running Script for total", e);
 				}
-				return getDocument().createElement(VALUE_ELEMENT);
+				return totalElem;
 			}
 		}
 		return buildTotalValueForChart(scenarioRun, v);
@@ -219,6 +225,11 @@ class CoaTableBuilder extends TableBuilder
 				retval.setTextContent(String.valueOf(total));
 			}
 		}
+		catch(DssMissingRecordException e)
+		{
+			LOGGER.log(Level.FINE, "Missing record, displaying as NR", e);
+			retval.setTextContent(NO_RECORD_TEXT);
+		}
 		catch(EpptReportException e)
 		{
 			logScriptException(LOGGER, v, e);
@@ -248,6 +259,11 @@ class CoaTableBuilder extends TableBuilder
 				String textRaw = String.valueOf(value);
 				retval.setTextContent(textRaw);
 			}
+		}
+		catch(DssMissingRecordException e)
+		{
+			LOGGER.log(Level.FINE, "Missing record, displaying as NR", e);
+			retval.setTextContent(NO_RECORD_TEXT);
 		}
 		catch(EpptReportException e)
 		{

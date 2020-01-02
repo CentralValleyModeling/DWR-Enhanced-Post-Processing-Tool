@@ -18,12 +18,14 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.NavigableMap;
+import java.util.TreeMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import gov.ca.water.calgui.bo.MonthPeriodFilter;
 import gov.ca.water.calgui.bo.PeriodFilter;
 import gov.ca.water.calgui.project.EpptScenarioRun;
+import gov.ca.water.calgui.scripts.DssMissingRecordException;
 import gov.ca.water.plotly.ExceedanceData;
 import gov.ca.water.plotly.PlotlyChart;
 import gov.ca.water.plotly.qaqc.PlotlyExceedancePage;
@@ -86,13 +88,21 @@ class ExceedanceChartPageBuilder extends PlotChartBuilder
 			throws EpptReportException
 	{
 		ChartComponent chartComponent = chartComponents.get(0);
-		NavigableMap<Double, Double> primaryData = createJythonValueGenerator(scenarioRun, chartComponent.getFunction()).generateExceedanceValues();
+		NavigableMap<Double, Double> primaryData = new TreeMap<>();
 		Map<String, NavigableMap<Double, Double>> thresholdData = new HashMap<>();
-		for(int i = 1; i < chartComponents.size(); i++)
+		try
 		{
-			NavigableMap<Double, Double> threshold = createJythonValueGenerator(periodFilter, getBase(),
-					chartComponents.get(i).getFunction()).generateExceedanceValues();
-			thresholdData.put(chartComponents.get(i).getComponent(), threshold);
+			primaryData = createJythonValueGenerator(periodFilter, scenarioRun, chartComponent.getFunction()).generateExceedanceValues();
+			for(int i = 1; i < chartComponents.size(); i++)
+			{
+				NavigableMap<Double, Double> threshold = createJythonValueGenerator(periodFilter, scenarioRun,
+						chartComponents.get(i).getFunction()).generateExceedanceValues();
+				thresholdData.put(chartComponents.get(i).getComponent(), threshold);
+			}
+		}
+		catch(DssMissingRecordException e)
+		{
+			logScriptException(LOGGER, chartComponent, e);
 		}
 		return new ExceedanceData(scenarioRun.getName(), primaryData, thresholdData);
 	}

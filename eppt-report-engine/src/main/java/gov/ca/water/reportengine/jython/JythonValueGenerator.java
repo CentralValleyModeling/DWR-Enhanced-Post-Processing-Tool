@@ -34,6 +34,7 @@ import gov.ca.water.calgui.bo.WaterYearPeriodRange;
 import gov.ca.water.calgui.bo.WaterYearPeriodRangeFilter;
 import gov.ca.water.calgui.bo.WaterYearType;
 import gov.ca.water.calgui.project.EpptScenarioRun;
+import gov.ca.water.calgui.scripts.DssMissingRecordException;
 import gov.ca.water.calgui.scripts.JythonScriptRunner;
 import gov.ca.water.reportengine.EpptReportException;
 import sun.font.Script;
@@ -103,7 +104,7 @@ public class JythonValueGenerator
 		_scriptRunner.setComparisonValue((double) comparisonValue);
 	}
 
-	public Double generateValue() throws EpptReportException
+	public Double generateValue() throws EpptReportException, DssMissingRecordException
 	{
 		try
 		{
@@ -121,6 +122,7 @@ public class JythonValueGenerator
 		}
 		catch(ScriptException e)
 		{
+			checkDssMissingException(e);
 			throw new EpptReportException("Error running script: " + _function, e);
 		}
 		catch(ClassCastException e)
@@ -130,7 +132,20 @@ public class JythonValueGenerator
 		}
 	}
 
-	public Object generateObjectValue() throws EpptReportException
+	private void checkDssMissingException(Throwable e) throws DssMissingRecordException
+	{
+		Throwable cause = e.getCause();
+		if(cause instanceof DssMissingRecordException)
+		{
+			throw (DssMissingRecordException) cause;
+		}
+		else if(cause != null)
+		{
+			checkDssMissingException(cause);
+		}
+	}
+
+	public Object generateObjectValue() throws EpptReportException, DssMissingRecordException
 	{
 		try
 		{
@@ -138,12 +153,13 @@ public class JythonValueGenerator
 		}
 		catch(ScriptException e)
 		{
+			checkDssMissingException(e);
 			throw new EpptReportException("Error running script: " + _function, e);
 		}
 	}
 
 	@SuppressWarnings("unchecked")
-	public long generateCount() throws EpptReportException
+	public long generateCount() throws EpptReportException, DssMissingRecordException
 	{
 		try
 		{
@@ -152,6 +168,7 @@ public class JythonValueGenerator
 		}
 		catch(ScriptException e)
 		{
+			checkDssMissingException(e);
 			throw new EpptReportException("Error running script: " + _function, e);
 		}
 		catch(ClassCastException e)
@@ -162,7 +179,7 @@ public class JythonValueGenerator
 	}
 
 	@SuppressWarnings("unchecked")
-	public NavigableMap<Double, Double> generateExceedanceValues() throws EpptReportException
+	public NavigableMap<Double, Double> generateExceedanceValues() throws EpptReportException, DssMissingRecordException
 	{
 		try
 		{
@@ -175,6 +192,7 @@ public class JythonValueGenerator
 		}
 		catch(ScriptException e)
 		{
+			checkDssMissingException(e);
 			throw new EpptReportException("Error running script: " + _function, e);
 		}
 		catch(ClassCastException e)
@@ -185,7 +203,7 @@ public class JythonValueGenerator
 	}
 
 	@SuppressWarnings("unchecked")
-	public Map<Integer, Double> generateAnnualValues() throws EpptReportException
+	public Map<Integer, Double> generateAnnualValues() throws EpptReportException, DssMissingRecordException
 	{
 		try
 		{
@@ -198,6 +216,7 @@ public class JythonValueGenerator
 		}
 		catch(ScriptException e)
 		{
+			checkDssMissingException(e);
 			throw new EpptReportException("Error running script: " + _function, e);
 		}
 		catch(ClassCastException e)
@@ -208,7 +227,7 @@ public class JythonValueGenerator
 	}
 
 	@SuppressWarnings("unchecked")
-	public Map<Month, Double> generateMonthlyValues() throws EpptReportException
+	public Map<Month, Double> generateMonthlyValues() throws EpptReportException, DssMissingRecordException
 	{
 		try
 		{
@@ -225,6 +244,7 @@ public class JythonValueGenerator
 		}
 		catch(ScriptException e)
 		{
+			checkDssMissingException(e);
 			throw new EpptReportException("Error running script: " + _function, e);
 		}
 		catch(ClassCastException e)
@@ -232,5 +252,10 @@ public class JythonValueGenerator
 			throw new EpptReportException("Incorrect return type from function: " + _function +
 					" Required: ", e);
 		}
+	}
+
+	public String getUnits()
+	{
+		return _scriptRunner.getUnits();
 	}
 }

@@ -22,9 +22,18 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.PrintStream;
+import java.time.Month;
+import java.time.YearMonth;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeFormatterBuilder;
+import java.time.format.DateTimeParseException;
+import java.time.format.SignStyle;
+import java.time.format.TextStyle;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Vector;
@@ -42,6 +51,9 @@ import gov.ca.water.calgui.constant.Constant;
 import gov.ca.water.calgui.techservice.IDialogSvc;
 import gov.ca.water.calgui.techservice.impl.DialogSvcImpl;
 import org.apache.log4j.Logger;
+
+import static java.time.temporal.ChronoField.MONTH_OF_YEAR;
+import static java.time.temporal.ChronoField.YEAR;
 
 /**
  * Supporting utilities for display of results
@@ -140,7 +152,39 @@ public class ResultUtilsBO
 
 		try
 		{
-			SpinnerListModel monthModel = new SpinnerListModel(monthNames);
+			SpinnerListModel monthModel = new SpinnerListModel(monthNames)
+			{
+				@Override
+				public void setValue(Object elt)
+				{
+					try
+					{
+						super.setValue(elt);
+					}
+					catch(IllegalArgumentException ex0)
+					{
+						LOG.debug("Try parsing as month", ex0);
+						List<String> formatStrings = Arrays.asList("yyyy M", "yyyy MM", "yyyy MMM", "yyyy MMMM");
+						YearMonth yearMonth = YearMonth.of(1, Month.JANUARY);
+						for(String format : formatStrings)
+						{
+							try
+							{
+								yearMonth = YearMonth.parse("1999 " + elt, new DateTimeFormatterBuilder()
+										.parseCaseInsensitive()
+										.appendPattern(format)
+										.toFormatter(Locale.ENGLISH));
+								break;
+							}
+							catch(DateTimeParseException ex)
+							{
+								LOG.debug("Error parsing month", ex);
+							}
+						}
+						super.setValue(yearMonth.getMonth().getDisplayName(TextStyle.SHORT, Locale.getDefault()));
+					}
+				}
+			};
 			jspn.setModel(monthModel);
 			jspn.setValue(monthNames[idx]);
 			if(changelistener)

@@ -155,7 +155,7 @@ public class DetailedIssueProcessor
 		GUILinksAllModelsBO guiLink = null;
 		if(Const.isValid(guiID))
 		{
-			guiLink = GuiLinksSeedDataSvcImpl.getSeedDataSvcImplInstance().getObjById(Integer.toString(guiID));
+			guiLink = GuiLinksSeedDataSvcImpl.getSeedDataSvcImplInstance().getGuiLink(Integer.toString(guiID));
 		}
 		ThresholdLinksBO thresholdLink = null;
 		if(Const.isValid(thresholdID))
@@ -189,7 +189,7 @@ public class DetailedIssueProcessor
 		DSSGrabber1SvcImpl grabber1Svc = buildDssGrabber(run, guiID, thresholdID);
 
 		//get the specific container for the threshold values
-		TimeSeriesContainer[] thresholdTimeSeries = grabber1Svc.getThresholdTimeSeries();
+		TimeSeriesContainer[] thresholdTimeSeries = grabber1Svc.getPrimarySeries();
 		TimeSeriesContainer thresholdSeriesContainer = null;
 		if(thresholdTimeSeries != null && thresholdTimeSeries.length > 0)
 		{
@@ -285,8 +285,10 @@ public class DetailedIssueProcessor
 		DSSGrabber1SvcImpl grabber1Svc = new DSSGrabber1SvcImpl();
 		grabber1Svc.setIsCFS(_isCFS);
 		grabber1Svc.setScenarioRuns(epptScenarioRun, Collections.emptyList());
-		grabber1Svc.setLocation(Integer.toString(guiID));
-		grabber1Svc.setThresholdId(thresholdId);
+		GUILinksAllModelsBO guiLink = GuiLinksSeedDataSvcImpl.getSeedDataSvcImplInstance().getGuiLink(Integer.toString(guiID));
+		grabber1Svc.setGuiLink(guiLink);
+		ThresholdLinksBO thresholdLink = ThresholdLinksSeedDataSvc.getSeedDataSvcImplInstance().getObjById(thresholdId);
+		grabber1Svc.setThresholdLink(thresholdLink);
 		return grabber1Svc;
 	}
 

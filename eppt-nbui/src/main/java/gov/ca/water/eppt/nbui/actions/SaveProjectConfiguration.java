@@ -22,6 +22,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.*;
 
+import gov.ca.water.calgui.constant.Constant;
 import gov.ca.water.calgui.constant.EpptPreferences;
 import gov.ca.water.eppt.nbui.Installer;
 import gov.ca.water.eppt.nbui.ProjectConfigurationTopComponent;
@@ -31,6 +32,7 @@ import org.openide.awt.ActionID;
 import org.openide.awt.ActionReference;
 import org.openide.awt.ActionReferences;
 import org.openide.awt.ActionRegistration;
+import org.openide.awt.DropDownButtonFactory;
 import org.openide.util.ContextAwareAction;
 import org.openide.util.Lookup;
 import org.openide.util.NbBundle.Messages;
@@ -44,7 +46,7 @@ import org.openide.windows.WindowManager;
 		id = "gov.ca.water.eppt.nbui.actions.SaveProjectConfiguration"
 )
 @ActionRegistration(
-		iconBase = "gov/ca/water/eppt/nbui/actions/HecDssVue.png",
+		iconBase = "gov/ca/water/eppt/nbui/actions/save.png",
 		displayName = "Save"
 )
 @ActionReferences(
@@ -83,19 +85,19 @@ public final class SaveProjectConfiguration extends AbstractAction implements Pr
 		ProjectConfigurationPanel projectConfigurationPanel = ProjectConfigurationPanel.getProjectConfigurationPanel();
 		if(lastProjectConfiguration.toFile().exists())
 		{
-			Path projectDir = lastProjectConfiguration.toAbsolutePath().getParent();
-			//For backwards compatibility
-			if(projectDir.normalize().equals(EpptPreferences.getProjectsPath()))
-			{
-				projectDir = projectDir.resolve(projectConfigurationPanel.getProjectName());
-			}
-			projectConfigurationPanel.saveConfigurationToPath(projectDir,
+			projectConfigurationPanel.saveConfigurationToPath(lastProjectConfiguration,
 					projectConfigurationPanel.getProjectName(), projectConfigurationPanel.getProjectDescription());
 		}
 		else
 		{
-			new NewProjectConfiguration().saveAs();
+			new NewProjectConfiguration().createNew();
 		}
+		clearSaveCookie();
+	}
+
+	static void clearSaveCookie()
+	{
+		ProjectConfigurationPanel projectConfigurationPanel = ProjectConfigurationPanel.getProjectConfigurationPanel();
 		WindowManager.getDefault().getMainWindow().setTitle(
 				Installer.MAIN_FRAME_NAME + " - " + projectConfigurationPanel.getProjectName());
 		Collection<? extends ProjectConfigurationSavable> projectConfigurationSavables = Savable.REGISTRY.lookupAll(
@@ -125,9 +127,24 @@ public final class SaveProjectConfiguration extends AbstractAction implements Pr
 	public Component getToolbarPresenter()
 	{
 		ImageIcon imageIcon = getSaveIcon("save24.png");
-		JButton dropDownToggleButton = new JButton(imageIcon);
-		dropDownToggleButton.addActionListener(e -> performSave());
-		return dropDownToggleButton;
+		JPopupMenu menu = new JPopupMenu();
+		menu.add(createSaveAsAction());
+		JButton dropDownButton = DropDownButtonFactory.createDropDownButton(imageIcon, menu);
+		dropDownButton.addActionListener(e -> performSave());
+		return dropDownButton;
+	}
+
+	private JMenuItem createSaveAsAction()
+	{
+		ImageIcon imageIcon = getSaveIcon("save24.png");
+		JMenuItem retval = new JMenuItem("Save As...", imageIcon);
+		retval.addActionListener(e -> saveAs());
+		return retval;
+	}
+
+	private void saveAs()
+	{
+		new SaveAsProjectConfiguration().actionPerformed(null);
 	}
 
 	@Override

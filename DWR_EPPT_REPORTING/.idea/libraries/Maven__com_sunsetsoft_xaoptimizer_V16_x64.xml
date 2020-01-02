@@ -1,0 +1,13 @@
+<component name="libraryTable">
+  <library name="Maven: com.sunsetsoft:xaoptimizer:V16_x64">
+    <CLASSES>
+      <root url="jar://$MAVEN_REPOSITORY$/com/sunsetsoft/xaoptimizer/V16_x64/xaoptimizer-V16_x64.jar!/" />
+    </CLASSES>
+    <JAVADOC>
+      <root url="jar://$MAVEN_REPOSITORY$/com/sunsetsoft/xaoptimizer/V16_x64/xaoptimizer-V16_x64-javadoc.jar!/" />
+    </JAVADOC>
+    <SOURCES>
+      <root url="jar://$MAVEN_REPOSITORY$/com/sunsetsoft/xaoptimizer/V16_x64/xaoptimizer-V16_x64-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

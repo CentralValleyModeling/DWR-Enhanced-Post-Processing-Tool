@@ -131,7 +131,7 @@ class DSSCatalogReader implements Enumeration
 		String line = _currentLine;
 		if(line == null)
 		{
-			throw new IllegalArgumentException("Catalog is empty ?");
+			return;
 		}
 		_beginIndex[Pathname.A_PART] = line.indexOf("A Part");
 		_endIndex[Pathname.A_PART] = line.indexOf("B Part");

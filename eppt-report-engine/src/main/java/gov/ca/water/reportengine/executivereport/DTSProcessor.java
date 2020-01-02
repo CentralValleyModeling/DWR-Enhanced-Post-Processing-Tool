@@ -12,22 +12,23 @@
 
 package gov.ca.water.reportengine.executivereport;
 
-import java.nio.file.Path;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.Month;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Vector;
 import java.util.logging.Level;
 
 import com.google.common.flogger.FluentLogger;
+import gov.ca.water.calgui.bo.DetailedIssue;
+import gov.ca.water.calgui.busservice.impl.DSSGrabber1SvcImpl;
 import gov.ca.water.calgui.project.EpptScenarioRun;
 import gov.ca.water.reportengine.EpptReportException;
-import org.python.antlr.base.mod;
+import gov.ca.water.reportengine.standardsummary.StandardSummaryErrors;
 
-import hec.heclib.dss.DSSPathname;
-import hec.heclib.dss.HecDataManager;
-import hec.heclib.dss.HecDss;
 import hec.heclib.util.HecTime;
 import hec.heclib.util.HecTimeArray;
 import hec.io.TimeSeriesContainer;
@@ -39,36 +40,25 @@ public class DTSProcessor
 {
 	private static final FluentLogger LOGGER = FluentLogger.forEnclosingClass();
 	private final List<Module> _modules = new ArrayList<>();
+	private final StandardSummaryErrors _standardSummaryErrors;
 
 
-	public DTSProcessor(List<Module> modules)
+	public DTSProcessor(List<Module> modules, StandardSummaryErrors standardSummaryErrors)
 	{
+		_standardSummaryErrors = standardSummaryErrors;
 		_modules.addAll(modules);
 	}
 
 	public Map<EpptScenarioRun, Map<SubModule, List<FlagViolation>>> processDSSFiles(List<EpptScenarioRun> runs)
 			throws EpptReportException
 	{
-		List<Path> dssFiles = new ArrayList<>();
+
+		Map<EpptScenarioRun, Map<SubModule, List<FlagViolation>>> runToViolations = new HashMap<>();
 		for(EpptScenarioRun run : runs)
 		{
 			checkInterrupt();
-			dssFiles.add(run.getPostProcessDss());
-		}
-		if(runs.size() != dssFiles.size())
-		{
-			throw new EpptReportException(
-					"Different number of DSS files as runs. Number of runs: " + runs.size() + " Number of DSS files: " + dssFiles.size() + ".");
-		}
-
-		Map<EpptScenarioRun, Map<SubModule, List<FlagViolation>>> runToViolations = new HashMap<>();
-
-
-		for(int i = 0; i < runs.size(); i++)
-		{
-			checkInterrupt();
-			Map<SubModule, List<FlagViolation>> subModuleToViolations = processDSSFile(dssFiles.get(i));
-			runToViolations.put(runs.get(i), subModuleToViolations);
+			Map<SubModule, List<FlagViolation>> subModuleToViolations = processDSSFile(run);
+			runToViolations.put(run, subModuleToViolations);
 		}
 		return runToViolations;
 	}
@@ -76,168 +66,103 @@ public class DTSProcessor
 	/**
 	 * Gets the violations from the dssFile and puts them into the correct subModule
 	 *
-	 * @param dssFile Path to dss file with dts records
+	 * @param epptScenarioRun Path to dss file with dts records
 	 * @throws Exception
 	 */
-	private Map<SubModule, List<FlagViolation>> processDSSFile(Path dssFile) throws EpptReportException
+	private Map<SubModule, List<FlagViolation>> processDSSFile(EpptScenarioRun epptScenarioRun) throws EpptReportException
 	{
-		LOGGER.at(Level.INFO).log("Processing DTS Records in file %s", dssFile);
+		LOGGER.at(Level.INFO).log("Processing DTS Records in file scenario: %s", epptScenarioRun);
 		Map<SubModule, List<FlagViolation>> subModToViolations = new HashMap<>();
-		HecDss hD = null;
-		try
+		for(Module mod : _modules)
 		{
-			if(HecDataManager.doesDSSFileExist(dssFile.toString()))
-			{
-				hD = HecDss.open(dssFile.toString());
+			checkInterrupt();
 
-				for(Module mod : _modules)
+			if("COA".equalsIgnoreCase(mod.getName()))
+			{
+				Map<SubModule, List<FlagViolation>> subModuleListMap = setMaxValueForCOAModuleFromDssFile(mod, epptScenarioRun);
+				for(Map.Entry<SubModule, List<FlagViolation>> entry : subModuleListMap.entrySet())
 				{
-					checkInterrupt();
-
-					if("COA".equalsIgnoreCase(mod.getName()))
-					{
-						Map<SubModule, List<FlagViolation>> subModuleListMap = setMaxValueForCOAModuleFromDssFile(mod, hD);
-						for(Map.Entry<SubModule, List<FlagViolation>> entry : subModuleListMap.entrySet())
-						{
-							subModToViolations.put(entry.getKey(), entry.getValue());
-						}
-						continue;
-					}
-
-					List<SubModule> subModules = mod.getSubModules();
-					for(SubModule sm : subModules)
-					{
-						checkInterrupt();
-						List<FlagViolation> violations = getViolations(dssFile, hD, sm);
-						subModToViolations.put(sm, violations);
-					}
+					subModToViolations.put(entry.getKey(), entry.getValue());
 				}
+				continue;
 			}
-		}
-		catch(Exception e)
-		{
-			throw new EpptReportException("Unable to open dssFile: " + dssFile, e);
-		}
-		finally
-		{
-			if(hD != null)
+
+			List<SubModule> subModules = mod.getSubModules();
+			for(SubModule sm : subModules)
 			{
-				hD.close();
+				checkInterrupt();
+				List<FlagViolation> violations = getViolations(epptScenarioRun, sm);
+				subModToViolations.put(sm, violations);
 			}
 		}
 		return subModToViolations;
 	}
 
-	private List<FlagViolation> getViolations(Path dssFile, HecDss hD, SubModule sm) throws EpptReportException
+	private List<FlagViolation> getViolations(EpptScenarioRun epptScenarioRun, SubModule sm) throws EpptReportException
 	{
 		List<FlagViolation> violations = new ArrayList<>();
-		List<String> linkedRecords = sm.getLinkedRecords();
+		List<DetailedIssue> linkedRecords = sm.getLinkedRecords();
 		SubModule.FlagType flagValue = sm.getFlagValue();
-		for(String lr : linkedRecords)
+		for(DetailedIssue detailedIssue : linkedRecords)
 		{
-
+			LOGGER.at(Level.INFO).log("Processing DTS ID: %s and DTS Record Path: %s ",
+					detailedIssue.getDetailedIssueId(), detailedIssue.getLinkedVar());
 			checkInterrupt();
-			DSSPathname pathName = new DSSPathname();
-			pathName.setAPart("*");
-			pathName.setBPart(lr);
-			pathName.setCPart("*");
-			pathName.setDPart("*");
-			pathName.setEPart("*");
-			pathName.setFPart("*");
-
-
-			String dssPath = pathName.toString();
-			try
+			DSSGrabber1SvcImpl dssGrabber1Svc = buildDssGrabber(epptScenarioRun, detailedIssue);
+			TimeSeriesContainer[] primarySeries = dssGrabber1Svc.getPrimarySeries();
+			if(primarySeries != null && primarySeries[0] != null && primarySeries[0].values.length > 0)
 			{
-
-				Vector catalogedPathnames = hD.getCatalogedPathnames(dssPath);
-				if(!catalogedPathnames.isEmpty())
-				{
-					dssPath = catalogedPathnames.get(0).toString();
-				}
-				TimeSeriesContainer result = (TimeSeriesContainer) hD.get(dssPath, true);
-
-				FlagViolation flagViolationFromRecord = createFlagViolationFromRecord(result, flagValue, lr);
+				TimeSeriesContainer result = primarySeries[0];
+				FlagViolation flagViolationFromRecord = createFlagViolationFromRecord(result, flagValue, detailedIssue);
 				if(flagViolationFromRecord != null)
 				{
 					violations.add(flagViolationFromRecord);
 				}
-
 			}
-			catch(Exception e)
+			else
 			{
-				if(e.getMessage() != null && e.getMessage().contains("Unable to recognize record"))
-				{
-					FluentLogger.forEnclosingClass().at(Level.INFO).withCause(e).log("Skipping record: %s from file: %s", dssPath,
-							dssFile);
-				}
-				else
-				{
-					throw new ExecutiveReportException("Error reading dssFile during executive report generation: " + dssFile.toString(),
-							e);
-				}
+				_standardSummaryErrors.addError(LOGGER,
+						"Unable to process flagged violations for DTS ID: "
+								+ detailedIssue.getDetailedIssueId() + " DTS record: " + detailedIssue.getLinkedVar());
 			}
-
 		}
 		return violations;
 	}
 
 
-	private Map<SubModule, List<FlagViolation>> setMaxValueForCOAModuleFromDssFile(Module mod, HecDss hD) throws EpptReportException
+	private Map<SubModule, List<FlagViolation>> setMaxValueForCOAModuleFromDssFile(Module mod, EpptScenarioRun epptScenarioRun)
+			throws EpptReportException
 	{
 		Map<SubModule, List<FlagViolation>> subModToViolations = new HashMap<>();
-		try
+		List<SubModule> subModules = mod.getSubModules();
+		for(SubModule sm : subModules)
 		{
-			List<SubModule> subModules = mod.getSubModules();
-			for (SubModule sm : subModules)
+			List<DetailedIssue> linkedRecords = sm.getLinkedRecords();
+			for(DetailedIssue detailedIssue : linkedRecords)
 			{
-				List<String> linkedRecords = sm.getLinkedRecords();
-				for (String lr : linkedRecords)
-				{
-					DSSPathname pathName = new DSSPathname();
-					pathName.setAPart("*");
-					pathName.setBPart(lr);
-					pathName.setCPart("*");
-					pathName.setDPart("*");
-					pathName.setEPart("*");
-					pathName.setFPart("*");
-
-					createViolationWithMaxValue(hD, subModToViolations, sm, lr, pathName);
-				}
-			}
-		}
-		catch (ExecutiveReportException e)
-		{
-			throw new EpptReportException("Unable to open DSS file: " + hD.getFilename(), e);
-		}
-		finally
-		{
-			if (hD != null)
-			{
-//				hD.close();
+				createViolationWithMaxValue(subModToViolations, sm, epptScenarioRun, detailedIssue);
 			}
 		}
 		return subModToViolations;
 	}
 
-	private void createViolationWithMaxValue(HecDss hD, Map<SubModule, List<FlagViolation>> subModToViolations, SubModule sm, String lr, DSSPathname pathName) throws ExecutiveReportException
+	private void createViolationWithMaxValue(Map<SubModule, List<FlagViolation>> subModToViolations, SubModule sm, EpptScenarioRun epptScenarioRun,
+											 DetailedIssue detailedIssue) throws ExecutiveReportException
 	{
 		FlagViolation violation;
 		try
 		{
-			String dssPath = pathName.toString();
-
-			Vector catalogedPathnames = hD.getCatalogedPathnames(dssPath);
-			if(!catalogedPathnames.isEmpty())
+			DSSGrabber1SvcImpl dssGrabber1Svc = buildDssGrabber(epptScenarioRun, detailedIssue);
+			TimeSeriesContainer[] primarySeries = dssGrabber1Svc.getPrimarySeries();
+			if(primarySeries != null && primarySeries[0] != null)
 			{
-				dssPath = catalogedPathnames.get(0).toString();
-				TimeSeriesContainer result = (TimeSeriesContainer) hD.get(dssPath, true);
+				TimeSeriesContainer result = primarySeries[0];
 
 				double[] values = result.values;
 
 				double maxValue = getMaxValue(values);
 
-				violation = new FlagViolation(maxValue, lr);
+				violation = new FlagViolation(maxValue, detailedIssue.getLinkedVar());
 
 				List<FlagViolation> violations = new ArrayList<>();
 				violations.add(violation);
@@ -245,19 +170,24 @@ public class DTSProcessor
 			}
 			else
 			{
-				throw new ExecutiveReportException("Error reading dssFile during executive report generation: " + hD.getFilename()
-						+ " Could not find record with name: " + dssPath);
+				_standardSummaryErrors.addError(LOGGER, "Error finding detailed issue:" + detailedIssue.getDetailedIssueId() +
+						" during executive report generation: " + epptScenarioRun +
+						" Could not find record with name: " + detailedIssue.getLinkedVar());
 			}
+		}
+		catch(RuntimeException e)
+		{
+			throw new ExecutiveReportException("Error reading dssFile during executive report generation: " + epptScenarioRun, e);
+		}
+	}
 
-		}
-		catch(ExecutiveReportException ex)
-		{
-			throw ex;
-		}
-		catch(Exception e)
-		{
-			throw new ExecutiveReportException("Error reading dssFile during executive report generation: " + hD.getFilename(), e);
-		}
+	private DSSGrabber1SvcImpl buildDssGrabber(EpptScenarioRun epptScenarioRun, DetailedIssue dtsLink)
+	{
+		DSSGrabber1SvcImpl grabber1Svc = new DSSGrabber1SvcImpl();
+		grabber1Svc.setScenarioRuns(epptScenarioRun, Collections.emptyList());
+		grabber1Svc.setDtsLink(dtsLink);
+		grabber1Svc.setIsCFS(false);
+		return grabber1Svc;
 	}
 
 	private double getMaxValue(double[] numbers)
@@ -273,22 +203,27 @@ public class DTSProcessor
 		return maxValue;
 	}
 
-	private FlagViolation createFlagViolationFromRecord(TimeSeriesContainer tsc, SubModule.FlagType flagType, String linkedVar)
+	private FlagViolation createFlagViolationFromRecord(TimeSeriesContainer tsc, SubModule.FlagType flagType, DetailedIssue detailedIssue)
 	{
-		List<HecTime> violationTimes = new ArrayList<>();
-		HecTimeArray times = tsc.getTimes();
-		for(int i = 0; i < times.numberElements(); i++)
+		FlagViolation retval = null;
+		try
 		{
-			addTimeIfInViolation(tsc, flagType, violationTimes, times, i);
+			List<HecTime> violationTimes = new ArrayList<>();
+			HecTimeArray times = tsc.getTimes();
+			for(int i = 0; i < times.numberElements(); i++)
+			{
+				addTimeIfInViolation(tsc, flagType, violationTimes, times, i);
+			}
+			if(!violationTimes.isEmpty())
+			{
+				retval = new FlagViolation(violationTimes, detailedIssue.getLinkedVar());
+			}
 		}
-		if(violationTimes.isEmpty())
+		catch(RuntimeException e)
 		{
-			return null;
+			_standardSummaryErrors.addError(LOGGER, "Error processing flagged violation", e);
 		}
-		else
-		{
-			return new FlagViolation(violationTimes, linkedVar);
-		}
+		return retval;
 	}
 
 	private void addTimeIfInViolation(TimeSeriesContainer tsc, SubModule.FlagType flagType, List<HecTime> violationTimes, HecTimeArray times, int i)
@@ -300,29 +235,23 @@ public class DTSProcessor
 			switch(value)
 			{
 				case 100:
-				{
 					if(flagType == SubModule.FlagType.VALUE_100)
 					{
 						violationTimes.add(hecTime);
 					}
 					break;
-				}
 				case 200:
-				{
 					if(flagType == SubModule.FlagType.VALUE_200)
 					{
 						violationTimes.add(hecTime);
 					}
 					break;
-				}
 				case 300:
-				{
 					if(flagType == SubModule.FlagType.VALUE_300)
 					{
 						violationTimes.add(hecTime);
 					}
 					break;
-				}
 			}
 
 		}

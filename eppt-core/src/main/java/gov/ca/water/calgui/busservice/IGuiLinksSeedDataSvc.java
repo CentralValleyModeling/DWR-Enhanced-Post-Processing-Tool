@@ -30,7 +30,7 @@ public interface IGuiLinksSeedDataSvc
 	 * @param id The id.
 	 * @return Will return the GUILinks3 Data object for the id passed in.
 	 */
-	GUILinksAllModelsBO getObjById(String id);
+	GUILinksAllModelsBO getGuiLink(String id);
 
 	List<GUILinksAllModelsBO> getAllGuiLinks();
 

@@ -61,21 +61,21 @@ public class ModuleCreator
 			{
 				checkInterrupt();
 				int id = sub.getId();
-				List<String> linkedFiles = getLinkedFilesFromID(id);
+				List<DetailedIssue> linkedFiles = getLinkedFilesFromID(id);
 				sub.addLinkedRecords(linkedFiles);
 			}
 		}
 	}
 
-	private List<String> getLinkedFilesFromID(int id)
+	private List<DetailedIssue> getLinkedFilesFromID(int id)
 	{
-		List<String> retval = new ArrayList<>();
+		List<DetailedIssue> retval = new ArrayList<>();
 
 		for(DetailedIssue di : _detailedIssues)
 		{
 			if(di.getSubModuleID() == id)
 			{
-				retval.add(di.getLinkedVar());
+				retval.add(di);
 			}
 		}
 		return retval;

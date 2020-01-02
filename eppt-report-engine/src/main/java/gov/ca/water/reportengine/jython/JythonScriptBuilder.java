@@ -96,14 +96,7 @@ public final class JythonScriptBuilder
 
 	public static void createInstance() throws EpptInitializationException
 	{
-		if(instance == null)
-		{
-			instance = new JythonScriptBuilder();
-		}
-		else
-		{
-			throw new EpptInitializationException("Script Builder already initialized");
-		}
+		instance = new JythonScriptBuilder();
 	}
 
 	public static JythonScriptBuilder getInstance()
@@ -114,7 +107,8 @@ public final class JythonScriptBuilder
 	public String buildFunctionFromTemplate(String functionReference)
 	{
 		return getMatchingScriptTemplate(functionReference)
-				.orElseThrow(() -> new IllegalArgumentException("No matching script defined in " + Constant.FUNCTIONS_PATH + ": " + functionReference));
+				.orElseThrow(
+						() -> new IllegalArgumentException("No matching script defined in " + Constant.FUNCTIONS_PATH + ": " + functionReference));
 	}
 
 	private Optional<String> getMatchingScriptTemplate(String functionReference)

@@ -51,6 +51,7 @@ public class TrendReportScaffold
 		GuiLinksSeedDataSvcImpl.createSeedDataSvcImplInstance();
 		ThresholdLinksSeedDataSvc.createSeedDataSvcImplInstance();
 		EpptReportingMonths.createTrendReportingMonthsInstance();
+		TrendReportingParameters.createTrendReportingParametersInstance();
 
 		try
 		{
@@ -74,7 +75,7 @@ public class TrendReportScaffold
 		EpptScenarioRun baseRun = new EpptScenarioRun("Base", "desc", GUILinksAllModelsBO.Model.findModel("CalSim2"),
 				Paths.get("Test.pdf"), Paths.get("mainWresl.wresl"), Paths.get("C:\\Git\\DWR\\EPPT\\DWR-Enhanced-Post-Processing-Tool\\eppt-trend-reporting\\src\\test\\resources\\dwr_eppt\\wresl\\lookup\\wytypes.table"), dssContainer, javafx.scene.paint.Color.BLUEVIOLET);
 		EpptScenarioRun altRun = new EpptScenarioRun("Alt", "desc", GUILinksAllModelsBO.Model.findModel("CalSim2"),
-				Paths.get("Test.pdf"), Paths.get("mainWresl.wresl"), Paths.get(""), dssContainer, javafx.scene.paint.Color.MEDIUMAQUAMARINE);
+				Paths.get("Test.pdf"), Paths.get("mainWresl.wresl"), Paths.get("C:\\Git\\DWR\\EPPT\\DWR-Enhanced-Post-Processing-Tool\\eppt-trend-reporting\\src\\test\\resources\\dwr_eppt\\wresl\\lookup\\wytypes.table"), dssContainer, javafx.scene.paint.Color.MEDIUMAQUAMARINE);
 		epptPanel.setScenarioRuns(baseRun, Collections.singletonList(altRun));
 		JFrame jFrame = new JFrame();
 		jFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

@@ -16,6 +16,9 @@ import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Container;
 import java.awt.Frame;
+import java.awt.KeyboardFocusManager;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.nio.file.Path;
@@ -185,10 +188,8 @@ public final class ProjectConfigurationPanel extends EpptPanel
 		spnSY.addChangeListener(e -> setModified(true));
 		JSpinner spnEY = (JSpinner) getSwingEngine().find("spnEndYear");
 		spnEY.addChangeListener(e -> setModified(true));
-		JRadioButton tafButton = ((JRadioButton) getSwingEngine().find("rdbTAF"));
-		tafButton.addActionListener(e -> setModified(true));
-		JRadioButton cfsButton = ((JRadioButton) getSwingEngine().find("rdbCFS"));
-		cfsButton.addActionListener(e -> setModified(true));
+		JCheckBox tafCheckBox = ((JCheckBox) getSwingEngine().find("chkTAF"));
+		tafCheckBox.addActionListener(e -> setModified(true));
 	}
 
 	private void initializeSpinners()
@@ -207,6 +208,14 @@ public final class ProjectConfigurationPanel extends EpptPanel
 		makeSpinnerCommitOnEdit(spnEM);
 		makeSpinnerCommitOnEdit(spnSY);
 		makeSpinnerCommitOnEdit(spnEY);
+		JFormattedTextField textField = ((JSpinner.DefaultEditor) spnSM.getEditor()).getTextField();
+		textField.addKeyListener(new MyKeyAdapter(textField));
+		JFormattedTextField textField1 = ((JSpinner.DefaultEditor) spnEM.getEditor()).getTextField();
+		textField1.addKeyListener(new MyKeyAdapter(textField1));
+		JFormattedTextField textField2 = ((JSpinner.DefaultEditor) spnSY.getEditor()).getTextField();
+		textField2.addKeyListener(new MyKeyAdapter(textField2));
+		JFormattedTextField textField3 = ((JSpinner.DefaultEditor) spnEY.getEditor()).getTextField();
+		textField3.addKeyListener(new MyKeyAdapter(textField3));
 	}
 
 	private void makeSpinnerCommitOnEdit(JSpinner spinner)
@@ -260,8 +269,18 @@ public final class ProjectConfigurationPanel extends EpptPanel
 
 	void clearAllScenarios()
 	{
-		_scenarioTablePanel.clearScenarios();
-		setModified(true);
+		if(JOptionPane.YES_OPTION == JOptionPane.showConfirmDialog(SwingUtilities.windowForComponent(this),
+				"Are you sure you want to delete all Scenario Runs?\nThis operation cannot be undone.",
+				"Clear All", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE))
+		{
+			_scenarioTablePanel.clearScenarios();
+			setModified(true);
+		}
+	}
+
+	public Path getSelectedDssPath()
+	{
+		return _scenarioTablePanel.getSelectedDssFile();
 	}
 
 	private void postScenarioChanged(ScenarioChangeListener scenarioChangeListener)
@@ -328,8 +347,19 @@ public final class ProjectConfigurationPanel extends EpptPanel
 
 	void deleteScenario()
 	{
-		_scenarioTablePanel.deleteSelectedScenarioRun();
-		setModified(true);
+		EpptScenarioRun selectedScenario = _scenarioTablePanel.getSelectedScenario();
+		if(selectedScenario != null)
+		{
+			int clear = JOptionPane.showConfirmDialog(SwingUtilities.windowForComponent(this),
+					"Are you sure you want to delete Scenario Runs: " + selectedScenario
+							+ "?\nThis operation cannot be undone.",
+					"Clear", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
+			if(JOptionPane.YES_OPTION == clear)
+			{
+				_scenarioTablePanel.deleteSelectedScenarioRun();
+				setModified(true);
+			}
+		}
 	}
 
 	public String quickStateString()
@@ -375,12 +405,26 @@ public final class ProjectConfigurationPanel extends EpptPanel
 	public void saveConfigurationToPath(Path selectedPath, String projectName, String projectDescription)
 			throws IOException
 	{
-		boolean mkdirs = selectedPath.toFile().mkdirs();
+		boolean mkdirs = selectedPath.getParent().toFile().mkdirs();
 		if(!mkdirs)
 		{
 			LOGGER.debug("Path not created: " + selectedPath);
 		}
-		Path projectFile = selectedPath.resolve(projectName + "." + Constant.EPPT_EXT);
+		_projectConfigurationIO.saveConfiguration(selectedPath, projectName, projectDescription);
+		EpptPreferences.setLastProjectConfiguration(selectedPath);
+	}
+
+	public void saveAsConfigurationToPath(Path newProjectPath, String projectName, String projectDescription)
+			throws IOException
+	{
+		boolean mkdirs = newProjectPath.toFile().mkdirs();
+		if(!mkdirs)
+		{
+			LOGGER.debug("Path not created: " + newProjectPath);
+		}
+		Path projectFile = newProjectPath.resolve(projectName + "." + Constant.EPPT_EXT);
+		Path oldProjectPath = EpptPreferences.getLastProjectConfiguration().getParent();
+		_scenarioTablePanel.relativizeScenariosToNewProject(newProjectPath, oldProjectPath);
 		_projectConfigurationIO.saveConfiguration(projectFile, projectName, projectDescription);
 		EpptPreferences.setLastProjectConfiguration(projectFile);
 	}
@@ -462,7 +506,7 @@ public final class ProjectConfigurationPanel extends EpptPanel
 
 	public boolean isTaf()
 	{
-		return ((JRadioButton) getSwingEngine().find("rdbTAF")).isSelected();
+		return ((JCheckBox) getSwingEngine().find("chkTAF")).isSelected();
 	}
 
 	private JRadioButton getRadioButtonBase()
@@ -518,6 +562,8 @@ public final class ProjectConfigurationPanel extends EpptPanel
 		initModels();
 		_scenarioTablePanel.clearScenarios();
 		setActionListener(getActionListener());
+		JSplitPane splitPane = (JSplitPane)getSwingEngine().find("split_pane");
+		splitPane.setDividerLocation(350);
 	}
 
 	public EpptScenarioRun getBaseScenario()
@@ -540,18 +586,6 @@ public final class ProjectConfigurationPanel extends EpptPanel
 	public List<EpptScenarioRun> getEpptScenarioAlternatives()
 	{
 		return _scenarioTablePanel.getAlternativeScenarioRuns();
-	}
-
-	public List<EpptScenarioRun> getEpptScenarioRuns()
-	{
-		List<EpptScenarioRun> retval = new ArrayList<>();
-		EpptScenarioRun baseScenarioRun = _scenarioTablePanel.getBaseScenarioRun();
-		if(baseScenarioRun != null)
-		{
-			retval.add(baseScenarioRun);
-			retval.addAll(_scenarioTablePanel.getAlternativeScenarioRuns());
-		}
-		return retval;
 	}
 
 	public List<EpptScenarioRun> getAllEpptScenarioRuns()
@@ -583,5 +617,35 @@ public final class ProjectConfigurationPanel extends EpptPanel
 	{
 		_scenarioTablePanel.moveSelectedScenarioDown();
 		setModified(true);
+	}
+
+	private static final class MyKeyAdapter extends KeyAdapter
+	{
+		private final Component _component;
+
+		private MyKeyAdapter(Component component)
+		{
+			_component = component;
+		}
+
+		@Override
+		public void keyPressed(KeyEvent evt)
+		{
+			int key = evt.getKeyCode();
+			if(key == KeyEvent.VK_ENTER
+					|| key == KeyEvent.VK_TAB)
+			{
+				_component.transferFocus();
+				SwingUtilities.invokeLater(() ->
+				{
+					Component focusOwner = KeyboardFocusManager.getCurrentKeyboardFocusManager().getFocusOwner();
+					if(focusOwner instanceof JTextField)
+					{
+						JTextField textField = (JTextField) focusOwner;
+						textField.selectAll();
+					}
+				});
+			}
+		}
 	}
 }

@@ -20,6 +20,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import gov.ca.water.calgui.project.EpptScenarioRun;
+import gov.ca.water.calgui.scripts.DssMissingRecordException;
 import gov.ca.water.reportengine.EpptReportException;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -162,6 +163,11 @@ class ControlTableBuilder extends TableBuilder
 				}
 			}
 		}
+		catch(DssMissingRecordException e)
+		{
+			LOGGER.log(Level.FINE, "Missing record, displaying as NR", e);
+			retval.setTextContent(NO_RECORD_TEXT);
+		}
 		catch(EpptReportException e)
 		{
 			logScriptException(LOGGER, v, e);
@@ -177,6 +183,11 @@ class ControlTableBuilder extends TableBuilder
 			long count = createJythonValueGenerator(scenarioRun, v.getFunction(), comparisonValue).generateCount();
 			String textRaw = String.valueOf(count);
 			retval.setTextContent(textRaw);
+		}
+		catch(DssMissingRecordException e)
+		{
+			LOGGER.log(Level.FINE, "Missing record, displaying as NR", e);
+			retval.setTextContent(NO_RECORD_TEXT);
 		}
 		catch(EpptReportException e)
 		{

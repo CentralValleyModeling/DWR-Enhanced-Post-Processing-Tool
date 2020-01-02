@@ -13,6 +13,8 @@
 package gov.ca.water.reportengine.standardsummary;
 
 import java.awt.Color;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.DoubleSummaryStatistics;
 import java.util.HashMap;
@@ -25,6 +27,7 @@ import java.util.logging.Logger;
 import gov.ca.water.calgui.bo.PeriodFilter;
 import gov.ca.water.calgui.constant.Constant;
 import gov.ca.water.calgui.project.EpptScenarioRun;
+import gov.ca.water.calgui.scripts.DssMissingRecordException;
 import gov.ca.water.reportengine.EpptReportException;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -137,10 +140,19 @@ class PercentDiffTableBuilder extends BaseAltDiffTableBuilder
 			{
 				if(baseValue != 0)
 				{
-					long percent = Math.round(((altValue - baseValue) / baseValue) * 100);
-					String textRaw = String.valueOf(percent);
+					double percentage = ((altValue - baseValue) / baseValue) * 100;
+					BigDecimal bigDecimal = BigDecimal.valueOf(percentage);
+					if(Math.abs(percentage) > 0 && Math.abs(percentage) < 1)
+					{
+						bigDecimal = bigDecimal.setScale(3, RoundingMode.HALF_UP);
+					}
+					else
+					{
+						bigDecimal = bigDecimal.setScale(1, RoundingMode.HALF_UP);
+					}
+					String textRaw = bigDecimal.toString();
 					retval.setTextContent(textRaw + "%");
-					_valueElements.put(retval, (double) percent);
+					_valueElements.put(retval, percentage);
 				}
 				else if(altValue == 0)
 				{
@@ -152,6 +164,11 @@ class PercentDiffTableBuilder extends BaseAltDiffTableBuilder
 					retval.setTextContent("B=0");
 				}
 			}
+		}
+		catch(DssMissingRecordException e)
+		{
+			LOGGER.log(Level.FINE, "Missing record, displaying as NR", e);
+			retval.setTextContent(NO_RECORD_TEXT);
 		}
 		catch(EpptReportException e)
 		{

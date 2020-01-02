@@ -17,21 +17,21 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import gov.ca.water.calgui.bo.DetailedIssue;
+
 public class SubModule
 {
 	private final FlagType _flagValue;
 	private final String _title;
-	private final List<String> _linkedRecords;
+	private final List<DetailedIssue> _linkedRecords;
 	private final String _name;
 	private final int _id;
-	//private final String _text;
 
 	private List<FlagViolation> _baseViolations = new ArrayList<>();
 	private Map<Integer, List<FlagViolation>> _alternativeViolations = new HashMap<>();
 
 	public SubModule(int id, String name, FlagType flagValue, String title)
 	{
-		//_text = text;
 		_id = id;
 		_name = name;
 		_flagValue = flagValue;
@@ -44,7 +44,7 @@ public class SubModule
 		return _id;
 	}
 
-	public void addLinkedRecords(List<String> recordNames)
+	public void addLinkedRecords(List<DetailedIssue> recordNames)
 	{
 		_linkedRecords.addAll(recordNames);
 	}
@@ -64,7 +64,7 @@ public class SubModule
 		return _flagValue;
 	}
 
-	List<String> getLinkedRecords()
+	List<DetailedIssue> getLinkedRecords()
 	{
 		return _linkedRecords;
 	}

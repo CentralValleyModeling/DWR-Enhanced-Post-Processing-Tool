@@ -28,7 +28,9 @@ import gov.ca.water.calgui.bo.WaterYearPeriodRange;
 import gov.ca.water.calgui.bo.WaterYearPeriodRangeFilter;
 import gov.ca.water.calgui.bo.WaterYearType;
 import gov.ca.water.calgui.project.EpptScenarioRun;
+import gov.ca.water.calgui.scripts.DssMissingRecordException;
 import gov.ca.water.reportengine.EpptReportException;
+import gov.ca.water.reportengine.jython.JythonValueGenerator;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
@@ -45,6 +47,7 @@ import static java.util.stream.Collectors.toList;
 class BaseAltDiffTableBuilder extends TableBuilder
 {
 	private static final Logger LOGGER = Logger.getLogger(BaseAltDiffTableBuilder.class.getName());
+	private String _units;
 
 	BaseAltDiffTableBuilder(Document document, EpptScenarioRun base, List<EpptScenarioRun> alternatives,
 							SummaryReportParameters reportParameters,
@@ -56,9 +59,8 @@ class BaseAltDiffTableBuilder extends TableBuilder
 
 	void buildTable(Element retval, EpptChart epptChart)
 	{
-		String units = "TAF";
+		_units = null;
 		SummaryReportParameters reportParameters = getReportParameters();
-		retval.setAttribute(UNITS_ATTRIBUTE, units);
 		String startMonth = reportParameters.getWaterYearDefinition().getStartMonth().getDisplayName(TextStyle.SHORT, Locale.getDefault());
 		String endMonth = reportParameters.getWaterYearDefinition().getEndMonth().getDisplayName(TextStyle.SHORT, Locale.getDefault());
 		if("resops-summary-may".equalsIgnoreCase(epptChart.getChartId()))
@@ -87,6 +89,14 @@ class BaseAltDiffTableBuilder extends TableBuilder
 			Element element = periodElements.get(i);
 			element.setAttribute(PERIOD_TYPE_ORDER_ATTRIBUTE, String.valueOf(i));
 			retval.appendChild(element);
+		}
+		if(_units != null)
+		{
+			retval.setAttribute(UNITS_ATTRIBUTE, _units);
+		}
+		else
+		{
+			retval.setAttribute(UNITS_ATTRIBUTE, "");
 		}
 	}
 
@@ -199,9 +209,10 @@ class BaseAltDiffTableBuilder extends TableBuilder
 		EpptScenarioRun base = getBase();
 		try
 		{
-			Double baseValue = createJythonValueGenerator(filter, base, v.getFunction()).generateValue();
-
-			Double altValue = createJythonValueGenerator(filter, alternative, v.getFunction()).generateValue();
+			JythonValueGenerator baseValueGenerator = createJythonValueGenerator(filter, base, v.getFunction());
+			Double baseValue = baseValueGenerator.generateValue();
+			JythonValueGenerator altValueGenerator = createJythonValueGenerator(filter, alternative, v.getFunction());
+			Double altValue = altValueGenerator.generateValue();
 			if(baseValue == null)
 			{
 				getStandardSummaryErrors().addError(LOGGER,
@@ -227,7 +238,21 @@ class BaseAltDiffTableBuilder extends TableBuilder
 				long baseValueRounded = Math.round(baseValue);
 				long altValueRounded = Math.round(altValue);
 				applyPercentDiffStyles(retval, baseValueRounded, altValueRounded);
+				String units = baseValueGenerator.getUnits();
+				if(units == null)
+				{
+					units = altValueGenerator.getUnits();
+				}
+				if(units != null && _units == null)
+				{
+					_units = units;
+				}
 			}
+		}
+		catch(DssMissingRecordException e)
+		{
+			LOGGER.log(Level.FINE, "Missing record, displaying as NR", e);
+			retval.setTextContent(NO_RECORD_TEXT);
 		}
 		catch(EpptReportException e)
 		{
@@ -281,7 +306,8 @@ class BaseAltDiffTableBuilder extends TableBuilder
 		Element retval = getDocument().createElement(VALUE_ELEMENT);
 		try
 		{
-			Double value = createJythonValueGenerator(filter, scenarioRun, v.getFunction()).generateValue();
+			JythonValueGenerator jythonValueGenerator = createJythonValueGenerator(filter, scenarioRun, v.getFunction());
+			Double value = jythonValueGenerator.generateValue();
 
 			if(value == null)
 			{
@@ -297,7 +323,17 @@ class BaseAltDiffTableBuilder extends TableBuilder
 			{
 				String textRaw = String.valueOf(Math.round(value));
 				retval.setTextContent(textRaw);
+				String units = jythonValueGenerator.getUnits();
+				if(units != null && _units == null)
+				{
+					_units = units;
+				}
 			}
+		}
+		catch(DssMissingRecordException e)
+		{
+			LOGGER.log(Level.FINE, "Missing record, displaying as NR", e);
+			retval.setTextContent(NO_RECORD_TEXT);
 		}
 		catch(EpptReportException e)
 		{

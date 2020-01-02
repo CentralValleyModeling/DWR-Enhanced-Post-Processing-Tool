@@ -57,6 +57,8 @@ public class JythonScriptRunner
 		}
 	}
 
+	private DssReader _dssReader;
+
 	public JythonScriptRunner(EpptScenarioRun epptScenarioRun, CommonPeriodFilter commonPeriodFilter)
 	{
 
@@ -65,9 +67,7 @@ public class JythonScriptRunner
 		{
 			throw new IllegalArgumentException("Unable to find jython engine");
 		}
-		//			LocalDateTime s1 = LocalDateTime.now();
 		initializeGlobalVariables(commonPeriodFilter);
-		//			System.out.println("Python script runner instantiation takes" + ChronoUnit.MILLIS.between(s1, LocalDateTime.now()));
 	}
 
 	private static void initializeScriptDirectory() throws ScriptException
@@ -91,9 +91,9 @@ public class JythonScriptRunner
 
 	private void initializeGlobalVariables(CommonPeriodFilter commonPeriodFilter)
 	{
-		DssReader dssReader = new DssReader(_epptScenarioRun);
+		_dssReader = new DssReader(_epptScenarioRun, commonPeriodFilter.getStart(), commonPeriodFilter.getEnd());
 		TitleReader titleReader = new TitleReader(_epptScenarioRun);
-		PYTHON_ENGINE.put("dssReader", dssReader);
+		PYTHON_ENGINE.put("dssReader", _dssReader);
 		PYTHON_ENGINE.put("titleReader", titleReader);
 		PYTHON_ENGINE.put("commonPeriodFilter", commonPeriodFilter);
 		setWaterYearType(null);
@@ -132,5 +132,10 @@ public class JythonScriptRunner
 	public void setWaterYearIndex(WaterYearIndex waterYearIndex)
 	{
 		PYTHON_ENGINE.put("waterYearIndex", waterYearIndex);
+	}
+
+	public String getUnits()
+	{
+		return _dssReader.getUnits();
 	}
 }

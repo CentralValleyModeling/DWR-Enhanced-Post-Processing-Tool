@@ -246,21 +246,19 @@ public class DataAnalysisListener implements ActionListener
 			theText.append(br.readLine()).append("\n");
 			String skipLine = br.readLine();
 			LOGGER.log(Level.FINE, "Skip Line: {0}", skipLine);
-			theText.append("FILE_BASE\t").append(_dataAnalysisPanel.getDssResultPathBase().toString()).append(
-					"\n");
+			theText.append("FILE_BASE\t").append(_dataAnalysisPanel.getDssResultPathBase().toString()).append("\n");
 			skipLine = br.readLine();
 			LOGGER.log(Level.FINE, "Skip Line: {0}", skipLine);
 			theText.append("NAME_BASE\t\"").append(_dataAnalysisPanel.getReportName1().getText()).append("\"\n");
 			skipLine = br.readLine();
 			LOGGER.log(Level.FINE, "Skip Line: {0}", skipLine);
-			theText.append("FILE_ALT\t").append(_dataAnalysisPanel.getDssResultPathAlt().toString()).append(
-					"\n");
+			theText.append("FILE_ALT\t").append(_dataAnalysisPanel.getDssResultPathAlt().toString()).append("\n");
 			skipLine = br.readLine();
 			LOGGER.log(Level.FINE, "Skip Line: {0}", skipLine);
 			theText.append("NAME_ALT\t\"").append(_dataAnalysisPanel.getReportName2().getText()).append("\"\n");
 			skipLine = br.readLine();
 			LOGGER.log(Level.FINE, "Skip Line: {0}", skipLine);
-			theText.append("OUTFILE\t").append(_dataAnalysisPanel.getOutputTextField().getToolTipText()).append("\n");
+			theText.append("OUTFILE\t\"").append(_dataAnalysisPanel.getOutputTextField().getToolTipText()).append("\"\n");
 			skipLine = br.readLine();
 			LOGGER.log(Level.FINE, "Skip Line: {0}", skipLine);
 			theText.append("NOTE\t\"").append(_dataAnalysisPanel.getReportNotes().getText()).append("\"\n");

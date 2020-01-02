@@ -25,7 +25,8 @@ public class ReportHeaderXMLCreator
 	private static final FluentLogger LOGGER = FluentLogger.forEnclosingClass();
 	private static final String REPORT_HEADER = "report-header";
 	private static final String AUTHOR = "author";
-	private static final String SUBTITLES = "subtitle";
+	private static final String TITLE = "title";
+	private static final String SUBTITLE = "subtitle";
 	private static final String BASE_FILE = "base";
 	private static final String NAME_ATTR = "name";
 	private static final String ALTERNATIVES = "alternatives";
@@ -41,7 +42,11 @@ public class ReportHeaderXMLCreator
 		authorElem.appendChild(document.createTextNode(reportHeader.getAuthor()));
 		root.appendChild(authorElem);
 
-		Element subtitleElem = document.createElement(SUBTITLES);
+		Element titleElem = document.createElement(TITLE);
+		titleElem.appendChild(document.createTextNode(reportHeader.getTitle()));
+		root.appendChild(titleElem);
+
+		Element subtitleElem = document.createElement(SUBTITLE);
 		subtitleElem.appendChild(document.createTextNode(reportHeader.getSubTitle()));
 		root.appendChild(subtitleElem);
 
