@@ -323,7 +323,10 @@ public final class ProjectConfigurationPanel extends EpptPanel
 							ScenarioRunEditor scenarioRunEditor = new ScenarioRunEditor(frame);
 							scenarioRunEditor.fillPanel(epptScenarioRun);
 							scenarioRunEditor.setVisible(true);
-							replaceScenario(epptScenarioRun, scenarioRunEditor.createRun());
+							if(!scenarioRunEditor.isCanceled())
+							{
+								replaceScenario(epptScenarioRun, scenarioRunEditor.createRun());
+							}
 						});
 					}
 					catch(InterruptedException e)

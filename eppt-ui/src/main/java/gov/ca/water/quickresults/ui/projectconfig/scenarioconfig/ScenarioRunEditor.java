@@ -17,6 +17,7 @@ import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Frame;
 import java.awt.event.ActionEvent;
+import java.util.stream.Stream;
 import javax.swing.*;
 
 import gov.ca.water.calgui.project.EpptScenarioRun;
@@ -34,6 +35,7 @@ public class ScenarioRunEditor extends JDialog implements LoadingDss
 	private final ScenarioEditorPanel _scenarioEditorPanel;
 	private final JProgressBar _progressBar = new JProgressBar();
 	private boolean _canceled = true;
+	private EpptScenarioRun _originalScenarioRun;
 
 	public ScenarioRunEditor(Frame frame)
 	{
@@ -49,6 +51,7 @@ public class ScenarioRunEditor extends JDialog implements LoadingDss
 
 	public void fillPanel(EpptScenarioRun scenarioRun)
 	{
+		_originalScenarioRun = scenarioRun;
 		setTitle("Edit Scenario Run: " + scenarioRun.getName());
 		_scenarioEditorPanel.fillPanel(scenarioRun);
 	}
@@ -103,6 +106,7 @@ public class ScenarioRunEditor extends JDialog implements LoadingDss
 		{
 			boolean duplicateName = ProjectConfigurationPanel.getProjectConfigurationPanel().getAllEpptScenarioRuns()
 															 .stream()
+															 .filter(s -> s != _originalScenarioRun)
 															 .map(EpptScenarioRun::getName)
 															 .anyMatch(s -> s.equalsIgnoreCase(run.getName()));
 			if(duplicateName)
@@ -144,11 +148,11 @@ public class ScenarioRunEditor extends JDialog implements LoadingDss
 	 */
 	public EpptScenarioRun createRun()
 	{
-		EpptScenarioRun retval = null;
-		if(!_canceled)
-		{
-			retval = _scenarioEditorPanel.createRun();
-		}
-		return retval;
+		return _scenarioEditorPanel.createRun();
+	}
+
+	public boolean isCanceled()
+	{
+		return _canceled;
 	}
 }

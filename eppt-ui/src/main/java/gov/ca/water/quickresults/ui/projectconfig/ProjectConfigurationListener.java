@@ -111,7 +111,7 @@ public class ProjectConfigurationListener implements ActionListener
 		scenarioRunEditor.setVisible(true);
 		scenarioRunEditor.dispose();
 		EpptScenarioRun scenarioRun = scenarioRunEditor.createRun();
-		if(scenarioRun != null)
+		if(scenarioRun != null && !scenarioRunEditor.isCanceled())
 		{
 			_projectConfigurationPanel.addScenario(scenarioRun);
 		}
@@ -157,7 +157,7 @@ public class ProjectConfigurationListener implements ActionListener
 			scenarioRunEditor.setVisible(false);
 			scenarioRunEditor.dispose();
 
-			if(newScenarioRun != null)
+			if(newScenarioRun != null && !scenarioRunEditor.isCanceled())
 			{
 				_projectConfigurationPanel.replaceScenario(oldScenarioRun, newScenarioRun);
 				_projectConfigurationPanel.updateRadioState();
