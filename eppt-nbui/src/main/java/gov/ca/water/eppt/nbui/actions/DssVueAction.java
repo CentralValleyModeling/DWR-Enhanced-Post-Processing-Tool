@@ -15,6 +15,7 @@ import java.awt.Frame;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 
 import gov.ca.water.calgui.constant.EpptPreferences;
 import gov.ca.water.quickresults.ui.projectconfig.ProjectConfigurationPanel;
@@ -61,7 +62,16 @@ public final class DssVueAction implements ActionListener
 		Path selectedDssPath = ProjectConfigurationPanel.getProjectConfigurationPanel().getSelectedDssPath();
 		if(selectedDssPath != null)
 		{
-			_listSelection.open(selectedDssPath.toString());
+			boolean fileAlreadyOpen = _listSelection.getDssFilenames()
+													.stream()
+													.map(Object::toString)
+													.map(p -> Paths.get(p.toString()))
+													.anyMatch(p -> p.equals(selectedDssPath));
+			if(!fileAlreadyOpen)
+			{
+				_listSelection.open(selectedDssPath.toString());
+			}
+
 		}
 		_listSelection.setVisible(true);
 	}
