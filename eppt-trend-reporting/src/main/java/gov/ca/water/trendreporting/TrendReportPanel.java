@@ -13,6 +13,7 @@
 package gov.ca.water.trendreporting;
 
 
+import java.awt.Dimension;
 import java.awt.Frame;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
@@ -73,7 +74,6 @@ import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.FlowPane;
-import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.TilePane;
@@ -114,6 +114,8 @@ public class TrendReportPanel extends JFXPanel
 
 	public TrendReportPanel()
 	{
+		setMinimumSize(new Dimension(1420, 880));
+		setPreferredSize(new Dimension(1420, 880));
 		Platform.setImplicitExit(false);
 		Platform.runLater(this::init);
 		CompletableFuture.supplyAsync(this::getTrendStatistics)
