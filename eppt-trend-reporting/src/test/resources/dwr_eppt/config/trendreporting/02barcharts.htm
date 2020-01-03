@@ -1,5 +1,5 @@
 <!--
-  ~ Enhanced Post Processing Tool (EPPT) Copyright (c) 2019.
+  ~ Enhanced Post Processing Tool (EPPT) Copyright (c) 2020.
   ~
   ~ EPPT is copyrighted by the State of California, Department of Water Resources. It is licensed
   ~ under the GNU General Public License, version 2. This means it can be
@@ -13,11 +13,11 @@
 <!DOCTYPE HTML>
 <html lang="en">
 <head>
-    <title>Water Year Type</title>
+    <title>Bar Charts</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
     <meta name="support-statistic" content="true"/>
     <meta name="support-seasonal-period" content="true"/>
-    <meta name="support-water-year-index" content="true"/>
+    <meta name="support-water-year-index" content="false"/>
 
     <script src="../../lib/plotly/dist/plotly.min.js"></script>
     <script src="../../lib/ajax/googleapis/jquery_3.4.1.js"></script>
@@ -27,19 +27,9 @@
     <link rel="stylesheet" href="../../lib/ajax/googleapis/jquery-contextMenu-2.8.0.min.css"></link>
 </head>
 <body>
-<script src="../../lib/plotly/dist/plotly.min.js"></script>
+<div id="tester" style="width:95%;height:84vh;float:left;"></div>
 <script src="js/preinit.js"></script>
-
-<div style="width:55%;height:670px; float:left;">
-    <div id="water-year-matrix1" style="width:50%;height:33%;float:left;"></div>
-    <div id="water-year-matrix2" style="width:50%;height:33%;float:left;"></div>
-    <div id="water-year-matrix3" style="width:50%;height:33%;float:left;"></div>
-    <div id="water-year-matrix4" style="width:50%;height:33%;float:left;"></div>
-    <div id="water-year-matrix5" style="width:50%;height:33%;float:left;"></div>
-    <div id="water-year-matrix6" style="width:50%;height:33%;float:left;"></div>
-</div>
-<div id="tester" style="width:45%;height:670px;float:left;"></div>
-
-<script src="js/wateryeartype.js"></script>
+<script src="js/barcharts.js"></script>
 </body>
 </html>
+
