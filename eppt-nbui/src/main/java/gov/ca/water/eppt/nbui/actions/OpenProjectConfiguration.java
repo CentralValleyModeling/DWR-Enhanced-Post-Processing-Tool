@@ -31,7 +31,6 @@ import org.openide.awt.ActionID;
 import org.openide.awt.ActionReference;
 import org.openide.awt.ActionReferences;
 import org.openide.awt.ActionRegistration;
-import org.openide.awt.DropDownButtonFactory;
 import org.openide.util.ContextAwareAction;
 import org.openide.util.Lookup;
 import org.openide.util.NbBundle.Messages;
@@ -82,9 +81,9 @@ public final class OpenProjectConfiguration extends AbstractAction
 		fileChooser.setMultiSelectionEnabled(false);
 		fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
 		fileChooser.setDialogType(JFileChooser.OPEN_DIALOG);
-		fileChooser.showOpenDialog(WindowManager.getDefault().getMainWindow());
+		int retval = fileChooser.showOpenDialog(WindowManager.getDefault().getMainWindow());
 		File selectedFile = fileChooser.getSelectedFile();
-		if(selectedFile != null && selectedFile.exists())
+		if(retval == JFileChooser.APPROVE_OPTION && selectedFile != null && selectedFile.exists())
 		{
 			Path selectedPath = selectedFile.toPath();
 			loadFromPath(selectedPath);

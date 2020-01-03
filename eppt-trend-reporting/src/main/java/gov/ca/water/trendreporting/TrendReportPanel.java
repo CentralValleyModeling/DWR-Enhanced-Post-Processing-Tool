@@ -659,7 +659,7 @@ public class TrendReportPanel extends JFXPanel
 		List<EpptReportingMonths.MonthPeriod> monthPeriod = new ArrayList<>(_seasonalPeriodListView.getSelectionModel().getSelectedItems());
 		WaterYearIndex waterYearIndex = _waterYearIndexComboBox.getSelectionModel().getSelectedItem();
 		List<EpptScenarioRun> scenarioRuns = _scenarioRuns.stream().filter(Objects::nonNull).collect(toList());
-		Optional<String> error = getError(guiLink, statistic, monthPeriod, waterYearIndex);
+		Optional<String> error = getError(scenarioRuns, guiLink, statistic, monthPeriod, waterYearIndex);
 		if(!error.isPresent())
 		{
 			setUiLoading(true, Cursor.WAIT, "Loading...");
@@ -703,12 +703,13 @@ public class TrendReportPanel extends JFXPanel
 		}
 	}
 
-	private Optional<String> getError(List<TrendReportingParameters.TrendParameter> guiLink, List<TrendStatistics> statistic,
+	private Optional<String> getError(List<EpptScenarioRun> scenarioRuns,
+									  List<TrendReportingParameters.TrendParameter> guiLink, List<TrendStatistics> statistic,
 									  List<EpptReportingMonths.MonthPeriod> monthPeriod,
 									  WaterYearIndex waterYearIndex)
 	{
 		Optional<String> retval = Optional.empty();
-		if(_scenarioRuns.isEmpty())
+		if(scenarioRuns.isEmpty())
 		{
 			retval = Optional.of("No Scenario Runs defined");
 		}
@@ -722,7 +723,7 @@ public class TrendReportPanel extends JFXPanel
 		}
 		else if(monthPeriod.isEmpty() || monthPeriod.get(0).getStart() == null)
 		{
-			retval = Optional.of("No Seasonal Period Defined");
+			retval = Optional.of("No Seasonal Period defined");
 		}
 		else if(waterYearIndex == null)
 		{
