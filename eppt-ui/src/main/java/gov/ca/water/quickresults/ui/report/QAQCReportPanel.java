@@ -183,8 +183,6 @@ public class QAQCReportPanel extends RmaJPanel
 		_longTermStartYear.setValue(1921);
 		_longTermEndYear.setValue(2003);
 		Arrays.asList(PercentDiffStyle.values()).forEach(_percentDiffStyle::addItem);
-		//		_reportModules.put(_coverPageCheckBox, EPPTReport.COVER_PAGE);
-		//		_reportModules.put(_tableOfContentsCheckBox, EPPTReport.TABLE_OF_CONTENTS);
 		_reportModules.put(_excutiveSummaryCheckBox, EPPTReport.EXECUTIVE_SUMMARY);
 		_reportModules.put(_assumptionChangesCheckBox, EPPTReport.ASSUMPTION_CHANGES);
 		_reportModules.put(_codeChangesCheckBox, EPPTReport.CODE_CHANGES);
@@ -203,7 +201,7 @@ public class QAQCReportPanel extends RmaJPanel
 			}
 			_summaryModules.forEach(c -> c.setEnabled(_standardSummaryStatiticsCheckBox.isSelected()));
 		});
-		_overwriteJRXMLButton.addActionListener((e) -> checkForceCopyJrXml());
+		_overwriteJRXMLButton.addActionListener(e -> checkForceCopyJrXml());
 		_openReportButton.addActionListener(this::openPdf);
 	}
 

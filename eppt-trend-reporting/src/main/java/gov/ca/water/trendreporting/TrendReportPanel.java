@@ -588,6 +588,7 @@ public class TrendReportPanel extends JFXPanel
 	{
 		try
 		{
+			_waterYearIndexComboBox.getItems().clear();
 			if(baseRun != null)
 			{
 				WaterYearTableReader waterYearTableReader = new WaterYearTableReader(baseRun.getWaterYearTable());
