@@ -323,7 +323,10 @@ public final class ProjectConfigurationPanel extends EpptPanel
 							ScenarioRunEditor scenarioRunEditor = new ScenarioRunEditor(frame);
 							scenarioRunEditor.fillPanel(epptScenarioRun);
 							scenarioRunEditor.setVisible(true);
-							replaceScenario(epptScenarioRun, scenarioRunEditor.createRun());
+							if(!scenarioRunEditor.isCanceled())
+							{
+								replaceScenario(epptScenarioRun, scenarioRunEditor.createRun());
+							}
 						});
 					}
 					catch(InterruptedException e)
@@ -431,48 +434,72 @@ public final class ProjectConfigurationPanel extends EpptPanel
 
 	public void loadProjectConfiguration(Path selectedPath) throws IOException
 	{
-		if(selectedPath.toFile().exists())
+		try
 		{
-			try
+			_ignoreModifiedEvents = true;
+			if(selectedPath.toFile().exists())
 			{
-				_ignoreModifiedEvents = true;
-
-				EpptProject project = _projectConfigurationIO.loadConfiguration(
-						selectedPath);
-				EpptPreferences.setLastProjectConfiguration(selectedPath);
-				JTextField projectNameField = (JTextField) getSwingEngine().find("prj_name");
-				JTextField descriptionField = (JTextField) getSwingEngine().find("prj_desc");
-				projectNameField.setText(project.getName());
-				descriptionField.setText(project.getDescription());
-				setStartMonth(project.getStartMonth());
-				setEndMonth(project.getEndMonth());
-				updateSelectedComponents(project.getSelectedComponents());
-				_scenarioTablePanel.clearScenarios();
-				List<EpptScenarioRun> scenarioRuns = project.getScenarioRuns();
-				boolean hasBase = scenarioRuns.stream().anyMatch(EpptScenarioRun::isBaseSelected);
-				boolean hasAlt = scenarioRuns.stream().anyMatch(EpptScenarioRun::isAltSelected);
-
-				if(!hasBase && !scenarioRuns.isEmpty())
-				{
-					scenarioRuns.get(0).setBaseSelected(true);
-				}
-				if(!hasAlt && scenarioRuns.size() > 1)
-				{
-					scenarioRuns.get(1).setAltSelected(true);
-				}
-				addScenarios(scenarioRuns);
-
-				//Need to ensure this is called after scenarios are added to TreeTable model
-				Platform.runLater(() -> SwingUtilities.invokeLater(this::updateRadioState));
+				loadProjectFile(selectedPath);
 			}
-			catch(RuntimeException ex)
+			else
 			{
-				LOGGER.error("Error loading project configuration", ex);
+				loadDefaultProject();
 			}
-			finally
-			{
-				_ignoreModifiedEvents = false;
-			}
+		}
+		catch(RuntimeException ex)
+		{
+			LOGGER.error("Error loading project configuration", ex);
+		}
+		finally
+		{
+			_ignoreModifiedEvents = false;
+		}
+	}
+
+	private void loadProjectFile(Path selectedPath) throws IOException
+	{
+		EpptProject project = _projectConfigurationIO.loadConfiguration(
+				selectedPath);
+		EpptPreferences.setLastProjectConfiguration(selectedPath);
+		JTextField projectNameField = (JTextField) getSwingEngine().find("prj_name");
+		JTextField descriptionField = (JTextField) getSwingEngine().find("prj_desc");
+		projectNameField.setText(project.getName());
+		descriptionField.setText(project.getDescription());
+		setStartMonth(project.getStartMonth());
+		setEndMonth(project.getEndMonth());
+		updateSelectedComponents(project.getSelectedComponents());
+		_scenarioTablePanel.clearScenarios();
+		List<EpptScenarioRun> scenarioRuns = project.getScenarioRuns();
+		boolean hasBase = scenarioRuns.stream().anyMatch(EpptScenarioRun::isBaseSelected);
+		boolean hasAlt = scenarioRuns.stream().anyMatch(EpptScenarioRun::isAltSelected);
+
+		if(!hasBase && !scenarioRuns.isEmpty())
+		{
+			scenarioRuns.get(0).setBaseSelected(true);
+		}
+		if(!hasAlt && scenarioRuns.size() > 1)
+		{
+			scenarioRuns.get(1).setAltSelected(true);
+		}
+		addScenarios(scenarioRuns);
+
+		//Need to ensure this is called after scenarios are added to TreeTable model
+		Platform.runLater(() -> SwingUtilities.invokeLater(this::updateRadioState));
+	}
+
+	private void loadDefaultProject()
+	{
+		try
+		{
+			String defaultProjectName = "EPPT Project";
+			JTextField projectNameField = (JTextField) getSwingEngine().find("prj_name");
+			projectNameField.setText(defaultProjectName);
+			saveAsConfigurationToPath(EpptPreferences.getProjectsPath().resolve(defaultProjectName),
+					defaultProjectName, "");
+		}
+		catch(IOException e)
+		{
+			LOGGER.error("Unable to create default project", e);
 		}
 	}
 
@@ -562,7 +589,7 @@ public final class ProjectConfigurationPanel extends EpptPanel
 		initModels();
 		_scenarioTablePanel.clearScenarios();
 		setActionListener(getActionListener());
-		JSplitPane splitPane = (JSplitPane)getSwingEngine().find("split_pane");
+		JSplitPane splitPane = (JSplitPane) getSwingEngine().find("split_pane");
 		splitPane.setDividerLocation(350);
 	}
 

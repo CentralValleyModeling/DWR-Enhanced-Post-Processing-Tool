@@ -87,6 +87,7 @@ public class PlotConfigurationState
 			else if(groupPart.startsWith("EX-"))
 			{
 				exceedMonths = Arrays.asList(groupPart.substring(3).split(","));
+				exceedMonths.removeIf(String::isEmpty);
 			}
 			else if("CFS".equals(groupPart))
 			{

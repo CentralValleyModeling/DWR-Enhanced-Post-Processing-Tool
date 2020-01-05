@@ -13,6 +13,7 @@
 package gov.ca.water.trendreporting;
 
 
+import java.awt.Dimension;
 import java.awt.Frame;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
@@ -73,7 +74,6 @@ import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.FlowPane;
-import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.TilePane;
@@ -114,6 +114,8 @@ public class TrendReportPanel extends JFXPanel
 
 	public TrendReportPanel()
 	{
+		setMinimumSize(new Dimension(1420, 880));
+		setPreferredSize(new Dimension(1420, 880));
 		Platform.setImplicitExit(false);
 		Platform.runLater(this::init);
 		CompletableFuture.supplyAsync(this::getTrendStatistics)
@@ -588,6 +590,7 @@ public class TrendReportPanel extends JFXPanel
 	{
 		try
 		{
+			_waterYearIndexComboBox.getItems().clear();
 			if(baseRun != null)
 			{
 				WaterYearTableReader waterYearTableReader = new WaterYearTableReader(baseRun.getWaterYearTable());
@@ -659,7 +662,7 @@ public class TrendReportPanel extends JFXPanel
 		List<EpptReportingMonths.MonthPeriod> monthPeriod = new ArrayList<>(_seasonalPeriodListView.getSelectionModel().getSelectedItems());
 		WaterYearIndex waterYearIndex = _waterYearIndexComboBox.getSelectionModel().getSelectedItem();
 		List<EpptScenarioRun> scenarioRuns = _scenarioRuns.stream().filter(Objects::nonNull).collect(toList());
-		Optional<String> error = getError(guiLink, statistic, monthPeriod, waterYearIndex);
+		Optional<String> error = getError(scenarioRuns, guiLink, statistic, monthPeriod, waterYearIndex);
 		if(!error.isPresent())
 		{
 			setUiLoading(true, Cursor.WAIT, "Loading...");
@@ -703,12 +706,13 @@ public class TrendReportPanel extends JFXPanel
 		}
 	}
 
-	private Optional<String> getError(List<TrendReportingParameters.TrendParameter> guiLink, List<TrendStatistics> statistic,
+	private Optional<String> getError(List<EpptScenarioRun> scenarioRuns,
+									  List<TrendReportingParameters.TrendParameter> guiLink, List<TrendStatistics> statistic,
 									  List<EpptReportingMonths.MonthPeriod> monthPeriod,
 									  WaterYearIndex waterYearIndex)
 	{
 		Optional<String> retval = Optional.empty();
-		if(_scenarioRuns.isEmpty())
+		if(scenarioRuns.isEmpty())
 		{
 			retval = Optional.of("No Scenario Runs defined");
 		}
@@ -722,7 +726,7 @@ public class TrendReportPanel extends JFXPanel
 		}
 		else if(monthPeriod.isEmpty() || monthPeriod.get(0).getStart() == null)
 		{
-			retval = Optional.of("No Seasonal Period Defined");
+			retval = Optional.of("No Seasonal Period defined");
 		}
 		else if(waterYearIndex == null)
 		{

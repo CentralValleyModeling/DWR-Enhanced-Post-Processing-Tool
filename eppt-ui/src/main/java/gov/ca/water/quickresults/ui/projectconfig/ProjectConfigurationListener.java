@@ -24,11 +24,12 @@ import javax.swing.*;
 
 import gov.ca.water.calgui.constant.EpptPreferences;
 import gov.ca.water.calgui.project.EpptScenarioRun;
-import gov.ca.water.calgui.project.EpptScenarioRunValidator;
 import gov.ca.water.quickresults.ui.EpptPanel;
 import gov.ca.water.quickresults.ui.projectconfig.scenarioconfig.ScenarioRunEditor;
 
 import hec.gui.NameDialog;
+
+import static java.util.stream.Collectors.toList;
 
 
 /**
@@ -98,7 +99,7 @@ public class ProjectConfigurationListener implements ActionListener
 			}
 			catch(IOException e)
 			{
-				LOGGER.log(Level.SEVERE, "Error opening project folder: " + projectFolder);
+				LOGGER.log(Level.SEVERE, "Error opening project folder: " + projectFolder, e);
 			}
 		}
 	}
@@ -110,7 +111,7 @@ public class ProjectConfigurationListener implements ActionListener
 		scenarioRunEditor.setVisible(true);
 		scenarioRunEditor.dispose();
 		EpptScenarioRun scenarioRun = scenarioRunEditor.createRun();
-		if(scenarioRun != null)
+		if(scenarioRun != null && !scenarioRunEditor.isCanceled())
 		{
 			_projectConfigurationPanel.addScenario(scenarioRun);
 		}
@@ -122,6 +123,11 @@ public class ProjectConfigurationListener implements ActionListener
 		if(oldScenarioRun != null)
 		{
 			NameDialog nameDialog = new NameDialog((Frame) SwingUtilities.windowForComponent(_projectConfigurationPanel), true);
+			nameDialog.setExistingNames(ProjectConfigurationPanel.getProjectConfigurationPanel()
+																 .getAllEpptScenarioRuns()
+																 .stream()
+																 .map(EpptScenarioRun::getName)
+																 .collect(toList()));
 			nameDialog.setTitle("Copy Scenario Run");
 			nameDialog.setName(oldScenarioRun.getName() + " (Copy)");
 			nameDialog.setDescription(oldScenarioRun.getDescription());
@@ -151,7 +157,7 @@ public class ProjectConfigurationListener implements ActionListener
 			scenarioRunEditor.setVisible(false);
 			scenarioRunEditor.dispose();
 
-			if(newScenarioRun != null)
+			if(newScenarioRun != null && !scenarioRunEditor.isCanceled())
 			{
 				_projectConfigurationPanel.replaceScenario(oldScenarioRun, newScenarioRun);
 				_projectConfigurationPanel.updateRadioState();

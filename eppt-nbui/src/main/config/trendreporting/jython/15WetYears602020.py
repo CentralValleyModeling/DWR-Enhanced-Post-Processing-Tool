@@ -5,7 +5,7 @@ from gov.ca.water.calgui.bo import WaterYearAnnualPeriodRangesFilter, WaterYearP
 
 
 def getName():
-	return "Wet years (60-20-20)"
+	return "Wet Years (60-20-20)"
 
 
 def calculate(data):

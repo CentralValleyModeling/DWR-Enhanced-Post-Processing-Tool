@@ -16,8 +16,8 @@ def toExceedance(v):
 
 
 def getName():
-	return "50% Exceedence Probability"
+	return "25% Exceedance Probability"
 
 
 def getCdfPercent():
-	return .5
+	return .75;
