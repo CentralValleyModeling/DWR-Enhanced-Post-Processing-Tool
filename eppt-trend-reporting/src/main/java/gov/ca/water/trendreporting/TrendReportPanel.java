@@ -41,6 +41,7 @@ import gov.ca.water.calgui.bo.GUILinksAllModelsBO;
 import gov.ca.water.calgui.bo.WaterYearDefinition;
 import gov.ca.water.calgui.bo.WaterYearIndex;
 import gov.ca.water.calgui.busservice.impl.GuiLinksSeedDataSvcImpl;
+import gov.ca.water.calgui.busservice.impl.MonthPeriod;
 import gov.ca.water.calgui.busservice.impl.WaterYearDefinitionSvc;
 import gov.ca.water.calgui.busservice.impl.WaterYearTableReader;
 import gov.ca.water.calgui.constant.Constant;
@@ -101,7 +102,7 @@ public class TrendReportPanel extends JFXPanel
 	private TrendReportFlowPane _javascriptPane;
 	private ListView<TrendReportingParameters.TrendParameter> _parameterListView;
 	private ListView<TrendStatistics> _statisticsListView;
-	private ListView<EpptReportingMonths.MonthPeriod> _seasonalPeriodListView;
+	private ListView<MonthPeriod> _seasonalPeriodListView;
 	private CheckBox _tafCheckbox;
 	private ComboBox<WaterYearIndex> _waterYearIndexComboBox;
 	private ComboBox<WaterYearDefinition> _waterYearDefinitionComboBox;
@@ -482,7 +483,7 @@ public class TrendReportPanel extends JFXPanel
 
 	private TitledPane buildSeasonalPeriodListView()
 	{
-		List<EpptReportingMonths.MonthPeriod> allMonthPeriods = EpptReportingMonths.getAllMonthPeriods();
+		List<MonthPeriod> allMonthPeriods = EpptReportingMonths.getAllMonthPeriods();
 		_seasonalPeriodListView.getItems().addAll(allMonthPeriods);
 		_seasonalPeriodListView.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
 		_seasonalPeriodListView.getSelectionModel().select(0);
@@ -659,7 +660,7 @@ public class TrendReportPanel extends JFXPanel
 	{
 		List<TrendReportingParameters.TrendParameter> guiLink = new ArrayList<>(_parameterListView.getSelectionModel().getSelectedItems());
 		List<TrendStatistics> statistic = new ArrayList<>(_statisticsListView.getSelectionModel().getSelectedItems());
-		List<EpptReportingMonths.MonthPeriod> monthPeriod = new ArrayList<>(_seasonalPeriodListView.getSelectionModel().getSelectedItems());
+		List<MonthPeriod> monthPeriod = new ArrayList<>(_seasonalPeriodListView.getSelectionModel().getSelectedItems());
 		WaterYearIndex waterYearIndex = _waterYearIndexComboBox.getSelectionModel().getSelectedItem();
 		ObservableList<WaterYearIndex> waterYearIndices = _waterYearIndexComboBox.getItems();
 		List<EpptScenarioRun> scenarioRuns = _scenarioRuns.stream().filter(Objects::nonNull).collect(toList());
@@ -710,7 +711,7 @@ public class TrendReportPanel extends JFXPanel
 
 	private Optional<String> getError(List<EpptScenarioRun> scenarioRuns,
 									  List<TrendReportingParameters.TrendParameter> guiLink, List<TrendStatistics> statistic,
-									  List<EpptReportingMonths.MonthPeriod> monthPeriod,
+									  List<MonthPeriod> monthPeriod,
 									  WaterYearIndex waterYearIndex)
 	{
 		Optional<String> retval = Optional.empty();
@@ -775,7 +776,7 @@ public class TrendReportPanel extends JFXPanel
 	}
 
 	private synchronized List<JSONObject> computeScenarios(List<TrendReportingParameters.TrendParameter> parameters, List<TrendStatistics> statistics,
-														   List<EpptReportingMonths.MonthPeriod> monthPeriods, LocalDate start,
+														   List<MonthPeriod> monthPeriods, LocalDate start,
 														   LocalDate end, boolean taf, List<EpptScenarioRun> scenarioRuns,
 														   WaterYearIndex waterYearIndex, ObservableList<WaterYearIndex> waterYearIndices)
 	{
@@ -784,7 +785,7 @@ public class TrendReportPanel extends JFXPanel
 		{
 			for(TrendStatistics statistic : statistics)
 			{
-				for(EpptReportingMonths.MonthPeriod monthPeriod : monthPeriods)
+				for(MonthPeriod monthPeriod : monthPeriods)
 				{
 					EpptReportingComputedSet epptReportingComputedSet = computeForMetrics(parameter.getGuiLink(), statistic, monthPeriod,
 							start, end, taf, scenarioRuns, waterYearIndex, waterYearIndices);
@@ -798,7 +799,7 @@ public class TrendReportPanel extends JFXPanel
 	}
 
 	private EpptReportingComputedSet computeForMetrics(GUILinksAllModelsBO guiLink, TrendStatistics statistic,
-													   EpptReportingMonths.MonthPeriod monthPeriod, LocalDate start,
+													   MonthPeriod monthPeriod, LocalDate start,
 													   LocalDate end, boolean taf, List<EpptScenarioRun> scenarioRuns,
 													   WaterYearIndex waterYearIndex, ObservableList<WaterYearIndex> waterYearIndices)
 	{
