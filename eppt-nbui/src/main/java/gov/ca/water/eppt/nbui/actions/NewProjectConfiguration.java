@@ -113,6 +113,7 @@ public class NewProjectConfiguration implements ActionListener
 				try
 				{
 					projectConfigurationPanel.resetProjectConfiguration();
+					projectConfigurationPanel.clearScenarios();
 				}
 				catch(Exception e)
 				{

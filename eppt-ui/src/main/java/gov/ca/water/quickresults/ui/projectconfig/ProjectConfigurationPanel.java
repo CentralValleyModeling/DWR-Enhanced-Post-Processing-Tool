@@ -580,6 +580,24 @@ public final class ProjectConfigurationPanel extends EpptPanel
 		return descriptionField.getText();
 	}
 
+	public void resetQuickState() throws Exception
+	{
+		String projectName = getProjectName();
+		String projectDescription = getProjectDescription();
+		removeAll();
+		Container swixmlProjectConfigurationPanel = renderSwixml(SCENARIO_CONFIGURATION_XML_FILE);
+		super.add(swixmlProjectConfigurationPanel, BorderLayout.CENTER);
+		initComponents();
+		initModels();
+		setActionListener(getActionListener());
+		JSplitPane splitPane = (JSplitPane) getSwingEngine().find("split_pane");
+		splitPane.setDividerLocation(350);
+		JTextField projectNameField = (JTextField) getSwingEngine().find("prj_name");
+		JTextField descriptionField = (JTextField) getSwingEngine().find("prj_desc");
+		projectNameField.setText(projectName);
+		descriptionField.setText(projectDescription);
+	}
+
 	public void resetProjectConfiguration() throws Exception
 	{
 		removeAll();
