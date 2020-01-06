@@ -14,6 +14,7 @@ package gov.ca.water.reportengine.standardsummary;
 
 import java.awt.Color;
 import java.math.BigDecimal;
+import java.math.MathContext;
 import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.DoubleSummaryStatistics;
@@ -141,15 +142,9 @@ class PercentDiffTableBuilder extends BaseAltDiffTableBuilder
 				if(baseValue != 0)
 				{
 					double percentage = ((altValue - baseValue) / baseValue) * 100;
+
 					BigDecimal bigDecimal = BigDecimal.valueOf(percentage);
-					if(Math.abs(percentage) > 0 && Math.abs(percentage) < 1)
-					{
-						bigDecimal = bigDecimal.setScale(3, RoundingMode.HALF_UP);
-					}
-					else
-					{
-						bigDecimal = bigDecimal.setScale(1, RoundingMode.HALF_UP);
-					}
+					percentage = bigDecimal.round(new MathContext(3)).doubleValue();
 					String textRaw = bigDecimal.toString();
 					retval.setTextContent(textRaw + "%");
 					_valueElements.put(retval, percentage);
@@ -161,7 +156,7 @@ class PercentDiffTableBuilder extends BaseAltDiffTableBuilder
 				}
 				else
 				{
-					retval.setTextContent("B=0");
+					retval.setTextContent("A=" + altValue);
 				}
 			}
 		}

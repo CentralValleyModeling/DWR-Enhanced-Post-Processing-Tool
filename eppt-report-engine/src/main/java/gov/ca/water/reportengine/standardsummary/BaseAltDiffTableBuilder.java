@@ -12,6 +12,8 @@
 
 package gov.ca.water.reportengine.standardsummary;
 
+import java.math.BigDecimal;
+import java.math.MathContext;
 import java.time.format.TextStyle;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -235,9 +237,7 @@ class BaseAltDiffTableBuilder extends TableBuilder
 			}
 			else
 			{
-				long baseValueRounded = Math.round(baseValue);
-				long altValueRounded = Math.round(altValue);
-				applyPercentDiffStyles(retval, baseValueRounded, altValueRounded);
+				applyPercentDiffStyles(retval, baseValue, altValue);
 				String units = baseValueGenerator.getUnits();
 				if(units == null)
 				{
@@ -261,42 +261,48 @@ class BaseAltDiffTableBuilder extends TableBuilder
 		return retval;
 	}
 
-	private void applyPercentDiffStyles(Element retval, long baseValueRounded, long altValueRounded)
+	private void applyPercentDiffStyles(Element retval, double baseValue, double altValue)
 	{
-		long absoluteDiff = altValueRounded - baseValueRounded;
+		double absoluteDiff = altValue - baseValue;
+		BigDecimal bigDecimal = BigDecimal.valueOf(absoluteDiff);
+		absoluteDiff = bigDecimal.round(new MathContext(3)).doubleValue();
 		String absoluteText = String.valueOf(absoluteDiff);
 		retval.setTextContent(absoluteText);
 		if(getReportParameters().getPercentDiffStyle() == PercentDiffStyle.PERCENT)
 		{
 
-			if(baseValueRounded != 0)
+			if(baseValue != 0)
 			{
-				long percent = ((altValueRounded - baseValueRounded) / baseValueRounded) * 100;
+				double percent = ((altValue - baseValue) / baseValue) * 100;
+				BigDecimal bd = BigDecimal.valueOf(percent);
+				percent = bd.round(new MathContext(3)).doubleValue();
 				retval.setAttribute(VALUE_FULL_TEXT_ATTRIBUTE, percent + "%");
 			}
-			else if(altValueRounded == 0)
+			else if(altValue == 0)
 			{
 				retval.setAttribute(VALUE_FULL_TEXT_ATTRIBUTE, "0%");
 			}
 			else
 			{
-				retval.setAttribute(VALUE_FULL_TEXT_ATTRIBUTE, "B=0");
+				retval.setAttribute(VALUE_FULL_TEXT_ATTRIBUTE, "A=" + altValue);
 			}
 		}
 		else if(getReportParameters().getPercentDiffStyle() == PercentDiffStyle.FULL)
 		{
-			if(baseValueRounded != 0)
+			if(baseValue != 0)
 			{
-				long percent = ((altValueRounded - baseValueRounded) / baseValueRounded) * 100;
+				double percent = ((altValue - baseValue) / baseValue) * 100;
+				BigDecimal bd = BigDecimal.valueOf(percent);
+				percent = bd.round(new MathContext(3)).doubleValue();
 				retval.setAttribute(VALUE_FULL_TEXT_ATTRIBUTE, absoluteText + "\n(" + percent + "%)");
 			}
-			else if(altValueRounded == 0)
+			else if(altValue == 0)
 			{
 				retval.setAttribute(VALUE_FULL_TEXT_ATTRIBUTE, absoluteText + "\n(0%)");
 			}
 			else
 			{
-				retval.setAttribute(VALUE_FULL_TEXT_ATTRIBUTE, absoluteText + "\n(B=0)");
+				retval.setAttribute(VALUE_FULL_TEXT_ATTRIBUTE, absoluteText + "\n(A=" + Math.round(altValue) + ")");
 			}
 		}
 	}
