@@ -126,12 +126,8 @@ public class NewProjectConfiguration implements ActionListener
 			WindowManager.getDefault().getMainWindow().setTitle(
 					Installer.MAIN_FRAME_NAME + " - " + projectConfigurationPanel.getProjectName());
 			projectConfigurationPanel.setModified(false);
-			Collection<? extends ProjectConfigurationSavable> projectConfigurationSavables = Savable.REGISTRY.lookupAll(
-					ProjectConfigurationSavable.class);
-			for(ProjectConfigurationSavable savable : projectConfigurationSavables)
-			{
-				savable.removeFromLookup();
-			}
+			Savable.REGISTRY.lookupAll(ProjectConfigurationSavable.class)
+							.forEach(ProjectConfigurationSavable::removeFromLookup);
 		}
 	}
 }
