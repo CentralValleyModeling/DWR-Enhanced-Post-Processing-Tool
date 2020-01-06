@@ -154,8 +154,9 @@ public class StandardSummaryReader
 	private String runTitleScript(String script)
 	{
 		String retval = script;
-		JythonScriptRunner runner = new JythonScriptRunner(null, new CommonPeriodFilter(LocalDateTime.of(1850, Month.JANUARY, 1, 0, 0),
-				LocalDateTime.of(2150, Month.JANUARY, 1, 0, 0)));
+		JythonScriptRunner runner = new JythonScriptRunner(null,
+				new CommonPeriodFilter(LocalDateTime.of(1850, Month.JANUARY, 1, 0, 0),
+						LocalDateTime.of(2150, Month.JANUARY, 1, 0, 0)), null);
 		try
 		{
 			retval = runner.runScript(script).toString();

@@ -24,7 +24,6 @@ import java.awt.event.ActionEvent;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalDate;
@@ -82,12 +81,8 @@ import gov.ca.water.reportengine.standardsummary.PercentDiffStyle;
 import gov.ca.water.reportengine.standardsummary.StandardSummaryErrors;
 import gov.ca.water.reportengine.standardsummary.StandardSummaryReader;
 import gov.ca.water.reportengine.standardsummary.SummaryReportParameters;
-import jdk.nashorn.internal.scripts.JO;
 
 import hec.heclib.dss.HecDSSFileAccess;
-import hec.heclib.dss.HecDataManager;
-import hec.heclib.dss.HecDss;
-import hec.heclib.util.Heclib;
 import rma.swing.RmaJDateTimeField;
 import rma.swing.RmaJDecimalField;
 import rma.swing.RmaJIntegerField;
@@ -1134,7 +1129,8 @@ public class QAQCReportPanel extends RmaJPanel
 		NavigableMap<LocalDateTime, Double> guiLinkData = new TreeMap<>();
 		try
 		{
-			guiLinkData = new DssReader(baseRun, LocalDateTime.of(1850, Month.JANUARY, 1, 0, 0),
+			WaterYearDefinition selectedItem = (WaterYearDefinition) _waterYearDefinitionCombo.getSelectedItem();
+			guiLinkData = new DssReader(baseRun, selectedItem, LocalDateTime.of(1850, Month.JANUARY, 1, 0, 0),
 					LocalDateTime.of(2150, Month.JANUARY, 1, 0, 0)).getGuiLinkData(102);
 		}
 		catch(DssMissingRecordException e)
@@ -1155,9 +1151,10 @@ public class QAQCReportPanel extends RmaJPanel
 	private Date getStartDate(EpptScenarioRun baseRun)
 	{
 		NavigableMap<LocalDateTime, Double> guiLinkData = new TreeMap<>();
+		WaterYearDefinition selectedItem = (WaterYearDefinition) _waterYearDefinitionCombo.getSelectedItem();
 		try
 		{
-			guiLinkData = new DssReader(baseRun, LocalDateTime.of(1850, Month.JANUARY, 1, 0, 0),
+			guiLinkData = new DssReader(baseRun, selectedItem, LocalDateTime.of(1850, Month.JANUARY, 1, 0, 0),
 					LocalDateTime.of(2150, Month.JANUARY, 1, 0, 0)).getGuiLinkData(102);
 		}
 		catch(DssMissingRecordException e)

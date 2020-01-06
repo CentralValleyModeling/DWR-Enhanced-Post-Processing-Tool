@@ -34,6 +34,7 @@ import com.google.common.flogger.FluentLogger;
 import gov.ca.water.calgui.bo.DetailedIssue;
 import gov.ca.water.calgui.bo.GUILinksAllModelsBO;
 import gov.ca.water.calgui.bo.ThresholdLinksBO;
+import gov.ca.water.calgui.bo.WaterYearDefinition;
 import gov.ca.water.calgui.busservice.impl.DSSGrabber1SvcImpl;
 import gov.ca.water.calgui.busservice.impl.DetailedIssuesReader;
 import gov.ca.water.calgui.busservice.impl.GuiLinksSeedDataSvcImpl;
@@ -56,51 +57,71 @@ public class DssReader
 {
 	private static final FluentLogger LOGGER = FluentLogger.forEnclosingClass();
 	private final EpptScenarioRun _scenarioRun;
+	private final WaterYearDefinition _waterYearDefinition;
 	private final LocalDateTime _start;
 	private final LocalDateTime _end;
 	private String _units;
 
-	public DssReader(EpptScenarioRun scenarioRun, LocalDateTime start, LocalDateTime end)
+	public DssReader(EpptScenarioRun scenarioRun, WaterYearDefinition waterYearDefinition, LocalDateTime start, LocalDateTime end)
 	{
 		_scenarioRun = scenarioRun;
+		_waterYearDefinition = waterYearDefinition;
 		_start = start;
 		_end = end;
 	}
 
 	@Scriptable
-	public NavigableMap<Integer, Double> getYearlyGuiLinkData(int guiID, Month startMonth) throws DssMissingRecordException
+	public NavigableMap<Integer, Double> getYearlyGuiLinkData(int guiID) throws DssMissingRecordException
 	{
-		return filterPeriodYearly(getGuiLinkData(guiID, true), startMonth);
+		return filterPeriodYearly(getGuiLinkData(guiID, true), _waterYearDefinition);
 	}
 
 	@Scriptable
-	public NavigableMap<Integer, Double> getYearlyGuiLinkData(int guiID, boolean mapToTaf, Month startMonth) throws DssMissingRecordException
+	public NavigableMap<Integer, Double> getYearlyGuiLinkData(int guiID, WaterYearDefinition waterYearDefinition) throws DssMissingRecordException
 	{
-		return filterPeriodYearly(getGuiLinkData(guiID, mapToTaf), startMonth);
+		return filterPeriodYearly(getGuiLinkData(guiID, true), waterYearDefinition);
 	}
 
 	@Scriptable
-	public NavigableMap<Integer, Double> getYearlyDtsData(int dtsId, Month startMonth) throws DssMissingRecordException
+	public NavigableMap<Integer, Double> getYearlyGuiLinkData(int guiID, boolean mapToTaf, WaterYearDefinition waterYearDefinition) throws DssMissingRecordException
 	{
-		return filterPeriodYearly(getDtsData(dtsId, true), startMonth);
+		return filterPeriodYearly(getGuiLinkData(guiID, mapToTaf), waterYearDefinition);
 	}
 
 	@Scriptable
-	public NavigableMap<Integer, Double> getYearlyDtsData(int dtsId, boolean mapToTaf, Month startMonth) throws DssMissingRecordException
+	public NavigableMap<Integer, Double> getYearlyDtsData(int dtsId) throws DssMissingRecordException
 	{
-		return filterPeriodYearly(getDtsData(dtsId, mapToTaf), startMonth);
+		return filterPeriodYearly(getDtsData(dtsId, true), _waterYearDefinition);
 	}
 
 	@Scriptable
-	public NavigableMap<Integer, Double> getYearlyThresholdData(int dtsId, Month startMonth) throws DssMissingRecordException
+	public NavigableMap<Integer, Double> getYearlyDtsData(int dtsId, WaterYearDefinition waterYearDefinition) throws DssMissingRecordException
 	{
-		return filterPeriodYearly(getThresholdData(dtsId, true), startMonth);
+		return filterPeriodYearly(getDtsData(dtsId, true), waterYearDefinition);
 	}
 
 	@Scriptable
-	public NavigableMap<Integer, Double> getYearlyThresholdData(int dtsId, boolean mapToTaf, Month startMonth) throws DssMissingRecordException
+	public NavigableMap<Integer, Double> getYearlyDtsData(int dtsId, boolean mapToTaf, WaterYearDefinition waterYearDefinition) throws DssMissingRecordException
 	{
-		return filterPeriodYearly(getThresholdData(dtsId, mapToTaf), startMonth);
+		return filterPeriodYearly(getDtsData(dtsId, mapToTaf), waterYearDefinition);
+	}
+
+	@Scriptable
+	public NavigableMap<Integer, Double> getYearlyThresholdData(int dtsId) throws DssMissingRecordException
+	{
+		return filterPeriodYearly(getThresholdData(dtsId, true), _waterYearDefinition);
+	}
+
+	@Scriptable
+	public NavigableMap<Integer, Double> getYearlyThresholdData(int dtsId, WaterYearDefinition waterYearDefinition) throws DssMissingRecordException
+	{
+		return filterPeriodYearly(getThresholdData(dtsId, true), waterYearDefinition);
+	}
+
+	@Scriptable
+	public NavigableMap<Integer, Double> getYearlyThresholdData(int dtsId, boolean mapToTaf, WaterYearDefinition waterYearDefinition) throws DssMissingRecordException
+	{
+		return filterPeriodYearly(getThresholdData(dtsId, mapToTaf), waterYearDefinition);
 	}
 
 	@Scriptable
@@ -309,6 +330,15 @@ public class DssReader
 		instance.addThresholdLinkUnitsToCache(_scenarioRun, thresholdId, _units);
 		return retval;
 	}
+
+	private NavigableMap<Integer, Double> filterPeriodYearly(NavigableMap<LocalDateTime, Double> input,
+															WaterYearDefinition waterYearDefinition)
+	{
+		MonthPeriod monthPeriod = new MonthPeriod(waterYearDefinition.getStartMonth(), waterYearDefinition.getEndMonth());
+		boolean aggregateYearly = "CFS".equalsIgnoreCase(getUnits());
+		return filterPeriodYearly(input, monthPeriod, aggregateYearly);
+	}
+
 	public NavigableMap<Integer, Double> filterPeriodYearly(NavigableMap<LocalDateTime, Double> input,
 																   Month startMonth)
 	{

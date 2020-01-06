@@ -25,6 +25,7 @@ import javax.script.ScriptException;
 import com.google.common.flogger.FluentLogger;
 import gov.ca.water.calgui.bo.CommonPeriodFilter;
 import gov.ca.water.calgui.bo.PeriodFilter;
+import gov.ca.water.calgui.bo.WaterYearDefinition;
 import gov.ca.water.calgui.bo.WaterYearIndex;
 import gov.ca.water.calgui.bo.WaterYearPeriod;
 import gov.ca.water.calgui.bo.WaterYearPeriodRange;
@@ -43,6 +44,7 @@ public class JythonScriptRunner
 {
 	private static final ScriptEngine PYTHON_ENGINE = new ScriptEngineManager().getEngineByName("python");
 	private final EpptScenarioRun _epptScenarioRun;
+	private final WaterYearDefinition _waterYearDefinition;
 	private static final FluentLogger LOGGER = FluentLogger.forEnclosingClass();
 
 	static
@@ -59,10 +61,11 @@ public class JythonScriptRunner
 
 	private DssReader _dssReader;
 
-	public JythonScriptRunner(EpptScenarioRun epptScenarioRun, CommonPeriodFilter commonPeriodFilter)
+	public JythonScriptRunner(EpptScenarioRun epptScenarioRun, CommonPeriodFilter commonPeriodFilter, WaterYearDefinition waterYearDefinition)
 	{
 
 		_epptScenarioRun = epptScenarioRun;
+		_waterYearDefinition = waterYearDefinition;
 		if(PYTHON_ENGINE == null)
 		{
 			throw new IllegalArgumentException("Unable to find jython engine");
@@ -91,7 +94,7 @@ public class JythonScriptRunner
 
 	private void initializeGlobalVariables(CommonPeriodFilter commonPeriodFilter)
 	{
-		_dssReader = new DssReader(_epptScenarioRun, commonPeriodFilter.getStart(), commonPeriodFilter.getEnd());
+		_dssReader = new DssReader(_epptScenarioRun, _waterYearDefinition, commonPeriodFilter.getStart(), commonPeriodFilter.getEnd());
 		TitleReader titleReader = new TitleReader(_epptScenarioRun);
 		PYTHON_ENGINE.put("dssReader", _dssReader);
 		PYTHON_ENGINE.put("titleReader", titleReader);
