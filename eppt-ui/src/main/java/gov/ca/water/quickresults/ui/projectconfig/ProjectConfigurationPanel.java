@@ -420,11 +420,7 @@ public final class ProjectConfigurationPanel extends EpptPanel
 	public void saveAsConfigurationToPath(Path newProjectPath, String projectName, String projectDescription)
 			throws IOException
 	{
-		boolean mkdirs = newProjectPath.toFile().mkdirs();
-		if(!mkdirs)
-		{
-			LOGGER.debug("Path not created: " + newProjectPath);
-		}
+		newProjectPath.toFile().mkdirs();
 		Path projectFile = newProjectPath.resolve(projectName + "." + Constant.EPPT_EXT);
 		Path oldProjectPath = EpptPreferences.getLastProjectConfiguration().getParent();
 		_scenarioTablePanel.relativizeScenariosToNewProject(newProjectPath, oldProjectPath);
