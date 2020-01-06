@@ -114,8 +114,8 @@ public class TrendReportPanel extends JFXPanel
 
 	public TrendReportPanel()
 	{
-		setMinimumSize(new Dimension(1420, 880));
-		setPreferredSize(new Dimension(1420, 880));
+		setMinimumSize(new Dimension(1400, 800));
+		setPreferredSize(new Dimension(1400, 800));
 		Platform.setImplicitExit(false);
 		Platform.runLater(this::init);
 		CompletableFuture.supplyAsync(this::getTrendStatistics)

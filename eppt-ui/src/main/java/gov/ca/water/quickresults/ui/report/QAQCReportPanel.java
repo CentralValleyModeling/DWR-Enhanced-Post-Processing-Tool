@@ -628,7 +628,7 @@ public class QAQCReportPanel extends RmaJPanel
 		_panel1 = new JPanel();
 		_panel1.setLayout(new BorderLayout(5, 2));
 		_panel1.setMinimumSize(new Dimension(1150, 350));
-		_panel1.setPreferredSize(new Dimension(1150, 800));
+		_panel1.setPreferredSize(new Dimension(1150, 760));
 		_panel1.setRequestFocusEnabled(false);
 		final JPanel panel1 = new JPanel();
 		panel1.setLayout(new BorderLayout(0, 0));

@@ -15,6 +15,7 @@ package gov.ca.water.quickresults.ui.projectconfig;
 import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Container;
+import java.awt.Dimension;
 import java.awt.Frame;
 import java.awt.KeyboardFocusManager;
 import java.awt.event.KeyAdapter;
@@ -587,7 +588,7 @@ public final class ProjectConfigurationPanel extends EpptPanel
 		initModels();
 		setActionListener(getActionListener());
 		JSplitPane splitPane = (JSplitPane) getSwingEngine().find("split_pane");
-		splitPane.setDividerLocation(350);
+		splitPane.setDividerLocation(275);
 		JTextField projectNameField = (JTextField) getSwingEngine().find("prj_name");
 		JTextField descriptionField = (JTextField) getSwingEngine().find("prj_desc");
 		projectNameField.setText(projectName);
