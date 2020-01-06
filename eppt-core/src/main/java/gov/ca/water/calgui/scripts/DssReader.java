@@ -84,7 +84,7 @@ public class DssReader
 				}
 				if(primarySeries == null || primarySeries[0] == null)
 				{
-					throw new DssMissingRecordException("Unable to find matching GUILink ID: " + guiID);
+					throw new DssMissingRecordException(_scenarioRun.getName() + ": Unable to find matching GUILink with ID: " + guiID);
 				}
 				retval = timeSeriesContainerToMap(primarySeries);
 				instance.addGuiLinkToCache(_scenarioRun, guiID, retval);
@@ -198,7 +198,7 @@ public class DssReader
 																	.filter(di -> di.getDetailedIssueId() == dtsId)
 																	.findAny();
 				DetailedIssue detailedIssue = issue.orElseThrow(
-						() -> new DssMissingRecordException("Unable to find matching DTS path for DTS ID: " + dtsId));
+						() -> new DssMissingRecordException(_scenarioRun.getName() + ": Unable to find matching DTS path for DTS ID: " + dtsId));
 				DSSGrabber1SvcImpl dssGrabber1Svc = buildDssGrabber(_scenarioRun, detailedIssue);
 				TimeSeriesContainer[] primarySeries = dssGrabber1Svc.getPrimarySeries();
 				if(mapToTaf)
@@ -207,8 +207,8 @@ public class DssReader
 				}
 				if(primarySeries == null || primarySeries[0] == null)
 				{
-					throw new DssMissingRecordException(
-							"Unable to find matching DTS ID: " + dtsId + " and DSS Path: " + detailedIssue.getLinkedVar());
+					throw new DssMissingRecordException(_scenarioRun.getName() +
+							": Unable to find matching DTS record with DTS ID: " + dtsId + " and DSS Path: " + detailedIssue.getLinkedVar());
 				}
 				retval = timeSeriesContainerToMap(primarySeries);
 				instance.addDtsLinkToCache(_scenarioRun, dtsId, retval);
@@ -248,8 +248,8 @@ public class DssReader
 				}
 				if(threshold == null || threshold[0] == null)
 				{
-					throw new DssMissingRecordException(
-							"Unable to find matching Threshold path for B-Part: " + thresholdLink.getModelData(
+					throw new DssMissingRecordException(_scenarioRun.getName() +
+							": Unable to find matching Threshold path for B-Part: " + thresholdLink.getModelData(
 									GUILinksAllModelsBO.Model.values().get(0)) + " and ID: " + thresholdLink.getId());
 				}
 				retval = timeSeriesContainerToMap(threshold);

@@ -1282,7 +1282,10 @@ public class QAQCReportPanel extends RmaJPanel
 					{
 						appendErrorText(record.getMessage());
 					}
-					appendThrowable(thrown);
+					else
+					{
+						appendThrowable(thrown);
+					}
 				}
 				else
 				{
@@ -1295,18 +1298,21 @@ public class QAQCReportPanel extends RmaJPanel
 		{
 			if(thrown != null)
 			{
-				if(thrown instanceof RuntimeException)
-				{
-					appendErrorText("\t" + thrown.toString());
-				}
-				else
-				{
-					appendErrorText("\t" + thrown.getMessage());
-				}
 				Throwable cause = thrown.getCause();
 				if(cause != null)
 				{
 					appendThrowable(cause);
+				}
+				else
+				{
+					if(thrown instanceof RuntimeException)
+					{
+						appendErrorText("\t" + thrown.toString());
+					}
+					else
+					{
+						appendErrorText("\t" + thrown.getMessage());
+					}
 				}
 			}
 		}

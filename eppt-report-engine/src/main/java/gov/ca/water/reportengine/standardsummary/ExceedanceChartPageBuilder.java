@@ -75,11 +75,10 @@ class ExceedanceChartPageBuilder extends PlotChartBuilder
 				MonthPeriodFilter monthPeriodFilter = new MonthPeriodFilter(month);
 				data.put(month, buildExceedanceData(monthPeriodFilter, scenarioRun, chartComponents));
 			}
-
 		}
 		catch(EpptReportException e)
 		{
-			logScriptException(LOGGER, chartComponents.get(0), e);
+			logScriptException(LOGGER, null, e);
 		}
 		return new PlotlyExceedancePage.ExceedanceMonthData(data);
 	}
@@ -102,7 +101,7 @@ class ExceedanceChartPageBuilder extends PlotChartBuilder
 		}
 		catch(DssMissingRecordException e)
 		{
-			logScriptException(LOGGER, chartComponent, e);
+			throw new EpptReportException(e.getMessage(), e);
 		}
 		return new ExceedanceData(scenarioRun.getName(), primaryData, thresholdData);
 	}
