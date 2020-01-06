@@ -14,6 +14,7 @@ package gov.ca.water.trendreporting;
 
 import java.util.List;
 
+import gov.ca.water.calgui.busservice.impl.MonthPeriod;
 import javafx.beans.value.ChangeListener;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -35,10 +36,9 @@ import javafx.scene.layout.VBox;
  */
 class TrendReportPeriodPane extends TitledPane
 {
-	private final ListView<EpptReportingMonths.MonthPeriod> _seasonalPeriodListView = new ListView<>();
-	private final AutoCompleteTextField<EpptReportingMonths.MonthPeriod> _textField = new AutoCompleteTextField<>();
-	private ObservableList<EpptReportingMonths.MonthPeriod> _backingStats;
-	private FilteredList<EpptReportingMonths.MonthPeriod> _filteredPeriods;
+	private final ListView<MonthPeriod> _seasonalPeriodListView = new ListView<>();
+	private final AutoCompleteTextField<MonthPeriod> _textField = new AutoCompleteTextField<>();
+	private FilteredList<MonthPeriod> _filteredPeriods;
 
 	TrendReportPeriodPane()
 	{
@@ -49,10 +49,10 @@ class TrendReportPeriodPane extends TitledPane
 	private void initComponents()
 	{
 		_seasonalPeriodListView.setStyle("-fx-selection-bar:-fx-focus-color ;-fx-selection-bar-non-focused: -fx-focus-color ;");
-		List<EpptReportingMonths.MonthPeriod> allMonthPeriods = EpptReportingMonths.getAllMonthPeriods();
+		List<MonthPeriod> allMonthPeriods = EpptReportingMonths.getAllMonthPeriods();
 		_textField.getEntries().addAll(allMonthPeriods);
-		_backingStats = FXCollections.observableList(allMonthPeriods);
-		_filteredPeriods = new FilteredList<>(_backingStats);
+		final ObservableList<MonthPeriod> backingStats = FXCollections.observableList(allMonthPeriods);
+		_filteredPeriods = new FilteredList<>(backingStats);
 		_seasonalPeriodListView.setItems(_filteredPeriods);
 		_seasonalPeriodListView.getSelectionModel().select(0);
 		VBox vBox = new VBox(_seasonalPeriodListView);
@@ -72,12 +72,12 @@ class TrendReportPeriodPane extends TitledPane
 		setPrefHeight(200);
 	}
 
-	void addListener(ChangeListener<? super EpptReportingMonths.MonthPeriod> inputsChanged)
+	void addListener(ChangeListener<? super MonthPeriod> inputsChanged)
 	{
 		_seasonalPeriodListView.getSelectionModel().selectedItemProperty().addListener(inputsChanged);
 	}
 
-	ObservableList<EpptReportingMonths.MonthPeriod> getSelectedItems()
+	ObservableList<MonthPeriod> getSelectedItems()
 	{
 		return _seasonalPeriodListView.getSelectionModel().getSelectedItems();
 	}
@@ -90,7 +90,7 @@ class TrendReportPeriodPane extends TitledPane
 
 	private void textChanged()
 	{
-		EpptReportingMonths.MonthPeriod selectedItem = _seasonalPeriodListView.getSelectionModel().getSelectedItem();
+		MonthPeriod selectedItem = _seasonalPeriodListView.getSelectionModel().getSelectedItem();
 		String text = _textField.getText();
 		if(text.trim().isEmpty())
 		{

@@ -482,7 +482,7 @@ public class TrendReportPanel extends JFXPanel
 													   LocalDate end, boolean taf, List<EpptScenarioRun> scenarioRuns,
 													   WaterYearIndex waterYearIndex, ObservableList<WaterYearIndex> waterYearIndices)
 	{
-		EpptReportingComputer trendReportingComputer = new EpptReportingComputer(guiLink, statistic, monthPeriod, waterYearDefinition,
+		EpptReportingComputer trendReportingComputer = new EpptReportingComputer(guiLink, statistic, monthPeriod,
 				waterYearIndex, waterYearIndices);
 		List<EpptReportingComputed> trendReportingComputed = new ArrayList<>();
 
