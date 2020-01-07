@@ -141,6 +141,8 @@ public class QAQCReportPanel extends RmaJPanel
 	private RmaJDateTimeField _endDateChooser;
 	private JButton _overwriteJRXMLButton;
 	private JButton _openReportButton;
+	private JButton _overwriteScriptsButton;
+	private JButton _overwriteScriptsButton1;
 	private EpptScenarioRun _baseRun;
 	private EpptScenarioRun _altRun;
 	private final Map<JCheckBox, String> _reportModules = new HashMap<>();
