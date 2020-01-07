@@ -23,6 +23,7 @@ import javax.script.ScriptEngineManager;
 import javax.script.ScriptException;
 
 import com.google.common.flogger.FluentLogger;
+import gov.ca.water.calgui.bo.AnnualPeriodFilter;
 import gov.ca.water.calgui.bo.CommonPeriodFilter;
 import gov.ca.water.calgui.bo.PeriodFilter;
 import gov.ca.water.calgui.bo.WaterYearDefinition;
@@ -73,7 +74,7 @@ public class JythonScriptRunner
 		initializeGlobalVariables(commonPeriodFilter);
 	}
 
-	private static void initializeScriptDirectory() throws ScriptException
+	public static void initializeScriptDirectory()
 	{
 		try(Stream<Path> stream = Files.walk(Constant.QA_QC_SCRIPT_DIRECTORY, 1))
 		{
@@ -86,15 +87,15 @@ public class JythonScriptRunner
 				}
 			}
 		}
-		catch(IOException e)
+		catch(IOException | ScriptException e)
 		{
-			throw new IllegalArgumentException("Unable to read script directory: " + Constant.QA_QC_SCRIPT_DIRECTORY, e);
+			LOGGER.atSevere().withCause(e).log("Unable to initialize utility scripts: %s",  Constant.QA_QC_SCRIPT_DIRECTORY);
 		}
 	}
 
 	private void initializeGlobalVariables(CommonPeriodFilter commonPeriodFilter)
 	{
-		_dssReader = new DssReader(_epptScenarioRun, _waterYearDefinition, commonPeriodFilter.getStart(), commonPeriodFilter.getEnd());
+		_dssReader = new DssReader(_epptScenarioRun, _waterYearDefinition);
 		TitleReader titleReader = new TitleReader(_epptScenarioRun);
 		PYTHON_ENGINE.put("dssReader", _dssReader);
 		PYTHON_ENGINE.put("titleReader", titleReader);
@@ -103,6 +104,7 @@ public class JythonScriptRunner
 		setWaterYearIndex(null);
 		setWaterYearPeriodRanges(null);
 		setPeriodFilter(null);
+		setAnnualPeriodFilter(null);
 		setComparisonValue(null);
 	}
 
@@ -113,7 +115,6 @@ public class JythonScriptRunner
 
 	public Object runScript(String script) throws ScriptException
 	{
-//		initializeScriptDirectory();
 		return PYTHON_ENGINE.eval(script);
 	}
 
@@ -140,5 +141,10 @@ public class JythonScriptRunner
 	public String getUnits()
 	{
 		return _dssReader.getUnits();
+	}
+
+	public void setAnnualPeriodFilter(AnnualPeriodFilter annualPeriodFilter)
+	{
+		PYTHON_ENGINE.put("annualPeriodFilter", annualPeriodFilter);
 	}
 }

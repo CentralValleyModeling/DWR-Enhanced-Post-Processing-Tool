@@ -238,7 +238,7 @@ public class JavaFxChartsPane extends BorderPane
 			String orcaCommandline = "\"" + ORCA_EXE + "\" graph \"" + jsonPath + "\" --width " + width + " --height " + height +
 					" --format " + format + " \"" + outputPath + "\"" + " --plotly \"" +
 					Paths.get(Constant.CONFIG_DIR).getParent().resolve("lib").resolve("plotly").resolve("dist").resolve("plotly.min.js") + "\"";
-			LOGGER.log(Level.INFO, "Plotly SVG generation command line: {0}", orcaCommandline);
+			LOGGER.log(Level.FINE, "Plotly SVG generation command line: {0}", orcaCommandline);
 			Process exec = null;
 			try
 			{

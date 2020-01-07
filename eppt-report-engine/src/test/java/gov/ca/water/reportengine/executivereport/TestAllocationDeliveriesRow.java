@@ -13,6 +13,10 @@
 package gov.ca.water.reportengine.executivereport;
 
 
+import java.time.LocalDateTime;
+import java.util.Map;
+import java.util.TreeMap;
+
 import org.junit.jupiter.api.Test;
 
 
@@ -28,5 +32,8 @@ public class TestAllocationDeliveriesRow extends ExecutiveReportTestBase
     void testAllocationDeliveriesRowWithOneAlternativeSameModel() throws Exception
     {
         testOneAlternativeSameModel( "Allocations and Deliveries");
+//        Map<LocalDateTime, Double> values = new TreeMap<>();
+//        values.entrySet().stream()
+//              .peek(e->System.out.println(e.getKey().toString() + " " + e.getValue()))
     }
 }

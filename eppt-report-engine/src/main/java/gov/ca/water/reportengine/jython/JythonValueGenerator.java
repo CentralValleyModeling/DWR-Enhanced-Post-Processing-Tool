@@ -21,6 +21,7 @@ import java.util.Map;
 import java.util.NavigableMap;
 import javax.script.ScriptException;
 
+import gov.ca.water.calgui.bo.AnnualPeriodFilter;
 import gov.ca.water.calgui.bo.CommonPeriodFilter;
 import gov.ca.water.calgui.bo.PeriodFilter;
 import gov.ca.water.calgui.bo.WaterYearDefinition;
@@ -45,6 +46,7 @@ import static java.util.stream.Collectors.toList;
 public class JythonValueGenerator
 {
 	private final PeriodFilter _periodFilter;
+	private final AnnualPeriodFilter _annualPeriodFilter;
 	private final EpptScenarioRun _scenarioRun;
 	private final String _function;
 	private final JythonScriptRunner _scriptRunner;
@@ -58,11 +60,19 @@ public class JythonValueGenerator
 	public JythonValueGenerator(PeriodFilter periodFilter, EpptScenarioRun base, String function,
 								CommonPeriodFilter commonPeriodFilter, WaterYearDefinition waterYearDefinition)
 	{
+		this(periodFilter, null, base, function, commonPeriodFilter, waterYearDefinition);
+	}
+
+	public JythonValueGenerator(PeriodFilter periodFilter, AnnualPeriodFilter annualPeriodFilter, EpptScenarioRun base, String function,
+								CommonPeriodFilter commonPeriodFilter, WaterYearDefinition waterYearDefinition)
+	{
+		_annualPeriodFilter = annualPeriodFilter;
 		_scenarioRun = base;
 		_function = JythonScriptBuilder.getInstance().buildFunctionFromTemplate(function);
 		_periodFilter = periodFilter;
 		_scriptRunner = new JythonScriptRunner(_scenarioRun, commonPeriodFilter, waterYearDefinition);
 		_scriptRunner.setPeriodFilter(_periodFilter);
+		_scriptRunner.setAnnualPeriodFilter(_annualPeriodFilter);
 		setWaterYearPeriodRange();
 	}
 
@@ -86,8 +96,11 @@ public class JythonValueGenerator
 			List<WaterYearPeriodRange> waterYearPeriodRanges = waterYearPeriodFilter.getWaterYearIndex()
 																					.getWaterYearTypes()
 																					.stream()
-																					.filter(e -> e.getWaterYearPeriod().equals(waterYearPeriodFilter.getWaterYearPeriod()))
-																					.map(e->new WaterYearPeriodRange(e.getWaterYearPeriod(), new WaterYearType(e.getYear(), e.getWaterYearPeriod()),new WaterYearType(e.getYear(), e.getWaterYearPeriod())))
+																					.filter(e -> e.getWaterYearPeriod().equals(
+																							waterYearPeriodFilter.getWaterYearPeriod()))
+																					.map(e -> new WaterYearPeriodRange(e.getWaterYearPeriod(),
+																							new WaterYearType(e.getYear(), e.getWaterYearPeriod()),
+																							new WaterYearType(e.getYear(), e.getWaterYearPeriod())))
 																					.collect(toList());
 			_scriptRunner.setWaterYearPeriodRanges(waterYearPeriodRanges);
 		}
@@ -105,7 +118,7 @@ public class JythonValueGenerator
 	{
 		try
 		{
-			Object o = _scriptRunner.runScript(_function);
+			Object o = generateObjectValue();
 			Double retval;
 			if(o instanceof BigInteger)
 			{
@@ -116,11 +129,6 @@ public class JythonValueGenerator
 				retval = (Double) o;
 			}
 			return retval;
-		}
-		catch(ScriptException e)
-		{
-			checkDssMissingException(e);
-			throw new EpptReportException("Error running script: " + _function, e);
 		}
 		catch(ClassCastException e)
 		{
@@ -160,13 +168,8 @@ public class JythonValueGenerator
 	{
 		try
 		{
-			Object o = _scriptRunner.runScript(_function);
+			Object o = generateObjectValue();
 			return ((BigInteger) o).longValue();
-		}
-		catch(ScriptException e)
-		{
-			checkDssMissingException(e);
-			throw new EpptReportException("Error running script: " + _function, e);
 		}
 		catch(ClassCastException e)
 		{
@@ -180,7 +183,7 @@ public class JythonValueGenerator
 	{
 		try
 		{
-			Object o = _scriptRunner.runScript(_function);
+			Object o = generateObjectValue();
 			if(o == null)
 			{
 				throw new ScriptException("Script returned null collection: " + _function);
@@ -204,7 +207,7 @@ public class JythonValueGenerator
 	{
 		try
 		{
-			Object o = _scriptRunner.runScript(_function);
+			Object o = generateObjectValue();
 			if(o == null)
 			{
 				throw new ScriptException("Script returned null collection: " + _function);
@@ -228,7 +231,7 @@ public class JythonValueGenerator
 	{
 		try
 		{
-			Object o = _scriptRunner.runScript(_function);
+			Object o = generateObjectValue();
 			if(o == null)
 			{
 				throw new ScriptException("Script returned null collection: " + _function);
