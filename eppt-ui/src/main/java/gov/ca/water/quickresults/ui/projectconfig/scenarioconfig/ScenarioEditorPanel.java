@@ -336,18 +336,10 @@ public class ScenarioEditorPanel
 		final JPanel panel5 = new JPanel();
 		panel5.setLayout(new BorderLayout(0, 0));
 		_panel1.add(panel5, BorderLayout.SOUTH);
-		panel5.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(), "QA/QC Report"));
+		panel5.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(), "QA/QC Report Resources"));
 		final JPanel panel6 = new JPanel();
 		panel6.setLayout(new GridBagLayout());
 		panel5.add(panel6, BorderLayout.CENTER);
-		final JLabel label6 = new JLabel();
-		label6.setText("EPPT WRESL Script");
-		gbc = new GridBagConstraints();
-		gbc.gridx = 0;
-		gbc.gridy = 0;
-		gbc.anchor = GridBagConstraints.WEST;
-		gbc.insets = new Insets(5, 5, 5, 5);
-		panel6.add(label6, gbc);
 		_wreslTextField = new JTextField();
 		gbc = new GridBagConstraints();
 		gbc.gridx = 1;
@@ -365,14 +357,14 @@ public class ScenarioEditorPanel
 		gbc.fill = GridBagConstraints.HORIZONTAL;
 		gbc.insets = new Insets(5, 5, 5, 5);
 		panel6.add(_wreslButton, gbc);
-		final JLabel label7 = new JLabel();
-		label7.setText("Water Year Table File:");
+		final JLabel label6 = new JLabel();
+		label6.setText("Lookup Directory:");
 		gbc = new GridBagConstraints();
 		gbc.gridx = 0;
 		gbc.gridy = 1;
 		gbc.anchor = GridBagConstraints.WEST;
 		gbc.insets = new Insets(5, 5, 5, 5);
-		panel6.add(label7, gbc);
+		panel6.add(label6, gbc);
 		_waterYearTable = new JTextField();
 		gbc = new GridBagConstraints();
 		gbc.gridx = 1;
@@ -391,6 +383,14 @@ public class ScenarioEditorPanel
 		gbc.fill = GridBagConstraints.HORIZONTAL;
 		gbc.insets = new Insets(5, 5, 5, 5);
 		panel6.add(_wyTableBtn, gbc);
+		final JLabel label7 = new JLabel();
+		label7.setText("EPPT WRESL Directory:");
+		gbc = new GridBagConstraints();
+		gbc.gridx = 0;
+		gbc.gridy = 0;
+		gbc.anchor = GridBagConstraints.WEST;
+		gbc.insets = new Insets(5, 5, 5, 5);
+		panel6.add(label7, gbc);
 	}
 
 	/**
