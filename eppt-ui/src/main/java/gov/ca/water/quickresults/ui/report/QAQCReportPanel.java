@@ -1219,19 +1219,25 @@ public class QAQCReportPanel extends RmaJPanel
 			throws IOException
 	{
 		boolean differ = installerDirectoryPaths.stream()
-												.map(p -> p.relativize(installerRoot))
+												.map(other -> installerRoot.relativize(other))
 												.map(scenarioRoot::resolve)
 												.anyMatch(p -> !scenarioDirectoryPaths.contains(p));
 		if(!differ)
 		{
 			for(Path installerPath : installerDirectoryPaths)
 			{
-				Path scenarioPath = scenarioRoot.resolve(installerPath.relativize(installerRoot));
-				boolean contentEquals = FileUtils.contentEquals(installerPath.toFile(), scenarioPath.toFile());
-				if(!contentEquals)
+				if(installerPath.toFile().isFile())
 				{
-					differ = true;
-					break;
+					Path scenarioPath = scenarioRoot.resolve(installerRoot.relativize(installerPath));
+					if(!scenarioPath.equals(installerPath))
+					{
+						boolean contentEquals = FileUtils.contentEquals(installerPath.toFile(), scenarioPath.toFile());
+						if(!contentEquals)
+						{
+							differ = true;
+							break;
+						}
+					}
 				}
 			}
 		}
