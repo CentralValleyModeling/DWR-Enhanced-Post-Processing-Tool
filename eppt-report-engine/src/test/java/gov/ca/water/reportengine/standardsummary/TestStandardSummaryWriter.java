@@ -99,6 +99,8 @@ public class TestStandardSummaryWriter
 
 		WaterYearDefinition waterYearDefinition = WaterYearDefinitionSvc.getWaterYearDefinitionSvc().getDefinitions().get(0);
 		WaterYearIndex waterYearIndex = new WaterYearTableReader(baseRun.getWaterYearTable()).read().get(0);
+		Map<EpptScenarioRun, WaterYearIndex> waterYearIndecies = new HashMap<>();
+		waterYearIndecies.put(baseRun, waterYearIndex);
 		WaterYearPeriod longTermPeriod = new WaterYearPeriod("Long Term");
 		WaterYearPeriodRange longTermRange = new WaterYearPeriodRange(longTermPeriod, new WaterYearType(1930, longTermPeriod),
 				new WaterYearType(1999, longTermPeriod));
@@ -121,7 +123,7 @@ public class TestStandardSummaryWriter
 		List<String> disabledStandardSummaryModules = new ArrayList<>();
 		CommonPeriodFilter commonPeriodFilter = new CommonPeriodFilter(LocalDateTime.of(1950, Month.JULY, 1, 0, 0),
 				LocalDateTime.of(1999, Month.JULY, 1, 0, 0));
-		SummaryReportParameters reportParameters = new SummaryReportParameters(waterYearDefinition, waterYearIndex, longTermRange, waterYearPeriodRanges, PercentDiffStyle.FULL, disabledStandardSummaryModules,
+		SummaryReportParameters reportParameters = new SummaryReportParameters(waterYearDefinition, waterYearIndecies, longTermRange, waterYearPeriodRanges, PercentDiffStyle.FULL, disabledStandardSummaryModules,
 				commonPeriodFilter, new DssCache());
 		Path imagePath = Constant.QAQC_IMAGE_PATH;
 		imagePath.toFile().delete();

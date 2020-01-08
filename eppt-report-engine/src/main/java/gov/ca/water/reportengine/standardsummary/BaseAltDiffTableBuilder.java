@@ -82,10 +82,7 @@ class BaseAltDiffTableBuilder extends TableBuilder
 		}
 		List<Element> periodElements = new ArrayList<>();
 		periodElements.add(buildPeriod("Long Term", Collections.singletonList(reportParameters.getLongTermRange()), epptChart));
-		if(reportParameters.getWaterYearIndex() != null)
-		{
-			periodElements.add(buildWaterYearIndex(epptChart));
-		}
+		periodElements.add(buildWaterYearIndex(epptChart));
 		periodElements.addAll(reportParameters.getWaterYearPeriodRanges().entrySet().stream()
 											  .map(e -> buildPeriod(e.getKey().toString(), e.getValue(), epptChart))
 											  .collect(toList()));
@@ -108,9 +105,12 @@ class BaseAltDiffTableBuilder extends TableBuilder
 	private Element buildWaterYearIndex(EpptChart epptChart)
 	{
 		Element retval = getDocument().createElement(PERIOD_TYPE_ELEMENT);
-		retval.setAttribute(PERIOD_TYPE_NAME_ATTRIBUTE, getReportParameters().getWaterYearIndex().toString());
-		List<Element> collect = getReportParameters().getWaterYearIndex().getWaterYearTypes().stream().map(
-				WaterYearType::getWaterYearPeriod).distinct()
+		retval.setAttribute(PERIOD_TYPE_NAME_ATTRIBUTE, getReportParameters().getWaterYearIndex(getBase()).toString());
+		List<Element> collect = getReportParameters().getWaterYearIndex(getBase())
+													 .getWaterYearTypes()
+													 .stream()
+													 .map(WaterYearType::getWaterYearPeriod)
+													 .distinct()
 													 .map(e -> buildSeasonalType(e, epptChart))
 													 .collect(toList());
 		for(int i = 0; i < collect.size(); i++)
@@ -140,10 +140,19 @@ class BaseAltDiffTableBuilder extends TableBuilder
 		Element retval = getDocument().createElement(SEASONAL_TYPE_ELEMENT);
 		retval.setAttribute(SEASONAL_TYPE_NAME_ATTRIBUTE, period.getPeriodName());
 		SummaryReportParameters reportParameters = getReportParameters();
-		PeriodFilter filter = new WaterYearPeriodFilter(period, reportParameters.getWaterYearIndex(), reportParameters.getWaterYearDefinition());
-		AnnualPeriodFilter annualPeriodFilter = new YearlyWaterYearPeriodFilter(period, reportParameters.getWaterYearIndex());
-		appendScenarios(retval, filter, annualPeriodFilter, epptChart);
+		appendScenarios(retval, period, epptChart);
 		return retval;
+	}
+
+	private void appendScenarios(Element retval, WaterYearPeriod waterYearPeriod, EpptChart epptChart)
+	{
+		List<Element> elements = buildScenarios(waterYearPeriod, epptChart);
+		for(int i = 0; i < elements.size(); i++)
+		{
+			Element element = elements.get(i);
+			element.setAttribute(SCENARIO_ORDER_ATTRIBUTE, String.valueOf(i));
+			retval.appendChild(element);
+		}
 	}
 
 	private void appendScenarios(Element retval, PeriodFilter filter, AnnualPeriodFilter annualPeriodFilter, EpptChart epptChart)
@@ -168,7 +177,38 @@ class BaseAltDiffTableBuilder extends TableBuilder
 		return retval;
 	}
 
-	List<Element> buildScenarios(PeriodFilter filter, AnnualPeriodFilter annualPeriodFilter, EpptChart epptChart)
+	private List<Element> buildScenarios(WaterYearPeriod waterYearPeriod, EpptChart epptChart)
+	{
+		SummaryReportParameters reportParameters = getReportParameters();
+		PeriodFilter baseFilter = new WaterYearPeriodFilter(waterYearPeriod, reportParameters.getWaterYearIndex(getBase()),
+				reportParameters.getWaterYearDefinition());
+		AnnualPeriodFilter baseAnnualPeriodFilter = new YearlyWaterYearPeriodFilter(waterYearPeriod,
+				reportParameters.getWaterYearIndex(getBase()));
+		List<Element> retval = new ArrayList<>();
+		EpptScenarioRun base = getBase();
+		int index = 0;
+		Element baseElement = buildScenario(base, BASE_NAME, baseFilter, baseAnnualPeriodFilter, epptChart);
+		baseElement.setAttribute(SCENARIO_ORDER_ATTRIBUTE, String.valueOf(index));
+		index++;
+		retval.add(baseElement);
+		for(EpptScenarioRun alternative : getAlternatives())
+		{
+			PeriodFilter altFilter = new WaterYearPeriodFilter(waterYearPeriod, reportParameters.getWaterYearIndex(alternative),
+					reportParameters.getWaterYearDefinition());
+			AnnualPeriodFilter altAnnualPeriodFilter = new YearlyWaterYearPeriodFilter(waterYearPeriod,
+					reportParameters.getWaterYearIndex(alternative));
+			Element altElement = buildScenario(alternative, ALT_NAME, altFilter, altAnnualPeriodFilter, epptChart);
+			altElement.setAttribute(SCENARIO_ORDER_ATTRIBUTE, String.valueOf(index));
+			index++;
+			retval.add(altElement);
+			Element element = buildScenarioDiff(alternative, waterYearPeriod, epptChart);
+			altElement.setAttribute(SCENARIO_ORDER_ATTRIBUTE, String.valueOf(index));
+			retval.add(element);
+		}
+		return retval;
+	}
+
+	private List<Element> buildScenarios(PeriodFilter filter, AnnualPeriodFilter annualPeriodFilter, EpptChart epptChart)
 	{
 		List<Element> retval = new ArrayList<>();
 		EpptScenarioRun base = getBase();
@@ -190,6 +230,12 @@ class BaseAltDiffTableBuilder extends TableBuilder
 		return retval;
 	}
 
+	private Element buildScenarioDiff(EpptScenarioRun alternative, WaterYearPeriod waterYearPeriod, EpptChart epptChart)
+	{
+		Function<ChartComponent, Element> valueFunction = v -> buildDiffValueForChart(alternative, v, waterYearPeriod);
+		return buildScenarioElement(DIFF_NAME, epptChart, valueFunction);
+	}
+
 	private Element buildScenarioDiff(EpptScenarioRun alternative, PeriodFilter filter, AnnualPeriodFilter annualPeriodFilter, EpptChart epptChart)
 	{
 		Function<ChartComponent, Element> valueFunction = v -> buildDiffValueForChart(alternative, v, filter, annualPeriodFilter);
@@ -208,6 +254,71 @@ class BaseAltDiffTableBuilder extends TableBuilder
 		Element retval = getDocument().createElement(SCENARIO_ELEMENT);
 		retval.setAttribute(SCENARIO_NAME_ATTRIBUTE, name);
 		appendTitles(retval, epptChart, valueFunction);
+		return retval;
+	}
+
+	private Element buildDiffValueForChart(EpptScenarioRun alternative, ChartComponent v, WaterYearPeriod waterYearPeriod)
+	{
+		Element retval = getDocument().createElement(VALUE_ELEMENT);
+		EpptScenarioRun base = getBase();
+		try
+		{
+			SummaryReportParameters reportParameters = getReportParameters();
+			PeriodFilter baseFilter = new WaterYearPeriodFilter(waterYearPeriod, reportParameters.getWaterYearIndex(base),
+					reportParameters.getWaterYearDefinition());
+			AnnualPeriodFilter baseAnnualPeriodFilter = new YearlyWaterYearPeriodFilter(waterYearPeriod,
+					reportParameters.getWaterYearIndex(base));
+			PeriodFilter altFilter = new WaterYearPeriodFilter(waterYearPeriod, reportParameters.getWaterYearIndex(alternative),
+					reportParameters.getWaterYearDefinition());
+			AnnualPeriodFilter altAnnualPeriodFilter = new YearlyWaterYearPeriodFilter(waterYearPeriod,
+					reportParameters.getWaterYearIndex(alternative));
+			JythonValueGenerator baseValueGenerator = createJythonValueGenerator(baseFilter, baseAnnualPeriodFilter, base, v.getFunction());
+			Double baseValue = baseValueGenerator.generateValue();
+			JythonValueGenerator altValueGenerator = createJythonValueGenerator(altFilter, altAnnualPeriodFilter, alternative, v.getFunction());
+			Double altValue = altValueGenerator.generateValue();
+			if(baseValue == null)
+			{
+				getStandardSummaryErrors().addError(LOGGER,
+						"Unable to generate diff value for: " + v + " value is null for scenario: " + base.getName());
+			}
+			else if(altValue == null)
+			{
+				getStandardSummaryErrors().addError(LOGGER,
+						"Unable to generate diff value for: " + v + " value is null for scenario: " + alternative.getName());
+			}
+			else if(!RMAConst.isValidValue(baseValue))
+			{
+				getStandardSummaryErrors().addError(LOGGER,
+						"Unable to generate diff value for: " + v + " value is invalid (" + baseValue + ") for scenario: " + base.getName());
+			}
+			else if(!RMAConst.isValidValue(altValue))
+			{
+				getStandardSummaryErrors().addError(LOGGER,
+						"Unable to generate diff value for: " + v + " value is invalid (" + altValue + ") for scenario: " + alternative.getName());
+			}
+			else
+			{
+				applyPercentDiffStyles(retval, baseValue, altValue);
+				String units = baseValueGenerator.getUnits();
+				if(units == null)
+				{
+					units = altValueGenerator.getUnits();
+				}
+				if(units != null && _units == null)
+				{
+					_units = units;
+				}
+			}
+		}
+		catch(DssMissingRecordException e)
+		{
+			LOGGER.log(Level.FINE, "Missing record, displaying as NR", e);
+			retval.setTextContent(NO_RECORD_TEXT);
+		}
+		catch(EpptReportException e)
+		{
+			logScriptException(LOGGER, v, e);
+		}
 		return retval;
 	}
 

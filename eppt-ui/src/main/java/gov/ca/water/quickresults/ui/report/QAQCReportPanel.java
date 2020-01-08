@@ -511,12 +511,34 @@ public class QAQCReportPanel extends RmaJPanel
 			PercentDiffStyle percentDiffStyle = (PercentDiffStyle) _percentDiffStyle.getSelectedItem();
 			WaterYearDefinition waterYearDefinition = (WaterYearDefinition) _waterYearDefinitionCombo.getSelectedItem();
 			WaterYearIndex waterYearIndex = (WaterYearIndex) _waterYearIndexCombo.getSelectedItem();
+			Map<EpptScenarioRun, WaterYearIndex> waterYearIndecies = new HashMap<>();
+			if(_baseRun != null && waterYearIndex != null)
+			{
+				WaterYearIndex baseIndex = new WaterYearTableReader(_baseRun.getWaterYearTable())
+						.read()
+						.stream()
+						.filter(index -> index.getName().equals(waterYearIndex.getName()))
+						.findAny()
+						.orElseThrow(() -> new IllegalArgumentException("Water Year Index: " + waterYearIndex + " does not exist for: " + _baseRun));
+				waterYearIndecies.put(_baseRun, baseIndex);
+			}
+
+			if(_altRun != null && waterYearIndex != null)
+			{
+				WaterYearIndex altIndex = new WaterYearTableReader(_altRun.getWaterYearTable())
+						.read()
+						.stream()
+						.filter(index -> index.getName().equals(waterYearIndex.getName()))
+						.findAny()
+						.orElseThrow(() -> new IllegalArgumentException("Water Year Index: " + waterYearIndex + " does not exist for: " + _altRun));
+				waterYearIndecies.put(_altRun, altIndex);
+			}
 			List<String> disabledSummaryModules = getDisabledSummaryModules();
 			Date startDate = _startDateChooser.getDate();
 			Date endDate = _endDateChooser.getDate();
 			CommonPeriodFilter commonPeriodFilter = new CommonPeriodFilter(LocalDateTime.ofInstant(startDate.toInstant(), ZoneId.systemDefault()),
 					LocalDateTime.ofInstant(endDate.toInstant(), ZoneId.systemDefault()));
-			SummaryReportParameters summaryReportParameters = new SummaryReportParameters(waterYearDefinition, waterYearIndex,
+			SummaryReportParameters summaryReportParameters = new SummaryReportParameters(waterYearDefinition, waterYearIndecies,
 					longTermRange, waterYearPeriodRanges, percentDiffStyle, disabledSummaryModules, commonPeriodFilter, new DssCache());
 			List<String> disabledReportModules = getDisabledReportModules();
 			ReportParameters reportParameters = new ReportParameters(tolerance, author, title, subtitle, summaryReportParameters,
@@ -524,7 +546,7 @@ public class QAQCReportPanel extends RmaJPanel
 			qaqcReportGenerator.generateQAQCReport(_baseRun, _altRun, reportParameters,
 					pathToWriteOut);
 		}
-		catch(QAQCReportException | RuntimeException | EpptReportException e)
+		catch(QAQCReportException | RuntimeException | EpptReportException | EpptInitializationException e)
 		{
 			if(e.getCause() instanceof InterruptedException)
 			{
