@@ -39,6 +39,7 @@ import gov.ca.water.calgui.EpptInitializationException;
 import gov.ca.water.calgui.bo.DetailedIssue;
 import gov.ca.water.calgui.bo.GUILinksAllModelsBO;
 import gov.ca.water.calgui.bo.WaterYearIndex;
+import gov.ca.water.calgui.busservice.impl.DetailedIssuesReader;
 import gov.ca.water.calgui.project.EpptScenarioRun;
 import gov.ca.water.calgui.scripts.DssCache;
 import gov.ca.water.reportengine.detailedissues.DetailedIssueProcessor;
@@ -100,6 +101,7 @@ public class EPPTReport
 	private final EpptScenarioRun _baseRun;
 	private final ReportParameters _reportParameters;
 	private final List<EpptScenarioRun> _altRuns = new ArrayList<>();
+	private final DssCache _dssCache;
 	private List<Module> _modules;
 
 
@@ -113,7 +115,7 @@ public class EPPTReport
 		_reportParameters = reportParameters;
 		_standardSummaryErrors = standardSummaryErrors;
 		_altRuns.addAll(altRuns);
-		DssCache.getInstance().clearCache();
+		_dssCache = new DssCache();
 	}
 
 	//what about base only vs alt vs alts
@@ -124,6 +126,7 @@ public class EPPTReport
 		{
 			LOGGER.at(Level.INFO).log("============= Starting Report Processor: %s =============", start);
 			validateReportInputs();
+			DetailedIssuesReader.createDetailedIssues();
 			Document doc = createDoc();
 			//create the modules
 			ModuleCreator mc = new ModuleCreator();
@@ -160,6 +163,7 @@ public class EPPTReport
 
 			LOGGER.at(Level.INFO).log("Writing data to XML: %s", _pathToWriteOut);
 			writeXmlFile(doc);
+			_dssCache.clearCache();
 		}
 		catch(RuntimeException | IOException | EpptReportException | ParserConfigurationException | TransformerException | EpptInitializationException e)
 		{
@@ -272,7 +276,7 @@ public class EPPTReport
 	{
 		if(canPrintStandardSummary())
 		{
-			StandardSummaryReader standardSummaryReader = new StandardSummaryReader(Paths.get(SUMMARY_CSV), _standardSummaryErrors);
+			StandardSummaryReader standardSummaryReader = new StandardSummaryReader(Paths.get(SUMMARY_CSV), _standardSummaryErrors, _dssCache);
 			Path imagesDir = _pathToWriteOut.getParent().getParent().resolve("Images");
 			SummaryReportParameters summaryReportParameters = _reportParameters.getSummaryReportParameters();
 			LOGGER.at(Level.INFO).log("Generate Standard Summary Statistic");

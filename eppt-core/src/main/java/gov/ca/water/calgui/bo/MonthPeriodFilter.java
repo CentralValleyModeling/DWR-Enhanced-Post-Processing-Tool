@@ -16,10 +16,6 @@ import java.time.LocalDateTime;
 import java.time.Month;
 import java.util.Map;
 
-import gov.ca.water.calgui.bo.PeriodFilter;
-
-import static java.util.stream.Collectors.toMap;
-
 /**
  * Company: Resource Management Associates
  *

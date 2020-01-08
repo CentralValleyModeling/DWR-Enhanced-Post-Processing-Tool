@@ -80,16 +80,17 @@ class EpptReportingComputer
 	EpptReportingComputed computeCfs(EpptScenarioRun scenarioRun, LocalDate start, LocalDate end) throws EpptInitializationException
 	{
 		DSSGrabber1SvcImpl dssGrabber = buildDssGrabber(scenarioRun, true, start, end);
-		return compute(scenarioRun, dssGrabber, false);
+		return compute(scenarioRun, dssGrabber, false, start, end);
 	}
 
 	EpptReportingComputed computeTaf(EpptScenarioRun scenarioRun, LocalDate start, LocalDate end) throws EpptInitializationException
 	{
 		DSSGrabber1SvcImpl dssGrabber = buildDssGrabber(scenarioRun, false, start, end);
-		return compute(scenarioRun, dssGrabber, true);
+		return compute(scenarioRun, dssGrabber, true, start, end);
 	}
 
-	private EpptReportingComputed compute(EpptScenarioRun scenarioRun, DSSGrabber1SvcImpl dssGrabber, boolean convertTaf)
+	private EpptReportingComputed compute(EpptScenarioRun scenarioRun, DSSGrabber1SvcImpl dssGrabber, boolean convertTaf, LocalDate start,
+										  LocalDate end)
 			throws EpptInitializationException
 	{
 		int offset = (int) TimeUnit.MILLISECONDS.toMinutes(TimeZone.getDefault().getRawOffset());
@@ -106,6 +107,10 @@ class EpptReportingComputer
 			}
 			TimeSeriesContainer tsc = primarySeries[0];
 			units = tsc.getParameterName() + " (" + tsc.getUnits() + ")";
+			if("STORAGE-CHANGE".equalsIgnoreCase(tsc.getParameterName()) && "TAF".equalsIgnoreCase(tsc.getUnits()))
+			{
+				aggregateYearly = true;
+			}
 			for(int i = 0; i < tsc.getNumberValues(); i++)
 			{
 				HecTime hecTime = tsc.getHecTime(i);
@@ -117,6 +122,8 @@ class EpptReportingComputer
 				}
 			}
 		}
+		fullSeries = fullSeries.subMap(start.minusMonths(1).atTime(0, 0), true,
+				end.plusMonths(1).atTime(0, 0), true);
 		NavigableMap<Integer, Double> filteredPeriodYearly = DssReader.filterPeriodYearly(fullSeries, _monthPeriod, aggregateYearly);
 		SortedMap<Month, NavigableMap<Integer, Double>> filteredPeriodMonthly = filterPeriodMonthly(fullSeries);
 		SortedMap<WaterYearPeriod, Double> waterYearPeriodGroupedYearly = groupWaterYearPeriod(scenarioRun, filteredPeriodYearly);
@@ -220,7 +227,7 @@ class EpptReportingComputer
 		dssGrabber.setIsCFS(isCFS);
 		dssGrabber.setScenarioRuns(epptScenarioRun, Collections.emptyList());
 		dssGrabber.setGuiLink(_guiLink);
-		dssGrabber.setDateRange(start, end);
+		dssGrabber.setDateRange(LocalDate.of(1800, 1, 1), LocalDate.of(2200, 1, 1));
 		return dssGrabber;
 	}
 }

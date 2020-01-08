@@ -20,6 +20,7 @@ import java.nio.file.Paths;
 import java.util.List;
 import java.util.Map;
 
+import gov.ca.water.calgui.scripts.DssCache;
 import gov.ca.water.reportengine.EpptReportException;
 import org.junit.jupiter.api.Test;
 
@@ -42,7 +43,7 @@ public class TestStandardSummaryReader
 		URI uri = resource.toURI();
 		Path path = Paths.get(
 				uri);
-		StandardSummaryReader standardSummaryReader = new StandardSummaryReader(path, new StandardSummaryErrors());
+		StandardSummaryReader standardSummaryReader = new StandardSummaryReader(path, new StandardSummaryErrors(), new DssCache());
 		List<String> orderedChartIds = standardSummaryReader.getOrderedChartIds();
 		Map<String, EpptChart> stringEpptChartMap = standardSummaryReader.readLines();
 		assertEquals(170, stringEpptChartMap.size());

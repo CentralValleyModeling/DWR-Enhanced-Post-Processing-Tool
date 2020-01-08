@@ -13,16 +13,14 @@
 package gov.ca.water.reportengine.standardsummary;
 
 import java.util.List;
-import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.script.ScriptException;
 
+import gov.ca.water.calgui.bo.AnnualPeriodFilter;
+import gov.ca.water.calgui.bo.MonthPeriodFilter;
 import gov.ca.water.calgui.bo.PeriodFilter;
-import gov.ca.water.calgui.bo.WaterYearDefinition;
 import gov.ca.water.calgui.bo.WaterYearIndex;
-import gov.ca.water.calgui.bo.WaterYearPeriod;
-import gov.ca.water.calgui.bo.WaterYearPeriodRange;
 import gov.ca.water.calgui.project.EpptScenarioRun;
+import gov.ca.water.calgui.scripts.DssCache;
 import gov.ca.water.reportengine.EpptReportException;
 import gov.ca.water.reportengine.jython.JythonValueGenerator;
 import org.w3c.dom.Document;
@@ -69,9 +67,7 @@ abstract class StandardSummaryChartBuilder
 	static final String COMPONENT_NAME_ATTRIBUTE = "component-name";
 	static final String ROW_LABEL_ELEMENT = "row-label";
 	static final String VALUE_ELEMENT = "value";
-	static final String VALUE_ORDER_ATTRIBUTE = "value-order";
 	static final String VALUE_FULL_TEXT_ATTRIBUTE = "value-full-text";
-	static final String VALUE_PERCENT_TEXT_ATTRIBUTE = "value-percent-text";
 	static final String COMPARISON_ELEMENT = "less-than-greater-than-equal-to";
 	static final String COMPARISON_ORDER_ATTRIBUTE = "less-greater-equal-order";
 	static final String COMPARISON_NAME_ATTRIBUTE = "less-greater-equal-label";
@@ -127,52 +123,36 @@ abstract class StandardSummaryChartBuilder
 		return _reportParameters;
 	}
 
-	JythonValueGenerator createJythonValueGenerator(PeriodFilter filter, EpptScenarioRun epptScenarioRun, String function) throws EpptReportException
+	JythonValueGenerator createJythonValueGenerator(PeriodFilter filter, AnnualPeriodFilter annualPeriodFilter,
+													EpptScenarioRun epptScenarioRun, String function)
 	{
-		try
-		{
-			return new JythonValueGenerator(filter, epptScenarioRun, function, _reportParameters.getCommonPeriodFilter());
-		}
-		catch(ScriptException e)
-		{
-			throw new EpptReportException("Error initializing Jython script runner", e);
-		}
+		return new JythonValueGenerator(filter, annualPeriodFilter, epptScenarioRun, function, _reportParameters.getCommonPeriodFilter(),
+				_reportParameters.getWaterYearDefinition(), _reportParameters.getDssCache());
 	}
 
-	JythonValueGenerator createJythonValueGenerator(EpptScenarioRun epptScenarioRun, String function) throws EpptReportException
+	JythonValueGenerator createJythonValueGenerator(MonthPeriodFilter monthPeriodFilter,
+													EpptScenarioRun epptScenarioRun, String function)
 	{
-		try
-		{
-			return new JythonValueGenerator(epptScenarioRun, function, _reportParameters.getCommonPeriodFilter());
-		}
-		catch(ScriptException e)
-		{
-			throw new EpptReportException("Error initializing Jython script runner", e);
-		}
+		return new JythonValueGenerator(monthPeriodFilter, epptScenarioRun, function, _reportParameters.getCommonPeriodFilter(),
+				_reportParameters.getWaterYearDefinition(), _reportParameters.getDssCache());
 	}
 
-	JythonValueGenerator createJythonValueGenerator(EpptScenarioRun epptScenarioRun, String function, WaterYearIndex waterYearIndex) throws EpptReportException
+	JythonValueGenerator createJythonValueGenerator(EpptScenarioRun epptScenarioRun, String function)
 	{
-		try
-		{
-			return new JythonValueGenerator(epptScenarioRun, function, _reportParameters.getCommonPeriodFilter(), waterYearIndex);
-		}
-		catch(ScriptException e)
-		{
-			throw new EpptReportException("Error initializing Jython script runner", e);
-		}
+		return new JythonValueGenerator(epptScenarioRun, function, _reportParameters.getCommonPeriodFilter(),
+				_reportParameters.getWaterYearDefinition(), _reportParameters.getDssCache());
 	}
 
-	JythonValueGenerator createJythonValueGenerator(EpptScenarioRun epptScenarioRun, String function, int comparisonValue) throws EpptReportException
+	JythonValueGenerator createJythonValueGenerator(EpptScenarioRun epptScenarioRun, String function, WaterYearIndex waterYearIndex)
 	{
-		try
-		{
-			return new JythonValueGenerator(epptScenarioRun, function, _reportParameters.getCommonPeriodFilter(), comparisonValue);
-		}
-		catch(ScriptException e)
-		{
-			throw new EpptReportException("Error initializing Jython script runner", e);
-		}
+		return new JythonValueGenerator(epptScenarioRun, function, _reportParameters.getCommonPeriodFilter(), waterYearIndex,
+				_reportParameters.getWaterYearDefinition(), _reportParameters.getDssCache());
+	}
+
+	JythonValueGenerator createJythonValueGenerator(EpptScenarioRun epptScenarioRun, String function, int comparisonValue)
+	{
+		return new JythonValueGenerator(epptScenarioRun, function, _reportParameters.getCommonPeriodFilter(), comparisonValue,
+				_reportParameters.getWaterYearDefinition(), _reportParameters.getDssCache());
 	}
 
 	void logScriptException(Logger logger, ChartComponent v, Exception e)
@@ -183,7 +163,8 @@ abstract class StandardSummaryChartBuilder
 		}
 		else
 		{
-			getStandardSummaryErrors().addError(logger, "Error in Summary configuration - " + v + "\nError running jython script for: " + v.getFunction(), e);
+			getStandardSummaryErrors().addError(logger,
+					"Error in Summary configuration - " + v + "\nError running jython script for: " + v.getFunction(), e);
 		}
 	}
 }
