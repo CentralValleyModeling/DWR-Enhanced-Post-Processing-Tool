@@ -60,7 +60,7 @@ public class JythonValueGenerator
 	public JythonValueGenerator(PeriodFilter periodFilter, EpptScenarioRun base, String function,
 								CommonPeriodFilter commonPeriodFilter, WaterYearDefinition waterYearDefinition)
 	{
-		this(periodFilter, null, base, function, commonPeriodFilter, waterYearDefinition);
+		this(periodFilter, input -> true, base, function, commonPeriodFilter, waterYearDefinition);
 	}
 
 	public JythonValueGenerator(PeriodFilter periodFilter, AnnualPeriodFilter annualPeriodFilter, EpptScenarioRun base, String function,
