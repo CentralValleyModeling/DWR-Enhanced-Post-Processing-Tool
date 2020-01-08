@@ -54,8 +54,6 @@ import org.junit.jupiter.api.Test;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
-import hec.io.D;
-
 import static java.util.stream.Collectors.toList;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -98,7 +96,7 @@ public class TestStandardSummaryWriter
 				Paths.get("Test.pdf"), Paths.get("mainWresl.wresl"), Paths.get(""), null, Color.BLUE);
 
 		WaterYearDefinition waterYearDefinition = WaterYearDefinitionSvc.getWaterYearDefinitionSvc().getDefinitions().get(0);
-		WaterYearIndex waterYearIndex = new WaterYearTableReader(baseRun.getWaterYearTable()).read().get(0);
+		WaterYearIndex waterYearIndex = new WaterYearTableReader(baseRun.getLookupDirectory()).read().get(0);
 		Map<EpptScenarioRun, WaterYearIndex> waterYearIndecies = new HashMap<>();
 		waterYearIndecies.put(baseRun, waterYearIndex);
 		WaterYearPeriod longTermPeriod = new WaterYearPeriod("Long Term");

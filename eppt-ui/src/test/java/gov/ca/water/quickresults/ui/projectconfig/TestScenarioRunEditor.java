@@ -88,7 +88,7 @@ class TestScenarioRunEditor
 		assertEquals(description, newRun.getDescription(), "Description should be set from the fillPanel method");
 		assertEquals(model, newRun.getModel(), "Model should be set with the new model name");
 		assertEquals(outputPath, newRun.getOutputPath(), "Output path should be set with the new scenario path");
-		assertEquals(wreslMain, newRun.getWreslMain(), "WRESL Main should be set with the new scenario path");
+		assertEquals(wreslMain, newRun.getWreslDirectory(), "WRESL Main should be set with the new scenario path");
 		EpptDssContainer newRunDssContainer = newRun.getDssContainer();
 		assertEquals(dvDssFile, newRunDssContainer.getDvDssFile(), "DV FILE should be set with the new scenario path");
 		assertEquals(svDssFile, newRunDssContainer.getSvDssFile(), "SV FILE should be set with the new scenario path");

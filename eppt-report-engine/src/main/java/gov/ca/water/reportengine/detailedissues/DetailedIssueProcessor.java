@@ -78,7 +78,7 @@ public class DetailedIssueProcessor
 				Map<Module, List<DetailedIssueViolation>> modToDIVs = new HashMap<>();
 				Map<SubModule, List<FlagViolation>> subModToViolations = _runsToViolations.get(run);
 				Path nameLookupPath = Paths.get(Constant.WY_TYPES_NAME_LOOKUP);
-				WaterYearTableReader wyTypeReader = new WaterYearTableReader(run.getWaterYearTable());
+				WaterYearTableReader wyTypeReader = new WaterYearTableReader(run.getLookupDirectory());
 				try
 				{
 					List<WaterYearIndex> waterYearTypes = wyTypeReader.read();
@@ -97,7 +97,7 @@ public class DetailedIssueProcessor
 				}
 				catch(EpptInitializationException e)
 				{
-					throw new EpptReportException("Unable to process water year types from: " + run.getWaterYearTable(), e);
+					throw new EpptReportException("Unable to process water year types from: " + run.getLookupDirectory(), e);
 				}
 			}
 			else

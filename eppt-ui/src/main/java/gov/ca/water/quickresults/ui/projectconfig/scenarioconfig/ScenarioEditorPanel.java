@@ -19,6 +19,7 @@ import java.awt.FlowLayout;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
+import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.beans.PropertyChangeEvent;
 import java.io.File;
@@ -29,10 +30,8 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import java.util.stream.Collectors;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
-import javax.swing.event.ChangeEvent;
 import javax.swing.table.TableCellEditor;
 import javax.swing.table.TableCellRenderer;
 
@@ -42,9 +41,9 @@ import gov.ca.water.calgui.constant.Constant;
 import gov.ca.water.calgui.constant.EpptPreferences;
 import gov.ca.water.calgui.project.EpptDssContainer;
 import gov.ca.water.calgui.project.EpptScenarioRun;
-import gov.ca.water.calgui.project.EpptScenarioRunValidator;
 import gov.ca.water.quickresults.ui.projectconfig.ProjectConfigurationPanel;
 import javafx.scene.paint.Color;
+import jdk.nashorn.internal.scripts.JO;
 
 import rma.swing.RmaJColorChooserButton;
 import rma.swing.RmaJComboBox;
@@ -107,8 +106,8 @@ public class ScenarioEditorPanel
 		_wyTableBtn.addActionListener(e -> chooseWaterYearTable());
 		_colorChooserButton.addSampleListener(this::chooseColor);
 		_modelCombobox.addActionListener(e -> modelComboChanged());
-		_waterYearTable.setText(Paths.get(Constant.WRESL_DIR).resolve("CalLite").resolve(Constant.WY_TYPES_TABLE).toString());
-		_wreslTextField.setText(Paths.get(Constant.WRESL_DIR).resolve("CalLite").resolve(Constant.WRESL_MAIN).toString());
+		_waterYearTable.setText(Paths.get(Constant.WRESL_DIR).resolve("CalLite").resolve(Constant.LOOKUP_DIRECTORY).toString());
+		_wreslTextField.setText(Paths.get(Constant.WRESL_DIR).resolve("CalLite").toString());
 		Color plotlyDefaultColor = Constant.getColorNotInList(ProjectConfigurationPanel.getProjectConfigurationPanel()
 																					   .getAllEpptScenarioRuns()
 																					   .stream()
@@ -126,8 +125,8 @@ public class ScenarioEditorPanel
 		Object selectedItem = _modelCombobox.getSelectedItem();
 		if(selectedItem instanceof GUILinksAllModelsBO.Model)
 		{
-			_waterYearTable.setText(Paths.get(Constant.WRESL_DIR).resolve(selectedItem.toString()).resolve(Constant.WY_TYPES_TABLE).toString());
-			_wreslTextField.setText(Paths.get(Constant.WRESL_DIR).resolve(selectedItem.toString()).resolve(Constant.WRESL_MAIN).toString());
+			_waterYearTable.setText(Paths.get(Constant.WRESL_DIR).resolve(selectedItem.toString()).resolve(Constant.LOOKUP_DIRECTORY).toString());
+			_wreslTextField.setText(Paths.get(Constant.WRESL_DIR).resolve(selectedItem.toString()).toString());
 		}
 
 	}
@@ -148,15 +147,23 @@ public class ScenarioEditorPanel
 
 	private void chooseWaterYearTable()
 	{
-		JFileChooser jFileChooser = getFileChooser("Choose Water Year Table File");
-		jFileChooser.setFileFilter(new SimpleFileFilter("TABLE"));
-		jFileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
-		if(JFileChooser.APPROVE_OPTION == jFileChooser.showOpenDialog(SwingUtilities.windowForComponent($$$getRootComponent$$$())))
+		Window window = SwingUtilities.windowForComponent($$$getRootComponent$$$());
+		JFileChooser jFileChooser = getFileChooser("Select Lookup Directory");
+		jFileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+		if(JFileChooser.APPROVE_OPTION == jFileChooser.showOpenDialog(window))
 		{
 			File selectedFile = jFileChooser.getSelectedFile();
 			if(selectedFile != null)
 			{
-				_waterYearTable.setText(selectedFile.toString());
+				if(selectedFile.toPath().resolve(Constant.WY_TYPES_TABLE).toFile().exists())
+				{
+					_waterYearTable.setText(selectedFile.toString());
+				}
+				else
+				{
+					JOptionPane.showMessageDialog(window, "Selected directory must contain a file named: " + Constant.WY_TYPES_TABLE,
+							"Invalid Lookup Directory", JOptionPane.WARNING_MESSAGE);
+				}
 			}
 		}
 	}
@@ -415,15 +422,23 @@ public class ScenarioEditorPanel
 
 	private void selectWreslMain(ActionEvent actionEvent)
 	{
-		JFileChooser jFileChooser = getFileChooser("Select WRESL Main");
-		jFileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
-		jFileChooser.setFileFilter(new SimpleFileFilter("WRESL"));
-		if(JFileChooser.APPROVE_OPTION == jFileChooser.showDialog(SwingUtilities.windowForComponent($$$getRootComponent$$$()), "Select"))
+		Window window = SwingUtilities.windowForComponent($$$getRootComponent$$$());
+		JFileChooser jFileChooser = getFileChooser("Select WRESL Directory");
+		jFileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+		if(JFileChooser.APPROVE_OPTION == jFileChooser.showDialog(window, "Select"))
 		{
 			File selectedFile = jFileChooser.getSelectedFile();
 			if(selectedFile != null)
 			{
-				_wreslTextField.setText(selectedFile.toString());
+				if(selectedFile.toPath().resolve(Constant.WRESL_MAIN).toFile().exists())
+				{
+					_wreslTextField.setText(selectedFile.toString());
+				}
+				else
+				{
+					JOptionPane.showMessageDialog(window, "Selected directory must contain a file named: " + Constant.WRESL_MAIN,
+							"Invalid WRESL Directory", JOptionPane.WARNING_MESSAGE);
+				}
 			}
 		}
 	}
@@ -526,14 +541,14 @@ public class ScenarioEditorPanel
 		{
 			_outputTextField.setText(outputPath.toString());
 		}
-		Path wreslMain = scenarioRun.getWreslMain();
+		Path wreslMain = scenarioRun.getWreslDirectory();
 		if(wreslMain != null)
 		{
 			_wreslTextField.setText(wreslMain.toString());
 		}
 		EpptDssContainer dssContainer = scenarioRun.getDssContainer();
 		_scenarioDssTableModel.fillModel(dssContainer);
-		_waterYearTable.setText(scenarioRun.getWaterYearTable().toString());
+		_waterYearTable.setText(scenarioRun.getLookupDirectory().toString());
 		String hex = Constant.colorToHex(scenarioRun.getColor());
 		_colorHexTextField.setText(hex);
 		java.awt.Color decode = java.awt.Color.decode(hex.substring(0, 7));

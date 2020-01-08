@@ -15,6 +15,7 @@ package gov.ca.water.quickresults.ui.projectconfig.scenariotable;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
@@ -185,6 +186,10 @@ public class ScenarioTablePanel extends JFXPanel
 
 	public Collection<? extends EpptScenarioRun> getAllScenarioRuns()
 	{
+		if(_scenarioTableModel == null)
+		{
+			return Collections.emptyList();
+		}
 		return _scenarioTableModel.getAllScenarioRuns();
 	}
 
@@ -266,8 +271,8 @@ public class ScenarioTablePanel extends JFXPanel
 				scenarioRun.getDescription(),
 				scenarioRun.getModel(),
 				makeRelativeToNewProject(scenarioRun.getOutputPath(), newProjectPath, oldProjectPath),
-				makeRelativeToNewProject(scenarioRun.getWreslMain(), newProjectPath, oldProjectPath),
-				makeRelativeToNewProject(scenarioRun.getWaterYearTable(), newProjectPath, oldProjectPath),
+				makeRelativeToNewProject(scenarioRun.getWreslDirectory(), newProjectPath, oldProjectPath),
+				makeRelativeToNewProject(scenarioRun.getLookupDirectory(), newProjectPath, oldProjectPath),
 				newDssContainer,
 				scenarioRun.getColor());
 	}

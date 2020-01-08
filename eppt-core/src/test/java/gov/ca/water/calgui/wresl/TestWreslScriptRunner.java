@@ -23,6 +23,7 @@ import java.util.List;
 import gov.ca.water.calgui.EpptInitializationException;
 import gov.ca.water.calgui.bo.GUILinksAllModelsBO;
 import gov.ca.water.calgui.busservice.impl.GuiLinksSeedDataSvcImpl;
+import gov.ca.water.calgui.constant.Constant;
 import gov.ca.water.calgui.project.EpptDssContainer;
 import gov.ca.water.calgui.project.EpptScenarioRun;
 import gov.ca.water.calgui.project.NamedDssPath;
@@ -59,7 +60,7 @@ public class TestWreslScriptRunner
 		String description = "Unit test runner";
 		GUILinksAllModelsBO.Model model = GUILinksAllModelsBO.Model.findModel("CalSim2");
 		Path outputPath = Paths.get("");
-		Path wreslMain  = new File(
+		Path wreslMain = new File(
 				TestWreslScriptRunner.class.getClassLoader().getResource("mainControl.wresl").getFile()).toPath();
 		Path dvPath = new File(
 				TestWreslScriptRunner.class.getClassLoader().getResource("SampleDV_Base.dss").getFile()).toPath();
@@ -74,7 +75,7 @@ public class TestWreslScriptRunner
 		NamedDssPath svDssFile = new NamedDssPath(svPath, "SV", "CALSIM", "1MON", "");
 		List<NamedDssPath> extraDssFiles = Collections.emptyList();
 		EpptDssContainer dssContainer = new EpptDssContainer(dvDssFile, svDssFile, ivDssFile, dtsDssFile, extraDssFiles);
-		EPPT_SCENARIO_RUN = new EpptScenarioRun(name, description, model, outputPath,Paths.get("table"),
+		EPPT_SCENARIO_RUN = new EpptScenarioRun(name, description, model, outputPath, Paths.get("table"),
 				wreslMain, dssContainer, Color.BLUE);
 		EPPT_SCENARIO_RUN_NOOP = new EpptScenarioRun(name, description, model, outputPath, Paths.get("table"),
 				wreslMain, dssContainer, Color.PINK);
@@ -89,20 +90,22 @@ public class TestWreslScriptRunner
 
 			LocalDate start = LocalDate.ofYearDay(1922, 3);
 			LocalDate end = LocalDate.ofYearDay(2000, 3);
-			WreslScriptRunner wreslScriptRunner = new WreslScriptRunner(EPPT_SCENARIO_RUN_NOOP, new ProcessOutputConsumer()
-			{
-				@Override
-				public void runStarted(EpptScenarioRun scenarioRun, Process process)
-				{
+			WreslScriptRunner wreslScriptRunner = new WreslScriptRunner(EPPT_SCENARIO_RUN_NOOP,
+					EPPT_SCENARIO_RUN_NOOP.getWreslDirectory().resolve(Constant.WRESL_MAIN),
+					new ProcessOutputConsumer()
+					{
+						@Override
+						public void runStarted(EpptScenarioRun scenarioRun, Process process)
+						{
 
-				}
+						}
 
-				@Override
-				public void runFinished(Process process)
-				{
+						@Override
+						public void runFinished(Process process)
+						{
 
-				}
-			});
+						}
+					});
 			wreslScriptRunner.run(start, end);
 		}
 		catch(WreslScriptException ex)
@@ -118,7 +121,7 @@ public class TestWreslScriptRunner
 		{
 			LocalDate start = LocalDate.ofYearDay(1922, 3);
 			LocalDate end = LocalDate.ofYearDay(2000, 3);
-			Path write = new WreslConfigWriter(EPPT_SCENARIO_RUN_NOOP)
+			Path write = new WreslConfigWriter(EPPT_SCENARIO_RUN_NOOP, EPPT_SCENARIO_RUN_NOOP.getWreslDirectory().resolve(Constant.WRESL_MAIN))
 					.withStartDate(start)
 					.withEndDate(end)
 					.write();
