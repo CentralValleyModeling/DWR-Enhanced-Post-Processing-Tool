@@ -55,14 +55,7 @@ public class DetailedIssuesReader
 
 	public static void createDetailedIssues() throws EpptInitializationException
 	{
-		if(instance == null)
-		{
-			instance = new DetailedIssuesReader(Constant.DETAILS_CSV);
-		}
-		else
-		{
-			throw new EpptInitializationException("Detailed Issues Reader already initialized!");
-		}
+		instance = new DetailedIssuesReader(Constant.DETAILS_CSV);
 	}
 
 	public List<DetailedIssue> getDetailedIssues()

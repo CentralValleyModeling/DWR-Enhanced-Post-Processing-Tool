@@ -39,6 +39,7 @@ import gov.ca.water.calgui.EpptInitializationException;
 import gov.ca.water.calgui.bo.DetailedIssue;
 import gov.ca.water.calgui.bo.GUILinksAllModelsBO;
 import gov.ca.water.calgui.bo.WaterYearIndex;
+import gov.ca.water.calgui.busservice.impl.DetailedIssuesReader;
 import gov.ca.water.calgui.project.EpptScenarioRun;
 import gov.ca.water.calgui.scripts.DssCache;
 import gov.ca.water.reportengine.detailedissues.DetailedIssueProcessor;
@@ -125,6 +126,7 @@ public class EPPTReport
 		{
 			LOGGER.at(Level.INFO).log("============= Starting Report Processor: %s =============", start);
 			validateReportInputs();
+			DetailedIssuesReader.createDetailedIssues();
 			Document doc = createDoc();
 			//create the modules
 			ModuleCreator mc = new ModuleCreator();
