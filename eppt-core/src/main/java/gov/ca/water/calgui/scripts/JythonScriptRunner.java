@@ -17,7 +17,6 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Stream;
 import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
@@ -47,27 +46,18 @@ public class JythonScriptRunner
 	private static final ScriptEngine PYTHON_ENGINE = new ScriptEngineManager().getEngineByName("python");
 	private final EpptScenarioRun _epptScenarioRun;
 	private final WaterYearDefinition _waterYearDefinition;
+	private final DssCache _dssCache;
 	private static final FluentLogger LOGGER = FluentLogger.forEnclosingClass();
-
-	static
-	{
-		try
-		{
-			initializeScriptDirectory();
-		}
-		catch(Throwable e)
-		{
-			LOGGER.atSevere().withCause(e).log("Unable to initialize utility scripts");
-		}
-	}
 
 	private DssReader _dssReader;
 
-	public JythonScriptRunner(EpptScenarioRun epptScenarioRun, CommonPeriodFilter commonPeriodFilter, WaterYearDefinition waterYearDefinition)
+	public JythonScriptRunner(EpptScenarioRun epptScenarioRun, CommonPeriodFilter commonPeriodFilter,
+							  WaterYearDefinition waterYearDefinition, DssCache dssCache)
 	{
 
 		_epptScenarioRun = epptScenarioRun;
 		_waterYearDefinition = waterYearDefinition;
+		_dssCache = dssCache;
 		if(PYTHON_ENGINE == null)
 		{
 			throw new IllegalArgumentException("Unable to find jython engine");
@@ -96,7 +86,7 @@ public class JythonScriptRunner
 
 	private void initializeGlobalVariables(CommonPeriodFilter commonPeriodFilter)
 	{
-		_dssReader = new DssReader(_epptScenarioRun, _waterYearDefinition);
+		_dssReader = new DssReader(_epptScenarioRun, _waterYearDefinition, _dssCache);
 		TitleReader titleReader = new TitleReader(_epptScenarioRun);
 		PYTHON_ENGINE.put("dssReader", _dssReader);
 		PYTHON_ENGINE.put("titleReader", titleReader);
@@ -135,7 +125,7 @@ public class JythonScriptRunner
 		PYTHON_ENGINE.put("comparisonValue", comparisonValue);
 	}
 
-	public void setWaterYearType(WaterYearPeriod waterYearType)
+	void setWaterYearType(WaterYearPeriod waterYearType)
 	{
 		PYTHON_ENGINE.put("waterYearType", waterYearType);
 	}

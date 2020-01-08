@@ -48,10 +48,13 @@ import gov.ca.water.calgui.busservice.impl.WaterYearDefinitionSvc;
 import gov.ca.water.calgui.busservice.impl.WaterYearTableReader;
 import gov.ca.water.calgui.constant.Constant;
 import gov.ca.water.calgui.project.EpptScenarioRun;
+import gov.ca.water.calgui.scripts.DssCache;
 import javafx.scene.paint.Color;
 import org.junit.jupiter.api.Test;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
+
+import hec.io.D;
 
 import static java.util.stream.Collectors.toList;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -78,7 +81,7 @@ public class TestStandardSummaryWriter
 		assertNotNull(resource,"Standard Summary Statistics configuration file must exist");
 		URI uri = resource.toURI();
 		Path path = Paths.get(uri);
-		StandardSummaryReader standardSummaryReader = new StandardSummaryReader(path, new StandardSummaryErrors());
+		StandardSummaryReader standardSummaryReader = new StandardSummaryReader(path, new StandardSummaryErrors(), new DssCache());
 		List<String> orderedChartIds = standardSummaryReader.getOrderedChartIds();
 		Map<String, EpptChart> stringEpptChartMap = standardSummaryReader.readLines();
 		List<EpptChart> collect = orderedChartIds.stream()
@@ -119,7 +122,7 @@ public class TestStandardSummaryWriter
 		CommonPeriodFilter commonPeriodFilter = new CommonPeriodFilter(LocalDateTime.of(1950, Month.JULY, 1, 0, 0),
 				LocalDateTime.of(1999, Month.JULY, 1, 0, 0));
 		SummaryReportParameters reportParameters = new SummaryReportParameters(waterYearDefinition, waterYearIndex, longTermRange, waterYearPeriodRanges, PercentDiffStyle.FULL, disabledStandardSummaryModules,
-				commonPeriodFilter);
+				commonPeriodFilter, new DssCache());
 		Path imagePath = Constant.QAQC_IMAGE_PATH;
 		imagePath.toFile().delete();
 		StandardSummaryWriter standardSummaryWriter = new StandardSummaryWriter(document, baseRun, Collections.singletonList(altRun),

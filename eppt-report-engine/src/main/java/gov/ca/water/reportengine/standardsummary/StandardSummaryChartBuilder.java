@@ -20,6 +20,7 @@ import gov.ca.water.calgui.bo.MonthPeriodFilter;
 import gov.ca.water.calgui.bo.PeriodFilter;
 import gov.ca.water.calgui.bo.WaterYearIndex;
 import gov.ca.water.calgui.project.EpptScenarioRun;
+import gov.ca.water.calgui.scripts.DssCache;
 import gov.ca.water.reportengine.EpptReportException;
 import gov.ca.water.reportengine.jython.JythonValueGenerator;
 import org.w3c.dom.Document;
@@ -126,32 +127,32 @@ abstract class StandardSummaryChartBuilder
 													EpptScenarioRun epptScenarioRun, String function)
 	{
 		return new JythonValueGenerator(filter, annualPeriodFilter, epptScenarioRun, function, _reportParameters.getCommonPeriodFilter(),
-				_reportParameters.getWaterYearDefinition());
+				_reportParameters.getWaterYearDefinition(), _reportParameters.getDssCache());
 	}
 
 	JythonValueGenerator createJythonValueGenerator(MonthPeriodFilter monthPeriodFilter,
 													EpptScenarioRun epptScenarioRun, String function)
 	{
 		return new JythonValueGenerator(monthPeriodFilter, epptScenarioRun, function, _reportParameters.getCommonPeriodFilter(),
-				_reportParameters.getWaterYearDefinition());
+				_reportParameters.getWaterYearDefinition(), _reportParameters.getDssCache());
 	}
 
 	JythonValueGenerator createJythonValueGenerator(EpptScenarioRun epptScenarioRun, String function)
 	{
 		return new JythonValueGenerator(epptScenarioRun, function, _reportParameters.getCommonPeriodFilter(),
-				_reportParameters.getWaterYearDefinition());
+				_reportParameters.getWaterYearDefinition(), _reportParameters.getDssCache());
 	}
 
 	JythonValueGenerator createJythonValueGenerator(EpptScenarioRun epptScenarioRun, String function, WaterYearIndex waterYearIndex)
 	{
 		return new JythonValueGenerator(epptScenarioRun, function, _reportParameters.getCommonPeriodFilter(), waterYearIndex,
-				_reportParameters.getWaterYearDefinition());
+				_reportParameters.getWaterYearDefinition(), _reportParameters.getDssCache());
 	}
 
 	JythonValueGenerator createJythonValueGenerator(EpptScenarioRun epptScenarioRun, String function, int comparisonValue)
 	{
 		return new JythonValueGenerator(epptScenarioRun, function, _reportParameters.getCommonPeriodFilter(), comparisonValue,
-				_reportParameters.getWaterYearDefinition());
+				_reportParameters.getWaterYearDefinition(), _reportParameters.getDssCache());
 	}
 
 	void logScriptException(Logger logger, ChartComponent v, Exception e)

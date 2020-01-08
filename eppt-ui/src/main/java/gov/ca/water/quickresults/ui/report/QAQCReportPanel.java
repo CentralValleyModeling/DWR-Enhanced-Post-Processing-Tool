@@ -66,6 +66,7 @@ import gov.ca.water.calgui.busservice.impl.WaterYearDefinitionSvc;
 import gov.ca.water.calgui.busservice.impl.WaterYearTableReader;
 import gov.ca.water.calgui.constant.EpptPreferences;
 import gov.ca.water.calgui.project.EpptScenarioRun;
+import gov.ca.water.calgui.scripts.DssCache;
 import gov.ca.water.calgui.scripts.DssMissingRecordException;
 import gov.ca.water.calgui.scripts.DssReader;
 import gov.ca.water.calgui.wresl.ProcessOutputConsumer;
@@ -516,7 +517,7 @@ public class QAQCReportPanel extends RmaJPanel
 			CommonPeriodFilter commonPeriodFilter = new CommonPeriodFilter(LocalDateTime.ofInstant(startDate.toInstant(), ZoneId.systemDefault()),
 					LocalDateTime.ofInstant(endDate.toInstant(), ZoneId.systemDefault()));
 			SummaryReportParameters summaryReportParameters = new SummaryReportParameters(waterYearDefinition, waterYearIndex,
-					longTermRange, waterYearPeriodRanges, percentDiffStyle, disabledSummaryModules, commonPeriodFilter);
+					longTermRange, waterYearPeriodRanges, percentDiffStyle, disabledSummaryModules, commonPeriodFilter, new DssCache());
 			List<String> disabledReportModules = getDisabledReportModules();
 			ReportParameters reportParameters = new ReportParameters(tolerance, author, title, subtitle, summaryReportParameters,
 					disabledReportModules, true, true);
@@ -564,7 +565,7 @@ public class QAQCReportPanel extends RmaJPanel
 
 	private List<JCheckBox> buildStandardSummaryModules()
 	{
-		StandardSummaryReader reader = new StandardSummaryReader(Paths.get(EPPTReport.SUMMARY_CSV), new StandardSummaryErrors());
+		StandardSummaryReader reader = new StandardSummaryReader(Paths.get(EPPTReport.SUMMARY_CSV), new StandardSummaryErrors(), new DssCache());
 		try
 		{
 			return reader.getModules()
@@ -1168,7 +1169,7 @@ public class QAQCReportPanel extends RmaJPanel
 		try
 		{
 			WaterYearDefinition selectedItem = (WaterYearDefinition) _waterYearDefinitionCombo.getSelectedItem();
-			guiLinkData = new DssReader(baseRun, selectedItem).getGuiLinkData(102);
+			guiLinkData = new DssReader(baseRun, selectedItem, new DssCache()).getGuiLinkData(102);
 		}
 		catch(DssMissingRecordException e)
 		{
@@ -1191,7 +1192,7 @@ public class QAQCReportPanel extends RmaJPanel
 		WaterYearDefinition selectedItem = (WaterYearDefinition) _waterYearDefinitionCombo.getSelectedItem();
 		try
 		{
-			guiLinkData = new DssReader(baseRun, selectedItem).getGuiLinkData(102);
+			guiLinkData = new DssReader(baseRun, selectedItem, new DssCache()).getGuiLinkData(102);
 		}
 		catch(DssMissingRecordException e)
 		{
