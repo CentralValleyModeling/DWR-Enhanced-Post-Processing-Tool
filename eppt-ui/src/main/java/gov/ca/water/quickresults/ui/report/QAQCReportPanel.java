@@ -84,6 +84,7 @@ import gov.ca.water.reportengine.standardsummary.PercentDiffStyle;
 import gov.ca.water.reportengine.standardsummary.StandardSummaryErrors;
 import gov.ca.water.reportengine.standardsummary.StandardSummaryReader;
 import gov.ca.water.reportengine.standardsummary.SummaryReportParameters;
+import org.apache.commons.io.FileUtils;
 
 import hec.heclib.dss.HecDSSFileAccess;
 import rma.swing.RmaJDateTimeField;
@@ -1187,12 +1188,24 @@ public class QAQCReportPanel extends RmaJPanel
 					scenarioWreslFiles = walk.filter(p -> !p.startsWith(scenarioWreslDirectory.resolve(Constant.LOOKUP_DIRECTORY)))
 											 .collect(toList());
 				}
-				List<Path> installerWreslFiles;
+				List<Path> scenarioLookupFiles;
 				try(Stream<Path> walk = Files.walk(scenarioLookupDirectory))
 				{
-					installerWreslFiles = walk.filter(p -> !p.startsWith(scenarioLookupDirectory.resolve(Constant.LOOKUP_DIRECTORY)))
-											 .collect(toList());
+					scenarioLookupFiles = walk.collect(toList());
 				}
+				List<Path> installerWreslFiles;
+				try(Stream<Path> walk = Files.walk(installerWreslDirectory))
+				{
+					installerWreslFiles = walk.filter(p -> !p.startsWith(installerWreslDirectory.resolve(Constant.LOOKUP_DIRECTORY)))
+											  .collect(toList());
+				}
+				List<Path> installerLookupFiles;
+				try(Stream<Path> walk = Files.walk(installerLookupDirectory))
+				{
+					installerLookupFiles = walk.collect(toList());
+				}
+				show = compareDirectories(scenarioLookupDirectory, scenarioLookupFiles, installerLookupDirectory, installerLookupFiles)
+						|| compareDirectories(scenarioWreslDirectory, scenarioWreslFiles, installerWreslDirectory, installerWreslFiles);
 			}
 			catch(IOException e)
 			{
@@ -1200,6 +1213,29 @@ public class QAQCReportPanel extends RmaJPanel
 			}
 		}
 		jLabel.setVisible(show);
+	}
+
+	private boolean compareDirectories(Path scenarioRoot, List<Path> scenarioDirectoryPaths, Path installerRoot, List<Path> installerDirectoryPaths)
+			throws IOException
+	{
+		boolean differ = installerDirectoryPaths.stream()
+												.map(p -> p.relativize(installerRoot))
+												.map(scenarioRoot::resolve)
+												.anyMatch(p -> !scenarioDirectoryPaths.contains(p));
+		if(!differ)
+		{
+			for(Path installerPath : installerDirectoryPaths)
+			{
+				Path scenarioPath = scenarioRoot.resolve(installerPath.relativize(installerRoot));
+				boolean contentEquals = FileUtils.contentEquals(installerPath.toFile(), scenarioPath.toFile());
+				if(!contentEquals)
+				{
+					differ = true;
+					break;
+				}
+			}
+		}
+		return differ;
 	}
 
 	private void initializeCommonPeriod()

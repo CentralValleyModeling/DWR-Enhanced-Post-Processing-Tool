@@ -208,7 +208,7 @@ class BaseAltDiffTableBuilder extends TableBuilder
 		return retval;
 	}
 
-	private List<Element> buildScenarios(PeriodFilter filter, AnnualPeriodFilter annualPeriodFilter, EpptChart epptChart)
+	List<Element> buildScenarios(PeriodFilter filter, AnnualPeriodFilter annualPeriodFilter, EpptChart epptChart)
 	{
 		List<Element> retval = new ArrayList<>();
 		EpptScenarioRun base = getBase();
