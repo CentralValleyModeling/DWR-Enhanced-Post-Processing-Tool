@@ -451,7 +451,7 @@
 							<textElement textAlignment="Center" verticalAlignment="Middle">
 								<font size="8"/>
 							</textElement>
-							<textFieldExpression><![CDATA[$V{value_MEASURE}==-2147483648?"NR":$V{value_MEASURE}]]></textFieldExpression>
+							<textFieldExpression><![CDATA[$V{value_MEASURE}=="-2147483648"?"NR":$V{value_MEASURE}]]></textFieldExpression>
 						</textField>
 					</cellContents>
 				</crosstabCell>
