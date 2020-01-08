@@ -97,7 +97,8 @@ class ListBuilder extends TableBuilder
 		Element retval = getDocument().createElement("placeholder");
 		try
 		{
-			Object value = createJythonValueGenerator(scenarioRun, v.getFunction(), getReportParameters().getWaterYearIndex()).generateObjectValue();
+			Object value = createJythonValueGenerator(scenarioRun, v.getFunction(), getReportParameters().getWaterYearIndex(scenarioRun))
+					.generateObjectValue();
 
 			if(value == null)
 			{
