@@ -24,14 +24,11 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.NavigableMap;
-import java.util.OptionalDouble;
 import java.util.SortedMap;
 import java.util.TimeZone;
 import java.util.TreeMap;
 import java.util.concurrent.TimeUnit;
-import java.util.logging.Level;
 import java.util.logging.Logger;
-import java.util.stream.DoubleStream;
 
 import gov.ca.water.calgui.EpptInitializationException;
 import gov.ca.water.calgui.bo.GUILinksAllModelsBO;
@@ -41,9 +38,10 @@ import gov.ca.water.calgui.bo.WaterYearIndex;
 import gov.ca.water.calgui.bo.WaterYearPeriod;
 import gov.ca.water.calgui.bo.WaterYearPeriodRange;
 import gov.ca.water.calgui.busservice.impl.DSSGrabber1SvcImpl;
-import gov.ca.water.calgui.busservice.impl.GuiLinksSeedDataSvcImpl;
+import gov.ca.water.calgui.busservice.impl.MonthPeriod;
 import gov.ca.water.calgui.busservice.impl.WaterYearTableReader;
 import gov.ca.water.calgui.project.EpptScenarioRun;
+import gov.ca.water.calgui.scripts.DssReader;
 
 import hec.heclib.util.HecTime;
 import hec.io.TimeSeriesContainer;
@@ -63,12 +61,12 @@ class EpptReportingComputer
 	private static final Logger LOGGER = Logger.getLogger(EpptReportingComputer.class.getName());
 	private final GUILinksAllModelsBO _guiLink;
 	private final TrendStatistics _statistics;
-	private final EpptReportingMonths.MonthPeriod _monthPeriod;
+	private final MonthPeriod _monthPeriod;
 	private final WaterYearDefinition _waterYearDefinition;
 	private final WaterYearIndex _waterYearIndex;
 	private final List<WaterYearIndex> _waterYearIndices;
 
-	EpptReportingComputer(GUILinksAllModelsBO guiLink, TrendStatistics statistics, EpptReportingMonths.MonthPeriod monthPeriod,
+	EpptReportingComputer(GUILinksAllModelsBO guiLink, TrendStatistics statistics, MonthPeriod monthPeriod,
 						  WaterYearDefinition waterYearDefinition, WaterYearIndex waterYearIndex, List<WaterYearIndex> waterYearIndices)
 	{
 		_guiLink = guiLink;
@@ -119,7 +117,7 @@ class EpptReportingComputer
 				}
 			}
 		}
-		NavigableMap<Integer, Double> filteredPeriodYearly = filterPeriodYearly(fullSeries, aggregateYearly);
+		NavigableMap<Integer, Double> filteredPeriodYearly = DssReader.filterPeriodYearly(fullSeries, _monthPeriod, aggregateYearly);
 		SortedMap<Month, NavigableMap<Integer, Double>> filteredPeriodMonthly = filterPeriodMonthly(fullSeries);
 		SortedMap<WaterYearPeriod, Double> waterYearPeriodGroupedYearly = groupWaterYearPeriod(scenarioRun, filteredPeriodYearly);
 		SortedMap<Month, Double> monthly = _statistics.calculateMonthly(filteredPeriodMonthly, _waterYearDefinition,
@@ -130,58 +128,6 @@ class EpptReportingComputer
 				getWaterYearIndicesForScenario(scenarioRun));
 		return new EpptReportingComputed(scenarioRun, fullSeries, filteredPeriodYearly, yearlyStatistic, monthly, waterYearPeriodGroupedYearly,
 				units);
-	}
-
-	private NavigableMap<Integer, Double> filterPeriodYearly(NavigableMap<LocalDateTime, Double> input, boolean aggregateYearly)
-	{
-		NavigableMap<Integer, Double> retval = new TreeMap<>();
-		if(!input.isEmpty())
-		{
-			int year = input.firstKey().getYear();
-			int lastYear = input.lastKey().getYear();
-			while(year <= lastYear)
-			{
-				NavigableMap<LocalDateTime, Double> dataMap = new TreeMap<>();
-				List<YearMonth> yearMonths = _monthPeriod.getYearMonths(year);
-				if(!yearMonths.isEmpty())
-				{
-					for(YearMonth yearMonth : yearMonths)
-					{
-						for(Map.Entry<LocalDateTime, Double> entry : input.entrySet())
-						{
-							LocalDateTime key = entry.getKey();
-							if(key.getMonth() == yearMonth.plusMonths(1).getMonth() && key.getYear() == yearMonth.plusMonths(1).getYear())
-							{
-								LOGGER.log(Level.FINE, "Value for {0}: {1} YearMonth: {2}",
-										new Object[]{year, entry.getValue(), YearMonth.of(key.getYear(), key.getMonth())});
-								dataMap.put(entry.getKey(), entry.getValue());
-								break;
-							}
-						}
-					}
-					Collections.sort(yearMonths);
-					if(dataMap.size() == yearMonths.size())
-					{
-						DoubleStream doubleStream = dataMap.values().stream().mapToDouble(e -> e);
-						OptionalDouble rollup;
-						if(aggregateYearly)
-						{
-							rollup = OptionalDouble.of(doubleStream.sum());
-						}
-						else
-						{
-							rollup = doubleStream.average();
-						}
-						Logger.getLogger(EpptReportingComputer.class.getName())
-							  .log(Level.FINE, "Average for " + year + ": " + rollup.getAsDouble());
-						int yearForOctSepDefinition = year;
-						rollup.ifPresent(a -> retval.put(yearForOctSepDefinition, a));
-					}
-				}
-				year++;
-			}
-		}
-		return retval;
 	}
 
 	private SortedMap<WaterYearPeriod, Double> groupWaterYearPeriod(EpptScenarioRun epptScenarioRun,

@@ -2430,7 +2430,7 @@ public final class AppUtils
 	 */
 	public static TimeWindow createTimeWindowFromString(String str)
 	{
-		int dIndex = str.indexOf("-");
+		int dIndex = str.indexOf('-');
 		if(dIndex < 0)
 		{
 			throw new IllegalArgumentException("Invalid string for time window " + str);

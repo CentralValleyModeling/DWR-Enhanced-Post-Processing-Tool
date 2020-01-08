@@ -177,6 +177,13 @@ abstract class StandardSummaryChartBuilder
 
 	void logScriptException(Logger logger, ChartComponent v, Exception e)
 	{
-		getStandardSummaryErrors().addError(logger, "Error in Summary configuration - " + v + "\nError running jython script for: " + v.getFunction(), e);
+		if(v == null)
+		{
+			getStandardSummaryErrors().addError(logger, "Error in Summary configuration\nError running jython script", e);
+		}
+		else
+		{
+			getStandardSummaryErrors().addError(logger, "Error in Summary configuration - " + v + "\nError running jython script for: " + v.getFunction(), e);
+		}
 	}
 }

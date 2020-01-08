@@ -11,26 +11,23 @@
   -->
 
 <panel id="ProjectConfiguration" name="ProjectConfiguration" layout="BorderLayout">
-	<splitpane id="split_pane" Orientation="JSplitPane.VERTICAL_SPLIT" DividerLocation="350" DividerSize="3">
+	<splitpane id="split_pane" Orientation="JSplitPane.VERTICAL_SPLIT" DividerLocation="275" DividerSize="3">
 		<panel layout="BorderLayout">
-			<panel constraints="BorderLayout.NORTH" layout="GridBagLayout">
-				<label text="Project Name:">
-					<gridbagconstraints insets="5,5,5,5" anchor="GridBagConstraints.WEST" gridx="0" gridy="0"/>
-				</label>
-				<textfield id="prj_name">
-					<gridbagconstraints insets="5,5,5,5" anchor="GridBagConstraints.WEST" weightx="0.8" fill="GridBagConstraints.HORIZONTAL" gridx="1"
-										gridy="0"/>
-				</textfield>
-				<button id="btnOpenProject" name="btnOpenProject" text="Open" ActionCommand="openProject">
-					<gridbagconstraints insets="5,5,5,5" anchor="GridBagConstraints.WEST" gridwidth="1" gridx="2" gridy="0"/>
-				</button>
-				<label text="Description:">
-					<gridbagconstraints insets="5,5,5,5" anchor="GridBagConstraints.WEST" gridx="0" gridy="1"/>
-				</label>
-				<textfield id="prj_desc">
-					<gridbagconstraints insets="5,5,5,5" anchor="GridBagConstraints.WEST" weightx="1.0" fill="GridBagConstraints.HORIZONTAL" gridx="1"
-										gridy="1"/>
-				</textfield>
+			<panel constraints="BorderLayout.NORTH" layout="FlowLayout(FlowLayout.LEFT)">
+				<panel layout="GridBagLayout">
+					<label text="Project Name:">
+						<gridbagconstraints insets="5,5,5,5" anchor="GridBagConstraints.WEST" gridwidth="1" gridx="0" gridy="0"/>
+					</label>
+					<textfield id="prj_name" PreferredSize="255,20">
+						<gridbagconstraints insets="5,5,5,5" anchor="GridBagConstraints.WEST" gridwidth="1" gridx="1" gridy="0"/>
+					</textfield>
+					<label text="Description:">
+						<gridbagconstraints insets="5,5,5,5" anchor="GridBagConstraints.WEST" gridwidth="1" gridx="0" gridy="1"/>
+					</label>
+					<textfield id="prj_desc" PreferredSize="255,20">
+						<gridbagconstraints insets="5,5,5,5" anchor="GridBagConstraints.WEST" gridwidth="1" gridx="1" gridy="1"/>
+					</textfield>
+				</panel>
 			</panel>
 			<panel border="TitledBorder(Scenarios)" constraints="BorderLayout.CENTER" layout="BorderLayout">
 				<panel constraints="BorderLayout.NORTH" layout="FlowLayout(FlowLayout.LEFT)">
@@ -39,7 +36,6 @@
 					<button id="btnCopyScenario" name="btnCopyScenario" text="Copy" ActionCommand="btnCopyScenario" PreferredSize="80,24"/>
 					<button id="btnDelScenario" name="btnDelScenario" text="Clear" ActionCommand="btnDelScenario" PreferredSize="80,24"/>
 					<button id="btnClearScenario" name="btnClearScenario" text="Clear All" ActionCommand="btnClearScenario" PreferredSize="80,24"/>
-
 				</panel>
 				<panel id="ScenarioTree" constraints="BorderLayout.CENTER" preferredsize="410,300" layout="BorderLayout"/>
 				<panel constraints="BorderLayout.SOUTH" layout="BorderLayout">
@@ -61,11 +57,11 @@
 			</panel>
 		</panel>
 		<panel layout="BorderLayout">
-			<scrollpane id="Display" border="null" PreferredSize="410,400" constraints="BorderLayout.CENTER">
+			<scrollpane id="Display" border="null" PreferredSize="410,350" constraints="BorderLayout.CENTER">
 				<panel layout="FlowLayout(FlowLayout.LEFT)">
 					<panel layout="GridBagLayout">
 						<panel layout="BorderLayout" border="TitledBorder(Global Controls)">
-							<gridbagconstraints insets="0,5,5,3" anchor="GridBagConstraints.NORTHWEST" gridx="1" gridy="1" fill="GridBagConstraints.HORIZONTAL"/>
+							<gridbagconstraints insets="0,5,0,3" anchor="GridBagConstraints.NORTHWEST" gridx="1" gridy="1" fill="GridBagConstraints.HORIZONTAL"/>
 							<panel layout="GridBagLayout" constraints="BorderLayout.WEST">
 								<panel layout="GridBagLayout">
 									<gridbagconstraints insets="0,5,5,3" anchor="GridBagConstraints.WEST" gridx="1" gridy="1"/>
@@ -100,7 +96,7 @@
 							</panel>
 						</panel>
 						<panel border="TitledBorder(Quick/Custom Results)" layout="GridBagLayout">
-							<gridbagconstraints insets="0,5,5,3" anchor="GridBagConstraints.NORTHWEST" gridx="1" gridy="2"/>
+							<gridbagconstraints insets="0,5,0,3" anchor="GridBagConstraints.NORTHWEST" gridx="1" gridy="2"/>
 							<panel layout="GridBagLayout">
 								<gridbagconstraints insets="0,0,5,3" anchor="GridBagConstraints.WEST" gridx="1" gridy="4"/>
 								<checkbox name="RepckbTimeSeriesPlot" id="RepckbTimeSeriesPlot" text="Display Time Series Plot" selected="true">

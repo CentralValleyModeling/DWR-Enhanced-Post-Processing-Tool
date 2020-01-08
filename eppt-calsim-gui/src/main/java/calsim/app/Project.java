@@ -812,16 +812,7 @@ public class Project implements Serializable
 	 */
 	public void setTimeWindow(String twstr)
 	{
-		TimeWindow tw = null;
-		try
-		{
-			tw = AppUtils.createTimeWindowFromString(twstr);
-		}
-		catch(Exception e)
-		{
-			throw new RuntimeException("Invalid time window string: " + twstr);
-		}
-		_tw = tw;
+		_tw = AppUtils.createTimeWindowFromString(twstr);
 		_modified = true;
 	}
 

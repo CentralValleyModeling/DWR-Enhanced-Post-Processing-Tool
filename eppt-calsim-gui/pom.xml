@@ -62,6 +62,12 @@
 			<version>1.0</version>
 			<classifier>Wrims_Distribution</classifier>
 		</dependency>
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>4.12</version>
+			<scope>test</scope>
+		</dependency>
 	</dependencies>
 	<repositories>
 		<repository>

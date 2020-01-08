@@ -53,7 +53,7 @@ public class ResetWindowsAction implements ActionListener
 		resetWindowsAction.actionPerformed(e);
 		try
 		{
-			ProjectConfigurationPanel.getProjectConfigurationPanel().resetProjectConfiguration();
+			ProjectConfigurationPanel.getProjectConfigurationPanel().resetQuickState();
 		}
 		catch(Exception ex)
 		{

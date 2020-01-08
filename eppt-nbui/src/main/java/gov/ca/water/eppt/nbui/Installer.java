@@ -33,7 +33,6 @@ import gov.ca.water.calgui.presentation.DisplayHelper;
 import gov.ca.water.calgui.techservice.impl.DialogSvcImpl;
 import gov.ca.water.eppt.nbui.actions.RunWreslScript;
 import gov.ca.water.quickresults.ui.projectconfig.ProjectConfigurationPanel;
-import gov.ca.water.reportengine.jython.JythonScriptBuilder;
 import gov.ca.water.trendreporting.EpptReportingMonths;
 import gov.ca.water.trendreporting.TrendReportingParameters;
 import javafx.application.Platform;

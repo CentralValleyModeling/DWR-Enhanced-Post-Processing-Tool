@@ -257,9 +257,9 @@ public class ScenarioTablePanel extends JFXPanel
 		NamedDssPath dvDssPath = copyDssToNewProjectFolder(newProjectPath, oldProjectPath, oldDssContainer.getDvDssFile());
 		NamedDssPath svDssPath = copyDssToNewProjectFolder(newProjectPath, oldProjectPath, oldDssContainer.getSvDssFile());
 		NamedDssPath dtsDssPath = copyDssToNewProjectFolder(newProjectPath, oldProjectPath, oldDssContainer.getDtsDssFile());
-		EpptDssContainer newDssContainer = new EpptDssContainer(ivDssPath,
-				dvDssPath,
+		EpptDssContainer newDssContainer = new EpptDssContainer(dvDssPath,
 				svDssPath,
+				ivDssPath,
 				dtsDssPath,
 				extra);
 		return new EpptScenarioRun(scenarioRun.getName(),

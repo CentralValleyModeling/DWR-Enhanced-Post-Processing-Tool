@@ -17,6 +17,7 @@ import java.util.List;
 import java.util.Locale;
 
 import gov.ca.water.calgui.bo.GUILinksAllModelsBO;
+import gov.ca.water.calgui.busservice.impl.MonthPeriod;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -37,13 +38,13 @@ class EpptReportingComputedSet
 	private static final String TAF = "taf";
 	private final GUILinksAllModelsBO _guiLink;
 	private final TrendStatistics _statistics;
-	private final EpptReportingMonths.MonthPeriod _monthPeriod;
+	private final MonthPeriod _monthPeriod;
 	private final List<EpptReportingComputed> _epptReportingComputed;
 	private final boolean _taf;
 
 	EpptReportingComputedSet(GUILinksAllModelsBO guiLink, TrendStatistics statistics,
-									EpptReportingMonths.MonthPeriod monthPeriod, boolean taf,
-									List<EpptReportingComputed> epptReportingComputed)
+							 MonthPeriod monthPeriod, boolean taf,
+							 List<EpptReportingComputed> epptReportingComputed)
 	{
 		_guiLink = guiLink;
 		_statistics = statistics;

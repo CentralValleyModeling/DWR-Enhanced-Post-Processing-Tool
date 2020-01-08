@@ -58,7 +58,9 @@ public abstract class EpptScaffold
 		{
 			DialogSvcImpl.installMainFrame(jFrame);
 			jFrame.setLayout(new BorderLayout());
-			jFrame.add(epptPanel, BorderLayout.CENTER);
+			JScrollPane scrollPane = new JScrollPane();
+			scrollPane.setViewportView(epptPanel);
+			jFrame.add(scrollPane, BorderLayout.CENTER);
 //			jFrame.add(buildUiManagerPanel(jFrame), BorderLayout.NORTH);
 			jFrame.pack();
 			jFrame.setVisible(true);
