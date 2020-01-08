@@ -55,3 +55,6 @@ def formatAsString(value, units):
     if units is None:
         units = "N/A"
     return " " + String.format("%.0f", value) + " (" + units + ")"
+
+def join(array):
+    return ",".join(array)
