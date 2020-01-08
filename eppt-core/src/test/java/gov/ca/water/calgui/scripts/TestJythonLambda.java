@@ -777,7 +777,7 @@ class TestJythonLambda
 		DssReader dssReader = new DssReader(scenarioRun, waterYearDefinition, new DssCache());
 		WaterYearDefinition waterYearDefinition = WaterYearDefinitionSvc.getWaterYearDefinitionSvc().getDefinitions().get(0);
 		NavigableMap<LocalDateTime, Double> dtsData = dssReader.getDtsData(237);
-		WaterYearTableReader waterYearTableReader = new WaterYearTableReader(scenarioRun.getWaterYearTable());
+		WaterYearTableReader waterYearTableReader = new WaterYearTableReader(scenarioRun.getLookupDirectory());
 		List<WaterYearIndex> waterYearIndices = waterYearTableReader.read();
 		WaterYearIndex waterYearIndex = waterYearIndices.stream()
 														.filter(p -> p.toString().equalsIgnoreCase("SAC Index"))

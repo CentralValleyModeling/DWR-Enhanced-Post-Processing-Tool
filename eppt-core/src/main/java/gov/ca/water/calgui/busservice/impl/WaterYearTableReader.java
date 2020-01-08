@@ -45,9 +45,9 @@ public class WaterYearTableReader
 	private WaterYearNameLookup _waterYearNameLookupTable;
 
 
-	public WaterYearTableReader(Path waterYearTypeTable)
+	public WaterYearTableReader(Path lookupDirectory)
 	{
-		_waterYearTypeTable = waterYearTypeTable;
+		_waterYearTypeTable = lookupDirectory.resolve(Constant.WY_TYPES_TABLE);
 	}
 
 	public List<WaterYearIndex> read() throws EpptInitializationException

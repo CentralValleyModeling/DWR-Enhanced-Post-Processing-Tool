@@ -62,8 +62,8 @@ class ScenarioRowModel extends ParentRowModel
 		_descriptionProperty = new SimpleObjectProperty<>(scenarioRun.getDescription());
 		_modelProperty = new SimpleObjectProperty<>(scenarioRun.getModel());
 		_outputProperty = new SimpleObjectProperty<>(Objects.toString(scenarioRun.getOutputPath()));
-		_wreslMainProperty = new SimpleObjectProperty<>(Objects.toString(scenarioRun.getWreslMain()));
-		_waterYearTableProperty = new SimpleObjectProperty<>(Objects.toString(scenarioRun.getWaterYearTable()));
+		_wreslMainProperty = new SimpleObjectProperty<>(Objects.toString(scenarioRun.getWreslDirectory()));
+		_waterYearTableProperty = new SimpleObjectProperty<>(Objects.toString(scenarioRun.getLookupDirectory()));
 		_baseProperty = new SimpleObjectProperty<>(scenarioRun.isBaseSelected());
 		_baseProperty.addListener((e, o, n) ->
 		{

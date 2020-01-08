@@ -16,6 +16,7 @@ import java.nio.file.Path;
 import java.util.Objects;
 
 import gov.ca.water.calgui.bo.GUILinksAllModelsBO;
+import gov.ca.water.calgui.constant.Constant;
 import javafx.scene.paint.Color;
 
 /**
@@ -30,8 +31,8 @@ public class EpptScenarioRun
 	private final String _description;
 	private final GUILinksAllModelsBO.Model _model;
 	private final Path _outputPath;
-	private final Path _wreslMain;
-	private final Path _waterYearTable;
+	private final Path _wreslDirectory;
+	private final Path _lookupDirectory;
 	private final EpptDssContainer _dssContainer;
 	private final Color _color;
 	private boolean _baseSelected;
@@ -42,18 +43,26 @@ public class EpptScenarioRun
 	 * @param description  description meta data for
 	 * @param model        model used for scenario run
 	 * @param outputPath   output path for DSS files. Will be used for relative paths to the EpptDssContainer
-	 * @param wreslMain    main file for running WRESL Post Processing Script
+	 * @param wreslDirectory    main file for running WRESL Post Processing Script
 	 * @param dssContainer
 	 */
 	public EpptScenarioRun(String name, String description, GUILinksAllModelsBO.Model model, Path outputPath,
-						   Path wreslMain, Path waterYearTable, EpptDssContainer dssContainer, Color color)
+						   Path wreslDirectory, Path lookupDirectory, EpptDssContainer dssContainer, Color color)
 	{
 		_name = name;
 		_description = description;
 		_model = model;
 		_outputPath = outputPath;
-		_wreslMain = wreslMain;
-		_waterYearTable = waterYearTable;
+		if(!wreslDirectory.toFile().isDirectory())
+		{
+			throw new IllegalArgumentException("WRESL Directory must not be a file");
+		}
+		_wreslDirectory = wreslDirectory;
+		if(!lookupDirectory.toFile().isDirectory())
+		{
+			throw new IllegalArgumentException("Lookup Directory must not be a file");
+		}
+		_lookupDirectory = lookupDirectory;
 		_dssContainer = dssContainer;
 		_color = color;
 	}
@@ -61,28 +70,23 @@ public class EpptScenarioRun
 	/**
 	 * Copy ctor
 	 *
-	 * @param name         name descriptor meta data for scenario run
-	 * @param description  description meta data for
+	 * @param name            name descriptor meta data for scenario run
+	 * @param description     description meta data for
 	 * @param epptScenarioRun scenario run to copy
 	 */
 	public EpptScenarioRun(String name, String description, EpptScenarioRun epptScenarioRun)
 	{
-		_name = name;
-		_description = description;
-		_model = epptScenarioRun.getModel();
-		_outputPath = epptScenarioRun.getOutputPath();
-		_wreslMain = epptScenarioRun.getWreslMain();
-		_waterYearTable = epptScenarioRun.getWaterYearTable();
-		_dssContainer = new EpptDssContainer(epptScenarioRun.getDssContainer());
-		_color = epptScenarioRun.getColor();
+		this(name, description, epptScenarioRun.getModel(), epptScenarioRun.getOutputPath(),
+				epptScenarioRun.getWreslDirectory(), epptScenarioRun.getLookupDirectory(),
+				new EpptDssContainer(epptScenarioRun.getDssContainer()), epptScenarioRun.getColor());
 	}
 
 	/**
 	 * @return path to the main script for running WRESL Post Processor
 	 */
-	public Path getWreslMain()
+	public Path getWreslDirectory()
 	{
-		return _wreslMain;
+		return _wreslDirectory;
 	}
 
 	/**
@@ -144,9 +148,9 @@ public class EpptScenarioRun
 		return getName();
 	}
 
-	public Path getWaterYearTable()
+	public Path getLookupDirectory()
 	{
-		return _waterYearTable;
+		return _lookupDirectory;
 	}
 
 	public Color getColor()
@@ -170,8 +174,8 @@ public class EpptScenarioRun
 				Objects.equals(getDescription(), that.getDescription()) &&
 				Objects.equals(getModel(), that.getModel()) &&
 				Objects.equals(getOutputPath(), that.getOutputPath()) &&
-				Objects.equals(getWreslMain(), that.getWreslMain()) &&
-				Objects.equals(getWaterYearTable(), that.getWaterYearTable()) &&
+				Objects.equals(getWreslDirectory(), that.getWreslDirectory()) &&
+				Objects.equals(getLookupDirectory(), that.getLookupDirectory()) &&
 				Objects.equals(getDssContainer(), that.getDssContainer()) &&
 				Objects.equals(getColor(), that.getColor());
 	}
@@ -179,7 +183,7 @@ public class EpptScenarioRun
 	@Override
 	public int hashCode()
 	{
-		return Objects.hash(getName(), getDescription(), getModel(), getOutputPath(), getWreslMain(), getWaterYearTable(), getDssContainer(),
+		return Objects.hash(getName(), getDescription(), getModel(), getOutputPath(), getWreslDirectory(), getLookupDirectory(), getDssContainer(),
 				getColor());
 	}
 

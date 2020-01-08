@@ -17,6 +17,7 @@ import java.awt.Color;
 import javax.swing.*;
 
 import gov.ca.water.calgui.EpptInitializationException;
+import gov.ca.water.quickresults.ui.report.WreslPanel;
 
 import static org.junit.jupiter.api.Assertions.fail;
 

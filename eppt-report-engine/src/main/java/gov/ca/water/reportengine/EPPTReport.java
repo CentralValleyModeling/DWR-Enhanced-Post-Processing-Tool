@@ -64,7 +64,6 @@ import gov.ca.water.reportengine.standardsummary.StandardSummaryErrors;
 import gov.ca.water.reportengine.standardsummary.StandardSummaryReader;
 import gov.ca.water.reportengine.standardsummary.StandardSummaryWriter;
 import gov.ca.water.reportengine.standardsummary.SummaryReportParameters;
-import org.omg.CORBA.DynAnyPackage.Invalid;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
@@ -347,7 +346,7 @@ public class EPPTReport
 		WaterYearIndex waterYearIndex = _reportParameters.getSummaryReportParameters().getWaterYearIndex(_baseRun);
 		if(waterYearIndex == null)
 		{
-			String message = "Water Year Index is undefined. Ensure that the Base Water Year Table file is defined correctly: " + _baseRun.getWaterYearTable();
+			String message = "Water Year Index is undefined. Ensure that the Base Water Year Table file is defined correctly: " + _baseRun.getLookupDirectory();
 			LOGGER.at(Level.SEVERE).log(message);
 			throw new EpptReportException(message);
 		}
@@ -365,15 +364,15 @@ public class EPPTReport
 	private void checkCorrectFilePaths(EpptScenarioRun run) throws EpptReportException
 	{
 
-		if(run.getWaterYearTable() == null)
+		if(run.getLookupDirectory() == null)
 		{
 			String errorMsg = "Scenario " + run.getName() + ": Water year type table is null";
 			LOGGER.at(Level.SEVERE).log(errorMsg);
 			throw new EpptReportException(errorMsg);
 		}
-		if(!run.getWaterYearTable().toFile().exists())
+		if(!run.getLookupDirectory().toFile().exists())
 		{
-			String errorMsg = "Scenario " + run.getName() + ": Water year type table file could not be found. Path: " + run.getWaterYearTable();
+			String errorMsg = "Scenario " + run.getName() + ": Water year type table file could not be found. Path: " + run.getLookupDirectory();
 			LOGGER.at(Level.SEVERE).log(errorMsg);
 			throw new EpptReportException(errorMsg);
 		}

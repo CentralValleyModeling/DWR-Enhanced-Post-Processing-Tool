@@ -1,5 +1,5 @@
 /*
- * Enhanced Post Processing Tool (EPPT) Copyright (c) 2019.
+ * Enhanced Post Processing Tool (EPPT) Copyright (c) 2020.
  *
  * EPPT is copyrighted by the State of California, Department of Water Resources. It is licensed
  * under the GNU General Public License, version 2. This means it can be
@@ -10,11 +10,13 @@
  * GNU General Public License
  */
 
-package gov.ca.water.quickresults.ui.qaqc;
+package gov.ca.water.quickresults.ui.report;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.FlowLayout;
 import java.awt.GridLayout;
+import java.nio.file.Path;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -79,14 +81,14 @@ public class WreslPanel extends RmaJPanel implements ProcessOutputConsumer
 		}
 		_scenarioPanel = new JPanel();
 		_scenarioPanel.setBorder(new TitledBorder("Run Scenarios"));
-		_scenarioPanel.setLayout(new GridLayout(0, 1));
+		_scenarioPanel.setLayout(new GridLayout(0, 2));
 		List<EpptScenarioRunCheckbox> scenarioRunCheckboxes = scenarioRuns
 				.stream()
 				.map(EpptScenarioRunCheckbox::new)
 				.collect(Collectors.toList());
 		_scenarioRunCheckboxes.clear();
 		_scenarioRunCheckboxes.addAll(scenarioRunCheckboxes);
-		_scenarioRunCheckboxes.forEach(_scenarioPanel::add);
+		_scenarioRunCheckboxes.forEach(this::addScenarioRunCheckboxPanel);
 		add(_scenarioPanel, BorderLayout.NORTH);
 	}
 
@@ -168,7 +170,8 @@ public class WreslPanel extends RmaJPanel implements ProcessOutputConsumer
 		{
 			try
 			{
-				WreslScriptRunner wreslScriptRunner = new WreslScriptRunner(scenarioRun, this);
+				Path wreslMain = QaQcFileUtils.createWreslMain(scenarioRun, false);
+				WreslScriptRunner wreslScriptRunner = new WreslScriptRunner(scenarioRun, wreslMain,this);
 				wreslScriptRunner.run(start, end);
 			}
 			catch(WreslScriptException | RuntimeException e1)
@@ -182,6 +185,15 @@ public class WreslPanel extends RmaJPanel implements ProcessOutputConsumer
 				LOGGER.log(Level.SEVERE, "Error in WRESL Script Run", t);
 			}
 		});
+	}
+
+	private void addScenarioRunCheckboxPanel(EpptScenarioRunCheckbox comp)
+	{
+		EpptScenarioRun scenarioRun = comp.getScenarioRun();
+		_scenarioPanel.add(comp);
+		JButton button = new JButton("Overwrite WRESL Scripts");
+		button.addActionListener(e->QaQcFileUtils.createWreslMain(scenarioRun, true));
+		_scenarioPanel.add(button);
 	}
 
 	private static final class EpptScenarioRunCheckbox extends JCheckBox

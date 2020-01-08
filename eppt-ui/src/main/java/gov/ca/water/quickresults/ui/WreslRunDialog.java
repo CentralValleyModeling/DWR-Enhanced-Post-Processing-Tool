@@ -19,7 +19,7 @@ import java.util.List;
 import javax.swing.*;
 
 import gov.ca.water.calgui.project.EpptScenarioRun;
-import gov.ca.water.quickresults.ui.qaqc.WreslPanel;
+import gov.ca.water.quickresults.ui.report.WreslPanel;
 
 /**
  * Company: Resource Management Associates

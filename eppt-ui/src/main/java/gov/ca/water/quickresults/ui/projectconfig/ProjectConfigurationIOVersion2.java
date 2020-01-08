@@ -1,5 +1,5 @@
 /*
- * Enhanced Post Processing Tool (EPPT) Copyright (c) 2019.
+ * Enhanced Post Processing Tool (EPPT) Copyright (c) 2020.
  *
  * EPPT is copyrighted by the State of California, Department of Water Resources. It is licensed
  * under the GNU General Public License, version 2. This means it can be
@@ -58,7 +58,7 @@ class ProjectConfigurationIOVersion2
 		try(BufferedWriter bufferedWriter = Files.newBufferedWriter(selectedPath))
 		{
 			JSONObject jsonObject = new JSONObject();
-			jsonObject.put(VERSION_KEY, VERSION_2_0);
+			jsonObject.put(VERSION_KEY, getVersion());
 			jsonObject.put(NAME_KEY, name);
 			jsonObject.put(DESCRIPTION_KEY, description);
 			jsonObject.put(CREATION_DATE_KEY, ZonedDateTime.now());
@@ -67,6 +67,11 @@ class ProjectConfigurationIOVersion2
 			jsonObject.put(MONTH_OPTIONS_KEY, writeMonthProperties());
 			jsonObject.write(bufferedWriter, 4, 4);
 		}
+	}
+
+	String getVersion()
+	{
+		return VERSION_2_0;
 	}
 
 	private JSONArray writeSelectedProperties()
@@ -106,7 +111,7 @@ class ProjectConfigurationIOVersion2
 			jsonObject.put(SCENARIO_DESCRIPTION, scenario.getDescription());
 			jsonObject.put(SCENARIO_MODEL, scenario.getModel().toString());
 			jsonObject.put(SCENARIO_OUTPUT_PATH, relativizeToProject(modelOutputPath, selectedPath));
-			jsonObject.put(SCENARIO_WRESL_MAIN, relativizeToInstaller(scenario.getWreslMain()));
+			jsonObject.put(SCENARIO_WRESL_DIR, relativizeToInstaller(scenario.getWreslDirectory()));
 			jsonObject.put(SCENARIO_COLOR_KEY, Constant.colorToHex(scenario.getColor()));
 			EpptDssContainer dssContainer = scenario.getDssContainer();
 			JSONObject dssContainerJson = new JSONObject();
@@ -130,10 +135,10 @@ class ProjectConfigurationIOVersion2
 			{
 				dssContainerJson.put(SCENARIO_DTS_KEY, namedDssDtsJsonObject);
 			}
-			String waterYearTable = relativizeToInstaller(scenario.getWaterYearTable());
+			String waterYearTable = relativizeToInstaller(scenario.getLookupDirectory());
 			if(waterYearTable != null)
 			{
-				jsonObject.put(SCENARIO_WATER_TABLE, waterYearTable);
+				jsonObject.put(SCENARIO_LOOKUP_DIR, waterYearTable);
 			}
 			JSONArray extraDssArray = new JSONArray();
 			dssContainer.getExtraDssFiles().stream()
@@ -200,12 +205,8 @@ class ProjectConfigurationIOVersion2
 			GUILinksAllModelsBO.Model model = GUILinksAllModelsBO.Model.findModel(
 					scenarioJson.getString(SCENARIO_MODEL));
 			Path modelOutputPath = unrelativizeFromProject(scenarioJson.getString(SCENARIO_OUTPUT_PATH), projectPath);
-			Path wreslMain = unrelativizeFromInstaller(scenarioJson.getString(SCENARIO_WRESL_MAIN));
-			Path waterYearTable = Paths.get(Constant.WY_TYPES_TABLE);
-			if(scenarioJson.has(SCENARIO_WATER_TABLE))
-			{
-				waterYearTable = unrelativizeFromInstaller(scenarioJson.getString(SCENARIO_WATER_TABLE));
-			}
+			Path wreslMain = readWreslDirectory(scenarioJson);
+			Path waterYearTable = readLookupDirectory(scenarioJson);
 			Color color = Constant.getPlotlyDefaultColor(i);
 			if(scenarioJson.has(SCENARIO_COLOR_KEY))
 			{
@@ -258,7 +259,37 @@ class ProjectConfigurationIOVersion2
 		return retval;
 	}
 
-	private Path unrelativizeFromInstaller(String path)
+	Path readLookupDirectory(JSONObject scenarioJson)
+	{
+		Path waterYearTable = Paths.get("");
+		if(scenarioJson.has(SCENARIO_WATER_TABLE))
+		{
+			waterYearTable = unrelativizeFromInstaller(scenarioJson.getString(SCENARIO_WATER_TABLE));
+			//Backwards compatibility
+			if(waterYearTable.toFile().isFile())
+			{
+				waterYearTable = waterYearTable.getParent();
+			}
+		}
+		return waterYearTable;
+	}
+
+	Path readWreslDirectory(JSONObject scenarioJson)
+	{
+		Path wreslMain = Paths.get("");
+		if(scenarioJson.has(SCENARIO_WRESL_MAIN))
+		{
+			wreslMain = unrelativizeFromInstaller(scenarioJson.getString(SCENARIO_WRESL_MAIN));
+			//Backwards compatibility
+			if(wreslMain.toFile().isFile())
+			{
+				wreslMain = wreslMain.getParent();
+			}
+		}
+		return wreslMain;
+	}
+
+	Path unrelativizeFromInstaller(String path)
 	{
 		if(path.startsWith(RELATIVE_TO_INSTALLER))
 		{

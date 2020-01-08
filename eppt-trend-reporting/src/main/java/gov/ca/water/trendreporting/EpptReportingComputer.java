@@ -205,7 +205,7 @@ class EpptReportingComputer
 
 	private WaterYearIndex getWaterYearIndexForScenario(EpptScenarioRun epptScenarioRun) throws EpptInitializationException
 	{
-		WaterYearTableReader tableReader = new WaterYearTableReader(epptScenarioRun.getWaterYearTable());
+		WaterYearTableReader tableReader = new WaterYearTableReader(epptScenarioRun.getLookupDirectory());
 		List<WaterYearIndex> read = tableReader.read();
 		return read.stream()
 				   .filter(index -> _waterYearIndex.getName().equalsIgnoreCase(index.getName()))
@@ -215,7 +215,7 @@ class EpptReportingComputer
 
 	private List<WaterYearIndex> getWaterYearIndicesForScenario(EpptScenarioRun epptScenarioRun) throws EpptInitializationException
 	{
-		WaterYearTableReader tableReader = new WaterYearTableReader(epptScenarioRun.getWaterYearTable());
+		WaterYearTableReader tableReader = new WaterYearTableReader(epptScenarioRun.getLookupDirectory());
 		List<String> collect = _waterYearIndices.stream().map(WaterYearIndex::getName).collect(toList());
 		List<WaterYearIndex> read = tableReader.read();
 		return read.stream().filter(index -> collect.contains(index.getName())).collect(toList());
