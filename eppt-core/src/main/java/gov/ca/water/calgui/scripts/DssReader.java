@@ -47,33 +47,41 @@ import hec.io.TimeSeriesContainer;
 import hec.lang.annotation.Scriptable;
 import rma.util.RMAConst;
 
-import static java.util.stream.Collectors.toMap;
-
 /**
  * Company: Resource Management Associates
  *
  * @author <a href="mailto:adam@rmanet.com">Adam Korynta</a>
  * @since 08-14-2019
  */
+@SuppressWarnings({"unused", "WeakerAccess"})
 public class DssReader
 {
 	private static final FluentLogger LOGGER = FluentLogger.forEnclosingClass();
 	private final EpptScenarioRun _scenarioRun;
 	private final WaterYearDefinition _waterYearDefinition;
+	private final DssCache _dssCache;
 	private String _units;
 	private String _originalUnits;
 	private String _parameter;
 
-	public DssReader(EpptScenarioRun scenarioRun, WaterYearDefinition waterYearDefinition)
+	public DssReader(EpptScenarioRun scenarioRun, WaterYearDefinition waterYearDefinition, DssCache dssCache)
 	{
 		_scenarioRun = scenarioRun;
 		_waterYearDefinition = waterYearDefinition;
+		_dssCache = dssCache;
 	}
 
 	@Scriptable
 	public NavigableMap<Integer, Double> getYearlyGuiLinkData(int guiID) throws DssMissingRecordException
 	{
 		return filterPeriodYearly(getGuiLinkData(guiID, true), _waterYearDefinition);
+	}
+
+	@Scriptable
+	public NavigableMap<Integer, Double> getYearlyGuiLinkData(int guiID, Month month) throws DssMissingRecordException
+	{
+		WaterYearDefinition waterYearDefinition = new WaterYearDefinition("", month, month.minus(1));
+		return filterPeriodYearly(getGuiLinkData(guiID, true), waterYearDefinition);
 	}
 
 	@Scriptable
@@ -93,6 +101,13 @@ public class DssReader
 	public NavigableMap<Integer, Double> getYearlyDtsData(int dtsId) throws DssMissingRecordException
 	{
 		return filterPeriodYearly(getDtsData(dtsId, true), _waterYearDefinition);
+	}
+
+	@Scriptable
+	public NavigableMap<Integer, Double> getYearlyDtsData(int dtsId, Month month) throws DssMissingRecordException
+	{
+		WaterYearDefinition waterYearDefinition = new WaterYearDefinition("", month, month.minus(1));
+		return filterPeriodYearly(getDtsData(dtsId, true), waterYearDefinition);
 	}
 
 	@Scriptable
@@ -136,9 +151,8 @@ public class DssReader
 	@Scriptable
 	public NavigableMap<LocalDateTime, Double> getGuiLinkData(int guiID, boolean mapToTaf) throws DssMissingRecordException
 	{
-		NavigableMap<LocalDateTime, Double> retval = new TreeMap<>();
-		DssCache instance = DssCache.getInstance();
-		DssCache.TSValue tsc = instance.readGuiLinkFromCache(_scenarioRun, guiID);
+		NavigableMap<LocalDateTime, Double> retval;
+		DssCache.TSValue tsc = _dssCache.readGuiLinkFromCache(_scenarioRun, guiID);
 		if(tsc == null)
 		{
 			try
@@ -157,7 +171,7 @@ public class DssReader
 				_originalUnits = dssGrabber1Svc.getOriginalUnits();
 				_parameter = primarySeries[0].getParameterName();
 				retval = timeSeriesContainerToMap(primarySeries);
-				instance.addGuiLinkToCache(_scenarioRun, guiID, primarySeries[0], _originalUnits);
+				_dssCache.addGuiLinkToCache(_scenarioRun, guiID, primarySeries[0], _originalUnits);
 			}
 			catch(RuntimeException e)
 			{
@@ -197,29 +211,34 @@ public class DssReader
 				_units = units;
 				for(int i = 0; i < tsc.times.length; i++)
 				{
+					double value = tsc.getValue(i);
 					HecTime hecTime = new HecTime();
 					hecTime.set(tsc.times[i], tsc.timeGranularitySeconds, tsc.julianBaseDate);
-					double value = tsc.getValue(i);
-					int offset = (int) TimeUnit.MILLISECONDS.toMinutes(TimeZone.getDefault().getRawOffset());
-					Date javaDate = hecTime.getJavaDate(offset);
-					LocalDateTime localDateTime = LocalDateTime.ofInstant(javaDate.toInstant(), ZoneId.systemDefault());
-					if(RMAConst.isValidValue(value))
-					{
-						if(tsc.getParameterName().toLowerCase().contains("percent"))
-						{
-							value *= 100;
-						}
-						retval.put(localDateTime, value);
-					}
-					else
-					{
-						retval.put(localDateTime, Double.NaN);
-						LOGGER.at(Level.FINE).log("Invalid value %d found at: %s", localDateTime);
-					}
+					addValueToMap(retval, tsc, value, hecTime);
 				}
 			}
 		}
 		return retval;
+	}
+
+	private void addValueToMap(NavigableMap<LocalDateTime, Double> retval, TimeSeriesContainer tsc, double value, HecTime hecTime)
+	{
+		int offset = (int) TimeUnit.MILLISECONDS.toMinutes(TimeZone.getDefault().getRawOffset());
+		Date javaDate = hecTime.getJavaDate(offset);
+		LocalDateTime localDateTime = LocalDateTime.ofInstant(javaDate.toInstant(), ZoneId.systemDefault());
+		if(RMAConst.isValidValue(value))
+		{
+			if(tsc.getParameterName().toLowerCase().contains("percent"))
+			{
+				value *= 100;
+			}
+			retval.put(localDateTime, value);
+		}
+		else
+		{
+			retval.put(localDateTime, Double.NaN);
+			LOGGER.at(Level.FINE).log("Invalid value %d found at: %s", localDateTime);
+		}
 	}
 
 	private DSSGrabber1SvcImpl buildDssGrabber(EpptScenarioRun epptScenarioRun, ThresholdLinksBO thresholdLink)
@@ -258,13 +277,11 @@ public class DssReader
 		return getDtsData(dtsId, false);
 	}
 
-	@SuppressWarnings("unchecked")
 	@Scriptable
 	public NavigableMap<LocalDateTime, Double> getDtsData(int dtsId, boolean mapToTaf) throws DssMissingRecordException
 	{
-		NavigableMap<LocalDateTime, Double> retval = new TreeMap<>();
-		DssCache instance = DssCache.getInstance();
-		DssCache.TSValue tsc = instance.readDtsLinkFromCache(_scenarioRun, dtsId);
+		NavigableMap<LocalDateTime, Double> retval;
+		DssCache.TSValue tsc = _dssCache.readDtsLinkFromCache(_scenarioRun, dtsId);
 		if(tsc == null)
 		{
 			try
@@ -289,7 +306,7 @@ public class DssReader
 				_originalUnits = dssGrabber1Svc.getOriginalUnits();
 				_parameter = primarySeries[0].getParameterName();
 				retval = timeSeriesContainerToMap(primarySeries);
-				instance.addDtsLinkToCache(_scenarioRun, dtsId, primarySeries[0], _originalUnits);
+				_dssCache.addDtsLinkToCache(_scenarioRun, dtsId, primarySeries[0], _originalUnits);
 			}
 			catch(RuntimeException e)
 			{
@@ -316,9 +333,8 @@ public class DssReader
 	@Scriptable
 	public NavigableMap<LocalDateTime, Double> getThresholdData(int thresholdId, boolean mapToTaf) throws DssMissingRecordException
 	{
-		NavigableMap<LocalDateTime, Double> retval = new TreeMap<>();
-		DssCache instance = DssCache.getInstance();
-		DssCache.TSValue tsc = instance.readThresholdLinkFromCache(_scenarioRun, thresholdId);
+		NavigableMap<LocalDateTime, Double> retval;
+		DssCache.TSValue tsc = _dssCache.readThresholdLinkFromCache(_scenarioRun, thresholdId);
 		if(tsc == null)
 		{
 			try
@@ -339,7 +355,7 @@ public class DssReader
 				_originalUnits = dssGrabber1Svc.getOriginalUnits();
 				_parameter = threshold[0].getParameterName();
 				retval = timeSeriesContainerToMap(threshold);
-				instance.addThresholdLinkToCache(_scenarioRun, thresholdId, threshold[0], _originalUnits);
+				_dssCache.addThresholdLinkToCache(_scenarioRun, thresholdId, threshold[0], _originalUnits);
 			}
 			catch(RuntimeException e)
 			{
@@ -363,7 +379,7 @@ public class DssReader
 	{
 		MonthPeriod monthPeriod = new MonthPeriod(waterYearDefinition.getStartMonth(), waterYearDefinition.getEndMonth());
 		boolean aggregateYearly = "CFS".equalsIgnoreCase(_originalUnits)
-				|| "STORAGE-CHANGE".equalsIgnoreCase(_parameter) && "TAF".equalsIgnoreCase(getUnits());
+				|| ("STORAGE-CHANGE".equalsIgnoreCase(_parameter) && "TAF".equalsIgnoreCase(getUnits()));
 		return filterPeriodYearly(input, monthPeriod, aggregateYearly);
 	}
 
@@ -383,8 +399,7 @@ public class DssReader
 	public NavigableMap<Integer, Double> aggregateYearly(NavigableMap<LocalDateTime, Double> input)
 	{
 		MonthPeriod monthPeriod = new MonthPeriod(_waterYearDefinition.getStartMonth(), _waterYearDefinition.getEndMonth());
-		NavigableMap<Integer, Double> retval = filterPeriodYearly(input, monthPeriod, true);
-		return retval;
+		return filterPeriodYearly(input, monthPeriod, true);
 	}
 
 	public static NavigableMap<Integer, Double> filterPeriodYearly(NavigableMap<LocalDateTime, Double> input,
@@ -392,51 +407,58 @@ public class DssReader
 																   boolean aggregateYearly)
 	{
 		NavigableMap<Integer, Double> retval = new TreeMap<>();
-		if(!input.isEmpty())
+		if(input.isEmpty())
 		{
-			int year = input.firstKey().getYear();
-			int lastYear = input.lastKey().getYear();
-			while(year <= lastYear)
+			return retval;
+		}
+		int year = input.firstKey().getYear();
+		int lastYear = input.lastKey().getYear();
+		while(year <= lastYear)
+		{
+			List<YearMonth> yearMonths = monthPeriod.getYearMonths(year);
+			if(!yearMonths.isEmpty())
 			{
-				NavigableMap<LocalDateTime, Double> dataMap = new TreeMap<>();
-				List<YearMonth> yearMonths = monthPeriod.getYearMonths(year);
-				if(!yearMonths.isEmpty())
+				NavigableMap<LocalDateTime, Double> dataMap = buildDataMap(input, year, yearMonths);
+				Collections.sort(yearMonths);
+				if(dataMap.size() == yearMonths.size())
 				{
-					for(YearMonth yearMonth : yearMonths)
+					DoubleStream doubleStream = dataMap.values().stream().mapToDouble(e -> e);
+					OptionalDouble rollup;
+					if(aggregateYearly)
 					{
-						for(Map.Entry<LocalDateTime, Double> entry : input.entrySet())
-						{
-							LocalDateTime key = entry.getKey();
-							if(key.getMonth() == yearMonth.plusMonths(1).getMonth() && key.getYear() == yearMonth.plusMonths(1).getYear())
-							{
-								LOGGER.at(Level.FINE)
-									  .log("Value for %s: %s YearMonth: %s", year, entry.getValue(), YearMonth.of(key.getYear(), key.getMonth()));
-								dataMap.put(entry.getKey(), entry.getValue());
-								break;
-							}
-						}
+						rollup = OptionalDouble.of(doubleStream.sum());
 					}
-					Collections.sort(yearMonths);
-					if(dataMap.size() == yearMonths.size())
+					else
 					{
-						DoubleStream doubleStream = dataMap.values().stream().mapToDouble(e -> e);
-						OptionalDouble rollup;
-						if(aggregateYearly)
-						{
-							rollup = OptionalDouble.of(doubleStream.sum());
-						}
-						else
-						{
-							rollup = doubleStream.average();
-						}
-						LOGGER.at(Level.FINE).log("Average for %s : ", year, rollup.orElse(Double.NaN));
-						int yearForOctSepDefinition = year;
-						rollup.ifPresent(a -> retval.put(yearForOctSepDefinition, a));
+						rollup = doubleStream.average();
 					}
+					LOGGER.at(Level.FINE).log("Average for %s : ", year, rollup.orElse(Double.NaN));
+					int yearForOctSepDefinition = year;
+					rollup.ifPresent(a -> retval.put(yearForOctSepDefinition, a));
 				}
-				year++;
 			}
+			year++;
 		}
 		return retval;
+	}
+
+	private static NavigableMap<LocalDateTime, Double> buildDataMap(NavigableMap<LocalDateTime, Double> input, int year, List<YearMonth> yearMonths)
+	{
+		NavigableMap<LocalDateTime, Double> dataMap = new TreeMap<>();
+		for(YearMonth yearMonth : yearMonths)
+		{
+			for(Map.Entry<LocalDateTime, Double> entry : input.entrySet())
+			{
+				LocalDateTime key = entry.getKey();
+				if(key.getMonth() == yearMonth.plusMonths(1).getMonth() && key.getYear() == yearMonth.plusMonths(1).getYear())
+				{
+					LOGGER.at(Level.FINE)
+						  .log("Value for %s: %s YearMonth: %s", year, entry.getValue(), YearMonth.of(key.getYear(), key.getMonth()));
+					dataMap.put(entry.getKey(), entry.getValue());
+					break;
+				}
+			}
+		}
+		return dataMap;
 	}
 }

@@ -31,6 +31,7 @@ import gov.ca.water.calgui.bo.WaterYearPeriodRange;
 import gov.ca.water.calgui.bo.WaterYearPeriodRangeFilter;
 import gov.ca.water.calgui.bo.WaterYearType;
 import gov.ca.water.calgui.project.EpptScenarioRun;
+import gov.ca.water.calgui.scripts.DssCache;
 import gov.ca.water.calgui.scripts.DssMissingRecordException;
 import gov.ca.water.calgui.scripts.JythonScriptRunner;
 import gov.ca.water.reportengine.EpptReportException;
@@ -52,35 +53,43 @@ public class JythonValueGenerator
 	private final JythonScriptRunner _scriptRunner;
 
 	public JythonValueGenerator(EpptScenarioRun scenarioRun, String function,
-								CommonPeriodFilter commonPeriodFilter, WaterYearDefinition waterYearDefinition)
+								CommonPeriodFilter commonPeriodFilter, WaterYearDefinition waterYearDefinition, DssCache dssCache)
 	{
-		this(input -> true, scenarioRun, function, commonPeriodFilter, waterYearDefinition);
+		this(input -> true, scenarioRun, function, commonPeriodFilter, waterYearDefinition, dssCache);
 	}
 
 	public JythonValueGenerator(PeriodFilter periodFilter, EpptScenarioRun base, String function,
-								CommonPeriodFilter commonPeriodFilter, WaterYearDefinition waterYearDefinition)
+								CommonPeriodFilter commonPeriodFilter, WaterYearDefinition waterYearDefinition, DssCache dssCache)
 	{
-		this(periodFilter, input -> true, base, function, commonPeriodFilter, waterYearDefinition);
+		this(periodFilter, input -> true, base, function, commonPeriodFilter, waterYearDefinition, dssCache);
+	}
+
+	public JythonValueGenerator(EpptScenarioRun epptScenarioRun, String function, CommonPeriodFilter commonPeriodFilter,
+								WaterYearIndex waterYearIndex, WaterYearDefinition waterYearDefinition, DssCache dssCache)
+	{
+		this(epptScenarioRun, function, commonPeriodFilter, waterYearDefinition, dssCache);
+		_scriptRunner.setWaterYearIndex(waterYearIndex);
+	}
+
+	public JythonValueGenerator(EpptScenarioRun epptScenarioRun, String function,
+								CommonPeriodFilter commonPeriodFilter, int comparisonValue,
+								WaterYearDefinition waterYearDefinition, DssCache dssCache)
+	{
+		this(epptScenarioRun, function, commonPeriodFilter, waterYearDefinition, dssCache);
+		_scriptRunner.setComparisonValue((double) comparisonValue);
 	}
 
 	public JythonValueGenerator(PeriodFilter periodFilter, AnnualPeriodFilter annualPeriodFilter, EpptScenarioRun base, String function,
-								CommonPeriodFilter commonPeriodFilter, WaterYearDefinition waterYearDefinition)
+								CommonPeriodFilter commonPeriodFilter, WaterYearDefinition waterYearDefinition, DssCache dssCache)
 	{
 		_annualPeriodFilter = annualPeriodFilter;
 		_scenarioRun = base;
 		_function = JythonScriptBuilder.getInstance().buildFunctionFromTemplate(function);
 		_periodFilter = periodFilter;
-		_scriptRunner = new JythonScriptRunner(_scenarioRun, commonPeriodFilter, waterYearDefinition);
+		_scriptRunner = new JythonScriptRunner(_scenarioRun, commonPeriodFilter, waterYearDefinition, dssCache);
 		_scriptRunner.setPeriodFilter(_periodFilter);
 		_scriptRunner.setAnnualPeriodFilter(_annualPeriodFilter);
 		setWaterYearPeriodRange();
-	}
-
-	public JythonValueGenerator(EpptScenarioRun epptScenarioRun, String function, CommonPeriodFilter commonPeriodFilter,
-								WaterYearIndex waterYearIndex, WaterYearDefinition waterYearDefinition)
-	{
-		this(epptScenarioRun, function, commonPeriodFilter, waterYearDefinition);
-		_scriptRunner.setWaterYearIndex(waterYearIndex);
 	}
 
 	private void setWaterYearPeriodRange()
@@ -104,14 +113,6 @@ public class JythonValueGenerator
 																					.collect(toList());
 			_scriptRunner.setWaterYearPeriodRanges(waterYearPeriodRanges);
 		}
-	}
-
-	public JythonValueGenerator(EpptScenarioRun epptScenarioRun, String function,
-								CommonPeriodFilter commonPeriodFilter, int comparisonValue,
-								WaterYearDefinition waterYearDefinition)
-	{
-		this(epptScenarioRun, function, commonPeriodFilter, waterYearDefinition);
-		_scriptRunner.setComparisonValue((double) comparisonValue);
 	}
 
 	public Double generateValue() throws EpptReportException, DssMissingRecordException

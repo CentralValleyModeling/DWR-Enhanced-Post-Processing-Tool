@@ -29,6 +29,7 @@ import gov.ca.water.calgui.bo.WaterYearIndex;
 import gov.ca.water.calgui.bo.WaterYearPeriod;
 import gov.ca.water.calgui.bo.WaterYearPeriodRange;
 import gov.ca.water.calgui.constant.Constant;
+import gov.ca.water.calgui.scripts.DssCache;
 import gov.ca.water.reportengine.EpptReportException;
 
 import rma.util.TwoColorColorContour;
@@ -50,10 +51,11 @@ public class SummaryReportParameters
 	private final TwoColorColorContour _negativeContour;
 	private final List<String> _disabledSummaryModules;
 	private final CommonPeriodFilter _commonPeriodFilter;
+	private final DssCache _dssCache;
 
 	public SummaryReportParameters(WaterYearDefinition waterYearDefinition, WaterYearIndex waterYearIndex, WaterYearPeriodRange longTermRange,
 								   Map<WaterYearPeriod, List<WaterYearPeriodRange>> waterYearPeriodRanges, PercentDiffStyle percentDiffStyle,
-								   List<String> disabledSummaryModules, CommonPeriodFilter commonPeriodFilter)
+								   List<String> disabledSummaryModules, CommonPeriodFilter commonPeriodFilter, DssCache dssCache)
 			throws EpptReportException
 	{
 		_waterYearDefinition = waterYearDefinition;
@@ -63,6 +65,7 @@ public class SummaryReportParameters
 		_percentDiffStyle = percentDiffStyle;
 		_disabledSummaryModules = disabledSummaryModules;
 		_commonPeriodFilter = commonPeriodFilter;
+		_dssCache = dssCache;
 		_positiveContour = createContour(Paths.get(Constant.POSITIVE_CONTOUR_FILE));
 		_negativeContour = createContour(Paths.get(Constant.NEGATIVE_CONTOUR_FILE));
 	}
@@ -136,5 +139,10 @@ return _disabledSummaryModules;
 	public CommonPeriodFilter getCommonPeriodFilter()
 	{
 		return _commonPeriodFilter;
+	}
+
+	public DssCache getDssCache()
+	{
+		return _dssCache;
 	}
 }

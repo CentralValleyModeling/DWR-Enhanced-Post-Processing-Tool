@@ -27,20 +27,9 @@ import hec.io.TimeSeriesContainer;
  */
 public class DssCache
 {
-	private static final DssCache INSTANCE = new DssCache();
 	private final ConcurrentHashMap<Key, TSValue> _guiLinkCache = new ConcurrentHashMap<>();
 	private final ConcurrentHashMap<Key, TSValue> _thresholdCache = new ConcurrentHashMap<>();
 	private final ConcurrentHashMap<Key, TSValue> _dtsCache = new ConcurrentHashMap<>();
-
-	/**
-	 * Class is not thread safe
-	 *
-	 * @return
-	 */
-	public static DssCache getInstance()
-	{
-		return INSTANCE;
-	}
 
 	public void clearCache()
 	{
