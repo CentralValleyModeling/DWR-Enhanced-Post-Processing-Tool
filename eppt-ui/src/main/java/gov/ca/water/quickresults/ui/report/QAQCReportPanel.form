@@ -75,14 +75,14 @@
       <grid id="bee11" layout-manager="BorderLayout" hgap="0" vgap="0">
         <constraints border-constraint="North"/>
         <properties>
-          <preferredSize width="850" height="400"/>
+          <preferredSize width="850" height="510"/>
         </properties>
         <border type="none"/>
         <children>
           <grid id="73f88" layout-manager="BorderLayout" hgap="0" vgap="0">
             <constraints border-constraint="West"/>
             <properties>
-              <preferredSize width="475" height="204"/>
+              <preferredSize width="560" height="300"/>
             </properties>
             <border type="none"/>
             <children>
@@ -93,14 +93,14 @@
                 <children>
                   <component id="9f6f9" class="javax.swing.JLabel">
                     <constraints>
-                      <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
-                      <gridbag top="5" left="5" bottom="5" right="5" weightx="0.0" weighty="0.0"/>
+                      <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="1" fill="1" indent="0" use-parent-layout="false"/>
+                      <gridbag top="10" left="5" bottom="5" right="5" weightx="0.0" weighty="0.0"/>
                     </constraints>
                     <properties>
                       <text value="Alternative Scenario Run:"/>
                     </properties>
                   </component>
-                  <grid id="5c3c7" layout-manager="BorderLayout" hgap="0" vgap="0">
+                  <grid id="5c3c7" layout-manager="BorderLayout" hgap="5" vgap="5">
                     <constraints>
                       <grid row="1" column="1" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
                       <gridbag top="5" left="5" bottom="5" right="5" weightx="0.0" weighty="0.0"/>
@@ -108,31 +108,61 @@
                     <properties/>
                     <border type="none"/>
                     <children>
-                      <component id="3c882" class="javax.swing.JButton" binding="_runAltWreslButton">
-                        <constraints border-constraint="East"/>
-                        <properties>
-                          <enabled value="false"/>
-                          <text value="Run WRESL"/>
-                        </properties>
-                      </component>
-                      <component id="b4bb4" class="javax.swing.JTextField" binding="_altScenarioTextField">
+                      <grid id="9783b" layout-manager="BorderLayout" hgap="5" vgap="5">
+                        <constraints border-constraint="South"/>
+                        <properties/>
+                        <border type="none"/>
+                        <children>
+                          <component id="457ec" class="javax.swing.JLabel">
+                            <constraints border-constraint="West"/>
+                            <properties>
+                              <preferredSize width="251" height="26"/>
+                              <text value="*WRESL Script Directory differs from installation"/>
+                            </properties>
+                          </component>
+                          <component id="8d837" class="javax.swing.JButton" binding="_overwriteScriptsButton" default-binding="true">
+                            <constraints border-constraint="East"/>
+                            <properties>
+                              <preferredSize width="125" height="26"/>
+                              <text value="Overwrite Scripts"/>
+                            </properties>
+                          </component>
+                        </children>
+                      </grid>
+                      <grid id="c9f65" layout-manager="BorderLayout" hgap="0" vgap="0">
                         <constraints border-constraint="Center"/>
-                        <properties>
-                          <editable value="false"/>
-                        </properties>
-                      </component>
+                        <properties/>
+                        <border type="none"/>
+                        <children>
+                          <component id="b4bb4" class="javax.swing.JTextField" binding="_altScenarioTextField">
+                            <constraints border-constraint="Center"/>
+                            <properties>
+                              <editable value="false"/>
+                              <text value="Alternative"/>
+                            </properties>
+                          </component>
+                          <component id="3c882" class="javax.swing.JButton" binding="_runAltWreslButton">
+                            <constraints border-constraint="East"/>
+                            <properties>
+                              <enabled value="false"/>
+                              <preferredSize width="125" height="26"/>
+                              <text value="Run WRESL"/>
+                            </properties>
+                          </component>
+                        </children>
+                      </grid>
                     </children>
                   </grid>
                   <component id="dc979" class="javax.swing.JLabel">
                     <constraints>
-                      <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
-                      <gridbag top="5" left="5" bottom="5" right="5" weightx="0.0" weighty="0.0"/>
+                      <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="1" fill="1" indent="0" use-parent-layout="false"/>
+                      <gridbag top="10" left="5" bottom="5" right="5" weightx="0.0" weighty="0.0"/>
                     </constraints>
                     <properties>
                       <text value="Base Scenario Run:"/>
                     </properties>
                   </component>
-                  <grid id="a17eb" layout-manager="BorderLayout" hgap="0" vgap="0">
+                  <grid id="a17eb" layout-manager="BorderLayout" hgap="5" vgap="5">
                     <constraints>
                       <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
                       <gridbag top="5" left="5" bottom="5" right="5" weightx="0.0" weighty="0.0"/>
@@ -140,19 +170,49 @@
                     <properties/>
                     <border type="none"/>
                     <children>
-                      <component id="dfb8c" class="javax.swing.JButton" binding="_runBaseWreslButton">
-                        <constraints border-constraint="East"/>
-                        <properties>
-                          <enabled value="false"/>
-                          <text value="Run WRESL"/>
-                        </properties>
-                      </component>
-                      <component id="22222" class="javax.swing.JTextField" binding="_baseScenarioTextField">
-                        <constraints border-constraint="Center"/>
-                        <properties>
-                          <editable value="false"/>
-                        </properties>
-                      </component>
+                      <grid id="be5af" layout-manager="BorderLayout" hgap="5" vgap="5">
+                        <constraints border-constraint="South"/>
+                        <properties/>
+                        <border type="none"/>
+                        <children>
+                          <component id="bad34" class="javax.swing.JLabel">
+                            <constraints border-constraint="West"/>
+                            <properties>
+                              <preferredSize width="251" height="26"/>
+                              <text value="*WRESL Script Directory differs from installation"/>
+                            </properties>
+                          </component>
+                          <component id="e2de8" class="javax.swing.JButton" binding="_overwriteScriptsButton1" default-binding="true">
+                            <constraints border-constraint="East"/>
+                            <properties>
+                              <preferredSize width="125" height="26"/>
+                              <text value="Overwrite Scripts"/>
+                            </properties>
+                          </component>
+                        </children>
+                      </grid>
+                      <grid id="34b37" layout-manager="BorderLayout" hgap="0" vgap="0">
+                        <constraints border-constraint="North"/>
+                        <properties/>
+                        <border type="none"/>
+                        <children>
+                          <component id="22222" class="javax.swing.JTextField" binding="_baseScenarioTextField">
+                            <constraints border-constraint="Center"/>
+                            <properties>
+                              <editable value="false"/>
+                              <text value="Base"/>
+                            </properties>
+                          </component>
+                          <component id="dfb8c" class="javax.swing.JButton" binding="_runBaseWreslButton">
+                            <constraints border-constraint="East"/>
+                            <properties>
+                              <enabled value="false"/>
+                              <preferredSize width="125" height="26"/>
+                              <text value="Run WRESL"/>
+                            </properties>
+                          </component>
+                        </children>
+                      </grid>
                     </children>
                   </grid>
                   <component id="f2a8c" class="javax.swing.JLabel">
@@ -304,7 +364,7 @@
                       <text value="Common Period:"/>
                     </properties>
                   </component>
-                  <grid id="70dd5" layout-manager="FlowLayout" hgap="5" vgap="5" flow-align="0">
+                  <grid id="70dd5" layout-manager="FlowLayout" hgap="0" vgap="5" flow-align="0">
                     <constraints>
                       <grid row="11" column="1" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
                       <gridbag top="5" left="5" bottom="5" right="5" weightx="0.0" weighty="0.0"/>
@@ -316,27 +376,27 @@
                         <constraints/>
                         <properties>
                           <enabled value="true"/>
-                          <preferredSize width="120" height="18"/>
+                          <preferredSize width="120" height="26"/>
                           <text value="01Nov1921 0000"/>
                         </properties>
                       </component>
                       <component id="164a5" class="javax.swing.JLabel">
                         <constraints/>
                         <properties>
-                          <text value="Start"/>
+                          <text value="  Start "/>
                         </properties>
                       </component>
                       <component id="10c02" class="rma.swing.RmaJDateTimeField" binding="_endDateChooser">
                         <constraints/>
                         <properties>
-                          <preferredSize width="120" height="18"/>
+                          <preferredSize width="120" height="26"/>
                           <text value="01Oct2003 0100"/>
                         </properties>
                       </component>
                       <component id="18d08" class="javax.swing.JLabel">
                         <constraints/>
                         <properties>
-                          <text value="End"/>
+                          <text value=" End"/>
                         </properties>
                       </component>
                     </children>
@@ -344,9 +404,10 @@
                   <component id="f4195" class="javax.swing.JButton" binding="_openReportButton">
                     <constraints>
                       <grid row="6" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="4" fill="0" indent="0" use-parent-layout="false"/>
-                      <gridbag weightx="0.0" weighty="0.0"/>
+                      <gridbag top="0" left="0" bottom="0" right="5" weightx="0.0" weighty="0.0"/>
                     </constraints>
                     <properties>
+                      <preferredSize width="125" height="26"/>
                       <text value="Open Report"/>
                     </properties>
                   </component>
@@ -377,7 +438,7 @@
           <grid id="ee1ef" layout-manager="BorderLayout" hgap="0" vgap="0">
             <constraints border-constraint="Center"/>
             <properties>
-              <preferredSize width="500" height="200"/>
+              <preferredSize width="400" height="200"/>
             </properties>
             <border type="etched" title="QA/QC Report Controls"/>
             <children>

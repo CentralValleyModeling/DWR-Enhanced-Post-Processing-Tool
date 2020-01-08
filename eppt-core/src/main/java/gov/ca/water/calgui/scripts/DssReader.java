@@ -12,6 +12,7 @@
 
 package gov.ca.water.calgui.scripts;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.Month;
 import java.time.YearMonth;
@@ -27,13 +28,13 @@ import java.util.TimeZone;
 import java.util.TreeMap;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
-import java.util.logging.Logger;
 import java.util.stream.DoubleStream;
 
 import com.google.common.flogger.FluentLogger;
 import gov.ca.water.calgui.bo.DetailedIssue;
 import gov.ca.water.calgui.bo.GUILinksAllModelsBO;
 import gov.ca.water.calgui.bo.ThresholdLinksBO;
+import gov.ca.water.calgui.bo.WaterYearDefinition;
 import gov.ca.water.calgui.busservice.impl.DSSGrabber1SvcImpl;
 import gov.ca.water.calgui.busservice.impl.DetailedIssuesReader;
 import gov.ca.water.calgui.busservice.impl.GuiLinksSeedDataSvcImpl;
@@ -46,6 +47,8 @@ import hec.io.TimeSeriesContainer;
 import hec.lang.annotation.Scriptable;
 import rma.util.RMAConst;
 
+import static java.util.stream.Collectors.toMap;
+
 /**
  * Company: Resource Management Associates
  *
@@ -56,51 +59,72 @@ public class DssReader
 {
 	private static final FluentLogger LOGGER = FluentLogger.forEnclosingClass();
 	private final EpptScenarioRun _scenarioRun;
-	private final LocalDateTime _start;
-	private final LocalDateTime _end;
+	private final WaterYearDefinition _waterYearDefinition;
 	private String _units;
+	private String _originalUnits;
+	private String _parameter;
 
-	public DssReader(EpptScenarioRun scenarioRun, LocalDateTime start, LocalDateTime end)
+	public DssReader(EpptScenarioRun scenarioRun, WaterYearDefinition waterYearDefinition)
 	{
 		_scenarioRun = scenarioRun;
-		_start = start;
-		_end = end;
+		_waterYearDefinition = waterYearDefinition;
 	}
 
 	@Scriptable
-	public NavigableMap<Integer, Double> getYearlyGuiLinkData(int guiID, Month startMonth) throws DssMissingRecordException
+	public NavigableMap<Integer, Double> getYearlyGuiLinkData(int guiID) throws DssMissingRecordException
 	{
-		return filterPeriodYearly(getGuiLinkData(guiID, true), startMonth);
+		return filterPeriodYearly(getGuiLinkData(guiID, true), _waterYearDefinition);
 	}
 
 	@Scriptable
-	public NavigableMap<Integer, Double> getYearlyGuiLinkData(int guiID, boolean mapToTaf, Month startMonth) throws DssMissingRecordException
+	public NavigableMap<Integer, Double> getYearlyGuiLinkData(int guiID, WaterYearDefinition waterYearDefinition) throws DssMissingRecordException
 	{
-		return filterPeriodYearly(getGuiLinkData(guiID, mapToTaf), startMonth);
+		return filterPeriodYearly(getGuiLinkData(guiID, true), waterYearDefinition);
 	}
 
 	@Scriptable
-	public NavigableMap<Integer, Double> getYearlyDtsData(int dtsId, Month startMonth) throws DssMissingRecordException
+	public NavigableMap<Integer, Double> getYearlyGuiLinkData(int guiID, boolean mapToTaf, WaterYearDefinition waterYearDefinition)
+			throws DssMissingRecordException
 	{
-		return filterPeriodYearly(getDtsData(dtsId, true), startMonth);
+		return filterPeriodYearly(getGuiLinkData(guiID, mapToTaf), waterYearDefinition);
 	}
 
 	@Scriptable
-	public NavigableMap<Integer, Double> getYearlyDtsData(int dtsId, boolean mapToTaf, Month startMonth) throws DssMissingRecordException
+	public NavigableMap<Integer, Double> getYearlyDtsData(int dtsId) throws DssMissingRecordException
 	{
-		return filterPeriodYearly(getDtsData(dtsId, mapToTaf), startMonth);
+		return filterPeriodYearly(getDtsData(dtsId, true), _waterYearDefinition);
 	}
 
 	@Scriptable
-	public NavigableMap<Integer, Double> getYearlyThresholdData(int dtsId, Month startMonth) throws DssMissingRecordException
+	public NavigableMap<Integer, Double> getYearlyDtsData(int dtsId, WaterYearDefinition waterYearDefinition) throws DssMissingRecordException
 	{
-		return filterPeriodYearly(getThresholdData(dtsId, true), startMonth);
+		return filterPeriodYearly(getDtsData(dtsId, true), waterYearDefinition);
 	}
 
 	@Scriptable
-	public NavigableMap<Integer, Double> getYearlyThresholdData(int dtsId, boolean mapToTaf, Month startMonth) throws DssMissingRecordException
+	public NavigableMap<Integer, Double> getYearlyDtsData(int dtsId, boolean mapToTaf, WaterYearDefinition waterYearDefinition)
+			throws DssMissingRecordException
 	{
-		return filterPeriodYearly(getThresholdData(dtsId, mapToTaf), startMonth);
+		return filterPeriodYearly(getDtsData(dtsId, mapToTaf), waterYearDefinition);
+	}
+
+	@Scriptable
+	public NavigableMap<Integer, Double> getYearlyThresholdData(int dtsId) throws DssMissingRecordException
+	{
+		return filterPeriodYearly(getThresholdData(dtsId, true), _waterYearDefinition);
+	}
+
+	@Scriptable
+	public NavigableMap<Integer, Double> getYearlyThresholdData(int dtsId, WaterYearDefinition waterYearDefinition) throws DssMissingRecordException
+	{
+		return filterPeriodYearly(getThresholdData(dtsId, true), waterYearDefinition);
+	}
+
+	@Scriptable
+	public NavigableMap<Integer, Double> getYearlyThresholdData(int dtsId, boolean mapToTaf, WaterYearDefinition waterYearDefinition)
+			throws DssMissingRecordException
+	{
+		return filterPeriodYearly(getThresholdData(dtsId, mapToTaf), waterYearDefinition);
 	}
 
 	@Scriptable
@@ -112,10 +136,10 @@ public class DssReader
 	@Scriptable
 	public NavigableMap<LocalDateTime, Double> getGuiLinkData(int guiID, boolean mapToTaf) throws DssMissingRecordException
 	{
+		NavigableMap<LocalDateTime, Double> retval = new TreeMap<>();
 		DssCache instance = DssCache.getInstance();
-		NavigableMap<LocalDateTime, Double> retval = instance.readGuiLinkFromCache(_scenarioRun, guiID);
-		_units = instance.readGuiLinkUnitsFromCache(_scenarioRun, guiID);
-		if(retval == null)
+		DssCache.TSValue tsc = instance.readGuiLinkFromCache(_scenarioRun, guiID);
+		if(tsc == null)
 		{
 			try
 			{
@@ -130,8 +154,10 @@ public class DssReader
 				{
 					throw new DssMissingRecordException(_scenarioRun.getName() + ": Unable to find matching GUILink with ID: " + guiID);
 				}
+				_originalUnits = dssGrabber1Svc.getOriginalUnits();
+				_parameter = primarySeries[0].getParameterName();
 				retval = timeSeriesContainerToMap(primarySeries);
-				instance.addGuiLinkToCache(_scenarioRun, guiID, retval);
+				instance.addGuiLinkToCache(_scenarioRun, guiID, primarySeries[0], _originalUnits);
 			}
 			catch(RuntimeException e)
 			{
@@ -139,7 +165,13 @@ public class DssReader
 				retval = new TreeMap<>();
 			}
 		}
-		instance.addGuiLinkUnitsToCache(_scenarioRun, guiID, _units);
+		else
+		{
+			retval = timeSeriesContainerToMap(new TimeSeriesContainer[]{tsc.getTsc()});
+			_units = tsc.getTsc().getUnits();
+			_originalUnits = tsc.getOriginalUnits();
+			_parameter = tsc.getTsc().getParameterName();
+		}
 		return retval;
 	}
 
@@ -193,7 +225,7 @@ public class DssReader
 	private DSSGrabber1SvcImpl buildDssGrabber(EpptScenarioRun epptScenarioRun, ThresholdLinksBO thresholdLink)
 	{
 		DSSGrabber1SvcImpl grabber1Svc = new DSSGrabber1SvcImpl();
-		grabber1Svc.setDateRange(_start.toLocalDate(), _end.toLocalDate());
+		grabber1Svc.setDateRange(LocalDate.of(1800, 1, 1), LocalDate.of(2200, 1, 1));
 		grabber1Svc.setScenarioRuns(epptScenarioRun, Collections.emptyList());
 		grabber1Svc.setThresholdLink(thresholdLink);
 		grabber1Svc.setIsCFS(false);
@@ -203,7 +235,7 @@ public class DssReader
 	private DSSGrabber1SvcImpl buildDssGrabber(EpptScenarioRun epptScenarioRun, DetailedIssue dtsLink)
 	{
 		DSSGrabber1SvcImpl grabber1Svc = new DSSGrabber1SvcImpl();
-		grabber1Svc.setDateRange(_start.toLocalDate(), _end.toLocalDate());
+		grabber1Svc.setDateRange(LocalDate.of(1800, 1, 1), LocalDate.of(2200, 1, 1));
 		grabber1Svc.setScenarioRuns(epptScenarioRun, Collections.emptyList());
 		grabber1Svc.setDtsLink(dtsLink);
 		grabber1Svc.setIsCFS(false);
@@ -213,7 +245,7 @@ public class DssReader
 	private DSSGrabber1SvcImpl buildDssGrabber(EpptScenarioRun epptScenarioRun, GUILinksAllModelsBO guiLink)
 	{
 		DSSGrabber1SvcImpl grabber1Svc = new DSSGrabber1SvcImpl();
-		grabber1Svc.setDateRange(_start.toLocalDate(), _end.toLocalDate());
+		grabber1Svc.setDateRange(LocalDate.of(1800, 1, 1), LocalDate.of(2200, 1, 1));
 		grabber1Svc.setScenarioRuns(epptScenarioRun, Collections.emptyList());
 		grabber1Svc.setGuiLink(guiLink);
 		grabber1Svc.setIsCFS(false);
@@ -230,10 +262,10 @@ public class DssReader
 	@Scriptable
 	public NavigableMap<LocalDateTime, Double> getDtsData(int dtsId, boolean mapToTaf) throws DssMissingRecordException
 	{
+		NavigableMap<LocalDateTime, Double> retval = new TreeMap<>();
 		DssCache instance = DssCache.getInstance();
-		NavigableMap<LocalDateTime, Double> retval = instance.readDtsLinkFromCache(_scenarioRun, dtsId);
-		_units = instance.readDtsLinkUnitsFromCache(_scenarioRun, dtsId);
-		if(retval == null)
+		DssCache.TSValue tsc = instance.readDtsLinkFromCache(_scenarioRun, dtsId);
+		if(tsc == null)
 		{
 			try
 			{
@@ -254,8 +286,10 @@ public class DssReader
 					throw new DssMissingRecordException(_scenarioRun.getName() +
 							": Unable to find matching DTS record with DTS ID: " + dtsId + " and DSS Path: " + detailedIssue.getLinkedVar());
 				}
+				_originalUnits = dssGrabber1Svc.getOriginalUnits();
+				_parameter = primarySeries[0].getParameterName();
 				retval = timeSeriesContainerToMap(primarySeries);
-				instance.addDtsLinkToCache(_scenarioRun, dtsId, retval);
+				instance.addDtsLinkToCache(_scenarioRun, dtsId, primarySeries[0], _originalUnits);
 			}
 			catch(RuntimeException e)
 			{
@@ -263,7 +297,13 @@ public class DssReader
 				retval = new TreeMap<>();
 			}
 		}
-		instance.addDtsLinkUnitsToCache(_scenarioRun, dtsId, _units);
+		else
+		{
+			retval = timeSeriesContainerToMap(new TimeSeriesContainer[]{tsc.getTsc()});
+			_units = tsc.getTsc().getUnits();
+			_originalUnits = tsc.getOriginalUnits();
+			_parameter = tsc.getTsc().getParameterName();
+		}
 		return retval;
 	}
 
@@ -276,10 +316,10 @@ public class DssReader
 	@Scriptable
 	public NavigableMap<LocalDateTime, Double> getThresholdData(int thresholdId, boolean mapToTaf) throws DssMissingRecordException
 	{
+		NavigableMap<LocalDateTime, Double> retval = new TreeMap<>();
 		DssCache instance = DssCache.getInstance();
-		NavigableMap<LocalDateTime, Double> retval = instance.readThresholdLinkFromCache(_scenarioRun, thresholdId);
-		_units = instance.readThresholdLinkUnitsFromCache(_scenarioRun, thresholdId);
-		if(retval == null)
+		DssCache.TSValue tsc = instance.readThresholdLinkFromCache(_scenarioRun, thresholdId);
+		if(tsc == null)
 		{
 			try
 			{
@@ -296,8 +336,10 @@ public class DssReader
 							": Unable to find matching Threshold path for B-Part: " + thresholdLink.getModelData(
 							GUILinksAllModelsBO.Model.values().get(0)) + " and ID: " + thresholdLink.getId());
 				}
+				_originalUnits = dssGrabber1Svc.getOriginalUnits();
+				_parameter = threshold[0].getParameterName();
 				retval = timeSeriesContainerToMap(threshold);
-				instance.addThresholdLinkToCache(_scenarioRun, thresholdId, retval);
+				instance.addThresholdLinkToCache(_scenarioRun, thresholdId, threshold[0], _originalUnits);
 			}
 			catch(RuntimeException e)
 			{
@@ -306,15 +348,29 @@ public class DssReader
 
 			}
 		}
-		instance.addThresholdLinkUnitsToCache(_scenarioRun, thresholdId, _units);
+		else
+		{
+			retval = timeSeriesContainerToMap(new TimeSeriesContainer[]{tsc.getTsc()});
+			_units = tsc.getTsc().getUnits();
+			_originalUnits = tsc.getOriginalUnits();
+			_parameter = tsc.getTsc().getParameterName();
+		}
 		return retval;
 	}
-	public NavigableMap<Integer, Double> filterPeriodYearly(NavigableMap<LocalDateTime, Double> input,
-																   Month startMonth)
+
+	private NavigableMap<Integer, Double> filterPeriodYearly(NavigableMap<LocalDateTime, Double> input,
+															 WaterYearDefinition waterYearDefinition)
 	{
-		MonthPeriod monthPeriod = new MonthPeriod(startMonth, startMonth.minus(1L));
-		boolean aggregateYearly = "CFS".equalsIgnoreCase(getUnits());
+		MonthPeriod monthPeriod = new MonthPeriod(waterYearDefinition.getStartMonth(), waterYearDefinition.getEndMonth());
+		boolean aggregateYearly = "CFS".equalsIgnoreCase(_originalUnits)
+				|| "STORAGE-CHANGE".equalsIgnoreCase(_parameter) && "TAF".equalsIgnoreCase(getUnits());
 		return filterPeriodYearly(input, monthPeriod, aggregateYearly);
+	}
+
+	public NavigableMap<Integer, Double> filterPeriodYearly(NavigableMap<LocalDateTime, Double> input,
+															Month startMonth)
+	{
+		return filterPeriodYearly(input, new WaterYearDefinition("Yearly", startMonth, startMonth.minus(1)));
 	}
 
 	@Scriptable
@@ -323,6 +379,13 @@ public class DssReader
 		return _units;
 	}
 
+	@Scriptable
+	public NavigableMap<Integer, Double> aggregateYearly(NavigableMap<LocalDateTime, Double> input)
+	{
+		MonthPeriod monthPeriod = new MonthPeriod(_waterYearDefinition.getStartMonth(), _waterYearDefinition.getEndMonth());
+		NavigableMap<Integer, Double> retval = filterPeriodYearly(input, monthPeriod, true);
+		return retval;
+	}
 
 	public static NavigableMap<Integer, Double> filterPeriodYearly(NavigableMap<LocalDateTime, Double> input,
 																   MonthPeriod monthPeriod,

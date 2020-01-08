@@ -14,6 +14,7 @@ package gov.ca.water.reportengine.standardsummary;
 
 import java.awt.Color;
 import java.math.BigDecimal;
+import java.math.MathContext;
 import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.DoubleSummaryStatistics;
@@ -24,6 +25,7 @@ import java.util.function.Function;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import gov.ca.water.calgui.bo.AnnualPeriodFilter;
 import gov.ca.water.calgui.bo.PeriodFilter;
 import gov.ca.water.calgui.constant.Constant;
 import gov.ca.water.calgui.project.EpptScenarioRun;
@@ -87,35 +89,35 @@ class PercentDiffTableBuilder extends BaseAltDiffTableBuilder
 	}
 
 	@Override
-	List<Element> buildScenarios(PeriodFilter filter, EpptChart epptChart)
+	List<Element> buildScenarios(PeriodFilter filter, AnnualPeriodFilter annualPeriodFilter, EpptChart epptChart)
 	{
 		List<Element> retval = new ArrayList<>();
 		for(int i = 0; i < getAlternatives().size(); i++)
 		{
 			EpptScenarioRun alternative = getAlternatives().get(i);
-			Element element = buildPercentDiffElement(alternative, filter, epptChart);
+			Element element = buildPercentDiffElement(alternative, filter, annualPeriodFilter, epptChart);
 			element.setAttribute(SCENARIO_ORDER_ATTRIBUTE, String.valueOf(i));
 			retval.add(element);
 		}
 		return retval;
 	}
 
-	private Element buildPercentDiffElement(EpptScenarioRun alternative, PeriodFilter filter, EpptChart epptChart)
+	private Element buildPercentDiffElement(EpptScenarioRun alternative, PeriodFilter filter, AnnualPeriodFilter annualPeriodFilter, EpptChart epptChart)
 	{
 		Element retval = getDocument().createElement(SCENARIO_ELEMENT);
-		Function<ChartComponent, Element> valueFunction = v -> buildPercentDiffValueForChart(alternative, v, filter);
+		Function<ChartComponent, Element> valueFunction = v -> buildPercentDiffValueForChart(alternative, v, filter, annualPeriodFilter);
 		appendTitles(retval, epptChart, valueFunction);
 		return retval;
 	}
 
-	private Element buildPercentDiffValueForChart(EpptScenarioRun alternative, ChartComponent v, PeriodFilter filter)
+	private Element buildPercentDiffValueForChart(EpptScenarioRun alternative, ChartComponent v, PeriodFilter filter, AnnualPeriodFilter annualPeriodFilter)
 	{
 		Element retval = getDocument().createElement(VALUE_ELEMENT);
 		EpptScenarioRun base = getBase();
 		try
 		{
-			Double baseValue = createJythonValueGenerator(filter, base, v.getFunction()).generateValue();
-			Double altValue = createJythonValueGenerator(filter, alternative, v.getFunction()).generateValue();
+			Double baseValue = createJythonValueGenerator(filter, annualPeriodFilter, base, v.getFunction()).generateValue();
+			Double altValue = createJythonValueGenerator(filter, annualPeriodFilter, alternative, v.getFunction()).generateValue();
 			if(baseValue == null)
 			{
 				getStandardSummaryErrors().addError(LOGGER,
@@ -141,17 +143,10 @@ class PercentDiffTableBuilder extends BaseAltDiffTableBuilder
 				if(baseValue != 0)
 				{
 					double percentage = ((altValue - baseValue) / baseValue) * 100;
+
 					BigDecimal bigDecimal = BigDecimal.valueOf(percentage);
-					if(Math.abs(percentage) > 0 && Math.abs(percentage) < 1)
-					{
-						bigDecimal = bigDecimal.setScale(3, RoundingMode.HALF_UP);
-					}
-					else
-					{
-						bigDecimal = bigDecimal.setScale(1, RoundingMode.HALF_UP);
-					}
-					String textRaw = bigDecimal.toString();
-					retval.setTextContent(textRaw + "%");
+					percentage = bigDecimal.round(new MathContext(3)).doubleValue();
+					retval.setTextContent(percentage + "%");
 					_valueElements.put(retval, percentage);
 				}
 				else if(altValue == 0)
@@ -161,7 +156,7 @@ class PercentDiffTableBuilder extends BaseAltDiffTableBuilder
 				}
 				else
 				{
-					retval.setTextContent("B=0");
+					retval.setTextContent("A=" + altValue);
 				}
 			}
 		}

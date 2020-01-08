@@ -78,10 +78,7 @@ class QAQCReportGenerator
 			Path dataFile = reports.resolve("DWR_QA_QC_Reports").resolve("Datasource").resolve("EPPT_Data.xml");
 			EPPTReport epptReport = new EPPTReport(dataFile,
 					baseRun, altRuns, reportParameters, standardSummaryErrors);
-			//			if(false)
-			{
-				epptReport.writeReport();
-			}
+			epptReport.writeReport();
 			return reports.resolve("QAQC_Report.jrxml");
 		}
 		catch(IOException | RuntimeException ex)

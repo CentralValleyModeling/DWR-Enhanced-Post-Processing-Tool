@@ -104,7 +104,7 @@ public final class PlotlySvgPrinter
 				Paths.get(Constant.CONFIG_DIR).getParent().resolve("lib").resolve("plotly").resolve("dist").resolve("plotly.min.js") + "\"";
 		try
 		{
-			LOGGER.log(Level.INFO, "Plotly SVG generation command line: {0}", orcaCommandline);
+			LOGGER.log(Level.FINE, "Plotly SVG generation command line: {0}", orcaCommandline);
 			Process exec = new ProcessBuilder()
 					.directory(imageDirectory.getParent().toFile())
 					.command(orcaCommandline)

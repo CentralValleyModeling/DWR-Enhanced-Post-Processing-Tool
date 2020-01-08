@@ -18,12 +18,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.NavigableMap;
-import java.util.TreeMap;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import gov.ca.water.calgui.bo.MonthPeriodFilter;
-import gov.ca.water.calgui.bo.PeriodFilter;
 import gov.ca.water.calgui.project.EpptScenarioRun;
 import gov.ca.water.calgui.scripts.DssMissingRecordException;
 import gov.ca.water.plotly.ExceedanceData;
@@ -83,11 +80,11 @@ class ExceedanceChartPageBuilder extends PlotChartBuilder
 		return new PlotlyExceedancePage.ExceedanceMonthData(data);
 	}
 
-	private ExceedanceData buildExceedanceData(PeriodFilter periodFilter, EpptScenarioRun scenarioRun, List<ChartComponent> chartComponents)
+	private ExceedanceData buildExceedanceData(MonthPeriodFilter periodFilter, EpptScenarioRun scenarioRun, List<ChartComponent> chartComponents)
 			throws EpptReportException
 	{
 		ChartComponent chartComponent = chartComponents.get(0);
-		NavigableMap<Double, Double> primaryData = new TreeMap<>();
+		NavigableMap<Double, Double> primaryData;
 		Map<String, NavigableMap<Double, Double>> thresholdData = new HashMap<>();
 		try
 		{
