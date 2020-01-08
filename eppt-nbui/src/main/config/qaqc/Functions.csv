@@ -9,7 +9,7 @@
 !Reference documentation - JythonFunctions.docx for more information,,
 !%2C (HTML standard value) is a String replacement for comma literals as commas are not valid characters in CSV formatted files,,
 !,,
-1,DvAnnualExceedanceWYD(${guiLinkId}%2C ${month}),dssReader.getGuiLinkData(${guiLinkId}).entrySet().stream().collect(collectingAndThen(groupingBy(mapToPeriodStartYear(${month})%2C averagingDouble(jdf(lambda e : e.getValue())))%2CgenerateExceedanceValues()))
+1,DvAnnualExceedanceWYD(${guiLinkId}%2C ${month}),calculateExceedance(dssReader.getYearlyGuiLinkData(${guiLinkId}%2C ${month}).entrySet().stream().filter(annualCommonPeriodFilter).map(jf(lambda e : e.getValue())).collect(toList()))
 2,DtsTitle(${dtsId}),titleReader.getDtsTitle(${dtsId})
 3,DtsEntirePeriodPerMonth(${dtsId}),calculateExceedance(dssReader.getDtsData(${dtsId}).entrySet().stream().filter(periodFilter).map(jf(lambda x : x.getValue())).collect(toList()))
 4,DtsEntirePeriodExceedanceAllMonths(${dtsId}),calculateExceedance(ArrayList(dssReader.getDtsData(${dtsId}).values()))
