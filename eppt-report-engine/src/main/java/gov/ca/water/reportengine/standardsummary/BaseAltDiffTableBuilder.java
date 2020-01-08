@@ -140,7 +140,7 @@ class BaseAltDiffTableBuilder extends TableBuilder
 		Element retval = getDocument().createElement(SEASONAL_TYPE_ELEMENT);
 		retval.setAttribute(SEASONAL_TYPE_NAME_ATTRIBUTE, period.getPeriodName());
 		SummaryReportParameters reportParameters = getReportParameters();
-		PeriodFilter filter = new WaterYearPeriodFilter(period, reportParameters.getWaterYearIndex());
+		PeriodFilter filter = new WaterYearPeriodFilter(period, reportParameters.getWaterYearIndex(), reportParameters.getWaterYearDefinition());
 		AnnualPeriodFilter annualPeriodFilter = new YearlyWaterYearPeriodFilter(period, reportParameters.getWaterYearIndex());
 		appendScenarios(retval, filter, annualPeriodFilter, epptChart);
 		return retval;
