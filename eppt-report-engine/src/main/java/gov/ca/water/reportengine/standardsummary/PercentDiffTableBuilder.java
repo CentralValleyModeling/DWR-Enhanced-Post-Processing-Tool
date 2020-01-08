@@ -146,8 +146,7 @@ class PercentDiffTableBuilder extends BaseAltDiffTableBuilder
 
 					BigDecimal bigDecimal = BigDecimal.valueOf(percentage);
 					percentage = bigDecimal.round(new MathContext(3)).doubleValue();
-					String textRaw = bigDecimal.toString();
-					retval.setTextContent(textRaw + "%");
+					retval.setTextContent(percentage + "%");
 					_valueElements.put(retval, percentage);
 				}
 				else if(altValue == 0)

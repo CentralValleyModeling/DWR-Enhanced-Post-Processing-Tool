@@ -17,6 +17,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Stream;
 import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
@@ -100,6 +101,12 @@ public class JythonScriptRunner
 		PYTHON_ENGINE.put("dssReader", _dssReader);
 		PYTHON_ENGINE.put("titleReader", titleReader);
 		PYTHON_ENGINE.put("commonPeriodFilter", commonPeriodFilter);
+		PYTHON_ENGINE.put("annualCommonPeriodFilter", (AnnualPeriodFilter) input ->
+		{
+			Integer year = input.getKey();
+			return year >= commonPeriodFilter.getStart().getYear()
+					&& year <= commonPeriodFilter.getEnd().getYear();
+		});
 		setWaterYearType(null);
 		setWaterYearIndex(null);
 		setWaterYearPeriodRanges(null);
