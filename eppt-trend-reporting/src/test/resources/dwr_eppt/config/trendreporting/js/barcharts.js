@@ -176,7 +176,7 @@ function plot(data) {
         displaylogo: false,
         modeBarButtonsToRemove: ['toImage', 'sendDataToCloud', 'editInChartStudio', 'lasso2d', 'select2d', 'resetScale2d'],
         scrollZoom: true,
-        responsive: true,
+        responsive: false,
         grid: {rows: 2, columns: 1, pattern: 'independent'}
     });
     $("#tester").mousedown((ev) => {

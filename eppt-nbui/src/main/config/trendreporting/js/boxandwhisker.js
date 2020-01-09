@@ -30,7 +30,7 @@ function getPlotlyBoxValuesForPeriodAvg(tsc) {
     return datum;
 }
 
-function getPlotlyBoxValues(dataOnly, periodMonths, periodSeries) {
+function getPlotlyBoxValues(dataOnly, periodMonths) {
     var y = [];
     var x = [];
     if (periodMonths.length > 1) {
@@ -42,11 +42,6 @@ function getPlotlyBoxValues(dataOnly, periodMonths, periodSeries) {
         let filteredData = filterDataForMonth(dataOnly, periodMonths[i]);
         y = y.concat(filteredData);
         x = x.concat(new Array(filteredData.length).fill(periodMonths[i], 0, filteredData.length));
-    }
-    if (periodMonths.length > 1) {
-        let values = getPlotlyBoxValuesForPeriodAvg(periodSeries);
-        y = y.concat(values);
-        x = x.concat(new Array(values.length).fill('Annual', 0, values.length));
     }
     return {
         y: y,
@@ -72,7 +67,7 @@ function getPlotlySeries(datum, periodMonths) {
     var series = [];
     for (var i = 0; i < datum.length; i++) {
         var timeSeries = datum[i]['full_time_series'];
-        var data = getPlotlyBoxValues(timeSeries, periodMonths, datum[i]['period_filtered_time_series']);
+        var data = getPlotlyBoxValues(timeSeries, periodMonths);
         series.push({
             y: data['y'],
             x: data['x'],
@@ -92,7 +87,10 @@ function plot(data) {
     let datum = data['scenario_run_data'];
     let periodMonths = data['period_months'];
     var layout = {
-        font: PLOTLY_FONT,
+        font: {
+            family: 'Lucida Grande", "Lucida Sans Unicode", "Verdana", "Arial", "Helvetica", "sans-serif',
+            color: 'black',
+        },
         title: {
             text: data['month_period_title'] + ' ' + data['gui_link_title'] + '<br>(' + data['statistics'] + ')',
             font: {

@@ -156,6 +156,13 @@ class TrendReportStatisticsPane extends TitledPane
 
 	void addListener(ChangeListener<? super TrendStatistics> inputsChanged)
 	{
-		_statisticsListView.getSelectionModel().selectedItemProperty().addListener(inputsChanged);
+		_statisticsListView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) ->
+		{
+			inputsChanged.changed(observable, oldValue, newValue);
+			if(newValue != null)
+			{
+				_textField.setText(newValue.toString());
+			}
+		});
 	}
 }

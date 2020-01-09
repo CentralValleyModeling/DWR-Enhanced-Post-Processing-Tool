@@ -201,7 +201,6 @@ public class TrendReportPanel extends JFXPanel
 		borderPane.setTop(buildToggleControls());
 		borderPane.setCenter(_javascriptPane.getDashboardPane());
 		BorderPane.setMargin(borderPane, new Insets(5.0, 0, 0, 0));
-		borderPane.setMaxWidth(1300);
 		return borderPane;
 	}
 

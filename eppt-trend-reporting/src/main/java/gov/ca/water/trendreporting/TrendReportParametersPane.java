@@ -239,7 +239,14 @@ class TrendReportParametersPane extends TitledPane
 
 	void addListener(ChangeListener<? super TrendReportingParameters.TrendParameter> inputsChanged)
 	{
-		_parameterListView.getSelectionModel().selectedItemProperty().addListener(inputsChanged);
+		_parameterListView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) ->
+		{
+			inputsChanged.changed(observable, oldValue, newValue);
+			if(newValue != null)
+			{
+				_textField.setPromptText(newValue.toString());
+			}
+		});
 	}
 
 	private static Set<TrendType> getTrendTypes()

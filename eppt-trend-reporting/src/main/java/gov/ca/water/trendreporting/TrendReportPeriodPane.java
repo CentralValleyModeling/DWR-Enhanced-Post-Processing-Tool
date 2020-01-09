@@ -74,7 +74,14 @@ class TrendReportPeriodPane extends TitledPane
 
 	void addListener(ChangeListener<? super MonthPeriod> inputsChanged)
 	{
-		_seasonalPeriodListView.getSelectionModel().selectedItemProperty().addListener(inputsChanged);
+		_seasonalPeriodListView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) ->
+		{
+			inputsChanged.changed(observable, oldValue, newValue);
+			if(newValue != null)
+			{
+				_textField.setPromptText(newValue.toString());
+			}
+		});
 	}
 
 	ObservableList<MonthPeriod> getSelectedItems()
@@ -94,11 +101,11 @@ class TrendReportPeriodPane extends TitledPane
 		String text = _textField.getText();
 		if(text.trim().isEmpty())
 		{
-			_filteredPeriods.setPredicate(s->true);
+			_filteredPeriods.setPredicate(s -> true);
 		}
 		else
 		{
-			_filteredPeriods.setPredicate(s->s.toString().toLowerCase().contains(text.toLowerCase()));
+			_filteredPeriods.setPredicate(s -> s.toString().toLowerCase().contains(text.toLowerCase()));
 		}
 		if(selectedItem != null && _filteredPeriods.contains(selectedItem))
 		{
