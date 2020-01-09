@@ -21,9 +21,11 @@ import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import javax.swing.*;
 
+import gov.ca.water.calgui.project.EpptScenarioRun;
 import gov.ca.water.calgui.project.PlotConfigurationState;
 import gov.ca.water.calgui.techservice.IErrorHandlingSvc;
 import gov.ca.water.calgui.techservice.impl.ErrorHandlingSvcImpl;
+import gov.ca.water.quickresults.ui.projectconfig.ProjectConfigurationPanel;
 import org.swixml.SwingEngine;
 
 import hec.io.S;
@@ -45,22 +47,24 @@ public class PlotConfigurationStateBuilder
 		{
 			String cAdd = "";
 			// Base, Comparison and Difference
-			JRadioButton rdb = (JRadioButton) _swingEngine.find("rdbp000");
-			if(rdb.isSelected())
+			ProjectConfigurationPanel projectConfigurationPanel = ProjectConfigurationPanel.getProjectConfigurationPanel();
+			List<EpptScenarioRun> epptScenarioAlternatives = projectConfigurationPanel.getEpptScenarioAlternatives();
+			if(epptScenarioAlternatives.isEmpty())
 			{
 				cAdd = cAdd + "Base";
 			}
-
-			rdb = (JRadioButton) _swingEngine.find("rdbp001");
-			if(rdb.isSelected())
+			else
 			{
-				cAdd = cAdd + "Comp";
-			}
 
-			rdb = (JRadioButton) _swingEngine.find("rdbp002");
-			if(rdb.isSelected())
-			{
-				cAdd = cAdd + "Diff";
+				JCheckBox checkBox = (JCheckBox) _swingEngine.find("RepckbScenarioDiff");
+				if(checkBox.isSelected())
+				{
+					cAdd = cAdd + "Diff";
+				}
+				else
+				{
+					cAdd = cAdd + "Comp";
+				}
 			}
 			// Units
 			JCheckBox checkBox = (JCheckBox) _swingEngine.find("chkTAF");
@@ -138,14 +142,24 @@ public class PlotConfigurationStateBuilder
 		try
 		{
 			// Base, Comparison and Difference
-			PlotConfigurationState.ComparisonType comparisonType = PlotConfigurationState.ComparisonType.BASE;
-			if(((JRadioButton) _swingEngine.find("rdbp001")).isSelected())
+			ProjectConfigurationPanel projectConfigurationPanel = ProjectConfigurationPanel.getProjectConfigurationPanel();
+			List<EpptScenarioRun> epptScenarioAlternatives = projectConfigurationPanel.getEpptScenarioAlternatives();
+			PlotConfigurationState.ComparisonType comparisonType;
+			if(epptScenarioAlternatives.isEmpty())
 			{
-				comparisonType = PlotConfigurationState.ComparisonType.COMPARISON;
+				comparisonType = PlotConfigurationState.ComparisonType.BASE;
 			}
-			if(((JRadioButton) _swingEngine.find("rdbp002")).isSelected())
+			else
 			{
-				comparisonType = PlotConfigurationState.ComparisonType.DIFF;
+				JCheckBox checkBox = (JCheckBox) _swingEngine.find("RepckbScenarioDiff");
+				if(checkBox.isSelected())
+				{
+					comparisonType = PlotConfigurationState.ComparisonType.DIFF;
+				}
+				else
+				{
+					comparisonType = PlotConfigurationState.ComparisonType.COMPARISON;
+				}
 			}
 			boolean displayTaf = !((JCheckBox) _swingEngine.find("chkTAF")).isSelected();
 			boolean displayTimeSeriesPlot = ((JCheckBox) _swingEngine.find("RepckbTimeSeriesPlot")).isSelected();

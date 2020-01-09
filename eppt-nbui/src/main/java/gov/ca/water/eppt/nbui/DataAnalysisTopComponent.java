@@ -14,6 +14,8 @@ package gov.ca.water.eppt.nbui;
 import java.awt.BorderLayout;
 import javax.swing.*;
 
+import gov.ca.water.quickresults.ui.EpptPanel;
+import gov.ca.water.quickresults.ui.customresults.CustomResultsPanel;
 import gov.ca.water.quickresults.ui.dataanalysis.DataAnalysisListener;
 import gov.ca.water.quickresults.ui.dataanalysis.DataAnalysisPanel;
 import org.openide.awt.ActionID;
@@ -66,5 +68,11 @@ public final class DataAnalysisTopComponent extends EpptTopComponent
 	public String getJavaHelpId()
 	{
 		return _dataAnalysisPanel.getJavaHelpId();
+	}
+
+	@Override
+	Class<? extends EpptPanel> getEpptPanelClass()
+	{
+		return DataAnalysisPanel.class;
 	}
 }

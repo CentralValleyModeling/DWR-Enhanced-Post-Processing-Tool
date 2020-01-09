@@ -16,6 +16,8 @@ import java.awt.BorderLayout;
 import java.awt.Dimension;
 import javax.swing.*;
 
+import gov.ca.water.quickresults.ui.EpptPanel;
+import gov.ca.water.quickresults.ui.customresults.CustomResultsPanel;
 import org.openide.windows.TopComponent;
 
 /**
@@ -53,5 +55,11 @@ public class PlotTopComponent extends EpptTopComponent
 	public String getJavaHelpId()
 	{
 		return "4.2_ViewingResults.htm";
+	}
+
+	@Override
+	Class<? extends EpptPanel> getEpptPanelClass()
+	{
+		return null;
 	}
 }

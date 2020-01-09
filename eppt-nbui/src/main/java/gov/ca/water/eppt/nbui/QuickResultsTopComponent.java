@@ -15,6 +15,8 @@ import java.awt.BorderLayout;
 import javax.swing.*;
 
 import gov.ca.water.calgui.presentation.DisplayHelper;
+import gov.ca.water.quickresults.ui.EpptPanel;
+import gov.ca.water.quickresults.ui.projectconfig.ProjectConfigurationPanel;
 import gov.ca.water.quickresults.ui.quickresults.QuickResultsListener;
 import gov.ca.water.quickresults.ui.quickresults.QuickResultsPanel;
 import org.openide.awt.ActionID;
@@ -68,5 +70,11 @@ public final class QuickResultsTopComponent extends EpptTopComponent
 	public String getJavaHelpId()
 	{
 		return _quickResultsPanel.getJavaHelpId();
+	}
+
+	@Override
+	Class<? extends EpptPanel> getEpptPanelClass()
+	{
+		return QuickResultsPanel.class;
 	}
 }

@@ -14,6 +14,7 @@ package gov.ca.water.eppt.nbui;
 import java.awt.BorderLayout;
 import javax.swing.*;
 
+import gov.ca.water.quickresults.ui.EpptPanel;
 import gov.ca.water.quickresults.ui.projectconfig.ProjectConfigurationPanel;
 import gov.ca.water.quickresults.ui.report.QAQCReportPanel;
 import org.openide.awt.ActionID;
@@ -49,11 +50,13 @@ public final class QAQCTopComponent extends EpptTopComponent
 {
 
 
+	private final QAQCReportPanel _qaqcPanel;
+
 	public QAQCTopComponent()
 	{
 		setName("QA/QC Report");
-		QAQCReportPanel qaqcPanel = QAQCReportPanel.getInstance();
-		JScrollPane scrollPane = new JScrollPane(qaqcPanel);
+		_qaqcPanel = QAQCReportPanel.getInstance();
+		JScrollPane scrollPane = new JScrollPane(_qaqcPanel);
 		setLayout(new BorderLayout());
 		add(scrollPane, BorderLayout.CENTER);
 	}
@@ -70,6 +73,12 @@ public final class QAQCTopComponent extends EpptTopComponent
 	@Override
 	public String getJavaHelpId()
 	{
-		return "4.5_QAQCReport.htm";
+		return _qaqcPanel.getJavaHelpId();
+	}
+
+	@Override
+	Class<? extends EpptPanel> getEpptPanelClass()
+	{
+		return QAQCReportPanel.class;
 	}
 }

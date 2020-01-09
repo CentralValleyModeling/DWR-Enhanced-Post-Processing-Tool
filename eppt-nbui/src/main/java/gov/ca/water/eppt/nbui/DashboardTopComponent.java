@@ -16,6 +16,8 @@ import java.awt.Color;
 
 import javax.swing.*;
 
+import gov.ca.water.quickresults.ui.EpptPanel;
+import gov.ca.water.quickresults.ui.customresults.CustomResultsPanel;
 import gov.ca.water.quickresults.ui.projectconfig.ProjectConfigurationPanel;
 import gov.ca.water.trendreporting.TrendReportPanel;
 import org.openide.awt.ActionID;
@@ -78,5 +80,11 @@ public final class DashboardTopComponent extends EpptTopComponent
 	public String getJavaHelpId()
 	{
 		return "Trend Reporting";
+	}
+
+	@Override
+	Class<? extends EpptPanel> getEpptPanelClass()
+	{
+		return null;
 	}
 }

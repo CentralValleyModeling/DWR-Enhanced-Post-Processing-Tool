@@ -74,6 +74,7 @@ import gov.ca.water.calgui.scripts.DssReader;
 import gov.ca.water.calgui.wresl.ProcessOutputConsumer;
 import gov.ca.water.calgui.wresl.WreslScriptException;
 import gov.ca.water.calgui.wresl.WreslScriptRunner;
+import gov.ca.water.quickresults.ui.EpptPanel;
 import gov.ca.water.quickresults.ui.TextAreaPrintStream;
 import gov.ca.water.quickresults.ui.projectconfig.ProjectConfigurationPanel;
 import gov.ca.water.reportengine.EPPTReport;
@@ -101,7 +102,7 @@ import static java.util.stream.Collectors.toList;
  * @author <a href="mailto:adam@rmanet.com">Adam Korynta</a>
  * @since 05-13-2019
  */
-public class QAQCReportPanel extends RmaJPanel
+public class QAQCReportPanel extends EpptPanel
 {
 	private static final Logger LOGGER = Logger.getLogger(QAQCReportPanel.class.getName());
 	private static final QAQCReportPanel INSTANCE = new QAQCReportPanel();
@@ -1593,5 +1594,11 @@ public class QAQCReportPanel extends RmaJPanel
 				_printStream.close();
 			}
 		}
+	}
+
+	@Override
+	public String getJavaHelpId()
+	{
+		return "4.5_QAQCReport.htm";
 	}
 }

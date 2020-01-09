@@ -39,16 +39,6 @@
 				</panel>
 				<panel id="ScenarioTree" constraints="BorderLayout.CENTER" preferredsize="410,300" layout="BorderLayout"/>
 				<panel constraints="BorderLayout.SOUTH" layout="BorderLayout">
-					<panel constraints="BorderLayout.WEST" layout="FlowLayout(FlowLayout.LEFT)">
-						<buttongroup>
-							<radiobutton name="rdbp000" id="rdbp000" text="Base" selected="true">
-							</radiobutton>
-							<radiobutton name="rdbp001" id="rdbp001" text="Comparison" enabled="false">
-							</radiobutton>
-							<radiobutton name="rdbp002" id="rdbp002" text="Difference" enabled="false">
-							</radiobutton>
-						</buttongroup>
-					</panel>
 					<panel constraints="BorderLayout.EAST" layout="FlowLayout(FlowLayout.RIGHT)">
 						<button id="moveUp" name="moveUp" text="&#9650;" ActionCommand="moveUp" PreferredSize="80,24"/>
 						<button id="moveDown" name="moveDown" text="&#9660;" ActionCommand="moveDown" PreferredSize="80,24"/>
@@ -95,10 +85,13 @@
 								</panel>
 							</panel>
 						</panel>
-						<panel border="TitledBorder(Quick/Custom Results)" layout="GridBagLayout">
+						<panel name="QuickCustomResultsPanel" id="QuickCustomResultsPanel" border="TitledBorder(Quick/Custom Results)" layout="GridBagLayout">
 							<gridbagconstraints insets="0,5,0,3" anchor="GridBagConstraints.NORTHWEST" gridx="1" gridy="2"/>
 							<panel layout="GridBagLayout">
 								<gridbagconstraints insets="0,0,5,3" anchor="GridBagConstraints.WEST" gridx="1" gridy="4"/>
+								<checkbox name="RepckbScenarioDiff" id="RepckbScenarioDiff" text="Display Scenario Difference" selected="false">
+									<gridbagconstraints insets="0,0,5,3" anchor="GridBagConstraints.WEST" gridx="1" gridy="0"/>
+								</checkbox>
 								<checkbox name="RepckbTimeSeriesPlot" id="RepckbTimeSeriesPlot" text="Display Time Series Plot" selected="true">
 									<gridbagconstraints insets="0,0,5,3" anchor="GridBagConstraints.WEST" gridx="1" gridy="1"/>
 								</checkbox>

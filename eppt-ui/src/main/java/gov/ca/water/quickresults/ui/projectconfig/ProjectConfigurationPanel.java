@@ -15,7 +15,6 @@ package gov.ca.water.quickresults.ui.projectconfig;
 import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Container;
-import java.awt.Dimension;
 import java.awt.Frame;
 import java.awt.KeyboardFocusManager;
 import java.awt.event.KeyAdapter;
@@ -45,9 +44,11 @@ import gov.ca.water.calgui.project.EpptScenarioRun;
 import gov.ca.water.calgui.project.EpptScenarioRunValidator;
 import gov.ca.water.calgui.project.PlotConfigurationState;
 import gov.ca.water.quickresults.ui.EpptPanel;
+import gov.ca.water.quickresults.ui.customresults.CustomResultsPanel;
 import gov.ca.water.quickresults.ui.projectconfig.scenarioconfig.ScenarioRunEditor;
 import gov.ca.water.quickresults.ui.projectconfig.scenariotable.ScenarioTablePanel;
 import gov.ca.water.quickresults.ui.quickresults.PlotConfigurationStateBuilder;
+import gov.ca.water.quickresults.ui.quickresults.QuickResultsPanel;
 import javafx.application.Platform;
 import org.apache.log4j.Logger;
 
@@ -255,16 +256,9 @@ public final class ProjectConfigurationPanel extends EpptPanel
 		SwingUtilities.invokeLater(() ->
 		{
 			_scenarioChangeListeners.forEach(this::postScenarioChanged);
-			EpptScenarioRun base = _scenarioTablePanel.getBaseScenarioRun();
 			List<EpptScenarioRun> alternatives = _scenarioTablePanel.getAlternativeScenarioRuns();
-			getRadioButtonDiff().setEnabled(!alternatives.isEmpty() && base != null);
-			getRadioButtonComparison().setEnabled(!alternatives.isEmpty() && base != null);
-			if(alternatives.isEmpty())
-			{
-				getRadioButtonBase().setSelected(true);
-				getRadioButtonComparison().setSelected(false);
-				getRadioButtonDiff().setSelected(false);
-			}
+			Component checkBox = getSwingEngine().find("RepckbScenarioDiff");
+			checkBox.setEnabled(!alternatives.isEmpty());
 		});
 	}
 
@@ -533,21 +527,6 @@ public final class ProjectConfigurationPanel extends EpptPanel
 		return ((JCheckBox) getSwingEngine().find("chkTAF")).isSelected();
 	}
 
-	private JRadioButton getRadioButtonBase()
-	{
-		return (JRadioButton) getSwingEngine().find("rdbp000");
-	}
-
-	private JRadioButton getRadioButtonComparison()
-	{
-		return (JRadioButton) getSwingEngine().find("rdbp001");
-	}
-
-	private JRadioButton getRadioButtonDiff()
-	{
-		return (JRadioButton) getSwingEngine().find("rdbp002");
-	}
-
 	public LocalDate getEndMonth()
 	{
 		JSpinner monthSpinner = (JSpinner) getSwingEngine().find("spnEndMonth");
@@ -659,6 +638,28 @@ public final class ProjectConfigurationPanel extends EpptPanel
 	{
 		_scenarioTablePanel.moveSelectedScenarioDown();
 		setModified(true);
+	}
+
+	private void enableChildComponents(boolean enable, Component component)
+	{
+		component.setEnabled(enable);
+		if(component instanceof Container)
+		{
+			Component[] components = ((Container) component).getComponents();
+			for(Component child : components)
+			{
+				enableChildComponents(enable, child);
+			}
+		}
+	}
+
+	public void topComponentActivated(Class<? extends EpptPanel> epptPanelClass)
+	{
+		Component quickCustomResultsPanel = getSwingEngine().find("QuickCustomResultsPanel");
+		boolean enableQuickCustomResults = epptPanelClass == ProjectConfigurationPanel.class
+				|| epptPanelClass == QuickResultsPanel.class
+				|| epptPanelClass == CustomResultsPanel.class;
+		enableChildComponents(enableQuickCustomResults, quickCustomResultsPanel);
 	}
 
 	private static final class MyKeyAdapter extends KeyAdapter

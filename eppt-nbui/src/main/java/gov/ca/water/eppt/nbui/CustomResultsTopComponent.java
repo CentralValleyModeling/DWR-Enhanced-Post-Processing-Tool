@@ -14,8 +14,10 @@ package gov.ca.water.eppt.nbui;
 import java.awt.BorderLayout;
 import javax.swing.*;
 
+import gov.ca.water.quickresults.ui.EpptPanel;
 import gov.ca.water.quickresults.ui.customresults.CustomResultsListener;
 import gov.ca.water.quickresults.ui.customresults.CustomResultsPanel;
+import gov.ca.water.quickresults.ui.projectconfig.ProjectConfigurationPanel;
 import org.openide.awt.ActionID;
 import org.openide.awt.ActionReference;
 import org.openide.awt.ActionReferences;
@@ -65,5 +67,11 @@ public final class CustomResultsTopComponent extends EpptTopComponent
 	public String getJavaHelpId()
 	{
 		return _customResultsPanel.getJavaHelpId();
+	}
+
+	@Override
+	Class<? extends EpptPanel> getEpptPanelClass()
+	{
+		return CustomResultsPanel.class;
 	}
 }

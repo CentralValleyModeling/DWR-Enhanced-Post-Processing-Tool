@@ -17,6 +17,7 @@ import java.io.ObjectInput;
 import javax.swing.*;
 
 import gov.ca.water.eppt.nbui.actions.ProjectConfigurationSavable;
+import gov.ca.water.quickresults.ui.EpptPanel;
 import gov.ca.water.quickresults.ui.projectconfig.ProjectConfigurationListener;
 import gov.ca.water.quickresults.ui.projectconfig.ProjectConfigurationPanel;
 import org.openide.awt.ActionID;
@@ -129,5 +130,11 @@ public final class ProjectConfigurationTopComponent extends EpptTopComponent
 		JScrollPane scrollPane = new JScrollPane(rmaJPanel);
 		setLayout(new BorderLayout());
 		add(scrollPane, BorderLayout.CENTER);
+	}
+
+	@Override
+	Class<? extends EpptPanel> getEpptPanelClass()
+	{
+		return ProjectConfigurationPanel.class;
 	}
 }
