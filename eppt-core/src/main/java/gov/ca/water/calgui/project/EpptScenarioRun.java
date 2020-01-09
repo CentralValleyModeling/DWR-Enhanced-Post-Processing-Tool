@@ -55,12 +55,12 @@ public class EpptScenarioRun
 		_outputPath = outputPath;
 		if(!wreslDirectory.toFile().isDirectory())
 		{
-			throw new IllegalArgumentException("WRESL Directory must not be a file");
+			throw new IllegalArgumentException("WRESL Directory must not be a file: " + wreslDirectory);
 		}
 		_wreslDirectory = wreslDirectory;
 		if(!lookupDirectory.toFile().isDirectory())
 		{
-			throw new IllegalArgumentException("Lookup Directory must not be a file");
+			throw new IllegalArgumentException("Lookup Directory must not be a file: " + lookupDirectory);
 		}
 		_lookupDirectory = lookupDirectory;
 		_dssContainer = dssContainer;
