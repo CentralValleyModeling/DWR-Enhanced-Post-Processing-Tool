@@ -446,9 +446,9 @@ public class TrendReportPanel extends JFXPanel
 		}
 	}
 
-	private void setUiLoading(boolean progresBar, Cursor cursorType, String text)
+	private void setUiLoading(boolean progressBar, Cursor cursorType, String text)
 	{
-		_progressBar.setVisible(progresBar);
+		_progressBar.setVisible(progressBar);
 		getScene().setCursor(cursorType);
 		_progressTextLabel.setText(text);
 	}
@@ -468,7 +468,7 @@ public class TrendReportPanel extends JFXPanel
 					EpptReportingComputedSet epptReportingComputedSet = computeForMetrics(parameter.getGuiLink(), statistic, monthPeriod,
 							start, end, taf, scenarioRuns, waterYearIndex, waterYearIndices);
 					JSONObject jsonObject = epptReportingComputedSet.toJson();
-					LOGGER.log(Level.INFO, "{0}", jsonObject);
+					LOGGER.log(Level.FINE, "{0}", jsonObject);
 					retval.add(jsonObject);
 				}
 			}

@@ -161,7 +161,7 @@ class TrendReportStatisticsPane extends TitledPane
 			inputsChanged.changed(observable, oldValue, newValue);
 			if(newValue != null)
 			{
-				_textField.setText(newValue.toString());
+				_textField.setPromptText(newValue.toString());
 			}
 		});
 	}
