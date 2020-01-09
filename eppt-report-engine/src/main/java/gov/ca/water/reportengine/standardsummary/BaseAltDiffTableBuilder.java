@@ -177,7 +177,7 @@ class BaseAltDiffTableBuilder extends TableBuilder
 		return retval;
 	}
 
-	private List<Element> buildScenarios(WaterYearPeriod waterYearPeriod, EpptChart epptChart)
+	List<Element> buildScenarios(WaterYearPeriod waterYearPeriod, EpptChart epptChart)
 	{
 		SummaryReportParameters reportParameters = getReportParameters();
 		PeriodFilter baseFilter = new WaterYearPeriodFilter(waterYearPeriod, reportParameters.getWaterYearIndex(getBase()),
@@ -423,7 +423,7 @@ class BaseAltDiffTableBuilder extends TableBuilder
 		}
 	}
 
-	private Element buildValueForChart(EpptScenarioRun scenarioRun, ChartComponent v, PeriodFilter filter, AnnualPeriodFilter annualPeriodFilter)
+	Element buildValueForChart(EpptScenarioRun scenarioRun, ChartComponent v, PeriodFilter filter, AnnualPeriodFilter annualPeriodFilter)
 	{
 		Element retval = getDocument().createElement(VALUE_ELEMENT);
 		try
