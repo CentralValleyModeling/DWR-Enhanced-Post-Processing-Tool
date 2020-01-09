@@ -15,7 +15,6 @@ package gov.ca.water.reportengine.standardsummary;
 import java.awt.Color;
 import java.math.BigDecimal;
 import java.math.MathContext;
-import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.DoubleSummaryStatistics;
 import java.util.HashMap;
