@@ -45,10 +45,12 @@ import gov.ca.water.calgui.project.EpptScenarioRunValidator;
 import gov.ca.water.calgui.project.PlotConfigurationState;
 import gov.ca.water.quickresults.ui.EpptPanel;
 import gov.ca.water.quickresults.ui.customresults.CustomResultsPanel;
+import gov.ca.water.quickresults.ui.dataanalysis.DataAnalysisPanel;
 import gov.ca.water.quickresults.ui.projectconfig.scenarioconfig.ScenarioRunEditor;
 import gov.ca.water.quickresults.ui.projectconfig.scenariotable.ScenarioTablePanel;
 import gov.ca.water.quickresults.ui.quickresults.PlotConfigurationStateBuilder;
 import gov.ca.water.quickresults.ui.quickresults.QuickResultsPanel;
+import gov.ca.water.quickresults.ui.report.QAQCReportPanel;
 import javafx.application.Platform;
 import org.apache.log4j.Logger;
 
@@ -256,9 +258,6 @@ public final class ProjectConfigurationPanel extends EpptPanel
 		SwingUtilities.invokeLater(() ->
 		{
 			_scenarioChangeListeners.forEach(this::postScenarioChanged);
-			List<EpptScenarioRun> alternatives = _scenarioTablePanel.getAlternativeScenarioRuns();
-			Component checkBox = getSwingEngine().find("RepckbScenarioDiff");
-			checkBox.setEnabled(!alternatives.isEmpty());
 		});
 	}
 
@@ -660,6 +659,7 @@ public final class ProjectConfigurationPanel extends EpptPanel
 				|| epptPanelClass == QuickResultsPanel.class
 				|| epptPanelClass == CustomResultsPanel.class;
 		enableChildComponents(enableQuickCustomResults, quickCustomResultsPanel);
+		getSwingEngine().find("chkTAF").setEnabled(epptPanelClass != QAQCReportPanel.class && epptPanelClass != DataAnalysisPanel.class);
 	}
 
 	private static final class MyKeyAdapter extends KeyAdapter
