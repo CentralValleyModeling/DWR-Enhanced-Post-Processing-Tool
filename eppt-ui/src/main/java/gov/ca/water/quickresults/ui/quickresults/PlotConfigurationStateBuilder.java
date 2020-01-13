@@ -14,11 +14,16 @@ package gov.ca.water.quickresults.ui.quickresults;
 
 import java.awt.Component;
 import java.awt.Container;
+import java.time.Month;
+import java.time.format.DateTimeFormatterBuilder;
+import java.time.format.TextStyle;
+import java.time.temporal.IsoFields;
+import java.time.temporal.TemporalAccessor;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import java.util.stream.Collectors;
 import javax.swing.*;
 
 import gov.ca.water.calgui.project.EpptScenarioRun;
@@ -28,7 +33,7 @@ import gov.ca.water.calgui.techservice.impl.ErrorHandlingSvcImpl;
 import gov.ca.water.quickresults.ui.projectconfig.ProjectConfigurationPanel;
 import org.swixml.SwingEngine;
 
-import hec.io.S;
+import static java.util.stream.Collectors.joining;
 
 public class PlotConfigurationStateBuilder
 {
@@ -95,11 +100,22 @@ public class PlotConfigurationStateBuilder
 			}
 
 			Component[] controls2 = ((JPanel) _swingEngine.find("controls2")).getComponents();
-			List<String> exceedanceMonths = new ArrayList<>();
+			List<Month> exceedanceMonths = new ArrayList<>();
+			boolean isDisplayExceedanceAll = ((JCheckBox) _swingEngine.find("ExceedanceALL")).isSelected();
+			boolean isDisplayExceedanceAnnualFlow = ((JCheckBox) _swingEngine.find("ExceedanceAnnual")).isSelected();
 			addExceedancePlots(exceedanceMonths, controls2);
-			if(!exceedanceMonths.isEmpty())
+			if(!exceedanceMonths.isEmpty() || isDisplayExceedanceAll || isDisplayExceedanceAnnualFlow)
 			{
-				cAdd = cAdd + ";EX-" + String.join(",", exceedanceMonths);
+				cAdd = cAdd + ";EX-" + exceedanceMonths.stream().map(m -> m.getDisplayName(TextStyle.SHORT, Locale.getDefault()))
+													   .collect(joining(","));
+				if(isDisplayExceedanceAll)
+				{
+					cAdd += ",All";
+				}
+				if(isDisplayExceedanceAnnualFlow)
+				{
+					cAdd += ",Annual";
+				}
 			}
 
 			// Boxplot
@@ -166,9 +182,11 @@ public class PlotConfigurationStateBuilder
 			boolean displayBoxAndWhisker = ((JCheckBox) _swingEngine.find("RepckbBAWPlot")).isSelected();
 			boolean displayMonthlyTable = ((JCheckBox) _swingEngine.find("RepckbMonthlyTable")).isSelected();
 			boolean displaySummaryTable = ((JCheckBox) _swingEngine.find("RepckbSummaryTable")).isSelected();
+			boolean isDisplayExceedanceAll = ((JCheckBox) _swingEngine.find("ExceedanceALL")).isSelected();
+			boolean isDisplayExceedanceAnnualFlow = ((JCheckBox) _swingEngine.find("ExceedanceAnnual")).isSelected();
 
 			Component[] controls2 = ((JPanel) _swingEngine.find("controls2")).getComponents();
-			List<String> exceedance = new ArrayList<>();
+			List<Month> exceedance = new ArrayList<>();
 			addExceedancePlots(exceedance, controls2);
 
 			List<String> summary = new ArrayList<>();
@@ -178,8 +196,9 @@ public class PlotConfigurationStateBuilder
 				Component[] components = ((JPanel) _swingEngine.find("controls3")).getComponents();
 				addSummaryTables(summary, components);
 			}
-			return new PlotConfigurationState(comparisonType, displayTaf, displayTimeSeriesPlot, displayBoxAndWhisker, exceedance,
-					displayMonthlyTable, displaySummaryTable, summary);
+			return new PlotConfigurationState(comparisonType, displayTaf, displayTimeSeriesPlot, displayBoxAndWhisker, isDisplayExceedanceAll,
+					exceedance,
+					displayMonthlyTable, displaySummaryTable, isDisplayExceedanceAnnualFlow, summary);
 		}
 		catch(RuntimeException e)
 		{
@@ -191,13 +210,22 @@ public class PlotConfigurationStateBuilder
 	}
 
 
-	private void addExceedancePlots(List<String> exceedanceMonths, Component[] components)
+	private void addExceedancePlots(List<Month> exceedanceMonths, Component[] components)
 	{
 		for(Component c : components)
 		{
 			if(c instanceof JCheckBox && ((JCheckBox) c).isSelected())
 			{
-				exceedanceMonths.add(((JCheckBox) c).getText());
+				if(c.getName().toLowerCase().startsWith("repchkmon"))
+				{
+					String text = ((JCheckBox) c).getText();
+					TemporalAccessor mmm = new DateTimeFormatterBuilder()
+							.parseCaseInsensitive()
+							.appendPattern("MMM")
+							.toFormatter()
+							.parse(text);
+					exceedanceMonths.add(Month.from(mmm));
+				}
 			}
 			else if(c instanceof Container)
 			{

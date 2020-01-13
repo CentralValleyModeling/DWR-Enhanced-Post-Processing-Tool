@@ -14,7 +14,6 @@ package gov.ca.water.trendreporting;
 
 
 import java.awt.Dimension;
-import java.awt.Frame;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -32,11 +31,11 @@ import java.util.stream.Stream;
 import javax.xml.parsers.ParserConfigurationException;
 
 import gov.ca.water.calgui.EpptInitializationException;
-import gov.ca.water.calgui.bo.GUILinksAllModelsBO;
 import gov.ca.water.calgui.bo.WaterYearIndex;
-import gov.ca.water.calgui.busservice.impl.GuiLinksSeedDataSvcImpl;
+import gov.ca.water.calgui.busservice.impl.EpptReportingComputedSet;
+import gov.ca.water.calgui.busservice.impl.EpptStatistic;
+import gov.ca.water.calgui.busservice.impl.ScriptedEpptStatistics;
 import gov.ca.water.calgui.busservice.impl.MonthPeriod;
-import gov.ca.water.calgui.busservice.impl.WaterYearDefinitionSvc;
 import gov.ca.water.calgui.busservice.impl.WaterYearTableReader;
 import gov.ca.water.calgui.constant.Constant;
 import gov.ca.water.calgui.project.EpptScenarioRun;
@@ -53,9 +52,7 @@ import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
-import javafx.scene.control.ListView;
 import javafx.scene.control.ProgressBar;
-import javafx.scene.control.SelectionMode;
 import javafx.scene.control.TitledPane;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.control.ToggleGroup;
@@ -66,7 +63,6 @@ import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.TilePane;
-import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import org.json.JSONObject;
 import org.xml.sax.SAXException;
@@ -337,7 +333,7 @@ public class TrendReportPanel extends JFXPanel
 	private void loadJavascript(Path path, LocalDate start, LocalDate end, boolean taf)
 	{
 		List<TrendReportingParameters.TrendParameter> guiLink = new ArrayList<>(_parametersPane.getSelectedItems());
-		List<TrendStatistics> statistic = new ArrayList<>(_statisticsPane.getSelectedItems());
+		List<EpptStatistic> statistic = new ArrayList<>(_statisticsPane.getSelectedItems());
 		List<MonthPeriod> monthPeriod = new ArrayList<>(_seasonalPeriodPane.getSelectedItems());
 		WaterYearIndex waterYearIndex = _waterYearIndexComboBox.getSelectionModel().getSelectedItem();
 		ObservableList<WaterYearIndex> waterYearIndices = _waterYearIndexComboBox.getItems();
@@ -388,7 +384,7 @@ public class TrendReportPanel extends JFXPanel
 	}
 
 	private Optional<String> getError(List<EpptScenarioRun> scenarioRuns,
-									  List<TrendReportingParameters.TrendParameter> guiLink, List<TrendStatistics> statistic,
+									  List<TrendReportingParameters.TrendParameter> guiLink, List<EpptStatistic> statistic,
 									  List<MonthPeriod> monthPeriod,
 									  WaterYearIndex waterYearIndex)
 	{
@@ -453,7 +449,7 @@ public class TrendReportPanel extends JFXPanel
 		_progressTextLabel.setText(text);
 	}
 
-	private synchronized List<JSONObject> computeScenarios(List<TrendReportingParameters.TrendParameter> parameters, List<TrendStatistics> statistics,
+	private synchronized List<JSONObject> computeScenarios(List<TrendReportingParameters.TrendParameter> parameters, List<EpptStatistic> statistics,
 														   List<MonthPeriod> monthPeriods, LocalDate start,
 														   LocalDate end, boolean taf, List<EpptScenarioRun> scenarioRuns,
 														   WaterYearIndex waterYearIndex, ObservableList<WaterYearIndex> waterYearIndices)
@@ -461,11 +457,11 @@ public class TrendReportPanel extends JFXPanel
 		List<JSONObject> retval = new ArrayList<>();
 		for(TrendReportingParameters.TrendParameter parameter : parameters)
 		{
-			for(TrendStatistics statistic : statistics)
+			for(EpptStatistic statistic : statistics)
 			{
 				for(MonthPeriod monthPeriod : monthPeriods)
 				{
-					EpptReportingComputedSet epptReportingComputedSet = computeForMetrics(parameter.getGuiLink(), statistic, monthPeriod,
+					EpptReportingComputedSet epptReportingComputedSet = EpptReportingComputedSet.computeForMetrics(parameter.getGuiLink(), statistic, monthPeriod,
 							start, end, taf, scenarioRuns, waterYearIndex, waterYearIndices);
 					JSONObject jsonObject = epptReportingComputedSet.toJson();
 					LOGGER.log(Level.FINE, "{0}", jsonObject);
@@ -474,38 +470,6 @@ public class TrendReportPanel extends JFXPanel
 			}
 		}
 		return retval;
-	}
-
-	private EpptReportingComputedSet computeForMetrics(GUILinksAllModelsBO guiLink, TrendStatistics statistic,
-													   MonthPeriod monthPeriod, LocalDate start,
-													   LocalDate end, boolean taf, List<EpptScenarioRun> scenarioRuns,
-													   WaterYearIndex waterYearIndex, ObservableList<WaterYearIndex> waterYearIndices)
-	{
-		EpptReportingComputer trendReportingComputer = new EpptReportingComputer(guiLink, statistic, monthPeriod,
-				waterYearIndex, waterYearIndices);
-		List<EpptReportingComputed> trendReportingComputed = new ArrayList<>();
-
-		for(EpptScenarioRun scenarioRun : scenarioRuns)
-		{
-			try
-			{
-
-				if(taf)
-				{
-					trendReportingComputed.add(trendReportingComputer.computeTaf(scenarioRun, start, end));
-				}
-				else
-				{
-					trendReportingComputed.add(trendReportingComputer.computeCfs(scenarioRun, start, end));
-				}
-			}
-			catch(EpptInitializationException e)
-			{
-				LOGGER.log(Level.SEVERE, "Error calculating Trend Reporting for scenario run: " + scenarioRun, e);
-			}
-		}
-		return new EpptReportingComputedSet(guiLink, statistic, monthPeriod,
-				taf, trendReportingComputed);
 	}
 
 }

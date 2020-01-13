@@ -23,6 +23,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Stream;
 
+import gov.ca.water.calgui.busservice.impl.EpptStatistic;
+import gov.ca.water.calgui.busservice.impl.ScriptedEpptStatistics;
 import gov.ca.water.calgui.constant.Constant;
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
@@ -51,10 +53,10 @@ class TrendReportStatisticsPane extends TitledPane
 {
 	private static final Logger LOGGER = Logger.getLogger(TrendReportStatisticsPane.class.getName());
 
-	private final ListView<TrendStatistics> _statisticsListView = new ListView<>();
-	private FilteredList<TrendStatistics> _filteredStats;
-	private ObservableList<TrendStatistics> _backingStats;
-	private final AutoCompleteTextField<TrendStatistics> _textField = new AutoCompleteTextField<>();
+	private final ListView<EpptStatistic> _statisticsListView = new ListView<>();
+	private FilteredList<EpptStatistic> _filteredStats;
+	private ObservableList<EpptStatistic> _backingStats;
+	private final AutoCompleteTextField<EpptStatistic> _textField = new AutoCompleteTextField<>();
 
 	TrendReportStatisticsPane()
 	{
@@ -66,14 +68,14 @@ class TrendReportStatisticsPane extends TitledPane
 	private void initListeners()
 	{
 		_textField.textProperty().addListener((observable, oldValue, newValue) -> textChanged());
-		MultipleSelectionModel<TrendStatistics> selectionModel = _statisticsListView.getSelectionModel();
+		MultipleSelectionModel<EpptStatistic> selectionModel = _statisticsListView.getSelectionModel();
 		_textField.setEntryPicked(obj -> selectionModel.select(obj));
 	}
 
 	private void textChanged()
 	{
 		String text = _textField.getText();
-		TrendStatistics selectedItem = _statisticsListView.getSelectionModel().getSelectedItem();
+		EpptStatistic selectedItem = _statisticsListView.getSelectionModel().getSelectedItem();
 		if(text.trim().isEmpty())
 		{
 			_filteredStats.setPredicate(s->true);
@@ -132,14 +134,14 @@ class TrendReportStatisticsPane extends TitledPane
 		setPrefHeight(200);
 	}
 
-	private List<TrendStatistics> getTrendStatistics()
+	private List<EpptStatistic> getTrendStatistics()
 	{
-		List<TrendStatistics> retval = new ArrayList<>();
+		List<EpptStatistic> retval = new ArrayList<>();
 		Path jython = Paths.get(Constant.TREND_REPORTING_DIR).resolve("jython");
 		try(Stream<Path> stream = Files.walk(jython, 5))
 		{
 			retval = stream.filter(p -> p.toFile().isFile()).filter(p -> p.toString().endsWith("py"))
-						   .map(TrendStatistics::new)
+						   .map(ScriptedEpptStatistics::new)
 						   .collect(toList());
 		}
 		catch(IOException e)
@@ -149,12 +151,12 @@ class TrendReportStatisticsPane extends TitledPane
 		return retval;
 	}
 
-	ObservableList<TrendStatistics> getSelectedItems()
+	ObservableList<EpptStatistic> getSelectedItems()
 	{
 		return _statisticsListView.getSelectionModel().getSelectedItems();
 	}
 
-	void addListener(ChangeListener<? super TrendStatistics> inputsChanged)
+	void addListener(ChangeListener<? super EpptStatistic> inputsChanged)
 	{
 		_statisticsListView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) ->
 		{

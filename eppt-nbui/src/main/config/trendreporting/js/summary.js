@@ -230,10 +230,10 @@ function tabulateLongTermPeriod(data) {
         font: PLOTLY_FONT,
         bgcolor: 'red',
         title: {
-            text: 'Long Term',
+            text: '<b>Long Term</b>',
             bgcolor: 'red'
         },
-        height: 300,
+        height: tableHeight,
         margin: {
             l: 10,
             r: 10,
@@ -265,10 +265,10 @@ function tabulateWaterYearPeriod(waterYearPeriod, data, tableValues, i) {
         font: PLOTLY_FONT,
         bgcolor: 'red',
         title: {
-            text: waterYearPeriod.toUpperCase() + ' (' + getAcronym(waterYearPeriod) + ')',
+            text: '<b>' + waterYearPeriod.toUpperCase() + ' (' + getAcronym(waterYearPeriod) + ')' + '</b>',
             bgcolor: 'red'
         },
-        height: 300,
+        height: tableHeight,
         margin: {
             l: 10,
             r: 10,
@@ -291,7 +291,10 @@ function tabulateWaterYearPeriod(waterYearPeriod, data, tableValues, i) {
     });
 }
 
+var tableHeight = 300;
+
 function plot(data) {
+    tableHeight = 100 + data['scenario_run_data'].length * 35;
     let tableValues = buildTable(data['scenario_run_data'])['cells']['values'];
     tabulateLongTermPeriod(data);
     for (let i = 1; i < tableValues.length; i++) {

@@ -1,5 +1,5 @@
 /*
- * Enhanced Post Processing Tool (EPPT) Copyright (c) 2019.
+ * Enhanced Post Processing Tool (EPPT) Copyright (c) 2020.
  *
  * EPPT is copyrighted by the State of California, Department of Water Resources. It is licensed
  * under the GNU General Public License, version 2. This means it can be
@@ -10,7 +10,7 @@
  * GNU General Public License
  */
 
-package gov.ca.water.trendreporting;
+package gov.ca.water.calgui.busservice.impl;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -37,9 +37,6 @@ import gov.ca.water.calgui.bo.WaterYearDefinition;
 import gov.ca.water.calgui.bo.WaterYearIndex;
 import gov.ca.water.calgui.bo.WaterYearPeriod;
 import gov.ca.water.calgui.bo.WaterYearPeriodRange;
-import gov.ca.water.calgui.busservice.impl.DSSGrabber1SvcImpl;
-import gov.ca.water.calgui.busservice.impl.MonthPeriod;
-import gov.ca.water.calgui.busservice.impl.WaterYearTableReader;
 import gov.ca.water.calgui.project.EpptScenarioRun;
 import gov.ca.water.calgui.scripts.DssReader;
 
@@ -56,18 +53,18 @@ import static java.util.stream.Collectors.toMap;
  * @author <a href="mailto:adam@rmanet.com">Adam Korynta</a>
  * @since 07-26-2019
  */
-class EpptReportingComputer
+public class EpptReportingComputer
 {
 	private static final Logger LOGGER = Logger.getLogger(EpptReportingComputer.class.getName());
 	private final GUILinksAllModelsBO _guiLink;
-	private final TrendStatistics _statistics;
+	private final EpptStatistic _statistics;
 	private final MonthPeriod _monthPeriod;
 	private final WaterYearDefinition _waterYearDefinition;
 	private final WaterYearIndex _waterYearIndex;
 	private final List<WaterYearIndex> _waterYearIndices;
 
-	EpptReportingComputer(GUILinksAllModelsBO guiLink, TrendStatistics statistics, MonthPeriod monthPeriod,
-						  WaterYearIndex waterYearIndex, List<WaterYearIndex> waterYearIndices)
+	public EpptReportingComputer(GUILinksAllModelsBO guiLink, EpptStatistic statistics, MonthPeriod monthPeriod,
+								 WaterYearIndex waterYearIndex, List<WaterYearIndex> waterYearIndices)
 	{
 		_guiLink = guiLink;
 		_statistics = statistics;
@@ -77,13 +74,13 @@ class EpptReportingComputer
 		_waterYearIndices = waterYearIndices;
 	}
 
-	EpptReportingComputed computeCfs(EpptScenarioRun scenarioRun, LocalDate start, LocalDate end) throws EpptInitializationException
+	public EpptReportingComputed computeCfs(EpptScenarioRun scenarioRun, LocalDate start, LocalDate end) throws EpptInitializationException
 	{
 		DSSGrabber1SvcImpl dssGrabber = buildDssGrabber(scenarioRun, true, start, end);
 		return compute(scenarioRun, dssGrabber, false, start, end);
 	}
 
-	EpptReportingComputed computeTaf(EpptScenarioRun scenarioRun, LocalDate start, LocalDate end) throws EpptInitializationException
+	public EpptReportingComputed computeTaf(EpptScenarioRun scenarioRun, LocalDate start, LocalDate end) throws EpptInitializationException
 	{
 		DSSGrabber1SvcImpl dssGrabber = buildDssGrabber(scenarioRun, false, start, end);
 		return compute(scenarioRun, dssGrabber, true, start, end);
@@ -94,36 +91,10 @@ class EpptReportingComputer
 			throws EpptInitializationException
 	{
 		int offset = (int) TimeUnit.MILLISECONDS.toMinutes(TimeZone.getDefault().getRawOffset());
-		NavigableMap<LocalDateTime, Double> fullSeries = new TreeMap<>();
 		TimeSeriesContainer[] primarySeries = dssGrabber.getPrimarySeries();
-		String units = "";
-		boolean aggregateYearly = false;
-		if(primarySeries != null && primarySeries.length > 0 && primarySeries[0] != null)
-		{
-			if(convertTaf)
-			{
-				aggregateYearly = "CFS".equalsIgnoreCase(primarySeries[0].getUnits());
-				dssGrabber.calcTAFforCFS(primarySeries, null);
-			}
-			TimeSeriesContainer tsc = primarySeries[0];
-			units = tsc.getParameterName() + " (" + tsc.getUnits() + ")";
-			if("STORAGE-CHANGE".equalsIgnoreCase(tsc.getParameterName()) && "TAF".equalsIgnoreCase(tsc.getUnits()))
-			{
-				aggregateYearly = true;
-			}
-			for(int i = 0; i < tsc.getNumberValues(); i++)
-			{
-				HecTime hecTime = tsc.getHecTime(i);
-				double value = tsc.getValue(i);
-				if(RMAConst.isValidValue(value))
-				{
-					Date javaDate = hecTime.getJavaDate(offset);
-					fullSeries.put(LocalDateTime.ofInstant(javaDate.toInstant(), ZoneId.systemDefault()), value);
-				}
-			}
-		}
-		fullSeries = fullSeries.subMap(start.minusDays(1).atTime(0, 0), true,
-				end.plusDays(2).atTime(0, 0), true);
+		String units = getUnits(primarySeries);
+		boolean aggregateYearly = isAggregateYearly(dssGrabber, convertTaf, primarySeries);
+		NavigableMap<LocalDateTime, Double> fullSeries = getFullTimeSeries(start, end, offset, primarySeries);
 		NavigableMap<Integer, Double> filteredPeriodYearly = DssReader.filterPeriodYearly(fullSeries, _monthPeriod, aggregateYearly);
 		SortedMap<Month, NavigableMap<Integer, Double>> filteredPeriodMonthly = filterPeriodMonthly(fullSeries);
 		SortedMap<WaterYearPeriod, Double> waterYearPeriodGroupedYearly = groupWaterYearPeriod(scenarioRun, filteredPeriodYearly);
@@ -135,6 +106,62 @@ class EpptReportingComputer
 				getWaterYearIndicesForScenario(scenarioRun));
 		return new EpptReportingComputed(scenarioRun, fullSeries, filteredPeriodYearly, yearlyStatistic, monthly, waterYearPeriodGroupedYearly,
 				units);
+	}
+
+	NavigableMap<LocalDateTime, Double> getFullTimeSeries(LocalDate start, LocalDate end, int offset,
+																  TimeSeriesContainer[] primarySeries)
+	{
+		NavigableMap<LocalDateTime, Double> fullSeries = new TreeMap<>();
+		if(primarySeries != null && primarySeries.length > 0 && primarySeries[0] != null)
+		{
+			TimeSeriesContainer tsc = primarySeries[0];
+			for(int i = 0; i < tsc.getNumberValues(); i++)
+			{
+				HecTime hecTime = tsc.getHecTime(i);
+				double value = tsc.getValue(i);
+				if(RMAConst.isValidValue(value))
+				{
+					Date javaDate = hecTime.getJavaDate(offset);
+					fullSeries.put(LocalDateTime.ofInstant(javaDate.toInstant(), ZoneId.systemDefault()), value);
+				}
+			}
+			if(!fullSeries.isEmpty())
+			{
+				fullSeries = fullSeries.subMap(start.minusDays(1).atTime(0, 0), true,
+						end.plusDays(2).atTime(0, 0), true);
+			}
+		}
+		return fullSeries;
+	}
+
+	private boolean isAggregateYearly(DSSGrabber1SvcImpl dssGrabber, boolean convertTaf, TimeSeriesContainer[] primarySeries)
+	{
+		boolean aggregateYearly = false;
+		if(primarySeries != null && primarySeries.length > 0 && primarySeries[0] != null)
+		{
+			if(convertTaf)
+			{
+				aggregateYearly = "CFS".equalsIgnoreCase(primarySeries[0].getUnits());
+				dssGrabber.calcTAFforCFS(primarySeries, null);
+			}
+			TimeSeriesContainer tsc = primarySeries[0];
+			if("STORAGE-CHANGE".equalsIgnoreCase(tsc.getParameterName()) && "TAF".equalsIgnoreCase(tsc.getUnits()))
+			{
+				aggregateYearly = true;
+			}
+		}
+		return aggregateYearly;
+	}
+
+	private String getUnits(TimeSeriesContainer[] primarySeries)
+	{
+		String units = "";
+		if(primarySeries != null && primarySeries.length > 0 && primarySeries[0] != null)
+		{
+			TimeSeriesContainer tsc = primarySeries[0];
+			units = tsc.getParameterName() + " (" + tsc.getUnits() + ")";
+		}
+		return units;
 	}
 
 	private SortedMap<WaterYearPeriod, Double> groupWaterYearPeriod(EpptScenarioRun epptScenarioRun,
@@ -221,13 +248,13 @@ class EpptReportingComputer
 		return read.stream().filter(index -> collect.contains(index.getName())).collect(toList());
 	}
 
-	private DSSGrabber1SvcImpl buildDssGrabber(EpptScenarioRun epptScenarioRun, boolean isCFS, LocalDate start, LocalDate end)
+	final DSSGrabber1SvcImpl buildDssGrabber(EpptScenarioRun epptScenarioRun, boolean isCFS, LocalDate start, LocalDate end)
 	{
 		DSSGrabber1SvcImpl dssGrabber = new DSSGrabber1SvcImpl();
 		dssGrabber.setIsCFS(isCFS);
 		dssGrabber.setScenarioRuns(epptScenarioRun, Collections.emptyList());
 		dssGrabber.setGuiLink(_guiLink);
-		dssGrabber.setDateRange(LocalDate.of(1800, 1, 1), LocalDate.of(2200, 1, 1));
+		dssGrabber.setDateRange(start, end);
 		return dssGrabber;
 	}
 }

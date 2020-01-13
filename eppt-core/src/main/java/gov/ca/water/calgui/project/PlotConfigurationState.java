@@ -12,39 +12,47 @@
 
 package gov.ca.water.calgui.project;
 
+import java.time.Month;
+import java.time.format.DateTimeFormatterBuilder;
+import java.time.format.DateTimeParseException;
+import java.time.temporal.TemporalAccessor;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-
-import vista.report.MonthlyReport;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class PlotConfigurationState
 {
 
-	private static final String[] MONTH_NAMES = {"Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov",
-			"Dec"};
-
+	private static final Logger LOGGER = Logger.getLogger(PlotConfigurationState.class.getName());
 	private final ComparisonType _comparisonType;
 	private final boolean _isDisplayTaf;
 	private final boolean _isDisplayTimeSeriesPlot;
 	private final boolean _isDisplayBoxAndWhiskerPlot;
 	private final boolean _isDisplayMonthlyTable;
 	private final boolean _isDisplaySummaryTable;
-	private final List<String> _exceedancePlotComponents;
+	private final boolean _isDisplayExceedanceAll;
+	private final boolean _isDisplayExceedanceAnnualFlow;
+	private final List<Month> _exceedancePlotMonths;
 	private final List<String> _summaryTableComponents;
 
-	public PlotConfigurationState(ComparisonType comparisonType, boolean isDisplayTaf, boolean isDisplayTimeSeriesPlot, boolean isDisplayBoxAndWhiskerPlot,
-						   List<String> exceedancePlotComponents, boolean isDisplayMonthlyTable,
-						   boolean isDisplaySummaryTable, List<String> summaryTableComponents)
+	public PlotConfigurationState(ComparisonType comparisonType, boolean isDisplayTaf, boolean isDisplayTimeSeriesPlot,
+								  boolean isDisplayBoxAndWhiskerPlot,
+								  boolean isDisplayExceedanceAll, List<Month> exceedancePlotMonths,
+								  boolean isDisplayMonthlyTable, boolean isDisplaySummaryTable,
+								  boolean isDisplayExceedanceAnnualFlow, List<String> summaryTableComponents)
 	{
 		_comparisonType = comparisonType;
 		_isDisplayTaf = isDisplayTaf;
 		_isDisplayTimeSeriesPlot = isDisplayTimeSeriesPlot;
 		_isDisplayBoxAndWhiskerPlot = isDisplayBoxAndWhiskerPlot;
-		_exceedancePlotComponents = exceedancePlotComponents;
+		_isDisplayExceedanceAll = isDisplayExceedanceAll;
+		_exceedancePlotMonths = exceedancePlotMonths;
 
 		_isDisplayMonthlyTable = isDisplayMonthlyTable;
 		_isDisplaySummaryTable = isDisplaySummaryTable;
+		_isDisplayExceedanceAnnualFlow = isDisplayExceedanceAnnualFlow;
 
 		_summaryTableComponents = summaryTableComponents;
 	}
@@ -56,7 +64,9 @@ public class PlotConfigurationState
 		boolean isCFS = false;
 		boolean doMonthlyTable = false;
 		boolean doSummaryTable = false;
-		List<String> exceedMonths = new ArrayList<>();
+		boolean doExceedanceAll = false;
+		boolean doExceedanceAnnual = false;
+		List<Month> exceedMonths = new ArrayList<>();
 		List<String> summaryTags = new ArrayList<>();
 
 		String[] groupParts = displayGroup.split(";");
@@ -86,8 +96,10 @@ public class PlotConfigurationState
 			}
 			else if(groupPart.startsWith("EX-"))
 			{
-				exceedMonths = Arrays.asList(groupPart.substring(3).split(","));
-				exceedMonths.removeIf(String::isEmpty);
+				String exceedanceParts = groupPart.substring(3);
+				addToExceedanceMonths(exceedMonths, exceedanceParts);
+				doExceedanceAll = exceedanceParts.toLowerCase().contains("all");
+				doExceedanceAnnual = exceedanceParts.toLowerCase().contains("annual");
 			}
 			else if("CFS".equals(groupPart))
 			{
@@ -107,7 +119,28 @@ public class PlotConfigurationState
 				summaryTags = Arrays.asList(groupPart.substring(4).split(","));
 			}
 		}
-		return new PlotConfigurationState(comparisonType, !isCFS, doTimeSeries, doBoxPlot, exceedMonths, doMonthlyTable, doSummaryTable, summaryTags);
+		return new PlotConfigurationState(comparisonType, !isCFS, doTimeSeries, doBoxPlot, doExceedanceAll, exceedMonths, doMonthlyTable, doSummaryTable,
+				doExceedanceAnnual, summaryTags);
+	}
+
+	private static void addToExceedanceMonths(List<Month> exceedMonths, String exceedanceParts)
+	{
+		for(String exceedanceDescriptor : exceedanceParts.split(","))
+		{
+			try
+			{
+				TemporalAccessor mmm = new DateTimeFormatterBuilder()
+						.parseCaseInsensitive()
+						.appendPattern("MMM")
+						.toFormatter()
+						.parse(exceedanceDescriptor);
+				exceedMonths.add(Month.from(mmm));
+			}
+			catch(DateTimeParseException e)
+			{
+				LOGGER.log(Level.FINE, "Unable to parse month: " + exceedanceDescriptor, e);
+			}
+		}
 	}
 
 	public ComparisonType getComparisonType()
@@ -143,44 +176,17 @@ public class PlotConfigurationState
 
 	public boolean isPlotAllExceedancePlots()
 	{
-		for(String name : _exceedancePlotComponents)
-		{
-			if("ALL".equals(name))
-			{
-				return true;
-			}
-		}
-		return false;
+		return _isDisplayExceedanceAll;
 	}
 
 	public boolean isAnnualFlowExceedancePlots()
 	{
-		for(String name : _exceedancePlotComponents)
-		{
-			if("Annual Flow".equals(name))
-			{
-				return true;
-			}
-		}
-		return false;
+		return _isDisplayExceedanceAnnualFlow;
 	}
 
-	public List<String> getSelectedExceedancePlotMonths()
+	public List<Month> getSelectedExceedancePlotMonths()
 	{
-		List<String> selectedMonths = new ArrayList<>();
-		for(String name : _exceedancePlotComponents)
-		{
-			if(!"Annual Flow".equals(name) && !"ALL".equals(name))
-			{
-				selectedMonths.add(name);
-			}
-		}
-		if(_exceedancePlotComponents.contains("ALL"))
-		{
-			selectedMonths.clear();
-			selectedMonths.addAll(Arrays.asList(MonthlyReport.months));
-		}
-		return selectedMonths;
+		return _exceedancePlotMonths;
 	}
 
 	public List<String> getSelectedSummaryTableItems()

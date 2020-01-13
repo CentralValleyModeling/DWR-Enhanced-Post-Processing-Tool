@@ -12,11 +12,13 @@
 
 package gov.ca.water.calgui.presentation;
 
+import gov.ca.water.calgui.bo.GUILinksAllModelsBO;
+
 import hec.io.TimeSeriesContainer;
 
 public class DisplayInput
 {
-	private final String _locationName;
+	private final GUILinksAllModelsBO _guiLink;
 	private final TimeSeriesContainer[] _primaryResults;
 	private final TimeSeriesContainer[] _secondaryResults;
 	private final TimeSeriesContainer[] _diffResults;
@@ -24,11 +26,11 @@ public class DisplayInput
 	private final TimeSeriesContainer[][] _sexcResults;
 	private final TimeSeriesContainer[][] _dexcResults;
 
-	public DisplayInput(String locationName, TimeSeriesContainer[] primaryResults, TimeSeriesContainer[] secondaryResults,
+	public DisplayInput(GUILinksAllModelsBO guiLink, TimeSeriesContainer[] primaryResults, TimeSeriesContainer[] secondaryResults,
 						TimeSeriesContainer[] diffResults, TimeSeriesContainer[][] excResults, TimeSeriesContainer[][] sexcResults,
 						TimeSeriesContainer[][] dexcResults)
 	{
-		_locationName = locationName;
+		_guiLink = guiLink;
 		_primaryResults = primaryResults;
 		_secondaryResults = secondaryResults;
 		_diffResults = diffResults;
@@ -37,9 +39,9 @@ public class DisplayInput
 		_dexcResults = dexcResults;
 	}
 
-	public String getLocationName()
+	public GUILinksAllModelsBO getGuiLink()
 	{
-		return _locationName;
+		return _guiLink;
 	}
 
 	public TimeSeriesContainer[] getPrimaryResults()

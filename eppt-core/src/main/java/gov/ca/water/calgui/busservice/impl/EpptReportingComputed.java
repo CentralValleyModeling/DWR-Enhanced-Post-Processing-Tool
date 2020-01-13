@@ -1,5 +1,5 @@
 /*
- * Enhanced Post Processing Tool (EPPT) Copyright (c) 2019.
+ * Enhanced Post Processing Tool (EPPT) Copyright (c) 2020.
  *
  * EPPT is copyrighted by the State of California, Department of Water Resources. It is licensed
  * under the GNU General Public License, version 2. This means it can be
@@ -10,7 +10,7 @@
  * GNU General Public License
  */
 
-package gov.ca.water.trendreporting;
+package gov.ca.water.calgui.busservice.impl;
 
 import java.time.LocalDateTime;
 import java.time.Month;
@@ -35,7 +35,7 @@ import org.json.JSONObject;
  * @author <a href="mailto:adam@rmanet.com">Adam Korynta</a>
  * @since 07-26-2019
  */
-class EpptReportingComputed
+public class EpptReportingComputed
 {
 	private static final String SCENARIO_NAME_KEY = "scenario_name";
 	private static final String FULL_TIME_SERIES = "full_time_series";

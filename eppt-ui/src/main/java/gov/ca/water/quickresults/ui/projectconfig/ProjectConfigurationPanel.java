@@ -255,10 +255,7 @@ public final class ProjectConfigurationPanel extends EpptPanel
 
 	void updateRadioState()
 	{
-		SwingUtilities.invokeLater(() ->
-		{
-			_scenarioChangeListeners.forEach(this::postScenarioChanged);
-		});
+		SwingUtilities.invokeLater(() -> _scenarioChangeListeners.forEach(this::postScenarioChanged));
 	}
 
 	void clearAllScenarios()

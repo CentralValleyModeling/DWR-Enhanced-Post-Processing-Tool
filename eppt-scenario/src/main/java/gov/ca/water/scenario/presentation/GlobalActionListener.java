@@ -92,7 +92,6 @@ public class GlobalActionListener implements ActionListener
 	{
 		try
 		{
-			final JList<String> lstReports = (JList<String>) _swingEngine.find("lstReports");
 			final JList<RBListItemBO> lstScenarios = (JList<RBListItemBO>) _swingEngine.find("SelectedList");
 			JTable table = null;
 			switch(ae.getActionCommand())
@@ -106,7 +105,6 @@ public class GlobalActionListener implements ActionListener
 					{
 						scendarios.add(model.getElementAt(i));
 					}
-					PowerFrame pf = new PowerFrame(scendarios);
 					break;
 
 				case "AC_SaveScen":

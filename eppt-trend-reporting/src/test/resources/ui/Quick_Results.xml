@@ -1,8 +1,13 @@
 <!--
-  ~ Copyright (c) 2019
-  ~ California Department of Water Resources
-  ~ All Rights Reserved.  DWR PROPRIETARY/CONFIDENTIAL.
-  ~ Source may not be released without written approval from DWR
+  ~ Enhanced Post Processing Tool (EPPT) Copyright (c) 2019.
+  ~
+  ~ EPPT is copyrighted by the State of California, Department of Water Resources. It is licensed
+  ~ under the GNU General Public License, version 2. This means it can be
+  ~ copied, distributed, and modified freely, but you may not restrict others
+  ~ in their ability to copy, distribute, and modify it. See the license below
+  ~ for more details.
+  ~
+  ~ GNU General Public License
   -->
 
 <panel id="QuickResults" name="QuickResults" layout="BorderLayout">
@@ -23,16 +28,6 @@
 				<list id="lstReports" visiblerowcount="5">
 				</list>
 			</scrollpane>
-			<panel constraints="BorderLayout.SOUTH" layout="FlowLayout(FlowLayout.LEFT)">
-				<buttongroup id="99">
-					<radiobutton id="rdbToScreen" name="rdbToScreen" selected="true" text="To Screen">
-					</radiobutton>
-					<radiobutton id="rdbToPrinter" name="rdbToPrinter" enabled="false" text="To Printer">
-					</radiobutton>
-					<radiobutton id="rdbToBoth" name="rdbToBoth" text="Both" enabled="false">
-					</radiobutton>
-				</buttongroup>
-			</panel>
 		</panel>
 		<panel constraints="Borderlayout.CENTER" id="reptabbedPane" minimumsize="550,505" preferredsize="550,505"
 			   layout="BorderLayout">

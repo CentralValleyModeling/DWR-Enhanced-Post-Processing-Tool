@@ -14,6 +14,7 @@ package gov.ca.water.trendreporting;
 
 import java.util.List;
 
+import gov.ca.water.calgui.busservice.impl.EpptReportingMonths;
 import gov.ca.water.calgui.busservice.impl.MonthPeriod;
 import javafx.beans.value.ChangeListener;
 import javafx.collections.FXCollections;

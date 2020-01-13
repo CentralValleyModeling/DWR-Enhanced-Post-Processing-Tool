@@ -20,6 +20,7 @@ import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.stream.Collectors;
 import javax.swing.*;
 
 import calsim.app.DerivedTimeSeries;
@@ -29,6 +30,8 @@ import gov.ca.water.calgui.presentation.display.DefaultPlotHandler;
 import gov.ca.water.calgui.project.EpptScenarioRun;
 import gov.ca.water.calgui.project.PlotConfigurationState;
 import org.apache.log4j.Logger;
+
+import static java.util.stream.Collectors.toList;
 
 public class DisplayHelper
 {
@@ -108,7 +111,24 @@ public class DisplayHelper
 		{
 			setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
 
-			jTabbedPanes = DisplayFrame.showDisplayFramesLocations(plotConfigurationState, locations, baseRun, scenarios, startMonth, endMonth);
+			if(!Boolean.getBoolean("plotly"))
+			{
+				List<GUILinksAllModelsBO> guiLinks = locations.stream()
+															 .map(s ->
+															 {
+																 GUILinksAllModelsBO guiLinksAllModelsBO = new GUILinksAllModelsBO(
+																		 s, s,
+																		 s, s);
+																 GUILinksAllModelsBO.Model.values().forEach(
+																		 m -> guiLinksAllModelsBO.addModelMapping(m.toString(), s, ""));
+																 return guiLinksAllModelsBO;
+															 }).collect(toList());
+				DisplayPlotlyFrames displayPlotlyFrames = new DisplayPlotlyFrames(plotConfigurationState, guiLinks, baseRun,
+						scenarios, startMonth,
+						endMonth);
+				jTabbedPanes.addAll(displayPlotlyFrames.showDisplayFrames());
+			}
+			jTabbedPanes.addAll(DisplayFrame.showDisplayFramesLocations(plotConfigurationState, locations, baseRun, scenarios, startMonth, endMonth));
 		}
 		catch(RuntimeException ex)
 		{
@@ -131,7 +151,13 @@ public class DisplayHelper
 		{
 			setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
 
-			jTabbedPanes = DisplayFrame.showDisplayFramesGuiLink(plotConfigurationState, locations, baseRun, scenarios, startMonth, endMonth);
+			if(Boolean.getBoolean("plotly"))
+			{
+				DisplayPlotlyFrames displayPlotlyFrames = new DisplayPlotlyFrames(plotConfigurationState, locations, baseRun, scenarios, startMonth,
+						endMonth);
+				jTabbedPanes.addAll(displayPlotlyFrames.showDisplayFrames());
+			}
+			jTabbedPanes.addAll(DisplayFrame.showDisplayFramesGuiLink(plotConfigurationState, locations, baseRun, scenarios, startMonth, endMonth));
 		}
 		catch(RuntimeException ex)
 		{

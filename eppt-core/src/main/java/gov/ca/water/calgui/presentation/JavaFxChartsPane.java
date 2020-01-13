@@ -1,5 +1,5 @@
 /*
- * Enhanced Post Processing Tool (EPPT) Copyright (c) 2019.
+ * Enhanced Post Processing Tool (EPPT) Copyright (c) 2020.
  *
  * EPPT is copyrighted by the State of California, Department of Water Resources. It is licensed
  * under the GNU General Public License, version 2. This means it can be
@@ -10,9 +10,8 @@
  * GNU General Public License
  */
 
-package gov.ca.water.quickresults.ui;
+package gov.ca.water.calgui.presentation;
 
-import java.awt.Cursor;
 import java.awt.Desktop;
 import java.awt.Frame;
 import java.io.BufferedWriter;
@@ -66,7 +65,7 @@ public class JavaFxChartsPane extends BorderPane
 		_webView.getEngine().getLoadWorker().exceptionProperty().addListener(this::handleException);
 		_webView.getEngine().getLoadWorker().stateProperty().addListener(this::callbackScript);
 		_webView.setPrefWidth(1380);
-		_webView.setMaxWidth(1380);
+		_webView.setMinWidth(1380);
 		setCenter(_webView);
 		load(path);
 	}

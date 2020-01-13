@@ -15,9 +15,11 @@ package gov.ca.water.calgui.presentation;
 import java.awt.BorderLayout;
 import java.awt.HeadlessException;
 import java.time.LocalDate;
+import java.time.Month;
 import java.time.YearMonth;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeFormatterBuilder;
+import java.time.format.TextStyle;
 import java.time.temporal.ChronoField;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -51,7 +53,6 @@ import gov.ca.water.calgui.techservice.IErrorHandlingSvc;
 import gov.ca.water.calgui.techservice.impl.ErrorHandlingSvcImpl;
 import javatests.TestSupport;
 import org.apache.log4j.Logger;
-import org.jfree.data.time.Month;
 import vista.report.MonthlyReport;
 
 import hec.io.TimeSeriesContainer;
@@ -255,12 +256,12 @@ final class DisplayFrame
 			}
 			if(plotConfigurationState.isDoExceedance())
 			{
-				List<String> exceedMonths = plotConfigurationState.getSelectedExceedancePlotMonths();
+				List<Month> exceedMonths = plotConfigurationState.getSelectedExceedancePlotMonths();
 				for(int m1 = 11; m1 >= 0; m1--)
 				{
 					if(m1 < exceedMonths.size() && excResults != null)
 					{
-						String monthName = exceedMonths.get(m1);
+						String monthName = exceedMonths.get(m1).getDisplayName(TextStyle.SHORT, Locale.getDefault());
 						DateTimeFormatter dateTimeFormatter = new DateTimeFormatterBuilder()
 								.parseCaseInsensitive()
 								.appendPattern("MMMyy")

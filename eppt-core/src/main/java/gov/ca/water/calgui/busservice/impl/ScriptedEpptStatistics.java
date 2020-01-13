@@ -1,5 +1,5 @@
 /*
- * Enhanced Post Processing Tool (EPPT) Copyright (c) 2019.
+ * Enhanced Post Processing Tool (EPPT) Copyright (c) 2020.
  *
  * EPPT is copyrighted by the State of California, Department of Water Resources. It is licensed
  * under the GNU General Public License, version 2. This means it can be
@@ -10,7 +10,7 @@
  * GNU General Public License
  */
 
-package gov.ca.water.trendreporting;
+package gov.ca.water.calgui.busservice.impl;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -37,7 +37,6 @@ import javax.script.ScriptException;
 
 import gov.ca.water.calgui.bo.WaterYearDefinition;
 import gov.ca.water.calgui.bo.WaterYearIndex;
-import gov.ca.water.calgui.busservice.impl.MonthPeriod;
 import gov.ca.water.calgui.constant.Constant;
 
 import static java.util.stream.Collectors.toMap;
@@ -48,14 +47,14 @@ import static java.util.stream.Collectors.toMap;
  * @author <a href="mailto:adam@rmanet.com">Adam Korynta</a>
  * @since 09-23-2019
  */
-class TrendStatistics
+public class ScriptedEpptStatistics implements EpptStatistic
 {
-	private static final Logger LOGGER = Logger.getLogger(TrendStatistics.class.getName());
+	private static final Logger LOGGER = Logger.getLogger(ScriptedEpptStatistics.class.getName());
 	private final ScriptEngine _scriptEngine = new ScriptEngineManager(getClass().getClassLoader()).getEngineByName("python");
 	private final Path _jythonFilePath;
 	private final String _name;
 
-	TrendStatistics(Path jythonFilePath)
+	public ScriptedEpptStatistics(Path jythonFilePath)
 	{
 		_jythonFilePath = jythonFilePath;
 		_name = loadStatisticName();
@@ -82,20 +81,22 @@ class TrendStatistics
 		}
 	}
 
-	String getName()
+	@Override
+	public String getName()
 	{
 		return _name;
 	}
 
 	@SuppressWarnings(value = "unchecked")
-	SortedMap<Month, Double> calculateMonthly(SortedMap<Month, NavigableMap<Integer,Double>> data, WaterYearDefinition waterYearDefinition,
-											  WaterYearIndex waterYearIndex, List<WaterYearIndex> waterYearIndices,
-											  MonthPeriod monthPeriod)
+	@Override
+	public SortedMap<Month, Double> calculateMonthly(SortedMap<Month, NavigableMap<Integer, Double>> data, WaterYearDefinition waterYearDefinition,
+													 WaterYearIndex waterYearIndex, List<WaterYearIndex> waterYearIndices,
+													 MonthPeriod monthPeriod)
 	{
 		Map<Month, Double> retval = new EnumMap<>(Month.class);
 		try
 		{
-			for(Map.Entry<Month, NavigableMap<Integer,Double>> entry : data.entrySet())
+			for(Map.Entry<Month, NavigableMap<Integer, Double>> entry : data.entrySet())
 			{
 				NavigableMap<Integer, Double> value = entry.getValue();
 				Month month = entry.getKey();
@@ -172,9 +173,10 @@ class TrendStatistics
 		return retval;
 	}
 
+	@Override
 	public Double calculateYearly(SortedMap<Integer, Double> data,
-													  WaterYearDefinition waterYearDefinition,
-													  WaterYearIndex waterYearIndex, List<WaterYearIndex> waterYearIndices)
+								  WaterYearDefinition waterYearDefinition,
+								  WaterYearIndex waterYearIndex, List<WaterYearIndex> waterYearIndices)
 	{
 		Double retval = null;
 		try

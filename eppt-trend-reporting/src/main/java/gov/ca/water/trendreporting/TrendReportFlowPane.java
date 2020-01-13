@@ -14,7 +14,7 @@ package gov.ca.water.trendreporting;
 
 import java.nio.file.Path;
 
-import gov.ca.water.quickresults.ui.JavaFxChartsPane;
+import gov.ca.water.calgui.presentation.JavaFxChartsPane;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.BorderPane;
