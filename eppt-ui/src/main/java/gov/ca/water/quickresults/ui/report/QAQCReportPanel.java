@@ -1170,7 +1170,7 @@ public class QAQCReportPanel extends RmaJPanel
 		showWreslScriptChangedWarning(_altWreslDiffWarningLabel, _altRun);
 	}
 
-	private void showWreslScriptChangedWarning(JLabel jLabel, EpptScenarioRun scenarioRun)
+	static void showWreslScriptChangedWarning(JLabel jLabel, EpptScenarioRun scenarioRun)
 	{
 		boolean show = false;
 		if(scenarioRun != null)
@@ -1209,13 +1209,13 @@ public class QAQCReportPanel extends RmaJPanel
 			}
 			catch(IOException e)
 			{
-				LOGGER.log(Level.SEVERE, "Unable to determin if WRESL files differ from installer for scenario run: " + scenarioRun, e);
+				LOGGER.log(Level.SEVERE, "Unable to determine if WRESL files differ from installer for scenario run: " + scenarioRun, e);
 			}
 		}
 		jLabel.setVisible(show);
 	}
 
-	private boolean compareDirectories(Path scenarioRoot, List<Path> scenarioDirectoryPaths, Path installerRoot, List<Path> installerDirectoryPaths)
+	private static boolean compareDirectories(Path scenarioRoot, List<Path> scenarioDirectoryPaths, Path installerRoot, List<Path> installerDirectoryPaths)
 			throws IOException
 	{
 		boolean differ = installerDirectoryPaths.stream()
