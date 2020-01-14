@@ -373,8 +373,6 @@ public class SummaryTablePanel extends JPanel implements ActionListener, Compone
 		JButton copy = new JButton("Copy to Clipboard");
 		copy.setAlignmentX(LEFT_ALIGNMENT);
 		copy.addActionListener(this);
-		copy.setAlignmentX(LEFT_ALIGNMENT);
-		copy.addActionListener(this);
 
 		Box box = Box.createVerticalBox();
 

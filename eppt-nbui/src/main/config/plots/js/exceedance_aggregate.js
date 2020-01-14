@@ -10,7 +10,6 @@
  * GNU General Public License
  */
 
-
 function getAggregatePlotlySeries(datum) {
     let series = new Array(datum.length);
     for (var i = 0; i < datum.length; i++) {
@@ -75,7 +74,7 @@ function plot(data) {
     };
     Plotly.newPlot('container_aggregate_tester', getAggregatePlotlySeries(datum), layout, {
         displaylogo: false,
-        modeBarButtonsToRemove: ['toImage', 'sendDataToCloud', 'editInChartStudio', 'lasso2d', 'select2d', 'resetScale2d'],
+        modeBarButtons: buildModeBarButtons('container_aggregate_tester'),
         scrollZoom: true,
         responsive: true,
     });

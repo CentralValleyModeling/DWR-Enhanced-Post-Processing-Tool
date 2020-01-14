@@ -108,7 +108,7 @@ public class ExceedanceChartPaneScaffold
 				PlotConfigurationState.ComparisonType.DIFF, LocalDate.of(1921, 1, 1), LocalDate.of(1999, 1, 1), true);
 		WaterYearDefinition waterYearDefinition = new WaterYearDefinition("", Month.JANUARY, Month.DECEMBER);
 		AnnualExceedancePane annualPanel = new AnnualExceedancePane(waterYearDefinition, guiLink,
-				Arrays.asList(baseRun, altRun, altRun2, altRun3, altRun4),
+				Arrays.asList(baseRun, altRun, altRun2, altRun3, altRun4), PlotConfigurationState.ComparisonType.DIFF,
 				LocalDate.of(1921, 1, 1), LocalDate.of(1999, 1, 1), true);
 		AllExceedancePane allPanel = new AllExceedancePane(guiLink, Arrays.asList(baseRun, altRun, altRun2, altRun3, altRun4),
 				PlotConfigurationState.ComparisonType.DIFF,

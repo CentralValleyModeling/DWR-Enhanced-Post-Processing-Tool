@@ -9,7 +9,6 @@
  *
  * GNU General Public License
  */
-
 function getDiscretePlotlySeries(datum) {
     let series = new Array(datum.length);
     for (var i = 0; i < datum.length; i++) {
@@ -74,7 +73,7 @@ function plot(data) {
     };
     Plotly.newPlot('container_discrete_tester', getDiscretePlotlySeries(datum), layout, {
         displaylogo: false,
-        modeBarButtonsToRemove: ['toImage', 'sendDataToCloud', 'editInChartStudio', 'lasso2d', 'select2d', 'resetScale2d'],
+        modeBarButtons: buildModeBarButtons('container_discrete_tester'),
         scrollZoom: true,
         responsive: true,
     });

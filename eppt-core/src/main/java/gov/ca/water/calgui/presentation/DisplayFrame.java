@@ -107,7 +107,7 @@ final class DisplayFrame
 
 					if(dssGrabber.getPrimaryDSSName() == null)
 					{
-						String message = "No GUI_Links3.csv entry found for " + locationName +".";
+						String message = "No GUI_Links3.csv entry found for " + locationName + ".";
 						ERROR_HANDLING_SVC.businessErrorHandler(message, message);
 					}
 					else if(dssGrabber.getPrimaryDSSName().isEmpty())
@@ -355,26 +355,16 @@ final class DisplayFrame
 			}
 		}
 		Map<GUILinksAllModelsBO.Model, List<String>> missing = dssGrabber.getMissingList();
-		boolean showFrame = false;
-		List<String> collect = missing.values()
-									  .stream()
-									  .flatMap(Collection::stream)
-									  .collect(toList());
-		if(collect.isEmpty())
-		{
-			showFrame = true;
-		}
-		else
+		if(!missing.isEmpty())
 		{
 			insertEmptyTab(tabbedpane, missing);
-			showFrame = true;
 		}
 		String title = dssGrabber.getPlotTitle();
 		tabbedpane.setName(title);
 		tabbedPanes.add(tabbedpane);
 	}
 
-	private static void insertEmptyTab(JTabbedPane tabbedpane, Map<GUILinksAllModelsBO.Model, List<String>> missing)
+	private static void insertEmptyTab(JTabbedPane tabbedPane, Map<GUILinksAllModelsBO.Model, List<String>> missing)
 	{
 		StringBuilder buffer = new StringBuilder();
 		buffer.append("<html><br>Not all DSS records were found, some results may be missing:<br><br>");
@@ -384,7 +374,7 @@ final class DisplayFrame
 		JPanel panel = new JPanel();
 		panel.setLayout(new BorderLayout());
 		panel.add(new JLabel(buffer.toString()), BorderLayout.PAGE_START);
-		tabbedpane.insertTab("Alert - Missing DSS records", null, panel, null, 0);
+		tabbedPane.insertTab("Alert - Missing DSS records", null, panel, null, 0);
 	}
 
 	private static void insertPlotPanel(IDSSGrabber1Svc dssGrabber, boolean doDifference, boolean doBase,

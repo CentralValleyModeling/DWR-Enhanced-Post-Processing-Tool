@@ -9,7 +9,6 @@
  *
  * GNU General Public License
  */
-
 function getPlotlyMonthlySeries(datum) {
     var series = [];
     for (var i = 0; i < datum.length; i++) {
@@ -59,9 +58,10 @@ function plot(data) {
             }
         }
     };
-    Plotly.newPlot('container_discrete_tester', getPlotlyMonthlySeries(datum), layout, {
+    let plotlyMonthlySeries = getPlotlyMonthlySeries(datum);
+    Plotly.newPlot('container_discrete_tester', plotlyMonthlySeries, layout, {
         displaylogo: false,
-        modeBarButtonsToRemove: ['toImage', 'sendDataToCloud', 'editInChartStudio', 'lasso2d', 'select2d', 'resetScale2d'],
+        modeBarButtons: buildModeBarButtons('container_discrete_tester'),
         scrollZoom: true,
         responsive: true
     });

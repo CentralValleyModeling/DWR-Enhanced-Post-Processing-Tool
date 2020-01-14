@@ -786,9 +786,7 @@ public class DSSGrabber1SvcImpl implements IDSSGrabber1Svc
 			if(baseDssPathName != null)
 			{
 				// Base first
-				EpptDssContainer dssContainer = _baseScenarioRun.getDssContainer();
-				TimeSeriesContainer oneSeries = getOneTimeSeriesFromAllModels(dssContainer,
-						_baseScenarioRun.getModel(), baseDssPathName);
+				TimeSeriesContainer oneSeries = getOneTimeSeriesFromAllModels(_baseScenarioRun, baseDssPathName);
 				results[0] = oneSeries;
 				if(results[0] != null)
 				{
@@ -806,8 +804,7 @@ public class DSSGrabber1SvcImpl implements IDSSGrabber1Svc
 					String altDssPathName = _primaryDSSName.get(altModel);
 					if(altDssPathName != null)
 					{
-						tsc = getOneTimeSeriesFromAllModels(epptScenarioRun.getDssContainer(),
-								epptScenarioRun.getModel(), altDssPathName);
+						tsc = getOneTimeSeriesFromAllModels(epptScenarioRun, altDssPathName);
 						results[i + 1] = tsc;
 					}
 				}
@@ -821,11 +818,11 @@ public class DSSGrabber1SvcImpl implements IDSSGrabber1Svc
 		return results;
 	}
 
-	private TimeSeriesContainer getOneTimeSeriesFromAllModels(EpptDssContainer dssContainer,
-															  GUILinksAllModelsBO.Model model,
-															  String dssPathName)
+	private TimeSeriesContainer getOneTimeSeriesFromAllModels(EpptScenarioRun epptScenarioRun, String dssPathName)
 	{
+		GUILinksAllModelsBO.Model model = _baseScenarioRun.getModel();
 		TimeSeriesContainer oneSeries = null;
+		EpptDssContainer dssContainer = epptScenarioRun.getDssContainer();
 		Optional<TimeSeriesContainer> timeSeriesContainerOptional = dssContainer.getAllDssFiles().stream()
 																				.filter(Objects::nonNull)
 																				.map(p -> getOneSeries(p, dssPathName,
@@ -838,7 +835,7 @@ public class DSSGrabber1SvcImpl implements IDSSGrabber1Svc
 		}
 		else
 		{
-			String messageText = "Could not find record - " + dssPathName;
+			String messageText = "Could not find record for scenario run: " + epptScenarioRun + " - " + dssPathName;
 			List<String> messages = _missingDSSRecords.computeIfAbsent(model, m -> new ArrayList<>());
 			messages.add(messageText);
 		}
@@ -867,8 +864,7 @@ public class DSSGrabber1SvcImpl implements IDSSGrabber1Svc
 				for(String splitPathname : baseDssPathName.split("\\|"))
 				{
 					// Base first
-					TimeSeriesContainer oneSeries = getOneTimeSeriesFromAllModels(_baseScenarioRun.getDssContainer(),
-							baseModel, splitPathname);
+					TimeSeriesContainer oneSeries = getOneTimeSeriesFromAllModels(_baseScenarioRun, splitPathname);
 					timeSeriesContainers.add(oneSeries);
 					// Then scenarios
 
@@ -881,8 +877,7 @@ public class DSSGrabber1SvcImpl implements IDSSGrabber1Svc
 					{
 						for(String splitPathname : altDssPathName.split("\\|"))
 						{
-							TimeSeriesContainer tsc = getOneTimeSeriesFromAllModels(epptScenarioRun.getDssContainer(),
-									epptScenarioRun.getModel(), splitPathname);
+							TimeSeriesContainer tsc = getOneTimeSeriesFromAllModels(epptScenarioRun, splitPathname);
 							timeSeriesContainers.add(tsc);
 						}
 					}

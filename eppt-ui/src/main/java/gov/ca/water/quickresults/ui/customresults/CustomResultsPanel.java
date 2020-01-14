@@ -27,6 +27,7 @@ import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Function;
 import java.util.function.Predicate;
+import java.util.stream.IntStream;
 import javax.swing.*;
 
 import calsim.app.AppUtils;
@@ -34,6 +35,7 @@ import calsim.app.DerivedTimeSeries;
 import calsim.app.MultipleTimeSeries;
 import calsim.gui.GeneralRetrievePanel;
 import calsim.gui.GuiUtils;
+import gov.ca.water.calgui.bo.GUILinksAllModelsBO;
 import gov.ca.water.calgui.presentation.DisplayHelper;
 import gov.ca.water.calgui.presentation.WRIMSGUILinks;
 import gov.ca.water.calgui.project.EpptScenarioRun;
@@ -215,35 +217,48 @@ public class CustomResultsPanel extends EpptPanel
 				return;
 			}
 			// checked if count > 0 above
-			int[] rows = table.getSelectedRows();
-			for(int row : rows)
+			List<GUILinksAllModelsBO> collect = IntStream.of(table.getSelectedRows())
+														 .mapToObj(row -> createPathnameForRow(table, row))
+														 .map(this::mapToGuiLink)
+														 .collect(toList());
+			EpptScenarioRun baseScenario = projectConfigurationPanel.getBaseScenario();
+			PlotConfigurationState plotConfigurationState = projectConfigurationPanel.plotConfigurationState();
+			LocalDate startMonth = projectConfigurationPanel.getStartMonth();
+			LocalDate endMonth = projectConfigurationPanel.getEndMonth();
+			if(baseScenario != null)
 			{
-
-				Pathname pathname = Pathname.createPathname(new String[]
-						{
-								table.getModel().getValueAt(row, 1).toString(),
-								table.getModel().getValueAt(row, 2).toString(),
-								table.getModel().getValueAt(row, 3).toString(),
-								table.getModel().getValueAt(row, 4).toString(),
-								table.getModel().getValueAt(row, 5).toString(),
-								table.getModel().getValueAt(row, 6).toString()
-						});
-				EpptScenarioRun baseScenario = projectConfigurationPanel.getBaseScenario();
-				PlotConfigurationState plotConfigurationState = projectConfigurationPanel.plotConfigurationState();
-				LocalDate startMonth = projectConfigurationPanel.getStartMonth();
-				LocalDate endMonth = projectConfigurationPanel.getEndMonth();
-				if(baseScenario != null)
-				{
-					List<EpptScenarioRun> alternatives = projectConfigurationPanel.getEpptScenarioAlternatives();
-					_displayHelper.showDisplayFramesLocations(plotConfigurationState, Collections.singletonList(pathname.getFullPath()),
-							baseScenario, alternatives, startMonth, endMonth);
-				}
+				List<EpptScenarioRun> alternatives = projectConfigurationPanel.getEpptScenarioAlternatives();
+				_displayHelper.showDisplayFramesGuiLink(plotConfigurationState, collect,
+						baseScenario, alternatives, startMonth, endMonth);
 			}
 		}
 		catch(RuntimeException e)
 		{
 			LOGGER.debug("Error in retrieve() -", e);
 		}
+	}
+
+	private Pathname createPathnameForRow(JTable table, int row)
+	{
+		return Pathname.createPathname(new String[]
+				{
+						table.getModel().getValueAt(row, 1).toString(),
+						table.getModel().getValueAt(row, 2).toString(),
+						table.getModel().getValueAt(row, 3).toString(),
+						table.getModel().getValueAt(row, 4).toString(),
+						table.getModel().getValueAt(row, 5).toString(),
+						table.getModel().getValueAt(row, 6).toString()
+				});
+	}
+
+	private GUILinksAllModelsBO mapToGuiLink(Pathname path)
+	{
+		String bAndCPart = path.getPart(Pathname.B_PART) + "/" + path.getPart(Pathname.C_PART);
+		GUILinksAllModelsBO guiLinksAllModelsBO = new GUILinksAllModelsBO(path.getFullPath(), path.getFullPath(),
+				path.getPart(Pathname.B_PART), bAndCPart);
+		GUILinksAllModelsBO.Model.values().forEach(
+				m -> guiLinksAllModelsBO.addModelMapping(m.toString(), bAndCPart, ""));
+		return guiLinksAllModelsBO;
 	}
 
 	/**

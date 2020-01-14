@@ -151,7 +151,7 @@ public class DisplayHelper
 		{
 			setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
 
-			if(Boolean.getBoolean("plotly"))
+			if(!Boolean.getBoolean("plotly"))
 			{
 				DisplayPlotlyFrames displayPlotlyFrames = new DisplayPlotlyFrames(plotConfigurationState, locations, baseRun, scenarios, startMonth,
 						endMonth);

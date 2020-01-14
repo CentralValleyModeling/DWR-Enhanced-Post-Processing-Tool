@@ -183,7 +183,7 @@ final class DisplayPlotlyFrames
 		{
 			insertEmptyTab(tabbedPane, missing);
 		}
-		String title = baseRun.getName() + " - " + guiLink.getPlotTitle();
+		String title = guiLink.getPlotTitle();
 		tabbedPane.setName(title);
 		return tabbedPane;
 	}
@@ -208,17 +208,17 @@ final class DisplayPlotlyFrames
 
 	private void plotExceedance(PlotConfigurationState plotConfigurationState, JTabbedPane tabbedPane, GUILinksAllModelsBO guiLink)
 	{
-		if(!plotConfigurationState.getSelectedExceedancePlotMonths().isEmpty())
+		if(plotConfigurationState.isPlotAllExceedancePlots())
 		{
-			plotMonthlyExceedance(plotConfigurationState, tabbedPane, guiLink);
+			plotAllExceedance(plotConfigurationState, tabbedPane, guiLink);
 		}
 		if(plotConfigurationState.isAnnualFlowExceedancePlots())
 		{
 			plotAnnualExceedance(tabbedPane, guiLink);
 		}
-		if(plotConfigurationState.isPlotAllExceedancePlots())
+		if(!plotConfigurationState.getSelectedExceedancePlotMonths().isEmpty())
 		{
-			plotAllExceedance(plotConfigurationState, tabbedPane, guiLink);
+			plotMonthlyExceedance(plotConfigurationState, tabbedPane, guiLink);
 		}
 	}
 
@@ -247,11 +247,11 @@ final class DisplayPlotlyFrames
 				_start, _end, taf);
 		if(plotConfigurationState.getComparisonType() == PlotConfigurationState.ComparisonType.DIFF)
 		{
-			tabbedPane.insertTab("Exceedance (All - Difference)", null, allExceedancePane, null, 0);
+			tabbedPane.addTab("Exceedance (All - Difference)", allExceedancePane);
 		}
 		else
 		{
-			tabbedPane.insertTab("Exceedance (All)", null, allExceedancePane, null, 0);
+			tabbedPane.addTab("Exceedance (All)", allExceedancePane);
 		}
 	}
 
@@ -262,7 +262,8 @@ final class DisplayPlotlyFrames
 		scenarioRuns.addAll(_alternatives);
 		boolean taf = _plotConfigurationState.isDisplayTaf();
 		WaterYearDefinition waterYearDefinition = new WaterYearDefinition("", Month.OCTOBER, Month.SEPTEMBER);
-		AnnualExceedancePane cp3 = new AnnualExceedancePane(waterYearDefinition, guiLink, scenarioRuns, _start, _end, taf);
+		AnnualExceedancePane cp3 = new AnnualExceedancePane(waterYearDefinition, guiLink, scenarioRuns, _plotConfigurationState.getComparisonType(),
+				_start, _end, taf);
 		if(_plotConfigurationState.getComparisonType() == PlotConfigurationState.ComparisonType.DIFF)
 		{
 			tabbedPane.addTab("Exceedance (Annual Total - Difference)", cp3);
