@@ -39,6 +39,7 @@ import gov.ca.water.calgui.busservice.impl.MonthPeriod;
 import gov.ca.water.calgui.busservice.impl.WaterYearTableReader;
 import gov.ca.water.calgui.constant.Constant;
 import gov.ca.water.calgui.project.EpptScenarioRun;
+import gov.ca.water.calgui.project.PlotConfigurationState;
 import gov.ca.water.quickresults.ui.projectconfig.ProjectConfigurationPanel;
 import javafx.application.Platform;
 import javafx.beans.value.ObservableValue;
@@ -462,7 +463,7 @@ public class TrendReportPanel extends JFXPanel
 				for(MonthPeriod monthPeriod : monthPeriods)
 				{
 					EpptReportingComputedSet epptReportingComputedSet = EpptReportingComputedSet.computeForMetrics(parameter.getGuiLink(), statistic, monthPeriod,
-							start, end, taf, scenarioRuns, waterYearIndex, waterYearIndices);
+							start, end, taf, scenarioRuns, PlotConfigurationState.ComparisonType.COMPARISON, waterYearIndex, waterYearIndices);
 					JSONObject jsonObject = epptReportingComputedSet.toJson();
 					LOGGER.log(Level.FINE, "{0}", jsonObject);
 					retval.add(jsonObject);

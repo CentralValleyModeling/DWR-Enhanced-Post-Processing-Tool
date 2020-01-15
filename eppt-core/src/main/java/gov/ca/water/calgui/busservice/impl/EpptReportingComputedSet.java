@@ -24,6 +24,7 @@ import gov.ca.water.calgui.EpptInitializationException;
 import gov.ca.water.calgui.bo.GUILinksAllModelsBO;
 import gov.ca.water.calgui.bo.WaterYearIndex;
 import gov.ca.water.calgui.project.EpptScenarioRun;
+import gov.ca.water.calgui.project.PlotConfigurationState;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -41,34 +42,38 @@ public final class EpptReportingComputedSet
 	private static final String STATISTICS = "statistics";
 	private static final String MONTH_PERIOD = "month_period_title";
 	private static final String PERIOD_MONTHS = "period_months";
+	private static final String COMPARISON_TYPE = "comparison_mode";
 	private static final String UNITS = "units";
 	private static final String TAF = "taf";
 	private final GUILinksAllModelsBO _guiLink;
 	private final EpptStatistic _statistics;
 	private final MonthPeriod _monthPeriod;
 	private final List<EpptReportingComputed> _epptReportingComputed;
+	private final PlotConfigurationState.ComparisonType _comparisonType;
 	private final boolean _taf;
 
 	private EpptReportingComputedSet(GUILinksAllModelsBO guiLink, EpptStatistic statistics,
 									 MonthPeriod monthPeriod, boolean taf,
-									 List<EpptReportingComputed> epptReportingComputed)
+									 List<EpptReportingComputed> epptReportingComputed, PlotConfigurationState.ComparisonType comparisonType)
 	{
 		_guiLink = guiLink;
 		_statistics = statistics;
 		_monthPeriod = monthPeriod;
 		_taf = taf;
 		_epptReportingComputed = epptReportingComputed;
+		_comparisonType = comparisonType;
 	}
 
 
 	public static EpptReportingComputedSet computeForMetrics(GUILinksAllModelsBO guiLink, EpptStatistic statistic,
 															 MonthPeriod monthPeriod, LocalDate start,
 															 LocalDate end, boolean taf, List<EpptScenarioRun> scenarioRuns,
+															 PlotConfigurationState.ComparisonType comparisonType,
 															 WaterYearIndex waterYearIndex, List<WaterYearIndex> waterYearIndices)
 	{
 		EpptReportingComputer trendReportingComputer = new EpptReportingComputer(guiLink, statistic, monthPeriod,
 				waterYearIndex, waterYearIndices);
-		return buildComputedValues(guiLink, statistic, monthPeriod, start, end, taf, scenarioRuns, trendReportingComputer);
+		return buildComputedValues(guiLink, statistic, monthPeriod, start, end, taf, scenarioRuns, comparisonType, trendReportingComputer);
 	}
 
 
@@ -76,15 +81,17 @@ public final class EpptReportingComputedSet
 																 MonthPeriod monthPeriod, LocalDate start,
 																 LocalDate end, boolean taf, EpptScenarioRun baseRun,
 																 List<EpptScenarioRun> scenarioRuns,
+																 PlotConfigurationState.ComparisonType comparisonType,
 																 WaterYearIndex waterYearIndex, List<WaterYearIndex> waterYearIndices)
 	{
 		EpptDiffReportingComputer trendReportingComputer = new EpptDiffReportingComputer(baseRun, guiLink, statistic, monthPeriod,
 				waterYearIndex, waterYearIndices);
-		return buildComputedValues(guiLink, statistic, monthPeriod, start, end, taf, scenarioRuns, trendReportingComputer);
+		return buildComputedValues(guiLink, statistic, monthPeriod, start, end, taf, scenarioRuns, comparisonType, trendReportingComputer);
 	}
 
 	private static EpptReportingComputedSet buildComputedValues(GUILinksAllModelsBO guiLink, EpptStatistic statistic, MonthPeriod monthPeriod,
 																LocalDate start, LocalDate end, boolean taf, List<EpptScenarioRun> scenarioRuns,
+																PlotConfigurationState.ComparisonType comparisonType,
 																EpptReportingComputer trendReportingComputer)
 	{
 		List<EpptReportingComputed> trendReportingComputed = new ArrayList<>();
@@ -109,7 +116,7 @@ public final class EpptReportingComputedSet
 			}
 		}
 		return new EpptReportingComputedSet(guiLink, statistic, monthPeriod,
-				taf, trendReportingComputed);
+				taf, trendReportingComputed, comparisonType);
 	}
 
 	public JSONObject toJson()
@@ -125,6 +132,7 @@ public final class EpptReportingComputedSet
 		jsonObject.put(MONTH_PERIOD, _monthPeriod.toString());
 		jsonObject.put(SCENARIO_RUN_DATA, jsonArray);
 		jsonObject.put(TAF, _taf);
+		jsonObject.put(COMPARISON_TYPE, _comparisonType.name());
 		JSONArray periodMonths = new JSONArray();
 		EpptReportingMonths.getMonths(_monthPeriod).forEach(e -> periodMonths.put(e.getDisplayName(TextStyle.SHORT, Locale.getDefault())));
 		jsonObject.put(PERIOD_MONTHS, periodMonths);

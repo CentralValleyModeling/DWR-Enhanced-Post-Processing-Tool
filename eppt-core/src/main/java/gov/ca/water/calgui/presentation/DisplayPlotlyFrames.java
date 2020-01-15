@@ -29,11 +29,8 @@ import gov.ca.water.calgui.busservice.IDSSGrabber1Svc;
 import gov.ca.water.calgui.busservice.impl.DSSGrabber1SvcImpl;
 import gov.ca.water.calgui.presentation.display.MonthlyTablePanel;
 import gov.ca.water.calgui.presentation.display.SummaryTablePanel;
-import gov.ca.water.calgui.presentation.plotly.AllExceedancePane;
-import gov.ca.water.calgui.presentation.plotly.AnnualExceedancePane;
-import gov.ca.water.calgui.presentation.plotly.BoxPlotChartPane;
-import gov.ca.water.calgui.presentation.plotly.MonthExceedancePane;
-import gov.ca.water.calgui.presentation.plotly.TimeseriesChartPane;
+import gov.ca.water.calgui.presentation.plotly.PlotlyPane;
+import gov.ca.water.calgui.presentation.plotly.PlotlyPaneBuilder;
 import gov.ca.water.calgui.project.EpptScenarioRun;
 import gov.ca.water.calgui.project.PlotConfigurationState;
 import gov.ca.water.calgui.techservice.IErrorHandlingSvc;
@@ -193,16 +190,18 @@ final class DisplayPlotlyFrames
 		List<EpptScenarioRun> scenarioRuns = new ArrayList<>();
 		scenarioRuns.add(_baseRun);
 		scenarioRuns.addAll(_alternatives);
-		boolean taf = _plotConfigurationState.isDisplayTaf();
-		TimeseriesChartPane cp2 = new TimeseriesChartPane(guiLink, scenarioRuns, plotConfigurationState.getComparisonType(),
-				_start, _end, taf);
+		PlotlyPane pane = new PlotlyPaneBuilder(PlotlyPaneBuilder.ChartType.TIMESERIES, scenarioRuns)
+				.withComparisonType(plotConfigurationState.getComparisonType())
+				.withGuiLink(guiLink)
+				.withTimeWindow(_start, _end)
+				.build();
 		if(plotConfigurationState.getComparisonType() == PlotConfigurationState.ComparisonType.DIFF)
 		{
-			tabbedPane.addTab("Difference", cp2);
+			tabbedPane.addTab("Difference", pane);
 		}
 		else
 		{
-			tabbedPane.addTab("Time Series", cp2);
+			tabbedPane.addTab("Time Series", pane);
 		}
 	}
 
@@ -230,10 +229,13 @@ final class DisplayPlotlyFrames
 			List<EpptScenarioRun> scenarioRuns = new ArrayList<>();
 			scenarioRuns.add(_baseRun);
 			scenarioRuns.addAll(_alternatives);
-			boolean taf = _plotConfigurationState.isDisplayTaf();
-			final JComponent cp3 = new MonthExceedancePane(month, guiLink, scenarioRuns, plotConfigurationState.getComparisonType(), _start, _end,
-					taf);
-			tabbedPane.addTab("Exceedance (" + month.getDisplayName(TextStyle.SHORT, Locale.getDefault()) + ")", cp3);
+			PlotlyPane pane = new PlotlyPaneBuilder(PlotlyPaneBuilder.ChartType.EXCEEDANCE, scenarioRuns)
+					.withComparisonType(plotConfigurationState.getComparisonType())
+					.withGuiLink(guiLink)
+					.withTimeWindow(_start, _end)
+					.withMonth(month)
+					.build();
+			tabbedPane.addTab("Exceedance (" + month.getDisplayName(TextStyle.SHORT, Locale.getDefault()) + ")", pane);
 		}
 	}
 
@@ -242,16 +244,18 @@ final class DisplayPlotlyFrames
 		List<EpptScenarioRun> scenarioRuns = new ArrayList<>();
 		scenarioRuns.add(_baseRun);
 		scenarioRuns.addAll(_alternatives);
-		boolean taf = _plotConfigurationState.isDisplayTaf();
-		AllExceedancePane allExceedancePane = new AllExceedancePane(guiLink, scenarioRuns, plotConfigurationState.getComparisonType(),
-				_start, _end, taf);
+		PlotlyPane pane = new PlotlyPaneBuilder(PlotlyPaneBuilder.ChartType.EXCEEDANCE, scenarioRuns)
+				.withComparisonType(plotConfigurationState.getComparisonType())
+				.withGuiLink(guiLink)
+				.withTimeWindow(_start, _end)
+				.build();
 		if(plotConfigurationState.getComparisonType() == PlotConfigurationState.ComparisonType.DIFF)
 		{
-			tabbedPane.addTab("Exceedance (All - Difference)", allExceedancePane);
+			tabbedPane.addTab("Exceedance (All - Difference)", pane);
 		}
 		else
 		{
-			tabbedPane.addTab("Exceedance (All)", allExceedancePane);
+			tabbedPane.addTab("Exceedance (All)", pane);
 		}
 	}
 
@@ -260,17 +264,20 @@ final class DisplayPlotlyFrames
 		List<EpptScenarioRun> scenarioRuns = new ArrayList<>();
 		scenarioRuns.add(_baseRun);
 		scenarioRuns.addAll(_alternatives);
-		boolean taf = _plotConfigurationState.isDisplayTaf();
 		WaterYearDefinition waterYearDefinition = new WaterYearDefinition("", Month.OCTOBER, Month.SEPTEMBER);
-		AnnualExceedancePane cp3 = new AnnualExceedancePane(waterYearDefinition, guiLink, scenarioRuns, _plotConfigurationState.getComparisonType(),
-				_start, _end, taf);
+		PlotlyPane pane = new PlotlyPaneBuilder(PlotlyPaneBuilder.ChartType.TIMESERIES, scenarioRuns)
+				.withComparisonType(_plotConfigurationState.getComparisonType())
+				.withGuiLink(guiLink)
+				.withTimeWindow(_start, _end)
+				.withWaterYearDefinition(waterYearDefinition)
+				.build();
 		if(_plotConfigurationState.getComparisonType() == PlotConfigurationState.ComparisonType.DIFF)
 		{
-			tabbedPane.addTab("Exceedance (Annual Total - Difference)", cp3);
+			tabbedPane.addTab("Exceedance (Annual Total - Difference)", pane);
 		}
 		else
 		{
-			tabbedPane.addTab("Exceedance (Annual Total)", cp3);
+			tabbedPane.addTab("Exceedance (Annual Total)", pane);
 		}
 	}
 
@@ -279,9 +286,12 @@ final class DisplayPlotlyFrames
 		List<EpptScenarioRun> scenarioRuns = new ArrayList<>();
 		scenarioRuns.add(_baseRun);
 		scenarioRuns.addAll(_alternatives);
-		boolean taf = _plotConfigurationState.isDisplayTaf();
-		BoxPlotChartPane boxPlotChartPane = new BoxPlotChartPane(guiLink, scenarioRuns, _start, _end, taf);
-		tabbedPane.addTab("Box Plot", boxPlotChartPane);
+		PlotlyPane pane = new PlotlyPaneBuilder(PlotlyPaneBuilder.ChartType.BOX, scenarioRuns)
+				.withComparisonType(_plotConfigurationState.getComparisonType())
+				.withGuiLink(guiLink)
+				.withTimeWindow(_start, _end)
+				.build();
+		tabbedPane.addTab("Box Plot", pane);
 	}
 
 	private void plotMonthlyTable(PlotConfigurationState plotConfigurationState, IDSSGrabber1Svc dssGrabber, DisplayInput displayInput,

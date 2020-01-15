@@ -73,7 +73,7 @@ function plot(data) {
     };
     Plotly.newPlot('container_discrete_tester', getDiscretePlotlySeries(datum), layout, {
         displaylogo: false,
-        modeBarButtons: buildModeBarButtons('container_discrete_tester'),
+        modeBarButtons: buildModeBarButtons(),
         scrollZoom: true,
         responsive: true,
     });

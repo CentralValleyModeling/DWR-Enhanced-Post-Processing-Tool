@@ -58,7 +58,7 @@ function plot(data) {
         title: {
             text: data['month_period_title'] + ' ' + data['gui_link_title'] + '<br>(' + data['statistics'] + ')',
             font: {
-                family: 'Lucida Grande", "Lucida Sans Unicode", "Verdana", "Arial", "Helvetica", "sans-serif',
+                family: PLOTLY_FONT['family'],
                 size: 20,
                 color: 'black',
             }

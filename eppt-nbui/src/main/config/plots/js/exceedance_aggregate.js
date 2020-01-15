@@ -74,7 +74,7 @@ function plot(data) {
     };
     Plotly.newPlot('container_aggregate_tester', getAggregatePlotlySeries(datum), layout, {
         displaylogo: false,
-        modeBarButtons: buildModeBarButtons('container_aggregate_tester'),
+        modeBarButtons: buildModeBarButtons(),
         scrollZoom: true,
         responsive: true,
     });

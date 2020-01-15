@@ -12,7 +12,7 @@ def calculate(data):
 	waterYearIndex = waterYearIndices.stream().filter(
 		jp(lambda p: p.toString() == "SJR Index")).findAny().orElseThrow(
 		js(lambda: RuntimeException("No SJR Index")))
-	critical = waterYearIndex.getAllLongWaterYearPeriodRanges().getOrDefault(WaterYearPeriod("Critical"), ArrayList <> ())
+	critical = waterYearIndex.getAllLongWaterYearPeriodRanges().getOrDefault(WaterYearPeriod("Critical"), ArrayList())
 	waterYearPeriodRangesFilter = WaterYearAnnualPeriodRangesFilter(critical)
 	return data.entrySet().stream().filter(waterYearPeriodRangesFilter).mapToDouble(
 		jdf(lambda e: e.getValue())).average()

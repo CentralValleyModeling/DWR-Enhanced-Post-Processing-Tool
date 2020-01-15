@@ -13,11 +13,12 @@
 package gov.ca.water.eppt.nbui;
 
 import java.awt.BorderLayout;
-import java.awt.Dimension;
+import java.awt.Component;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.*;
 
 import gov.ca.water.quickresults.ui.EpptPanel;
-import gov.ca.water.quickresults.ui.customresults.CustomResultsPanel;
 import org.openide.windows.TopComponent;
 
 /**
@@ -28,14 +29,28 @@ import org.openide.windows.TopComponent;
  */
 public class PlotTopComponent extends EpptTopComponent
 {
+	private static final Logger LOGGER = Logger.getLogger(PlotTopComponent.class.getName());
+
+	public PlotTopComponent()
+	{
+		LOGGER.log(Level.FINEST, "NOOP constructor for Netbeans serialization routine (even though this top component is not persistent");
+	}
+
 	PlotTopComponent(JTabbedPane tabbedPane)
 	{
-		tabbedPane.setPreferredSize(new Dimension(545, 630));
+		int tabCount = tabbedPane.getTabCount();
+		for(int i = 0; i < tabCount; i++)
+		{
+			Component tabComponentAt = tabbedPane.getComponentAt(i);
+			String titleAt = tabbedPane.getTitleAt(i);
+			tabbedPane.removeTabAt(i);
+			JScrollPane scrollPane = new JScrollPane();
+			scrollPane.setViewportView(tabComponentAt);
+			tabbedPane.insertTab(titleAt, null, scrollPane, null, i);
+		}
 		tabbedPane.setSelectedIndex(0);
-		JScrollPane jScrollPane = new JScrollPane();
-		jScrollPane.setViewportView(tabbedPane);
 		super.setLayout(new BorderLayout());
-		super.add(jScrollPane, BorderLayout.CENTER);
+		super.add(tabbedPane, BorderLayout.CENTER);
 		super.setName("Results - " + tabbedPane.getName());
 	}
 

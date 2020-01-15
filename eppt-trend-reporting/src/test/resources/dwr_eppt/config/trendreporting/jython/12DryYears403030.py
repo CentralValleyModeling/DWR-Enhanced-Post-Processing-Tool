@@ -12,7 +12,7 @@ def calculate(data):
 	waterYearIndex = waterYearIndices.stream().filter(
 		jp(lambda p: p.toString() == "SAC Index")).findAny().orElseThrow(
 		js(lambda: RuntimeException("No SAC index")))
-	dry = waterYearIndex.getAllLongWaterYearPeriodRanges().getOrDefault(WaterYearPeriod("Dry"), ArrayList <> ())
+	dry = waterYearIndex.getAllLongWaterYearPeriodRanges().getOrDefault(WaterYearPeriod("Dry"), ArrayList())
 	waterYearPeriodRangesFilter = WaterYearAnnualPeriodRangesFilter(dry)
 	return data.entrySet().stream().filter(waterYearPeriodRangesFilter).mapToDouble(
 		jdf(lambda e: e.getValue())).average()

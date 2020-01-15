@@ -117,7 +117,7 @@ function plot(data) {
     };
     Plotly.newPlot('tester', getPlotlySeries(datum, periodMonths), layout, {
             displaylogo: false,
-            modeBarButtons: buildModeBarButtonsWithoutScatter(),
+            modeBarButtons: buildModeBarButtons(),
             scrollZoom: true,
             responsive: true
         }
