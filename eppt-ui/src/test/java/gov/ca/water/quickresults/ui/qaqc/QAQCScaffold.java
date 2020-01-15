@@ -68,9 +68,9 @@ public class QAQCScaffold
 				namedDssPath,
 				Collections.emptyList());
 		EpptScenarioRun baseRun = new EpptScenarioRun("Base", "desc", GUILinksAllModelsBO.Model.findModel("CalSim2"),
-				Paths.get("Test.pdf"), Paths.get("mainWresl.wresl"), Paths.get("target\\test-classes\\dwr_eppt\\wresl\\lookup\\wytypes.table"), dssContainer, javafx.scene.paint.Color.PINK);
+				Paths.get("Test.pdf"), Paths.get("target\\test-classes\\dwr_eppt\\wresl\\"), Paths.get("target\\test-classes\\dwr_eppt\\wresl\\lookup\\"), dssContainer, javafx.scene.paint.Color.PINK);
 		EpptScenarioRun altRun = new EpptScenarioRun("Alt", "desc", GUILinksAllModelsBO.Model.findModel("CalSim2"),
-				Paths.get("Test.pdf"), Paths.get("mainWresl.wresl"), Paths.get(""), dssContainer, javafx.scene.paint.Color.PINK);
+				Paths.get("Test.pdf"), Paths.get("target\\test-classes\\dwr_eppt\\wresl\\"), Paths.get("target\\test-classes\\dwr_eppt\\wresl\\lookup\\"), dssContainer, javafx.scene.paint.Color.PINK);
 		QAQCReportPanel epptPanel = QAQCReportPanel.getInstance();
 		epptPanel.fillScenarioRuns(baseRun, Collections.singletonList(altRun));
 		JFrame jFrame = new JFrame();
@@ -79,6 +79,12 @@ public class QAQCScaffold
 		{
 			jFrame.setLayout(new BorderLayout());
 			jFrame.add(epptPanel, BorderLayout.CENTER);
+			JButton button = new JButton("Toggle");
+			button.addActionListener(e->
+			{
+				epptPanel.toggleWarningText();
+			});
+			jFrame.add(button, BorderLayout.SOUTH);
 			jFrame.setSize(1000,700);
 			jFrame.setBackground(Color.WHITE);
 			jFrame.setVisible(true);

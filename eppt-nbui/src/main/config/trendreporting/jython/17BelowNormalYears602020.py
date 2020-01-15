@@ -13,7 +13,7 @@ def calculate(data):
 		jp(lambda p: p.toString() == "SJR Index")).findAny().orElseThrow(
 		js(lambda: RuntimeException("No SJR Index")))
 	belowNormal = waterYearIndex.getAllLongWaterYearPeriodRanges().getOrDefault(WaterYearPeriod("Below Normal"),
-																				ArrayList <> ())
+																				ArrayList())
 	waterYearPeriodRangesFilter = WaterYearAnnualPeriodRangesFilter(belowNormal)
 	return data.entrySet().stream().filter(waterYearPeriodRangesFilter).mapToDouble(
 		jdf(lambda e: e.getValue())).average()

@@ -266,7 +266,7 @@ class ProjectConfigurationIOVersion2
 		{
 			waterYearTable = unrelativizeFromInstaller(scenarioJson.getString(SCENARIO_WATER_TABLE));
 			//Backwards compatibility
-			if(waterYearTable.toFile().isFile())
+			if(!waterYearTable.toFile().isDirectory())
 			{
 				waterYearTable = waterYearTable.getParent();
 			}
@@ -281,7 +281,7 @@ class ProjectConfigurationIOVersion2
 		{
 			wreslMain = unrelativizeFromInstaller(scenarioJson.getString(SCENARIO_WRESL_MAIN));
 			//Backwards compatibility
-			if(wreslMain.toFile().isFile())
+			if(!wreslMain.toFile().isDirectory())
 			{
 				wreslMain = wreslMain.getParent();
 			}

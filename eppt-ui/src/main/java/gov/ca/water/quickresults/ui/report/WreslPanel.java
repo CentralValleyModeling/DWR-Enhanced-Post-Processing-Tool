@@ -14,6 +14,7 @@ package gov.ca.water.quickresults.ui.report;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.GridLayout;
 import java.nio.file.Path;
@@ -45,7 +46,7 @@ import rma.swing.RmaJPanel;
  */
 public class WreslPanel extends RmaJPanel implements ProcessOutputConsumer
 {
-	private static final Logger LOGGER = Logger.getLogger(WreslRunDialog.class.getName());
+	private static final Logger LOGGER = Logger.getLogger(WreslPanel.class.getName());
 
 	private final JTabbedPane _tabbedPane;
 	private final List<TextAreaPrintStream> _textAreaPrintStreams = new ArrayList<>();
@@ -79,16 +80,18 @@ public class WreslPanel extends RmaJPanel implements ProcessOutputConsumer
 		{
 			remove(_scenarioPanel);
 		}
-		_scenarioPanel = new JPanel();
-		_scenarioPanel.setBorder(new TitledBorder("Run Scenarios"));
-		_scenarioPanel.setLayout(new GridLayout(0, 2));
+		_scenarioPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+		JPanel panel = new JPanel();
+		panel.setBorder(new TitledBorder("Run Scenarios"));
+		panel.setLayout(new GridLayout(0, 3));
 		List<EpptScenarioRunCheckbox> scenarioRunCheckboxes = scenarioRuns
 				.stream()
 				.map(EpptScenarioRunCheckbox::new)
 				.collect(Collectors.toList());
 		_scenarioRunCheckboxes.clear();
 		_scenarioRunCheckboxes.addAll(scenarioRunCheckboxes);
-		_scenarioRunCheckboxes.forEach(this::addScenarioRunCheckboxPanel);
+		_scenarioRunCheckboxes.forEach(comp -> addScenarioRunCheckboxPanel(comp, panel));
+		_scenarioPanel.add(panel);
 		add(_scenarioPanel, BorderLayout.NORTH);
 	}
 
@@ -187,13 +190,17 @@ public class WreslPanel extends RmaJPanel implements ProcessOutputConsumer
 		});
 	}
 
-	private void addScenarioRunCheckboxPanel(EpptScenarioRunCheckbox comp)
+	private void addScenarioRunCheckboxPanel(EpptScenarioRunCheckbox comp, JPanel parent)
 	{
+		JLabel warnText = new JLabel();
+		warnText.setText("*WRESL Script Directory differs from installation");
 		EpptScenarioRun scenarioRun = comp.getScenarioRun();
-		_scenarioPanel.add(comp);
+		parent.add(comp);
 		JButton button = new JButton("Overwrite WRESL Scripts");
 		button.addActionListener(e->QaQcFileUtils.createWreslMain(scenarioRun, true));
-		_scenarioPanel.add(button);
+		parent.add(button);
+		parent.add(warnText);
+		QAQCReportPanel.showWreslScriptChangedWarning(warnText, comp._scenarioRun);
 	}
 
 	private static final class EpptScenarioRunCheckbox extends JCheckBox

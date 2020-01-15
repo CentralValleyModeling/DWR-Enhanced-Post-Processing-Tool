@@ -216,17 +216,18 @@ public class CustomResultsPanel extends EpptPanel
 			}
 			// checked if count > 0 above
 			int[] rows = table.getSelectedRows();
-			DataReference[] array = new DataReference[rows.length];
-			for(int i = 0; i < rows.length; i++)
+			for(int row : rows)
 			{
-				array[i] = group.getDataReference(rows[i]);
-			}
-			for(int i = 0; i < rows.length; i++)
-			{
-				String[] parts = array[i].getName().split("::");
-				String[] parts2 = parts[2].split("/");
-				parts[2] = "/" + parts2[1] + "/" + parts2[2] + "/" + parts2[3] + "/" + parts[3] + "/" + parts2[5] + "/"
-						+ parts2[6] + "/";
+
+				Pathname pathname = Pathname.createPathname(new String[]
+						{
+								table.getModel().getValueAt(row, 1).toString(),
+								table.getModel().getValueAt(row, 2).toString(),
+								table.getModel().getValueAt(row, 3).toString(),
+								table.getModel().getValueAt(row, 4).toString(),
+								table.getModel().getValueAt(row, 5).toString(),
+								table.getModel().getValueAt(row, 6).toString()
+						});
 				EpptScenarioRun baseScenario = projectConfigurationPanel.getBaseScenario();
 				PlotConfigurationState plotConfigurationState = projectConfigurationPanel.plotConfigurationState();
 				LocalDate startMonth = projectConfigurationPanel.getStartMonth();
@@ -234,7 +235,7 @@ public class CustomResultsPanel extends EpptPanel
 				if(baseScenario != null)
 				{
 					List<EpptScenarioRun> alternatives = projectConfigurationPanel.getEpptScenarioAlternatives();
-					_displayHelper.showDisplayFramesLocations(plotConfigurationState, Collections.singletonList(parts[2]),
+					_displayHelper.showDisplayFramesLocations(plotConfigurationState, Collections.singletonList(pathname.getFullPath()),
 							baseScenario, alternatives, startMonth, endMonth);
 				}
 			}

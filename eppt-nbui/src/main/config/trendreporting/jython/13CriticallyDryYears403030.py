@@ -13,7 +13,7 @@ def calculate(data):
 		jp(lambda p: p.toString() == "SAC Index")).findAny().orElseThrow(
 		js(lambda: RuntimeException("No SAC index")))
 	critical = waterYearIndex.getAllLongWaterYearPeriodRanges().getOrDefault(WaterYearPeriod("Critical"),
-																			 ArrayList <> ())
+																			 ArrayList())
 	waterYearPeriodRangesFilter = WaterYearAnnualPeriodRangesFilter(critical)
 	return data.entrySet().stream().filter(waterYearPeriodRangesFilter).mapToDouble(
 		jdf(lambda e: e.getValue())).average()

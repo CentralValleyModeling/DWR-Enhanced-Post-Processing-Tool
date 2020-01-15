@@ -20,7 +20,7 @@
 		<defaultValueExpression><![CDATA["delta-ops-list"]]></defaultValueExpression>
 	</parameter>
 	<queryString language="XPath">
-		<![CDATA[/qaqc-report/summary/module/section/sub-module/chart/delta-ops-list/title/header/sub-header/component]]>
+		<![CDATA[/qaqc-report/summary/module/section/sub-module/chart/$P{p_report_name}/title/header/sub-header/component]]>
 	</queryString>
 	<field name="row-label" class="java.lang.String">
 		<property name="net.sf.jasperreports.xpath.field.expression" value="row-label"/>
