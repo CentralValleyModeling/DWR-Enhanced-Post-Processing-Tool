@@ -122,7 +122,7 @@ public class DTSProcessor
 			else
 			{
 				_standardSummaryErrors.addError(LOGGER,
-						"Unable to process flagged violations for DTS ID: "
+						"\t" + epptScenarioRun + ": Unable to process flagged violations for DTS ID: "
 								+ detailedIssue.getDetailedIssueId() + " DTS record: " + detailedIssue.getLinkedVar());
 			}
 		}
@@ -170,7 +170,7 @@ public class DTSProcessor
 			}
 			else
 			{
-				_standardSummaryErrors.addError(LOGGER, "Error finding detailed issue:" + detailedIssue.getDetailedIssueId() +
+				_standardSummaryErrors.addError(LOGGER, "\t" + epptScenarioRun + ": Error finding detailed issue:" + detailedIssue.getDetailedIssueId() +
 						" during executive report generation: " + epptScenarioRun +
 						" Could not find record with name: " + detailedIssue.getLinkedVar());
 			}

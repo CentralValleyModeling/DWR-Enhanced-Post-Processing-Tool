@@ -189,11 +189,16 @@ class ListBuilder extends TableBuilder
 			}
 			if(!rows.isEmpty() && !rows.get(0).isEmpty())
 			{
-				for(int i = 0; i < headers.size(); i++)
+				for(int i = 0; i < rows.get(0).size() - 1; i++)
 				{
+					String header = "";
+					if(i < headers.size())
+					{
+						header = headers.get(i);
+					}
 					Element element = getDocument().createElement(LIST_HEADER_ELEMENT);
 					element.setAttribute(NAME_ORDER_ATTRIBUTE, Integer.toString(i));
-					element.setAttribute(LIST_NAME_ATTRIBUTE, headers.get(i));
+					element.setAttribute(LIST_NAME_ATTRIBUTE, header);
 					componentElement.appendChild(element);
 					for(int j = 0; j < rows.size(); j++)
 					{
