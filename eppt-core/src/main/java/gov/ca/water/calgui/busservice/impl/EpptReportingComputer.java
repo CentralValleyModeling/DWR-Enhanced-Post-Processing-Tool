@@ -18,6 +18,7 @@ import java.time.Month;
 import java.time.YearMonth;
 import java.time.ZoneId;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
@@ -28,6 +29,7 @@ import java.util.SortedMap;
 import java.util.TimeZone;
 import java.util.TreeMap;
 import java.util.concurrent.TimeUnit;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import gov.ca.water.calgui.EpptInitializationException;
@@ -39,11 +41,13 @@ import gov.ca.water.calgui.bo.WaterYearPeriod;
 import gov.ca.water.calgui.bo.WaterYearPeriodRange;
 import gov.ca.water.calgui.project.EpptScenarioRun;
 import gov.ca.water.calgui.scripts.DssReader;
+import vista.set.TimeSeries;
 
 import hec.heclib.util.HecTime;
 import hec.io.TimeSeriesContainer;
 import rma.util.RMAConst;
 
+import static gov.ca.water.calgui.busservice.impl.DSSGrabber1SvcImpl.CFS_2_TAF_DAY;
 import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toMap;
 
@@ -74,26 +78,24 @@ public class EpptReportingComputer
 		_waterYearIndices = waterYearIndices;
 	}
 
-	public EpptReportingComputed computeCfs(EpptScenarioRun scenarioRun, LocalDate start, LocalDate end) throws EpptInitializationException
+	public EpptReportingComputed computeCfs(EpptScenarioRun scenarioRun, TimeSeriesContainer[] primarySeries,
+											LocalDate start, LocalDate end) throws EpptInitializationException
 	{
-		DSSGrabber1SvcImpl dssGrabber = buildDssGrabber(scenarioRun, true, start, end);
-		return compute(scenarioRun, dssGrabber, false, start, end);
+		return compute(scenarioRun, primarySeries, false, start, end);
 	}
 
-	public EpptReportingComputed computeTaf(EpptScenarioRun scenarioRun, LocalDate start, LocalDate end) throws EpptInitializationException
+	public EpptReportingComputed computeTaf(EpptScenarioRun scenarioRun, TimeSeriesContainer[] primarySeries,
+											LocalDate start, LocalDate end) throws EpptInitializationException
 	{
-		DSSGrabber1SvcImpl dssGrabber = buildDssGrabber(scenarioRun, false, start, end);
-		return compute(scenarioRun, dssGrabber, true, start, end);
+		return compute(scenarioRun, primarySeries, true, start, end);
 	}
 
-	private EpptReportingComputed compute(EpptScenarioRun scenarioRun, DSSGrabber1SvcImpl dssGrabber, boolean convertTaf, LocalDate start,
-										  LocalDate end)
-			throws EpptInitializationException
+	private EpptReportingComputed compute(EpptScenarioRun scenarioRun, TimeSeriesContainer[] primarySeries,
+										  boolean convertTaf, LocalDate start, LocalDate end) throws EpptInitializationException
 	{
 		int offset = (int) TimeUnit.MILLISECONDS.toMinutes(TimeZone.getDefault().getRawOffset());
-		TimeSeriesContainer[] primarySeries = dssGrabber.getPrimarySeries();
 		String units = getUnits(primarySeries);
-		boolean aggregateYearly = isAggregateYearly(dssGrabber, convertTaf, primarySeries);
+		boolean aggregateYearly = isAggregateYearly(convertTaf, primarySeries);
 		NavigableMap<LocalDateTime, Double> fullSeries = getFullTimeSeries(start, end, offset, primarySeries);
 		NavigableMap<Integer, Double> filteredPeriodYearly = DssReader.filterPeriodYearly(fullSeries, _monthPeriod, aggregateYearly);
 		SortedMap<Month, NavigableMap<Integer, Double>> filteredPeriodMonthly = filterPeriodMonthly(fullSeries);
@@ -109,7 +111,7 @@ public class EpptReportingComputer
 	}
 
 	NavigableMap<LocalDateTime, Double> getFullTimeSeries(LocalDate start, LocalDate end, int offset,
-																  TimeSeriesContainer[] primarySeries)
+														  TimeSeriesContainer[] primarySeries)
 	{
 		NavigableMap<LocalDateTime, Double> fullSeries = new TreeMap<>();
 		if(primarySeries != null && primarySeries.length > 0 && primarySeries[0] != null)
@@ -119,7 +121,7 @@ public class EpptReportingComputer
 			{
 				HecTime hecTime = tsc.getHecTime(i);
 				double value = tsc.getValue(i);
-				if(RMAConst.isValidValue(value))
+				if(RMAConst.isValidValue(value) &&  value != -3.402823466E38)
 				{
 					Date javaDate = hecTime.getJavaDate(offset);
 					fullSeries.put(LocalDateTime.ofInstant(javaDate.toInstant(), ZoneId.systemDefault()), value);
@@ -134,7 +136,18 @@ public class EpptReportingComputer
 		return fullSeries;
 	}
 
-	private boolean isAggregateYearly(DSSGrabber1SvcImpl dssGrabber, boolean convertTaf, TimeSeriesContainer[] primarySeries)
+	private String getUnits(TimeSeriesContainer[] primarySeries)
+	{
+		String units = "";
+		if(primarySeries != null && primarySeries.length > 0 && primarySeries[0] != null)
+		{
+			TimeSeriesContainer tsc = primarySeries[0];
+			units = tsc.getParameterName() + " (" + tsc.getUnits() + ")";
+		}
+		return units;
+	}
+
+	private boolean isAggregateYearly(boolean convertTaf, TimeSeriesContainer[] primarySeries)
 	{
 		boolean aggregateYearly = false;
 		if(primarySeries != null && primarySeries.length > 0 && primarySeries[0] != null)
@@ -142,7 +155,7 @@ public class EpptReportingComputer
 			if(convertTaf)
 			{
 				aggregateYearly = "CFS".equalsIgnoreCase(primarySeries[0].getUnits());
-				dssGrabber.calcTAFforCFS(primarySeries, null);
+				calcTAFforCFS(primarySeries[0]);
 			}
 			TimeSeriesContainer tsc = primarySeries[0];
 			if("STORAGE-CHANGE".equalsIgnoreCase(tsc.getParameterName()) && "TAF".equalsIgnoreCase(tsc.getUnits()))
@@ -153,15 +166,30 @@ public class EpptReportingComputer
 		return aggregateYearly;
 	}
 
-	private String getUnits(TimeSeriesContainer[] primarySeries)
+	private void calcTAFforCFS(TimeSeriesContainer series)
 	{
-		String units = "";
-		if(primarySeries != null && primarySeries.length > 0 && primarySeries[0] != null)
+		try
 		{
-			TimeSeriesContainer tsc = primarySeries[0];
-			units = tsc.getParameterName() + " (" + tsc.getUnits() + ")";
+			if("CFS".equalsIgnoreCase(series.getUnits()))
+			{
+				HecTime ht = new HecTime();
+				Calendar calendar = Calendar.getInstance();
+				// Primary series
+				for(int j = 0; j < series.numberValues; j++)
+				{
+
+					ht.set(series.times[j]);
+					calendar.set(ht.year(), ht.month() - 1, 1);
+					double monthlyTAF = series.values[j]
+							* calendar.getActualMaximum(Calendar.DAY_OF_MONTH) * CFS_2_TAF_DAY;
+					series.values[j] = monthlyTAF;
+				}
+			}
 		}
-		return units;
+		catch(RuntimeException ex)
+		{
+			LOGGER.log(Level.SEVERE, "Unable to calculate TAF.", ex);
+		}
 	}
 
 	private SortedMap<WaterYearPeriod, Double> groupWaterYearPeriod(EpptScenarioRun epptScenarioRun,

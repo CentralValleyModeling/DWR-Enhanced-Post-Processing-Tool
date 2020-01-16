@@ -20,9 +20,13 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.TreeMap;
 import java.util.concurrent.CancellationException;
 import java.util.concurrent.CompletableFuture;
 import java.util.logging.Level;
@@ -31,10 +35,11 @@ import java.util.stream.Stream;
 import javax.xml.parsers.ParserConfigurationException;
 
 import gov.ca.water.calgui.EpptInitializationException;
+import gov.ca.water.calgui.bo.GUILinksAllModelsBO;
 import gov.ca.water.calgui.bo.WaterYearIndex;
+import gov.ca.water.calgui.busservice.impl.DSSGrabber1SvcImpl;
 import gov.ca.water.calgui.busservice.impl.EpptReportingComputedSet;
 import gov.ca.water.calgui.busservice.impl.EpptStatistic;
-import gov.ca.water.calgui.busservice.impl.ScriptedEpptStatistics;
 import gov.ca.water.calgui.busservice.impl.MonthPeriod;
 import gov.ca.water.calgui.busservice.impl.WaterYearTableReader;
 import gov.ca.water.calgui.constant.Constant;
@@ -67,6 +72,8 @@ import javafx.scene.layout.TilePane;
 import javafx.scene.paint.Color;
 import org.json.JSONObject;
 import org.xml.sax.SAXException;
+
+import hec.io.TimeSeriesContainer;
 
 import static java.util.stream.Collectors.toList;
 
@@ -462,8 +469,16 @@ public class TrendReportPanel extends JFXPanel
 			{
 				for(MonthPeriod monthPeriod : monthPeriods)
 				{
-					EpptReportingComputedSet epptReportingComputedSet = EpptReportingComputedSet.computeForMetrics(parameter.getGuiLink(), statistic, monthPeriod,
-							start, end, taf, scenarioRuns, PlotConfigurationState.ComparisonType.COMPARISON, waterYearIndex, waterYearIndices);
+					GUILinksAllModelsBO guiLink = parameter.getGuiLink();
+					Map<EpptScenarioRun, TimeSeriesContainer[]> scenarioRunData = new TreeMap<>(Comparator.comparing(scenarioRuns::indexOf));
+					for(EpptScenarioRun epptScenarioRun : scenarioRuns)
+					{
+						DSSGrabber1SvcImpl dssGrabber = buildDssGrabber(epptScenarioRun, guiLink, taf, start, end);
+						TimeSeriesContainer[] primarySeries = dssGrabber.getPrimarySeries();
+						scenarioRunData.put(epptScenarioRun, primarySeries);
+					}
+					EpptReportingComputedSet epptReportingComputedSet = EpptReportingComputedSet.computeForMetrics(guiLink, statistic, monthPeriod,
+							start, end, taf, scenarioRunData, PlotConfigurationState.ComparisonType.COMPARISON, waterYearIndex, waterYearIndices);
 					JSONObject jsonObject = epptReportingComputedSet.toJson();
 					LOGGER.log(Level.FINE, "{0}", jsonObject);
 					retval.add(jsonObject);
@@ -471,6 +486,16 @@ public class TrendReportPanel extends JFXPanel
 			}
 		}
 		return retval;
+	}
+
+	private DSSGrabber1SvcImpl buildDssGrabber(EpptScenarioRun epptScenarioRun, GUILinksAllModelsBO guiLink, boolean isCFS, LocalDate start, LocalDate end)
+	{
+		DSSGrabber1SvcImpl dssGrabber = new DSSGrabber1SvcImpl();
+		dssGrabber.setIsCFS(isCFS);
+		dssGrabber.setScenarioRuns(epptScenarioRun, Collections.emptyList());
+		dssGrabber.setGuiLink(guiLink);
+		dssGrabber.setDateRange(start, end);
+		return dssGrabber;
 	}
 
 }

@@ -16,6 +16,7 @@ import java.time.LocalDate;
 import java.time.Month;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -30,6 +31,8 @@ import gov.ca.water.calgui.busservice.impl.WaterYearTableReader;
 import gov.ca.water.calgui.project.EpptScenarioRun;
 import gov.ca.water.calgui.project.PlotConfigurationState;
 
+import hec.io.TimeSeriesContainer;
+
 /**
  * Company: Resource Management Associates
  *
@@ -40,8 +43,8 @@ public class PlotlyPaneBuilder
 {
 	private static final Logger LOGGER = Logger.getLogger(PlotlyPaneBuilder.class.getName());
 	private final ChartType _chartType;
+	private final Map<EpptScenarioRun, TimeSeriesContainer[]> _scenarioRunData;
 	private final EpptScenarioRun _baseRun;
-	private final ArrayList<EpptScenarioRun> _alternatives;
 	private PlotConfigurationState.ComparisonType _comparisonType = PlotConfigurationState.ComparisonType.COMPARISON;
 	private GUILinksAllModelsBO _guiLink;
 	private boolean _taf;
@@ -50,16 +53,15 @@ public class PlotlyPaneBuilder
 	private WaterYearDefinition _waterYearDefinition;
 	private Month _month;
 
-	public PlotlyPaneBuilder(ChartType chartType, List<EpptScenarioRun> scenarioRuns)
+	public PlotlyPaneBuilder(ChartType chartType, EpptScenarioRun baseRun, Map<EpptScenarioRun, TimeSeriesContainer[]> scenarioRunData)
 	{
 		_chartType = chartType;
-		if(scenarioRuns.isEmpty())
+		_scenarioRunData = scenarioRunData;
+		if(scenarioRunData.isEmpty())
 		{
 			throw new IllegalArgumentException("Cannot plot without scenarios");
 		}
-		_baseRun = scenarioRuns.get(0);
-		_alternatives = new ArrayList<>(scenarioRuns);
-		_alternatives.remove(0);
+		_baseRun = baseRun;
 	}
 
 	public PlotlyPaneBuilder withComparisonType(PlotConfigurationState.ComparisonType comparisonType)
@@ -109,22 +111,20 @@ public class PlotlyPaneBuilder
 					_end,
 					_taf,
 					_baseRun,
-					_alternatives,
+					_scenarioRunData,
 					_comparisonType,
 					waterYearIndices.get(0),
 					waterYearIndices);
 		}
 		else
 		{
-			List<EpptScenarioRun> epptScenarioRuns = new ArrayList<>(_alternatives);
-			epptScenarioRuns.add(0, _baseRun);
 			epptReportingComputedSet = EpptReportingComputedSet.computeForMetrics(_guiLink,
 					new NoopEpptStatistic(),
 					new MonthPeriod(Month.OCTOBER, Month.SEPTEMBER),
 					_start,
 					_end,
 					_taf,
-					epptScenarioRuns,
+					_scenarioRunData,
 					_comparisonType,
 					waterYearIndices.get(0),
 					waterYearIndices);

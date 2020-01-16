@@ -40,7 +40,7 @@ class EpptDiffReportingComputer extends EpptReportingComputer
 	private final EpptScenarioRun _baseRun;
 
 	EpptDiffReportingComputer(EpptScenarioRun baseRun, GUILinksAllModelsBO guiLink, EpptStatistic statistics, MonthPeriod monthPeriod,
-									 WaterYearIndex waterYearIndex, List<WaterYearIndex> waterYearIndices)
+							  WaterYearIndex waterYearIndex, List<WaterYearIndex> waterYearIndices)
 	{
 		super(guiLink, statistics, monthPeriod, waterYearIndex, waterYearIndices);
 		_baseRun = baseRun;
@@ -48,7 +48,7 @@ class EpptDiffReportingComputer extends EpptReportingComputer
 
 	@Override
 	NavigableMap<LocalDateTime, Double> getFullTimeSeries(LocalDate start, LocalDate end, int offset,
-																  TimeSeriesContainer[] primarySeries)
+														  TimeSeriesContainer[] primarySeries)
 	{
 		NavigableMap<LocalDateTime, Double> baseTimeSeries = super.getFullTimeSeries(start, end, offset,
 				buildDssGrabber(_baseRun, false, start, end).getPrimarySeries());
@@ -60,12 +60,15 @@ class EpptDiffReportingComputer extends EpptReportingComputer
 			{
 				HecTime hecTime = tsc.getHecTime(i);
 				double altValue = tsc.getValue(i);
-				if(RMAConst.isValidValue(altValue))
+				if(RMAConst.isValidValue(altValue) && altValue != -3.402823466E38)
 				{
 					Date javaDate = hecTime.getJavaDate(offset);
 					LocalDateTime localDateTime = LocalDateTime.ofInstant(javaDate.toInstant(), ZoneId.systemDefault());
 					Double baseValue = baseTimeSeries.getOrDefault(localDateTime, Double.NaN);
-					fullSeries.put(localDateTime, altValue - baseValue);
+					if(RMAConst.isValidValue(baseValue) && baseValue != -3.402823466E38)
+					{
+						fullSeries.put(localDateTime, altValue - baseValue);
+					}
 				}
 			}
 			if(!fullSeries.isEmpty())

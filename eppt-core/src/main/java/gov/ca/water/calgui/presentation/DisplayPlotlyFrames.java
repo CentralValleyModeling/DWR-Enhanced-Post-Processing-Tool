@@ -18,9 +18,12 @@ import java.time.Month;
 import java.time.format.TextStyle;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.TreeMap;
 import javax.swing.*;
 
 import gov.ca.water.calgui.bo.GUILinksAllModelsBO;
@@ -94,8 +97,7 @@ final class DisplayPlotlyFrames
 			}
 			for(GUILinksAllModelsBO guiLink : _guiLinks)
 			{
-				displayForLocation(_plotConfigurationState, _baseRun, _start, _end,
-						tabbedPanes, dssGrabber, guiLink);
+				displayForLocation(tabbedPanes, dssGrabber, guiLink);
 			}
 		}
 		catch(RuntimeException e)
@@ -107,8 +109,7 @@ final class DisplayPlotlyFrames
 		return tabbedPanes;
 	}
 
-	private void displayForLocation(PlotConfigurationState plotConfigurationState, EpptScenarioRun baseRun, LocalDate start,
-									LocalDate end, List<JTabbedPane> tabbedPanes, IDSSGrabber1Svc dssGrabber, GUILinksAllModelsBO guiLink)
+	private void displayForLocation(List<JTabbedPane> tabbedPanes, IDSSGrabber1Svc dssGrabber, GUILinksAllModelsBO guiLink)
 	{
 		dssGrabber.setGuiLink(guiLink);
 		if(dssGrabber.getPrimaryDSSName() == null)
@@ -123,25 +124,24 @@ final class DisplayPlotlyFrames
 		}
 		else
 		{
-			dssGrabber.setDateRange(start, end);
-			TimeSeriesContainer[] primaryResults = dssGrabber.getPrimarySeries();
-			TimeSeriesContainer[] secondaryResults = dssGrabber.getSecondarySeries();
-			dssGrabber.calcTAFforCFS(primaryResults, secondaryResults);
-			TimeSeriesContainer[] diffResults = dssGrabber.getDifferenceSeries(primaryResults);
-			TimeSeriesContainer[][] excResults = dssGrabber.getExceedanceSeries(primaryResults);
-			TimeSeriesContainer[][] sexcResults = dssGrabber.getExceedanceSeries(secondaryResults);
-			TimeSeriesContainer[][] dexcResults = dssGrabber.getExceedanceSeriesD(primaryResults);
-			JTabbedPane tabbedpane = displayFrameForData(plotConfigurationState, baseRun, dssGrabber,
-					new DisplayInput(guiLink, primaryResults, secondaryResults, diffResults, excResults, sexcResults, dexcResults));
+			dssGrabber.setDateRange(_start, _end);
+			TimeSeriesContainer[] primaryResults = null;
+			dssGrabber.getPrimarySeries();
+			//			TimeSeriesContainer[] secondaryResults = dssGrabber.getSecondarySeries();
+			//			dssGrabber.calcTAFforCFS(primaryResults, secondaryResults);
+			//			TimeSeriesContainer[] diffResults = dssGrabber.getDifferenceSeries(primaryResults);
+			//			TimeSeriesContainer[][] excResults = dssGrabber.getExceedanceSeries(primaryResults);
+			//			TimeSeriesContainer[][] sexcResults = dssGrabber.getExceedanceSeries(secondaryResults);
+			//			TimeSeriesContainer[][] dexcResults = dssGrabber.getExceedanceSeriesD(primaryResults);
+			JTabbedPane tabbedpane = displayFrameForData(dssGrabber,
+					new DisplayInput(guiLink, primaryResults, null, null, null, null, null));
+			//					new DisplayInput(guiLink, primaryResults, secondaryResults, diffResults, excResults, sexcResults, dexcResults));
 
 			tabbedPanes.add(tabbedpane);
 		}
 	}
 
-	private JTabbedPane displayFrameForData(PlotConfigurationState plotConfigurationState,
-											EpptScenarioRun baseRun,
-											IDSSGrabber1Svc dssGrabber,
-											DisplayInput displayInput)
+	private JTabbedPane displayFrameForData(IDSSGrabber1Svc dssGrabber, DisplayInput displayInput)
 	{
 		JTabbedPane tabbedPane = new JTabbedPane();
 		String plotTitle = dssGrabber.getPlotTitle();
@@ -149,29 +149,39 @@ final class DisplayPlotlyFrames
 		String baseRunName = dssGrabber.getBaseRunName();
 		Map<GUILinksAllModelsBO.Model, List<String>> missing = dssGrabber.getMissingList();
 		GUILinksAllModelsBO guiLink = displayInput.getGuiLink();
-		if(displayInput.getPrimaryResults() != null && displayInput.getPrimaryResults()[0] != null)
+		//		if(displayInput.getPrimaryResults() != null && displayInput.getPrimaryResults()[0] != null)
+		//		{
+		List<EpptScenarioRun> scenarioRuns = new ArrayList<>();
+		scenarioRuns.add(_baseRun);
+		scenarioRuns.addAll(_alternatives);
+		Map<EpptScenarioRun, TimeSeriesContainer[]> scenarioRunData = new TreeMap<>(Comparator.comparing(scenarioRuns::indexOf));
+		for(EpptScenarioRun epptScenarioRun : scenarioRuns)
 		{
-			if(plotConfigurationState.isDisplayTimeSeriesPlot())
-			{
-				plotTimeSeries(plotConfigurationState, guiLink, tabbedPane);
-			}
-			if(plotConfigurationState.isDoExceedance())
-			{
-				plotExceedance(plotConfigurationState, tabbedPane, guiLink);
-			}
-			if(plotConfigurationState.isDisplayBoxAndWhiskerPlot())
-			{
-				plotBoxPlot(tabbedPane, guiLink);
-			}
-			if(plotConfigurationState.isDisplayMonthlyTable())
-			{
-				plotMonthlyTable(plotConfigurationState, dssGrabber, displayInput, tabbedPane, plotTitle, sLabel, baseRunName);
-			}
-			if(plotConfigurationState.isDisplaySummaryTable())
-			{
-				plotSummaryTable(plotConfigurationState, dssGrabber, displayInput, tabbedPane, plotTitle, sLabel, baseRunName);
-			}
+			TimeSeriesContainer[] primarySeries = buildDssGrabber(epptScenarioRun, guiLink, _plotConfigurationState.isDisplayTaf(), _start,
+					_end).getPrimarySeries();
+			scenarioRunData.put(epptScenarioRun, primarySeries);
 		}
+		if(_plotConfigurationState.isDisplayTimeSeriesPlot())
+		{
+			plotTimeSeries(scenarioRunData, _plotConfigurationState, guiLink, tabbedPane);
+		}
+		if(_plotConfigurationState.isDoExceedance())
+		{
+			plotExceedance(scenarioRunData, _plotConfigurationState, tabbedPane, guiLink);
+		}
+		if(_plotConfigurationState.isDisplayBoxAndWhiskerPlot())
+		{
+			plotBoxPlot(scenarioRunData, tabbedPane, guiLink);
+		}
+		if(_plotConfigurationState.isDisplayMonthlyTable())
+		{
+			plotMonthlyTable(_plotConfigurationState, dssGrabber, displayInput, tabbedPane, plotTitle, sLabel, baseRunName);
+		}
+		if(_plotConfigurationState.isDisplaySummaryTable())
+		{
+			plotSummaryTable(_plotConfigurationState, dssGrabber, displayInput, tabbedPane, plotTitle, sLabel, baseRunName);
+		}
+		//		}
 		List<String> collect = missing.values()
 									  .stream()
 									  .flatMap(Collection::stream)
@@ -185,13 +195,15 @@ final class DisplayPlotlyFrames
 		return tabbedPane;
 	}
 
-	private void plotTimeSeries(PlotConfigurationState plotConfigurationState, GUILinksAllModelsBO guiLink, JTabbedPane tabbedPane)
+	private void plotTimeSeries(Map<EpptScenarioRun, TimeSeriesContainer[]> scenarioRunData, PlotConfigurationState plotConfigurationState,
+								GUILinksAllModelsBO guiLink, JTabbedPane tabbedPane)
 	{
 		List<EpptScenarioRun> scenarioRuns = new ArrayList<>();
 		scenarioRuns.add(_baseRun);
 		scenarioRuns.addAll(_alternatives);
-		PlotlyPane pane = new PlotlyPaneBuilder(PlotlyPaneBuilder.ChartType.TIMESERIES, scenarioRuns)
+		PlotlyPane pane = new PlotlyPaneBuilder(PlotlyPaneBuilder.ChartType.TIMESERIES, _baseRun, scenarioRunData)
 				.withComparisonType(plotConfigurationState.getComparisonType())
+				.withTaf(_plotConfigurationState.isDisplayTaf())
 				.withGuiLink(guiLink)
 				.withTimeWindow(_start, _end)
 				.build();
@@ -205,32 +217,32 @@ final class DisplayPlotlyFrames
 		}
 	}
 
-	private void plotExceedance(PlotConfigurationState plotConfigurationState, JTabbedPane tabbedPane, GUILinksAllModelsBO guiLink)
+	private void plotExceedance(Map<EpptScenarioRun, TimeSeriesContainer[]> scenarioRunData, PlotConfigurationState plotConfigurationState,
+								JTabbedPane tabbedPane, GUILinksAllModelsBO guiLink)
 	{
 		if(plotConfigurationState.isPlotAllExceedancePlots())
 		{
-			plotAllExceedance(plotConfigurationState, tabbedPane, guiLink);
+			plotAllExceedance(scenarioRunData, plotConfigurationState, tabbedPane, guiLink);
 		}
 		if(plotConfigurationState.isAnnualFlowExceedancePlots())
 		{
-			plotAnnualExceedance(tabbedPane, guiLink);
+			plotAnnualExceedance(scenarioRunData, tabbedPane, guiLink);
 		}
 		if(!plotConfigurationState.getSelectedExceedancePlotMonths().isEmpty())
 		{
-			plotMonthlyExceedance(plotConfigurationState, tabbedPane, guiLink);
+			plotMonthlyExceedance(scenarioRunData, plotConfigurationState, tabbedPane, guiLink);
 		}
 	}
 
-	private void plotMonthlyExceedance(PlotConfigurationState plotConfigurationState, JTabbedPane tabbedPane, GUILinksAllModelsBO guiLink)
+	private void plotMonthlyExceedance(Map<EpptScenarioRun, TimeSeriesContainer[]> scenarioRunData, PlotConfigurationState plotConfigurationState,
+									   JTabbedPane tabbedPane, GUILinksAllModelsBO guiLink)
 	{
 		List<Month> exceedMonths = plotConfigurationState.getSelectedExceedancePlotMonths();
 		for(Month month : exceedMonths)
 		{
-			List<EpptScenarioRun> scenarioRuns = new ArrayList<>();
-			scenarioRuns.add(_baseRun);
-			scenarioRuns.addAll(_alternatives);
-			PlotlyPane pane = new PlotlyPaneBuilder(PlotlyPaneBuilder.ChartType.EXCEEDANCE, scenarioRuns)
+			PlotlyPane pane = new PlotlyPaneBuilder(PlotlyPaneBuilder.ChartType.EXCEEDANCE, _baseRun, scenarioRunData)
 					.withComparisonType(plotConfigurationState.getComparisonType())
+					.withTaf(_plotConfigurationState.isDisplayTaf())
 					.withGuiLink(guiLink)
 					.withTimeWindow(_start, _end)
 					.withMonth(month)
@@ -239,12 +251,11 @@ final class DisplayPlotlyFrames
 		}
 	}
 
-	private void plotAllExceedance(PlotConfigurationState plotConfigurationState, JTabbedPane tabbedPane, GUILinksAllModelsBO guiLink)
+	private void plotAllExceedance(Map<EpptScenarioRun, TimeSeriesContainer[]> scenarioRunData, PlotConfigurationState plotConfigurationState,
+								   JTabbedPane tabbedPane, GUILinksAllModelsBO guiLink)
 	{
-		List<EpptScenarioRun> scenarioRuns = new ArrayList<>();
-		scenarioRuns.add(_baseRun);
-		scenarioRuns.addAll(_alternatives);
-		PlotlyPane pane = new PlotlyPaneBuilder(PlotlyPaneBuilder.ChartType.EXCEEDANCE, scenarioRuns)
+		PlotlyPane pane = new PlotlyPaneBuilder(PlotlyPaneBuilder.ChartType.EXCEEDANCE, _baseRun, scenarioRunData)
+				.withTaf(_plotConfigurationState.isDisplayTaf())
 				.withComparisonType(plotConfigurationState.getComparisonType())
 				.withGuiLink(guiLink)
 				.withTimeWindow(_start, _end)
@@ -259,14 +270,13 @@ final class DisplayPlotlyFrames
 		}
 	}
 
-	private void plotAnnualExceedance(JTabbedPane tabbedPane, GUILinksAllModelsBO guiLink)
+	private void plotAnnualExceedance(Map<EpptScenarioRun, TimeSeriesContainer[]> scenarioRunData, JTabbedPane tabbedPane,
+									  GUILinksAllModelsBO guiLink)
 	{
-		List<EpptScenarioRun> scenarioRuns = new ArrayList<>();
-		scenarioRuns.add(_baseRun);
-		scenarioRuns.addAll(_alternatives);
 		WaterYearDefinition waterYearDefinition = new WaterYearDefinition("", Month.OCTOBER, Month.SEPTEMBER);
-		PlotlyPane pane = new PlotlyPaneBuilder(PlotlyPaneBuilder.ChartType.TIMESERIES, scenarioRuns)
+		PlotlyPane pane = new PlotlyPaneBuilder(PlotlyPaneBuilder.ChartType.TIMESERIES, _baseRun, scenarioRunData)
 				.withComparisonType(_plotConfigurationState.getComparisonType())
+				.withTaf(_plotConfigurationState.isDisplayTaf())
 				.withGuiLink(guiLink)
 				.withTimeWindow(_start, _end)
 				.withWaterYearDefinition(waterYearDefinition)
@@ -281,13 +291,11 @@ final class DisplayPlotlyFrames
 		}
 	}
 
-	private void plotBoxPlot(JTabbedPane tabbedPane, GUILinksAllModelsBO guiLink)
+	private void plotBoxPlot(Map<EpptScenarioRun, TimeSeriesContainer[]> scenarioRunData, JTabbedPane tabbedPane, GUILinksAllModelsBO guiLink)
 	{
-		List<EpptScenarioRun> scenarioRuns = new ArrayList<>();
-		scenarioRuns.add(_baseRun);
-		scenarioRuns.addAll(_alternatives);
-		PlotlyPane pane = new PlotlyPaneBuilder(PlotlyPaneBuilder.ChartType.BOX, scenarioRuns)
+		PlotlyPane pane = new PlotlyPaneBuilder(PlotlyPaneBuilder.ChartType.BOX, _baseRun, scenarioRunData)
 				.withComparisonType(_plotConfigurationState.getComparisonType())
+				.withTaf(_plotConfigurationState.isDisplayTaf())
 				.withGuiLink(guiLink)
 				.withTimeWindow(_start, _end)
 				.build();
@@ -344,6 +352,17 @@ final class DisplayPlotlyFrames
 		panel.setLayout(new BorderLayout());
 		panel.add(new JLabel(buffer.toString()), BorderLayout.PAGE_START);
 		tabbedPane.addTab("Alert - Missing DSS records", panel);
+	}
+
+	private DSSGrabber1SvcImpl buildDssGrabber(EpptScenarioRun epptScenarioRun, GUILinksAllModelsBO guiLink, boolean isCFS, LocalDate start,
+											   LocalDate end)
+	{
+		DSSGrabber1SvcImpl dssGrabber = new DSSGrabber1SvcImpl();
+		dssGrabber.setIsCFS(isCFS);
+		dssGrabber.setScenarioRuns(epptScenarioRun, Collections.emptyList());
+		dssGrabber.setGuiLink(guiLink);
+		dssGrabber.setDateRange(start, end);
+		return dssGrabber;
 	}
 
 }
