@@ -5,7 +5,7 @@ from java.util import TreeMap
 from java.util.stream.Collectors import *
 from java.time.format import TextStyle
 from java.util import Locale
-from java.lang import String, Double
+from java.lang import String, Double, System
 from rma.stats import EmpiricalDist
 from gov.ca.water.calgui.scripts import JythonScriptRunner
 from gov.ca.water.calgui.scripts.JythonScriptRunner import *
