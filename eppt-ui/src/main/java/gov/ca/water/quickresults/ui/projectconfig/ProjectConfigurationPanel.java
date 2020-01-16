@@ -554,7 +554,7 @@ public final class ProjectConfigurationPanel extends EpptPanel
 		int month = ResultUtilsBO.getResultUtilsInstance().monthToInt(monthSpinner.getValue().toString());
 		JSpinner yearSpinner = (JSpinner) getSwingEngine().find("spnEndYear");
 		int year = Integer.parseInt(yearSpinner.getValue().toString());
-		return LocalDate.of(year, month, 1).plusMonths(1);
+		return LocalDate.of(year, month, 1).plusMonths(1).minusDays(1);
 	}
 
 	private void setEndMonth(LocalDate end)
