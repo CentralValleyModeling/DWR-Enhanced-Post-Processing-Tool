@@ -54,7 +54,7 @@ def buildMonthYearEntry(entry):
 def formatAsString(value, units):
     if units is None:
         units = "N/A"
-    return " " + String.format("%.0f", value) + " (" + units + ")"
+    return String.format("%.0f", value)
 
 def join(array):
     return ",".join(array)
