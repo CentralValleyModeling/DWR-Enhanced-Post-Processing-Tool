@@ -14,20 +14,16 @@ package gov.ca.water.calgui.presentation.plotly;
 
 import java.time.LocalDate;
 import java.time.Month;
-import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
-import gov.ca.water.calgui.EpptInitializationException;
 import gov.ca.water.calgui.bo.GUILinksAllModelsBO;
 import gov.ca.water.calgui.bo.WaterYearDefinition;
 import gov.ca.water.calgui.bo.WaterYearIndex;
 import gov.ca.water.calgui.busservice.impl.EpptReportingComputedSet;
 import gov.ca.water.calgui.busservice.impl.MonthPeriod;
 import gov.ca.water.calgui.busservice.impl.NoopEpptStatistic;
-import gov.ca.water.calgui.busservice.impl.WaterYearTableReader;
 import gov.ca.water.calgui.project.EpptScenarioRun;
 import gov.ca.water.calgui.project.PlotConfigurationState;
 
@@ -41,10 +37,11 @@ import hec.io.TimeSeriesContainer;
  */
 public class PlotlyPaneBuilder
 {
-	private static final Logger LOGGER = Logger.getLogger(PlotlyPaneBuilder.class.getName());
 	private final ChartType _chartType;
 	private final Map<EpptScenarioRun, TimeSeriesContainer[]> _scenarioRunData;
 	private final EpptScenarioRun _baseRun;
+	private final Map<EpptScenarioRun, List<WaterYearIndex>> _allWaterYearIndicies = new HashMap<>();
+	private final Map<EpptScenarioRun, WaterYearIndex> _selectedWaterYearIndicies = new HashMap<>();
 	private PlotConfigurationState.ComparisonType _comparisonType = PlotConfigurationState.ComparisonType.COMPARISON;
 	private GUILinksAllModelsBO _guiLink;
 	private boolean _taf;
@@ -89,18 +86,23 @@ public class PlotlyPaneBuilder
 		return this;
 	}
 
+	public PlotlyPaneBuilder withWaterYearIndicies(Map<EpptScenarioRun, List<WaterYearIndex>> waterYearIndicies)
+	{
+		_allWaterYearIndicies.clear();
+		_allWaterYearIndicies.putAll(waterYearIndicies);
+		_selectedWaterYearIndicies.clear();
+		for(Map.Entry<EpptScenarioRun, List<WaterYearIndex>> entry : waterYearIndicies.entrySet())
+		{
+			if(!entry.getValue().isEmpty())
+			{
+				_selectedWaterYearIndicies.put(entry.getKey(), entry.getValue().get(0));
+			}
+		}
+		return this;
+	}
+
 	public PlotlyPane build()
 	{
-
-		List<WaterYearIndex> waterYearIndices = new ArrayList<>();
-		try
-		{
-			waterYearIndices = new WaterYearTableReader(_baseRun.getLookupDirectory()).read();
-		}
-		catch(EpptInitializationException e)
-		{
-			LOGGER.log(Level.SEVERE, "Error reading water year table for scenario: " + _baseRun, e);
-		}
 		EpptReportingComputedSet epptReportingComputedSet;
 		if(_comparisonType == PlotConfigurationState.ComparisonType.DIFF)
 		{
@@ -113,8 +115,8 @@ public class PlotlyPaneBuilder
 					_baseRun,
 					_scenarioRunData,
 					_comparisonType,
-					waterYearIndices.get(0),
-					waterYearIndices);
+					_selectedWaterYearIndicies,
+					_allWaterYearIndicies);
 		}
 		else
 		{
@@ -126,8 +128,8 @@ public class PlotlyPaneBuilder
 					_taf,
 					_scenarioRunData,
 					_comparisonType,
-					waterYearIndices.get(0),
-					waterYearIndices);
+					_selectedWaterYearIndicies,
+					_allWaterYearIndicies);
 		}
 		PlotlyPane retval = null;
 		switch(_chartType)
@@ -136,22 +138,29 @@ public class PlotlyPaneBuilder
 				retval = new TimeseriesChartPane(epptReportingComputedSet);
 				break;
 			case EXCEEDANCE:
-				if(_waterYearDefinition == null)
-				{
-					retval = new AllExceedancePane(epptReportingComputedSet);
-				}
-				else if(_month == null)
-				{
-					retval = new MonthExceedancePane(epptReportingComputedSet);
-				}
-				else
-				{
-					retval = new AnnualExceedancePane(epptReportingComputedSet);
-				}
+				retval = buildExceedancePane(epptReportingComputedSet);
 				break;
 			case BOX:
 				retval = new BoxPlotChartPane(epptReportingComputedSet);
 				break;
+		}
+		return retval;
+	}
+
+	private PlotlyPane buildExceedancePane(EpptReportingComputedSet epptReportingComputedSet)
+	{
+		final PlotlyPane retval;
+		if(_waterYearDefinition == null)
+		{
+			retval = new AllExceedancePane(epptReportingComputedSet);
+		}
+		else if(_month == null)
+		{
+			retval = new MonthExceedancePane(epptReportingComputedSet);
+		}
+		else
+		{
+			retval = new AnnualExceedancePane(epptReportingComputedSet);
 		}
 		return retval;
 	}

@@ -57,7 +57,8 @@ public final class EpptReportingComputedSet
 
 	private EpptReportingComputedSet(GUILinksAllModelsBO guiLink, EpptStatistic statistics,
 									 MonthPeriod monthPeriod, boolean taf,
-									 List<EpptReportingComputed> epptReportingComputed, PlotConfigurationState.ComparisonType comparisonType)
+									 List<EpptReportingComputed> epptReportingComputed,
+									 PlotConfigurationState.ComparisonType comparisonType)
 	{
 		_guiLink = guiLink;
 		_statistics = statistics;
@@ -72,10 +73,11 @@ public final class EpptReportingComputedSet
 															 MonthPeriod monthPeriod, LocalDate start,
 															 LocalDate end, boolean taf, Map<EpptScenarioRun, TimeSeriesContainer[]> scenarioRunData,
 															 PlotConfigurationState.ComparisonType comparisonType,
-															 WaterYearIndex waterYearIndex, List<WaterYearIndex> waterYearIndices)
+															 Map<EpptScenarioRun, WaterYearIndex> selectedIndicies,
+															 Map<EpptScenarioRun, List<WaterYearIndex>> allIndicies)
 	{
 		EpptReportingComputer trendReportingComputer = new EpptReportingComputer(guiLink, statistic, monthPeriod,
-				waterYearIndex, waterYearIndices);
+				selectedIndicies, allIndicies);
 		return buildComputedValues(guiLink, statistic, monthPeriod, start, end, taf, scenarioRunData, comparisonType, trendReportingComputer);
 	}
 
@@ -85,10 +87,11 @@ public final class EpptReportingComputedSet
 																 LocalDate end, boolean taf, EpptScenarioRun baseRun,
 																 Map<EpptScenarioRun, TimeSeriesContainer[]> scenarioRunData,
 																 PlotConfigurationState.ComparisonType comparisonType,
-																 WaterYearIndex waterYearIndex, List<WaterYearIndex> waterYearIndices)
+																 Map<EpptScenarioRun, WaterYearIndex> selectedIndicies,
+																 Map<EpptScenarioRun, List<WaterYearIndex>> allIndicies)
 	{
 		EpptDiffReportingComputer trendReportingComputer = new EpptDiffReportingComputer(baseRun, guiLink, statistic, monthPeriod,
-				waterYearIndex, waterYearIndices);
+				selectedIndicies, allIndicies);
 		return buildComputedValues(guiLink, statistic, monthPeriod, start, end, taf, scenarioRunData, comparisonType, trendReportingComputer);
 	}
 

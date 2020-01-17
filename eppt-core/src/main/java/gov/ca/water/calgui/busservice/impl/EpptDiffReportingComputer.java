@@ -17,6 +17,7 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import java.util.NavigableMap;
 import java.util.TreeMap;
 
@@ -40,9 +41,9 @@ class EpptDiffReportingComputer extends EpptReportingComputer
 	private final EpptScenarioRun _baseRun;
 
 	EpptDiffReportingComputer(EpptScenarioRun baseRun, GUILinksAllModelsBO guiLink, EpptStatistic statistics, MonthPeriod monthPeriod,
-							  WaterYearIndex waterYearIndex, List<WaterYearIndex> waterYearIndices)
+							  Map<EpptScenarioRun, WaterYearIndex> selectedIndicies, Map<EpptScenarioRun, List<WaterYearIndex>> allIndicies)
 	{
-		super(guiLink, statistics, monthPeriod, waterYearIndex, waterYearIndices);
+		super(guiLink, statistics, monthPeriod, selectedIndicies, allIndicies);
 		_baseRun = baseRun;
 	}
 

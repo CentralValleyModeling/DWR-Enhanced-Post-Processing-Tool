@@ -63,19 +63,19 @@ public class EpptReportingComputer
 	private final GUILinksAllModelsBO _guiLink;
 	private final EpptStatistic _statistics;
 	private final MonthPeriod _monthPeriod;
+	private final Map<EpptScenarioRun, WaterYearIndex> _selectedIndicies;
+	private final Map<EpptScenarioRun, List<WaterYearIndex>> _allIndicies;
 	private final WaterYearDefinition _waterYearDefinition;
-	private final WaterYearIndex _waterYearIndex;
-	private final List<WaterYearIndex> _waterYearIndices;
 
 	public EpptReportingComputer(GUILinksAllModelsBO guiLink, EpptStatistic statistics, MonthPeriod monthPeriod,
-								 WaterYearIndex waterYearIndex, List<WaterYearIndex> waterYearIndices)
+								 Map<EpptScenarioRun, WaterYearIndex> selectedIndicies, Map<EpptScenarioRun, List<WaterYearIndex>> allIndicies)
 	{
 		_guiLink = guiLink;
 		_statistics = statistics;
 		_monthPeriod = monthPeriod;
+		_selectedIndicies = selectedIndicies;
+		_allIndicies = allIndicies;
 		_waterYearDefinition = new WaterYearDefinition("Default", Month.OCTOBER, Month.SEPTEMBER);
-		_waterYearIndex = waterYearIndex;
-		_waterYearIndices = waterYearIndices;
 	}
 
 	public EpptReportingComputed computeCfs(EpptScenarioRun scenarioRun, TimeSeriesContainer[] primarySeries,
@@ -260,20 +260,12 @@ public class EpptReportingComputer
 
 	private WaterYearIndex getWaterYearIndexForScenario(EpptScenarioRun epptScenarioRun) throws EpptInitializationException
 	{
-		WaterYearTableReader tableReader = new WaterYearTableReader(epptScenarioRun.getLookupDirectory());
-		List<WaterYearIndex> read = tableReader.read();
-		return read.stream()
-				   .filter(index -> _waterYearIndex.getName().equalsIgnoreCase(index.getName()))
-				   .findAny()
-				   .orElse(_waterYearIndex);
+		return _selectedIndicies.get(epptScenarioRun);
 	}
 
 	private List<WaterYearIndex> getWaterYearIndicesForScenario(EpptScenarioRun epptScenarioRun) throws EpptInitializationException
 	{
-		WaterYearTableReader tableReader = new WaterYearTableReader(epptScenarioRun.getLookupDirectory());
-		List<String> collect = _waterYearIndices.stream().map(WaterYearIndex::getName).collect(toList());
-		List<WaterYearIndex> read = tableReader.read();
-		return read.stream().filter(index -> collect.contains(index.getName())).collect(toList());
+		return _allIndicies.get(epptScenarioRun);
 	}
 
 	final DSSGrabber1SvcImpl buildDssGrabber(EpptScenarioRun epptScenarioRun, boolean isCFS, LocalDate start, LocalDate end)

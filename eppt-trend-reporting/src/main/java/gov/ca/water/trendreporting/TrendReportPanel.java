@@ -22,6 +22,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -344,7 +345,6 @@ public class TrendReportPanel extends JFXPanel
 		List<EpptStatistic> statistic = new ArrayList<>(_statisticsPane.getSelectedItems());
 		List<MonthPeriod> monthPeriod = new ArrayList<>(_seasonalPeriodPane.getSelectedItems());
 		WaterYearIndex waterYearIndex = _waterYearIndexComboBox.getSelectionModel().getSelectedItem();
-		ObservableList<WaterYearIndex> waterYearIndices = _waterYearIndexComboBox.getItems();
 		List<EpptScenarioRun> scenarioRuns = _scenarioRuns.stream().filter(Objects::nonNull).collect(toList());
 		Optional<String> error = getError(scenarioRuns, guiLink, statistic, monthPeriod, waterYearIndex);
 		if(!error.isPresent())
@@ -375,7 +375,7 @@ public class TrendReportPanel extends JFXPanel
 			});
 			_waitFuture.thenRunAsync(() -> setUiLoading(true, Cursor.WAIT, "Loading..."), Platform::runLater)
 					   .thenApplyAsync(e -> computeScenarios(guiLink, statistic, monthPeriod, start, end, taf, scenarioRuns,
-							   waterYearIndex, waterYearIndices))
+							   waterYearIndex))
 					   .whenCompleteAsync((jsonObjects, t) ->
 					   {
 						   handleWhenComplete(path, jsonObjects, t);
@@ -458,10 +458,12 @@ public class TrendReportPanel extends JFXPanel
 	}
 
 	private synchronized List<JSONObject> computeScenarios(List<TrendReportingParameters.TrendParameter> parameters, List<EpptStatistic> statistics,
-														   List<MonthPeriod> monthPeriods, LocalDate start,
-														   LocalDate end, boolean taf, List<EpptScenarioRun> scenarioRuns,
-														   WaterYearIndex waterYearIndex, ObservableList<WaterYearIndex> waterYearIndices)
+														   List<MonthPeriod> monthPeriods, LocalDate start, LocalDate end,
+														   boolean taf, List<EpptScenarioRun> scenarioRuns, WaterYearIndex selectedIndex)
 	{
+		Map<EpptScenarioRun, WaterYearIndex> selectedIndicies = new HashMap<>();
+		Map<EpptScenarioRun, List<WaterYearIndex>> allIndicies = new HashMap<>();
+		addIndicies(scenarioRuns, selectedIndex, selectedIndicies, allIndicies);
 		List<JSONObject> retval = new ArrayList<>();
 		for(TrendReportingParameters.TrendParameter parameter : parameters)
 		{
@@ -478,7 +480,7 @@ public class TrendReportPanel extends JFXPanel
 						scenarioRunData.put(epptScenarioRun, primarySeries);
 					}
 					EpptReportingComputedSet epptReportingComputedSet = EpptReportingComputedSet.computeForMetrics(guiLink, statistic, monthPeriod,
-							start, end, taf, scenarioRunData, PlotConfigurationState.ComparisonType.COMPARISON, waterYearIndex, waterYearIndices);
+							start, end, taf, scenarioRunData, PlotConfigurationState.ComparisonType.COMPARISON, selectedIndicies, allIndicies);
 					JSONObject jsonObject = epptReportingComputedSet.toJson();
 					LOGGER.log(Level.FINE, "{0}", jsonObject);
 					retval.add(jsonObject);
@@ -486,6 +488,31 @@ public class TrendReportPanel extends JFXPanel
 			}
 		}
 		return retval;
+	}
+
+	private void addIndicies(List<EpptScenarioRun> scenarioRuns, WaterYearIndex waterYearIndex, Map<EpptScenarioRun, WaterYearIndex> selectedIndicies,
+							 Map<EpptScenarioRun, List<WaterYearIndex>> allIndicies)
+	{
+		for(EpptScenarioRun epptScenarioRun : scenarioRuns)
+		{
+			try
+			{
+
+
+				WaterYearTableReader tableReader = new WaterYearTableReader(epptScenarioRun.getLookupDirectory());
+				List<WaterYearIndex> read = tableReader.read();
+				WaterYearIndex selectedIndex = read.stream()
+												   .filter(index -> waterYearIndex.getName().equalsIgnoreCase(index.getName()))
+												   .findAny()
+												   .orElse(waterYearIndex);
+				selectedIndicies.put(epptScenarioRun, selectedIndex);
+				allIndicies.put(epptScenarioRun, read);
+			}
+			catch(EpptInitializationException e)
+			{
+				LOGGER.log(Level.SEVERE, "Error reading water year index file for scenario: " + e);
+			}
+		}
 	}
 
 	private DSSGrabber1SvcImpl buildDssGrabber(EpptScenarioRun epptScenarioRun, GUILinksAllModelsBO guiLink, boolean isCFS, LocalDate start, LocalDate end)

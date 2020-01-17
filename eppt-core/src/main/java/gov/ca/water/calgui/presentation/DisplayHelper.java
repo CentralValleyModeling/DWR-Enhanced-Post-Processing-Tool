@@ -128,7 +128,7 @@ public class DisplayHelper
 						endMonth);
 				jTabbedPanes.addAll(displayPlotlyFrames.showDisplayFrames());
 			}
-//			jTabbedPanes.addAll(DisplayFrame.showDisplayFramesLocations(plotConfigurationState, locations, baseRun, scenarios, startMonth, endMonth));
+			jTabbedPanes.addAll(DisplayFrame.showDisplayFramesLocations(plotConfigurationState, locations, baseRun, scenarios, startMonth, endMonth));
 		}
 		catch(RuntimeException ex)
 		{
@@ -157,7 +157,7 @@ public class DisplayHelper
 						endMonth);
 				jTabbedPanes.addAll(displayPlotlyFrames.showDisplayFrames());
 			}
-//			jTabbedPanes.addAll(DisplayFrame.showDisplayFramesGuiLink(plotConfigurationState, locations, baseRun, scenarios, startMonth, endMonth));
+			jTabbedPanes.addAll(DisplayFrame.showDisplayFramesGuiLink(plotConfigurationState, locations, baseRun, scenarios, startMonth, endMonth));
 		}
 		catch(RuntimeException ex)
 		{

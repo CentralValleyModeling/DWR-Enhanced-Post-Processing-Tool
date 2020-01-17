@@ -20,16 +20,20 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.TreeMap;
 import javax.swing.*;
 
+import gov.ca.water.calgui.EpptInitializationException;
 import gov.ca.water.calgui.bo.GUILinksAllModelsBO;
 import gov.ca.water.calgui.bo.WaterYearDefinition;
+import gov.ca.water.calgui.bo.WaterYearIndex;
 import gov.ca.water.calgui.busservice.IDSSGrabber1Svc;
 import gov.ca.water.calgui.busservice.impl.DSSGrabber1SvcImpl;
+import gov.ca.water.calgui.busservice.impl.WaterYearTableReader;
 import gov.ca.water.calgui.presentation.display.MonthlyTablePanel;
 import gov.ca.water.calgui.presentation.display.SummaryTablePanel;
 import gov.ca.water.calgui.presentation.plotly.PlotlyPane;
@@ -125,23 +129,28 @@ final class DisplayPlotlyFrames
 		else
 		{
 			dssGrabber.setDateRange(_start, _end);
-			TimeSeriesContainer[] primaryResults = null;
-			dssGrabber.getPrimarySeries();
-			//			TimeSeriesContainer[] secondaryResults = dssGrabber.getSecondarySeries();
-			//			dssGrabber.calcTAFforCFS(primaryResults, secondaryResults);
-			//			TimeSeriesContainer[] diffResults = dssGrabber.getDifferenceSeries(primaryResults);
-			//			TimeSeriesContainer[][] excResults = dssGrabber.getExceedanceSeries(primaryResults);
-			//			TimeSeriesContainer[][] sexcResults = dssGrabber.getExceedanceSeries(secondaryResults);
-			//			TimeSeriesContainer[][] dexcResults = dssGrabber.getExceedanceSeriesD(primaryResults);
-			JTabbedPane tabbedpane = displayFrameForData(dssGrabber,
-					new DisplayInput(guiLink, primaryResults, null, null, null, null, null));
-			//					new DisplayInput(guiLink, primaryResults, secondaryResults, diffResults, excResults, sexcResults, dexcResults));
+			TimeSeriesContainer[] primaryResults = dssGrabber.getPrimarySeries();
+			TimeSeriesContainer[] secondaryResults = dssGrabber.getSecondarySeries();
+			dssGrabber.calcTAFforCFS(primaryResults, secondaryResults);
+			TimeSeriesContainer[] diffResults = dssGrabber.getDifferenceSeries(primaryResults);
+			TimeSeriesContainer[][] excResults = dssGrabber.getExceedanceSeries(primaryResults);
+			TimeSeriesContainer[][] sexcResults = dssGrabber.getExceedanceSeries(secondaryResults);
+			TimeSeriesContainer[][] dexcResults = dssGrabber.getExceedanceSeriesD(primaryResults);
+			try
+			{
+				JTabbedPane tabbedPane = displayFrameForData(dssGrabber,
+						new DisplayInput(guiLink, primaryResults, secondaryResults, diffResults, excResults, sexcResults, dexcResults));
+				tabbedPanes.add(tabbedPane);
+			}
+			catch(EpptInitializationException e)
+			{
+				ERROR_HANDLING_SVC.businessErrorHandler("Error plotting data for GUILink: " + guiLink.getCheckboxId(), e);
+			}
 
-			tabbedPanes.add(tabbedpane);
 		}
 	}
 
-	private JTabbedPane displayFrameForData(IDSSGrabber1Svc dssGrabber, DisplayInput displayInput)
+	private JTabbedPane displayFrameForData(IDSSGrabber1Svc dssGrabber, DisplayInput displayInput) throws EpptInitializationException
 	{
 		JTabbedPane tabbedPane = new JTabbedPane();
 		String plotTitle = dssGrabber.getPlotTitle();
@@ -149,39 +158,46 @@ final class DisplayPlotlyFrames
 		String baseRunName = dssGrabber.getBaseRunName();
 		Map<GUILinksAllModelsBO.Model, List<String>> missing = dssGrabber.getMissingList();
 		GUILinksAllModelsBO guiLink = displayInput.getGuiLink();
-		//		if(displayInput.getPrimaryResults() != null && displayInput.getPrimaryResults()[0] != null)
-		//		{
-		List<EpptScenarioRun> scenarioRuns = new ArrayList<>();
-		scenarioRuns.add(_baseRun);
-		scenarioRuns.addAll(_alternatives);
-		Map<EpptScenarioRun, TimeSeriesContainer[]> scenarioRunData = new TreeMap<>(Comparator.comparing(scenarioRuns::indexOf));
-		for(EpptScenarioRun epptScenarioRun : scenarioRuns)
+		if(displayInput.getPrimaryResults() != null && displayInput.getPrimaryResults()[0] != null)
 		{
-			TimeSeriesContainer[] primarySeries = buildDssGrabber(epptScenarioRun, guiLink, _plotConfigurationState.isDisplayTaf(), _start,
-					_end).getPrimarySeries();
-			scenarioRunData.put(epptScenarioRun, primarySeries);
+			List<EpptScenarioRun> scenarioRuns = new ArrayList<>();
+			scenarioRuns.add(_baseRun);
+			scenarioRuns.addAll(_alternatives);
+			Map<EpptScenarioRun, TimeSeriesContainer[]> scenarioRunData = new TreeMap<>(Comparator.comparing(scenarioRuns::indexOf));
+			for(EpptScenarioRun epptScenarioRun : scenarioRuns)
+			{
+				TimeSeriesContainer[] primarySeries = buildDssGrabber(epptScenarioRun, guiLink, _plotConfigurationState.isDisplayTaf(), _start,
+						_end).getPrimarySeries();
+				scenarioRunData.put(epptScenarioRun, primarySeries);
+			}
+			Map<EpptScenarioRun, List<WaterYearIndex>> waterYearIndicies = new HashMap<>();
+			for(EpptScenarioRun epptScenarioRun : scenarioRuns)
+			{
+				WaterYearTableReader tableReader = new WaterYearTableReader(epptScenarioRun.getLookupDirectory());
+				List<WaterYearIndex> read = tableReader.read();
+				waterYearIndicies.put(epptScenarioRun, read);
+			}
+			if(_plotConfigurationState.isDisplayTimeSeriesPlot())
+			{
+				plotTimeSeries(scenarioRunData, waterYearIndicies, _plotConfigurationState, guiLink, tabbedPane);
+			}
+			if(_plotConfigurationState.isDoExceedance())
+			{
+				plotExceedance(scenarioRunData, waterYearIndicies, _plotConfigurationState, tabbedPane, guiLink);
+			}
+			if(_plotConfigurationState.isDisplayBoxAndWhiskerPlot())
+			{
+				plotBoxPlot(scenarioRunData, waterYearIndicies, tabbedPane, guiLink);
+			}
+			if(_plotConfigurationState.isDisplayMonthlyTable())
+			{
+				plotMonthlyTable(_plotConfigurationState, dssGrabber, displayInput, tabbedPane, plotTitle, sLabel, baseRunName);
+			}
+			if(_plotConfigurationState.isDisplaySummaryTable())
+			{
+				plotSummaryTable(_plotConfigurationState, dssGrabber, displayInput, tabbedPane, plotTitle, sLabel, baseRunName);
+			}
 		}
-		if(_plotConfigurationState.isDisplayTimeSeriesPlot())
-		{
-			plotTimeSeries(scenarioRunData, _plotConfigurationState, guiLink, tabbedPane);
-		}
-		if(_plotConfigurationState.isDoExceedance())
-		{
-			plotExceedance(scenarioRunData, _plotConfigurationState, tabbedPane, guiLink);
-		}
-		if(_plotConfigurationState.isDisplayBoxAndWhiskerPlot())
-		{
-			plotBoxPlot(scenarioRunData, tabbedPane, guiLink);
-		}
-		if(_plotConfigurationState.isDisplayMonthlyTable())
-		{
-			plotMonthlyTable(_plotConfigurationState, dssGrabber, displayInput, tabbedPane, plotTitle, sLabel, baseRunName);
-		}
-		if(_plotConfigurationState.isDisplaySummaryTable())
-		{
-			plotSummaryTable(_plotConfigurationState, dssGrabber, displayInput, tabbedPane, plotTitle, sLabel, baseRunName);
-		}
-		//		}
 		List<String> collect = missing.values()
 									  .stream()
 									  .flatMap(Collection::stream)
@@ -195,8 +211,9 @@ final class DisplayPlotlyFrames
 		return tabbedPane;
 	}
 
-	private void plotTimeSeries(Map<EpptScenarioRun, TimeSeriesContainer[]> scenarioRunData, PlotConfigurationState plotConfigurationState,
-								GUILinksAllModelsBO guiLink, JTabbedPane tabbedPane)
+	private void plotTimeSeries(Map<EpptScenarioRun, TimeSeriesContainer[]> scenarioRunData,
+								Map<EpptScenarioRun, List<WaterYearIndex>> waterYearIndicies,
+								PlotConfigurationState plotConfigurationState, GUILinksAllModelsBO guiLink, JTabbedPane tabbedPane)
 	{
 		List<EpptScenarioRun> scenarioRuns = new ArrayList<>();
 		scenarioRuns.add(_baseRun);
@@ -206,6 +223,7 @@ final class DisplayPlotlyFrames
 				.withTaf(_plotConfigurationState.isDisplayTaf())
 				.withGuiLink(guiLink)
 				.withTimeWindow(_start, _end)
+				.withWaterYearIndicies(waterYearIndicies)
 				.build();
 		if(plotConfigurationState.getComparisonType() == PlotConfigurationState.ComparisonType.DIFF)
 		{
@@ -217,25 +235,27 @@ final class DisplayPlotlyFrames
 		}
 	}
 
-	private void plotExceedance(Map<EpptScenarioRun, TimeSeriesContainer[]> scenarioRunData, PlotConfigurationState plotConfigurationState,
-								JTabbedPane tabbedPane, GUILinksAllModelsBO guiLink)
+	private void plotExceedance(Map<EpptScenarioRun, TimeSeriesContainer[]> scenarioRunData,
+								Map<EpptScenarioRun, List<WaterYearIndex>> waterYearIndicies,
+								PlotConfigurationState plotConfigurationState, JTabbedPane tabbedPane, GUILinksAllModelsBO guiLink)
 	{
 		if(plotConfigurationState.isPlotAllExceedancePlots())
 		{
-			plotAllExceedance(scenarioRunData, plotConfigurationState, tabbedPane, guiLink);
+			plotAllExceedance(scenarioRunData, waterYearIndicies, plotConfigurationState, tabbedPane, guiLink);
 		}
 		if(plotConfigurationState.isAnnualFlowExceedancePlots())
 		{
-			plotAnnualExceedance(scenarioRunData, tabbedPane, guiLink);
+			plotAnnualExceedance(scenarioRunData, waterYearIndicies, tabbedPane, guiLink);
 		}
 		if(!plotConfigurationState.getSelectedExceedancePlotMonths().isEmpty())
 		{
-			plotMonthlyExceedance(scenarioRunData, plotConfigurationState, tabbedPane, guiLink);
+			plotMonthlyExceedance(scenarioRunData, waterYearIndicies, plotConfigurationState, tabbedPane, guiLink);
 		}
 	}
 
-	private void plotMonthlyExceedance(Map<EpptScenarioRun, TimeSeriesContainer[]> scenarioRunData, PlotConfigurationState plotConfigurationState,
-									   JTabbedPane tabbedPane, GUILinksAllModelsBO guiLink)
+	private void plotMonthlyExceedance(Map<EpptScenarioRun, TimeSeriesContainer[]> scenarioRunData,
+									   Map<EpptScenarioRun, List<WaterYearIndex>> waterYearIndicies,
+									   PlotConfigurationState plotConfigurationState, JTabbedPane tabbedPane, GUILinksAllModelsBO guiLink)
 	{
 		List<Month> exceedMonths = plotConfigurationState.getSelectedExceedancePlotMonths();
 		for(Month month : exceedMonths)
@@ -245,20 +265,23 @@ final class DisplayPlotlyFrames
 					.withTaf(_plotConfigurationState.isDisplayTaf())
 					.withGuiLink(guiLink)
 					.withTimeWindow(_start, _end)
+					.withWaterYearIndicies(waterYearIndicies)
 					.withMonth(month)
 					.build();
 			tabbedPane.addTab("Exceedance (" + month.getDisplayName(TextStyle.SHORT, Locale.getDefault()) + ")", pane);
 		}
 	}
 
-	private void plotAllExceedance(Map<EpptScenarioRun, TimeSeriesContainer[]> scenarioRunData, PlotConfigurationState plotConfigurationState,
-								   JTabbedPane tabbedPane, GUILinksAllModelsBO guiLink)
+	private void plotAllExceedance(Map<EpptScenarioRun, TimeSeriesContainer[]> scenarioRunData,
+								   Map<EpptScenarioRun, List<WaterYearIndex>> waterYearIndicies,
+								   PlotConfigurationState plotConfigurationState, JTabbedPane tabbedPane, GUILinksAllModelsBO guiLink)
 	{
 		PlotlyPane pane = new PlotlyPaneBuilder(PlotlyPaneBuilder.ChartType.EXCEEDANCE, _baseRun, scenarioRunData)
 				.withTaf(_plotConfigurationState.isDisplayTaf())
 				.withComparisonType(plotConfigurationState.getComparisonType())
 				.withGuiLink(guiLink)
 				.withTimeWindow(_start, _end)
+				.withWaterYearIndicies(waterYearIndicies)
 				.build();
 		if(plotConfigurationState.getComparisonType() == PlotConfigurationState.ComparisonType.DIFF)
 		{
@@ -270,8 +293,9 @@ final class DisplayPlotlyFrames
 		}
 	}
 
-	private void plotAnnualExceedance(Map<EpptScenarioRun, TimeSeriesContainer[]> scenarioRunData, JTabbedPane tabbedPane,
-									  GUILinksAllModelsBO guiLink)
+	private void plotAnnualExceedance(Map<EpptScenarioRun, TimeSeriesContainer[]> scenarioRunData,
+									  Map<EpptScenarioRun, List<WaterYearIndex>> waterYearIndicies,
+									  JTabbedPane tabbedPane, GUILinksAllModelsBO guiLink)
 	{
 		WaterYearDefinition waterYearDefinition = new WaterYearDefinition("", Month.OCTOBER, Month.SEPTEMBER);
 		PlotlyPane pane = new PlotlyPaneBuilder(PlotlyPaneBuilder.ChartType.TIMESERIES, _baseRun, scenarioRunData)
@@ -279,6 +303,7 @@ final class DisplayPlotlyFrames
 				.withTaf(_plotConfigurationState.isDisplayTaf())
 				.withGuiLink(guiLink)
 				.withTimeWindow(_start, _end)
+				.withWaterYearIndicies(waterYearIndicies)
 				.withWaterYearDefinition(waterYearDefinition)
 				.build();
 		if(_plotConfigurationState.getComparisonType() == PlotConfigurationState.ComparisonType.DIFF)
@@ -291,13 +316,16 @@ final class DisplayPlotlyFrames
 		}
 	}
 
-	private void plotBoxPlot(Map<EpptScenarioRun, TimeSeriesContainer[]> scenarioRunData, JTabbedPane tabbedPane, GUILinksAllModelsBO guiLink)
+	private void plotBoxPlot(Map<EpptScenarioRun, TimeSeriesContainer[]> scenarioRunData,
+							 Map<EpptScenarioRun, List<WaterYearIndex>> waterYearIndicies,
+							 JTabbedPane tabbedPane, GUILinksAllModelsBO guiLink)
 	{
 		PlotlyPane pane = new PlotlyPaneBuilder(PlotlyPaneBuilder.ChartType.BOX, _baseRun, scenarioRunData)
 				.withComparisonType(_plotConfigurationState.getComparisonType())
 				.withTaf(_plotConfigurationState.isDisplayTaf())
 				.withGuiLink(guiLink)
 				.withTimeWindow(_start, _end)
+				.withWaterYearIndicies(waterYearIndicies)
 				.build();
 		tabbedPane.addTab("Box Plot", pane);
 	}
