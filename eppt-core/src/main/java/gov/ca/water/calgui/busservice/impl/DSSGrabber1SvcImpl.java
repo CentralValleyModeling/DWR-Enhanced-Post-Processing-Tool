@@ -59,6 +59,7 @@ import hec.hecmath.DSSFile;
 import hec.hecmath.computation.r;
 import hec.hecmath.functions.TimeSeriesFunctions;
 import hec.io.TimeSeriesContainer;
+import rma.util.RMAConst;
 
 /**
  * Class to grab (load) DSS time series for a set of scenarios passed in a
@@ -984,7 +985,7 @@ public class DSSGrabber1SvcImpl implements IDSSGrabber1Svc
 							{
 								_annualTAFs[i][wy] += monthlyTAF;
 							}
-							if(!_isCFS)
+							if(!_isCFS && RMAConst.isValidValue(monthlyTAF) && monthlyTAF != -3.402823466E38)
 							{
 								primaryResults[i].values[j] = monthlyTAF;
 							}

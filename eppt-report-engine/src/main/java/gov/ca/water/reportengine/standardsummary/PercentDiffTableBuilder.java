@@ -158,12 +158,12 @@ class PercentDiffTableBuilder extends BaseAltDiffTableBuilder
 				getStandardSummaryErrors().addError(LOGGER,
 						"Unable to generate diff value for: " + v + " value is null for scenario: " + alternative.getName());
 			}
-			else if(!RMAConst.isValidValue(baseValue))
+			else if(!RMAConst.isValidValue(baseValue) && baseValue != -3.402823466E38)
 			{
 				getStandardSummaryErrors().addError(LOGGER,
 						"Unable to generate diff value for: " + v + " value is invalid (" + baseValue + ") for scenario: " + base.getName());
 			}
-			else if(!RMAConst.isValidValue(altValue))
+			else if(!RMAConst.isValidValue(altValue) && altValue != -3.402823466E38)
 			{
 				getStandardSummaryErrors().addError(LOGGER,
 						"Unable to generate diff value for: " + v + " value is invalid (" + baseValue + ") for scenario: " + alternative.getName());

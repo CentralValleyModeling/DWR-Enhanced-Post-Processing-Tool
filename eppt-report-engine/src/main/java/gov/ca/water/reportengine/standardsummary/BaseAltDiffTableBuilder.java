@@ -286,12 +286,12 @@ class BaseAltDiffTableBuilder extends TableBuilder
 				getStandardSummaryErrors().addError(LOGGER,
 						"Unable to generate diff value for: " + v + " value is null for scenario: " + alternative.getName());
 			}
-			else if(!RMAConst.isValidValue(baseValue))
+			else if(!RMAConst.isValidValue(baseValue) && baseValue != -3.402823466E38)
 			{
 				getStandardSummaryErrors().addError(LOGGER,
 						"Unable to generate diff value for: " + v + " value is invalid (" + baseValue + ") for scenario: " + base.getName());
 			}
-			else if(!RMAConst.isValidValue(altValue))
+			else if(!RMAConst.isValidValue(altValue) && altValue != -3.402823466E38)
 			{
 				getStandardSummaryErrors().addError(LOGGER,
 						"Unable to generate diff value for: " + v + " value is invalid (" + altValue + ") for scenario: " + alternative.getName());
@@ -343,12 +343,12 @@ class BaseAltDiffTableBuilder extends TableBuilder
 				getStandardSummaryErrors().addError(LOGGER,
 						"Unable to generate diff value for: " + v + " value is null for scenario: " + alternative.getName());
 			}
-			else if(!RMAConst.isValidValue(baseValue))
+			else if(!RMAConst.isValidValue(baseValue) && baseValue != -3.402823466E38)
 			{
 				getStandardSummaryErrors().addError(LOGGER,
 						"Unable to generate diff value for: " + v + " value is invalid (" + baseValue + ") for scenario: " + base.getName());
 			}
-			else if(!RMAConst.isValidValue(altValue))
+			else if(!RMAConst.isValidValue(altValue) && altValue != -3.402823466E38)
 			{
 				getStandardSummaryErrors().addError(LOGGER,
 						"Unable to generate diff value for: " + v + " value is invalid (" + altValue + ") for scenario: " + alternative.getName());
@@ -436,7 +436,7 @@ class BaseAltDiffTableBuilder extends TableBuilder
 				getStandardSummaryErrors().addError(LOGGER,
 						"Unable to generate scenario value for: " + v + " value is null for scenario: " + scenarioRun.getName());
 			}
-			else if(!RMAConst.isValidValue(value))
+			else if(!RMAConst.isValidValue(value) && value != -3.402823466E38)
 			{
 				getStandardSummaryErrors().addError(LOGGER,
 						"Unable to generate scenario value for: " + v + " value is invalid (" + value + ") for scenario: " + scenarioRun.getName());

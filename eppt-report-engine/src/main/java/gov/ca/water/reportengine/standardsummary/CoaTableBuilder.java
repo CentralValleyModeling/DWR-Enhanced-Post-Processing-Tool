@@ -209,12 +209,12 @@ class CoaTableBuilder extends TableBuilder
 				getStandardSummaryErrors().addError(LOGGER,
 						"Unable to generate diff value for: " + v + " value is null for scenario: " + alternative.getName());
 			}
-			else if(baseValue instanceof Double && !RMAConst.isValidValue((Double) baseValue))
+			else if(baseValue instanceof Double && !RMAConst.isValidValue((Double) baseValue) && (Double)baseValue != -3.402823466E38)
 			{
 				getStandardSummaryErrors().addError(LOGGER,
 						"Unable to generate diff value for: " + v + " value is invalid (" + baseValue + ") for scenario: " + base.getName());
 			}
-			else if(altValue instanceof Double && !RMAConst.isValidValue((Double) altValue))
+			else if(altValue instanceof Double && !RMAConst.isValidValue((Double) altValue) && (Double)altValue != -3.402823466E38)
 			{
 				getStandardSummaryErrors().addError(LOGGER,
 						"Unable to generate diff value for: " + v + " value is invalid (" + baseValue + ") for scenario: " + alternative.getName());
