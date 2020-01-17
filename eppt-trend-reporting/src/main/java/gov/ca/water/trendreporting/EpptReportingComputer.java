@@ -122,8 +122,8 @@ class EpptReportingComputer
 				}
 			}
 		}
-		fullSeries = fullSeries.subMap(start.atTime(0, 0), true,
-				end.plusDays(1).atTime(0, 0), true);
+		fullSeries = fullSeries.subMap(start.minusDays(1).atTime(0, 0), true,
+				end.plusDays(2).atTime(0, 0), true);
 		NavigableMap<Integer, Double> filteredPeriodYearly = DssReader.filterPeriodYearly(fullSeries, _monthPeriod, aggregateYearly);
 		SortedMap<Month, NavigableMap<Integer, Double>> filteredPeriodMonthly = filterPeriodMonthly(fullSeries);
 		SortedMap<WaterYearPeriod, Double> waterYearPeriodGroupedYearly = groupWaterYearPeriod(scenarioRun, filteredPeriodYearly);

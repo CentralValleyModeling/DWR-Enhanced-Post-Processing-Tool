@@ -10,6 +10,7 @@ from rma.stats import EmpiricalDist
 from gov.ca.water.calgui.scripts import JythonScriptRunner
 from gov.ca.water.calgui.scripts.JythonScriptRunner import *
 from java.time import Month
+from gov.ca.water.calgui.constant import Constant
 
 def getPeriodStartYear(date, startOfPeriod):
     period = WaterYearPeriod("")

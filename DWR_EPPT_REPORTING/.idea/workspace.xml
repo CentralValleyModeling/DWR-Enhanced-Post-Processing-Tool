@@ -3,6 +3,8 @@
   <component name="ChangeListManager">
     <list default="true" id="fcb7956c-6345-46a3-b008-00db19bcce46" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../application/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../application/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../eppt-nbui/src/main/jasper/DWR_QA_QC_Reports/Subreports/QAQC_North_of_Delta_Groundwater_Pumping_2.jrxml" beforeDir="false" afterPath="$PROJECT_DIR$/../eppt-nbui/src/main/jasper/DWR_QA_QC_Reports/Subreports/QAQC_North_of_Delta_Groundwater_Pumping_2.jrxml" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -38,10 +40,11 @@
   <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
   <component name="PropertiesComponent">
     <property name="ASKED_ADD_EXTERNAL_FILES" value="true" />
+    <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$/../eppt-parent/pom.xml" />
     <property name="project.structure.last.edited" value="Modules" />
     <property name="project.structure.proportion" value="0.15" />
-    <property name="project.structure.side.proportion" value="0.0" />
+    <property name="project.structure.side.proportion" value="0.2" />
     <property name="settings.editor.selected.configurable" value="preferences.keymap" />
   </component>
   <component name="RunDashboard">

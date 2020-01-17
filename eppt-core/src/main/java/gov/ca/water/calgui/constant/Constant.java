@@ -21,6 +21,8 @@ import java.util.stream.Collectors;
 
 import javafx.scene.paint.Color;
 
+import rma.util.RMAConst;
+
 
 /**
  * This class is used to hold all the constant values required for the
@@ -187,5 +189,20 @@ public final class Constant
 				color.getGreen(),
 				color.getBlue(),
 				color.getAlpha());
+	}
+
+	public static boolean isValidValue(Double value)
+	{
+		boolean retval = true;
+		if(value != null)
+		{
+			retval = RMAConst.isValidValue(value) && value != -3.402823466E38;
+		}
+		return retval;
+	}
+
+	public static boolean isValidValue(double value)
+	{
+		return RMAConst.isValidValue(value) && value != -3.402823466E38;
 	}
 }
