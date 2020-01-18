@@ -1,280 +1,570 @@
-/************************************
-
-Calc_NOD_Mass.wresl
-
-Yuxiang, DWR, BDO
-2019/03/25
-
-This file post process data for NOD Mass Balances
-
-In this NOD mass balance calculation, NOD is divided into 3 regions:
-NOD_R1. Sac Valley Colusa Basin
-NOD_R2. FRSA
-NOD_R3. America river 
-
-Mass Balance: 	Reervoir releases 
-				+ Local Inflow 
-				+ Net GW pumping 
-				- Consumptive use (delivery) 
-				- System Loss 
-				- System Outflow 
-				+ Accretion-Depletion Term
-				= 0
-
-**************************************/
+/********************** DESCRIPTION ****************************
+- post-processes study results to determine Whether the NOD is balanced or not
 
 
-/************************************* Sac River Colusa Basin ******************************************/
+********************* REVIEW HISTORY****************************
+Ahmed Ali	| DWR	|	11/25/2019	|	Setup initial file
+Ahmed Ali	| DWR	|	12/11/2019	|	Reformatted/ standardized logic statements
+
+/***************************************************************
+
+/******************** NORTH of Delta Mass Balance *********************/
+
+/******************** Mapping *********************/
+
+define SHSTA_DWNSTRM_FLOW { timeseries 'C4' kind 'FLOW-CHANNEL' units 'CFS' convert 'TAF' } 
+define THOMES_CRK_FLOW { timeseries 'C11301' kind 'FLOW-CHANNEL' units 'CFS' convert 'TAF' }
+define ANTLP_MLL_DEER_CRKS_FLOW { timeseries 'C11305' kind 'FLOW-CHANNEL' units 'CFS' convert 'TAF' }
+define NODOS_REL { timeseries 'C17603' kind 'FLOW-CHANNEL' units 'CFS' convert 'TAF' }
+define GCID_CANAL { timeseries 'C142A' kind 'FLOW-CHANNEL' units 'CFS' convert 'TAF' }
+define CLOUSA_BASIN_DRN { timeseries 'C184A' kind 'FLOW-CHANNEL' units 'CFS' convert 'TAF' }
+define SAC_RVR_TO_DLTA { timeseries 'C169' kind 'FLOW-CHANNEL' units 'CFS' convert 'TAF' }
+define SUTTERBYPASS_FLOW { timeseries 'C137' kind 'FLOW-CHANNEL' units 'CFS' convert 'TAF' }
+define FEATHER_RVR { timeseries 'C223' kind 'FLOW-CHANNEL' units 'CFS' convert 'TAF' }      
+define AMERICAN_RVR { timeseries 'C303' kind 'FLOW-CHANNEL' units 'CFS' convert 'TAF' }
+define DSA70_SPILL { timeseries 'C308' kind 'FLOW-CHANNEL' units 'CFS' convert 'TAF' }
+define KSWK_NR_SPILL { timeseries 'F5' kind 'FLOW-SPILL-NON-RECOV' units 'CFS' convert 'TAF' }
+define WHSKY_NR_SPILL { timeseries 'F3' kind 'FLOW-SPILL-NON-RECOV' units 'CFS' convert 'TAF' }
+define CLR_CRK_TO_WHSKY { timeseries 'I3' kind 'FLOW-INFLOW' units 'TAF' convert 'TAF' }  
+define DSA58_ACCRTN { timeseries 'I109' kind 'FLOW-INFLOW' units 'TAF' convert 'TAF' }
+define RED_BANK_CRK { timeseries 'I112' kind 'FLOW-INFLOW' units 'TAF' convert 'TAF' }
+define DSA10_ACCRTN { timeseries 'I118' kind 'FLOW-INFLOW' units 'TAF' convert 'TAF' }
+define DSA15_ACCRTN { timeseries 'I123' kind 'FLOW-INFLOW' units 'TAF' convert 'TAF' }
+define DSA70_ACCRTN { timeseries 'I166' kind 'FLOW-INFLOW' units 'TAF' convert 'TAF' }
+define BIG_CHICO_CRK_CHNL { timeseries 'C11501' kind 'FLOW-CHANNEL' units 'CFS' convert 'TAF' }
+define PAYNES_CRK_CHNL { timeseries 'C11001' kind 'FLOW-CHANNEL' units 'CFS' convert 'TAF' }
+define COW_CRK_CHNL { timeseries 'C10801' kind 'FLOW-CHANNEL' units 'CFS' convert 'TAF' }
+define COTTONWOOD_CRK_CHNL { timeseries 'C10802' kind 'FLOW-CHANNEL' units 'CFS' convert 'TAF' }
+define BATTLE_CRK_CHNL { timeseries 'C10803' kind 'FLOW-CHANNEL' units 'CFS' convert 'TAF' }
+define WHSKY_STORAGE { timeseries 'S3' kind 'STORAGE' units 'TAF' convert 'TAF' }
+define KSWK_STORAGE { timeseries 'S5' kind 'STORAGE' units 'TAF' convert 'TAF' }
+define EVAP_WHSKY { timeseries 'E3' kind 'EVAPORATION' units 'CFS' convert 'TAF' }   
+define EVAP_KSWK { timeseries 'E5' kind 'EVAPORATION' units 'CFS' convert 'TAF' }	
+define TEHAMA_COLOUSA_DIV { timeseries 'D112' kind 'FLOW-DELIVERY' units 'CFS' convert 'TAF' }
+define WBA4_DIV { timeseries 'D113A' kind 'FLOW-DELIVERY' units 'CFS' convert 'TAF' }
+define WBA5_DIV { timeseries 'D113B' kind 'FLOW-DELIVERY' units 'CFS' convert 'TAF' }
+define GLEN_COLOUSA_DIV { timeseries 'D114' kind 'FLOW-DELIVERY' units 'CFS' convert 'TAF' }
+define SPILL_TO_SUTTER_BYPASS { timeseries 'D117' kind 'FLOW-DELIVERY' units 'CFS' convert 'TAF' }
+define DSA10_NEGTV_ACCRTN { timeseries 'D118' kind 'FLOW-DELIVERY' units 'CFS' convert 'TAF' }
+define CLEAR_CRK_DIV { timeseries 'D100' kind 'FLOW-DELIVERY' units 'CFS' convert 'TAF' }
+define DSA_58_DIV { timeseries 'D104' kind 'FLOW-DELIVERY' units 'CFS' convert 'TAF' }
+define DSA58_NEGTV_ACCRTN { timeseries 'D109' kind 'FLOW-DELIVERY' units 'CFS' convert 'TAF' }
+define SAC_TO_COLOUSA { timeseries 'D122A' kind 'FLOW-DELIVERY' units 'CFS' convert 'TAF' }
+define WEST_BANK_DIV { timeseries 'D122B' kind 'FLOW-DELIVERY' units 'CFS' convert 'TAF' }
+define PLACEHOLDER_WTS1 { timeseries 'D122B_WTS' kind 'FLOW-DELIVERY' units 'CFS' convert 'TAF' }
+define DSA15_NEGTV_ACCRTN { timeseries 'D123' kind 'FLOW-DELIVERY' units 'CFS' convert 'TAF' }
+define MOULTON_TO_SUTTER { timeseries 'D124' kind 'FLOW-DELIVERY' units 'CFS' convert 'TAF' }
+define NEW_CANAL_DIV { timeseries 'D124A' kind 'FLOW-DELIVERY' units 'CFS' convert 'TAF' }
+define CLOUSA_TO_SUTTER { timeseries 'D125' kind 'FLOW-DELIVERY' units 'CFS' convert 'TAF' }
+define TISDALE_TO_SUTTER { timeseries 'D126' kind 'FLOW-DELIVERY' units 'CFS' convert 'TAF' }
+define DSA15_DIV { timeseries 'D128' kind 'FLOW-DELIVERY' units 'CFS' convert 'TAF' }
+define PLACEHOLDER_WTS2 { timeseries 'D128_WTS' kind 'FLOW-DELIVERY' units 'CFS' convert 'TAF' }
+define WBA8S_DIV { timeseries 'D129A' kind 'FLOW-DELIVERY' units 'CFS' convert 'TAF' }
+define DSA12_NEGTV_ACCRTN { timeseries 'D134' kind 'FLOW-DELIVERY' units 'CFS' convert 'TAF' }
+define FRMNT_TO_YOLO { timeseries 'D160' kind 'FLOW-DELIVERY' units 'CFS' convert 'TAF' }
+define LEFT_BANK_DIV { timeseries 'D162' kind 'FLOW-DELIVERY' units 'CFS' convert 'TAF' }
+define RIGHT_BANK_DIV { timeseries 'D163' kind 'FLOW-DELIVERY' units 'CFS' convert 'TAF' }
+define WEST_SAC_DIV { timeseries 'D165' kind 'FLOW-DELIVERY' units 'CFS' convert 'TAF' }
+define SAC_WEIR_SPILL { timeseries 'D166A' kind 'FLOW-DELIVERY' units 'CFS' convert 'TAF' }
+define DSA70_NEGTV_ACCRTN { timeseries 'D166B' kind 'FLOW-DELIVERY' units 'CFS' convert 'TAF' }
+define SAC_CITY_DIV { timeseries 'D167' kind 'FLOW-DELIVERY' units 'CFS' convert 'TAF' }
+define DSA70_DIV { timeseries 'D168A' kind 'FLOW-DELIVERY' units 'CFS' convert 'TAF' }
+define EBMUD_CCWD_DIV { timeseries 'D168B' kind 'FLOW-DELIVERY' units 'CFS' convert 'TAF' }
+define SCWA_DIV { timeseries 'D168C' kind 'FLOW-DELIVERY' units 'CFS' convert 'TAF' }
+define PLACEHOLDER_WTS3 { timeseries 'D168A_WTS' kind 'FLOW-DELIVERY' units 'CFS' convert 'TAF' }
+define WOODLAND_DAVIS_DIV { timeseries 'D165B' kind 'FLOW-DELIVERY' units 'CFS' convert 'TAF' }
+define DSA_58_RTRN_FLOW { timeseries 'R109' kind 'FLOW-RETURN' units 'CFS' convert 'TAF' }
+define CORNING_RTRN_FLOW { timeseries 'R113' kind 'FLOW-RETURN' units 'CFS' convert 'TAF' }
+define WBA4_SR_RTRN_FLOW { timeseries 'R114A' kind 'FLOW-RETURN' units 'CFS' convert 'TAF' }
+define WBA5_RTRN_FLOW { timeseries 'R114B' kind 'FLOW-RETURN' units 'CFS' convert 'TAF' }
+define WBA4_TCC_RTRN_FLOW { timeseries 'R114C' kind 'FLOW-RETURN' units 'CFS' convert 'TAF' }
+define WBA8S_RTRN_FLOW { timeseries 'R134' kind 'FLOW-RETURN' units 'CFS' convert 'TAF' }
+define DSA_15_RTRN_FLOW { timeseries 'R160' kind 'FLOW-RETURN' units 'CFS' convert 'TAF' }
+define DSA_70_RTRN_FLOW { timeseries 'R169' kind 'FLOW-RETURN' units 'CFS' convert 'TAF' }
+define DSA58_GW_SW_INTERACTION { timeseries 'GS60' kind 'FLOW-CHANNEL' units 'CFS' convert 'TAF' }
+define DSA10_GW_SW_INTERACTION { timeseries 'GS61' kind 'FLOW-CHANNEL' units 'CFS' convert 'TAF' }
+define DSA15_GW_SW_INTERACTION { timeseries 'GS63' kind 'FLOW-CHANNEL' units 'CFS' convert 'TAF' }
+!define CLR_CRK_FLOW { timeseries 'C3' kind 'FLOW-CHANNEL' units 'CFS' convert 'TAF' }
+define BEL_KSWK_FLOW { timeseries 'C5' kind 'FLOW-CHANNEL' units 'CFS' convert 'TAF' }
+define DOWNSTREAM_NDD { timeseries 'C17301' kind 'FLOW-CHANNEL' units 'CFS' convert 'TAF' }
+define NODOS_REL_TO_TCC { timeseries 'C17602' kind 'FLOW-CHANNEL' units 'CFS' convert 'TAF' }
+define NODOS_REL_TO_SAC_RVR { timeseries 'C17603' kind 'FLOW-CHANNEL' units 'CFS' convert 'TAF' }
+define COW_CRK_INFLOW { timeseries 'I10801' kind 'FLOW-INFLOW' units 'TAF' convert 'TAF' }
+define COTTONWOOD_CRK_INFLOW { timeseries 'I10802' kind 'FLOW-INFLOW' units 'TAF' convert 'TAF' }
+define BATTLE_CRK_INFLOW { timeseries 'I10803' kind 'FLOW-INFLOW' units 'TAF' convert 'TAF' }
+define PAYNES_CRK_INFLOW { timeseries 'I11001' kind 'FLOW-INFLOW' units 'TAF' convert 'TAF' }
+define ELDER_CRK { timeseries 'I11303' kind 'FLOW-INFLOW' units 'TAF' convert 'TAF' }
+define THRONES_CRK { timeseries 'I11304' kind 'FLOW-INFLOW' units 'TAF' convert 'TAF' }
+define ANTLP_CRK { timeseries 'I11307' kind 'FLOW-INFLOW' units 'TAF' convert 'TAF' }
+define MILL_CRK { timeseries 'I11308' kind 'FLOW-INFLOW' units 'TAF' convert 'TAF' }
+define DEER_CRK { timeseries 'I11309' kind 'FLOW-INFLOW' units 'TAF' convert 'TAF' }
+define BIG_CHICO_CRK_INFLOW { timeseries 'I11501' kind 'FLOW-INFLOW' units 'TAF' convert 'TAF' }
+define DSA12_ACCR_ADJ_1 { timeseries 'I180' kind 'FLOW-INFLOW' units 'TAF' convert 'TAF' }
+define DSA12_ACCR_ADJ_2 { timeseries 'I182' kind 'FLOW-INFLOW' units 'TAF' convert 'TAF' }
+define DSA12_ACCR_ADJ_3 { timeseries 'I184' kind 'FLOW-INFLOW' units 'TAF' convert 'TAF' }
+define DEEP_PER_DSA58 { timeseries 'GR60AW' kind 'FLOW-CHANNEL' units 'CFS' convert 'TAF' }
+define DEEP_PER_DSA10 { timeseries 'GR61AW' kind 'FLOW-CHANNEL' units 'CFS' convert 'TAF' }
+define DEEP_PER_DSA12 { timeseries 'GR62AW' kind 'FLOW-CHANNEL' units 'CFS' convert 'TAF' }
+define DEEP_PER_DSA15 { timeseries 'GR63AW' kind 'FLOW-CHANNEL' units 'CFS' convert 'TAF' }
+define DEEP_PER_DSA65 { timeseries 'GR64AW' kind 'FLOW-CHANNEL' units 'CFS' convert 'TAF' }
+define DSA12_GW_SW_INTERACTION { timeseries 'GS62' kind 'FLOW-CHANNEL' units 'CFS' convert 'TAF' }
+define DSA65_GW_SW_INTERACTION { timeseries 'GS64' kind 'FLOW-CHANNEL' units 'CFS' convert 'TAF' }
+define DSA58_DPLTN { timeseries 'D107' kind 'FLOW-DELIVERY' units 'CFS' convert 'TAF' }
+define WBA4_DEL { timeseries 'D11302' kind 'FLOW-DELIVERY' units 'CFS' convert 'TAF' }
+define CONRNING_CANAL { timeseries 'D17101' kind 'FLOW-DELIVERY' units 'CFS' convert 'TAF' }
+define TC_CANAL_LOSS { timeseries 'D17201' kind 'FLOW-DELIVERY' units 'CFS' convert 'TAF' }
+define WBA5_DEL { timeseries 'D11306' kind 'FLOW-DELIVERY' units 'CFS' convert 'TAF' }
+define WBA7_DEL { timeseries 'D17401' kind 'FLOW-DELIVERY' units 'CFS' convert 'TAF' }
+define WBA8_N_DEL { timeseries 'D14301' kind 'FLOW-DELIVERY' units 'CFS' convert 'TAF' }
+define SAC_REFUGE { timeseries 'D14302' kind 'FLOW-DELIVERY' units 'CFS' convert 'TAF' }
+define D17801 { timeseries 'D17801' kind 'FLOW-DELIVERY' units 'CFS' convert 'TAF' }
+define DELEVAN_COLUSA_REF { timeseries 'D18201' kind 'FLOW-DELIVERY' units 'CFS' convert 'TAF' }
+define WBA8_SOUTH { timeseries 'D18301' kind 'FLOW-DELIVERY' units 'CFS' convert 'TAF' }
+define WBA8_NS { timeseries 'D14501' kind 'FLOW-DELIVERY' units 'CFS' convert 'TAF' }
+define DSA15_DPLTN { timeseries 'D131' kind 'FLOW-DELIVERY' units 'CFS' convert 'TAF' }
+define DSA65_DEP { timeseries 'D155' kind 'FLOW-DELIVERY' units 'CFS' convert 'TAF' }
+define CANAL_LOS { timeseries 'L172' kind 'FLOW-DELIVERY' units 'CFS' convert 'TAF' }
+define GC_CANAL_LOS { timeseries 'L143' kind 'FLOW-DELIVERY' units 'CFS' convert 'TAF' }
+define RCH_2_LOS { timeseries 'L173' kind 'FLOW-DELIVERY' units 'CFS' convert 'TAF' }
+define RCH_3_LOS { timeseries 'L142' kind 'FLOW-DELIVERY' units 'CFS' convert 'TAF' }
+define WBA_4 { timeseries 'L17201' kind 'FLOW-DELIVERY' units 'CFS' convert 'TAF' }
+define TOT_WBA_7N { timeseries 'L17401' kind 'FLOW-DELIVERY' units 'CFS' convert 'TAF' }
+define L17801 { timeseries 'L17801' kind 'FLOW-DELIVERY' units 'CFS' convert 'TAF' }
+define CONRNING_CANAL_LOSS { timeseries 'L17101' kind 'FLOW-DELIVERY' units 'CFS' convert 'TAF' }
+define WGA4_LOSS { timeseries 'L11302' kind 'FLOW-DELIVERY' units 'CFS' convert 'TAF' }
+define TOT_WBA_5_DEL { timeseries 'L11306' kind 'FLOW-DELIVERY' units 'CFS' convert 'TAF' }
+define L128 { timeseries 'L128' kind 'FLOW-DELIVERY' units 'CFS' convert 'TAF' }
+define GC_CANAL_LOS_A { timeseries 'L143a' kind 'FLOW-DELIVERY' units 'CFS' convert 'TAF' }
+define GC_CANAL_LOS_B { timeseries 'L180A' kind 'FLOW-DELIVERY' units 'CFS' convert 'TAF' }
+define WBA_8NS_LOSS { timeseries 'L122A' kind 'FLOW-DELIVERY' units 'CFS' convert 'TAF' }
+define REF_THRU_GC_CANAL { timeseries 'L143B' kind 'FLOW-DELIVERY' units 'CFS' convert 'TAF' }
+define WBA__8NS { timeseries 'L145A' kind 'FLOW-DELIVERY' units 'CFS' convert 'TAF' }
+define WBA__8NS_SAC { timeseries 'L122B' kind 'FLOW-DELIVERY' units 'CFS' convert 'TAF' }
+define WBA8_CBD_DIV { timeseries 'L182A' kind 'FLOW-DELIVERY' units 'CFS' convert 'TAF' }
+define WBA8_CBD_REF_LOS { timeseries 'L145B' kind 'FLOW-DELIVERY' units 'CFS' convert 'TAF' }
+define WBA8_S { timeseries 'L183' kind 'FLOW-DELIVERY' units 'CFS' convert 'TAF' }
+define WBA8_S_SAC { timeseries 'L129A' kind 'FLOW-DELIVERY' units 'CFS' convert 'TAF' }
+define WATER_TRNSFR_1 { timeseries 'D143A_WTS' kind 'FLOW-DELIVERY' units 'CFS' convert 'TAF' }
+define WATER_TRNSFR_2 { timeseries 'D128_WTS' kind 'FLOW-DELIVERY' units 'CFS' convert 'TAF' }
+define WATER_TRNSFR_3 { timeseries 'D122A_WTS' kind 'FLOW-DELIVERY' units 'CFS' convert 'TAF' }
+define WATER_TRNSFR_4 { timeseries 'D122B_WTS' kind 'FLOW-DELIVERY' units 'CFS' convert 'TAF' }
+define WATER_TRNSFR_5 { timeseries 'D145A_WTS' kind 'FLOW-DELIVERY' units 'CFS' convert 'TAF' }
+define DSA65_ACCRTN_adj { timeseries 'I152' kind 'FLOW-INFLOW' units 'TAF' convert 'TAF' }
+define DSA65_NEGTV_ACCRTN { timeseries 'D152' kind 'FLOW-DELIVERY' units 'CFS' convert 'TAF' }
+define D17501 { timeseries 'D17501' kind 'FLOW-DELIVERY' units 'CFS' convert 'TAF' }
+define POLERMO_CANAL { timeseries 'D6' kind 'FLOW-DELIVERY' units 'CFS' convert 'TAF' }
+define BUTTE_CNTRY { timeseries 'D201' kind 'FLOW-DELIVERY' units 'CFS' convert 'TAF' }
+define THRMLTO_ID { timeseries 'D202' kind 'FLOW-DELIVERY' units 'CFS' convert 'TAF' }
+define WSTRN_CANAL { timeseries 'D7A' kind 'FLOW-DELIVERY' units 'CFS' convert 'TAF' }
+define JOINT_CANAL { timeseries 'D7B' kind 'FLOW-DELIVERY' units 'CFS' convert 'TAF' }
+define THRMLTO_COMPLX { timeseries 'C203' kind 'FLOW-CHANNEL' units 'CFS' convert 'TAF' }
+define YUBA_RVR { timeseries 'I230' kind 'FLOW-INFLOW' units 'CFS' convert 'TAF' }
+define BEAR_RVR_1 { timeseries 'I285' kind 'FLOW-INFLOW' units 'TAF' convert 'TAF' }
+define BEAR_RVR_2 { timeseries 'I225' kind 'FLOW-INFLOW' units 'TAF' convert 'TAF' }
+define BUTTE_CRK_INF { timeseries 'I217' kind 'FLOW-INFLOW' units 'TAF' convert 'TAF' }
+define BEAR_RVR_ACCRTN { timeseries 'I282' kind 'FLOW-INFLOW' units 'TAF' convert 'TAF' }
+define WATER_TRNSFR_6 { timeseries 'I204_WTS' kind 'FLOW-INFLOW' units 'CFS' convert 'TAF' }
+define RICE_DCMP_RTRN { timeseries 'R135C_DCMP' kind 'RETURN-FLOW' units 'CFS' convert 'TAF' }
+!define GW_PMP_DSA69 { timeseries 'GP65' kind 'FLOW-DELIVERY' units 'CFS' convert 'TAF' }
+define DEEP_PER_DSA69 { timeseries 'GR65AW' kind 'FLOW-CHANNEL' units 'CFS' convert 'TAF' }
+define DSA69_GW_SW_INTERACTION { timeseries 'GS65' kind 'FLOW-CHANNEL' units 'CFS' convert 'TAF' }
+define DSA69_GW_DEPLTION { timeseries 'D210' kind 'FLOW-DELIVERY' units 'CFS' convert 'TAF' }
+define GRAY_LDGE_DIV { timeseries 'D218' kind 'FLOW-DELIVERY' units 'CFS' convert 'TAF' }
+define SUTTER_REF_DIV { timeseries 'D222' kind 'FLOW-DELIVERY' units 'CFS' convert 'TAF' }
+define BUTTE_SINK { timeseries 'D226' kind 'FLOW-DELIVERY' units 'CFS' convert 'TAF' }
+define WATER_TRNSFR_7 { timeseries 'D204_REOP' kind 'FLOW-DELIVERY' units 'CFS' convert 'TAF' }
+define WATER_TRNSFR_8 { timeseries 'D230_LRYA' kind 'FLOW-TRANSFERABLE' units 'CFS' convert 'TAF' }
+define DSA69_GAIN { timeseries 'I207' kind 'FLOW-INFLOW' units 'TAF' convert 'TAF' }
+define DSA69_LOSS { timeseries 'D207B' kind 'FLOW-DELIVERY' units 'CFS' convert 'TAF' }
+define AMERICAN_RVR_UPS_INFLOW { timeseries 'I300' kind 'FLOW-INFLOW' units 'CFS' convert 'TAF' }
+define FLSM_TO_PCWA { timeseries 'D8' kind 'FLOW-DELIVERY' units 'CFS' convert 'TAF' }
+define FLSM_NATOMA_REL { timeseries 'C9' kind 'FLOW-CHANNEL' units 'CFS' convert 'TAF' }
+define FLSM_SOUTH_CANAL { timeseries 'D9' kind 'FLOW-DELIVERY' units 'CFS' convert 'TAF' }
+define AMERICAN_RVR_LOCAL_INF { timeseries 'I302' kind 'FLOW-INFLOW' units 'TAF' convert 'TAF' }
+!define GW_PMP_DSA70 { timeseries 'GP66' kind 'FLOW-DELIVERY' units 'CFS' convert 'TAF' }
+define DEEP_PER_DSA70 { timeseries 'GR66AW' kind 'FLOW-CHANNEL' units 'CFS' convert 'TAF' }
+define DSA70_GW_SW_INTERACTION { timeseries 'GS66' kind 'FLOW-CHANNEL' units 'CFS' convert 'TAF' }
+define DSA70_GW_DEPLTION { timeseries 'D307' kind 'FLOW-DELIVERY' units 'CFS' convert 'TAF' }
+define EXP_TO_DSA_59 { timeseries 'D309B' kind 'FLOW-DELIVERY' units 'CFS' convert 'TAF' }
+define AUBURN_TO_FLSM { timeseries 'C300' kind 'FLOW-CHANNEL' units 'CFS' convert 'TAF' }
+define PCWA_TO_NRHT_FOLK { timeseries 'D308A' kind 'FLOW-DELIVERY' units 'CFS' convert 'TAF' }
+
+
+define SHSTA_DWNSTRM_FLOW_ { alias  SHSTA_DWNSTRM_FLOW  kind 'DTS-NOD-MB-VALUE' units 'TAF' }
+define THOMES_CRK_FLOW_ { alias  THOMES_CRK_FLOW  kind 'DTS-NOD-MB-VALUE' units 'TAF' }
+define ANTLP_MLL_DEER_CRKS_FLOW_ { alias  ANTLP_MLL_DEER_CRKS_FLOW  kind 'DTS-NOD-MB-VALUE' units 'TAF' }
+define NODOS_REL_ { alias  NODOS_REL  kind 'DTS-NOD-MB-VALUE' units 'TAF' }
+define GCID_CANAL_ { alias  GCID_CANAL  kind 'DTS-NOD-MB-VALUE' units 'TAF' }
+define CLOUSA_BASIN_DRN_ { alias  CLOUSA_BASIN_DRN  kind 'DTS-NOD-MB-VALUE' units 'TAF' }
+define SAC_RVR_TO_DLTA_ { alias  SAC_RVR_TO_DLTA  kind 'DTS-NOD-MB-VALUE' units 'TAF' }
+define SUTTERBYPASS_FLOW_ { alias  SUTTERBYPASS_FLOW  kind 'DTS-NOD-MB-VALUE' units 'TAF' }
+define FEATHER_RVR_ { alias  FEATHER_RVR  kind 'DTS-NOD-MB-VALUE' units 'TAF' }
+define AMERICAN_RVR_ { alias  AMERICAN_RVR  kind 'DTS-NOD-MB-VALUE' units 'TAF' }
+define DSA70_SPILL_ { alias  DSA70_SPILL  kind 'DTS-NOD-MB-VALUE' units 'TAF' }
+define KSWK_NR_SPILL_ { alias  KSWK_NR_SPILL  kind 'DTS-NOD-MB-VALUE' units 'TAF' }
+define WHSKY_NR_SPILL_ { alias  WHSKY_NR_SPILL  kind 'DTS-NOD-MB-VALUE' units 'TAF' }
+define CLR_CRK_TO_WHSKY_ { alias  CLR_CRK_TO_WHSKY  kind 'DTS-NOD-MB-VALUE' units 'TAF' }
+define DSA58_ACCRTN_ { alias  DSA58_ACCRTN  kind 'DTS-NOD-MB-VALUE' units 'TAF' }
+define RED_BANK_CRK_ { alias  RED_BANK_CRK  kind 'DTS-NOD-MB-VALUE' units 'TAF' }
+define DSA10_ACCRTN_ { alias  DSA10_ACCRTN  kind 'DTS-NOD-MB-VALUE' units 'TAF' }
+define DSA15_ACCRTN_ { alias  DSA15_ACCRTN  kind 'DTS-NOD-MB-VALUE' units 'TAF' }
+define DSA70_ACCRTN_ { alias  DSA70_ACCRTN  kind 'DTS-NOD-MB-VALUE' units 'TAF' }
+define BIG_CHICO_CRK_CHNL_ { alias  BIG_CHICO_CRK_CHNL  kind 'DTS-NOD-MB-VALUE' units 'TAF' }
+define PAYNES_CRK_CHNL_ { alias  PAYNES_CRK_CHNL  kind 'DTS-NOD-MB-VALUE' units 'TAF' }
+define COW_CRK_CHNL_ { alias  COW_CRK_CHNL  kind 'DTS-NOD-MB-VALUE' units 'TAF' }
+define COTTONWOOD_CRK_CHNL_ { alias  COTTONWOOD_CRK_CHNL  kind 'DTS-NOD-MB-VALUE' units 'TAF' }
+define BATTLE_CRK_CHNL_ { alias  BATTLE_CRK_CHNL  kind 'DTS-NOD-MB-VALUE' units 'TAF' }
+define WHSKY_STORAGE_ { alias  WHSKY_STORAGE  kind 'DTS-NOD-MB-VALUE' units 'TAF' }
+define KSWK_STORAGE_ { alias  KSWK_STORAGE  kind 'DTS-NOD-MB-VALUE' units 'TAF' }
+define EVAP_WHSKY_ { alias  EVAP_WHSKY  kind 'DTS-NOD-MB-VALUE' units 'TAF' }
+define EVAP_KSWK_ { alias  EVAP_KSWK  kind 'DTS-NOD-MB-VALUE' units 'TAF' }
+define TEHAMA_COLOUSA_DIV_ { alias  TEHAMA_COLOUSA_DIV  kind 'DTS-NOD-MB-VALUE' units 'TAF' }
+define WBA4_DIV_ { alias  WBA4_DIV  kind 'DTS-NOD-MB-VALUE' units 'TAF' }
+define WBA5_DIV_ { alias  WBA5_DIV  kind 'DTS-NOD-MB-VALUE' units 'TAF' }
+define GLEN_COLOUSA_DIV_ { alias  GLEN_COLOUSA_DIV  kind 'DTS-NOD-MB-VALUE' units 'TAF' }
+define SPILL_TO_SUTTER_BYPASS_ { alias  SPILL_TO_SUTTER_BYPASS  kind 'DTS-NOD-MB-VALUE' units 'TAF' }
+define DSA10_NEGTV_ACCRTN_ { alias  DSA10_NEGTV_ACCRTN  kind 'DTS-NOD-MB-VALUE' units 'TAF' }
+define CLEAR_CRK_DIV_ { alias  CLEAR_CRK_DIV  kind 'DTS-NOD-MB-VALUE' units 'TAF' }
+define DSA_58_DIV_ { alias  DSA_58_DIV  kind 'DTS-NOD-MB-VALUE' units 'TAF' }
+define DSA58_NEGTV_ACCRTN_ { alias  DSA58_NEGTV_ACCRTN  kind 'DTS-NOD-MB-VALUE' units 'TAF' }
+define SAC_TO_COLOUSA_ { alias  SAC_TO_COLOUSA  kind 'DTS-NOD-MB-VALUE' units 'TAF' }
+define WEST_BANK_DIV_ { alias  WEST_BANK_DIV  kind 'DTS-NOD-MB-VALUE' units 'TAF' }
+define PLACEHOLDER_WTS1_ { alias  PLACEHOLDER_WTS1  kind 'DTS-NOD-MB-VALUE' units 'TAF' }
+define DSA15_NEGTV_ACCRTN_ { alias  DSA15_NEGTV_ACCRTN  kind 'DTS-NOD-MB-VALUE' units 'TAF' }
+define MOULTON_TO_SUTTER_ { alias  MOULTON_TO_SUTTER  kind 'DTS-NOD-MB-VALUE' units 'TAF' }
+define NEW_CANAL_DIV_ { alias  NEW_CANAL_DIV  kind 'DTS-NOD-MB-VALUE' units 'TAF' }
+define CLOUSA_TO_SUTTER_ { alias  CLOUSA_TO_SUTTER  kind 'DTS-NOD-MB-VALUE' units 'TAF' }
+define TISDALE_TO_SUTTER_ { alias  TISDALE_TO_SUTTER  kind 'DTS-NOD-MB-VALUE' units 'TAF' }
+define DSA15_DIV_ { alias  DSA15_DIV  kind 'DTS-NOD-MB-VALUE' units 'TAF' }
+define PLACEHOLDER_WTS2_ { alias  PLACEHOLDER_WTS2  kind 'DTS-NOD-MB-VALUE' units 'TAF' }
+define WBA8S_DIV_ { alias  WBA8S_DIV  kind 'DTS-NOD-MB-VALUE' units 'TAF' }
+define DSA12_NEGTV_ACCRTN_ { alias  DSA12_NEGTV_ACCRTN  kind 'DTS-NOD-MB-VALUE' units 'TAF' }
+define FRMNT_TO_YOLO_ { alias  FRMNT_TO_YOLO  kind 'DTS-NOD-MB-VALUE' units 'TAF' }
+define LEFT_BANK_DIV_ { alias  LEFT_BANK_DIV  kind 'DTS-NOD-MB-VALUE' units 'TAF' }
+define RIGHT_BANK_DIV_ { alias  RIGHT_BANK_DIV  kind 'DTS-NOD-MB-VALUE' units 'TAF' }
+define WEST_SAC_DIV_ { alias  WEST_SAC_DIV  kind 'DTS-NOD-MB-VALUE' units 'TAF' }
+define SAC_WEIR_SPILL_ { alias  SAC_WEIR_SPILL  kind 'DTS-NOD-MB-VALUE' units 'TAF' }
+define DSA70_NEGTV_ACCRTN_ { alias  DSA70_NEGTV_ACCRTN  kind 'DTS-NOD-MB-VALUE' units 'TAF' }
+define SAC_CITY_DIV_ { alias  SAC_CITY_DIV  kind 'DTS-NOD-MB-VALUE' units 'TAF' }
+define DSA70_DIV_ { alias  DSA70_DIV  kind 'DTS-NOD-MB-VALUE' units 'TAF' }
+define EBMUD_CCWD_DIV_ { alias  EBMUD_CCWD_DIV  kind 'DTS-NOD-MB-VALUE' units 'TAF' }
+define SCWA_DIV_ { alias  SCWA_DIV  kind 'DTS-NOD-MB-VALUE' units 'TAF' }
+define PLACEHOLDER_WTS3_ { alias  PLACEHOLDER_WTS3  kind 'DTS-NOD-MB-VALUE' units 'TAF' }
+define WOODLAND_DAVIS_DIV_ { alias  WOODLAND_DAVIS_DIV  kind 'DTS-NOD-MB-VALUE' units 'TAF' }
+define DSA_58_RTRN_FLOW_ { alias  DSA_58_RTRN_FLOW  kind 'DTS-NOD-MB-VALUE' units 'TAF' }
+define CORNING_RTRN_FLOW_ { alias  CORNING_RTRN_FLOW  kind 'DTS-NOD-MB-VALUE' units 'TAF' }
+define WBA4_SR_RTRN_FLOW_ { alias  WBA4_SR_RTRN_FLOW  kind 'DTS-NOD-MB-VALUE' units 'TAF' }
+define WBA5_RTRN_FLOW_ { alias  WBA5_RTRN_FLOW  kind 'DTS-NOD-MB-VALUE' units 'TAF' }
+define WBA4_TCC_RTRN_FLOW_ { alias  WBA4_TCC_RTRN_FLOW  kind 'DTS-NOD-MB-VALUE' units 'TAF' }
+define WBA8S_RTRN_FLOW_ { alias  WBA8S_RTRN_FLOW  kind 'DTS-NOD-MB-VALUE' units 'TAF' }
+define DSA_15_RTRN_FLOW_ { alias  DSA_15_RTRN_FLOW  kind 'DTS-NOD-MB-VALUE' units 'TAF' }
+define DSA_70_RTRN_FLOW_ { alias  DSA_70_RTRN_FLOW  kind 'DTS-NOD-MB-VALUE' units 'TAF' }
+define DSA58_GW_SW_INTERACTION_ { alias  DSA58_GW_SW_INTERACTION  kind 'DTS-NOD-MB-VALUE' units 'TAF' }
+define DSA10_GW_SW_INTERACTION_ { alias  DSA10_GW_SW_INTERACTION  kind 'DTS-NOD-MB-VALUE' units 'TAF' }
+define DSA15_GW_SW_INTERACTION_ { alias  DSA15_GW_SW_INTERACTION  kind 'DTS-NOD-MB-VALUE' units 'TAF' }
+!define CLR_CRK_FLOW_ { alias  CLR_CRK_FLOW  kind 'DTS-NOD-MB-VALUE' units 'TAF' }
+define BEL_KSWK_FLOW_ { alias  BEL_KSWK_FLOW  kind 'DTS-NOD-MB-VALUE' units 'TAF' }
+define DOWNSTREAM_NDD_ { alias  DOWNSTREAM_NDD  kind 'DTS-NOD-MB-VALUE' units 'TAF' }
+define NODOS_REL_TO_TCC_ { alias  NODOS_REL_TO_TCC  kind 'DTS-NOD-MB-VALUE' units 'TAF' }
+define NODOS_REL_TO_SAC_RVR_ { alias  NODOS_REL_TO_SAC_RVR  kind 'DTS-NOD-MB-VALUE' units 'TAF' }
+define COW_CRK_INFLOW_ { alias  COW_CRK_INFLOW  kind 'DTS-NOD-MB-VALUE' units 'TAF' }
+define COTTONWOOD_CRK_INFLOW_ { alias  COTTONWOOD_CRK_INFLOW  kind 'DTS-NOD-MB-VALUE' units 'TAF' }
+define BATTLE_CRK_INFLOW_ { alias  BATTLE_CRK_INFLOW  kind 'DTS-NOD-MB-VALUE' units 'TAF' }
+define PAYNES_CRK_INFLOW_ { alias  PAYNES_CRK_INFLOW  kind 'DTS-NOD-MB-VALUE' units 'TAF' }
+define ELDER_CRK_ { alias  ELDER_CRK  kind 'DTS-NOD-MB-VALUE' units 'TAF' }
+define THRONES_CRK_ { alias  THRONES_CRK  kind 'DTS-NOD-MB-VALUE' units 'TAF' }
+define ANTLP_CRK_ { alias  ANTLP_CRK  kind 'DTS-NOD-MB-VALUE' units 'TAF' }
+define MILL_CRK_ { alias  MILL_CRK  kind 'DTS-NOD-MB-VALUE' units 'TAF' }
+define DEER_CRK_ { alias  DEER_CRK  kind 'DTS-NOD-MB-VALUE' units 'TAF' }
+define BIG_CHICO_CRK_INFLOW_ { alias  BIG_CHICO_CRK_INFLOW  kind 'DTS-NOD-MB-VALUE' units 'TAF' }
+define DSA12_ACCR_ADJ_1_ { alias  DSA12_ACCR_ADJ_1  kind 'DTS-NOD-MB-VALUE' units 'TAF' }
+define DSA12_ACCR_ADJ_2_ { alias  DSA12_ACCR_ADJ_2  kind 'DTS-NOD-MB-VALUE' units 'TAF' }
+define DSA12_ACCR_ADJ_3_ { alias  DSA12_ACCR_ADJ_3  kind 'DTS-NOD-MB-VALUE' units 'TAF' }
+define DEEP_PER_DSA58_ { alias  DEEP_PER_DSA58  kind 'DTS-NOD-MB-VALUE' units 'TAF' }
+define DEEP_PER_DSA10_ { alias  DEEP_PER_DSA10  kind 'DTS-NOD-MB-VALUE' units 'TAF' }
+define DEEP_PER_DSA12_ { alias  DEEP_PER_DSA12  kind 'DTS-NOD-MB-VALUE' units 'TAF' }
+define DEEP_PER_DSA15_ { alias  DEEP_PER_DSA15  kind 'DTS-NOD-MB-VALUE' units 'TAF' }
+define DEEP_PER_DSA65_ { alias  DEEP_PER_DSA65  kind 'DTS-NOD-MB-VALUE' units 'TAF' }
+define DSA12_GW_SW_INTERACTION_ { alias  DSA12_GW_SW_INTERACTION  kind 'DTS-NOD-MB-VALUE' units 'TAF' }
+define DSA65_GW_SW_INTERACTION_ { alias  DSA65_GW_SW_INTERACTION  kind 'DTS-NOD-MB-VALUE' units 'TAF' }
+define DSA58_DPLTN_ { alias  DSA58_DPLTN  kind 'DTS-NOD-MB-VALUE' units 'TAF' }
+define WBA4_DEL_ { alias  WBA4_DEL  kind 'DTS-NOD-MB-VALUE' units 'TAF' }
+define CONRNING_CANAL_ { alias  CONRNING_CANAL  kind 'DTS-NOD-MB-VALUE' units 'TAF' }
+define TC_CANAL_LOSS_ { alias  TC_CANAL_LOSS  kind 'DTS-NOD-MB-VALUE' units 'TAF' }
+define WBA5_DEL_ { alias  WBA5_DEL  kind 'DTS-NOD-MB-VALUE' units 'TAF' }
+define WBA7_DEL_ { alias  WBA7_DEL  kind 'DTS-NOD-MB-VALUE' units 'TAF' }
+define WBA8_N_DEL_ { alias  WBA8_N_DEL  kind 'DTS-NOD-MB-VALUE' units 'TAF' }
+define SAC_REFUGE_ { alias  SAC_REFUGE  kind 'DTS-NOD-MB-VALUE' units 'TAF' }
+define D17801_ { alias  D17801  kind 'DTS-NOD-MB-VALUE' units 'TAF' }
+define DELEVAN_COLUSA_REF_ { alias  DELEVAN_COLUSA_REF  kind 'DTS-NOD-MB-VALUE' units 'TAF' }
+define WBA8_SOUTH_ { alias  WBA8_SOUTH  kind 'DTS-NOD-MB-VALUE' units 'TAF' }
+define WBA8_NS_ { alias  WBA8_NS  kind 'DTS-NOD-MB-VALUE' units 'TAF' }
+define DSA15_DPLTN_ { alias  DSA15_DPLTN  kind 'DTS-NOD-MB-VALUE' units 'TAF' }
+define DSA65_DEP_ { alias  DSA65_DEP  kind 'DTS-NOD-MB-VALUE' units 'TAF' }
+define CANAL_LOS_ { alias  CANAL_LOS  kind 'DTS-NOD-MB-VALUE' units 'TAF' }
+define GC_CANAL_LOS_ { alias  GC_CANAL_LOS  kind 'DTS-NOD-MB-VALUE' units 'TAF' }
+define RCH_2_LOS_ { alias  RCH_2_LOS  kind 'DTS-NOD-MB-VALUE' units 'TAF' }
+define RCH_3_LOS_ { alias  RCH_3_LOS  kind 'DTS-NOD-MB-VALUE' units 'TAF' }
+define WBA_4_ { alias  WBA_4  kind 'DTS-NOD-MB-VALUE' units 'TAF' }
+define TOT_WBA_7N_ { alias  TOT_WBA_7N  kind 'DTS-NOD-MB-VALUE' units 'TAF' }
+define L17801_ { alias  L17801  kind 'DTS-NOD-MB-VALUE' units 'TAF' }
+define CONRNING_CANAL_LOSS_ { alias  CONRNING_CANAL_LOSS  kind 'DTS-NOD-MB-VALUE' units 'TAF' }
+define WGA4_LOSS_ { alias  WGA4_LOSS  kind 'DTS-NOD-MB-VALUE' units 'TAF' }
+define TOT_WBA_5_DEL_ { alias  TOT_WBA_5_DEL  kind 'DTS-NOD-MB-VALUE' units 'TAF' }
+define L128_ { alias  L128  kind 'DTS-NOD-MB-VALUE' units 'TAF' }
+define GC_CANAL_LOS_A_ { alias  GC_CANAL_LOS_A  kind 'DTS-NOD-MB-VALUE' units 'TAF' }
+define GC_CANAL_LOS_B_ { alias  GC_CANAL_LOS_B  kind 'DTS-NOD-MB-VALUE' units 'TAF' }
+define WBA_8NS_LOSS_ { alias  WBA_8NS_LOSS  kind 'DTS-NOD-MB-VALUE' units 'TAF' }
+define REF_THRU_GC_CANAL_ { alias  REF_THRU_GC_CANAL  kind 'DTS-NOD-MB-VALUE' units 'TAF' }
+define WBA__8NS_ { alias  WBA__8NS  kind 'DTS-NOD-MB-VALUE' units 'TAF' }
+define WBA__8NS_SAC_ { alias  WBA__8NS_SAC  kind 'DTS-NOD-MB-VALUE' units 'TAF' }
+define WBA8_CBD_DIV_ { alias  WBA8_CBD_DIV  kind 'DTS-NOD-MB-VALUE' units 'TAF' }
+define WBA8_CBD_REF_LOS_ { alias  WBA8_CBD_REF_LOS  kind 'DTS-NOD-MB-VALUE' units 'TAF' }
+define WBA8_S_ { alias  WBA8_S  kind 'DTS-NOD-MB-VALUE' units 'TAF' }
+define WBA8_S_SAC_ { alias  WBA8_S_SAC  kind 'DTS-NOD-MB-VALUE' units 'TAF' }
+define WATER_TRNSFR_1_ { alias  WATER_TRNSFR_1  kind 'DTS-NOD-MB-VALUE' units 'TAF' }
+define WATER_TRNSFR_2_ { alias  WATER_TRNSFR_2  kind 'DTS-NOD-MB-VALUE' units 'TAF' }
+define WATER_TRNSFR_3_ { alias  WATER_TRNSFR_3  kind 'DTS-NOD-MB-VALUE' units 'TAF' }
+define WATER_TRNSFR_4_ { alias  WATER_TRNSFR_4  kind 'DTS-NOD-MB-VALUE' units 'TAF' }
+define WATER_TRNSFR_5_ { alias  WATER_TRNSFR_5  kind 'DTS-NOD-MB-VALUE' units 'TAF' }
+define DSA65_ACCRTN_adj_ { alias  DSA65_ACCRTN_adj  kind 'DTS-NOD-MB-VALUE' units 'TAF' }
+define DSA65_NEGTV_ACCRTN_ { alias  DSA65_NEGTV_ACCRTN  kind 'DTS-NOD-MB-VALUE' units 'TAF' }
+define D17501_ { alias  D17501  kind 'DTS-NOD-MB-VALUE' units 'TAF' }
+define POLERMO_CANAL_ { alias  POLERMO_CANAL  kind 'DTS-NOD-MB-VALUE' units 'TAF' }
+define BUTTE_CNTRY_ { alias  BUTTE_CNTRY  kind 'DTS-NOD-MB-VALUE' units 'TAF' }
+define THRMLTO_ID_ { alias  THRMLTO_ID  kind 'DTS-NOD-MB-VALUE' units 'TAF' }
+define WSTRN_CANAL_ { alias  WSTRN_CANAL  kind 'DTS-NOD-MB-VALUE' units 'TAF' }
+define JOINT_CANAL_ { alias  JOINT_CANAL  kind 'DTS-NOD-MB-VALUE' units 'TAF' }
+define THRMLTO_COMPLX_ { alias  THRMLTO_COMPLX  kind 'DTS-NOD-MB-VALUE' units 'TAF' }
+define YUBA_RVR_ { alias  YUBA_RVR  kind 'DTS-NOD-MB-VALUE' units 'TAF' }
+define BEAR_RVR_1_ { alias  BEAR_RVR_1  kind 'DTS-NOD-MB-VALUE' units 'TAF' }
+define BEAR_RVR_2_ { alias  BEAR_RVR_2  kind 'DTS-NOD-MB-VALUE' units 'TAF' }
+define BUTTE_CRK_INF_ { alias  BUTTE_CRK_INF  kind 'DTS-NOD-MB-VALUE' units 'TAF' }
+define BEAR_RVR_ACCRTN_ { alias  BEAR_RVR_ACCRTN  kind 'DTS-NOD-MB-VALUE' units 'TAF' }
+define WATER_TRNSFR_6_ { alias  WATER_TRNSFR_6  kind 'DTS-NOD-MB-VALUE' units 'TAF' }
+define RICE_DCMP_RTRN_ { alias  RICE_DCMP_RTRN  kind 'DTS-NOD-MB-VALUE' units 'TAF' }
+!define GW_PMP_DSA69_ { alias  GW_PMP_DSA69  kind 'DTS-NOD-MB-VALUE' units 'TAF' }
+define DEEP_PER_DSA69_ { alias  DEEP_PER_DSA69  kind 'DTS-NOD-MB-VALUE' units 'TAF' }
+define DSA69_GW_SW_INTERACTION_ { alias  DSA69_GW_SW_INTERACTION  kind 'DTS-NOD-MB-VALUE' units 'TAF' }
+define DSA69_GW_DEPLTION_ { alias  DSA69_GW_DEPLTION  kind 'DTS-NOD-MB-VALUE' units 'TAF' }
+define GRAY_LDGE_DIV_ { alias  GRAY_LDGE_DIV  kind 'DTS-NOD-MB-VALUE' units 'TAF' }
+define SUTTER_REF_DIV_ { alias  SUTTER_REF_DIV  kind 'DTS-NOD-MB-VALUE' units 'TAF' }
+define BUTTE_SINK_ { alias  BUTTE_SINK  kind 'DTS-NOD-MB-VALUE' units 'TAF' }
+define WATER_TRNSFR_7_ { alias  WATER_TRNSFR_7  kind 'DTS-NOD-MB-VALUE' units 'TAF' }
+define WATER_TRNSFR_8_ { alias  WATER_TRNSFR_8  kind 'DTS-NOD-MB-VALUE' units 'TAF' }
+define DSA69_GAIN_ { alias  DSA69_GAIN  kind 'DTS-NOD-MB-VALUE' units 'TAF' }
+define DSA69_LOSS_ { alias  DSA69_LOSS  kind 'DTS-NOD-MB-VALUE' units 'TAF' }
+define AMERICAN_RVR_UPS_INFLOW_ { alias  AMERICAN_RVR_UPS_INFLOW  kind 'DTS-NOD-MB-VALUE' units 'TAF' }
+define FLSM_TO_PCWA_ { alias  FLSM_TO_PCWA  kind 'DTS-NOD-MB-VALUE' units 'TAF' }
+define FLSM_NATOMA_REL_ { alias  FLSM_NATOMA_REL  kind 'DTS-NOD-MB-VALUE' units 'TAF' }
+define FLSM_SOUTH_CANAL_ { alias  FLSM_SOUTH_CANAL  kind 'DTS-NOD-MB-VALUE' units 'TAF' }
+define AMERICAN_RVR_LOCAL_INF_ { alias  AMERICAN_RVR_LOCAL_INF  kind 'DTS-NOD-MB-VALUE' units 'TAF' }
+!define GW_PMP_DSA70_ { alias  GW_PMP_DSA70  kind 'DTS-NOD-MB-VALUE' units 'TAF' }
+define DEEP_PER_DSA70_ { alias  DEEP_PER_DSA70  kind 'DTS-NOD-MB-VALUE' units 'TAF' }
+define DSA70_GW_SW_INTERACTION_ { alias  DSA70_GW_SW_INTERACTION  kind 'DTS-NOD-MB-VALUE' units 'TAF' }
+define DSA70_GW_DEPLTION_ { alias  DSA70_GW_DEPLTION  kind 'DTS-NOD-MB-VALUE' units 'TAF' }
+define EXP_TO_DSA_59_ { alias  EXP_TO_DSA_59  kind 'DTS-NOD-MB-VALUE' units 'TAF' }
+define AUBURN_TO_FLSM_ { alias  AUBURN_TO_FLSM  kind 'DTS-NOD-MB-VALUE' units 'TAF' }
+define PCWA_TO_NRHT_FOLK_ { alias  PCWA_TO_NRHT_FOLK  kind 'DTS-NOD-MB-VALUE' units 'TAF' }
+
+	
+	
+/************************************** SUMMARY **************************************/
+
+/************************************** Inflow **************************************/	
+define NOD_CHANNEL_INFLOWS {value 
+								  SHSTA_DWNSTRM_FLOW - KSWK_NR_SPILL - WHSKY_NR_SPILL
+								+ THOMES_CRK_FLOW + ANTLP_MLL_DEER_CRKS_FLOW + GCID_CANAL 
+								+ NODOS_REL + CLOUSA_BASIN_DRN + SUTTERBYPASS_FLOW
+								+ FEATHER_RVR + AMERICAN_RVR + DSA70_SPILL - SAC_RVR_TO_DLTA
+}	
+	
+
+define NOD_LOCAL_INFLOWS {value
+								  CLR_CRK_TO_WHSKY + DSA58_ACCRTN + RED_BANK_CRK 
+								+ DSA10_ACCRTN + DSA15_ACCRTN + DSA70_ACCRTN
+								+ BIG_CHICO_CRK_CHNL	+ PAYNES_CRK_CHNL + COW_CRK_CHNL 
+								+ COTTONWOOD_CRK_CHNL + BATTLE_CRK_CHNL
+}
+
+define NOD_TOT_INFLOW {value NOD_CHANNEL_INFLOWS + NOD_LOCAL_INFLOWS} 	
+
+define NOD_CHANNEL_INFLOWS_ {alias NOD_CHANNEL_INFLOWS kind 'DTS-NOD-MB-VALUE' units 'TAF' }
+define NOD_LOCAL_INFLOWS_   {alias NOD_LOCAL_INFLOWS kind 'DTS-NOD-MB-VALUE' units 'TAF' }
+define NOD_TOT_INFLOW_      {alias NOD_TOT_INFLOW kind 'DTS-NOD-MB-VALUE' units 'TAF' }
+/************************************* Storage ******************************************/
+
+define WHSKY_INIT_STOR {
+	case Oct1922 {
+	  condition month==oct .and. wateryear==1922
+	  value 241.}
+	case other {
+	  condition always
+	  value WHSKY_STORAGE(-1)}
+	}
+define NET_WHSKY_REL {value  WHSKY_INIT_STOR - WHSKY_STORAGE}	
+
+define KSWK_INIT_STOR {
+	case Oct1922 {
+	  condition month==oct .and. wateryear==1922
+	  value 16.3 }
+	case other {
+	  condition always
+	  value KSWK_STORAGE(-1)}
+	}
+define NET_KSWK_REL {value  KSWK_INIT_STOR - KSWK_STORAGE}
+
+define NOD_REL {value NET_WHSKY_REL + NET_KSWK_REL}
+
+
+define WHSKY_INIT_STOR_ {alias WHSKY_INIT_STOR kind 'DTS-NOD-MB-VALUE' units 'TAF' }
+define KSWK_INIT_STOR_  {alias KSWK_INIT_STOR kind 'DTS-NOD-MB-VALUE' units 'TAF' }
+define NET_WHSKY_REL_   {alias NET_WHSKY_REL kind 'DTS-NOD-MB-VALUE' units 'TAF' }
+define NET_KSWK_REL_    {alias NET_KSWK_REL kind 'DTS-NOD-MB-VALUE' units 'TAF' }
+define NOD_REL_         {alias NOD_REL kind 'DTS-NOD-MB-VALUE' units 'TAF' }
+
+/************************************* Evaporation ******************************************/
+
+define NOD_EVAP {value
+		              EVAP_WHSKY + EVAP_KSWK
+}
+define NOD_EVAP_     {alias NOD_EVAP kind 'DTS-NOD-MB-VALUE' units 'TAF' }
+	
+/************************************* Diversion ******************************************/
+
+define NOD_DIVERSION {Value
+								  TEHAMA_COLOUSA_DIV + WBA4_DIV + WBA5_DIV + GLEN_COLOUSA_DIV			
+								+ SPILL_TO_SUTTER_BYPASS + DSA10_NEGTV_ACCRTN - CLEAR_CRK_DIV 			
+								+ DSA_58_DIV + DSA58_NEGTV_ACCRTN + SAC_TO_COLOUSA + WEST_BANK_DIV 			
+								+ PLACEHOLDER_WTS1 + DSA15_NEGTV_ACCRTN + MOULTON_TO_SUTTER 		
+								+ NEW_CANAL_DIV + CLOUSA_TO_SUTTER + TISDALE_TO_SUTTER		
+								+ DSA15_DIV + PLACEHOLDER_WTS2 + WBA8S_DIV + DSA12_NEGTV_ACCRTN		
+								+ FRMNT_TO_YOLO + LEFT_BANK_DIV + RIGHT_BANK_DIV + WEST_SAC_DIV 			
+								+ SAC_WEIR_SPILL + DSA70_NEGTV_ACCRTN + SAC_CITY_DIV			
+								+ DSA70_DIV + EBMUD_CCWD_DIV + SCWA_DIV + PLACEHOLDER_WTS3 		
+								+ WOODLAND_DAVIS_DIV 		
+}
+define NOD_DIVERSION_     {alias NOD_DIVERSION kind 'DTS-NOD-MB-VALUE' units 'TAF' }
+
+/************************************* Return Flows ******************************************/
+define NOD_RTRN_FLOW {Value
+								   DSA_58_RTRN_FLOW + CORNING_RTRN_FLOW + WBA4_SR_RTRN_FLOW 
+								 + WBA5_RTRN_FLOW + WBA4_TCC_RTRN_FLOW + WBA8S_RTRN_FLOW	
+						         + DSA_15_RTRN_FLOW + DSA_70_RTRN_FLOW 	
+}	
+					
+define NOD_RTRN_FLOW_     {alias NOD_RTRN_FLOW kind 'DTS-NOD-MB-VALUE' units 'TAF' }
+
+/************************************* Groundwater-Surface Water ******************************************/
+					
+define TOT_SW_GW_INTERACTION  {Value 
+								DSA58_GW_SW_INTERACTION + DSA10_GW_SW_INTERACTION + DSA15_GW_SW_INTERACTION  }
+								
+define TOT_SW_GW_INTERACTION_ {alias TOT_SW_GW_INTERACTION kind 'TS-NOD-MB-VALUE' units 'TAF' }
+
+/************************************* final mass balance manipulation  ******************************************/
+
+define NOD_MB 		{value NOD_TOT_INFLOW + NOD_RTRN_FLOW + NOD_REL  - NOD_EVAP - NOD_DIVERSION - TOT_SW_GW_INTERACTION}	
+define NOD_MB_ 		{alias NOD_MB kind 'DTS-NOD-MB-VALUE' units 'TAF'}
+
+
+
+define NOD_MB_CHECK {
+	case atSTANDARD		{condition abs(NOD_MB - 0)	<= abs_threshold	value EQ}
+	case aboveSTANDARD	{condition (NOD_MB - 0)	> abs_threshold		value GT}
+	case belowSTANDARD	{condition (NOD_MB - 0)	< -1*abs_threshold	value LT}
+	case UNEXPECTED		{condition always							value UE}
+}
+
+
+/************************************* some mass balance terms  ******************************************/
 	/*Sac River Colusa Basin - Reservori releases*/
-	define NOD_R1_RR {value
-		 C3  !Whiskeytown Lake 
-		+C5  !Shasta/Keswich 
-		!+C42 !Black Butte
-		!+D42 !Black Butte
-		+c17301
-		+C17602 !NODOS
-		+C17603 !NODOS
-	}
-	
-	/*Sac River Colusa Basin - local Inflow*/
-	define NOD_R1_LI {value
-		 I10801 /*Cow Creek*/
-		+I10802 /*Cottonwood Creek*/
-		+I10803 /*Battle Creek*/
-		+I11001 /*Poynee Creek*/
-		+I112   /*Red Bank Creek*/
-		+I11303 /*Elder Creek*/
-		+I11304 /*Thornes Creek*/
-		+I11307 /*Antelope Creek*/
-		+I11308 /*Mill Creek*/
-		+I11309 /*Deer Creek*/
-		+I11501 /*Big Chico Creek*/
-		+I180   /**/
-		+I182   /**/
-		+I184   /**/
-	}
+define NOD_RES_REL_REG1 {value CLR_CRK_FLOW + BEL_KSWK_FLOW + DOWNSTREAM_NDD + NODOS_REL_TO_TCC + NODOS_REL_TO_SAC_RVR }
+define NOD_LOCAL_INF_REG_1 {value COW_CRK_INFLOW + COTTONWOOD_CRK_INFLOW + BATTLE_CRK_INFLOW + PAYNES_CRK_INFLOW + RED_BANK_CRK + ELDER_CRK + THRONES_CRK 
+                                + ANTLP_CRK + MILL_CRK + DEER_CRK + BIG_CHICO_CRK_INFLOW + DSA12_ACCR_ADJ_1 + DSA12_ACCR_ADJ_2 
+								+ DSA12_ACCR_ADJ_3 }
+define NOD_GW_REG_1	{value  GW_PMP_DSA58 + GW_PMP_COLUSA_1 + GW_PMP_COLUSA_2 + GW_PMP_COLUSA_3 + GW_PMP_DSA65 - DEEP_PER_DSA58 
+						  - DEEP_PER_DSA10 - DEEP_PER_DSA12 - DEEP_PER_DSA15 - DEEP_PER_DSA65 - DSA58_GW_SW_INTERACTION
+                           - DSA10_GW_SW_INTERACTION - DSA12_GW_SW_INTERACTION - DSA15_GW_SW_INTERACTION 
+						   - DSA65_GW_SW_INTERACTION}
+							
+define NOD_CNSMPTV_USE_REG_1	{value DSA58_DPLTN + WBA4_DEL + CONRNING_CANAL + TC_CANAL_LOSS + WBA5_DEL + WBA7_DEL + WBA8_N_DEL + SAC_REFUGE 
+									 + D17801 + DELEVAN_COLUSA_REF + WBA8_SOUTH + WBA8_NS + DSA15_DPLTN	+ DSA65_DEP	+ CANAL_LOS	
+									 + GC_CANAL_LOS	+ RCH_2_LOS	+ RCH_3_LOS	+ WBA_4	+ TOT_WBA_7N + L17801 + CONRNING_CANAL_LOSS	
+									 + WGA4_LOSS + TOT_WBA_5_DEL + L128	+ GC_CANAL_LOS_A + GC_CANAL_LOS_B + WBA_8NS_LOSS 
+									 + REF_THRU_GC_CANAL + WBA__8NS	+ WBA__8NS_SAC + WBA8_CBD_DIV + WBA8_CBD_REF_LOS + WBA8_S 
+									 + WBA8_S_SAC + WATER_TRNSFR_1 + WATER_TRNSFR_2 + WATER_TRNSFR_3 + WATER_TRNSFR_4 
+									 + WATER_TRNSFR_5}	
 
-	/*Sac River Colusa Basin - Groundwater*/ !need to ddl check 
-	define NOD_R1_GW {value
-		 GP60 -GR60AW -GS60 /*DSA 58 net GW Pumping and SW-to-GW interaction*/
-		+GP61 -GR61AW -GS61 /*DSA 12 net GW Pumping and SW-to-GW interaction*/
-		+GP62 -GR62AW -GS62 /*DSA 10 net GW Pumping and SW-to-GW interaction*/
-		+GP63 -GR63AW -GS63 /*DSA 15 net GW Pumping and SW-to-GW interaction*/
-		+GP64 -GR64AW -GS64 /*DSA 65 net GW Pumping and SW-to-GW interaction*/
-	}
-	
-	/*	define NOD_R1_GW {value
-		 GP60 -GR60AW -GS61 !DSA 58 net GW Pumping and SW-to-GW interaction
-		+GP17201 +GP17401 +GP17801 +GP17101 !GW Pumping
-		+GP11302 +GP11306 +GP131 +GP14301 !GW Pumping
-		+GP14302 +GP14501 +GP18201 +GP18301 !GW Pumping
-		-GS61 !DSA 10 SW-to-GW interaction
-		-GS63 !DSA 15 SW-to-GW interaction
-		+GP64 -GR64AW -GS64 !DSA 65 net GW Pumping and SW-to-GW interaction
-	}
-	*/	
-	
-	/*Sac River Colusa Basin - Consumptive Use (Diversion - Return Flow)*/ !need to ddl check
-	define 	NOD_R1_CU {Value	
-		 D107 !-R109  /*demand node 107*/ ! ddl check for R109
-		+D11302 !-R114B /*demand node 11302*/
-		+D17101 !-R113  /*demand node 17101*/
-		+D17201 !-R114C /*demand node 17201*/
-		+D11306 !-R114A /*demand node 11306*/
-		+D17401 !-R182A /*demand node 17401*/
-		+D14301 !-R181A /*demand note 14301*/
-		+D14302 !-R181B /*demand note 14302*/
-		+D17801 !-R182B /*demand node 17801*/
-		+D18201 !-R184B /*demand node 18201*/
-		+D18301 !-R134-R18302 /*demand node 18301*/
-		+D14501 !-R184A /*demand node 14501*/
-		+D131 !-R160 /*demand node 131*/
-		+D155 !-R156 /*demand node 155*/
-		+L172+L143+L173+L142 +L17201 +L17401 /*Misc Loss Terms*/
-		+L17801 +L17101 +L11302 +L11306 +L128 /*Misc Loss Terms*/
-		+L143A +L180A +L122A +L143B +L145A /*Misc Loss Terms*/ 
-		+L122B +L182A +L145B +L183 +L129A /*Misc Loss Terms*/
-		+D143A_WTS +D128_WTS +D122A_WTS +D122B_WTS +D145A_WTS /*Water Transfer Terms*/
-		}
-		
-	/*Sac River Colusa Basin - Conveyance loss*/
-	define NOD_R1_LS {value
-		L142 + L172 + L173
-		}
-		
-	/*Sac River Colusa Basin - Accretion-Depletion Terms*/	
-	define NOD_R1_AD {value
-		 I109 /*DSA58 projected gain in*/
-		-D109 /*DSA58 projected gain out*/
-		+I118 /*DSA10 projected gain in*/
-		-D118 /*DSA10 projected gain out*/
-		+I123 /*DSA15 projected gain in*/
-		-D123 /*DSA15 projected gain out*/
-		-D134 /*DSA12 projected gain out (no projected gain in)*/
-		+I152 /*DSA65 projected gain in*/
-		-D152 /*DSA65 projected gain out*/
-		+I166 /*DSA65 projected gain in*/
-		-D166B/*DSA65 projected gain out*/				
-		} 
-		
-	/*Sac River Colusa Basin - Regional Outflow*/	
-	Define NOD_R1_RO {value
-		 C157 	/*Yolo Bypass*/
-		+C169 	/*Sacramento River @ before Hood*/
-		+D17501	/*NODOS*/
-		+D124A	/*NODOS*/
-		
-	}	
-	
-	
-	
-	
-/************************************* FRSA ******************************************/		
-	/*FRSA - Reservori releases*/	
-	define NOD_R2_RR {value
-		 D6		!Polermo Canel 
-		+D201	!Butte County
-		+D202	!Thermolito ID
-		+D7A	!Western Canal
-		+D7B	!Joint Canal
-		+C203	!Thermolito Complex (High flow channel)
-		+I230	!Yuba River Upstream Inflow
-		+I285	!Bear River Upstream Inflow
-		+I225 	!Bear River (Gold Hill/Combie Canal+Bear River Canal+Boardman Canal)
-	}
+define NOD_CONV_LOSS_REG_1  {value CANAL_LOS + RCH_2_LOS + RCH_3_LOS}
 
-		
-	/*FRSA - local Inflow*/	
-	define NOD_R2_LI {value 	 
-		 I217		! Butte Creek
-		+I282		! Local	
-		+I204_WTS 	! Water Transfer
-		+R135C_DCMP !	/*Rice decomp return flows, diversions for rice decomp (D7C) part of SWPDS term*/
-		!+I204_EWA
-	}	
-		
-	/*FRSA - Groundwater*/		
-	define NOD_R2_GW {value
-		GP65 -GR65AW -GS65 /*DSA 69 net GW Pumping and SW-to-GW interaction*/
-	}
-		
-	
-	/*FRSA - Consumptive Use (Diversion - Return Flow)*/		
-	define NOD_R2_CU {value	
-		 D210 !-R223		/*demand node 210*/
-		+D218 !-R135A 	/*Gray Lodge (demand node 218)*/
-		+D222 !-R137		/*Sutter Refuge (demand node 222)*/
-		+D226 !-R135B	/*Butte Sink (demand node 226)*/
-		+D204_REOP 		/*Misc water transfer terms*/
-		+D230_LRYA 		/*Misc water transfer terms*/
-	}
-	
-	/*FRSA - Accretion-Depletion Terms*/	
-	define NOD_R2_AD {value
-		 I207  /*DSA69 projected gain in*/
-		-D207B /*DSA69 projected gain out*/
-	}
-	/*FRSA - Regional Outflow*/	!- No Regional Outflow for FRSA	
-	
-	
-	
-	
-		
-	/************************************* American River ******************************************/	
+define NOD_ACCR_DEPL_REG_1  {value DSA58_ACCRTN - DSA58_NEGTV_ACCRTN + DSA10_ACCRTN - DSA10_NEGTV_ACCRTN
+								+  DSA15_ACCRTN - DSA15_NEGTV_ACCRTN - DSA65_NEGTV_ACCRTN + DSA65_ACCRTN_adj
+								- DSA12_NEGTV_ACCRTN + DSA70_ACCRTN - DSA70_NEGTV_ACCRTN}
 
-	/*American River Basin - Reservori releases*/	
-	define NOD_R3_RR {value
-		 I300	 !American River Upstream Inflow
-		+D8	!Folsom Lake to PCWA
-		+C9	!Folsom Lake/lake Natoma Release
-		+D9	!Folsom South Canal
-	}		
-		
-	/*American River Basin - local Inflow*/	
-	define NOD_R3_LI {value
-		 I302
-	}	
-		
-	/*American River Basin - Groundwater*/		
-	define NOD_R3_GW {value
-		GP66 -GR66AW -GS66 /*DSA 69 net GW Pumping and SW-to-GW interaction*/
-	}	
-	
-	/*American River Basin - Consumptive Use (Diversion - Return Flow)*/		
-	define NOD_R3_CU {value	
-		 D307 !-R169		/*demand node 307*/
-		+D309B			/*Export to DSA59*/
-	}
-		
-	/*American River Basin - Accretion-Depletion Terms*/	
+define NOD_OUTFLOW_REG_1  {value YOLO_BYPASS + SAC_RVR_TO_DLTA + D17501 + NEW_CANAL_DIV}
 
-	
-	/*American River Basin - Regional Outflow*/	
-	Define NOD_R3_RO {value
-		 C300 	/*Auburn Reservoir site to Flosom Lake*/
-		+D308A 	/*PCWA & GDPUD Auburn Portion to North Fork AR @ North Fork Dam*/
-	
-	}	
-	
-	
-! define NOD total Reservori releases
-define NOD_RR {value NOD_R1_RR + NOD_R2_RR + NOD_R3_RR}
-! define NOD total Local Inflow
-define NOD_LI {value NOD_R1_LI + NOD_R2_LI + NOD_R3_LI}
-! define NOD total Groundwater pumping
-define NOD_GW {value NOD_R1_GW + NOD_R2_GW + NOD_R3_GW}
-! define NOD total Comsumptive Use
-define NOD_CU {value NOD_R1_CU + NOD_R2_CU + NOD_R3_CU}
-! define NOD total Loss
-define NOD_LS {value NOD_R1_LS }
-! define NOD total Region outflow
-define NOD_RO {value NOD_R1_RO 			   + NOD_R3_RO}
-! define NOD total Accretion-Depletion Term
-define NOD_AD {value NOD_R1_AD + NOD_R2_AD }
+/******************************FRSA***************************************/
 
-/* Mass Balance: 	Reervoir releases 
-				+ Local Inflow 
-				+ GW pumping 
-				- Consumptive use 
-				- Loss 
-				- Regional Outflow 
-				+ Accretion-Depletion Term
-				= 0
-*/
+define NOD_RES_REL_REG2   {value POLERMO_CANAL + BUTTE_CNTRY + THRMLTO_ID + WSTRN_CANAL + JOINT_CANAL
+								+ THRMLTO_COMPLX + YUBA_RVR + BEAR_RVR_1 + BEAR_RVR_2}
 
-define NOD_MB {value NOD_RR +NOD_LI +NOD_GW -NOD_CU -NOD_LS -NOD_RO +NOD_AD}	
-define NOD_MB_DTS {alias NOD_MB kind 'DTS-1' units 'CFS'}
+define NOD_LOCAL_INF_REG_2 {value BUTTE_CRK_INF + BEAR_RVR_ACCRTN + WATER_TRNSFR_6 + RICE_DCMP_RTRN }
 
-define NOD_MB_Check {
-	case balanced {
-	condition abs(NOD_MB) < abs_threshold
-	value 100!0
-	}
-	case notBalanced{
-	condition always
-	value 200 ! underreview - mass balance under review for miss arcs
-	!value 1
-	}
-}
-define NOD_UNBAL_Check {
-	case unBalanced {
-	condition abs(NOD_MB) > abs_threshold
-	value 200
-	}
-	case Balanced{
-	condition always
-	value 100 ! underreview - mass balance under review for miss arcs
-	!value 1
-	}
-}
+define NOD_GW_REG_2	{value GW_PMP_DSA69 - DEEP_PER_DSA69 - DSA69_GW_SW_INTERACTION}
+define NOD_CNSMPTV_USE_REG_2	{value DSA69_GW_DEPLTION + GRAY_LDGE_DIV + SUTTER_REF_DIV + BUTTE_SINK
+									  + WATER_TRNSFR_6 + WATER_TRNSFR_7 }
 
-define NOD_UNBAL_STATUS_DTS {alias NOD_MB_Check kind 'DTS-Status' units 'NONE'}
-define NOD_MB_STATUS_DTS {alias NOD_MB_Check kind 'DTS-Status' units 'NONE'}
-!define Delta_MB_STATUS_DTS {alias NOD_MB_Check kind 'DTS-Status' units 'NONE'} !underreview
-define SOD_MB_STATUS_DTS {alias NOD_MB_Check kind 'DTS-Status' units 'NONE'} !underreview 
+define NOD_ACCR_DEPL_REG_2 {value DSA69_GAIN + DSA69_LOSS}
+/******************************AMERICAN RIVER ***************************************/
+define NOD_RES_REL_REG3 {value AMERICAN_RVR_UPS_INFLOW + FLSM_TO_PCWA + FLSM_NATOMA_REL + FLSM_SOUTH_CANAL}
+define NOD_LOCAL_INF_REG_3 {value AMERICAN_RVR_LOCAL_INF}
+define NOD_GW_REG_3 {value GW_PMP_DSA70 - DEEP_PER_DSA70 - DSA70_GW_SW_INTERACTION}
+define NOD_CNSMPTV_USE_REG_3	{value DSA70_GW_DEPLTION + EXP_TO_DSA_59}
+define NOD_OUTFLOW_REG_3 {value AUBURN_TO_FLSM + PCWA_TO_NRHT_FOLK}
 
-define FRSA_MB {value NOD_R2_RR +NOD_R2_LI +NOD_R2_GW -NOD_R2_CU +NOD_R2_AD -(C225+C223+C217A+R135A+R135B+R135C_DCMP)}
-define FRSA_MB_DTS {alias FRSA_MB}
+/******************************SUMMARY ***************************************/
+define NOD_RES_REL  		{value NOD_RES_REL_REG1 + NOD_RES_REL_REG2 + NOD_RES_REL_REG3}
+define NOD_LOCAL_INF		{value NOD_LOCAL_INF_REG_1 + NOD_LOCAL_INF_REG_2 + NOD_LOCAL_INF_REG_3}
+define NOD_GW				{value NOD_GW_REG_1 + NOD_GW_REG_2 + NOD_GW_REG_3}
+define NOD_CNSMPTV_USE		{value NOD_CNSMPTV_USE_REG_1 + NOD_CNSMPTV_USE_REG_2 + NOD_CNSMPTV_USE_REG_3}
+define NOD_CONV_LOSS		{value NOD_CONV_LOSS_REG_1}
+define NOD_ACCR_DEPL		{value NOD_ACCR_DEPL_REG_1 + NOD_ACCR_DEPL_REG_2}
+define NOD_BNDRY_OUTFLOW    {value NOD_OUTFLOW_REG_1 + NOD_OUTFLOW_REG_3 }
+define NOD_OUTFLOW			{value NOD_BNDRY_OUTFLOW + NOD_CONV_LOSS }
 
-define AMER_MB {value NOD_R3_RR +NOD_R3_LI +NOD_R3_GW -NOD_R3_CU +NOD_R3_RO -(C308+C303+R169-C225-D162-D167-D168)}
-define AMER_MB_DTS {alias AMER_MB}
+
+/******************************OUTPUT DSS ***************************************/
+
+
+define NOD_MB_CHECK_ { alias  NOD_MB_CHECK  kind 'DTS-NOD-MB-STATUS' units 'NONE' }
+define NOD_RES_REL_REG1_ { alias  NOD_RES_REL_REG1  kind 'DTS-NOD-MB-VALUE' units 'TAF' }
+define NOD_LOCAL_INF_REG_1_ { alias  NOD_LOCAL_INF_REG_1  kind 'DTS-NOD-MB-VALUE' units 'TAF' }
+define NOD_GW_REG_1_ { alias  NOD_GW_REG_1  kind 'DTS-NOD-MB-VALUE' units 'TAF' }
+define NOD_CNSMPTV_USE_REG_1_ { alias  NOD_CNSMPTV_USE_REG_1  kind 'DTS-NOD-MB-VALUE' units 'TAF' }
+define NOD_CONV_LOSS_REG_1_ { alias  NOD_CONV_LOSS_REG_1  kind 'DTS-NOD-MB-VALUE' units 'TAF' }
+define NOD_ACCR_DEPL_REG_1_ { alias  NOD_ACCR_DEPL_REG_1  kind 'DTS-NOD-MB-VALUE' units 'TAF' }
+define NOD_OUTFLOW_REG_1_ { alias  NOD_OUTFLOW_REG_1  kind 'DTS-NOD-MB-VALUE' units 'TAF' }
+define NOD_RES_REL_REG2_ { alias  NOD_RES_REL_REG2  kind 'DTS-NOD-MB-VALUE' units 'TAF' }
+define NOD_LOCAL_INF_REG_2_ { alias  NOD_LOCAL_INF_REG_2  kind 'DTS-NOD-MB-VALUE' units 'TAF' }
+define NOD_GW_REG_2_ { alias  NOD_GW_REG_2  kind 'DTS-NOD-MB-VALUE' units 'TAF' }
+define NOD_CNSMPTV_USE_REG_2_ { alias  NOD_CNSMPTV_USE_REG_2  kind 'DTS-NOD-MB-VALUE' units 'TAF' }
+define NOD_ACCR_DEPL_REG_2_ { alias  NOD_ACCR_DEPL_REG_2  kind 'DTS-NOD-MB-VALUE' units 'TAF' }
+define NOD_RES_REL_REG3_ { alias  NOD_RES_REL_REG3  kind 'DTS-NOD-MB-VALUE' units 'TAF' }
+define NOD_LOCAL_INF_REG_3_ { alias  NOD_LOCAL_INF_REG_3  kind 'DTS-NOD-MB-VALUE' units 'TAF' }
+define NOD_GW_REG_3_ { alias  NOD_GW_REG_3  kind 'DTS-NOD-MB-VALUE' units 'TAF' }
+define NOD_CNSMPTV_USE_REG_3_ { alias  NOD_CNSMPTV_USE_REG_3  kind 'DTS-NOD-MB-VALUE' units 'TAF' }
+define NOD_OUTFLOW_REG_3_ { alias  NOD_OUTFLOW_REG_3  kind 'DTS-NOD-MB-VALUE' units 'TAF' }
+define NOD_RES_REL_ { alias  NOD_RES_REL  kind 'DTS-NOD-MB-VALUE' units 'TAF' }
+define NOD_LOCAL_INF_ { alias  NOD_LOCAL_INF  kind 'DTS-NOD-MB-VALUE' units 'TAF' }
+define NOD_GW_ { alias  NOD_GW  kind 'DTS-NOD-MB-VALUE' units 'TAF' }
+define NOD_CNSMPTV_USE_ { alias  NOD_CNSMPTV_USE  kind 'DTS-NOD-MB-VALUE' units 'TAF' }
+define NOD_CONV_LOSS_ { alias  NOD_CONV_LOSS  kind 'DTS-NOD-MB-VALUE' units 'TAF' }
+define NOD_ACCR_DEPL_ { alias  NOD_ACCR_DEPL  kind 'DTS-NOD-MB-VALUE' units 'TAF' }
+define NOD_BNDRY_OUTFLOW_ { alias  NOD_BNDRY_OUTFLOW  kind 'DTS-NOD-MB-VALUE' units 'TAF' }
+define NOD_OUTFLOW_ { alias  NOD_OUTFLOW  kind 'DTS-NOD-MB-VALUE' units 'TAF' }
+
+
+
+
+

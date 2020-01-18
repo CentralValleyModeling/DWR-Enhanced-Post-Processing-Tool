@@ -1,0 +1,440 @@
+/********************** DESCRIPTION ****************************
+- post-processes study results to determine factors controlling reservoir releases
+- limited to major reservoirs only, including Trinity, Shasta, Folsom, Oroville, CVP San Luis and SWP San Luis
+- also looks at the Trinity River imports into the Sacramento Valley via the Clear Creek Tunnel
+
+********************* REVIEW HISTORY****************************
+Yuxian (Sean) Feng	| DWR	|	02/14/2019	|	Setup initial file
+Karandev Singh		| DWR	|	12/03/2019	|	Reformatted/ standardized logic statements
+
+****************************************************************/
+
+
+/****************************************************************
+*************************** SUMMARY *****************************
+****************************************************************/
+define STRG_CVP_SWP_TOT	{value TRINITY_STRG + SHASTA_STRG + FOLSOM_STRG + OROVILLE_STRG + SANLUIS_CVP_STRG + SANLUIS_SWP_STRG}
+define STRG_CVP_SWP_NOD	{value TRINITY_STRG + SHASTA_STRG + FOLSOM_STRG + OROVILLE_STRG}
+define STRG_CVP_NOD		{value TRINITY_STRG + SHASTA_STRG + FOLSOM_STRG}
+define STRG_SANLUIS_TOT	{value SANLUIS_CVP_STRG + SANLUIS_SWP_STRG}
+define STRG_CVP_TOT     {value TRINITY_STRG + SHASTA_STRG + FOLSOM_STRG + SANLUIS_CVP_STRG }
+define STRG_SWP_TOT     {value OROVILLE_STRG + SANLUIS_SWP_STRG }
+
+/****************************************************************
+*************************** CONTORLS ****************************
+****************************************************************/
+
+/************************** TRINITY ****************************/
+!Change in monthly storage
+!Calculated by comparing current month's storage to previous month's storage
+define TRINITY_STRG_CHNG {value TRINITY_STRG - TRINITY_STRG(-1)}
+
+!Evaluates whether the reservoir operations are controlled by reservoir's capacity
+!Calculated by comparing the storage to Level 5 storage-level (representative of the reservoir capacity)
+define TRINITY_CAP_CHECK {
+	case atSTANDARD		{condition abs(TRINITY_STRG - TRINITY_LEVEL_CAP)	<= abs_threshold	value EQ}
+	case aboveSTANDARD	{condition (TRINITY_STRG - TRINITY_LEVEL_CAP)		> abs_threshold		value GT}
+	case belowSTANDARD	{condition (TRINITY_STRG - TRINITY_LEVEL_CAP)		< -1*abs_threshold	value LT}
+	case UNEXPECTED    	{condition always														value UE}
+}
+
+!Evaluates whether the reservoir operations at the deadpool level
+!Calculated by comparing the storage to Level 1 storage-level (representative of the reservoir deadpool)
+define TRINITY_DPL_CHECK {
+	case atSTANDARD		{condition abs(TRINITY_STRG - TRINITY_LEVEL_DPL)	<= abs_threshold	value EQ}
+	case aboveSTANDARD	{condition (TRINITY_STRG - TRINITY_LEVEL_DPL)		> abs_threshold		value GT}
+	case belowSTANDARD	{condition (TRINITY_STRG - TRINITY_LEVEL_DPL)		< -1*abs_threshold	value LT}
+	case UNEXPECTED    	{condition always														value UE}
+}
+
+!Evaluates whether the reservoir operations are controlled by flood control
+!Calculated by comparing the storage to Level 4 storage-level
+define TRINITY_FLD_CHECK {
+	case atSTANDARD		{condition abs(TRINITY_STRG - TRINITY_LEVEL_FLD)	<= abs_threshold	value EQ}
+	case aboveSTANDARD	{condition (TRINITY_STRG - TRINITY_LEVEL_FLD)		> abs_threshold		value GT}
+	case belowSTANDARD	{condition (TRINITY_STRG - TRINITY_LEVEL_FLD)		< -1*abs_threshold	value LT}
+	case UNEXPECTED    	{condition always														value UE}
+}
+
+!Evaluates whether the reservoir operations are controlled by downstream minimum flow requirements
+!Calculated by comparing the downstream channel flows to minimum flow requirements
+!Reservoir operations are assumed to be controlled by the minimum downstream flow requirements if the channel flow are at or below the standard
+define TRINITY_MIF_CHECK {
+	case atSTANDARD		{condition TRINITY_LEWISTON_MIF_CHECK == EQ
+									.or. TRINITY_LEWISTON_MIF_CHECK == LT
+										value EQ}
+	case aboveSTANDARD	{condition TRINITY_LEWISTON_MIF_CHECK == GT
+										value GT}
+	case UNEXPECTED    	{condition always	value UE}
+}
+
+!Evaluates whether the reservoir operations are controlled by guide curve
+!Calculated by comparing the storage to Level 3 storage-level
+define TRINITY_RC_CHECK {
+	case atSTANDARD		{condition abs(TRINITY_STRG - TRINITY_LEVEL_RC)	<= abs_threshold		value EQ}
+	case aboveSTANDARD	{condition (TRINITY_STRG - TRINITY_LEVEL_RC)		> abs_threshold		value GT}
+	case belowSTANDARD	{condition (TRINITY_STRG - TRINITY_LEVEL_RC)		< -1*abs_threshold	value LT}
+	case UNEXPECTED    	{condition always														value UE}
+}
+
+!Evaluates whether the reservoir operations are generating non-recoverable spill
+!Calculated by looking for spill flows above zero
+define TRINITY_SPL_CHECK {
+	case atSTANDARD		{condition abs(TRINITY_NR_SPILL - 0)	<= abs_threshold	value EQ}
+	case aboveSTANDARD	{condition (TRINITY_NR_SPILL - 0)		> abs_threshold		value GT}
+	case belowSTANDARD	{condition (TRINITY_NR_SPILL - 0)		< -1*abs_threshold	value LT}
+	case UNEXPECTED    	{condition always											value UE}
+}
+
+/************************** SHASTA *****************************/ 
+!Change in monthly storage
+!Calculated by comparing current month's storage to previous month's storage
+define SHASTA_STRG_CHNG {value SHASTA_STRG - SHASTA_STRG(-1)}
+
+!Evaluates whether the reservoir operations are controlled by reservoir's capacity
+!Calculated by comparing the storage to Level 6 storage-level (representative of the reservoir capacity)
+define SHASTA_CAP_CHECK {
+	case atSTANDARD		{condition abs(SHASTA_STRG - SHASTA_LEVEL_CAP)	<= abs_threshold	value EQ}
+	case aboveSTANDARD	{condition (SHASTA_STRG - SHASTA_LEVEL_CAP)	> abs_threshold		value GT}
+	case belowSTANDARD	{condition (SHASTA_STRG - SHASTA_LEVEL_CAP)	< -1*abs_threshold	value LT}
+	case UNEXPECTED    	{condition always												value UE}
+}
+
+!Evaluates whether the reservoir operations at the deadpool level
+!Calculated by comparing the storage to Level 1 storage-level (representative of the reservoir deadpool)
+define SHASTA_DPL_CHECK {
+	case atSTANDARD		{condition abs(SHASTA_STRG - SHASTA_LEVEL_DPL)	<= abs_threshold	value EQ}
+	case aboveSTANDARD	{condition (SHASTA_STRG - SHASTA_LEVEL_DPL)	> abs_threshold		value GT}
+	case belowSTANDARD	{condition (SHASTA_STRG - SHASTA_LEVEL_DPL)	< -1*abs_threshold	value LT}
+	case UNEXPECTED    	{condition always												value UE}
+}
+
+!Evaluates whether the reservoir operations are controlled by flood control
+!Calculated by comparing the storage to Level 5 storage-level
+define SHASTA_FLD_CHECK {
+	case atSTANDARD		{condition abs(SHASTA_STRG - SHASTA_LEVEL_FLD)	<= abs_threshold	value EQ}
+	case aboveSTANDARD	{condition (SHASTA_STRG - SHASTA_LEVEL_FLD)	> abs_threshold		value GT}
+	case belowSTANDARD	{condition (SHASTA_STRG - SHASTA_LEVEL_FLD)	< -1*abs_threshold	value LT}
+	case UNEXPECTED    	{condition always												value UE}
+}
+
+!Evaluates whether the reservoir operations are controlled by downstream minimum flow requirements
+!Calculated by comparing the downstream channel flows to minimum flow requirements
+!Reservoir operations are assumed to be controlled by the minimum downstream flow requirements if the channel flow are at or below the standard
+define SHASTA_MIF_CHECK {
+	case atSTANDARD		{condition SAC_KESWICK_MIF_CHECK == EQ .or. SAC_REDBLUFF_MIF_CHECK == EQ .or. SAC_HAMILTONCITY_MIF_CHECK == EQ .or. SAC_WILKINSSLOUGH_MIF_CHECK == EQ
+									.or. SAC_KESWICK_MIF_CHECK == LT .or. SAC_REDBLUFF_MIF_CHECK == LT .or. SAC_HAMILTONCITY_MIF_CHECK == LT .or. SAC_WILKINSSLOUGH_MIF_CHECK == LT
+										value EQ}
+	case aboveSTANDARD	{condition SAC_KESWICK_MIF_CHECK == GT .and. SAC_REDBLUFF_MIF_CHECK == GT .and. SAC_HAMILTONCITY_MIF_CHECK == GT .and. SAC_WILKINSSLOUGH_MIF_CHECK == GT
+										value GT}
+	case UNEXPECTED    	{condition always	value UE}
+}
+
+!Evaluates whether the reservoir operations are controlled by guide curve
+!Calculated by comparing the storage to Level 3 storage-level
+define SHASTA_RC_CHECK {
+	case atSTANDARD		{condition abs(SHASTA_STRG - SHASTA_LEVEL_RC)	<= abs_threshold	value EQ}
+	case aboveSTANDARD	{condition (SHASTA_STRG - SHASTA_LEVEL_RC)	> abs_threshold		value GT}
+	case belowSTANDARD	{condition (SHASTA_STRG - SHASTA_LEVEL_RC)	< -1*abs_threshold	value LT}
+	case UNEXPECTED    	{condition always												value UE}
+}
+
+!Evaluates whether the reservoir operations are generating non-recoverable spill
+!Calculated by looking for spill flows above zero
+define SHASTA_SPL_CHECK {
+	case atSTANDARD		{condition abs(SHASTA_NR_SPILL - 0)	<= abs_threshold	value EQ}
+	case aboveSTANDARD	{condition (SHASTA_NR_SPILL - 0)	> abs_threshold		value GT}
+	case belowSTANDARD	{condition (SHASTA_NR_SPILL - 0)	< -1*abs_threshold	value LT}
+	case UNEXPECTED    	{condition always										value UE}
+}
+
+!Evaluates whether the End of September Shasta Storage meet the CVPIA(b)(2) threshold
+!Calculated by comparing the end of September Shasta Storage to the CVPIA(b)(2) threshold
+define SHASTA_CVPIA_B2_CHECK {
+	case atSTANDARD		{condition month == SEP .and. abs(SHASTA_STRG - SHASTA_CVPIA_B2)	<= abs_threshold	value EQ}
+	case aboveSTANDARD	{condition month == SEP .and. (SHASTA_STRG - SHASTA_CVPIA_B2)		> abs_threshold		value GT}
+	case belowSTANDARD	{condition month == SEP .and. (SHASTA_STRG - SHASTA_CVPIA_B2)		< -1*abs_threshold	value LT}
+	case UNEXPECTED    	{condition always																		value UE}
+}
+
+/************************** FOLSOM *****************************/ 
+!Change in monthly storage
+!Calculated by comparing current month's storage to previous month's storage
+define FOLSOM_STRG_CHNG {value FOLSOM_STRG - FOLSOM_STRG(-1)}
+
+!Evaluates whether the reservoir operations are controlled by reservoir's capacity
+!Calculated by comparing the storage to Level 6 storage-level (representative of the reservoir capacity)
+define FOLSOM_CAP_CHECK {
+	case atSTANDARD		{condition abs(FOLSOM_STRG - FOLSOM_LEVEL_CAP)	<= abs_threshold	value EQ}
+	case aboveSTANDARD	{condition (FOLSOM_STRG - FOLSOM_LEVEL_CAP)	> abs_threshold			value GT}
+	case belowSTANDARD	{condition (FOLSOM_STRG - FOLSOM_LEVEL_CAP)	< -1*abs_threshold		value LT}
+	case UNEXPECTED    	{condition always													value UE}
+}
+
+!Evaluates whether the reservoir operations at the deadpool level
+!Calculated by comparing the storage to Level 1 storage-level (representative of the reservoir deadpool)
+define FOLSOM_DPL_CHECK {
+	case atSTANDARD		{condition abs(FOLSOM_STRG - FOLSOM_LEVEL_DPL)	<= abs_threshold	value EQ}
+	case aboveSTANDARD	{condition (FOLSOM_STRG - FOLSOM_LEVEL_DPL)	> abs_threshold			value GT}
+	case belowSTANDARD	{condition (FOLSOM_STRG - FOLSOM_LEVEL_DPL)	< -1*abs_threshold		value LT}
+	case UNEXPECTED    	{condition always													value UE}
+}
+
+!Evaluates whether the reservoir operations are controlled by flood control
+!Calculated by comparing the storage to Level 5 storage-level
+define FOLSOM_FLD_CHECK {
+	case atSTANDARD		{condition abs(FOLSOM_STRG - FOLSOM_LEVEL_FLD)	<= abs_threshold	value EQ}
+	case aboveSTANDARD	{condition (FOLSOM_STRG - FOLSOM_LEVEL_FLD)	> abs_threshold			value GT}
+	case belowSTANDARD	{condition (FOLSOM_STRG - FOLSOM_LEVEL_FLD)	< -1*abs_threshold		value LT}
+	case UNEXPECTED    	{condition always													value UE}
+}
+
+!Evaluates whether the reservoir operations are controlled by downstream minimum flow requirements
+!Calculated by comparing the downstream channel flows to minimum flow requirements
+!Reservoir operations are assumed to be controlled by the minimum downstream flow requirements if the channel flow are at or below the standard
+define FOLSOM_MIF_CHECK {
+	case atSTANDARD		{condition AMERICAN_NIMBUS_MIF_CHECK == EQ .or. AMERICAN_HSTREET_MIF_CHECK == EQ
+									.or. AMERICAN_NIMBUS_MIF_CHECK == LT .or. AMERICAN_HSTREET_MIF_CHECK == LT
+										value EQ}
+	case aboveSTANDARD	{condition AMERICAN_NIMBUS_MIF_CHECK == GT .and. AMERICAN_HSTREET_MIF_CHECK == GT
+										value GT}
+	case UNEXPECTED    	{condition always	value UE}
+}
+
+!Evaluates whether the reservoir operations are controlled by guide curve
+!Calculated by comparing the storage to Level 3 storage-level
+define FOLSOM_RC_CHECK {
+	case atSTANDARD		{condition abs(FOLSOM_STRG - FOLSOM_LEVEL_RC)	<= abs_threshold	value EQ}
+	case aboveSTANDARD	{condition (FOLSOM_STRG - FOLSOM_LEVEL_RC)	> abs_threshold			value GT}
+	case belowSTANDARD	{condition (FOLSOM_STRG - FOLSOM_LEVEL_RC)	< -1*abs_threshold		value LT}
+	case UNEXPECTED    	{condition always													value UE}
+}
+
+!Evaluates whether the reservoir operations are generating non-recoverable spill
+!Calculated by looking for spill flows above zero
+define FOLSOM_SPL_CHECK {
+	case atSTANDARD		{condition abs(FOLSOM_NR_SPILL - 0)	<= abs_threshold	value EQ}
+	case aboveSTANDARD	{condition (FOLSOM_NR_SPILL - 0)	> abs_threshold		value GT}
+	case belowSTANDARD	{condition (FOLSOM_NR_SPILL - 0)	< -1*abs_threshold	value LT}
+	case UNEXPECTED    	{condition always										value UE}
+}
+
+/************************* OROVILLE ****************************/ 
+!Change in monthly storage
+!Calculated by comparing current month's storage to previous month's storage
+define OROVILLE_STRG_CHNG {value OROVILLE_STRG - OROVILLE_STRG(-1)}
+
+!Evaluates whether the reservoir operations are controlled by reservoir's capacity
+!Calculated by comparing the storage to Level 6 storage-level (representative of the reservoir capacity)
+define OROVILLE_CAP_CHECK {
+	case atSTANDARD		{condition abs(OROVILLE_STRG - OROVILLE_LEVEL_CAP)	<= abs_threshold	value EQ}
+	case aboveSTANDARD	{condition (OROVILLE_STRG - OROVILLE_LEVEL_CAP)	> abs_threshold			value GT}
+	case belowSTANDARD	{condition (OROVILLE_STRG - OROVILLE_LEVEL_CAP)	< -1*abs_threshold		value LT}
+	case UNEXPECTED    	{condition always														value UE}
+}
+
+!Evaluates whether the reservoir operations at the deadpool level
+!Calculated by comparing the storage to Level 1 storage-level (representative of the reservoir deadpool)
+define OROVILLE_DPL_CHECK {
+	case atSTANDARD		{condition abs(OROVILLE_STRG - OROVILLE_LEVEL_DPL)	<= abs_threshold	value EQ}
+	case aboveSTANDARD	{condition (OROVILLE_STRG - OROVILLE_LEVEL_DPL)	> abs_threshold			value GT}
+	case belowSTANDARD	{condition (OROVILLE_STRG - OROVILLE_LEVEL_DPL)	< -1*abs_threshold		value LT}
+	case UNEXPECTED    	{condition always														value UE}
+}
+
+!Evaluates whether the reservoir operations are controlled by flood control
+!Calculated by comparing the storage to Level 4 storage-level
+define OROVILLE_FLD_CHECK {
+	case atSTANDARD		{condition abs(OROVILLE_STRG - OROVILLE_LEVEL_FLD)	<= abs_threshold	value EQ}
+	case aboveSTANDARD	{condition (OROVILLE_STRG - OROVILLE_LEVEL_FLD)	> abs_threshold			value GT}
+	case belowSTANDARD	{condition (OROVILLE_STRG - OROVILLE_LEVEL_FLD)	< -1*abs_threshold		value LT}
+	case UNEXPECTED    	{condition always														value UE}
+}
+
+!Evaluates whether the reservoir operations are controlled by downstream minimum flow requirements
+!Calculated by comparing the downstream channel flows to minimum flow requirements
+!Reservoir operations are assumed to be controlled by the minimum downstream flow requirements if the channel flow are at or below the standard
+define OROVILLE_MIF_CHECK {
+	case atSTANDARD		{condition FEATHER_BLW_THERMALITO_MIF_CHECK == EQ .or. FEATHER_VERONA_MIF_CHECK == EQ
+									.or. FEATHER_BLW_THERMALITO_MIF_CHECK == LT .or. FEATHER_VERONA_MIF_CHECK == LT
+										value EQ}
+	case aboveSTANDARD	{condition FEATHER_BLW_THERMALITO_MIF_CHECK == GT .and. FEATHER_VERONA_MIF_CHECK == GT
+										value GT}
+	case UNEXPECTED    	{condition always	value UE}
+}
+
+!Evaluates whether the reservoir operations are controlled by guide curve
+!Calculated by comparing the storage to Level 3 storage-level
+define OROVILLE_RC_CHECK {
+	case atSTANDARD		{condition abs(OROVILLE_STRG - OROVILLE_LEVEL_RC)	<= abs_threshold	value EQ}
+	case aboveSTANDARD	{condition (OROVILLE_STRG - OROVILLE_LEVEL_RC)	> abs_threshold			value GT}
+	case belowSTANDARD	{condition (OROVILLE_STRG - OROVILLE_LEVEL_RC)	< -1*abs_threshold		value LT}
+	case UNEXPECTED    	{condition always														value UE}
+}
+
+!Evaluates whether the reservoir operations are generating non-recoverable spill
+!Calculated by looking for spill flows above zero
+define OROVILLE_SPL_CHECK {
+	case atSTANDARD		{condition abs(OROVILLE_NR_SPILL - 0)	<= abs_threshold	value EQ}
+	case aboveSTANDARD	{condition (OROVILLE_NR_SPILL - 0)		> abs_threshold		value GT}
+	case belowSTANDARD	{condition (OROVILLE_NR_SPILL - 0)		< -1*abs_threshold	value LT}
+	case UNEXPECTED    	{condition always											value UE}
+}
+
+/********************** SAN LUIS - CVP *************************/
+!Change in monthly storage
+!Calculated by comparing current month's storage to previous month's storage
+define SANLUIS_CVP_STRG_CHNG {value SANLUIS_CVP_STRG - SANLUIS_CVP_STRG(-1)}
+
+!Evaluates whether the reservoir operations are controlled by reservoir's capacity
+!Calculated by comparing the storage to Level 5 storage-level (representative of the reservoir capacity)
+define SANLUIS_CVP_CAP_CHECK {
+	case atSTANDARD		{condition abs(SANLUIS_CVP_STRG - SANLUIS_CVP_LEVEL_CAP)	<= abs_threshold	value EQ}
+	case aboveSTANDARD	{condition (SANLUIS_CVP_STRG - SANLUIS_CVP_LEVEL_CAP)		> abs_threshold		value GT}
+	case belowSTANDARD	{condition (SANLUIS_CVP_STRG - SANLUIS_CVP_LEVEL_CAP)		< -1*abs_threshold	value LT}
+	case UNEXPECTED    	{condition always																value UE}
+}
+
+!Evaluates whether the reservoir operations at the deadpool level
+!Calculated by comparing the storage to Level 1 storage-level (representative of the reservoir deadpool)
+define SANLUIS_CVP_DPL_CHECK {
+	case atSTANDARD		{condition abs(SANLUIS_CVP_STRG - SANLUIS_CVP_LEVEL_DPL)	<= abs_threshold	value EQ}
+	case aboveSTANDARD	{condition (SANLUIS_CVP_STRG - SANLUIS_CVP_LEVEL_DPL)		> abs_threshold		value GT}
+	case belowSTANDARD	{condition (SANLUIS_CVP_STRG - SANLUIS_CVP_LEVEL_DPL)		< -1*abs_threshold	value LT}
+	case UNEXPECTED    	{condition always																value UE}
+}
+
+!Evaluates whether the reservoir operations are controlled by guide curve
+!Calculated by comparing the storage to rule curve timeseries
+define SANLUIS_CVP_RC_CHECK {
+	case atSTANDARD		{condition abs(SANLUIS_CVP_STRG - SANLUIS_CVP_RC)	<= abs_threshold	value EQ}
+	case aboveSTANDARD	{condition (SANLUIS_CVP_STRG - SANLUIS_CVP_RC)		> abs_threshold		value GT}
+	case belowSTANDARD	{condition (SANLUIS_CVP_STRG - SANLUIS_CVP_RC)		< -1*abs_threshold	value LT}
+	case UNEXPECTED    	{condition always														value UE}
+}
+
+!Evaluates whether the reservoir operations are generating non-recoverable spill
+!Calculated by looking for spill flows above zero
+define SANLUIS_CVP_SPL_CHECK {
+	case atSTANDARD		{condition abs(SANLUIS_CVP_NR_SPILL - 0)	<= abs_threshold	value EQ}
+	case aboveSTANDARD	{condition (SANLUIS_CVP_NR_SPILL - 0)		> abs_threshold		value GT}
+	case belowSTANDARD	{condition (SANLUIS_CVP_NR_SPILL - 0)		< -1*abs_threshold	value LT}
+	case UNEXPECTED    	{condition always												value UE}
+}
+
+/********************** SAN LUIS - SWP *************************/ 
+!Change in monthly storage
+!Calculated by comparing current month's storage to previous month's storage
+define SANLUIS_SWP_STRG_CHNG {value SANLUIS_SWP_STRG - SANLUIS_SWP_STRG(-1)}
+
+!Evaluates whether the reservoir operations are controlled by reservoir's capacity
+!Calculated by comparing the storage to Level 5 storage-level (representative of the reservoir capacity)
+define SANLUIS_SWP_CAP_CHECK {
+	case atSTANDARD		{condition abs(SANLUIS_SWP_STRG - SANLUIS_SWP_LEVEL_CAP)	<= abs_threshold	value EQ}
+	case aboveSTANDARD	{condition (SANLUIS_SWP_STRG - SANLUIS_SWP_LEVEL_CAP)		> abs_threshold		value GT}
+	case belowSTANDARD	{condition (SANLUIS_SWP_STRG - SANLUIS_SWP_LEVEL_CAP)		< -1*abs_threshold	value LT}
+	case UNEXPECTED    	{condition always																value UE}
+}
+
+!Evaluates whether the reservoir operations at the deadpool level
+!Calculated by comparing the storage to Level 1 storage-level (representative of the reservoir deadpool)
+define SANLUIS_SWP_DPL_CHECK {
+	case atSTANDARD		{condition abs(SANLUIS_SWP_STRG - SANLUIS_SWP_LEVEL_DPL)	<= abs_threshold	value EQ}
+	case aboveSTANDARD	{condition (SANLUIS_SWP_STRG - SANLUIS_SWP_LEVEL_DPL)		> abs_threshold		value GT}
+	case belowSTANDARD	{condition (SANLUIS_SWP_STRG - SANLUIS_SWP_LEVEL_DPL)		< -1*abs_threshold	value LT}
+	case UNEXPECTED    	{condition always																value UE}
+}
+
+!Evaluates whether the reservoir operations are controlled by guide curve
+!Calculated by comparing the storage to rule curve timeseries
+define SANLUIS_SWP_RC_CHECK {
+	case atSTANDARD		{condition abs(SANLUIS_SWP_STRG - SANLUIS_SWP_RC)	<= abs_threshold	value EQ}
+	case aboveSTANDARD	{condition (SANLUIS_SWP_STRG - SANLUIS_SWP_RC)		> abs_threshold		value GT}
+	case belowSTANDARD	{condition (SANLUIS_SWP_STRG - SANLUIS_SWP_RC)		< -1*abs_threshold	value LT}
+	case UNEXPECTED    	{condition always														value UE}
+}
+
+!Evaluates whether the reservoir operations are generating non-recoverable spill
+!Calculated by looking for spill flows above zero
+define SANLUIS_SWP_SPL_CHECK {
+	case atSTANDARD		{condition abs(SANLUIS_SWP_NR_SPILL - 0)	<= abs_threshold	value EQ}
+	case aboveSTANDARD	{condition (SANLUIS_SWP_NR_SPILL - 0)		> abs_threshold		value GT}
+	case belowSTANDARD	{condition (SANLUIS_SWP_NR_SPILL - 0)		< -1*abs_threshold	value LT}
+	case UNEXPECTED    	{condition always												value UE}
+}
+define SANLUIS_TOT_STRG_CHNG {value SANLUIS_CVP_STRG_CHNG + SANLUIS_SWP_STRG_CHNG}
+/******************** CLEAR CREEK IMPORTS **********************/ 
+!Evaluates whether the Trinity Imports into the Sacramento Valley are controlled by Clear Creek tunnel capacity
+!Calculated by comparing the flows to tunnel capacity
+define CLR_CRK_CAP_CHECK {
+	case atSTANDARD		{condition abs(CLR_CRK_TUNNEL - CLR_CRK_CAP)	<= abs_threshold	value EQ}
+	case aboveSTANDARD	{condition (CLR_CRK_TUNNEL - CLR_CRK_CAP)		> abs_threshold		value GT}
+	case belowSTANDARD	{condition (CLR_CRK_TUNNEL - CLR_CRK_CAP)		< -1*abs_threshold	value LT}
+	case UNEXPECTED    	{condition always													value UE}
+}
+
+!Evaluates whether the Trinity Imports into the Sacramento Valley are controlled by the import schedule
+!Calculated by comparing the flows to target imports
+define CLR_CRK_TGT_IMPORT_CHECK {
+	case atSTANDARD		{condition abs(CLR_CRK_TUNNEL - CLR_CRK_TGT_IMPORT)		<= abs_threshold	value EQ}
+	case aboveSTANDARD	{condition (CLR_CRK_TUNNEL - CLR_CRK_TGT_IMPORT)		> abs_threshold		value GT}
+	case belowSTANDARD	{condition (CLR_CRK_TUNNEL - CLR_CRK_TGT_IMPORT)		< -1*abs_threshold	value LT}
+	case UNEXPECTED    	{condition always															value UE}
+}
+
+/************************* DSS OUTPUT **************************/ 
+define STRG_CVP_SWP_TOT_ { alias STRG_CVP_SWP_TOT kind 'DTS-RESOP-VALUE' units 'TAF' }
+define STRG_CVP_SWP_NOD_ { alias STRG_CVP_SWP_NOD kind 'DTS-RESOP-VALUE' units 'TAF' }
+define STRG_CVP_NOD_ { alias STRG_CVP_NOD kind 'DTS-RESOP-VALUE' units 'TAF' }
+define STRG_SANLUIS_TOT_ { alias STRG_SANLUIS_TOT kind 'DTS-RESOP-VALUE' units 'TAF' }
+define STRG_CVP_TOT_   {alias STRG_CVP_TOT kind 'DTS-RESOP-VALUE' units 'TAF' }
+define STRG_SWP_TOT_   {alias STRG_SWP_TOT kind 'DTS-RESOP-VALUE' units 'TAF' }
+
+define TRINITY_STRG_CHNG_ { alias TRINITY_STRG_CHNG kind 'DTS-RESOP-VALUE' units 'TAF' }
+define TRINITY_CAP_CHECK_ { alias TRINITY_CAP_CHECK kind 'DTS-RESOP-STATUS' units 'NONE' }
+define TRINITY_DPL_CHECK_ { alias TRINITY_DPL_CHECK kind 'DTS-RESOP-STATUS' units 'NONE' }
+define TRINITY_FLD_CHECK_ { alias TRINITY_FLD_CHECK kind 'DTS-RESOP-STATUS' units 'NONE' }
+define TRINITY_MIF_CHECK_ { alias TRINITY_MIF_CHECK kind 'DTS-RESOP-STATUS' units 'NONE' }
+define TRINITY_RC_CHECK_ { alias TRINITY_RC_CHECK kind 'DTS-RESOP-STATUS' units 'NONE' }
+define TRINITY_SPL_CHECK_ { alias TRINITY_SPL_CHECK kind 'DTS-RESOP-STATUS' units 'NONE' }
+
+define SHASTA_STRG_CHNG_ { alias SHASTA_STRG_CHNG kind 'DTS-RESOP-VALUE' units 'TAF' }
+define SHASTA_CAP_CHECK_ { alias SHASTA_CAP_CHECK kind 'DTS-RESOP-STATUS' units 'NONE' }
+define SHASTA_DPL_CHECK_ { alias SHASTA_DPL_CHECK kind 'DTS-RESOP-STATUS' units 'NONE' }
+define SHASTA_FLD_CHECK_ { alias SHASTA_FLD_CHECK kind 'DTS-RESOP-STATUS' units 'NONE' }
+define SHASTA_MIF_CHECK_ { alias SHASTA_MIF_CHECK kind 'DTS-RESOP-STATUS' units 'NONE' }
+define SHASTA_RC_CHECK_ { alias SHASTA_RC_CHECK kind 'DTS-RESOP-STATUS' units 'NONE' }
+define SHASTA_SPL_CHECK_ { alias SHASTA_SPL_CHECK kind 'DTS-RESOP-STATUS' units 'NONE' }
+define SHASTA_CVPIA_B2_CHECK_ { alias SHASTA_CVPIA_B2_CHECK kind 'DTS-RESOP-STATUS' units 'NONE' }
+
+define FOLSOM_STRG_CHNG_ { alias FOLSOM_STRG_CHNG kind 'DTS-RESOP-VALUE' units 'TAF' }
+define FOLSOM_CAP_CHECK_ { alias FOLSOM_CAP_CHECK kind 'DTS-RESOP-STATUS' units 'NONE' }
+define FOLSOM_DPL_CHECK_ { alias FOLSOM_DPL_CHECK kind 'DTS-RESOP-STATUS' units 'NONE' }
+define FOLSOM_FLD_CHECK_ { alias FOLSOM_FLD_CHECK kind 'DTS-RESOP-STATUS' units 'NONE' }
+define FOLSOM_MIF_CHECK_ { alias FOLSOM_MIF_CHECK kind 'DTS-RESOP-STATUS' units 'NONE' }
+define FOLSOM_RC_CHECK_ { alias FOLSOM_RC_CHECK kind 'DTS-RESOP-STATUS' units 'NONE' }
+define FOLSOM_SPL_CHECK_ { alias FOLSOM_SPL_CHECK kind 'DTS-RESOP-STATUS' units 'NONE' }
+
+define OROVILLE_STRG_CHNG_ { alias OROVILLE_STRG_CHNG kind 'DTS-RESOP-VALUE' units 'TAF' }
+define OROVILLE_CAP_CHECK_ { alias OROVILLE_CAP_CHECK kind 'DTS-RESOP-STATUS' units 'NONE' }
+define OROVILLE_DPL_CHECK_ { alias OROVILLE_DPL_CHECK kind 'DTS-RESOP-STATUS' units 'NONE' }
+define OROVILLE_FLD_CHECK_ { alias OROVILLE_FLD_CHECK kind 'DTS-RESOP-STATUS' units 'NONE' }
+define OROVILLE_MIF_CHECK_ { alias OROVILLE_MIF_CHECK kind 'DTS-RESOP-STATUS' units 'NONE' }
+define OROVILLE_RC_CHECK_ { alias OROVILLE_RC_CHECK kind 'DTS-RESOP-STATUS' units 'NONE' }
+define OROVILLE_SPL_CHECK_ { alias OROVILLE_SPL_CHECK kind 'DTS-RESOP-STATUS' units 'NONE' }
+
+define SANLUIS_CVP_STRG_CHNG_ { alias SANLUIS_CVP_STRG_CHNG kind 'DTS-RESOP-VALUE' units 'TAF' }
+define SANLUIS_CVP_CAP_CHECK_ { alias SANLUIS_CVP_CAP_CHECK kind 'DTS-RESOP-STATUS' units 'NONE' }
+define SANLUIS_CVP_DPL_CHECK_ { alias SANLUIS_CVP_DPL_CHECK kind 'DTS-RESOP-STATUS' units 'NONE' }
+define SANLUIS_CVP_RC_CHECK_ { alias SANLUIS_CVP_RC_CHECK kind 'DTS-RESOP-STATUS' units 'NONE' }
+define SANLUIS_CVP_SPL_CHECK_ { alias SANLUIS_CVP_SPL_CHECK kind 'DTS-RESOP-STATUS' units 'NONE' }
+
+define SANLUIS_SWP_STRG_CHNG_ { alias SANLUIS_SWP_STRG_CHNG kind 'DTS-RESOP-VALUE' units 'TAF' }
+define SANLUIS_SWP_CAP_CHECK_ { alias SANLUIS_SWP_CAP_CHECK kind 'DTS-RESOP-STATUS' units 'NONE' }
+define SANLUIS_SWP_DPL_CHECK_ { alias SANLUIS_SWP_DPL_CHECK kind 'DTS-RESOP-STATUS' units 'NONE' }
+define SANLUIS_SWP_RC_CHECK_ { alias SANLUIS_SWP_RC_CHECK kind 'DTS-RESOP-STATUS' units 'NONE' }
+define SANLUIS_SWP_SPL_CHECK_ { alias SANLUIS_SWP_SPL_CHECK kind 'DTS-RESOP-STATUS' units 'NONE' }
+define SANLUIS_TOT_STRG_CHNG_ { alias SANLUIS_TOT_STRG_CHNG kind 'DTS-RESOP-VALUE' units 'TAF' }
+
+define CLR_CRK_CAP_CHECK_ { alias CLR_CRK_CAP_CHECK kind 'DTS-RESOP-STATUS' units 'NONE' }
+define CLR_CRK_TGT_IMPORT_CHECK_ { alias CLR_CRK_TGT_IMPORT_CHECK kind 'DTS-RESOP-STATUS' units 'NONE' }

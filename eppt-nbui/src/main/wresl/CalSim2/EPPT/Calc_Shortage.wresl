@@ -7,87 +7,53 @@ Yuxiang, DWR, BDO
 
 This file post process the shortage during each timestep   
 **************************************/
+/****************************** INPUTS FOR **********************************/
+/******************************* SHORTAGE ***********************************/
+
 
 /************************************ CVP Storage **************************************/
 !CHECK IF THERE IS SHORTAGE IN CVP AND WHAT IS THE SHORTAGE AMOUNT
-define SHORT_CVP_CHECK_ {
-	case short { 
-	condition SHORT_CVP_TOT_N > abs_threshold .or. SHORT_CVP_TOT_S > abs_threshold
-	value 200
-	}
-	case noshort {
-	condition always 
-	value 100
-	}
+define SHORT_CVP_CHECK {
+	case short {condition SHORT_CVP_TOT_N > abs_threshold .or. SHORT_CVP_TOT_S > abs_threshold value EQ}
+	case noshort {condition always 	value GT}
 }
-define SHORT_CVP_TOT_ {value SHORT_CVP_TOT_N + SHORT_CVP_TOT_S}
+define SHORT_CVP_TOT {value SHORT_CVP_TOT_N + SHORT_CVP_TOT_S}
 !CHECK IF THERE IS SHORTAGE IN CVP NOD AND WHAT IS THE SHORTAGE AMOUNT
-define SHORT_CVP_N_CHECK_ {
-	case short { 
-	condition SHORT_CVP_TOT_N > abs_threshold
-	value 200
-	}
-	case noshort {
-	condition always 
-	value 100
-	}
+define SHORT_CVP_N_CHECK {
+	case short {condition SHORT_CVP_TOT_N > abs_threshold value EQ}
+	case noshort {condition always value GT}
 }
 !CHECK IF THERE IS SHORTAGE IN CVP NOD AND WHAT IS THE SHORTAGE AMOUNT
-define SHORT_CVP_S_CHECK_ {
-	case short { 
-	condition SHORT_CVP_TOT_S > abs_threshold
-	value 200
-	}
-	case noshort {
-	condition always 
-	value 100
-	}
+define SHORT_CVP_S_CHECK {
+	case short {condition SHORT_CVP_TOT_S > abs_threshold value EQ}
+	case noshort {condition always value GT}
 }
 !Output variable
-define SHORT_CVP_STATUS_DTS {alias SHORT_CVP_CHECK_ kind 'DTS-STATUS' units 'NONE'}
-define SHORT_CVP_TOT_DTS {alias SHORT_CVP_TOT_ kind 'DTS-DELIVERY-SHORTAGE-CVP' units 'CFS'}
-define SHORT_CVP_N_STATUS {alias SHORT_CVP_N_CHECK_ kind 'DTS-STATUS' units 'NONE'}
-define SHORT_CVP_TOT_N_DTS {alias SHORT_CVP_TOT_N kind 'DTS-DELIVERY-SHORTAGE-CVP' units 'CFS'}
-define SHORT_CVP_S_STATUS {alias SHORT_CVP_S_CHECK_ kind 'STATUS' units 'NONE'}
-define SHORT_CVP_TOT_S_DTS {alias SHORT_CVP_TOT_S kind 'DTS-DELIVERY-SHORTAGE-CVP' units 'CFS'}
+define SHORT_CVP_CHECK_ 	{alias SHORT_CVP_CHECK      kind 'DTS-ALLOC-STATUS'units 'NONE'}
+define SHORT_CVP_TOT_    	{alias SHORT_CVP_TOT 	    kind 'DTS-ALLOC-VALUE' units 'TAF'}
+define SHORT_CVP_N_CHECK_   {alias SHORT_CVP_N_CHECK    kind 'DTS-ALLOC-STATUS'units 'NONE'}
+define SHORT_CVP_S_CHECK_   {alias SHORT_CVP_S_CHECK    kind 'DTS-ALLOC-STATUS'units 'NONE'}
+
 /************************************ SWP Storage **************************************/
-define SHORT_SWP_CHECK_ {
-	case short { 
-	condition SHORT_SWP_TOT_N > abs_threshold .or. SHORT_SWP_TOT_S > abs_threshold
-	value 200
-	}
-	case noshort {
-	condition always 
-	value 100
-	}
+define SHORT_SWP_CHECK {
+	case short {condition SHORT_SWP_TOT_N > abs_threshold .or. SHORT_SWP_TOT_S > abs_threshold value EQ}
+	case noshort {condition always value GT}
 }
-define SHORT_SWP_TOT_ {value SHORT_SWP_TOT_N + SHORT_SWP_TOT_S}
+define SHORT_SWP_TOT {value SHORT_SWP_TOT_N + SHORT_SWP_TOT_S}
 !CHECK IF THERE IS SHORTAGE IN SWP NOD AND WHAT IS THE SHORTAGE AMOUNT
-define SHORT_SWP_N_CHECK_ {
-	case short { 
-	condition SHORT_SWP_TOT_N > abs_threshold
-	value 200
-	}
-	case noshort {
-	condition always 
-	value 100
-	}
+define SHORT_SWP_N_CHECK {
+	case short {condition SHORT_SWP_TOT_N > abs_threshold value EQ} 
+	case noshort {condition always value GT}
 }
 !CHECK IF THERE IS SHORTAGE IN SWP NOD AND WHAT IS THE SHORTAGE AMOUNT
-define SHORT_SWP_S_CHECK_ {
-	case short { 
-	condition SHORT_SWP_TOT_S > abs_threshold
-	value 200
-	}
-	case noshort {
-	condition always 
-	value 100
-	}
+define SHORT_SWP_S_CHECK {
+	case short {condition SHORT_SWP_TOT_S > abs_threshold value EQ}
+	case noshort {condition always value GT}
 }
 !Output variable
-define SHORT_SWP_STATUS_DTS {alias SHORT_SWP_CHECK_ kind 'DTS-STATUS' units 'NONE'}
-define SHORT_SWP_TOT_DTS {alias SHORT_SWP_TOT_ kind 'DTS-DELIVERY-SHORTAGE-SWP' units 'CFS'}
-define SHORT_SWP_N_STATUS_DTS {alias SHORT_SWP_N_CHECK_ kind 'DTS-STATUS' units 'NONE'}
-define SHORT_SWP_TOT_N_DTS {alias SHORT_SWP_TOT_N kind 'DTS-DELIVERY-SHORTAGE-SWP' units 'CFS'}
-define SHORT_SWP_S_STATUS_DTS {alias SHORT_SWP_S_CHECK_ kind 'DTS-STATUS' units 'NONE'}
-define SHORT_SWP_TOT_S_DTS {alias SHORT_SWP_TOT_S kind 'DTS-DELIVERY-SHORTAGE-SWP' units 'CFS'}
+define  SHORT_SWP_CHECK_  	{alias SHORT_SWP_CHECK     kind 'DTS-ALLOC-STATUS' 				units 'NONE'}
+define 	SHORT_SWP_TOT_		{alias SHORT_SWP_TOT	   kind 'DTS-ALLOC-VALUE' 				units 'TAF'}
+define  SHORT_SWP_N_CHECK_	{alias SHORT_SWP_N_CHECK   kind 'DTS-ALLOC-STATUS'  			units 'NONE'}
+define  SHORT_SWP_S_CHECK_	{alias SHORT_SWP_S_CHECK   kind 'DTS-ALLOC-STATUS' 				units 'NONE'}
+
+
