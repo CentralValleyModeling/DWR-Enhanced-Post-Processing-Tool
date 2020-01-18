@@ -1,0 +1,61 @@
+/********************** DESCRIPTION ****************************
+- defines variables used in the post-processing script, including
+- out of range for a continuous variables
+- thresholds used for determining operations controls
+- CFS to TAF conversion
+- TAF to CFS conversion
+
+********************* REVIEW HISTORY****************************
+Yuxian (Sean) Feng	| DWR	|	02/02/2019	|	Setup initial file
+Karandev Singh		| DWR	|	12/03/2019	|	Reformatted; added new definitions
+
+****************************************************************/
+
+/********************* SUMMARY THRESHOLDS **********************/
+!Out of range value for continuous variables
+!Used to identify periods of non-applicability
+!Example, if the reverse flow on OMR. Should be only evaluated for periods when OMR flow criteria is applicable
+define Neg_Flt_Max {value - 3.402823466 * pow(10,38)}
+define Neg_FLT {alias Neg_Flt_Max kind 'DTS-EPPT-DEF' units 'NONE'}
+
+/******************** CONTROLS THRESHOLDS **********************/
+!Threshold value for comparing TAF values
+define abs_threshold {
+	select IValue
+	from UserInit
+	where index=2.1}
+
+!Threshold value for comparing ???????????
+define none_zero_threshold {
+	select IValue
+	from UserInit
+	where index=2.2}
+
+!Threshold value for comparing percentages
+define percentage_threshold {
+	select IValue
+	from UserInit
+	where index=2.3}	
+
+/******************** CONTROLS DEFINITIONS *********************/
+define LT {value 300} !Less than
+define EQ {value 200} !Equal to
+define GT {value 100} !Greater than
+define NA {value 900} !Not applicable; eg. OMR flow criteria does not apply outside of Dec - Jun period
+define UE {value 999} !Unexpected result
+
+/********************** UNIT CONVERSIONS ***********************/
+define CONVERT_CFS_TAF {alias 1*CFS_TAF kind'CONVERSION' units 'TAF'}
+define CONVERT_TAF_CFS {alias 1*TAF_CFS kind'CONVERSION' units 'CFS'}
+define CFS_CFS {value 1*CFS_TAF*TAF_CFS}
+define TAF_TAF {value 1*TAF_CFS*CFS_TAF}
+
+/*********************CONTROL NUMBERS*************************************/
+define Jones_HS_Limit {value  800 * CFS_TAF }
+define Banks_HS_Limit {value  300 * CFS_TAF } 
+define SOD_HS_Limit   {value  1100 * CFS_TAF }
+define X2_REQ    	  {value  66.3 }
+define zero_thrshld   {value 0.0 }
+
+define X2_REQ_        {alias X2_REQ kind 'DTS-DELTA-CONTROL-VALUE' UNITS 'KM' }
+define ZERO_THRSHLD_        {alias zero_thrshld kind 'DTS-INPUT' UNITS 'TAF' }

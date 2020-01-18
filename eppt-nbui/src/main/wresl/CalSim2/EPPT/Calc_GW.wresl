@@ -1,163 +1,88 @@
-/************************************
-
-Calc_GW.wresl
-
-Yuxiang, DWR, BDO
-2019/03/25
-
-This file post process data for Groundwater Pumping
-
- Grounwater Pumping "	RF	Average_Post	/CALSIM/GP60+GP61+GP62+GP63+GP65+GP64+GP66/FLOW-DELIVERY//1MON//	/CALSIM/GP60+GP61+GP62+GP63+GP65+GP64+GP66/FLOW-DELIVERY//1MON//	B	N	CFS2TAF
-" DSA 58 "	RF	Avg_Excd	/CALSIM/GP60/FLOW-DELIVERY//1MON//	/CALSIM/GP60/FLOW-DELIVERY//1MON//	N	N	CFS2TAF
-" Colusa Basin "	RF	Avg_Excd_Post	/CALSIM/GP61+GP62+GP63/FLOW-DELIVERY//1MON//	/CALSIM/GP61+GP62+GP63/FLOW-DELIVERY//1MON//	N	N	CFS2TAF
-" DSA 69 "	RF	Avg_Excd	/CALSIM/GP65/FLOW-DELIVERY//1MON//	/CALSIM/GP65/FLOW-DELIVERY//1MON//	N	N	CFS2TAF
-" DSA 65 "	RF	Avg_Excd	/CALSIM/GP64/FLOW-DELIVERY//1MON//	/CALSIM/GP64/FLOW-DELIVERY//1MON//	N	N	CFS2TAF
-" DSA 70 "	RF	Avg_Excd	/CALSIM/GP66/FLOW-DELIVERY//1MON//	/CALSIM/GP66/FLOW-DELIVERY//1MON//	N	N	CFS2TAF
+/********************** DESCRIPTION ****************************
+- post-processes  groundwater pumping study results  
 
 
-GP60 - minpump_58_prj + minpump_58_np = (SV) mingw_58
-GP64 - minpump_65_prj + minpump_65_np = (SV) mingw_65
-GP65 - minpump_69_prj + minpump_69_np = (SV) mingw_69
-GP66 - minpump_70_prj + minpump_70_np = (SV) mingw_70
+********************* REVIEW HISTORY****************************
+Yuxiang Feng	| DWR	|	03/25/2019	|	Setup initial file
+Ahmed Ali	    | DWR	|	12/12/2019	|	Reformatted/ standardized logic statements
+Ahmed Ali    	| DWR	|	01/10/2020	|	Revised by moving the mapped variables (from Dvar) to the input_csII.wresl file 
 
-underreview - need to establish theshold to determine when GW is over pumping, current set at over 20 CFS
-**************************************/
+/***************************************************************
 
-!the following section require SV Timeseries mingw_58/GW-PUMPING-MIN; mingw_65/GW-PUMPING-MIN; mingw_69/GW-PUMPING-MIN; mingw_70/GW-PUMPING-MIN;
+/********************GW Pumping EXAMINATION *********************/
 
-! DSA 58 
-! Minimum GW pumping - exceeded (100) / met (200) / Violated (300)
-define GP60_MinPump_CHECK {
-	case meet {
-		Condition abs(GP60 - mingw_58) < abs_threshold
-		Value 200
-	}
-	case exceeded {
-		Condition GP60 - mingw_58 > abs_threshold 
-		Value 100
-	}
-	Case Violated {
-		Condition always 
-		Value 300
-	}
+
+
+
+/********************DSA 58 *********************/
+! Minimum GW pumping 
+define DSA_58_GW_PMP_MIN_CHECK {
+	case atSTANDARD		{condition abs(GW_PMP_DSA58 - GW_PMP_DSA58_MIN)	    <= abs_threshold	value EQ}
+	case aboveSTANDARD	{condition (GW_PMP_DSA58 - GW_PMP_DSA58_MIN)		> abs_threshold		value GT}
+	case belowSTANDARD	{condition (GW_PMP_DSA58 - GW_PMP_DSA58_MIN)		< -1*abs_threshold	value LT}
+	case UNEXPECTED	{condition always														value UE}
 }
-define GP60_MinPump_STATUS_DTS {alias GP60_MinPump_CHECK kind 'DTS-STATUS' units 'NONE'}
 
-! Check when Actual Pumping is more than 10%(Set in user init table - index 2.3) of minimum groundwater pumping 
-! Excesive GW pumping indicate insufficient surface water supply 
-! 100 = No excesive pumping, 200 = excesive GW pumping
-define GP60_OverPump_CHECK {
-	case Excesive {
-		Condition GP60 - mingw_58*taf_cfs > 20  
-		!condition *(GP60 - mingw_58)/mingw_58 > percetage_threshold*
-		Value 200
-	}
-	case noExcesive {
-		Condition always
-		Value 100
-	}
+/********************DSA 65 *********************/
+! Minimum GW pumping 
+define DSA_65_GW_PMP_MIN_CHECK {
+	case atSTANDARD		{condition abs(GW_PMP_DSA65 - GW_PMP_DSA65_MIN)	    <= abs_threshold	value EQ}
+	case aboveSTANDARD	{condition (GW_PMP_DSA65 - GW_PMP_DSA65_MIN)		> abs_threshold		value GT}
+	case belowSTANDARD	{condition (GW_PMP_DSA65 - GW_PMP_DSA65_MIN)		< -1*abs_threshold	value LT}
+	case UNEXPECTED	{condition always														value UE}
 }
-define GP60_OverPump_STATUS_DTS {alias GP60_OverPump_CHECK kind 'DTS-STATUS' units 'NONE'}
 
-
-! DSA 65 
-! Minimum GW pumping - exceeded (100) / met (200) / Violated (300)
-define GP64_MinPump_CHECK {
-	case meet {
-		Condition abs(GP64 - mingw_65) < abs_threshold
-		Value 200
-	}
-	case exceeded {
-		Condition GP64 - mingw_65 > abs_threshold 
-		Value 100
-	}
-	Case Violated {
-		Condition always 
-		Value 300
-	}
+/********************DSA 69 *********************/
+! Minimum GW pumping 
+define DSA_69_GW_PMP_MIN_CHECK {
+	case atSTANDARD		{condition abs(GW_PMP_DSA69 - GW_PMP_DSA69_MIN)	    <= abs_threshold	value EQ}
+	case aboveSTANDARD	{condition (GW_PMP_DSA69 - GW_PMP_DSA69_MIN)		> abs_threshold		value GT}
+	case belowSTANDARD	{condition (GW_PMP_DSA69 - GW_PMP_DSA69_MIN)		< -1*abs_threshold	value LT}
+	case UNEXPECTED	{condition always														value UE}
 }
-define GP64_MinPump_STATUS_DTS {alias GP64_MinPump_CHECK kind 'DTS-STATUS' units 'NONE'}
 
-! Check when Actual Pumping is more than 10%(Set in user init table - index 2.3) of minimum groundwater pumping 
-! Excesive GW pumping indicate insufficient surface water supply 
-! 100 = No excesive pumping, 200 = excesive GW pumping
-define GP64_OverPump_CHECK {
-	case Excesive {
-		Condition GP64 - mingw_65*taf_cfs > 20 
-		!Condition (GP64 - mingw_65)/mingw_65 > percetage_threshold
-		Value 200
-	}
-	case noExcesive {
-		Condition always
-		Value 100
-	}
+/********************DSA 70 *********************/
+! Minimum GW pumping
+define DSA_70_GW_PMP_MIN_CHECK {
+	case atSTANDARD		{condition abs(GW_PMP_DSA70 - GW_PMP_DSA70_MIN)	    <= abs_threshold	value EQ}
+	case aboveSTANDARD	{condition (GW_PMP_DSA70 - GW_PMP_DSA70_MIN)		> abs_threshold		value GT}
+	case belowSTANDARD	{condition (GW_PMP_DSA70 - GW_PMP_DSA70_MIN)		< -1*abs_threshold	value LT}
+	case UNEXPECTED	{condition always														value UE}
 }
-define GP64_OverPump_STATUS_DTS {alias GP64_OverPump_CHECK kind 'DTS-STATUS' units 'NONE'}
+/********************COLUSA BASIN *********************/
+define GW_PMP_COLUSA 	 {value GW_PMP_COLUSA_1 + GW_PMP_COLUSA_2 + GW_PMP_COLUSA_3}
+define GW_PMP_COLUSA_MIN {value     GW_PMP_COLUSA_MIN1 + GW_PMP_COLUSA_MIN2 + GW_PMP_COLUSA_MIN3 + GW_PMP_COLUSA_MIN4 + GW_PMP_COLUSA_MIN5 
+								+   GW_PMP_COLUSA_MIN6 + GW_PMP_COLUSA_MIN7 + GW_PMP_COLUSA_MIN8 + GW_PMP_COLUSA_MIN9 + GW_PMP_COLUSA_MIN10
+								+   GW_PMP_COLUSA_MIN11+ GW_PMP_COLUSA_MIN12+ GW_PMP_COLUSA_MIN13+ GW_PMP_COLUSA_MIN14  } 
 
-! DSA 69 
-! Minimum GW pumping - exceeded (100) / met (200) / Violated (300)
-define GP65_MinPump_CHECK {
-	case meet {
-		Condition abs(GP65 - mingw_69) < abs_threshold
-		Value 200
-	}
-	case exceeded {
-		Condition GP65 - mingw_69 > abs_threshold 
-		Value 100
-	}
-	Case Violated {
-		Condition always 
-		Value 300
-	}
+! Minimum GW pumping
+define GW_PMP_COLUSA_MIN_CHECK {
+	case atSTANDARD		{condition abs(GW_PMP_COLUSA - GW_PMP_COLUSA_MIN)	    <= abs_threshold	value EQ}
+	case aboveSTANDARD	{condition (GW_PMP_COLUSA - GW_PMP_COLUSA_MIN)		> abs_threshold		value GT}
+	case belowSTANDARD	{condition (GW_PMP_COLUSA - GW_PMP_COLUSA_MIN)		< -1*abs_threshold	value LT}
+	case UNEXPECTED	{condition always														value UE}
 }
-define GP65_MinPump_STATUS_DTS {alias GP65_MinPump_CHECK kind 'DTS-STATUS' units 'NONE'}
+/********************NOD GW PUMPIN *********************/
+define NOD_PMP 		 {value GW_PMP_DSA58 + GW_PMP_DSA65 + GW_PMP_DSA69 + GW_PMP_DSA70 + GW_PMP_COLUSA}
+define NOD_PMP_MIN 	 {value GW_PMP_DSA58_MIN + GW_PMP_DSA65_MIN + GW_PMP_DSA69_MIN + GW_PMP_DSA70_MIN + GW_PMP_COLUSA_MIN}
+! Minimum GW pumping
+define NOD_PMP_MIN_CHECK {
+	case atSTANDARD		{condition abs(NOD_PMP - NOD_PMP_MIN)	    <= abs_threshold	value EQ}
+	case aboveSTANDARD	{condition (NOD_PMP - NOD_PMP_MIN)		> abs_threshold		value GT}
+	case belowSTANDARD	{condition (NOD_PMP - NOD_PMP_MIN)		< -1*abs_threshold	value LT}
+	case UNEXPECTED	{condition always														value UE}
+}
+/************************* DSS OUTPUT **************************/ 
+define GW_PMP_COLUSA_ 			   { alias  GW_PMP_COLUSA  				kind 'DTS-GW-VALUE' units 'TAF'  }
+define GW_PMP_COLUSA_MIN_		   { alias  GW_PMP_COLUSA_MIN  			kind 'DTS-GW-VALUE' units 'TAF'  }
+define NOD_PMP_					   { alias  NOD_PMP					    kind 'DTS-GW-VALUE' units 'TAF'  }
+define NOD_PMP_MIN_				   { alias  NOD_PMP_MIN		    	    kind 'DTS-GW-VALUE' units 'TAF'  }
 
-! Check when Actual Pumping is more than 10%(Set in user init table - index 2.3) of minimum groundwater pumping 
-! Excesive GW pumping indicate insufficient surface water supply 
-! 100 = No excesive pumping, 200 = excesive GW pumping
-define GP65_OverPump_CHECK {
-	case Excesive {
-		Condition GP65 - mingw_69*taf_cfs > 20 
-		!Condition (GP65 - mingw_69)/mingw_69 > percetage_threshold
-		Value 200
-	}
-	case noExcesive {
-		Condition always
-		Value 100
-	}
-}
-define GP65_OverPump_STATUS_DTS {alias GP65_OverPump_CHECK kind 'DTS-STATUS' units 'NONE'}
+define DSA_58_GW_PMP_MIN_CHECK_ { alias  DSA_58_GW_PMP_MIN_CHECK  kind 'DTS-GW-STATUS' units 'NONE' }
+define DSA_65_GW_PMP_MIN_CHECK_ { alias  DSA_65_GW_PMP_MIN_CHECK  kind 'DTS-GW-STATUS' units 'NONE' }
+define DSA_69_GW_PMP_MIN_CHECK_ { alias  DSA_69_GW_PMP_MIN_CHECK  kind 'DTS-GW-STATUS' units 'NONE' }
+define DSA_70_GW_PMP_MIN_CHECK_ { alias  DSA_70_GW_PMP_MIN_CHECK  kind 'DTS-GW-STATUS' units 'NONE' }
+define GW_PMP_COLUSA_MIN_CHECK_ { alias  GW_PMP_COLUSA_MIN_CHECK  kind 'DTS-GW-STATUS' units 'NONE' }
+define NOD_PMP_MIN_CHECK_ 		{ alias  NOD_PMP_MIN_CHECK 		  kind 'DTS-GW-STATUS' units 'NONE' }
 
-! DSA 70 
-! Minimum GW pumping - exceeded (100) / met (200) / Violated (300)
-define GP66_MinPump_CHECK {
-	case meet {
-		Condition abs(GP66 - mingw_70) < abs_threshold
-		Value 200
-	}
-	case exceeded {
-		Condition GP66 - mingw_70 > abs_threshold 
-		Value 100
-	}
-	Case Violated {
-		Condition always 
-		Value 300
-	}
-}
-define GP66_MinPump_STATUS_DTS {alias GP66_MinPump_CHECK kind 'DTS-STATUS' units 'NONE'}
 
-! Check when Actual Pumping is more than 10%(Set in user init table - index 2.3) of minimum groundwater pumping 
-! Excesive GW pumping indicate insufficient surface water supply 
-! 100 = No excesive pumping, 200 = excesive GW pumping
-define GP66_OverPump_CHECK {
-	case Excesive {
-		Condition GP66 - mingw_70*taf_cfs > 20 
-		!Condition (GP66 - mingw_70)/mingw_70 > percetage_threshold
-		Value 200
-	}
-	case noExcesive {
-		Condition always
-		Value 100
-	}
-}
-define GP66_OverPump_STATUS_DTS {alias GP66_OverPump_CHECK kind 'DTS-STATUS' units 'NONE'}
