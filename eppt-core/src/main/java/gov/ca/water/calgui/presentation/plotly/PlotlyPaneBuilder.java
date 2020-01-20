@@ -122,7 +122,7 @@ public class PlotlyPaneBuilder
 		{
 			epptReportingComputedSet = EpptReportingComputedSet.computeForMetrics(_guiLink,
 					new NoopEpptStatistic(),
-					new MonthPeriod(Month.OCTOBER, Month.SEPTEMBER),
+					new MonthPeriod(_waterYearDefinition.getStartMonth(), _waterYearDefinition.getEndMonth()),
 					_start,
 					_end,
 					_taf,
@@ -154,7 +154,7 @@ public class PlotlyPaneBuilder
 		{
 			retval = new AllExceedancePane(epptReportingComputedSet);
 		}
-		else if(_month == null)
+		else if(_month != null)
 		{
 			retval = new MonthExceedancePane(epptReportingComputedSet);
 		}

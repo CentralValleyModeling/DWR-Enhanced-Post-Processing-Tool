@@ -110,25 +110,20 @@ public class DisplayHelper
 		try
 		{
 			setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
-
-			if(!Boolean.getBoolean("plotly"))
-			{
-				List<GUILinksAllModelsBO> guiLinks = locations.stream()
-															 .map(s ->
-															 {
-																 GUILinksAllModelsBO guiLinksAllModelsBO = new GUILinksAllModelsBO(
-																		 s, s,
-																		 s, s);
-																 GUILinksAllModelsBO.Model.values().forEach(
-																		 m -> guiLinksAllModelsBO.addModelMapping(m.toString(), s, ""));
-																 return guiLinksAllModelsBO;
-															 }).collect(toList());
-				DisplayPlotlyFrames displayPlotlyFrames = new DisplayPlotlyFrames(plotConfigurationState, guiLinks, baseRun,
-						scenarios, startMonth,
-						endMonth);
-				jTabbedPanes.addAll(displayPlotlyFrames.showDisplayFrames());
-			}
-			jTabbedPanes.addAll(DisplayFrame.showDisplayFramesLocations(plotConfigurationState, locations, baseRun, scenarios, startMonth, endMonth));
+			List<GUILinksAllModelsBO> guiLinks = locations.stream()
+														  .map(s ->
+														  {
+															  GUILinksAllModelsBO guiLinksAllModelsBO = new GUILinksAllModelsBO(
+																	  s, s,
+																	  s, s);
+															  GUILinksAllModelsBO.Model.values().forEach(
+																	  m -> guiLinksAllModelsBO.addModelMapping(m.toString(), s, ""));
+															  return guiLinksAllModelsBO;
+														  }).collect(toList());
+			DisplayPlotlyFrames displayPlotlyFrames = new DisplayPlotlyFrames(plotConfigurationState, guiLinks, baseRun,
+					scenarios, startMonth,
+					endMonth);
+			jTabbedPanes.addAll(displayPlotlyFrames.showDisplayFrames());
 		}
 		catch(RuntimeException ex)
 		{
@@ -151,13 +146,9 @@ public class DisplayHelper
 		{
 			setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
 
-			if(!Boolean.getBoolean("plotly"))
-			{
-				DisplayPlotlyFrames displayPlotlyFrames = new DisplayPlotlyFrames(plotConfigurationState, locations, baseRun, scenarios, startMonth,
-						endMonth);
-				jTabbedPanes.addAll(displayPlotlyFrames.showDisplayFrames());
-			}
-			jTabbedPanes.addAll(DisplayFrame.showDisplayFramesGuiLink(plotConfigurationState, locations, baseRun, scenarios, startMonth, endMonth));
+			DisplayPlotlyFrames displayPlotlyFrames = new DisplayPlotlyFrames(plotConfigurationState, locations, baseRun, scenarios, startMonth,
+					endMonth);
+			jTabbedPanes.addAll(displayPlotlyFrames.showDisplayFrames());
 		}
 		catch(RuntimeException ex)
 		{

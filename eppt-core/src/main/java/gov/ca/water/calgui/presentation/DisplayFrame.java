@@ -20,25 +20,18 @@ import java.time.YearMonth;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeFormatterBuilder;
 import java.time.format.TextStyle;
-import java.time.temporal.ChronoField;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.util.regex.Pattern;
 import javax.swing.*;
 
 import calsim.app.DerivedTimeSeries;
 import calsim.app.MultipleTimeSeries;
-import calsim.msw.MYDate;
 import gov.ca.water.calgui.bo.GUILinksAllModelsBO;
 import gov.ca.water.calgui.busservice.IDSSGrabber1Svc;
 import gov.ca.water.calgui.busservice.impl.DSSGrabber1SvcImpl;
 import gov.ca.water.calgui.busservice.impl.DSSGrabber2SvcImpl;
-import gov.ca.water.calgui.busservice.impl.GuiLinksSeedDataSvcImpl;
-import gov.ca.water.calgui.constant.Constant;
 import gov.ca.water.calgui.presentation.display.BoxPlotChartPanel;
 import gov.ca.water.calgui.presentation.display.BoxPlotChartPanel2;
 import gov.ca.water.calgui.presentation.display.ChartPanel1;
@@ -53,11 +46,8 @@ import gov.ca.water.calgui.techservice.IErrorHandlingSvc;
 import gov.ca.water.calgui.techservice.impl.ErrorHandlingSvcImpl;
 import javatests.TestSupport;
 import org.apache.log4j.Logger;
-import vista.report.MonthlyReport;
 
 import hec.io.TimeSeriesContainer;
-
-import static java.util.stream.Collectors.toList;
 
 /**
  * DisplayFrame class provides a frame for showing charts.
@@ -69,300 +59,12 @@ final class DisplayFrame
 
 	private static final Logger LOG = Logger.getLogger(DisplayFrame.class.getName());
 	private static final IErrorHandlingSvc ERROR_HANDLING_SVC = new ErrorHandlingSvcImpl();
-	private static final Pattern GROUP_PATTERN = Pattern.compile("\\w\\w\\w\\d\\d\\d\\d-\\w\\w\\w\\d\\d\\d\\d");
 
 	private DisplayFrame()
 	{
 		throw new TestSupport.AssertionError("Utility class");
 	}
 
-	/**
-	 * showDisplayFrames method creates a frame showing multiple charts
-	 * according to parameters.
-	 */
-	static List<JTabbedPane> showDisplayFramesLocations(PlotConfigurationState plotConfigurationState, List<String> locationNames,
-														EpptScenarioRun baseRun,
-														List<EpptScenarioRun> alternatives, LocalDate startMonth,
-														LocalDate endMonth)
-	{
-		List<JTabbedPane> tabbedPanes = new ArrayList<>();
-		try
-		{
-
-			IDSSGrabber1Svc dssGrabber = new DSSGrabber1SvcImpl();
-			dssGrabber.setIsCFS(!plotConfigurationState.isDisplayTaf());
-			dssGrabber.setScenarioRuns(baseRun, alternatives);
-
-			for(String locationName : locationNames)
-			{
-				if(locationName == null || locationName.isEmpty())
-				{
-					String message = "No Location selected.";
-					ERROR_HANDLING_SVC.businessErrorHandler(message, message);
-				}
-				else
-				{
-					dssGrabber.setLocation(locationName);
-
-
-					if(dssGrabber.getPrimaryDSSName() == null)
-					{
-						String message = "No GUI_Links3.csv entry found for " + locationName + ".";
-						ERROR_HANDLING_SVC.businessErrorHandler(message, message);
-					}
-					else if(dssGrabber.getPrimaryDSSName().isEmpty())
-					{
-						String message = "No DSS time series specified for " + locationName + ".";
-						ERROR_HANDLING_SVC.businessErrorHandler(message, message);
-					}
-					else
-					{
-						plotForLocation(plotConfigurationState, baseRun, startMonth, endMonth, tabbedPanes, dssGrabber);
-					}
-				}
-			}
-		}
-		catch(RuntimeException e)
-		{
-			LOG.error(e.getMessage());
-			String messageText = "Unable to display frame.";
-			ERROR_HANDLING_SVC.businessErrorHandler(messageText, e);
-		}
-		return tabbedPanes;
-	}
-
-	/**
-	 * showDisplayFrames method creates a frame showing multiple charts
-	 * according to parameters.
-	 */
-	static List<JTabbedPane> showDisplayFramesGuiLink(PlotConfigurationState plotConfigurationState, List<GUILinksAllModelsBO> guiLinks,
-													  EpptScenarioRun baseRun,
-													  List<EpptScenarioRun> alternatives, LocalDate startMonth,
-													  LocalDate endMonth)
-	{
-		List<JTabbedPane> tabbedPanes = new ArrayList<>();
-		try
-		{
-
-			IDSSGrabber1Svc dssGrabber = new DSSGrabber1SvcImpl();
-			dssGrabber.setIsCFS(!plotConfigurationState.isDisplayTaf());
-			dssGrabber.setScenarioRuns(baseRun, alternatives);
-
-			for(GUILinksAllModelsBO guiLink : guiLinks)
-			{
-				if(guiLink == null)
-				{
-					String message = "No Location selected.";
-					ERROR_HANDLING_SVC.businessErrorHandler(message, message);
-				}
-				else
-				{
-					dssGrabber.setGuiLink(guiLink);
-
-
-					if(dssGrabber.getPrimaryDSSName() == null)
-					{
-						String message = "No GUI_Links3.csv entry found for " + guiLink.getCheckboxId();
-						ERROR_HANDLING_SVC.businessErrorHandler(message, message);
-					}
-					else if(dssGrabber.getPrimaryDSSName().isEmpty())
-					{
-						String message = "No DSS time series specified for " + guiLink.getCheckboxId();
-						ERROR_HANDLING_SVC.businessErrorHandler(message, message);
-					}
-					else
-					{
-						plotForLocation(plotConfigurationState, baseRun, startMonth, endMonth, tabbedPanes, dssGrabber);
-					}
-				}
-			}
-		}
-		catch(RuntimeException e)
-		{
-			LOG.error(e.getMessage());
-			String messageText = "Unable to display frame.";
-			ERROR_HANDLING_SVC.businessErrorHandler(messageText, e);
-		}
-		return tabbedPanes;
-	}
-
-	private static void plotForLocation(PlotConfigurationState plotConfigurationState, EpptScenarioRun baseRun, LocalDate startMonth,
-										LocalDate endMonth, List<JTabbedPane> tabbedPanes, IDSSGrabber1Svc dssGrabber)
-	{
-
-		dssGrabber.setDateRange(startMonth, endMonth);
-
-		TimeSeriesContainer[] primaryResults = dssGrabber.getPrimarySeries();
-		TimeSeriesContainer[] secondaryResults = dssGrabber.getSecondarySeries();
-
-
-		dssGrabber.calcTAFforCFS(primaryResults, secondaryResults);
-
-		TimeSeriesContainer[] diffResults = dssGrabber.getDifferenceSeries(primaryResults);
-		TimeSeriesContainer[][] excResults = dssGrabber.getExceedanceSeries(primaryResults);
-		TimeSeriesContainer[][] sexcResults = dssGrabber.getExceedanceSeries(secondaryResults);
-		TimeSeriesContainer[][] dexcResults = dssGrabber.getExceedanceSeriesD(primaryResults);
-
-		JTabbedPane tabbedpane = new JTabbedPane();
-
-		if(primaryResults != null && primaryResults[0] != null)
-		{
-			if(plotConfigurationState.isDisplaySummaryTable())
-			{
-				SummaryTablePanel stp;
-				if(plotConfigurationState.getComparisonType() == PlotConfigurationState.ComparisonType.DIFF)
-				{
-					stp = new SummaryTablePanel(
-							dssGrabber.getPlotTitle() + " - Difference from " + primaryResults[0].fileName,
-							diffResults, null, plotConfigurationState.getSelectedSummaryTableItems(), "", dssGrabber);
-				}
-				else
-				{
-					stp = new SummaryTablePanel(dssGrabber.getPlotTitle(), primaryResults,
-							secondaryResults,
-							plotConfigurationState.getSelectedSummaryTableItems(), dssGrabber.getSLabel(), dssGrabber,
-							plotConfigurationState.getComparisonType() == PlotConfigurationState.ComparisonType.BASE);
-				}
-				tabbedpane.insertTab("Summary - " + dssGrabber.getBaseRunName(), null, stp, null, 0);
-			}
-
-			if(plotConfigurationState.isDisplayMonthlyTable())
-			{
-				MonthlyTablePanel mtp;
-				if(plotConfigurationState.getComparisonType() == PlotConfigurationState.ComparisonType.DIFF)
-				{
-					mtp = new MonthlyTablePanel(
-							dssGrabber.getPlotTitle() + " - Difference from " + primaryResults[0].fileName,
-							diffResults, null, dssGrabber, "");
-				}
-				else
-				{
-					mtp = new MonthlyTablePanel(dssGrabber.getPlotTitle(), primaryResults,
-							secondaryResults,
-							dssGrabber, dssGrabber.getSLabel(),
-							plotConfigurationState.getComparisonType() == PlotConfigurationState.ComparisonType.BASE);
-				}
-				tabbedpane.insertTab("Monthly - " + dssGrabber.getBaseRunName(), null, mtp, null, 0);
-			}
-
-			if(plotConfigurationState.isDisplayBoxAndWhiskerPlot())
-			{
-				tabbedpane
-						.insertTab("Box Plot", null,
-								new BoxPlotChartPanel(dssGrabber.getPlotTitle(),
-										primaryResults,
-										plotConfigurationState.getComparisonType() == PlotConfigurationState.ComparisonType.BASE),
-								null, 0);
-			}
-			if(plotConfigurationState.isDoExceedance())
-			{
-				List<Month> exceedMonths = plotConfigurationState.getSelectedExceedancePlotMonths();
-				for(int m1 = 11; m1 >= 0; m1--)
-				{
-					if(m1 < exceedMonths.size() && excResults != null)
-					{
-						String monthName = exceedMonths.get(m1).getDisplayName(TextStyle.SHORT, Locale.getDefault());
-						DateTimeFormatter dateTimeFormatter = new DateTimeFormatterBuilder()
-								.parseCaseInsensitive()
-								.appendPattern("MMMyy")
-								.toFormatter(Locale.ENGLISH);
-						int index = YearMonth.parse(monthName + "11", dateTimeFormatter).getMonthValue() - 1;
-						insertTabForMonth(
-								plotConfigurationState.getComparisonType() == PlotConfigurationState.ComparisonType.DIFF,
-								plotConfigurationState.getComparisonType() == PlotConfigurationState.ComparisonType.BASE,
-								tabbedpane,
-								primaryResults, excResults,
-								sexcResults, dexcResults, index, monthName, dssGrabber.getPlotTitle(),
-								dssGrabber.getYLabel(),
-								dssGrabber.getSLabel());
-					}
-				}
-
-				if(plotConfigurationState.isAnnualFlowExceedancePlots())
-				{
-					if("CFS".equals(dssGrabber.getOriginalUnits()))
-					{
-						insertPlotPanel(dssGrabber,
-								plotConfigurationState.getComparisonType() == PlotConfigurationState.ComparisonType.DIFF,
-								plotConfigurationState.getComparisonType() == PlotConfigurationState.ComparisonType.BASE,
-								primaryResults, excResults,
-								sexcResults, dexcResults, tabbedpane,
-								" - Exceedance (annual total)",
-								"Annual Total Volume (TAF)",
-								12, dssGrabber.getPlotTitle() + " - Exceedance (Annual Total)",
-								"Exceedance (annual total)");
-					}
-					else
-					{
-						JPanel panel = new JPanel();
-						panel.add(
-								new JLabel("No chart - annual totals are only calculated for flows."));
-						tabbedpane.insertTab("Exceedance (Annual Total)", null, panel, null, 0);
-					}
-				}
-				if(plotConfigurationState.isPlotAllExceedancePlots())
-				{
-					insertPlotPanel(dssGrabber,
-							plotConfigurationState.getComparisonType() == PlotConfigurationState.ComparisonType.DIFF,
-							plotConfigurationState.getComparisonType() == PlotConfigurationState.ComparisonType.BASE, primaryResults,
-							excResults,
-							sexcResults, dexcResults, tabbedpane, " - Exceedance (all months)", dssGrabber.getYLabel(), 13,
-							dssGrabber.getPlotTitle() + " - Exceedance (all months)",
-							"Exceedance (all)");
-				}
-			}
-			ChartPanel1 cp1;
-			ChartPanel1 cp2;
-
-			if(plotConfigurationState.isDisplayTimeSeriesPlot())
-			{
-				if(plotConfigurationState.getComparisonType() == PlotConfigurationState.ComparisonType.BASE)
-				{
-					cp2 = new ChartPanel1(dssGrabber.getPlotTitle(), dssGrabber.getYLabel(),
-							primaryResults,
-							secondaryResults, false, dssGrabber.getSLabel(), true);
-					tabbedpane.insertTab("Time Series", null, cp2, null, 0);
-
-				}
-				else if(primaryResults.length < 2)
-				{
-					JPanel panel = new JPanel();
-					panel.add(new JLabel("No chart - need two or more time series."));
-					tabbedpane.insertTab(
-							plotConfigurationState.getComparisonType() == PlotConfigurationState.ComparisonType.DIFF ? "Difference" : "Comparison",
-							null, panel, null,
-							0);
-				}
-				else
-				{
-					if(plotConfigurationState.getComparisonType() == PlotConfigurationState.ComparisonType.DIFF)
-					{
-						cp2 = new ChartPanel1(
-								dssGrabber.getPlotTitle() + " - Difference from " + primaryResults[0].fileName,
-								dssGrabber.getYLabel(), diffResults, null, false,
-								dssGrabber.getSLabel());
-						tabbedpane.insertTab("Difference", null, cp2, null, 0);
-					}
-					else if(plotConfigurationState.getComparisonType() == PlotConfigurationState.ComparisonType.COMPARISON)
-					{
-						cp1 = new ChartPanel1(dssGrabber.getPlotTitle() + " - Comparison ",
-								dssGrabber.getYLabel(),
-								primaryResults, secondaryResults, false,
-								dssGrabber.getSLabel());
-						tabbedpane.insertTab("Comparison", null, cp1, null, 0);
-					}
-				}
-			}
-		}
-		Map<GUILinksAllModelsBO.Model, List<String>> missing = dssGrabber.getMissingList();
-		if(!missing.isEmpty())
-		{
-			insertEmptyTab(tabbedpane, missing);
-		}
-		String title = dssGrabber.getPlotTitle();
-		tabbedpane.setName(title);
-		tabbedPanes.add(tabbedpane);
-	}
 
 	private static void insertEmptyTab(JTabbedPane tabbedPane, Map<GUILinksAllModelsBO.Model, List<String>> missing)
 	{

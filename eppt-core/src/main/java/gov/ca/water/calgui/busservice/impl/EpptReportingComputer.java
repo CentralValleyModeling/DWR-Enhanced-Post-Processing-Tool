@@ -121,7 +121,7 @@ public class EpptReportingComputer
 			{
 				HecTime hecTime = tsc.getHecTime(i);
 				double value = tsc.getValue(i);
-				if(RMAConst.isValidValue(value) &&  value != -3.402823466E38)
+				if(RMAConst.isValidValue(value) && value != -3.402823466E38)
 				{
 					Date javaDate = hecTime.getJavaDate(offset);
 					fullSeries.put(LocalDateTime.ofInstant(javaDate.toInstant(), ZoneId.systemDefault()), value);
@@ -225,36 +225,28 @@ public class EpptReportingComputer
 
 	private SortedMap<Month, NavigableMap<Integer, Double>> filterPeriodMonthly(NavigableMap<LocalDateTime, Double> input)
 	{
-		List<Month> months = EpptReportingMonths.getMonths(_monthPeriod);
-
 		SortedMap<Month, NavigableMap<Integer, Double>> retval = new TreeMap<>();
-		for(Month month : months)
+		if(!input.isEmpty())
 		{
-			NavigableMap<Integer, Double> yearlyMap = new TreeMap<>();
-			retval.put(month, yearlyMap);
-			if(!input.isEmpty())
+			for(int year = input.firstKey().getYear(); year < input.lastKey().getYear(); year++)
 			{
-				int year = input.firstKey().getYear();
-				int lastYear = input.lastKey().getYear();
-				while(year <= lastYear)
+				List<YearMonth> yearMonths = _monthPeriod.getYearMonths(year);
+				LocalDateTime startYearMonth = yearMonths.get(0).minusMonths(1).atEndOfMonth().minusDays(2).atTime(0, 0);
+				LocalDateTime endYearMonth = yearMonths.get(yearMonths.size() - 1).atEndOfMonth().plusDays(2).atTime(0, 0);
+				if(input.firstKey().isAfter(startYearMonth) || input.lastKey().isBefore(endYearMonth))
 				{
-					List<YearMonth> yearMonths = _monthPeriod.getYearMonths(year);
-					for(Map.Entry<LocalDateTime, Double> entry : input.entrySet())
-					{
-						for(YearMonth yearMonth : yearMonths)
-						{
-							LocalDateTime key = entry.getKey().minusMonths(1);
-							Month entryMonth = key.getMonth();
-							if(entryMonth == month && key.getYear() == yearMonth.getYear())
-							{
-								yearlyMap.put(yearMonth.getYear(), entry.getValue());
-							}
-						}
-					}
-					year++;
+					continue;
+				}
+				SortedMap<LocalDateTime, Double> yearValues = input.subMap(startYearMonth, true, endYearMonth, true);
+				for(Map.Entry<LocalDateTime, Double> entry : yearValues.entrySet())
+				{
+					LocalDateTime localDateTime = entry.getKey().minusMonths(1);
+					NavigableMap<Integer, Double> yearlyMap = retval.computeIfAbsent(localDateTime.getMonth(), v -> new TreeMap<>());
+					yearlyMap.put(localDateTime.getYear(), entry.getValue());
 				}
 			}
 		}
+
 		return retval;
 	}
 

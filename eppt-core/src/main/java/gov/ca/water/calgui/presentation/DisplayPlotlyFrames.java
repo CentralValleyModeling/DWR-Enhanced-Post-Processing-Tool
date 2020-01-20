@@ -220,6 +220,7 @@ final class DisplayPlotlyFrames
 		scenarioRuns.addAll(_alternatives);
 		PlotlyPane pane = new PlotlyPaneBuilder(PlotlyPaneBuilder.ChartType.TIMESERIES, _baseRun, scenarioRunData)
 				.withComparisonType(plotConfigurationState.getComparisonType())
+				.withWaterYearDefinition(new WaterYearDefinition("", Month.OCTOBER, Month.SEPTEMBER))
 				.withTaf(_plotConfigurationState.isDisplayTaf())
 				.withGuiLink(guiLink)
 				.withTimeWindow(_start, _end)
@@ -278,6 +279,7 @@ final class DisplayPlotlyFrames
 	{
 		PlotlyPane pane = new PlotlyPaneBuilder(PlotlyPaneBuilder.ChartType.EXCEEDANCE, _baseRun, scenarioRunData)
 				.withTaf(_plotConfigurationState.isDisplayTaf())
+				.withWaterYearDefinition(new WaterYearDefinition("", Month.OCTOBER, Month.SEPTEMBER))
 				.withComparisonType(plotConfigurationState.getComparisonType())
 				.withGuiLink(guiLink)
 				.withTimeWindow(_start, _end)
@@ -298,7 +300,7 @@ final class DisplayPlotlyFrames
 									  JTabbedPane tabbedPane, GUILinksAllModelsBO guiLink)
 	{
 		WaterYearDefinition waterYearDefinition = new WaterYearDefinition("", Month.OCTOBER, Month.SEPTEMBER);
-		PlotlyPane pane = new PlotlyPaneBuilder(PlotlyPaneBuilder.ChartType.TIMESERIES, _baseRun, scenarioRunData)
+		PlotlyPane pane = new PlotlyPaneBuilder(PlotlyPaneBuilder.ChartType.EXCEEDANCE, _baseRun, scenarioRunData)
 				.withComparisonType(_plotConfigurationState.getComparisonType())
 				.withTaf(_plotConfigurationState.isDisplayTaf())
 				.withGuiLink(guiLink)
@@ -322,6 +324,7 @@ final class DisplayPlotlyFrames
 	{
 		PlotlyPane pane = new PlotlyPaneBuilder(PlotlyPaneBuilder.ChartType.BOX, _baseRun, scenarioRunData)
 				.withComparisonType(_plotConfigurationState.getComparisonType())
+				.withWaterYearDefinition(new WaterYearDefinition("", Month.OCTOBER, Month.SEPTEMBER))
 				.withTaf(_plotConfigurationState.isDisplayTaf())
 				.withGuiLink(guiLink)
 				.withTimeWindow(_start, _end)

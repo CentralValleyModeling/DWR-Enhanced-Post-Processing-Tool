@@ -43,7 +43,7 @@ import static java.util.stream.Collectors.toList;
  */
 public class JythonScriptRunner
 {
-	private static final ScriptEngine PYTHON_ENGINE = new ScriptEngineManager().getEngineByName("python");
+	private static ScriptEngine PYTHON_ENGINE = new ScriptEngineManager().getEngineByName("python");
 	private final EpptScenarioRun _epptScenarioRun;
 	private final WaterYearDefinition _waterYearDefinition;
 	private final DssCache _dssCache;
@@ -74,6 +74,7 @@ public class JythonScriptRunner
 			{
 				try(BufferedReader reader = Files.newBufferedReader(path))
 				{
+					PYTHON_ENGINE = new ScriptEngineManager().getEngineByName("python");
 					PYTHON_ENGINE.eval(reader);
 				}
 			}
