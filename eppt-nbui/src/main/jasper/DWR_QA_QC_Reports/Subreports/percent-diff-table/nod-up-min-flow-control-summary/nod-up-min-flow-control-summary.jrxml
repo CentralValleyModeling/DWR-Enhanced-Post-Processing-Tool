@@ -8,7 +8,7 @@
 	<property name="com.jaspersoft.studio.unit.pageWidth" value="inch"/>
 	<property name="net.sf.jasperreports.data.adapter" value="QAQC_Datasource.xml"/>
 	<property name="com.jaspersoft.studio.unit." value="pixel"/>
-	<property name="net.sf.jasperreports.data.adapter" value="QAQC_Datasource.xml"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="QAQC_Datasource"/>
 	<style name="Long_Term_Borders">
 		<box>
 			<topPen lineWidth="1.0"/>
@@ -175,7 +175,7 @@
 				<crosstabHeaderCell>
 					<cellContents>
 						<textField>
-							<reportElement x="0" y="0" width="116" height="50" uuid="e159c4a7-d581-4b44-877e-206382bde911"/>
+							<reportElement x="0" y="0" width="161" height="50" uuid="e159c4a7-d581-4b44-877e-206382bde911"/>
 							<box>
 								<topPen lineWidth="1.0"/>
 								<leftPen lineWidth="1.0"/>
@@ -202,16 +202,15 @@
 						</cellContents>
 					</crosstabTotalRowHeader>
 				</rowGroup>
-				<rowGroup name="period-type-name" width="35" totalPosition="End" headerPosition="Stretch" mergeHeaderCells="true">
+				<rowGroup name="period-type-name" width="80" totalPosition="End" headerPosition="Stretch" mergeHeaderCells="true">
 					<bucket class="java.lang.String">
 						<bucketExpression><![CDATA[$F{period-type-name}]]></bucketExpression>
 					</bucket>
 					<crosstabRowHeader>
 						<cellContents mode="Transparent" style="Long_Term_Borders">
-							<property name="com.jaspersoft.studio.unit.width" value="px"/>
 							<textField isStretchWithOverflow="true">
-								<reportElement style="Long_Term_Borders" x="0" y="0" width="35" height="16" uuid="a97e394b-2c1f-49a6-8cfb-32e4eeb23864"/>
-								<textElement textAlignment="Center" verticalAlignment="Middle" rotation="Left">
+								<reportElement style="Long_Term_Borders" stretchType="ElementGroupBottom" x="0" y="0" width="80" height="16" uuid="a97e394b-2c1f-49a6-8cfb-32e4eeb23864"/>
+								<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None">
 									<font size="11" isBold="true"/>
 								</textElement>
 								<textFieldExpression><![CDATA[$V{period-type-name}=="Long Term"?"":($V{period-type-name}==null?"":$V{period-type-name})]]></textFieldExpression>
@@ -323,7 +322,7 @@
 								<rightPen lineWidth="1.0"/>
 							</box>
 							<textField isStretchWithOverflow="true" isBlankWhenNull="false">
-								<reportElement stretchType="ContainerHeight" isPrintRepeatedValues="false" x="0" y="0" width="64" height="16" isRemoveLineWhenBlank="true" uuid="e7fff6bf-cd10-4e75-a29c-dfc1a9168d69"/>
+								<reportElement stretchType="ContainerHeight" x="0" y="0" width="64" height="16" isRemoveLineWhenBlank="true" uuid="e7fff6bf-cd10-4e75-a29c-dfc1a9168d69"/>
 								<textElement textAlignment="Center" verticalAlignment="Middle">
 									<font size="11" isBold="true" isItalic="false"/>
 								</textElement>
