@@ -1378,6 +1378,7 @@ public class QAQCReportPanel extends RmaJPanel
 
 	private void fillWaterYearIndex()
 	{
+		_waterYearIndexCombo.removeAllItems();
 		Path lookupDirectory = _baseRun.getLookupDirectory();
 		WaterYearTableReader waterYearTableReader = new WaterYearTableReader(lookupDirectory);
 		try
