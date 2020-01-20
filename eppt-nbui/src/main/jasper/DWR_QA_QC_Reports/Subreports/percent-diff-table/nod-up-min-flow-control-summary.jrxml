@@ -6,7 +6,7 @@
 	<property name="net.sf.jasperreports.print.create.bookmarks" value="true"/>
 	<property name="com.jaspersoft.studio.unit.pageHeight" value="inch"/>
 	<property name="com.jaspersoft.studio.unit.pageWidth" value="inch"/>
-	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="QAQC_Datasource"/>
+	<property name="net.sf.jasperreports.data.adapter" value="QAQC_Datasource.xml"/>
 	<property name="com.jaspersoft.studio.unit." value="pixel"/>
 	<style name="Long_Term_Borders">
 		<box>
@@ -34,7 +34,7 @@
 		</conditionalStyle>
 	</style>
 	<subDataset name="Dataset1" uuid="825d7c0e-7cc6-4211-9ccb-04248d508680">
-		<property name="com.jaspersoft.studio.data.defaultdataadapter" value="QAQC_Datasource"/>
+		<property name="net.sf.jasperreports.data.adapter" value="QAQC_Datasource.xml"/>
 		<parameter name="p_report_name" class="java.lang.String" isForPrompting="false">
 			<defaultValueExpression><![CDATA["nod-up-min-flow-control-summary"]]></defaultValueExpression>
 		</parameter>
@@ -152,15 +152,17 @@
 	<group name="Group1">
 		<groupExpression><![CDATA[$F{sub-header-name}]]></groupExpression>
 		<groupFooter>
-			<band height="90">
+			<band height="131">
+				<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				<crosstab>
-					<reportElement stretchType="ContainerHeight" x="0" y="0" width="504" height="90" uuid="448a22d6-fc04-4da1-b724-f0fd89f4b11b">
+					<reportElement stretchType="ContainerHeight" x="0" y="10" width="504" height="121" uuid="448a22d6-fc04-4da1-b724-f0fd89f4b11b">
 						<property name="com.jaspersoft.studio.layout" value="com.jaspersoft.studio.editor.layout.VerticalRowLayout"/>
 						<property name="com.jaspersoft.studio.crosstab.style.header" value="Crosstab_CH"/>
 						<property name="com.jaspersoft.studio.crosstab.style.group" value="Crosstab_CG"/>
 						<property name="com.jaspersoft.studio.crosstab.style.total" value="Crosstab_CT"/>
 						<property name="com.jaspersoft.studio.crosstab.style.detail" value="Crosstab_CD"/>
 						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+						<property name="com.jaspersoft.studio.unit.y" value="px"/>
 					</reportElement>
 					<box>
 						<topPen lineWidth="1.0"/>
@@ -406,6 +408,19 @@
 							<cellContents mode="Opaque"/>
 						</crosstabTotalColumnHeader>
 					</columnGroup>
+					<columnGroup name="component-order" height="0" totalPosition="End">
+						<bucket class="java.lang.String">
+							<bucketExpression><![CDATA[$F{component-order}]]></bucketExpression>
+						</bucket>
+						<crosstabColumnHeader>
+							<cellContents>
+								<property name="com.jaspersoft.studio.unit.height" value="px"/>
+							</cellContents>
+						</crosstabColumnHeader>
+						<crosstabTotalColumnHeader>
+							<cellContents/>
+						</crosstabTotalColumnHeader>
+					</columnGroup>
 					<columnGroup name="component-name" height="55" totalPosition="End" headerPosition="Stretch">
 						<bucket class="java.lang.String">
 							<bucketExpression><![CDATA[$F{component-name}]]></bucketExpression>
@@ -454,6 +469,7 @@
 					<crosstabCell width="64" height="16">
 						<cellContents backcolor="#FFFFFF">
 							<property name="com.jaspersoft.studio.unit.width" value="px"/>
+							<property name="com.jaspersoft.studio.unit.height" value="px"/>
 							<box>
 								<topPen lineWidth="1.0"/>
 								<leftPen lineWidth="1.0"/>
@@ -598,10 +614,36 @@
 					<crosstabCell width="0" height="0" rowTotalGroup="period-type-order" columnTotalGroup="title-order">
 						<cellContents mode="Opaque"/>
 					</crosstabCell>
+					<crosstabCell width="0" height="16" columnTotalGroup="component-order">
+						<cellContents>
+							<property name="com.jaspersoft.studio.unit.width" value="px"/>
+						</cellContents>
+					</crosstabCell>
+					<crosstabCell width="0" height="0" rowTotalGroup="period-type-order" columnTotalGroup="component-order">
+						<cellContents>
+							<property name="com.jaspersoft.studio.unit.height" value="px"/>
+						</cellContents>
+					</crosstabCell>
+					<crosstabCell width="0" height="0" rowTotalGroup="period-type-name" columnTotalGroup="component-order">
+						<cellContents>
+							<property name="com.jaspersoft.studio.unit.height" value="px"/>
+						</cellContents>
+					</crosstabCell>
+					<crosstabCell width="0" height="0" rowTotalGroup="seasonal-type-order" columnTotalGroup="component-order">
+						<cellContents>
+							<property name="com.jaspersoft.studio.unit.height" value="px"/>
+						</cellContents>
+					</crosstabCell>
+					<crosstabCell width="0" height="0" rowTotalGroup="seasonal-type-name" columnTotalGroup="component-order">
+						<cellContents>
+							<property name="com.jaspersoft.studio.unit.height" value="px"/>
+						</cellContents>
+					</crosstabCell>
 				</crosstab>
 			</band>
-			<band height="10">
+			<band>
 				<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				<printWhenExpression><![CDATA[1==0]]></printWhenExpression>
 			</band>
 		</groupFooter>
 	</group>
