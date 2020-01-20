@@ -186,10 +186,11 @@ public class DetailedIssueProcessor
 			title = "Undefined";
 		}
 
-		DSSGrabber1SvcImpl grabber1Svc = buildDssGrabber(run, guiID, thresholdID);
+		DSSGrabber1SvcImpl guiLinkGrabber = buildGuiLinkDssGrabber(run, guiID);
+		DSSGrabber1SvcImpl thresholdGrabber = buildThresholdDssGrabber(run, thresholdID);
 
 		//get the specific container for the threshold values
-		TimeSeriesContainer[] thresholdTimeSeries = grabber1Svc.getPrimarySeries();
+		TimeSeriesContainer[] thresholdTimeSeries = thresholdGrabber.getPrimarySeries();
 		TimeSeriesContainer thresholdSeriesContainer = null;
 		if(thresholdTimeSeries != null && thresholdTimeSeries.length > 0)
 		{
@@ -197,7 +198,7 @@ public class DetailedIssueProcessor
 		}
 
 		//get the specific container for the values
-		TimeSeriesContainer[] primarySeries = grabber1Svc.getPrimarySeries();
+		TimeSeriesContainer[] primarySeries = guiLinkGrabber.getPrimarySeries();
 
 		TimeSeriesContainer valueContainer = null;
 		if(primarySeries != null && primarySeries.length > 0)
@@ -280,15 +281,23 @@ public class DetailedIssueProcessor
 		return types;
 	}
 
-	private DSSGrabber1SvcImpl buildDssGrabber(EpptScenarioRun epptScenarioRun, int guiID, int thresholdId)
+	private DSSGrabber1SvcImpl buildThresholdDssGrabber(EpptScenarioRun epptScenarioRun, int thresholdId)
+	{
+		DSSGrabber1SvcImpl grabber1Svc = new DSSGrabber1SvcImpl();
+		grabber1Svc.setIsCFS(_isCFS);
+		grabber1Svc.setScenarioRuns(epptScenarioRun, Collections.emptyList());
+		ThresholdLinksBO thresholdLink = ThresholdLinksSeedDataSvc.getSeedDataSvcImplInstance().getObjById(thresholdId);
+		grabber1Svc.setThresholdLink(thresholdLink);
+		return grabber1Svc;
+	}
+
+	private DSSGrabber1SvcImpl buildGuiLinkDssGrabber(EpptScenarioRun epptScenarioRun, int guiID)
 	{
 		DSSGrabber1SvcImpl grabber1Svc = new DSSGrabber1SvcImpl();
 		grabber1Svc.setIsCFS(_isCFS);
 		grabber1Svc.setScenarioRuns(epptScenarioRun, Collections.emptyList());
 		GUILinksAllModelsBO guiLink = GuiLinksSeedDataSvcImpl.getSeedDataSvcImplInstance().getGuiLink(Integer.toString(guiID));
 		grabber1Svc.setGuiLink(guiLink);
-		ThresholdLinksBO thresholdLink = ThresholdLinksSeedDataSvc.getSeedDataSvcImplInstance().getObjById(thresholdId);
-		grabber1Svc.setThresholdLink(thresholdLink);
 		return grabber1Svc;
 	}
 
