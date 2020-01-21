@@ -29,6 +29,7 @@ import gov.ca.water.calgui.bo.ResultUtilsBO;
 import gov.ca.water.calgui.busservice.IGuiLinksSeedDataSvc;
 import gov.ca.water.calgui.project.EpptScenarioRun;
 import gov.ca.water.calgui.project.NamedDssPath;
+import jdk.internal.org.objectweb.asm.tree.AnnotationNode;
 
 import hec.heclib.util.HecTime;
 import hec.io.TimeSeriesContainer;
@@ -611,17 +612,21 @@ public class DSSGrabber2SvcImpl extends DSSGrabber1SvcImpl
 									if(month == 12)
 									{
 
-										// Annual totals - grab from annualTAFs
-										n = _annualTAFs[i].length;
-										times2 = new int[n];
-										values2 = new double[n];
-										for(int j = 0; j < n; j++)
+										n = 0;
+										if(i < _annualTAFs.length)
 										{
-											ht.setYearMonthDay(j + _startWY, 11, 1, 0);
-											times2[j] = ht.value();
-											values2[j] = _annualTAFs[mtsI][i][j];
+											double[][] annualTAF = _annualTAFs[i];
+											// Annual totals - grab from annualTAFs
+											n = annualTAF.length;
+											times2 = new int[n];
+											values2 = new double[n];
+											for(int j = 0; j < n; j++)
+											{
+												ht.setYearMonthDay(j + _startWY, 11, 1, 0);
+												times2[j] = ht.value();
+												values2[j] = _annualTAFs[mtsI][i][j];
+											}
 										}
-
 									}
 									else
 									{
