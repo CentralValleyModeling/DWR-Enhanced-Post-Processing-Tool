@@ -132,7 +132,9 @@ final class DisplayFrame
 			boolean isCFS = !plotConfigurationState.isDisplayTaf();
 			boolean doMonthlyTable = plotConfigurationState.isDisplayMonthlyTable();
 			boolean doSummaryTable = plotConfigurationState.isDisplaySummaryTable();
-
+			String exceedMonths = plotConfigurationState.getSelectedExceedancePlotMonths().stream()
+														.map(m -> m.getDisplayName(TextStyle.SHORT, Locale.getDefault()))
+														.collect(Collectors.joining(","));
 			List<String> summaryTags = plotConfigurationState.getSelectedSummaryTableItems();
 			String[] monthNames = {"Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov",
 					"Dec"};
