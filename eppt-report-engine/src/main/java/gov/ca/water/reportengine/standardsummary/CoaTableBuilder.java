@@ -12,6 +12,8 @@
 
 package gov.ca.water.reportengine.standardsummary;
 
+import java.math.BigDecimal;
+import java.math.MathContext;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -23,6 +25,7 @@ import java.util.regex.Pattern;
 import gov.ca.water.calgui.project.EpptScenarioRun;
 import gov.ca.water.calgui.scripts.DssMissingRecordException;
 import gov.ca.water.reportengine.EpptReportException;
+import gov.ca.water.reportengine.jython.JythonValueGenerator;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
@@ -196,7 +199,8 @@ class CoaTableBuilder extends TableBuilder
 		EpptScenarioRun base = getBase();
 		try
 		{
-			Object baseValue = createJythonValueGenerator(base, v.getFunction()).generateObjectValue();
+			JythonValueGenerator baseJythonValueGenerator = createJythonValueGenerator(base, v.getFunction());
+			Object baseValue = baseJythonValueGenerator.generateObjectValue();
 
 			Object altValue = createJythonValueGenerator(alternative, v.getFunction()).generateObjectValue();
 			if(baseValue == null)
@@ -221,8 +225,19 @@ class CoaTableBuilder extends TableBuilder
 			}
 			else if(baseValue instanceof Double && altValue instanceof Double)
 			{
-				long total = Math.round((double) baseValue + (double) altValue);
-				retval.setTextContent(String.valueOf(total));
+				double value = (double) baseValue + (double) altValue;
+				String textValue;
+				String units = baseJythonValueGenerator.getUnits();
+				if("percent".equals(units))
+				{
+					BigDecimal bd = BigDecimal.valueOf(value);
+					textValue = bd.round(new MathContext(3)).toString();
+				}
+				else
+				{
+					textValue = String.valueOf(Math.round(value));
+				}
+				retval.setTextContent(textValue);
 			}
 		}
 		catch(DssMissingRecordException e)
@@ -242,7 +257,8 @@ class CoaTableBuilder extends TableBuilder
 		Element retval = getDocument().createElement(VALUE_ELEMENT);
 		try
 		{
-			Object value = createJythonValueGenerator(scenarioRun, v.getFunction()).generateObjectValue();
+			JythonValueGenerator jythonValueGenerator = createJythonValueGenerator(scenarioRun, v.getFunction());
+			Object value = jythonValueGenerator.generateObjectValue();
 
 			if(value == null)
 			{
@@ -256,8 +272,26 @@ class CoaTableBuilder extends TableBuilder
 			}
 			else
 			{
-				String textRaw = String.valueOf(value);
-				retval.setTextContent(textRaw);
+				if(value instanceof Double)
+				{
+					String units = jythonValueGenerator.getUnits();
+					String textValue;
+					if("percent".equals(units))
+					{
+						BigDecimal bd = BigDecimal.valueOf((Double) value);
+						textValue = bd.round(new MathContext(3)).toString();
+					}
+					else
+					{
+						textValue = String.valueOf(Math.round((Double) value));
+					}
+					retval.setTextContent(textValue);
+				}
+				else
+				{
+					String textRaw = String.valueOf(value);
+					retval.setTextContent(textRaw);
+				}
 			}
 		}
 		catch(DssMissingRecordException e)
