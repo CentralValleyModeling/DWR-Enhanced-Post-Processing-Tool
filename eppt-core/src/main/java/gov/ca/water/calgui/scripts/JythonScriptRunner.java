@@ -74,8 +74,11 @@ public class JythonScriptRunner
 			{
 				try(BufferedReader reader = Files.newBufferedReader(path))
 				{
-					PYTHON_ENGINE = new ScriptEngineManager().getEngineByName("python");
-					PYTHON_ENGINE.eval(reader);
+					if(PYTHON_ENGINE == null)
+					{
+						PYTHON_ENGINE = new ScriptEngineManager().getEngineByName("python");
+						PYTHON_ENGINE.eval(reader);
+					}
 				}
 			}
 		}
