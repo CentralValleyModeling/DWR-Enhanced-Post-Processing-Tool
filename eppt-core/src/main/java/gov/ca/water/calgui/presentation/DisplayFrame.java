@@ -15,10 +15,6 @@ package gov.ca.water.calgui.presentation;
 import java.awt.BorderLayout;
 import java.awt.HeadlessException;
 import java.time.LocalDate;
-import java.time.Month;
-import java.time.YearMonth;
-import java.time.format.DateTimeFormatter;
-import java.time.format.DateTimeFormatterBuilder;
 import java.time.format.TextStyle;
 import java.util.ArrayList;
 import java.util.List;
@@ -31,7 +27,6 @@ import calsim.app.DerivedTimeSeries;
 import calsim.app.MultipleTimeSeries;
 import gov.ca.water.calgui.bo.GUILinksAllModelsBO;
 import gov.ca.water.calgui.busservice.IDSSGrabber1Svc;
-import gov.ca.water.calgui.busservice.impl.DSSGrabber1SvcImpl;
 import gov.ca.water.calgui.busservice.impl.DSSGrabber2SvcImpl;
 import gov.ca.water.calgui.presentation.display.BoxPlotChartPanel;
 import gov.ca.water.calgui.presentation.display.BoxPlotChartPanel2;
@@ -380,72 +375,72 @@ final class DisplayFrame
 		if(primaryResults != null)
 		{
 			dssGrabber.calcTAFforCFS(primaryResults, secondaryResults);
-		}
 
-		TimeSeriesContainer[] diffResults = dssGrabber.getDifferenceSeries(primaryResults);
-		TimeSeriesContainer[][] excResults = dssGrabber.getExceedanceSeries(primaryResults);
-		TimeSeriesContainer[][] sexcResults = dssGrabber.getExceedanceSeries(secondaryResults);
-		TimeSeriesContainer[][] dexcResults = dssGrabber.getExceedanceSeriesD(primaryResults);
+			TimeSeriesContainer[] diffResults = dssGrabber.getDifferenceSeries(primaryResults);
+			TimeSeriesContainer[][] excResults = dssGrabber.getExceedanceSeries(primaryResults);
+			TimeSeriesContainer[][] sexcResults = dssGrabber.getExceedanceSeries(secondaryResults);
+			TimeSeriesContainer[][] dexcResults = dssGrabber.getExceedanceSeriesD(primaryResults);
 
-		if(doSummaryTable)
-		{
-			insertSummaryTable(dssGrabber, doDifference, doBase, summaryTags, tabbedpane, primaryResults,
-					secondaryResults,
-					diffResults);
-		}
-
-		if(doMonthlyTable)
-		{
-			insertMonthlyTable(dssGrabber, doDifference, doBase, tabbedpane, primaryResults, secondaryResults,
-					diffResults);
-		}
-
-		if(doBoxPlot)
-		{
-			tabbedpane
-					.insertTab("Box Plot", null,
-							new BoxPlotChartPanel(dssGrabber.getPlotTitle(), primaryResults, doBase),
-							null, 0);
-		}
-		if(doExceedance)
-		{
-			insertExceedancePlots(dssGrabber, doDifference, doBase, exceedMonths, monthNames, tabbedpane,
-					primaryResults, excResults, sexcResults, dexcResults);
-		}
-
-		ChartPanel1 cp1;
-		ChartPanel1 cp2;
-
-		if(doTimeSeries)
-		{
-
-			if(doBase)
+			if(doSummaryTable)
 			{
-				cp2 = new ChartPanel1(dssGrabber.getPlotTitle(), dssGrabber.getYLabel(), primaryResults,
-						secondaryResults, false, dssGrabber.getSLabel(), doBase);
-				tabbedpane.insertTab("Time Series", null, cp2, null, 0);
-
+				insertSummaryTable(dssGrabber, doDifference, doBase, summaryTags, tabbedpane, primaryResults,
+						secondaryResults,
+						diffResults);
 			}
-			else if(primaryResults.length < 2)
+
+			if(doMonthlyTable)
 			{
-				JPanel panel = new JPanel();
-				panel.add(new JLabel("No chart - need two or more time series."));
-				tabbedpane.insertTab(doDifference ? "Difference" : "Comparison", null, panel, null, 0);
+				insertMonthlyTable(dssGrabber, doDifference, doBase, tabbedpane, primaryResults, secondaryResults,
+						diffResults);
 			}
-			else
+
+			if(doBoxPlot)
 			{
-				if(doDifference)
+				tabbedpane
+						.insertTab("Box Plot", null,
+								new BoxPlotChartPanel(dssGrabber.getPlotTitle(), primaryResults, doBase),
+								null, 0);
+			}
+			if(doExceedance)
+			{
+				insertExceedancePlots(dssGrabber, doDifference, doBase, exceedMonths, monthNames, tabbedpane,
+						primaryResults, excResults, sexcResults, dexcResults);
+			}
+
+			ChartPanel1 cp1;
+			ChartPanel1 cp2;
+
+			if(doTimeSeries)
+			{
+
+				if(doBase)
 				{
-					cp2 = new ChartPanel1(
-							dssGrabber.getPlotTitle() + " - Difference from " + primaryResults[0].fileName,
-							dssGrabber.getYLabel(), diffResults, null, false, dssGrabber.getSLabel());
-					tabbedpane.insertTab("Difference", null, cp2, null, 0);
+					cp2 = new ChartPanel1(dssGrabber.getPlotTitle(), dssGrabber.getYLabel(), primaryResults,
+							secondaryResults, false, dssGrabber.getSLabel(), doBase);
+					tabbedpane.insertTab("Time Series", null, cp2, null, 0);
+
 				}
-				else if(doComparison)
+				else if(primaryResults.length < 2)
 				{
-					cp1 = new ChartPanel1(dssGrabber.getPlotTitle() + " - Comparison ", dssGrabber.getYLabel(),
-							primaryResults, secondaryResults, false, dssGrabber.getSLabel());
-					tabbedpane.insertTab("Comparison", null, cp1, null, 0);
+					JPanel panel = new JPanel();
+					panel.add(new JLabel("No chart - need two or more time series."));
+					tabbedpane.insertTab(doDifference ? "Difference" : "Comparison", null, panel, null, 0);
+				}
+				else
+				{
+					if(doDifference)
+					{
+						cp2 = new ChartPanel1(
+								dssGrabber.getPlotTitle() + " - Difference from " + primaryResults[0].fileName,
+								dssGrabber.getYLabel(), diffResults, null, false, dssGrabber.getSLabel());
+						tabbedpane.insertTab("Difference", null, cp2, null, 0);
+					}
+					else if(doComparison)
+					{
+						cp1 = new ChartPanel1(dssGrabber.getPlotTitle() + " - Comparison ", dssGrabber.getYLabel(),
+								primaryResults, secondaryResults, false, dssGrabber.getSLabel());
+						tabbedpane.insertTab("Comparison", null, cp1, null, 0);
+					}
 				}
 			}
 		}
