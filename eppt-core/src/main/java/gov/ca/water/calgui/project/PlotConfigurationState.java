@@ -116,7 +116,7 @@ public class PlotConfigurationState
 			else if(groupPart.startsWith("ST-"))
 			{
 				doSummaryTable = true;
-				summaryTags = Arrays.asList(groupPart.substring(4).split(","));
+				summaryTags = Arrays.asList(groupPart.replace("ST-", "").split(","));
 			}
 		}
 		return new PlotConfigurationState(comparisonType, !isCFS, doTimeSeries, doBoxPlot, doExceedanceAll, exceedMonths, doMonthlyTable, doSummaryTable,

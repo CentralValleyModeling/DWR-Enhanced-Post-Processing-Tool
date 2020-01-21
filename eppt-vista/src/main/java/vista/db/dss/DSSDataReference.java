@@ -30,7 +30,7 @@ import vista.time.TimeWindow;
  * @author Nicky Sandhu
  * @version $Id: DSSDataReference.java,v 1.1 2003/10/02 20:48:44 redwood Exp $
  */
-class DSSDataReference extends DataReference
+public class DSSDataReference extends DataReference
 {
 	/**
 	 * separator for name
@@ -83,7 +83,7 @@ class DSSDataReference extends DataReference
 	/**
 	 * create a reference using the given reference as the prototype.
 	 */
-	protected DSSDataReference(String server, String file, Pathname path)
+	public DSSDataReference(String server, String file, Pathname path)
 	{
 		if(file == null)
 		{
@@ -106,7 +106,6 @@ class DSSDataReference extends DataReference
 		setPathname(path);
 		setTimeInterval(ti);
 		setTimeWindow(tw);
-		// setName( server+SEPARATOR+file+SEPARATOR+path+SEPARATOR+tw );
 	}
 
 	/**

@@ -467,11 +467,11 @@ Delta Operations,Control,Delta Operations Controls,control-table,delta-ops-contr
 !,,,,,,,,,
 Delta Operations,Control,Delta Operations Control List,list,delta-ops-list,,Gate Operations,Days Open%2CRequired Days Open,Delta Cross Channel,DtsLessThanReportDv(279%2C 2778%2C 2864)
 Delta Operations,Control,Delta Operations Control List,list,delta-ops-list,,Flow,OMR (TAF/yr)%2CAllowable OMR (TAF/yr),Old and Middle River,DtsLessThanReportDv(169%2C 218%2C 2865 )
-Delta Operations,Control,Delta Operations Control List,list,delta-ops-list,,Electrical Conductivity,EC (UMHOS/CM)%2CEC Standard(UMHOS/CM),Rock Slough,DtsGreaterThanReportDv(226%2C 2781%2C 411)
-Delta Operations,Control,Delta Operations Control List,list,delta-ops-list,,Electrical Conductivity,EC (UMHOS/CM)%2CEC Standard(UMHOS/CM),Jersey Point,DtsGreaterThanReportDv(228%2C 2872%2C 410)
-Delta Operations,Control,Delta Operations Control List,list,delta-ops-list,,Electrical Conductivity,EC (UMHOS/CM)%2CEC Standard(UMHOS/CM),Emmaton,DtsGreaterThanReportDv(227%2C 2783%2C 412)
-Delta Operations,Control,Delta Operations Control List,list,delta-ops-list,,Electrical Conductivity,EC (UMHOS/CM)%2CEC Standard(UMHOS/CM),Collinsville,DtsGreaterThanReportDv(229%2C 2784%2C 413)
-Delta Operations,Control,Delta Operations Control List,list,delta-ops-list,,Negative Carriage Water,Trinity (TAF)%2CShasta (TAF)%2COroville (TAF)%2CFolsom (TAF)%2CCVP San Luis (TAF)%2CSWP San Luis (TAF)%2CBanks PP (TAF)%2CJones PP (TAF),Storage Conditions during Negative Carriage Water Conditions,DtsEqualsReportDv8(170%2C 102%2C 112%2C 107%2C 104%2C 106%2C 108%2C 2744%2C 2745)
+Delta Operations,Control,Delta Operations Control List,list,delta-ops-list,,Electrical Conductivity,EC (umhos/cm)%2CEC Standard (mg/l),Rock Slough,DtsGreaterThanReportDv(226%2C 2781%2C 411)
+Delta Operations,Control,Delta Operations Control List,list,delta-ops-list,,Electrical Conductivity,EC (umhos/cm)%2CEC Standard (umhos/cm),Jersey Point,DtsGreaterThanReportDv(228%2C 2872%2C 410)
+Delta Operations,Control,Delta Operations Control List,list,delta-ops-list,,Electrical Conductivity,EC (umhos/cm)%2CEC Standard (umhos/cm),Emmaton,DtsGreaterThanReportDv(227%2C 2783%2C 412)
+Delta Operations,Control,Delta Operations Control List,list,delta-ops-list,,Electrical Conductivity,EC (umhos/cm)%2CEC Standard (umhos/cm),Collinsville,DtsGreaterThanReportDv(229%2C 2784%2C 413)
+Delta Operations,Control,Delta Operations Control List,list,delta-ops-list,,Negative Carriage Water,Trinity (TAF)%2CShasta (TAF)%2COroville (TAF)%2CFolsom (TAF)%2CCVP San Luis (TAF)%2CSWP San Luis (TAF)%2CBanks PP (TAF/month)%2CJones PP (TAF/month),Storage Conditions during Negative Carriage Water Conditions,DtsEqualsReportDv8(170%2C 102%2C 112%2C 107%2C 104%2C 106%2C 108%2C 2744%2C 2745)
 Delta Operations,Control,Delta Operations Control List,list,delta-ops-list,,Zero Flow Conditions,,Banks PP,
 Delta Operations,Control,Delta Operations Control List,list,delta-ops-list,,Zero Flow Conditions,,Jones PP,
 Delta Operations,Control,Delta Operations Control List,list,delta-ops-list,,Zero Flow Conditions,,Delta Outflow,
