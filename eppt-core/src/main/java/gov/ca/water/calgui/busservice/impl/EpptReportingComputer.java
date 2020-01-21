@@ -60,17 +60,15 @@ import static java.util.stream.Collectors.toMap;
 public class EpptReportingComputer
 {
 	private static final Logger LOGGER = Logger.getLogger(EpptReportingComputer.class.getName());
-	private final GUILinksAllModelsBO _guiLink;
 	private final EpptStatistic _statistics;
 	private final MonthPeriod _monthPeriod;
 	private final Map<EpptScenarioRun, WaterYearIndex> _selectedIndicies;
 	private final Map<EpptScenarioRun, List<WaterYearIndex>> _allIndicies;
 	private final WaterYearDefinition _waterYearDefinition;
 
-	public EpptReportingComputer(GUILinksAllModelsBO guiLink, EpptStatistic statistics, MonthPeriod monthPeriod,
+	public EpptReportingComputer(EpptStatistic statistics, MonthPeriod monthPeriod,
 								 Map<EpptScenarioRun, WaterYearIndex> selectedIndicies, Map<EpptScenarioRun, List<WaterYearIndex>> allIndicies)
 	{
-		_guiLink = guiLink;
 		_statistics = statistics;
 		_monthPeriod = monthPeriod;
 		_selectedIndicies = selectedIndicies;
@@ -258,15 +256,5 @@ public class EpptReportingComputer
 	private List<WaterYearIndex> getWaterYearIndicesForScenario(EpptScenarioRun epptScenarioRun) throws EpptInitializationException
 	{
 		return _allIndicies.get(epptScenarioRun);
-	}
-
-	final DSSGrabber1SvcImpl buildDssGrabber(EpptScenarioRun epptScenarioRun, boolean isCFS, LocalDate start, LocalDate end)
-	{
-		DSSGrabber1SvcImpl dssGrabber = new DSSGrabber1SvcImpl();
-		dssGrabber.setIsCFS(isCFS);
-		dssGrabber.setScenarioRuns(epptScenarioRun, Collections.emptyList());
-		dssGrabber.setGuiLink(_guiLink);
-		dssGrabber.setDateRange(start, end);
-		return dssGrabber;
 	}
 }

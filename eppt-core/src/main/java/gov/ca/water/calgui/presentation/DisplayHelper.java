@@ -20,11 +20,11 @@ import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.stream.Collectors;
 import javax.swing.*;
 
 import calsim.app.DerivedTimeSeries;
 import calsim.app.MultipleTimeSeries;
+import gov.ca.water.calgui.EpptInitializationException;
 import gov.ca.water.calgui.bo.GUILinksAllModelsBO;
 import gov.ca.water.calgui.presentation.display.DefaultPlotHandler;
 import gov.ca.water.calgui.project.EpptScenarioRun;
@@ -120,12 +120,12 @@ public class DisplayHelper
 																	  m -> guiLinksAllModelsBO.addModelMapping(m.toString(), s, ""));
 															  return guiLinksAllModelsBO;
 														  }).collect(toList());
-			DisplayPlotlyFrames displayPlotlyFrames = new DisplayPlotlyFrames(plotConfigurationState, guiLinks, baseRun,
+			DisplayGuiLinkFrames displayGuiLinkFrames = new DisplayGuiLinkFrames(plotConfigurationState, guiLinks, baseRun,
 					scenarios, startMonth,
 					endMonth);
-			jTabbedPanes.addAll(displayPlotlyFrames.showDisplayFrames());
+			jTabbedPanes.addAll(displayGuiLinkFrames.showDisplayFrames());
 		}
-		catch(RuntimeException ex)
+		catch(RuntimeException | EpptInitializationException ex)
 		{
 			LOGGER.error("An error occurred while trying to display results", ex);
 		}
@@ -146,11 +146,11 @@ public class DisplayHelper
 		{
 			setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
 
-			DisplayPlotlyFrames displayPlotlyFrames = new DisplayPlotlyFrames(plotConfigurationState, locations, baseRun, scenarios, startMonth,
+			DisplayGuiLinkFrames displayGuiLinkFrames = new DisplayGuiLinkFrames(plotConfigurationState, locations, baseRun, scenarios, startMonth,
 					endMonth);
-			jTabbedPanes.addAll(displayPlotlyFrames.showDisplayFrames());
+			jTabbedPanes.addAll(displayGuiLinkFrames.showDisplayFrames());
 		}
-		catch(RuntimeException ex)
+		catch(RuntimeException | EpptInitializationException ex)
 		{
 			LOGGER.error("An error occurred while trying to display results", ex);
 		}
@@ -179,17 +179,20 @@ public class DisplayHelper
 	}
 
 	private List<JTabbedPane> getTabbedPanesWRIMS(PlotConfigurationState plotConfigurationState, EpptScenarioRun baseRun,
-												  List<EpptScenarioRun> lstScenarios, DerivedTimeSeries dts,
+												  List<EpptScenarioRun> scenarios, DerivedTimeSeries dts,
 												  MultipleTimeSeries mts, LocalDate startMonth, LocalDate endMonth)
 	{
 		List<JTabbedPane> jTabbedPanes = new ArrayList<>();
 		try
 		{
 			setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
-			jTabbedPanes = DisplayFrame.showDisplayFramesWRIMS(plotConfigurationState, baseRun, lstScenarios, dts, mts,
+			DisplayPlotlyWrimsFrames displayPlotlyWrimsFrames = new DisplayPlotlyWrimsFrames(plotConfigurationState, dts, mts, baseRun, scenarios,
 					startMonth, endMonth);
+			jTabbedPanes.addAll(displayPlotlyWrimsFrames.showDisplayFrames());
+			jTabbedPanes.addAll(DisplayFrame.showDisplayFramesWRIMS(plotConfigurationState, baseRun, scenarios, dts, mts,
+					startMonth, endMonth));
 		}
-		catch(RuntimeException ex)
+		catch(RuntimeException | EpptInitializationException ex)
 		{
 			LOGGER.error("An error occurred while trying to display results", ex);
 		}

@@ -37,22 +37,20 @@ import rma.util.RMAConst;
  */
 class EpptDiffReportingComputer extends EpptReportingComputer
 {
+	private final TimeSeriesContainer[] _baseTimeSeries;
 
-	private final EpptScenarioRun _baseRun;
-
-	EpptDiffReportingComputer(EpptScenarioRun baseRun, GUILinksAllModelsBO guiLink, EpptStatistic statistics, MonthPeriod monthPeriod,
-							  Map<EpptScenarioRun, WaterYearIndex> selectedIndicies, Map<EpptScenarioRun, List<WaterYearIndex>> allIndicies)
+	EpptDiffReportingComputer(EpptStatistic statistics, MonthPeriod monthPeriod, Map<EpptScenarioRun, WaterYearIndex> selectedIndicies,
+							  Map<EpptScenarioRun, List<WaterYearIndex>> allIndicies, TimeSeriesContainer[] baseTimeSeries)
 	{
-		super(guiLink, statistics, monthPeriod, selectedIndicies, allIndicies);
-		_baseRun = baseRun;
+		super(statistics, monthPeriod, selectedIndicies, allIndicies);
+		_baseTimeSeries = baseTimeSeries;
 	}
 
 	@Override
 	NavigableMap<LocalDateTime, Double> getFullTimeSeries(LocalDate start, LocalDate end, int offset,
 														  TimeSeriesContainer[] primarySeries)
 	{
-		NavigableMap<LocalDateTime, Double> baseTimeSeries = super.getFullTimeSeries(start, end, offset,
-				buildDssGrabber(_baseRun, false, start, end).getPrimarySeries());
+		NavigableMap<LocalDateTime, Double> baseTimeSeries = super.getFullTimeSeries(start, end, offset, _baseTimeSeries);
 		NavigableMap<LocalDateTime, Double> fullSeries = new TreeMap<>();
 		if(primarySeries != null && primarySeries.length > 0 && primarySeries[0] != null)
 		{

@@ -43,12 +43,12 @@ public class PlotlyPaneBuilder
 	private final Map<EpptScenarioRun, List<WaterYearIndex>> _allWaterYearIndicies = new HashMap<>();
 	private final Map<EpptScenarioRun, WaterYearIndex> _selectedWaterYearIndicies = new HashMap<>();
 	private PlotConfigurationState.ComparisonType _comparisonType = PlotConfigurationState.ComparisonType.COMPARISON;
-	private GUILinksAllModelsBO _guiLink;
 	private boolean _taf;
 	private LocalDate _start;
 	private LocalDate _end;
 	private WaterYearDefinition _waterYearDefinition;
 	private Month _month;
+	private String _plotTitle;
 
 	public PlotlyPaneBuilder(ChartType chartType, EpptScenarioRun baseRun, Map<EpptScenarioRun, TimeSeriesContainer[]> scenarioRunData)
 	{
@@ -67,9 +67,9 @@ public class PlotlyPaneBuilder
 		return this;
 	}
 
-	public PlotlyPaneBuilder withGuiLink(GUILinksAllModelsBO guiLink)
+	public PlotlyPaneBuilder withPlotTitle(String plotTitle)
 	{
-		_guiLink = guiLink;
+		_plotTitle = plotTitle;
 		return this;
 	}
 
@@ -106,7 +106,7 @@ public class PlotlyPaneBuilder
 		EpptReportingComputedSet epptReportingComputedSet;
 		if(_comparisonType == PlotConfigurationState.ComparisonType.DIFF)
 		{
-			epptReportingComputedSet = EpptReportingComputedSet.computeDiffForMetrics(_guiLink,
+			epptReportingComputedSet = EpptReportingComputedSet.computeDiffForMetrics(_plotTitle,
 					new NoopEpptStatistic(),
 					new MonthPeriod(_waterYearDefinition.getStartMonth(), _waterYearDefinition.getEndMonth()),
 					_start,
@@ -120,7 +120,7 @@ public class PlotlyPaneBuilder
 		}
 		else
 		{
-			epptReportingComputedSet = EpptReportingComputedSet.computeForMetrics(_guiLink,
+			epptReportingComputedSet = EpptReportingComputedSet.computeForMetrics(_plotTitle,
 					new NoopEpptStatistic(),
 					new MonthPeriod(_waterYearDefinition.getStartMonth(), _waterYearDefinition.getEndMonth()),
 					_start,

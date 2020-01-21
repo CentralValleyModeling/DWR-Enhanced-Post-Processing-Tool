@@ -479,8 +479,9 @@ public class TrendReportPanel extends JFXPanel
 						TimeSeriesContainer[] primarySeries = dssGrabber.getPrimarySeries();
 						scenarioRunData.put(epptScenarioRun, primarySeries);
 					}
-					EpptReportingComputedSet epptReportingComputedSet = EpptReportingComputedSet.computeForMetrics(guiLink, statistic, monthPeriod,
-							start, end, taf, scenarioRunData, PlotConfigurationState.ComparisonType.COMPARISON, selectedIndicies, allIndicies);
+					EpptReportingComputedSet epptReportingComputedSet = EpptReportingComputedSet.computeForMetrics(guiLink.getPlotTitle(),
+							statistic, monthPeriod, start, end, taf, scenarioRunData,
+							PlotConfigurationState.ComparisonType.COMPARISON, selectedIndicies, allIndicies);
 					JSONObject jsonObject = epptReportingComputedSet.toJson();
 					LOGGER.log(Level.FINE, "{0}", jsonObject);
 					retval.add(jsonObject);

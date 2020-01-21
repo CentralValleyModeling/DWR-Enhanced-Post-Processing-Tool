@@ -92,8 +92,6 @@ public class DSSGrabber1SvcImpl implements IDSSGrabber1Svc
 	final Map<GUILinksAllModelsBO.Model, String> _primaryDSSName = new HashMap<>();
 	final Map<GUILinksAllModelsBO.Model, String> _secondaryDSSName = new HashMap<>();
 	final List<EpptScenarioRun> _alternatives = new ArrayList<>();
-	private final IGuiLinksSeedDataSvc _seedDataSvc = GuiLinksSeedDataSvcImpl.getSeedDataSvcImplInstance();
-	private final ThresholdLinksSeedDataSvc _thresholdLinksSeedDataSvc = ThresholdLinksSeedDataSvc.getSeedDataSvcImplInstance();
 	private final Map<GUILinksAllModelsBO.Model, List<String>> _missingDSSRecords = new HashMap<>();
 	// Chart title
 	String _plotTitle;
@@ -905,7 +903,7 @@ public class DSSGrabber1SvcImpl implements IDSSGrabber1Svc
 	{
 
 		TimeSeriesContainer[] results = new TimeSeriesContainer[_alternatives.size()];
-		if(timeSeriesResults[0] != null)
+		if(timeSeriesResults != null && timeSeriesResults[0] != null)
 		{
 			for(int i = 0; i < _alternatives.size(); i++)
 			{
