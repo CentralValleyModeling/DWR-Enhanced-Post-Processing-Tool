@@ -26,6 +26,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 import javax.swing.*;
 
 import calsim.app.DerivedTimeSeries;
@@ -52,6 +53,7 @@ import gov.ca.water.calgui.techservice.impl.ErrorHandlingSvcImpl;
 import javatests.TestSupport;
 import org.apache.log4j.Logger;
 import org.jfree.data.time.Month;
+import sun.net.www.content.text.PlainTextInputStream;
 import vista.report.MonthlyReport;
 
 import hec.io.TimeSeriesContainer;
@@ -443,7 +445,15 @@ final class DisplayFrame
 			boolean isCFS = !plotConfigurationState.isDisplayTaf();
 			boolean doMonthlyTable = plotConfigurationState.isDisplayMonthlyTable();
 			boolean doSummaryTable = plotConfigurationState.isDisplaySummaryTable();
-			String exceedMonths = "";
+			String exceedMonths = String.join(",", plotConfigurationState.getSelectedExceedancePlotMonths());
+			if(plotConfigurationState.isAnnualFlowExceedancePlots())
+			{
+				exceedMonths += ",Annual";
+			}
+			if(plotConfigurationState.isPlotAllExceedancePlots())
+			{
+				exceedMonths += ",ALL";
+			}
 			List<String> summaryTags = plotConfigurationState.getSelectedSummaryTableItems();
 			String[] monthNames = {"Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov",
 					"Dec"};
@@ -528,7 +538,7 @@ final class DisplayFrame
 
 					for(int m1 = 0; m1 < 12; m1++)
 					{
-						if(exceedMonths.contains(monthNames[m1]))
+						if(exceedMonths.contains(monthNames[m1].toUpperCase()))
 						{
 							if(doDifference)
 							{
@@ -751,7 +761,7 @@ final class DisplayFrame
 		for(int m1 = 0; m1 < 12; m1++)
 		{
 			String monthName = monthNames[m1];
-			if(exceedMonths.contains(monthName))
+			if(exceedMonths.contains(monthName.toUpperCase()))
 			{
 				plottedOne = insertTabForMonth(doDifference, doBase, tabbedpane, primaryResults,
 						excResults, sexcResults, dexcResults,
