@@ -538,7 +538,7 @@ final class DisplayFrame
 
 					for(int m1 = 0; m1 < 12; m1++)
 					{
-						if(exceedMonths.contains(monthNames[m1].toUpperCase()))
+						if(exceedMonths.contains(monthNames[m1]))
 						{
 							if(doDifference)
 							{
@@ -761,7 +761,7 @@ final class DisplayFrame
 		for(int m1 = 0; m1 < 12; m1++)
 		{
 			String monthName = monthNames[m1];
-			if(exceedMonths.contains(monthName.toUpperCase()))
+			if(exceedMonths.contains(monthName))
 			{
 				plottedOne = insertTabForMonth(doDifference, doBase, tabbedpane, primaryResults,
 						excResults, sexcResults, dexcResults,

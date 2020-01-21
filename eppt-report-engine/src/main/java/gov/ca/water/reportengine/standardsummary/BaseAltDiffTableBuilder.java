@@ -443,13 +443,22 @@ class BaseAltDiffTableBuilder extends TableBuilder
 			}
 			else
 			{
-				String textRaw = String.valueOf(Math.round(value));
-				retval.setTextContent(textRaw);
 				String units = jythonValueGenerator.getUnits();
 				if(units != null && _units == null)
 				{
 					_units = units;
 				}
+				String textValue;
+				if("percent".equals(units))
+				{
+					BigDecimal bd = BigDecimal.valueOf(value);
+					textValue = bd.round(new MathContext(3)).toString();
+				}
+				else
+				{
+					textValue = String.valueOf(Math.round(value));
+				}
+				retval.setTextContent(textValue);
 			}
 		}
 		catch(DssMissingRecordException e)
