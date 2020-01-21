@@ -27,23 +27,25 @@ import javafx.stage.Stage;
  * @author <a href="mailto:adam@rmanet.com">Adam Korynta</a>
  * @since 01-09-2020
  */
-public class WebTest extends Application {
-		@Override
-		public void start(Stage stage) throws Exception {
-			StackPane pane = new StackPane();
-			WebView view = new WebView();
+public class WebCssCompliance extends Application
+{
+	@Override
+	public void start(Stage stage) throws Exception
+	{
+		StackPane pane = new StackPane();
+		WebView view = new WebView();
 
-			WebEngine engine = view.getEngine();
-			engine.load("http://css3test.com/");
-			pane.getChildren().add(view);
+		WebEngine engine = view.getEngine();
+		engine.load("http://css3test.com/");
+		pane.getChildren().add(view);
 
-			Scene scene = new Scene(pane, 960, 600);
-			stage.setScene(scene);
-			stage.show();
-		}
+		Scene scene = new Scene(pane, 960, 600);
+		stage.setScene(scene);
+		stage.show();
+	}
 
-		public static void main(String[] args) throws IOException
-		{
-			Application.launch(args);
-		}
+	public static void main(String[] args)
+	{
+		Application.launch(args);
+	}
 }
