@@ -40,6 +40,7 @@ import gov.ca.water.calgui.bo.WaterYearPeriodRange;
 import gov.ca.water.calgui.busservice.impl.DSSGrabber1SvcImpl;
 import gov.ca.water.calgui.busservice.impl.MonthPeriod;
 import gov.ca.water.calgui.busservice.impl.WaterYearTableReader;
+import gov.ca.water.calgui.constant.Constant;
 import gov.ca.water.calgui.project.EpptScenarioRun;
 import gov.ca.water.calgui.scripts.DssReader;
 
@@ -102,15 +103,13 @@ class EpptReportingComputer
 		{
 			if(convertTaf)
 			{
-				aggregateYearly = "CFS".equalsIgnoreCase(primarySeries[0].getUnits());
 				dssGrabber.calcTAFforCFS(primarySeries, null);
 			}
 			TimeSeriesContainer tsc = primarySeries[0];
-			units = tsc.getParameterName() + " (" + tsc.getUnits() + ")";
-			if("STORAGE-CHANGE".equalsIgnoreCase(tsc.getParameterName()) && "TAF".equalsIgnoreCase(tsc.getUnits()))
-			{
-				aggregateYearly = true;
-			}
+			String parameterName = tsc.getParameterName();
+			units = parameterName + " (" + tsc.getUnits() + ")";
+			String originalUnits = dssGrabber.getOriginalUnits();
+			aggregateYearly = Constant.isAggregateYearly(convertTaf, parameterName, originalUnits);
 			for(int i = 0; i < tsc.getNumberValues(); i++)
 			{
 				HecTime hecTime = tsc.getHecTime(i);
