@@ -34,6 +34,7 @@ import gov.ca.dsm2.input.parser.InputTable;
 import gov.ca.dsm2.input.parser.Parser;
 import gov.ca.dsm2.input.parser.Tables;
 import gov.ca.water.calgui.presentation.display.ReportPDFWriter;
+import vista.db.dss.DSSDataReference;
 import vista.db.dss.DSSUtil;
 import vista.report.TSMath;
 import vista.set.Constants;
@@ -716,7 +717,37 @@ public class Report extends SwingWorker<Void, String>
 				}
 				else
 				{
-					return refs[0];
+					DataReference retval = null;
+					DataReference firstRef = refs[0];
+					if(firstRef != null)
+					{
+
+						DataReference lastRef = refs[refs.length - 1];
+						String serverName = firstRef.getServername();
+						String fileName = firstRef.getFilename();
+						String firstDPart = firstRef.getPathname().getPart(Pathname.D_PART);
+						if(firstDPart.contains("-"))
+						{
+							firstDPart = firstDPart.split("-")[0];
+						}
+						String lastDPart = lastRef.getPathname().getPart(Pathname.D_PART);
+						if(lastDPart.contains("-"))
+						{
+							String[] split = lastDPart.split("-");
+							lastDPart = split[split.length - 1];
+						}
+						Pathname pathname = Pathname.createPathname(new String[]
+								{
+										firstRef.getPathname().getPart(Pathname.A_PART),
+										firstRef.getPathname().getPart(Pathname.B_PART),
+										firstRef.getPathname().getPart(Pathname.C_PART),
+										firstDPart + " - " + lastDPart,
+										firstRef.getPathname().getPart(Pathname.E_PART),
+										firstRef.getPathname().getPart(Pathname.F_PART),
+								});
+						retval = new DSSDataReference(serverName, fileName, pathname);
+					}
+					return retval;
 				}
 			}
 			catch(Exception ex)
