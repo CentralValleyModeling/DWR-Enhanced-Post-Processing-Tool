@@ -24,6 +24,7 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Objects;
 import java.util.TimeZone;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -717,9 +718,9 @@ public class Report extends SwingWorker<Void, String>
 				}
 				else
 				{
-					DataReference retval = null;
 					DataReference firstRef = refs[0];
-					if(firstRef != null)
+					DataReference retval = firstRef;
+					if(firstRef != null && refs.length > 1)
 					{
 
 						DataReference lastRef = refs[refs.length - 1];
@@ -736,12 +737,17 @@ public class Report extends SwingWorker<Void, String>
 							String[] split = lastDPart.split("-");
 							lastDPart = split[split.length - 1];
 						}
+						String newDPart = firstDPart;
+						if(!Objects.equals(firstDPart, lastDPart))
+						{
+							newDPart = firstDPart + " - " + lastDPart;
+						}
 						Pathname pathname = Pathname.createPathname(new String[]
 								{
 										firstRef.getPathname().getPart(Pathname.A_PART),
 										firstRef.getPathname().getPart(Pathname.B_PART),
 										firstRef.getPathname().getPart(Pathname.C_PART),
-										firstDPart + " - " + lastDPart,
+										newDPart,
 										firstRef.getPathname().getPart(Pathname.E_PART),
 										firstRef.getPathname().getPart(Pathname.F_PART),
 								});
