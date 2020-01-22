@@ -1,102 +1,102 @@
 !Index,GuiLink ID,Title Override
-100,102,Trinity Reservoir Storage
-200,103,Shasta Reservoir Storage
-300,104,Folsom Reservoir Storage
-400,105,CVP North of Delta Storage
-500,106,CVP San Luis Reservoir Storage
-600,107,Oroville Reservoir Storage
-700,108,SWP San Luis Reservoir Storage
-800,111,Trinity Reservoir Operations
-900,112,Shasta Reservoir Operations
-1000,113,Folsom Reservoir Operations
-1100,114,CVP San Luis Reservoir Operations
-1200,115,Oroville Reservoir Operations
-1300,116,SWP San Luis Reservoir Operations
-1400,202,Trinity River
-1500,203,Trinity River Exports
-1600,204,Clear Creek
-1700,205,Spring Creek Tunnel
-1800,206,Sacramento River at Keswick
-1900,207,Sacramento River at Red Bluff
-2000,208,Sacramento River at Wilkins Slough
-2100,209,Feather River at Thermolito
-2200,210,Feather River Below Yuba Confluence
-2300,211,American River at Nimbus
-2400,212,Fremont Weir
-2500,213,Sacramento Weir
-2600,214,Sacramento River at Hood
-2700,215,Yolo Bypass
-2800,216,Delta Cross Channel
-2900,217,Sacramento River at Rio Vista
-3000,218,Old and Middle River
-3100,219,San Joaquin River near Jersey Point (QWEST)
-3200,302,Delta Inflow
-3300,303,Delta Outflow
-3400,304,Delta Required Outflow
-3500,305,Export-Inflow Ratio
-3600,306,X2 Position
-3700,310,Jones Exports
-3800,311,Banks Exports
-3900,312,Total Exports
-4000,313,North Bay Aqueduct
-4100,314,CCWD Alternative Intake Exports
-4200,315,CCWD Rock Slough Exports
-4300,316,CCWD Total Exports
-4400,402,CVP North of Delta Deliveries
-4500,403,CVP South of Delta Deliveries (including CVC)
-4600,404,SWP North of Delta Deliveries
-4700,405,SWP Total Deliveries
-4800,406,SWP Article 21 (Interruptible) Deliveries
-4900,410,Jersey Point Salinity
-5000,411,Rock Slough Salinity
-5100,412,Emmaton Salinity
-5200,413,Collinsville Salinity
-5300,414,Antioch Salinity
-5400,415,Chipps Salinity
+100,102,
+200,103,
+300,104,
+400,105,
+500,106,
+600,107,
+700,108,
+800,111,
+900,112,
+1000,113,
+1100,114,
+1200,115,
+1300,116,
+1400,202,
+1500,203,
+1600,204,
+1700,205,
+1800,206,
+1900,207,
+2000,208,
+2100,209,
+2200,210,
+2300,211,
+2400,212,
+2500,213,
+2600,214,
+2700,215,
+2800,216,
+2900,217,
+3000,218,
+3100,219,
+3200,302,
+3300,303,
+3400,304,
+3500,305,
+3600,306,
+3700,310,
+3800,311,
+3900,312,
+4000,313,
+4100,314,
+4200,315,
+4300,316,
+4400,402,
+4500,403,
+4600,404,
+4700,405,
+4800,406,
+4900,410,
+5000,411,
+5100,412,
+5200,413,
+5300,414,
+5400,415,
 5500,,
-5600,508,Los Vaqueros Storage
-5700,509,Diversion Salinity - Old River
-5800,510,Diversion Salinity - Victoria Canal
-5900,511,Diversion Salinity - Rock Slough
-6000,512,Los Vaqueros Fill
-6100,513,CCWD Deliveries
-6200,514,CCWD Diversions - Old River
-6300,515,CCWD Diversions - Victoria Canal
-6400,516,CCWD Diversions - Rock Slough
-6500,517,CCWD Delivery Salinity
+5600,508,
+5700,509,
+5800,510,
+5900,511,
+6000,512,
+6100,513,
+6200,514,
+6300,515,
+6400,516,
+6500,517,
 6600,,
-6700,600,New Melones Reservoir Storage
-6800,601,New Don Pedro Reservoir Storage
-6900,602,Mclure Reservoir Storage
-7000,603,Millerton Reservoir Storage
-7100,604,Flow from SJR to Vernalis
-7200,605,Flow of Stanislaus River to SJR
-7300,606,Flow of Tuolumne River to SJR
-7400,607,Flow of Merced river to SJR
-7500,608,Flow of SJR at Mud Slough
-7600,609,Flow below Mendota Pool
-7700,610,Deliveries of Stanislaus
-7800,611,Deliveries of Tuolumne
-7900,612,Deliveries of Merced
-8000,613,Deliveries of Friant
-8100,614,Vernalis Salinity
+6700,600,
+6800,601,
+6900,602,
+7000,603,
+7100,604,
+7200,605,
+7300,606,
+7400,607,
+7500,608,
+7600,609,
+7700,610,
+7800,611,
+7900,612,
+8000,613,
+8100,614,
 8200,,
-8300,851,SWP Water Rights Shortages
-8400,852,SWP North of Delta Ag Shortages
-8500,853,SWP South of Delta Ag Shortages
-8600,854,SWP Total Ag Shortages
-8700,855,SWP North of Delta M&I Demands Shortages
-8800,856,SWP South of Delta M&I Demands Shortages
-8900,857,SWP Total M&I Shortages
-9000,858,SWP MWD Shortages
-9100,859,SWP Other Shortages
-9200,860,SWP Losses Shortages
-9300,861,SWP North of Delta Total Shortages
-9400,862,SWP South of Delta Total Shortages
-9500,863,SWP Total Shortages
-9600,881,CVP South of Delta Ag Shortages
-9700,882,CVP South of Delta M&I Shortages
-9800,883,CVP South of Delta Exchange Shortages
-9900,884,CVP South of Delta Refuge Shortages
-10000,885,CVP South of Delta Losses Shortages
-10100,886,CVP South of Delta Total Shortages
+8300,851,
+8400,852,
+8500,853,
+8600,854,
+8700,855,
+8800,856,
+8900,857,
+9000,858,
+9100,859,
+9200,860,
+9300,861,
+9400,862,
+9500,863,
+9600,881,
+9700,882,
+9800,883,
+9900,884,
+10000,885,
+10100,886,
