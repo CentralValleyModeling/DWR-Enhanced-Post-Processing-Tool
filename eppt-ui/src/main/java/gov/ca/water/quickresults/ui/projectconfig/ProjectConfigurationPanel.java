@@ -435,7 +435,7 @@ public final class ProjectConfigurationPanel extends EpptPanel
 		}
 		catch(RuntimeException ex)
 		{
-			LOGGER.error("Error loading project configuration", ex);
+			LOGGER.fatal("Error loading project configuration", ex);
 		}
 		finally
 		{
