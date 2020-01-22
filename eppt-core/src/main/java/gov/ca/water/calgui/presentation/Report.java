@@ -197,7 +197,7 @@ public class Report extends SwingWorker<Void, String>
 			ArrayList<String> copy = new ArrayList<>(row);
 			copy.remove(index);
 			String value = copy.stream().collect(Collectors.joining(" "));
-			_scalars.put(name, value);
+			_scalars.put(name, value.replace("\"", ""));
 		}
 		// load pathname mapping into a map
 		InputTable pathnameMappingTable = tables.getTableNamed("PATHNAME_MAPPING");
