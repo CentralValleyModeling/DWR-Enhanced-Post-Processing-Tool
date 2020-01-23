@@ -12,6 +12,8 @@
 
 package gov.ca.water.reportengine.detailedissues;
 
+import java.time.LocalDateTime;
+import java.time.YearMonth;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -28,15 +30,15 @@ public class DetailedIssueViolation
 	private final int _totalNumberOfViolations;
 	private final List<Issue> _issues = new ArrayList<>();
 
-	DetailedIssueViolation(List<HecTime> times, String title, Map<HecTime, Double> actualValues,
-						   Map<HecTime, Double> thresholdValues, Map<HecTime, String> waterYearType, String valueUnits,
+	DetailedIssueViolation(List<LocalDateTime> times, String title, Map<LocalDateTime, Double> actualValues,
+						   Map<LocalDateTime, Double> thresholdValues, Map<LocalDateTime, String> waterYearType, String valueUnits,
 						   String standardUnits, int totalNumberOfViolations)
 	{
 
 		_title = title;
 		_totalNumberOfViolations = totalNumberOfViolations;
 
-		for(HecTime time : times)
+		for(LocalDateTime time : times)
 		{
 			String waterYear = waterYearType.get(time);
 			Double value = actualValues.get(time);
@@ -65,17 +67,17 @@ public class DetailedIssueViolation
 	static class Issue
 	{
 
-		private final HecTime _time;
+		private final YearMonth _time;
 		private final String _waterYearType;
 		private final Double _value;
 		private final String _valueUnits;
 		private final Double _standard;
 		private final String _standardUnits;
 
-		Issue(HecTime time, String waterYearType, Double value, String valueUnits, Double standard, String standardUnits)
+		Issue(LocalDateTime time, String waterYearType, Double value, String valueUnits, Double standard, String standardUnits)
 		{
 
-			_time = time;
+			_time = YearMonth.of(time.minusMonths(1).getYear(), time.minusMonths(1).getMonth());
 			_waterYearType = waterYearType;
 			_value = value;
 			_valueUnits = valueUnits;
@@ -90,7 +92,14 @@ public class DetailedIssueViolation
 			String actualValue = "";
 			if(_value != null)
 			{
-				actualValue = String.format("%.2f", _value) + " " + _valueUnits;
+				if(Double.isNaN(_value))
+				{
+					actualValue = "NR";
+				}
+				else
+				{
+					actualValue = String.format("%.2f", _value) + " " + _valueUnits;
+				}
 			}
 			String standardValue = "";
 			if(_standard != null)
@@ -99,14 +108,21 @@ public class DetailedIssueViolation
 				{
 					standardValue += " | ";
 				}
-				standardValue += String.format("%.2f", _standard) + " " + _standardUnits;
+				if(Double.isNaN(_standard))
+				{
+					standardValue += "NR";
+				}
+				else
+				{
+					standardValue += String.format("%.2f", _standard) + " " + _standardUnits;
+				}
 			}
 			String values = "";
 			if(!actualValue.isEmpty())
 			{
                 values = " @ " + actualValue + " " + standardValue;
 			}
-			String formattedTime = _time.month() + "/" + _time.year();
+			String formattedTime = _time.getMonth().getValue() + "/" + _time.getYear();
 			return formattedTime + " " + _waterYearType + values;
 		}
 	}

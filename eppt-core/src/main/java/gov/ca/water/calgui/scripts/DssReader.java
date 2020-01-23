@@ -343,22 +343,31 @@ public class DssReader
 			try
 			{
 				ThresholdLinksBO thresholdLink = ThresholdLinksSeedDataSvc.getSeedDataSvcImplInstance().getObjById(thresholdId);
-				DSSGrabber1SvcImpl dssGrabber1Svc = buildDssGrabber(_scenarioRun, thresholdLink);
-				TimeSeriesContainer[] threshold = dssGrabber1Svc.getPrimarySeries();
-				if(mapToTaf)
+				if(thresholdLink != null)
 				{
-					threshold = mapToTaf(threshold, dssGrabber1Svc);
+
+					DSSGrabber1SvcImpl dssGrabber1Svc = buildDssGrabber(_scenarioRun, thresholdLink);
+					TimeSeriesContainer[] threshold = dssGrabber1Svc.getPrimarySeries();
+					if(mapToTaf)
+					{
+						threshold = mapToTaf(threshold, dssGrabber1Svc);
+					}
+					if(threshold == null || threshold[0] == null)
+					{
+						throw new DssMissingRecordException(_scenarioRun.getName() +
+								": Unable to find matching Threshold path for B/C-Part: " + thresholdLink.getModelData(
+								GUILinksAllModelsBO.Model.values().get(0)).getPrimary() + " and ID: " + thresholdLink.getId());
+					}
+					_originalUnits = dssGrabber1Svc.getOriginalUnits();
+					_parameter = threshold[0].getParameterName();
+					retval = timeSeriesContainerToMap(threshold);
+					_dssCache.addThresholdLinkToCache(_scenarioRun, thresholdId, threshold[0], _originalUnits);
 				}
-				if(threshold == null || threshold[0] == null)
+				else
 				{
 					throw new DssMissingRecordException(_scenarioRun.getName() +
-							": Unable to find matching Threshold path for B-Part: " + thresholdLink.getModelData(
-							GUILinksAllModelsBO.Model.values().get(0)) + " and ID: " + thresholdLink.getId());
+							": Unable to find matching Threshold link for ID " + thresholdId);
 				}
-				_originalUnits = dssGrabber1Svc.getOriginalUnits();
-				_parameter = threshold[0].getParameterName();
-				retval = timeSeriesContainerToMap(threshold);
-				_dssCache.addThresholdLinkToCache(_scenarioRun, thresholdId, threshold[0], _originalUnits);
 			}
 			catch(RuntimeException e)
 			{

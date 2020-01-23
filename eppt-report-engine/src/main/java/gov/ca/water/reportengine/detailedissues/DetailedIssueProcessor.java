@@ -12,14 +12,15 @@
 
 package gov.ca.water.reportengine.detailedissues;
 
-import java.nio.file.Path;
-import java.nio.file.Paths;
+import java.time.LocalDateTime;
+import java.time.Month;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.NavigableMap;
 import java.util.Objects;
+import java.util.TreeMap;
 import java.util.logging.Level;
 
 import com.google.common.flogger.FluentLogger;
@@ -27,21 +28,22 @@ import gov.ca.water.calgui.EpptInitializationException;
 import gov.ca.water.calgui.bo.DetailedIssue;
 import gov.ca.water.calgui.bo.GUILinksAllModelsBO;
 import gov.ca.water.calgui.bo.ThresholdLinksBO;
+import gov.ca.water.calgui.bo.WaterYearDefinition;
 import gov.ca.water.calgui.bo.WaterYearIndex;
 import gov.ca.water.calgui.bo.WaterYearType;
-import gov.ca.water.calgui.busservice.impl.DSSGrabber1SvcImpl;
 import gov.ca.water.calgui.busservice.impl.GuiLinksSeedDataSvcImpl;
 import gov.ca.water.calgui.busservice.impl.ThresholdLinksSeedDataSvc;
 import gov.ca.water.calgui.busservice.impl.WaterYearTableReader;
-import gov.ca.water.calgui.constant.Constant;
 import gov.ca.water.calgui.project.EpptScenarioRun;
+import gov.ca.water.calgui.scripts.DssCache;
+import gov.ca.water.calgui.scripts.DssMissingRecordException;
+import gov.ca.water.calgui.scripts.DssReader;
 import gov.ca.water.reportengine.EpptReportException;
 import gov.ca.water.reportengine.executivereport.FlagViolation;
 import gov.ca.water.reportengine.executivereport.Module;
 import gov.ca.water.reportengine.executivereport.SubModule;
+import gov.ca.water.reportengine.standardsummary.StandardSummaryErrors;
 
-import hec.heclib.util.HecTime;
-import hec.io.TimeSeriesContainer;
 import hec.lang.Const;
 
 import static java.util.stream.Collectors.toList;
@@ -50,15 +52,18 @@ public class DetailedIssueProcessor
 {
 
 	private static final FluentLogger LOGGER = FluentLogger.forEnclosingClass();
+	private final StandardSummaryErrors _standardSummaryErrors;
 	private final Map<EpptScenarioRun, Map<SubModule, List<FlagViolation>>> _runsToViolations;
 	private final List<Module> _modules;
 	private final List<DetailedIssue> _allDetailedIssues;
 	private final List<EpptScenarioRun> _runs;
 	private final boolean _isCFS;
 
-	public DetailedIssueProcessor(Map<EpptScenarioRun, Map<SubModule, List<FlagViolation>>> runsToViolations, List<Module> modules,
-								  List<DetailedIssue> allDetailedIssues, List<EpptScenarioRun> runs, boolean isCFS) throws EpptReportException
+	public DetailedIssueProcessor(StandardSummaryErrors standardSummaryErrors,
+								  Map<EpptScenarioRun, Map<SubModule, List<FlagViolation>>> runsToViolations, List<Module> modules,
+								  List<DetailedIssue> allDetailedIssues, List<EpptScenarioRun> runs, boolean isCFS)
 	{
+		_standardSummaryErrors = standardSummaryErrors;
 		_runsToViolations = runsToViolations;
 		_modules = modules;
 		_allDetailedIssues = allDetailedIssues;
@@ -77,7 +82,6 @@ public class DetailedIssueProcessor
 				LOGGER.at(Level.INFO).log("Processing Detailed Issues for Scenario Run: %s", run.getName());
 				Map<Module, List<DetailedIssueViolation>> modToDIVs = new HashMap<>();
 				Map<SubModule, List<FlagViolation>> subModToViolations = _runsToViolations.get(run);
-				Path nameLookupPath = Paths.get(Constant.WY_TYPES_NAME_LOOKUP);
 				WaterYearTableReader wyTypeReader = new WaterYearTableReader(run.getLookupDirectory());
 				try
 				{
@@ -185,91 +189,86 @@ public class DetailedIssueProcessor
 		{
 			title = "Undefined";
 		}
-
-		DSSGrabber1SvcImpl guiLinkGrabber = buildGuiLinkDssGrabber(run, guiID);
-		DSSGrabber1SvcImpl thresholdGrabber = buildThresholdDssGrabber(run, thresholdID);
-
-		//get the specific container for the threshold values
-		TimeSeriesContainer[] thresholdTimeSeries = thresholdGrabber.getPrimarySeries();
-		TimeSeriesContainer thresholdSeriesContainer = null;
-		if(thresholdTimeSeries != null && thresholdTimeSeries.length > 0)
+		DssReader dssReader = new DssReader(run, new WaterYearDefinition("", Month.OCTOBER, Month.SEPTEMBER), new DssCache());
+		NavigableMap<LocalDateTime, Double> guiLinkData = new TreeMap<>();
+		String valueUnits = "";
+		try
 		{
-			thresholdSeriesContainer = thresholdTimeSeries[0];
+			//get the specific container for the threshold values
+			guiLinkData = dssReader.getGuiLinkData(guiID, !_isCFS);
+			valueUnits = dssReader.getUnits();
 		}
-
-		//get the specific container for the values
-		TimeSeriesContainer[] primarySeries = guiLinkGrabber.getPrimarySeries();
-
-		TimeSeriesContainer valueContainer = null;
-		if(primarySeries != null && primarySeries.length > 0)
+		catch(DssMissingRecordException e)
 		{
-			valueContainer = primarySeries[0];
+			_standardSummaryErrors.addError(LOGGER,"Unable to process value for flagged violation", e);
+		}
+		NavigableMap<LocalDateTime, Double> thresholdData = new TreeMap<>();
+		String standardUnits = "";
+		try
+		{
+			//get the specific container for the values
+			thresholdData = dssReader.getThresholdData(thresholdID, !_isCFS);
+			standardUnits = dssReader.getUnits();
+		}
+		catch(DssMissingRecordException e)
+		{
+			_standardSummaryErrors.addError(LOGGER,"Unable to process threshold value for flagged violation", e);
 		}
 		LOGGER.at(Level.INFO).log("Processing violations from: %s", violation.getDtsFileName());
-		List<HecTime> violationTimes = violation.getTimes();
+		List<LocalDateTime> violationTimes = violation.getTimes();
 		if(violationTimes.size() > 10)
 		{
 			LOGGER.at(Level.INFO).log("Showing first 10 violations. Total violation count: %s", violationTimes.size());
 		}
-		List<HecTime> times = violationTimes
+		List<LocalDateTime> times = violationTimes
 				.stream()
 				.limit(10)
 				.collect(toList());
-		String valueUnits = "";
-		if(valueContainer != null)
-		{
-			valueUnits = valueContainer.getUnits();
-		}
-		String standardUnits = "";
-		if(thresholdSeriesContainer != null)
-		{
-			standardUnits = thresholdSeriesContainer.getUnits();
-		}
-		Map<HecTime, Double> actualValues = getActualValues(times, valueContainer);
-		Map<HecTime, Double> thresholdValues = getThresholdValues(times, thresholdSeriesContainer);
-		Map<HecTime, String> waterYearTypes = getWaterYearTypes(times, waterYearTypesFromFile);
+		Map<LocalDateTime, Double> actualValues = getActualValues(times, guiLinkData);
+		Map<LocalDateTime, Double> thresholdValues = getThresholdValues(times, thresholdData);
+		Map<LocalDateTime, String> waterYearTypes = getWaterYearTypes(times, waterYearTypesFromFile);
 		return new DetailedIssueViolation(times, title, actualValues, thresholdValues, waterYearTypes, valueUnits, standardUnits,
 				violation.getTimes().size());
 	}
 
-	private Map<HecTime, Double> getActualValues(List<HecTime> times, TimeSeriesContainer tsc)
+	private Map<LocalDateTime, Double> getActualValues(List<LocalDateTime> times, NavigableMap<LocalDateTime, Double> data)
 	{
-		Map<HecTime, Double> values = new HashMap<>();
-		if(tsc != null)
+		Map<LocalDateTime, Double> values = new HashMap<>();
+		for(LocalDateTime time : times)
 		{
-			for(HecTime time : times)
+			Double value = data.getOrDefault(time, Double.NaN);
+			if(value != null)
 			{
-				double value = tsc.getValue(time);
 				values.put(time, value);
 			}
 		}
 		return values;
 	}
 
-	private Map<HecTime, Double> getThresholdValues(List<HecTime> times, TimeSeriesContainer tsc)
+	private Map<LocalDateTime, Double> getThresholdValues(List<LocalDateTime> times, NavigableMap<LocalDateTime, Double> data)
 	{
-		Map<HecTime, Double> thresholds = new HashMap<>();
-		if(tsc != null)
+		Map<LocalDateTime, Double> thresholds = new HashMap<>();
+		for(LocalDateTime time : times)
 		{
-			for(HecTime time : times)
+			Double threshold = data.getOrDefault(time, Double.NaN);
+			if(threshold != null)
 			{
-				double threshold = tsc.getValue(time);
 				thresholds.put(time, threshold);
 			}
 		}
 		return thresholds;
 	}
 
-	private Map<HecTime, String> getWaterYearTypes(List<HecTime> times,
-												   List<WaterYearType> waterYearTypesFromFile)
+	private Map<LocalDateTime, String> getWaterYearTypes(List<LocalDateTime> times,
+														 List<WaterYearType> waterYearTypesFromFile)
 	{
-		Map<HecTime, String> types = new HashMap<>();
-		for(HecTime time : times)
+		Map<LocalDateTime, String> types = new HashMap<>();
+		for(LocalDateTime time : times)
 		{
 			String waterYearTypeString = "Undefined";
 			for(WaterYearType wyt : waterYearTypesFromFile)
 			{
-				if(wyt.getYear() == time.year())
+				if(wyt.getYear() == time.minusMonths(1).getYear())
 				{
 					waterYearTypeString = wyt.getWaterYearPeriod().toString();
 					break;
@@ -280,27 +279,6 @@ public class DetailedIssueProcessor
 
 		return types;
 	}
-
-	private DSSGrabber1SvcImpl buildThresholdDssGrabber(EpptScenarioRun epptScenarioRun, int thresholdId)
-	{
-		DSSGrabber1SvcImpl grabber1Svc = new DSSGrabber1SvcImpl();
-		grabber1Svc.setIsCFS(_isCFS);
-		grabber1Svc.setScenarioRuns(epptScenarioRun, Collections.emptyList());
-		ThresholdLinksBO thresholdLink = ThresholdLinksSeedDataSvc.getSeedDataSvcImplInstance().getObjById(thresholdId);
-		grabber1Svc.setThresholdLink(thresholdLink);
-		return grabber1Svc;
-	}
-
-	private DSSGrabber1SvcImpl buildGuiLinkDssGrabber(EpptScenarioRun epptScenarioRun, int guiID)
-	{
-		DSSGrabber1SvcImpl grabber1Svc = new DSSGrabber1SvcImpl();
-		grabber1Svc.setIsCFS(_isCFS);
-		grabber1Svc.setScenarioRuns(epptScenarioRun, Collections.emptyList());
-		GUILinksAllModelsBO guiLink = GuiLinksSeedDataSvcImpl.getSeedDataSvcImplInstance().getGuiLink(Integer.toString(guiID));
-		grabber1Svc.setGuiLink(guiLink);
-		return grabber1Svc;
-	}
-
 
 	private DetailedIssue getDetailedIssueThatMatchViolation(FlagViolation violation)
 	{

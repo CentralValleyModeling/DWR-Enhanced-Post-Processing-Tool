@@ -12,6 +12,7 @@
 
 package gov.ca.water.reportengine.executivereport;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,11 +22,11 @@ import hec.lang.Const;
 public class FlagViolation
 {
 
-	private final List<HecTime> _times = new ArrayList<>();
+	private final List<LocalDateTime> _times = new ArrayList<>();
 	private final String _dtsFileName;
 	private final double _maxValue;
 
-	FlagViolation(List<HecTime> times, String dtsFileName)
+	FlagViolation(List<LocalDateTime> times, String dtsFileName)
 	{
 		_times.addAll(times);
 		_dtsFileName = dtsFileName;
@@ -37,7 +38,6 @@ public class FlagViolation
 	{
 		_maxValue = maxValue;
 		_dtsFileName = dtsFileName;
-
 	}
 
 	public String getDtsFileName()
@@ -45,7 +45,7 @@ public class FlagViolation
 		return _dtsFileName;
 	}
 
-	public List<HecTime> getTimes()
+	public List<LocalDateTime> getTimes()
 	{
 		return _times;
 	}
