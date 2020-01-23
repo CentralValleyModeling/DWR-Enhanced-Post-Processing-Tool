@@ -150,8 +150,8 @@ public class SummaryTablePanel2 extends JPanel implements ActionListener, Compon
 			columns.addElement("Sep");
 			columns.addElement("All (TAF)");
 
-			boolean isCFS = dss_Grabber == null ? dss_Grabber2.getOriginalUnits().equals("CFS")
-					: dss_Grabber.getOriginalUnits().equals("CFS");
+			boolean isCFS = dss_Grabber == null ? "CFS".equalsIgnoreCase(dss_Grabber2.getOriginalUnits())
+					: "CFS".equalsIgnoreCase(dss_Grabber.getOriginalUnits());
 
 			// loop over all Primary datasets
 

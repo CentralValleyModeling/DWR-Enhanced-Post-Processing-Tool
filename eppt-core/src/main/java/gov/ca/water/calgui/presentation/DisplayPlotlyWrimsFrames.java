@@ -23,6 +23,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.TreeMap;
+import java.util.stream.Collectors;
 import javax.swing.*;
 
 import calsim.app.DerivedTimeSeries;
@@ -91,7 +92,9 @@ public class DisplayPlotlyWrimsFrames extends DisplayFrames
 		boolean isCFS = !getPlotConfigurationState().isDisplayTaf();
 		boolean doMonthlyTable = getPlotConfigurationState().isDisplayMonthlyTable();
 		boolean doSummaryTable = getPlotConfigurationState().isDisplaySummaryTable();
-		String exceedMonths = "";
+		String exceedMonths = getPlotConfigurationState().getSelectedExceedancePlotMonths().stream()
+													.map(m -> m.getDisplayName(TextStyle.SHORT, Locale.getDefault()))
+													.collect(Collectors.joining(","));
 		List<String> summaryTags = getPlotConfigurationState().getSelectedSummaryTableItems();
 		String[] monthNames = {"Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov",
 				"Dec"};

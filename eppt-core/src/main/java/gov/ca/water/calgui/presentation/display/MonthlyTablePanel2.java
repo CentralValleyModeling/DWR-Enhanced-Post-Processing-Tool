@@ -79,7 +79,7 @@ public class MonthlyTablePanel2 extends JPanel implements ActionListener, Compon
 		columns.addElement("Jul");
 		columns.addElement("Aug");
 		columns.addElement("Sep");
-		boolean isCFS = dss_Grabber2.getOriginalUnits().equals("CFS");
+		boolean isCFS = "CFS".equalsIgnoreCase(dss_Grabber2.getOriginalUnits());
 		if(isCFS)
 		{
 			columns.addElement("Ann (TAF)");

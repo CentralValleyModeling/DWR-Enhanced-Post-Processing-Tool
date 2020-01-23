@@ -43,7 +43,6 @@ import gov.ca.water.calgui.project.EpptDssContainer;
 import gov.ca.water.calgui.project.EpptScenarioRun;
 import gov.ca.water.quickresults.ui.projectconfig.ProjectConfigurationPanel;
 import javafx.scene.paint.Color;
-import jdk.nashorn.internal.scripts.JO;
 
 import rma.swing.RmaJColorChooserButton;
 import rma.swing.RmaJComboBox;
@@ -68,8 +67,6 @@ public class ScenarioEditorPanel
 	private JTable _dssTable;
 	private JButton _addButton;
 	private JButton _removeButton;
-	private JButton _upButton;
-	private JButton _downButton;
 	private JTextField _nameField;
 	private JTextField _descriptionField;
 	private JTextField _outputTextField;
@@ -177,7 +174,7 @@ public class ScenarioEditorPanel
 		}
 	}
 
-	private JFileChooser getFileChooser(String s)
+	private static JFileChooser getFileChooser(String s)
 	{
 		if(fileChooser == null)
 		{
@@ -411,8 +408,6 @@ public class ScenarioEditorPanel
 	private void createUIComponents()
 	{
 		_dssTable = new RmaJTable();
-		_downButton = new JButton("<html>&#9660;</html>");
-		_upButton = new JButton("<html>&#9650;</html>");
 	}
 
 	private void addExtraDss(ActionEvent e)
@@ -646,7 +641,7 @@ public class ScenarioEditorPanel
 		}
 	}
 
-	private class ComboBoxCellEditor extends RmaCellEditor implements TableCellRenderer
+	private final class ComboBoxCellEditor extends RmaCellEditor implements TableCellRenderer
 	{
 		private final RmaJComboBox<String> _comboBox;
 
