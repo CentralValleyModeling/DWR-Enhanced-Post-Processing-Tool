@@ -538,7 +538,7 @@ final class DisplayFrame
 
 					for(int m1 = 0; m1 < 12; m1++)
 					{
-						if(exceedMonths.contains(monthNames[m1]))
+						if(exceedMonths.toLowerCase().contains(monthNames[m1].toLowerCase()))
 						{
 							if(doDifference)
 							{
@@ -557,7 +557,7 @@ final class DisplayFrame
 							tabbedpane.insertTab("Exceedance (" + monthNames[m1] + ")", null, cp3, null, 0);
 						}
 					}
-					if(exceedMonths.contains("ALL") || !plottedOne)
+					if(exceedMonths.toLowerCase().contains("all") || !plottedOne)
 					{
 						if(doDifference)
 						{
@@ -573,7 +573,7 @@ final class DisplayFrame
 						}
 						tabbedpane.insertTab("Exceedance (all)", null, cp3, null, 0);
 					}
-					if(exceedMonths.contains("Annual"))
+					if(exceedMonths.toLowerCase().contains("annual"))
 					{
 						if("CFS".equals(dssGrabber.getOriginalUnits()))
 						{
@@ -761,20 +761,20 @@ final class DisplayFrame
 		for(int m1 = 0; m1 < 12; m1++)
 		{
 			String monthName = monthNames[m1];
-			if(exceedMonths.contains(monthName))
+			if(exceedMonths.toLowerCase().contains(monthName.toLowerCase()))
 			{
 				plottedOne = insertTabForMonth(doDifference, doBase, tabbedpane, primaryResults,
 						excResults, sexcResults, dexcResults,
 						m1, monthName, dssGrabber.getPlotTitle(), dssGrabber.getYLabel(), dssGrabber.getSLabel());
 			}
 		}
-		if(exceedMonths.contains("ALL") || !plottedOne)
+		if(exceedMonths.toLowerCase().contains("aLL") || !plottedOne)
 		{
 			insertPlotPanel(dssGrabber, doDifference, doBase, primaryResults, excResults, sexcResults, dexcResults,
 					tabbedpane, " - Exceedance (all months)", dssGrabber.getYLabel(), 13,
 					dssGrabber.getPlotTitle() + " - Exceedance (all months)", "Exceedance (all)");
 		}
-		if(exceedMonths.contains("Annual"))
+		if(exceedMonths.toLowerCase().contains("annual"))
 		{
 			if("CFS".equals(dssGrabber.getOriginalUnits()))
 			{
