@@ -12,7 +12,6 @@
 
 package gov.ca.water.reportengine.executivereport;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.Month;
 import java.util.ArrayList;
@@ -20,21 +19,25 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.NavigableMap;
 import java.util.logging.Level;
 
 import com.google.common.flogger.FluentLogger;
 import gov.ca.water.calgui.bo.DetailedIssue;
+import gov.ca.water.calgui.bo.WaterYearDefinition;
 import gov.ca.water.calgui.busservice.impl.DSSGrabber1SvcImpl;
 import gov.ca.water.calgui.project.EpptScenarioRun;
+import gov.ca.water.calgui.scripts.DssCache;
+import gov.ca.water.calgui.scripts.DssMissingRecordException;
+import gov.ca.water.calgui.scripts.DssReader;
 import gov.ca.water.reportengine.EpptReportException;
 import gov.ca.water.reportengine.standardsummary.StandardSummaryErrors;
+import org.python.antlr.base.mod;
 
-import hec.heclib.util.HecTime;
-import hec.heclib.util.HecTimeArray;
 import hec.io.TimeSeriesContainer;
-import hec.lang.Const;
 
 import static gov.ca.water.reportengine.EPPTReport.checkInterrupt;
+import static java.util.stream.Collectors.toList;
 
 public class DTSProcessor
 {
@@ -103,27 +106,29 @@ public class DTSProcessor
 		List<FlagViolation> violations = new ArrayList<>();
 		List<DetailedIssue> linkedRecords = sm.getLinkedRecords();
 		SubModule.FlagType flagValue = sm.getFlagValue();
+		DssReader dssReader = new DssReader(epptScenarioRun, new WaterYearDefinition("", Month.OCTOBER, Month.SEPTEMBER), new DssCache());
 		for(DetailedIssue detailedIssue : linkedRecords)
 		{
-			LOGGER.at(Level.INFO).log("Processing DTS ID: %s and DTS Record Path: %s ",
-					detailedIssue.getDetailedIssueId(), detailedIssue.getLinkedVar());
-			checkInterrupt();
-			DSSGrabber1SvcImpl dssGrabber1Svc = buildDssGrabber(epptScenarioRun, detailedIssue);
-			TimeSeriesContainer[] primarySeries = dssGrabber1Svc.getPrimarySeries();
-			if(primarySeries != null && primarySeries[0] != null && primarySeries[0].values.length > 0)
+			if(detailedIssue.isExecutiveReport())
 			{
-				TimeSeriesContainer result = primarySeries[0];
-				FlagViolation flagViolationFromRecord = createFlagViolationFromRecord(result, flagValue, detailedIssue);
-				if(flagViolationFromRecord != null)
+				LOGGER.at(Level.INFO).log("Processing DTS ID: %s and DTS Record Path: %s ",
+						detailedIssue.getDetailedIssueId(), detailedIssue.getLinkedVar());
+				checkInterrupt();
+				try
 				{
-					violations.add(flagViolationFromRecord);
+					NavigableMap<LocalDateTime, Double> dtsData = dssReader.getDtsData(detailedIssue.getDetailedIssueId());
+					FlagViolation flagViolationFromRecord = createFlagViolationFromRecord(dtsData, flagValue, detailedIssue);
+					if(flagViolationFromRecord != null)
+					{
+						violations.add(flagViolationFromRecord);
+					}
 				}
-			}
-			else
-			{
-				_standardSummaryErrors.addError(LOGGER,
-						"\t" + epptScenarioRun + ": Unable to process flagged violations for DTS ID: "
-								+ detailedIssue.getDetailedIssueId() + " DTS record: " + detailedIssue.getLinkedVar());
+				catch(DssMissingRecordException e)
+				{
+					_standardSummaryErrors.addError(LOGGER,
+							"\t" + epptScenarioRun + ": Unable to process flagged violations for DTS ID: "
+									+ detailedIssue.getDetailedIssueId() + " DTS record: " + detailedIssue.getLinkedVar(), e);
+				}
 			}
 		}
 		return violations;
@@ -170,9 +175,10 @@ public class DTSProcessor
 			}
 			else
 			{
-				_standardSummaryErrors.addError(LOGGER, "\t" + epptScenarioRun + ": Error finding detailed issue:" + detailedIssue.getDetailedIssueId() +
-						" during executive report generation: " + epptScenarioRun +
-						" Could not find record with name: " + detailedIssue.getLinkedVar());
+				_standardSummaryErrors.addError(LOGGER,
+						"\t" + epptScenarioRun + ": Error finding detailed issue:" + detailedIssue.getDetailedIssueId() +
+								" during executive report generation: " + epptScenarioRun +
+								" Could not find record with name: " + detailedIssue.getLinkedVar());
 			}
 		}
 		catch(RuntimeException e)
@@ -203,17 +209,16 @@ public class DTSProcessor
 		return maxValue;
 	}
 
-	private FlagViolation createFlagViolationFromRecord(TimeSeriesContainer tsc, SubModule.FlagType flagType, DetailedIssue detailedIssue)
+	private FlagViolation createFlagViolationFromRecord(Map<LocalDateTime, Double> dataMap, SubModule.FlagType flagType, DetailedIssue detailedIssue)
 	{
 		FlagViolation retval = null;
 		try
 		{
-			List<HecTime> violationTimes = new ArrayList<>();
-			HecTimeArray times = tsc.getTimes();
-			for(int i = 0; i < times.numberElements(); i++)
-			{
-				addTimeIfInViolation(tsc, flagType, violationTimes, times, i);
-			}
+			List<LocalDateTime> violationTimes = dataMap.entrySet()
+														.stream()
+														.filter(e -> isInViolation(e.getValue(), flagType))
+														.map(Map.Entry::getKey)
+														.collect(toList());
 			if(!violationTimes.isEmpty())
 			{
 				retval = new FlagViolation(violationTimes, detailedIssue.getLinkedVar());
@@ -226,35 +231,35 @@ public class DTSProcessor
 		return retval;
 	}
 
-	private void addTimeIfInViolation(TimeSeriesContainer tsc, SubModule.FlagType flagType, List<HecTime> violationTimes, HecTimeArray times, int i)
+	private boolean isInViolation(Double dataValue, SubModule.FlagType flagType)
 	{
-		HecTime hecTime = times.elementAt(i);
-		int value = (int) Math.round(tsc.getValue(hecTime));
-		if(Const.isValid(value))
+		boolean retval = false;
+		if(dataValue != null)
 		{
+			int value = (int) Math.round(dataValue);
 			switch(value)
 			{
 				case 100:
 					if(flagType == SubModule.FlagType.VALUE_100)
 					{
-						violationTimes.add(hecTime);
+						retval = true;
 					}
 					break;
 				case 200:
 					if(flagType == SubModule.FlagType.VALUE_200)
 					{
-						violationTimes.add(hecTime);
+						retval = true;
 					}
 					break;
 				case 300:
 					if(flagType == SubModule.FlagType.VALUE_300)
 					{
-						violationTimes.add(hecTime);
+						retval = true;
 					}
 					break;
 			}
-
 		}
+		return retval;
 	}
 
 }

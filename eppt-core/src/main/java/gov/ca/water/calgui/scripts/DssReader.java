@@ -40,6 +40,7 @@ import gov.ca.water.calgui.busservice.impl.DetailedIssuesReader;
 import gov.ca.water.calgui.busservice.impl.GuiLinksSeedDataSvcImpl;
 import gov.ca.water.calgui.busservice.impl.MonthPeriod;
 import gov.ca.water.calgui.busservice.impl.ThresholdLinksSeedDataSvc;
+import gov.ca.water.calgui.constant.Constant;
 import gov.ca.water.calgui.project.EpptScenarioRun;
 
 import hec.heclib.util.HecTime;
@@ -94,7 +95,7 @@ public class DssReader
 	public NavigableMap<Integer, Double> getYearlyGuiLinkData(int guiID, boolean mapToTaf, WaterYearDefinition waterYearDefinition)
 			throws DssMissingRecordException
 	{
-		return filterPeriodYearly(getGuiLinkData(guiID, mapToTaf), waterYearDefinition);
+		return filterPeriodYearly(getGuiLinkData(guiID, mapToTaf), waterYearDefinition, mapToTaf);
 	}
 
 	@Scriptable
@@ -120,7 +121,7 @@ public class DssReader
 	public NavigableMap<Integer, Double> getYearlyDtsData(int dtsId, boolean mapToTaf, WaterYearDefinition waterYearDefinition)
 			throws DssMissingRecordException
 	{
-		return filterPeriodYearly(getDtsData(dtsId, mapToTaf), waterYearDefinition);
+		return filterPeriodYearly(getDtsData(dtsId, mapToTaf), waterYearDefinition, mapToTaf);
 	}
 
 	@Scriptable
@@ -139,7 +140,7 @@ public class DssReader
 	public NavigableMap<Integer, Double> getYearlyThresholdData(int dtsId, boolean mapToTaf, WaterYearDefinition waterYearDefinition)
 			throws DssMissingRecordException
 	{
-		return filterPeriodYearly(getThresholdData(dtsId, mapToTaf), waterYearDefinition);
+		return filterPeriodYearly(getThresholdData(dtsId, mapToTaf), waterYearDefinition, mapToTaf);
 	}
 
 	@Scriptable
@@ -228,7 +229,9 @@ public class DssReader
 		LocalDateTime localDateTime = LocalDateTime.ofInstant(javaDate.toInstant(), ZoneId.systemDefault());
 		if(RMAConst.isValidValue(value) && value != -3.402823466E38)
 		{
-			if(tsc.getParameterName().toLowerCase().contains("percent"))
+			if(tsc.getParameterName().toLowerCase().contains("percent")
+					|| tsc.getUnits().toLowerCase().contains("percent")
+					|| tsc.getUnits().toLowerCase().contains("%"))
 			{
 				value *= 100;
 			}
@@ -340,22 +343,31 @@ public class DssReader
 			try
 			{
 				ThresholdLinksBO thresholdLink = ThresholdLinksSeedDataSvc.getSeedDataSvcImplInstance().getObjById(thresholdId);
-				DSSGrabber1SvcImpl dssGrabber1Svc = buildDssGrabber(_scenarioRun, thresholdLink);
-				TimeSeriesContainer[] threshold = dssGrabber1Svc.getPrimarySeries();
-				if(mapToTaf)
+				if(thresholdLink != null)
 				{
-					threshold = mapToTaf(threshold, dssGrabber1Svc);
+
+					DSSGrabber1SvcImpl dssGrabber1Svc = buildDssGrabber(_scenarioRun, thresholdLink);
+					TimeSeriesContainer[] threshold = dssGrabber1Svc.getPrimarySeries();
+					if(mapToTaf)
+					{
+						threshold = mapToTaf(threshold, dssGrabber1Svc);
+					}
+					if(threshold == null || threshold[0] == null)
+					{
+						throw new DssMissingRecordException(_scenarioRun.getName() +
+								": Unable to find matching Threshold path for B/C-Part: " + thresholdLink.getModelData(
+								GUILinksAllModelsBO.Model.values().get(0)).getPrimary() + " and ID: " + thresholdLink.getId());
+					}
+					_originalUnits = dssGrabber1Svc.getOriginalUnits();
+					_parameter = threshold[0].getParameterName();
+					retval = timeSeriesContainerToMap(threshold);
+					_dssCache.addThresholdLinkToCache(_scenarioRun, thresholdId, threshold[0], _originalUnits);
 				}
-				if(threshold == null || threshold[0] == null)
+				else
 				{
 					throw new DssMissingRecordException(_scenarioRun.getName() +
-							": Unable to find matching Threshold path for B-Part: " + thresholdLink.getModelData(
-							GUILinksAllModelsBO.Model.values().get(0)) + " and ID: " + thresholdLink.getId());
+							": Unable to find matching Threshold link for ID " + thresholdId);
 				}
-				_originalUnits = dssGrabber1Svc.getOriginalUnits();
-				_parameter = threshold[0].getParameterName();
-				retval = timeSeriesContainerToMap(threshold);
-				_dssCache.addThresholdLinkToCache(_scenarioRun, thresholdId, threshold[0], _originalUnits);
 			}
 			catch(RuntimeException e)
 			{
@@ -374,12 +386,19 @@ public class DssReader
 		return retval;
 	}
 
+
 	private NavigableMap<Integer, Double> filterPeriodYearly(NavigableMap<LocalDateTime, Double> input,
 															 WaterYearDefinition waterYearDefinition)
 	{
+		return filterPeriodYearly(input, waterYearDefinition, true);
+	}
+
+	private NavigableMap<Integer, Double> filterPeriodYearly(NavigableMap<LocalDateTime, Double> input,
+															 WaterYearDefinition waterYearDefinition, boolean convertTaf)
+	{
+
 		MonthPeriod monthPeriod = new MonthPeriod(waterYearDefinition.getStartMonth(), waterYearDefinition.getEndMonth());
-		boolean aggregateYearly = "CFS".equalsIgnoreCase(_originalUnits)
-				|| ("STORAGE-CHANGE".equalsIgnoreCase(_parameter) && "TAF".equalsIgnoreCase(getUnits()));
+		boolean aggregateYearly = Constant.isAggregateYearly(convertTaf, _parameter, _originalUnits);
 		return filterPeriodYearly(input, monthPeriod, aggregateYearly);
 	}
 
@@ -422,7 +441,7 @@ public class DssReader
 				Collections.sort(yearMonths);
 				if(dataMap.size() == yearMonths.size())
 				{
-					DoubleStream doubleStream = dataMap.values().stream().mapToDouble(e -> e);
+					DoubleStream doubleStream = dataMap.values().stream().mapToDouble(e -> e).filter(d -> !Double.isNaN(d));
 					OptionalDouble rollup;
 					if(aggregateYearly)
 					{

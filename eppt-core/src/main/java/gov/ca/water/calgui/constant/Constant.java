@@ -205,4 +205,31 @@ public final class Constant
 	{
 		return RMAConst.isValidValue(value) && value != -3.402823466E38;
 	}
+
+
+	public static boolean isAggregateYearly(boolean convertTaf, String parameterName, String originalUnits)
+	{
+		final boolean aggregateYearly;
+		if("CFS".equalsIgnoreCase(originalUnits))
+		{
+			aggregateYearly = convertTaf;
+		}
+		else if("TAF".equalsIgnoreCase(originalUnits))
+		{
+			if(parameterName.toUpperCase().contains("STORAGE")
+					&& !parameterName.toUpperCase().contains("STORAGE-CHANGE"))
+			{
+				aggregateYearly = false;
+			}
+			else
+			{
+				aggregateYearly = convertTaf;
+			}
+		}
+		else
+		{
+			aggregateYearly = false;
+		}
+		return aggregateYearly;
+	}
 }
