@@ -507,7 +507,7 @@ public class EPPTReport
 		allRuns.add(_baseRun);
 		allRuns.addAll(_altRuns);
 		DetailedIssueProcessor processor =
-				new DetailedIssueProcessor(runsToFlagViolations, _modules, _allDetailedIssues, allRuns, false);
+				new DetailedIssueProcessor(_standardSummaryErrors, runsToFlagViolations, _modules, _allDetailedIssues, allRuns, false);
 		Map<EpptScenarioRun, Map<Module, List<DetailedIssueViolation>>> runsToDetailedViolations = processor.process();
 
 		DetailedIssuesXMLCreator xmlCreator = new DetailedIssuesXMLCreator();
