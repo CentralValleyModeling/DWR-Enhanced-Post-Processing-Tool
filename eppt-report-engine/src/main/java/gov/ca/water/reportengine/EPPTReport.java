@@ -35,9 +35,11 @@ import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
 import com.google.common.flogger.FluentLogger;
+import gov.ca.water.calgui.EpptInitializationException;
 import gov.ca.water.calgui.bo.DetailedIssue;
 import gov.ca.water.calgui.bo.GUILinksAllModelsBO;
 import gov.ca.water.calgui.bo.WaterYearIndex;
+import gov.ca.water.calgui.busservice.impl.DetailedIssuesReader;
 import gov.ca.water.calgui.project.EpptScenarioRun;
 import gov.ca.water.calgui.scripts.DssCache;
 import gov.ca.water.reportengine.detailedissues.DetailedIssueProcessor;
@@ -62,7 +64,6 @@ import gov.ca.water.reportengine.standardsummary.StandardSummaryErrors;
 import gov.ca.water.reportengine.standardsummary.StandardSummaryReader;
 import gov.ca.water.reportengine.standardsummary.StandardSummaryWriter;
 import gov.ca.water.reportengine.standardsummary.SummaryReportParameters;
-import org.omg.CORBA.DynAnyPackage.Invalid;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
@@ -99,6 +100,7 @@ public class EPPTReport
 	private final EpptScenarioRun _baseRun;
 	private final ReportParameters _reportParameters;
 	private final List<EpptScenarioRun> _altRuns = new ArrayList<>();
+	private final DssCache _dssCache;
 	private List<Module> _modules;
 
 
@@ -112,7 +114,7 @@ public class EPPTReport
 		_reportParameters = reportParameters;
 		_standardSummaryErrors = standardSummaryErrors;
 		_altRuns.addAll(altRuns);
-		DssCache.getInstance().clearCache();
+		_dssCache = new DssCache();
 	}
 
 	//what about base only vs alt vs alts
@@ -123,6 +125,7 @@ public class EPPTReport
 		{
 			LOGGER.at(Level.INFO).log("============= Starting Report Processor: %s =============", start);
 			validateReportInputs();
+			DetailedIssuesReader.createDetailedIssues();
 			Document doc = createDoc();
 			//create the modules
 			ModuleCreator mc = new ModuleCreator();
@@ -159,8 +162,9 @@ public class EPPTReport
 
 			LOGGER.at(Level.INFO).log("Writing data to XML: %s", _pathToWriteOut);
 			writeXmlFile(doc);
+			_dssCache.clearCache();
 		}
-		catch(RuntimeException | IOException | EpptReportException | ParserConfigurationException | TransformerException e)
+		catch(RuntimeException | IOException | EpptReportException | ParserConfigurationException | TransformerException | EpptInitializationException e)
 		{
 			throw new QAQCReportException(e.getMessage(), e);
 		}
@@ -196,7 +200,7 @@ public class EPPTReport
 	{
 		if(canPrintAssumptionChanges())
 		{
-			LOGGER.at(Level.INFO).log("Generate QAQC Assumption Changes data");
+			LOGGER.at(Level.INFO).log("Generate QA/QC Assumption Changes data");
 			rootElement.appendChild(createAssumptionChangesElem(fileChangeStats.get(0), doc));
 		}
 	}
@@ -207,7 +211,7 @@ public class EPPTReport
 		if(canPrintDetailedIssues())
 		{
 			//create and add the detailed issues
-			LOGGER.at(Level.INFO).log("Generate QAQC Detailed Issues data");
+			LOGGER.at(Level.INFO).log("Generate QA/QC Detailed Issues data");
 			rootElement.appendChild(createDetailedIssueReportElem(runsToFlagViolations, doc));
 		}
 	}
@@ -217,7 +221,7 @@ public class EPPTReport
 		if(canPrintDetailedIssues() || canPrintExecutiveSummary())
 		{
 
-			DTSProcessor dtsProcessor = new DTSProcessor(_modules);
+			DTSProcessor dtsProcessor = new DTSProcessor(_modules, _standardSummaryErrors);
 			return dtsProcessor.processDSSFiles(allRuns);
 		}
 		else
@@ -267,11 +271,11 @@ public class EPPTReport
 		}
 	}
 
-	private void appendSummaryStats(Document doc, Element rootElement) throws EpptReportException
+	private void appendSummaryStats(Document doc, Element rootElement) throws EpptReportException, EpptInitializationException
 	{
 		if(canPrintStandardSummary())
 		{
-			StandardSummaryReader standardSummaryReader = new StandardSummaryReader(Paths.get(SUMMARY_CSV), _standardSummaryErrors);
+			StandardSummaryReader standardSummaryReader = new StandardSummaryReader(Paths.get(SUMMARY_CSV), _standardSummaryErrors, _dssCache);
 			Path imagesDir = _pathToWriteOut.getParent().getParent().resolve("Images");
 			SummaryReportParameters summaryReportParameters = _reportParameters.getSummaryReportParameters();
 			LOGGER.at(Level.INFO).log("Generate Standard Summary Statistic");
@@ -339,10 +343,10 @@ public class EPPTReport
 			LOGGER.at(Level.SEVERE).log(errorMsg);
 			throw new EpptReportException(errorMsg);
 		}
-		WaterYearIndex waterYearIndex = _reportParameters.getSummaryReportParameters().getWaterYearIndex();
+		WaterYearIndex waterYearIndex = _reportParameters.getSummaryReportParameters().getWaterYearIndex(_baseRun);
 		if(waterYearIndex == null)
 		{
-			String message = "Water Year Index is undefined. Ensure that the Base Water Year Table file is defined correctly: " + _baseRun.getWaterYearTable();
+			String message = "Water Year Index is undefined. Ensure that the Base Water Year Table file is defined correctly: " + _baseRun.getLookupDirectory();
 			LOGGER.at(Level.SEVERE).log(message);
 			throw new EpptReportException(message);
 		}
@@ -360,15 +364,15 @@ public class EPPTReport
 	private void checkCorrectFilePaths(EpptScenarioRun run) throws EpptReportException
 	{
 
-		if(run.getWaterYearTable() == null)
+		if(run.getLookupDirectory() == null)
 		{
 			String errorMsg = "Scenario " + run.getName() + ": Water year type table is null";
 			LOGGER.at(Level.SEVERE).log(errorMsg);
 			throw new EpptReportException(errorMsg);
 		}
-		if(!run.getWaterYearTable().toFile().exists())
+		if(!run.getLookupDirectory().toFile().exists())
 		{
-			String errorMsg = "Scenario " + run.getName() + ": Water year type table file could not be found. Path: " + run.getWaterYearTable();
+			String errorMsg = "Scenario " + run.getName() + ": Water year type table file could not be found. Path: " + run.getLookupDirectory();
 			LOGGER.at(Level.SEVERE).log(errorMsg);
 			throw new EpptReportException(errorMsg);
 		}
@@ -503,7 +507,7 @@ public class EPPTReport
 		allRuns.add(_baseRun);
 		allRuns.addAll(_altRuns);
 		DetailedIssueProcessor processor =
-				new DetailedIssueProcessor(runsToFlagViolations, _modules, _allDetailedIssues, allRuns, false);
+				new DetailedIssueProcessor(_standardSummaryErrors, runsToFlagViolations, _modules, _allDetailedIssues, allRuns, false);
 		Map<EpptScenarioRun, Map<Module, List<DetailedIssueViolation>>> runsToDetailedViolations = processor.process();
 
 		DetailedIssuesXMLCreator xmlCreator = new DetailedIssuesXMLCreator();
@@ -546,8 +550,9 @@ public class EPPTReport
 			altNames.add(altRun.getName());
 		}
 		String author = _reportParameters.getAuthor();
+		String title = _reportParameters.getTitle();
 		String subtitle = _reportParameters.getSubtitle();
-		ReportHeader rh = new ReportHeader(author, subtitle, _baseRun.getName(), altNames);
+		ReportHeader rh = new ReportHeader(author, title, subtitle, _baseRun.getName(), altNames);
 		ReportHeaderXMLCreator rhWriter = new ReportHeaderXMLCreator();
 		return rhWriter.createReportHeaderElement(rh, doc);
 	}

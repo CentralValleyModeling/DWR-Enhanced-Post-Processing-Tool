@@ -27,31 +27,36 @@ import com.google.common.flogger.FluentLogger;
  */
 public class StandardSummaryErrors
 {
+	private static final Logger LOGGER = Logger.getLogger(StandardSummaryErrors.class.getName());
 	private final List<Runnable> _loggingStatements = new ArrayList<>();
 
-	void addError(Logger logger, String message)
+	public void addError(Logger logger, String message)
 	{
 		_loggingStatements.add(()->logger.log(Level.WARNING, message));
 	}
 
-	void addError(Logger logger, String message, Exception exception)
+	public void addError(Logger logger, String message, Exception exception)
 	{
 		_loggingStatements.add(()->logger.log(Level.WARNING, message, exception));
 	}
 
-	void addError(FluentLogger logger, String message)
+	public void addError(FluentLogger logger, String message)
 	{
 		_loggingStatements.add(()->logger.at(Level.WARNING).log(message));
 	}
 
-	void addError(FluentLogger logger, String message, Exception exception)
+	public void addError(FluentLogger logger, String message, Exception exception)
 	{
 		_loggingStatements.add(()->logger.at(Level.WARNING).withCause(exception).log(message));
 	}
 
 	public void log()
 	{
-		_loggingStatements.forEach(Runnable::run);
-		_loggingStatements.clear();
+		if(!_loggingStatements.isEmpty())
+		{
+			LOGGER.log(Level.WARNING, "The QA/QC Report ran with the following errors:");
+			_loggingStatements.forEach(Runnable::run);
+			_loggingStatements.clear();
+		}
 	}
 }

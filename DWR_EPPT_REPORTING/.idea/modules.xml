@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/../application/eppt-app.iml" filepath="$PROJECT_DIR$/../application/eppt-app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../branding/eppt-branding.iml" filepath="$PROJECT_DIR$/../branding/eppt-branding.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../eppt-calsim-gui/eppt-calsim-gui.iml" filepath="$PROJECT_DIR$/../eppt-calsim-gui/eppt-calsim-gui.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../eppt-core/eppt-core.iml" filepath="$PROJECT_DIR$/../eppt-core/eppt-core.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../eppt-jasper-engine/eppt-jasper-engine.iml" filepath="$PROJECT_DIR$/../eppt-jasper-engine/eppt-jasper-engine.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../eppt-nbui/eppt-nbui.iml" filepath="$PROJECT_DIR$/../eppt-nbui/eppt-nbui.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../eppt-parent/eppt-parent.iml" filepath="$PROJECT_DIR$/../eppt-parent/eppt-parent.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../eppt-plots/eppt-plots.iml" filepath="$PROJECT_DIR$/../eppt-plots/eppt-plots.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../eppt-report-engine/eppt-report-engine.iml" filepath="$PROJECT_DIR$/../eppt-report-engine/eppt-report-engine.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../eppt-trend-reporting/eppt-trend-reporting.iml" filepath="$PROJECT_DIR$/../eppt-trend-reporting/eppt-trend-reporting.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../eppt-ui/eppt-ui.iml" filepath="$PROJECT_DIR$/../eppt-ui/eppt-ui.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../eppt-vista/eppt-vista.iml" filepath="$PROJECT_DIR$/../eppt-vista/eppt-vista.iml" />
+    </modules>
+  </component>
+</project>

@@ -6,7 +6,7 @@
     </constraints>
     <properties>
       <minimumSize width="1150" height="350"/>
-      <preferredSize width="1150" height="800"/>
+      <preferredSize width="1150" height="760"/>
       <requestFocusEnabled value="false"/>
     </properties>
     <border type="none"/>
@@ -75,14 +75,14 @@
       <grid id="bee11" layout-manager="BorderLayout" hgap="0" vgap="0">
         <constraints border-constraint="North"/>
         <properties>
-          <preferredSize width="850" height="400"/>
+          <preferredSize width="850" height="510"/>
         </properties>
         <border type="none"/>
         <children>
           <grid id="73f88" layout-manager="BorderLayout" hgap="0" vgap="0">
             <constraints border-constraint="West"/>
             <properties>
-              <preferredSize width="475" height="204"/>
+              <preferredSize width="560" height="300"/>
             </properties>
             <border type="none"/>
             <children>
@@ -91,73 +91,87 @@
                 <properties/>
                 <border type="none"/>
                 <children>
-                  <component id="9f6f9" class="javax.swing.JLabel">
-                    <constraints>
-                      <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
-                      <gridbag top="5" left="5" bottom="5" right="5" weightx="0.0" weighty="0.0"/>
-                    </constraints>
-                    <properties>
-                      <text value="Alternative Scenario Run:"/>
-                    </properties>
-                  </component>
-                  <grid id="5c3c7" layout-manager="BorderLayout" hgap="0" vgap="0">
-                    <constraints>
-                      <grid row="1" column="1" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
-                      <gridbag top="5" left="5" bottom="5" right="5" weightx="0.0" weighty="0.0"/>
-                    </constraints>
-                    <properties/>
-                    <border type="none"/>
-                    <children>
-                      <component id="3c882" class="javax.swing.JButton" binding="_runAltWreslButton">
-                        <constraints border-constraint="East"/>
-                        <properties>
-                          <enabled value="false"/>
-                          <text value="Run WRESL"/>
-                        </properties>
-                      </component>
-                      <component id="b4bb4" class="javax.swing.JTextField" binding="_altScenarioTextField">
-                        <constraints border-constraint="Center"/>
-                        <properties>
-                          <editable value="false"/>
-                        </properties>
-                      </component>
-                    </children>
-                  </grid>
                   <component id="dc979" class="javax.swing.JLabel">
                     <constraints>
-                      <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
-                      <gridbag top="5" left="5" bottom="5" right="5" weightx="0.0" weighty="0.0"/>
+                      <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="1" fill="1" indent="0" use-parent-layout="false"/>
+                      <gridbag top="10" left="5" bottom="5" right="5" weightx="0.0" weighty="0.0"/>
                     </constraints>
                     <properties>
                       <text value="Base Scenario Run:"/>
                     </properties>
                   </component>
-                  <grid id="a17eb" layout-manager="BorderLayout" hgap="0" vgap="0">
+                  <grid id="a17eb" layout-manager="BorderLayout" hgap="5" vgap="5">
                     <constraints>
                       <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
                       <gridbag top="5" left="5" bottom="5" right="5" weightx="0.0" weighty="0.0"/>
                     </constraints>
-                    <properties/>
+                    <properties>
+                      <maximumSize width="386" height="57"/>
+                      <minimumSize width="386" height="57"/>
+                    </properties>
                     <border type="none"/>
                     <children>
-                      <component id="dfb8c" class="javax.swing.JButton" binding="_runBaseWreslButton">
-                        <constraints border-constraint="East"/>
-                        <properties>
-                          <enabled value="false"/>
-                          <text value="Run WRESL"/>
-                        </properties>
-                      </component>
-                      <component id="22222" class="javax.swing.JTextField" binding="_baseScenarioTextField">
+                      <grid id="81eea" layout-manager="GridBagLayout">
                         <constraints border-constraint="Center"/>
-                        <properties>
-                          <editable value="false"/>
-                        </properties>
-                      </component>
+                        <properties/>
+                        <border type="none"/>
+                        <children>
+                          <component id="22222" class="javax.swing.JTextField" binding="_baseScenarioTextField">
+                            <constraints>
+                              <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+                              <gridbag weightx="0.8" weighty="0.0"/>
+                            </constraints>
+                            <properties>
+                              <editable value="false"/>
+                              <opaque value="true"/>
+                              <preferredSize width="251" height="26"/>
+                              <text value="Base"/>
+                            </properties>
+                          </component>
+                          <component id="dfb8c" class="javax.swing.JButton" binding="_runBaseWreslButton">
+                            <constraints>
+                              <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="4" fill="0" indent="0" use-parent-layout="false"/>
+                              <gridbag weightx="0.0" weighty="0.0"/>
+                            </constraints>
+                            <properties>
+                              <enabled value="false"/>
+                              <maximumSize width="120" height="26"/>
+                              <minimumSize width="120" height="26"/>
+                              <preferredSize width="120" height="26"/>
+                              <text value="Run WRESL"/>
+                            </properties>
+                          </component>
+                          <component id="bad34" class="javax.swing.JLabel" binding="_baseWreslDiffWarningLabel">
+                            <constraints>
+                              <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                              <gridbag weightx="0.0" weighty="0.0"/>
+                            </constraints>
+                            <properties>
+                              <maximumSize width="251" height="16"/>
+                              <minimumSize width="251" height="16"/>
+                              <preferredSize width="251" height="16"/>
+                              <text value="*WRESL Script Directory differs from installation"/>
+                            </properties>
+                          </component>
+                          <component id="e2de8" class="javax.swing.JButton" binding="_overwriteScriptsButtonBase">
+                            <constraints>
+                              <grid row="1" column="1" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="4" fill="0" indent="0" use-parent-layout="false"/>
+                              <gridbag weightx="0.2" weighty="0.0"/>
+                            </constraints>
+                            <properties>
+                              <maximumSize width="120" height="26"/>
+                              <minimumSize width="120" height="26"/>
+                              <preferredSize width="120" height="26"/>
+                              <text value="Overwrite Scripts"/>
+                            </properties>
+                          </component>
+                        </children>
+                      </grid>
                     </children>
                   </grid>
                   <component id="f2a8c" class="javax.swing.JLabel">
                     <constraints>
-                      <grid row="4" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+                      <grid row="5" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
                       <gridbag top="5" left="5" bottom="5" right="5" weightx="0.0" weighty="0.0"/>
                     </constraints>
                     <properties>
@@ -166,7 +180,7 @@
                   </component>
                   <grid id="400fb" layout-manager="BorderLayout" hgap="2" vgap="0">
                     <constraints>
-                      <grid row="4" column="1" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+                      <grid row="5" column="1" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
                       <gridbag top="5" left="5" bottom="5" right="5" weightx="0.0" weighty="0.0"/>
                     </constraints>
                     <properties/>
@@ -176,14 +190,14 @@
                         <constraints border-constraint="Center"/>
                         <properties>
                           <editable value="false"/>
-                          <preferredSize width="200" height="24"/>
+                          <preferredSize width="200" height="26"/>
                           <text value=""/>
                         </properties>
                       </component>
                       <component id="c0a35" class="javax.swing.JButton" binding="_fileChooserBtn">
                         <constraints border-constraint="East"/>
                         <properties>
-                          <preferredSize width="30" height="24"/>
+                          <preferredSize width="30" height="26"/>
                           <text value="..."/>
                         </properties>
                       </component>
@@ -191,7 +205,7 @@
                   </grid>
                   <component id="3739d" class="javax.swing.JLabel">
                     <constraints>
-                      <grid row="6" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+                      <grid row="7" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
                       <gridbag top="5" left="5" bottom="5" right="5" weightx="0.0" weighty="0.0"/>
                     </constraints>
                     <properties>
@@ -200,7 +214,7 @@
                   </component>
                   <component id="ebf3d" class="javax.swing.JTextField" binding="_toleranceTextField" custom-create="true">
                     <constraints>
-                      <grid row="6" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
+                      <grid row="7" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
                         <preferred-size width="150" height="-1"/>
                       </grid>
                       <gridbag top="5" left="5" bottom="5" right="5" weightx="0.0" weighty="0.0"/>
@@ -229,7 +243,7 @@
                   </component>
                   <component id="8ae0e" class="javax.swing.JLabel">
                     <constraints>
-                      <grid row="3" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+                      <grid row="4" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
                       <gridbag top="5" left="5" bottom="5" right="5" weightx="0.0" weighty="0.0"/>
                     </constraints>
                     <properties>
@@ -238,18 +252,18 @@
                   </component>
                   <component id="97dd1" class="javax.swing.JTextField" binding="_reportSubtitle">
                     <constraints>
-                      <grid row="3" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
+                      <grid row="4" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
                         <preferred-size width="150" height="-1"/>
                       </grid>
                       <gridbag top="5" left="5" bottom="5" right="5" weightx="1.0" weighty="0.0"/>
                     </constraints>
                     <properties>
-                      <text value="Subtitle"/>
+                      <text value=""/>
                     </properties>
                   </component>
                   <component id="c1b2e" class="javax.swing.JLabel">
                     <constraints>
-                      <grid row="7" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+                      <grid row="8" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
                       <gridbag top="5" left="5" bottom="5" right="5" weightx="0.0" weighty="0.0"/>
                     </constraints>
                     <properties>
@@ -258,7 +272,7 @@
                   </component>
                   <component id="590cf" class="javax.swing.JLabel">
                     <constraints>
-                      <grid row="8" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+                      <grid row="9" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
                       <gridbag top="5" left="5" bottom="5" right="5" weightx="0.0" weighty="0.0"/>
                     </constraints>
                     <properties>
@@ -267,7 +281,7 @@
                   </component>
                   <component id="388a8" class="javax.swing.JLabel">
                     <constraints>
-                      <grid row="9" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+                      <grid row="10" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
                       <gridbag top="5" left="5" bottom="5" right="5" weightx="0.0" weighty="0.0"/>
                     </constraints>
                     <properties>
@@ -276,37 +290,43 @@
                   </component>
                   <component id="d8527" class="javax.swing.JComboBox" binding="_percentDiffStyle">
                     <constraints>
-                      <grid row="7" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="2" anchor="8" fill="1" indent="0" use-parent-layout="false"/>
+                      <grid row="8" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="2" anchor="8" fill="1" indent="0" use-parent-layout="false"/>
                       <gridbag top="5" left="5" bottom="5" right="5" weightx="0.0" weighty="0.0"/>
                     </constraints>
-                    <properties/>
+                    <properties>
+                      <preferredSize width="91" height="26"/>
+                    </properties>
                   </component>
                   <component id="16b6a" class="rma.swing.RmaJIntegerField" binding="_longTermStartYear">
-                    <constraints>
-                      <grid row="8" column="1" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
-                      <gridbag top="5" left="5" bottom="5" right="5" weightx="0.0" weighty="0.0"/>
-                    </constraints>
-                    <properties/>
-                  </component>
-                  <component id="59c38" class="rma.swing.RmaJIntegerField" binding="_longTermEndYear">
                     <constraints>
                       <grid row="9" column="1" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
                       <gridbag top="5" left="5" bottom="5" right="5" weightx="0.0" weighty="0.0"/>
                     </constraints>
-                    <properties/>
+                    <properties>
+                      <preferredSize width="64" height="26"/>
+                    </properties>
+                  </component>
+                  <component id="59c38" class="rma.swing.RmaJIntegerField" binding="_longTermEndYear">
+                    <constraints>
+                      <grid row="10" column="1" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+                      <gridbag top="5" left="5" bottom="5" right="5" weightx="0.0" weighty="0.0"/>
+                    </constraints>
+                    <properties>
+                      <preferredSize width="64" height="26"/>
+                    </properties>
                   </component>
                   <component id="b36d" class="javax.swing.JLabel">
                     <constraints>
-                      <grid row="10" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+                      <grid row="11" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
                       <gridbag top="5" left="5" bottom="5" right="5" weightx="0.0" weighty="0.0"/>
                     </constraints>
                     <properties>
                       <text value="Common Period:"/>
                     </properties>
                   </component>
-                  <grid id="70dd5" layout-manager="FlowLayout" hgap="5" vgap="5" flow-align="0">
+                  <grid id="70dd5" layout-manager="FlowLayout" hgap="0" vgap="5" flow-align="0">
                     <constraints>
-                      <grid row="10" column="1" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+                      <grid row="11" column="1" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
                       <gridbag top="5" left="5" bottom="5" right="5" weightx="0.0" weighty="0.0"/>
                     </constraints>
                     <properties/>
@@ -316,38 +336,136 @@
                         <constraints/>
                         <properties>
                           <enabled value="true"/>
-                          <preferredSize width="120" height="18"/>
+                          <preferredSize width="120" height="26"/>
                           <text value="01Nov1921 0000"/>
                         </properties>
                       </component>
                       <component id="164a5" class="javax.swing.JLabel">
                         <constraints/>
                         <properties>
-                          <text value="Start"/>
+                          <text value="  Start "/>
                         </properties>
                       </component>
                       <component id="10c02" class="rma.swing.RmaJDateTimeField" binding="_endDateChooser">
                         <constraints/>
                         <properties>
-                          <preferredSize width="120" height="18"/>
+                          <preferredSize width="120" height="26"/>
                           <text value="01Oct2003 0100"/>
                         </properties>
                       </component>
                       <component id="18d08" class="javax.swing.JLabel">
                         <constraints/>
                         <properties>
-                          <text value="End"/>
+                          <text value=" End"/>
                         </properties>
                       </component>
                     </children>
                   </grid>
                   <component id="f4195" class="javax.swing.JButton" binding="_openReportButton">
                     <constraints>
-                      <grid row="5" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="4" fill="0" indent="0" use-parent-layout="false"/>
-                      <gridbag weightx="0.0" weighty="0.0"/>
+                      <grid row="6" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="4" fill="0" indent="0" use-parent-layout="false"/>
+                      <gridbag top="0" left="0" bottom="0" right="5" weightx="0.0" weighty="0.0"/>
                     </constraints>
                     <properties>
+                      <maximumSize width="120" height="26"/>
+                      <minimumSize width="120" height="26"/>
+                      <preferredSize width="120" height="26"/>
                       <text value="Open Report"/>
+                    </properties>
+                  </component>
+                  <component id="16a19" class="javax.swing.JLabel">
+                    <constraints>
+                      <grid row="3" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+                      <gridbag top="5" left="5" bottom="5" right="5" weightx="0.0" weighty="0.0"/>
+                    </constraints>
+                    <properties>
+                      <text value="QA/QC Report Title:"/>
+                    </properties>
+                  </component>
+                  <component id="70f56" class="javax.swing.JTextField" binding="_reportTitle">
+                    <constraints>
+                      <grid row="3" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
+                        <preferred-size width="150" height="-1"/>
+                      </grid>
+                      <gridbag top="5" left="5" bottom="5" right="5" weightx="1.0" weighty="0.0"/>
+                    </constraints>
+                    <properties>
+                      <text value="EPPT QA/QC Report"/>
+                    </properties>
+                  </component>
+                  <grid id="171ae" layout-manager="BorderLayout" hgap="5" vgap="5">
+                    <constraints>
+                      <grid row="1" column="1" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+                      <gridbag top="5" left="5" bottom="5" right="5" weightx="0.0" weighty="0.0"/>
+                    </constraints>
+                    <properties/>
+                    <border type="none"/>
+                    <children>
+                      <grid id="39d2d" layout-manager="GridBagLayout">
+                        <constraints border-constraint="Center"/>
+                        <properties/>
+                        <border type="none"/>
+                        <children>
+                          <component id="b4bb4" class="javax.swing.JTextField" binding="_altScenarioTextField">
+                            <constraints>
+                              <grid row="0" column="0" row-span="1" col-span="2" vsize-policy="3" hsize-policy="0" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+                              <gridbag weightx="0.8" weighty="0.0"/>
+                            </constraints>
+                            <properties>
+                              <editable value="false"/>
+                              <preferredSize width="251" height="26"/>
+                              <text value="Alternative"/>
+                            </properties>
+                          </component>
+                          <component id="457ec" class="javax.swing.JLabel" binding="_altWreslDiffWarningLabel">
+                            <constraints>
+                              <grid row="1" column="0" row-span="1" col-span="2" vsize-policy="3" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                              <gridbag weightx="0.8" weighty="0.0"/>
+                            </constraints>
+                            <properties>
+                              <maximumSize width="251" height="16"/>
+                              <minimumSize width="251" height="16"/>
+                              <preferredSize width="251" height="16"/>
+                              <text value="*WRESL Script Directory differs from installation"/>
+                              <visible value="true"/>
+                            </properties>
+                          </component>
+                          <component id="8d837" class="javax.swing.JButton" binding="_overwriteScriptsButtonAlt">
+                            <constraints>
+                              <grid row="1" column="2" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="4" fill="0" indent="0" use-parent-layout="false"/>
+                              <gridbag weightx="0.2" weighty="0.0"/>
+                            </constraints>
+                            <properties>
+                              <maximumSize width="120" height="26"/>
+                              <minimumSize width="120" height="26"/>
+                              <preferredSize width="120" height="26"/>
+                              <text value="Overwrite Scripts"/>
+                            </properties>
+                          </component>
+                          <component id="3c882" class="javax.swing.JButton" binding="_runAltWreslButton">
+                            <constraints>
+                              <grid row="0" column="2" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="4" fill="0" indent="0" use-parent-layout="false"/>
+                              <gridbag weightx="0.2" weighty="0.0"/>
+                            </constraints>
+                            <properties>
+                              <enabled value="false"/>
+                              <maximumSize width="120" height="26"/>
+                              <minimumSize width="120" height="26"/>
+                              <preferredSize width="120" height="26"/>
+                              <text value="Run WRESL"/>
+                            </properties>
+                          </component>
+                        </children>
+                      </grid>
+                    </children>
+                  </grid>
+                  <component id="9f6f9" class="javax.swing.JLabel">
+                    <constraints>
+                      <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="1" fill="1" indent="0" use-parent-layout="false"/>
+                      <gridbag top="10" left="5" bottom="5" right="5" weightx="0.0" weighty="0.0"/>
+                    </constraints>
+                    <properties>
+                      <text value="Alternative Scenario Run:"/>
                     </properties>
                   </component>
                 </children>
@@ -357,7 +475,7 @@
           <grid id="ee1ef" layout-manager="BorderLayout" hgap="0" vgap="0">
             <constraints border-constraint="Center"/>
             <properties>
-              <preferredSize width="500" height="200"/>
+              <preferredSize width="400" height="200"/>
             </properties>
             <border type="etched" title="QA/QC Report Controls"/>
             <children>

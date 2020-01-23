@@ -18,6 +18,7 @@ import java.awt.geom.Rectangle2D;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.nio.file.Files;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -48,6 +49,7 @@ import gov.ca.water.calgui.techservice.IErrorHandlingSvc;
 import gov.ca.water.calgui.techservice.impl.DialogSvcImpl;
 import gov.ca.water.calgui.techservice.impl.ErrorHandlingSvcImpl;
 import org.apache.log4j.Logger;
+import org.apache.log4j.Priority;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.JFreeChart;
 import org.jfree.chart.axis.ValueAxis;
@@ -113,31 +115,30 @@ public class ReportPDFWriter implements Writer
 		document = new Document();
 		document.setPageSize(PageSize.A4.rotate());
 		document.addCreationDate();
+		File file = new File(filename);
+		file.toPath().getParent().toFile().mkdirs();
 		try
 		{
-			writer = PdfWriter.getInstance(
-					// that listens to the document
-					document,
-					// and directs a PDF-stream to a file
-					new FileOutputStream(filename));
+			writer = PdfWriter.getInstance(document, new FileOutputStream(file));
 			document.open();
 		}
 		catch(DocumentException de)
 		{
-			LOG.debug(de.getMessage());
-			dialogSvc.getOK("Error while creating the pdf file: " + (new File(filename).getName()) + ". " + de.getMessage(),
+			LOG.fatal(de.getMessage(), de);
+			dialogSvc.getOK("Error while creating the pdf file: " + (file.getName()) + ". " + de.getMessage(),
 					JOptionPane.WARNING_MESSAGE);
 			return false;
 		}
 		catch(IOException ioe)
 		{
-			LOG.debug(ioe.getMessage());
-			dialogSvc.getOK("Error while creating the pdf file: " + (new File(
-							filename).getName()) + "\nIf the file is already open, please close it and try again.\n" + ioe.getMessage(),
+			LOG.fatal(ioe.getMessage(), ioe);
+			dialogSvc.getOK(
+					"Error while creating the pdf file: " + (file.getName()) + "\nIf the file is already open, please close it and try again.\n" + ioe.getMessage(),
 					JOptionPane.WARNING_MESSAGE);
 			return false;
 		}
 		return true;
+
 	}
 
 	@Override

@@ -101,7 +101,7 @@ class ProjectConfigurationIOVersion1
 		EpptDssContainer dssContainer = new EpptDssContainer(dvDssFile, svDssFile,
 				ivDssFile, dtsDssFile, extraDssFiles);
 		return new EpptScenarioRun(name, description,
-				model, outputPath, wreslMain, Paths.get(Constant.WY_TYPES_TABLE), dssContainer, Constant.getPlotlyDefaultColor(index));
+				model, outputPath, wreslMain, Paths.get(Constant.LOOKUP_DIRECTORY), dssContainer, Constant.getPlotlyDefaultColor(index));
 	}
 
 	private LocalDate readStartMonthProperties(JSONObject jsonObject)

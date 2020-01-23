@@ -91,7 +91,7 @@ abstract class TableBuilder extends StandardSummaryChartBuilder
 		return retval;
 	}
 
-	public static boolean hasValueContent(Element element)
+	static boolean hasValueContent(Element element)
 	{
 		NodeList value = element.getElementsByTagName("value");
 		return IntStream.iterate(0, iter -> iter + 1).limit(value.getLength()).mapToObj(value::item).map(
@@ -125,8 +125,8 @@ abstract class TableBuilder extends StandardSummaryChartBuilder
 		{
 			appendHeaderPlaceholder(header, componentsForHeader, valueFunction, retval);
 		}
-		Map<String, List<ChartComponent>> groupedBySubheaders = componentsForHeader.stream().distinct().collect(
-				groupingBy(ChartComponent::getSubHeader));
+		Map<String, List<ChartComponent>> groupedBySubheaders = componentsForHeader.stream().distinct()
+																				   .collect(groupingBy(ChartComponent::getSubHeader));
 		int i = 0;
 		for(String subHeader : componentsForHeader.stream().map(ChartComponent::getSubHeader).distinct().collect(toList()))
 		{
@@ -143,7 +143,7 @@ abstract class TableBuilder extends StandardSummaryChartBuilder
 		return retval;
 	}
 
-	private void appendHeaderPlaceholder(String header, List<ChartComponent> componentsForHeader, Function<ChartComponent, Element> valueFunction,
+	void appendHeaderPlaceholder(String header, List<ChartComponent> componentsForHeader, Function<ChartComponent, Element> valueFunction,
 										 Element retval)
 	{
 		Element subHeaderPlaceholder = getDocument().createElement(SUBHEADER_ELEMENT);
@@ -158,7 +158,7 @@ abstract class TableBuilder extends StandardSummaryChartBuilder
 						   .ifPresent(e -> buildValue(componentPlaceholder, e, valueFunction));
 	}
 
-	private Element buildSubHeader(String subHeader, List<ChartComponent> componentsForSubHeaders, Function<ChartComponent, Element> valueFunction)
+	Element buildSubHeader(String subHeader, List<ChartComponent> componentsForSubHeaders, Function<ChartComponent, Element> valueFunction)
 	{
 		Element retval = getDocument().createElement(SUBHEADER_ELEMENT);
 		retval.setAttribute(SUBHEADER_NAME_ATTRIBUTE, subHeader);
@@ -166,6 +166,12 @@ abstract class TableBuilder extends StandardSummaryChartBuilder
 		{
 			appendSubHeaderPlaceholder(subHeader, componentsForSubHeaders, valueFunction, retval);
 		}
+		buildComponents(componentsForSubHeaders, valueFunction, retval);
+		return retval;
+	}
+
+	void buildComponents(List<ChartComponent> componentsForSubHeaders, Function<ChartComponent, Element> valueFunction, Element retval)
+	{
 		int i = 0;
 		for(ChartComponent component : componentsForSubHeaders)
 		{
@@ -183,11 +189,10 @@ abstract class TableBuilder extends StandardSummaryChartBuilder
 				}
 			}
 		}
-		return retval;
 	}
 
-	private void appendSubHeaderPlaceholder(String subHeader, List<ChartComponent> componentsForSubHeaders,
-											Function<ChartComponent, Element> valueFunction, Element retval)
+	void appendSubHeaderPlaceholder(String subHeader, List<ChartComponent> componentsForSubHeaders,
+									Function<ChartComponent, Element> valueFunction, Element retval)
 	{
 		Element componentPlaceholder = getDocument().createElement(COMPONENT_ELEMENT);
 		buildRowLabel(subHeader, componentPlaceholder);
@@ -207,7 +212,7 @@ abstract class TableBuilder extends StandardSummaryChartBuilder
 		}
 	}
 
-	void buildRowLabel(String text, Element retval)
+	private void buildRowLabel(String text, Element retval)
 	{
 		Element rowLabel = getDocument().createElement(ROW_LABEL_ELEMENT);
 		retval.appendChild(rowLabel);

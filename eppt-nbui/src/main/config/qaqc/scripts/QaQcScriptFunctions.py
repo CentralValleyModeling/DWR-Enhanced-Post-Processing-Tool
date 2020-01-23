@@ -5,11 +5,12 @@ from java.util import TreeMap
 from java.util.stream.Collectors import *
 from java.time.format import TextStyle
 from java.util import Locale
-from java.lang import String, Double
+from java.lang import String, Double, System
 from rma.stats import EmpiricalDist
 from gov.ca.water.calgui.scripts import JythonScriptRunner
 from gov.ca.water.calgui.scripts.JythonScriptRunner import *
 from java.time import Month
+from gov.ca.water.calgui.constant import Constant
 
 def getPeriodStartYear(date, startOfPeriod):
     period = WaterYearPeriod("")
@@ -48,8 +49,13 @@ def buildListPrefix(entry):
 
 def buildMonthYearEntry(entry):
     localDate = entry.getKey().minusMonths(1)
-    return localDate.getMonth().getDisplayName(TextStyle.FULL,
-                                               Locale.getDefault()) + " " + String.valueOf(localDate.getYear())
+    return String.valueOf(localDate.getYear()) + " " + \
+           localDate.getMonth().getDisplayName(TextStyle.FULL, Locale.getDefault())
 
-def formatAsString(value):
-    return " " + String.format("%.0f", value) + " (TAF)"
+def formatAsString(value, units):
+    if units is None:
+        units = "N/A"
+    return String.format("%.0f", value)
+
+def join(array):
+    return ",".join(array)

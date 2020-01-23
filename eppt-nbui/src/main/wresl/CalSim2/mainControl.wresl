@@ -1,70 +1,74 @@
-/************************************
- 
-mainControl.wresl
+/********************** DESCRIPTION ****************************
+- defines the file location and file sequence included in the post-processing 
 
-Yuxiang, DWR, BDO
-20190206
+********************* REVIEW HISTORY****************************
+Yuxian (Sean) Feng	| DWR	|	02/14/2019	|	Setup initial file
+Karandev Singh		| DWR	|	12/03/2019	|	Reformatted/ standardized logic statements
 
-Post processing script for EPPT QAQC Report
-**************************************/
-! Load user selected study type inputs
-INITIAL { 
-	svar stdtype {select IValue from UserInit where index = 1}    !IValue = 3 for CS3
-	}
-	
+****************************************************************/
 	
 SEQUENCE CYCLE1 {  
     model   QAQC_Post
     order   1
 }
-	
 
 MODEL QAQC_Post { 
 
+! Selected the study type
+	define stdtype {select IValue from UserInit where index = 1}
 
-    ! Load water year type definition
+! Load definitions used in the post-processing script
+	INCLUDE [LOCAL]'EPPT\EPPTDefinitions.wresl'
+
+! Load the mock LP file to pass through solver
+    INCLUDE [LOCAL]'logic_mockLP.wresl'	
+
+! Load water year type definition
 	INCLUDE [LOCAL]'EPPT\wytypes.wresl'
-	! Load input variables (SV and DV needed for post-processing) based on study type 1 = CalLite	2 = CalSimII 3 = CalSim3
-	If stdtype == 1 {
-	INCLUDE [LOCAL]'EPPT\InputSV_CL.wresl' !underreview - place holder 
-	INCLUDE [LOCAL]'EPPT\InputDV_CL.wresl' !underreview - place holder 
-	}	
-	If stdtype == 2 {
-	INCLUDE [LOCAL]'EPPT\InputSV_CSII.wresl'
-	INCLUDE [LOCAL]'EPPT\InputDV_CSII.wresl'
-	INCLUDE [LOCAL]'EPPT\InputCSII_COAExhibitB2.wresl'
-	}
-	If stdtype == 3 {
-	INCLUDE [LOCAL]'EPPT\InputSV_CS3.wresl' !underreview - place holder
-	INCLUDE [LOCAL]'EPPT\InputDV_CS3.wresl' !underreview - place holder
-	}
-	! run dummy logic to pass through solver
-    	INCLUDE [LOCAL]'logic_Dummy.wresl'
-	! run Upstream_MIF post processing calculation
-	INCLUDE [LOCAL]'EPPT\Calc_Upstream_MIF.wresl'
-	! run Weirs Operation post processing calculation
+
+! Load input variables (SV and DV needed for post-processing) based on study type 1 = CalLite	2 = CalSimII 3 = CalSim3
+	!If stdtype == 1 {
+	!INCLUDE [LOCAL]'EPPT\Input_CL.wresl' !underreview - place holder 
+	!}	
+	!If stdtype == 2 {
+	INCLUDE [LOCAL]'EPPT\Input_CSII.wresl'
+	!}
+	!If stdtype == 3 {
+	!INCLUDE [LOCAL]'EPPT\Input_CS3.wresl' !underreview - place holder
+	!}
+! Load NOD Upstream Minimum Instream Flows Module
+	INCLUDE [LOCAL]'EPPT\Calc_nodMIF.wresl'
+	
+! Load Reservoir Operations Module
+	INCLUDE [LOCAL]'EPPT\Calc_resOP.wresl'
+
+! Load NOD Upstream Minimum Instream Flows Module
+!	INCLUDE [LOCAL]'EPPT\Calc_nodMIF.wresl'
+
+! Load NOD Weir Operations Module
 	INCLUDE [LOCAL]'EPPT\Calc_Weirs_Op.wresl'
-	! run SOD Export post processing calculation
+
+! Load NOD Groundwater Pumping Module
+	INCLUDE [LOCAL]'EPPT\Calc_GW.wresl'
+
+! Load Delta Operations Module
 	INCLUDE [LOCAL]'EPPT\Calc_SOD_EXP.wresl'
-	! run Shortage post processing calculation
-	INCLUDE [LOCAL]'EPPT\Calc_Shortage.wresl'
-	! run Delta Control post processing calculation
 	INCLUDE [LOCAL]'EPPT\Calc_Delta_Control.wresl'
-	! run Delta Operation post processing calculation
 	INCLUDE [LOCAL]'EPPT\Calc_Delta_Op.wresl'
-	! run Reservoir Operation post processing calculation
-	! run COA Operation post processing calculation
+	
+! Load Coordinated Operations Agreement Module
 	INCLUDE [LOCAL]'EPPT\Calc_COA.wresl'
 	INCLUDE [LOCAL]'EPPT\Calc_COAExhibitB2.wresl'
-	INCLUDE [LOCAL]'EPPT\Calc_Reservoir_Op.wresl'
-	! run Groundwater post processing calculation
-	!INCLUDE [LOCAL]'EPPT\Calc_GW.wresl'
-	! run NOD Mass Balance post processing calculation
+
+
+! Load Mass Balance Module
 	INCLUDE [LOCAL]'EPPT\Calc_MassBlnc_NOD.wresl'
-	INCLUDE [LOCAL]'EPPT\Summ_compnts_AA_CQ.wresl'
-	! run Delta Mass Balance post processing calculation
-	!INCLUDE [LOCAL]'EPPT\Calc_MassBlnc_Delta.wresl'
-	! run Phase II post processing calculation
-	!INCLUDE [LOCAL]'EPPT\Calc_PhaseII.wresl'
-	
+	INCLUDE [LOCAL]'EPPT\Calc_MassBlnc_Delta.wresl'
+	INCLUDE [LOCAL]'EPPT\Calc_MassBlnc_SOD.wresl'
+! Load Allocations	AAli 12312019
+	INCLUDE [LOCAL]'EPPT\Calc_Allocation.wresl'
+	INCLUDE [LOCAL]'EPPT\Calc_Shortage.wresl'	
+! Load ????????????
+	!INCLUDE [LOCAL]'EPPT\Summ_compnts_AA_CQ.wresl'
+	!INCLUDE [LOCAL]'EPPT\Calc_PhaseII.wresl'	
 }

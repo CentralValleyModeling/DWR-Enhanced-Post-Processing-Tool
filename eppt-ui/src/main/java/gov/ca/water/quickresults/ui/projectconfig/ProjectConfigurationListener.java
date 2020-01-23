@@ -12,14 +12,24 @@
 
 package gov.ca.water.quickresults.ui.projectconfig;
 
+import java.awt.Desktop;
 import java.awt.Frame;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.IOException;
+import java.nio.file.Path;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.*;
 
+import gov.ca.water.calgui.constant.EpptPreferences;
 import gov.ca.water.calgui.project.EpptScenarioRun;
 import gov.ca.water.quickresults.ui.EpptPanel;
 import gov.ca.water.quickresults.ui.projectconfig.scenarioconfig.ScenarioRunEditor;
+
+import hec.gui.NameDialog;
+
+import static java.util.stream.Collectors.toList;
 
 
 /**
@@ -30,6 +40,7 @@ import gov.ca.water.quickresults.ui.projectconfig.scenarioconfig.ScenarioRunEdit
  */
 public class ProjectConfigurationListener implements ActionListener
 {
+	private static final Logger LOGGER = Logger.getLogger(ProjectConfigurationListener.class.getName());
 	private final ProjectConfigurationPanel _projectConfigurationPanel;
 
 	public ProjectConfigurationListener(ProjectConfigurationPanel projectConfigurationPanel)
@@ -54,6 +65,9 @@ public class ProjectConfigurationListener implements ActionListener
 			case "btnEditScenario":
 				launchFileDialogToEditScenario(e);
 				break;
+			case "btnCopyScenario":
+				launchFileDialogToCopyScenario(e);
+				break;
 			case "btnDelScenario":
 				_projectConfigurationPanel.deleteScenario();
 				break;
@@ -66,7 +80,27 @@ public class ProjectConfigurationListener implements ActionListener
 			case "moveDown":
 				_projectConfigurationPanel.moveSelectedScenarioDown();
 				break;
+			case "openProject":
+				openCurrentProject();
+				break;
 			default:
+		}
+	}
+
+	private void openCurrentProject()
+	{
+		Path lastProjectConfiguration = EpptPreferences.getLastProjectConfiguration();
+		if(!lastProjectConfiguration.toString().isEmpty())
+		{
+			Path projectFolder = lastProjectConfiguration.getParent();
+			try
+			{
+				Desktop.getDesktop().open(projectFolder.toFile());
+			}
+			catch(IOException e)
+			{
+				LOGGER.log(Level.SEVERE, "Error opening project folder: " + projectFolder, e);
+			}
 		}
 	}
 
@@ -77,9 +111,36 @@ public class ProjectConfigurationListener implements ActionListener
 		scenarioRunEditor.setVisible(true);
 		scenarioRunEditor.dispose();
 		EpptScenarioRun scenarioRun = scenarioRunEditor.createRun();
-		if(scenarioRun != null)
+		if(scenarioRun != null && !scenarioRunEditor.isCanceled())
 		{
 			_projectConfigurationPanel.addScenario(scenarioRun);
+		}
+	}
+
+	private void launchFileDialogToCopyScenario(ActionEvent e)
+	{
+		EpptScenarioRun oldScenarioRun = _projectConfigurationPanel.getSelectedScenario();
+		if(oldScenarioRun != null)
+		{
+			NameDialog nameDialog = new NameDialog((Frame) SwingUtilities.windowForComponent(_projectConfigurationPanel), true);
+			nameDialog.setExistingNames(ProjectConfigurationPanel.getProjectConfigurationPanel()
+																 .getAllEpptScenarioRuns()
+																 .stream()
+																 .map(EpptScenarioRun::getName)
+																 .collect(toList()));
+			nameDialog.setTitle("Copy Scenario Run");
+			nameDialog.setName(oldScenarioRun.getName() + " (Copy)");
+			nameDialog.setDescription(oldScenarioRun.getDescription());
+			nameDialog.setVisible(true);
+			if(!nameDialog.isCanceled())
+			{
+				String name = nameDialog.getName();
+				String description = nameDialog.getDescription();
+				EpptScenarioRun newScenarioRun = new EpptScenarioRun(name, description, oldScenarioRun);
+				_projectConfigurationPanel.addScenario(newScenarioRun);
+				_projectConfigurationPanel.updateRadioState();
+			}
+			nameDialog.dispose();
 		}
 	}
 
@@ -96,7 +157,7 @@ public class ProjectConfigurationListener implements ActionListener
 			scenarioRunEditor.setVisible(false);
 			scenarioRunEditor.dispose();
 
-			if(newScenarioRun != null)
+			if(newScenarioRun != null && !scenarioRunEditor.isCanceled())
 			{
 				_projectConfigurationPanel.replaceScenario(oldScenarioRun, newScenarioRun);
 				_projectConfigurationPanel.updateRadioState();

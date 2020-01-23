@@ -68,7 +68,7 @@ class QAQCReportGenerator
 			if(!reports.toFile().exists() ||
 					!reports.resolve("QAQC_Report.jrxml").toFile().exists())
 			{
-				copyJasperPaths();
+				QaQcFileUtils.copyJasperPaths();
 			}
 			List<EpptScenarioRun> altRuns = Collections.emptyList();
 			if(altRun != null)
@@ -78,10 +78,7 @@ class QAQCReportGenerator
 			Path dataFile = reports.resolve("DWR_QA_QC_Reports").resolve("Datasource").resolve("EPPT_Data.xml");
 			EPPTReport epptReport = new EPPTReport(dataFile,
 					baseRun, altRuns, reportParameters, standardSummaryErrors);
-			//			if(false)
-			{
-				epptReport.writeReport();
-			}
+			epptReport.writeReport();
 			return reports.resolve("QAQC_Report.jrxml");
 		}
 		catch(IOException | RuntimeException ex)
@@ -90,54 +87,5 @@ class QAQCReportGenerator
 		}
 	}
 
-	public static Path copyJasperPaths() throws IOException
-	{
-		String jasperDir = Constant.JASPER_DIR;
 
-		Path lastProjectConfiguration = EpptPreferences.getLastProjectConfiguration();
-		Path reports = lastProjectConfiguration.getParent().resolve("Reports");
-		copyFolder(Paths.get(jasperDir), reports);
-		try(Stream<Path> walk = Files.walk(reports, 7))
-		{
-			List<Path> jasper = walk.filter(p -> p.getFileName().toString().endsWith("jasper"))
-									.collect(toList());
-			for(Path path : jasper)
-			{
-				Files.deleteIfExists(path);
-
-			}
-		}
-		return reports;
-	}
-
-	private static void copyFolder(Path src, Path dest) throws IOException
-	{
-		try(Stream<Path> walk = Files.walk(src))
-		{
-			walk.forEach(source -> copy(source, dest.resolve(src.relativize(source))));
-		}
-	}
-
-	private static void copy(Path source, Path dest)
-	{
-		try
-		{
-			if(!dest.toFile().exists())
-			{
-				boolean mkdirs = dest.toFile().mkdirs();
-				if(!mkdirs)
-				{
-					throw new IOException("Unable to create directory for: " + dest);
-				}
-			}
-			if(source.toFile().isFile())
-			{
-				Files.copy(source, dest, REPLACE_EXISTING);
-			}
-		}
-		catch(IOException e)
-		{
-			throw new IllegalStateException("Error copying file: " + source, e);
-		}
-	}
 }

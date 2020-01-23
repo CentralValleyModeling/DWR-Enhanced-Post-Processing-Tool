@@ -29,6 +29,8 @@ import gov.ca.water.calgui.bo.WaterYearIndex;
 import gov.ca.water.calgui.bo.WaterYearPeriod;
 import gov.ca.water.calgui.bo.WaterYearPeriodRange;
 import gov.ca.water.calgui.constant.Constant;
+import gov.ca.water.calgui.project.EpptScenarioRun;
+import gov.ca.water.calgui.scripts.DssCache;
 import gov.ca.water.reportengine.EpptReportException;
 
 import rma.util.TwoColorColorContour;
@@ -42,7 +44,7 @@ import rma.util.TwoColorColorContour;
 public class SummaryReportParameters
 {
 	private final WaterYearDefinition _waterYearDefinition;
-	private final WaterYearIndex _waterYearIndex;
+	private final Map<EpptScenarioRun, WaterYearIndex> _waterYearIndex;
 	private final WaterYearPeriodRange _longTermRange;
 	private final Map<WaterYearPeriod, List<WaterYearPeriodRange>> _waterYearPeriodRanges;
 	private final PercentDiffStyle _percentDiffStyle;
@@ -50,19 +52,21 @@ public class SummaryReportParameters
 	private final TwoColorColorContour _negativeContour;
 	private final List<String> _disabledSummaryModules;
 	private final CommonPeriodFilter _commonPeriodFilter;
+	private final DssCache _dssCache;
 
-	public SummaryReportParameters(WaterYearDefinition waterYearDefinition, WaterYearIndex waterYearIndex, WaterYearPeriodRange longTermRange,
+	public SummaryReportParameters(WaterYearDefinition waterYearDefinition, Map<EpptScenarioRun, WaterYearIndex> waterYearIndicies, WaterYearPeriodRange longTermRange,
 								   Map<WaterYearPeriod, List<WaterYearPeriodRange>> waterYearPeriodRanges, PercentDiffStyle percentDiffStyle,
-								   List<String> disabledSummaryModules, CommonPeriodFilter commonPeriodFilter)
+								   List<String> disabledSummaryModules, CommonPeriodFilter commonPeriodFilter, DssCache dssCache)
 			throws EpptReportException
 	{
 		_waterYearDefinition = waterYearDefinition;
-		_waterYearIndex = waterYearIndex;
+		_waterYearIndex = waterYearIndicies;
 		_longTermRange = longTermRange;
 		_waterYearPeriodRanges = waterYearPeriodRanges;
 		_percentDiffStyle = percentDiffStyle;
 		_disabledSummaryModules = disabledSummaryModules;
 		_commonPeriodFilter = commonPeriodFilter;
+		_dssCache = dssCache;
 		_positiveContour = createContour(Paths.get(Constant.POSITIVE_CONTOUR_FILE));
 		_negativeContour = createContour(Paths.get(Constant.NEGATIVE_CONTOUR_FILE));
 	}
@@ -117,9 +121,9 @@ public class SummaryReportParameters
 		return _waterYearDefinition;
 	}
 
-	public WaterYearIndex getWaterYearIndex()
+	public WaterYearIndex getWaterYearIndex(EpptScenarioRun epptScenarioRun)
 	{
-		return _waterYearIndex;
+		return _waterYearIndex.get(epptScenarioRun);
 	}
 
 	public WaterYearPeriodRange getLongTermRange()
@@ -136,5 +140,10 @@ return _disabledSummaryModules;
 	public CommonPeriodFilter getCommonPeriodFilter()
 	{
 		return _commonPeriodFilter;
+	}
+
+	public DssCache getDssCache()
+	{
+		return _dssCache;
 	}
 }

@@ -16,11 +16,12 @@ import java.awt.HeadlessException;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import javax.swing.*;
 
+import gov.ca.water.calgui.bo.GUILinksAllModelsBO;
+import gov.ca.water.calgui.busservice.impl.GuiLinksSeedDataSvcImpl;
 import gov.ca.water.calgui.presentation.DisplayHelper;
 import gov.ca.water.calgui.project.EpptScenarioRun;
 import gov.ca.water.calgui.project.PlotConfigurationState;
@@ -76,7 +77,9 @@ class QuickResultsMouseListener extends MouseAdapter
 					PlotConfigurationState plotConfigurationState = projectConfigurationPanel.plotConfigurationState();
 					LocalDate startMonth = projectConfigurationPanel.getStartMonth();
 					LocalDate endMonth = projectConfigurationPanel.getEndMonth();
-					_displayHelper.showDisplayFrames(plotConfigurationState, Collections.singletonList(chk.getName()), baseScenario, alternatives,
+					String name = chk.getName();
+					GUILinksAllModelsBO guiLink = GuiLinksSeedDataSvcImpl.getSeedDataSvcImplInstance().getGuiLink(name);
+					_displayHelper.showDisplayFramesGuiLink(plotConfigurationState, Collections.singletonList(guiLink), baseScenario, alternatives,
 							startMonth, endMonth);
 				}
 			}

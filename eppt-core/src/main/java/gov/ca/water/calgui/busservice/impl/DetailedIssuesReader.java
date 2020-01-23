@@ -55,14 +55,7 @@ public class DetailedIssuesReader
 
 	public static void createDetailedIssues() throws EpptInitializationException
 	{
-		if(instance == null)
-		{
-			instance = new DetailedIssuesReader(Constant.DETAILS_CSV);
-		}
-		else
-		{
-			throw new EpptInitializationException("Detailed Issues Reader already initialized!");
-		}
+		instance = new DetailedIssuesReader(Constant.DETAILS_CSV);
 	}
 
 	public List<DetailedIssue> getDetailedIssues()
@@ -77,7 +70,7 @@ public class DetailedIssuesReader
 
 	private List<DetailedIssue> read() throws EpptInitializationException
 	{
-		String line = "";
+		String line;
 		String csvSplitBy = ",";
 		List<DetailedIssue> retval = new ArrayList<>();
 		LOGGER.at(Level.INFO).log("Reading DTS Configuration %s", _detailedIssuesCSVPath);
@@ -132,38 +125,34 @@ public class DetailedIssuesReader
 				int guiLink = Const.UNDEFINED_INT;
 				int thresholdLink = Const.UNDEFINED_INT;
 
-				if(row.length > GUI_LINK)
+				if(row.length > GUI_LINK && !"".equals(row[GUI_LINK]) && !"N/A".equals(row[GUI_LINK]))
 				{
-					if(!"".equals(row[GUI_LINK]) && !"N/A".equals(row[GUI_LINK]))
+					guiLink = Integer.parseInt(row[GUI_LINK]);
+				}
+				if(row.length > THRESHOLD_LINK && !"".equals(row[THRESHOLD_LINK]))
+				{
+					try
 					{
-						guiLink = Integer.parseInt(row[GUI_LINK]);
+						thresholdLink = Integer.parseInt(row[THRESHOLD_LINK]);
+					}
+					catch(NumberFormatException e)
+					{
+						thresholdLink = -1;
+						LOGGER.atFiner().withCause(e).log("Not a valid sub module ID");
 					}
 				}
-				if(row.length > THRESHOLD_LINK)
+				boolean isExecutiveReport = false;
+				if(row.length > THRESHOLD_LINK && !"".equals(row[SECTION_ID]))
 				{
-					if(!"".equals(row[THRESHOLD_LINK]))
-					{
-						try
-						{
-							thresholdLink = Integer.parseInt(row[THRESHOLD_LINK]);
-						}
-						catch(NumberFormatException e)
-						{
-							thresholdLink = -1;
-							LOGGER.atFiner().withCause(e).log("Not a valid sub module ID");
-						}
-					}
+					isExecutiveReport = row[SECTION_ID].contains(EXEC_DETAILS_REPORT);
 				}
 				String title = "";
-				if(row.length > TITLE)
+				if(row.length > TITLE && !"".equals(row[TITLE]))
 				{
-					if(!"".equals(row[TITLE]))
-					{
-						title = row[TITLE];
-					}
+					title = row[TITLE];
 				}
 
-				retval.add(new DetailedIssue(detailsId, subModuleID, linkedVar, guiLink, thresholdLink, title));
+				retval.add(new DetailedIssue(detailsId, subModuleID, linkedVar, guiLink, thresholdLink, title, isExecutiveReport));
 
 			}
 		}

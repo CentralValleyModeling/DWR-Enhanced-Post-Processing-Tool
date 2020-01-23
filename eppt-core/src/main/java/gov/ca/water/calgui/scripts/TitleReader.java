@@ -12,16 +12,9 @@
 
 package gov.ca.water.calgui.scripts;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import gov.ca.water.calgui.EpptInitializationException;
-import gov.ca.water.calgui.bo.DetailedIssue;
 import gov.ca.water.calgui.bo.GUILinksAllModelsBO;
 import gov.ca.water.calgui.busservice.impl.DetailedIssuesReader;
 import gov.ca.water.calgui.busservice.impl.GuiLinksSeedDataSvcImpl;
-import gov.ca.water.calgui.constant.Constant;
-import gov.ca.water.calgui.constant.EpptPreferences;
 import gov.ca.water.calgui.project.EpptScenarioRun;
 
 /**
@@ -58,7 +51,7 @@ public class TitleReader
 
 	public String getGuiLinkId(int i)
 	{
-		GUILinksAllModelsBO objById = GuiLinksSeedDataSvcImpl.getSeedDataSvcImplInstance().getObjById(String.valueOf(i));
+		GUILinksAllModelsBO objById = GuiLinksSeedDataSvcImpl.getSeedDataSvcImplInstance().getGuiLink(String.valueOf(i));
 		if(objById != null)
 		{
 			String plotTitle = objById.getPlotTitle();

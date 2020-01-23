@@ -1,0 +1,35 @@
+/************************************
+
+Allocation.wresl
+
+AAli, CQ DWR, BDO
+2019/08/23
+
+
+/****************************** New Components ******************************/
+!SWP SOD TA delivery without carryover
+define SWP_TA_SOD_DEL {value TOT_TBL_A_SWP - FEATH_TBL_A_SWP}
+!AA_modified define SWP_DELIVERIES {value swp_ta_total+swp_in_total+swp_co_total}
+
+define SWP_DELIVERIES {value TOT_TBL_A_SWP + ART_21_SWP + ART_56_SWP}
+
+!AA_modified define swp_sod_del {value swp_ta_total+swp_in_total+swp_co_total+swp_loss}
+define SWP_SOD_DEL {value TOT_TBL_A_SWP +ART_21_SWP+ART_56_SWP+SWP_LOSS}
+
+define SOD_DEL 			{value SWP_SOD_DEL+CVPTOTALDEL}  
+define SHORT_SOD_TA 	{value SHORT_SWP_PAG_S+SHORT_SWP_PMI_S}
+define SHORT_FRSA 		{value SHORT_SWP_PAG_N+SHORT_SWP_PWR}
+define SHORT_SWP_TA 	{value SHORT_SWP_PAG_S+SHORT_SWP_PMI_S+SHORT_SWP_PMI_N}
+
+/******************New Components *****************************/
+!SWP TA SOD Delivery
+define SWP_TA_SOD_DEL_ 	{alias SWP_TA_SOD_DEL kind 'DTS-ALLOC-VALUE' units  'TAF'}
+!SWP_Deliveries
+define SWP_DELIVERIES_ 	{alias SWP_DELIVERIES kind 'DTS-ALLOC-VALUE' units  'TAF'}
+!SWP SOD Deliveries
+define SWP_SOD_DEL_ 	{alias SWP_SOD_DEL   kind 'DTS-ALLOC-VALUE' units  'TAF'}
+define SOD_DEL_ 		{alias SOD_DEL   kind 'DTS-ALLOC-VALUE' units  'TAF'}
+define SHORT_SOD_TA_ 	{alias SHORT_SOD_TA  kind 'DTS-ALLOC-VALUE' units 'TAF'}
+define SHORT_FRSA_ 		{alias SHORT_FRSA    kind 'DTS-ALLOC-VALUE' units  'TAF'}
+define SHORT_SWP_TA_ 	{alias SHORT_SWP_TA  kind 'DTS-ALLOC-VALUE' units  'TAF'}
+

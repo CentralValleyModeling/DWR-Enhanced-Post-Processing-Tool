@@ -22,6 +22,7 @@ import java.util.logging.Logger;
 
 import gov.ca.water.calgui.bo.WaterYearDefinition;
 import gov.ca.water.calgui.project.EpptScenarioRun;
+import gov.ca.water.calgui.scripts.DssMissingRecordException;
 import gov.ca.water.plotly.PlotlyChart;
 import gov.ca.water.plotly.qaqc.PlotlyMonthly;
 import gov.ca.water.reportengine.EpptReportException;
@@ -95,7 +96,7 @@ class LinePlotBuilder extends PlotChartBuilder
 				}
 			}
 		}
-		catch(EpptReportException e)
+		catch(EpptReportException | DssMissingRecordException e)
 		{
 			logScriptException(LOGGER, chartComponent, e);
 		}

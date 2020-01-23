@@ -1,0 +1,13 @@
+<component name="libraryTable">
+  <library name="Maven: hecjavadev-core:images:DeltaERT-1-4-0-97-Obfuscated:6.0">
+    <CLASSES>
+      <root url="jar://$MAVEN_REPOSITORY$/hecjavadev-core/images/6.0/images-6.0-DeltaERT-1-4-0-97-Obfuscated.jar!/" />
+    </CLASSES>
+    <JAVADOC>
+      <root url="jar://$MAVEN_REPOSITORY$/hecjavadev-core/images/6.0/images-6.0-javadoc.jar!/" />
+    </JAVADOC>
+    <SOURCES>
+      <root url="jar://$MAVEN_REPOSITORY$/hecjavadev-core/images/6.0/images-6.0-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

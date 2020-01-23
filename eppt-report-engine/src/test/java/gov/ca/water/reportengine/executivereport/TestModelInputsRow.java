@@ -14,6 +14,7 @@ package gov.ca.water.reportengine.executivereport;
 
 import gov.ca.water.calgui.project.EpptScenarioRun;
 import gov.ca.water.reportengine.ModuleCreator;
+import gov.ca.water.reportengine.standardsummary.StandardSummaryErrors;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.w3c.dom.Document;
@@ -47,7 +48,7 @@ public class TestModelInputsRow extends ExecutiveReportTestBase
         ModuleCreator mc = new ModuleCreator();
         List<Module> modules = mc.createModules(getCSVPath());
 
-        DTSProcessor dtsProcessor = new DTSProcessor(modules);
+        DTSProcessor dtsProcessor = new DTSProcessor(modules, new StandardSummaryErrors());
         Map<EpptScenarioRun, Map<SubModule, List<FlagViolation>>> runsToViolations = dtsProcessor.processDSSFiles(allRuns);
 
 

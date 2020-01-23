@@ -44,11 +44,13 @@ public class WreslScriptRunner
 {
 	private static final Logger LOGGER = Logger.getLogger(WreslScriptRunner.class.getName());
 	private final EpptScenarioRun _scenarioRun;
+	private final Path _wreslMainFile;
 	private final ProcessOutputConsumer _outputStreamConsumer;
 
-	public WreslScriptRunner(EpptScenarioRun scenarioRun, ProcessOutputConsumer outputStreamConsumer)
+	public WreslScriptRunner(EpptScenarioRun scenarioRun, Path wreslMainFile, ProcessOutputConsumer outputStreamConsumer)
 	{
 		_scenarioRun = scenarioRun;
+		_wreslMainFile = wreslMainFile;
 		_outputStreamConsumer = outputStreamConsumer;
 	}
 
@@ -98,7 +100,7 @@ public class WreslScriptRunner
 		Process process = null;
 		try
 		{
-			Path configPath = new WreslConfigWriter(_scenarioRun)
+			Path configPath = new WreslConfigWriter(_scenarioRun, _wreslMainFile)
 					.withStartDate(start)
 					.withEndDate(end)
 					.write()
@@ -110,7 +112,7 @@ public class WreslScriptRunner
 			String javaLibraryPath = "-Djava.library.path=" + wrimsLib.toString();
 			String classpath = wrimsLib + File.separator + "*;" + wrimsSys + File.separator + "*";
 
-			String[] args = new String[]{javaExe, "-Xmx4096m", "-Xss1024K", javaLibraryPath, "-cp", classpath, ControllerBatch.class.getName(), "-config=" + configPath.toString()};
+			String[] args = new String[]{javaExe, "-Xmx4096m", "-Xss1024K", javaLibraryPath, "-cp", classpath, ControllerBatch.class.getName(), "-config=\"" + configPath.toString() + "\""};
 			String commandLine = String.join(" ", args);
 			LOGGER.log(Level.INFO, "Running Post Process WRESL Script: >>>>>>>>>>>>>>>>>");
 			LOGGER.log(Level.INFO, commandLine);
@@ -121,7 +123,7 @@ public class WreslScriptRunner
 			int exitValue = process.exitValue();
 			if(exitValue != 0)
 			{
-				LOGGER.log(Level.WARNING,  "{0} WRESL ERROR Return Code: {1}", new Object[]{_scenarioRun.getWreslMain(), exitValue});
+				LOGGER.log(Level.WARNING,  "{0} WRESL ERROR Return Code: {1}", new Object[]{_wreslMainFile, exitValue});
 			}
 		}
 		catch(InterruptedException ex)

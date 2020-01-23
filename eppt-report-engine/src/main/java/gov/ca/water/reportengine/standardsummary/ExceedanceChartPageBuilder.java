@@ -13,17 +13,19 @@
 package gov.ca.water.reportengine.standardsummary;
 
 import java.time.Month;
+import java.time.format.TextStyle;
 import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.NavigableMap;
-import java.util.logging.Level;
+import java.util.TreeMap;
 import java.util.logging.Logger;
 
 import gov.ca.water.calgui.bo.MonthPeriodFilter;
-import gov.ca.water.calgui.bo.PeriodFilter;
 import gov.ca.water.calgui.project.EpptScenarioRun;
+import gov.ca.water.calgui.scripts.DssMissingRecordException;
 import gov.ca.water.plotly.ExceedanceData;
 import gov.ca.water.plotly.PlotlyChart;
 import gov.ca.water.plotly.qaqc.PlotlyExceedancePage;
@@ -70,29 +72,46 @@ class ExceedanceChartPageBuilder extends PlotChartBuilder
 		{
 			for(Month month : Month.values())
 			{
-				MonthPeriodFilter monthPeriodFilter = new MonthPeriodFilter(month);
-				data.put(month, buildExceedanceData(monthPeriodFilter, scenarioRun, chartComponents));
+				data.put(month, buildExceedanceData(month, scenarioRun, chartComponents));
 			}
-
 		}
 		catch(EpptReportException e)
 		{
-			logScriptException(LOGGER, chartComponents.get(0), e);
+			logScriptException(LOGGER, null, e);
 		}
 		return new PlotlyExceedancePage.ExceedanceMonthData(data);
 	}
 
-	private ExceedanceData buildExceedanceData(PeriodFilter periodFilter, EpptScenarioRun scenarioRun, List<ChartComponent> chartComponents)
+	private ExceedanceData buildExceedanceData(Month month, EpptScenarioRun scenarioRun, List<ChartComponent> chartComponents)
 			throws EpptReportException
 	{
+		MonthPeriodFilter periodFilter = new MonthPeriodFilter(month);
 		ChartComponent chartComponent = chartComponents.get(0);
-		NavigableMap<Double, Double> primaryData = createJythonValueGenerator(scenarioRun, chartComponent.getFunction()).generateExceedanceValues();
+		NavigableMap<Double, Double> primaryData = new TreeMap<>();
 		Map<String, NavigableMap<Double, Double>> thresholdData = new HashMap<>();
+		try
+		{
+			primaryData = createJythonValueGenerator(periodFilter, scenarioRun, chartComponent.getFunction()).generateExceedanceValues();
+		}
+		catch(DssMissingRecordException e)
+		{
+			logScriptException(LOGGER, chartComponent,
+					new DssMissingRecordException(e.getMessage() + " for month: " + month.getDisplayName(TextStyle.SHORT, Locale.getDefault())));
+		}
 		for(int i = 1; i < chartComponents.size(); i++)
 		{
-			NavigableMap<Double, Double> threshold = createJythonValueGenerator(periodFilter, getBase(),
-					chartComponents.get(i).getFunction()).generateExceedanceValues();
-			thresholdData.put(chartComponents.get(i).getComponent(), threshold);
+			ChartComponent component = chartComponents.get(i);
+			try
+			{
+				NavigableMap<Double, Double> threshold = createJythonValueGenerator(periodFilter, scenarioRun,
+						component.getFunction()).generateExceedanceValues();
+				thresholdData.put(component.getComponent(), threshold);
+			}
+			catch(DssMissingRecordException e)
+			{
+				logScriptException(LOGGER, component,
+						new DssMissingRecordException(e.getMessage() + " for month: " + month.getDisplayName(TextStyle.SHORT, Locale.getDefault())));
+			}
 		}
 		return new ExceedanceData(scenarioRun.getName(), primaryData, thresholdData);
 	}

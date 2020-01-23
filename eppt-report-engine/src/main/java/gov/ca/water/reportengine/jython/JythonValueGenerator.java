@@ -13,10 +13,7 @@
 package gov.ca.water.reportengine.jython;
 
 import java.math.BigInteger;
-import java.time.LocalDateTime;
 import java.time.Month;
-import java.time.temporal.ChronoUnit;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.EnumMap;
 import java.util.List;
@@ -24,19 +21,20 @@ import java.util.Map;
 import java.util.NavigableMap;
 import javax.script.ScriptException;
 
+import gov.ca.water.calgui.bo.AnnualPeriodFilter;
 import gov.ca.water.calgui.bo.CommonPeriodFilter;
 import gov.ca.water.calgui.bo.PeriodFilter;
 import gov.ca.water.calgui.bo.WaterYearDefinition;
 import gov.ca.water.calgui.bo.WaterYearIndex;
-import gov.ca.water.calgui.bo.WaterYearPeriod;
 import gov.ca.water.calgui.bo.WaterYearPeriodFilter;
 import gov.ca.water.calgui.bo.WaterYearPeriodRange;
 import gov.ca.water.calgui.bo.WaterYearPeriodRangeFilter;
 import gov.ca.water.calgui.bo.WaterYearType;
 import gov.ca.water.calgui.project.EpptScenarioRun;
+import gov.ca.water.calgui.scripts.DssCache;
+import gov.ca.water.calgui.scripts.DssMissingRecordException;
 import gov.ca.water.calgui.scripts.JythonScriptRunner;
 import gov.ca.water.reportengine.EpptReportException;
-import sun.font.Script;
 
 import static java.util.stream.Collectors.toList;
 
@@ -49,31 +47,49 @@ import static java.util.stream.Collectors.toList;
 public class JythonValueGenerator
 {
 	private final PeriodFilter _periodFilter;
+	private final AnnualPeriodFilter _annualPeriodFilter;
 	private final EpptScenarioRun _scenarioRun;
 	private final String _function;
 	private final JythonScriptRunner _scriptRunner;
 
-	public JythonValueGenerator(EpptScenarioRun scenarioRun, String function, CommonPeriodFilter commonPeriodFilter) throws ScriptException
+	public JythonValueGenerator(EpptScenarioRun scenarioRun, String function,
+								CommonPeriodFilter commonPeriodFilter, WaterYearDefinition waterYearDefinition, DssCache dssCache)
 	{
-		this(input -> true, scenarioRun, function, commonPeriodFilter);
+		this(input -> true, scenarioRun, function, commonPeriodFilter, waterYearDefinition, dssCache);
 	}
 
-	public JythonValueGenerator(PeriodFilter periodFilter, EpptScenarioRun base, String function, CommonPeriodFilter commonPeriodFilter)
-			throws ScriptException
+	public JythonValueGenerator(PeriodFilter periodFilter, EpptScenarioRun base, String function,
+								CommonPeriodFilter commonPeriodFilter, WaterYearDefinition waterYearDefinition, DssCache dssCache)
 	{
-		_scenarioRun = base;
-		_function = JythonScriptBuilder.getInstance().buildFunctionFromTemplate(function);
-		_periodFilter = periodFilter;
-		_scriptRunner = new JythonScriptRunner(_scenarioRun, commonPeriodFilter);
-		_scriptRunner.setPeriodFilter(_periodFilter);
-		setWaterYearPeriodRange();
+		this(periodFilter, input -> true, base, function, commonPeriodFilter, waterYearDefinition, dssCache);
 	}
 
 	public JythonValueGenerator(EpptScenarioRun epptScenarioRun, String function, CommonPeriodFilter commonPeriodFilter,
-								WaterYearIndex waterYearIndex) throws ScriptException
+								WaterYearIndex waterYearIndex, WaterYearDefinition waterYearDefinition, DssCache dssCache)
 	{
-		this(epptScenarioRun, function, commonPeriodFilter);
+		this(epptScenarioRun, function, commonPeriodFilter, waterYearDefinition, dssCache);
 		_scriptRunner.setWaterYearIndex(waterYearIndex);
+	}
+
+	public JythonValueGenerator(EpptScenarioRun epptScenarioRun, String function,
+								CommonPeriodFilter commonPeriodFilter, int comparisonValue,
+								WaterYearDefinition waterYearDefinition, DssCache dssCache)
+	{
+		this(epptScenarioRun, function, commonPeriodFilter, waterYearDefinition, dssCache);
+		_scriptRunner.setComparisonValue((double) comparisonValue);
+	}
+
+	public JythonValueGenerator(PeriodFilter periodFilter, AnnualPeriodFilter annualPeriodFilter, EpptScenarioRun base, String function,
+								CommonPeriodFilter commonPeriodFilter, WaterYearDefinition waterYearDefinition, DssCache dssCache)
+	{
+		_annualPeriodFilter = annualPeriodFilter;
+		_scenarioRun = base;
+		_function = JythonScriptBuilder.getInstance().buildFunctionFromTemplate(function);
+		_periodFilter = periodFilter;
+		_scriptRunner = new JythonScriptRunner(_scenarioRun, commonPeriodFilter, waterYearDefinition, dssCache);
+		_scriptRunner.setPeriodFilter(_periodFilter);
+		_scriptRunner.setAnnualPeriodFilter(_annualPeriodFilter);
+		setWaterYearPeriodRange();
 	}
 
 	private void setWaterYearPeriodRange()
@@ -89,25 +105,21 @@ public class JythonValueGenerator
 			List<WaterYearPeriodRange> waterYearPeriodRanges = waterYearPeriodFilter.getWaterYearIndex()
 																					.getWaterYearTypes()
 																					.stream()
-																					.filter(e -> e.getWaterYearPeriod().equals(waterYearPeriodFilter.getWaterYearPeriod()))
-																					.map(e->new WaterYearPeriodRange(e.getWaterYearPeriod(), new WaterYearType(e.getYear(), e.getWaterYearPeriod()),new WaterYearType(e.getYear(), e.getWaterYearPeriod())))
+																					.filter(e -> e.getWaterYearPeriod().equals(
+																							waterYearPeriodFilter.getWaterYearPeriod()))
+																					.map(e -> new WaterYearPeriodRange(e.getWaterYearPeriod(),
+																							new WaterYearType(e.getYear(), e.getWaterYearPeriod()),
+																							new WaterYearType(e.getYear(), e.getWaterYearPeriod())))
 																					.collect(toList());
 			_scriptRunner.setWaterYearPeriodRanges(waterYearPeriodRanges);
 		}
 	}
 
-	public JythonValueGenerator(EpptScenarioRun epptScenarioRun, String function, CommonPeriodFilter commonPeriodFilter, int comparisonValue)
-			throws ScriptException
-	{
-		this(epptScenarioRun, function, commonPeriodFilter);
-		_scriptRunner.setComparisonValue((double) comparisonValue);
-	}
-
-	public Double generateValue() throws EpptReportException
+	public Double generateValue() throws EpptReportException, DssMissingRecordException
 	{
 		try
 		{
-			Object o = _scriptRunner.runScript(_function);
+			Object o = generateObjectValue();
 			Double retval;
 			if(o instanceof BigInteger)
 			{
@@ -119,10 +131,6 @@ public class JythonValueGenerator
 			}
 			return retval;
 		}
-		catch(ScriptException e)
-		{
-			throw new EpptReportException("Error running script: " + _function, e);
-		}
 		catch(ClassCastException e)
 		{
 			throw new EpptReportException("Incorrect return type from function: " + _function +
@@ -130,7 +138,20 @@ public class JythonValueGenerator
 		}
 	}
 
-	public Object generateObjectValue() throws EpptReportException
+	private void checkDssMissingException(Throwable e) throws DssMissingRecordException
+	{
+		Throwable cause = e.getCause();
+		if(cause instanceof DssMissingRecordException)
+		{
+			throw (DssMissingRecordException) cause;
+		}
+		else if(cause != null)
+		{
+			checkDssMissingException(cause);
+		}
+	}
+
+	public Object generateObjectValue() throws EpptReportException, DssMissingRecordException
 	{
 		try
 		{
@@ -138,21 +159,18 @@ public class JythonValueGenerator
 		}
 		catch(ScriptException e)
 		{
+			checkDssMissingException(e);
 			throw new EpptReportException("Error running script: " + _function, e);
 		}
 	}
 
 	@SuppressWarnings("unchecked")
-	public long generateCount() throws EpptReportException
+	public long generateCount() throws EpptReportException, DssMissingRecordException
 	{
 		try
 		{
-			Object o = _scriptRunner.runScript(_function);
+			Object o = generateObjectValue();
 			return ((BigInteger) o).longValue();
-		}
-		catch(ScriptException e)
-		{
-			throw new EpptReportException("Error running script: " + _function, e);
 		}
 		catch(ClassCastException e)
 		{
@@ -162,11 +180,11 @@ public class JythonValueGenerator
 	}
 
 	@SuppressWarnings("unchecked")
-	public NavigableMap<Double, Double> generateExceedanceValues() throws EpptReportException
+	public NavigableMap<Double, Double> generateExceedanceValues() throws EpptReportException, DssMissingRecordException
 	{
 		try
 		{
-			Object o = _scriptRunner.runScript(_function);
+			Object o = generateObjectValue();
 			if(o == null)
 			{
 				throw new ScriptException("Script returned null collection: " + _function);
@@ -175,6 +193,7 @@ public class JythonValueGenerator
 		}
 		catch(ScriptException e)
 		{
+			checkDssMissingException(e);
 			throw new EpptReportException("Error running script: " + _function, e);
 		}
 		catch(ClassCastException e)
@@ -185,11 +204,11 @@ public class JythonValueGenerator
 	}
 
 	@SuppressWarnings("unchecked")
-	public Map<Integer, Double> generateAnnualValues() throws EpptReportException
+	public Map<Integer, Double> generateAnnualValues() throws EpptReportException, DssMissingRecordException
 	{
 		try
 		{
-			Object o = _scriptRunner.runScript(_function);
+			Object o = generateObjectValue();
 			if(o == null)
 			{
 				throw new ScriptException("Script returned null collection: " + _function);
@@ -198,6 +217,7 @@ public class JythonValueGenerator
 		}
 		catch(ScriptException e)
 		{
+			checkDssMissingException(e);
 			throw new EpptReportException("Error running script: " + _function, e);
 		}
 		catch(ClassCastException e)
@@ -208,11 +228,11 @@ public class JythonValueGenerator
 	}
 
 	@SuppressWarnings("unchecked")
-	public Map<Month, Double> generateMonthlyValues() throws EpptReportException
+	public Map<Month, Double> generateMonthlyValues() throws EpptReportException, DssMissingRecordException
 	{
 		try
 		{
-			Object o = _scriptRunner.runScript(_function);
+			Object o = generateObjectValue();
 			if(o == null)
 			{
 				throw new ScriptException("Script returned null collection: " + _function);
@@ -225,6 +245,7 @@ public class JythonValueGenerator
 		}
 		catch(ScriptException e)
 		{
+			checkDssMissingException(e);
 			throw new EpptReportException("Error running script: " + _function, e);
 		}
 		catch(ClassCastException e)
@@ -232,5 +253,10 @@ public class JythonValueGenerator
 			throw new EpptReportException("Incorrect return type from function: " + _function +
 					" Required: ", e);
 		}
+	}
+
+	public String getUnits()
+	{
+		return _scriptRunner.getUnits();
 	}
 }

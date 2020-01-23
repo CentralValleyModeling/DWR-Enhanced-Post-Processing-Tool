@@ -58,6 +58,7 @@ public class DataAnalysisPanel extends EpptPanel
 			_baseRadioGroup = new ButtonGroup();
 			_altRadioGroup = new ButtonGroup();
 			initRadioButtons();
+			initListeners();
 			ProjectConfigurationPanel.getProjectConfigurationPanel().addScenarioChangedListener(this::updateScenarios);
 		}
 		catch(Exception e)
@@ -65,6 +66,36 @@ public class DataAnalysisPanel extends EpptPanel
 			LOGGER.error("Error setting up quick results swing xml: " + DATA_ANALYSIS_XML_FILE, e);
 			throw new IllegalStateException(e);
 		}
+	}
+
+	private void initListeners()
+	{
+		JComboBox<EpptScenarioRun> baseScenarioCombo = (JComboBox<EpptScenarioRun>) getSwingEngine().find("baseScenarioCombo");
+		JComboBox<EpptScenarioRun> altScenarioCombo = (JComboBox<EpptScenarioRun>) getSwingEngine().find("altScenarioCombo");
+		baseScenarioCombo.addActionListener(e->
+		{
+			Object selectedItem = baseScenarioCombo.getSelectedItem();
+			if(selectedItem != null)
+			{
+				((JTextField) getSwingEngine().find("tfReportNAME1")).setText(selectedItem.toString());
+			}
+		});
+		altScenarioCombo.addActionListener(e->
+		{
+			Object selectedItem = altScenarioCombo.getSelectedItem();
+			if(selectedItem != null)
+			{
+				((JTextField) getSwingEngine().find("tfReportNAME2")).setText(selectedItem.toString());
+			}
+		});
+		JRadioButton baseScenarioRadioButton = (JRadioButton) getSwingEngine().find("baseScenarioBtn");
+		JRadioButton baseFileRadioButton = (JRadioButton) getSwingEngine().find("baseFileBtn");
+		JRadioButton altScenarioRadioButton = (JRadioButton) getSwingEngine().find("altScenarioBtn");
+		JRadioButton altFileRadioButton = (JRadioButton) getSwingEngine().find("altFileBtn");
+		baseScenarioRadioButton.addActionListener(e->baseScenarioCombo.setEnabled(baseScenarioRadioButton.isSelected()));
+		baseFileRadioButton.addActionListener(e->baseScenarioCombo.setEnabled(!baseFileRadioButton.isSelected()));
+		altScenarioRadioButton.addActionListener(e->altScenarioCombo.setEnabled(altScenarioRadioButton.isSelected()));
+		altFileRadioButton.addActionListener(e->altScenarioCombo.setEnabled(!altFileRadioButton.isSelected()));
 	}
 
 	@SuppressWarnings("unchecked")

@@ -25,6 +25,7 @@
     </annotationProcessing>
     <bytecodeTargetLevel>
       <module name="eppt-report-data" target="1.8" />
+      <module name="eppt-schematic" target="1.8" />
       <module name="trend-reporting" target="1.8" />
     </bytecodeTargetLevel>
   </component>

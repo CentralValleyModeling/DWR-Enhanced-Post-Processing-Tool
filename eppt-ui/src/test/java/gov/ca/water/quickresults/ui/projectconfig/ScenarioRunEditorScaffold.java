@@ -70,7 +70,7 @@ public class ScenarioRunEditorScaffold
 					LOGGER.log(Level.INFO, "Description: {0}", new Object[]{run.getDescription()});
 					LOGGER.log(Level.INFO, "Model: {0}", new Object[]{run.getModel()});
 					LOGGER.log(Level.INFO, "Output Path: {0}", new Object[]{run.getOutputPath()});
-					LOGGER.log(Level.INFO, "WRESL Main: {0}", new Object[]{run.getWreslMain()});
+					LOGGER.log(Level.INFO, "WRESL Main: {0}", new Object[]{run.getWreslDirectory()});
 				}
 				jFrame.setVisible(false);
 				jFrame.dispose();

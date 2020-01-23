@@ -164,10 +164,10 @@ final class EPPTOptionsPanel extends JPanel
 				4, 2, 1, .1, .5,
 				GridBagConstraints.WEST, GridBagConstraints.BOTH,
 				new Insets(5, 5, 5, 5), 5, 5));
-		panel.add(_usePlotlyCheckbox, new GridBagConstraints(3,
-				5, 1, 1, .1, .5,
-				GridBagConstraints.WEST, GridBagConstraints.HORIZONTAL,
-				new Insets(5, 5, 5, 5), 5, 5));
+//		panel.add(_usePlotlyCheckbox, new GridBagConstraints(3,
+//				5, 1, 1, .1, .5,
+//				GridBagConstraints.WEST, GridBagConstraints.HORIZONTAL,
+//				new Insets(5, 5, 5, 5), 5, 5));
 		panel.add(resetButton, new GridBagConstraints(3,
 				5, 1, 1, .1, .5,
 				GridBagConstraints.EAST, GridBagConstraints.HORIZONTAL,
@@ -212,6 +212,7 @@ final class EPPTOptionsPanel extends JPanel
 
 	private void updateWrimsVersion()
 	{
+		_wrimsVersionLabel.setText("N/A");
 		String text = _wrimsDirectoryField.getText();
 		Path wrimsLibDir = Paths.get(text).resolve("lib");
 		if(wrimsLibDir.toFile().exists() && wrimsLibDir.toFile().isDirectory())
@@ -225,14 +226,17 @@ final class EPPTOptionsPanel extends JPanel
 				try(URLClassLoader urlClassLoader = new URLClassLoader(urls.toArray(new URL[0])))
 				{
 					URL resource = urlClassLoader.findResource("wrimsv2/version.props");
-					Properties properties = new Properties();
-					try(InputStream inputStream = resource.openStream())
+					if(resource != null)
 					{
-						properties.load(inputStream);
-						Object version = properties.get("version");
-						if(version != null)
+						Properties properties = new Properties();
+						try(InputStream inputStream = resource.openStream())
 						{
-							_wrimsVersionLabel.setText(version.toString());
+							properties.load(inputStream);
+							Object version = properties.get("version");
+							if(version != null)
+							{
+								_wrimsVersionLabel.setText(version.toString());
+							}
 						}
 					}
 				}
@@ -263,7 +267,15 @@ final class EPPTOptionsPanel extends JPanel
 		{
 			EpptPreferences.setProjectsPath(_projectDirectoryFileChooserField.getText());
 			EpptPreferences.setResultsOutputLocation(Objects.toString(_resultsOutputComboBox.getSelectedItem()));
-			EpptPreferences.setWrimsPath(Paths.get(_wrimsDirectoryField.getText()));
+			Path path = Paths.get(_wrimsDirectoryField.getText());
+			if(!path.toAbsolutePath().startsWith(Paths.get("").toAbsolutePath()))
+			{
+				EpptPreferences.setWrimsPath(path);
+			}
+			else
+			{
+				EpptPreferences.removeWrimsPathPreference();
+			}
 			EpptPreferences.setUsePlotly(_usePlotlyCheckbox.isSelected());
 		}
 	}

@@ -16,22 +16,18 @@ import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.UncheckedIOException;
-import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalDate;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import java.util.stream.Stream;
 
-import gov.ca.water.calgui.EpptInitializationException;
 import gov.ca.water.calgui.constant.Constant;
 import gov.ca.water.calgui.project.EpptDssContainer;
 import gov.ca.water.calgui.project.EpptScenarioRun;
 import gov.ca.water.calgui.project.NamedDssPath;
 
-import hec.heclib.dss.HecDSSFileDataManager;
 import hec.heclib.dss.HecDss;
 import hec.heclib.util.Heclib;
 
@@ -45,12 +41,14 @@ class WreslConfigWriter
 {
 	private static final Logger LOGGER = Logger.getLogger(WreslConfigWriter.class.getName());
 	private final EpptScenarioRun _scenarioRun;
+	private final Path _wreslMainFile;
 	private LocalDate _start;
 	private LocalDate _end;
 
-	WreslConfigWriter(EpptScenarioRun scenarioRun)
+	WreslConfigWriter(EpptScenarioRun scenarioRun, Path wreslMainFile)
 	{
 		_scenarioRun = scenarioRun;
+		_wreslMainFile = wreslMainFile;
 	}
 
 	WreslConfigWriter withStartDate(LocalDate start)
@@ -128,10 +126,9 @@ class WreslConfigWriter
 				deleteCorruptCatalogFile(dvDssFile);
 			}
 
-			Path wreslMain = _scenarioRun.getWreslMain();
-			if(wreslMain != null)
+			if(_wreslMainFile != null)
 			{
-				configText = configText.replace("{MainFile}", "\"" + wreslMain.toAbsolutePath().toString() + "\"");
+				configText = configText.replace("{MainFile}", "\"" + _wreslMainFile.toAbsolutePath().toString() + "\"");
 			}
 			else
 			{
@@ -154,7 +151,7 @@ class WreslConfigWriter
 
 			String name = _scenarioRun.getName();
 			name = name.replaceAll("[^a-zA-Z0-9.\\-]", "_");
-			Path configPath = _scenarioRun.getWreslMain().toAbsolutePath().getParent().resolve("WRESL" + name + ".config");
+			Path configPath = _wreslMainFile.toAbsolutePath().getParent().resolve("WRESL_" + name + ".config");
 			LOGGER.log(Level.INFO, "Writing WRESL config: {0}", configPath);
 			configPath.getParent().toFile().mkdirs();
 			try(BufferedWriter bufferedWriter = Files.newBufferedWriter(configPath);

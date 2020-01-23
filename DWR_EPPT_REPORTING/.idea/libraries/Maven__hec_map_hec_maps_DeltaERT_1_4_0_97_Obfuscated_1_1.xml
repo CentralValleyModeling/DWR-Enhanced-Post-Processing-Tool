@@ -1,0 +1,13 @@
+<component name="libraryTable">
+  <library name="Maven: hec.map:hec-maps:DeltaERT-1-4-0-97-Obfuscated:1.1">
+    <CLASSES>
+      <root url="jar://$MAVEN_REPOSITORY$/hec/map/hec-maps/1.1/hec-maps-1.1-DeltaERT-1-4-0-97-Obfuscated.jar!/" />
+    </CLASSES>
+    <JAVADOC>
+      <root url="jar://$MAVEN_REPOSITORY$/hec/map/hec-maps/1.1/hec-maps-1.1-javadoc.jar!/" />
+    </JAVADOC>
+    <SOURCES>
+      <root url="jar://$MAVEN_REPOSITORY$/hec/map/hec-maps/1.1/hec-maps-1.1-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

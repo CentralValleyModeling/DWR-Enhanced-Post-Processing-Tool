@@ -88,7 +88,7 @@ class ScenarioTableModel extends RmaTreeTableModel<ParentRowModel>
 				.withSortable(false)
 				.withVisibleByDefault(false)
 				.build();
-		WRESL_MAIN_COL_SPEC = new RmaTreeTableColumnSpec.Builder("EPPT WRESL Script")
+		WRESL_MAIN_COL_SPEC = new RmaTreeTableColumnSpec.Builder("EPPT WRESL Directory")
 				.withCanBeHidden(true)
 				.withEditable(false)
 				.withSortable(false)
@@ -112,7 +112,7 @@ class ScenarioTableModel extends RmaTreeTableModel<ParentRowModel>
 				.withSortable(false)
 				.withVisibleByDefault(false)
 				.build();
-		WATER_YEAR_PATH_COL_SPEC = new RmaTreeTableColumnSpec.Builder("Water Year File")
+		WATER_YEAR_PATH_COL_SPEC = new RmaTreeTableColumnSpec.Builder("Lookup Directory")
 				.withCanBeHidden(true)
 				.withEditable(false)
 				.withSortable(false)

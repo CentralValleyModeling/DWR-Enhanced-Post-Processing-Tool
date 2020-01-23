@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Created with Jaspersoft Studio version 6.9.0.final using JasperReports Library version 6.9.0-cb8f9004be492ccc537180b49c026951f4220bf3  -->
+<!-- Created with Jaspersoft Studio version 6.8.0.final using JasperReports Library version 6.8.0-2ed8dfabb690ff337a5797129f2cd92902b0c87b  -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="QAQC_controls_table" language="groovy" pageWidth="504" pageHeight="684" columnWidth="504" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="fdf29854-1cab-4c3d-99e9-a38b49852a26">
 	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
 	<property name="net.sf.jasperreports.export.xls.collapse.row.span" value="true"/>
@@ -111,7 +111,7 @@
 			<leftPen lineWidth="1.0" lineColor="#CCCCCC"/>
 		</box>
 		<conditionalStyle>
-			<conditionExpression><![CDATA[$V{value_MEASURE}<0&&$V{less-greater-equal-order}==2&&$V{scenario-order}==2]]></conditionExpression>
+			<conditionExpression><![CDATA[$V{value_MEASURE}<0&&$V{value_MEASURE}!=-2147483648&&$V{less-greater-equal-order}==2&&$V{scenario-order}==2]]></conditionExpression>
 			<style forecolor="#F06063" scaleImage="FillFrame">
 				<box>
 					<topPen lineWidth="0.0" lineColor="#000000"/>
@@ -144,7 +144,7 @@
 			</style>
 		</conditionalStyle>
 		<conditionalStyle>
-			<conditionExpression><![CDATA[$V{value_MEASURE}<0&&$V{less-greater-equal-order}==0&&$V{scenario-order}==2]]></conditionExpression>
+			<conditionExpression><![CDATA[$V{value_MEASURE}<0&&$V{less-greater-equal-order}==0&&$V{value_MEASURE}!=-2147483648&&$V{scenario-order}==2]]></conditionExpression>
 			<style forecolor="#F06063" scaleImage="FillFrame">
 				<box>
 					<topPen lineWidth="0.0" lineColor="#000000"/>
@@ -177,7 +177,7 @@
 			</style>
 		</conditionalStyle>
 		<conditionalStyle>
-			<conditionExpression><![CDATA[$V{value_MEASURE}<0&&$V{scenario-order}==2]]></conditionExpression>
+			<conditionExpression><![CDATA[$V{value_MEASURE}<0&&$V{value_MEASURE}!=-2147483648&&$V{scenario-order}==2]]></conditionExpression>
 			<style forecolor="#F06063">
 				<box>
 					<topPen lineWidth="0.0"/>
@@ -381,7 +381,7 @@
 		<band/>
 	</pageFooter>
 	<summary>
-		<band height="100">
+		<band height="60">
 			<property name="com.jaspersoft.studio.unit.height" value="px"/>
 			<crosstab>
 				<reportElement x="0" y="-1" width="504" height="61" uuid="0234ba63-fc75-4a2f-90a9-e28aa409e9c5">
@@ -460,7 +460,7 @@
 					</bucket>
 					<crosstabRowHeader>
 						<cellContents mode="Opaque" style="row-label">
-							<textField>
+							<textField isStretchWithOverflow="true">
 								<reportElement style="row-label" stretchType="ContainerHeight" x="0" y="0" width="100" height="16" uuid="7ee8f37b-a075-4965-820c-63bf247cf439"/>
 								<box leftPadding="3" rightPadding="2"/>
 								<textElement verticalAlignment="Middle">
@@ -581,7 +581,7 @@
 							<textElement textAlignment="Center" verticalAlignment="Middle">
 								<font size="9"/>
 							</textElement>
-							<textFieldExpression><![CDATA[$V{value-full-text}==null?($V{value_MEASURE}==""?"N/A":($V{value_MEASURE}>0&&$V{scenario-order}==2?"+"+$V{value_MEASURE}:$V{value_MEASURE})):($V{value_MEASURE}>0&&$V{scenario-order}==2?"+"+$V{value-full-text}:$V{value-full-text})]]></textFieldExpression>
+							<textFieldExpression><![CDATA[$V{value_MEASURE}==-2147483648?"NR":($V{value-full-text}==null?($V{value_MEASURE}==""?"N/A":($V{value_MEASURE}>0&&$V{scenario-order}==2?"+"+$V{value_MEASURE}:$V{value_MEASURE})):($V{value_MEASURE}>0&&$V{scenario-order}==2?"+"+$V{value-full-text}:$V{value-full-text}))]]></textFieldExpression>
 						</textField>
 					</cellContents>
 				</crosstabCell>

@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<launchConfiguration type="wpp.launchType">
+<stringAttribute key="bad_container_name" value="C:\Users\singhk\Desktop\EPPT_WRESL_Testing"/>
+<stringAttribute key="wpp.debugModel.ATTR_WPP_ALLOWSVTSINIT" value="yes"/>
+<stringAttribute key="wpp.debugModel.ATTR_WPP_APART" value="CALSIM"/>
+<stringAttribute key="wpp.debugModel.ATTR_WPP_APART_MS2" value=""/>
+<stringAttribute key="wpp.debugModel.ATTR_WPP_AUTHOR" value=""/>
+<stringAttribute key="wpp.debugModel.ATTR_WPP_DATABASEURL" value="none"/>
+<stringAttribute key="wpp.debugModel.ATTR_WPP_DATATRANSFER_MS2" value=""/>
+<stringAttribute key="wpp.debugModel.ATTR_WPP_DATE" value=""/>
+<stringAttribute key="wpp.debugModel.ATTR_WPP_DESCRIPTION" value=""/>
+<stringAttribute key="wpp.debugModel.ATTR_WPP_DVAR" value="DSS\DCRBL_QAQCtest.dss"/>
+<stringAttribute key="wpp.debugModel.ATTR_WPP_DVAR_MS2" value=""/>
+<stringAttribute key="wpp.debugModel.ATTR_WPP_ENDDAY" value="30"/>
+<stringAttribute key="wpp.debugModel.ATTR_WPP_ENDMONTH" value="sep"/>
+<stringAttribute key="wpp.debugModel.ATTR_WPP_ENDYEAR" value="2003"/>
+<stringAttribute key="wpp.debugModel.ATTR_WPP_FREEXA" value="no"/>
+<stringAttribute key="wpp.debugModel.ATTR_WPP_GWDATA" value=""/>
+<stringAttribute key="wpp.debugModel.ATTR_WPP_GWDATA_MS2" value=""/>
+<stringAttribute key="wpp.debugModel.ATTR_WPP_INIT" value="DSS\DCRBL_SVDV.dss"/>
+<stringAttribute key="wpp.debugModel.ATTR_WPP_INITFPART" value="2020D09E"/>
+<stringAttribute key="wpp.debugModel.ATTR_WPP_INITFPART_MS2" value=""/>
+<stringAttribute key="wpp.debugModel.ATTR_WPP_INIT_MS2" value=""/>
+<stringAttribute key="wpp.debugModel.ATTR_WPP_ISFIXDURATION" value="yes"/>
+<stringAttribute key="wpp.debugModel.ATTR_WPP_ISSENSITIVITYRUN" value="no"/>
+<stringAttribute key="wpp.debugModel.ATTR_WPP_LAUNCHTYPE" value="0"/>
+<stringAttribute key="wpp.debugModel.ATTR_WPP_MSDURATION" value="12"/>
+<stringAttribute key="wpp.debugModel.ATTR_WPP_MULTISTUDY" value="1"/>
+<stringAttribute key="wpp.debugModel.ATTR_WPP_NUMSENSITIVITYRUN" value="1"/>
+<stringAttribute key="wpp.debugModel.ATTR_WPP_OVFILE" value=""/>
+<stringAttribute key="wpp.debugModel.ATTR_WPP_OVOPTION" value="0"/>
+<stringAttribute key="wpp.debugModel.ATTR_WPP_PADELINIT" value="yes"/>
+<stringAttribute key="wpp.debugModel.ATTR_WPP_PADURATION" value="12"/>
+<stringAttribute key="wpp.debugModel.ATTR_WPP_PADVSTARTDAY" value="1"/>
+<stringAttribute key="wpp.debugModel.ATTR_WPP_PADVSTARTMONTH" value="10"/>
+<stringAttribute key="wpp.debugModel.ATTR_WPP_PADVSTARTYEAR" value="2019"/>
+<stringAttribute key="wpp.debugModel.ATTR_WPP_PARESETDVSTART" value="no"/>
+<stringAttribute key="wpp.debugModel.ATTR_WPP_PASTARTINTERVAL" value="12"/>
+<stringAttribute key="wpp.debugModel.ATTR_WPP_PROGRAM" value="mainControl.wresl"/>
+<stringAttribute key="wpp.debugModel.ATTR_WPP_PROGRAM_MS2" value=""/>
+<stringAttribute key="wpp.debugModel.ATTR_WPP_SENSITIVITYINDEXTABLENAME" value="SensitivityIndex"/>
+<stringAttribute key="wpp.debugModel.ATTR_WPP_SQLGROUP" value="calsim"/>
+<stringAttribute key="wpp.debugModel.ATTR_WPP_STARTDAY" value="31"/>
+<stringAttribute key="wpp.debugModel.ATTR_WPP_STARTMONTH" value="oct"/>
+<stringAttribute key="wpp.debugModel.ATTR_WPP_STARTYEAR" value="1921"/>
+<stringAttribute key="wpp.debugModel.ATTR_WPP_STUDY" value="Post processes CSII model results"/>
+<stringAttribute key="wpp.debugModel.ATTR_WPP_SVAR" value="DSS\DCRBL_SVDV.dss"/>
+<stringAttribute key="wpp.debugModel.ATTR_WPP_SVAR_MS2" value=""/>
+<stringAttribute key="wpp.debugModel.ATTR_WPP_SVFPART" value="2020D09E"/>
+<stringAttribute key="wpp.debugModel.ATTR_WPP_SVFPART_MS2" value=""/>
+<stringAttribute key="wpp.debugModel.ATTR_WPP_TIMESTEP" value="1MON"/>
+<stringAttribute key="wpp.debugModel.ATTR_WPP_TIMESTEP_MS2" value="1MON"/>
+<stringAttribute key="wpp.debugModel.ATTR_WPP_VARIABLEDURATION" value=""/>
+<stringAttribute key="wpp.debugModel.ATTR_WPP_WRESLPLUS" value="no"/>
+<stringAttribute key="wpp.debugModel.CALSIMHYDROEXE" value=""/>
+<stringAttribute key="wpp.debugModel.CALSIMHYDRORUN" value="0"/>
+</launchConfiguration>

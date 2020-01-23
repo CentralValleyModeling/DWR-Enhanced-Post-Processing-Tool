@@ -18,12 +18,15 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 import javax.swing.*;
 
 import gov.ca.water.calgui.project.PlotConfigurationState;
 import gov.ca.water.calgui.techservice.IErrorHandlingSvc;
 import gov.ca.water.calgui.techservice.impl.ErrorHandlingSvcImpl;
 import org.swixml.SwingEngine;
+
+import hec.io.S;
 
 public class PlotConfigurationStateBuilder
 {
@@ -60,8 +63,8 @@ public class PlotConfigurationStateBuilder
 				cAdd = cAdd + "Diff";
 			}
 			// Units
-			rdb = (JRadioButton) _swingEngine.find("rdbCFS");
-			if(rdb.isSelected())
+			JCheckBox checkBox = (JCheckBox) _swingEngine.find("chkTAF");
+			if(!checkBox.isSelected())
 			{
 				cAdd = cAdd + ";CFS";
 			}
@@ -87,12 +90,12 @@ public class PlotConfigurationStateBuilder
 				cAdd = cAdd + ";TS";
 			}
 
-			StringBuilder cST = new StringBuilder();
 			Component[] controls2 = ((JPanel) _swingEngine.find("controls2")).getComponents();
-			addExceedancePlots(cST, controls2);
-			if(cST.length() > 0)
+			List<String> exceedanceMonths = new ArrayList<>();
+			addExceedancePlots(exceedanceMonths, controls2);
+			if(!exceedanceMonths.isEmpty())
 			{
-				cAdd = cAdd + ";EX-" + cST;
+				cAdd = cAdd + ";EX-" + String.join(",", exceedanceMonths);
 			}
 
 			// Boxplot
@@ -113,9 +116,10 @@ public class PlotConfigurationStateBuilder
 			ckb = (JCheckBox) _swingEngine.find("RepckbSummaryTable");
 			if(ckb.isSelected())
 			{
-				cST = new StringBuilder(";ST-");
-				addSummaryTables(cST, components);
-				cAdd = cAdd + cST;
+				StringBuilder cST = new StringBuilder(";ST-");
+				List<String> summaryTables = new ArrayList<>();
+				addSummaryTables(summaryTables, components);
+				cAdd = cAdd + ";ST-" + String.join(",", summaryTables);
 			}
 
 			return cAdd;
@@ -143,7 +147,7 @@ public class PlotConfigurationStateBuilder
 			{
 				comparisonType = PlotConfigurationState.ComparisonType.DIFF;
 			}
-			boolean displayTaf = !((JRadioButton) _swingEngine.find("rdbCFS")).isSelected();
+			boolean displayTaf = !((JCheckBox) _swingEngine.find("chkTAF")).isSelected();
 			boolean displayTimeSeriesPlot = ((JCheckBox) _swingEngine.find("RepckbTimeSeriesPlot")).isSelected();
 			boolean displayBoxAndWhisker = ((JCheckBox) _swingEngine.find("RepckbBAWPlot")).isSelected();
 			boolean displayMonthlyTable = ((JCheckBox) _swingEngine.find("RepckbMonthlyTable")).isSelected();
@@ -173,37 +177,22 @@ public class PlotConfigurationStateBuilder
 	}
 
 
-	private void addExceedancePlots(StringBuilder cST, Component[] components)
+	private void addExceedancePlots(List<String> exceedanceMonths, Component[] components)
 	{
 		for(Component c : components)
 		{
 			if(c instanceof JCheckBox && ((JCheckBox) c).isSelected())
 			{
-				cST.append(",").append(((JCheckBox) c).getText());
+				exceedanceMonths.add(((JCheckBox) c).getText());
 			}
 			else if(c instanceof Container)
 			{
-				addExceedancePlots(cST, ((Container) c).getComponents());
+				addExceedancePlots(exceedanceMonths, ((Container) c).getComponents());
 			}
 		}
 	}
 
-	private void addExceedancePlots(List<String> exceedance, Component[] components)
-	{
-		for(Component c : components)
-		{
-			if(c instanceof JCheckBox && ((JCheckBox) c).isSelected())
-			{
-				exceedance.add(((JCheckBox) c).getText());
-			}
-			else if(c instanceof Container)
-			{
-				addExceedancePlots(exceedance, ((Container) c).getComponents());
-			}
-		}
-	}
-
-	private void addSummaryTables(StringBuilder cST, Component[] components)
+	private void addSummaryTables(List<String> summaryTables, Component[] components)
 	{
 		for(final Component component : components)
 		{
@@ -213,32 +202,12 @@ public class PlotConfigurationStateBuilder
 				if(c.isSelected())
 				{
 					String cName = c.getText();
-					cST.append(",").append(cName);
+					summaryTables.add(cName);
 				}
 			}
 			else if(component instanceof Container)
 			{
-				addSummaryTables(cST, ((Container) component).getComponents());
-			}
-		}
-	}
-
-	private void addSummaryTables(List<String> summary, Component[] components)
-	{
-		for(final Component component : components)
-		{
-			if(component instanceof JCheckBox)
-			{
-				JCheckBox c = (JCheckBox) component;
-				if(c.isSelected())
-				{
-					String cName = c.getText();
-					summary.add(cName);
-				}
-			}
-			else if(component instanceof Container)
-			{
-				addSummaryTables(summary, ((Container) component).getComponents());
+				addSummaryTables(summaryTables, ((Container) component).getComponents());
 			}
 		}
 	}

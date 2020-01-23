@@ -48,6 +48,7 @@ import gov.ca.water.calgui.busservice.impl.WaterYearDefinitionSvc;
 import gov.ca.water.calgui.busservice.impl.WaterYearTableReader;
 import gov.ca.water.calgui.constant.Constant;
 import gov.ca.water.calgui.project.EpptScenarioRun;
+import gov.ca.water.calgui.scripts.DssCache;
 import javafx.scene.paint.Color;
 import org.junit.jupiter.api.Test;
 import org.w3c.dom.Document;
@@ -78,7 +79,7 @@ public class TestStandardSummaryWriter
 		assertNotNull(resource,"Standard Summary Statistics configuration file must exist");
 		URI uri = resource.toURI();
 		Path path = Paths.get(uri);
-		StandardSummaryReader standardSummaryReader = new StandardSummaryReader(path, new StandardSummaryErrors());
+		StandardSummaryReader standardSummaryReader = new StandardSummaryReader(path, new StandardSummaryErrors(), new DssCache());
 		List<String> orderedChartIds = standardSummaryReader.getOrderedChartIds();
 		Map<String, EpptChart> stringEpptChartMap = standardSummaryReader.readLines();
 		List<EpptChart> collect = orderedChartIds.stream()
@@ -95,7 +96,9 @@ public class TestStandardSummaryWriter
 				Paths.get("Test.pdf"), Paths.get("mainWresl.wresl"), Paths.get(""), null, Color.BLUE);
 
 		WaterYearDefinition waterYearDefinition = WaterYearDefinitionSvc.getWaterYearDefinitionSvc().getDefinitions().get(0);
-		WaterYearIndex waterYearIndex = new WaterYearTableReader(baseRun.getWaterYearTable()).read().get(0);
+		WaterYearIndex waterYearIndex = new WaterYearTableReader(baseRun.getLookupDirectory()).read().get(0);
+		Map<EpptScenarioRun, WaterYearIndex> waterYearIndecies = new HashMap<>();
+		waterYearIndecies.put(baseRun, waterYearIndex);
 		WaterYearPeriod longTermPeriod = new WaterYearPeriod("Long Term");
 		WaterYearPeriodRange longTermRange = new WaterYearPeriodRange(longTermPeriod, new WaterYearType(1930, longTermPeriod),
 				new WaterYearType(1999, longTermPeriod));
@@ -118,8 +121,8 @@ public class TestStandardSummaryWriter
 		List<String> disabledStandardSummaryModules = new ArrayList<>();
 		CommonPeriodFilter commonPeriodFilter = new CommonPeriodFilter(LocalDateTime.of(1950, Month.JULY, 1, 0, 0),
 				LocalDateTime.of(1999, Month.JULY, 1, 0, 0));
-		SummaryReportParameters reportParameters = new SummaryReportParameters(waterYearDefinition, waterYearIndex, longTermRange, waterYearPeriodRanges, PercentDiffStyle.FULL, disabledStandardSummaryModules,
-				commonPeriodFilter);
+		SummaryReportParameters reportParameters = new SummaryReportParameters(waterYearDefinition, waterYearIndecies, longTermRange, waterYearPeriodRanges, PercentDiffStyle.FULL, disabledStandardSummaryModules,
+				commonPeriodFilter, new DssCache());
 		Path imagePath = Constant.QAQC_IMAGE_PATH;
 		imagePath.toFile().delete();
 		StandardSummaryWriter standardSummaryWriter = new StandardSummaryWriter(document, baseRun, Collections.singletonList(altRun),

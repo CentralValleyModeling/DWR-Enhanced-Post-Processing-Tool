@@ -16,6 +16,8 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 
+import gov.ca.water.calgui.constant.Constant;
+
 /**
  * Company: Resource Management Associates
  *
@@ -49,11 +51,11 @@ public class EpptScenarioRunValidator
 		}
 		if(isWaterYearTableInvalid())
 		{
-			retval.add("Invalid Scenario Water Year Table: " + _epptScenarioRun.getWaterYearTable());
+			retval.add("Invalid Scenario Water Year Table: " + _epptScenarioRun.getLookupDirectory());
 		}
 		if(isWreslMainInvalid())
 		{
-			retval.add("Invalid Scenario EPPT WRESL Main: " + _epptScenarioRun.getWreslMain());
+			retval.add("Invalid Scenario EPPT WRESL Main: " + _epptScenarioRun.getWreslDirectory());
 		}
 		if(isOutputPathInvalid())
 		{
@@ -81,16 +83,20 @@ public class EpptScenarioRunValidator
 
 	private boolean isWreslMainInvalid()
 	{
-		Path wreslMain = _epptScenarioRun.getWreslMain();
-		return wreslMain == null || !wreslMain.toFile().exists()
-				|| !wreslMain.toFile().isFile();
+		Path wreslMain = _epptScenarioRun.getWreslDirectory();
+		return wreslMain == null
+				|| !wreslMain.toFile().exists()
+				|| !wreslMain.toFile().isDirectory()
+				|| !wreslMain.resolve(Constant.WRESL_MAIN).toFile().exists();
 	}
 
 	private boolean isWaterYearTableInvalid()
 	{
-		Path waterYearTable = _epptScenarioRun.getWaterYearTable();
-		return waterYearTable == null || !waterYearTable.toFile().exists()
-				|| !waterYearTable.toFile().isFile();
+		Path waterYearTable = _epptScenarioRun.getLookupDirectory();
+		return waterYearTable == null
+				|| !waterYearTable.toFile().exists()
+				|| !waterYearTable.toFile().isDirectory()
+				|| !waterYearTable.resolve(Constant.WY_TYPES_TABLE).toFile().exists();
 	}
 
 	private boolean isModelInvalid()

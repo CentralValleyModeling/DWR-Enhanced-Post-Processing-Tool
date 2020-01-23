@@ -17,13 +17,15 @@ import java.util.List;
 public class ReportHeader
 {
 	private final String _author;
+	private final String _title;
 	private final String _baseFile;
 	private final List<String> _alternatives;
 	private final String _subtitle;
 
-	public ReportHeader(String author, String subtitle, String baseFile, List<String> alternatives)
+	public ReportHeader(String author, String title, String subtitle, String baseFile, List<String> alternatives)
 	{
 		_author = author;
+		_title = title;
 		_baseFile = baseFile;
 		_alternatives = alternatives;
 		_subtitle = subtitle;
@@ -42,6 +44,11 @@ public class ReportHeader
 	public List<String> getAlternativeNames()
 	{
 		return _alternatives;
+	}
+
+	public String getTitle()
+	{
+		return _title;
 	}
 
 	public String getSubTitle()

@@ -17,6 +17,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
+import static java.util.stream.Collectors.toList;
+
 /**
  * Company: Resource Management Associates
  *
@@ -39,6 +41,17 @@ public class EpptDssContainer
 		_ivDssFile = ivDssFile;
 		_dtsDssFile = dtsDssFile;
 		_extraDssFiles = Collections.unmodifiableList(extraDssFiles);
+	}
+
+	public EpptDssContainer(EpptDssContainer epptDssContainer)
+	{
+		_dvDssFile = new NamedDssPath(epptDssContainer.getDvDssFile());
+		_svDssFile = new NamedDssPath(epptDssContainer.getSvDssFile());
+		_ivDssFile = new NamedDssPath(epptDssContainer.getIvDssFile());
+		_dtsDssFile = new NamedDssPath(epptDssContainer.getDtsDssFile());
+		_extraDssFiles = Collections.unmodifiableList(epptDssContainer.getExtraDssFiles().stream()
+																	  .map(NamedDssPath::new)
+																	  .collect(toList()));
 	}
 
 	/**
@@ -103,10 +116,10 @@ public class EpptDssContainer
 	public List<NamedDssPath> getAllDssFiles()
 	{
 		List<NamedDssPath> retval = new ArrayList<>();
+		retval.add(getDtsDssFile());
 		retval.add(getDvDssFile());
 		retval.add(getSvDssFile());
 		retval.add(getIvDssFile());
-		retval.add(getDtsDssFile());
 		retval.addAll(getExtraDssFiles());
 		return retval;
 	}

@@ -12,6 +12,8 @@
 
 package gov.ca.water.calgui.presentation;
 
+import java.awt.Desktop;
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -22,15 +24,18 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Objects;
 import java.util.TimeZone;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 import javax.swing.*;
 
 import gov.ca.dsm2.input.parser.InputTable;
 import gov.ca.dsm2.input.parser.Parser;
 import gov.ca.dsm2.input.parser.Tables;
 import gov.ca.water.calgui.presentation.display.ReportPDFWriter;
+import vista.db.dss.DSSDataReference;
 import vista.db.dss.DSSUtil;
 import vista.report.TSMath;
 import vista.set.Constants;
@@ -143,21 +148,21 @@ public class Report extends SwingWorker<Void, String>
 	protected void done()
 	{
 
-		String command = "cmd /c start " + _outputFilename;
 		try
 		{
-			if(Paths.get(_outputFilename).toFile().exists())
+			File file = Paths.get(_outputFilename).toFile();
+			if(file.exists())
 			{
-				Runtime.getRuntime().exec(command);
+				Desktop.getDesktop().open(file);
 			}
 		}
 		catch(IOException e)
 		{
-			LOG.log(Level.SEVERE, "Error thrown processing command: " + command, e);
+			LOG.log(Level.SEVERE, "Unable to open file: " + _outputFilename, e);
 		}
 		catch(RuntimeException e)
 		{
-			LOG.log(Level.SEVERE, "Error thrown processing command: " + command, e);
+			LOG.log(Level.SEVERE, "Unable to open file: " + _outputFilename, e);
 		}
 	}
 
@@ -187,9 +192,13 @@ public class Report extends SwingWorker<Void, String>
 		_scalars = new HashMap<>();
 		for(int i = 0; i < nscalars; i++)
 		{
-			String name = scalarTable.getValue(i, "NAME");
-			String value = scalarTable.getValue(i, "VALUE");
-			_scalars.put(name, value);
+			ArrayList<String> row = scalarTable.getValues().get(i);
+			int index = scalarTable.getHeaders().indexOf("NAME");
+			String name = row.get(index);
+			ArrayList<String> copy = new ArrayList<>(row);
+			copy.remove(index);
+			String value = copy.stream().collect(Collectors.joining(" "));
+			_scalars.put(name, value.replace("\"", ""));
 		}
 		// load pathname mapping into a map
 		InputTable pathnameMappingTable = tables.getTableNamed("PATHNAME_MAPPING");
@@ -700,7 +709,7 @@ public class Report extends SwingWorker<Void, String>
 			try
 			{
 				DataReference[] refs = findpath(group, path, true);
-				if(refs == null)
+				if(refs == null || refs.length == 0)
 				{
 					String msg = "No data found for " + group + " and " + path;
 					addMessage(msg);
@@ -709,13 +718,48 @@ public class Report extends SwingWorker<Void, String>
 				}
 				else
 				{
-					return refs[0];
+					DataReference firstRef = refs[0];
+					DataReference retval = firstRef;
+					if(firstRef != null && refs.length > 1)
+					{
+
+						DataReference lastRef = refs[refs.length - 1];
+						String serverName = firstRef.getServername();
+						String fileName = firstRef.getFilename();
+						String firstDPart = firstRef.getPathname().getPart(Pathname.D_PART);
+						if(firstDPart.contains("-"))
+						{
+							firstDPart = firstDPart.split("-")[0];
+						}
+						String lastDPart = lastRef.getPathname().getPart(Pathname.D_PART);
+						if(lastDPart.contains("-"))
+						{
+							String[] split = lastDPart.split("-");
+							lastDPart = split[split.length - 1];
+						}
+						String newDPart = firstDPart;
+						if(!Objects.equals(firstDPart, lastDPart))
+						{
+							newDPart = firstDPart + " - " + lastDPart;
+						}
+						Pathname pathname = Pathname.createPathname(new String[]
+								{
+										firstRef.getPathname().getPart(Pathname.A_PART),
+										firstRef.getPathname().getPart(Pathname.B_PART),
+										firstRef.getPathname().getPart(Pathname.C_PART),
+										newDPart,
+										firstRef.getPathname().getPart(Pathname.E_PART),
+										firstRef.getPathname().getPart(Pathname.F_PART),
+								});
+						retval = new DSSDataReference(serverName, fileName, pathname);
+					}
+					return retval;
 				}
 			}
 			catch(Exception ex)
 			{
 				String msg = "Exception while trying to retrieve " + path + " from " + group;
-				LOG.severe(msg);
+				LOG.log(Level.SEVERE,msg, ex);
 				addMessage(msg);
 				return null;
 			}

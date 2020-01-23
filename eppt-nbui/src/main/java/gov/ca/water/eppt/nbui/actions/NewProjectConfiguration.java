@@ -14,7 +14,6 @@ package gov.ca.water.eppt.nbui.actions;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.File;
 import java.io.IOException;
 import java.nio.file.FileSystems;
 import java.nio.file.Path;
@@ -23,8 +22,6 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
-import javax.swing.*;
 
 import gov.ca.water.calgui.constant.Constant;
 import gov.ca.water.calgui.constant.EpptPreferences;
@@ -39,8 +36,6 @@ import org.openide.util.Lookup;
 import org.openide.util.NbBundle;
 import org.openide.util.Utilities;
 import org.openide.windows.WindowManager;
-
-import hec.gui.NameDialog;
 
 /**
  * Company: Resource Management Associates
@@ -87,7 +82,7 @@ public class NewProjectConfiguration implements ActionListener
 	{
 		try
 		{
-			saveAs();
+			createNew();
 		}
 		catch(IOException ex)
 		{
@@ -95,48 +90,44 @@ public class NewProjectConfiguration implements ActionListener
 		}
 	}
 
-	void saveAs() throws IOException
+	void createNew() throws IOException
 	{
-		NameDialog nameDialog = new NameDialog(WindowManager.getDefault().getMainWindow());
+		createNew(true);
+	}
+
+	void createNew(boolean resetConfigurationBeforeSave) throws IOException
+	{
+		NewProjectDialog nameDialog = new NewProjectDialog();
 		String substring = String.valueOf(new Date().getTime()).substring(8);
 		String newProjectName = "New_Project_" + substring;
 		nameDialog.setTitle("New Project");
 		nameDialog.setName(newProjectName);
 		nameDialog.setDescription("");
-		nameDialog.setModal(true);
 		nameDialog.setVisible(true);
 		if(!nameDialog.isCanceled())
 		{
-			JFileChooser fileChooser = new JFileChooser(EpptPreferences.getProjectsPath().toString());
-			fileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
-			fileChooser.setDialogTitle("Choose Projects Directory");
-			fileChooser.showSaveDialog(WindowManager.getDefault().getMainWindow());
-			File selectedFile = fileChooser.getSelectedFile();
-			if(selectedFile != null)
+			Path projectPath = nameDialog.getProjectDirectory();
+			ProjectConfigurationPanel projectConfigurationPanel = ProjectConfigurationPanel.getProjectConfigurationPanel();
+			if(resetConfigurationBeforeSave)
 			{
-				Path projectPath = selectedFile.toPath().resolve(nameDialog.getName());
-				ProjectConfigurationPanel projectConfigurationPanel = ProjectConfigurationPanel.getProjectConfigurationPanel();
 				try
 				{
 					projectConfigurationPanel.resetProjectConfiguration();
 				}
 				catch(Exception e)
 				{
-					throw new IOException("Unable to reset Project Configuration to default state");
-				}
-				projectConfigurationPanel.saveConfigurationToPath(projectPath,
-						nameDialog.getName(), nameDialog.getDescription());
-				projectConfigurationPanel.loadProjectConfiguration(EpptPreferences.getLastProjectConfiguration());
-				WindowManager.getDefault().getMainWindow().setTitle(
-						Installer.MAIN_FRAME_NAME + " - " + projectConfigurationPanel.getProjectName());
-				projectConfigurationPanel.setModified(false);
-				Collection<? extends ProjectConfigurationSavable> projectConfigurationSavables = Savable.REGISTRY.lookupAll(
-						ProjectConfigurationSavable.class);
-				for(ProjectConfigurationSavable savable : projectConfigurationSavables)
-				{
-					savable.removeFromLookup();
+					throw new IOException("Unable to reset Project Configuration to default state", e);
 				}
 			}
+			Path projectFile = projectPath.resolve(nameDialog.getName() + "." + Constant.EPPT_EXT);
+			projectConfigurationPanel.saveConfigurationToPath(projectFile,
+					nameDialog.getName(), nameDialog.getDescription());
+			projectConfigurationPanel.loadProjectConfiguration(EpptPreferences.getLastProjectConfiguration());
+			WindowManager.getDefault().getMainWindow().setTitle(
+					Installer.MAIN_FRAME_NAME + " - " + projectConfigurationPanel.getProjectName());
+			projectConfigurationPanel.setModified(false);
+			Savable.REGISTRY.lookupAll(ProjectConfigurationSavable.class)
+							.forEach(ProjectConfigurationSavable::removeFromLookup);
 		}
 	}
 }

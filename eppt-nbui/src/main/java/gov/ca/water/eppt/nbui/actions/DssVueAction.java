@@ -14,8 +14,11 @@ package gov.ca.water.eppt.nbui.actions;
 import java.awt.Frame;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 import gov.ca.water.calgui.constant.EpptPreferences;
+import gov.ca.water.quickresults.ui.projectconfig.ProjectConfigurationPanel;
 import org.openide.awt.ActionID;
 import org.openide.awt.ActionReference;
 import org.openide.awt.ActionReferences;
@@ -54,6 +57,21 @@ public final class DssVueAction implements ActionListener
 			Frame mainWindow = WindowManager.getDefault().getMainWindow();
 			_listSelection.setLocationRelativeTo(mainWindow);
 			_listSelection.setDirectory(EpptPreferences.getScenariosPaths().toString());
+		}
+
+		Path selectedDssPath = ProjectConfigurationPanel.getProjectConfigurationPanel().getSelectedDssPath();
+		if(selectedDssPath != null)
+		{
+			boolean fileAlreadyOpen = _listSelection.getDssFilenames()
+													.stream()
+													.map(Object::toString)
+													.map(p -> Paths.get(p.toString()))
+													.anyMatch(p -> p.equals(selectedDssPath));
+			if(!fileAlreadyOpen)
+			{
+				_listSelection.open(selectedDssPath.toString());
+			}
+
 		}
 		_listSelection.setVisible(true);
 	}

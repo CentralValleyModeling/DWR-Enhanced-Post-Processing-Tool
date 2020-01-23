@@ -1,0 +1,13 @@
+<component name="libraryTable">
+  <library name="Maven: hec.dssgui:hec-dssvue:DeltaERT-1-4-0-97-Obfuscated:3.0.1">
+    <CLASSES>
+      <root url="jar://$MAVEN_REPOSITORY$/hec/dssgui/hec-dssvue/3.0.1/hec-dssvue-3.0.1-DeltaERT-1-4-0-97-Obfuscated.jar!/" />
+    </CLASSES>
+    <JAVADOC>
+      <root url="jar://$MAVEN_REPOSITORY$/hec/dssgui/hec-dssvue/3.0.1/hec-dssvue-3.0.1-javadoc.jar!/" />
+    </JAVADOC>
+    <SOURCES>
+      <root url="jar://$MAVEN_REPOSITORY$/hec/dssgui/hec-dssvue/3.0.1/hec-dssvue-3.0.1-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

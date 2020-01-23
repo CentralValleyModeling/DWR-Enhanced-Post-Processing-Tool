@@ -1,5 +1,5 @@
 /*
- * Enhanced Post Processing Tool (EPPT) Copyright (c) 2019.
+ * Enhanced Post Processing Tool (EPPT) Copyright (c) 2020.
  *
  * EPPT is copyrighted by the State of California, Department of Water Resources. It is licensed
  * under the GNU General Public License, version 2. This means it can be
@@ -58,7 +58,7 @@ class ProjectConfigurationIOVersion2
 		try(BufferedWriter bufferedWriter = Files.newBufferedWriter(selectedPath))
 		{
 			JSONObject jsonObject = new JSONObject();
-			jsonObject.put(VERSION_KEY, VERSION_2_0);
+			jsonObject.put(VERSION_KEY, getVersion());
 			jsonObject.put(NAME_KEY, name);
 			jsonObject.put(DESCRIPTION_KEY, description);
 			jsonObject.put(CREATION_DATE_KEY, ZonedDateTime.now());
@@ -67,6 +67,11 @@ class ProjectConfigurationIOVersion2
 			jsonObject.put(MONTH_OPTIONS_KEY, writeMonthProperties());
 			jsonObject.write(bufferedWriter, 4, 4);
 		}
+	}
+
+	String getVersion()
+	{
+		return VERSION_2_0;
 	}
 
 	private JSONArray writeSelectedProperties()
@@ -106,14 +111,14 @@ class ProjectConfigurationIOVersion2
 			jsonObject.put(SCENARIO_DESCRIPTION, scenario.getDescription());
 			jsonObject.put(SCENARIO_MODEL, scenario.getModel().toString());
 			jsonObject.put(SCENARIO_OUTPUT_PATH, relativizeToProject(modelOutputPath, selectedPath));
-			jsonObject.put(SCENARIO_WRESL_MAIN, relativizeToInstaller(scenario.getWreslMain()));
+			jsonObject.put(SCENARIO_WRESL_DIR, relativizeToInstaller(scenario.getWreslDirectory()));
 			jsonObject.put(SCENARIO_COLOR_KEY, Constant.colorToHex(scenario.getColor()));
 			EpptDssContainer dssContainer = scenario.getDssContainer();
 			JSONObject dssContainerJson = new JSONObject();
-			JSONObject namedDssDvJsonObject = createDssJson(dssContainer.getDvDssFile(), modelOutputPath);
-			JSONObject namedDssSvJsonObject = createDssJson(dssContainer.getSvDssFile(), modelOutputPath);
-			JSONObject namedDssIvJsonObject = createDssJson(dssContainer.getIvDssFile(), modelOutputPath);
-			JSONObject namedDssDtsJsonObject = createDssJson(dssContainer.getDtsDssFile(), modelOutputPath);
+			JSONObject namedDssDvJsonObject = createDssJson(dssContainer.getDvDssFile(), modelOutputPath, selectedPath);
+			JSONObject namedDssSvJsonObject = createDssJson(dssContainer.getSvDssFile(), modelOutputPath, selectedPath);
+			JSONObject namedDssIvJsonObject = createDssJson(dssContainer.getIvDssFile(), modelOutputPath, selectedPath);
+			JSONObject namedDssDtsJsonObject = createDssJson(dssContainer.getDtsDssFile(), modelOutputPath, selectedPath);
 			if(namedDssDvJsonObject != null)
 			{
 				dssContainerJson.put(SCENARIO_DV_KEY, namedDssDvJsonObject);
@@ -130,14 +135,14 @@ class ProjectConfigurationIOVersion2
 			{
 				dssContainerJson.put(SCENARIO_DTS_KEY, namedDssDtsJsonObject);
 			}
-			String waterYearTable = relativizeToInstaller(scenario.getWaterYearTable());
+			String waterYearTable = relativizeToInstaller(scenario.getLookupDirectory());
 			if(waterYearTable != null)
 			{
-				jsonObject.put(SCENARIO_WATER_TABLE, waterYearTable);
+				jsonObject.put(SCENARIO_LOOKUP_DIR, waterYearTable);
 			}
 			JSONArray extraDssArray = new JSONArray();
 			dssContainer.getExtraDssFiles().stream()
-						.map((NamedDssPath dssFile) -> createDssJson(dssFile, modelOutputPath))
+						.map((NamedDssPath dssFile) -> createDssJson(dssFile, modelOutputPath, selectedPath))
 						.filter(Objects::nonNull)
 						.forEach(extraDssArray::put);
 			dssContainerJson.put(SCENARIO_DSS_EXTRA, extraDssArray);
@@ -171,13 +176,16 @@ class ProjectConfigurationIOVersion2
 		return originalPath.toString();
 	}
 
-	private String relativizeToModel(Path originalPath, Path modelPath)
+	private String relativizeToModel(Path originalPath, Path modelPath, Path projectPath)
 	{
 		if(isChild(originalPath, modelPath))
 		{
 			return Paths.get(RELATIVE_TO_MODEL).resolve(modelPath.toAbsolutePath().relativize(originalPath)).toString();
 		}
-		return originalPath.toString();
+		else
+		{
+			return relativizeToProject(originalPath, projectPath);
+		}
 	}
 
 	private static boolean isChild(Path child, Path parent)
@@ -197,12 +205,8 @@ class ProjectConfigurationIOVersion2
 			GUILinksAllModelsBO.Model model = GUILinksAllModelsBO.Model.findModel(
 					scenarioJson.getString(SCENARIO_MODEL));
 			Path modelOutputPath = unrelativizeFromProject(scenarioJson.getString(SCENARIO_OUTPUT_PATH), projectPath);
-			Path wreslMain = unrelativizeFromInstaller(scenarioJson.getString(SCENARIO_WRESL_MAIN));
-			Path waterYearTable = Paths.get(Constant.WY_TYPES_TABLE);
-			if(scenarioJson.has(SCENARIO_WATER_TABLE))
-			{
-				waterYearTable = unrelativizeFromInstaller(scenarioJson.getString(SCENARIO_WATER_TABLE));
-			}
+			Path wreslMain = readWreslDirectory(scenarioJson);
+			Path waterYearTable = readLookupDirectory(scenarioJson);
 			Color color = Constant.getPlotlyDefaultColor(i);
 			if(scenarioJson.has(SCENARIO_COLOR_KEY))
 			{
@@ -212,25 +216,25 @@ class ProjectConfigurationIOVersion2
 			NamedDssPath dvDssFile = null;
 			if(jsonObject.has(SCENARIO_DV_KEY))
 			{
-				dvDssFile = readDssJson(jsonObject.getJSONObject(SCENARIO_DV_KEY), modelOutputPath);
+				dvDssFile = readDssJson(jsonObject.getJSONObject(SCENARIO_DV_KEY), modelOutputPath, projectPath);
 			}
 			NamedDssPath svDssFile = null;
 			if(jsonObject.has(SCENARIO_SV_KEY))
 			{
-				svDssFile = readDssJson(jsonObject.getJSONObject(SCENARIO_SV_KEY), modelOutputPath);
+				svDssFile = readDssJson(jsonObject.getJSONObject(SCENARIO_SV_KEY), modelOutputPath, projectPath);
 			}
 			NamedDssPath ivDssFile = null;
 			if(jsonObject.has(SCENARIO_IV_KEY))
 			{
-				ivDssFile = readDssJson(jsonObject.getJSONObject(SCENARIO_IV_KEY), modelOutputPath);
+				ivDssFile = readDssJson(jsonObject.getJSONObject(SCENARIO_IV_KEY), modelOutputPath, projectPath);
 			}
 			NamedDssPath dtsDssFile = null;
 			if(jsonObject.has(SCENARIO_DTS_KEY))
 			{
-				dtsDssFile = readDssJson(jsonObject.getJSONObject(SCENARIO_DTS_KEY), modelOutputPath);
+				dtsDssFile = readDssJson(jsonObject.getJSONObject(SCENARIO_DTS_KEY), modelOutputPath, projectPath);
 			}
 
-			List<NamedDssPath> extraDssFiles = readExtraDss(jsonObject, modelOutputPath);
+			List<NamedDssPath> extraDssFiles = readExtraDss(jsonObject, modelOutputPath, projectPath);
 			EpptDssContainer dssContainer = new EpptDssContainer(dvDssFile, svDssFile, ivDssFile, dtsDssFile, extraDssFiles);
 			EpptScenarioRun epptScenarioRun = new EpptScenarioRun(name, description,
 					model, modelOutputPath, wreslMain, waterYearTable, dssContainer, color);
@@ -255,7 +259,37 @@ class ProjectConfigurationIOVersion2
 		return retval;
 	}
 
-	private Path unrelativizeFromInstaller(String path)
+	Path readLookupDirectory(JSONObject scenarioJson)
+	{
+		Path waterYearTable = Paths.get("");
+		if(scenarioJson.has(SCENARIO_WATER_TABLE))
+		{
+			waterYearTable = unrelativizeFromInstaller(scenarioJson.getString(SCENARIO_WATER_TABLE));
+			//Backwards compatibility
+			if(!waterYearTable.toFile().isDirectory())
+			{
+				waterYearTable = waterYearTable.getParent();
+			}
+		}
+		return waterYearTable;
+	}
+
+	Path readWreslDirectory(JSONObject scenarioJson)
+	{
+		Path wreslMain = Paths.get("");
+		if(scenarioJson.has(SCENARIO_WRESL_MAIN))
+		{
+			wreslMain = unrelativizeFromInstaller(scenarioJson.getString(SCENARIO_WRESL_MAIN));
+			//Backwards compatibility
+			if(!wreslMain.toFile().isDirectory())
+			{
+				wreslMain = wreslMain.getParent();
+			}
+		}
+		return wreslMain;
+	}
+
+	Path unrelativizeFromInstaller(String path)
 	{
 		if(path.startsWith(RELATIVE_TO_INSTALLER))
 		{
@@ -273,16 +307,19 @@ class ProjectConfigurationIOVersion2
 		return Paths.get(path);
 	}
 
-	private Path unrelativizeFromModel(String path, Path modelOutputPath)
+	private Path unrelativizeFromModel(String path, Path modelOutputPath, Path projectPath)
 	{
 		if(path.startsWith(RELATIVE_TO_MODEL))
 		{
 			return modelOutputPath.toAbsolutePath().resolve(path.replace(RELATIVE_TO_MODEL + "\\", ""));
 		}
-		return Paths.get(path);
+		else
+		{
+			return unrelativizeFromProject(path, projectPath);
+		}
 	}
 
-	private List<NamedDssPath> readExtraDss(JSONObject jsonObject, Path modelOutputPath)
+	private List<NamedDssPath> readExtraDss(JSONObject jsonObject, Path modelOutputPath, Path projectPath)
 	{
 		List<NamedDssPath> extraDssFiles = new ArrayList<>();
 		if(jsonObject.has(SCENARIO_DSS_EXTRA))
@@ -290,16 +327,16 @@ class ProjectConfigurationIOVersion2
 			JSONArray jsonArray = jsonObject.getJSONArray(SCENARIO_DSS_EXTRA);
 			for(int j = 0; j < jsonArray.length(); j++)
 			{
-				extraDssFiles.add(readDssJson(jsonArray.getJSONObject(j), modelOutputPath));
+				extraDssFiles.add(readDssJson(jsonArray.getJSONObject(j), modelOutputPath, projectPath));
 			}
 		}
 		return extraDssFiles;
 	}
 
-	private NamedDssPath readDssJson(JSONObject dssJson, Path modelOutputPath)
+	private NamedDssPath readDssJson(JSONObject dssJson, Path modelOutputPath, Path projectPath)
 	{
 		String aliasName = dssJson.getString(SCENARIO_DSS_NAME);
-		Path dssPath = unrelativizeFromModel(dssJson.getString(SCENARIO_DSS_PATH), modelOutputPath);
+		Path dssPath = unrelativizeFromModel(dssJson.getString(SCENARIO_DSS_PATH), modelOutputPath, projectPath);
 		String aPart = "";
 		if(dssJson.has(SCENARIO_A_PART))
 		{
@@ -318,7 +355,7 @@ class ProjectConfigurationIOVersion2
 		return new NamedDssPath(dssPath, aliasName, aPart, ePart, fPart);
 	}
 
-	private JSONObject createDssJson(NamedDssPath dssFile, Path modelOutputPath)
+	private JSONObject createDssJson(NamedDssPath dssFile, Path modelOutputPath, Path projectPath)
 	{
 		JSONObject namedDssJsonObject = null;
 		if(dssFile != null)
@@ -330,7 +367,7 @@ class ProjectConfigurationIOVersion2
 			}
 			if(dssFile.getDssPath() != null)
 			{
-				namedDssJsonObject.put(SCENARIO_DSS_PATH, relativizeToModel(dssFile.getDssPath(), modelOutputPath));
+				namedDssJsonObject.put(SCENARIO_DSS_PATH, relativizeToModel(dssFile.getDssPath(), modelOutputPath, projectPath));
 			}
 			if(dssFile.getAPart() != null)
 			{

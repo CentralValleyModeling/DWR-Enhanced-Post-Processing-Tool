@@ -17,16 +17,13 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.time.LocalDateTime;
 import java.time.Month;
-import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
 import java.util.NavigableMap;
 import java.util.Objects;
-import java.util.Optional;
 import java.util.OptionalDouble;
 import java.util.SortedMap;
 import java.util.TreeMap;
@@ -40,6 +37,7 @@ import javax.script.ScriptException;
 
 import gov.ca.water.calgui.bo.WaterYearDefinition;
 import gov.ca.water.calgui.bo.WaterYearIndex;
+import gov.ca.water.calgui.busservice.impl.MonthPeriod;
 import gov.ca.water.calgui.constant.Constant;
 
 import static java.util.stream.Collectors.toMap;
@@ -92,7 +90,7 @@ class TrendStatistics
 	@SuppressWarnings(value = "unchecked")
 	SortedMap<Month, Double> calculateMonthly(SortedMap<Month, NavigableMap<Integer,Double>> data, WaterYearDefinition waterYearDefinition,
 											  WaterYearIndex waterYearIndex, List<WaterYearIndex> waterYearIndices,
-											  EpptReportingMonths.MonthPeriod monthPeriod)
+											  MonthPeriod monthPeriod)
 	{
 		Map<Month, Double> retval = new EnumMap<>(Month.class);
 		try
@@ -150,7 +148,7 @@ class TrendStatistics
 		}
 	}
 
-	private SortedMap<Month, Double> sort(Map<Month, Double> calculate, EpptReportingMonths.MonthPeriod monthPeriod)
+	private SortedMap<Month, Double> sort(Map<Month, Double> calculate, MonthPeriod monthPeriod)
 	{
 		List<Month> months = EpptReportingMonths.getMonths(monthPeriod);
 		SortedMap<Month, Double> retval = new TreeMap<>(Comparator.comparingInt(months::indexOf));
@@ -174,24 +172,6 @@ class TrendStatistics
 		return retval;
 	}
 
-	boolean usesWaterYearDefinition()
-	{
-		boolean retval = false;
-
-		try(BufferedReader bufferedReader = Files.newBufferedReader(_jythonFilePath))
-		{
-			_scriptEngine.eval(bufferedReader);
-			retval = Boolean.parseBoolean(Objects.toString(_scriptEngine.eval("usesWaterYearDefinition()")));
-		}
-		catch(IOException | ScriptException e)
-		{
-			LOGGER.log(Level.SEVERE,
-					"Error getting water year definition support from Jython script: " + _jythonFilePath + " ensure method usesWaterYearDefinition() is defined",
-					e);
-		}
-		return retval;
-	}
-
 	public Double calculateYearly(SortedMap<Integer, Double> data,
 													  WaterYearDefinition waterYearDefinition,
 													  WaterYearIndex waterYearIndex, List<WaterYearIndex> waterYearIndices)
@@ -199,7 +179,6 @@ class TrendStatistics
 		Double retval = null;
 		try
 		{
-			//				value.values().stream().mapToDouble(e->e).min()
 			Object obj = runScript(data, waterYearDefinition, waterYearIndex, waterYearIndices);
 			if(obj instanceof OptionalDouble)
 			{

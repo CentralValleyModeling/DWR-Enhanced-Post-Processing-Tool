@@ -16,6 +16,7 @@ import gov.ca.water.calgui.project.EpptScenarioRun;
 import gov.ca.water.reportengine.ModuleCreator;
 import gov.ca.water.reportengine.TestQAQCReportBase;
 import gov.ca.water.reportengine.filechanges.*;
+import gov.ca.water.reportengine.standardsummary.StandardSummaryErrors;
 import org.junit.jupiter.api.Assertions;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -49,7 +50,7 @@ public class ExecutiveReportTestBase extends TestQAQCReportBase
         ModuleCreator mc = new ModuleCreator();
         List<Module> modules = mc.createModules(getCSVPath());
 
-        DTSProcessor dtsProcessor = new DTSProcessor(modules);
+        DTSProcessor dtsProcessor = new DTSProcessor(modules, new StandardSummaryErrors());
         Map<EpptScenarioRun, Map<SubModule, List<FlagViolation>>> runsToViolations = dtsProcessor.processDSSFiles(allRuns);
 
 
@@ -94,7 +95,7 @@ public class ExecutiveReportTestBase extends TestQAQCReportBase
         allRuns.add(baseScenarioRun);
         allRuns.addAll(altScenarioRuns);
 
-        DTSProcessor dtsProcessor = new DTSProcessor(modules);
+        DTSProcessor dtsProcessor = new DTSProcessor(modules, new StandardSummaryErrors());
         Map<EpptScenarioRun, Map<SubModule, List<FlagViolation>>> runsToViolations = dtsProcessor.processDSSFiles(allRuns);
 
 

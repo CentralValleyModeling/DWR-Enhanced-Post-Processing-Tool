@@ -34,6 +34,7 @@ class ProjectConfigurationIO
 	static final String VERSION_KEY = "version";
 	static final String VERSION_1_0 = "1.0";
 	static final String VERSION_2_0 = "2.0";
+	static final String VERSION_3_0 = "3.0";
 	static final String NAME_KEY = "name";
 	static final String DESCRIPTION_KEY = "description";
 	static final String CREATION_DATE_KEY = "creation_date";
@@ -44,6 +45,7 @@ class ProjectConfigurationIO
 	static final String SCENARIO_MODEL = "scenario_model";
 	static final String SCENARIO_OUTPUT_PATH = "scenario_output_path";
 	static final String SCENARIO_WRESL_MAIN = "scenario_wresl_main";
+	static final String SCENARIO_WRESL_DIR = "scenario_wresl_dir";
 	static final String SCENARIO_DSS_FILES = "scenario_dss_files";
 	static final String SCENARIO_DSS_NAME = "scneario_dss_name";
 	static final String SCENARIO_DSS_PATH = "scneario_dss_path";
@@ -59,6 +61,7 @@ class ProjectConfigurationIO
 	static final String SCENARIO_COLOR_KEY = "scenario_color";
 	static final String SCENARIO_DSS_EXTRA = "scenario_dss_extra";
 	static final String SCENARIO_WATER_TABLE = "scenario_water_table";
+	static final String SCENARIO_LOOKUP_DIR = "scenario_water_lookup_dir";
 	static final String SCENARIO_WATER_LOOKUP = "scenario_water_lookup";
 	static final String FILE_KEY = "file";
 	static final String MODEL_KEY = "model";
@@ -69,14 +72,14 @@ class ProjectConfigurationIO
 
 	void saveConfiguration(Path selectedPath, String name, String description) throws IOException
 	{
-		ProjectConfigurationIOVersion2 projectConfigurationIOVersion2 = new ProjectConfigurationIOVersion2();
-		projectConfigurationIOVersion2.saveConfiguration(selectedPath, name, description);
+		ProjectConfigurationIOVersion3 projectConfigurationIOVersion3 = new ProjectConfigurationIOVersion3();
+		projectConfigurationIOVersion3.saveConfiguration(selectedPath, name, description);
 	}
 
 	EpptProject loadConfiguration(Path selectedPath) throws IOException
 	{
 		String collect = String.join("\n", Files.readAllLines(selectedPath));
-		if(collect != null && !collect.isEmpty())
+		if(!collect.isEmpty())
 		{
 			JSONObject jsonObject = new JSONObject(collect);
 			if(VERSION_1_0.equalsIgnoreCase(jsonObject.getString(VERSION_KEY)))
@@ -86,8 +89,13 @@ class ProjectConfigurationIO
 			}
 			else if(VERSION_2_0.equalsIgnoreCase(jsonObject.getString(VERSION_KEY)))
 			{
-				ProjectConfigurationIOVersion2 projectConfigurationIOVersion1 = new ProjectConfigurationIOVersion2();
-				return projectConfigurationIOVersion1.loadConfiguration(jsonObject, selectedPath);
+				ProjectConfigurationIOVersion2 projectConfigurationIOVersion2 = new ProjectConfigurationIOVersion2();
+				return projectConfigurationIOVersion2.loadConfiguration(jsonObject, selectedPath);
+			}
+			else if(VERSION_3_0.equalsIgnoreCase(jsonObject.getString(VERSION_KEY)))
+			{
+				ProjectConfigurationIOVersion3 projectConfigurationIOVersion3 = new ProjectConfigurationIOVersion3();
+				return projectConfigurationIOVersion3.loadConfiguration(jsonObject, selectedPath);
 			}
 			else
 			{

@@ -31,7 +31,6 @@ import org.openide.awt.ActionID;
 import org.openide.awt.ActionReference;
 import org.openide.awt.ActionReferences;
 import org.openide.awt.ActionRegistration;
-import org.openide.awt.DropDownButtonFactory;
 import org.openide.util.ContextAwareAction;
 import org.openide.util.Lookup;
 import org.openide.util.NbBundle.Messages;
@@ -82,9 +81,9 @@ public final class OpenProjectConfiguration extends AbstractAction
 		fileChooser.setMultiSelectionEnabled(false);
 		fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
 		fileChooser.setDialogType(JFileChooser.OPEN_DIALOG);
-		fileChooser.showOpenDialog(WindowManager.getDefault().getMainWindow());
+		int retval = fileChooser.showOpenDialog(WindowManager.getDefault().getMainWindow());
 		File selectedFile = fileChooser.getSelectedFile();
-		if(selectedFile != null && selectedFile.exists())
+		if(retval == JFileChooser.APPROVE_OPTION && selectedFile != null && selectedFile.exists())
 		{
 			Path selectedPath = selectedFile.toPath();
 			loadFromPath(selectedPath);
@@ -113,29 +112,23 @@ public final class OpenProjectConfiguration extends AbstractAction
 	@Override
 	public Component getToolbarPresenter()
 	{
-		ImageIcon imageIcon = getSaveIcon("open24.png");
-		JPopupMenu menu = new JPopupMenu();
-		createMenuItems(menu);
-		JToggleButton button = DropDownButtonFactory.createDropDownToggleButton(imageIcon, menu);
+		ImageIcon imageIcon = getIcon("open24.png");
+		JButton button = new JButton(imageIcon);
 		button.setToolTipText("Open Project Configuration");
 		button.addActionListener(this);
 		return button;
 	}
 
-	private void createMenuItems(JPopupMenu menu)
-	{
-	}
-
 	@Override
 	public JMenuItem getMenuPresenter()
 	{
-		ImageIcon imageIcon = getSaveIcon("open.png");
+		ImageIcon imageIcon = getIcon("open.png");
 		JMenuItem jMenuItem = new JMenuItem("Open...", imageIcon);
 		jMenuItem.addActionListener(this);
 		return jMenuItem;
 	}
 
-	private ImageIcon getSaveIcon(String iconName)
+	private ImageIcon getIcon(String iconName)
 	{
 		ImageIcon imageIcon = new ImageIcon("");
 		URL saveImg = Thread.currentThread().getContextClassLoader().getResource(

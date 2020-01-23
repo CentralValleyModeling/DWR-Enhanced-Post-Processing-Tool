@@ -16,8 +16,10 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Logger;
 
 import gov.ca.water.calgui.project.EpptScenarioRun;
+import gov.ca.water.calgui.scripts.DssMissingRecordException;
 import gov.ca.water.plotly.qaqc.PlotlyBubble;
 import gov.ca.water.plotly.PlotlyChart;
 import gov.ca.water.reportengine.EpptReportException;
@@ -29,8 +31,9 @@ import org.w3c.dom.Document;
  * @author <a href="mailto:adam@rmanet.com">Adam Korynta</a>
  * @since 08-26-2019
  */
-public class ScatterPlotBuilder extends PlotChartBuilder
+class ScatterPlotBuilder extends PlotChartBuilder
 {
+	private static final Logger LOGGER = Logger.getLogger(ScatterPlotBuilder.class.getName());
 
 	ScatterPlotBuilder(Document document, EpptScenarioRun base, List<EpptScenarioRun> alternatives,
 					   SummaryReportParameters reportParameters,
@@ -63,21 +66,28 @@ public class ScatterPlotBuilder extends PlotChartBuilder
 		{
 			ChartComponent xComponent = chartComponents.get(0);
 			ChartComponent yComponent = chartComponents.get(1);
-			Map<Integer, Double> xValues = createJythonValueGenerator(base, xComponent.getFunction()).generateAnnualValues();
-			Map<Integer, Double> yValues = createJythonValueGenerator(base, yComponent.getFunction()).generateAnnualValues();
-			for(Map.Entry<Integer, Double> entry : xValues.entrySet())
+			try
 			{
-				Integer key = entry.getKey();
-				Double xDouble = xValues.get(key);
-				Double yDouble = yValues.get(key);
-				if(xDouble != null && yDouble != null)
+				Map<Integer, Double> xValues = createJythonValueGenerator(base, xComponent.getFunction()).generateAnnualValues();
+				Map<Integer, Double> yValues = createJythonValueGenerator(base, yComponent.getFunction()).generateAnnualValues();
+				for(Map.Entry<Integer, Double> entry : xValues.entrySet())
 				{
-					xData.add(xDouble);
-					yData.add(yDouble);
-					String year = String.valueOf(key);
-					markers.add(year);
-				}
+					Integer key = entry.getKey();
+					Double xDouble = xValues.get(key);
+					Double yDouble = yValues.get(key);
+					if(xDouble != null && yDouble != null)
+					{
+						xData.add(xDouble);
+						yData.add(yDouble);
+						String year = String.valueOf(key);
+						markers.add(year);
+					}
 
+				}
+			}
+			catch(DssMissingRecordException e)
+			{
+				logScriptException(LOGGER, xComponent, e);
 			}
 		}
 		return new PlotlyBubble.BubbleData(xData, yData, markers);

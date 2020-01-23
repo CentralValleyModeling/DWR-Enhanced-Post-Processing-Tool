@@ -76,7 +76,7 @@ public class ProjectConfigurationSavable extends AbstractSavable implements Save
 	@Override
 	public void saveAs(FileObject fileObject, String s) throws IOException
 	{
-		new NewProjectConfiguration().saveAs();
+		new NewProjectConfiguration().createNew(false);
 		_tc.removeContent(this);
 		unregister();
 	}

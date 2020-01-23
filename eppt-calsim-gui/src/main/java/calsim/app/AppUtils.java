@@ -28,6 +28,8 @@ import java.util.Hashtable;
 import java.util.List;
 import java.util.StringTokenizer;
 import java.util.Vector;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.*;
 
 import calsim.gui.GuiUtils;
@@ -698,7 +700,8 @@ public final class AppUtils
 		}
 		catch(Exception e)
 		{
-			System.err.println("Exception: " + e.getMessage());
+			Logger.getLogger(AppUtils.class.getName()).log(Level.WARNING, "Exception: " + e.getMessage());
+			Logger.getLogger(AppUtils.class.getName()).log(Level.FINE, "Exception: " + e.getMessage(), e);
 			return null;
 		}
 	}
@@ -2427,7 +2430,7 @@ public final class AppUtils
 	 */
 	public static TimeWindow createTimeWindowFromString(String str)
 	{
-		int dIndex = str.indexOf("-");
+		int dIndex = str.indexOf('-');
 		if(dIndex < 0)
 		{
 			throw new IllegalArgumentException("Invalid string for time window " + str);

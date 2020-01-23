@@ -23,6 +23,10 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
+import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.function.Function;
+import java.util.function.Predicate;
 import javax.swing.*;
 
 import calsim.app.AppUtils;
@@ -45,6 +49,8 @@ import gov.ca.water.quickresults.ui.quickresults.QuickResultsPanel;
 import org.apache.log4j.Logger;
 import vista.set.DataReference;
 import vista.set.Group;
+import vista.set.Pathname;
+import vista.time.TimeWindow;
 
 import static java.util.stream.Collectors.toList;
 
@@ -147,6 +153,7 @@ public class CustomResultsPanel extends EpptPanel
 												 .collect(toList());
 			List<DataReference> allrefs = new ArrayList<>();
 			GeneralRetrievePanel retrievePanel = GuiUtils.getCLGPanel().getRetrievePanel();
+			TimeWindow timeWindow = AppUtils.getCurrentProject().getTimeWindow();
 			for(Path path : allDssFiles)
 			{
 				String[] stringParts = retrievePanel.getStringParts();
@@ -154,7 +161,7 @@ public class CustomResultsPanel extends EpptPanel
 				if(dssGroup != null)
 				{
 					Group gc = Group.createGroup(dssGroup);
-					DataReference[] refs = AppUtils.createRefs(stringParts, null, gc);
+					DataReference[] refs = AppUtils.createRefs(stringParts, timeWindow, gc);
 					if(refs != null)
 					{
 						allrefs.addAll(Arrays.asList(refs));
@@ -209,17 +216,18 @@ public class CustomResultsPanel extends EpptPanel
 			}
 			// checked if count > 0 above
 			int[] rows = table.getSelectedRows();
-			DataReference[] array = new DataReference[rows.length];
-			for(int i = 0; i < rows.length; i++)
+			for(int row : rows)
 			{
-				array[i] = group.getDataReference(rows[i]);
-			}
-			for(int i = 0; i < rows.length; i++)
-			{
-				String[] parts = array[i].getName().split("::");
-				String[] parts2 = parts[2].split("/");
-				parts[2] = "/" + parts2[1] + "/" + parts2[2] + "/" + parts2[3] + "/" + parts[3] + "/" + parts2[5] + "/"
-						+ parts2[6] + "/";
+
+				Pathname pathname = Pathname.createPathname(new String[]
+						{
+								table.getModel().getValueAt(row, 1).toString(),
+								table.getModel().getValueAt(row, 2).toString(),
+								table.getModel().getValueAt(row, 3).toString(),
+								table.getModel().getValueAt(row, 4).toString(),
+								table.getModel().getValueAt(row, 5).toString(),
+								table.getModel().getValueAt(row, 6).toString()
+						});
 				EpptScenarioRun baseScenario = projectConfigurationPanel.getBaseScenario();
 				PlotConfigurationState plotConfigurationState = projectConfigurationPanel.plotConfigurationState();
 				LocalDate startMonth = projectConfigurationPanel.getStartMonth();
@@ -227,7 +235,7 @@ public class CustomResultsPanel extends EpptPanel
 				if(baseScenario != null)
 				{
 					List<EpptScenarioRun> alternatives = projectConfigurationPanel.getEpptScenarioAlternatives();
-					_displayHelper.showDisplayFrames(plotConfigurationState, Collections.singletonList(parts[2]),
+					_displayHelper.showDisplayFramesLocations(plotConfigurationState, Collections.singletonList(pathname.getFullPath()),
 							baseScenario, alternatives, startMonth, endMonth);
 				}
 			}
@@ -267,7 +275,7 @@ public class CustomResultsPanel extends EpptPanel
 				LocalDate startMonth = projectConfigurationPanel.getStartMonth();
 				LocalDate endMonth = projectConfigurationPanel.getEndMonth();
 				List<EpptScenarioRun> alternatives = projectConfigurationPanel.getEpptScenarioAlternatives();
-				_displayHelper.showDisplayFramesWRIMS(plotConfigurationState,  baseScenario, alternatives,
+				_displayHelper.showDisplayFramesWRIMS(plotConfigurationState, baseScenario, alternatives,
 						dts,
 						mts, startMonth, endMonth);
 			}

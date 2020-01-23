@@ -21,6 +21,8 @@ import java.util.stream.Collectors;
 
 import javafx.scene.paint.Color;
 
+import rma.util.RMAConst;
+
 
 /**
  * This class is used to hold all the constant values required for the
@@ -53,7 +55,8 @@ public final class Constant
 	public static final String WRESL_DIR = System.getProperty("user.dir") + "\\dwr_eppt\\wresl\\";
 	public static final String WRESL_MAIN = "mainControl.wresl";
 	public static final String WRIMS_DIR = System.getProperty("user.dir") + "\\dwr_eppt\\wresl\\wrims";
-	public static final String WY_TYPES_TABLE = "lookup/wytypes" + TABLE_EXT;
+	public static final String LOOKUP_DIRECTORY = "lookup";
+	public static final String WY_TYPES_TABLE = "wytypes" + TABLE_EXT;
 	public static final String WY_TYPES_NAME_LOOKUP = CONFIG_DIR + "/WYTypesLookup" + CSV_EXT;
 	public static final String JASPER_DIR = System.getProperty("user.dir") + "\\dwr_eppt\\jasper\\";
 	public static final String MODEL_W2_DIR = System.getProperty("user.dir") + "//Model_w2//";
@@ -156,6 +159,15 @@ public final class Constant
 		return Color.web(PLOTLY_COLORS[index % PLOTLY_COLORS.length]);
 	}
 
+	public static Color getColorNotInList(List<Color> colors)
+	{
+		return Arrays.stream(PLOTLY_COLORS)
+					 .map(Color::web)
+					 .filter(o -> !colors.contains(o))
+					 .findAny()
+					 .orElse(getPlotlyDefaultColor(colors.size()));
+	}
+
 	public static String getPlotlyThresholdLineDash(int index)
 	{
 		return PLOTLY_THRESHOLD_LINE_DASH[index % PLOTLY_THRESHOLD_LINE_DASH.length];
@@ -177,5 +189,47 @@ public final class Constant
 				color.getGreen(),
 				color.getBlue(),
 				color.getAlpha());
+	}
+
+	public static boolean isValidValue(Double value)
+	{
+		boolean retval = true;
+		if(value != null)
+		{
+			retval = RMAConst.isValidValue(value) && value != -3.402823466E38;
+		}
+		return retval;
+	}
+
+	public static boolean isValidValue(double value)
+	{
+		return RMAConst.isValidValue(value) && value != -3.402823466E38;
+	}
+
+
+	public static boolean isAggregateYearly(boolean convertTaf, String parameterName, String originalUnits)
+	{
+		final boolean aggregateYearly;
+		if("CFS".equalsIgnoreCase(originalUnits))
+		{
+			aggregateYearly = convertTaf;
+		}
+		else if("TAF".equalsIgnoreCase(originalUnits))
+		{
+			if(parameterName.toUpperCase().contains("STORAGE")
+					&& !parameterName.toUpperCase().contains("STORAGE-CHANGE"))
+			{
+				aggregateYearly = false;
+			}
+			else
+			{
+				aggregateYearly = convertTaf;
+			}
+		}
+		else
+		{
+			aggregateYearly = false;
+		}
+		return aggregateYearly;
 	}
 }

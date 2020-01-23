@@ -21,8 +21,10 @@ public class DetailedIssue
 	private final int _guiLink;
 	private final int _thresholdLink;
 	private final String _title;
+	private boolean _isExecutiveReport;
 
-	public DetailedIssue(int detailedIssueId, int subModuleID, String linkedVar, int guiLink, int thresholdLink, String title)
+	public DetailedIssue(int detailedIssueId, int subModuleID, String linkedVar, int guiLink, int thresholdLink, String title,
+						 boolean isExecutiveReport)
 	{
 		_detailedIssueId = detailedIssueId;
 		_subModuleID = subModuleID;
@@ -30,6 +32,7 @@ public class DetailedIssue
 		_guiLink = guiLink;
 		_thresholdLink = thresholdLink;
 		_title = title;
+		_isExecutiveReport = isExecutiveReport;
 	}
 
 	public int getDetailedIssueId()
@@ -62,4 +65,8 @@ public class DetailedIssue
 		return _thresholdLink;
 	}
 
+	public boolean isExecutiveReport()
+	{
+		return _isExecutiveReport;
+	}
 }
