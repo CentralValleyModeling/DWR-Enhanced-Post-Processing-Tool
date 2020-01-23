@@ -432,7 +432,7 @@ public class DssReader
 				Collections.sort(yearMonths);
 				if(dataMap.size() == yearMonths.size())
 				{
-					DoubleStream doubleStream = dataMap.values().stream().mapToDouble(e -> e);
+					DoubleStream doubleStream = dataMap.values().stream().mapToDouble(e -> e).filter(d -> !Double.isNaN(d));
 					OptionalDouble rollup;
 					if(aggregateYearly)
 					{
