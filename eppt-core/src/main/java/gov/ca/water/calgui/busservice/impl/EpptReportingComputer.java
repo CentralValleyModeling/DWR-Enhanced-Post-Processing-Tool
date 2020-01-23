@@ -40,6 +40,7 @@ import gov.ca.water.calgui.bo.WaterYearIndex;
 import gov.ca.water.calgui.bo.WaterYearPeriod;
 import gov.ca.water.calgui.bo.WaterYearPeriodRange;
 
+import gov.ca.water.calgui.constant.Constant;
 import gov.ca.water.calgui.project.EpptScenarioRun;
 import gov.ca.water.calgui.scripts.DssReader;
 import vista.set.TimeSeries;
@@ -95,6 +96,10 @@ public class EpptReportingComputer
 		int offset = (int) TimeUnit.MILLISECONDS.toMinutes(TimeZone.getDefault().getRawOffset());
 		String units = getUnits(primarySeries);
 		boolean aggregateYearly = isAggregateYearly(convertTaf, primarySeries);
+		if(convertTaf)
+		{
+			calcTAFforCFS(primarySeries);
+		}
 		NavigableMap<LocalDateTime, Double> fullSeries = getFullTimeSeries(start, end, offset, primarySeries);
 		NavigableMap<Integer, Double> filteredPeriodYearly = DssReader.filterPeriodYearly(fullSeries, _monthPeriod, aggregateYearly);
 		SortedMap<Month, NavigableMap<Integer, Double>> filteredPeriodMonthly = filterPeriodMonthly(fullSeries);
@@ -151,43 +156,38 @@ public class EpptReportingComputer
 		boolean aggregateYearly = false;
 		if(primarySeries != null && primarySeries.length > 0 && primarySeries[0] != null)
 		{
-			if(convertTaf)
-			{
-				aggregateYearly = "CFS".equalsIgnoreCase(primarySeries[0].getUnits());
-				calcTAFforCFS(primarySeries[0]);
-			}
-			TimeSeriesContainer tsc = primarySeries[0];
-			if("STORAGE-CHANGE".equalsIgnoreCase(tsc.getParameterName()) && "TAF".equalsIgnoreCase(tsc.getUnits()))
-			{
-				aggregateYearly = true;
-			}
+			aggregateYearly = Constant.isAggregateYearly(convertTaf, primarySeries[0].getParameterName(), primarySeries[0].getUnits());
 		}
 		return aggregateYearly;
 	}
 
-	private void calcTAFforCFS(TimeSeriesContainer series)
+	private void calcTAFforCFS(TimeSeriesContainer[] timeSeriesContainers)
 	{
-		try
+		if(timeSeriesContainers != null && timeSeriesContainers[0] != null)
 		{
-			if("CFS".equalsIgnoreCase(series.getUnits()))
+			try
 			{
-				HecTime ht = new HecTime();
-				Calendar calendar = Calendar.getInstance();
-				// Primary series
-				for(int j = 0; j < series.numberValues; j++)
+				TimeSeriesContainer series = timeSeriesContainers[0];
+				if("CFS".equalsIgnoreCase(series.getUnits()))
 				{
+					HecTime ht = new HecTime();
+					Calendar calendar = Calendar.getInstance();
+					// Primary series
+					for(int j = 0; j < series.numberValues; j++)
+					{
 
-					ht.set(series.times[j]);
-					calendar.set(ht.year(), ht.month() - 1, 1);
-					double monthlyTAF = series.values[j]
-							* calendar.getActualMaximum(Calendar.DAY_OF_MONTH) * CFS_2_TAF_DAY;
-					series.values[j] = monthlyTAF;
+						ht.set(series.times[j]);
+						calendar.set(ht.year(), ht.month() - 1, 1);
+						double monthlyTAF = series.values[j]
+								* calendar.getActualMaximum(Calendar.DAY_OF_MONTH) * CFS_2_TAF_DAY;
+						series.values[j] = monthlyTAF;
+					}
 				}
 			}
-		}
-		catch(RuntimeException ex)
-		{
-			LOGGER.log(Level.SEVERE, "Unable to calculate TAF.", ex);
+			catch(RuntimeException ex)
+			{
+				LOGGER.log(Level.SEVERE, "Unable to calculate TAF.", ex);
+			}
 		}
 	}
 
