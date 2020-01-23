@@ -207,7 +207,6 @@ public final class Constant
 	}
 
 
-
 	public static boolean isAggregateYearly(boolean convertTaf, String parameterName, String originalUnits)
 	{
 		final boolean aggregateYearly;
@@ -217,7 +216,8 @@ public final class Constant
 		}
 		else if("TAF".equalsIgnoreCase(originalUnits))
 		{
-			if(parameterName.toUpperCase().contains("STORAGE"))
+			if(parameterName.toUpperCase().contains("STORAGE")
+					&& !parameterName.toUpperCase().contains("STORAGE-CHANGE"))
 			{
 				aggregateYearly = false;
 			}
