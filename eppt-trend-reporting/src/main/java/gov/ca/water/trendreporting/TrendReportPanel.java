@@ -479,7 +479,7 @@ public class TrendReportPanel extends JFXPanel
 						scenarioRunData.put(epptScenarioRun, Collections.singletonList(primarySeries));
 					}
 					EpptReportingComputedSet epptReportingComputedSet = EpptReportingComputedSet.computeForMetrics(guiLink.getPlotTitle(),
-							statistic, monthPeriod, start, end, taf, scenarioRunData, new HashMap<>(),
+							statistic, monthPeriod, start, end, taf, new HashMap<>(), scenarioRunData, new HashMap<>(), new HashMap<>(),
 							PlotConfigurationState.ComparisonType.COMPARISON, selectedIndexes, allIndexes);
 					JSONObject jsonObject = epptReportingComputedSet.toJson();
 					LOGGER.log(Level.INFO, "{0}", jsonObject);

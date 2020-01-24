@@ -190,12 +190,10 @@ public class DSSGrabber2SvcImpl extends DSSGrabber1SvcImpl
 
 		try
 		{
-			TimeSeriesContainer[] results = null;
 			checkReadiness();
 
 			// Store number of scenarios
-
-			results = new TimeSeriesContainer[_alternatives.size() + 1];
+			TimeSeriesContainer[] results = new TimeSeriesContainer[_alternatives.size() + 1];
 
 			// Base first
 
@@ -351,6 +349,10 @@ public class DSSGrabber2SvcImpl extends DSSGrabber1SvcImpl
 						}
 					}
 				}
+			}
+			if(result != null)
+			{
+				result.setFullName(dts2.getName());
 			}
 			return result;
 		}

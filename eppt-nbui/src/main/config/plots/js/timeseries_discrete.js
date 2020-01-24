@@ -12,21 +12,27 @@
 
 function getPlotlyMonthlySeries(datum) {
     var series = [];
-    for (var i = 0; i < datum.length; i++) {
-        let timeSeries = datum[i]['full_time_series'];
-        let x = [];
-        let y = [];
-        for (var j = 0; j < timeSeries.length; j++) {
-            x.push(new Date(timeSeries[j][0]));
-            y.push(timeSeries[j][1]);
+    for (let i = 0; i < datum.length; i++) {
+        let allTimeSeries = datum[i]['primary_data']['full_time_series'];
+        for (let j = 0; j < allTimeSeries.length; j++) {
+            let timeSeries = allTimeSeries[j];
+            let x = [];
+            let y = [];
+            for (let m = 0; m < timeSeries.length; m++) {
+                x.push(new Date(timeSeries[m][0]));
+                y.push(timeSeries[m][1]);
+            }
+            series.push({
+                name: datum[i]['scenario_name'] + " " + datum[i]['primary_data']['data_suffix'][j],
+                x: x,
+                y: y,
+                mode: 'lines',
+                line: {
+                    color: datum[i]['scenario_color'],
+                    dash: PLOTLY_LINE_DASH_STYLES[j % PLOTLY_LINE_DASH_STYLES.length]
+                }
+            });
         }
-        series.push({
-            name: datum[i]['scenario_name'],
-            x: x,
-            y: y,
-            mode: 'lines',
-            line: {color: datum[i]['scenario_color']}
-        });
     }
     return series;
 }
@@ -34,24 +40,31 @@ function getPlotlyMonthlySeries(datum) {
 function getPlotlyScatterSeries(datum) {
     var series = [];
     for (var i = 1; i < datum.length; i++) {
-        let baseTimeSeries = datum[0]['full_time_series'];
-        let altTimeSeries = datum[i]['full_time_series'];
-        let x = [];
-        let y = [];
-        for (var j = 0; j < altTimeSeries.length; j++) {
-            x.push(baseTimeSeries[j][1]);
-            y.push(altTimeSeries[j][1]);
-        }
-        series.push({
-            name: datum[i]['scenario_name'],
-            x: x,
-            y: y,
-            type: 'scatter',
-            mode: 'markers',
-            marker:{
-                color: datum[i]['scenario_color']
+        let allBaseTimeSeries = datum[0]['primary_data']['full_time_series'];
+        let allAltTimeSeries = datum[i]['primary_data']['full_time_series'];
+        for (let j = 0; j < allBaseTimeSeries.length && j < allAltTimeSeries.length; j++) {
+            let baseTimeSeries = allBaseTimeSeries[j];
+            let altTimeSeries = allAltTimeSeries[j];
+            let x = [];
+            let y = [];
+            for (var m = 0; m < altTimeSeries.length; m++) {
+                x.push(baseTimeSeries[m][1]);
+                y.push(altTimeSeries[m][1]);
             }
-        });
+            series.push({
+                name: datum[i]['scenario_name'] + ' ' + datum[i]['primary_data']['data_suffix'][j] + ' Diff',
+                x: x,
+                y: y,
+                type: 'scatter',
+                mode: 'markers',
+                line: {
+                    dash: PLOTLY_LINE_DASH_STYLES[j % PLOTLY_LINE_DASH_STYLES.length]
+                },
+                marker: {
+                    color: datum[i]['scenario_color']
+                }
+            });
+        }
     }
     return series;
 }
@@ -61,7 +74,7 @@ function buildLineLayout(data) {
         font: PLOTLY_FONT,
         yaxis: {
             title: {
-                text: data['units'],
+                text: data['scenario_run_data'][0]['primary_data']['units'][0],
             },
             gridcolor: '#CCCCCC'
         },
@@ -87,17 +100,18 @@ function buildLineLayout(data) {
 }
 
 function buildScatterLayout(data) {
+    let units = data['scenario_run_data'][0]['primary_data']['units'][0];
     return {
         font: PLOTLY_FONT,
         yaxis: {
             title: {
-                text: data['units'],
+                text: units,
             },
             gridcolor: '#CCCCCC'
         },
         xaxis: {
             title: {
-                text: data['scenario_run_data'][0]['scenario_name'] + ' - ' +  data['units'],
+                text: data['scenario_run_data'][0]['scenario_name'] + ' - ' + units,
             },
             hovertemplate: '<i>Price</i>: $%{y:.2f}' +
                 '<br><b>X</b>: %{x}<br>' +
@@ -191,6 +205,7 @@ function buildModeBarButtonsWithScatter(graphDiv, data) {
         click: () => toggleScatterPlot()
     };
     var scatter = false;
+
     function toggleScatterPlot() {
         if (!scatter) {
             scatter = true;

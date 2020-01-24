@@ -38,11 +38,13 @@ import hec.io.TimeSeriesContainer;
 public class PlotlyPaneBuilder
 {
 	private final ChartType _chartType;
-	private final Map<EpptScenarioRun, List<TimeSeriesContainer>> _scenarioRunData;
 	private final EpptScenarioRun _baseRun;
+	private final Map<EpptScenarioRun, List<TimeSeriesContainer>> _scenarioRunData;
+	private final Map<EpptScenarioRun, List<TimeSeriesContainer>> _secondaryScenarioData;
+	private final Map<EpptScenarioRun, List<String>> _primarySuffixes = new HashMap<>();
+	private final Map<EpptScenarioRun, List<String>> _secondarySuffixes = new HashMap<>();
 	private final Map<EpptScenarioRun, List<WaterYearIndex>> _allWaterYearIndicies = new HashMap<>();
 	private final Map<EpptScenarioRun, WaterYearIndex> _selectedWaterYearIndicies = new HashMap<>();
-	private final Map<EpptScenarioRun, List<TimeSeriesContainer>> _secondaryScenarioData;
 	private PlotConfigurationState.ComparisonType _comparisonType = PlotConfigurationState.ComparisonType.COMPARISON;
 	private boolean _taf;
 	private LocalDate _start;
@@ -89,6 +91,20 @@ public class PlotlyPaneBuilder
 		return this;
 	}
 
+	public PlotlyPaneBuilder withPrimarySuffixes(Map<EpptScenarioRun, List<String>> primarySuffixes)
+	{
+		_primarySuffixes.clear();
+		_primarySuffixes.putAll(primarySuffixes);
+		return this;
+	}
+
+	public PlotlyPaneBuilder withSecondarySuffixes(Map<EpptScenarioRun, List<String>> secondarySuffixes)
+	{
+		_secondarySuffixes.clear();
+		_secondarySuffixes.putAll(secondarySuffixes);
+		return this;
+	}
+
 	public PlotlyPaneBuilder withWaterYearIndicies(Map<EpptScenarioRun, List<WaterYearIndex>> waterYearIndicies)
 	{
 		_allWaterYearIndicies.clear();
@@ -107,16 +123,23 @@ public class PlotlyPaneBuilder
 	public PlotlyPane build()
 	{
 		EpptReportingComputedSet epptReportingComputedSet;
+		MonthPeriod monthPeriod = new MonthPeriod(Month.OCTOBER, Month.SEPTEMBER);
+		if(_waterYearDefinition != null)
+		{
+			monthPeriod = new MonthPeriod(_waterYearDefinition.getStartMonth(), _waterYearDefinition.getEndMonth());
+		}
 		if(_comparisonType == PlotConfigurationState.ComparisonType.DIFF)
 		{
 			epptReportingComputedSet = EpptReportingComputedSet.computeDiffForMetrics(_plotTitle,
 					new NoopEpptStatistic(),
-					new MonthPeriod(_waterYearDefinition.getStartMonth(), _waterYearDefinition.getEndMonth()),
+					monthPeriod,
 					_start,
 					_end,
 					_taf,
 					_baseRun,
+					_primarySuffixes,
 					_scenarioRunData,
+					_secondarySuffixes,
 					_secondaryScenarioData,
 					_comparisonType,
 					_selectedWaterYearIndicies,
@@ -126,11 +149,13 @@ public class PlotlyPaneBuilder
 		{
 			epptReportingComputedSet = EpptReportingComputedSet.computeForMetrics(_plotTitle,
 					new NoopEpptStatistic(),
-					new MonthPeriod(_waterYearDefinition.getStartMonth(), _waterYearDefinition.getEndMonth()),
+					monthPeriod,
 					_start,
 					_end,
 					_taf,
+					_primarySuffixes,
 					_scenarioRunData,
+					_secondarySuffixes,
 					_secondaryScenarioData,
 					_comparisonType,
 					_selectedWaterYearIndicies,

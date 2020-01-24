@@ -42,6 +42,8 @@ class EpptReportingComputed
 	private static final String WATER_YEAR_PERIOD = "water_year_period";
 	private static final String WATER_YEAR_PERIOD_VALUES = "water_year_period_values";
 	private static final String UNITS = "units";
+	private static final String DATA_SUFFIX_KEY = "data_suffix";
+	private final List<String> _dataSuffix;
 	private final List<SortedMap<LocalDateTime, Double>> _fullTimeSeries;
 	private final List<SortedMap<Integer, Double>> _annualPeriodFilteredTimeSeries;
 	private final List<SortedMap<Month, Double>> _statisticallyComputedMonthly;
@@ -49,13 +51,15 @@ class EpptReportingComputed
 	private final List<SortedMap<WaterYearPeriod, Double>> _statisticallyComputedTimeSeriesWyt;
 	private final List<Double> _yearlyStatistic;
 
-	EpptReportingComputed(List<SortedMap<LocalDateTime, Double>> fullTimeSeries,
+	EpptReportingComputed(List<String> dataSuffix,
+						  List<SortedMap<LocalDateTime, Double>> fullTimeSeries,
 						  List<SortedMap<Integer, Double>> annualPeriodFiltered,
 						  List<Double> yearlyStatistic,
 						  List<SortedMap<Month, Double>> statisticallyComputedMonthly,
 						  List<SortedMap<WaterYearPeriod, Double>> statisticallyComputedTimeSeriesWyt,
 						  List<String> units)
 	{
+		_dataSuffix = dataSuffix;
 		_fullTimeSeries = fullTimeSeries;
 		_annualPeriodFilteredTimeSeries = annualPeriodFiltered;
 		_yearlyStatistic = yearlyStatistic;
@@ -73,13 +77,14 @@ class EpptReportingComputed
 		jsonObject.put(STATISTICALLY_COMPUTED_MONTHLY, buildMonthMap(_statisticallyComputedMonthly));
 		jsonObject.put(STATISTICALLY_COMPUTER_TIME_SERIES_WYT, buildWytMap(_statisticallyComputedTimeSeriesWyt));
 		jsonObject.put(UNITS, buildUnits());
+		jsonObject.put(DATA_SUFFIX_KEY, buildArray(_dataSuffix));
 		return jsonObject;
 	}
 
-	private JSONArray buildArray(List<Double> yearlyStatistic)
+	private JSONArray buildArray(List<?> data)
 	{
 		JSONArray retval = new JSONArray();
-		yearlyStatistic.forEach(retval::put);
+		data.forEach(retval::put);
 		return retval;
 	}
 

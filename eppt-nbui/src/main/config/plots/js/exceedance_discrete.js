@@ -10,34 +10,41 @@
  * GNU General Public License
  */
 function getDiscretePlotlySeries(datum) {
-    let series = new Array(datum.length);
+    let series = [];
     for (var i = 0; i < datum.length; i++) {
-        let timeSeries = datum[i]['full_time_series'];
-        let dataOnly = [];
-        for (var j = 0; j < timeSeries.length; j++) {
-            dataOnly.push(timeSeries[j][1]);
+        let allTimeSeries = datum[i]['primary_data']['full_time_series'];
+        for (let m = 0; m < allTimeSeries.length; m++) {
+            let timeSeries = allTimeSeries[m];
+            let dataOnly = [];
+            for (var j = 0; j < timeSeries.length; j++) {
+                dataOnly.push(timeSeries[j][1]);
+            }
+            dataOnly.sort((a, b) => a - b);
+            let xData = [];
+            let yData = [];
+            for (var k = 0; k < dataOnly.length; k++) {
+                let exceedance = 1 - ((k + 0.5) / dataOnly.length);
+                xData.push(exceedance);
+                yData.push(dataOnly[k]);
+            }
+            series.push({
+                x: xData,
+                y: yData,
+                marker: {
+                    color: datum[i]['scenario_color']
+                },
+                line: {
+                    dash: PLOTLY_LINE_DASH_STYLES[m % PLOTLY_LINE_DASH_STYLES.length]
+                },
+                name: datum[i]['scenario_name'] + ' ' + datum[i]['primary_data']['data_suffix'][m]
+            });
         }
-        dataOnly.sort((a, b) => a - b);
-        let xData = [];
-        let yData = [];
-        for (var k = 0; k < dataOnly.length; k++) {
-            let exceedance = 1 - ((k + 0.5) / dataOnly.length);
-            xData.push(exceedance);
-            yData.push(dataOnly[k]);
-        }
-        series[i] = {
-            x: xData,
-            y: yData,
-            marker: {
-                color: datum[i]['scenario_color']
-            },
-            name: datum[i]['scenario_name']
-        };
     }
     return series;
 }
 
 function plot(data) {
+    let units = data['scenario_run_data'][0]['primary_data']['units'][0];
     let datum = data['scenario_run_data'];
     var layout = {
         font: PLOTLY_FONT,
@@ -49,7 +56,7 @@ function plot(data) {
         },
         yaxis: {
             title: {
-                text: data['units'],
+                text: units,
             },
             autorange: true,
             zeroline: false,

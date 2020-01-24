@@ -112,10 +112,23 @@ public class DisplayFrames
 					 String plotTitle,
 					 JTabbedPane tabbedPane)
 	{
+		plotBoxPlot(new HashMap<>(), scenarioRunData, new HashMap<>(), secondaryScenarioRunData, plotTitle, tabbedPane);
+	}
+
+	void plotBoxPlot(Map<EpptScenarioRun, List<String>> primarySuffixes,
+					 Map<EpptScenarioRun, List<TimeSeriesContainer>> scenarioRunData,
+					 Map<EpptScenarioRun, List<String>> secondarySuffixes,
+					 Map<EpptScenarioRun, List<TimeSeriesContainer>> secondaryScenarioRunData,
+					 String plotTitle,
+					 JTabbedPane tabbedPane)
+	{
+
 		PlotlyPane pane = new PlotlyPaneBuilder(PlotlyPaneBuilder.ChartType.BOX, getBaseRun(), scenarioRunData, secondaryScenarioRunData)
 				.withComparisonType(getPlotConfigurationState().getComparisonType())
 				.withWaterYearDefinition(new WaterYearDefinition("", Month.OCTOBER, Month.SEPTEMBER))
 				.withTaf(getPlotConfigurationState().isDisplayTaf())
+				.withPrimarySuffixes(primarySuffixes)
+				.withSecondarySuffixes(secondarySuffixes)
 				.withPlotTitle(plotTitle)
 				.withTimeWindow(getStart(), getEnd())
 				.withWaterYearIndicies(getWaterYearIndicies())
@@ -127,10 +140,21 @@ public class DisplayFrames
 						Map<EpptScenarioRun, List<TimeSeriesContainer>> secondaryScenarioRunData,
 						String plotTitle, JTabbedPane tabbedPane)
 	{
+		plotTimeSeries(new HashMap<>(), scenarioRunData, new HashMap<>(), secondaryScenarioRunData, plotTitle, tabbedPane);
+	}
+
+	void plotTimeSeries(Map<EpptScenarioRun, List<String>> primarySuffixes,
+						Map<EpptScenarioRun, List<TimeSeriesContainer>> scenarioRunData,
+						Map<EpptScenarioRun, List<String>> secondarySuffixes,
+						Map<EpptScenarioRun, List<TimeSeriesContainer>> secondaryScenarioRunData,
+						String plotTitle, JTabbedPane tabbedPane)
+	{
 		PlotlyPane pane = new PlotlyPaneBuilder(PlotlyPaneBuilder.ChartType.TIMESERIES, getBaseRun(), scenarioRunData, secondaryScenarioRunData)
 				.withComparisonType(getPlotConfigurationState().getComparisonType())
 				.withWaterYearDefinition(new WaterYearDefinition("", Month.OCTOBER, Month.SEPTEMBER))
 				.withTaf(getPlotConfigurationState().isDisplayTaf())
+				.withPrimarySuffixes(primarySuffixes)
+				.withSecondarySuffixes(secondarySuffixes)
 				.withPlotTitle(plotTitle)
 				.withTimeWindow(getStart(), getEnd())
 				.withWaterYearIndicies(getWaterYearIndicies())
@@ -201,21 +225,32 @@ public class DisplayFrames
 						Map<EpptScenarioRun, List<TimeSeriesContainer>> secondaryScenarioRunData,
 						String plotTitle, JTabbedPane tabbedPane)
 	{
+		plotExceedance(new HashMap<>(), scenarioRunData, new HashMap<>(), secondaryScenarioRunData, plotTitle, tabbedPane);
+	}
+
+	void plotExceedance(Map<EpptScenarioRun, List<String>> primarySuffixes,
+						Map<EpptScenarioRun, List<TimeSeriesContainer>> scenarioRunData,
+						Map<EpptScenarioRun, List<String>> secondarySuffixes,
+						Map<EpptScenarioRun, List<TimeSeriesContainer>> secondaryScenarioRunData,
+						String plotTitle, JTabbedPane tabbedPane)
+	{
 		if(getPlotConfigurationState().isPlotAllExceedancePlots())
 		{
-			plotAllExceedance(scenarioRunData, secondaryScenarioRunData, plotTitle, tabbedPane);
+			plotAllExceedance(primarySuffixes, scenarioRunData, secondarySuffixes, secondaryScenarioRunData, plotTitle, tabbedPane);
 		}
 		if(getPlotConfigurationState().isAnnualFlowExceedancePlots())
 		{
-			plotAnnualExceedance(scenarioRunData, secondaryScenarioRunData, plotTitle, tabbedPane);
+			plotAnnualExceedance(primarySuffixes, scenarioRunData, secondarySuffixes, secondaryScenarioRunData, plotTitle, tabbedPane);
 		}
 		if(!getPlotConfigurationState().getSelectedExceedancePlotMonths().isEmpty())
 		{
-			plotMonthlyExceedance(scenarioRunData, secondaryScenarioRunData, plotTitle, tabbedPane);
+			plotMonthlyExceedance(primarySuffixes, scenarioRunData, secondarySuffixes, secondaryScenarioRunData, plotTitle, tabbedPane);
 		}
 	}
 
-	private void plotMonthlyExceedance(Map<EpptScenarioRun, List<TimeSeriesContainer>> scenarioRunData,
+	private void plotMonthlyExceedance(Map<EpptScenarioRun, List<String>> primarySuffixes,
+									   Map<EpptScenarioRun, List<TimeSeriesContainer>> scenarioRunData,
+									   Map<EpptScenarioRun, List<String>> secondarySuffixes,
 									   Map<EpptScenarioRun, List<TimeSeriesContainer>> secondaryScenarioRunData,
 									   String plotTitle, JTabbedPane tabbedPane)
 	{
@@ -226,6 +261,8 @@ public class DisplayFrames
 					.withComparisonType(getPlotConfigurationState().getComparisonType())
 					.withTaf(getPlotConfigurationState().isDisplayTaf())
 					.withPlotTitle(plotTitle)
+					.withPrimarySuffixes(primarySuffixes)
+					.withSecondarySuffixes(secondarySuffixes)
 					.withTimeWindow(getStart(), getEnd())
 					.withWaterYearIndicies(getWaterYearIndicies())
 					.withMonth(month)
@@ -234,15 +271,18 @@ public class DisplayFrames
 		}
 	}
 
-	private void plotAllExceedance(Map<EpptScenarioRun, List<TimeSeriesContainer>> scenarioRunData,
+	private void plotAllExceedance(Map<EpptScenarioRun, List<String>> primarySuffixes,
+								   Map<EpptScenarioRun, List<TimeSeriesContainer>> scenarioRunData,
+								   Map<EpptScenarioRun, List<String>> secondarySuffixes,
 								   Map<EpptScenarioRun, List<TimeSeriesContainer>> secondaryScenarioRunData,
 								   String plotTitle, JTabbedPane tabbedPane)
 	{
 		PlotlyPane pane = new PlotlyPaneBuilder(PlotlyPaneBuilder.ChartType.EXCEEDANCE, getBaseRun(), scenarioRunData, secondaryScenarioRunData)
 				.withTaf(getPlotConfigurationState().isDisplayTaf())
-				.withWaterYearDefinition(new WaterYearDefinition("", Month.OCTOBER, Month.SEPTEMBER))
 				.withComparisonType(getPlotConfigurationState().getComparisonType())
 				.withPlotTitle(plotTitle)
+				.withPrimarySuffixes(primarySuffixes)
+				.withSecondarySuffixes(secondarySuffixes)
 				.withTimeWindow(getStart(), getEnd())
 				.withWaterYearIndicies(getWaterYearIndicies())
 				.build();
@@ -256,13 +296,17 @@ public class DisplayFrames
 		}
 	}
 
-	private void plotAnnualExceedance(Map<EpptScenarioRun, List<TimeSeriesContainer>> scenarioRunData,
+	private void plotAnnualExceedance(Map<EpptScenarioRun, List<String>> primarySuffixes,
+									  Map<EpptScenarioRun, List<TimeSeriesContainer>> scenarioRunData,
+									  Map<EpptScenarioRun, List<String>> secondarySuffixes,
 									  Map<EpptScenarioRun, List<TimeSeriesContainer>> secondaryScenarioRunData,
 									  String plotTitle, JTabbedPane tabbedPane)
 	{
 		WaterYearDefinition waterYearDefinition = new WaterYearDefinition("", Month.OCTOBER, Month.SEPTEMBER);
 		PlotlyPane pane = new PlotlyPaneBuilder(PlotlyPaneBuilder.ChartType.EXCEEDANCE, getBaseRun(), scenarioRunData, secondaryScenarioRunData)
 				.withComparisonType(getPlotConfigurationState().getComparisonType())
+				.withPrimarySuffixes(primarySuffixes)
+				.withSecondarySuffixes(secondarySuffixes)
 				.withTaf(getPlotConfigurationState().isDisplayTaf())
 				.withPlotTitle(plotTitle)
 				.withTimeWindow(getStart(), getEnd())

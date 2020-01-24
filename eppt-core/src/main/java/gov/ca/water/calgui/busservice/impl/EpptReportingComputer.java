@@ -73,29 +73,31 @@ class EpptReportingComputer
 		_waterYearDefinition = new WaterYearDefinition("Default", Month.OCTOBER, Month.SEPTEMBER);
 	}
 
-	EpptReportingScenarioComputed computeCfs(EpptScenarioRun scenarioRun, List<TimeSeriesContainer> primarySeries,
-													List<TimeSeriesContainer> secondarySeries,
-													LocalDate start, LocalDate end)
+	EpptReportingScenarioComputed computeCfs(EpptScenarioRun scenarioRun, List<String> primarySuffixes, List<TimeSeriesContainer> primarySeries,
+											 List<String> secondarySuffixes, List<TimeSeriesContainer> secondarySeries,
+											 LocalDate start, LocalDate end)
 	{
-		return compute(scenarioRun, primarySeries, secondarySeries, false, start, end);
+		return compute(scenarioRun, primarySuffixes, primarySeries, secondarySuffixes, secondarySeries, false, start, end);
 	}
 
-	EpptReportingScenarioComputed computeTaf(EpptScenarioRun scenarioRun, List<TimeSeriesContainer> primarySeries,
-													List<TimeSeriesContainer> secondarySeries,
-													LocalDate start, LocalDate end)
+	EpptReportingScenarioComputed computeTaf(EpptScenarioRun scenarioRun, List<String> primarySuffixes, List<TimeSeriesContainer> primarySeries,
+											 List<String> secondarySuffixes, List<TimeSeriesContainer> secondarySeries,
+											 LocalDate start, LocalDate end)
 	{
-		return compute(scenarioRun, primarySeries, secondarySeries, true, start, end);
+		return compute(scenarioRun, primarySuffixes, primarySeries, secondarySuffixes, secondarySeries, true, start, end);
 	}
 
-	private EpptReportingScenarioComputed compute(EpptScenarioRun scenarioRun, List<TimeSeriesContainer> primarySeries,
+	private EpptReportingScenarioComputed compute(EpptScenarioRun scenarioRun, List<String> primaryDataSuffixes,
+												  List<TimeSeriesContainer> primarySeries, List<String> secondaryDataSuffixes,
 												  List<TimeSeriesContainer> secondarySeries,
 												  boolean convertTaf, LocalDate start, LocalDate end)
 	{
-		return new EpptReportingScenarioComputed(scenarioRun, compute(scenarioRun, primarySeries, convertTaf, start, end),
-				compute(scenarioRun, secondarySeries, convertTaf, start, end));
+		return new EpptReportingScenarioComputed(scenarioRun, compute(scenarioRun, primaryDataSuffixes, primarySeries, convertTaf, start, end),
+				compute(scenarioRun, secondaryDataSuffixes, secondarySeries, convertTaf, start, end));
 	}
 
-	private EpptReportingComputed compute(EpptScenarioRun scenarioRun, List<TimeSeriesContainer> primarySeries, boolean convertTaf,
+	private EpptReportingComputed compute(EpptScenarioRun scenarioRun, List<String> dataSuffixes, List<TimeSeriesContainer> primarySeries,
+										  boolean convertTaf,
 										  LocalDate start, LocalDate end)
 	{
 		int offset = (int) TimeUnit.MILLISECONDS.toMinutes(TimeZone.getDefault().getRawOffset());
@@ -107,7 +109,7 @@ class EpptReportingComputer
 		List<Double> yearlyStatistic = new ArrayList<>();
 		for(int i = 0; i < primarySeries.size(); i++)
 		{
-			TimeSeriesContainer tsc = primarySeries.get(0);
+			TimeSeriesContainer tsc = primarySeries.get(i);
 			boolean aggregateYearly = isAggregateYearly(convertTaf, tsc);
 			if(convertTaf)
 			{
@@ -126,7 +128,7 @@ class EpptReportingComputer
 					getWaterYearIndexForScenario(scenarioRun),
 					getWaterYearIndicesForScenario(scenarioRun)));
 		}
-		return new EpptReportingComputed(fullSeries, filteredPeriodYearly, yearlyStatistic, monthly,
+		return new EpptReportingComputed(dataSuffixes, fullSeries, filteredPeriodYearly, yearlyStatistic, monthly,
 				waterYearPeriodGroupedYearly, units);
 	}
 
@@ -242,7 +244,7 @@ class EpptReportingComputer
 			for(int year = input.firstKey().getYear(); year < input.lastKey().getYear(); year++)
 			{
 				List<YearMonth> yearMonths = _monthPeriod.getYearMonths(year);
-				LocalDateTime startYearMonth = yearMonths.get(0).minusMonths(1).atEndOfMonth().minusDays(2).atTime(0, 0);
+				LocalDateTime startYearMonth = yearMonths.get(0).atEndOfMonth().minusDays(2).atTime(0, 0);
 				LocalDateTime endYearMonth = yearMonths.get(yearMonths.size() - 1).atEndOfMonth().plusDays(2).atTime(0, 0);
 				if(input.firstKey().isAfter(startYearMonth) || input.lastKey().isBefore(endYearMonth))
 				{

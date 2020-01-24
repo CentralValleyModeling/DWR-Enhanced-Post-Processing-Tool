@@ -11,25 +11,17 @@
  */
 
 function getPlotlyBoxValuesForAll(tsc) {
-    var datum = [];
+    let datum = [];
     // All data
-    for (var k = 0; k < tsc.length; k++) {
+    for (let k = 0; k < tsc.length; k++) {
         datum.push(tsc[k][1]);
     }
     return datum;
 }
 
-function getPlotlyBoxValuesForPeriodAvg(tsc) {
-    var datum = [];
-    for (var i = 0; i < tsc.length; i++) {
-        datum.push(tsc[i][1]);
-    }
-    return datum;
-}
-
 function getPlotlyBoxValues(dataOnly, periodMonths) {
-    var y = [];
-    var x = [];
+    let y = [];
+    let x = [];
     if (periodMonths.length > 1) {
         let values = getPlotlyBoxValuesForAll(dataOnly);
         y = y.concat(values);
@@ -47,12 +39,12 @@ function getPlotlyBoxValues(dataOnly, periodMonths) {
 }
 
 function filterDataForMonth(data, month) {
-    var retval = [];
-    for (var i = 0; i < data.length; i++) {
+    let retval = [];
+    for (let i = 0; i < data.length; i++) {
         let dateMillis = data[i][0];
-        var tsDate = new Date(dateMillis);
+        let tsDate = new Date(dateMillis);
         tsDate.setMonth(tsDate.getMonth() - 1);
-        var compareMonth = new Date(Date.parse(month + "1, 2012"));
+        let compareMonth = new Date(Date.parse(month + "1, 2012"));
         if (tsDate.getMonth() === compareMonth.getMonth()) {
             retval.push(data[i][1]);
         }
@@ -61,29 +53,36 @@ function filterDataForMonth(data, month) {
 }
 
 function getPlotlySeries(datum, periodMonths) {
-    var series = [];
-    for (var i = 0; i < datum.length; i++) {
-        var timeSeries = datum[i]['full_time_series'];
-        var data = getPlotlyBoxValues(timeSeries, periodMonths);
-        series.push({
-            y: data['y'],
-            x: data['x'],
-            type: 'box',
-            name: datum[i]['scenario_name'],
-            marker: {
-                color: datum[i]['scenario_color']
-            },
-            boxmean: true,
-            boxpoints: false
-        });
+    let series = [];
+    for (let i = 0; i < datum.length; i++) {
+        let allTimeSeries = datum[i]['primary_data']['full_time_series'];
+        for (let j = 0; j < allTimeSeries.length; j++) {
+            let timeSeries = allTimeSeries[j];
+            let data = getPlotlyBoxValues(timeSeries, periodMonths);
+            series.push({
+                y: data['y'],
+                x: data['x'],
+                type: 'box',
+                name: datum[i]['scenario_name'] + ' ' + datum[i]['primary_data']['data_suffix'][j],
+                marker: {
+                    color: datum[i]['scenario_color']
+                },
+                line: {
+                    dash: PLOTLY_LINE_DASH_STYLES[j % PLOTLY_LINE_DASH_STYLES.length]
+                },
+                boxmean: true,
+                boxpoints: false
+            });
+        }
     }
     return series;
 }
 
 function plot(data) {
+    let units = data['scenario_run_data'][0]['primary_data']['units'][0];
     let datum = data['scenario_run_data'];
     let periodMonths = data['period_months'];
-    var layout = {
+    let layout = {
         font: {
             family: 'Lucida Grande", "Lucida Sans Unicode", "Verdana", "Arial", "Helvetica", "sans-serif',
             color: 'black',
@@ -104,7 +103,7 @@ function plot(data) {
         },
         yaxis: {
             title: {
-                text: data['units']
+                text: units
             },
             automargin: true,
             zeroline: false,
@@ -135,14 +134,14 @@ function plotlyCopyToClipboard() {
     let layout = plot.layout;
     let data1 = plot.data;
     let calcdata = plot.calcdata;
-    var text = layout['title']['text'] + '\n' + 'Scenario\tGroup\t' + layout['yaxis']['title']['text'] + '\n\t';
+    let text = layout['title']['text'] + '\n' + 'Scenario\tGroup\t' + layout['yaxis']['title']['text'] + '\n\t';
     text += '\n';
-    for (var j = 0; j < calcdata.length; j++) {
+    for (let j = 0; j < calcdata.length; j++) {
         let calcdatum = calcdata[j];
         text += calcdatum[0]['trace']['name'] + '\t';
         text += '\tmin\tmax\tmedian\tmean\tq1\tq3\tsd';
         text += '\n';
-        for (var k = 0; k < calcdatum.length; k++) {
+        for (let k = 0; k < calcdatum.length; k++) {
             let boxdatum = calcdatum[k];
             text += '\t';
             if (calcdatum[0]['trace']) {

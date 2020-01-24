@@ -186,13 +186,11 @@ public class DisplayHelper
 		try
 		{
 			setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
-			DisplayWrimsFrames displayWrimsFrames = new DisplayWrimsFrames(plotConfigurationState, dts, mts, baseRun, scenarios,
+			DisplayWRIMSFrames displayWrimsFrames = new DisplayWRIMSFrames(plotConfigurationState, dts, mts, baseRun, scenarios,
 					startMonth, endMonth);
 			jTabbedPanes.addAll(displayWrimsFrames.showDisplayFrames());
-			jTabbedPanes.addAll(DisplayFrame.showDisplayFramesWRIMS(plotConfigurationState, baseRun, scenarios, dts, mts,
-					startMonth, endMonth));
 		}
-		catch(RuntimeException | EpptInitializationException ex)
+		catch(Throwable ex)
 		{
 			LOGGER.error("An error occurred while trying to display results", ex);
 		}
