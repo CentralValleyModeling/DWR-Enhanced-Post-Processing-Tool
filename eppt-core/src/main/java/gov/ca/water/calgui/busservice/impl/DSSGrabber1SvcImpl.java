@@ -770,14 +770,11 @@ public class DSSGrabber1SvcImpl implements IDSSGrabber1Svc
 	public TimeSeriesContainer[] getPrimarySeries()
 	{
 
-		TimeSeriesContainer[] results = null;
+		TimeSeriesContainer[] results = new TimeSeriesContainer[_alternatives.size() + 1];
 
 		try
 		{
 			checkReadiness();
-
-			// Store number of scenarios
-			results = new TimeSeriesContainer[_alternatives.size() + 1];
 
 			GUILinksAllModelsBO.Model baseModel = _baseScenarioRun.getModel();
 			String baseDssPathName = _primaryDSSName.get(baseModel);
@@ -851,7 +848,7 @@ public class DSSGrabber1SvcImpl implements IDSSGrabber1Svc
 	@Override
 	public TimeSeriesContainer[] getSecondarySeries()
 	{
-		TimeSeriesContainer[] results = null;
+		TimeSeriesContainer[] results = new TimeSeriesContainer[_alternatives.size() + 1];
 		if(!_secondaryDSSName.isEmpty())
 		{
 			List<TimeSeriesContainer> timeSeriesContainers = new ArrayList<>();

@@ -17,15 +17,12 @@ import java.time.Month;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.TextStyle;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.util.NavigableMap;
 import java.util.SortedMap;
-import java.util.TreeMap;
 
 import gov.ca.water.calgui.bo.WaterYearPeriod;
-import gov.ca.water.calgui.constant.Constant;
-import gov.ca.water.calgui.project.EpptScenarioRun;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -35,9 +32,8 @@ import org.json.JSONObject;
  * @author <a href="mailto:adam@rmanet.com">Adam Korynta</a>
  * @since 07-26-2019
  */
-public class EpptReportingComputed
+class EpptReportingComputed
 {
-	private static final String SCENARIO_NAME_KEY = "scenario_name";
 	private static final String FULL_TIME_SERIES = "full_time_series";
 	private static final String PERIOD_FILTERED_TIME_SERIES = "period_filtered_time_series";
 	private static final String STATISTICALLY_COMPUTED_YEARLY = "statistically_computed_time_series_yearly";
@@ -45,25 +41,25 @@ public class EpptReportingComputed
 	private static final String STATISTICALLY_COMPUTER_TIME_SERIES_WYT = "statistically_computed_time_series_wyt";
 	private static final String WATER_YEAR_PERIOD = "water_year_period";
 	private static final String WATER_YEAR_PERIOD_VALUES = "water_year_period_values";
-	private static final String SCENARIO_COLOR = "scenario_color";
-	private final EpptScenarioRun _epptScenarioRun;
-	private final NavigableMap<LocalDateTime, Double> _fullTimeSeries;
-	private final NavigableMap<Integer, Double> _annualPeriodFilteredTimeSeries;
-	private final NavigableMap<Month, Double> _statisticallyComputedMonthly;
-	private final String _units;
-	private final SortedMap<WaterYearPeriod, Double> _statisticallyComputedTimeSeriesWyt;
-	private final Double _yearlyStatistic;
+	private static final String UNITS = "units";
+	private final List<SortedMap<LocalDateTime, Double>> _fullTimeSeries;
+	private final List<SortedMap<Integer, Double>> _annualPeriodFilteredTimeSeries;
+	private final List<SortedMap<Month, Double>> _statisticallyComputedMonthly;
+	private final List<String> _units;
+	private final List<SortedMap<WaterYearPeriod, Double>> _statisticallyComputedTimeSeriesWyt;
+	private final List<Double> _yearlyStatistic;
 
-	EpptReportingComputed(EpptScenarioRun epptScenarioRun, NavigableMap<LocalDateTime, Double> fullTimeSeries,
-						  NavigableMap<Integer, Double> annualPeriodFiltered, Double yearlyStatistic,
-						  SortedMap<Month, Double> statisticallyComputedMonthly,
-						  SortedMap<WaterYearPeriod, Double> statisticallyComputedTimeSeriesWyt, String units)
+	EpptReportingComputed(List<SortedMap<LocalDateTime, Double>> fullTimeSeries,
+						  List<SortedMap<Integer, Double>> annualPeriodFiltered,
+						  List<Double> yearlyStatistic,
+						  List<SortedMap<Month, Double>> statisticallyComputedMonthly,
+						  List<SortedMap<WaterYearPeriod, Double>> statisticallyComputedTimeSeriesWyt,
+						  List<String> units)
 	{
-		_epptScenarioRun = epptScenarioRun;
 		_fullTimeSeries = fullTimeSeries;
 		_annualPeriodFilteredTimeSeries = annualPeriodFiltered;
 		_yearlyStatistic = yearlyStatistic;
-		_statisticallyComputedMonthly = new TreeMap<>(statisticallyComputedMonthly);
+		_statisticallyComputedMonthly = statisticallyComputedMonthly;
 		_statisticallyComputedTimeSeriesWyt = statisticallyComputedTimeSeriesWyt;
 		_units = units;
 	}
@@ -71,24 +67,35 @@ public class EpptReportingComputed
 	JSONObject toJson()
 	{
 		JSONObject jsonObject = new JSONObject();
-		jsonObject.put(SCENARIO_NAME_KEY, _epptScenarioRun.getName());
 		jsonObject.put(FULL_TIME_SERIES, buildTimeSeriesMap(_fullTimeSeries));
 		jsonObject.put(PERIOD_FILTERED_TIME_SERIES, buildYearMap(_annualPeriodFilteredTimeSeries));
-		jsonObject.put(STATISTICALLY_COMPUTED_YEARLY, _yearlyStatistic);
+		jsonObject.put(STATISTICALLY_COMPUTED_YEARLY, buildArray(_yearlyStatistic));
 		jsonObject.put(STATISTICALLY_COMPUTED_MONTHLY, buildMonthMap(_statisticallyComputedMonthly));
 		jsonObject.put(STATISTICALLY_COMPUTER_TIME_SERIES_WYT, buildWytMap(_statisticallyComputedTimeSeriesWyt));
-		jsonObject.put(SCENARIO_COLOR, Constant.colorToHex(_epptScenarioRun.getColor()));
+		jsonObject.put(UNITS, buildUnits());
 		return jsonObject;
 	}
 
-	private JSONArray buildWytMap(SortedMap<WaterYearPeriod, Double> statisticallyComputedTimeSeriesWyt)
+	private JSONArray buildArray(List<Double> yearlyStatistic)
 	{
-		JSONArray jsonArray = new JSONArray();
-		statisticallyComputedTimeSeriesWyt.entrySet()
-										  .stream()
-										  .map(this::extractWytArray)
-										  .forEach(jsonArray::put);
-		return jsonArray;
+		JSONArray retval = new JSONArray();
+		yearlyStatistic.forEach(retval::put);
+		return retval;
+	}
+
+	private JSONArray buildWytMap(List<SortedMap<WaterYearPeriod, Double>> statisticallyComputedTimeSeriesWyt)
+	{
+		JSONArray retval = new JSONArray();
+		statisticallyComputedTimeSeriesWyt.forEach(v ->
+		{
+			JSONArray jsonArray = new JSONArray();
+			v.entrySet()
+			 .stream()
+			 .map(this::extractWytArray)
+			 .forEach(jsonArray::put);
+			retval.put(jsonArray);
+		});
+		return retval;
 	}
 
 	private JSONObject extractWytArray(Map.Entry<WaterYearPeriod, Double> waterYearPeriodSortedMapEntry)
@@ -99,18 +106,25 @@ public class EpptReportingComputed
 		return retval;
 	}
 
-	String getUnits()
+	private JSONArray buildUnits()
 	{
-		return _units;
+		JSONArray retval = new JSONArray();
+		_units.forEach(retval::put);
+		return retval;
 	}
 
-	private JSONArray buildTimeSeriesMap(Map<LocalDateTime, Double> fullTimeSeries)
+	private JSONArray buildTimeSeriesMap(List<SortedMap<LocalDateTime, Double>> fullTimeSeries)
 	{
-		JSONArray jsonArray = new JSONArray();
-		fullTimeSeries.entrySet()
-					  .stream().map(this::extractDateArray)
-					  .forEach(jsonArray::put);
-		return jsonArray;
+		JSONArray retval = new JSONArray();
+		fullTimeSeries.forEach(v ->
+		{
+			JSONArray jsonArray = new JSONArray();
+			v.entrySet()
+			 .stream().map(this::extractDateArray)
+			 .forEach(jsonArray::put);
+			retval.put(jsonArray);
+		});
+		return retval;
 	}
 
 	private JSONArray extractDateArray(Map.Entry<LocalDateTime, Double> e)
@@ -138,22 +152,32 @@ public class EpptReportingComputed
 		return retval;
 	}
 
-	private JSONArray buildYearMap(Map<Integer, Double> fullTimeSeries)
+	private JSONArray buildYearMap(List<SortedMap<Integer, Double>> fullTimeSeries)
 	{
-		JSONArray jsonArray = new JSONArray();
-		fullTimeSeries.entrySet()
-					  .stream().map(this::extractYearArray)
-					  .forEach(jsonArray::put);
-		return jsonArray;
+		JSONArray retval = new JSONArray();
+		fullTimeSeries.forEach(v ->
+		{
+			JSONArray jsonArray = new JSONArray();
+			v.entrySet()
+			 .stream().map(this::extractYearArray)
+			 .forEach(jsonArray::put);
+			retval.put(jsonArray);
+		});
+		return retval;
 	}
 
-	private JSONArray buildMonthMap(Map<Month, Double> fullTimeSeries)
+	private JSONArray buildMonthMap(List<SortedMap<Month, Double>> fullTimeSeries)
 	{
-		JSONArray jsonArray = new JSONArray();
-		fullTimeSeries.entrySet()
-					  .stream().map(this::extractMonthArray)
-					  .forEach(jsonArray::put);
-		return jsonArray;
+		JSONArray retval = new JSONArray();
+		fullTimeSeries.forEach(v ->
+		{
+			JSONArray jsonArray = new JSONArray();
+			v.entrySet()
+			 .stream().map(this::extractMonthArray)
+			 .forEach(jsonArray::put);
+			retval.put(jsonArray);
+		});
+		return retval;
 	}
 
 }

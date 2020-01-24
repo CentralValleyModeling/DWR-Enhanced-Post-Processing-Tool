@@ -65,7 +65,7 @@ function filterDataForMonth(data, month) {
 function getPlotlySeries(datum, periodMonths) {
     var series = [];
     for (var i = 0; i < datum.length; i++) {
-        var timeSeries = datum[i]['full_time_series'];
+        var timeSeries = datum[i]['primary_data']['full_time_series'][0];
         var data = getPlotlyBoxValues(timeSeries, periodMonths);
         series.push({
             y: data['y'],

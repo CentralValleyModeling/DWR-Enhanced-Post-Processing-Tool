@@ -11,7 +11,7 @@
  */
 
 function getHeaders(data) {
-    let firstIndexData = data[0]['statistically_computed_time_series_wyt'];
+    let firstIndexData = data[0]['primary_data']['statistically_computed_time_series_wyt'][0];
     let headers = [''];
     for (let j = 0; j < firstIndexData.length; j++) {
         let waterYearPeriod = firstIndexData[j]['water_year_period'];
@@ -32,7 +32,7 @@ function buildTable(data) {
         }
         colors.push(data[i]['scenario_color']);
         scenarioArr.push(data[i]['scenario_name']);
-        let timeSeries = data[i]['statistically_computed_time_series_wyt'];
+        let timeSeries = data[i]['primary_data']['statistically_computed_time_series_wyt'][0];
         let k = 0;
         for (; k < timeSeries.length; k++) {
             let val = timeSeries[k]['water_year_period_values'];
@@ -68,7 +68,7 @@ function getAcronym(text) {
 }
 
 function buildMatrixData(data, tableValues) {
-    let header = [['Scenario'], [data['units']]];
+    let header = [['Scenario'], [data['scenario_run_data'][0]['primary_data']['units'][0]]];
     let scenarios = [];
     let volumes = [];
     let colors = [];
@@ -133,7 +133,7 @@ function tabulateLongTermPeriod(data) {
     };
     let longTermData = [];
     for (let i = 0; i < data['scenario_run_data'].length; i++) {
-        longTermData[i] = Math.round(data['scenario_run_data'][i]['statistically_computed_time_series_yearly']);
+        longTermData[i] = Math.round(data['scenario_run_data'][i]['primary_data']['statistically_computed_time_series_yearly'][0]);
     }
     let tableData = buildMatrixData(data, longTermData);
     Plotly.newPlot('water-year-matrix0', [tableData], layout, {
@@ -187,7 +187,7 @@ function plot(data) {
     let tableValues = buildTable(data['scenario_run_data'])['cells']['values'];
     tabulateLongTermPeriod(data);
     for (let i = 1; i < tableValues.length; i++) {
-        let arr = data['scenario_run_data'][0]['statistically_computed_time_series_wyt'][i - 1];
+        let arr = data['scenario_run_data'][0]['primary_data']['statistically_computed_time_series_wyt'][0][i - 1];
         if (arr) {
             let waterYearPeriod = arr['water_year_period'];
             tabulateWaterYearPeriod(waterYearPeriod, data, tableValues, i);

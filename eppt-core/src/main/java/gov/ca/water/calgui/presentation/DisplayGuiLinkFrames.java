@@ -12,29 +12,20 @@
 
 package gov.ca.water.calgui.presentation;
 
-import java.awt.BorderLayout;
 import java.time.LocalDate;
-import java.time.Month;
-import java.time.format.TextStyle;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 import java.util.TreeMap;
 import javax.swing.*;
 
 import gov.ca.water.calgui.EpptInitializationException;
 import gov.ca.water.calgui.bo.GUILinksAllModelsBO;
-import gov.ca.water.calgui.bo.WaterYearDefinition;
 import gov.ca.water.calgui.busservice.IDSSGrabber1Svc;
 import gov.ca.water.calgui.busservice.impl.DSSGrabber1SvcImpl;
-import gov.ca.water.calgui.presentation.display.MonthlyTablePanel;
-import gov.ca.water.calgui.presentation.display.SummaryTablePanel;
-import gov.ca.water.calgui.presentation.plotly.PlotlyPane;
-import gov.ca.water.calgui.presentation.plotly.PlotlyPaneBuilder;
 import gov.ca.water.calgui.project.EpptScenarioRun;
 import gov.ca.water.calgui.project.PlotConfigurationState;
 import gov.ca.water.calgui.techservice.IErrorHandlingSvc;
@@ -139,25 +130,29 @@ final class DisplayGuiLinkFrames extends DisplayFrames
 			List<EpptScenarioRun> scenarioRuns = new ArrayList<>();
 			scenarioRuns.add(getBaseRun());
 			scenarioRuns.addAll(getAlternatives());
-			Map<EpptScenarioRun, TimeSeriesContainer[]> scenarioRunData = new TreeMap<>(Comparator.comparing(scenarioRuns::indexOf));
+			Map<EpptScenarioRun, List<TimeSeriesContainer>> primaryScenarioRunData = new TreeMap<>(Comparator.comparing(scenarioRuns::indexOf));
+			Map<EpptScenarioRun, List<TimeSeriesContainer>> secondaryScenarioRunData = new TreeMap<>(Comparator.comparing(scenarioRuns::indexOf));
 			for(EpptScenarioRun epptScenarioRun : scenarioRuns)
 			{
-				TimeSeriesContainer[] primarySeries = buildDssGrabber(epptScenarioRun, guiLink, getPlotConfigurationState().isDisplayTaf(),
+				DSSGrabber1SvcImpl dssGrabber1Svc = buildDssGrabber(epptScenarioRun, guiLink, getPlotConfigurationState().isDisplayTaf(),
 						getStart(),
-						getEnd()).getPrimarySeries();
-				scenarioRunData.put(epptScenarioRun, primarySeries);
+						getEnd());
+				TimeSeriesContainer primarySeries = dssGrabber1Svc.getPrimarySeries()[0];
+				TimeSeriesContainer secondarySeries = dssGrabber1Svc.getSecondarySeries()[0];
+				primaryScenarioRunData.put(epptScenarioRun, Collections.singletonList(primarySeries));
+				secondaryScenarioRunData.put(epptScenarioRun, Collections.singletonList(secondarySeries));
 			}
 			if(getPlotConfigurationState().isDisplayTimeSeriesPlot())
 			{
-				plotTimeSeries(scenarioRunData, guiLink.getPlotTitle(), tabbedPane);
+				plotTimeSeries(primaryScenarioRunData, secondaryScenarioRunData, guiLink.getPlotTitle(), tabbedPane);
 			}
 			if(getPlotConfigurationState().isDoExceedance())
 			{
-				plotExceedance(scenarioRunData, tabbedPane, guiLink.getPlotTitle());
+				plotExceedance(primaryScenarioRunData, secondaryScenarioRunData, guiLink.getPlotTitle(), tabbedPane);
 			}
 			if(getPlotConfigurationState().isDisplayBoxAndWhiskerPlot())
 			{
-				plotBoxPlot(scenarioRunData, tabbedPane, guiLink.getPlotTitle());
+				plotBoxPlot(primaryScenarioRunData, secondaryScenarioRunData, guiLink.getPlotTitle(), tabbedPane);
 			}
 			if(getPlotConfigurationState().isDisplayMonthlyTable())
 			{

@@ -13,7 +13,7 @@
 function getPlotlyMonthlySeries(datum) {
     var series = [];
     for (var i = 0; i < datum.length; i++) {
-        let timeSeries = datum[i]['full_time_series'];
+        let timeSeries = datum[i]['primary_data']['full_time_series'][0];
         let x = [];
         let y = [];
         for (var j = 0; j < timeSeries.length; j++) {

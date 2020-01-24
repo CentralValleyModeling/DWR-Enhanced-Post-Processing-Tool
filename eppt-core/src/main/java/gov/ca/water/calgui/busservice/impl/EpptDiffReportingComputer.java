@@ -21,8 +21,8 @@ import java.util.Map;
 import java.util.NavigableMap;
 import java.util.TreeMap;
 
-import gov.ca.water.calgui.bo.GUILinksAllModelsBO;
 import gov.ca.water.calgui.bo.WaterYearIndex;
+import gov.ca.water.calgui.constant.Constant;
 import gov.ca.water.calgui.project.EpptScenarioRun;
 
 import hec.heclib.util.HecTime;
@@ -37,24 +37,23 @@ import rma.util.RMAConst;
  */
 class EpptDiffReportingComputer extends EpptReportingComputer
 {
-	private final TimeSeriesContainer[] _baseTimeSeries;
+	private final List<TimeSeriesContainer> _baseTimeSeries;
 
 	EpptDiffReportingComputer(EpptStatistic statistics, MonthPeriod monthPeriod, Map<EpptScenarioRun, WaterYearIndex> selectedIndicies,
-							  Map<EpptScenarioRun, List<WaterYearIndex>> allIndicies, TimeSeriesContainer[] baseTimeSeries)
+							  Map<EpptScenarioRun, List<WaterYearIndex>> allIndexes, List<TimeSeriesContainer> baseTimeSeries)
 	{
-		super(statistics, monthPeriod, selectedIndicies, allIndicies);
+		super(statistics, monthPeriod, selectedIndicies, allIndexes);
 		_baseTimeSeries = baseTimeSeries;
 	}
 
 	@Override
 	NavigableMap<LocalDateTime, Double> getFullTimeSeries(LocalDate start, LocalDate end, int offset,
-														  TimeSeriesContainer[] primarySeries)
+														  TimeSeriesContainer tsc, int index)
 	{
-		NavigableMap<LocalDateTime, Double> baseTimeSeries = super.getFullTimeSeries(start, end, offset, _baseTimeSeries);
+		NavigableMap<LocalDateTime, Double> baseTimeSeries = super.getFullTimeSeries(start, end, offset, _baseTimeSeries.get(index), index);
 		NavigableMap<LocalDateTime, Double> fullSeries = new TreeMap<>();
-		if(primarySeries != null && primarySeries.length > 0 && primarySeries[0] != null)
+		if(tsc != null)
 		{
-			TimeSeriesContainer tsc = primarySeries[0];
 			for(int i = 0; i < tsc.getNumberValues(); i++)
 			{
 				HecTime hecTime = tsc.getHecTime(i);
@@ -64,7 +63,7 @@ class EpptDiffReportingComputer extends EpptReportingComputer
 					Date javaDate = hecTime.getJavaDate(offset);
 					LocalDateTime localDateTime = LocalDateTime.ofInstant(javaDate.toInstant(), ZoneId.systemDefault());
 					Double baseValue = baseTimeSeries.getOrDefault(localDateTime, Double.NaN);
-					if(RMAConst.isValidValue(baseValue) && baseValue != -3.402823466E38)
+					if(RMAConst.isValidValue(baseValue) && Constant.isValidValue(baseValue))
 					{
 						fullSeries.put(localDateTime, altValue - baseValue);
 					}

@@ -38,10 +38,11 @@ import hec.io.TimeSeriesContainer;
 public class PlotlyPaneBuilder
 {
 	private final ChartType _chartType;
-	private final Map<EpptScenarioRun, TimeSeriesContainer[]> _scenarioRunData;
+	private final Map<EpptScenarioRun, List<TimeSeriesContainer>> _scenarioRunData;
 	private final EpptScenarioRun _baseRun;
 	private final Map<EpptScenarioRun, List<WaterYearIndex>> _allWaterYearIndicies = new HashMap<>();
 	private final Map<EpptScenarioRun, WaterYearIndex> _selectedWaterYearIndicies = new HashMap<>();
+	private final Map<EpptScenarioRun, List<TimeSeriesContainer>> _secondaryScenarioData;
 	private PlotConfigurationState.ComparisonType _comparisonType = PlotConfigurationState.ComparisonType.COMPARISON;
 	private boolean _taf;
 	private LocalDate _start;
@@ -50,10 +51,12 @@ public class PlotlyPaneBuilder
 	private Month _month;
 	private String _plotTitle;
 
-	public PlotlyPaneBuilder(ChartType chartType, EpptScenarioRun baseRun, Map<EpptScenarioRun, TimeSeriesContainer[]> scenarioRunData)
+	public PlotlyPaneBuilder(ChartType chartType, EpptScenarioRun baseRun, Map<EpptScenarioRun, List<TimeSeriesContainer>> scenarioRunData,
+							 Map<EpptScenarioRun, List<TimeSeriesContainer>> secondaryScenarioData)
 	{
 		_chartType = chartType;
 		_scenarioRunData = scenarioRunData;
+		_secondaryScenarioData = secondaryScenarioData;
 		if(scenarioRunData.isEmpty())
 		{
 			throw new IllegalArgumentException("Cannot plot without scenarios");
@@ -114,6 +117,7 @@ public class PlotlyPaneBuilder
 					_taf,
 					_baseRun,
 					_scenarioRunData,
+					_secondaryScenarioData,
 					_comparisonType,
 					_selectedWaterYearIndicies,
 					_allWaterYearIndicies);
@@ -127,6 +131,7 @@ public class PlotlyPaneBuilder
 					_end,
 					_taf,
 					_scenarioRunData,
+					_secondaryScenarioData,
 					_comparisonType,
 					_selectedWaterYearIndicies,
 					_allWaterYearIndicies);

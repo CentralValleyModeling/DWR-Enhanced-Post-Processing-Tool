@@ -49,8 +49,7 @@ public class MonthlyTablePanel2 extends JPanel implements ActionListener, Compon
 	JPanel panel;
 	JScrollPane scrollPane;
 
-	public MonthlyTablePanel2(String title, TimeSeriesContainer[][] mtscs, DSSGrabber2SvcImpl dss_Grabber2,
-							  String sName, boolean isBase, MultipleTimeSeries mts)
+	public MonthlyTablePanel2(TimeSeriesContainer[][] mtscs, DSSGrabber2SvcImpl dss_Grabber2, MultipleTimeSeries mts)
 	{
 
 		super();

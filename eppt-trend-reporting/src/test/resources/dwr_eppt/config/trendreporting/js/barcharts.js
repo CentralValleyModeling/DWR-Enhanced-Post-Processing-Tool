@@ -11,7 +11,7 @@
  */
 
 function getHeaders(data) {
-    let firstIndexData = data[0]['statistically_computed_time_series_wyt'];
+    let firstIndexData = data[0]['primary_data']['statistically_computed_time_series_wyt'][0];
     let headers = ['','<b>Long Term</b>'];
     for (let j = 0; j < firstIndexData.length; j++) {
         let waterYearPeriod = firstIndexData[j]['water_year_period'];
@@ -20,7 +20,7 @@ function getHeaders(data) {
     return headers;
 }
 
-function buildTable(data, allData) {
+function buildTable(data) {
     let headers = getHeaders(data);
     let values = [];
     let colors = [];
@@ -37,8 +37,8 @@ function buildTable(data, allData) {
             longTerm = [];
             values[1] = longTerm;
         }
-        longTerm[i] = Math.round(data[i]['statistically_computed_time_series_yearly']);
-        let timeSeries = data[i]['statistically_computed_time_series_wyt'];
+        longTerm[i] = Math.round(data[i]['primary_data']['statistically_computed_time_series_yearly'][0]);
+        let timeSeries = data[i]['primary_data']['statistically_computed_time_series_wyt'][0];
         for (let k = 0; k < timeSeries.length; k++) {
             let val = timeSeries[k]['water_year_period_values'];
             let periodValues = values[2 + k];
@@ -75,20 +75,20 @@ function getPlotlySeries(allData) {
     let series = [];
     let datum = allData['scenario_run_data'];
     for (let i = 0; i < datum.length; i++) {
-        series.push(buildBarsForScenario(datum[i], datum[i]['scenario_color']));
+        series.push(buildBarsForScenario(datum[i]['primary_data'], datum[i]['scenario_color']));
     }
-    series.push(buildTable(datum, allData));
+    series.push(buildTable(datum));
     return series;
 }
 
 function buildBarsForScenario(data, color) {
-    let timeSeries = data['statistically_computed_time_series_wyt'];
+    let timeSeries = data['statistically_computed_time_series_wyt'][0];
     let xarr = ['Long Term'];
     for (let j = 0; j < timeSeries.length; j++) {
         let waterYearPeriod = timeSeries[j]['water_year_period'];
         xarr.push(getAcronym(waterYearPeriod));
     }
-    let yarr = [data['statistically_computed_time_series_yearly']];
+    let yarr = [data['statistically_computed_time_series_yearly'][0]];
     for (let k = 0; k < timeSeries.length; k++) {
         let val = timeSeries[k]['water_year_period_values'];
         yarr.push(val);

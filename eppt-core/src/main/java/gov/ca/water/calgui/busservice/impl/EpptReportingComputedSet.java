@@ -18,10 +18,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
-import gov.ca.water.calgui.EpptInitializationException;
 import gov.ca.water.calgui.bo.WaterYearIndex;
 import gov.ca.water.calgui.project.EpptScenarioRun;
 import gov.ca.water.calgui.project.PlotConfigurationState;
@@ -38,31 +35,26 @@ import hec.io.TimeSeriesContainer;
  */
 public final class EpptReportingComputedSet
 {
-	private static final Logger LOGGER = Logger.getLogger(EpptReportingComputedSet.class.getName());
 	private static final String SCENARIO_RUN_DATA = "scenario_run_data";
 	private static final String GUI_LINK_TITLE = "gui_link_title";
 	private static final String STATISTICS = "statistics";
 	private static final String MONTH_PERIOD = "month_period_title";
 	private static final String PERIOD_MONTHS = "period_months";
 	private static final String COMPARISON_TYPE = "comparison_mode";
-	private static final String UNITS = "units";
-	private static final String TAF = "taf";
 	private final EpptStatistic _statistics;
 	private final MonthPeriod _monthPeriod;
-	private final List<EpptReportingComputed> _epptReportingComputed;
+	private final List<EpptReportingScenarioComputed> _epptReportingComputed;
 	private final PlotConfigurationState.ComparisonType _comparisonType;
-	private final boolean _taf;
 	private final String _plotTitle;
 
 	private EpptReportingComputedSet(String plotTitle, EpptStatistic statistics,
-									 MonthPeriod monthPeriod, boolean taf,
-									 List<EpptReportingComputed> epptReportingComputed,
+									 MonthPeriod monthPeriod,
+									 List<EpptReportingScenarioComputed> epptReportingComputed,
 									 PlotConfigurationState.ComparisonType comparisonType)
 	{
 		_plotTitle = plotTitle;
 		_statistics = statistics;
 		_monthPeriod = monthPeriod;
-		_taf = taf;
 		_epptReportingComputed = epptReportingComputed;
 		_comparisonType = comparisonType;
 	}
@@ -70,58 +62,58 @@ public final class EpptReportingComputedSet
 
 	public static EpptReportingComputedSet computeForMetrics(String plotTitle, EpptStatistic statistic,
 															 MonthPeriod monthPeriod, LocalDate start,
-															 LocalDate end, boolean taf, Map<EpptScenarioRun, TimeSeriesContainer[]> scenarioRunData,
+															 LocalDate end, boolean taf,
+															 Map<EpptScenarioRun, List<TimeSeriesContainer>> scenarioRunData,
+															 Map<EpptScenarioRun, List<TimeSeriesContainer>> seconaryScenarioRunData,
 															 PlotConfigurationState.ComparisonType comparisonType,
 															 Map<EpptScenarioRun, WaterYearIndex> selectedIndicies,
 															 Map<EpptScenarioRun, List<WaterYearIndex>> allIndicies)
 	{
 		EpptReportingComputer trendReportingComputer = new EpptReportingComputer(statistic, monthPeriod,
 				selectedIndicies, allIndicies);
-		return buildComputedValues(plotTitle, statistic, monthPeriod, start, end, taf, scenarioRunData, comparisonType, trendReportingComputer);
+		return buildComputedValues(plotTitle, statistic, monthPeriod, start, end, taf, scenarioRunData, seconaryScenarioRunData, comparisonType,
+				trendReportingComputer);
 	}
 
 
 	public static EpptReportingComputedSet computeDiffForMetrics(String plotTitle, EpptStatistic statistic,
 																 MonthPeriod monthPeriod, LocalDate start,
 																 LocalDate end, boolean taf, EpptScenarioRun baseRun,
-																 Map<EpptScenarioRun, TimeSeriesContainer[]> scenarioRunData,
+																 Map<EpptScenarioRun, List<TimeSeriesContainer>> scenarioRunData,
+																 Map<EpptScenarioRun, List<TimeSeriesContainer>> seconaryScenarioRunData,
 																 PlotConfigurationState.ComparisonType comparisonType,
 																 Map<EpptScenarioRun, WaterYearIndex> selectedIndicies,
 																 Map<EpptScenarioRun, List<WaterYearIndex>> allIndicies)
 	{
 		EpptDiffReportingComputer trendReportingComputer = new EpptDiffReportingComputer(statistic, monthPeriod,
 				selectedIndicies, allIndicies, scenarioRunData.get(baseRun));
-		return buildComputedValues(plotTitle, statistic, monthPeriod, start, end, taf, scenarioRunData, comparisonType, trendReportingComputer);
+		return buildComputedValues(plotTitle, statistic, monthPeriod, start, end, taf, scenarioRunData, seconaryScenarioRunData, comparisonType,
+				trendReportingComputer);
 	}
 
 	private static EpptReportingComputedSet buildComputedValues(String plotTitle, EpptStatistic statistic, MonthPeriod monthPeriod,
 																LocalDate start, LocalDate end, boolean taf,
-																Map<EpptScenarioRun, TimeSeriesContainer[]> scenarioRunData,
+																Map<EpptScenarioRun, List<TimeSeriesContainer>> scenarioRunData,
+																Map<EpptScenarioRun, List<TimeSeriesContainer>> seconaryScenarioRunData,
 																PlotConfigurationState.ComparisonType comparisonType,
 																EpptReportingComputer trendReportingComputer)
 	{
-		List<EpptReportingComputed> trendReportingComputed = new ArrayList<>();
+		List<EpptReportingScenarioComputed> trendReportingComputed = new ArrayList<>();
 
-		for(Map.Entry<EpptScenarioRun, TimeSeriesContainer[]> data : scenarioRunData.entrySet())
+		for(Map.Entry<EpptScenarioRun, List<TimeSeriesContainer>> data : scenarioRunData.entrySet())
 		{
-			try
+			List<TimeSeriesContainer> secondary = seconaryScenarioRunData.getOrDefault(data.getKey(), new ArrayList<>());
+			if(taf)
 			{
-				if(taf)
-				{
-					trendReportingComputed.add(trendReportingComputer.computeTaf(data.getKey(), data.getValue(), start, end));
-				}
-				else
-				{
-					trendReportingComputed.add(trendReportingComputer.computeCfs(data.getKey(), data.getValue(), start, end));
-				}
+				trendReportingComputed.add(trendReportingComputer.computeTaf(data.getKey(), data.getValue(), secondary, start, end));
 			}
-			catch(EpptInitializationException e)
+			else
 			{
-				LOGGER.log(Level.SEVERE, "Error calculating Trend Reporting for scenario run: " + data, e);
+				trendReportingComputed.add(trendReportingComputer.computeCfs(data.getKey(), data.getValue(), secondary, start, end));
 			}
 		}
 		return new EpptReportingComputedSet(plotTitle, statistic, monthPeriod,
-				taf, trendReportingComputed, comparisonType);
+				trendReportingComputed, comparisonType);
 	}
 
 	public JSONObject toJson()
@@ -130,18 +122,15 @@ public final class EpptReportingComputedSet
 		JSONArray jsonArray = new JSONArray();
 		jsonObject.put(GUI_LINK_TITLE, _plotTitle);
 		jsonObject.put(STATISTICS, _statistics.getName());
-		if(!_epptReportingComputed.isEmpty())
-		{
-			jsonObject.put(UNITS, _epptReportingComputed.get(0).getUnits());
-		}
 		jsonObject.put(MONTH_PERIOD, _monthPeriod.toString());
 		jsonObject.put(SCENARIO_RUN_DATA, jsonArray);
-		jsonObject.put(TAF, _taf);
 		jsonObject.put(COMPARISON_TYPE, _comparisonType.name());
 		JSONArray periodMonths = new JSONArray();
 		EpptReportingMonths.getMonths(_monthPeriod).forEach(e -> periodMonths.put(e.getDisplayName(TextStyle.SHORT, Locale.getDefault())));
 		jsonObject.put(PERIOD_MONTHS, periodMonths);
-		_epptReportingComputed.forEach(e -> jsonArray.put(e.toJson()));
+		_epptReportingComputed.stream()
+							  .map(EpptReportingScenarioComputed::toJson)
+							  .forEach(jsonArray::put);
 		return jsonObject;
 	}
 }

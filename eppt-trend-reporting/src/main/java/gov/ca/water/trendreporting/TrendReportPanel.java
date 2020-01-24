@@ -49,7 +49,6 @@ import gov.ca.water.calgui.project.PlotConfigurationState;
 import gov.ca.water.quickresults.ui.projectconfig.ProjectConfigurationPanel;
 import javafx.application.Platform;
 import javafx.beans.value.ObservableValue;
-import javafx.collections.ObservableList;
 import javafx.embed.swing.JFXPanel;
 import javafx.geometry.Insets;
 import javafx.geometry.Orientation;
@@ -461,9 +460,9 @@ public class TrendReportPanel extends JFXPanel
 														   List<MonthPeriod> monthPeriods, LocalDate start, LocalDate end,
 														   boolean taf, List<EpptScenarioRun> scenarioRuns, WaterYearIndex selectedIndex)
 	{
-		Map<EpptScenarioRun, WaterYearIndex> selectedIndicies = new HashMap<>();
-		Map<EpptScenarioRun, List<WaterYearIndex>> allIndicies = new HashMap<>();
-		addIndicies(scenarioRuns, selectedIndex, selectedIndicies, allIndicies);
+		Map<EpptScenarioRun, WaterYearIndex> selectedIndexes = new HashMap<>();
+		Map<EpptScenarioRun, List<WaterYearIndex>> allIndexes = new HashMap<>();
+		addIndicies(scenarioRuns, selectedIndex, selectedIndexes, allIndexes);
 		List<JSONObject> retval = new ArrayList<>();
 		for(TrendReportingParameters.TrendParameter parameter : parameters)
 		{
@@ -472,18 +471,18 @@ public class TrendReportPanel extends JFXPanel
 				for(MonthPeriod monthPeriod : monthPeriods)
 				{
 					GUILinksAllModelsBO guiLink = parameter.getGuiLink();
-					Map<EpptScenarioRun, TimeSeriesContainer[]> scenarioRunData = new TreeMap<>(Comparator.comparing(scenarioRuns::indexOf));
+					Map<EpptScenarioRun, List<TimeSeriesContainer>> scenarioRunData = new TreeMap<>(Comparator.comparing(scenarioRuns::indexOf));
 					for(EpptScenarioRun epptScenarioRun : scenarioRuns)
 					{
 						DSSGrabber1SvcImpl dssGrabber = buildDssGrabber(epptScenarioRun, guiLink, taf, start, end);
-						TimeSeriesContainer[] primarySeries = dssGrabber.getPrimarySeries();
-						scenarioRunData.put(epptScenarioRun, primarySeries);
+						TimeSeriesContainer primarySeries = dssGrabber.getPrimarySeries()[0];
+						scenarioRunData.put(epptScenarioRun, Collections.singletonList(primarySeries));
 					}
 					EpptReportingComputedSet epptReportingComputedSet = EpptReportingComputedSet.computeForMetrics(guiLink.getPlotTitle(),
-							statistic, monthPeriod, start, end, taf, scenarioRunData,
-							PlotConfigurationState.ComparisonType.COMPARISON, selectedIndicies, allIndicies);
+							statistic, monthPeriod, start, end, taf, scenarioRunData, new HashMap<>(),
+							PlotConfigurationState.ComparisonType.COMPARISON, selectedIndexes, allIndexes);
 					JSONObject jsonObject = epptReportingComputedSet.toJson();
-					LOGGER.log(Level.FINE, "{0}", jsonObject);
+					LOGGER.log(Level.INFO, "{0}", jsonObject);
 					retval.add(jsonObject);
 				}
 			}

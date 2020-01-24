@@ -186,9 +186,9 @@ public class DisplayHelper
 		try
 		{
 			setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
-			DisplayPlotlyWrimsFrames displayPlotlyWrimsFrames = new DisplayPlotlyWrimsFrames(plotConfigurationState, dts, mts, baseRun, scenarios,
+			DisplayWrimsFrames displayWrimsFrames = new DisplayWrimsFrames(plotConfigurationState, dts, mts, baseRun, scenarios,
 					startMonth, endMonth);
-			jTabbedPanes.addAll(displayPlotlyWrimsFrames.showDisplayFrames());
+			jTabbedPanes.addAll(displayWrimsFrames.showDisplayFrames());
 			jTabbedPanes.addAll(DisplayFrame.showDisplayFramesWRIMS(plotConfigurationState, baseRun, scenarios, dts, mts,
 					startMonth, endMonth));
 		}

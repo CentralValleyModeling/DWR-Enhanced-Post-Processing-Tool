@@ -232,15 +232,11 @@ final class DisplayFrame
 			MonthlyTablePanel2 mtp;
 			if(doDifference)
 			{
-				mtp = new MonthlyTablePanel2(
-						dssGrabber.getPlotTitle() + " - Difference from " + results[0][0].fileName, diffResults,
-						dssGrabber, "", doBase, mts);
+				mtp = new MonthlyTablePanel2(diffResults, dssGrabber, mts);
 			}
 			else
 			{
-				mtp = new MonthlyTablePanel2(dssGrabber.getPlotTitle(), results, dssGrabber,
-						dssGrabber.getSLabel(),
-						doBase, mts);
+				mtp = new MonthlyTablePanel2(results, dssGrabber, mts);
 			}
 			tabbedpane.insertTab("Monthly - " + dssGrabber.getBaseRunName(), null, mtp, null, 0);
 		}

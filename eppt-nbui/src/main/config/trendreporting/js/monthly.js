@@ -15,7 +15,7 @@ function getPlotlySeries(datum) {
     let categoryKeys = [];
     let series = new Array(datum.length);
     for (var i = 0; i < datum.length; i++) {
-        let dataSeries = datum[i]['statistically_computed_time_series_monthly'];
+        let dataSeries = datum[i]['primary_data']['statistically_computed_time_series_monthly'][0];
         let yData = [];
         for (var j = 0; j < dataSeries.length; j++) {
             yData.push(dataSeries[j][1]);
