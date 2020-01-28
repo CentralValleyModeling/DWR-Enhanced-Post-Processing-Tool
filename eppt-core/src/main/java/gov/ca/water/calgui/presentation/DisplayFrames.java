@@ -17,24 +17,30 @@ import java.time.LocalDate;
 import java.time.Month;
 import java.time.format.TextStyle;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Optional;
+import java.util.SortedMap;
+import java.util.TreeMap;
 import javax.swing.*;
 
 import gov.ca.water.calgui.EpptInitializationException;
 import gov.ca.water.calgui.bo.GUILinksAllModelsBO;
 import gov.ca.water.calgui.bo.WaterYearDefinition;
 import gov.ca.water.calgui.bo.WaterYearIndex;
-import gov.ca.water.calgui.busservice.IDSSGrabber1Svc;
+import gov.ca.water.calgui.busservice.impl.EpptReportingComputedSet;
+import gov.ca.water.calgui.busservice.impl.EpptStatistic;
+import gov.ca.water.calgui.busservice.impl.MonthPeriod;
+import gov.ca.water.calgui.busservice.impl.NoopEpptStatistic;
 import gov.ca.water.calgui.busservice.impl.WaterYearTableReader;
-import gov.ca.water.calgui.presentation.display.MonthlyTablePanel;
-import gov.ca.water.calgui.presentation.display.SummaryTablePanel;
-import gov.ca.water.calgui.presentation.plotly.PlotlyPane;
 import gov.ca.water.calgui.presentation.plotly.PlotlyPaneBuilder;
+import gov.ca.water.calgui.presentation.plotly.SummaryPane;
 import gov.ca.water.calgui.project.EpptScenarioRun;
 import gov.ca.water.calgui.project.PlotConfigurationState;
+import javafx.embed.swing.JFXPanel;
 
 import hec.io.TimeSeriesContainer;
 
@@ -123,9 +129,9 @@ public class DisplayFrames
 					 JTabbedPane tabbedPane)
 	{
 
-		PlotlyPane pane = new PlotlyPaneBuilder(PlotlyPaneBuilder.ChartType.BOX, getBaseRun(), scenarioRunData, secondaryScenarioRunData)
+		JFXPanel pane = new PlotlyPaneBuilder(PlotlyPaneBuilder.ChartType.BOX, getBaseRun(), scenarioRunData, secondaryScenarioRunData)
 				.withComparisonType(getPlotConfigurationState().getComparisonType())
-				.withWaterYearDefinition(new WaterYearDefinition("", Month.OCTOBER, Month.SEPTEMBER))
+				.withWaterYearDefinition(getPlotConfigurationState().getWaterYearDefinition())
 				.withTaf(getPlotConfigurationState().isDisplayTaf())
 				.withPrimarySuffixes(primarySuffixes)
 				.withSecondarySuffixes(secondarySuffixes)
@@ -149,9 +155,9 @@ public class DisplayFrames
 						Map<EpptScenarioRun, List<TimeSeriesContainer>> secondaryScenarioRunData,
 						String plotTitle, JTabbedPane tabbedPane)
 	{
-		PlotlyPane pane = new PlotlyPaneBuilder(PlotlyPaneBuilder.ChartType.TIMESERIES, getBaseRun(), scenarioRunData, secondaryScenarioRunData)
+		JFXPanel pane = new PlotlyPaneBuilder(PlotlyPaneBuilder.ChartType.TIMESERIES, getBaseRun(), scenarioRunData, secondaryScenarioRunData)
 				.withComparisonType(getPlotConfigurationState().getComparisonType())
-				.withWaterYearDefinition(new WaterYearDefinition("", Month.OCTOBER, Month.SEPTEMBER))
+				.withWaterYearDefinition(getPlotConfigurationState().getWaterYearDefinition())
 				.withTaf(getPlotConfigurationState().isDisplayTaf())
 				.withPrimarySuffixes(primarySuffixes)
 				.withSecondarySuffixes(secondarySuffixes)
@@ -182,43 +188,162 @@ public class DisplayFrames
 		tabbedPane.addTab("Alert - Missing DSS records", panel);
 	}
 
-	void plotSummaryTable(IDSSGrabber1Svc dssGrabber, DisplayInput displayInput,
-						  JTabbedPane tabbedPane, String plotTitle, String sLabel, String baseRunName)
+	void plotSummaryTable(Map<EpptScenarioRun, List<String>> primarySuffixes,
+						  Map<EpptScenarioRun, List<TimeSeriesContainer>> scenarioRunData,
+						  Map<EpptScenarioRun, List<String>> secondarySuffixes,
+						  Map<EpptScenarioRun, List<TimeSeriesContainer>> secondaryScenarioRunData,
+						  String plotTitle,
+						  JTabbedPane tabbedPane)
 	{
-		SummaryTablePanel stp;
+		SortedMap<String, SortedMap<EpptStatistic, Map<WaterYearIndex, EpptReportingComputedSet>>> data = new TreeMap<>();
+		List<EpptStatistic> selectedSummaryTableItems = getPlotConfigurationState().getSelectedSummaryTableItems();
+		WaterYearDefinition waterYearDefinition = getPlotConfigurationState().getWaterYearDefinition();
+		MonthPeriod monthPeriod = new MonthPeriod(waterYearDefinition.getStartMonth(), waterYearDefinition.getEndMonth());
+		List<WaterYearIndex> summaryWaterYearIndexes = getPlotConfigurationState().getSummaryWaterYearIndexes();
+		SortedMap<EpptStatistic, Map<WaterYearIndex, EpptReportingComputedSet>> statsData = new TreeMap<>(
+				Comparator.comparing(selectedSummaryTableItems::indexOf));
+		List<EpptScenarioRun> scenarioRuns = new ArrayList<>();
+		scenarioRuns.add(getBaseRun());
+		scenarioRuns.addAll(getAlternatives());
+		for(EpptScenarioRun epptScenarioRun : getAlternatives())
+		{
+			Map<EpptScenarioRun, List<String>> clonedSuffix = new HashMap<>();
+			if(!primarySuffixes.isEmpty())
+			{
+				clonedSuffix.put(epptScenarioRun, primarySuffixes.get(epptScenarioRun));
+			}
+			Map<EpptScenarioRun, List<TimeSeriesContainer>> clonedScenarioRunData = new HashMap<>();
+			if(!scenarioRunData.isEmpty())
+			{
+				clonedScenarioRunData.put(epptScenarioRun, scenarioRunData.get(epptScenarioRun));
+			}
+			Map<EpptScenarioRun, List<String>> clonedSecondarySuffix = new HashMap<>();
+			if(!secondarySuffixes.isEmpty())
+			{
+				clonedSecondarySuffix.put(epptScenarioRun, secondarySuffixes.get(epptScenarioRun));
+			}
+			Map<EpptScenarioRun, List<TimeSeriesContainer>> clonedSecondaryScenarioRunData = new HashMap<>();
+			if(!secondaryScenarioRunData.isEmpty())
+			{
+				clonedSecondaryScenarioRunData.put(epptScenarioRun, secondaryScenarioRunData.get(epptScenarioRun));
+			}
+			addSummaryDataForScenario(clonedSuffix, clonedScenarioRunData, plotTitle, data, selectedSummaryTableItems,
+					monthPeriod, summaryWaterYearIndexes, statsData, epptScenarioRun);
+			addSummaryDataForScenario(clonedSecondarySuffix, clonedSecondaryScenarioRunData, plotTitle, data, selectedSummaryTableItems,
+					monthPeriod, summaryWaterYearIndexes, statsData, epptScenarioRun);
+		}
+		JFXPanel pane = new SummaryPane(plotTitle, waterYearDefinition, data);
 		if(getPlotConfigurationState().getComparisonType() == PlotConfigurationState.ComparisonType.DIFF)
 		{
-			stp = new SummaryTablePanel(plotTitle + " - Difference from " + displayInput.getPrimaryResults()[0].fileName,
-					displayInput.getDiffResults(), null, getPlotConfigurationState().getSelectedSummaryTableItems(), "", dssGrabber);
+			tabbedPane.addTab("Summary - Difference", pane);
 		}
 		else
+
 		{
-			stp = new SummaryTablePanel(plotTitle, displayInput.getPrimaryResults(),
-					displayInput.getSecondaryResults(),
-					getPlotConfigurationState().getSelectedSummaryTableItems(), sLabel, dssGrabber,
-					getPlotConfigurationState().getComparisonType() == PlotConfigurationState.ComparisonType.BASE);
+			tabbedPane.addTab("Summary", pane);
 		}
-		tabbedPane.addTab("Summary - " + baseRunName, stp);
+
 	}
 
-	void plotMonthlyTable(IDSSGrabber1Svc dssGrabber, DisplayInput displayInput,
-						  JTabbedPane tabbedPane, String plotTitle, String sLabel, String baseRunName)
+	private void addSummaryDataForScenario(Map<EpptScenarioRun, List<String>> primarySuffixes,
+										   Map<EpptScenarioRun, List<TimeSeriesContainer>> scenarioRunData, String plotTitle,
+										   SortedMap<String, SortedMap<EpptStatistic, Map<WaterYearIndex, EpptReportingComputedSet>>> data,
+										   List<EpptStatistic> selectedSummaryTableItems, MonthPeriod monthPeriod,
+										   List<WaterYearIndex> summaryWaterYearIndexes,
+										   SortedMap<EpptStatistic, Map<WaterYearIndex, EpptReportingComputedSet>> statsData, EpptScenarioRun scenarioRun)
 	{
-		MonthlyTablePanel mtp;
+		for(int i = 0; i < scenarioRunData.get(scenarioRun).size(); i++)
+		{
+			String header = scenarioRun.getName();
+			if(i < primarySuffixes.getOrDefault(scenarioRun, new ArrayList<>()).size())
+			{
+				header += " - " + primarySuffixes.get(scenarioRun).get(i);
+			}
+			else
+			{
+				header += " - " + plotTitle;
+			}
+			for(EpptStatistic stat : selectedSummaryTableItems)
+			{
+				Map<EpptScenarioRun, List<WaterYearIndex>> allWaterYearIndicies = getWaterYearIndicies();
+				SortedMap<WaterYearIndex, EpptReportingComputedSet> indexData = new TreeMap<>(
+						Comparator.comparing(allWaterYearIndicies.get(getBaseRun())::indexOf));
+				Map<EpptScenarioRun, WaterYearIndex> selectedWaterYearIndicies = new HashMap<>();
+				for(WaterYearIndex waterYearIndex : summaryWaterYearIndexes)
+				{
+					for(Map.Entry<EpptScenarioRun, List<WaterYearIndex>> entry : allWaterYearIndicies.entrySet())
+					{
+						Optional<WaterYearIndex> collect = entry.getValue().stream().filter(
+								s -> waterYearIndex.getName().equalsIgnoreCase(s.getName())).findAny();
+						collect.ifPresent(index -> selectedWaterYearIndicies.put(entry.getKey(), index));
+					}
+					EpptReportingComputedSet epptReportingComputedSet;
+					if(getPlotConfigurationState().getComparisonType() == PlotConfigurationState.ComparisonType.DIFF)
+					{
+						epptReportingComputedSet = EpptReportingComputedSet.computeDiffForMetrics(plotTitle,
+								stat,
+								monthPeriod,
+								_start,
+								_end,
+								getPlotConfigurationState().isDisplayTaf(),
+								_baseRun,
+								primarySuffixes,
+								scenarioRunData,
+								new HashMap<>(),
+								new HashMap<>(),
+								getPlotConfigurationState().getComparisonType(),
+								selectedWaterYearIndicies,
+								allWaterYearIndicies);
+					}
+					else
+					{
+						epptReportingComputedSet = EpptReportingComputedSet.computeForMetrics(plotTitle,
+								stat,
+								monthPeriod,
+								_start,
+								_end,
+								getPlotConfigurationState().isDisplayTaf(),
+								primarySuffixes,
+								scenarioRunData,
+								new HashMap<>(),
+								new HashMap<>(),
+								getPlotConfigurationState().getComparisonType(),
+								selectedWaterYearIndicies,
+								allWaterYearIndicies);
+					}
+					indexData.put(waterYearIndex, epptReportingComputedSet);
+				}
+				statsData.put(stat, indexData);
+			}
+			data.put(header, statsData);
+		}
+	}
+
+	void plotMonthlyTable(Map<EpptScenarioRun, List<String>> primarySuffixes,
+						  Map<EpptScenarioRun, List<TimeSeriesContainer>> scenarioRunData,
+						  Map<EpptScenarioRun, List<String>> secondarySuffixes,
+						  Map<EpptScenarioRun, List<TimeSeriesContainer>> secondaryScenarioRunData,
+						  String plotTitle,
+						  JTabbedPane tabbedPane)
+	{
+		JFXPanel pane = new PlotlyPaneBuilder(PlotlyPaneBuilder.ChartType.MONTHLY, getBaseRun(), scenarioRunData, secondaryScenarioRunData)
+				.withComparisonType(getPlotConfigurationState().getComparisonType())
+				.withWaterYearDefinition(getPlotConfigurationState().getWaterYearDefinition())
+				.withTaf(getPlotConfigurationState().isDisplayTaf())
+				.withPrimarySuffixes(primarySuffixes)
+				.withSecondarySuffixes(secondarySuffixes)
+				.withPlotTitle(plotTitle)
+				.withTimeWindow(getStart(), getEnd())
+				.withWaterYearIndicies(getWaterYearIndicies())
+				.build();
 		if(getPlotConfigurationState().getComparisonType() == PlotConfigurationState.ComparisonType.DIFF)
 		{
-			mtp = new MonthlyTablePanel(
-					plotTitle + " - Difference from " + displayInput.getPrimaryResults()[0].fileName,
-					displayInput.getDiffResults(), null, dssGrabber, "");
+			tabbedPane.addTab("Monthly - Difference", pane);
 		}
 		else
 		{
-			mtp = new MonthlyTablePanel(plotTitle, displayInput.getPrimaryResults(),
-					displayInput.getSecondaryResults(),
-					dssGrabber, sLabel,
-					getPlotConfigurationState().getComparisonType() == PlotConfigurationState.ComparisonType.BASE);
+			tabbedPane.addTab("Monthly", pane);
 		}
-		tabbedPane.addTab("Monthly - " + baseRunName, mtp);
 	}
 
 	void plotExceedance(Map<EpptScenarioRun, List<TimeSeriesContainer>> scenarioRunData,
@@ -257,7 +382,7 @@ public class DisplayFrames
 		List<Month> exceedMonths = getPlotConfigurationState().getSelectedExceedancePlotMonths();
 		for(Month month : exceedMonths)
 		{
-			PlotlyPane pane = new PlotlyPaneBuilder(PlotlyPaneBuilder.ChartType.EXCEEDANCE, getBaseRun(), scenarioRunData, secondaryScenarioRunData)
+			JFXPanel pane = new PlotlyPaneBuilder(PlotlyPaneBuilder.ChartType.EXCEEDANCE, getBaseRun(), scenarioRunData, secondaryScenarioRunData)
 					.withComparisonType(getPlotConfigurationState().getComparisonType())
 					.withTaf(getPlotConfigurationState().isDisplayTaf())
 					.withPlotTitle(plotTitle)
@@ -277,7 +402,7 @@ public class DisplayFrames
 								   Map<EpptScenarioRun, List<TimeSeriesContainer>> secondaryScenarioRunData,
 								   String plotTitle, JTabbedPane tabbedPane)
 	{
-		PlotlyPane pane = new PlotlyPaneBuilder(PlotlyPaneBuilder.ChartType.EXCEEDANCE, getBaseRun(), scenarioRunData, secondaryScenarioRunData)
+		JFXPanel pane = new PlotlyPaneBuilder(PlotlyPaneBuilder.ChartType.EXCEEDANCE, getBaseRun(), scenarioRunData, secondaryScenarioRunData)
 				.withTaf(getPlotConfigurationState().isDisplayTaf())
 				.withComparisonType(getPlotConfigurationState().getComparisonType())
 				.withPlotTitle(plotTitle)
@@ -302,8 +427,8 @@ public class DisplayFrames
 									  Map<EpptScenarioRun, List<TimeSeriesContainer>> secondaryScenarioRunData,
 									  String plotTitle, JTabbedPane tabbedPane)
 	{
-		WaterYearDefinition waterYearDefinition = new WaterYearDefinition("", Month.OCTOBER, Month.SEPTEMBER);
-		PlotlyPane pane = new PlotlyPaneBuilder(PlotlyPaneBuilder.ChartType.EXCEEDANCE, getBaseRun(), scenarioRunData, secondaryScenarioRunData)
+		WaterYearDefinition waterYearDefinition = getPlotConfigurationState().getWaterYearDefinition();
+		JFXPanel pane = new PlotlyPaneBuilder(PlotlyPaneBuilder.ChartType.EXCEEDANCE, getBaseRun(), scenarioRunData, secondaryScenarioRunData)
 				.withComparisonType(getPlotConfigurationState().getComparisonType())
 				.withPrimarySuffixes(primarySuffixes)
 				.withSecondarySuffixes(secondarySuffixes)

@@ -26,6 +26,7 @@ import gov.ca.water.calgui.busservice.impl.MonthPeriod;
 import gov.ca.water.calgui.busservice.impl.NoopEpptStatistic;
 import gov.ca.water.calgui.project.EpptScenarioRun;
 import gov.ca.water.calgui.project.PlotConfigurationState;
+import javafx.embed.swing.JFXPanel;
 
 import hec.io.TimeSeriesContainer;
 
@@ -120,7 +121,7 @@ public class PlotlyPaneBuilder
 		return this;
 	}
 
-	public PlotlyPane build()
+	public JFXPanel build()
 	{
 		EpptReportingComputedSet epptReportingComputedSet;
 		MonthPeriod monthPeriod = new MonthPeriod(Month.OCTOBER, Month.SEPTEMBER);
@@ -161,7 +162,7 @@ public class PlotlyPaneBuilder
 					_selectedWaterYearIndicies,
 					_allWaterYearIndicies);
 		}
-		PlotlyPane retval = null;
+		JFXPanel retval = null;
 		switch(_chartType)
 		{
 			case TIMESERIES:
@@ -172,6 +173,9 @@ public class PlotlyPaneBuilder
 				break;
 			case BOX:
 				retval = new BoxPlotChartPane(epptReportingComputedSet);
+				break;
+			case MONTHLY:
+				retval = new MonthlyPane(_plotTitle, _waterYearDefinition, epptReportingComputedSet);
 				break;
 		}
 		return retval;
@@ -210,6 +214,6 @@ public class PlotlyPaneBuilder
 
 	public enum ChartType
 	{
-		TIMESERIES, EXCEEDANCE, BOX
+		TIMESERIES, EXCEEDANCE, BOX, MONTHLY
 	}
 }

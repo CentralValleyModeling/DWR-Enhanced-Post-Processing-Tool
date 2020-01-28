@@ -18,6 +18,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.Month;
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.EnumMap;
 import java.util.List;
@@ -39,6 +40,7 @@ import gov.ca.water.calgui.bo.WaterYearDefinition;
 import gov.ca.water.calgui.bo.WaterYearIndex;
 import gov.ca.water.calgui.constant.Constant;
 
+import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toMap;
 
 /**
@@ -59,6 +61,23 @@ public class ScriptedEpptStatistics implements EpptStatistic
 		_jythonFilePath = jythonFilePath;
 		_name = loadStatisticName();
 		setupScriptEngine();
+	}
+
+	public static List<EpptStatistic> getTrendStatistics()
+	{
+		List<EpptStatistic> retval = new ArrayList<>();
+		Path jython = Paths.get(Constant.TREND_REPORTING_DIR).resolve("jython");
+		try(Stream<Path> stream = Files.walk(jython, 5))
+		{
+			retval = stream.filter(p -> p.toFile().isFile()).filter(p -> p.toString().endsWith("py"))
+						   .map(ScriptedEpptStatistics::new)
+						   .collect(toList());
+		}
+		catch(IOException e)
+		{
+			LOGGER.log(Level.SEVERE, "Unable to load Statistics for Trend Reporting dashboard", e);
+		}
+		return retval;
 	}
 
 	private void setupScriptEngine()

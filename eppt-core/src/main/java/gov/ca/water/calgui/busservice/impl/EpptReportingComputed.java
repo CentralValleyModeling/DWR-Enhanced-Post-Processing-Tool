@@ -32,7 +32,7 @@ import org.json.JSONObject;
  * @author <a href="mailto:adam@rmanet.com">Adam Korynta</a>
  * @since 07-26-2019
  */
-class EpptReportingComputed
+public class EpptReportingComputed
 {
 	private static final String FULL_TIME_SERIES = "full_time_series";
 	private static final String PERIOD_FILTERED_TIME_SERIES = "period_filtered_time_series";
@@ -68,6 +68,16 @@ class EpptReportingComputed
 		_units = units;
 	}
 
+	public List<String> getDataSuffix()
+	{
+		return _dataSuffix;
+	}
+
+	public List<SortedMap<LocalDateTime, Double>> getFullTimeSeries()
+	{
+		return _fullTimeSeries;
+	}
+
 	JSONObject toJson()
 	{
 		JSONObject jsonObject = new JSONObject();
@@ -101,6 +111,21 @@ class EpptReportingComputed
 			retval.put(jsonArray);
 		});
 		return retval;
+	}
+
+	public List<SortedMap<Month, Double>> getStatisticallyComputedMonthly()
+	{
+		return _statisticallyComputedMonthly;
+	}
+
+	public List<Double> getYearlyStatistic()
+	{
+		return _yearlyStatistic;
+	}
+
+	public List<SortedMap<WaterYearPeriod, Double>> getStatisticallyComputedTimeSeriesWyt()
+	{
+		return _statisticallyComputedTimeSeriesWyt;
 	}
 
 	private JSONObject extractWytArray(Map.Entry<WaterYearPeriod, Double> waterYearPeriodSortedMapEntry)

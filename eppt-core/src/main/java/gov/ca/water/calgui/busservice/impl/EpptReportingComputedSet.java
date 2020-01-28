@@ -60,7 +60,6 @@ public final class EpptReportingComputedSet
 		_comparisonType = comparisonType;
 	}
 
-
 	public static EpptReportingComputedSet computeForMetrics(String plotTitle, EpptStatistic statistic,
 															 MonthPeriod monthPeriod, LocalDate start,
 															 LocalDate end, boolean taf,
@@ -136,6 +135,11 @@ public final class EpptReportingComputedSet
 		}
 		return new EpptReportingComputedSet(plotTitle, statistic, monthPeriod,
 				trendReportingComputed, comparisonType);
+	}
+
+	public List<EpptReportingScenarioComputed> getEpptReportingComputed()
+	{
+		return _epptReportingComputed;
 	}
 
 	public JSONObject toJson()

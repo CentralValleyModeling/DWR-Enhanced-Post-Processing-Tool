@@ -23,7 +23,7 @@ import org.json.JSONObject;
  * @author <a href="mailto:adam@rmanet.com">Adam Korynta</a>
  * @since 01-24-2020
  */
-class EpptReportingScenarioComputed
+public class EpptReportingScenarioComputed
 {
 	private static final String SCENARIO_NAME_KEY = "scenario_name";
 	private static final String PRIMARY_DATA_KEY = "primary_data";
@@ -38,6 +38,21 @@ class EpptReportingScenarioComputed
 		_epptScenarioRun = epptScenarioRun;
 		_primary = primary;
 		_secondary = secondary;
+	}
+
+	public EpptScenarioRun getEpptScenarioRun()
+	{
+		return _epptScenarioRun;
+	}
+
+	public EpptReportingComputed getPrimary()
+	{
+		return _primary;
+	}
+
+	public EpptReportingComputed getSecondary()
+	{
+		return _secondary;
 	}
 
 	JSONObject toJson()

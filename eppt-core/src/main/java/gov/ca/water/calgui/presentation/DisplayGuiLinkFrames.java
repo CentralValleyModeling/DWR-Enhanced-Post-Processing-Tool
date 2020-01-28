@@ -17,6 +17,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
@@ -121,9 +122,6 @@ final class DisplayGuiLinkFrames extends DisplayFrames
 	private JTabbedPane displayFrameForData(IDSSGrabber1Svc dssGrabber, GUILinksAllModelsBO guiLink, DisplayInput displayInput)
 	{
 		JTabbedPane tabbedPane = new JTabbedPane();
-		String plotTitle = dssGrabber.getPlotTitle();
-		String sLabel = dssGrabber.getSLabel();
-		String baseRunName = dssGrabber.getBaseRunName();
 		Map<GUILinksAllModelsBO.Model, List<String>> missing = dssGrabber.getMissingList();
 		if(displayInput.getPrimaryResults() != null && displayInput.getPrimaryResults()[0] != null)
 		{
@@ -132,6 +130,7 @@ final class DisplayGuiLinkFrames extends DisplayFrames
 			scenarioRuns.addAll(getAlternatives());
 			Map<EpptScenarioRun, List<TimeSeriesContainer>> primaryScenarioRunData = new TreeMap<>(Comparator.comparing(scenarioRuns::indexOf));
 			Map<EpptScenarioRun, List<TimeSeriesContainer>> secondaryScenarioRunData = new TreeMap<>(Comparator.comparing(scenarioRuns::indexOf));
+			Map<EpptScenarioRun, List<String>> secondarySuffixes = new TreeMap<>(Comparator.comparing(scenarioRuns::indexOf));
 			for(EpptScenarioRun epptScenarioRun : scenarioRuns)
 			{
 				DSSGrabber1SvcImpl dssGrabber1Svc = buildDssGrabber(epptScenarioRun, guiLink, getPlotConfigurationState().isDisplayTaf(),
@@ -141,6 +140,7 @@ final class DisplayGuiLinkFrames extends DisplayFrames
 				TimeSeriesContainer secondarySeries = dssGrabber1Svc.getSecondarySeries()[0];
 				primaryScenarioRunData.put(epptScenarioRun, Collections.singletonList(primarySeries));
 				secondaryScenarioRunData.put(epptScenarioRun, Collections.singletonList(secondarySeries));
+				secondarySuffixes.put(epptScenarioRun, Collections.singletonList(guiLink.getLegend()));
 			}
 			if(getPlotConfigurationState().isDisplayTimeSeriesPlot())
 			{
@@ -156,11 +156,13 @@ final class DisplayGuiLinkFrames extends DisplayFrames
 			}
 			if(getPlotConfigurationState().isDisplayMonthlyTable())
 			{
-				plotMonthlyTable(dssGrabber, displayInput, tabbedPane, plotTitle, sLabel, baseRunName);
+				plotMonthlyTable(new HashMap<>(), primaryScenarioRunData, secondarySuffixes, secondaryScenarioRunData, guiLink.getPlotTitle(),
+						tabbedPane);
 			}
 			if(getPlotConfigurationState().isDisplaySummaryTable())
 			{
-				plotSummaryTable(dssGrabber, displayInput, tabbedPane, plotTitle, sLabel, baseRunName);
+				plotSummaryTable(new HashMap<>(), primaryScenarioRunData, secondarySuffixes,
+						secondaryScenarioRunData, guiLink.getPlotTitle(), tabbedPane);
 			}
 		}
 		List<String> collect = missing.values()

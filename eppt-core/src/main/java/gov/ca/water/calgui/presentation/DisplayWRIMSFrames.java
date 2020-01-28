@@ -124,57 +124,20 @@ class DisplayWRIMSFrames extends DisplayFrames
 		}
 		if(getPlotConfigurationState().isDoExceedance())
 		{
-			plotExceedance(primarySuffxies, scenarioRunData, new HashMap<>(),  new HashMap<>(),mts.getName(), tabbedPane);
+			plotExceedance(primarySuffxies, scenarioRunData, new HashMap<>(), new HashMap<>(), mts.getName(), tabbedPane);
 		}
 		if(getPlotConfigurationState().isDisplayBoxAndWhiskerPlot())
 		{
-			plotBoxPlot(primarySuffxies, scenarioRunData, new HashMap<>(),  new HashMap<>(),mts.getName(), tabbedPane);
+			plotBoxPlot(primarySuffxies, scenarioRunData, new HashMap<>(), new HashMap<>(), mts.getName(), tabbedPane);
 		}
 		if(getPlotConfigurationState().isDisplayMonthlyTable())
 		{
-			mtsMonthly(mts, dssGrabber, tabbedPane, results, diffResults);
+			plotMonthlyTable(primarySuffxies, scenarioRunData, new HashMap<>(), new HashMap<>(), mts.getName(), tabbedPane);
 		}
 		if(getPlotConfigurationState().isDisplaySummaryTable())
 		{
-			mtsSummary(mts, dssGrabber, tabbedPane, results, diffResults);
+			plotSummaryTable(primarySuffxies, scenarioRunData, new HashMap<>(), new HashMap<>(), mts.getName(), tabbedPane);
 		}
-
-
-	}
-
-	private void mtsMonthly(MultipleTimeSeries mts, DSSGrabber2SvcImpl dssGrabber, JTabbedPane tabbedPane,
-							TimeSeriesContainer[][] results, TimeSeriesContainer[][] diffResults)
-	{
-		MonthlyTablePanel2 mtp;
-		if(getPlotConfigurationState().getComparisonType() == PlotConfigurationState.ComparisonType.DIFF)
-		{
-			mtp = new MonthlyTablePanel2(diffResults, dssGrabber, mts);
-		}
-		else
-		{
-			mtp = new MonthlyTablePanel2(results, dssGrabber, mts);
-		}
-		tabbedPane.addTab("Monthly - " + dssGrabber.getBaseRunName(), mtp);
-	}
-
-	private void mtsSummary(MultipleTimeSeries mts, DSSGrabber2SvcImpl dssGrabber,
-							JTabbedPane tabbedPane, TimeSeriesContainer[][] results, TimeSeriesContainer[][] diffResults)
-	{
-		boolean doBase = getPlotConfigurationState().getComparisonType() == PlotConfigurationState.ComparisonType.BASE;
-		SummaryTablePanel2 stp;
-		List<String> summaryTags = getPlotConfigurationState().getSelectedSummaryTableItems();
-		if(getPlotConfigurationState().getComparisonType() == PlotConfigurationState.ComparisonType.DIFF)
-		{
-			stp = new SummaryTablePanel2(
-					dssGrabber.getPlotTitle() + " - Difference from " + results[0][0].fileName, diffResults,
-					null, summaryTags, "", null, dssGrabber, doBase, mts);
-		}
-		else
-		{
-			stp = new SummaryTablePanel2(dssGrabber.getPlotTitle(), results, null, summaryTags,
-					dssGrabber.getSLabel(), null, dssGrabber, doBase, mts);
-		}
-		tabbedPane.addTab("Summary - " + dssGrabber.getBaseRunName(), stp);
 	}
 
 	private void plotDts(DerivedTimeSeries dts, DSSGrabber2SvcImpl dssGrabber, JTabbedPane tabbedPane)
@@ -218,11 +181,11 @@ class DisplayWRIMSFrames extends DisplayFrames
 			}
 			if(getPlotConfigurationState().isDisplayMonthlyTable())
 			{
-				plotMonthlyTable(dssGrabber, displayInput, tabbedPane, dts.getName(), sLabel, baseRunName);
+				plotMonthlyTable(new HashMap<>(), scenarioRunData, new HashMap<>(), new HashMap<>(), dts.getName(), tabbedPane);
 			}
 			if(getPlotConfigurationState().isDisplaySummaryTable())
 			{
-				plotSummaryTable(dssGrabber, displayInput, tabbedPane, dts.getName(), sLabel, baseRunName);
+				plotSummaryTable(new HashMap<>(), scenarioRunData, new HashMap<>(), new HashMap<>(), dts.getName(), tabbedPane);
 			}
 		}
 	}
