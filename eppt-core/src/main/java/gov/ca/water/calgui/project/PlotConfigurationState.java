@@ -17,10 +17,16 @@ import java.time.format.DateTimeFormatterBuilder;
 import java.time.format.DateTimeParseException;
 import java.time.temporal.TemporalAccessor;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import gov.ca.water.calgui.bo.WaterYearDefinition;
+import gov.ca.water.calgui.bo.WaterYearIndex;
+import gov.ca.water.calgui.busservice.impl.EpptStatistic;
+import gov.ca.water.calgui.busservice.impl.ScriptedEpptStatistics;
+
+import static java.util.stream.Collectors.toList;
 
 public class PlotConfigurationState
 {
@@ -35,13 +41,17 @@ public class PlotConfigurationState
 	private final boolean _isDisplayExceedanceAll;
 	private final boolean _isDisplayExceedanceAnnualFlow;
 	private final List<Month> _exceedancePlotMonths;
-	private final List<String> _summaryTableComponents;
+	private final List<EpptStatistic> _summaryTableComponents;
+	private final WaterYearDefinition _waterYearDefinition;
+	private final List<WaterYearIndex> _summaryWaterYearIndex;
 
 	public PlotConfigurationState(ComparisonType comparisonType, boolean isDisplayTaf, boolean isDisplayTimeSeriesPlot,
 								  boolean isDisplayBoxAndWhiskerPlot,
 								  boolean isDisplayExceedanceAll, List<Month> exceedancePlotMonths,
 								  boolean isDisplayMonthlyTable, boolean isDisplaySummaryTable,
-								  boolean isDisplayExceedanceAnnualFlow, List<String> summaryTableComponents)
+								  boolean isDisplayExceedanceAnnualFlow, List<EpptStatistic> summaryTableComponents,
+								  List<WaterYearIndex> summaryWaterYearIndex,
+								  WaterYearDefinition waterYearDefinition)
 	{
 		_comparisonType = comparisonType;
 		_isDisplayTaf = isDisplayTaf;
@@ -55,6 +65,13 @@ public class PlotConfigurationState
 		_isDisplayExceedanceAnnualFlow = isDisplayExceedanceAnnualFlow;
 
 		_summaryTableComponents = summaryTableComponents;
+		_waterYearDefinition = waterYearDefinition;
+		_summaryWaterYearIndex = summaryWaterYearIndex;
+	}
+
+	public WaterYearDefinition getWaterYearDefinition()
+	{
+		return _waterYearDefinition;
 	}
 
 	public static PlotConfigurationState fromString(String displayGroup)
@@ -67,11 +84,12 @@ public class PlotConfigurationState
 		boolean doExceedanceAll = false;
 		boolean doExceedanceAnnual = false;
 		List<Month> exceedMonths = new ArrayList<>();
-		List<String> summaryTags = new ArrayList<>();
+		List<EpptStatistic> summaryTags = new ArrayList<>();
 
 		String[] groupParts = displayGroup.split(";");
 
 		ComparisonType comparisonType = ComparisonType.BASE;
+		List<EpptStatistic> trendStatistics = ScriptedEpptStatistics.getTrendStatistics();
 		for(final String groupPart : groupParts)
 		{
 			if("Base".equals(groupPart))
@@ -116,11 +134,11 @@ public class PlotConfigurationState
 			else if(groupPart.startsWith("ST-"))
 			{
 				doSummaryTable = true;
-				summaryTags = Arrays.asList(groupPart.replace("ST-", "").split(","));
+				summaryTags = trendStatistics.stream().filter(s->groupPart.toLowerCase().contains(s.getName().toLowerCase())).collect(toList());
 			}
 		}
 		return new PlotConfigurationState(comparisonType, !isCFS, doTimeSeries, doBoxPlot, doExceedanceAll, exceedMonths, doMonthlyTable, doSummaryTable,
-				doExceedanceAnnual, summaryTags);
+				doExceedanceAnnual, summaryTags, new ArrayList<>(), new WaterYearDefinition("", Month.OCTOBER, Month.SEPTEMBER));
 	}
 
 	private static void addToExceedanceMonths(List<Month> exceedMonths, String exceedanceParts)
@@ -151,7 +169,6 @@ public class PlotConfigurationState
 	public boolean isDisplayTaf()
 	{
 		return _isDisplayTaf;
-
 	}
 
 	public boolean isDisplayTimeSeriesPlot()
@@ -189,7 +206,7 @@ public class PlotConfigurationState
 		return _exceedancePlotMonths;
 	}
 
-	public List<String> getSelectedSummaryTableItems()
+	public List<EpptStatistic> getSelectedSummaryTableItems()
 	{
 		return _summaryTableComponents;
 	}
@@ -197,6 +214,11 @@ public class PlotConfigurationState
 	public boolean isDoExceedance()
 	{
 		return !getSelectedExceedancePlotMonths().isEmpty() || isAnnualFlowExceedancePlots() || isPlotAllExceedancePlots();
+	}
+
+	public List<WaterYearIndex> getSummaryWaterYearIndexes()
+	{
+		return _summaryWaterYearIndex;
 	}
 
 	public enum ComparisonType

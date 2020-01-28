@@ -13,6 +13,7 @@ import java.nio.file.Paths;
 import javax.swing.*;
 
 import gov.ca.water.calgui.EpptInitializationException;
+import gov.ca.water.calgui.busservice.impl.EpptReportingMonths;
 import gov.ca.water.calgui.busservice.impl.GuiLinksSeedDataSvcImpl;
 import gov.ca.water.calgui.busservice.impl.ThresholdLinksSeedDataSvc;
 import gov.ca.water.calgui.busservice.impl.WaterYearDefinitionSvc;
@@ -35,7 +36,7 @@ public abstract class EpptScaffold
 		System.setProperty("user.dir", userDir);
 	}
 
-	abstract protected EpptPanel buildEpptPanel();
+	abstract protected JComponent buildEpptPanel();
 
 	public final void initScaffold() throws EpptInitializationException
 	{
@@ -51,7 +52,8 @@ public abstract class EpptScaffold
 		GuiLinksSeedDataSvcImpl.createSeedDataSvcImplInstance();
 		WaterYearDefinitionSvc.createSeedDataSvcImplInstance();
 		ThresholdLinksSeedDataSvc.createSeedDataSvcImplInstance();
-		EpptPanel epptPanel = buildEpptPanel();
+		EpptReportingMonths.createTrendReportingMonthsInstance();
+		JComponent epptPanel = buildEpptPanel();
 		JFrame jFrame = new JFrame();
 		jFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		SwingUtilities.invokeLater(() ->

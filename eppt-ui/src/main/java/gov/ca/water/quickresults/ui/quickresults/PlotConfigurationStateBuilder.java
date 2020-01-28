@@ -17,15 +17,18 @@ import java.awt.Container;
 import java.time.Month;
 import java.time.format.DateTimeFormatterBuilder;
 import java.time.format.TextStyle;
-import java.time.temporal.IsoFields;
 import java.time.temporal.TemporalAccessor;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 import javax.swing.*;
 
+import gov.ca.water.calgui.bo.WaterYearDefinition;
+import gov.ca.water.calgui.busservice.impl.EpptStatistic;
+import gov.ca.water.calgui.busservice.impl.ScriptedEpptStatistics;
 import gov.ca.water.calgui.project.EpptScenarioRun;
 import gov.ca.water.calgui.project.PlotConfigurationState;
 import gov.ca.water.calgui.techservice.IErrorHandlingSvc;
@@ -136,10 +139,9 @@ public class PlotConfigurationStateBuilder
 			ckb = (JCheckBox) _swingEngine.find("RepckbSummaryTable");
 			if(ckb.isSelected())
 			{
-				StringBuilder cST = new StringBuilder(";ST-");
-				List<String> summaryTables = new ArrayList<>();
-				addSummaryTables(summaryTables, components);
-				cAdd = cAdd + ";ST-" + String.join(",", summaryTables);
+				List<EpptStatistic> summary = new ArrayList<>();
+				addSummaryTables(summary, components);
+				cAdd = cAdd + ";ST-" + summary.stream().map(EpptStatistic::getName).collect(Collectors.joining(","));
 			}
 
 			return cAdd;
@@ -159,6 +161,7 @@ public class PlotConfigurationStateBuilder
 		{
 			// Base, Comparison and Difference
 			ProjectConfigurationPanel projectConfigurationPanel = ProjectConfigurationPanel.getProjectConfigurationPanel();
+			WaterYearDefinition waterYearDefinition = projectConfigurationPanel.getWaterYearDefinition();
 			List<EpptScenarioRun> epptScenarioAlternatives = projectConfigurationPanel.getEpptScenarioAlternatives();
 			PlotConfigurationState.ComparisonType comparisonType;
 			if(epptScenarioAlternatives.isEmpty())
@@ -189,7 +192,7 @@ public class PlotConfigurationStateBuilder
 			List<Month> exceedance = new ArrayList<>();
 			addExceedancePlots(exceedance, controls2);
 
-			List<String> summary = new ArrayList<>();
+			List<EpptStatistic> summary = new ArrayList<>();
 			// Summary Table
 			if(displaySummaryTable)
 			{
@@ -197,8 +200,8 @@ public class PlotConfigurationStateBuilder
 				addSummaryTables(summary, components);
 			}
 			return new PlotConfigurationState(comparisonType, displayTaf, displayTimeSeriesPlot, displayBoxAndWhisker, isDisplayExceedanceAll,
-					exceedance,
-					displayMonthlyTable, displaySummaryTable, isDisplayExceedanceAnnualFlow, summary);
+					exceedance, displayMonthlyTable, displaySummaryTable, isDisplayExceedanceAnnualFlow, summary,
+					new ArrayList<>(), waterYearDefinition);
 		}
 		catch(RuntimeException e)
 		{
@@ -234,8 +237,9 @@ public class PlotConfigurationStateBuilder
 		}
 	}
 
-	private void addSummaryTables(List<String> summaryTables, Component[] components)
+	private void addSummaryTables(List<EpptStatistic> summaryTables, Component[] components)
 	{
+		List<EpptStatistic> trendStatistics = ScriptedEpptStatistics.getTrendStatistics();
 		for(final Component component : components)
 		{
 			if(component instanceof JCheckBox)
@@ -244,7 +248,8 @@ public class PlotConfigurationStateBuilder
 				if(c.isSelected())
 				{
 					String cName = c.getText();
-					summaryTables.add(cName);
+					trendStatistics.stream().filter(e -> e.getName().equalsIgnoreCase(cName)).findAny()
+								   .ifPresent(summaryTables::add);
 				}
 			}
 			else if(component instanceof Container)

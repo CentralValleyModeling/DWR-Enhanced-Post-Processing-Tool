@@ -83,6 +83,21 @@
 										<gridbagconstraints anchor="GridBagConstraints.WEST" gridx="0" gridy="3" gridwidth="2"/>
 									</checkbox>
 								</panel>
+								<panel  layout="GridBagLayout">
+									<gridbagconstraints insets="0,5,5,3" anchor="GridBagConstraints.WEST" gridx="1" gridy="2" fill="GridBagConstraints.HORIZONTAL"/>
+									<label text="Water Year Definition">
+										<gridbagconstraints  insets="0,0,5,3" anchor="GridBagConstraints.WEST" gridx="0" gridy="0" gridwidth="1" fill="GridBagConstraints.HORIZONTAL"/>
+									</label>
+									<label text="Water Year Index">
+										<gridbagconstraints  insets="0,0,5,3" anchor="GridBagConstraints.WEST" gridx="1" gridy="0" gridwidth="1" fill="GridBagConstraints.HORIZONTAL"/>
+									</label>
+									<combobox name="waterYearDefinitionCombo" id="waterYearDefinitionCombo" enabled="true">
+										<gridbagconstraints  insets="0,0,5,3" anchor="GridBagConstraints.WEST" gridx="0" gridy="1" gridwidth="1" fill="GridBagConstraints.HORIZONTAL"/>
+									</combobox>
+									<combobox name="waterYearIndexCombo" id="waterYearIndexCombo" enabled="true">
+										<gridbagconstraints  insets="0,0,5,3" anchor="GridBagConstraints.WEST" gridx="1" gridy="1" gridwidth="1" fill="GridBagConstraints.HORIZONTAL"/>
+									</combobox>
+								</panel>
 							</panel>
 						</panel>
 						<panel name="QuickCustomResultsPanel" id="QuickCustomResultsPanel" border="TitledBorder(Quick/Custom Results)" layout="GridBagLayout">

@@ -34,7 +34,7 @@ import gov.ca.water.calgui.techservice.impl.DialogSvcImpl;
 import gov.ca.water.eppt.nbui.actions.RunWreslScript;
 import gov.ca.water.quickresults.ui.projectconfig.ProjectConfigurationPanel;
 import gov.ca.water.calgui.busservice.impl.EpptReportingMonths;
-import gov.ca.water.trendreporting.TrendReportingParameters;
+import gov.ca.water.calgui.busservice.impl.TrendReportingParameters;
 import javafx.application.Platform;
 import javafx.embed.swing.JFXPanel;
 import org.openide.modules.ModuleInstall;

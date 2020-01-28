@@ -23,7 +23,7 @@ import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.nio.file.Path;
 import java.time.LocalDate;
-import java.time.temporal.TemporalAdjusters;
+import java.time.Month;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -35,8 +35,13 @@ import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.text.DefaultFormatter;
 
+import gov.ca.water.calgui.EpptInitializationException;
 import gov.ca.water.calgui.bo.ResultUtilsBO;
+import gov.ca.water.calgui.bo.WaterYearDefinition;
+import gov.ca.water.calgui.bo.WaterYearIndex;
 import gov.ca.water.calgui.busservice.ScenarioChangeListener;
+import gov.ca.water.calgui.busservice.impl.WaterYearDefinitionSvc;
+import gov.ca.water.calgui.busservice.impl.WaterYearTableReader;
 import gov.ca.water.calgui.constant.Constant;
 import gov.ca.water.calgui.constant.EpptPreferences;
 import gov.ca.water.calgui.project.EpptProject;
@@ -148,6 +153,13 @@ public final class ProjectConfigurationPanel extends EpptPanel
 	private void initModels()
 	{
 		initializeSpinners();
+		initializeCombos();
+	}
+
+	private void initializeCombos()
+	{
+		JComboBox waterYearDefinitionCombo = (JComboBox) getSwingEngine().find("waterYearDefinitionCombo");
+		WaterYearDefinitionSvc.getWaterYearDefinitionSvc().getDefinitions().forEach(waterYearDefinitionCombo::addItem);
 	}
 
 	private void initListeners()
@@ -255,7 +267,30 @@ public final class ProjectConfigurationPanel extends EpptPanel
 
 	void updateRadioState()
 	{
-		SwingUtilities.invokeLater(() -> _scenarioChangeListeners.forEach(this::postScenarioChanged));
+		SwingUtilities.invokeLater(() ->
+		{
+			EpptScenarioRun baseScenario = getBaseScenario();
+			updateWaterYearIndexCombo(baseScenario);
+			_scenarioChangeListeners.forEach(this::postScenarioChanged);
+		});
+	}
+
+	private void updateWaterYearIndexCombo(EpptScenarioRun baseScenario)
+	{
+		JComboBox waterYearIndexCombo = (JComboBox) getSwingEngine().find("waterYearIndexCombo");
+		waterYearIndexCombo.removeAllItems();
+		if(baseScenario != null)
+		{
+			WaterYearTableReader waterYearTableReader = new WaterYearTableReader(baseScenario.getLookupDirectory());
+			try
+			{
+				waterYearTableReader.read().forEach(waterYearIndexCombo::addItem);
+			}
+			catch(EpptInitializationException e)
+			{
+				LOGGER.fatal("Error reading water year index for scenario: " + baseScenario, e);
+			}
+		}
 	}
 
 	void clearAllScenarios()
@@ -463,13 +498,13 @@ public final class ProjectConfigurationPanel extends EpptPanel
 		if(!hasBase && !scenarioRuns.isEmpty())
 		{
 			scenarioRuns.get(0).setBaseSelected(true);
+			updateWaterYearIndexCombo(scenarioRuns.get(0));
 		}
 		if(!hasAlt && scenarioRuns.size() > 1)
 		{
 			scenarioRuns.get(1).setAltSelected(true);
 		}
 		addScenarios(scenarioRuns);
-
 		//Need to ensure this is called after scenarios are added to TreeTable model
 		Platform.runLater(() -> SwingUtilities.invokeLater(this::updateRadioState));
 	}
@@ -657,6 +692,16 @@ public final class ProjectConfigurationPanel extends EpptPanel
 				|| epptPanelClass == CustomResultsPanel.class;
 		enableChildComponents(enableQuickCustomResults, quickCustomResultsPanel);
 		getSwingEngine().find("chkTAF").setEnabled(epptPanelClass != QAQCReportPanel.class && epptPanelClass != DataAnalysisPanel.class);
+	}
+
+	public WaterYearDefinition getWaterYearDefinition()
+	{
+		return (WaterYearDefinition) ((JComboBox) getSwingEngine().find("waterYearDefinitionCombo")).getSelectedItem();
+	}
+
+	public WaterYearIndex getWaterYearIndex()
+	{
+		return (WaterYearIndex) ((JComboBox) getSwingEngine().find("waterYearIndexCombo")).getSelectedItem();
 	}
 
 	private static final class MyKeyAdapter extends KeyAdapter

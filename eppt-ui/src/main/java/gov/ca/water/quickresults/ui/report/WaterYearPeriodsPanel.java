@@ -102,17 +102,24 @@ public class WaterYearPeriodsPanel extends JFXPanel
 	private void buildWaterYearTypeRangeRows(WaterYearIndex waterYearIndex)
 	{
 		TreeItem<WaterYearPeriodDefinitionsRow> root = _treeView.getRoot();
-		for(Map.Entry<WaterYearPeriod, List<WaterYearPeriodRange>> entry : waterYearIndex.getLongWaterYearPeriodRanges().entrySet())
+		if(waterYearIndex != null && _waterYearDefinition != null)
 		{
-			CheckBoxTreeItem<WaterYearPeriodDefinitionsRow> parent = new CheckBoxTreeItem<>(new WaterYearPeriodRow(entry.getKey()),
-					null, false, true);
-			parent.selectedProperty().addListener((e, o, n) -> parentCheckboxSelected(e, o, n, parent));
-			root.getChildren().add(parent);
-			List<WaterYearPeriodRange> ranges = entry.getValue();
-			SimpleIntegerProperty totalSelectedProperty = new SimpleIntegerProperty(0);
-			ranges.stream()
-				  .map(e -> buildPeriodRow(e, totalSelectedProperty))
-				  .forEach(parent.getChildren()::add);
+			for(Map.Entry<WaterYearPeriod, List<WaterYearPeriodRange>> entry : waterYearIndex.getLongWaterYearPeriodRanges().entrySet())
+			{
+				CheckBoxTreeItem<WaterYearPeriodDefinitionsRow> parent = new CheckBoxTreeItem<>(new WaterYearPeriodRow(entry.getKey()),
+						null, false, true);
+				parent.selectedProperty().addListener((e, o, n) -> parentCheckboxSelected(e, o, n, parent));
+				root.getChildren().add(parent);
+				List<WaterYearPeriodRange> ranges = entry.getValue();
+				SimpleIntegerProperty totalSelectedProperty = new SimpleIntegerProperty(0);
+				ranges.stream()
+					  .map(e -> buildPeriodRow(e, totalSelectedProperty))
+					  .forEach(parent.getChildren()::add);
+			}
+		}
+		else
+		{
+			root.getChildren().clear();
 		}
 	}
 

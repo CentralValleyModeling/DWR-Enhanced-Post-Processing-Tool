@@ -574,49 +574,6 @@
                     </properties>
                     <border type="none"/>
                     <children>
-                      <grid id="3f5ca" layout-manager="GridBagLayout">
-                        <constraints border-constraint="North"/>
-                        <properties/>
-                        <border type="none"/>
-                        <children>
-                          <component id="dcc10" class="javax.swing.JLabel">
-                            <constraints>
-                              <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
-                              <gridbag top="5" left="5" bottom="5" right="5" weightx="0.0" weighty="0.0"/>
-                            </constraints>
-                            <properties>
-                              <text value="Water Year Definition:"/>
-                            </properties>
-                          </component>
-                          <component id="adf90" class="javax.swing.JLabel">
-                            <constraints>
-                              <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
-                              <gridbag top="5" left="5" bottom="5" right="5" weightx="0.0" weighty="0.0"/>
-                            </constraints>
-                            <properties>
-                              <text value="Water Year Index:"/>
-                            </properties>
-                          </component>
-                          <component id="4cb16" class="javax.swing.JComboBox" binding="_waterYearDefinitionCombo">
-                            <constraints>
-                              <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="2" anchor="8" fill="1" indent="0" use-parent-layout="false"/>
-                              <gridbag top="5" left="5" bottom="5" right="5" weightx="0.8" weighty="0.0"/>
-                            </constraints>
-                            <properties>
-                              <enabled value="true"/>
-                            </properties>
-                          </component>
-                          <component id="f38e7" class="javax.swing.JComboBox" binding="_waterYearIndexCombo">
-                            <constraints>
-                              <grid row="1" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="2" anchor="8" fill="1" indent="0" use-parent-layout="false"/>
-                              <gridbag top="5" left="5" bottom="5" right="5" weightx="0.8" weighty="0.0"/>
-                            </constraints>
-                            <properties>
-                              <enabled value="false"/>
-                            </properties>
-                          </component>
-                        </children>
-                      </grid>
                       <component id="3762f" class="gov.ca.water.quickresults.ui.report.WaterYearPeriodsPanel" binding="_waterYearPeriodsPanel" custom-create="true">
                         <constraints border-constraint="Center"/>
                         <properties>
