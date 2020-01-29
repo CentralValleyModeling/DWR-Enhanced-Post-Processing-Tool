@@ -7,8 +7,6 @@ from java.time.format import TextStyle
 from java.util import Locale
 from java.lang import String, Double, System
 from rma.stats import EmpiricalDist
-from gov.ca.water.calgui.scripts import JythonScriptRunner
-from gov.ca.water.calgui.scripts.JythonScriptRunner import *
 from java.time import Month
 from gov.ca.water.calgui.constant import Constant
 

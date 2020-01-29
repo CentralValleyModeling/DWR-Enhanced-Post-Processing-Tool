@@ -32,6 +32,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+import javax.script.CompiledScript;
 import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
 import javax.script.ScriptException;
@@ -39,6 +40,10 @@ import javax.script.ScriptException;
 import gov.ca.water.calgui.bo.WaterYearDefinition;
 import gov.ca.water.calgui.bo.WaterYearIndex;
 import gov.ca.water.calgui.constant.Constant;
+import org.python.jsr223.PyScriptEngine;
+
+import rma.util.lookup.Lookup;
+import rma.util.lookup.Lookups;
 
 import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toMap;
@@ -55,6 +60,7 @@ public class ScriptedEpptStatistics implements EpptStatistic
 	private final ScriptEngine _scriptEngine = new ScriptEngineManager(getClass().getClassLoader()).getEngineByName("python");
 	private final Path _jythonFilePath;
 	private final String _name;
+	private CompiledScript _compile;
 
 	public ScriptedEpptStatistics(Path jythonFilePath)
 	{
@@ -77,6 +83,7 @@ public class ScriptedEpptStatistics implements EpptStatistic
 		{
 			LOGGER.log(Level.SEVERE, "Unable to load Statistics for Trend Reporting dashboard", e);
 		}
+		retval.addAll(Lookup.getDefault().lookupAll(EpptStatistic.class));
 		return retval;
 	}
 
@@ -85,14 +92,20 @@ public class ScriptedEpptStatistics implements EpptStatistic
 		Path jython = Paths.get(Constant.CONFIG_DIR).resolve("jython");
 		try(Stream<Path> stream = Files.walk(jython, 5))
 		{
+			PyScriptEngine pyScriptEngine = (PyScriptEngine) _scriptEngine;
 			List<Path> py = stream.filter(p -> p.toFile().isFile()).filter(p -> p.toString().endsWith("py")).collect(Collectors.toList());
 			for(Path p : py)
 			{
 				try(BufferedReader reader = Files.newBufferedReader(p))
 				{
-					_scriptEngine.eval(reader);
+					pyScriptEngine.eval(reader);
 				}
 			}
+			try(BufferedReader bufferedReader = Files.newBufferedReader(_jythonFilePath))
+			{
+				_scriptEngine.eval(bufferedReader);
+			}
+			_compile = pyScriptEngine.compile("calculate(data)");
 		}
 		catch(IOException | ScriptException e)
 		{
@@ -140,32 +153,25 @@ public class ScriptedEpptStatistics implements EpptStatistic
 		}
 		catch(ClassCastException e)
 		{
-			LOGGER.log(Level.SEVERE,
-					"Error computing statistic " + getName() + " from Jython script: " + _jythonFilePath +
-							" ensure method calculate(Map<LocalDateTime, Double> data) returns a Map<? extends Month, ? extends Double>", e);
+			LOGGER.log(Level.SEVERE, "Error computing statistic " + getName() + " from Jython script: " + _jythonFilePath +
+					" ensure method calculate(Map<LocalDateTime, Double> data) returns a Map<? extends Month, ? extends Double>", e);
 		}
-		catch(IOException | ScriptException e)
+		catch(ScriptException e)
 		{
-			LOGGER.log(Level.SEVERE,
-					"Error computing statistic " + getName() + " from Jython script: " + _jythonFilePath +
-							" ensure method calculate(Map<LocalDateTime, Double> data) is defined",
-					e);
+			LOGGER.log(Level.SEVERE, "Error computing statistic " + getName() + " from Jython script: " + _jythonFilePath +
+					" ensure method calculate(Map<LocalDateTime, Double> data) is defined", e);
 		}
 		return sort(retval, monthPeriod);
 	}
 
 	private Object runScript(Map<Integer, Double> data, WaterYearDefinition waterYearDefinition, WaterYearIndex waterYearIndex,
-							 List<WaterYearIndex> waterYearIndices) throws ScriptException, IOException
+							 List<WaterYearIndex> waterYearIndices) throws ScriptException
 	{
-		try(BufferedReader bufferedReader = Files.newBufferedReader(_jythonFilePath))
-		{
-			_scriptEngine.eval(bufferedReader);
-			_scriptEngine.put("waterYearIndices", waterYearIndices);
-			_scriptEngine.put("data", data);
-			_scriptEngine.put("waterYearIndex", waterYearIndex);
-			_scriptEngine.put("waterYearDefinition", waterYearDefinition);
-			return _scriptEngine.eval("calculate(data)");
-		}
+		_scriptEngine.put("waterYearIndices", waterYearIndices);
+		_scriptEngine.put("data", data);
+		_scriptEngine.put("waterYearIndex", waterYearIndex);
+		_scriptEngine.put("waterYearDefinition", waterYearDefinition);
+		return _compile.eval();
 	}
 
 	private SortedMap<Month, Double> sort(Map<Month, Double> calculate, MonthPeriod monthPeriod)
@@ -216,16 +222,13 @@ public class ScriptedEpptStatistics implements EpptStatistic
 		}
 		catch(ClassCastException e)
 		{
-			LOGGER.log(Level.SEVERE,
-					"Error computing statistic " + getName() + " from Jython script: " + _jythonFilePath +
-							" ensure method calculate(Map<LocalDateTime, Double> data) returns a Map<? extends Month, ? extends Double>", e);
+			LOGGER.log(Level.SEVERE, "Error computing statistic " + getName() + " from Jython script: " + _jythonFilePath +
+					" ensure method calculate(Map<LocalDateTime, Double> data) returns a Map<? extends Month, ? extends Double>", e);
 		}
-		catch(IOException | ScriptException e)
+		catch(ScriptException e)
 		{
-			LOGGER.log(Level.SEVERE,
-					"Error computing statistic " + getName() + " from Jython script: " + _jythonFilePath +
-							" ensure method calculate(Map<LocalDateTime, Double> data) is defined",
-					e);
+			LOGGER.log(Level.SEVERE, "Error computing statistic " + getName() + " from Jython script: " + _jythonFilePath +
+					" ensure method calculate(Map<LocalDateTime, Double> data) is defined", e);
 		}
 		return retval;
 	}

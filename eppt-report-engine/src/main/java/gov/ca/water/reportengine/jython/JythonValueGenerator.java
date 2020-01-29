@@ -33,7 +33,6 @@ import gov.ca.water.calgui.bo.WaterYearType;
 import gov.ca.water.calgui.project.EpptScenarioRun;
 import gov.ca.water.calgui.scripts.DssCache;
 import gov.ca.water.calgui.scripts.DssMissingRecordException;
-import gov.ca.water.calgui.scripts.JythonScriptRunner;
 import gov.ca.water.reportengine.EpptReportException;
 
 import static java.util.stream.Collectors.toList;
@@ -49,7 +48,7 @@ public class JythonValueGenerator
 	private final PeriodFilter _periodFilter;
 	private final AnnualPeriodFilter _annualPeriodFilter;
 	private final EpptScenarioRun _scenarioRun;
-	private final String _function;
+	private final JythonScript _function;
 	private final JythonScriptRunner _scriptRunner;
 
 	public JythonValueGenerator(EpptScenarioRun scenarioRun, String function,

@@ -29,7 +29,8 @@ import javax.script.ScriptException;
 import com.google.common.flogger.FluentLogger;
 import gov.ca.water.calgui.bo.CommonPeriodFilter;
 import gov.ca.water.calgui.scripts.DssCache;
-import gov.ca.water.calgui.scripts.JythonScriptRunner;
+import gov.ca.water.reportengine.jython.JythonScript;
+import gov.ca.water.reportengine.jython.JythonScriptRunner;
 import gov.ca.water.calgui.techservice.impl.FilePredicates;
 import gov.ca.water.reportengine.EpptReportException;
 import gov.ca.water.reportengine.jython.JythonScriptBuilder;
@@ -144,13 +145,13 @@ public class StandardSummaryReader
 
 	private String attemptFunction(String reference)
 	{
-		Optional<String> script = JythonScriptBuilder.getInstance().getScript(reference);
+		Optional<JythonScript> script = JythonScriptBuilder.getInstance().getScript(reference);
 		return script.map(this::runTitleScript).orElse(reference);
 	}
 
-	private String runTitleScript(String script)
+	private String runTitleScript(JythonScript script)
 	{
-		String retval = script;
+		String retval = String.join(",", script.getArguments());
 		JythonScriptRunner runner = new JythonScriptRunner(null,
 				new CommonPeriodFilter(LocalDateTime.of(1850, Month.JANUARY, 1, 0, 0),
 						LocalDateTime.of(2150, Month.JANUARY, 1, 0, 0)), null, _dssCache);

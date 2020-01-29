@@ -1,5 +1,5 @@
 /*
- * Enhanced Post Processing Tool (EPPT) Copyright (c) 2019.
+ * Enhanced Post Processing Tool (EPPT) Copyright (c) 2020.
  *
  * EPPT is copyrighted by the State of California, Department of Water Resources. It is licensed
  * under the GNU General Public License, version 2. This means it can be
@@ -10,7 +10,7 @@
  * GNU General Public License
  */
 
-package gov.ca.water.calgui.scripts;
+package gov.ca.water.reportengine.jython;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -32,6 +32,9 @@ import gov.ca.water.calgui.bo.WaterYearPeriod;
 import gov.ca.water.calgui.bo.WaterYearPeriodRange;
 import gov.ca.water.calgui.constant.Constant;
 import gov.ca.water.calgui.project.EpptScenarioRun;
+import gov.ca.water.calgui.scripts.DssCache;
+import gov.ca.water.calgui.scripts.DssReader;
+import gov.ca.water.calgui.scripts.TitleReader;
 
 import static java.util.stream.Collectors.toList;
 
@@ -43,100 +46,80 @@ import static java.util.stream.Collectors.toList;
  */
 public class JythonScriptRunner
 {
-	private static ScriptEngine PYTHON_ENGINE = new ScriptEngineManager().getEngineByName("python");
 	private final EpptScenarioRun _epptScenarioRun;
+	private final CommonPeriodFilter _commonPeriodFilter;
 	private final WaterYearDefinition _waterYearDefinition;
 	private final DssCache _dssCache;
 	private static final FluentLogger LOGGER = FluentLogger.forEnclosingClass();
 
 	private DssReader _dssReader;
+	private PeriodFilter _periodFilter;
+	private List<WaterYearPeriodRange> _waterYearPeriodRanges;
+	private Double _comparisonValue;
+	private WaterYearPeriod _waterYearType;
+	private WaterYearIndex _waterYearIndex;
+	private AnnualPeriodFilter _annualPeriodFilter;
 
 	public JythonScriptRunner(EpptScenarioRun epptScenarioRun, CommonPeriodFilter commonPeriodFilter,
 							  WaterYearDefinition waterYearDefinition, DssCache dssCache)
 	{
 
 		_epptScenarioRun = epptScenarioRun;
+		_commonPeriodFilter = commonPeriodFilter;
 		_waterYearDefinition = waterYearDefinition;
 		_dssCache = dssCache;
-		if(PYTHON_ENGINE == null)
-		{
-			throw new IllegalArgumentException("Unable to find jython engine");
-		}
-		initializeGlobalVariables(commonPeriodFilter);
 	}
 
-	public static void initializeScriptDirectory()
-	{
-		try(Stream<Path> stream = Files.walk(Constant.QA_QC_SCRIPT_DIRECTORY, 1))
-		{
-			List<Path> collect = stream.filter(p -> p.toString().endsWith("py")).collect(toList());
-			for(Path path : collect)
-			{
-				try(BufferedReader reader = Files.newBufferedReader(path))
-				{
-					if(PYTHON_ENGINE == null)
-					{
-						PYTHON_ENGINE = new ScriptEngineManager().getEngineByName("python");
-						PYTHON_ENGINE.eval(reader);
-					}
-				}
-			}
-		}
-		catch(IOException | ScriptException e)
-		{
-			LOGGER.atSevere().withCause(e).log("Unable to initialize utility scripts: %s",  Constant.QA_QC_SCRIPT_DIRECTORY);
-		}
-	}
-
-	private void initializeGlobalVariables(CommonPeriodFilter commonPeriodFilter)
+	private void initializeGlobalVariables(JythonScript jythonScript)
 	{
 		_dssReader = new DssReader(_epptScenarioRun, _waterYearDefinition, _dssCache);
 		TitleReader titleReader = new TitleReader(_epptScenarioRun);
-		PYTHON_ENGINE.put("dssReader", _dssReader);
-		PYTHON_ENGINE.put("titleReader", titleReader);
-		PYTHON_ENGINE.put("commonPeriodFilter", commonPeriodFilter);
-		PYTHON_ENGINE.put("annualCommonPeriodFilter", (AnnualPeriodFilter) input ->
+		jythonScript.put("dssReader", _dssReader);
+		jythonScript.put("titleReader", titleReader);
+		jythonScript.put("commonPeriodFilter", _commonPeriodFilter);
+		jythonScript.put("annualCommonPeriodFilter", (AnnualPeriodFilter) input ->
 		{
 			Integer year = input.getKey();
-			return year >= commonPeriodFilter.getStart().getYear()
-					&& year <= commonPeriodFilter.getEnd().getYear();
+			return year >= _commonPeriodFilter.getStart().getYear()
+					&& year <= _commonPeriodFilter.getEnd().getYear();
 		});
-		setWaterYearType(null);
-		setWaterYearIndex(null);
-		setWaterYearPeriodRanges(null);
-		setPeriodFilter(null);
-		setAnnualPeriodFilter(null);
-		setComparisonValue(null);
+		jythonScript.put("periodFilter", _periodFilter);
+		jythonScript.put("waterYearPeriodRanges", _waterYearPeriodRanges);
+		jythonScript.put("comparisonValue", _comparisonValue);
+		jythonScript.put("waterYearType", _waterYearType);
+		jythonScript.put("waterYearIndex", _waterYearIndex);
+		jythonScript.put("annualPeriodFilter", _annualPeriodFilter);
 	}
 
 	public void setPeriodFilter(PeriodFilter periodFilter)
 	{
-		PYTHON_ENGINE.put("periodFilter", periodFilter);
+		_periodFilter = periodFilter;
 	}
 
-	public Object runScript(String script) throws ScriptException
+	public Object runScript(JythonScript script) throws ScriptException
 	{
-		return PYTHON_ENGINE.eval(script);
+		initializeGlobalVariables(script);
+		return script.eval();
 	}
 
 	public void setWaterYearPeriodRanges(List<WaterYearPeriodRange> waterYearPeriodRanges)
 	{
-		PYTHON_ENGINE.put("waterYearPeriodRanges", waterYearPeriodRanges);
+		_waterYearPeriodRanges = waterYearPeriodRanges;
 	}
 
 	public void setComparisonValue(Double comparisonValue)
 	{
-		PYTHON_ENGINE.put("comparisonValue", comparisonValue);
+		_comparisonValue = comparisonValue;
 	}
 
 	void setWaterYearType(WaterYearPeriod waterYearType)
 	{
-		PYTHON_ENGINE.put("waterYearType", waterYearType);
+		_waterYearType = waterYearType;
 	}
 
 	public void setWaterYearIndex(WaterYearIndex waterYearIndex)
 	{
-		PYTHON_ENGINE.put("waterYearIndex", waterYearIndex);
+		_waterYearIndex = waterYearIndex;
 	}
 
 	public String getUnits()
@@ -146,6 +129,6 @@ public class JythonScriptRunner
 
 	public void setAnnualPeriodFilter(AnnualPeriodFilter annualPeriodFilter)
 	{
-		PYTHON_ENGINE.put("annualPeriodFilter", annualPeriodFilter);
+		_annualPeriodFilter = annualPeriodFilter;
 	}
 }
