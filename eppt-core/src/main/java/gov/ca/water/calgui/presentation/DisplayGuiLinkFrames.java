@@ -109,61 +109,54 @@ final class DisplayGuiLinkFrames extends DisplayFrames
 		else
 		{
 			dssGrabber.setDateRange(getStart(), getEnd());
-			TimeSeriesContainer[] primaryResults = dssGrabber.getPrimarySeries();
-			TimeSeriesContainer[] secondaryResults = dssGrabber.getSecondarySeries();
-			dssGrabber.calcTAFforCFS(primaryResults, secondaryResults);
-			TimeSeriesContainer[] diffResults = dssGrabber.getDifferenceSeries(primaryResults);
-			JTabbedPane tabbedPane = displayFrameForData(dssGrabber, guiLink, new DisplayInput(primaryResults, secondaryResults, diffResults));
+			JTabbedPane tabbedPane = displayFrameForData(dssGrabber, guiLink);
 			tabbedPanes.add(tabbedPane);
 
 		}
 	}
 
-	private JTabbedPane displayFrameForData(IDSSGrabber1Svc dssGrabber, GUILinksAllModelsBO guiLink, DisplayInput displayInput)
+	private JTabbedPane displayFrameForData(IDSSGrabber1Svc dssGrabber, GUILinksAllModelsBO guiLink)
 	{
 		JTabbedPane tabbedPane = new JTabbedPane();
 		Map<GUILinksAllModelsBO.Model, List<String>> missing = dssGrabber.getMissingList();
-		if(displayInput.getPrimaryResults() != null && displayInput.getPrimaryResults()[0] != null)
+		List<EpptScenarioRun> scenarioRuns = new ArrayList<>();
+		scenarioRuns.add(getBaseRun());
+		scenarioRuns.addAll(getAlternatives());
+		Map<EpptScenarioRun, List<TimeSeriesContainer>> primaryScenarioRunData = new TreeMap<>(Comparator.comparing(scenarioRuns::indexOf));
+		Map<EpptScenarioRun, List<TimeSeriesContainer>> secondaryScenarioRunData = new TreeMap<>(Comparator.comparing(scenarioRuns::indexOf));
+		Map<EpptScenarioRun, List<String>> secondarySuffixes = new TreeMap<>(Comparator.comparing(scenarioRuns::indexOf));
+		for(EpptScenarioRun epptScenarioRun : scenarioRuns)
 		{
-			List<EpptScenarioRun> scenarioRuns = new ArrayList<>();
-			scenarioRuns.add(getBaseRun());
-			scenarioRuns.addAll(getAlternatives());
-			Map<EpptScenarioRun, List<TimeSeriesContainer>> primaryScenarioRunData = new TreeMap<>(Comparator.comparing(scenarioRuns::indexOf));
-			Map<EpptScenarioRun, List<TimeSeriesContainer>> secondaryScenarioRunData = new TreeMap<>(Comparator.comparing(scenarioRuns::indexOf));
-			Map<EpptScenarioRun, List<String>> secondarySuffixes = new TreeMap<>(Comparator.comparing(scenarioRuns::indexOf));
-			for(EpptScenarioRun epptScenarioRun : scenarioRuns)
-			{
-				DSSGrabber1SvcImpl dssGrabber1Svc = buildDssGrabber(epptScenarioRun, guiLink, getPlotConfigurationState().isDisplayTaf(),
-						getStart(),
-						getEnd());
-				TimeSeriesContainer primarySeries = dssGrabber1Svc.getPrimarySeries()[0];
-				TimeSeriesContainer secondarySeries = dssGrabber1Svc.getSecondarySeries()[0];
-				primaryScenarioRunData.put(epptScenarioRun, Collections.singletonList(primarySeries));
-				secondaryScenarioRunData.put(epptScenarioRun, Collections.singletonList(secondarySeries));
-				secondarySuffixes.put(epptScenarioRun, Collections.singletonList(guiLink.getLegend()));
-			}
-			if(getPlotConfigurationState().isDisplayTimeSeriesPlot())
-			{
-				plotTimeSeries(primaryScenarioRunData, secondaryScenarioRunData, guiLink.getPlotTitle(), tabbedPane);
-			}
-			if(getPlotConfigurationState().isDoExceedance())
-			{
-				plotExceedance(primaryScenarioRunData, secondaryScenarioRunData, guiLink.getPlotTitle(), tabbedPane);
-			}
-			if(getPlotConfigurationState().isDisplayBoxAndWhiskerPlot())
-			{
-				plotBoxPlot(primaryScenarioRunData, secondaryScenarioRunData, guiLink.getPlotTitle(), tabbedPane);
-			}
-			if(getPlotConfigurationState().isDisplayMonthlyTable())
-			{
-				plotMonthlyTable(new HashMap<>(), primaryScenarioRunData, secondarySuffixes, secondaryScenarioRunData, guiLink.getPlotTitle(),
-						tabbedPane);
-			}
-			if(getPlotConfigurationState().isDisplaySummaryTable())
-			{
-				plotSummaryTable(new HashMap<>(), primaryScenarioRunData, secondarySuffixes,
-						secondaryScenarioRunData, guiLink.getPlotTitle(), tabbedPane);
-			}
+			DSSGrabber1SvcImpl dssGrabber1Svc = buildDssGrabber(epptScenarioRun, guiLink, getPlotConfigurationState().isDisplayTaf(),
+					getStart(),
+					getEnd());
+			TimeSeriesContainer primarySeries = dssGrabber1Svc.getPrimarySeries()[0];
+			TimeSeriesContainer secondarySeries = dssGrabber1Svc.getSecondarySeries()[0];
+			primaryScenarioRunData.put(epptScenarioRun, Collections.singletonList(primarySeries));
+			secondaryScenarioRunData.put(epptScenarioRun, Collections.singletonList(secondarySeries));
+			secondarySuffixes.put(epptScenarioRun, Collections.singletonList(guiLink.getLegend()));
+		}
+		if(getPlotConfigurationState().isDisplayTimeSeriesPlot())
+		{
+			plotTimeSeries(primaryScenarioRunData, secondaryScenarioRunData, guiLink.getPlotTitle(), tabbedPane);
+		}
+		if(getPlotConfigurationState().isDoExceedance())
+		{
+			plotExceedance(primaryScenarioRunData, secondaryScenarioRunData, guiLink.getPlotTitle(), tabbedPane);
+		}
+		if(getPlotConfigurationState().isDisplayBoxAndWhiskerPlot())
+		{
+			plotBoxPlot(primaryScenarioRunData, secondaryScenarioRunData, guiLink.getPlotTitle(), tabbedPane);
+		}
+		if(getPlotConfigurationState().isDisplayMonthlyTable())
+		{
+			plotMonthlyTable(new HashMap<>(), primaryScenarioRunData, secondarySuffixes, secondaryScenarioRunData, guiLink.getPlotTitle(),
+					tabbedPane);
+		}
+		if(getPlotConfigurationState().isDisplaySummaryTable())
+		{
+			plotSummaryTable(new HashMap<>(), primaryScenarioRunData, secondarySuffixes, secondaryScenarioRunData, guiLink.getPlotTitle(),
+					tabbedPane);
 		}
 		List<String> collect = missing.values()
 									  .stream()

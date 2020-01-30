@@ -26,6 +26,7 @@ import javax.swing.*;
 import gov.ca.water.calgui.EpptInitializationException;
 import gov.ca.water.calgui.busservice.impl.DetailedIssuesReader;
 import gov.ca.water.calgui.busservice.impl.GuiLinksSeedDataSvcImpl;
+import gov.ca.water.calgui.busservice.impl.ScriptedEpptStatistics;
 import gov.ca.water.calgui.busservice.impl.ThresholdLinksSeedDataSvc;
 import gov.ca.water.calgui.busservice.impl.WaterYearDefinitionSvc;
 import gov.ca.water.calgui.constant.EpptPreferences;
@@ -140,6 +141,7 @@ public class Installer extends ModuleInstall
 			WaterYearDefinitionSvc.createSeedDataSvcImplInstance();
 			DetailedIssuesReader.createDetailedIssues();
 			TrendReportingParameters.createTrendReportingParametersInstance();
+			ScriptedEpptStatistics.createScriptedStatistics();
 			//This is done so that the JFXPanels created on startup have already loaded up the Platform thread.
 			Platform.setImplicitExit(false);
 			new JFXPanel();

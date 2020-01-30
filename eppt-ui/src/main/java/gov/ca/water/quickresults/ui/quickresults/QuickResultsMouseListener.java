@@ -16,6 +16,7 @@ import java.awt.HeadlessException;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.time.LocalDate;
+import java.time.YearMonth;
 import java.util.Collections;
 import java.util.List;
 import javax.swing.*;
@@ -75,12 +76,14 @@ class QuickResultsMouseListener extends MouseAdapter
 				{
 					ProjectConfigurationPanel projectConfigurationPanel = ProjectConfigurationPanel.getProjectConfigurationPanel();
 					PlotConfigurationState plotConfigurationState = projectConfigurationPanel.plotConfigurationState();
-					LocalDate startMonth = projectConfigurationPanel.getStartMonth();
-					LocalDate endMonth = projectConfigurationPanel.getEndMonth();
+					YearMonth startMonth = projectConfigurationPanel.getStartMonth();
+					YearMonth endMonth = projectConfigurationPanel.getEndMonth();
 					String name = chk.getName();
 					GUILinksAllModelsBO guiLink = GuiLinksSeedDataSvcImpl.getSeedDataSvcImplInstance().getGuiLink(name);
+					LocalDate start = LocalDate.of(startMonth.getYear(), startMonth.getMonth(), 1).minusDays(2);
+					LocalDate end = LocalDate.of(endMonth.getYear(), endMonth.getMonth(), 1).plusMonths(1).plusDays(2);
 					_displayHelper.showDisplayFramesGuiLink(plotConfigurationState, Collections.singletonList(guiLink), baseScenario, alternatives,
-							startMonth, endMonth);
+							start, end);
 				}
 			}
 		}

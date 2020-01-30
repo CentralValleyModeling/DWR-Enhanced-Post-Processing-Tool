@@ -38,6 +38,7 @@ import gov.ca.water.calgui.bo.WaterYearPeriod;
 import gov.ca.water.calgui.bo.WaterYearPeriodRange;
 import gov.ca.water.calgui.constant.Constant;
 import gov.ca.water.calgui.project.EpptScenarioRun;
+import gov.ca.water.calgui.scripts.DssCache;
 import gov.ca.water.calgui.scripts.DssReader;
 
 import hec.heclib.util.HecTime;
@@ -74,61 +75,57 @@ class EpptReportingComputer
 	}
 
 	EpptReportingScenarioComputed computeCfs(EpptScenarioRun scenarioRun, List<String> primarySuffixes, List<TimeSeriesContainer> primarySeries,
-											 List<String> secondarySuffixes, List<TimeSeriesContainer> secondarySeries,
-											 LocalDate start, LocalDate end)
+											 List<String> secondarySuffixes, List<TimeSeriesContainer> secondarySeries)
 	{
-		return compute(scenarioRun, primarySuffixes, primarySeries, secondarySuffixes, secondarySeries, false, start, end);
+		return compute(scenarioRun, primarySuffixes, primarySeries, secondarySuffixes, secondarySeries, false);
 	}
 
 	EpptReportingScenarioComputed computeTaf(EpptScenarioRun scenarioRun, List<String> primarySuffixes, List<TimeSeriesContainer> primarySeries,
-											 List<String> secondarySuffixes, List<TimeSeriesContainer> secondarySeries,
-											 LocalDate start, LocalDate end)
+											 List<String> secondarySuffixes, List<TimeSeriesContainer> secondarySeries)
 	{
-		return compute(scenarioRun, primarySuffixes, primarySeries, secondarySuffixes, secondarySeries, true, start, end);
+		return compute(scenarioRun, primarySuffixes, primarySeries, secondarySuffixes, secondarySeries, true);
 	}
 
 	private EpptReportingScenarioComputed compute(EpptScenarioRun scenarioRun, List<String> primaryDataSuffixes,
 												  List<TimeSeriesContainer> primarySeries, List<String> secondaryDataSuffixes,
-												  List<TimeSeriesContainer> secondarySeries,
-												  boolean convertTaf, LocalDate start, LocalDate end)
+												  List<TimeSeriesContainer> secondarySeries, boolean convertTaf)
 	{
-		return new EpptReportingScenarioComputed(scenarioRun, compute(scenarioRun, primaryDataSuffixes, primarySeries, convertTaf, start, end),
-				compute(scenarioRun, secondaryDataSuffixes, secondarySeries, convertTaf, start, end));
+		return new EpptReportingScenarioComputed(scenarioRun, compute(scenarioRun, primaryDataSuffixes, primarySeries, convertTaf),
+				compute(scenarioRun, secondaryDataSuffixes, secondarySeries, convertTaf));
 	}
 
 	private EpptReportingComputed compute(EpptScenarioRun scenarioRun, List<String> dataSuffixes, List<TimeSeriesContainer> primarySeries,
-										  boolean convertTaf,
-										  LocalDate start, LocalDate end)
+										  boolean convertTaf)
 	{
-		int offset = (int) TimeUnit.MILLISECONDS.toMinutes(TimeZone.getDefault().getRawOffset());
 		List<SortedMap<LocalDateTime, Double>> fullSeries = new ArrayList<>();
 		List<SortedMap<Integer, Double>> filteredPeriodYearly = new ArrayList<>();
 		List<String> units = new ArrayList<>();
 		List<SortedMap<WaterYearPeriod, Double>> waterYearPeriodGroupedYearly = new ArrayList<>();
 		List<SortedMap<Month, Double>> monthly = new ArrayList<>();
 		List<Double> yearlyStatistic = new ArrayList<>();
-		for(int i = 0; i < primarySeries.size(); i++)
+		List<SortedMap<WaterYearPeriod, SortedMap<Month, Double>>> statisticallyComputedPeriodMonthly = new ArrayList<>();
+		for(TimeSeriesContainer tsc : primarySeries)
 		{
-			TimeSeriesContainer tsc = primarySeries.get(i);
 			boolean aggregateYearly = isAggregateYearly(convertTaf, tsc);
-			if(convertTaf)
-			{
-				calcTAFforCFS(tsc);
-			}
 			units.add(getUnits(tsc));
-			NavigableMap<LocalDateTime, Double> full = getFullTimeSeries(start, end, offset, tsc, i);
+			NavigableMap<LocalDateTime, Double> full = new DssReader(scenarioRun, _waterYearDefinition, new DssCache())
+					.timeSeriesContainerToMap(new TimeSeriesContainer[]{tsc}, convertTaf);
 			fullSeries.add(full);
 			NavigableMap<Integer, Double> yearly = DssReader.filterPeriodYearly(full, _monthPeriod, aggregateYearly);
 			filteredPeriodYearly.add(yearly);
 			SortedMap<Month, NavigableMap<Integer, Double>> monthlySplit = filterPeriodMonthly(full);
-			waterYearPeriodGroupedYearly.add(groupWaterYearPeriod(scenarioRun, yearly));
-			monthly.add(_statistics.calculateMonthly(monthlySplit, _waterYearDefinition,
-					getWaterYearIndexForScenario(scenarioRun), getWaterYearIndicesForScenario(scenarioRun), _monthPeriod));
-			yearlyStatistic.add(_statistics.calculateYearly(yearly, _waterYearDefinition,
+			SortedMap<WaterYearPeriod, Double> waterYearPeriodAnnual = groupWaterYearPeriod(scenarioRun, yearly);
+			waterYearPeriodGroupedYearly.add(waterYearPeriodAnnual);
+			statisticallyComputedPeriodMonthly.add(groupWaterYearPeriodMonthly(scenarioRun, monthlySplit));
+			SortedMap<Month, Double> monthDoubleSortedMap = _statistics.calculateMonthly(monthlySplit, _waterYearDefinition,
+					getWaterYearIndexForScenario(scenarioRun), getWaterYearIndicesForScenario(scenarioRun), _monthPeriod);
+			monthly.add(monthDoubleSortedMap);
+			Double yearlyValueForStat = _statistics.calculateYearly(yearly, _waterYearDefinition,
 					getWaterYearIndexForScenario(scenarioRun),
-					getWaterYearIndicesForScenario(scenarioRun)));
+					getWaterYearIndicesForScenario(scenarioRun));
+			yearlyStatistic.add(yearlyValueForStat);
 		}
-		return new EpptReportingComputed(dataSuffixes, fullSeries, filteredPeriodYearly, yearlyStatistic, monthly,
+		return new EpptReportingComputed(dataSuffixes, fullSeries, filteredPeriodYearly, statisticallyComputedPeriodMonthly, yearlyStatistic, monthly,
 				waterYearPeriodGroupedYearly, units);
 	}
 
@@ -177,33 +174,39 @@ class EpptReportingComputer
 		return aggregateYearly;
 	}
 
-	private void calcTAFforCFS(TimeSeriesContainer tsc)
+	private SortedMap<WaterYearPeriod, SortedMap<Month, Double>> groupWaterYearPeriodMonthly(EpptScenarioRun epptScenarioRun,
+																					   SortedMap<Month, NavigableMap<Integer, Double>> filteredYearlyPeriod)
 	{
-		if(tsc != null)
+		WaterYearIndex waterYearIndexForScenario = getWaterYearIndexForScenario(epptScenarioRun);
+		List<WaterYearPeriod> sortedPeriods = waterYearIndexForScenario.getSortedPeriods();
+		if(sortedPeriods.stream().anyMatch(WaterYearPeriod::isDry) && sortedPeriods.stream().anyMatch(WaterYearPeriod::isCritical))
 		{
-			try
+			sortedPeriods.add(new WaterYearPeriod("Dry & Critical"));
+		}
+		SortedMap<WaterYearPeriod, SortedMap<Month, Double>> retval = new TreeMap<>(Comparator.comparingInt(sortedPeriods::indexOf));
+		List<WaterYearIndex> waterYearIndicesForScenario = getWaterYearIndicesForScenario(epptScenarioRun);
+		for(Map.Entry<Month, NavigableMap<Integer, Double>> entry : filteredYearlyPeriod.entrySet())
+		{
+			NavigableMap<Integer, Double> value = entry.getValue();
+			for(WaterYearPeriod waterYearPeriod : sortedPeriods)
 			{
-				if("CFS".equalsIgnoreCase(tsc.getUnits()))
-				{
-					HecTime ht = new HecTime();
-					Calendar calendar = Calendar.getInstance();
-					// Primary series
-					for(int j = 0; j < tsc.numberValues; j++)
-					{
-
-						ht.set(tsc.times[j]);
-						calendar.set(ht.year(), ht.month() - 1, 1);
-						double monthlyTAF = tsc.values[j]
-								* calendar.getActualMaximum(Calendar.DAY_OF_MONTH) * CFS_2_TAF_DAY;
-						tsc.values[j] = monthlyTAF;
-					}
-				}
-			}
-			catch(RuntimeException ex)
-			{
-				LOGGER.log(Level.SEVERE, "Unable to calculate TAF.", ex);
+				List<WaterYearPeriodRange> periodRange = waterYearIndexForScenario.getWaterYearTypeGroups().getOrDefault(waterYearPeriod,
+						new ArrayList<>())
+																				  .stream()
+																				  .map(e -> new WaterYearPeriodRange(e.getWaterYearPeriod(), e, e))
+																				  .collect(toList());
+				WaterYearAnnualPeriodRangesFilter waterYearPeriodRangesFilter = new WaterYearAnnualPeriodRangesFilter(periodRange);
+				NavigableMap<Integer, Double> grouped = value.entrySet()
+																			.stream()
+																			.filter(waterYearPeriodRangesFilter)
+																			.collect(toMap(Map.Entry::getKey, Map.Entry::getValue, (o, n) -> n,
+																					TreeMap::new));
+				Double calculate = _statistics.calculateYearly(grouped, _waterYearDefinition, waterYearIndexForScenario, waterYearIndicesForScenario);
+				Map<Month, Double> monthDoubleMap = retval.computeIfAbsent(waterYearPeriod, v -> new TreeMap<>());
+				monthDoubleMap.put(entry.getKey(), calculate);
 			}
 		}
+		return retval;
 	}
 
 	private SortedMap<WaterYearPeriod, Double> groupWaterYearPeriod(EpptScenarioRun epptScenarioRun,

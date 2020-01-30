@@ -19,6 +19,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalDate;
+import java.time.YearMonth;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -255,13 +256,13 @@ public class TrendReportPanel extends JFXPanel
 		_scenarioRuns.add(baseRun);
 		_scenarioRuns.addAll(alternatives);
 		boolean taf = ProjectConfigurationPanel.getProjectConfigurationPanel().isTaf();
-		LocalDate startMonth = ProjectConfigurationPanel.getProjectConfigurationPanel().getStartMonth();
-		LocalDate endMonth = ProjectConfigurationPanel.getProjectConfigurationPanel().getEndMonth();
+		YearMonth startMonth = ProjectConfigurationPanel.getProjectConfigurationPanel().getStartMonth();
+		YearMonth endMonth = ProjectConfigurationPanel.getProjectConfigurationPanel().getEndMonth();
 		WaterYearIndex waterYearIndex = ProjectConfigurationPanel.getProjectConfigurationPanel().getWaterYearIndex();
 		Platform.runLater(() ->loadPane(startMonth, endMonth, taf, waterYearIndex));
 	}
 
-	private void loadPane(LocalDate start, LocalDate end, boolean taf, WaterYearIndex waterYearIndex)
+	private void loadPane(YearMonth start, YearMonth end, boolean taf, WaterYearIndex waterYearIndex)
 	{
 		TrendReportToggleButton button = (TrendReportToggleButton) _toggleGroup.getSelectedToggle();
 		if(button != null)
@@ -275,14 +276,14 @@ public class TrendReportPanel extends JFXPanel
 
 	private void inputsChanged(ObservableValue<?> e, Object o, Object n)
 	{
-		LocalDate startMonth = ProjectConfigurationPanel.getProjectConfigurationPanel().getStartMonth();
-		LocalDate endMonth = ProjectConfigurationPanel.getProjectConfigurationPanel().getEndMonth();
+		YearMonth startMonth = ProjectConfigurationPanel.getProjectConfigurationPanel().getStartMonth();
+		YearMonth endMonth = ProjectConfigurationPanel.getProjectConfigurationPanel().getEndMonth();
 		boolean taf = ProjectConfigurationPanel.getProjectConfigurationPanel().isTaf();
 		WaterYearIndex waterYearIndex = ProjectConfigurationPanel.getProjectConfigurationPanel().getWaterYearIndex();
 		loadPane(startMonth, endMonth, taf, waterYearIndex);
 	}
 
-	private void loadJavascript(Path path, LocalDate start, LocalDate end, boolean taf, WaterYearIndex waterYearIndex)
+	private void loadJavascript(Path path, YearMonth start, YearMonth end, boolean taf, WaterYearIndex waterYearIndex)
 	{
 		List<TrendReportingParameters.TrendParameter> guiLink = new ArrayList<>(_parametersPane.getSelectedItems());
 		List<EpptStatistic> statistic = new ArrayList<>(_statisticsPane.getSelectedItems());
@@ -399,7 +400,7 @@ public class TrendReportPanel extends JFXPanel
 	}
 
 	private synchronized List<JSONObject> computeScenarios(List<TrendReportingParameters.TrendParameter> parameters, List<EpptStatistic> statistics,
-														   List<MonthPeriod> monthPeriods, LocalDate start, LocalDate end,
+														   List<MonthPeriod> monthPeriods, YearMonth startMonth, YearMonth endMonth,
 														   boolean taf, List<EpptScenarioRun> scenarioRuns, WaterYearIndex selectedIndex)
 	{
 		Map<EpptScenarioRun, WaterYearIndex> selectedIndexes = new HashMap<>();
@@ -414,6 +415,8 @@ public class TrendReportPanel extends JFXPanel
 				{
 					GUILinksAllModelsBO guiLink = parameter.getGuiLink();
 					Map<EpptScenarioRun, List<TimeSeriesContainer>> scenarioRunData = new TreeMap<>(Comparator.comparing(scenarioRuns::indexOf));
+					LocalDate start = LocalDate.of(startMonth.getYear(), startMonth.getMonth(), 1).minusDays(2);
+					LocalDate end = LocalDate.of(endMonth.getYear(), endMonth.getMonth(), 1).plusMonths(1).plusDays(2);
 					for(EpptScenarioRun epptScenarioRun : scenarioRuns)
 					{
 						DSSGrabber1SvcImpl dssGrabber = buildDssGrabber(epptScenarioRun, guiLink, taf, start, end);
@@ -421,7 +424,7 @@ public class TrendReportPanel extends JFXPanel
 						scenarioRunData.put(epptScenarioRun, Collections.singletonList(primarySeries));
 					}
 					EpptReportingComputedSet epptReportingComputedSet = EpptReportingComputedSet.computeForMetrics(guiLink.getPlotTitle(),
-							statistic, monthPeriod, start, end, taf, new HashMap<>(), scenarioRunData, new HashMap<>(), new HashMap<>(),
+							statistic, monthPeriod, taf, new HashMap<>(), scenarioRunData, new HashMap<>(), new HashMap<>(),
 							PlotConfigurationState.ComparisonType.COMPARISON, selectedIndexes, allIndexes);
 					JSONObject jsonObject = epptReportingComputedSet.toJson();
 					LOGGER.log(Level.FINE, "{0}", jsonObject);

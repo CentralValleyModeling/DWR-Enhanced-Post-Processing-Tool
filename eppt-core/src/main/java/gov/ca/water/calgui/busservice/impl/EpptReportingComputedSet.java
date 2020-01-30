@@ -61,8 +61,7 @@ public final class EpptReportingComputedSet
 	}
 
 	public static EpptReportingComputedSet computeForMetrics(String plotTitle, EpptStatistic statistic,
-															 MonthPeriod monthPeriod, LocalDate start,
-															 LocalDate end, boolean taf,
+															 MonthPeriod monthPeriod, boolean taf,
 															 Map<EpptScenarioRun, List<String>> primarySuffixes,
 															 Map<EpptScenarioRun, List<TimeSeriesContainer>> scenarioRunData,
 															 Map<EpptScenarioRun, List<String>> secondarySuffixes,
@@ -73,14 +72,13 @@ public final class EpptReportingComputedSet
 	{
 		EpptReportingComputer trendReportingComputer = new EpptReportingComputer(statistic, monthPeriod,
 				selectedIndicies, allIndicies);
-		return buildComputedValues(plotTitle, statistic, monthPeriod, start, end, taf, primarySuffixes, scenarioRunData, secondarySuffixes,
+		return buildComputedValues(plotTitle, statistic, monthPeriod, taf, primarySuffixes, scenarioRunData, secondarySuffixes,
 				seconaryScenarioRunData, comparisonType, trendReportingComputer);
 	}
 
 
 	public static EpptReportingComputedSet computeDiffForMetrics(String plotTitle, EpptStatistic statistic,
-																 MonthPeriod monthPeriod, LocalDate start,
-																 LocalDate end, boolean taf, EpptScenarioRun baseRun,
+																 MonthPeriod monthPeriod, boolean taf, EpptScenarioRun baseRun,
 																 Map<EpptScenarioRun, List<String>> primarySuffixes,
 																 Map<EpptScenarioRun, List<TimeSeriesContainer>> scenarioRunData,
 																 Map<EpptScenarioRun, List<String>> secondarySuffixes,
@@ -93,7 +91,7 @@ public final class EpptReportingComputedSet
 				selectedIndicies, allIndicies, scenarioRunData.get(baseRun));
 		List<TimeSeriesContainer> primaryData = scenarioRunData.remove(baseRun);
 		List<TimeSeriesContainer> secondaryData = secondaryScenarioRunData.remove(baseRun);
-		EpptReportingComputedSet retval = buildComputedValues(plotTitle, statistic, monthPeriod, start, end, taf, primarySuffixes, scenarioRunData,
+		EpptReportingComputedSet retval = buildComputedValues(plotTitle, statistic, monthPeriod, taf, primarySuffixes, scenarioRunData,
 				secondarySuffixes, secondaryScenarioRunData, comparisonType,
 				trendReportingComputer);
 		scenarioRunData.put(baseRun, primaryData);
@@ -104,8 +102,6 @@ public final class EpptReportingComputedSet
 	private static EpptReportingComputedSet buildComputedValues(String plotTitle,
 																EpptStatistic statistic,
 																MonthPeriod monthPeriod,
-																LocalDate start,
-																LocalDate end,
 																boolean taf,
 																Map<EpptScenarioRun, List<String>> primarySuffixes,
 																Map<EpptScenarioRun, List<TimeSeriesContainer>> scenarioRunData,
@@ -125,12 +121,12 @@ public final class EpptReportingComputedSet
 			if(taf)
 			{
 				trendReportingComputed.add(
-						trendReportingComputer.computeTaf(data.getKey(), primaryS, data.getValue(), secondaryS, secondary, start, end));
+						trendReportingComputer.computeTaf(data.getKey(), primaryS, data.getValue(), secondaryS, secondary));
 			}
 			else
 			{
 				trendReportingComputed.add(
-						trendReportingComputer.computeCfs(data.getKey(), primaryS, data.getValue(), secondaryS, secondary, start, end));
+						trendReportingComputer.computeCfs(data.getKey(), primaryS, data.getValue(), secondaryS, secondary));
 			}
 		}
 		return new EpptReportingComputedSet(plotTitle, statistic, monthPeriod,

@@ -18,6 +18,7 @@ import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.time.LocalDate;
+import java.time.YearMonth;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -134,8 +135,8 @@ public class QuickResultsListener implements ActionListener
 			if(component instanceof JList)
 			{
 				JList<String> lstReports = (JList<String>) component;
-				LocalDate startMonth = projectConfigurationPanel.getStartMonth();
-				LocalDate endMonth = projectConfigurationPanel.getEndMonth();
+				YearMonth startMonth = projectConfigurationPanel.getStartMonth();
+				YearMonth endMonth = projectConfigurationPanel.getEndMonth();
 				for(int i = 0; i < lstReports.getModel().getSize(); i++)
 				{
 					String elementAt = lstReports.getModel().getElementAt(i);
@@ -145,7 +146,9 @@ public class QuickResultsListener implements ActionListener
 					List<GUILinksAllModelsBO> guiLinks = locations.stream()
 																  .map(GuiLinksSeedDataSvcImpl.getSeedDataSvcImplInstance()::getGuiLink)
 																  .collect(toList());
-					displayHelper.showDisplayFramesGuiLink(plotConfigurationState, guiLinks, baseScenario, alternatives, startMonth, endMonth);
+					LocalDate start = LocalDate.of(startMonth.getYear(), startMonth.getMonth(), 1).minusDays(2);
+					LocalDate end = LocalDate.of(endMonth.getYear(), endMonth.getMonth(), 1).plusMonths(1).plusDays(2);
+					displayHelper.showDisplayFramesGuiLink(plotConfigurationState, guiLinks, baseScenario, alternatives, start, end);
 				}
 			}
 		}

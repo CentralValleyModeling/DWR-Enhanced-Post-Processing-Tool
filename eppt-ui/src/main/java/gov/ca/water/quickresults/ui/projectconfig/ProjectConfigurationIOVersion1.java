@@ -104,18 +104,16 @@ class ProjectConfigurationIOVersion1
 				model, outputPath, wreslMain, Paths.get(Constant.LOOKUP_DIRECTORY), dssContainer, Constant.getPlotlyDefaultColor(index));
 	}
 
-	private LocalDate readStartMonthProperties(JSONObject jsonObject)
+	private int readStartYearProperties(JSONObject jsonObject)
 	{
-		String startMonth = jsonObject.getString(START_MONTH_PROPERTY);
 		String startYear = jsonObject.getString(START_YEAR_PROPERTY);
-		return LocalDate.of(Integer.parseInt(startYear), Integer.parseInt(startMonth), 1);
+		return Integer.parseInt(startYear);
 	}
 
-	private LocalDate readEndMonthProperties(JSONObject jsonObject)
+	private int readEndYearProperties(JSONObject jsonObject)
 	{
-		String endMonth = jsonObject.getString(END_MONTH_PROPERTY);
 		String endYear = jsonObject.getString(END_YEAR_PROPERTY);
-		return (LocalDate) TemporalAdjusters.lastDayOfMonth().adjustInto(LocalDate.of(Integer.parseInt(endYear), Integer.parseInt(endMonth), 1));
+		return Integer.parseInt(endYear);
 	}
 
 	private Map<String, Boolean> readDisplayProperties(JSONArray jsonArray)
@@ -138,8 +136,8 @@ class ProjectConfigurationIOVersion1
 		JSONArray displayOptions = jsonObject.getJSONArray(DISPLAY_OPTIONS_KEY);
 		Map<String, Boolean> selected = readDisplayProperties(displayOptions);
 		JSONObject monthProperties = jsonObject.getJSONObject(MONTH_OPTIONS_KEY);
-		LocalDate start = readStartMonthProperties(monthProperties);
-		LocalDate end = readEndMonthProperties(monthProperties);
+		int start = readStartYearProperties(monthProperties);
+		int end = readEndYearProperties(monthProperties);
 		JSONArray scenarioPaths = jsonObject.getJSONArray(SCENARIO_FILES_KEY);
 		List<EpptScenarioRun> scenarioRuns = readScenarioDssPaths(scenarioPaths, selectedPath.getParent());
 		String name = jsonObject.getString(NAME_KEY);

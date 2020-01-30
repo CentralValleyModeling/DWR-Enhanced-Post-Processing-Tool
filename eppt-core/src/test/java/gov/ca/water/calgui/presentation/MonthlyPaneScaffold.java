@@ -89,7 +89,7 @@ public class MonthlyPaneScaffold
 				Paths.get(
 						"C:\\Git\\DWR\\EPPT\\DWR-Enhanced-Post-Processing-Tool\\eppt-trend-reporting\\src\\test\\resources\\dwr_eppt\\wresl\\lookup"),
 				dssContainer, javafx.scene.paint.Color.MEDIUMAQUAMARINE);
-		EpptScenarioRun altRun2 = new EpptScenarioRun("Alt", "desc", GUILinksAllModelsBO.Model.findModel("CalSim2"),
+		EpptScenarioRun altRun2 = new EpptScenarioRun("Alternative 2", "desc", GUILinksAllModelsBO.Model.findModel("CalSim2"),
 				Paths.get("Test.pdf"),
 				Paths.get("C:\\Git\\DWR\\EPPT\\DWR-Enhanced-Post-Processing-Tool\\eppt-trend-reporting\\src\\test\\resources\\dwr_eppt\\wresl"),
 				Paths.get(
@@ -110,10 +110,19 @@ public class MonthlyPaneScaffold
 		WaterYearTableReader waterYearTableReader = new WaterYearTableReader(baseRun.getLookupDirectory());
 		List<WaterYearIndex> read = waterYearTableReader.read();
 		List<EpptStatistic> trendStatistics = ScriptedEpptStatistics.getTrendStatistics();
+		//		PlotConfigurationState plotConfigurationState = new PlotConfigurationState(PlotConfigurationState.ComparisonType.COMPARISON,
+		//				true, false, false, false, Collections.emptyList(),
+		//				false, true, false, Collections.singletonList(trendStatistics.get(0)),
+		//				Collections.singletonList(read.get(0)), new WaterYearDefinition("", Month.OCTOBER, Month.SEPTEMBER));
+		//		PlotConfigurationState plotConfigurationState = new PlotConfigurationState(PlotConfigurationState.ComparisonType.COMPARISON,
+		//				true, false, false, false, Collections.emptyList(),
+		//				false, true, false, trendStatistics,
+		//				read, new WaterYearDefinition("", Month.OCTOBER, Month.SEPTEMBER));
 		PlotConfigurationState plotConfigurationState = new PlotConfigurationState(PlotConfigurationState.ComparisonType.COMPARISON,
 				true, false, false, false, Collections.emptyList(),
-				false, true, false, Collections.singletonList(trendStatistics.get(0)),
-				Collections.singletonList(read.get(0)), new WaterYearDefinition("", Month.OCTOBER, Month.SEPTEMBER));
+				false, true, false, Arrays.asList(trendStatistics.get(0),
+				trendStatistics.get(1), trendStatistics.get(2), trendStatistics.get(3)),
+				read, new WaterYearDefinition("", Month.OCTOBER, Month.SEPTEMBER));
 		LocalDate start = LocalDate.of(1901, 1, 1);
 		LocalDate end = LocalDate.of(2007, 1, 1);
 

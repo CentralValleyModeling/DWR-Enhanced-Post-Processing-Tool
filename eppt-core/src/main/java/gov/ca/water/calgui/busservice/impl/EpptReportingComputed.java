@@ -47,6 +47,7 @@ public class EpptReportingComputed
 	private final List<SortedMap<LocalDateTime, Double>> _fullTimeSeries;
 	private final List<SortedMap<Integer, Double>> _annualPeriodFilteredTimeSeries;
 	private final List<SortedMap<Month, Double>> _statisticallyComputedMonthly;
+	private final List<SortedMap<WaterYearPeriod, SortedMap<Month, Double>>> _statisticallyComputedPeriodMonthly;
 	private final List<String> _units;
 	private final List<SortedMap<WaterYearPeriod, Double>> _statisticallyComputedTimeSeriesWyt;
 	private final List<Double> _yearlyStatistic;
@@ -54,6 +55,7 @@ public class EpptReportingComputed
 	EpptReportingComputed(List<String> dataSuffix,
 						  List<SortedMap<LocalDateTime, Double>> fullTimeSeries,
 						  List<SortedMap<Integer, Double>> annualPeriodFiltered,
+						  List<SortedMap<WaterYearPeriod, SortedMap<Month, Double>>> statisticallyComputedPeriodMonthly,
 						  List<Double> yearlyStatistic,
 						  List<SortedMap<Month, Double>> statisticallyComputedMonthly,
 						  List<SortedMap<WaterYearPeriod, Double>> statisticallyComputedTimeSeriesWyt,
@@ -62,6 +64,7 @@ public class EpptReportingComputed
 		_dataSuffix = dataSuffix;
 		_fullTimeSeries = fullTimeSeries;
 		_annualPeriodFilteredTimeSeries = annualPeriodFiltered;
+		_statisticallyComputedPeriodMonthly = statisticallyComputedPeriodMonthly;
 		_yearlyStatistic = yearlyStatistic;
 		_statisticallyComputedMonthly = statisticallyComputedMonthly;
 		_statisticallyComputedTimeSeriesWyt = statisticallyComputedTimeSeriesWyt;
@@ -121,6 +124,11 @@ public class EpptReportingComputed
 	public List<Double> getYearlyStatistic()
 	{
 		return _yearlyStatistic;
+	}
+
+	public List<SortedMap<WaterYearPeriod, SortedMap<Month, Double>>> getStatisticallyComputedPeriodMonthly()
+	{
+		return _statisticallyComputedPeriodMonthly;
 	}
 
 	public List<SortedMap<WaterYearPeriod, Double>> getStatisticallyComputedTimeSeriesWyt()
@@ -202,9 +210,13 @@ public class EpptReportingComputed
 		fullTimeSeries.forEach(v ->
 		{
 			JSONArray jsonArray = new JSONArray();
-			v.entrySet()
-			 .stream().map(this::extractMonthArray)
-			 .forEach(jsonArray::put);
+			if(v != null)
+			{
+
+				v.entrySet()
+				 .stream().map(this::extractMonthArray)
+				 .forEach(jsonArray::put);
+			}
 			retval.put(jsonArray);
 		});
 		return retval;

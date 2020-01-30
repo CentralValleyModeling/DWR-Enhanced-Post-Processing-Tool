@@ -22,8 +22,7 @@ import java.awt.event.KeyEvent;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.nio.file.Path;
-import java.time.LocalDate;
-import java.time.Month;
+import java.time.YearMonth;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -196,10 +195,6 @@ public final class ProjectConfigurationPanel extends EpptPanel
 		JTextField descriptionField = (JTextField) getSwingEngine().find("prj_desc");
 		projectNameField.getDocument().addDocumentListener(documentListener);
 		descriptionField.getDocument().addDocumentListener(documentListener);
-		JSpinner spnSM = (JSpinner) getSwingEngine().find("spnStartMonth");
-		spnSM.addChangeListener(e -> setModified(true));
-		JSpinner spnEM = (JSpinner) getSwingEngine().find("spnEndMonth");
-		spnEM.addChangeListener(e -> setModified(true));
 		JSpinner spnSY = (JSpinner) getSwingEngine().find("spnStartYear");
 		spnSY.addChangeListener(e -> setModified(true));
 		JSpinner spnEY = (JSpinner) getSwingEngine().find("spnEndYear");
@@ -210,24 +205,13 @@ public final class ProjectConfigurationPanel extends EpptPanel
 
 	private void initializeSpinners()
 	{
-		// Set up month spinners on result page
-		JSpinner spnSM = (JSpinner) getSwingEngine().find("spnStartMonth");
-		ResultUtilsBO.SetMonthModelAndIndex(spnSM, 9, null, true);
-		JSpinner spnEM = (JSpinner) getSwingEngine().find("spnEndMonth");
-		ResultUtilsBO.SetMonthModelAndIndex(spnEM, 8, null, true);
 		// Set up year spinners
 		JSpinner spnSY = (JSpinner) getSwingEngine().find("spnStartYear");
 		ResultUtilsBO.SetNumberModelAndIndex(spnSY, 1921, 1921, 2003, 1, "####", null, true);
 		JSpinner spnEY = (JSpinner) getSwingEngine().find("spnEndYear");
 		ResultUtilsBO.SetNumberModelAndIndex(spnEY, 2003, 1921, 2003, 1, "####", null, true);
-		makeSpinnerCommitOnEdit(spnSM);
-		makeSpinnerCommitOnEdit(spnEM);
 		makeSpinnerCommitOnEdit(spnSY);
 		makeSpinnerCommitOnEdit(spnEY);
-		JFormattedTextField textField = ((JSpinner.DefaultEditor) spnSM.getEditor()).getTextField();
-		textField.addKeyListener(new MyKeyAdapter(textField));
-		JFormattedTextField textField1 = ((JSpinner.DefaultEditor) spnEM.getEditor()).getTextField();
-		textField1.addKeyListener(new MyKeyAdapter(textField1));
 		JFormattedTextField textField2 = ((JSpinner.DefaultEditor) spnSY.getEditor()).getTextField();
 		textField2.addKeyListener(new MyKeyAdapter(textField2));
 		JFormattedTextField textField3 = ((JSpinner.DefaultEditor) spnEY.getEditor()).getTextField();
@@ -342,30 +326,35 @@ public final class ProjectConfigurationPanel extends EpptPanel
 						JOptionPane.YES_NO_OPTION);
 				if(response == JOptionPane.YES_OPTION)
 				{
-					try
-					{
-						SwingUtilities.invokeAndWait(() ->
-						{
-							ScenarioRunEditor scenarioRunEditor = new ScenarioRunEditor(frame);
-							scenarioRunEditor.fillPanel(epptScenarioRun);
-							scenarioRunEditor.setVisible(true);
-							if(!scenarioRunEditor.isCanceled())
-							{
-								replaceScenario(epptScenarioRun, scenarioRunEditor.createRun());
-							}
-						});
-					}
-					catch(InterruptedException e)
-					{
-						LOGGER.info("Thread interrupted", e);
-						Thread.currentThread().interrupt();
-					}
-					catch(InvocationTargetException e)
-					{
-						LOGGER.error("Error updating Scenario run: " + epptScenarioRun, e);
-					}
+					replaceScenarioDialog(epptScenarioRun, frame);
 				}
 			}
+		}
+	}
+
+	private void replaceScenarioDialog(EpptScenarioRun epptScenarioRun, Frame frame)
+	{
+		try
+		{
+			SwingUtilities.invokeAndWait(() ->
+			{
+				ScenarioRunEditor scenarioRunEditor = new ScenarioRunEditor(frame);
+				scenarioRunEditor.fillPanel(epptScenarioRun);
+				scenarioRunEditor.setVisible(true);
+				if(!scenarioRunEditor.isCanceled())
+				{
+					replaceScenario(epptScenarioRun, scenarioRunEditor.createRun());
+				}
+			});
+		}
+		catch(InterruptedException e)
+		{
+			LOGGER.info("Thread interrupted", e);
+			Thread.currentThread().interrupt();
+		}
+		catch(InvocationTargetException e)
+		{
+			LOGGER.error("Error updating Scenario run: " + epptScenarioRun, e);
 		}
 	}
 
@@ -414,21 +403,18 @@ public final class ProjectConfigurationPanel extends EpptPanel
 		}
 	}
 
-	public LocalDate getStartMonth()
+	public YearMonth getStartMonth()
 	{
-		JSpinner monthSpinner = (JSpinner) getSwingEngine().find("spnStartMonth");
-		int month = ResultUtilsBO.getResultUtilsInstance().monthToInt(monthSpinner.getValue().toString());
+		WaterYearDefinition waterYearDefinition = getWaterYearDefinition();
 		JSpinner yearSpinner = (JSpinner) getSwingEngine().find("spnStartYear");
 		int year = Integer.parseInt(yearSpinner.getValue().toString());
-		return LocalDate.of(year, month, 1).plusMonths(1).minusDays(1);
+		return YearMonth.of(year, waterYearDefinition.getStartMonth());
 	}
 
-	private void setStartMonth(LocalDate start)
+	private void setStartYear(int start)
 	{
-		JSpinner monthSpinner = (JSpinner) getSwingEngine().find("spnStartMonth");
-		monthSpinner.setValue(ResultUtilsBO.getResultUtilsInstance().intToMonth(start.getMonth().getValue()));
 		JSpinner yearSpinner = (JSpinner) getSwingEngine().find("spnStartYear");
-		yearSpinner.setValue(start.getYear());
+		yearSpinner.setValue(start);
 	}
 
 	public void saveConfigurationToPath(Path selectedPath, String projectName, String projectDescription)
@@ -487,8 +473,8 @@ public final class ProjectConfigurationPanel extends EpptPanel
 		JTextField descriptionField = (JTextField) getSwingEngine().find("prj_desc");
 		projectNameField.setText(project.getName());
 		descriptionField.setText(project.getDescription());
-		setStartMonth(project.getStartMonth());
-		setEndMonth(project.getEndMonth());
+		setStartYear(project.getStartYear());
+		setEndYear(project.getEndYear());
 		updateSelectedComponents(project.getSelectedComponents());
 		_scenarioTablePanel.clearScenarios();
 		List<EpptScenarioRun> scenarioRuns = project.getScenarioRuns();
@@ -558,21 +544,18 @@ public final class ProjectConfigurationPanel extends EpptPanel
 		return ((JCheckBox) getSwingEngine().find("chkTAF")).isSelected();
 	}
 
-	public LocalDate getEndMonth()
+	public YearMonth getEndMonth()
 	{
-		JSpinner monthSpinner = (JSpinner) getSwingEngine().find("spnEndMonth");
-		int month = ResultUtilsBO.getResultUtilsInstance().monthToInt(monthSpinner.getValue().toString());
+		WaterYearDefinition waterYearDefinition = getWaterYearDefinition();
 		JSpinner yearSpinner = (JSpinner) getSwingEngine().find("spnEndYear");
 		int year = Integer.parseInt(yearSpinner.getValue().toString());
-		return LocalDate.of(year, month, 1).plusMonths(1).minusDays(1);
+		return YearMonth.of(year, waterYearDefinition.getEndMonth());
 	}
 
-	private void setEndMonth(LocalDate end)
+	private void setEndYear(int end)
 	{
-		JSpinner monthSpinner = (JSpinner) getSwingEngine().find("spnEndMonth");
-		monthSpinner.setValue(ResultUtilsBO.getResultUtilsInstance().intToMonth(end.getMonth().getValue()));
 		JSpinner yearSpinner = (JSpinner) getSwingEngine().find("spnEndYear");
-		yearSpinner.setValue(end.getYear());
+		yearSpinner.setValue(end);
 	}
 
 	public String getProjectName()

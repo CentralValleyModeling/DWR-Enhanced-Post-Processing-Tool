@@ -86,7 +86,7 @@ import rma.util.RMAConst;
 public class DSSGrabber1SvcImpl implements IDSSGrabber1Svc
 {
 
-	static final double CFS_2_TAF_DAY = 0.001983471;
+	public static final double CFS_2_TAF_DAY = 0.001983471;
 	private static final double TAF_DAY_2_CFS = 504.166667;
 	private static Logger LOGGER = Logger.getLogger(DSSGrabber1SvcImpl.class.getName());
 	final Map<GUILinksAllModelsBO.Model, String> _primaryDSSName = new HashMap<>();
@@ -967,7 +967,6 @@ public class DSSGrabber1SvcImpl implements IDSSGrabber1Svc
 						{
 
 							ht.set(primaryResults[i].times[j]);
-							calendar.set(ht.year(), ht.month() - 1, 1);
 							double monthlyTAF = primaryResults[i].values[j]
 									* calendar.getActualMaximum(Calendar.DAY_OF_MONTH) * CFS_2_TAF_DAY;
 							int wy = ((ht.month() < 10) ? ht.year() : ht.year() + 1) - _startWY;

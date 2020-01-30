@@ -145,16 +145,6 @@ public class CalLiteInitClass
 			lstScenarios.setModel(fdDSSFiles.getLmScenNames());
 			lstScenarios.setBorder(new LineBorder(Color.gray, 1));
 
-
-			// Schematic views
-
-			new SchematicMain((JPanel) swingEngine.find("schematic_holder"),
-					"file:///" + System.getProperty("user.dir") + "/Config/callite_merged.svg", swingEngine, 1.19, 0.0,
-					0.0, 1.19, -8.0, 5.0);
-			new SchematicMain((JPanel) swingEngine.find("schematic_holder2"),
-					"file:///" + System.getProperty("user.dir") + "/Config/callite-massbalance_working.svg",
-					swingEngine, 1.2, 0, 0.0, 1.2, 21.0, 15.0);
-
 			// Recolor results tabs
 			JTabbedPane jTabbedPane = (JTabbedPane) swingEngine.find("tabbedPane1");
 			jTabbedPane.setForegroundAt(6, Color.blue);

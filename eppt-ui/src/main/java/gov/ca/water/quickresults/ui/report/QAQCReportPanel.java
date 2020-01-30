@@ -29,6 +29,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.YearMonth;
 import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -135,12 +136,8 @@ public class QAQCReportPanel extends EpptPanel
 	private JTextPane _altWreslTextPane;
 	private WaterYearPeriodsPanel _waterYearPeriodsPanel;
 	private JComboBox<PercentDiffStyle> _percentDiffStyle;
-	private RmaJIntegerField _longTermEndYear;
-	private RmaJIntegerField _longTermStartYear;
 	private JPanel _summaryModulesPanel;
 	private JButton _cancelButton;
-	private RmaJDateTimeField _startDateChooser;
-	private RmaJDateTimeField _endDateChooser;
 	private JButton _overwriteJRXMLButton;
 	private JButton _openReportButton;
 	private JButton _overwriteScriptsButtonAlt;
@@ -179,8 +176,6 @@ public class QAQCReportPanel extends EpptPanel
 		_pdfOutput.setText(reportPath.toString());
 		_openReportButton.setEnabled(reportPath.toFile().exists());
 		_tabbedPane1.setTitleAt(0, reportPath.getFileName().toString() + " QA/QC");
-		_longTermStartYear.setValue(1921);
-		_longTermEndYear.setValue(2003);
 		Arrays.asList(PercentDiffStyle.values()).forEach(_percentDiffStyle::addItem);
 		_reportModules.put(_excutiveSummaryCheckBox, EPPTReport.EXECUTIVE_SUMMARY);
 		_reportModules.put(_assumptionChangesCheckBox, EPPTReport.ASSUMPTION_CHANGES);
@@ -367,8 +362,8 @@ public class QAQCReportPanel extends EpptPanel
 		{
 			textPane.setText("");
 			ProjectConfigurationPanel projectConfigurationPanel = ProjectConfigurationPanel.getProjectConfigurationPanel();
-			LocalDate startMonth = projectConfigurationPanel.getStartMonth();
-			LocalDate endMonth = projectConfigurationPanel.getEndMonth();
+			YearMonth startMonth = projectConfigurationPanel.getStartMonth();
+			YearMonth endMonth = projectConfigurationPanel.getEndMonth().plusMonths(1);
 			LocalDate start = LocalDate.of(startMonth.getYear(), startMonth.getMonth(), 1);
 			start = start.withDayOfMonth(start.lengthOfMonth());
 			LocalDate end = LocalDate.of(endMonth.getYear(), endMonth.getMonth(), 1);
@@ -524,10 +519,12 @@ public class QAQCReportPanel extends EpptPanel
 				waterYearIndecies.put(_altRun, altIndex);
 			}
 			List<String> disabledSummaryModules = getDisabledSummaryModules();
-			Date startDate = _startDateChooser.getDate();
-			Date endDate = _endDateChooser.getDate();
-			CommonPeriodFilter commonPeriodFilter = new CommonPeriodFilter(LocalDateTime.ofInstant(startDate.toInstant(), ZoneId.systemDefault()),
-					LocalDateTime.ofInstant(endDate.toInstant(), ZoneId.systemDefault()));
+			ProjectConfigurationPanel projectConfigurationPanel = ProjectConfigurationPanel.getProjectConfigurationPanel();
+			LocalDateTime start = LocalDateTime.of(projectConfigurationPanel.getStartMonth().getYear(),
+					projectConfigurationPanel.getStartMonth().getMonth(), 1, 0, 0).minusDays(2);
+			LocalDateTime end = LocalDateTime.of(projectConfigurationPanel.getEndMonth().getYear(),
+					projectConfigurationPanel.getEndMonth().getMonth(), 1, 0, 0).plusMonths(1).plusDays(2);
+			CommonPeriodFilter commonPeriodFilter = new CommonPeriodFilter(start, end);
 			SummaryReportParameters summaryReportParameters = new SummaryReportParameters(_waterYearDefinition, waterYearIndecies,
 					longTermRange, waterYearPeriodRanges, percentDiffStyle, disabledSummaryModules, commonPeriodFilter, new DssCache());
 			List<String> disabledReportModules = getDisabledReportModules();
@@ -595,8 +592,9 @@ public class QAQCReportPanel extends EpptPanel
 	private WaterYearPeriodRange getLongTermRange()
 	{
 		WaterYearPeriod longTerm = new WaterYearPeriod("Long Term");
-		int startYear = _longTermStartYear.getValue();
-		int endYear = _longTermEndYear.getValue();
+		ProjectConfigurationPanel projectConfigurationPanel = ProjectConfigurationPanel.getProjectConfigurationPanel();
+		int startYear = projectConfigurationPanel.getStartMonth().getYear();
+		int endYear = projectConfigurationPanel.getEndMonth().getYear();
 		return new WaterYearPeriodRange(longTerm, new WaterYearType(startYear, longTerm), new WaterYearType(endYear, longTerm));
 	}
 
@@ -671,7 +669,7 @@ public class QAQCReportPanel extends EpptPanel
 		panel5.add(_progressBar1, BorderLayout.CENTER);
 		final JPanel panel6 = new JPanel();
 		panel6.setLayout(new BorderLayout(0, 0));
-		panel6.setPreferredSize(new Dimension(850, 510));
+		panel6.setPreferredSize(new Dimension(850, 390));
 		_panel1.add(panel6, BorderLayout.NORTH);
 		final JPanel panel7 = new JPanel();
 		panel7.setLayout(new BorderLayout(0, 0));
@@ -831,22 +829,6 @@ public class QAQCReportPanel extends EpptPanel
 		gbc.fill = GridBagConstraints.HORIZONTAL;
 		gbc.insets = new Insets(5, 5, 5, 5);
 		panel8.add(label6, gbc);
-		final JLabel label7 = new JLabel();
-		label7.setText("Long Term Start Year:");
-		gbc = new GridBagConstraints();
-		gbc.gridx = 0;
-		gbc.gridy = 9;
-		gbc.fill = GridBagConstraints.HORIZONTAL;
-		gbc.insets = new Insets(5, 5, 5, 5);
-		panel8.add(label7, gbc);
-		final JLabel label8 = new JLabel();
-		label8.setText("Long Term End Year:");
-		gbc = new GridBagConstraints();
-		gbc.gridx = 0;
-		gbc.gridy = 10;
-		gbc.fill = GridBagConstraints.HORIZONTAL;
-		gbc.insets = new Insets(5, 5, 5, 5);
-		panel8.add(label8, gbc);
 		_percentDiffStyle = new JComboBox();
 		_percentDiffStyle.setPreferredSize(new Dimension(91, 26));
 		gbc = new GridBagConstraints();
@@ -856,53 +838,6 @@ public class QAQCReportPanel extends EpptPanel
 		gbc.fill = GridBagConstraints.HORIZONTAL;
 		gbc.insets = new Insets(5, 5, 5, 5);
 		panel8.add(_percentDiffStyle, gbc);
-		_longTermStartYear = new RmaJIntegerField();
-		_longTermStartYear.setPreferredSize(new Dimension(64, 26));
-		gbc = new GridBagConstraints();
-		gbc.gridx = 1;
-		gbc.gridy = 9;
-		gbc.fill = GridBagConstraints.HORIZONTAL;
-		gbc.insets = new Insets(5, 5, 5, 5);
-		panel8.add(_longTermStartYear, gbc);
-		_longTermEndYear = new RmaJIntegerField();
-		_longTermEndYear.setPreferredSize(new Dimension(64, 26));
-		gbc = new GridBagConstraints();
-		gbc.gridx = 1;
-		gbc.gridy = 10;
-		gbc.fill = GridBagConstraints.HORIZONTAL;
-		gbc.insets = new Insets(5, 5, 5, 5);
-		panel8.add(_longTermEndYear, gbc);
-		final JLabel label9 = new JLabel();
-		label9.setText("Common Period:");
-		gbc = new GridBagConstraints();
-		gbc.gridx = 0;
-		gbc.gridy = 11;
-		gbc.fill = GridBagConstraints.HORIZONTAL;
-		gbc.insets = new Insets(5, 5, 5, 5);
-		panel8.add(label9, gbc);
-		final JPanel panel12 = new JPanel();
-		panel12.setLayout(new FlowLayout(FlowLayout.LEFT, 0, 5));
-		gbc = new GridBagConstraints();
-		gbc.gridx = 1;
-		gbc.gridy = 11;
-		gbc.fill = GridBagConstraints.BOTH;
-		gbc.insets = new Insets(5, 5, 5, 5);
-		panel8.add(panel12, gbc);
-		_startDateChooser = new RmaJDateTimeField();
-		_startDateChooser.setEnabled(true);
-		_startDateChooser.setPreferredSize(new Dimension(120, 26));
-		_startDateChooser.setText("01Nov1921 0000");
-		panel12.add(_startDateChooser);
-		final JLabel label10 = new JLabel();
-		label10.setText("  Start ");
-		panel12.add(label10);
-		_endDateChooser = new RmaJDateTimeField();
-		_endDateChooser.setPreferredSize(new Dimension(120, 26));
-		_endDateChooser.setText("01Oct2003 0100");
-		panel12.add(_endDateChooser);
-		final JLabel label11 = new JLabel();
-		label11.setText(" End");
-		panel12.add(label11);
 		_openReportButton = new JButton();
 		_openReportButton.setMaximumSize(new Dimension(120, 26));
 		_openReportButton.setMinimumSize(new Dimension(120, 26));
@@ -914,14 +849,14 @@ public class QAQCReportPanel extends EpptPanel
 		gbc.anchor = GridBagConstraints.EAST;
 		gbc.insets = new Insets(0, 0, 0, 5);
 		panel8.add(_openReportButton, gbc);
-		final JLabel label12 = new JLabel();
-		label12.setText("QA/QC Report Title:");
+		final JLabel label7 = new JLabel();
+		label7.setText("QA/QC Report Title:");
 		gbc = new GridBagConstraints();
 		gbc.gridx = 0;
 		gbc.gridy = 3;
 		gbc.fill = GridBagConstraints.HORIZONTAL;
 		gbc.insets = new Insets(5, 5, 5, 5);
-		panel8.add(label12, gbc);
+		panel8.add(label7, gbc);
 		_reportTitle = new JTextField();
 		_reportTitle.setText("EPPT QA/QC Report");
 		gbc = new GridBagConstraints();
@@ -932,17 +867,17 @@ public class QAQCReportPanel extends EpptPanel
 		gbc.fill = GridBagConstraints.HORIZONTAL;
 		gbc.insets = new Insets(5, 5, 5, 5);
 		panel8.add(_reportTitle, gbc);
-		final JPanel panel13 = new JPanel();
-		panel13.setLayout(new BorderLayout(5, 5));
+		final JPanel panel12 = new JPanel();
+		panel12.setLayout(new BorderLayout(5, 5));
 		gbc = new GridBagConstraints();
 		gbc.gridx = 1;
 		gbc.gridy = 1;
 		gbc.fill = GridBagConstraints.BOTH;
 		gbc.insets = new Insets(5, 5, 5, 5);
-		panel8.add(panel13, gbc);
-		final JPanel panel14 = new JPanel();
-		panel14.setLayout(new GridBagLayout());
-		panel13.add(panel14, BorderLayout.CENTER);
+		panel8.add(panel12, gbc);
+		final JPanel panel13 = new JPanel();
+		panel13.setLayout(new GridBagLayout());
+		panel12.add(panel13, BorderLayout.CENTER);
 		_altScenarioTextField = new JTextField();
 		_altScenarioTextField.setEditable(false);
 		_altScenarioTextField.setPreferredSize(new Dimension(251, 26));
@@ -953,7 +888,7 @@ public class QAQCReportPanel extends EpptPanel
 		gbc.gridwidth = 2;
 		gbc.weightx = 0.8;
 		gbc.fill = GridBagConstraints.HORIZONTAL;
-		panel14.add(_altScenarioTextField, gbc);
+		panel13.add(_altScenarioTextField, gbc);
 		_altWreslDiffWarningLabel = new JLabel();
 		_altWreslDiffWarningLabel.setMaximumSize(new Dimension(251, 16));
 		_altWreslDiffWarningLabel.setMinimumSize(new Dimension(251, 16));
@@ -966,7 +901,7 @@ public class QAQCReportPanel extends EpptPanel
 		gbc.gridwidth = 2;
 		gbc.weightx = 0.8;
 		gbc.anchor = GridBagConstraints.WEST;
-		panel14.add(_altWreslDiffWarningLabel, gbc);
+		panel13.add(_altWreslDiffWarningLabel, gbc);
 		_overwriteScriptsButtonAlt = new JButton();
 		_overwriteScriptsButtonAlt.setMaximumSize(new Dimension(120, 26));
 		_overwriteScriptsButtonAlt.setMinimumSize(new Dimension(120, 26));
@@ -977,7 +912,7 @@ public class QAQCReportPanel extends EpptPanel
 		gbc.gridy = 1;
 		gbc.weightx = 0.2;
 		gbc.anchor = GridBagConstraints.EAST;
-		panel14.add(_overwriteScriptsButtonAlt, gbc);
+		panel13.add(_overwriteScriptsButtonAlt, gbc);
 		_runAltWreslButton = new JButton();
 		_runAltWreslButton.setEnabled(false);
 		_runAltWreslButton.setMaximumSize(new Dimension(120, 26));
@@ -989,28 +924,28 @@ public class QAQCReportPanel extends EpptPanel
 		gbc.gridy = 0;
 		gbc.weightx = 0.2;
 		gbc.anchor = GridBagConstraints.EAST;
-		panel14.add(_runAltWreslButton, gbc);
-		final JLabel label13 = new JLabel();
-		label13.setText("Alternative Scenario Run:");
+		panel13.add(_runAltWreslButton, gbc);
+		final JLabel label8 = new JLabel();
+		label8.setText("Alternative Scenario Run:");
 		gbc = new GridBagConstraints();
 		gbc.gridx = 0;
 		gbc.gridy = 1;
 		gbc.anchor = GridBagConstraints.NORTH;
 		gbc.fill = GridBagConstraints.HORIZONTAL;
 		gbc.insets = new Insets(10, 5, 5, 5);
-		panel8.add(label13, gbc);
+		panel8.add(label8, gbc);
+		final JPanel panel14 = new JPanel();
+		panel14.setLayout(new BorderLayout(0, 0));
+		panel14.setPreferredSize(new Dimension(400, 200));
+		panel6.add(panel14, BorderLayout.CENTER);
+		panel14.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(), "QA/QC Report Controls"));
 		final JPanel panel15 = new JPanel();
 		panel15.setLayout(new BorderLayout(0, 0));
-		panel15.setPreferredSize(new Dimension(400, 200));
-		panel6.add(panel15, BorderLayout.CENTER);
-		panel15.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(), "QA/QC Report Controls"));
+		panel15.setPreferredSize(new Dimension(300, 270));
+		panel14.add(panel15, BorderLayout.WEST);
 		final JPanel panel16 = new JPanel();
-		panel16.setLayout(new BorderLayout(0, 0));
-		panel16.setPreferredSize(new Dimension(300, 270));
-		panel15.add(panel16, BorderLayout.WEST);
-		final JPanel panel17 = new JPanel();
-		panel17.setLayout(new GridBagLayout());
-		panel16.add(panel17, BorderLayout.NORTH);
+		panel16.setLayout(new GridBagLayout());
+		panel15.add(panel16, BorderLayout.NORTH);
 		_excutiveSummaryCheckBox = new JCheckBox();
 		_excutiveSummaryCheckBox.setEnabled(true);
 		_excutiveSummaryCheckBox.setHorizontalAlignment(2);
@@ -1022,7 +957,7 @@ public class QAQCReportPanel extends EpptPanel
 		gbc.weightx = 0.5;
 		gbc.anchor = GridBagConstraints.NORTHWEST;
 		gbc.insets = new Insets(0, 5, 0, 5);
-		panel17.add(_excutiveSummaryCheckBox, gbc);
+		panel16.add(_excutiveSummaryCheckBox, gbc);
 		_assumptionChangesCheckBox = new JCheckBox();
 		_assumptionChangesCheckBox.setEnabled(true);
 		_assumptionChangesCheckBox.setHorizontalAlignment(2);
@@ -1032,7 +967,7 @@ public class QAQCReportPanel extends EpptPanel
 		gbc.gridy = 1;
 		gbc.anchor = GridBagConstraints.NORTHWEST;
 		gbc.insets = new Insets(0, 5, 0, 5);
-		panel17.add(_assumptionChangesCheckBox, gbc);
+		panel16.add(_assumptionChangesCheckBox, gbc);
 		_codeChangesCheckBox = new JCheckBox();
 		_codeChangesCheckBox.setEnabled(true);
 		_codeChangesCheckBox.setHorizontalAlignment(2);
@@ -1042,7 +977,7 @@ public class QAQCReportPanel extends EpptPanel
 		gbc.gridy = 2;
 		gbc.anchor = GridBagConstraints.NORTHWEST;
 		gbc.insets = new Insets(0, 5, 0, 5);
-		panel17.add(_codeChangesCheckBox, gbc);
+		panel16.add(_codeChangesCheckBox, gbc);
 		_detailedIssuesCheckBox = new JCheckBox();
 		_detailedIssuesCheckBox.setEnabled(true);
 		_detailedIssuesCheckBox.setHorizontalAlignment(2);
@@ -1053,7 +988,7 @@ public class QAQCReportPanel extends EpptPanel
 		gbc.gridy = 3;
 		gbc.anchor = GridBagConstraints.NORTHWEST;
 		gbc.insets = new Insets(0, 5, 0, 5);
-		panel17.add(_detailedIssuesCheckBox, gbc);
+		panel16.add(_detailedIssuesCheckBox, gbc);
 		_standardSummaryStatiticsCheckBox = new JCheckBox();
 		_standardSummaryStatiticsCheckBox.setEnabled(true);
 		_standardSummaryStatiticsCheckBox.setHorizontalAlignment(2);
@@ -1064,7 +999,7 @@ public class QAQCReportPanel extends EpptPanel
 		gbc.gridy = 4;
 		gbc.anchor = GridBagConstraints.NORTHWEST;
 		gbc.insets = new Insets(0, 5, 0, 5);
-		panel17.add(_standardSummaryStatiticsCheckBox, gbc);
+		panel16.add(_standardSummaryStatiticsCheckBox, gbc);
 		_summaryModulesPanel = new JPanel();
 		_summaryModulesPanel.setLayout(new FlowLayout(FlowLayout.LEFT, 5, 5));
 		gbc = new GridBagConstraints();
@@ -1072,16 +1007,16 @@ public class QAQCReportPanel extends EpptPanel
 		gbc.gridy = 5;
 		gbc.fill = GridBagConstraints.BOTH;
 		gbc.insets = new Insets(5, 25, 5, 5);
-		panel17.add(_summaryModulesPanel, gbc);
+		panel16.add(_summaryModulesPanel, gbc);
+		final JPanel panel17 = new JPanel();
+		panel17.setLayout(new BorderLayout(0, 0));
+		panel14.add(panel17, BorderLayout.CENTER);
 		final JPanel panel18 = new JPanel();
 		panel18.setLayout(new BorderLayout(0, 0));
-		panel15.add(panel18, BorderLayout.CENTER);
-		final JPanel panel19 = new JPanel();
-		panel19.setLayout(new BorderLayout(0, 0));
-		panel19.setPreferredSize(new Dimension(350, 300));
-		panel18.add(panel19, BorderLayout.WEST);
+		panel18.setPreferredSize(new Dimension(350, 300));
+		panel17.add(panel18, BorderLayout.WEST);
 		_waterYearPeriodsPanel.setEnabled(true);
-		panel19.add(_waterYearPeriodsPanel, BorderLayout.CENTER);
+		panel18.add(_waterYearPeriodsPanel, BorderLayout.CENTER);
 		_tabbedPane1 = new JTabbedPane();
 		_panel1.add(_tabbedPane1, BorderLayout.CENTER);
 		final JScrollPane scrollPane1 = new JScrollPane();
@@ -1160,7 +1095,6 @@ public class QAQCReportPanel extends EpptPanel
 		_tabbedPane1.setSelectedIndex(0);
 		updateCompareState();
 		updateEnabledState();
-		initializeCommonPeriod();
 		showWreslScriptChangedWarning(_baseWreslDiffWarningLabel, _baseRun);
 		showWreslScriptChangedWarning(_altWreslDiffWarningLabel, _altRun);
 	}
@@ -1238,37 +1172,6 @@ public class QAQCReportPanel extends EpptPanel
 			}
 		}
 		return differ;
-	}
-
-	private void initializeCommonPeriod()
-	{
-		if(_baseRun == null)
-		{
-			_startDateChooser.setText("");
-			_endDateChooser.setText("");
-		}
-		else if(_altRun == null)
-		{
-			_startDateChooser.setDate(getStartDate(_baseRun));
-			_endDateChooser.setDate(getEndDate(_baseRun));
-		}
-		else
-		{
-			Date startDate = getStartDate(_baseRun);
-			Date endDate = getEndDate(_baseRun);
-			Date altStartDate = getStartDate(_altRun);
-			Date altEndDate = getEndDate(_altRun);
-			if(startDate.before(altStartDate))
-			{
-				startDate = altStartDate;
-			}
-			if(endDate.after(altEndDate))
-			{
-				endDate = altEndDate;
-			}
-			_startDateChooser.setDate(startDate);
-			_endDateChooser.setDate(endDate);
-		}
 	}
 
 	private Date getEndDate(EpptScenarioRun baseRun)

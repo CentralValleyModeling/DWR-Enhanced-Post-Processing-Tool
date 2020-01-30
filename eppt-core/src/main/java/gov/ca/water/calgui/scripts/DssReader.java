@@ -17,6 +17,7 @@ import java.time.LocalDateTime;
 import java.time.Month;
 import java.time.YearMonth;
 import java.time.ZoneId;
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
@@ -47,6 +48,8 @@ import hec.heclib.util.HecTime;
 import hec.io.TimeSeriesContainer;
 import hec.lang.annotation.Scriptable;
 import rma.util.RMAConst;
+
+import static gov.ca.water.calgui.busservice.impl.DSSGrabber1SvcImpl.CFS_2_TAF_DAY;
 
 /**
  * Company: Resource Management Associates
@@ -161,17 +164,13 @@ public class DssReader
 				GUILinksAllModelsBO guiLink = GuiLinksSeedDataSvcImpl.getSeedDataSvcImplInstance().getGuiLink(Integer.toString(guiID));
 				DSSGrabber1SvcImpl dssGrabber1Svc = buildDssGrabber(_scenarioRun, guiLink);
 				TimeSeriesContainer[] primarySeries = dssGrabber1Svc.getPrimarySeries();
-				if(mapToTaf)
-				{
-					primarySeries = mapToTaf(primarySeries, dssGrabber1Svc);
-				}
 				if(primarySeries == null || primarySeries[0] == null)
 				{
 					throw new DssMissingRecordException(_scenarioRun.getName() + ": Unable to find matching GUILink with ID: " + guiID);
 				}
 				_originalUnits = dssGrabber1Svc.getOriginalUnits();
 				_parameter = primarySeries[0].getParameterName();
-				retval = timeSeriesContainerToMap(primarySeries);
+				retval = timeSeriesContainerToMap(primarySeries, mapToTaf);
 				_dssCache.addGuiLinkToCache(_scenarioRun, guiID, primarySeries[0], _originalUnits);
 			}
 			catch(RuntimeException e)
@@ -182,24 +181,15 @@ public class DssReader
 		}
 		else
 		{
-			retval = timeSeriesContainerToMap(new TimeSeriesContainer[]{tsc.getTsc()});
 			_units = tsc.getTsc().getUnits();
 			_originalUnits = tsc.getOriginalUnits();
 			_parameter = tsc.getTsc().getParameterName();
+			retval = timeSeriesContainerToMap(new TimeSeriesContainer[]{tsc.getTsc()}, mapToTaf);
 		}
 		return retval;
 	}
 
-	private TimeSeriesContainer[] mapToTaf(TimeSeriesContainer[] primarySeries, DSSGrabber1SvcImpl dssGrabber1Svc)
-	{
-		if(primarySeries != null && primarySeries[0] != null)
-		{
-			dssGrabber1Svc.calcTAFforCFS(primarySeries, null);
-		}
-		return primarySeries;
-	}
-
-	private NavigableMap<LocalDateTime, Double> timeSeriesContainerToMap(TimeSeriesContainer[] primarySeries)
+	public NavigableMap<LocalDateTime, Double> timeSeriesContainerToMap(TimeSeriesContainer[] primarySeries, boolean mapToTaf)
 	{
 		NavigableMap<LocalDateTime, Double> retval = new TreeMap<>();
 		if(primarySeries != null && primarySeries[0] != null)
@@ -210,19 +200,21 @@ public class DssReader
 				String units = tsc.getUnits();
 				LOGGER.at(Level.FINER).log("Timeseries %s units are %s", tsc.getShortName(), units);
 				_units = units;
+				Calendar calendar = Calendar.getInstance();
 				for(int i = 0; i < tsc.times.length; i++)
 				{
 					double value = tsc.getValue(i);
 					HecTime hecTime = new HecTime();
 					hecTime.set(tsc.times[i], tsc.timeGranularitySeconds, tsc.julianBaseDate);
-					addValueToMap(retval, tsc, value, hecTime);
+					addValueToMap(retval, tsc, mapToTaf, calendar, value, hecTime);
 				}
 			}
 		}
 		return retval;
 	}
 
-	private void addValueToMap(NavigableMap<LocalDateTime, Double> retval, TimeSeriesContainer tsc, double value, HecTime hecTime)
+	private void addValueToMap(NavigableMap<LocalDateTime, Double> retval, TimeSeriesContainer tsc, boolean mapToTaf,
+							   Calendar calendar, double value, HecTime hecTime)
 	{
 		int offset = (int) TimeUnit.MILLISECONDS.toMinutes(TimeZone.getDefault().getRawOffset());
 		Date javaDate = hecTime.getJavaDate(offset);
@@ -234,6 +226,11 @@ public class DssReader
 					|| tsc.getUnits().toLowerCase().contains("%"))
 			{
 				value *= 100;
+			}
+			if(mapToTaf && "CFS".equalsIgnoreCase(_originalUnits))
+			{
+				calendar.set(hecTime.year(), hecTime.month() - 1, 1);
+				value *= calendar.getActualMaximum(Calendar.DAY_OF_MONTH) * CFS_2_TAF_DAY;
 			}
 			retval.put(localDateTime, value);
 		}
@@ -297,10 +294,6 @@ public class DssReader
 						() -> new DssMissingRecordException(_scenarioRun.getName() + ": Unable to find matching DTS path for DTS ID: " + dtsId));
 				DSSGrabber1SvcImpl dssGrabber1Svc = buildDssGrabber(_scenarioRun, detailedIssue);
 				TimeSeriesContainer[] primarySeries = dssGrabber1Svc.getPrimarySeries();
-				if(mapToTaf)
-				{
-					primarySeries = mapToTaf(primarySeries, dssGrabber1Svc);
-				}
 				if(primarySeries == null || primarySeries[0] == null)
 				{
 					throw new DssMissingRecordException(_scenarioRun.getName() +
@@ -308,7 +301,7 @@ public class DssReader
 				}
 				_originalUnits = dssGrabber1Svc.getOriginalUnits();
 				_parameter = primarySeries[0].getParameterName();
-				retval = timeSeriesContainerToMap(primarySeries);
+				retval = timeSeriesContainerToMap(primarySeries, mapToTaf);
 				_dssCache.addDtsLinkToCache(_scenarioRun, dtsId, primarySeries[0], _originalUnits);
 			}
 			catch(RuntimeException e)
@@ -319,10 +312,10 @@ public class DssReader
 		}
 		else
 		{
-			retval = timeSeriesContainerToMap(new TimeSeriesContainer[]{tsc.getTsc()});
 			_units = tsc.getTsc().getUnits();
 			_originalUnits = tsc.getOriginalUnits();
 			_parameter = tsc.getTsc().getParameterName();
+			retval = timeSeriesContainerToMap(new TimeSeriesContainer[]{tsc.getTsc()}, mapToTaf);
 		}
 		return retval;
 	}
@@ -348,10 +341,6 @@ public class DssReader
 
 					DSSGrabber1SvcImpl dssGrabber1Svc = buildDssGrabber(_scenarioRun, thresholdLink);
 					TimeSeriesContainer[] threshold = dssGrabber1Svc.getPrimarySeries();
-					if(mapToTaf)
-					{
-						threshold = mapToTaf(threshold, dssGrabber1Svc);
-					}
 					if(threshold == null || threshold[0] == null)
 					{
 						throw new DssMissingRecordException(_scenarioRun.getName() +
@@ -360,7 +349,7 @@ public class DssReader
 					}
 					_originalUnits = dssGrabber1Svc.getOriginalUnits();
 					_parameter = threshold[0].getParameterName();
-					retval = timeSeriesContainerToMap(threshold);
+					retval = timeSeriesContainerToMap(threshold, mapToTaf);
 					_dssCache.addThresholdLinkToCache(_scenarioRun, thresholdId, threshold[0], _originalUnits);
 				}
 				else
@@ -378,10 +367,10 @@ public class DssReader
 		}
 		else
 		{
-			retval = timeSeriesContainerToMap(new TimeSeriesContainer[]{tsc.getTsc()});
 			_units = tsc.getTsc().getUnits();
 			_originalUnits = tsc.getOriginalUnits();
 			_parameter = tsc.getTsc().getParameterName();
+			retval = timeSeriesContainerToMap(new TimeSeriesContainer[]{tsc.getTsc()}, mapToTaf);
 		}
 		return retval;
 	}

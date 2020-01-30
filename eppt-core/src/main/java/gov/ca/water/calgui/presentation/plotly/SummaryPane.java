@@ -58,14 +58,16 @@ public class SummaryPane extends JFXPanel
 		treeView.setModel(monthlyTableModel);
 		treeView.setCopyEnabled(true);
 		treeView.setColumnResizePolicy(TreeTableView.CONSTRAINED_RESIZE_POLICY);
-		for(int i = 0; i < monthlyTableModel.getRows().size(); i++)
+		TreeItem<SummaryPaneRow> treeItem = treeView.getTreeItem(0);
+		int i = 1;
+		while(treeItem != null)
 		{
-			TreeItem<SummaryPaneRow> treeItem = treeView.getTreeItem(i);
+			treeItem = treeView.getTreeItem(i);
 			if(treeItem != null)
 			{
 				treeItem.setExpanded(true);
 			}
-
+			i++;
 		}
 		treeView.resizeAllColumnsToFitContent();
 		borderPane.setCenter(treeView);

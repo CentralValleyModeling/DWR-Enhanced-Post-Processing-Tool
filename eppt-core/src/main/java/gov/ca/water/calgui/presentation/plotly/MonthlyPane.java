@@ -53,7 +53,6 @@ class MonthlyPane extends JFXPanel
 		MonthlyTableModel monthlyTableModel = new MonthlyTableModel(_plotTitle, _waterYearDefinition, _epptReportingComputedSet);
 		_treeView.setModel(monthlyTableModel);
 		_treeView.setCopyEnabled(true);
-		_treeView.setColumnResizePolicy(TreeTableView.CONSTRAINED_RESIZE_POLICY);
 		for(int i = 0; i < monthlyTableModel.getRows().size(); i++)
 		{
 			TreeItem<MonthlyPaneRow> treeItem = _treeView.getTreeItem(i);
@@ -62,7 +61,13 @@ class MonthlyPane extends JFXPanel
 				treeItem.setExpanded(true);
 			}
 		}
-		_treeView.resizeAllColumnsToFitContent();
+		Platform.runLater(() ->
+		{
+			_treeView.setColumnResizePolicy(TreeTableView.CONSTRAINED_RESIZE_POLICY);
+			_treeView.resizeAllColumnsToFitContent();
+			_treeView.setColumnResizePolicy(TreeTableView.CONSTRAINED_RESIZE_POLICY);
+		});
+//		_treeView.resizeAllColumnsToFitContent();
 		borderPane.setCenter(_treeView);
 		setScene(new Scene(borderPane));
 	}

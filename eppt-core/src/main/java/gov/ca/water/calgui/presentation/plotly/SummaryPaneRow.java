@@ -14,6 +14,7 @@ package gov.ca.water.calgui.presentation.plotly;
 
 import java.math.BigDecimal;
 import java.math.MathContext;
+import java.text.DecimalFormat;
 import java.util.Map;
 
 import gov.ca.water.calgui.bo.WaterYearIndex;
@@ -80,7 +81,7 @@ abstract class SummaryPaneRow extends RmaTreeTableRowModel<SummaryPaneRow>
 	{
 		private final SimpleStringProperty _title;
 
-		SummaryPaneRowStat(SummaryPaneRowScenario parent, EpptStatistic epptStatistic)
+		SummaryPaneRowStat(SummaryPaneRow parent, EpptStatistic epptStatistic)
 		{
 			super(parent);
 			_title = new SimpleStringProperty(epptStatistic.getName());
@@ -97,15 +98,30 @@ abstract class SummaryPaneRow extends RmaTreeTableRowModel<SummaryPaneRow>
 			return null;
 		}
 	}
+	static class SummaryPaneBlankRow extends SummaryPaneRow
+	{
+
+		public SummaryPaneBlankRow(SummaryPaneRow parent)
+		{
+			super(parent);
+		}
+
+		@Override
+		public ObservableValue<?> getObservableValue(TreeTableColumnSpec treeTableColumnSpec)
+		{
+			return null;
+		}
+	}
 
 	static class SummaryPaneRowWaterYearIndex extends SummaryPaneRow
 	{
 		private final SimpleStringProperty _title;
 
-		SummaryPaneRowWaterYearIndex(SummaryPaneRowStat parent, WaterYearIndex waterYearIndex)
+		SummaryPaneRowWaterYearIndex(SummaryPaneRow parent, EpptStatistic key,
+									 WaterYearIndex waterYearIndex)
 		{
 			super(parent);
-			_title = new SimpleStringProperty(waterYearIndex.getName());
+			_title = new SimpleStringProperty(key + " - " + waterYearIndex.getName());
 		}
 
 
@@ -125,7 +141,7 @@ abstract class SummaryPaneRow extends RmaTreeTableRowModel<SummaryPaneRow>
 		private final Map<TreeTableColumnSpec, SimpleStringProperty> _data;
 		private final SimpleStringProperty _rowTitle;
 
-		SummaryPaneRowData(SummaryPaneRowWaterYearIndex parent, String rowTitle, Map<TreeTableColumnSpec, Double> data)
+		SummaryPaneRowData(SummaryPaneRow parent, String rowTitle, Map<TreeTableColumnSpec, Double> data)
 		{
 			super(parent);
 			_rowTitle = new SimpleStringProperty(rowTitle);
@@ -137,7 +153,7 @@ abstract class SummaryPaneRow extends RmaTreeTableRowModel<SummaryPaneRow>
 						{
 							BigDecimal bigDecimal = BigDecimal.valueOf(value);
 							bigDecimal = bigDecimal.round(new MathContext(3));
-							return new SimpleStringProperty(Double.toString(bigDecimal.doubleValue()));
+							return new SimpleStringProperty(bigDecimal.toPlainString());
 						}
 						else
 						{

@@ -19,6 +19,7 @@ import java.time.format.DateTimeFormatterBuilder;
 import java.time.format.TextStyle;
 import java.time.temporal.TemporalAccessor;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 import java.util.logging.Level;
@@ -27,6 +28,7 @@ import java.util.stream.Collectors;
 import javax.swing.*;
 
 import gov.ca.water.calgui.bo.WaterYearDefinition;
+import gov.ca.water.calgui.bo.WaterYearIndex;
 import gov.ca.water.calgui.busservice.impl.EpptStatistic;
 import gov.ca.water.calgui.busservice.impl.ScriptedEpptStatistics;
 import gov.ca.water.calgui.project.EpptScenarioRun;
@@ -199,9 +201,10 @@ public class PlotConfigurationStateBuilder
 				Component[] components = ((JPanel) _swingEngine.find("controls3")).getComponents();
 				addSummaryTables(summary, components);
 			}
+			WaterYearIndex waterYearIndex = projectConfigurationPanel.getWaterYearIndex();
 			return new PlotConfigurationState(comparisonType, displayTaf, displayTimeSeriesPlot, displayBoxAndWhisker, isDisplayExceedanceAll,
 					exceedance, displayMonthlyTable, displaySummaryTable, isDisplayExceedanceAnnualFlow, summary,
-					new ArrayList<>(), waterYearDefinition);
+					Collections.singletonList(waterYearIndex), waterYearDefinition);
 		}
 		catch(RuntimeException e)
 		{

@@ -48,8 +48,6 @@ public class PlotlyPaneBuilder
 	private final Map<EpptScenarioRun, WaterYearIndex> _selectedWaterYearIndicies = new HashMap<>();
 	private PlotConfigurationState.ComparisonType _comparisonType = PlotConfigurationState.ComparisonType.COMPARISON;
 	private boolean _taf;
-	private LocalDate _start;
-	private LocalDate _end;
 	private WaterYearDefinition _waterYearDefinition;
 	private Month _month;
 	private String _plotTitle;
@@ -82,13 +80,6 @@ public class PlotlyPaneBuilder
 	public PlotlyPaneBuilder withTaf(boolean taf)
 	{
 		_taf = taf;
-		return this;
-	}
-
-	public PlotlyPaneBuilder withTimeWindow(LocalDate start, LocalDate end)
-	{
-		_start = start;
-		_end = end;
 		return this;
 	}
 
@@ -134,8 +125,6 @@ public class PlotlyPaneBuilder
 			epptReportingComputedSet = EpptReportingComputedSet.computeDiffForMetrics(_plotTitle,
 					new NoopEpptStatistic(),
 					monthPeriod,
-					_start,
-					_end,
 					_taf,
 					_baseRun,
 					_primarySuffixes,
@@ -151,8 +140,6 @@ public class PlotlyPaneBuilder
 			epptReportingComputedSet = EpptReportingComputedSet.computeForMetrics(_plotTitle,
 					new NoopEpptStatistic(),
 					monthPeriod,
-					_start,
-					_end,
 					_taf,
 					_primarySuffixes,
 					_scenarioRunData,

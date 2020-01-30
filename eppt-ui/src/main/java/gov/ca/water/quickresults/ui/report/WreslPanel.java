@@ -19,6 +19,7 @@ import java.awt.FlowLayout;
 import java.awt.GridLayout;
 import java.nio.file.Path;
 import java.time.LocalDate;
+import java.time.YearMonth;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
@@ -157,11 +158,11 @@ public class WreslPanel extends RmaJPanel implements ProcessOutputConsumer
 	{
 
 		ProjectConfigurationPanel projectConfigurationPanel = ProjectConfigurationPanel.getProjectConfigurationPanel();
-		LocalDate startMonth = projectConfigurationPanel.getStartMonth();
-		LocalDate endMonth = projectConfigurationPanel.getEndMonth();
+		YearMonth startMonth = projectConfigurationPanel.getStartMonth();
+		YearMonth endMonth = projectConfigurationPanel.getEndMonth();
 		LocalDate start = LocalDate.of(startMonth.getYear(), startMonth.getMonth(), 1);
 		start = start.withDayOfMonth(start.lengthOfMonth());
-		LocalDate end = LocalDate.of(endMonth.getYear(), endMonth.getMonth(), 1);
+		LocalDate end = LocalDate.of(endMonth.getYear(), endMonth.getMonth(), 1).plusMonths(1);
 		end = end.withDayOfMonth(end.lengthOfMonth());
 		runWresl(epptScenarioRun, start, end);
 	}

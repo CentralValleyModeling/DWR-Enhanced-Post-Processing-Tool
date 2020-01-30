@@ -34,7 +34,7 @@ import gov.ca.water.calgui.bo.WaterYearIndex;
 import gov.ca.water.calgui.busservice.impl.EpptReportingComputedSet;
 import gov.ca.water.calgui.busservice.impl.EpptStatistic;
 import gov.ca.water.calgui.busservice.impl.MonthPeriod;
-import gov.ca.water.calgui.busservice.impl.NoopEpptStatistic;
+import gov.ca.water.calgui.busservice.impl.ScriptedEpptStatistics;
 import gov.ca.water.calgui.busservice.impl.WaterYearTableReader;
 import gov.ca.water.calgui.presentation.plotly.PlotlyPaneBuilder;
 import gov.ca.water.calgui.presentation.plotly.SummaryPane;
@@ -43,6 +43,8 @@ import gov.ca.water.calgui.project.PlotConfigurationState;
 import javafx.embed.swing.JFXPanel;
 
 import hec.io.TimeSeriesContainer;
+
+import static java.util.stream.Collectors.toList;
 
 /**
  * Company: Resource Management Associates
@@ -136,7 +138,6 @@ public class DisplayFrames
 				.withPrimarySuffixes(primarySuffixes)
 				.withSecondarySuffixes(secondarySuffixes)
 				.withPlotTitle(plotTitle)
-				.withTimeWindow(getStart(), getEnd())
 				.withWaterYearIndicies(getWaterYearIndicies())
 				.build();
 		tabbedPane.addTab("Box Plot", pane);
@@ -162,7 +163,6 @@ public class DisplayFrames
 				.withPrimarySuffixes(primarySuffixes)
 				.withSecondarySuffixes(secondarySuffixes)
 				.withPlotTitle(plotTitle)
-				.withTimeWindow(getStart(), getEnd())
 				.withWaterYearIndicies(getWaterYearIndicies())
 				.build();
 		if(getPlotConfigurationState().getComparisonType() == PlotConfigurationState.ComparisonType.DIFF)
@@ -196,7 +196,9 @@ public class DisplayFrames
 						  JTabbedPane tabbedPane)
 	{
 		SortedMap<String, SortedMap<EpptStatistic, Map<WaterYearIndex, EpptReportingComputedSet>>> data = new TreeMap<>();
-		List<EpptStatistic> selectedSummaryTableItems = getPlotConfigurationState().getSelectedSummaryTableItems();
+//		List<EpptStatistic> selectedSummaryTableItems = getPlotConfigurationState().getSelectedSummaryTableItems();
+
+		List<EpptStatistic> selectedSummaryTableItems = ScriptedEpptStatistics.getTrendStatistics();
 		WaterYearDefinition waterYearDefinition = getPlotConfigurationState().getWaterYearDefinition();
 		MonthPeriod monthPeriod = new MonthPeriod(waterYearDefinition.getStartMonth(), waterYearDefinition.getEndMonth());
 		List<WaterYearIndex> summaryWaterYearIndexes = getPlotConfigurationState().getSummaryWaterYearIndexes();
@@ -205,32 +207,11 @@ public class DisplayFrames
 		List<EpptScenarioRun> scenarioRuns = new ArrayList<>();
 		scenarioRuns.add(getBaseRun());
 		scenarioRuns.addAll(getAlternatives());
-		for(EpptScenarioRun epptScenarioRun : getAlternatives())
+		for(EpptScenarioRun epptScenarioRun : scenarioRuns)
 		{
-			Map<EpptScenarioRun, List<String>> clonedSuffix = new HashMap<>();
-			if(!primarySuffixes.isEmpty())
-			{
-				clonedSuffix.put(epptScenarioRun, primarySuffixes.get(epptScenarioRun));
-			}
-			Map<EpptScenarioRun, List<TimeSeriesContainer>> clonedScenarioRunData = new HashMap<>();
-			if(!scenarioRunData.isEmpty())
-			{
-				clonedScenarioRunData.put(epptScenarioRun, scenarioRunData.get(epptScenarioRun));
-			}
-			Map<EpptScenarioRun, List<String>> clonedSecondarySuffix = new HashMap<>();
-			if(!secondarySuffixes.isEmpty())
-			{
-				clonedSecondarySuffix.put(epptScenarioRun, secondarySuffixes.get(epptScenarioRun));
-			}
-			Map<EpptScenarioRun, List<TimeSeriesContainer>> clonedSecondaryScenarioRunData = new HashMap<>();
-			if(!secondaryScenarioRunData.isEmpty())
-			{
-				clonedSecondaryScenarioRunData.put(epptScenarioRun, secondaryScenarioRunData.get(epptScenarioRun));
-			}
-			addSummaryDataForScenario(clonedSuffix, clonedScenarioRunData, plotTitle, data, selectedSummaryTableItems,
-					monthPeriod, summaryWaterYearIndexes, statsData, epptScenarioRun);
-			addSummaryDataForScenario(clonedSecondarySuffix, clonedSecondaryScenarioRunData, plotTitle, data, selectedSummaryTableItems,
-					monthPeriod, summaryWaterYearIndexes, statsData, epptScenarioRun);
+			data.putAll(addSummaryDataForScenario(epptScenarioRun, primarySuffixes.get(epptScenarioRun), scenarioRunData.get(epptScenarioRun),
+					secondarySuffixes.get(epptScenarioRun), secondaryScenarioRunData.get(epptScenarioRun), plotTitle,
+					selectedSummaryTableItems, monthPeriod, summaryWaterYearIndexes, statsData));
 		}
 		JFXPanel pane = new SummaryPane(plotTitle, waterYearDefinition, data);
 		if(getPlotConfigurationState().getComparisonType() == PlotConfigurationState.ComparisonType.DIFF)
@@ -245,78 +226,105 @@ public class DisplayFrames
 
 	}
 
-	private void addSummaryDataForScenario(Map<EpptScenarioRun, List<String>> primarySuffixes,
-										   Map<EpptScenarioRun, List<TimeSeriesContainer>> scenarioRunData, String plotTitle,
-										   SortedMap<String, SortedMap<EpptStatistic, Map<WaterYearIndex, EpptReportingComputedSet>>> data,
-										   List<EpptStatistic> selectedSummaryTableItems, MonthPeriod monthPeriod,
-										   List<WaterYearIndex> summaryWaterYearIndexes,
-										   SortedMap<EpptStatistic, Map<WaterYearIndex, EpptReportingComputedSet>> statsData, EpptScenarioRun scenarioRun)
+	private SortedMap<String, SortedMap<EpptStatistic, Map<WaterYearIndex, EpptReportingComputedSet>>> addSummaryDataForScenario(
+			EpptScenarioRun scenarioRun, List<String> primarySuffixes, List<TimeSeriesContainer> scenarioRunData,
+			List<String> secondarySuffixes, List<TimeSeriesContainer> secondaryScenarioRunData, String plotTitle,
+			List<EpptStatistic> selectedSummaryTableItems, MonthPeriod monthPeriod, List<WaterYearIndex> summaryWaterYearIndexes,
+			SortedMap<EpptStatistic, Map<WaterYearIndex, EpptReportingComputedSet>> statsData)
 	{
-		for(int i = 0; i < scenarioRunData.get(scenarioRun).size(); i++)
+		List<String> headers = new ArrayList<>();
+		for(int i = 0; i < scenarioRunData.size(); i++)
 		{
 			String header = scenarioRun.getName();
-			if(i < primarySuffixes.getOrDefault(scenarioRun, new ArrayList<>()).size())
+			if(primarySuffixes != null && i < primarySuffixes.size())
 			{
-				header += " - " + primarySuffixes.get(scenarioRun).get(i);
+				header += " - " + primarySuffixes.get(i);
 			}
 			else
 			{
 				header += " - " + plotTitle;
 			}
+			headers.add(header);
+		}
+		SortedMap<String, SortedMap<EpptStatistic, Map<WaterYearIndex, EpptReportingComputedSet>>> retval = new TreeMap<>(
+				Comparator.comparing(headers::indexOf));
+		for(int i = 0; i < scenarioRunData.size(); i++)
+		{
+			String header = headers.get(i);
 			for(EpptStatistic stat : selectedSummaryTableItems)
 			{
-				Map<EpptScenarioRun, List<WaterYearIndex>> allWaterYearIndicies = getWaterYearIndicies();
-				SortedMap<WaterYearIndex, EpptReportingComputedSet> indexData = new TreeMap<>(
-						Comparator.comparing(allWaterYearIndicies.get(getBaseRun())::indexOf));
-				Map<EpptScenarioRun, WaterYearIndex> selectedWaterYearIndicies = new HashMap<>();
+				List<WaterYearIndex> allWaterYearIndicies = getWaterYearIndicies().get(scenarioRun);
+				List<String> allIndexNames = allWaterYearIndicies.stream().map(WaterYearIndex::getName).collect(toList());
+				SortedMap<WaterYearIndex, EpptReportingComputedSet> indexData = new TreeMap<>(Comparator.comparing(WaterYearIndex::getName, Comparator.comparing(allIndexNames::indexOf)));
 				for(WaterYearIndex waterYearIndex : summaryWaterYearIndexes)
 				{
-					for(Map.Entry<EpptScenarioRun, List<WaterYearIndex>> entry : allWaterYearIndicies.entrySet())
+					Optional<WaterYearIndex> collect = allWaterYearIndicies.stream().filter(
+							selected -> waterYearIndex.getName().equalsIgnoreCase(selected.getName())).findAny();
+					if(collect.isPresent())
 					{
-						Optional<WaterYearIndex> collect = entry.getValue().stream().filter(
-								s -> waterYearIndex.getName().equalsIgnoreCase(s.getName())).findAny();
-						collect.ifPresent(index -> selectedWaterYearIndicies.put(entry.getKey(), index));
+						EpptReportingComputedSet epptReportingComputedSet = computeSummaryData(scenarioRun,
+								primarySuffixes, scenarioRunData, secondarySuffixes, secondaryScenarioRunData, plotTitle, monthPeriod,
+								stat, collect.get());
+						indexData.put(waterYearIndex, epptReportingComputedSet);
 					}
-					EpptReportingComputedSet epptReportingComputedSet;
-					if(getPlotConfigurationState().getComparisonType() == PlotConfigurationState.ComparisonType.DIFF)
-					{
-						epptReportingComputedSet = EpptReportingComputedSet.computeDiffForMetrics(plotTitle,
-								stat,
-								monthPeriod,
-								_start,
-								_end,
-								getPlotConfigurationState().isDisplayTaf(),
-								_baseRun,
-								primarySuffixes,
-								scenarioRunData,
-								new HashMap<>(),
-								new HashMap<>(),
-								getPlotConfigurationState().getComparisonType(),
-								selectedWaterYearIndicies,
-								allWaterYearIndicies);
-					}
-					else
-					{
-						epptReportingComputedSet = EpptReportingComputedSet.computeForMetrics(plotTitle,
-								stat,
-								monthPeriod,
-								_start,
-								_end,
-								getPlotConfigurationState().isDisplayTaf(),
-								primarySuffixes,
-								scenarioRunData,
-								new HashMap<>(),
-								new HashMap<>(),
-								getPlotConfigurationState().getComparisonType(),
-								selectedWaterYearIndicies,
-								allWaterYearIndicies);
-					}
-					indexData.put(waterYearIndex, epptReportingComputedSet);
 				}
 				statsData.put(stat, indexData);
 			}
-			data.put(header, statsData);
+			retval.put(header, statsData);
 		}
+		return retval;
+	}
+
+	private EpptReportingComputedSet computeSummaryData(EpptScenarioRun epptScenarioRun,
+														List<String> primarySuffix,
+														List<TimeSeriesContainer> scenarioData,
+														List<String> secondarySuffix,
+														List<TimeSeriesContainer> secondaryScenarioData,
+														String plotTitle,
+														MonthPeriod monthPeriod, EpptStatistic stat,
+														WaterYearIndex waterYearIndex)
+	{
+		Map<EpptScenarioRun, WaterYearIndex> selectedWaterYearIndexes = new HashMap<>();
+		selectedWaterYearIndexes.put(epptScenarioRun, waterYearIndex);
+		Map<EpptScenarioRun, List<String>> primarySuffixes = new HashMap<>();
+		primarySuffixes.put(epptScenarioRun, primarySuffix);
+		Map<EpptScenarioRun, List<TimeSeriesContainer>> scenarioRunData = new HashMap<>();
+		scenarioRunData.put(epptScenarioRun, scenarioData);
+		Map<EpptScenarioRun, List<String>> secondarySuffixes = new HashMap<>();
+		secondarySuffixes.put(epptScenarioRun, secondarySuffix);
+		Map<EpptScenarioRun, List<TimeSeriesContainer>> secondaryScenarioRunData = new HashMap<>();
+		secondaryScenarioRunData.put(epptScenarioRun, secondaryScenarioData);
+		EpptReportingComputedSet epptReportingComputedSet;
+		if(getPlotConfigurationState().getComparisonType() == PlotConfigurationState.ComparisonType.DIFF)
+		{
+			epptReportingComputedSet = EpptReportingComputedSet.computeDiffForMetrics(plotTitle,
+					stat,
+					monthPeriod,
+					getPlotConfigurationState().isDisplayTaf(),
+					_baseRun,
+					primarySuffixes,
+					scenarioRunData,
+					secondarySuffixes,
+					secondaryScenarioRunData,
+					getPlotConfigurationState().getComparisonType(),
+					selectedWaterYearIndexes,
+					getWaterYearIndicies());
+		}
+		else
+		{
+			epptReportingComputedSet = EpptReportingComputedSet.computeForMetrics(plotTitle,
+					stat,
+					monthPeriod,
+					getPlotConfigurationState().isDisplayTaf(),
+					primarySuffixes,
+					scenarioRunData,
+					secondarySuffixes,
+					secondaryScenarioRunData,
+					getPlotConfigurationState().getComparisonType(),
+					selectedWaterYearIndexes,
+					getWaterYearIndicies());
+		}
+		return epptReportingComputedSet;
 	}
 
 	void plotMonthlyTable(Map<EpptScenarioRun, List<String>> primarySuffixes,
@@ -333,7 +341,6 @@ public class DisplayFrames
 				.withPrimarySuffixes(primarySuffixes)
 				.withSecondarySuffixes(secondarySuffixes)
 				.withPlotTitle(plotTitle)
-				.withTimeWindow(getStart(), getEnd())
 				.withWaterYearIndicies(getWaterYearIndicies())
 				.build();
 		if(getPlotConfigurationState().getComparisonType() == PlotConfigurationState.ComparisonType.DIFF)
@@ -388,7 +395,6 @@ public class DisplayFrames
 					.withPlotTitle(plotTitle)
 					.withPrimarySuffixes(primarySuffixes)
 					.withSecondarySuffixes(secondarySuffixes)
-					.withTimeWindow(getStart(), getEnd())
 					.withWaterYearIndicies(getWaterYearIndicies())
 					.withMonth(month)
 					.build();
@@ -408,7 +414,6 @@ public class DisplayFrames
 				.withPlotTitle(plotTitle)
 				.withPrimarySuffixes(primarySuffixes)
 				.withSecondarySuffixes(secondarySuffixes)
-				.withTimeWindow(getStart(), getEnd())
 				.withWaterYearIndicies(getWaterYearIndicies())
 				.build();
 		if(getPlotConfigurationState().getComparisonType() == PlotConfigurationState.ComparisonType.DIFF)
@@ -434,7 +439,6 @@ public class DisplayFrames
 				.withSecondarySuffixes(secondarySuffixes)
 				.withTaf(getPlotConfigurationState().isDisplayTaf())
 				.withPlotTitle(plotTitle)
-				.withTimeWindow(getStart(), getEnd())
 				.withWaterYearIndicies(getWaterYearIndicies())
 				.withWaterYearDefinition(waterYearDefinition)
 				.build();

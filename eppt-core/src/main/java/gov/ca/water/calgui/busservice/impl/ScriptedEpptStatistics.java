@@ -57,6 +57,7 @@ import static java.util.stream.Collectors.toMap;
 public class ScriptedEpptStatistics implements EpptStatistic
 {
 	private static final Logger LOGGER = Logger.getLogger(ScriptedEpptStatistics.class.getName());
+	private static List<EpptStatistic> scriptedStatistics = new ArrayList<>();
 	private final ScriptEngine _scriptEngine = new ScriptEngineManager(getClass().getClassLoader()).getEngineByName("python");
 	private final Path _jythonFilePath;
 	private final String _name;
@@ -71,20 +72,24 @@ public class ScriptedEpptStatistics implements EpptStatistic
 
 	public static List<EpptStatistic> getTrendStatistics()
 	{
-		List<EpptStatistic> retval = new ArrayList<>();
+		return scriptedStatistics;
+	}
+
+	public static void createScriptedStatistics()
+	{
+		scriptedStatistics.clear();
 		Path jython = Paths.get(Constant.TREND_REPORTING_DIR).resolve("jython");
 		try(Stream<Path> stream = Files.walk(jython, 5))
 		{
-			retval = stream.filter(p -> p.toFile().isFile()).filter(p -> p.toString().endsWith("py"))
-						   .map(ScriptedEpptStatistics::new)
-						   .collect(toList());
+			scriptedStatistics.addAll(stream.filter(p -> p.toFile().isFile()).filter(p -> p.toString().endsWith("py"))
+											.map(ScriptedEpptStatistics::new)
+											.collect(toList()));
 		}
 		catch(IOException e)
 		{
 			LOGGER.log(Level.SEVERE, "Unable to load Statistics for Trend Reporting dashboard", e);
 		}
-		retval.addAll(Lookup.getDefault().lookupAll(EpptStatistic.class));
-		return retval;
+		scriptedStatistics.addAll(Lookup.getDefault().lookupAll(EpptStatistic.class));
 	}
 
 	private void setupScriptEngine()

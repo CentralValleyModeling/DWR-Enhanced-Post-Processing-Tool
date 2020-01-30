@@ -18,6 +18,8 @@ import java.awt.Container;
 import java.awt.event.ActionListener;
 import java.nio.file.Path;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.YearMonth;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -223,13 +225,15 @@ public class CustomResultsPanel extends EpptPanel
 														 .collect(toList());
 			EpptScenarioRun baseScenario = projectConfigurationPanel.getBaseScenario();
 			PlotConfigurationState plotConfigurationState = projectConfigurationPanel.plotConfigurationState();
-			LocalDate startMonth = projectConfigurationPanel.getStartMonth();
-			LocalDate endMonth = projectConfigurationPanel.getEndMonth();
+			YearMonth startMonth = projectConfigurationPanel.getStartMonth();
+			YearMonth endMonth = projectConfigurationPanel.getEndMonth();
 			if(baseScenario != null)
 			{
+				LocalDate start = LocalDate.of(startMonth.getYear(), startMonth.getMonth(), 1).minusDays(2);
+				LocalDate end = LocalDate.of(endMonth.getYear(), endMonth.getMonth(), 1).plusMonths(1).plusDays(2);
 				List<EpptScenarioRun> alternatives = projectConfigurationPanel.getEpptScenarioAlternatives();
 				_displayHelper.showDisplayFramesGuiLink(plotConfigurationState, collect,
-						baseScenario, alternatives, startMonth, endMonth);
+						baseScenario, alternatives, start, end);
 			}
 		}
 		catch(RuntimeException e)
@@ -287,12 +291,13 @@ public class CustomResultsPanel extends EpptPanel
 			if(baseScenario != null)
 			{
 				PlotConfigurationState plotConfigurationState = projectConfigurationPanel.plotConfigurationState();
-				LocalDate startMonth = projectConfigurationPanel.getStartMonth();
-				LocalDate endMonth = projectConfigurationPanel.getEndMonth();
+				YearMonth startMonth = projectConfigurationPanel.getStartMonth();
+				YearMonth endMonth = projectConfigurationPanel.getEndMonth();
+				LocalDate start = LocalDate.of(startMonth.getYear(), startMonth.getMonth(), 1).minusDays(2);
+				LocalDate end = LocalDate.of(endMonth.getYear(), endMonth.getMonth(), 1).plusMonths(1).plusDays(2);
 				List<EpptScenarioRun> alternatives = projectConfigurationPanel.getEpptScenarioAlternatives();
 				_displayHelper.showDisplayFramesWRIMS(plotConfigurationState, baseScenario, alternatives,
-						dts,
-						mts, startMonth, endMonth);
+						dts, mts, start, end);
 			}
 
 		}

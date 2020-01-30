@@ -27,13 +27,8 @@ import calsim.app.MultipleTimeSeries;
 import gov.ca.water.calgui.EpptInitializationException;
 import gov.ca.water.calgui.bo.GUILinksAllModelsBO;
 import gov.ca.water.calgui.busservice.impl.DSSGrabber2SvcImpl;
-import gov.ca.water.calgui.presentation.display.MonthlyTablePanel2;
-import gov.ca.water.calgui.presentation.display.SummaryTablePanel2;
 import gov.ca.water.calgui.project.EpptScenarioRun;
 import gov.ca.water.calgui.project.PlotConfigurationState;
-import gov.ca.water.calgui.techservice.IErrorHandlingSvc;
-import gov.ca.water.calgui.techservice.impl.ErrorHandlingSvcImpl;
-import org.apache.log4j.Logger;
 
 import hec.io.TimeSeriesContainer;
 
@@ -151,10 +146,6 @@ class DisplayWRIMSFrames extends DisplayFrames
 
 		if(primaryResults != null)
 		{
-			dssGrabber.calcTAFforCFS(primaryResults, secondaryResults);
-
-			TimeSeriesContainer[] diffResults = dssGrabber.getDifferenceSeries(primaryResults);
-			DisplayInput displayInput = new DisplayInput(primaryResults, secondaryResults, diffResults);
 			List<EpptScenarioRun> scenarioRuns = new ArrayList<>();
 			scenarioRuns.add(getBaseRun());
 			scenarioRuns.addAll(getAlternatives());
@@ -165,8 +156,6 @@ class DisplayWRIMSFrames extends DisplayFrames
 				TimeSeriesContainer tsc = primaryResults[i];
 				scenarioRunData.put(epptScenarioRun, Collections.singletonList(tsc));
 			}
-			String sLabel = dssGrabber.getSLabel();
-			String baseRunName = dssGrabber.getBaseRunName();
 			if(getPlotConfigurationState().isDisplayTimeSeriesPlot())
 			{
 				plotTimeSeries(scenarioRunData, new HashMap<>(), dts.getName(), tabbedPane);
