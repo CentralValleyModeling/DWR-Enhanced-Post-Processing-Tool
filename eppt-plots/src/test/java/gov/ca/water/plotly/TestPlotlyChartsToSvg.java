@@ -71,7 +71,7 @@ public class TestPlotlyChartsToSvg
 				buildBubbleData(), alternativeData);
 		PlotlySvgPrinter.printJsonToPath(path, bubble);
 		PlotlySvgPrinter.printSvg(path.toAbsolutePath().getParent());
-		assertTrue(Files.exists(path.toAbsolutePath().getParent().resolve("svg").resolve(path)));
+		assertTrue(Files.exists(path));
 		Files.deleteIfExists(path);
 //		Files.deleteIfExists(Paths.get(path.toString().replace("svg", "json")));
 	}
@@ -89,7 +89,7 @@ public class TestPlotlyChartsToSvg
 				buildBaseExceedanceData(), alternativeData);
 		PlotlySvgPrinter.printJsonToPath(path, bubble);
 		PlotlySvgPrinter.printSvg(path.toAbsolutePath().getParent());
-		assertTrue(Files.exists(path.toAbsolutePath().getParent().resolve("svg").resolve(path)));
+		assertTrue(Files.exists(path));
 		Files.deleteIfExists(path);
 //		Files.deleteIfExists(Paths.get(path.toString().replace("svg", "json")));
 	}
@@ -107,7 +107,7 @@ public class TestPlotlyChartsToSvg
 				primaryData, thresholdData);
 		PlotlySvgPrinter.printJsonToPath(path, bubble);
 		PlotlySvgPrinter.printSvg(path.toAbsolutePath().getParent());
-		assertTrue(Files.exists(path.toAbsolutePath().getParent().resolve("svg").resolve(path)));
+		assertTrue(Files.exists(path));
 		Files.deleteIfExists(path);
 //		Files.deleteIfExists(Paths.get(path.toString().replace("svg", "json")));
 	}
@@ -157,7 +157,7 @@ public class TestPlotlyChartsToSvg
 				exceedanceData);
 		PlotlySvgPrinter.printJsonToPath(path, exceedancePage);
 		PlotlySvgPrinter.printSvg(path.toAbsolutePath().getParent());
-//		assertTrue(Files.exists(path.toAbsolutePath().getParent().resolve("svg").resolve(path)));
+		assertTrue(Files.exists(path));
 //		Files.deleteIfExists(path);
 //		Files.deleteIfExists(Paths.get(path.toString().replace("svg", "json")));
 	}

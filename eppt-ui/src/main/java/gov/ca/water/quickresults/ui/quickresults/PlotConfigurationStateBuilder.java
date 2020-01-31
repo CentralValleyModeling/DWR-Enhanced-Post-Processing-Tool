@@ -88,13 +88,10 @@ public class PlotConfigurationStateBuilder
 			}
 
 			// Date
-			JSpinner spnSM = (JSpinner) _swingEngine.find("spnStartMonth");
 			JSpinner spnEM = (JSpinner) _swingEngine.find("spnEndMonth");
-			JSpinner spnSY = (JSpinner) _swingEngine.find("spnStartYear");
 			JSpinner spnEY = (JSpinner) _swingEngine.find("spnEndYear");
 
-			String cDate = spnSM.getValue().toString() + spnSY.getValue().toString();
-			cDate = cDate + "-" + spnEM.getValue().toString() + spnEY.getValue().toString();
+			String cDate = spnEM.getValue().toString() + spnEY.getValue().toString();
 			cAdd = cAdd + ";" + cDate;
 
 			// Time Series
