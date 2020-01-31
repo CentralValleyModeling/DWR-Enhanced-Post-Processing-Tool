@@ -570,11 +570,13 @@ public class DerivedTimeSeries extends DataReference implements Serializable
 	 */
 	public void setCPartAt(int i, String cpart)
 	{
-		if(cpart != null)
+
+		if(cpart == null)
 		{
-			expandTo(i);
-			_cparts.setElementAt(cpart.toUpperCase().trim(), i);
+			cpart = "";
 		}
+		expandTo(i);
+		_cparts.setElementAt(cpart.toUpperCase().trim(), i);
 	}
 
 	/**

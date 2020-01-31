@@ -422,7 +422,7 @@ public class DTSTable extends MPanel
 		{
 			return;
 		}
-		if(var.equals(AppUtils.SVAR))
+		if(AppUtils.SVAR.equals(var))
 		{
 			String c = (String) svList.get(b.toUpperCase());
 			if(dtm != null)
@@ -434,7 +434,7 @@ public class DTSTable extends MPanel
 				mtm.setValueAt(c, r, 3);
 			}
 		}
-		else if(var.equals(AppUtils.DVAR))
+		else if(AppUtils.DVAR.equals(var))
 		{
 			String c = (String) dvList.get(b.toUpperCase());
 			if(dtm != null)

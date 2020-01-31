@@ -51,6 +51,7 @@ import gov.ca.water.quickresults.ui.EpptPanel;
 import gov.ca.water.quickresults.ui.customresults.CustomResultsPanel;
 import gov.ca.water.quickresults.ui.dataanalysis.DataAnalysisPanel;
 import gov.ca.water.quickresults.ui.projectconfig.scenarioconfig.ScenarioRunEditor;
+import gov.ca.water.quickresults.ui.projectconfig.scenariotable.ScenarioProjectUpdater;
 import gov.ca.water.quickresults.ui.projectconfig.scenariotable.ScenarioTablePanel;
 import gov.ca.water.quickresults.ui.quickresults.PlotConfigurationStateBuilder;
 import gov.ca.water.quickresults.ui.quickresults.QuickResultsPanel;
@@ -492,7 +493,11 @@ public final class ProjectConfigurationPanel extends EpptPanel
 		}
 		addScenarios(scenarioRuns);
 		//Need to ensure this is called after scenarios are added to TreeTable model
-		Platform.runLater(() -> SwingUtilities.invokeLater(this::updateRadioState));
+		Platform.runLater(() ->
+		{
+			ScenarioProjectUpdater.updateWithAllDssFiles();
+			SwingUtilities.invokeLater(this::updateRadioState);
+		});
 	}
 
 	private void loadDefaultProject()
