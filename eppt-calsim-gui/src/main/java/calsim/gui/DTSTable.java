@@ -552,9 +552,6 @@ public class DTSTable extends MPanel
 			int[] ri = _table.getSelectedRows();
 			if(ri == null || ri.length == 0)
 			{
-				JOptionPane.showMessageDialog(this, "Message",
-						"Select a row first!",
-						JOptionPane.PLAIN_MESSAGE);
 				return;
 			}
 			int numberDeleted = 0;
@@ -650,9 +647,6 @@ public class DTSTable extends MPanel
 			int ri = _table.getSelectedRow();
 			if(ri == -1)
 			{
-				JOptionPane.showMessageDialog(this, "Message",
-						"Select a row first!",
-						JOptionPane.PLAIN_MESSAGE);
 				return;
 			}
 			_dts.insertAt(ri);

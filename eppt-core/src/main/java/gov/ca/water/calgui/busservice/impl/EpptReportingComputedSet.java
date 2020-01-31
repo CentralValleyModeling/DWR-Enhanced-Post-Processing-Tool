@@ -118,6 +118,18 @@ public final class EpptReportingComputedSet
 			List<String> primaryS = primarySuffixes.getOrDefault(data.getKey(), new ArrayList<>());
 			List<String> secondaryS = secondarySuffixes.getOrDefault(data.getKey(), new ArrayList<>());
 
+			if(secondaryS == null)
+			{
+				secondaryS = new ArrayList<>();
+			}
+			if(secondary == null)
+			{
+				secondary = new ArrayList<>();
+			}
+			if(primaryS == null)
+			{
+				primaryS = new ArrayList<>();
+			}
 			if(taf)
 			{
 				trendReportingComputed.add(
