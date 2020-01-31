@@ -48,26 +48,6 @@ public class EpptDoubleStatistics extends DoubleSummaryStatistics
 							 EpptDoubleStatistics::combine, EpptDoubleStatistics::getStandardDeviation));
 	}
 
-	@Scriptable
-	public static Double calculateMedian(Map<LocalDateTime, Double> values)
-	{
-		Double retval = null;
-		List<Double> list = values.values().stream().filter(Objects::nonNull).filter(Constant::isValidValue).collect(toList());
-		if(!list.isEmpty())
-		{
-			boolean even = list.size() % 2 == 0;
-			if(even)
-			{
-				retval = list.stream().mapToDouble(d -> d).sorted().skip(list.size() / 2 - 1).limit(2).average().orElse(Double.NaN);
-			}
-			else
-			{
-				retval = list.stream().mapToDouble(d -> d).sorted().skip(list.size() / 2).findFirst().orElse(Double.NaN);
-			}
-		}
-		return retval;
-	}
-
 	@Override
 	public void accept(double value)
 	{
@@ -104,8 +84,8 @@ public class EpptDoubleStatistics extends DoubleSummaryStatistics
 		return tmp;
 	}
 
-	private final double getStandardDeviation()
+	private double getStandardDeviation()
 	{
-		return getCount() > 0 ? Math.sqrt((getSumOfSquare() / getCount()) - Math.pow(getAverage(), 2)) : 0.0d;
+		return getCount() > 0 ? Math.sqrt((getSumOfSquare() / getCount()) - Math.pow(getAverage(), 2)) : 0.0D;
 	}
 }
