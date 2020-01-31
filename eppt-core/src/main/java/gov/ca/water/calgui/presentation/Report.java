@@ -695,7 +695,7 @@ public class Report extends SwingWorker<Void, String>
 			if(refs == null || refs.length == 0)
 			{
 				String filename = ((DSSGroup) group).getFile().toString();
-				String msg = "No data found for " + filename + " and " + path;
+				String msg = "No data found for " + path + " and " + filename;
 				addMessage(msg);
 				LOG.log(Level.FINE, msg);
 				return null;
