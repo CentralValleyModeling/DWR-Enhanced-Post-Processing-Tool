@@ -22,14 +22,16 @@ import gov.ca.water.calgui.busservice.impl.EpptStatistic;
 import javafx.application.Platform;
 import javafx.collections.ObservableList;
 import javafx.embed.swing.JFXPanel;
+import javafx.geometry.Orientation;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeTableView;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.FlowPane;
 
 import com.rma.javafx.treetable.RmaTreeTableView;
 
-import static gov.ca.water.calgui.presentation.plotly.MonthlyTableModel.WATER_YEAR_COL_SPEC;
 import static gov.ca.water.calgui.presentation.plotly.SummaryTableModel.ROOT_COL_SPEC;
 
 /**
@@ -66,6 +68,11 @@ public class SummaryPane extends JFXPanel
 		treeView.setColumnResizePolicy(TreeTableView.CONSTRAINED_RESIZE_POLICY);
 		treeView.getColumnFromSpec(ROOT_COL_SPEC).setMinWidth(250);
 		borderPane.setCenter(treeView);
+		FlowPane flowPane = new FlowPane(Orientation.HORIZONTAL);
+		Button copyDataButton = new Button("Copy Data");
+		copyDataButton.setOnAction(evt->TreeTableUtil.copyValuesToClipboard(treeView));
+		flowPane.getChildren().add(copyDataButton);
+		borderPane.setBottom(flowPane);
 		setScene(new Scene(borderPane));
 	}
 
