@@ -14,6 +14,7 @@ package calsim.gui;
 //import vista.gui.*;
 
 import java.awt.Component;
+import java.awt.Frame;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.FileInputStream;
@@ -801,7 +802,7 @@ public class GeneralTreeModel extends DefaultTreeModel implements Serializable
 	 */
 	public boolean permissionToRemove()
 	{
-		int selectedoption = JOptionPane.showConfirmDialog(null,
+		int selectedoption = JOptionPane.showConfirmDialog(Frame.getFrames()[Frame.getFrames().length - 1],
 				"Remove Node? This could result in permanently removing the DTS and MTS's from the project.",
 				"Warning", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
 		return selectedoption == 1;

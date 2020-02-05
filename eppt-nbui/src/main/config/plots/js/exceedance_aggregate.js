@@ -12,10 +12,10 @@
 
 function getAggregatePlotlySeries(datum) {
     let series = [];
-    for (var i = 0; i < datum.length; i++) {
-        let allTimeSeries = datum[i]['primary_data']['period_filtered_time_series'];
-        for (let m = 0; m < allTimeSeries.length; m++) {
-            let timeSeries = allTimeSeries[m];
+
+    function plotSeries(allTimeSeries, lineName, lineColor, primary) {
+        for (let m = 0; m < allTimeSeries['period_filtered_time_series'].length; m++) {
+            let timeSeries = allTimeSeries['period_filtered_time_series'][m];
             let dataOnly = [];
             for (var j = 0; j < timeSeries.length; j++) {
                 dataOnly.push(timeSeries[j][1]);
@@ -28,18 +28,37 @@ function getAggregatePlotlySeries(datum) {
                 xData.push(exceedance);
                 yData.push(dataOnly[k]);
             }
+            let dash;
+            if (primary) {
+                dash = PLOTLY_LINE_DASH_STYLES[m % PLOTLY_LINE_DASH_STYLES.length];
+            } else {
+                dash = PLOTLY_LINE_DASH_STYLES[1];
+            }
+            let name = lineName;
+            if (allTimeSeries['data_suffix'][m]) {
+                name = " " + allTimeSeries['data_suffix'][m];
+            }
             series.push({
                 x: xData,
                 y: yData,
                 marker: {
-                    color: datum[i]['scenario_color']
+                    color: lineColor
                 },
                 line: {
-                    dash: PLOTLY_LINE_DASH_STYLES[m % PLOTLY_LINE_DASH_STYLES.length]
+                    dash: dash
                 },
-                name: datum[i]['scenario_name'] + ' ' + datum[i]['primary_data']['data_suffix'][m]
+                name: name
             });
         }
+    }
+
+    for (var i = 0; i < datum.length; i++) {
+        let primarySeries = datum[i]['primary_data'];
+        let scenarioName = datum[i]['scenario_name'];
+        let lineColor = datum[i]['scenario_color'];
+        plotSeries(primarySeries, scenarioName, lineColor, true);
+        let secondarySeries = datum[i]['secondary_data'];
+        plotSeries(secondarySeries, scenarioName, lineColor, false);
     }
     return series;
 }
@@ -81,7 +100,7 @@ function plot(data) {
     };
     Plotly.newPlot('container_aggregate_tester', getAggregatePlotlySeries(datum), layout, {
         displaylogo: false,
-        modeBarButtons: buildModeBarButtons(),
+        modeBarButtons: buildModeBarButtons("container_aggregate_tester"),
         scrollZoom: true,
         responsive: true,
     });

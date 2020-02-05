@@ -58,7 +58,7 @@ public class TestPlotlyChartsToSvg
 		}
 	}
 
-	@Test
+//	@Test
 	public void testPlotlyBubbleToSvgFromTemplate() throws Exception
 	{
 		Path path = Paths.get("TestBubbleFromTemplate.svg");
@@ -76,7 +76,7 @@ public class TestPlotlyChartsToSvg
 //		Files.deleteIfExists(Paths.get(path.toString().replace("svg", "json")));
 	}
 
-	@Test
+//	@Test
 	public void testPlotlyExceedanceToSvgFromTemplate() throws Exception
 	{
 		Path path = Paths.get("TestExceedanceFromTemplate.svg");
@@ -94,7 +94,7 @@ public class TestPlotlyChartsToSvg
 //		Files.deleteIfExists(Paths.get(path.toString().replace("svg", "json")));
 	}
 
-	@Test
+//	@Test
 	public void testPlotlyMonthlyToSvgFromTemplate() throws Exception
 	{
 		Path path = Paths.get("TestMonthlyFromTemplate.svg");
@@ -142,7 +142,7 @@ public class TestPlotlyChartsToSvg
 		return retval;
 	}
 
-	@Test
+//	@Test
 	public void testPlotlyExceedancePageToSvgFromTemplate() throws Exception
 	{
 		Path path = Paths.get("TestExceedancePageFromTemplate.svg");

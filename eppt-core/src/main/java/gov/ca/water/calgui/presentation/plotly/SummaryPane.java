@@ -20,6 +20,7 @@ import gov.ca.water.calgui.bo.WaterYearIndex;
 import gov.ca.water.calgui.busservice.impl.EpptReportingComputedSet;
 import gov.ca.water.calgui.busservice.impl.EpptStatistic;
 import javafx.application.Platform;
+import javafx.collections.ObservableList;
 import javafx.embed.swing.JFXPanel;
 import javafx.scene.Scene;
 import javafx.scene.control.TreeItem;
@@ -27,6 +28,9 @@ import javafx.scene.control.TreeTableView;
 import javafx.scene.layout.BorderPane;
 
 import com.rma.javafx.treetable.RmaTreeTableView;
+
+import static gov.ca.water.calgui.presentation.plotly.MonthlyTableModel.WATER_YEAR_COL_SPEC;
+import static gov.ca.water.calgui.presentation.plotly.SummaryTableModel.ROOT_COL_SPEC;
 
 /**
  * Company: Resource Management Associates
@@ -57,20 +61,23 @@ public class SummaryPane extends JFXPanel
 		SummaryTableModel monthlyTableModel = new SummaryTableModel(_plotTitle, _waterYearDefinition, _data);
 		treeView.setModel(monthlyTableModel);
 		treeView.setCopyEnabled(true);
+		ObservableList<TreeItem<SummaryPaneRow>> treeItems = treeView.getRoot().getChildren();
+		expandTreeItems(treeItems);
 		treeView.setColumnResizePolicy(TreeTableView.CONSTRAINED_RESIZE_POLICY);
-		TreeItem<SummaryPaneRow> treeItem = treeView.getTreeItem(0);
-		int i = 1;
-		while(treeItem != null)
+		treeView.getColumnFromSpec(ROOT_COL_SPEC).setMinWidth(250);
+		borderPane.setCenter(treeView);
+		setScene(new Scene(borderPane));
+	}
+
+	private void expandTreeItems(ObservableList<TreeItem<SummaryPaneRow>> treeItems)
+	{
+		for(TreeItem<SummaryPaneRow> treeItem : treeItems)
 		{
-			treeItem = treeView.getTreeItem(i);
 			if(treeItem != null)
 			{
 				treeItem.setExpanded(true);
+				expandTreeItems(treeItem.getChildren());
 			}
-			i++;
 		}
-		treeView.resizeAllColumnsToFitContent();
-		borderPane.setCenter(treeView);
-		setScene(new Scene(borderPane));
 	}
 }

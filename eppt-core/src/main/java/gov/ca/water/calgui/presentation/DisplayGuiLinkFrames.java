@@ -138,7 +138,7 @@ final class DisplayGuiLinkFrames extends DisplayFrames
 		}
 		if(getPlotConfigurationState().isDisplayTimeSeriesPlot())
 		{
-			plotTimeSeries(primaryScenarioRunData, secondaryScenarioRunData, guiLink.getPlotTitle(), tabbedPane);
+			plotTimeSeries(new HashMap<>(), primaryScenarioRunData, secondarySuffixes, secondaryScenarioRunData, guiLink.getPlotTitle(), tabbedPane);
 		}
 		if(getPlotConfigurationState().isDoExceedance())
 		{

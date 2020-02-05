@@ -15,6 +15,7 @@ package gov.ca.water.calgui.presentation.plotly;
 import gov.ca.water.calgui.bo.WaterYearDefinition;
 import gov.ca.water.calgui.busservice.impl.EpptReportingComputedSet;
 import javafx.application.Platform;
+import javafx.collections.ObservableList;
 import javafx.embed.swing.JFXPanel;
 import javafx.scene.Scene;
 import javafx.scene.control.TreeItem;
@@ -23,6 +24,8 @@ import javafx.scene.control.TreeView;
 import javafx.scene.layout.BorderPane;
 
 import com.rma.javafx.treetable.RmaTreeTableView;
+
+import static gov.ca.water.calgui.presentation.plotly.MonthlyTableModel.WATER_YEAR_COL_SPEC;
 
 /**
  * Company: Resource Management Associates
@@ -53,21 +56,16 @@ class MonthlyPane extends JFXPanel
 		MonthlyTableModel monthlyTableModel = new MonthlyTableModel(_plotTitle, _waterYearDefinition, _epptReportingComputedSet);
 		_treeView.setModel(monthlyTableModel);
 		_treeView.setCopyEnabled(true);
-		for(int i = 0; i < monthlyTableModel.getRows().size(); i++)
+		ObservableList<TreeItem<MonthlyPaneRow>> treeItems = _treeView.getRoot().getChildren();
+		for(TreeItem<MonthlyPaneRow> treeItem : treeItems)
 		{
-			TreeItem<MonthlyPaneRow> treeItem = _treeView.getTreeItem(i);
 			if(treeItem != null)
 			{
 				treeItem.setExpanded(true);
 			}
 		}
-		Platform.runLater(() ->
-		{
-			_treeView.setColumnResizePolicy(TreeTableView.CONSTRAINED_RESIZE_POLICY);
-			_treeView.resizeAllColumnsToFitContent();
-			_treeView.setColumnResizePolicy(TreeTableView.CONSTRAINED_RESIZE_POLICY);
-		});
-//		_treeView.resizeAllColumnsToFitContent();
+		_treeView.setColumnResizePolicy(TreeTableView.CONSTRAINED_RESIZE_POLICY);
+		_treeView.getColumnFromSpec(WATER_YEAR_COL_SPEC).setMinWidth(250);
 		borderPane.setCenter(_treeView);
 		setScene(new Scene(borderPane));
 	}

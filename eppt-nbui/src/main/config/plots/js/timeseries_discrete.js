@@ -12,27 +12,47 @@
 
 function getPlotlyMonthlySeries(datum) {
     var series = [];
-    for (let i = 0; i < datum.length; i++) {
-        let allTimeSeries = datum[i]['primary_data']['full_time_series'];
-        for (let j = 0; j < allTimeSeries.length; j++) {
-            let timeSeries = allTimeSeries[j];
+
+    function plotSeries(allTimeSeries, lineName, lineColor, primary) {
+        for (let j = 0; j < allTimeSeries['full_time_series'].length; j++) {
+            let timeSeries = allTimeSeries['full_time_series'][j];
             let x = [];
             let y = [];
             for (let m = 0; m < timeSeries.length; m++) {
                 x.push(new Date(timeSeries[m][0]));
                 y.push(timeSeries[m][1]);
             }
+            let dash;
+            if(primary){
+                dash = PLOTLY_LINE_DASH_STYLES[j % PLOTLY_LINE_DASH_STYLES.length];
+            }
+            else{
+                dash = PLOTLY_LINE_DASH_STYLES[1];
+            }
+            let name = lineName;
+            if(allTimeSeries['data_suffix'][j]){
+                name = " " + allTimeSeries['data_suffix'][j];
+            }
             series.push({
-                name: datum[i]['scenario_name'] + " " + datum[i]['primary_data']['data_suffix'][j],
+                name: name,
                 x: x,
                 y: y,
                 mode: 'lines',
                 line: {
-                    color: datum[i]['scenario_color'],
-                    dash: PLOTLY_LINE_DASH_STYLES[j % PLOTLY_LINE_DASH_STYLES.length]
+                    color: lineColor,
+                    dash: dash
                 }
             });
         }
+    }
+
+    for (let i = 0; i < datum.length; i++) {
+        let primarySeries = datum[i]['primary_data'];
+        let scenarioName = datum[i]['scenario_name'];
+        let lineColor = datum[i]['scenario_color'];
+        plotSeries(primarySeries, scenarioName, lineColor, true);
+        let secondarySeries = datum[i]['secondary_data'];
+        plotSeries(secondarySeries, scenarioName, lineColor, false);
     }
     return series;
 }
@@ -122,10 +142,7 @@ function buildScatterLayout(data) {
         legend: {
             orientation: 'h',
             xanchor: 'center',
-            x: 0.5,
-            font: {
-                size: 10,
-            }
+            x: 0.5
         },
         title: {
             text: data['gui_link_title'],
@@ -144,7 +161,7 @@ function plot(data) {
     if (data['comparison_mode'] === 'COMPARISON' && datum.length > 1) {
         modeBar = buildModeBarButtonsWithScatter('container_discrete_tester', data);
     } else {
-        modeBar = buildModeBarButtons();
+        modeBar = buildModeBarButtons('container_discrete_tester');
     }
     Plotly.newPlot('container_discrete_tester', plotlyMonthlySeries, layout, {
         displaylogo: false,
@@ -210,7 +227,7 @@ function buildModeBarButtonsWithScatter(graphDiv, data) {
         if (!scatter) {
             scatter = true;
             var datum = data['scenario_run_data'];
-            let modeBar = buildModeBarButtons();
+            let modeBar = buildModeBarButtons('container_discrete_tester');
             var layout = buildScatterLayout(data);
             let plotlyMonthlySeries = getPlotlyScatterSeries(datum);
             modeBar[1].push(lineButton);
@@ -222,7 +239,7 @@ function buildModeBarButtonsWithScatter(graphDiv, data) {
             });
         } else {
             scatter = false;
-            let modeBar = buildModeBarButtons();
+            let modeBar = buildModeBarButtons('container_discrete_tester');
             var datum = data['scenario_run_data'];
             var layout = buildLineLayout(data);
             let plotlyMonthlySeries = getPlotlyMonthlySeries(datum);
@@ -236,7 +253,7 @@ function buildModeBarButtonsWithScatter(graphDiv, data) {
         }
     }
 
-    let modeBar = buildModeBarButtons();
+    let modeBar = buildModeBarButtons(graphDiv);
     modeBar[1].push(scatterButton);
     return modeBar;
 }

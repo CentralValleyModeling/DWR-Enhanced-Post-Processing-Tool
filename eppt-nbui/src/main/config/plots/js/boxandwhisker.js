@@ -54,26 +54,44 @@ function filterDataForMonth(data, month) {
 
 function getPlotlySeries(datum, periodMonths) {
     let series = [];
-    for (let i = 0; i < datum.length; i++) {
-        let allTimeSeries = datum[i]['primary_data']['full_time_series'];
-        for (let j = 0; j < allTimeSeries.length; j++) {
-            let timeSeries = allTimeSeries[j];
+
+    function plotSeries(allTimeSeries, lineName, lineColor, primary) {
+        for (let j = 0; j < allTimeSeries['full_time_series'].length; j++) {
+            let timeSeries = allTimeSeries['full_time_series'][j];
             let data = getPlotlyBoxValues(timeSeries, periodMonths);
+            let opacity;
+            if(primary){
+                opacity = 1;
+            }
+            else{
+                opacity = .3;
+            }
+            let name = lineName;
+            if(allTimeSeries['data_suffix'][j]){
+                name = " " + allTimeSeries['data_suffix'][j];
+            }
             series.push({
                 y: data['y'],
                 x: data['x'],
                 type: 'box',
-                name: datum[i]['scenario_name'] + ' ' + datum[i]['primary_data']['data_suffix'][j],
+                name: name,
                 marker: {
-                    color: datum[i]['scenario_color']
+                    color: lineColor
                 },
-                line: {
-                    dash: PLOTLY_LINE_DASH_STYLES[j % PLOTLY_LINE_DASH_STYLES.length]
-                },
+                opacity: opacity,
                 boxmean: true,
                 boxpoints: false
             });
         }
+    }
+
+    for (let i = 0; i < datum.length; i++) {
+        let primarySeries = datum[i]['primary_data'];
+        let scenarioName = datum[i]['scenario_name'];
+        let lineColor = datum[i]['scenario_color'];
+        plotSeries(primarySeries, scenarioName, lineColor, true);
+        let secondarySeries = datum[i]['secondary_data'];
+        plotSeries(secondarySeries, scenarioName, lineColor, false);
     }
     return series;
 }
@@ -116,7 +134,7 @@ function plot(data) {
     };
     Plotly.newPlot('tester', getPlotlySeries(datum, periodMonths), layout, {
             displaylogo: false,
-            modeBarButtons: buildModeBarButtons(),
+            modeBarButtons: buildModeBarButtons('tester'),
             scrollZoom: true,
             responsive: true
         }

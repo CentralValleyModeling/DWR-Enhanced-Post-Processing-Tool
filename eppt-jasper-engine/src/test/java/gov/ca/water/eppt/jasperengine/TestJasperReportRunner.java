@@ -36,7 +36,7 @@ public class TestJasperReportRunner
 {
 	private static final Logger LOGGER = Logger.getLogger(TestJasperReportRunner.class.getName());
 
-	@Test
+//	@Test
 	public void testReportRunner() throws Exception
 	{
 		JasperReportRunner jasperReportRunner = new JasperReportRunner();
