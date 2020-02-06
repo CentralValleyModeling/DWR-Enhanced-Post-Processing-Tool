@@ -91,11 +91,11 @@ function plotlyExportFunction(plot) {
     return (format) => {
         let width = plot.offsetWidth;
         let height = plot.offsetHeight;
-        Plotly.downloadImage(plot, {format: format, height: height, width: width});
         //javaObj instantiated from JavaFX
         if (javaObj) {
             javaObj.interruptFunction(format, JSON.stringify(plot.data), JSON.stringify(plot.layout), width, height);
         }
+        Plotly.downloadImage(plot, {format: format, height: height, width: width});
     }
 }
 
@@ -120,8 +120,8 @@ function openSecondNav(option, plot) {
     while (secondSidenav.firstChild) {
         secondSidenav.removeChild(secondSidenav.firstChild);
     }
-    secondSidenav.style.width = "300px";
-    document.getElementById("main").style.marginLeft = "550px";
+    secondSidenav.style.width = "350px";
+    document.getElementById("main").style.marginLeft = "600px";
     let plotTemplate = Plotly.makeTemplate(plot);
 
     function addDomainAxesOptions() {
@@ -139,7 +139,8 @@ function openSecondNav(option, plot) {
             Plotly.relayout(plot, {"xaxis.title.text": event.target.value});
         });
         let domainLabel = document.createElement("label");
-        domainLabel.appendChild(document.createTextNode("Domain Label"));
+        domainLabel.appendChild(document.createTextNode("Label"));
+        domainLabel.className = "secondary-nav-label";
 
 
         let domainLabelColor = document.createElement("input");
@@ -151,13 +152,18 @@ function openSecondNav(option, plot) {
             Plotly.relayout(plot, {"xaxis.title.font.color": event.target.value});
         });
         let domainLabelColorLabel = document.createElement("label");
-        domainLabelColorLabel.appendChild(document.createTextNode("Domain Label Color"));
+        domainLabelColorLabel.appendChild(document.createTextNode("Label Color"));
+        domainLabelColorLabel.className = "secondary-nav-label";
 
         let domainShowTicks = document.createElement("label");
         domainShowTicks.className = 'switch';
         let showTicksToggleCheckbox = document.createElement("input");
         showTicksToggleCheckbox.type = "checkbox";
-        showTicksToggleCheckbox.checked = plotTemplate.layout.xaxis.visible;
+        let checked = true;
+        if(plotTemplate.layout.xaxis.visible === false){
+            checked = false;
+        }
+        showTicksToggleCheckbox.checked = checked;
         domainShowTicks.appendChild(showTicksToggleCheckbox);
         let showTicksToggle = document.createElement("div");
         showTicksToggle.className = "slider round";
@@ -170,12 +176,17 @@ function openSecondNav(option, plot) {
         let domainShowTicksLabel = document.createElement("label");
         domainShowTicksLabel.for = 'margin-color';
         domainShowTicksLabel.appendChild(document.createTextNode("Show Ticks"));
+        domainShowTicksLabel.className = "secondary-nav-label";
 
         let domainShowTickLabels = document.createElement("label");
         domainShowTickLabels.className = 'switch';
         let showTickLabelsToggleCheckbox = document.createElement("input");
         showTickLabelsToggleCheckbox.type = "checkbox";
-        showTickLabelsToggleCheckbox.checked = plotTemplate.layout.xaxis.showticklabels;
+        checked = true;
+        if(plotTemplate.layout.xaxis.showticklabels === false){
+            checked = false;
+        }
+        showTickLabelsToggleCheckbox.checked = checked;
         domainShowTickLabels.appendChild(showTickLabelsToggleCheckbox);
         let showTickLabelsToggle = document.createElement("div");
         showTickLabelsToggle.className = "slider round";
@@ -188,6 +199,7 @@ function openSecondNav(option, plot) {
         let domainShowTicksLabelsLabel = document.createElement("label");
         domainShowTicksLabelsLabel.for = 'margin-color';
         domainShowTicksLabelsLabel.appendChild(document.createTextNode("Show Tick Labels"));
+        domainShowTicksLabelsLabel.className = "secondary-nav-label";
 
         let domainAxisType = document.createElement("select");
         domainAxisType.type = "dropdown";
@@ -236,6 +248,7 @@ function openSecondNav(option, plot) {
         domainMin.value = plotTemplate.layout.xaxis.range[0];
         let domainMinLabel = document.createElement("label");
         domainMinLabel.appendChild(document.createTextNode("Min"));
+        domainMinLabel.className = "secondary-nav-label";
 
         if (plotTemplate.layout.xaxis.type === 'linear'
             || plotTemplate.layout.xaxis.type === 'log') {
@@ -252,6 +265,7 @@ function openSecondNav(option, plot) {
         });
         let domainMaxLabel = document.createElement("label");
         domainMaxLabel.appendChild(document.createTextNode("Max"));
+        domainMaxLabel.className = "secondary-nav-label";
 
         secondSidenav.appendChild(domain);
         secondSidenav.appendChild(document.createElement("br"));
@@ -290,7 +304,8 @@ function openSecondNav(option, plot) {
             Plotly.relayout(plot, {"yaxis.title.text": event.target.value});
         });
         let rangeLabel = document.createElement("label");
-        rangeLabel.appendChild(document.createTextNode("Range Label"));
+        rangeLabel.appendChild(document.createTextNode("Label"));
+        rangeLabel.className = "secondary-nav-label";
 
 
         let rangeLabelColor = document.createElement("input");
@@ -302,13 +317,18 @@ function openSecondNav(option, plot) {
             Plotly.relayout(plot, {"yaxis.title.font.color": event.target.value});
         });
         let rangeLabelColorLabel = document.createElement("label");
-        rangeLabelColorLabel.appendChild(document.createTextNode("Range Label Color"));
+        rangeLabelColorLabel.appendChild(document.createTextNode("Label Color"));
+        rangeLabelColorLabel.className = "secondary-nav-label";
 
         let rangeShowTicks = document.createElement("label");
         rangeShowTicks.className = 'switch';
         let showTicksToggleCheckbox = document.createElement("input");
         showTicksToggleCheckbox.type = "checkbox";
-        showTicksToggleCheckbox.checked = plotTemplate.layout.yaxis.visible;
+        let checked = true;
+        if(plotTemplate.layout.yaxis.visible === false){
+            checked = false;
+        }
+        showTicksToggleCheckbox.checked = checked;
         rangeShowTicks.appendChild(showTicksToggleCheckbox);
         let showTicksToggle = document.createElement("div");
         showTicksToggle.className = "slider round";
@@ -321,12 +341,17 @@ function openSecondNav(option, plot) {
         let rangeShowTicksLabel = document.createElement("label");
         rangeShowTicksLabel.for = 'margin-color';
         rangeShowTicksLabel.appendChild(document.createTextNode("Show Ticks"));
+        rangeShowTicksLabel.className = "secondary-nav-label";
 
         let rangeShowTickLabels = document.createElement("label");
         rangeShowTickLabels.className = 'switch';
         let showTickLabelsToggleCheckbox = document.createElement("input");
         showTickLabelsToggleCheckbox.type = "checkbox";
-        showTickLabelsToggleCheckbox.checked = plotTemplate.layout.yaxis.showticklabels;
+        checked = true;
+        if(plotTemplate.layout.yaxis.showticklabels === false){
+            checked = false;
+        }
+        showTickLabelsToggleCheckbox.checked = checked;
         rangeShowTickLabels.appendChild(showTickLabelsToggleCheckbox);
         let showTickLabelsToggle = document.createElement("div");
         showTickLabelsToggle.className = "slider round";
@@ -339,6 +364,7 @@ function openSecondNav(option, plot) {
         let domainShowTicksLabelsLabel = document.createElement("label");
         domainShowTicksLabelsLabel.for = 'margin-color';
         domainShowTicksLabelsLabel.appendChild(document.createTextNode("Show Tick Labels"));
+        domainShowTicksLabelsLabel.className = "secondary-nav-label";
 
         let rangeAxisType = document.createElement("select");
         rangeAxisType.type = "dropdown";
@@ -387,6 +413,7 @@ function openSecondNav(option, plot) {
         rangeMin.value = plotTemplate.layout.yaxis.range[0];
         let rangeMinLabel = document.createElement("label");
         rangeMinLabel.appendChild(document.createTextNode("Min"));
+        rangeMinLabel.className = "secondary-nav-label";
 
         if (plotTemplate.layout.yaxis.type === 'linear'
             || plotTemplate.layout.yaxis.type === 'log') {
@@ -403,30 +430,34 @@ function openSecondNav(option, plot) {
         });
         let rangeMaxLabel = document.createElement("label");
         rangeMaxLabel.appendChild(document.createTextNode("Max"));
+        rangeMaxLabel.className = "secondary-nav-label";
 
         secondSidenav.appendChild(range);
         secondSidenav.appendChild(document.createElement("br"));
-        secondSidenav.appendChild(rangeTextField);
         secondSidenav.appendChild(rangeLabel);
+        secondSidenav.appendChild(rangeTextField);
         secondSidenav.appendChild(document.createElement("br"));
-        secondSidenav.appendChild(rangeLabelColor);
         secondSidenav.appendChild(rangeLabelColorLabel);
+        secondSidenav.appendChild(rangeLabelColor);
         secondSidenav.appendChild(document.createElement("br"));
-        secondSidenav.appendChild(rangeShowTicks);
         secondSidenav.appendChild(rangeShowTicksLabel);
+        secondSidenav.appendChild(rangeShowTicks);
         secondSidenav.appendChild(document.createElement("br"));
-        secondSidenav.appendChild(rangeShowTickLabels);
         secondSidenav.appendChild(domainShowTicksLabelsLabel);
+        secondSidenav.appendChild(rangeShowTickLabels);
         secondSidenav.appendChild(document.createElement("br"));
-        secondSidenav.appendChild(rangeMin);
         secondSidenav.appendChild(rangeMinLabel);
+        secondSidenav.appendChild(rangeMin);
         secondSidenav.appendChild(document.createElement("br"));
-        secondSidenav.appendChild(rangeMax);
         secondSidenav.appendChild(rangeMaxLabel);
+        secondSidenav.appendChild(rangeMax);
         secondSidenav.appendChild(document.createElement("br"));
     }
 
     if (option === 'general') {
+        let plotLabel = document.createElement("label");
+        plotLabel.appendChild(document.createTextNode("Plot"));
+        plotLabel.className = "secondary-nav-title";
         let backgroundColorNode = document.createElement("input");
         backgroundColorNode.type = 'color';
         backgroundColorNode.id = 'general-background-color';
@@ -443,6 +474,7 @@ function openSecondNav(option, plot) {
         let backgroundColorLabel = document.createElement("label");
         backgroundColorLabel.for = 'general-background-color';
         backgroundColorLabel.appendChild(document.createTextNode("Background Color"));
+        backgroundColorLabel.className = "secondary-nav-label";
 
         let marginColorNode = document.createElement("input");
         marginColorNode.type = 'color';
@@ -460,6 +492,7 @@ function openSecondNav(option, plot) {
         let marginColorLabel = document.createElement("label");
         marginColorLabel.for = 'margin-color';
         marginColorLabel.appendChild(document.createTextNode("Plot Color"));
+        marginColorLabel.className = "secondary-nav-label";
 
         let onOffSwitchLabel = document.createElement("label");
         onOffSwitchLabel.className = 'switch';
@@ -477,10 +510,12 @@ function openSecondNav(option, plot) {
         });
         let legendVisibleLabel = document.createElement("label");
         legendVisibleLabel.for = 'margin-color';
+        legendVisibleLabel.className = "secondary-nav-label";
         legendVisibleLabel.appendChild(document.createTextNode("Show Legend"));
 
         let titleHeaderElement = document.createElement("label");
         titleHeaderElement.appendChild(document.createTextNode("Title"));
+        titleHeaderElement.className = "secondary-nav-title";
         let titleTextElement = document.createElement("input");
         titleTextElement.type = "text";
         titleTextElement.value = plotTemplate.layout.title.text;
@@ -489,6 +524,7 @@ function openSecondNav(option, plot) {
         });
 
         let showTitleLabel = document.createElement("label");
+        showTitleLabel.className = "secondary-nav-label";
         showTitleLabel.for = 'margin-color';
         showTitleLabel.appendChild(document.createTextNode("Label"));
         let titleColorNode = document.createElement("input");
@@ -499,24 +535,27 @@ function openSecondNav(option, plot) {
         });
 
         let titleColorLabel = document.createElement("label");
+        titleColorLabel.className = "secondary-nav-label";
         titleColorLabel.appendChild(document.createTextNode("Title Color"));
 
-        secondSidenav.appendChild(backgroundColorNode);
+        secondSidenav.appendChild(plotLabel);
+        secondSidenav.appendChild(document.createElement("br"));
         secondSidenav.appendChild(backgroundColorLabel);
+        secondSidenav.appendChild(backgroundColorNode);
         secondSidenav.appendChild(document.createElement("br"));
-        secondSidenav.appendChild(marginColorNode);
         secondSidenav.appendChild(marginColorLabel);
+        secondSidenav.appendChild(marginColorNode);
         secondSidenav.appendChild(document.createElement("br"));
-        secondSidenav.appendChild(onOffSwitchLabel);
         secondSidenav.appendChild(legendVisibleLabel);
+        secondSidenav.appendChild(onOffSwitchLabel);
         secondSidenav.appendChild(document.createElement("br"));
         secondSidenav.appendChild(titleHeaderElement);
         secondSidenav.appendChild(document.createElement("br"));
-        secondSidenav.appendChild(titleTextElement);
         secondSidenav.appendChild(showTitleLabel);
+        secondSidenav.appendChild(titleTextElement);
         secondSidenav.appendChild(document.createElement("br"));
-        secondSidenav.appendChild(titleColorNode);
         secondSidenav.appendChild(titleColorLabel);
+        secondSidenav.appendChild(titleColorNode);
 
     } else if (option === 'axes') {
         addDomainAxesOptions();

@@ -61,7 +61,7 @@ function plotDiscrete(data) {
     };
     Plotly.newPlot('container_discrete_tester', getPlotlyMonthlySeries(datum), layout, {
         displaylogo: false,
-        modeBarButtonsToRemove: ['toImage', 'sendDataToCloud', 'editInChartStudio', 'lasso2d', 'select2d', 'resetScale2d'],
+        modeBarButtons: buildModeBarButtons('container_discrete_tester'),
         scrollZoom: true,
         responsive: true
     });

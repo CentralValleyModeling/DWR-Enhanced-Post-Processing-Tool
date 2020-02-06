@@ -30,6 +30,7 @@ import javax.swing.*;
 import gov.ca.water.calgui.bo.SimpleFileFilter;
 import gov.ca.water.calgui.constant.Constant;
 import gov.ca.water.calgui.constant.EpptPreferences;
+import javafx.application.Platform;
 import javafx.beans.value.ObservableValue;
 import javafx.concurrent.Worker;
 import javafx.scene.layout.BorderPane;
@@ -72,11 +73,6 @@ public class JavaFxChartsPane extends BorderPane
 
 	private void callbackScript(ObservableValue<? extends Worker.State> observableValue, Worker.State state, Worker.State newValue)
 	{
-		JSObject document = (JSObject) _webView.getEngine().executeScript("window");
-		if(document != null)
-		{
-			document.setMember("javaObj", new JavaApp());
-		}
 		if(newValue == Worker.State.SUCCEEDED)
 		{
 			executeScript(_callbackScript);
@@ -84,6 +80,11 @@ public class JavaFxChartsPane extends BorderPane
 		else if(newValue == Worker.State.CANCELLED)
 		{
 			handleCancel();
+		}
+		JSObject document = (JSObject) _webView.getEngine().executeScript("window");
+		if(document != null)
+		{
+			Platform.runLater(()->document.setMember("javaObj", new JavaApp()));
 		}
 	}
 

@@ -66,7 +66,7 @@ function plot(data) {
     };
     Plotly.newPlot('tester', getPlotlySeries(datum), layout, {
         displaylogo: false,
-        modeBarButtonsToRemove: ['toImage', 'sendDataToCloud', 'editInChartStudio', 'lasso2d', 'select2d', 'toggleSpikelines', 'resetScale2d'],
+        modeBarButtons: buildModeBarButtons('tester'),
         scrollZoom: true
     });
     $("#tester").mousedown((ev) => {

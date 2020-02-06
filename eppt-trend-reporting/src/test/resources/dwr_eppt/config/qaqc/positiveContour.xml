@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<TwoColorColorContour>
+    <saturation>1.0</saturation>
+    <brightness>1.0</brightness>
+    <minimum>0.0</minimum>
+    <maximum>37.0</maximum>
+    <maxClipping>
+        <enabled>false</enabled>
+        <value>-INF</value>
+    </maxClipping>
+    <minClipping>
+        <enabled>false</enabled>
+        <value>-INF</value>
+    </minClipping>
+    <scaleToClipping>false</scaleToClipping>
+    <minColor>
+        <a>253</a>
+        <b>239</b>
+        <c>160</c>
+        <d>255</d>
+    </minColor>
+    <maxColor>
+        <a>109</a>
+        <b>192</b>
+        <c>127</c>
+        <d>255</d>
+    </maxColor>
+</TwoColorColorContour>

@@ -15,21 +15,15 @@ package gov.ca.water.calgui.presentation.plotly;
 import java.awt.Toolkit;
 import java.awt.datatransfer.StringSelection;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Objects;
 import java.util.function.Function;
 
 import javafx.beans.value.ObservableValue;
 import javafx.collections.ObservableList;
 import javafx.scene.control.TreeItem;
-import javafx.scene.control.TreeTableColumn;
-import javafx.scene.control.TreeTablePosition;
 
 import com.rma.javafx.iface.ColumnSpec;
 import com.rma.javafx.treetable.RmaTreeTableView;
-import com.rma.javafx.treetable.TreeTableViewSelectionUtilities;
-import com.rma.javafx.treetable.columns.RmaTreeTableColumn;
 import com.rma.javafx.treetable.columns.specs.TreeTableColumnSpec;
 import com.rma.javafx.treetable.rows.TreeTableRowModel;
 import com.rma.javafx.utils.JavaFxTreeTableViewUtils;
@@ -40,9 +34,13 @@ import com.rma.javafx.utils.JavaFxTreeTableViewUtils;
  * @author <a href="mailto:adam@rmanet.com">Adam Korynta</a>
  * @since 02-05-2020
  */
-class TreeTableUtil
+final class TreeTableUtil
 {
 
+	private TreeTableUtil()
+	{
+		throw new AssertionError("utility class");
+	}
 
 	private static <R extends TreeTableRowModel> String copyValuesToString(RmaTreeTableView<?, R> treeTableView)
 	{

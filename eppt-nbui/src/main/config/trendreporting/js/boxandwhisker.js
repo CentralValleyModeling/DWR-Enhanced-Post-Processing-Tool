@@ -119,7 +119,7 @@ function plot(data) {
     };
     let plot = Plotly.newPlot('tester', getPlotlySeries(datum, periodMonths), layout, {
             displaylogo: false,
-            modeBarButtonsToRemove: ['toImage', 'sendDataToCloud', 'editInChartStudio', 'lasso2d', 'select2d', 'resetScale2d'],
+        modeBarButtons: buildModeBarButtons('tester'),
             scrollZoom: true,
             responsive: true
         }

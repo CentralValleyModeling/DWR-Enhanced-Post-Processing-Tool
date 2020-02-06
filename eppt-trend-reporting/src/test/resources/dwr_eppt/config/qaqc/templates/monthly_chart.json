@@ -11,9 +11,8 @@
     }
   ],
   "layout": {
-    "width": 900,
-    "height": 600,
     "font": {
+      "family": "Lucida Sans Unicode, Verdana, Arial, Helvetica, sans-serif",
       "color": "black"
     },
     "xaxis": {
@@ -28,7 +27,10 @@
       }
     },
     "title": {
-      "text": ""
+      "text": "",
+      "font": {
+        "size": 20
+      }
     }
   }
 }

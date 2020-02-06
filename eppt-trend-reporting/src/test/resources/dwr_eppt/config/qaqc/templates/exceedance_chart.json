@@ -12,10 +12,9 @@
   ],
   "layout": {
     "font": {
+      "family": "Lucida Sans Unicode, Verdana, Arial, Helvetica, sans-serif",
       "color": "black"
     },
-    "width": 900,
-    "height": 600,
     "xaxis": {
       "showgrid": false,
       "tickformat": ",.0%",
@@ -34,7 +33,10 @@
       }
     },
     "title": {
-      "text": ""
+      "text": "",
+      "font": {
+        "size": 20
+      }
     }
   }
 }

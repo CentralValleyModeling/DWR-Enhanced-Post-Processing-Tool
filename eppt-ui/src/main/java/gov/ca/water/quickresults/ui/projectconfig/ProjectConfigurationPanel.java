@@ -516,7 +516,7 @@ public final class ProjectConfigurationPanel extends EpptPanel
 		}
 	}
 
-	private void addScenarios(List<EpptScenarioRun> scenarioRuns)
+	public void addScenarios(List<EpptScenarioRun> scenarioRuns)
 	{
 		scenarioRuns.forEach(_scenarioTablePanel::addScenarioRun);
 		Platform.runLater(() ->

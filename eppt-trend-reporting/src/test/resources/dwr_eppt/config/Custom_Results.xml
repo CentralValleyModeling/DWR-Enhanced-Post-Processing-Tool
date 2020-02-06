@@ -1,0 +1,27 @@
+<!--
+  ~ Enhanced Post Processing Tool (EPPT) Copyright (c) 2019.
+  ~
+  ~ EPPT is copyrighted by the State of California, Department of Water Resources. It is licensed
+  ~ under the GNU General Public License, version 2. This means it can be
+  ~ copied, distributed, and modified freely, but you may not restrict others
+  ~ in their ability to copy, distribute, and modify it. See the license below
+  ~ for more details.
+  ~
+  ~ GNU General Public License
+  -->
+
+<panel id="Custom" font="Tahoma-Italic-12" layout="borderlayout">
+	<panel constraints="BorderLayout.NORTH" layout="FlowLayout(FlowLayout.LEFT)">
+		<button text="Load List/Tree" ActionCommand="CR_LoadList"
+				enabled="true">
+		</button>
+		<button text="Save List/Tree" ActionCommand="CR_SaveList"
+				enabled="true">
+		</button>
+		<button text="Clear Tree" ActionCommand="CR_ClearTree" enabled="true">
+		</button>
+	</panel>
+	<panel constraints="BorderLayout.CENTER" name="WRIMS" id="WRIMS" layout="BorderLayout"
+		   preferredsize="900,600">
+	</panel>
+</panel>

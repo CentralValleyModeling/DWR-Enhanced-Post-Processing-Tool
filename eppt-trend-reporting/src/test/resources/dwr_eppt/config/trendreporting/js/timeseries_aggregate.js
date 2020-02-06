@@ -62,7 +62,7 @@ function plotAggregate(data) {
     };
     Plotly.newPlot('container_aggregate_tester', getPlotlyAnnualSeries(datum), layout, {
         displaylogo: false,
-        modeBarButtonsToRemove: ['toImage', 'sendDataToCloud', 'editInChartStudio', 'lasso2d', 'select2d', 'resetScale2d'],
+        modeBarButtons: buildModeBarButtons('container_aggregate_tester'),
         scrollZoom: true,
         responsive: true
     });
