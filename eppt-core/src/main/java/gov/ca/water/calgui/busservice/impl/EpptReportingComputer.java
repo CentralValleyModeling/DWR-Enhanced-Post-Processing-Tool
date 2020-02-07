@@ -104,14 +104,16 @@ class EpptReportingComputer
 		List<SortedMap<Month, Double>> monthly = new ArrayList<>();
 		List<Double> yearlyStatistic = new ArrayList<>();
 		List<SortedMap<WaterYearPeriod, SortedMap<Month, Double>>> statisticallyComputedPeriodMonthly = new ArrayList<>();
-		for(TimeSeriesContainer tsc : primarySeries)
+		for(TimeSeriesContainer ts : primarySeries)
 		{
-			boolean aggregateYearly = isAggregateYearly(convertTaf, tsc);
-			units.add(getUnits(tsc));
+			TimeSeriesContainer timeSeriesContainer = new TimeSeriesContainer();
+			ts.clone(timeSeriesContainer);
+			boolean aggregateYearly = isAggregateYearly(convertTaf, timeSeriesContainer);
 			DssReader dssReader = new DssReader(scenarioRun, _waterYearDefinition, new DssCache());
-			dssReader.setOriginalUnits(tsc.getUnits());
+			dssReader.setOriginalUnits(timeSeriesContainer.getUnits());
 			NavigableMap<LocalDateTime, Double> full = dssReader
-					.timeSeriesContainerToMap(new TimeSeriesContainer[]{tsc}, convertTaf);
+					.timeSeriesContainerToMap(new TimeSeriesContainer[]{timeSeriesContainer}, convertTaf);
+			units.add(getUnits(timeSeriesContainer));
 			fullSeries.add(full);
 			NavigableMap<Integer, Double> yearly = DssReader.filterPeriodYearly(full, _monthPeriod, aggregateYearly);
 			filteredPeriodYearly.add(yearly);

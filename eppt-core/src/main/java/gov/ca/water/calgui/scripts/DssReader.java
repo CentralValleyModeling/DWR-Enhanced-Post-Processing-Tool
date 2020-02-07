@@ -229,6 +229,7 @@ public class DssReader
 			}
 			if(mapToTaf && "CFS".equalsIgnoreCase(_originalUnits))
 			{
+				tsc.setUnits("TAF");
 				calendar.set(hecTime.year(), hecTime.month() - 1, 1);
 				value *= calendar.getActualMaximum(Calendar.DAY_OF_MONTH) * CFS_2_TAF_DAY;
 			}
