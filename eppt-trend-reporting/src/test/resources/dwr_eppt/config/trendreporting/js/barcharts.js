@@ -37,7 +37,7 @@ function buildTable(data) {
             longTerm = [];
             values[1] = longTerm;
         }
-        longTerm[i] = Math.round(data[i]['primary_data']['statistically_computed_time_series_yearly'][0]);
+        longTerm[i] = data[i]['primary_data']['statistically_computed_time_series_yearly'][0];
         let timeSeries = data[i]['primary_data']['statistically_computed_time_series_wyt'][0];
         for (let k = 0; k < timeSeries.length; k++) {
             let val = timeSeries[k]['water_year_period_values'];
@@ -46,7 +46,7 @@ function buildTable(data) {
                 periodValues = [];
                 values[2 + k] = periodValues;
             }
-            periodValues.push(Math.round(val));
+            periodValues.push(val);
         }
     }
     return {
@@ -58,6 +58,7 @@ function buildTable(data) {
             font: PLOTLY_FONT
         },
         cells: {
+            format: ['',',.3r%'],
             values: values,
             line: {color: "black", width: 1},
             align: ["left", "center"],
@@ -109,6 +110,7 @@ function plot(data) {
         font: PLOTLY_FONT,
         barmode: 'group',
         yaxis: {
+            tickformat: ',.3r%',
             title: {
                 text: data['units'],
             },

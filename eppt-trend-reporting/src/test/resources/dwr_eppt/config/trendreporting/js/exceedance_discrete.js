@@ -49,6 +49,7 @@ function plotDiscrete(data) {
             gridcolor: '#CCCCCC'
         },
         yaxis: {
+            tickformat: ',.3r%',
             title: {
                 text: data['units'],
             },

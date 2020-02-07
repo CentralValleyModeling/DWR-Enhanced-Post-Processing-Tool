@@ -108,7 +108,9 @@ class EpptReportingComputer
 		{
 			boolean aggregateYearly = isAggregateYearly(convertTaf, tsc);
 			units.add(getUnits(tsc));
-			NavigableMap<LocalDateTime, Double> full = new DssReader(scenarioRun, _waterYearDefinition, new DssCache())
+			DssReader dssReader = new DssReader(scenarioRun, _waterYearDefinition, new DssCache());
+			dssReader.setOriginalUnits(tsc.getUnits());
+			NavigableMap<LocalDateTime, Double> full = dssReader
 					.timeSeriesContainerToMap(new TimeSeriesContainer[]{tsc}, convertTaf);
 			fullSeries.add(full);
 			NavigableMap<Integer, Double> yearly = DssReader.filterPeriodYearly(full, _monthPeriod, aggregateYearly);

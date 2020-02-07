@@ -41,7 +41,7 @@ function buildTable(data) {
                 periodValues = [];
                 values[1 + k] = periodValues;
             }
-            periodValues.push(Math.round(val));
+            periodValues.push(val);
         }
     }
     return {
@@ -53,6 +53,7 @@ function buildTable(data) {
             font: PLOTLY_FONT
         },
         cells: {
+            format: ['',',.3r%'],
             values: values,
             line: {color: "black", width: 1},
             align: ["left", "center"],
@@ -91,7 +92,7 @@ function buildMatrixData(data, tableValues) {
                 diffValues.push('');
             } else {
                 let diff = tableValues[j] - tableValues[i - 1];
-                diffValues.push(Math.round(diff));
+                diffValues.push(diff);
             }
         }
         values.push(diffValues);
@@ -105,6 +106,7 @@ function buildMatrixData(data, tableValues) {
             font: {family: PLOTLY_FONT['family'], size: 11}
         },
         cells: {
+            format: ['',',.3r%'],
             values: values,
             align: ['left', 'center'],
             height: 8,
@@ -133,7 +135,7 @@ function tabulateLongTermPeriod(data) {
     };
     let longTermData = [];
     for (let i = 0; i < data['scenario_run_data'].length; i++) {
-        longTermData[i] = Math.round(data['scenario_run_data'][i]['primary_data']['statistically_computed_time_series_yearly'][0]);
+        longTermData[i] = data['scenario_run_data'][i]['primary_data']['statistically_computed_time_series_yearly'][0];
     }
     let tableData = buildMatrixData(data, longTermData);
     Plotly.newPlot('water-year-matrix0', [tableData], layout, {

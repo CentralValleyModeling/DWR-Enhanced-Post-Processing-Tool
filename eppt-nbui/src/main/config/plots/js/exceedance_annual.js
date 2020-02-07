@@ -74,6 +74,7 @@ function plot(data) {
             gridcolor: '#CCCCCC'
         },
         yaxis: {
+            tickformat: ',.3r%',
             title: {
                 text: units,
             },

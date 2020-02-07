@@ -87,7 +87,6 @@ public class DSSGrabber1SvcImpl implements IDSSGrabber1Svc
 {
 
 	public static final double CFS_2_TAF_DAY = 0.001983471;
-	private static final double TAF_DAY_2_CFS = 504.166667;
 	private static Logger LOGGER = Logger.getLogger(DSSGrabber1SvcImpl.class.getName());
 	final Map<GUILinksAllModelsBO.Model, String> _primaryDSSName = new HashMap<>();
 	final Map<GUILinksAllModelsBO.Model, String> _secondaryDSSName = new HashMap<>();
@@ -102,18 +101,11 @@ public class DSSGrabber1SvcImpl implements IDSSGrabber1Svc
 	// Indicates whether "CFS" button was selected
 	String _originalUnits;
 	boolean _isCFS;
-	// USGS Water Year for start and end time.
-	int _startWY;
-	int _endWY;
-	Project _project = ResultUtilsBO.getResultUtilsInstance().getProject();
 	EpptScenarioRun _baseScenarioRun;
 	// Copy of original units
 	// Start and end time of interest
 	private int _startTime;
 	private int _endTime;
-	// Number of scenarios passed in list parameter
-	private double[][] _annualTAFs;
-	private double[][] _annualTAFsDiff;
 
 	public DSSGrabber1SvcImpl()
 	{
@@ -179,22 +171,12 @@ public class DSSGrabber1SvcImpl implements IDSSGrabber1Svc
 
 			int m = startMonth.getMonth().getValue();
 			int y = startMonth.getYear();
-			ht.setYearMonthDay(m == 12 ? (y + 1) : y, m == 12 ? 1 : (m + 1), 1, 0);
+			ht.setYearMonthDay(y, m, 1, 0);
 			_startTime = ht.value();
-			if(m < 10)
-			{
-				_startWY = y;
-			}
-			else
-			{
-				_startWY = y + 1;
-			} // Water year
-
 			m = endMonth.getMonth().getValue();
 			y = endMonth.getYear();
-			ht.setYearMonthDay(m == 12 ? (y + 1) : y, m == 12 ? 1 : (m + 1), 1, 0);
+			ht.setYearMonthDay(y, m, 1, 0);
 			_endTime = ht.value();
-			_endWY = (m < 10) ? y : (y + 1);
 		}
 		catch(RuntimeException ex)
 		{
@@ -202,17 +184,6 @@ public class DSSGrabber1SvcImpl implements IDSSGrabber1Svc
 			LOGGER.log(Level.WARNING, ex.getMessage(), ex);
 		}
 
-	}
-
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see gov.ca.water.calgui.busservice.impl.IDSSGrabber1Svc#getBaseRunName()
-	 */
-	@Override
-	public String getBaseRunName()
-	{
-		return _baseScenarioRun.getName();
 	}
 
 	/*
@@ -260,26 +231,6 @@ public class DSSGrabber1SvcImpl implements IDSSGrabber1Svc
 	}
 
 	@Override
-	public void setLocation(String locationName)
-	{
-		if(locationName != null)
-		{
-			locationName = locationName.trim();
-			if(locationName.startsWith("/"))
-			{
-				// Handle names passed from WRIMS GUI
-				String[] parts = locationName.split("/");
-				_plotTitle = locationName;
-				_primaryDSSName.clear();
-				_primaryDSSName.put(_baseScenarioRun.getModel(), parts[2] + "/" + parts[3]);
-				_secondaryDSSName.clear();
-				_axisLabel = "";
-				_legend = "";
-			}
-		}
-	}
-
-	@Override
 	public void setThresholdLink(ThresholdLinksBO objById)
 	{
 		if(objById != null)
@@ -294,51 +245,6 @@ public class DSSGrabber1SvcImpl implements IDSSGrabber1Svc
 			_axisLabel = objById.getLabel();
 			_plotTitle = "";
 			_legend = "";
-		}
-	}
-
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see gov.ca.water.calgui.busservice.impl.IDSSGrabber1Svc#getYLabel()
-	 */
-	@Override
-	public String getYLabel()
-	{
-		return _axisLabel;
-	}
-
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see gov.ca.water.calgui.busservice.impl.IDSSGrabber1Svc#getSLabel()
-	 */
-	@Override
-	public String getSLabel()
-	{
-		return _legend;
-	}
-
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see gov.ca.water.calgui.busservice.impl.IDSSGrabber1Svc#getPlotTitle()
-	 */
-	@Override
-	public String getPlotTitle()
-	{
-		if(_plotTitle != null && !_plotTitle.isEmpty())
-		{
-			return _plotTitle;
-		}
-		else
-		{
-			List<String> titles = new ArrayList<>();
-			for(Map.Entry<GUILinksAllModelsBO.Model, String> entry : _primaryDSSName.entrySet())
-			{
-				titles.add(entry.toString() + " (" + entry.getKey() + ")");
-			}
-			return String.join(",", titles);
 		}
 	}
 
@@ -458,43 +364,6 @@ public class DSSGrabber1SvcImpl implements IDSSGrabber1Svc
 		}
 
 		return Boolean.valueOf(lveState);
-	}
-
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see
-	 * gov.ca.water.calgui.busservice.impl.IDSSGrabber1Svc#hasPower(java.lang.
-	 * String)
-	 */
-	@Override
-	public boolean hasPower(String dssFilename)
-	{
-		try
-		{
-			if(HecDataManager.doesDSSFileExist(dssFilename))
-			{
-				HecDss hD = HecDss.open(dssFilename);
-				@SuppressWarnings("unchecked")
-
-				Vector<String> aList = hD.getPathnameList();
-				for(String path : aList)
-				{
-					String[] parts = path.split("/");
-					if(parts[1].startsWith("HYDROPOWER"))
-					{
-						return true;
-					}
-				}
-			}
-		}
-		catch(Exception ex)
-		{
-
-			LOGGER.log(Level.FINE, ex.getMessage(), ex);
-
-		}
-		return false;
 	}
 
 	/**
@@ -660,6 +529,10 @@ public class DSSGrabber1SvcImpl implements IDSSGrabber1Svc
 				// Trim to date range
 				if(result != null)
 				{
+					HecTime start = new HecTime();
+					start.set(_startTime);
+					HecTime end = new HecTime();
+					end.set(_endTime);
 					// Find starting index
 					int first = 0;
 					for(int i = 0; (i < result.numberValues) && (result.times[i] < _startTime); i++)
@@ -673,16 +546,21 @@ public class DSSGrabber1SvcImpl implements IDSSGrabber1Svc
 						last = i;
 					}
 					// Shift results in array to start
+
 					if(first != 0)
 					{
+						double[] values = new double[last - first + 1];
+						int[] times = new int[last - first + 1];
 						for(int i = 0; i <= (last - first); i++)
 						{ // TODO: Think
 							// through
 							// change to
 							// <= done 11/9
-							result.times[i] = result.times[i + first];
-							result.values[i] = result.values[i + first];
+							times[i] = result.times[i + first];
+							values[i] = result.values[i + first];
 						}
+						result.times = times;
+						result.values = values;
 					}
 
 					result.numberValues = last - first + 1; // Adjust count of
@@ -793,13 +671,12 @@ public class DSSGrabber1SvcImpl implements IDSSGrabber1Svc
 				for(int i = 0; i < _alternatives.size(); i++)
 				{
 					EpptScenarioRun epptScenarioRun = _alternatives.get(i);
-					TimeSeriesContainer tsc = null;
 
 					GUILinksAllModelsBO.Model altModel = epptScenarioRun.getModel();
 					String altDssPathName = _primaryDSSName.get(altModel);
 					if(altDssPathName != null)
 					{
-						tsc = getOneTimeSeriesFromAllModels(epptScenarioRun, altDssPathName);
+						TimeSeriesContainer tsc = getOneTimeSeriesFromAllModels(epptScenarioRun, altDssPathName);
 						results[i + 1] = tsc;
 					}
 				}
@@ -888,300 +765,6 @@ public class DSSGrabber1SvcImpl implements IDSSGrabber1Svc
 		return results;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see
-	 * gov.ca.water.calgui.busservice.impl.IDSSGrabber1Svc#getDifferenceSeriesWithMultipleTimeSeries(
-	 * hec.io.TimeSeriesContainer[])
-	 */
-	@Override
-	public TimeSeriesContainer[] getDifferenceSeries(TimeSeriesContainer[] timeSeriesResults)
-	{
-
-		TimeSeriesContainer[] results = new TimeSeriesContainer[_alternatives.size()];
-		if(timeSeriesResults != null && timeSeriesResults[0] != null)
-		{
-			for(int i = 0; i < _alternatives.size(); i++)
-			{
-				TimeSeriesContainer timeSeriesResult = timeSeriesResults[i + 1];
-				if(timeSeriesResult != null)
-				{
-					results[i] = (TimeSeriesContainer) timeSeriesResult.clone();
-					for(int j = 0; j < results[i].values.length && j < timeSeriesResults[0].values.length; j++)
-					{
-						results[i].values[j] = results[i].values[j] - timeSeriesResults[0].values[j];
-					}
-				}
-			}
-		}
-		return results;
-	}
-
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see
-	 * gov.ca.water.calgui.busservice.impl.IDSSGrabber1Svc#calcTAFforCFS(hec.io
-	 * .TimeSeriesContainer[], hec.io.TimeSeriesContainer[])
-	 */
-	@Override
-	public void calcTAFforCFS(TimeSeriesContainer[] primaryResults, TimeSeriesContainer[] secondaryResults)
-	{
-
-		try
-		{
-			// Allocate and zero out
-
-			int datasets = primaryResults.length;
-			if(secondaryResults != null)
-			{
-				datasets = datasets + secondaryResults.length;
-			}
-
-			_annualTAFs = new double[datasets][_endWY - _startWY + 2];
-
-			for(int i = 0; i < datasets; i++)
-			{
-				for(int j = 0; j < _endWY - _startWY + 1; j++)
-				{
-					_annualTAFs[i][j] = 0.0;
-				}
-			}
-
-			// Calculate
-
-			if("CFS".equals(_originalUnits))
-			{
-
-				HecTime ht = new HecTime();
-				Calendar calendar = Calendar.getInstance();
-
-				// Primary series
-
-				for(int i = 0; i < primaryResults.length; i++)
-				{
-					if(primaryResults[i] != null)
-					{
-						for(int j = 0; j < primaryResults[i].numberValues; j++)
-						{
-
-							ht.set(primaryResults[i].times[j]);
-							double monthlyTAF = primaryResults[i].values[j]
-									* calendar.getActualMaximum(Calendar.DAY_OF_MONTH) * CFS_2_TAF_DAY;
-							int wy = ((ht.month() < 10) ? ht.year() : ht.year() + 1) - _startWY;
-							if(wy >= 0)
-							{
-								_annualTAFs[i][wy] += monthlyTAF;
-							}
-							if(!_isCFS && RMAConst.isValidValue(monthlyTAF) && monthlyTAF != -3.402823466E38)
-							{
-								primaryResults[i].values[j] = monthlyTAF;
-							}
-						}
-						if(!_isCFS)
-						{
-							primaryResults[i].units = "TAF";
-							primaryResults[i].type = "PER-CUM";
-						}
-					}
-				}
-
-				// Calculate differences if applicable (primary series only)
-
-				if(primaryResults.length > 1)
-				{
-					_annualTAFsDiff = new double[primaryResults.length - 1][_endWY - _startWY + 2];
-					for(int i = 0; i < primaryResults.length - 1; i++)
-					{
-						for(int j = 0; j < _endWY - _startWY + 1; j++)
-						{
-							_annualTAFsDiff[i][j] = _annualTAFs[i + 1][j] - _annualTAFs[0][j];
-						}
-					}
-				}
-
-				if(secondaryResults != null)
-				{
-
-					// Secondary series
-
-					for(int i = 0; i < secondaryResults.length; i++)
-					{
-						if(secondaryResults[i] != null)
-						{
-							for(int j = 0; j < secondaryResults[i].numberValues; j++)
-							{
-
-								ht.set(secondaryResults[i].times[j]);
-								calendar.set(ht.year(), ht.month() - 1, 1);
-								double monthlyTAF = secondaryResults[i].values[j]
-										* calendar.getActualMaximum(Calendar.DAY_OF_MONTH) * CFS_2_TAF_DAY;
-								int wy = ((ht.month() < 10) ? ht.year() : ht.year() + 1) - _startWY;
-								_annualTAFs[i + primaryResults.length][wy] += monthlyTAF;
-								if(!_isCFS)
-								{
-									secondaryResults[i].values[j] = monthlyTAF;
-								}
-
-							}
-							if(!_isCFS)
-							{
-								secondaryResults[i].units = "TAF";
-								secondaryResults[i].type = "PER-CUM";
-							}
-						}
-					}
-				}
-			}
-		}
-		catch(RuntimeException ex)
-		{
-			LOGGER.log(Level.SEVERE, "Unable to calculate TAF.", ex);
-		}
-	}
-
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see
-	 * gov.ca.water.calgui.busservice.impl.IDSSGrabber1Svc#getAnnualTAF(int,
-	 * int)
-	 */
-	@Override
-	public double getAnnualTAF(int i, int wy)
-	{
-
-		return wy < _startWY ? -1 : _annualTAFs[i][wy - _startWY];
-	}
-
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see
-	 * gov.ca.water.calgui.busservice.impl.IDSSGrabber1Svc#getAnnualTAFDiff(
-	 * int, int)
-	 */
-	@Override
-	public double getAnnualTAFDiff(int i, int wy)
-	{
-
-		return wy < _startWY ? -1 : _annualTAFsDiff[i][wy - _startWY];
-	}
-
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see
-	 * gov.ca.water.calgui.busservice.impl.IDSSGrabber1Svc#getExceedanceSeriesWithMultipleTimeSeries(
-	 * hec.io.TimeSeriesContainer[])
-	 */
-	@Override
-	public TimeSeriesContainer[][] getExceedanceSeries(TimeSeriesContainer[] timeSeriesResults)
-	{
-
-		TimeSeriesContainer[][] results;
-		try
-		{
-			boolean valid = timeSeriesResults != null && isValid(timeSeriesResults);
-			if(!valid)
-			{
-				results = null;
-			}
-			else
-			{
-				results = new TimeSeriesContainer[14][_alternatives.size() + 1];
-
-				for(int month = 0; month < 14; month++)
-				{
-
-					HecTime ht = new HecTime();
-					for(int i = 0; i < _alternatives.size() + 1; i++)
-					{
-
-						if(month == 13)
-						{
-							results[month][i] = (TimeSeriesContainer) timeSeriesResults[i].clone();
-						}
-						else
-						{
-
-							int n;
-							int[] times2;
-							double[] values2;
-
-							results[month][i] = new TimeSeriesContainer();
-
-							if(month == 12)
-							{
-
-								// Annual totals - grab from annualTAFs
-								n = _annualTAFs[i].length;
-								times2 = new int[n];
-								values2 = new double[n];
-								for(int j = 0; j < n; j++)
-								{
-									ht.setYearMonthDay(j + _startWY, 11, 1, 0);
-									times2[j] = ht.value();
-									values2[j] = _annualTAFs[i][j];
-								}
-
-							}
-							else
-							{
-
-								int[] times = timeSeriesResults[i].times;
-								double[] values = timeSeriesResults[i].values;
-
-								n = 0;
-								for(final int time : times)
-								{
-									ht.set(time);
-									if(ht.month() == month + 1)
-									{
-										n = n + 1;
-									}
-								}
-
-								times2 = new int[n];
-								values2 = new double[n];
-								n = 0;
-								for(int j = 0; j < times.length; j++)
-								{
-									ht.set(times[j]);
-									if(ht.month() == month + 1)
-									{
-										times2[n] = times[j];
-										values2[n] = values[j];
-										n = n + 1;
-									}
-								}
-							}
-							results[month][i].times = times2;
-							results[month][i].values = values2;
-							results[month][i].numberValues = n;
-							results[month][i].units = timeSeriesResults[i].units;
-							results[month][i].fullName = timeSeriesResults[i].fullName;
-							results[month][i].fileName = timeSeriesResults[i].fileName;
-						}
-						if(results[month][i].values != null)
-						{
-							double[] sortArray = results[month][i].values;
-							Arrays.sort(sortArray);
-							results[month][i].values = sortArray;
-						}
-					}
-				}
-			}
-			return results;
-		}
-		catch(RuntimeException ex)
-		{
-			LOGGER.log(Level.SEVERE, "Unable to get time-series.", ex);
-		}
-		return null;
-	}
-
 	private boolean isValid(TimeSeriesContainer[] timeSeriesResults)
 	{
 		boolean valid = timeSeriesResults != null;
@@ -1197,131 +780,6 @@ public class DSSGrabber1SvcImpl implements IDSSGrabber1Svc
 			}
 		}
 		return valid;
-	}
-
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see
-	 * gov.ca.water.calgui.busservice.impl.IDSSGrabber1Svc#getExceedanceSeriesDWithMultipleTimeSeries
-	 * (hec.io.TimeSeriesContainer[])
-	 */
-	@Override
-	public TimeSeriesContainer[][] getExceedanceSeriesD(TimeSeriesContainer[] timeSeriesResults)
-	{
-
-		/*
-		 * Copy of getExceedanceSeriesWithMultipleTimeSeries to handle "exceedance of differences"
-		 *
-		 * Calculates difference of annual TAFs to get proper results for [12]
-		 * should be recombined with getExceedanceSeriesWithMultipleTimeSeries
-		 */
-
-		TimeSeriesContainer[][] results = null;
-		try
-		{
-			boolean valid = timeSeriesResults != null && isValid(timeSeriesResults);
-			if(valid)
-			{
-				results = new TimeSeriesContainer[14][_alternatives.size()];
-
-				for(int month = 0; month < 14; month++)
-				{
-
-					HecTime ht = new HecTime();
-					for(int i = 0; i < _alternatives.size(); i++)
-					{
-
-						if(month == 13)
-						{
-
-							results[month][i] = (TimeSeriesContainer) timeSeriesResults[i + 1].clone();
-							for(int j = 0; j < results[month][i].numberValues; j++)
-							{
-								results[month][i].values[j] -= timeSeriesResults[0].values[j];
-							}
-
-						}
-						else
-						{
-
-							int n;
-							int[] times2;
-							double[] values2;
-
-							results[month][i] = new TimeSeriesContainer();
-
-							if(month == 12)
-							{
-
-								// Annual totals - grab from annualTAFs
-								n = _annualTAFs[i + 1].length;
-								times2 = new int[n];
-								values2 = new double[n];
-								for(int j = 0; j < n; j++)
-								{
-									ht.setYearMonthDay(j + _startWY, 11, 1, 0);
-									times2[j] = ht.value();
-									values2[j] = _annualTAFs[i + 1][j] - _annualTAFs[0][j];
-								}
-
-							}
-							else
-							{
-
-								int[] times = timeSeriesResults[i + 1].times;
-								double[] values = timeSeriesResults[i + 1].values;
-								n = 0;
-								for(final int time : times)
-								{
-									ht.set(time);
-									if(ht.month() == month + 1)
-									{
-										n = n + 1;
-									}
-								}
-								times2 = new int[n];
-								values2 = new double[n];
-								int nmax = n; // Added to trap Schematic View
-								// case
-								// where required flow has extra
-								// values
-								n = 0;
-								for(int j = 0; j < times.length; j++)
-								{
-									ht.set(times[j]);
-									if((ht.month() == month + 1) && (n < nmax)
-											&& (j < timeSeriesResults[0].values.length))
-									{
-										times2[n] = times[j];
-										values2[n] = values[j] - timeSeriesResults[0].values[j];
-										n = n + 1;
-									}
-								}
-							}
-							results[month][i].times = times2;
-							results[month][i].values = values2;
-							results[month][i].numberValues = n;
-							results[month][i].units = timeSeriesResults[i + 1].units;
-							results[month][i].fullName = timeSeriesResults[i + 1].fullName;
-							results[month][i].fileName = timeSeriesResults[i + 1].fileName;
-						}
-						if(results[month][i].values != null)
-						{
-							double[] sortArray = results[month][i].values;
-							Arrays.sort(sortArray);
-							results[month][i].values = sortArray;
-						}
-					}
-				}
-			}
-			return results;
-		}
-		catch(RuntimeException ex)
-		{
-			LOGGER.log(Level.SEVERE, "Unable to get time-series.", ex);
-		}
-		return results;
 	}
 
 	/*

@@ -20,6 +20,7 @@ import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.function.Consumer;
 import javax.swing.*;
 
 import calsim.app.DerivedTimeSeries;
@@ -56,13 +57,6 @@ public class DisplayHelper
 		return new Thread(r, "DisplayHelperThread");
 	}
 
-	public void showDisplayFramesLocations(PlotConfigurationState plotConfigurationState, List<String> locations,
-										   EpptScenarioRun baseRun, List<EpptScenarioRun> scenarios,
-										   LocalDate startMonth, LocalDate endMonth)
-	{
-		displayFramesOnBackgroundLocations(plotConfigurationState, locations, baseRun, scenarios, startMonth, endMonth);
-	}
-
 	public void showDisplayFramesGuiLink(PlotConfigurationState plotConfigurationState, List<GUILinksAllModelsBO> locations, EpptScenarioRun baseRun,
 										 List<EpptScenarioRun> scenarios,
 										 LocalDate startMonth,
@@ -79,18 +73,6 @@ public class DisplayHelper
 	}
 
 
-	private void displayFramesOnBackgroundLocations(PlotConfigurationState plotConfigurationState, List<String> locations, EpptScenarioRun baseRun,
-													List<EpptScenarioRun> scenarios, LocalDate startMonth,
-													LocalDate endMonth)
-	{
-		CompletableFuture.supplyAsync(() -> getTabbedPanesLocations(plotConfigurationState, locations, baseRun, scenarios, startMonth, endMonth),
-				_executorService)
-						 .thenAcceptAsync(tabbedPanes -> topComponentPlotHandler.openPlots(tabbedPanes), SwingUtilities::invokeLater);
-
-
-	}
-
-
 	private void displayFramesOnBackgroundGuiLink(PlotConfigurationState plotConfigurationState, List<GUILinksAllModelsBO> locations,
 												  EpptScenarioRun baseRun,
 												  List<EpptScenarioRun> scenarios, LocalDate startMonth,
@@ -101,40 +83,6 @@ public class DisplayHelper
 						 .thenAcceptAsync(tabbedPanes -> topComponentPlotHandler.openPlots(tabbedPanes), SwingUtilities::invokeLater);
 
 
-	}
-
-	private List<JTabbedPane> getTabbedPanesLocations(PlotConfigurationState plotConfigurationState, List<String> locations, EpptScenarioRun baseRun,
-													  List<EpptScenarioRun> scenarios, LocalDate startMonth, LocalDate endMonth)
-	{
-		List<JTabbedPane> jTabbedPanes = new ArrayList<>();
-		try
-		{
-			setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
-			List<GUILinksAllModelsBO> guiLinks = locations.stream()
-														  .map(s ->
-														  {
-															  GUILinksAllModelsBO guiLinksAllModelsBO = new GUILinksAllModelsBO(
-																	  s, s,
-																	  s, s);
-															  GUILinksAllModelsBO.Model.values().forEach(
-																	  m -> guiLinksAllModelsBO.addModelMapping(m.toString(), s, ""));
-															  return guiLinksAllModelsBO;
-														  }).collect(toList());
-			DisplayGuiLinkFrames displayGuiLinkFrames = new DisplayGuiLinkFrames(plotConfigurationState, guiLinks, baseRun,
-					scenarios, startMonth,
-					endMonth);
-			jTabbedPanes.addAll(displayGuiLinkFrames.showDisplayFrames());
-		}
-		catch(RuntimeException | EpptInitializationException ex)
-		{
-			LOGGER.error("An error occurred while trying to display results", ex);
-		}
-		finally
-		{
-
-			setCursor(Cursor.getDefaultCursor());
-		}
-		return jTabbedPanes;
 	}
 
 	private List<JTabbedPane> getTabbedPanesGuiLink(PlotConfigurationState plotConfigurationState, List<GUILinksAllModelsBO> locations,
@@ -202,11 +150,15 @@ public class DisplayHelper
 
 	}
 
-
-	@FunctionalInterface
-	public interface PlotHandler
+	public interface PlotHandler extends Consumer<List<JTabbedPane>>
 	{
 		void openPlots(List<JTabbedPane> tabbedPanes);
+
+		@Override
+		default void accept(List<JTabbedPane> jTabbedPanes)
+		{
+			openPlots(jTabbedPanes);
+		}
 	}
 
 }

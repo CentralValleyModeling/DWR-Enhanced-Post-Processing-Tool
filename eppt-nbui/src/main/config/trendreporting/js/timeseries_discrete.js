@@ -35,6 +35,7 @@ function plotDiscrete(data) {
     var layout = {
         font: PLOTLY_FONT,
         yaxis: {
+            tickformat: ',.3r',
             title: {
                 text: data['units'],
             },

@@ -469,4 +469,9 @@ public class DssReader
 		}
 		return dataMap;
 	}
+
+	public void setOriginalUnits(String units)
+	{
+		_originalUnits = units;
+	}
 }

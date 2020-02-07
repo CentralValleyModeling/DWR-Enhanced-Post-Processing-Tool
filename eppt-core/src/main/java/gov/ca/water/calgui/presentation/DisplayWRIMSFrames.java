@@ -92,14 +92,11 @@ class DisplayWRIMSFrames extends DisplayFrames
 	{
 		dssGrabber.setLocation("@@" + mts.getName());
 		int n = mts.getNumberOfDataReferences();
-		int s = scenarios.size();
 		Map<EpptScenarioRun, List<TimeSeriesContainer>> scenarioRunData = new TreeMap<>(Comparator.comparing(scenarios::indexOf));
 		Map<EpptScenarioRun, List<String>> primarySuffxies = new TreeMap<>(Comparator.comparing(scenarios::indexOf));
-		TimeSeriesContainer[][] results = new TimeSeriesContainer[n][s];
 		for(int i = 0; i < n; i++)
 		{
 			TimeSeriesContainer[] result = dssGrabber.getMultipleTimeSeries(i);
-			results[i] = result;
 			for(int j = 0; j < scenarios.size(); j++)
 			{
 				EpptScenarioRun epptScenarioRun = scenarios.get(j);
@@ -110,9 +107,6 @@ class DisplayWRIMSFrames extends DisplayFrames
 			}
 		}
 
-		dssGrabber.calcTAFforCFS(results);
-
-		TimeSeriesContainer[][] diffResults = dssGrabber.getDifferenceSeriesWithMultipleTimeSeries(results);
 		if(getPlotConfigurationState().isDisplayTimeSeriesPlot())
 		{
 			plotTimeSeries(primarySuffxies, scenarioRunData, new HashMap<>(), new HashMap<>(), mts.getName(), tabbedPane);
@@ -142,8 +136,6 @@ class DisplayWRIMSFrames extends DisplayFrames
 		dssGrabber.setLocation("@@" + dts.getName());
 
 		TimeSeriesContainer[] primaryResults = dssGrabber.getPrimarySeries();
-		TimeSeriesContainer[] secondaryResults = dssGrabber.getSecondarySeries();
-
 		if(primaryResults != null)
 		{
 			List<EpptScenarioRun> scenarioRuns = new ArrayList<>();

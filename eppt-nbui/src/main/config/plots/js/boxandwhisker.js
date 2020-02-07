@@ -120,6 +120,7 @@ function plot(data) {
             }
         },
         yaxis: {
+            tickformat: ',.3r%',
             title: {
                 text: units
             },

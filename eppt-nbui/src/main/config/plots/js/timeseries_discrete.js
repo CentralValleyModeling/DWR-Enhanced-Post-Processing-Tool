@@ -93,6 +93,7 @@ function buildLineLayout(data) {
     return {
         font: PLOTLY_FONT,
         yaxis: {
+            tickformat: ',.3r%',
             title: {
                 text: data['scenario_run_data'][0]['primary_data']['units'][0],
             },
@@ -124,12 +125,14 @@ function buildScatterLayout(data) {
     return {
         font: PLOTLY_FONT,
         yaxis: {
+            tickformat: ',.3r%',
             title: {
                 text: units,
             },
             gridcolor: '#CCCCCC'
         },
         xaxis: {
+            tickformat: ',.3r%',
             title: {
                 text: data['scenario_run_data'][0]['scenario_name'] + ' - ' + units,
             },

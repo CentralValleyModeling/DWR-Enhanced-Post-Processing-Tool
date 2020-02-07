@@ -15,12 +15,12 @@ function getPlotlyAnnualSeries(datum) {
         let timeSeries = datum[i]['primary_data']['period_filtered_time_series'][0];
         let x = [];
         let y = [];
-        for(var j =0; j < timeSeries.length; j++){
+        for (var j = 0; j < timeSeries.length; j++) {
             x.push(timeSeries[j][0]);
             y.push(timeSeries[j][1]);
         }
         series.push({
-            name:datum[i]['scenario_name'],
+            name: datum[i]['scenario_name'],
             type: 'scatter',
             x: x,
             y: y,
@@ -35,13 +35,16 @@ function plotAggregate(data) {
 
     var layout = {
         font: PLOTLY_FONT,
+        separators: '.,,',
+        separatethousands: true,
         yaxis: {
+            tickformat: ',.3r',
             title: {
                 text: data['units'],
             },
             gridcolor: '#CCCCCC'
         },
-        xaxis:{
+        xaxis: {
             gridcolor: '#CCCCCC'
         },
         showlegend: true,
@@ -78,7 +81,7 @@ function plotlyCopyToClipboardAnnual() {
     let layout = plot.layout;
     let data1 = plot.data;
     var text = layout['title']['text'] + '\n' + 'Year\t' + layout['yaxis']['title']['text'] + '\n';
-    for(var i = 0; i < data1.length; i++){
+    for (var i = 0; i < data1.length; i++) {
         text += '\t' + data1[i]['name']
     }
     text += '\n';
@@ -86,7 +89,7 @@ function plotlyCopyToClipboardAnnual() {
     let xarr = datum['x'];
     for (var j = 0; j < xarr.length; j++) {
         text += xarr[j];
-        for(var k = 0; k < data1.length; k++){
+        for (var k = 0; k < data1.length; k++) {
             let yarr = data1[k]['y'];
             text += '\t' + yarr[j];
         }
