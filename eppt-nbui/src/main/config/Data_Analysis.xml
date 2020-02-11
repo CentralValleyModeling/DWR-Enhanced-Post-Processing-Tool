@@ -22,8 +22,11 @@
 					   id="tfTemplateFILE" preferredsize="250,20" name="tfTemplateFILE">
 				<gridbagconstraints insets="5,5,5,5" anchor="GridBagConstraints.WEST" gridx="1" gridy="5"/>
 			</textfield>
-			<button text="Select File ..." id="btnGetTemplateFile" name="btnGetTemplateFile">
+			<button text="Select File..." id="btnGetTemplateFile" name="btnGetTemplateFile">
 				<gridbagconstraints insets="5,5,5,5" anchor="GridBagConstraints.WEST" gridx="2" gridy="5"/>
+			</button>
+			<button text="Edit File..." id="btnEditTemplateFile" name="btnEditTemplateFile">
+				<gridbagconstraints insets="5,5,5,5" anchor="GridBagConstraints.WEST" gridx="3" gridy="5"/>
 			</button>
 			<label text="Base">
 				<gridbagconstraints insets="5,5,5,5" anchor="GridBagConstraints.WEST" gridx="0" gridy="10"/>
@@ -116,11 +119,9 @@
 			<textfield id="tfFontSize" name="tfFontSize" text="9" preferredsize="50,20">
 				<gridbagconstraints insets="10,5,5,0" anchor="GridBagConstraints.WEST" gridx="1" gridy="85"/>
 			</textfield>
-		</panel>
-		<panel constraints="BorderLayout.SOUTH" layout="BorderLayout">
-			<panel constraints="BorderLayout.EAST" layout="FlowLayout(FlowLayout.RIGHT)">
-				<button name="btnReport" id="btnReport" text="Generate Report" ActionCommand="AC_GenReport"/>
-			</panel>
+			<button name="btnReport" id="btnReport" text="Generate Report" ActionCommand="AC_GenReport">
+				<gridbagconstraints insets="5,5,5,5" anchor="GridBagConstraints.WEST" gridx="2" gridy="86"/>
+			</button>
 		</panel>
 	</panel>
 </panel>
