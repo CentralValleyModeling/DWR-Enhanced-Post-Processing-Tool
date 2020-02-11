@@ -33,7 +33,7 @@ function getPlotlyMonthlySeries(datum) {
     return series;
 }
 
-function plotDiscrete(data) {
+function plot(data) {
     var datum = data['scenario_run_data'];
     var layout = {
         font: PLOTLY_FONT,

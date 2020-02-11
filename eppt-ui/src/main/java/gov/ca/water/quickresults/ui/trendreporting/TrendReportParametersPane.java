@@ -16,6 +16,7 @@ import java.awt.Frame;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
 import java.util.function.Predicate;
@@ -190,10 +191,9 @@ public class TrendReportParametersPane extends TitledPane
 		{
 			String type = addParameterDialog.getDataType();
 			String parameter = addParameterDialog.getParameter();
-			String bAndCPart = addParameterDialog.getBAndCPart();
+			Map<GUILinksAllModelsBO.Model, String> bAndCPart = addParameterDialog.getBAndCParts();
 			GUILinksAllModelsBO guiLink = new GUILinksAllModelsBO("", type, parameter, "");
-			GUILinksAllModelsBO.Model.values()
-									 .forEach(m -> guiLink.addModelMapping(m.toString(), bAndCPart, ""));
+			bAndCPart.forEach((key, value) -> guiLink.addModelMapping(key.toString(), value, ""));
 			return guiLink;
 		}
 		else

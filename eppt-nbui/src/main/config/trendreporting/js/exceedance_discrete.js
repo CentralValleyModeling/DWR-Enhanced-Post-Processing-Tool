@@ -38,7 +38,7 @@ function getDiscretePlotlySeries(datum) {
     return series;
 }
 
-function plotDiscrete(data) {
+function plot(data) {
     let datum = data['scenario_run_data'];
     var layout = {
         font: PLOTLY_FONT,

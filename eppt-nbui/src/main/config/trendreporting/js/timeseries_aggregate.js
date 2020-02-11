@@ -30,7 +30,7 @@ function getPlotlyAnnualSeries(datum) {
     return series;
 }
 
-function plotAggregate(data) {
+function plot(data) {
     var datum = data['scenario_run_data'];
 
     var layout = {
