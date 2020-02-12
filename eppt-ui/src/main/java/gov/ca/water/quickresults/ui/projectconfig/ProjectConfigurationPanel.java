@@ -208,9 +208,9 @@ public final class ProjectConfigurationPanel extends EpptPanel
 	{
 		// Set up year spinners
 		JSpinner spnSY = (JSpinner) getSwingEngine().find("spnStartYear");
-		ResultUtilsBO.SetNumberModelAndIndex(spnSY, 1921, 1921, 2003, 1, "####", null, true);
+		ResultUtilsBO.SetNumberModelAndIndex(spnSY, 1921, 0, Integer.MAX_VALUE, 1, "####", null, true);
 		JSpinner spnEY = (JSpinner) getSwingEngine().find("spnEndYear");
-		ResultUtilsBO.SetNumberModelAndIndex(spnEY, 2003, 1921, 2003, 1, "####", null, true);
+		ResultUtilsBO.SetNumberModelAndIndex(spnEY, 2003, 0, Integer.MAX_VALUE, 1, "####", null, true);
 		makeSpinnerCommitOnEdit(spnSY);
 		makeSpinnerCommitOnEdit(spnEY);
 		JFormattedTextField textField2 = ((JSpinner.DefaultEditor) spnSY.getEditor()).getTextField();
