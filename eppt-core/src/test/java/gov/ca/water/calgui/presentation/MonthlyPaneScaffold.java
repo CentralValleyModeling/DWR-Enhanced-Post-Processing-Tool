@@ -107,6 +107,7 @@ public class MonthlyPaneScaffold
 				Paths.get(
 						"C:\\Git\\DWR\\EPPT\\DWR-Enhanced-Post-Processing-Tool\\eppt-trend-reporting\\src\\test\\resources\\dwr_eppt\\wresl\\lookup"),
 				dssContainer, javafx.scene.paint.Color.BISQUE);
+		ScriptedEpptStatistics.createScriptedStatistics();
 		WaterYearTableReader waterYearTableReader = new WaterYearTableReader(baseRun.getLookupDirectory());
 		List<WaterYearIndex> read = waterYearTableReader.read();
 		List<EpptStatistic> trendStatistics = ScriptedEpptStatistics.getTrendStatistics();

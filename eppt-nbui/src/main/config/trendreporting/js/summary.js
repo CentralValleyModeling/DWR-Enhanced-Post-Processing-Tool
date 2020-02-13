@@ -185,6 +185,17 @@ function tabulateWaterYearPeriod(waterYearPeriod, data, tableValues, i) {
 var tableHeight = 300;
 
 function plot(data) {
+    let title = document.getElementById('title');
+    while (title.firstChild) {
+        title.removeChild(title.firstChild);
+    }
+    let element = document.createElement('h2');
+    title.appendChild(element);
+    element.appendChild(document.createTextNode(data['gui_link_title']));
+    element.appendChild(document.createElement('br'));
+    element.appendChild(document.createTextNode(data['month_period_title']));
+    element.appendChild(document.createElement('br'));
+    element.appendChild(document.createTextNode(data['statistics']));
     tableHeight = 100 + data['scenario_run_data'].length * 35;
     let tableValues = buildTable(data['scenario_run_data'])['cells']['values'];
     tabulateLongTermPeriod(data);

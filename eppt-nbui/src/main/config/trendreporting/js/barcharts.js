@@ -122,7 +122,7 @@ function plot(data) {
         },
         showlegend: false,
         title: {
-            text: data['month_period_title'] + ' ' + data['gui_link_title'] + '<br>(' + data['statistics'] + ')',
+            text: data['gui_link_title'] + '<br>' + data['month_period_title'] + '<br>' + data['statistics'],
             font: {
                 size: 20,
             }

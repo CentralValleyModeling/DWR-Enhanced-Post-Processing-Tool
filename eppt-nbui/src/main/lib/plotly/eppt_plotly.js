@@ -476,11 +476,11 @@ function openSecondNav(option, plot) {
             traceColor.className = "color-picker";
             new Picker({
                 parent: traceColor,
-                color : line.line.color,
+                color: line.line.color,
                 editor: true,
                 alpha: true,
                 // layout: 'left',
-                onChange: function(color){
+                onChange: function (color) {
                     traceColor.style.background = color.rgbaString;
                     Plotly.restyle(plot, {"line.color": color.hex}, [i]);
                 }
