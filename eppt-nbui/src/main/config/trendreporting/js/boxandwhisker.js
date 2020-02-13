@@ -46,7 +46,7 @@ function getPlotlyBoxValues(dataOnly, periodMonths, periodSeries) {
     if (periodMonths.length > 1) {
         let values = getPlotlyBoxValuesForPeriodAvg(periodSeries);
         y = y.concat(values);
-        x = x.concat(new Array(values.length).fill('Annual', 0, values.length));
+        x = x.concat(new Array(values.length).fill('Seasonal Period Aggregate', 0, values.length));
     }
     return {
         y: y,
