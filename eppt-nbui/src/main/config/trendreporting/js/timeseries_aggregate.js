@@ -80,7 +80,11 @@ function plotlyCopyToClipboardAnnual() {
     let plot = document.getElementById("container_aggregate_tester");
     let layout = plot.layout;
     let data1 = plot.data;
-    var text = layout['title']['text'] + '\n' + 'Year\t' + layout['yaxis']['title']['text'] + '\n';
+    let yaxis = '';
+    if(layout['yaxis']['title']['text']){
+        yaxis = layout['yaxis']['title']['text'];
+    }
+    var text = layout['title']['text'] + '\n' + 'Year\t' + yaxis + '\n';
     for (var i = 0; i < data1.length; i++) {
         text += '\t' + data1[i]['name']
     }
