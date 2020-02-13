@@ -103,12 +103,22 @@
               </component>
             </children>
           </grid>
-          <component id="58c41" class="javax.swing.JTable" binding="_table1" custom-create="true" default-binding="true">
+          <scrollpane id="f852">
             <constraints border-constraint="Center"/>
             <properties>
               <preferredSize width="300" height="100"/>
             </properties>
-          </component>
+            <border type="none"/>
+            <children>
+              <component id="58c41" class="javax.swing.JTable" binding="_table1" custom-create="true" default-binding="true">
+                <constraints/>
+                <properties>
+                  <preferredScrollableViewportSize width="300" height="50"/>
+                  <preferredSize width="300" height="70"/>
+                </properties>
+              </component>
+            </children>
+          </scrollpane>
         </children>
       </grid>
     </children>

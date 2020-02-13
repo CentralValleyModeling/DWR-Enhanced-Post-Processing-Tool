@@ -52,6 +52,10 @@ public class AddParameterDialog extends JDialog
 		_buttonOK.addActionListener(e -> onOK());
 		_buttonCancel.addActionListener(e -> onCancel());
 		_tableModel = new TableModel();
+		for(int i = 0; i < _tableModel.getRowCount(); i++)
+		{
+			_tableModel.setValueAt("B-PART/C-PART", i, 1);
+		}
 		_table1.setModel(_tableModel);
 		// call onCancel() when cross is clicked
 		setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
@@ -189,8 +193,12 @@ public class AddParameterDialog extends JDialog
 		gbc.fill = GridBagConstraints.HORIZONTAL;
 		gbc.insets = new Insets(5, 5, 5, 5);
 		panel4.add(_typeField, gbc);
-		_table1.setPreferredSize(new Dimension(300, 100));
-		panel3.add(_table1, BorderLayout.CENTER);
+		final JScrollPane scrollPane1 = new JScrollPane();
+		scrollPane1.setPreferredSize(new Dimension(300, 100));
+		panel3.add(scrollPane1, BorderLayout.CENTER);
+		_table1.setPreferredScrollableViewportSize(new Dimension(300, 50));
+		_table1.setPreferredSize(new Dimension(300, 70));
+		scrollPane1.setViewportView(_table1);
 	}
 
 	/**
