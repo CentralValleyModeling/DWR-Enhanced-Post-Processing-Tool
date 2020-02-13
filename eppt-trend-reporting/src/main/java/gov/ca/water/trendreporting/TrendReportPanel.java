@@ -24,6 +24,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
@@ -47,6 +48,7 @@ import gov.ca.water.calgui.busservice.impl.WaterYearTableReader;
 import gov.ca.water.calgui.constant.Constant;
 import gov.ca.water.calgui.project.EpptScenarioRun;
 import gov.ca.water.quickresults.ui.projectconfig.ProjectConfigurationPanel;
+import gov.ca.water.quickresults.ui.trendreporting.AddParameterDialog;
 import javafx.application.Platform;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
@@ -409,10 +411,9 @@ public class TrendReportPanel extends JFXPanel
 		{
 			String type = addParameterDialog.getDataType();
 			String parameter = addParameterDialog.getParameter();
-			String bAndCPart = addParameterDialog.getBAndCPart();
+			Map<GUILinksAllModelsBO.Model, String> bAndCParts = addParameterDialog.getBAndCParts();
 			GUILinksAllModelsBO guiLink = new GUILinksAllModelsBO("", type, parameter, "");
-			GUILinksAllModelsBO.Model.values()
-									 .forEach(m -> guiLink.addModelMapping(m.toString(), bAndCPart, ""));
+			bAndCParts.forEach((key, value) -> guiLink.addModelMapping(key.toString(), value, ""));
 			return guiLink;
 		}
 		else
