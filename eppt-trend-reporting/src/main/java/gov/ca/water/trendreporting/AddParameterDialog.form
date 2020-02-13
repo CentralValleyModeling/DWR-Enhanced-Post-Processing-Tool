@@ -93,38 +93,22 @@
               </hspacer>
             </children>
           </grid>
-        </children>
-      </grid>
-      <grid id="94766" layout-manager="BorderLayout" hgap="0" vgap="0">
-        <constraints border-constraint="South"/>
-        <properties/>
-        <border type="none"/>
-        <children>
-          <grid id="9538f" layout-manager="FlowLayout" hgap="5" vgap="5" flow-align="2">
+          <scrollpane id="f852">
             <constraints border-constraint="Center"/>
-            <properties/>
+            <properties>
+              <preferredSize width="300" height="100"/>
+            </properties>
             <border type="none"/>
             <children>
-              <component id="e7465" class="javax.swing.JButton" binding="buttonOK">
+              <component id="58c41" class="javax.swing.JTable" binding="_table1" custom-create="true" default-binding="true">
                 <constraints/>
                 <properties>
-                  <maximumSize width="70" height="25"/>
-                  <minimumSize width="70" height="25"/>
-                  <preferredSize width="70" height="25"/>
-                  <text value="OK"/>
-                </properties>
-              </component>
-              <component id="5723f" class="javax.swing.JButton" binding="buttonCancel">
-                <constraints/>
-                <properties>
-                  <maximumSize width="70" height="25"/>
-                  <minimumSize width="70" height="25"/>
-                  <preferredSize width="70" height="25"/>
-                  <text value="Cancel"/>
+                  <preferredScrollableViewportSize width="300" height="50"/>
+                  <preferredSize width="300" height="70"/>
                 </properties>
               </component>
             </children>
-          </grid>
+          </scrollpane>
         </children>
       </grid>
     </children>
