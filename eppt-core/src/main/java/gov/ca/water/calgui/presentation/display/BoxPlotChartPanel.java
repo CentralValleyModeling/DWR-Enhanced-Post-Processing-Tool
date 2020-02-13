@@ -57,7 +57,7 @@ public class BoxPlotChartPanel extends JPanel implements Printable
 	private String buffer;
 	private IErrorHandlingSvc errorHandlingSvc = new ErrorHandlingSvcImpl();
 
-	public BoxPlotChartPanel(String title, TimeSeriesContainer[] tscs, boolean isBase)
+	public BoxPlotChartPanel(String title, String yLabel, TimeSeriesContainer[] tscs, boolean isBase)
 	{
 
 		super();
@@ -117,7 +117,7 @@ public class BoxPlotChartPanel extends JPanel implements Printable
 			}
 
 			final CategoryAxis xAxis = new CategoryAxis("Period");
-			final NumberAxis yAxis = new NumberAxis("Value");
+			final NumberAxis yAxis = new NumberAxis(yLabel + ((yLabel.endsWith("(TAF)") ? "" : "(" + tscs[0].units + ")")));
 			yAxis.setAutoRangeIncludesZero(false);
 			yAxis.setRange(ymin * 0.95, ymax * 1.05);
 			final BoxAndWhiskerRenderer renderer = new BoxAndWhiskerRenderer();

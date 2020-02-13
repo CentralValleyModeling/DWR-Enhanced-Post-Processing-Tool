@@ -659,6 +659,10 @@ public class TrendReportPanel extends JFXPanel
 
 	private void loadJavascript(Path path, LocalDate start, LocalDate end, boolean taf)
 	{
+		if(start.isAfter(end))
+		{
+			return;
+		}
 		List<TrendReportingParameters.TrendParameter> guiLink = new ArrayList<>(_parameterListView.getSelectionModel().getSelectedItems());
 		List<TrendStatistics> statistic = new ArrayList<>(_statisticsListView.getSelectionModel().getSelectedItems());
 		List<MonthPeriod> monthPeriod = new ArrayList<>(_seasonalPeriodListView.getSelectionModel().getSelectedItems());

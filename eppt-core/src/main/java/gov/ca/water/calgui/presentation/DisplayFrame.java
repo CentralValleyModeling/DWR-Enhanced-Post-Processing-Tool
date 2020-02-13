@@ -18,26 +18,20 @@ import java.time.LocalDate;
 import java.time.YearMonth;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeFormatterBuilder;
-import java.time.temporal.ChronoField;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.regex.Pattern;
-import java.util.stream.Collectors;
 import javax.swing.*;
 
 import calsim.app.DerivedTimeSeries;
 import calsim.app.MultipleTimeSeries;
-import calsim.msw.MYDate;
 import gov.ca.water.calgui.bo.GUILinksAllModelsBO;
 import gov.ca.water.calgui.busservice.IDSSGrabber1Svc;
 import gov.ca.water.calgui.busservice.impl.DSSGrabber1SvcImpl;
 import gov.ca.water.calgui.busservice.impl.DSSGrabber2SvcImpl;
-import gov.ca.water.calgui.busservice.impl.GuiLinksSeedDataSvcImpl;
-import gov.ca.water.calgui.constant.Constant;
 import gov.ca.water.calgui.presentation.display.BoxPlotChartPanel;
 import gov.ca.water.calgui.presentation.display.BoxPlotChartPanel2;
 import gov.ca.water.calgui.presentation.display.ChartPanel1;
@@ -52,9 +46,6 @@ import gov.ca.water.calgui.techservice.IErrorHandlingSvc;
 import gov.ca.water.calgui.techservice.impl.ErrorHandlingSvcImpl;
 import javatests.TestSupport;
 import org.apache.log4j.Logger;
-import org.jfree.data.time.Month;
-import sun.net.www.content.text.PlainTextInputStream;
-import vista.report.MonthlyReport;
 
 import hec.io.TimeSeriesContainer;
 
@@ -108,7 +99,7 @@ final class DisplayFrame
 
 					if(dssGrabber.getPrimaryDSSName() == null)
 					{
-						String message = "No GUI_Links3.csv entry found for " + locationName +".";
+						String message = "No GUI_Links3.csv entry found for " + locationName + ".";
 						ERROR_HANDLING_SVC.businessErrorHandler(message, message);
 					}
 					else if(dssGrabber.getPrimaryDSSName().isEmpty())
@@ -250,7 +241,7 @@ final class DisplayFrame
 			{
 				tabbedpane
 						.insertTab("Box Plot", null,
-								new BoxPlotChartPanel(dssGrabber.getPlotTitle(),
+								new BoxPlotChartPanel(dssGrabber.getPlotTitle(), dssGrabber.getYLabel(),
 										primaryResults,
 										plotConfigurationState.getComparisonType() == PlotConfigurationState.ComparisonType.BASE),
 								null, 0);
@@ -675,7 +666,7 @@ final class DisplayFrame
 				{
 					tabbedpane
 							.insertTab("Box Plot", null,
-									new BoxPlotChartPanel(dssGrabber.getPlotTitle(), primaryResults, doBase),
+									new BoxPlotChartPanel(dssGrabber.getPlotTitle(), dssGrabber.getYLabel(), primaryResults, doBase),
 									null, 0);
 				}
 				if(doExceedance)
