@@ -14,12 +14,26 @@
         <properties/>
         <border type="none"/>
         <children>
-          <grid id="9538f" layout-manager="FlowLayout" hgap="5" vgap="5" flow-align="2">
-            <constraints border-constraint="Center"/>
+          <grid id="9538f" layout-manager="BorderLayout" hgap="0" vgap="0">
+            <constraints border-constraint="West"/>
             <properties/>
             <border type="none"/>
             <children>
-              <component id="e7465" class="javax.swing.JButton" binding="_buttonOK">
+              <component id="92ed8" class="javax.swing.JLabel">
+                <constraints border-constraint="Center"/>
+                <properties>
+                  <font style="2"/>
+                  <text value="*User Defined parameters do not persist on application close"/>
+                </properties>
+              </component>
+            </children>
+          </grid>
+          <grid id="d802a" layout-manager="FlowLayout" hgap="5" vgap="5" flow-align="1">
+            <constraints border-constraint="East"/>
+            <properties/>
+            <border type="none"/>
+            <children>
+              <component id="febf0" class="javax.swing.JButton" binding="_buttonOK">
                 <constraints/>
                 <properties>
                   <maximumSize width="70" height="25"/>
@@ -28,7 +42,7 @@
                   <text value="OK"/>
                 </properties>
               </component>
-              <component id="5723f" class="javax.swing.JButton" binding="_buttonCancel">
+              <component id="52a1" class="javax.swing.JButton" binding="_buttonCancel">
                 <constraints/>
                 <properties>
                   <maximumSize width="70" height="25"/>
@@ -96,9 +110,10 @@
                   <gridbag top="5" left="5" bottom="5" right="5" weightx="1.0" weighty="0.0"/>
                 </constraints>
                 <properties>
+                  <enabled value="false"/>
                   <horizontalAlignment value="2"/>
                   <preferredSize width="400" height="26"/>
-                  <text value=""/>
+                  <text value="User Defined"/>
                 </properties>
               </component>
             </children>

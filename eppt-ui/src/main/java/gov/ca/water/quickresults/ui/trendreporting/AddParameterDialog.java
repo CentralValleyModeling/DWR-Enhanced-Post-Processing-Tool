@@ -15,6 +15,7 @@ package gov.ca.water.quickresults.ui.trendreporting;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
+import java.awt.Font;
 import java.awt.Frame;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -72,6 +73,8 @@ public class AddParameterDialog extends JDialog
 		_contentPane.registerKeyboardAction(e -> onCancel(), KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0),
 				JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
 		pack();
+		setPreferredSize(new Dimension(550, 300));
+		setMinimumSize(new Dimension(550, 300));
 		setLocationRelativeTo(frame);
 	}
 
@@ -125,27 +128,38 @@ public class AddParameterDialog extends JDialog
 		panel1.setLayout(new BorderLayout(0, 0));
 		_contentPane.add(panel1, BorderLayout.SOUTH);
 		final JPanel panel2 = new JPanel();
-		panel2.setLayout(new FlowLayout(FlowLayout.RIGHT, 5, 5));
-		panel1.add(panel2, BorderLayout.CENTER);
+		panel2.setLayout(new BorderLayout(0, 0));
+		panel1.add(panel2, BorderLayout.WEST);
+		final JLabel label1 = new JLabel();
+		Font label1Font = this.$$$getFont$$$(null, Font.ITALIC, -1, label1.getFont());
+		if(label1Font != null)
+		{
+			label1.setFont(label1Font);
+		}
+		label1.setText("*User Defined parameters do not persist on application close");
+		panel2.add(label1, BorderLayout.CENTER);
+		final JPanel panel3 = new JPanel();
+		panel3.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
+		panel1.add(panel3, BorderLayout.EAST);
 		_buttonOK = new JButton();
 		_buttonOK.setMaximumSize(new Dimension(70, 25));
 		_buttonOK.setMinimumSize(new Dimension(70, 25));
 		_buttonOK.setPreferredSize(new Dimension(70, 25));
 		_buttonOK.setText("OK");
-		panel2.add(_buttonOK);
+		panel3.add(_buttonOK);
 		_buttonCancel = new JButton();
 		_buttonCancel.setMaximumSize(new Dimension(70, 25));
 		_buttonCancel.setMinimumSize(new Dimension(70, 25));
 		_buttonCancel.setPreferredSize(new Dimension(70, 25));
 		_buttonCancel.setText("Cancel");
-		panel2.add(_buttonCancel);
-		final JPanel panel3 = new JPanel();
-		panel3.setLayout(new BorderLayout(10, 10));
-		_contentPane.add(panel3, BorderLayout.CENTER);
+		panel3.add(_buttonCancel);
 		final JPanel panel4 = new JPanel();
-		panel4.setLayout(new GridBagLayout());
-		panel4.setPreferredSize(new Dimension(250, 108));
-		panel3.add(panel4, BorderLayout.NORTH);
+		panel4.setLayout(new BorderLayout(10, 10));
+		_contentPane.add(panel4, BorderLayout.CENTER);
+		final JPanel panel5 = new JPanel();
+		panel5.setLayout(new GridBagLayout());
+		panel5.setPreferredSize(new Dimension(250, 108));
+		panel4.add(panel5, BorderLayout.NORTH);
 		_parameterField = new JTextField();
 		_parameterField.setHorizontalAlignment(2);
 		_parameterField.setPreferredSize(new Dimension(400, 26));
@@ -158,33 +172,34 @@ public class AddParameterDialog extends JDialog
 		gbc.anchor = GridBagConstraints.WEST;
 		gbc.fill = GridBagConstraints.HORIZONTAL;
 		gbc.insets = new Insets(5, 5, 5, 5);
-		panel4.add(_parameterField, gbc);
-		final JLabel label1 = new JLabel();
-		label1.setHorizontalAlignment(2);
-		label1.setHorizontalTextPosition(2);
-		label1.setText("Parameter Name:");
+		panel5.add(_parameterField, gbc);
+		final JLabel label2 = new JLabel();
+		label2.setHorizontalAlignment(2);
+		label2.setHorizontalTextPosition(2);
+		label2.setText("Parameter Name:");
 		gbc = new GridBagConstraints();
 		gbc.gridx = 0;
 		gbc.gridy = 1;
 		gbc.weightx = 0.2;
 		gbc.anchor = GridBagConstraints.WEST;
 		gbc.insets = new Insets(0, 0, 5, 5);
-		panel4.add(label1, gbc);
-		final JLabel label2 = new JLabel();
-		label2.setHorizontalAlignment(2);
-		label2.setHorizontalTextPosition(2);
-		label2.setText("Type Name:");
+		panel5.add(label2, gbc);
+		final JLabel label3 = new JLabel();
+		label3.setHorizontalAlignment(2);
+		label3.setHorizontalTextPosition(2);
+		label3.setText("Type Name:");
 		gbc = new GridBagConstraints();
 		gbc.gridx = 0;
 		gbc.gridy = 0;
 		gbc.weightx = 0.2;
 		gbc.anchor = GridBagConstraints.WEST;
 		gbc.insets = new Insets(0, 0, 5, 5);
-		panel4.add(label2, gbc);
+		panel5.add(label3, gbc);
 		_typeField = new JTextField();
+		_typeField.setEnabled(false);
 		_typeField.setHorizontalAlignment(2);
 		_typeField.setPreferredSize(new Dimension(400, 26));
-		_typeField.setText("");
+		_typeField.setText("User Defined");
 		gbc = new GridBagConstraints();
 		gbc.gridx = 1;
 		gbc.gridy = 0;
@@ -192,13 +207,42 @@ public class AddParameterDialog extends JDialog
 		gbc.anchor = GridBagConstraints.WEST;
 		gbc.fill = GridBagConstraints.HORIZONTAL;
 		gbc.insets = new Insets(5, 5, 5, 5);
-		panel4.add(_typeField, gbc);
+		panel5.add(_typeField, gbc);
 		final JScrollPane scrollPane1 = new JScrollPane();
 		scrollPane1.setPreferredSize(new Dimension(300, 100));
-		panel3.add(scrollPane1, BorderLayout.CENTER);
+		panel4.add(scrollPane1, BorderLayout.CENTER);
 		_table1.setPreferredScrollableViewportSize(new Dimension(300, 50));
 		_table1.setPreferredSize(new Dimension(300, 70));
 		scrollPane1.setViewportView(_table1);
+	}
+
+	/**
+	 * @noinspection ALL
+	 */
+	private Font $$$getFont$$$(String fontName, int style, int size, Font currentFont)
+	{
+		if(currentFont == null)
+		{
+			return null;
+		}
+		String resultName;
+		if(fontName == null)
+		{
+			resultName = currentFont.getName();
+		}
+		else
+		{
+			Font testFont = new Font(fontName, Font.PLAIN, 10);
+			if(testFont.canDisplay('a') && testFont.canDisplay('1'))
+			{
+				resultName = fontName;
+			}
+			else
+			{
+				resultName = currentFont.getName();
+			}
+		}
+		return new Font(resultName, style >= 0 ? style : currentFont.getStyle(), size >= 0 ? size : currentFont.getSize());
 	}
 
 	/**
