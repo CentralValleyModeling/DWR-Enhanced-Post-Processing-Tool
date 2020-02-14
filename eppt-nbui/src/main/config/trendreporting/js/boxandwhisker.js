@@ -93,7 +93,7 @@ function plot(data) {
     var layout = {
         font: PLOTLY_FONT,
         title: {
-            text: data['gui_link_title'] + '<br>' + data['month_period_title'] + '<br>' + data['statistics'],
+            text: data['gui_link_title'] + '<br>' + data['month_period_title'],
             font: {
                 size: 20,
             }
