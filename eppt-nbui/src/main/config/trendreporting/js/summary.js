@@ -57,7 +57,9 @@ function getPlotlySeries(datum) {
 }
 
 function buildChart(data, plotlyData) {
-    var yrange = [Math.min.apply(null, plotlyData['y']) - 20, Math.max.apply(null, plotlyData['y']) + 20];
+    let min = Math.min.apply(null, plotlyData['y']);
+    let max = Math.max.apply(null, plotlyData['y']);
+    var yrange = [min - min*0.05,  max + max*0.05];
     var layout = {
         font: PLOTLY_FONT,
         yaxis: {
