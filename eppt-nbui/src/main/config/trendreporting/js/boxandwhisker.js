@@ -24,7 +24,7 @@ function getPlotlyBoxValuesForAll(tsc) {
 
 function getPlotlyBoxValuesForPeriodAvg(tsc) {
     var datum = [];
-    for (var i = 0; i < tsc.length; i ++) {
+    for (var i = 0; i < tsc.length; i++) {
         datum.push(tsc[i][1]);
     }
     return datum;
@@ -46,7 +46,7 @@ function getPlotlyBoxValues(dataOnly, periodMonths, periodSeries) {
     if (periodMonths.length > 1) {
         let values = getPlotlyBoxValuesForPeriodAvg(periodSeries);
         y = y.concat(values);
-        x = x.concat(new Array(values.length).fill('Seasonal Period Aggregate', 0, values.length));
+        x = x.concat(new Array(values.length).fill(periodMonths[0] + '-' + periodMonths[periodMonths.length - 1], 0, values.length));
     }
     return {
         y: y,
