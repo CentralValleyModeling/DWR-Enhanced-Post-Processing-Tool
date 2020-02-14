@@ -83,7 +83,7 @@ function plotlyExportFunction(plot) {
 
 function copyTextToClipboard(text) {
     var textArea = document.createElement("textarea");
-    textArea.value = text;
+    textArea.value = text.replace(/<br>/g, ' ').replace(/<b>/g, '').replace(/<\/b>/g, '');
     document.body.appendChild(textArea);
     textArea.focus();
     textArea.select();
