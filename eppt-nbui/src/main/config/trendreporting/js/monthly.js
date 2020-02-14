@@ -58,7 +58,7 @@ function plot(data) {
         },
         showlegend: true,
         title: {
-            text: data['month_period_title'] + ' ' + data['gui_link_title'] + '<br>(' + data['statistics'] + ')',
+            text: data['gui_link_title'] + '<br>' + data['month_period_title'] + '<br>' + data['statistics'],
             font: {
                 family: PLOTLY_FONT['family'],
                 size: 20,

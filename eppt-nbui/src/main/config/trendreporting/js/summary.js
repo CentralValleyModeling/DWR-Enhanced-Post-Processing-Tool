@@ -76,7 +76,7 @@ function buildChart(data, plotlyData) {
             }
         },
         title: {
-            text: data['month_period_title'] + ' ' + data['gui_link_title'] + '<br>(' + data['statistics'] + ')',
+            text: data['gui_link_title'] + '<br>' + data['month_period_title'] + '<br>' + data['statistics'],
             font: {
                 family:PLOTLY_FONT['family'],
                 size: 20,
@@ -101,7 +101,7 @@ function buildPlotlyTable(data) {
     var layout = {
         font: PLOTLY_FONT,
         title: {
-            text: data['month_period_title'] + '<br>' + data['gui_link_title'] + '<br>' + data['statistics'],
+            text: data['gui_link_title'] + '<br>' + data['month_period_title'] + '<br>' + data['statistics'],
         }
     };
     var header = [['Scenario'], [data['units']]];

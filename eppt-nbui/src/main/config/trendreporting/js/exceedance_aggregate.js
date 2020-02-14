@@ -67,7 +67,7 @@ function plotAggregate(data) {
             }
         },
         title: {
-            text: data['month_period_title'] + ' ' + data['gui_link_title'],
+            text: data['gui_link_title'] + '<br>' + data['month_period_title'],
             font: {
                 size: 20,
             }
