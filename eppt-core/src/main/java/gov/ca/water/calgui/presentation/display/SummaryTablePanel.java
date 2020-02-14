@@ -227,7 +227,7 @@ public class SummaryTablePanel extends JPanel implements ActionListener, Compone
 				HecTime ht = new HecTime();
 				int lastWY = -9999;
 
-				for(int i = 0; i < tsc.numberValues; i++)
+				for(int i = 0; i < tsc.numberValues &&i < tsc.values.length; i++)
 				{
 
 					ht.set(tsc.times[i]);
@@ -245,15 +245,30 @@ public class SummaryTablePanel extends JPanel implements ActionListener, Compone
 					int ySJRindex = (m < 2) ? y - 1 : y;
 
 					update(0, 0, tsc.values[i], m);
-					update(1, ylt[ySac403030 - 1920][1], tsc.values[i], m);
-					update(2, ylt[ySHASTAindex - 1920][3], tsc.values[i], m);
-					update(3, ylt[yFEATHERindex - 1920][5], tsc.values[i], m);
-					update(4, ylt[ySJRindex - 1920][2], tsc.values[i], m);
-
-					if(ylt[wy - 1920][8] != 0)
+					if((ySac403030 - 1920) < ylt.length)
 					{
-						update(5, ylt[wy - 1920][8], tsc.values[i], m);
-						update(5, 0, tsc.values[i], m);
+						update(1, ylt[ySac403030 - 1920][1], tsc.values[i], m);
+					}
+					if((ySHASTAindex - 1920) < ylt.length)
+					{
+						update(2, ylt[ySHASTAindex - 1920][3], tsc.values[i], m);
+					}
+					if((yFEATHERindex - 1920) < ylt.length)
+					{
+						update(3, ylt[yFEATHERindex - 1920][5], tsc.values[i], m);
+					}
+					if((ySJRindex - 1920) < ylt.length)
+					{
+						update(4, ylt[ySJRindex - 1920][2], tsc.values[i], m);
+					}
+
+					if((wy - 1920) < ylt.length)
+					{
+						if(ylt[wy - 1920][8] != 0)
+						{
+							update(5, ylt[wy - 1920][8], tsc.values[i], m);
+							update(5, 0, tsc.values[i], m);
+						}
 					}
 					if(isNewWY && isCFS)
 					{

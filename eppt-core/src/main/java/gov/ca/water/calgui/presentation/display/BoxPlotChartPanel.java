@@ -99,7 +99,7 @@ public class BoxPlotChartPanel extends JPanel implements Printable
 					else
 					{
 						// Annual
-						for(int k = 0; k < tsc.numberValues; k += 12)
+						for(int k = 0; k < tsc.numberValues && k + 1 < tsc.values[k]; k += 12)
 						{
 							double sum = 0;
 							for(int l = 0; l < 12; l++)
