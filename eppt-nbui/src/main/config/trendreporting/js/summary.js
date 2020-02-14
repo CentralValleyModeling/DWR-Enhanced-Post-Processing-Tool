@@ -143,6 +143,7 @@ function buildPlotlyTable(data) {
             font: {family: PLOTLY_FONT['family'], size: 11}
         },
         cells: {
+            format: ['',',.3r%'],
             values: values,
             align: ['left', 'center'],
             height: 30,

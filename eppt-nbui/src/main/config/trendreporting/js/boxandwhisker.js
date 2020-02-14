@@ -110,6 +110,7 @@ function plot(data) {
             title: {
                 text: data['units']
             },
+            tickformat: ',.3r',
             automargin: true,
             zeroline: false,
             gridcolor: '#DDDDDD'

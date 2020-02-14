@@ -53,6 +53,7 @@ function plotAggregate(data) {
             title: {
                 text: data['units'],
             },
+            tickformat: ',.3r',
             autorange: true,
             zeroline: false,
             gridcolor: '#CCCCCC'
