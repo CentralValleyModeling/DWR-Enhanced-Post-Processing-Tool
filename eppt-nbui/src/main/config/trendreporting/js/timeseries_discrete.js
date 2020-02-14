@@ -17,7 +17,10 @@ function getPlotlyMonthlySeries(datum) {
         let x = [];
         let y = [];
         for (var j = 0; j < timeSeries.length; j++) {
-            x.push(new Date(timeSeries[j][0]));
+            let date = new Date(timeSeries[j][0]);
+            date = new Date(date.setDate(date.getDate() - 1));
+            date = new Date(date.setHours(23,59,59,59));
+            x.push(date);
             y.push(timeSeries[j][1]);
         }
         series.push({
@@ -41,6 +44,8 @@ function plotDiscrete(data) {
             gridcolor: '#CCCCCC'
         },
         xaxis:{
+            tickformat: '%b-%Y',
+            hoverformat: '%b-%d-%Y',
             gridcolor: '#CCCCCC'
         },
         showlegend: true,
@@ -84,7 +89,8 @@ function plotlyCopyToClipboardMonthly() {
     let datum = data1[0];
     let xarr = datum['x'];
     for (var j = 0; j < xarr.length; j++) {
-        text += xarr[j];
+        let date = xarr[j];
+        text += (date.getMonth() + 1) + '/' + date.getDate() + '/' + date.getFullYear();
         for (var k = 0; k < data1.length; k++) {
             let yarr = data1[k]['y'];
             text += '\t' + yarr[j];
