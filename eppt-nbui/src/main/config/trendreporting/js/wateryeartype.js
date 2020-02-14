@@ -201,7 +201,7 @@ function plotGraph(data) {
     });
     $("#tester").mousedown((ev) => {
         if (ev.which === 3) {
-            openContextMenu('#tester', ev, () => plotlyCopyToClipboard('tester'), plotlyExportFunction(document.getElementById('tester')));
+            openContextMenu('#tester', ev, () => plotlyCopyToClipboard('tester', data['water-year-index']), plotlyExportFunction(document.getElementById('tester')));
         }
     });
 }
@@ -279,7 +279,7 @@ function tabulateWaterYearPeriod(waterYearPeriod, data, tableValues, i) {
     let elementid = "water-year-matrix" + i;
     $("#" + elementid).mousedown((ev) => {
         if (ev.which === 3) {
-            openContextMenu("#" + elementid, ev, () => plotlyCopyToClipboard(elementid), plotlyExportFunction(document.getElementById(elementid)));
+            openContextMenu("#" + elementid, ev, () => plotlyCopyToClipboard(elementid, data['water-year-index']), plotlyExportFunction(document.getElementById(elementid)));
         }
     });
 }
@@ -300,11 +300,11 @@ function plot(data) {
     plotMatrix(data);
 }
 
-function plotlyCopyToClipboard(element) {
+function plotlyCopyToClipboard(element, waterYearIndex) {
     let plot = document.getElementById(element);
     let layout = plot.layout;
     let data1 = plot.data;
-    var text = layout['title']['text'];
+    var text = waterYearIndex + '\t' + layout['title']['text'];
     if (layout['yaxis'] && layout['yaxis']['title']) {
         text += '\nScenario\t' + layout['yaxis']['title']['text'];
     }

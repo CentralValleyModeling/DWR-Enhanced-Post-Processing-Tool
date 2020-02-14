@@ -17,6 +17,7 @@ import java.util.List;
 import java.util.Locale;
 
 import gov.ca.water.calgui.bo.GUILinksAllModelsBO;
+import gov.ca.water.calgui.bo.WaterYearIndex;
 import gov.ca.water.calgui.busservice.impl.MonthPeriod;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -35,14 +36,16 @@ class EpptReportingComputedSet
 	private static final String MONTH_PERIOD = "month_period_title";
 	private static final String PERIOD_MONTHS = "period_months";
 	private static final String UNITS = "units";
+	private static final String WATER_YEAR_INDEX = "water-year-index";
 	private static final String TAF = "taf";
 	private final GUILinksAllModelsBO _guiLink;
 	private final TrendStatistics _statistics;
 	private final MonthPeriod _monthPeriod;
+	private final WaterYearIndex _waterYearIndex;
 	private final List<EpptReportingComputed> _epptReportingComputed;
 	private final boolean _taf;
 
-	EpptReportingComputedSet(GUILinksAllModelsBO guiLink, TrendStatistics statistics,
+	EpptReportingComputedSet(GUILinksAllModelsBO guiLink, TrendStatistics statistics, WaterYearIndex waterYearIndex,
 							 MonthPeriod monthPeriod, boolean taf,
 							 List<EpptReportingComputed> epptReportingComputed)
 	{
@@ -50,6 +53,7 @@ class EpptReportingComputedSet
 		_statistics = statistics;
 		_monthPeriod = monthPeriod;
 		_taf = taf;
+		_waterYearIndex = waterYearIndex;
 		_epptReportingComputed = epptReportingComputed;
 	}
 
@@ -66,6 +70,7 @@ class EpptReportingComputedSet
 		jsonObject.put(MONTH_PERIOD, _monthPeriod.toString());
 		jsonObject.put(SCENARIO_RUN_DATA, jsonArray);
 		jsonObject.put(TAF, _taf);
+		jsonObject.put(WATER_YEAR_INDEX, _waterYearIndex.getName());
 		JSONArray periodMonths = new JSONArray();
 		EpptReportingMonths.getMonths(_monthPeriod).forEach(e -> periodMonths.put(e.getDisplayName(TextStyle.SHORT, Locale.getDefault())));
 		jsonObject.put(PERIOD_MONTHS, periodMonths);

@@ -832,7 +832,7 @@ public class TrendReportPanel extends JFXPanel
 				LOGGER.log(Level.SEVERE, "Error calculating Trend Reporting for scenario run: " + scenarioRun, e);
 			}
 		}
-		return new EpptReportingComputedSet(guiLink, statistic, monthPeriod,
+		return new EpptReportingComputedSet(guiLink, statistic, waterYearIndex, monthPeriod,
 				_tafCheckbox.isSelected(), trendReportingComputed);
 	}
 
