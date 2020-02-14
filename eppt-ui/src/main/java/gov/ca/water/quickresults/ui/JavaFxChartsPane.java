@@ -248,7 +248,14 @@ public class JavaFxChartsPane extends BorderPane
 						.command(orcaCommandline)
 						.start();
 				exec.waitFor();
-				Desktop.getDesktop().open(outputPath.toFile());
+				if(outputPath.toFile().exists())
+				{
+					Desktop.getDesktop().open(outputPath.toFile());
+				}
+				else
+				{
+					throw new IOException("File was not created by Plotly: " + outputPath);
+				}
 			}
 			finally
 			{
