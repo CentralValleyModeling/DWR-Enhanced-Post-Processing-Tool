@@ -111,7 +111,7 @@ function plot(data) {
                 text: data['units']
             },
             tickformat: ',.3r',
-            automargin: true,
+            rangemode: 'tozero',
             zeroline: false,
             gridcolor: '#DDDDDD'
         },
@@ -120,7 +120,7 @@ function plot(data) {
         },
         boxmode: 'group'
     };
-    let plot = Plotly.newPlot('tester', getPlotlySeries(datum, periodMonths), layout, {
+    Plotly.newPlot('tester', getPlotlySeries(datum, periodMonths), layout, {
             displaylogo: false,
             modeBarButtonsToRemove: ['toImage', 'sendDataToCloud', 'editInChartStudio', 'lasso2d', 'select2d', 'resetScale2d'],
             scrollZoom: true,

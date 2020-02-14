@@ -42,7 +42,8 @@ function plotDiscrete(data) {
                 text: data['units'],
             },
             tickformat: ',.3r',
-            gridcolor: '#CCCCCC'
+            gridcolor: '#CCCCCC',
+            rangemode:'tozero'
         },
         xaxis:{
             tickformat: '%b-%Y',

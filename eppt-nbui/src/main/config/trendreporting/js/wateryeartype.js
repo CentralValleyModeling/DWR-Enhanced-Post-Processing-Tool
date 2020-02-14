@@ -169,19 +169,6 @@ function getPlotlySeries(allData) {
 
 function plotGraph(data) {
     let plotlySeries = getPlotlySeries(data);
-    let yvalues = [];
-    for (let i = 0; i < plotlySeries.length; i++) {
-        if (plotlySeries[i]['y']) {
-            for (let j = 0; j < plotlySeries[i]['y'].length; j++) {
-                if (plotlySeries[i]['y'][j]) {
-                    yvalues.push(plotlySeries[i]['y'][j]);
-                }
-            }
-        }
-    }
-    let min = Math.min.apply(null, yvalues);
-    let max = Math.max.apply(null, yvalues);
-    var yrange = [min - min * 0.05, max + max * 0.05];
     let layout = {
         font: PLOTLY_FONT,
         barmode: 'group',
@@ -190,7 +177,7 @@ function plotGraph(data) {
                 text: data['units'],
             },
             domain: [0.35, 1.0],
-            range: yrange,
+            rangemode: 'tozero',
             gridcolor: '#CCCCCC'
         },
         xaxis: {

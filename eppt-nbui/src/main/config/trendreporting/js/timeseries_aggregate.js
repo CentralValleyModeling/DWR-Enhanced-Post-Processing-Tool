@@ -40,7 +40,8 @@ function plotAggregate(data) {
                 text: data['units'],
             },
             tickformat: ',.3r',
-            gridcolor: '#CCCCCC'
+            gridcolor: '#CCCCCC',
+            rangemode:'tozero'
         },
         xaxis:{
             gridcolor: '#CCCCCC'

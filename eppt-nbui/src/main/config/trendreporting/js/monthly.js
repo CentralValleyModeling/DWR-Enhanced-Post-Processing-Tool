@@ -47,6 +47,7 @@ function plot(data) {
                 text: data['units']
             },
             tickformat: ',.3r',
+            rangemode: 'tozero',
             gridcolor: '#CCCCCC'
         },
         xaxis:{
