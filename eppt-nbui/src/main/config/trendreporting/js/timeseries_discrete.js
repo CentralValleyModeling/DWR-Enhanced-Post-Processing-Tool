@@ -10,6 +10,8 @@
  * GNU General Public License
  */
 
+var FORMATTER = '';
+
 function getPlotlyMonthlySeries(datum) {
     var series = [];
     for (var i = 0; i < datum.length; i++) {
@@ -34,6 +36,7 @@ function getPlotlyMonthlySeries(datum) {
 }
 
 function plotDiscrete(data) {
+    FORMATTER = getD3Formatter(data['scenario_run_data'][0]['full_time_series']);
     var datum = data['scenario_run_data'];
     var layout = {
         font: PLOTLY_FONT,
@@ -41,7 +44,7 @@ function plotDiscrete(data) {
             title: {
                 text: data['units'],
             },
-            tickformat: ',.3r',
+            tickformat: FORMATTER,
             gridcolor: '#CCCCCC',
             rangemode:'tozero'
         },

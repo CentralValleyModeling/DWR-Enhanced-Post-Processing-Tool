@@ -16,6 +16,19 @@ const PLOTLY_FONT = {
     color: 'black',
 };
 
+function getD3Formatter(fullSeries){
+    let values = [];
+    for(let i = 0; i < fullSeries.length; i++){
+        values.push(fullSeries[i][1]);
+    }
+    if(Math.max.apply(null, values) > 1){
+        return ',.0f';
+    }
+    else{
+        return ',.3r';
+    }
+}
+
 
 function openContextMenu(id, e, copyToClipboard, plotlyExportToFormat) {
     // prevent the browsers default context menu form appearing.

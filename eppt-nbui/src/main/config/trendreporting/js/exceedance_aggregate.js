@@ -10,6 +10,7 @@
  * GNU General Public License
  */
 
+var FORMATTER = '';
 
 function getAggregatePlotlySeries(datum) {
     let series = new Array(datum.length);
@@ -40,6 +41,7 @@ function getAggregatePlotlySeries(datum) {
 }
 
 function plotAggregate(data) {
+    FORMATTER = getD3Formatter(data['scenario_run_data'][0]['full_time_series']);
     let datum = data['scenario_run_data'];
     var layout = {
         font: PLOTLY_FONT,
@@ -53,7 +55,7 @@ function plotAggregate(data) {
             title: {
                 text: data['units'],
             },
-            tickformat: ',.3r',
+            tickformat: FORMATTER,
             rangemode: 'tozero',
             zeroline: false,
             gridcolor: '#CCCCCC'

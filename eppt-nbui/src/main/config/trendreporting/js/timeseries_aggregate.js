@@ -9,6 +9,8 @@
  *
  * GNU General Public License
  */
+var FORMATTER = '';
+
 function getPlotlyAnnualSeries(datum) {
     var series = [];
     for (var i = 0; i < datum.length; i++) {
@@ -31,6 +33,7 @@ function getPlotlyAnnualSeries(datum) {
 }
 
 function plotAggregate(data) {
+    FORMATTER = getD3Formatter(data['scenario_run_data'][0]['full_time_series']);
     var datum = data['scenario_run_data'];
 
     var layout = {
@@ -39,7 +42,7 @@ function plotAggregate(data) {
             title: {
                 text: data['units'],
             },
-            tickformat: ',.3r',
+            tickformat: FORMATTER,
             gridcolor: '#CCCCCC',
             rangemode:'tozero'
         },
