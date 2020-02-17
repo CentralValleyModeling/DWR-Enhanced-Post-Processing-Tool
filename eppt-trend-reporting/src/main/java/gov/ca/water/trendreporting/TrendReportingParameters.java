@@ -204,6 +204,7 @@ public class TrendReportingParameters
 								   .values()
 								   .stream()
 								   .filter(p -> !p.isEmpty())
+								   .map(p->p.split("/")[0])
 								   .findAny()
 								   .orElse("");
 				}

@@ -86,6 +86,8 @@ import org.json.JSONObject;
 import org.xml.sax.SAXException;
 
 import static gov.ca.water.trendreporting.TrendType.ALL_TREND_TYPE;
+import static gov.ca.water.trendreporting.TrendType.MISC_TREND_TYPE;
+import static gov.ca.water.trendreporting.TrendType.USER_DEFINED_TREND_TYPE;
 import static java.util.stream.Collectors.toList;
 
 /**
@@ -208,7 +210,7 @@ public class TrendReportPanel extends JFXPanel
 		addExpansionListener(parametersPane, parametersPane, statisticsListView, seasonalPeriodListView);
 		addExpansionListener(statisticsListView, parametersPane, statisticsListView, seasonalPeriodListView);
 		addExpansionListener(seasonalPeriodListView, parametersPane, statisticsListView, seasonalPeriodListView);
-		_trendTypes.removeIf(t -> _backingParameters.stream().noneMatch(n->t.matchesGuiLink(n.getGuiLink())));
+		_trendTypes.removeIf(t -> _backingParameters.stream().noneMatch(n -> t.matchesGuiLink(n.getGuiLink())));
 		updateTrendTypes();
 		_typeListView.getSelectionModel().select(0);
 		return flowPane;
@@ -261,14 +263,7 @@ public class TrendReportPanel extends JFXPanel
 		for(GUILinksAllModelsBO guiLink : allGuiLinks)
 		{
 			String plotAxisLabel = guiLink.getPlotAxisLabel();
-			if(plotAxisLabel != null && !plotAxisLabel.isEmpty())
-			{
-				retval.add(new TrendType(plotAxisLabel));
-			}
-			else
-			{
-				retval.add(new TrendType(guiLink));
-			}
+			retval.add(new TrendType(plotAxisLabel));
 		}
 		return retval;
 	}
@@ -369,9 +364,8 @@ public class TrendReportPanel extends JFXPanel
 			if(guiLink != null)
 			{
 				//Both elements should be added to the list
-				boolean added1 = _trendTypes.add(new TrendType(guiLink.getPlotAxisLabel()));
-				boolean added2 = _trendTypes.add(new TrendType(guiLink));
-				if(added1 || added2)
+				boolean added = _trendTypes.add(new TrendType(guiLink.getPlotAxisLabel()));
+				if(added)
 				{
 					updateTrendTypes();
 				}
@@ -396,6 +390,8 @@ public class TrendReportPanel extends JFXPanel
 		_trendTypes.removeIf(t -> t.getTitle() == null || t.getTitle().isEmpty());
 		_typeListView.getItems().clear();
 		_typeListView.getItems().add(ALL_TREND_TYPE);
+		_typeListView.getItems().add(MISC_TREND_TYPE);
+		_typeListView.getItems().add(USER_DEFINED_TREND_TYPE);
 		_typeListView.getItems().addAll(_trendTypes);
 		if(selectedItem != null)
 		{
