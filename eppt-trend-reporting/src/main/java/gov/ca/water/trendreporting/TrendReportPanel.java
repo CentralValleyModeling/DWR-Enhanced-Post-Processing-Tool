@@ -44,7 +44,7 @@ import gov.ca.water.calgui.bo.WaterYearIndex;
 import gov.ca.water.calgui.busservice.impl.GuiLinksSeedDataSvcImpl;
 import gov.ca.water.calgui.busservice.impl.MonthPeriod;
 import gov.ca.water.calgui.busservice.impl.WaterYearDefinitionSvc;
-import gov.ca.water.calgui.busservice.impl.WaterYearTableReader;
+import gov.ca.water.calgui.busservice.impl.WaterYearIndexAliasReader;
 import gov.ca.water.calgui.constant.Constant;
 import gov.ca.water.calgui.project.EpptScenarioRun;
 import gov.ca.water.quickresults.ui.projectconfig.ProjectConfigurationPanel;
@@ -108,7 +108,7 @@ public class TrendReportPanel extends JFXPanel
 	private ListView<TrendStatistics> _statisticsListView;
 	private ListView<MonthPeriod> _seasonalPeriodListView;
 	private CheckBox _tafCheckbox;
-	private ComboBox<WaterYearIndex> _waterYearIndexComboBox;
+	private ComboBox<WaterYearIndexAliasReader.WaterYearIndexAlias> _waterYearIndexComboBox;
 	private ComboBox<WaterYearDefinition> _waterYearDefinitionComboBox;
 	private ProgressBar _progressBar;
 	private Label _progressTextLabel;
@@ -157,7 +157,8 @@ public class TrendReportPanel extends JFXPanel
 		_tafCheckbox = new CheckBox("CFS -> TAF/mon");
 		_waterYearIndexComboBox = new ComboBox<>();
 		_waterYearDefinitionComboBox = new ComboBox<>();
-		fillWaterYearDefinitionCombo();
+
+		initWaterYearIndexCombo();
 
 		Insets insets = new Insets(4);
 		BorderPane mainPane = new BorderPane();
@@ -566,70 +567,14 @@ public class TrendReportPanel extends JFXPanel
 		boolean taf = ProjectConfigurationPanel.getProjectConfigurationPanel().isTaf();
 		LocalDate startMonth = ProjectConfigurationPanel.getProjectConfigurationPanel().getStartMonth();
 		LocalDate endMonth = ProjectConfigurationPanel.getProjectConfigurationPanel().getEndMonth();
-		Platform.runLater(() ->
-		{
-			if(baseRun != null)
-			{
-				fillWaterYearIndexCombo(baseRun);
-			}
-			else if(!alternatives.isEmpty())
-			{
-				fillWaterYearIndexCombo(alternatives.get(0));
-			}
-			else
-			{
-				_waterYearIndexComboBox.getItems().clear();
-			}
-			loadPane(startMonth, endMonth, taf);
-		});
+		Platform.runLater(() -> loadPane(startMonth, endMonth, taf));
 	}
 
-	private void fillWaterYearIndexCombo(EpptScenarioRun baseRun)
+	private void initWaterYearIndexCombo()
 	{
-		try
-		{
-			_waterYearIndexComboBox.getItems().clear();
-			if(baseRun != null)
-			{
-				WaterYearTableReader waterYearTableReader = new WaterYearTableReader(baseRun.getLookupDirectory());
-				WaterYearIndex selectedItem = _waterYearIndexComboBox.selectionModelProperty().get().getSelectedItem();
-				List<WaterYearIndex> indices = waterYearTableReader.read();
-				_waterYearIndexComboBox.itemsProperty().get().clear();
-				_waterYearIndexComboBox.itemsProperty().get().addAll(indices);
-				if(selectedItem == null)
-				{
-					_waterYearIndexComboBox.selectionModelProperty().get().select(0);
-				}
-				else
-				{
-					WaterYearIndex waterYearIndex = indices.stream().filter(f -> f.toString().equals(selectedItem.toString()))
-														   .findAny().orElse(indices.get(0));
-					_waterYearIndexComboBox.selectionModelProperty().get().select(waterYearIndex);
-				}
-			}
-		}
-		catch(EpptInitializationException e)
-		{
-			LOGGER.log(Level.SEVERE, "Error reading water year table from: " + baseRun.getName(), e);
-		}
-	}
-
-	private void fillWaterYearDefinitionCombo()
-	{
-		WaterYearDefinition selectedItem = _waterYearDefinitionComboBox.selectionModelProperty().get().getSelectedItem();
-		List<WaterYearDefinition> definitions = WaterYearDefinitionSvc.getWaterYearDefinitionSvc().getDefinitions();
-		_waterYearDefinitionComboBox.itemsProperty().get().clear();
-		_waterYearDefinitionComboBox.itemsProperty().get().addAll(definitions);
-		if(selectedItem == null)
-		{
-			_waterYearDefinitionComboBox.selectionModelProperty().get().select(0);
-		}
-		else
-		{
-			WaterYearDefinition waterYearIndex = definitions.stream().filter(f -> f.toString().equals(selectedItem.toString()))
-															.findAny().orElse(definitions.get(0));
-			_waterYearDefinitionComboBox.selectionModelProperty().get().select(waterYearIndex);
-		}
+		List<WaterYearIndexAliasReader.WaterYearIndexAlias> aliases = WaterYearIndexAliasReader.getInstance().getAliases();
+		_waterYearIndexComboBox.itemsProperty().get().addAll(aliases);
+		_waterYearIndexComboBox.selectionModelProperty().get().select(0);
 	}
 
 	private void loadPane(LocalDate start, LocalDate end, boolean taf)
@@ -662,8 +607,8 @@ public class TrendReportPanel extends JFXPanel
 		List<TrendReportingParameters.TrendParameter> guiLink = new ArrayList<>(_parameterListView.getSelectionModel().getSelectedItems());
 		List<TrendStatistics> statistic = new ArrayList<>(_statisticsListView.getSelectionModel().getSelectedItems());
 		List<MonthPeriod> monthPeriod = new ArrayList<>(_seasonalPeriodListView.getSelectionModel().getSelectedItems());
-		WaterYearIndex waterYearIndex = _waterYearIndexComboBox.getSelectionModel().getSelectedItem();
-		ObservableList<WaterYearIndex> waterYearIndices = _waterYearIndexComboBox.getItems();
+		WaterYearIndexAliasReader.WaterYearIndexAlias waterYearIndex = _waterYearIndexComboBox.getSelectionModel().getSelectedItem();
+		ObservableList<WaterYearIndexAliasReader.WaterYearIndexAlias> waterYearIndices = _waterYearIndexComboBox.getItems();
 		List<EpptScenarioRun> scenarioRuns = _scenarioRuns.stream().filter(Objects::nonNull).collect(toList());
 		Optional<String> error = getError(scenarioRuns, guiLink, statistic, monthPeriod, waterYearIndex);
 		if(!error.isPresent())
@@ -713,7 +658,7 @@ public class TrendReportPanel extends JFXPanel
 	private Optional<String> getError(List<EpptScenarioRun> scenarioRuns,
 									  List<TrendReportingParameters.TrendParameter> guiLink, List<TrendStatistics> statistic,
 									  List<MonthPeriod> monthPeriod,
-									  WaterYearIndex waterYearIndex)
+									  WaterYearIndexAliasReader.WaterYearIndexAlias waterYearIndex)
 	{
 		Optional<String> retval = Optional.empty();
 		if(scenarioRuns.isEmpty())
@@ -779,7 +724,8 @@ public class TrendReportPanel extends JFXPanel
 	private synchronized List<JSONObject> computeScenarios(List<TrendReportingParameters.TrendParameter> parameters, List<TrendStatistics> statistics,
 														   List<MonthPeriod> monthPeriods, LocalDate start,
 														   LocalDate end, boolean taf, List<EpptScenarioRun> scenarioRuns,
-														   WaterYearIndex waterYearIndex, ObservableList<WaterYearIndex> waterYearIndices)
+														   WaterYearIndexAliasReader.WaterYearIndexAlias waterYearIndex,
+														   ObservableList<WaterYearIndexAliasReader.WaterYearIndexAlias> waterYearIndices)
 	{
 		List<JSONObject> retval = new ArrayList<>();
 		for(TrendReportingParameters.TrendParameter parameter : parameters)
@@ -802,7 +748,8 @@ public class TrendReportPanel extends JFXPanel
 	private EpptReportingComputedSet computeForMetrics(GUILinksAllModelsBO guiLink, TrendStatistics statistic,
 													   MonthPeriod monthPeriod, LocalDate start,
 													   LocalDate end, boolean taf, List<EpptScenarioRun> scenarioRuns,
-													   WaterYearIndex waterYearIndex, ObservableList<WaterYearIndex> waterYearIndices)
+													   WaterYearIndexAliasReader.WaterYearIndexAlias waterYearIndex,
+													   ObservableList<WaterYearIndexAliasReader.WaterYearIndexAlias> waterYearIndices)
 	{
 		WaterYearDefinition waterYearDefinition = _waterYearDefinitionComboBox.getSelectionModel().getSelectedItem();
 		EpptReportingComputer trendReportingComputer = new EpptReportingComputer(guiLink, statistic, monthPeriod, waterYearDefinition,

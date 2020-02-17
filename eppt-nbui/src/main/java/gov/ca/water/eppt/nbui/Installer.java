@@ -28,6 +28,8 @@ import gov.ca.water.calgui.busservice.impl.DetailedIssuesReader;
 import gov.ca.water.calgui.busservice.impl.GuiLinksSeedDataSvcImpl;
 import gov.ca.water.calgui.busservice.impl.ThresholdLinksSeedDataSvc;
 import gov.ca.water.calgui.busservice.impl.WaterYearDefinitionSvc;
+import gov.ca.water.calgui.busservice.impl.WaterYearIndexAliasReader;
+import gov.ca.water.calgui.busservice.impl.WaterYearPeriodReader;
 import gov.ca.water.calgui.constant.EpptPreferences;
 import gov.ca.water.calgui.presentation.DisplayHelper;
 import gov.ca.water.calgui.techservice.impl.DialogSvcImpl;
@@ -140,6 +142,8 @@ public class Installer extends ModuleInstall
 			WaterYearDefinitionSvc.createSeedDataSvcImplInstance();
 			DetailedIssuesReader.createDetailedIssues();
 			TrendReportingParameters.createTrendReportingParametersInstance();
+			WaterYearIndexAliasReader.createInstance();
+			WaterYearPeriodReader.createInstance();
 			//This is done so that the JFXPanels created on startup have already loaded up the Platform thread.
 			Platform.setImplicitExit(false);
 			new JFXPanel();

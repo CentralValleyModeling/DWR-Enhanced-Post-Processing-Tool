@@ -22,6 +22,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.logging.Level;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -69,18 +70,24 @@ public class WaterYearTableReader
 				for(int i = 1; i < headers.length; i++)
 				{
 					List<WaterYearType> waterYearTypes = new ArrayList<>();
+					String header = headers[i];
+					String waterYearIndexName = WaterYearIndexAliasReader.getInstance().getAliases().stream()
+																		 .filter(s -> s.isAliasFor(header))
+																		 .findAny()
+																		 .map(WaterYearIndexAliasReader.WaterYearIndexAlias::getAlias)
+																		 .orElse(header);
 					for(int j = 1; j < collect.size(); j++)
 					{
 						String[] row = collect.get(j);
 						if(i < row.length)
 						{
 							int waterYearCode = Integer.parseInt(row[i]);
-							String waterYearType = _waterYearNameLookupTable.getWaterYearType(waterYearCode, headers[i]);
+							String waterYearType = _waterYearNameLookupTable.getWaterYearType(waterYearCode, waterYearIndexName);
 							waterYearTypes.add(new WaterYearType(Integer.parseInt(row[0]), new WaterYearPeriod(waterYearType)));
 						}
 					}
-					List<WaterYearPeriod> waterYearPeriods = _waterYearNameLookupTable.getSortedWaterYearPeriods(headers[i]);
-					waterYearIndices.add(new WaterYearIndex(headers[i], waterYearTypes, waterYearPeriods));
+					List<WaterYearPeriod> waterYearPeriods = _waterYearNameLookupTable.getSortedWaterYearPeriods(waterYearIndexName);
+					waterYearIndices.add(new WaterYearIndex(header, waterYearTypes, waterYearPeriods));
 				}
 			}
 		}
