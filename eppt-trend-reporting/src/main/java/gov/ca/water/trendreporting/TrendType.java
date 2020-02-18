@@ -38,7 +38,7 @@ public class TrendType
 		@Override
 		public boolean matchesGuiLink(GUILinksAllModelsBO guiLink)
 		{
-			return guiLink != null && (guiLink.getPlotAxisLabel() == null || guiLink.getPlotAxisLabel().isEmpty());
+			return guiLink != null && (guiLink.getType() == null || guiLink.getType().isEmpty());
 		}
 	};
 	static final TrendType USER_DEFINED_TREND_TYPE = new TrendType(USER_DEFINED)
@@ -46,7 +46,7 @@ public class TrendType
 		@Override
 		public boolean matchesGuiLink(GUILinksAllModelsBO guiLink)
 		{
-			return guiLink != null && (guiLink.getPlotAxisLabel().equalsIgnoreCase(USER_DEFINED));
+			return guiLink != null && (guiLink.getType().equalsIgnoreCase(USER_DEFINED));
 		}
 	};
 	private final String _title;
@@ -80,7 +80,7 @@ public class TrendType
 		boolean retval = false;
 		if(guiLink != null)
 		{
-			if(_title.equalsIgnoreCase(guiLink.getPlotAxisLabel().trim()))
+			if(_title.equalsIgnoreCase(guiLink.getType().trim()))
 			{
 				retval = true;
 			}

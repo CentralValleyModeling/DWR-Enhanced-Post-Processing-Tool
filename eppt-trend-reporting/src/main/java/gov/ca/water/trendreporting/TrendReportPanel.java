@@ -40,10 +40,8 @@ import javax.xml.parsers.ParserConfigurationException;
 import gov.ca.water.calgui.EpptInitializationException;
 import gov.ca.water.calgui.bo.GUILinksAllModelsBO;
 import gov.ca.water.calgui.bo.WaterYearDefinition;
-import gov.ca.water.calgui.bo.WaterYearIndex;
 import gov.ca.water.calgui.busservice.impl.GuiLinksSeedDataSvcImpl;
 import gov.ca.water.calgui.busservice.impl.MonthPeriod;
-import gov.ca.water.calgui.busservice.impl.WaterYearDefinitionSvc;
 import gov.ca.water.calgui.busservice.impl.WaterYearIndexAliasReader;
 import gov.ca.water.calgui.constant.Constant;
 import gov.ca.water.calgui.project.EpptScenarioRun;
@@ -263,7 +261,7 @@ public class TrendReportPanel extends JFXPanel
 		List<GUILinksAllModelsBO> allGuiLinks = GuiLinksSeedDataSvcImpl.getSeedDataSvcImplInstance().getAllGuiLinks();
 		for(GUILinksAllModelsBO guiLink : allGuiLinks)
 		{
-			String plotAxisLabel = guiLink.getPlotAxisLabel();
+			String plotAxisLabel = guiLink.getType();
 			retval.add(new TrendType(plotAxisLabel));
 		}
 		return retval;
@@ -365,7 +363,7 @@ public class TrendReportPanel extends JFXPanel
 			if(guiLink != null)
 			{
 				//Both elements should be added to the list
-				boolean added = _trendTypes.add(new TrendType(guiLink.getPlotAxisLabel()));
+				boolean added = _trendTypes.add(new TrendType(guiLink.getType()));
 				if(added)
 				{
 					updateTrendTypes();
@@ -409,7 +407,7 @@ public class TrendReportPanel extends JFXPanel
 			String type = addParameterDialog.getDataType();
 			String parameter = addParameterDialog.getParameter();
 			Map<GUILinksAllModelsBO.Model, String> bAndCParts = addParameterDialog.getBAndCParts();
-			GUILinksAllModelsBO guiLink = new GUILinksAllModelsBO("", type, parameter, "");
+			GUILinksAllModelsBO guiLink = new GUILinksAllModelsBO("", "", parameter, "", type);
 			bAndCParts.forEach((key, value) -> guiLink.addModelMapping(key.toString(), value, ""));
 			return guiLink;
 		}
