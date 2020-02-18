@@ -45,7 +45,7 @@ function buildTable(data) {
                 periodValues = [];
                 values[1 + k] = periodValues;
             }
-            periodValues.push(Math.round(val));
+            periodValues.push(val);
         }
     }
     return {
