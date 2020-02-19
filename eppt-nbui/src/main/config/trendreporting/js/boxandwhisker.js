@@ -83,7 +83,8 @@ function getPlotlySeries(datum, periodMonths) {
             marker: {
                 color: datum[i]['scenario_color']
             },
-            boxpoints: false
+            boxpoints: false,
+            boxmean: true
         });
     }
     return series;
