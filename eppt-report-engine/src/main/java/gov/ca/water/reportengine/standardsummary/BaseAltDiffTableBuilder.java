@@ -139,7 +139,6 @@ class BaseAltDiffTableBuilder extends TableBuilder
 	{
 		Element retval = getDocument().createElement(SEASONAL_TYPE_ELEMENT);
 		retval.setAttribute(SEASONAL_TYPE_NAME_ATTRIBUTE, period.getPeriodName());
-		SummaryReportParameters reportParameters = getReportParameters();
 		appendScenarios(retval, period, epptChart);
 		return retval;
 	}

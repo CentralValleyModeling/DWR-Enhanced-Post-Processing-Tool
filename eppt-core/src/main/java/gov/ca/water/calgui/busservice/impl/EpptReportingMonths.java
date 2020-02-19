@@ -26,6 +26,7 @@ import gov.ca.water.calgui.EpptInitializationException;
 import gov.ca.water.calgui.bo.CalLiteGUIException;
 import gov.ca.water.calgui.constant.Constant;
 import gov.ca.water.calgui.techservice.IFileSystemSvc;
+import gov.ca.water.calgui.techservice.impl.FilePredicates;
 import gov.ca.water.calgui.techservice.impl.FileSystemSvcImpl;
 import org.apache.log4j.Logger;
 
@@ -79,7 +80,7 @@ public final class EpptReportingMonths
 		try
 		{
 			List<String> monthPeriodStrings = fileSystemSvc.getFileData(Paths.get(MONTH_PERIODS_FILENAME), true,
-					GuiLinksSeedDataSvcImpl::isNotComments);
+					FilePredicates.commentFilter());
 			for(String guiLinkString : monthPeriodStrings)
 			{
 				errorStr = guiLinkString;

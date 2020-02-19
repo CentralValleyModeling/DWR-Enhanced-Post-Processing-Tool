@@ -104,8 +104,8 @@ public class TrendReportPanel extends JFXPanel
 
 	public TrendReportPanel()
 	{
-		setMinimumSize(new Dimension(1400, 800));
-		setPreferredSize(new Dimension(1400, 800));
+		setMinimumSize(new Dimension(1450, 800));
+		setPreferredSize(new Dimension(1450, 800));
 		Platform.setImplicitExit(false);
 		Platform.runLater(this::init);
 	}
@@ -336,7 +336,7 @@ public class TrendReportPanel extends JFXPanel
 	private Optional<String> getError(List<EpptScenarioRun> scenarioRuns,
 									  List<TrendReportingParameters.TrendParameter> guiLink, List<EpptStatistic> statistic,
 									  List<MonthPeriod> monthPeriod,
-									  WaterYearIndex waterYearIndex)
+									  WaterYearIndexAliasReader.WaterYearIndexAlias waterYearIndex)
 	{
 		Optional<String> retval = Optional.empty();
 		if(scenarioRuns.isEmpty())

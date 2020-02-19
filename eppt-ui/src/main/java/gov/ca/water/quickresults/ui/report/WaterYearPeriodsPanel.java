@@ -22,6 +22,8 @@ import gov.ca.water.calgui.bo.WaterYearDefinition;
 import gov.ca.water.calgui.bo.WaterYearIndex;
 import gov.ca.water.calgui.bo.WaterYearPeriod;
 import gov.ca.water.calgui.bo.WaterYearPeriodRange;
+import gov.ca.water.calgui.bo.WaterYearType;
+import gov.ca.water.calgui.busservice.impl.WaterYearPeriodReader;
 import javafx.application.Platform;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
@@ -35,6 +37,8 @@ import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
 import javafx.scene.control.cell.CheckBoxTreeCell;
 import javafx.scene.layout.BorderPane;
+
+import static java.util.stream.Collectors.toList;
 
 /**
  * Company: Resource Management Associates
@@ -78,16 +82,15 @@ public class WaterYearPeriodsPanel extends JFXPanel
 			});
 			return cell;
 		});
-	}
-
-	void fillWithIndex(WaterYearIndex waterYearIndex, WaterYearDefinition waterYearDefinition)
-	{
-		Platform.runLater(() ->
+		buildWaterYearTypeRangeRows();
+		for(int i = 0; i < _treeView.getRoot().getChildren().size(); i++)
 		{
-			_waterYearDefinition = waterYearDefinition;
-			_treeView.getRoot().getChildren().clear();
-			buildWaterYearTypeRangeRows(waterYearIndex);
-		});
+			TreeItem<WaterYearPeriodDefinitionsRow> treeItem = _treeView.getRoot().getChildren().get(i);
+			if(treeItem != null)
+			{
+				treeItem.setExpanded(true);
+			}
+		}
 	}
 
 	void fillWithDefinition(WaterYearDefinition waterYearDefinition)
@@ -99,34 +102,35 @@ public class WaterYearPeriodsPanel extends JFXPanel
 		});
 	}
 
-	private void buildWaterYearTypeRangeRows(WaterYearIndex waterYearIndex)
+	private void buildWaterYearTypeRangeRows()
 	{
 		TreeItem<WaterYearPeriodDefinitionsRow> root = _treeView.getRoot();
-		if(waterYearIndex != null && _waterYearDefinition != null)
+		root.getChildren().clear();
+		List<WaterYearPeriodReader.WaterYearPeriodDefinition> waterYearPeriodDefinitions = WaterYearPeriodReader.getInstance().getWaterYearPeriodDefinitions();
+		List<String> periodNames = waterYearPeriodDefinitions.stream()
+															 .map(WaterYearPeriodReader.WaterYearPeriodDefinition::getName)
+															 .distinct()
+															 .collect(toList());
+		for(String period : periodNames)
 		{
-			for(Map.Entry<WaterYearPeriod, List<WaterYearPeriodRange>> entry : waterYearIndex.getLongWaterYearPeriodRanges().entrySet())
-			{
-				CheckBoxTreeItem<WaterYearPeriodDefinitionsRow> parent = new CheckBoxTreeItem<>(new WaterYearPeriodRow(entry.getKey()),
-						null, false, true);
-				parent.selectedProperty().addListener((e, o, n) -> parentCheckboxSelected(e, o, n, parent));
-				root.getChildren().add(parent);
-				List<WaterYearPeriodRange> ranges = entry.getValue();
-				SimpleIntegerProperty totalSelectedProperty = new SimpleIntegerProperty(0);
-				ranges.stream()
-					  .map(e -> buildPeriodRow(e, totalSelectedProperty))
-					  .forEach(parent.getChildren()::add);
-			}
-		}
-		else
-		{
-			root.getChildren().clear();
+			CheckBoxTreeItem<WaterYearPeriodDefinitionsRow> parent = new CheckBoxTreeItem<>(new WaterYearPeriodRow(new WaterYearPeriod(period)),
+					null, false, true);
+			parent.selectedProperty().addListener((e, o, n) -> parentCheckboxSelected(e, o, n, parent));
+			root.getChildren().add(parent);
+			waterYearPeriodDefinitions.stream()
+									  .filter(s -> s.getName().equalsIgnoreCase(period))
+									  .map(s -> buildPeriodRow(s, new SimpleIntegerProperty(0)))
+									  .forEach(parent.getChildren()::add);
 		}
 	}
 
-	private CheckBoxTreeItem<WaterYearPeriodDefinitionsRow> buildPeriodRow(WaterYearPeriodRange range,
+	private CheckBoxTreeItem<WaterYearPeriodDefinitionsRow> buildPeriodRow(WaterYearPeriodReader.WaterYearPeriodDefinition range,
 																		   SimpleIntegerProperty totalSelectedProperty)
 	{
-		WaterYearPeriodRangeRow waterYearPeriodRangeRow = new WaterYearPeriodRangeRow(range);
+		WaterYearPeriod waterYearPeriod = new WaterYearPeriod(range.getName());
+		WaterYearPeriodRange waterYearPeriodRange = new WaterYearPeriodRange(waterYearPeriod,
+				new WaterYearType(range.getStartYear(), waterYearPeriod), new WaterYearType(range.getEndYear(), waterYearPeriod));
+		WaterYearPeriodRangeRow waterYearPeriodRangeRow = new WaterYearPeriodRangeRow(waterYearPeriodRange);
 		CheckBoxTreeItem<WaterYearPeriodDefinitionsRow> retval = new CheckBoxTreeItem<>(waterYearPeriodRangeRow);
 		retval.selectedProperty().addListener((e, o, n) ->
 		{
@@ -139,7 +143,8 @@ public class WaterYearPeriodsPanel extends JFXPanel
 				totalSelectedProperty.set(Math.max(0, totalSelectedProperty.getValue() - 1));
 			}
 		});
-		totalSelectedProperty.addListener((e, o, n) -> waterYearPeriodRangeRow.disabledProperty().setValue(!retval.isSelected() && n.intValue() >= MAX_PERIODS));
+		totalSelectedProperty.addListener(
+				(e, o, n) -> waterYearPeriodRangeRow.disabledProperty().setValue(!retval.isSelected() && n.intValue() >= MAX_PERIODS));
 		return retval;
 	}
 
@@ -240,7 +245,7 @@ public class WaterYearPeriodsPanel extends JFXPanel
 		@Override
 		public String toString()
 		{
-			DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MMM yy");
+			DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MMM yyyy");
 			return _range.toString(_waterYearDefinition, formatter);
 
 		}

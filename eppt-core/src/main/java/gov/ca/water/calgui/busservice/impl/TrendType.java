@@ -24,12 +24,29 @@ import gov.ca.water.calgui.bo.GUILinksAllModelsBO;
  */
 public class TrendType
 {
-	public static final TrendType ALL_TREND_TYPE = new TrendType("All Types")
+	public static final String USER_DEFINED = "User Defined";
+	static final TrendType ALL_TREND_TYPE = new TrendType("All Types")
 	{
 		@Override
 		public boolean matchesGuiLink(GUILinksAllModelsBO guiLink)
 		{
 			return true;
+		}
+	};
+	static final TrendType MISC_TREND_TYPE = new TrendType("Misc")
+	{
+		@Override
+		public boolean matchesGuiLink(GUILinksAllModelsBO guiLink)
+		{
+			return guiLink != null && (guiLink.getType() == null || guiLink.getType().isEmpty());
+		}
+	};
+	static final TrendType USER_DEFINED_TREND_TYPE = new TrendType(USER_DEFINED)
+	{
+		@Override
+		public boolean matchesGuiLink(GUILinksAllModelsBO guiLink)
+		{
+			return guiLink != null && (guiLink.getType().equalsIgnoreCase(USER_DEFINED));
 		}
 	};
 	private final String _title;
@@ -63,7 +80,7 @@ public class TrendType
 		boolean retval = false;
 		if(guiLink != null)
 		{
-			if(_title.equalsIgnoreCase(guiLink.getPlotAxisLabel().trim()))
+			if(_title.equalsIgnoreCase(guiLink.getType().trim()))
 			{
 				retval = true;
 			}

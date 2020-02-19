@@ -10,6 +10,7 @@
  * GNU General Public License
  */
 
+var FORMATTER = '';
 
 function getPlotlySeries(datum) {
     let categoryKeys = [];
@@ -35,6 +36,7 @@ function getPlotlySeries(datum) {
 }
 
 function plot(data) {
+    FORMATTER = getD3Formatter(data['scenario_run_data'][0]['full_time_series']);
 
     let datum = data['scenario_run_data'];
 
@@ -45,6 +47,8 @@ function plot(data) {
             title: {
                 text: data['units']
             },
+            tickformat: FORMATTER,
+            rangemode: 'tozero',
             gridcolor: '#CCCCCC'
         },
         xaxis:{

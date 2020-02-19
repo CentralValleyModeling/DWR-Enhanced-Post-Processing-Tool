@@ -91,7 +91,7 @@ public class TrendReportingParameters
 		try
 		{
 			List<String> monthPeriodStrings = fileSystemSvc.getFileData(Paths.get(PARAMETERS_FILENAME), true,
-					GuiLinksSeedDataSvcImpl::isNotComments)
+					FilePredicates.commentFilter())
 														   .stream()
 														   .filter(FilePredicates.commentFilter())
 														   .collect(Collectors.toList());
@@ -210,6 +210,7 @@ public class TrendReportingParameters
 								   .values()
 								   .stream()
 								   .filter(p -> !p.isEmpty())
+								   .map(p->p.split("/")[0])
 								   .findAny()
 								   .orElse("");
 				}

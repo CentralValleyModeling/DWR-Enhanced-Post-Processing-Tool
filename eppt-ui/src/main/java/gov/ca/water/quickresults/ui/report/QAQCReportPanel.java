@@ -65,6 +65,7 @@ import gov.ca.water.calgui.bo.WaterYearPeriod;
 import gov.ca.water.calgui.bo.WaterYearPeriodRange;
 import gov.ca.water.calgui.bo.WaterYearType;
 import gov.ca.water.calgui.busservice.impl.WaterYearDefinitionSvc;
+import gov.ca.water.calgui.busservice.impl.WaterYearIndexAliasReader;
 import gov.ca.water.calgui.busservice.impl.WaterYearTableReader;
 import gov.ca.water.calgui.constant.Constant;
 import gov.ca.water.calgui.constant.EpptPreferences;
@@ -94,7 +95,6 @@ import rma.swing.RmaJDecimalField;
 import rma.swing.RmaJIntegerField;
 import rma.swing.RmaJPanel;
 
-import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
 import static java.util.stream.Collectors.toList;
 
 /**
@@ -135,6 +135,8 @@ public class QAQCReportPanel extends EpptPanel
 	private JTextPane _baseWreslTextPane;
 	private JTextPane _altWreslTextPane;
 	private WaterYearPeriodsPanel _waterYearPeriodsPanel;
+	private JComboBox<WaterYearIndexAliasReader.WaterYearIndexAlias> _waterYearIndexCombo;
+	private JComboBox<WaterYearDefinition> _waterYearDefinitionCombo;
 	private JComboBox<PercentDiffStyle> _percentDiffStyle;
 	private JPanel _summaryModulesPanel;
 	private JButton _cancelButton;
@@ -274,7 +276,11 @@ public class QAQCReportPanel extends EpptPanel
 
 	private void waterYearIndexChanged(WaterYearIndex waterYearIndex, WaterYearDefinition waterYearDefinition)
 	{
-		_waterYearPeriodsPanel.fillWithIndex(waterYearIndex, waterYearDefinition);
+		Object waterYearDefinition = _waterYearDefinitionCombo.getSelectedItem();
+		if(waterYearDefinition instanceof WaterYearDefinition)
+		{
+			_waterYearPeriodsPanel.fillWithDefinition((WaterYearDefinition) waterYearDefinition);
+		}
 	}
 
 	private void runAltWresl()
@@ -496,13 +502,15 @@ public class QAQCReportPanel extends EpptPanel
 			WaterYearPeriodRange longTermRange = getLongTermRange();
 			Map<WaterYearPeriod, List<WaterYearPeriodRange>> waterYearPeriodRanges = _waterYearPeriodsPanel.getWaterYearPeriodRanges();
 			PercentDiffStyle percentDiffStyle = (PercentDiffStyle) _percentDiffStyle.getSelectedItem();
+			WaterYearDefinition waterYearDefinition = (WaterYearDefinition) _waterYearDefinitionCombo.getSelectedItem();
+			WaterYearIndexAliasReader.WaterYearIndexAlias waterYearIndex = (WaterYearIndexAliasReader.WaterYearIndexAlias) _waterYearIndexCombo.getSelectedItem();
 			Map<EpptScenarioRun, WaterYearIndex> waterYearIndecies = new HashMap<>();
 			if(_baseRun != null && _waterYearIndex != null)
 			{
 				WaterYearIndex baseIndex = new WaterYearTableReader(_baseRun.getLookupDirectory())
 						.read()
 						.stream()
-						.filter(index -> index.getName().equals(_waterYearIndex.getName()))
+						.filter(waterYearIndex::isAliasFor)
 						.findAny()
 						.orElseThrow(() -> new IllegalArgumentException("Water Year Index: " + _waterYearIndex + " does not exist for: " + _baseRun));
 				waterYearIndecies.put(_baseRun, baseIndex);
@@ -513,7 +521,7 @@ public class QAQCReportPanel extends EpptPanel
 				WaterYearIndex altIndex = new WaterYearTableReader(_altRun.getLookupDirectory())
 						.read()
 						.stream()
-						.filter(index -> index.getName().equals(_waterYearIndex.getName()))
+						.filter(waterYearIndex::isAliasFor)
 						.findAny()
 						.orElseThrow(() -> new IllegalArgumentException("Water Year Index: " + _waterYearIndex + " does not exist for: " + _altRun));
 				waterYearIndecies.put(_altRun, altIndex);
@@ -1216,6 +1224,12 @@ public class QAQCReportPanel extends EpptPanel
 		{
 			return new Date();
 		}
+	}
+
+	private void initWaterYearIndex()
+	{
+		List<WaterYearIndexAliasReader.WaterYearIndexAlias> aliases = WaterYearIndexAliasReader.getInstance().getAliases();
+		aliases.forEach(_waterYearIndexCombo::addItem);
 	}
 
 	private void updateCompareState()

@@ -10,6 +10,7 @@
  * GNU General Public License
  */
 
+var FORMATTER = '';
 function getDiscretePlotlySeries(datum) {
     let series = new Array(datum.length);
     for (var i = 0; i < datum.length; i++) {
@@ -39,6 +40,7 @@ function getDiscretePlotlySeries(datum) {
 }
 
 function plot(data) {
+    FORMATTER = getD3Formatter(data['scenario_run_data'][0]['full_time_series']);
     let datum = data['scenario_run_data'];
     var layout = {
         font: PLOTLY_FONT,
@@ -53,7 +55,8 @@ function plot(data) {
             title: {
                 text: data['units'],
             },
-            autorange: true,
+            tickformat: FORMATTER,
+            rangemode: 'tozero',
             zeroline: false,
             gridcolor: '#CCCCCC'
         },

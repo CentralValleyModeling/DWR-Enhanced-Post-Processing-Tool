@@ -219,6 +219,8 @@
 									<target>
 										<unzip src="${project.build.directory}\jre-1.8.0_202.zip" dest="${project.build.directory}\dwr_eppt\jre"/>
 										<copy file="${project.basedir}/src/EPPT.exe" todir="${project.build.directory}\dwr_eppt"/>
+										<copy file="${project.basedir}/src/EPPT.config" todir="${project.build.directory}\dwr_eppt"/>
+										<copy file="${project.basedir}/src/RunEppt.jar" todir="${project.build.directory}\dwr_eppt\bin"/>
 										<copy todir="${project.build.directory}\${zip-dist-name}-${parsedVersion.majorVersion}.${parsedVersion.minorVersion}.${parsedVersion.incrementalVersion}-${maven.build.timestamp}">
 											<fileset dir="${project.build.directory}\dwr_eppt"/>
 										</copy>

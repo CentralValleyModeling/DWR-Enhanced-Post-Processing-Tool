@@ -12,6 +12,8 @@
 
 
 
+var FORMATTER = '';
+
 function getPlotlyBoxValuesForAll(tsc) {
     var datum = [];
     // All data
@@ -23,7 +25,7 @@ function getPlotlyBoxValuesForAll(tsc) {
 
 function getPlotlyBoxValuesForPeriodAvg(tsc) {
     var datum = [];
-    for (var i = 0; i < tsc.length; i ++) {
+    for (var i = 0; i < tsc.length; i++) {
         datum.push(tsc[i][1]);
     }
     return datum;
@@ -41,6 +43,11 @@ function getPlotlyBoxValues(dataOnly, periodMonths) {
         let filteredData = filterDataForMonth(dataOnly, periodMonths[i]);
         y = y.concat(filteredData);
         x = x.concat(new Array(filteredData.length).fill(periodMonths[i], 0, filteredData.length));
+    }
+    if (periodMonths.length > 1) {
+        let values = getPlotlyBoxValuesForPeriodAvg(periodSeries);
+        y = y.concat(values);
+        x = x.concat(new Array(values.length).fill(periodMonths[0] + '-' + periodMonths[periodMonths.length - 1], 0, values.length));
     }
     return {
         y: y,
@@ -75,14 +82,15 @@ function getPlotlySeries(datum, periodMonths) {
             marker: {
                 color: datum[i]['scenario_color']
             },
-            boxmean: true,
-            boxpoints: false
+            boxpoints: false,
+            boxmean: true
         });
     }
     return series;
 }
 
 function plot(data) {
+    FORMATTER = getD3Formatter(data['scenario_run_data'][0]['full_time_series']);
     let datum = data['scenario_run_data'];
     let periodMonths = data['period_months'];
     var layout = {
@@ -109,7 +117,8 @@ function plot(data) {
             title: {
                 text: data['units']
             },
-            automargin: true,
+            tickformat: FORMATTER,
+            rangemode: 'tozero',
             zeroline: false,
             gridcolor: '#DDDDDD'
         },
@@ -118,7 +127,7 @@ function plot(data) {
         },
         boxmode: 'group'
     };
-    let plot = Plotly.newPlot('tester', getPlotlySeries(datum, periodMonths), layout, {
+    Plotly.newPlot('tester', getPlotlySeries(datum, periodMonths), layout, {
             displaylogo: false,
         modeBarButtons: buildModeBarButtons('tester'),
             scrollZoom: true,

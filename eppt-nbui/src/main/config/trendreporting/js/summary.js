@@ -83,6 +83,15 @@ function buildMatrixData(data, tableValues) {
             header.push(['Difference from<br>' + scenarioName]);
         }
     }
+    let headerFormat = [];
+    let valueFormat = [];
+    for(let i = 0; i < header.length - 1; i++){
+        headerFormat.push('');
+        valueFormat.push(FORMATTER);
+    }
+    format.push(headerFormat);
+    format.push(valueFormat);
+
     colors.push(headerColors);
     let values = [scenarios, volumes];
     for (let i = 1; i < volumes.length; i++) {
@@ -90,12 +99,14 @@ function buildMatrixData(data, tableValues) {
         for (let j = 0; j < data['scenario_run_data'].length; j++) {
             if (j < i) {
                 diffValues.push('');
+                diffFormat.push('')
             } else {
                 let diff = tableValues[j] - tableValues[i - 1];
                 diffValues.push(diff);
             }
         }
         values.push(diffValues);
+        format.push(diffFormat);
     }
     return {
         type: 'table',

@@ -36,13 +36,15 @@ public class GUILinksAllModelsBO
 	private final String _plotAxisLabel;
 	private final String _plotTitle;
 	private final String _legend;
+	private final String _type;
 
-	public GUILinksAllModelsBO(String checkboxId, String plotAxisLabel, String plotTitle, String legend)
+	public GUILinksAllModelsBO(String checkboxId, String plotAxisLabel, String plotTitle, String legend, String type)
 	{
 		_checkboxId = checkboxId;
 		_plotAxisLabel = plotAxisLabel;
 		_plotTitle = plotTitle;
 		_legend = legend;
+		_type = type;
 	}
 
 	public String getCheckboxId()
@@ -63,6 +65,11 @@ public class GUILinksAllModelsBO
 	public String getLegend()
 	{
 		return _legend;
+	}
+
+	public String getType()
+	{
+		return _type;
 	}
 
 	private Optional<ModelData> getModelData(Model model)

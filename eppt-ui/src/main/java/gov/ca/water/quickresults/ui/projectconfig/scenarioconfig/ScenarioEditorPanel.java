@@ -23,6 +23,7 @@ import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.beans.PropertyChangeEvent;
 import java.io.File;
+import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Date;
@@ -32,6 +33,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
+import javax.swing.filechooser.FileFilter;
 import javax.swing.table.TableCellEditor;
 import javax.swing.table.TableCellRenderer;
 
@@ -41,8 +43,10 @@ import gov.ca.water.calgui.constant.Constant;
 import gov.ca.water.calgui.constant.EpptPreferences;
 import gov.ca.water.calgui.project.EpptDssContainer;
 import gov.ca.water.calgui.project.EpptScenarioRun;
+import gov.ca.water.calgui.techservice.impl.NonSymlinkFilter;
 import gov.ca.water.quickresults.ui.projectconfig.ProjectConfigurationPanel;
 import javafx.scene.paint.Color;
+import org.apache.commons.io.FileUtils;
 
 import rma.swing.RmaJColorChooserButton;
 import rma.swing.RmaJComboBox;
@@ -147,6 +151,7 @@ public class ScenarioEditorPanel
 		Window window = SwingUtilities.windowForComponent($$$getRootComponent$$$());
 		JFileChooser jFileChooser = getFileChooser("Select Lookup Directory");
 		jFileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+		jFileChooser.setFileFilter(new NonSymlinkFilter());
 		if(JFileChooser.APPROVE_OPTION == jFileChooser.showOpenDialog(window))
 		{
 			File selectedFile = jFileChooser.getSelectedFile();
@@ -420,6 +425,7 @@ public class ScenarioEditorPanel
 		Window window = SwingUtilities.windowForComponent($$$getRootComponent$$$());
 		JFileChooser jFileChooser = getFileChooser("Select WRESL Directory");
 		jFileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+		jFileChooser.setFileFilter(new NonSymlinkFilter());
 		if(JFileChooser.APPROVE_OPTION == jFileChooser.showDialog(window, "Select"))
 		{
 			File selectedFile = jFileChooser.getSelectedFile();
@@ -442,6 +448,7 @@ public class ScenarioEditorPanel
 	{
 		JFileChooser jFileChooser = getFileChooser("Select Scenario Run Directory");
 		jFileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+		jFileChooser.setFileFilter(new NonSymlinkFilter());
 		if(JFileChooser.APPROVE_OPTION == jFileChooser.showDialog(SwingUtilities.windowForComponent($$$getRootComponent$$$()), "Select"))
 		{
 			File selectedFile = jFileChooser.getSelectedFile();
@@ -696,4 +703,5 @@ public class ScenarioEditorPanel
 		}
 
 	}
+
 }

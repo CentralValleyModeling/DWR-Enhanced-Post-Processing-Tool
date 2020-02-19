@@ -29,7 +29,6 @@ class WaterYearNameLookup
 
 	WaterYearNameLookup(Map<String, List<String>> colHeadersToValues)
 	{
-
 		_colHeadersToValues = colHeadersToValues;
 	}
 
