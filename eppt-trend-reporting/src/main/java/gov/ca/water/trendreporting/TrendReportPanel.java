@@ -117,8 +117,8 @@ public class TrendReportPanel extends JFXPanel
 
 	public TrendReportPanel()
 	{
-		setMinimumSize(new Dimension(1400, 800));
-		setPreferredSize(new Dimension(1400, 800));
+		setMinimumSize(new Dimension(1450, 800));
+		setPreferredSize(new Dimension(1450, 800));
 		Platform.setImplicitExit(false);
 		Platform.runLater(this::init);
 		CompletableFuture.supplyAsync(this::getTrendStatistics)
@@ -389,8 +389,15 @@ public class TrendReportPanel extends JFXPanel
 		_trendTypes.removeIf(t -> t.getTitle() == null || t.getTitle().isEmpty());
 		_typeListView.getItems().clear();
 		_typeListView.getItems().add(ALL_TREND_TYPE);
-		_typeListView.getItems().add(MISC_TREND_TYPE);
-		_typeListView.getItems().add(USER_DEFINED_TREND_TYPE);
+
+		if(_filteredParameters.stream().anyMatch(s->MISC_TREND_TYPE.matchesGuiLink(s.getGuiLink())))
+		{
+			_typeListView.getItems().add(MISC_TREND_TYPE);
+		}
+		if(_filteredParameters.stream().anyMatch(s->USER_DEFINED_TREND_TYPE.matchesGuiLink(s.getGuiLink())))
+		{
+			_typeListView.getItems().add(USER_DEFINED_TREND_TYPE);
+		}
 		_typeListView.getItems().addAll(_trendTypes);
 		if(selectedItem != null)
 		{
