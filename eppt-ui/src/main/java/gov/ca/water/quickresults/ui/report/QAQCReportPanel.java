@@ -164,8 +164,8 @@ public class QAQCReportPanel extends EpptPanel
 		_doc = (StyledDocument) _qaqcTextPane.getDocument();
 		_style = _doc.addStyle("ConsoleStyle", null);
 		Logger.getLogger("").addHandler(new ReportHandler());
-		ProjectConfigurationPanel.getProjectConfigurationPanel().addScenarioChangedListener(this::fillScenarioRuns);
 		ProjectConfigurationPanel projectConfigurationPanel = ProjectConfigurationPanel.getProjectConfigurationPanel();
+		projectConfigurationPanel.addScenarioChangedListener(this::fillScenarioRuns);
 		Path currentProject = EpptPreferences.getLastProjectConfiguration().getParent();
 		Path reportPath = currentProject.resolve("Reports").resolve(projectConfigurationPanel.getProjectName() + ".pdf");
 		_pdfOutput.setText(reportPath.toString());
@@ -196,6 +196,7 @@ public class QAQCReportPanel extends EpptPanel
 		_overwriteScriptsButtonAlt.addActionListener(e -> QaQcFileUtils.createWreslMain(_altRun, true));
 		_baseWreslDiffWarningLabel.setVisible(false);
 		_altWreslDiffWarningLabel.setVisible(false);
+		waterYearDefinitionChanged(projectConfigurationPanel.getWaterYearDefinition());
 	}
 
 	private void tabChanged(ChangeEvent e)

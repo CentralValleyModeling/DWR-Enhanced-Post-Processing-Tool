@@ -15,7 +15,6 @@ package gov.ca.water.quickresults.ui.trendreporting;
 import java.awt.Frame;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Comparator;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
@@ -26,6 +25,7 @@ import javax.swing.*;
 
 import gov.ca.water.calgui.bo.GUILinksAllModelsBO;
 import gov.ca.water.calgui.busservice.impl.GuiLinksSeedDataSvcImpl;
+import gov.ca.water.calgui.busservice.impl.TrendParameter;
 import gov.ca.water.calgui.busservice.impl.TrendReportingParameters;
 import gov.ca.water.calgui.busservice.impl.TrendType;
 import javafx.beans.value.ChangeListener;
@@ -36,18 +36,18 @@ import javafx.collections.transformation.FilteredList;
 import javafx.event.ActionEvent;
 import javafx.geometry.Insets;
 import javafx.geometry.Orientation;
+import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.SelectionMode;
 import javafx.scene.control.TitledPane;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.Pane;
-import javafx.scene.layout.TilePane;
 import javafx.scene.layout.VBox;
 
 import static java.util.stream.Collectors.toCollection;
-import static java.util.stream.Collectors.toSet;
 
 /**
  * Company: Resource Management Associates
@@ -58,14 +58,15 @@ import static java.util.stream.Collectors.toSet;
 public class TrendReportParametersPane extends TitledPane
 {
 	private static final Logger LOGGER = Logger.getLogger(TrendReportParametersPane.class.getName());
-	private final ListView<TrendReportingParameters.TrendParameter> _parameterListView = new ListView<>();
+	private final ListView<TrendParameter> _parameterListView = new ListView<>();
 	private final ListView<TrendType> _typeListView = new ListView<>();
 	private final Set<TrendType> _trendTypes = getTrendTypes();
-	private FilteredList<TrendReportingParameters.TrendParameter> _filteredParameters;
-	private ObservableList<TrendReportingParameters.TrendParameter> _backingParameters;
-	private final AutoCompleteTextField<TrendReportingParameters.TrendParameter> _textField = new AutoCompleteTextField<>();
-	private Predicate<TrendReportingParameters.TrendParameter> _searchPredicate = s -> true;
-	private Predicate<TrendReportingParameters.TrendParameter> _typePredicate = s -> true;
+	private FilteredList<TrendParameter> _filteredParameters;
+	private ObservableList<TrendParameter> _backingParameters;
+	private final AutoCompleteTextField<TrendParameter> _textField = new AutoCompleteTextField<>();
+	private Predicate<TrendParameter> _searchPredicate = s -> true;
+	private Predicate<TrendParameter> _typePredicate = s -> true;
+	private Button _editButton;
 
 	public TrendReportParametersPane()
 	{
@@ -77,7 +78,7 @@ public class TrendReportParametersPane extends TitledPane
 	{
 		_typeListView.setStyle("-fx-selection-bar:-fx-focus-color ;-fx-selection-bar-non-focused: -fx-focus-color ;");
 		_parameterListView.setStyle("-fx-selection-bar:-fx-focus-color ;-fx-selection-bar-non-focused: -fx-focus-color ;");
-		TilePane innerPane = new TilePane(Orientation.VERTICAL, 5, 5, buildTypeListView(), buildParameterListView());
+		FlowPane innerPane = new FlowPane(Orientation.VERTICAL, 5, 5, buildTypeListView(), buildParameterListView());
 		setContent(innerPane);
 		BorderPane borderPane = new BorderPane();
 		setGraphicTextGap(0);
@@ -109,7 +110,13 @@ public class TrendReportParametersPane extends TitledPane
 		borderPane.setLeft(parameterLabel);
 		Button addButton = new Button("Add");
 		addButton.setOnAction(this::addParameter);
-		borderPane.setRight(addButton);
+		_editButton = new Button("Edit");
+		_editButton.setDisable(true);
+		_editButton.setOnAction(this::editParameter);
+		FlowPane tilePane = new FlowPane(Orientation.HORIZONTAL, 5.0, 5.0, addButton, _editButton);
+		tilePane.setAlignment(Pos.CENTER_RIGHT);
+		tilePane.setPrefWidth(120);
+		borderPane.setCenter(tilePane);
 		VBox vBox = new VBox(5, borderPane, _parameterListView);
 		vBox.setPrefHeight(200);
 		return vBox;
@@ -136,7 +143,7 @@ public class TrendReportParametersPane extends TitledPane
 		{
 			_searchPredicate = s -> s.toString().toLowerCase().contains(text.toLowerCase());
 		}
-		TrendReportingParameters.TrendParameter selectedItem = _parameterListView.getSelectionModel().getSelectedItem();
+		TrendParameter selectedItem = _parameterListView.getSelectionModel().getSelectedItem();
 		_filteredParameters.setPredicate(_typePredicate.and(_searchPredicate));
 		if(selectedItem != null && _filteredParameters.contains(selectedItem))
 		{
@@ -164,6 +171,7 @@ public class TrendReportParametersPane extends TitledPane
 		{
 			_typeListView.getSelectionModel().select(selectedItem);
 		}
+		_typeListView.refresh();
 	}
 
 	private void addParameter(ActionEvent e)
@@ -173,10 +181,12 @@ public class TrendReportParametersPane extends TitledPane
 			GUILinksAllModelsBO guiLink = createGuiLink();
 			if(guiLink != null)
 			{
-				//Both elements should be added to the list
 				updateTrendTypes();
 				int size = _backingParameters.size();
-				_backingParameters.add(TrendReportingParameters.TrendParameter.create(size, guiLink, ""));
+				TrendParameter trendParameter = TrendParameter.create(size, guiLink);
+				_backingParameters.add(trendParameter);
+				_typeListView.getSelectionModel().select(TrendType.USER_DEFINED_TREND_TYPE);
+				_parameterListView.getSelectionModel().select(trendParameter);
 			}
 		}
 		catch(InterruptedException ex)
@@ -206,6 +216,43 @@ public class TrendReportParametersPane extends TitledPane
 		else
 		{
 			return null;
+		}
+	}
+
+	private void editParameter(ActionEvent e)
+	{
+		try
+		{
+			editGuiLink();
+			_parameterListView.refresh();
+		}
+		catch(InterruptedException ex)
+		{
+			LOGGER.log(Level.FINE, "Swing thread interrupted. Unable to create new parameter", ex);
+			Thread.currentThread().interrupt();
+		}
+		catch(InvocationTargetException | RuntimeException ex)
+		{
+			LOGGER.log(Level.SEVERE, "Error creating new parameter", ex);
+		}
+	}
+
+	private void editGuiLink() throws InvocationTargetException, InterruptedException
+	{
+		TrendParameter selectedItem = _parameterListView.getSelectionModel().getSelectedItem();
+		if(selectedItem != null)
+		{
+			AddParameterDialog addParameterDialog = new AddParameterDialog(Frame.getFrames()[0], selectedItem);
+			SwingUtilities.invokeAndWait(() -> addParameterDialog.setVisible(true));
+			if(!addParameterDialog.isCanceled())
+			{
+				String type = addParameterDialog.getDataType();
+				String parameter = addParameterDialog.getParameter();
+				GUILinksAllModelsBO guiLink = new GUILinksAllModelsBO("", "", parameter, "", type);
+				selectedItem.update(guiLink);
+				_parameterListView.getSelectionModel().select(null);
+				_parameterListView.getSelectionModel().select(selectedItem);
+			}
 		}
 	}
 
@@ -241,14 +288,19 @@ public class TrendReportParametersPane extends TitledPane
 		return vBox;
 	}
 
-	public void addListener(ChangeListener<? super TrendReportingParameters.TrendParameter> inputsChanged)
+	public void addListener(ChangeListener<? super TrendParameter> inputsChanged)
 	{
 		_parameterListView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) ->
 		{
+			_editButton.setDisable(true);
 			inputsChanged.changed(observable, oldValue, newValue);
 			if(newValue != null)
 			{
 				_textField.setPromptText(newValue.toString());
+				if(newValue.isEditable())
+				{
+					_editButton.setDisable(false);
+				}
 			}
 		});
 	}
@@ -262,7 +314,7 @@ public class TrendReportParametersPane extends TitledPane
 									  .collect(toCollection(() -> new TreeSet<>(Comparator.comparing(TrendType::getTitle))));
 	}
 
-	public ObservableList<TrendReportingParameters.TrendParameter> getSelectedItems()
+	public ObservableList<TrendParameter> getSelectedItems()
 	{
 		return _parameterListView.getSelectionModel().getSelectedItems();
 	}

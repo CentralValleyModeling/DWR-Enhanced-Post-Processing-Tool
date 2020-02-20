@@ -43,6 +43,7 @@ import gov.ca.water.calgui.busservice.impl.DSSGrabber1SvcImpl;
 import gov.ca.water.calgui.busservice.impl.EpptReportingComputedSet;
 import gov.ca.water.calgui.busservice.impl.EpptStatistic;
 import gov.ca.water.calgui.busservice.impl.MonthPeriod;
+import gov.ca.water.calgui.busservice.impl.TrendParameter;
 import gov.ca.water.calgui.busservice.impl.TrendReportingParameters;
 import gov.ca.water.calgui.busservice.impl.WaterYearIndexAliasReader;
 import gov.ca.water.calgui.busservice.impl.WaterYearTableReader;
@@ -284,7 +285,7 @@ public class TrendReportPanel extends JFXPanel
 
 	private void loadJavascript(Path path, YearMonth start, YearMonth end, boolean taf, WaterYearIndexAliasReader.WaterYearIndexAlias waterYearIndex)
 	{
-		List<TrendReportingParameters.TrendParameter> guiLink = new ArrayList<>(_parametersPane.getSelectedItems());
+		List<TrendParameter> guiLink = new ArrayList<>(_parametersPane.getSelectedItems());
 		List<EpptStatistic> statistic = new ArrayList<>(_statisticsPane.getSelectedItems());
 		List<MonthPeriod> monthPeriod = new ArrayList<>(_seasonalPeriodPane.getSelectedItems());
 		List<EpptScenarioRun> scenarioRuns = _scenarioRuns.stream().filter(Objects::nonNull).collect(toList());
@@ -333,7 +334,7 @@ public class TrendReportPanel extends JFXPanel
 	}
 
 	private Optional<String> getError(List<EpptScenarioRun> scenarioRuns,
-									  List<TrendReportingParameters.TrendParameter> guiLink, List<EpptStatistic> statistic,
+									  List<TrendParameter> guiLink, List<EpptStatistic> statistic,
 									  List<MonthPeriod> monthPeriod,
 									  WaterYearIndexAliasReader.WaterYearIndexAlias waterYearIndex)
 	{
@@ -398,7 +399,7 @@ public class TrendReportPanel extends JFXPanel
 		_progressTextLabel.setText(text);
 	}
 
-	private synchronized List<JSONObject> computeScenarios(List<TrendReportingParameters.TrendParameter> parameters, List<EpptStatistic> statistics,
+	private synchronized List<JSONObject> computeScenarios(List<TrendParameter> parameters, List<EpptStatistic> statistics,
 														   List<MonthPeriod> monthPeriods, YearMonth startMonth, YearMonth endMonth,
 														   boolean taf, List<EpptScenarioRun> scenarioRuns,
 														   WaterYearIndexAliasReader.WaterYearIndexAlias selectedIndex)
@@ -407,7 +408,7 @@ public class TrendReportPanel extends JFXPanel
 		Map<EpptScenarioRun, List<WaterYearIndex>> allIndexes = new HashMap<>();
 		addIndicies(scenarioRuns, selectedIndex, selectedIndexes, allIndexes);
 		List<JSONObject> retval = new ArrayList<>();
-		for(TrendReportingParameters.TrendParameter parameter : parameters)
+		for(TrendParameter parameter : parameters)
 		{
 			for(EpptStatistic statistic : statistics)
 			{

@@ -89,8 +89,8 @@ public class WaterYearPeriodRange
 		}
 		else
 		{
-			return String.format("%s - %s", getStartYear(),
-					getEndYear());
+			return String.format("%s - %s", getStartYear().getYear(),
+					getEndYear().getYear());
 		}
 	}
 }

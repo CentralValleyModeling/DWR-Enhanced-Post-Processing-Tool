@@ -29,6 +29,7 @@ import javax.swing.*;
 import javax.swing.table.AbstractTableModel;
 
 import gov.ca.water.calgui.bo.GUILinksAllModelsBO;
+import gov.ca.water.calgui.busservice.impl.TrendParameter;
 
 import rma.swing.RmaJTable;
 
@@ -76,6 +77,13 @@ public class AddParameterDialog extends JDialog
 		setPreferredSize(new Dimension(550, 300));
 		setMinimumSize(new Dimension(550, 300));
 		setLocationRelativeTo(frame);
+	}
+
+	public AddParameterDialog(Frame frame, TrendParameter selectedItem)
+	{
+		this(frame);
+		_parameterField.setText(selectedItem.toString());
+		_tableModel._bAndCParts.putAll(selectedItem.getGuiLink().getPrimary());
 	}
 
 	public boolean isCanceled()
