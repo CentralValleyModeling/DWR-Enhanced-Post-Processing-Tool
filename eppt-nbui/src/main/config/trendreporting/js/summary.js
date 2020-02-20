@@ -10,6 +10,8 @@
  * GNU General Public License
  */
 
+var FORMATTER = '';
+
 function getHeaders(data) {
     let firstIndexData = data[0]['primary_data']['statistically_computed_time_series_wyt'][0];
     let headers = [''];
@@ -74,6 +76,7 @@ function buildMatrixData(data, tableValues) {
     let volumes = [];
     let colors = [];
     let headerColors = [];
+    let format = [];
     for (let i = 0; i < data['scenario_run_data'].length; i++) {
         let scenarioName = data['scenario_run_data'][i]['scenario_name'];
         scenarios.push('<b>' + scenarioName + '</b>');
@@ -96,10 +99,11 @@ function buildMatrixData(data, tableValues) {
     let values = [scenarios, volumes];
     for (let i = 1; i < volumes.length; i++) {
         let diffValues = [];
+        let diffFormat = [];
         for (let j = 0; j < data['scenario_run_data'].length; j++) {
             if (j < i) {
                 diffValues.push('');
-                diffFormat.push('')
+                diffFormat.push('');
             } else {
                 let diff = tableValues[j] - tableValues[i - 1];
                 diffValues.push(diff);
