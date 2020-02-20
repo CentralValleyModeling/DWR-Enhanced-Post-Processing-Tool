@@ -259,7 +259,7 @@ public class CustomResultsPanel extends EpptPanel
 	{
 		String bAndCPart = path.getPart(Pathname.B_PART) + "/" + path.getPart(Pathname.C_PART);
 		GUILinksAllModelsBO guiLinksAllModelsBO = new GUILinksAllModelsBO(path.getFullPath(), path.getFullPath(),
-				path.getPart(Pathname.B_PART), bAndCPart);
+				path.getPart(Pathname.B_PART), bAndCPart, "");
 		GUILinksAllModelsBO.Model.values().forEach(
 				m -> guiLinksAllModelsBO.addModelMapping(m.toString(), bAndCPart, ""));
 		return guiLinksAllModelsBO;

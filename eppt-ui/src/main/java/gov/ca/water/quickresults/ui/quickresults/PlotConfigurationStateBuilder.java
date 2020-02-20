@@ -31,6 +31,7 @@ import gov.ca.water.calgui.bo.WaterYearDefinition;
 import gov.ca.water.calgui.bo.WaterYearIndex;
 import gov.ca.water.calgui.busservice.impl.EpptStatistic;
 import gov.ca.water.calgui.busservice.impl.ScriptedEpptStatistics;
+import gov.ca.water.calgui.busservice.impl.WaterYearIndexAliasReader;
 import gov.ca.water.calgui.project.EpptScenarioRun;
 import gov.ca.water.calgui.project.PlotConfigurationState;
 import gov.ca.water.calgui.techservice.IErrorHandlingSvc;
@@ -198,7 +199,7 @@ public class PlotConfigurationStateBuilder
 				Component[] components = ((JPanel) _swingEngine.find("controls3")).getComponents();
 				addSummaryTables(summary, components);
 			}
-			WaterYearIndex waterYearIndex = projectConfigurationPanel.getWaterYearIndex();
+			WaterYearIndexAliasReader.WaterYearIndexAlias waterYearIndex = projectConfigurationPanel.getWaterYearIndex();
 			return new PlotConfigurationState(comparisonType, displayTaf, displayTimeSeriesPlot, displayBoxAndWhisker, isDisplayExceedanceAll,
 					exceedance, displayMonthlyTable, displaySummaryTable, isDisplayExceedanceAnnualFlow, summary,
 					Collections.singletonList(waterYearIndex), waterYearDefinition);

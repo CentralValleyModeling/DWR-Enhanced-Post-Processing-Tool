@@ -76,8 +76,8 @@
                 </constraints>
                 <properties>
                   <horizontalAlignment value="2"/>
-                  <horizontalTextPosition value="2"/>
-                  <text value="Parameter Name:"/>
+                  <preferredSize width="400" height="26"/>
+                  <text value=""/>
                 </properties>
               </component>
               <component id="46799" class="javax.swing.JLabel">

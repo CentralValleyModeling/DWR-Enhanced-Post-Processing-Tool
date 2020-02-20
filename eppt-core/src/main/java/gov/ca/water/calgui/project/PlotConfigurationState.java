@@ -25,6 +25,7 @@ import gov.ca.water.calgui.bo.WaterYearDefinition;
 import gov.ca.water.calgui.bo.WaterYearIndex;
 import gov.ca.water.calgui.busservice.impl.EpptStatistic;
 import gov.ca.water.calgui.busservice.impl.ScriptedEpptStatistics;
+import gov.ca.water.calgui.busservice.impl.WaterYearIndexAliasReader;
 
 import static java.util.stream.Collectors.toList;
 
@@ -43,14 +44,14 @@ public class PlotConfigurationState
 	private final List<Month> _exceedancePlotMonths;
 	private final List<EpptStatistic> _summaryTableComponents;
 	private final WaterYearDefinition _waterYearDefinition;
-	private final List<WaterYearIndex> _summaryWaterYearIndex;
+	private final List<WaterYearIndexAliasReader.WaterYearIndexAlias> _summaryWaterYearIndex;
 
 	public PlotConfigurationState(ComparisonType comparisonType, boolean isDisplayTaf, boolean isDisplayTimeSeriesPlot,
 								  boolean isDisplayBoxAndWhiskerPlot,
 								  boolean isDisplayExceedanceAll, List<Month> exceedancePlotMonths,
 								  boolean isDisplayMonthlyTable, boolean isDisplaySummaryTable,
 								  boolean isDisplayExceedanceAnnualFlow, List<EpptStatistic> summaryTableComponents,
-								  List<WaterYearIndex> summaryWaterYearIndex,
+								  List<WaterYearIndexAliasReader.WaterYearIndexAlias> summaryWaterYearIndex,
 								  WaterYearDefinition waterYearDefinition)
 	{
 		_comparisonType = comparisonType;
@@ -216,7 +217,7 @@ public class PlotConfigurationState
 		return !getSelectedExceedancePlotMonths().isEmpty() || isAnnualFlowExceedancePlots() || isPlotAllExceedancePlots();
 	}
 
-	public List<WaterYearIndex> getSummaryWaterYearIndexes()
+	public List<WaterYearIndexAliasReader.WaterYearIndexAlias> getSummaryWaterYearIndexes()
 	{
 		return _summaryWaterYearIndex;
 	}

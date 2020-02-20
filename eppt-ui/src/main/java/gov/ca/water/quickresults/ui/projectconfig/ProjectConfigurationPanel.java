@@ -40,6 +40,7 @@ import gov.ca.water.calgui.bo.WaterYearDefinition;
 import gov.ca.water.calgui.bo.WaterYearIndex;
 import gov.ca.water.calgui.busservice.ScenarioChangeListener;
 import gov.ca.water.calgui.busservice.impl.WaterYearDefinitionSvc;
+import gov.ca.water.calgui.busservice.impl.WaterYearIndexAliasReader;
 import gov.ca.water.calgui.busservice.impl.WaterYearTableReader;
 import gov.ca.water.calgui.constant.Constant;
 import gov.ca.water.calgui.constant.EpptPreferences;
@@ -160,6 +161,8 @@ public final class ProjectConfigurationPanel extends EpptPanel
 	{
 		JComboBox waterYearDefinitionCombo = (JComboBox) getSwingEngine().find("waterYearDefinitionCombo");
 		WaterYearDefinitionSvc.getWaterYearDefinitionSvc().getDefinitions().forEach(waterYearDefinitionCombo::addItem);
+		JComboBox waterYearIndexCombo = (JComboBox) getSwingEngine().find("waterYearIndexCombo");
+		WaterYearIndexAliasReader.getInstance().getAliases().forEach(waterYearIndexCombo::addItem);
 	}
 
 	private void initListeners()
@@ -252,30 +255,7 @@ public final class ProjectConfigurationPanel extends EpptPanel
 
 	void updateRadioState()
 	{
-		SwingUtilities.invokeLater(() ->
-		{
-			EpptScenarioRun baseScenario = getBaseScenario();
-			updateWaterYearIndexCombo(baseScenario);
-			_scenarioChangeListeners.forEach(this::postScenarioChanged);
-		});
-	}
-
-	private void updateWaterYearIndexCombo(EpptScenarioRun baseScenario)
-	{
-		JComboBox waterYearIndexCombo = (JComboBox) getSwingEngine().find("waterYearIndexCombo");
-		waterYearIndexCombo.removeAllItems();
-		if(baseScenario != null)
-		{
-			WaterYearTableReader waterYearTableReader = new WaterYearTableReader(baseScenario.getLookupDirectory());
-			try
-			{
-				waterYearTableReader.read().forEach(waterYearIndexCombo::addItem);
-			}
-			catch(EpptInitializationException e)
-			{
-				LOGGER.fatal("Error reading water year index for scenario: " + baseScenario, e);
-			}
-		}
+		SwingUtilities.invokeLater(() ->_scenarioChangeListeners.forEach(this::postScenarioChanged));
 	}
 
 	void clearAllScenarios()
@@ -485,7 +465,6 @@ public final class ProjectConfigurationPanel extends EpptPanel
 		if(!hasBase && !scenarioRuns.isEmpty())
 		{
 			scenarioRuns.get(0).setBaseSelected(true);
-			updateWaterYearIndexCombo(scenarioRuns.get(0));
 		}
 		if(!hasAlt && scenarioRuns.size() > 1)
 		{
@@ -687,9 +666,9 @@ public final class ProjectConfigurationPanel extends EpptPanel
 		return (WaterYearDefinition) ((JComboBox) getSwingEngine().find("waterYearDefinitionCombo")).getSelectedItem();
 	}
 
-	public WaterYearIndex getWaterYearIndex()
+	public WaterYearIndexAliasReader.WaterYearIndexAlias getWaterYearIndex()
 	{
-		return (WaterYearIndex) ((JComboBox) getSwingEngine().find("waterYearIndexCombo")).getSelectedItem();
+		return (WaterYearIndexAliasReader.WaterYearIndexAlias) ((JComboBox) getSwingEngine().find("waterYearIndexCombo")).getSelectedItem();
 	}
 
 	private static final class MyKeyAdapter extends KeyAdapter

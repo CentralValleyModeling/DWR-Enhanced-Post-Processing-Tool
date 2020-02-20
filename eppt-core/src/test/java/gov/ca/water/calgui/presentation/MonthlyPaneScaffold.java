@@ -30,6 +30,7 @@ import gov.ca.water.calgui.busservice.impl.GuiLinksSeedDataSvcImpl;
 import gov.ca.water.calgui.busservice.impl.ScriptedEpptStatistics;
 import gov.ca.water.calgui.busservice.impl.ThresholdLinksSeedDataSvc;
 import gov.ca.water.calgui.busservice.impl.WaterYearDefinitionSvc;
+import gov.ca.water.calgui.busservice.impl.WaterYearIndexAliasReader;
 import gov.ca.water.calgui.busservice.impl.WaterYearTableReader;
 import gov.ca.water.calgui.project.EpptDssContainer;
 import gov.ca.water.calgui.project.EpptScenarioRun;
@@ -109,7 +110,7 @@ public class MonthlyPaneScaffold
 				dssContainer, javafx.scene.paint.Color.BISQUE);
 		ScriptedEpptStatistics.createScriptedStatistics();
 		WaterYearTableReader waterYearTableReader = new WaterYearTableReader(baseRun.getLookupDirectory());
-		List<WaterYearIndex> read = waterYearTableReader.read();
+		List<WaterYearIndexAliasReader.WaterYearIndexAlias> read = WaterYearIndexAliasReader.getInstance().getAliases();
 		List<EpptStatistic> trendStatistics = ScriptedEpptStatistics.getTrendStatistics();
 		//		PlotConfigurationState plotConfigurationState = new PlotConfigurationState(PlotConfigurationState.ComparisonType.COMPARISON,
 		//				true, false, false, false, Collections.emptyList(),

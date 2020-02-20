@@ -35,6 +35,7 @@ import gov.ca.water.calgui.busservice.impl.EpptReportingComputedSet;
 import gov.ca.water.calgui.busservice.impl.EpptStatistic;
 import gov.ca.water.calgui.busservice.impl.MonthPeriod;
 import gov.ca.water.calgui.busservice.impl.ScriptedEpptStatistics;
+import gov.ca.water.calgui.busservice.impl.WaterYearIndexAliasReader;
 import gov.ca.water.calgui.busservice.impl.WaterYearTableReader;
 import gov.ca.water.calgui.presentation.plotly.PlotlyPaneBuilder;
 import gov.ca.water.calgui.presentation.plotly.SummaryPane;
@@ -196,12 +197,10 @@ public class DisplayFrames
 						  JTabbedPane tabbedPane)
 	{
 		SortedMap<String, SortedMap<EpptStatistic, Map<WaterYearIndex, EpptReportingComputedSet>>> data = new TreeMap<>();
-//		List<EpptStatistic> selectedSummaryTableItems = getPlotConfigurationState().getSelectedSummaryTableItems();
-
 		List<EpptStatistic> selectedSummaryTableItems = ScriptedEpptStatistics.getTrendStatistics();
 		WaterYearDefinition waterYearDefinition = getPlotConfigurationState().getWaterYearDefinition();
 		MonthPeriod monthPeriod = new MonthPeriod(waterYearDefinition.getStartMonth(), waterYearDefinition.getEndMonth());
-		List<WaterYearIndex> summaryWaterYearIndexes = getPlotConfigurationState().getSummaryWaterYearIndexes();
+		List<WaterYearIndexAliasReader.WaterYearIndexAlias> summaryWaterYearIndexes = getPlotConfigurationState().getSummaryWaterYearIndexes();
 		SortedMap<EpptStatistic, Map<WaterYearIndex, EpptReportingComputedSet>> statsData = new TreeMap<>(
 				Comparator.comparing(selectedSummaryTableItems::indexOf));
 		List<EpptScenarioRun> scenarioRuns = new ArrayList<>();
@@ -229,7 +228,8 @@ public class DisplayFrames
 	private SortedMap<String, SortedMap<EpptStatistic, Map<WaterYearIndex, EpptReportingComputedSet>>> addSummaryDataForScenario(
 			EpptScenarioRun scenarioRun, List<String> primarySuffixes, List<TimeSeriesContainer> scenarioRunData,
 			List<String> secondarySuffixes, List<TimeSeriesContainer> secondaryScenarioRunData, String plotTitle,
-			List<EpptStatistic> selectedSummaryTableItems, MonthPeriod monthPeriod, List<WaterYearIndex> summaryWaterYearIndexes,
+			List<EpptStatistic> selectedSummaryTableItems, MonthPeriod monthPeriod,
+			List<WaterYearIndexAliasReader.WaterYearIndexAlias> summaryWaterYearIndexes,
 			SortedMap<EpptStatistic, Map<WaterYearIndex, EpptReportingComputedSet>> statsData)
 	{
 		List<String> headers = new ArrayList<>();
@@ -255,17 +255,17 @@ public class DisplayFrames
 			{
 				List<WaterYearIndex> allWaterYearIndicies = getWaterYearIndicies().get(scenarioRun);
 				List<String> allIndexNames = allWaterYearIndicies.stream().map(WaterYearIndex::getName).collect(toList());
-				SortedMap<WaterYearIndex, EpptReportingComputedSet> indexData = new TreeMap<>(Comparator.comparing(WaterYearIndex::getName, Comparator.comparing(allIndexNames::indexOf)));
-				for(WaterYearIndex waterYearIndex : summaryWaterYearIndexes)
+				SortedMap<WaterYearIndex, EpptReportingComputedSet> indexData = new TreeMap<>(
+						Comparator.comparing(WaterYearIndex::getName, Comparator.comparing(allIndexNames::indexOf)));
+				for(WaterYearIndexAliasReader.WaterYearIndexAlias waterYearIndex : summaryWaterYearIndexes)
 				{
-					Optional<WaterYearIndex> collect = allWaterYearIndicies.stream().filter(
-							selected -> waterYearIndex.getName().equalsIgnoreCase(selected.getName())).findAny();
+					Optional<WaterYearIndex> collect = allWaterYearIndicies.stream().filter(waterYearIndex::isAliasFor).findAny();
 					if(collect.isPresent())
 					{
 						EpptReportingComputedSet epptReportingComputedSet = computeSummaryData(scenarioRun,
 								primarySuffixes, scenarioRunData, secondarySuffixes, secondaryScenarioRunData, plotTitle, monthPeriod,
 								stat, collect.get());
-						indexData.put(waterYearIndex, epptReportingComputedSet);
+						indexData.put(collect.get(), epptReportingComputedSet);
 					}
 				}
 				statsData.put(stat, indexData);

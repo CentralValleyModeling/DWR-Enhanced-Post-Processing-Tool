@@ -46,6 +46,9 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.TilePane;
 import javafx.scene.layout.VBox;
 
+import static java.util.stream.Collectors.toCollection;
+import static java.util.stream.Collectors.toSet;
+
 /**
  * Company: Resource Management Associates
  *
@@ -127,7 +130,7 @@ public class TrendReportParametersPane extends TitledPane
 		String text = _textField.getText();
 		if(text.trim().isEmpty())
 		{
-			_searchPredicate = s->true;
+			_searchPredicate = s -> true;
 		}
 		else
 		{
@@ -147,6 +150,15 @@ public class TrendReportParametersPane extends TitledPane
 		_trendTypes.removeIf(t -> t.getTitle() == null || t.getTitle().isEmpty());
 		_typeListView.getItems().clear();
 		_typeListView.getItems().add(TrendType.ALL_TREND_TYPE);
+
+		if(_backingParameters.stream().anyMatch(s -> TrendType.MISC_TREND_TYPE.matchesGuiLink(s.getGuiLink())))
+		{
+			_typeListView.getItems().add(TrendType.MISC_TREND_TYPE);
+		}
+		if(_backingParameters.stream().anyMatch(s -> TrendType.USER_DEFINED_TREND_TYPE.matchesGuiLink(s.getGuiLink())))
+		{
+			_typeListView.getItems().add(TrendType.USER_DEFINED_TREND_TYPE);
+		}
 		_typeListView.getItems().addAll(_trendTypes);
 		if(selectedItem != null)
 		{
@@ -162,12 +174,7 @@ public class TrendReportParametersPane extends TitledPane
 			if(guiLink != null)
 			{
 				//Both elements should be added to the list
-				boolean added1 = _trendTypes.add(new TrendType(guiLink.getPlotAxisLabel()));
-				boolean added2 = _trendTypes.add(new TrendType(guiLink));
-				if(added1 || added2)
-				{
-					updateTrendTypes();
-				}
+				updateTrendTypes();
 				int size = _backingParameters.size();
 				_backingParameters.add(TrendReportingParameters.TrendParameter.create(size, guiLink, ""));
 			}
@@ -191,9 +198,9 @@ public class TrendReportParametersPane extends TitledPane
 		{
 			String type = addParameterDialog.getDataType();
 			String parameter = addParameterDialog.getParameter();
-			Map<GUILinksAllModelsBO.Model, String> bAndCPart = addParameterDialog.getBAndCParts();
-			GUILinksAllModelsBO guiLink = new GUILinksAllModelsBO("", type, parameter, "");
-			bAndCPart.forEach((key, value) -> guiLink.addModelMapping(key.toString(), value, ""));
+			Map<GUILinksAllModelsBO.Model, String> bAndCParts = addParameterDialog.getBAndCParts();
+			GUILinksAllModelsBO guiLink = new GUILinksAllModelsBO("", "", parameter, "", type);
+			bAndCParts.forEach((key, value) -> guiLink.addModelMapping(key.toString(), value, ""));
 			return guiLink;
 		}
 		else
@@ -248,21 +255,11 @@ public class TrendReportParametersPane extends TitledPane
 
 	private static Set<TrendType> getTrendTypes()
 	{
-		Set<TrendType> retval = new TreeSet<>(Comparator.comparing(trendType -> trendType.getTitle().toLowerCase()));
-		List<GUILinksAllModelsBO> allGuiLinks = GuiLinksSeedDataSvcImpl.getSeedDataSvcImplInstance().getAllGuiLinks();
-		for(GUILinksAllModelsBO guiLink : allGuiLinks)
-		{
-			String plotAxisLabel = guiLink.getPlotAxisLabel();
-			if(plotAxisLabel != null && !plotAxisLabel.isEmpty())
-			{
-				retval.add(new TrendType(plotAxisLabel));
-			}
-			else
-			{
-				retval.add(new TrendType(guiLink));
-			}
-		}
-		return retval;
+		return GuiLinksSeedDataSvcImpl.getSeedDataSvcImplInstance()
+									  .getAllGuiLinks()
+									  .stream()
+									  .map(TrendType::new)
+									  .collect(toCollection(() -> new TreeSet<>(Comparator.comparing(TrendType::getTitle))));
 	}
 
 	public ObservableList<TrendReportingParameters.TrendParameter> getSelectedItems()

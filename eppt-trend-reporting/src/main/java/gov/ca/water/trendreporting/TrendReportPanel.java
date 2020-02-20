@@ -44,6 +44,7 @@ import gov.ca.water.calgui.busservice.impl.EpptReportingComputedSet;
 import gov.ca.water.calgui.busservice.impl.EpptStatistic;
 import gov.ca.water.calgui.busservice.impl.MonthPeriod;
 import gov.ca.water.calgui.busservice.impl.TrendReportingParameters;
+import gov.ca.water.calgui.busservice.impl.WaterYearIndexAliasReader;
 import gov.ca.water.calgui.busservice.impl.WaterYearTableReader;
 import gov.ca.water.calgui.constant.Constant;
 import gov.ca.water.calgui.project.EpptScenarioRun;
@@ -61,7 +62,6 @@ import javafx.geometry.Pos;
 import javafx.scene.Cursor;
 import javafx.scene.Node;
 import javafx.scene.Scene;
-import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.ProgressBar;
 import javafx.scene.control.TitledPane;
@@ -71,7 +71,6 @@ import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.FlowPane;
-import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.TilePane;
 import javafx.scene.paint.Color;
@@ -104,8 +103,8 @@ public class TrendReportPanel extends JFXPanel
 
 	public TrendReportPanel()
 	{
-		setMinimumSize(new Dimension(1450, 800));
-		setPreferredSize(new Dimension(1450, 800));
+		setMinimumSize(new Dimension(1300, 800));
+		setPreferredSize(new Dimension(1300, 800));
 		Platform.setImplicitExit(false);
 		Platform.runLater(this::init);
 	}
@@ -258,11 +257,11 @@ public class TrendReportPanel extends JFXPanel
 		boolean taf = ProjectConfigurationPanel.getProjectConfigurationPanel().isTaf();
 		YearMonth startMonth = ProjectConfigurationPanel.getProjectConfigurationPanel().getStartMonth();
 		YearMonth endMonth = ProjectConfigurationPanel.getProjectConfigurationPanel().getEndMonth();
-		WaterYearIndex waterYearIndex = ProjectConfigurationPanel.getProjectConfigurationPanel().getWaterYearIndex();
-		Platform.runLater(() ->loadPane(startMonth, endMonth, taf, waterYearIndex));
+		WaterYearIndexAliasReader.WaterYearIndexAlias waterYearIndex = ProjectConfigurationPanel.getProjectConfigurationPanel().getWaterYearIndex();
+		Platform.runLater(() -> loadPane(startMonth, endMonth, taf, waterYearIndex));
 	}
 
-	private void loadPane(YearMonth start, YearMonth end, boolean taf, WaterYearIndex waterYearIndex)
+	private void loadPane(YearMonth start, YearMonth end, boolean taf, WaterYearIndexAliasReader.WaterYearIndexAlias waterYearIndex)
 	{
 		TrendReportToggleButton button = (TrendReportToggleButton) _toggleGroup.getSelectedToggle();
 		if(button != null)
@@ -279,11 +278,11 @@ public class TrendReportPanel extends JFXPanel
 		YearMonth startMonth = ProjectConfigurationPanel.getProjectConfigurationPanel().getStartMonth();
 		YearMonth endMonth = ProjectConfigurationPanel.getProjectConfigurationPanel().getEndMonth();
 		boolean taf = ProjectConfigurationPanel.getProjectConfigurationPanel().isTaf();
-		WaterYearIndex waterYearIndex = ProjectConfigurationPanel.getProjectConfigurationPanel().getWaterYearIndex();
+		WaterYearIndexAliasReader.WaterYearIndexAlias waterYearIndex = ProjectConfigurationPanel.getProjectConfigurationPanel().getWaterYearIndex();
 		loadPane(startMonth, endMonth, taf, waterYearIndex);
 	}
 
-	private void loadJavascript(Path path, YearMonth start, YearMonth end, boolean taf, WaterYearIndex waterYearIndex)
+	private void loadJavascript(Path path, YearMonth start, YearMonth end, boolean taf, WaterYearIndexAliasReader.WaterYearIndexAlias waterYearIndex)
 	{
 		List<TrendReportingParameters.TrendParameter> guiLink = new ArrayList<>(_parametersPane.getSelectedItems());
 		List<EpptStatistic> statistic = new ArrayList<>(_statisticsPane.getSelectedItems());
@@ -401,7 +400,8 @@ public class TrendReportPanel extends JFXPanel
 
 	private synchronized List<JSONObject> computeScenarios(List<TrendReportingParameters.TrendParameter> parameters, List<EpptStatistic> statistics,
 														   List<MonthPeriod> monthPeriods, YearMonth startMonth, YearMonth endMonth,
-														   boolean taf, List<EpptScenarioRun> scenarioRuns, WaterYearIndex selectedIndex)
+														   boolean taf, List<EpptScenarioRun> scenarioRuns,
+														   WaterYearIndexAliasReader.WaterYearIndexAlias selectedIndex)
 	{
 		Map<EpptScenarioRun, WaterYearIndex> selectedIndexes = new HashMap<>();
 		Map<EpptScenarioRun, List<WaterYearIndex>> allIndexes = new HashMap<>();
@@ -435,7 +435,8 @@ public class TrendReportPanel extends JFXPanel
 		return retval;
 	}
 
-	private void addIndicies(List<EpptScenarioRun> scenarioRuns, WaterYearIndex waterYearIndex, Map<EpptScenarioRun, WaterYearIndex> selectedIndicies,
+	private void addIndicies(List<EpptScenarioRun> scenarioRuns, WaterYearIndexAliasReader.WaterYearIndexAlias waterYearIndex,
+							 Map<EpptScenarioRun, WaterYearIndex> selectedIndicies,
 							 Map<EpptScenarioRun, List<WaterYearIndex>> allIndicies)
 	{
 		for(EpptScenarioRun epptScenarioRun : scenarioRuns)
@@ -444,12 +445,14 @@ public class TrendReportPanel extends JFXPanel
 			{
 				WaterYearTableReader tableReader = new WaterYearTableReader(epptScenarioRun.getLookupDirectory());
 				List<WaterYearIndex> read = tableReader.read();
-				WaterYearIndex selectedIndex = read.stream()
-												   .filter(index -> waterYearIndex.getName().equalsIgnoreCase(index.getName()))
-												   .findAny()
-												   .orElse(waterYearIndex);
-				selectedIndicies.put(epptScenarioRun, selectedIndex);
-				allIndicies.put(epptScenarioRun, read);
+				Optional<WaterYearIndex> opt = read.stream()
+												   .filter(index -> waterYearIndex.isAliasFor(index))
+												   .findAny();
+				if(opt.isPresent())
+				{
+					selectedIndicies.put(epptScenarioRun, opt.get());
+					allIndicies.put(epptScenarioRun, read);
+				}
 			}
 			catch(EpptInitializationException e)
 			{
@@ -458,7 +461,8 @@ public class TrendReportPanel extends JFXPanel
 		}
 	}
 
-	private DSSGrabber1SvcImpl buildDssGrabber(EpptScenarioRun epptScenarioRun, GUILinksAllModelsBO guiLink, boolean isCFS, LocalDate start, LocalDate end)
+	private DSSGrabber1SvcImpl buildDssGrabber(EpptScenarioRun epptScenarioRun, GUILinksAllModelsBO guiLink, boolean isCFS, LocalDate start,
+											   LocalDate end)
 	{
 		DSSGrabber1SvcImpl dssGrabber = new DSSGrabber1SvcImpl();
 		dssGrabber.setIsCFS(isCFS);

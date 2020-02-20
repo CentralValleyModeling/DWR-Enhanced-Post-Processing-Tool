@@ -25,7 +25,7 @@ import gov.ca.water.calgui.bo.GUILinksAllModelsBO;
 public class TrendType
 {
 	public static final String USER_DEFINED = "User Defined";
-	static final TrendType ALL_TREND_TYPE = new TrendType("All Types")
+	public static final TrendType ALL_TREND_TYPE = new TrendType("All Types")
 	{
 		@Override
 		public boolean matchesGuiLink(GUILinksAllModelsBO guiLink)
@@ -33,7 +33,7 @@ public class TrendType
 			return true;
 		}
 	};
-	static final TrendType MISC_TREND_TYPE = new TrendType("Misc")
+	public static final TrendType MISC_TREND_TYPE = new TrendType("Misc")
 	{
 		@Override
 		public boolean matchesGuiLink(GUILinksAllModelsBO guiLink)
@@ -41,7 +41,7 @@ public class TrendType
 			return guiLink != null && (guiLink.getType() == null || guiLink.getType().isEmpty());
 		}
 	};
-	static final TrendType USER_DEFINED_TREND_TYPE = new TrendType(USER_DEFINED)
+	public static final TrendType USER_DEFINED_TREND_TYPE = new TrendType(USER_DEFINED)
 	{
 		@Override
 		public boolean matchesGuiLink(GUILinksAllModelsBO guiLink)
@@ -58,48 +58,12 @@ public class TrendType
 
 	public TrendType(GUILinksAllModelsBO guiLink)
 	{
-		String bAndCPart = guiLink.getPrimary()
-								  .values()
-								  .stream()
-								  .filter(p -> !p.isEmpty())
-								  .findAny()
-								  .orElse("");
-		String[] split = bAndCPart.split("/");
-		if(split.length > 1)
-		{
-			_title = split[split.length - 1].trim();
-		}
-		else
-		{
-			_title = "";
-		}
+		_title = guiLink.getType();
 	}
 
 	public boolean matchesGuiLink(GUILinksAllModelsBO guiLink)
 	{
-		boolean retval = false;
-		if(guiLink != null)
-		{
-			if(_title.equalsIgnoreCase(guiLink.getType().trim()))
-			{
-				retval = true;
-			}
-			else
-			{
-				String bAndCPart = guiLink.getPrimary()
-										  .values()
-										  .stream()
-										  .filter(p -> !p.isEmpty())
-										  .findAny()
-										  .orElse("");
-				String[] split = bAndCPart.split("/");
-				if(split.length > 1)
-				{
-					retval = _title.equalsIgnoreCase(split[split.length - 1].trim());
-				}
-			}
-		}
-		return retval;
+		return guiLink != null && guiLink.getType().equalsIgnoreCase(_title);
 	}
 
 	public String getTitle()
