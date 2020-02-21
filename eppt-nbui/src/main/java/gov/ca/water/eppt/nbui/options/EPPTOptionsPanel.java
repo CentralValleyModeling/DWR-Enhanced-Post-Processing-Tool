@@ -39,6 +39,7 @@ import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
 import gov.ca.water.calgui.constant.EpptPreferences;
+import gov.ca.water.calgui.techservice.impl.NonSymlinkFilter;
 
 import hec.client.FileChooserFld;
 
@@ -192,6 +193,7 @@ final class EPPTOptionsPanel extends JPanel
 	{
 		JFileChooser fileChooser = new JFileChooser(_wrimsDirectoryField.getText());
 		fileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+		fileChooser.setFileFilter(new NonSymlinkFilter());
 		fileChooser.showOpenDialog(this);
 		File selectedFile = fileChooser.getSelectedFile();
 		if(selectedFile != null)

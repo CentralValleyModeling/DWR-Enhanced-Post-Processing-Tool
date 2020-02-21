@@ -174,8 +174,13 @@ public final class GuiLinksSeedDataSvcImpl implements IGuiLinksSeedDataSvc
 		{
 			sLegend = list[6].replace("%2C", ",");
 		}
+		String type = "";
+		if(list.length > 7)
+		{
+			type = list[7].replace("%2C", ",");
+		}
 		String id = extractCheckboxId(checkboxId);
-		return new GUILinksAllModelsBO(id, yTitle, title, sLegend);
+		return new GUILinksAllModelsBO(id, yTitle, title, sLegend, type);
 	}
 
 	private String extractCheckboxId(int checkboxId)
