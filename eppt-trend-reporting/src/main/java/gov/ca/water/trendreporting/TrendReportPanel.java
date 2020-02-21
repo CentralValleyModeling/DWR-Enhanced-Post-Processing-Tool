@@ -362,14 +362,9 @@ public class TrendReportPanel extends JFXPanel
 			GUILinksAllModelsBO guiLink = createGuiLink();
 			if(guiLink != null)
 			{
-				//Both elements should be added to the list
-				boolean added = _trendTypes.add(new TrendType(guiLink.getType()));
-				if(added)
-				{
-					updateTrendTypes();
-				}
 				int size = _backingParameters.size();
 				_backingParameters.add(TrendReportingParameters.TrendParameter.create(size, guiLink, ""));
+				updateTrendTypes();
 			}
 		}
 		catch(InterruptedException ex)
@@ -390,11 +385,11 @@ public class TrendReportPanel extends JFXPanel
 		_typeListView.getItems().clear();
 		_typeListView.getItems().add(ALL_TREND_TYPE);
 
-		if(_filteredParameters.stream().anyMatch(s->MISC_TREND_TYPE.matchesGuiLink(s.getGuiLink())))
+		if(_backingParameters.stream().anyMatch(s -> MISC_TREND_TYPE.matchesGuiLink(s.getGuiLink())))
 		{
 			_typeListView.getItems().add(MISC_TREND_TYPE);
 		}
-		if(_filteredParameters.stream().anyMatch(s->USER_DEFINED_TREND_TYPE.matchesGuiLink(s.getGuiLink())))
+		if(_backingParameters.stream().anyMatch(s -> USER_DEFINED_TREND_TYPE.matchesGuiLink(s.getGuiLink())))
 		{
 			_typeListView.getItems().add(USER_DEFINED_TREND_TYPE);
 		}
