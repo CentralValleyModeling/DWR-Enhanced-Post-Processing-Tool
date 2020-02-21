@@ -12,21 +12,6 @@
 
 var FORMATTER = '';
 
-function getHeaders(data) {
-    let firstIndexData = data[0]['primary_data']['statistically_computed_time_series_wyt'][0];
-    let headers = [''];
-    for (let j = 0; j < firstIndexData.length; j++) {
-        let waterYearPeriod = firstIndexData[j]['water_year_period'];
-        headers.push('<b>' + getAcronym(waterYearPeriod) + '</b>');
-    }
-    return headers;
-}
-
-function getAcronym(text) {
-    let matches = text.match(/\b(\w)/g);
-    return matches.join('');
-}
-
 function buildAnnualPeriodCells(data) {
     let retval = ['Long Term'];
     for (let i = 1; i < data['scenario_run_data'].length; i++) {
