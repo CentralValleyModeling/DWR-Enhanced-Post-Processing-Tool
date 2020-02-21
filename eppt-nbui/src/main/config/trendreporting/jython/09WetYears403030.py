@@ -10,7 +10,7 @@ def getName():
 
 def calculate(data):
 	waterYearIndex = waterYearIndices.stream().filter(
-		jp(lambda p: p.toString() == "SAC Index")).findAny().orElseThrow(
+		jp(lambda p: p.toString().lower() == "sacindex")).findAny().orElseThrow(
 		js(lambda: RuntimeException("No SAC index")))
 	wet = waterYearIndex.getAllLongWaterYearPeriodRanges().getOrDefault(WaterYearPeriod("Wet"), ArrayList())
 	waterYearPeriodRangesFilter = WaterYearAnnualPeriodRangesFilter(wet)
