@@ -11,7 +11,6 @@
  */
 
 
-
 var FORMATTER = '';
 
 function getPlotlyBoxValuesForAll(tsc) {
@@ -31,7 +30,7 @@ function getPlotlyBoxValuesForPeriodAvg(tsc) {
     return datum;
 }
 
-function getPlotlyBoxValues(dataOnly, periodMonths) {
+function getPlotlyBoxValues(dataOnly, periodMonths, periodSeries) {
     var y = [];
     var x = [];
     if (periodMonths.length > 1) {
@@ -73,7 +72,7 @@ function getPlotlySeries(datum, periodMonths) {
     var series = [];
     for (var i = 0; i < datum.length; i++) {
         var timeSeries = datum[i]['primary_data']['full_time_series'][0];
-        var data = getPlotlyBoxValues(timeSeries, periodMonths);
+        var data = getPlotlyBoxValues(timeSeries, periodMonths, datum[i]['primary_data']['period_filtered_time_series'][0]);
         series.push({
             y: data['y'],
             x: data['x'],
@@ -90,7 +89,7 @@ function getPlotlySeries(datum, periodMonths) {
 }
 
 function plot(data) {
-    FORMATTER = getD3Formatter(data['scenario_run_data'][0]['full_time_series']);
+    FORMATTER = getD3Formatter(data['scenario_run_data'][0]['primary_data']['full_time_series'][0]);
     let datum = data['scenario_run_data'];
     let periodMonths = data['period_months'];
     var layout = {
@@ -113,7 +112,6 @@ function plot(data) {
             }
         },
         yaxis: {
-            tickformat: ',.3r%',
             title: {
                 text: data['units']
             },
@@ -129,7 +127,7 @@ function plot(data) {
     };
     Plotly.newPlot('tester', getPlotlySeries(datum, periodMonths), layout, {
             displaylogo: false,
-        modeBarButtons: buildModeBarButtons('tester'),
+            modeBarButtons: buildModeBarButtons('tester'),
             scrollZoom: true,
             responsive: true
         }

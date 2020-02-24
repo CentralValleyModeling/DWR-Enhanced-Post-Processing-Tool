@@ -36,12 +36,11 @@ function getPlotlyMonthlySeries(datum) {
 }
 
 function plot(data) {
-    FORMATTER = getD3Formatter(data['scenario_run_data'][0]['full_time_series']);
+    FORMATTER = getD3Formatter(data['scenario_run_data'][0]['primary_data']['full_time_series'][0]);
     var datum = data['scenario_run_data'];
     var layout = {
         font: PLOTLY_FONT,
         yaxis: {
-            tickformat: ',.3r',
             title: {
                 text: data['units'],
             },

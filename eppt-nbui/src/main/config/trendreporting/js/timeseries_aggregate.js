@@ -33,21 +33,21 @@ function getPlotlyAnnualSeries(datum) {
 }
 
 function plot(data) {
-    FORMATTER = getD3Formatter(data['scenario_run_data'][0]['full_time_series']);
+    FORMATTER = getD3Formatter(data['scenario_run_data'][0]['primary_data']['full_time_series'][0]);
     var datum = data['scenario_run_data'];
-
+    let series = getPlotlyAnnualSeries(datum);
+    let shapes = [];//buildMarkerLines(series);
     var layout = {
         font: PLOTLY_FONT,
-        separators: '.,,',
         separatethousands: true,
         yaxis: {
-            tickformat: ',.3r',
+            tickformat: FORMATTER,
             title: {
                 text: data['units'],
             },
             tickformat: FORMATTER,
             gridcolor: '#CCCCCC',
-            rangemode:'tozero'
+            rangemode: 'tozero'
         },
         xaxis: {
             gridcolor: '#CCCCCC'
@@ -62,13 +62,14 @@ function plot(data) {
             }
         },
         title: {
-            text: data['gui_link_title'] + '<br>' +  data['month_period_title'],
+            text: data['gui_link_title'] + '<br>' + data['month_period_title'],
             font: {
                 size: 20,
             }
-        }
+        },
+        shapes: shapes
     };
-    Plotly.newPlot('container_aggregate_tester', getPlotlyAnnualSeries(datum), layout, {
+    Plotly.newPlot('container_aggregate_tester', series, layout, {
         displaylogo: false,
         modeBarButtons: buildModeBarButtons('container_aggregate_tester'),
         scrollZoom: true,
@@ -86,7 +87,7 @@ function plotlyCopyToClipboardAnnual() {
     let layout = plot.layout;
     let data1 = plot.data;
     let yaxis = '';
-    if(layout['yaxis']['title']['text']){
+    if (layout['yaxis']['title']['text']) {
         yaxis = layout['yaxis']['title']['text'];
     }
     var text = layout['title']['text'] + '\n' + 'Year\t' + yaxis + '\n';
