@@ -31,7 +31,6 @@
 		<all.clusters>${project.build.directory}/${brandingToken}</all.clusters>
 		<zip-dist-name>DWR-EPPT</zip-dist-name>
 	</properties>
-
 	<dependencies>
 		<dependency>
 			<groupId>org.netbeans.cluster</groupId>
@@ -132,7 +131,6 @@
 		<profile>
 			<id>deployment</id>
 			<build>
-
 				<plugins>
 					<plugin>
 						<groupId>org.apache.maven.plugins</groupId>
@@ -153,8 +151,9 @@
 								<artifactItem>
 									<groupId>oracle</groupId>
 									<artifactId>jre</artifactId>
-									<version>1.8.0_202</version>
+									<version>1.8.0_202-b34</version>
 									<type>zip</type>
+									<destFileName>jre.zip</destFileName>
 								</artifactItem>
 							</artifactItems>
 						</configuration>
@@ -217,7 +216,7 @@
 								</goals>
 								<configuration>
 									<target>
-										<unzip src="${project.build.directory}\jre-1.8.0_202.zip" dest="${project.build.directory}\dwr_eppt\jre"/>
+										<unzip src="${project.build.directory}\jre.zip" dest="${project.build.directory}\dwr_eppt\jre"/>
 										<copy file="${project.basedir}/src/EPPT.exe" todir="${project.build.directory}\dwr_eppt"/>
 										<copy file="${project.basedir}/src/EPPT.config" todir="${project.build.directory}\dwr_eppt"/>
 										<copy file="${project.basedir}/src/RunEppt.jar" todir="${project.build.directory}\dwr_eppt\bin"/>
