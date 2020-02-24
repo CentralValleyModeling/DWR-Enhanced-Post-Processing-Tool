@@ -147,7 +147,7 @@ public class PlotConfigurationStateBuilder
 			{
 				comparisonType = PlotConfigurationState.ComparisonType.DIFF;
 			}
-			boolean displayTaf = !((JCheckBox) _swingEngine.find("chkTAF")).isSelected();
+			boolean displayTaf = ((JCheckBox) _swingEngine.find("chkTAF")).isSelected();
 			boolean displayTimeSeriesPlot = ((JCheckBox) _swingEngine.find("RepckbTimeSeriesPlot")).isSelected();
 			boolean displayBoxAndWhisker = ((JCheckBox) _swingEngine.find("RepckbBAWPlot")).isSelected();
 			boolean displayMonthlyTable = ((JCheckBox) _swingEngine.find("RepckbMonthlyTable")).isSelected();
