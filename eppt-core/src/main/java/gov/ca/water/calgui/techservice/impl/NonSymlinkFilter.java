@@ -9,6 +9,7 @@ package gov.ca.water.calgui.techservice.impl;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.InvalidPathException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.filechooser.FileFilter;
@@ -30,12 +31,12 @@ public class NonSymlinkFilter extends FileFilter
 	{
 		try
 		{
-			return !FileUtils.isSymlink(f);
+			return  !f.getName().endsWith(".lnk") && !FileUtils.isSymlink(f);
 		}
-		catch(IOException e)
+		catch(IOException | InvalidPathException e)
 		{
 			LOGGER.log(Level.FINE, "Unable to determine if file is symlink: " + f, e);
-			return true;
+			return false;
 		}
 	}
 
