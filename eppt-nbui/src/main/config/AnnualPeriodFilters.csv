@@ -8,7 +8,7 @@ WYI,2,San Joaquin River Index,SJRindex
 WYI,3,Shasta Lake Index,SHASTAindex, Shastaindex
 WYI,4,Trinity Lake Index,Trinityindex
 WYI,5,Feather River Index,FEATHERindex
-WYI,6,American River Index (40-30-30),AmerD893
+!WYI,6,American River Index (40-30-30),AmerD893
 WYI,7,American River Index (D893),Amer403030
 !
 !WYP indicates Water Year Period - do not rename
