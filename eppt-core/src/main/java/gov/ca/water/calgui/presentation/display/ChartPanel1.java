@@ -342,10 +342,15 @@ public class ChartPanel1 extends JPanel implements Printable
 					}
 				}
 
+				String units = "";
+				if(tscs[0] != null)
+				{
+					units = tscs[0].units;
+				}
 				chart = ChartFactory.createTimeSeriesChart(title.replace(";", "+"), // title
 						"Time (1MON)", // x-axis label //TODO - Hard-coded to
 						// monthly!
-						yLabel + " (" + tscs[0].units + ")", // y-axis label
+						yLabel + " (" + units + ")", // y-axis label
 						dataset); // create and display a frame...
 
 				if(scatterAvailable && tscs[0] != null && tscs[1] != null)
