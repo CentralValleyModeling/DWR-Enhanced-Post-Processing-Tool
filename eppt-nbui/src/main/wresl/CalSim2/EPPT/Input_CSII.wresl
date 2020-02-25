@@ -361,13 +361,14 @@ define BANKS_EXP 		{timeseries 'D419' 				kind 'FLOW-DELIVERY' 		units 'CFS' con
 define JONES_EXP 		{timeseries 'D418' 				kind 'FLOW-DELIVERY' 		units 'CFS' convert 'TAF' }
 define BANKSALLOWOUT 	{timeseries 'BANKSALLOWOUT' 	kind 'FLOW-ALLOW-BANKS' 	units 'CFS' convert 'TAF' }
 define JONESALLOWOUT 	{timeseries 'JONESALLOWOUT' 	kind 'EXPORT-CTRL-JONES' 	units 'CFS' convert 'TAF' }
+define MAXJONESCALCDV 	{timeseries 'MAXJONESCALCDV' 	kind 'UNDEFINED' 			units 'CFS' convert 'TAF' }
 define APRMAYEXPCTRL	{timeseries 'APRMAYEXPCTRL' 	kind 'EXPORT-CTRL-APRMAY' 	units 'CFS'  convert 'TAF'} 
 define MAXEXP_RPA	 	{timeseries 'MAXEXP_RPADV' 		kind 'EXPORT-LIMIT' 		units 'CFS'  convert 'TAF'} 
 define FWS_X2_LIMIT 	{timeseries 'FWS_MAXEXPX2DV' 	kind 'EXPORT-LIMIT' 		units 'CFS'  convert 'TAF'}
 define NMFS_MAXEXPDCC	{timeseries 'NMFS_MAXEXPDCCDV'	kind 'EXPORT-LIMIT' 		units 'CFS'  convert 'TAF'}
 define BANKS_UPSTREAM 	{timeseries 'D409_UPSTREAM' 	kind 'FLOW-DELIVERY' 		units 'CFS'  convert 'TAF'}
 define TOT_EXP 			{timeseries 'D409' 				kind 'FLOW-DELIVERY' 		units 'CFS'  convert 'TAF'} 
-define NMFS_MAXEXP		{timeseries 'NMFS_MAXEXPDV' 	kind 'NMFS' 				units 'CFS'  convert 'TAF'}
+define NMFS_MAXEXP		{timeseries 'NMFS_MAXEXPDV' 	kind 'NMFS' 				units 'CFS'  			  }
 define APRMAYTRACYCTRL 	{timeseries 'APRMAYTRACYCTRL' 	kind 'EXPORT-CTRL-APRMAY'	units 'CFS'  convert 'TAF'} 
 define MAXEXP_RPA_SWP	{timeseries 'MAXEXP_RPA_SWPDV'	kind 'EXPORT-LIMIT' 		units 'CFS'  convert 'TAF'} 
 define EXPORT_DEC 		{timeseries 'EXPORT_DEC_' 		kind 'TEMP' 				units 'CFS'  convert 'TAF'} 
@@ -393,6 +394,7 @@ define MAXEXP_RPA_SWP_ 		{ alias  MAXEXP_RPA_SWP  	kind 'DTS-DELTA-EXP-CTRL-INPU
 define EXPORT_DEC_ 			{ alias  EXPORT_DEC  		kind 'DTS-DELTA-EXP-CTRL-INPUT' units 'TAF' }
 define NMFS_DCC_LIMIT_ 		{ alias  NMFS_DCC_LIMIT 	kind 'DTS-DELTA-EXP-CTRL-INPUT' units 'TAF' }
 define APRMAYBANKSCTRL_ 	{ alias  APRMAYBANKSCTRL  	kind 'DTS-DELTA-EXP-CTRL-INPUT' units 'TAF' }
+define MAXJONESCALCDV_ 	{ alias  MAXJONESCALCDV  		kind 'DTS-DELTA-EXP-CTRL-INPUT' units 'TAF' }
 define MAXEXP_RPA_CVP_ 		{ alias  MAXEXP_RPA_CVP  	kind 'DTS-DELTA-EXP-CTRL-INPUT' units 'TAF' }
 define SOD_EXP_MAXCAP_ 		{ alias  SOD_EXP_MAXCAP 	kind 'DTS-DELTA-EXP-CTRL-INPUT' units 'TAF' }
 
@@ -422,6 +424,9 @@ define C417A {timeseries 'C417A' kind 'flow-channel' units 'CFS' convert 'TAF'}
 define DO_REQ_FLOW_OUT { timeseries 'DO_req_flow_out' kind 'FLOW-REQ-NDOI' units 'CFS' convert 'TAF' }
 define NMFS_MaxExpdv { timeseries 'NMFS_MaxExpdv' kind 'NMFS' units 'CFS' convert 'TAF' }
 define NMFS_MaxExpDCCdv { timeseries 'NMFS_MaxExpDCCdv' kind 'EXPORT-LIMIT' units 'CFS' convert 'TAF' }
+define NMFSdaysopentgdv { timeseries 'NMFSdaysopentgdv' kind 'DCC-DAYS-OPEN' units 'NONE'}
+define NMFSdaysopendv { timeseries 'NMFSdaysopendv' kind 'DCC-DAYS-OPEN' units 'NONE'}
+define NMFSMaxExDCCest_ { timeseries 'NMFSMaxExDCCest_' kind 'EXPORT-LIMIT' units 'cfs' convert 'TAF'}
 define EIEXPCTRL { timeseries 'EIEXPCTRL' kind 'EXPORT-CTRL-EI' units 'CFS' convert 'TAF' }
 define BANKS { timeseries 'D418' kind 'FLOW-DELIVERY' units 'CFS' convert 'TAF' }
 define JONES { timeseries 'D419' kind 'FLOW-DELIVERY' units 'CFS' convert 'TAF' }
@@ -466,7 +471,7 @@ define C407_whlcv_ { alias C407_whlcv kind 'DTS-RESOP-INPUT' units 'TAF' }
 define C407_whljp_ { alias C407_whljp kind 'DTS-RESOP-INPUT' units 'TAF' }
 define C407_WTS_ { alias C407_WTS kind 'DTS-RESOP-INPUT' units 'TAF' }
 define RIOVISTA_ { alias RIOVISTA kind 'DTS-RESOP-INPUT' units 'TAF' }
-define RIOVISTA_MIF_ { alias RIOVISTA_MIF kind 'DTS-RESOP-INPUT' units 'TAF' }
+define RIOVISTA_MIF_ { alias Rio_req kind 'DTS-RESOP-INPUT' units 'TAF' }
 define QWEST_ { alias QWEST kind 'DTS-RESOP-INPUT' units 'TAF' }
 define D168C_EXC_NTDEP_ { alias D168C_EXC_NTDEP kind 'DTS-RESOP-INPUT' units 'TAF' }
 define D418_TD_ { alias D418_TD kind 'DTS-RESOP-INPUT' units 'TAF' }
@@ -489,6 +494,9 @@ define C407_ANN_ { alias C407_ANN kind 'DTS-RESOP-INPUT' units 'TAF' }
 define DO_REQ_FLOW_OUT_ { alias DO_REQ_FLOW_OUT kind 'DTS-RESOP-INPUT' units 'TAF' }
 define NMFS_MaxExpdv_ { alias NMFS_MaxExpdv kind 'DTS-RESOP-INPUT' units 'TAF' }
 define NMFS_MaxExpDCCdv_ { alias NMFS_MaxExpDCCdv kind 'DTS-RESOP-INPUT' units 'TAF' }
+define NMFSdaysopentgdv_ { alias NMFSdaysopentgdv kind 'DTS-RESOP-INPUT' units 'TAF' }
+define NMFSdaysopendv_ { alias NMFSdaysopendv kind 'DTS-RESOP-INPUT' units 'TAF' }
+define NMFSMaxExDCCest_dv {alias NMFSMaxExDCCest_ kind 'Export-Limit' units 'cfs'} !for output only
 define EIEXPCTRL_ { alias EIEXPCTRL kind 'DTS-RESOP-INPUT' units 'TAF' }
 define BANKS_ { alias BANKS kind 'DTS-RESOP-INPUT' units 'TAF' }
 define JONES_ { alias JONES kind 'DTS-RESOP-INPUT' units 'TAF' }

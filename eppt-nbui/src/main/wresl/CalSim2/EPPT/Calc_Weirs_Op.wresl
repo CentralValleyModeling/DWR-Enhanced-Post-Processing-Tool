@@ -19,9 +19,9 @@ define SUTTER_SPLL      {value SPILL_TO_SUTTER + SPILL_FROM_MOULTON + SPILL_FROM
 define SUTTER_SPLL_ 	{ alias  SUTTER_SPLL  kind 'WEIR-OP-VALUE' units 'TAF' }
 
 define SUTTER_TOT_SPL_CHECK {
-	case atSTANDARD		{condition abs(SUTTER_SPLL - 0)		<= abs_threshold	value EQ}
-	case aboveSTANDARD	{condition    (SUTTER_SPLL - 0)		> abs_threshold		value GT}
-	case belowSTANDARD	{condition    (SUTTER_SPLL - 0)		< -1*abs_threshold	value LT}
+	case atSTANDARD		{condition abs(SUTTER_SPLL - SUTTER_SPLL_THRSHLD)		<= abs_threshold	value EQ}
+	case aboveSTANDARD	{condition    (SUTTER_SPLL - SUTTER_SPLL_THRSHLD)		> abs_threshold		value GT}
+	case belowSTANDARD	{condition    (SUTTER_SPLL - SUTTER_SPLL_THRSHLD)		< -1*abs_threshold	value LT}
 	case UNEXPECTED		{condition     always									value UE}
 }
 
@@ -76,9 +76,9 @@ define YOLO_SPLL_ 	  { alias  YOLO_SPLL  kind 'WEIR-OP-VALUE' units 'TAF' }
 
 
 define YOLO_TOT_SPL_CHECK {
-	case atSTANDARD		{condition abs(YOLO_SPLL - 0)		<= abs_threshold	value EQ}
-	case aboveSTANDARD	{condition    (YOLO_SPLL - 0)		> abs_threshold		value GT}
-	case belowSTANDARD	{condition    (YOLO_SPLL - 0)		< -1*abs_threshold	value LT}
+	case atSTANDARD		{condition abs(YOLO_SPLL - YOLO_SPLL_THRSHLD)		<= abs_threshold	value EQ}
+	case aboveSTANDARD	{condition    (YOLO_SPLL - YOLO_SPLL_THRSHLD)		> abs_threshold		value GT}
+	case belowSTANDARD	{condition    (YOLO_SPLL - YOLO_SPLL_THRSHLD)		< -1*abs_threshold	value LT}
 	case UNEXPECTED		{condition     always									value UE}
 }
 

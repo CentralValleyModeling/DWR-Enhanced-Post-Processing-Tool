@@ -56,6 +56,14 @@ define Banks_HS_Limit {value  300 * CFS_TAF }
 define SOD_HS_Limit   {value  1100 * CFS_TAF }
 define X2_REQ    	  {value  66.3 }
 define zero_thrshld   {value 0.0 }
+define YOLO_SPLL_THRSHLD   {value  55000 * CFS_TAF }
+define SUTTER_SPLL_THRSHLD   {value  23000 * CFS_TAF }
+define SHORT_CVP_THRSHLD   {value  1000 * CFS_TAF }
+define SHORT_SWP_THRSHLD   {value  9000 * CFS_TAF }
 
 define X2_REQ_        {alias X2_REQ kind 'DTS-DELTA-CONTROL-VALUE' UNITS 'KM' }
 define ZERO_THRSHLD_        {alias zero_thrshld kind 'DTS-INPUT' UNITS 'TAF' }
+define YOLO_SPLL_THRSHLD_        {alias YOLO_SPLL_THRSHLD kind 'DTS-WEIR-OP-VALUE' UNITS 'TAF' }
+define SUTTER_SPLL_THRSHLD_        {alias SUTTER_SPLL_THRSHLD kind 'DTS-WEIR-OP-VALUE' UNITS 'TAF' }
+define SHORT_CVP_THRSHLD_        {alias SHORT_CVP_THRSHLD kind 'DTS-ALLOC-VALUE' UNITS 'TAF' }
+define SHORT_SWP_THRSHLD_        {alias SHORT_SWP_THRSHLD kind 'DTS-ALLOC-VALUE' UNITS 'TAF' }

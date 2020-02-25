@@ -189,13 +189,24 @@ define SJRIE_CHECK {
 }
 
 /*************************** NMFS ***************************/
-/*************************** DCC ****************************/
-define DCC_CHECK {
+/*************************** DCC MAX EXP ****************************/
+define DCC_EXP_CHECK {
+	case notAPPLICABLE  {condition NMFS_MaxExpDCCdv == 999999 value NA}
 	case atSTANDARD		{condition abs(NMFS_MaxExpDCCdv - (D418_TD + D419_TD)) < abs_threshold	value EQ}
 	case aboveSTANDARD	{condition D418_TD + D419_TD - NMFS_MaxExpDCCdv > abs_threshold	        value GT}
 	case belowSTANDARD	{condition D418_TD + D419_TD - NMFS_MaxExpDCCdv < abs_threshold	        value LT}
 	case UNEXPECTED		{condition always														value UE}
 }
+
+/*************************** NMFS ***************************/
+/*************************** DCC GATE OPEN ****************************/
+define DCC_DAYS_CHECK {
+	case atSTANDARD		{condition abs(NMFSdaysopentgdv - NMFSdaysopendv) < abs_threshold	value EQ}
+	case aboveSTANDARD	{condition NMFSdaysopendv - NMFSdaysopentgdv > abs_threshold	    value GT}
+	case belowSTANDARD	{condition NMFSdaysopendv - NMFSdaysopentgdv < -1 *abs_threshold	value LT}
+	case UNEXPECTED		{condition always													value UE}
+}
+
 /************** MRDO due to different controls ***************/
 ! MRDO due to NDOI
 define MRDO_NDOI_ {value DO_req_flow_out}
@@ -297,9 +308,11 @@ define SX2_CHECK_ { alias SX2_CHECK kind 'DTS-DELTA-CONTROL-STATUS' units 'NONE'
 define EI_CHECK_ { alias EI_CHECK kind 'DTS-DELTA-CONTROL-STATUS' units 'NONE' }
 define RV_CHECK_ { alias RV_CHECK kind 'DTS-DELTA-CONTROL-STATUS' units 'NONE' }
 define QWEST_CHECK_ { alias QWEST_CHECK kind 'DTS-DELTA-CONTROL-STATUS' units 'NONE' }
+!define DCC_GATE_CHECK_ { alias DCC_GATE_CHECK kind 'DTS-DELTA-CONTROL-STATUS' units 'NONE' }
 define OMR_CHECK14D_ { alias OMR_CHECK14D kind 'DTS-DELTA-CONTROL-STATUS' units 'NONE' }
 define SJRIE_CHECK_ { alias SJRIE_CHECK kind 'DTS-DELTA-CONTROL-STATUS' units 'NONE' }
-define DCC_CHECK_ { alias DCC_CHECK kind 'DTS-DELTA-CONTROL-STATUS' units 'NONE' }
+define DCC_EXP_CHECK_ { alias DCC_EXP_CHECK kind 'DTS-DELTA-CONTROL-STATUS' units 'NONE' }
+define DCC_DAYS_CHECK_ { alias DCC_DAYS_CHECK kind 'DTS-DELTA-CONTROL-STATUS' units 'NONE' }
 define NDOI_CHECK_ { alias NDOI_CHECK kind 'DTS-DELTA-CONTROL-STATUS' units 'NONE' }
 define MRDO_NDOI__ { alias MRDO_NDOI_ kind 'DTS-DELTA-CONTROL-VALUE' units 'TAF' }
 define MRDO_ANN__ { alias MRDO_ANN_ kind 'DTS-DELTA-CONTROL-VALUE' units 'TAF' }
