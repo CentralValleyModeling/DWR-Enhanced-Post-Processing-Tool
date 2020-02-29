@@ -26,7 +26,7 @@ define SOD_EXP_ZERO_CTRL {
 !Check for total export capacity limit
 define SOD_EXP_CAP_CTRL {
 	case atSTANDARD    {condition ABS(SOD_EXP - SOD_EXP_MAXCAP) < abs_threshold value EQ}
-	case aboveSTANDARD {condition (SOD_EXP - SOD_EXP_MAXCAP) > abs_threshold     value GT}
+	case aboveSTANDARD {condition SOD_EXP - SOD_EXP_MAXCAP > abs_threshold     value GT}
 	case belowSTANDARD {condition (SOD_EXP - SOD_EXP_MAXCAP) < -1*abs_threshold value LT}
 	case UNEXPECTED {condition always value UE}
 }
@@ -58,6 +58,7 @@ define SOD_EXP_VERN_CTRL {
 
 ! Control by RPAs ?
 define SOD_EXP_RPA_CTRL {
+	case notAPPLICABLE {condition MAXEXP_RPA > BANKSALLOWOUT + JONESALLOWOUT VALUE NA}
 	case atSTANDARD {condition ABS(TOT_EXP - MAXEXP_RPA) < abs_threshold 		value EQ}
 	case aboveSTANDARD {condition TOT_EXP - MAXEXP_RPA > abs_threshold 			value GT}
 	case belowSTANDARD {condition  TOT_EXP - MAXEXP_RPA < -1 * abs_threshold 	value LT}
@@ -76,9 +77,10 @@ define SOD_EXP_FX2_CTRL {
 
 ! Control by DCC 
 define SOD_EXP_DCC_CTRL {
-	case atSTANDARD {condition BANKS_UPSTREAM-TOT_EXP>0 .and. ABS(SOD_EXP-NMFSMaxExDCCest_) < abs_threshold value EQ}
-	case aboveSTANDARD {condition SOD_EXP-NMFSMaxExDCCest_ > abs_threshold value GT}
-	case belowSTANDARD {condition SOD_EXP-NMFSMaxExDCCest_ < -1 * abs_threshold value LT}
+	case notAPPLICABLE    {condition NMFS_MAXEXPDCC > BANKSALLOWOUT + JONESALLOWOUT value NA}
+	case atSTANDARD {condition BANKS_UPSTREAM-TOT_EXP>0 .and. ABS(SOD_EXP-NMFS_MAXEXPDCC) < abs_threshold value EQ}
+	case aboveSTANDARD {condition SOD_EXP-NMFS_MAXEXPDCC > abs_threshold value GT}
+	case belowSTANDARD {condition SOD_EXP-NMFS_MAXEXPDCC < -1 * abs_threshold value LT}
 	case UNEXPECTED {condition always value UE}
 
 }
@@ -97,9 +99,9 @@ define SOD_EXP_OMR_CTRL {
 ! Control by SJR EI 
 define SOD_EXP_SJREI_CTRL {
 	case notAPPLICABLE {condition (MONTH <= MAR .OR. MONTH>=JUN) .and. NMFS_MAXEXP == 999999 VALUE NA}
-	case atSTANDARD {condition (MONTH == APR .OR. MONTH == MAY) .and. ABS(SOD_EXP-NMFS_MAXEXP*cfs_taf) < abs_threshold value EQ}
-	case aboveSTANDARD {condition (MONTH == APR .OR. MONTH == MAY) .and. SOD_EXP-NMFS_MAXEXP*cfs_taf > abs_threshold  value GT}
-	case belowSTANDARD {condition  (MONTH == APR .OR. MONTH == MAY) .and. SOD_EXP-NMFS_MAXEXP*cfs_taf < -1 * abs_threshold value LT}	
+	case atSTANDARD {condition (MONTH == APR .OR. MONTH == MAY) .and. ABS(SOD_EXP-NMFS_MAXEXP) < abs_threshold value EQ}
+	case aboveSTANDARD {condition (MONTH == APR .OR. MONTH == MAY) .and. SOD_EXP-NMFS_MAXEXP > abs_threshold  value GT}
+	case belowSTANDARD {condition  (MONTH == APR .OR. MONTH == MAY) .and. SOD_EXP-NMFS_MAXEXP < -1 * abs_threshold value LT}	
 	case UNEXPECTED {condition always value UE}
 
 }
@@ -125,7 +127,6 @@ define CVP_EXP_CAP_CTRL {
 	case belowSTANDARD {condition (JONES_EXP - JONESALLOWOUT) < -1 * abs_threshold value LT}
     case UNEXPECTED {condition always value UE}
 }
-
 ! Jones Control by Vernalis 1:1 ?
 define CVP_EXP_VERN_CTRL {
 	case notAPPLICABLE {condition (MONTH <= MAR .OR. MONTH >= JUN) VALUE NA}
