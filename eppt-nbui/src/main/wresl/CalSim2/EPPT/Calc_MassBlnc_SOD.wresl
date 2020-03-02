@@ -170,17 +170,19 @@ define TOT_DEL_MB  {value CVP_DEL_MB + SWP_DEL_MB} 									!Total deliveries
 define TOT_DEL_MB_ {alias TOT_DEL_MB kind 'DTS-SOD-MB-VALUE' units 'TAF'}
 /************************************** SOD EXPORT INFLOW **************************************/
 define CVP_SOD_EXP_INF {value BANKS_EXP_CVP + JONES_EXP_CVP + MP_LOCAL_INFLOW_MB + NET_CVP_SL_REL - EVAP_SANLUIS_CVP}
-define SWP_SOD_EXP_INF {value BANKS_EXP_SWP + BANKS_EXP_WATER_TRNSR + KRN_RIV_INTRTIE_BNA_VSTA + NET_SWP_SOD_REL - SOD_EVAP_MB}
-define CVP_SOD_BAL     {value CVP_SOD_EXP_INF - SOD_DELIVERY_CVP } !for QA/QC
+define SWP_SOD_EXP_INF {value BANKS_EXP_SWP + BANKS_EXP_WATER_TRNSR + KRN_RIV_INTRTIE_BNA_VSTA + NET_SWP_SOD_REL - SOD_EVAP_SWP}
+define CVP_SOD_BAL     {value CVP_SOD_EXP_INF - CVP_DEL_MB } !for QA/QC
 define SWP_SOD_BAL     {value SWP_SOD_EXP_INF - SWP_DEL_MB 		 } !for QA/QC
 
-define TOT_SOD_EXP_INF {value CVP_SOD_EXP_INF + SWP_SOD_EXP_INF}
+define TOT_SOD_EXP_INF {value CVP_SOD_EXP_INF + SWP_SOD_EXP_INF }
+define TOT_SOD_DEL_MB {value TOT_DEL_MB}
 
 define CVP_SOD_EXP_INF_ {alias CVP_SOD_EXP_INF kind 'DTS-SOD-MB-VALUE' units 'TAF'}
 define SWP_SOD_EXP_INF_ {alias SWP_SOD_EXP_INF kind 'DTS-SOD-MB-VALUE' units 'TAF'}
 define CVP_SOD_BAL_		{alias CVP_SOD_BAL kind 'DTS-SOD-MB-VALUE' units 'TAF'}
 define SWP_SOD_BAL_ 	{alias SWP_SOD_BAL kind 'DTS-SOD-MB-VALUE' units 'TAF'}
 define TOT_SOD_EXP_INF_ {alias TOT_SOD_EXP_INF kind 'DTS-SOD-MB-VALUE' units 'TAF'}
+define TOT_SOD_DEL_MB_ {alias TOT_SOD_DEL_MB kind 'DTS-SOD-MB-VALUE' units 'TAF'}
 
 /************************************** final mass balance manipulation **************************************/
 
