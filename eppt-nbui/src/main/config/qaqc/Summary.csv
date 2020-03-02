@@ -89,9 +89,9 @@ Reservoir Operations,Summary,SWP San Luis,line-plot,resops-summary-swp-san-luis-
 Reservoir Operations,Summary,SWP San Luis,line-plot,resops-summary-swp-san-luis-stor-month,Monthly Average Storage,Storage (TAF)||Time (months),,GuiLinkTitle(116),DvEntirePeriodMonthlyAverage(116)
 !,,,,,,,,,
 Reservoir Operations,Summary,Trinity Imports,exceedance-page,resops-summary-trinity-imports-exceed-month,Imports,Imports (TAF/month)||Exceedance Probability (%),,GuiLinkTitle(203),DvEntirePeriodExceedancePerMonth(203)
-Reservoir Operations,Summary,Trinity Imports,exceedance-page,resops-summary-trinity-imports-exceed-month,Imports,Imports (TAF/month) ||Exceedance Probability (%),,GuiLinkTitle(801),DvEntirePeriodExceedancePerMonth(801)
+Reservoir Operations,Summary,Trinity Imports,exceedance-page,resops-summary-trinity-imports-exceed-month,Imports,Imports (TAF/month) ||Exceedance Probability (%),,GuiLinkTitle(2849),DvEntirePeriodExceedancePerMonth(2849)
 Reservoir Operations,Summary,Trinity Imports,line-plot,resops-summary-trinity-imports-stor-month,Monthly Average Imports,Imports (TAF/yr)||Time (months),,GuiLinkTitle(203),DvEntirePeriodMonthlyAverage(203)
-Reservoir Operations,Summary,Trinity Imports,line-plot,resops-summary-trinity-imports-stor-month,Monthly Average Imports,Imports (TAF/yr)||Time (months),,GuiLinkTitle(801),DvEntirePeriodMonthlyAverage(801)
+Reservoir Operations,Summary,Trinity Imports,line-plot,resops-summary-trinity-imports-stor-month,Monthly Average Imports,Imports (TAF/yr)||Time (months),,GuiLinkTitle(2849),DvEntirePeriodMonthlyAverage(2849)
 !,,,,,,,,,
 Reservoir Operations,Summary,Percent Difference in Reservoir Release Controls,percent-diff-table,resops-control-summary,North of Delta,Central Valley Project,Trinity,DPL,DtsPeriodCountEquals(1)
 Reservoir Operations,Summary,Percent Difference in Reservoir Release Controls,percent-diff-table,resops-control-summary,North of Delta,Central Valley Project,Trinity,CAP,DtsPeriodCountEquals(2)
@@ -755,7 +755,7 @@ Mass Balance,Summary,Systemwide Summary,base-alt-diff-table,mass-balance-summary
 Mass Balance,Summary,Systemwide Summary,base-alt-diff-table,mass-balance-summary-systemwide,,CVP SOD Deliveries (w/ CVC),,,DvPeriodAverage(403)
 !,,,,,,,,,
 Mass Balance,Summary,North of Delta Regional Mass Balance Summary,base-alt-diff-table,mass-balance-summary-nod-regional,,Balance,,,DtsPeriodAverage(299)
-Mass Balance,Summary,North of Delta Regional Mass Balance Summary,base-alt-diff-table,mass-balance-summary-nod-regional,,Inflow,,,DtsPeriodAverage(379)
+Mass Balance,Summary,North of Delta Regional Mass Balance Summary,base-alt-diff-table,mass-balance-summary-nod-regional,,Inflow,,,DtsPeriodAverage(308)
 Mass Balance,Summary,North of Delta Regional Mass Balance Summary,base-alt-diff-table,mass-balance-summary-nod-regional,,Inflow,,DtsTitle(300),DtsPeriodAverage(300)
 Mass Balance,Summary,North of Delta Regional Mass Balance Summary,base-alt-diff-table,mass-balance-summary-nod-regional,,Inflow,,DtsTitle(301),DtsPeriodAverage(301)
 Mass Balance,Summary,North of Delta Regional Mass Balance Summary,base-alt-diff-table,mass-balance-summary-nod-regional,,Inflow,,DtsTitle(302),DtsPeriodAverage(302)
@@ -819,6 +819,6 @@ Mass Balance,Summary,South of Delta Regional Mass Balance Summary,base-alt-diff-
 Mass Balance,Summary,South of Delta Regional Mass Balance Summary,base-alt-diff-table,mass-balance-summary-sod-regional,,SWP SOD BALANCE,,DtsTitle(356),DtsPeriodAverage(356)
 Mass Balance,Summary,South of Delta Regional Mass Balance Summary,base-alt-diff-table,mass-balance-summary-sod-regional,,CVP SOD BALANCE,,,DtsPeriodAverage(382)
 Mass Balance,Summary,South of Delta Regional Mass Balance Summary,base-alt-diff-table,mass-balance-summary-sod-regional,,CVP SOD BALANCE,,DtsTitle(357),DtsPeriodAverage(357)
-Mass Balance,Summary,South of Delta Regional Mass Balance Summary,base-alt-diff-table,mass-balance-summary-sod-regional,,CVP SOD BALANCE,,DtsTitle(358),DvPeriodAverage(403)
+Mass Balance,Summary,South of Delta Regional Mass Balance Summary,base-alt-diff-table,mass-balance-summary-sod-regional,,CVP SOD BALANCE,,DtsTitle(358),DtsPeriodAverage(358)
 !,,,,,,,,,
 !Mass Balance,Control,Mass Balance List,list,mass-balance-list,,,Storage (TAF),Unbalanced Months,DtsNot0ReportMonth(365)

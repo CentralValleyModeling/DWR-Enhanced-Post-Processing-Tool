@@ -57,7 +57,7 @@ define SOD_HS_Limit   			{value  1100 * CFS_TAF }
 define X2_REQ    	  			{value  66.3 }
 define zero_thrshld   			{value  0.0 }
 define YOLO_SPLL_THRSHLD   		{value  74160 * CFS_TAF } ! Yolo BP fully inundated after flows greater than 2100 cubic meter/sec, Sommer et al. 2001, NSO.
-define SUTTER_SPLL_THRSHLD   	{value  20850 * CFS_TAF } ! Average of high flow events in 1966, 1997, 1942, and 1986 from California Nevado River Forecase Center, NOAA. NSO.
+define SUTTER_SPLL_THRSHLD   	{value  20850 * CFS_TAF } ! Average of high flow events in Tisdale Weir during 1966, 1997, 1942, and 1986 from California Nevado River Forecast Center, NOAA. NSO.
 define SHORT_CVP_THRSHLD   		{value  1000 * CFS_TAF } ! The CVP and SWP shortage thresholds are temporarily set as follows. These can be modified as appropriate.  
 define SHORT_SWP_THRSHLD   		{value  9000 * CFS_TAF } ! The goal was not to flag everytime the shortage timeseries are greater than zero.
 

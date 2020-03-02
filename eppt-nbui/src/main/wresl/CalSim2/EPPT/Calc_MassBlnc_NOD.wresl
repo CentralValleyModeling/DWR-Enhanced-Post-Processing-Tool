@@ -464,8 +464,13 @@ define TOT_SW_GW_INTERACTION_ {alias TOT_SW_GW_INTERACTION kind 'TS-NOD-MB-VALUE
 
 /************************************* final mass balance manipulation  ******************************************/
 
-define NOD_MB 		{value NOD_TOT_INFLOW + NOD_RTRN_FLOW + NOD_REL  - NOD_EVAP - NOD_DIVERSION - TOT_SW_GW_INTERACTION}	
+define NOD_MB 		{value NOD_TOT_INFLOW + NOD_RTRN_FLOW + NOD_REL  - NOD_EVAP - NOD_DIVERSION - TOT_SW_GW_INTERACTION}
+define NOD_MB_INFLOW	{value NOD_TOT_INFLOW + NOD_RTRN_FLOW + NOD_REL}
+define NOD_MB_OUTFLOW	{value NOD_EVAP + NOD_DIVERSION + TOT_SW_GW_INTERACTION}
+
 define NOD_MB_ 		{alias NOD_MB kind 'DTS-NOD-MB-VALUE' units 'TAF'}
+define NOD_MB_INFLOW_ 		{alias NOD_MB_INFLOW kind 'DTS-NOD-MB-VALUE' units 'TAF'}
+define NOD_MB_OUTFLOW_ 		{alias NOD_MB_OUTFLOW kind 'DTS-NOD-MB-VALUE' units 'TAF'}
 
 
 
