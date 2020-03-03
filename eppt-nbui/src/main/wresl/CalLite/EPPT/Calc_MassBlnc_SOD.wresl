@@ -1,0 +1,209 @@
+/********************** DESCRIPTION ****************************
+- post-processes study results to determine Whether the SOD is balanced or not
+
+
+********************* REVIEW HISTORY****************************
+Ahmed Ali	| DWR	|	11/12/2019	|	Setup initial file
+Ahmed Ali	| DWR	|	12/06/2019	|	Reformatted/ standardized logic statements
+
+/***************************************************************
+
+/******************** South of Delta Mass Balance *********************/
+
+/*D_Banks_SWP + I_KERN + del_S_SLSWP
+SWP_TA_Total-SWP_TA_NBAY-SWP_TA_FEATH
+SWP_IN_Total-SWP_IN_NBAY-SWP_IN_FEATH
+SWP_CO_TOTAL-SWP_CO_NBAY-SWP_CO_FEATH
+SWP_LOSS-D403B_PLS
+E_SLSWP
+
+D_Banks_CVP + D_Jones + D_MendotaPL -min(D_MendotaPL, C_CVPDMC) + del_S_SLCVP 
+MP=D_MendotaPL- min(D_MendotaPL, C_CVPDMC)
+MP_OverFlow=IF(MP=0,C_CVPDMC-D_MendotaPL,0)
+del_cvp_pag_s +	del_cvp_pmi_s +	del_cvp_pex_s +	del_cvp_prf_s +	del_cvp_pls_s  !DEL_CVP_TOTAL_S
++ D_CVP_CVC + E_SLCVP + MP_OverFlow*/
+
+
+/******************** Mapping *********************/
+define BANKS_EXP_SWP { timeseries 'D_Banks_SWP' kind 'FLOW-DELIVERY' units 'CFS' convert 'TAF' }
+
+!define BANKS_WTS_TD { timeseries 'D_Banks_WTS_TD' kind 'FLOW-DELIVERY' units 'CFS' convert 'TAF' }    
+!define BANKS_WTS_IF { timeseries 'D_Banks_WTS_IF' kind 'FLOW-DELIVERY' units 'CFS' convert 'TAF' }
+define BANKS_EXP_WATER_TRNSR { value BANKS_WTS_TD + BANKS_WTS_IF }
+
+define KRN_RIV_INTRTIE_BNA_VSTA { timeseries 'I_KERN' kind 'FLOW-INFLOW' units 'CFS' convert 'TAF' }
+/*define SWP_SOD_INIT_STOR {
+	case Oct1922 {
+	  condition month==oct .and. wateryear==1922
+	  value 841.}
+	case other {
+	  condition always
+	  value SWP_SL_TERM_STOR_(-1)}
+}	  
+define NET_SWP_SOD_REL {value SWP_SOD_INIT_STOR - SWP_SL_TERM_STOR}*/
+
+define D_DelValle { timeseries 'D_DelValle' kind 'FLOW-DELIVERY' units 'CFS' convert 'TAF' }
+define D_Castaic { timeseries 'D_Castaic' kind 'FLOW-DELIVERY' units 'CFS' convert 'TAF' }
+define D_Pyramid { timeseries 'D_Pyramid' kind 'FLOW-DELIVERY' units 'CFS' convert 'TAF' }
+define D_Silverwood { timeseries 'D_Silverwood' kind 'FLOW-DELIVERY' units 'CFS' convert 'TAF' }
+define D_Perris { timeseries 'D_Perris' kind 'FLOW-DELIVERY' units 'CFS' convert 'TAF' }
+
+define I_DelValle { timeseries 'I_DelValle' kind 'FLOW-INFLOW' units 'CFS' convert 'TAF' }
+define I_Castaic { timeseries 'I_Castaic' kind 'FLOW-INFLOW' units 'CFS' convert 'TAF' }
+define I_Pyramid { timeseries 'I_Pyramid' kind 'FLOW-INFLOW' units 'CFS' convert 'TAF' }
+define I_Silverwood { timeseries 'I_Silverwood' kind 'FLOW-INFLOW' units 'CFS' convert 'TAF' }
+define I_Perris { timeseries 'I_Perris' kind 'FLOW-INFLOW' units 'CFS' convert 'TAF' }
+
+
+define TOT_TBL_A_SWP { timeseries 'SWP_TA_TOTAL' kind 'SWP_DELIVERY' units 'CFS' convert 'TAF' }
+define ART_21_SWP { timeseries 'SWP_IN_TOTAL' kind 'SWP_DELIVERY' units 'CFS' convert 'TAF' }
+define ART_56_SWP { timeseries 'SWP_CO_TOTAL' kind 'SWP_DELIVERY' units 'CFS' convert 'TAF' }
+define NBAY_TBL_A_SWP { timeseries 'SWP_TA_NBAY' kind 'SWP_DELIVERY' units 'CFS' convert 'TAF' }
+define NBAY_ART_21_SWP { timeseries 'SWP_IN_NBAY' kind 'SWP_DELIVERY' units 'CFS' convert 'TAF' }
+define NBAY_ART_56_SWP { timeseries 'SWP_CO_NBAY' kind 'SWP_DELIVERY' units 'CFS' convert 'TAF' }
+define FEATH_TBL_A_SWP { timeseries 'SWP_TA_FEATH' kind 'SWP_DELIVERY' units 'CFS' convert 'TAF' }
+define FEATH_ART_21_SWP { timeseries 'SWP_IN_FEATH' kind 'SWP_DELIVERY' units 'CFS' convert 'TAF' }
+define FEATH_ART_56_SWP { timeseries 'SWP_CO_FEATH' kind 'SWP_DELIVERY' units 'CFS' convert 'TAF' }
+define PRJ_LOSS { timeseries 'D403B_PLS' kind 'FLOW-DELIVERY' units 'CFS' convert 'TAF' }
+define SWP_LOSS { timeseries 'SWP_LOSS' kind 'SWP_DELIVERY' units 'CFS' convert 'TAF' }
+define EVAP_SANLUIS_SWP { timeseries 'E_SLSWP' kind 'EVAPORATION' units 'CFS' convert 'TAF' }
+!define EVAP_LAK_DL_VALL { timeseries 'I_DelValle' kind 'FLOW-INFLOW' units 'CFS' convert 'TAF' }
+
+define BANKS_EXP_CVP { timeseries 'D_Banks_CVP' kind 'FLOW-DELIVERY' units 'CFS' convert 'TAF' }
+define JONES_EXP_CVP {timeseries 'D_Jones' 	kind 'FLOW-DELIVERY' units 'CFS' convert 'TAF' }
+
+define MP_INFLOW {timeseries 'D_MendotaPL' kind 'FLOW-DELIVERY' units 'CFS' convert 'TAF' }
+define LOWR_DLTA_MNDTA_CANAL { timeseries 'C_CVPDMC' kind 'FLOW-CHANNEL' units 'CFS' convert 'TAF' }
+define MP {value MP_Inflow - min(LOWR_DLTA_MNDTA_CANAL,MP_Inflow)}
+define MP_LOCAL_INFLOW_MB {
+	case MP0 {
+	  condition MP==0
+	  value LOWR_DLTA_MNDTA_CANAL-MP_INFLOW}
+	case other {
+	  condition always
+	  value 0}
+	}
+
+/*define CVP_SOD_INIT_STOR {
+	case Oct1922 {
+	  condition month==oct .and. wateryear==1922
+	  value 300.}
+	case other {
+	  condition always
+	  value SANLUIS_CVP_STRG(-1)}
+	}	  
+define NET_CVP_SL_REL {value  CVP_SOD_INIT_STOR - SANLUIS_CVP_STRG}*/
+
+define SOD_DELIVERY_CVP { timeseries 'DEL_CVP_TOTAL_S' kind 'DELIVERY-CVP' units 'CFS' convert 'TAF' }  !del_cvp_pag_s + del_cvp_pmi_s + del_cvp_pex_s + del_cvp_prf_s + del_cvp_pls_s
+define CVP_CRSS_VLLY_CANAL { timeseries 'D_CVP_CVC' kind 'FLOW-DELIVERY' units 'CFS' convert 'TAF' }
+define EVAP_SANLUIS_CVP { timeseries 'E_SLCVP' kind 'EVAPORATION' units 'CFS' convert 'TAF' }
+
+
+/************************************** SUMMARY **************************************/
+
+/************************************** Delta Inflow **************************************/
+
+!define MP_INFLOW {timeseries 'D_MendotaPL' kind 'FLOW-DELIVERY' units 'CFS' convert 'TAF' }
+!define MP_LOCAL_INFLOW_MB {value MP_Inflow - min(LOWR_DLTA_MNDTA_CANAL,MP_Inflow)}
+define SWP_SL_TERM_STOR {value SANLUIS_SWP_STRG /*+ LAK_DL_VALL_STRG + LAK_SLVRWOD_STRG + LAK_PERRIS_STRG + LAK_PRMD_STRG + LAK_CASTAIC_STRG*/}
+define SWP_SL_TERM_STOR_ {alias SWP_SL_TERM_STOR kind 'DTS-SOD-MB-VALUE' units 'TAF'}
+
+define SOD_SWP_TERM_Inflow_Del {value D_DelValle + D_Castaic + D_Pyramid + D_Silverwood + D_Perris -I_DelValle-I_Castaic-I_Pyramid-I_Silverwood-I_Perris }
+define SOD_SWP_TERM_Inflow_Del_ {alias SOD_SWP_TERM_Inflow_Del kind 'DTS-SOD-MB-VALUE' units 'TAF'}
+
+define SWP_SOD_INIT_STOR {
+	case Oct1922 {
+	  condition month==oct .and. wateryear==1922
+	  value 225.}
+	case other {
+	  condition always
+	  value SWP_SL_TERM_STOR_(-1)}
+}	  
+define NET_SWP_SOD_REL {value SWP_SOD_INIT_STOR - SWP_SL_TERM_STOR}
+
+define CVP_SOD_INIT_STOR {
+	case Oct1922 {
+	  condition month==oct .and. wateryear==1922
+	  value 300.}
+	case other {
+	  condition always
+	  value SANLUIS_CVP_STRG(-1)}
+	}	  
+define NET_CVP_SL_REL {value  CVP_SOD_INIT_STOR - SANLUIS_CVP_STRG}
+
+define SOD_INFLOW {value  KRN_RIV_INTRTIE_BNA_VSTA + MP_LOCAL_INFLOW_MB + NET_SWP_SOD_REL + NET_CVP_SL_REL	}
+
+
+
+define MP_INFLOW_          { alias  MP_INFLOW  kind 'DTS-SOD-MB-VALUE' units 'TAF' }
+define MP_LOCAL_INFLOW_MB_ { alias  MP_LOCAL_INFLOW_MB  kind 'DTS-SOD-MB-VALUE' units 'TAF' }
+define MP_          { alias  MP  kind 'DTS-SOD-MB-VALUE' units 'TAF' }
+define SWP_SOD_INIT_STOR_  { alias  SWP_SOD_INIT_STOR  kind 'DTS-SOD-MB-VALUE' units 'TAF' }
+define NET_SWP_SOD_REL_    { alias  NET_SWP_SOD_REL  kind 'DTS-SOD-MB-VALUE' units 'TAF' }
+define NET_CVP_SL_REL_     {alias NET_CVP_SL_REL kind 'DTS-SOD-MB-VALUE' units 'TAF'}
+define SOD_INFLOW_ 		   {alias SOD_INFLOW kind 'DTS-SOD-MB-VALUE' units 'TAF'}
+/************************************** Export **************************************/	
+
+define SOD_EXPORT {value BANKS_EXP_SWP + BANKS_EXP_CVP + MP + BANKS_EXP_WATER_TRNSR + JONES_EXP_CVP }
+define SOD_EXPORT_ {alias SOD_EXPORT kind 'DTS-SOD-MB-VALUE' units 'TAF'}
+/************************************** EVAPORATION **************************************/	
+
+define SOD_EVAP_MB {value EVAP_SANLUIS_CVP + EVAP_SANLUIS_SWP /*+ EVAP_LAK_DL_VALL + EVAP_LAK_SLVRWOD + EVAP_LAK_PERRIS + EVAP_LAK_PRMD + EVAP_LAK_CASTAIC*/ }
+!define SOD_EVAP_SWP{value SOD_EVAP_MB - EVAP_SANLUIS_CVP}
+
+define SOD_EVAP_MB_ {alias SOD_EVAP_MB kind 'DTS-SOD-MB-VALUE' units 'TAF'}
+define SOD_EVAP_SWP_ {alias EVAP_SANLUIS_SWP kind 'DTS-SOD-MB-VALUE' units 'TAF'}
+!define SOD_EVAP_DLVLSWP_ {alias EVAP_LAK_DL_VALL kind 'DTS-SOD-MB-VALUE' units 'TAF'}
+define SOD_EVAP_CVP_ {alias EVAP_SANLUIS_CVP kind 'DTS-SOD-MB-VALUE' units 'TAF'}
+
+/************************************** SOD Deliveries **************************************/
+define CVP_DEL_MB   {value SOD_DELIVERY_CVP  + CVP_CRSS_VLLY_CANAL }  	        			
+define CVP_DEL_MB_ {alias CVP_DEL_MB kind 'DTS-SOD-MB-VALUE' units 'TAF'}
+
+define SWP_LOSS_MB  {value SWP_LOSS - PRJ_LOSS } 							 		
+define SWP_LOSS_MB_ {alias SWP_LOSS_MB kind 'DTS-SOD-MB-VALUE' units 'TAF'}
+
+define TOT_TA_MB        {value TOT_TBL_A_SWP - NBAY_TBL_A_SWP - FEATH_TBL_A_SWP } 	            !Article 21
+define TOT_IN_MB        {value ART_21_SWP - NBAY_ART_21_SWP  - FEATH_ART_21_SWP }     			!Article 56
+define TOT_CO_MB        {value ART_56_SWP - NBAY_ART_56_SWP  - FEATH_ART_56_SWP  }             !SWP SOD Loss
+
+define TOT_TA_MB_   {alias TOT_TA_MB kind 'DTS-SOD-MB-VALUE' units 'TAF'}
+define TOT_IN_MB_   {alias TOT_IN_MB kind 'DTS-SOD-MB-VALUE' units 'TAF'}
+define TOT_CO_MB_   {alias TOT_CO_MB kind 'DTS-SOD-MB-VALUE' units 'TAF'}
+
+define SWP_DEL_MB  {value SWP_LOSS_MB + TOT_TA_MB + TOT_IN_MB + TOT_CO_MB} 						!SWP deliveries
+define SWP_DEL_TOT {value SWP_DEL_MB - SWP_LOSS_MB }									!THIS IS FOR QA/QC SUMMARY COMPONENTS
+
+define SWP_DEL_MB_ {alias SWP_DEL_MB kind 'DTS-SOD-MB-VALUE' units 'TAF'}
+define SWP_DEL_TOT_ {alias SWP_DEL_TOT kind 'DTS-SOD-MB-VALUE' units 'TAF'}
+
+define TOT_DEL_MB  {value CVP_DEL_MB + SWP_DEL_MB} 									!Total deliveries
+define TOT_DEL_MB_ {alias TOT_DEL_MB kind 'DTS-SOD-MB-VALUE' units 'TAF'}
+/************************************** SOD EXPORT INFLOW **************************************/
+define CVP_SOD_EXP_INF {value BANKS_EXP_CVP + JONES_EXP_CVP + MP_LOCAL_INFLOW_MB + NET_CVP_SL_REL - EVAP_SANLUIS_CVP}
+define SWP_SOD_EXP_INF {value BANKS_EXP_SWP + BANKS_EXP_WATER_TRNSR + KRN_RIV_INTRTIE_BNA_VSTA + NET_SWP_SOD_REL - SOD_EVAP_MB}
+define CVP_SOD_BAL     {value CVP_SOD_EXP_INF - SOD_DELIVERY_CVP } !for QA/QC
+define SWP_SOD_BAL     {value SWP_SOD_EXP_INF - SWP_DEL_MB 	}  !for QA/QC
+
+define TOT_SOD_EXP_INF {value CVP_SOD_EXP_INF + SWP_SOD_EXP_INF}
+
+define CVP_SOD_EXP_INF_ {alias CVP_SOD_EXP_INF kind 'DTS-SOD-MB-VALUE' units 'TAF'}
+define SWP_SOD_EXP_INF_ {alias SWP_SOD_EXP_INF kind 'DTS-SOD-MB-VALUE' units 'TAF'}
+define CVP_SOD_BAL_		{alias CVP_SOD_BAL kind 'DTS-SOD-MB-VALUE' units 'TAF'}
+define SWP_SOD_BAL_ 	{alias SWP_SOD_BAL kind 'DTS-SOD-MB-VALUE' units 'TAF'}
+define TOT_SOD_EXP_INF_ {alias TOT_SOD_EXP_INF kind 'DTS-SOD-MB-VALUE' units 'TAF'}
+
+/************************************** final mass balance manipulation **************************************/
+
+define SOD_MB {value  SOD_INFLOW + SOD_EXPORT - SOD_EVAP_MB - SOD_SWP_TERM_Inflow_Del - TOT_DEL_MB}
+define SOD_MB_ {alias SOD_MB kind 'DTS-SOD-MB-VALUE' units 'TAF'}
+
+define SOD_MB_CHECK {
+	case atSTANDARD		{condition abs(SOD_MB - 0)	<= abs_threshold	value EQ}
+	case aboveSTANDARD	{condition (SOD_MB - 0)	> abs_threshold		value GT}
+	case belowSTANDARD	{condition (SOD_MB - 0)	< -1*abs_threshold	value LT}
+	case UNEXPECTED		{condition always							value UE}
+}
+
+define SOD_MB_CHECK_ { alias  SOD_MB_CHECK  kind 'DTS-SOD-MB-STATUS' units 'NONE' }
+

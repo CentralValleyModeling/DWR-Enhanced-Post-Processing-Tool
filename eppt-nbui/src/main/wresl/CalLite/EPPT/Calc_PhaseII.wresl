@@ -23,23 +23,23 @@ This file post process data to respond to specific question of the system
 	1.9 MAF in Shasta
 */
 !Check minimum carryover storage (end-of-Sep) requirements
-	1.9 MAF in Shasta
+!	1.9 MAF in Shasta
 define S4_EOS_Check {
 	case aboveRequirement {
-	condition S4 - 1900 > abs_threshold .and. month == SEP
-	value 0
+	condition SHASTA_STRG - 1900 > abs_threshold .and. month == SEP
+	value 100
 	}
 	case atRequirement {
-	condition abs(S4-1900) < abs_threshold .and. month == SEP
-	value 1
+	condition abs(SHASTA_STRG-1900) < abs_threshold .and. month == SEP
+	value 200
 	}
 	case belowRequirment {
-	condition S4 - 1900 < abs_threshold .and. month == SEP
-	value 2
+	condition SHASTA_STRG - 1900 < abs_threshold .and. month == SEP
+	value 300
 	}
 	case notInSep {
 	condition always
-	value 99
+	value 999
 	}
 }
 define S4_EOS_DTS {alias S4_EOS_Check kind 'DTS-STATUS' units 'NONE'}
