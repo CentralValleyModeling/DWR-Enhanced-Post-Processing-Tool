@@ -1,0 +1,442 @@
+/********************** DESCRIPTION ****************************
+- post-processes study results to compute CVP-SWP Coordinated Operations Agreement 1986, Exhibit B-2 CVP and SWP Annual Supplies table value
+- same set of definitions as included in this file were used during the negotiations leading up to the COA Addendum Dec 2018
+
+********************* REVIEW HISTORY****************************
+Karandev Singh 		| DWR	|	08/15/2018	|	Setup initial file
+Karandev Singh 		| DWR	|	01/14/2019	|	Revised and reformatted the entire script, as needed
+Ahmed Ali           | DWR   |   01/14/2020  |   Compiled with the rest of the files and debugged 
+
+****************************************************************/
+
+
+/************************* DSS INPUT ***************************/
+!********** SACRAMENTO BASIN USE **********
+!Sacramento R below Shasta
+	! CVP - Ag Service Contract
+define D104_PAG1_ {timeseries 'D_WTPCSD_02_PA' kind 'DIVERSION' units 'CFS' convert 'TAF'} 
+define D104_PAG2_ {timeseries 'D_SAC294_03_PA' kind 'DIVERSION' units 'CFS' convert 'TAF'} 
+
+define D104_PAG_ {value D104_PAG1_+D104_PAG2_} !timeseries 'D104_PAG' kind 'FLOW-DELIVERY' units 'CFS' convert 'TAF'} !Anderson Cottonwood WD
+define D171_PAG_ {timeseries 'D_TCC001_CCL005' kind 'DIVERSION' units 'CFS' convert 'TAF'} !Corning Canal Contractors
+define D172_PAG_ {timeseries 'D_TCC022_04_PA2' kind 'DIVERSION' units 'CFS' convert 'TAF'} !Tehama Colusa Canal Contractors
+define D174_PAG_ {timeseries 'D_TCC036_07N_PA' kind 'DIVERSION' units 'CFS' convert 'TAF'} !Tehama Colusa Canal Contractors
+define D178_PAG_ {timeseries 'D_TCC081_07S_PA' kind 'DIVERSION' units 'CFS' convert 'TAF'} !Tehama Colusa Canal Contractors
+	! CVP - MI Service Contract
+define D104_PMI1_ {timeseries 'D_WTPBUK_03_PU3' kind 'DIVERSION' units 'CFS' convert 'TAF'} !Anderson Cottonwood WD
+define D104_PMI2_ {timeseries 'D_WTPCSD_02_PU' kind 'DIVERSION' units 'CFS' convert 'TAF'} !Anderson Cottonwood WD
+define D104_PMI3_ {timeseries 'D_WKYTN_02_PU' kind 'DIVERSION' units 'CFS' convert 'TAF'} !Anderson Cottonwood WD
+define D104_PMI4_ {timeseries 'D_WTPBLV_03_PU2' kind 'DIVERSION' units 'CFS' convert 'TAF'} !Anderson Cottonwood WD
+define D104_PMI5_ {timeseries 'D_WTPJMS_03_PU1' kind 'DIVERSION' units 'CFS' convert 'TAF'} !Anderson Cottonwood WD
+
+define D104_PMI_ {value D104_PMI1_+D104_PMI2_+D104_PMI3_+D104_PMI4_+D104_PMI5_} !timeseries 'D104_PMI' kind 'FLOW-DELIVERY' units 'CFS' convert 'TAF'} !Anderson Cottonwood WD
+!-KS. define D162_PMI_ {timeseries 'D162_PMI' kind 'FLOW-DELIVERY' units 'CFS' convert 'TAF'} !DSA 70 Sac R Users; double counted; arc removed in DCR 2017
+define D104_PMI_OUT {alias D104_PMI_ kind 'debug' units 'taf'}
+
+	! CVP - Settlement Contractors
+define D104_PSC1_ {timeseries 'D_WTPFTH_03_SU' kind 'DIVERSION' units 'CFS' convert 'TAF'} !Anderson Cottonwood WD
+define D104_PSC2_ {timeseries 'D_SAC296_02_SA' kind 'DIVERSION' units 'CFS' convert 'TAF'} !Anderson Cottonwood WD
+define D104_PSC3_ {timeseries 'D_SAC289_03_SA' kind 'DIVERSION' units 'CFS' convert 'TAF'} !Anderson Cottonwood WD
+define D104_PSC4_ {timeseries 'D_WTPFTH_02_SU' kind 'DIVERSION' units 'CFS' convert 'TAF'} !Anderson Cottonwood WD
+define D104_PSC5_ {timeseries 'D_SAC296_WTPFTH' kind 'DIVERSION' units 'CFS' convert 'TAF'} !Anderson Cottonwood WD
+	
+define D104_PSC_ {value D104_PSC1_+D104_PSC2_+D104_PSC3_+D104_PSC4_+D104_PSC5_} !timeseries 'D104_PSC' kind 'FLOW-DELIVERY' units 'CFS' convert 'TAF'} !Anderson Cottonwood WD
+
+define D122A_PSC1_ {timeseries 'D_SAC178_08N_SA1' kind 'DIVERSION' units 'CFS' convert 'TAF'} !Sac R West bank divertors
+define D122A_PSC2_ {timeseries 'D_SAC159_08N_SA1' kind 'DIVERSION' units 'CFS' convert 'TAF'} !Sac R West bank divertors
+
+define D122A_PSC_ {value D122A_PSC1_+D122A_PSC2_ } !kind 'FLOW-DELIVERY' units /*'CFS' convert*/ 'TAF'} !Sac R West bank divertors
+
+define D122B_PSC_ {timeseries 'D_SAC159_08S_SA1' kind 'DIVERSION' units 'CFS' convert 'TAF'} !Sac R West bank divertors
+
+define D128_PSC1_ {timeseries 'D_SAC196_MTC000' kind 'DIVERSION' units 'CFS' convert 'TAF'} !DSA 15
+define D128_PSC2_ {timeseries 'D_SAC185_09_NA' kind 'DIVERSION' units 'CFS' convert 'TAF'} !DSA 15
+define D128_PSC3_ {timeseries 'D_SAC162_09_SA2' kind 'DIVERSION' units 'CFS' convert 'TAF'} !DSA 15
+define D128_PSC4_ {timeseries 'D_SAC136_18_NA' kind 'DIVERSION' units 'CFS' convert 'TAF'} !DSA 15
+define D128_PSC5_ {timeseries 'D_SAC136_18_SA' kind 'DIVERSION' units 'CFS' convert 'TAF'} !DSA 15
+define D128_PSC6_ {timeseries 'D_SAC122_19_SA' kind 'DIVERSION' units 'CFS' convert 'TAF'} !DSA 15
+define D128_PSC7_ {timeseries 'D_SAC115_19_SA' kind 'DIVERSION' units 'CFS' convert 'TAF'} !DSA 15
+define D128_PSC8_ {timeseries 'D_SAC099_19_SA' kind 'DIVERSION' units 'CFS' convert 'TAF'} !DSA 15
+define D128_PSC9_ {timeseries 'D_SAC091_19_SA' kind 'DIVERSION' units 'CFS' convert 'TAF'} !DSA 15
+define D128_PSC10_ {timeseries 'D_SAC109_19_SA' kind 'DIVERSION' units 'CFS' convert 'TAF'} !DSA 15
+
+define D128_PSC_ {value D128_PSC1_+D128_PSC2_+D128_PSC3_+D128_PSC4_+D128_PSC5_+D128_PSC6_+D128_PSC7_+D128_PSC8_+D128_PSC9_+D128_PSC10_} !timeseries 'D128_PSC' kind 'FLOW-DELIVERY' units 'CFS' convert 'TAF'} !DSA 15
+define D129A_PSC_ {timeseries 'D_SAC121_08S_SA3' kind 'DIVERSION' units 'CFS' convert 'TAF'} !DSA 15
+define D143A_PSC_ {timeseries 'D_GCC027_08N_SA2' kind 'DIVERSION' units 'CFS' convert 'TAF'} !Glenn Colusa ID
+define D145A_PSC_ {timeseries 'D_GCC056_08S_SA2' kind 'DIVERSION' units 'CFS' convert 'TAF'} !Glenn Colusa ID
+define D180_PSC_ {value 0.}!timeseries 'D180_PSC' kind 'DIVERSION' units 'CFS' convert 'TAF'} !Colusa Basin M.W.C.
+define D182A_ {timeseries 'D_CBD041_08S_SA2' kind 'DIVERSION' units 'CFS' convert 'TAF'} !Colusa Basin M.W.C.
+define D183_PSC_ {value 0.} !timeseries 'D183_PSC' kind 'DIVERSION' units 'CFS' convert 'TAF'} !Colusa Basin M.W.C.
+define D18302_ {timeseries 'D_CBD041_08S_SA1' kind 'DIVERSION' units 'CFS' convert 'TAF'} !Colusa Basin M.W.C.
+
+define D162_PSC1_ {timeseries 'D_CRC002_22_SA1' kind 'DIVERSION' units 'CFS' convert 'TAF'} !DSA 70 Sac R Users
+define D162_PSC2_ {timeseries 'D_SAC082_22_SA1' kind 'DIVERSION' units 'CFS' convert 'TAF'} !DSA 70 Sac R Users
+define D162_PSC3_ {timeseries 'D_SAC078_22_SA1' kind 'DIVERSION' units 'CFS' convert 'TAF'} !DSA 70 Sac R Users
+define D162_PSC4_ {timeseries 'D_SAC075_22_NA' kind 'DIVERSION' units 'CFS' convert 'TAF'} !DSA 70 Sac R Users
+
+define D162_PSC_ {value D162_PSC1_+D162_PSC2_+D162_PSC3_+D162_PSC4_} !timeseries 'D162_PSC' kind 'DIVERSION' units 'CFS' convert 'TAF'} !DSA 70 Sac R Users
+
+define D163_PSC1_ {timeseries 'D_SAC081_21_NA' kind 'DIVERSION' units 'CFS' convert 'TAF'} !DSA 65 Sac R Misc. Users
+define D163_PSC2_ {timeseries 'D_SAC074_21_SA' kind 'DIVERSION' units 'CFS' convert 'TAF'} !DSA 65 Sac R Misc. Users
+define D163_PSC3_ {timeseries 'D_SAC083_21_SA' kind 'DIVERSION' units 'CFS' convert 'TAF'} !DSA 65 Sac R Misc. Users
+
+define D163_PSC_ {value D163_PSC1_+D163_PSC2_+D163_PSC3_} !timeseries 'D163_PSC' kind 'DIVERSION' units 'CFS' convert 'TAF'} !DSA 65 Sac R Misc. Users
+define D165_PSC_ {timeseries 'D_SAC065_WTPBTB' kind 'DIVERSION' units 'CFS' convert 'TAF'} !West Sacramento, City of
+	! CVP - Refuge Level 2
+define C136B1_ {timeseries 'D_SBP028_17S_PR' kind 'DIVERSION' units 'CFS' convert 'TAF'} !Sutter NWR
+define C136B2_ {timeseries 'D_FTR039_SEC009' kind 'DIVERSION' units 'CFS' convert 'TAF'} !Sutter NWR
+
+define C136B_ {value C136B1_+C136B2_} !timeseries 'C136B' kind 'FLOW-CHANNEL' units 'CFS' convert 'TAF'} !Sutter NWR
+
+define C216B1_ {timeseries 'D_JBC002_17N_PR' kind 'DIVERSION' units 'CFS' convert 'TAF'} !Gray Lodge WMA
+define C216B2_ {timeseries 'D_BGD000_17N_PR' kind 'DIVERSION' units 'CFS' convert 'TAF'} !Gray Lodge WMA
+
+define C216B_ {value C216B1_+C216B2_} !timeseries 'C216B' kind 'FLOW-CHANNEL' units 'CFS' convert 'TAF'} !Gray Lodge WMA
+define C221_ {timeseries 'D_CRK005_17N_NR' kind 'DIVERSION' units 'CFS'} !Butte Sinks Duck Clubs
+define D143B_PRF_ {timeseries 'D_GCC027_08N_PR1' kind 'DIVERSION' units 'CFS' convert 'TAF'} !Sacramento NWR
+
+define D145B_PRF1_ {timeseries 'D_GCC056_08S_PR' kind 'DIVERSION' units 'CFS' convert 'TAF'} !Delevan & Colusa NWR
+define D145B_PRF2_ {timeseries 'D_GCC039_08N_PR2' kind 'DIVERSION' units 'CFS' convert 'TAF'} !Delevan & Colusa NWR
+
+define D145B_PRF_ {value D145B_PRF1_+D145B_PRF2_} !timeseries 'D145B_PRF' kind 'DIVERSION' units 'CFS' convert 'TAF'} !Delevan & Colusa NWR
+define D182B_PRF_ {timeseries 'D_CBD037_08S_PR' kind 'DIVERSION' units 'CFS' convert 'TAF'} !Delevan & Colusa NWR via Colusa Basin Drain
+	! Non Project/ Water Right
+
+define D104_NP1_ {timeseries 'D_BCN005_03_NA' kind 'DIVERSION' units 'CFS' convert 'TAF'} !Anderson Cottonwood WD
+define D104_NP2_ {timeseries 'D_COW014_03_NA' kind 'DIVERSION' units 'CFS' convert 'TAF'} !Anderson Cottonwood WD
+define D104_NP3_ {timeseries 'D_BTL006_03_NA' kind 'DIVERSION' units 'CFS' convert 'TAF'} !Anderson Cottonwood WD
+define D104_NP4_ {timeseries 'D_SAC273_03_NA' kind 'DIVERSION' units 'CFS' convert 'TAF'} !Anderson Cottonwood WD
+define D104_NP5_ {timeseries 'D_CLR009_02_NA' kind 'DIVERSION' units 'CFS' convert 'TAF'} !Anderson Cottonwood WD
+define D104_NP6_ {timeseries 'D_SAC281_02_NA' kind 'DIVERSION' units 'CFS' convert 'TAF'} !Anderson Cottonwood WD
+define D104_NP7_ {timeseries 'D_CWD009_02_NA' kind 'DIVERSION' units 'CFS' convert 'TAF'} !Anderson Cottonwood WD
+
+define D104_NP_ {value D104_NP1_+D104_NP2_+D104_NP3_+D104_NP4_+D104_NP5_+D104_NP6_+D104_NP7_} !timeseries 'D104_NP' kind 'DIVERSION' units 'CFS' convert 'TAF'} !Anderson Cottonwood WD
+define D113A_ {timeseries 'D_SAC224_04_NA' kind 'DIVERSION' units 'CFS' convert 'TAF'} !DSA 10/ WBA 4 Sac R Misc. Users
+define D113B_ {timeseries 'D_SAC240_05_NA' kind 'DIVERSION' units 'CFS' convert 'TAF'} !DSA 10/ WBA 5 Sac R Misc. Users
+define D162_NP_ {value 0.}!timeseries 'D162_NP' kind 'FLOW-DELIVERY' units 'CFS' convert 'TAF'} !DSA 70 Sac R Users
+	! Other Miscellaneous water users
+define D165B_ {value 0.} !timeseries 'D165B' kind 'FLOW-DELIVERY' units 'CFS' convert 'TAF'} !Woodland-Davis Municipal Project
+    
+!American R Basin (CVP)
+	! CVP - Ag Service Contract
+define D9_PAG_ {value 0.} !imeseries 'D9_PAG' kind 'FLOW-DELIVERY' units 'CFS' convert 'TAF'} !Folsom South Canal diverions
+	! CVP - MI Service Contract
+	
+define D8_PMI1_ {timeseries 'D_WTPSJP_26N_PU3' kind 'DIVERSION' units 'CFS' convert 'TAF'} !Folsom Reservoir diversions
+define D8_PMI2_ {timeseries 'D_WTPSJP_26N_PU2' kind 'DIVERSION' units 'CFS' convert 'TAF'} !Folsom Reservoir diversions
+define D8_PMI3_ {timeseries 'D_WTPRSV_26N_PU1' kind 'DIVERSION' units 'CFS' convert 'TAF'} !Folsom Reservoir diversions
+define D8_PMI4_ {timeseries 'D_WTPEID_EIDEH' kind 'DIVERSION' units 'CFS' convert 'TAF'} !Folsom Reservoir diversions
+	
+define D8_PMI_ {value D8_PMI1_+D8_PMI2_+D8_PMI3_+D8_PMI4_} !timeseries 'D8_PMI' kind 'FLOW-DELIVERY' units 'CFS' convert 'TAF'} !Folsom Reservoir diversions
+
+define D_WTPCOL_26S_PU2 {timeseries 'D_WTPCOL_26S_PU2' kind 'DIVERSION' units 'CFS' convert 'TAF'}
+define D_FSC025_60N_PU {timeseries 'D_FSC025_60N_PU' kind 'DIVERSION' units 'CFS' convert 'TAF'}
+
+define D9_PMI1_ {value 0.54*D_WTPCOL_26S_PU2} !timeseries 'D_WTPCOL_26S_PU2' kind 'DIVERSION' units 'CFS' convert 'TAF'} !Folsom South Canal diverions
+define D9_PMI2_ {value 0.67*D_FSC025_60N_PU} ! kind 'DIVERSION' units 'CFS' convert 'TAF'} !Folsom South Canal diverions
+define D9_PMI3_ {timeseries 'D_FOLSM_26S_PU3' kind 'DIVERSION' units 'CFS' convert 'TAF'} !Folsom South Canal diverions
+
+define D9_PMI_ {value D9_PMI1_+D9_PMI2_+D9_PMI3_} !timeseries 'D9_PMI' kind 'FLOW-DELIVERY' units 'CFS' convert 'TAF'} !Folsom South Canal diverions
+
+define D167_PMI_ {timeseries 'D_WTPSAC_26S_PU4' kind 'DIVERSION' units 'CFS' convert 'TAF'} !Sacramento, City of
+define D168C_FRWP_PMI_ {timeseries 'D_FPT_CVP' kind 'DELIVERY' units 'CFS' convert 'TAF'} !SCWA via FRWP
+	! CVP - Losses
+define D9_PLS_ {timeseries 'D_FSC003_FSCLOS' kind 'DIVERSION' units 'CFS' convert 'TAF'} !Folsom South Canal diverions
+	! Non Project/ Water Right
+define D300_NP_ {timeseries 'D_NFA016_ABT002' kind 'DIVERSION' units 'CFS' convert 'TAF'} !Placer County Water Agency
+
+define D8_NP1_ {timeseries 'D_WTPSJP_26N_NU1' kind 'DIVERSION' units 'CFS' convert 'TAF'} !Folsom Reservoir diversions
+define D8_NP2_ {timeseries 'D_FOLSM_26S_NU4' kind 'DIVERSION' units 'CFS' convert 'TAF'} !Folsom Reservoir diversions
+define D8_NP3_ {timeseries 'D_ABN010_24_NA2' kind 'DIVERSION' units 'CFS' convert 'TAF'} !Folsom Reservoir diversions
+define D8_NP4_ {timeseries 'D_WTPFSS_24_NU2' kind 'DIVERSION' units 'CFS' convert 'TAF'} !Folsom Reservoir diversions
+define D8_NP5_ {timeseries 'D_WTPAUB_24_NU1' kind 'DIVERSION' units 'CFS' convert 'TAF'} !Folsom Reservoir diversions
+define D8_NP6_ {timeseries 'D_WTPBWM_24_NU1' kind 'DIVERSION' units 'CFS' convert 'TAF'} !Folsom Reservoir diversions
+define D8_NP7_ {timeseries 'D_LBC010_PCWA3' kind 'DIVERSION' units 'CFS' convert 'TAF'} !Folsom Reservoir diversions
+define D8_NP8_ {timeseries 'D_WTPFOL_26S_PU1' kind 'DIVERSION' units 'CFS' convert 'TAF'} !Folsom Reservoir diversions
+define D8_NP9_ {timeseries 'D_STH004_24_NA3' kind 'DIVERSION' units 'CFS' convert 'TAF'} !Folsom Reservoir diversions
+
+define D8_NP_ {value D8_NP1_+D8_NP2_+D8_NP3_+D8_NP4_+D8_NP5_+D8_NP6_+D8_NP7_+D8_NP8_+D8_NP9_} !timeseries 'D8_NP' kind 'FLOW-DELIVERY' units 'CFS' convert 'TAF'} !Folsom Reservoir diversions
+
+define D9_NP1_ {value 0.46*D_WTPCOL_26S_PU2} !timeseries 'D9_NP' kind 'FLOW-DELIVERY' units 'CFS' convert 'TAF'} !Folsom South Canal diverions
+define D9_NP2_ {value 0.33*D_FSC025_60N_PU} !timeseries 'D9_NP' kind 'FLOW-DELIVERY' units 'CFS' convert 'TAF'} !Folsom South Canal diverions
+define D9_NP3_ {timeseries 'D_FOLSM_26S_PU3' kind 'DIVERSION' units 'CFS' convert 'TAF'} !Folsom South Canal diverions
+
+define D9_NP_ {value D9_NP1_+D9_NP2_+D9_NP3_} !timeseries 'D9_NP' kind 'FLOW-DELIVERY' units 'CFS' convert 'TAF'} !Folsom South Canal diverions
+
+define D302_NP1_ {timeseries 'D_AMR007_WTPFBN' kind 'DIVERSION' units 'CFS' convert 'TAF'} !Lower American R diverions by Sacramento, City of
+define D302_NP2_ {timeseries 'D_AMR017_WTPBJM' kind 'DIVERSION' units 'CFS' convert 'TAF'} !Lower American R diverions by Sacramento, City of
+
+define D302_NP_ {value D302_NP1_+D302_NP2_} !timeseries 'D302_NP' kind 'FLOW-DELIVERY' units 'CFS' convert 'TAF'} !Lower American R diverions by Sacramento, City of
+define D167_NP_ {timeseries 'D_SAC062_WTPSAC' kind 'DIVERSION' units 'CFS' convert 'TAF'} !Sacramento, City of
+
+	! Other Miscellaneous water users
+define D168A_ {value 0.} !timeseries 'D168A' kind 'FLOW-DELIVERY' units 'CFS' convert 'TAF'} !DSA 70 Sacramento R diversions
+define D168C_EXCESS_PMI_ {timeseries 'D_FPT_exc' kind 'DELIVERY' units 'CFS' convert 'TAF'} !Sacramento County Water Agency
+define D168C_OTHER_PMI_ {timeseries 'D_FPT_oth' kind 'DELIVERY' units 'CFS' convert 'TAF'} !Sacramento County Water Agency
+
+!Feather R below Oroville
+	! SWP - MI Service Contract
+define D201_PMI_ {timeseries 'D_THRMF_12_NU1' kind 'DIVERSION' units 'CFS' convert 'TAF'} !Butte, County of
+define D204_PMI_ {timeseries 'D_FTR031_WTPCYC' kind 'DIVERSION' units 'CFS' convert 'TAF'} !Yuba City, City of
+	! SWP - FRSA Contractors
+	
+define C_WEC000 {timeseries 'C_WEC000' kind 'CHANNEL' units 'CFS' convert 'TAF'} !Plumas MWC
+	
+define D7A_PAG_ {value 0.51*C_WEC000 } !timeseries 'D7A_PAG' kind 'FLOW-DELIVERY' units 'CFS' convert 'TAF'} !Western Canal
+
+define D_THRMA_RVC000 {timeseries 'D_THRMA_RVC000' kind 'DIVERSION' units 'CFS' convert 'TAF'} !Oswald WD
+define D_THRMA_JBC000 {timeseries 'D_THRMA_JBC000' kind 'DIVERSION' units 'CFS' convert 'TAF'} !Oswald WD
+
+define D7B_PAG1_ {value 0.99*D_THRMA_RVC000} ! kind 'FLOW-DELIVERY' units 'CFS' convert 'TAF'} !Joint Board
+define D7B_PAG2_ {value 0.99*D_THRMA_JBC000} !timeseries 'D_THRMA_JBC000' kind 'FLOW-DELIVERY' units 'CFS' convert 'TAF'} !Joint Board
+
+define D7B_PAG_ {value 0.99*(D7B_PAG1_+D7B_PAG2_)} !timeseries 'D7B_PAG' kind 'FLOW-DELIVERY' units 'CFS' convert 'TAF'} !Joint Board
+define D206A_PAG_ {timeseries 'D_FTR021_16_PA' kind 'DIVERSION' units 'CFS' convert 'TAF'} !Feather WD
+
+define D_FTR014_16_SA {timeseries 'D_FTR014_16_SA' kind 'DIVERSION' units 'CFS' convert 'TAF'} 
+define D_FTR021_16_SA {timeseries 'D_FTR021_16_SA' kind 'DIVERSION' units 'CFS' convert 'TAF'}
+
+define D206B_PAG1_ {value 0.92*D_FTR014_16_SA} !timeseries 'D206B_PAG' kind 'FLOW-DELIVERY' units 'CFS' convert 'TAF'} !Garden, Oswald, Joint Board
+define D206B_PAG2_ {value 0.92*D_FTR021_16_SA} !timeseries 'D206B_PAG' kind 'FLOW-DELIVERY' units 'CFS' convert 'TAF'} !Garden, Oswald, Joint Board
+
+define D206B_PAG_ {value D206B_PAG1_+D206B_PAG2_} !timeseries 'D206B_PAG' kind 'FLOW-DELIVERY' units 'CFS' convert 'TAF'} !Garden, Oswald, Joint Board
+
+define D_FTR018_15S_SA {timeseries 'D_FTR018_15S_SA' kind 'DIVERSION' units 'CFS' convert 'TAF'} !Oswald WD
+define D_FTR018_16_SA {timeseries 'D_FTR018_16_SA' kind 'DIVERSION' units 'CFS' convert 'TAF'} !Oswald WD
+
+define D206C_PAG1_ {value 0.33*D_FTR018_15S_SA} !timeseries 'D206C_PAG' kind 'FLOW-DELIVERY' units 'CFS' convert 'TAF'} !Plumas, Tudor
+define D206C_PAG2_ {value 0.33*D_FTR018_16_SA} !timeseries 'D206C_PAG' kind 'FLOW-DELIVERY' units 'CFS' convert 'TAF'} !Plumas, Tudor
+
+define D206C_PAG_ {value D206C_PAG1_+D206C_PAG2_} !timeseries 'D206C_PAG' kind 'FLOW-DELIVERY' units 'CFS' convert 'TAF'} !Plumas, Tudor
+	! SWP - Water Rights
+define D6_PWR_ {timeseries 'D_OROVL_13_NU1' kind 'DIVERSION' units 'CFS' convert 'TAF'} !Palermo
+define D202_PWR_ {timeseries 'D_THRMF_11_NU1' kind 'DIVERSION' units 'CFS' convert 'TAF'} !Thermalito
+define D7A_PWR_ {value 0.49*C_WEC000}!timeseries 'D7A_PWR' kind 'FLOW-DELIVERY' units 'CFS' convert 'TAF'} !Western Canal
+
+define D7B_PWR1_ {value 0.01*D_THRMA_RVC000}!timeseries 'D7B_PWR' kind 'FLOW-DELIVERY' units 'CFS' convert 'TAF'} !Joint Board
+define D7B_PWR2_ {value 0.01*D_THRMA_JBC000} !timeseries 'D7B_PWR' kind 'FLOW-DELIVERY' units 'CFS' convert 'TAF'} !Joint Board
+
+define D7B_PWR_ {value D7B_PWR1_+D7B_PWR2_} !0.01*timeseries 'D7B_PWR' kind 'FLOW-DELIVERY' units 'CFS' convert 'TAF'} !Joint Board
+
+define D206B_PWR1_ {value 0.08*D_FTR014_16_SA} !timeseries 'D206B_PWR' kind 'FLOW-DELIVERY' units 'CFS' convert 'TAF'} !Garden, Oswald, Joint Board
+define D206B_PWR2_ {value 0.08*D_FTR021_16_SA} !timeseries 'D206B_PWR' kind 'FLOW-DELIVERY' units 'CFS' convert 'TAF'} !Garden, Oswald, Joint Board
+
+define D206B_PWR_ {value D206B_PWR1_+D206B_PWR1_} !timeseries 'D206B_PWR' kind 'FLOW-DELIVERY' units 'CFS' convert 'TAF'} !Garden, Oswald, Joint Board
+
+define D206C_PWR1_ {value 0.67*D_FTR018_15S_SA} !timeseries 'D206C_PWR' kind 'FLOW-DELIVERY' units 'CFS' convert 'TAF'} !Plumas, Tudor
+define D206C_PWR2_ {value 0.67*D_FTR018_16_SA} !timeseries 'D206C_PWR' kind 'FLOW-DELIVERY' units 'CFS' convert 'TAF'} !Plumas, Tudor
+
+define D206C_PWR_ {value D206C_PWR1_+D206C_PWR2_} !timeseries 'D206C_PWR' kind 'FLOW-DELIVERY' units 'CFS' convert 'TAF'} !Plumas, Tudor
+	! SWP - Rice decomposition/ Winter Water
+define D7C_ {value WEST_CANAL_WD} !timeseries 'D7C' kind 'FLOW-DELIVERY' units 'CFS' convert 'TAF'} !DSA 69 rice decomposition
+	! Other Miscellaneous water users
+
+define D_YUB013_14_NA {timeseries 'D_YUB013_14_NA' kind 'DIVERSION' units 'CFS' convert 'TAF'}
+define D_YUB011_15N_NA2 {timeseries 'D_YUB011_15N_NA2' kind 'DIVERSION' units 'CFS' convert 'TAF'}
+define D_YUB011_15S_NA2 {timeseries 'D_YUB011_15S_NA2' kind 'DIVERSION' units 'CFS' convert 'TAF'}
+
+define D_FTR059_12_SA {timeseries 'D_FTR059_12_SA' kind 'DIVERSION' units 'CFS' convert 'TAF'}
+define D_FTR045_15N_SA {timeseries 'D_FTR045_15N_SA' kind 'DIVERSION' units 'CFS' convert 'TAF'}
+define D_FTR028_15S_SA {timeseries 'D_FTR028_15S_SA' kind 'DIVERSION' units 'CFS' convert 'TAF'}
+define D_FTR008_16_SA {timeseries 'D_FTR008_16_SA' kind 'DIVERSION' units 'CFS' convert 'TAF'}
+define D_FTR003_17S_SA {timeseries 'D_FTR003_17S_SA' kind 'DIVERSION' units 'CFS' convert 'TAF'}
+define D_BRR017_23_NA {timeseries 'D_BRR017_23_NA' kind 'DIVERSION' units 'CFS' convert 'TAF'}
+define D_BTC045_ESL008 {timeseries 'D_BTC045_ESL008' kind 'DIVERSION' units 'CFS' convert 'TAF'}
+define D_BTC043_10_NA {timeseries 'D_BTC043_10_NA' kind 'DIVERSION' units 'CFS' convert 'TAF'}
+define D_BTC036_10_NA {timeseries 'D_BTC036_10_NA' kind 'DIVERSION' units 'CFS' convert 'TAF'}
+define D_BTC012_09_SA2 {timeseries 'D_BTC012_09_SA2' kind 'DIVERSION' units 'CFS' convert 'TAF'}
+
+define D230_ {value D_YUB013_14_NA+D_YUB011_15N_NA2+D_YUB011_15S_NA2} ! kind 'DIVERSION' units 'CFS'} !Yuba County Water Agency
+define D285_ {value 0.10*D_BRR017_23_NA} ! kind 'DIVERSION' units 'CFS'} !Camp Far West ID
+define D223_ {timeseries 'D_FTR003_22_SA2' kind 'DIVERSION' units 'CFS' convert 'TAF'} !DSA 70 Exports from Feather R
+define D283_ {value 0.90*D_BRR017_23_NA} ! kind 'DIVERSION' units 'CFS'} !DSA 70 Exports from Bear R
+define D207A_ {value D_FTR059_12_SA+D_FTR045_15N_SA+D_FTR028_15S_SA+D_FTR008_16_SA+D_FTR003_17S_SA} ! kind 'DIVERSION' units 'CFS'} !DSA 69 Feather R diversions
+define D217_ {value D_BTC045_ESL008+D_BTC043_10_NA+D_BTC036_10_NA+D_BTC012_09_SA2} ! kind 'DIVERSION' units 'CFS'} !DSA 69 Butte Creek diversions
+
+!********** EXPORT **********
+!Tracy Pumping Plant (Jones PP)
+!define D418_CVP_ {timeseries 'D418_CVP' kind 'FLOW-DELIVERY' units 'CFS' convert 'TAF'}
+
+!CVP South Delta Exports via Banks
+!define D419_CVP_ {timeseries 'D419_CVP' kind 'FLOW-DELIVERY' units 'CFS' convert 'TAF'}
+define D419_CVC_ {timeseries 'C_CAA003_CVC' kind 'FLOW-DELIVERY' units 'CFS' convert 'TAF'}	!Cross Valley Canal deliveries via Banks/ CA Aqueduct
+define D419_CVPDED_ {timeseries 'C_CAA003_CVPDED' kind 'FLOW-DELIVERY' units 'CFS' convert 'TAF'}	!CVP wheeling via dedicated capacity at Banks
+define D419_CVPWHL_ {timeseries 'C_CAA003_CVPWHL' kind 'FLOW-DELIVERY' units 'CFS' convert 'TAF'}	!Other CVP wheeling via Banks
+
+
+!Contra Costa Pumping Plant
+!define D408_CVP_ {timeseries 'D408_CVP' kind 'FLOW-DELIVERY' units 'CFS' convert 'TAF'}
+
+!Freeport Regional Water Project (FRWP)
+!-KS, 7/16/18. SCWA diversions via FRWP included as part of American R Basin. SCWA would have diverted the water regardless of FRWP; it is economical for them to use FRWP.
+define D168B_CCWD_ {value 0.} !timeseries 'D168B_CCWD' kind 'FLOW-DELIVERY' units 'CFS' convert 'TAF'}		!Contra Costa WD via Freeport Regional Water Project
+define D168B_EBMUD_ {timeseries 'D_FPT013_FSC013' kind 'DIVERSION' units 'CFS' convert 'TAF'}				!EBMUD via Freeport Regional Water Project
+
+!Delta Pumping Plant (Banks PP)
+!define D419_SWP_ {timeseries 'D419_SWP' kind 'FLOW-DELIVERY' units 'CFS' convert 'TAF'}
+
+!North Bay Aqueduct
+!define D403B_ {timeseries 'D403B' kind 'FLOW-DELIVERY' units 'CFS' convert 'TAF'}
+!define D403C_ {timeseries 'D403C' kind 'FLOW-DELIVERY' units 'CFS' convert 'TAF'}
+
+!!Water Transfers via Jones and Banks PP
+define D418_WTS_ {timeseries 'C_DMC000_WTS' kind 'FLOW-DELIVERY' units 'CFS' convert 'TAF'}
+define D419_WTS_ {timeseries 'C_CAA003_WTS' kind 'FLOW-DELIVERY' units 'CFS' convert 'TAF'}
+
+!********** DELTA AREA AND OUTFLOW **********
+!Delta In-basin Consumptive Use
+!-KS, 7/16/18. Does not include I400 and D400B; considered upstream of Delta.
+define NET_DICU_ {timeseries 'NET_DICU' kind 'DICU_FLOW' units 'CFS' convert 'TAF'}
+
+!Required Delta Outflow
+!define C407_ANN_ {timeseries 'C407_ANN' kind 'FLOW-CHANNEL' units 'CFS' convert 'TAF'}
+define D407_ {timeseries 'C_SAC000_MIN' kind 'CHANNEL' units 'CFS' convert 'TAF'}
+
+!Other Delta Pumping
+	! Water Right deliveries via North Bay Aqueduct
+define D403A_ {timeseries 'D_BKR004_NBA009_VPW' kind 'DIVERSION' units 'CFS' convert 'TAF'}	!City of Vallejo
+define D403D_ {timeseries 'D_BKR004_NBA009_SMT' kind 'DIVERSION' units 'CFS' convert 'TAF'}	!Fairfield-Vacaville-Benecia Settlement Water
+	! City of Antioch
+define D406B_ {timeseries 'D_SJR006_ANTOC' kind 'DIVERSION' units 'CFS' convert 'TAF'}
+	! CCWD Water Rights and Partners
+define D406A_MS_ {timeseries 'D406A_MS' kind 'FLOW-DELIVERY' units 'CFS' convert 'TAF'} !CCWD diversions via Mallard Slough
+define D408_DS_ {timeseries 'D408_DS' kind 'FLOW-DELIVERY' units 'CFS' convert 'TAF'} !CCWD diversions of Surplus Delta Outflow
+define D408_ECC_ {timeseries 'D408_ECC' kind 'FLOW-DELIVERY' units 'CFS' convert 'TAF'} !East Contra Costa Irrigation District
+define D408_P_ {timeseries 'D408_P' kind 'FLOW-DELIVERY' units 'CFS' convert 'TAF'} !CCWD Partners
+define D408_TX_ {timeseries 'D408_TX' kind 'FLOW-DELIVERY' units 'CFS' convert 'TAF'} !CCWD Delta transfers
+
+/****************************************************************
+*************************** SUMMARY *****************************
+****************************************************************/
+
+!********** SACRAMENTO BASIN USE **********
+!Sacramento R below Shasta
+	! CVP - Ag Service Contract
+define BASIN_USE_SCRMNTO_CVP_AG {value (D104_PAG_ + D171_PAG_ + D172_PAG_ + D174_PAG_ + D178_PAG_)}
+	! CVP - MI Service Contract 
+	
+define BASIN_USE_SCRMNTO_CVP_MI {value (D104_PMI_ /* + D162_PMI_*/)}
+	! CVP - Settlement Contractors
+	
+define BASIN_USE_SCRMNTO_CVP_SC {value (D104_PSC_ + D122A_PSC_ + D122B_PSC_ + D128_PSC_ + D129A_PSC_ + D143A_PSC_ + D145A_PSC_ + D180_PSC_ + D182A_ + D183_PSC_ + D18302_ + D162_PSC_ + D163_PSC_ + D165_PSC_)}
+	! CVP - Refuge Level 2
+	
+define BASIN_USE_SCRMNTO_CVP_RF {value (C136B_ + C216B_ + C221_ + D143B_PRF_ + D145B_PRF_ + D182B_PRF_)}
+
+	! Non Project/ Water Right
+define BASIN_USE_SCRMNTO_NP_WR {value (D104_NP_ + D113A_ + D113B_ + D162_NP_)}
+	! TOTAL
+define BASIN_USE_SCRMNTO {value (BASIN_USE_SCRMNTO_CVP_AG + BASIN_USE_SCRMNTO_CVP_MI + BASIN_USE_SCRMNTO_CVP_SC + BASIN_USE_SCRMNTO_CVP_RF + BASIN_USE_SCRMNTO_NP_WR)}
+
+!American R Basin
+	! CVP - Ag Service Contract
+define BASIN_USE_AMRCN_CVP_AG {value (D9_PAG_)}
+	! CVP - MI Service Contract
+define BASIN_USE_AMRCN_CVP_MI {value (D8_PMI_ + D9_PMI_ + D167_PMI_ + D168C_FRWP_PMI_)}
+	! CVP - Losses
+define BASIN_USE_AMRCN_CVP_LS {value (D9_PLS_)}
+	! Non Project/ Water Right
+define BASIN_USE_AMRCN_NP_WR {value (D300_NP_ + D8_NP_ + D9_NP_ + D302_NP_ + D167_NP_)}
+	! TOTAL
+define BASIN_USE_AMRCN {value (BASIN_USE_AMRCN_CVP_AG + BASIN_USE_AMRCN_CVP_MI + BASIN_USE_AMRCN_CVP_LS + BASIN_USE_AMRCN_NP_WR)}
+	
+!Feather R below Oroville
+	! SWP - MI Service Contract
+define BASIN_USE_FTHR_SWP_MI {value (D201_PMI_ + D204_PMI_)}
+	! SWP - FRSA
+define BASIN_USE_FTHR_FRSA {value (D7A_PAG_ + D7B_PAG_ + D206A_PAG_ + D206B_PAG_ + D206C_PAG_)}
+	! SWP - Water Rights
+define BASIN_USE_FTHR_SWP_WR {value (D6_PWR_ + D202_PWR_ + D7A_PWR_ + D7B_PWR_ + D206B_PWR_ + D206C_PWR_)}
+	! FRSA Rice Decomp (Winter Water)
+define BASIN_USE_FTHR_DCMP {value (D7C_)}
+	! TOTAL
+define BASIN_USE_FTHR {value (BASIN_USE_FTHR_SWP_MI + BASIN_USE_FTHR_FRSA + BASIN_USE_FTHR_SWP_WR + BASIN_USE_FTHR_DCMP)}
+
+!Miscellaneous water users
+	! Sacramento R below Shasta
+define BASIN_USE_SCRMNTO_MISC {value (D165B_)}
+	! American R Basin
+define BASIN_USE_AMRCN_MISC {value (D168A_ + D168C_EXCESS_PMI_ + D168C_OTHER_PMI_)}
+	! Feather R below Oroville
+define BASIN_USE_FTHR_MISC {value (D230_ + D285_ + D223_ + D283_ + D207A_ + D217_)}
+	! TOTAL
+define BASIN_USE_MISC {value (BASIN_USE_SCRMNTO_MISC + BASIN_USE_AMRCN_MISC + BASIN_USE_FTHR_MISC)}
+
+!********** EXPORT **********
+!Tracy Pumping Plant (Jones PP)
+define EXPORT_TRACY {value (D418_CVP)}
+
+!Freeport Regional Water Project
+define EXPORT_FRWP {value (D168B_CCWD_ + D168B_EBMUD_)}
+
+!Contra Costa Pumping Plant
+define EXPORT_CCWD {value (D408_CVP)}
+
+!CVP Wheeling via Banks
+define EXPORT_CVP_Banks {value (D419_CVP)}	!Total CVP wheeling via Banks
+define EXPORT_CVC_Banks {value (D419_CVC_)}	!Cross Valley Canal
+define EXPORT_OtherCVP_Banks {value (D419_CVPDED_ + D419_CVPWHL_)}	!Other CVP Wheeling via Banks
+
+!Delta Pumping Plant (Banks PP)
+define EXPORT_SWP_SOD {value (D419_SWP)}
+
+!North Bay Aqueduct
+define EXPORT_NBA {value (D403B + D403C)}
+
+!Water Transfers
+define EXPORT_WTS {value (D418_WTS_ + D419_WTS_)}
+
+
+!********** DELTA AREA AND OUTFLOW **********
+!Delta In-Basin Consumptive Use
+define BASIN_USE_DELTA_DICU {value (NET_DICU_)}
+
+!Required Delta Outflow
+define BASIN_USE_DELTA_REQ_DO {value (C407_ANN + D407_)}
+
+!Other Delta Diversions
+define BASIN_USE_DELTA_OTHER {value (D403A_ + D403D_ + D406B_ + D406A_MS_ + D408_DS_ + D408_ECC_ + D408_P_ + D408_TX_)}
+
+!Total Delta Basin Use
+define BASIN_USE_DELTA {value BASIN_USE_DELTA_DICU + BASIN_USE_DELTA_REQ_DO + BASIN_USE_DELTA_OTHER}
+
+
+/************************* DSS OUTPUT ***************************/
+define BASIN_USE_SCRMNTO_CVP_AG_ {alias BASIN_USE_SCRMNTO_CVP_AG kind 'DTS-COA-EXHBTB2-VALUE' units 'TAF'}
+define BASIN_USE_SCRMNTO_CVP_MI_ {alias BASIN_USE_SCRMNTO_CVP_MI kind 'DTS-COA-EXHBTB2-VALUE' units 'TAF'}
+define BASIN_USE_SCRMNTO_CVP_SC_ {alias BASIN_USE_SCRMNTO_CVP_SC kind 'DTS-COA-EXHBTB2-VALUE' units 'TAF'}
+define BASIN_USE_SCRMNTO_CVP_RF_ {alias BASIN_USE_SCRMNTO_CVP_RF kind 'DTS-COA-EXHBTB2-VALUE' units 'TAF'}
+define BASIN_USE_SCRMNTO_NP_WR_ {alias BASIN_USE_SCRMNTO_NP_WR kind 'DTS-COA-EXHBTB2-VALUE' units 'TAF'}
+define BASIN_USE_SCRMNTO_ {alias BASIN_USE_SCRMNTO kind 'DTS-COA-EXHBTB2-VALUE' units 'TAF'}
+
+define BASIN_USE_AMRCN_CVP_AG_ {alias BASIN_USE_AMRCN_CVP_AG kind 'DTS-COA-EXHBTB2-VALUE' units 'TAF'}
+define BASIN_USE_AMRCN_CVP_MI_ {alias BASIN_USE_AMRCN_CVP_MI kind 'DTS-COA-EXHBTB2-VALUE' units 'TAF'}
+define BASIN_USE_AMRCN_CVP_LS_ {alias BASIN_USE_AMRCN_CVP_LS kind 'DTS-COA-EXHBTB2-VALUE' units 'TAF'}
+define BASIN_USE_AMRCN_NP_WR_ {alias BASIN_USE_AMRCN_NP_WR kind 'DTS-COA-EXHBTB2-VALUE' units 'TAF'}
+define BASIN_USE_AMRCN_ {alias BASIN_USE_AMRCN kind 'DTS-COA-EXHBTB2-VALUE' units 'TAF'}
+
+define BASIN_USE_FTHR_SWP_MI_ {alias BASIN_USE_FTHR_SWP_MI kind 'DTS-COA-EXHBTB2-VALUE' units 'TAF'}
+define BASIN_USE_FTHR_FRSA_ {alias BASIN_USE_FTHR_FRSA kind 'DTS-COA-EXHBTB2-VALUE' units 'TAF'}
+define BASIN_USE_FTHR_SWP_WR_ {alias BASIN_USE_FTHR_SWP_WR kind 'DTS-COA-EXHBTB2-VALUE' units 'TAF'}
+define BASIN_USE_FTHR_DCMP_ {alias BASIN_USE_FTHR_DCMP kind 'DTS-COA-EXHBTB2-VALUE' units 'TAF'}
+define BASIN_USE_FTHR_ {alias BASIN_USE_FTHR kind 'DTS-COA-EXHBTB2-VALUE' units 'TAF'}
+
+define BASIN_USE_SCRMNTO_MISC_ {alias BASIN_USE_SCRMNTO_MISC kind 'DTS-COA-EXHBTB2-VALUE' units 'TAF'}
+define BASIN_USE_AMRCN_MISC_ {alias BASIN_USE_AMRCN_MISC kind 'DTS-COA-EXHBTB2-VALUE' units 'TAF'}
+define BASIN_USE_FTHR_MISC_ {alias BASIN_USE_FTHR_MISC kind 'DTS-COA-EXHBTB2-VALUE' units 'TAF'}
+define BASIN_USE_MISC_ {alias BASIN_USE_MISC kind 'DTS-COA-EXHBTB2-VALUE' units 'TAF'}
+
+define EXPORT_TRACY_ {alias EXPORT_TRACY kind 'DTS-COA-EXHBTB2-VALUE' units 'TAF'}
+define EXPORT_FRWP_ {alias EXPORT_FRWP kind 'DTS-COA-EXHBTB2-VALUE' units 'TAF'}
+define EXPORT_CCWD_ {alias EXPORT_CCWD kind 'DTS-COA-EXHBTB2-VALUE' units 'TAF'}
+define EXPORT_CVP_Banks_ {alias EXPORT_CVP_Banks kind 'DTS-COA-EXHBTB2-VALUE' units 'TAF'}
+define EXPORT_CVC_Banks_ {alias EXPORT_CVC_Banks kind 'DTS-COA-EXHBTB2-VALUE' units 'TAF'}
+define EXPORT_OtherCVP_Banks_ {alias EXPORT_OtherCVP_Banks kind 'DTS-COA-EXHBTB2-VALUE' units 'TAF'}
+define EXPORT_SWP_SOD_ {alias EXPORT_SWP_SOD kind 'DTS-COA-EXHBTB2-VALUE' units 'TAF'}
+define EXPORT_NBA_ {alias EXPORT_NBA kind 'DTS-COA-EXHBTB2-VALUE' units 'TAF'}
+define EXPORT_WTS_ {alias EXPORT_WTS kind 'DTS-COA-EXHBTB2-VALUE' units 'TAF'}
+
+define BASIN_USE_DELTA_DICU_ {alias BASIN_USE_DELTA_DICU kind 'DTS-COA-EXHBTB2-VALUE' units 'TAF'}
+define BASIN_USE_DELTA_REQ_DO_ {alias BASIN_USE_DELTA_REQ_DO kind 'DTS-COA-EXHBTB2-VALUE' units 'TAF'}
+define BASIN_USE_DELTA_OTHER_ {alias BASIN_USE_DELTA_OTHER kind 'DTS-COA-EXHBTB2-VALUE' units 'TAF'}
+define BASIN_USE_DELTA_ {alias BASIN_USE_DELTA kind 'DTS-COA-EXHBTB2-VALUE' units 'TAF'}

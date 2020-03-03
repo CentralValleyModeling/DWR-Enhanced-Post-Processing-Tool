@@ -42,35 +42,35 @@ define TRNTY_Storage_CHECK_ {
 define TRNTY_Spill_CHECK_ {
 	case spill {
 	condition F1 > abs_threshold
-	value 1}
+	value 200}!1
 	case noSpill {
 	condition always
-	value 0}
+	value 100} !0
 }
 !determines during which timestep Trinity reservoir was at maximum capacity 
 define TRNTY_CAP_CHECK_ {
 	case AtCapacity {
 		condition abs(S1 - S1LEVEL5DV) <= abs_threshold
-		value 1
+		value 200 !1
 	}
 	case notAtCapacity{
 		condition always
-		value 0
+		value 100 !0
 	}
 }
 !determines during which timesteps flood release controls Trinity reservoir release
 /*define TRNTY_FLD_CHECK_ {
 	case atFlood {
 		condition abs(S1 - S1LEVEL4DV) <= abs_threshold
-		value 1
+		value 200
 	}
 	case belowflood{
 		condition S1 - S1LEVEL4DV < -abs_threshold
-		value 2
+		value 300
 	}
 	case aboveFlood {
 		condition always 
-		value 0
+		value 100
 	}
 }*/
 
@@ -78,15 +78,15 @@ define TRNTY_CAP_CHECK_ {
 define TRNTY_RC_CHECK_ {
 	case belowRC{
 		condition S1LEVEL3DV - S1 > abs_threshold
-		value 2
+		value 300
 	}
 	case atRC {
 		condition abs(S1 - S1LEVEL3DV) <= abs_threshold
-		value 1
+		value 200
 	}
 	case aboveRC{
 		condition always
-		value 0
+		value 100
 	}
 }
 
@@ -95,15 +95,15 @@ define TRNTY_RC_CHECK_ {
 define TRNTY_DP_CHECK_ {
 	case belowdeadpool{
 		condition S1LEVEL1DV - S1 > abs_threshold
-		value 2
+		value 300
 	}
 	case atdeadpool {
 		condition abs(S1 - S1LEVEL1DV) <= abs_threshold
-		value 1
+		value 200
 	}
 	case abovedeadpool{
 		condition always
-		value 0
+		value 100
 	}
 }
 
@@ -111,15 +111,15 @@ define TRNTY_DP_CHECK_ {
 define ClrCkTnnl_import_CHECK_ {
 	case at {
 		condition abs(D100 - TRIN_IMPDV) <= abs_threshold
-		value 1
+		value 200
 	}
 	case above{
 		condition D100 - TRIN_IMPDV > abs_threshold
-		value 0
+		value 100
 	}
 	case below{
 		condition always
-		value 2
+		value 300
 	}
 }
 
@@ -127,15 +127,15 @@ define ClrCkTnnl_import_CHECK_ {
 define ClrCkTnnl_Cap_CHECK_ {
 	case at {
 		condition abs(D100 - 3300) <= abs_threshold
-		value 1
+		value 200
 	}
 	case above{
 		condition D100 - 3300 > abs_threshold
-		value 0
+		value 100
 	}
 	case below{
 		condition always
-		value 2
+		value 300
 	}
 }
 
@@ -146,65 +146,65 @@ define ClrCkTnnl_Cap_CHECK_ {
 define SHST_Spill_CHECK_ {
 	case spill {
 	condition F4 > abs_threshold
-	value 1}
+	value 200} !1
 	case noSpill {
 	condition always
-	value 0}
+	value 100} !0
 }
 !determines during which timesteps Shasta reservoir was at maximum capacity 
 define SHST_CAP_CHECK_{
 	case Capacity {
 		condition abs(S4 - S4LEVEL6DV) <= abs_threshold
-		value 1
+		value 200 !1
 	}
 	case notCapacity{
 		condition always
-		value 0
+		value 100 !0
 	}
 }
 !determines during which timesteps flood release controls Shasta reservoir release
 define SHST_FLD_CHECK_{
 	case Flood {
 		condition abs(S4 - S4LEVEL5DV) <= abs_threshold
-		value 1
+		value 200
 	}
 	case belowFlood{
 		condition S4 - S4LEVEL5DV < -abs_threshold
-		value 2
+		value 300
 	}
 		case aboveFlood{
 		condition always
-		value 0
+		value 100
 	}
 }
 !determines was Shasta reservoir storage above/at/below Rule curve in each timestep
 define SHST_RC_CHECK_ {
 	case belowRC{
 		condition S4LEVEL3DV - S4 > abs_threshold
-		value 2
+		value 300
 	}
 	case atRC {
 		condition abs(S4 - S4LEVEL3DV) <= abs_threshold
-		value 1
+		value 200
 	}
 	case aboveRC{
 		condition always
-		value 0
+		value 100
 	}
 }
 !determines was SHASTA reservoir above/at/below Dead Pool in each timestep
 define SHST_DP_CHECK_{
 	case belowdeadpool{
 		condition S4LEVEL1DV - S4 > abs_threshold
-		value 2
+		value 300
 	}
 	case atdeadpool {
 		condition abs(S4 - S4LEVEL1DV) <= abs_threshold
-		value 1
+		value 200
 	}
 	case abovedeadpool{
 		condition always
-		value 0
+		value 100
 	}
 }
 
@@ -214,65 +214,65 @@ define SHST_DP_CHECK_{
 define FLSM_Spill_CHECK_ {
 	case spill {
 	condition F8 > abs_threshold
-	value 1}
+	value 200} !1
 	case noSpill {
 	condition always
-	value 0}
+	value 100} !0
 }
 !determines during which timesteps Folsom reservoir was at maximum capacity 
 define FLSM_CAP_CHECK_{
 	case Capacity {
 		condition abs(S8 - S8LEVEL6DV) <= abs_threshold
-		value 1
+		value 200 !1
 	}
 	case notCapacity{
 		condition always
-		value 0
+		value 100 !0
 	}
 }
 !determines during which timesteps flood release controls Folsom reservoir release
 define FLSM_FLD_CHECK_{
 	case Flood {
 		condition abs(S8 - S8LEVEL5DV) <= abs_threshold
-		value 1
+		value 200
 	}
 	case belowFlood{
 		condition S8 - S8LEVEL5DV < - abs_threshold
-		value 2
+		value 300
 	}
 		case aboveFlood{
 		condition always
-		value 0
+		value 100
 	}
 }
 !determines was Flosom reservoir storage above/at/below Rule curve in each timestep
 define FLSM_RC_CHECK_ {
 	case belowRC{
 		condition S8LEVEL3DV - S8 > abs_threshold
-		value 2
+		value 300
 	}
 	case atRC {
 		condition abs(S8 - S8LEVEL3DV) <= abs_threshold
-		value 1
+		value 200
 	}
 	case aboveRC{
 		condition always
-		value 0
+		value 100
 	}
 }
 !determines was Flosom reservoir above/at/below Dead Pool in each timestep
 define FLSM_DP_CHECK_{
 	case belowdeadpool{
 		condition S8LEVEL1DV - S8 > abs_threshold
-		value 2
+		value 300
 	}
 	case atdeadpool {
 		condition abs(S8 - S8LEVEL1DV) <= abs_threshold
-		value 1
+		value 200
 	}
 	case abovedeadpool{
 		condition always
-		value 0
+		value 100
 	}
 }
 
@@ -283,65 +283,65 @@ define FLSM_DP_CHECK_{
 define OROV_Spill_CHECK_ {
 	case spill {
 	condition F6 > abs_threshold
-	value 1}
+	value 200} !1
 	case noSpill {
 	condition always
-	value 0}
+	value 100}!0
 }
 !determines during which timesteps Oroville reservoir was at maximum capacity 
 define OROV_CAP_CHECK_{
 	case Capacity {
 		condition abs(S6 - S6LEVEL6DV) <= abs_threshold
-		value 1
+		value 200 !1
 	}
 	case notCapacity{
 		condition always
-		value 0
+		value 100 !0
 	}
 }
 !determines during which timesteps flood release controls Oroville reservoir release
 define OROV_FLD_CHECK_{
 	case Flood {
 		condition abs(S6 - S6LEVEL5DV) <= abs_threshold
-		value 1
+		value 200
 	}
 	case belowControl{
 		condition S6 - S6LEVEL5DV < -abs_threshold
-		value 2
+		value 300
 	}
 		case aboveControl{
 		condition always
-		value 0
+		value 100
 	}
 }
 !determines was Oroville reservoir storage above/at/below Rule curve in each timestep
 define OROV_RC_CHECK_ {
 	case belowRC{
 		condition S6LEVEL3DV - S6 > abs_threshold
-		value 2
+		value 300
 	}
 	case atRC {
 		condition abs(S6 - S6LEVEL3DV) <= abs_threshold
-		value 1
+		value 200
 	}
 	case aboveRC{
 		condition always
-		value 0
+		value 100
 	}
 }
 !determines was Oroville reservoir above/at/below Dead Pool in each timestep
 define OROV_DP_CHECK_{
 	case belowdeadpool{
 		condition S6LEVEL1DV - S6 > abs_threshold
-		value 2
+		value 300
 	}
 	case atdeadpool {
 		condition abs(S6 - S6LEVEL1DV) <= abs_threshold
-		value 1
+		value 200
 	}
 	case abovedeadpool{
 		condition always
-		value 0
+		value 100
 	}
 }
 
@@ -352,46 +352,46 @@ define OROV_DP_CHECK_{
 define SLCVP_CAP_CHECK_{
 	case Capacity {
 		condition abs(S11 - S11_MAX) <= abs_threshold
-		value 1
+		value 200 !1
 	}
 	case notCapacity{
 		condition always
-		value 0
+		value 100 !0
 	}
 }
 
 
 !determines Luis CVP reservoir storage VS CVP Rule curve in each timestep 
-!0 = above RC, 1 = at RC, 2 = below RC
+!100 = above RC, 200 = at RC, 300 = below RC
 define SLCVP_RC_CHECK_{
 	case AboveRC{
 		condition (S11 - S11_RC) > none_zero_threshold
-		value 0
+		value 100
 	}
 	case AtRC{
 		condition abs(S11 - S11_RC) <= none_zero_threshold
-		value 1
+		value 200
 	}
 	case BelowRC{
 		condition (S11 - S11_RC) < -none_zero_threshold
-		value 2
+		value 300
 	}	
 }
 
 !determines Luis CVP reservoir storage VS CVP Dead Pool in each timestep
-!0 = above DP, 1 = at DP, 2 = below DP
+!100 = above DP, 200 = at DP, 300 = below DP
 define SLCVP_DP_CHECK_{
 	case AboveDP{
 		condition (S11 - S11_DP) > none_zero_threshold
-		value 0
+		value 100
 	}
 	case AtDP{
 		condition abs(S11 - S11_DP) <= none_zero_threshold
-		value 1
+		value 200
 	}
 	case BelowDP{
 		condition (S11 - S11_DP) < -none_zero_threshold
-		value 2
+		value 300
 	}	
 }
 
@@ -402,45 +402,45 @@ define SLCVP_DP_CHECK_{
 define SLSWP_CAP_CHECK_{
 	case Capacity {
 		condition abs(S12 - S12_MAX) <= abs_threshold
-		value 1
+		value 200 !1
 	}
 	case notCapacity{
 		condition always
-		value 0
+		value 100 !0
 	}
 }
 
 !determines during which timesteps San Luis SWP reservoir storage VS SWP Rule curve 
-!0 = above RC, 1 = at RC, 2 = below RC
+!100 = above RC, 200 = at RC, 300 = below RC
 define SLSWP_RC_CHECK_{
 	case AboveRC{
 		condition (S12 - S12_RC) > none_zero_threshold
-		value 0
+		value 100
 	}
 	case AtRC{
 		condition abs(S12 - S12_RC) <= none_zero_threshold
-		value 1
+		value 200
 	}
 	case BelowRC{
 		condition (S12 - S12_RC) < -none_zero_threshold
-		value 2
+		value 300
 	}	
 }
 
 !determines San Luis SWP reservoir storage VS SWP Dead Pool in each timestep
-!0 = above DP, 1 = at DP, 2 = below DP
+!100 = above DP, 200 = at DP, 300 = below DP
 define SLSWP_DP_CHECK_{
 	case AboveDP{
 		condition (S12 - S12_DP) > none_zero_threshold
-		value 0
+		value 100
 	}
 	case AtDP{
 		condition abs(S12 - S12_DP) <= none_zero_threshold
-		value 1
+		value 200
 	}
 	case BelowDP{
 		condition (S12 - S12_DP) < -none_zero_threshold
-		value 2
+		value 300
 	}	
 }
 /************************** Outputs ****************************/
@@ -481,7 +481,7 @@ define SLCVP_CAP_STATUS_DTS {alias SLCVP_CAP_CHECK_ kind 'DTS-STATUS' units 'NON
 define SLCVP_RC_STATUS_DTS {alias SLCVP_RC_CHECK_ kind 'DTS-STATUS' units 'NONE'}
 define SLCVP_DP_STATUS_DTS {alias SLCVP_DP_CHECK_ kind 'DTS-STATUS' units 'NONE'}
 
-define trinity_baldv {alias trinity_bal kind 'debug' units 'taf'}
+!define trinity_baldv {alias trinity_bal kind 'debug' units 'taf'}
 
 
 

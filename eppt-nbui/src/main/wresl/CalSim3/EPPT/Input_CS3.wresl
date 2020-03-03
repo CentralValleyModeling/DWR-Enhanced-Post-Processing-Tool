@@ -1,0 +1,769 @@
+/********************** DESCRIPTION ****************************
+- define CSII input variables used in the post-processing script
+- variables should be assigned a model neutral name
+- make sure to print out the variables read-into the WRESL script for verification purposes
+
+********************* REVIEW HISTORY****************************
+Karandev Singh		| DWR	|	12/03/2019	|	Reservoirs Operations
+Ahmed Ali           	| DWR   |   01/10/2020  |   Upstream MIF, NOD Weirs Operation, NOD Groundwater Pumping
+			| 	|  		 |   
+****************************************************************/
+
+/******************** RESERVOIR OPERATIONS *********************/
+define TRINITY_STRG { timeseries 'S_TRNTY' kind 'STORAGE' units 'TAF' convert 'TAF' }
+define TRINITY_LEVEL_DPL { value 240 *TAF_TAF} !timeseries 'S1LEVEL1DV' kind 'STORAGE-LEVEL' units 'TAF' convert 'TAF' }
+define TRINITY_LEVEL_RC { timeseries 'S_TRNTYLEVEL3DV' kind 'STORAGE-LEVEL' units 'TAF' convert 'TAF' }
+!define TRINITY_LEVEL_FLD { timeseries 'S1LEVEL4DV' kind 'STORAGE-LEVEL' units 'TAF' convert 'TAF' }
+define TRINITY_LEVEL_CAP { value 2447 *TAF_TAF}!timeseries 'S1LEVEL5DV' kind 'STORAGE-LEVEL' units 'TAF' convert 'TAF' }
+define TRINITY_NR_SPILL { timeseries 'C_TRNTY_FLOOD' kind 'SPILL' units 'CFS' convert 'TAF' }
+
+define SHASTA_STRG { timeseries 'S_SHSTA' kind 'STORAGE' units 'TAF' convert 'TAF' }
+define SHASTA_LEVEL_DPL { value 550 *TAF_TAF} ! timeseries 'S4LEVEL1DV' kind 'STORAGE-LEVEL' units 'TAF' convert 'TAF' }
+define SHASTA_LEVEL_RC { timeseries 'S_SHSTALEVEL3DV' kind 'STORAGE-LEVEL' units 'TAF' convert 'TAF' }
+define SHASTA_LEVEL_FLD { timeseries 'S_SHSTALEVEL5DV' kind 'STORAGE-LEVEL' units 'TAF' convert 'TAF' }
+define SHASTA_LEVEL_CAP { value 4552 *TAF_TAF} !timeseries 'S4LEVEL6DV' kind 'STORAGE-LEVEL' units 'TAF' convert 'TAF' }
+define SHASTA_NR_SPILL { timeseries 'C_SHSTA_FLOOD' kind 'SPILL' units 'CFS' convert 'TAF' }
+define SHASTA_CVPIA_B2 { value 2200 }
+
+define FOLSOM_STRG { timeseries 'S_FOLSM' kind 'STORAGE' units 'TAF' convert 'TAF' }
+define FOLSOM_LEVEL_DPL { value 90 *TAF_TAF} !timeseries 'S8LEVEL1DV' kind 'STORAGE-LEVEL' units 'TAF' convert 'TAF' }
+define FOLSOM_LEVEL_RC { timeseries 'S_FOLSMLEVEL3DV' kind 'STORAGE-LEVEL' units 'TAF' convert 'TAF' }
+define FOLSOM_LEVEL_FLD { timeseries 'S_FOLSMLEVEL5DV' kind 'STORAGE-LEVEL' units 'TAF' convert 'TAF' }
+define FOLSOM_LEVEL_CAP { value 966.8 *TAF_TAF} !timeseries 'S8LEVEL6DV' kind 'STORAGE-LEVEL' units 'TAF' convert 'TAF' }
+define FOLSOM_NR_SPILL { timeseries 'C_FOLSM_FLOOD' kind 'SPILL' units 'CFS' convert 'TAF' }
+
+define OROVILLE_STRG { timeseries 'S_OROVL' kind 'STORAGE' units 'TAF' convert 'TAF' }
+define OROVILLE_LEVEL_DPL { value 29.6 * CFS_TAF} !timeseries 'S6LEVEL1DV' kind 'STORAGE-LEVEL' units 'TAF' convert 'TAF' }
+define OROVILLE_LEVEL_RC { timeseries 'S_OROVLLEVEL3DV' kind 'STORAGE-LEVEL' units 'TAF' convert 'TAF' }
+define OROVILLE_LEVEL_FLD { timeseries 'S_OROVLLEVEL5DV' kind 'STORAGE-LEVEL' units 'TAF' convert 'TAF' }
+define OROVILLE_LEVEL_CAP { value 3538 * CFS_TAF} !timeseries 'S6LEVEL6DV' kind 'STORAGE-LEVEL' units 'TAF' convert 'TAF' }
+define OROVILLE_NR_SPILL { timeseries 'C_OROVL_FLOOD' kind 'SPILL' units 'CFS' convert 'TAF' }
+
+define SANLUIS_CVP_STRG { timeseries 'S_SLUIS_CVP' kind 'STORAGE' units 'TAF' convert 'TAF' }
+define SANLUIS_CVP_LEVEL_DPL { value 45 *TAF_TAF} !timeseries 'S11LEVEL1DV' kind 'STORAGE-LEVEL' units 'TAF' convert 'TAF' }
+define SANLUIS_CVP_LEVEL_CAP { value 972 *TAF_TAF} !timeseries 'S11LEVEL5DV' kind 'STORAGE-LEVEL' units 'TAF' convert 'TAF' }
+!define SANLUIS_CVP_NR_SPILL { timeseries 'C_S' kind 'FLOW-SPILL-NON-RECOV' units 'CFS' convert 'TAF' }
+define SANLUIS_CVP_RC { timeseries 'CVPRULECV' kind 'RULECURVE' units 'TAF' convert 'TAF' }
+
+define SANLUIS_SWP_STRG { timeseries 'S_SLUIS_SWP' kind 'STORAGE' units 'TAF' convert 'TAF' }
+define SANLUIS_SWP_LEVEL_DPL { value 55 *TAF_TAF} !timeseries 'S12LEVEL1DV' kind 'STORAGE-LEVEL' units 'TAF' convert 'TAF' }
+define SANLUIS_SWP_LEVEL_CAP { value 1067 *TAF_TAF} !timeseries 'S12LEVEL5DV' kind 'STORAGE-LEVEL' units 'TAF' convert 'TAF' }
+!define SANLUIS_SWP_NR_SPILL { timeseries 'F12' kind 'FLOW-SPILL-NON-RECOV' units 'CFS' convert 'TAF' }
+define SANLUIS_SWP_RC { timeseries 'SWPRULECV' kind 'RULECURVE' units 'TAF' convert 'TAF' }
+
+define CLR_CRK_TUNNEL { timeseries 'D_LWSTN_CCT011' kind 'DIVERSION' units 'CFS' convert 'TAF' }
+define CLR_CRK_CAP { value 3300 * CFS_TAF}
+define CLR_CRK_TGT_IMPORT { timeseries 'TRIN_IMPDV' kind 'UNDEFINED' units 'CFS' convert 'TAF' }
+
+define TRINITY_STRG_ { alias TRINITY_STRG kind 'DTS-RESOP-INPUT' units 'TAF' }
+define TRINITY_LEVEL_DPL_ { alias TRINITY_LEVEL_DPL kind 'DTS-RESOP-INPUT' units 'TAF' }
+define TRINITY_LEVEL_RC_ { alias TRINITY_LEVEL_RC kind 'DTS-RESOP-INPUT' units 'TAF' }
+!define TRINITY_LEVEL_FLD_ { alias TRINITY_LEVEL_FLD kind 'DTS-RESOP-INPUT' units 'TAF' }
+define TRINITY_LEVEL_CAP_ { alias TRINITY_LEVEL_CAP kind 'DTS-RESOP-INPUT' units 'TAF' }
+define TRINITY_NR_SPILL_ { alias TRINITY_NR_SPILL kind 'DTS-RESOP-INPUT' units 'TAF' }
+
+define SHASTA_STRG_ { alias SHASTA_STRG kind 'DTS-RESOP-INPUT' units 'TAF' }
+define SHASTA_LEVEL_DPL_ { alias SHASTA_LEVEL_DPL kind 'DTS-RESOP-INPUT' units 'TAF' }
+define SHASTA_LEVEL_RC_ { alias SHASTA_LEVEL_RC kind 'DTS-RESOP-INPUT' units 'TAF' }
+define SHASTA_LEVEL_FLD_ { alias SHASTA_LEVEL_FLD kind 'DTS-RESOP-INPUT' units 'TAF' }
+define SHASTA_LEVEL_CAP_ { alias SHASTA_LEVEL_CAP kind 'DTS-RESOP-INPUT' units 'TAF' }
+define SHASTA_NR_SPILL_ { alias SHASTA_NR_SPILL kind 'DTS-RESOP-INPUT' units 'TAF' }
+define SHASTA_CVPIA_B2_ { alias SHASTA_CVPIA_B2 kind 'DTS-RESOP-INPUT' units 'TAF' }
+
+define FOLSOM_STRG_ { alias FOLSOM_STRG kind 'DTS-RESOP-INPUT' units 'TAF' }
+define FOLSOM_LEVEL_DPL_ { alias FOLSOM_LEVEL_DPL kind 'DTS-RESOP-INPUT' units 'TAF' }
+define FOLSOM_LEVEL_RC_ { alias FOLSOM_LEVEL_RC kind 'DTS-RESOP-INPUT' units 'TAF' }
+define FOLSOM_LEVEL_FLD_ { alias FOLSOM_LEVEL_FLD kind 'DTS-RESOP-INPUT' units 'TAF' }
+define FOLSOM_LEVEL_CAP_ { alias FOLSOM_LEVEL_CAP kind 'DTS-RESOP-INPUT' units 'TAF' }
+define FOLSOM_NR_SPILL_ { alias FOLSOM_NR_SPILL kind 'DTS-RESOP-INPUT' units 'TAF' }
+
+define OROVILLE_STRG_ { alias OROVILLE_STRG kind 'DTS-RESOP-INPUT' units 'TAF' }
+define OROVILLE_LEVEL_DPL_ { alias OROVILLE_LEVEL_DPL kind 'DTS-RESOP-INPUT' units 'TAF' }
+define OROVILLE_LEVEL_RC_ { alias OROVILLE_LEVEL_RC kind 'DTS-RESOP-INPUT' units 'TAF' }
+define OROVILLE_LEVEL_FLD_ { alias OROVILLE_LEVEL_FLD kind 'DTS-RESOP-INPUT' units 'TAF' }
+define OROVILLE_LEVEL_CAP_ { alias OROVILLE_LEVEL_CAP kind 'DTS-RESOP-INPUT' units 'TAF' }
+define OROVILLE_NR_SPILL_ { alias OROVILLE_NR_SPILL kind 'DTS-RESOP-INPUT' units 'TAF' }
+
+define SANLUIS_CVP_STRG_ { alias SANLUIS_CVP_STRG kind 'DTS-RESOP-INPUT' units 'TAF' }
+define SANLUIS_CVP_LEVEL_DPL_ { alias SANLUIS_CVP_LEVEL_DPL kind 'DTS-RESOP-INPUT' units 'TAF' }
+define SANLUIS_CVP_LEVEL_CAP_ { alias SANLUIS_CVP_LEVEL_CAP kind 'DTS-RESOP-INPUT' units 'TAF' }
+!define SANLUIS_CVP_NR_SPILL_ { alias SANLUIS_CVP_NR_SPILL kind 'DTS-RESOP-INPUT' units 'TAF' }
+define SANLUIS_CVP_RC_ { alias SANLUIS_CVP_RC kind 'DTS-RESOP-INPUT' units 'TAF' }
+
+define SANLUIS_SWP_STRG_ { alias SANLUIS_SWP_STRG kind 'DTS-RESOP-INPUT' units 'TAF' }
+define SANLUIS_SWP_LEVEL_DPL_ { alias SANLUIS_SWP_LEVEL_DPL kind 'DTS-RESOP-INPUT' units 'TAF' }
+define SANLUIS_SWP_LEVEL_CAP_ { alias SANLUIS_SWP_LEVEL_CAP kind 'DTS-RESOP-INPUT' units 'TAF' }
+!define SANLUIS_SWP_NR_SPILL_ { alias SANLUIS_SWP_NR_SPILL kind 'DTS-RESOP-INPUT' units 'TAF' }
+define SANLUIS_SWP_RC_ { alias SANLUIS_SWP_RC kind 'DTS-RESOP-INPUT' units 'TAF' }
+
+define CLR_CRK_TUNNEL_ { alias CLR_CRK_TUNNEL kind 'DTS-RESOP-INPUT' units 'TAF' }
+define CLR_CRK_CAP_ { alias CLR_CRK_CAP kind 'DTS-RESOP-INPUT' units 'TAF' }
+define CLR_CRK_TGT_IMPORT_ { alias CLR_CRK_TGT_IMPORT kind 'DTS-RESOP-INPUT' units 'TAF' }
+
+
+!******************** Upstream Minimum Flow *********************
+define TRINITY_FLOW { timeseries 'C_LWSTN' kind 'CHANNEL' units 'CFS' convert 'TAF' }
+define TRINITY_FLOW_MIN1 { timeseries 'C_LWSTN_MIF' kind 'FLOW-MIN-INSTREAM' units 'CFS' convert 'TAF' }
+define TRINITY_FLOW_MIN2_LOOKUP { select RIVER_Q from TRINITYMIN where MONTH=MONTH, WYT_TRIN=WYT_TRIN }
+define TRINITY_FLOW_MIN2 { value TRINITY_FLOW_MIN2_LOOKUP * CFS_TAF }
+define TRINITY_FLOW_MIN { value max(TRINITY_FLOW_MIN1, TRINITY_FLOW_MIN2) }
+
+define CLR_CRK_FLOW { timeseries 'C_WKYTN' kind 'CHANNEL' units 'CFS' convert 'TAF' }
+define CLR_CRK_FLOW_MIN1 { timeseries 'C_WKYTN_MIF' kind 'FLOW-MIN-INSTREAM' units 'CFS' convert 'TAF' }
+define CLR_CRK_FLOW_MIN2 { timeseries 'MINFLOW_CLEARCK' kind 'FLOW-MIN-REQUIRED' units 'CFS' convert 'TAF' }
+define CLR_CRK_FLOW_MIN3 { timeseries 'C3MIF__Z3' kind 'FLOW-MIN-INSTREAM' units 'CFS' convert 'TAF' }  !SVAR DSS
+define CLR_CRK_FLOW_MIN { value max(CLR_CRK_FLOW_MIN1, CLR_CRK_FLOW_MIN2, CLR_CRK_FLOW_MIN3) }
+
+define SAC_KESWICK_FLOW { timeseries 'C_KSWCK' kind 'CHANNEL' units 'CFS' convert 'TAF' }
+define SAC_KESWICK_FLOW_MIN1 { timeseries 'C_KSWCK_MIF' kind 'FLOW-MIN-INSTREAM' units 'CFS' convert 'TAF' }
+define SAC_KESWICK_FLOW_MIN2 { timeseries 'KESWICK_MIN' kind 'ALIAS' units 'CFS' convert 'TAF' }
+define SAC_KESWICK_FLOW_MIN3 { value 0.}!* CFS_TAF} ! timeseries 'C5MIF__Z3' kind 'FLOW-MIN-INSTREAM' units 'CFS' convert 'TAF' }
+define SAC_KESWICK_FLOW_MIN {
+	case OctDec {
+		condition month <= DEC .and. SAC_KESWICK_FLOW_MIN3 >= 4500.0 * cfs_TAF
+			value 4000.0 * cfs_TAF }
+	case otherwise {
+		condition always
+			value max(SAC_KESWICK_FLOW_MIN1, SAC_KESWICK_FLOW_MIN2, SAC_KESWICK_FLOW_MIN3) }
+}
+
+define SAC_REDBLUFF_FLOW { timeseries 'C_SAC240' kind 'CHANNEL' units 'CFS' convert 'TAF' }
+define SAC_REDBLUFF_FLOW_MIN1 { timeseries 'C_SAC240_MIF' kind 'FLOW-MIN-INSTREAM' units 'CFS' convert 'TAF' }
+define SAC_REDBLUFF_FLOW_MIN2_LOOKUP { select REDMIN from REDBLUFF_BASE where MONTH=MONTH, SHASTAINDX=WYT_SHASTA_CVP }
+define SAC_REDBLUFF_FLOW_MIN2 { value SAC_REDBLUFF_FLOW_MIN2_LOOKUP * CFS_TAF }
+define SAC_REDBLUFF_FLOW_MIN1_DAILY { timeseries 'C_SAC240_MIF_DAILY' kind 'FLOW-MIN-INSTREAM' units 'CFS' convert 'TAF' }
+define SAC_REDBLUFF_FLOW_MIN2_DAILY { timeseries 'flow_adj_rb' kind 'FLOW' units 'CFS' convert 'TAF' }
+define SAC_REDBLUFF_FLOW_MIN { value max(SAC_REDBLUFF_FLOW_MIN1, SAC_REDBLUFF_FLOW_MIN2) + max(SAC_REDBLUFF_FLOW_MIN1_DAILY, SAC_REDBLUFF_FLOW_MIN2_DAILY) }
+
+define SAC_HAMILTONCITY_FLOW { timeseries 'C_SAC201' kind 'CHANNEL' units 'CFS' convert 'TAF' }
+define SAC_HAMILTONCITY_FLOW_MIN1 { timeseries 'C_SAC201_MIF' kind 'FLOW-MIN-INSTREAM' units 'CFS' convert 'TAF' }
+define GCID_DEMAND { timeseries 'CL_GCC027_08N_SA2' kind 'CONTRACT-LIMIT' units 'TAF' convert 'TAF' }
+define SAC_HAMILTONCITY_FLOW_MIN2_1 { value 0.}! 'ERP_C114MIFDV' kind 'FLOW-TARGET' units 'CFS' convert 'TAF' }   !zero value
+define SAC_HAMILTONCITY_FLOW_MIN2_2 {													
+    case WBA8NNDemand {
+        condition GCID_DEMAND > 100. * cfs_taf	!if there is a significant diversion
+        value 4000. * cfs_taf}					!require the bypass flow
+    case other {
+        condition always
+        value 0. }
+}		
+define SAC_HAMILTONCITY_FLOW_MIN2 { value max (SAC_HAMILTONCITY_FLOW_MIN2_1 , SAC_HAMILTONCITY_FLOW_MIN2_2) }
+define SAC_HAMILTONCITY_FLOW_MIN1_DAILY { timeseries 'C_SAC201_MIF_DAILY' kind 'FLOW-MIN-INSTREAM' units 'CFS' convert 'TAF' }
+define SAC_HAMILTONCITY_FLOW_MIN2_DAILY { timeseries 'flow_adj_hc' kind 'FLOW' units 'CFS' convert 'TAF' }
+define SAC_HAMILTONCITY_FLOW_MIN { value max(SAC_HAMILTONCITY_FLOW_MIN1, SAC_HAMILTONCITY_FLOW_MIN2) + max(SAC_HAMILTONCITY_FLOW_MIN1_DAILY, SAC_HAMILTONCITY_FLOW_MIN2_DAILY) }
+
+define SAC_WILKINSSLOUGH_FLOW { timeseries 'C_SAC097' kind 'CHANNEL' units 'CFS' convert 'TAF' }
+define SAC_WILKINSSLOUGH_FLOW_MIN1 { timeseries 'C_SAC097_MIF' kind 'FLOW-MIN-INSTREAM' units 'CFS' convert 'TAF' }
+define SAC_WILKINSSLOUGH_FLOW_MIN2 { timeseries 'MINFLOWC_SAC097' kind 'FLOW-MIN-REQUIRED' units 'CFS' convert 'TAF' }
+define SAC_WILKINSSLOUGH_FLOW_MIN1_DAILY { timeseries 'C_SAC097_MIF_DAILY' kind 'FLOW-MIN-INSTREAM' units 'CFS' convert 'TAF' }
+define SAC_WILKINSSLOUGH_FLOW_MIN2_DAILY { timeseries 'flow_adj_wlk' kind 'FLOW' units 'CFS' convert 'TAF' }
+define SAC_WILKINSSLOUGH_FLOW_MIN { value max(SAC_WILKINSSLOUGH_FLOW_MIN1, SAC_WILKINSSLOUGH_FLOW_MIN2) + max(SAC_WILKINSSLOUGH_FLOW_MIN1_DAILY, SAC_WILKINSSLOUGH_FLOW_MIN2_DAILY) * TAF_TAF }
+
+define SAC_FREEPORT_FLOW { timeseries 'C_SAC048' kind 'CHANNEL' units 'CFS' convert 'TAF' }
+define SAC_FREEPORT_FLOW_MIN { value 0.} !timeseries 'C169_MIF' kind 'FLOW-MIN-INSTREAM' units 'CFS' convert 'TAF' }  !zero value
+
+define FEATHER_LOWFLOW_THERMALITO_FLOW { timeseries 'C_FTR068' kind 'CHANNEL' units 'CFS' convert 'TAF' }
+define FEATHER_LOWFLOW_THERMALITO_FLOW_MIN_LOOKUP { select MINFLOW from MINFLOW where  C_ARC=200.1, MONTH=MONTH }
+define FEATHER_LOWFLOW_THERMALITO_FLOW_MIN { value FEATHER_LOWFLOW_THERMALITO_FLOW_MIN_LOOKUP * CFS_TAF }
+
+define FEATHER_BLW_THERMALITO_FLOW { timeseries 'C_FTR059' kind 'CHANNEL' units 'CFS' convert 'TAF' }
+define FEATHER_BLW_THERMALITO_FLOW_MIN { timeseries 'C_FTR059_MIF' kind 'FLOW-MIN-INSTREAM' units 'CFS' convert 'TAF' }
+
+define FEATHER_VERONA_FLOW { timeseries 'C_FTR003' kind 'CHANNEL' units 'CFS' convert 'TAF' }
+define FEATHER_VERONA_FLOW_MIN { timeseries 'C_FTR003_MIF' kind 'FLOW-MIN-INSTREAM' units 'CFS' convert 'TAF' }
+
+define AMERICAN_NIMBUS_FLOW { timeseries 'C_NTOMA' kind 'CHANNEL' units 'CFS' convert 'TAF' }
+define AMERICAN_NIMBUS_FLOW_MIN1 { timeseries 'C_NTOMA_MIF' kind 'FLOW-MIN-INSTREAM' units 'CFS' convert 'TAF' }
+define AMERICAN_NIMBUS_FLOW_MIN2 { timeseries 'C_NTOMA_FMP' kind 'FLOW' units 'CFS' convert 'TAF' }
+define AMERICAN_NIMBUS_FLOW_MIN3 { value 0.}!'C9MIF__Z3'
+define AMERICAN_NIMBUS_FLOW_MIN { value max(AMERICAN_NIMBUS_FLOW_MIN1, AMERICAN_NIMBUS_FLOW_MIN2, AMERICAN_NIMBUS_FLOW_MIN3) }
+
+define AMERICAN_HSTREET_FLOW { timeseries 'C_AMR004' kind 'CHANNEL' units 'CFS' convert 'TAF' }
+define AMERICAN_HSTREET_FLOW_MIN1 { timeseries 'C_AMR004_MIF' kind 'FLOW-MIN-INSTREAM' units 'CFS' convert 'TAF' }
+define AMERICAN_HSTREET_FLOW_MIN2_LOOKUP { select HSTMIN from HST_BASE where MONTH=MONTH, AMERD893=WYT_AMERD893_CVP }
+define AMERICAN_HSTREET_FLOW_MIN2 { value AMERICAN_HSTREET_FLOW_MIN2_LOOKUP * CFS_TAF }
+define AMERICAN_HSTREET_FLOW_MIN { value max(AMERICAN_HSTREET_FLOW_MIN1, AMERICAN_HSTREET_FLOW_MIN2) }
+
+
+define TRINITY_FLOW_ { alias TRINITY_FLOW kind 'DTS-NODMIF-INPUT' units 'TAF' }
+define TRINITY_FLOW_MIN1_ { alias TRINITY_FLOW_MIN1 kind 'DTS-NODMIF-INPUT' units 'TAF' }
+define TRINITY_FLOW_MIN2_ { alias TRINITY_FLOW_MIN2 kind 'DTS-NODMIF-INPUT' units 'TAF' }
+define TRINITY_FLOW_MIN_ { alias TRINITY_FLOW_MIN kind 'DTS-NODMIF-INPUT' units 'TAF' }
+define CLR_CRK_FLOW_ { alias CLR_CRK_FLOW kind 'DTS-NODMIF-INPUT' units 'TAF' }
+define CLR_CRK_FLOW_MIN1_ { alias CLR_CRK_FLOW_MIN1 kind 'DTS-NODMIF-INPUT' units 'TAF' }
+define CLR_CRK_FLOW_MIN2_ { alias CLR_CRK_FLOW_MIN2 kind 'DTS-NODMIF-INPUT' units 'TAF' }
+define CLR_CRK_FLOW_MIN3_ { alias CLR_CRK_FLOW_MIN3 kind 'DTS-NODMIF-INPUT' units 'TAF' }
+define CLR_CRK_FLOW_MIN_ { alias CLR_CRK_FLOW_MIN kind 'DTS-NODMIF-INPUT' units 'TAF' }
+define SAC_KESWICK_FLOW_ { alias SAC_KESWICK_FLOW kind 'DTS-NODMIF-INPUT' units 'TAF' }
+define SAC_KESWICK_FLOW_MIN1_ { alias SAC_KESWICK_FLOW_MIN1 kind 'DTS-NODMIF-INPUT' units 'TAF' }
+define SAC_KESWICK_FLOW_MIN2_ { alias SAC_KESWICK_FLOW_MIN2 kind 'DTS-NODMIF-INPUT' units 'TAF' }
+define SAC_KESWICK_FLOW_MIN3_ { alias SAC_KESWICK_FLOW_MIN3 kind 'DTS-NODMIF-INPUT' units 'TAF' }
+define SAC_KESWICK_FLOW_MIN_ { alias SAC_KESWICK_FLOW_MIN kind 'DTS-NODMIF-INPUT' units 'TAF' }
+define SAC_REDBLUFF_FLOW_ { alias SAC_REDBLUFF_FLOW kind 'DTS-NODMIF-INPUT' units 'TAF' }
+define SAC_REDBLUFF_FLOW_MIN1_ { alias SAC_REDBLUFF_FLOW_MIN1 kind 'DTS-NODMIF-INPUT' units 'TAF' }
+define SAC_REDBLUFF_FLOW_MIN1_DAILY_ { alias SAC_REDBLUFF_FLOW_MIN1_DAILY kind 'DTS-NODMIF-INPUT' units 'TAF' }
+define SAC_REDBLUFF_FLOW_MIN2_ { alias SAC_REDBLUFF_FLOW_MIN2 kind 'DTS-NODMIF-INPUT' units 'TAF' }
+define SAC_REDBLUFF_FLOW_MIN2_DAILY_ { alias SAC_REDBLUFF_FLOW_MIN2_DAILY kind 'DTS-NODMIF-INPUT' units 'TAF' }
+define SAC_REDBLUFF_FLOW_MIN_ { alias SAC_REDBLUFF_FLOW_MIN kind 'DTS-NODMIF-INPUT' units 'TAF' }
+define SAC_HAMILTONCITY_FLOW_ { alias SAC_HAMILTONCITY_FLOW kind 'DTS-NODMIF-INPUT' units 'TAF' }
+define SAC_HAMILTONCITY_FLOW_MIN1_ { alias SAC_HAMILTONCITY_FLOW_MIN1 kind 'DTS-NODMIF-INPUT' units 'TAF' }
+define SAC_HAMILTONCITY_FLOW_MIN2_ { alias SAC_HAMILTONCITY_FLOW_MIN2 kind 'DTS-NODMIF-INPUT' units 'TAF' }
+define SAC_HAMILTONCITY_FLOW_MIN1_DAILY_ { alias SAC_HAMILTONCITY_FLOW_MIN1_DAILY kind 'DTS-NODMIF-INPUT' units 'TAF' }
+define SAC_HAMILTONCITY_FLOW_MIN2_DAILY_ { alias SAC_HAMILTONCITY_FLOW_MIN2_DAILY kind 'DTS-NODMIF-INPUT' units 'TAF' }
+define SAC_HAMILTONCITY_FLOW_MIN_ { alias SAC_HAMILTONCITY_FLOW_MIN kind 'DTS-NODMIF-INPUT' units 'TAF' }
+define SAC_WILKINSSLOUGH_FLOW_ { alias SAC_WILKINSSLOUGH_FLOW kind 'DTS-NODMIF-INPUT' units 'TAF' }
+define SAC_WILKINSSLOUGH_FLOW_MIN1_ { alias SAC_WILKINSSLOUGH_FLOW_MIN1 kind 'DTS-NODMIF-INPUT' units 'TAF' }
+define SAC_WILKINSSLOUGH_FLOW_MIN2_ { alias SAC_WILKINSSLOUGH_FLOW_MIN2 kind 'DTS-NODMIF-INPUT' units 'TAF' }
+define SAC_WILKINSSLOUGH_FLOW_MIN1_DAILY_ { alias SAC_WILKINSSLOUGH_FLOW_MIN1_DAILY kind 'DTS-NODMIF-INPUT' units 'TAF' }
+define SAC_WILKINSSLOUGH_FLOW_MIN2_DAILY_ { alias SAC_WILKINSSLOUGH_FLOW_MIN2_DAILY kind 'DTS-NODMIF-INPUT' units 'TAF' }
+define SAC_WILKINSSLOUGH_FLOW_MIN_ { alias SAC_WILKINSSLOUGH_FLOW_MIN kind 'DTS-NODMIF-INPUT' units 'TAF' }
+define SAC_FREEPORT_FLOW_ { alias SAC_FREEPORT_FLOW kind 'DTS-NODMIF-INPUT' units 'TAF' }
+define SAC_FREEPORT_FLOW_MIN_ { alias SAC_FREEPORT_FLOW_MIN kind 'DTS-NODMIF-INPUT' units 'TAF' }
+define FEATHER_LOWFLOW_THERMALITO_FLOW_ { alias FEATHER_LOWFLOW_THERMALITO_FLOW kind 'DTS-NODMIF-INPUT' units 'TAF' }
+define FEATHER_LOWFLOW_THERMALITO_FLOW_MIN_ { alias FEATHER_LOWFLOW_THERMALITO_FLOW_MIN kind 'DTS-NODMIF-INPUT' units 'TAF' }
+define FEATHER_BLW_THERMALITO_FLOW_ { alias FEATHER_BLW_THERMALITO_FLOW kind 'DTS-NODMIF-INPUT' units 'TAF' }
+define FEATHER_BLW_THERMALITO_FLOW_MIN_ { alias FEATHER_BLW_THERMALITO_FLOW_MIN kind 'DTS-NODMIF-INPUT' units 'TAF' }
+define FEATHER_VERONA_FLOW_ { alias FEATHER_VERONA_FLOW kind 'DTS-NODMIF-INPUT' units 'TAF' }
+define FEATHER_VERONA_FLOW_MIN_ { alias FEATHER_VERONA_FLOW_MIN kind 'DTS-NODMIF-INPUT' units 'TAF' }
+define AMERICAN_NIMBUS_FLOW_ { alias AMERICAN_NIMBUS_FLOW kind 'DTS-NODMIF-INPUT' units 'TAF' }
+define AMERICAN_NIMBUS_FLOW_MIN1_ { alias AMERICAN_NIMBUS_FLOW_MIN1 kind 'DTS-NODMIF-INPUT' units 'TAF' }
+define AMERICAN_NIMBUS_FLOW_MIN2_ { alias AMERICAN_NIMBUS_FLOW_MIN2 kind 'DTS-NODMIF-INPUT' units 'TAF' }
+define AMERICAN_NIMBUS_FLOW_MIN3_ { alias AMERICAN_NIMBUS_FLOW_MIN3 kind 'DTS-NODMIF-INPUT' units 'TAF' }
+define AMERICAN_NIMBUS_FLOW_MIN_ { alias AMERICAN_NIMBUS_FLOW_MIN kind 'DTS-NODMIF-INPUT' units 'TAF' }
+define AMERICAN_HSTREET_FLOW_ { alias AMERICAN_HSTREET_FLOW kind 'DTS-NODMIF-VALUE' units 'TAF' }
+define AMERICAN_HSTREET_FLOW_MIN1_ { alias AMERICAN_HSTREET_FLOW_MIN1 kind 'DTS-NODMIF-VALUE' units 'TAF' }
+define AMERICAN_HSTREET_FLOW_MIN2_ { alias AMERICAN_HSTREET_FLOW_MIN2 kind 'DTS-NODMIF-VALUE' units 'TAF' }
+define AMERICAN_HSTREET_FLOW_MIN_ { alias AMERICAN_HSTREET_FLOW_MIN kind 'DTS-NODMIF-VALUE' units 'TAF' }
+
+!******************** NOD Weirs Operation *********************
+define SPILL_TO_SUTTER1			 { timeseries 'SP_SAC193_BTC003' kind 'RIVER-SPILLS' units 'CFS' convert 'TAF' }
+define SPILL_TO_SUTTER2 		{ timeseries 'SP_SAC188_BTC003' kind 'RIVER-SPILLS' units 'CFS' convert 'TAF' }
+define SPILL_TO_SUTTER3 		{ timeseries 'SP_SAC178_BTC003' kind 'RIVER-SPILLS' units 'CFS' convert 'TAF' }
+
+define SPILL_TO_SUTTER 			 { VALUE SPILL_TO_SUTTER1+SPILL_TO_SUTTER2+SPILL_TO_SUTTER3}
+define SPILL_FROM_MOULTON  	     { timeseries 'SP_SAC159_BTC003' kind 'RIVER-SPILLS' units 'CFS' convert 'TAF' } 
+define SPILL_FROM_COLUSA 		 { timeseries 'SP_SAC148_BTC003' kind 'RIVER-SPILLS' units 'CFS' convert 'TAF' }
+define SPILL_FROM_TISDALE 		 { timeseries 'SP_SAC122_SBP021' kind 'RIVER-SPILLS' units 'CFS' convert 'TAF' }
+define SPILL_FROM_BUTT_CRK 		 { timeseries 'C_BTC007' kind 'CHANNEL' units 'CFS' convert 'TAF' }
+define SPILL_FROM_FREMONT 		 { timeseries 'SP_SAC083_YBP037' kind 'RIVER-SPILLS' units 'CFS' convert 'TAF' }
+define SPILL_FROM_SAC_WEIR		 { timeseries 'SP_SAC066_YBP020' kind 'RIVER-SPILLS' units 'CFS' convert 'TAF'}
+define SPILL_FROM_KINGHTS_LNDING { timeseries 'D_CBD001_KLR005' kind 'DIVERSION' units 'CFS' convert 'TAF' }
+
+define SPILL_TO_SUTTER1_          { alias  SPILL_TO_SUTTER1  kind 'WEIR-OP-VALUE' units 'TAF' }
+define SPILL_TO_SUTTER2_          { alias  SPILL_TO_SUTTER2  kind 'WEIR-OP-VALUE' units 'TAF' }
+define SPILL_TO_SUTTER3_          { alias  SPILL_TO_SUTTER3  kind 'WEIR-OP-VALUE' units 'TAF' }
+
+define SPILL_TO_SUTTER_          { alias  SPILL_TO_SUTTER  kind 'WEIR-OP-VALUE' units 'TAF' }
+define SPILL_FROM_MOULTON_       { alias  SPILL_FROM_MOULTON  kind 'WEIR-OP-VALUE' units 'TAF' }
+define SPILL_FROM_COLUSA_     	 { alias  SPILL_FROM_COLUSA  kind 'WEIR-OP-VALUE' units 'TAF' }
+define SPILL_FROM_TISDALE_ 	 	 { alias  SPILL_FROM_TISDALE  kind 'WEIR-OP-VALUE' units 'TAF' }
+define SPILL_FROM_BUTT_CRK_		 { alias  SPILL_FROM_BUTT_CRK  kind 'WEIR-OP-VALUE' units 'TAF' }
+define SPILL_FROM_FREMONT_ 		 { alias  SPILL_FROM_FREMONT  kind 'WEIR-OP-VALUE' units 'TAF' }
+define SPILL_FROM_SAC_WEIR_ 	 { alias  SPILL_FROM_SAC_WEIR  kind 'WEIR-OP-VALUE' units 'TAF' }
+define SPILL_FROM_KINGHTS_LNDING_ { alias  SPILL_FROM_KINGHTS_LNDING  kind 'WEIR-OP-VALUE' units 'TAF' }
+
+!******************** NOD Groundwater Pumping *********************
+!DSA58
+define GPMIN_02_NA_DV {timeseries 'GPMIN_02_NA_DV' kind 'GW-PUMPING-LIMIT' units 'cfs' convert 'taf'}		
+define GPMIN_02_PA_DV {timeseries 'GPMIN_02_PA_DV' kind 'GW-PUMPING-LIMIT' units 'cfs' convert 'taf'}		
+define GPMIN_02_SA_DV {timeseries 'GPMIN_02_SA_DV' kind 'GW-PUMPING-LIMIT' units 'cfs' convert 'taf'}		
+define GPMIN_03_NA_DV {timeseries 'GPMIN_02_SA_DV' kind 'GW-PUMPING-LIMIT' units 'cfs' convert 'taf'}		
+define GPMIN_03_PA_DV {timeseries 'GPMIN_03_PA_DV' kind 'GW-PUMPING-LIMIT' units 'cfs' convert 'taf'}		
+define GPMIN_03_SA_DV {timeseries 'GPMIN_03_SA_DV' kind 'GW-PUMPING-LIMIT' units 'cfs' convert 'taf'}		
+define GP_WBATotal_2 {timeseries 'GP_WBATotal_2' kind 'GW-PUMPING' units 'cfs' convert 'taf'}
+define GP_WBATotal_3 {timeseries 'GP_WBATotal_3' kind 'GW-PUMPING' units 'cfs' convert 'taf'}
+
+!DSA65
+define GPMIN_20_NA1_DV {timeseries kind 'GW-PUMPING-LIMIT' units 'cfs' convert 'taf'}		
+define GPMIN_20_NA2_DV {timeseries kind 'GW-PUMPING-LIMIT' units 'cfs' convert 'taf'}		
+define GPMIN_20_PA_DV {timeseries kind 'GW-PUMPING-LIMIT' units 'cfs' convert 'taf'}		
+define GPMIN_21_NA_DV {timeseries kind 'GW-PUMPING-LIMIT' units 'cfs' convert 'taf'}		
+define GPMIN_21_PA_DV {timeseries kind 'GW-PUMPING-LIMIT' units 'cfs' convert 'taf'}		
+define GPMIN_21_SA_DV {timeseries kind 'GW-PUMPING-LIMIT' units 'cfs' convert 'taf'}		
+define GPMIN_25_NA_DV {timeseries kind 'GW-PUMPING-LIMIT' units 'cfs' convert 'taf'}		
+define GPMIN_25_PA1_DV {timeseries kind 'GW-PUMPING-LIMIT' units 'cfs' convert 'taf'}		
+define GPMIN_25_PA2_DV {timeseries kind 'GW-PUMPING-LIMIT' units 'cfs' convert 'taf'}		
+define GP_WBATotal_20 {timeseries kind 'GW-PUMPING' units 'cfs' convert 'taf'}
+define GP_WBATotal_21 {timeseries kind 'GW-PUMPING' units 'cfs' convert 'taf'}
+define GP_WBATotal_25 {timeseries kind 'GW-PUMPING' units 'cfs' convert 'taf'}
+
+!DSA69
+define gpmin_10_na_dv {timeseries kind 'GW-PUMPING-LIMIT' units 'cfs' convert 'taf'}		
+define gpmin_11_na_dv {timeseries kind 'GW-PUMPING-LIMIT' units 'cfs' convert 'taf'}		
+define gpmin_11_sa1_dv {timeseries kind 'GW-PUMPING-LIMIT' units 'cfs' convert 'taf'}		
+define gpmin_11_sa2_dv {timeseries kind 'GW-PUMPING-LIMIT' units 'cfs' convert 'taf'}		
+define gpmin_11_sa3_dv {timeseries kind 'GW-PUMPING-LIMIT' units 'cfs' convert 'taf'}		
+define gpmin_11_sa4_dv {timeseries kind 'GW-PUMPING-LIMIT' units 'cfs' convert 'taf'}		
+define gpmin_12_na_dv {timeseries kind 'GW-PUMPING-LIMIT' units 'cfs' convert 'taf'}		
+define gpmin_13_na_dv {timeseries kind 'GW-PUMPING-LIMIT' units 'cfs' convert 'taf'}		
+define gpmin_14_na_dv {timeseries kind 'GW-PUMPING-LIMIT' units 'cfs' convert 'taf'}		
+define gpmin_15n_na1_dv {timeseries kind 'GW-PUMPING-LIMIT' units 'cfs' convert 'taf'}		
+define gpmin_15n_na2_dv {timeseries kind 'GW-PUMPING-LIMIT' units 'cfs' convert 'taf'}		
+define gpmin_15n_sa_dv {timeseries kind 'GW-PUMPING-LIMIT' units 'cfs' convert 'taf'}		
+define gpmin_15s_na1_dv {timeseries kind 'GW-PUMPING-LIMIT' units 'cfs' convert 'taf'}		
+define gpmin_15s_na2_dv {timeseries kind 'GW-PUMPING-LIMIT' units 'cfs' convert 'taf'}		
+define gpmin_15s_sa_dv {timeseries kind 'GW-PUMPING-LIMIT' units 'cfs' convert 'taf'}		
+define gpmin_16_na1_dv {timeseries kind 'GW-PUMPING-LIMIT' units 'cfs' convert 'taf'}		
+define gpmin_16_na2_dv {timeseries kind 'GW-PUMPING-LIMIT' units 'cfs' convert 'taf'}		
+define gpmin_16_pa_dv {timeseries kind 'GW-PUMPING-LIMIT' units 'cfs' convert 'taf'}		
+define gpmin_16_sa_dv {timeseries kind 'GW-PUMPING-LIMIT' units 'cfs' convert 'taf'}		
+define gpmin_17n_na_dv {timeseries kind 'GW-PUMPING-LIMIT' units 'cfs' convert 'taf'}		
+define gpmin_17s_na_dv {timeseries kind 'GW-PUMPING-LIMIT' units 'cfs' convert 'taf'}		
+define gpmin_17s_sa_dv {timeseries kind 'GW-PUMPING-LIMIT' units 'cfs' convert 'taf'}		
+define GP_WBATotal_10 {timeseries kind 'GW-PUMPING' units 'cfs' convert 'taf'}
+define GP_WBATotal_11 {timeseries kind 'GW-PUMPING' units 'cfs' convert 'taf'}
+define GP_WBATotal_12 {timeseries kind 'GW-PUMPING' units 'cfs' convert 'taf'}
+define GP_WBATotal_13 {timeseries kind 'GW-PUMPING' units 'cfs' convert 'taf'}
+define GP_WBATotal_14 {timeseries kind 'GW-PUMPING' units 'cfs' convert 'taf'}
+define GP_WBATotal_15N {timeseries kind 'GW-PUMPING' units 'cfs' convert 'taf'}
+define GP_WBATotal_15S {timeseries kind 'GW-PUMPING' units 'cfs' convert 'taf'}
+define GP_WBATotal_16 {timeseries kind 'GW-PUMPING' units 'cfs' convert 'taf'}
+define GP_WBATotal_17N {timeseries kind 'GW-PUMPING' units 'cfs' convert 'taf'}
+define GP_WBATotal_17S {timeseries kind 'GW-PUMPING' units 'cfs' convert 'taf'}
+
+!DSA70
+define gpmin_24_na3_dv {timeseries kind 'GW-PUMPING-LIMIT' units 'cfs' convert 'taf'}		
+define gpmin_24_na2_dv {timeseries kind 'GW-PUMPING-LIMIT' units 'cfs' convert 'taf'}		
+define gpmin_22_na_dv {timeseries kind 'GW-PUMPING-LIMIT' units 'cfs' convert 'taf'}		
+define gpmin_24_na1_dv {timeseries kind 'GW-PUMPING-LIMIT' units 'cfs' convert 'taf'}		
+define gpmin_22_sa1_dv {timeseries kind 'GW-PUMPING-LIMIT' units 'cfs' convert 'taf'}		
+define gpmin_22_sa2_dv {timeseries kind 'GW-PUMPING-LIMIT' units 'cfs' convert 'taf'}		
+define gpmin_23_na_dv {timeseries kind 'GW-PUMPING-LIMIT' units 'cfs' convert 'taf'}	
+define GP_WBATotal_22 {timeseries kind 'GW-PUMPING' units 'cfs' convert 'taf'}
+define GP_WBATotal_23 {timeseries kind 'GW-PUMPING' units 'cfs' convert 'taf'}
+define GP_WBATotal_24 {timeseries kind 'GW-PUMPING' units 'cfs' convert 'taf'}
+
+!CB
+define GPMIN_09_NA_DV { timeseries kind 'GW-PUMPING-LIMIT' units 'CFS' convert 'TAF'} !DSA15
+define GPMIN_09_SA1_DV { timeseries kind 'GW-PUMPING-LIMIT' units 'CFS' convert 'TAF'} !DSA15
+define GPMIN_09_SA2_DV { timeseries kind 'GW-PUMPING-LIMIT' units 'CFS' convert 'TAF'} !DSA15
+define GPMIN_18_NA_DV { timeseries kind 'GW-PUMPING-LIMIT' units 'CFS' convert 'TAF'}!DSA15
+define GPMIN_18_SA_DV { timeseries kind 'GW-PUMPING-LIMIT' units 'CFS' convert 'TAF'}!DSA15
+define GPMIN_19_SA_DV { timeseries kind 'GW-PUMPING-LIMIT' units 'CFS' convert 'TAF'}!DSA15
+define GP_04_NA { timeseries kind 'GW-PUMPING' units 'cfs' convert 'taf'}
+define GP_05_NA{ timeseries kind 'GW-PUMPING' units 'cfs' convert 'taf'}
+define GP_06_PA { timeseries kind 'GW-PUMPING' units 'cfs' convert 'taf'}
+define GP_07N_PA { timeseries kind 'GW-PUMPING' units 'cfs' convert 'taf'}
+define GP_07S_PA { timeseries kind 'GW-PUMPING' units 'cfs' convert 'taf'}
+define GP_08N_SA1 { timeseries kind 'GW-PUMPING' units 'cfs' convert 'taf'}
+define GP_08N_SA2 { timeseries kind 'GW-PUMPING' units 'cfs' convert 'taf'}
+define GP_08S_SA1 { timeseries kind 'GW-PUMPING' units 'cfs' convert 'taf'}
+define GP_08S_SA2 { timeseries kind 'GW-PUMPING' units 'cfs' convert 'taf'}
+define GP_08S_SA3 { timeseries kind 'GW-PUMPING' units 'cfs' convert 'taf'}
+!GCC,Sac R West Bank,CBD
+define GPMIN_08N_PA_DV { timeseries 'GPMIN_08N_PA_DV' kind 'GW-PUMPING-LIMIT' units 'CFS' convert 'TAF'}
+define GPMIN_08N_SA1_DV { timeseries 'GPMIN_08N_SA1_DV' kind 'GW-PUMPING-LIMIT' units 'CFS' convert 'TAF'}
+define GPMIN_08N_SA2_DV { timeseries 'GPMIN_08N_SA2_DV' kind 'GW-PUMPING-LIMIT' units 'CFS' convert 'TAF'}
+define GPMIN_08S_PA_DV { timeseries 'GPMIN_08S_PA_DV' kind 'GW-PUMPING-LIMIT' units 'CFS' convert 'TAF'}
+define GPMIN_08S_SA1_DV { timeseries 'GPMIN_08S_SA1_DV' kind 'GW-PUMPING-LIMIT' units 'CFS' convert 'TAF'}
+define GPMIN_08S_SA2_DV { timeseries 'GPMIN_08S_SA2_DV' kind 'GW-PUMPING-LIMIT' units 'CFS' convert 'TAF'}
+define GP_09_NA { timeseries kind 'GW-PUMPING' units 'cfs' convert 'taf'}
+define GP_09_SA1 { timeseries kind 'GW-PUMPING' units 'cfs' convert 'taf'}
+define GP_09_SA2 { timeseries kind 'GW-PUMPING' units 'cfs' convert 'taf'}
+define GP_18_NA { timeseries kind 'GW-PUMPING' units 'cfs' convert 'taf'}
+define GP_18_SA { timeseries kind 'GW-PUMPING' units 'cfs' convert 'taf'}
+define GP_19_SA { timeseries kind 'GW-PUMPING' units 'cfs' convert 'taf'}
+
+define GW_PMP_DSA58 { value GP_WBATotal_2+GP_WBATotal_3}
+define GW_PMP_DSA58_MIN { value GPMIN_02_NA_DV+GPMIN_02_PA_DV+GPMIN_02_SA_DV+GPMIN_03_NA_DV+GPMIN_03_PA_DV+GPMIN_03_SA_DV}
+define GW_PMP_DSA65 { value GP_WBATotal_20+GP_WBATotal_21+GP_WBATotal_25}
+define GW_PMP_DSA65_MIN { value GPMIN_20_NA1_DV+GPMIN_20_NA2_DV+GPMIN_20_PA_DV+GPMIN_21_NA_DV+GPMIN_21_PA_DV+
+				GPMIN_21_SA_DV+GPMIN_25_NA_DV+GPMIN_25_PA1_DV+GPMIN_25_PA2_DV}
+define GW_PMP_DSA69 { value GP_WBATotal_10+GP_WBATotal_11+GP_WBATotal_12+GP_WBATotal_13+GP_WBATotal_14+
+			    GP_WBATotal_15N+GP_WBATotal_15S+GP_WBATotal_16+GP_WBATotal_17N+GP_WBATotal_17S}
+define GW_PMP_DSA69_MIN { value gpmin_10_na_dv+gpmin_11_na_dv+gpmin_11_sa1_dv+gpmin_11_sa2_dv+gpmin_11_sa3_dv+gpmin_11_sa4_dv+
+				gpmin_12_na_dv+gpmin_13_na_dv+gpmin_14_na_dv+gpmin_15n_na1_dv+gpmin_15n_na2_dv+gpmin_15n_sa_dv+
+				gpmin_15s_na1_dv+gpmin_15s_na2_dv+gpmin_16_na1_dv+gpmin_16_na2_dv+gpmin_16_pa_dv+gpmin_16_sa_dv+
+				gpmin_17n_na_dv+gpmin_17s_na_dv+gpmin_17s_sa_dv} 
+define GW_PMP_DSA70 { value GP_WBATotal_22+GP_WBATotal_23+GP_WBATotal_24}
+define GW_PMP_DSA70_MIN { value gpmin_24_na3_dv+gpmin_24_na2_dv+gpmin_22_na_dv+gpmin_24_na1_dv+gpmin_22_sa1_dv+gpmin_22_sa2_dv+gpmin_23_na_dv} 
+define GW_PMP_COLUSA_1 { value GP_04_NA+GP_05_NA} !'GP61' 
+define GW_PMP_COLUSA_2 { value GP_06_PA+GP_07N_PA+GP_07S_PA+GP_08N_SA1+GP_08N_SA2+
+			       GP_08S_SA1+GP_08S_SA2+GP_08S_SA3}!'GP62' 
+define GW_PMP_COLUSA_3 { value GP_09_NA+GP_09_SA1+GP_09_SA2+GP_18_NA+GP_18_SA+GP_19_SA} !'GP63' 
+define GW_PMP_COLUSA_MIN1 { timeseries 'GPMIN_04_NA_DV' kind 'GW-PUMPING-LIMIT' units 'CFS' convert 'TAF'}!MINPUMP_11302'
+define GW_PMP_COLUSA_MIN2 { timeseries 'GPMIN_05_NA_DV' kind 'GW-PUMPING-LIMIT' units 'CFS' convert 'TAF'}!MINPUMP_11306' 
+define GW_PMP_COLUSA_MIN3 { value GPMIN_09_NA_DV+GPMIN_18_NA_DV}!MINPUMP_131NP
+define GW_PMP_COLUSA_MIN4 { value GPMIN_09_SA1_DV+GPMIN_09_SA2_DV+GPMIN_18_SA_DV+GPMIN_19_SA_DV} !MINPUMP_131SC
+define GW_PMP_COLUSA_MIN5 { value GPMIN_08N_SA2_DV}!MINPUMP_14301GCID
+define GW_PMP_COLUSA_MIN6 { value GPMIN_08N_SA1_DV} !MINPUMP_14301SC
+define GW_PMP_COLUSA_MIN7 { value GPMIN_08S_SA2_DV} !MINPUMP_14501GCID
+define GW_PMP_COLUSA_MIN8 { value GPMIN_08S_SA1_DV}!MINPUMP_14501SC
+define GW_PMP_COLUSA_MIN9 { timeseries 'GPMIN_04_PA1_DV' kind 'GW-PUMPING-LIMIT' units 'CFS' convert 'TAF'}!MINPUMP_17101' kind 'MINPUMP' units 'TAF' convert 'TAF' }
+define GW_PMP_COLUSA_MIN10 { timeseries 'GPMIN_04_PA2_DV' kind 'GW-PUMPING-LIMIT' units 'CFS' convert 'TAF'}!MINPUMP_17201' kind 'MINPUMP' units 'TAF' convert 'TAF' }
+define GW_PMP_COLUSA_MIN11 { timeseries 'GPMIN_06_PA_DV' kind 'GW-PUMPING-LIMIT' units 'CFS' convert 'TAF'}!MINPUMP_17302P' kind 'MINPUMP' units 'TAF' convert 'TAF' }
+define GW_PMP_COLUSA_MIN12 { timeseries 'GPMIN_07N_PA_DV' kind 'GW-PUMPING-LIMIT' units 'CFS' convert 'TAF'}!MINPUMP_17401' kind 'MINPUMP' units 'TAF' convert 'TAF' }
+define GW_PMP_COLUSA_MIN13 { timeseries 'GPMIN_07S_PA_DV' kind 'GW-PUMPING-LIMIT' units 'CFS' convert 'TAF'}!MINPUMP_17801' kind 'MINPUMP' units 'TAF' convert 'TAF' }
+define GW_PMP_COLUSA_MIN14 { timeseries 'GPMIN_08S_SA3_DV' kind 'GW-PUMPING-LIMIT' units 'CFS' convert 'TAF'}!MINPUMP_18301SC' kind 'MINPUMP' units 'TAF' convert 'TAF' }*/
+
+define GW_PMP_DSA58_ { alias  GW_PMP_DSA58  kind 'DTS-GW-VALUE' units 'TAF' }
+define GW_PMP_DSA58_MIN_ { alias  GW_PMP_DSA58_MIN  kind 'DTS-GW-VALUE' units 'TAF' }
+define GW_PMP_DSA65_ { alias  GW_PMP_DSA65  kind 'DTS-GW-VALUE' units 'TAF' }
+define GW_PMP_DSA65_MIN_ { alias  GW_PMP_DSA65_MIN  kind 'DTS-GW-VALUE' units 'TAF' }
+define GW_PMP_DSA69_ { alias  GW_PMP_DSA69  kind 'DTS-GW-VALUE' units 'TAF' }
+define GW_PMP_DSA69_MIN_ { alias  GW_PMP_DSA69_MIN  kind 'DTS-GW-VALUE' units 'TAF' }
+define GW_PMP_DSA70_ { alias  GW_PMP_DSA70  kind 'DTS-GW-VALUE' units 'TAF' }
+define GW_PMP_DSA70_MIN_ { alias  GW_PMP_DSA70_MIN  kind 'DTS-GW-VALUE' units 'TAF' }
+
+define GW_PMP_COLUSA_1_ { alias  GW_PMP_COLUSA_1  kind 'DTS-GW-VALUE' units 'TAF' }
+define GW_PMP_COLUSA_2_ { alias  GW_PMP_COLUSA_2  kind 'DTS-GW-VALUE' units 'TAF' }
+define GW_PMP_COLUSA_3_ { alias  GW_PMP_COLUSA_3  kind 'DTS-GW-VALUE' units 'TAF' }
+define GW_PMP_COLUSA_MIN1_ { alias  GW_PMP_COLUSA_MIN1  kind 'DTS-GW-VALUE' units 'TAF' }
+define GW_PMP_COLUSA_MIN2_ { alias  GW_PMP_COLUSA_MIN2  kind 'DTS-GW-VALUE' units 'TAF' }
+define GW_PMP_COLUSA_MIN3_ { alias  GW_PMP_COLUSA_MIN3  kind 'DTS-GW-VALUE' units 'TAF' }
+define GW_PMP_COLUSA_MIN4_ { alias  GW_PMP_COLUSA_MIN4  kind 'DTS-GW-VALUE' units 'TAF' }
+define GW_PMP_COLUSA_MIN5_ { alias  GW_PMP_COLUSA_MIN5  kind 'DTS-GW-VALUE' units 'TAF' }
+define GW_PMP_COLUSA_MIN6_ { alias  GW_PMP_COLUSA_MIN6  kind 'DTS-GW-VALUE' units 'TAF' }
+define GW_PMP_COLUSA_MIN7_ { alias  GW_PMP_COLUSA_MIN7  kind 'DTS-GW-VALUE' units 'TAF' }
+define GW_PMP_COLUSA_MIN8_ { alias  GW_PMP_COLUSA_MIN8  kind 'DTS-GW-VALUE' units 'TAF' }
+define GW_PMP_COLUSA_MIN9_ { alias  GW_PMP_COLUSA_MIN9  kind 'DTS-GW-VALUE' units 'TAF' }
+define GW_PMP_COLUSA_MIN10_ { alias  GW_PMP_COLUSA_MIN10  kind 'DTS-GW-VALUE' units 'TAF' }
+define GW_PMP_COLUSA_MIN11_ { alias  GW_PMP_COLUSA_MIN11  kind 'DTS-GW-VALUE' units 'TAF' }
+define GW_PMP_COLUSA_MIN12_ { alias  GW_PMP_COLUSA_MIN12  kind 'DTS-GW-VALUE' units 'TAF' }
+define GW_PMP_COLUSA_MIN13_ { alias  GW_PMP_COLUSA_MIN13  kind 'DTS-GW-VALUE' units 'TAF' }
+define GW_PMP_COLUSA_MIN14_ { alias  GW_PMP_COLUSA_MIN14  kind 'DTS-GW-VALUE' units 'TAF' }
+
+!***************************** Delta Operation ********************************
+define C400 { timeseries 'C_SAC041' kind 'CHANNEL' units 'CFS' convert 'TAF' }
+define JP_SLOPE { timeseries 'JP_M' kind 'SLOPE' units 'NONE'}
+define JP_INTERCEPT { timeseries 'JP_B' kind 'INTERCEPT' units 'NONE'}
+define EM_SLOPE { timeseries 'EM_M' kind 'SLOPE' units 'NONE'}
+define EM_INTERCEPT { timeseries 'EM_B' kind 'INTERCEPT' units 'NONE'}
+define CO_SLOPE { timeseries 'CO_M' kind 'SLOPE' units 'NONE'}
+define CO_INTERCEPT { timeseries 'CO_B' kind 'INTERCEPT' units 'NONE'}
+define RS_SLOPE_1 { timeseries 'RS_M_1' kind 'SLOPE' units 'NONE'}
+define RS_INTERCEPT_1 { timeseries 'RS_B_1' kind 'INTERCEPT' units 'NONE'}
+define RS_SLOPE_2 { timeseries 'RS_M_2' kind 'SLOPE' units 'NONE'}
+define RS_INTERCEPT_2 { timeseries 'RS_B_2' kind 'INTERCEPT' units 'NONE'}
+define RS_SLOPE_3 { timeseries 'RS_M_3' kind 'SLOPE' units 'NONE'}
+define RS_INTERCEPT_3 { timeseries 'RS_B_3' kind 'INTERCEPT' units 'NONE'}
+define JONES_EXP1 { timeseries 'C_DMC000_EXP1' kind 'FLOW-DELIVERY' units 'CFS' convert 'TAF' }
+define JONES_EXP2 { timeseries 'C_DMC000_EXP2' kind 'FLOW-DELIVERY' units 'CFS' convert 'TAF' }
+define JONES_CVP { timeseries 'C_DMC000_CVP' kind 'FLOW-DELIVERY' units 'CFS' convert 'TAF' }
+define JONES_WTS { timeseries 'C_DMC000_WTS' kind 'FLOW-DELIVERY' units 'CFS' convert 'TAF' }
+define BANKS_EXP1 { timeseries 'C_CAA003_EXP1' kind 'FLOW-DELIVERY' units 'CFS' convert 'TAF' }
+define BANKS_EXP2 { timeseries 'C_CAA003_EXP2' kind 'FLOW-DELIVERY' units 'CFS' convert 'TAF' }
+define BANKS_CVP { timeseries 'C_CAA003_CVP' kind 'FLOW-DELIVERY' units 'CFS' convert 'TAF' }
+define BANKS_SWP { timeseries 'C_CAA003_SWP' kind 'FLOW-DELIVERY' units 'CFS' convert 'TAF' }
+define BANKS_WTS { timeseries 'C_CAA003_WTS' kind 'FLOW-DELIVERY' units 'CFS' convert 'TAF' }
+
+define C400_ { alias C400 kind 'DTS-DELTA-OP-INPUT' units 'TAF' }
+define JP_SLOPE_ { alias JP_SLOPE kind 'DTS-DELTA-OP-INPUT' units 'NONE' }
+define JP_INTERCEPT_ { alias JP_INTERCEPT kind 'DTS-DELTA-OP-INPUT' units 'NONE' }
+define EM_SLOPE_ { alias EM_SLOPE kind 'DTS-DELTA-OP-INPUT' units 'NONE' }
+define EM_INTERCEPT_ { alias EM_INTERCEPT kind 'DTS-DELTA-OP-INPUT' units 'NONE' }
+define COLLINS_SLOPE_ { alias CO_SLOPE kind 'DTS-DELTA-OP-INPUT' units 'NONE' }
+define COLLINS_INTERCEPT_ { alias CO_INTERCEPT kind 'DTS-DELTA-OP-INPUT' units 'NONE' }
+define RS_SLOPE_1_ { alias RS_SLOPE_1 kind 'DTS-DELTA-OP-INPUT' units 'NONE' }
+define RS_INTERCEPT_1_ { alias RS_INTERCEPT_1 kind 'DTS-DELTA-OP-INPUT' units 'NONE' }
+define RS_SLOPE_2_ { alias RS_SLOPE_2 kind 'DTS-DELTA-OP-INPUT' units 'NONE' }
+define RS_INTERCEPT_2_ { alias RS_INTERCEPT_2 kind 'DTS-DELTA-OP-INPUT' units 'NONE' }
+define RS_SLOPE_3_ { alias RS_SLOPE_3 kind 'DTS-DELTA-OP-INPUT' units 'NONE' }
+define RS_INTERCEPT_3_ { alias RS_INTERCEPT_3 kind 'DTS-DELTA-OP-INPUT' units 'NONE' }
+
+
+define JONES_EXP1_ { alias JONES_EXP1 kind 'DTS-DELTA-OP-VALUE' units 'TAF' }
+define JONES_EXP2_ { alias JONES_EXP2 kind 'DTS-DELTA-OP-VALUE' units 'TAF' }
+define JONES_CVP_ { alias JONES_CVP kind 'DTS-DELTA-OP-VALUE' units 'TAF' }
+define BANKS_EXP1_ { alias BANKS_EXP1 kind 'DTS-DELTA-OP-VALUE' units 'TAF' }
+define BANKS_EXP2_ { alias BANKS_EXP2 kind 'DTS-DELTA-OP-VALUE' units 'TAF' }
+define BANKS_CVP_ { alias BANKS_CVP kind 'DTS-DELTA-OP-VALUE' units 'TAF' }
+define BANKS_SWP_ { alias BANKS_SWP kind 'DTS-DELTA-OP-VALUE' units 'TAF' }
+define BANKS_WTS_ { alias BANKS_WTS kind 'DTS-DELTA-OP-VALUE' units 'TAF' }
+
+!******************** SOD EXPORT *********************
+define BANKS_EXP {timeseries 'C_CAA003' kind 'CHANNEL' 	units 'CFS' convert 'TAF' }
+define JONES_EXP {timeseries 'C_DMC000' kind 'CHANNEL' 	units 'CFS' convert 'TAF' }
+define BANKSALLOWOUT 	{timeseries 'BANKSALLOWOUT' 	kind 'FLOW-ALLOW-BANKS' 	units 'CFS' convert 'TAF' }
+define JONESALLOWOUT 	{timeseries 'TRACYALLOWOUT' 	kind 'FLOW-ALLOW-TRACY' 	units 'CFS' convert 'TAF' }
+define APRMAYEXPCTRL	{timeseries 'APRMAYEXPCTRL' 	kind 'EXPORT-CTRL-APRMAY' 	units 'CFS'  convert 'TAF'} 
+define MAXEXP_RPA	 	{timeseries 'MAXEXP_RPA_DV' 		kind 'EXPORT-LIMIT' 		units 'CFS'  convert 'TAF'} 
+define FWS_X2_LIMIT 	{timeseries 'FWS_MAXEXPX2DV' 	kind 'EXPORT-LIMIT' 		units 'CFS'  convert 'TAF'}
+define NMFS_MAXEXPDCC	{timeseries 'NMFS_MAXEXPDCCDV'	kind 'EXPORT-LIMIT' 		units 'CFS'  convert 'TAF'}
+define BANKS_UPSTREAM 	{timeseries 'EXP_TD_UPSTREAM' 	kind 'FLOW-DELIVERY' 		units 'CFS'  convert 'TAF'}
+define TOT_EXP 			{timeseries 'EXP_TD' 				kind 'FLOW-DELIVERY' 		units 'CFS'  convert 'TAF'} 
+define NMFS_MAXEXP		{timeseries 'NMFS_MAXEXPDV' 	kind 'NMFS' 				units 'CFS'  convert 'TAF'}
+define APRMAYTRACYCTRL 	{timeseries 'APRMAYTRACYCTRL' 	kind 'EXPORT-CTRL-APRMAY'	units 'CFS'  convert 'TAF'} 
+define MAXEXP_RPA_SWP	{timeseries 'MAXEXP_RPA_SWPDV'	kind 'EXPORT-LIMIT' 		units 'CFS'  convert 'TAF'} 
+define EXPORT_DEC 		{timeseries 'EXPORT_DEC_' 		kind 'TEMP' 				units 'CFS'  convert 'TAF'} 
+define NMFS_DCC_LIMIT 	{timeseries 'NMFS_MaxExpDCCdv'	kind 'EXPORT-LIMIT'			units 'CFS'  convert 'TAF'}
+define APRMAYBANKSCTRL 	{timeseries 'APRMAYBANKSCTRL' 	kind 'EXPORT-CTRL-APRMAY' 	units 'CFS'  convert 'TAF'} 
+define MAXEXP_RPA_CVP	{timeseries 'MAXEXP_RPA_CVPDV' 	kind 'EXPORT-LIMIT' 		units 'CFS'  convert 'TAF'} 
+define SOD_EXP_MAXCAP 	{value BANKSALLOWOUT + JONESALLOWOUT}
+
+
+!define BANKS_EXP_ { alias  BANKS_EXP  kind 'DTS-DELTA-EXP-CTRL-INPUT' units 'TAF' }
+!define JONES_EXP_ { alias  JONES_EXP  kind 'DTS-DELTA-EXP-CTRL-INPUT' units 'TAF' }
+define BANKSALLOWOUT_ 		{ alias  BANKSALLOWOUT  	kind 'DTS-DELTA-EXP-CTRL-INPUT' units 'TAF' }
+define JONESALLOWOUT_ 		{ alias  JONESALLOWOUT 		kind 'DTS-DELTA-EXP-CTRL-INPUT' units 'TAF' }
+define APRMAYEXPCTRL_ 		{ alias  APRMAYEXPCTRL 		kind 'DTS-DELTA-EXP-CTRL-INPUT' units 'TAF' }
+define MAXEXP_RPA_ 			{ alias  MAXEXP_RPA  		kind 'DTS-DELTA-EXP-CTRL-INPUT' units 'TAF' }
+define FWS_X2_LIMIT_ 		{ alias  FWS_X2_LIMIT  		kind 'DTS-DELTA-EXP-CTRL-INPUT' units 'TAF' }
+define NMFS_MAXEXPDCC_ 		{ alias  NMFS_MAXEXPDCC  	kind 'DTS-DELTA-EXP-CTRL-INPUT' units 'TAF' }
+define BANKS_UPSTREAM_ 		{ alias  BANKS_UPSTREAM  	kind 'DTS-DELTA-EXP-CTRL-INPUT' units 'TAF' }
+define TOT_EXP_ 			{ alias  TOT_EXP  			kind 'DTS-DELTA-EXP-CTRL-INPUT' units 'TAF' }
+define NMFS_MAXEXP_			{ alias  NMFS_MAXEXP  		kind 'DTS-DELTA-EXP-CTRL-INPUT' units 'TAF' }
+define APRMAYTRACYCTRL_		{ alias  APRMAYTRACYCTRL 	kind 'DTS-DELTA-EXP-CTRL-INPUT' units 'TAF' }
+define MAXEXP_RPA_SWP_ 		{ alias  MAXEXP_RPA_SWP  	kind 'DTS-DELTA-EXP-CTRL-INPUT' units 'TAF' }
+define EXPORT_DEC_ 			{ alias  EXPORT_DEC  		kind 'DTS-DELTA-EXP-CTRL-INPUT' units 'TAF' }
+define NMFS_DCC_LIMIT_ 		{ alias  NMFS_DCC_LIMIT 	kind 'DTS-DELTA-EXP-CTRL-INPUT' units 'TAF' }
+define APRMAYBANKSCTRL_ 	{ alias  APRMAYBANKSCTRL  	kind 'DTS-DELTA-EXP-CTRL-INPUT' units 'TAF' }
+define MAXEXP_RPA_CVP_ 		{ alias  MAXEXP_RPA_CVP  	kind 'DTS-DELTA-EXP-CTRL-INPUT' units 'TAF' }
+define SOD_EXP_MAXCAP_ 		{ alias  SOD_EXP_MAXCAP 	kind 'DTS-DELTA-EXP-CTRL-INPUT' units 'TAF' }
+
+
+!***************************** Delta Control ********************************
+define REQ_DO { timeseries 'C_SAC000_MIN' kind 'CHANNEL' units 'CFS' convert 'TAF' }
+define C407 { timeseries 'C_SAC000_ADD' kind 'CHANNEL' units 'CFS' convert 'TAF' }
+define RIOVISTA { timeseries 'C_SAC017' kind 'CHANNEL' units 'CFS' convert 'TAF' }
+define RIOVISTA_MIF { timeseries 'C_SAC017_MIF' kind 'FLOW-MIN-INSTREAM' units 'CFS' convert 'TAF' }
+define QWEST { timeseries 'C_SJR013' kind 'CHANNEL' units 'CFS' convert 'TAF' }
+define EXPRATIO { timeseries 'EXPRATIO_' kind 'EI-RATIO-STD' units 'NONE'}
+define D409_Delta { timeseries 'EXP_TD_Delta' kind 'FLOW-DELIVERY' units 'CFS' convert 'TAF' }
+define D409_Upstream { timeseries 'EXP_TD_Upstream' kind 'FLOW-DELIVERY' units 'CFS' convert 'TAF' }
+define DO { VALUE REQ_DO+C407 }!timeseries 'C406' kind 'FLOW-CHANNEL' units 'CFS' convert 'TAF' }
+define C406_Delta { timeseries 'C_SAC000_DELTA' kind 'FLOW-CHANNEL' units 'CFS' convert 'TAF' }
+define C406_Upstream { timeseries 'C_SAC000_UPSTREAM' kind 'FLOW-CHANNEL' units 'CFS' convert 'TAF' }
+define OMR_INCREASE_ { timeseries 'OMR_INCREASE_' kind 'TEMP' units 'CFS' convert 'TAF' }
+define EXPORT_DEC_RPA_ { timeseries 'EXPORT_DEC_RPA_' kind 'TEMP' units 'CFS' convert 'TAF' }
+define JP_MRDO { timeseries 'JP_MRDO' kind 'FLOW' units 'CFS' convert 'TAF' }
+define EM_MRDO { timeseries 'EM_MRDO' kind 'FLOW' units 'CFS' convert 'TAF' }
+define RS_MRDO_1 { timeseries 'RS_MRDO_1' kind 'FLOW' units 'CFS' convert 'TAF' }
+define RS_MRDO_2 { timeseries 'RS_MRDO_2' kind 'FLOW' units 'CFS' convert 'TAF' }
+define RS_MRDO_3 { timeseries 'RS_MRDO_3' kind 'FLOW' units 'CFS' convert 'TAF' }
+define CO_MRDO { timeseries 'CO_MRDO' kind 'FLOW' units 'CFS' convert 'TAF' }
+define C407_ANN { timeseries 'C_SAC000_ADD_ANN' kind 'FLOW-CHANNEL' units 'CFS' convert 'TAF' }
+define C514 {timeseries 'C_SJR028' kind 'channel' units 'CFS' convert 'TAF'}
+define C417A {timeseries 'C_SJR053A' kind 'channel' units 'CFS' convert 'TAF'}
+define DO_REQ_FLOW_OUT { timeseries 'DO_req_flow_out' kind 'FLOW-REQ-NDOI' units 'CFS' convert 'TAF' }
+define NMFS_MaxExpdv { timeseries 'NMFS_MaxExpdv' kind 'NMFS' units 'CFS' convert 'TAF' }
+define NMFS_MaxExpDCCdv { timeseries 'NMFS_MaxExpDCCdv' kind 'EXPORT-LIMIT' units 'CFS' convert 'TAF' }
+define EIEXPCTRL { timeseries 'EIEXPCTRL' kind 'EXPORT-CTRL-EI' units 'CFS' convert 'TAF' }
+define BANKS { timeseries 'C_CAA003' kind 'CHANNEL' units 'CFS' convert 'TAF' }
+define JONES { timeseries 'C_DMC000' kind 'CHANNEL' units 'CFS' convert 'TAF' }
+define C400_EXC { timeseries 'C_SAC041_ADD' kind 'flow-additional-instream' units 'CFS' convert 'TAF' }
+define C157_EXC { timeseries 'C_CSL005_ADD' kind 'flow-additional-instream' units 'CFS' convert 'TAF' }
+define X2_PRV { timeseries 'x2_prv' kind 'x2-position-prev' units 'km'}
+define OMR_RPA14d { timeseries 'OMR_RPA14d' kind 'flow-reg' units 'CFS' convert 'TAF'}
+define RS_EC_MONTH { timeseries 'rs_ec_month' kind 'salinity' units 'umhos/cm'}
+define EM_EC_MONTH { timeseries 'em_ec_month' kind 'salinity' units 'umhos/cm'}
+define JP_EC_MONTH { timeseries 'jp_ec_month' kind 'salinity' units 'umhos/cm'}
+define CO_EC_MONTH { timeseries 'co_ec_month' kind 'salinity' units 'umhos/cm'}
+define RS_EC_STD { timeseries 'rs_ec_std' kind 'salinity' units 'umhos/cm'}
+define EM_EC_STD { timeseries 'em_ec_std' kind 'salinity' units 'umhos/cm'}
+define JP_EC_STD { timeseries 'jp_ec_std' kind 'salinity' units 'umhos/cm'}
+define CO_EC_STD { timeseries 'co_ec_std' kind 'salinity' units 'umhos/cm'}
+define OMR_LBOUND { timeseries 'C_OMR014_LBOUND' kind 'FLOW-LBOUND' units 'CFS' convert 'TAF'}
+define OMR_NoEXP1 { timeseries 'C_OMR014_NoEXP1' kind 'FLOW-CHANNEL' units 'CFS' convert 'TAF'}
+define OMR { timeseries 'C_OMR014' kind 'CHANNEL' units 'CFS' convert 'TAF'}
+define C407_whlcv { timeseries 'C_SAC000_ADD_whlcv' kind 'FLOW-CHANNEL' units 'CFS' convert 'TAF' }
+define C407_whljp { timeseries 'C_SAC000_ADD_whljp' kind 'FLOW-CHANNEL' units 'CFS' convert 'TAF' }
+define C407_WTS { timeseries 'C_SAC000_ADD_WTS' kind 'FLOW-CHANNEL' units 'CFS' convert 'TAF' }
+!!!!!!!!!!!define D168C_EXC_NTDEP { timeseries 'D168C_EXC_NTDEP' kind 'FLOW' units 'CFS' convert 'TAF' }
+define D418_TD { timeseries 'C_DMC000_TD' kind 'FLOW-DELIVERY' units 'CFS' convert 'TAF' }
+define D419_TD { timeseries 'C_CAA003_TD' kind 'FLOW-DELIVERY' units 'CFS' convert 'TAF' }
+
+define Rio_req_lookup {  ! Minimum Flow required @ Rio Vista
+       select       river_q
+       from         riovista
+       where        month=month, wyt_SAC=wyt_SAC}
+define qwest_std_lookup { ! Minimum Flow required @ QWEST
+		select 		QWESTstd 
+		from 		qwest 
+		where 		month=month, WYT=wyt_SAC}
+		
+define Rio_req {value Rio_req_lookup}
+define qwest_std {value qwest_std_lookup} 
+
+define REQ_DO_ { alias REQ_DO kind 'DTS-RESOP-INPUT' units 'TAF' }
+define C407_ { alias C407 kind 'DTS-RESOP-INPUT' units 'TAF' }
+define C407_whlcv_ { alias C407_whlcv kind 'DTS-RESOP-INPUT' units 'TAF' }
+define C407_whljp_ { alias C407_whljp kind 'DTS-RESOP-INPUT' units 'TAF' }
+define C407_WTS_ { alias C407_WTS kind 'DTS-RESOP-INPUT' units 'TAF' }
+define RIOVISTA_ { alias RIOVISTA kind 'DTS-RESOP-INPUT' units 'TAF' }
+define RIOVISTA_MIF_ { alias RIOVISTA_MIF kind 'DTS-RESOP-INPUT' units 'TAF' }
+define QWEST_ { alias QWEST kind 'DTS-RESOP-INPUT' units 'TAF' }
+!!!!!!!!!!define D168C_EXC_NTDEP_ { alias D168C_EXC_NTDEP kind 'DTS-RESOP-INPUT' units 'TAF' }
+define D418_TD_ { alias D418_TD kind 'DTS-RESOP-INPUT' units 'TAF' }
+define D419_TD_ { alias D419_TD kind 'DTS-RESOP-INPUT' units 'TAF' }
+define EXPRATIO_ { alias EXPRATIO kind 'DTS-RESOP-INPUT' units 'NONE' }
+define D409_Delta_ { alias D409_Delta kind 'DTS-RESOP-INPUT' units 'TAF' }
+define D409_Upstream_ { alias D409_Upstream kind 'DTS-RESOP-INPUT' units 'TAF' }
+define DO_ { alias DO kind 'DTS-RESOP-INPUT' units 'TAF' }
+define C406_Delta_ { alias C406_Delta kind 'DTS-RESOP-INPUT' units 'TAF' }
+define C406_Upstream_ { alias C406_Upstream kind 'DTS-RESOP-INPUT' units 'TAF' }
+define OMR_INCREASE__ { alias OMR_INCREASE_ kind 'DTS-RESOP-INPUT' units 'TAF' }
+define EXPORT_DEC_RPA__ { alias EXPORT_DEC_RPA_ kind 'DTS-RESOP-INPUT' units 'TAF' }
+define JP_MRDO_ { alias JP_MRDO kind 'DTS-RESOP-INPUT' units 'TAF' }
+define EM_MRDO_ { alias EM_MRDO kind 'DTS-RESOP-INPUT' units 'TAF' }
+define RS_MRDO_1_ { alias RS_MRDO_1 kind 'DTS-RESOP-INPUT' units 'TAF' }
+define RS_MRDO_2_ { alias RS_MRDO_2 kind 'DTS-RESOP-INPUT' units 'TAF' }
+define RS_MRDO_3_ { alias RS_MRDO_3 kind 'DTS-RESOP-INPUT' units 'TAF' }
+define CO_MRDO_ { alias CO_MRDO kind 'DTS-RESOP-INPUT' units 'TAF' }
+define C407_ANN_ { alias C407_ANN kind 'DTS-RESOP-INPUT' units 'TAF' }
+define DO_REQ_FLOW_OUT_ { alias DO_REQ_FLOW_OUT kind 'DTS-RESOP-INPUT' units 'TAF' }
+define NMFS_MaxExpdv_ { alias NMFS_MaxExpdv kind 'DTS-RESOP-INPUT' units 'TAF' }
+define NMFS_MaxExpDCCdv_ { alias NMFS_MaxExpDCCdv kind 'DTS-RESOP-INPUT' units 'TAF' }
+define NMFSdaysopentgdv { timeseries 'NMFSdaysopentgdv' kind 'DCC-DAYS-OPEN' units 'NONE'}
+define NMFSdaysopendv 	{ timeseries 'NMFSdaysopendv' kind 'DCC-DAYS-OPEN' units 'NONE'}
+define EIEXPCTRL_ { alias EIEXPCTRL kind 'DTS-RESOP-INPUT' units 'TAF' }
+define BANKS_ { alias BANKS kind 'DTS-RESOP-INPUT' units 'TAF' }
+define JONES_ { alias JONES kind 'DTS-RESOP-INPUT' units 'TAF' }
+define c400_exc_ { alias c400_exc kind 'DTS-RESOP-INPUT' units 'TAF' }
+define c157_exc_ { alias c157_exc kind 'DTS-RESOP-INPUT' units 'TAF' }
+define x2_prv_ { alias x2_prv kind 'DTS-RESOP-INPUT' units 'TAF' }
+define OMR_RPA14d_ { alias OMR_RPA14d kind 'DTS-RESOP-INPUT' units 'TAF' }
+define rs_ec_month_ { alias rs_ec_month kind 'DTS-RESOP-INPUT' units 'umhos/cm' }
+define em_ec_month_ { alias em_ec_month kind 'DTS-RESOP-INPUT' units 'umhos/cm' }
+define jp_ec_month_ { alias jp_ec_month kind 'DTS-RESOP-INPUT' units 'umhos/cm' }
+define co_ec_month_ { alias co_ec_month kind 'DTS-RESOP-INPUT' units 'umhos/cm' }
+define rs_ec_std_ { alias rs_ec_std kind 'DTS-RESOP-INPUT' units 'umhos/cm' }
+define em_ec_std_ { alias em_ec_std kind 'DTS-RESOP-INPUT' units 'umhos/cm' }
+define jp_ec_std_ { alias jp_ec_std kind 'DTS-RESOP-INPUT' units 'umhos/cm' }
+define co_ec_std_ { alias co_ec_std kind 'DTS-RESOP-INPUT' units 'umhos/cm' }
+define OMR_LBOUND_ { alias OMR_LBOUND kind 'DTS-RESOP-INPUT' units 'TAF' }
+define OMR_NoEXP1_ { alias OMR_NoEXP1 kind 'DTS-RESOP-INPUT' units 'TAF' }
+define OMR_ { alias OMR kind 'DTS-RESOP-INPUT' units 'TAF' }
+
+!******************** COA *********************
+
+
+
+!******************** Allocations and Deliveries *********************
+define SHORT_CVP_TOT_N 	 {timeseries 'SHORT_CVP_TOT_N'   kind 'DELIVERY-SHORTAGE-CVP' units 'CFS' convert 'TAF'} !TOTAL NOD SHORTAGE   
+define SHORT_CVP_TOT_S 	 {timeseries 'SHORT_CVP_TOT_S'   kind 'DELIVERY-SHORTAGE-CVP' units 'CFS' convert 'TAF'} !TOTAL SOD SHORTAGE
+define SHORT_SWP_PAG_S 	 {timeseries 'SHORT_SWP_PAG_S'   kind 'DELIVERY-SHORTAGE-SWP' units 'CFS' convert 'TAF'} !AG SOD SHORTAGE
+define SHORT_SWP_PMI_S 	 {timeseries 'SHORT_SWP_PMI_S'   kind 'DELIVERY-SHORTAGE-SWP' units 'CFS' convert 'TAF'} !M&I SOD SHORTAGE 
+define SHORT_CVP_PMI_S 	 {timeseries 'SHORT_CVP_PMI_S'   kind 'DELIVERY-SHORTAGE-CVP' units 'CFS' convert 'TAF'} !M&I SOD SHORTAGE 
+define SHORT_CVP_PMI_N 	 {timeseries 'SHORT_CVP_PMI_N'   kind 'DELIVERY-SHORTAGE-CVP' units 'CFS'convert 'TAF'} !M&I NOD SHORTAGE 
+define SHORT_CVP_PSC_N 	 {timeseries 'SHORT_CVP_PSC_N' 	 kind 'DELIVERY-SHORTAGE-CVP' units 'CFS'convert 'TAF'} !SETTLEMENT NOD SHORTAGE
+define SWP_PERDELDV_YUBA {timeseries 'SWP_PERDELDV_YUBA' kind 'SWP-DELIVERY' units 'NONE'}
+define SWP_PERDEL_SOD    {timeseries 'SWP_PERDEL_SOD_DV' kind 'SWP-DELIVERY' units 'NONE'}
+define PERDV_SWP_FSC 	 {timeseries 'PERDV_SWP_FSC' 	 kind 'PERCENT-DELIVERY' units 'NONE'}
+define DEL_CVP_PSC_N 	 {timeseries 'DEL_CVP_PSC_N' 	 kind 'DELIVERY-CVP' units 'CFS' convert 'TAF'}
+define CVPTOTALDEL 		 {timeseries 'CVPTOTALDEL' 		 kind 'FLOW-DELIVERY' units 'CFS' convert 'TAF'}   
+define DEL_CVP_PAG_N	 {timeseries 'DEL_CVP_PAG_N' 	 kind 'DELIVERY-CVP' units 'CFS' convert 'TAF'}
+define DEL_CVP_TOTAL_S 	 {timeseries 'DEL_CVP_TOTAL_S' 	 kind 'DELIVERY-CVP' units 'CFS' convert 'TAF'}
+define SHORT_CVP_PRF_N 	 {timeseries 'SHORT_CVP_PRF_N' 	 kind 'DELIVERY-SHORTAGE-CVP' units 'CFS' convert 'TAF'} !REFUGES NOD SHORTAGE
+define DEL_CVP_PLS_S 	 {timeseries 'DEL_CVP_PLS_S'	 kind 'DELIVERY-CVP' units 'CFS' convert 'TAF'}
+define PERDV_CVPMI_SYS 	 {timeseries 'PERDV_CVPMI_SYS' 	 kind 'PERCENT-DELIVERY' units 'NONE'}
+define PERDV_CVPRF_SYS 	 {timeseries 'PERDV_CVPRF_SYS' 	 kind 'PERCENT-DELIVERY' units 'NONE'}
+define PERDV_CVPSC_SYS 	 {timeseries 'PERDV_CVPSC_SYS' 	 kind 'PERCENT-DELIVERY' units 'NONE'}
+define PERDV_CVPAG_S 	 {timeseries 'PERDV_CVPAG_S' kind 'PERCENT-DELIVERY' units 'NONE'}
+define PERDV_CVPRF_S 	 {timeseries 'PERDV_CVPRF_S' kind 'PERCENT-DELIVERY' units 'NONE'}
+define PERDV_CVPEX_S 	 {timeseries 'PERDV_CVPEX_S' kind 'PERCENT-DELIVERY' units 'NONE'}
+define DEL_CVP_PMI_N 	 {timeseries 'DEL_CVP_PMI_N' kind 'DELIVERY-CVP' units 'CFS' convert 'TAF'}
+define DEL_CVP_PRF_N 	 {timeseries 'DEL_CVP_PRF_N' kind 'DELIVERY-CVP' units 'CFS' convert 'TAF'}
+define DEL_CVP_PAG_S 	 {timeseries 'DEL_CVP_PAG_S' kind 'DELIVERY-CVP' units 'CFS' convert 'TAF'}
+define DEL_CVP_PMI_S 	 {timeseries 'DEL_CVP_PMI_S' kind 'DELIVERY-CVP' units 'CFS' convert 'TAF'}
+define DEL_CVP_PRF_S 	 {timeseries 'DEL_CVP_PRF_S' kind 'DELIVERY-CVP' units 'CFS' convert 'TAF'}
+define DEL_CVP_PEX_S 	 {timeseries 'DEL_CVP_PEX_S' kind 'DELIVERY-CVP' units 'CFS' convert 'TAF'}
+define WEST_CANAL_WD1	 {timeseries 'DN_11_SA1' kind 'SW-DELIVERY-NET' units 'CFS' convert 'TAF'}
+define WEST_CANAL_WD2	 {timeseries 'DN_11_SA2' kind 'SW-DELIVERY-NET' units 'CFS' convert 'TAF'}
+define WEST_CANAL_WD3	 {timeseries 'DN_11_SA3' kind 'SW-DELIVERY-NET' units 'CFS' convert 'TAF'}
+define WEST_CANAL_WD4	 {timeseries 'DN_11_SA4' kind 'SW-DELIVERY-NET' units 'CFS' convert 'TAF'}
+/*
+define WEST_CANAL_WD {  !D7C
+	case FEB {
+		condition month==FEB
+	      	value WEST_CANAL_WD1(-4)*cfs_taf(-4)+WEST_CANAL_WD1(-3)*cfs_taf(-3)+WEST_CANAL_WD1(-2)*cfs_taf(-2)+WEST_CANAL_WD1(-1)*cfs_taf(-1)+
+	              WEST_CANAL_WD2(-4)*cfs_taf(-4)+WEST_CANAL_WD2(-3)*cfs_taf(-3)+WEST_CANAL_WD2(-2)*cfs_taf(-2)+WEST_CANAL_WD2(-1)*cfs_taf(-1)+
+	              WEST_CANAL_WD3(-4)*cfs_taf(-4)+WEST_CANAL_WD3(-3)*cfs_taf(-3)+WEST_CANAL_WD3(-2)*cfs_taf(-2)+WEST_CANAL_WD3(-1)*cfs_taf(-1)+
+	              WEST_CANAL_WD4(-4)*cfs_taf(-4)+WEST_CANAL_WD4(-3)*cfs_taf(-3)+WEST_CANAL_WD4(-2)*cfs_taf(-2)+WEST_CANAL_WD4(-1)*cfs_taf(-1)}
+
+	case other{
+	      	condition always
+	      	value 0.}
+}*/
+
+define WEST_CANAL_WD {  !D7C
+	case FEB {
+		condition month==FEB
+	      	value WEST_CANAL_WD1(-4)+WEST_CANAL_WD1(-3)+WEST_CANAL_WD1(-2)+WEST_CANAL_WD1(-1)+
+	              WEST_CANAL_WD2(-4)+WEST_CANAL_WD2(-3)+WEST_CANAL_WD2(-2)+WEST_CANAL_WD2(-1)+
+	              WEST_CANAL_WD3(-4)+WEST_CANAL_WD3(-3)+WEST_CANAL_WD3(-2)+WEST_CANAL_WD3(-1)+
+	              WEST_CANAL_WD4(-4)+WEST_CANAL_WD4(-3)+WEST_CANAL_WD4(-2)+WEST_CANAL_WD4(-1)}
+
+	case other{
+	      	condition always
+	      	value 0.}
+}
+
+define DEL_CVP_TOTAL_N	 {timeseries 'DEL_CVP_TOTAL_N' kind 'DELIVERY-CVP' units 'CFS' convert 'TAF'}
+define SHORT_CVP_PAG_N 	 {timeseries 'SHORT_CVP_PAG_N' kind 'DELIVERY-SHORTAGE-CVP' units 'CFS' convert 'TAF'} !AG NOD SHORTAGE
+define SHORT_CVP_PAG_S   {timeseries 'SHORT_CVP_PAG_S' kind 'DELIVERY-SHORTAGE-CVP' units 'CFS' convert 'TAF'} !AG SOD SHORTAGE
+define SHORT_CVP_PRF_S   {timeseries 'SHORT_CVP_PRF_S' kind 'DELIVERY-SHORTAGE-CVP' units 'CFS' convert 'TAF'} !REFUGES SOD SHORTAGE
+define SHORT_CVP_PEX_S 	 {timeseries 'SHORT_CVP_PEX_S' kind 'DELIVERY-SHORTAGE-CVP' units 'CFS' convert 'TAF'} 
+define SHORT_CVP_PLS_S 	 {timeseries 'SHORT_CVP_PLS_S' kind 'DELIVERY-SHORTAGE-CVP' units 'CFS' convert 'TAF'} !PROJECT LOSS SOD SHORTAGE
+!!!!!!!define SHORT_SWP_TOT_N   {timeseries 'SHORT_SWP_TOT_N' kind 'DELIVERY-SHORTAGE-SWP' units 'CFS' convert 'TAF'} !TOTAL NOD SHORTAGE
+define SHORT_SWP_PAG_N   {timeseries 'SHORT_SWP_PAG_N' kind 'DELIVERY-SHORTAGE-SWP' units 'CFS' convert 'TAF'} !AG NOD SHORTAGE
+define SHORT_SWP_PMI_N   {timeseries 'SHORT_SWP_PMI_N' kind 'DELIVERY-SHORTAGE-SWP' units 'CFS' convert 'TAF'} !M&I NOD SHORTAGE 
+!!!!!!!define SHORT_SWP_PWR 	 {timeseries 'SHORT_SWP_PWR'   kind 'DELIVERY-SHORTAGE-SWP' units 'CFS' convert 'TAF'} 
+define SHORT_SWP_TOT_S 	 {timeseries 'SHORT_SWP_TOT_S' kind 'DELIVERY-SHORTAGE-SWP' units 'CFS' convert 'TAF'} !TOTAL SOD SHORTAGE
+define SHORT_SWP_PLS 	 {timeseries 'SHORT_SWP_PLS'   kind 'DELIVERY-SHORTAGE-SWP' units 'CFS' convert 'TAF'} !LOSS SOD SHORTAGE
+!!!!!!!define SWP_FRSA			 {timeseries 'SWP_FRSA'        kind 'SWP_DELIVERY' 			units 'CFS' convert 'TAF'}
+define SWP_PERDELDV_SOLANO {timeseries 'SWP_PERDELDV_SOLANO' kind 'SWP-DELIVERY' 	 units 'NONE'}
+define SWP_PERDELDV_BUTT   {timeseries 'SWP_PERDELDV_BUTT'   kind 'SWP-DELIVERY' 	 units 'NONE'}
+define DEL_CVP_TOTAL 	   {ALIAS DEL_CVP_TOTAL_N+DEL_CVP_TOTAL_S kind 'DELIVERY-CVP'  	 units /*'CFS' convert*/ 'TAF'}
+define SWP_PERDELDV_NAPA   {timeseries 'SWP_PERDELDV_NAPA'   kind 'SWP-DELIVERY' 	 units 'NONE'}
+define PERDV_CVPAG_SYS 	   {timeseries 'PERDV_CVPAG_SYS' 	 kind 'PERCENT-DELIVERY' units 'NONE'}
+define PERDV_CVPMI_S 	   {timeseries 'PERDV_CVPMI_S' 		 kind 'PERCENT-DELIVERY' units 'NONE'}
+
+
+
+!define SHORT_CVP_TOT_ 	{alias SHORT_CVP_TOT kind 'DTS-ALLOC-VALUE' units 'TAF'}
+DEFINE PERDV_CVPAG_SYS_ 	{alias PERDV_CVPAG_SYS kind 'DTS-ALLOC-STATUS' units 'NONE'}
+DEFINE PERDV_CVPMI_SYS_ 	{alias PERDV_CVPMI_SYS kind 'DTS-ALLOC-STATUS' units 'NONE'}
+DEFINE PERDV_CVPRF_SYS_ 	{alias PERDV_CVPRF_SYS kind 'DTS-ALLOC-STATUS' units 'NONE'}
+DEFINE PERDV_CVPSC_SYS_ 	{alias PERDV_CVPSC_SYS kind 'DTS-ALLOC-STATUS' units 'NONE'}
+DEFINE PERDV_CVPAG_S_ 		{alias PERDV_CVPAG_S   kind 'DTS-ALLOC-STATUS' units 'NONE'}
+DEFINE PERDV_CVPMI_S_ 		{alias PERDV_CVPMI_S   kind 'DTS-ALLOC-STATUS' units 'NONE'}
+DEFINE PERDV_CVPRF_S_ 		{alias PERDV_CVPRF_S   kind 'DTS-ALLOC-STATUS' units 'NONE'}
+DEFINE PERDV_CVPEX_S_ 		{alias PERDV_CVPEX_S   kind 'DTS-ALLOC-STATUS' units 'NONE'}
+define DEL_CVP_PAG_N_ {alias DEL_CVP_PAG_N kind 'DTS-ALLOC-VALUE' units  'TAF'}
+define DEL_CVP_PMI_N_ {alias DEL_CVP_PMI_N kind 'DTS-ALLOC-VALUE' units  'TAF'}
+define DEL_CVP_PRF_N_ {alias DEL_CVP_PRF_N kind 'DTS-ALLOC-VALUE' units  'TAF'}
+define DEL_CVP_PSC_N_ {alias DEL_CVP_PSC_N kind 'DTS-ALLOC-VALUE' units  'TAF'}
+define DEL_CVP_PAG_S_ {alias DEL_CVP_PAG_S kind 'DTS-ALLOC-VALUE' units  'TAF'}
+define DEL_CVP_PMI_S_ {alias DEL_CVP_PMI_S kind 'DTS-ALLOC-VALUE' units  'TAF'}
+define DEL_CVP_PRF_S_ {alias DEL_CVP_PRF_S kind 'DTS-ALLOC-VALUE' units  'TAF'}
+define DEL_CVP_PEX_S_ {alias DEL_CVP_PEX_S kind 'DTS-ALLOC-VALUE' units  'TAF'}
+define DEL_CVP_PLS_S_ {alias DEL_CVP_PLS_S kind 'DTS-ALLOC-VALUE' units  'TAF'}
+define SWP_PERDELDV_YUBA_ 	{alias SWP_PERDELDV_YUBA 	kind 'DTS-ALLOC-STATUS' units 'NONE'}
+define SWP_PERDELDV_BUTT_ 	{alias SWP_PERDELDV_BUTT 	kind 'DTS-ALLOC-STATUS' units 'NONE'}
+define SWP_PERDELDV_NAPA_ 	{alias SWP_PERDELDV_NAPA 	kind 'DTS-ALLOC-STATUS' units 'NONE'}
+define SWP_PERDELDV_SOLANO_ {alias SWP_PERDELDV_SOLANO 	kind 'DTS-ALLOC-STATUS' units 'NONE'}
+define SWP_PERDEL_SOD_  	{alias SWP_PERDEL_SOD 		kind 'DTS-ALLOC-STATUS' units 'NONE'}
+!!!!!!!define SWP_FRSA_ 			{alias SWP_FRSA 			kind 'DTS-ALLOC-VALUE' units  'TAF'}
+define PERDV_SWP_FSC_ 		{alias PERDV_SWP_FSC 		kind 'DTS-ALLOC-STATUS' units 'NONE'}
+
+! define swp_in_total_ {alias swp_in_total kind 'SWP-DELIVERY' units 'CFS' convert 'TAF'}
+define WEST_CANAL_WD1_	{alias WEST_CANAL_WD1 			kind 'DTS-ALLOC-VALUE' units  'TAF'}
+define WEST_CANAL_WD2_	{alias WEST_CANAL_WD2 			kind 'DTS-ALLOC-VALUE' units  'TAF'}
+define WEST_CANAL_WD3_	{alias WEST_CANAL_WD3 			kind 'DTS-ALLOC-VALUE' units  'TAF'}
+define WEST_CANAL_WD4_	{alias WEST_CANAL_WD4 			kind 'DTS-ALLOC-VALUE' units  'TAF'}
+
+define WEST_CANAL_WD_	{alias WEST_CANAL_WD 			kind 'DTS-ALLOC-VALUE' units  'TAF'}
+define SHORT_SWP_PMI_N_ {alias SHORT_SWP_PMI_N kind 'DTS-ALLOC-VALUE' units  'TAF'}
+!!!!!!!!define SHORT_SWP_PWR_ 	{alias  SHORT_SWP_PWR 	 kind 'DTS-ALLOC-VALUE' units  'TAF'}
+define SHORT_SWP_TOT_S_  {alias SHORT_SWP_TOT_S  kind 'DTS-ALLOC-VALUE' units  'TAF'}
+define SHORT_SWP_PLS_ 	{alias  SHORT_SWP_PLS 	 kind 'DTS-ALLOC-VALUE' units  'TAF'}
+!!!!!!!!define SHORT_CVP_TOT_N_ {alias SHORT_CVP_TOT_N kind 'DTS-ALLOC-VALUE' units  'TAF'}
+define SHORT_CVP_TOT_S_ {alias SHORT_CVP_TOT_S kind 'DTS-ALLOC-VALUE' units  'TAF'}
+define SHORT_SWP_PAG_S_ {alias SHORT_SWP_PAG_S kind 'DTS-ALLOC-VALUE' units  'TAF'}
+define SHORT_SWP_PMI_S_ {alias SHORT_SWP_PMI_S kind 'DTS-ALLOC-VALUE' units 'TAF'}
+define DEL_CVP_TOTAL_S_ {alias DEL_CVP_TOTAL_S kind 'DTS-ALLOC-VALUE' units  'TAF'}
+define DEL_CVP_TOTAL_N_ {alias DEL_CVP_TOTAL_N kind 'DTS-ALLOC-VALUE' units  'TAF'}
+define DEL_CVP_TOTAL_ 	{alias DEL_CVP_TOTAL   kind 'DTS-ALLOC-VALUE' units  'TAF'}
+define CVPTOTALDEL_ 	{alias CVPTOTALDEL   kind 'DTS-ALLOC-VALUE' units  'TAF'}
+define SHORT_CVP_PRF_S_ {alias SHORT_CVP_PRF_S kind 'DTS-ALLOC-VALUE' units  'TAF'}
+define SHORT_CVP_PEX_S_ {alias SHORT_CVP_PEX_S kind 'DTS-ALLOC-VALUE' units  'TAF'}
+define SHORT_CVP_PLS_S_ {alias SHORT_CVP_PLS_S kind 'DTS-ALLOC-VALUE' units  'TAF'}
+!!!!!!!define SHORT_SWP_TOT_N_ {alias SHORT_SWP_TOT_N kind 'DTS-ALLOC-VALUE' units  'TAF'}
+define SHORT_SWP_PAG_N_ {alias SHORT_SWP_PAG_N kind 'DTS-ALLOC-VALUE' units  'TAF'}
+define SHORT_CVP_PAG_N_ {alias SHORT_CVP_PAG_N kind 'DTS-ALLOC-VALUE' units  'TAF'}
+define SHORT_CVP_PMI_N_ {alias SHORT_CVP_PMI_N kind 'DTS-ALLOC-VALUE' units  'TAF'}
+define SHORT_CVP_PRF_N_ {alias SHORT_CVP_PRF_N kind 'DTS-ALLOC-VALUE' units  'TAF'}
+define SHORT_CVP_PSC_N_ {alias SHORT_CVP_PSC_N kind 'DTS-ALLOC-VALUE' units  'TAF'}
+define SHORT_CVP_PAG_S_ {alias SHORT_CVP_PAG_S kind 'DTS-ALLOC-VALUE' units  'TAF'}
+define SHORT_CVP_PMI_S_ {alias SHORT_CVP_PMI_S kind 'DTS-ALLOC-VALUE' units  'TAF'}
