@@ -1,123 +1,122 @@
-/************************************
+/********************** DESCRIPTION ****************************
+- post-processes study results to determine Whether the SOD is balanced or not
 
-Calc_Weirs_Op.wresl
 
-Yuxiang, DWR, BDO
-2019/02/07
+********************* REVIEW HISTORY****************************
+Yuxiang Feng	| DWR	|	02/07/2019	|	Setup initial file
+Ahmed Ali	    | DWR	|	12/06/2019	|	Reformatted/ standardized logic statements
+Ahmed Ali    	| DWR	|	01/10/2020	|	Revised by moving the mapped variables (from Dvar) to the input_csII.wresl file 
 
-This file post process the weirs operation during each timestep   
-**************************************/
+/***************************************************************
 
-/***************************************** Sutter Bypass ************************************/
-!Weirs Operation for Sutter Bypass
-!Check if any water spills into the Sutter Bypass: No Spills (0) Spills (1)
-define Sutter_weirs_ {
-	case nospills{
-	condition D117 + D124 + D125 + D126   == 0
-	Value 0
-	}
-	case spills {
-	condition always
-	Value 1
-	}
-}
-!Total spills from all 3 weirs + overflow into Sutter bypass
-define Weirs_SutterBypass_ {value D117 + D124 + D125 + D126}
-!Outputs for Sutter Bypass Weirs Operation
-define Sutter_Weirs_Op_DTS {alias Sutter_weirs_ kind 'DTS-STATUS' Units 'NONE'} !Water spills? No Spills (0) Spills (1)
-define SutterBypass_Weirs_TOT_DTS {alias Weirs_SutterBypass_ kind 'DTS-FLOW-DELIVERY' Units 'CFS'} !Total spills from all 3 weirs
+/******************** Weir operations *********************/
 
-! check for individual weir status
-!Check if any water spills from overflow into the Sutter Bypass: No Spills (0) Spills (1)
-define Sutter_overflow_ {
-	case nospills{
-	condition D117 == 0
-	Value 0
-	}
-	case spills {
-	condition always
-	Value 1
-	}
-}
-define Sutter_overflow_DTS {alias Sutter_overflow_ kind 'DTS-STATUS' Units 'NONE'} !Water spills? No Spills (0) Spills (1)
-!Check if any water spills from Moulton Weir into the Sutter Bypass: No Spills (0) Spills (1)
-define Moulton_Weir_ {
-	case nospills{
-	condition D124 == 0
-	Value 0
-	}
-	case spills {
-	condition always
-	Value 1
-	}
-}
-define Moulton_Weir_DTS {alias Moulton_Weir_ kind 'DTS-STATUS' Units 'NONE'} !Water spills? No Spills (0) Spills (1)
-!Check if any water spills from Colusa Weir into the Sutter Bypass: No Spills (0) Spills (1)
-define Colusa_Weir_ {
-	case nospills{
-	condition D125 == 0
-	Value 0
-	}
-	case spills {
-	condition always
-	Value 1
-	}
-}
-define Colusa_Weir_DTS {alias Colusa_Weir_ kind 'DTS-STATUS' Units 'NONE'} !Water spills? No Spills (0) Spills (1)
-!Check if any water spills from Tisdale Weir into the Sutter Bypass: No Spills (0) Spills (1)
-define Tisdale_Weir_ {
-	case nospills{
-	condition D126 == 0
-	Value 0
-	}
-	case spills {
-	condition always
-	Value 1
-	}
-}
-define Tisdale_Weir_DTS {alias Tisdale_Weir_ kind 'DTS-STATUS' Units 'NONE'} !Water spills? No Spills (0) Spills (1)
 
-/***************************************** Yolo Bypass ************************************/
-!Weirs Operation for Yolo Bypass
-!Check if any water spills into the Yolo Bypass: No Spills (0) Spills (1)
-define Yolo_weirs_ {
-	case nospills{
-	condition D160 + D166A == 0
-	Value 0
-	}
-	case spills {
-	condition always
-	Value 1
-	}
-}
-!Total spills from all 2 weirs in to YOLO bypass
-define Weirs_YoloBypass_ {value D160 + D166A}
-!Outputs for Yolo Bypass Weirs Operation
-define Yolo_Weirs_Op_DTS {alias Yolo_weirs_ kind 'DTS-STATUS' Units 'NONE'} !Water spills? No Spills (0) Spills (1)
-define YoloBypass_Weirs_TOT_DTS {alias Weirs_YoloBypass_ kind 'DTS-FLOW-DELIVERY' Units 'CFS'} !Total spills from all 3 weirs
+/***************************************** Sutter Bypass TOTAL SPILL ************************************/
 
-! check for individual weir status
-!Check if any water spills from Fremont Weir into the Yolo Bypass: No Spills (0) Spills (1)
-define Fremont_Weir_ {
-	case nospills{
-	condition D160 == 0
-	Value 0
-	}
-	case spills {
-	condition always
-	Value 1
-	}
+/*!Check if any water spills into the Sutter Bypass
+define SUTTER_SPLL      {value SPILL_TO_SUTTER + SPILL_FROM_MOULTON + SPILL_FROM_COLUSA + SPILL_FROM_TISDALE + SPILL_FROM_BUTT_CRK }
+define SUTTER_SPLL_ 	{ alias  SUTTER_SPLL  kind 'WEIR-OP-VALUE' units 'TAF' }
+
+define SUTTER_TOT_SPL_CHECK {
+	case atSTANDARD		{condition abs(SUTTER_SPLL - SUTTER_SPLL_THRSHLD)		<= abs_threshold	value EQ}
+	case aboveSTANDARD	{condition    (SUTTER_SPLL - SUTTER_SPLL_THRSHLD)		> abs_threshold		value GT}
+	case belowSTANDARD	{condition    (SUTTER_SPLL - SUTTER_SPLL_THRSHLD)		< -1*abs_threshold	value LT}
+	case UNEXPECTED		{condition     always									value UE}
+}*/
+
+
+/***************************************** Sutter Bypass INDIVIDUAL SPILL - SUTTER ************************************/
+/*!Check if any water spills from overflow into the Sutter Bypass
+define SUTTER_OVERFLOW_CHECK {
+	case atSTANDARD		{condition abs(SPILL_TO_SUTTER - 0)		<= abs_threshold	value EQ}
+	case aboveSTANDARD	{condition    (SPILL_TO_SUTTER - 0)		> abs_threshold		value GT}
+	case belowSTANDARD	{condition    (SPILL_TO_SUTTER - 0)		< -1*abs_threshold	value LT}
+	case UNEXPECTED		{condition     always		  								value UE}
+}*/
+/***************************************** Sutter Bypass INDIVIDUAL SPILL- BUTTE CREEK ************************************/
+/*!Check if any water spills from overflow from BUTTE CREEK
+define BUTTE_CRK_OVERFLOW_CHECK {
+	case atSTANDARD		{condition abs(SPILL_FROM_BUTT_CRK - 0)		<= abs_threshold	value EQ}
+	case aboveSTANDARD	{condition    (SPILL_FROM_BUTT_CRK - 0)		> abs_threshold		value GT}
+	case belowSTANDARD	{condition    (SPILL_FROM_BUTT_CRK - 0)		< -1*abs_threshold	value LT}
+	case UNEXPECTED		{condition     always	 	 									value UE}
+}*/
+/***************************************** Sutter Bypass INDIVIDUAL SPILL- MOULTON WEIR ************************************/
+/*!Check if any water spills from overflow from Moulton Weir
+define SPILL_FROM_MOULTON_CHECK {
+	case atSTANDARD		{condition abs(SPILL_FROM_MOULTON - 0)		<= abs_threshold	value EQ}
+	case aboveSTANDARD	{condition    (SPILL_FROM_MOULTON - 0)		> abs_threshold		value GT}
+	case belowSTANDARD	{condition    (SPILL_FROM_MOULTON - 0)		< -1*abs_threshold	value LT}
+	case UNEXPECTED		{condition     always	 	 									value UE}
+}*/
+/***************************************** Sutter Bypass INDIVIDUAL SPILL- COLUSA WEIR ************************************/
+/*!Check if any water spills from overflow from Colusa Weir
+define SPILL_FROM_COLUSA_CHECK {
+	case atSTANDARD		{condition abs(SPILL_FROM_COLUSA - 0)		<= abs_threshold	value EQ}
+	case aboveSTANDARD	{condition    (SPILL_FROM_COLUSA - 0)		> abs_threshold		value GT}
+	case belowSTANDARD	{condition    (SPILL_FROM_COLUSA - 0)		< -1*abs_threshold	value LT}
+	case UNEXPECTED		{condition     always											value UE}
+}*/
+/***************************************** Sutter Bypass INDIVIDUAL SPILL- TISDALE WEIR ************************************/
+/*!Check if any water spills from overflow from Tisdale Weir
+define SPILL_FROM_TISDALE_CHECK {
+	case atSTANDARD		{condition abs(SPILL_FROM_TISDALE - 0)		<= abs_threshold	value EQ}
+	case aboveSTANDARD	{condition    (SPILL_FROM_TISDALE - 0)		> abs_threshold		value GT}
+	case belowSTANDARD	{condition    (SPILL_FROM_TISDALE - 0)		< -1*abs_threshold	value LT}
+	case UNEXPECTED		{condition     always											value UE}
 }
-define Fremont_Weir_DTS {alias Fremont_Weir_ kind 'DTS-STATUS' Units 'NONE'} !Water spills? No Spills (0) Spills (1)
-!Check if any water spills from Sacramento Weir into the Yolo Bypass: No Spills (0) Spills (1)
-define Sacramento_Weir_ {
-	case nospills{
-	condition D166A == 0
-	Value 0
-	}
-	case spills {
-	condition always
-	Value 1
-	}
+*/
+
+/***************************************** Yolo Bypass TOTAL SPILL ************************************/
+
+!Check if any water spills into the Yolo Bypass
+define YOLO_SPLL      {value SPILL_FROM_FREMONT + SPILL_FROM_SAC_WEIR /*+ SPILL_FROM_KINGHTS_LNDING*/}  !AK Knights Landing is not in CL
+define YOLO_SPLL_ 	  { alias  YOLO_SPLL  kind 'WEIR-OP-VALUE' units 'TAF' }
+
+
+define YOLO_TOT_SPL_CHECK {
+	case atSTANDARD		{condition abs(YOLO_SPLL - YOLO_SPLL_THRSHLD)		<= abs_threshold	value EQ}
+	case aboveSTANDARD	{condition    (YOLO_SPLL - YOLO_SPLL_THRSHLD)		> abs_threshold		value GT}
+	case belowSTANDARD	{condition    (YOLO_SPLL - YOLO_SPLL_THRSHLD)		< -1*abs_threshold	value LT}
+	case UNEXPECTED		{condition     always									value UE}
 }
-define Sacramento_Weir_DTS {alias Sacramento_Weir_ kind 'DTS-STATUS' Units 'NONE'} !Water spills? No Spills (0) Spills (1)
+
+
+/***************************************** YOLO Bypass INDIVIDUAL SPILL - Knights Landing ************************************/
+/*!Check if any water spills from overflow from Knights Landing 
+define SPILL_FROM_KINGHTS_LNDING_CHECK {
+	case atSTANDARD		{condition abs(SPILL_FROM_KINGHTS_LNDING - 0)		<= abs_threshold	value EQ}
+	case aboveSTANDARD	{condition    (SPILL_FROM_KINGHTS_LNDING - 0)		> abs_threshold		value GT}
+	case belowSTANDARD	{condition    (SPILL_FROM_KINGHTS_LNDING - 0)		< -1*abs_threshold	value LT}
+	case UNEXPECTED		{condition     always		  	    	 								value UE}
+}*/
+/***************************************** YOLO Bypass INDIVIDUAL SPILL - Fremont weir ************************************/
+!Check if any water spills from overflow from Fremont 
+define SPILL_FROM_FREMONT_CHECK {
+	case atSTANDARD		{condition abs(SPILL_FROM_FREMONT - 0)		<= abs_threshold	value EQ}
+	case aboveSTANDARD	{condition    (SPILL_FROM_FREMONT - 0)		> abs_threshold		value GT}
+	case belowSTANDARD	{condition    (SPILL_FROM_FREMONT - 0)		< -1*abs_threshold	value LT}
+	case UNEXPECTED		{condition     always		  	    	 						value UE}
+}
+/***************************************** YOLO Bypass INDIVIDUAL SPILL - Sacramento weir ************************************/
+!Check if any water spills from overflow from Sacramento weir 
+define SPILL_FROM_SACRAMENTO_CHECK {
+	case atSTANDARD		{condition abs(SPILL_FROM_SAC_WEIR - 0)		<= abs_threshold	value EQ}
+	case aboveSTANDARD	{condition    (SPILL_FROM_SAC_WEIR - 0)		> abs_threshold		value GT}
+	case belowSTANDARD	{condition    (SPILL_FROM_SAC_WEIR - 0)		< -1*abs_threshold	value LT}
+	case UNEXPECTED		{condition     always			  	    	 				    value UE}
+}
+
+/************************* DSS OUTPUT **************************/ 
+!define SUTTER_TOT_SPL_CHECK_ { alias  SUTTER_TOT_SPL_CHECK  kind 'DTS-WEIR-OP-STATUS' units 'NONE' }
+!define SUTTER_OVERFLOW_CHECK_ { alias  SUTTER_OVERFLOW_CHECK  kind 'DTS-WEIR-OP-STATUS' units 'NONE' }
+!define BUTTE_CRK_OVERFLOW_CHECK_ { alias  BUTTE_CRK_OVERFLOW_CHECK  kind 'DTS-WEIR-OP-STATUS' units 'NONE' }
+!define SPILL_FROM_MOULTON_CHECK_ { alias  SPILL_FROM_MOULTON_CHECK  kind 'DTS-WEIR-OP-STATUS' units 'NONE' }
+!define SPILL_FROM_COLUSA_CHECK_ { alias  SPILL_FROM_COLUSA_CHECK  kind 'DTS-WEIR-OP-STATUS' units 'NONE' }
+!define SPILL_FROM_TISDALE_CHECK_ { alias  SPILL_FROM_TISDALE_CHECK  kind 'DTS-WEIR-OP-STATUS' units 'NONE' }
+define YOLO_TOT_SPL_CHECK_ { alias  YOLO_TOT_SPL_CHECK  kind 'DTS-WEIR-OP-STATUS' units 'NONE' }
+!define SPILL_FROM_KINGHTS_LNDING_CHECK_ { alias  SPILL_FROM_KINGHTS_LNDING_CHECK  kind 'DTS-WEIR-OP-STATUS' units 'NONE' }
+define SPILL_FROM_FREMONT_CHECK_ { alias  SPILL_FROM_FREMONT_CHECK  kind 'DTS-WEIR-OP-STATUS' units 'NONE' }
+define SPILL_FROM_SACRAMENTO_CHECK_ { alias  SPILL_FROM_SACRAMENTO_CHECK  kind 'DTS-WEIR-OP-STATUS' units 'NONE' }
+

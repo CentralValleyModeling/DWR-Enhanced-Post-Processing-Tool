@@ -1,56 +1,163 @@
-/************************************
+/********************** DESCRIPTION ****************************
+- post-processes study results to determine Whether the Delta is balanced or not
 
-Calc_NOD_Mass.wresl
 
-Yuxiang, DWR, BDO
-2019/03/25
+********************* REVIEW HISTORY****************************
+Yuxiang Feng	| DWR	|	03/25/2019	|	Setup initial file
+Ahmed Ali	| DWR	|	12/11/2019	|	Reformatted/ standardized logic statements
 
-This file post process data for Delta Mass Balances
+/***************************************************************
 
-Delta Mass Balance:
+/************************ Delta Mass Balance *********************/
 
-Delta Inflow = Delta Outflow + Export
+/******************** Mapping *********************/
 
-**************************************/
 
+		
+define SAC_RVR_HOOD { timeseries 'C_Hood' kind 'FLOW-CHANNEL' units 'CFS' convert 'TAF' }
+define YOLO_BYPASS { timeseries 'C_YoloBP' kind 'FLOW-CHANNEL' units 'CFS' convert 'TAF' }
+define MOKELUM_RVR { timeseries 'AD_MOKELUMNE' kind 'FLOW-ACCRDEPL' units 'CFS' convert 'TAF' }
+define SAN_JOAQ_RVR { timeseries 'AD_SJR_V' kind 'FLOW-ACCRDEPL' units 'CFS' convert 'TAF' }
+define MARS_CRK { timeseries 'I_marshCr_S2D' kind 'FLOW-INFLOW' units 'CFS' convert 'TAF' }
+!define CALAVERAS_RVR { timeseries 'C508' kind 'FLOW-CHANNEL' units 'CFS' convert 'TAF' }
+!define DELTA_RTRN_FLOW { timeseries 'R514' kind 'FLOW-RETURN' units 'CFS' convert 'TAF' }
+define CALAVERAS_RVR { timeseries 'AD_Calaveras' kind 'FLOW-ACCRDEPL' units 'CFS' convert 'TAF' } !AK AD_Calaveras=C508+R514A+R514B-D514A-D514B
+  
+!define BANKS_EXP { timeseries 'D419' kind 'FLOW-DELIVERY' units 'CFS' convert 'TAF' }
+!define JONES_EXP { timeseries 'D418' kind 'FLOW-DELIVERY' units 'CFS' convert 'TAF' }
+define SWP_NORTH_BAY_AQ { timeseries 'C_NBA' kind 'FLOW-CHANNEL' units 'CFS' convert 'TAF' }
+!define RIPARIAN_DIV { timeseries 'D514A' kind 'FLOW-DELIVERY' units 'CFS' convert 'TAF' }
+define CCWD_OLD_RVR 	{ timeseries 'D_CCWDVCOR' kind 'FLOW-DELIVERY' units 'CFS' convert 'TAF' }
+define CCWD_ROCK_SLOUGH { timeseries 'D_CCWDINTK' kind 'FLOW-DELIVERY' units 'CFS' convert 'TAF' }
+define NET_DICU_1_PSTV { timeseries 'D_BrananIs_NP' kind 'FLOW-DELIVERY' units 'CFS' convert 'TAF' }
+define NET_DICU_2_PSTV { timeseries 'D_SacSJR' kind 'FLOW-DELIVERY' units 'CFS' convert 'TAF' }
+define NET_DICU_3_PSTV { timeseries 'D_MedfordIs' kind 'FLOW-DELIVERY' units 'CFS' convert 'TAF' }
+define NET_DICU_4_PSTV { timeseries 'D_ConeyIs' kind 'FLOW-DELIVERY' units 'CFS' convert 'TAF' }
+define NET_DICU_5_PSTV { timeseries 'D_Stockton' kind 'FLOW-DELIVERY' units 'CFS' convert 'TAF' }
+define NET_DICU_6_PSTV { timeseries 'D_Terminous' kind 'FLOW-DELIVERY' units 'CFS' convert 'TAF' }
+define NET_DICU_1_NGTV { timeseries 'I_BrananIs_S2D' kind 'FLOW-INFLOW' units 'CFS' convert 'TAF' }
+define NET_DICU_2_NGTV { timeseries 'I_SacSJR_S2D' kind 'FLOW-INFLOW' units 'CFS' convert 'TAF' }
+define NET_DICU_3_NGTV { timeseries 'I_MedfordIs_S2D' kind 'FLOW-INFLOW' units 'CFS' convert 'TAF' }
+define NET_DICU_4_NGTV { timeseries 'I_ConeyIs_S2D' kind 'FLOW-INFLOW' units 'CFS' convert 'TAF' }
+define NET_DICU_5_NGTV { timeseries 'I_Stockton_S2D' kind 'FLOW-INFLOW' units 'CFS' convert 'TAF' }
+define NET_DICU_6_NGTV { timeseries 'I_Terminous_S2D' kind 'FLOW-INFLOW' units 'CFS' convert 'TAF' }
+define CITY_ANTIOCH_DIV { timeseries 'D_Antioch' kind 'FLOW-DELIVERY' units 'CFS' convert 'TAF' }
+define MINFLOW_BYPASS 		{timeseries 'C_YoloBP_MIF' kind 'FLOW-MIN-INSTREAM' units 'CFS' convert 'TAF'}  
+define MINFLOW_SAC_RVR_HOOD {timeseries 'C_Hood_MIF' kind 'FLOW-MIN-INSTREAM' units 'CFS' convert 'TAF'}
+
+define SAC_RVR_HOOD_ { alias  SAC_RVR_HOOD  kind 'DTS-DELTA-MB-VALUE' units 'TAF' }
+define YOLO_BYPASS_ { alias  YOLO_BYPASS  kind 'DTS-DELTA-MB-VALUE' units 'TAF' }
+define MOKELUM_RVR_ { alias  MOKELUM_RVR  kind 'DTS-DELTA-MB-VALUE' units 'TAF' }
+define SAN_JOAQ_RVR_ { alias  SAN_JOAQ_RVR  kind 'DTS-DELTA-MB-VALUE' units 'TAF' }
+define MARS_CRK_ { alias  MARS_CRK  kind 'DTS-DELTA-MB-VALUE' units 'TAF' }
+define CALAVERAS_RVR_ { alias  CALAVERAS_RVR  kind 'DTS-DELTA-MB-VALUE' units 'TAF' }
+!define DELTA_RTRN_FLOW_ { alias  DELTA_RTRN_FLOW  kind 'DTS-DELTA-MB-VALUE' units 'TAF' }
+define BANKS_EXP_ { alias  BANKS_EXP  kind 'DTS-DELTA-MB-VALUE' units 'TAF' }
+define JONES_EXP_ { alias  JONES_EXP  kind 'DTS-DELTA-MB-VALUE' units 'TAF' }
+define SWP_NORTH_BAY_AQ_ { alias  SWP_NORTH_BAY_AQ  kind 'DTS-DELTA-MB-VALUE' units 'TAF' }
+!define RIPARIAN_DIV_ { alias  RIPARIAN_DIV  kind 'DTS-DELTA-MB-VALUE' units 'TAF' }
+define CCWD_OLD_RVR_ { alias  CCWD_OLD_RVR  kind 'DTS-DELTA-MB-VALUE' units 'TAF' }
+define CCWD_ROCK_SLOUGH_ { alias  CCWD_ROCK_SLOUGH  kind 'DTS-DELTA-MB-VALUE' units 'TAF' }
+define NET_DICU_1_PSTV_ { alias  NET_DICU_1_PSTV  kind 'DTS-DELTA-MB-VALUE' units 'TAF' }
+define NET_DICU_2_PSTV_ { alias  NET_DICU_2_PSTV  kind 'DTS-DELTA-MB-VALUE' units 'TAF' }
+define NET_DICU_3_PSTV_ { alias  NET_DICU_3_PSTV  kind 'DTS-DELTA-MB-VALUE' units 'TAF' }
+define NET_DICU_4_PSTV_ { alias  NET_DICU_4_PSTV  kind 'DTS-DELTA-MB-VALUE' units 'TAF' }
+define NET_DICU_5_PSTV_ { alias  NET_DICU_5_PSTV  kind 'DTS-DELTA-MB-VALUE' units 'TAF' }
+define NET_DICU_6_PSTV_ { alias  NET_DICU_6_PSTV  kind 'DTS-DELTA-MB-VALUE' units 'TAF' }
+define NET_DICU_1_NGTV_ { alias  NET_DICU_1_NGTV  kind 'DTS-DELTA-MB-VALUE' units 'TAF' }
+define NET_DICU_2_NGTV_ { alias  NET_DICU_2_NGTV  kind 'DTS-DELTA-MB-VALUE' units 'TAF' }
+define NET_DICU_3_NGTV_ { alias  NET_DICU_3_NGTV  kind 'DTS-DELTA-MB-VALUE' units 'TAF' }
+define NET_DICU_4_NGTV_ { alias  NET_DICU_4_NGTV  kind 'DTS-DELTA-MB-VALUE' units 'TAF' }
+define NET_DICU_5_NGTV_ { alias  NET_DICU_5_NGTV  kind 'DTS-DELTA-MB-VALUE' units 'TAF' }
+define NET_DICU_6_NGTV_ { alias  NET_DICU_6_NGTV  kind 'DTS-DELTA-MB-VALUE' units 'TAF' }
+define CITY_ANTIOCH_DIV_ { alias  CITY_ANTIOCH_DIV  kind 'DTS-DELTA-MB-VALUE' units 'TAF' }
+define MINFLOW_BYPASS_ 		 {alias MINFLOW_BYPASS 		 kind 'DTS-NODMIF-VALUE' units 'TAF'}
+define MINFLOW_SAC_RVR_HOOD_ {alias MINFLOW_SAC_RVR_HOOD kind 'DTS-NODMIF-VALUE' units 'TAF'}
+
+/************************************** Summary **************************************/
+define CCWD {value CCWD_OLD_RVR + CCWD_ROCK_SLOUGH }
+/*define Net_DICU {value  NET_DICU_1_PSTV + NET_DICU_2_PSTV + NET_DICU_3_PSTV
+                      + NET_DICU_4_PSTV + NET_DICU_5_PSTV + NET_DICU_6_PSTV
+                      + NET_DICU_1_NGTV + NET_DICU_2_NGTV + NET_DICU_3_NGTV
+                      + NET_DICU_4_NGTV + NET_DICU_5_NGTV + NET_DICU_6_NGTV
+}*/
 /************************************** Delta Inflow **************************************/
-define Delta_inflow {value 
-		 C400 !Sacramento R @ Hood
-		!+D400 !Isolated facility 
-		+C157 !Yolo Bypass
-		+AD_Mokelmne !Mokelumne R
-		+C644 !San Joaquin R d/s Calaveras
-		+I406 !Marsh Creek Inflow
-		+AD_Calaveras !Calaveras River
-	}
+define DELTA_INFLOW {value    
+								   SAC_RVR_HOOD + YOLO_BYPASS + MOKELUM_RVR 	
+								 + SAN_JOAQ_RVR + MARS_CRK + CALAVERAS_RVR
+								 /*+ DELTA_RTRN_FLOW*/ 
+}
+define DELTA_INFLOW_ { alias  DELTA_INFLOW  kind 'DTS-DELTA-MB-VALUE' units 'TAF' }
 
 /************************************** Delta Outflow **************************************/		
-define Delta_outflow {value C406}
+define DELTA_OUTFLOW { timeseries 'C_SacSJR' kind 'FLOW-CHANNEL' units 'CFS' convert 'TAF' }
+define DELTA_OUTFLOW_ { alias  DELTA_OUTFLOW  kind 'DTS-DELTA-MB-VALUE' units 'TAF' }
 
 /************************************** Export **************************************/	
-define Delta_export {value
-		D419_SWP	!Banks SWP
-		+D419_CVP	!Banks CVP
-		!+D419_WTS	!Banks WTS
-		!D419
-		+D418	!Jones CVP
-		+C402B	!Diversion NBAY
-		+D408 +D408_RS	!CCWD
-		+NET_DICU
-		+D406B	!Diversion Antioch
+
+define DELTA_EXPORT {value
+								   BANKS_EXP+ JONES_EXP + SWP_NORTH_BAY_AQ /*+ RIPARIAN_DIV*/ 
+								 + CCWD_OLD_RVR + CCWD_ROCK_SLOUGH + NET_DICU_1_PSTV + NET_DICU_2_PSTV 
+								 + NET_DICU_3_PSTV + NET_DICU_4_PSTV + NET_DICU_5_PSTV + NET_DICU_6_PSTV 
+								 - NET_DICU_1_NGTV - NET_DICU_2_NGTV - NET_DICU_3_NGTV - NET_DICU_4_NGTV 
+								 - NET_DICU_5_NGTV - NET_DICU_6_NGTV + CITY_ANTIOCH_DIV 
+}
+define DELTA_EXPORT_ { alias  DELTA_EXPORT  kind 'DTS-DELTA-MB-VALUE' units 'TAF' }
+
+/************************************** Delta mass balance manipulation **************************************/	
+
+define DELTA_MB {value DELTA_INFLOW - DELTA_OUTFLOW -DELTA_EXPORT}
+
+define CCWD_      {alias CCWD kind 'DTS-DELTA-MB-VALUE' units 'TAF' }
+!define Net_DICU_  {alias Net_DICU kind 'DTS-DELTA-MB-VALUE' units 'TAF' }
+define DELTA_MB_ { alias  DELTA_MB  kind 'DTS-DELTA-MB-VALUE' units 'TAF' }
+
+/************************************** Mass balance Check **************************************/	
+
+define DELTA_MB_CHECK {
+	case atSTANDARD		{condition abs(Delta_MB - 0)		<= abs_threshold	value EQ}
+	case aboveSTANDARD	{condition    (Delta_MB - 0)		> abs_threshold		value GT}
+	case belowSTANDARD	{condition    (Delta_MB - 0)		< -1*abs_threshold	value LT}
+	case UNEXPECTED		{condition    always									value UE}
 }
 
-define Delta_MB {value Delta_inflow -Delta_outflow -Delta_export}
-define Delta_MB_DTS {alias Delta_MB kind 'DTS-1' units 'CFS'}
+define DELTA_MB_CHECK_ { alias  DELTA_MB_CHECK  kind 'DTS-DELTA-MB-STATUS' units 'NONE' }
 
-define Delta_MB_Check {
-	case balanced {
-	condition abs(Delta_MB) < abs_threshold
-	value 0
-	}
-	case notBalance {
-	condition always
-	value 1
-	}
+
+/*********************** Additional MIF and WTS manipulations *************/
+
+define SAC_RVR_HOOD_MIF_CHECK {
+	case atSTANDARD		{condition abs(SAC_RVR_HOOD - MINFLOW_SAC_RVR_HOOD)	    <= abs_threshold	value EQ}
+	case aboveSTANDARD	{condition    (SAC_RVR_HOOD - MINFLOW_SAC_RVR_HOOD)		> abs_threshold		value GT}
+	case belowSTANDARD	{condition    (SAC_RVR_HOOD - MINFLOW_SAC_RVR_HOOD)		< -1*abs_threshold	value LT}
+	case UNEXPECTED    	{condition always 										 					value UE}
 }
-define Delta_MB_STATUS_DTS {alias Delta_MB_Check kind 'DTS-STATUS' units 'NONE'}
+
+define YOLO_BYPASS_MIF_CHECK {
+	case atSTANDARD		{condition abs(YOLO_BYPASS - MINFLOW_BYPASS)	    <= abs_threshold	value EQ}
+	case aboveSTANDARD	{condition    (YOLO_BYPASS - MINFLOW_BYPASS)		> abs_threshold		value GT}
+	case belowSTANDARD	{condition    (YOLO_BYPASS - MINFLOW_BYPASS)		< -1*abs_threshold	value LT}
+	case UNEXPECTED    	{condition always 														value UE}
+}
+
+define RIOVISTA_MIF_CHECK {
+	case atSTANDARD		{condition abs(RIOVISTA - RIOVISTA_MIF)	    <= abs_threshold	value EQ}
+	case aboveSTANDARD	{condition    (RIOVISTA - RIOVISTA_MIF)		> abs_threshold		value GT}
+	case belowSTANDARD	{condition    (RIOVISTA - RIOVISTA_MIF)		< -1*abs_threshold	value LT}
+	case UNEXPECTED    	{condition always 												value UE}
+}
+
+define SAC_RVR_HOOD_MIF_CHECK_ {alias SAC_RVR_HOOD_MIF_CHECK kind 'DTS-NODMIF-STATUS' units 'NONE'}
+define YOLO_BYPASS_MIF_CHECK_ {alias YOLO_BYPASS_MIF_CHECK   kind 'DTS-NODMIF-STATUS' units 'NONE'}
+define RIOVISTA_MIF_CHECK_    {alias RIOVISTA_MIF_CHECK      kind 'DTS-NODMIF-STATUS' units 'NONE'}
+
+!Central Valley project
+define CVProject {value Jones_EXP1 + Jones_EXP2 }
+!State Water project
+define SWProject {value Banks_EXP1 + Banks_EXP2 + Banks_CVP + BANKS_WTS}
+!Water Transfers
+!define Water_transfer {value JONES_WTS + BANKS_WTS }
+
+define CVProject_ 			{alias CVProject kind 'DTS-DELTA-MB-VALUE' units 'TAF'}
+define SWProject_ 			{alias SWProject   kind 'DTS-DELTA-MB-VALUE' units 'TAF'}
+!define Water_transfer_   	{alias Water_transfer      kind 'DTS-DELTA-MB-VALUE' units 'TAF'}  !AK should the WTS be only SWP?

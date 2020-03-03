@@ -1,0 +1,639 @@
+/************************************
+
+Calc_SOD_EXP.wresl
+
+Yuxiang, DWR, BDO
+2019/02/07
+
+This file post process the South of Delta Export Controls during each timestep   
+**************************************/
+
+/************************************ TOTAL SOD EXPORT**************************************/
+define sod_exp {value D418 + D419}
+
+define SOD_EXP_ZERO_ctrl_ {
+	case not_control {
+		condition SOD_EXP > abs_threshold
+		value 100!0
+	}
+	case control {
+		condition SOD_EXP < abs_threshold
+		value 200!1
+	}
+}
+define SOD_EXP_ZERO_STATUS_DTS {alias SOD_EXP_ZERO_ctrl_ kind 'DTS-STATUS' units 'NONE'} 
+
+define SOD_EXP_CAP_ctrl_ {
+	case not_control {
+	condition SOD_EXP - SOD_EXP_MAXCAP > abs_threshold
+	value 100!0
+	}
+	case control {
+	condition ABS(SOD_EXP - SOD_EXP_MAXCAP) < abs_threshold
+	value 200!1
+	}
+	case violated {
+	condition always
+	value 300!2
+	}
+}
+define SOD_EXP_CAP_STATUS_DTS {alias SOD_EXP_CAP_ctrl_ kind 'DTS-STATUS' units 'NONE'} ! Output of HandS control status
+
+! Control by H&S requirement(1,500 CFS)? 
+define SOD_EXP_HandS_ctrl_ {
+	case not_control {
+	condition sod_exp - 1500. > abs_threshold
+	value 100!0
+	}
+	case control {
+	condition ABS(sod_exp - 1500.) < abs_threshold
+	value 200!1
+	}
+	case violated {
+	condition always
+	value 300!2
+	}
+}
+define SOD_EXP_HandS_STATUS_DTS {alias SOD_EXP_HandS_ctrl_ kind 'DTS-STATUS' units 'NONE'} ! Output of HandS control status
+
+! Control by EI Ratio?
+define SOD_EXP_EI_ctrl_ {
+	case not_control {
+	condition sod_exp - EIEXPCTRL > abs_threshold
+	value 100!0
+	}
+	case control {
+	condition ABS(sod_exp - EIEXPCTRL) < abs_threshold
+	value 200!1
+	}
+	case violated {
+	condition always
+	value 300!2
+	}
+}
+define SOD_EXP_EI_STATUS_DTS {alias SOD_EXP_EI_ctrl_ kind 'DTS-STATUS' units 'NONE'} ! Output of EI Ratio control status
+
+! Control by Vernalis 1:1 ?
+define SOD_EXP_Vern_ctrl_ {
+	case notApply { !Does not apply - Not Apr or May
+		condition month<APR  .and. month>may
+		Value 999!Neg_Flt_Max
+	}
+	/*case not_control {
+	condition D409 - APRMAYEXPCTRL < -abs_threshold 
+	value 100
+	}*/
+	case control {
+		condition month==apr .or. month==may .and. ABS(D409 - APRMAYEXPCTRL) < abs_threshold 
+		value 200!0
+	}
+	case above {
+		condition month==apr .or. month==may .and. ABS(D409 - APRMAYEXPCTRL) > abs_threshold 
+		value 100!1
+	}
+	case below {
+		condition always
+		value 300!2
+
+	}
+}
+define SOD_EXP_Vern_STATUS_DTS {alias SOD_EXP_Vern_ctrl_ kind 'DTS-STATUS' units 'NONE'} ! Output of Vernalis control status
+
+! Control by RPAs ?
+define SOD_EXP_RPA_ctrl_ {
+	case notApply { !not in controlling months
+	condition MAXEXP_RPADV == 99999
+	Value 999!Neg_Flt_Max
+	}
+	case above {
+	condition D409 - MAXEXP_RPADV > abs_threshold 
+	value 100!0
+	}
+	case control {
+	condition ABS(D409 - MAXEXP_RPADV) < abs_threshold 
+	value 200!1
+	}
+	case below {
+	condition always
+	value 300!2
+	}
+}
+define SOD_EXP_RPA_STATUS_DTS {alias SOD_EXP_RPA_ctrl_ kind 'DTS-STATUS' units 'NONE'} ! Output of PRAs control status
+
+/*************** FX2 Control *************************/
+define SOD_EXP_FX2_ctrl_ {
+	case notApply { !Does not apply - Not Apr or May
+		condition month<SEP  .and. month>Oct
+		Value 999!Neg_Flt_Max
+	}
+	/*case not_control {
+	condition D409 - APRMAYEXPCTRL < -abs_threshold 
+	value 0
+	}*/
+	case control {
+		condition month==Sep .or. month==Oct .and. ABS(SOD_EXP - FWS_X2_limit) < abs_threshold 
+		value 200!0
+	}
+	case above {
+		condition month==Sep .or.  month==Oct .and. ABS(SOD_EXP - FWS_X2_limit) > abs_threshold 
+		value 100!1
+	}
+	case below {
+		condition month==Sep .or. month==Oct .and. wyt_sac<=2
+		value 300!2
+
+	}
+}
+define SOD_EXP_FX2_STATUS_DTS {alias SOD_EXP_FX2_ctrl_ kind 'DTS-STATUS' units 'NONE'} ! 
+/*************** FX2 Control ************************
+define SOD_EXP_FX2_ctrl_ {
+	case notApply { !Does not apply - Not Apr or May
+		condition month<SEP  .and. month>Oct
+		Value 999!Neg_Flt_Max
+	}
+	/*case not_control {
+	condition D409 - APRMAYEXPCTRL < -abs_threshold 
+	value 0
+	}
+	case control {
+		condition month==Sep .or. month==Oct .and. D409_Upstream-D409>0 .and. ABS(SOD_EXP - FWS_X2_limit) < abs_threshold 
+		value 200!0
+	}
+	case above {
+		condition month==Sep .or. month==Oct .and. D409_Upstream-D409>0 .and. ABS(SOD_EXP - FWS_X2_limit) > abs_threshold 
+		value 100!1
+	}
+	case below {
+		condition month==Sep .or. month==Oct .and. D409_Upstream-D409>0
+		value 300!2
+
+	}
+}
+define SOD_EXP_FX2_STATUS_DTS {alias SOD_EXP_FX2_ctrl_ kind 'DTS-STATUS' units 'NONE'} ! 
+*/
+! Control by DCC 
+define SOD_EXP_DCC_ctrl_ {
+	case notApply { !not in controlling months
+		condition nmfs_dcc_limit > 99999
+		Value 999
+	}
+	case above {
+		condition d409_upstream-d409>0 .and. sod_exp-NMFS_MaxExpDCCdv > abs_threshold 
+		value 100!0
+	}
+	case control {
+		condition d409_upstream-d409>0 .and. sod_exp-NMFS_MaxExpDCCdv < abs_threshold 
+		value 200!1
+	}
+	case below {
+		condition always
+		value 300!2
+	}	
+}
+define SOD_EXP_DCC_STATUS_DTS {alias SOD_EXP_DCC_ctrl_ kind 'DTS-STATUS' units 'NONE'} ! 
+/********************* OMR control *****************/
+! Control by OMR 
+define SOD_EXP_OMR_ctrl_ {
+	case notApply { !not in controlling months
+		condition month<Jan .and. month>Jun
+		Value 999
+	}
+	case above {
+		condition d409_upstream-d409>0 .and. export_dec>0 .and. sod_exp-export_dec > abs_threshold 
+		value 100!0
+	}
+	case control {
+		condition d409_upstream-d409>0 .and. export_dec>0 .and. sod_exp-export_dec < abs_threshold 
+		value 200!1
+	}
+	case below {
+		condition always
+		value 300!2
+	}	
+}
+define SOD_EXP_OMR_STATUS_DTS {alias SOD_EXP_OMR_ctrl_ kind 'DTS-STATUS' units 'NONE'} ! 
+/********************* SJR EI control *****************/
+! Control by SJR EI 
+define SOD_EXP_SJREI_ctrl_ {
+	case notApply { !not in controlling months
+		condition month<Apr .and. month>May
+		Value 999
+	}
+	case above {
+		condition d409_upstream-d409>0 .and. export_dec>0 .and. sod_exp-nmfs_maxexpdv > abs_threshold 
+		value 100!0
+	}
+	case control {
+		condition d409_upstream-d409>0 .and. export_dec>0 .and. sod_exp-nmfs_maxexpdv < abs_threshold 
+		value 200!1
+	}
+	case below {
+		condition always
+		value 300!2
+	}	
+}
+define SOD_EXP_SJREI_STATUS_DTS {alias SOD_EXP_SJREI_ctrl_ kind 'DTS-STATUS' units 'NONE'} ! 
+/************************************ CVP EXPORT**************************************/
+! Zero flow condition 
+define CVP_EXP_ZERO_ctrl_ {
+	case above {
+	condition D418 > abs_threshold
+	value 100!0
+	}
+	case control {
+	condition D418 < abs_threshold
+	value 200!1
+	}/*
+	case below {
+	condition always
+	value 300!2
+	}*/
+} 
+define CVP_EXP_ZERO_STATUS_DTS {alias CVP_EXP_ZERO_ctrl_ kind 'DTS-STATUS' units 'NONE'} 
+
+! Control by H&S requirement(800 CFS)? 
+define CVP_EXP_HandS_ctrl_ {
+	case above {
+	condition D418 - 800. > abs_threshold
+	value 100!0
+	}
+	case control {
+	condition D418 - 800. < abs_threshold
+	value 200!1
+	}/*
+	case below {
+	condition always
+	value 300!2
+	}*/
+}
+define CVP_EXP_HandS_STATUS_DTS {alias CVP_EXP_HandS_ctrl_ kind 'DTS-STATUS' units 'NONE'} ! Output of HandS control status
+
+!Control by Capacity (4600 CFS)?
+define CVP_EXP_CAP_ctrl_ {
+	case below {
+	condition JONESALLOWOUT - D418 > abs_threshold
+	value 300!0
+	}
+	case control {
+	condition ABS(D418 - JONESALLOWOUT) < abs_threshold
+	value 200!1
+	}/*
+	case violated {
+	condition always
+	value 2
+	}*/
+}
+define CVP_EXP_CAP_STATUS_DTS {alias CVP_EXP_CAP_ctrl_ kind 'DTS-STATUS' units 'NONE'} ! Output of Jones capacity control status
+
+! Jones Control by Vernalis 1:1 ?
+define CVP_EXP_Vern_ctrl_ {
+	case notApply { !not in controlling months - Not Apr or May
+	condition month<Apr .and. month>May
+	Value 999
+	}
+	case above {
+	condition D418 - APRMAYTRACYCTRL > abs_threshold 
+	value 100!0
+	}
+	case control {
+	condition ABS(D418 - APRMAYTRACYCTRL) < abs_threshold 
+	value 200!1
+	}
+	case below {
+	condition always
+	value 300!2
+	}
+}
+define CVP_EXP_Vern_STATUS_DTS {alias CVP_EXP_Vern_ctrl_ kind 'DTS-STATUS' units 'NONE'} ! Output of Vernalis control status
+
+define CVP_EXP_EI_ctrl_ {
+	/*case notApply { !not in controlling months - Not Apr or May
+	condition month<Apr .and. month>May
+	Value 999
+	}*/
+	case control {
+		condition SOD_EXP_EI_ctrl_ == 200
+		value 200!1
+	}
+	case Not_controlling {
+		condition always 
+		value 100!0
+	}
+	/*
+	case below {
+	condition always
+	value 300!2
+	}*/
+}
+define CVP_EXP_EI_STATUS_DTS {alias CVP_EXP_EI_ctrl_ kind 'DTS-STATUS' units 'NONE'} ! Output of Vernalis control status
+
+define CVP_EXP_FX2_ctrl_ {
+	/*case notApply { !not in controlling months - Not Apr or May
+	condition month<Apr .and. month>May
+	Value 999
+	}*/
+	case Controlling {
+	condition SOD_EXP_FX2_ctrl_ == 200
+	value 200!0
+	}
+	case Not_controlling {
+	condition always
+	value 100
+	}/*
+	case below {
+	condition always
+	value 300!2
+	}*/
+}
+define CVP_EXP_FX2_STATUS_DTS {alias CVP_EXP_FX2_ctrl_ kind 'DTS-STATUS' units 'NONE'} ! Output of Vernalis control status
+
+define CVP_EXP_DCC_ctrl_ {
+	/*case notApply { !not in controlling months - Not Apr or May
+	condition month<Apr .and. month>May
+	Value 999
+	}*/
+	case Controlling {
+	condition SOD_EXP_DCC_ctrl_ == 200
+	value 200!0
+	}
+	case Not_controlling {
+	condition always
+	value 100
+	}/*
+	case below {
+	condition always
+	value 300!2
+	}*/
+}
+define CVP_EXP_DCC_STATUS_DTS {alias CVP_EXP_DCC_ctrl_ kind 'DTS-STATUS' units 'NONE'} ! Output of Vernalis control status
+
+define CVP_EXP_OMR_ctrl_ {
+	/*case notApply { !not in controlling months - Not Apr or May
+	condition month<Apr .and. month>May
+	Value 999
+	}*/
+	case Controlling {
+	condition SOD_EXP_OMR_ctrl_ == 200
+	value 200!0
+	}
+	case Not_controlling {
+	condition always
+	value 100
+	}/*
+	case below {
+	condition always
+	value 300!2
+	}*/
+}
+define CVP_EXP_OMR_STATUS_DTS {alias CVP_EXP_OMR_ctrl_ kind 'DTS-STATUS' units 'NONE'} ! Output of Vernalis control status
+
+define CVP_EXP_SJREI_ctrl_ {
+	/*case notApply { !not in controlling months - Not Apr or May
+	condition month<Apr .and. month>May
+	Value 999
+	}*/
+	case Controlling {
+	condition SOD_EXP_SJREI_ctrl_ == 200
+	value 200!0
+	}
+	case Not_controlling {
+	condition always
+	value 100
+	}/*
+	case below {
+	condition always
+	value 300!2
+	}*/
+}
+define CVP_EXP_SJREI_STATUS_DTS {alias CVP_EXP_SJREI_ctrl_ kind 'DTS-STATUS' units 'NONE'} ! Output of Vernalis control status
+
+! Jones Control by RPAs ?
+define CVP_EXP_PRAs_ctrl_ {
+	case notApply { !not in controlling months
+	condition MAXEXP_RPA_CVPDV == 99999
+	Value Neg_Flt_Max
+	}
+	case not_control {
+	condition D418 - MAXEXP_RPA_CVPDV < -abs_threshold 
+	value 100
+	}
+	case control {
+	condition ABS(D418 - MAXEXP_RPA_CVPDV) < abs_threshold 
+	value 200
+	}
+	case violated {
+	condition always
+	value 300
+	}
+}
+define CVP_EXP_PRAs_STATUS_DTS {alias CVP_EXP_PRAs_ctrl_ kind 'DTS-STATUS' units 'NONE'} ! Output of PRAs control status
+
+/*
+! Jones Control by OMR ? 
+define CVPExpDecUPtoDelta {value D418UP-D418} !export reduction between Upstream cycle and delta cycle 
+define CVPExpDecOMR {value CVP_EXP_DEC_+ 0.5*COMB_EXP_DEC_} !export reduction due to OMR
+define CVP_EXP_OMR_ctrl_ {
+	case control {
+	condition CVPExpDecUPtoDelta > abs_threshold .and.  CVPExpDecOMR > abs_threshold .and. abs(CVPExpDecUPtoDelta - CVPExpDecOMR) < abs_threshold
+	value 1
+	}
+	case notControl {
+	condition always 
+	value 0
+	}
+}
+define CVP_EXP_OMR_STATUS_DTS {alias CVP_EXP_OMR_ctrl_ kind 'DTS-STATUS' units 'NONE'} ! Output of SWP OMR control status
+*/
+
+/************************************ SWP EXPORT**************************************/
+! Zero flow condition 
+define SWP_EXP_ZERO_ctrl_ {
+	case above {
+	condition D419 > abs_threshold
+	value 100!0
+	}
+	case control {
+	condition D419 < abs_threshold
+	value 200!1
+	}/*
+	case below {
+	condition always
+	value 300!2
+	}*/
+}
+define SWP_EXP_ZERO_STATUS_DTS {alias SWP_EXP_ZERO_ctrl_ kind 'DTS-STATUS' units 'NONE'} 
+
+! Control by H&S requirement(300 CFS)? 
+define SWP_EXP_HandS_ctrl_ {
+	case not_control {
+	condition D419 - 300. > abs_threshold
+	value 100!0
+	}
+	case control {
+	condition ABS(D419 - 300.) < abs_threshold
+	value 200!1
+	}
+	case violated {
+	condition always
+	value 300
+	}
+}
+define SWP_EXP_HandS_STATUS_DTS {alias SWP_EXP_HandS_ctrl_ kind 'DTS-STATUS' units 'NONE'} ! Output of HandS control status
+
+!Control by Banks capacity?
+define SWP_EXP_CAP_ctrl_ {
+	case not_control {
+	condition BANKSALLOWOUT - D419 > abs_threshold
+	value 100
+	}
+	case control {
+	condition D419 - BANKSALLOWOUT < abs_threshold
+	value 200!1
+	}
+	case other {
+	condition always
+	value 300
+	}
+}
+define SWP_EXP_CAP_ctrl__EXP_CAP_STATUS_DTS {alias SWP_EXP_CAP_ctrl_ kind 'DTS-STATUS' units 'NONE'} ! Output of Banks capacity control status
+
+
+! Banks Control by Vernalis 1:1 ?
+define SWP_EXP_Vern_ctrl_ {
+	case notApply { !not in controlling months - Not Apr or May
+	condition month<Apr .and. month>May
+	Value 999
+	}
+	case control {
+	condition D419 - APRMAYBANKSCTRL > abs_threshold 
+	value 100!0
+	}
+	case control {
+	condition D419 - APRMAYBANKSCTRL < abs_threshold 
+	value 200!1
+	}
+	case below {
+	condition always
+	value 300!2
+	}
+}
+define SWP_EXP_Vern_STATUS_DTS {alias SWP_EXP_Vern_ctrl_ kind 'DTS-STATUS' units 'NONE'} ! Output of Vernalis control status
+
+define SWP_EXP_FX2_ctrl_ {
+	/*case notApply { !not in controlling months - Not Apr or May
+	condition month<Apr .and. month>May
+	Value 999
+	}*/
+	case Controlling {
+	condition SOD_EXP_FX2_ctrl_ == 200
+	value 200!0
+	}
+	case Not_controlling {
+	condition always
+	value 100
+	}/*
+	case below {
+	condition always
+	value 300!2
+	}*/
+}
+define SWP_EXP_FX2_STATUS_DTS {alias SWP_EXP_FX2_ctrl_ kind 'DTS-STATUS' units 'NONE'} ! Output of Vernalis control status
+
+define SWP_EXP_DCC_ctrl_ {
+	/*case notApply { !not in controlling months - Not Apr or May
+	condition month<Apr .and. month>May
+	Value 999
+	}*/
+	case Controlling {
+	condition SOD_EXP_DCC_ctrl_ == 200
+	value 200!0
+	}
+	case Not_controlling {
+	condition always
+	value 100
+	}/*
+	case below {
+	condition always
+	value 300!2
+	}*/
+}
+define SWP_EXP_DCC_STATUS_DTS {alias SWP_EXP_DCC_ctrl_ kind 'DTS-STATUS' units 'NONE'} ! Output of Vernalis control status
+
+define SWP_EXP_OMR_ctrl_ {
+	/*case notApply { !not in controlling months - Not Apr or May
+	condition month<Apr .and. month>May
+	Value 999
+	}*/
+	case Controlling {
+	condition SOD_EXP_OMR_ctrl_ == 200
+	value 200!0
+	}
+	case Not_controlling {
+	condition always
+	value 100
+	}/*
+	case below {
+	condition always
+	value 300!2
+	}*/
+}
+define SWP_EXP_OMR_STATUS_DTS {alias SWP_EXP_OMR_ctrl_ kind 'DTS-STATUS' units 'NONE'} ! Output of Vernalis control status
+
+define SWP_EXP_SJREI_ctrl_ {
+	/*case notApply { !not in controlling months - Not Apr or May
+	condition month<Apr .and. month>May
+	Value 999
+	}*/
+	case Controlling {
+	condition SOD_EXP_SJREI_ctrl_ == 200
+	value 200!0
+	}
+	case Not_controlling {
+	condition always
+	value 100
+	}/*
+	case below {
+	condition always
+	value 300!2
+	}*/
+}
+define SWP_EXP_SJREI_STATUS_DTS {alias SWP_EXP_SJREI_ctrl_ kind 'DTS-STATUS' units 'NONE'} ! Output of Vernalis control status
+
+! Banks Control by RPAs ?
+define SWP_EXP_PRAs_ctrl_ {
+	case notApply { !not in controlling months
+	condition MAXEXP_RPA_SWPDV == 99999
+	Value Neg_Flt_Max
+	}
+	case not_control {
+	condition D419 - MAXEXP_RPA_SWPDV < -abs_threshold 
+	value 100
+	}
+	case control {
+	condition ABS(D419 - MAXEXP_RPA_SWPDV) < abs_threshold 
+	value 200
+	}
+	case violated {
+	condition always
+	value 300
+	}
+}
+define SWP_EXP_PRAs_STATUS_DTS {alias SWP_EXP_PRAs_ctrl_ kind 'DTS-STATUS' units 'NONE'} ! Output of PRAs control status
+define rpa_omr_trig {value min(SOD_EXP_RPA_ctrl_,SOD_EXP_OMR_ctrl_)}
+/*
+! Banks Control by OMR ? 
+define SWPExpDecUPtoDelta {value D419UP-D419} !export reduction between Upstream cycle and delta cycle 
+define SWPExpDecOMR {value SWP_EXP_DEC_+ 0.5*COMB_EXP_DEC_} !export reduction due to OMR
+define SWP_EXP_OMR_ctrl_ {
+	case control {
+	condition SWPExpDecUPtoDelta > abs_threshold .and.  SWPExpDecOMR > abs_threshold .and. abs(SWPExpDecUPtoDelta - SWPExpDecOMR) < abs_threshold
+	value 1
+	}
+	case notControl {
+	condition always 
+	value 0
+	}
+}
+define SWP_EXP_OMR_STATUS_DTS {alias SWP_EXP_OMR_ctrl_ kind 'DTS-STATUS' units 'NONE'} ! Output of SWP OMR control status
+*/
+
