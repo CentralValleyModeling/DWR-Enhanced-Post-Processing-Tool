@@ -26,7 +26,7 @@ define SOD_EXP_ZERO_CTRL {
 !Check for total export capacity limit
 define SOD_EXP_CAP_CTRL {
 	case atSTANDARD    {condition ABS(SOD_EXP - SOD_EXP_MAXCAP) < abs_threshold value EQ}
-	case aboveSTANDARD {condition (SOD_EXP - SOD_EXP_MAXCAP) > abs_threshold     value GT}
+	case aboveSTANDARD {condition SOD_EXP - SOD_EXP_MAXCAP > abs_threshold     value GT}
 	case belowSTANDARD {condition (SOD_EXP - SOD_EXP_MAXCAP) < -1*abs_threshold value LT}
 	case UNEXPECTED {condition always value UE}
 }
