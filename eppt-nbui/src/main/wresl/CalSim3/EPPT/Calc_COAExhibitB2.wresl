@@ -228,7 +228,7 @@ define D206C_PWR2_ {value 0.67*D_FTR018_16_SA} !timeseries 'D206C_PWR' kind 'FLO
 
 define D206C_PWR_ {value D206C_PWR1_+D206C_PWR2_} !timeseries 'D206C_PWR' kind 'FLOW-DELIVERY' units 'CFS' convert 'TAF'} !Plumas, Tudor
 	! SWP - Rice decomposition/ Winter Water
-define D7C_ {value WEST_CANAL_WD} !timeseries 'D7C' kind 'FLOW-DELIVERY' units 'CFS' convert 'TAF'} !DSA 69 rice decomposition
+define D7C_ {timeseries 'RICE_DECOMP_DEL' kind 'FLOW-DELIVERY' units 'CFS' convert 'TAF'} !DSA 69 rice decomposition
 	! Other Miscellaneous water users
 
 define D_YUB013_14_NA {timeseries 'D_YUB013_14_NA' kind 'DIVERSION' units 'CFS' convert 'TAF'}
