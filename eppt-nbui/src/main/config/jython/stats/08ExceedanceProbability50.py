@@ -3,7 +3,7 @@ from java.util import ArrayList
 
 
 def calculate(input):
-	return toExceedance(ArrayList(input.values()))
+	return toExceedance(ArrayList(input))
 
 
 def calculateExceedance(doubles):
@@ -16,8 +16,8 @@ def toExceedance(v):
 
 
 def getName():
-	return "10% Exceedance Probability"
+	return "50% Exceedance Probability"
 
 
 def getCdfPercent():
-	return .9
+	return .5

@@ -67,7 +67,7 @@ public final class ScriptedEpptStatistics implements EpptStatistic
 	public static void createScriptedStatistics()
 	{
 		scriptedStatistics.clear();
-		Path jython = Paths.get(Constant.TREND_REPORTING_DIR).resolve("jython");
+		Path jython = Paths.get(Constant.CONFIG_DIR).resolve("jython").resolve("stats");
 		try(Stream<Path> stream = Files.walk(jython, 5))
 		{
 			scriptedStatistics.addAll(stream.filter(p -> p.toFile().isFile()).filter(p -> p.toString().endsWith("py"))

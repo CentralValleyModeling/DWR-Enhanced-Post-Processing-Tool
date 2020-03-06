@@ -14,8 +14,10 @@ package gov.ca.water.calgui.project;
 
 import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.logging.Level;
@@ -47,7 +49,7 @@ public class EpptConfigurationController
 	private final List<EpptScenarioRun> _scenarioRuns = new ArrayList<>();
 	private final List<MonthPeriod> _monthlyPeriods = new ArrayList<>();
 	private final List<EpptStatistic> _statistics = new ArrayList<>();
-	private final List<WaterYearPeriodRangesFilter> _annualPeriodFilters = new ArrayList<>();
+	private final List<Map<EpptScenarioRun, WaterYearPeriodRangesFilter>> _annualPeriodFilters = new ArrayList<>();
 	private String _projectName = "Default Project";
 	private String _projectDescription = "";
 	private SimpleIntegerProperty _startYear = new SimpleIntegerProperty(1921);
@@ -158,7 +160,7 @@ public class EpptConfigurationController
 		return _waterYearDefinition.get();
 	}
 
-	public List<WaterYearPeriodRangesFilter> getWaterYearPeriodRanges()
+	public List<Map<EpptScenarioRun, WaterYearPeriodRangesFilter>> getWaterYearPeriodRanges()
 	{
 		return _annualPeriodFilters;
 	}
@@ -250,7 +252,7 @@ public class EpptConfigurationController
 		return _difference;
 	}
 
-	public void setWaterYearPeriodRangesFilters(List<WaterYearPeriodRangesFilter> filters)
+	public void setWaterYearPeriodRangesFilters(List<Map<EpptScenarioRun, WaterYearPeriodRangesFilter>> filters)
 	{
 		_annualPeriodFilters.clear();
 		_annualPeriodFilters.addAll(filters);

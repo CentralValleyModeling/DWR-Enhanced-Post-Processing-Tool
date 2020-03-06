@@ -162,11 +162,17 @@ final class DisplayGuiLinkFrames extends DisplayFrames
 					getEnd());
 			TimeSeriesContainer primarySeries = dssGrabber1Svc.getPrimarySeries()[0];
 			TimeSeriesContainer secondarySeries = dssGrabber1Svc.getSecondarySeries()[0];
+			List<TimeSeriesContainer> tscList = new ArrayList<>();
+			if(primarySeries != null)
+			{
+				tscList.add(primarySeries);
+			}
 			if(secondarySeries != null)
 			{
 				secondarySeries.setFullName(guiLink.getLegend());
+				tscList.add(secondarySeries);
 			}
-			primaryScenarioRunData.put(epptScenarioRun, Arrays.asList(primarySeries, secondarySeries));
+			primaryScenarioRunData.put(epptScenarioRun, tscList);
 		}
 		if(getPlotConfigurationState().isDisplayTimeSeriesAll())
 		{

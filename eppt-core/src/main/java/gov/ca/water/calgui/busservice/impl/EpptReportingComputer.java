@@ -44,26 +44,26 @@ import static java.util.stream.Collectors.toMap;
  * @author <a href="mailto:adam@rmanet.com">Adam Korynta</a>
  * @since 07-26-2019
  */
-public class EpptReportingComputer
+public final class EpptReportingComputer
 {
 	private final List<EpptStatistic> _statistics;
 	private final MonthPeriod _monthPeriod;
-	private final WaterYearPeriodRangesFilter _waterYearPeriodRangesFilter;
+	private final Map<EpptScenarioRun, WaterYearPeriodRangesFilter> _waterYearPeriodRangesFilters;
 	private final WaterYearDefinition _waterYearDefinition;
 
-	EpptReportingComputer(List<EpptStatistic> statistics, WaterYearDefinition waterYearDefinition, MonthPeriod monthPeriod,
-						  WaterYearPeriodRangesFilter waterYearPeriodRangesFilter)
+	private EpptReportingComputer(List<EpptStatistic> statistics, WaterYearDefinition waterYearDefinition, MonthPeriod monthPeriod,
+								  Map<EpptScenarioRun, WaterYearPeriodRangesFilter> waterYearPeriodRangesFilters)
 	{
 		_statistics = statistics;
 		_monthPeriod = monthPeriod;
-		_waterYearPeriodRangesFilter = waterYearPeriodRangesFilter;
+		_waterYearPeriodRangesFilters = waterYearPeriodRangesFilters;
 		_waterYearDefinition = waterYearDefinition;
 	}
 
 	public static EpptReportingComputedSet computeForMetrics(Map<EpptScenarioRun, List<TimeSeriesContainer>> scenarioRunData,
 															 String plotTitle, boolean taf, WaterYearDefinition waterYearDefinition,
 															 List<MonthPeriod> monthPeriods,
-															 List<WaterYearPeriodRangesFilter> waterYearPeriodRangesFilters,
+															 List<Map<EpptScenarioRun, WaterYearPeriodRangesFilter>> waterYearPeriodRangesFilters,
 															 List<EpptStatistic> statistic)
 	{
 		List<EpptReportingComputedSet.EpptReportingScenarioComputed> trendReportingComputed = new ArrayList<>();
@@ -77,7 +77,7 @@ public class EpptReportingComputer
 				for(MonthPeriod monthPeriod : monthPeriods)
 				{
 					List<EpptReportingComputed> annualComputes = new ArrayList<>();
-					for(WaterYearPeriodRangesFilter waterYearPeriodRangesFilter : waterYearPeriodRangesFilters)
+					for(Map<EpptScenarioRun, WaterYearPeriodRangesFilter> waterYearPeriodRangesFilter : waterYearPeriodRangesFilters)
 					{
 						EpptReportingComputer trendReportingComputer = new EpptReportingComputer(statistic, waterYearDefinition, monthPeriod,
 								waterYearPeriodRangesFilter);
@@ -86,7 +86,12 @@ public class EpptReportingComputer
 					}
 					monthComputes.add(new EpptReportingComputedSet.EpptReportingMonthComputed(annualComputes));
 				}
-				tsComputes.add(new EpptReportingComputedSet.EpptReportingTs(ts.fullName, monthComputes));
+				String name = "";
+				if(ts != null)
+				{
+					name = ts.getFullName();
+				}
+				tsComputes.add(new EpptReportingComputedSet.EpptReportingTs(name, monthComputes));
 			}
 			trendReportingComputed.add(new EpptReportingComputedSet.EpptReportingScenarioComputed(data.getKey(), tsComputes));
 		}
@@ -97,52 +102,39 @@ public class EpptReportingComputer
 	{
 		DssReader dssReader = new DssReader(scenarioRun, _waterYearDefinition, new DssCache());
 		TimeSeriesContainer timeSeriesContainer = new TimeSeriesContainer();
-		primarySeries.clone(timeSeriesContainer);
+		if(primarySeries != null)
+		{
+			primarySeries.clone(timeSeriesContainer);
+		}
 		dssReader.setOriginalUnits(timeSeriesContainer.getUnits());
 		boolean aggregateYearly = isAggregateYearly(convertTaf, timeSeriesContainer);
-		NavigableMap<LocalDateTime, Double> discreteSeries = dssReader.timeSeriesContainerToMap(new TimeSeriesContainer[]{timeSeriesContainer},
-				convertTaf);
+		TimeSeriesContainer[] data = {timeSeriesContainer};
+		WaterYearPeriodRangesFilter waterYearPeriodRangesFilter = _waterYearPeriodRangesFilters.get(scenarioRun);
+		NavigableMap<LocalDateTime, Double> discreteSeries = dssReader.timeSeriesContainerToMap(data, convertTaf)
+																	  .entrySet()
+																	  .stream()
+																	  .filter(waterYearPeriodRangesFilter)
+																	  .collect(toMap(Map.Entry::getKey, Map.Entry::getValue,
+																			  (o1, o2) -> o1, TreeMap::new));
 		NavigableMap<Integer, Double> aggregateSeries = DssReader.filterPeriodYearly(discreteSeries, _monthPeriod, aggregateYearly);
 		List<EpptReportingComputedStatistics> computedStatistics = computeStatistics(discreteSeries, aggregateSeries);
-		return new EpptReportingComputed(_monthPeriod, _waterYearPeriodRangesFilter, discreteSeries, aggregateSeries, computedStatistics);
+		return new EpptReportingComputed(_monthPeriod, waterYearPeriodRangesFilter, discreteSeries, aggregateSeries, computedStatistics);
 	}
 
 	private List<EpptReportingComputedStatistics> computeStatistics(NavigableMap<LocalDateTime, Double> discreteSeries,
 																	NavigableMap<Integer, Double> aggregateSeries)
 	{
 		List<EpptReportingComputedStatistics> retval = new ArrayList<>();
-		for(EpptStatistic epptStatistic : _statistics)
+		if(!discreteSeries.isEmpty())
 		{
-			SortedMap<Month, Double> monthlySplit = filterPeriodMonthly(discreteSeries, epptStatistic);
-			Double aggregateStatistic = epptStatistic.calculateYearly(new ArrayList<>(aggregateSeries.values()));
-			retval.add(new EpptReportingComputedStatistics(epptStatistic, aggregateStatistic, monthlySplit));
+			for(EpptStatistic epptStatistic : _statistics)
+			{
+				SortedMap<Month, Double> monthlySplit = filterPeriodMonthly(discreteSeries, epptStatistic);
+				Double aggregateStatistic = epptStatistic.calculateYearly(new ArrayList<>(aggregateSeries.values()));
+				retval.add(new EpptReportingComputedStatistics(epptStatistic, aggregateStatistic, monthlySplit));
+			}
 		}
 		return retval;
-	}
-
-	NavigableMap<LocalDateTime, Double> getFullTimeSeries(LocalDate start, LocalDate end, int offset,
-														  TimeSeriesContainer tsc)
-	{
-		NavigableMap<LocalDateTime, Double> fullSeries = new TreeMap<>();
-		if(tsc != null)
-		{
-			for(int i = 0; i < tsc.getNumberValues(); i++)
-			{
-				HecTime hecTime = tsc.getHecTime(i);
-				double value = tsc.getValue(i);
-				if(RMAConst.isValidValue(value) && value != -3.402823466E38)
-				{
-					Date javaDate = hecTime.getJavaDate(offset);
-					fullSeries.put(LocalDateTime.ofInstant(javaDate.toInstant(), ZoneId.systemDefault()), value);
-				}
-			}
-			if(!fullSeries.isEmpty())
-			{
-				fullSeries = fullSeries.subMap(start.minusDays(1).atTime(0, 0), true,
-						end.plusDays(2).atTime(0, 0), true);
-			}
-		}
-		return fullSeries;
 	}
 
 	private String getUnits(TimeSeriesContainer tsc)

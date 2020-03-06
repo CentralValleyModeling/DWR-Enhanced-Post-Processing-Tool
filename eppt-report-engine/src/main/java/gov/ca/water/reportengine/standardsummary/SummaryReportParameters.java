@@ -52,11 +52,11 @@ public class SummaryReportParameters
 	private final List<String> _disabledSummaryModules;
 	private final CommonPeriodFilter _commonPeriodFilter;
 	private final DssCache _dssCache;
-	private final List<WaterYearPeriodRangesFilter> _waterYearPeriodRanges;
+	private final List<Map<EpptScenarioRun, WaterYearPeriodRangesFilter>> _waterYearPeriodRanges;
 
 	public SummaryReportParameters(WaterYearDefinition waterYearDefinition, Map<EpptScenarioRun, WaterYearIndex> waterYearIndicies,
 								   WaterYearPeriodRange longTermRange,
-								   List<WaterYearPeriodRangesFilter> waterYearPeriodRanges, PercentDiffStyle percentDiffStyle,
+								   List<Map<EpptScenarioRun, WaterYearPeriodRangesFilter>> waterYearPeriodRanges, PercentDiffStyle percentDiffStyle,
 								   List<String> disabledSummaryModules, CommonPeriodFilter commonPeriodFilter, DssCache dssCache)
 			throws EpptReportException
 	{
@@ -112,7 +112,7 @@ public class SummaryReportParameters
 		return _percentDiffStyle;
 	}
 
-	public List<WaterYearPeriodRangesFilter> getWaterYearPeriodRanges()
+	public List<Map<EpptScenarioRun, WaterYearPeriodRangesFilter>> getWaterYearPeriodRanges()
 	{
 		return _waterYearPeriodRanges;
 	}

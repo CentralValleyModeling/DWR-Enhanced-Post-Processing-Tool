@@ -54,14 +54,14 @@ class TrendReportDataLoader
 	private final WaterYearDefinition _waterYearDefinition;
 	private final List<EpptStatistic> _statistics;
 	private final List<MonthPeriod> _monthPeriod;
-	private final List<WaterYearPeriodRangesFilter> _waterYearPeriodRangesFilters;
+	private final List<Map<EpptScenarioRun, WaterYearPeriodRangesFilter>> _waterYearPeriodRangesFilters;
 	private final boolean _difference;
 
 	TrendReportDataLoader(List<EpptScenarioRun> scenarioRuns, List<EpptParameter> guiLink,
 						  int start, int end, boolean taf, boolean difference,
 						  WaterYearDefinition waterYearDefinition,
 						  List<EpptStatistic> statistics, List<MonthPeriod> monthPeriod,
-						  List<WaterYearPeriodRangesFilter> waterYearPeriodRangesFilters)
+						  List<Map<EpptScenarioRun, WaterYearPeriodRangesFilter>> waterYearPeriodRangesFilters)
 	{
 		_scenarioRuns = scenarioRuns;
 		_guiLink = guiLink;
@@ -147,7 +147,7 @@ class TrendReportDataLoader
 		}
 		else if(_waterYearPeriodRangesFilters.isEmpty())
 		{
-			retval = Optional.of("No Water Year Index defined");
+			retval = Optional.of("No Annual Filter defined");
 		}
 		return retval;
 	}

@@ -26,10 +26,10 @@
 				<checkbox name="ExceedanceAggregate" id="ExceedanceAggregate" text="Exceedance Aggregate" selected="false">
 					<gridbagconstraints insets="0,0,5,3" anchor="GridBagConstraints.WEST" gridx="2" gridy="2"/>
 				</checkbox>
-				<checkbox name="MonthlyLine" id="MonthlyLine" text="Monthly Line" selected="false" enabled="false">
+				<checkbox name="MonthlyLine" id="MonthlyLine" text="Monthly Line" selected="false">
 					<gridbagconstraints insets="0,0,5,3" anchor="GridBagConstraints.WEST" gridx="3" gridy="1"/>
 				</checkbox>
-				<checkbox name="BarGraph" id="BarGraph" text="Bar Graph" selected="false" enabled="false">
+				<checkbox name="BarGraph" id="BarGraph" text="Bar Graph" selected="false">
 					<gridbagconstraints insets="0,0,5,3" anchor="GridBagConstraints.WEST" gridx="3" gridy="2"/>
 				</checkbox>
 				<checkbox name="BoxAndWhiskerAll" id="BoxAndWhiskerAll" text="Box and Whisker All" selected="false">

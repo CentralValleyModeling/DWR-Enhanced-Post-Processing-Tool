@@ -20,6 +20,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.CancellationException;
 import java.util.concurrent.CompletableFuture;
@@ -213,7 +214,7 @@ public class TrendReportPanel extends JFXPanel
 			List<EpptParameter> guiLink = new ArrayList<>(_parametersPane.getSelectedItems());
 			List<EpptScenarioRun> scenarioRuns = _scenarioRuns.stream().filter(Objects::nonNull).collect(toList());
 			boolean difference = _epptConfigurationController.isDifference();
-			List<WaterYearPeriodRangesFilter> waterYearPeriodRanges = _epptConfigurationController.getWaterYearPeriodRanges();
+			List<Map<EpptScenarioRun, WaterYearPeriodRangesFilter>> waterYearPeriodRanges = _epptConfigurationController.getWaterYearPeriodRanges();
 			TrendReportDataLoader trendReportDataLoader = new TrendReportDataLoader(scenarioRuns, guiLink, startYear, endYear, taf, difference,
 					waterYearDefinition, statistic, monthPeriod, waterYearPeriodRanges);
 			loadJavascript(trendReportTabConfig.getPath(),

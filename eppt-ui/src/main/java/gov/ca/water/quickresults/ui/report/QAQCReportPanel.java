@@ -473,7 +473,7 @@ public class QAQCReportPanel extends EpptPanel
 			String title = _reportTitle.getText();
 			String subtitle = _reportSubtitle.getText();
 			WaterYearPeriodRange longTermRange = getLongTermRange();
-			List<WaterYearPeriodRangesFilter> waterYearPeriodRanges = _epptConfigurationController.getWaterYearPeriodRanges();
+			List<Map<EpptScenarioRun, WaterYearPeriodRangesFilter>> waterYearPeriodRanges = _epptConfigurationController.getWaterYearPeriodRanges();
 			PercentDiffStyle percentDiffStyle = (PercentDiffStyle) _percentDiffStyle.getSelectedItem();
 			WaterYearIndexAliasReader.WaterYearIndexAlias waterYearIndex = _epptConfigurationController.getWaterYearIndex();
 			Map<EpptScenarioRun, WaterYearIndex> waterYearIndecies = new HashMap<>();

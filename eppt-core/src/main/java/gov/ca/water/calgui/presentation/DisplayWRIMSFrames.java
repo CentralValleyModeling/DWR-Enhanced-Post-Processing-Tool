@@ -98,7 +98,6 @@ class DisplayWRIMSFrames extends DisplayFrames
 		dssGrabber.setLocation("@@" + mts.getName());
 		int n = mts.getNumberOfDataReferences();
 		Map<EpptScenarioRun, List<TimeSeriesContainer>> scenarioRunData = new TreeMap<>(Comparator.comparing(scenarios::indexOf));
-		Map<EpptScenarioRun, List<String>> primarySuffxies = new TreeMap<>(Comparator.comparing(scenarios::indexOf));
 		for(int i = 0; i < n; i++)
 		{
 			TimeSeriesContainer[] result = dssGrabber.getMultipleTimeSeries(i);
@@ -106,9 +105,10 @@ class DisplayWRIMSFrames extends DisplayFrames
 			{
 				EpptScenarioRun epptScenarioRun = scenarios.get(j);
 				TimeSeriesContainer tsc = result[j];
-				String suffix = tsc.getFullName();
-				primarySuffxies.computeIfAbsent(epptScenarioRun, v -> new ArrayList<>()).add(suffix);
-				scenarioRunData.computeIfAbsent(epptScenarioRun, v -> new ArrayList<>()).add(tsc);
+				if(tsc != null)
+				{
+					scenarioRunData.computeIfAbsent(epptScenarioRun, v -> new ArrayList<>()).add(tsc);
+				}
 			}
 		}
 		plot(tabbedPane, scenarioRunData, mts.getName());
@@ -162,7 +162,10 @@ class DisplayWRIMSFrames extends DisplayFrames
 			{
 				EpptScenarioRun epptScenarioRun = scenarioRuns.get(i);
 				TimeSeriesContainer tsc = primaryResults[i];
-				scenarioRunData.put(epptScenarioRun, Collections.singletonList(tsc));
+				if(tsc != null)
+				{
+					scenarioRunData.put(epptScenarioRun, Collections.singletonList(tsc));
+				}
 			}
 			plot(tabbedPane, scenarioRunData, dts.getName());
 		}

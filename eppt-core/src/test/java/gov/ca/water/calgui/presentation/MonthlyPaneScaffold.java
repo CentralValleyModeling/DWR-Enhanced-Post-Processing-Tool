@@ -17,7 +17,9 @@ import java.nio.file.Paths;
 import java.time.Month;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import javax.swing.*;
 
 import gov.ca.water.calgui.EpptInitializationException;
@@ -164,8 +166,15 @@ public class MonthlyPaneScaffold
 		WaterYearPeriod shortTermPeriod = new WaterYearPeriod("Short Term");
 		List<WaterYearPeriodRange> longTermRanges = Arrays.asList(new WaterYearPeriodRange(longTermPeriod, new WaterYearType(1920, longTermPeriod), new WaterYearType(1999, longTermPeriod)));
 		List<WaterYearPeriodRange> shortTermRanges = Arrays.asList(new WaterYearPeriodRange(shortTermPeriod, new WaterYearType(1950, shortTermPeriod), new WaterYearType(1960, shortTermPeriod)));
-		List<WaterYearPeriodRangesFilter> annualFilters = Arrays.asList(new WaterYearPeriodRangesFilter("Long Term", longTermRanges, waterYearDefinition),
-				new WaterYearPeriodRangesFilter("Short Term", shortTermRanges, waterYearDefinition));
+		WaterYearPeriodRangesFilter longTerm = new WaterYearPeriodRangesFilter("Long Term", longTermRanges, waterYearDefinition);
+		WaterYearPeriodRangesFilter shortTerm = new WaterYearPeriodRangesFilter("Short Term", shortTermRanges, waterYearDefinition);
+		Map<EpptScenarioRun, WaterYearPeriodRangesFilter> range1 = new HashMap<>();
+		range1.put(baseRun, longTerm);
+		range1.put(altRun, longTerm);
+		Map<EpptScenarioRun, WaterYearPeriodRangesFilter> range2 = new HashMap<>();
+		range2.put(baseRun, shortTerm);
+		range2.put(altRun, shortTerm);
+		List<Map<EpptScenarioRun, WaterYearPeriodRangesFilter>> annualFilters = Arrays.asList(range1,range2);
 		epptConfigurationController.setWaterYearPeriodRangesFilters(annualFilters);
 		DisplayGuiLinkFrames displayGuiLinkFrames = new DisplayGuiLinkFrames(epptConfigurationController, plotConfigurationState,
 				Collections.singletonList(guiLink));

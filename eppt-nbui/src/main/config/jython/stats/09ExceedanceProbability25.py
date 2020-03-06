@@ -3,7 +3,7 @@ from java.util import ArrayList
 
 
 def calculate(input):
-	return toExceedance(ArrayList(input.values()))
+	return toExceedance(ArrayList(input))
 
 
 def calculateExceedance(doubles):

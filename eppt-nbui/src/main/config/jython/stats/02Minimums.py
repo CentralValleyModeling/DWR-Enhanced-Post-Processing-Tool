@@ -6,4 +6,4 @@ def getName():
 
 
 def calculate(input):
-	return ArrayList(input.values()).stream().mapToDouble(jdf(lambda e: e)).min()
+	return ArrayList(input).stream().mapToDouble(jdf(lambda e: e)).min()
