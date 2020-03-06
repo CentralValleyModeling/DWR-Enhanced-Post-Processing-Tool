@@ -16,7 +16,7 @@ Ahmed Ali	| DWR	|	12/11/2019	|	Reformatted/ standardized logic statements
 		
 define SAC_RVR_HOOD { timeseries 'C_Hood' kind 'FLOW-CHANNEL' units 'CFS' convert 'TAF' }
 define YOLO_BYPASS { timeseries 'C_YoloBP' kind 'FLOW-CHANNEL' units 'CFS' convert 'TAF' }
-define MOKELUM_RVR { timeseries 'AD_MOKELUMNE' kind 'FLOW-ACCRDEPL' units 'CFS' convert 'TAF' }
+define MOKELUM_RVR { timeseries 'AD_MOKELUMNE_S2D' kind 'FLOW-ACCRDEPL' units 'CFS' convert 'TAF' }
 define SAN_JOAQ_RVR { timeseries 'AD_SJR_V' kind 'FLOW-ACCRDEPL' units 'CFS' convert 'TAF' }
 define MARS_CRK { timeseries 'I_marshCr_S2D' kind 'FLOW-INFLOW' units 'CFS' convert 'TAF' }
 !define CALAVERAS_RVR { timeseries 'C508' kind 'FLOW-CHANNEL' units 'CFS' convert 'TAF' }
@@ -107,10 +107,12 @@ define DELTA_EXPORT_ { alias  DELTA_EXPORT  kind 'DTS-DELTA-MB-VALUE' units 'TAF
 /************************************** Delta mass balance manipulation **************************************/	
 
 define DELTA_MB {value DELTA_INFLOW - DELTA_OUTFLOW -DELTA_EXPORT}
+define DELTA_OUTFLOW_EXPORT {value DELTA_OUTFLOW + DELTA_EXPORT}
 
 define CCWD_      {alias CCWD kind 'DTS-DELTA-MB-VALUE' units 'TAF' }
 !define Net_DICU_  {alias Net_DICU kind 'DTS-DELTA-MB-VALUE' units 'TAF' }
 define DELTA_MB_ { alias  DELTA_MB  kind 'DTS-DELTA-MB-VALUE' units 'TAF' }
+define DELTA_OUTFLOW_EXPORT_ { alias  DELTA_OUTFLOW_EXPORT  kind 'DTS-DELTA-MB-VALUE' units 'TAF' }
 
 /************************************** Mass balance Check **************************************/	
 
@@ -158,6 +160,6 @@ define SWProject {value Banks_EXP1 + Banks_EXP2 + Banks_CVP + BANKS_WTS}
 !Water Transfers
 !define Water_transfer {value JONES_WTS + BANKS_WTS }
 
-define CVProject_ 			{alias CVProject kind 'DTS-DELTA-MB-VALUE' units 'TAF'}
-define SWProject_ 			{alias SWProject   kind 'DTS-DELTA-MB-VALUE' units 'TAF'}
-!define Water_transfer_   	{alias Water_transfer      kind 'DTS-DELTA-MB-VALUE' units 'TAF'}  !AK should the WTS be only SWP?
+define CVProject_ 			{alias CVProject kind 'DTS-DELTA-MB-STATUS' units 'TAF'}
+define SWProject_ 			{alias SWProject   kind 'DTS-DELTA-MB-STATUS' units 'TAF'}
+!define Water_transfer_   	{alias Water_transfer      kind 'DTS-DELTA-MB-STATUS' units 'TAF'}  !AK should the WTS be only SWP?

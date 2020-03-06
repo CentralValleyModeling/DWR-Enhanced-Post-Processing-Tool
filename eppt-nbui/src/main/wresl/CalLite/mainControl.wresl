@@ -58,7 +58,7 @@ MODEL QAQC_Post {
 	
 ! Load Coordinated Operations Agreement Module
 	INCLUDE [LOCAL]'EPPT\Calc_COA.wresl'
-!	INCLUDE [LOCAL]'EPPT\Calc_COAExhibitB2.wresl'
+ 	INCLUDE [LOCAL]'EPPT\Calc_COAExhibitB2.wresl'
 
 
 ! Load Mass Balance Module

@@ -119,8 +119,12 @@ define NOD_HSt_ { alias  NOD_HSt  kind 'DTS-NOD-MB-STATUS' units 'NONE' }
 
 define NOD_MB 	{value NOD_Wilkins+NOD_YubFea+NOD_HSt
 		+ AD_SACFEA - SPILL_FROM_FREMONT + AD_SACAME - SPILL_FROM_SAC_WEIR - D_SACAME + I_HOOD - C400 - D400}	
+!define NOD_MB_INFLOW	{value NOD_TOT_INFLOW + NOD_RTRN_FLOW + NOD_REL}
+!define NOD_MB_OUTFLOW	{value NOD_EVAP + NOD_DIVERSION + TOT_SW_GW_INTERACTION}
 		
 define NOD_MB_ 	{alias NOD_MB kind 'DTS-NOD-MB-VALUE' units 'TAF'}
+!define NOD_MB_INFLOW_ 		{alias NOD_MB_INFLOW kind 'DTS-NOD-MB-VALUE' units 'TAF'}
+!define NOD_MB_OUTFLOW_ 		{alias NOD_MB_OUTFLOW kind 'DTS-NOD-MB-VALUE' units 'TAF'}
 
 
 

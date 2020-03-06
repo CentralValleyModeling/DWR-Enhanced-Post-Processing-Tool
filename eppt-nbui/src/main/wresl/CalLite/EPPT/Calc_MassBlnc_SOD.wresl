@@ -149,10 +149,10 @@ define SOD_EXPORT_ {alias SOD_EXPORT kind 'DTS-SOD-MB-VALUE' units 'TAF'}
 /************************************** EVAPORATION **************************************/	
 
 define SOD_EVAP_MB {value EVAP_SANLUIS_CVP + EVAP_SANLUIS_SWP /*+ EVAP_LAK_DL_VALL + EVAP_LAK_SLVRWOD + EVAP_LAK_PERRIS + EVAP_LAK_PRMD + EVAP_LAK_CASTAIC*/ }
-!define SOD_EVAP_SWP{value SOD_EVAP_MB - EVAP_SANLUIS_CVP}
+define SOD_EVAP_SWP{value SOD_EVAP_MB - EVAP_SANLUIS_CVP}
 
 define SOD_EVAP_MB_ {alias SOD_EVAP_MB kind 'DTS-SOD-MB-VALUE' units 'TAF'}
-define SOD_EVAP_SWP_ {alias EVAP_SANLUIS_SWP kind 'DTS-SOD-MB-VALUE' units 'TAF'}
+define SOD_EVAP_SWP_ {alias SOD_EVAP_SWP kind 'DTS-SOD-MB-VALUE' units 'TAF'}
 !define SOD_EVAP_DLVLSWP_ {alias EVAP_LAK_DL_VALL kind 'DTS-SOD-MB-VALUE' units 'TAF'}
 define SOD_EVAP_CVP_ {alias EVAP_SANLUIS_CVP kind 'DTS-SOD-MB-VALUE' units 'TAF'}
 
@@ -180,18 +180,20 @@ define SWP_DEL_TOT_ {alias SWP_DEL_TOT kind 'DTS-SOD-MB-VALUE' units 'TAF'}
 define TOT_DEL_MB  {value CVP_DEL_MB + SWP_DEL_MB} 									!Total deliveries
 define TOT_DEL_MB_ {alias TOT_DEL_MB kind 'DTS-SOD-MB-VALUE' units 'TAF'}
 /************************************** SOD EXPORT INFLOW **************************************/
-define CVP_SOD_EXP_INF {value BANKS_EXP_CVP + JONES_EXP_CVP + MP_LOCAL_INFLOW_MB + NET_CVP_SL_REL - EVAP_SANLUIS_CVP}
-define SWP_SOD_EXP_INF {value BANKS_EXP_SWP + BANKS_EXP_WATER_TRNSR + KRN_RIV_INTRTIE_BNA_VSTA + NET_SWP_SOD_REL - SOD_EVAP_MB}
-define CVP_SOD_BAL     {value CVP_SOD_EXP_INF - SOD_DELIVERY_CVP } !for QA/QC
+define CVP_SOD_EXP_INF {value BANKS_EXP_CVP + JONES_EXP_CVP + MP + MP_LOCAL_INFLOW_MB + NET_CVP_SL_REL - EVAP_SANLUIS_CVP}
+define SWP_SOD_EXP_INF {value BANKS_EXP_SWP + BANKS_EXP_WATER_TRNSR + KRN_RIV_INTRTIE_BNA_VSTA + NET_SWP_SOD_REL - SOD_SWP_TERM_Inflow_Del - SOD_EVAP_SWP}
+define CVP_SOD_BAL     {value CVP_SOD_EXP_INF - CVP_DEL_MB } !for QA/QC
 define SWP_SOD_BAL     {value SWP_SOD_EXP_INF - SWP_DEL_MB 	}  !for QA/QC
 
-define TOT_SOD_EXP_INF {value CVP_SOD_EXP_INF + SWP_SOD_EXP_INF}
+define TOT_SOD_EXP_INF {value SOD_INFLOW + SOD_EXPORT - SOD_EVAP_MB - SOD_SWP_TERM_Inflow_Del }
+define TOT_SOD_DEL_MB {value TOT_DEL_MB}
 
 define CVP_SOD_EXP_INF_ {alias CVP_SOD_EXP_INF kind 'DTS-SOD-MB-VALUE' units 'TAF'}
 define SWP_SOD_EXP_INF_ {alias SWP_SOD_EXP_INF kind 'DTS-SOD-MB-VALUE' units 'TAF'}
 define CVP_SOD_BAL_		{alias CVP_SOD_BAL kind 'DTS-SOD-MB-VALUE' units 'TAF'}
 define SWP_SOD_BAL_ 	{alias SWP_SOD_BAL kind 'DTS-SOD-MB-VALUE' units 'TAF'}
 define TOT_SOD_EXP_INF_ {alias TOT_SOD_EXP_INF kind 'DTS-SOD-MB-VALUE' units 'TAF'}
+define TOT_SOD_DEL_MB_ {alias TOT_SOD_DEL_MB kind 'DTS-SOD-MB-VALUE' units 'TAF'}
 
 /************************************** final mass balance manipulation **************************************/
 
@@ -207,3 +209,24 @@ define SOD_MB_CHECK {
 
 define SOD_MB_CHECK_ { alias  SOD_MB_CHECK  kind 'DTS-SOD-MB-STATUS' units 'NONE' }
 
+define CVP_CRSS_VLLY_CANAL_ { alias  CVP_CRSS_VLLY_CANAL  kind 'DTS-SOD-MB-VALUE' units 'TAF' }
+define LOWR_DLTA_MNDTA_CANAL_ { alias  LOWR_DLTA_MNDTA_CANAL  kind 'DTS-SOD-MB-VALUE' units 'TAF' }
+define KRN_RIV_INTRTIE_BNA_VSTA_ { alias  KRN_RIV_INTRTIE_BNA_VSTA  kind 'DTS-SOD-MB-VALUE' units 'TAF' }
+define BANKS_EXP_SWP_ { alias  BANKS_EXP_SWP  kind 'DTS-SOD-MB-VALUE' units 'TAF' }
+define BANKS_EXP_CVP_ { alias  BANKS_EXP_CVP  kind 'DTS-SOD-MB-VALUE' units 'TAF' }
+define BANKS_EXP_WATER_TRNSR_ { alias  BANKS_EXP_WATER_TRNSR  kind 'DTS-SOD-MB-VALUE' units 'TAF' }
+define JONES_EXP_CVP_ { alias  JONES_EXP_CVP  kind 'DTS-SOD-MB-VALUE' units 'TAF' }
+define EVAP_SANLUIS_CVP_ { alias  EVAP_SANLUIS_CVP  kind 'DTS-SOD-MB-VALUE' units 'TAF' }
+define EVAP_SANLUIS_SWP_ { alias  EVAP_SANLUIS_SWP  kind 'DTS-SOD-MB-VALUE' units 'TAF' }
+define SOD_DELIVERY_CVP_ { alias  SOD_DELIVERY_CVP  kind 'DTS-SOD-MB-VALUE' units 'TAF' }
+define TOT_TBL_A_SWP_ { alias  TOT_TBL_A_SWP  kind 'DTS-SOD-MB-VALUE' units 'TAF' }
+define ART_21_SWP_ { alias  ART_21_SWP  kind 'DTS-SOD-MB-VALUE' units 'TAF' }
+define ART_56_SWP_ { alias  ART_56_SWP  kind 'DTS-SOD-MB-VALUE' units 'TAF' }
+define NBAY_TBL_A_SWP_ { alias  NBAY_TBL_A_SWP  kind 'DTS-SOD-MB-VALUE' units 'TAF' }
+define NBAY_ART_21_SWP_ { alias  NBAY_ART_21_SWP  kind 'DTS-SOD-MB-VALUE' units 'TAF' }
+define NBAY_ART_56_SWP_ { alias  NBAY_ART_56_SWP  kind 'DTS-SOD-MB-VALUE' units 'TAF' }
+define FEATH_TBL_A_SWP_ { alias  FEATH_TBL_A_SWP  kind 'DTS-SOD-MB-VALUE' units 'TAF' }
+define FEATH_ART_21_SWP_ { alias  FEATH_ART_21_SWP  kind 'DTS-SOD-MB-VALUE' units 'TAF' }
+define FEATH_ART_56_SWP_ { alias  FEATH_ART_56_SWP  kind 'DTS-SOD-MB-VALUE' units 'TAF' }
+define PRJ_LOSS_ { alias  PRJ_LOSS  kind 'DTS-SOD-MB-VALUE' units 'TAF' }
+define SWP_LOSS_ { alias  SWP_LOSS  kind 'DTS-SOD-MB-VALUE' units 'TAF' }
