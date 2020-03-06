@@ -174,7 +174,7 @@ define SWP_SOD_EXP_INF {value BANKS_EXP_SWP + BANKS_EXP_WATER_TRNSR + KRN_RIV_IN
 define CVP_SOD_BAL     {value CVP_SOD_EXP_INF - CVP_DEL_MB } !for QA/QC
 define SWP_SOD_BAL     {value SWP_SOD_EXP_INF - SWP_DEL_MB 		 } !for QA/QC
 
-define TOT_SOD_EXP_INF {value CVP_SOD_EXP_INF + SWP_SOD_EXP_INF }
+define TOT_SOD_EXP_INF {value SOD_INFLOW + SOD_EXPORT - SOD_EVAP_MB }
 define TOT_SOD_DEL_MB {value TOT_DEL_MB}
 
 define CVP_SOD_EXP_INF_ {alias CVP_SOD_EXP_INF kind 'DTS-SOD-MB-VALUE' units 'TAF'}
