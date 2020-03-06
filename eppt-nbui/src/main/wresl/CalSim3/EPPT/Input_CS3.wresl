@@ -163,7 +163,7 @@ define SAC_FREEPORT_FLOW { timeseries 'C_SAC048' kind 'CHANNEL' units 'CFS' conv
 define SAC_FREEPORT_FLOW_MIN { value 0.} !timeseries 'C169_MIF' kind 'FLOW-MIN-INSTREAM' units 'CFS' convert 'TAF' }  !zero value
 
 define FEATHER_LOWFLOW_THERMALITO_FLOW { timeseries 'C_FTR068' kind 'CHANNEL' units 'CFS' convert 'TAF' }
-define FEATHER_LOWFLOW_THERMALITO_FLOW_MIN_LOOKUP { select MINFLOW from MINFLOW where  C_ARC=200.1, MONTH=MONTH }
+define FEATHER_LOWFLOW_THERMALITO_FLOW_MIN_LOOKUP { select MINFLOW from MINFLOW where  C_ARC=200, MONTH=MONTH }
 define FEATHER_LOWFLOW_THERMALITO_FLOW_MIN { value FEATHER_LOWFLOW_THERMALITO_FLOW_MIN_LOOKUP * CFS_TAF }
 
 define FEATHER_BLW_THERMALITO_FLOW { timeseries 'C_FTR059' kind 'CHANNEL' units 'CFS' convert 'TAF' }
