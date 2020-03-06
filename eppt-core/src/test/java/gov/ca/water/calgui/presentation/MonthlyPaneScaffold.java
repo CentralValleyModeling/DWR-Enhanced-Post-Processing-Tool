@@ -14,7 +14,6 @@ package gov.ca.water.calgui.presentation;
 
 import java.awt.BorderLayout;
 import java.nio.file.Paths;
-import java.time.LocalDate;
 import java.time.Month;
 import java.util.Arrays;
 import java.util.Collections;
@@ -24,14 +23,19 @@ import javax.swing.*;
 import gov.ca.water.calgui.EpptInitializationException;
 import gov.ca.water.calgui.bo.GUILinksAllModelsBO;
 import gov.ca.water.calgui.bo.WaterYearDefinition;
-import gov.ca.water.calgui.bo.WaterYearIndex;
+import gov.ca.water.calgui.bo.WaterYearPeriod;
+import gov.ca.water.calgui.bo.WaterYearPeriodRange;
+import gov.ca.water.calgui.bo.WaterYearPeriodRangesFilter;
+import gov.ca.water.calgui.bo.WaterYearType;
 import gov.ca.water.calgui.busservice.impl.EpptStatistic;
 import gov.ca.water.calgui.busservice.impl.GuiLinksSeedDataSvcImpl;
+import gov.ca.water.calgui.busservice.impl.MonthPeriod;
 import gov.ca.water.calgui.busservice.impl.ScriptedEpptStatistics;
 import gov.ca.water.calgui.busservice.impl.ThresholdLinksSeedDataSvc;
 import gov.ca.water.calgui.busservice.impl.WaterYearDefinitionSvc;
 import gov.ca.water.calgui.busservice.impl.WaterYearIndexAliasReader;
 import gov.ca.water.calgui.busservice.impl.WaterYearTableReader;
+import gov.ca.water.calgui.project.EpptConfigurationController;
 import gov.ca.water.calgui.project.EpptDssContainer;
 import gov.ca.water.calgui.project.EpptScenarioRun;
 import gov.ca.water.calgui.project.NamedDssPath;
@@ -69,13 +73,22 @@ public class MonthlyPaneScaffold
 		GuiLinksSeedDataSvcImpl.createSeedDataSvcImplInstance();
 		WaterYearDefinitionSvc.createSeedDataSvcImplInstance();
 		ThresholdLinksSeedDataSvc.createSeedDataSvcImplInstance();
-		NamedDssPath namedDssPath = new NamedDssPath(
-				Paths.get("J:\\DWR\\QA_QC\\SupportingDocs040219\\EPPTSupportingDoc040219\\SampleDSS_V1.01\\Inputs\\SampleDV_Base.dss"), "test",
+		WaterYearIndexAliasReader.createInstance();
+		NamedDssPath baseDss = new NamedDssPath(
+				Paths.get("J:\\DWR\\QA_QC\\SupportingDocs040219\\EPPTSupportingDoc040219\\SampleDSS_V1.01\\Inputs\\SampleDV_Base.dss"), "test base",
 				"CALSIM", "1MON", "2020D09E");
-		EpptDssContainer dssContainer = new EpptDssContainer(namedDssPath,
-				namedDssPath,
-				namedDssPath,
-				namedDssPath,
+		EpptDssContainer baseDssContainer = new EpptDssContainer(baseDss,
+				baseDss,
+				baseDss,
+				baseDss,
+				Collections.emptyList());
+		NamedDssPath altDss = new NamedDssPath(
+				Paths.get("J:\\DWR\\QA_QC\\SupportingDocs040219\\EPPTSupportingDoc040219\\SampleDSS_V1.01\\Inputs\\SampleDV_Base.dss"), "test alt",
+				"CALSIM", "1MON", "2020D09E");
+		EpptDssContainer altDssContainer = new EpptDssContainer(altDss,
+				altDss,
+				altDss,
+				altDss,
 				Collections.emptyList());
 
 		EpptScenarioRun baseRun = new EpptScenarioRun("Base", "desc", GUILinksAllModelsBO.Model.findModel("CalSim2"),
@@ -83,31 +96,33 @@ public class MonthlyPaneScaffold
 				Paths.get("C:\\Git\\DWR\\EPPT\\DWR-Enhanced-Post-Processing-Tool\\eppt-trend-reporting\\src\\test\\resources\\dwr_eppt\\wresl"),
 				Paths.get(
 						"C:\\Git\\DWR\\EPPT\\DWR-Enhanced-Post-Processing-Tool\\eppt-trend-reporting\\src\\test\\resources\\dwr_eppt\\wresl\\lookup"),
-				dssContainer, javafx.scene.paint.Color.BLUEVIOLET);
+				baseDssContainer, javafx.scene.paint.Color.BLUEVIOLET);
+		baseRun.setBaseSelected(true);
 		EpptScenarioRun altRun = new EpptScenarioRun("Alt", "desc", GUILinksAllModelsBO.Model.findModel("CalSim2"),
 				Paths.get("Test.pdf"),
 				Paths.get("C:\\Git\\DWR\\EPPT\\DWR-Enhanced-Post-Processing-Tool\\eppt-trend-reporting\\src\\test\\resources\\dwr_eppt\\wresl"),
 				Paths.get(
 						"C:\\Git\\DWR\\EPPT\\DWR-Enhanced-Post-Processing-Tool\\eppt-trend-reporting\\src\\test\\resources\\dwr_eppt\\wresl\\lookup"),
-				dssContainer, javafx.scene.paint.Color.MEDIUMAQUAMARINE);
+				altDssContainer, javafx.scene.paint.Color.MEDIUMAQUAMARINE);
+		altRun.setAltSelected(true);
 		EpptScenarioRun altRun2 = new EpptScenarioRun("Alternative 2", "desc", GUILinksAllModelsBO.Model.findModel("CalSim2"),
 				Paths.get("Test.pdf"),
 				Paths.get("C:\\Git\\DWR\\EPPT\\DWR-Enhanced-Post-Processing-Tool\\eppt-trend-reporting\\src\\test\\resources\\dwr_eppt\\wresl"),
 				Paths.get(
 						"C:\\Git\\DWR\\EPPT\\DWR-Enhanced-Post-Processing-Tool\\eppt-trend-reporting\\src\\test\\resources\\dwr_eppt\\wresl\\lookup"),
-				dssContainer, javafx.scene.paint.Color.CORNFLOWERBLUE);
+				altDssContainer, javafx.scene.paint.Color.CORNFLOWERBLUE);
 		EpptScenarioRun altRun3 = new EpptScenarioRun("Alt", "desc", GUILinksAllModelsBO.Model.findModel("CalSim2"),
 				Paths.get("Test.pdf"),
 				Paths.get("C:\\Git\\DWR\\EPPT\\DWR-Enhanced-Post-Processing-Tool\\eppt-trend-reporting\\src\\test\\resources\\dwr_eppt\\wresl"),
 				Paths.get(
 						"C:\\Git\\DWR\\EPPT\\DWR-Enhanced-Post-Processing-Tool\\eppt-trend-reporting\\src\\test\\resources\\dwr_eppt\\wresl\\lookup"),
-				dssContainer, javafx.scene.paint.Color.CHARTREUSE);
+				altDssContainer, javafx.scene.paint.Color.CHARTREUSE);
 		EpptScenarioRun altRun4 = new EpptScenarioRun("Alt", "desc", GUILinksAllModelsBO.Model.findModel("CalSim2"),
 				Paths.get("Test.pdf"),
 				Paths.get("C:\\Git\\DWR\\EPPT\\DWR-Enhanced-Post-Processing-Tool\\eppt-trend-reporting\\src\\test\\resources\\dwr_eppt\\wresl"),
 				Paths.get(
 						"C:\\Git\\DWR\\EPPT\\DWR-Enhanced-Post-Processing-Tool\\eppt-trend-reporting\\src\\test\\resources\\dwr_eppt\\wresl\\lookup"),
-				dssContainer, javafx.scene.paint.Color.BISQUE);
+				altDssContainer, javafx.scene.paint.Color.BISQUE);
 		ScriptedEpptStatistics.createScriptedStatistics();
 		WaterYearTableReader waterYearTableReader = new WaterYearTableReader(baseRun.getLookupDirectory());
 		List<WaterYearIndexAliasReader.WaterYearIndexAlias> read = WaterYearIndexAliasReader.getInstance().getAliases();
@@ -120,28 +135,51 @@ public class MonthlyPaneScaffold
 		//				true, false, false, false, Collections.emptyList(),
 		//				false, true, false, trendStatistics,
 		//				read, new WaterYearDefinition("", Month.OCTOBER, Month.SEPTEMBER));
-		PlotConfigurationState plotConfigurationState = new PlotConfigurationState(PlotConfigurationState.ComparisonType.COMPARISON,
-				true, false, false, false, Collections.emptyList(),
-				false, true, false, Arrays.asList(trendStatistics.get(0),
-				trendStatistics.get(1), trendStatistics.get(2), trendStatistics.get(3)),
-				read, new WaterYearDefinition("", Month.OCTOBER, Month.SEPTEMBER));
-		LocalDate start = LocalDate.of(1901, 1, 1);
-		LocalDate end = LocalDate.of(2007, 1, 1);
+		boolean displayTimeSeriesAll = true;
+		boolean displayTimeSeriesAggregate = true;
+		boolean displayExceedanceAll = true;
+		boolean displayExceedanceAggregate = true;
+		boolean displayBoxAndWhiskerAll = true;
+		boolean displayBoxAndWhiskerAggregate = true;
+		boolean displayMonthlyTable = true;
+		boolean displaySummaryTable = true;
+		boolean displayMonthlyLine = true;
+		boolean displayBarCharts = true;
+		PlotConfigurationState plotConfigurationState = new PlotConfigurationState(displayTimeSeriesAll, displayTimeSeriesAggregate,
+				displayExceedanceAll, displayExceedanceAggregate, displayBoxAndWhiskerAll, displayBoxAndWhiskerAggregate,
+				displayMonthlyTable, displaySummaryTable, displayMonthlyLine, displayBarCharts);
 
 		GUILinksAllModelsBO guiLink = GuiLinksSeedDataSvcImpl.getSeedDataSvcImplInstance().getGuiLink("202");
-		DisplayGuiLinkFrames displayGuiLinkFrames = new DisplayGuiLinkFrames(plotConfigurationState, Collections.singletonList(guiLink), baseRun,
-				Arrays.asList(altRun, altRun2), start, end);
-		List<JTabbedPane> jTabbedPanes = displayGuiLinkFrames.showDisplayFrames();
+		EpptConfigurationController epptConfigurationController = new EpptConfigurationController();
+		WaterYearDefinition waterYearDefinition = new WaterYearDefinition("Test", Month.OCTOBER, Month.SEPTEMBER);
+		epptConfigurationController.setWaterYearDefinition(waterYearDefinition);
+		epptConfigurationController.setStartYear(1901);
+		epptConfigurationController.setEndYear(2007);
+		epptConfigurationController.setScenarioRuns(Arrays.asList(baseRun, altRun));
+		epptConfigurationController.setMonthlyPeriods(Arrays.asList(new MonthPeriod("October - September", Month.OCTOBER, Month.SEPTEMBER),
+				new MonthPeriod("March - September", Month.MARCH, Month.SEPTEMBER)));
+		epptConfigurationController.setStatistics(
+				Arrays.asList(ScriptedEpptStatistics.getTrendStatistics().get(0), ScriptedEpptStatistics.getTrendStatistics().get(1)));
+		WaterYearPeriod longTermPeriod = new WaterYearPeriod("Long Term");
+		WaterYearPeriod shortTermPeriod = new WaterYearPeriod("Short Term");
+		List<WaterYearPeriodRange> longTermRanges = Arrays.asList(new WaterYearPeriodRange(longTermPeriod, new WaterYearType(1920, longTermPeriod), new WaterYearType(1999, longTermPeriod)));
+		List<WaterYearPeriodRange> shortTermRanges = Arrays.asList(new WaterYearPeriodRange(shortTermPeriod, new WaterYearType(1950, shortTermPeriod), new WaterYearType(1960, shortTermPeriod)));
+		List<WaterYearPeriodRangesFilter> annualFilters = Arrays.asList(new WaterYearPeriodRangesFilter("Long Term", longTermRanges, waterYearDefinition),
+				new WaterYearPeriodRangesFilter("Short Term", shortTermRanges, waterYearDefinition));
+		epptConfigurationController.setWaterYearPeriodRangesFilters(annualFilters);
+		DisplayGuiLinkFrames displayGuiLinkFrames = new DisplayGuiLinkFrames(epptConfigurationController, plotConfigurationState,
+				Collections.singletonList(guiLink));
 		JFrame jFrame = new JFrame();
 		jFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		SwingUtilities.invokeLater(() ->
 		{
+			List<JTabbedPane> jTabbedPanes = displayGuiLinkFrames.showDisplayFrames();
 			DialogSvcImpl.installMainFrame(jFrame);
 			jFrame.setLayout(new BorderLayout());
 			JScrollPane scrollPane = new JScrollPane();
 			scrollPane.setViewportView(jTabbedPanes.get(0));
 			jFrame.add(scrollPane, BorderLayout.CENTER);
-			jFrame.pack();
+			jFrame.setSize(1600, 900);
 			jFrame.setVisible(true);
 		});
 	}

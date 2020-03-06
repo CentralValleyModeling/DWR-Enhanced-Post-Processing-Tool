@@ -12,8 +12,6 @@
 
 package gov.ca.water.quickresults.ui.projectconfig.scenariotable;
 
-import java.nio.file.Path;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Hashtable;
 import java.util.List;
@@ -23,10 +21,10 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import calsim.app.AppUtils;
+import calsim.gui.GuiUtils;
 import gov.ca.water.calgui.project.EpptDssContainer;
 import gov.ca.water.calgui.project.EpptScenarioRun;
 import gov.ca.water.calgui.project.NamedDssPath;
-import gov.ca.water.quickresults.ui.projectconfig.ProjectConfigurationPanel;
 import vista.set.Pathname;
 
 import hec.heclib.dss.HecDataManager;
@@ -40,7 +38,7 @@ import static java.util.stream.Collectors.toList;
  * @author <a href="mailto:adam@rmanet.com">Adam Korynta</a>
  * @since 01-31-2020
  */
-public class ScenarioProjectUpdater
+public final class ScenarioProjectUpdater
 {
 	private static final Logger LOGGER = Logger.getLogger(ScenarioProjectUpdater.class.getName());
 
@@ -49,18 +47,15 @@ public class ScenarioProjectUpdater
 		throw new AssertionError("Utility class");
 	}
 
-	public static void updateWithAllDssFiles()
+	public static void updateWithAllDssFiles(List<EpptScenarioRun> scenarioRuns)
 	{
-		CompletableFuture.runAsync(ScenarioProjectUpdater::updateWithAllDssFilesSync);
+		CompletableFuture.runAsync(() -> updateWithAllDssFilesSync(scenarioRuns));
 	}
 
-	private static void updateWithAllDssFilesSync()
+	private static void updateWithAllDssFilesSync(List<EpptScenarioRun> scenarioRuns)
 	{
+		GuiUtils.setStatus("Loading DSS paths");
 		Hashtable dvList = AppUtils.getCurrentProject()._dvList;
-		ProjectConfigurationPanel projectConfigurationPanel = ProjectConfigurationPanel.getProjectConfigurationPanel();
-		List<EpptScenarioRun> scenarioRuns = new ArrayList<>();
-		scenarioRuns.add(projectConfigurationPanel.getBaseScenario());
-		scenarioRuns.addAll(projectConfigurationPanel.getEpptScenarioAlternatives());
 		List<String> collect = scenarioRuns.stream().map(EpptScenarioRun::getDssContainer)
 										   .map(EpptDssContainer::getAllDssFiles)
 										   .flatMap(Collection::stream)
@@ -85,5 +80,6 @@ public class ScenarioProjectUpdater
 				LOGGER.log(Level.SEVERE, "Error reading DSS file: " + dssPath, ex);
 			}
 		}
+		GuiUtils.setStatus("Initialized.");
 	}
 }

@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<form xmlns="http://www.intellij.com/uidesigner/form/" version="1" bind-to-class="gov.ca.water.quickresults.ui.global.AddMonthlyFilterDialog">
+  <grid id="cbd77" binding="_contentPane" layout-manager="BorderLayout" hgap="5" vgap="5">
+    <constraints>
+      <xy x="48" y="54" width="563" height="197"/>
+    </constraints>
+    <properties/>
+    <border type="empty">
+      <size top="5" left="5" bottom="0" right="5"/>
+    </border>
+    <children>
+      <grid id="94766" layout-manager="BorderLayout" hgap="0" vgap="0">
+        <constraints border-constraint="South"/>
+        <properties/>
+        <border type="none"/>
+        <children>
+          <grid id="9538f" layout-manager="BorderLayout" hgap="0" vgap="0">
+            <constraints border-constraint="West"/>
+            <properties/>
+            <border type="none"/>
+            <children>
+              <component id="92ed8" class="javax.swing.JLabel">
+                <constraints border-constraint="Center"/>
+                <properties>
+                  <font style="2"/>
+                  <text value="*User Defined parameters do not persist on application close"/>
+                </properties>
+              </component>
+            </children>
+          </grid>
+          <grid id="d802a" layout-manager="FlowLayout" hgap="5" vgap="5" flow-align="1">
+            <constraints border-constraint="East"/>
+            <properties/>
+            <border type="none"/>
+            <children>
+              <component id="febf0" class="javax.swing.JButton" binding="_buttonOK">
+                <constraints/>
+                <properties>
+                  <maximumSize width="70" height="25"/>
+                  <minimumSize width="70" height="25"/>
+                  <preferredSize width="70" height="25"/>
+                  <text value="OK"/>
+                </properties>
+              </component>
+              <component id="52a1" class="javax.swing.JButton" binding="_buttonCancel">
+                <constraints/>
+                <properties>
+                  <maximumSize width="70" height="25"/>
+                  <minimumSize width="70" height="25"/>
+                  <preferredSize width="70" height="25"/>
+                  <text value="Cancel"/>
+                </properties>
+              </component>
+            </children>
+          </grid>
+        </children>
+      </grid>
+      <grid id="b65ff" layout-manager="BorderLayout" hgap="10" vgap="10">
+        <constraints border-constraint="Center"/>
+        <properties/>
+        <border type="none"/>
+        <children>
+          <grid id="68070" layout-manager="GridBagLayout">
+            <constraints border-constraint="Center"/>
+            <properties>
+              <preferredSize width="250" height="108"/>
+            </properties>
+            <border type="none"/>
+            <children>
+              <component id="8eedc" class="javax.swing.JLabel">
+                <constraints>
+                  <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                  <gridbag top="5" left="5" bottom="5" right="5" weightx="0.2" weighty="0.0"/>
+                </constraints>
+                <properties>
+                  <horizontalAlignment value="2"/>
+                  <horizontalTextPosition value="2"/>
+                  <text value="Name:"/>
+                </properties>
+              </component>
+              <component id="3b90" class="javax.swing.JTextField" binding="_nameTextField">
+                <constraints>
+                  <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
+                    <preferred-size width="150" height="-1"/>
+                  </grid>
+                  <gridbag top="5" left="5" bottom="5" right="5" weightx="1.0" weighty="0.0"/>
+                </constraints>
+                <properties>
+                  <editable value="true"/>
+                  <enabled value="true"/>
+                  <horizontalAlignment value="2"/>
+                  <preferredSize width="400" height="26"/>
+                  <text value=""/>
+                </properties>
+              </component>
+              <component id="131d9" class="javax.swing.JRadioButton" binding="_singleMonthRadioButton" default-binding="true">
+                <constraints>
+                  <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                  <gridbag top="5" left="5" bottom="5" right="5" weightx="0.0" weighty="0.0"/>
+                </constraints>
+                <properties>
+                  <selected value="true"/>
+                  <text value="Single Month"/>
+                </properties>
+              </component>
+              <component id="d5563" class="javax.swing.JRadioButton" binding="_seasonalPeriodRadioButton" default-binding="true">
+                <constraints>
+                  <grid row="2" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                  <gridbag top="5" left="5" bottom="5" right="5" weightx="0.0" weighty="0.0"/>
+                </constraints>
+                <properties>
+                  <text value="Seasonal Period"/>
+                </properties>
+              </component>
+              <component id="1cc8c" class="javax.swing.JComboBox" binding="_singleMonthComboBox">
+                <constraints>
+                  <grid row="1" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="2" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                  <gridbag top="5" left="5" bottom="5" right="5" weightx="0.0" weighty="0.0"/>
+                </constraints>
+                <properties/>
+              </component>
+              <grid id="c3872" layout-manager="GridBagLayout">
+                <constraints>
+                  <grid row="2" column="1" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="8" fill="2" indent="0" use-parent-layout="false"/>
+                  <gridbag top="5" left="5" bottom="5" right="5" weightx="0.0" weighty="0.0"/>
+                </constraints>
+                <properties/>
+                <border type="none"/>
+                <children>
+                  <component id="2e147" class="javax.swing.JComboBox" binding="_seasonalPeriodStartCombobox">
+                    <constraints>
+                      <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="2" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                      <gridbag weightx="0.0" weighty="0.0"/>
+                    </constraints>
+                    <properties>
+                      <enabled value="false"/>
+                    </properties>
+                  </component>
+                  <hspacer id="6995d">
+                    <constraints>
+                      <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="1" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+                      <gridbag weightx="0.0" weighty="0.0"/>
+                    </constraints>
+                  </hspacer>
+                  <vspacer id="98084">
+                    <constraints>
+                      <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="6" hsize-policy="1" anchor="0" fill="2" indent="0" use-parent-layout="false"/>
+                      <gridbag weightx="0.0" weighty="0.0"/>
+                    </constraints>
+                  </vspacer>
+                  <component id="9f935" class="javax.swing.JComboBox" binding="_seasonalPeriodEndCombobox">
+                    <constraints>
+                      <grid row="0" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="2" anchor="8" fill="1" indent="0" use-parent-layout="false"/>
+                      <gridbag weightx="0.0" weighty="0.0"/>
+                    </constraints>
+                    <properties>
+                      <enabled value="false"/>
+                    </properties>
+                  </component>
+                </children>
+              </grid>
+            </children>
+          </grid>
+        </children>
+      </grid>
+    </children>
+  </grid>
+</form>

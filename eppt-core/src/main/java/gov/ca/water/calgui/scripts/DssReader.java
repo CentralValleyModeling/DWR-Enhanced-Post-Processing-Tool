@@ -387,7 +387,7 @@ public class DssReader
 															 WaterYearDefinition waterYearDefinition, boolean convertTaf)
 	{
 
-		MonthPeriod monthPeriod = new MonthPeriod(waterYearDefinition.getStartMonth(), waterYearDefinition.getEndMonth());
+		MonthPeriod monthPeriod = new MonthPeriod("", waterYearDefinition.getStartMonth(), waterYearDefinition.getEndMonth());
 		boolean aggregateYearly = Constant.isAggregateYearly(convertTaf, _parameter, _originalUnits);
 		return filterPeriodYearly(input, monthPeriod, aggregateYearly);
 	}
@@ -407,7 +407,7 @@ public class DssReader
 	@Scriptable
 	public NavigableMap<Integer, Double> aggregateYearly(NavigableMap<LocalDateTime, Double> input)
 	{
-		MonthPeriod monthPeriod = new MonthPeriod(_waterYearDefinition.getStartMonth(), _waterYearDefinition.getEndMonth());
+		MonthPeriod monthPeriod = new MonthPeriod("", _waterYearDefinition.getStartMonth(), _waterYearDefinition.getEndMonth());
 		return filterPeriodYearly(input, monthPeriod, true);
 	}
 

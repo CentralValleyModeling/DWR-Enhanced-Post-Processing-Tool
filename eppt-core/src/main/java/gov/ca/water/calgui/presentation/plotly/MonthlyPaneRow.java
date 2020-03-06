@@ -16,7 +16,7 @@ import java.math.BigDecimal;
 import java.math.MathContext;
 import java.util.Map;
 
-import javafx.beans.property.SimpleDoubleProperty;
+import gov.ca.water.calgui.busservice.impl.EpptStatistic;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.value.ObservableValue;
 import javafx.scene.paint.Color;
@@ -85,7 +85,7 @@ abstract class MonthlyPaneRow extends RmaTreeTableRowModel<MonthlyPaneRow>
 		{
 			super(parent);
 			_year = new SimpleStringProperty(Integer.toString(year));
-			_data = data.entrySet().stream().collect(toMap(e->e.getKey(),
+			_data = data.entrySet().stream().collect(toMap(Map.Entry::getKey,
 					e->
 					{
 						BigDecimal bigDecimal = BigDecimal.valueOf(e.getValue());
@@ -101,6 +101,37 @@ abstract class MonthlyPaneRow extends RmaTreeTableRowModel<MonthlyPaneRow>
 			if(treeTableColumnSpec == WATER_YEAR_COL_SPEC)
 			{
 				return _year;
+			}
+			return _data.get(treeTableColumnSpec);
+		}
+	}
+
+	static class MonthlyPaneRowStat extends MonthlyPaneRow
+	{
+
+		private final SimpleStringProperty _stat;
+		private final Map<TreeTableColumnSpec, SimpleStringProperty> _data;
+
+		MonthlyPaneRowStat(MonthlyPaneRowScenario parent, EpptStatistic epptStatistic, Map<TreeTableColumnSpec, Double> data)
+		{
+			super(parent);
+			_stat = new SimpleStringProperty(epptStatistic.getName());
+			_data = data.entrySet().stream().collect(toMap(Map.Entry::getKey,
+					e->
+					{
+						BigDecimal bigDecimal = BigDecimal.valueOf(e.getValue());
+						bigDecimal = bigDecimal.round(new MathContext(3));
+						return new SimpleStringProperty(Double.toString(bigDecimal.doubleValue()));
+					}));
+		}
+
+
+		@Override
+		public ObservableValue<?> getObservableValue(TreeTableColumnSpec treeTableColumnSpec)
+		{
+			if(treeTableColumnSpec == WATER_YEAR_COL_SPEC)
+			{
+				return _stat;
 			}
 			return _data.get(treeTableColumnSpec);
 		}

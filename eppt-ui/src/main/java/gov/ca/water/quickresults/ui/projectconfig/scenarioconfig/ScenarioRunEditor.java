@@ -17,12 +17,11 @@ import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Frame;
 import java.awt.event.ActionEvent;
-import java.util.stream.Stream;
+import java.util.List;
 import javax.swing.*;
 
 import gov.ca.water.calgui.project.EpptScenarioRun;
 import gov.ca.water.calgui.project.EpptScenarioRunValidator;
-import gov.ca.water.quickresults.ui.projectconfig.ProjectConfigurationPanel;
 
 /**
  * Company: Resource Management Associates
@@ -34,14 +33,16 @@ public class ScenarioRunEditor extends JDialog implements LoadingDss
 {
 	private final ScenarioEditorPanel _scenarioEditorPanel;
 	private final JProgressBar _progressBar = new JProgressBar();
+	private final List<EpptScenarioRun> _scenarioRuns;
 	private boolean _canceled = true;
 	private EpptScenarioRun _originalScenarioRun;
 
-	public ScenarioRunEditor(Frame frame)
+	public ScenarioRunEditor(Frame frame, List<EpptScenarioRun> scenarioRuns)
 	{
 		super(frame, "New Scenario Run", true);
+		_scenarioRuns = scenarioRuns;
 		_progressBar.setVisible(false);
-		_scenarioEditorPanel = new ScenarioEditorPanel(this);
+		_scenarioEditorPanel = new ScenarioEditorPanel(this, scenarioRuns);
 		setPreferredSize(new Dimension(650, 500));
 		setMinimumSize(new Dimension(650, 500));
 		initComponents();
@@ -98,17 +99,17 @@ public class ScenarioRunEditor extends JDialog implements LoadingDss
 		_progressBar.setIndeterminate(false);
 	}
 
-	public void okPerformed(ActionEvent e)
+	private void okPerformed(ActionEvent e)
 	{
 		EpptScenarioRun run = createRun();
 		EpptScenarioRunValidator epptScenarioRunValidator = new EpptScenarioRunValidator(run);
 		if(epptScenarioRunValidator.isValid())
 		{
-			boolean duplicateName = ProjectConfigurationPanel.getProjectConfigurationPanel().getAllEpptScenarioRuns()
-															 .stream()
-															 .filter(s -> s != _originalScenarioRun)
-															 .map(EpptScenarioRun::getName)
-															 .anyMatch(s -> s.equalsIgnoreCase(run.getName()));
+			boolean duplicateName = _scenarioRuns
+					.stream()
+					.filter(s -> s != _originalScenarioRun)
+					.map(EpptScenarioRun::getName)
+					.anyMatch(s -> s.equalsIgnoreCase(run.getName()));
 			if(duplicateName)
 			{
 				JOptionPane.showMessageDialog(this, "Duplicate Scenario Run Name: " + run.getName(),

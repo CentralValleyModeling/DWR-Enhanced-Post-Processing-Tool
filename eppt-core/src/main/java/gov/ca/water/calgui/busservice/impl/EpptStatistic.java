@@ -30,12 +30,5 @@ public interface EpptStatistic
 {
 	String getName();
 
-	@SuppressWarnings(value = "unchecked")
-	SortedMap<Month, Double> calculateMonthly(SortedMap<Month, NavigableMap<Integer, Double>> data, WaterYearDefinition waterYearDefinition,
-											  WaterYearIndex waterYearIndex, List<WaterYearIndex> waterYearIndices,
-											  MonthPeriod monthPeriod);
-
-	Double calculateYearly(SortedMap<Integer, Double> data,
-						   WaterYearDefinition waterYearDefinition,
-						   WaterYearIndex waterYearIndex, List<WaterYearIndex> waterYearIndices);
+	Double calculateYearly(List<Double> data);
 }

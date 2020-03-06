@@ -83,9 +83,9 @@ class BaseAltDiffTableBuilder extends TableBuilder
 		List<Element> periodElements = new ArrayList<>();
 		periodElements.add(buildPeriod("Long Term", Collections.singletonList(reportParameters.getLongTermRange()), epptChart));
 		periodElements.add(buildWaterYearIndex(epptChart));
-		periodElements.addAll(reportParameters.getWaterYearPeriodRanges().entrySet().stream()
-											  .map(e -> buildPeriod(e.getKey().toString(), e.getValue(), epptChart))
-											  .collect(toList()));
+//		periodElements.addAll(reportParameters.getWaterYearPeriodRanges().entrySet().stream()
+//											  .map(e -> buildPeriod(e.getKey().toString(), e.getValue(), epptChart))
+//											  .collect(toList()));
 		for(int i = 0; i < periodElements.size(); i++)
 		{
 			Element element = periodElements.get(i);

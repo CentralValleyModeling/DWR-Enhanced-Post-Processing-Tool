@@ -44,7 +44,7 @@ public final class EpptReportingMonths
 {
 	private static final Map<Integer, MonthPeriod> MONTH_PERIODS = new TreeMap<>();
 	private static final Logger LOG = Logger.getLogger(EpptReportingMonths.class.getName());
-	private static final String MONTH_PERIODS_FILENAME = CONFIG_DIR + "trendreporting/TrendReportingPeriod" + CSV_EXT;
+	private static final String MONTH_PERIODS_FILENAME = CONFIG_DIR + "MonthlyPeriodFilters" + CSV_EXT;
 	private static EpptReportingMonths seedDataSvc;
 
 	private EpptReportingMonths() throws EpptInitializationException
@@ -53,7 +53,7 @@ public final class EpptReportingMonths
 		initMonthPeriods();
 	}
 
-	public static EpptReportingMonths getTrendReportingMonths()
+	public static EpptReportingMonths getInstance()
 	{
 		if(seedDataSvc == null)
 		{
@@ -76,28 +76,12 @@ public final class EpptReportingMonths
 	private void initMonthPeriods() throws EpptInitializationException
 	{
 		IFileSystemSvc fileSystemSvc = new FileSystemSvcImpl();
-		String errorStr = "";
 		try
 		{
 			List<String> monthPeriodStrings = fileSystemSvc.getFileData(Paths.get(MONTH_PERIODS_FILENAME), true,
 					FilePredicates.commentFilter());
 			for(String guiLinkString : monthPeriodStrings)
 			{
-				errorStr = guiLinkString;
-				//don't count comment rows
-				if(guiLinkString.length() > 0)
-				{
-					if(guiLinkString.trim().charAt(0) == '\uFEFF' || guiLinkString.trim().charAt(0) == '!' || guiLinkString.trim().charAt(0) == '#')
-					{
-						continue;
-					}
-				}
-				else
-				{
-					continue;
-				}
-
-
 				String[] list = guiLinkString.split(Constant.DELIMITER);
 				Month start = null;
 				Month end = null;
@@ -114,39 +98,21 @@ public final class EpptReportingMonths
 				{
 					end = Month.valueOf(list[2].toUpperCase());
 				}
-				MONTH_PERIODS.put(index, new MonthPeriod(start, end));
+				MONTH_PERIODS.put(index, new MonthPeriod("", start, end));
 			}
 		}
-		catch(ArrayIndexOutOfBoundsException ex)
-		{
-			String errorMessage = "In file \"" + MONTH_PERIODS_FILENAME + "\" has corrupted data at line \"" + errorStr + "\""
-					+ Constant.NEW_LINE + "The column number which the data is corrupted is " + ex.getMessage();
-			throw new EpptInitializationException(errorMessage, ex);
-		}
-		catch(NumberFormatException ex)
-		{
-			String errorMessage = "In file \"" + MONTH_PERIODS_FILENAME + "\" has corrupted data at line \"" + errorStr + "\""
-					+ Constant.NEW_LINE + "The checkbox id is not an Integer " + ex.getMessage();
-			throw new EpptInitializationException(errorMessage, ex);
-		}
-		catch(IllegalArgumentException ex)
-		{
-			String errorMessage = "In file \"" + MONTH_PERIODS_FILENAME + "\" has corrupted data at line \"" + errorStr + "\""
-					+ Constant.NEW_LINE + "The model could not be parsed " + ex.getMessage();
-			throw new EpptInitializationException(errorMessage, ex);
-		}
-		catch(CalLiteGUIException ex)
+		catch(CalLiteGUIException | RuntimeException ex)
 		{
 			throw new EpptInitializationException("Failed to get file data for file: " + MONTH_PERIODS_FILENAME, ex);
 		}
 	}
 
-	public static List<MonthPeriod> getAllMonthPeriods()
+	public List<MonthPeriod> getAllMonthPeriods()
 	{
 		return new ArrayList<>(MONTH_PERIODS.values());
 	}
 
-	public static List<Month> getMonths(MonthPeriod monthPeriod)
+	static List<Month> getMonths(MonthPeriod monthPeriod)
 	{
 		if(monthPeriod.getStart() == null || monthPeriod.getEnd() == null)
 		{

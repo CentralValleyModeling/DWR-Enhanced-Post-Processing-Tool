@@ -25,6 +25,8 @@ import javax.swing.*;
 
 import gov.ca.water.calgui.EpptInitializationException;
 import gov.ca.water.calgui.busservice.impl.DetailedIssuesReader;
+import gov.ca.water.calgui.busservice.impl.EpptParameters;
+import gov.ca.water.calgui.busservice.impl.EpptReportingMonths;
 import gov.ca.water.calgui.busservice.impl.GuiLinksSeedDataSvcImpl;
 import gov.ca.water.calgui.busservice.impl.ScriptedEpptStatistics;
 import gov.ca.water.calgui.busservice.impl.ThresholdLinksSeedDataSvc;
@@ -35,9 +37,6 @@ import gov.ca.water.calgui.constant.EpptPreferences;
 import gov.ca.water.calgui.presentation.DisplayHelper;
 import gov.ca.water.calgui.techservice.impl.DialogSvcImpl;
 import gov.ca.water.eppt.nbui.actions.RunWreslScript;
-import gov.ca.water.quickresults.ui.projectconfig.ProjectConfigurationPanel;
-import gov.ca.water.calgui.busservice.impl.EpptReportingMonths;
-import gov.ca.water.calgui.busservice.impl.TrendReportingParameters;
 import javafx.application.Platform;
 import javafx.embed.swing.JFXPanel;
 import org.openide.modules.ModuleInstall;
@@ -80,30 +79,19 @@ public class Installer extends ModuleInstall
 
 	private void loadLastProjectConfiguration()
 	{
-		WindowManager.getDefault().invokeWhenUIReady(() ->
-		{
-			try
-			{
-				ProjectConfigurationPanel projectConfigurationPanel = ProjectConfigurationPanel.getProjectConfigurationPanel();
-				Path lastProjectConfiguration = EpptPreferences.getLastProjectConfiguration();
-				projectConfigurationPanel.loadProjectConfiguration(lastProjectConfiguration);
-				WindowManager.getDefault().getMainWindow().setTitle(
-						MAIN_FRAME_NAME + " - " + projectConfigurationPanel.getProjectName());
-			}
-			catch(IOException | RuntimeException ex)
-			{
-				LOGGER.log(Level.SEVERE,
-						"Unable to load last Project Configuration EPPT Home: " + EpptPreferences.getLastProjectConfiguration(),
-						ex);
-			}
-		});
+		Path lastProjectConfiguration = EpptPreferences.getLastProjectConfiguration();
+		EpptControllerProvider.setEpptController(lastProjectConfiguration);
+		WindowManager wm = WindowManager.getDefault();
+		wm.invokeWhenUIReady(() -> wm.getMainWindow().setTitle(
+				MAIN_FRAME_NAME + " - " + EpptControllerProvider.getEpptConfigurationController().getProjectName()));
 	}
 
 	private void initPlotHandler()
 	{
-		WindowManager.getDefault().invokeWhenUIReady(() ->
+		WindowManager wm = WindowManager.getDefault();
+		wm.invokeWhenUIReady(() ->
 		{
-			Frame mainWindow = WindowManager.getDefault().getMainWindow();
+			Frame mainWindow = wm.getMainWindow();
 			DialogSvcImpl.installMainFrame((JFrame) mainWindow);
 		});
 		DisplayHelper.installPlotHandler(new TopComponentPlotHandler());
@@ -142,7 +130,7 @@ public class Installer extends ModuleInstall
 			EpptReportingMonths.createTrendReportingMonthsInstance();
 			WaterYearDefinitionSvc.createSeedDataSvcImplInstance();
 			DetailedIssuesReader.createDetailedIssues();
-			TrendReportingParameters.createTrendReportingParametersInstance();
+			EpptParameters.createTrendReportingParametersInstance();
 			ScriptedEpptStatistics.createScriptedStatistics();
 			WaterYearIndexAliasReader.createInstance();
 			WaterYearPeriodReader.createInstance();
@@ -201,7 +189,7 @@ public class Installer extends ModuleInstall
 		netbeansLogger.setParent(rootLogger);
 		netbeansLogger.setUseParentHandlers(true);
 
-		WindowManager.getDefault().invokeWhenUIReady(() ->setupLogHandlers(rootLogger));
+		WindowManager.getDefault().invokeWhenUIReady(() -> setupLogHandlers(rootLogger));
 	}
 
 	private void setupLogHandlers(Logger rootLogger)

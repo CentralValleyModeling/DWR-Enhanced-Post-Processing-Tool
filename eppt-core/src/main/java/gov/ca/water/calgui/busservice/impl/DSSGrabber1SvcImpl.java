@@ -47,6 +47,8 @@ import gov.ca.water.calgui.project.NamedDssPath;
 import gov.ca.water.calgui.techservice.IDialogSvc;
 import gov.ca.water.calgui.techservice.impl.DialogSvcImpl;
 
+import hec.data.tx.DataSetTx;
+import hec.data.tx.DataSetTxTemplate;
 import hec.dssgui.CombinedDataManager;
 import hec.heclib.dss.DSSPathname;
 import hec.heclib.dss.HecDSSDataAttributes;
@@ -104,8 +106,8 @@ public class DSSGrabber1SvcImpl implements IDSSGrabber1Svc
 	EpptScenarioRun _baseScenarioRun;
 	// Copy of original units
 	// Start and end time of interest
-	private int _startTime;
-	private int _endTime;
+	private HecTime _startTime;
+	private HecTime _endTime;
 
 	public DSSGrabber1SvcImpl()
 	{
@@ -172,15 +174,14 @@ public class DSSGrabber1SvcImpl implements IDSSGrabber1Svc
 			int m = startMonth.getMonth().getValue();
 			int y = startMonth.getYear();
 			ht.setYearMonthDay(y, m, 1, 0);
-			_startTime = ht.value();
+			_startTime = new HecTime(ht);
 			m = endMonth.getMonth().getValue();
 			y = endMonth.getYear();
 			ht.setYearMonthDay(y, m, 1, 0);
-			_endTime = ht.value();
+			_endTime = new HecTime(ht);
 		}
 		catch(RuntimeException ex)
 		{
-			_startTime = -1;
 			LOGGER.log(Level.WARNING, ex.getMessage(), ex);
 		}
 
@@ -432,7 +433,7 @@ public class DSSGrabber1SvcImpl implements IDSSGrabber1Svc
 
 				if(!missingBOrCPart)
 				{
-					result = (TimeSeriesContainer) hecDss.get(firstPath, true);
+					result = (TimeSeriesContainer) hecDss.get(firstPath, _startTime.toString(), _endTime.toString());
 				}
 				String message = null;
 				if((result == null) || (result.numberValues < 1))
@@ -526,59 +527,6 @@ public class DSSGrabber1SvcImpl implements IDSSGrabber1Svc
 				{
 					LOGGER.log(Level.FINER, message);
 				}
-				// Trim to date range
-				if(result != null)
-				{
-					HecTime start = new HecTime();
-					start.set(_startTime);
-					HecTime end = new HecTime();
-					end.set(_endTime);
-					// Find starting index
-					int first = 0;
-					for(int i = 0; (i < result.numberValues) && (result.times[i] < _startTime); i++)
-					{
-						first = i + 1;
-					}
-					// find ending index
-					int last = result.numberValues - 1;
-					for(int i = result.numberValues - 1; (i >= 0) && (result.times[i] >= _endTime); i--)
-					{
-						last = i;
-					}
-					// Shift results in array to start
-
-					if(first != 0)
-					{
-						double[] values = new double[last - first + 1];
-						int[] times = new int[last - first + 1];
-						for(int i = 0; i <= (last - first); i++)
-						{ // TODO: Think
-							// through
-							// change to
-							// <= done 11/9
-							times[i] = result.times[i + first];
-							values[i] = result.values[i + first];
-						}
-						result.times = times;
-						result.values = values;
-					}
-
-					result.numberValues = last - first + 1; // Adjust count of
-					// results
-
-					// Do time shift where indicated (when a dataset has suffix
-					// "(-1)"
-
-					if(doTimeShift)
-					{
-						if(result.numberValues - 1 - result.numberValues >= 0)
-						{
-							System.arraycopy(result.times, result.numberValues + 1, result.times, result.numberValues,
-									result.numberValues - 1 - result.numberValues);
-						}
-						result.numberValues = result.numberValues - 1;
-					}
-				}
 			}
 		}
 		catch(Exception ex)
@@ -593,13 +541,6 @@ public class DSSGrabber1SvcImpl implements IDSSGrabber1Svc
 			{
 				messageText = "Unable to get time series." + ex.getMessage();
 				LOGGER.log(Level.SEVERE, messageText, ex);
-			}
-		}
-		finally
-		{
-			if(hecDss != null)
-			{
-				//				hecDss.close();
 			}
 		}
 
@@ -617,7 +558,7 @@ public class DSSGrabber1SvcImpl implements IDSSGrabber1Svc
 	void checkReadiness()
 	{
 		String result = null;
-		if(_startTime == -1)
+		if(_startTime != null || _endTime != null)
 		{
 			result = "Date range is not set in DSSGrabber.";
 		}
@@ -630,10 +571,6 @@ public class DSSGrabber1SvcImpl implements IDSSGrabber1Svc
 			result = "Base scenario is not set in DSSGrabber.";
 		}
 		LOGGER.log(Level.FINE, result);
-		if(result != null)
-		{
-			//			throw new IllegalStateException(result);
-		}
 
 	}
 

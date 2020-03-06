@@ -36,15 +36,7 @@ public class NoopEpptStatistic implements EpptStatistic
 	}
 
 	@Override
-	public SortedMap<Month, Double> calculateMonthly(SortedMap<Month, NavigableMap<Integer, Double>> data, WaterYearDefinition waterYearDefinition,
-													 WaterYearIndex waterYearIndex, List<WaterYearIndex> waterYearIndices, MonthPeriod monthPeriod)
-	{
-		return new TreeMap<>();
-	}
-
-	@Override
-	public Double calculateYearly(SortedMap<Integer, Double> data, WaterYearDefinition waterYearDefinition, WaterYearIndex waterYearIndex,
-								  List<WaterYearIndex> waterYearIndices)
+	public Double calculateYearly(List<Double> data)
 	{
 		return 0.0;
 	}

@@ -22,21 +22,20 @@ import javax.swing.*;
 
 import gov.ca.water.calgui.EpptInitializationException;
 import gov.ca.water.calgui.bo.GUILinksAllModelsBO;
+import gov.ca.water.calgui.busservice.impl.EpptParameters;
 import gov.ca.water.calgui.busservice.impl.EpptReportingMonths;
 import gov.ca.water.calgui.busservice.impl.GuiLinksSeedDataSvcImpl;
 import gov.ca.water.calgui.busservice.impl.ScriptedEpptStatistics;
 import gov.ca.water.calgui.busservice.impl.ThresholdLinksSeedDataSvc;
-import gov.ca.water.calgui.busservice.impl.TrendReportingParameters;
 import gov.ca.water.calgui.busservice.impl.WaterYearDefinitionSvc;
+import gov.ca.water.calgui.busservice.impl.WaterYearIndexAliasReader;
 import gov.ca.water.calgui.project.EpptDssContainer;
 import gov.ca.water.calgui.project.EpptScenarioRun;
 import gov.ca.water.calgui.project.NamedDssPath;
-import gov.ca.water.quickresults.ui.projectconfig.ProjectConfigurationPanel;
+import gov.ca.water.calgui.project.EpptConfigurationController;
 import org.junit.jupiter.api.Assertions;
 
 import hec.heclib.dss.HecDSSFileAccess;
-
-import static org.junit.jupiter.api.Assertions.fail;
 
 /**
  * Company: Resource Management Associates
@@ -55,8 +54,9 @@ public class TrendReportScaffold
 		GuiLinksSeedDataSvcImpl.createSeedDataSvcImplInstance();
 		ThresholdLinksSeedDataSvc.createSeedDataSvcImplInstance();
 		EpptReportingMonths.createTrendReportingMonthsInstance();
-		TrendReportingParameters.createTrendReportingParametersInstance();
+		EpptParameters.createTrendReportingParametersInstance();
 		ScriptedEpptStatistics.createScriptedStatistics();
+		WaterYearIndexAliasReader.createInstance();
 
 		try
 		{
@@ -67,7 +67,6 @@ public class TrendReportScaffold
 			Assertions.fail(e);
 		}
 		GuiLinksSeedDataSvcImpl.createSeedDataSvcImplInstance();
-		TrendReportPanel epptPanel = new TrendReportPanel();
 		NamedDssPath namedDssPath = new NamedDssPath(
 				Paths.get("J:\\DWR\\QA_QC\\SupportingDocs040219\\EPPTSupportingDoc040219\\SampleDSS_V1.01\\Inputs\\SampleDV_Base.dss"), "test",
 				"CALSIM", "1MON", "2020D09E");
@@ -87,9 +86,11 @@ public class TrendReportScaffold
 				Paths.get("dwr_eppt"), Paths.get("C:\\Git\\DWR\\EPPT\\DWR-Enhanced-Post-Processing-Tool\\eppt-trend-reporting\\src\\test\\resources\\dwr_eppt\\wresl"), Paths.get("C:\\Git\\DWR\\EPPT\\DWR-Enhanced-Post-Processing-Tool\\eppt-trend-reporting\\src\\test\\resources\\dwr_eppt\\wresl\\lookup"), dssContainer, javafx.scene.paint.Color.CHARTREUSE);
 		EpptScenarioRun altRun4 = new EpptScenarioRun("Alt", "desc", GUILinksAllModelsBO.Model.findModel("CalSim2"),
 				Paths.get("dwr_eppt"), Paths.get("C:\\Git\\DWR\\EPPT\\DWR-Enhanced-Post-Processing-Tool\\eppt-trend-reporting\\src\\test\\resources\\dwr_eppt\\wresl"), Paths.get("C:\\Git\\DWR\\EPPT\\DWR-Enhanced-Post-Processing-Tool\\eppt-trend-reporting\\src\\test\\resources\\dwr_eppt\\wresl\\lookup"), dssContainer, javafx.scene.paint.Color.BISQUE);
-		ProjectConfigurationPanel.getProjectConfigurationPanel().addScenarios(Arrays.asList(baseRun, altRun));
+
+		EpptConfigurationController epptConfigurationController = new EpptConfigurationController();
+		epptConfigurationController.setScenarioRuns(Arrays.asList(baseRun, altRun));
+		TrendReportPanel epptPanel = new TrendReportPanel(epptConfigurationController);
 		baseRun.setBaseSelected(true);
-		epptPanel.setScenarioRuns(baseRun, Arrays.asList(altRun));
 		JFrame jFrame = new JFrame();
 		jFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		SwingUtilities.invokeLater(() ->

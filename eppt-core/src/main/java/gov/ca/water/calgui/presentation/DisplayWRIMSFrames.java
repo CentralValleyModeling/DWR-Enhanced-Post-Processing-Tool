@@ -12,23 +12,24 @@
 
 package gov.ca.water.calgui.presentation;
 
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.TreeMap;
 import javax.swing.*;
 
 import calsim.app.DerivedTimeSeries;
 import calsim.app.MultipleTimeSeries;
-import gov.ca.water.calgui.EpptInitializationException;
 import gov.ca.water.calgui.bo.GUILinksAllModelsBO;
 import gov.ca.water.calgui.busservice.impl.DSSGrabber2SvcImpl;
+import gov.ca.water.calgui.project.EpptConfigurationController;
 import gov.ca.water.calgui.project.EpptScenarioRun;
 import gov.ca.water.calgui.project.PlotConfigurationState;
+import gov.ca.water.calgui.techservice.IErrorHandlingSvc;
+import gov.ca.water.calgui.techservice.impl.ErrorHandlingSvcImpl;
 
 import hec.io.TimeSeriesContainer;
 
@@ -40,18 +41,15 @@ import hec.io.TimeSeriesContainer;
  */
 class DisplayWRIMSFrames extends DisplayFrames
 {
+	private static final IErrorHandlingSvc ERROR_HANDLING_SVC = new ErrorHandlingSvcImpl();
 	private final DerivedTimeSeries _dts;
 	private final MultipleTimeSeries _mts;
 
-	DisplayWRIMSFrames(PlotConfigurationState plotConfigurationState,
-					   DerivedTimeSeries dts,
-					   MultipleTimeSeries mts,
-					   EpptScenarioRun baseRun,
-					   List<EpptScenarioRun> alternatives,
-					   LocalDate start,
-					   LocalDate end) throws EpptInitializationException
+	DisplayWRIMSFrames(EpptConfigurationController epptConfigurationController,
+					   PlotConfigurationState plotConfigurationState, DerivedTimeSeries dts,
+					   MultipleTimeSeries mts)
 	{
-		super(plotConfigurationState, baseRun, alternatives, start, end);
+		super(epptConfigurationController, plotConfigurationState);
 		_dts = dts;
 		_mts = mts;
 	}
@@ -59,36 +57,43 @@ class DisplayWRIMSFrames extends DisplayFrames
 	List<JTabbedPane> showDisplayFrames()
 	{
 		List<JTabbedPane> tabbedPanes = new ArrayList<>();
-
-		DSSGrabber2SvcImpl dssGrabber = new DSSGrabber2SvcImpl(_dts, _mts);
-		JTabbedPane tabbedPane = new JTabbedPane();
-		dssGrabber.setIsCFS(!getPlotConfigurationState().isDisplayTaf());
-		dssGrabber.setScenarioRuns(getBaseRun(), getAlternatives());
-		dssGrabber.setDateRange(getStart(), getEnd());
-		if(_mts != null)
+		Optional<EpptScenarioRun> baseRun = getBaseRun();
+		if(baseRun.isPresent())
 		{
-			tabbedPane.setName(_mts.getName());
-
+			DSSGrabber2SvcImpl dssGrabber = new DSSGrabber2SvcImpl(_dts, _mts);
+			JTabbedPane tabbedPane = new JTabbedPane();
+			dssGrabber.setIsCFS(!getEpptConfigurationController().isTaf());
+			dssGrabber.setScenarioRuns(baseRun.get(), getAlternatives());
+			dssGrabber.setDateRange(getStart(), getEnd());
 			List<EpptScenarioRun> scenarioRuns = new ArrayList<>();
-			scenarioRuns.add(getBaseRun());
+			scenarioRuns.add(baseRun.get());
 			scenarioRuns.addAll(getAlternatives());
-			plotMts(scenarioRuns, _mts, dssGrabber, tabbedPane);
+			if(_mts != null)
+			{
+				tabbedPane.setName(_mts.getName());
+				plotMts(scenarioRuns, _mts, dssGrabber, tabbedPane);
+			}
+			if(_dts != null)
+			{
+				tabbedPane.setName(_dts.getName());
+				plotDts(scenarioRuns, _dts, dssGrabber, tabbedPane);
+			}
+			Map<GUILinksAllModelsBO.Model, List<String>> missing = dssGrabber.getMissingList();
+			if(!missing.isEmpty())
+			{
+				insertEmptyTab(tabbedPane, missing);
+			}
+			tabbedPanes.add(tabbedPane);
 		}
-		if(_dts != null)
+		else
 		{
-			tabbedPane.setName(_dts.getName());
-			plotDts(_dts, dssGrabber, tabbedPane);
+			ERROR_HANDLING_SVC.businessErrorHandler("Must select Base Scenario", "");
 		}
-		Map<GUILinksAllModelsBO.Model, List<String>> missing = dssGrabber.getMissingList();
-		if(!missing.isEmpty())
-		{
-			insertEmptyTab(tabbedPane, missing);
-		}
-		tabbedPanes.add(tabbedPane);
 		return tabbedPanes;
 	}
 
-	private void plotMts(List<EpptScenarioRun> scenarios, MultipleTimeSeries mts, DSSGrabber2SvcImpl dssGrabber, JTabbedPane tabbedPane)
+	private void plotMts(List<EpptScenarioRun> scenarios, MultipleTimeSeries mts, DSSGrabber2SvcImpl dssGrabber,
+						 JTabbedPane tabbedPane)
 	{
 		dssGrabber.setLocation("@@" + mts.getName());
 		int n = mts.getNumberOfDataReferences();
@@ -106,41 +111,52 @@ class DisplayWRIMSFrames extends DisplayFrames
 				scenarioRunData.computeIfAbsent(epptScenarioRun, v -> new ArrayList<>()).add(tsc);
 			}
 		}
+		plot(tabbedPane, scenarioRunData, mts.getName());
+	}
 
-		if(getPlotConfigurationState().isDisplayTimeSeriesPlot())
+	private void plot(JTabbedPane tabbedPane, Map<EpptScenarioRun, List<TimeSeriesContainer>> scenarioRunData, String name)
+	{
+		if(getPlotConfigurationState().isDisplayTimeSeriesAll())
 		{
-			plotTimeSeries(primarySuffxies, scenarioRunData, new HashMap<>(), new HashMap<>(), mts.getName(), tabbedPane);
+			plotTimeSeriesDiscrete(scenarioRunData, name, tabbedPane);
 		}
-		if(getPlotConfigurationState().isDoExceedance())
+		if(getPlotConfigurationState().isDisplayTimeSeriesAggregate())
 		{
-			plotExceedance(primarySuffxies, scenarioRunData, new HashMap<>(), new HashMap<>(), mts.getName(), tabbedPane);
+			plotTimeSeriesAggregate(scenarioRunData, name, tabbedPane);
 		}
-		if(getPlotConfigurationState().isDisplayBoxAndWhiskerPlot())
+		if(getPlotConfigurationState().isDisplayExceedanceAll())
 		{
-			plotBoxPlot(primarySuffxies, scenarioRunData, new HashMap<>(), new HashMap<>(), mts.getName(), tabbedPane);
+			plotAllExceedance(scenarioRunData, name, tabbedPane);
+		}
+		if(getPlotConfigurationState().isDisplayExceedanceAggregate())
+		{
+			plotAggregateExceedance(scenarioRunData, name, tabbedPane);
+		}
+		if(getPlotConfigurationState().isDisplayBoxAndWhiskerAll())
+		{
+			plotBoxPlotDiscrete(scenarioRunData, name, tabbedPane);
+		}
+		if(getPlotConfigurationState().isDisplayBoxAndWhiskerAggregate())
+		{
+			plotBoxPlotAggregate(scenarioRunData, name, tabbedPane);
 		}
 		if(getPlotConfigurationState().isDisplayMonthlyTable())
 		{
-			plotMonthlyTable(primarySuffxies, scenarioRunData, new HashMap<>(), new HashMap<>(), mts.getName(), tabbedPane);
+			plotMonthlyTable(scenarioRunData, name, tabbedPane);
 		}
 		if(getPlotConfigurationState().isDisplaySummaryTable())
 		{
-			plotSummaryTable(primarySuffxies, scenarioRunData, new HashMap<>(), new HashMap<>(), mts.getName(), tabbedPane);
+			plotSummaryTable(scenarioRunData, name, tabbedPane);
 		}
 	}
 
-	private void plotDts(DerivedTimeSeries dts, DSSGrabber2SvcImpl dssGrabber, JTabbedPane tabbedPane)
+	private void plotDts(List<EpptScenarioRun> scenarioRuns, DerivedTimeSeries dts, DSSGrabber2SvcImpl dssGrabber, JTabbedPane tabbedPane)
 	{
-		// Handle DTS
-
 		dssGrabber.setLocation("@@" + dts.getName());
 
 		TimeSeriesContainer[] primaryResults = dssGrabber.getPrimarySeries();
 		if(primaryResults != null)
 		{
-			List<EpptScenarioRun> scenarioRuns = new ArrayList<>();
-			scenarioRuns.add(getBaseRun());
-			scenarioRuns.addAll(getAlternatives());
 			Map<EpptScenarioRun, List<TimeSeriesContainer>> scenarioRunData = new TreeMap<>(Comparator.comparing(scenarioRuns::indexOf));
 			for(int i = 0; i < primaryResults.length; i++)
 			{
@@ -148,26 +164,7 @@ class DisplayWRIMSFrames extends DisplayFrames
 				TimeSeriesContainer tsc = primaryResults[i];
 				scenarioRunData.put(epptScenarioRun, Collections.singletonList(tsc));
 			}
-			if(getPlotConfigurationState().isDisplayTimeSeriesPlot())
-			{
-				plotTimeSeries(scenarioRunData, new HashMap<>(), dts.getName(), tabbedPane);
-			}
-			if(getPlotConfigurationState().isDoExceedance())
-			{
-				plotExceedance(scenarioRunData, new HashMap<>(), dts.getName(), tabbedPane);
-			}
-			if(getPlotConfigurationState().isDisplayBoxAndWhiskerPlot())
-			{
-				plotBoxPlot(scenarioRunData, new HashMap<>(), dts.getName(), tabbedPane);
-			}
-			if(getPlotConfigurationState().isDisplayMonthlyTable())
-			{
-				plotMonthlyTable(new HashMap<>(), scenarioRunData, new HashMap<>(), new HashMap<>(), dts.getName(), tabbedPane);
-			}
-			if(getPlotConfigurationState().isDisplaySummaryTable())
-			{
-				plotSummaryTable(new HashMap<>(), scenarioRunData, new HashMap<>(), new HashMap<>(), dts.getName(), tabbedPane);
-			}
+			plot(tabbedPane, scenarioRunData, dts.getName());
 		}
 	}
 }

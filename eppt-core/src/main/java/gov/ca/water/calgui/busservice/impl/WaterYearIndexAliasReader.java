@@ -16,9 +16,12 @@ import java.util.List;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 
+import gov.ca.water.calgui.EpptInitializationException;
 import gov.ca.water.calgui.bo.CalLiteGUIException;
 import gov.ca.water.calgui.bo.WaterYearIndex;
+import gov.ca.water.calgui.bo.WaterYearPeriod;
 import gov.ca.water.calgui.constant.Constant;
 import gov.ca.water.calgui.techservice.IFileSystemSvc;
 import gov.ca.water.calgui.techservice.impl.FilePredicates;
@@ -65,6 +68,7 @@ public class WaterYearIndexAliasReader
 		IFileSystemSvc fileSystemSvc = new FileSystemSvcImpl();
 		try
 		{
+			WaterYearNameLookup waterYearNameLookup = new WaterYearNameLookup();
 			List<String> rows = fileSystemSvc.getFileData(file, true, FilePredicates.commentFilter());
 			for(String row : rows)
 			{
@@ -82,11 +86,13 @@ public class WaterYearIndexAliasReader
 						indexDefinitions.add(index);
 					}
 				}
-				_aliases.add(new WaterYearIndexAlias(Integer.parseInt(list[INDEX_COLUMN]), list[ALIAS_COLUMN], indexDefinitions));
+				String alias = list[ALIAS_COLUMN];
+				List<WaterYearPeriod> waterYearPeriods = waterYearNameLookup.getSortedWaterYearPeriods(alias);
+				_aliases.add(new WaterYearIndexAlias(Integer.parseInt(list[INDEX_COLUMN]), alias, indexDefinitions, waterYearPeriods));
 			}
 			_aliases.sort(Comparator.comparing(WaterYearIndexAlias::getIndex));
 		}
-		catch(RuntimeException | CalLiteGUIException ex)
+		catch(RuntimeException | CalLiteGUIException | EpptInitializationException ex)
 		{
 			LOGGER.log(Level.SEVERE, "Unable to read water year index alias file: " + file, ex);
 		}
@@ -97,12 +103,16 @@ public class WaterYearIndexAliasReader
 		private final int _index;
 		private final String _alias;
 		private final Set<String> _waterYearIndexes;
+		private final List<WaterYearPeriod> _waterYearPeriods;
 
-		private WaterYearIndexAlias(int index, String alias, Set<String> waterYearIndexes)
+		private WaterYearIndexAlias(int index, String alias, Set<String> waterYearIndexes, List<WaterYearPeriod> waterYearPeriods)
 		{
 			_index = index;
 			_alias = alias;
 			_waterYearIndexes = waterYearIndexes;
+			_waterYearPeriods = waterYearPeriods.stream()
+												.distinct()
+												.collect(Collectors.toList());
 		}
 
 		public String getAlias()
@@ -134,6 +144,11 @@ public class WaterYearIndexAliasReader
 		public boolean isAliasFor(String index)
 		{
 			return index.equalsIgnoreCase(getAlias()) || getWaterYearIndexes().stream().anyMatch(c -> c.equalsIgnoreCase(index));
+		}
+
+		public List<WaterYearPeriod> getWaterYearPeriods()
+		{
+			return _waterYearPeriods;
 		}
 	}
 }

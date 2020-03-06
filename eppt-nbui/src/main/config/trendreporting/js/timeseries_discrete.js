@@ -94,8 +94,7 @@ function plotlyCopyToClipboardMonthly() {
     let datum = data1[0];
     let xarr = datum['x'];
     for (var j = 0; j < xarr.length; j++) {
-        let date = xarr[j];
-        text += (date.getMonth() + 1) + '/' + date.getDate() + '/' + date.getFullYear();
+        text += xarr[j];
         for (var k = 0; k < data1.length; k++) {
             let yarr = data1[k]['y'];
             text += '\t' + yarr[j];

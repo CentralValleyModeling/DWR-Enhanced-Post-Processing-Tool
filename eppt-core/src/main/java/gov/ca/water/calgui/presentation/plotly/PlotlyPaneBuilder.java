@@ -12,20 +12,17 @@
 
 package gov.ca.water.calgui.presentation.plotly;
 
-import java.time.LocalDate;
 import java.time.Month;
-import java.util.HashMap;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
-import gov.ca.water.calgui.bo.GUILinksAllModelsBO;
 import gov.ca.water.calgui.bo.WaterYearDefinition;
-import gov.ca.water.calgui.bo.WaterYearIndex;
 import gov.ca.water.calgui.busservice.impl.EpptReportingComputedSet;
+import gov.ca.water.calgui.busservice.impl.EpptReportingComputer;
 import gov.ca.water.calgui.busservice.impl.MonthPeriod;
-import gov.ca.water.calgui.busservice.impl.NoopEpptStatistic;
+import gov.ca.water.calgui.project.EpptConfigurationController;
 import gov.ca.water.calgui.project.EpptScenarioRun;
-import gov.ca.water.calgui.project.PlotConfigurationState;
 import javafx.embed.swing.JFXPanel;
 
 import hec.io.TimeSeriesContainer;
@@ -39,168 +36,103 @@ import hec.io.TimeSeriesContainer;
 public class PlotlyPaneBuilder
 {
 	private final ChartType _chartType;
-	private final EpptScenarioRun _baseRun;
 	private final Map<EpptScenarioRun, List<TimeSeriesContainer>> _scenarioRunData;
-	private final Map<EpptScenarioRun, List<TimeSeriesContainer>> _secondaryScenarioData;
-	private final Map<EpptScenarioRun, List<String>> _primarySuffixes = new HashMap<>();
-	private final Map<EpptScenarioRun, List<String>> _secondarySuffixes = new HashMap<>();
-	private final Map<EpptScenarioRun, List<WaterYearIndex>> _allWaterYearIndicies = new HashMap<>();
-	private final Map<EpptScenarioRun, WaterYearIndex> _selectedWaterYearIndicies = new HashMap<>();
-	private PlotConfigurationState.ComparisonType _comparisonType = PlotConfigurationState.ComparisonType.COMPARISON;
-	private boolean _taf;
-	private WaterYearDefinition _waterYearDefinition;
-	private Month _month;
-	private String _plotTitle;
+	private final EpptConfigurationController _epptConfigurationController;
+	private final String _plotTitle;
 
-	public PlotlyPaneBuilder(ChartType chartType, EpptScenarioRun baseRun, Map<EpptScenarioRun, List<TimeSeriesContainer>> scenarioRunData,
-							 Map<EpptScenarioRun, List<TimeSeriesContainer>> secondaryScenarioData)
+	public PlotlyPaneBuilder(ChartType chartType, String plotTitle, Map<EpptScenarioRun, List<TimeSeriesContainer>> scenarioRunData,
+							 EpptConfigurationController epptConfigurationController)
 	{
 		_chartType = chartType;
+		_plotTitle = plotTitle;
 		_scenarioRunData = scenarioRunData;
-		_secondaryScenarioData = secondaryScenarioData;
+		_epptConfigurationController = epptConfigurationController;
 		if(scenarioRunData.isEmpty())
 		{
 			throw new IllegalArgumentException("Cannot plot without scenarios");
 		}
-		_baseRun = baseRun;
-	}
-
-	public PlotlyPaneBuilder withComparisonType(PlotConfigurationState.ComparisonType comparisonType)
-	{
-		_comparisonType = comparisonType;
-		return this;
-	}
-
-	public PlotlyPaneBuilder withPlotTitle(String plotTitle)
-	{
-		_plotTitle = plotTitle;
-		return this;
-	}
-
-	public PlotlyPaneBuilder withTaf(boolean taf)
-	{
-		_taf = taf;
-		return this;
-	}
-
-	public PlotlyPaneBuilder withPrimarySuffixes(Map<EpptScenarioRun, List<String>> primarySuffixes)
-	{
-		_primarySuffixes.clear();
-		_primarySuffixes.putAll(primarySuffixes);
-		return this;
-	}
-
-	public PlotlyPaneBuilder withSecondarySuffixes(Map<EpptScenarioRun, List<String>> secondarySuffixes)
-	{
-		_secondarySuffixes.clear();
-		_secondarySuffixes.putAll(secondarySuffixes);
-		return this;
-	}
-
-	public PlotlyPaneBuilder withWaterYearIndicies(Map<EpptScenarioRun, List<WaterYearIndex>> waterYearIndicies)
-	{
-		_allWaterYearIndicies.clear();
-		_allWaterYearIndicies.putAll(waterYearIndicies);
-		_selectedWaterYearIndicies.clear();
-		for(Map.Entry<EpptScenarioRun, List<WaterYearIndex>> entry : waterYearIndicies.entrySet())
-		{
-			if(!entry.getValue().isEmpty())
-			{
-				_selectedWaterYearIndicies.put(entry.getKey(), entry.getValue().get(0));
-			}
-		}
-		return this;
 	}
 
 	public JFXPanel build()
 	{
 		EpptReportingComputedSet epptReportingComputedSet;
-		MonthPeriod monthPeriod = new MonthPeriod(Month.OCTOBER, Month.SEPTEMBER);
-		if(_waterYearDefinition != null)
+		WaterYearDefinition waterYearDefinition = _epptConfigurationController.getWaterYearDefinition();
+		List<MonthPeriod> selectedMonthlyPeriods = _epptConfigurationController.getSelectedMonthlyPeriods();
+		if(_chartType == ChartType.MONTHLY_TABLE || _chartType == ChartType.SUMMARY_TABLE)
 		{
-			monthPeriod = new MonthPeriod(_waterYearDefinition.getStartMonth(), _waterYearDefinition.getEndMonth());
+			selectedMonthlyPeriods = Collections.singletonList(new MonthPeriod(null, null, null)
+			{
+				@Override
+				public Month getStart()
+				{
+					return waterYearDefinition.getStartMonth();
+				}
+
+				@Override
+				public Month getEnd()
+				{
+					return waterYearDefinition.getEndMonth();
+				}
+
+				@Override
+				public String toString()
+				{
+					return "Entire Period (" + super.toString() + ")";
+				}
+			});
 		}
-		if(_comparisonType == PlotConfigurationState.ComparisonType.DIFF)
-		{
-			epptReportingComputedSet = EpptReportingComputedSet.computeDiffForMetrics(_plotTitle,
-					new NoopEpptStatistic(),
-					monthPeriod,
-					_taf,
-					_baseRun,
-					_primarySuffixes,
-					_scenarioRunData,
-					_secondarySuffixes,
-					_secondaryScenarioData,
-					_comparisonType,
-					_selectedWaterYearIndicies,
-					_allWaterYearIndicies);
-		}
-		else
-		{
-			epptReportingComputedSet = EpptReportingComputedSet.computeForMetrics(_plotTitle,
-					new NoopEpptStatistic(),
-					monthPeriod,
-					_taf,
-					_primarySuffixes,
-					_scenarioRunData,
-					_secondarySuffixes,
-					_secondaryScenarioData,
-					_comparisonType,
-					_selectedWaterYearIndicies,
-					_allWaterYearIndicies);
-		}
+		epptReportingComputedSet = EpptReportingComputer.computeForMetrics(_scenarioRunData,
+				_plotTitle, _epptConfigurationController.isTaf(), _epptConfigurationController.getWaterYearDefinition(),
+				selectedMonthlyPeriods,
+				_epptConfigurationController.getWaterYearPeriodRanges(),
+				_epptConfigurationController.getSelectedStatistics());
 		JFXPanel retval = null;
 		switch(_chartType)
 		{
-			case TIMESERIES:
-				retval = new TimeseriesChartPane(epptReportingComputedSet);
+			case TIME_SERIES_ALL:
+				retval = new TimeseriesPaneDiscrete(epptReportingComputedSet);
 				break;
-			case EXCEEDANCE:
-				retval = buildExceedancePane(epptReportingComputedSet);
+			case TIME_SERIES_AGGREGATE:
+				retval = new TimeseriesPaneAggregate(epptReportingComputedSet);
 				break;
-			case BOX:
-				retval = new BoxPlotChartPane(epptReportingComputedSet);
+			case EXCEEDANCE_ALL:
+				retval = new ExceedancePaneDiscrete(epptReportingComputedSet);
 				break;
-			case MONTHLY:
-				retval = new MonthlyPane(_plotTitle, _waterYearDefinition, epptReportingComputedSet);
+			case EXCEEDANCE_AGGREGATE:
+				retval = new ExceedancePaneAggregate(epptReportingComputedSet);
 				break;
+			case BOX_ALL:
+				retval = new BoxPlotChartPaneDiscrete(epptReportingComputedSet);
+				break;
+			case BOX_AGGREGATE:
+				retval = new BoxPlotChartPaneAggreate(epptReportingComputedSet);
+				break;
+			case BAR_GRAPH:
+				retval = new BarChartsPane(epptReportingComputedSet);
+				break;
+			case MONTHLY_LINE:
+				retval = new MonthlyLinePane(epptReportingComputedSet);
+				break;
+			case MONTHLY_TABLE:
+				retval = new MonthlyTablePane(_plotTitle, waterYearDefinition, epptReportingComputedSet);
+				break;
+			case SUMMARY_TABLE:
+				retval = new SummaryTablePane(_plotTitle, waterYearDefinition, epptReportingComputedSet);
 		}
 		return retval;
-	}
-
-	private PlotlyPane buildExceedancePane(EpptReportingComputedSet epptReportingComputedSet)
-	{
-		final PlotlyPane retval;
-		if(_waterYearDefinition == null)
-		{
-			retval = new AllExceedancePane(epptReportingComputedSet);
-		}
-		else if(_month != null)
-		{
-			retval = new MonthExceedancePane(epptReportingComputedSet);
-		}
-		else
-		{
-			retval = new AnnualExceedancePane(epptReportingComputedSet);
-		}
-		return retval;
-	}
-
-	public PlotlyPaneBuilder withWaterYearDefinition(WaterYearDefinition waterYearDefinition)
-	{
-		_waterYearDefinition = waterYearDefinition;
-		return this;
-	}
-
-	public PlotlyPaneBuilder withMonth(Month month)
-	{
-		_waterYearDefinition = new WaterYearDefinition("Month", month, month);
-		_month = month;
-		return this;
 	}
 
 	public enum ChartType
 	{
-		TIMESERIES, EXCEEDANCE, BOX, MONTHLY
+		TIME_SERIES_ALL,
+		TIME_SERIES_AGGREGATE,
+		EXCEEDANCE_ALL,
+		MONTHLY_LINE,
+		BAR_GRAPH,
+		EXCEEDANCE_AGGREGATE,
+		BOX_ALL,
+		BOX_AGGREGATE,
+		MONTHLY_TABLE,
+		SUMMARY_TABLE
 	}
 }

@@ -29,17 +29,13 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.YearMonth;
-import java.time.ZoneId;
+import java.time.Month;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.NavigableMap;
 import java.util.Objects;
-import java.util.TreeMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
@@ -63,6 +59,7 @@ import gov.ca.water.calgui.bo.WaterYearDefinition;
 import gov.ca.water.calgui.bo.WaterYearIndex;
 import gov.ca.water.calgui.bo.WaterYearPeriod;
 import gov.ca.water.calgui.bo.WaterYearPeriodRange;
+import gov.ca.water.calgui.bo.WaterYearPeriodRangesFilter;
 import gov.ca.water.calgui.bo.WaterYearType;
 import gov.ca.water.calgui.busservice.impl.WaterYearIndexAliasReader;
 import gov.ca.water.calgui.busservice.impl.WaterYearTableReader;
@@ -70,14 +67,12 @@ import gov.ca.water.calgui.constant.Constant;
 import gov.ca.water.calgui.constant.EpptPreferences;
 import gov.ca.water.calgui.project.EpptScenarioRun;
 import gov.ca.water.calgui.scripts.DssCache;
-import gov.ca.water.calgui.scripts.DssMissingRecordException;
-import gov.ca.water.calgui.scripts.DssReader;
 import gov.ca.water.calgui.wresl.ProcessOutputConsumer;
 import gov.ca.water.calgui.wresl.WreslScriptException;
 import gov.ca.water.calgui.wresl.WreslScriptRunner;
 import gov.ca.water.quickresults.ui.EpptPanel;
 import gov.ca.water.quickresults.ui.TextAreaPrintStream;
-import gov.ca.water.quickresults.ui.projectconfig.ProjectConfigurationPanel;
+import gov.ca.water.calgui.project.EpptConfigurationController;
 import gov.ca.water.reportengine.EPPTReport;
 import gov.ca.water.reportengine.EpptReportException;
 import gov.ca.water.reportengine.QAQCReportException;
@@ -102,12 +97,12 @@ import static java.util.stream.Collectors.toList;
 public class QAQCReportPanel extends EpptPanel
 {
 	private static final Logger LOGGER = Logger.getLogger(QAQCReportPanel.class.getName());
-	private static final QAQCReportPanel INSTANCE = new QAQCReportPanel();
 
 	private final StyledDocument _doc;
 	private final Style _style;
 	private final AtomicInteger _processesRunning = new AtomicInteger(0);
 	private final List<JCheckBox> _summaryModules;
+	private final EpptConfigurationController _epptConfigurationController;
 	private JPanel _panel1;
 	private JButton _generateReportButton;
 	private JTextPane _qaqcTextPane;
@@ -130,7 +125,6 @@ public class QAQCReportPanel extends EpptPanel
 	private JTabbedPane _tabbedPane1;
 	private JTextPane _baseWreslTextPane;
 	private JTextPane _altWreslTextPane;
-	private WaterYearPeriodsPanel _waterYearPeriodsPanel;
 	private JComboBox<PercentDiffStyle> _percentDiffStyle;
 	private JPanel _summaryModulesPanel;
 	private JButton _cancelButton;
@@ -149,9 +143,9 @@ public class QAQCReportPanel extends EpptPanel
 	private final ExecutorService _executor = Executors.newFixedThreadPool(5);
 	private WaterYearDefinition _waterYearDefinition;
 
-	private QAQCReportPanel()
+	public QAQCReportPanel(EpptConfigurationController epptConfigurationController)
 	{
-		_waterYearPeriodsPanel = new WaterYearPeriodsPanel();
+		_epptConfigurationController = epptConfigurationController;
 		$$$setupUI$$$();
 		_generateReportButton.addActionListener(e -> generateReport());
 		_runBaseWreslButton.addActionListener(e -> runBaseWresl());
@@ -164,10 +158,9 @@ public class QAQCReportPanel extends EpptPanel
 		_doc = (StyledDocument) _qaqcTextPane.getDocument();
 		_style = _doc.addStyle("ConsoleStyle", null);
 		Logger.getLogger("").addHandler(new ReportHandler());
-		ProjectConfigurationPanel projectConfigurationPanel = ProjectConfigurationPanel.getProjectConfigurationPanel();
-		projectConfigurationPanel.addScenarioChangedListener(this::fillScenarioRuns);
+		_epptConfigurationController.addScenarioChangedListener(this::fillScenarioRuns);
 		Path currentProject = EpptPreferences.getLastProjectConfiguration().getParent();
-		Path reportPath = currentProject.resolve("Reports").resolve(projectConfigurationPanel.getProjectName() + ".pdf");
+		Path reportPath = currentProject.resolve("Reports").resolve(_epptConfigurationController.getProjectName() + ".pdf");
 		_pdfOutput.setText(reportPath.toString());
 		_openReportButton.setEnabled(reportPath.toFile().exists());
 		_tabbedPane1.setTitleAt(0, reportPath.getFileName().toString() + " QA/QC");
@@ -196,7 +189,6 @@ public class QAQCReportPanel extends EpptPanel
 		_overwriteScriptsButtonAlt.addActionListener(e -> QaQcFileUtils.createWreslMain(_altRun, true));
 		_baseWreslDiffWarningLabel.setVisible(false);
 		_altWreslDiffWarningLabel.setVisible(false);
-		waterYearDefinitionChanged(projectConfigurationPanel.getWaterYearDefinition());
 	}
 
 	private void tabChanged(ChangeEvent e)
@@ -268,11 +260,6 @@ public class QAQCReportPanel extends EpptPanel
 		}
 	}
 
-	public void waterYearDefinitionChanged(WaterYearDefinition waterYearDefinition)
-	{
-		_waterYearPeriodsPanel.fillWithDefinition(waterYearDefinition);
-	}
-
 	private void runAltWresl()
 	{
 		if(checkIfDssFileIsOpen(_altRun))
@@ -338,9 +325,9 @@ public class QAQCReportPanel extends EpptPanel
 				HecDSSFileAccess hecDSSFileAccess = new HecDSSFileAccess(postProcessDss.toString());
 				if(!hecDSSFileAccess.writeAccess())
 				{
-					JOptionPane.showConfirmDialog(this,
+					JOptionPane.showMessageDialog(this,
 							"DSS File inaccessible. Ensure it is not being written to in another process:\n" + postProcessDss,
-							"DSS File Error", JOptionPane.OK_OPTION, JOptionPane.WARNING_MESSAGE);
+							"DSS File Error", JOptionPane.WARNING_MESSAGE);
 				}
 				else
 				{
@@ -357,12 +344,13 @@ public class QAQCReportPanel extends EpptPanel
 		try
 		{
 			textPane.setText("");
-			ProjectConfigurationPanel projectConfigurationPanel = ProjectConfigurationPanel.getProjectConfigurationPanel();
-			YearMonth startMonth = projectConfigurationPanel.getStartMonth();
-			YearMonth endMonth = projectConfigurationPanel.getEndMonth().plusMonths(1);
-			LocalDate start = LocalDate.of(startMonth.getYear(), startMonth.getMonth(), 1);
+			int startYear = _epptConfigurationController.getStartYear();
+			int endYear = _epptConfigurationController.getEndYear();
+			Month startMonth = _epptConfigurationController.getWaterYearDefinition().getStartMonth();
+			Month endMonth = _epptConfigurationController.getWaterYearDefinition().getEndMonth();
+			LocalDate start = LocalDate.of(startYear, startMonth, 1);
 			start = start.withDayOfMonth(start.lengthOfMonth());
-			LocalDate end = LocalDate.of(endMonth.getYear(), endMonth.getMonth(), 1);
+			LocalDate end = LocalDate.of(endYear, endMonth, 1).plusMonths(1);
 			end = end.withDayOfMonth(end.lengthOfMonth());
 			Path wreslMainFile = QaQcFileUtils.createWreslMain(scenarioRun, false);
 			WreslScriptRunner wreslScriptRunner = new WreslScriptRunner(scenarioRun, wreslMainFile, new WreslProcessConsumer(textPane));
@@ -391,11 +379,6 @@ public class QAQCReportPanel extends EpptPanel
 			button.setEnabled(false);
 			startProgress();
 		});
-	}
-
-	public static QAQCReportPanel getInstance()
-	{
-		return INSTANCE;
 	}
 
 	private void chooseReportFile()
@@ -490,9 +473,9 @@ public class QAQCReportPanel extends EpptPanel
 			String title = _reportTitle.getText();
 			String subtitle = _reportSubtitle.getText();
 			WaterYearPeriodRange longTermRange = getLongTermRange();
-			Map<WaterYearPeriod, List<WaterYearPeriodRange>> waterYearPeriodRanges = _waterYearPeriodsPanel.getWaterYearPeriodRanges();
+			List<WaterYearPeriodRangesFilter> waterYearPeriodRanges = _epptConfigurationController.getWaterYearPeriodRanges();
 			PercentDiffStyle percentDiffStyle = (PercentDiffStyle) _percentDiffStyle.getSelectedItem();
-			WaterYearIndexAliasReader.WaterYearIndexAlias waterYearIndex = ProjectConfigurationPanel.getProjectConfigurationPanel().getWaterYearIndex();
+			WaterYearIndexAliasReader.WaterYearIndexAlias waterYearIndex = _epptConfigurationController.getWaterYearIndex();
 			Map<EpptScenarioRun, WaterYearIndex> waterYearIndecies = new HashMap<>();
 			if(_baseRun != null)
 			{
@@ -516,11 +499,10 @@ public class QAQCReportPanel extends EpptPanel
 				waterYearIndecies.put(_altRun, altIndex);
 			}
 			List<String> disabledSummaryModules = getDisabledSummaryModules();
-			ProjectConfigurationPanel projectConfigurationPanel = ProjectConfigurationPanel.getProjectConfigurationPanel();
-			LocalDateTime start = LocalDateTime.of(projectConfigurationPanel.getStartMonth().getYear(),
-					projectConfigurationPanel.getStartMonth().getMonth(), 1, 0, 0).minusDays(2);
-			LocalDateTime end = LocalDateTime.of(projectConfigurationPanel.getEndMonth().getYear(),
-					projectConfigurationPanel.getEndMonth().getMonth(), 1, 0, 0).plusMonths(1).plusDays(2);
+			LocalDateTime start = LocalDateTime.of(_epptConfigurationController.getStartYear(),
+					_epptConfigurationController.getWaterYearDefinition().getStartMonth(), 1, 0, 0).minusDays(2);
+			LocalDateTime end = LocalDateTime.of(_epptConfigurationController.getEndYear(),
+					_epptConfigurationController.getWaterYearDefinition().getEndMonth(), 1, 0, 0).plusMonths(1).plusDays(2);
 			CommonPeriodFilter commonPeriodFilter = new CommonPeriodFilter(start, end);
 			SummaryReportParameters summaryReportParameters = new SummaryReportParameters(_waterYearDefinition, waterYearIndecies,
 					longTermRange, waterYearPeriodRanges, percentDiffStyle, disabledSummaryModules, commonPeriodFilter, new DssCache());
@@ -589,9 +571,8 @@ public class QAQCReportPanel extends EpptPanel
 	private WaterYearPeriodRange getLongTermRange()
 	{
 		WaterYearPeriod longTerm = new WaterYearPeriod("Long Term");
-		ProjectConfigurationPanel projectConfigurationPanel = ProjectConfigurationPanel.getProjectConfigurationPanel();
-		int startYear = projectConfigurationPanel.getStartMonth().getYear();
-		int endYear = projectConfigurationPanel.getEndMonth().getYear();
+		int startYear = _epptConfigurationController.getStartYear();
+		int endYear = _epptConfigurationController.getEndYear();
 		return new WaterYearPeriodRange(longTerm, new WaterYearType(startYear, longTerm), new WaterYearType(endYear, longTerm));
 	}
 
@@ -939,7 +920,7 @@ public class QAQCReportPanel extends EpptPanel
 		final JPanel panel15 = new JPanel();
 		panel15.setLayout(new BorderLayout(0, 0));
 		panel15.setPreferredSize(new Dimension(300, 270));
-		panel14.add(panel15, BorderLayout.WEST);
+		panel14.add(panel15, BorderLayout.CENTER);
 		final JPanel panel16 = new JPanel();
 		panel16.setLayout(new GridBagLayout());
 		panel15.add(panel16, BorderLayout.NORTH);
@@ -1005,15 +986,6 @@ public class QAQCReportPanel extends EpptPanel
 		gbc.fill = GridBagConstraints.BOTH;
 		gbc.insets = new Insets(5, 25, 5, 5);
 		panel16.add(_summaryModulesPanel, gbc);
-		final JPanel panel17 = new JPanel();
-		panel17.setLayout(new BorderLayout(0, 0));
-		panel14.add(panel17, BorderLayout.CENTER);
-		final JPanel panel18 = new JPanel();
-		panel18.setLayout(new BorderLayout(0, 0));
-		panel18.setPreferredSize(new Dimension(350, 300));
-		panel17.add(panel18, BorderLayout.WEST);
-		_waterYearPeriodsPanel.setEnabled(true);
-		panel18.add(_waterYearPeriodsPanel, BorderLayout.CENTER);
 		_tabbedPane1 = new JTabbedPane();
 		_panel1.add(_tabbedPane1, BorderLayout.CENTER);
 		final JScrollPane scrollPane1 = new JScrollPane();
@@ -1051,7 +1023,7 @@ public class QAQCReportPanel extends EpptPanel
 			return;
 		}
 
-		_waterYearDefinition = ProjectConfigurationPanel.getProjectConfigurationPanel().getWaterYearDefinition();
+		_waterYearDefinition = _epptConfigurationController.getWaterYearDefinition();
 		_qaqcTextPane.setText("");
 		_baseRun = baseRun;
 		if(alternatives.isEmpty())
@@ -1082,8 +1054,7 @@ public class QAQCReportPanel extends EpptPanel
 			_tabbedPane1.setEnabledAt(1, true);
 		}
 		Path currentProject = EpptPreferences.getLastProjectConfiguration().getParent();
-		Path reportPath = currentProject.resolve("Reports").resolve(
-				ProjectConfigurationPanel.getProjectConfigurationPanel().getProjectName() + ".pdf");
+		Path reportPath = currentProject.resolve("Reports").resolve(_epptConfigurationController.getProjectName() + ".pdf");
 		_pdfOutput.setText(reportPath.toString());
 		_openReportButton.setEnabled(reportPath.toFile().exists());
 		_tabbedPane1.setTitleAt(0, reportPath.getFileName().toString() + " QA/QC");
@@ -1167,50 +1138,6 @@ public class QAQCReportPanel extends EpptPanel
 			}
 		}
 		return differ;
-	}
-
-	private Date getEndDate(EpptScenarioRun baseRun)
-	{
-		NavigableMap<LocalDateTime, Double> guiLinkData = new TreeMap<>();
-		try
-		{
-			guiLinkData = new DssReader(baseRun, _waterYearDefinition, new DssCache()).getGuiLinkData(102);
-		}
-		catch(DssMissingRecordException e)
-		{
-			LOGGER.log(Level.FINE, "Missing GUILink for ID 102", e);
-		}
-		if(!guiLinkData.isEmpty())
-		{
-			LocalDateTime localDateTime = guiLinkData.lastKey();
-			return Date.from(localDateTime.atZone(ZoneId.systemDefault()).toInstant());
-		}
-		else
-		{
-			return new Date();
-		}
-	}
-
-	private Date getStartDate(EpptScenarioRun baseRun)
-	{
-		NavigableMap<LocalDateTime, Double> guiLinkData = new TreeMap<>();
-		try
-		{
-			guiLinkData = new DssReader(baseRun, _waterYearDefinition, new DssCache()).getGuiLinkData(102);
-		}
-		catch(DssMissingRecordException e)
-		{
-			LOGGER.log(Level.FINE, "Missing GUILink for ID 102", e);
-		}
-		if(!guiLinkData.isEmpty())
-		{
-			LocalDateTime localDateTime = guiLinkData.firstKey();
-			return Date.from(localDateTime.atZone(ZoneId.systemDefault()).toInstant());
-		}
-		else
-		{
-			return new Date();
-		}
 	}
 
 	private void updateCompareState()

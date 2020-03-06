@@ -14,10 +14,9 @@ package gov.ca.water.eppt.nbui;
 import java.awt.BorderLayout;
 import javax.swing.*;
 
-import gov.ca.water.quickresults.ui.EpptPanel;
 import gov.ca.water.quickresults.ui.customresults.CustomResultsListener;
 import gov.ca.water.quickresults.ui.customresults.CustomResultsPanel;
-import gov.ca.water.quickresults.ui.projectconfig.ProjectConfigurationPanel;
+import gov.ca.water.calgui.project.EpptConfigurationController;
 import org.openide.awt.ActionID;
 import org.openide.awt.ActionReference;
 import org.openide.awt.ActionReferences;
@@ -55,7 +54,8 @@ public final class CustomResultsTopComponent extends EpptTopComponent
 	public CustomResultsTopComponent()
 	{
 		setName("Custom Results");
-		_customResultsPanel = new CustomResultsPanel();
+		EpptConfigurationController epptConfigurationController = EpptControllerProvider.getEpptConfigurationController();
+		_customResultsPanel = new CustomResultsPanel(epptConfigurationController);
 		CustomResultsListener customResultsListener = new CustomResultsListener(_customResultsPanel);
 		_customResultsPanel.setActionListener(customResultsListener);
 		JScrollPane scrollPane = new JScrollPane(_customResultsPanel);
@@ -67,11 +67,5 @@ public final class CustomResultsTopComponent extends EpptTopComponent
 	public String getJavaHelpId()
 	{
 		return _customResultsPanel.getJavaHelpId();
-	}
-
-	@Override
-	Class<? extends EpptPanel> getEpptPanelClass()
-	{
-		return CustomResultsPanel.class;
 	}
 }

@@ -14,8 +14,7 @@ package gov.ca.water.eppt.nbui;
 import java.awt.BorderLayout;
 import javax.swing.*;
 
-import gov.ca.water.quickresults.ui.EpptPanel;
-import gov.ca.water.quickresults.ui.projectconfig.ProjectConfigurationPanel;
+import gov.ca.water.calgui.project.EpptConfigurationController;
 import gov.ca.water.quickresults.ui.report.QAQCReportPanel;
 import org.openide.awt.ActionID;
 import org.openide.awt.ActionReference;
@@ -55,30 +54,16 @@ public final class QAQCTopComponent extends EpptTopComponent
 	public QAQCTopComponent()
 	{
 		setName("QA/QC Report");
-		_qaqcPanel = QAQCReportPanel.getInstance();
+		EpptConfigurationController epptConfigurationController = EpptControllerProvider.getEpptConfigurationController();
+		_qaqcPanel = new QAQCReportPanel(epptConfigurationController);
 		JScrollPane scrollPane = new JScrollPane(_qaqcPanel);
 		setLayout(new BorderLayout());
 		add(scrollPane, BorderLayout.CENTER);
 	}
 
 	@Override
-	protected void componentOpened()
-	{
-		super.componentOpened();
-		ProjectConfigurationPanel projectConfigurationPanel = ProjectConfigurationPanel.getProjectConfigurationPanel();
-		QAQCReportPanel.getInstance().fillScenarioRuns(projectConfigurationPanel.getBaseScenario(),
-				projectConfigurationPanel.getEpptScenarioAlternatives());
-	}
-
-	@Override
 	public String getJavaHelpId()
 	{
 		return _qaqcPanel.getJavaHelpId();
-	}
-
-	@Override
-	Class<? extends EpptPanel> getEpptPanelClass()
-	{
-		return QAQCReportPanel.class;
 	}
 }

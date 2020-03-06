@@ -398,7 +398,7 @@
             <border type="etched" title="QA/QC Report Controls"/>
             <children>
               <grid id="67e7f" layout-manager="BorderLayout" hgap="0" vgap="0">
-                <constraints border-constraint="West"/>
+                <constraints border-constraint="Center"/>
                 <properties>
                   <preferredSize width="300" height="270"/>
                 </properties>
@@ -476,28 +476,6 @@
                         <border type="none"/>
                         <children/>
                       </grid>
-                    </children>
-                  </grid>
-                </children>
-              </grid>
-              <grid id="cff3f" layout-manager="BorderLayout" hgap="0" vgap="0">
-                <constraints border-constraint="Center"/>
-                <properties/>
-                <border type="none"/>
-                <children>
-                  <grid id="7fb4f" layout-manager="BorderLayout" hgap="0" vgap="0">
-                    <constraints border-constraint="West"/>
-                    <properties>
-                      <preferredSize width="350" height="300"/>
-                    </properties>
-                    <border type="none"/>
-                    <children>
-                      <component id="3762f" class="gov.ca.water.quickresults.ui.report.WaterYearPeriodsPanel" binding="_waterYearPeriodsPanel" custom-create="true">
-                        <constraints border-constraint="Center"/>
-                        <properties>
-                          <enabled value="true"/>
-                        </properties>
-                      </component>
                     </children>
                   </grid>
                 </children>

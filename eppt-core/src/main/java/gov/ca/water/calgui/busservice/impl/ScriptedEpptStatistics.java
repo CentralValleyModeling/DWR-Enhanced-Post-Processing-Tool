@@ -17,17 +17,10 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.time.Month;
 import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.EnumMap;
 import java.util.List;
-import java.util.Map;
-import java.util.NavigableMap;
 import java.util.Objects;
 import java.util.OptionalDouble;
-import java.util.SortedMap;
-import java.util.TreeMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
@@ -37,16 +30,12 @@ import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
 import javax.script.ScriptException;
 
-import gov.ca.water.calgui.bo.WaterYearDefinition;
-import gov.ca.water.calgui.bo.WaterYearIndex;
 import gov.ca.water.calgui.constant.Constant;
 import org.python.jsr223.PyScriptEngine;
 
 import rma.util.lookup.Lookup;
-import rma.util.lookup.Lookups;
 
 import static java.util.stream.Collectors.toList;
-import static java.util.stream.Collectors.toMap;
 
 /**
  * Company: Resource Management Associates
@@ -54,7 +43,7 @@ import static java.util.stream.Collectors.toMap;
  * @author <a href="mailto:adam@rmanet.com">Adam Korynta</a>
  * @since 09-23-2019
  */
-public class ScriptedEpptStatistics implements EpptStatistic
+public final class ScriptedEpptStatistics implements EpptStatistic
 {
 	private static final Logger LOGGER = Logger.getLogger(ScriptedEpptStatistics.class.getName());
 	private static List<EpptStatistic> scriptedStatistics = new ArrayList<>();
@@ -63,7 +52,7 @@ public class ScriptedEpptStatistics implements EpptStatistic
 	private final String _name;
 	private CompiledScript _compile;
 
-	public ScriptedEpptStatistics(Path jythonFilePath)
+	private ScriptedEpptStatistics(Path jythonFilePath)
 	{
 		_jythonFilePath = jythonFilePath;
 		_name = loadStatisticName();
@@ -124,67 +113,10 @@ public class ScriptedEpptStatistics implements EpptStatistic
 		return _name;
 	}
 
-	@SuppressWarnings(value = "unchecked")
-	@Override
-	public SortedMap<Month, Double> calculateMonthly(SortedMap<Month, NavigableMap<Integer, Double>> data, WaterYearDefinition waterYearDefinition,
-													 WaterYearIndex waterYearIndex, List<WaterYearIndex> waterYearIndices,
-													 MonthPeriod monthPeriod)
+	private Object runScript(List<Double> data) throws ScriptException
 	{
-		Map<Month, Double> retval = new EnumMap<>(Month.class);
-		try
-		{
-			for(Map.Entry<Month, NavigableMap<Integer, Double>> entry : data.entrySet())
-			{
-				NavigableMap<Integer, Double> value = entry.getValue();
-				Month month = entry.getKey();
-				Object obj = runScript(value, waterYearDefinition, waterYearIndex, waterYearIndices);
-				if(obj instanceof OptionalDouble)
-				{
-					OptionalDouble opt = ((OptionalDouble) obj);
-					if(opt.isPresent())
-					{
-						retval.put(month, opt.getAsDouble());
-					}
-					else
-					{
-						retval.put(month, null);
-					}
-				}
-				else
-				{
-					retval.put(month, (Double) obj);
-				}
-			}
-		}
-		catch(ClassCastException e)
-		{
-			LOGGER.log(Level.SEVERE, "Error computing statistic " + getName() + " from Jython script: " + _jythonFilePath +
-					" ensure method calculate(Map<LocalDateTime, Double> data) returns a Map<? extends Month, ? extends Double>", e);
-		}
-		catch(ScriptException e)
-		{
-			LOGGER.log(Level.SEVERE, "Error computing statistic " + getName() + " from Jython script: " + _jythonFilePath +
-					" ensure method calculate(Map<LocalDateTime, Double> data) is defined", e);
-		}
-		return sort(retval, monthPeriod);
-	}
-
-	private Object runScript(Map<Integer, Double> data, WaterYearDefinition waterYearDefinition, WaterYearIndex waterYearIndex,
-							 List<WaterYearIndex> waterYearIndices) throws ScriptException
-	{
-		_scriptEngine.put("waterYearIndices", waterYearIndices);
 		_scriptEngine.put("data", data);
-		_scriptEngine.put("waterYearIndex", waterYearIndex);
-		_scriptEngine.put("waterYearDefinition", waterYearDefinition);
 		return _compile.eval();
-	}
-
-	private SortedMap<Month, Double> sort(Map<Month, Double> calculate, MonthPeriod monthPeriod)
-	{
-		List<Month> months = EpptReportingMonths.getMonths(monthPeriod);
-		SortedMap<Month, Double> retval = new TreeMap<>(Comparator.comparingInt(months::indexOf));
-		retval.putAll(calculate);
-		return retval;
 	}
 
 	private String loadStatisticName()
@@ -204,14 +136,12 @@ public class ScriptedEpptStatistics implements EpptStatistic
 	}
 
 	@Override
-	public Double calculateYearly(SortedMap<Integer, Double> data,
-								  WaterYearDefinition waterYearDefinition,
-								  WaterYearIndex waterYearIndex, List<WaterYearIndex> waterYearIndices)
+	public Double calculateYearly(List<Double> data)
 	{
-		Double retval = null;
+		Double retval = Double.NaN;
 		try
 		{
-			Object obj = runScript(data, waterYearDefinition, waterYearIndex, waterYearIndices);
+			Object obj = runScript(data);
 			if(obj instanceof OptionalDouble)
 			{
 				OptionalDouble opt = ((OptionalDouble) obj);

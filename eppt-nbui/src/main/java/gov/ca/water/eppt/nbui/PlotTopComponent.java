@@ -71,10 +71,4 @@ public class PlotTopComponent extends EpptTopComponent
 	{
 		return "4.2_ViewingResults.htm";
 	}
-
-	@Override
-	Class<? extends EpptPanel> getEpptPanelClass()
-	{
-		return null;
-	}
 }

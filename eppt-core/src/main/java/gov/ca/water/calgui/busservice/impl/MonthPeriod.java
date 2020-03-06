@@ -31,9 +31,11 @@ public class MonthPeriod
 {
 	private final Month _start;
 	private final Month _end;
+	private final String _name;
 
-	public MonthPeriod(Month start, Month end)
+	public MonthPeriod(String name, Month start, Month end)
 	{
+		_name = name;
 		_start = start;
 		_end = end;
 	}
@@ -51,14 +53,7 @@ public class MonthPeriod
 	@Override
 	public String toString()
 	{
-		if(Objects.equals(_start, _end))
-		{
-			return formatMonth(_start);
-		}
-		else
-		{
-			return formatMonth(_start) + " - " + formatMonth(_end);
-		}
+		return getName();
 	}
 
 	private String formatMonth(Month month)
@@ -76,15 +71,15 @@ public class MonthPeriod
 	public List<YearMonth> getYearMonths(int year)
 	{
 		List<YearMonth> retval = new ArrayList<>();
-		if(_start == null || _end == null)
+		if(getStart() == null || getEnd() == null)
 		{
 			return retval;
 		}
-		if(_start != _end)
+		if(getStart() != getEnd())
 		{
 			int i = 0;
-			long between = ChronoUnit.MONTHS.between(YearMonth.of(2001, _start), YearMonth.of(2010, _end)) % 12;
-			Month month = _start.plus(i);
+			long between = ChronoUnit.MONTHS.between(YearMonth.of(2001, getStart()), YearMonth.of(2010, getEnd())) % 12;
+			Month month = getStart().plus(i);
 			YearMonth yearMonth;
 			if(isPreviousYear(month))
 			{
@@ -102,13 +97,13 @@ public class MonthPeriod
 		}
 		else
 		{
-			if(isPreviousYear(_start))
+			if(isPreviousYear(getStart()))
 			{
-				retval.add(YearMonth.of(year - 1, _start));
+				retval.add(YearMonth.of(year - 1, getStart()));
 			}
 			else
 			{
-				retval.add(YearMonth.of(year, _start));
+				retval.add(YearMonth.of(year, getStart()));
 			}
 		}
 		return retval;
@@ -116,12 +111,27 @@ public class MonthPeriod
 
 	private boolean isPreviousYear(Month month)
 	{
-		long totalMonths = 1 + ChronoUnit.MONTHS.between(YearMonth.of(2001, _start), YearMonth.of(2010, _end)) % 12;
-		if(totalMonths == 12 && _start == Month.JANUARY)
+		long totalMonths = 1 + ChronoUnit.MONTHS.between(YearMonth.of(2001, getStart()), YearMonth.of(2010, getEnd())) % 12;
+		if(totalMonths == 12 && getStart() == Month.JANUARY)
 		{
 			return false;
 		}
 		return month == Month.OCTOBER || month == Month.NOVEMBER || month == Month.DECEMBER;
 	}
 
+	public String getName()
+	{
+		if(_name != null && !_name.isEmpty())
+		{
+			return _name;
+		}
+		else if(Objects.equals(getStart(), getEnd()))
+		{
+			return formatMonth(getStart());
+		}
+		else
+		{
+			return formatMonth(getStart()) + " - " + formatMonth(getEnd());
+		}
+	}
 }

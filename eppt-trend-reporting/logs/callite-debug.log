@@ -719,3 +719,6 @@ java.io.IOException: Resource could not be found ui/Project_Configuration.xml
 	at gov.ca.water.trendreporting.TrendReportPanel.setScenarioRuns(TrendReportPanel.java:350)
 	at gov.ca.water.trendreporting.TrendReportScaffold.initScaffold(TrendReportScaffold.java:75)
 	at gov.ca.water.trendreporting.TrendReportScaffold.main(TrendReportScaffold.java:90)
+2020-02-27 09:03:34,611 [main] ERROR gov.ca.water.calgui.techservice.impl.FileSystemSvcImpl - File missing : C:\Git\DWR\EPPT\DWR-Enhanced-Post-Processing-Tool\eppt-trend-reporting\target\test-classes\dwr_eppt\config\MonthlyPeriodFilters.csv
+2020-02-27 09:04:22,173 [main] ERROR gov.ca.water.calgui.techservice.impl.FileSystemSvcImpl - File missing : C:\Git\DWR\EPPT\DWR-Enhanced-Post-Processing-Tool\eppt-trend-reporting\target\test-classes\dwr_eppt\config\MonthlyPeriodFilters.csv
+2020-02-27 09:05:09,976 [main] ERROR gov.ca.water.calgui.techservice.impl.FileSystemSvcImpl - File missing : C:\Git\DWR\EPPT\DWR-Enhanced-Post-Processing-Tool\eppt-trend-reporting\target\test-classes\dwr_eppt\config\AnnualPeriodFilters.csv

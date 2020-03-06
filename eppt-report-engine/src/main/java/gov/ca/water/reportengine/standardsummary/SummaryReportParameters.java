@@ -26,8 +26,8 @@ import javax.xml.bind.Unmarshaller;
 import gov.ca.water.calgui.bo.CommonPeriodFilter;
 import gov.ca.water.calgui.bo.WaterYearDefinition;
 import gov.ca.water.calgui.bo.WaterYearIndex;
-import gov.ca.water.calgui.bo.WaterYearPeriod;
 import gov.ca.water.calgui.bo.WaterYearPeriodRange;
+import gov.ca.water.calgui.bo.WaterYearPeriodRangesFilter;
 import gov.ca.water.calgui.constant.Constant;
 import gov.ca.water.calgui.project.EpptScenarioRun;
 import gov.ca.water.calgui.scripts.DssCache;
@@ -46,16 +46,17 @@ public class SummaryReportParameters
 	private final WaterYearDefinition _waterYearDefinition;
 	private final Map<EpptScenarioRun, WaterYearIndex> _waterYearIndex;
 	private final WaterYearPeriodRange _longTermRange;
-	private final Map<WaterYearPeriod, List<WaterYearPeriodRange>> _waterYearPeriodRanges;
 	private final PercentDiffStyle _percentDiffStyle;
 	private final TwoColorColorContour _positiveContour;
 	private final TwoColorColorContour _negativeContour;
 	private final List<String> _disabledSummaryModules;
 	private final CommonPeriodFilter _commonPeriodFilter;
 	private final DssCache _dssCache;
+	private final List<WaterYearPeriodRangesFilter> _waterYearPeriodRanges;
 
-	public SummaryReportParameters(WaterYearDefinition waterYearDefinition, Map<EpptScenarioRun, WaterYearIndex> waterYearIndicies, WaterYearPeriodRange longTermRange,
-								   Map<WaterYearPeriod, List<WaterYearPeriodRange>> waterYearPeriodRanges, PercentDiffStyle percentDiffStyle,
+	public SummaryReportParameters(WaterYearDefinition waterYearDefinition, Map<EpptScenarioRun, WaterYearIndex> waterYearIndicies,
+								   WaterYearPeriodRange longTermRange,
+								   List<WaterYearPeriodRangesFilter> waterYearPeriodRanges, PercentDiffStyle percentDiffStyle,
 								   List<String> disabledSummaryModules, CommonPeriodFilter commonPeriodFilter, DssCache dssCache)
 			throws EpptReportException
 	{
@@ -111,7 +112,7 @@ public class SummaryReportParameters
 		return _percentDiffStyle;
 	}
 
-	public Map<WaterYearPeriod, List<WaterYearPeriodRange>> getWaterYearPeriodRanges()
+	public List<WaterYearPeriodRangesFilter> getWaterYearPeriodRanges()
 	{
 		return _waterYearPeriodRanges;
 	}

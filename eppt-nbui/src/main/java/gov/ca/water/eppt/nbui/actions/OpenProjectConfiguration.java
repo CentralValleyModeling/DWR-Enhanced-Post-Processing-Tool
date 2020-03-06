@@ -14,19 +14,16 @@ package gov.ca.water.eppt.nbui.actions;
 import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.io.File;
-import java.io.IOException;
 import java.net.URL;
 import java.nio.file.Path;
 import java.util.Collection;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.*;
 
 import gov.ca.water.calgui.bo.SimpleFileFilter;
 import gov.ca.water.calgui.constant.Constant;
 import gov.ca.water.calgui.constant.EpptPreferences;
+import gov.ca.water.eppt.nbui.EpptControllerProvider;
 import gov.ca.water.eppt.nbui.Installer;
-import gov.ca.water.quickresults.ui.projectconfig.ProjectConfigurationPanel;
 import org.openide.awt.ActionID;
 import org.openide.awt.ActionReference;
 import org.openide.awt.ActionReferences;
@@ -56,8 +53,6 @@ import org.openide.windows.WindowManager;
 public final class OpenProjectConfiguration extends AbstractAction
 		implements Presenter.Toolbar, Presenter.Menu, ContextAwareAction
 {
-
-	private static final Logger LOGGER = Logger.getLogger(OpenProjectConfiguration.class.getName());
 	private Lookup.Result<ProjectConfigurationSavable> _lkpInfo;
 
 	public OpenProjectConfiguration()
@@ -92,20 +87,14 @@ public final class OpenProjectConfiguration extends AbstractAction
 
 	private void loadFromPath(Path selectedPath)
 	{
-		try
+		EpptControllerProvider.setEpptController(selectedPath);
+		WindowManager wm = WindowManager.getDefault();
+		wm.getMainWindow().setTitle(
+				Installer.MAIN_FRAME_NAME + " - " + EpptControllerProvider.getEpptConfigurationController().getProjectName());
+		Collection<? extends ProjectConfigurationSavable> scenarioConfigurationSavables = _lkpInfo.allInstances();
+		for(ProjectConfigurationSavable savable : scenarioConfigurationSavables)
 		{
-			ProjectConfigurationPanel.getProjectConfigurationPanel().loadProjectConfiguration(selectedPath);
-			WindowManager.getDefault().getMainWindow().setTitle(
-					Installer.MAIN_FRAME_NAME + " - " + ProjectConfigurationPanel.getProjectConfigurationPanel().getProjectName());
-			Collection<? extends ProjectConfigurationSavable> scenarioConfigurationSavables = _lkpInfo.allInstances();
-			for(ProjectConfigurationSavable savable : scenarioConfigurationSavables)
-			{
-				savable.removeFromLookup();
-			}
-		}
-		catch(IOException | RuntimeException ex)
-		{
-			LOGGER.log(Level.SEVERE, "Error loading Project Configuration to: " + selectedPath, ex);
+			savable.removeFromLookup();
 		}
 	}
 

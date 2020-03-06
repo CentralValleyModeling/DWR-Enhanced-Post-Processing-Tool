@@ -14,12 +14,10 @@ package gov.ca.water.quickresults.ui.report;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.GridLayout;
 import java.nio.file.Path;
 import java.time.LocalDate;
-import java.time.YearMonth;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
@@ -29,13 +27,13 @@ import java.util.stream.Collectors;
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
 
+import gov.ca.water.calgui.bo.WaterYearDefinition;
 import gov.ca.water.calgui.project.EpptScenarioRun;
 import gov.ca.water.calgui.wresl.ProcessOutputConsumer;
 import gov.ca.water.calgui.wresl.WreslScriptException;
 import gov.ca.water.calgui.wresl.WreslScriptRunner;
 import gov.ca.water.quickresults.ui.TextAreaPrintStream;
-import gov.ca.water.quickresults.ui.WreslRunDialog;
-import gov.ca.water.quickresults.ui.projectconfig.ProjectConfigurationPanel;
+import gov.ca.water.calgui.project.EpptConfigurationController;
 
 import rma.swing.RmaJPanel;
 
@@ -57,10 +55,12 @@ public class WreslPanel extends RmaJPanel implements ProcessOutputConsumer
 	private final List<EpptScenarioRunCheckbox> _scenarioRunCheckboxes = new ArrayList<>();
 	private final JProgressBar _progressBar;
 	private final JPanel _southPanel;
+	private final EpptConfigurationController _epptConfigurationController;
 	private JPanel _scenarioPanel;
 
-	public WreslPanel()
+	public WreslPanel(EpptConfigurationController epptConfigurationController)
 	{
+		_epptConfigurationController = epptConfigurationController;
 		setLayout(new BorderLayout());
 		_tabbedPane = new JTabbedPane();
 		_stopButton.addActionListener(e -> destroyProcesses());
@@ -156,13 +156,12 @@ public class WreslPanel extends RmaJPanel implements ProcessOutputConsumer
 
 	private void runScenario(EpptScenarioRun epptScenarioRun)
 	{
-
-		ProjectConfigurationPanel projectConfigurationPanel = ProjectConfigurationPanel.getProjectConfigurationPanel();
-		YearMonth startMonth = projectConfigurationPanel.getStartMonth();
-		YearMonth endMonth = projectConfigurationPanel.getEndMonth();
-		LocalDate start = LocalDate.of(startMonth.getYear(), startMonth.getMonth(), 1);
+		int startYear = _epptConfigurationController.getStartYear();
+		int endYear = _epptConfigurationController.getEndYear();
+		WaterYearDefinition waterYearDefinition = _epptConfigurationController.getWaterYearDefinition();
+		LocalDate start = LocalDate.of(startYear, waterYearDefinition.getStartMonth(), 1);
 		start = start.withDayOfMonth(start.lengthOfMonth());
-		LocalDate end = LocalDate.of(endMonth.getYear(), endMonth.getMonth(), 1).plusMonths(1);
+		LocalDate end = LocalDate.of(endYear, waterYearDefinition.getEndMonth(), 1).plusMonths(1);
 		end = end.withDayOfMonth(end.lengthOfMonth());
 		runWresl(epptScenarioRun, start, end);
 	}

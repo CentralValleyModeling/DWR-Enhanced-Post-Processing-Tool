@@ -14,38 +14,20 @@ package gov.ca.water.calgui.presentation;
 
 import java.awt.BorderLayout;
 import java.time.LocalDate;
-import java.time.Month;
-import java.time.format.TextStyle;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 import java.util.Optional;
-import java.util.SortedMap;
-import java.util.TreeMap;
 import javax.swing.*;
 
-import gov.ca.water.calgui.EpptInitializationException;
 import gov.ca.water.calgui.bo.GUILinksAllModelsBO;
 import gov.ca.water.calgui.bo.WaterYearDefinition;
-import gov.ca.water.calgui.bo.WaterYearIndex;
-import gov.ca.water.calgui.busservice.impl.EpptReportingComputedSet;
-import gov.ca.water.calgui.busservice.impl.EpptStatistic;
-import gov.ca.water.calgui.busservice.impl.MonthPeriod;
-import gov.ca.water.calgui.busservice.impl.ScriptedEpptStatistics;
-import gov.ca.water.calgui.busservice.impl.WaterYearIndexAliasReader;
-import gov.ca.water.calgui.busservice.impl.WaterYearTableReader;
 import gov.ca.water.calgui.presentation.plotly.PlotlyPaneBuilder;
-import gov.ca.water.calgui.presentation.plotly.SummaryPane;
+import gov.ca.water.calgui.project.EpptConfigurationController;
 import gov.ca.water.calgui.project.EpptScenarioRun;
 import gov.ca.water.calgui.project.PlotConfigurationState;
 import javafx.embed.swing.JFXPanel;
 
 import hec.io.TimeSeriesContainer;
-
-import static java.util.stream.Collectors.toList;
 
 /**
  * Company: Resource Management Associates
@@ -53,37 +35,21 @@ import static java.util.stream.Collectors.toList;
  * @author <a href="mailto:adam@rmanet.com">Adam Korynta</a>
  * @since 01-20-2020
  */
-public class DisplayFrames
+class DisplayFrames
 {
+	private final EpptConfigurationController _epptConfigurationController;
 	private final PlotConfigurationState _plotConfigurationState;
-	private final EpptScenarioRun _baseRun;
-	private final List<EpptScenarioRun> _alternatives;
-	private final LocalDate _start;
-	private final LocalDate _end;
-	private final Map<EpptScenarioRun, List<WaterYearIndex>> _waterYearIndicies;
 
-	DisplayFrames(PlotConfigurationState plotConfigurationState,
-				  EpptScenarioRun baseRun,
-				  List<EpptScenarioRun> alternatives,
-				  LocalDate start,
-				  LocalDate end) throws EpptInitializationException
+	DisplayFrames(EpptConfigurationController epptConfigurationController,
+				  PlotConfigurationState plotConfigurationState)
 	{
+		_epptConfigurationController = epptConfigurationController;
 		_plotConfigurationState = plotConfigurationState;
-		_baseRun = baseRun;
-		_alternatives = alternatives;
-		_start = start;
-		_end = end;
+	}
 
-		List<EpptScenarioRun> scenarioRuns = new ArrayList<>();
-		scenarioRuns.add(_baseRun);
-		scenarioRuns.addAll(_alternatives);
-		_waterYearIndicies = new HashMap<>();
-		for(EpptScenarioRun epptScenarioRun : scenarioRuns)
-		{
-			WaterYearTableReader tableReader = new WaterYearTableReader(epptScenarioRun.getLookupDirectory());
-			List<WaterYearIndex> read = tableReader.read();
-			_waterYearIndicies.put(epptScenarioRun, read);
-		}
+	EpptConfigurationController getEpptConfigurationController()
+	{
+		return _epptConfigurationController;
 	}
 
 	PlotConfigurationState getPlotConfigurationState()
@@ -93,86 +59,99 @@ public class DisplayFrames
 
 	LocalDate getEnd()
 	{
-		return _end;
+		int endYear = _epptConfigurationController.getEndYear();
+		WaterYearDefinition waterYearDefinition = _epptConfigurationController.getWaterYearDefinition();
+		return LocalDate.of(endYear, waterYearDefinition.getEndMonth(), 1).plusMonths(1).plusDays(2);
 	}
 
 	LocalDate getStart()
 	{
-		return _start;
+		int startYear = _epptConfigurationController.getStartYear();
+		WaterYearDefinition waterYearDefinition = _epptConfigurationController.getWaterYearDefinition();
+		return LocalDate.of(startYear, waterYearDefinition.getStartMonth(), 1).minusDays(2);
 	}
 
-	private Map<EpptScenarioRun, List<WaterYearIndex>> getWaterYearIndicies()
+	Optional<EpptScenarioRun> getBaseRun()
 	{
-		return _waterYearIndicies;
-	}
-
-	EpptScenarioRun getBaseRun()
-	{
-		return _baseRun;
+		return _epptConfigurationController.getEpptScenarioBase();
 	}
 
 	List<EpptScenarioRun> getAlternatives()
 	{
-		return _alternatives;
+		return _epptConfigurationController.getEpptScenarioAlternatives();
 	}
 
-	void plotBoxPlot(Map<EpptScenarioRun, List<TimeSeriesContainer>> scenarioRunData,
-					 Map<EpptScenarioRun, List<TimeSeriesContainer>> secondaryScenarioRunData,
-					 String plotTitle,
-					 JTabbedPane tabbedPane)
-	{
-		plotBoxPlot(new HashMap<>(), scenarioRunData, new HashMap<>(), secondaryScenarioRunData, plotTitle, tabbedPane);
-	}
-
-	void plotBoxPlot(Map<EpptScenarioRun, List<String>> primarySuffixes,
-					 Map<EpptScenarioRun, List<TimeSeriesContainer>> scenarioRunData,
-					 Map<EpptScenarioRun, List<String>> secondarySuffixes,
-					 Map<EpptScenarioRun, List<TimeSeriesContainer>> secondaryScenarioRunData,
+	void plotBoxPlotDiscrete(Map<EpptScenarioRun, List<TimeSeriesContainer>> scenarioRunData,
 					 String plotTitle,
 					 JTabbedPane tabbedPane)
 	{
 
-		JFXPanel pane = new PlotlyPaneBuilder(PlotlyPaneBuilder.ChartType.BOX, getBaseRun(), scenarioRunData, secondaryScenarioRunData)
-				.withComparisonType(getPlotConfigurationState().getComparisonType())
-				.withWaterYearDefinition(getPlotConfigurationState().getWaterYearDefinition())
-				.withTaf(getPlotConfigurationState().isDisplayTaf())
-				.withPrimarySuffixes(primarySuffixes)
-				.withSecondarySuffixes(secondarySuffixes)
-				.withPlotTitle(plotTitle)
-				.withWaterYearIndicies(getWaterYearIndicies())
+		JFXPanel pane = new PlotlyPaneBuilder(PlotlyPaneBuilder.ChartType.BOX_ALL, plotTitle, scenarioRunData,
+				_epptConfigurationController)
 				.build();
-		tabbedPane.addTab("Box Plot", pane);
+		tabbedPane.addTab("Box Plot All", pane);
 	}
 
-	void plotTimeSeries(Map<EpptScenarioRun, List<TimeSeriesContainer>> scenarioRunData,
-						Map<EpptScenarioRun, List<TimeSeriesContainer>> secondaryScenarioRunData,
-						String plotTitle, JTabbedPane tabbedPane)
+	void plotBoxPlotAggregate(Map<EpptScenarioRun, List<TimeSeriesContainer>> scenarioRunData,
+					 String plotTitle,
+					 JTabbedPane tabbedPane)
 	{
-		plotTimeSeries(new HashMap<>(), scenarioRunData, new HashMap<>(), secondaryScenarioRunData, plotTitle, tabbedPane);
+
+		JFXPanel pane = new PlotlyPaneBuilder(PlotlyPaneBuilder.ChartType.BOX_AGGREGATE, plotTitle, scenarioRunData,
+				_epptConfigurationController)
+				.build();
+		tabbedPane.addTab("Box Plot Aggregate", pane);
 	}
 
-	void plotTimeSeries(Map<EpptScenarioRun, List<String>> primarySuffixes,
-						Map<EpptScenarioRun, List<TimeSeriesContainer>> scenarioRunData,
-						Map<EpptScenarioRun, List<String>> secondarySuffixes,
-						Map<EpptScenarioRun, List<TimeSeriesContainer>> secondaryScenarioRunData,
+	void plotBarCharts(Map<EpptScenarioRun, List<TimeSeriesContainer>> scenarioRunData,
+							  String plotTitle,
+							  JTabbedPane tabbedPane)
+	{
+
+		JFXPanel pane = new PlotlyPaneBuilder(PlotlyPaneBuilder.ChartType.BAR_GRAPH, plotTitle, scenarioRunData,
+				_epptConfigurationController)
+				.build();
+		tabbedPane.addTab("Bar Charts Aggregate", pane);
+	}
+
+	void plotMonthlyLine(Map<EpptScenarioRun, List<TimeSeriesContainer>> scenarioRunData,
+							  String plotTitle,
+							  JTabbedPane tabbedPane)
+	{
+
+		JFXPanel pane = new PlotlyPaneBuilder(PlotlyPaneBuilder.ChartType.MONTHLY_LINE, plotTitle, scenarioRunData,
+				_epptConfigurationController)
+				.build();
+		tabbedPane.addTab("Monthly Line Plot", pane);
+	}
+
+	void plotTimeSeriesDiscrete(Map<EpptScenarioRun, List<TimeSeriesContainer>> scenarioRunData,
 						String plotTitle, JTabbedPane tabbedPane)
 	{
-		JFXPanel pane = new PlotlyPaneBuilder(PlotlyPaneBuilder.ChartType.TIMESERIES, getBaseRun(), scenarioRunData, secondaryScenarioRunData)
-				.withComparisonType(getPlotConfigurationState().getComparisonType())
-				.withWaterYearDefinition(getPlotConfigurationState().getWaterYearDefinition())
-				.withTaf(getPlotConfigurationState().isDisplayTaf())
-				.withPrimarySuffixes(primarySuffixes)
-				.withSecondarySuffixes(secondarySuffixes)
-				.withPlotTitle(plotTitle)
-				.withWaterYearIndicies(getWaterYearIndicies())
+		JFXPanel pane = new PlotlyPaneBuilder(PlotlyPaneBuilder.ChartType.TIME_SERIES_ALL, plotTitle, scenarioRunData, _epptConfigurationController)
 				.build();
-		if(getPlotConfigurationState().getComparisonType() == PlotConfigurationState.ComparisonType.DIFF)
+		if(_epptConfigurationController.isDifference())
 		{
-			tabbedPane.addTab("Difference", pane);
+			tabbedPane.addTab("Difference All", pane);
 		}
 		else
 		{
-			tabbedPane.addTab("Time Series", pane);
+			tabbedPane.addTab("Time Series All", pane);
+		}
+	}
+
+	void plotTimeSeriesAggregate(Map<EpptScenarioRun, List<TimeSeriesContainer>> scenarioRunData,
+						String plotTitle, JTabbedPane tabbedPane)
+	{
+		JFXPanel pane = new PlotlyPaneBuilder(PlotlyPaneBuilder.ChartType.TIME_SERIES_AGGREGATE, plotTitle, scenarioRunData, _epptConfigurationController)
+				.build();
+		if(_epptConfigurationController.isDifference())
+		{
+			tabbedPane.addTab("Difference Aggregate", pane);
+		}
+		else
+		{
+			tabbedPane.addTab("Time Series Aggregate", pane);
 		}
 	}
 
@@ -189,31 +168,13 @@ public class DisplayFrames
 		tabbedPane.addTab("Alert - Missing DSS records", panel);
 	}
 
-	void plotSummaryTable(Map<EpptScenarioRun, List<String>> primarySuffixes,
-						  Map<EpptScenarioRun, List<TimeSeriesContainer>> scenarioRunData,
-						  Map<EpptScenarioRun, List<String>> secondarySuffixes,
-						  Map<EpptScenarioRun, List<TimeSeriesContainer>> secondaryScenarioRunData,
+	void plotSummaryTable(Map<EpptScenarioRun, List<TimeSeriesContainer>> scenarioRunData,
 						  String plotTitle,
 						  JTabbedPane tabbedPane)
 	{
-		SortedMap<String, SortedMap<EpptStatistic, Map<WaterYearIndex, EpptReportingComputedSet>>> data = new TreeMap<>();
-		List<EpptStatistic> selectedSummaryTableItems = ScriptedEpptStatistics.getTrendStatistics();
-		WaterYearDefinition waterYearDefinition = getPlotConfigurationState().getWaterYearDefinition();
-		MonthPeriod monthPeriod = new MonthPeriod(waterYearDefinition.getStartMonth(), waterYearDefinition.getEndMonth());
-		List<WaterYearIndexAliasReader.WaterYearIndexAlias> summaryWaterYearIndexes = getPlotConfigurationState().getSummaryWaterYearIndexes();
-		SortedMap<EpptStatistic, Map<WaterYearIndex, EpptReportingComputedSet>> statsData = new TreeMap<>(
-				Comparator.comparing(selectedSummaryTableItems::indexOf));
-		List<EpptScenarioRun> scenarioRuns = new ArrayList<>();
-		scenarioRuns.add(getBaseRun());
-		scenarioRuns.addAll(getAlternatives());
-		for(EpptScenarioRun epptScenarioRun : scenarioRuns)
-		{
-			data.putAll(addSummaryDataForScenario(epptScenarioRun, primarySuffixes.get(epptScenarioRun), scenarioRunData.get(epptScenarioRun),
-					secondarySuffixes.get(epptScenarioRun), secondaryScenarioRunData.get(epptScenarioRun), plotTitle,
-					selectedSummaryTableItems, monthPeriod, summaryWaterYearIndexes, statsData));
-		}
-		JFXPanel pane = new SummaryPane(plotTitle, waterYearDefinition, data);
-		if(getPlotConfigurationState().getComparisonType() == PlotConfigurationState.ComparisonType.DIFF)
+		JFXPanel pane = new PlotlyPaneBuilder(PlotlyPaneBuilder.ChartType.SUMMARY_TABLE, plotTitle, scenarioRunData, _epptConfigurationController)
+				.build();
+		if(_epptConfigurationController.isDifference())
 		{
 			tabbedPane.addTab("Summary - Difference", pane);
 		}
@@ -225,125 +186,13 @@ public class DisplayFrames
 
 	}
 
-	private SortedMap<String, SortedMap<EpptStatistic, Map<WaterYearIndex, EpptReportingComputedSet>>> addSummaryDataForScenario(
-			EpptScenarioRun scenarioRun, List<String> primarySuffixes, List<TimeSeriesContainer> scenarioRunData,
-			List<String> secondarySuffixes, List<TimeSeriesContainer> secondaryScenarioRunData, String plotTitle,
-			List<EpptStatistic> selectedSummaryTableItems, MonthPeriod monthPeriod,
-			List<WaterYearIndexAliasReader.WaterYearIndexAlias> summaryWaterYearIndexes,
-			SortedMap<EpptStatistic, Map<WaterYearIndex, EpptReportingComputedSet>> statsData)
-	{
-		List<String> headers = new ArrayList<>();
-		for(int i = 0; i < scenarioRunData.size(); i++)
-		{
-			String header = scenarioRun.getName();
-			if(primarySuffixes != null && i < primarySuffixes.size())
-			{
-				header += " - " + primarySuffixes.get(i);
-			}
-			else
-			{
-				header += " - " + plotTitle;
-			}
-			headers.add(header);
-		}
-		SortedMap<String, SortedMap<EpptStatistic, Map<WaterYearIndex, EpptReportingComputedSet>>> retval = new TreeMap<>(
-				Comparator.comparing(headers::indexOf));
-		for(int i = 0; i < scenarioRunData.size(); i++)
-		{
-			String header = headers.get(i);
-			for(EpptStatistic stat : selectedSummaryTableItems)
-			{
-				List<WaterYearIndex> allWaterYearIndicies = getWaterYearIndicies().get(scenarioRun);
-				List<String> allIndexNames = allWaterYearIndicies.stream().map(WaterYearIndex::getName).collect(toList());
-				SortedMap<WaterYearIndex, EpptReportingComputedSet> indexData = new TreeMap<>(
-						Comparator.comparing(WaterYearIndex::getName, Comparator.comparing(allIndexNames::indexOf)));
-				for(WaterYearIndexAliasReader.WaterYearIndexAlias waterYearIndex : summaryWaterYearIndexes)
-				{
-					Optional<WaterYearIndex> collect = allWaterYearIndicies.stream().filter(waterYearIndex::isAliasFor).findAny();
-					if(collect.isPresent())
-					{
-						EpptReportingComputedSet epptReportingComputedSet = computeSummaryData(scenarioRun,
-								primarySuffixes, scenarioRunData, secondarySuffixes, secondaryScenarioRunData, plotTitle, monthPeriod,
-								stat, collect.get());
-						indexData.put(collect.get(), epptReportingComputedSet);
-					}
-				}
-				statsData.put(stat, indexData);
-			}
-			retval.put(header, statsData);
-		}
-		return retval;
-	}
-
-	private EpptReportingComputedSet computeSummaryData(EpptScenarioRun epptScenarioRun,
-														List<String> primarySuffix,
-														List<TimeSeriesContainer> scenarioData,
-														List<String> secondarySuffix,
-														List<TimeSeriesContainer> secondaryScenarioData,
-														String plotTitle,
-														MonthPeriod monthPeriod, EpptStatistic stat,
-														WaterYearIndex waterYearIndex)
-	{
-		Map<EpptScenarioRun, WaterYearIndex> selectedWaterYearIndexes = new HashMap<>();
-		selectedWaterYearIndexes.put(epptScenarioRun, waterYearIndex);
-		Map<EpptScenarioRun, List<String>> primarySuffixes = new HashMap<>();
-		primarySuffixes.put(epptScenarioRun, primarySuffix);
-		Map<EpptScenarioRun, List<TimeSeriesContainer>> scenarioRunData = new HashMap<>();
-		scenarioRunData.put(epptScenarioRun, scenarioData);
-		Map<EpptScenarioRun, List<String>> secondarySuffixes = new HashMap<>();
-		secondarySuffixes.put(epptScenarioRun, secondarySuffix);
-		Map<EpptScenarioRun, List<TimeSeriesContainer>> secondaryScenarioRunData = new HashMap<>();
-		secondaryScenarioRunData.put(epptScenarioRun, secondaryScenarioData);
-		EpptReportingComputedSet epptReportingComputedSet;
-		if(getPlotConfigurationState().getComparisonType() == PlotConfigurationState.ComparisonType.DIFF)
-		{
-			epptReportingComputedSet = EpptReportingComputedSet.computeDiffForMetrics(plotTitle,
-					stat,
-					monthPeriod,
-					getPlotConfigurationState().isDisplayTaf(),
-					_baseRun,
-					primarySuffixes,
-					scenarioRunData,
-					secondarySuffixes,
-					secondaryScenarioRunData,
-					getPlotConfigurationState().getComparisonType(),
-					selectedWaterYearIndexes,
-					getWaterYearIndicies());
-		}
-		else
-		{
-			epptReportingComputedSet = EpptReportingComputedSet.computeForMetrics(plotTitle,
-					stat,
-					monthPeriod,
-					getPlotConfigurationState().isDisplayTaf(),
-					primarySuffixes,
-					scenarioRunData,
-					secondarySuffixes,
-					secondaryScenarioRunData,
-					getPlotConfigurationState().getComparisonType(),
-					selectedWaterYearIndexes,
-					getWaterYearIndicies());
-		}
-		return epptReportingComputedSet;
-	}
-
-	void plotMonthlyTable(Map<EpptScenarioRun, List<String>> primarySuffixes,
-						  Map<EpptScenarioRun, List<TimeSeriesContainer>> scenarioRunData,
-						  Map<EpptScenarioRun, List<String>> secondarySuffixes,
-						  Map<EpptScenarioRun, List<TimeSeriesContainer>> secondaryScenarioRunData,
+	void plotMonthlyTable(Map<EpptScenarioRun, List<TimeSeriesContainer>> scenarioRunData,
 						  String plotTitle,
 						  JTabbedPane tabbedPane)
 	{
-		JFXPanel pane = new PlotlyPaneBuilder(PlotlyPaneBuilder.ChartType.MONTHLY, getBaseRun(), scenarioRunData, secondaryScenarioRunData)
-				.withComparisonType(getPlotConfigurationState().getComparisonType())
-				.withWaterYearDefinition(getPlotConfigurationState().getWaterYearDefinition())
-				.withTaf(getPlotConfigurationState().isDisplayTaf())
-				.withPrimarySuffixes(primarySuffixes)
-				.withSecondarySuffixes(secondarySuffixes)
-				.withPlotTitle(plotTitle)
-				.withWaterYearIndicies(getWaterYearIndicies())
+		JFXPanel pane = new PlotlyPaneBuilder(PlotlyPaneBuilder.ChartType.MONTHLY_TABLE, plotTitle, scenarioRunData, _epptConfigurationController)
 				.build();
-		if(getPlotConfigurationState().getComparisonType() == PlotConfigurationState.ComparisonType.DIFF)
+		if(_epptConfigurationController.isDifference())
 		{
 			tabbedPane.addTab("Monthly - Difference", pane);
 		}
@@ -353,70 +202,13 @@ public class DisplayFrames
 		}
 	}
 
-	void plotExceedance(Map<EpptScenarioRun, List<TimeSeriesContainer>> scenarioRunData,
-						Map<EpptScenarioRun, List<TimeSeriesContainer>> secondaryScenarioRunData,
-						String plotTitle, JTabbedPane tabbedPane)
-	{
-		plotExceedance(new HashMap<>(), scenarioRunData, new HashMap<>(), secondaryScenarioRunData, plotTitle, tabbedPane);
-	}
-
-	void plotExceedance(Map<EpptScenarioRun, List<String>> primarySuffixes,
-						Map<EpptScenarioRun, List<TimeSeriesContainer>> scenarioRunData,
-						Map<EpptScenarioRun, List<String>> secondarySuffixes,
-						Map<EpptScenarioRun, List<TimeSeriesContainer>> secondaryScenarioRunData,
-						String plotTitle, JTabbedPane tabbedPane)
-	{
-		if(getPlotConfigurationState().isPlotAllExceedancePlots())
-		{
-			plotAllExceedance(primarySuffixes, scenarioRunData, secondarySuffixes, secondaryScenarioRunData, plotTitle, tabbedPane);
-		}
-		if(getPlotConfigurationState().isAnnualFlowExceedancePlots())
-		{
-			plotAnnualExceedance(primarySuffixes, scenarioRunData, secondarySuffixes, secondaryScenarioRunData, plotTitle, tabbedPane);
-		}
-		if(!getPlotConfigurationState().getSelectedExceedancePlotMonths().isEmpty())
-		{
-			plotMonthlyExceedance(primarySuffixes, scenarioRunData, secondarySuffixes, secondaryScenarioRunData, plotTitle, tabbedPane);
-		}
-	}
-
-	private void plotMonthlyExceedance(Map<EpptScenarioRun, List<String>> primarySuffixes,
-									   Map<EpptScenarioRun, List<TimeSeriesContainer>> scenarioRunData,
-									   Map<EpptScenarioRun, List<String>> secondarySuffixes,
-									   Map<EpptScenarioRun, List<TimeSeriesContainer>> secondaryScenarioRunData,
-									   String plotTitle, JTabbedPane tabbedPane)
-	{
-		List<Month> exceedMonths = getPlotConfigurationState().getSelectedExceedancePlotMonths();
-		for(Month month : exceedMonths)
-		{
-			JFXPanel pane = new PlotlyPaneBuilder(PlotlyPaneBuilder.ChartType.EXCEEDANCE, getBaseRun(), scenarioRunData, secondaryScenarioRunData)
-					.withComparisonType(getPlotConfigurationState().getComparisonType())
-					.withTaf(getPlotConfigurationState().isDisplayTaf())
-					.withPlotTitle(plotTitle)
-					.withPrimarySuffixes(primarySuffixes)
-					.withSecondarySuffixes(secondarySuffixes)
-					.withWaterYearIndicies(getWaterYearIndicies())
-					.withMonth(month)
-					.build();
-			tabbedPane.addTab("Exceedance (" + month.getDisplayName(TextStyle.SHORT, Locale.getDefault()) + ")", pane);
-		}
-	}
-
-	private void plotAllExceedance(Map<EpptScenarioRun, List<String>> primarySuffixes,
-								   Map<EpptScenarioRun, List<TimeSeriesContainer>> scenarioRunData,
-								   Map<EpptScenarioRun, List<String>> secondarySuffixes,
-								   Map<EpptScenarioRun, List<TimeSeriesContainer>> secondaryScenarioRunData,
+	void plotAllExceedance(Map<EpptScenarioRun, List<TimeSeriesContainer>> scenarioRunData,
 								   String plotTitle, JTabbedPane tabbedPane)
 	{
-		JFXPanel pane = new PlotlyPaneBuilder(PlotlyPaneBuilder.ChartType.EXCEEDANCE, getBaseRun(), scenarioRunData, secondaryScenarioRunData)
-				.withTaf(getPlotConfigurationState().isDisplayTaf())
-				.withComparisonType(getPlotConfigurationState().getComparisonType())
-				.withPlotTitle(plotTitle)
-				.withPrimarySuffixes(primarySuffixes)
-				.withSecondarySuffixes(secondarySuffixes)
-				.withWaterYearIndicies(getWaterYearIndicies())
+		JFXPanel pane = new PlotlyPaneBuilder(PlotlyPaneBuilder.ChartType.EXCEEDANCE_ALL, plotTitle, scenarioRunData,
+				_epptConfigurationController)
 				.build();
-		if(getPlotConfigurationState().getComparisonType() == PlotConfigurationState.ComparisonType.DIFF)
+		if(_epptConfigurationController.isDifference())
 		{
 			tabbedPane.addTab("Exceedance (All - Difference)", pane);
 		}
@@ -426,29 +218,19 @@ public class DisplayFrames
 		}
 	}
 
-	private void plotAnnualExceedance(Map<EpptScenarioRun, List<String>> primarySuffixes,
-									  Map<EpptScenarioRun, List<TimeSeriesContainer>> scenarioRunData,
-									  Map<EpptScenarioRun, List<String>> secondarySuffixes,
-									  Map<EpptScenarioRun, List<TimeSeriesContainer>> secondaryScenarioRunData,
-									  String plotTitle, JTabbedPane tabbedPane)
+	void plotAggregateExceedance(Map<EpptScenarioRun, List<TimeSeriesContainer>> scenarioRunData,
+								 String plotTitle, JTabbedPane tabbedPane)
 	{
-		WaterYearDefinition waterYearDefinition = getPlotConfigurationState().getWaterYearDefinition();
-		JFXPanel pane = new PlotlyPaneBuilder(PlotlyPaneBuilder.ChartType.EXCEEDANCE, getBaseRun(), scenarioRunData, secondaryScenarioRunData)
-				.withComparisonType(getPlotConfigurationState().getComparisonType())
-				.withPrimarySuffixes(primarySuffixes)
-				.withSecondarySuffixes(secondarySuffixes)
-				.withTaf(getPlotConfigurationState().isDisplayTaf())
-				.withPlotTitle(plotTitle)
-				.withWaterYearIndicies(getWaterYearIndicies())
-				.withWaterYearDefinition(waterYearDefinition)
+		JFXPanel pane = new PlotlyPaneBuilder(PlotlyPaneBuilder.ChartType.EXCEEDANCE_AGGREGATE, plotTitle, scenarioRunData,
+				_epptConfigurationController)
 				.build();
-		if(getPlotConfigurationState().getComparisonType() == PlotConfigurationState.ComparisonType.DIFF)
+		if(_epptConfigurationController.isDifference())
 		{
-			tabbedPane.addTab("Exceedance (Annual Total - Difference)", pane);
+			tabbedPane.addTab("Exceedance (Aggregate - Difference)", pane);
 		}
 		else
 		{
-			tabbedPane.addTab("Exceedance (Annual Total)", pane);
+			tabbedPane.addTab("Exceedance (Aggregate)", pane);
 		}
 	}
 }

@@ -14,22 +14,25 @@ package gov.ca.water.calgui.presentation;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.TreeMap;
 import javax.swing.*;
 
-import gov.ca.water.calgui.EpptInitializationException;
 import gov.ca.water.calgui.bo.GUILinksAllModelsBO;
 import gov.ca.water.calgui.busservice.IDSSGrabber1Svc;
 import gov.ca.water.calgui.busservice.impl.DSSGrabber1SvcImpl;
+import gov.ca.water.calgui.busservice.impl.MonthPeriod;
+import gov.ca.water.calgui.project.EpptConfigurationController;
 import gov.ca.water.calgui.project.EpptScenarioRun;
 import gov.ca.water.calgui.project.PlotConfigurationState;
 import gov.ca.water.calgui.techservice.IErrorHandlingSvc;
+import gov.ca.water.calgui.techservice.impl.DialogSvcImpl;
 import gov.ca.water.calgui.techservice.impl.ErrorHandlingSvcImpl;
 import org.apache.log4j.Logger;
 
@@ -49,14 +52,10 @@ final class DisplayGuiLinkFrames extends DisplayFrames
 	private static final IErrorHandlingSvc ERROR_HANDLING_SVC = new ErrorHandlingSvcImpl();
 	private final List<GUILinksAllModelsBO> _guiLinks;
 
-	DisplayGuiLinkFrames(PlotConfigurationState plotConfigurationState,
-						 List<GUILinksAllModelsBO> guiLinks,
-						 EpptScenarioRun baseRun,
-						 List<EpptScenarioRun> alternatives,
-						 LocalDate start,
-						 LocalDate end) throws EpptInitializationException
+	DisplayGuiLinkFrames(EpptConfigurationController epptConfigurationController, PlotConfigurationState plotConfigurationState,
+						 List<GUILinksAllModelsBO> guiLinks)
 	{
-		super(plotConfigurationState, baseRun, alternatives, start, end);
+		super(epptConfigurationController, plotConfigurationState);
 		_guiLinks = guiLinks;
 	}
 
@@ -69,19 +68,35 @@ final class DisplayGuiLinkFrames extends DisplayFrames
 		List<JTabbedPane> tabbedPanes = new ArrayList<>();
 		try
 		{
-
-			IDSSGrabber1Svc dssGrabber = new DSSGrabber1SvcImpl();
-			dssGrabber.setIsCFS(!getPlotConfigurationState().isDisplayTaf());
-			dssGrabber.setScenarioRuns(getBaseRun(), getAlternatives());
-
-			if(_guiLinks.isEmpty())
+			Optional<EpptScenarioRun> baseRun = getBaseRun();
+			if(baseRun.isPresent())
 			{
-				String message = "No Location selected.";
-				ERROR_HANDLING_SVC.businessErrorHandler(message, message);
+				Optional<String> error = getError();
+				if(error.isPresent())
+				{
+					DialogSvcImpl.getDialogSvcInstance().getOK("Unable to generate plots - " + error.get(), JOptionPane.WARNING_MESSAGE);
+				}
+				else
+				{
+					IDSSGrabber1Svc dssGrabber = new DSSGrabber1SvcImpl();
+					dssGrabber.setIsCFS(!getEpptConfigurationController().isTaf());
+					dssGrabber.setScenarioRuns(baseRun.get(), getAlternatives());
+
+					if(_guiLinks.isEmpty())
+					{
+						String message = "No Location selected.";
+						DialogSvcImpl.getDialogSvcInstance().getOK(message, JOptionPane.WARNING_MESSAGE);
+					}
+					for(GUILinksAllModelsBO guiLink : _guiLinks)
+					{
+						dssGrabber.setGuiLink(guiLink);
+						displayForLocation(tabbedPanes, dssGrabber, guiLink, baseRun.get());
+					}
+				}
 			}
-			for(GUILinksAllModelsBO guiLink : _guiLinks)
+			else
 			{
-				displayForLocation(tabbedPanes, dssGrabber, guiLink);
+				DialogSvcImpl.getDialogSvcInstance().getOK("Must select Base Scenario", JOptionPane.WARNING_MESSAGE);
 			}
 		}
 		catch(RuntimeException e)
@@ -93,70 +108,105 @@ final class DisplayGuiLinkFrames extends DisplayFrames
 		return tabbedPanes;
 	}
 
-	private void displayForLocation(List<JTabbedPane> tabbedPanes, IDSSGrabber1Svc dssGrabber, GUILinksAllModelsBO guiLink)
+	private Optional<String> getError()
 	{
-		dssGrabber.setGuiLink(guiLink);
+		Optional<String> retval = Optional.empty();
+		List<MonthPeriod> selectedMonthlyPeriods = getEpptConfigurationController().getSelectedMonthlyPeriods();
+		if(selectedMonthlyPeriods.isEmpty())
+		{
+			retval = Optional.of("No monthly filter selected");
+		}
+		else if(getEpptConfigurationController().getWaterYearPeriodRanges().isEmpty())
+		{
+			retval = Optional.of("No annual filter selected");
+		}
+		else if(getEpptConfigurationController().getSelectedStatistics().isEmpty() && getPlotConfigurationState().isDisplaySummaryTable())
+		{
+			retval = Optional.of("Cannot display summary table without selected statistics");
+		}
+		return retval;
+	}
+
+	private void displayForLocation(List<JTabbedPane> tabbedPanes, IDSSGrabber1Svc dssGrabber, GUILinksAllModelsBO guiLink, EpptScenarioRun baseRun)
+	{
 		if(dssGrabber.getPrimaryDSSName() == null)
 		{
 			String message = "No GUI_Links3.csv entry found for " + guiLink + "/" + guiLink + ".";
-			ERROR_HANDLING_SVC.businessErrorHandler(message, message);
+			DialogSvcImpl.getDialogSvcInstance().getOK(message, JOptionPane.WARNING_MESSAGE);
 		}
 		else if(dssGrabber.getPrimaryDSSName().isEmpty())
 		{
 			String message = "No DSS time series specified for " + guiLink + "/" + guiLink + ".";
-			ERROR_HANDLING_SVC.businessErrorHandler(message, message);
+			DialogSvcImpl.getDialogSvcInstance().getOK(message, JOptionPane.WARNING_MESSAGE);
 		}
 		else
 		{
 			dssGrabber.setDateRange(getStart(), getEnd());
-			JTabbedPane tabbedPane = displayFrameForData(dssGrabber, guiLink);
+			JTabbedPane tabbedPane = displayFrameForData(dssGrabber, guiLink, baseRun);
 			tabbedPanes.add(tabbedPane);
-
 		}
 	}
 
-	private JTabbedPane displayFrameForData(IDSSGrabber1Svc dssGrabber, GUILinksAllModelsBO guiLink)
+	private JTabbedPane displayFrameForData(IDSSGrabber1Svc dssGrabber, GUILinksAllModelsBO guiLink, EpptScenarioRun baseRun)
 	{
 		JTabbedPane tabbedPane = new JTabbedPane();
 		Map<GUILinksAllModelsBO.Model, List<String>> missing = dssGrabber.getMissingList();
 		List<EpptScenarioRun> scenarioRuns = new ArrayList<>();
-		scenarioRuns.add(getBaseRun());
+		scenarioRuns.add(baseRun);
 		scenarioRuns.addAll(getAlternatives());
 		Map<EpptScenarioRun, List<TimeSeriesContainer>> primaryScenarioRunData = new TreeMap<>(Comparator.comparing(scenarioRuns::indexOf));
-		Map<EpptScenarioRun, List<TimeSeriesContainer>> secondaryScenarioRunData = new TreeMap<>(Comparator.comparing(scenarioRuns::indexOf));
-		Map<EpptScenarioRun, List<String>> secondarySuffixes = new TreeMap<>(Comparator.comparing(scenarioRuns::indexOf));
 		for(EpptScenarioRun epptScenarioRun : scenarioRuns)
 		{
-			DSSGrabber1SvcImpl dssGrabber1Svc = buildDssGrabber(epptScenarioRun, guiLink, getPlotConfigurationState().isDisplayTaf(),
+			DSSGrabber1SvcImpl dssGrabber1Svc = buildDssGrabber(epptScenarioRun, guiLink, getEpptConfigurationController().isTaf(),
 					getStart(),
 					getEnd());
 			TimeSeriesContainer primarySeries = dssGrabber1Svc.getPrimarySeries()[0];
 			TimeSeriesContainer secondarySeries = dssGrabber1Svc.getSecondarySeries()[0];
-			primaryScenarioRunData.put(epptScenarioRun, Collections.singletonList(primarySeries));
-			secondaryScenarioRunData.put(epptScenarioRun, Collections.singletonList(secondarySeries));
-			secondarySuffixes.put(epptScenarioRun, Collections.singletonList(guiLink.getLegend()));
+			if(secondarySeries != null)
+			{
+				secondarySeries.setFullName(guiLink.getLegend());
+			}
+			primaryScenarioRunData.put(epptScenarioRun, Arrays.asList(primarySeries, secondarySeries));
 		}
-		if(getPlotConfigurationState().isDisplayTimeSeriesPlot())
+		if(getPlotConfigurationState().isDisplayTimeSeriesAll())
 		{
-			plotTimeSeries(new HashMap<>(), primaryScenarioRunData, secondarySuffixes, secondaryScenarioRunData, guiLink.getPlotTitle(), tabbedPane);
+			plotTimeSeriesDiscrete(primaryScenarioRunData, guiLink.getPlotTitle(), tabbedPane);
 		}
-		if(getPlotConfigurationState().isDoExceedance())
+		if(getPlotConfigurationState().isDisplayTimeSeriesAggregate())
 		{
-			plotExceedance(primaryScenarioRunData, secondaryScenarioRunData, guiLink.getPlotTitle(), tabbedPane);
+			plotTimeSeriesAggregate(primaryScenarioRunData, guiLink.getPlotTitle(), tabbedPane);
 		}
-		if(getPlotConfigurationState().isDisplayBoxAndWhiskerPlot())
+		if(getPlotConfigurationState().isDisplayExceedanceAll())
 		{
-			plotBoxPlot(primaryScenarioRunData, secondaryScenarioRunData, guiLink.getPlotTitle(), tabbedPane);
+			plotAllExceedance(primaryScenarioRunData, guiLink.getPlotTitle(), tabbedPane);
+		}
+		if(getPlotConfigurationState().isDisplayExceedanceAggregate())
+		{
+			plotAggregateExceedance(primaryScenarioRunData, guiLink.getPlotTitle(), tabbedPane);
+		}
+		if(getPlotConfigurationState().isDisplayMonthlyLine())
+		{
+			plotMonthlyLine(primaryScenarioRunData, guiLink.getPlotTitle(), tabbedPane);
+		}
+		if(getPlotConfigurationState().isDisplayBarCharts())
+		{
+			plotBarCharts(primaryScenarioRunData, guiLink.getPlotTitle(), tabbedPane);
+		}
+		if(getPlotConfigurationState().isDisplayBoxAndWhiskerAll())
+		{
+			plotBoxPlotDiscrete(primaryScenarioRunData, guiLink.getPlotTitle(), tabbedPane);
+		}
+		if(getPlotConfigurationState().isDisplayBoxAndWhiskerAggregate())
+		{
+			plotBoxPlotAggregate(primaryScenarioRunData, guiLink.getPlotTitle(), tabbedPane);
 		}
 		if(getPlotConfigurationState().isDisplayMonthlyTable())
 		{
-			plotMonthlyTable(new HashMap<>(), primaryScenarioRunData, secondarySuffixes, secondaryScenarioRunData, guiLink.getPlotTitle(),
-					tabbedPane);
+			plotMonthlyTable(primaryScenarioRunData, guiLink.getPlotTitle(), tabbedPane);
 		}
 		if(getPlotConfigurationState().isDisplaySummaryTable())
 		{
-			plotSummaryTable(new HashMap<>(), primaryScenarioRunData, secondarySuffixes, secondaryScenarioRunData, guiLink.getPlotTitle(),
-					tabbedPane);
+			plotSummaryTable(primaryScenarioRunData, guiLink.getPlotTitle(), tabbedPane);
 		}
 		List<String> collect = missing.values()
 									  .stream()

@@ -10,82 +10,112 @@
  * GNU General Public License
  */
 
-function getAggregatePlotlySeries(datum) {
-    let series = new Array(datum.length);
-    for (var i = 0; i < datum.length; i++) {
-        let timeSeries = datum[i]['period_filtered_time_series'];
-        let dataOnly = [];
-        for (var j = 0; j < timeSeries.length; j++) {
-            dataOnly.push(timeSeries[j][1]);
+function getPlotlyAggregateSeries(datum) {
+    let seriesList = [];
+    for (let i = 0; i < datum.length; i++) {
+        let tsList = datum[i]['ts_list'];
+        for (let j = 0; j < tsList.length; j++) {
+            let axis = 0;
+            let monthlyFilters = tsList[j]['monthly_filters'];
+            for (let k = 0; k < monthlyFilters.length; k++) {
+                let annualFilters = monthlyFilters[k]['annual_filters'];
+                for (let m = 0; m < annualFilters.length; m++) {
+                    let timeSeries = annualFilters[m]['aggregate_ts'];
+                    let x = [];
+                    let y = [];
+                    let dataOnly = [];
+                    for (let index = 0; index < timeSeries.length; index++) {
+                        dataOnly.push(timeSeries[index][1]);
+                    }
+                    dataOnly.sort((a, b) => a - b);
+                    for (let n = 0; n < dataOnly.length; n++) {
+                        let exceedance = 1 - ((n + 0.5) / dataOnly.length);
+                        x.push(exceedance);
+                        y.push(dataOnly[n]);
+                    }
+                    let series = seriesList[axis];
+                    if (!series) {
+                        series = [];
+                        seriesList.push(series);
+                    }
+                    series.push({
+                        name: tsList[j]['ts_name'],
+                        x: x,
+                        y: y,
+                        line: {
+                            color: datum[i]['scenario_color'],
+                            dash: PLOTLY_LINE_DASH_STYLES[j % PLOTLY_LINE_DASH_STYLES.length]
+                        }
+                    });
+                    axis++;
+                }
+            }
         }
-        dataOnly.sort((a, b) => a - b);
-        let xData = [];
-        let yData = [];
-        for (var k = 0; k < dataOnly.length; k++) {
-            let exceedance = 1 - ((k + 0.5) / dataOnly.length);
-            xData.push(exceedance);
-            yData.push(dataOnly[k]);
-        }
-        series[i] = {
-            x: xData,
-            y: yData,
-            marker: {
-                color: datum[i]['scenario_color']
-            },
-            name: datum[i]['scenario_name']
-        };
     }
-    return series;
+    return seriesList;
 }
 
 function plot(data) {
-    let datum = data['scenario_run_data'];
-    var layout = {
-        font: PLOTLY_FONT,
-        xaxis: {
-            tickformat: ',.0%',
-            range: [1, 0],
-            zeroline: false,
-            gridcolor: '#CCCCCC'
-        },
-        yaxis: {
-            title: {
-                text: data['units'],
-            },
-            autorange: true,
-            zeroline: false,
-            gridcolor: '#CCCCCC'
-        },
-        showlegend: true,
-        legend: {
-            orientation: 'h',
-            xanchor: 'center',
-            x: 0.5,
-            font: {
-                size: 15,
-            }
-        },
-        title: {
-            text: data['month_period_title'] + ' ' + data['gui_link_title'],
-            font: {
-                size: 20,
-            }
-        }
-    };
-    Plotly.newPlot('container_aggregate_tester', getAggregatePlotlySeries(datum), layout, {
-        displaylogo: false,
-        modeBarButtons: buildModeBarButtons('container_aggregate_tester'),
-        scrollZoom: true,
-        responsive: true,
-    });
-    $("#container_aggregate_tester").mousedown((ev) => {
-        if (ev.which === 3) {
-            openContextMenu('#container_aggregate_tester', ev, plotlyAggregateCopyToClipboard, plotlyExportFunction(document.getElementById("container_aggregate_tester")));
-        }
-    })
+    FORMATTER = getD3Formatter(data['scenario_run_data'][0]['ts_list'][0]['monthly_filters'][0]['annual_filters'][0]['discrete_ts']);
+    var datum = data['scenario_run_data'];
+    var layout = buildLayouts(datum, data['units'], data['gui_link_title']);
+    let plotlyAggregateSeries = getPlotlyAggregateSeries(datum);
+    plotData(layout, plotlyAggregateSeries);
 }
 
-function plotlyAggregateCopyToClipboard() {
+function buildLayouts(datum, yaxis, title) {
+    let layoutList = [];
+    for (let i = 0; i < datum.length; i++) {
+        let tsList = datum[i]['ts_list'];
+        for (let j = 0; j < tsList.length; j++) {
+            let axis = 0;
+            let monthlyFilters = tsList[j]['monthly_filters'];
+            for (let k = 0; k < monthlyFilters.length; k++) {
+                let annualFilters = monthlyFilters[k]['annual_filters'];
+                for (let m = 0; m < annualFilters.length; m++) {
+                    let series = layoutList[axis];
+                    if (!series) {
+                        layoutList[axis] = {
+                            font: PLOTLY_FONT,
+                            yaxis: {
+                                title: {
+                                    text: yaxis,
+                                },
+                                tickformat: FORMATTER,
+                                gridcolor: '#CCCCCC',
+                                rangemode: 'tozero'
+                            },
+                            xaxis: {
+                                gridcolor: '#CCCCCC',
+                                tickformat: ',.0%',
+                                range: [1, 0],
+                            },
+                            showlegend: true,
+                            legend: {
+                                orientation: 'h',
+                                xanchor: 'center',
+                                x: 0.5,
+                                font: {
+                                    size: 10,
+                                }
+                            },
+                            title: {
+                                text: title + '<br>' + annualFilters[m]['annual_period'] + '<br>' + annualFilters[m]['month_period'],
+                                font: {
+                                    size: 20,
+                                }
+                            }
+                        };
+                    }
+                    axis++;
+                }
+            }
+        }
+    }
+    return layoutList;
+}
+
+function plotlyCopyToClipboard() {
     let plot = document.getElementById("container_aggregate_tester");
     let layout = plot.layout;
     let data1 = plot.data;

@@ -14,10 +14,9 @@ package gov.ca.water.eppt.nbui;
 import java.awt.BorderLayout;
 import javax.swing.*;
 
-import gov.ca.water.quickresults.ui.EpptPanel;
-import gov.ca.water.quickresults.ui.customresults.CustomResultsPanel;
 import gov.ca.water.quickresults.ui.dataanalysis.DataAnalysisListener;
 import gov.ca.water.quickresults.ui.dataanalysis.DataAnalysisPanel;
+import gov.ca.water.calgui.project.EpptConfigurationController;
 import org.openide.awt.ActionID;
 import org.openide.awt.ActionReference;
 import org.openide.awt.ActionReferences;
@@ -56,7 +55,8 @@ public final class DataAnalysisTopComponent extends EpptTopComponent
 	public DataAnalysisTopComponent()
 	{
 		setName("Data Analysis");
-		_dataAnalysisPanel = new DataAnalysisPanel();
+		EpptConfigurationController epptConfigurationController = EpptControllerProvider.getEpptConfigurationController();
+		_dataAnalysisPanel = new DataAnalysisPanel(epptConfigurationController);
 		DataAnalysisListener dataAnalysisListener = new DataAnalysisListener(_dataAnalysisPanel);
 		_dataAnalysisPanel.setActionListener(dataAnalysisListener);
 		JScrollPane scrollPane = new JScrollPane(_dataAnalysisPanel);
@@ -70,9 +70,4 @@ public final class DataAnalysisTopComponent extends EpptTopComponent
 		return _dataAnalysisPanel.getJavaHelpId();
 	}
 
-	@Override
-	Class<? extends EpptPanel> getEpptPanelClass()
-	{
-		return DataAnalysisPanel.class;
-	}
 }

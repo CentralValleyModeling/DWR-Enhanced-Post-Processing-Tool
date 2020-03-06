@@ -12,26 +12,23 @@
 
 package gov.ca.water.quickresults.ui.quickresults;
 
-import java.awt.HeadlessException;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.time.LocalDate;
-import java.time.YearMonth;
 import java.util.Collections;
-import java.util.List;
+import java.util.Optional;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.*;
 
 import gov.ca.water.calgui.bo.GUILinksAllModelsBO;
 import gov.ca.water.calgui.busservice.impl.GuiLinksSeedDataSvcImpl;
 import gov.ca.water.calgui.presentation.DisplayHelper;
+import gov.ca.water.calgui.presentation.plotly.EpptPlotException;
 import gov.ca.water.calgui.project.EpptScenarioRun;
 import gov.ca.water.calgui.project.PlotConfigurationState;
 import gov.ca.water.calgui.techservice.IDialogSvc;
-import gov.ca.water.calgui.techservice.IErrorHandlingSvc;
 import gov.ca.water.calgui.techservice.impl.DialogSvcImpl;
-import gov.ca.water.calgui.techservice.impl.ErrorHandlingSvcImpl;
-import gov.ca.water.quickresults.ui.projectconfig.ProjectConfigurationPanel;
-import org.apache.log4j.Logger;
+import gov.ca.water.calgui.project.EpptConfigurationController;
 
 /**
  * Company: Resource Management Associates
@@ -41,57 +38,52 @@ import org.apache.log4j.Logger;
  */
 class QuickResultsMouseListener extends MouseAdapter
 {
-	private static final Logger LOG = Logger.getLogger(QuickResultsMouseListener.class.getName());
-	private final IErrorHandlingSvc _errorHandlingSvc = new ErrorHandlingSvcImpl();
+	private static final Logger LOGGER = Logger.getLogger(QuickResultsMouseListener.class.getName());
 	private final IDialogSvc _dialogSvc = DialogSvcImpl.getDialogSvcInstance();
+	private final QuickResultsPanel _quickResultsPanel;
 	private final DisplayHelper _displayHelper;
+	private final EpptConfigurationController _epptConfigurationController;
 
-	public QuickResultsMouseListener(DisplayHelper displayHelper)
+	QuickResultsMouseListener(QuickResultsPanel quickResultsPanel, DisplayHelper displayHelper,
+							  EpptConfigurationController epptConfigurationController)
 	{
+		_quickResultsPanel = quickResultsPanel;
 		_displayHelper = displayHelper;
+		_epptConfigurationController = epptConfigurationController;
 	}
 
 	@Override
 	public void mouseClicked(MouseEvent e)
 	{
-		try
-		{
-			LOG.debug("mouseClicked");
-			JComponent component = (JComponent) e.getComponent();
-			String cName = component.getName();
+		JComponent component = (JComponent) e.getComponent();
+		String cName = component.getName();
 
-			if(!SwingUtilities.isRightMouseButton(e) && e.isControlDown() && cName.startsWith("ckbp"))
+		if(!SwingUtilities.isRightMouseButton(e) && e.isControlDown() && cName.startsWith("ckbp"))
+		{
+			// checkbox from quick results.
+			JCheckBox chk = (JCheckBox) component;
+			//This is to undo the click event action
+			chk.setSelected(!chk.isSelected());
+			Optional<EpptScenarioRun> baseScenario = _epptConfigurationController.getEpptScenarioBase();
+			if(!baseScenario.isPresent())
 			{
-				// checkbox from quick results.
-				JCheckBox chk = (JCheckBox) component;
-				//This is to undo the click event action
-				chk.setSelected(!chk.isSelected());
-				List<EpptScenarioRun> alternatives = ProjectConfigurationPanel.getProjectConfigurationPanel().getEpptScenarioAlternatives();
-				EpptScenarioRun baseScenario = ProjectConfigurationPanel.getProjectConfigurationPanel().getBaseScenario();
-				if(baseScenario == null)
+				_dialogSvc.getOK("Error - No Base Scenario defined", JOptionPane.ERROR_MESSAGE);
+			}
+			else
+			{
+				try
 				{
-					_dialogSvc.getOK("Error - No Base Scenario defined", JOptionPane.ERROR_MESSAGE);
-				}
-				else
-				{
-					ProjectConfigurationPanel projectConfigurationPanel = ProjectConfigurationPanel.getProjectConfigurationPanel();
-					PlotConfigurationState plotConfigurationState = projectConfigurationPanel.plotConfigurationState();
-					YearMonth startMonth = projectConfigurationPanel.getStartMonth();
-					YearMonth endMonth = projectConfigurationPanel.getEndMonth();
+					PlotConfigurationState plotConfigurationState = new PlotConfigurationStateBuilder(_quickResultsPanel.getSwingEngine())
+							.createPlotConfigurationState();
 					String name = chk.getName();
 					GUILinksAllModelsBO guiLink = GuiLinksSeedDataSvcImpl.getSeedDataSvcImplInstance().getGuiLink(name);
-					LocalDate start = LocalDate.of(startMonth.getYear(), startMonth.getMonth(), 1).minusDays(2);
-					LocalDate end = LocalDate.of(endMonth.getYear(), endMonth.getMonth(), 1).plusMonths(1).plusDays(2);
-					_displayHelper.showDisplayFramesGuiLink(plotConfigurationState, Collections.singletonList(guiLink), baseScenario, alternatives,
-							start, end);
+					_displayHelper.showDisplayFramesGuiLink(plotConfigurationState, Collections.singletonList(guiLink));
+				}
+				catch(EpptPlotException ex)
+				{
+					LOGGER.log(Level.SEVERE, "Unable to plot Quick Results: " + chk.getText(), ex);
 				}
 			}
-		}
-		catch(HeadlessException ex)
-		{
-			LOG.error(ex.getMessage(), ex);
-			String messageText = "Unable to initialize mouse listeners.";
-			_errorHandlingSvc.businessErrorHandler(messageText, ex);
 		}
 	}
 }

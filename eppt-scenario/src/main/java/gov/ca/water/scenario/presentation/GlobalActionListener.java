@@ -54,7 +54,6 @@ import gov.ca.water.calgui.techservice.IErrorHandlingSvc;
 import gov.ca.water.calgui.techservice.impl.AuditSvcImpl;
 import gov.ca.water.calgui.techservice.impl.DialogSvcImpl;
 import gov.ca.water.calgui.techservice.impl.ErrorHandlingSvcImpl;
-import gov.ca.water.quickresults.ui.projectconfig.ProjectConfigurationPanel;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.log4j.Logger;
 import org.swixml.SwingEngine;
@@ -324,15 +323,8 @@ public class GlobalActionListener implements ActionListener
 
 	private void compareScenarios()
 	{
-		ProjectConfigurationPanel projectConfigurationPanel = ProjectConfigurationPanel.getProjectConfigurationPanel();
 		IScenarioDele scenarioDele = new ScenarioDeleImp();
 		List<String> fileNames = new ArrayList<>();
-		//		for(int i = 0; i < projectConfigurationPanel.getScenarios().size(); i++)
-		//		{
-		//			String name = Paths.get(projectConfigurationPanel.getScenarios().get(i).toString())
-		//							   .getFileName().toString();
-		//			fileNames.add(name.substring(0, name.length() - 7) + Constant.CLS_EXT);
-		//		}
 		try
 		{
 			List<DataTableModel> dtmList = scenarioDele.getScenarioTableData(fileNames, _swingEngine);

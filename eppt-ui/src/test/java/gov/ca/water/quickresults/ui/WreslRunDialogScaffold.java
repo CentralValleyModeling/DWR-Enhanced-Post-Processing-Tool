@@ -26,6 +26,7 @@ import gov.ca.water.calgui.busservice.impl.WaterYearDefinitionSvc;
 import gov.ca.water.calgui.project.EpptDssContainer;
 import gov.ca.water.calgui.project.EpptScenarioRun;
 import gov.ca.water.calgui.project.NamedDssPath;
+import gov.ca.water.calgui.project.EpptConfigurationController;
 import org.junit.jupiter.api.Assertions;
 
 import hec.heclib.dss.HecDSSFileAccess;
@@ -75,7 +76,8 @@ public class WreslRunDialogScaffold
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		SwingUtilities.invokeLater(()->
 		{
-			WreslRunDialog wreslRunDialog = new WreslRunDialog(frame);
+			EpptConfigurationController epptConfigurationController = new EpptConfigurationController();
+			WreslRunDialog wreslRunDialog = new WreslRunDialog(frame, epptConfigurationController);
 			wreslRunDialog.buildScenarioPanel(scenarioRuns);
 			wreslRunDialog.setModal(true);
 			wreslRunDialog.setVisible(true);

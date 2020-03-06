@@ -21,6 +21,7 @@ import gov.ca.water.calgui.presentation.JavaFxChartsPane;
 import javafx.application.Platform;
 import javafx.embed.swing.JFXPanel;
 import javafx.scene.Scene;
+import javafx.scene.layout.BorderPane;
 
 /**
  * Company: Resource Management Associates
@@ -28,7 +29,7 @@ import javafx.scene.Scene;
  * @author <a href="mailto:adam@rmanet.com">Adam Korynta</a>
  * @since 01-14-2020
  */
-public abstract class PlotlyPane extends JFXPanel
+abstract class PlotlyPane extends JFXPanel
 {
 	private JavaFxChartsPane _javaFxChartsPane;
 
@@ -38,9 +39,11 @@ public abstract class PlotlyPane extends JFXPanel
 		Platform.setImplicitExit(false);
 		Platform.runLater(() ->
 		{
+			BorderPane borderPane = new BorderPane();
 			_javaFxChartsPane = new JavaFxChartsPane(Paths.get(Constant.CONFIG_DIR).resolve("plots").resolve(getHtmlPath()),
 					"plot(" + epptReportingComputedSet.toJson() + ");");
-			setScene(new Scene(_javaFxChartsPane));
+			borderPane.setCenter(_javaFxChartsPane);
+			setScene(new Scene(borderPane));
 		});
 	}
 

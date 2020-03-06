@@ -12,15 +12,10 @@
 
 package gov.ca.water.quickresults.ui.projectconfig.scenariotable;
 
-import java.nio.file.Path;
-import java.util.Hashtable;
-import java.util.List;
+import java.util.Collections;
 import java.util.Objects;
-import java.util.Vector;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import calsim.app.AppUtils;
 import gov.ca.water.calgui.bo.GUILinksAllModelsBO;
 import gov.ca.water.calgui.project.EpptDssContainer;
 import gov.ca.water.calgui.project.EpptScenarioRun;
@@ -29,10 +24,7 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ObservableValue;
 import javafx.scene.Node;
 import javafx.scene.shape.Rectangle;
-import vista.set.Pathname;
 
-import hec.heclib.dss.HecDataManager;
-import hec.heclib.dss.HecDss;
 import com.rma.javafx.treetable.columns.specs.TreeTableColumnSpec;
 
 import static gov.ca.water.quickresults.ui.projectconfig.scenariotable.ScenarioTableModel.ALTERNATIVE_COL_SPEC;
@@ -43,7 +35,6 @@ import static gov.ca.water.quickresults.ui.projectconfig.scenariotable.ScenarioT
 import static gov.ca.water.quickresults.ui.projectconfig.scenariotable.ScenarioTableModel.OUTPUT_PATH_COL_SPEC;
 import static gov.ca.water.quickresults.ui.projectconfig.scenariotable.ScenarioTableModel.WATER_YEAR_PATH_COL_SPEC;
 import static gov.ca.water.quickresults.ui.projectconfig.scenariotable.ScenarioTableModel.WRESL_MAIN_COL_SPEC;
-import static java.util.stream.Collectors.toList;
 
 /**
  * Company: Resource Management Associates
@@ -51,9 +42,8 @@ import static java.util.stream.Collectors.toList;
  * @author <a href="mailto:adam@rmanet.com">Adam Korynta</a>
  * @since 05-07-2019
  */
-class ScenarioRowModel extends ParentRowModel
+class ScenarioRowModel extends ScenarioTableRowModel
 {
-	private static final Logger LOGGER = Logger.getLogger(ScenarioRowModel.class.getName());
 	private final EpptScenarioRun _scenarioRun;
 	private final SimpleObjectProperty<Boolean> _baseProperty;
 	private final SimpleObjectProperty<Boolean> _alternativeProperty;
@@ -84,7 +74,7 @@ class ScenarioRowModel extends ParentRowModel
 			modified.run();
 			if(n)
 			{
-				ScenarioProjectUpdater.updateWithAllDssFiles();
+				ScenarioProjectUpdater.updateWithAllDssFiles(Collections.singletonList(scenarioRun));
 			}
 		});
 		_alternativeProperty = new SimpleObjectProperty<>(scenarioRun.isAltSelected());

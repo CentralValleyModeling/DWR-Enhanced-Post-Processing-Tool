@@ -26,13 +26,37 @@ import java.util.Map;
  */
 public class WaterYearPeriodRangesFilter implements PeriodFilter
 {
+	private final String _name;
 	private final List<WaterYearPeriodRange> _waterYearPeriodRanges;
 	private final WaterYearDefinition _waterYearDefinition;
 
-	public WaterYearPeriodRangesFilter(List<WaterYearPeriodRange> waterYearPeriodRanges, WaterYearDefinition waterYearDefinition)
+	public WaterYearPeriodRangesFilter(String name, List<WaterYearPeriodRange> waterYearPeriodRanges, WaterYearDefinition waterYearDefinition)
 	{
+		_name = name;
 		_waterYearPeriodRanges = waterYearPeriodRanges;
 		_waterYearDefinition = waterYearDefinition;
+	}
+
+	public String getName()
+	{
+		return _name;
+	}
+
+	public boolean testAnnual(Map.Entry<Integer, Double> input)
+	{
+		boolean retval = false;
+		Integer key = input.getKey();
+		for(WaterYearPeriodRange range : _waterYearPeriodRanges)
+		{
+			int start = range.getStartYear().getYear();
+			int end = range.getEndYear().getYear();
+			retval = key >= start && key <= end;
+			if(retval)
+			{
+				break;
+			}
+		}
+		return retval;
 	}
 
 	@Override
@@ -55,4 +79,5 @@ public class WaterYearPeriodRangesFilter implements PeriodFilter
 		}
 		return retval;
 	}
+
 }

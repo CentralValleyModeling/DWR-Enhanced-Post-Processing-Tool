@@ -22,8 +22,6 @@ import java.util.logging.Logger;
 import javax.swing.*;
 
 import gov.ca.water.calgui.EpptInitializationException;
-import gov.ca.water.quickresults.ui.EpptPanel;
-import gov.ca.water.quickresults.ui.projectconfig.ProjectConfigurationPanel;
 import org.openide.windows.Mode;
 import org.openide.windows.TopComponent;
 import org.openide.windows.WindowManager;
@@ -103,13 +101,4 @@ public abstract class EpptTopComponent extends TopComponent
 		}
 		return epptHelpTopComponent;
 	}
-
-	@Override
-	protected final void componentActivated()
-	{
-		super.componentActivated();
-		ProjectConfigurationPanel.getProjectConfigurationPanel().topComponentActivated(getEpptPanelClass());
-	}
-
-	abstract Class<? extends EpptPanel> getEpptPanelClass();
 }

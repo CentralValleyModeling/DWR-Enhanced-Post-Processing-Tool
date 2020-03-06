@@ -12,13 +12,10 @@
 
 package gov.ca.water.calgui.project;
 
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import org.jfree.data.time.Month;
 
 /**
  * Company: Resource Management Associates
@@ -29,31 +26,31 @@ import org.jfree.data.time.Month;
 public class EpptProject
 {
 	private final List<EpptScenarioRun> _scenarioRuns;
-	private final int _startMonth;
-	private final int _endMonth;
+	private final int _startYear;
+	private final int _endYear;
 	private final Map<String, Boolean> _selectedComponents;
 	private String _description;
 	private String _name;
 
-	public EpptProject(String name, String description, List<EpptScenarioRun> scenarioRuns, int startMonth,
-					   int endMonth, Map<String, Boolean> selectedComponents)
+	public EpptProject(String name, String description, List<EpptScenarioRun> scenarioRuns, int startYear,
+					   int endYear, Map<String, Boolean> selectedComponents)
 	{
 		_name = name;
 		_description = description;
 		_scenarioRuns = scenarioRuns;
-		_startMonth = startMonth;
-		_endMonth = endMonth;
+		_startYear = startYear;
+		_endYear = endYear;
 		_selectedComponents = new HashMap<>(selectedComponents);
 	}
 
 	public int getStartYear()
 	{
-		return _startMonth;
+		return _startYear;
 	}
 
 	public int getEndYear()
 	{
-		return _endMonth;
+		return _endYear;
 	}
 
 	public Map<String, Boolean> getSelectedComponents()
