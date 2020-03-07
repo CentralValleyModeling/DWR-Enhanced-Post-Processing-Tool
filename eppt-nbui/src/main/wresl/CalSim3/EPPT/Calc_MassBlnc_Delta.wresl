@@ -120,7 +120,7 @@ define SG199_MOK004_30_ { alias SG199_MOK004_30 kind 'DTS-DELTA-MB-VALUE' units 
 define SG198_MOK004_30_ { alias SG198_MOK004_30 kind 'DTS-DELTA-MB-VALUE' units 'TAF' }
 define SAC_RVR_HOOD_ { alias C_SAC041 kind 'DTS-DELTA-MB-VALUE' units 'TAF' }
 !define CACHE_SL_ {alias CACHE_SL kind 'DTS-DELTA-MB-VALUE' units 'TAF'}
-define YOLO_BYPASS_ { alias YOLO_BYPASS kind 'DTS-DELTA-MB-VALUE' units 'TAF' }NOD_PMP
+define YOLO_BYPASS_ { alias YOLO_BYPASS kind 'DTS-DELTA-MB-VALUE' units 'TAF' }
 
 define MOKELUM_RVR_ { alias MOKELUM_RVR kind 'DTS-DELTA-MB-VALUE' units 'TAF' }
 define SAN_JOAQ_RVR_ { alias SAN_JOAQ_RVR kind 'DTS-DELTA-MB-VALUE' units 'TAF' }
@@ -157,10 +157,12 @@ define DELTA_OUTFLOW_ {alias DELTA_OUTFLOW kind 'DTS-DELTA-MB-VALUE' units 'TAF'
 !************************************** Delta mass balance **************************************
 
 define DELTA_MB {value DELTA_INFLOW - DELTA_OUTFLOW}
+define DELTA_OUTFLOW_EXPORT {value DELTA_OUTFLOW}
 
 define CCWD_      {alias CCWD kind 'DTS-DELTA-MB-VALUE' units 'TAF' }
 !define Net_DICU_  {alias Net_DICU kind 'DTS-DELTA-MB-VALUE' units 'TAF' }
 define DELTA_MB_ { alias  DELTA_MB  kind 'DTS-DELTA-MB-VALUE' units 'TAF' }
+define DELTA_OUTFLOW_EXPORT_ { alias  DELTA_OUTFLOW_EXPORT  kind 'DTS-DELTA-MB-VALUE' units 'TAF' }
 
 !************************************** Mass balance Check **************************************	
 
