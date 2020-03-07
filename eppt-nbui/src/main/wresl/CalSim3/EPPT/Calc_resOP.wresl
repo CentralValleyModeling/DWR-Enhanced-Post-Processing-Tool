@@ -49,12 +49,12 @@ define TRINITY_DPL_CHECK {
 
 !Evaluates whether the reservoir operations are controlled by flood control
 !Calculated by comparing the storage to Level 4 storage-level
-/*define TRINITY_FLD_CHECK {
+define TRINITY_FLD_CHECK {
 	case atSTANDARD		{condition abs(TRINITY_STRG - TRINITY_LEVEL_FLD)	<= abs_threshold	value EQ}
 	case aboveSTANDARD	{condition (TRINITY_STRG - TRINITY_LEVEL_FLD)		> abs_threshold		value GT}
 	case belowSTANDARD	{condition (TRINITY_STRG - TRINITY_LEVEL_FLD)		< -1*abs_threshold	value LT}
 	case UNEXPECTED    	{condition always														value UE}
-}*/
+}
 !Evaluates whether the reservoir operations are controlled by downstream minimum flow requirements
 !Calculated by comparing the downstream channel flows to minimum flow requirements
 !Reservoir operations are assumed to be controlled by the minimum downstream flow requirements if the channel flow are at or below the standard
@@ -314,12 +314,12 @@ define SANLUIS_CVP_RC_CHECK {
 
 !Evaluates whether the reservoir operations are generating non-recoverable spill
 !Calculated by looking for spill flows above zero
-/*define SANLUIS_CVP_SPL_CHECK {
+define SANLUIS_CVP_SPL_CHECK {
 	case atSTANDARD		{condition abs(SANLUIS_CVP_NR_SPILL - 0)	<= abs_threshold	value EQ}
 	case aboveSTANDARD	{condition (SANLUIS_CVP_NR_SPILL - 0)		> abs_threshold		value GT}
 	case belowSTANDARD	{condition (SANLUIS_CVP_NR_SPILL - 0)		< -1*abs_threshold	value LT}
 	case UNEXPECTED    	{condition always												value UE}
-}*/
+}
 /********************** SAN LUIS - SWP *************************/ 
 !Change in monthly storage
 !Calculated by comparing current month's storage to previous month's storage
@@ -354,12 +354,12 @@ define SANLUIS_SWP_RC_CHECK {
 
 !Evaluates whether the reservoir operations are generating non-recoverable spill
 !Calculated by looking for spill flows above zero
-/*define SANLUIS_SWP_SPL_CHECK {
+define SANLUIS_SWP_SPL_CHECK {
 	case atSTANDARD		{condition abs(SANLUIS_SWP_NR_SPILL - 0)	<= abs_threshold	value EQ}
 	case aboveSTANDARD	{condition (SANLUIS_SWP_NR_SPILL - 0)		> abs_threshold		value GT}
 	case belowSTANDARD	{condition (SANLUIS_SWP_NR_SPILL - 0)		< -1*abs_threshold	value LT}
 	case UNEXPECTED    	{condition always												value UE}
-}*/
+}
 define SANLUIS_TOT_STRG_CHNG {value SANLUIS_CVP_STRG_CHNG + SANLUIS_SWP_STRG_CHNG}
 /******************** CLEAR CREEK IMPORTS **********************/ 
 !Evaluates whether the Trinity Imports into the Sacramento Valley are controlled by Clear Creek tunnel capacity
@@ -391,7 +391,7 @@ define STRG_SWP_TOT_   {alias STRG_SWP_TOT kind 'DTS-RESOP-VALUE' units 'TAF' }
 define TRINITY_STRG_CHNG_ { alias TRINITY_STRG_CHNG kind 'DTS-RESOP-VALUE' units 'TAF' }
 define TRINITY_CAP_CHECK_ { alias TRINITY_CAP_CHECK kind 'DTS-RESOP-STATUS' units 'NONE' }
 define TRINITY_DPL_CHECK_ { alias TRINITY_DPL_CHECK kind 'DTS-RESOP-STATUS' units 'NONE' }
-!define TRINITY_FLD_CHECK_ { alias TRINITY_FLD_CHECK kind 'DTS-RESOP-STATUS' units 'NONE' }
+define TRINITY_FLD_CHECK_ { alias TRINITY_FLD_CHECK kind 'DTS-RESOP-STATUS' units 'NONE' }
 define TRINITY_MIF_CHECK_ { alias TRINITY_MIF_CHECK kind 'DTS-RESOP-STATUS' units 'NONE' }
 define TRINITY_RC_CHECK_ { alias TRINITY_RC_CHECK kind 'DTS-RESOP-STATUS' units 'NONE' }
 define TRINITY_SPL_CHECK_ { alias TRINITY_SPL_CHECK kind 'DTS-RESOP-STATUS' units 'NONE' }
@@ -425,13 +425,13 @@ define SANLUIS_CVP_STRG_CHNG_ { alias SANLUIS_CVP_STRG_CHNG kind 'DTS-RESOP-VALU
 define SANLUIS_CVP_CAP_CHECK_ { alias SANLUIS_CVP_CAP_CHECK kind 'DTS-RESOP-STATUS' units 'NONE' }
 define SANLUIS_CVP_DPL_CHECK_ { alias SANLUIS_CVP_DPL_CHECK kind 'DTS-RESOP-STATUS' units 'NONE' }
 define SANLUIS_CVP_RC_CHECK_ { alias SANLUIS_CVP_RC_CHECK kind 'DTS-RESOP-STATUS' units 'NONE' }
-!define SANLUIS_CVP_SPL_CHECK_ { alias SANLUIS_CVP_SPL_CHECK kind 'DTS-RESOP-STATUS' units 'NONE' }
+define SANLUIS_CVP_SPL_CHECK_ { alias SANLUIS_CVP_SPL_CHECK kind 'DTS-RESOP-STATUS' units 'NONE' }
 
 define SANLUIS_SWP_STRG_CHNG_ { alias SANLUIS_SWP_STRG_CHNG kind 'DTS-RESOP-VALUE' units 'TAF' }
 define SANLUIS_SWP_CAP_CHECK_ { alias SANLUIS_SWP_CAP_CHECK kind 'DTS-RESOP-STATUS' units 'NONE' }
 define SANLUIS_SWP_DPL_CHECK_ { alias SANLUIS_SWP_DPL_CHECK kind 'DTS-RESOP-STATUS' units 'NONE' }
 define SANLUIS_SWP_RC_CHECK_ { alias SANLUIS_SWP_RC_CHECK kind 'DTS-RESOP-STATUS' units 'NONE' }
-!define SANLUIS_SWP_SPL_CHECK_ { alias SANLUIS_SWP_SPL_CHECK kind 'DTS-RESOP-STATUS' units 'NONE' }
+define SANLUIS_SWP_SPL_CHECK_ { alias SANLUIS_SWP_SPL_CHECK kind 'DTS-RESOP-STATUS' units 'NONE' }
 define SANLUIS_TOT_STRG_CHNG_ { alias SANLUIS_TOT_STRG_CHNG kind 'DTS-RESOP-VALUE' units 'TAF' }
 
 define CLR_CRK_CAP_CHECK_ { alias CLR_CRK_CAP_CHECK kind 'DTS-RESOP-STATUS' units 'NONE' }
