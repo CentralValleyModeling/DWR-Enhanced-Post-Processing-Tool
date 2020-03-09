@@ -612,8 +612,8 @@ define C407_ANN_ { alias C407_ANN kind 'DTS-RESOP-INPUT' units 'TAF' }
 define DO_REQ_FLOW_OUT_ { alias DO_REQ_FLOW_OUT kind 'DTS-RESOP-INPUT' units 'TAF' }
 define NMFS_MaxExpdv_ { alias NMFS_MaxExpdv kind 'DTS-RESOP-INPUT' units 'TAF' }
 define NMFS_MaxExpDCCdv_ { alias NMFS_MaxExpDCCdv kind 'DTS-RESOP-INPUT' units 'TAF' }
-define NMFSdaysopentgdv { timeseries 'NMFSdaysopentgdv' kind 'DCC-DAYS-OPEN' units 'NONE'}
-define NMFSdaysopendv 	{ timeseries 'NMFSdaysopendv' kind 'DCC-DAYS-OPEN' units 'NONE'}
+define NMFSdaysopentgdv_ { alias NMFSdaysopentgdv kind 'DCC-DAYS-OPEN' units 'NONE'}
+define NMFSdaysopendv_ 	{ alias NMFSdaysopendv kind 'DCC-DAYS-OPEN' units 'NONE'}
 define EIEXPCTRL_ { alias EIEXPCTRL kind 'DTS-RESOP-INPUT' units 'TAF' }
 define BANKS_ { alias BANKS kind 'DTS-RESOP-INPUT' units 'TAF' }
 define JONES_ { alias JONES kind 'DTS-RESOP-INPUT' units 'TAF' }
