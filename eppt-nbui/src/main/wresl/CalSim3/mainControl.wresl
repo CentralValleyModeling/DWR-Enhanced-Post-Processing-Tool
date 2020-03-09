@@ -15,7 +15,7 @@ SEQUENCE CYCLE1 {
 MODEL QAQC_Post { 
 
 ! Selected the study type
-	define stdtype {select IValue from UserInit where index = 1}
+!	define stdtype {select IValue from UserInit where index = 1}
 
 ! Load definitions used in the post-processing script
 	INCLUDE [LOCAL]'EPPT\EPPTDefinitions.wresl'
@@ -33,9 +33,9 @@ MODEL QAQC_Post {
 	!If stdtype == 2 {
 	!INCLUDE [LOCAL]'EPPT\Input_CSII.wresl'
 	!}
-	!If stdtype == 3 {
+!	If stdtype == 3 {
 	INCLUDE [LOCAL]'EPPT\Input_CS3.wresl' !underreview - place holder
-	!}
+!	}
 ! Load NOD Upstream Minimum Instream Flows Module
 	INCLUDE [LOCAL]'EPPT\Calc_nodMIF.wresl'
 	
