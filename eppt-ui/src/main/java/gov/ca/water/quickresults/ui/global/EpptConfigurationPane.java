@@ -63,6 +63,8 @@ public class EpptConfigurationPane extends BorderPane
 		BorderPane borderPane = new BorderPane();
 		borderPane.setLeft(epptMonthlyPeriodPane);
 		borderPane.setCenter(epptAnnualPeriodPane);
+//		borderPane.setPrefHeight(320);
+		GridPane.setVgrow(borderPane, Priority.ALWAYS);
 		return borderPane;
 	}
 

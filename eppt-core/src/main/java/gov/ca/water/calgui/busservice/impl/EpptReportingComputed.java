@@ -81,7 +81,7 @@ public class EpptReportingComputed
 	{
 		JSONObject jsonObject = new JSONObject();
 		jsonObject.put(MONTH_PERIOD, _monthPeriod.getName());
-		jsonObject.put(ANNUAL_PERIOD, _waterYearPeriodRangesFilter.getName());
+		jsonObject.put(ANNUAL_PERIOD, _waterYearPeriodRangesFilter.getGroupName() + "<br>" + _waterYearPeriodRangesFilter.getName());
 		jsonObject.put(FULL_TIME_SERIES, buildTimeSeriesMap(_discreteSeries));
 		jsonObject.put(PERIOD_FILTERED_TIME_SERIES, buildYearMap(_aggregateSeries));
 		jsonObject.put(COMPUTED_STATISTICS, buildComputedStatisticsArray(_computedStatistics));

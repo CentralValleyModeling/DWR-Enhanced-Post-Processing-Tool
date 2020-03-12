@@ -15,7 +15,9 @@ package gov.ca.water.quickresults.ui.global;
 import java.awt.Frame;
 import java.lang.reflect.InvocationTargetException;
 import java.time.Month;
+import java.time.format.TextStyle;
 import java.util.List;
+import java.util.Locale;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -66,7 +68,8 @@ class EpptMonthlyPeriodPane extends TitledPane
 		@Override
 		public String toString()
 		{
-			return "Entire Period (" + super.toString() + ")";
+			return "Entire Period (" + getStart().getDisplayName(TextStyle.SHORT, Locale.getDefault()) + " - " +
+					getEnd().getDisplayName(TextStyle.SHORT, Locale.getDefault()) + ")";
 		}
 	};
 	private final ListView<PeriodItem> _seasonalPeriodListView = new ListView<>();
@@ -84,7 +87,8 @@ class EpptMonthlyPeriodPane extends TitledPane
 	private void addListeners()
 	{
 		_controller.waterYearDefinitionProperty().addListener((e, o, n) -> _seasonalPeriodListView.refresh());
-		_seasonalPeriodListView.getSelectionModel().selectedItemProperty().addListener((e,o,n)->_editButton.setDisable(n == null || !n._editable));
+		_seasonalPeriodListView.getSelectionModel().selectedItemProperty().addListener(
+				(e, o, n) -> _editButton.setDisable(n == null || !n._editable));
 	}
 
 	private void initComponents()
@@ -111,7 +115,7 @@ class EpptMonthlyPeriodPane extends TitledPane
 		flowPane.setAlignment(Pos.CENTER_RIGHT);
 		flowPane.setPrefWidth(140);
 		graphicPane.setRight(flowPane);
-		BorderPane.setMargin(seasonalLabel, new Insets(5));
+		BorderPane.setMargin(seasonalLabel, new Insets(2));
 		setGraphic(graphicPane);
 	}
 

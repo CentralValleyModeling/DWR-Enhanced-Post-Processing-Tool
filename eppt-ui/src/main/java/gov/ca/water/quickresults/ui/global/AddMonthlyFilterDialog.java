@@ -20,7 +20,6 @@ import java.awt.Frame;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
-import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
@@ -36,9 +35,6 @@ class AddMonthlyFilterDialog extends JDialog
 	private JButton _buttonOK;
 	private JButton _buttonCancel;
 	private JTextField _nameTextField;
-	private JRadioButton _singleMonthRadioButton;
-	private JRadioButton _seasonalPeriodRadioButton;
-	private JComboBox _singleMonthComboBox;
 	private JComboBox _seasonalPeriodStartCombobox;
 	private JComboBox _seasonalPeriodEndCombobox;
 	private boolean _canceled = true;
@@ -51,6 +47,7 @@ class AddMonthlyFilterDialog extends JDialog
 		setModal(true);
 		getRootPane().setDefaultButton(_buttonOK);
 		_buttonOK.addActionListener(e -> onOK());
+		getRootPane().setDefaultButton(_buttonOK);
 		_buttonCancel.addActionListener(e -> onCancel());
 		// call onCancel() when cross is clicked
 		setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
@@ -70,38 +67,16 @@ class AddMonthlyFilterDialog extends JDialog
 		setPreferredSize(new Dimension(550, 300));
 		setMinimumSize(new Dimension(550, 300));
 		setLocationRelativeTo(frame);
-		Arrays.asList(Month.values()).forEach(_singleMonthComboBox::addItem);
 		Arrays.asList(Month.values()).forEach(_seasonalPeriodStartCombobox::addItem);
 		Arrays.asList(Month.values()).forEach(_seasonalPeriodEndCombobox::addItem);
-		ButtonGroup buttonGroup = new ButtonGroup();
-		buttonGroup.add(_seasonalPeriodRadioButton);
-		buttonGroup.add(_singleMonthRadioButton);
-		_singleMonthRadioButton.addActionListener(e -> radioSelectionChanged(e));
-		_seasonalPeriodRadioButton.addActionListener(e -> radioSelectionChanged(e));
-	}
-
-	private void radioSelectionChanged(ActionEvent e)
-	{
-		_singleMonthComboBox.setEnabled(_singleMonthRadioButton.isSelected());
-		_seasonalPeriodStartCombobox.setEnabled(!_singleMonthRadioButton.isSelected());
-		_seasonalPeriodEndCombobox.setEnabled(!_singleMonthRadioButton.isSelected());
 	}
 
 	AddMonthlyFilterDialog(Frame frame, MonthPeriod selectedItem)
 	{
 		this(frame);
 		_nameTextField.setText(selectedItem.getName());
-		if(selectedItem.getStart() == selectedItem.getEnd())
-		{
-			_singleMonthRadioButton.setSelected(true);
-			_singleMonthComboBox.setSelectedItem(selectedItem.getStart());
-		}
-		else
-		{
-			_seasonalPeriodRadioButton.setSelected(true);
-			_seasonalPeriodStartCombobox.setSelectedItem(selectedItem.getStart());
-			_seasonalPeriodEndCombobox.setSelectedItem(selectedItem.getEnd());
-		}
+		_seasonalPeriodStartCombobox.setSelectedItem(selectedItem.getStart());
+		_seasonalPeriodEndCombobox.setSelectedItem(selectedItem.getEnd());
 	}
 
 	public boolean isCanceled()
@@ -129,26 +104,12 @@ class AddMonthlyFilterDialog extends JDialog
 
 	Month getStartMonth()
 	{
-		if(_singleMonthRadioButton.isSelected())
-		{
-			return (Month) _singleMonthComboBox.getSelectedItem();
-		}
-		else
-		{
-			return (Month) _seasonalPeriodStartCombobox.getSelectedItem();
-		}
+		return (Month) _seasonalPeriodStartCombobox.getSelectedItem();
 	}
 
 	Month getEndMonth()
 	{
-		if(_singleMonthRadioButton.isSelected())
-		{
-			return (Month) _singleMonthComboBox.getSelectedItem();
-		}
-		else
-		{
-			return (Month) _seasonalPeriodEndCombobox.getSelectedItem();
-		}
+		return (Month) _seasonalPeriodEndCombobox.getSelectedItem();
 	}
 
 	/**
@@ -225,35 +186,11 @@ class AddMonthlyFilterDialog extends JDialog
 		gbc.fill = GridBagConstraints.HORIZONTAL;
 		gbc.insets = new Insets(5, 5, 5, 5);
 		panel5.add(_nameTextField, gbc);
-		_singleMonthRadioButton = new JRadioButton();
-		_singleMonthRadioButton.setSelected(true);
-		_singleMonthRadioButton.setText("Single Month");
-		gbc = new GridBagConstraints();
-		gbc.gridx = 0;
-		gbc.gridy = 1;
-		gbc.anchor = GridBagConstraints.WEST;
-		gbc.insets = new Insets(5, 5, 5, 5);
-		panel5.add(_singleMonthRadioButton, gbc);
-		_seasonalPeriodRadioButton = new JRadioButton();
-		_seasonalPeriodRadioButton.setText("Seasonal Period");
-		gbc = new GridBagConstraints();
-		gbc.gridx = 0;
-		gbc.gridy = 2;
-		gbc.anchor = GridBagConstraints.WEST;
-		gbc.insets = new Insets(5, 5, 5, 5);
-		panel5.add(_seasonalPeriodRadioButton, gbc);
-		_singleMonthComboBox = new JComboBox();
-		gbc = new GridBagConstraints();
-		gbc.gridx = 1;
-		gbc.gridy = 1;
-		gbc.anchor = GridBagConstraints.WEST;
-		gbc.insets = new Insets(5, 5, 5, 5);
-		panel5.add(_singleMonthComboBox, gbc);
 		final JPanel panel6 = new JPanel();
 		panel6.setLayout(new GridBagLayout());
 		gbc = new GridBagConstraints();
 		gbc.gridx = 1;
-		gbc.gridy = 2;
+		gbc.gridy = 1;
 		gbc.anchor = GridBagConstraints.WEST;
 		gbc.fill = GridBagConstraints.VERTICAL;
 		gbc.insets = new Insets(5, 5, 5, 5);
@@ -285,6 +222,14 @@ class AddMonthlyFilterDialog extends JDialog
 		gbc.anchor = GridBagConstraints.WEST;
 		gbc.fill = GridBagConstraints.HORIZONTAL;
 		panel6.add(_seasonalPeriodEndCombobox, gbc);
+		final JLabel label3 = new JLabel();
+		label3.setText("Seasonal Period:");
+		gbc = new GridBagConstraints();
+		gbc.gridx = 0;
+		gbc.gridy = 1;
+		gbc.anchor = GridBagConstraints.WEST;
+		gbc.insets = new Insets(5, 5, 5, 5);
+		panel5.add(label3, gbc);
 	}
 
 	/**

@@ -69,7 +69,7 @@ class EpptStatisticsPane extends TitledPane
 		BorderPane borderPane = new BorderPane();
 		Label statisticLabel = new Label("Statistic");
 		borderPane.setLeft(statisticLabel);
-		BorderPane.setMargin(statisticLabel, new Insets(5));
+		BorderPane.setMargin(statisticLabel, new Insets(2));
 		setGraphic(borderPane);
 		setPrefHeight(300);
 	}

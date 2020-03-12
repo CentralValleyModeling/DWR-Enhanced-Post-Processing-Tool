@@ -472,47 +472,23 @@ public class QAQCReportPanel extends EpptPanel
 			EpptPreferences.setUsername(author);
 			String title = _reportTitle.getText();
 			String subtitle = _reportSubtitle.getText();
-			WaterYearPeriodRange longTermRange = getLongTermRange();
 			List<Map<EpptScenarioRun, WaterYearPeriodRangesFilter>> waterYearPeriodRanges = _epptConfigurationController.getWaterYearPeriodRanges();
 			PercentDiffStyle percentDiffStyle = (PercentDiffStyle) _percentDiffStyle.getSelectedItem();
-			WaterYearIndexAliasReader.WaterYearIndexAlias waterYearIndex = _epptConfigurationController.getWaterYearIndex();
-			Map<EpptScenarioRun, WaterYearIndex> waterYearIndecies = new HashMap<>();
-			if(_baseRun != null)
-			{
-				WaterYearIndex baseIndex = new WaterYearTableReader(_baseRun.getLookupDirectory())
-						.read()
-						.stream()
-						.filter(waterYearIndex::isAliasFor)
-						.findAny()
-						.orElseThrow(() -> new IllegalArgumentException("Water Year Index: " + waterYearIndex + " does not exist for: " + _baseRun));
-				waterYearIndecies.put(_baseRun, baseIndex);
-			}
-
-			if(_altRun != null)
-			{
-				WaterYearIndex altIndex = new WaterYearTableReader(_altRun.getLookupDirectory())
-						.read()
-						.stream()
-						.filter(waterYearIndex::isAliasFor)
-						.findAny()
-						.orElseThrow(() -> new IllegalArgumentException("Water Year Index: " + waterYearIndex + " does not exist for: " + _altRun));
-				waterYearIndecies.put(_altRun, altIndex);
-			}
 			List<String> disabledSummaryModules = getDisabledSummaryModules();
 			LocalDateTime start = LocalDateTime.of(_epptConfigurationController.getStartYear(),
 					_epptConfigurationController.getWaterYearDefinition().getStartMonth(), 1, 0, 0).minusDays(2);
 			LocalDateTime end = LocalDateTime.of(_epptConfigurationController.getEndYear(),
 					_epptConfigurationController.getWaterYearDefinition().getEndMonth(), 1, 0, 0).plusMonths(1).plusDays(2);
 			CommonPeriodFilter commonPeriodFilter = new CommonPeriodFilter(start, end);
-			SummaryReportParameters summaryReportParameters = new SummaryReportParameters(_waterYearDefinition, waterYearIndecies,
-					longTermRange, waterYearPeriodRanges, percentDiffStyle, disabledSummaryModules, commonPeriodFilter, new DssCache());
+			SummaryReportParameters summaryReportParameters = new SummaryReportParameters(_waterYearDefinition,
+					waterYearPeriodRanges, percentDiffStyle, disabledSummaryModules, commonPeriodFilter, new DssCache());
 			List<String> disabledReportModules = getDisabledReportModules();
 			ReportParameters reportParameters = new ReportParameters(tolerance, author, title, subtitle, summaryReportParameters,
 					disabledReportModules, true, true);
 			qaqcReportGenerator.generateQAQCReport(_baseRun, _altRun, reportParameters,
 					pathToWriteOut);
 		}
-		catch(QAQCReportException | RuntimeException | EpptReportException | EpptInitializationException e)
+		catch(QAQCReportException | RuntimeException | EpptReportException e)
 		{
 			if(e.getCause() instanceof InterruptedException)
 			{
@@ -566,14 +542,6 @@ public class QAQCReportPanel extends EpptPanel
 			LOGGER.log(Level.SEVERE, "Error reading summary modules", e);
 			return new ArrayList<>();
 		}
-	}
-
-	private WaterYearPeriodRange getLongTermRange()
-	{
-		WaterYearPeriod longTerm = new WaterYearPeriod("Long Term");
-		int startYear = _epptConfigurationController.getStartYear();
-		int endYear = _epptConfigurationController.getEndYear();
-		return new WaterYearPeriodRange(longTerm, new WaterYearType(startYear, longTerm), new WaterYearType(endYear, longTerm));
 	}
 
 	private void startProgress()

@@ -75,6 +75,16 @@ function buildLayouts(datum, yaxis, title) {
                 for (let m = 0; m < annualFilters.length; m++) {
                     let series = layoutList[axis];
                     if (!series) {
+                        let plotTitle = title;
+                        if (annualFilters[m]['annual_period']) {
+                            if (annualFilters[m]['annual_period'].indexOf('<br>') === annualFilters[m]['annual_period'].length - 4) {
+                                plotTitle += '<br>' + annualFilters[m]['annual_period'].replace("<br>", "");
+                            } else {
+                                plotTitle += '<br>' + annualFilters[m]['annual_period'].replace("<br>", " - ");
+                            }
+                        } else if (annualFilters[m]['month_period']) {
+                            plotTitle += '<br>' + annualFilters[m]['month_period'];
+                        }
                         layoutList[axis] = {
                             font: PLOTLY_FONT,
                             yaxis: {
@@ -100,10 +110,16 @@ function buildLayouts(datum, yaxis, title) {
                                 }
                             },
                             title: {
-                                text: title + '<br>' + annualFilters[m]['annual_period'] + '<br>' + annualFilters[m]['month_period'],
+                                text: plotTitle,
                                 font: {
                                     size: 20,
                                 }
+                            },
+                            margin: {
+                                l: 60,
+                                r: 40,
+                                b: 90,
+                                t: 120
                             }
                         };
                     }

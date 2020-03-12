@@ -79,6 +79,7 @@ function buildLayouts(datum, yaxis, title) {
                                 orientation: 'h',
                                 xanchor: 'center',
                                 x: 0.5,
+                                y: -0.2,
                                 font: {
                                     size: 10,
                                 }
@@ -89,7 +90,13 @@ function buildLayouts(datum, yaxis, title) {
                                     size: 20,
                                 }
                             },
-                            boxmode: 'group'
+                            boxmode: 'group',
+                            margin: {
+                                l: 60,
+                                r: 40,
+                                b: 90,
+                                t: 120
+                            }
                         };
                     }
                     axis++;

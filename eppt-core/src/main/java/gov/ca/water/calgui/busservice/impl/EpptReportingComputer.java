@@ -12,13 +12,10 @@
 
 package gov.ca.water.calgui.busservice.impl;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.Month;
 import java.time.YearMonth;
-import java.time.ZoneId;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.NavigableMap;
@@ -32,9 +29,7 @@ import gov.ca.water.calgui.project.EpptScenarioRun;
 import gov.ca.water.calgui.scripts.DssCache;
 import gov.ca.water.calgui.scripts.DssReader;
 
-import hec.heclib.util.HecTime;
 import hec.io.TimeSeriesContainer;
-import rma.util.RMAConst;
 
 import static java.util.stream.Collectors.toMap;
 
@@ -50,6 +45,9 @@ public final class EpptReportingComputer
 	private final MonthPeriod _monthPeriod;
 	private final Map<EpptScenarioRun, WaterYearPeriodRangesFilter> _waterYearPeriodRangesFilters;
 	private final WaterYearDefinition _waterYearDefinition;
+	private LocalDateTime _firstRecord;
+	private LocalDateTime _lastRecord;
+	private String _units = "";
 
 	private EpptReportingComputer(List<EpptStatistic> statistics, WaterYearDefinition waterYearDefinition, MonthPeriod monthPeriod,
 								  Map<EpptScenarioRun, WaterYearPeriodRangesFilter> waterYearPeriodRangesFilters)
@@ -66,6 +64,9 @@ public final class EpptReportingComputer
 															 List<Map<EpptScenarioRun, WaterYearPeriodRangesFilter>> waterYearPeriodRangesFilters,
 															 List<EpptStatistic> statistic)
 	{
+		LocalDateTime firstRecord = null;
+		LocalDateTime lastRecord = null;
+		String units = "";
 		List<EpptReportingComputedSet.EpptReportingScenarioComputed> trendReportingComputed = new ArrayList<>();
 
 		for(Map.Entry<EpptScenarioRun, List<TimeSeriesContainer>> data : scenarioRunData.entrySet())
@@ -82,6 +83,9 @@ public final class EpptReportingComputer
 						EpptReportingComputer trendReportingComputer = new EpptReportingComputer(statistic, waterYearDefinition, monthPeriod,
 								waterYearPeriodRangesFilter);
 						EpptReportingComputed compute = trendReportingComputer.compute(data.getKey(), ts, taf);
+						firstRecord = getMin(firstRecord, trendReportingComputer._firstRecord);
+						lastRecord = getMax(lastRecord, trendReportingComputer._lastRecord);
+						units = trendReportingComputer._units;
 						annualComputes.add(compute);
 					}
 					monthComputes.add(new EpptReportingComputedSet.EpptReportingMonthComputed(annualComputes));
@@ -95,7 +99,33 @@ public final class EpptReportingComputer
 			}
 			trendReportingComputed.add(new EpptReportingComputedSet.EpptReportingScenarioComputed(data.getKey(), tsComputes));
 		}
-		return new EpptReportingComputedSet(plotTitle, trendReportingComputed);
+		return new EpptReportingComputedSet(plotTitle, trendReportingComputed, units, firstRecord, lastRecord);
+	}
+
+	private static LocalDateTime getMin(LocalDateTime firstRecord, LocalDateTime firstRecordNew)
+	{
+		if(firstRecord == null)
+		{
+			return firstRecordNew;
+		}
+		else if(firstRecordNew != null)
+		{
+			return (firstRecordNew.isBefore(firstRecord)) ? firstRecordNew : firstRecord;
+		}
+		return firstRecord;
+	}
+
+	private static LocalDateTime getMax(LocalDateTime lastRecord, LocalDateTime lastRecordNew)
+	{
+		if(lastRecord == null)
+		{
+			return lastRecordNew;
+		}
+		else if(lastRecordNew != null)
+		{
+			return (lastRecordNew.isAfter(lastRecord)) ? lastRecordNew : lastRecord;
+		}
+		return lastRecord;
 	}
 
 	private EpptReportingComputed compute(EpptScenarioRun scenarioRun, TimeSeriesContainer primarySeries, boolean convertTaf)
@@ -116,9 +146,34 @@ public final class EpptReportingComputer
 																	  .filter(waterYearPeriodRangesFilter)
 																	  .collect(toMap(Map.Entry::getKey, Map.Entry::getValue,
 																			  (o1, o2) -> o1, TreeMap::new));
+		_units = dssReader.getUnits();
+		updateDateExtents(discreteSeries);
 		NavigableMap<Integer, Double> aggregateSeries = DssReader.filterPeriodYearly(discreteSeries, _monthPeriod, aggregateYearly);
 		List<EpptReportingComputedStatistics> computedStatistics = computeStatistics(discreteSeries, aggregateSeries);
 		return new EpptReportingComputed(_monthPeriod, waterYearPeriodRangesFilter, discreteSeries, aggregateSeries, computedStatistics);
+	}
+
+	private void updateDateExtents(NavigableMap<LocalDateTime, Double> discreteSeries)
+	{
+		if(!discreteSeries.isEmpty())
+		{
+			if(_firstRecord == null)
+			{
+				_firstRecord = discreteSeries.firstKey();
+			}
+			else
+			{
+				_firstRecord = (discreteSeries.firstKey().isBefore(_firstRecord)) ? discreteSeries.firstKey() : _firstRecord;
+			}
+			if(_lastRecord == null)
+			{
+				_lastRecord = discreteSeries.lastKey();
+			}
+			else
+			{
+				_lastRecord = (discreteSeries.lastKey().isAfter(_lastRecord)) ? discreteSeries.lastKey() : _lastRecord;
+			}
+		}
 	}
 
 	private List<EpptReportingComputedStatistics> computeStatistics(NavigableMap<LocalDateTime, Double> discreteSeries,
@@ -135,16 +190,6 @@ public final class EpptReportingComputer
 			}
 		}
 		return retval;
-	}
-
-	private String getUnits(TimeSeriesContainer tsc)
-	{
-		String units = "";
-		if(tsc != null)
-		{
-			units = tsc.getParameterName() + " (" + tsc.getUnits() + ")";
-		}
-		return units;
 	}
 
 	private boolean isAggregateYearly(boolean convertTaf, TimeSeriesContainer primarySeries)

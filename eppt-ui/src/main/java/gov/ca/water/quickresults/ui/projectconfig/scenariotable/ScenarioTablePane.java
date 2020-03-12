@@ -40,6 +40,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TitledPane;
 import javafx.scene.control.TreeItem;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.TilePane;
 import javafx.scene.layout.VBox;
 
@@ -85,7 +86,7 @@ public class ScenarioTablePane extends TitledPane
 		initComponents();
 		_controller.getScenarioRuns().forEach(this::addScenarioRun);
 		initListeners();
-		_treeTable.setPrefHeight(350);
+		_treeTable.setPrefHeight(250);
 	}
 
 	private void initListeners()
@@ -107,7 +108,7 @@ public class ScenarioTablePane extends TitledPane
 		BorderPane titleBorderPane = new BorderPane();
 		Label statisticLabel = new Label("Scenarios");
 		titleBorderPane.setLeft(statisticLabel);
-		BorderPane.setMargin(statisticLabel, new Insets(5));
+		BorderPane.setMargin(statisticLabel, new Insets(2));
 		setGraphic(titleBorderPane);
 		BorderPane borderPane = new BorderPane();
 		_addButton.setMaxWidth(Double.MAX_VALUE);
@@ -131,7 +132,7 @@ public class ScenarioTablePane extends TitledPane
 		BorderPane southernRegion = new BorderPane();
 		TilePane upDownPane = new TilePane(Orientation.HORIZONTAL, 5.0, 5.0, _upButton, _downButton);
 		upDownPane.setAlignment(Pos.CENTER_RIGHT);
-		VBox checkboxPane = new VBox(5.0, _differenceCheckbox, _tafCheckbox);
+		HBox checkboxPane = new HBox(5.0, _tafCheckbox, _differenceCheckbox);
 		southernRegion.setLeft(checkboxPane);
 		southernRegion.setRight(upDownPane);
 		borderPane.setBottom(southernRegion);

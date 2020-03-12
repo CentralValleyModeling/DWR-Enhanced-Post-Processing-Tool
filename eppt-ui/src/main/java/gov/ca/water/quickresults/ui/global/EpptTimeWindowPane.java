@@ -12,7 +12,6 @@
 
 package gov.ca.water.quickresults.ui.global;
 
-import com.sun.javafx.scene.control.skin.SpinnerSkin;
 import gov.ca.water.calgui.bo.WaterYearDefinition;
 import gov.ca.water.calgui.busservice.impl.WaterYearDefinitionSvc;
 import gov.ca.water.calgui.project.EpptConfigurationController;
@@ -20,6 +19,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
+import javafx.geometry.Orientation;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.Spinner;
@@ -28,7 +28,8 @@ import javafx.scene.control.TitledPane;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.GridPane;
+import javafx.scene.layout.FlowPane;
+import javafx.scene.layout.VBox;
 
 /**
  * Company: Resource Management Associates
@@ -80,23 +81,25 @@ class EpptTimeWindowPane extends TitledPane
 		BorderPane borderPane = new BorderPane();
 		Label statisticLabel = new Label("Time Window");
 		borderPane.setLeft(statisticLabel);
-		BorderPane.setMargin(statisticLabel, new Insets(5));
+		BorderPane.setMargin(statisticLabel, new Insets(2));
 		setGraphic(borderPane);
-		GridPane timeWindowControlsGrid = new GridPane();
-		timeWindowControlsGrid.setHgap(5);
-		timeWindowControlsGrid.setVgap(5);
-		timeWindowControlsGrid.add(new Label("Start Year: "), 0, 1);
-		timeWindowControlsGrid.add(new Label("End Year: "), 0, 2);
+		VBox timeWindowControlsGrid = new VBox(5);
+		FlowPane flowPane = new FlowPane(Orientation.HORIZONTAL, 5,5);
+		flowPane.getChildren().add(new Label("Start Year: "));
+		flowPane.getChildren().add(_startYearSpinner);
+		flowPane.getChildren().add(new Label("End Year: "));
+		flowPane.getChildren().add(_endYearSpinner);
+		timeWindowControlsGrid.getChildren().add(flowPane);
 		_startYearSpinner.setPrefWidth(70);
 		_startYearSpinner.setEditable(true);
-		timeWindowControlsGrid.add(_startYearSpinner, 1, 1);
 		_endYearSpinner.setPrefWidth(70);
 		_endYearSpinner.setEditable(true);
-		timeWindowControlsGrid.add(_endYearSpinner, 1, 2);
 		_waterYearDefinitionComboBox.getSelectionModel().select(0);
-		_waterYearDefinitionComboBox.setMaxWidth(Double.MAX_VALUE);
-		timeWindowControlsGrid.add(new Label("Water Year Definition: "), 0, 3);
-		timeWindowControlsGrid.add(_waterYearDefinitionComboBox, 1, 3);
+		FlowPane definitionFlowPane = new FlowPane(Orientation.HORIZONTAL, 5,5);
+		Label waterDefinitionLabel = new Label("Water Year Definition: ");
+		definitionFlowPane.getChildren().add(waterDefinitionLabel);
+		definitionFlowPane.getChildren().add(_waterYearDefinitionComboBox);
+		timeWindowControlsGrid.getChildren().add(definitionFlowPane);
 		setContent(timeWindowControlsGrid);
 	}
 
@@ -123,6 +126,13 @@ class EpptTimeWindowPane extends TitledPane
 			{
 				_component.fireEvent(new KeyEvent(event.getEventType(), event.getCharacter(), event.getText(), KeyCode.TAB, event.isShiftDown(),
 						event.isControlDown(), event.isAltDown(), event.isMetaDown()));
+			}
+			else if(key == KeyCode.TAB)
+			{
+				String text = _component.getEditor().getText();
+				SpinnerValueFactory<Integer> valueFactory = _component.getValueFactory();
+				Integer integer = valueFactory.getConverter().fromString(text);
+				valueFactory.setValue(integer);
 			}
 		}
 	}

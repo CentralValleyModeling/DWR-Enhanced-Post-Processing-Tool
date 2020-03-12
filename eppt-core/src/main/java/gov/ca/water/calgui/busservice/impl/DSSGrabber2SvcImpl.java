@@ -181,7 +181,7 @@ public class DSSGrabber2SvcImpl extends DSSGrabber1SvcImpl
 		{
 			LOGGER.log(Level.SEVERE, "Unable to get time-series.", ex);
 		}
-		return null;
+		return new TimeSeriesContainer[1];
 	}
 
 	public TimeSeriesContainer[] getMultipleTimeSeries(int mtsI)
@@ -224,7 +224,7 @@ public class DSSGrabber2SvcImpl extends DSSGrabber1SvcImpl
 		{
 			LOGGER.log(Level.SEVERE, "Unable to get time-series.", ex);
 		}
-		return null;
+		return new TimeSeriesContainer[1];
 	}
 
 	private Optional<TimeSeriesContainer> getMtsContainer(EpptScenarioRun epptScenarioRun, int mtsI)

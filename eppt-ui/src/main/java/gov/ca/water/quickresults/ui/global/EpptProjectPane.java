@@ -62,7 +62,7 @@ class EpptProjectPane extends TitledPane
 		BorderPane borderPane = new BorderPane();
 		Label statisticLabel = new Label("Project Info");
 		borderPane.setLeft(statisticLabel);
-		BorderPane.setMargin(statisticLabel, new Insets(5));
+		BorderPane.setMargin(statisticLabel, new Insets(2));
 		setGraphic(borderPane);
 		GridPane gridPane = new GridPane();
 		gridPane.setHgap(5.0);

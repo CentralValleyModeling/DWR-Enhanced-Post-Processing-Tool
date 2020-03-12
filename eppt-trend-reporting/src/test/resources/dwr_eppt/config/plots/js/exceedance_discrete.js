@@ -9,108 +9,114 @@
  *
  * GNU General Public License
  */
-function getDiscretePlotlySeries(datum) {
-    let series = [];
 
-    function plotSeries(allTimeSeries, lineName, lineColor, primary) {
-        for (let m = 0; m < allTimeSeries['full_time_series'].length; m++) {
-            let timeSeries = allTimeSeries['full_time_series'][m];
-            let dataOnly = [];
-            for (var j = 0; j < timeSeries.length; j++) {
-                dataOnly.push(timeSeries[j][1]);
+function getPlotlyAggregateSeries(datum) {
+    let seriesList = [];
+    for (let i = 0; i < datum.length; i++) {
+        let tsList = datum[i]['ts_list'];
+        for (let j = 0; j < tsList.length; j++) {
+            let axis = 0;
+            let monthlyFilters = tsList[j]['monthly_filters'];
+            for (let k = 0; k < monthlyFilters.length; k++) {
+                let annualFilters = monthlyFilters[k]['annual_filters'];
+                for (let m = 0; m < annualFilters.length; m++) {
+                    let timeSeries = annualFilters[m]['discrete_ts'];
+                    let x = [];
+                    let y = [];
+                    let dataOnly = [];
+                    for (let index = 0; index < timeSeries.length; index++) {
+                        dataOnly.push(timeSeries[index][1]);
+                    }
+                    dataOnly.sort((a, b) => a - b);
+                    for (let n = 0; n < dataOnly.length; n++) {
+                        let exceedance = 1 - ((n + 0.5) / dataOnly.length);
+                        x.push(exceedance);
+                        y.push(dataOnly[n]);
+                    }
+                    let series = seriesList[axis];
+                    if (!series) {
+                        series = [];
+                        seriesList.push(series);
+                    }
+                    series.push({
+                        name: tsList[j]['ts_name'],
+                        x: x,
+                        y: y,
+                        line: {
+                            color: datum[i]['scenario_color'],
+                            dash: PLOTLY_LINE_DASH_STYLES[j % PLOTLY_LINE_DASH_STYLES.length]
+                        }
+                    });
+                    axis++;
+                }
             }
-            dataOnly.sort((a, b) => a - b);
-            let xData = [];
-            let yData = [];
-            for (var k = 0; k < dataOnly.length; k++) {
-                let exceedance = 1 - ((k + 0.5) / dataOnly.length);
-                xData.push(exceedance);
-                yData.push(dataOnly[k]);
-            }
-            let dash;
-            if(primary){
-                dash = PLOTLY_LINE_DASH_STYLES[m % PLOTLY_LINE_DASH_STYLES.length];
-            }
-            else{
-                dash = PLOTLY_LINE_DASH_STYLES[1];
-            }
-            let name = lineName;
-            if(allTimeSeries['data_suffix'][m]){
-                name = " " + allTimeSeries['data_suffix'][m];
-            }
-            series.push({
-                x: xData,
-                y: yData,
-                marker: {
-                    color: lineColor
-                },
-                line: {
-                    dash: dash
-                },
-                name: name
-            });
         }
     }
-
-    for (var i = 0; i < datum.length; i++) {
-        let primarySeries = datum[i]['primary_data'];
-        let scenarioName = datum[i]['scenario_name'];
-        let lineColor = datum[i]['scenario_color'];
-        plotSeries(primarySeries, scenarioName, lineColor, true);
-        let secondarySeries = datum[i]['secondary_data'];
-        plotSeries(secondarySeries, scenarioName, lineColor, false);
-    }
-    return series;
+    return seriesList;
 }
 
 function plot(data) {
-    let units = data['scenario_run_data'][0]['primary_data']['units'][0];
-    let datum = data['scenario_run_data'];
-    var layout = {
-        font: PLOTLY_FONT,
-        xaxis: {
-            tickformat: ',.0%',
-            range: [1, 0],
-            zeroline: false,
-            gridcolor: '#CCCCCC'
-        },
-        yaxis: {
-            tickformat: ',.3r%',
-            title: {
-                text: units,
-            },
-            autorange: true,
-            zeroline: false,
-            gridcolor: '#CCCCCC'
-        },
-        showlegend: true,
-        legend: {
-            orientation: 'h',
-            xanchor: 'center',
-            x: 0.5
-        },
-        title: {
-            text: data['gui_link_title'],
-            font: {
-                size: 20,
-            }
-        }
-    };
-    Plotly.newPlot('container_discrete_tester', getDiscretePlotlySeries(datum), layout, {
-        displaylogo: false,
-        modeBarButtons: buildModeBarButtons("container_discrete_tester"),
-        scrollZoom: true,
-        responsive: true,
-    });
-    $("#container_discrete_tester").mousedown((ev) => {
-        if (ev.which === 3) {
-            openContextMenu('#container_discrete_tester', ev, plotlyDiscreteCopyToClipboard, plotlyExportFunction(document.getElementById("container_discrete_tester")));
-        }
-    })
+    FORMATTER = getD3Formatter(data['scenario_run_data'][0]['ts_list'][0]['monthly_filters'][0]['annual_filters'][0]['discrete_ts']);
+    var datum = data['scenario_run_data'];
+    var layout = buildLayouts(datum, data['units'], data['gui_link_title']);
+    let plotlyAggregateSeries = getPlotlyAggregateSeries(datum);
+    plotData(layout, plotlyAggregateSeries);
 }
 
-function plotlyDiscreteCopyToClipboard() {
-    let plot = document.getElementById("container_discrete_tester");
+function buildLayouts(datum, yaxis, title) {
+    let layoutList = [];
+    for (let i = 0; i < datum.length; i++) {
+        let tsList = datum[i]['ts_list'];
+        for (let j = 0; j < tsList.length; j++) {
+            let axis = 0;
+            let monthlyFilters = tsList[j]['monthly_filters'];
+            for (let k = 0; k < monthlyFilters.length; k++) {
+                let annualFilters = monthlyFilters[k]['annual_filters'];
+                for (let m = 0; m < annualFilters.length; m++) {
+                    let series = layoutList[axis];
+                    if (!series) {
+                        layoutList[axis] = {
+                            font: PLOTLY_FONT,
+                            yaxis: {
+                                title: {
+                                    text: yaxis,
+                                },
+                                tickformat: FORMATTER,
+                                gridcolor: '#CCCCCC',
+                                rangemode: 'tozero'
+                            },
+                            xaxis: {
+                                gridcolor: '#CCCCCC',
+                                tickformat: ',.0%',
+                                range: [1, 0],
+                            },
+                            showlegend: true,
+                            legend: {
+                                orientation: 'h',
+                                xanchor: 'center',
+                                x: 0.5,
+                                font: {
+                                    size: 10,
+                                }
+                            },
+                            title: {
+                                text: title + '<br>' + annualFilters[m]['annual_period'] + '<br>' + annualFilters[m]['month_period'],
+                                font: {
+                                    size: 20,
+                                }
+                            }
+                        };
+                    }
+                    axis++;
+                }
+            }
+        }
+    }
+    return layoutList;
+}
+
+function plotlyCopyToClipboard() {
+    let plot = document.getElementById("container_aggregate_tester");
     let layout = plot.layout;
     let data1 = plot.data;
     var text = layout['title']['text'] + '\n' + 'Percent\t' + layout['yaxis']['title']['text'] + '\n';

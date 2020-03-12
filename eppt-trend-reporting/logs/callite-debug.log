@@ -722,3 +722,18 @@ java.io.IOException: Resource could not be found ui/Project_Configuration.xml
 2020-02-27 09:03:34,611 [main] ERROR gov.ca.water.calgui.techservice.impl.FileSystemSvcImpl - File missing : C:\Git\DWR\EPPT\DWR-Enhanced-Post-Processing-Tool\eppt-trend-reporting\target\test-classes\dwr_eppt\config\MonthlyPeriodFilters.csv
 2020-02-27 09:04:22,173 [main] ERROR gov.ca.water.calgui.techservice.impl.FileSystemSvcImpl - File missing : C:\Git\DWR\EPPT\DWR-Enhanced-Post-Processing-Tool\eppt-trend-reporting\target\test-classes\dwr_eppt\config\MonthlyPeriodFilters.csv
 2020-02-27 09:05:09,976 [main] ERROR gov.ca.water.calgui.techservice.impl.FileSystemSvcImpl - File missing : C:\Git\DWR\EPPT\DWR-Enhanced-Post-Processing-Tool\eppt-trend-reporting\target\test-classes\dwr_eppt\config\AnnualPeriodFilters.csv
+2020-03-06 14:45:25,637 [main] ERROR gov.ca.water.calgui.techservice.impl.FileSystemSvcImpl - File missing : C:\Git\DWR\EPPT\DWR-Enhanced-Post-Processing-Tool\eppt-trend-reporting\target\test-classes\dwr_eppt\config\AnnualPeriodFilters.csv
+2020-03-06 14:45:55,240 [main] ERROR gov.ca.water.calgui.techservice.impl.FileSystemSvcImpl - File missing : C:\Git\DWR\EPPT\DWR-Enhanced-Post-Processing-Tool\eppt-trend-reporting\target\test-classes\dwr_eppt\config\AnnualPeriodFilters.csv
+2020-03-06 15:33:23,426 [main] ERROR gov.ca.water.calgui.techservice.impl.FileSystemSvcImpl - File missing : C:\Git\DWR\EPPT\DWR-Enhanced-Post-Processing-Tool\eppt-trend-reporting\dwr_eppt\config\GUILinks.csv
+2020-03-06 15:33:23,429 [main] ERROR gov.ca.water.calgui.busservice.impl.GuiLinksSeedDataSvcImpl - File missing : C:\Git\DWR\EPPT\DWR-Enhanced-Post-Processing-Tool\eppt-trend-reporting\dwr_eppt\config\GUILinks.csv
+gov.ca.water.calgui.bo.CalLiteGUIExceptionFatal: File missing : C:\Git\DWR\EPPT\DWR-Enhanced-Post-Processing-Tool\eppt-trend-reporting\dwr_eppt\config\GUILinks.csv
+	at gov.ca.water.calgui.techservice.impl.FileSystemSvcImpl.getFileData(FileSystemSvcImpl.java:77)
+	at gov.ca.water.calgui.techservice.impl.FileSystemSvcImpl.getFileData(FileSystemSvcImpl.java:92)
+	at gov.ca.water.calgui.busservice.impl.GuiLinksSeedDataSvcImpl.initGuiLinksAllModels(GuiLinksSeedDataSvcImpl.java:95)
+	at gov.ca.water.calgui.busservice.impl.GuiLinksSeedDataSvcImpl.<init>(GuiLinksSeedDataSvcImpl.java:54)
+	at gov.ca.water.calgui.busservice.impl.GuiLinksSeedDataSvcImpl.createSeedDataSvcImplInstance(GuiLinksSeedDataSvcImpl.java:85)
+	at gov.ca.water.trendreporting.TrendReportScaffold.initScaffold(TrendReportScaffold.java:74)
+	at gov.ca.water.trendreporting.TrendReportScaffold.main(TrendReportScaffold.java:197)
+Caused by: java.io.FileNotFoundException: File missing : C:\Git\DWR\EPPT\DWR-Enhanced-Post-Processing-Tool\eppt-trend-reporting\dwr_eppt\config\GUILinks.csv
+	at gov.ca.water.calgui.techservice.impl.FileSystemSvcImpl.getFileData(FileSystemSvcImpl.java:74)
+	... 6 more

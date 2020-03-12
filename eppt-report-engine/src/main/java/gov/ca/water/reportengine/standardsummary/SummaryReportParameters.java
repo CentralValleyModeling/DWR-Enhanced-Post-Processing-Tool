@@ -17,8 +17,10 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.NavigableMap;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
@@ -35,6 +37,8 @@ import gov.ca.water.reportengine.EpptReportException;
 
 import rma.util.TwoColorColorContour;
 
+import static java.util.stream.Collectors.toList;
+
 /**
  * Company: Resource Management Associates
  *
@@ -44,8 +48,6 @@ import rma.util.TwoColorColorContour;
 public class SummaryReportParameters
 {
 	private final WaterYearDefinition _waterYearDefinition;
-	private final Map<EpptScenarioRun, WaterYearIndex> _waterYearIndex;
-	private final WaterYearPeriodRange _longTermRange;
 	private final PercentDiffStyle _percentDiffStyle;
 	private final TwoColorColorContour _positiveContour;
 	private final TwoColorColorContour _negativeContour;
@@ -54,15 +56,13 @@ public class SummaryReportParameters
 	private final DssCache _dssCache;
 	private final List<Map<EpptScenarioRun, WaterYearPeriodRangesFilter>> _waterYearPeriodRanges;
 
-	public SummaryReportParameters(WaterYearDefinition waterYearDefinition, Map<EpptScenarioRun, WaterYearIndex> waterYearIndicies,
-								   WaterYearPeriodRange longTermRange,
-								   List<Map<EpptScenarioRun, WaterYearPeriodRangesFilter>> waterYearPeriodRanges, PercentDiffStyle percentDiffStyle,
-								   List<String> disabledSummaryModules, CommonPeriodFilter commonPeriodFilter, DssCache dssCache)
+	public SummaryReportParameters(WaterYearDefinition waterYearDefinition,
+								   List<Map<EpptScenarioRun, WaterYearPeriodRangesFilter>> waterYearPeriodRanges,
+								   PercentDiffStyle percentDiffStyle, List<String> disabledSummaryModules,
+								   CommonPeriodFilter commonPeriodFilter, DssCache dssCache)
 			throws EpptReportException
 	{
 		_waterYearDefinition = waterYearDefinition;
-		_waterYearIndex = waterYearIndicies;
-		_longTermRange = longTermRange;
 		_waterYearPeriodRanges = waterYearPeriodRanges;
 		_percentDiffStyle = percentDiffStyle;
 		_disabledSummaryModules = disabledSummaryModules;
@@ -117,25 +117,39 @@ public class SummaryReportParameters
 		return _waterYearPeriodRanges;
 	}
 
+	public List<WaterYearPeriodRangeGroup> getGroupedWaterYearPeriodRanges()
+	{
+		List<WaterYearPeriodRangeGroup> retval = new ArrayList<>();
+		List<String> groupNames = _waterYearPeriodRanges.stream()
+														.map(Map::values)
+														.filter(s -> !s.isEmpty())
+														.map(s -> s.iterator().next())
+														.map(WaterYearPeriodRangesFilter::getGroupName)
+														.distinct()
+														.collect(toList());
+		for(String group : groupNames)
+		{
+			List<Map<EpptScenarioRun, WaterYearPeriodRangesFilter>> filters = new ArrayList<>();
+			for(Map<EpptScenarioRun, WaterYearPeriodRangesFilter> filterMap : _waterYearPeriodRanges)
+			{
+				if(!filterMap.isEmpty() && filterMap.values().iterator().next().getGroupName().equals(group))
+				{
+					filters.add(filterMap);
+				}
+			}
+			retval.add(new WaterYearPeriodRangeGroup(group, filters));
+		}
+		return retval;
+	}
+
 	public WaterYearDefinition getWaterYearDefinition()
 	{
 		return _waterYearDefinition;
 	}
 
-	public WaterYearIndex getWaterYearIndex(EpptScenarioRun epptScenarioRun)
-	{
-		return _waterYearIndex.get(epptScenarioRun);
-	}
-
-	public WaterYearPeriodRange getLongTermRange()
-	{
-		return _longTermRange;
-	}
-
-
 	public List<String> getDisabledSummaryModules()
 	{
-return _disabledSummaryModules;
+		return _disabledSummaryModules;
 	}
 
 	public CommonPeriodFilter getCommonPeriodFilter()
@@ -146,5 +160,27 @@ return _disabledSummaryModules;
 	public DssCache getDssCache()
 	{
 		return _dssCache;
+	}
+
+	public static final class WaterYearPeriodRangeGroup
+	{
+		private final String _groupName;
+		private final List<Map<EpptScenarioRun, WaterYearPeriodRangesFilter>> _filters;
+
+		private WaterYearPeriodRangeGroup(String groupName, List<Map<EpptScenarioRun, WaterYearPeriodRangesFilter>> filters)
+		{
+			_groupName = groupName;
+			_filters = filters;
+		}
+
+		public List<Map<EpptScenarioRun, WaterYearPeriodRangesFilter>> getFilters()
+		{
+			return _filters;
+		}
+
+		public String getGroupName()
+		{
+			return _groupName;
+		}
 	}
 }

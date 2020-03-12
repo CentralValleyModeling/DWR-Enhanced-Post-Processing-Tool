@@ -130,14 +130,13 @@ public class TrendReportPanel extends JFXPanel
 		flowPane.alignmentProperty().set(Pos.TOP_CENTER);
 		_applyBtn = new Button("Refresh");
 		_applyBtn.setOnAction(e -> inputsChanged());
-		flowPane.getChildren().addAll(_parametersPane, _applyBtn);
+		flowPane.getChildren().addAll(buildToggleControls(),_parametersPane, _applyBtn);
 		return flowPane;
 	}
 
 	private BorderPane buildJavascriptPane()
 	{
 		BorderPane borderPane = new BorderPane();
-		borderPane.setTop(buildToggleControls());
 		borderPane.setCenter(_javascriptPane.getDashboardPane());
 		BorderPane.setMargin(borderPane, new Insets(5.0, 0, 0, 0));
 		return borderPane;
@@ -243,7 +242,9 @@ public class TrendReportPanel extends JFXPanel
 			}
 			else
 			{
-				LOGGER.log(Level.SEVERE, "Error plotting Trend Report", t);
+				String msg = "Error plotting Trend Report";
+				LOGGER.log(Level.SEVERE, msg, t);
+				_progressTextLabel.setText(msg);
 			}
 		}
 		if(jsonObjects != null)

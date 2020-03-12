@@ -25,7 +25,6 @@ import gov.ca.water.calgui.bo.AnnualPeriodFilter;
 import gov.ca.water.calgui.bo.CommonPeriodFilter;
 import gov.ca.water.calgui.bo.PeriodFilter;
 import gov.ca.water.calgui.bo.WaterYearDefinition;
-import gov.ca.water.calgui.bo.WaterYearIndex;
 import gov.ca.water.calgui.bo.WaterYearPeriodFilter;
 import gov.ca.water.calgui.bo.WaterYearPeriodRange;
 import gov.ca.water.calgui.bo.WaterYearPeriodRangeFilter;
@@ -46,7 +45,6 @@ import static java.util.stream.Collectors.toList;
 public class JythonValueGenerator
 {
 	private final PeriodFilter _periodFilter;
-	private final AnnualPeriodFilter _annualPeriodFilter;
 	private final EpptScenarioRun _scenarioRun;
 	private final JythonScript _function;
 	private final JythonScriptRunner _scriptRunner;
@@ -63,13 +61,6 @@ public class JythonValueGenerator
 		this(periodFilter, input -> true, base, function, commonPeriodFilter, waterYearDefinition, dssCache);
 	}
 
-	public JythonValueGenerator(EpptScenarioRun epptScenarioRun, String function, CommonPeriodFilter commonPeriodFilter,
-								WaterYearIndex waterYearIndex, WaterYearDefinition waterYearDefinition, DssCache dssCache)
-	{
-		this(epptScenarioRun, function, commonPeriodFilter, waterYearDefinition, dssCache);
-		_scriptRunner.setWaterYearIndex(waterYearIndex);
-	}
-
 	public JythonValueGenerator(EpptScenarioRun epptScenarioRun, String function,
 								CommonPeriodFilter commonPeriodFilter, int comparisonValue,
 								WaterYearDefinition waterYearDefinition, DssCache dssCache)
@@ -81,13 +72,12 @@ public class JythonValueGenerator
 	public JythonValueGenerator(PeriodFilter periodFilter, AnnualPeriodFilter annualPeriodFilter, EpptScenarioRun base, String function,
 								CommonPeriodFilter commonPeriodFilter, WaterYearDefinition waterYearDefinition, DssCache dssCache)
 	{
-		_annualPeriodFilter = annualPeriodFilter;
 		_scenarioRun = base;
 		_function = JythonScriptBuilder.getInstance().buildFunctionFromTemplate(function);
 		_periodFilter = periodFilter;
 		_scriptRunner = new JythonScriptRunner(_scenarioRun, commonPeriodFilter, waterYearDefinition, dssCache);
 		_scriptRunner.setPeriodFilter(_periodFilter);
-		_scriptRunner.setAnnualPeriodFilter(_annualPeriodFilter);
+		_scriptRunner.setAnnualPeriodFilter(annualPeriodFilter);
 		setWaterYearPeriodRange();
 	}
 
@@ -163,7 +153,6 @@ public class JythonValueGenerator
 		}
 	}
 
-	@SuppressWarnings("unchecked")
 	public long generateCount() throws EpptReportException, DssMissingRecordException
 	{
 		try

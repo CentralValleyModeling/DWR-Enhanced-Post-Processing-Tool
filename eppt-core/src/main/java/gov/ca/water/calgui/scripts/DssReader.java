@@ -197,9 +197,6 @@ public class DssReader
 			TimeSeriesContainer tsc = primarySeries[0];
 			if(tsc.times != null)
 			{
-				String units = tsc.getUnits();
-				LOGGER.at(Level.FINER).log("Timeseries %s units are %s", tsc.getShortName(), units);
-				_units = units;
 				Calendar calendar = Calendar.getInstance();
 				for(int i = 0; i < tsc.times.length; i++)
 				{
@@ -208,6 +205,9 @@ public class DssReader
 					hecTime.set(tsc.times[i], tsc.timeGranularitySeconds, tsc.julianBaseDate);
 					addValueToMap(retval, tsc, mapToTaf, calendar, value, hecTime);
 				}
+				String units = tsc.getUnits();
+				LOGGER.at(Level.FINER).log("Timeseries %s units are %s", tsc.getShortName(), units);
+				_units = units;
 			}
 		}
 		return retval;

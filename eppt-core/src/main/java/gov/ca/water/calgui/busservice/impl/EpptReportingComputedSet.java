@@ -12,6 +12,9 @@
 
 package gov.ca.water.calgui.busservice.impl;
 
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.List;
 
 import gov.ca.water.calgui.constant.Constant;
@@ -37,13 +40,23 @@ public final class EpptReportingComputedSet
 	private static final String TS_NAME = "ts_name";
 	private static final String DATA = "data";
 	private static final String SCENARIO_COLOR = "scenario_color";
+	private static final String UNITS = "units";
+	private static final String FIRST_RECORD = "first_record";
+	private static final String LAST_RECORD = "last_record";
 	private final List<EpptReportingScenarioComputed> _epptReportingComputed;
+	private final String _units;
+	private final LocalDateTime _firstRecord;
+	private final LocalDateTime _lastRecord;
 	private final String _plotTitle;
 
-	EpptReportingComputedSet(String plotTitle, List<EpptReportingScenarioComputed> epptReportingComputed)
+	EpptReportingComputedSet(String plotTitle, List<EpptReportingScenarioComputed> epptReportingComputed, String units, LocalDateTime firstRecord,
+							 LocalDateTime lastRecord)
 	{
 		_plotTitle = plotTitle;
 		_epptReportingComputed = epptReportingComputed;
+		_units = units;
+		_firstRecord = firstRecord;
+		_lastRecord = lastRecord;
 	}
 
 	public List<EpptReportingScenarioComputed> getEpptReportingComputed()
@@ -57,6 +70,11 @@ public final class EpptReportingComputedSet
 		JSONArray jsonArray = new JSONArray();
 		jsonObject.put(GUI_LINK_TITLE, _plotTitle);
 		jsonObject.put(SCENARIO_RUN_DATA, jsonArray);
+		jsonObject.put(UNITS, _units);
+		long firstRecord = ZonedDateTime.of(_firstRecord, ZoneId.systemDefault()).toInstant().toEpochMilli();
+		jsonObject.put(FIRST_RECORD, firstRecord);
+		long lastRecord = ZonedDateTime.of(_lastRecord, ZoneId.systemDefault()).toInstant().toEpochMilli();
+		jsonObject.put(LAST_RECORD, lastRecord);
 		_epptReportingComputed.stream()
 							  .map(EpptReportingScenarioComputed::toJson)
 							  .forEach(jsonArray::put);

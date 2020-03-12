@@ -24,11 +24,13 @@ import javax.swing.*;
 import calsim.app.DerivedTimeSeries;
 import calsim.app.MultipleTimeSeries;
 import gov.ca.water.calgui.bo.GUILinksAllModelsBO;
+import gov.ca.water.calgui.busservice.impl.DSSGrabber1SvcImpl;
 import gov.ca.water.calgui.busservice.impl.DSSGrabber2SvcImpl;
 import gov.ca.water.calgui.project.EpptConfigurationController;
 import gov.ca.water.calgui.project.EpptScenarioRun;
 import gov.ca.water.calgui.project.PlotConfigurationState;
 import gov.ca.water.calgui.techservice.IErrorHandlingSvc;
+import gov.ca.water.calgui.techservice.impl.DialogSvcImpl;
 import gov.ca.water.calgui.techservice.impl.ErrorHandlingSvcImpl;
 
 import hec.io.TimeSeriesContainer;
@@ -60,30 +62,35 @@ class DisplayWRIMSFrames extends DisplayFrames
 		Optional<EpptScenarioRun> baseRun = getBaseRun();
 		if(baseRun.isPresent())
 		{
-			DSSGrabber2SvcImpl dssGrabber = new DSSGrabber2SvcImpl(_dts, _mts);
-			JTabbedPane tabbedPane = new JTabbedPane();
-			dssGrabber.setIsCFS(!getEpptConfigurationController().isTaf());
-			dssGrabber.setScenarioRuns(baseRun.get(), getAlternatives());
-			dssGrabber.setDateRange(getStart(), getEnd());
-			List<EpptScenarioRun> scenarioRuns = new ArrayList<>();
-			scenarioRuns.add(baseRun.get());
-			scenarioRuns.addAll(getAlternatives());
-			if(_mts != null)
+			Optional<String> error = getError();
+			if(error.isPresent())
 			{
-				tabbedPane.setName(_mts.getName());
-				plotMts(scenarioRuns, _mts, dssGrabber, tabbedPane);
+				DialogSvcImpl.getDialogSvcInstance().getOK("Unable to generate plots - " + error.get(), JOptionPane.WARNING_MESSAGE);
 			}
-			if(_dts != null)
+			else
 			{
-				tabbedPane.setName(_dts.getName());
-				plotDts(scenarioRuns, _dts, dssGrabber, tabbedPane);
+				JTabbedPane tabbedPane = new JTabbedPane();
+				List<EpptScenarioRun> scenarioRuns = new ArrayList<>();
+				scenarioRuns.add(baseRun.get());
+				scenarioRuns.addAll(getAlternatives());
+				if(_mts != null)
+				{
+					tabbedPane.setName(_mts.getName());
+					plotMts(scenarioRuns, _mts, tabbedPane);
+				}
+				if(_dts != null)
+				{
+					tabbedPane.setName(_dts.getName());
+					plotDts(scenarioRuns, _dts, tabbedPane);
+				}
+				DSSGrabber2SvcImpl dssGrabber = buildDssGrabber(baseRun.get());
+				Map<GUILinksAllModelsBO.Model, List<String>> missing = dssGrabber.getMissingList();
+				if(!missing.isEmpty())
+				{
+					insertEmptyTab(tabbedPane, missing);
+				}
+				tabbedPanes.add(tabbedPane);
 			}
-			Map<GUILinksAllModelsBO.Model, List<String>> missing = dssGrabber.getMissingList();
-			if(!missing.isEmpty())
-			{
-				insertEmptyTab(tabbedPane, missing);
-			}
-			tabbedPanes.add(tabbedPane);
 		}
 		else
 		{
@@ -92,26 +99,87 @@ class DisplayWRIMSFrames extends DisplayFrames
 		return tabbedPanes;
 	}
 
-	private void plotMts(List<EpptScenarioRun> scenarios, MultipleTimeSeries mts, DSSGrabber2SvcImpl dssGrabber,
-						 JTabbedPane tabbedPane)
+	private DSSGrabber2SvcImpl buildDssGrabber(EpptScenarioRun run)
 	{
-		dssGrabber.setLocation("@@" + mts.getName());
-		int n = mts.getNumberOfDataReferences();
-		Map<EpptScenarioRun, List<TimeSeriesContainer>> scenarioRunData = new TreeMap<>(Comparator.comparing(scenarios::indexOf));
-		for(int i = 0; i < n; i++)
+		DSSGrabber2SvcImpl dssGrabber = new DSSGrabber2SvcImpl(_dts, _mts);
+		dssGrabber.setIsCFS(!getEpptConfigurationController().isTaf());
+		dssGrabber.setScenarioRuns(run, Collections.emptyList());
+		dssGrabber.setDateRange(getStart(), getEnd());
+		return dssGrabber;
+	}
+
+	private void plotMts(List<EpptScenarioRun> scenarios, MultipleTimeSeries mts, JTabbedPane tabbedPane)
+	{
+
+		Map<EpptScenarioRun, List<TimeSeriesContainer>> scenarioRunData;
+		if(getEpptConfigurationController().isDifference())
 		{
-			TimeSeriesContainer[] result = dssGrabber.getMultipleTimeSeries(i);
-			for(int j = 0; j < scenarios.size(); j++)
+			scenarioRunData = getMtsDiffData(scenarios, mts);
+		}
+		else
+		{
+			scenarioRunData = getMtsComparisonData(scenarios, mts);
+		}
+		plot(tabbedPane, scenarioRunData, mts.getName());
+	}
+
+	private Map<EpptScenarioRun, List<TimeSeriesContainer>> getMtsDiffData(List<EpptScenarioRun> scenarios, MultipleTimeSeries mts)
+	{
+		Map<EpptScenarioRun, List<TimeSeriesContainer>> scenarioRunData = new TreeMap<>(Comparator.comparing(scenarios::indexOf));
+		Optional<EpptScenarioRun> base = getEpptConfigurationController().getEpptScenarioBase();
+		if(base.isPresent())
+		{
+			TimeSeriesContainer[] baseContainers = getBaseMtsData(mts, base.get());
+			for(EpptScenarioRun epptScenarioRun : scenarios)
 			{
-				EpptScenarioRun epptScenarioRun = scenarios.get(j);
-				TimeSeriesContainer tsc = result[j];
+				if(!epptScenarioRun.isBaseSelected())
+				{
+					for(int i = 0; i < mts.getNumberOfDataReferences(); i++)
+					{
+						DSSGrabber2SvcImpl dssGrabber = buildDssGrabber(epptScenarioRun);
+						dssGrabber.setLocation("@@" + mts.getName());
+						TimeSeriesContainer[] result = dssGrabber.getMultipleTimeSeries(i);
+						TimeSeriesContainer tsc = DSSGrabber1SvcImpl.diffSeries(baseContainers[i], result[0]);
+						scenarioRunData.computeIfAbsent(epptScenarioRun, v -> new ArrayList<>()).add(tsc);
+					}
+				}
+			}
+		}
+		return scenarioRunData;
+	}
+
+	private TimeSeriesContainer[] getBaseMtsData(MultipleTimeSeries mts, EpptScenarioRun base)
+	{
+		TimeSeriesContainer[] baseContainers = new TimeSeriesContainer[mts.getNumberOfDataReferences()];
+		for(int i = 0; i < mts.getNumberOfDataReferences(); i++)
+		{
+			DSSGrabber2SvcImpl dssGrabber = buildDssGrabber(base);
+			dssGrabber.setLocation("@@" + mts.getName());
+			TimeSeriesContainer[] result = dssGrabber.getMultipleTimeSeries(i);
+			TimeSeriesContainer tsc = result[0];
+			baseContainers[i] = tsc;
+		}
+		return baseContainers;
+	}
+
+	private Map<EpptScenarioRun, List<TimeSeriesContainer>> getMtsComparisonData(List<EpptScenarioRun> scenarios, MultipleTimeSeries mts)
+	{
+		Map<EpptScenarioRun, List<TimeSeriesContainer>> scenarioRunData = new TreeMap<>(Comparator.comparing(scenarios::indexOf));
+		for(EpptScenarioRun epptScenarioRun : scenarios)
+		{
+			for(int i = 0; i < mts.getNumberOfDataReferences(); i++)
+			{
+				DSSGrabber2SvcImpl dssGrabber = buildDssGrabber(epptScenarioRun);
+				dssGrabber.setLocation("@@" + mts.getName());
+				TimeSeriesContainer[] result = dssGrabber.getMultipleTimeSeries(i);
+				TimeSeriesContainer tsc = result[0];
 				if(tsc != null)
 				{
 					scenarioRunData.computeIfAbsent(epptScenarioRun, v -> new ArrayList<>()).add(tsc);
 				}
 			}
 		}
-		plot(tabbedPane, scenarioRunData, mts.getName());
+		return scenarioRunData;
 	}
 
 	private void plot(JTabbedPane tabbedPane, Map<EpptScenarioRun, List<TimeSeriesContainer>> scenarioRunData, String name)
@@ -150,24 +218,20 @@ class DisplayWRIMSFrames extends DisplayFrames
 		}
 	}
 
-	private void plotDts(List<EpptScenarioRun> scenarioRuns, DerivedTimeSeries dts, DSSGrabber2SvcImpl dssGrabber, JTabbedPane tabbedPane)
+	private void plotDts(List<EpptScenarioRun> scenarios, DerivedTimeSeries dts, JTabbedPane tabbedPane)
 	{
-		dssGrabber.setLocation("@@" + dts.getName());
-
-		TimeSeriesContainer[] primaryResults = dssGrabber.getPrimarySeries();
-		if(primaryResults != null)
+		Map<EpptScenarioRun, List<TimeSeriesContainer>> scenarioRunData = new TreeMap<>(Comparator.comparing(scenarios::indexOf));
+		for(EpptScenarioRun epptScenarioRun : scenarios)
 		{
-			Map<EpptScenarioRun, List<TimeSeriesContainer>> scenarioRunData = new TreeMap<>(Comparator.comparing(scenarioRuns::indexOf));
-			for(int i = 0; i < primaryResults.length; i++)
+			DSSGrabber2SvcImpl dssGrabber = buildDssGrabber(epptScenarioRun);
+			dssGrabber.setLocation("@@" + dts.getName());
+			TimeSeriesContainer[] result = dssGrabber.getPrimarySeries();
+			if(result[0] != null)
 			{
-				EpptScenarioRun epptScenarioRun = scenarioRuns.get(i);
-				TimeSeriesContainer tsc = primaryResults[i];
-				if(tsc != null)
-				{
-					scenarioRunData.put(epptScenarioRun, Collections.singletonList(tsc));
-				}
+				TimeSeriesContainer tsc = result[0];
+				scenarioRunData.computeIfAbsent(epptScenarioRun, v -> new ArrayList<>()).add(tsc);
 			}
-			plot(tabbedPane, scenarioRunData, dts.getName());
 		}
+		plot(tabbedPane, scenarioRunData, dts.getName());
 	}
 }

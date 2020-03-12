@@ -112,9 +112,13 @@ class MonthlyTableModel extends RmaTreeTableModel<MonthlyPaneRow>
 					LocalDateTime localDateTime = entry.getKey().minusMonths(1);
 					dataMap.put(monthTreeTableColumnSpecMap.get(localDateTime.getMonth()), entry.getValue());
 				}
-				dataMap.put(_aggregateColumnSpec, yearly.getOrDefault(year, Double.NaN));
-				MonthlyPaneRow.MonthlyPaneRowData dataRow = new MonthlyPaneRow.MonthlyPaneRowData(monthlyPaneRowScenario, year, dataMap);
-				monthlyPaneRowScenario.getChildren().add(dataRow);
+				Double orDefault = yearly.getOrDefault(year, Double.NaN);
+				if(!Double.isNaN(orDefault))
+				{
+					dataMap.put(_aggregateColumnSpec, orDefault);
+					MonthlyPaneRow.MonthlyPaneRowData dataRow = new MonthlyPaneRow.MonthlyPaneRowData(monthlyPaneRowScenario, year, dataMap);
+					monthlyPaneRowScenario.getChildren().add(dataRow);
+				}
 			}
 			for(EpptReportingComputedStatistics computedStatistics : primary.getComputedStatistics())
 			{

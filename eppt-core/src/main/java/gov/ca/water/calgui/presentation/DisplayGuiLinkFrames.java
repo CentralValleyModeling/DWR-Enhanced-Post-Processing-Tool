@@ -108,25 +108,6 @@ final class DisplayGuiLinkFrames extends DisplayFrames
 		return tabbedPanes;
 	}
 
-	private Optional<String> getError()
-	{
-		Optional<String> retval = Optional.empty();
-		List<MonthPeriod> selectedMonthlyPeriods = getEpptConfigurationController().getSelectedMonthlyPeriods();
-		if(selectedMonthlyPeriods.isEmpty())
-		{
-			retval = Optional.of("No monthly filter selected");
-		}
-		else if(getEpptConfigurationController().getWaterYearPeriodRanges().isEmpty())
-		{
-			retval = Optional.of("No annual filter selected");
-		}
-		else if(getEpptConfigurationController().getSelectedStatistics().isEmpty() && getPlotConfigurationState().isDisplaySummaryTable())
-		{
-			retval = Optional.of("Cannot display summary table without selected statistics");
-		}
-		return retval;
-	}
-
 	private void displayForLocation(List<JTabbedPane> tabbedPanes, IDSSGrabber1Svc dssGrabber, GUILinksAllModelsBO guiLink, EpptScenarioRun baseRun)
 	{
 		if(dssGrabber.getPrimaryDSSName() == null)
@@ -154,25 +135,14 @@ final class DisplayGuiLinkFrames extends DisplayFrames
 		List<EpptScenarioRun> scenarioRuns = new ArrayList<>();
 		scenarioRuns.add(baseRun);
 		scenarioRuns.addAll(getAlternatives());
-		Map<EpptScenarioRun, List<TimeSeriesContainer>> primaryScenarioRunData = new TreeMap<>(Comparator.comparing(scenarioRuns::indexOf));
-		for(EpptScenarioRun epptScenarioRun : scenarioRuns)
+		Map<EpptScenarioRun, List<TimeSeriesContainer>> primaryScenarioRunData;
+		if(getEpptConfigurationController().isDifference())
 		{
-			DSSGrabber1SvcImpl dssGrabber1Svc = buildDssGrabber(epptScenarioRun, guiLink, getEpptConfigurationController().isTaf(),
-					getStart(),
-					getEnd());
-			TimeSeriesContainer primarySeries = dssGrabber1Svc.getPrimarySeries()[0];
-			TimeSeriesContainer secondarySeries = dssGrabber1Svc.getSecondarySeries()[0];
-			List<TimeSeriesContainer> tscList = new ArrayList<>();
-			if(primarySeries != null)
-			{
-				tscList.add(primarySeries);
-			}
-			if(secondarySeries != null)
-			{
-				secondarySeries.setFullName(guiLink.getLegend());
-				tscList.add(secondarySeries);
-			}
-			primaryScenarioRunData.put(epptScenarioRun, tscList);
+			primaryScenarioRunData = getDiffData(guiLink, scenarioRuns);
+		}
+		else
+		{
+			primaryScenarioRunData = getComparisonData(guiLink, scenarioRuns);
 		}
 		if(getPlotConfigurationState().isDisplayTimeSeriesAll())
 		{
@@ -225,6 +195,69 @@ final class DisplayGuiLinkFrames extends DisplayFrames
 		String title = guiLink.getPlotTitle();
 		tabbedPane.setName(title);
 		return tabbedPane;
+	}
+
+	private Map<EpptScenarioRun, List<TimeSeriesContainer>> getDiffData(GUILinksAllModelsBO guiLink, List<EpptScenarioRun> scenarioRuns)
+	{
+		Map<EpptScenarioRun, List<TimeSeriesContainer>> primaryScenarioRunData = new TreeMap<>(Comparator.comparing(scenarioRuns::indexOf));
+		Optional<EpptScenarioRun> base = getEpptConfigurationController().getEpptScenarioBase();
+		if(base.isPresent())
+		{
+			DSSGrabber1SvcImpl dssGrabber1Svc = buildDssGrabber(base.get(), guiLink, getEpptConfigurationController().isTaf(),
+					getStart(),
+					getEnd());
+			TimeSeriesContainer basePrimarySeries = dssGrabber1Svc.getPrimarySeries()[0];
+			TimeSeriesContainer baseSecondarySeries = dssGrabber1Svc.getSecondarySeries()[0];
+
+			for(EpptScenarioRun epptScenarioRun : scenarioRuns)
+			{
+				if(!epptScenarioRun.isBaseSelected())
+				{
+					dssGrabber1Svc = buildDssGrabber(epptScenarioRun, guiLink, getEpptConfigurationController().isTaf(),
+							getStart(),
+							getEnd());
+					TimeSeriesContainer primarySeries = DSSGrabber1SvcImpl.diffSeries(basePrimarySeries, dssGrabber1Svc.getPrimarySeries()[0]);
+					TimeSeriesContainer secondarySeries = DSSGrabber1SvcImpl.diffSeries(baseSecondarySeries, dssGrabber1Svc.getSecondarySeries()[0]);
+					List<TimeSeriesContainer> tscList = new ArrayList<>();
+					if(primarySeries != null)
+					{
+						tscList.add(primarySeries);
+					}
+					if(secondarySeries != null)
+					{
+						secondarySeries.setFullName(guiLink.getLegend());
+						tscList.add(secondarySeries);
+					}
+					primaryScenarioRunData.put(epptScenarioRun, tscList);
+				}
+			}
+		}
+		return primaryScenarioRunData;
+	}
+
+	private Map<EpptScenarioRun, List<TimeSeriesContainer>> getComparisonData(GUILinksAllModelsBO guiLink, List<EpptScenarioRun> scenarioRuns)
+	{
+		Map<EpptScenarioRun, List<TimeSeriesContainer>> primaryScenarioRunData = new TreeMap<>(Comparator.comparing(scenarioRuns::indexOf));
+		for(EpptScenarioRun epptScenarioRun : scenarioRuns)
+		{
+			DSSGrabber1SvcImpl dssGrabber1Svc = buildDssGrabber(epptScenarioRun, guiLink, getEpptConfigurationController().isTaf(),
+					getStart(),
+					getEnd());
+			TimeSeriesContainer primarySeries = dssGrabber1Svc.getPrimarySeries()[0];
+			TimeSeriesContainer secondarySeries = dssGrabber1Svc.getSecondarySeries()[0];
+			List<TimeSeriesContainer> tscList = new ArrayList<>();
+			if(primarySeries != null)
+			{
+				tscList.add(primarySeries);
+			}
+			if(secondarySeries != null)
+			{
+				secondarySeries.setFullName(guiLink.getLegend());
+				tscList.add(secondarySeries);
+			}
+			primaryScenarioRunData.put(epptScenarioRun, tscList);
+		}
+		return primaryScenarioRunData;
 	}
 
 	private DSSGrabber1SvcImpl buildDssGrabber(EpptScenarioRun epptScenarioRun, GUILinksAllModelsBO guiLink, boolean isCFS, LocalDate start,

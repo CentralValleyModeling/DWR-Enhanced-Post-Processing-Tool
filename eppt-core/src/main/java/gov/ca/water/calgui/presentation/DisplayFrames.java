@@ -21,6 +21,7 @@ import javax.swing.*;
 
 import gov.ca.water.calgui.bo.GUILinksAllModelsBO;
 import gov.ca.water.calgui.bo.WaterYearDefinition;
+import gov.ca.water.calgui.busservice.impl.MonthPeriod;
 import gov.ca.water.calgui.presentation.plotly.PlotlyPaneBuilder;
 import gov.ca.water.calgui.project.EpptConfigurationController;
 import gov.ca.water.calgui.project.EpptScenarioRun;
@@ -45,6 +46,29 @@ class DisplayFrames
 	{
 		_epptConfigurationController = epptConfigurationController;
 		_plotConfigurationState = plotConfigurationState;
+	}
+
+	Optional<String> getError()
+	{
+		Optional<String> retval = Optional.empty();
+		List<MonthPeriod> selectedMonthlyPeriods = getEpptConfigurationController().getSelectedMonthlyPeriods();
+		if(selectedMonthlyPeriods.isEmpty())
+		{
+			retval = Optional.of("No monthly filter selected");
+		}
+		else if(getEpptConfigurationController().getWaterYearPeriodRanges().isEmpty())
+		{
+			retval = Optional.of("No annual filter selected");
+		}
+		else if(getEpptConfigurationController().getSelectedStatistics().isEmpty() && getPlotConfigurationState().isDisplaySummaryTable())
+		{
+			retval = Optional.of("Cannot display summary table without selected statistics");
+		}
+		else if(getEpptConfigurationController().isDifference() && !getEpptConfigurationController().getEpptScenarioBase().isPresent())
+		{
+			retval = Optional.of("Cannot compute difference without Base scenario run selected");
+		}
+		return retval;
 	}
 
 	EpptConfigurationController getEpptConfigurationController()
@@ -82,8 +106,8 @@ class DisplayFrames
 	}
 
 	void plotBoxPlotDiscrete(Map<EpptScenarioRun, List<TimeSeriesContainer>> scenarioRunData,
-					 String plotTitle,
-					 JTabbedPane tabbedPane)
+							 String plotTitle,
+							 JTabbedPane tabbedPane)
 	{
 
 		JFXPanel pane = new PlotlyPaneBuilder(PlotlyPaneBuilder.ChartType.BOX_ALL, plotTitle, scenarioRunData,
@@ -93,8 +117,8 @@ class DisplayFrames
 	}
 
 	void plotBoxPlotAggregate(Map<EpptScenarioRun, List<TimeSeriesContainer>> scenarioRunData,
-					 String plotTitle,
-					 JTabbedPane tabbedPane)
+							  String plotTitle,
+							  JTabbedPane tabbedPane)
 	{
 
 		JFXPanel pane = new PlotlyPaneBuilder(PlotlyPaneBuilder.ChartType.BOX_AGGREGATE, plotTitle, scenarioRunData,
@@ -104,8 +128,8 @@ class DisplayFrames
 	}
 
 	void plotBarCharts(Map<EpptScenarioRun, List<TimeSeriesContainer>> scenarioRunData,
-							  String plotTitle,
-							  JTabbedPane tabbedPane)
+					   String plotTitle,
+					   JTabbedPane tabbedPane)
 	{
 
 		JFXPanel pane = new PlotlyPaneBuilder(PlotlyPaneBuilder.ChartType.BAR_GRAPH, plotTitle, scenarioRunData,
@@ -115,8 +139,8 @@ class DisplayFrames
 	}
 
 	void plotMonthlyLine(Map<EpptScenarioRun, List<TimeSeriesContainer>> scenarioRunData,
-							  String plotTitle,
-							  JTabbedPane tabbedPane)
+						 String plotTitle,
+						 JTabbedPane tabbedPane)
 	{
 
 		JFXPanel pane = new PlotlyPaneBuilder(PlotlyPaneBuilder.ChartType.MONTHLY_LINE, plotTitle, scenarioRunData,
@@ -126,7 +150,7 @@ class DisplayFrames
 	}
 
 	void plotTimeSeriesDiscrete(Map<EpptScenarioRun, List<TimeSeriesContainer>> scenarioRunData,
-						String plotTitle, JTabbedPane tabbedPane)
+								String plotTitle, JTabbedPane tabbedPane)
 	{
 		JFXPanel pane = new PlotlyPaneBuilder(PlotlyPaneBuilder.ChartType.TIME_SERIES_ALL, plotTitle, scenarioRunData, _epptConfigurationController)
 				.build();
@@ -141,9 +165,10 @@ class DisplayFrames
 	}
 
 	void plotTimeSeriesAggregate(Map<EpptScenarioRun, List<TimeSeriesContainer>> scenarioRunData,
-						String plotTitle, JTabbedPane tabbedPane)
+								 String plotTitle, JTabbedPane tabbedPane)
 	{
-		JFXPanel pane = new PlotlyPaneBuilder(PlotlyPaneBuilder.ChartType.TIME_SERIES_AGGREGATE, plotTitle, scenarioRunData, _epptConfigurationController)
+		JFXPanel pane = new PlotlyPaneBuilder(PlotlyPaneBuilder.ChartType.TIME_SERIES_AGGREGATE, plotTitle, scenarioRunData,
+				_epptConfigurationController)
 				.build();
 		if(_epptConfigurationController.isDifference())
 		{
@@ -203,7 +228,7 @@ class DisplayFrames
 	}
 
 	void plotAllExceedance(Map<EpptScenarioRun, List<TimeSeriesContainer>> scenarioRunData,
-								   String plotTitle, JTabbedPane tabbedPane)
+						   String plotTitle, JTabbedPane tabbedPane)
 	{
 		JFXPanel pane = new PlotlyPaneBuilder(PlotlyPaneBuilder.ChartType.EXCEEDANCE_ALL, plotTitle, scenarioRunData,
 				_epptConfigurationController)

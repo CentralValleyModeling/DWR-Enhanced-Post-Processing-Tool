@@ -26,9 +26,7 @@ import java.util.logging.Logger;
 
 import gov.ca.water.calgui.bo.AnnualPeriodFilter;
 import gov.ca.water.calgui.bo.PeriodFilter;
-import gov.ca.water.calgui.bo.WaterYearPeriod;
-import gov.ca.water.calgui.bo.WaterYearPeriodFilter;
-import gov.ca.water.calgui.bo.YearlyWaterYearPeriodFilter;
+import gov.ca.water.calgui.bo.WaterYearPeriodRangesFilter;
 import gov.ca.water.calgui.constant.Constant;
 import gov.ca.water.calgui.project.EpptScenarioRun;
 import gov.ca.water.calgui.scripts.DssMissingRecordException;
@@ -105,21 +103,16 @@ class PercentDiffTableBuilder extends BaseAltDiffTableBuilder
 	}
 
 	@Override
-	List<Element> buildScenarios(WaterYearPeriod waterYearPeriod, EpptChart epptChart)
+	List<Element> buildScenarios(Map<EpptScenarioRun, WaterYearPeriodRangesFilter> filters, EpptChart epptChart)
 	{
-		SummaryReportParameters reportParameters = getReportParameters();
-		PeriodFilter baseFilter = new WaterYearPeriodFilter(waterYearPeriod, reportParameters.getWaterYearIndex(getBase()),
-				reportParameters.getWaterYearDefinition());
-		AnnualPeriodFilter baseAnnualPeriodFilter = new YearlyWaterYearPeriodFilter(waterYearPeriod,
-				reportParameters.getWaterYearIndex(getBase()));
+		WaterYearPeriodRangesFilter baseFilter = filters.get(getBase());
+		AnnualPeriodFilter baseAnnualPeriodFilter = baseFilter::testAnnual;
 		List<Element> retval = new ArrayList<>();
 		for(int i = 0; i < getAlternatives().size(); i++)
 		{
 			EpptScenarioRun alternative = getAlternatives().get(i);
-			PeriodFilter altFilter = new WaterYearPeriodFilter(waterYearPeriod, reportParameters.getWaterYearIndex(alternative),
-					reportParameters.getWaterYearDefinition());
-			AnnualPeriodFilter altAnnualPeriodFilter = new YearlyWaterYearPeriodFilter(waterYearPeriod,
-					reportParameters.getWaterYearIndex(alternative));
+			WaterYearPeriodRangesFilter altFilter = filters.get(alternative);
+			AnnualPeriodFilter altAnnualPeriodFilter = altFilter::testAnnual;
 			Element element = buildPercentDiffElement(alternative, baseFilter, baseAnnualPeriodFilter,
 					altFilter, altAnnualPeriodFilter, epptChart);
 			element.setAttribute(SCENARIO_ORDER_ATTRIBUTE, String.valueOf(i));

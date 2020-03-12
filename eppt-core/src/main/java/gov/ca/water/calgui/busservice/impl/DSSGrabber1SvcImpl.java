@@ -41,6 +41,7 @@ import gov.ca.water.calgui.bo.ResultUtilsBO;
 import gov.ca.water.calgui.bo.ThresholdLinksBO;
 import gov.ca.water.calgui.busservice.IDSSGrabber1Svc;
 import gov.ca.water.calgui.busservice.IGuiLinksSeedDataSvc;
+import gov.ca.water.calgui.constant.Constant;
 import gov.ca.water.calgui.project.EpptDssContainer;
 import gov.ca.water.calgui.project.EpptScenarioRun;
 import gov.ca.water.calgui.project.NamedDssPath;
@@ -55,6 +56,7 @@ import hec.heclib.dss.HecDSSDataAttributes;
 import hec.heclib.dss.HecDataManager;
 import hec.heclib.dss.HecDss;
 import hec.heclib.util.HecTime;
+import hec.heclib.util.HecTimeArray;
 import hec.heclib.util.Heclib;
 import hec.hecmath.DSS;
 import hec.hecmath.DSSFile;
@@ -247,6 +249,37 @@ public class DSSGrabber1SvcImpl implements IDSSGrabber1Svc
 			_plotTitle = "";
 			_legend = "";
 		}
+	}
+
+
+
+	public static TimeSeriesContainer diffSeries(TimeSeriesContainer baseSeries, TimeSeriesContainer primarySeries)
+	{
+		TimeSeriesContainer retval = null;
+		if(baseSeries != null && primarySeries != null)
+		{
+			retval = new TimeSeriesContainer();
+			baseSeries.clone(retval);
+			HecTimeArray times = retval.getTimes();
+			double[] values = new double[times.numberElements()];
+			for(int i = 0;i < times.numberElements(); i++)
+			{
+				HecTime time = times.timeArray()[i];
+				double baseValue = baseSeries.getValue(time);
+				double altValue = primarySeries.getValue(time);
+				if(Constant.isValidValue(altValue) && Constant.isValidValue(baseValue))
+				{
+					values[i] = altValue - baseValue;
+				}
+				else
+				{
+					values[i] = RMAConst.UNDEF_DOUBLE;
+				}
+			}
+			retval.setValues(values);
+			retval.setFullName("Diff " + primarySeries.getFullName() + " <br>from " + baseSeries.getFullName());
+		}
+		return retval;
 	}
 
 	/**

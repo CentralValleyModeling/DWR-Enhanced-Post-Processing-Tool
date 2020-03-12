@@ -56,7 +56,6 @@ public class EpptConfigurationController
 	private SimpleIntegerProperty _endYear = new SimpleIntegerProperty(2003);
 	private SimpleObjectProperty<WaterYearDefinition> _waterYearDefinition = new SimpleObjectProperty<>(
 			WaterYearDefinitionSvc.getWaterYearDefinitionSvc().getDefinitions().get(0));
-	private WaterYearIndexAliasReader.WaterYearIndexAlias _waterYearIndex = WaterYearIndexAliasReader.getInstance().getAliases().get(0);
 	private boolean _taf;
 	private Path _selectedDssPath;
 	private boolean _difference;
@@ -163,11 +162,6 @@ public class EpptConfigurationController
 	public List<Map<EpptScenarioRun, WaterYearPeriodRangesFilter>> getWaterYearPeriodRanges()
 	{
 		return _annualPeriodFilters;
-	}
-
-	public WaterYearIndexAliasReader.WaterYearIndexAlias getWaterYearIndex()
-	{
-		return _waterYearIndex;
 	}
 
 	public boolean isTaf()

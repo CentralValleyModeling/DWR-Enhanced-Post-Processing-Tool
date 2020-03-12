@@ -27,12 +27,14 @@ import java.util.Map;
 public class WaterYearPeriodRangesFilter implements PeriodFilter
 {
 	private final String _name;
+	private final String _groupName;
 	private final List<WaterYearPeriodRange> _waterYearPeriodRanges;
 	private final WaterYearDefinition _waterYearDefinition;
 
-	public WaterYearPeriodRangesFilter(String name, List<WaterYearPeriodRange> waterYearPeriodRanges, WaterYearDefinition waterYearDefinition)
+	public WaterYearPeriodRangesFilter(String name, String groupName, List<WaterYearPeriodRange> waterYearPeriodRanges, WaterYearDefinition waterYearDefinition)
 	{
 		_name = name;
+		_groupName = groupName;
 		_waterYearPeriodRanges = waterYearPeriodRanges;
 		_waterYearDefinition = waterYearDefinition;
 	}
@@ -40,6 +42,11 @@ public class WaterYearPeriodRangesFilter implements PeriodFilter
 	public String getName()
 	{
 		return _name;
+	}
+
+	public String getGroupName()
+	{
+		return _groupName;
 	}
 
 	public boolean testAnnual(Map.Entry<Integer, Double> input)

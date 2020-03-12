@@ -12,31 +12,18 @@
 
 package gov.ca.water.reportengine.jython;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.util.List;
-import java.util.stream.Stream;
-import javax.script.ScriptEngine;
-import javax.script.ScriptEngineManager;
 import javax.script.ScriptException;
 
-import com.google.common.flogger.FluentLogger;
 import gov.ca.water.calgui.bo.AnnualPeriodFilter;
 import gov.ca.water.calgui.bo.CommonPeriodFilter;
 import gov.ca.water.calgui.bo.PeriodFilter;
 import gov.ca.water.calgui.bo.WaterYearDefinition;
-import gov.ca.water.calgui.bo.WaterYearIndex;
-import gov.ca.water.calgui.bo.WaterYearPeriod;
 import gov.ca.water.calgui.bo.WaterYearPeriodRange;
-import gov.ca.water.calgui.constant.Constant;
 import gov.ca.water.calgui.project.EpptScenarioRun;
 import gov.ca.water.calgui.scripts.DssCache;
 import gov.ca.water.calgui.scripts.DssReader;
 import gov.ca.water.calgui.scripts.TitleReader;
-
-import static java.util.stream.Collectors.toList;
 
 /**
  * Company: Resource Management Associates
@@ -50,14 +37,11 @@ public class JythonScriptRunner
 	private final CommonPeriodFilter _commonPeriodFilter;
 	private final WaterYearDefinition _waterYearDefinition;
 	private final DssCache _dssCache;
-	private static final FluentLogger LOGGER = FluentLogger.forEnclosingClass();
 
 	private DssReader _dssReader;
 	private PeriodFilter _periodFilter;
 	private List<WaterYearPeriodRange> _waterYearPeriodRanges;
 	private Double _comparisonValue;
-	private WaterYearPeriod _waterYearType;
-	private WaterYearIndex _waterYearIndex;
 	private AnnualPeriodFilter _annualPeriodFilter;
 
 	public JythonScriptRunner(EpptScenarioRun epptScenarioRun, CommonPeriodFilter commonPeriodFilter,
@@ -86,8 +70,6 @@ public class JythonScriptRunner
 		jythonScript.put("periodFilter", _periodFilter);
 		jythonScript.put("waterYearPeriodRanges", _waterYearPeriodRanges);
 		jythonScript.put("comparisonValue", _comparisonValue);
-		jythonScript.put("waterYearType", _waterYearType);
-		jythonScript.put("waterYearIndex", _waterYearIndex);
 		jythonScript.put("annualPeriodFilter", _annualPeriodFilter);
 	}
 
@@ -110,16 +92,6 @@ public class JythonScriptRunner
 	public void setComparisonValue(Double comparisonValue)
 	{
 		_comparisonValue = comparisonValue;
-	}
-
-	void setWaterYearType(WaterYearPeriod waterYearType)
-	{
-		_waterYearType = waterYearType;
-	}
-
-	public void setWaterYearIndex(WaterYearIndex waterYearIndex)
-	{
-		_waterYearIndex = waterYearIndex;
 	}
 
 	public String getUnits()

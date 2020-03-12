@@ -11,175 +11,112 @@
  */
 
 function getPlotlyMonthlySeries(datum) {
-    var series = [];
-
-    function plotSeries(allTimeSeries, lineName, lineColor, primary) {
-        for (let j = 0; j < allTimeSeries['full_time_series'].length; j++) {
-            let timeSeries = allTimeSeries['full_time_series'][j];
-            let x = [];
-            let y = [];
-            for (let m = 0; m < timeSeries.length; m++) {
-                x.push(new Date(timeSeries[m][0]));
-                y.push(timeSeries[m][1]);
-            }
-            let dash;
-            if(primary){
-                dash = PLOTLY_LINE_DASH_STYLES[j % PLOTLY_LINE_DASH_STYLES.length];
-            }
-            else{
-                dash = PLOTLY_LINE_DASH_STYLES[1];
-            }
-            let name = lineName;
-            if(allTimeSeries['data_suffix'][j]){
-                name = " " + allTimeSeries['data_suffix'][j];
-            }
-            series.push({
-                name: name,
-                x: x,
-                y: y,
-                mode: 'lines',
-                line: {
-                    color: lineColor,
-                    dash: dash
-                }
-            });
-        }
-    }
-
+    let seriesList = [];
     for (let i = 0; i < datum.length; i++) {
-        let primarySeries = datum[i]['primary_data'];
-        let scenarioName = datum[i]['scenario_name'];
-        let lineColor = datum[i]['scenario_color'];
-        plotSeries(primarySeries, scenarioName, lineColor, true);
-        let secondarySeries = datum[i]['secondary_data'];
-        plotSeries(secondarySeries, scenarioName, lineColor, false);
-    }
-    return series;
-}
-
-function getPlotlyScatterSeries(datum) {
-    var series = [];
-    for (var i = 1; i < datum.length; i++) {
-        let allBaseTimeSeries = datum[0]['primary_data']['full_time_series'];
-        let allAltTimeSeries = datum[i]['primary_data']['full_time_series'];
-        for (let j = 0; j < allBaseTimeSeries.length && j < allAltTimeSeries.length; j++) {
-            let baseTimeSeries = allBaseTimeSeries[j];
-            let altTimeSeries = allAltTimeSeries[j];
-            let x = [];
-            let y = [];
-            for (var m = 0; m < altTimeSeries.length; m++) {
-                x.push(baseTimeSeries[m][1]);
-                y.push(altTimeSeries[m][1]);
-            }
-            series.push({
-                name: datum[i]['scenario_name'] + ' ' + datum[i]['primary_data']['data_suffix'][j] + ' Diff',
-                x: x,
-                y: y,
-                type: 'scatter',
-                mode: 'markers',
-                line: {
-                    dash: PLOTLY_LINE_DASH_STYLES[j % PLOTLY_LINE_DASH_STYLES.length]
-                },
-                marker: {
-                    color: datum[i]['scenario_color']
+        let tsList = datum[i]['ts_list'];
+        for (let j = 0; j < tsList.length; j++) {
+            let axis = 0;
+            let monthlyFilters = tsList[j]['monthly_filters'];
+            for (let k = 0; k < monthlyFilters.length; k++) {
+                let annualFilters = monthlyFilters[k]['annual_filters'];
+                for (let m = 0; m < annualFilters.length; m++) {
+                    let timeSeries = annualFilters[m]['discrete_ts'];
+                    let x = [];
+                    let y = [];
+                    for (var ts = 0; ts < timeSeries.length; ts++) {
+                        x.push(new Date(timeSeries[ts][0]));
+                        y.push(timeSeries[ts][1]);
+                    }
+                    let series = seriesList[axis];
+                    if (!series) {
+                        series = [];
+                        seriesList.push(series);
+                    }
+                    series.push({
+                        name: tsList[j]['ts_name'],
+                        x: x,
+                        y: y,
+                        line: {
+                            color: datum[i]['scenario_color'],
+                            dash: PLOTLY_LINE_DASH_STYLES[j % PLOTLY_LINE_DASH_STYLES.length]
+                        }
+                    });
+                    axis++;
                 }
-            });
+            }
         }
     }
-    return series;
+    return seriesList;
 }
 
-function buildLineLayout(data) {
-    return {
-        font: PLOTLY_FONT,
-        yaxis: {
-            tickformat: ',.3r%',
-            title: {
-                text: data['scenario_run_data'][0]['primary_data']['units'][0],
-            },
-            gridcolor: '#CCCCCC'
-        },
-        xaxis: {
-            gridcolor: '#CCCCCC'
-        },
-        showlegend: true,
-        legend: {
-            orientation: 'h',
-            xanchor: 'center',
-            x: 0.5,
-            font: {
-                size: 10,
-            }
-        },
-        title: {
-            text: data['gui_link_title'],
-            font: {
-                size: 20,
-            }
-        }
-    };
-}
-
-function buildScatterLayout(data) {
-    let units = data['scenario_run_data'][0]['primary_data']['units'][0];
-    return {
-        font: PLOTLY_FONT,
-        yaxis: {
-            tickformat: ',.3r%',
-            title: {
-                text: units,
-            },
-            gridcolor: '#CCCCCC'
-        },
-        xaxis: {
-            tickformat: ',.3r%',
-            title: {
-                text: data['scenario_run_data'][0]['scenario_name'] + ' - ' + units,
-            },
-            hovertemplate: '<i>Price</i>: $%{y:.2f}' +
-                '<br><b>X</b>: %{x}<br>' +
-                '<b>%{text}</b>',
-            gridcolor: '#CCCCCC'
-        },
-        showlegend: true,
-        legend: {
-            orientation: 'h',
-            xanchor: 'center',
-            x: 0.5
-        },
-        title: {
-            text: data['gui_link_title'],
-            font: {
-                size: 20,
+function buildLayouts(datum, yaxis, title) {
+    let layoutList = [];
+    for (let i = 0; i < datum.length; i++) {
+        let tsList = datum[i]['ts_list'];
+        for (let j = 0; j < tsList.length; j++) {
+            let axis = 0;
+            let monthlyFilters = tsList[j]['monthly_filters'];
+            for (let k = 0; k < monthlyFilters.length; k++) {
+                let annualFilters = monthlyFilters[k]['annual_filters'];
+                for (let m = 0; m < annualFilters.length; m++) {
+                    let timeSeries = annualFilters[m]['discrete_ts'];
+                    let x = [];
+                    let y = [];
+                    for (var ts = 0; ts < timeSeries.length; ts++) {
+                        x.push(new Date(timeSeries[ts][0]));
+                        y.push(timeSeries[ts][1]);
+                    }
+                    let series = layoutList[axis];
+                    if (!series) {
+                        layoutList[axis] = {
+                            font: PLOTLY_FONT,
+                            yaxis: {
+                                title: {
+                                    text: yaxis,
+                                },
+                                tickformat: FORMATTER,
+                                gridcolor: '#CCCCCC',
+                                rangemode: 'tozero'
+                            },
+                            xaxis: {
+                                tickformat: '%b-%Y',
+                                hoverformat: '%b-%d-%Y',
+                                gridcolor: '#CCCCCC'
+                            },
+                            showlegend: true,
+                            legend: {
+                                orientation: 'h',
+                                xanchor: 'center',
+                                x: 0.5,
+                                font: {
+                                    size: 10,
+                                }
+                            },
+                            title: {
+                                text: title + '<br>' + annualFilters[m]['annual_period'] + '<br>' + annualFilters[m]['month_period'],
+                                font: {
+                                    size: 20,
+                                }
+                            }
+                        };
+                    }
+                    axis++;
+                }
             }
         }
-    };
+    }
+    return layoutList;
 }
 
 function plot(data) {
+    FORMATTER = getD3Formatter(data['scenario_run_data'][0]['ts_list'][0]['monthly_filters'][0]['annual_filters'][0]['discrete_ts']);
     var datum = data['scenario_run_data'];
-    var layout = buildLineLayout(data);
+    var layout = buildLayouts(datum, data['units'], data['gui_link_title']);
     let plotlyMonthlySeries = getPlotlyMonthlySeries(datum);
-    let modeBar;
-    if (data['comparison_mode'] === 'COMPARISON' && datum.length > 1) {
-        modeBar = buildModeBarButtonsWithScatter('container_discrete_tester', data);
-    } else {
-        modeBar = buildModeBarButtons('container_discrete_tester');
-    }
-    Plotly.newPlot('container_discrete_tester', plotlyMonthlySeries, layout, {
-        displaylogo: false,
-        modeBarButtons: modeBar,
-        scrollZoom: true,
-        responsive: true
-    });
-    $("#container_discrete_tester").mousedown((ev) => {
-        if (ev.which === 3) {
-            openContextMenu('#container_discrete_tester', ev, plotlyCopyToClipboardMonthly, plotlyExportFunction(document.getElementById("container_discrete_tester")));
-        }
-    });
+    plotData(layout, plotlyMonthlySeries);
 }
 
-function plotlyCopyToClipboardMonthly() {
+function plotlyCopyToClipboard() {
     let plot = document.getElementById("container_discrete_tester");
     let layout = plot.layout;
     let data1 = plot.data;
@@ -199,64 +136,4 @@ function plotlyCopyToClipboardMonthly() {
         text += '\n';
     }
     copyTextToClipboard(text);
-}
-
-function buildModeBarButtonsWithScatter(graphDiv, data) {
-    let scatterButton = {
-        name: 'Scatter Plot',
-        // icon: '../img/scatter-plot.svg',
-        icon: {
-            'width': 1500,
-            'height': 1500,
-            'path': 'm 1206.5226,551.534 c 0,61.97227 -53.8873,112.21073 -120.3606,112.21073 -66.4733,0 -120.36063,-50.23846 -120.36063,-112.21073 0,-61.97228 53.88733,-112.21073 120.36063,-112.21073 66.4733,0 120.3606,50.23845 120.3606,112.21073 z m 788.8696,-625.174074 c 0,61.972271 -53.8873,112.210727 -120.3606,112.210727 -66.4733,0 -120.3606,-50.238456 -120.3606,-112.210727 0,-61.972296 53.8873,-112.210746 120.3606,-112.210746 66.4733,0 120.3606,50.23845 120.3606,112.210746 z M 1656.0623,351.15768 c 0,61.97228 -53.8873,112.21073 -120.3607,112.21073 -66.4733,0 -120.3606,-50.23845 -120.3606,-112.21073 0,-61.97227 53.8873,-112.21072 120.3606,-112.21072 66.4734,0 120.3607,50.23845 120.3607,112.21072 z M 1357.3359,-33.564819 c 0,61.972271 -53.8873,112.210727 -120.3606,112.210727 -66.4733,0 -120.3606,-50.238456 -120.3606,-112.210727 0,-61.972281 53.8873,-112.210731 120.3606,-112.210731 66.4733,0 120.3606,50.23845 120.3606,112.210731 z M 1099.2131,1120.6027 c 0,61.9723 -53.8873,112.2107 -120.3606,112.2107 -66.47334,0 -120.36063,-50.2384 -120.36063,-112.2107 0,-61.9722 53.88729,-112.2107 120.36063,-112.2107 66.4733,0 120.3606,50.2385 120.3606,112.2107 z M 785.98547,885.49454 c 0,61.97228 -53.88728,112.21072 -120.36062,112.21072 -66.47334,0 -120.36062,-50.23844 -120.36062,-112.21072 0,-61.97228 53.88728,-112.21073 120.36062,-112.21073 66.47334,0 120.36062,50.23845 120.36062,112.21073 z M 491.60949,1139.3045 c 0,61.9723 -53.88729,112.2107 -120.36062,112.2107 -66.47336,0 -120.36064,-50.2384 -120.36064,-112.2107 0,-61.9723 53.88728,-112.2108 120.36064,-112.2108 66.47333,0 120.36062,50.2385 120.36062,112.2108 z M 219.25741,1451.2417 H 2013.1081 q 18.0849,0 30.5721,11.1064 12.4872,11.1064 12.4872,27.766 0,15.8663 -12.4872,27.3694 -12.4872,11.503 -30.5721,11.503 H 177.05931 q -18.0849,0 -30.57213,-11.503 Q 134,1505.9804 134,1490.1141 V -190.12754 q 0,-15.86632 12.48718,-27.36939 12.48723,-11.50306 30.57213,-11.50306 17.2237,0 29.71093,11.50306 12.48717,11.50307 12.48717,27.36939',
-            // 'transform': 'matrix(1 0 0 -1 0 850)'
-        },
-        click: () => toggleScatterPlot()
-    };
-    let lineButton = {
-        name: 'Line Plot',
-        icon: {
-            'width': 1500,
-            'height': 1000,
-            'path': 'M233 -251h2083q21 0 35.5 -14t14.5 -35q0 -20 -14.5 -34.5t-35.5 -14.5h-2132q-21 0 -35.5 14.5t-14.5 34.5v2118q0 20 14.5 34.5t35.5 14.5q20 0 34.5 -14.5t14.5 -34.5v-1642l235 241q21 21 48 21q25 0 45 -17l211 -176l435 1316q15 46 59 46q45 0 65 -35l310 -560\n' +
-                'l179 517q8 21 26 34l391 273q18 12 40 12q28 0 48 -19.5t20 -48.5q0 -37 -29 -57l-373 -261l-224 -640q-16 -47 -59 -47q-46 0 -66 36l-306 557l-416 -1263q-7 -20 -24.5 -34t-41.5 -14q-14 0 -24 4.5t-20 12.5l-240 201l-289 -294v-232z',
-            'transform': 'matrix(1 0 0 -1 0 850)'
-        },
-        click: () => toggleScatterPlot()
-    };
-    var scatter = false;
-
-    function toggleScatterPlot() {
-        if (!scatter) {
-            scatter = true;
-            var datum = data['scenario_run_data'];
-            let modeBar = buildModeBarButtons('container_discrete_tester');
-            var layout = buildScatterLayout(data);
-            let plotlyMonthlySeries = getPlotlyScatterSeries(datum);
-            modeBar[1].push(lineButton);
-            Plotly.react(graphDiv, plotlyMonthlySeries, layout, {
-                displaylogo: false,
-                modeBarButtons: modeBar,
-                scrollZoom: true,
-                responsive: true
-            });
-        } else {
-            scatter = false;
-            let modeBar = buildModeBarButtons('container_discrete_tester');
-            var datum = data['scenario_run_data'];
-            var layout = buildLineLayout(data);
-            let plotlyMonthlySeries = getPlotlyMonthlySeries(datum);
-            modeBar[1].push(scatterButton);
-            Plotly.react(graphDiv, plotlyMonthlySeries, layout, {
-                displaylogo: false,
-                modeBarButtons: modeBar,
-                scrollZoom: true,
-                responsive: true
-            });
-        }
-    }
-
-    let modeBar = buildModeBarButtons(graphDiv);
-    modeBar[1].push(scatterButton);
-    return modeBar;
 }

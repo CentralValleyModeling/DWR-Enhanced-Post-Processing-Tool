@@ -73,7 +73,7 @@ public final class ProjectConfigurationTopComponent extends EpptTopComponent
 
 	public void topComponentNameModified()
 	{
-		setDisplayName(TOP_COMPONENT_NAME + "*");
+		SwingUtilities.invokeLater(()->setDisplayName(TOP_COMPONENT_NAME + "*"));
 	}
 
 	public void topComponentNameUnmodified()

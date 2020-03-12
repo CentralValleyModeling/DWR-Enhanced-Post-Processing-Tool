@@ -54,32 +54,42 @@ public final class ScenarioProjectUpdater
 
 	private static void updateWithAllDssFilesSync(List<EpptScenarioRun> scenarioRuns)
 	{
-		GuiUtils.setStatus("Loading DSS paths");
-		Hashtable dvList = AppUtils.getCurrentProject()._dvList;
-		List<String> collect = scenarioRuns.stream().map(EpptScenarioRun::getDssContainer)
-										   .map(EpptDssContainer::getAllDssFiles)
-										   .flatMap(Collection::stream)
-										   .map(NamedDssPath::getDssPath)
-										   .map(Object::toString)
-										   .filter(HecDataManager::doesDSSFileExist)
-										   .collect(toList());
-		for(String dssPath : collect)
+		Thread thread = Thread.currentThread();
+		int previousPriority = thread.getPriority();
+		try
 		{
-			try
+			thread.setPriority(1);
+			GuiUtils.setStatus("Loading DSS paths");
+			Hashtable dvList = AppUtils.getCurrentProject()._dvList;
+			List<String> collect = scenarioRuns.stream().map(EpptScenarioRun::getDssContainer)
+											   .map(EpptDssContainer::getAllDssFiles)
+											   .flatMap(Collection::stream)
+											   .map(NamedDssPath::getDssPath)
+											   .map(Object::toString)
+											   .filter(HecDataManager::doesDSSFileExist)
+											   .collect(toList());
+			for(String dssPath : collect)
 			{
-				HecDss open = HecDss.open(dssPath);
-				Vector<?> catalogedPathnames = open.getCatalogedPathnames();
-				for(Object obj : catalogedPathnames)
+				try
 				{
-					Pathname pathname = Pathname.createPathname(obj.toString());
-					dvList.put(pathname.getPart(Pathname.B_PART), pathname.getPart(Pathname.C_PART));
+					HecDss open = HecDss.open(dssPath);
+					Vector<?> catalogedPathnames = open.getCatalogedPathnames();
+					for(Object obj : catalogedPathnames)
+					{
+						Pathname pathname = Pathname.createPathname(obj.toString());
+						dvList.put(pathname.getPart(Pathname.B_PART), pathname.getPart(Pathname.C_PART));
+					}
+				}
+				catch(Exception ex)
+				{
+					LOGGER.log(Level.SEVERE, "Error reading DSS file: " + dssPath, ex);
 				}
 			}
-			catch(Exception ex)
-			{
-				LOGGER.log(Level.SEVERE, "Error reading DSS file: " + dssPath, ex);
-			}
+			GuiUtils.setStatus("Initialized.");
 		}
-		GuiUtils.setStatus("Initialized.");
+		finally
+		{
+			thread.setPriority(previousPriority);
+		}
 	}
 }

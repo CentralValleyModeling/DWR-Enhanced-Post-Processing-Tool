@@ -57,6 +57,7 @@ public class AddParameterDialog extends JDialog
 		setModal(true);
 		getRootPane().setDefaultButton(_buttonOK);
 		_buttonOK.addActionListener(e -> onOK());
+		getRootPane().setDefaultButton(_buttonCancel);
 		_buttonCancel.addActionListener(e -> onCancel());
 		_tableModel = new TableModel();
 		for(int i = 0; i < _tableModel.getRowCount(); i++)

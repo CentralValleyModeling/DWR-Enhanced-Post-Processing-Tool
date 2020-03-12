@@ -126,17 +126,6 @@ public class MonthlyPaneScaffold
 						"C:\\Git\\DWR\\EPPT\\DWR-Enhanced-Post-Processing-Tool\\eppt-trend-reporting\\src\\test\\resources\\dwr_eppt\\wresl\\lookup"),
 				altDssContainer, javafx.scene.paint.Color.BISQUE);
 		ScriptedEpptStatistics.createScriptedStatistics();
-		WaterYearTableReader waterYearTableReader = new WaterYearTableReader(baseRun.getLookupDirectory());
-		List<WaterYearIndexAliasReader.WaterYearIndexAlias> read = WaterYearIndexAliasReader.getInstance().getAliases();
-		List<EpptStatistic> trendStatistics = ScriptedEpptStatistics.getTrendStatistics();
-		//		PlotConfigurationState plotConfigurationState = new PlotConfigurationState(PlotConfigurationState.ComparisonType.COMPARISON,
-		//				true, false, false, false, Collections.emptyList(),
-		//				false, true, false, Collections.singletonList(trendStatistics.get(0)),
-		//				Collections.singletonList(read.get(0)), new WaterYearDefinition("", Month.OCTOBER, Month.SEPTEMBER));
-		//		PlotConfigurationState plotConfigurationState = new PlotConfigurationState(PlotConfigurationState.ComparisonType.COMPARISON,
-		//				true, false, false, false, Collections.emptyList(),
-		//				false, true, false, trendStatistics,
-		//				read, new WaterYearDefinition("", Month.OCTOBER, Month.SEPTEMBER));
 		boolean displayTimeSeriesAll = true;
 		boolean displayTimeSeriesAggregate = true;
 		boolean displayExceedanceAll = true;
@@ -166,8 +155,8 @@ public class MonthlyPaneScaffold
 		WaterYearPeriod shortTermPeriod = new WaterYearPeriod("Short Term");
 		List<WaterYearPeriodRange> longTermRanges = Arrays.asList(new WaterYearPeriodRange(longTermPeriod, new WaterYearType(1920, longTermPeriod), new WaterYearType(1999, longTermPeriod)));
 		List<WaterYearPeriodRange> shortTermRanges = Arrays.asList(new WaterYearPeriodRange(shortTermPeriod, new WaterYearType(1950, shortTermPeriod), new WaterYearType(1960, shortTermPeriod)));
-		WaterYearPeriodRangesFilter longTerm = new WaterYearPeriodRangesFilter("Long Term", longTermRanges, waterYearDefinition);
-		WaterYearPeriodRangesFilter shortTerm = new WaterYearPeriodRangesFilter("Short Term", shortTermRanges, waterYearDefinition);
+		WaterYearPeriodRangesFilter longTerm = new WaterYearPeriodRangesFilter("Long Term", "Long Term", longTermRanges, waterYearDefinition);
+		WaterYearPeriodRangesFilter shortTerm = new WaterYearPeriodRangesFilter("Short Term", "Short Term", shortTermRanges, waterYearDefinition);
 		Map<EpptScenarioRun, WaterYearPeriodRangesFilter> range1 = new HashMap<>();
 		range1.put(baseRun, longTerm);
 		range1.put(altRun, longTerm);

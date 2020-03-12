@@ -32,10 +32,14 @@ import gov.ca.water.calgui.busservice.impl.EpptReportingComputedSet;
 import gov.ca.water.calgui.busservice.impl.EpptReportingComputer;
 import gov.ca.water.calgui.busservice.impl.EpptStatistic;
 import gov.ca.water.calgui.busservice.impl.MonthPeriod;
+import gov.ca.water.calgui.constant.Constant;
 import gov.ca.water.calgui.project.EpptScenarioRun;
 import org.json.JSONObject;
 
+import hec.heclib.util.HecTime;
+import hec.heclib.util.HecTimeArray;
 import hec.io.TimeSeriesContainer;
+import rma.util.RMAConst;
 
 /**
  * Company: Resource Management Associates
@@ -94,15 +98,17 @@ class TrendReportDataLoader
 		for(EpptParameter parameter : _guiLink)
 		{
 			GUILinksAllModelsBO guiLink = parameter.getGuiLink();
-			Map<EpptScenarioRun, List<TimeSeriesContainer>> scenarioRunData = new TreeMap<>(Comparator.comparing(_scenarioRuns::indexOf));
 
 			LocalDate start = LocalDate.of(_start, _waterYearDefinition.getStartMonth(), 1).minusDays(2);
 			LocalDate end = LocalDate.of(_end, _waterYearDefinition.getEndMonth(), 1).plusMonths(1).plusDays(2);
-			for(EpptScenarioRun epptScenarioRun : _scenarioRuns)
+			Map<EpptScenarioRun, List<TimeSeriesContainer>> scenarioRunData;
+			if(_difference)
 			{
-				DSSGrabber1SvcImpl dssGrabber = buildDssGrabber(epptScenarioRun, guiLink, _taf, start, end);
-				TimeSeriesContainer primarySeries = dssGrabber.getPrimarySeries()[0];
-				scenarioRunData.put(epptScenarioRun, Collections.singletonList(primarySeries));
+				scenarioRunData = buildDiffSeries(guiLink, start, end);
+			}
+			else
+			{
+				scenarioRunData = buildComparisonSeries(guiLink, start, end);
 			}
 			EpptReportingComputedSet epptReportingComputedSet = EpptReportingComputer.computeForMetrics(
 					scenarioRunData, guiLink.getPlotTitle(), _taf, _waterYearDefinition,
@@ -112,6 +118,42 @@ class TrendReportDataLoader
 			retval.add(jsonObject);
 		}
 		return retval;
+	}
+
+	private Map<EpptScenarioRun, List<TimeSeriesContainer>> buildComparisonSeries(GUILinksAllModelsBO guiLink, LocalDate start, LocalDate end)
+	{
+		Map<EpptScenarioRun, List<TimeSeriesContainer>> scenarioRunData = new TreeMap<>(Comparator.comparing(_scenarioRuns::indexOf));
+		for(EpptScenarioRun epptScenarioRun : _scenarioRuns)
+		{
+			DSSGrabber1SvcImpl dssGrabber = buildDssGrabber(epptScenarioRun, guiLink, _taf, start, end);
+			TimeSeriesContainer primarySeries = dssGrabber.getPrimarySeries()[0];
+			scenarioRunData.put(epptScenarioRun, Collections.singletonList(primarySeries));
+		}
+		return scenarioRunData;
+	}
+
+	private Map<EpptScenarioRun, List<TimeSeriesContainer>> buildDiffSeries(GUILinksAllModelsBO guiLink, LocalDate start, LocalDate end)
+	{
+		Map<EpptScenarioRun, List<TimeSeriesContainer>> scenarioRunData = new TreeMap<>(Comparator.comparing(_scenarioRuns::indexOf));
+
+		Optional<EpptScenarioRun> baseRun = _scenarioRuns.stream().filter(EpptScenarioRun::isBaseSelected).findAny();
+		if(baseRun.isPresent())
+		{
+			DSSGrabber1SvcImpl dssGrabber = buildDssGrabber(baseRun.get(), guiLink, _taf, start, end);
+			TimeSeriesContainer baseSeries = dssGrabber.getPrimarySeries()[0];
+
+			for(EpptScenarioRun epptScenarioRun : _scenarioRuns)
+			{
+				if(!epptScenarioRun.isBaseSelected())
+				{
+					dssGrabber = buildDssGrabber(epptScenarioRun, guiLink, _taf, start, end);
+					TimeSeriesContainer primarySeries = dssGrabber.getPrimarySeries()[0];
+
+					scenarioRunData.put(epptScenarioRun, Collections.singletonList(DSSGrabber1SvcImpl.diffSeries(baseSeries, primarySeries)));
+				}
+			}
+		}
+		return scenarioRunData;
 	}
 
 	private DSSGrabber1SvcImpl buildDssGrabber(EpptScenarioRun epptScenarioRun, GUILinksAllModelsBO guiLink, boolean isCFS, LocalDate start,
@@ -148,6 +190,10 @@ class TrendReportDataLoader
 		else if(_waterYearPeriodRangesFilters.isEmpty())
 		{
 			retval = Optional.of("No Annual Filter defined");
+		}
+		else if(_difference && _scenarioRuns.stream().noneMatch(EpptScenarioRun::isBaseSelected))
+		{
+			retval = Optional.of("No Base scenario selected for Difference calculation");
 		}
 		return retval;
 	}

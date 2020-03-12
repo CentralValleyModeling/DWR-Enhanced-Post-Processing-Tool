@@ -12,42 +12,41 @@
 var FORMATTER = '';
 
 function getHeaders(data) {
-    let firstIndexData = data[0]['primary_data']['statistically_computed_time_series_wyt'][0];
-    let headers = ['', '<b>Long Term</b>'];
-    for (let j = 0; j < firstIndexData.length; j++) {
-        let waterYearPeriod = firstIndexData[j]['water_year_period'];
-        headers.push('<b>' + getAcronym(waterYearPeriod) + '</b>');
+    let headers = [''];
+    let periods = data[0]['ts_list'][0]['monthly_filters'][0]['annual_filters'];
+    for (let j = 0; j < periods.length; j++) {
+        let waterYearPeriod = periods[j]['annual_period'];
+        headers.push('<b>' + waterYearPeriod + '</b>');
     }
     return headers;
 }
 
-function buildTable(data) {
+function buildTable(data, monthlyIndex, statIndex) {
     let headers = getHeaders(data);
     let values = [];
     let colors = [];
-    for (let i = 0; i < data.length; i++) {
-        let scenarioArr = values[0];
-        if (!scenarioArr) {
-            scenarioArr = [];
-            values[0] = scenarioArr;
-        }
-        colors.push(data[i]['scenario_color']);
-        scenarioArr.push(data[i]['scenario_name']);
-        let longTerm = values[1];
-        if (!longTerm) {
-            longTerm = [];
-            values[1] = longTerm;
-        }
-        longTerm[i] = data[i]['primary_data']['statistically_computed_time_series_yearly'][0];
-        let timeSeries = data[i]['primary_data']['statistically_computed_time_series_wyt'][0];
-        for (let k = 0; k < timeSeries.length; k++) {
-            let val = timeSeries[k]['water_year_period_values'];
-            let periodValues = values[2 + k];
-            if (!periodValues) {
-                periodValues = [];
-                values[2 + k] = periodValues;
+    for (let scenarioIndex = 0; scenarioIndex < data.length; scenarioIndex++) {
+        for (let tsIndex = 0; tsIndex < data[0]['ts_list'].length; tsIndex++) {
+            let scenarioArr = values[0];
+            if (!scenarioArr) {
+                scenarioArr = [];
+                values[0] = scenarioArr;
             }
-            periodValues.push(val);
+            colors.push(data[scenarioIndex]['scenario_color']);
+            scenarioArr.push(data[scenarioIndex]['ts_list'][tsIndex]['ts_name']);
+        }
+    }
+    for (let annualIndex = 0; annualIndex < data[0]['ts_list'][0]['monthly_filters'][monthlyIndex]['annual_filters'].length; annualIndex++) {
+        for (let scenarioIndex = 0; scenarioIndex < data.length; scenarioIndex++) {
+            for(let tsIndex = 0; tsIndex < data[scenarioIndex]['ts_list'].length; tsIndex++) {
+                let annual = data[scenarioIndex]['ts_list'][tsIndex]['monthly_filters'][monthlyIndex]['annual_filters'][annualIndex];
+                let annualValues = values[annualIndex + 1];
+                if (!annualValues) {
+                    annualValues = [];
+                    values[annualIndex + 1] = annualValues;
+                }
+                annualValues.push(annual['computed_statistics'][statIndex]['statistic_aggregate']);
+            }
         }
     }
     return {
@@ -56,14 +55,15 @@ function buildTable(data) {
             values: headers,
             align: "center",
             line: {width: 1, color: 'black'},
-            font: PLOTLY_FONT
+            font: {family: PLOTLY_FONT['family'], size:18}
         },
         cells: {
             format: ['', FORMATTER],
             values: values,
             line: {color: "black", width: 1},
             align: ["left", "center"],
-            font: {family: PLOTLY_FONT['family'], color: [colors]}
+            height:25,
+            font: {family: PLOTLY_FONT['family'], color: [colors], size:[14,16]}
         },
         domain: {x: [0, 1], y: [0, 0.3]}
     };
@@ -91,19 +91,20 @@ function buildLayouts(datum, yaxis, title) {
                                 font: PLOTLY_FONT,
                                 barmode: 'grouped',
                                 showlegend: false,
+                                height:600,
                                 yaxis: {
                                     title: {
                                         text: yaxis,
                                     },
                                     tickformat: FORMATTER,
-                                    domain: [0.35, 1.0],
+                                    domain: [0.4, 1.0],
                                     gridcolor: '#CCCCCC',
                                     rangemode: 'tozero'
                                 },
                                 xaxis: {
                                     gridcolor: '#CCCCCC'
                                 },
-                                showlegend: true,
+                                showlegend: false,
                                 legend: {
                                     orientation: 'h',
                                     xanchor: 'center',
@@ -117,6 +118,12 @@ function buildLayouts(datum, yaxis, title) {
                                     font: {
                                         size: 20,
                                     }
+                                },
+                                margin: {
+                                    l: 60,
+                                    r: 40,
+                                    b: 90,
+                                    t: 120
                                 }
                             };
                             axis++;
@@ -201,36 +208,42 @@ function getScenarioGroupedPlotlySeries(datum) {
     return seriesList;
 }
 
+function plotPeriodGroupedForMonthStat(datum, monthlyIndex, statIndex) {
+    let series = [];
+    for (let tsIndex = 0; tsIndex < datum[0]['ts_list'].length; tsIndex++) {
+        for (let i = 0; i < datum.length; i++) {
+            let tsList = datum[i]['ts_list'];
+            let annualFilters = tsList[tsIndex]['monthly_filters'][monthlyIndex]['annual_filters'];
+            let x = [];
+            let y = [];
+            for (let j = 0; j < annualFilters.length; j++) {
+                let annualData = annualFilters[j];
+                let statistics = annualData['computed_statistics'];
+                let value = statistics[statIndex];
+                x.push(annualData['annual_period']);
+                y.push(value['statistic_aggregate']);
+            }
+            series.push({
+                type: 'bar',
+                x: x,
+                y: y,
+                name: tsList[tsIndex]['ts_name'],
+                marker: {
+                    color: datum[i]['scenario_color']
+                },
+                // domain: {x: [0, 1], y: [0.3, 1]}
+            });
+        }
+    }
+    series.push(buildTable(datum, monthlyIndex, statIndex));
+    return series;
+}
+
 function getPeriodGroupedPlotlySeries(datum) {
     let seriesList = [];
     for (let statIndex = 0; statIndex < datum[0]['ts_list'][0]['monthly_filters'][0]['annual_filters'][0]['computed_statistics'].length; statIndex++) {
         for (let monthlyIndex = 0; monthlyIndex < datum[0]['ts_list'][0]['monthly_filters'].length; monthlyIndex++) {
-            let series = [];
-            for (let tsIndex = 0; tsIndex < datum[0]['ts_list'].length; tsIndex++) {
-                for (let i = 0; i < datum.length; i++) {
-                    let tsList = datum[i]['ts_list'];
-                    let annualFilters = tsList[tsIndex]['monthly_filters'][monthlyIndex]['annual_filters'];
-                    let x = [];
-                    let y = [];
-                    for (let j = 0; j < annualFilters.length; j++) {
-                        let annualData = annualFilters[j];
-                        let statistics = annualData['computed_statistics'];
-                        let value = statistics[statIndex];
-                        x.push(annualData['annual_period']);
-                        y.push(value['statistic_aggregate']);
-                    }
-                    series.push({
-                        type: 'bar',
-                        x: x,
-                        y: y,
-                        name: tsList[tsIndex]['ts_name'],
-                        marker: {
-                            color: datum[i]['scenario_color']
-                        }
-                    });
-                }
-            }
-            seriesList.push(series);
+            seriesList.push(plotPeriodGroupedForMonthStat(datum, monthlyIndex, statIndex));
         }
     }
     return seriesList;
