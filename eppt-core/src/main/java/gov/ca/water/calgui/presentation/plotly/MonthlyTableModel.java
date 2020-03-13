@@ -87,7 +87,11 @@ class MonthlyTableModel extends RmaTreeTableModel<MonthlyPaneRow>
 		if(!series.isEmpty())
 		{
 			SortedMap<Integer, Double> yearly = primary.getAggregateSeries();
-			String title = plotTitle + " - " + primary.getWaterYearPeriodRangesFilter().getName();
+			String title = plotTitle + " - " + primary.getWaterYearPeriodRangesFilter().getGroupName();
+			if(!primary.getWaterYearPeriodRangesFilter().getName().isEmpty())
+			{
+				title += " - " + primary.getWaterYearPeriodRangesFilter().getName();
+			}
 			MonthlyPaneRow.MonthlyPaneRowScenario monthlyPaneRowScenario = new MonthlyPaneRow.MonthlyPaneRowScenario(title, _waterYearColSpec);
 			getRows().add(monthlyPaneRowScenario);
 			for(int year = series.firstKey().getYear(); year < series.lastKey().getYear(); year++)
