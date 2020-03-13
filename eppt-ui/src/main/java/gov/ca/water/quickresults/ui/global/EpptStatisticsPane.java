@@ -13,7 +13,6 @@
 package gov.ca.water.quickresults.ui.global;
 
 import java.util.List;
-import java.util.logging.Logger;
 
 import gov.ca.water.calgui.busservice.impl.EpptStatistic;
 import gov.ca.water.calgui.busservice.impl.ScriptedEpptStatistics;
@@ -21,15 +20,12 @@ import gov.ca.water.calgui.project.EpptConfigurationController;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.collections.FXCollections;
 import javafx.geometry.Insets;
-import javafx.geometry.Orientation;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TitledPane;
 import javafx.scene.control.cell.CheckBoxListCell;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.TilePane;
-import javafx.scene.layout.VBox;
 
 import static java.util.stream.Collectors.toList;
 
@@ -41,8 +37,6 @@ import static java.util.stream.Collectors.toList;
  */
 class EpptStatisticsPane extends TitledPane
 {
-	private static final Logger LOGGER = Logger.getLogger(EpptStatisticsPane.class.getName());
-
 	private final ListView<StatItem> _statisticsListView = new ListView<>();
 	private final EpptConfigurationController _controller;
 
@@ -51,13 +45,14 @@ class EpptStatisticsPane extends TitledPane
 		_controller = controller;
 		initComponents();
 		loadStats();
+		_statisticsListView.getItems().get(0)._selected.set(true);
+		_controller.setStatistics(getSelectedStatistic());
 	}
 
 	private void loadStats()
 	{
 		List<EpptStatistic> statistics = ScriptedEpptStatistics.getTrendStatistics();
 		_statisticsListView.setItems(FXCollections.observableList(statistics.stream().map(StatItem::new).collect(toList())));
-		_statisticsListView.getItems().get(0)._selected.set(true);
 	}
 
 	private void initComponents()
@@ -81,6 +76,12 @@ class EpptStatisticsPane extends TitledPane
 								  .filter(item->item._selected.get())
 								  .map(item->item._epptStatistic)
 								  .collect(toList());
+	}
+
+	void reloadProject()
+	{
+		List<EpptStatistic> selectedStatistics = _controller.getSelectedStatistics();
+		_statisticsListView.getItems().forEach(i->i._selected.set(selectedStatistics.contains(i._epptStatistic)));
 	}
 
 	private final class MyCheckboxTreeItem extends CheckBoxListCell<StatItem>

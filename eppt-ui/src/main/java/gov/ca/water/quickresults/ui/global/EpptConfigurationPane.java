@@ -31,6 +31,9 @@ public class EpptConfigurationPane extends BorderPane
 	private final EpptProjectPane _projectPane;
 	private final ScenarioTablePane _scenarioPane;
 	private final EpptTimeWindowPane _timeWindowPane;
+	private final EpptMonthlyPeriodPane _epptMonthlyPeriodPane;
+	private final EpptAnnualPeriodPane _epptAnnualPeriodPane;
+	private final EpptStatisticsPane _epptStatisticsPane;
 
 	public EpptConfigurationPane(EpptConfigurationController controller)
 	{
@@ -38,6 +41,9 @@ public class EpptConfigurationPane extends BorderPane
 		_projectPane = new EpptProjectPane(_controller);
 		_scenarioPane = new ScenarioTablePane(_controller);
 		_timeWindowPane = new EpptTimeWindowPane(_controller);
+		_epptMonthlyPeriodPane = new EpptMonthlyPeriodPane(_controller);
+		_epptAnnualPeriodPane = new EpptAnnualPeriodPane(_controller);
+		_epptStatisticsPane = new EpptStatisticsPane(_controller);
 		initComponents();
 	}
 
@@ -48,7 +54,7 @@ public class EpptConfigurationPane extends BorderPane
 		gridPane.add(_scenarioPane, 0, 1);
 		gridPane.add(_timeWindowPane, 0, 2);
 		gridPane.add(buildFilterControls(), 0, 3);
-		gridPane.add(new EpptStatisticsPane(_controller), 0, 4);
+		gridPane.add(_epptStatisticsPane, 0, 4);
 		GridPane.setHgrow(_timeWindowPane, Priority.ALWAYS);
 
 		setCenter(gridPane);
@@ -57,13 +63,10 @@ public class EpptConfigurationPane extends BorderPane
 
 	private Node buildFilterControls()
 	{
-		EpptMonthlyPeriodPane epptMonthlyPeriodPane = new EpptMonthlyPeriodPane(_controller);
-		EpptAnnualPeriodPane epptAnnualPeriodPane = new EpptAnnualPeriodPane(_controller);
-		epptAnnualPeriodPane.expandedProperty().bindBidirectional(epptMonthlyPeriodPane.expandedProperty());
+		_epptAnnualPeriodPane.expandedProperty().bindBidirectional(_epptMonthlyPeriodPane.expandedProperty());
 		BorderPane borderPane = new BorderPane();
-		borderPane.setLeft(epptMonthlyPeriodPane);
-		borderPane.setCenter(epptAnnualPeriodPane);
-//		borderPane.setPrefHeight(320);
+		borderPane.setLeft(_epptMonthlyPeriodPane);
+		borderPane.setCenter(_epptAnnualPeriodPane);
 		GridPane.setVgrow(borderPane, Priority.ALWAYS);
 		return borderPane;
 	}
@@ -73,5 +76,8 @@ public class EpptConfigurationPane extends BorderPane
 		_projectPane.reloadProject();
 		_scenarioPane.reloadProject();
 		_timeWindowPane.reloadProject();
+		_epptMonthlyPeriodPane.reloadProject();
+		_epptAnnualPeriodPane.reloadProject();
+		_epptStatisticsPane.reloadProject();
 	}
 }

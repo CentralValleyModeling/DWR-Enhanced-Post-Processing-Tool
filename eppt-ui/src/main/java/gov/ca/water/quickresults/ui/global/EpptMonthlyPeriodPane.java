@@ -82,6 +82,7 @@ class EpptMonthlyPeriodPane extends TitledPane
 		initComponents();
 		addListeners();
 		_seasonalPeriodListView.getItems().get(0)._selected.set(true);
+		_controller.setMonthlyPeriods(getSelectedMonthlyPeriods());
 	}
 
 	private void addListeners()
@@ -184,6 +185,12 @@ class EpptMonthlyPeriodPane extends TitledPane
 		{
 			LOGGER.log(Level.SEVERE, "Error adding monthly period", e);
 		}
+	}
+
+	void reloadProject()
+	{
+		List<MonthPeriod> selectedMonthlyPeriods = _controller.getSelectedMonthlyPeriods();
+		_seasonalPeriodListView.getItems().forEach(item ->item._selected.set(selectedMonthlyPeriods.contains(item._monthPeriod)));
 	}
 
 	private final class MyCheckboxTreeItem extends CheckBoxListCell<PeriodItem>

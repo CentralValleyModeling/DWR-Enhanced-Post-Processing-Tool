@@ -15,6 +15,7 @@ package gov.ca.water.quickresults.ui.global;
 import gov.ca.water.calgui.bo.WaterYearDefinition;
 import gov.ca.water.calgui.busservice.impl.WaterYearDefinitionSvc;
 import gov.ca.water.calgui.project.EpptConfigurationController;
+import javafx.beans.value.ChangeListener;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.EventHandler;
@@ -59,20 +60,30 @@ class EpptTimeWindowPane extends TitledPane
 	private void initListeners()
 	{
 		_waterYearDefinitionComboBox.getSelectionModel().selectedItemProperty().addListener((e, o, n) -> _controller.setWaterYearDefinition(n));
-		_startYearSpinner.valueProperty().addListener((e, o, n) ->
-		{
-			_controller.setStartYear(n);
-			SpinnerValueFactory.IntegerSpinnerValueFactory valueFactory = (SpinnerValueFactory.IntegerSpinnerValueFactory)_endYearSpinner.getValueFactory();
-			valueFactory.setMin(n);
-		});
-		_endYearSpinner.valueProperty().addListener((e, o, n) ->
+		_startYearSpinner.valueProperty().addListener(startYearChanged());
+		_endYearSpinner.valueProperty().addListener(endYearChanged());
+		_startYearSpinner.addEventFilter(KeyEvent.KEY_PRESSED, new MyKeyAdapter(_startYearSpinner));
+		_endYearSpinner.addEventFilter(KeyEvent.KEY_PRESSED, new MyKeyAdapter(_endYearSpinner));
+	}
+
+	private ChangeListener<Integer> endYearChanged()
+	{
+		return (e, o, n) ->
 		{
 			_controller.setEndYear(n);
 			SpinnerValueFactory.IntegerSpinnerValueFactory valueFactory = (SpinnerValueFactory.IntegerSpinnerValueFactory)_startYearSpinner.getValueFactory();
 			valueFactory.setMax(n);
-		});
-		_startYearSpinner.addEventFilter(KeyEvent.KEY_PRESSED, new MyKeyAdapter(_startYearSpinner));
-		_endYearSpinner.addEventFilter(KeyEvent.KEY_PRESSED, new MyKeyAdapter(_endYearSpinner));
+		};
+	}
+
+	private ChangeListener<Integer> startYearChanged()
+	{
+		return (e, o, n) ->
+		{
+			_controller.setStartYear(n);
+			SpinnerValueFactory.IntegerSpinnerValueFactory valueFactory = (SpinnerValueFactory.IntegerSpinnerValueFactory)_endYearSpinner.getValueFactory();
+			valueFactory.setMin(n);
+		};
 	}
 
 	private void initComponents()

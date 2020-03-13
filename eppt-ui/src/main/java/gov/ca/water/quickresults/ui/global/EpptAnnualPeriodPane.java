@@ -17,6 +17,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.time.Month;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -25,6 +26,7 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.stream.Stream;
 
 import javax.swing.*;
 
@@ -75,6 +77,7 @@ class EpptAnnualPeriodPane extends TitledPane
 		initComponents();
 		addListeners();
 		((MyCheckBoxTreeItem) _treeView.getRoot().getChildren().get(0)).setSelected(true);
+		_controller.setWaterYearPeriodRangesFilters(getWaterYearPeriodRanges());
 	}
 
 	private void addListeners()
@@ -163,18 +166,6 @@ class EpptAnnualPeriodPane extends TitledPane
 		catch(InvocationTargetException e)
 		{
 			LOGGER.log(Level.SEVERE, "Error adding monthly period", e);
-		}
-	}
-
-	private void expandTree()
-	{
-		for(int i = 0; i < _treeView.getRoot().getChildren().size(); i++)
-		{
-			TreeItem<WaterYearPeriodDefinitionsRow> treeItem = _treeView.getRoot().getChildren().get(i);
-			if(treeItem != null)
-			{
-				treeItem.setExpanded(true);
-			}
 		}
 	}
 
@@ -275,7 +266,7 @@ class EpptAnnualPeriodPane extends TitledPane
 		}
 	}
 
-	public List<Map<EpptScenarioRun, WaterYearPeriodRangesFilter>> getWaterYearPeriodRanges()
+	private List<Map<EpptScenarioRun, WaterYearPeriodRangesFilter>> getWaterYearPeriodRanges()
 	{
 		List<Map<EpptScenarioRun, WaterYearPeriodRangesFilter>> retval = new ArrayList<>();
 		for(TreeItem<WaterYearPeriodDefinitionsRow> treeItem : _treeView.getRoot().getChildren())
@@ -313,6 +304,32 @@ class EpptAnnualPeriodPane extends TitledPane
 		}
 		retval.removeIf(Objects::isNull);
 		return retval;
+	}
+
+	void reloadProject()
+	{
+		List<Map<EpptScenarioRun, WaterYearPeriodRangesFilter>> waterYearPeriodRanges = _controller.getWaterYearPeriodRanges();
+		List<String> collect = waterYearPeriodRanges.stream()
+																		 .map(Map::entrySet)
+																		 .flatMap(Collection::stream)
+																		 .map(Map.Entry::getValue)
+																		 .map(s->s.getName())
+																		 .collect(toList());
+		for(TreeItem<WaterYearPeriodDefinitionsRow> treeItem : _treeView.getRoot().getChildren())
+		{
+			WaterYearPeriodDefinitionsRow value = treeItem.getValue();
+			String name = value.getWaterYearPeriodRangesFilter().values().iterator().next().getName();
+			((CheckBoxTreeItem<WaterYearPeriodDefinitionsRow>) treeItem).setSelected(collect.contains(name));
+			for(TreeItem<WaterYearPeriodDefinitionsRow> child : treeItem.getChildren())
+			{
+				if(child instanceof CheckBoxTreeItem)
+				{
+					value = child.getValue();
+					name = value.getWaterYearPeriodRangesFilter().values().iterator().next().getName();
+					((CheckBoxTreeItem<WaterYearPeriodDefinitionsRow>) child).setSelected(collect.contains(name));
+				}
+			}
+		}
 	}
 
 	private interface WaterYearPeriodDefinitionsRow

@@ -16,7 +16,9 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 
 import gov.ca.water.calgui.EpptInitializationException;
+import gov.ca.water.calgui.busservice.impl.EpptReportingMonths;
 import gov.ca.water.calgui.busservice.impl.GuiLinksSeedDataSvcImpl;
+import gov.ca.water.calgui.busservice.impl.ScriptedEpptStatistics;
 import gov.ca.water.calgui.busservice.impl.WaterYearDefinitionSvc;
 import gov.ca.water.calgui.busservice.impl.WaterYearIndexAliasReader;
 import gov.ca.water.calgui.project.EpptConfigurationController;
@@ -42,6 +44,8 @@ public class QuickResultsListenerTest
 		GuiLinksSeedDataSvcImpl.createSeedDataSvcImplInstance();
 		WaterYearDefinitionSvc.createSeedDataSvcImplInstance();
 		WaterYearIndexAliasReader.createInstance();
+		ScriptedEpptStatistics.createScriptedStatistics();
+		EpptReportingMonths.createTrendReportingMonthsInstance();
 	}
 
 	@Test

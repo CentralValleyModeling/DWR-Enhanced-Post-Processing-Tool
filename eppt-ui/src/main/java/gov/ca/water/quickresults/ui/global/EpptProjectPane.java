@@ -13,6 +13,7 @@
 package gov.ca.water.quickresults.ui.global;
 
 import gov.ca.water.calgui.project.EpptConfigurationController;
+import javafx.beans.value.ChangeListener;
 import javafx.geometry.Insets;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
@@ -39,21 +40,32 @@ class EpptProjectPane extends TitledPane
 		setExpanded(false);
 		initComponents();
 		fillProject(_controller.getProjectName(), _controller.getProjectDescription());
+
 		initListeners();
 	}
 
 	private void initListeners()
 	{
-		_projectDescriptionField.textProperty().addListener((e,o,n)->
-		{
-			_controller.setProjectDescription(n);
-			_controller.setModified();
-		});
-		_projectNameField.textProperty().addListener((e,o,n)->
+		_projectDescriptionField.textProperty().addListener(descriptionModified());
+		_projectNameField.textProperty().addListener(nameModified());
+	}
+
+	private ChangeListener<String> nameModified()
+	{
+		return (e,o,n)->
 		{
 			_controller.setProjectName(n);
 			_controller.setModified();
-		});
+		};
+	}
+
+	private ChangeListener<String> descriptionModified()
+	{
+		return (e,o,n)->
+		{
+			_controller.setProjectDescription(n);
+			_controller.setModified();
+		};
 	}
 
 	private void initComponents()
@@ -87,6 +99,7 @@ class EpptProjectPane extends TitledPane
 
 	void reloadProject()
 	{
+		initListeners();
 		fillProject(_controller.getProjectName(), _controller.getProjectDescription());
 	}
 }
