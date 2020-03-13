@@ -96,7 +96,7 @@ class AddAnnualFilterDialog extends JDialog
 	{
 		this(frame);
 		_nameTextField.setText(selectedItem.getWaterYearPeriod().getPeriodName());
-		if(selectedItem.getStartYear() == selectedItem.getStartYear())
+		if(selectedItem.getStartYear().getYear() == selectedItem.getEndYear().getYear())
 		{
 			_singleMonthRadioButton.setSelected(true);
 			_singleMonthComboBox.setSelectedItem(selectedItem.getStartYear());

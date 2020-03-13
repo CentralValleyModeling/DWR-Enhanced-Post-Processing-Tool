@@ -14,11 +14,10 @@ package gov.ca.water.calgui.presentation.plotly;
 
 import java.math.BigDecimal;
 import java.math.MathContext;
-import java.text.DecimalFormat;
 import java.util.Map;
 
-import gov.ca.water.calgui.bo.WaterYearIndex;
 import gov.ca.water.calgui.busservice.impl.EpptStatistic;
+import gov.ca.water.calgui.constant.Constant;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.value.ObservableValue;
 import javafx.scene.paint.Color;
@@ -26,7 +25,6 @@ import javafx.scene.paint.Color;
 import com.rma.javafx.treetable.columns.specs.TreeTableColumnSpec;
 import com.rma.javafx.treetable.rows.RmaTreeTableRowModel;
 
-import static gov.ca.water.calgui.presentation.plotly.SummaryTableModel.ROOT_COL_SPEC;
 import static java.util.stream.Collectors.toMap;
 
 /**
@@ -58,18 +56,20 @@ abstract class SummaryPaneRow extends RmaTreeTableRowModel<SummaryPaneRow>
 	static class SummaryPaneRowScenario extends SummaryPaneRow
 	{
 		private final SimpleStringProperty _title;
+		private final TreeTableColumnSpec _treeTableColumnSpec;
 
-		SummaryPaneRowScenario(String title)
+		SummaryPaneRowScenario(String title, TreeTableColumnSpec treeTableColumnSpec)
 		{
 			super(null);
 			_title = new SimpleStringProperty(title);
+			_treeTableColumnSpec = treeTableColumnSpec;
 		}
 
 
 		@Override
 		public ObservableValue<?> getObservableValue(TreeTableColumnSpec treeTableColumnSpec)
 		{
-			if(treeTableColumnSpec == ROOT_COL_SPEC)
+			if(treeTableColumnSpec == _treeTableColumnSpec)
 			{
 				return _title;
 			}
@@ -80,55 +80,20 @@ abstract class SummaryPaneRow extends RmaTreeTableRowModel<SummaryPaneRow>
 	static class SummaryPaneRowStat extends SummaryPaneRow
 	{
 		private final SimpleStringProperty _title;
+		private final TreeTableColumnSpec _treeTableColumnSpec;
 
-		SummaryPaneRowStat(SummaryPaneRow parent, EpptStatistic epptStatistic)
+		SummaryPaneRowStat(SummaryPaneRow parent, EpptStatistic epptStatistic, TreeTableColumnSpec treeTableColumnSpec)
 		{
 			super(parent);
 			_title = new SimpleStringProperty(epptStatistic.getName());
+			_treeTableColumnSpec = treeTableColumnSpec;
 		}
 
 
 		@Override
 		public ObservableValue<?> getObservableValue(TreeTableColumnSpec treeTableColumnSpec)
 		{
-			if(treeTableColumnSpec == ROOT_COL_SPEC)
-			{
-				return _title;
-			}
-			return null;
-		}
-	}
-	static class SummaryPaneBlankRow extends SummaryPaneRow
-	{
-
-		public SummaryPaneBlankRow(SummaryPaneRow parent)
-		{
-			super(parent);
-		}
-
-		@Override
-		public ObservableValue<?> getObservableValue(TreeTableColumnSpec treeTableColumnSpec)
-		{
-			return null;
-		}
-	}
-
-	static class SummaryPaneRowWaterYearIndex extends SummaryPaneRow
-	{
-		private final SimpleStringProperty _title;
-
-		SummaryPaneRowWaterYearIndex(SummaryPaneRow parent, EpptStatistic key,
-									 WaterYearIndex waterYearIndex)
-		{
-			super(parent);
-			_title = new SimpleStringProperty(key + " - " + waterYearIndex.getName());
-		}
-
-
-		@Override
-		public ObservableValue<?> getObservableValue(TreeTableColumnSpec treeTableColumnSpec)
-		{
-			if(treeTableColumnSpec == ROOT_COL_SPEC)
+			if(treeTableColumnSpec == _treeTableColumnSpec)
 			{
 				return _title;
 			}
@@ -139,34 +104,41 @@ abstract class SummaryPaneRow extends RmaTreeTableRowModel<SummaryPaneRow>
 	static class SummaryPaneRowData extends SummaryPaneRow
 	{
 		private final Map<TreeTableColumnSpec, SimpleStringProperty> _data;
+		private final TreeTableColumnSpec _rootSpec;
 		private final SimpleStringProperty _rowTitle;
 
-		SummaryPaneRowData(SummaryPaneRow parent, String rowTitle, Map<TreeTableColumnSpec, Double> data)
+		SummaryPaneRowData(SummaryPaneRow parent, String rowTitle, Map<TreeTableColumnSpec, Double> data, TreeTableColumnSpec rootSpec)
 		{
 			super(parent);
 			_rowTitle = new SimpleStringProperty(rowTitle);
-			_data = data.entrySet().stream().collect(toMap(Map.Entry::getKey,
-					e ->
+			_data = data.entrySet().stream().collect(toMap(Map.Entry::getKey, e ->
+			{
+				SimpleStringProperty retval = new SimpleStringProperty();
+				if(e.getValue() != null && Constant.isValidValue(e.getValue()))
+				{
+					Double value = e.getValue();
+					if(value >= 1)
 					{
-						Double value = e.getValue();
-						if(value != null && !value.isNaN())
-						{
-							BigDecimal bigDecimal = BigDecimal.valueOf(value);
-							bigDecimal = bigDecimal.round(new MathContext(3));
-							return new SimpleStringProperty(bigDecimal.toPlainString());
-						}
-						else
-						{
-							return new SimpleStringProperty("");
-						}
-					}));
+						retval = new SimpleStringProperty(Long.toString(Math.round(value)));
+					}
+					else
+					{
+						BigDecimal bigDecimal = BigDecimal.valueOf(value);
+						bigDecimal = bigDecimal.round(new MathContext(3));
+						value = bigDecimal.doubleValue();
+						retval = new SimpleStringProperty(Double.toString(value));
+					}
+				}
+				return retval;
+			}));
+			_rootSpec = rootSpec;
 		}
 
 
 		@Override
 		public ObservableValue<?> getObservableValue(TreeTableColumnSpec treeTableColumnSpec)
 		{
-			if(treeTableColumnSpec == ROOT_COL_SPEC)
+			if(treeTableColumnSpec == _rootSpec)
 			{
 				return _rowTitle;
 			}

@@ -62,6 +62,11 @@ public final class EpptReportingComputedSet
 		_isInstantaneous = isInstantaneous;
 	}
 
+	public String getUnits()
+	{
+		return _units;
+	}
+
 	public List<EpptReportingScenarioComputed> getEpptReportingComputed()
 	{
 		return _epptReportingComputed;

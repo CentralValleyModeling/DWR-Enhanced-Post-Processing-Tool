@@ -18,19 +18,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.util.SortedMap;
-import java.util.TreeMap;
-import java.util.function.Function;
 
 import gov.ca.water.calgui.bo.WaterYearDefinition;
-import gov.ca.water.calgui.bo.WaterYearIndex;
-import gov.ca.water.calgui.bo.WaterYearPeriod;
 import gov.ca.water.calgui.bo.WaterYearPeriodRangesFilter;
 import gov.ca.water.calgui.busservice.impl.EpptReportingComputed;
 import gov.ca.water.calgui.busservice.impl.EpptReportingComputedSet;
-import gov.ca.water.calgui.busservice.impl.EpptReportingComputedSet.EpptReportingScenarioComputed;
 import gov.ca.water.calgui.busservice.impl.EpptReportingComputedStatistics;
-import gov.ca.water.calgui.busservice.impl.EpptStatistic;
 import gov.ca.water.calgui.busservice.impl.MonthPeriod;
 
 import com.rma.javafx.treetable.RmaTreeTableModel;
@@ -45,22 +38,17 @@ import com.rma.javafx.treetable.columns.specs.TreeTableColumnSpec;
  */
 class SummaryTableModel extends RmaTreeTableModel<SummaryPaneRow>
 {
-	static final RmaTreeTableColumnSpec ROOT_COL_SPEC;
+	private final RmaTreeTableColumnSpec _rootColSpec;
+	private final RmaTreeTableColumnSpec _aggregateColumnSpec;
 
-	static
+	SummaryTableModel(String plotTitle, WaterYearDefinition waterYearDefinition, EpptReportingComputedSet epptReportingComputedSet)
 	{
-		ROOT_COL_SPEC = new RmaTreeTableColumnSpec.Builder("")
+		_rootColSpec = new RmaTreeTableColumnSpec.Builder(plotTitle + " (" + epptReportingComputedSet.getUnits() + ")")
 				.withCanBeHidden(false)
 				.withEditable(false)
 				.withSortable(false)
 				.withVisibleByDefault(true)
 				.build();
-	}
-
-	private final RmaTreeTableColumnSpec _aggregateColumnSpec;
-
-	SummaryTableModel(String plotTitle, WaterYearDefinition waterYearDefinition, EpptReportingComputedSet epptReportingComputedSet)
-	{
 		MonthPeriod monthPeriod = epptReportingComputedSet.getEpptReportingComputed().get(0)
 														  .getTsComputed().get(0)
 														  .getMonthComputed().get(0)
@@ -78,7 +66,7 @@ class SummaryTableModel extends RmaTreeTableModel<SummaryPaneRow>
 		{
 			for(EpptReportingComputedSet.EpptReportingTs tsComputed : computed.getTsComputed())
 			{
-				SummaryPaneRow.SummaryPaneRowScenario summaryPaneRowScenario = new SummaryPaneRow.SummaryPaneRowScenario(tsComputed.getTsName());
+				SummaryPaneRow.SummaryPaneRowScenario summaryPaneRowScenario = new SummaryPaneRow.SummaryPaneRowScenario(tsComputed.getTsName(), _rootColSpec);
 				for(EpptReportingComputedSet.EpptReportingMonthComputed monthComputed : tsComputed.getMonthComputed())
 				{
 					List<EpptReportingComputedStatistics> computedStatistics = monthComputed.getEpptReportingComputed().get(0)
@@ -87,7 +75,7 @@ class SummaryTableModel extends RmaTreeTableModel<SummaryPaneRow>
 					for(int statIndex = 0; statIndex < statisticsCount; statIndex++)
 					{
 						SummaryPaneRow.SummaryPaneRowStat statRow = new SummaryPaneRow.SummaryPaneRowStat(summaryPaneRowScenario,
-								computedStatistics.get(statIndex).getEpptStatistic());
+								computedStatistics.get(statIndex).getEpptStatistic(), _rootColSpec);
 						for(EpptReportingComputed epptReportingComputed : monthComputed.getEpptReportingComputed())
 						{
 							processRows(statRow, monthTreeTableColumnSpecMap, epptReportingComputed, statIndex);
@@ -105,24 +93,32 @@ class SummaryTableModel extends RmaTreeTableModel<SummaryPaneRow>
 							 EpptReportingComputed epptReportingComputed, int statIndex)
 	{
 		WaterYearPeriodRangesFilter waterYearPeriodRangesFilter = epptReportingComputed.getWaterYearPeriodRangesFilter();
-		EpptReportingComputedStatistics computedStatistics = epptReportingComputed.getComputedStatistics().get(statIndex);
-		Map<TreeTableColumnSpec, Double> data = new HashMap<>();
-		data.put(_aggregateColumnSpec, computedStatistics.getAggregateStatistic());
-		for(Map.Entry<Month, Double> stat : computedStatistics.getStatisticallyComputedMonthly().entrySet())
+		List<EpptReportingComputedStatistics> statsList = epptReportingComputed.getComputedStatistics();
+		if(statIndex < statsList.size())
 		{
-			data.put(monthTreeTableColumnSpecMap.get(stat.getKey()), stat.getValue());
-		}
-		String title = waterYearPeriodRangesFilter.getName();
-		SummaryPaneRow.SummaryPaneRowData summaryPaneRowData = new SummaryPaneRow.SummaryPaneRowData(statRow, title, data);
-		statRow.getChildren().add(summaryPaneRowData);
+			EpptReportingComputedStatistics computedStatistics = statsList.get(statIndex);
+			Map<TreeTableColumnSpec, Double> data = new HashMap<>();
+			data.put(_aggregateColumnSpec, computedStatistics.getAggregateStatistic());
+			for(Map.Entry<Month, Double> stat : computedStatistics.getStatisticallyComputedMonthly().entrySet())
+			{
+				data.put(monthTreeTableColumnSpecMap.get(stat.getKey()), stat.getValue());
+			}
 
+			String title = waterYearPeriodRangesFilter.getGroupName();
+			if(!waterYearPeriodRangesFilter.getName().isEmpty())
+			{
+				title += " - " + waterYearPeriodRangesFilter.getName();
+			}
+			SummaryPaneRow.SummaryPaneRowData summaryPaneRowData = new SummaryPaneRow.SummaryPaneRowData(statRow, title, data, _rootColSpec);
+			statRow.getChildren().add(summaryPaneRowData);
+		}
 	}
 
 	private Map<Month, TreeTableColumnSpec> processColumns(WaterYearDefinition waterYearDefinition,
 														   RmaTreeTableColumnSpec aggregateColumnSpec)
 	{
 		Map<Month, TreeTableColumnSpec> retval = new HashMap<>();
-		getColumnSpecs().add(ROOT_COL_SPEC);
+		getColumnSpecs().add(_rootColSpec);
 		Month startMonth = waterYearDefinition.getStartMonth();
 		do
 		{

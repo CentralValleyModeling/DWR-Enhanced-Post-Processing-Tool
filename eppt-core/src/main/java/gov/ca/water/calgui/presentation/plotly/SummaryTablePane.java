@@ -12,13 +12,8 @@
 
 package gov.ca.water.calgui.presentation.plotly;
 
-import java.util.Map;
-import java.util.SortedMap;
-
 import gov.ca.water.calgui.bo.WaterYearDefinition;
-import gov.ca.water.calgui.bo.WaterYearIndex;
 import gov.ca.water.calgui.busservice.impl.EpptReportingComputedSet;
-import gov.ca.water.calgui.busservice.impl.EpptStatistic;
 import javafx.application.Platform;
 import javafx.collections.ObservableList;
 import javafx.embed.swing.JFXPanel;
@@ -32,7 +27,6 @@ import javafx.scene.layout.FlowPane;
 
 import com.rma.javafx.treetable.RmaTreeTableView;
 
-import static gov.ca.water.calgui.presentation.plotly.SummaryTableModel.ROOT_COL_SPEC;
 
 /**
  * Company: Resource Management Associates
@@ -40,13 +34,13 @@ import static gov.ca.water.calgui.presentation.plotly.SummaryTableModel.ROOT_COL
  * @author <a href="mailto:adam@rmanet.com">Adam Korynta</a>
  * @since 01-27-2020
  */
-public class SummaryTablePane extends JFXPanel
+class SummaryTablePane extends JFXPanel
 {
 	private final String _plotTitle;
 	private final WaterYearDefinition _waterYearDefinition;
 	private final EpptReportingComputedSet _data;
 
-	public SummaryTablePane(String plotTitle, WaterYearDefinition waterYearDefinition, EpptReportingComputedSet data)
+	SummaryTablePane(String plotTitle, WaterYearDefinition waterYearDefinition, EpptReportingComputedSet data)
 	{
 		_data = data;
 		_plotTitle = plotTitle;
@@ -59,18 +53,17 @@ public class SummaryTablePane extends JFXPanel
 	{
 		BorderPane borderPane = new BorderPane();
 		RmaTreeTableView<SummaryTableModel, SummaryPaneRow> treeView = new RmaTreeTableView<>();
-		SummaryTableModel monthlyTableModel = new SummaryTableModel(_plotTitle, _waterYearDefinition, _data);
-		treeView.setModel(monthlyTableModel);
+		SummaryTableModel tableModel = new SummaryTableModel(_plotTitle, _waterYearDefinition, _data);
+		treeView.setModel(tableModel);
 		treeView.setCopyEnabled(true);
 		ObservableList<TreeItem<SummaryPaneRow>> treeItems = treeView.getRoot().getChildren();
 		expandTreeItems(treeItems);
 		treeView.setColumnResizePolicy(TreeTableView.CONSTRAINED_RESIZE_POLICY);
-		treeView.getColumnFromSpec(ROOT_COL_SPEC).setMinWidth(200);
-		treeView.getColumnFromSpec(monthlyTableModel.getColumnSpecs().get(monthlyTableModel.getColumnSpecs().size() - 1)).setMinWidth(150);
 		borderPane.setCenter(treeView);
+		treeView.getColumnFromSpec(tableModel.getColumnSpecs().get(0)).setMinWidth(250);
 		FlowPane flowPane = new FlowPane(Orientation.HORIZONTAL);
 		Button copyDataButton = new Button("Copy Data");
-		copyDataButton.setOnAction(evt->TreeTableUtil.copyValuesToClipboard(treeView));
+		copyDataButton.setOnAction(evt -> TreeTableUtil.copyValuesToClipboard(treeView));
 		flowPane.getChildren().add(copyDataButton);
 		borderPane.setBottom(flowPane);
 		setScene(new Scene(borderPane));

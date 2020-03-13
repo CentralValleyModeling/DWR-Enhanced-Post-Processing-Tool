@@ -17,6 +17,7 @@ import java.math.MathContext;
 import java.util.Map;
 
 import gov.ca.water.calgui.busservice.impl.EpptStatistic;
+import gov.ca.water.calgui.constant.Constant;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.value.ObservableValue;
 import javafx.scene.paint.Color;
@@ -24,7 +25,6 @@ import javafx.scene.paint.Color;
 import com.rma.javafx.treetable.columns.specs.TreeTableColumnSpec;
 import com.rma.javafx.treetable.rows.RmaTreeTableRowModel;
 
-import static gov.ca.water.calgui.presentation.plotly.MonthlyTableModel.WATER_YEAR_COL_SPEC;
 import static java.util.stream.Collectors.toMap;
 
 /**
@@ -36,7 +36,7 @@ import static java.util.stream.Collectors.toMap;
 abstract class MonthlyPaneRow extends RmaTreeTableRowModel<MonthlyPaneRow>
 {
 
-	public MonthlyPaneRow(MonthlyPaneRow parent)
+	MonthlyPaneRow(MonthlyPaneRow parent)
 	{
 		super(parent);
 	}
@@ -56,18 +56,20 @@ abstract class MonthlyPaneRow extends RmaTreeTableRowModel<MonthlyPaneRow>
 	static class MonthlyPaneRowScenario extends MonthlyPaneRow
 	{
 		private final SimpleStringProperty _title;
+		private final TreeTableColumnSpec _treeTableColumnSpec;
 
-		MonthlyPaneRowScenario(String title)
+		MonthlyPaneRowScenario(String title, TreeTableColumnSpec treeTableColumnSpec)
 		{
 			super(null);
 			_title = new SimpleStringProperty(title);
+			_treeTableColumnSpec = treeTableColumnSpec;
 		}
 
 
 		@Override
 		public ObservableValue<?> getObservableValue(TreeTableColumnSpec treeTableColumnSpec)
 		{
-			if(treeTableColumnSpec == WATER_YEAR_COL_SPEC)
+			if(treeTableColumnSpec == _treeTableColumnSpec)
 			{
 				return _title;
 			}
@@ -80,30 +82,40 @@ abstract class MonthlyPaneRow extends RmaTreeTableRowModel<MonthlyPaneRow>
 
 		private final SimpleStringProperty _year;
 		private final Map<TreeTableColumnSpec, SimpleStringProperty> _data;
+		private final TreeTableColumnSpec _treeTableColumnSpec;
 
-		MonthlyPaneRowData(MonthlyPaneRowScenario parent, int year, Map<TreeTableColumnSpec, Double> data)
+		MonthlyPaneRowData(MonthlyPaneRowScenario parent, int year, Map<TreeTableColumnSpec, Double> data, TreeTableColumnSpec treeTableColumnSpec)
 		{
 			super(parent);
 			_year = new SimpleStringProperty(Integer.toString(year));
-			_data = data.entrySet().stream().collect(toMap(Map.Entry::getKey,
-					e->
+			_data = data.entrySet().stream().collect(toMap(Map.Entry::getKey, e ->
+			{
+				SimpleStringProperty retval = new SimpleStringProperty();
+				if(e.getValue() != null && Constant.isValidValue(e.getValue()))
+				{
+					Double value = e.getValue();
+					if(value >= 1)
 					{
-						Double value = e.getValue();
-						if(!Double.isNaN(value))
-						{
-							BigDecimal bigDecimal = BigDecimal.valueOf(value);
-							bigDecimal = bigDecimal.round(new MathContext(3));
-							value = bigDecimal.doubleValue();
-						}
-						return new SimpleStringProperty(Double.toString(value));
-					}));
+						retval = new SimpleStringProperty(Long.toString(Math.round(value)));
+					}
+					else
+					{
+						BigDecimal bigDecimal = BigDecimal.valueOf(value);
+						bigDecimal = bigDecimal.round(new MathContext(3));
+						value = bigDecimal.doubleValue();
+						retval = new SimpleStringProperty(Double.toString(value));
+					}
+				}
+				return retval;
+			}));
+			_treeTableColumnSpec = treeTableColumnSpec;
 		}
 
 
 		@Override
 		public ObservableValue<?> getObservableValue(TreeTableColumnSpec treeTableColumnSpec)
 		{
-			if(treeTableColumnSpec == WATER_YEAR_COL_SPEC)
+			if(treeTableColumnSpec == _treeTableColumnSpec)
 			{
 				return _year;
 			}
@@ -116,25 +128,28 @@ abstract class MonthlyPaneRow extends RmaTreeTableRowModel<MonthlyPaneRow>
 
 		private final SimpleStringProperty _stat;
 		private final Map<TreeTableColumnSpec, SimpleStringProperty> _data;
+		private final TreeTableColumnSpec _treeTableColumnSpec;
 
-		MonthlyPaneRowStat(MonthlyPaneRowScenario parent, EpptStatistic epptStatistic, Map<TreeTableColumnSpec, Double> data)
+		MonthlyPaneRowStat(MonthlyPaneRowScenario parent, EpptStatistic epptStatistic, Map<TreeTableColumnSpec, Double> data,
+						   TreeTableColumnSpec treeTableColumnSpec)
 		{
 			super(parent);
 			_stat = new SimpleStringProperty(epptStatistic.getName());
 			_data = data.entrySet().stream().collect(toMap(Map.Entry::getKey,
-					e->
+					e ->
 					{
 						BigDecimal bigDecimal = BigDecimal.valueOf(e.getValue());
 						bigDecimal = bigDecimal.round(new MathContext(3));
 						return new SimpleStringProperty(Double.toString(bigDecimal.doubleValue()));
 					}));
+			_treeTableColumnSpec = treeTableColumnSpec;
 		}
 
 
 		@Override
 		public ObservableValue<?> getObservableValue(TreeTableColumnSpec treeTableColumnSpec)
 		{
-			if(treeTableColumnSpec == WATER_YEAR_COL_SPEC)
+			if(treeTableColumnSpec == _treeTableColumnSpec)
 			{
 				return _stat;
 			}

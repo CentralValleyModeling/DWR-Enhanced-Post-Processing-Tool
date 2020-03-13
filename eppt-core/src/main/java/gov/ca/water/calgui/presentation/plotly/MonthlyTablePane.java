@@ -27,8 +27,6 @@ import javafx.scene.layout.FlowPane;
 
 import com.rma.javafx.treetable.RmaTreeTableView;
 
-import static gov.ca.water.calgui.presentation.plotly.MonthlyTableModel.WATER_YEAR_COL_SPEC;
-
 /**
  * Company: Resource Management Associates
  *
@@ -66,8 +64,7 @@ class MonthlyTablePane extends JFXPanel
 			}
 		}
 		treeView.setColumnResizePolicy(TreeTableView.CONSTRAINED_RESIZE_POLICY);
-		treeView.getColumnFromSpec(WATER_YEAR_COL_SPEC).setMinWidth(250);
-		treeView.getColumnFromSpec(monthlyTableModel.getColumnSpecs().get(monthlyTableModel.getColumnSpecs().size() - 1)).setMinWidth(150);
+		treeView.getColumnFromSpec(monthlyTableModel.getColumnSpecs().get(0)).setMinWidth(250);
 		borderPane.setCenter(treeView);
 		FlowPane flowPane = new FlowPane(Orientation.HORIZONTAL);
 		Button copyDataButton = new Button("Copy Data");

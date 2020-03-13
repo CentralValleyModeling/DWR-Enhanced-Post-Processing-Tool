@@ -28,7 +28,6 @@ import gov.ca.water.calgui.busservice.impl.EpptReportingComputedSet;
 import gov.ca.water.calgui.busservice.impl.EpptReportingComputedStatistics;
 import gov.ca.water.calgui.busservice.impl.EpptStatistic;
 import gov.ca.water.calgui.busservice.impl.MonthPeriod;
-import gov.ca.water.calgui.project.EpptScenarioRun;
 
 import com.rma.javafx.treetable.RmaTreeTableModel;
 import com.rma.javafx.treetable.columns.specs.RmaTreeTableColumnSpec;
@@ -42,22 +41,17 @@ import com.rma.javafx.treetable.columns.specs.TreeTableColumnSpec;
  */
 class MonthlyTableModel extends RmaTreeTableModel<MonthlyPaneRow>
 {
-	static final RmaTreeTableColumnSpec WATER_YEAR_COL_SPEC;
+	private final RmaTreeTableColumnSpec _waterYearColSpec;
+	private final RmaTreeTableColumnSpec _aggregateColumnSpec;
 
-	static
+	MonthlyTableModel(String plotTitle, WaterYearDefinition waterYearDefinition, EpptReportingComputedSet epptReportingComputedSet)
 	{
-		WATER_YEAR_COL_SPEC = new RmaTreeTableColumnSpec.Builder("WY")
+		_waterYearColSpec = new RmaTreeTableColumnSpec.Builder(plotTitle + " (" + epptReportingComputedSet.getUnits() + ")")
 				.withCanBeHidden(false)
 				.withEditable(false)
 				.withSortable(false)
 				.withVisibleByDefault(true)
 				.build();
-	}
-
-	private final RmaTreeTableColumnSpec _aggregateColumnSpec;
-
-	MonthlyTableModel(String plotTitle, WaterYearDefinition waterYearDefinition, EpptReportingComputedSet epptReportingComputedSet)
-	{
 		MonthPeriod monthPeriod = epptReportingComputedSet.getEpptReportingComputed().get(0)
 														  .getTsComputed().get(0)
 														  .getMonthComputed().get(0)
@@ -94,7 +88,7 @@ class MonthlyTableModel extends RmaTreeTableModel<MonthlyPaneRow>
 		{
 			SortedMap<Integer, Double> yearly = primary.getAggregateSeries();
 			String title = plotTitle + " - " + primary.getWaterYearPeriodRangesFilter().getName();
-			MonthlyPaneRow.MonthlyPaneRowScenario monthlyPaneRowScenario = new MonthlyPaneRow.MonthlyPaneRowScenario(title);
+			MonthlyPaneRow.MonthlyPaneRowScenario monthlyPaneRowScenario = new MonthlyPaneRow.MonthlyPaneRowScenario(title, _waterYearColSpec);
 			getRows().add(monthlyPaneRowScenario);
 			for(int year = series.firstKey().getYear(); year < series.lastKey().getYear(); year++)
 			{
@@ -116,7 +110,8 @@ class MonthlyTableModel extends RmaTreeTableModel<MonthlyPaneRow>
 				if(!Double.isNaN(orDefault))
 				{
 					dataMap.put(_aggregateColumnSpec, orDefault);
-					MonthlyPaneRow.MonthlyPaneRowData dataRow = new MonthlyPaneRow.MonthlyPaneRowData(monthlyPaneRowScenario, year, dataMap);
+					MonthlyPaneRow.MonthlyPaneRowData dataRow = new MonthlyPaneRow.MonthlyPaneRowData(monthlyPaneRowScenario, year, dataMap,
+							_waterYearColSpec);
 					monthlyPaneRowScenario.getChildren().add(dataRow);
 				}
 			}
@@ -129,7 +124,8 @@ class MonthlyTableModel extends RmaTreeTableModel<MonthlyPaneRow>
 					dataMap.put(monthTreeTableColumnSpecMap.get(entry.getKey()), entry.getValue());
 				}
 				dataMap.put(_aggregateColumnSpec, computedStatistics.getAggregateStatistic());
-				monthlyPaneRowScenario.getChildren().add(new MonthlyPaneRow.MonthlyPaneRowStat(monthlyPaneRowScenario, epptStatistic, dataMap));
+				monthlyPaneRowScenario.getChildren().add(new MonthlyPaneRow.MonthlyPaneRowStat(monthlyPaneRowScenario, epptStatistic, dataMap,
+						_waterYearColSpec));
 			}
 		}
 	}
@@ -138,7 +134,7 @@ class MonthlyTableModel extends RmaTreeTableModel<MonthlyPaneRow>
 														   RmaTreeTableColumnSpec aggregateColumnSpec)
 	{
 		Map<Month, TreeTableColumnSpec> retval = new HashMap<>();
-		getColumnSpecs().add(WATER_YEAR_COL_SPEC);
+		getColumnSpecs().add(_waterYearColSpec);
 		Month startMonth = waterYearDefinition.getStartMonth();
 		do
 		{
