@@ -43,20 +43,23 @@ public final class EpptReportingComputedSet
 	private static final String UNITS = "units";
 	private static final String FIRST_RECORD = "first_record";
 	private static final String LAST_RECORD = "last_record";
+	private static final String IS_INSTANTANEOUS = "is_instantaneous";
 	private final List<EpptReportingScenarioComputed> _epptReportingComputed;
 	private final String _units;
 	private final LocalDateTime _firstRecord;
 	private final LocalDateTime _lastRecord;
+	private final boolean _isInstantaneous;
 	private final String _plotTitle;
 
 	EpptReportingComputedSet(String plotTitle, List<EpptReportingScenarioComputed> epptReportingComputed, String units, LocalDateTime firstRecord,
-							 LocalDateTime lastRecord)
+							 LocalDateTime lastRecord, boolean isInstantaneous)
 	{
 		_plotTitle = plotTitle;
 		_epptReportingComputed = epptReportingComputed;
 		_units = units;
 		_firstRecord = firstRecord;
 		_lastRecord = lastRecord;
+		_isInstantaneous = isInstantaneous;
 	}
 
 	public List<EpptReportingScenarioComputed> getEpptReportingComputed()
@@ -75,6 +78,7 @@ public final class EpptReportingComputedSet
 		jsonObject.put(FIRST_RECORD, firstRecord);
 		long lastRecord = ZonedDateTime.of(_lastRecord, ZoneId.systemDefault()).toInstant().toEpochMilli();
 		jsonObject.put(LAST_RECORD, lastRecord);
+		jsonObject.put(IS_INSTANTANEOUS, _isInstantaneous);
 		_epptReportingComputed.stream()
 							  .map(EpptReportingScenarioComputed::toJson)
 							  .forEach(jsonArray::put);

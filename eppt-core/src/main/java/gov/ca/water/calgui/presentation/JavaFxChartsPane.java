@@ -12,8 +12,11 @@
 
 package gov.ca.water.calgui.presentation;
 
+import java.awt.Container;
+import java.awt.Cursor;
 import java.awt.Desktop;
 import java.awt.Frame;
+import java.awt.Window;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.IOException;
@@ -25,11 +28,14 @@ import java.nio.file.Paths;
 import java.util.concurrent.CompletableFuture;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import javax.swing.*;
 
 import gov.ca.water.calgui.bo.SimpleFileFilter;
 import gov.ca.water.calgui.constant.Constant;
 import gov.ca.water.calgui.constant.EpptPreferences;
+import gov.ca.water.calgui.techservice.impl.DialogSvcImpl;
 import javafx.application.Platform;
 import javafx.beans.value.ObservableValue;
 import javafx.concurrent.Worker;
@@ -37,10 +43,14 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.web.WebView;
 import netscape.javascript.JSException;
 import netscape.javascript.JSObject;
+import oracle.jrockit.jfr.JFR;
 import org.apache.commons.io.FileUtils;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import sun.misc.BASE64Decoder;
+
+import hec.util.TextUtil;
+import rma.util.RMAIO;
 
 import static gov.ca.water.calgui.constant.Constant.ORCA_EXE;
 
@@ -71,72 +81,14 @@ public class JavaFxChartsPane extends BorderPane
 
 	private void callbackScript(ObservableValue<? extends Worker.State> observableValue, Worker.State state, Worker.State newValue)
 	{
-		if(newValue == Worker.State.SUCCEEDED)
-		{
-			executeScript(_callbackScript);
-		}
-		else if(newValue == Worker.State.CANCELLED)
-		{
-			handleCancel();
-		}
 		JSObject document = (JSObject) _webView.getEngine().executeScript("window");
 		if(document != null)
 		{
-			Platform.runLater(()->document.setMember("javaObj", new JavaApp()));
+			document.setMember("javaObj", new JavaApp());
 		}
-	}
-
-	private void handleCancel()
-	{
-		String location = _webView.getEngine().getLocation();
-		if(location.contains("base64,"))
+		if(newValue == Worker.State.SUCCEEDED)
 		{
-			if(location.contains("pdf"))
-			{
-				handlePdf(location);
-			}
-
-		}
-		else if(location.contains("svg+xml"))
-		{
-			String s = location.split("charset=UTF-8,")[1];
-			String result = null;
-			try
-			{
-				result = java.net.URLDecoder.decode(s, StandardCharsets.UTF_8.name());
-				FileUtils.writeStringToFile(new File(_outputPath.toString() + ".svg"), result, StandardCharsets.UTF_8.name());
-			}
-			catch(UnsupportedEncodingException e)
-			{
-				LOGGER.log(Level.SEVERE, "Error decoding: " + s, e);
-			}
-			catch(IOException e)
-			{
-				LOGGER.log(Level.SEVERE, "Error saving file: " + _outputPath, e);
-			}
-		}
-		else
-		{
-			LOGGER.log(Level.INFO, location);
-		}
-	}
-
-	private void handlePdf(String location)
-	{
-		try
-		{
-			LOGGER.log(Level.INFO, location);
-			String filename = location.split("filename=")[1].split(";")[0];
-			String byteData = location.split("base64,")[1];
-			BASE64Decoder decoder = new BASE64Decoder();
-			byte[] bytes = decoder.decodeBuffer(byteData);
-			LOGGER.log(Level.INFO, byteData);
-			File file = new File(filename);
-			FileUtils.writeByteArrayToFile(file, bytes, false);
-		}
-		catch(IOException e)
-		{
-			LOGGER.log(Level.SEVERE, "Error writing PDF", e);
+			executeScript(_callbackScript);
 		}
 	}
 
@@ -214,17 +166,31 @@ public class JavaFxChartsPane extends BorderPane
 			{
 				try
 				{
+					JFrame frame = (JFrame) Frame.getFrames()[0];
+					Container contentPane = frame.getContentPane();
+					contentPane.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
 					writeToJson(jsonPath, dataJson, layoutJson);
 					exportToFormat(jsonPath, outputPath, format, width, height);
 				}
 				catch(InterruptedException e)
 				{
 					Thread.currentThread().interrupt();
-					LOGGER.log(Level.SEVERE, "Error exporting to: " + format);
+					LOGGER.log(Level.WARNING, "Error exporting to: " + format, e);
+					DialogSvcImpl.getDialogSvcInstance().getOK("Error exporting to: " + format + "\n" + e.getMessage(),
+							JOptionPane.WARNING_MESSAGE);
 				}
 				catch(IOException | RuntimeException e)
 				{
 					LOGGER.log(Level.SEVERE, "Error exporting to: " + format, e);
+					LOGGER.log(Level.WARNING, "Error exporting to: " + format, e);
+					DialogSvcImpl.getDialogSvcInstance().getOK("Error exporting to: " + format + "\n" + e.getMessage(),
+							JOptionPane.WARNING_MESSAGE);
+				}
+				finally
+				{
+					JFrame frame = (JFrame) Frame.getFrames()[0];
+					Container contentPane = frame.getContentPane();
+					contentPane.setCursor(Cursor.getDefaultCursor());
 				}
 			});
 		}
@@ -233,7 +199,7 @@ public class JavaFxChartsPane extends BorderPane
 				throws IOException, InterruptedException
 		{
 			String orcaCommandline = "\"" + ORCA_EXE + "\" graph \"" + jsonPath + "\" --width " + width + " --height " + height +
-					" --format " + format + " \"" + outputPath + "\"" + " --plotly \"" +
+					" --format " + format + " \"" + outputPath + "\"" + " --verbose --plotly \"" +
 					Paths.get(Constant.CONFIG_DIR).getParent().resolve("lib").resolve("plotly").resolve("dist").resolve("plotly.min.js") + "\"";
 			LOGGER.log(Level.FINE, "Plotly SVG generation command line: {0}", orcaCommandline);
 			Process exec = null;
@@ -241,7 +207,6 @@ public class JavaFxChartsPane extends BorderPane
 			{
 				exec = new ProcessBuilder()
 						.directory(jsonPath.getParent().toFile())
-						.inheritIO()
 						.command(orcaCommandline)
 						.start();
 				exec.waitFor();

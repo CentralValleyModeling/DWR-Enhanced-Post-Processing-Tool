@@ -55,7 +55,7 @@ function buildTable(data, monthlyIndex, statIndex) {
             values: headers,
             align: "center",
             line: {width: 1, color: 'black'},
-            font: {family: PLOTLY_FONT['family'], size:18}
+            font: {family: PLOTLY_FONT['family'], size:13}
         },
         cells: {
             format: ['', FORMATTER],
@@ -141,7 +141,7 @@ function plot(data) {
     var datum = data['scenario_run_data'];
     var layout = buildLayouts(datum, data['units'], data['gui_link_title']);
     let plotlyAggregateSeries = getPeriodGroupedPlotlySeries(datum);
-    plotData(layout, plotlyAggregateSeries, data);
+    plotData(layout, plotlyAggregateSeries);
 }
 
 
@@ -249,10 +249,12 @@ function getPeriodGroupedPlotlySeries(datum) {
     return seriesList;
 }
 
-function plotData(layout, dataList, data) {
+function plotData2(layout, dataList, data) {
     let main = document.getElementById("main");
+    let plots = [];
     for (let i = 0; i < dataList.length; i++) {
         let plot = document.createElement("div");
+        plots.push(plot);
         plot.id = 'plot' + i;
         main.appendChild(plot);
         Plotly.newPlot(plot.id, dataList[i], layout[i], {
@@ -266,11 +268,38 @@ function plotData(layout, dataList, data) {
                 openContextMenu('#' + plot.id, ev, plotlyCopyToClipboard, plotlyExportFunction(plot));
             }
         });
+        plot.on('plotly_relayout',
+            function (eventdata) {
+                if (eventdata['xaxis.range[0]']) {
+                    for (let i = 0; i < plots.length; i++) {
+                        if (plots[i].id != plot.id) {
+                            let curentRange = plots[i]['_fullLayout']['xaxis']['range'];
+                            if (curentRange[0] !== eventdata['xaxis.range[0]']
+                                && curentRange[1] !== eventdata['xaxis.range[1]']) {
+                                Plotly.relayout(plots[i].id, {
+                                    'xaxis.range': [eventdata['xaxis.range[0]'], eventdata['xaxis.range[1]']]
+                                });
+                            }
+                        }
+                    }
+                }else if(eventdata['xaxis.autorange']){
+                    for (let i = 0; i < plots.length; i++) {
+                        if (plots[i].id != plot.id) {
+                            let curentRange = plots[i]['_fullLayout']['xaxis']['range'];
+                            if (curentRange !== plot['_fullLayout']['xaxis']['range']) {
+                                Plotly.relayout(plots[i].id, {
+                                    'xaxis.range': plot['_fullLayout']['xaxis']['range']
+                                });
+                            }
+                        }
+                    }
+                }
+            });
     }
 }
 
 function plotlyCopyToClipboard(element) {
-    let plot = document.getElementById(element);
+    let plot = $(element)[0];
     let layout = plot.layout;
     let data1 = plot.data;
     var text = layout['title']['text'];

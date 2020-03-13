@@ -15,6 +15,10 @@ body {
     font-family: 'Lucida Grande", "Lucida Sans Unicode", "Verdana", "Arial", "Helvetica", "sans-serif';
 }
 
+.clicked path {
+    fill: black;
+}
+
 .sidenav {
     height: 100%;
     width: 0;

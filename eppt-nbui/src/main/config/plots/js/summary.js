@@ -202,7 +202,7 @@ function buildLayouts(datum, yaxis, title) {
 }
 
 function plotlyCopyToClipboard(element) {
-    let plot = document.getElementById(element);
+    let plot = $(element)[0];
     let layout = plot.layout;
     let data1 = plot.data;
     var text = layout['title']['text'];

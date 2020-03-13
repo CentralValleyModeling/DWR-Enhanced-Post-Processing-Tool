@@ -139,8 +139,8 @@ function plot(data) {
     plotData(layout, plotlyAggregateSeries);
 }
 
-function plotlyCopyToClipboard() {
-    let plot = document.getElementById("container_discrete_tester");
+function plotlyCopyToClipboard(element) {
+    let plot = $(element)[0];
     let layout = plot.layout;
     let data1 = plot.data;
     var text = layout['title']['text'] + '\n' + 'Date\t' + layout['yaxis']['title']['text'] + '\n';

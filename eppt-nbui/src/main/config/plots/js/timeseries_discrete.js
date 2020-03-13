@@ -11,7 +11,7 @@
  */
 
 
-function getPlotlyMonthlySeries(datum, firstRecord, lastRecord) {
+function getPlotlyMonthlySeries(datum, firstRecord, lastRecord, instantaneous) {
     let seriesList = [];
     for (let i = 0; i < datum.length; i++) {
         let tsList = datum[i]['ts_list'];
@@ -44,13 +44,15 @@ function getPlotlyMonthlySeries(datum, firstRecord, lastRecord) {
                                 startingDataIndex++;
                             }
                         }
-                        if (!y[y.length - 2] && y[y.length - 1]) {
-                            y[y.length - 2] = y[y.length - 1];
-                        }
-                        if (x.length > y.length) {
-                            y.push(null);
-                            hoverInfo.push('skip');
-                            markerSize.push(0);
+                        if (!instantaneous) {
+                            if (!y[y.length - 2] && y[y.length - 1]) {
+                                y[y.length - 2] = y[y.length - 1];
+                            }
+                            if (x.length > y.length) {
+                                y.push(null);
+                                hoverInfo.push('skip');
+                                markerSize.push(0);
+                            }
                         }
                         startDate.setMonth(startDate.getMonth() + 1);
                     }
@@ -59,6 +61,10 @@ function getPlotlyMonthlySeries(datum, firstRecord, lastRecord) {
                         series = [];
                         seriesList.push(series);
                     }
+                    let shape = 'vh';
+                    if(instantaneous){
+                        shape = 'linear';
+                    }
                     series.push({
                         name: tsList[j]['ts_name'],
                         x: x,
@@ -66,7 +72,7 @@ function getPlotlyMonthlySeries(datum, firstRecord, lastRecord) {
                         line: {
                             color: datum[i]['scenario_color'],
                             dash: PLOTLY_LINE_DASH_STYLES[j % PLOTLY_LINE_DASH_STYLES.length],
-                            shape: 'vh'
+                            shape: shape
                         },
                         mode: 'lines+markers',
                         marker: {
@@ -218,12 +224,12 @@ function plot(data) {
     FORMATTER = getD3Formatter(data['scenario_run_data'][0]['ts_list'][0]['monthly_filters'][0]['annual_filters'][0]['discrete_ts']);
     var datum = data['scenario_run_data'];
     var layout = buildLayouts(datum, data['units'], data['gui_link_title']);
-    let plotlyMonthlySeries = getPlotlyMonthlySeries(datum, data['first_record'], data['last_record']);
+    let plotlyMonthlySeries = getPlotlyMonthlySeries(datum, data['first_record'], data['last_record'], data['is_instantaneous']);
     plotData(layout, plotlyMonthlySeries);
 }
 
-function plotlyCopyToClipboard() {
-    let plot = document.getElementById("container_discrete_tester");
+function plotlyCopyToClipboard(element) {
+    let plot = $(element)[0];
     let layout = plot.layout;
     let data1 = plot.data;
     var text = layout['title']['text'] + '\n' + 'Date\t' + layout['yaxis']['title']['text'] + '\n';
@@ -234,7 +240,9 @@ function plotlyCopyToClipboard() {
     let datum = data1[0];
     let xarr = datum['x'];
     for (var j = 0; j < xarr.length; j++) {
-        text += xarr[j];
+        let date = new Date(xarr[j]);
+        date.setDate(date.getDate() - 1);
+        text += date.getMonth() + '/' + date.getFullYear();
         for (var k = 0; k < data1.length; k++) {
             let yarr = data1[k]['y'];
             text += '\t' + yarr[j];

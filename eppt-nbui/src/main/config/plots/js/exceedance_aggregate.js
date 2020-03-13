@@ -131,8 +131,8 @@ function buildLayouts(datum, yaxis, title) {
     return layoutList;
 }
 
-function plotlyCopyToClipboard() {
-    let plot = document.getElementById("container_aggregate_tester");
+function plotlyCopyToClipboard(element) {
+    let plot = $(element)[0];
     let layout = plot.layout;
     let data1 = plot.data;
     var text = layout['title']['text'] + '\n' + 'Percent\t' + layout['yaxis']['title']['text'] + '\n';

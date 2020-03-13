@@ -21,7 +21,6 @@ import java.time.LocalDate;
 import java.time.Month;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -29,37 +28,22 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.Properties;
 import java.util.Scanner;
-import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.swing.*;
 
-import calsim.app.Project;
 import gov.ca.water.calgui.bo.DetailedIssue;
 import gov.ca.water.calgui.bo.GUILinksAllModelsBO;
-import gov.ca.water.calgui.bo.ResultUtilsBO;
 import gov.ca.water.calgui.bo.ThresholdLinksBO;
 import gov.ca.water.calgui.busservice.IDSSGrabber1Svc;
-import gov.ca.water.calgui.busservice.IGuiLinksSeedDataSvc;
 import gov.ca.water.calgui.constant.Constant;
 import gov.ca.water.calgui.project.EpptDssContainer;
 import gov.ca.water.calgui.project.EpptScenarioRun;
 import gov.ca.water.calgui.project.NamedDssPath;
-import gov.ca.water.calgui.techservice.IDialogSvc;
-import gov.ca.water.calgui.techservice.impl.DialogSvcImpl;
 
-import hec.data.tx.DataSetTx;
-import hec.data.tx.DataSetTxTemplate;
-import hec.dssgui.CombinedDataManager;
-import hec.heclib.dss.DSSPathname;
-import hec.heclib.dss.HecDSSDataAttributes;
 import hec.heclib.dss.HecDataManager;
 import hec.heclib.dss.HecDss;
 import hec.heclib.util.HecTime;
 import hec.heclib.util.HecTimeArray;
-import hec.heclib.util.Heclib;
-import hec.hecmath.DSS;
-import hec.hecmath.DSSFile;
 import hec.hecmath.computation.r;
 import hec.hecmath.functions.TimeSeriesFunctions;
 import hec.io.TimeSeriesContainer;
@@ -458,7 +442,6 @@ public class DSSGrabber1SvcImpl implements IDSSGrabber1Svc
 						dssNames[i] = dssNames1[i].trim();
 					}
 				}
-
 				String hecAPart = dssPath.getAPart();
 				String hecEPart = dssPath.getEPart();
 				String hecFPart = dssPath.getFPart();
@@ -467,6 +450,7 @@ public class DSSGrabber1SvcImpl implements IDSSGrabber1Svc
 				if(!missingBOrCPart)
 				{
 					result = (TimeSeriesContainer) hecDss.get(firstPath, _startTime.toString(), _endTime.toString());
+					DssPatternUpdater.updateTimeSeriesContainer(result);
 				}
 				String message = null;
 				if((result == null) || (result.numberValues < 1))
@@ -519,7 +503,6 @@ public class DSSGrabber1SvcImpl implements IDSSGrabber1Svc
 						message = "Could not find " + dssNames[0] + " in " + dssPath.getDssPath()
 								+ ".\n The selected scenario was not run with Los Vaqueros Enlargement.";
 					}
-
 					else
 					{
 						message = "Could not find " + dssNames[0] + " in " + dssPath.getDssPath() + " - attempted to retrieve path: " + firstPath;
@@ -536,14 +519,12 @@ public class DSSGrabber1SvcImpl implements IDSSGrabber1Svc
 
 						// TODO: Note hard-coded D- and E-PART
 						String pathName = "/" + hecAPart + "/" + dssNames[i] + "//" + dssPath.getEPart() + "/" + hecFPart + "/";
-						TimeSeriesContainer result2 = (TimeSeriesContainer) hecDss
-								.get(pathName, true);
+						TimeSeriesContainer result2 = (TimeSeriesContainer) hecDss.get(pathName, true);
+						DssPatternUpdater.updateTimeSeriesContainer(result2);
 						if(result2 == null || result2.numberValues < 1)
 						{
-							result2 = null;
 							message = String.format("Could not find %s in %s - attempted to retrieve path: %s",
 									dssNames[0], dssPath.getDssPath(), pathName);
-							//						JOptionPane.showMessageDialog(null, message, "Error", JOptionPane.ERROR_MESSAGE);
 						}
 						else
 						{

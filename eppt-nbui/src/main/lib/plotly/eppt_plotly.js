@@ -10,7 +10,7 @@
  * GNU General Public License
  */
 //DEBUG flag to render plot on page load
-const DEBUG = true;
+const DEBUG = false;
 var FORMATTER = '';
 const PLOTLY_FONT = {
     family: 'Lucida Grande", "Lucida Sans Unicode", "Verdana", "Arial", "Helvetica", "sans-serif',
@@ -19,18 +19,34 @@ const PLOTLY_FONT = {
 
 const PLOTLY_LINE_DASH_STYLES = ['solid', 'dashdot', 'dot'];
 
+let syncPlotsEnabled = false;
+let lockBtnState = false;
 function buildModeBarButtons(graphDiv) {
-    let lineButton = {
-        name: 'Properties',
+    let syncPlots = {
+        name: 'Toggle Sync X-Axis',
         icon: {
-            'width': 24,
-            'height': 24,
-            'path': 'M12,8A4,4 0 0,1 16,12A4,4 0 0,1 12,16A4,4 0 0,1 8,12A4,4 0 0,1 12,8M12,10A2,2 0 0,0 10,12A2,2 0 0,0 12,14A2,2 0 0,0 14,12A2,2 0 0,0 12,10M10,22C9.75,22 9.54,21.82 9.5,21.58L9.13,18.93C8.5,18.68 7.96,18.34 7.44,17.94L4.95,18.95C4.73,19.03 4.46,18.95 4.34,18.73L2.34,15.27C2.21,15.05 2.27,14.78 2.46,14.63L4.57,12.97L4.5,12L4.57,11L2.46,9.37C2.27,9.22 2.21,8.95 2.34,8.73L4.34,5.27C4.46,5.05 4.73,4.96 4.95,5.05L7.44,6.05C7.96,5.66 8.5,5.32 9.13,5.07L9.5,2.42C9.54,2.18 9.75,2 10,2H14C14.25,2 14.46,2.18 14.5,2.42L14.87,5.07C15.5,5.32 16.04,5.66 16.56,6.05L19.05,5.05C19.27,4.96 19.54,5.05 19.66,5.27L21.66,8.73C21.79,8.95 21.73,9.22 21.54,9.37L19.43,11L19.5,12L19.43,13L21.54,14.63C21.73,14.78 21.79,15.05 21.66,15.27L19.66,18.73C19.54,18.95 19.27,19.04 19.05,18.95L16.56,17.95C16.04,18.34 15.5,18.68 14.87,18.93L14.5,21.58C14.46,21.82 14.25,22 14,22H10M11.25,4L10.88,6.61C9.68,6.86 8.62,7.5 7.85,8.39L5.44,7.35L4.69,8.65L6.8,10.2C6.4,11.37 6.4,12.64 6.8,13.8L4.68,15.36L5.43,16.66L7.86,15.62C8.63,16.5 9.68,17.14 10.87,17.38L11.24,20H12.76L13.13,17.39C14.32,17.14 15.37,16.5 16.14,15.62L18.57,16.66L19.32,15.36L17.2,13.81C17.6,12.64 17.6,11.37 17.2,10.2L19.31,8.65L18.56,7.35L16.15,8.39C15.38,7.5 14.32,6.86 13.12,6.62L12.75,4H11.25Z',
+            'width': 477.859,
+            'height': 477.859,
+            // 'viewBox' : "0 0 477.859 477.859",
+            'path': "M472.863,175.662L353.396,56.195c-6.666-6.664-17.472-6.662-24.136,0.004c-3.199,3.2-4.996,7.538-4.997,12.063v51.2 H204.796c-9.426,0-17.067,7.641-17.067,17.067c0,9.426,7.641,17.067,17.067,17.067H341.33c9.426,0,17.067-7.641,17.067-17.067 V109.46l78.268,78.268l-78.268,78.268v-27.068c0-9.426-7.641-17.067-17.067-17.067H153.596v-51.2 c-0.002-9.426-7.645-17.065-17.07-17.063c-4.524,0.001-8.863,1.798-12.063,4.997L4.997,278.062 c-6.663,6.665-6.663,17.468,0,24.132l119.467,119.467c3.2,3.201,7.54,5,12.066,5.001c2.243,0.007,4.466-0.434,6.536-1.297 c6.376-2.644,10.532-8.867,10.53-15.77v-51.2h119.467c9.426,0,17.067-7.641,17.067-17.067s-7.641-17.067-17.067-17.067H136.53 c-9.426,0-17.067,7.641-17.067,17.067v27.068l-78.268-78.268l78.268-78.268v27.068c0,9.426,7.641,17.067,17.067,17.067h187.733 v51.2c0.002,9.426,7.645,17.065,17.07,17.063c4.524-0.001,8.863-1.798,12.063-4.997l119.467-119.467 C479.525,193.129,479.525,182.326,472.863,175.662z",
         },
-        click: () => openNav(graphDiv)
+        click: () => {
+            alert('clicked custom button!');
+            syncPlotsEnabled = !syncPlotsEnabled;
+            let buttons = document.getElementsByClassName('modebar-btn');
+            for (let i = 0; i < buttons.length; i++) {
+                if (buttons[i].getAttribute('data-title') === 'Toggle Sync X-Axis') {
+                    if (syncPlotsEnabled) {
+                        buttons[i].classList.add('clicked');
+                    } else {
+                        buttons[i].classList.remove('clicked');
+                    }
+                }
+            }
+        }
     };
-    return [[lineButton], ['zoom2d', 'pan2d', 'zoomIn2d', 'zoomOut2d', 'resetScale2d'],
-        ['toggleSpikelines', 'hoverClosestCartesian', 'hoverCompareCartesian']];
+    return [['zoom2d', 'pan2d', 'zoomIn2d', 'zoomOut2d', 'resetScale2d'],
+        ['toggleSpikelines', 'hoverClosestCartesian', 'hoverCompareCartesian'], [syncPlots]];
 }
 
 const subtractLight = function (color, amount) {
@@ -67,7 +83,7 @@ function plotData(layout, dataList) {
         });
         plot.on('plotly_relayout',
             function (eventdata) {
-                if (eventdata['xaxis.range[0]']) {
+                if (eventdata['xaxis.range[0]'] && syncPlots) {
                     for (let i = 0; i < plots.length; i++) {
                         if (plots[i].id != plot.id) {
                             let curentRange = plots[i]['_fullLayout']['xaxis']['range'];
@@ -79,9 +95,9 @@ function plotData(layout, dataList) {
                             }
                         }
                     }
-                }else if(eventdata['xaxis.autorange']){
+                } else if (eventdata['xaxis.autorange'] && syncPlots) {
                     for (let i = 0; i < plots.length; i++) {
-                        if (plots[i].id != plot.id) {
+                        if (plots[i].id != plot.id && plots[i]['syncPlots']) {
                             let curentRange = plots[i]['_fullLayout']['xaxis']['range'];
                             if (curentRange !== plot['_fullLayout']['xaxis']['range']) {
                                 Plotly.relayout(plots[i].id, {
@@ -136,7 +152,7 @@ function openContextMenu(id, e, copyToClipboard, plotlyExportToFormat) {
                     "copy": {
                         name: "Copy Data",
                         callback: function (key, options) {
-                            copyToClipboard();
+                            copyToClipboard(options['selector']);
                         }
                     },
                 }

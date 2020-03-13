@@ -67,6 +67,7 @@ public final class EpptReportingComputer
 		LocalDateTime firstRecord = null;
 		LocalDateTime lastRecord = null;
 		String units = "";
+		boolean isInstantaneous = false;
 		List<EpptReportingComputedSet.EpptReportingScenarioComputed> trendReportingComputed = new ArrayList<>();
 
 		for(Map.Entry<EpptScenarioRun, List<TimeSeriesContainer>> data : scenarioRunData.entrySet())
@@ -74,6 +75,10 @@ public final class EpptReportingComputer
 			List<EpptReportingComputedSet.EpptReportingTs> tsComputes = new ArrayList<>();
 			for(TimeSeriesContainer ts : data.getValue())
 			{
+				if(ts != null)
+				{
+					isInstantaneous = "INST-VAL".equalsIgnoreCase(ts.getType());
+				}
 				List<EpptReportingComputedSet.EpptReportingMonthComputed> monthComputes = new ArrayList<>();
 				for(MonthPeriod monthPeriod : monthPeriods)
 				{
@@ -99,7 +104,7 @@ public final class EpptReportingComputer
 			}
 			trendReportingComputed.add(new EpptReportingComputedSet.EpptReportingScenarioComputed(data.getKey(), tsComputes));
 		}
-		return new EpptReportingComputedSet(plotTitle, trendReportingComputed, units, firstRecord, lastRecord);
+		return new EpptReportingComputedSet(plotTitle, trendReportingComputed, units, firstRecord, lastRecord, isInstantaneous);
 	}
 
 	private static LocalDateTime getMin(LocalDateTime firstRecord, LocalDateTime firstRecordNew)

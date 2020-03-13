@@ -115,8 +115,8 @@ function plot(data) {
     plotData(layout, plotlyAggregateSeries);
 }
 
-function plotlyCopyToClipboard() {
-    let plot = document.getElementById("tester");
+function plotlyCopyToClipboard(element) {
+    let plot = $(element)[0];
     let layout = plot.layout;
     let data1 = plot.data;
     let calcdata = plot.calcdata;
