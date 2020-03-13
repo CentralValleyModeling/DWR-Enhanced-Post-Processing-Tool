@@ -176,6 +176,7 @@ public class ScenarioTablePane extends TitledPane
 
 	private void setModified()
 	{
+		_treeTable.refresh();
 		_controller.setScenarioRuns(_scenarioTableModel.getAllScenarioRuns());
 		_controller.setModified();
 	}

@@ -183,20 +183,27 @@ class ScenarioRowModel extends ScenarioTableRowModel
 	public boolean isEditable(TreeTableColumnSpec columnSpec)
 	{
 		boolean retval = false;
-		if(columnSpec == BASE_COL_SPEC && !_alternativeProperty.get())
+		if(columnSpec == BASE_COL_SPEC)
 		{
 			if(_baseProperty.get())
 			{
 				retval = true;
 			}
-			else
+			else if(!_alternativeProperty.get())
 			{
 				retval = noOtherBaseDefined();
 			}
 		}
 		else if(columnSpec == ALTERNATIVE_COL_SPEC)
 		{
-			retval = !_baseProperty.get();
+			if(_alternativeProperty.get())
+			{
+				retval = true;
+			}
+			else
+			{
+				retval = !_baseProperty.get();
+			}
 		}
 		return retval;
 	}
