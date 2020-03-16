@@ -39,6 +39,7 @@ import javafx.scene.control.TitledPane;
 import javafx.scene.control.cell.CheckBoxListCell;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.FlowPane;
+import javafx.scene.text.Font;
 
 import static java.util.stream.Collectors.toList;
 
@@ -101,6 +102,7 @@ class EpptMonthlyPeriodPane extends TitledPane
 		_seasonalPeriodListView.getItems().add(0, new PeriodItem(new MonthPeriod(null, null, null)));
 		PeriodItem entirePeriodItem = new PeriodItem(_entirePeriod);
 		_seasonalPeriodListView.getItems().add(0, entirePeriodItem);
+		_seasonalPeriodListView.setFixedCellSize(20);
 		BorderPane innerPane = new BorderPane();
 		innerPane.setCenter(_seasonalPeriodListView);
 		setContent(innerPane);
@@ -114,10 +116,11 @@ class EpptMonthlyPeriodPane extends TitledPane
 		_editButton.setOnAction(e -> editMonthlyPeriod());
 		FlowPane flowPane = new FlowPane(Orientation.HORIZONTAL, addButton, _editButton);
 		flowPane.setAlignment(Pos.CENTER_RIGHT);
-		flowPane.setPrefWidth(140);
+		flowPane.setPrefWidth(90);
 		graphicPane.setRight(flowPane);
 		BorderPane.setMargin(seasonalLabel, new Insets(2));
 		setGraphic(graphicPane);
+		setPrefWidth(90);
 	}
 
 	private void editMonthlyPeriod()
@@ -198,6 +201,8 @@ class EpptMonthlyPeriodPane extends TitledPane
 		private MyCheckboxTreeItem()
 		{
 			super(param -> param._selected);
+			super.setPrefHeight(20);
+			super.setFont(Font.font(11));
 		}
 
 		@Override

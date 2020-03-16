@@ -43,7 +43,7 @@ public class ScenarioRunEditor extends JDialog implements LoadingDss
 		_scenarioRuns = scenarioRuns;
 		_progressBar.setVisible(false);
 		_scenarioEditorPanel = new ScenarioEditorPanel(this, scenarioRuns);
-		setPreferredSize(new Dimension(650, 500));
+		setPreferredSize(new Dimension(900, 700));
 		setMinimumSize(new Dimension(650, 500));
 		initComponents();
 		pack();

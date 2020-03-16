@@ -18,6 +18,8 @@ import javafx.scene.Node;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Priority;
+import javafx.scene.layout.TilePane;
+import javafx.scene.layout.VBox;
 
 /**
  * Company: Resource Management Associates
@@ -27,7 +29,6 @@ import javafx.scene.layout.Priority;
  */
 public class EpptConfigurationPane extends BorderPane
 {
-	private final EpptConfigurationController _controller;
 	private final EpptProjectPane _projectPane;
 	private final ScenarioTablePane _scenarioPane;
 	private final EpptTimeWindowPane _timeWindowPane;
@@ -37,37 +38,38 @@ public class EpptConfigurationPane extends BorderPane
 
 	public EpptConfigurationPane(EpptConfigurationController controller)
 	{
-		_controller = controller;
-		_projectPane = new EpptProjectPane(_controller);
-		_scenarioPane = new ScenarioTablePane(_controller);
-		_timeWindowPane = new EpptTimeWindowPane(_controller);
-		_epptMonthlyPeriodPane = new EpptMonthlyPeriodPane(_controller);
-		_epptAnnualPeriodPane = new EpptAnnualPeriodPane(_controller);
-		_epptStatisticsPane = new EpptStatisticsPane(_controller);
+		_projectPane = new EpptProjectPane(controller);
+		_scenarioPane = new ScenarioTablePane(controller);
+		_timeWindowPane = new EpptTimeWindowPane(controller);
+		_epptMonthlyPeriodPane = new EpptMonthlyPeriodPane(controller);
+		_epptAnnualPeriodPane = new EpptAnnualPeriodPane(controller);
+		_epptStatisticsPane = new EpptStatisticsPane(controller);
 		initComponents();
 	}
 
 	private void initComponents()
 	{
-		GridPane gridPane = new GridPane();
-		gridPane.add(_projectPane, 0, 0);
-		gridPane.add(_scenarioPane, 0, 1);
-		gridPane.add(_timeWindowPane, 0, 2);
-		gridPane.add(buildFilterControls(), 0, 3);
-		gridPane.add(_epptStatisticsPane, 0, 4);
-		GridPane.setHgrow(_timeWindowPane, Priority.ALWAYS);
-
+		VBox gridPane = new VBox();
+		gridPane.getChildren().add(_projectPane);
+		gridPane.getChildren().add(_scenarioPane);
+		gridPane.getChildren().add(_timeWindowPane);
+		Node filterControls = buildFilterControls();
+		gridPane.getChildren().add(filterControls);
+		gridPane.getChildren().add(_epptStatisticsPane);
 		setCenter(gridPane);
-		setPrefSize(570, 900);
+		setStyle("-fx-font-size: 11");
 	}
 
 	private Node buildFilterControls()
 	{
-		_epptAnnualPeriodPane.expandedProperty().bindBidirectional(_epptMonthlyPeriodPane.expandedProperty());
 		BorderPane borderPane = new BorderPane();
-		borderPane.setLeft(_epptMonthlyPeriodPane);
-		borderPane.setCenter(_epptAnnualPeriodPane);
-		GridPane.setVgrow(borderPane, Priority.ALWAYS);
+		_epptAnnualPeriodPane.expandedProperty().bindBidirectional(_epptMonthlyPeriodPane.expandedProperty());
+		GridPane gridPane = new GridPane();
+		gridPane.add(_epptMonthlyPeriodPane, 1, 1);
+		gridPane.add(_epptAnnualPeriodPane, 2, 1);
+		GridPane.setHgrow(_epptAnnualPeriodPane, Priority.ALWAYS);
+		borderPane.setCenter(gridPane);
+		borderPane.setPrefHeight(320);
 		return borderPane;
 	}
 

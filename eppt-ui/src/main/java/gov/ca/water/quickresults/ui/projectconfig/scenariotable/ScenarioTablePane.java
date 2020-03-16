@@ -138,6 +138,7 @@ public class ScenarioTablePane extends TitledPane
 		borderPane.setBottom(southernRegion);
 		setContent(borderPane);
 		Platform.runLater(() -> _treeTable.getColumnFromSpec(NAME_COL_SPEC).setPrefWidth(200));
+		setPrefWidth(200);
 	}
 
 	private void clearScenarios()

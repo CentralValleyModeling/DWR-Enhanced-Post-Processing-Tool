@@ -20,30 +20,29 @@ import java.awt.Frame;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
-import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.time.Month;
+import java.time.YearMonth;
 import java.util.Arrays;
+import java.util.Objects;
 import javax.swing.*;
 
 import gov.ca.water.calgui.bo.WaterYearPeriodRange;
+import gov.ca.water.calgui.techservice.impl.DialogSvcImpl;
+import jdk.nashorn.internal.scripts.JO;
 
 class AddAnnualFilterDialog extends JDialog
 {
 	private JPanel _contentPane;
 	private JButton _buttonOK;
 	private JButton _buttonCancel;
-	private JTextField _nameTextField;
-	private JRadioButton _singleMonthRadioButton;
-	private JRadioButton _seasonalPeriodRadioButton;
-	private JComboBox _singleMonthComboBox;
-	private JComboBox _seasonalPeriodStartCombobox;
-	private JComboBox _seasonalPeriodEndCombobox;
-	private JSpinner _startYear;
-	private JSpinner _endYear;
-	private JPanel _en;
+	private JSpinner _startYearSpinner;
+	private JSpinner _endYearSpinner;
+	private JCheckBox _overrideWaterYearDefinitionCheckBox;
+	private JComboBox _startMonthCombobox;
+	private JComboBox _endMonthCombobox;
 	private boolean _canceled = true;
 
 	AddAnnualFilterDialog(Frame frame)
@@ -70,43 +69,44 @@ class AddAnnualFilterDialog extends JDialog
 		_contentPane.registerKeyboardAction(e -> onCancel(), KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0),
 				JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
 		pack();
-		setPreferredSize(new Dimension(550, 300));
-		setMinimumSize(new Dimension(550, 300));
+		setPreferredSize(new Dimension(550, 200));
+		setMinimumSize(new Dimension(550, 200));
 		setLocationRelativeTo(frame);
-		Arrays.asList(Month.values()).forEach(_singleMonthComboBox::addItem);
-		Arrays.asList(Month.values()).forEach(_seasonalPeriodStartCombobox::addItem);
-		Arrays.asList(Month.values()).forEach(_seasonalPeriodEndCombobox::addItem);
-		ButtonGroup buttonGroup = new ButtonGroup();
-		buttonGroup.add(_seasonalPeriodRadioButton);
-		buttonGroup.add(_singleMonthRadioButton);
-		_singleMonthRadioButton.addActionListener(e -> radioSelectionChanged(e));
-		_seasonalPeriodRadioButton.addActionListener(e -> radioSelectionChanged(e));
-		_startYear.setValue(1921);
-		_endYear.setValue(2003);
+		_startYearSpinner.setValue(1921);
+		_endYearSpinner.setValue(2003);
+		Arrays.asList(Month.values()).forEach(e ->
+		{
+			_startMonthCombobox.addItem(e);
+			_endMonthCombobox.addItem(e);
+		});
+		_startMonthCombobox.setSelectedItem(Month.MAY);
+		_endMonthCombobox.setSelectedItem(Month.SEPTEMBER);
+		_overrideWaterYearDefinitionCheckBox.addActionListener(e ->
+		{
+			_startMonthCombobox.setEnabled(_overrideWaterYearDefinitionCheckBox.isSelected());
+			_endMonthCombobox.setEnabled(_overrideWaterYearDefinitionCheckBox.isSelected());
+		});
+		JSpinner.NumberEditor editor = new JSpinner.NumberEditor(_startYearSpinner, "#");
+		_startYearSpinner.setEditor(editor);
+		editor = new JSpinner.NumberEditor(_endYearSpinner, "#");
+		_endYearSpinner.setEditor(editor);
 	}
 
-	private void radioSelectionChanged(ActionEvent e)
+	AddAnnualFilterDialog(Frame frame, WaterYearPeriodRange selectedItem, Month startMonth, Month endMonth)
 	{
-		_singleMonthComboBox.setEnabled(_singleMonthRadioButton.isSelected());
-		_seasonalPeriodStartCombobox.setEnabled(!_singleMonthRadioButton.isSelected());
-		_seasonalPeriodEndCombobox.setEnabled(!_singleMonthRadioButton.isSelected());
+		this(frame, selectedItem);
+		_startMonthCombobox.setSelectedItem(startMonth);
+		_endMonthCombobox.setSelectedItem(endMonth);
+		_overrideWaterYearDefinitionCheckBox.setSelected(true);
+		_startMonthCombobox.setEnabled(true);
+		_endMonthCombobox.setEnabled(true);
 	}
 
 	AddAnnualFilterDialog(Frame frame, WaterYearPeriodRange selectedItem)
 	{
 		this(frame);
-		_nameTextField.setText(selectedItem.getWaterYearPeriod().getPeriodName());
-		if(selectedItem.getStartYear().getYear() == selectedItem.getEndYear().getYear())
-		{
-			_singleMonthRadioButton.setSelected(true);
-			_singleMonthComboBox.setSelectedItem(selectedItem.getStartYear());
-		}
-		else
-		{
-			_seasonalPeriodRadioButton.setSelected(true);
-			_seasonalPeriodStartCombobox.setSelectedItem(selectedItem.getStartYear());
-			_seasonalPeriodEndCombobox.setSelectedItem(selectedItem.getEndYear());
-		}
+		_startYearSpinner.setValue(selectedItem.getStartYear().getYear());
+		_endYearSpinner.setValue(selectedItem.getEndYear().getYear());
 	}
 
 	public boolean isCanceled()
@@ -116,9 +116,33 @@ class AddAnnualFilterDialog extends JDialog
 
 	private void onOK()
 	{
-		_canceled = false;
-		// add your code here
-		dispose();
+		if(overrideWaterYearDefinition())
+		{
+			if(Objects.equals(getStartMonth(), getEndMonth()))
+			{
+				DialogSvcImpl.getDialogSvcInstance().getOK("Start Month cannot equal End Month", JOptionPane.WARNING_MESSAGE);
+			}
+			else if(!YearMonth.of(getStartYear(), getStartMonth()).isBefore(YearMonth.of(getEndYear(), getEndMonth())))
+			{
+				DialogSvcImpl.getDialogSvcInstance().getOK("End Year-Month must be after Start Year-Month", JOptionPane.WARNING_MESSAGE);
+			}
+			else
+			{
+				_canceled = false;
+				// add your code here
+				dispose();
+			}
+		}
+		else if(getStartYear() > getEndYear())
+		{
+			DialogSvcImpl.getDialogSvcInstance().getOK("End Year must be after Start Year", JOptionPane.WARNING_MESSAGE);
+		}
+		else
+		{
+			_canceled = false;
+			// add your code here
+			dispose();
+		}
 	}
 
 	private void onCancel()
@@ -127,33 +151,29 @@ class AddAnnualFilterDialog extends JDialog
 		dispose();
 	}
 
-	String getPeriodName()
-	{
-		return _nameTextField.getText();
-	}
-
 	int getStartYear()
 	{
-		if(_singleMonthRadioButton.isSelected())
-		{
-			return (int) _singleMonthComboBox.getSelectedItem();
-		}
-		else
-		{
-			return (int) _seasonalPeriodStartCombobox.getSelectedItem();
-		}
+		return (int) _startYearSpinner.getValue();
 	}
 
 	int getEndYear()
 	{
-		if(_singleMonthRadioButton.isSelected())
-		{
-			return (int) _singleMonthComboBox.getSelectedItem();
-		}
-		else
-		{
-			return (int) _seasonalPeriodEndCombobox.getSelectedItem();
-		}
+		return (int) _endYearSpinner.getValue();
+	}
+
+	boolean overrideWaterYearDefinition()
+	{
+		return _overrideWaterYearDefinitionCheckBox.isSelected();
+	}
+
+	Month getStartMonth()
+	{
+		return (Month) _startMonthCombobox.getSelectedItem();
+	}
+
+	Month getEndMonth()
+	{
+		return (Month) _endMonthCombobox.getSelectedItem();
 	}
 
 	/**
@@ -204,76 +224,95 @@ class AddAnnualFilterDialog extends JDialog
 		panel5.setLayout(new GridBagLayout());
 		panel5.setPreferredSize(new Dimension(250, 108));
 		panel4.add(panel5, BorderLayout.CENTER);
-		final JLabel label2 = new JLabel();
-		label2.setHorizontalAlignment(2);
-		label2.setHorizontalTextPosition(2);
-		label2.setText("Name:");
+		final JPanel panel6 = new JPanel();
+		panel6.setLayout(new GridBagLayout());
 		GridBagConstraints gbc;
-		gbc = new GridBagConstraints();
-		gbc.gridx = 0;
-		gbc.gridy = 0;
-		gbc.weightx = 0.2;
-		gbc.anchor = GridBagConstraints.WEST;
-		gbc.insets = new Insets(5, 5, 5, 5);
-		panel5.add(label2, gbc);
-		_nameTextField = new JTextField();
-		_nameTextField.setEditable(true);
-		_nameTextField.setEnabled(true);
-		_nameTextField.setHorizontalAlignment(2);
-		_nameTextField.setPreferredSize(new Dimension(400, 26));
-		_nameTextField.setText("");
 		gbc = new GridBagConstraints();
 		gbc.gridx = 1;
 		gbc.gridy = 0;
 		gbc.weightx = 1.0;
 		gbc.anchor = GridBagConstraints.WEST;
-		gbc.fill = GridBagConstraints.HORIZONTAL;
+		gbc.fill = GridBagConstraints.VERTICAL;
 		gbc.insets = new Insets(5, 5, 5, 5);
-		panel5.add(_nameTextField, gbc);
-		_seasonalPeriodRadioButton = new JRadioButton();
-		_seasonalPeriodRadioButton.setSelected(true);
-		_seasonalPeriodRadioButton.setText("Seasonal Period");
+		panel5.add(panel6, gbc);
+		final JPanel spacer1 = new JPanel();
+		gbc = new GridBagConstraints();
+		gbc.gridx = 1;
+		gbc.gridy = 0;
+		gbc.fill = GridBagConstraints.HORIZONTAL;
+		panel6.add(spacer1, gbc);
+		final JPanel spacer2 = new JPanel();
 		gbc = new GridBagConstraints();
 		gbc.gridx = 0;
 		gbc.gridy = 1;
-		gbc.anchor = GridBagConstraints.WEST;
-		gbc.insets = new Insets(5, 5, 5, 5);
-		panel5.add(_seasonalPeriodRadioButton, gbc);
-		_en = new JPanel();
-		_en.setLayout(new GridBagLayout());
-		gbc = new GridBagConstraints();
-		gbc.gridx = 1;
-		gbc.gridy = 1;
-		gbc.anchor = GridBagConstraints.WEST;
 		gbc.fill = GridBagConstraints.VERTICAL;
-		gbc.insets = new Insets(5, 5, 5, 5);
-		panel5.add(_en, gbc);
-		final JPanel spacer1 = new JPanel();
+		panel6.add(spacer2, gbc);
+		_startYearSpinner = new JSpinner();
+		gbc = new GridBagConstraints();
+		gbc.gridx = 0;
+		gbc.gridy = 0;
+		gbc.anchor = GridBagConstraints.WEST;
+		gbc.fill = GridBagConstraints.HORIZONTAL;
+		panel6.add(_startYearSpinner, gbc);
+		_endYearSpinner = new JSpinner();
 		gbc = new GridBagConstraints();
 		gbc.gridx = 2;
 		gbc.gridy = 0;
+		gbc.anchor = GridBagConstraints.WEST;
 		gbc.fill = GridBagConstraints.HORIZONTAL;
-		_en.add(spacer1, gbc);
-		final JPanel spacer2 = new JPanel();
+		panel6.add(_endYearSpinner, gbc);
+		final JLabel label2 = new JLabel();
+		label2.setText("Seasonal Period:");
+		gbc = new GridBagConstraints();
+		gbc.gridx = 0;
+		gbc.gridy = 0;
+		gbc.anchor = GridBagConstraints.WEST;
+		gbc.insets = new Insets(5, 5, 5, 5);
+		panel5.add(label2, gbc);
+		_overrideWaterYearDefinitionCheckBox = new JCheckBox();
+		_overrideWaterYearDefinitionCheckBox.setText("Override Water Year Definition Months");
+		gbc = new GridBagConstraints();
+		gbc.gridx = 0;
+		gbc.gridy = 1;
+		gbc.anchor = GridBagConstraints.WEST;
+		panel5.add(_overrideWaterYearDefinitionCheckBox, gbc);
+		final JPanel panel7 = new JPanel();
+		panel7.setLayout(new GridBagLayout());
 		gbc = new GridBagConstraints();
 		gbc.gridx = 1;
 		gbc.gridy = 1;
+		gbc.anchor = GridBagConstraints.WEST;
 		gbc.fill = GridBagConstraints.VERTICAL;
-		_en.add(spacer2, gbc);
-		_startYear = new JSpinner();
+		gbc.insets = new Insets(5, 5, 5, 5);
+		panel5.add(panel7, gbc);
+		final JPanel spacer3 = new JPanel();
+		gbc = new GridBagConstraints();
+		gbc.gridx = 1;
+		gbc.gridy = 0;
+		gbc.fill = GridBagConstraints.HORIZONTAL;
+		panel7.add(spacer3, gbc);
+		final JPanel spacer4 = new JPanel();
+		gbc = new GridBagConstraints();
+		gbc.gridx = 0;
+		gbc.gridy = 1;
+		gbc.fill = GridBagConstraints.VERTICAL;
+		panel7.add(spacer4, gbc);
+		_startMonthCombobox = new JComboBox();
+		_startMonthCombobox.setEnabled(false);
 		gbc = new GridBagConstraints();
 		gbc.gridx = 0;
 		gbc.gridy = 0;
 		gbc.anchor = GridBagConstraints.WEST;
 		gbc.fill = GridBagConstraints.HORIZONTAL;
-		_en.add(_startYear, gbc);
-		_endYear = new JSpinner();
+		panel7.add(_startMonthCombobox, gbc);
+		_endMonthCombobox = new JComboBox();
+		_endMonthCombobox.setEnabled(false);
 		gbc = new GridBagConstraints();
-		gbc.gridx = 3;
+		gbc.gridx = 2;
 		gbc.gridy = 0;
 		gbc.anchor = GridBagConstraints.WEST;
 		gbc.fill = GridBagConstraints.HORIZONTAL;
-		_en.add(_endYear, gbc);
+		panel7.add(_endMonthCombobox, gbc);
 	}
 
 	/**

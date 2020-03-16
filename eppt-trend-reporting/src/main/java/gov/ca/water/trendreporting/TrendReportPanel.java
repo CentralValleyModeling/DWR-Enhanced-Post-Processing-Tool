@@ -34,10 +34,9 @@ import gov.ca.water.calgui.bo.WaterYearPeriodRangesFilter;
 import gov.ca.water.calgui.busservice.impl.EpptParameter;
 import gov.ca.water.calgui.busservice.impl.EpptStatistic;
 import gov.ca.water.calgui.busservice.impl.MonthPeriod;
-import gov.ca.water.calgui.busservice.impl.WaterYearIndexAliasReader;
 import gov.ca.water.calgui.constant.Constant;
-import gov.ca.water.calgui.project.EpptScenarioRun;
 import gov.ca.water.calgui.project.EpptConfigurationController;
+import gov.ca.water.calgui.project.EpptScenarioRun;
 import gov.ca.water.quickresults.ui.global.EpptParametersPane;
 import javafx.application.Platform;
 import javafx.embed.swing.JFXPanel;
@@ -51,12 +50,12 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ProgressBar;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.control.ToggleGroup;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.Pane;
-import javafx.scene.layout.TilePane;
 import javafx.scene.paint.Color;
 import org.json.JSONObject;
 import org.xml.sax.SAXException;
@@ -95,6 +94,13 @@ public class TrendReportPanel extends JFXPanel
 	{
 		_javascriptPane = new TrendReportFlowPane();
 		_parametersPane = new EpptParametersPane();
+		_applyBtn = new Button("Refresh");
+
+		_applyBtn.setOnAction(e -> inputsChanged());
+		ImageView imageView = new ImageView("gov/ca/water/trendreporting/refresh.png");
+		imageView.setFitHeight(16);
+		imageView.setFitWidth(16);
+		_applyBtn.setGraphic(imageView);
 
 		Insets insets = new Insets(4);
 		BorderPane mainPane = new BorderPane();
@@ -102,9 +108,14 @@ public class TrendReportPanel extends JFXPanel
 		BorderPane center = buildJavascriptPane();
 		BorderPane.setMargin(center, insets);
 		mainPane.setCenter(center);
-		Pane top = buildControls();
-		BorderPane.setMargin(top, insets);
-		mainPane.setTop(top);
+		Pane left = buildControls();
+		BorderPane flowPane = new BorderPane(null, null, _applyBtn, null, left);
+		flowPane.setPrefHeight(40);
+		BorderPane.setMargin(left, insets);
+		BorderPane.setMargin(_applyBtn, insets);
+		mainPane.setTop(flowPane);
+		left.setMaxWidth(Double.MAX_VALUE);
+		flowPane.setMaxWidth(Double.MAX_VALUE);
 		Node bottom = buildProgressControls();
 		BorderPane.setMargin(bottom, insets);
 		mainPane.setBottom(bottom);
@@ -126,12 +137,14 @@ public class TrendReportPanel extends JFXPanel
 
 	private Pane buildControls()
 	{
-		FlowPane flowPane = new FlowPane(Orientation.HORIZONTAL, 10.0, 5.0);
-		flowPane.alignmentProperty().set(Pos.TOP_CENTER);
-		_applyBtn = new Button("Refresh");
-		_applyBtn.setOnAction(e -> inputsChanged());
-		flowPane.getChildren().addAll(buildToggleControls(),_parametersPane, _applyBtn);
-		return flowPane;
+		Insets insets = new Insets(0, 4, 0, 4);
+		Pane toggleControls = buildToggleControls();
+		BorderPane borderPane = new BorderPane();
+		FlowPane center = new FlowPane(Orientation.VERTICAL, 5.0, 0, toggleControls);
+		borderPane.setLeft(_parametersPane);
+		borderPane.setCenter(center);
+		BorderPane.setMargin(center, insets);
+		return borderPane;
 	}
 
 	private BorderPane buildJavascriptPane()
@@ -155,8 +168,8 @@ public class TrendReportPanel extends JFXPanel
 		{
 			LOGGER.log(Level.SEVERE, "Unable to build javascript panels", ex);
 		}
-		TilePane tilePane = new TilePane();
-		tilePane.alignmentProperty().set(Pos.CENTER);
+		FlowPane tilePane = new FlowPane();
+		tilePane.alignmentProperty().set(Pos.CENTER_LEFT);
 		tilePane.getChildren().addAll(_toggleGroup.getToggles()
 												  .stream()
 												  .filter(b -> b instanceof ToggleButton)
@@ -170,6 +183,7 @@ public class TrendReportPanel extends JFXPanel
 							.findAny()
 							.ifPresent(b -> b.setSelected(true))
 		);
+		tilePane.setPrefWidth(550);
 		return tilePane;
 	}
 

@@ -31,6 +31,7 @@ import gov.ca.water.calgui.bo.SimpleFileFilter;
 import gov.ca.water.calgui.constant.Constant;
 import gov.ca.water.calgui.constant.EpptPreferences;
 import gov.ca.water.calgui.techservice.impl.DialogSvcImpl;
+import javafx.application.Platform;
 import javafx.beans.value.ObservableValue;
 import javafx.concurrent.Worker;
 import javafx.scene.layout.BorderPane;
@@ -71,10 +72,11 @@ public class JavaFxChartsPane extends BorderPane
 		if(document != null)
 		{
 			document.setMember("javaObj", new JavascriptImageExporter());
+			Platform.runLater(()->executeScript("console.log = function(message) { javaObj.log(message); }"));
 		}
 		if(newValue == Worker.State.SUCCEEDED)
 		{
-			executeScript(_callbackScript);
+			Platform.runLater(()->executeScript(_callbackScript));
 		}
 	}
 

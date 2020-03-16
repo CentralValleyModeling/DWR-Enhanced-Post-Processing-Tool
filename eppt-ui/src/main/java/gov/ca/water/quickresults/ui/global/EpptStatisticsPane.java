@@ -26,6 +26,7 @@ import javafx.scene.control.ListView;
 import javafx.scene.control.TitledPane;
 import javafx.scene.control.cell.CheckBoxListCell;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.text.Font;
 
 import static java.util.stream.Collectors.toList;
 
@@ -58,6 +59,7 @@ class EpptStatisticsPane extends TitledPane
 	private void initComponents()
 	{
 		_statisticsListView.setCellFactory(listView ->new MyCheckboxTreeItem());
+		_statisticsListView.setFixedCellSize(20);
 		_statisticsListView.setStyle("-fx-selection-bar:-fx-focus-color ;-fx-selection-bar-non-focused: -fx-focus-color ;");
 		setContent(_statisticsListView);
 		setGraphicTextGap(0);
@@ -66,7 +68,7 @@ class EpptStatisticsPane extends TitledPane
 		borderPane.setLeft(statisticLabel);
 		BorderPane.setMargin(statisticLabel, new Insets(2));
 		setGraphic(borderPane);
-		setPrefHeight(300);
+		setPrefHeight(280);
 	}
 
 	private List<EpptStatistic> getSelectedStatistic()
@@ -89,6 +91,8 @@ class EpptStatisticsPane extends TitledPane
 		private MyCheckboxTreeItem()
 		{
 			super(param -> param._selected);
+			super.setPrefHeight(20);
+			super.setFont(Font.font(11));
 		}
 
 		@Override

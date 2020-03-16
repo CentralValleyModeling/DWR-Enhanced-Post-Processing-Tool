@@ -76,7 +76,7 @@ public final class EpptReportingComputer
 			List<EpptReportingComputedSet.EpptReportingTs> tsComputes = new ArrayList<>();
 			for(TimeSeriesContainer ts : data.getValue())
 			{
-				if(ts != null)
+				if(ts != null && !isInstantaneous)
 				{
 					isInstantaneous = "INST-VAL".equalsIgnoreCase(ts.getType());
 				}

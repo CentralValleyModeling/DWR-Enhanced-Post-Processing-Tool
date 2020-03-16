@@ -64,7 +64,7 @@ public class EpptConfigurationScaffold extends EpptScaffold
 			EpptConfigurationPane epptConfigurationPane = new EpptConfigurationPane(epptConfigurationController);
 			jfxPanel.setScene(new Scene(epptConfigurationPane));
 		});
-		epptPanel.setPreferredSize(new Dimension(570, 900));
+		epptPanel.setPreferredSize(new Dimension(400, 900));
 		return epptPanel;
 	}
 }

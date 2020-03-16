@@ -122,7 +122,7 @@ function buildLayouts(datum, yaxis, title) {
                                 margin: {
                                     l: 60,
                                     r: 40,
-                                    b: 90,
+                                    b: 0,
                                     t: 120
                                 }
                             };
@@ -141,6 +141,10 @@ function plot(data) {
     var datum = data['scenario_run_data'];
     var layout = buildLayouts(datum, data['units'], data['gui_link_title']);
     let plotlyAggregateSeries = getPeriodGroupedPlotlySeries(datum);
+    let numberOfRows = datum.length;
+    for(let i = 0; i < layout.length; i++){
+        layout[i]['height'] = 400 + numberOfRows * 65;
+    }
     plotData(layout, plotlyAggregateSeries);
 }
 

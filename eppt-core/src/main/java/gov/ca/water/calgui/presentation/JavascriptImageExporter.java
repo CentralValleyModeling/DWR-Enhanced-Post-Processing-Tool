@@ -47,6 +47,11 @@ public class JavascriptImageExporter
 {
 	private static final Logger LOGGER = Logger.getLogger(JavascriptImageExporter.class.getName());
 
+	public void log(String message)
+	{
+		LOGGER.log(Level.INFO, "Plotly Output: " + message);
+	}
+
 	public void interruptFunction(String format, Object dataJson, Object layoutJson, Object width, Object height)
 	{
 		if(format != null && dataJson != null && layoutJson != null)

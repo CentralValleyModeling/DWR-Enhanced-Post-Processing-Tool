@@ -12,6 +12,7 @@
 package gov.ca.water.eppt.nbui;
 
 import java.awt.BorderLayout;
+import java.awt.Dimension;
 import java.util.Collection;
 import javax.swing.*;
 
@@ -103,6 +104,7 @@ public final class ProjectConfigurationTopComponent extends EpptTopComponent
 		Platform.runLater(() ->
 		{
 			EpptConfigurationPane epptConfigurationPane = new EpptConfigurationPane(epptConfigurationController);
+			epptConfigurationPane.setPrefHeight(900);
 			EpptControllerProvider.addListener(epptConfigurationPane::reloadProject);
 			jfxPanel.setScene(new Scene(epptConfigurationPane));
 		});

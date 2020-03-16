@@ -16,7 +16,13 @@ function buildAnnualPeriodCells(data) {
     let retval = [];
     for (let annualIndex = 0; annualIndex < data[0]['ts_list'][0]['monthly_filters'][0]['annual_filters'].length; annualIndex++) {
         let periodName = data[0]['ts_list'][0]['monthly_filters'][0]['annual_filters'][annualIndex]['annual_period'];
-        retval.push(periodName.replace("<br>", ' - '));
+        let name = periodName;
+        if (periodName.indexOf('<br>') === periodName.length - 4) {
+            name = periodName.replace("<br>", "");
+        } else {
+            name = periodName.replace("<br>", " - ");
+        }
+        retval.push(name);
         for (let tsIndex = 0; tsIndex < data[0]['ts_list'].length; tsIndex++) {
             for (let scenarioIndex = 1; scenarioIndex < data.length; scenarioIndex++) {
                 retval.push('');
@@ -103,6 +109,10 @@ function plot(data) {
     FORMATTER = getD3Formatter(data['scenario_run_data'][0]['ts_list'][0]['monthly_filters'][0]['annual_filters'][0]['discrete_ts']);
     var layout = buildLayouts(data['scenario_run_data'], data['units'], data['gui_link_title']);
     let plotlyAggregateSeries = getPlotlyData(data['scenario_run_data'], data['units']);
+    let numberOfRows = plotlyAggregateSeries[0][0]['cells']['values'][0].length;
+    for(let i = 0; i < layout.length; i++){
+        layout[i]['height'] = 165 + numberOfRows * 35;
+    }
     plotData(layout, plotlyAggregateSeries);
 }
 
@@ -149,14 +159,14 @@ function plotPeriodGroupedForMonthStat(data, monthlyIndex, statIndex, units) {
         header: {
             values: header,
             align: "center",
-            font: {family: PLOTLY_FONT['family'], size:18}
+            font: {family: PLOTLY_FONT['family'], size: 18}
         },
         cells: {
             format: format,
             values: values,
             align: ['left', 'left', 'center'],
-            height:25,
-            font: {family: PLOTLY_FONT['family'], color: ['', colors], size:[14,14,16]}
+            height: 25,
+            font: {family: PLOTLY_FONT['family'], color: ['', colors], size: [14, 14, 16]}
         }
     };
 }
@@ -187,7 +197,7 @@ function buildLayouts(datum, yaxis, title) {
                                 margin: {
                                     l: 60,
                                     r: 40,
-                                    b: 90,
+                                    b: 0,
                                     t: 120
                                 }
                             };

@@ -25,13 +25,19 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.*;
 
+import gov.ca.water.calgui.bo.GUILinksAllModelsBO;
 import gov.ca.water.calgui.bo.ResultUtilsBO;
+import gov.ca.water.calgui.busservice.impl.GuiLinksSeedDataSvcImpl;
+import gov.ca.water.calgui.presentation.DisplayHelper;
 import gov.ca.water.calgui.presentation.plotly.EpptPlotException;
 import gov.ca.water.calgui.project.EpptConfigurationController;
 import gov.ca.water.calgui.project.EpptScenarioRun;
+import gov.ca.water.calgui.project.PlotConfigurationState;
 import gov.ca.water.calgui.techservice.IDialogSvc;
 import gov.ca.water.calgui.techservice.impl.DialogSvcImpl;
 import gov.ca.water.quickresults.ui.EpptPanel;
+
+import static java.util.stream.Collectors.toList;
 
 
 /**
@@ -128,13 +134,13 @@ public class QuickResultsListener implements ActionListener
 				for(int i = 0; i < lstReports.getModel().getSize(); i++)
 				{
 					String elementAt = lstReports.getModel().getElementAt(i);
-//					PlotConfigurationState plotConfigurationState = PlotConfigurationState.fromString(elementAt);
-//					List<String> locations = parseLocations(elementAt);
-//					DisplayHelper displayHelper = _quickResultsPanel.getDisplayHelper();
-//					List<GUILinksAllModelsBO> guiLinks = locations.stream()
-//																  .map(GuiLinksSeedDataSvcImpl.getSeedDataSvcImplInstance()::getGuiLink)
-//																  .collect(toList());
-//					displayHelper.showDisplayFramesGuiLink(plotConfigurationState, guiLinks);
+					PlotConfigurationState plotConfigurationState = PlotConfigurationStateBuilder.fromString(elementAt);
+					List<String> locations = parseLocations(elementAt);
+					DisplayHelper displayHelper = _quickResultsPanel.getDisplayHelper();
+					List<GUILinksAllModelsBO> guiLinks = locations.stream()
+																  .map(GuiLinksSeedDataSvcImpl.getSeedDataSvcImplInstance()::getGuiLink)
+																  .collect(toList());
+					displayHelper.showDisplayFramesGuiLink(plotConfigurationState, guiLinks);
 				}
 			}
 		}
