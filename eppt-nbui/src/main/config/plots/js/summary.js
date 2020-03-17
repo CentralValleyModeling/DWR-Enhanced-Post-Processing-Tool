@@ -64,7 +64,12 @@ function buildScenarioValues(data, monthlyIndex, statIndex) {
     for (let annualIndex = 0; annualIndex < data[0]['ts_list'][0]['monthly_filters'][monthlyIndex]['annual_filters'].length; annualIndex++) {
         for (let tsIndex = 0; tsIndex < data[0]['ts_list'].length; tsIndex++) {
             for (let scenarioIndex = 0; scenarioIndex < data.length; scenarioIndex++) {
-                retval.push(data[scenarioIndex]['ts_list'][tsIndex]['monthly_filters'][monthlyIndex]['annual_filters'][annualIndex]['computed_statistics'][statIndex]['statistic_aggregate']);
+                let stat = data[scenarioIndex]['ts_list'][tsIndex]['monthly_filters'][monthlyIndex]['annual_filters'][annualIndex]['computed_statistics'];
+                if (stat[statIndex]) {
+                    retval.push(stat[statIndex]['statistic_aggregate']);
+                } else {
+                    retval.push(NaN);
+                }
             }
         }
     }
@@ -77,9 +82,14 @@ function buildScenarioValuesDiff(data, diffIndex, monthlyIndex, statIndex) {
         for (let tsIndex = 0; tsIndex < data[0]['ts_list'].length; tsIndex++) {
             for (let scenarioIndex = 0; scenarioIndex < data.length; scenarioIndex++) {
                 if (diffIndex < scenarioIndex) {
-                    let currentValue = data[scenarioIndex]['ts_list'][tsIndex]['monthly_filters'][monthlyIndex]['annual_filters'][annualIndex]['computed_statistics'][statIndex]['statistic_aggregate'];
-                    let diffValue = data[diffIndex]['ts_list'][tsIndex]['monthly_filters'][monthlyIndex]['annual_filters'][annualIndex]['computed_statistics'][statIndex]['statistic_aggregate'];
-                    retval.push(currentValue - diffValue);
+                    let stat = data[scenarioIndex]['ts_list'][tsIndex]['monthly_filters'][monthlyIndex]['annual_filters'][annualIndex]['computed_statistics'][statIndex];
+                    if (stat) {
+                        let currentValue = stat['statistic_aggregate'];
+                        let diffValue = data[diffIndex]['ts_list'][tsIndex]['monthly_filters'][monthlyIndex]['annual_filters'][annualIndex]['computed_statistics'][statIndex]['statistic_aggregate'];
+                        retval.push(currentValue - diffValue);
+                    }else{
+                        retval.push(NaN);
+                    }
                 } else {
                     retval.push('');
                 }
@@ -110,7 +120,7 @@ function plot(data) {
     var layout = buildLayouts(data['scenario_run_data'], data['units'], data['gui_link_title']);
     let plotlyAggregateSeries = getPlotlyData(data['scenario_run_data'], data['units']);
     let numberOfRows = plotlyAggregateSeries[0][0]['cells']['values'][0].length;
-    for(let i = 0; i < layout.length; i++){
+    for (let i = 0; i < layout.length; i++) {
         layout[i]['height'] = 165 + numberOfRows * 35;
     }
     plotData(layout, plotlyAggregateSeries);

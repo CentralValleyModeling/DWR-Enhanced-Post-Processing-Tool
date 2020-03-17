@@ -45,7 +45,11 @@ function buildTable(data, monthlyIndex, statIndex) {
                     annualValues = [];
                     values[annualIndex + 1] = annualValues;
                 }
-                annualValues.push(annual['computed_statistics'][statIndex]['statistic_aggregate']);
+                if(annual['computed_statistics'][statIndex]){
+                    annualValues.push(annual['computed_statistics'][statIndex]['statistic_aggregate']);
+                }else{
+                    annualValues.push(NaN);
+                }
             }
         }
     }
@@ -225,7 +229,11 @@ function plotPeriodGroupedForMonthStat(datum, monthlyIndex, statIndex) {
                 let statistics = annualData['computed_statistics'];
                 let value = statistics[statIndex];
                 x.push(annualData['annual_period']);
-                y.push(value['statistic_aggregate']);
+                if(value){
+                    y.push(value['statistic_aggregate']);
+                }else{
+                    y.push(NaN);
+                }
             }
             series.push({
                 type: 'bar',

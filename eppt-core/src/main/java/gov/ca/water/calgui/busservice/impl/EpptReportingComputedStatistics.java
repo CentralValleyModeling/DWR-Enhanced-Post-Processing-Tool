@@ -18,6 +18,7 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.SortedMap;
 
+import gov.ca.water.calgui.constant.Constant;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -63,7 +64,10 @@ public class EpptReportingComputedStatistics
 	{
 		JSONObject jsonObject = new JSONObject();
 		jsonObject.put(STATISTIC, _epptStatistic.getName());
-		jsonObject.put(STATISTICALLY_AGGREGATE, _aggregateStatistic);
+		if(Constant.isValidValue(_aggregateStatistic))
+		{
+			jsonObject.put(STATISTICALLY_AGGREGATE, _aggregateStatistic);
+		}
 		jsonObject.put(STATISTICALLY_COMPUTED_MONTHLY, buildMonthMap(_statisticallyComputedMonthly));
 		return jsonObject;
 	}
