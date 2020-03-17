@@ -73,14 +73,13 @@ class EpptAnnualPeriodPane extends TitledPane
 	private final TreeView<WaterYearPeriodDefinitionsRow> _treeView = new TreeView<>();
 	private final EpptConfigurationController _controller;
 	private final Button _editButton = new Button("Edit");
+	private boolean _modifiedListenerEnabled = false;
 
 	EpptAnnualPeriodPane(EpptConfigurationController controller)
 	{
 		_controller = controller;
 		initComponents();
 		addListeners();
-		((MyCheckBoxTreeItem) _treeView.getRoot().getChildren().get(0)).setSelected(true);
-		_controller.setWaterYearPeriodRangesFilters(getWaterYearPeriodRanges());
 	}
 
 	private void addListeners()
@@ -363,27 +362,47 @@ class EpptAnnualPeriodPane extends TitledPane
 
 	void reloadProject()
 	{
-		List<Map<EpptScenarioRun, WaterYearPeriodRangesFilter>> waterYearPeriodRanges = _controller.getWaterYearPeriodRanges();
-		List<String> collect = waterYearPeriodRanges.stream()
-													.map(Map::entrySet)
-													.flatMap(Collection::stream)
-													.map(Map.Entry::getValue)
-													.map(WaterYearPeriodRangesFilter::getName)
-													.collect(toList());
-		for(TreeItem<WaterYearPeriodDefinitionsRow> treeItem : _treeView.getRoot().getChildren())
+		try
 		{
-			WaterYearPeriodDefinitionsRow value = treeItem.getValue();
-			String name = value.getWaterYearPeriodRangesFilter().values().iterator().next().getName();
-			((CheckBoxTreeItem<WaterYearPeriodDefinitionsRow>) treeItem).setSelected(collect.contains(name));
-			for(TreeItem<WaterYearPeriodDefinitionsRow> child : treeItem.getChildren())
+			_modifiedListenerEnabled = false;
+			List<Map<EpptScenarioRun, WaterYearPeriodRangesFilter>> waterYearPeriodRanges = _controller.getWaterYearPeriodRanges();
+			List<WaterYearPeriodRangesFilter> collect = waterYearPeriodRanges.stream()
+																			 .map(Map::entrySet)
+																			 .flatMap(Collection::stream)
+																			 .map(Map.Entry::getValue)
+																			 .collect(toList());
+			for(TreeItem<WaterYearPeriodDefinitionsRow> treeItem : _treeView.getRoot().getChildren())
 			{
-				if(child instanceof CheckBoxTreeItem)
+				WaterYearPeriodDefinitionsRow value = treeItem.getValue();
+				Map<EpptScenarioRun, WaterYearPeriodRangesFilter> waterYearPeriodRangesFilters = value.getWaterYearPeriodRangesFilter();
+				if(waterYearPeriodRangesFilters != null)
 				{
-					value = child.getValue();
-					name = value.getWaterYearPeriodRangesFilter().values().iterator().next().getName();
-					((CheckBoxTreeItem<WaterYearPeriodDefinitionsRow>) child).setSelected(collect.contains(name));
+					WaterYearPeriodRangesFilter filter = waterYearPeriodRangesFilters.values().iterator().next();
+					String name = filter.getName();
+					String groupName = filter.getGroupName();
+					((CheckBoxTreeItem<WaterYearPeriodDefinitionsRow>) treeItem).setSelected(
+							collect.stream().anyMatch(s -> s.getName().equals(name) && s.getGroupName().equals(groupName)));
+				}
+				else
+				{
+					for(TreeItem<WaterYearPeriodDefinitionsRow> child : treeItem.getChildren())
+					{
+						if(child instanceof CheckBoxTreeItem)
+						{
+							WaterYearPeriodRangesFilter filter = child.getValue().getWaterYearPeriodRangesFilter().values().iterator().next();
+							String name = filter.getName();
+							String groupName = filter.getGroupName();
+							((CheckBoxTreeItem<WaterYearPeriodDefinitionsRow>) child).setSelected(
+									collect.stream().anyMatch(s -> s.getName().equals(name) && s.getGroupName().equals(groupName)));
+						}
+					}
 				}
 			}
+			_controller.setWaterYearPeriodRangesFilters(getWaterYearPeriodRanges());
+		}
+		finally
+		{
+			_modifiedListenerEnabled = true;
 		}
 	}
 
@@ -614,7 +633,14 @@ class EpptAnnualPeriodPane extends TitledPane
 		private MyCheckBoxTreeItem(WaterYearPeriodDefinitionsRow row)
 		{
 			super(row);
-			selectedProperty().addListener((e, o, n) -> _controller.setWaterYearPeriodRangesFilters(getWaterYearPeriodRanges()));
+			selectedProperty().addListener((e, o, n) ->
+			{
+				if(_modifiedListenerEnabled)
+				{
+					_controller.setWaterYearPeriodRangesFilters(getWaterYearPeriodRanges());
+					_controller.setModified();
+				}
+			});
 		}
 	}
 

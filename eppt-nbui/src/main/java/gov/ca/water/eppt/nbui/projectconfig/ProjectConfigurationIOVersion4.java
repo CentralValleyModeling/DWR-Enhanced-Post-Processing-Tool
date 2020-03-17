@@ -19,26 +19,40 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.time.Month;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 import javax.swing.*;
 
 import gov.ca.water.calgui.bo.GUILinksAllModelsBO;
+import gov.ca.water.calgui.bo.WaterYearDefinition;
+import gov.ca.water.calgui.bo.WaterYearPeriodRangesFilter;
+import gov.ca.water.calgui.busservice.impl.EpptReportingMonths;
+import gov.ca.water.calgui.busservice.impl.EpptStatistic;
+import gov.ca.water.calgui.busservice.impl.MonthPeriod;
+import gov.ca.water.calgui.busservice.impl.ScriptedEpptStatistics;
+import gov.ca.water.calgui.busservice.impl.WaterYearDefinitionSvc;
 import gov.ca.water.calgui.constant.Constant;
+import gov.ca.water.calgui.project.EpptConfigurationController;
 import gov.ca.water.calgui.project.EpptDssContainer;
 import gov.ca.water.calgui.project.EpptProject;
 import gov.ca.water.calgui.project.EpptScenarioRun;
 import gov.ca.water.calgui.project.NamedDssPath;
-import gov.ca.water.calgui.project.EpptConfigurationController;
 import javafx.scene.paint.Color;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
 import static gov.ca.water.eppt.nbui.projectconfig.ProjectConfigurationIO.*;
+import static java.util.stream.Collectors.toList;
+import static java.util.stream.Collectors.toMap;
 
 /**
  * Company: Resource Management Associates
@@ -46,7 +60,7 @@ import static gov.ca.water.eppt.nbui.projectconfig.ProjectConfigurationIO.*;
  * @author <a href="mailto:adam@rmanet.com">Adam Korynta</a>
  * @since 05-06-2019
  */
-class ProjectConfigurationIOVersion2
+class ProjectConfigurationIOVersion4
 {
 	private static final String RELATIVE_TO_PROJECT = "_RELATIVE_TO_PROJECT_";
 	private static final String RELATIVE_TO_MODEL = "_RELATIVE_TO_MODEL_";
@@ -60,15 +74,60 @@ class ProjectConfigurationIOVersion2
 			jsonObject.put(VERSION_KEY, getVersion());
 			jsonObject.put(NAME_KEY, epptConfigurationController.getProjectName());
 			jsonObject.put(DESCRIPTION_KEY, epptConfigurationController.getProjectDescription());
+			jsonObject.put(COMPUTE_CFS_TO_TAF, epptConfigurationController.isTaf());
+			jsonObject.put(COMPUTE_DIFFERENCE, epptConfigurationController.isDifference());
 			jsonObject.put(CREATION_DATE_KEY, ZonedDateTime.now());
 			jsonObject.put(SCENARIOS_KEY, buildScenarioFilesArray(selectedPath, epptConfigurationController));
+			jsonObject.put(WATER_YEAR_DEFINITION, epptConfigurationController.getWaterYearDefinition().getName());
+			jsonObject.put(MONTHLY_PERIODS, buildMonthlyPeriodArray(epptConfigurationController));
+			jsonObject.put(ANNUAL_PERIODS, buildAnnualPeriodArray(epptConfigurationController));
+			jsonObject.put(START_YEAR_PROPERTY, epptConfigurationController.getStartYear());
+			jsonObject.put(END_YEAR_PROPERTY, epptConfigurationController.getEndYear());
+			jsonObject.put(STATISTICS, buildStatisticsArray(epptConfigurationController));
 			jsonObject.write(bufferedWriter, 4, 4);
 		}
 	}
 
+	private JSONArray buildStatisticsArray(EpptConfigurationController epptConfigurationController)
+	{
+		return new JSONArray(epptConfigurationController.getSelectedStatistics().stream().map(EpptStatistic::getName).collect(toList()));
+	}
+
+	private JSONArray buildAnnualPeriodArray(EpptConfigurationController epptConfigurationController)
+	{
+		return new JSONArray(epptConfigurationController.getWaterYearPeriodRanges()
+														.stream()
+														.map(Map::values)
+														.filter(e -> !e.isEmpty())
+														.map(e -> e.iterator().next())
+														.filter(Objects::nonNull)
+														.map(e ->
+														{
+															JSONObject retval = new JSONObject();
+															retval.put(ANNUAL_PERIODS_NAME, e.getName());
+															retval.put(ANNUAL_PERIODS_GROUP, e.getGroupName());
+															return retval;
+														})
+														.collect(toList()));
+	}
+
+	private JSONArray buildMonthlyPeriodArray(EpptConfigurationController epptConfigurationController)
+	{
+		return new JSONArray(epptConfigurationController.getSelectedMonthlyPeriods()
+														.stream()
+														.map(e ->
+														{
+															JSONObject retval = new JSONObject();
+															retval.put(MONTHLY_PERIODS_START, e.getStart());
+															retval.put(MONTHLY_PERIODS_END, e.getEnd());
+															return retval;
+														})
+														.collect(toList()));
+	}
+
 	String getVersion()
 	{
-		return VERSION_2_0;
+		return VERSION_4_0;
 	}
 
 	private JSONArray buildScenarioFilesArray(Path selectedPath, EpptConfigurationController epptConfigurationController)
@@ -228,36 +287,6 @@ class ProjectConfigurationIOVersion2
 		return retval;
 	}
 
-	Path readLookupDirectory(JSONObject scenarioJson)
-	{
-		Path waterYearTable = Paths.get("");
-		if(scenarioJson.has(SCENARIO_WATER_TABLE))
-		{
-			waterYearTable = unrelativizeFromInstaller(scenarioJson.getString(SCENARIO_WATER_TABLE));
-			//Backwards compatibility
-			if(!waterYearTable.toFile().isDirectory())
-			{
-				waterYearTable = waterYearTable.getParent();
-			}
-		}
-		return waterYearTable;
-	}
-
-	Path readWreslDirectory(JSONObject scenarioJson)
-	{
-		Path wreslMain = Paths.get("");
-		if(scenarioJson.has(SCENARIO_WRESL_MAIN))
-		{
-			wreslMain = unrelativizeFromInstaller(scenarioJson.getString(SCENARIO_WRESL_MAIN));
-			//Backwards compatibility
-			if(!wreslMain.toFile().isDirectory())
-			{
-				wreslMain = wreslMain.getParent();
-			}
-		}
-		return wreslMain;
-	}
-
 	Path unrelativizeFromInstaller(String path)
 	{
 		if(path.startsWith(RELATIVE_TO_INSTALLER))
@@ -354,79 +383,96 @@ class ProjectConfigurationIOVersion2
 		return namedDssJsonObject;
 	}
 
-	private void writeSelectedProperties(JSONArray jsonArray, Component[] components)
-	{
-		for(Component component : components)
-		{
-			if(component instanceof JCheckBox)
-			{
-				JSONObject checkBox = new JSONObject();
-				checkBox.put(ID_KEY, component.getName());
-				checkBox.put(SELECTED_KEY, ((JCheckBox) component).isSelected());
-				jsonArray.put(checkBox);
-			}
-			else if(component instanceof JRadioButton)
-			{
-				JSONObject radioButton = new JSONObject();
-				radioButton.put(ID_KEY, component.getName());
-				radioButton.put(SELECTED_KEY, ((JRadioButton) component).isSelected());
-				jsonArray.put(radioButton);
-			}
-			else if(component instanceof Container)
-			{
-				writeSelectedProperties(jsonArray, ((Container) component).getComponents());
-			}
-		}
-	}
-
 	private int readStartYearProperties(JSONObject jsonObject)
 	{
-		String startYear = jsonObject.getString(START_YEAR_PROPERTY);
-		return Integer.parseInt(startYear);
+		return jsonObject.getInt(START_YEAR_PROPERTY);
 	}
 
 	private int readEndYearProperties(JSONObject jsonObject)
 	{
-		String endYear = jsonObject.getString(END_YEAR_PROPERTY);
-		return Integer.parseInt(endYear);
+		return jsonObject.getInt(END_YEAR_PROPERTY);
 	}
 
-	private Map<String, Boolean> readDisplayProperties(JSONArray jsonArray)
+	Path readWreslDirectory(JSONObject scenarioJson)
 	{
-		Map<String, Boolean> retval = new HashMap<>();
-		for(int i = 0; i < jsonArray.length(); i++)
+		Path wreslMain = Paths.get("");
+		if(scenarioJson.has(SCENARIO_WRESL_DIR))
 		{
-			JSONObject jsonObject = jsonArray.getJSONObject(i);
-			if(jsonObject != null && jsonObject.getString(ID_KEY) != null)
-			{
-				boolean selected = jsonObject.getBoolean(SELECTED_KEY);
-				retval.put(jsonObject.getString(ID_KEY), selected);
-			}
+			wreslMain = unrelativizeFromInstaller(scenarioJson.getString(SCENARIO_WRESL_DIR));
 		}
-		return retval;
+		return wreslMain;
 	}
 
-	EpptProject loadConfiguration(JSONObject jsonObject, Path projectPath)
+	Path readLookupDirectory(JSONObject scenarioJson)
 	{
-		Map<String, Boolean> selected = new HashMap<>();
-		if(jsonObject.has(DISPLAY_OPTIONS_KEY))
+		Path waterYearTable = Paths.get("");
+		if(scenarioJson.has(SCENARIO_LOOKUP_DIR))
 		{
-			JSONArray displayOptions = jsonObject.getJSONArray(DISPLAY_OPTIONS_KEY);
-			selected = readDisplayProperties(displayOptions);
+			waterYearTable = unrelativizeFromInstaller(scenarioJson.getString(SCENARIO_LOOKUP_DIR));
 		}
+		return waterYearTable;
+	}
+
+	EpptProject loadConfiguration(JSONObject jsonObject, Path projectPath, EpptConfigurationController configurationController)
+	{
 		int start = 1921;
 		int end = 2003;
-		if(jsonObject.has(YEAR_OPTIONS_KEY))
-		{
-
-			JSONObject monthProperties = jsonObject.getJSONObject(YEAR_OPTIONS_KEY);
-			start = readStartYearProperties(monthProperties);
-			end = readEndYearProperties(monthProperties);
-		}
+		start = readStartYearProperties(jsonObject);
+		end = readEndYearProperties(jsonObject);
 		JSONArray scenarioPaths = jsonObject.getJSONArray(SCENARIOS_KEY);
 		List<EpptScenarioRun> scenarioRuns = readEpptScenarioRuns(scenarioPaths, projectPath);
+		configurationController.setWaterYearDefinition(readWaterYearDefinition(jsonObject));
+		configurationController.setStatistics(readStatistics(jsonObject));
+		configurationController.setMonthlyPeriods(readMonthlyPeriods(jsonObject));
+		configurationController.setWaterYearPeriodRangesFilters(readWaterYearPeriodRangesFilters(jsonObject, scenarioRuns));
+		configurationController.setDifference(jsonObject.getBoolean(COMPUTE_DIFFERENCE));
+		configurationController.setTaf(jsonObject.getBoolean(COMPUTE_CFS_TO_TAF));
 		String name = jsonObject.getString(NAME_KEY);
 		String description = jsonObject.getString(DESCRIPTION_KEY);
-		return new EpptProject(name, description, scenarioRuns, start, end, selected);
+		return new EpptProject(name, description, scenarioRuns, start, end, Collections.emptyMap());
+	}
+
+	private List<Map<EpptScenarioRun, WaterYearPeriodRangesFilter>> readWaterYearPeriodRangesFilters(JSONObject jsonObject,
+																									 List<EpptScenarioRun> scenarioRuns)
+	{
+		return jsonObject.getJSONArray(ANNUAL_PERIODS).toList()
+						 .stream()
+						 .filter(e -> e instanceof Map)
+						 .map(e -> Map.class.cast(e))
+						 .map(e -> new WaterYearPeriodRangesFilter(e.get(ANNUAL_PERIODS_NAME).toString(),
+								 e.get(ANNUAL_PERIODS_GROUP).toString(),
+								 Collections.emptyList(), null))
+						 .map(s -> scenarioRuns.stream().collect(toMap(e -> e, e -> s)))
+						 .collect(toList());
+
+	}
+
+	private List<MonthPeriod> readMonthlyPeriods(JSONObject jsonObject)
+	{
+		return jsonObject.getJSONArray(MONTHLY_PERIODS).toList()
+						 .stream()
+						 .filter(s -> s instanceof Map)
+						 .map(e -> new MonthPeriod("", Month.valueOf(((Map) e).get(MONTHLY_PERIODS_START).toString()),
+								 Month.valueOf(((Map) e).get(MONTHLY_PERIODS_END).toString())))
+						 .collect(toList());
+	}
+
+	private List<EpptStatistic> readStatistics(JSONObject jsonObject)
+	{
+		List<String> statistics = jsonObject.getJSONArray(STATISTICS).toList().stream().map(Object::toString).collect(toList());
+		return ScriptedEpptStatistics.getTrendStatistics().stream()
+									 .filter(s -> statistics.contains(s.getName()))
+									 .collect(toList());
+	}
+
+	private WaterYearDefinition readWaterYearDefinition(JSONObject jsonObject)
+	{
+		String definition = jsonObject.getString(WATER_YEAR_DEFINITION);
+		return WaterYearDefinitionSvc.getWaterYearDefinitionSvc()
+									 .getDefinitions()
+									 .stream()
+									 .filter(s -> s.getName().equals(definition))
+									 .findFirst()
+									 .orElse(WaterYearDefinitionSvc.getWaterYearDefinitionSvc().getDefinitions().get(0));
 	}
 }

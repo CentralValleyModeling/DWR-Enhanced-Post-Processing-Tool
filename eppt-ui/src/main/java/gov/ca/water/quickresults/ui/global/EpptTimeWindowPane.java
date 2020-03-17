@@ -73,6 +73,7 @@ class EpptTimeWindowPane extends TitledPane
 			_controller.setEndYear(n);
 			SpinnerValueFactory.IntegerSpinnerValueFactory valueFactory = (SpinnerValueFactory.IntegerSpinnerValueFactory)_startYearSpinner.getValueFactory();
 			valueFactory.setMax(n);
+			_controller.setModified();
 		};
 	}
 
@@ -83,6 +84,7 @@ class EpptTimeWindowPane extends TitledPane
 			_controller.setStartYear(n);
 			SpinnerValueFactory.IntegerSpinnerValueFactory valueFactory = (SpinnerValueFactory.IntegerSpinnerValueFactory)_endYearSpinner.getValueFactory();
 			valueFactory.setMin(n);
+			_controller.setModified();
 		};
 	}
 
@@ -118,6 +120,7 @@ class EpptTimeWindowPane extends TitledPane
 	{
 		_startYearSpinner.getValueFactory().setValue(_controller.getStartYear());
 		_endYearSpinner.getValueFactory().setValue(_controller.getEndYear());
+		_waterYearDefinitionComboBox.setValue(_controller.getWaterYearDefinition());
 	}
 
 	private static final class MyKeyAdapter implements EventHandler<KeyEvent>

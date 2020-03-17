@@ -54,7 +54,7 @@ public final class EpptControllerProvider
 			ProjectConfigurationIO projectConfigurationIO = new ProjectConfigurationIO();
 			if(path.toFile().exists())
 			{
-				EpptProject epptProject = projectConfigurationIO.loadConfiguration(path);
+				EpptProject epptProject = projectConfigurationIO.loadConfiguration(path, epptConfigurationController);
 				EpptControllerProvider.epptConfigurationController.setProjectName(epptProject.getName());
 				EpptControllerProvider.epptConfigurationController.setProjectDescription(epptProject.getDescription());
 				EpptControllerProvider.epptConfigurationController.setScenarioRuns(epptProject.getScenarioRuns());

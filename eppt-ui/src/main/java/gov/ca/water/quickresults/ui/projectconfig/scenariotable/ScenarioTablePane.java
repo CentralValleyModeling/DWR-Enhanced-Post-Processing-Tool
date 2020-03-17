@@ -77,6 +77,7 @@ public class ScenarioTablePane extends TitledPane
 	private final ScenarioTableModel _scenarioTableModel;
 	private final RmaTreeTableView<ScenarioTableModel, ScenarioTableRowModel> _treeTable;
 	private final EpptConfigurationController _controller;
+	private boolean _modifiedListenerEnabled = false;
 
 	public ScenarioTablePane(EpptConfigurationController controller)
 	{
@@ -408,8 +409,19 @@ public class ScenarioTablePane extends TitledPane
 
 	public void reloadProject()
 	{
-		_scenarioTableModel.getRows().clear();
-		_controller.getScenarioRuns().forEach(this::addScenarioRun);
+		try
+		{
+			_modifiedListenerEnabled = false;
+			_scenarioTableModel.getRows().clear();
+			_controller.getScenarioRuns().forEach(this::addScenarioRun);
+			_differenceCheckbox.setSelected(_controller.isDifference());
+			_tafCheckbox.setSelected(_controller.isTaf());
+
+		}
+		finally
+		{
+			_modifiedListenerEnabled = true;
+		}
 	}
 
 	private static class ScenarioCheckboxView extends RmaCheckBoxCellView

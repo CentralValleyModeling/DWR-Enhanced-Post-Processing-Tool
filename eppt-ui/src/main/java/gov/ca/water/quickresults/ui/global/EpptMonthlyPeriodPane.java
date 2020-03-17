@@ -18,6 +18,7 @@ import java.time.Month;
 import java.time.format.TextStyle;
 import java.util.List;
 import java.util.Locale;
+import java.util.Objects;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -76,14 +77,13 @@ class EpptMonthlyPeriodPane extends TitledPane
 	private final ListView<PeriodItem> _seasonalPeriodListView = new ListView<>();
 	private final EpptConfigurationController _controller;
 	private final Button _editButton = new Button("Edit");
+	private boolean _modifiedListenerEnabled = false;
 
 	EpptMonthlyPeriodPane(EpptConfigurationController controller)
 	{
 		_controller = controller;
 		initComponents();
 		addListeners();
-		_seasonalPeriodListView.getItems().get(0)._selected.set(true);
-		_controller.setMonthlyPeriods(getSelectedMonthlyPeriods());
 	}
 
 	private void addListeners()
@@ -192,8 +192,28 @@ class EpptMonthlyPeriodPane extends TitledPane
 
 	void reloadProject()
 	{
-		List<MonthPeriod> selectedMonthlyPeriods = _controller.getSelectedMonthlyPeriods();
-		_seasonalPeriodListView.getItems().forEach(item ->item._selected.set(selectedMonthlyPeriods.contains(item._monthPeriod)));
+		try
+		{
+			_modifiedListenerEnabled = false;
+			List<MonthPeriod> selectedMonthlyPeriods = _controller.getSelectedMonthlyPeriods();
+			_seasonalPeriodListView.getItems().forEach(item -> item._selected.set(monthsMatch(selectedMonthlyPeriods, item)));
+			_controller.setMonthlyPeriods(getSelectedMonthlyPeriods());
+		}
+		finally
+		{
+			_modifiedListenerEnabled = true;
+		}
+	}
+
+	private boolean monthsMatch(List<MonthPeriod> selectedMonthlyPeriods, PeriodItem item)
+	{
+		return selectedMonthlyPeriods.stream().anyMatch(
+				e ->
+				{
+					boolean startEquals = Objects.equals(Objects.toString(e.getStart()), Objects.toString(item._monthPeriod.getStart()));
+					boolean endEquals = Objects.equals(Objects.toString(e.getEnd()), Objects.toString(item._monthPeriod.getEnd()));
+					return startEquals && endEquals;
+				});
 	}
 
 	private final class MyCheckboxTreeItem extends CheckBoxListCell<PeriodItem>
@@ -216,7 +236,14 @@ class EpptMonthlyPeriodPane extends TitledPane
 			CheckBox graphic = (CheckBox) getGraphic();
 			if(graphic != null)
 			{
-				graphic.selectedProperty().addListener((e, o, n) -> _controller.setMonthlyPeriods(getSelectedMonthlyPeriods()));
+				graphic.selectedProperty().addListener((e, o, n) ->
+				{
+					if(_modifiedListenerEnabled)
+					{
+						_controller.setMonthlyPeriods(getSelectedMonthlyPeriods());
+						_controller.setModified();
+					}
+				});
 			}
 		}
 	}

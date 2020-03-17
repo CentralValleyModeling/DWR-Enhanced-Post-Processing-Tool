@@ -105,8 +105,9 @@ public final class ProjectConfigurationTopComponent extends EpptTopComponent
 		{
 			EpptConfigurationPane epptConfigurationPane = new EpptConfigurationPane(epptConfigurationController);
 			epptConfigurationPane.setPrefHeight(900);
-			EpptControllerProvider.addListener(epptConfigurationPane::reloadProject);
+			EpptControllerProvider.addListener(()->Platform.runLater(epptConfigurationPane::reloadProject));
 			jfxPanel.setScene(new Scene(epptConfigurationPane));
+			epptConfigurationPane.reloadProject();
 		});
 		JScrollPane scrollPane = new JScrollPane(jfxPanel);
 		setLayout(new BorderLayout());

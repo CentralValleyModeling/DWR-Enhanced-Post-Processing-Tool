@@ -133,7 +133,7 @@ class ProjectConfigurationIOVersion1
 	{
 		JSONArray displayOptions = jsonObject.getJSONArray(DISPLAY_OPTIONS_KEY);
 		Map<String, Boolean> selected = readDisplayProperties(displayOptions);
-		JSONObject monthProperties = jsonObject.getJSONObject(MONTH_OPTIONS_KEY);
+		JSONObject monthProperties = jsonObject.getJSONObject(YEAR_OPTIONS_KEY);
 		int start = readStartYearProperties(monthProperties);
 		int end = readEndYearProperties(monthProperties);
 		JSONArray scenarioPaths = jsonObject.getJSONArray(SCENARIO_FILES_KEY);

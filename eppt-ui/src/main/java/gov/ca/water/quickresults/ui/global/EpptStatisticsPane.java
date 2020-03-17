@@ -40,14 +40,13 @@ class EpptStatisticsPane extends TitledPane
 {
 	private final ListView<StatItem> _statisticsListView = new ListView<>();
 	private final EpptConfigurationController _controller;
+	private boolean _modifiedListenerEnabled = false;
 
 	EpptStatisticsPane(EpptConfigurationController controller)
 	{
 		_controller = controller;
 		initComponents();
 		loadStats();
-		_statisticsListView.getItems().get(0)._selected.set(true);
-		_controller.setStatistics(getSelectedStatistic());
 	}
 
 	private void loadStats()
@@ -58,7 +57,7 @@ class EpptStatisticsPane extends TitledPane
 
 	private void initComponents()
 	{
-		_statisticsListView.setCellFactory(listView ->new MyCheckboxTreeItem());
+		_statisticsListView.setCellFactory(listView -> new MyCheckboxTreeItem());
 		_statisticsListView.setFixedCellSize(20);
 		_statisticsListView.setStyle("-fx-selection-bar:-fx-focus-color ;-fx-selection-bar-non-focused: -fx-focus-color ;");
 		setContent(_statisticsListView);
@@ -75,15 +74,25 @@ class EpptStatisticsPane extends TitledPane
 	{
 		return _statisticsListView.getItems()
 								  .stream()
-								  .filter(item->item._selected.get())
-								  .map(item->item._epptStatistic)
+								  .filter(item -> item._selected.get())
+								  .map(item -> item._epptStatistic)
 								  .collect(toList());
 	}
 
 	void reloadProject()
 	{
-		List<EpptStatistic> selectedStatistics = _controller.getSelectedStatistics();
-		_statisticsListView.getItems().forEach(i->i._selected.set(selectedStatistics.contains(i._epptStatistic)));
+		try
+		{
+			_modifiedListenerEnabled = false;
+			List<EpptStatistic> selectedStatistics = _controller.getSelectedStatistics();
+			_statisticsListView.getItems().forEach(i -> i._selected.set(selectedStatistics.stream()
+																						  .map(EpptStatistic::getName)
+																						  .anyMatch(s -> s.equals(i._epptStatistic.getName()))));
+		}
+		finally
+		{
+			_modifiedListenerEnabled = true;
+		}
 	}
 
 	private final class MyCheckboxTreeItem extends CheckBoxListCell<StatItem>
@@ -106,7 +115,14 @@ class EpptStatisticsPane extends TitledPane
 			CheckBox graphic = (CheckBox) getGraphic();
 			if(graphic != null)
 			{
-				graphic.selectedProperty().addListener((e,o,n)->_controller.setStatistics(getSelectedStatistic()));
+				graphic.selectedProperty().addListener((e, o, n) ->
+				{
+					if(_modifiedListenerEnabled)
+					{
+						_controller.setStatistics(getSelectedStatistic());
+						_controller.setModified();
+					}
+				});
 			}
 		}
 	}

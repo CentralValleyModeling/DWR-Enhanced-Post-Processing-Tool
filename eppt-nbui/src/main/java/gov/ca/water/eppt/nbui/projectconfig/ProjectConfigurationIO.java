@@ -34,6 +34,7 @@ public class ProjectConfigurationIO
 	private static final String VERSION_1_0 = "1.0";
 	static final String VERSION_2_0 = "2.0";
 	static final String VERSION_3_0 = "3.0";
+	static final String VERSION_4_0 = "4.0";
 	static final String NAME_KEY = "name";
 	static final String DESCRIPTION_KEY = "description";
 	static final String CREATION_DATE_KEY = "creation_date";
@@ -61,20 +62,30 @@ public class ProjectConfigurationIO
 	static final String SCENARIO_DSS_EXTRA = "scenario_dss_extra";
 	static final String SCENARIO_WATER_TABLE = "scenario_water_table";
 	static final String SCENARIO_LOOKUP_DIR = "scenario_water_lookup_dir";
+	static final String WATER_YEAR_DEFINITION = "water_year_definition";
+	static final String MONTHLY_PERIODS = "monthly_periods";
+	static final String MONTHLY_PERIODS_START = "monthly_periods_start";
+	static final String MONTHLY_PERIODS_END = "monthly_periods_end";
+	static final String ANNUAL_PERIODS = "annual_periods";
+	static final String ANNUAL_PERIODS_NAME = "annual_periods_name";
+	static final String ANNUAL_PERIODS_GROUP = "annual_periods_group";
+	static final String COMPUTE_DIFFERENCE = "difference";
+	static final String COMPUTE_CFS_TO_TAF = "cfs_to_taf";
+	static final String STATISTICS = "statistics";
 	static final String FILE_KEY = "file";
 	static final String MODEL_KEY = "model";
 	static final String SELECTED_KEY = "selected";
 	static final String DISPLAY_OPTIONS_KEY = "display_options";
-	static final String MONTH_OPTIONS_KEY = "month_options";
+	static final String YEAR_OPTIONS_KEY = "year_options";
 	static final String ID_KEY = "id";
 
 	public void saveConfiguration(EpptConfigurationController epptConfigurationController, Path selectedPath) throws IOException
 	{
-		ProjectConfigurationIOVersion3 projectConfigurationIOVersion3 = new ProjectConfigurationIOVersion3();
-		projectConfigurationIOVersion3.saveConfiguration(selectedPath, epptConfigurationController);
+		ProjectConfigurationIOVersion4 projectConfigurationIOVersion4 = new ProjectConfigurationIOVersion4();
+		projectConfigurationIOVersion4.saveConfiguration(selectedPath, epptConfigurationController);
 	}
 
-	public EpptProject loadConfiguration(Path selectedPath) throws IOException
+	public EpptProject loadConfiguration(Path selectedPath, EpptConfigurationController epptConfigurationController) throws IOException
 	{
 		String collect = String.join("\n", Files.readAllLines(selectedPath));
 		if(!collect.isEmpty())
@@ -94,6 +105,11 @@ public class ProjectConfigurationIO
 			{
 				ProjectConfigurationIOVersion3 projectConfigurationIOVersion3 = new ProjectConfigurationIOVersion3();
 				return projectConfigurationIOVersion3.loadConfiguration(jsonObject, selectedPath);
+			}
+			else if(VERSION_4_0.equalsIgnoreCase(jsonObject.getString(VERSION_KEY)))
+			{
+				ProjectConfigurationIOVersion4 projectConfigurationIOVersion3 = new ProjectConfigurationIOVersion4();
+				return projectConfigurationIOVersion3.loadConfiguration(jsonObject, selectedPath, epptConfigurationController);
 			}
 			else
 			{

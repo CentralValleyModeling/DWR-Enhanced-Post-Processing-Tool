@@ -14,6 +14,7 @@ package gov.ca.water.quickresults.ui.global;
 
 import gov.ca.water.calgui.project.EpptConfigurationController;
 import gov.ca.water.quickresults.ui.projectconfig.scenariotable.ScenarioTablePane;
+import javafx.application.Platform;
 import javafx.scene.Node;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
