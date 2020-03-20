@@ -440,6 +440,24 @@ define Exp_Res_Month {
 		value NA }
 	}
 
+	
+define Excess_CHECK{
+	case Excess {
+		condition Delta_Cndtn_Bal == NA .and. Exp_Res_Month == NA 	
+		value EQ }
+	case not_Excess {
+		condition always
+		value NA }
+}
+
+define Excess_Res_CHECK{
+	case Excess {
+		condition Delta_Cndtn_Bal == NA .and. Exp_Res_Month == EQ 	
+		value EQ }
+	case not_Excess_Res {
+		condition always
+		value NA }
+}
 	! Identify months when either project export is capacity limited or Health and Safety limited
 define Exp_Cap_HandS_Res_Month {
 	case Restricted {
@@ -647,6 +665,8 @@ define SWP_SI_UWFE_ { alias  SWP_SI_UWFE  kind 'DTS-COA-VALUE' units 'TAF' }
 define TOT_SI_UWFE_ { alias  TOT_SI_UWFE  kind 'DTS-COA-VALUE' units 'TAF' }
 define IBU_TOT_CHECK_PP_ { alias  IBU_TOT_CHECK_PP  kind 'DTS-COA-STATUS' units 'NONE' }
 define UWFE_TOT_CHECK_PP_ { alias  UWFE_TOT_CHECK_PP  kind 'DTS-COA-STATUS' units 'NONE' }
+define Excess_CHECK_ { alias  Excess_CHECK  kind 'DTS-COA-STATUS' units 'NONE' }
+define Excess_Res_CHECK_ { alias  Excess_Res_CHECK  kind 'DTS-COA-STATUS' units 'NONE' }
 define IBU_TOT_CHECK_DYN_ { alias  IBU_TOT_CHECK_DYN  kind 'DTS-COA-STATUS' units 'NONE' }
 define UWFE_TOT_CHECK_DYN_ { alias  UWFE_TOT_CHECK_DYN  kind 'DTS-COA-STATUS' units 'NONE' }
 define IBU_Ratio_CVP_ { alias  IBU_Ratio_CVP  kind 'DTS-COA-VALUE' units 'PERCENT' }
