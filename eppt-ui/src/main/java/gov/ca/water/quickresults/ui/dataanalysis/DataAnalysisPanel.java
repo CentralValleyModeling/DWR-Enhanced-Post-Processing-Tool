@@ -21,12 +21,11 @@ import java.util.List;
 import java.util.Objects;
 import javax.swing.*;
 
-import gov.ca.water.calgui.busservice.ScenarioChangeListener;
 import gov.ca.water.calgui.constant.Constant;
 import gov.ca.water.calgui.constant.EpptPreferences;
 import gov.ca.water.calgui.project.EpptScenarioRun;
 import gov.ca.water.quickresults.ui.EpptPanel;
-import gov.ca.water.quickresults.ui.projectconfig.ProjectConfigurationPanel;
+import gov.ca.water.calgui.project.EpptConfigurationController;
 import gov.ca.water.quickresults.ui.quickresults.QuickResultsPanel;
 import org.apache.log4j.Logger;
 
@@ -43,7 +42,7 @@ public class DataAnalysisPanel extends EpptPanel
 	private final ButtonGroup _baseRadioGroup;
 	private final ButtonGroup _altRadioGroup;
 
-	public DataAnalysisPanel()
+	public DataAnalysisPanel(EpptConfigurationController epptConfigurationController)
 	{
 		try
 		{
@@ -59,7 +58,7 @@ public class DataAnalysisPanel extends EpptPanel
 			_altRadioGroup = new ButtonGroup();
 			initRadioButtons();
 			initListeners();
-			ProjectConfigurationPanel.getProjectConfigurationPanel().addScenarioChangedListener(this::updateScenarios);
+			epptConfigurationController.addScenarioChangedListener(this::updateScenarios);
 		}
 		catch(Exception e)
 		{

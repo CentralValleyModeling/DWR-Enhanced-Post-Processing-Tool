@@ -21,7 +21,6 @@ import java.time.LocalDate;
 import java.time.Month;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -29,33 +28,22 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.Properties;
 import java.util.Scanner;
-import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.swing.*;
 
-import calsim.app.Project;
 import gov.ca.water.calgui.bo.DetailedIssue;
 import gov.ca.water.calgui.bo.GUILinksAllModelsBO;
-import gov.ca.water.calgui.bo.ResultUtilsBO;
 import gov.ca.water.calgui.bo.ThresholdLinksBO;
 import gov.ca.water.calgui.busservice.IDSSGrabber1Svc;
-import gov.ca.water.calgui.busservice.IGuiLinksSeedDataSvc;
+import gov.ca.water.calgui.constant.Constant;
 import gov.ca.water.calgui.project.EpptDssContainer;
 import gov.ca.water.calgui.project.EpptScenarioRun;
 import gov.ca.water.calgui.project.NamedDssPath;
-import gov.ca.water.calgui.techservice.IDialogSvc;
-import gov.ca.water.calgui.techservice.impl.DialogSvcImpl;
 
-import hec.dssgui.CombinedDataManager;
-import hec.heclib.dss.DSSPathname;
-import hec.heclib.dss.HecDSSDataAttributes;
 import hec.heclib.dss.HecDataManager;
 import hec.heclib.dss.HecDss;
 import hec.heclib.util.HecTime;
-import hec.heclib.util.Heclib;
-import hec.hecmath.DSS;
-import hec.hecmath.DSSFile;
+import hec.heclib.util.HecTimeArray;
 import hec.hecmath.computation.r;
 import hec.hecmath.functions.TimeSeriesFunctions;
 import hec.io.TimeSeriesContainer;
@@ -86,14 +74,11 @@ import rma.util.RMAConst;
 public class DSSGrabber1SvcImpl implements IDSSGrabber1Svc
 {
 
-	static final double CFS_2_TAF_DAY = 0.001983471;
-	private static final double TAF_DAY_2_CFS = 504.166667;
+	public static final double CFS_2_TAF_DAY = 0.001983471;
 	private static Logger LOGGER = Logger.getLogger(DSSGrabber1SvcImpl.class.getName());
 	final Map<GUILinksAllModelsBO.Model, String> _primaryDSSName = new HashMap<>();
 	final Map<GUILinksAllModelsBO.Model, String> _secondaryDSSName = new HashMap<>();
 	final List<EpptScenarioRun> _alternatives = new ArrayList<>();
-	private final IGuiLinksSeedDataSvc _seedDataSvc = GuiLinksSeedDataSvcImpl.getSeedDataSvcImplInstance();
-	private final ThresholdLinksSeedDataSvc _thresholdLinksSeedDataSvc = ThresholdLinksSeedDataSvc.getSeedDataSvcImplInstance();
 	private final Map<GUILinksAllModelsBO.Model, List<String>> _missingDSSRecords = new HashMap<>();
 	// Chart title
 	String _plotTitle;
@@ -104,18 +89,11 @@ public class DSSGrabber1SvcImpl implements IDSSGrabber1Svc
 	// Indicates whether "CFS" button was selected
 	String _originalUnits;
 	boolean _isCFS;
-	// USGS Water Year for start and end time.
-	int _startWY;
-	int _endWY;
-	Project _project = ResultUtilsBO.getResultUtilsInstance().getProject();
 	EpptScenarioRun _baseScenarioRun;
 	// Copy of original units
 	// Start and end time of interest
-	private int _startTime;
-	private int _endTime;
-	// Number of scenarios passed in list parameter
-	private double[][] _annualTAFs;
-	private double[][] _annualTAFsDiff;
+	private HecTime _startTime;
+	private HecTime _endTime;
 
 	public DSSGrabber1SvcImpl()
 	{
@@ -181,40 +159,18 @@ public class DSSGrabber1SvcImpl implements IDSSGrabber1Svc
 
 			int m = startMonth.getMonth().getValue();
 			int y = startMonth.getYear();
-			ht.setYearMonthDay(m == 12 ? (y + 1) : y, m == 12 ? 1 : (m + 1), 1, 0);
-			_startTime = ht.value();
-			if(m < 10)
-			{
-				_startWY = y;
-			}
-			else
-			{
-				_startWY = y + 1;
-			} // Water year
-
+			ht.setYearMonthDay(y, m, 1, 0);
+			_startTime = new HecTime(ht);
 			m = endMonth.getMonth().getValue();
 			y = endMonth.getYear();
-			ht.setYearMonthDay(m == 12 ? (y + 1) : y, m == 12 ? 1 : (m + 1), 1, 0);
-			_endTime = ht.value();
-			_endWY = (m < 10) ? y : (y + 1);
+			ht.setYearMonthDay(y, m, 1, 0);
+			_endTime = new HecTime(ht);
 		}
 		catch(RuntimeException ex)
 		{
-			_startTime = -1;
 			LOGGER.log(Level.WARNING, ex.getMessage(), ex);
 		}
 
-	}
-
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see gov.ca.water.calgui.busservice.impl.IDSSGrabber1Svc#getBaseRunName()
-	 */
-	@Override
-	public String getBaseRunName()
-	{
-		return _baseScenarioRun.getName();
 	}
 
 	/*
@@ -262,26 +218,6 @@ public class DSSGrabber1SvcImpl implements IDSSGrabber1Svc
 	}
 
 	@Override
-	public void setLocation(String locationName)
-	{
-		if(locationName != null)
-		{
-			locationName = locationName.trim();
-			if(locationName.startsWith("/"))
-			{
-				// Handle names passed from WRIMS GUI
-				String[] parts = locationName.split("/");
-				_plotTitle = locationName;
-				_primaryDSSName.clear();
-				_primaryDSSName.put(_baseScenarioRun.getModel(), parts[2] + "/" + parts[3]);
-				_secondaryDSSName.clear();
-				_axisLabel = "";
-				_legend = "";
-			}
-		}
-	}
-
-	@Override
 	public void setThresholdLink(ThresholdLinksBO objById)
 	{
 		if(objById != null)
@@ -299,49 +235,35 @@ public class DSSGrabber1SvcImpl implements IDSSGrabber1Svc
 		}
 	}
 
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see gov.ca.water.calgui.busservice.impl.IDSSGrabber1Svc#getYLabel()
-	 */
-	@Override
-	public String getYLabel()
-	{
-		return _axisLabel;
-	}
 
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see gov.ca.water.calgui.busservice.impl.IDSSGrabber1Svc#getSLabel()
-	 */
-	@Override
-	public String getSLabel()
-	{
-		return _legend;
-	}
 
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see gov.ca.water.calgui.busservice.impl.IDSSGrabber1Svc#getPlotTitle()
-	 */
-	@Override
-	public String getPlotTitle()
+	public static TimeSeriesContainer diffSeries(TimeSeriesContainer baseSeries, TimeSeriesContainer primarySeries)
 	{
-		if(_plotTitle != null && !_plotTitle.isEmpty())
+		TimeSeriesContainer retval = null;
+		if(baseSeries != null && primarySeries != null)
 		{
-			return _plotTitle;
-		}
-		else
-		{
-			List<String> titles = new ArrayList<>();
-			for(Map.Entry<GUILinksAllModelsBO.Model, String> entry : _primaryDSSName.entrySet())
+			retval = new TimeSeriesContainer();
+			baseSeries.clone(retval);
+			HecTimeArray times = retval.getTimes();
+			double[] values = new double[times.numberElements()];
+			for(int i = 0;i < times.numberElements(); i++)
 			{
-				titles.add(entry.toString() + " (" + entry.getKey() + ")");
+				HecTime time = times.timeArray()[i];
+				double baseValue = baseSeries.getValue(time);
+				double altValue = primarySeries.getValue(time);
+				if(Constant.isValidValue(altValue) && Constant.isValidValue(baseValue))
+				{
+					values[i] = altValue - baseValue;
+				}
+				else
+				{
+					values[i] = RMAConst.UNDEF_DOUBLE;
+				}
 			}
-			return String.join(",", titles);
+			retval.setValues(values);
+			retval.setFullName("Diff " + primarySeries.getFullName() + " <br>from " + baseSeries.getFullName());
 		}
+		return retval;
 	}
 
 	/**
@@ -462,43 +384,6 @@ public class DSSGrabber1SvcImpl implements IDSSGrabber1Svc
 		return Boolean.valueOf(lveState);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see
-	 * gov.ca.water.calgui.busservice.impl.IDSSGrabber1Svc#hasPower(java.lang.
-	 * String)
-	 */
-	@Override
-	public boolean hasPower(String dssFilename)
-	{
-		try
-		{
-			if(HecDataManager.doesDSSFileExist(dssFilename))
-			{
-				HecDss hD = HecDss.open(dssFilename);
-				@SuppressWarnings("unchecked")
-
-				Vector<String> aList = hD.getPathnameList();
-				for(String path : aList)
-				{
-					String[] parts = path.split("/");
-					if(parts[1].startsWith("HYDROPOWER"))
-					{
-						return true;
-					}
-				}
-			}
-		}
-		catch(Exception ex)
-		{
-
-			LOGGER.log(Level.FINE, ex.getMessage(), ex);
-
-		}
-		return false;
-	}
-
 	/**
 	 * Reads a specified dataset from a specified HEC DSS file.
 	 *
@@ -557,7 +442,6 @@ public class DSSGrabber1SvcImpl implements IDSSGrabber1Svc
 						dssNames[i] = dssNames1[i].trim();
 					}
 				}
-
 				String hecAPart = dssPath.getAPart();
 				String hecEPart = dssPath.getEPart();
 				String hecFPart = dssPath.getFPart();
@@ -565,7 +449,8 @@ public class DSSGrabber1SvcImpl implements IDSSGrabber1Svc
 
 				if(!missingBOrCPart)
 				{
-					result = (TimeSeriesContainer) hecDss.get(firstPath, true);
+					result = (TimeSeriesContainer) hecDss.get(firstPath, _startTime.toString(), _endTime.toString());
+					DssPatternUpdater.updateTimeSeriesContainer(result);
 				}
 				String message = null;
 				if((result == null) || (result.numberValues < 1))
@@ -618,7 +503,6 @@ public class DSSGrabber1SvcImpl implements IDSSGrabber1Svc
 						message = "Could not find " + dssNames[0] + " in " + dssPath.getDssPath()
 								+ ".\n The selected scenario was not run with Los Vaqueros Enlargement.";
 					}
-
 					else
 					{
 						message = "Could not find " + dssNames[0] + " in " + dssPath.getDssPath() + " - attempted to retrieve path: " + firstPath;
@@ -635,14 +519,12 @@ public class DSSGrabber1SvcImpl implements IDSSGrabber1Svc
 
 						// TODO: Note hard-coded D- and E-PART
 						String pathName = "/" + hecAPart + "/" + dssNames[i] + "//" + dssPath.getEPart() + "/" + hecFPart + "/";
-						TimeSeriesContainer result2 = (TimeSeriesContainer) hecDss
-								.get(pathName, true);
+						TimeSeriesContainer result2 = (TimeSeriesContainer) hecDss.get(pathName, true);
+						DssPatternUpdater.updateTimeSeriesContainer(result2);
 						if(result2 == null || result2.numberValues < 1)
 						{
-							result2 = null;
 							message = String.format("Could not find %s in %s - attempted to retrieve path: %s",
 									dssNames[0], dssPath.getDssPath(), pathName);
-							//						JOptionPane.showMessageDialog(null, message, "Error", JOptionPane.ERROR_MESSAGE);
 						}
 						else
 						{
@@ -658,50 +540,6 @@ public class DSSGrabber1SvcImpl implements IDSSGrabber1Svc
 				if(message != null)
 				{
 					LOGGER.log(Level.FINER, message);
-				}
-				// Trim to date range
-				if(result != null)
-				{
-					// Find starting index
-					int first = 0;
-					for(int i = 0; (i < result.numberValues) && (result.times[i] < _startTime); i++)
-					{
-						first = i + 1;
-					}
-					// find ending index
-					int last = result.numberValues - 1;
-					for(int i = result.numberValues - 1; (i >= 0) && (result.times[i] >= _endTime); i--)
-					{
-						last = i;
-					}
-					// Shift results in array to start
-					if(first != 0)
-					{
-						for(int i = 0; i <= (last - first); i++)
-						{ // TODO: Think
-							// through
-							// change to
-							// <= done 11/9
-							result.times[i] = result.times[i + first];
-							result.values[i] = result.values[i + first];
-						}
-					}
-
-					result.numberValues = last - first + 1; // Adjust count of
-					// results
-
-					// Do time shift where indicated (when a dataset has suffix
-					// "(-1)"
-
-					if(doTimeShift)
-					{
-						if(result.numberValues - 1 - result.numberValues >= 0)
-						{
-							System.arraycopy(result.times, result.numberValues + 1, result.times, result.numberValues,
-									result.numberValues - 1 - result.numberValues);
-						}
-						result.numberValues = result.numberValues - 1;
-					}
 				}
 			}
 		}
@@ -719,13 +557,6 @@ public class DSSGrabber1SvcImpl implements IDSSGrabber1Svc
 				LOGGER.log(Level.SEVERE, messageText, ex);
 			}
 		}
-		finally
-		{
-			if(hecDss != null)
-			{
-				//				hecDss.close();
-			}
-		}
 
 		// Store name portion of DSS file in TimeSeriesContainer
 
@@ -741,7 +572,7 @@ public class DSSGrabber1SvcImpl implements IDSSGrabber1Svc
 	void checkReadiness()
 	{
 		String result = null;
-		if(_startTime == -1)
+		if(_startTime != null || _endTime != null)
 		{
 			result = "Date range is not set in DSSGrabber.";
 		}
@@ -754,10 +585,6 @@ public class DSSGrabber1SvcImpl implements IDSSGrabber1Svc
 			result = "Base scenario is not set in DSSGrabber.";
 		}
 		LOGGER.log(Level.FINE, result);
-		if(result != null)
-		{
-			//			throw new IllegalStateException(result);
-		}
 
 	}
 
@@ -772,23 +599,18 @@ public class DSSGrabber1SvcImpl implements IDSSGrabber1Svc
 	public TimeSeriesContainer[] getPrimarySeries()
 	{
 
-		TimeSeriesContainer[] results = null;
+		TimeSeriesContainer[] results = new TimeSeriesContainer[_alternatives.size() + 1];
 
 		try
 		{
 			checkReadiness();
-
-			// Store number of scenarios
-			results = new TimeSeriesContainer[_alternatives.size() + 1];
 
 			GUILinksAllModelsBO.Model baseModel = _baseScenarioRun.getModel();
 			String baseDssPathName = _primaryDSSName.get(baseModel);
 			if(baseDssPathName != null)
 			{
 				// Base first
-				EpptDssContainer dssContainer = _baseScenarioRun.getDssContainer();
-				TimeSeriesContainer oneSeries = getOneTimeSeriesFromAllModels(dssContainer,
-						_baseScenarioRun.getModel(), baseDssPathName);
+				TimeSeriesContainer oneSeries = getOneTimeSeriesFromAllModels(_baseScenarioRun, baseDssPathName);
 				results[0] = oneSeries;
 				if(results[0] != null)
 				{
@@ -800,14 +622,12 @@ public class DSSGrabber1SvcImpl implements IDSSGrabber1Svc
 				for(int i = 0; i < _alternatives.size(); i++)
 				{
 					EpptScenarioRun epptScenarioRun = _alternatives.get(i);
-					TimeSeriesContainer tsc = null;
 
 					GUILinksAllModelsBO.Model altModel = epptScenarioRun.getModel();
 					String altDssPathName = _primaryDSSName.get(altModel);
 					if(altDssPathName != null)
 					{
-						tsc = getOneTimeSeriesFromAllModels(epptScenarioRun.getDssContainer(),
-								epptScenarioRun.getModel(), altDssPathName);
+						TimeSeriesContainer tsc = getOneTimeSeriesFromAllModels(epptScenarioRun, altDssPathName);
 						results[i + 1] = tsc;
 					}
 				}
@@ -821,11 +641,11 @@ public class DSSGrabber1SvcImpl implements IDSSGrabber1Svc
 		return results;
 	}
 
-	private TimeSeriesContainer getOneTimeSeriesFromAllModels(EpptDssContainer dssContainer,
-															  GUILinksAllModelsBO.Model model,
-															  String dssPathName)
+	private TimeSeriesContainer getOneTimeSeriesFromAllModels(EpptScenarioRun epptScenarioRun, String dssPathName)
 	{
+		GUILinksAllModelsBO.Model model = _baseScenarioRun.getModel();
 		TimeSeriesContainer oneSeries = null;
+		EpptDssContainer dssContainer = epptScenarioRun.getDssContainer();
 		Optional<TimeSeriesContainer> timeSeriesContainerOptional = dssContainer.getAllDssFiles().stream()
 																				.filter(Objects::nonNull)
 																				.map(p -> getOneSeries(p, dssPathName,
@@ -838,7 +658,7 @@ public class DSSGrabber1SvcImpl implements IDSSGrabber1Svc
 		}
 		else
 		{
-			String messageText = "Could not find record - " + dssPathName;
+			String messageText = "Could not find record for scenario run: " + epptScenarioRun + " - " + dssPathName;
 			List<String> messages = _missingDSSRecords.computeIfAbsent(model, m -> new ArrayList<>());
 			messages.add(messageText);
 		}
@@ -856,7 +676,7 @@ public class DSSGrabber1SvcImpl implements IDSSGrabber1Svc
 	@Override
 	public TimeSeriesContainer[] getSecondarySeries()
 	{
-		TimeSeriesContainer[] results = null;
+		TimeSeriesContainer[] results = new TimeSeriesContainer[_alternatives.size() + 1];
 		if(!_secondaryDSSName.isEmpty())
 		{
 			List<TimeSeriesContainer> timeSeriesContainers = new ArrayList<>();
@@ -867,8 +687,7 @@ public class DSSGrabber1SvcImpl implements IDSSGrabber1Svc
 				for(String splitPathname : baseDssPathName.split("\\|"))
 				{
 					// Base first
-					TimeSeriesContainer oneSeries = getOneTimeSeriesFromAllModels(_baseScenarioRun.getDssContainer(),
-							baseModel, splitPathname);
+					TimeSeriesContainer oneSeries = getOneTimeSeriesFromAllModels(_baseScenarioRun, splitPathname);
 					timeSeriesContainers.add(oneSeries);
 					// Then scenarios
 
@@ -881,8 +700,7 @@ public class DSSGrabber1SvcImpl implements IDSSGrabber1Svc
 					{
 						for(String splitPathname : altDssPathName.split("\\|"))
 						{
-							TimeSeriesContainer tsc = getOneTimeSeriesFromAllModels(epptScenarioRun.getDssContainer(),
-									epptScenarioRun.getModel(), splitPathname);
+							TimeSeriesContainer tsc = getOneTimeSeriesFromAllModels(epptScenarioRun, splitPathname);
 							timeSeriesContainers.add(tsc);
 						}
 					}
@@ -896,303 +714,6 @@ public class DSSGrabber1SvcImpl implements IDSSGrabber1Svc
 			}
 		}
 		return results;
-	}
-
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see
-	 * gov.ca.water.calgui.busservice.impl.IDSSGrabber1Svc#getDifferenceSeriesWithMultipleTimeSeries(
-	 * hec.io.TimeSeriesContainer[])
-	 */
-	@Override
-	public TimeSeriesContainer[] getDifferenceSeries(TimeSeriesContainer[] timeSeriesResults)
-	{
-
-		TimeSeriesContainer[] results = new TimeSeriesContainer[_alternatives.size()];
-		if(timeSeriesResults[0] != null)
-		{
-			for(int i = 0; i < _alternatives.size(); i++)
-			{
-				TimeSeriesContainer timeSeriesResult = timeSeriesResults[i + 1];
-				if(timeSeriesResult != null)
-				{
-					results[i] = (TimeSeriesContainer) timeSeriesResult.clone();
-					for(int j = 0; j < results[i].values.length && j < timeSeriesResults[0].values.length; j++)
-					{
-						results[i].values[j] = results[i].values[j] - timeSeriesResults[0].values[j];
-					}
-				}
-			}
-		}
-		return results;
-	}
-
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see
-	 * gov.ca.water.calgui.busservice.impl.IDSSGrabber1Svc#calcTAFforCFS(hec.io
-	 * .TimeSeriesContainer[], hec.io.TimeSeriesContainer[])
-	 */
-	@Override
-	public void calcTAFforCFS(TimeSeriesContainer[] primaryResults, TimeSeriesContainer[] secondaryResults)
-	{
-
-		try
-		{
-			// Allocate and zero out
-
-			int datasets = primaryResults.length;
-			if(secondaryResults != null)
-			{
-				datasets = datasets + secondaryResults.length;
-			}
-
-			_annualTAFs = new double[datasets][_endWY - _startWY + 2];
-
-			for(int i = 0; i < datasets; i++)
-			{
-				for(int j = 0; j < _endWY - _startWY + 1; j++)
-				{
-					_annualTAFs[i][j] = 0.0;
-				}
-			}
-
-			// Calculate
-
-			if("CFS".equals(_originalUnits))
-			{
-
-				HecTime ht = new HecTime();
-				Calendar calendar = Calendar.getInstance();
-
-				// Primary series
-
-				for(int i = 0; i < primaryResults.length; i++)
-				{
-					if(primaryResults[i] != null)
-					{
-						for(int j = 0; j < primaryResults[i].numberValues; j++)
-						{
-
-							ht.set(primaryResults[i].times[j]);
-							calendar.set(ht.year(), ht.month() - 1, 1);
-							double monthlyTAF = primaryResults[i].values[j]
-									* calendar.getActualMaximum(Calendar.DAY_OF_MONTH) * CFS_2_TAF_DAY;
-							int wy = ((ht.month() < 10) ? ht.year() : ht.year() + 1) - _startWY;
-							if(wy >= 0)
-							{
-								_annualTAFs[i][wy] += monthlyTAF;
-							}
-							if(!_isCFS && RMAConst.isValidValue(monthlyTAF) && monthlyTAF != -3.402823466E38)
-							{
-								primaryResults[i].values[j] = monthlyTAF;
-							}
-						}
-						if(!_isCFS)
-						{
-							primaryResults[i].units = "TAF";
-							primaryResults[i].type = "PER-CUM";
-						}
-					}
-				}
-
-				// Calculate differences if applicable (primary series only)
-
-				if(primaryResults.length > 1)
-				{
-					_annualTAFsDiff = new double[primaryResults.length - 1][_endWY - _startWY + 2];
-					for(int i = 0; i < primaryResults.length - 1; i++)
-					{
-						for(int j = 0; j < _endWY - _startWY + 1; j++)
-						{
-							_annualTAFsDiff[i][j] = _annualTAFs[i + 1][j] - _annualTAFs[0][j];
-						}
-					}
-				}
-
-				if(secondaryResults != null)
-				{
-
-					// Secondary series
-
-					for(int i = 0; i < secondaryResults.length; i++)
-					{
-						if(secondaryResults[i] != null)
-						{
-							for(int j = 0; j < secondaryResults[i].numberValues; j++)
-							{
-
-								ht.set(secondaryResults[i].times[j]);
-								calendar.set(ht.year(), ht.month() - 1, 1);
-								double monthlyTAF = secondaryResults[i].values[j]
-										* calendar.getActualMaximum(Calendar.DAY_OF_MONTH) * CFS_2_TAF_DAY;
-								int wy = ((ht.month() < 10) ? ht.year() : ht.year() + 1) - _startWY;
-								_annualTAFs[i + primaryResults.length][wy] += monthlyTAF;
-								if(!_isCFS)
-								{
-									secondaryResults[i].values[j] = monthlyTAF;
-								}
-
-							}
-							if(!_isCFS)
-							{
-								secondaryResults[i].units = "TAF";
-								secondaryResults[i].type = "PER-CUM";
-							}
-						}
-					}
-				}
-			}
-		}
-		catch(RuntimeException ex)
-		{
-			LOGGER.log(Level.SEVERE, "Unable to calculate TAF.", ex);
-		}
-	}
-
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see
-	 * gov.ca.water.calgui.busservice.impl.IDSSGrabber1Svc#getAnnualTAF(int,
-	 * int)
-	 */
-	@Override
-	public double getAnnualTAF(int i, int wy)
-	{
-
-		return wy < _startWY ? -1 : _annualTAFs[i][wy - _startWY];
-	}
-
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see
-	 * gov.ca.water.calgui.busservice.impl.IDSSGrabber1Svc#getAnnualTAFDiff(
-	 * int, int)
-	 */
-	@Override
-	public double getAnnualTAFDiff(int i, int wy)
-	{
-
-		return wy < _startWY ? -1 : _annualTAFsDiff[i][wy - _startWY];
-	}
-
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see
-	 * gov.ca.water.calgui.busservice.impl.IDSSGrabber1Svc#getExceedanceSeriesWithMultipleTimeSeries(
-	 * hec.io.TimeSeriesContainer[])
-	 */
-	@Override
-	public TimeSeriesContainer[][] getExceedanceSeries(TimeSeriesContainer[] timeSeriesResults)
-	{
-
-		TimeSeriesContainer[][] results;
-		try
-		{
-			boolean valid = timeSeriesResults != null;
-			if(!valid)
-			{
-				results = null;
-			}
-			else
-			{
-				results = new TimeSeriesContainer[14][_alternatives.size() + 1];
-
-				for(int month = 0; month < 14; month++)
-				{
-
-					HecTime ht = new HecTime();
-					for(int i = 0; i < _alternatives.size() + 1; i++)
-					{
-						if(isValid(new TimeSeriesContainer[]{timeSeriesResults[i]}))
-						{
-							if(month == 13)
-							{
-								results[month][i] = (TimeSeriesContainer) timeSeriesResults[i].clone();
-							}
-							else
-							{
-
-								int n;
-								int[] times2;
-								double[] values2;
-
-								results[month][i] = new TimeSeriesContainer();
-
-								if(month == 12)
-								{
-
-									// Annual totals - grab from annualTAFs
-									n = _annualTAFs[i].length;
-									times2 = new int[n];
-									values2 = new double[n];
-									for(int j = 0; j < n; j++)
-									{
-										ht.setYearMonthDay(j + _startWY, 11, 1, 0);
-										times2[j] = ht.value();
-										values2[j] = _annualTAFs[i][j];
-									}
-
-								}
-								else
-								{
-
-									int[] times = timeSeriesResults[i].times;
-									double[] values = timeSeriesResults[i].values;
-
-									n = 0;
-									for(final int time : times)
-									{
-										ht.set(time);
-										if(ht.month() == month + 1)
-										{
-											n = n + 1;
-										}
-									}
-
-									times2 = new int[n];
-									values2 = new double[n];
-									n = 0;
-									for(int j = 0; j < times.length; j++)
-									{
-										ht.set(times[j]);
-										if(ht.month() == month + 1)
-										{
-											times2[n] = times[j];
-											values2[n] = values[j];
-											n = n + 1;
-										}
-									}
-								}
-								results[month][i].times = times2;
-								results[month][i].values = values2;
-								results[month][i].numberValues = n;
-								results[month][i].units = timeSeriesResults[i].units;
-								results[month][i].fullName = timeSeriesResults[i].fullName;
-								results[month][i].fileName = timeSeriesResults[i].fileName;
-							}
-							if(results[month][i].values != null)
-							{
-								double[] sortArray = results[month][i].values;
-								Arrays.sort(sortArray);
-								results[month][i].values = sortArray;
-							}
-						}
-					}
-				}
-			}
-			return results;
-		}
-		catch(RuntimeException ex)
-		{
-			LOGGER.log(Level.SEVERE, "Unable to get time-series.", ex);
-		}
-		return null;
 	}
 
 	private boolean isValid(TimeSeriesContainer[] timeSeriesResults)
@@ -1210,131 +731,6 @@ public class DSSGrabber1SvcImpl implements IDSSGrabber1Svc
 			}
 		}
 		return valid;
-	}
-
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see
-	 * gov.ca.water.calgui.busservice.impl.IDSSGrabber1Svc#getExceedanceSeriesDWithMultipleTimeSeries
-	 * (hec.io.TimeSeriesContainer[])
-	 */
-	@Override
-	public TimeSeriesContainer[][] getExceedanceSeriesD(TimeSeriesContainer[] timeSeriesResults)
-	{
-
-		/*
-		 * Copy of getExceedanceSeriesWithMultipleTimeSeries to handle "exceedance of differences"
-		 *
-		 * Calculates difference of annual TAFs to get proper results for [12]
-		 * should be recombined with getExceedanceSeriesWithMultipleTimeSeries
-		 */
-
-		TimeSeriesContainer[][] results = null;
-		try
-		{
-			boolean valid = timeSeriesResults != null && isValid(timeSeriesResults);
-			if(valid)
-			{
-				results = new TimeSeriesContainer[14][_alternatives.size()];
-
-				for(int month = 0; month < 14; month++)
-				{
-
-					HecTime ht = new HecTime();
-					for(int i = 0; i < _alternatives.size(); i++)
-					{
-
-						if(month == 13)
-						{
-
-							results[month][i] = (TimeSeriesContainer) timeSeriesResults[i + 1].clone();
-							for(int j = 0; j < results[month][i].numberValues && j < timeSeriesResults[0].values.length; j++)
-							{
-								results[month][i].values[j] -= timeSeriesResults[0].values[j];
-							}
-
-						}
-						else
-						{
-
-							int n;
-							int[] times2;
-							double[] values2;
-
-							results[month][i] = new TimeSeriesContainer();
-
-							if(month == 12)
-							{
-
-								// Annual totals - grab from annualTAFs
-								n = _annualTAFs[i + 1].length;
-								times2 = new int[n];
-								values2 = new double[n];
-								for(int j = 0; j < n; j++)
-								{
-									ht.setYearMonthDay(j + _startWY, 11, 1, 0);
-									times2[j] = ht.value();
-									values2[j] = _annualTAFs[i + 1][j] - _annualTAFs[0][j];
-								}
-
-							}
-							else
-							{
-
-								int[] times = timeSeriesResults[i + 1].times;
-								double[] values = timeSeriesResults[i + 1].values;
-								n = 0;
-								for(final int time : times)
-								{
-									ht.set(time);
-									if(ht.month() == month + 1)
-									{
-										n = n + 1;
-									}
-								}
-								times2 = new int[n];
-								values2 = new double[n];
-								int nmax = n; // Added to trap Schematic View
-								// case
-								// where required flow has extra
-								// values
-								n = 0;
-								for(int j = 0; j < times.length; j++)
-								{
-									ht.set(times[j]);
-									if((ht.month() == month + 1) && (n < nmax)
-											&& (j < timeSeriesResults[0].values.length))
-									{
-										times2[n] = times[j];
-										values2[n] = values[j] - timeSeriesResults[0].values[j];
-										n = n + 1;
-									}
-								}
-							}
-							results[month][i].times = times2;
-							results[month][i].values = values2;
-							results[month][i].numberValues = n;
-							results[month][i].units = timeSeriesResults[i + 1].units;
-							results[month][i].fullName = timeSeriesResults[i + 1].fullName;
-							results[month][i].fileName = timeSeriesResults[i + 1].fileName;
-						}
-						if(results[month][i].values != null)
-						{
-							double[] sortArray = results[month][i].values;
-							Arrays.sort(sortArray);
-							results[month][i].values = sortArray;
-						}
-					}
-				}
-			}
-			return results;
-		}
-		catch(RuntimeException ex)
-		{
-			LOGGER.log(Level.SEVERE, "Unable to get time-series.", ex);
-		}
-		return results;
 	}
 
 	/*

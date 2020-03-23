@@ -33,7 +33,7 @@
   ],
   "layout": {
     "font": {
-      "family": "Lucida Grande,Lucida Sans Unicode, Verdana, Arial, Helvetica, sans-serif",
+      "family": "Lucida Sans Unicode, Verdana, Arial, Helvetica, sans-serif",
       "color": "black"
     },
     "width": 1600,
@@ -50,6 +50,7 @@
       ]
     },
     "yaxis": {
+      "tickformat": ",.3r%",
       "autorange": true,
       "title": {
         "text": ""

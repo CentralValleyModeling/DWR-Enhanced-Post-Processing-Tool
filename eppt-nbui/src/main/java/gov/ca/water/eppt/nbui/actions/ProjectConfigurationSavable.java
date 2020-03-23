@@ -14,8 +14,8 @@ package gov.ca.water.eppt.nbui.actions;
 
 import java.io.IOException;
 
+import gov.ca.water.eppt.nbui.EpptControllerProvider;
 import gov.ca.water.eppt.nbui.ProjectConfigurationTopComponent;
-import gov.ca.water.quickresults.ui.projectconfig.ProjectConfigurationPanel;
 import org.netbeans.spi.actions.AbstractSavable;
 import org.openide.filesystems.FileObject;
 import org.openide.loaders.SaveAsCapable;
@@ -40,7 +40,8 @@ public class ProjectConfigurationSavable extends AbstractSavable implements Save
 	@Override
 	protected String findDisplayName()
 	{
-		return "Project Configuration - " + ProjectConfigurationPanel.getProjectConfigurationPanel().getProjectName();
+
+		return "Project Configuration - " + EpptControllerProvider.getEpptConfigurationController().getProjectName();
 	}
 
 	@Override
@@ -76,7 +77,7 @@ public class ProjectConfigurationSavable extends AbstractSavable implements Save
 	@Override
 	public void saveAs(FileObject fileObject, String s) throws IOException
 	{
-		new NewProjectConfiguration().createNew(false);
+		new NewProjectConfiguration().createNew(EpptControllerProvider.getEpptConfigurationController());
 		_tc.removeContent(this);
 		unregister();
 	}

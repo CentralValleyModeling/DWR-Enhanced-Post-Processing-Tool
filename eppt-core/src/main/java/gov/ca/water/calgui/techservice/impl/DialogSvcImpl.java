@@ -129,6 +129,7 @@ public class DialogSvcImpl implements IDialogSvc
 		dialog.setIconImage(_mainFrame.getIconImage());
 		dialog.setResizable(false);
 		dialog.setVisible(true);
+		dialog.dispose();
 		return optionPane.getValue().toString();
 	}
 

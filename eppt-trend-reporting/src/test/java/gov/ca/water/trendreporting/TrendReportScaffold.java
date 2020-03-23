@@ -16,17 +16,36 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.time.Month;
+import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import javax.swing.*;
 
 import gov.ca.water.calgui.EpptInitializationException;
 import gov.ca.water.calgui.bo.GUILinksAllModelsBO;
+import gov.ca.water.calgui.bo.WaterYearDefinition;
+import gov.ca.water.calgui.bo.WaterYearPeriod;
+import gov.ca.water.calgui.bo.WaterYearPeriodRange;
+import gov.ca.water.calgui.bo.WaterYearPeriodRangesFilter;
+import gov.ca.water.calgui.bo.WaterYearType;
+import gov.ca.water.calgui.busservice.impl.EpptParameters;
+import gov.ca.water.calgui.busservice.impl.EpptReportingMonths;
+import gov.ca.water.calgui.busservice.impl.EpptStatistic;
 import gov.ca.water.calgui.busservice.impl.GuiLinksSeedDataSvcImpl;
+import gov.ca.water.calgui.busservice.impl.MonthPeriod;
+import gov.ca.water.calgui.busservice.impl.ScriptedEpptStatistics;
 import gov.ca.water.calgui.busservice.impl.ThresholdLinksSeedDataSvc;
 import gov.ca.water.calgui.busservice.impl.WaterYearDefinitionSvc;
+import gov.ca.water.calgui.busservice.impl.WaterYearIndexAliasReader;
+import gov.ca.water.calgui.busservice.impl.WaterYearTableReader;
 import gov.ca.water.calgui.project.EpptDssContainer;
 import gov.ca.water.calgui.project.EpptScenarioRun;
 import gov.ca.water.calgui.project.NamedDssPath;
+import gov.ca.water.calgui.project.EpptConfigurationController;
+import gov.ca.water.calgui.project.PlotConfigurationState;
 import org.junit.jupiter.api.Assertions;
 
 import hec.heclib.dss.HecDSSFileAccess;
@@ -41,16 +60,15 @@ import static org.junit.jupiter.api.Assertions.fail;
  */
 public class TrendReportScaffold
 {
+	static
+	{
+		String userDir = Paths.get(System.getProperty("user.dir")).resolve(
+				"target/test-classes").toAbsolutePath().toString();
+		System.setProperty("user.dir", userDir);
+	}
+
 	public final void initScaffold() throws EpptInitializationException
 	{
-		HecDSSFileAccess.setMessageLevel(HecDSSFileAccess.MESS_LEVEL_CRITICAL);
-		Path target = Paths.get(System.getProperty("user.dir")).resolve("target").resolve("test-classes");
-		System.setProperty("user.dir", target.toString());
-		WaterYearDefinitionSvc.createSeedDataSvcImplInstance();
-		GuiLinksSeedDataSvcImpl.createSeedDataSvcImplInstance();
-		ThresholdLinksSeedDataSvc.createSeedDataSvcImplInstance();
-		EpptReportingMonths.createTrendReportingMonthsInstance();
-		TrendReportingParameters.createTrendReportingParametersInstance();
 
 		try
 		{
@@ -58,24 +76,90 @@ public class TrendReportScaffold
 		}
 		catch(ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException e)
 		{
-			Assertions.fail(e);
+			fail(e);
 		}
 		GuiLinksSeedDataSvcImpl.createSeedDataSvcImplInstance();
-		TrendReportPanel epptPanel = new TrendReportPanel();
-		NamedDssPath namedDssPath = new NamedDssPath(
-				Paths.get("J:\\DWR\\QA_QC\\SupportingDocs040219\\EPPTSupportingDoc040219\\SampleDSS_V1.01\\Inputs\\SampleDV_Base.dss"), "test",
+		WaterYearDefinitionSvc.createSeedDataSvcImplInstance();
+		ThresholdLinksSeedDataSvc.createSeedDataSvcImplInstance();
+		WaterYearIndexAliasReader.createInstance();
+		EpptParameters.createTrendReportingParametersInstance();
+		NamedDssPath baseDss = new NamedDssPath(
+				Paths.get("J:\\DWR\\QA_QC\\SupportingDocs040219\\EPPTSupportingDoc040219\\SampleDSS_V1.01\\Inputs\\SampleDV_Base.dss"), "test base",
 				"CALSIM", "1MON", "2020D09E");
-		EpptDssContainer dssContainer = new EpptDssContainer(namedDssPath,
-				namedDssPath,
-				namedDssPath,
-				namedDssPath,
+		EpptDssContainer baseDssContainer = new EpptDssContainer(baseDss,
+				baseDss,
+				baseDss,
+				baseDss,
+				Collections.emptyList());
+		NamedDssPath altDss = new NamedDssPath(
+				Paths.get("J:\\DWR\\QA_QC\\SupportingDocs040219\\EPPTSupportingDoc040219\\SampleDSS_V1.01\\Inputs\\SampleDV_Base.dss"), "test alt",
+				"CALSIM", "1MON", "2020D09E");
+		EpptDssContainer altDssContainer = new EpptDssContainer(altDss,
+				altDss,
+				altDss,
+				altDss,
 				Collections.emptyList());
 
 		EpptScenarioRun baseRun = new EpptScenarioRun("Base", "desc", GUILinksAllModelsBO.Model.findModel("CalSim2"),
-				Paths.get("Test.pdf"), Paths.get("mainWresl.wresl"), Paths.get("C:\\Git\\DWR\\EPPT\\DWR-Enhanced-Post-Processing-Tool\\eppt-trend-reporting\\src\\test\\resources\\dwr_eppt\\wresl\\lookup\\wytypes.table"), dssContainer, javafx.scene.paint.Color.BLUEVIOLET);
+				Paths.get("Test.pdf"),
+				Paths.get("C:\\Git\\DWR\\EPPT\\DWR-Enhanced-Post-Processing-Tool\\eppt-trend-reporting\\src\\test\\resources\\dwr_eppt\\wresl"),
+				Paths.get(
+						"C:\\Git\\DWR\\EPPT\\DWR-Enhanced-Post-Processing-Tool\\eppt-trend-reporting\\src\\test\\resources\\dwr_eppt\\wresl\\lookup"),
+				baseDssContainer, javafx.scene.paint.Color.BLUEVIOLET);
+		baseRun.setBaseSelected(true);
 		EpptScenarioRun altRun = new EpptScenarioRun("Alt", "desc", GUILinksAllModelsBO.Model.findModel("CalSim2"),
-				Paths.get("Test.pdf"), Paths.get("mainWresl.wresl"), Paths.get("C:\\Git\\DWR\\EPPT\\DWR-Enhanced-Post-Processing-Tool\\eppt-trend-reporting\\src\\test\\resources\\dwr_eppt\\wresl\\lookup\\wytypes.table"), dssContainer, javafx.scene.paint.Color.MEDIUMAQUAMARINE);
-		epptPanel.setScenarioRuns(baseRun, Collections.singletonList(altRun));
+				Paths.get("Test.pdf"),
+				Paths.get("C:\\Git\\DWR\\EPPT\\DWR-Enhanced-Post-Processing-Tool\\eppt-trend-reporting\\src\\test\\resources\\dwr_eppt\\wresl"),
+				Paths.get(
+						"C:\\Git\\DWR\\EPPT\\DWR-Enhanced-Post-Processing-Tool\\eppt-trend-reporting\\src\\test\\resources\\dwr_eppt\\wresl\\lookup"),
+				altDssContainer, javafx.scene.paint.Color.MEDIUMAQUAMARINE);
+		altRun.setAltSelected(true);
+		EpptScenarioRun altRun2 = new EpptScenarioRun("Alternative 2", "desc", GUILinksAllModelsBO.Model.findModel("CalSim2"),
+				Paths.get("Test.pdf"),
+				Paths.get("C:\\Git\\DWR\\EPPT\\DWR-Enhanced-Post-Processing-Tool\\eppt-trend-reporting\\src\\test\\resources\\dwr_eppt\\wresl"),
+				Paths.get(
+						"C:\\Git\\DWR\\EPPT\\DWR-Enhanced-Post-Processing-Tool\\eppt-trend-reporting\\src\\test\\resources\\dwr_eppt\\wresl\\lookup"),
+				altDssContainer, javafx.scene.paint.Color.CORNFLOWERBLUE);
+		EpptScenarioRun altRun3 = new EpptScenarioRun("Alt", "desc", GUILinksAllModelsBO.Model.findModel("CalSim2"),
+				Paths.get("Test.pdf"),
+				Paths.get("C:\\Git\\DWR\\EPPT\\DWR-Enhanced-Post-Processing-Tool\\eppt-trend-reporting\\src\\test\\resources\\dwr_eppt\\wresl"),
+				Paths.get(
+						"C:\\Git\\DWR\\EPPT\\DWR-Enhanced-Post-Processing-Tool\\eppt-trend-reporting\\src\\test\\resources\\dwr_eppt\\wresl\\lookup"),
+				altDssContainer, javafx.scene.paint.Color.CHARTREUSE);
+		EpptScenarioRun altRun4 = new EpptScenarioRun("Alt", "desc", GUILinksAllModelsBO.Model.findModel("CalSim2"),
+				Paths.get("Test.pdf"),
+				Paths.get("C:\\Git\\DWR\\EPPT\\DWR-Enhanced-Post-Processing-Tool\\eppt-trend-reporting\\src\\test\\resources\\dwr_eppt\\wresl"),
+				Paths.get(
+						"C:\\Git\\DWR\\EPPT\\DWR-Enhanced-Post-Processing-Tool\\eppt-trend-reporting\\src\\test\\resources\\dwr_eppt\\wresl\\lookup"),
+				altDssContainer, javafx.scene.paint.Color.BISQUE);
+		ScriptedEpptStatistics.createScriptedStatistics();
+
+		EpptConfigurationController epptConfigurationController = new EpptConfigurationController();
+		WaterYearDefinition waterYearDefinition = new WaterYearDefinition("Test", Month.OCTOBER, Month.SEPTEMBER);
+		epptConfigurationController.setWaterYearDefinition(waterYearDefinition);
+		epptConfigurationController.setStartYear(1901);
+		epptConfigurationController.setEndYear(2007);
+		epptConfigurationController.setScenarioRuns(Arrays.asList(baseRun, altRun));
+		epptConfigurationController.setMonthlyPeriods(Arrays.asList(new MonthPeriod("October - September", Month.OCTOBER, Month.SEPTEMBER),
+				new MonthPeriod("March - September", Month.MARCH, Month.SEPTEMBER)));
+		epptConfigurationController.setStatistics(
+				Arrays.asList(ScriptedEpptStatistics.getTrendStatistics().get(0), ScriptedEpptStatistics.getTrendStatistics().get(1)));
+		WaterYearPeriod longTermPeriod = new WaterYearPeriod("Long Term");
+		WaterYearPeriod shortTermPeriod = new WaterYearPeriod("Short Term");
+		List<WaterYearPeriodRange> longTermRanges = Arrays.asList(new WaterYearPeriodRange(longTermPeriod, new WaterYearType(1920, longTermPeriod), new WaterYearType(1999, longTermPeriod)));
+		List<WaterYearPeriodRange> shortTermRanges = Arrays.asList(new WaterYearPeriodRange(shortTermPeriod, new WaterYearType(1950, shortTermPeriod), new WaterYearType(1960, shortTermPeriod)));
+		WaterYearPeriodRangesFilter longTerm = new WaterYearPeriodRangesFilter("", "Long Term", longTermRanges, waterYearDefinition);
+		WaterYearPeriodRangesFilter shortTerm = new WaterYearPeriodRangesFilter("", "Short Term", shortTermRanges, waterYearDefinition);
+		Map<EpptScenarioRun, WaterYearPeriodRangesFilter> range1 = new HashMap<>();
+		range1.put(baseRun, longTerm);
+		range1.put(altRun, longTerm);
+		Map<EpptScenarioRun, WaterYearPeriodRangesFilter> range2 = new HashMap<>();
+		range2.put(baseRun, shortTerm);
+		range2.put(altRun, shortTerm);
+		List<Map<EpptScenarioRun, WaterYearPeriodRangesFilter>> annualFilters = Arrays.asList(range1,range2);
+		epptConfigurationController.setWaterYearPeriodRangesFilters(annualFilters);
+		TrendReportPanel epptPanel = new TrendReportPanel(epptConfigurationController);
+		baseRun.setBaseSelected(true);
 		JFrame jFrame = new JFrame();
 		jFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		SwingUtilities.invokeLater(() ->

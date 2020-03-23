@@ -38,7 +38,6 @@ import gov.ca.water.calgui.techservice.impl.FilePredicates;
 
 public class WaterYearTableReader
 {
-	private static final Path WATER_YEAR_TYPE_NAMES = Paths.get(Constant.WY_TYPES_NAME_LOOKUP);
 	private static final FluentLogger LOGGER = FluentLogger.forEnclosingClass();
 	private static final Pattern WYTPES_TABLE_SPLIT = Pattern.compile("\\s+");
 
@@ -100,75 +99,6 @@ public class WaterYearTableReader
 
 	private void readNameLookupTable() throws EpptInitializationException
 	{
-		LOGGER.at(Level.FINE).log("Reading Water Year Type Name Lookup: %s", WATER_YEAR_TYPE_NAMES);
-		String line = "";
-		String csvSplitBy = ",";
-
-		List<String> colHeaders = new ArrayList<>();
-
-		Map<String, List<String>> columnsToValues = new HashMap<>();
-
-		try(BufferedReader br = Files.newBufferedReader(WATER_YEAR_TYPE_NAMES))
-		{
-
-			boolean columnHeadersHaveNotBeenDefined = true;
-			while((line = br.readLine()) != null)
-			{
-				// use comma as separator
-				String[] row = line.split(csvSplitBy);
-				//skip comments
-				if(row.length > 0)
-				{
-					String firstString = row[0];
-					String trimmedString = firstString.trim();
-					if(trimmedString.length() > 0)
-					{
-
-
-						char firstChar = trimmedString.charAt(0);
-						if(firstChar == '#' || firstChar == '!')
-						{
-							continue;
-						}
-					}
-					if(columnHeadersHaveNotBeenDefined)
-					{
-						columnHeadersHaveNotBeenDefined = false;
-
-						for(final String s : row)
-						{
-							//skip the first column
-							colHeaders.add(s);
-							columnsToValues.put(s, new ArrayList<>());
-						}
-					}
-					else
-					{
-						//for all other rows other than column headers
-						for(int i = 1; i < colHeaders.size(); i++)
-						{
-							//add the value from each column into the dictionary
-							//basically taking a horizontal row and putting it into a dictionary that goes vertacally
-							String value = "Undefined";
-							if(row.length > i)
-							{
-								value = row[i];
-							}
-							if(Objects.equals(value, ""))
-							{
-								value = "Undefined";
-							}
-							columnsToValues.get(colHeaders.get(i)).add(value);
-						}
-					}
-				}
-			}
-			_waterYearNameLookupTable = new WaterYearNameLookup(columnsToValues);
-
-		}
-		catch(IOException e)
-		{
-			throw new EpptInitializationException("Error reading the water year type name lookup csv file: " + WATER_YEAR_TYPE_NAMES, e);
-		}
+		_waterYearNameLookupTable = new WaterYearNameLookup();
 	}
 }

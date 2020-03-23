@@ -100,11 +100,15 @@ public final class ThresholdLinksSeedDataSvc
 				if(list.length > THRESHOLD_INDEX && list[THRESHOLD_INDEX] != null)
 				{
 					int id = Integer.parseInt(list[ID_INDEX].trim());
-					ThresholdLinksBO threadholdLinksBO = _thresholdLinks.computeIfAbsent(id,
+					ThresholdLinksBO thresholdLinksBO = _thresholdLinks.computeIfAbsent(id,
 							i -> createThresholdLinks(list, i));
+					if(list.length > LABEL_INDEX && (thresholdLinksBO.getLabel() == null || thresholdLinksBO.getLabel().isEmpty()))
+					{
+						thresholdLinksBO.setLabel(list[LABEL_INDEX]);
+					}
 					String model = list[MODEL_INDEX];
 					String primary = list[THRESHOLD_INDEX].trim();
-					threadholdLinksBO.addModelMapping(model, primary);
+					thresholdLinksBO.addModelMapping(model, primary);
 				}
 			}
 		}

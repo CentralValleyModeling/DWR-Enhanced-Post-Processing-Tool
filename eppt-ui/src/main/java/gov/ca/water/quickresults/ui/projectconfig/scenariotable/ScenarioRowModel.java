@@ -12,7 +12,9 @@
 
 package gov.ca.water.quickresults.ui.projectconfig.scenariotable;
 
+import java.util.Collections;
 import java.util.Objects;
+import java.util.logging.Logger;
 
 import gov.ca.water.calgui.bo.GUILinksAllModelsBO;
 import gov.ca.water.calgui.project.EpptDssContainer;
@@ -40,7 +42,7 @@ import static gov.ca.water.quickresults.ui.projectconfig.scenariotable.ScenarioT
  * @author <a href="mailto:adam@rmanet.com">Adam Korynta</a>
  * @since 05-07-2019
  */
-class ScenarioRowModel extends ParentRowModel
+class ScenarioRowModel extends ScenarioTableRowModel
 {
 	private final EpptScenarioRun _scenarioRun;
 	private final SimpleObjectProperty<Boolean> _baseProperty;
@@ -67,8 +69,13 @@ class ScenarioRowModel extends ParentRowModel
 		_baseProperty = new SimpleObjectProperty<>(scenarioRun.isBaseSelected());
 		_baseProperty.addListener((e, o, n) ->
 		{
+
 			scenarioRun.setBaseSelected(n);
 			modified.run();
+			if(n)
+			{
+				ScenarioProjectUpdater.updateWithAllDssFiles(Collections.singletonList(scenarioRun));
+			}
 		});
 		_alternativeProperty = new SimpleObjectProperty<>(scenarioRun.isAltSelected());
 		_alternativeProperty.addListener((e, o, n) ->
@@ -176,20 +183,27 @@ class ScenarioRowModel extends ParentRowModel
 	public boolean isEditable(TreeTableColumnSpec columnSpec)
 	{
 		boolean retval = false;
-		if(columnSpec == BASE_COL_SPEC && !_alternativeProperty.get())
+		if(columnSpec == BASE_COL_SPEC)
 		{
 			if(_baseProperty.get())
 			{
 				retval = true;
 			}
-			else
+			else if(!_alternativeProperty.get())
 			{
 				retval = noOtherBaseDefined();
 			}
 		}
 		else if(columnSpec == ALTERNATIVE_COL_SPEC)
 		{
-			retval = !_baseProperty.get();
+			if(_alternativeProperty.get())
+			{
+				retval = true;
+			}
+			else
+			{
+				retval = !_baseProperty.get();
+			}
 		}
 		return retval;
 	}

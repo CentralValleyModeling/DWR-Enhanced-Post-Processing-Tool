@@ -12,191 +12,83 @@
 
 package gov.ca.water.calgui.project;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
-import vista.report.MonthlyReport;
-
 public class PlotConfigurationState
 {
 
-	private static final String[] MONTH_NAMES = {"Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov",
-			"Dec"};
+	private final boolean _displayTimeSeriesAll;
+	private final boolean _displayTimeSeriesAggregate;
+	private final boolean _displayExceedanceAll;
+	private final boolean _displayExceedanceAggregate;
+	private final boolean _displayBoxAndWhiskerAll;
+	private final boolean _displayBoxAndWhiskerAggregate;
+	private final boolean _displayMonthlyTable;
+	private final boolean _displaySummaryTable;
+	private final boolean _displayMonthlyLine;
+	private final boolean _displayBarCharts;
 
-	private final ComparisonType _comparisonType;
-	private final boolean _isDisplayTaf;
-	private final boolean _isDisplayTimeSeriesPlot;
-	private final boolean _isDisplayBoxAndWhiskerPlot;
-	private final boolean _isDisplayMonthlyTable;
-	private final boolean _isDisplaySummaryTable;
-	private final List<String> _exceedancePlotComponents;
-	private final List<String> _summaryTableComponents;
-
-	public PlotConfigurationState(ComparisonType comparisonType, boolean isDisplayTaf, boolean isDisplayTimeSeriesPlot, boolean isDisplayBoxAndWhiskerPlot,
-						   List<String> exceedancePlotComponents, boolean isDisplayMonthlyTable,
-						   boolean isDisplaySummaryTable, List<String> summaryTableComponents)
+	public PlotConfigurationState(boolean displayTimeSeriesAll, boolean displayTimeSeriesAggregate, boolean displayExceedanceAll,
+								  boolean displayExceedanceAggregate, boolean displayBoxAndWhiskerAll, boolean displayBoxAndWhiskerAggregate,
+								  boolean displayMonthlyTable, boolean displaySummaryTable, boolean displayMonthlyLine, boolean displayBarCharts)
 	{
-		_comparisonType = comparisonType;
-		_isDisplayTaf = isDisplayTaf;
-		_isDisplayTimeSeriesPlot = isDisplayTimeSeriesPlot;
-		_isDisplayBoxAndWhiskerPlot = isDisplayBoxAndWhiskerPlot;
-		_exceedancePlotComponents = exceedancePlotComponents;
-
-		_isDisplayMonthlyTable = isDisplayMonthlyTable;
-		_isDisplaySummaryTable = isDisplaySummaryTable;
-
-		_summaryTableComponents = summaryTableComponents;
+		_displayTimeSeriesAll = displayTimeSeriesAll;
+		_displayTimeSeriesAggregate = displayTimeSeriesAggregate;
+		_displayExceedanceAll = displayExceedanceAll;
+		_displayExceedanceAggregate = displayExceedanceAggregate;
+		_displayBoxAndWhiskerAll = displayBoxAndWhiskerAll;
+		_displayBoxAndWhiskerAggregate = displayBoxAndWhiskerAggregate;
+		_displayMonthlyTable = displayMonthlyTable;
+		_displaySummaryTable = displaySummaryTable;
+		_displayMonthlyLine = displayMonthlyLine;
+		_displayBarCharts = displayBarCharts;
 	}
 
-	public static PlotConfigurationState fromString(String displayGroup)
+	public boolean isDisplayTimeSeriesAll()
 	{
-		boolean doTimeSeries = false;
-		boolean doBoxPlot = false;
-		boolean isCFS = false;
-		boolean doMonthlyTable = false;
-		boolean doSummaryTable = false;
-		List<String> exceedMonths = new ArrayList<>();
-		List<String> summaryTags = new ArrayList<>();
-
-		String[] groupParts = displayGroup.split(";");
-
-		ComparisonType comparisonType = ComparisonType.BASE;
-		for(final String groupPart : groupParts)
-		{
-			if("Base".equals(groupPart))
-			{
-				comparisonType = ComparisonType.BASE;
-			}
-			if("Comp".equals(groupPart))
-			{
-				comparisonType = ComparisonType.COMPARISON;
-			}
-			else if("Diff".equals(groupPart))
-			{
-				comparisonType = ComparisonType.DIFF;
-			}
-			else if("TS".equals(groupPart))
-			{
-				doTimeSeries = true;
-			}
-			else if("BP".equals(groupPart))
-			{
-				doBoxPlot = true;
-			}
-			else if(groupPart.startsWith("EX-"))
-			{
-				exceedMonths = Arrays.asList(groupPart.replace("EX-", "").split(","));
-				exceedMonths.removeIf(String::isEmpty);
-			}
-			else if("CFS".equals(groupPart))
-			{
-				isCFS = true;
-			}
-			else if("TAF".equals(groupPart))
-			{
-				isCFS = false;
-			}
-			else if("Monthly".equals(groupPart))
-			{
-				doMonthlyTable = true;
-			}
-			else if(groupPart.startsWith("ST-"))
-			{
-				doSummaryTable = true;
-				summaryTags = Arrays.asList(groupPart.replace("ST-", "").split(","));
-			}
-		}
-		return new PlotConfigurationState(comparisonType, !isCFS, doTimeSeries, doBoxPlot, exceedMonths, doMonthlyTable, doSummaryTable, summaryTags);
+		return _displayTimeSeriesAll;
 	}
 
-	public ComparisonType getComparisonType()
+	public boolean isDisplayTimeSeriesAggregate()
 	{
-		return _comparisonType;
+		return _displayTimeSeriesAggregate;
 	}
 
-	public boolean isDisplayTaf()
+	public boolean isDisplayExceedanceAll()
 	{
-		return _isDisplayTaf;
-
+		return _displayExceedanceAll;
 	}
 
-	public boolean isDisplayTimeSeriesPlot()
+	public boolean isDisplayExceedanceAggregate()
 	{
-		return _isDisplayTimeSeriesPlot;
+		return _displayExceedanceAggregate;
 	}
 
-	public boolean isDisplayBoxAndWhiskerPlot()
+	public boolean isDisplayBoxAndWhiskerAll()
 	{
-		return _isDisplayBoxAndWhiskerPlot;
+		return _displayBoxAndWhiskerAll;
+	}
+
+	public boolean isDisplayBoxAndWhiskerAggregate()
+	{
+		return _displayBoxAndWhiskerAggregate;
 	}
 
 	public boolean isDisplayMonthlyTable()
 	{
-		return _isDisplayMonthlyTable;
+		return _displayMonthlyTable;
 	}
 
 	public boolean isDisplaySummaryTable()
 	{
-		return _isDisplaySummaryTable;
+		return _displaySummaryTable;
 	}
 
-	public boolean isPlotAllExceedancePlots()
+	public boolean isDisplayBarCharts()
 	{
-		for(String name : _exceedancePlotComponents)
-		{
-			if("ALL".equals(name))
-			{
-				return true;
-			}
-		}
-		return false;
+		return _displayBarCharts;
 	}
 
-	public boolean isAnnualFlowExceedancePlots()
+	public boolean isDisplayMonthlyLine()
 	{
-		for(String name : _exceedancePlotComponents)
-		{
-			if("Annual Flow".equals(name))
-			{
-				return true;
-			}
-		}
-		return false;
+		return _displayMonthlyLine;
 	}
-
-	public List<String> getSelectedExceedancePlotMonths()
-	{
-		List<String> selectedMonths = new ArrayList<>();
-		for(String name : _exceedancePlotComponents)
-		{
-			if(!"Annual Flow".equals(name) && !"ALL".equals(name))
-			{
-				selectedMonths.add(name);
-			}
-		}
-		if(_exceedancePlotComponents.contains("ALL"))
-		{
-			selectedMonths.clear();
-			selectedMonths.addAll(Arrays.asList(MonthlyReport.months));
-		}
-		return selectedMonths;
-	}
-
-	public List<String> getSelectedSummaryTableItems()
-	{
-		return _summaryTableComponents;
-	}
-
-	public boolean isDoExceedance()
-	{
-		return !getSelectedExceedancePlotMonths().isEmpty() || isAnnualFlowExceedancePlots() || isPlotAllExceedancePlots();
-	}
-
-	public enum ComparisonType
-	{
-		BASE, COMPARISON, DIFF
-	}
-
-
 }

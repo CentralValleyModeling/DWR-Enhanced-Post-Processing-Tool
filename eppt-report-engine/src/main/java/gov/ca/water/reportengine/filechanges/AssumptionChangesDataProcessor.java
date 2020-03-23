@@ -22,6 +22,7 @@ import java.util.Vector;
 import java.util.logging.Level;
 
 import com.google.common.flogger.FluentLogger;
+import gov.ca.water.calgui.busservice.impl.DssPatternUpdater;
 import gov.ca.water.reportengine.EpptReportException;
 
 import hec.heclib.dss.DSSPathname;
@@ -147,10 +148,12 @@ public class AssumptionChangesDataProcessor
 		{
 
 			TimeSeriesContainer baseContainer = (TimeSeriesContainer) base.get(pathFromMaster, true);
+			DssPatternUpdater.updateTimeSeriesContainer(baseContainer);
 			double[] baseValues = baseContainer.values;
 			int[] baseTimes = baseContainer.times;
 
 			TimeSeriesContainer altContainer = (TimeSeriesContainer) alt.get(pathFromMaster, true);
+			DssPatternUpdater.updateTimeSeriesContainer(altContainer);
 			double[] altValues = altContainer.values;
 			int[] altTimes = altContainer.times;
 

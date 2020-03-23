@@ -1218,6 +1218,7 @@ public class DtsTreeModel extends GeneralTreeModel
 			}
 		}
 		_tree.expandRow(0);
+		_tree.setSelectionRow(0);
 		MessagePanel.setDtsMasterMessage(treefile);
 	}
 

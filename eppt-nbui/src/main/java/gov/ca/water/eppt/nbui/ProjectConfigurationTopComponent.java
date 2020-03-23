@@ -12,13 +12,17 @@
 package gov.ca.water.eppt.nbui;
 
 import java.awt.BorderLayout;
-import java.io.IOException;
-import java.io.ObjectInput;
+import java.awt.Dimension;
+import java.util.Collection;
 import javax.swing.*;
 
+import gov.ca.water.calgui.project.EpptConfigurationController;
 import gov.ca.water.eppt.nbui.actions.ProjectConfigurationSavable;
-import gov.ca.water.quickresults.ui.projectconfig.ProjectConfigurationListener;
-import gov.ca.water.quickresults.ui.projectconfig.ProjectConfigurationPanel;
+import gov.ca.water.quickresults.ui.global.EpptConfigurationPane;
+import javafx.application.Platform;
+import javafx.embed.swing.JFXPanel;
+import javafx.scene.Scene;
+import org.netbeans.api.actions.Savable;
 import org.openide.awt.ActionID;
 import org.openide.awt.ActionReference;
 import org.openide.awt.ActionReferences;
@@ -26,8 +30,7 @@ import org.openide.util.NbBundle.Messages;
 import org.openide.util.lookup.AbstractLookup;
 import org.openide.util.lookup.InstanceContent;
 import org.openide.windows.TopComponent;
-
-import rma.swing.RmaJPanel;
+import org.openide.windows.WindowManager;
 
 /**
  * Top component which displays something.
@@ -57,9 +60,6 @@ public final class ProjectConfigurationTopComponent extends EpptTopComponent
 	private static final String TOP_COMPONENT_NAME = "Project Configuration";
 	private final InstanceContent _instanceContent = new InstanceContent();
 
-	/**
-	 *
-	 */
 	public ProjectConfigurationTopComponent()
 	{
 		setName(TOP_COMPONENT_NAME);
@@ -67,25 +67,16 @@ public final class ProjectConfigurationTopComponent extends EpptTopComponent
 		initComponents();
 	}
 
-	/**
-	 * @param content
-	 */
 	public void removeContent(Object content)
 	{
 		_instanceContent.remove(content);
 	}
 
-	/**
-	 *
-	 */
 	public void topComponentNameModified()
 	{
-		setDisplayName(TOP_COMPONENT_NAME + "*");
+		SwingUtilities.invokeLater(()->setDisplayName(TOP_COMPONENT_NAME + "*"));
 	}
 
-	/**
-	 *
-	 */
 	public void topComponentNameUnmodified()
 	{
 		setDisplayName(TOP_COMPONENT_NAME);
@@ -94,39 +85,31 @@ public final class ProjectConfigurationTopComponent extends EpptTopComponent
 	@Override
 	public String getJavaHelpId()
 	{
-		return ProjectConfigurationPanel.getProjectConfigurationPanel().getJavaHelpId();
+		return "3.1_ProjectConfiguration.htm";
 	}
 
 	private void initComponents()
 	{
-		RmaJPanel rmaJPanel = new RmaJPanel()
+		JFXPanel jfxPanel = new JFXPanel();
+		EpptConfigurationController epptConfigurationController = EpptControllerProvider.getEpptConfigurationController();
+		epptConfigurationController.modifiedProperty().addListener((e,o,n)->
 		{
-			@Override
-			public void setModified(boolean b)
+			Collection<? extends ProjectConfigurationSavable> projectConfigurationSavables = Savable.REGISTRY.lookupAll(
+					ProjectConfigurationSavable.class);
+			if(n && projectConfigurationSavables.isEmpty())
 			{
-				if(b)
-				{
-					topComponentNameModified();
-					ProjectConfigurationSavable savable = getLookup().lookup(ProjectConfigurationSavable.class);
-					if(savable == null)
-					{
-						_instanceContent.add(
-								new ProjectConfigurationSavable(ProjectConfigurationTopComponent.this));
-					}
-				}
-				else
-				{
-					setName(TOP_COMPONENT_NAME);
-				}
+				new ProjectConfigurationSavable(this);
 			}
-		};
-		ProjectConfigurationPanel projectConfigurationPanel = ProjectConfigurationPanel.getProjectConfigurationPanel();
-		ProjectConfigurationListener projectConfigurationListener = new ProjectConfigurationListener(
-				projectConfigurationPanel);
-		projectConfigurationPanel.setActionListener(projectConfigurationListener);
-		rmaJPanel.setLayout(new BorderLayout());
-		rmaJPanel.add(projectConfigurationPanel, BorderLayout.CENTER);
-		JScrollPane scrollPane = new JScrollPane(rmaJPanel);
+		});
+		Platform.runLater(() ->
+		{
+			EpptConfigurationPane epptConfigurationPane = new EpptConfigurationPane(epptConfigurationController);
+			epptConfigurationPane.setPrefHeight(900);
+			EpptControllerProvider.addListener(()->Platform.runLater(epptConfigurationPane::reloadProject));
+			jfxPanel.setScene(new Scene(epptConfigurationPane));
+			epptConfigurationPane.reloadProject();
+		});
+		JScrollPane scrollPane = new JScrollPane(jfxPanel);
 		setLayout(new BorderLayout());
 		add(scrollPane, BorderLayout.CENTER);
 	}

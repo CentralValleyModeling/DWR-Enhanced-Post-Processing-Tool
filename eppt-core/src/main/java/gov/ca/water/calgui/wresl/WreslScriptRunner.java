@@ -82,7 +82,6 @@ public class WreslScriptRunner
 		catch(RuntimeException | IOException | RecognitionException ex)
 		{
 			LOGGER.log(Level.SEVERE, "Error during WRESL Run", ex);
-			System.exit(-1);
 		}
 		finally
 		{
@@ -92,7 +91,6 @@ public class WreslScriptRunner
 			long seconds = Duration.between(start, end).minus(minutes, ChronoUnit.MINUTES).getSeconds();
 			LOGGER.log(Level.INFO, "============= Run Took: {0}min {1}sec =============", new Object[]{minutes, seconds});
 		}
-		System.exit(0);
 	}
 
 	public void run(LocalDate start, LocalDate end) throws WreslScriptException

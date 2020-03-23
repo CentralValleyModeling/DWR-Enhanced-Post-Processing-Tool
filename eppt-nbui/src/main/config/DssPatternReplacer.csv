@@ -1,0 +1,12 @@
+!Pattern Type - 'glob' to use glob wildcard matching or 'regex' to use or regular expression matching.
+!Use '%2C' as a stand-in for commas in patterns as CSV format will treat them as comma delimiters
+!Pattern matching is case insensitive
+!DSS Path Pattern - regex or glob pattern used to find and update DSS records with type and unit replacements.
+!Type Pattern - regex or glob pattern used to filter DSS records found from the DSS Path Pattern. 
+!Unit Pattern - regex or glob pattern used to filter DSS records found from the DSS Path Pattern and Type Pattern.
+!Type Replacement - replacement string for DSS record type. PER-AVER records are displayed as EOP stepped lines in line plot visualizations. INST-VAL records are linearly interpolated in line plot visualizations.
+!Unit Replacement - replacement string for DSS record units. Record values with PERCENT units are multiplied by 100 in all visualizations
+!Pattern Type,DSS Path Pattern,Type Pattern,Unit Pattern,Type Replacement,Unit Replacement
+glob,\/*\/*\/STORAGE\/**,PER-AVER,*,INST-VAL,
+regex,\/.*\/PERCENT-ALLOCATION\/.*,.*,NONE,,PERCENT
+glob,\/*\/*\/SWP-DELIVERY\/*,*,*,,PERCENT

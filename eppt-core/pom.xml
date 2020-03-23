@@ -18,7 +18,7 @@
 	<parent>
 		<groupId>gov.ca.water</groupId>
 		<artifactId>eppt-parent</artifactId>
-		<version>1.1.4-SNAPSHOT</version>
+		<version>1.2.0-SNAPSHOT</version>
 		<relativePath>../eppt-parent</relativePath>
 	</parent>
 	<artifactId>eppt-core</artifactId>
@@ -38,6 +38,17 @@
 			<groupId>log4j</groupId>
 			<artifactId>log4j</artifactId>
 			<version>1.2.17</version>
+		</dependency>
+		<dependency>
+			<groupId>com.rma.javafx</groupId>
+			<artifactId>rmaJavaFx</artifactId>
+			<version>v1.2.13</version>
+			<exclusions>
+				<exclusion>
+					<groupId>*</groupId>
+					<artifactId>*</artifactId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 		<dependency>
 			<groupId>hecjavadev-core</groupId>
@@ -164,6 +175,17 @@
 	</repositories>
 	<build>
 		<plugins>
+<!--			<plugin>-->
+<!--				<groupId>org.apache.maven.plugins</groupId>-->
+<!--				<artifactId>maven-surefire-plugin</artifactId>-->
+<!--&lt;!&ndash;				<version>2.19.1</version>&ndash;&gt;-->
+<!--				<configuration>-->
+<!--&lt;!&ndash;					<workingDirectory>${project.basedir}</workingDirectory>&ndash;&gt;-->
+<!--&lt;!&ndash;					<forkMode>once</forkMode>&ndash;&gt;-->
+<!--&lt;!&ndash;					<argLine>-Djava.library.path=${project.build.directory}/lib</argLine>&ndash;&gt;-->
+<!--&lt;!&ndash;					<argLine>-Djava.library.path=${project.build.directory}\lib</argLine>&ndash;&gt;-->
+<!--				</configuration>-->
+<!--			</plugin>-->
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-surefire-plugin</artifactId>
@@ -171,7 +193,7 @@
 				<configuration>
 					<forkCount>3</forkCount>
 					<reuseForks>true</reuseForks>
-					<argLine>-Xmx1024m -XX:MaxPermSize=256m</argLine>
+					<argLine>-Xmx1024m -XX:MaxPermSize=256m -Djava.library.path=${project.build.directory}/lib</argLine>
 				</configuration>
 			</plugin>
 			<plugin>

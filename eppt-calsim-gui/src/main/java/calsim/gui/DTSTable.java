@@ -422,7 +422,7 @@ public class DTSTable extends MPanel
 		{
 			return;
 		}
-		if(var.equals(AppUtils.SVAR))
+		if(AppUtils.SVAR.equals(var))
 		{
 			String c = (String) svList.get(b.toUpperCase());
 			if(dtm != null)
@@ -434,7 +434,7 @@ public class DTSTable extends MPanel
 				mtm.setValueAt(c, r, 3);
 			}
 		}
-		else if(var.equals(AppUtils.DVAR))
+		else if(AppUtils.DVAR.equals(var))
 		{
 			String c = (String) dvList.get(b.toUpperCase());
 			if(dtm != null)
@@ -552,9 +552,6 @@ public class DTSTable extends MPanel
 			int[] ri = _table.getSelectedRows();
 			if(ri == null || ri.length == 0)
 			{
-				JOptionPane.showMessageDialog(this, "Message",
-						"Select a row first!",
-						JOptionPane.PLAIN_MESSAGE);
 				return;
 			}
 			int numberDeleted = 0;
@@ -650,9 +647,6 @@ public class DTSTable extends MPanel
 			int ri = _table.getSelectedRow();
 			if(ri == -1)
 			{
-				JOptionPane.showMessageDialog(this, "Message",
-						"Select a row first!",
-						JOptionPane.PLAIN_MESSAGE);
 				return;
 			}
 			_dts.insertAt(ri);

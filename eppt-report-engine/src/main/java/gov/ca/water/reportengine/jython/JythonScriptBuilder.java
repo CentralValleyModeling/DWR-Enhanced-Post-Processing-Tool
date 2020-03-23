@@ -14,6 +14,7 @@ package gov.ca.water.reportengine.jython;
 
 import java.io.IOException;
 import java.nio.file.Files;
+import java.time.Month;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -24,6 +25,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Pattern;
 import java.util.stream.Stream;
+
+import javax.script.ScriptException;
 
 import gov.ca.water.calgui.EpptInitializationException;
 import gov.ca.water.calgui.constant.Constant;
@@ -47,14 +50,14 @@ public final class JythonScriptBuilder
 	private static final int FUNCTION_TEMPLATE_INDEX = 2;
 	private static JythonScriptBuilder instance;
 
-	private final List<Script> _scripts;
+	private final List<JythonScript> _scripts;
 
 	private JythonScriptBuilder() throws EpptInitializationException
 	{
 		_scripts = readJythonScripts();
 	}
 
-	private List<Script> readJythonScripts() throws EpptInitializationException
+	private List<JythonScript> readJythonScripts() throws EpptInitializationException
 	{
 		try(Stream<String> stream = Files.lines(Constant.FUNCTIONS_PATH))
 		{
@@ -66,9 +69,10 @@ public final class JythonScriptBuilder
 		}
 	}
 
-	private Script buildScriptFromLine(String line)
+	private JythonScript buildScriptFromLine(String line)
 	{
-		Script retval = null;
+
+		JythonScript retval = null;
 		String[] split = CSV_PATTERN.split(line);
 		replaceCommas(split);
 		if(FUNCTION_TEMPLATE_INDEX < split.length)
@@ -81,7 +85,14 @@ public final class JythonScriptBuilder
 				String[] argumentsListed = CLOSED_PAREN_PATTERN.split(nameSplit[1]);
 				Collections.addAll(arguments, CSV_PATTERN.split(argumentsListed[0]));
 			}
-			retval = new Script(nameSplit[0], arguments, split[FUNCTION_TEMPLATE_INDEX]);
+			try
+			{
+				retval = new JythonScript(nameSplit[0], arguments, split[FUNCTION_TEMPLATE_INDEX]);
+			}
+			catch(IOException | ScriptException ex)
+			{
+				throw new IllegalStateException("Unable to load script: " + nameSplit[0], ex);
+			}
 		}
 		return retval;
 	}
@@ -104,24 +115,24 @@ public final class JythonScriptBuilder
 		return instance;
 	}
 
-	public String buildFunctionFromTemplate(String functionReference)
+	public JythonScript buildFunctionFromTemplate(String functionReference)
 	{
 		return getMatchingScriptTemplate(functionReference)
 				.orElseThrow(
 						() -> new IllegalArgumentException("No matching script defined in " + Constant.FUNCTIONS_PATH + ": " + functionReference));
 	}
 
-	private Optional<String> getMatchingScriptTemplate(String functionReference)
+	private Optional<JythonScript> getMatchingScriptTemplate(String functionReference)
 	{
 		String[] nameSplit = OPEN_PAREN_PATTERN.split(functionReference);
-		return _scripts.stream().filter(f -> f._name.equals(nameSplit[0]))
-					   .map(f -> buildFunctionFromTemplate(f, functionReference))
-					   .findAny();
+		Optional<JythonScript> retval = _scripts.stream().filter(f -> f.getName().equals(nameSplit[0]))
+												.findAny();
+		retval.ifPresent(s -> buildFunctionFromTemplate(s, functionReference));
+		return retval;
 	}
 
-	private String buildFunctionFromTemplate(Script script, String functionReference)
+	private void buildFunctionFromTemplate(JythonScript script, String functionReference)
 	{
-		String retval = script._scriptTemplate;
 		String[] split = OPEN_PAREN_PATTERN.split(functionReference);
 		if(split.length > 1)
 		{
@@ -130,46 +141,59 @@ public final class JythonScriptBuilder
 			{
 				String argumentsList = arguments[0];
 				String[] arg = CSV_PATTERN.split(argumentsList);
-				if(arg.length != script._arguments.size())
+				if(arg.length != script.getArguments().size())
 				{
 					throw new IllegalArgumentException(
-							"Function: " + script._name + " Arguments length differs from template length. Arguments: " + Arrays.toString(
-									arg) + " Template: " + script._arguments);
+							"Function: " + script.getName() + " Arguments length differs from template length. Arguments: " + Arrays.toString(
+									arg) + " Template: " + script.getArguments());
 				}
 				for(int i = 0; i < arg.length; i++)
 				{
-					String s = script._arguments.get(i);
-					retval = retval.replace(s.trim(), arg[i].trim());
+					String s = script.getArguments().get(i);
+					String key = s.trim().replace("${", "").replace("}", "");
+					String valueString = arg[i].trim().replace("${", "").replace("}", "");
+					Object value = valueString;
+					try
+					{
+						value = Integer.parseInt(valueString);
+					}
+					catch(RuntimeException e)
+					{
+						LOGGER.log(Level.FINER, "Not an integer", e);
+						try
+						{
+							value = Double.parseDouble(valueString);
+						}
+						catch(RuntimeException ex)
+						{
+							LOGGER.log(Level.FINER, "Not a double", ex);
+							try
+							{
+								value = Month.valueOf(valueString.replace("Month.", ""));
+							}
+							catch(RuntimeException ex2)
+							{
+								LOGGER.log(Level.FINER, "Not a double", ex2);
+							}
+						}
+					}
+					script.put(key, value);
 				}
 			}
 			else
 			{
-				LOGGER.log(Level.WARNING, "Missing closed parenthesis in function: {0}", retval);
+				LOGGER.log(Level.WARNING, "Missing closed parenthesis in function: {0}", script);
 			}
 		}
 		else
 		{
-			LOGGER.log(Level.WARNING, "Missing open parenthesis in function: {0}", retval);
+			LOGGER.log(Level.WARNING, "Missing open parenthesis in function: {0}", script);
 		}
-		return retval;
 	}
 
-	public Optional<String> getScript(String reference)
+	public Optional<JythonScript> getScript(String reference)
 	{
 		return getMatchingScriptTemplate(reference);
 	}
 
-	private static class Script
-	{
-		private final String _name;
-		private final List<String> _arguments;
-		private final String _scriptTemplate;
-
-		private Script(String name, List<String> arguments, String scriptTemplate)
-		{
-			_name = name;
-			_arguments = arguments;
-			_scriptTemplate = scriptTemplate;
-		}
-	}
 }

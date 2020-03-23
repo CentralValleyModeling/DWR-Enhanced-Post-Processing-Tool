@@ -29,7 +29,7 @@ import static java.util.stream.Collectors.toList;
  * @author <a href="mailto:adam@rmanet.com">Adam Korynta</a>
  * @since 05-07-2019
  */
-class ScenarioTableModel extends RmaTreeTableModel<ParentRowModel>
+class ScenarioTableModel extends RmaTreeTableModel<ScenarioTableRowModel>
 {
 	static final RmaTreeTableColumnSpec NAME_COL_SPEC;
 	static final RmaTreeTableColumnSpec MODEL_COL_SPEC;
