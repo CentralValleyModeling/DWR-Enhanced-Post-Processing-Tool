@@ -14,7 +14,6 @@ package gov.ca.water.calgui.presentation;
 
 import java.awt.Desktop;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Paths;
@@ -36,6 +35,7 @@ import gov.ca.dsm2.input.parser.Parser;
 import gov.ca.dsm2.input.parser.Tables;
 import gov.ca.water.calgui.presentation.display.ReportPDFWriter;
 import vista.db.dss.DSSDataReference;
+import vista.db.dss.DSSGroup;
 import vista.db.dss.DSSUtil;
 import vista.report.TSMath;
 import vista.set.Constants;
@@ -66,7 +66,7 @@ public class Report extends SwingWorker<Void, String>
 	private static final String TIME_SERIES = "timeseries";
 	private static final String EXCEEDANCE = "exceedance";
 	private final JFrame _mainFrame;
-	private final StringBuilder _messages = new StringBuilder();
+	private final List<String> _messages = new ArrayList<>();
 	private ProgressFrameForPDF _progressFrameForPDF;
 	private InputStream _inputStream;
 
@@ -74,7 +74,6 @@ public class Report extends SwingWorker<Void, String>
 	 * ********* START SwingWorker additions
 	 */
 	private String _outputFilename;
-	private boolean _isInitialized = false;
 	private List<ArrayList<String>> _twValues;
 	private List<PathnameMap> _pathnameMaps;
 	private HashMap<String, String> _scalars;
@@ -85,30 +84,14 @@ public class Report extends SwingWorker<Void, String>
 		_mainFrame = mainFrame;
 		this._inputStream = inputStream;
 		this._outputFilename = outputFilename;
-		this._isInitialized = true;
-	}
-
-	/*
-	 * ********* END SwingWorker additions
-	 */
-
-	public Report(String templateFile, JFrame mainFrame) throws IOException
-	{
-		this(new FileInputStream(templateFile), mainFrame);
-	}
-
-	public Report(InputStream inputStream, JFrame mainFrame) throws IOException
-	{
-		_mainFrame = mainFrame;
-		generateReport(inputStream);
+		_progressFrameForPDF = ProgressFrameForPDF.getInstance(_mainFrame, this);
+		_progressFrameForPDF.toFront();
+		_progressFrameForPDF.setVisible(true);
 	}
 
 	@Override
 	protected Void doInBackground() throws Exception
 	{
-		_progressFrameForPDF = ProgressFrameForPDF.getProgressFrameInstance(_mainFrame);
-		_progressFrameForPDF.toFront();
-		_progressFrameForPDF.setVisible(true);
 		publish("Generating report in background thread.");
 
 		LOG.fine("Parsing input template");
@@ -126,10 +109,10 @@ public class Report extends SwingWorker<Void, String>
 			LOG.log(Level.SEVERE, "Error processing report", ex);
 			publish("Error running report: " + ex.getMessage());
 		}
-		catch(Throwable ex)
+		catch(ReportGenerationCanceledException ex)
 		{
-			LOG.log(Level.SEVERE, "Error processing report", ex);
-			publish("Error running report: " + ex.getMessage());
+			LOG.log(Level.FINEST, ex.getMessage(), ex);
+			publish(ex.getMessage());
 		}
 
 		LOG.fine("Done generating report");
@@ -141,7 +124,6 @@ public class Report extends SwingWorker<Void, String>
 	protected void process(List<String> status)
 	{
 		_progressFrameForPDF.setList(status.get(status.size() - 1));
-		return;
 	}
 
 	@Override
@@ -150,38 +132,33 @@ public class Report extends SwingWorker<Void, String>
 
 		try
 		{
+			if(!_messages.isEmpty())
+			{
+				_progressFrameForPDF.setList(_messages);
+			}
+			_writer.endDocument();
+			checkInterrupt();
 			File file = Paths.get(_outputFilename).toFile();
 			if(file.exists())
 			{
 				Desktop.getDesktop().open(file);
 			}
 		}
-		catch(IOException e)
+		catch(IOException | RuntimeException e)
 		{
 			LOG.log(Level.SEVERE, "Unable to open file: " + _outputFilename, e);
 		}
-		catch(RuntimeException e)
+		catch(ReportGenerationCanceledException e)
 		{
-			LOG.log(Level.SEVERE, "Unable to open file: " + _outputFilename, e);
+			publish(e.getMessage());
+			LOG.log(Level.FINEST, "Report canceled: " + _outputFilename, e);
 		}
 	}
 
-	private void generateReport(InputStream templateContentStream) throws IOException
-	{
-		LOG.fine("Parsing input template");
-		clearMessages();
-		parseTemplateFile(templateContentStream);
-		doProcessing();
-		LOG.fine("Done generating report");
-	}
-
-	private void parseTemplateFile(InputStream templateFileStream) throws IOException
+	private void parseTemplateFile(InputStream templateFileStream) throws IOException, ReportGenerationCanceledException
 	{
 
-		if(_isInitialized)
-		{
-			publish("Parsing template file.");
-		}
+		publish("Parsing template file.");
 
 		Parser p = new Parser();
 		Tables tables = p.parseModel(templateFileStream);
@@ -200,40 +177,47 @@ public class Report extends SwingWorker<Void, String>
 			String value = copy.stream().collect(Collectors.joining(" "));
 			_scalars.put(name, value.replace("\"", ""));
 		}
+		checkInterrupt();
 		// load pathname mapping into a map
 		InputTable pathnameMappingTable = tables.getTableNamed("PATHNAME_MAPPING");
-		ArrayList<ArrayList<String>> pmap_values = pathnameMappingTable.getValues();
-		int nvalues = pmap_values.size();
+		ArrayList<ArrayList<String>> pmapValues = pathnameMappingTable.getValues();
+		int nvalues = pmapValues.size();
 		_pathnameMaps = new ArrayList<>();
 		for(int i = 0; i < nvalues; i++)
 		{
-			String var_name = pathnameMappingTable.getValue(i, "VARIABLE");
-			var_name = var_name.replace("\"", "");
-			PathnameMap path_map = new PathnameMap(var_name);
-			path_map._reportType = pathnameMappingTable.getValue(i, "REPORT_TYPE").toLowerCase();
-			path_map._pathBase = pathnameMappingTable.getValue(i, "PATH_BASE");
-			path_map._pathAlt = pathnameMappingTable.getValue(i, "PATH_ALT");
-			path_map._varCategory = pathnameMappingTable.getValue(i, "VAR_CATEGORY");
-			path_map._rowType = pathnameMappingTable.getValue(i, "ROW_TYPE");
-			if((path_map._pathAlt == null) || (path_map._pathAlt.length() == 0))
+			checkInterrupt();
+			String varName = pathnameMappingTable.getValue(i, "VARIABLE");
+			varName = varName.replace("\"", "");
+			PathnameMap pathMap = new PathnameMap(varName);
+			pathMap._reportType = pathnameMappingTable.getValue(i, "REPORT_TYPE").toLowerCase();
+			pathMap._pathBase = pathnameMappingTable.getValue(i, "PATH_BASE");
+			pathMap._pathAlt = pathnameMappingTable.getValue(i, "PATH_ALT");
+			pathMap._varCategory = pathnameMappingTable.getValue(i, "VAR_CATEGORY");
+			pathMap._rowType = pathnameMappingTable.getValue(i, "ROW_TYPE");
+			if((pathMap._pathAlt == null) || (pathMap._pathAlt.length() == 0))
 			{
-				path_map._pathAlt = path_map._pathBase;
+				pathMap._pathAlt = pathMap._pathBase;
 			}
-			path_map._plot = "Y".equalsIgnoreCase(pathnameMappingTable.getValue(i, "PLOT"));
-			path_map._units = pathnameMappingTable.getValue(i, "UNIT");
-			_pathnameMaps.add(path_map);
+			pathMap._plot = "Y".equalsIgnoreCase(pathnameMappingTable.getValue(i, "PLOT"));
+			pathMap._units = pathnameMappingTable.getValue(i, "UNIT");
+			_pathnameMaps.add(pathMap);
 		}
 		InputTable timeWindowTable = tables.getTableNamed("TIME_PERIODS");
 		_twValues = timeWindowTable.getValues();
 	}
 
-	public void doProcessing()
+	private void checkInterrupt() throws ReportGenerationCanceledException
+	{
+		if(isCancelled())
+		{
+			throw new ReportGenerationCanceledException();
+		}
+	}
+
+	public void doProcessing() throws ReportGenerationCanceledException
 	{
 		// open files 1 and file 2 and loop over to plot
-		if(_isInitialized)
-		{
-			publish("Processing template file.");
-		}
+		publish("Processing template file.");
 		Group dssGroupBase = opendss(_scalars.get("FILE_BASE"));
 		Group dssGroupAlt = opendss(_scalars.get("FILE_ALT"));
 		ArrayList<TimeWindow> timewindows = new ArrayList<>();
@@ -243,13 +227,13 @@ public class Report extends SwingWorker<Void, String>
 			timewindows.add(TimeFactory.getInstance().createTimeWindow(v));
 		}
 		TimeWindow tw = null;
-		if(timewindows.size() > 0)
+		if(!timewindows.isEmpty())
 		{
 			tw = timewindows.get(0);
 		}
-		String output_file = _scalars.get("OUTFILE");
+		String outputFile = _scalars.get("OUTFILE");
 		_writer = new ReportPDFWriter();
-		boolean wasSuccessful = _writer.startDocument(output_file);
+		boolean wasSuccessful = _writer.startDocument(outputFile);
 		if(!wasSuccessful)
 		{
 			return;
@@ -262,106 +246,112 @@ public class Report extends SwingWorker<Void, String>
 		{
 			String msg = "No data available in either : " + _scalars.get("FILE_BASE") + " or " + _scalars.get(
 					"FILE_ALT");
-			LOG.severe(msg);
+			LOG.log(Level.FINE, msg);
 			addMessage(msg);
 			return;
 		}
 
 		generateSummaryTable();
 		int dataIndex = 0;
+		generatePlots(dssGroupBase, dssGroupAlt, tw, dataIndex);
+		checkInterrupt();
+		_writer.endDocument();
+		checkInterrupt();
+	}
+
+	private void generatePlots(Group dssGroupBase, Group dssGroupAlt, TimeWindow tw, int dataIndex) throws ReportGenerationCanceledException
+	{
 		for(PathnameMap pathMap : _pathnameMaps)
 		{
+			checkInterrupt();
 			dataIndex = dataIndex + 1;
-			if(_isInitialized)
-			{
-				publish("Generating plot " + dataIndex + " of " + _pathnameMaps.size() + ".");
-			}
+			publish("Generating plot " + dataIndex + " of " + _pathnameMaps.size() + ".");
 
-			LOG.fine("Working on index: " + dataIndex);
+			LOG.log(Level.FINE, "Working on index: {0}", dataIndex);
 			if((pathMap._pathAlt == null) || (pathMap._pathAlt == ""))
 			{
 				pathMap._pathAlt = pathMap._pathBase;
 			}
-			boolean calculate_dts = false;
-			if(pathMap._varCategory.equals("HEADER"))
+			boolean calculateDts = false;
+			if("HEADER".equals(pathMap._varCategory))
 			{
 				LOG.fine("Inserting header");
 				continue;
 			}
 			if(pathMap._reportType.endsWith("_post"))
 			{
-				calculate_dts = true;
+				calculateDts = true;
 			}
-			DataReference refBase = getReference(dssGroupBase, pathMap._pathBase, calculate_dts, _pathnameMaps, 1);
-			DataReference refAlt = getReference(dssGroupAlt, pathMap._pathAlt, calculate_dts, _pathnameMaps, 2);
-			if((refBase == null) || (refAlt == null))
+			DataReference refBase = getReference(dssGroupBase, pathMap._pathBase, calculateDts);
+			DataReference refAlt = getReference(dssGroupAlt, pathMap._pathAlt, calculateDts);
+			if((refBase != null) && (refAlt != null))
 			{
-				continue;
-			}
-			// Switch order from original code to reverse legends ... LimnoTech
-			// 20110816
-			String[] series_name = new String[]{_scalars.get("NAME_ALT"), _scalars.get("NAME_BASE")};
-			// String[] series_name = new String[] { scalars.get("NAME_BASE"),
-			// scalars.get("NAME_ALT") };
-			if(pathMap._units.equals("CFS2TAF"))
-			{
-				TSMath.cfs2taf((RegularTimeSeries) refBase.getData());
-				TSMath.cfs2taf((RegularTimeSeries) refAlt.getData());
-			}
-			else if(pathMap._units.equals("TAF2CFS"))
-			{
-				TSMath.taf2cfs((RegularTimeSeries) refBase.getData());
-				TSMath.taf2cfs((RegularTimeSeries) refAlt.getData());
-			}
-			String data_units = getUnits(refBase, refAlt);
-			String data_type = getType(refBase, refAlt);
-			if(pathMap._plot)
-			{
-				if(pathMap._reportType.startsWith("average"))
+				checkInterrupt();
+				// Switch order from original code to reverse legends ... LimnoTech
+				// 20110816
+				String[] seriesName = new String[]{_scalars.get("NAME_ALT"), _scalars.get("NAME_BASE")};
+				if("CFS2TAF".equals(pathMap._units))
 				{
-					generatePlot(buildDataArray(refAlt, refBase, tw), dataIndex,
-							"Average " + pathMap._varName.replace("\"", ""), series_name,
-							data_type + "(" + data_units + ")", "Time", TIME_SERIES);
+					TSMath.cfs2taf((RegularTimeSeries) refBase.getData());
+					TSMath.cfs2taf((RegularTimeSeries) refAlt.getData());
 				}
-				else if(pathMap._reportType.startsWith("exceedance"))
+				else if("TAF2CFS".equals(pathMap._units))
 				{
-					generatePlot(buildExceedanceArray(refAlt, refBase, pathMap._varCategory == "S_SEPT", tw), dataIndex,
-							getExceedancePlotTitle(pathMap), series_name, data_type + "(" + data_units + ")",
-							"Percent at or above", EXCEEDANCE);
+					TSMath.taf2cfs((RegularTimeSeries) refBase.getData());
+					TSMath.taf2cfs((RegularTimeSeries) refAlt.getData());
 				}
-				else if(pathMap._reportType.startsWith("avg_excd"))
+				String dataUnits = getUnits(refBase, refAlt);
+				String dataType = getType(refBase, refAlt);
+				if(pathMap._plot)
 				{
-					generatePlot(buildDataArray(refAlt, refBase, tw), dataIndex,
-							"Average " + pathMap._varName.replace("\"", ""), series_name,
-							data_type + "(" + data_units + ")", "Time", TIME_SERIES);
-					generatePlot(buildExceedanceArray(refAlt, refBase, pathMap._varCategory == "S_SEPT", tw), dataIndex,
-							getExceedancePlotTitle(pathMap), series_name, data_type + "(" + data_units + ")",
-							"Percent at or above", EXCEEDANCE);
-				}
-				else if(pathMap._reportType.startsWith("timeseries"))
-				{
-					generatePlot(buildDataArray(refAlt, refBase, tw), dataIndex,
-							"Average " + pathMap._varName.replace("\"", ""), series_name,
-							data_type + "(" + data_units + ")", "Time", TIME_SERIES);
-				}
-				else if(pathMap._reportType.equals("alloc"))
-				{
-					generatePlot(buildExceedanceArray(refAlt, refBase, true, tw), dataIndex,
-							"Exceedance " + pathMap._varName.replace("\"", ""), series_name, "Allocation (%)",
-							"Probability", EXCEEDANCE);
+					generatePlotForReportType(tw, pathMap, refBase, refAlt, seriesName, dataUnits, dataType);
 				}
 			}
 		}
-		_writer.endDocument();
 	}
 
-	private void generateSummaryTable()
+	private void generatePlotForReportType(TimeWindow tw, PathnameMap pathMap, DataReference refBase, DataReference refAlt,
+										   String[] seriesName, String dataUnits, String dataType) throws ReportGenerationCanceledException
+	{
+		if(pathMap._reportType.startsWith("average"))
+		{
+			generatePlot(buildDataArray(refAlt, refBase, tw),
+					"Average " + pathMap._varName.replace("\"", ""), seriesName,
+					dataType + "(" + dataUnits + ")", "Time", TIME_SERIES);
+		}
+		else if(pathMap._reportType.startsWith("exceedance"))
+		{
+			generatePlot(buildExceedanceArray(refAlt, refBase, pathMap._varCategory == "S_SEPT", tw),
+					getExceedancePlotTitle(pathMap), seriesName, dataType + "(" + dataUnits + ")",
+					"Percent at or above", EXCEEDANCE);
+		}
+		else if(pathMap._reportType.startsWith("avg_excd"))
+		{
+			generatePlot(buildDataArray(refAlt, refBase, tw),
+					"Average " + pathMap._varName.replace("\"", ""), seriesName,
+					dataType + "(" + dataUnits + ")", "Time", TIME_SERIES);
+			generatePlot(buildExceedanceArray(refAlt, refBase, pathMap._varCategory == "S_SEPT", tw),
+					getExceedancePlotTitle(pathMap), seriesName, dataType + "(" + dataUnits + ")",
+					"Percent at or above", EXCEEDANCE);
+		}
+		else if(pathMap._reportType.startsWith("timeseries"))
+		{
+			generatePlot(buildDataArray(refAlt, refBase, tw),
+					"Average " + pathMap._varName.replace("\"", ""), seriesName,
+					dataType + "(" + dataUnits + ")", "Time", TIME_SERIES);
+		}
+		else if("alloc".equals(pathMap._reportType))
+		{
+			generatePlot(buildExceedanceArray(refAlt, refBase, true, tw),
+					"Exceedance " + pathMap._varName.replace("\"", ""), seriesName, "Allocation (%)",
+					"Probability", EXCEEDANCE);
+		}
+	}
+
+	private void generateSummaryTable() throws ReportGenerationCanceledException
 	{
 
-		if(_isInitialized)
-		{
-			publish("Generating summary table.");
-		}
+		publish("Generating summary table.");
 
 		_writer.setTableFontSize(_scalars.get("TABLE_FONT_SIZE"));
 
@@ -374,15 +364,15 @@ public class Report extends SwingWorker<Void, String>
 		// between title and table
 		Group dssGroupBase = opendss(_scalars.get("FILE_BASE"));
 		Group dssGroupAlt = opendss(_scalars.get("FILE_ALT"));
-		ArrayList<TimeWindow> timewindows = new ArrayList<TimeWindow>();
+		ArrayList<TimeWindow> timewindows = new ArrayList<>();
 		for(ArrayList<String> values : _twValues)
 		{
 			String v = values.get(1).replace("\"", "");
 			timewindows.add(TimeFactory.getInstance().createTimeWindow(v));
 		}
-		ArrayList<String> headerRow = new ArrayList<String>();
+		ArrayList<String> headerRow = new ArrayList<>();
 		headerRow.add("");
-		ArrayList<String> headerRow2 = new ArrayList<String>();
+		ArrayList<String> headerRow2 = new ArrayList<>();
 		headerRow2.add("");
 
 		for(TimeWindow tw : timewindows)
@@ -403,75 +393,49 @@ public class Report extends SwingWorker<Void, String>
 		int dataIndex = 0;
 		for(PathnameMap pathMap : _pathnameMaps)
 		{
+			checkInterrupt();
 			dataIndex++;
-			if(_isInitialized)
-			{
-				publish("Processing dataset " + dataIndex + " of " + _pathnameMaps.size());
-			}
+			publish("Processing dataset " + dataIndex + " of " + _pathnameMaps.size());
 
 			if(!categoryList.contains(pathMap._varCategory))
 			{
 				continue;
 			}
-			ArrayList<String> rowData = new ArrayList<String>();
+			firstDataRow = processSummaryForPath(dssGroupBase, dssGroupAlt, timewindows, firstDataRow, pathMap);
+		}
+		_writer.endTable();
+	}
+
+	private boolean processSummaryForPath(Group dssGroupBase, Group dssGroupAlt, ArrayList<TimeWindow> timewindows, boolean firstDataRow,
+										  PathnameMap pathMap)
+	{
+		try
+		{
+			ArrayList<String> rowData = new ArrayList<>();
 			rowData.add(pathMap._varName);
-			boolean calculate_dts = false;
+			boolean calculateDts = false;
 			if(pathMap._reportType.toLowerCase().endsWith("_post"))
 			{
-				calculate_dts = true;
+				calculateDts = true;
 			}
 			DataReference refBase = null, refAlt = null;
-			if(!pathMap._pathBase.equalsIgnoreCase("ignore"))
+			if(!"ignore".equalsIgnoreCase(pathMap._pathBase))
 			{
-				refBase = getReference(dssGroupBase, pathMap._pathBase, calculate_dts, _pathnameMaps, 1);
+				refBase = getReference(dssGroupBase, pathMap._pathBase, calculateDts);
 			}
-			if(!pathMap._pathAlt.equalsIgnoreCase("ignore"))
+			if(!"ignore".equalsIgnoreCase(pathMap._pathAlt))
 			{
-				refAlt = getReference(dssGroupAlt, pathMap._pathAlt, calculate_dts, _pathnameMaps, 2);
+				refAlt = getReference(dssGroupAlt, pathMap._pathAlt, calculateDts);
 			}
 			for(TimeWindow tw : timewindows)
 			{
-				double avgBase = 0, avgAlt = 0;
-				if(refAlt != null)
-				{
-					avgAlt = avg(cfs2taf((RegularTimeSeries) refAlt.getData()), tw);
-					rowData.add(formatDoubleValue(avgAlt));
-				}
-				else
-				{
-					rowData.add("");
-				}
-				if(refBase != null)
-				{
-					avgBase = avg(cfs2taf((RegularTimeSeries) refBase.getData()), tw);
-					rowData.add(formatDoubleValue(avgBase));
-				}
-				else
-				{
-					rowData.add("");
-				}
-				if((refBase == null) || (refAlt == null))
-				{
-					rowData.add("");
-					rowData.add("");
-				}
-				else
-				{
-					double diff = avgAlt - avgBase;
-					double pctDiff = Double.NaN;
-					if(avgBase != 0)
-					{
-						pctDiff = diff / avgBase * 100;
-					}
-					rowData.add(formatDoubleValue(diff));
-					rowData.add(formatDoubleValue(pctDiff));
-				}
+				processSummaryTimeWindow(rowData, refBase, refAlt, tw);
 			}
 			if("B".equals(pathMap._rowType))
 			{
 				if(!firstDataRow)
 				{
-					ArrayList<String> blankRow = new ArrayList<String>();
+					ArrayList<String> blankRow = new ArrayList<>();
 					for(int i = 0; i < rowData.size(); i++)
 					{
 						blankRow.add(" ");
@@ -486,7 +450,51 @@ public class Report extends SwingWorker<Void, String>
 			}
 			firstDataRow = false;
 		}
-		_writer.endTable();
+		catch(RuntimeException e)
+		{
+			addMessage(e.getMessage());
+			LOG.log(Level.FINE, "Error obtaining dataset.", e);
+		}
+		return firstDataRow;
+	}
+
+	private void processSummaryTimeWindow(ArrayList<String> rowData, DataReference refBase, DataReference refAlt, TimeWindow tw)
+	{
+		double avgBase = 0, avgAlt = 0;
+		if(refAlt != null)
+		{
+			avgAlt = avg(cfs2taf((RegularTimeSeries) refAlt.getData()), tw);
+			rowData.add(formatDoubleValue(avgAlt));
+		}
+		else
+		{
+			rowData.add("");
+		}
+		if(refBase != null)
+		{
+			avgBase = avg(cfs2taf((RegularTimeSeries) refBase.getData()), tw);
+			rowData.add(formatDoubleValue(avgBase));
+		}
+		else
+		{
+			rowData.add("");
+		}
+		if((refBase == null) || (refAlt == null))
+		{
+			rowData.add("");
+			rowData.add("");
+		}
+		else
+		{
+			double diff = avgAlt - avgBase;
+			double pctDiff = Double.NaN;
+			if(avgBase != 0)
+			{
+				pctDiff = diff / avgBase * 100;
+			}
+			rowData.add(formatDoubleValue(diff));
+			rowData.add(formatDoubleValue(pctDiff));
+		}
 	}
 
 	private String formatDoubleValue(double val)
@@ -494,9 +502,10 @@ public class Report extends SwingWorker<Void, String>
 		return Double.isNaN(val) ? "" : String.format("%3d", Math.round(val));
 	}
 
-	private void generatePlot(List<double[]> buildDataArray, int dataIndex, String title, String[] seriesName,
-							  String yAxisLabel, String xAxisLabel, String plotType)
+	private void generatePlot(List<double[]> buildDataArray, String title, String[] seriesName,
+							  String yAxisLabel, String xAxisLabel, String plotType) throws ReportGenerationCanceledException
 	{
+		checkInterrupt();
 		if(plotType.equals(TIME_SERIES))
 		{
 			_writer.addTimeSeriesPlot(buildDataArray, title, seriesName, xAxisLabel, yAxisLabel);
@@ -509,7 +518,7 @@ public class Report extends SwingWorker<Void, String>
 		{
 			String msg = "Requested unknown plot type: " + plotType + " for title: " + title + " seriesName: "
 					+ seriesName[0] + ",..";
-			LOG.warning(msg);
+			LOG.log(Level.FINE, msg);
 			addMessage(msg);
 		}
 	}
@@ -521,7 +530,7 @@ public class Report extends SwingWorker<Void, String>
 
 	private ArrayList<double[]> buildDataArray(DataReference ref1, DataReference ref2, TimeWindow tw)
 	{
-		ArrayList<double[]> dlist = new ArrayList<double[]>();
+		ArrayList<double[]> dlist = new ArrayList<>();
 		if((ref1 == null) || (ref2 == null))
 		{
 			return dlist;
@@ -545,9 +554,9 @@ public class Report extends SwingWorker<Void, String>
 		return dlist;
 	}
 
-	private Date convertToDate(Time time_val)
+	private Date convertToDate(Time timeVal)
 	{
-		return new Date(time_val.getDate().getTime() - TimeZone.getDefault().getRawOffset());
+		return new Date(timeVal.getDate().getTime() - TimeZone.getDefault().getRawOffset());
 	}
 
 	private MultiIterator buildMultiIterator(TimeSeries[] dsarray, ElementFilter filter)
@@ -562,14 +571,14 @@ public class Report extends SwingWorker<Void, String>
 		}
 	}
 
-	public ArrayList<double[]> buildExceedanceArray(DataReference ref1, DataReference ref2, boolean end_of_sept,
-													TimeWindow tw)
+	public List<double[]> buildExceedanceArray(DataReference ref1, DataReference ref2, boolean endOfSept,
+											   TimeWindow tw)
 	{
-		ArrayList<Double> x1 = sort(ref1, end_of_sept, tw);
-		ArrayList<Double> x2 = sort(ref2, end_of_sept, tw);
-		ArrayList<double[]> darray = new ArrayList<double[]>();
+		ArrayList<Double> x1 = sort(ref1, endOfSept, tw);
+		ArrayList<Double> x2 = sort(ref2, endOfSept, tw);
+		ArrayList<double[]> darray = new ArrayList<>();
 		int i = 0;
-		int n = Math.round(Math.min(x1.size(), x2.size()));
+		int n = Math.min(x1.size(), x2.size());
 		while(i < n)
 		{
 			darray.add(new double[]{100.0 - 100.0 * i / (n + 1), x1.get(i), x2.get(i)});
@@ -578,18 +587,18 @@ public class Report extends SwingWorker<Void, String>
 		return darray;
 	}
 
-	private ArrayList<Double> sort(DataReference ref, boolean end_of_sept, TimeWindow tw)
+	private ArrayList<Double> sort(DataReference ref, boolean endOfSept, TimeWindow tw)
 	{
 		TimeSeries data = (TimeSeries) ref.getData();
 		if(tw != null)
 		{
 			data = data.createSlice(tw);
 		}
-		ArrayList<Double> dx = new ArrayList<Double>();
+		ArrayList<Double> dx = new ArrayList<>();
 		ElementFilterIterator iter = new ElementFilterIterator(data.getIterator(), Constants.DEFAULT_FLAG_FILTER);
 		while(!iter.atEnd())
 		{
-			if(end_of_sept)
+			if(endOfSept)
 			{
 				if(iter.getElement().getXString().indexOf("30SEP") >= 0)
 				{
@@ -648,9 +657,9 @@ public class Report extends SwingWorker<Void, String>
 
 	public RegularTimeSeries cfs2taf(RegularTimeSeries data)
 	{
-		RegularTimeSeries data_taf = (RegularTimeSeries) TSMath.createCopy(data);
-		TSMath.cfs2taf(data_taf);
-		return data_taf;
+		RegularTimeSeries dataTaf = (RegularTimeSeries) TSMath.createCopy(data);
+		TSMath.cfs2taf(dataTaf);
+		return dataTaf;
 	}
 
 	public double avg(RegularTimeSeries data, TimeWindow tw)
@@ -659,110 +668,119 @@ public class Report extends SwingWorker<Void, String>
 		{
 			return Stats.avg(data.createSlice(tw)) * 12;
 		}
-		catch(Exception ex)
+		catch(RuntimeException ex)
 		{
-			LOG.fine(ex.getMessage());
+			LOG.log(Level.FINE, ex.getMessage(), ex);
 			return Double.NaN;
 		}
 	}
 
-	private DataReference getReference(Group group, String path, boolean calculate_dts,
-									   List<PathnameMap> pathname_maps, int group_no)
+	private DataReference getReference(Group group, String path, boolean calculateDts)
 	{
-		if(calculate_dts)
+		if(calculateDts)
 		{
-			try
-			{
-				// FIXME: add expression parser to enable any expression
-				String bpart = path.split("/")[2];
-				String[] vars = bpart.split("\\+");
-				DataReference ref = null;
-				for(String varname : vars)
-				{
-					DataReference xref = null;
-					String varPath = createPathFromVarname(path, varname);
-					xref = getReference(group, varPath, false, pathname_maps, group_no);
-					if(xref == null)
-					{
-						throw new RuntimeException("Aborting calculation of " + path + " due to previous path missing");
-					}
-					if(ref == null)
-					{
-						ref = xref;
-					}
-					else
-					{
-						ref = ref.__add__(xref);
-					}
-				}
-				return ref;
-			}
-			catch(Throwable ex)
-			{
-				addMessage(ex.getMessage());
-				LOG.log(Level.SEVERE, "Error obtaining dataset.", ex);
-				return null;
-			}
+			return getDtsReference(group, path);
 		}
 		else
 		{
-			try
+			return getTsReference(group, path);
+		}
+	}
+
+	private DataReference getTsReference(Group group, String path)
+	{
+		try
+		{
+			DataReference[] refs = findpath(group, path);
+			if(refs == null || refs.length == 0)
 			{
-				DataReference[] refs = findpath(group, path, true);
-				if(refs == null || refs.length == 0)
+				String filename = ((DSSGroup) group).getFile().toString();
+				String msg = "No data found for " + path + " and " + filename;
+				addMessage(msg);
+				LOG.log(Level.FINE, msg);
+				return null;
+			}
+			else
+			{
+				DataReference firstRef = refs[0];
+				DataReference retval = firstRef;
+				if(firstRef != null && refs.length > 1)
 				{
-					String msg = "No data found for " + group + " and " + path;
-					addMessage(msg);
-					LOG.severe(msg);
-					return null;
+
+					DataReference lastRef = refs[refs.length - 1];
+					String serverName = firstRef.getServername();
+					String fileName = firstRef.getFilename();
+					String firstDPart = firstRef.getPathname().getPart(Pathname.D_PART);
+					if(firstDPart.contains("-"))
+					{
+						firstDPart = firstDPart.split("-")[0];
+					}
+					String lastDPart = lastRef.getPathname().getPart(Pathname.D_PART);
+					if(lastDPart.contains("-"))
+					{
+						String[] split = lastDPart.split("-");
+						lastDPart = split[split.length - 1];
+					}
+					String newDPart = firstDPart;
+					if(!Objects.equals(firstDPart, lastDPart))
+					{
+						newDPart = firstDPart + " - " + lastDPart;
+					}
+					Pathname pathname = Pathname.createPathname(new String[]
+							{
+									firstRef.getPathname().getPart(Pathname.A_PART),
+									firstRef.getPathname().getPart(Pathname.B_PART),
+									firstRef.getPathname().getPart(Pathname.C_PART),
+									newDPart,
+									firstRef.getPathname().getPart(Pathname.E_PART),
+									firstRef.getPathname().getPart(Pathname.F_PART),
+							});
+					retval = new DSSDataReference(serverName, fileName, pathname);
+				}
+				return retval;
+			}
+		}
+		catch(RuntimeException ex)
+		{
+			String msg = "Exception while trying to retrieve " + path + " from " + group;
+			LOG.log(Level.FINE, msg, ex);
+			addMessage(msg);
+			return null;
+		}
+	}
+
+	private DataReference getDtsReference(Group group, String path)
+	{
+		try
+		{
+			String bpart = path.split("/")[2];
+			String[] vars = bpart.split("\\+");
+			DataReference ref = null;
+			for(String varname : vars)
+			{
+				checkInterrupt();
+				String varPath = createPathFromVarname(path, varname);
+				DataReference xref = getReference(group, varPath, false);
+				if(xref == null)
+				{
+					throw new IllegalArgumentException("Aborting calculation of " + path + " due to previous path missing");
+				}
+				if(ref == null)
+				{
+					ref = xref;
 				}
 				else
 				{
-					DataReference firstRef = refs[0];
-					DataReference retval = firstRef;
-					if(firstRef != null && refs.length > 1)
-					{
-
-						DataReference lastRef = refs[refs.length - 1];
-						String serverName = firstRef.getServername();
-						String fileName = firstRef.getFilename();
-						String firstDPart = firstRef.getPathname().getPart(Pathname.D_PART);
-						if(firstDPart.contains("-"))
-						{
-							firstDPart = firstDPart.split("-")[0];
-						}
-						String lastDPart = lastRef.getPathname().getPart(Pathname.D_PART);
-						if(lastDPart.contains("-"))
-						{
-							String[] split = lastDPart.split("-");
-							lastDPart = split[split.length - 1];
-						}
-						String newDPart = firstDPart;
-						if(!Objects.equals(firstDPart, lastDPart))
-						{
-							newDPart = firstDPart + " - " + lastDPart;
-						}
-						Pathname pathname = Pathname.createPathname(new String[]
-								{
-										firstRef.getPathname().getPart(Pathname.A_PART),
-										firstRef.getPathname().getPart(Pathname.B_PART),
-										firstRef.getPathname().getPart(Pathname.C_PART),
-										newDPart,
-										firstRef.getPathname().getPart(Pathname.E_PART),
-										firstRef.getPathname().getPart(Pathname.F_PART),
-								});
-						retval = new DSSDataReference(serverName, fileName, pathname);
-					}
-					return retval;
+					ref = ref.__add__(xref);
 				}
 			}
-			catch(Exception ex)
-			{
-				String msg = "Exception while trying to retrieve " + path + " from " + group;
-				LOG.log(Level.SEVERE,msg, ex);
-				addMessage(msg);
-				return null;
-			}
+			return ref;
+		}
+		catch(RuntimeException | ReportGenerationCanceledException ex)
+		{
+			addMessage(ex.getMessage());
+			LOG.log(Level.FINE, "Error obtaining dataset.", ex);
+			return null;
 		}
 	}
 
@@ -774,10 +792,9 @@ public class Report extends SwingWorker<Void, String>
 	 *
 	 * @param g
 	 * @param path
-	 * @param exact
 	 * @return
 	 */
-	private DataReference[] findpath(Group g, String path, boolean exact)
+	private DataReference[] findpath(Group g, String path)
 	{
 		String[] pa = new String[6];
 		for(int i = 0; i < 6; i++)
@@ -788,19 +805,17 @@ public class Report extends SwingWorker<Void, String>
 		String[] split = path.trim().split("/");
 		for(String p : split)
 		{
-			if(i == 0)
+			if(i != 0)
 			{
-				i++;
-				continue;
-			}
-			if(i >= pa.length)
-			{
-				break;
-			}
-			pa[i - 1] = p;
-			if(exact && p.length() > 0)
-			{
-				pa[i - 1] = "^" + pa[i - 1] + "$";
+				if(i >= pa.length)
+				{
+					break;
+				}
+				pa[i - 1] = p;
+				if(p.length() > 0)
+				{
+					pa[i - 1] = "^" + pa[i - 1] + "$";
+				}
 			}
 			i++;
 		}
@@ -872,21 +887,13 @@ public class Report extends SwingWorker<Void, String>
 	}
 
 	/**
-	 * Clear {@link ProgressFrameForPDF} status window message buffer
-	 */
-	private void clearMessages()
-	{
-		_messages.setLength(0);
-	}
-
-	/**
 	 * Add a message to the {@link ProgressFrameForPDF} status window
 	 *
 	 * @param msg
 	 */
 	private void addMessage(String msg)
 	{
-		_messages.append(msg).append("\n");
+		_messages.add(msg);
 	}
 
 	/**

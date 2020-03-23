@@ -17,6 +17,7 @@ import java.awt.Color;
 import javax.swing.*;
 
 import gov.ca.water.calgui.EpptInitializationException;
+import gov.ca.water.calgui.project.EpptConfigurationController;
 import gov.ca.water.quickresults.ui.report.WreslPanel;
 
 import static org.junit.jupiter.api.Assertions.fail;
@@ -40,7 +41,8 @@ public class WreslScaffold
 		{
 			fail(e);
 		}
-		WreslPanel epptPanel = new WreslPanel();
+		EpptConfigurationController epptConfigurationController = new EpptConfigurationController();
+		WreslPanel epptPanel = new WreslPanel(epptConfigurationController);
 		JFrame jFrame = new JFrame();
 		jFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		SwingUtilities.invokeLater(() ->

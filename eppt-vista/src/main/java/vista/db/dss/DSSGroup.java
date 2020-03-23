@@ -11,6 +11,8 @@
  */
 package vista.db.dss;
 
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import javax.swing.*;
 
@@ -29,7 +31,7 @@ import vista.set.Pathname;
  * @author Nicky Sandhu
  * @version $Id: DSSGroup.java,v 1.1 2003/10/02 20:48:45 redwood Exp $
  */
-class DSSGroup extends GroupProxy
+public class DSSGroup extends GroupProxy
 {
 	/**
 	 * server & filename to use for initializing this group...
@@ -47,6 +49,11 @@ class DSSGroup extends GroupProxy
 		_filename = dssFile.trim();
 		super.setName(_serverName + DSSDataReference.SEPARATOR + _filename);
 		_redoCatalog = false;
+	}
+
+	public Path getFile()
+	{
+		return Paths.get(_filename);
 	}
 
 	/**

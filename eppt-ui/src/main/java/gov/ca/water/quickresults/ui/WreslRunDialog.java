@@ -19,6 +19,7 @@ import java.util.List;
 import javax.swing.*;
 
 import gov.ca.water.calgui.project.EpptScenarioRun;
+import gov.ca.water.calgui.project.EpptConfigurationController;
 import gov.ca.water.quickresults.ui.report.WreslPanel;
 
 /**
@@ -31,13 +32,13 @@ public class WreslRunDialog extends JDialog
 {
 	private final WreslPanel _wreslPanel;
 
-	public WreslRunDialog(Frame frame)
+	public WreslRunDialog(Frame frame, EpptConfigurationController epptConfigurationController)
 	{
 		super(frame, "Run WRESL Script", false);
 		setSize(new Dimension(1200, 500));
 		setLocationRelativeTo(frame);
 		setLayout(new BorderLayout());
-		_wreslPanel = new WreslPanel();
+		_wreslPanel = new WreslPanel(epptConfigurationController);
 		add(_wreslPanel, BorderLayout.CENTER);
 	}
 

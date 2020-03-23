@@ -7,13 +7,10 @@
 
 package gov.ca.water.quickresults.ui.dataanalysis;
 
-import java.awt.BorderLayout;
-import javax.swing.*;
-
 import gov.ca.water.calgui.EpptInitializationException;
 import gov.ca.water.quickresults.ui.EpptPanel;
 import gov.ca.water.quickresults.ui.EpptScaffold;
-import gov.ca.water.quickresults.ui.customresults.CustomResultsScaffold;
+import gov.ca.water.calgui.project.EpptConfigurationController;
 
 import static org.junit.jupiter.api.Assertions.fail;
 
@@ -33,7 +30,8 @@ public class DataAnalysisPanelScaffold extends EpptScaffold
 	@Override
 	protected EpptPanel buildEpptPanel()
 	{
-		DataAnalysisPanel dataAnalysisPanel = new DataAnalysisPanel();
+		EpptConfigurationController epptConfigurationController = new EpptConfigurationController();
+		DataAnalysisPanel dataAnalysisPanel = new DataAnalysisPanel(epptConfigurationController);
 		DataAnalysisListener dataAnalysisListener = new DataAnalysisListener(dataAnalysisPanel);
 		dataAnalysisPanel.setActionListener(dataAnalysisListener);
 		return dataAnalysisPanel;

@@ -24,7 +24,7 @@ import java.util.Map;
 public class ThresholdLinksBO
 {
 	private final int _id;
-	private final String _label;
+	private String _label;
 	private final Map<GUILinksAllModelsBO.Model, ModelData> _modelMapping = new HashMap<>();
 
 	public ThresholdLinksBO(int id, String label)
@@ -41,6 +41,11 @@ public class ThresholdLinksBO
 	public String getLabel()
 	{
 		return _label;
+	}
+
+	public void setLabel(String label)
+	{
+		_label = label;
 	}
 
 	public ModelData getModelData(GUILinksAllModelsBO.Model model)

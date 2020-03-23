@@ -22,11 +22,12 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.*;
 
-import gov.ca.water.calgui.constant.Constant;
 import gov.ca.water.calgui.constant.EpptPreferences;
+import gov.ca.water.eppt.nbui.EpptControllerProvider;
 import gov.ca.water.eppt.nbui.Installer;
 import gov.ca.water.eppt.nbui.ProjectConfigurationTopComponent;
-import gov.ca.water.quickresults.ui.projectconfig.ProjectConfigurationPanel;
+import gov.ca.water.eppt.nbui.projectconfig.ProjectConfigurationIO;
+import gov.ca.water.calgui.project.EpptConfigurationController;
 import org.netbeans.api.actions.Savable;
 import org.openide.awt.ActionID;
 import org.openide.awt.ActionReference;
@@ -82,11 +83,11 @@ public final class SaveProjectConfiguration extends AbstractAction implements Pr
 	void saveCurrentConfiguration() throws IOException
 	{
 		Path lastProjectConfiguration = EpptPreferences.getLastProjectConfiguration();
-		ProjectConfigurationPanel projectConfigurationPanel = ProjectConfigurationPanel.getProjectConfigurationPanel();
+		EpptConfigurationController epptConfigurationController = EpptControllerProvider.getEpptConfigurationController();
 		if(lastProjectConfiguration.toFile().exists())
 		{
-			projectConfigurationPanel.saveConfigurationToPath(lastProjectConfiguration,
-					projectConfigurationPanel.getProjectName(), projectConfigurationPanel.getProjectDescription());
+			ProjectConfigurationIO projectConfigurationIO = new ProjectConfigurationIO();
+			projectConfigurationIO.saveConfiguration(epptConfigurationController, lastProjectConfiguration);
 		}
 		else
 		{
@@ -97,9 +98,8 @@ public final class SaveProjectConfiguration extends AbstractAction implements Pr
 
 	static void clearSaveCookie()
 	{
-		ProjectConfigurationPanel projectConfigurationPanel = ProjectConfigurationPanel.getProjectConfigurationPanel();
 		WindowManager.getDefault().getMainWindow().setTitle(
-				Installer.MAIN_FRAME_NAME + " - " + projectConfigurationPanel.getProjectName());
+				Installer.MAIN_FRAME_NAME + " - " + EpptControllerProvider.getEpptConfigurationController().getProjectName());
 		Collection<? extends ProjectConfigurationSavable> projectConfigurationSavables = Savable.REGISTRY.lookupAll(
 				ProjectConfigurationSavable.class);
 		if(projectConfigurationSavables.isEmpty())
@@ -120,6 +120,7 @@ public final class SaveProjectConfiguration extends AbstractAction implements Pr
 				savable.removeFromLookup();
 			}
 		}
+		EpptControllerProvider.getEpptConfigurationController().clearModified();
 	}
 
 

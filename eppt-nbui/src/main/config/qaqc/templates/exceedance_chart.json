@@ -28,6 +28,7 @@
       ]
     },
     "yaxis": {
+      "tickformat": ",.3r%",
       "title": {
         "text": ""
       }

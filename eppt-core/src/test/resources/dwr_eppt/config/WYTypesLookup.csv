@@ -1,5 +1,5 @@
-!Index name must match Alias column in WaterYearIndex.csv
-ID,SAC Index,San Joaquin Index,Shasta Index,American River Index,Feather Index,Trinity Index,American 403030
+!Index name must match Alias column in AnnualPeriodFilters.csv
+ID,Sacramento River Index,San Joaquin River Index,Shasta Lake Index,American River Index (D893),Feather River Index,Trinity Lake Index,American River Index (40-30-30)
 0,,,Other,,Other,,
 1,Wet,Wet,Other,Other,Critical,Wet,
 2,Above Normal,Above Normal,Other,Critical,,Above Normal,
