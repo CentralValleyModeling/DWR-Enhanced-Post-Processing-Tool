@@ -79,7 +79,7 @@ define FEATH_ART_21_SWP { timeseries 'SWP_IN_FEATH' kind 'SWP_DELIVERY' units 'C
 define FEATH_ART_56_SWP { timeseries 'SWP_CO_FEATH' kind 'SWP_DELIVERY' units 'CFS' convert 'TAF' }
 define PRJ_LOSS { timeseries 'D_BKR004_NBA009_NAPA_PLS' kind 'DIVERSION' units 'CFS' convert 'TAF' }
 define SWP_LOSS { timeseries 'SWP_LOSS' kind 'SWP_DELIVERY' units 'CFS' convert 'TAF' }
-
+define F27 {timeseries kind 'FLOW-SPILL-NON-RECOV' units 'cfs' convert 'taf'}
 !define MNDTA_PL_AG_ { alias  MNDTA_PL_AG  kind 'DTS-SOD-MB-VALUE' units 'TAF' }
 !define MNDTA_PL_EXCH_ { alias  MNDTA_PL_EXCH  kind 'DTS-SOD-MB-VALUE' units 'TAF' }
 !define MNDTA_PL_RFG_ { alias  MNDTA_PL_RFG  kind 'DTS-SOD-MB-VALUE' units 'TAF' }
@@ -154,7 +154,7 @@ define SG_R7_SWP_ {alias SG_R7_SWP kind 'DTS-SOD-MB-VALUE' units 'TAF'}
 /************************************** Delta Inflow **************************************/
 
 !define MP_INFLOW {VALUE C_SJR213+C_FSL005} !value MNDTA_PL_AG + MNDTA_PL_EXCH + MNDTA_PL_RFG + MNDTA_PL_LOSS + SACK_DAM_EXCH + SACK_DAM_RFG}
-define MP_LOCAL_INFLOW_MB {VALUE C_GRZ012+C_QNT005+C_LBN025+R_72_PR1_LBN012+D_DMC076_XCC043+R_RFS71C_XCC054+
+define MP_LOCAL_INFLOW_MB {VALUE C_GRZ012+C_QNT005+C_LBN025+R_72_PR1_LBN012/*+D_DMC076_XCC043*/+R_RFS71C_XCC054+
 			      	SR_64_SJR180+R_64_XA_SJR185+C_SJR213+C_FSL005}!     	value MP_Inflow - min(LOWR_DLTA_MNDTA_CANAL,MP_Inflow)}
 define SL_LOCAL_INFLOW {value (0.4766*I_SLUIS)}
 define SWP_SL_TERM_STOR {value SANLUIS_SWP_STRG + LAK_DL_VALL_STRG + LAK_SLVRWOD_STRG + LAK_PERRIS_STRG + LAK_PRMD_STRG + LAK_CASTAIC_STRG}
@@ -168,7 +168,7 @@ define SWP_SOD_INIT_STOR {
 	  condition always
 	  value SWP_SL_TERM_STOR_(-1)}
 }	  
-define NET_SWP_SOD_REL {value SWP_SOD_INIT_STOR - SWP_SL_TERM_STOR}
+define NET_SWP_SOD_REL {value SWP_SOD_INIT_STOR - SWP_SL_TERM_STOR - F27}
 
 define CVP_SOD_INIT_STOR {
 	case Oct1922 {
@@ -183,8 +183,8 @@ define NET_CVP_SL_REL {value  CVP_SOD_INIT_STOR - SANLUIS_CVP_STRG}
 define SOD_INFLOW {value  KRN_RIV_INTRTIE_BNA_VSTA + MP_LOCAL_INFLOW_MB + NET_SWP_SOD_REL + NET_CVP_SL_REL	}
 define MISC_INFL {value D_DMC054_NMW004+D_DMC034_WWW001-D_WTPDGT_50_PU-D_RFS72A_72_PR5+C_SJR180+C_LBN008-SG64_SJR198_8-
 			SG65_SJR192_8-SG66_SJR185_8-SG67_SJR180_8-SG62_SJR205_7-SG63_SJR205_8}
-
-!define MP_INFLOW_          { alias  MP_INFLOW  kind 'DTS-SOD-MB-VALUE' units 'TAF' }
+define MP_INFLOW {value KRN_RIV_INTRTIE_BNA_VSTA+MP_LOCAL_INFLOW_MB+NET_SWP_SOD_REL+NET_CVP_SL_REL}
+define MP_INFLOW_          { alias  MP_INFLOW  kind 'DTS-SOD-MB-VALUE' units 'TAF' }
 define MP_LOCAL_INFLOW_MB_ { alias  MP_LOCAL_INFLOW_MB  kind 'DTS-SOD-MB-VALUE' units 'TAF' }
 define SWP_SOD_INIT_STOR_  { alias  SWP_SOD_INIT_STOR  kind 'DTS-SOD-MB-VALUE' units 'TAF' }
 define NET_SWP_SOD_REL_    { alias  NET_SWP_SOD_REL  kind 'DTS-SOD-MB-VALUE' units 'TAF' }
