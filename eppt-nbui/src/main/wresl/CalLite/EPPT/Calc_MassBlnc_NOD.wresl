@@ -1,76 +1,147 @@
-/************************************
-
-Calc_NOD_Mass.wresl
-
-Yuxiang, DWR, BDO
-2019/03/25
-
-This file post process data for NOD Mass Balances
-
-In this NOD mass balance calculation, NOD is divided into 3 regions:
-NOD_R1. Sac Valley Colusa Basin
-NOD_R2. FRSA
-NOD_R3. America river 
-
-Mass Balance: 	Reervoir releases 
-				+ Local Inflow 
-				+ Net GW pumping 
-				- Consumptive use (delivery) 
-				- System Loss 
-				- System Outflow 
-				+ Accretion-Depletion Term
-				= 0
-
-**************************************/
+/********************** DESCRIPTION ****************************
+- post-processes study results to determine Whether the NOD is balanced or not
 
 
-/************************************* Sacramento River******************************************/
-/*Upstream of Red Bluff*/
+********************* REVIEW HISTORY****************************
+Ahmed Ali	| DWR	|	11/25/2019	|	Setup initial file
+Ahmed Ali	| DWR	|	12/11/2019	|	Reformatted/ standardized logic statements
+
+/***************************************************************
+
+/******************** NORTH of Delta Mass Balance *********************/
+
+/******************** Mapping *********************/
+!Sacramento River
+define TRNTY_REL {timeseries 'C_TRNTY' kind 'FLOW-CHANNEL' units 'CFS' convert 'TAF' }		
+define SHASTA_REL {timeseries 'C_SHSTA' kind 'FLOW-CHANNEL' units 'CFS' convert 'TAF' } 	
+!define TRINITY_FLOW { timeseries 'C_Lwstn' kind 'FLOW-CHANNEL' units 'CFS' convert 'TAF' }     	 !AK already defined
+!define SAC_WILKINSSLOUGH_FLOW { timeseries 'C_Wilkns' kind 'FLOW-CHANNEL' units 'CFS' convert 'TAF' }   !AK already defined
+!define CLR_CRK_FLOW { timeseries 'C_Wkytn' kind 'FLOW-CHANNEL' units 'CFS' convert 'TAF' }     	 !AK already defined
+
+define D_REDBLF {timeseries 'D_REDBLF' kind 'FLOW-DELIVERY' units 'CFS' convert 'TAF' }
+define D_WILKNS {timeseries 'D_WILKNS' kind 'FLOW-DELIVERY' units 'CFS' convert 'TAF' }
+define D_SPRING {timeseries 'D_SPRING' kind 'FLOW-TUNNEL' units 'CFS' convert 'TAF' }
+!define CLR_CRK_TUNNEL { timeseries 'D_CLEARTU' kind 'FLOW-TUNNEL' units 'CFS' convert 'TAF' }		  !AK already defined
+
+
+define AD_KSWCK {timeseries 'AD_KSWCK' kind 'FLOW-ACCRDEPL' units 'CFS' convert 'TAF' }
+define AD_REDBLF {timeseries 'AD_REDBLF' kind 'FLOW-ACCRDEPL' units 'CFS' convert 'TAF' }
+define AD_WILKNS {timeseries 'AD_WILKNS' kind 'FLOW-ACCRDEPL' units 'CFS' convert 'TAF' }
+
+define TRNTY_REL_   {alias TRNTY_REL   kind 'DTS-NOD-MB-STATUS' units 'TAF'}
+define SHASTA_REL_   {alias SHASTA_REL   kind 'DTS-NOD-MB-STATUS' units 'TAF'}
+!define TRINITY_FLOW_   {alias TRINITY_FLOW   kind 'DTS-NOD-MB-STATUS' units 'TAF'}
+!define SAC_WILKINSSLOUGH_FLOW_   {alias SAC_WILKINSSLOUGH_FLOW   kind 'DTS-NOD-MB-STATUS' units 'TAF'}
+!define CLR_CRK_FLOW_   {alias CLR_CRK_FLOW   kind 'DTS-NOD-MB-STATUS' units 'TAF'}
+
+define D_REDBLF_   {alias D_REDBLF   kind 'DTS-NOD-MB-STATUS' units 'TAF'}
+define D_WILKNS_   {alias D_WILKNS   kind 'DTS-NOD-MB-STATUS' units 'TAF'}
+define D_SPRING_   {alias D_SPRING   kind 'DTS-NOD-MB-STATUS' units 'TAF'}
+!define CLR_CRK_TUNNEL_   {alias CLR_CRK_TUNNEL   kind 'DTS-NOD-MB-STATUS' units 'TAF'}
+
+define AD_KSWCK_   {alias AD_KSWCK   kind 'DTS-NOD-MB-STATUS' units 'TAF'}
+define AD_REDBLF_   {alias AD_REDBLF   kind 'DTS-NOD-MB-STATUS' units 'TAF'}
+define AD_WILKNS_   {alias AD_WILKNS   kind 'DTS-NOD-MB-STATUS' units 'TAF'}
+
+!Yuba and Feather Rivers Region
+define OROVILLE_REL {timeseries 'C_OROVL' kind 'FLOW-CHANNEL' units 'CFS' convert 'TAF' } 
+!C_YUBFEA {timeseries 'C_YUBFEA' kind 'FLOW-DELIVERY' units 'CFS'} 
+
+define D_THERM {timeseries 'D_THERM' kind 'FLOW-DELIVERY' units 'CFS' convert 'TAF' }
+define D_YUBFEA {timeseries 'D_YUBFEA' kind 'FLOW-DELIVERY' units 'CFS' convert 'TAF' }
+define D_DAGUER {timeseries 'D_DAGUER' kind 'FLOW-DELIVERY' units 'CFS' convert 'TAF' }
+
+define AD_THERM {timeseries 'AD_THERM' kind 'FLOW-ACCRDEPL' units 'CFS' convert 'TAF' }
+define AD_YUBFEA {timeseries 'AD_YUBFEA' kind 'FLOW-ACCRDEPL' units 'CFS' convert 'TAF' }
+
+!American River
+define FOLSOM_REL {timeseries 'C_FOLSM' kind 'FLOW-CHANNEL' units 'CFS' convert 'TAF' } 
+!C_HST {timeseries 'C_HST' kind 'FLOW-DELIVERY' units 'CFS'} 
+
+define D_HST {timeseries 'D_HST' kind 'FLOW-DELIVERY' units 'CFS' convert 'TAF' }
+define D_NIMBUS {timeseries 'D_NIMBUS' kind 'FLOW-DELIVERY' units 'CFS' convert 'TAF' }
+
+define AD_HST {timeseries 'AD_HST' kind 'FLOW-ACCRDEPL' units 'CFS' convert 'TAF' }
+define AD_NIMBUS {timeseries 'AD_NIMBUS' kind 'FLOW-ACCRDEPL' units 'CFS' convert 'TAF' }
+
+!Reach
+define AD_SACAME {timeseries 'AD_SACAME' kind 'FLOW-ACCRDEPL' units 'CFS' convert 'TAF' }
+
+!define SPILL_FROM_FREMONT  { timeseries 'D_FreWeir' kind 'FLOW-DELIVERY' units 'CFS' convert 'TAF' }	!AK already defined
+!define SPILL_FROM_SAC_WEIR { timeseries 'D_SacWeir' kind 'FLOW-DELIVERY' units 'CFS' convert 'TAF'}	!AK already defined
+define AD_SACFEA { timeseries 'AD_SACFEA' kind 'FLOW-ACCRDEPL' units 'CFS' convert 'TAF'}
+
+define D_SACAME {timeseries 'D_SACAME' kind 'FLOW-DELIVERY' units 'CFS' convert 'TAF' }
+!define C400 { timeseries 'C_Hood' kind 'FLOW-CHANNEL' units 'CFS' convert 'TAF' }			!AK already defined
+define D400 {timeseries 'D_hood' kind 'FLOW-DELIVERY' units 'CFS' convert 'TAF' } 
+
+!Sacramento River
+define I_LEWISTON {timeseries 'I_LEWISTON_S2D' kind 'FLOW-INFLOW' units 'CFS' convert 'TAF' }
+define I_LEWISTON_   {alias I_LEWISTON   kind 'DTS-NOD-MB-STATUS' units 'TAF'}
+
+!Yuba and Feather Rivers Region
+define I_YUBA {timeseries 'I_YUBA_S2D' kind 'FLOW-INFLOW' units 'CFS' convert 'TAF' }
+
+!Reach
+define I_HOOD {timeseries 'I_HOOD_S2D' kind 'FLOW-INFLOW' units 'CFS' convert 'TAF' }
+
+/************************************* Upstream of Red Bluff ******************************************/
 	define NOD_RedBlf {value
-		 I100+C1-C100
-		 +D3+C3-D100
-		 +C4+AD_KSWCK+AD_REDBLF-D109
+		 I_LEWISTON + TRNTY_REL - TRINITY_FLOW
+		 + D_SPRING + CLR_CRK_FLOW - CLR_CRK_TUNNEL
+		 + SHASTA_REL + AD_KSWCK + AD_REDBLF - D_REDBLF
 	}
-	
-/*Upstream of Wilkins SLough*/
+
+define NOD_RedBlf_ { alias  NOD_RedBlf  kind 'DTS-NOD-MB-STATUS' units 'NONE' }
+
+/************************************* Upstream of Wilkins SLough******************************************/
 	define NOD_Wilkins {value
-		 NOD_RedBlf+AD_WILKNS-D134
-	}	
-	
-/*Yuba and Feather Rivers*/
+		 NOD_RedBlf + AD_WILKNS - D_WILKNS
+	}
+
+define NOD_Wilkins_ { alias  NOD_Wilkins  kind 'DTS-NOD-MB-STATUS' units 'NONE' }
+
+/*************************************Yuba and Feather Rivers******************************************/
 	define NOD_YubFea {value
-		 C6+AD_THERM-D_THERM 
-		 +I_YUBA-D_DAGUER+AD_YUBFEA-D_YUBFEA
-	}
-
-/*American river*/ 
-	define NOD_HSt {value
-		 C8+AD_NIMBUS-D9+AD_HST-D302
-	}
-
-/*AT Hoods*/ 
-	define NOD_Hood {value
-		 NOD_Wilkins+NOD_YubFea+NOD_HSt
-		 +AD_SACFEA-D160+AD_SACAME-D166A-D166B+I400-C400-D400
+		 OROVILLE_REL + AD_THERM - D_THERM 
+		 + I_YUBA - D_DAGUER + AD_YUBFEA - D_YUBFEA
 	}	
+
+define NOD_YubFea_ { alias  NOD_YubFea  kind 'DTS-NOD-MB-STATUS' units 'NONE' }
+
+/*************************************American river******************************************/ 
+	define NOD_HSt {value
+		 FOLSOM_REL + AD_NIMBUS - D_NIMBUS + AD_HST - D_HST
+	}
 	
+define NOD_HSt_ { alias  NOD_HSt  kind 'DTS-NOD-MB-STATUS' units 'NONE' }
+/************************************* final mass balance manipulation  ******************************************/
 
-define NOD_MB {value NOD_Hood}	
-define NOD_MB_DTS {alias NOD_MB kind 'DTS-1' units 'CFS'}
+define NOD_MB 	{value NOD_Wilkins+NOD_YubFea+NOD_HSt
+		+ AD_SACFEA - SPILL_FROM_FREMONT + AD_SACAME - SPILL_FROM_SAC_WEIR - D_SACAME + I_HOOD - C400 - D400}	
+!define NOD_MB_INFLOW	{value NOD_TOT_INFLOW + NOD_RTRN_FLOW + NOD_REL}
+!define NOD_MB_OUTFLOW	{value NOD_EVAP + NOD_DIVERSION + TOT_SW_GW_INTERACTION}
+		
+define NOD_MB_ 	{alias NOD_MB kind 'DTS-NOD-MB-VALUE' units 'TAF'}
+!define NOD_MB_INFLOW_ 		{alias NOD_MB_INFLOW kind 'DTS-NOD-MB-VALUE' units 'TAF'}
+!define NOD_MB_OUTFLOW_ 		{alias NOD_MB_OUTFLOW kind 'DTS-NOD-MB-VALUE' units 'TAF'}
 
-define NOD_MB_Check {
-	case balanced {
-	condition abs(NOD_MB) < abs_threshold
-	value 0
-	}
-	case notBalanced{
-	condition always
-	value 0 ! underreview - mass balance under review for miss arcs
-	!value 1
-	}
+
+
+define NOD_MB_CHECK {
+	case atSTANDARD		{condition abs(NOD_MB - 0)	<= abs_threshold	value EQ}
+	case aboveSTANDARD	{condition (NOD_MB - 0)	> abs_threshold		value GT}
+	case belowSTANDARD	{condition (NOD_MB - 0)	< -1*abs_threshold	value LT}
+	case UNEXPECTED		{condition always							value UE}
 }
 
-define NOD_MB_STATUS_DTS {alias NOD_MB_Check kind 'DTS-Status' units 'NONE'}
-!define Delta_MB_STATUS_DTS {alias NOD_MB_Check kind 'DTS-Status' units 'NONE'} !underreview
-define SOD_MB_STATUS_DTS {alias NOD_MB_Check kind 'DTS-Status' units 'NONE'} !underreview 
+	
+/******************************OUTPUT DSS ***************************************/
+
+define NOD_MB_CHECK_ { alias  NOD_MB_CHECK  kind 'DTS-NOD-MB-STATUS' units 'NONE' }
+
+
+
+
+
 

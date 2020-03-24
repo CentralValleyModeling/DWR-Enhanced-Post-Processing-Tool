@@ -361,6 +361,7 @@ define BANKS_EXP 		{timeseries 'D419' 				kind 'FLOW-DELIVERY' 		units 'CFS' con
 define JONES_EXP 		{timeseries 'D418' 				kind 'FLOW-DELIVERY' 		units 'CFS' convert 'TAF' }
 define BANKSALLOWOUT 	{timeseries 'BANKSALLOWOUT' 	kind 'FLOW-ALLOW-BANKS' 	units 'CFS' convert 'TAF' }
 define JONESALLOWOUT 	{timeseries 'JONESALLOWOUT' 	kind 'EXPORT-CTRL-JONES' 	units 'CFS' convert 'TAF' }
+define MAXJONESCALCDV 	{timeseries 'MAXJONESCALCDV' 	kind 'UNDEFINED' 			units 'CFS' convert 'TAF' }
 define APRMAYEXPCTRL	{timeseries 'APRMAYEXPCTRL' 	kind 'EXPORT-CTRL-APRMAY' 	units 'CFS'  convert 'TAF'} 
 define MAXEXP_RPA	 	{timeseries 'MAXEXP_RPADV' 		kind 'EXPORT-LIMIT' 		units 'CFS'  convert 'TAF'} 
 define FWS_X2_LIMIT 	{timeseries 'FWS_MAXEXPX2DV' 	kind 'EXPORT-LIMIT' 		units 'CFS'  convert 'TAF'}
@@ -393,60 +394,64 @@ define MAXEXP_RPA_SWP_ 		{ alias  MAXEXP_RPA_SWP  	kind 'DTS-DELTA-EXP-CTRL-INPU
 define EXPORT_DEC_ 			{ alias  EXPORT_DEC  		kind 'DTS-DELTA-EXP-CTRL-INPUT' units 'TAF' }
 define NMFS_DCC_LIMIT_ 		{ alias  NMFS_DCC_LIMIT 	kind 'DTS-DELTA-EXP-CTRL-INPUT' units 'TAF' }
 define APRMAYBANKSCTRL_ 	{ alias  APRMAYBANKSCTRL  	kind 'DTS-DELTA-EXP-CTRL-INPUT' units 'TAF' }
+define MAXJONESCALCDV_ 	    { alias  MAXJONESCALCDV  	kind 'DTS-DELTA-EXP-CTRL-INPUT' units 'TAF' }
 define MAXEXP_RPA_CVP_ 		{ alias  MAXEXP_RPA_CVP  	kind 'DTS-DELTA-EXP-CTRL-INPUT' units 'TAF' }
 define SOD_EXP_MAXCAP_ 		{ alias  SOD_EXP_MAXCAP 	kind 'DTS-DELTA-EXP-CTRL-INPUT' units 'TAF' }
 
 
 /***************************** Delta Control ********************************/
-define REQ_DO { timeseries 'D407' kind 'FLOW-DELIVERY' units 'CFS' convert 'TAF' }
-define RIOVISTA { timeseries 'C405' kind 'FLOW-CHANNEL' units 'CFS' convert 'TAF' }
-define RIOVISTA_MIF { timeseries 'C405_MIF' kind 'FLOW-MIN-INSTREAM' units 'CFS' convert 'TAF' }
-define QWEST { timeseries 'C416A' kind 'FLOW-CHANNEL' units 'CFS' convert 'TAF' }
-define EXPRATIO { timeseries 'EXPRATIO_' kind 'EI-RATIO-STD' units 'NONE'}
-define D409_Delta { timeseries 'D409_Delta' kind 'FLOW-DELIVERY' units 'CFS' convert 'TAF' }
-define D409_Upstream { timeseries 'D409_Upstream' kind 'FLOW-DELIVERY' units 'CFS' convert 'TAF' }
-define DO { timeseries 'C406' kind 'FLOW-CHANNEL' units 'CFS' convert 'TAF' }
-define C406_Delta { timeseries 'C406_Delta' kind 'FLOW-CHANNEL' units 'CFS' convert 'TAF' }
-define C406_Upstream { timeseries 'C406_Upstream' kind 'FLOW-CHANNEL' units 'CFS' convert 'TAF' }
-define OMR_INCREASE_ { timeseries 'OMR_INCREASE_' kind 'TEMP' units 'CFS' convert 'TAF' }
-define EXPORT_DEC_RPA_ { timeseries 'EXPORT_DEC_RPA_' kind 'TEMP' units 'CFS' convert 'TAF' }
-define JP_MRDO { timeseries 'JP_MRDO' kind 'FLOW' units 'CFS' convert 'TAF' }
-define EM_MRDO { timeseries 'EM_MRDO' kind 'FLOW' units 'CFS' convert 'TAF' }
-define RS_MRDO_1 { timeseries 'RS_MRDO_1' kind 'FLOW' units 'CFS' convert 'TAF' }
-define RS_MRDO_2 { timeseries 'RS_MRDO_2' kind 'FLOW' units 'CFS' convert 'TAF' }
-define RS_MRDO_3 { timeseries 'RS_MRDO_3' kind 'FLOW' units 'CFS' convert 'TAF' }
-define CO_MRDO { timeseries 'CO_MRDO' kind 'FLOW' units 'CFS' convert 'TAF' }
-define C407_ANN { timeseries 'C407_ANN' kind 'FLOW-CHANNEL' units 'CFS' convert 'TAF' }
-define C514 {timeseries 'C514' kind 'flow-channel' units 'CFS' convert 'TAF'}
-define C417A {timeseries 'C417A' kind 'flow-channel' units 'CFS' convert 'TAF'}
-define DO_REQ_FLOW_OUT { timeseries 'DO_req_flow_out' kind 'FLOW-REQ-NDOI' units 'CFS' convert 'TAF' }
-define NMFS_MaxExpdv { timeseries 'NMFS_MaxExpdv' kind 'NMFS' units 'CFS' convert 'TAF' }
+define REQ_DO 			{ timeseries 'D407' kind 'FLOW-DELIVERY' units 'CFS' convert 'TAF' }
+define RIOVISTA 		{ timeseries 'C405' kind 'FLOW-CHANNEL' units 'CFS' convert 'TAF' }
+define RIOVISTA_MIF 	{ timeseries 'C405_MIF' kind 'FLOW-MIN-INSTREAM' units 'CFS' convert 'TAF' }
+define QWEST 			{ timeseries 'C416A' kind 'FLOW-CHANNEL' units 'CFS' convert 'TAF' }
+define EXPRATIO 		{ timeseries 'EXPRATIO_' kind 'EI-RATIO-STD' units 'NONE'}
+define D409_Delta 		{ timeseries 'D409_Delta' kind 'FLOW-DELIVERY' units 'CFS' convert 'TAF' }
+define D409_Upstream 	{ timeseries 'D409_Upstream' kind 'FLOW-DELIVERY' units 'CFS' convert 'TAF' }
+define DO 				{ timeseries 'C406' kind 'FLOW-CHANNEL' units 'CFS' convert 'TAF' }
+define C406_Delta 		{ timeseries 'C406_Delta' kind 'FLOW-CHANNEL' units 'CFS' convert 'TAF' }
+define C406_Upstream 	{ timeseries 'C406_Upstream' kind 'FLOW-CHANNEL' units 'CFS' convert 'TAF' }
+define OMR_INCREASE_ 	{ timeseries 'OMR_INCREASE_' kind 'TEMP' units 'CFS' convert 'TAF' }
+define EXPORT_DEC_RPA_ 	{ timeseries 'EXPORT_DEC_RPA_' kind 'TEMP' units 'CFS' convert 'TAF' }
+define JP_MRDO 			{ timeseries 'JP_MRDO' kind 'FLOW' units 'CFS' convert 'TAF' }
+define EM_MRDO 			{ timeseries 'EM_MRDO' kind 'FLOW' units 'CFS' convert 'TAF' }
+define RS_MRDO_1 		{ timeseries 'RS_MRDO_1' kind 'FLOW' units 'CFS' convert 'TAF' }
+define RS_MRDO_2 		{ timeseries 'RS_MRDO_2' kind 'FLOW' units 'CFS' convert 'TAF' }
+define RS_MRDO_3 		{ timeseries 'RS_MRDO_3' kind 'FLOW' units 'CFS' convert 'TAF' }
+define CO_MRDO 			{ timeseries 'CO_MRDO' kind 'FLOW' units 'CFS' convert 'TAF' }
+define C407_ANN 		{ timeseries 'C407_ANN' kind 'FLOW-CHANNEL' units 'CFS' convert 'TAF' }
+define C514 			{ timeseries 'C514' kind 'flow-channel' units 'CFS' convert 'TAF'}
+define C417A 			{ timeseries 'C417A' kind 'flow-channel' units 'CFS' convert 'TAF'}
+define DO_REQ_FLOW_OUT 	{ timeseries 'DO_req_flow_out' kind 'FLOW-REQ-NDOI' units 'CFS' convert 'TAF' }
+define NMFS_MaxExpdv	{timeseries 'NMFS_MaxExpdv' kind 'NMFS' units 'CFS' convert 'TAF' }
 define NMFS_MaxExpDCCdv { timeseries 'NMFS_MaxExpDCCdv' kind 'EXPORT-LIMIT' units 'CFS' convert 'TAF' }
-define EIEXPCTRL { timeseries 'EIEXPCTRL' kind 'EXPORT-CTRL-EI' units 'CFS' convert 'TAF' }
-define BANKS { timeseries 'D418' kind 'FLOW-DELIVERY' units 'CFS' convert 'TAF' }
-define JONES { timeseries 'D419' kind 'FLOW-DELIVERY' units 'CFS' convert 'TAF' }
-define C400_EXC { timeseries 'c400_exc' kind 'flow-excess-instream' units 'CFS' convert 'TAF' }
-define C157_EXC { timeseries 'c157_exc' kind 'flow-excess-instream' units 'CFS' convert 'TAF' }
-define X2_PRV { timeseries 'x2_prv' kind 'x2-position-prev' units 'km'}
-define OMR_RPA14d { timeseries 'OMR_RPA14d' kind 'flow-reg' units 'CFS' convert 'TAF'}
-define RS_EC_MONTH { timeseries 'rs_ec_month' kind 'salinity' units 'umhos/cm'}
-define EM_EC_MONTH { timeseries 'em_ec_month' kind 'salinity' units 'umhos/cm'}
-define JP_EC_MONTH { timeseries 'jp_ec_month' kind 'salinity' units 'umhos/cm'}
-define CO_EC_MONTH { timeseries 'co_ec_month' kind 'salinity' units 'umhos/cm'}
-define RS_EC_STD { timeseries 'rs_ec_std' kind 'salinity' units 'umhos/cm'}
-define EM_EC_STD { timeseries 'em_ec_std' kind 'salinity' units 'umhos/cm'}
-define JP_EC_STD { timeseries 'jp_ec_std' kind 'salinity' units 'umhos/cm'}
-define CO_EC_STD { timeseries 'co_ec_std' kind 'salinity' units 'umhos/cm'}
-define OMR_LBOUND { timeseries 'C408_LBOUND' kind 'FLOW-LBOUND' units 'CFS' convert 'TAF'}
-define OMR_NoEXP1 { timeseries 'C408_NoEXP1' kind 'FLOW-CHANNEL' units 'CFS' convert 'TAF'}
-define OMR { timeseries 'C408' kind 'FLOW-CHANNEL' units 'CFS' convert 'TAF'}
-define C407 { timeseries 'C407' kind 'FLOW-CHANNEL' units 'CFS' convert 'TAF' }
-define C407_whlcv { timeseries 'C407_whlcv' kind 'FLOW-CHANNEL' units 'CFS' convert 'TAF' }
-define C407_whljp { timeseries 'C407_whljp' kind 'FLOW-CHANNEL' units 'CFS' convert 'TAF' }
-define C407_WTS { timeseries 'C407_WTS' kind 'FLOW-CHANNEL' units 'CFS' convert 'TAF' }
-define D168C_EXC_NTDEP { timeseries 'D168C_EXC_NTDEP' kind 'FLOW' units 'CFS' convert 'TAF' }
-define D418_TD { timeseries 'D418_TD' kind 'FLOW-DELIVERY' units 'CFS' convert 'TAF' }
-define D419_TD { timeseries 'D419_TD' kind 'FLOW-DELIVERY' units 'CFS' convert 'TAF' }
+define NMFSdaysopentgdv { timeseries 'NMFSdaysopentgdv' kind 'DCC-DAYS-OPEN' units 'NONE'}
+define NMFSdaysopendv 	{ timeseries 'NMFSdaysopendv' kind 'DCC-DAYS-OPEN' units 'NONE'}
+define NMFSMaxExDCCest_ { timeseries 'NMFSMaxExDCCest_' kind 'EXPORT-LIMIT' units 'cfs' convert 'TAF'}
+define EIEXPCTRL 		{ timeseries 'EIEXPCTRL' kind 'EXPORT-CTRL-EI' units 'CFS' convert 'TAF' }
+define BANKS 			{ timeseries 'D418' kind 'FLOW-DELIVERY' units 'CFS' convert 'TAF' }
+define JONES 			{ timeseries 'D419' kind 'FLOW-DELIVERY' units 'CFS' convert 'TAF' }
+define C400_EXC 		{ timeseries 'c400_exc' kind 'flow-excess-instream' units 'CFS' convert 'TAF' }
+define C157_EXC 		{ timeseries 'c157_exc' kind 'flow-excess-instream' units 'CFS' convert 'TAF' }
+define X2_PRV 			{ timeseries 'x2_prv' kind 'x2-position-prev' units 'km'}
+define OMR_RPA14d 		{ timeseries 'OMR_RPA14d' kind 'flow-reg' units 'CFS' convert 'TAF'}
+define RS_EC_MONTH 		{ timeseries 'rs_ec_month' kind 'salinity' units 'umhos/cm'}
+define EM_EC_MONTH 		{ timeseries 'em_ec_month' kind 'salinity' units 'umhos/cm'}
+define JP_EC_MONTH 		{ timeseries 'jp_ec_month' kind 'salinity' units 'umhos/cm'}
+define CO_EC_MONTH 		{ timeseries 'co_ec_month' kind 'salinity' units 'umhos/cm'}
+define RS_EC_STD 		{ timeseries 'rs_ec_std' kind 'salinity' units 'umhos/cm'}
+define EM_EC_STD 		{ timeseries 'em_ec_std' kind 'salinity' units 'umhos/cm'}
+define JP_EC_STD 		{ timeseries 'jp_ec_std' kind 'salinity' units 'umhos/cm'}
+define CO_EC_STD 		{ timeseries 'co_ec_std' kind 'salinity' units 'umhos/cm'}
+define OMR_LBOUND 		{ timeseries 'C408_LBOUND' kind 'FLOW-LBOUND' units 'CFS' convert 'TAF'}
+define OMR_NoEXP1 		{ timeseries 'C408_NoEXP1' kind 'FLOW-CHANNEL' units 'CFS' convert 'TAF'}
+define OMR 				{ timeseries 'C408' kind 'FLOW-CHANNEL' units 'CFS' convert 'TAF'}
+define C407 			{ timeseries 'C407' kind 'FLOW-CHANNEL' units 'CFS' convert 'TAF' }
+define C407_whlcv 		{ timeseries 'C407_whlcv' kind 'FLOW-CHANNEL' units 'CFS' convert 'TAF' }
+define C407_whljp 		{ timeseries 'C407_whljp' kind 'FLOW-CHANNEL' units 'CFS' convert 'TAF' }
+define C407_WTS 		{ timeseries 'C407_WTS' kind 'FLOW-CHANNEL' units 'CFS' convert 'TAF' }
+define D168C_EXC_NTDEP 	{ timeseries 'D168C_EXC_NTDEP' kind 'FLOW' units 'CFS' convert 'TAF' }
+define D418_TD 			{ timeseries 'D418_TD' kind 'FLOW-DELIVERY' units 'CFS' convert 'TAF' }
+define D419_TD 			{ timeseries 'D419_TD' kind 'FLOW-DELIVERY' units 'CFS' convert 'TAF' }
 
 define Rio_req_lookup {  ! Minimum Flow required @ Rio Vista
        select       river_q
@@ -466,7 +471,7 @@ define C407_whlcv_ { alias C407_whlcv kind 'DTS-RESOP-INPUT' units 'TAF' }
 define C407_whljp_ { alias C407_whljp kind 'DTS-RESOP-INPUT' units 'TAF' }
 define C407_WTS_ { alias C407_WTS kind 'DTS-RESOP-INPUT' units 'TAF' }
 define RIOVISTA_ { alias RIOVISTA kind 'DTS-RESOP-INPUT' units 'TAF' }
-define RIOVISTA_MIF_ { alias RIOVISTA_MIF kind 'DTS-RESOP-INPUT' units 'TAF' }
+define RIOVISTA_MIF_ { alias Rio_req kind 'DTS-RESOP-INPUT' units 'TAF' }
 define QWEST_ { alias QWEST kind 'DTS-RESOP-INPUT' units 'TAF' }
 define D168C_EXC_NTDEP_ { alias D168C_EXC_NTDEP kind 'DTS-RESOP-INPUT' units 'TAF' }
 define D418_TD_ { alias D418_TD kind 'DTS-RESOP-INPUT' units 'TAF' }
@@ -489,6 +494,9 @@ define C407_ANN_ { alias C407_ANN kind 'DTS-RESOP-INPUT' units 'TAF' }
 define DO_REQ_FLOW_OUT_ { alias DO_REQ_FLOW_OUT kind 'DTS-RESOP-INPUT' units 'TAF' }
 define NMFS_MaxExpdv_ { alias NMFS_MaxExpdv kind 'DTS-RESOP-INPUT' units 'TAF' }
 define NMFS_MaxExpDCCdv_ { alias NMFS_MaxExpDCCdv kind 'DTS-RESOP-INPUT' units 'TAF' }
+define NMFSdaysopentgdv_ { alias NMFSdaysopentgdv kind 'DTS-RESOP-INPUT' units 'TAF' }
+define NMFSdaysopendv_ { alias NMFSdaysopendv kind 'DTS-RESOP-INPUT' units 'TAF' }
+define NMFSMaxExDCCest_dv {alias NMFSMaxExDCCest_ kind 'Export-Limit' units 'TAF'} !for output only
 define EIEXPCTRL_ { alias EIEXPCTRL kind 'DTS-RESOP-INPUT' units 'TAF' }
 define BANKS_ { alias BANKS kind 'DTS-RESOP-INPUT' units 'TAF' }
 define JONES_ { alias JONES kind 'DTS-RESOP-INPUT' units 'TAF' }
