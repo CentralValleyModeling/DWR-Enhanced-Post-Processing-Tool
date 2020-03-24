@@ -16,6 +16,7 @@ import javax.swing.*;
 
 import gov.ca.water.quickresults.ui.customresults.CustomResultsListener;
 import gov.ca.water.quickresults.ui.customresults.CustomResultsPanel;
+import gov.ca.water.calgui.project.EpptConfigurationController;
 import org.openide.awt.ActionID;
 import org.openide.awt.ActionReference;
 import org.openide.awt.ActionReferences;
@@ -53,7 +54,8 @@ public final class CustomResultsTopComponent extends EpptTopComponent
 	public CustomResultsTopComponent()
 	{
 		setName("Custom Results");
-		_customResultsPanel = new CustomResultsPanel();
+		EpptConfigurationController epptConfigurationController = EpptControllerProvider.getEpptConfigurationController();
+		_customResultsPanel = new CustomResultsPanel(epptConfigurationController);
 		CustomResultsListener customResultsListener = new CustomResultsListener(_customResultsPanel);
 		_customResultsPanel.setActionListener(customResultsListener);
 		JScrollPane scrollPane = new JScrollPane(_customResultsPanel);

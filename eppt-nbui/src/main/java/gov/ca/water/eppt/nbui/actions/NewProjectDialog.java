@@ -22,6 +22,7 @@ import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 
 import gov.ca.water.calgui.constant.EpptPreferences;
+import gov.ca.water.calgui.techservice.impl.NonSymlinkFilter;
 import org.openide.windows.WindowManager;
 
 import hec.gui.NameDialog;
@@ -51,6 +52,7 @@ class NewProjectDialog extends NameDialog
 		{
 			JFileChooser fileChooser = new JFileChooser(EpptPreferences.getProjectsPath().toString());
 			fileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+			fileChooser.setFileFilter(new NonSymlinkFilter());
 			fileChooser.setDialogTitle("Choose Projects Directory");
 			int saveDialog = fileChooser.showSaveDialog(WindowManager.getDefault().getMainWindow());
 			if(saveDialog == JFileChooser.APPROVE_OPTION)

@@ -1,9 +1,10 @@
-Code,SACindex,SJRindex,SHASTAindex,AmerD893,FEATHERindex,Trinityindex,Amer403030
+!Index name must match Alias column in AnnualPeriodFilters.csv
+ID,Sacramento River Index,San Joaquin River Index,Shasta Lake Index,American River Index (D893),Feather River Index,Trinity Lake Index,American River Index (40-30-30)
 0,,,Other,,Other,,
-1,Wet,Wet,Other,Other,Crtical,Wet,
-2,Above Normal,Above Normal,Other,Crtical,,Above Normal,
+1,Wet,Wet,Other,Other,Critical,Wet,
+2,Above Normal,Above Normal,Other,Critical,,Above Normal,
 3,Below Normal,Below Normal,Other,,,Below Normal,
-4,Dry,Dry,Crtical,,,Dry,
+4,Dry,Dry,Critical,,,Dry,
 5,Critical,Critical,,,,Critical,
 6,,,,,,,
 7,,,,,,,

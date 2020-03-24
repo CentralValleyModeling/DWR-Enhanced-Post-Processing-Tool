@@ -14,6 +14,7 @@ package calsim.gui;
 //import vista.gui.*;
 
 import java.awt.Component;
+import java.awt.Frame;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.FileInputStream;
@@ -22,6 +23,8 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.Serializable;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.*;
 import javax.swing.event.TreeModelEvent;
 import javax.swing.event.TreeModelListener;
@@ -49,6 +52,7 @@ import org.xml.sax.SAXException;
 public class GeneralTreeModel extends DefaultTreeModel implements Serializable
 {
 
+	private static final Logger LOGGER = Logger.getLogger(GeneralTreeModel.class.getName());
 	final int ELEMENT_TYPE = 1;
 	boolean iscopied = false;
 	DefaultMutableTreeNode copiednode = new DefaultMutableTreeNode();
@@ -181,9 +185,10 @@ public class GeneralTreeModel extends DefaultTreeModel implements Serializable
 				}
 				catch(NullPointerException exc)
 				{
+					LOGGER.log(Level.WARNING, "Error in node change", exc);
 				}
-				System.out.println("The user has finished editing the node.");
-				System.out.println("New value: " + node.getUserObject());
+				LOGGER.log(Level.FINE,"The user has finished editing the node.");
+				LOGGER.log(Level.FINE,"New value: {0}", node.getUserObject());
 			}
 
 			public void treeNodesInserted(TreeModelEvent e)
@@ -797,7 +802,7 @@ public class GeneralTreeModel extends DefaultTreeModel implements Serializable
 	 */
 	public boolean permissionToRemove()
 	{
-		int selectedoption = JOptionPane.showConfirmDialog(null,
+		int selectedoption = JOptionPane.showConfirmDialog(Frame.getFrames()[Frame.getFrames().length - 1],
 				"Remove Node? This could result in permanently removing the DTS and MTS's from the project.",
 				"Warning", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
 		return selectedoption == 1;

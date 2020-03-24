@@ -18,6 +18,7 @@ import javax.swing.*;
 
 import gov.ca.water.calgui.EpptInitializationException;
 import gov.ca.water.calgui.busservice.impl.GuiLinksSeedDataSvcImpl;
+import gov.ca.water.calgui.project.EpptConfigurationController;
 import org.apache.log4j.Logger;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -47,7 +48,8 @@ class CustomResultsPanelTest
 		try
 		{
 			JFrame frame = new JFrame();
-			CustomResultsPanel customResultsPanel = new CustomResultsPanel();
+			EpptConfigurationController epptConfigurationController = new EpptConfigurationController();
+			CustomResultsPanel customResultsPanel = new CustomResultsPanel(epptConfigurationController);
 			assertNotNull(customResultsPanel.getSwingEngine());
 		}
 		catch(Throwable e)

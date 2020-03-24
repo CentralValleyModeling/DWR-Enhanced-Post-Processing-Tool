@@ -26,6 +26,7 @@ import gov.ca.water.calgui.bo.GUILinksAllModelsBO;
 import gov.ca.water.calgui.busservice.IGuiLinksSeedDataSvc;
 import gov.ca.water.calgui.constant.Constant;
 import gov.ca.water.calgui.techservice.IFileSystemSvc;
+import gov.ca.water.calgui.techservice.impl.FilePredicates;
 import gov.ca.water.calgui.techservice.impl.FileSystemSvcImpl;
 import org.apache.log4j.Logger;
 
@@ -85,17 +86,6 @@ public final class GuiLinksSeedDataSvcImpl implements IGuiLinksSeedDataSvc
 		}
 	}
 
-	/**
-	 * This will tell whether the line is comment or not.
-	 *
-	 * @param line The line to be checked.
-	 * @return Will return true if the line id not comment.
-	 */
-	public static boolean isNotComments(String line)
-	{
-		return !line.startsWith(Constant.EXCLAMATION);
-	}
-
 	private void initGuiLinksAllModels() throws EpptInitializationException
 	{
 		IFileSystemSvc fileSystemSvc = new FileSystemSvcImpl();
@@ -103,7 +93,7 @@ public final class GuiLinksSeedDataSvcImpl implements IGuiLinksSeedDataSvc
 		try
 		{
 			List<String> guiLinkStrings = fileSystemSvc.getFileData(Paths.get(GUI_LINKS_ALL_MODELS_FILENAME), true,
-					GuiLinksSeedDataSvcImpl::isNotComments);
+					FilePredicates.commentFilter());
 			for(String guiLinkString : guiLinkStrings)
 			{
 				errorStr = guiLinkString;
@@ -184,8 +174,13 @@ public final class GuiLinksSeedDataSvcImpl implements IGuiLinksSeedDataSvc
 		{
 			sLegend = list[6].replace("%2C", ",");
 		}
+		String type = "";
+		if(list.length > 7)
+		{
+			type = list[7].replace("%2C", ",");
+		}
 		String id = extractCheckboxId(checkboxId);
-		return new GUILinksAllModelsBO(id, yTitle, title, sLegend);
+		return new GUILinksAllModelsBO(id, yTitle, title, sLegend, type);
 	}
 
 	private String extractCheckboxId(int checkboxId)

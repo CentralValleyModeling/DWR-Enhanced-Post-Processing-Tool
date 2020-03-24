@@ -17,7 +17,7 @@
 
 	<groupId>gov.ca.water</groupId>
 	<artifactId>eppt-parent</artifactId>
-	<version>1.1.3-SNAPSHOT</version>
+	<version>1.2.0-SNAPSHOT</version>
 	<packaging>pom</packaging>
 
 	<name>EPPT Parent</name>
@@ -81,6 +81,10 @@
 		<repository>
 			<id>dwr-application-releases</id>
 			<url>http://artifactory.rmanet.com:2447/artifactory/dwr-application-releases</url>
+		</repository>
+		<repository>
+			<id>java-releases</id>
+			<url>http://artifactory.rmanet.com:2447/artifactory/java-releases</url>
 		</repository>
 	</repositories>
 	<build>

@@ -17,16 +17,12 @@ import java.awt.Component;
 import java.awt.Container;
 import java.awt.event.ActionListener;
 import java.nio.file.Path;
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
-import java.util.Set;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.function.Function;
-import java.util.function.Predicate;
+import java.util.Optional;
+import java.util.stream.IntStream;
 import javax.swing.*;
 
 import calsim.app.AppUtils;
@@ -34,17 +30,18 @@ import calsim.app.DerivedTimeSeries;
 import calsim.app.MultipleTimeSeries;
 import calsim.gui.GeneralRetrievePanel;
 import calsim.gui.GuiUtils;
+import gov.ca.water.calgui.bo.GUILinksAllModelsBO;
 import gov.ca.water.calgui.presentation.DisplayHelper;
 import gov.ca.water.calgui.presentation.WRIMSGUILinks;
+import gov.ca.water.calgui.project.EpptConfigurationController;
 import gov.ca.water.calgui.project.EpptScenarioRun;
 import gov.ca.water.calgui.project.NamedDssPath;
 import gov.ca.water.calgui.project.PlotConfigurationState;
 import gov.ca.water.calgui.techservice.IDialogSvc;
-import gov.ca.water.calgui.techservice.IErrorHandlingSvc;
 import gov.ca.water.calgui.techservice.impl.DialogSvcImpl;
-import gov.ca.water.calgui.techservice.impl.ErrorHandlingSvcImpl;
 import gov.ca.water.quickresults.ui.EpptPanel;
-import gov.ca.water.quickresults.ui.projectconfig.ProjectConfigurationPanel;
+import gov.ca.water.calgui.presentation.plotly.EpptPlotException;
+import gov.ca.water.quickresults.ui.quickresults.PlotConfigurationStateBuilder;
 import gov.ca.water.quickresults.ui.quickresults.QuickResultsPanel;
 import org.apache.log4j.Logger;
 import vista.set.DataReference;
@@ -64,15 +61,16 @@ public class CustomResultsPanel extends EpptPanel
 {
 	private static final Logger LOGGER = Logger.getLogger(QuickResultsPanel.class.getName());
 	private static final String CUSTOM_RESULTS_XML_FILE = "Custom_Results.xml";
-	private final IErrorHandlingSvc _errorHandlingSvc = new ErrorHandlingSvcImpl();
 	private final IDialogSvc _dialogSvc = DialogSvcImpl.getDialogSvcInstance();
 	private final DisplayHelper _displayHelper;
+	private final EpptConfigurationController _epptConfigurationController;
 
-	public CustomResultsPanel()
+	public CustomResultsPanel(EpptConfigurationController epptConfigurationController)
 	{
 		try
 		{
-			_displayHelper = new DisplayHelper(this);
+			_epptConfigurationController = epptConfigurationController;
+			_displayHelper = new DisplayHelper(this, _epptConfigurationController);
 			super.setLayout(new BorderLayout());
 			Container swixmlCustomResultsPanel = renderSwixml(CUSTOM_RESULTS_XML_FILE);
 			super.add(swixmlCustomResultsPanel);
@@ -141,11 +139,10 @@ public class CustomResultsPanel extends EpptPanel
 
 	private void filter()
 	{
-		ProjectConfigurationPanel projectConfigurationPanel = ProjectConfigurationPanel.getProjectConfigurationPanel();
-		EpptScenarioRun baseScenario = projectConfigurationPanel.getBaseScenario();
-		if(baseScenario != null)
+		Optional<EpptScenarioRun> baseScenario = _epptConfigurationController.getEpptScenarioBase();
+		if(baseScenario.isPresent())
 		{
-			List<Path> allDssFiles = baseScenario.getDssContainer().getAllDssFiles()
+			List<Path> allDssFiles = baseScenario.get().getDssContainer().getAllDssFiles()
 												 .stream()
 												 .filter(Objects::nonNull)
 												 .map(NamedDssPath::getDssPath)
@@ -195,8 +192,8 @@ public class CustomResultsPanel extends EpptPanel
 	{
 		try
 		{
-			ProjectConfigurationPanel projectConfigurationPanel = ProjectConfigurationPanel.getProjectConfigurationPanel();
-			if(projectConfigurationPanel.getBaseScenario() == null)
+			Optional<EpptScenarioRun> epptScenarioBase = _epptConfigurationController.getEpptScenarioBase();
+			if(!epptScenarioBase.isPresent())
 			{
 				_dialogSvc.getOK("DSS not selected! The Base DSS files need to be selected", JOptionPane.WARNING_MESSAGE);
 				return;
@@ -215,35 +212,40 @@ public class CustomResultsPanel extends EpptPanel
 				return;
 			}
 			// checked if count > 0 above
-			int[] rows = table.getSelectedRows();
-			for(int row : rows)
-			{
-
-				Pathname pathname = Pathname.createPathname(new String[]
-						{
-								table.getModel().getValueAt(row, 1).toString(),
-								table.getModel().getValueAt(row, 2).toString(),
-								table.getModel().getValueAt(row, 3).toString(),
-								table.getModel().getValueAt(row, 4).toString(),
-								table.getModel().getValueAt(row, 5).toString(),
-								table.getModel().getValueAt(row, 6).toString()
-						});
-				EpptScenarioRun baseScenario = projectConfigurationPanel.getBaseScenario();
-				PlotConfigurationState plotConfigurationState = projectConfigurationPanel.plotConfigurationState();
-				LocalDate startMonth = projectConfigurationPanel.getStartMonth();
-				LocalDate endMonth = projectConfigurationPanel.getEndMonth();
-				if(baseScenario != null)
-				{
-					List<EpptScenarioRun> alternatives = projectConfigurationPanel.getEpptScenarioAlternatives();
-					_displayHelper.showDisplayFramesLocations(plotConfigurationState, Collections.singletonList(pathname.getFullPath()),
-							baseScenario, alternatives, startMonth, endMonth);
-				}
-			}
+			List<GUILinksAllModelsBO> collect = IntStream.of(table.getSelectedRows())
+														 .mapToObj(row -> createPathnameForRow(table, row))
+														 .map(this::mapToGuiLink)
+														 .collect(toList());
+			PlotConfigurationState plotConfigurationState = new PlotConfigurationStateBuilder(getSwingEngine()).createPlotConfigurationState();
+			_displayHelper.showDisplayFramesGuiLink(plotConfigurationState, collect);
 		}
-		catch(RuntimeException e)
+		catch(RuntimeException | EpptPlotException e)
 		{
 			LOGGER.debug("Error in retrieve() -", e);
 		}
+	}
+
+	private Pathname createPathnameForRow(JTable table, int row)
+	{
+		return Pathname.createPathname(new String[]
+				{
+						table.getModel().getValueAt(row, 1).toString(),
+						table.getModel().getValueAt(row, 2).toString(),
+						table.getModel().getValueAt(row, 3).toString(),
+						table.getModel().getValueAt(row, 4).toString(),
+						table.getModel().getValueAt(row, 5).toString(),
+						table.getModel().getValueAt(row, 6).toString()
+				});
+	}
+
+	private GUILinksAllModelsBO mapToGuiLink(Pathname path)
+	{
+		String bAndCPart = path.getPart(Pathname.B_PART) + "/" + path.getPart(Pathname.C_PART);
+		GUILinksAllModelsBO guiLinksAllModelsBO = new GUILinksAllModelsBO(path.getFullPath(), path.getFullPath(),
+				path.getPart(Pathname.B_PART), bAndCPart, "");
+		GUILinksAllModelsBO.Model.values().forEach(
+				m -> guiLinksAllModelsBO.addModelMapping(m.toString(), bAndCPart, ""));
+		return guiLinksAllModelsBO;
 	}
 
 	/**
@@ -267,24 +269,21 @@ public class CustomResultsPanel extends EpptPanel
 
 		try
 		{
-			ProjectConfigurationPanel projectConfigurationPanel = ProjectConfigurationPanel.getProjectConfigurationPanel();
-			EpptScenarioRun baseScenario = projectConfigurationPanel.getBaseScenario();
-			if(baseScenario != null)
+			Optional<EpptScenarioRun> baseScenario = _epptConfigurationController.getEpptScenarioBase();
+			if(baseScenario.isPresent())
 			{
-				PlotConfigurationState plotConfigurationState = projectConfigurationPanel.plotConfigurationState();
-				LocalDate startMonth = projectConfigurationPanel.getStartMonth();
-				LocalDate endMonth = projectConfigurationPanel.getEndMonth();
-				List<EpptScenarioRun> alternatives = projectConfigurationPanel.getEpptScenarioAlternatives();
-				_displayHelper.showDisplayFramesWRIMS(plotConfigurationState, baseScenario, alternatives,
-						dts,
-						mts, startMonth, endMonth);
+				PlotConfigurationState plotConfigurationState = new PlotConfigurationStateBuilder(getSwingEngine()).createPlotConfigurationState();
+				_displayHelper.showDisplayFramesWRIMS(plotConfigurationState, dts, mts);
+			}
+			else
+			{
+				_dialogSvc.getOK("DSS not selected! The Base DSS files need to be selected", JOptionPane.WARNING_MESSAGE);
 			}
 
 		}
-		catch(RuntimeException e)
+		catch(RuntimeException | EpptPlotException e)
 		{
 			LOGGER.debug("Error in retrieve2() -", e);
-			_errorHandlingSvc.businessErrorHandler(null, e);
 		}
 	}
 }

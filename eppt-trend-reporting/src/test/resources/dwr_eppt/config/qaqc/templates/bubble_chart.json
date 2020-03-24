@@ -1,8 +1,6 @@
 {
   "layout": {
     "title": "",
-    "width": 900,
-    "height": 600,
     "grid": {
       "columns": 1,
       "rows": 1
@@ -13,6 +11,7 @@
       }
     },
     "yaxis": {
+      "tickformat": ",.3r%",
       "title": {
         "text": ""
       }
@@ -31,6 +30,7 @@
       }
     ],
     "font": {
+      "family": "'Lucida Grande', 'Lucida Sans Unicode', 'Verdana', 'Arial', 'Helvetica', 'sans-serif'",
       "color": "black"
     }
   },

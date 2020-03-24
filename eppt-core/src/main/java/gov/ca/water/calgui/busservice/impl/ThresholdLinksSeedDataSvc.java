@@ -24,6 +24,7 @@ import gov.ca.water.calgui.bo.CalLiteGUIException;
 import gov.ca.water.calgui.bo.ThresholdLinksBO;
 import gov.ca.water.calgui.constant.Constant;
 import gov.ca.water.calgui.techservice.IFileSystemSvc;
+import gov.ca.water.calgui.techservice.impl.FilePredicates;
 import gov.ca.water.calgui.techservice.impl.FileSystemSvcImpl;
 
 import static gov.ca.water.calgui.constant.Constant.CONFIG_DIR;
@@ -82,17 +83,6 @@ public final class ThresholdLinksSeedDataSvc
 		}
 	}
 
-	/**
-	 * This will tell whether the line is comment or not.
-	 *
-	 * @param line The line to be checked.
-	 * @return Will return true if the line id not comment.
-	 */
-	private static boolean isNotComments(String line)
-	{
-		return !line.startsWith(Constant.EXCLAMATION);
-	}
-
 	private void initThresholdLinksAllModels() throws EpptInitializationException
 	{
 		IFileSystemSvc fileSystemSvc = new FileSystemSvcImpl();
@@ -100,7 +90,7 @@ public final class ThresholdLinksSeedDataSvc
 		try
 		{
 			List<String> thresholdLinkStrings = fileSystemSvc.getFileData(Paths.get(THRESHOLD_LINKS_FILENAME), true,
-					ThresholdLinksSeedDataSvc::isNotComments);
+					FilePredicates.commentFilter());
 			//Header
 			thresholdLinkStrings.remove(0);
 			for(String thresholdLinkString : thresholdLinkStrings)
@@ -110,11 +100,15 @@ public final class ThresholdLinksSeedDataSvc
 				if(list.length > THRESHOLD_INDEX && list[THRESHOLD_INDEX] != null)
 				{
 					int id = Integer.parseInt(list[ID_INDEX].trim());
-					ThresholdLinksBO threadholdLinksBO = _thresholdLinks.computeIfAbsent(id,
+					ThresholdLinksBO thresholdLinksBO = _thresholdLinks.computeIfAbsent(id,
 							i -> createThresholdLinks(list, i));
+					if(list.length > LABEL_INDEX && (thresholdLinksBO.getLabel() == null || thresholdLinksBO.getLabel().isEmpty()))
+					{
+						thresholdLinksBO.setLabel(list[LABEL_INDEX]);
+					}
 					String model = list[MODEL_INDEX];
 					String primary = list[THRESHOLD_INDEX].trim();
-					threadholdLinksBO.addModelMapping(model, primary);
+					thresholdLinksBO.addModelMapping(model, primary);
 				}
 			}
 		}

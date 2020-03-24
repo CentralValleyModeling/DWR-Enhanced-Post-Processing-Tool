@@ -16,9 +16,12 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Optional;
+import java.util.Vector;
 
 import gov.ca.water.calgui.constant.EpptPreferences;
-import gov.ca.water.quickresults.ui.projectconfig.ProjectConfigurationPanel;
+import gov.ca.water.eppt.nbui.EpptControllerProvider;
+import gov.ca.water.calgui.project.EpptConfigurationController;
 import org.openide.awt.ActionID;
 import org.openide.awt.ActionReference;
 import org.openide.awt.ActionReferences;
@@ -59,17 +62,19 @@ public final class DssVueAction implements ActionListener
 			_listSelection.setDirectory(EpptPreferences.getScenariosPaths().toString());
 		}
 
-		Path selectedDssPath = ProjectConfigurationPanel.getProjectConfigurationPanel().getSelectedDssPath();
-		if(selectedDssPath != null)
+		EpptConfigurationController epptConfigurationController = EpptControllerProvider.getEpptConfigurationController();
+		Optional<Path> selectedDssPath = epptConfigurationController.getSelectedDssPath();
+		if(selectedDssPath.isPresent())
 		{
-			boolean fileAlreadyOpen = _listSelection.getDssFilenames()
-													.stream()
-													.map(Object::toString)
-													.map(p -> Paths.get(p.toString()))
-													.anyMatch(p -> p.equals(selectedDssPath));
+			Vector<?> dssFilenames = _listSelection.getDssFilenames();
+			boolean fileAlreadyOpen = dssFilenames
+					.stream()
+					.map(Object::toString)
+					.map(p -> Paths.get(p.toString()))
+					.anyMatch(p -> p.equals(selectedDssPath.get()));
 			if(!fileAlreadyOpen)
 			{
-				_listSelection.open(selectedDssPath.toString());
+				_listSelection.open(selectedDssPath.get().toString());
 			}
 
 		}

@@ -17,8 +17,9 @@ import java.awt.event.ActionListener;
 import java.util.List;
 
 import gov.ca.water.calgui.project.EpptScenarioRun;
+import gov.ca.water.eppt.nbui.EpptControllerProvider;
 import gov.ca.water.quickresults.ui.WreslRunDialog;
-import gov.ca.water.quickresults.ui.projectconfig.ProjectConfigurationPanel;
+import gov.ca.water.calgui.project.EpptConfigurationController;
 import org.openide.awt.ActionID;
 import org.openide.awt.ActionReference;
 import org.openide.awt.ActionReferences;
@@ -60,11 +61,12 @@ public class RunWreslScript implements ActionListener
 
 	private static void action()
 	{
+		EpptConfigurationController epptConfigurationController = EpptControllerProvider.getEpptConfigurationController();
 		if(wreslRunDialog == null)
 		{
-			wreslRunDialog = new WreslRunDialog(WindowManager.getDefault().getMainWindow());
+			wreslRunDialog = new WreslRunDialog(WindowManager.getDefault().getMainWindow(), epptConfigurationController);
 		}
-		List<EpptScenarioRun> allEpptScenarioRuns = ProjectConfigurationPanel.getProjectConfigurationPanel().getAllEpptScenarioRuns();
+		List<EpptScenarioRun> allEpptScenarioRuns = epptConfigurationController.getScenarioRuns();
 		wreslRunDialog.buildScenarioPanel(allEpptScenarioRuns);
 		wreslRunDialog.revalidate();
 		wreslRunDialog.setVisible(true);

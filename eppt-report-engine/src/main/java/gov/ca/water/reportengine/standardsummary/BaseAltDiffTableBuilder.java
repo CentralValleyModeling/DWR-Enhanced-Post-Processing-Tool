@@ -16,9 +16,9 @@ import java.math.BigDecimal;
 import java.math.MathContext;
 import java.time.format.TextStyle;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.function.Function;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -29,6 +29,7 @@ import gov.ca.water.calgui.bo.WaterYearPeriod;
 import gov.ca.water.calgui.bo.WaterYearPeriodFilter;
 import gov.ca.water.calgui.bo.WaterYearPeriodRange;
 import gov.ca.water.calgui.bo.WaterYearPeriodRangeFilter;
+import gov.ca.water.calgui.bo.WaterYearPeriodRangesFilter;
 import gov.ca.water.calgui.bo.WaterYearType;
 import gov.ca.water.calgui.bo.YearlyWaterYearPeriodFilter;
 import gov.ca.water.calgui.bo.YearlyWaterYearPeriodRangeFilter;
@@ -81,11 +82,10 @@ class BaseAltDiffTableBuilder extends TableBuilder
 			retval.setAttribute(WATER_YEAR_DEF_ATTRIBUTE, startMonth + "-" + endMonth);
 		}
 		List<Element> periodElements = new ArrayList<>();
-		periodElements.add(buildPeriod("Long Term", Collections.singletonList(reportParameters.getLongTermRange()), epptChart));
-		periodElements.add(buildWaterYearIndex(epptChart));
-		periodElements.addAll(reportParameters.getWaterYearPeriodRanges().entrySet().stream()
-											  .map(e -> buildPeriod(e.getKey().toString(), e.getValue(), epptChart))
-											  .collect(toList()));
+		for(SummaryReportParameters.WaterYearPeriodRangeGroup group : reportParameters.getGroupedWaterYearPeriodRanges())
+		{
+			periodElements.add(buildAnnualPeriods(epptChart, group));
+		}
 		for(int i = 0; i < periodElements.size(); i++)
 		{
 			Element element = periodElements.get(i);
@@ -102,17 +102,15 @@ class BaseAltDiffTableBuilder extends TableBuilder
 		}
 	}
 
-	private Element buildWaterYearIndex(EpptChart epptChart)
+	private Element buildAnnualPeriods(EpptChart epptChart,
+									   SummaryReportParameters.WaterYearPeriodRangeGroup range)
 	{
 		Element retval = getDocument().createElement(PERIOD_TYPE_ELEMENT);
-		retval.setAttribute(PERIOD_TYPE_NAME_ATTRIBUTE, getReportParameters().getWaterYearIndex(getBase()).toString());
-		List<Element> collect = getReportParameters().getWaterYearIndex(getBase())
-													 .getWaterYearTypes()
-													 .stream()
-													 .map(WaterYearType::getWaterYearPeriod)
-													 .distinct()
-													 .map(e -> buildSeasonalType(e, epptChart))
-													 .collect(toList());
+		retval.setAttribute(PERIOD_TYPE_NAME_ATTRIBUTE, range.getGroupName());
+		List<Element> collect = range.getFilters()
+									 .stream()
+									 .map(e -> buildSeasonalType(e, epptChart))
+									 .collect(toList());
 		for(int i = 0; i < collect.size(); i++)
 		{
 			Element element = collect.get(i);
@@ -135,18 +133,17 @@ class BaseAltDiffTableBuilder extends TableBuilder
 		return retval;
 	}
 
-	private Element buildSeasonalType(WaterYearPeriod period, EpptChart epptChart)
+	private Element buildSeasonalType(Map<EpptScenarioRun, WaterYearPeriodRangesFilter> period, EpptChart epptChart)
 	{
 		Element retval = getDocument().createElement(SEASONAL_TYPE_ELEMENT);
-		retval.setAttribute(SEASONAL_TYPE_NAME_ATTRIBUTE, period.getPeriodName());
-		SummaryReportParameters reportParameters = getReportParameters();
+		retval.setAttribute(SEASONAL_TYPE_NAME_ATTRIBUTE, period.values().iterator().next().getName());
 		appendScenarios(retval, period, epptChart);
 		return retval;
 	}
 
-	private void appendScenarios(Element retval, WaterYearPeriod waterYearPeriod, EpptChart epptChart)
+	private void appendScenarios(Element retval, Map<EpptScenarioRun, WaterYearPeriodRangesFilter> filters, EpptChart epptChart)
 	{
-		List<Element> elements = buildScenarios(waterYearPeriod, epptChart);
+		List<Element> elements = buildScenarios(filters, epptChart);
 		for(int i = 0; i < elements.size(); i++)
 		{
 			Element element = elements.get(i);
@@ -177,13 +174,10 @@ class BaseAltDiffTableBuilder extends TableBuilder
 		return retval;
 	}
 
-	List<Element> buildScenarios(WaterYearPeriod waterYearPeriod, EpptChart epptChart)
+	List<Element> buildScenarios(Map<EpptScenarioRun, WaterYearPeriodRangesFilter> filters, EpptChart epptChart)
 	{
-		SummaryReportParameters reportParameters = getReportParameters();
-		PeriodFilter baseFilter = new WaterYearPeriodFilter(waterYearPeriod, reportParameters.getWaterYearIndex(getBase()),
-				reportParameters.getWaterYearDefinition());
-		AnnualPeriodFilter baseAnnualPeriodFilter = new YearlyWaterYearPeriodFilter(waterYearPeriod,
-				reportParameters.getWaterYearIndex(getBase()));
+		WaterYearPeriodRangesFilter baseFilter = filters.get(getBase());
+		AnnualPeriodFilter baseAnnualPeriodFilter = baseFilter::testAnnual;
 		List<Element> retval = new ArrayList<>();
 		EpptScenarioRun base = getBase();
 		int index = 0;
@@ -193,15 +187,13 @@ class BaseAltDiffTableBuilder extends TableBuilder
 		retval.add(baseElement);
 		for(EpptScenarioRun alternative : getAlternatives())
 		{
-			PeriodFilter altFilter = new WaterYearPeriodFilter(waterYearPeriod, reportParameters.getWaterYearIndex(alternative),
-					reportParameters.getWaterYearDefinition());
-			AnnualPeriodFilter altAnnualPeriodFilter = new YearlyWaterYearPeriodFilter(waterYearPeriod,
-					reportParameters.getWaterYearIndex(alternative));
+			WaterYearPeriodRangesFilter altFilter = filters.get(alternative);
+			AnnualPeriodFilter altAnnualPeriodFilter = altFilter::testAnnual;
 			Element altElement = buildScenario(alternative, ALT_NAME, altFilter, altAnnualPeriodFilter, epptChart);
 			altElement.setAttribute(SCENARIO_ORDER_ATTRIBUTE, String.valueOf(index));
 			index++;
 			retval.add(altElement);
-			Element element = buildScenarioDiff(alternative, waterYearPeriod, epptChart);
+			Element element = buildScenarioDiff(alternative, filters, epptChart);
 			altElement.setAttribute(SCENARIO_ORDER_ATTRIBUTE, String.valueOf(index));
 			retval.add(element);
 		}
@@ -230,9 +222,9 @@ class BaseAltDiffTableBuilder extends TableBuilder
 		return retval;
 	}
 
-	private Element buildScenarioDiff(EpptScenarioRun alternative, WaterYearPeriod waterYearPeriod, EpptChart epptChart)
+	private Element buildScenarioDiff(EpptScenarioRun alternative, Map<EpptScenarioRun, WaterYearPeriodRangesFilter> filters, EpptChart epptChart)
 	{
-		Function<ChartComponent, Element> valueFunction = v -> buildDiffValueForChart(alternative, v, waterYearPeriod);
+		Function<ChartComponent, Element> valueFunction = v -> buildDiffValueForChart(alternative, v, filters);
 		return buildScenarioElement(DIFF_NAME, epptChart, valueFunction);
 	}
 
@@ -257,21 +249,16 @@ class BaseAltDiffTableBuilder extends TableBuilder
 		return retval;
 	}
 
-	private Element buildDiffValueForChart(EpptScenarioRun alternative, ChartComponent v, WaterYearPeriod waterYearPeriod)
+	private Element buildDiffValueForChart(EpptScenarioRun alternative, ChartComponent v, Map<EpptScenarioRun, WaterYearPeriodRangesFilter> filters)
 	{
 		Element retval = getDocument().createElement(VALUE_ELEMENT);
 		EpptScenarioRun base = getBase();
 		try
 		{
-			SummaryReportParameters reportParameters = getReportParameters();
-			PeriodFilter baseFilter = new WaterYearPeriodFilter(waterYearPeriod, reportParameters.getWaterYearIndex(base),
-					reportParameters.getWaterYearDefinition());
-			AnnualPeriodFilter baseAnnualPeriodFilter = new YearlyWaterYearPeriodFilter(waterYearPeriod,
-					reportParameters.getWaterYearIndex(base));
-			PeriodFilter altFilter = new WaterYearPeriodFilter(waterYearPeriod, reportParameters.getWaterYearIndex(alternative),
-					reportParameters.getWaterYearDefinition());
-			AnnualPeriodFilter altAnnualPeriodFilter = new YearlyWaterYearPeriodFilter(waterYearPeriod,
-					reportParameters.getWaterYearIndex(alternative));
+			WaterYearPeriodRangesFilter baseFilter = filters.get(base);
+			AnnualPeriodFilter baseAnnualPeriodFilter = baseFilter::testAnnual;
+			WaterYearPeriodRangesFilter altFilter = filters.get(alternative);
+			AnnualPeriodFilter altAnnualPeriodFilter = altFilter::testAnnual;
 			JythonValueGenerator baseValueGenerator = createJythonValueGenerator(baseFilter, baseAnnualPeriodFilter, base, v.getFunction());
 			Double baseValue = baseValueGenerator.generateValue();
 			JythonValueGenerator altValueGenerator = createJythonValueGenerator(altFilter, altAnnualPeriodFilter, alternative, v.getFunction());

@@ -22,7 +22,9 @@ import javax.swing.*;
 
 import gov.ca.water.calgui.EpptInitializationException;
 import gov.ca.water.calgui.constant.Constant;
+import gov.ca.water.quickresults.ui.EpptPanel;
 import gov.ca.water.quickresults.ui.HelpPanel;
+import gov.ca.water.quickresults.ui.customresults.CustomResultsPanel;
 import org.apache.log4j.Logger;
 import org.openide.awt.ActionID;
 import org.openide.awt.ActionReference;
@@ -45,32 +47,14 @@ import org.openide.windows.WindowManager;
 )
 public final class EpptHelpTopComponent extends TopComponent
 {
-	private static final Logger LOGGER = Logger.getLogger(EpptHelpTopComponent.class.getName());
-
-//	private final JHelp _helpViewer;
 	private final HelpPanel _helpViewHtml5;
 
 	public EpptHelpTopComponent() throws EpptInitializationException
 	{
 		setName("EPPT Help");
-		Path path = Paths.get(Constant.DOCS_DIR).toAbsolutePath().getParent().resolve("docs").resolve("Help").resolve(
-				"CalLite3-GUI-Help_JavaHelp_v2_082614.hs");
-//		try
-//		{
-//			_helpViewer = new JHelp(new HelpSet(null, path.toUri().toURL()));
-			_helpViewHtml5 = new HelpPanel();
-			setLayout(new BorderLayout());
-			add(this._helpViewHtml5, BorderLayout.CENTER);
-//		}
-//		catch(MalformedURLException | HelpSetException ex)
-//		{
-//			throw new EpptInitializationException("Error initializing Java Help", ex);
-//		}
-	}
-
-	private void initListener()
-	{
-		TopComponent.getRegistry().addPropertyChangeListener(e -> selectActivatedHelp());
+		_helpViewHtml5 = new HelpPanel();
+		setLayout(new BorderLayout());
+		add(this._helpViewHtml5, BorderLayout.CENTER);
 	}
 
 	private void selectActivatedHelp()
@@ -85,8 +69,6 @@ public final class EpptHelpTopComponent extends TopComponent
 
 	void selectCurrentHelperId(String page)
 	{
-//		System.out.println(page);
-//		_helpViewer.setCurrentID(page);
 		_helpViewHtml5.loadHelp(page);
 	}
 

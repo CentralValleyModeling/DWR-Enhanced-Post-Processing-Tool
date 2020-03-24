@@ -21,6 +21,8 @@ import gov.ca.water.calgui.busservice.impl.ThresholdLinksSeedDataSvc;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+
 /**
  * Company: Resource Management Associates
  *
@@ -42,5 +44,6 @@ public class TestThresholdCsv
 	public void testThresholdCsvInit() throws EpptInitializationException
 	{
 		ThresholdLinksSeedDataSvc.createSeedDataSvcImplInstance();
+		assertNotNull(ThresholdLinksSeedDataSvc.getSeedDataSvcImplInstance().getObjById(1));
 	}
 }
