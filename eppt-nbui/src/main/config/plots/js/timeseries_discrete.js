@@ -108,7 +108,8 @@ function buildLayouts(datum, yaxis, title) {
                             } else {
                                 plotTitle += '<br>' + annualFilters[m]['annual_period'].replace("<br>", " - ");
                             }
-                        } else if (annualFilters[m]['month_period']) {
+                        }
+                        if (annualFilters[m]['month_period']) {
                             plotTitle += '<br>' + annualFilters[m]['month_period'];
                         }
                         var updatemenus = [
