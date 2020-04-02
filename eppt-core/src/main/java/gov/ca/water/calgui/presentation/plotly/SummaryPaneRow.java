@@ -61,7 +61,7 @@ abstract class SummaryPaneRow extends RmaTreeTableRowModel<SummaryPaneRow>
 		SummaryPaneRowScenario(String title, TreeTableColumnSpec treeTableColumnSpec)
 		{
 			super(null);
-			_title = new SimpleStringProperty(title);
+			_title = new SimpleStringProperty(title.replace("<br>", " "));
 			_treeTableColumnSpec = treeTableColumnSpec;
 		}
 

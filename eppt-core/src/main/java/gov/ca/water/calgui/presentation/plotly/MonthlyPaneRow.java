@@ -61,7 +61,7 @@ abstract class MonthlyPaneRow extends RmaTreeTableRowModel<MonthlyPaneRow>
 		MonthlyPaneRowScenario(String title, TreeTableColumnSpec treeTableColumnSpec)
 		{
 			super(null);
-			_title = new SimpleStringProperty(title);
+			_title = new SimpleStringProperty(title.replace("<br>", " "));
 			_treeTableColumnSpec = treeTableColumnSpec;
 		}
 
