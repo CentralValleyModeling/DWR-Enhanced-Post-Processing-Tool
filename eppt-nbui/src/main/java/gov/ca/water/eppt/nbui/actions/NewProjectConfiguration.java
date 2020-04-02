@@ -109,7 +109,7 @@ public class NewProjectConfiguration implements ActionListener
 			Path projectPath = nameDialog.getProjectDirectory();
 			Path projectFile = projectPath.resolve(nameDialog.getName() + "." + Constant.EPPT_EXT);
 			ProjectConfigurationIO projectConfigurationIO = new ProjectConfigurationIO();
-			projectConfigurationIO.saveConfiguration(epptConfigurationController, projectPath);
+			projectConfigurationIO.saveConfiguration(epptConfigurationController, projectFile);
 			EpptControllerProvider.setEpptController(projectFile);
 			WindowManager.getDefault().getMainWindow().setTitle(
 					Installer.MAIN_FRAME_NAME + " - " + EpptControllerProvider.getEpptConfigurationController().getProjectName());

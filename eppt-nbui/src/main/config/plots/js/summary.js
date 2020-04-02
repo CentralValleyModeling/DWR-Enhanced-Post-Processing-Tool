@@ -120,8 +120,13 @@ function plot(data) {
     var layout = buildLayouts(data['scenario_run_data'], data['units'], data['gui_link_title']);
     let plotlyAggregateSeries = getPlotlyData(data['scenario_run_data'], data['units']);
     let numberOfRows = plotlyAggregateSeries[0][0]['cells']['values'][0].length;
+    var rowHeight = 35;
+    if(data['scenario_run_data'][0]['ts_list'][0]['ts_name'].includes('<br>')){
+        rowHeight *= 2;
+    }
+
     for (let i = 0; i < layout.length; i++) {
-        layout[i]['height'] = 165 + numberOfRows * 35;
+        layout[i]['height'] = 165 + numberOfRows * rowHeight;
     }
     plotData(layout, plotlyAggregateSeries);
 }

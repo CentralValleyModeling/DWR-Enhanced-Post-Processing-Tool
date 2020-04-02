@@ -68,6 +68,7 @@ class ProjectConfigurationIOVersion4
 
 	void saveConfiguration(Path selectedPath, EpptConfigurationController epptConfigurationController) throws IOException
 	{
+		Files.createDirectories(selectedPath.getParent());
 		try(BufferedWriter bufferedWriter = Files.newBufferedWriter(selectedPath))
 		{
 			JSONObject jsonObject = new JSONObject();

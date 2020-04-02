@@ -191,9 +191,13 @@ class TrendReportDataLoader
 		{
 			retval = Optional.of("No Annual Filter defined");
 		}
-		else if(_difference && _scenarioRuns.stream().noneMatch(EpptScenarioRun::isBaseSelected))
+		else if(_difference && _scenarioRuns.stream().noneMatch(EpptScenarioRun::isBaseSelected) )
 		{
 			retval = Optional.of("No Base scenario selected for Difference calculation");
+		}
+		else if(_difference && _scenarioRuns.stream().noneMatch(EpptScenarioRun::isAltSelected))
+		{
+			retval = Optional.of("No Alternative scenario selected for Difference calculation");
 		}
 		return retval;
 	}

@@ -54,6 +54,9 @@ public final class EpptControllerProvider
 			ProjectConfigurationIO projectConfigurationIO = new ProjectConfigurationIO();
 			if(path.toFile().exists())
 			{
+				EpptControllerProvider.epptConfigurationController.setStatistics(new ArrayList<>());
+				EpptControllerProvider.epptConfigurationController.setMonthlyPeriods(new ArrayList<>());
+				EpptControllerProvider.epptConfigurationController.setWaterYearPeriodRangesFilters(new ArrayList<>());
 				EpptProject epptProject = projectConfigurationIO.loadConfiguration(path, epptConfigurationController);
 				EpptControllerProvider.epptConfigurationController.setProjectName(epptProject.getName());
 				EpptControllerProvider.epptConfigurationController.setProjectDescription(epptProject.getDescription());
