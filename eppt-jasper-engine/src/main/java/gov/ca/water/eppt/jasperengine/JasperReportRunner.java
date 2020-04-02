@@ -69,7 +69,7 @@ public class JasperReportRunner implements ReportRunner
 {
 	private static final Logger LOGGER = Logger.getLogger(JasperReportRunner.class.getName());
 
-	public static void main(String[] args) throws Exception
+	public static void main(String[] args)
 	{
 		System.setProperty("java.util.logging.SimpleFormatter.format", "[%1$tF %1$tT] [%4$] %5$s %n");
 		Logger parentLogger = Logger.getLogger("");
@@ -100,6 +100,10 @@ public class JasperReportRunner implements ReportRunner
 					PrintWriter printWriter = new PrintWriter(writer))
 				{
 					e.printStackTrace(printWriter);
+				}
+				catch(IOException ex)
+				{
+					LOGGER.log(Level.INFO, "Error closing printWriter", ex);
 				}
 				System.exit(-1);
 			}

@@ -14,11 +14,9 @@ package gov.ca.water.eppt.nbui.actions;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.*;
 
-import gov.ca.water.quickresults.ui.projectconfig.ProjectConfigurationPanel;
 import org.openide.awt.ActionID;
 import org.openide.awt.ActionReference;
 import org.openide.awt.ActionRegistration;
@@ -51,13 +49,5 @@ public class ResetWindowsAction implements ActionListener
 		Action resetWindowsAction = FileUtil.getConfigObject(
 				"Actions/Window/org-netbeans-core-windows-actions-ResetWindowsAction.instance", Action.class);
 		resetWindowsAction.actionPerformed(e);
-		try
-		{
-			ProjectConfigurationPanel.getProjectConfigurationPanel().resetQuickState();
-		}
-		catch(Exception ex)
-		{
-			LOGGER.log(Level.SEVERE, "Error resetting Project Configuration", ex);
-		}
 	}
 }

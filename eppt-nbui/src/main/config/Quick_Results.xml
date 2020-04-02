@@ -11,36 +11,61 @@
   -->
 
 <panel id="QuickResults" name="QuickResults" layout="BorderLayout">
-	<panel id="controls" name="controls" resizeable="true" layout="BorderLayout" constraints="BorderLayout.CENTER">
-		<panel id="ss2" resizeable="false" border="TitledBorder(Report List)" layout="BorderLayout"
-			   preferredsize="510,180"
-			   minimumsize="510,180" maximumsize="510,180" constraints="Borderlayout.NORTH">
-			<panel constraints="BorderLayout.NORTH" layout="FlowLayout(FlowLayout.LEFT)">
-				<button text="Add To List" ActionCommand="Rep_AddList"/>
-				<button text="Clear List" ActionCommand="Rep_ClearList"/>
-				<glue minimumsize="10,1"/>
-				<button text="Display List" ActionCommand="Rep_DispAll"/>
-				<glue minimumsize="10,1"/>
-				<button text="Save List" ActionCommand="Rep_SaveList"/>
-				<button text="Load List" ActionCommand="Rep_LoadList"/>
-			</panel>
-			<scrollpane minimumsize="480,90" preferredsize="500,90" constraints="BorderLayout.CENTER">
-				<list id="lstReports" visiblerowcount="5">
-				</list>
-			</scrollpane>
-			<panel constraints="BorderLayout.SOUTH" layout="FlowLayout(FlowLayout.LEFT)">
-				<buttongroup id="99">
-					<radiobutton id="rdbToScreen" name="rdbToScreen" selected="true" text="To Screen">
-					</radiobutton>
-					<radiobutton id="rdbToPrinter" name="rdbToPrinter" enabled="false" text="To Printer">
-					</radiobutton>
-					<radiobutton id="rdbToBoth" name="rdbToBoth" text="Both" enabled="false">
-					</radiobutton>
-				</buttongroup>
+	<panel layout="BorderLayout">
+		<panel layout="FlowLayout(FlowLayout.LEFT)" border="TitledBorder(Controls)" constraints="BorderLayout.NORTH">
+			<panel layout="GridBagLayout">
+				<checkbox name="TimeSeriesAll" id="TimeSeriesAll" text="Time Series All" selected="true">
+					<gridbagconstraints insets="0,0,5,3" anchor="GridBagConstraints.WEST" gridx="1" gridy="1"/>
+				</checkbox>
+				<checkbox name="TimeSeriesAggregate" id="TimeSeriesAggregate" text="Time Series Aggregate" selected="false">
+					<gridbagconstraints insets="0,0,5,3" anchor="GridBagConstraints.WEST" gridx="1" gridy="2"/>
+				</checkbox>
+				<checkbox name="ExceedanceAll" id="ExceedanceAll" text="Exceedance All" selected="false">
+					<gridbagconstraints insets="0,0,5,3" anchor="GridBagConstraints.WEST" gridx="2" gridy="1"/>
+				</checkbox>
+				<checkbox name="ExceedanceAggregate" id="ExceedanceAggregate" text="Exceedance Aggregate" selected="false">
+					<gridbagconstraints insets="0,0,5,3" anchor="GridBagConstraints.WEST" gridx="2" gridy="2"/>
+				</checkbox>
+				<checkbox name="MonthlyLine" id="MonthlyLine" text="Monthly Line" selected="false">
+					<gridbagconstraints insets="0,0,5,3" anchor="GridBagConstraints.WEST" gridx="3" gridy="1"/>
+				</checkbox>
+				<checkbox name="BarGraph" id="BarGraph" text="Bar Graph" selected="false">
+					<gridbagconstraints insets="0,0,5,3" anchor="GridBagConstraints.WEST" gridx="3" gridy="2"/>
+				</checkbox>
+				<checkbox name="BoxAndWhiskerAll" id="BoxAndWhiskerAll" text="Box and Whisker All" selected="false">
+					<gridbagconstraints insets="0,0,5,3" anchor="GridBagConstraints.WEST" gridx="4" gridy="1"/>
+				</checkbox>
+				<checkbox name="BoxAndWhiskerAggregate" id="BoxAndWhiskerAggregate" text="Box and Whisker Aggregate" selected="false">
+					<gridbagconstraints insets="0,0,5,3" anchor="GridBagConstraints.WEST" gridx="4" gridy="2"/>
+				</checkbox>
+				<checkbox name="MonthlyTable" id="MonthlyTable" text="Display Monthly Table">
+					<gridbagconstraints insets="0,0,5,3" anchor="GridBagConstraints.WEST" gridx="5" gridy="1"/>
+				</checkbox>
+				<checkbox name="SummaryTable" id="SummaryTable" text="Display Summary Table" selected="false">
+					<gridbagconstraints insets="0,0,5,3" anchor="GridBagConstraints.WEST" gridx="5" gridy="2"/>
+				</checkbox>
 			</panel>
 		</panel>
-		<panel constraints="Borderlayout.CENTER" id="reptabbedPane" minimumsize="550,505" preferredsize="550,505"
-			   layout="BorderLayout">
+		<panel id="controls" name="controls" layout="BorderLayout" constraints="BorderLayout.CENTER">
+			<panel id="ss2" resizeable="false" border="TitledBorder(Report List)" layout="BorderLayout"
+				   preferredsize="510,180"
+				   minimumsize="510,180" maximumsize="510,180" constraints="Borderlayout.NORTH">
+				<panel constraints="BorderLayout.NORTH" layout="FlowLayout(FlowLayout.LEFT)">
+					<button text="Add To List" ActionCommand="Rep_AddList"/>
+					<button text="Clear List" ActionCommand="Rep_ClearList"/>
+					<glue minimumsize="10,1"/>
+					<button text="Display List" ActionCommand="Rep_DispAll"/>
+					<glue minimumsize="10,1"/>
+					<button text="Save List" ActionCommand="Rep_SaveList"/>
+					<button text="Load List" ActionCommand="Rep_LoadList"/>
+				</panel>
+				<scrollpane minimumsize="480,90" preferredsize="500,90" constraints="BorderLayout.CENTER">
+					<list id="lstReports" visiblerowcount="5">
+					</list>
+				</scrollpane>
+			</panel>
+			<panel constraints="Borderlayout.CENTER" id="reptabbedPane" minimumsize="550,505" preferredsize="550,505"
+				   layout="BorderLayout">
 			<tabbedpane id="variables" name="variables" minimumsize="510,502" preferredsize="510,502"
 						constraints="Borderlayout.CENTER">
 				<panel layout="FlowLayout(FlowLayout.LEFT)" name="Storage+Flows">
@@ -438,6 +463,7 @@
 					</panel>
 				</panel>
 			</tabbedpane>
+			</panel>
 		</panel>
 	</panel>
 </panel>

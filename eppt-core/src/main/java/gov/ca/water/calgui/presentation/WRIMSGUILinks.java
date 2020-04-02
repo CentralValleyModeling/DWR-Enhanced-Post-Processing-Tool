@@ -61,9 +61,9 @@ public final class WRIMSGUILinks
 
 		CalLiteGUIPanelWrapper pw = new CalLiteGUIPanelWrapper();
 		pw.getPanel().setSize(900, 650);
-		p.add(pw.getPanel(), BorderLayout.NORTH);
+		p.add(pw.getPanel(), BorderLayout.CENTER);
 		JPanel statusPanel = GuiUtils.getStatusPanel();
-		p.add(statusPanel, BorderLayout.CENTER);
+		p.add(statusPanel, BorderLayout.SOUTH);
 		GuiUtils.setStatus("Initialized.");
 	}
 

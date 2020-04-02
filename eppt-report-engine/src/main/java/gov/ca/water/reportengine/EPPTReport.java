@@ -343,10 +343,9 @@ public class EPPTReport
 			LOGGER.at(Level.SEVERE).log(errorMsg);
 			throw new EpptReportException(errorMsg);
 		}
-		WaterYearIndex waterYearIndex = _reportParameters.getSummaryReportParameters().getWaterYearIndex(_baseRun);
-		if(waterYearIndex == null)
+		if(_reportParameters.getSummaryReportParameters().getWaterYearPeriodRanges().isEmpty())
 		{
-			String message = "Water Year Index is undefined. Ensure that the Base Water Year Table file is defined correctly: " + _baseRun.getLookupDirectory();
+			String message = "No Annual Periods defined.";
 			LOGGER.at(Level.SEVERE).log(message);
 			throw new EpptReportException(message);
 		}

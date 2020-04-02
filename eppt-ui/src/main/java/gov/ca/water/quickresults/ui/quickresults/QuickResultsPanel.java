@@ -22,6 +22,7 @@ import javax.swing.border.LineBorder;
 
 import gov.ca.water.calgui.presentation.DisplayHelper;
 import gov.ca.water.quickresults.ui.EpptPanel;
+import gov.ca.water.calgui.project.EpptConfigurationController;
 import org.apache.log4j.Logger;
 
 /**
@@ -38,16 +39,16 @@ public class QuickResultsPanel extends EpptPanel
 
 	private final DisplayHelper _displayHelper;
 
-	public QuickResultsPanel()
+	public QuickResultsPanel(EpptConfigurationController epptConfigurationController)
 	{
 		try
 		{
-			_displayHelper = new DisplayHelper(this);
+			_displayHelper = new DisplayHelper(this, epptConfigurationController);
 			super.setLayout(new BorderLayout());
 			Container swixmlQuickResultsPanel = renderSwixml(QUICK_RESULTS_XML_FILE);
 			super.add(swixmlQuickResultsPanel);
 			Component reptabbedPane = getSwingEngine().find("reptabbedPane");
-			setCheckBoxorMouseListener(reptabbedPane, new QuickResultsMouseListener(_displayHelper));
+			setCheckBoxorMouseListener(reptabbedPane, new QuickResultsMouseListener(this, _displayHelper, epptConfigurationController));
 			// Set up report list
 			JList<?> lstReports = (JList<?>) getSwingEngine().find("lstReports");
 			lstReports.setBorder(new LineBorder(Color.gray, 1));

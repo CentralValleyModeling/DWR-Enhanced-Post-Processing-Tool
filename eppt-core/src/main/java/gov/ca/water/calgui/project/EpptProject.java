@@ -12,13 +12,10 @@
 
 package gov.ca.water.calgui.project;
 
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import org.jfree.data.time.Month;
 
 /**
  * Company: Resource Management Associates
@@ -29,31 +26,31 @@ import org.jfree.data.time.Month;
 public class EpptProject
 {
 	private final List<EpptScenarioRun> _scenarioRuns;
-	private final LocalDate _startMonth;
-	private final LocalDate _endMonth;
+	private final int _startYear;
+	private final int _endYear;
 	private final Map<String, Boolean> _selectedComponents;
 	private String _description;
 	private String _name;
 
-	public EpptProject(String name, String description, List<EpptScenarioRun> scenarioRuns, LocalDate startMonth,
-					   LocalDate endMonth, Map<String, Boolean> selectedComponents)
+	public EpptProject(String name, String description, List<EpptScenarioRun> scenarioRuns, int startYear,
+					   int endYear, Map<String, Boolean> selectedComponents)
 	{
 		_name = name;
 		_description = description;
 		_scenarioRuns = scenarioRuns;
-		_startMonth = startMonth;
-		_endMonth = endMonth;
+		_startYear = startYear;
+		_endYear = endYear;
 		_selectedComponents = new HashMap<>(selectedComponents);
 	}
 
-	public LocalDate getStartMonth()
+	public int getStartYear()
 	{
-		return _startMonth;
+		return _startYear;
 	}
 
-	public LocalDate getEndMonth()
+	public int getEndYear()
 	{
-		return _endMonth;
+		return _endYear;
 	}
 
 	public Map<String, Boolean> getSelectedComponents()
@@ -70,16 +67,11 @@ public class EpptProject
 	}
 
 	/**
-	 * @return copy list of Senario runs
+	 * @return copy list of Scenario runs
 	 */
 	public List<EpptScenarioRun> getScenarioRuns()
 	{
 		return new ArrayList<>(_scenarioRuns);
-	}
-
-	public void addScenarioRun(EpptScenarioRun scenarioRun)
-	{
-		_scenarioRuns.add(scenarioRun);
 	}
 
 	/**

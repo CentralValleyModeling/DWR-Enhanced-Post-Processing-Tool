@@ -143,6 +143,6 @@ public class WaterYearIndex
 	@Override
 	public String toString()
 	{
-		return _name.replace("index", " Index");
+		return _name;
 	}
 }

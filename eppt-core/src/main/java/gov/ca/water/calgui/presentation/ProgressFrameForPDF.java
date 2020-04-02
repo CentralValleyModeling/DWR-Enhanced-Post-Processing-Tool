@@ -14,15 +14,9 @@ package gov.ca.water.calgui.presentation;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
-import java.awt.HeadlessException;
-import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
-import java.io.IOException;
+import java.util.List;
 import javax.swing.*;
-
-import gov.ca.water.calgui.techservice.IErrorHandlingSvc;
-import gov.ca.water.calgui.techservice.impl.ErrorHandlingSvcImpl;
-import org.apache.log4j.Logger;
 
 /**
  * This frame is used for displaying the monitored status of run and save
@@ -30,54 +24,38 @@ import org.apache.log4j.Logger;
  *
  * @author mohan
  */
-public final class ProgressFrameForPDF extends JFrame
+final class ProgressFrameForPDF extends JFrame
 {
 
-	private static final Logger LOG = Logger.getLogger(ProgressFrameForPDF.class.getName());
 	private static final long serialVersionUID = -606008444073979623L;
-	private static ProgressFrameForPDF progressFrame;
 	private final JList<String> _list;
 	private final JScrollPane _listScroller;
+	private final Report _report;
+	private static ProgressFrameForPDF instance;
 
 	/**
 	 * This will prepare the Dialog box to show.
 	 */
-	private ProgressFrameForPDF(JFrame mainFrame)
+	private ProgressFrameForPDF(JFrame mainFrame, Report report)
 	{
-		if(mainFrame != null)
-		{
-			setIconImage(mainFrame.getIconImage());
-			setLocationRelativeTo(mainFrame);
-		}
+		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+		_report = report;
 		String[] data = {"No reports active"};
 		_list = new JList<>(data);
 		_listScroller = new JScrollPane(_list);
-		try
-		{
-			initComponents();
-			setVisible(true);
-		}
-		catch(HeadlessException e)
-		{
-			LOG.error(e.getMessage());
-			String messageText = "Unable to display PDF progress frame.";
-			final IErrorHandlingSvc errorHandlingSvc = new ErrorHandlingSvcImpl();
-			errorHandlingSvc.businessErrorHandler(messageText, e);
-		}
+		initComponents();
+		setIconImage(mainFrame.getIconImage());
 	}
 
-	/**
-	 * This method is for implementing the singleton.
-	 *
-	 * @return
-	 */
-	public static ProgressFrameForPDF getProgressFrameInstance(JFrame mainFrame)
+	static ProgressFrameForPDF getInstance(JFrame mainFrame, Report report)
 	{
-		if(progressFrame == null)
+		if(instance == null)
 		{
-			progressFrame = new ProgressFrameForPDF(mainFrame);
+			instance = new ProgressFrameForPDF(mainFrame, report);
 		}
-		return progressFrame;
+		instance.setLocationRelativeTo(mainFrame);
+		instance.setVisible(true);
+		return instance;
 	}
 
 	private void initComponents()
@@ -104,16 +82,19 @@ public final class ProgressFrameForPDF extends JFrame
 		btnClose.setVisible(true);
 		add(BorderLayout.PAGE_END, btnClose);
 		pack();
-		Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
-		setLocation((dim.width - 400) / 2, (dim.height - 200) / 2);
 	}
 
-	/**
-	 * This will set the listData to the monitor window.
-	 *
-	 * @param data
-	 */
-	public void setList(String data)
+	void setList(List<String> data)
+	{
+		if(!_listScroller.isVisible())
+		{
+			_listScroller.setVisible(true);
+		}
+		_list.setListData(data.toArray(new String[0]));
+		repaint();
+	}
+
+	void setList(String data)
 	{
 		String[] listData = new String[1];
 		if(!_listScroller.isVisible())
@@ -125,7 +106,7 @@ public final class ProgressFrameForPDF extends JFrame
 		repaint();
 	}
 
-	public void closePerformed(ActionEvent ae)
+	private void closePerformed(ActionEvent ae)
 	{
 		if("Go".equals(ae.getActionCommand()))
 		{
@@ -133,16 +114,7 @@ public final class ProgressFrameForPDF extends JFrame
 		}
 		else if("Stop".equals(ae.getActionCommand()))
 		{
-			Runtime rt = Runtime.getRuntime();
-			Process proc;
-			try
-			{
-				proc = rt.exec("taskkill /f /t /fi \"WINDOWTITLE eq CalLiteRun*\" ");
-			}
-			catch(IOException ex)
-			{
-				LOG.error(ex);
-			}
+			_report.cancel(true);
 		}
 	}
 }

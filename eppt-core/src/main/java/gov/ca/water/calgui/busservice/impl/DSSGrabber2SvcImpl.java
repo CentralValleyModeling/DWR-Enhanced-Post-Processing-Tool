@@ -81,7 +81,6 @@ public class DSSGrabber2SvcImpl extends DSSGrabber1SvcImpl
 	 *
 	 * @param locationName index into GUI_Links3.table or Schematic_DSS_Link4.table
 	 */
-	@Override
 	public void setLocation(String locationName)
 	{
 
@@ -182,7 +181,7 @@ public class DSSGrabber2SvcImpl extends DSSGrabber1SvcImpl
 		{
 			LOGGER.log(Level.SEVERE, "Unable to get time-series.", ex);
 		}
-		return null;
+		return new TimeSeriesContainer[1];
 	}
 
 	public TimeSeriesContainer[] getMultipleTimeSeries(int mtsI)
@@ -190,12 +189,10 @@ public class DSSGrabber2SvcImpl extends DSSGrabber1SvcImpl
 
 		try
 		{
-			TimeSeriesContainer[] results = null;
 			checkReadiness();
 
 			// Store number of scenarios
-
-			results = new TimeSeriesContainer[_alternatives.size() + 1];
+			TimeSeriesContainer[] results = new TimeSeriesContainer[_alternatives.size() + 1];
 
 			// Base first
 
@@ -227,7 +224,7 @@ public class DSSGrabber2SvcImpl extends DSSGrabber1SvcImpl
 		{
 			LOGGER.log(Level.SEVERE, "Unable to get time-series.", ex);
 		}
-		return null;
+		return new TimeSeriesContainer[1];
 	}
 
 	private Optional<TimeSeriesContainer> getMtsContainer(EpptScenarioRun epptScenarioRun, int mtsI)
@@ -352,6 +349,10 @@ public class DSSGrabber2SvcImpl extends DSSGrabber1SvcImpl
 					}
 				}
 			}
+			if(result != null)
+			{
+				result.setFullName(dts2.getName());
+			}
 			return result;
 		}
 		catch(Exception ex)
@@ -384,33 +385,7 @@ public class DSSGrabber2SvcImpl extends DSSGrabber1SvcImpl
 				// Operand is a DSS time series
 				_primaryDSSName.clear();
 				_primaryDSSName.put(model, mts2.getBPartAt(i) + "//" + mts2.getCPartAt(i));
-				if("DVAR".equals(mts2.getVarTypeAt(i)))
-				{
-					result = getOneSeries(dssPath, (mts2.getBPartAt(i) + "/" + mts2.getCPartAt(i)), model);
-				}
-				else
-				{
-					//					String svFilename = "";
-					//
-					//					if(dssFilename.equals(_project.getDVFile()))
-					//					{
-					//						svFilename = _project.getSVFile();
-					//					}
-					//					else if(dssFilename.equals(_project.getDV2File()))
-					//					{
-					//						svFilename = _project.getSV2File();
-					//					}
-					//					else if(dssFilename.equals(_project.getDV3File()))
-					//					{
-					//						svFilename = _project.getSV3File();
-					//					}
-					//					else if(dssFilename.equals(_project.getDV4File()))
-					//					{
-					//						svFilename = _project.getSV4File();
-					//					}
-					//
-					//					result = getOneSeries(svFilename, (mts2.getBPartAt(i) + "/" + mts2.getCPartAt(i)), model);
-				}
+				result = getOneSeries(dssPath, (mts2.getBPartAt(i) + "/" + mts2.getCPartAt(i)), model);
 			}
 			return result;
 		}
@@ -444,10 +419,13 @@ public class DSSGrabber2SvcImpl extends DSSGrabber1SvcImpl
 				for(int i = 0; i < _alternatives.size(); i++)
 				{
 
-					results[tsi][i] = (TimeSeriesContainer) timeSeriesResults[tsi][i + 1].clone();
-					for(int j = 0; j < results[tsi][i].numberValues; j++)
+					if(timeSeriesResults[tsi][i] != null)
 					{
-						results[tsi][i].values[j] = results[tsi][i].values[j] - timeSeriesResults[tsi][0].values[j];
+						results[tsi][i] = (TimeSeriesContainer) timeSeriesResults[tsi][i + 1].clone();
+						for(int j = 0; j < results[tsi][i].numberValues; j++)
+						{
+							results[tsi][i].values[j] = results[tsi][i].values[j] - timeSeriesResults[tsi][0].values[j];
+						}
 					}
 				}
 			}
@@ -458,357 +436,5 @@ public class DSSGrabber2SvcImpl extends DSSGrabber1SvcImpl
 			LOGGER.log(Level.SEVERE, "Unable to get time-series.", ex);
 		}
 		return timeSeriesResults;
-	}
-
-	/**
-	 * Variant of CalcTAFforCFS to work with multiple time series
-	 *
-	 * @param primaryResults
-	 */
-	public void calcTAFforCFS(TimeSeriesContainer[][] primaryResults)
-	{
-
-		try
-		{
-			// Allocate and zero out
-
-			int datasets = primaryResults.length;
-			int scenarios = primaryResults[0].length;
-
-			_annualTAFs = new double[datasets][scenarios][_endWY - _startWY + 2];
-
-			for(int mtsi = 0; mtsi < datasets; mtsi++)
-			{
-				for(int i = 0; i < scenarios; i++)
-				{
-					for(int j = 0; j < _endWY - _startWY + 1; j++)
-					{
-						_annualTAFs[mtsi][i][j] = 0.0;
-					}
-				}
-			}
-
-			// Calculate
-
-			if("CFS".equals(_originalUnits))
-			{
-
-				HecTime ht = new HecTime();
-				Calendar calendar = Calendar.getInstance();
-
-				// Primary series
-
-				for(int mtsi = 0; mtsi < primaryResults.length; mtsi++)
-				{
-					for(int i = 0; i < scenarios; i++)
-					{
-						for(int j = 0; j < primaryResults[mtsi][i].numberValues; j++)
-						{
-
-							ht.set(primaryResults[mtsi][i].times[j]);
-							calendar.set(ht.year(), ht.month() - 1, 1);
-							double monthlyTAF = primaryResults[mtsi][i].values[j]
-									* calendar.getActualMaximum(Calendar.DAY_OF_MONTH) * CFS_2_TAF_DAY;
-							int wy = ((ht.month() < 10) ? ht.year() : ht.year() + 1) - _startWY;
-							if(wy >= 0)
-							{
-								_annualTAFs[mtsi][i][wy] += monthlyTAF;
-							}
-							if(!_isCFS)
-							{
-								primaryResults[mtsi][i].values[j] = monthlyTAF;
-							}
-						}
-						if(!_isCFS)
-						{
-							primaryResults[mtsi][i].units = "TAF";
-							primaryResults[mtsi][i].type = "PER-CUM";
-						}
-					}
-				}
-			}
-
-			// Calculate differences if applicable (primary series only)
-
-			if(primaryResults[0].length > 1)
-			{
-				_annualTAFsDiff = new double[datasets][scenarios - 1][_endWY - _startWY + 2];
-				for(int mtsi = 0; mtsi < primaryResults.length - 1; mtsi++)
-				{
-					for(int i = 0; i < scenarios; i++)
-					{
-						for(int j = 0; j < _endWY - _startWY + 1; j++)
-						{
-							_annualTAFsDiff[mtsi][i][j] = _annualTAFs[mtsi + 1][i][j] - _annualTAFs[0][i][j];
-						}
-					}
-				}
-			}
-		}
-		catch(Exception ex)
-		{
-			LOGGER.log(Level.SEVERE, "Unable to calculate TAF.", ex);
-		}
-
-	}
-
-	public double getAnnualTAF(int mtsi, int i, int wy)
-	{
-
-		return wy < _startWY ? -1 : _annualTAFs[mtsi][i][wy - _startWY];
-	}
-
-	public double getAnnualTAFDiff(int mtsi, int i, int wy)
-	{
-
-		return wy < _startWY ? -1 : _annualTAFsDiff[mtsi][i][wy - _startWY];
-	}
-
-	/**
-	 * Variant of getExceedanceSeriesWithMultipleTimeSeries for mts
-	 *
-	 * @param timeSeriesResults
-	 * @return
-	 */
-	public TimeSeriesContainer[][][] getExceedanceSeriesWithMultipleTimeSeries(
-			TimeSeriesContainer[][] timeSeriesResults)
-	{
-
-		try
-		{
-			TimeSeriesContainer[][][] results;
-			if(timeSeriesResults == null)
-			{
-				results = null;
-			}
-			else
-			{
-				int datasets = timeSeriesResults.length;
-				results = new TimeSeriesContainer[14][datasets][_alternatives.size() + 1];
-				for(int mtsI = 0; mtsI < datasets; mtsI++)
-				{
-					for(int month = 0; month < 14; month++)
-					{
-
-						HecTime ht = new HecTime();
-						for(int i = 0; i < _alternatives.size() + 1; i++)
-						{
-							if(timeSeriesResults[mtsI][i] != null)
-							{
-								if(month == 13)
-								{
-									results[month][mtsI][i] = (TimeSeriesContainer) timeSeriesResults[mtsI][i].clone();
-								}
-								else
-								{
-
-									int n;
-									int[] times2 = null;
-									double[] values2 = null;
-
-									results[month][mtsI][i] = new TimeSeriesContainer();
-
-									if(month == 12)
-									{
-
-										n = 0;
-										if(i < _annualTAFs.length)
-										{
-											double[][] annualTAF = _annualTAFs[i];
-											// Annual totals - grab from annualTAFs
-											n = annualTAF.length;
-											times2 = new int[n];
-											values2 = new double[n];
-											for(int j = 0; j < n; j++)
-											{
-												ht.setYearMonthDay(j + _startWY, 11, 1, 0);
-												times2[j] = ht.value();
-												values2[j] = _annualTAFs[mtsI][i][j];
-											}
-										}
-									}
-									else
-									{
-
-										int[] times = timeSeriesResults[mtsI][i].times;
-										double[] values = timeSeriesResults[mtsI][i].values;
-										n = 0;
-										if(times != null)
-										{
-											for(final int time : times)
-											{
-												ht.set(time);
-												if(ht.month() == month + 1)
-												{
-													n = n + 1;
-												}
-											}
-											times2 = new int[n];
-											values2 = new double[n];
-											n = 0;
-											for(int j = 0; j < times.length; j++)
-											{
-												ht.set(times[j]);
-												if(ht.month() == month + 1)
-												{
-													times2[n] = times[j];
-													values2[n] = values[j];
-													n = n + 1;
-												}
-											}
-										}
-									}
-									results[month][mtsI][i].times = times2;
-									results[month][mtsI][i].values = values2;
-									results[month][mtsI][i].numberValues = n;
-									results[month][mtsI][i].units = timeSeriesResults[mtsI][i].units;
-									results[month][mtsI][i].fullName = timeSeriesResults[mtsI][i].fullName;
-									results[month][mtsI][i].fileName = timeSeriesResults[mtsI][i].fileName;
-								}
-							}
-							if(results[month][mtsI][i] != null && results[month][mtsI][i].values != null)
-							{
-								double[] sortArray = results[month][mtsI][i].values;
-								Arrays.sort(sortArray);
-								results[month][mtsI][i].values = sortArray;
-							}
-						}
-					}
-				}
-			}
-			return results;
-		}
-		catch(Exception ex)
-		{
-			LOGGER.log(Level.SEVERE, "Unable to get time-series.", ex);
-		}
-		return null;
-	}
-
-	/**
-	 * Variant of getExceedanceSeriesDWithMultipleTimeSeries that works with MTS files
-	 * <p>
-	 * Should be recombinable with other exceedance methods.
-	 *
-	 * @param timeSeriesResults
-	 * @return
-	 */
-	public TimeSeriesContainer[][][] getExceedanceSeriesDWithMultipleTimeSeries(
-			TimeSeriesContainer[][] timeSeriesResults)
-	{
-
-		try
-		{
-			TimeSeriesContainer[][][] results;
-			if(timeSeriesResults == null)
-			{
-				results = null;
-			}
-			else
-			{
-				int datasets = timeSeriesResults.length;
-				results = new TimeSeriesContainer[14][datasets][_alternatives.size()];
-				for(int mtsI = 0; mtsI < datasets; mtsI++)
-				{
-
-					for(int month = 0; month < 14; month++)
-					{
-
-						HecTime ht = new HecTime();
-						for(int i = 0; i < _alternatives.size(); i++)
-						{
-
-							if(month == 13)
-							{
-
-								results[month][mtsI][i] = (TimeSeriesContainer) timeSeriesResults[mtsI][i + 1].clone();
-								for(int j = 0; j < results[month][mtsI][i].numberValues; j++)
-								{
-									results[month][mtsI][i].values[j] -= timeSeriesResults[mtsI][0].values[j];
-								}
-
-							}
-							else
-							{
-
-								int n;
-								int[] times2;
-								double[] values2;
-
-								results[month][mtsI][i] = new TimeSeriesContainer();
-
-								if(month == 12)
-								{
-
-									// Annual totals - grab from annualTAFs
-									n = _annualTAFs[mtsI][i + 1].length;
-									times2 = new int[n];
-									values2 = new double[n];
-									for(int j = 0; j < n; j++)
-									{
-										ht.setYearMonthDay(j + _startWY, 11, 1, 0);
-										times2[j] = ht.value();
-										values2[j] = _annualTAFs[mtsI][i + 1][j] - _annualTAFs[mtsI][0][j];
-									}
-
-								}
-								else
-								{
-
-									int[] times = timeSeriesResults[mtsI][i + 1].times;
-									double[] values = timeSeriesResults[mtsI][i + 1].values;
-									n = 0;
-									for(int j = 0; j < times.length; j++)
-									{
-										ht.set(times[j]);
-										if(ht.month() == month + 1)
-										{
-											n = n + 1;
-										}
-									}
-									times2 = new int[n];
-									values2 = new double[n];
-									int nmax = n; // Added to trap Schematic
-									// View
-									// case where required flow
-									// has
-									// extra values
-									n = 0;
-									for(int j = 0; j < times.length; j++)
-									{
-										ht.set(times[j]);
-										if((ht.month() == month + 1) && (n < nmax)
-												&& (j < timeSeriesResults[0][mtsI].values.length))
-										{
-											times2[n] = times[j];
-											values2[n] = values[j] - timeSeriesResults[0][mtsI].values[j];
-											n = n + 1;
-										}
-									}
-								}
-								results[month][mtsI][i].times = times2;
-								results[month][mtsI][i].values = values2;
-								results[month][mtsI][i].numberValues = n;
-								results[month][mtsI][i].units = timeSeriesResults[mtsI][i + 1].units;
-								results[month][mtsI][i].fullName = timeSeriesResults[mtsI][i + 1].fullName;
-								results[month][mtsI][i].fileName = timeSeriesResults[mtsI][i + 1].fileName;
-							}
-							if(results[month][mtsI][i].values != null)
-							{
-								double[] sortArray = results[month][mtsI][i].values;
-								Arrays.sort(sortArray);
-								results[month][mtsI][i].values = sortArray;
-							}
-						}
-					}
-				}
-			}
-			return results;
-		}
-		catch(Exception ex)
-		{
-			LOGGER.log(Level.SEVERE, "Unable to get time-series.", ex);
-		}
-		return null;
 	}
 }

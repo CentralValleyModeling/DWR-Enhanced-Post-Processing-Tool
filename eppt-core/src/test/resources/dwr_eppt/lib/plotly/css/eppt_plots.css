@@ -1,0 +1,210 @@
+/*
+ * Enhanced Post Processing Tool (EPPT) Copyright (c) 2020.
+ *
+ * EPPT is copyrighted by the State of California, Department of Water Resources. It is licensed
+ * under the GNU General Public License, version 2. This means it can be
+ * copied, distributed, and modified freely, but you may not restrict others
+ * in their ability to copy, distribute, and modify it. See the license below
+ * for more details.
+ *
+ * GNU General Public License
+ */
+
+body {
+    transition: background-color .5s;
+    font-family: 'Lucida Grande", "Lucida Sans Unicode", "Verdana", "Arial", "Helvetica", "sans-serif';
+}
+
+.sidenav {
+    height: 100%;
+    width: 0;
+    position: fixed;
+    /*z-index: 1;*/
+    top: 0;
+    left: 0;
+    background-color: rgb(204, 204, 204);
+    overflow-x: hidden;
+    transition: 0.5s;
+    padding-top: 60px;
+}
+
+.second-sidenav {
+    height: 100%;
+    width: 0;
+    position: fixed;
+    /*z-index: 1;*/
+    top: 0;
+    left: 250px;
+    background-color: rgb(241, 241, 241);
+    transition: 0.5s;
+    padding-top: 60px;
+}
+
+.second-sidenav label {
+    margin-top: 8px;
+    padding: 6px;
+    text-decoration: none;
+    font-size: 10px;
+    color: black;
+    display: inline-block;
+    transition: 0.3s;
+    margin-bottom: 2px;
+}
+
+.second-sidenav .secondary-nav-title {
+    margin-left: 5px;
+    font-size: 20px;
+}
+
+.second-sidenav .secondary-nav-label {
+    margin-left: 25px;
+    font-size: 12px;
+    width: 130px;
+}
+
+.second-sidenav input {
+    margin-left: 15px;
+    padding: 2px;
+    text-decoration: none;
+    font-size: 10px;
+    color: black;
+    margin-bottom: 2px;
+    transition: 0.3s;
+}
+
+.sidenav a {
+    padding: 8px 8px 8px 32px;
+    text-decoration: none;
+    font-size: 20px;
+    color: black;
+    display: block;
+    transition: 0.3s;
+}
+
+.sidenav select {
+    padding: 8px 8px 8px 32px;
+    text-decoration: none;
+    font-size: 15px;
+    color: #818181;
+    display: block;
+    transition: 0.3s;
+}
+
+.sidenav a:hover {
+    color: #f1f1f1;
+}
+
+.sidenav .closebtn {
+    position: absolute;
+    top: 0;
+    right: 25px;
+    font-size: 20px;
+    margin-left: 50px;
+}
+
+.sidenav .applybtn {
+    font-size: 26px;
+    margin-left: 120px;
+    color: cornflowerblue;
+}
+
+.color-picker {
+    margin-left: 15px;
+    display:inline-block;
+    color:#444;
+    border:1px solid #333333;
+    background:#333333;
+    box-shadow: 0 0 5px -1px rgba(0,0,0,0.2);
+    cursor:pointer;
+    vertical-align:middle;
+    width: 70px;
+    padding: 5px;
+    text-align: center;
+}
+.color-picker:active {
+    color:red;
+    box-shadow: 0 0 5px -1px rgba(0,0,0,0.6);
+}
+
+#main {
+    transition: margin-left .5s;
+    padding: 16px;
+}
+
+@media screen and (max-height: 450px) {
+    .sidenav {padding-top: 15px;}
+    .sidenav a {font-size: 18px;}
+}
+
+.switch {
+    position: relative;
+    width: 80px;
+    height: 13px;
+}
+
+.switch input {display:none;}
+
+.switch label {
+    margin-left: 25px;
+}
+
+.slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #ff282d;
+    -webkit-transition: .4s;
+    transition: .4s;
+    border-radius: 15px;
+    margin-left: 15px;
+}
+
+.slider:before {
+    position: absolute;
+    content: "";
+    height: 15px;
+    width: 15px;
+    left: 4px;
+    bottom: 2px;
+    background-color: white;
+    -webkit-transition: .4s;
+    transition: .4s;
+    border-radius: 50%;
+}
+
+input:checked + .slider {
+    background-color: #2ab934;
+}
+
+input:focus + .slider {
+    box-shadow: 0 0 1px #2196F3;
+}
+
+input:checked + .slider:before {
+    -webkit-transform: translateX(80px);
+    -ms-transform: translateX(40px);
+    transform: translateX(50px);
+}
+
+.slider:after
+{
+    content:'OFF';
+    color: black;
+    display: block;
+    position: absolute;
+    transform: translate(-50%,-50%);
+    top: 50%;
+    left: 50%;
+    font-size: 6px;
+    font-family: Verdana, sans-serif;
+}
+
+input:checked + .slider:after
+{
+    content:'ON';
+    color: white;
+}
+

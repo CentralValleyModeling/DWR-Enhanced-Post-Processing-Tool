@@ -16,59 +16,15 @@ import hec.io.TimeSeriesContainer;
 
 public class DisplayInput
 {
-	private final String _locationName;
 	private final TimeSeriesContainer[] _primaryResults;
-	private final TimeSeriesContainer[] _secondaryResults;
-	private final TimeSeriesContainer[] _diffResults;
-	private final TimeSeriesContainer[][] _excResults;
-	private final TimeSeriesContainer[][] _sexcResults;
-	private final TimeSeriesContainer[][] _dexcResults;
 
-	public DisplayInput(String locationName, TimeSeriesContainer[] primaryResults, TimeSeriesContainer[] secondaryResults,
-						TimeSeriesContainer[] diffResults, TimeSeriesContainer[][] excResults, TimeSeriesContainer[][] sexcResults,
-						TimeSeriesContainer[][] dexcResults)
+	public DisplayInput(TimeSeriesContainer[] primaryResults)
 	{
-		_locationName = locationName;
 		_primaryResults = primaryResults;
-		_secondaryResults = secondaryResults;
-		_diffResults = diffResults;
-		_excResults = excResults;
-		_sexcResults = sexcResults;
-		_dexcResults = dexcResults;
-	}
-
-	public String getLocationName()
-	{
-		return _locationName;
 	}
 
 	public TimeSeriesContainer[] getPrimaryResults()
 	{
 		return _primaryResults;
-	}
-
-	public TimeSeriesContainer[] getSecondaryResults()
-	{
-		return _secondaryResults;
-	}
-
-	public TimeSeriesContainer[] getDiffResults()
-	{
-		return _diffResults;
-	}
-
-	public TimeSeriesContainer[][] getExcResults()
-	{
-		return _excResults;
-	}
-
-	public TimeSeriesContainer[][] getSexcResults()
-	{
-		return _sexcResults;
-	}
-
-	public TimeSeriesContainer[][] getDexcResults()
-	{
-		return _dexcResults;
 	}
 }

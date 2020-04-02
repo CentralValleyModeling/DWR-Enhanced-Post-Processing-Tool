@@ -13,10 +13,9 @@ package gov.ca.water.eppt.nbui;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
-
 import javax.swing.*;
 
-import gov.ca.water.quickresults.ui.projectconfig.ProjectConfigurationPanel;
+import gov.ca.water.calgui.project.EpptConfigurationController;
 import gov.ca.water.trendreporting.TrendReportPanel;
 import org.openide.awt.ActionID;
 import org.openide.awt.ActionReference;
@@ -50,28 +49,16 @@ import org.openide.windows.TopComponent;
 public final class DashboardTopComponent extends EpptTopComponent
 {
 
-
-	private final TrendReportPanel _trendReportPanel;
-
 	public DashboardTopComponent()
 	{
 		setName("Trend Reporting");
-		_trendReportPanel = new TrendReportPanel();
+		EpptConfigurationController epptConfigurationController = EpptControllerProvider.getEpptConfigurationController();
+		final TrendReportPanel trendReportPanel = new TrendReportPanel(epptConfigurationController);
 		JScrollPane scrollPane = new JScrollPane();
-		scrollPane.setViewportView(_trendReportPanel);
+		scrollPane.setViewportView(trendReportPanel);
 		setLayout(new BorderLayout(15,15));
 		add(scrollPane, BorderLayout.CENTER);
 		setBackground(Color.WHITE);
-	}
-
-
-	@Override
-	protected void componentOpened()
-	{
-		super.componentOpened();
-		ProjectConfigurationPanel projectConfigurationPanel = ProjectConfigurationPanel.getProjectConfigurationPanel();
-		_trendReportPanel.setScenarioRuns(projectConfigurationPanel.getBaseScenario(),
-				projectConfigurationPanel.getEpptScenarioAlternatives());
 	}
 
 	@Override
@@ -79,4 +66,5 @@ public final class DashboardTopComponent extends EpptTopComponent
 	{
 		return "Trend Reporting";
 	}
+
 }

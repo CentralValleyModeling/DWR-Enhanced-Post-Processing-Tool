@@ -90,7 +90,7 @@ public final class ProgressFrame extends JFrame implements ActionListener
 				public void windowClosed(java.awt.event.WindowEvent windowEvent)
 				{
 					_workerScenarioMonitor.cancel(true);
-					progressFrame = null;
+					removeProgressFrame();
 				}
 			});
 
@@ -105,6 +105,11 @@ public final class ProgressFrame extends JFrame implements ActionListener
 			String messageText = "Unable to display progress frame.";
 			errorHandlingSvc.businessErrorHandler(messageText, e);
 		}
+	}
+
+	private static void removeProgressFrame()
+	{
+		progressFrame = null;
 	}
 
 	/**
@@ -148,7 +153,7 @@ public final class ProgressFrame extends JFrame implements ActionListener
 	}
 
 	/**
-	 * Sets the text for the button at the botom of the dialog
+	 * Sets the text for the button at the bottom of the dialog
 	 *
 	 * @param text
 	 */

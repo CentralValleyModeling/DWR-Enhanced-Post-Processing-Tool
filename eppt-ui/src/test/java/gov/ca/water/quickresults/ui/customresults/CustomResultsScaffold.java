@@ -10,6 +10,7 @@ package gov.ca.water.quickresults.ui.customresults;
 import gov.ca.water.calgui.EpptInitializationException;
 import gov.ca.water.quickresults.ui.EpptPanel;
 import gov.ca.water.quickresults.ui.EpptScaffold;
+import gov.ca.water.calgui.project.EpptConfigurationController;
 
 /**
  * Company: Resource Management Associates
@@ -27,7 +28,8 @@ public class CustomResultsScaffold extends EpptScaffold
 	@Override
 	protected EpptPanel buildEpptPanel()
 	{
-		CustomResultsPanel customResultsPanel = new CustomResultsPanel();
+		EpptConfigurationController epptConfigurationController = new EpptConfigurationController();
+		CustomResultsPanel customResultsPanel = new CustomResultsPanel(epptConfigurationController);
 		customResultsPanel.getSwingEngine().setActionListener(customResultsPanel,
 				new CustomResultsListener(customResultsPanel));
 		return customResultsPanel;

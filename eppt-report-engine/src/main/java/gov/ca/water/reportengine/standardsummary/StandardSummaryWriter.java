@@ -20,7 +20,7 @@ import java.util.logging.Level;
 import com.google.common.flogger.FluentLogger;
 import gov.ca.water.calgui.EpptInitializationException;
 import gov.ca.water.calgui.project.EpptScenarioRun;
-import gov.ca.water.calgui.scripts.JythonScriptRunner;
+import gov.ca.water.reportengine.jython.JythonScriptRunner;
 import gov.ca.water.plotly.PlotlyPrintException;
 import gov.ca.water.plotly.PlotlySvgPrinter;
 import gov.ca.water.reportengine.EpptReportException;
@@ -84,7 +84,6 @@ public class StandardSummaryWriter
 		_percentDiffTableBuilder = new PercentDiffTableBuilder(document, base, alternatives, reportParameters,_standardSummaryErrors);
 		_scatterPlotBuilder = new ScatterPlotBuilder(document, base, alternatives, reportParameters,_standardSummaryErrors);
 		JythonScriptBuilder.createInstance();
-		JythonScriptRunner.initializeScriptDirectory();
 	}
 
 	public Element write(List<EpptChart> charts) throws EpptReportException

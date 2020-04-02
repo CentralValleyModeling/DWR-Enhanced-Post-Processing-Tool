@@ -17,15 +17,19 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import gov.ca.water.calgui.constant.Constant;
+import org.apache.commons.io.FileUtils;
 import org.json.JSONObject;
 
 import static gov.ca.water.calgui.constant.Constant.ORCA_EXE;
+import static java.util.stream.Collectors.toList;
 
 /**
  * Company: Resource Management Associates
@@ -76,54 +80,62 @@ public final class PlotlySvgPrinter
 		}
 	}
 
-	public static void printSvg(Path imageDirectory) throws PlotlyPrintException
+	public static void printSvg(Path projectImageDir) throws PlotlyPrintException
 	{
 		try
 		{
-			Files.createDirectory(imageDirectory);
-		}
-		catch(IOException e)
-		{
-			LOGGER.log(Level.FINE, "Error creating images directory", e);
-		}
-		String jsonFiles;
-		try(Stream<Path> files = Files.walk(imageDirectory, 1))
-		{
-			jsonFiles = files.filter(p -> p.toString().endsWith(".json"))
-							 .map(imageDirectory.getParent()::relativize)
-							 .map(Path::toString)
-							 .map(s -> "\"" + s + "\"")
-							 .collect(Collectors.joining(" "));
-		}
-		catch(IOException e)
-		{
-			throw new PlotlyPrintException("Unable to export plots to SVG, cannot read JSON file directory: " + imageDirectory, e);
-		}
-		String orcaCommandline = "\"" + ORCA_EXE + "\" graph " + jsonFiles + " --format svg --output-dir \"" + imageDirectory.getParent().relativize(
-				imageDirectory) + "\""+ " --plotly \"" +
-				Paths.get(Constant.CONFIG_DIR).getParent().resolve("lib").resolve("plotly").resolve("dist").resolve("plotly.min.js") + "\"";
-		try
-		{
-			LOGGER.log(Level.FINE, "Plotly SVG generation command line: {0}", orcaCommandline);
-			Process exec = new ProcessBuilder()
-					.directory(imageDirectory.getParent().toFile())
-					.command(orcaCommandline)
-					.start();
-			exec.waitFor();
-			int exitCode = exec.exitValue();
-			if(exitCode != 0)
+			//Need to do Plotly SVG generation in temp directory because of bug in Plotly generating inside OneDrive folder
+			Path tempImageDir = Files.createTempDirectory("DWR-EPPT-" + projectImageDir.getFileName());
+			try(Stream<Path> files = Files.walk(projectImageDir, 1))
 			{
-				throw new PlotlyPrintException("Unable to create plots: " + imageDirectory + "\n Exit code: " + exitCode);
+				List<Path> jsonFiles = files.filter(p -> p.toString().endsWith(".json"))
+											.collect(toList());
+				for(Path jsonPath : jsonFiles)
+				{
+					Files.copy(jsonPath, tempImageDir.resolve(jsonPath.getFileName()), StandardCopyOption.REPLACE_EXISTING);
+				}
 			}
+			try(Stream<Path> files = Files.walk(tempImageDir, 1))
+			{
+				String jsonFiles = files.filter(p -> p.toString().endsWith(".json"))
+										.map(tempImageDir.getParent()::relativize)
+										.map(Path::toString)
+										.map(s -> "\"" + s + "\"")
+										.collect(Collectors.joining(" "));
+				String orcaCommandline = "\"" + ORCA_EXE + "\" graph " + jsonFiles + " --format svg --output-dir \""
+						+ tempImageDir.getFileName() + "\"" + " --plotly \""
+						+ Paths.get(Constant.CONFIG_DIR).getParent().resolve("lib").resolve("plotly").resolve("dist").resolve("plotly.min.js") + "\"";
+				LOGGER.log(Level.FINE, "Plotly SVG generation command line: {0}", orcaCommandline);
+				Process exec = new ProcessBuilder()
+						.directory(tempImageDir.getParent().toFile())
+						.command(orcaCommandline)
+						.start();
+				exec.waitFor();
+				int exitCode = exec.exitValue();
+				if(exitCode != 0)
+				{
+					throw new PlotlyPrintException("Unable to create plots: " + tempImageDir + "\n Exit code: " + exitCode);
+				}
+			}
+			try(Stream<Path> files = Files.walk(tempImageDir, 1))
+			{
+				List<Path> svgFiles = files.filter(p -> p.toString().endsWith(".svg"))
+											.collect(toList());
+				for(Path jsonPath : svgFiles)
+				{
+					Files.copy(jsonPath, projectImageDir.resolve(jsonPath.getFileName()), StandardCopyOption.REPLACE_EXISTING);
+				}
+			}
+			FileUtils.deleteDirectory(tempImageDir.toFile());
+		}
+		catch(IOException e)
+		{
+			LOGGER.log(Level.SEVERE, "Error creating images directory", e);
 		}
 		catch(InterruptedException e)
 		{
 			Thread.currentThread().interrupt();
 			throw new PlotlyPrintException("Plotly SVG generation process interrupted", e);
-		}
-		catch(IOException e)
-		{
-			throw new PlotlyPrintException("Unable to export plots to SVG", e);
 		}
 	}
 

@@ -14,7 +14,7 @@ package gov.ca.water.trendreporting;
 
 import java.nio.file.Path;
 
-import gov.ca.water.quickresults.ui.JavaFxChartsPane;
+import gov.ca.water.calgui.presentation.JavaFxChartsPane;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.BorderPane;
@@ -36,7 +36,6 @@ class TrendReportFlowPane
 	{
 		_flowPane = new BorderPane();
 		_flowPane.setBackground(new Background(new BackgroundFill(Color.WHITE, null, null)));
-		_flowPane.setMaxWidth(1300);
 		_animator = new TrendReportingAnimator();
 		_animator.observe(_flowPane.getChildren());
 	}
