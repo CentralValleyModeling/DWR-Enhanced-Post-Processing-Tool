@@ -33,12 +33,17 @@ public class TopComponentPlotHandler implements DisplayHelper.PlotHandler
 	{
 		String resultsOutputLocation = EpptPreferences.getResultsOutputLocation();
 		Mode output = WindowManager.getDefault().findMode(resultsOutputLocation);
+		PlotTopComponent firstTc = null;
 		for(JTabbedPane tabbedpane : tabbedPanes)
 		{
 			PlotTopComponent topComponent = new PlotTopComponent(tabbedpane);
 			output.dockInto(topComponent);
 			topComponent.open();
-			topComponent.requestActive();
+			if(firstTc == null)
+			{
+				topComponent.requestActive();
+				firstTc = topComponent;
+			}
 		}
 	}
 }
