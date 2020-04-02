@@ -70,7 +70,6 @@ public class EpptConfigurationPane extends BorderPane
 		gridPane.add(_epptAnnualPeriodPane, 2, 1);
 		GridPane.setHgrow(_epptAnnualPeriodPane, Priority.ALWAYS);
 		borderPane.setCenter(gridPane);
-		borderPane.setPrefHeight(320);
 		return borderPane;
 	}
 
