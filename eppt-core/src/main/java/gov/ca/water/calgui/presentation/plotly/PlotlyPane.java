@@ -29,22 +29,32 @@ import javafx.scene.layout.BorderPane;
  * @author <a href="mailto:adam@rmanet.com">Adam Korynta</a>
  * @since 01-14-2020
  */
-abstract class PlotlyPane extends JFXPanel
+public abstract class PlotlyPane extends JFXPanel
 {
+	private final EpptReportingComputedSet _epptReportingComputedSet;
 	private JavaFxChartsPane _javaFxChartsPane;
+	private boolean _initialized;
 
 	PlotlyPane(EpptReportingComputedSet epptReportingComputedSet)
 	{
-
 		Platform.setImplicitExit(false);
-		Platform.runLater(() ->
+		_epptReportingComputedSet = epptReportingComputedSet;
+	}
+
+	public void initPlot()
+	{
+		if(!_initialized)
 		{
-			BorderPane borderPane = new BorderPane();
-			_javaFxChartsPane = new JavaFxChartsPane(Paths.get(Constant.CONFIG_DIR).resolve("plots").resolve(getHtmlPath()),
-					"plot(" + epptReportingComputedSet.toJson() + ");");
-			borderPane.setCenter(_javaFxChartsPane);
-			setScene(new Scene(borderPane));
-		});
+			_initialized = true;
+			Platform.runLater(() ->
+			{
+				BorderPane borderPane = new BorderPane();
+				_javaFxChartsPane = new JavaFxChartsPane(Paths.get(Constant.CONFIG_DIR).resolve("plots").resolve(getHtmlPath()),
+						"plot(" + _epptReportingComputedSet.toJson() + ");");
+				borderPane.setCenter(_javaFxChartsPane);
+				setScene(new Scene(borderPane));
+			});
+		}
 	}
 
 	abstract Path getHtmlPath();
