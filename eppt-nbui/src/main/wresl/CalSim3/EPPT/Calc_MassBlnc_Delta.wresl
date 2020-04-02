@@ -31,7 +31,7 @@ define SR_26S_MOK014 { timeseries 'SR_26S_MOK014' kind 'SURFACE-RUNOFF' units 'C
 define SR_71_OMR039 { timeseries 'SR_71_OMR039' kind 'SURFACE-RUNOFF' units 'CFS' convert 'TAF' }
 
 define SG203_SJR006_31 { timeseries 'SG203_SJR006_31' kind 'RIVER-SEEPAGE' units 'CFS' convert 'TAF' }
-!define SG201_SJR013_31 { timeseries 'SG201_SJR013_31' kind 'RIVER-SEEPAGE' units 'CFS' convert 'TAF' }
+define SG201_SJR013_31 { timeseries 'SG201_SJR013_31' kind 'RIVER-SEEPAGE' units 'CFS' convert 'TAF' }
 define SG197_MOK014_30 { timeseries 'SG197_MOK014_30' kind 'RIVER-SEEPAGE' units 'CFS' convert 'TAF' }
 define SG159_SJR042_24 { timeseries 'SG159_SJR042_24' kind 'RIVER-SEEPAGE' units 'CFS' convert 'TAF' }
 define SG168_SJR038_26 { timeseries 'SG168_SJR038_26' kind 'RIVER-SEEPAGE' units 'CFS' convert 'TAF' }
