@@ -196,7 +196,7 @@ class AddMonthlyFilterDialog extends JDialog
 		gbc.insets = new Insets(5, 5, 5, 5);
 		panel5.add(panel6, gbc);
 		_seasonalPeriodStartCombobox = new JComboBox();
-		_seasonalPeriodStartCombobox.setEnabled(false);
+		_seasonalPeriodStartCombobox.setEnabled(true);
 		gbc = new GridBagConstraints();
 		gbc.gridx = 0;
 		gbc.gridy = 0;
@@ -215,7 +215,7 @@ class AddMonthlyFilterDialog extends JDialog
 		gbc.fill = GridBagConstraints.VERTICAL;
 		panel6.add(spacer2, gbc);
 		_seasonalPeriodEndCombobox = new JComboBox();
-		_seasonalPeriodEndCombobox.setEnabled(false);
+		_seasonalPeriodEndCombobox.setEnabled(true);
 		gbc = new GridBagConstraints();
 		gbc.gridx = 2;
 		gbc.gridy = 0;
