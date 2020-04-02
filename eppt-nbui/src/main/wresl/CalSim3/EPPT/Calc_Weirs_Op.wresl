@@ -15,8 +15,8 @@ Ahmed Ali    	| DWR	|	01/10/2020	|	Revised by moving the mapped variables (from 
 /***************************************** Sutter Bypass TOTAL SPILL ************************************/
 
 !Check if any water spills into the Sutter Bypass
-!define SUTTER_SPLL      {value SPILL_TO_SUTTER + SPILL_FROM_MOULTON + SPILL_FROM_COLUSA + SPILL_FROM_TISDALE + SPILL_FROM_BUTT_CRK }
-define SUTTER_SPLL { timeseries kind 'WEIR-OP-VALUE' units 'cfs' convert 'taf'}
+define SUTTER_SPLL      {value SPILL_TO_SUTTER + SPILL_FROM_MOULTON + SPILL_FROM_COLUSA + SPILL_FROM_TISDALE + SPILL_FROM_BUTT_CRK }
+!define SUTTER_SPLL { timeseries kind 'WEIR-OP-VALUE' units 'cfs' convert 'taf'}
 define SUTTER_SPLL_ 	{ alias  SUTTER_SPLL  kind 'WEIR-OP-VALUE' units 'TAF' }
 
 define SUTTER_TOT_SPL_CHECK {
@@ -72,8 +72,8 @@ define SPILL_FROM_TISDALE_CHECK {
 /***************************************** Yolo Bypass TOTAL SPILL ************************************/
 
 !Check if any water spills into the Yolo Bypass
-!define YOLO_SPLL      {value SPILL_FROM_FREMONT + SPILL_FROM_SAC_WEIR + SPILL_FROM_KINGHTS_LNDING}
-define YOLO_SPLL      {timeseries kind 'WEIR-OP-VALUE' units 'cfs' convert 'taf'}
+define YOLO_SPLL      {value SPILL_FROM_FREMONT + SPILL_FROM_SAC_WEIR + SPILL_FROM_KINGHTS_LNDING}
+!define YOLO_SPLL      {timeseries kind 'WEIR-OP-VALUE' units 'cfs' convert 'taf'}
 define YOLO_SPLL_ 	  { alias  YOLO_SPLL  kind 'WEIR-OP-VALUE' units 'TAF' }
 
 
