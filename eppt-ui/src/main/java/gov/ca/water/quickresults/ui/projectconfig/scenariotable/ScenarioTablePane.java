@@ -194,7 +194,7 @@ public class ScenarioTablePane extends TitledPane
 			newScenarioRun.setBaseSelected(oldModel.isBase());
 			newScenarioRun.setAltSelected(oldModel.isAlternative());
 			_scenarioTableModel.getRows().add(i, new ScenarioRowModel(this::setModified, _scenarioTableModel, newScenarioRun));
-			_controller.setModified();
+			setModified();
 		}
 	}
 
@@ -313,6 +313,7 @@ public class ScenarioTablePane extends TitledPane
 		if(scenarioRun != null && !scenarioRunEditor.isCanceled())
 		{
 			addScenarioRun(scenarioRun);
+			setModified();
 		}
 	}
 
