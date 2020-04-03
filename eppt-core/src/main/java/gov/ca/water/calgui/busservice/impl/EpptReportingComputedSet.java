@@ -79,10 +79,16 @@ public final class EpptReportingComputedSet
 		jsonObject.put(GUI_LINK_TITLE, _plotTitle);
 		jsonObject.put(SCENARIO_RUN_DATA, jsonArray);
 		jsonObject.put(UNITS, _units);
-		long firstRecord = ZonedDateTime.of(_firstRecord, ZoneId.systemDefault()).toInstant().toEpochMilli();
-		jsonObject.put(FIRST_RECORD, firstRecord);
-		long lastRecord = ZonedDateTime.of(_lastRecord, ZoneId.systemDefault()).toInstant().toEpochMilli();
-		jsonObject.put(LAST_RECORD, lastRecord);
+		if(_firstRecord != null)
+		{
+			long firstRecord = ZonedDateTime.of(_firstRecord, ZoneId.systemDefault()).toInstant().toEpochMilli();
+			jsonObject.put(FIRST_RECORD, firstRecord);
+		}
+		if(_lastRecord != null)
+		{
+			long lastRecord = ZonedDateTime.of(_lastRecord, ZoneId.systemDefault()).toInstant().toEpochMilli();
+			jsonObject.put(LAST_RECORD, lastRecord);
+		}
 		jsonObject.put(IS_INSTANTANEOUS, _isInstantaneous);
 		_epptReportingComputed.stream()
 							  .map(EpptReportingScenarioComputed::toJson)

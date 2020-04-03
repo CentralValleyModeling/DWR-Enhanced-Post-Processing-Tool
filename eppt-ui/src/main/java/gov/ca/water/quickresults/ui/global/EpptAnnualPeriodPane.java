@@ -89,6 +89,7 @@ class EpptAnnualPeriodPane extends TitledPane
 		_controller.endYearProperty().addListener((e, o, n) -> _treeView.refresh());
 		_treeView.getSelectionModel().selectedItemProperty().addListener(
 				(e, o, n) -> _editButton.setDisable(n == null || n.getValue() == null || !n.getValue().isEditable()));
+		_controller.addScenarioChangedListener((b, a) -> _controller.setWaterYearPeriodRangesFilters(getWaterYearPeriodRanges()));
 	}
 
 	private void initComponents()
