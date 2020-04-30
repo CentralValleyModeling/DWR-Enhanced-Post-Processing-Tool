@@ -437,7 +437,7 @@ class EpptAnnualPeriodPane extends TitledPane
 			WaterYearPeriod waterYearPeriod = new WaterYearPeriod("Long Term");
 			WaterYearPeriodRange range = new WaterYearPeriodRange(waterYearPeriod,
 					new WaterYearType(_controller.getStartYear(), waterYearPeriod), new WaterYearType(_controller.getEndYear(), waterYearPeriod));
-			return "Long Term (" + range.toString(_controller.getWaterYearDefinition(), formatter) + ")";
+			return "Long Term";
 		}
 
 		@Override
