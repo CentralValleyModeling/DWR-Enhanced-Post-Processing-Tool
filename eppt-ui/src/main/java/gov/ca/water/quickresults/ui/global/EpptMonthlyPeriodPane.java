@@ -70,8 +70,7 @@ class EpptMonthlyPeriodPane extends TitledPane
 		@Override
 		public String toString()
 		{
-			return "Entire Period (" + getStart().getDisplayName(TextStyle.SHORT, Locale.getDefault()) + " - " +
-					getEnd().getDisplayName(TextStyle.SHORT, Locale.getDefault()) + ")";
+			return "All Months";
 		}
 	};
 	private final ListView<PeriodItem> _seasonalPeriodListView = new ListView<>();

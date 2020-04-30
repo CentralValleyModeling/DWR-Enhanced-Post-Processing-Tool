@@ -77,7 +77,7 @@ public class PlotlyPaneBuilder
 				@Override
 				public String toString()
 				{
-					return "Entire Period (" + super.toString() + ")";
+					return "All Months";
 				}
 			});
 		}
