@@ -19,7 +19,6 @@ import java.util.logging.Logger;
 import javax.swing.*;
 
 import gov.ca.water.calgui.presentation.plotly.PlotlyPane;
-import gov.ca.water.quickresults.ui.EpptPanel;
 import org.openide.windows.TopComponent;
 
 /**
@@ -65,19 +64,22 @@ public class PlotTopComponent extends EpptTopComponent
 		if(!_initialized)
 		{
 			_initialized = true;
-			_tabbedPane.addChangeListener(e ->
-			{
-				Component selectedComponent = _tabbedPane.getSelectedComponent();
-				if(selectedComponent instanceof JScrollPane)
-				{
-					Component component = ((JScrollPane) selectedComponent).getViewport().getComponents()[0];
-					if(component instanceof PlotlyPane)
-					{
-						((PlotlyPane) component).initPlot();
-					}
-				}
-			});
+			_tabbedPane.addChangeListener(e -> loadSelectedPlot());
 			_tabbedPane.setSelectedIndex(0);
+			loadSelectedPlot();
+		}
+	}
+
+	private void loadSelectedPlot()
+	{
+		Component selectedComponent = _tabbedPane.getSelectedComponent();
+		if(selectedComponent instanceof JScrollPane)
+		{
+			Component component = ((JScrollPane) selectedComponent).getViewport().getComponents()[0];
+			if(component instanceof PlotlyPane)
+			{
+				((PlotlyPane) component).initPlot();
+			}
 		}
 	}
 
