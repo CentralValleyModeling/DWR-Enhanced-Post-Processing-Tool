@@ -606,6 +606,7 @@ public class QAQCReportPanel extends EpptPanel
 		_cancelButton.setEnabled(false);
 		_cancelButton.setPreferredSize(new Dimension(147, 30));
 		_cancelButton.setText("Cancel");
+		_cancelButton.setToolTipText("Cancel Running Task");
 		panel4.add(_cancelButton);
 		final JPanel panel5 = new JPanel();
 		panel5.setLayout(new BorderLayout(0, 0));
@@ -667,6 +668,7 @@ public class QAQCReportPanel extends EpptPanel
 		_openReportButton.setMinimumSize(new Dimension(120, 26));
 		_openReportButton.setPreferredSize(new Dimension(146, 30));
 		_openReportButton.setText("Open Report");
+		_openReportButton.setToolTipText("Open Generated Report");
 		gbc = new GridBagConstraints();
 		gbc.gridx = 3;
 		gbc.gridy = 0;
@@ -675,6 +677,7 @@ public class QAQCReportPanel extends EpptPanel
 		_generateReportButton = new JButton();
 		_generateReportButton.setPreferredSize(new Dimension(147, 30));
 		_generateReportButton.setText("Generate Report");
+		_generateReportButton.setToolTipText("Generate QA/QC Report");
 		gbc = new GridBagConstraints();
 		gbc.gridx = 3;
 		gbc.gridy = 2;
@@ -783,6 +786,7 @@ public class QAQCReportPanel extends EpptPanel
 		panel11.add(panel14, BorderLayout.SOUTH);
 		_overwriteJRXMLButton = new JButton();
 		_overwriteJRXMLButton.setText("Update Report Templates");
+		_overwriteJRXMLButton.setToolTipText("Update Report Templates in project directory with templates in the installer directory");
 		panel14.add(_overwriteJRXMLButton);
 		final JPanel panel15 = new JPanel();
 		panel15.setLayout(new BorderLayout(0, 0));
@@ -920,6 +924,7 @@ public class QAQCReportPanel extends EpptPanel
 		_runBaseWreslButton.setMinimumSize(new Dimension(120, 26));
 		_runBaseWreslButton.setPreferredSize(new Dimension(90, 26));
 		_runBaseWreslButton.setText("Run WRESL");
+		_runBaseWreslButton.setToolTipText("Run EPPT WRESL Script");
 		gbc = new GridBagConstraints();
 		gbc.gridx = 3;
 		gbc.gridy = 0;
@@ -952,6 +957,7 @@ public class QAQCReportPanel extends EpptPanel
 		_overwriteScriptsButtonBase.setMinimumSize(new Dimension(120, 26));
 		_overwriteScriptsButtonBase.setPreferredSize(new Dimension(120, 26));
 		_overwriteScriptsButtonBase.setText("Overwrite Scripts");
+		_overwriteScriptsButtonBase.setToolTipText("Overwrite Scripts in project directory with scripts from the installer directory");
 		gbc = new GridBagConstraints();
 		gbc.gridx = 4;
 		gbc.gridy = 0;
@@ -965,6 +971,7 @@ public class QAQCReportPanel extends EpptPanel
 		_runAltWreslButton.setMinimumSize(new Dimension(120, 26));
 		_runAltWreslButton.setPreferredSize(new Dimension(90, 26));
 		_runAltWreslButton.setText("Run WRESL");
+		_runAltWreslButton.setToolTipText("Run EPPT WRESL Script");
 		gbc = new GridBagConstraints();
 		gbc.gridx = 3;
 		gbc.gridy = 2;
@@ -977,6 +984,7 @@ public class QAQCReportPanel extends EpptPanel
 		_overwriteScriptsButtonAlt.setMinimumSize(new Dimension(120, 26));
 		_overwriteScriptsButtonAlt.setPreferredSize(new Dimension(120, 26));
 		_overwriteScriptsButtonAlt.setText("Overwrite Scripts");
+		_overwriteScriptsButtonAlt.setToolTipText("Overwrite Scripts in project directory with scripts from the installer directory");
 		gbc = new GridBagConstraints();
 		gbc.gridx = 4;
 		gbc.gridy = 2;

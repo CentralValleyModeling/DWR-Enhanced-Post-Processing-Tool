@@ -38,6 +38,7 @@
                       <enabled value="false"/>
                       <preferredSize width="147" height="30"/>
                       <text value="Cancel"/>
+                      <toolTipText value="Cancel Running Task"/>
                     </properties>
                   </component>
                 </children>
@@ -137,6 +138,7 @@
                           <minimumSize width="120" height="26"/>
                           <preferredSize width="146" height="30"/>
                           <text value="Open Report"/>
+                          <toolTipText value="Open Generated Report"/>
                         </properties>
                       </component>
                       <component id="74b35" class="javax.swing.JButton" binding="_generateReportButton" default-binding="true">
@@ -147,6 +149,7 @@
                         <properties>
                           <preferredSize width="147" height="30"/>
                           <text value="Generate Report"/>
+                          <toolTipText value="Generate QA/QC Report"/>
                         </properties>
                       </component>
                     </children>
@@ -310,6 +313,7 @@
                     <constraints/>
                     <properties>
                       <text value="Update Report Templates"/>
+                      <toolTipText value="Update Report Templates in project directory with templates in the installer directory"/>
                     </properties>
                   </component>
                 </children>
@@ -473,6 +477,7 @@
                       <minimumSize width="120" height="26"/>
                       <preferredSize width="90" height="26"/>
                       <text value="Run WRESL"/>
+                      <toolTipText value="Run EPPT WRESL Script"/>
                     </properties>
                   </component>
                   <component id="bad34" class="javax.swing.JLabel" binding="_baseWreslDiffWarningLabel">
@@ -506,6 +511,7 @@
                       <minimumSize width="120" height="26"/>
                       <preferredSize width="120" height="26"/>
                       <text value="Overwrite Scripts"/>
+                      <toolTipText value="Overwrite Scripts in project directory with scripts from the installer directory"/>
                     </properties>
                   </component>
                   <component id="3c882" class="javax.swing.JButton" binding="_runAltWreslButton">
@@ -519,6 +525,7 @@
                       <minimumSize width="120" height="26"/>
                       <preferredSize width="90" height="26"/>
                       <text value="Run WRESL"/>
+                      <toolTipText value="Run EPPT WRESL Script"/>
                     </properties>
                   </component>
                   <component id="8d837" class="javax.swing.JButton" binding="_overwriteScriptsButtonAlt">
@@ -531,6 +538,7 @@
                       <minimumSize width="120" height="26"/>
                       <preferredSize width="120" height="26"/>
                       <text value="Overwrite Scripts"/>
+                      <toolTipText value="Overwrite Scripts in project directory with scripts from the installer directory"/>
                     </properties>
                   </component>
                   <component id="b4bb4" class="javax.swing.JTextField" binding="_altScenarioTextField">
