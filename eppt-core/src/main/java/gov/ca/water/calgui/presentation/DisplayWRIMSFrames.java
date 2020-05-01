@@ -229,6 +229,7 @@ class DisplayWRIMSFrames extends DisplayFrames
 			if(result[0] != null)
 			{
 				TimeSeriesContainer tsc = result[0];
+				tsc.setFullName(epptScenarioRun.getName() + " (" + epptScenarioRun.getModel() +")");
 				scenarioRunData.computeIfAbsent(epptScenarioRun, v -> new ArrayList<>()).add(tsc);
 			}
 		}

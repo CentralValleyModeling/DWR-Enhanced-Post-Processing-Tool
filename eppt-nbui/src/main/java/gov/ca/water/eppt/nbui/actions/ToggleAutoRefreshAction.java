@@ -11,36 +11,16 @@
  */
 package gov.ca.water.eppt.nbui.actions;
 
-import java.awt.Component;
 import java.awt.event.ActionEvent;
-import java.io.IOException;
-import java.net.URL;
-import java.nio.file.Path;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.*;
 
 import gov.ca.water.calgui.constant.EpptPreferences;
-import gov.ca.water.calgui.project.EpptConfigurationController;
-import gov.ca.water.eppt.nbui.EpptControllerProvider;
-import gov.ca.water.eppt.nbui.Installer;
-import gov.ca.water.eppt.nbui.ProjectConfigurationTopComponent;
-import gov.ca.water.eppt.nbui.projectconfig.ProjectConfigurationIO;
-import org.netbeans.api.actions.Savable;
 import org.openide.awt.ActionID;
 import org.openide.awt.ActionReference;
 import org.openide.awt.ActionReferences;
 import org.openide.awt.ActionRegistration;
-import org.openide.awt.DropDownButtonFactory;
-import org.openide.util.ContextAwareAction;
-import org.openide.util.Lookup;
 import org.openide.util.NbBundle.Messages;
-import org.openide.util.Utilities;
 import org.openide.util.actions.Presenter;
-import org.openide.windows.Mode;
-import org.openide.windows.WindowManager;
 
 @ActionID(
 		category = "EPPT",
