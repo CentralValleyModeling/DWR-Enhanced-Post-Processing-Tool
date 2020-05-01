@@ -13,11 +13,15 @@
 package gov.ca.water.calgui.presentation.plotly;
 
 import java.time.Month;
+import java.time.YearMonth;
 import java.time.format.TextStyle;
+import java.util.Collection;
+import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Set;
 
 import gov.ca.water.calgui.bo.WaterYearDefinition;
 import gov.ca.water.calgui.bo.WaterYearPeriodRangesFilter;
@@ -30,6 +34,8 @@ import com.rma.javafx.treetable.RmaTreeTableModel;
 import com.rma.javafx.treetable.columns.specs.RmaTreeTableColumnSpec;
 import com.rma.javafx.treetable.columns.specs.TreeTableColumnSpec;
 
+import static java.util.stream.Collectors.toSet;
+
 /**
  * Company: Resource Management Associates
  *
@@ -41,7 +47,8 @@ class SummaryTableModel extends RmaTreeTableModel<SummaryPaneRow>
 	private final RmaTreeTableColumnSpec _rootColSpec;
 	private final RmaTreeTableColumnSpec _aggregateColumnSpec;
 
-	SummaryTableModel(String plotTitle, WaterYearDefinition waterYearDefinition, EpptReportingComputedSet epptReportingComputedSet)
+	SummaryTableModel(String plotTitle, WaterYearDefinition waterYearDefinition, EpptReportingComputedSet epptReportingComputedSet,
+					  List<MonthPeriod> selectedMonthlyPeriods)
 	{
 		_rootColSpec = new RmaTreeTableColumnSpec.Builder(plotTitle + " (" + epptReportingComputedSet.getUnits() + ")")
 				.withCanBeHidden(false)
@@ -55,18 +62,25 @@ class SummaryTableModel extends RmaTreeTableModel<SummaryPaneRow>
 														  .getEpptReportingComputed().get(0)
 														  .getMonthPeriod();
 		String columnTitle = monthPeriod.getName();
+		Set<Month> selectedMonths = selectedMonthlyPeriods.stream()
+														  .map(period -> period.getYearMonths(1955))
+														  .flatMap(Collection::stream)
+														  .map(YearMonth::getMonth)
+														  .collect(toSet());
 		_aggregateColumnSpec = new RmaTreeTableColumnSpec.Builder(columnTitle)
-				.withCanBeHidden(false)
+				.withCanBeHidden(true)
 				.withEditable(false)
 				.withSortable(false)
-				.withVisibleByDefault(true)
+				.withVisibleByDefault(selectedMonths.size() == 12)
 				.build();
-		Map<Month, TreeTableColumnSpec> monthTreeTableColumnSpecMap = processColumns(waterYearDefinition, _aggregateColumnSpec);
+		Map<Month, TreeTableColumnSpec> monthTreeTableColumnSpecMap = processColumns(waterYearDefinition, _aggregateColumnSpec,
+				selectedMonths);
 		for(EpptReportingComputedSet.EpptReportingScenarioComputed computed : epptReportingComputedSet.getEpptReportingComputed())
 		{
 			for(EpptReportingComputedSet.EpptReportingTs tsComputed : computed.getTsComputed())
 			{
-				SummaryPaneRow.SummaryPaneRowScenario summaryPaneRowScenario = new SummaryPaneRow.SummaryPaneRowScenario(tsComputed.getTsName(), _rootColSpec);
+				SummaryPaneRow.SummaryPaneRowScenario summaryPaneRowScenario = new SummaryPaneRow.SummaryPaneRowScenario(tsComputed.getTsName(),
+						_rootColSpec);
 				for(EpptReportingComputedSet.EpptReportingMonthComputed monthComputed : tsComputed.getMonthComputed())
 				{
 					List<EpptReportingComputedStatistics> computedStatistics = monthComputed.getEpptReportingComputed().get(0)
@@ -115,9 +129,10 @@ class SummaryTableModel extends RmaTreeTableModel<SummaryPaneRow>
 	}
 
 	private Map<Month, TreeTableColumnSpec> processColumns(WaterYearDefinition waterYearDefinition,
-														   RmaTreeTableColumnSpec aggregateColumnSpec)
+														   RmaTreeTableColumnSpec aggregateColumnSpec,
+														   Set<Month> selectedMonths)
 	{
-		Map<Month, TreeTableColumnSpec> retval = new HashMap<>();
+		Map<Month, TreeTableColumnSpec> retval = new EnumMap<>(Month.class);
 		getColumnSpecs().add(_rootColSpec);
 		Month startMonth = waterYearDefinition.getStartMonth();
 		do
@@ -126,7 +141,7 @@ class SummaryTableModel extends RmaTreeTableModel<SummaryPaneRow>
 					.withCanBeHidden(true)
 					.withEditable(false)
 					.withSortable(false)
-					.withVisibleByDefault(true)
+					.withVisibleByDefault(selectedMonths.contains(startMonth))
 					.build();
 			getColumnSpecs().add(spec);
 			retval.put(startMonth, spec);

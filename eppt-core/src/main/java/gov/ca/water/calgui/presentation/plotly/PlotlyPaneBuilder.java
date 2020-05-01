@@ -114,10 +114,10 @@ public class PlotlyPaneBuilder
 				retval = new MonthlyLinePane(epptReportingComputedSet);
 				break;
 			case MONTHLY_TABLE:
-				retval = new MonthlyTablePane(_plotTitle, waterYearDefinition, epptReportingComputedSet);
+				retval = new MonthlyTablePane(_plotTitle, waterYearDefinition, epptReportingComputedSet, _epptConfigurationController.getSelectedMonthlyPeriods());
 				break;
 			case SUMMARY_TABLE:
-				retval = new SummaryTablePane(_plotTitle, waterYearDefinition, epptReportingComputedSet);
+				retval = new SummaryTablePane(_plotTitle, waterYearDefinition, epptReportingComputedSet, _epptConfigurationController.getSelectedMonthlyPeriods());
 		}
 		return retval;
 	}

@@ -15,13 +15,10 @@ package gov.ca.water.quickresults.ui.global;
 import java.awt.Frame;
 import java.lang.reflect.InvocationTargetException;
 import java.time.Month;
-import java.time.format.TextStyle;
 import java.util.List;
-import java.util.Locale;
 import java.util.Objects;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
 import javax.swing.*;
 
 import gov.ca.water.calgui.busservice.impl.EpptReportingMonths;

@@ -12,8 +12,11 @@
 
 package gov.ca.water.calgui.presentation.plotly;
 
+import java.util.List;
+
 import gov.ca.water.calgui.bo.WaterYearDefinition;
 import gov.ca.water.calgui.busservice.impl.EpptReportingComputedSet;
+import gov.ca.water.calgui.busservice.impl.MonthPeriod;
 import javafx.application.Platform;
 import javafx.collections.ObservableList;
 import javafx.embed.swing.JFXPanel;
@@ -38,13 +41,16 @@ class SummaryTablePane extends JFXPanel
 {
 	private final String _plotTitle;
 	private final WaterYearDefinition _waterYearDefinition;
+	private final List<MonthPeriod> _selectedMonthlyPeriods;
 	private final EpptReportingComputedSet _data;
 
-	SummaryTablePane(String plotTitle, WaterYearDefinition waterYearDefinition, EpptReportingComputedSet data)
+	SummaryTablePane(String plotTitle, WaterYearDefinition waterYearDefinition, EpptReportingComputedSet data,
+					 List<MonthPeriod> selectedMonthlyPeriods)
 	{
 		_data = data;
 		_plotTitle = plotTitle;
 		_waterYearDefinition = waterYearDefinition;
+		_selectedMonthlyPeriods = selectedMonthlyPeriods;
 		Platform.setImplicitExit(false);
 		Platform.runLater(this::init);
 	}
@@ -53,7 +59,7 @@ class SummaryTablePane extends JFXPanel
 	{
 		BorderPane borderPane = new BorderPane();
 		RmaTreeTableView<SummaryTableModel, SummaryPaneRow> treeView = new RmaTreeTableView<>();
-		SummaryTableModel tableModel = new SummaryTableModel(_plotTitle, _waterYearDefinition, _data);
+		SummaryTableModel tableModel = new SummaryTableModel(_plotTitle, _waterYearDefinition, _data, _selectedMonthlyPeriods);
 		treeView.setModel(tableModel);
 		treeView.setCopyEnabled(true);
 		ObservableList<TreeItem<SummaryPaneRow>> treeItems = treeView.getRoot().getChildren();

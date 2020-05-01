@@ -138,9 +138,16 @@ abstract class MonthlyPaneRow extends RmaTreeTableRowModel<MonthlyPaneRow>
 			_data = data.entrySet().stream().collect(toMap(Map.Entry::getKey,
 					e ->
 					{
-						BigDecimal bigDecimal = BigDecimal.valueOf(e.getValue());
-						bigDecimal = bigDecimal.round(new MathContext(3));
-						return new SimpleStringProperty(Double.toString(bigDecimal.doubleValue()));
+						if(!e.getValue().isNaN())
+						{
+							BigDecimal bigDecimal = BigDecimal.valueOf(e.getValue());
+							bigDecimal = bigDecimal.round(new MathContext(3));
+							return new SimpleStringProperty(Double.toString(bigDecimal.doubleValue()));
+						}
+						else
+						{
+							return new SimpleStringProperty("");
+						}
 					}));
 			_treeTableColumnSpec = treeTableColumnSpec;
 		}
