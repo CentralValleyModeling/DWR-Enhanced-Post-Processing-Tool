@@ -129,8 +129,6 @@ public final class Constant
 
 	// Numbers
 	public static final int ZERO = 0;
-	public static final int MIN_YEAR = 1921;
-	public static final int MAX_YEAR = 2003;
 
 	// Status window
 	public static final String STATUS_BTN_TEXT_CLOSE = "Close this status window";

@@ -104,6 +104,7 @@ public class TrendReportPanel extends JFXPanel
 
 		Insets insets = new Insets(4);
 		BorderPane mainPane = new BorderPane();
+		mainPane.setStyle("-fx-font-size: 11");
 		mainPane.setBackground(new Background(new BackgroundFill(Color.WHITE, null, null)));
 		BorderPane center = buildJavascriptPane();
 		BorderPane.setMargin(center, insets);

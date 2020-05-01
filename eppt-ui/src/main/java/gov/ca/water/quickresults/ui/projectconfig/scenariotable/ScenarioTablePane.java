@@ -87,7 +87,7 @@ public class ScenarioTablePane extends TitledPane
 		initComponents();
 		_controller.getScenarioRuns().forEach(this::addScenarioRun);
 		initListeners();
-		_treeTable.setPrefHeight(250);
+//		_treeTable.setPrefHeight(250);
 	}
 
 	private void initListeners()
@@ -178,9 +178,12 @@ public class ScenarioTablePane extends TitledPane
 
 	private void setModified()
 	{
-		_treeTable.refresh();
-		_controller.setScenarioRuns(_scenarioTableModel.getAllScenarioRuns());
-		_controller.setModified();
+		if(_modifiedListenerEnabled)
+		{
+			_treeTable.refresh();
+			_controller.setScenarioRuns(_scenarioTableModel.getAllScenarioRuns());
+			_controller.setModified();
+		}
 	}
 
 	private void updateScenario(EpptScenarioRun oldScenarioRun, EpptScenarioRun newScenarioRun)

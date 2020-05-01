@@ -12,6 +12,7 @@
 
 package gov.ca.water.quickresults.ui.global;
 
+import gov.ca.water.calgui.constant.EpptPreferences;
 import gov.ca.water.calgui.project.EpptConfigurationController;
 import javafx.beans.value.ChangeListener;
 import javafx.geometry.Insets;
@@ -32,15 +33,14 @@ class EpptProjectPane extends TitledPane
 {
 	private final TextField _projectNameField = new TextField();
 	private final TextField _projectDescriptionField = new TextField();
+	private final TextField _projectFileField = new TextField();
 	private final EpptConfigurationController _controller;
 
 	EpptProjectPane(EpptConfigurationController controller)
 	{
 		_controller = controller;
-		setExpanded(false);
 		initComponents();
-		fillProject(_controller.getProjectName(), _controller.getProjectDescription());
-
+		fillProject();
 		initListeners();
 	}
 
@@ -81,25 +81,30 @@ class EpptProjectPane extends TitledPane
 		gridPane.setVgap(5.0);
 		gridPane.add(new Label("Project Name: "), 0, 0);
 		gridPane.add(new Label("Description: "), 0, 1);
+		gridPane.add(new Label("Project File: "), 0, 2);
 		_projectNameField.setMaxWidth(Double.MAX_VALUE);
 		_projectDescriptionField.setMaxWidth(Double.MAX_VALUE);
+		_projectFileField.setMaxWidth(Double.MAX_VALUE);
+		_projectFileField.setDisable(true);
 		gridPane.add(_projectNameField, 1, 0);
 		gridPane.add(_projectDescriptionField, 1, 1);
+		gridPane.add(_projectFileField, 1, 2);
 		GridPane.setHgrow(_projectDescriptionField, Priority.ALWAYS);
 		BorderPane mainPane = new BorderPane();
 		mainPane.setCenter(gridPane);
 		setContent(mainPane);
 	}
 
-	private void fillProject(String name, String description)
+	private void fillProject()
 	{
-		_projectNameField.setText(name);
-		_projectDescriptionField.setText(description);
+		_projectNameField.setText(_controller.getProjectName());
+		_projectDescriptionField.setText(_controller.getProjectDescription());
+		_projectFileField.setText(EpptPreferences.getLastProjectConfiguration().toString());
 	}
 
 	void reloadProject()
 	{
 		initListeners();
-		fillProject(_controller.getProjectName(), _controller.getProjectDescription());
+		fillProject();
 	}
 }

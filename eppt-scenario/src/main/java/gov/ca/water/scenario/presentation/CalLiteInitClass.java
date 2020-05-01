@@ -258,9 +258,9 @@ public class CalLiteInitClass
 		setMonthModelAndIndex(spnEM1, 8);
 		// Set up year spinners
 		JSpinner spnSY1 = (JSpinner) _swingEngine.find("spnRunStartYear");
-		setNumberModelAndIndex(spnSY1, 1921, Constant.MIN_YEAR, Constant.MAX_YEAR, 1, "####");
+		setNumberModelAndIndex(spnSY1, 1921, 1921, 2003, 1, "####");
 		JSpinner spnEY1 = (JSpinner) _swingEngine.find("spnRunEndYear");
-		setNumberModelAndIndex(spnEY1, 2003, Constant.MIN_YEAR, Constant.MAX_YEAR, 1, "####");
+		setNumberModelAndIndex(spnEY1, 2003, 1921, 2003, 1, "####");
 		addJSpinnerListener();
 	}
 
