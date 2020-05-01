@@ -114,6 +114,7 @@ public class TrendReportPanel extends JFXPanel
 		mainPane.setBottom(bottom);
 		Scene scene = new Scene(mainPane);
 		setScene(scene);
+		Platform.runLater(this::inputsChanged);
 	}
 
 	private Node buildProgressControls()
@@ -147,7 +148,7 @@ public class TrendReportPanel extends JFXPanel
 		return borderPane;
 	}
 
-	private void inputsChanged()
+	public void inputsChanged()
 	{
 		TrendReportTabConfig trendReportTabConfig = _trendReportPagesPane.getTrendReportTabConfig();
 		if(trendReportTabConfig != null)
