@@ -94,7 +94,6 @@ public class EpptParametersPane extends TitledPane
 		_trendTypes.removeIf(t -> _backingParameters.stream().noneMatch(n -> t.matchesGuiLink(n.getGuiLink())));
 		updateTrendTypes();
 		_typeListView.getSelectionModel().select(0);
-		setExpanded(false);
 	}
 
 	private Pane buildParameterListView()
