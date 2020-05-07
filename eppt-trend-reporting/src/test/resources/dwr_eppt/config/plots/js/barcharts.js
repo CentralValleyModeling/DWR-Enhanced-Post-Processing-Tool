@@ -103,6 +103,7 @@ function buildLayouts(datum, yaxis, title) {
                                 xaxis: {
                                     gridcolor: '#CCCCCC'
                                 },
+                                bargroupgap:0.05,
                                 showlegend: true,
                                 legend: {
                                     orientation: 'h',
@@ -223,8 +224,7 @@ function plotPeriodGroupedForMonthStat(datum, monthlyIndex, statIndex) {
                 name: tsList[tsIndex]['ts_name'],
                 marker: {
                     color: datum[i]['scenario_color']
-                },
-                // domain: {x: [0, 1], y: [0.3, 1]}
+                }
             });
         }
     }
