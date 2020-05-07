@@ -20,12 +20,15 @@ import gov.ca.water.calgui.project.EpptConfigurationController;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.collections.FXCollections;
 import javafx.geometry.Insets;
+import javafx.geometry.Orientation;
+import javafx.geometry.Pos;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TitledPane;
 import javafx.scene.control.cell.CheckBoxListCell;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.FlowPane;
 import javafx.scene.text.Font;
 
 import static java.util.stream.Collectors.toList;
@@ -41,12 +44,26 @@ class EpptStatisticsPane extends TitledPane
 	private final ListView<StatItem> _statisticsListView = new ListView<>();
 	private final EpptConfigurationController _controller;
 	private boolean _modifiedListenerEnabled = false;
+	private final CheckBox _tafCheckbox = new CheckBox("Convert CFS to TAF");
 
 	EpptStatisticsPane(EpptConfigurationController controller)
 	{
 		_controller = controller;
 		initComponents();
 		loadStats();
+		initListeners();
+	}
+
+	private void initListeners()
+	{
+		_tafCheckbox.selectedProperty().addListener((e, o, n) ->
+		{
+			_controller.setTaf(n);
+			if(_modifiedListenerEnabled)
+			{
+				_controller.setModified();
+			}
+		});
 	}
 
 	private void loadStats()
@@ -57,10 +74,17 @@ class EpptStatisticsPane extends TitledPane
 
 	private void initComponents()
 	{
+		BorderPane content = new BorderPane();
 		_statisticsListView.setCellFactory(listView -> new MyCheckboxTreeItem());
 		_statisticsListView.setFixedCellSize(20);
 		_statisticsListView.setStyle("-fx-selection-bar:-fx-focus-color ;-fx-selection-bar-non-focused: -fx-focus-color ;");
-		setContent(_statisticsListView);
+		FlowPane flowPane = new FlowPane(Orientation.HORIZONTAL);
+		BorderPane.setMargin(flowPane, new Insets(5, 5, 5, 7));
+		flowPane.getChildren().add(_tafCheckbox);
+		flowPane.setAlignment(Pos.CENTER_LEFT);
+		content.setTop(flowPane);
+		content.setCenter(_statisticsListView);
+		setContent(content);
 		setGraphicTextGap(0);
 		BorderPane borderPane = new BorderPane();
 		Label statisticLabel = new Label("Statistic");
@@ -84,6 +108,7 @@ class EpptStatisticsPane extends TitledPane
 		try
 		{
 			_modifiedListenerEnabled = false;
+			_tafCheckbox.setSelected(_controller.isTaf());
 			List<EpptStatistic> selectedStatistics = _controller.getSelectedStatistics();
 			_statisticsListView.getItems().forEach(i -> i._selected.set(selectedStatistics.stream()
 																						  .map(EpptStatistic::getName)
