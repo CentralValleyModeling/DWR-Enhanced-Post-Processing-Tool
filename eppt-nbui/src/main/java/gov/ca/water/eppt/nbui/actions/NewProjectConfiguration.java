@@ -108,33 +108,10 @@ public class NewProjectConfiguration implements ActionListener
 		{
 			Path projectPath = nameDialog.getProjectDirectory();
 			Path projectFile = projectPath.resolve(nameDialog.getName() + "." + Constant.EPPT_EXT);
+			epptConfigurationController.setProjectName(nameDialog.getName());
+			epptConfigurationController.setProjectDescription(nameDialog.getDescription());
 			ProjectConfigurationIO projectConfigurationIO = new ProjectConfigurationIO();
-			projectConfigurationIO.saveConfiguration(epptConfigurationController, projectPath);
-			EpptControllerProvider.setEpptController(projectFile);
-			WindowManager.getDefault().getMainWindow().setTitle(
-					Installer.MAIN_FRAME_NAME + " - " + EpptControllerProvider.getEpptConfigurationController().getProjectName());
-			EpptControllerProvider.getEpptConfigurationController().clearModified();
-			Savable.REGISTRY.lookupAll(ProjectConfigurationSavable.class)
-							.forEach(ProjectConfigurationSavable::removeFromLookup);
-		}
-	}
-
-	void createNew(boolean resetConfigurationBeforeSave) throws IOException
-	{
-		NewProjectDialog nameDialog = new NewProjectDialog();
-		String substring = String.valueOf(new Date().getTime()).substring(8);
-		String newProjectName = "New_Project_" + substring;
-		nameDialog.setTitle("New Project");
-		nameDialog.setName(newProjectName);
-		nameDialog.setDescription("");
-		nameDialog.setVisible(true);
-		if(!nameDialog.isCanceled())
-		{
-			Path projectPath = nameDialog.getProjectDirectory();
-			Path projectFile = projectPath.resolve(nameDialog.getName() + "." + Constant.EPPT_EXT);
-			EpptConfigurationController epptConfigurationController = new EpptConfigurationController();
-			ProjectConfigurationIO projectConfigurationIO = new ProjectConfigurationIO();
-			projectConfigurationIO.saveConfiguration(epptConfigurationController, projectPath);
+			projectConfigurationIO.saveConfiguration(epptConfigurationController, projectFile);
 			EpptControllerProvider.setEpptController(projectFile);
 			WindowManager.getDefault().getMainWindow().setTitle(
 					Installer.MAIN_FRAME_NAME + " - " + EpptControllerProvider.getEpptConfigurationController().getProjectName());

@@ -89,6 +89,7 @@ class EpptAnnualPeriodPane extends TitledPane
 		_controller.endYearProperty().addListener((e, o, n) -> _treeView.refresh());
 		_treeView.getSelectionModel().selectedItemProperty().addListener(
 				(e, o, n) -> _editButton.setDisable(n == null || n.getValue() == null || !n.getValue().isEditable()));
+		_controller.addScenarioChangedListener((b, a) -> _controller.setWaterYearPeriodRangesFilters(getWaterYearPeriodRanges()));
 	}
 
 	private void initComponents()
@@ -375,7 +376,7 @@ class EpptAnnualPeriodPane extends TitledPane
 			{
 				WaterYearPeriodDefinitionsRow value = treeItem.getValue();
 				Map<EpptScenarioRun, WaterYearPeriodRangesFilter> waterYearPeriodRangesFilters = value.getWaterYearPeriodRangesFilter();
-				if(waterYearPeriodRangesFilters != null)
+				if(waterYearPeriodRangesFilters != null && !waterYearPeriodRangesFilters.isEmpty())
 				{
 					WaterYearPeriodRangesFilter filter = waterYearPeriodRangesFilters.values().iterator().next();
 					String name = filter.getName();
@@ -389,11 +390,19 @@ class EpptAnnualPeriodPane extends TitledPane
 					{
 						if(child instanceof CheckBoxTreeItem)
 						{
-							WaterYearPeriodRangesFilter filter = child.getValue().getWaterYearPeriodRangesFilter().values().iterator().next();
-							String name = filter.getName();
-							String groupName = filter.getGroupName();
-							((CheckBoxTreeItem<WaterYearPeriodDefinitionsRow>) child).setSelected(
-									collect.stream().anyMatch(s -> s.getName().equals(name) && s.getGroupName().equals(groupName)));
+							Collection<WaterYearPeriodRangesFilter> values = child.getValue().getWaterYearPeriodRangesFilter().values();
+							if(!values.isEmpty())
+							{
+								WaterYearPeriodRangesFilter filter = values.iterator().next();
+								String name = filter.getName();
+								String groupName = filter.getGroupName();
+								((CheckBoxTreeItem<WaterYearPeriodDefinitionsRow>) child).setSelected(
+										collect.stream().anyMatch(s -> s.getName().equals(name) && s.getGroupName().equals(groupName)));
+							}
+							else
+							{
+								((CheckBoxTreeItem<WaterYearPeriodDefinitionsRow>) child).setSelected(false);
+							}
 						}
 					}
 				}
@@ -428,7 +437,7 @@ class EpptAnnualPeriodPane extends TitledPane
 			WaterYearPeriod waterYearPeriod = new WaterYearPeriod("Long Term");
 			WaterYearPeriodRange range = new WaterYearPeriodRange(waterYearPeriod,
 					new WaterYearType(_controller.getStartYear(), waterYearPeriod), new WaterYearType(_controller.getEndYear(), waterYearPeriod));
-			return "Long Term (" + range.toString(_controller.getWaterYearDefinition(), formatter) + ")";
+			return "Long Term";
 		}
 
 		@Override

@@ -130,8 +130,11 @@ public final class SaveAsProjectConfiguration implements ActionListener
 				jDialog.setVisible(true);
 			}
 			ProjectConfigurationIO projectConfigurationIO = new ProjectConfigurationIO();
-			projectConfigurationIO.saveConfiguration(epptConfigurationController, projectPath);
-			EpptControllerProvider.setEpptController(projectPath);
+			Path projectFile = projectPath.resolve(newProjectDialog.getName() + ".eppt");
+			epptConfigurationController.setProjectName(newProjectDialog.getName());
+			epptConfigurationController.setProjectDescription(newProjectDialog.getDescription());
+			projectConfigurationIO.saveConfiguration(epptConfigurationController, projectFile);
+			EpptControllerProvider.setEpptController(projectFile);
 			SaveProjectConfiguration.clearSaveCookie();
 		}
 	}

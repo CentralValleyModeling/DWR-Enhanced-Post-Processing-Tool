@@ -51,9 +51,12 @@ public final class EpptControllerProvider
 		}
 		try
 		{
-			ProjectConfigurationIO projectConfigurationIO = new ProjectConfigurationIO();
 			if(path.toFile().exists())
 			{
+				EpptControllerProvider.epptConfigurationController.setStatistics(new ArrayList<>());
+				EpptControllerProvider.epptConfigurationController.setMonthlyPeriods(new ArrayList<>());
+				EpptControllerProvider.epptConfigurationController.setWaterYearPeriodRangesFilters(new ArrayList<>());
+				ProjectConfigurationIO projectConfigurationIO = new ProjectConfigurationIO();
 				EpptProject epptProject = projectConfigurationIO.loadConfiguration(path, epptConfigurationController);
 				EpptControllerProvider.epptConfigurationController.setProjectName(epptProject.getName());
 				EpptControllerProvider.epptConfigurationController.setProjectDescription(epptProject.getDescription());
@@ -61,6 +64,7 @@ public final class EpptControllerProvider
 				EpptControllerProvider.epptConfigurationController.setStartYear(epptProject.getStartYear());
 				EpptControllerProvider.epptConfigurationController.setEndYear(epptProject.getEndYear());
 				ScenarioProjectUpdater.updateWithAllDssFiles(epptProject.getScenarioRuns());
+				EpptPreferences.setLastProjectConfiguration(path);
 			}
 		}
 		catch(IOException | RuntimeException ex)

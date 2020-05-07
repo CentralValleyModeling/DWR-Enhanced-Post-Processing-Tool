@@ -102,6 +102,11 @@ public class CalLiteGUIMainPanel extends JPanel
 		_tabbedPane.setSelectedIndex(i);
 	}
 
+	JButton getOpenDtsButton()
+	{
+		return _dtsTreePanel.getTable().getOpenCurrentButton();
+	}
+
 	/**
 	 * Return the message panel object in the main panel
 	 */

@@ -32,19 +32,11 @@ public class EpptConfigurationPane extends BorderPane
 {
 	private final EpptProjectPane _projectPane;
 	private final ScenarioTablePane _scenarioPane;
-	private final EpptTimeWindowPane _timeWindowPane;
-	private final EpptMonthlyPeriodPane _epptMonthlyPeriodPane;
-	private final EpptAnnualPeriodPane _epptAnnualPeriodPane;
-	private final EpptStatisticsPane _epptStatisticsPane;
 
 	public EpptConfigurationPane(EpptConfigurationController controller)
 	{
 		_projectPane = new EpptProjectPane(controller);
 		_scenarioPane = new ScenarioTablePane(controller);
-		_timeWindowPane = new EpptTimeWindowPane(controller);
-		_epptMonthlyPeriodPane = new EpptMonthlyPeriodPane(controller);
-		_epptAnnualPeriodPane = new EpptAnnualPeriodPane(controller);
-		_epptStatisticsPane = new EpptStatisticsPane(controller);
 		initComponents();
 	}
 
@@ -53,34 +45,13 @@ public class EpptConfigurationPane extends BorderPane
 		VBox gridPane = new VBox();
 		gridPane.getChildren().add(_projectPane);
 		gridPane.getChildren().add(_scenarioPane);
-		gridPane.getChildren().add(_timeWindowPane);
-		Node filterControls = buildFilterControls();
-		gridPane.getChildren().add(filterControls);
-		gridPane.getChildren().add(_epptStatisticsPane);
 		setCenter(gridPane);
 		setStyle("-fx-font-size: 11");
-	}
-
-	private Node buildFilterControls()
-	{
-		BorderPane borderPane = new BorderPane();
-		_epptAnnualPeriodPane.expandedProperty().bindBidirectional(_epptMonthlyPeriodPane.expandedProperty());
-		GridPane gridPane = new GridPane();
-		gridPane.add(_epptMonthlyPeriodPane, 1, 1);
-		gridPane.add(_epptAnnualPeriodPane, 2, 1);
-		GridPane.setHgrow(_epptAnnualPeriodPane, Priority.ALWAYS);
-		borderPane.setCenter(gridPane);
-		borderPane.setPrefHeight(320);
-		return borderPane;
 	}
 
 	public void reloadProject()
 	{
 		_projectPane.reloadProject();
 		_scenarioPane.reloadProject();
-		_timeWindowPane.reloadProject();
-		_epptMonthlyPeriodPane.reloadProject();
-		_epptAnnualPeriodPane.reloadProject();
-		_epptStatisticsPane.reloadProject();
 	}
 }

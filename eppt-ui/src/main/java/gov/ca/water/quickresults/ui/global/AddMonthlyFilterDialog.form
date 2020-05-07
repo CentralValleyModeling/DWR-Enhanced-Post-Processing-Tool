@@ -107,7 +107,7 @@
                       <gridbag weightx="0.0" weighty="0.0"/>
                     </constraints>
                     <properties>
-                      <enabled value="false"/>
+                      <enabled value="true"/>
                     </properties>
                   </component>
                   <hspacer id="6995d">
@@ -128,7 +128,7 @@
                       <gridbag weightx="0.0" weighty="0.0"/>
                     </constraints>
                     <properties>
-                      <enabled value="false"/>
+                      <enabled value="true"/>
                     </properties>
                   </component>
                 </children>

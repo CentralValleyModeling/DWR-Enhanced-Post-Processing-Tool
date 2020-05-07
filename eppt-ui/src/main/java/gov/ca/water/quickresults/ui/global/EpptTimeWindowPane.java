@@ -15,6 +15,7 @@ package gov.ca.water.quickresults.ui.global;
 import gov.ca.water.calgui.bo.WaterYearDefinition;
 import gov.ca.water.calgui.busservice.impl.WaterYearDefinitionSvc;
 import gov.ca.water.calgui.project.EpptConfigurationController;
+import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -64,6 +65,8 @@ class EpptTimeWindowPane extends TitledPane
 		_endYearSpinner.valueProperty().addListener(endYearChanged());
 		_startYearSpinner.addEventFilter(KeyEvent.KEY_PRESSED, new MyKeyAdapter(_startYearSpinner));
 		_endYearSpinner.addEventFilter(KeyEvent.KEY_PRESSED, new MyKeyAdapter(_endYearSpinner));
+		_startYearSpinner.focusedProperty().addListener((obs, o,n)->_startYearSpinner.increment(0));
+		_endYearSpinner.focusedProperty().addListener((obs, o,n)->_endYearSpinner.increment(0));
 	}
 
 	private ChangeListener<Integer> endYearChanged()
@@ -143,11 +146,16 @@ class EpptTimeWindowPane extends TitledPane
 			}
 			else if(key == KeyCode.TAB)
 			{
-				String text = _component.getEditor().getText();
-				SpinnerValueFactory<Integer> valueFactory = _component.getValueFactory();
-				Integer integer = valueFactory.getConverter().fromString(text);
-				valueFactory.setValue(integer);
+				updateValueFromText();
 			}
+		}
+
+		private void updateValueFromText()
+		{
+			String text = _component.getEditor().getText();
+			SpinnerValueFactory<Integer> valueFactory = _component.getValueFactory();
+			Integer integer = valueFactory.getConverter().fromString(text);
+			valueFactory.setValue(integer);
 		}
 	}
 }

@@ -14,7 +14,7 @@ This file post process the shortage during each timestep
 /************************************ CVP Storage **************************************/
 !CHECK IF THERE IS SHORTAGE IN CVP AND WHAT IS THE SHORTAGE AMOUNT
 define SHORT_CVP_CHECK {
-	case short {condition SHORT_CVP_TOT_N > abs_threshold .or. SHORT_CVP_TOT_S > abs_threshold value EQ}
+	case short {condition SHORT_CVP_TOT_N - SHORT_CVP_THRSHLD > abs_threshold .or. SHORT_CVP_TOT_S - SHORT_CVP_THRSHLD > abs_threshold value EQ}
 	case noshort {condition always 	value GT}
 }
 define SHORT_CVP_TOT {value SHORT_CVP_TOT_N + SHORT_CVP_TOT_S}
@@ -36,7 +36,7 @@ define SHORT_CVP_S_CHECK_   {alias SHORT_CVP_S_CHECK    kind 'DTS-ALLOC-STATUS'u
 
 /************************************ SWP Storage **************************************/
 define SHORT_SWP_CHECK {
-	case short {condition SHORT_SWP_TOT_N > abs_threshold .or. SHORT_SWP_TOT_S > abs_threshold value EQ}
+	case short {condition SHORT_SWP_TOT_N - SHORT_SWP_THRSHLD > abs_threshold .or. SHORT_SWP_TOT_S - SHORT_SWP_THRSHLD > abs_threshold value EQ}
 	case noshort {condition always value GT}
 }
 define SHORT_SWP_TOT {value SHORT_SWP_TOT_N + SHORT_SWP_TOT_S}

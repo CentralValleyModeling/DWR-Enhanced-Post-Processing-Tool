@@ -256,7 +256,7 @@ public class DtsTreeModel extends GeneralTreeModel
 		{
 			public void doWork()
 			{
-				open();
+				GuiUtils.getCLGPanel().getOpenDtsButton().doClick();
 			}
 		});
 		_nodepopup.add(_open);

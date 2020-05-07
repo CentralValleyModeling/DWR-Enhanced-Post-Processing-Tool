@@ -1,268 +1,1096 @@
-/************************************
-
-Calc_NOD_Mass.wresl
-
-Yuxiang, DWR, BDO
-2019/03/25
-
-This file post process data for NOD Mass Balances
-
-In this NOD mass balance calculation, NOD is divided into 3 regions:
-NOD_R1. Sac Valley Colusa Basin
-NOD_R2. FRSA
-NOD_R3. America river 
-
-Mass Balance: 	Reervoir releases 
-				+ Local Inflow 
-				+ Net GW pumping 
-				- Consumptive use (delivery) 
-				- System Loss 
-				- System Outflow 
-				+ Accretion-Depletion Term
-				= 0
-
-**************************************/
+/********************** DESCRIPTION ****************************
+- post-processes study results to determine Whether the NOD is balanced or not
 
 
-/************************************* Sac River Colusa Basin ******************************************/
-	/*Sac River Colusa Basin - Reservori releases*/
-	define NOD_R1_RR {value
-		 C3  !Whiskeytown Lake 
-		+C5  !Shasta/Keswich 
-		!+C42 !Black Butte
-		!+D42 !Black Butte
-		+c17301
-		+C17602 !NODOS
-		+C17603 !NODOS
-	}
-	
-	/*Sac River Colusa Basin - local Inflow*/
-	define NOD_R1_LI {value
-		 I10801 /*Cow Creek*/
-		+I10802 /*Cottonwood Creek*/
-		+I10803 /*Battle Creek*/
-		+I11001 /*Poynee Creek*/
-		+I112   /*Red Bank Creek*/
-		+I11303 /*Elder Creek*/
-		+I11304 /*Thornes Creek*/
-		+I11307 /*Antelope Creek*/
-		+I11308 /*Mill Creek*/
-		+I11309 /*Deer Creek*/
-		+I11501 /*Big Chico Creek*/
-		+I180   /**/
-		+I182   /**/
-		+I184   /**/
-	}
+********************* REVIEW HISTORY****************************
+Ahmed Ali	| DWR	|	11/25/2019	|	Setup initial file
+Ahmed Ali	| DWR	|	12/11/2019	|	Reformatted/ standardized logic statements
 
-	/*Sac River Colusa Basin - Groundwater*/ !need to ddl check 
-	define NOD_R1_GW {value
-		 GP60 -GR60AW -GS60 /*DSA 58 net GW Pumping and SW-to-GW interaction*/
-		+GP61 -GR61AW -GS61 /*DSA 12 net GW Pumping and SW-to-GW interaction*/
-		+GP62 -GR62AW -GS62 /*DSA 10 net GW Pumping and SW-to-GW interaction*/
-		+GP63 -GR63AW -GS63 /*DSA 15 net GW Pumping and SW-to-GW interaction*/
-		+GP64 -GR64AW -GS64 /*DSA 65 net GW Pumping and SW-to-GW interaction*/
-	}
-	
-	/*	define NOD_R1_GW {value
-		 GP60 -GR60AW -GS61 !DSA 58 net GW Pumping and SW-to-GW interaction
-		+GP17201 +GP17401 +GP17801 +GP17101 !GW Pumping
-		+GP11302 +GP11306 +GP131 +GP14301 !GW Pumping
-		+GP14302 +GP14501 +GP18201 +GP18301 !GW Pumping
-		-GS61 !DSA 10 SW-to-GW interaction
-		-GS63 !DSA 15 SW-to-GW interaction
-		+GP64 -GR64AW -GS64 !DSA 65 net GW Pumping and SW-to-GW interaction
-	}
-	*/	
-	
-	/*Sac River Colusa Basin - Consumptive Use (Diversion - Return Flow)*/ !need to ddl check
-	define 	NOD_R1_CU {Value	
-		 D107 !-R109  /*demand node 107*/ ! ddl check for R109
-		+D11302 !-R114B /*demand node 11302*/
-		+D17101 !-R113  /*demand node 17101*/
-		+D17201 !-R114C /*demand node 17201*/
-		+D11306 !-R114A /*demand node 11306*/
-		+D17401 !-R182A /*demand node 17401*/
-		+D14301 !-R181A /*demand note 14301*/
-		+D14302 !-R181B /*demand note 14302*/
-		+D17801 !-R182B /*demand node 17801*/
-		+D18201 !-R184B /*demand node 18201*/
-		+D18301 !-R134-R18302 /*demand node 18301*/
-		+D14501 !-R184A /*demand node 14501*/
-		+D131 !-R160 /*demand node 131*/
-		+D155 !-R156 /*demand node 155*/
-		+L172+L143+L173+L142 +L17201 +L17401 /*Misc Loss Terms*/
-		+L17801 +L17101 +L11302 +L11306 +L128 /*Misc Loss Terms*/
-		+L143A +L180A +L122A +L143B +L145A /*Misc Loss Terms*/ 
-		+L122B +L182A +L145B +L183 +L129A /*Misc Loss Terms*/
-		+D143A_WTS +D128_WTS +D122A_WTS +D122B_WTS +D145A_WTS /*Water Transfer Terms*/
-		}
-		
-	/*Sac River Colusa Basin - Conveyance loss*/
-	define NOD_R1_LS {value
-		L142 + L172 + L173
-		}
-		
-	/*Sac River Colusa Basin - Accretion-Depletion Terms*/	
-	define NOD_R1_AD {value
-		 I109 /*DSA58 projected gain in*/
-		-D109 /*DSA58 projected gain out*/
-		+I118 /*DSA10 projected gain in*/
-		-D118 /*DSA10 projected gain out*/
-		+I123 /*DSA15 projected gain in*/
-		-D123 /*DSA15 projected gain out*/
-		-D134 /*DSA12 projected gain out (no projected gain in)*/
-		+I152 /*DSA65 projected gain in*/
-		-D152 /*DSA65 projected gain out*/
-		+I166 /*DSA65 projected gain in*/
-		-D166B/*DSA65 projected gain out*/				
-		} 
-		
-	/*Sac River Colusa Basin - Regional Outflow*/	
-	Define NOD_R1_RO {value
-		 C157 	/*Yolo Bypass*/
-		+C169 	/*Sacramento River @ before Hood*/
-		+D17501	/*NODOS*/
-		+D124A	/*NODOS*/
-		
-	}	
-	
-	
-	
-	
-/************************************* FRSA ******************************************/		
-	/*FRSA - Reservoir releases*/	
-	define NOD_R2_RR {value
-		 D6		!Polermo Canel 
-		+D201	!Butte County
-		+D202	!Thermolito ID
-		+D7A	!Western Canal
-		+D7B	!Joint Canal
-		+C203	!Thermolito Complex (High flow channel)
-		+I230	!Yuba River Upstream Inflow
-		+I285	!Bear River Upstream Inflow
-		+I225 	!Bear River (Gold Hill/Combie Canal+Bear River Canal+Boardman Canal)
-	}
+/***************************************************************
 
-		
-	/*FRSA - local Inflow*/	
-	define NOD_R2_LI {value 	 
-		 I217		! Butte Creek
-		+I282		! Local	
-		+I204_WTS 	! Water Transfer
-		+R135C_DCMP !	/*Rice decomp return flows, diversions for rice decomp (D7C) part of SWPDS term*/
-		!+I204_EWA
-	}	
-		
-	/*FRSA - Groundwater*/		
-	define NOD_R2_GW {value
-		GP65 -GR65AW -GS65 /*DSA 69 net GW Pumping and SW-to-GW interaction*/
-	}
-		
-	
-	/*FRSA - Consumptive Use (Diversion - Return Flow)*/		
-	define NOD_R2_CU {value	
-		 D210 !-R223		/*demand node 210*/
-		+D218 !-R135A 	/*Gray Lodge (demand node 218)*/
-		+D222 !-R137		/*Sutter Refuge (demand node 222)*/
-		+D226 !-R135B	/*Butte Sink (demand node 226)*/
-		+D204_REOP 		/*Misc water transfer terms*/
-		+D230_LYRA 		/*Misc water transfer terms*/
-	}
-	
-	/*FRSA - Accretion-Depletion Terms*/	
-	define NOD_R2_AD {value
-		 I207  /*DSA69 projected gain in*/
-		-D207B /*DSA69 projected gain out*/
-	}
-	/*FRSA - Regional Outflow*/	!- No Regional Outflow for FRSA	
-	
-	
-	
-	
-		
-	/************************************* American River ******************************************/	
+/******************** CALSIM 3.0 NORTH of Delta Mass Balance *********************/
 
-	/*American River Basin - Reservori releases*/	
-	define NOD_R3_RR {value
-		 I300	 !American River Upstream Inflow
-		+D8	!Folsom Lake to PCWA
-		+C9	!Folsom Lake/lake Natoma Release
-		+D9	!Folsom South Canal
-	}		
-		
-	/*American River Basin - local Inflow*/	
-	define NOD_R3_LI {value
-		 I302
-	}	
-		
-	/*American River Basin - Groundwater*/		
-	define NOD_R3_GW {value
-		GP66 -GR66AW -GS66 /*DSA 69 net GW Pumping and SW-to-GW interaction*/
-	}	
-	
-	/*American River Basin - Consumptive Use (Diversion - Return Flow)*/		
-	define NOD_R3_CU {value	
-		 D307 !-R169		/*demand node 307*/
-		+D309B			/*Export to DSA59*/
-	}
-		
-	/*American River Basin - Accretion-Depletion Terms*/	
+!AMERICAN RIVER
+define D_NNA013_LVC001  {timeseries 'D_NNA013_LVC001' kind 'DIVERSION' units 'CFS' convert 'TAF'}
+define D_NFA016_ABT002  {timeseries 'D_NFA016_ABT002' kind 'DIVERSION' units 'CFS' convert 'TAF'}
+define D_ABT002_STH001  {timeseries 'D_ABT002_STH001' kind 'DIVERSION' units 'CFS' convert 'TAF'}
+/*define D_WTPFSS_24_NU2  {timeseries 'D_WTPFSS_24_NU2' kind 'DIVERSION' units 'CFS' convert 'TAF'}   !Auburn ravine
+define D_FOLSM_WTPRSV   {timeseries 'D_FOLSM_WTPRSV' kind 'DIVERSION' units 'CFS' convert 'TAF'}
+define D_FOLSM_WTPSJP   {timeseries 'D_FOLSM_WTPSJP' kind 'DIVERSION' units 'CFS' convert 'TAF'}
+define D_FOLSM_WTPFOL   {timeseries 'D_FOLSM_WTPFOL' kind 'DIVERSION' units 'CFS' convert 'TAF'}
+define D_FOLSM_WTPEDH   {timeseries 'D_FOLSM_WTPEDH' kind 'DIVERSION' units 'CFS' convert 'TAF'}*/
+define D_WTPEDH_EIDEH   {timeseries 'D_WTPEDH_EIDEH' kind 'DIVERSION' units 'CFS' convert 'TAF'}
+define D_NTOMA_FSC003   {timeseries 'D_NTOMA_FSC003' kind 'DIVERSION' units 'CFS' convert 'TAF'}
+/*define D_AMR017_WTPBJM  {timeseries 'D_AMR017_WTPBJM' kind 'DIVERSION' units 'CFS' convert 'TAF'}
+define D_AMR007_WTPFBN  {timeseries 'D_AMR007_WTPFBN' kind 'DIVERSION' units 'CFS' convert 'TAF'}
+define D_FSC003_FSCLOS  {timeseries 'D_FSC003_FSCLOS' kind 'DIVERSION' units 'CFS' convert 'TAF'} */   !Folsom south canal
+define D_WTPBJM_26N_NU2  {timeseries 'D_WTPBJM_26N_NU2' kind 'DIVERSION' units 'CFS' convert 'TAF'}
+define D_WTPFBN_26N_NU1  {timeseries 'D_WTPFBN_26N_NU1' kind 'DIVERSION' units 'CFS' convert 'TAF'}
+define D_WTPFBN_26N_NU3  {timeseries 'D_WTPFBN_26N_NU3' kind 'DIVERSION' units 'CFS' convert 'TAF'}
+define D_WTPFBN_26N_NU4  {timeseries 'D_WTPFBN_26N_NU4' kind 'DIVERSION' units 'CFS' convert 'TAF'}
+define D_WTPFBN_26S_NU2  {timeseries 'D_WTPFBN_26S_NU2' kind 'DIVERSION' units 'CFS' convert 'TAF'}
+define D_WTPFBN_26S_NU1  {timeseries 'D_WTPFBN_26S_NU1' kind 'DIVERSION' units 'CFS' convert 'TAF'}
+define D_WTPFOL_26S_PU1  {timeseries 'D_WTPFOL_26S_PU1' kind 'DIVERSION' units 'CFS' convert 'TAF'}
+define D_WTPRSV_26N_PU1  {timeseries 'D_WTPRSV_26N_PU1' kind 'DIVERSION' units 'CFS' convert 'TAF'}
+define D_WTPSJP_26N_PU2  {timeseries 'D_WTPSJP_26N_PU2' kind 'DIVERSION' units 'CFS' convert 'TAF'}
+define D_WTPSJP_26N_PU3  {timeseries 'D_WTPSJP_26N_PU3' kind 'DIVERSION' units 'CFS' convert 'TAF'}
+define D_WTPSJP_26N_NU1  {timeseries 'D_WTPSJP_26N_NU1' kind 'DIVERSION' units 'CFS' convert 'TAF'}
+define D_FSC003_WTPCOL   {timeseries 'D_FSC003_WTPCOL' kind 'DIVERSION' units 'CFS' convert 'TAF'}!Coloma WTP
+!define D_WTPCOL_26S_PU2  {timeseries 'D_WTPCOL_26S_PU2' kind 'DIVERSION' units 'CFS' convert 'TAF'}
+define D_FOLSM_26S_PU3   {timeseries 'D_FOLSM_26S_PU3' kind 'DIVERSION' units 'CFS' convert 'TAF'}
+define D_FOLSM_26S_NU4   {timeseries 'D_FOLSM_26S_NU4' kind 'DIVERSION' units 'CFS' convert 'TAF'}
 
-	
-	/*American River Basin - Regional Outflow*/	
-	Define NOD_R3_RO {value
-		 C300 	/*Auburn Reservoir site to Flosom Lake*/
-		+D308A 	/*PCWA & GDPUD Auburn Portion to North Fork AR @ North Fork Dam*/
-	
-	}	
-	
-	
-! define NOD total Reservori releases
-define NOD_RR {value NOD_R1_RR + NOD_R2_RR + NOD_R3_RR}
-! define NOD total Local Inflow
-define NOD_LI {value NOD_R1_LI + NOD_R2_LI + NOD_R3_LI}
-! define NOD total Groundwater pumping
-define NOD_GW {value NOD_R1_GW + NOD_R2_GW + NOD_R3_GW}
-! define NOD total Comsumptive Use
-define NOD_CU {value NOD_R1_CU + NOD_R2_CU + NOD_R3_CU}
-! define NOD total Loss
-define NOD_LS {value NOD_R1_LS }
-! define NOD total Region outflow
-define NOD_RO {value NOD_R1_RO 			   + NOD_R3_RO}
-! define NOD total Accretion-Depletion Term
-define NOD_AD {value NOD_R1_AD + NOD_R2_AD }
+define I_FOLSM  {timeseries 'I_FOLSM' kind 'INFLOW' units 'TAF'}! convert 'CFS'}
+define I_LKVLY  {timeseries 'I_LKVLY' kind 'INFLOW' units 'TAF'}! convert 'CFS'}
+define I_NFA054 {timeseries 'I_NFA054' kind 'INFLOW' units 'TAF'}! convert 'CFS'}
+define I_NFA022 {timeseries 'I_NFA022' kind 'INFLOW' units 'TAF'}! convert 'CFS'}
+define I_MFA023 {timeseries 'I_MFA023' kind 'INFLOW' units 'TAF'}! convert 'CFS'}
+define I_MFA001 {timeseries 'I_MFA001' kind 'INFLOW' units 'TAF'}! convert 'CFS'}
+define I_SFA030 {timeseries 'I_SFA030' kind 'INFLOW' units 'TAF'}! convert 'CFS'}
+define CT_FairOaks {timeseries 'CT_FairOaks' kind 'CLOSURE-TERM' units 'CFS' convert 'TAF'}
+/*
+define C_LKVLY  {timeseries ' kind 'CHANNEL' units 'CFS'}
+define C_FOLSM  {timeseries ' kind 'CHANNEL' units 'CFS'}    
+define C_NTOMA	{timeseries ' kind 'CHANNEL' units 'CFS'} define C_NTOMA_NCF {lower 0 upper 7071*taf_cfs ' kind 'CHANNEL' units 'CFS'} !in constraints-FloodSpill.wresl !@jmg 2017v13
+define C_AMR022 {timeseries ' kind 'CHANNEL' units 'CFS'}
+define C_AMR020 {timeseries ' kind 'CHANNEL' units 'CFS'}    
+define C_AMR017 {timeseries ' kind 'CHANNEL' units 'CFS'}    
+define C_AMR015 {timeseries ' kind 'CHANNEL' units 'CFS'}    
+define C_AMR009 {timeseries ' kind 'CHANNEL' units 'CFS'}        
+define C_AMR007 {timeseries ' kind 'CHANNEL' units 'CFS'}
+define C_AMR006 {timeseries ' kind 'CHANNEL' units 'CFS'}*/
+!define C_AMR004 {timeseries 'C_AMR004' kind 'CHANNEL' units 'CFS' convert 'TAF'}   !American and Sac River     
+define C_ABT002 {timeseries 'C_ABT002' kind 'CHANNEL' units 'CFS' convert 'TAF'}   !American and Auburn ravine
+!define C_SFA030 {timeseries ' kind 'CHANNEL' units 'CFS'}
+define C_MFA023 {timeseries 'C_MFA023' kind 'CHANNEL' units 'CFS' convert 'TAF'}
+define C_MFA001 {timeseries 'C_MFA001' kind 'CHANNEL' units 'CFS' convert 'TAF'}
+/*define C_NNA013 {timeseries ' kind 'CHANNEL' units 'CFS'}
+define C_NFA054 {timeseries ' kind 'CHANNEL' units 'CFS'}
+define C_NFA048 {timeseries ' kind 'CHANNEL' units 'CFS'}*/
+define C_NFA022 {timeseries 'C_NFA022' kind 'CHANNEL' units 'CFS' convert 'TAF'}
+define C_NFA019 {timeseries 'C_NFA019' kind 'CHANNEL' units 'CFS' convert 'TAF'}
+define C_NFA016 {timeseries 'C_NFA016' kind 'CHANNEL' units 'CFS' convert 'TAF'}
+define C_NFA011 {timeseries 'C_NFA011' kind 'CHANNEL' units 'CFS' convert 'TAF'}
+define C_SFA030 {timeseries 'C_SFA030' kind 'CHANNEL' units 'CFS' convert 'TAF'}
+/*define C_EMD001 {timeseries 'C_EMD001' kind 'CHANNEL' units 'CFS' convert 'TAF'}  !American and Sac River
+define C_EMD007 {timeseries ' kind 'CHANNEL' units 'CFS'}
+define C_SCR002 {timeseries ' kind 'CHANNEL' units 'CFS'} */!Miner's and Secret ravines
+define C_DCK012 {timeseries 'C_DCK012' kind 'CHANNEL' units 'CFS' convert 'TAF'}  !American and Miner's and Secret ravines
+/*define C_CBC000 {timeseries ' kind 'CHANNEL' units 'CFS'}  !Lower Boardman*/
+define C_CYN009 {timeseries 'C_CYN009' kind 'CHANNEL' units 'CFS' convert 'TAF'} !American and Bear River
+define C_STH007 {timeseries 'C_STH007' kind 'CHANNEL' units 'CFS' convert 'TAF' }
+define C_MRM001 {timeseries 'C_MRM001' kind 'CHANNEL' units 'CFS' convert 'TAF'}
 
-/* Mass Balance: 	Reervoir releases 
-				+ Local Inflow 
-				+ GW pumping 
-				- Consumptive use 
-				- Loss 
-				- Regional Outflow 
-				+ Accretion-Depletion Term
-				= 0
-*/
+define SR_24_EMD007     {timeseries 'SR_24_EMD007' kind 'SURFACE-RUNOFF' units 'CFS' convert 'TAF'}
+define SR_26N_AMR004    {timeseries 'SR_26N_AMR004' kind 'SURFACE-RUNOFF' units 'CFS' convert 'TAF'}
+/*define SR_26N_CRC002    {timeseries ' kind 'SURFACE-RUNOFF' units 'CFS' convert 'TAF'} */ !Auburn ravine
+define SR_26N_EMD001    {timeseries 'SR_26N_EMD001' kind 'SURFACE-RUNOFF' units 'CFS' convert 'TAF'}
+define SR_26N_EMD007    {timeseries 'SR_26N_EMD007' kind 'SURFACE-RUNOFF' units 'CFS' convert 'TAF'}
+define SR_26N_NTOMA     {timeseries 'SR_26N_NTOMA' kind 'SURFACE-RUNOFF' units 'CFS' convert 'TAF'}
+define SR_26S_AMR007    {timeseries 'SR_26S_AMR007' kind 'SURFACE-RUNOFF' units 'CFS' convert 'TAF'}
+/*define SR_26S_MOK014    {timeseries ' kind 'SURFACE-RUNOFF' units 'CFS' convert 'TAF'}*/ !@jmg 2017.06.27 - in EastsideStreams
+define SR_26S_NTOMA     {timeseries 'SR_26S_NTOMA' kind 'SURFACE-RUNOFF' units 'CFS' convert 'TAF'}
 
-define NOD_MB {value NOD_RR +NOD_LI +NOD_GW -NOD_CU -NOD_LS -NOD_RO +NOD_AD}	
-define NOD_MB_DTS {alias NOD_MB kind 'DTS-1' units 'CFS'}
+define SG374_FOLSM_66  {timeseries 'SG374_FOLSM_66' kind 'STREAM-GAIN' units 'CFS' convert 'TAF'} 
+define SG375_NTOMA_66  {timeseries 'SG375_NTOMA_66' kind 'STREAM-GAIN' units 'CFS' convert 'TAF'}
+define SG376_AMR020_66 {timeseries 'SG376_AMR020_66' kind 'STREAM-GAIN' units 'CFS' convert 'TAF'}
+define SG377_AMR015_66 {timeseries 'SG377_AMR015_66' kind 'STREAM-GAIN' units 'CFS' convert 'TAF'}
+define SG378_AMR009_66 {timeseries 'SG378_AMR009_66' kind 'STREAM-GAIN' units 'CFS' convert 'TAF'}
+define SG379_AMR004_66 {timeseries 'SG379_AMR004_66' kind 'STREAM-GAIN' units 'CFS' convert 'TAF'}
+define SG380_AMR004_66 {timeseries 'SG380_AMR004_66' kind 'STREAM-GAIN' units 'CFS' convert 'TAF'}
 
-define NOD_MB_Check {
-	case balanced {
-	condition abs(NOD_MB) < abs_threshold
-	value 0
-	}
-	case notBalanced{
-	condition always
-	value 0 ! underreview - mass balance under review for miss arcs
-	!value 1
-	}
+define S_LKVLY {timeseries 'S_LKVLY' kind 'STORAGE' units 'TAF'} !
+define S_NTOMA {timeseries 'S_NTOMA' kind 'STORAGE' units 'TAF'} !LAKE NATOMA
+define S_FOLSM {timeseries 'S_FOLSM' kind 'STORAGE' units 'TAF'}
+
+define E_LKVLY {value 0.0}
+define E_FOLSM {timeseries 'E_FOLSM' kind 'EVAPORATION' units 'CFS' convert 'TAF'}
+define E_NTOMA {timeseries 'E_NTOMA' kind 'EVAPORATION' units 'CFS' convert 'TAF'}
+
+define R_RFS22_EMD001   {timeseries 'R_RFS22_EMD001' kind 'RETURN-FLOW' units 'CFS' convert 'TAF'} !American and split returns
+define R_RFS26N_DCWWTP  {timeseries 'R_RFS26N_DCWWTP' kind 'RETURN-FLOW' units 'CFS' convert 'TAF'} !American and split returns
+define R_RFS26N_PGWWTP  {timeseries 'R_RFS26N_PGWWTP' kind 'RETURN-FLOW' units 'CFS' convert 'TAF'} !American and split returns
+define R_PGWWTP_CRC002  {timeseries 'R_PGWWTP_CRC002' kind 'RETURN-FLOW' units 'CFS' convert 'TAF'} !American and Auburn ravine
+define R_DCWWTP_DCK012  {timeseries 'R_DCWWTP_DCK012' kind 'RETURN-FLOW' units 'CFS' convert 'TAF'} !American and Miner's and Secret ravines
+define R_26N_NA_EMD007  {timeseries 'R_26N_NA_EMD007' kind 'RETURN-FLOW' units 'CFS' convert 'TAF'}
+define R_EIDEH_EDWWTP   {timeseries 'R_EIDEH_EDWWTP' kind 'RETURN-FLOW' units 'CFS' convert 'TAF'}
+define R_EIDWE_EDWWTP   {timeseries 'R_EIDWE_EDWWTP' kind 'RETURN-FLOW' units 'CFS' convert 'TAF'}
+define R_RFS26S_AMR020  {timeseries 'R_RFS26S_AMR020' kind 'RETURN-FLOW' units 'CFS' convert 'TAF'}
+define R_EDWWTP_DEE020  {timeseries 'R_EDWWTP_DEE020' kind 'RETURN-FLOW' units 'CFS' convert 'TAF'} !defined in Cosumnes River
+
+			
+DEFINE AMER_BAL {VALUE I_SFA030+I_MFA023+I_MFA001+I_LKVLY-E_LKVLY-S_LKVLY+S_LKVLY(-1)-D_NNA013_LVC001+I_NFA054+C_CYN009+I_NFA022+C_STH007+C_MRM001-
+			D_ABT002_STH001-C_ABT002+I_FOLSM+SG374_FOLSM_66-D_FOLSM_26S_PU3-D_FOLSM_26S_NU4-E_FOLSM-S_FOLSM+S_FOLSM(-1)+SR_26N_NTOMA+
+			SR_26S_NTOMA+SG375_NTOMA_66-D_NTOMA_FSC003-E_NTOMA-S_NTOMA+S_NTOMA(-1)+CT_FairOaks+SG376_AMR020_66+R_RFS26S_AMR020+SG377_AMR015_66+
+			SG378_AMR009_66+SR_26S_AMR007+SG379_AMR004_66+SG380_AMR004_66+SR_26N_AMR004-C_AMR004+SR_26N_EMD001+R_RFS22_EMD001-C_EMD001+
+			C_DCK012+SR_24_EMD007+SR_26N_EMD007+R_26N_NA_EMD007+R_RFS26N_DCWWTP-R_DCWWTP_DCK012+R_RFS26N_PGWWTP - R_PGWWTP_CRC002+
+			R_RFS26N_PGWWTP-R_PGWWTP_CRC002-D_WTPBJM_26N_NU2-D_WTPFBN_26S_NU1-D_WTPFBN_26N_NU1-D_WTPFBN_26N_NU3-D_WTPFBN_26N_NU4-D_WTPFBN_26S_NU2-
+			D_WTPFOL_26S_PU1-D_WTPRSV_26N_PU1- D_WTPSJP_26N_PU2 - D_WTPSJP_26N_PU3 - D_WTPSJP_26N_NU1+D_FSC003_WTPCOL - D_WTPCOL_26S_PU2-
+			D_WTPEDH_EIDEH+R_EIDEH_EDWWTP+R_EIDWE_EDWWTP-R_EDWWTP_DEE020}
+			
+define amer_baldv {alias amer_bal kind 'MASSBAL' units 'taf'}
+
+!******************************* SUMMARY FOR AMERICAN RIVER **************************************
+
+define D_NNA013_LVC001_  {alias D_NNA013_LVC001 kind 'DTS-NOD-MB-VALUE' units 'TAF'}
+define D_NFA016_ABT002_  {alias D_NFA016_ABT002 kind 'DTS-NOD-MB-VALUE' units 'TAF'}
+define D_ABT002_STH001_  {alias D_ABT002_STH001 kind 'DTS-NOD-MB-VALUE' units 'TAF'}
+/*define D_WTPFSS_24_NU2  {alias D_WTPFSS_24_NU2 kind 'DTS-NOD-MB-VALUE' units 'TAF'}   !Auburn ravine
+define D_FOLSM_WTPRSV   {alias D_FOLSM_WTPRSV kind 'DTS-NOD-MB-VALUE' units 'TAF'}
+define D_FOLSM_WTPSJP   {alias D_FOLSM_WTPSJP kind 'DTS-NOD-MB-VALUE' units 'TAF'}
+define D_FOLSM_WTPFOL   {alias D_FOLSM_WTPFOL kind 'DTS-NOD-MB-VALUE' units 'TAF'}
+define D_FOLSM_WTPEDH   {alias D_FOLSM_WTPEDH kind 'DTS-NOD-MB-VALUE' units 'TAF'}*/
+define D_WTPEDH_EIDEH_   {alias D_WTPEDH_EIDEH kind 'DTS-NOD-MB-VALUE' units 'TAF'}
+define D_NTOMA_FSC003_   {alias D_NTOMA_FSC003 kind 'DTS-NOD-MB-VALUE' units 'TAF'}
+/*define D_AMR017_WTPBJM  {alias D_AMR017_WTPBJM kind 'DTS-NOD-MB-VALUE' units 'TAF'}
+define D_AMR007_WTPFBN  {alias D_AMR007_WTPFBN kind 'DTS-NOD-MB-VALUE' units 'TAF'}
+define D_FSC003_FSCLOS  {alias D_FSC003_FSCLOS kind 'DTS-NOD-MB-VALUE' units 'TAF'} */   !Folsom south canal
+define D_WTPBJM_26N_NU2_  {alias D_WTPBJM_26N_NU2 kind 'DTS-NOD-MB-VALUE' units 'TAF'}
+define D_WTPFBN_26N_NU1_  {alias D_WTPFBN_26N_NU1 kind 'DTS-NOD-MB-VALUE' units 'TAF'}
+define D_WTPFBN_26N_NU3_  {alias D_WTPFBN_26N_NU3 kind 'DTS-NOD-MB-VALUE' units 'TAF'}
+define D_WTPFBN_26N_NU4_  {alias D_WTPFBN_26N_NU4 kind 'DTS-NOD-MB-VALUE' units 'TAF'}
+define D_WTPFBN_26S_NU2_  {alias D_WTPFBN_26S_NU2 kind 'DTS-NOD-MB-VALUE' units 'TAF'}
+define D_WTPFBN_26S_NU1_  {alias D_WTPFBN_26S_NU1 kind 'DTS-NOD-MB-VALUE' units 'TAF'}
+define D_WTPFOL_26S_PU1_  {alias D_WTPFOL_26S_PU1 kind 'DTS-NOD-MB-VALUE' units 'TAF'}
+define D_WTPRSV_26N_PU1_  {alias D_WTPRSV_26N_PU1 kind 'DTS-NOD-MB-VALUE' units 'TAF'}
+define D_WTPSJP_26N_PU2_  {alias D_WTPSJP_26N_PU2 kind 'DTS-NOD-MB-VALUE' units 'TAF'}
+define D_WTPSJP_26N_PU3_  {alias D_WTPSJP_26N_PU3 kind 'DTS-NOD-MB-VALUE' units 'TAF'}
+define D_WTPSJP_26N_NU1_  {alias D_WTPSJP_26N_NU1 kind 'DTS-NOD-MB-VALUE' units 'TAF'}
+define D_FSC003_WTPCOL_   {alias D_FSC003_WTPCOL kind 'DTS-NOD-MB-VALUE' units 'TAF'}!Coloma WTP
+define D_WTPCOL_26S_PU2_  {alias D_WTPCOL_26S_PU2 kind 'DTS-NOD-MB-VALUE' units 'TAF'}
+define D_FOLSM_26S_PU3_   {alias D_FOLSM_26S_PU3 kind 'DTS-NOD-MB-VALUE' units 'TAF'}
+define D_FOLSM_26S_NU4_   {alias D_FOLSM_26S_NU4 kind 'DTS-NOD-MB-VALUE' units 'TAF'}
+
+define I_FOLSM_  {alias I_FOLSM kind 'DTS-NOD-MB-VALUE' units 'TAF'}! convert CFS}
+define I_LKVLY_  {alias I_LKVLY kind 'DTS-NOD-MB-VALUE' units 'TAF'}! convert CFS}
+define I_NFA054_ {alias I_NFA054 kind 'DTS-NOD-MB-VALUE' units 'TAF'}! convert CFS}
+define I_NFA022_ {alias I_NFA022 kind 'DTS-NOD-MB-VALUE' units 'TAF'}! convert CFS}
+define I_MFA023_ {alias I_MFA023 kind 'DTS-NOD-MB-VALUE' units 'TAF'}! convert CFS}
+define I_MFA001_ {alias I_MFA001 kind 'DTS-NOD-MB-VALUE' units 'TAF'}! convert CFS}
+define I_SFA030_ {alias I_SFA030 kind 'DTS-NOD-MB-VALUE' units 'TAF'}! convert CFS}
+define CT_FairOaks_ {alias CT_FairOaks kind 'DTS-NOD-MB-VALUE' units 'TAF'}
+/*
+define C_LKVLY  {alias  kind 'DTS-NOD-MB-VALUE' units CFS}
+define C_FOLSM  {alias  kind 'DTS-NOD-MB-VALUE' units CFS}    
+define C_NTOMA	{alias  kind 'DTS-NOD-MB-VALUE' units CFS} define C_NTOMA_NCF {lower 0 upper 7071*taf_cfs  kind 'DTS-NOD-MB-VALUE' units CFS} !in constraints-FloodSpill.wresl !@jmg 2017v13
+define C_AMR022 {alias  kind 'DTS-NOD-MB-VALUE' units CFS}
+define C_AMR020 {alias  kind 'DTS-NOD-MB-VALUE' units CFS}    
+define C_AMR017 {alias  kind 'DTS-NOD-MB-VALUE' units CFS}    
+define C_AMR015 {alias  kind 'DTS-NOD-MB-VALUE' units CFS}    
+define C_AMR009 {alias  kind 'DTS-NOD-MB-VALUE' units CFS}        
+define C_AMR007 {alias  kind 'DTS-NOD-MB-VALUE' units CFS}
+define C_AMR006 {alias  kind 'DTS-NOD-MB-VALUE' units CFS}*/
+define C_AMR004_ {alias C_AMR004 kind 'DTS-NOD-MB-VALUE' units 'TAF'}   !American and Sac River     
+define C_ABT002_ {alias C_ABT002 kind 'DTS-NOD-MB-VALUE' units 'TAF'}   !American and Auburn ravine
+!define C_SFA030 {alias  kind 'DTS-NOD-MB-VALUE' units CFS}
+define C_MFA023_ {alias C_MFA023 kind 'DTS-NOD-MB-VALUE' units 'TAF'}
+define C_MFA001_ {alias C_MFA001 kind 'DTS-NOD-MB-VALUE' units 'TAF'}
+/*define C_NNA013 {alias  kind 'DTS-NOD-MB-VALUE' units CFS}
+define C_NFA054 {alias  kind 'DTS-NOD-MB-VALUE' units CFS}
+define C_NFA048 {alias  kind 'DTS-NOD-MB-VALUE' units CFS}*/
+define C_NFA022_ {alias C_NFA022 kind 'DTS-NOD-MB-VALUE' units 'TAF'}
+define C_NFA019_ {alias C_NFA019 kind 'DTS-NOD-MB-VALUE' units 'TAF'}
+define C_NFA016_ {alias C_NFA016 kind 'DTS-NOD-MB-VALUE' units 'TAF'}
+define C_NFA011_ {alias C_NFA011 kind 'DTS-NOD-MB-VALUE' units 'TAF'}
+define C_SFA030_ {alias C_SFA030 kind 'DTS-NOD-MB-VALUE' units 'TAF'}
+/*define C_EMD001 {alias C_EMD001 kind 'DTS-NOD-MB-VALUE' units 'TAF'}  !American and Sac River
+define C_EMD007 {alias  kind 'DTS-NOD-MB-VALUE' units CFS}
+define C_SCR002 {alias  kind 'DTS-NOD-MB-VALUE' units CFS} */!Miners and Secret ravines
+define C_DCK012_ {alias C_DCK012 kind 'DTS-NOD-MB-VALUE' units 'TAF'}  !American and Miners and Secret ravines
+/*define C_CBC000 {alias  kind 'DTS-NOD-MB-VALUE' units CFS}  !Lower Boardman*/
+define C_CYN009_ {alias C_CYN009 kind 'DTS-NOD-MB-VALUE' units 'TAF'} !American and Bear River
+define C_STH007_ {alias C_STH007 kind 'DTS-NOD-MB-VALUE' units 'TAF' }
+define C_MRM001_ {alias C_MRM001 kind 'DTS-NOD-MB-VALUE' units 'TAF'}
+
+define SR_24_EMD007_     {alias SR_24_EMD007 kind 'DTS-NOD-MB-VALUE' units 'TAF'}
+define SR_26N_AMR004_    {alias SR_26N_AMR004 kind 'DTS-NOD-MB-VALUE' units 'TAF'}
+/*define SR_26N_CRC002    {alias  kind 'DTS-NOD-MB-VALUE' units 'TAF'} */ !Auburn ravine
+define SR_26N_EMD001_    {alias SR_26N_EMD001 kind 'DTS-NOD-MB-VALUE' units 'TAF'}
+define SR_26N_EMD007_    {alias SR_26N_EMD007 kind 'DTS-NOD-MB-VALUE' units 'TAF'}
+define SR_26N_NTOMA_    {alias SR_26N_NTOMA kind 'DTS-NOD-MB-VALUE' units 'TAF'}
+define SR_26S_AMR007_    {alias SR_26S_AMR007 kind 'DTS-NOD-MB-VALUE' units 'TAF'}
+/*define SR_26S_MOK014    {alias  kind 'DTS-NOD-MB-VALUE' units 'TAF'}*/ !@jmg 2017.06.27 - in EastsideStreams
+define SR_26S_NTOMA_     {alias SR_26S_NTOMA kind 'DTS-NOD-MB-VALUE' units 'TAF'}
+
+define SG374_FOLSM_66_  {alias SG374_FOLSM_66 kind 'DTS-NOD-MB-VALUE' units 'TAF'} 
+define SG375_NTOMA_66_  {alias SG375_NTOMA_66 kind 'DTS-NOD-MB-VALUE' units 'TAF'}
+define SG376_AMR020_66_ {alias SG376_AMR020_66 kind 'DTS-NOD-MB-VALUE' units 'TAF'}
+define SG377_AMR015_66_ {alias SG377_AMR015_66 kind 'DTS-NOD-MB-VALUE' units 'TAF'}
+define SG378_AMR009_66_ {alias SG378_AMR009_66 kind 'DTS-NOD-MB-VALUE' units 'TAF'}
+define SG379_AMR004_66_ {alias SG379_AMR004_66 kind 'DTS-NOD-MB-VALUE' units 'TAF'}
+define SG380_AMR004_66_ {alias SG380_AMR004_66 kind 'DTS-NOD-MB-VALUE' units 'TAF'}
+
+define S_LKVLY_ {alias S_LKVLY kind 'DTS-NOD-MB-VALUE' units 'TAF'} !
+define S_NTOMA_ {alias S_NTOMA kind 'DTS-NOD-MB-VALUE' units 'TAF'} !LAKE NATOMA
+define S_FOLSM_ {alias S_FOLSM kind 'DTS-NOD-MB-VALUE' units 'TAF'}
+
+define E_LKVLY_ {alias E_LKVLY kind 'DTS-NOD-MB-VALUE' units 'TAF'}
+define E_FOLSM_ {alias E_FOLSM kind 'DTS-NOD-MB-VALUE' units 'TAF'}
+define E_NTOMA_ {alias E_NTOMA kind 'DTS-NOD-MB-VALUE' units 'TAF'}
+
+define R_RFS22_EMD001_   {alias R_RFS22_EMD001 kind 'DTS-NOD-MB-VALUE' units 'TAF'} !American and split returns
+define R_RFS26N_DCWWTP_  {alias R_RFS26N_DCWWTP kind 'DTS-NOD-MB-VALUE' units 'TAF'} !American and split returns
+define R_RFS26N_PGWWTP_  {alias R_RFS26N_PGWWTP kind 'DTS-NOD-MB-VALUE' units 'TAF'} !American and split returns
+define R_PGWWTP_CRC002_  {alias R_PGWWTP_CRC002 kind 'DTS-NOD-MB-VALUE' units 'TAF'} !American and Auburn ravine
+define R_DCWWTP_DCK012_  {alias R_DCWWTP_DCK012 kind 'DTS-NOD-MB-VALUE' units 'TAF'} !American and Miners and Secret ravines
+define R_26N_NA_EMD007_  {alias R_26N_NA_EMD007 kind 'DTS-NOD-MB-VALUE' units 'TAF'}
+define R_EIDEH_EDWWTP_   {alias R_EIDEH_EDWWTP kind 'DTS-NOD-MB-VALUE' units 'TAF'}
+define R_EIDWE_EDWWTP_   {alias R_EIDWE_EDWWTP kind 'DTS-NOD-MB-VALUE' units 'TAF'}
+define R_RFS26S_AMR020_  {alias R_RFS26S_AMR020 kind 'DTS-NOD-MB-VALUE' units 'TAF'}
+define R_EDWWTP_DEE020_  {alias R_EDWWTP_DEE020 kind 'DTS-NOD-MB-VALUE' units 'TAF'} !defined in Cosumnes River
+
+!FEATHER RIVER
+define D_OROVL_13_NU1   {timeseries 'D_OROVL_13_NU1' kind 'DIVERSION' units 'CFS' convert 'TAF'} !Estimate of current canal capacity from SFWPA  !save
+/*define D_FTR068_THRMF   {std kind 'DIVERSION' units 'CFS'}*/
+define D_THRMF_11_NU1   {timeseries 'D_THRMF_11_NU1' kind 'DIVERSION' units 'CFS' convert 'TAF'}!save
+define D_THRMF_12_NU1   {timeseries 'D_THRMF_12_NU1' kind 'DIVERSION' units 'CFS' convert 'TAF'}!save
+define D_THRMA_WEC000   {timeseries 'D_THRMA_WEC000' kind 'DIVERSION' units 'CFS' convert 'TAF'}!save
+!define D_THRMA_JBC000   {timeseries 'D_THRMA_JBC000' kind 'DIVERSION' units 'CFS' convert 'TAF'}!save
+!define D_THRMA_RVC000   {timeseries 'D_THRMA_RVC000' kind 'DIVERSION' units 'CFS' convert 'TAF'}!save
+/*
+define D_WEC005_BTC032  {std kind 'DIVERSION' units 'CFS'}
+define D_WEC005_11_SA1  {std kind 'DIVERSION' units 'CFS'}
+define D_JBC002_RVC005  {std kind 'DIVERSION' units 'CFS'}
+define D_JBC004_11_SA3  {std kind 'DIVERSION' units 'CFS'}
+define D_WEC005_11_PR   {std kind 'DIVERSION' units 'CFS'}
+define D_RVC005_11_PR   {std kind 'DIVERSION' units 'CFS'}
+define D_RVC005_11_SA2  {std kind 'DIVERSION' units 'CFS'}
+define D_JBC002_17N_PR  {std kind 'DIVERSION' units 'CFS'}*/
+!define D_FTR059_12_SA   {timeseries 'D_FTR059_12_SA' kind 'DIVERSION' units 'CFS' convert 'TAF'}  !save
+!define D_FTR045_15N_SA  {timeseries 'D_FTR045_15N_SA' kind 'DIVERSION' units 'CFS' convert 'TAF'}!save
+
+define D_FTR039_SEC009  {timeseries 'D_FTR039_SEC009' kind 'DIVERSION' units 'CFS' convert 'TAF'}
+/*
+define D_SEC009_11_SA4  {std kind 'DIVERSION' units 'CFS'}
+define D_SEC009_17S_PR  {std kind 'DIVERSION' units 'CFS'}*/
+define D_FTR031_WTPCYC  {timeseries 'D_FTR031_WTPCYC' kind 'DIVERSION' units 'CFS' convert 'TAF'}!save  Feather and Sly Creek
+!define D_FTR028_15S_SA  {timeseries 'D_FTR028_15S_SA' kind 'DIVERSION' units 'CFS' convert 'TAF'}!save
+/*define D_WTPCYC_16_PU   {std kind 'DIVERSION' units 'CFS'}*/
+!define D_FTR018_15S_SA  {timeseries 'D_FTR018_15S_SA' kind 'DIVERSION' units 'CFS' convert 'TAF'}!save
+define D_FTR021_16_PA   {timeseries 'D_FTR021_16_PA' kind 'DIVERSION' units 'CFS' convert 'TAF'}!save
+!define D_FTR021_16_SA   {timeseries 'D_FTR021_16_SA' kind 'DIVERSION' units 'CFS' convert 'TAF'}! Oswald WD   !save
+!define D_FTR018_16_SA   {timeseries 'D_FTR018_16_SA' kind 'DIVERSION' units 'CFS' convert 'TAF'}! Tudor MWC !save
+!define D_FTR014_16_SA   {timeseries 'D_FTR014_16_SA' kind 'DIVERSION' units 'CFS' convert 'TAF'}! Garden Highway MWC  !save
+define D_FTR003_22_SA2  {timeseries 'D_FTR003_22_SA2' kind 'DIVERSION' units 'CFS' convert 'TAF'}!save
+!define D_FTR008_16_SA   {timeseries 'D_FTR008_16_SA' kind 'DIVERSION' units 'CFS' convert 'TAF'}!save
+!define D_FTR003_17S_SA  {timeseries 'D_FTR003_17S_SA' kind 'DIVERSION' units 'CFS' convert 'TAF'}!save
+/*
+define D_MNRRH_13_NA    {std kind 'DIVERSION' units 'CFS'}
+define D_SFF029_SFT000  {std kind 'DIVERSION' units 'CFS'}
+define D_SFF011_MNRRH   {std kind 'DIVERSION' units 'CFS'}
+define D_MNRRH_WTPMNR   {std kind 'DIVERSION' units 'CFS'}
+define D_WTPMNR_13_NU1  {std kind 'DIVERSION' units 'CFS'}
+define D_MNRRH_13_NU2   {std kind 'DIVERSION' units 'CFS'}
+define D_OWC000_13_NA   {std kind 'DIVERSION' units 'CFS'}
+define D_LST004_OWC000  {std kind 'DIVERSION' units 'CFS'}
+define D_WBF030_HKC002  {lower 0.0 upper 125.0 kind 'DIVERSION' units 'CFS'}
+define D_WBF015_MIO023  {lower 0.0 upper 65.0 kind 'DIVERSION' units 'CFS'}
+define D_MIO023_12_NU1  {std kind 'DIVERSION' units 'CFS'}
+define D_MIO023_10_NA       {std kind 'DIVERSION' units 'CFS'}
+define D_MIO023_LDC021  {std kind 'DIVERSION' units 'CFS'}
+define D_LDC007_11_SA2  {std kind 'DIVERSION' units 'CFS'}
+
+define I_SFF011     {timeseries kind 'INFLOW' units 'TAF' convert 'CFS'}
+define I_SFF008     {timeseries kind 'INFLOW' units 'TAF' convert 'CFS'}
+define I_NFF027     {timeseries kind 'INFLOW' units 'TAF' convert 'CFS'}
+define I_MFF019     {timeseries kind 'INFLOW' units 'TAF' convert 'CFS'}
+define I_RVPHB  {timeseries kind 'INFLOW' units 'TAF' convert 'CFS'}
+define I_WBF030     {timeseries kind 'INFLOW' units 'TAF' convert 'CFS'}
+define I_WBF015     {timeseries kind 'INFLOW' units 'TAF' convert 'CFS'}
+define I_WBF006     {timeseries kind 'INFLOW' units 'TAF' convert 'CFS'}
+define I_LGRSV  {timeseries kind 'INFLOW' units 'TAF' convert 'CFS'}
+define I_LST007     {timeseries kind 'INFLOW' units 'TAF' convert 'CFS'}*/
+define I_OROVL  {timeseries kind 'INFLOW' units 'TAF'}! convert 'CFS'}!save
+
+define C_SFF002 {timeseries 'C_SFF002' kind 'CHANNEL' units 'CFS' convert 'TAF'} !Feather and South Fork Feather
+define C_NFF008 {timeseries 'C_NFF008' kind 'CHANNEL' units 'CFS' convert 'TAF'} !Feather and North Fork Feather
+define C_HON004 {timeseries 'C_HON004' kind 'CHANNEL' units 'CFS' convert 'TAF'} !Feather and Honcut Creek
+define C_YUB002 {timeseries 'C_YUB002' kind 'CHANNEL' units 'CFS' convert 'TAF'} !Feather and Yuba
+define C_BRR004 {timeseries 'C_BRR004' kind 'CHANNEL' units 'CFS' convert 'TAF'} !Feather and Bear
+define C_FTR003 {timeseries 'C_FTR003' kind 'CHANNEL' units 'CFS' convert 'TAF'}
+define C_FTR039 {timeseries 'C_FTR039' kind 'CHANNEL' units 'CFS' convert 'TAF'}
+define C_FTR036 {timeseries 'C_FTR036' kind 'CHANNEL' units 'CFS' convert 'TAF'}
+
+define SR_15N_JCK002    {timeseries 'SR_15N_JCK002' kind 'SURFACE-RUNOFF' units 'CFS' convert 'TAF'}
+define SR_15S_FTR012    {timeseries 'SR_15S_FTR012' kind 'SURFACE-RUNOFF' units 'CFS' convert 'TAF'}
+define SR_15N_FTR029    {timeseries 'SR_15N_FTR029' kind 'SURFACE-RUNOFF' units 'CFS' convert 'TAF'}
+define SR_11_FTR059     {timeseries 'SR_11_FTR059' kind 'SURFACE-RUNOFF' units 'CFS' convert 'TAF'}
+define SR_14_JCK002     {timeseries 'SR_14_JCK002' kind 'SURFACE-RUNOFF' units 'CFS' convert 'TAF'}
+
+define  SG341_FTR068_59 {timeseries 'SG341_FTR068_59' kind 'STREAM-GAIN' units 'CFS' convert 'TAF'}
+define  SG342_FTR063_59 {timeseries 'SG342_FTR063_59' kind 'STREAM-GAIN' units 'CFS' convert 'TAF'}    
+define  SG343_FTR059_59 {timeseries 'SG343_FTR059_59' kind 'STREAM-GAIN' units 'CFS' convert 'TAF'}
+define  SG344_FTR053_59 {timeseries 'SG344_FTR053_59' kind 'STREAM-GAIN' units 'CFS' convert 'TAF'}
+define  SG345_FTR048_59 {timeseries 'SG345_FTR048_59' kind 'STREAM-GAIN' units 'CFS' convert 'TAF'}
+define  SG346_FTR045_59 {timeseries 'SG346_FTR045_59' kind 'STREAM-GAIN' units 'CFS' convert 'TAF'}
+define  SG347_FTR036_59 {timeseries 'SG347_FTR036_59' kind 'STREAM-GAIN' units 'CFS' convert 'TAF'}
+define  SG348_FTR029_59 {timeseries 'SG348_FTR029_59' kind 'STREAM-GAIN' units 'CFS' convert 'TAF'}
+define  SG352_FTR029_61 {timeseries 'SG352_FTR029_61' kind 'STREAM-GAIN' units 'CFS' convert 'TAF'}
+define  SG353_FTR025_61 {timeseries 'SG353_FTR025_61' kind 'STREAM-GAIN' units 'CFS' convert 'TAF'}
+define  SG354_FTR021_61 {timeseries 'SG354_FTR021_61' kind 'STREAM-GAIN' units 'CFS' convert 'TAF'}
+define  SG355_FTR016_61 {timeseries 'SG355_FTR016_61' kind 'STREAM-GAIN' units 'CFS' convert 'TAF'}
+define  SG356_FTR012_61 {timeseries 'SG356_FTR012_61' kind 'STREAM-GAIN' units 'CFS' convert 'TAF'}
+define  SG362_FTR012_63 {timeseries 'SG362_FTR012_63' kind 'STREAM-GAIN' units 'CFS' convert 'TAF'}
+define  SG363_FTR008_63 {timeseries 'SG363_FTR008_63' kind 'STREAM-GAIN' units 'CFS' convert 'TAF'}
+define  SG364_FTR008_64 {timeseries 'SG364_FTR008_64' kind 'STREAM-GAIN' units 'CFS' convert 'TAF'}
+define  SG365_FTR003_64 {timeseries 'SG365_FTR003_64' kind 'STREAM-GAIN' units 'CFS' convert 'TAF'}
+define  SG366_FTR003_64 {timeseries 'SG366_FTR003_64' kind 'STREAM-GAIN' units 'CFS' convert 'TAF'} 
+
+/*define R_11_NU1_ORWWTP  {timeseries ' kind 'RETURN-FLOW' units 'CFS' convert 'TAF'}
+define R_11_SA3_RFS11       {timeseries ' kind 'RETURN-FLOW' units 'CFS' convert 'TAF'}
+define R_12_NU1_ORWWTP  {timeseries ' kind 'RETURN-FLOW' units 'CFS' convert 'TAF'}*/
+define R_12_SA_FTR045       {timeseries 'R_12_SA_FTR045' kind 'RETURN-FLOW' units 'CFS' convert 'TAF'}!save
+/*define R_13_NU1_ORWWTP  {timeseries ' kind 'RETURN-FLOW' units 'CFS' convert 'TAF'}*/
+define R_RFS14_JCK002       {timeseries 'R_RFS14_JCK002' kind 'RETURN-FLOW' units 'CFS' convert 'TAF'} !save
+define R_15N_NA1_FTR031 {timeseries 'R_15N_NA1_FTR031' kind 'RETURN-FLOW' units 'CFS' convert 'TAF'}!save
+define R_15N_NA2_JCK002 {timeseries 'R_15N_NA2_JCK002' kind 'RETURN-FLOW' units 'CFS' convert 'TAF'}!save
+define R_15N_SA_FTR031  {timeseries 'R_15N_SA_FTR031' kind 'RETURN-FLOW' units 'CFS' convert 'TAF'}!save
+/*define R_15N_NU_LCWWTP  {timeseries ' kind 'RETURN-FLOW' units 'CFS' convert 'TAF'}
+define R_16_PU_YCWWTP   {timeseries ' kind 'RETURN-FLOW' units 'CFS' convert 'TAF'}*/
+define R_15S_SA_FTR014  {timeseries 'R_15S_SA_FTR014' kind 'RETURN-FLOW' units 'CFS' convert 'TAF'}!save
+/*define R_15S_NA1_DHC001 {timeseries ' kind 'RETURN-FLOW' units 'CFS' convert 'TAF'}
+define R_15S_NA2_DHC001 {timeseries ' kind 'RETURN-FLOW' units 'CFS' convert 'TAF'}
+define R_15S_NU_DHC001  {timeseries ' kind 'RETURN-FLOW' units 'CFS' convert 'TAF'}
+define R_15S_NU_LCWWTP  {timeseries ' kind 'RETURN-FLOW' units 'CFS' convert 'TAF'}*/
+define R_LCWWTP_FTR025  {timeseries 'R_LCWWTP_FTR025' kind 'RETURN-FLOW' units 'CFS' convert 'TAF'}!save
+define R_MNRRH_FTR072   {timeseries 'R_MNRRH_FTR072' kind 'RETURN-FLOW' units 'CFS' convert 'TAF'}!save
+define R_ORWWTP_FTR063  {timeseries 'R_ORWWTP_FTR063' kind 'RETURN-FLOW' units 'CFS' convert 'TAF'}!save
+define R_YCWWTP_FTR028  {timeseries 'R_YCWWTP_FTR028' kind 'RETURN-FLOW' units 'CFS' convert 'TAF'}!save
+define R_JBC008_FTR048  {timeseries 'R_JBC008_FTR048' kind 'RETURN-FLOW' units 'CFS' convert 'TAF'}! Cox spill !save
+
+define S_OROVL       {timeseries 'S_OROVL' kind 'STORAGE' units 'TAF'} !LAKE OROVILLE
+define S_THRMF       {timeseries 'S_THRMF' kind 'STORAGE' units 'TAF'} !
+define S_THRMA       {timeseries 'S_THRMA' kind 'STORAGE' units 'TAF'}
+define E_THRMA       {timeseries 'E_THRMA' kind 'EVAPORATION' units 'CFS' convert 'TAF'}
+define E_THRMF       {timeseries 'E_THRMF' kind 'EVAPORATION' units 'CFS' convert 'TAF'} !@jmg 2017v13
+define E_OROVL       {timeseries 'E_OROVL' kind 'EVAPORATION' units 'CFS' convert 'TAF'}
+define CT_Oroville  {timeseries 'CT_Oroville' kind 'CLOSURE-TERM' units 'CFS' convert 'TAF'}
+define CT_Nicolaus  {timeseries 'CT_Nicolaus' kind 'CLOSURE-TERM' units 'CFS' convert 'TAF'}
+
+define Feather_bal {value I_OROVL-D_OROVL_13_NU1-D_THRMF_11_NU1-D_THRMF_12_NU1-D_THRMA_WEC000-D_THRMA_JBC000-D_THRMA_RVC000-
+			D_FTR059_12_SA-D_FTR045_15N_SA-D_FTR039_SEC009-D_FTR031_WTPCYC-D_FTR028_15S_SA-D_FTR021_16_PA-
+			D_FTR021_16_SA-D_FTR018_16_SA-D_FTR018_15S_SA-D_FTR014_16_SA-D_FTR008_16_SA-D_FTR003_17S_SA-D_FTR003_22_SA2+
+			C_SFF002+C_NFF008+C_HON004+C_YUB002+C_BRR004+SR_15N_JCK002+SR_15S_FTR012+SR_15N_FTR029+SR_11_FTR059+
+			SR_14_JCK002+SG341_FTR068_59+SG342_FTR063_59+SG343_FTR059_59+SG344_FTR053_59+SG345_FTR048_59+SG346_FTR045_59+
+			SG347_FTR036_59+SG348_FTR029_59+SG352_FTR029_61+SG353_FTR025_61+SG354_FTR021_61+SG355_FTR016_61+SG356_FTR012_61+
+			SG362_FTR012_63+SG363_FTR008_63+SG364_FTR008_64+SG365_FTR003_64+SG366_FTR003_64+R_12_SA_FTR045+R_RFS14_JCK002+
+			R_15N_NA1_FTR031+R_15N_NA2_JCK002+R_15N_SA_FTR031+R_15S_SA_FTR014+R_LCWWTP_FTR025+R_MNRRH_FTR072+R_ORWWTP_FTR063+
+			R_YCWWTP_FTR028+R_JBC008_FTR048-E_OROVL-E_THRMF-E_THRMA-S_OROVL+S_OROVL(-1)-S_THRMF+S_THRMF(-1)-S_THRMA+S_THRMA(-1)+
+			CT_Oroville+CT_Nicolaus-C_FTR003}
+			
+define Feath_baldv {alias feather_bal kind 'MASSBAL' units 'taf'}	
+!define contFTR036 {value C_FTR039 + SG347_FTR036_59 - C_FTR036}
+!define contFTR036dv {alias contFTR036 kind 'debug' units 'taf'}
+
+!************************** SUMMARY FOR FEATHER RIVER ***********************************
+define D_OROVL_13_NU1_   {alias D_OROVL_13_NU1 kind 'DTS-NOD-MB-VALUE' units 'TAF'} !Estimate of current canal capacity from SFWPA  !save
+/*define D_FTR068_THRMF   {std kind 'DTS-NOD-MB-VALUE' units CFS}*/
+define D_THRMF_11_NU1_   {alias D_THRMF_11_NU1 kind 'DTS-NOD-MB-VALUE' units 'TAF'}!save
+define D_THRMF_12_NU1_   {alias D_THRMF_12_NU1 kind 'DTS-NOD-MB-VALUE' units 'TAF'}!save
+define D_THRMA_WEC000_   {alias D_THRMA_WEC000 kind 'DTS-NOD-MB-VALUE' units 'TAF'}!save
+define D_THRMA_JBC000_   {alias D_THRMA_JBC000 kind 'DTS-NOD-MB-VALUE' units 'TAF'}!save
+define D_THRMA_RVC000_   {alias D_THRMA_RVC000 kind 'DTS-NOD-MB-VALUE' units 'TAF'}!save
+/*
+define D_WEC005_BTC032  {std kind 'DTS-NOD-MB-VALUE' units CFS}
+define D_WEC005_11_SA1  {std kind 'DTS-NOD-MB-VALUE' units CFS}
+define D_JBC002_RVC005  {std kind 'DTS-NOD-MB-VALUE' units CFS}
+define D_JBC004_11_SA3  {std kind 'DTS-NOD-MB-VALUE' units CFS}
+define D_WEC005_11_PR   {std kind 'DTS-NOD-MB-VALUE' units CFS}
+define D_RVC005_11_PR   {std kind 'DTS-NOD-MB-VALUE' units CFS}
+define D_RVC005_11_SA2  {std kind 'DTS-NOD-MB-VALUE' units CFS}
+define D_JBC002_17N_PR  {std kind 'DTS-NOD-MB-VALUE' units CFS}*/
+define D_FTR059_12_SA_   {alias D_FTR059_12_SA kind 'DTS-NOD-MB-VALUE' units 'TAF'}  !save
+define D_FTR045_15N_SA_  {alias D_FTR045_15N_SA kind 'DTS-NOD-MB-VALUE' units 'TAF'}!save
+
+define D_FTR039_SEC009_  {alias D_FTR039_SEC009 kind 'DTS-NOD-MB-VALUE' units 'TAF'}
+/*
+define D_SEC009_11_SA4  {std kind 'DTS-NOD-MB-VALUE' units CFS}
+define D_SEC009_17S_PR  {std kind 'DTS-NOD-MB-VALUE' units CFS}*/
+define D_FTR031_WTPCYC_ {alias D_FTR031_WTPCYC kind 'DTS-NOD-MB-VALUE' units 'TAF'}!save  Feather and Sly Creek
+!define D_FTR028_15S_SA  {alias D_FTR028_15S_SA kind 'DTS-NOD-MB-VALUE' units 'TAF'}!save
+/*define D_WTPCYC_16_PU   {std kind 'DTS-NOD-MB-VALUE' units CFS}*/
+define D_FTR018_15S_SA_  {alias D_FTR018_15S_SA kind 'DTS-NOD-MB-VALUE' units 'TAF'}!save
+define D_FTR021_16_PA_   {alias D_FTR021_16_PA kind 'DTS-NOD-MB-VALUE' units 'TAF'}!save
+define D_FTR021_16_SA_   {alias D_FTR021_16_SA kind 'DTS-NOD-MB-VALUE' units 'TAF'}! Oswald WD   !save
+define D_FTR018_16_SA_   {alias D_FTR018_16_SA kind 'DTS-NOD-MB-VALUE' units 'TAF'}! Tudor MWC !save
+define D_FTR014_16_SA_   {alias D_FTR014_16_SA kind 'DTS-NOD-MB-VALUE' units 'TAF'}! Garden Highway MWC  !save
+define D_FTR003_22_SA2_  {alias D_FTR003_22_SA2 kind 'DTS-NOD-MB-VALUE' units 'TAF'}!save
+define D_FTR008_16_SA_   {alias D_FTR008_16_SA kind 'DTS-NOD-MB-VALUE' units 'TAF'}!save
+define D_FTR003_17S_SA_  {alias D_FTR003_17S_SA kind 'DTS-NOD-MB-VALUE' units 'TAF'}!save
+/*
+define D_MNRRH_13_NA    {std kind 'DTS-NOD-MB-VALUE' units CFS}
+define D_SFF029_SFT000  {std kind 'DTS-NOD-MB-VALUE' units CFS}
+define D_SFF011_MNRRH   {std kind 'DTS-NOD-MB-VALUE' units CFS}
+define D_MNRRH_WTPMNR   {std kind 'DTS-NOD-MB-VALUE' units CFS}
+define D_WTPMNR_13_NU1  {std kind 'DTS-NOD-MB-VALUE' units CFS}
+define D_MNRRH_13_NU2   {std kind 'DTS-NOD-MB-VALUE' units CFS}
+define D_OWC000_13_NA   {std kind 'DTS-NOD-MB-VALUE' units CFS}
+define D_LST004_OWC000  {std kind 'DTS-NOD-MB-VALUE' units CFS}
+define D_WBF030_HKC002  {lower 0.0 upper 125.0 kind 'DTS-NOD-MB-VALUE' units CFS}
+define D_WBF015_MIO023  {lower 0.0 upper 65.0 kind 'DTS-NOD-MB-VALUE' units CFS}
+define D_MIO023_12_NU1  {std kind 'DTS-NOD-MB-VALUE' units CFS}
+define D_MIO023_10_NA       {std kind 'DTS-NOD-MB-VALUE' units CFS}
+define D_MIO023_LDC021  {std kind 'DTS-NOD-MB-VALUE' units CFS}
+define D_LDC007_11_SA2  {std kind 'DTS-NOD-MB-VALUE' units CFS}
+
+define I_SFF011     {alias kind INFLOW units TAF convert CFS}
+define I_SFF008     {alias kind INFLOW units TAF convert CFS}
+define I_NFF027     {alias kind INFLOW units TAF convert CFS}
+define I_MFF019     {alias kind INFLOW units TAF convert CFS}
+define I_RVPHB  {alias kind INFLOW units TAF convert CFS}
+define I_WBF030     {alias kind INFLOW units TAF convert CFS}
+define I_WBF015     {alias kind INFLOW units TAF convert CFS}
+define I_WBF006     {alias kind INFLOW units TAF convert CFS}
+define I_LGRSV  {alias kind INFLOW units TAF convert CFS}
+define I_LST007     {alias kind INFLOW units TAF convert CFS}*/
+define I_OROVL_  {alias I_OROVL kind 'DTS-NOD-MB-VALUE' units 'TAF'}! convert CFS}!save
+
+define C_SFF002_ {alias C_SFF002 kind 'DTS-NOD-MB-VALUE' units 'TAF'} !Feather and South Fork Feather
+define C_NFF008_ {alias C_NFF008 kind 'DTS-NOD-MB-VALUE' units 'TAF'} !Feather and North Fork Feather
+define C_HON004_ {alias C_HON004 kind 'DTS-NOD-MB-VALUE' units 'TAF'} !Feather and Honcut Creek
+define C_YUB002_ {alias C_YUB002 kind 'DTS-NOD-MB-VALUE' units 'TAF'} !Feather and Yuba
+define C_BRR004_ {alias C_BRR004 kind 'DTS-NOD-MB-VALUE' units 'TAF'} !Feather and Bear
+define C_FTR003_ {alias C_FTR003 kind 'DTS-NOD-MB-VALUE' units 'TAF'}
+define C_FTR039_ {alias C_FTR039 kind 'DTS-NOD-MB-VALUE' units 'TAF'}
+define C_FTR036_ {alias C_FTR036 kind 'DTS-NOD-MB-VALUE' units 'TAF'}
+
+define SR_15N_JCK002_    {alias SR_15N_JCK002 kind 'DTS-NOD-MB-VALUE' units 'TAF'}
+define SR_15S_FTR012_    {alias SR_15S_FTR012 kind 'DTS-NOD-MB-VALUE' units 'TAF'}
+define SR_15N_FTR029_    {alias SR_15N_FTR029 kind 'DTS-NOD-MB-VALUE' units 'TAF'}
+define SR_11_FTR059_     {alias SR_11_FTR059 kind 'DTS-NOD-MB-VALUE' units 'TAF'}
+define SR_14_JCK002_     {alias SR_14_JCK002 kind 'DTS-NOD-MB-VALUE' units 'TAF'}
+
+define  SG341_FTR068_59_ {alias SG341_FTR068_59 kind 'DTS-NOD-MB-VALUE' units 'TAF'}
+define  SG342_FTR063_59_ {alias SG342_FTR063_59 kind 'DTS-NOD-MB-VALUE' units 'TAF'}    
+define  SG343_FTR059_59_ {alias SG343_FTR059_59 kind 'DTS-NOD-MB-VALUE' units 'TAF'}
+define  SG344_FTR053_59_ {alias SG344_FTR053_59 kind 'DTS-NOD-MB-VALUE' units 'TAF'}
+define  SG345_FTR048_59_ {alias SG345_FTR048_59 kind 'DTS-NOD-MB-VALUE' units 'TAF'}
+define  SG346_FTR045_59_ {alias SG346_FTR045_59 kind 'DTS-NOD-MB-VALUE' units 'TAF'}
+define  SG347_FTR036_59_ {alias SG347_FTR036_59 kind 'DTS-NOD-MB-VALUE' units 'TAF'}
+define  SG348_FTR029_59_ {alias SG348_FTR029_59 kind 'DTS-NOD-MB-VALUE' units 'TAF'}
+define  SG352_FTR029_61_ {alias SG352_FTR029_61 kind 'DTS-NOD-MB-VALUE' units 'TAF'}
+define  SG353_FTR025_61_ {alias SG353_FTR025_61 kind 'DTS-NOD-MB-VALUE' units 'TAF'}
+define  SG354_FTR021_61_ {alias SG354_FTR021_61 kind 'DTS-NOD-MB-VALUE' units 'TAF'}
+define  SG355_FTR016_61_ {alias SG355_FTR016_61 kind 'DTS-NOD-MB-VALUE' units 'TAF'}
+define  SG356_FTR012_61_ {alias SG356_FTR012_61 kind 'DTS-NOD-MB-VALUE' units 'TAF'}
+define  SG362_FTR012_63_ {alias SG362_FTR012_63 kind 'DTS-NOD-MB-VALUE' units 'TAF'}
+define  SG363_FTR008_63_ {alias SG363_FTR008_63 kind 'DTS-NOD-MB-VALUE' units 'TAF'}
+define  SG364_FTR008_64_ {alias SG364_FTR008_64 kind 'DTS-NOD-MB-VALUE' units 'TAF'}
+define  SG365_FTR003_64_ {alias SG365_FTR003_64 kind 'DTS-NOD-MB-VALUE' units 'TAF'}
+define  SG366_FTR003_64_ {alias SG366_FTR003_64 kind 'DTS-NOD-MB-VALUE' units 'TAF'} 
+
+/*define R_11_NU1_ORWWTP  {alias  kind 'DTS-NOD-MB-VALUE' units 'TAF'}
+define R_11_SA3_RFS11       {alias  kind 'DTS-NOD-MB-VALUE' units 'TAF'}
+define R_12_NU1_ORWWTP  {alias  kind 'DTS-NOD-MB-VALUE' units 'TAF'}*/
+define R_12_SA_FTR045_       {alias R_12_SA_FTR045 kind 'DTS-NOD-MB-VALUE' units 'TAF'}!save
+/*define R_13_NU1_ORWWTP  {alias  kind 'DTS-NOD-MB-VALUE' units 'TAF'}*/
+define R_RFS14_JCK002_       {alias R_RFS14_JCK002 kind 'DTS-NOD-MB-VALUE' units 'TAF'} !save
+define R_15N_NA1_FTR031_ {alias R_15N_NA1_FTR031 kind 'DTS-NOD-MB-VALUE' units 'TAF'}!save
+define R_15N_NA2_JCK002_ {alias R_15N_NA2_JCK002 kind 'DTS-NOD-MB-VALUE' units 'TAF'}!save
+define R_15N_SA_FTR031_  {alias R_15N_SA_FTR031 kind 'DTS-NOD-MB-VALUE' units 'TAF'}!save
+/*define R_15N_NU_LCWWTP  {alias  kind 'DTS-NOD-MB-VALUE' units 'TAF'}
+define R_16_PU_YCWWTP   {alias  kind 'DTS-NOD-MB-VALUE' units 'TAF'}*/
+define R_15S_SA_FTR014_  {alias R_15S_SA_FTR014 kind 'DTS-NOD-MB-VALUE' units 'TAF'}!save
+/*define R_15S_NA1_DHC001 {alias  kind 'DTS-NOD-MB-VALUE' units 'TAF'}
+define R_15S_NA2_DHC001 {alias  kind 'DTS-NOD-MB-VALUE' units 'TAF'}
+define R_15S_NU_DHC001  {alias  kind 'DTS-NOD-MB-VALUE' units 'TAF'}
+define R_15S_NU_LCWWTP  {alias  kind 'DTS-NOD-MB-VALUE' units 'TAF'}*/
+define R_LCWWTP_FTR025_  {alias R_LCWWTP_FTR025 kind 'DTS-NOD-MB-VALUE' units 'TAF'}!save
+define R_MNRRH_FTR072_   {alias R_MNRRH_FTR072 kind 'DTS-NOD-MB-VALUE' units 'TAF'}!save
+define R_ORWWTP_FTR063_  {alias R_ORWWTP_FTR063 kind 'DTS-NOD-MB-VALUE' units 'TAF'}!save
+define R_YCWWTP_FTR028_  {alias R_YCWWTP_FTR028 kind 'DTS-NOD-MB-VALUE' units 'TAF'}!save
+define R_JBC008_FTR048_  {alias R_JBC008_FTR048 kind 'DTS-NOD-MB-VALUE' units 'TAF'}! Cox spill !save
+
+define S_OROVL_       {alias S_OROVL kind 'DTS-NOD-MB-VALUE' units 'TAF'} !LAKE OROVILLE
+define S_THRMF_       {alias S_THRMF kind 'DTS-NOD-MB-VALUE' units 'TAF'} !
+define S_THRMA_       {alias S_THRMA kind 'DTS-NOD-MB-VALUE' units 'TAF'}
+define E_THRMA_       {alias E_THRMA kind 'DTS-NOD-MB-VALUE' units 'TAF'}
+define E_THRMF_       {alias E_THRMF kind 'DTS-NOD-MB-VALUE' units 'TAF'} !@jmg 2017v13
+define E_OROVL_       {alias E_OROVL kind 'DTS-NOD-MB-VALUE' units 'TAF'}
+define CT_Oroville_  {alias CT_Oroville kind 'DTS-NOD-MB-VALUE' units 'TAF'}
+define CT_Nicolaus_  {alias CT_Nicolaus kind 'DTS-NOD-MB-VALUE' units 'TAF'}
+
+
+!SACRAMENTO RIVER
+define I_SHSTA  {timeseries 'I_SHSTA' kind 'INFLOW' units 'TAF'}! convert 'CFS'}
+define E_SHSTA       {timeseries 'E_SHSTA' kind 'EVAPORATION' units 'CFS' convert 'TAF'}
+define S_SHSTA       {timeseries 'S_SHSTA' kind 'STORAGE' units 'TAF'} !SHASTA RESERVOIR
+define D_WKYTN_SPT003   {timeseries 'D_WKYTN_SPT003' kind 'DIVERSION' units 'CFS' convert 'TAF'}
+define D_WTPJMS_03_PU1  {timeseries 'D_WTPJMS_03_PU1' kind 'DIVERSION' units 'CFS' convert 'TAF'}
+define SR_02_KSWCK  {timeseries 'SR_02_KSWCK' kind 'SURFACE-RUNOFF' units 'CFS' convert 'TAF'}
+define SR_03_KSWCK  {timeseries 'SR_03_KSWCK' kind 'SURFACE-RUNOFF' units 'CFS' convert 'TAF'}
+define R_03_PU1_KSWCK   {timeseries 'R_03_PU1_KSWCK' kind 'RETURN-FLOW' units 'CFS' convert 'TAF'}
+define E_KSWCK       {timeseries 'E_KSWCK' kind 'EVAPORATION' units 'CFS' convert 'TAF'}
+define S_KSWCK       {timeseries 'S_KSWCK' kind 'STORAGE' units 'TAF'} !KESWICK RESERVOIR
+define  SG205_SAC296_32 {timeseries 'SG205_SAC296_32' kind 'STREAM-GAIN' units 'CFS' convert 'TAF'}
+define D_SAC296_02_SA   {timeseries 'D_SAC296_02_SA' kind 'DIVERSION' units 'CFS' convert 'TAF'}
+define D_SAC296_WTPFTH  {timeseries 'D_SAC296_WTPFTH' kind 'DIVERSION' units 'CFS' convert 'TAF'}
+define  SG206_SAC294_32 {timeseries 'SG206_SAC294_32' kind 'STREAM-GAIN' units 'CFS' convert 'TAF'}
+define D_SAC294_03_PA   {timeseries 'D_SAC294_03_PA' kind 'DIVERSION' units 'CFS' convert 'TAF'}
+define D_WTPBLV_03_PU2  {timeseries 'D_WTPBLV_03_PU2' kind 'DIVERSION' units 'CFS' convert 'TAF'}
+define  SG207_SAC289_32 {timeseries 'SG207_SAC289_32' kind 'STREAM-GAIN' units 'CFS' convert 'TAF'}
+define D_SAC289_03_SA   {timeseries 'D_SAC289_03_SA' kind 'DIVERSION' units 'CFS' convert 'TAF'}
+define D_WTPFTH_03_SU   {timeseries 'D_WTPFTH_03_SU' kind 'DIVERSION' units 'CFS' convert 'TAF'}
+define D_WTPFTH_02_SU   {timeseries 'D_WTPFTH_02_SU' kind 'DIVERSION' units 'CFS' convert 'TAF'}
+define R_03_SU_SWWWTP   {timeseries 'R_03_SU_SWWWTP' kind 'RETURN-FLOW' units 'CFS' convert 'TAF'}
+define R_03_PU2_SWWWTP  {timeseries 'R_03_PU2_SWWWTP' kind 'RETURN-FLOW' units 'CFS' convert 'TAF'}
+define R_03_PU3_SWWWTP  {timeseries 'R_03_PU3_SWWWTP' kind 'RETURN-FLOW' units 'CFS' convert 'TAF'}
+define R_SWWWTP_SAC281  {timeseries 'R_SWWWTP_SAC281' kind 'RETURN-FLOW' units 'CFS' convert 'TAF'}
+define  SG208_SAC287_32 {timeseries 'SG208_SAC287_32' kind 'STREAM-GAIN' units 'CFS' convert 'TAF'}
+define C_CLR009 {timeseries 'C_CLR009' kind 'CHANNEL' units 'CFS' convert 'TAF'}    
+define R_03_PA_SAC287       {timeseries 'R_03_PA_SAC287' kind 'RETURN-FLOW' units 'CFS' convert 'TAF'}
+define R_CCWWTP_SAC287  {timeseries 'R_CCWWTP_SAC287' kind 'RETURN-FLOW' units 'CFS' convert 'TAF'}
+define  SG209_SAC281_32 {timeseries 'SG209_SAC281_32' kind 'STREAM-GAIN' units 'CFS' convert 'TAF'}
+define R_02_NU_SAC281   {timeseries 'R_02_NU_SAC281' kind 'RETURN-FLOW' units 'CFS' convert 'TAF'}
+define R_03_SA_SAC281       {timeseries 'R_03_SA_SAC281' kind 'RETURN-FLOW' units 'CFS' convert 'TAF'}
+define D_SAC281_02_NA       {timeseries 'D_SAC281_02_NA' kind 'DIVERSION' units 'CFS' convert 'TAF'}
+define  SG210_SAC277_32 {timeseries 'SG210_SAC277_32' kind 'STREAM-GAIN' units 'CFS' convert 'TAF'}
+define  SG215_SAC277_34 {timeseries 'SG215_SAC277_34' kind 'STREAM-GAIN' units 'CFS' convert 'TAF'}
+define SR_03_SAC277     {timeseries 'SR_03_SAC277' kind 'SURFACE-RUNOFF' units 'CFS' convert 'TAF'}
+define C_COW003 {timeseries 'C_COW003' kind 'CHANNEL' units 'CFS' convert 'TAF'}
+define  SG216_SAC275_34 {timeseries 'SG216_SAC275_34' kind 'STREAM-GAIN' units 'CFS' convert 'TAF'}
+define C_BCN005 {timeseries 'C_BCN005' kind 'CHANNEL' units 'CFS' convert 'TAF'}
+define R_02_SA_SAC273       {timeseries 'R_02_SA_SAC273' kind 'RETURN-FLOW' units 'CFS' convert 'TAF'}
+define R_02_PA_SAC273       {timeseries 'R_02_PA_SAC273' kind 'RETURN-FLOW' units 'CFS' convert 'TAF'}
+define D_SAC273_03_NA   {timeseries 'D_SAC273_03_NA' kind 'DIVERSION' units 'CFS' convert 'TAF'}
+define C_CWD003 {timeseries 'C_CWD003' kind 'CHANNEL' units 'CFS' convert 'TAF'}
+define SR_02_SAC271     {timeseries 'SR_02_SAC271' kind 'SURFACE-RUNOFF' units 'CFS' convert 'TAF'}
+define  SG217_SAC269_34 {timeseries 'SG217_SAC269_34' kind 'STREAM-GAIN' units 'CFS' convert 'TAF'}
+define  SG222_SAC269_37 {timeseries 'SG222_SAC269_37' kind 'STREAM-GAIN' units 'CFS' convert 'TAF'}
+define C_BTL006 {timeseries 'C_BTL006' kind 'CHANNEL' units 'CFS' convert 'TAF'}
+define R_03_NA_SAC269       {timeseries 'R_03_NA_SAC269' kind 'RETURN-FLOW' units 'CFS' convert 'TAF'}
+define  SG223_SAC265_37 {timeseries 'SG223_SAC265_37' kind 'STREAM-GAIN' units 'CFS' convert 'TAF'}
+define SR_03_SAC265     {timeseries 'SR_03_SAC265' kind 'SURFACE-RUNOFF' units 'CFS' convert 'TAF'}
+define  SG224_SAC259_37 {timeseries 'SG224_SAC259_37' kind 'STREAM-GAIN' units 'CFS' convert 'TAF'}
+define  SG227_SAC259_39 {timeseries 'SG227_SAC259_39' kind 'STREAM-GAIN' units 'CFS' convert 'TAF'}
+define SR_02_SAC257     {timeseries 'SR_02_SAC257' kind 'SURFACE-RUNOFF' units 'CFS' convert 'TAF'}
+define CT_BendBridge  {timeseries 'CT_BendBridge' kind 'CLOSURE-TERM' units 'CFS' convert 'TAF'}
+define  SG228_SAC254_39 {timeseries 'SG228_SAC254_39' kind 'STREAM-GAIN' units 'CFS' convert 'TAF'}
+define  SG229_SAC250_39 {timeseries 'SG229_SAC250_39' kind 'STREAM-GAIN' units 'CFS' convert 'TAF'}
+define C_PYN001 {timeseries 'C_PYN001' kind 'CHANNEL' units 'CFS' convert 'TAF'}
+define  SG230_SAC247_39 {timeseries 'SG230_SAC247_39' kind 'STREAM-GAIN' units 'CFS' convert 'TAF'}
+define  SG231_SAC240_39 {timeseries 'SG231_SAC240_39' kind 'STREAM-GAIN' units 'CFS' convert 'TAF'}
+define D_SAC240_TCC001  {timeseries 'D_SAC240_TCC001' kind 'DIVERSION' units 'CFS' convert 'TAF'}
+define D_SAC240_05_NA   {timeseries 'D_SAC240_05_NA' kind 'DIVERSION' units 'CFS' convert 'TAF'}
+define R_04_NU1_SAC240  {timeseries 'R_04_NU1_SAC240' kind 'RETURN-FLOW' units 'CFS' convert 'TAF'}
+define  SG232_SAC232_39 {timeseries 'SG232_SAC232_39' kind 'STREAM-GAIN' units 'CFS' convert 'TAF'}
+define  SG235_SAC232_41 {timeseries 'SG235_SAC232_41' kind 'STREAM-GAIN' units 'CFS' convert 'TAF'}
+define C_ANT010 {timeseries 'C_ANT010' kind 'CHANNEL' units 'CFS' convert 'TAF'}
+define C_ELD005 {timeseries 'C_ELD005' kind 'CHANNEL' units 'CFS' convert 'TAF'}    
+define  SG236_SAC228_41 {timeseries 'SG236_SAC228_41' kind 'STREAM-GAIN' units 'CFS' convert 'TAF'}
+define  SG246_SAC228_44 {timeseries 'SG246_SAC228_44' kind 'STREAM-GAIN' units 'CFS' convert 'TAF'}
+define C_MLC004 {timeseries 'C_MLC004' kind 'CHANNEL' units 'CFS' convert 'TAF'}
+define  SG247_SAC224_44 {timeseries 'SG247_SAC224_44' kind 'STREAM-GAIN' units 'CFS' convert 'TAF'}
+define  SG254_SAC224_46 {timeseries 'SG254_SAC224_46' kind 'STREAM-GAIN' units 'CFS' convert 'TAF'}
+define C_THM005 {timeseries 'C_THM005' kind 'CHANNEL' units 'CFS' convert 'TAF'}
+define D_SAC224_04_NA   {timeseries 'D_SAC224_04_NA' kind 'DIVERSION' units 'CFS' convert 'TAF'}
+define  SG255_SAC218_46 {timeseries 'SG255_SAC218_46' kind 'STREAM-GAIN' units 'CFS' convert 'TAF'}
+define  SG259_SAC218_48 {timeseries 'SG259_SAC218_48' kind 'STREAM-GAIN' units 'CFS' convert 'TAF'}
+define C_DRC005 {timeseries 'C_DRC005' kind 'CHANNEL' units 'CFS' convert 'TAF'}
+define R_04_NU2_SAC217  {timeseries 'R_04_NU2_SAC217' kind 'RETURN-FLOW' units 'CFS' convert 'TAF'}
+define SR_04_SAC217     {timeseries 'SR_04_SAC217' kind 'SURFACE-RUNOFF' units 'CFS' convert 'TAF'}
+define SR_05_SAC217     {timeseries 'SR_05_SAC217' kind 'SURFACE-RUNOFF' units 'CFS' convert 'TAF'}
+define  SG260_SAC214_48 {timeseries 'SG260_SAC214_48' kind 'STREAM-GAIN' units 'CFS' convert 'TAF'}
+define C_MNS000 {timeseries 'C_MNS000' kind 'CHANNEL' units 'CFS' convert 'TAF'}
+define D_SAC207_GCC007  {timeseries 'D_SAC207_GCC007' kind 'DIVERSION' units 'CFS' convert 'TAF'}
+define  SG261_SAC207_48 {timeseries 'SG261_SAC207_48' kind 'STREAM-GAIN' units 'CFS' convert 'TAF'}
+define SR_04_SAC207     {timeseries 'SR_04_SAC207' kind 'SURFACE-RUNOFF' units 'CFS' convert 'TAF'}
+define R_04_NA_SAC207       {timeseries 'R_04_NA_SAC207' kind 'RETURN-FLOW' units 'CFS' convert 'TAF'}
+define R_04_PA2_SAC207  {timeseries 'R_04_PA2_SAC207' kind 'RETURN-FLOW' units 'CFS' convert 'TAF'}
+define R_05_NA_SAC201       {timeseries 'R_05_NA_SAC201' kind 'RETURN-FLOW' units 'CFS' convert 'TAF'}
+define SR_05_SAC201     {timeseries 'SR_05_SAC201' kind 'SURFACE-RUNOFF' units 'CFS' convert 'TAF'}
+define  SG262_SAC196_48 {timeseries 'SG262_SAC196_48' kind 'STREAM-GAIN' units 'CFS' convert 'TAF'}
+define  SG273_SAC196_51 {timeseries 'SG273_SAC196_51' kind 'STREAM-GAIN' units 'CFS' convert 'TAF'}
+define SR_05_SAC196     {timeseries 'SR_05_SAC196' kind 'SURFACE-RUNOFF' units 'CFS' convert 'TAF'}
+define SR_10_SAC196     {timeseries 'SR_10_SAC196' kind 'SURFACE-RUNOFF' units 'CFS' convert 'TAF'}
+define C_BCC004 {timeseries 'C_BCC004' kind 'CHANNEL' units 'CFS' convert 'TAF'}    
+define D_MTC000_09_PR   {timeseries 'D_MTC000_09_PR' kind 'DIVERSION' units 'CFS' convert 'TAF'}
+define D_MTC000_09_NA   {timeseries 'D_MTC000_09_NA' kind 'DIVERSION' units 'CFS' convert 'TAF'}
+define D_MTC000_09_SA1  {timeseries 'D_MTC000_09_SA1' kind 'DIVERSION' units 'CFS' convert 'TAF'}
+define R_10_NU1_CHWWTP  {timeseries 'R_10_NU1_CHWWTP' kind 'RETURN-FLOW' units 'CFS' convert 'TAF'}
+define  SG274_SAC193_51 {timeseries 'SG274_SAC193_51' kind 'STREAM-GAIN' units 'CFS' convert 'TAF'}
+define C_STN004 {timeseries 'C_STN004' kind 'CHANNEL' units 'CFS' convert 'TAF'}    
+define	SP_SAC193_BTC003 {timeseries 'SP_SAC193_BTC003' kind 'RIVER-SPILLS' units 'CFS' convert 'TAF'}
+define  SG275_SAC188_51 {timeseries 'SG275_SAC188_51' kind 'STREAM-GAIN' units 'CFS' convert 'TAF'}
+define	SP_SAC188_BTC003 {timeseries 'SP_SAC188_BTC003' kind 'RIVER-SPILLS' units 'CFS' convert 'TAF'}
+define SR_06_SAC185     {timeseries 'SR_06_SAC185' kind 'SURFACE-RUNOFF' units 'CFS' convert 'TAF'}
+define SR_07N_SAC185    {timeseries 'SR_07N_SAC185' kind 'SURFACE-RUNOFF' units 'CFS' convert 'TAF'}
+define SR_08N_SAC185    {timeseries 'SR_08N_SAC185' kind 'SURFACE-RUNOFF' units 'CFS' convert 'TAF'}
+define SR_09_SAC185     {timeseries 'SR_09_SAC185' kind 'SURFACE-RUNOFF' units 'CFS' convert 'TAF'}
+define D_SAC185_08N_NA  {timeseries 'D_SAC185_08N_NA' kind 'DIVERSION' units 'CFS' convert 'TAF'}
+define D_SAC185_09_NA   {timeseries 'D_SAC185_09_NA' kind 'DIVERSION' units 'CFS' convert 'TAF'}
+define  SG276_SAC182_51 {timeseries 'SG276_SAC182_51' kind 'STREAM-GAIN' units 'CFS' convert 'TAF'}
+define  SG277_SAC178_51 {timeseries 'SG277_SAC178_51' kind 'STREAM-GAIN' units 'CFS' convert 'TAF'}
+define D_SAC178_08N_SA1     {timeseries 'D_SAC178_08N_SA1' kind 'DIVERSION' units 'CFS' convert 'TAF'}
+define	SP_SAC178_BTC003	{timeseries 'SP_SAC178_BTC003' kind 'RIVER-SPILLS' units 'CFS' convert 'TAF'}
+define  SG278_SAC174_51 {timeseries 'SG278_SAC174_51' kind 'STREAM-GAIN' units 'CFS' convert 'TAF'}
+define CT_ButteCity  {timeseries 'CT_ButteCity' kind 'CLOSURE-TERM' units 'CFS' convert 'TAF'}
+define  SG279_SAC168_51 {timeseries 'SG279_SAC168_51' kind 'STREAM-GAIN' units 'CFS' convert 'TAF'}
+define  SG280_SAC162_51 {timeseries 'SG280_SAC162_51' kind 'STREAM-GAIN' units 'CFS' convert 'TAF'}
+define D_SAC162_09_SA2  {timeseries 'D_SAC162_09_SA2' kind 'DIVERSION' units 'CFS' convert 'TAF'}
+define D_SAC159_08S_SA1     {timeseries 'D_SAC159_08S_SA1' kind 'DIVERSION' units 'CFS' convert 'TAF'}
+define D_SAC159_08N_SA1     {timeseries 'D_SAC159_08N_SA1' kind 'DIVERSION' units 'CFS' convert 'TAF'}
+define	SP_SAC159_BTC003	{timeseries 'SP_SAC159_BTC003' kind 'RIVER-SPILLS' units 'CFS' convert 'TAF'}
+define  SG281_SAC154_51 {timeseries 'SG281_SAC154_51' kind 'STREAM-GAIN' units 'CFS' convert 'TAF'}
+define SR_08N_SAC154    {timeseries 'SR_08N_SAC154' kind 'SURFACE-RUNOFF' units 'CFS' convert 'TAF'}
+define  SG282_SAC148_51 {timeseries 'SG282_SAC148_51' kind 'STREAM-GAIN' units 'CFS' convert 'TAF'}
+define  SG293_SAC148_53 {timeseries 'SG293_SAC148_53' kind 'STREAM-GAIN' units 'CFS' convert 'TAF'}
+define	SP_SAC148_BTC003	{timeseries 'SP_SAC148_BTC003' kind 'RIVER-SPILLS' units 'CFS' convert 'TAF'}
+define SR_08S_SAC146    {timeseries 'SR_08S_SAC146' kind 'SURFACE-RUNOFF' units 'CFS' convert 'TAF'}
+define D_SAC146_08S_NA1     {timeseries 'D_SAC146_08S_NA1' kind 'DIVERSION' units 'CFS' convert 'TAF'}
+define  SG294_SAC141_53 {timeseries 'SG294_SAC141_53' kind 'STREAM-GAIN' units 'CFS' convert 'TAF'}
+define D_BSL000_SAC141  {timeseries 'D_BSL000_SAC141' kind 'DIVERSION' units 'CFS' convert 'TAF'}
+define SR_09_SAC141     {timeseries 'SR_09_SAC141' kind 'SURFACE-RUNOFF' units 'CFS' convert 'TAF'}
+define D_SAC136_18_NA   {timeseries 'D_SAC136_18_NA' kind 'DIVERSION' units 'CFS' convert 'TAF'}
+define D_SAC136_18_SA   {timeseries 'D_SAC136_18_SA' kind 'DIVERSION' units 'CFS' convert 'TAF'}
+define  SG295_SAC134_53 {timeseries 'SG295_SAC134_53' kind 'STREAM-GAIN' units 'CFS' convert 'TAF'}
+define  SG296_SAC129_53 {timeseries 'SG296_SAC129_53' kind 'STREAM-GAIN' units 'CFS' convert 'TAF'}
+define D_SAC129_08S_NA2     {timeseries 'D_SAC129_08S_NA2' kind 'DIVERSION' units 'CFS' convert 'TAF'}
+define  SG297_SAC122_53 {timeseries 'SG297_SAC122_53' kind 'STREAM-GAIN' units 'CFS' convert 'TAF'}
+define R_RFS18_SAC122       {timeseries 'R_RFS18_SAC122' kind 'RETURN-FLOW' units 'CFS' convert 'TAF'}
+define D_SAC122_19_SA   {timeseries 'D_SAC122_19_SA' kind 'DIVERSION' units 'CFS' convert 'TAF'}
+define	SP_SAC122_SBP021	{timeseries 'SP_SAC122_SBP021' kind 'RIVER-SPILLS' units 'CFS' convert 'TAF'}
+define D_SAC121_08S_SA3     {timeseries 'D_SAC121_08S_SA3' kind 'DIVERSION' units 'CFS' convert 'TAF'}
+define CT_WilkinsSl  {timeseries 'CT_WilkinsSl' kind 'CLOSURE-TERM' units 'CFS' convert 'TAF'}
+define  SG298_SAC115_53 {timeseries 'SG298_SAC115_53' kind 'STREAM-GAIN' units 'CFS' convert 'TAF'}
+define D_SAC115_19_SA   {timeseries 'D_SAC115_19_SA' kind 'DIVERSION' units 'CFS' convert 'TAF'}
+define D_SAC109_08S_SA3     {timeseries 'D_SAC109_08S_SA3' kind 'DIVERSION' units 'CFS' convert 'TAF'}
+define D_SAC109_19_SA   {timeseries 'D_SAC109_19_SA' kind 'DIVERSION' units 'CFS' convert 'TAF'}
+define  SG299_SAC106_53 {timeseries 'SG299_SAC106_53' kind 'STREAM-GAIN' units 'CFS' convert 'TAF'}
+define D_SAC099_19_SA   {timeseries 'D_SAC099_19_SA' kind 'DIVERSION' units 'CFS' convert 'TAF'}
+define  SG300_SAC097_53 {timeseries 'SG300_SAC097_53' kind 'STREAM-GAIN' units 'CFS' convert 'TAF'}
+define R_RFS8S_SAC097       {timeseries 'R_RFS8S_SAC097' kind 'RETURN-FLOW' units 'CFS' convert 'TAF'}
+define C_CBD000 {timeseries 'C_CBD000' kind 'CHANNEL' units 'CFS' convert 'TAF'} 
+define R_RFS8S_SAC093       {timeseries 'R_RFS8S_SAC093' kind 'RETURN-FLOW' units 'CFS' convert 'TAF'}
+define  SG301_SAC092_53 {timeseries 'SG301_SAC092_53' kind 'STREAM-GAIN' units 'CFS' convert 'TAF'}
+define  SG330_SAC092_57 {timeseries 'SG330_SAC092_57' kind 'STREAM-GAIN' units 'CFS' convert 'TAF'}
+define D_SAC091_19_SA   {timeseries 'D_SAC091_19_SA' kind 'DIVERSION' units 'CFS' convert 'TAF'}
+define  SG331_SAC085_57 {timeseries 'SG331_SAC085_57' kind 'STREAM-GAIN' units 'CFS' convert 'TAF'}
+define C_SSL001 {timeseries 'C_SSL001' kind 'CHANNEL' units 'CFS' convert 'TAF'}
+define R_17S_SA_SAC085  {timeseries 'R_17S_SA_SAC085' kind 'RETURN-FLOW' units 'CFS' convert 'TAF'}
+define CT_Verona  {timeseries 'CT_Verona' kind 'CLOSURE-TERM' units 'CFS' convert 'TAF'}
+define  SG332_SAC083_57 {timeseries 'SG332_SAC083_57' kind 'STREAM-GAIN' units 'CFS' convert 'TAF'}
+define  SG367_SAC083_65 {timeseries 'SG367_SAC083_65' kind 'STREAM-GAIN' units 'CFS' convert 'TAF'}
+!define C_FTR003 {timeseries 'C_FTR003' kind 'CHANNEL' units 'CFS' convert 'TAF'}   
+define R_22_SA2_SAC083  {timeseries 'R_22_SA2_SAC083' kind 'RETURN-FLOW' units 'CFS' convert 'TAF'}
+define D_SAC083_21_SA   {timeseries 'D_SAC083_21_SA' kind 'DIVERSION' units 'CFS' convert 'TAF'}
+define	SP_SAC083_YBP037	{timeseries 'SP_SAC083_YBP037' kind 'RIVER-SPILLS' units 'CFS' convert 'TAF'}
+define  SG368_SAC082_65 {timeseries 'SG368_SAC082_65' kind 'STREAM-GAIN' units 'CFS' convert 'TAF'}
+define C_CRC002 {timeseries 'C_CRC002' kind 'CHANNEL' units 'CFS' convert 'TAF'}
+define D_SAC082_22_SA1  {timeseries 'D_SAC082_22_SA1' kind 'DIVERSION' units 'CFS' convert 'TAF'}
+define  SG369_SAC081_65 {timeseries 'SG369_SAC081_65' kind 'STREAM-GAIN' units 'CFS' convert 'TAF'}
+define D_SAC081_21_NA   {timeseries 'D_SAC081_21_NA' kind 'DIVERSION' units 'CFS' convert 'TAF'}
+define  SG370_SAC078_65 {timeseries 'SG370_SAC078_65' kind 'STREAM-GAIN' units 'CFS' convert 'TAF'}
+define D_SAC078_22_SA1  {timeseries 'D_SAC078_22_SA1' kind 'DIVERSION' units 'CFS' convert 'TAF'}
+define D_WTPSRW_24_NU2  {timeseries 'D_WTPSRW_24_NU2' kind 'DIVERSION' units 'CFS' convert 'TAF'}
+define D_WTPSRW_26N_NU1     {timeseries 'D_WTPSRW_26N_NU1' kind 'DIVERSION' units 'CFS' convert 'TAF'}
+define D_WTPSRW_26N_PU1     {timeseries 'D_WTPSRW_26N_PU1' kind 'DIVERSION' units 'CFS' convert 'TAF'}
+define D_WTPSRW_26N_NU3     {timeseries 'D_WTPSRW_26N_NU3' kind 'DIVERSION' units 'CFS' convert 'TAF'}
+define  SG371_SAC075_65 {timeseries 'SG371_SAC075_65' kind 'STREAM-GAIN' units 'CFS' convert 'TAF'}
+define D_SAC075_22_NA   {timeseries 'D_SAC075_22_NA' kind 'DIVERSION' units 'CFS' convert 'TAF'}
+define D_SAC074_21_SA   {timeseries 'D_SAC074_21_SA' kind 'DIVERSION' units 'CFS' convert 'TAF'}
+define D_WTPDWP_20_NU1  {timeseries 'D_WTPDWP_20_NU1' kind 'DIVERSION' units 'CFS' convert 'TAF'}
+define  SG372_SAC066_65 {timeseries 'SG372_SAC066_65' kind 'STREAM-GAIN' units 'CFS' convert 'TAF'}
+define SR_22_SAC066     {timeseries 'SR_22_SAC066' kind 'SURFACE-RUNOFF' units 'CFS' convert 'TAF'}
+define R_RFS22_SAC066       {timeseries 'R_RFS22_SAC066' kind 'RETURN-FLOW' units 'CFS' convert 'TAF'}
+define	SP_SAC066_YBP020	{timeseries 'SP_SAC066_YBP020' kind 'RIVER-SPILLS' units 'CFS' convert 'TAF'}
+define D_WTPBTB_21_PU   {timeseries 'D_WTPBTB_21_PU' kind 'DIVERSION' units 'CFS' convert 'TAF'}
+define C_EMD001 {timeseries 'C_EMD001' kind 'CHANNEL' units 'CFS' convert 'TAF'}
+define C_AMR004 {timeseries 'C_AMR004' kind 'CHANNEL' units 'CFS' convert 'TAF'}        
+define  SG373_SAC063_65 {timeseries 'SG373_SAC063_65' kind 'STREAM-GAIN' units 'CFS' convert 'TAF'}
+define  SG381_SAC063_67 {timeseries 'SG381_SAC063_67' kind 'STREAM-GAIN' units 'CFS' convert 'TAF'}
+define D_WTPSAC_26S_NU1     {timeseries 'D_WTPSAC_26S_NU1' kind 'DIVERSION' units 'CFS' convert 'TAF'}
+define D_WTPSAC_26S_PU4     {timeseries 'D_WTPSAC_26S_PU4' kind 'DIVERSION' units 'CFS' convert 'TAF'}
+define D_WTPSAC_26N_NU3     {timeseries 'D_WTPSAC_26N_NU3' kind 'DIVERSION' units 'CFS' convert 'TAF'}
+define  SG382_SAC057_67 {timeseries 'SG382_SAC057_67' kind 'STREAM-GAIN' units 'CFS' convert 'TAF'}
+define  SG383_SAC053_67 {timeseries 'SG383_SAC053_67' kind 'STREAM-GAIN' units 'CFS' convert 'TAF'}
+define R_26N_PU2_SRWWTP {timeseries 'R_26N_PU2_SRWWTP' kind 'RETURN-FLOW' units 'CFS' convert 'TAF'}
+define R_26N_PU3_SRWWTP {timeseries 'R_26N_PU3_SRWWTP' kind 'RETURN-FLOW' units 'CFS' convert 'TAF'}
+define R_26N_NU1_SRWWTP {timeseries 'R_26N_NU1_SRWWTP' kind 'RETURN-FLOW' units 'CFS' convert 'TAF'}
+define R_26N_NU2_SRWWTP {timeseries 'R_26N_NU2_SRWWTP' kind 'RETURN-FLOW' units 'CFS' convert 'TAF'}
+define R_26N_NU3_SRWWTP {timeseries 'R_26N_NU3_SRWWTP' kind 'RETURN-FLOW' units 'CFS' convert 'TAF'}
+define R_26N_NU4_SRWWTP {timeseries 'R_26N_NU4_SRWWTP' kind 'RETURN-FLOW' units 'CFS' convert 'TAF'}
+define R_26N_NU5_SRWWTP {timeseries 'R_26N_NU5_SRWWTP' kind 'RETURN-FLOW' units 'CFS' convert 'TAF'}
+define R_26S_PU1_SRWWTP {timeseries 'R_26S_PU1_SRWWTP' kind 'RETURN-FLOW' units 'CFS' convert 'TAF'}
+define R_26S_PU2_SRWWTP {timeseries 'R_26S_PU2_SRWWTP' kind 'RETURN-FLOW' units 'CFS' convert 'TAF'}
+define R_26S_NU1_SRWWTP {timeseries 'R_26S_NU1_SRWWTP' kind 'RETURN-FLOW' units 'CFS' convert 'TAF'}
+define R_26S_PU4_SRWWTP {timeseries 'R_26S_PU4_SRWWTP' kind 'RETURN-FLOW' units 'CFS' convert 'TAF'}
+define R_26S_NU2_SRWWTP {timeseries 'R_26S_NU2_SRWWTP' kind 'RETURN-FLOW' units 'CFS' convert 'TAF'}
+define R_26S_PU5_SRWWTP {timeseries 'R_26S_PU5_SRWWTP' kind 'RETURN-FLOW' units 'CFS' convert 'TAF'}
+define R_26S_PU6_SRWWTP {timeseries 'R_26S_PU6_SRWWTP' kind 'RETURN-FLOW' units 'CFS' convert 'TAF'}
+define R_26S_NU3_SRWWTP {timeseries 'R_26S_NU3_SRWWTP' kind 'RETURN-FLOW' units 'CFS' convert 'TAF'}
+define R_RFS26S_SRWWTP  {timeseries 'R_RFS26S_SRWWTP' kind 'RETURN-FLOW' units 'CFS' convert 'TAF'}
+define R_21_PU_SRWWTP   {timeseries 'R_21_PU_SRWWTP' kind 'RETURN-FLOW' units 'CFS' convert 'TAF'}
+define R_SRWWTP_SAC048  {timeseries 'R_SRWWTP_SAC048' kind 'RETURN-FLOW' units 'CFS' convert 'TAF'}
+define D_SAC050_FPT013  {timeseries 'D_SAC050_FPT013' kind 'DIVERSION' units 'CFS' convert 'TAF'}
+define CT_Freeport  {timeseries 'CT_Freeport' kind 'CLOSURE-TERM' units 'CFS' convert 'TAF'}
+define  SG384_SAC048_67 {timeseries 'SG384_SAC048_67' kind 'STREAM-GAIN' units 'CFS' convert 'TAF'}
+define SR_26S_SAC048    {timeseries 'SR_26S_SAC048' kind 'SURFACE-RUNOFF' units 'CFS' convert 'TAF'}
+define  SG385_SAC041_67 {timeseries 'SG385_SAC041_67' kind 'STREAM-GAIN' units 'CFS' convert 'TAF'}
+!define DA_SACN_SAC041   {timeseries 'DA_SACN_SAC041' kind 'DELTA-ACCRETION' units 'TAF' convert 'CFS'}
+define D_SAC041_ISF001  {timeseries 'D_SAC041_ISF001' kind 'DIVERSION' units 'CFS' convert 'TAF'}
+define DD_SAC041_SACN   {timeseries 'DD_SAC041_SACN' kind 'DIVERSION' units 'CFS' convert 'TAF'}
+define DD_21_PU_adj {timeseries 'DD_21_PU_adj' kind 'DELTA-DEPLETION-ADJ' units 'CFS' convert 'TAF'}  
+define DD_26S_NU1_adj {timeseries 'DD_26S_NU1_adj' kind 'DELTA-DEPLETION-ADJ' units 'CFS' convert 'TAF'}       	  
+define  SG386_SAC036_67 {timeseries 'SG386_SAC036_67' kind 'STREAM-GAIN' units 'CFS' convert 'TAF'}
+define  SG387_SAC030_67 {timeseries 'SG387_SAC030_67' kind 'STREAM-GAIN' units 'CFS' convert 'TAF'}
+define D_SAC030_MOK014      {timeseries 'D_SAC030_MOK014' kind 'DIVERSION' units 'CFS' convert 'TAF'}   ! Cross-channel diversion  !@jmg 2017.06.27 - adding here; doing all MOK in EastsideStreams
+define C_SAC029B    {timeseries 'C_SAC029B' kind 'CHANNEL' units 'CFS' convert 'TAF'}  
+define  SG388_SAC022_67 {timeseries 'SG388_SAC022_67' kind 'STREAM-GAIN' units 'CFS' convert 'TAF'}
+define  SG389_SAC017_67 {timeseries 'SG389_SAC017_67' kind 'STREAM-GAIN' units 'CFS' convert 'TAF'}
+define  SG413_SAC017_71 {timeseries 'SG413_SAC017_71' kind 'STREAM-GAIN' units 'CFS' convert 'TAF'}
+define CACHESL    {timeseries 'C_CSL004A' kind 'CHANNEL' units 'CFS' convert 'TAF'}
+!define DA_SACS_SAC017   {timeseries 'DA_SACS_SAC017' kind 'DELTA-ACCRETION' units 'TAF' convert 'CFS'}
+define DD_SAC017_SACS   {timeseries 'DD_SAC017_SACS' kind 'DIVERSION' units 'CFS' convert 'TAF'}
+define  SG414_SAC011_71 {timeseries 'SG414_SAC011_71' kind 'STREAM-GAIN' units 'CFS' convert 'TAF'}
+define  SG415_SAC007_71 {timeseries 'SG415_SAC007_71' kind 'STREAM-GAIN' units 'CFS' convert 'TAF'}
+define  SG416_SAC003_71 {timeseries 'SG416_SAC003_71' kind 'STREAM-GAIN' units 'CFS' convert 'TAF'}
+define  SG417_SAC000_71 {timeseries 'SG417_SAC000_71' kind 'STREAM-GAIN' units 'CFS' convert 'TAF'}
+define  SG418_SAC000_72 {timeseries 'SG418_SAC000_72' kind 'STREAM-GAIN' units 'CFS' convert 'TAF'}
+define C_SJR006 {timeseries 'C_SJR006' kind 'CHANNEL' units 'CFS' convert 'TAF'}
+!define DA_SACW_SAC000   {timeseries 'DA_SACW_SAC000' kind 'DELTA-ACCRETION' units 'TAF' convert 'CFS'}
+define C_SAC000_MIN {timeseries 'C_SAC000_MIN' kind 'CHANNEL' units 'CFS' convert 'TAF'}
+define C_SAC000_ADD {timeseries 'C_SAC000_ADD' kind 'CHANNEL' units 'CFS' convert 'TAF'}
+define DD_SAC000_SACW   {timeseries 'DD_SAC000_SACW' kind 'DIVERSION' units 'CFS' convert 'TAF'}
+
+define C_SHSTA {timeseries 'C_SHSTA' kind 'CHANNEL' units 'CFS' convert 'TAF'}   
+define C_SAC048 {timeseries 'C_SAC048' kind 'CHANNEL' units 'CFS' convert 'taf'}   
+define C_SAC273 {timeseries 'C_SAC273' kind 'CHANNEL' units 'CFS' convert 'taf'}   
+define C_SAC296 {timeseries 'C_SAC296' kind 'CHANNEL' units 'CFS' convert 'taf'}  
+define C_KSWCK {timeseries 'C_KSWCK' kind 'CHANNEL' units 'CFS' convert 'TAF'}
+define D_SHSTA_WTPJMS {timeseries 'D_SHSTA_WTPJMS' kind 'DIVERSION' units 'cfs'}
+define C_SAC053 {timeseries 'C_SAC053' kind 'CHANNEL' units 'CFS' convert 'taf'}
+define C_SAC078 {timeseries 'C_SAC078' kind 'CHANNEL' units 'CFS' convert 'taf'}
+define C_SAC092 {timeseries 'C_SAC092' kind 'CHANNEL' units 'CFS' convert 'taf'}
+define C_SAC178 {timeseries 'C_SAC178' kind 'CHANNEL' units 'CFS' convert 'taf'}
+define C_SAC174 {timeseries 'C_SAC174' kind 'CHANNEL' units 'CFS' convert 'taf'}
+
+define C_SAC162 {timeseries 'C_SAC162' kind 'CHANNEL' units 'CFS' convert 'taf'}  
+define C_SAC168 {timeseries 'C_SAC168' kind 'CHANNEL' units 'CFS' convert 'taf'}  
+define C_SAC154 {timeseries 'C_SAC154' kind 'CHANNEL' units 'CFS' convert 'taf'}
+
+define C_SAC148 {timeseries 'C_SAC148' kind 'CHANNEL' units 'CFS' convert 'taf'}
+define C_SAC146 {timeseries 'C_SAC146' kind 'CHANNEL' units 'CFS' convert 'taf'}
+
+define C_SAC141 {timeseries 'C_SAC141' kind 'CHANNEL' units 'CFS' convert 'taf'}
+
+define C_SAC159 {timeseries 'C_SAC159' kind 'CHANNEL' units 'CFS' convert 'taf'}  
+define C_SAC294 {timeseries 'C_SAC294' kind 'CHANNEL' units 'CFS' convert 'taf'}  
+define C_SAC041 {timeseries 'C_SAC041' kind 'CHANNEL' units 'CFS' convert 'taf'}
+define contSHSTA {value I_SHSTA*taf_cfs-C_SHSTA-D_SHSTA_WTPJMS-E_SHSTA*taf_cfs - S_SHSTA*taf_cfs+S_SHSTA(-1)*taf_cfs+0.}
+define contSHSTAdv {alias contSHSTA kind 'debug' units 'cfs'}
+define sac_bal {value I_SHSTA-E_SHSTA-S_SHSTA+S_SHSTA(-1)+D_WKYTN_SPT003-D_WTPJMS_03_PU1+SR_02_KSWCK+SR_03_KSWCK+R_03_PU1_KSWCK-E_KSWCK-S_KSWCK+S_KSWCK(-1)+
+			SG205_SAC296_32-D_SAC296_02_SA+SG206_SAC294_32-D_SAC294_03_PA-D_WTPBLV_03_PU2+SG207_SAC289_32-D_SAC289_03_SA-D_WTPFTH_03_SU-
+			D_WTPFTH_02_SU+R_03_SU_SWWWTP+R_03_PU2_SWWWTP+R_03_PU3_SWWWTP+SG208_SAC287_32+C_CLR009+R_03_PA_SAC287+
+			R_CCWWTP_SAC287+SG209_SAC281_32+R_02_NU_SAC281+R_03_SA_SAC281-D_SAC281_02_NA+SG210_SAC277_32+SG215_SAC277_34+SR_03_SAC277+
+			C_COW003+SG216_SAC275_34+C_BCN005+R_02_SA_SAC273+R_02_PA_SAC273-D_SAC273_03_NA+C_CWD003+SR_02_SAC271+SG217_SAC269_34+
+			SG222_SAC269_37+C_BTL006+R_03_NA_SAC269+SG223_SAC265_37+SR_03_SAC265+SG224_SAC259_37+SG227_SAC259_39+SR_02_SAC257+
+			CT_BendBridge+SG228_SAC254_39+SG229_SAC250_39+C_PYN001+SG230_SAC247_39+SG231_SAC240_39-D_SAC240_TCC001-D_SAC240_05_NA+
+			R_04_NU1_SAC240+SG232_SAC232_39+SG235_SAC232_41+C_ANT010+C_ELD005+SG236_SAC228_41+SG246_SAC228_44+C_MLC004+SG247_SAC224_44+
+			SG254_SAC224_46+C_THM005-D_SAC224_04_NA+SG255_SAC218_46+SG259_SAC218_48+C_DRC005+R_04_NU2_SAC217+SR_04_SAC217+SR_05_SAC217+
+			SG260_SAC214_48+C_MNS000-D_SAC207_GCC007+SG261_SAC207_48+SR_04_SAC207+R_04_NA_SAC207+R_04_PA2_SAC207+R_05_NA_SAC201+SR_05_SAC201+SG262_SAC196_48+
+			SG273_SAC196_51+SR_05_SAC196+SR_10_SAC196+C_BCC004-D_MTC000_09_PR-D_MTC000_09_NA-D_MTC000_09_SA1+R_10_NU1_CHWWTP+SG274_SAC193_51+
+			C_STN004-SP_SAC193_BTC003+SG275_SAC188_51-SP_SAC188_BTC003+SR_06_SAC185+SR_07N_SAC185+SR_08N_SAC185+SR_09_SAC185-D_SAC185_08N_NA-
+			D_SAC185_09_NA+SG276_SAC182_51+SG277_SAC178_51-D_SAC178_08N_SA1-SP_SAC178_BTC003+SG278_SAC174_51+CT_ButteCity+SG279_SAC168_51+
+			SG280_SAC162_51-D_SAC162_09_SA2-D_SAC159_08S_SA1-D_SAC159_08N_SA1-SP_SAC159_BTC003+SG281_SAC154_51+SR_08N_SAC154+SG282_SAC148_51+
+			SG293_SAC148_53-SP_SAC148_BTC003+SR_08S_SAC146-D_SAC146_08S_NA1+SG294_SAC141_53+D_BSL000_SAC141+SR_09_SAC141-D_SAC136_18_NA-
+			D_SAC136_18_SA+SG295_SAC134_53+SG296_SAC129_53-D_SAC129_08S_NA2+SG297_SAC122_53+R_RFS18_SAC122-D_SAC122_19_SA-SP_SAC122_SBP021-
+			D_SAC121_08S_SA3+CT_WilkinsSl+SG298_SAC115_53-D_SAC115_19_SA-D_SAC109_08S_SA3-D_SAC109_19_SA+SG299_SAC106_53-D_SAC099_19_SA+
+			SG300_SAC097_53+R_RFS8S_SAC097+C_CBD000+R_RFS8S_SAC093+SG301_SAC092_53+SG330_SAC092_57-D_SAC091_19_SA+SG331_SAC085_57+C_SSL001+
+			R_17S_SA_SAC085+CT_Verona+SG332_SAC083_57+SG367_SAC083_65+C_FTR003+R_22_SA2_SAC083-D_SAC083_21_SA-SP_SAC083_YBP037+SG368_SAC082_65+
+			C_CRC002-D_SAC082_22_SA1+SG369_SAC081_65-D_SAC081_21_NA+SG370_SAC078_65-D_SAC078_22_SA1-D_WTPSRW_24_NU2-D_WTPSRW_26N_NU1-D_WTPSRW_26N_PU1-
+			D_WTPSRW_26N_NU3+SG371_SAC075_65-D_SAC075_22_NA-D_SAC074_21_SA-D_WTPDWP_20_NU1+SG372_SAC066_65+SR_22_SAC066+R_RFS22_SAC066-SP_SAC066_YBP020-
+			D_WTPBTB_21_PU+C_EMD001+C_AMR004+SG373_SAC063_65+SG381_SAC063_67-D_WTPSAC_26S_NU1-D_WTPSAC_26S_PU4-D_WTPSAC_26N_NU3+SG382_SAC057_67+
+			SG383_SAC053_67+R_26N_PU2_SRWWTP+R_26N_PU3_SRWWTP+R_26N_NU1_SRWWTP+R_26N_NU2_SRWWTP+R_26N_NU3_SRWWTP+R_26N_NU4_SRWWTP+R_26N_NU5_SRWWTP+
+			R_26S_PU1_SRWWTP+R_26S_PU2_SRWWTP+R_26S_NU1_SRWWTP+R_26S_PU4_SRWWTP+R_26S_NU2_SRWWTP+R_26S_PU5_SRWWTP+R_26S_PU6_SRWWTP+R_26S_NU3_SRWWTP+
+			R_RFS26S_SRWWTP+R_21_PU_SRWWTP-D_SAC050_FPT013+CT_Freeport+SG384_SAC048_67+SR_26S_SAC048-C_SAC048}
+			
+define sac_bal_dv {alias sac_bal kind 'MASSBAL' units 'taf'}
+define nod_massbal {value feather_bal+amer_bal+sac_bal}
+define nod_massbal_dv {alias nod_massbal kind 'massbal' units 'taf'}
+
+!**************************** SUMMARY FOR SACRAMENTO RIVER ********************************************
+define I_SHSTA_  {alias I_SHSTA kind 'DTS-NOD-MB-VALUE' units 'TAF'}! convert CFS}
+define E_SHSTA_       {alias E_SHSTA kind 'DTS-NOD-MB-VALUE' units 'TAF'}
+define S_SHSTA_       {alias S_SHSTA kind 'DTS-NOD-MB-VALUE' units 'TAF'} !SHASTA RESERVOIR
+define D_WKYTN_SPT003_   {alias D_WKYTN_SPT003 kind 'DTS-NOD-MB-VALUE' units 'TAF'}
+define D_WTPJMS_03_PU1_  {alias D_WTPJMS_03_PU1 kind 'DTS-NOD-MB-VALUE' units 'TAF'}
+define SR_02_KSWCK_  {alias SR_02_KSWCK kind 'DTS-NOD-MB-VALUE' units 'TAF'}
+define SR_03_KSWCK_  {alias SR_03_KSWCK kind 'DTS-NOD-MB-VALUE' units 'TAF'}
+define R_03_PU1_KSWCK_   {alias R_03_PU1_KSWCK kind 'DTS-NOD-MB-VALUE' units 'TAF'}
+define E_KSWCK_       {alias E_KSWCK kind 'DTS-NOD-MB-VALUE' units 'TAF'}
+define S_KSWCK_       {alias S_KSWCK kind 'DTS-NOD-MB-VALUE' units 'TAF'} !KESWICK RESERVOIR
+define  SG205_SAC296_32_ {alias SG205_SAC296_32 kind 'DTS-NOD-MB-VALUE' units 'TAF'}
+define D_SAC296_02_SA_   {alias D_SAC296_02_SA kind 'DTS-NOD-MB-VALUE' units 'TAF'}
+define D_SAC296_WTPFTH_  {alias D_SAC296_WTPFTH kind 'DTS-NOD-MB-VALUE' units 'TAF'}
+define  SG206_SAC294_32_ {alias SG206_SAC294_32 kind 'DTS-NOD-MB-VALUE' units 'TAF'}
+define D_SAC294_03_PA_   {alias D_SAC294_03_PA kind 'DTS-NOD-MB-VALUE' units 'TAF'}
+define D_WTPBLV_03_PU2_  {alias D_WTPBLV_03_PU2 kind 'DTS-NOD-MB-VALUE' units 'TAF'}
+define  SG207_SAC289_32_ {alias SG207_SAC289_32 kind 'DTS-NOD-MB-VALUE' units 'TAF'}
+define D_SAC289_03_SA_   {alias D_SAC289_03_SA kind 'DTS-NOD-MB-VALUE' units 'TAF'}
+define D_WTPFTH_03_SU_   {alias D_WTPFTH_03_SU kind 'DTS-NOD-MB-VALUE' units 'TAF'}
+define D_WTPFTH_02_SU_   {alias D_WTPFTH_02_SU kind 'DTS-NOD-MB-VALUE' units 'TAF'}
+define R_03_SU_SWWWTP_   {alias R_03_SU_SWWWTP kind 'DTS-NOD-MB-VALUE' units 'TAF'}
+define R_03_PU2_SWWWTP_  {alias R_03_PU2_SWWWTP kind 'DTS-NOD-MB-VALUE' units 'TAF'}
+define R_03_PU3_SWWWTP_  {alias R_03_PU3_SWWWTP kind 'DTS-NOD-MB-VALUE' units 'TAF'}
+define R_SWWWTP_SAC281_  {alias R_SWWWTP_SAC281 kind 'DTS-NOD-MB-VALUE' units 'TAF'}
+define  SG208_SAC287_32_ {alias SG208_SAC287_32 kind 'DTS-NOD-MB-VALUE' units 'TAF'}
+define C_CLR009_ {alias C_CLR009 kind 'DTS-NOD-MB-VALUE' units 'TAF'}    
+define R_03_PA_SAC287_       {alias R_03_PA_SAC287 kind 'DTS-NOD-MB-VALUE' units 'TAF'}
+define R_CCWWTP_SAC287_  {alias R_CCWWTP_SAC287 kind 'DTS-NOD-MB-VALUE' units 'TAF'}
+define  SG209_SAC281_32_ {alias SG209_SAC281_32 kind 'DTS-NOD-MB-VALUE' units 'TAF'}
+define R_02_NU_SAC281_   {alias R_02_NU_SAC281 kind 'DTS-NOD-MB-VALUE' units 'TAF'}
+define R_03_SA_SAC281_       {alias R_03_SA_SAC281 kind 'DTS-NOD-MB-VALUE' units 'TAF'}
+define D_SAC281_02_NA_       {alias D_SAC281_02_NA kind 'DTS-NOD-MB-VALUE' units 'TAF'}
+define  SG210_SAC277_32_ {alias SG210_SAC277_32 kind 'DTS-NOD-MB-VALUE' units 'TAF'}
+define  SG215_SAC277_34_ {alias SG215_SAC277_34 kind 'DTS-NOD-MB-VALUE' units 'TAF'}
+define SR_03_SAC277_     {alias SR_03_SAC277 kind 'DTS-NOD-MB-VALUE' units 'TAF'}
+define C_COW003_ {alias C_COW003 kind 'DTS-NOD-MB-VALUE' units 'TAF'}
+define  SG216_SAC275_34_ {alias SG216_SAC275_34 kind 'DTS-NOD-MB-VALUE' units 'TAF'}
+define C_BCN005_ {alias C_BCN005 kind 'DTS-NOD-MB-VALUE' units 'TAF'}
+define R_02_SA_SAC273_       {alias R_02_SA_SAC273 kind 'DTS-NOD-MB-VALUE' units 'TAF'}
+define R_02_PA_SAC273_       {alias R_02_PA_SAC273 kind 'DTS-NOD-MB-VALUE' units 'TAF'}
+define D_SAC273_03_NA_   {alias D_SAC273_03_NA kind 'DTS-NOD-MB-VALUE' units 'TAF'}
+define C_CWD003_ {alias C_CWD003 kind 'DTS-NOD-MB-VALUE' units 'TAF'}
+define SR_02_SAC271_     {alias SR_02_SAC271 kind 'DTS-NOD-MB-VALUE' units 'TAF'}
+define  SG217_SAC269_34_ {alias SG217_SAC269_34 kind 'DTS-NOD-MB-VALUE' units 'TAF'}
+define  SG222_SAC269_37_ {alias SG222_SAC269_37 kind 'DTS-NOD-MB-VALUE' units 'TAF'}
+define C_BTL006_ {alias C_BTL006 kind 'DTS-NOD-MB-VALUE' units 'TAF'}
+define R_03_NA_SAC269_       {alias R_03_NA_SAC269 kind 'DTS-NOD-MB-VALUE' units 'TAF'}
+define  SG223_SAC265_37_ {alias SG223_SAC265_37 kind 'DTS-NOD-MB-VALUE' units 'TAF'}
+define SR_03_SAC265_     {alias SR_03_SAC265 kind 'DTS-NOD-MB-VALUE' units 'TAF'}
+define  SG224_SAC259_37_ {alias SG224_SAC259_37 kind 'DTS-NOD-MB-VALUE' units 'TAF'}
+define  SG227_SAC259_39_ {alias SG227_SAC259_39 kind 'DTS-NOD-MB-VALUE' units 'TAF'}
+define SR_02_SAC257_     {alias SR_02_SAC257 kind 'DTS-NOD-MB-VALUE' units 'TAF'}
+define CT_BendBridge_  {alias CT_BendBridge kind 'DTS-NOD-MB-VALUE' units 'TAF'}
+define  SG228_SAC254_39_ {alias SG228_SAC254_39 kind 'DTS-NOD-MB-VALUE' units 'TAF'}
+define  SG229_SAC250_39_ {alias SG229_SAC250_39 kind 'DTS-NOD-MB-VALUE' units 'TAF'}
+define C_PYN001_ {alias C_PYN001 kind 'DTS-NOD-MB-VALUE' units 'TAF'}
+define  SG230_SAC247_39_ {alias SG230_SAC247_39 kind 'DTS-NOD-MB-VALUE' units 'TAF'}
+define  SG231_SAC240_39_ {alias SG231_SAC240_39 kind 'DTS-NOD-MB-VALUE' units 'TAF'}
+define D_SAC240_TCC001_  {alias D_SAC240_TCC001 kind 'DTS-NOD-MB-VALUE' units 'TAF'}
+define D_SAC240_05_NA_   {alias D_SAC240_05_NA kind 'DTS-NOD-MB-VALUE' units 'TAF'}
+define R_04_NU1_SAC240_  {alias R_04_NU1_SAC240 kind 'DTS-NOD-MB-VALUE' units 'TAF'}
+define  SG232_SAC232_39_ {alias SG232_SAC232_39 kind 'DTS-NOD-MB-VALUE' units 'TAF'}
+define  SG235_SAC232_41_ {alias SG235_SAC232_41 kind 'DTS-NOD-MB-VALUE' units 'TAF'}
+define C_ANT010_ {alias C_ANT010 kind 'DTS-NOD-MB-VALUE' units 'TAF'}
+define C_ELD005_ {alias C_ELD005 kind 'DTS-NOD-MB-VALUE' units 'TAF'}    
+define  SG236_SAC228_41_ {alias SG236_SAC228_41 kind 'DTS-NOD-MB-VALUE' units 'TAF'}
+define  SG246_SAC228_44_ {alias SG246_SAC228_44 kind 'DTS-NOD-MB-VALUE' units 'TAF'}
+define C_MLC004_ {alias C_MLC004 kind 'DTS-NOD-MB-VALUE' units 'TAF'}
+define  SG247_SAC224_44_ {alias SG247_SAC224_44 kind 'DTS-NOD-MB-VALUE' units 'TAF'}
+define  SG254_SAC224_46_ {alias SG254_SAC224_46 kind 'DTS-NOD-MB-VALUE' units 'TAF'}
+define C_THM005_ {alias C_THM005 kind 'DTS-NOD-MB-VALUE' units 'TAF'}
+define D_SAC224_04_NA_   {alias D_SAC224_04_NA kind 'DTS-NOD-MB-VALUE' units 'TAF'}
+define  SG255_SAC218_46_ {alias SG255_SAC218_46 kind 'DTS-NOD-MB-VALUE' units 'TAF'}
+define  SG259_SAC218_48_ {alias SG259_SAC218_48 kind 'DTS-NOD-MB-VALUE' units 'TAF'}
+define C_DRC005_ {alias C_DRC005 kind 'DTS-NOD-MB-VALUE' units 'TAF'}
+define R_04_NU2_SAC217_  {alias R_04_NU2_SAC217 kind 'DTS-NOD-MB-VALUE' units 'TAF'}
+define SR_04_SAC217_     {alias SR_04_SAC217 kind 'DTS-NOD-MB-VALUE' units 'TAF'}
+define SR_05_SAC217_     {alias SR_05_SAC217 kind 'DTS-NOD-MB-VALUE' units 'TAF'}
+define  SG260_SAC214_48_ {alias SG260_SAC214_48 kind 'DTS-NOD-MB-VALUE' units 'TAF'}
+define C_MNS000_ {alias C_MNS000 kind 'DTS-NOD-MB-VALUE' units 'TAF'}
+define D_SAC207_GCC007_  {alias D_SAC207_GCC007 kind 'DTS-NOD-MB-VALUE' units 'TAF'}
+define  SG261_SAC207_48_ {alias SG261_SAC207_48 kind 'DTS-NOD-MB-VALUE' units 'TAF'}
+define SR_04_SAC207_     {alias SR_04_SAC207 kind 'DTS-NOD-MB-VALUE' units 'TAF'}
+define R_04_NA_SAC207_       {alias R_04_NA_SAC207 kind 'DTS-NOD-MB-VALUE' units 'TAF'}
+define R_04_PA2_SAC207_  {alias R_04_PA2_SAC207 kind 'DTS-NOD-MB-VALUE' units 'TAF'}
+define R_05_NA_SAC201_       {alias R_05_NA_SAC201 kind 'DTS-NOD-MB-VALUE' units 'TAF'}
+define SR_05_SAC201_     {alias SR_05_SAC201 kind 'DTS-NOD-MB-VALUE' units 'TAF'}
+define  SG262_SAC196_48_ {alias SG262_SAC196_48 kind 'DTS-NOD-MB-VALUE' units 'TAF'}
+define  SG273_SAC196_51_ {alias SG273_SAC196_51 kind 'DTS-NOD-MB-VALUE' units 'TAF'}
+define SR_05_SAC196_     {alias SR_05_SAC196 kind 'DTS-NOD-MB-VALUE' units 'TAF'}
+define SR_10_SAC196_     {alias SR_10_SAC196 kind 'DTS-NOD-MB-VALUE' units 'TAF'}
+define C_BCC004_ {alias C_BCC004 kind 'DTS-NOD-MB-VALUE' units 'TAF'}    
+define D_MTC000_09_PR_   {alias D_MTC000_09_PR kind 'DTS-NOD-MB-VALUE' units 'TAF'}
+define D_MTC000_09_NA_   {alias D_MTC000_09_NA kind 'DTS-NOD-MB-VALUE' units 'TAF'}
+define D_MTC000_09_SA1_  {alias D_MTC000_09_SA1 kind 'DTS-NOD-MB-VALUE' units 'TAF'}
+define R_10_NU1_CHWWTP_  {alias R_10_NU1_CHWWTP kind 'DTS-NOD-MB-VALUE' units 'TAF'}
+define  SG274_SAC193_51_ {alias SG274_SAC193_51 kind 'DTS-NOD-MB-VALUE' units 'TAF'}
+define C_STN004_ {alias C_STN004 kind 'DTS-NOD-MB-VALUE' units 'TAF'}    
+define	SP_SAC193_BTC003_ {alias SP_SAC193_BTC003 kind 'DTS-NOD-MB-VALUE' units 'TAF'}
+define  SG275_SAC188_51_ {alias SG275_SAC188_51 kind 'DTS-NOD-MB-VALUE' units 'TAF'}
+define	SP_SAC188_BTC003_ {alias SP_SAC188_BTC003 kind 'DTS-NOD-MB-VALUE' units 'TAF'}
+define SR_06_SAC185_     {alias SR_06_SAC185 kind 'DTS-NOD-MB-VALUE' units 'TAF'}
+define SR_07N_SAC185_    {alias SR_07N_SAC185 kind 'DTS-NOD-MB-VALUE' units 'TAF'}
+define SR_08N_SAC185_    {alias SR_08N_SAC185 kind 'DTS-NOD-MB-VALUE' units 'TAF'}
+define SR_09_SAC185_     {alias SR_09_SAC185 kind 'DTS-NOD-MB-VALUE' units 'TAF'}
+define D_SAC185_08N_NA_  {alias D_SAC185_08N_NA kind 'DTS-NOD-MB-VALUE' units 'TAF'}
+define D_SAC185_09_NA_   {alias D_SAC185_09_NA kind 'DTS-NOD-MB-VALUE' units 'TAF'}
+define  SG276_SAC182_51_ {alias SG276_SAC182_51 kind 'DTS-NOD-MB-VALUE' units 'TAF'}
+define  SG277_SAC178_51_ {alias SG277_SAC178_51 kind 'DTS-NOD-MB-VALUE' units 'TAF'}
+define D_SAC178_08N_SA1_     {alias D_SAC178_08N_SA1 kind 'DTS-NOD-MB-VALUE' units 'TAF'}
+define	SP_SAC178_BTC003_	{alias SP_SAC178_BTC003 kind 'DTS-NOD-MB-VALUE' units 'TAF'}
+define  SG278_SAC174_51_ {alias SG278_SAC174_51 kind 'DTS-NOD-MB-VALUE' units 'TAF'}
+define CT_ButteCity_  {alias CT_ButteCity kind 'DTS-NOD-MB-VALUE' units 'TAF'}
+define  SG279_SAC168_51_ {alias SG279_SAC168_51 kind 'DTS-NOD-MB-VALUE' units 'TAF'}
+define  SG280_SAC162_51_ {alias SG280_SAC162_51 kind 'DTS-NOD-MB-VALUE' units 'TAF'}
+define D_SAC162_09_SA2_  {alias D_SAC162_09_SA2 kind 'DTS-NOD-MB-VALUE' units 'TAF'}
+define D_SAC159_08S_SA1_     {alias D_SAC159_08S_SA1 kind 'DTS-NOD-MB-VALUE' units 'TAF'}
+define D_SAC159_08N_SA1_     {alias D_SAC159_08N_SA1 kind 'DTS-NOD-MB-VALUE' units 'TAF'}
+define	SP_SAC159_BTC003_	{alias SP_SAC159_BTC003 kind 'DTS-NOD-MB-VALUE' units 'TAF'}
+define  SG281_SAC154_51_ {alias SG281_SAC154_51 kind 'DTS-NOD-MB-VALUE' units 'TAF'}
+define SR_08N_SAC154_    {alias SR_08N_SAC154 kind 'DTS-NOD-MB-VALUE' units 'TAF'}
+define  SG282_SAC148_51_ {alias SG282_SAC148_51 kind 'DTS-NOD-MB-VALUE' units 'TAF'}
+define  SG293_SAC148_53_ {alias SG293_SAC148_53 kind 'DTS-NOD-MB-VALUE' units 'TAF'}
+define	SP_SAC148_BTC003_	{alias SP_SAC148_BTC003 kind 'DTS-NOD-MB-VALUE' units 'TAF'}
+define SR_08S_SAC146_    {alias SR_08S_SAC146 kind 'DTS-NOD-MB-VALUE' units 'TAF'}
+define D_SAC146_08S_NA1_     {alias D_SAC146_08S_NA1 kind 'DTS-NOD-MB-VALUE' units 'TAF'}
+define  SG294_SAC141_53_ {alias SG294_SAC141_53 kind 'DTS-NOD-MB-VALUE' units 'TAF'}
+define D_BSL000_SAC141_  {alias D_BSL000_SAC141 kind 'DTS-NOD-MB-VALUE' units 'TAF'}
+define SR_09_SAC141_     {alias SR_09_SAC141 kind 'DTS-NOD-MB-VALUE' units 'TAF'}
+define D_SAC136_18_NA_   {alias D_SAC136_18_NA kind 'DTS-NOD-MB-VALUE' units 'TAF'}
+define D_SAC136_18_SA_   {alias D_SAC136_18_SA kind 'DTS-NOD-MB-VALUE' units 'TAF'}
+define  SG295_SAC134_53_ {alias SG295_SAC134_53 kind 'DTS-NOD-MB-VALUE' units 'TAF'}
+define  SG296_SAC129_53_ {alias SG296_SAC129_53 kind 'DTS-NOD-MB-VALUE' units 'TAF'}
+define D_SAC129_08S_NA2_     {alias D_SAC129_08S_NA2 kind 'DTS-NOD-MB-VALUE' units 'TAF'}
+define  SG297_SAC122_53_ {alias SG297_SAC122_53 kind 'DTS-NOD-MB-VALUE' units 'TAF'}
+define R_RFS18_SAC122_       {alias R_RFS18_SAC122 kind 'DTS-NOD-MB-VALUE' units 'TAF'}
+define D_SAC122_19_SA_   {alias D_SAC122_19_SA kind 'DTS-NOD-MB-VALUE' units 'TAF'}
+define	SP_SAC122_SBP021_	{alias SP_SAC122_SBP021 kind 'DTS-NOD-MB-VALUE' units 'TAF'}
+define D_SAC121_08S_SA3_     {alias D_SAC121_08S_SA3 kind 'DTS-NOD-MB-VALUE' units 'TAF'}
+define CT_WilkinsSl_  {alias CT_WilkinsSl kind 'DTS-NOD-MB-VALUE' units 'TAF'}
+define  SG298_SAC115_53_ {alias SG298_SAC115_53 kind 'DTS-NOD-MB-VALUE' units 'TAF'}
+define D_SAC115_19_SA_   {alias D_SAC115_19_SA kind 'DTS-NOD-MB-VALUE' units 'TAF'}
+define D_SAC109_08S_SA3_     {alias D_SAC109_08S_SA3 kind 'DTS-NOD-MB-VALUE' units 'TAF'}
+define D_SAC109_19_SA_   {alias D_SAC109_19_SA kind 'DTS-NOD-MB-VALUE' units 'TAF'}
+define  SG299_SAC106_53_ {alias SG299_SAC106_53 kind 'DTS-NOD-MB-VALUE' units 'TAF'}
+define D_SAC099_19_SA_   {alias D_SAC099_19_SA kind 'DTS-NOD-MB-VALUE' units 'TAF'}
+define  SG300_SAC097_53_ {alias SG300_SAC097_53 kind 'DTS-NOD-MB-VALUE' units 'TAF'}
+define R_RFS8S_SAC097_       {alias R_RFS8S_SAC097 kind 'DTS-NOD-MB-VALUE' units 'TAF'}
+define C_CBD000_ {alias C_CBD000 kind 'DTS-NOD-MB-VALUE' units 'TAF'} 
+define R_RFS8S_SAC093_       {alias R_RFS8S_SAC093 kind 'DTS-NOD-MB-VALUE' units 'TAF'}
+define  SG301_SAC092_53_ {alias SG301_SAC092_53 kind 'DTS-NOD-MB-VALUE' units 'TAF'}
+define  SG330_SAC092_57_ {alias SG330_SAC092_57 kind 'DTS-NOD-MB-VALUE' units 'TAF'}
+define D_SAC091_19_SA_   {alias D_SAC091_19_SA kind 'DTS-NOD-MB-VALUE' units 'TAF'}
+define  SG331_SAC085_57_ {alias SG331_SAC085_57 kind 'DTS-NOD-MB-VALUE' units 'TAF'}
+define C_SSL001_ {alias C_SSL001 kind 'DTS-NOD-MB-VALUE' units 'TAF'}
+define R_17S_SA_SAC085_  {alias R_17S_SA_SAC085 kind 'DTS-NOD-MB-VALUE' units 'TAF'}
+define CT_Verona_  {alias CT_Verona kind 'DTS-NOD-MB-VALUE' units 'TAF'}
+define  SG332_SAC083_57_ {alias SG332_SAC083_57 kind 'DTS-NOD-MB-VALUE' units 'TAF'}
+define  SG367_SAC083_65_ {alias SG367_SAC083_65 kind 'DTS-NOD-MB-VALUE' units 'TAF'}
+!define C_FTR003_ {alias C_FTR003 kind 'DTS-NOD-MB-VALUE' units 'TAF'}   
+define R_22_SA2_SAC083_  {alias R_22_SA2_SAC083 kind 'DTS-NOD-MB-VALUE' units 'TAF'}
+define D_SAC083_21_SA_   {alias D_SAC083_21_SA kind 'DTS-NOD-MB-VALUE' units 'TAF'}
+define	SP_SAC083_YBP037_	{alias SP_SAC083_YBP037 kind 'DTS-NOD-MB-VALUE' units 'TAF'}
+define  SG368_SAC082_65_ {alias SG368_SAC082_65 kind 'DTS-NOD-MB-VALUE' units 'TAF'}
+define C_CRC002_ {alias C_CRC002 kind 'DTS-NOD-MB-VALUE' units 'TAF'}
+define D_SAC082_22_SA1_  {alias D_SAC082_22_SA1 kind 'DTS-NOD-MB-VALUE' units 'TAF'}
+define  SG369_SAC081_65_ {alias SG369_SAC081_65 kind 'DTS-NOD-MB-VALUE' units 'TAF'}
+define D_SAC081_21_NA_   {alias D_SAC081_21_NA kind 'DTS-NOD-MB-VALUE' units 'TAF'}
+define  SG370_SAC078_65_ {alias SG370_SAC078_65 kind 'DTS-NOD-MB-VALUE' units 'TAF'}
+define D_SAC078_22_SA1_  {alias D_SAC078_22_SA1 kind 'DTS-NOD-MB-VALUE' units 'TAF'}
+define D_WTPSRW_24_NU2_  {alias D_WTPSRW_24_NU2 kind 'DTS-NOD-MB-VALUE' units 'TAF'}
+define D_WTPSRW_26N_NU1_     {alias D_WTPSRW_26N_NU1 kind 'DTS-NOD-MB-VALUE' units 'TAF'}
+define D_WTPSRW_26N_PU1_     {alias D_WTPSRW_26N_PU1 kind 'DTS-NOD-MB-VALUE' units 'TAF'}
+define D_WTPSRW_26N_NU3_     {alias D_WTPSRW_26N_NU3 kind 'DTS-NOD-MB-VALUE' units 'TAF'}
+define  SG371_SAC075_65_ {alias SG371_SAC075_65 kind 'DTS-NOD-MB-VALUE' units 'TAF'}
+define D_SAC075_22_NA_   {alias D_SAC075_22_NA kind 'DTS-NOD-MB-VALUE' units 'TAF'}
+define D_SAC074_21_SA_   {alias D_SAC074_21_SA kind 'DTS-NOD-MB-VALUE' units 'TAF'}
+define D_WTPDWP_20_NU1_  {alias D_WTPDWP_20_NU1 kind 'DTS-NOD-MB-VALUE' units 'TAF'}
+define  SG372_SAC066_65_ {alias SG372_SAC066_65 kind 'DTS-NOD-MB-VALUE' units 'TAF'}
+define SR_22_SAC066_     {alias SR_22_SAC066 kind 'DTS-NOD-MB-VALUE' units 'TAF'}
+define R_RFS22_SAC066_       {alias R_RFS22_SAC066 kind 'DTS-NOD-MB-VALUE' units 'TAF'}
+define	SP_SAC066_YBP020_	{alias SP_SAC066_YBP020 kind 'DTS-NOD-MB-VALUE' units 'TAF'}
+define D_WTPBTB_21_PU_   {alias D_WTPBTB_21_PU kind 'DTS-NOD-MB-VALUE' units 'TAF'}
+define C_EMD001_ {alias C_EMD001 kind 'DTS-NOD-MB-VALUE' units 'TAF'}
+!define C_AMR004_ {alias C_AMR004 kind 'DTS-NOD-MB-VALUE' units 'TAF'}        
+define  SG373_SAC063_65_ {alias SG373_SAC063_65 kind 'DTS-NOD-MB-VALUE' units 'TAF'}
+define  SG381_SAC063_67_ {alias SG381_SAC063_67 kind 'DTS-NOD-MB-VALUE' units 'TAF'}
+define D_WTPSAC_26S_NU1_     {alias D_WTPSAC_26S_NU1 kind 'DTS-NOD-MB-VALUE' units 'TAF'}
+define D_WTPSAC_26S_PU4_     {alias D_WTPSAC_26S_PU4 kind 'DTS-NOD-MB-VALUE' units 'TAF'}
+define D_WTPSAC_26N_NU3_     {alias D_WTPSAC_26N_NU3 kind 'DTS-NOD-MB-VALUE' units 'TAF'}
+define  SG382_SAC057_67_ {alias SG382_SAC057_67 kind 'DTS-NOD-MB-VALUE' units 'TAF'}
+define  SG383_SAC053_67_ {alias SG383_SAC053_67 kind 'DTS-NOD-MB-VALUE' units 'TAF'}
+define R_26N_PU2_SRWWTP_ {alias R_26N_PU2_SRWWTP kind 'DTS-NOD-MB-VALUE' units 'TAF'}
+define R_26N_PU3_SRWWTP_ {alias R_26N_PU3_SRWWTP kind 'DTS-NOD-MB-VALUE' units 'TAF'}
+define R_26N_NU1_SRWWTP_ {alias R_26N_NU1_SRWWTP kind 'DTS-NOD-MB-VALUE' units 'TAF'}
+define R_26N_NU2_SRWWTP_ {alias R_26N_NU2_SRWWTP kind 'DTS-NOD-MB-VALUE' units 'TAF'}
+define R_26N_NU3_SRWWTP_ {alias R_26N_NU3_SRWWTP kind 'DTS-NOD-MB-VALUE' units 'TAF'}
+define R_26N_NU4_SRWWTP_ {alias R_26N_NU4_SRWWTP kind 'DTS-NOD-MB-VALUE' units 'TAF'}
+define R_26N_NU5_SRWWTP_ {alias R_26N_NU5_SRWWTP kind 'DTS-NOD-MB-VALUE' units 'TAF'}
+define R_26S_PU1_SRWWTP_ {alias R_26S_PU1_SRWWTP kind 'DTS-NOD-MB-VALUE' units 'TAF'}
+define R_26S_PU2_SRWWTP_ {alias R_26S_PU2_SRWWTP kind 'DTS-NOD-MB-VALUE' units 'TAF'}
+define R_26S_NU1_SRWWTP_ {alias R_26S_NU1_SRWWTP kind 'DTS-NOD-MB-VALUE' units 'TAF'}
+define R_26S_PU4_SRWWTP_ {alias R_26S_PU4_SRWWTP kind 'DTS-NOD-MB-VALUE' units 'TAF'}
+define R_26S_NU2_SRWWTP_ {alias R_26S_NU2_SRWWTP kind 'DTS-NOD-MB-VALUE' units 'TAF'}
+define R_26S_PU5_SRWWTP_ {alias R_26S_PU5_SRWWTP kind 'DTS-NOD-MB-VALUE' units 'TAF'}
+define R_26S_PU6_SRWWTP_ {alias R_26S_PU6_SRWWTP kind 'DTS-NOD-MB-VALUE' units 'TAF'}
+define R_26S_NU3_SRWWTP_ {alias R_26S_NU3_SRWWTP kind 'DTS-NOD-MB-VALUE' units 'TAF'}
+define R_RFS26S_SRWWTP_  {alias R_RFS26S_SRWWTP kind 'DTS-NOD-MB-VALUE' units 'TAF'}
+define R_21_PU_SRWWTP_   {alias R_21_PU_SRWWTP kind 'DTS-NOD-MB-VALUE' units 'TAF'}
+define R_SRWWTP_SAC048_  {alias R_SRWWTP_SAC048 kind 'DTS-NOD-MB-VALUE' units 'TAF'}
+define D_SAC050_FPT013_  {alias D_SAC050_FPT013 kind 'DTS-NOD-MB-VALUE' units 'TAF'}
+define CT_Freeport_  {alias CT_Freeport kind 'DTS-NOD-MB-VALUE' units 'TAF'}
+define  SG384_SAC048_67_ {alias SG384_SAC048_67 kind 'DTS-NOD-MB-VALUE' units 'TAF'}
+define SR_26S_SAC048_    {alias SR_26S_SAC048 kind 'DTS-NOD-MB-VALUE' units 'TAF'}
+define  SG385_SAC041_67_ {alias SG385_SAC041_67 kind 'DTS-NOD-MB-VALUE' units 'TAF'}
+!define DA_SACN_SAC041   {alias DA_SACN_SAC041 kind 'DTS-NOD-MB-VALUE' units TAF convert CFS}
+define D_SAC041_ISF001_  {alias D_SAC041_ISF001 kind 'DTS-NOD-MB-VALUE' units 'TAF'}
+define DD_SAC041_SACN_   {alias DD_SAC041_SACN kind 'DTS-NOD-MB-VALUE' units 'TAF'}
+define DD_21_PU_adj_ {alias DD_21_PU_adj kind 'DTS-NOD-MB-VALUE' units 'TAF'}  
+define DD_26S_NU1_adj_ {alias DD_26S_NU1_adj kind 'DTS-NOD-MB-VALUE' units 'TAF'}       	  
+define  SG386_SAC036_67_ {alias SG386_SAC036_67 kind 'DTS-NOD-MB-VALUE' units 'TAF'}
+define  SG387_SAC030_67_ {alias SG387_SAC030_67 kind 'DTS-NOD-MB-VALUE' units 'TAF'}
+define D_SAC030_MOK014_      {alias D_SAC030_MOK014 kind 'DTS-NOD-MB-VALUE' units 'TAF'}   ! Cross-'DTS-NOD-MB-VALUE' 'DTS-NOD-MB-VALUE'  !@jmg 2017.06.27 - adding here; doing all MOK in EastsideStreams
+define C_SAC029B_    {alias C_SAC029B kind 'DTS-NOD-MB-VALUE' units 'TAF'}  
+define  SG388_SAC022_67_ {alias SG388_SAC022_67 kind 'DTS-NOD-MB-VALUE' units 'TAF'}
+define  SG389_SAC017_67_ {alias SG389_SAC017_67 kind 'DTS-NOD-MB-VALUE' units 'TAF'}
+define  SG413_SAC017_71_ {alias SG413_SAC017_71 kind 'DTS-NOD-MB-VALUE' units 'TAF'}
+define CACHESL_    {alias CACHESL kind 'DTS-NOD-MB-VALUE' units 'TAF'}
+!define DA_SACS_SAC017   {alias DA_SACS_SAC017 kind 'DTS-NOD-MB-VALUE' units TAF convert CFS}
+define DD_SAC017_SACS_   {alias DD_SAC017_SACS kind 'DTS-NOD-MB-VALUE' units 'TAF'}
+define  SG414_SAC011_71_ {alias SG414_SAC011_71 kind 'DTS-NOD-MB-VALUE' units 'TAF'}
+define  SG415_SAC007_71_ {alias SG415_SAC007_71 kind 'DTS-NOD-MB-VALUE' units 'TAF'}
+define  SG416_SAC003_71_ {alias SG416_SAC003_71 kind 'DTS-NOD-MB-VALUE' units 'TAF'}
+define  SG417_SAC000_71_ {alias SG417_SAC000_71 kind 'DTS-NOD-MB-VALUE' units 'TAF'}
+define  SG418_SAC000_72_ {alias SG418_SAC000_72 kind 'DTS-NOD-MB-VALUE' units 'TAF'}
+define C_SJR006_ {alias C_SJR006 kind 'DTS-NOD-MB-VALUE' units 'TAF'}
+!define DA_SACW_SAC000   {alias DA_SACW_SAC000 kind 'DTS-NOD-MB-VALUE' units TAF convert CFS}
+define C_SAC000_MIN_ {alias C_SAC000_MIN kind 'DTS-NOD-MB-VALUE' units 'TAF'}
+define C_SAC000_ADD_ {alias C_SAC000_ADD kind 'DTS-NOD-MB-VALUE' units 'TAF'}
+define DD_SAC000_SACW_   {alias DD_SAC000_SACW kind 'DTS-NOD-MB-VALUE' units 'TAF'}
+
+define C_SHSTA_ {alias C_SHSTA kind 'DTS-NOD-MB-VALUE' units 'TAF'}   
+define C_SAC048_ {alias C_SAC048 kind 'DTS-NOD-MB-VALUE' units 'TAF'}   
+define C_SAC273_ {alias C_SAC273 kind 'DTS-NOD-MB-VALUE' units 'TAF'}   
+define C_SAC296_ {alias C_SAC296 kind 'DTS-NOD-MB-VALUE' units 'TAF'}  
+define C_KSWCK_ {alias C_KSWCK kind 'DTS-NOD-MB-VALUE' units 'TAF'}
+define D_SHSTA_WTPJMS_ {alias D_SHSTA_WTPJMS kind 'DTS-NOD-MB-VALUE' units 'cfs'}
+define C_SAC053_ {alias C_SAC053 kind 'DTS-NOD-MB-VALUE' units 'TAF'}
+define C_SAC078_ {alias C_SAC078 kind 'DTS-NOD-MB-VALUE' units 'TAF'}
+define C_SAC092_ {alias C_SAC092 kind 'DTS-NOD-MB-VALUE' units 'TAF'}
+define C_SAC178_ {alias C_SAC178 kind 'DTS-NOD-MB-VALUE' units 'TAF'}
+define C_SAC174_ {alias C_SAC174 kind 'DTS-NOD-MB-VALUE' units 'TAF'}
+
+define C_SAC162_ {alias C_SAC162 kind 'DTS-NOD-MB-VALUE' units 'TAF'}  
+define C_SAC168_ {alias C_SAC168 kind 'DTS-NOD-MB-VALUE' units 'TAF'}  
+define C_SAC154_ {alias C_SAC154 kind 'DTS-NOD-MB-VALUE' units 'TAF'}
+
+define C_SAC148_ {alias C_SAC148 kind 'DTS-NOD-MB-VALUE' units 'TAF'}
+define C_SAC146_ {alias C_SAC146 kind 'DTS-NOD-MB-VALUE' units 'TAF'}
+
+define C_SAC141_ {alias C_SAC141 kind 'DTS-NOD-MB-VALUE' units 'TAF'}
+
+define C_SAC159_ {alias C_SAC159 kind 'DTS-NOD-MB-VALUE' units 'TAF'}  
+define C_SAC294_ {alias C_SAC294 kind 'DTS-NOD-MB-VALUE' units 'TAF'}  
+define C_SAC041_ {alias C_SAC041 kind 'DTS-NOD-MB-VALUE' units 'TAF'}
+
+/************************************* final mass balance manipulation  ******************************************/
+
+define NOD_MB 		{value SAC_BAL+AMER_BAL+FEATHER_BAL} !NOD_TOT_INFLOW + NOD_RTRN_FLOW + NOD_REL  - NOD_EVAP - NOD_DIVERSION - TOT_SW_GW_INTERACTION}	
+define NOD_MB_ 		{alias NOD_MB kind 'DTS-NOD-MB-VALUE' units 'TAF'}
+
+define NOD_MB_CHECK {
+	case atSTANDARD		{condition abs(NOD_MB - 0)	<= abs_threshold	value EQ}
+	case aboveSTANDARD	{condition (NOD_MB - 0)	> abs_threshold		value GT}
+	case belowSTANDARD	{condition (NOD_MB - 0)	< -1*abs_threshold	value LT}
+	case UNEXPECTED		{condition always							value UE}
 }
 
-define NOD_MB_STATUS_DTS {alias NOD_MB_Check kind 'DTS-Status' units 'NONE'}
-!define Delta_MB_STATUS_DTS {alias NOD_MB_Check kind 'DTS-Status' units 'NONE'} !underreview
-define SOD_MB_STATUS_DTS {alias NOD_MB_Check kind 'DTS-Status' units 'NONE'} !underreview 
+define NOD_MB_CHECK_ { alias  NOD_MB_CHECK  kind 'DTS-NOD-MB-STATUS' units 'NONE' }
 
-define FRSA_MB {value NOD_R2_RR +NOD_R2_LI +NOD_R2_GW -NOD_R2_CU +NOD_R2_AD -(C225+C223+C217A+R135A+R135B+R135C_DCMP)}
-define FRSA_MB_DTS {alias FRSA_MB}
 
-define AMER_MB {value NOD_R3_RR +NOD_R3_LI +NOD_R3_GW -NOD_R3_CU +NOD_R3_RO -(C308+C303+R169-C225-D162-D167-D168)}
-define AMER_MB_DTS {alias AMER_MB}
+
+
+

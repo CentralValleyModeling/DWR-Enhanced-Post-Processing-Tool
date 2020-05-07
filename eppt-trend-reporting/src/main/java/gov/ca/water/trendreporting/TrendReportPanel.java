@@ -14,10 +14,7 @@ package gov.ca.water.trendreporting;
 
 
 import java.awt.Dimension;
-import java.io.IOException;
-import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -26,15 +23,12 @@ import java.util.concurrent.CancellationException;
 import java.util.concurrent.CompletableFuture;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import java.util.stream.Stream;
-import javax.xml.parsers.ParserConfigurationException;
 
 import gov.ca.water.calgui.bo.WaterYearDefinition;
 import gov.ca.water.calgui.bo.WaterYearPeriodRangesFilter;
 import gov.ca.water.calgui.busservice.impl.EpptParameter;
 import gov.ca.water.calgui.busservice.impl.EpptStatistic;
 import gov.ca.water.calgui.busservice.impl.MonthPeriod;
-import gov.ca.water.calgui.constant.Constant;
 import gov.ca.water.calgui.project.EpptConfigurationController;
 import gov.ca.water.calgui.project.EpptScenarioRun;
 import gov.ca.water.quickresults.ui.global.EpptParametersPane;
@@ -48,8 +42,6 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ProgressBar;
-import javafx.scene.control.ToggleButton;
-import javafx.scene.control.ToggleGroup;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
@@ -58,7 +50,6 @@ import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import org.json.JSONObject;
-import org.xml.sax.SAXException;
 
 import static java.util.stream.Collectors.toList;
 
@@ -73,13 +64,13 @@ public class TrendReportPanel extends JFXPanel
 	private static final Logger LOGGER = Logger.getLogger(TrendReportPanel.class.getName());
 
 	private final List<EpptScenarioRun> _scenarioRuns = new ArrayList<>();
-	private final ToggleGroup _toggleGroup = new ToggleGroup();
 	private final EpptConfigurationController _epptConfigurationController;
 	private TrendReportFlowPane _javascriptPane;
 	private EpptParametersPane _parametersPane;
 	private ProgressBar _progressBar;
 	private Label _progressTextLabel;
 	private Button _applyBtn;
+	private TrendReportPagesPane _trendReportPagesPane;
 
 	public TrendReportPanel(EpptConfigurationController epptConfigurationController)
 	{
@@ -94,6 +85,7 @@ public class TrendReportPanel extends JFXPanel
 	{
 		_javascriptPane = new TrendReportFlowPane();
 		_parametersPane = new EpptParametersPane();
+		_trendReportPagesPane = new TrendReportPagesPane(this::inputsChanged);
 		_applyBtn = new Button("Refresh");
 
 		_applyBtn.setOnAction(e -> inputsChanged());
@@ -104,6 +96,7 @@ public class TrendReportPanel extends JFXPanel
 
 		Insets insets = new Insets(4);
 		BorderPane mainPane = new BorderPane();
+		mainPane.setStyle("-fx-font-size: 11");
 		mainPane.setBackground(new Background(new BackgroundFill(Color.WHITE, null, null)));
 		BorderPane center = buildJavascriptPane();
 		BorderPane.setMargin(center, insets);
@@ -121,6 +114,7 @@ public class TrendReportPanel extends JFXPanel
 		mainPane.setBottom(bottom);
 		Scene scene = new Scene(mainPane);
 		setScene(scene);
+		Platform.runLater(this::inputsChanged);
 	}
 
 	private Node buildProgressControls()
@@ -138,9 +132,8 @@ public class TrendReportPanel extends JFXPanel
 	private Pane buildControls()
 	{
 		Insets insets = new Insets(0, 4, 0, 4);
-		Pane toggleControls = buildToggleControls();
 		BorderPane borderPane = new BorderPane();
-		FlowPane center = new FlowPane(Orientation.VERTICAL, 5.0, 0, toggleControls);
+		FlowPane center = new FlowPane(Orientation.VERTICAL, 5.0, 0, _trendReportPagesPane);
 		borderPane.setLeft(_parametersPane);
 		borderPane.setCenter(center);
 		BorderPane.setMargin(center, insets);
@@ -155,64 +148,10 @@ public class TrendReportPanel extends JFXPanel
 		return borderPane;
 	}
 
-	private Pane buildToggleControls()
+	public void inputsChanged()
 	{
-		try(Stream<Path> paths = Files.walk(Paths.get(Constant.TREND_REPORTING_DIR), 1))
-		{
-			paths.filter(path -> path.toString().endsWith(".htm") || path.toString().endsWith(".html"))
-				 .map(this::buildToggleButton)
-				 .filter(Objects::nonNull)
-				 .forEach(_toggleGroup.getToggles()::add);
-		}
-		catch(IOException ex)
-		{
-			LOGGER.log(Level.SEVERE, "Unable to build javascript panels", ex);
-		}
-		FlowPane tilePane = new FlowPane();
-		tilePane.alignmentProperty().set(Pos.CENTER_LEFT);
-		tilePane.getChildren().addAll(_toggleGroup.getToggles()
-												  .stream()
-												  .filter(b -> b instanceof ToggleButton)
-												  .map(b -> (ToggleButton) b)
-												  .collect(toList()));
-		Platform.runLater(() ->
-				_toggleGroup.getToggles()
-							.stream()
-							.filter(b -> b instanceof ToggleButton)
-							.map(b -> (ToggleButton) b)
-							.findAny()
-							.ifPresent(b -> b.setSelected(true))
-		);
-		tilePane.setPrefWidth(550);
-		return tilePane;
-	}
-
-	private ToggleButton buildToggleButton(Path path)
-	{
-		try
-		{
-			TrendReportTabConfig trendReportTabConfig = new TrendReportTabConfig(path);
-			TrendReportToggleButton trendReportToggleButton = new TrendReportToggleButton(trendReportTabConfig);
-			trendReportToggleButton.selectedProperty().addListener((o, old, n) ->
-			{
-				if(n)
-				{
-					inputsChanged();
-				}
-			});
-			return trendReportToggleButton;
-		}
-		catch(IOException | RuntimeException | ParserConfigurationException | SAXException ex)
-		{
-			LOGGER.log(Level.SEVERE, "Unable to extract toggle button text from: " + path, ex);
-			return null;
-		}
-	}
-
-	private void inputsChanged()
-	{
-		TrendReportToggleButton button = (TrendReportToggleButton) _toggleGroup.getSelectedToggle();
-		if(button != null)
+		TrendReportTabConfig trendReportTabConfig = _trendReportPagesPane.getTrendReportTabConfig();
+		if(trendReportTabConfig != null)
 		{
 			_scenarioRuns.clear();
 			_epptConfigurationController.getEpptScenarioBase().ifPresent(_scenarioRuns::add);
@@ -223,7 +162,6 @@ public class TrendReportPanel extends JFXPanel
 			List<EpptStatistic> statistic = _epptConfigurationController.getSelectedStatistics();
 			List<MonthPeriod> monthPeriod = _epptConfigurationController.getSelectedMonthlyPeriods();
 			WaterYearDefinition waterYearDefinition = _epptConfigurationController.getWaterYearDefinition();
-			TrendReportTabConfig trendReportTabConfig = button.getTrendReportTabConfig();
 			List<EpptParameter> guiLink = new ArrayList<>(_parametersPane.getSelectedItems());
 			List<EpptScenarioRun> scenarioRuns = _scenarioRuns.stream().filter(Objects::nonNull).collect(toList());
 			boolean difference = _epptConfigurationController.isDifference();

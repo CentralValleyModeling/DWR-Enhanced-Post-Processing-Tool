@@ -54,29 +54,29 @@ define D165_DV {alias D165 kind 'FLOW-DELIVERY' units 'CFS'} !Sacramento Weirs S
 ! 1. TOTAL SOD EXPORT CONTROL OUTPUTS
 define D418_DV {alias D418 kind 'FLOW-DELIVERY' units 'CFS'} !Tracy PP
 define D419_DV {alias D419 kind 'FLOW-DELIVERY' units 'CFS'} !Banks PP
-!define D409PRE_DV {alias D409PRE kind 'DEBUG' units 'CFS'} !D409 In Pre-setup Cycle     -No C3 equivalent
-define D409UP_DV {alias EXP_TD_UPSTREAM kind 'DEBUG' units 'CFS'} !D409 In Upstream Cycle        
+define D409PRE_DV {alias D409PRE kind 'DEBUG' units 'CFS'} !D409 In Pre-setup Cycle
+define D409UP_DV {alias D409UP kind 'DEBUG' units 'CFS'} !D409 In Upstream Cycle
 define EIEXPCTRL_DV {alias EIEXPCTRL kind 'EXPORT-CTRL-EI' units 'CFS'} 
 define EIEXPCTRLUP_DV {alias EIEXPCTRLUP kind 'DEBUG' units 'CFS'} 
 define APRMAYEXPCTRL_DV {alias APRMAYEXPCTRL kind 'EXPORT-CTRL-APRMAY' units 'CFS'} 
-!define APRMAYEXPCTRLUP_DV {alias APRMAYEXPCTRLUP kind 'DEBUG' units 'CFS'} 
-define D409_DV {alias EXP_TD kind 'FLOW-DELIVERY' units 'CFS'} !D409 
+define APRMAYEXPCTRLUP_DV {alias APRMAYEXPCTRLUP kind 'DEBUG' units 'CFS'} 
+define D409_DV {alias D409 kind 'FLOW-DELIVERY' units 'CFS'} !D409 
 define C408_DV {alias C408 kind 'FLOW-CHANNEL' units 'CFS'} !D408
 define MAXEXP_RPADV_DV {alias MAXEXP_RPADV kind 'EXPORT-LIMIT' units 'CFS'} 
 define EXPORT_DEC_DV {alias EXPORT_DEC kind 'TEMP' units 'CFS'} 
 define C408_LBOUND_DV {alias C408_LBOUND kind 'FLOW-LBOUND' units 'CFS'} !OMR flow restrictions
 define C408_NoEXP1_DV {alias C408_NoEXP1 kind 'FLOW-CHANNEL' units 'CFS'} !OMR flows w/o Exports
-!define COMB_EXP_DEC_DV {alias COMB_EXP_DEC_ kind 'TEMP' units 'CFS'}
+define COMB_EXP_DEC_DV {alias COMB_EXP_DEC_ kind 'TEMP' units 'CFS'}
 ! 2. SWP SOD EXPORT CONTROL OUTPUTS
 define APRMAYBANKSCTRL_DV {alias APRMAYBANKSCTRL kind 'EXPORT-CTRL-APRMAY' units 'CFS'} 
 define MAXEXP_RPA_SWPDV_DV {alias MAXEXP_RPA_SWPDV kind 'EXPORT-LIMIT' units 'CFS'} 
-!define SWP_EXP_DEC_DV {alias SWP_EXP_DEC_ kind 'TEMP' units 'CFS'}
+define SWP_EXP_DEC_DV {alias SWP_EXP_DEC_ kind 'TEMP' units 'CFS'}
 define BANKSALLOWOUT_DV {alias BANKSALLOWOUT kind 'FLOW-ALLOW-BANKS' units 'CFS'}
 define D419UP_DV {alias D419UP kind 'FLOW-DELIVERY' units 'CFS'}
 ! 3. CVP SOD EXPORT CONTROL OUTPUTS
 define APRMAYTRACYCTRL_DV {alias APRMAYTRACYCTRL kind 'EXPORT-CTRL-APRMAY' units 'CFS'} 
 define MAXEXP_RPA_CVPDV_DV {alias MAXEXP_RPA_CVPDV kind 'EXPORT-LIMIT' units 'CFS'} 
-!define CVP_EXP_DEC__DV {alias CVP_EXP_DEC_ kind 'TEMP' units 'CFS'}
+define CVP_EXP_DEC__DV {alias CVP_EXP_DEC_ kind 'TEMP' units 'CFS'}
 define JONESALLOWOUT_DV {alias JONESALLOWOUT kind 'EXPORT-CTRL-JONES' units 'CFS'}
 define D418UP_DV {alias D418UP kind 'FLOW-DELIVERY' units 'CFS'}
 
@@ -101,7 +101,7 @@ define SHORT_CVP_PLS_S_DV {alias SHORT_CVP_PLS_S kind 'DELIVERY-SHORTAGE-CVP' un
 define SHORT_SWP_TOT_N_DV {alias SHORT_SWP_TOT_N kind 'DELIVERY-SHORTAGE-SWP' units 'CFS'} !TOTAL NOD SHORTAGE
 define SHORT_SWP_PAG_N_DV {alias SHORT_SWP_PAG_N kind 'DELIVERY-SHORTAGE-SWP' units 'CFS'} !AG NOD SHORTAGE
 define SHORT_SWP_PMI_N_DV {alias SHORT_SWP_PMI_N kind 'DELIVERY-SHORTAGE-SWP' units 'CFS'} !M&I NOD SHORTAGE 
-!define SHORT_SWP_PWR_DV {alias SHORT_SWP_PWR kind 'DELIVERY-SHORTAGE-SWP' units 'CFS'}
+define SHORT_SWP_PWR_DV {alias SHORT_SWP_PWR kind 'DELIVERY-SHORTAGE-SWP' units 'CFS'}
 !SOD SWP
 define SHORT_SWP_TOT_S_DV {alias SHORT_SWP_TOT_S kind 'DELIVERY-SHORTAGE-SWP' units 'CFS'} !TOTAL SOD SHORTAGE
 define SHORT_SWP_PAG_S_DV {alias SHORT_SWP_PAG_S kind 'DELIVERY-SHORTAGE-SWP' units 'CFS'} !AG SOD SHORTAGE
@@ -115,7 +115,7 @@ define C407_DV {alias C407 kind 'FLOW-CHANNEL' units 'CFS'} ! Regulations and Op
 define C407_whlcv_DV {alias C407_whlcv kind 'FLOW-CHANNEL' units 'CFS'}
 define C405_DV {alias C405 kind 'FLOW-CHANNEL' units 'CFS'} !Actual Flow @ Rio Vista
 define C405_MIF_DV {alias C405_MIF kind 'FLOW-MIN-INSTREAM' units 'CFS'} !Minimum Flow @ Rio Vista
-!define D168C_EXC_NTDEP_DV {alias D168C_EXC_NTDEP kind 'FLOW' units 'CFS'} !Excess from Freeport; returned to D.O. in wheeling cycle
+!!!!!!define D168C_EXC_NTDEP_DV {alias D168C_EXC_NTDEP kind 'FLOW' units 'CFS'} !Excess from Freeport; returned to D.O. in wheeling cycle
 !Tracy and Bank Thru Delta Exports
 define D418_TD_DV {alias D418_TD kind 'FLOW-DELIVERY' units 'CFS'}
 define D419_TD_DV {alias D419_TD kind 'FLOW-DELIVERY' units 'CFS'}
@@ -177,9 +177,9 @@ define S1_DV {alias S1 kind 'STORAGE' units 'TAF'}
 ! Trinity Spills
 define F1_DV {alias F1 kind 'FLOW-SPILL-NON-RECOV' units 'CFS'}
 ! Trinity storage at Capacity 
-!define S1LEVEL5DV_DV {alias S1LEVEL5DV kind 'Storage-level' units 'TAF'} 
+define S1LEVEL5DV_DV {alias S1LEVEL5DV kind 'Storage-level' units 'TAF'} 
 ! Trinity storage at flood level 
-!define S1LEVEL4DV_DV {alias S1LEVEL4DV kind 'Storage-level' units 'TAF'} 
+define S1LEVEL4DV_DV {alias S1LEVEL4DV kind 'Storage-level' units 'TAF'} 
 ! Trinity storage at RC level 
 define S1LEVEL3DV_DV {alias S1LEVEL3DV kind 'Storage-level' units 'TAF'} 
 ! Trinity storage at Dead Pool level 
@@ -265,7 +265,7 @@ define D408_DS_EXP1_DV {alias D408_DS_EXP1 kind 'FLOW-DELIVERY' units 'CFS'}   !
 define D408_P_STR_CVP_DV {alias D408_P_STR_CVP kind 'FLOW-DELIVERY' units 'cfs'}! COA split for diversion of surplus to storage or for delivery
 define D408_P_DEL_CVP_DV {alias D408_P_DEL_CVP kind 'FLOW-DELIVERY' units 'cfs'} 
 define D408_P_WHL_SF_e1_DV {alias D408_P_WHL_SF_e1 kind 'FLOW-DELIVERY' units 'cfs'} ! COA split for wheeling unused CVP and SWP water 
-!define D168B_EXP1_DV {alias D168B_EXP1 kind 'FLOW-DELIVERY' units 'CFS'} ! Delta Exporter study of Freeport Project- RSR                    -No C3 equivalent
+define D168B_EXP1_DV {alias D168B_EXP1 kind 'FLOW-DELIVERY' units 'CFS'} ! Delta Exporter study of Freeport Project- RSR  
 ! Export - SWP
 ! Export at Banks Pumping Plant defined as D419
 !define D419_EXP1_DV {alias D419_EXP1 kind 'FLOW-DELIVERY' units 'CFS'} ! Export Split at SWP

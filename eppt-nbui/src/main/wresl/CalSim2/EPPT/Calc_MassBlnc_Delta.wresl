@@ -106,10 +106,12 @@ define DELTA_EXPORT_ { alias  DELTA_EXPORT  kind 'DTS-DELTA-MB-VALUE' units 'TAF
 /************************************** Delta mass balance manipulation **************************************/	
 
 define DELTA_MB {value DELTA_INFLOW - DELTA_OUTFLOW -DELTA_EXPORT}
+define DELTA_OUTFLOW_EXPORT {value DELTA_OUTFLOW + DELTA_EXPORT} 
 
 define CCWD_      {alias CCWD kind 'DTS-DELTA-MB-VALUE' units 'TAF' }
 !define Net_DICU_  {alias Net_DICU kind 'DTS-DELTA-MB-VALUE' units 'TAF' }
 define DELTA_MB_ { alias  DELTA_MB  kind 'DTS-DELTA-MB-VALUE' units 'TAF' }
+define DELTA_OUTFLOW_EXPORT_ { alias  DELTA_OUTFLOW_EXPORT  kind 'DTS-DELTA-MB-VALUE' units 'TAF' }
 
 /************************************** Mass balance Check **************************************/	
 

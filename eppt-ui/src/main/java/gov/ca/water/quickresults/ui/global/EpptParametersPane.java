@@ -147,6 +147,7 @@ public class EpptParametersPane extends TitledPane
 
 	private void textChanged()
 	{
+		_typeListView.getSelectionModel().select(0);
 		String text = _textField.getText();
 		if(text.trim().isEmpty())
 		{

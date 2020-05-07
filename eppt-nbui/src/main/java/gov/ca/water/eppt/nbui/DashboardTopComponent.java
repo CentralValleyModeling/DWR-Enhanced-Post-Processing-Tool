@@ -13,10 +13,14 @@ package gov.ca.water.eppt.nbui;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.util.Collection;
 import javax.swing.*;
 
+import gov.ca.water.calgui.constant.EpptPreferences;
 import gov.ca.water.calgui.project.EpptConfigurationController;
+import gov.ca.water.eppt.nbui.actions.ProjectConfigurationSavable;
 import gov.ca.water.trendreporting.TrendReportPanel;
+import org.netbeans.api.actions.Savable;
 import org.openide.awt.ActionID;
 import org.openide.awt.ActionReference;
 import org.openide.awt.ActionReferences;
@@ -53,7 +57,14 @@ public final class DashboardTopComponent extends EpptTopComponent
 	{
 		setName("Trend Reporting");
 		EpptConfigurationController epptConfigurationController = EpptControllerProvider.getEpptConfigurationController();
-		final TrendReportPanel trendReportPanel = new TrendReportPanel(epptConfigurationController);
+		TrendReportPanel trendReportPanel = new TrendReportPanel(epptConfigurationController);
+		epptConfigurationController.modifiedProperty().addListener((e,o,n)->
+		{
+			if(EpptPreferences.getAutoRefreshTrendReport())
+			{
+				trendReportPanel.inputsChanged();
+			}
+		});
 		JScrollPane scrollPane = new JScrollPane();
 		scrollPane.setViewportView(trendReportPanel);
 		setLayout(new BorderLayout(15,15));

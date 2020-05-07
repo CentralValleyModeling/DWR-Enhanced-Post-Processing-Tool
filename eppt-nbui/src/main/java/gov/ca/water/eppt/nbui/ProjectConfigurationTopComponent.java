@@ -90,7 +90,6 @@ public final class ProjectConfigurationTopComponent extends EpptTopComponent
 
 	private void initComponents()
 	{
-		JFXPanel jfxPanel = new JFXPanel();
 		EpptConfigurationController epptConfigurationController = EpptControllerProvider.getEpptConfigurationController();
 		epptConfigurationController.modifiedProperty().addListener((e,o,n)->
 		{
@@ -101,6 +100,7 @@ public final class ProjectConfigurationTopComponent extends EpptTopComponent
 				new ProjectConfigurationSavable(this);
 			}
 		});
+		JFXPanel jfxPanel = new JFXPanel();
 		Platform.runLater(() ->
 		{
 			EpptConfigurationPane epptConfigurationPane = new EpptConfigurationPane(epptConfigurationController);

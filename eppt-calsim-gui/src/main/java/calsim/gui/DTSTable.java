@@ -90,6 +90,7 @@ public class DTSTable extends MPanel
 	private boolean _modified;
 	private JMenuBar _mbar;
 	private boolean _start = true;
+	private JButton _opencurrent;
 
 	/**
 	 *
@@ -155,13 +156,18 @@ public class DTSTable extends MPanel
 		return _mts;
 	}
 
+	public JButton getOpenCurrentButton()
+	{
+		return _opencurrent;
+	}
+
 	public JPanel createButtonPanel()
 	{
 		JPanel holder = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 5));
 		JButton addrow = new JButton("Add");
 		JButton insertrow = new JButton("Insert");
 		JButton deleterow = new JButton("Delete");
-		JButton opencurrent = new JButton("Open");
+		_opencurrent = new JButton("Open");
 		addrow.addActionListener(new CursorChangeListener()
 		{
 			public void doWork()
@@ -183,7 +189,7 @@ public class DTSTable extends MPanel
 				delete();
 			}
 		});
-		opencurrent.addActionListener(new GuiTaskListener("Retrieving...")
+		_opencurrent.addActionListener(new GuiTaskListener("Retrieving...")
 		{
 			public void doWork()
 			{
@@ -193,7 +199,7 @@ public class DTSTable extends MPanel
 		holder.add(addrow);
 		holder.add(insertrow);
 		holder.add(deleterow);
-		holder.add(opencurrent);
+		holder.add(_opencurrent);
 		return holder;
 	}
 
