@@ -24,9 +24,13 @@ function getPlotlyStatisticsSeries(datum) {
                         let timeSeries = annualFilters[m]['computed_statistics'][statIndex]['statistically_computed_time_series_monthly'];
                         let x = [];
                         let y = [];
-                        for (let ts = 0; ts < timeSeries.length; ts++) {
-                            x.push(timeSeries[ts][0]);
-                            y.push(timeSeries[ts][1]);
+                        for (let periodMonth = 0; periodMonth < annualFilters[m]['period_months'].length; periodMonth++) {
+                            for (let ts = 0; ts < timeSeries.length; ts++) {
+                                if (annualFilters[m]['period_months'][periodMonth] === timeSeries[ts][0]) {
+                                    x.push(timeSeries[ts][0]);
+                                    y.push(timeSeries[ts][1]);
+                                }
+                            }
                         }
                         let series = seriesList[axis];
                         if (!series) {
@@ -39,7 +43,13 @@ function getPlotlyStatisticsSeries(datum) {
                             y: y,
                             line: {
                                 color: datum[i]['scenario_color'],
-                                dash: PLOTLY_LINE_DASH_STYLES[j % PLOTLY_LINE_DASH_STYLES.length]
+                                dash: PLOTLY_LINE_DASH_STYLES[j % PLOTLY_LINE_DASH_STYLES.length],
+                                shape: 'hvh'
+                            },
+                            mode: 'lines+markers',
+                            marker: {
+                                size: 6,
+                                color: darken(datum[i]['scenario_color'], 20)
                             }
                         });
                         axis++;
@@ -65,6 +75,17 @@ function buildLayouts(datum, yaxis, title) {
                     if (!series) {
                         let annualFilter = annualFilters[m];
                         for (let statIndex = 0; statIndex < annualFilters[m]['computed_statistics'].length; statIndex++) {
+                            let plotTitle = title;
+                            if (annualFilter['annual_period']) {
+                                if (annualFilter['annual_period'].indexOf('<br>') === annualFilter['annual_period'].length - 4) {
+                                    plotTitle += '<br>' + annualFilter['annual_period'].replace("<br>", "");
+                                } else {
+                                    plotTitle += '<br>' + annualFilter['annual_period'].replace("<br>", " - ");
+                                }
+                            }
+                            if (annualFilter['month_period']) {
+                                plotTitle += '<br>' + annualFilter['month_period'] + '<br>' + annualFilter['computed_statistics'][statIndex]['statistic']
+                            }
                             layoutList[axis] = {
                                 font: PLOTLY_FONT,
                                 yaxis: {
@@ -88,10 +109,16 @@ function buildLayouts(datum, yaxis, title) {
                                     }
                                 },
                                 title: {
-                                    text: title + '<br>' + annualFilter['annual_period'] + '<br>' + annualFilter['month_period'] + '<br>' + annualFilter['computed_statistics'][statIndex]['statistic'],
+                                    text: plotTitle,
                                     font: {
                                         size: 20,
                                     }
+                                },
+                                margin: {
+                                    l: 60,
+                                    r: 40,
+                                    b: 20,
+                                    t: 160
                                 }
                             };
                             axis++;
@@ -112,8 +139,8 @@ function plot(data) {
     plotData(layout, plotlyAggregateSeries);
 }
 
-function plotlyCopyToClipboard() {
-    let plot = document.getElementById("container_discrete_tester");
+function plotlyCopyToClipboard(element) {
+    let plot = $(element)[0];
     let layout = plot.layout;
     let data1 = plot.data;
     var text = layout['title']['text'] + '\n' + 'Date\t' + layout['yaxis']['title']['text'] + '\n';

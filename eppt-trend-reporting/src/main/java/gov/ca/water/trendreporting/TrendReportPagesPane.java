@@ -23,11 +23,22 @@ import java.util.stream.Stream;
 import javax.xml.parsers.ParserConfigurationException;
 
 import gov.ca.water.calgui.constant.Constant;
+import gov.ca.water.quickresults.ui.global.AutoCompleteTextField;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.collections.transformation.FilteredList;
 import javafx.geometry.Insets;
+import javafx.geometry.Orientation;
 import javafx.scene.control.Button;
-import javafx.scene.control.ComboBox;
+import javafx.scene.control.Label;
+import javafx.scene.control.ListView;
+import javafx.scene.control.TitledPane;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.HBox;
 import org.xml.sax.SAXException;
+
+import static java.util.stream.Collectors.toList;
 
 /**
  * Company: Resource Management Associates
@@ -35,40 +46,60 @@ import org.xml.sax.SAXException;
  * @author <a href="mailto:adam@rmanet.com">Adam Korynta</a>
  * @since 05-01-2020
  */
-class TrendReportPagesPane extends HBox
+class TrendReportPagesPane extends TitledPane
 {
 	private static final Logger LOGGER = Logger.getLogger(TrendReportPagesPane.class.getName());
-	private final Runnable _runnable;
-	private final ComboBox<TrendReportTabConfig> _comboBox = new ComboBox<>();
+	private final Runnable _updateTrigger;
+	private final ListView<TrendReportTabConfig> _trendReportTabConfigListView = new ListView<>();
+	private final AutoCompleteTextField<TrendReportTabConfig> _textField = new AutoCompleteTextField<>();
 	private final Button _leftButton = new Button("<");
 	private final Button _rightButton = new Button(">");
 
 	TrendReportPagesPane(Runnable updateTrigger)
 	{
-		_runnable = updateTrigger;
+		_updateTrigger = updateTrigger;
 		initComponents();
 		initListeners();
 	}
 
 	private void initComponents()
 	{
+		ObservableList<TrendReportTabConfig> backingParameters = FXCollections.observableArrayList();
+		FilteredList<TrendReportTabConfig> filteredParameters = new FilteredList<>(backingParameters, s -> true);
+		_trendReportTabConfigListView.setItems(filteredParameters);
 		try(Stream<Path> paths = Files.walk(Paths.get(Constant.TREND_REPORTING_DIR), 1))
 		{
-			paths.filter(path -> path.toString().endsWith(".htm") || path.toString().endsWith(".html"))
-				 .map(this::buildTrendReportTabConfig)
-				 .filter(Objects::nonNull)
-				 .forEach(_comboBox.getItems()::add);
-			_comboBox.getSelectionModel().select(0);
+			backingParameters.addAll(paths.filter(path -> path.toString().endsWith(".htm") || path.toString().endsWith(".html"))
+										  .map(this::buildTrendReportTabConfig)
+										  .filter(Objects::nonNull)
+										  .collect(toList()));
+			_trendReportTabConfigListView.getSelectionModel().select(0);
 		}
 		catch(IOException ex)
 		{
 			LOGGER.log(Level.SEVERE, "Unable to build javascript panels", ex);
 		}
-		_comboBox.setPrefHeight(32);
+		BorderPane borderPane = new BorderPane();
+		HBox hBox = new HBox();
 		_leftButton.setPrefHeight(32);
 		_rightButton.setPrefHeight(32);
-		getChildren().addAll(_comboBox, _leftButton, _rightButton);
-		HBox.setMargin(_comboBox, new Insets(0, 5, 0, 10));
+		_textField.setPromptText(backingParameters.get(0).toString());
+		_textField.getEntries().addAll(backingParameters);
+		borderPane.setCenter(_trendReportTabConfigListView);
+
+		Label pagesLabel = new Label("Reports");
+		FlowPane.setMargin(pagesLabel, new Insets(5));
+		hBox.getChildren().addAll(_leftButton, _rightButton);
+		FlowPane flowPane = new FlowPane(Orientation.HORIZONTAL, 5, 5);
+		flowPane.getChildren().addAll(pagesLabel, _textField, hBox);
+
+		setGraphicTextGap(0);
+		setGraphic(flowPane);
+		setContent(borderPane);
+		setMaxHeight(Double.MAX_VALUE);
+		borderPane.setPrefWidth(120);
+		borderPane.setPrefHeight(200);
+
 	}
 
 	private TrendReportTabConfig buildTrendReportTabConfig(Path path)
@@ -86,29 +117,29 @@ class TrendReportPagesPane extends HBox
 
 	TrendReportTabConfig getTrendReportTabConfig()
 	{
-		return _comboBox.getValue();
+		return _trendReportTabConfigListView.getSelectionModel().getSelectedItem();
 	}
 
 	private void initListeners()
 	{
-		_comboBox.setOnAction(e -> _runnable.run());
+		_trendReportTabConfigListView.getSelectionModel().selectedItemProperty().addListener(e -> _updateTrigger.run());
 		_rightButton.setOnAction(e ->
 		{
-			int selectedIndex = _comboBox.getSelectionModel().getSelectedIndex() + 1;
-			if(selectedIndex >= _comboBox.getItems().size())
+			int selectedIndex = _trendReportTabConfigListView.getSelectionModel().getSelectedIndex() + 1;
+			if(selectedIndex >= _trendReportTabConfigListView.getItems().size())
 			{
 				selectedIndex = 0;
 			}
-			_comboBox.getSelectionModel().select(selectedIndex);
+			_trendReportTabConfigListView.getSelectionModel().select(selectedIndex);
 		});
 		_leftButton.setOnAction(e ->
 		{
-			int selectedIndex = _comboBox.getSelectionModel().getSelectedIndex() - 1;
+			int selectedIndex = _trendReportTabConfigListView.getSelectionModel().getSelectedIndex() - 1;
 			if(selectedIndex < 0)
 			{
-				selectedIndex = _comboBox.getItems().size() - 1;
+				selectedIndex = _trendReportTabConfigListView.getItems().size() - 1;
 			}
-			_comboBox.getSelectionModel().select(selectedIndex);
+			_trendReportTabConfigListView.getSelectionModel().select(selectedIndex);
 		});
 	}
 }

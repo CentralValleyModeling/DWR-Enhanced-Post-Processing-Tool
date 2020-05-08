@@ -59,13 +59,15 @@ class TrendReportDataLoader
 	private final List<EpptStatistic> _statistics;
 	private final List<MonthPeriod> _monthPeriod;
 	private final List<Map<EpptScenarioRun, WaterYearPeriodRangesFilter>> _waterYearPeriodRangesFilters;
+	private final boolean _aggregate;
 	private final boolean _difference;
 
 	TrendReportDataLoader(List<EpptScenarioRun> scenarioRuns, List<EpptParameter> guiLink,
 						  int start, int end, boolean taf, boolean difference,
 						  WaterYearDefinition waterYearDefinition,
 						  List<EpptStatistic> statistics, List<MonthPeriod> monthPeriod,
-						  List<Map<EpptScenarioRun, WaterYearPeriodRangesFilter>> waterYearPeriodRangesFilters)
+						  List<Map<EpptScenarioRun, WaterYearPeriodRangesFilter>> waterYearPeriodRangesFilters,
+						  boolean aggregate)
 	{
 		_scenarioRuns = scenarioRuns;
 		_guiLink = guiLink;
@@ -77,6 +79,12 @@ class TrendReportDataLoader
 		_statistics = statistics;
 		_monthPeriod = monthPeriod;
 		_waterYearPeriodRangesFilters = waterYearPeriodRangesFilters;
+		_aggregate = aggregate;
+	}
+
+	public boolean isAggregate()
+	{
+		return _aggregate;
 	}
 
 	List<JSONObject> computeScenarios()

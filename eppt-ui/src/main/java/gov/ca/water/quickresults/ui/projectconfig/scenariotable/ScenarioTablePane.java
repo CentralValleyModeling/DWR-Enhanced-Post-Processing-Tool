@@ -72,7 +72,6 @@ public class ScenarioTablePane extends TitledPane
 	private final Button _clearAllButton = new Button("Clear All");
 	private final Button _upButton = new Button("\u25B2");
 	private final Button _downButton = new Button("\u25BC");
-	private final CheckBox _tafCheckbox = new CheckBox("Convert CFS to TAF");
 	private final CheckBox _differenceCheckbox = new CheckBox("Difference");
 	private final ScenarioTableModel _scenarioTableModel;
 	private final RmaTreeTableView<ScenarioTableModel, ScenarioTableRowModel> _treeTable;
@@ -87,7 +86,6 @@ public class ScenarioTablePane extends TitledPane
 		initComponents();
 		_controller.getScenarioRuns().forEach(this::addScenarioRun);
 		initListeners();
-//		_treeTable.setPrefHeight(250);
 	}
 
 	private void initListeners()
@@ -100,8 +98,14 @@ public class ScenarioTablePane extends TitledPane
 		_clearAllButton.setOnAction(e -> clearScenarios());
 		_upButton.setOnAction(e -> moveSelectedScenarioUp());
 		_downButton.setOnAction(e -> moveSelectedScenarioDown());
-		_tafCheckbox.selectedProperty().addListener((e, o, n) -> _controller.setTaf(n));
-		_differenceCheckbox.selectedProperty().addListener((e, o, n) -> _controller.setDifference(n));
+		_differenceCheckbox.selectedProperty().addListener((e, o, n) ->
+		{
+			_controller.setDifference(n);
+			if(_modifiedListenerEnabled)
+			{
+				_controller.setModified();
+			}
+		});
 	}
 
 	private void initComponents()
@@ -133,7 +137,7 @@ public class ScenarioTablePane extends TitledPane
 		BorderPane southernRegion = new BorderPane();
 		TilePane upDownPane = new TilePane(Orientation.HORIZONTAL, 5.0, 5.0, _upButton, _downButton);
 		upDownPane.setAlignment(Pos.CENTER_RIGHT);
-		HBox checkboxPane = new HBox(5.0, _tafCheckbox, _differenceCheckbox);
+		HBox checkboxPane = new HBox(5.0, _differenceCheckbox);
 		southernRegion.setLeft(checkboxPane);
 		southernRegion.setRight(upDownPane);
 		borderPane.setBottom(southernRegion);
@@ -419,8 +423,6 @@ public class ScenarioTablePane extends TitledPane
 			_scenarioTableModel.getRows().clear();
 			_controller.getScenarioRuns().forEach(this::addScenarioRun);
 			_differenceCheckbox.setSelected(_controller.isDifference());
-			_tafCheckbox.setSelected(_controller.isTaf());
-
 		}
 		finally
 		{

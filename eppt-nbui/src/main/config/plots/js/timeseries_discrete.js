@@ -89,7 +89,7 @@ function getPlotlyMonthlySeries(datum, firstRecord, lastRecord, instantaneous) {
     return seriesList;
 }
 
-function buildLayouts(datum, yaxis, title) {
+function buildDiscreteLayouts(datum, yaxis, title) {
     let layoutList = [];
     for (let i = 0; i < datum.length; i++) {
         let tsList = datum[i]['ts_list'];
@@ -112,66 +112,6 @@ function buildLayouts(datum, yaxis, title) {
                         if (annualFilters[m]['month_period']) {
                             plotTitle += '<br>' + annualFilters[m]['month_period'];
                         }
-                        var updatemenus = [
-                            {
-                                buttons: [
-                                    {
-                                        args: ['xaxis.range', [new Date('31Dec1909 2359'), new Date('01Jan1920 0000')]],
-                                        label: '1910\'s',
-                                        method: 'relayout'
-                                    },
-                                    {
-                                        args: ['xaxis.range', [new Date('31Dec1919 2359'), new Date('01Jan1930 0000')]],
-                                        label: '1920\'s',
-                                        method: 'relayout'
-                                    }, {
-                                        args: ['xaxis.range', [new Date('31Dec1929 2359'), new Date('01Jan1940 0000')]],
-                                        label: '1930\'s',
-                                        method: 'relayout'
-                                    }, {
-                                        args: ['xaxis.range', [new Date('31Dec1939 2359'), new Date('01Jan1950 0000')]],
-                                        label: '1940\'s',
-                                        method: 'relayout'
-                                    }, {
-                                        args: ['xaxis.range', [new Date('31Dec1949 2359'), new Date('01Jan1960 0000')]],
-                                        label: '1950\'s',
-                                        method: 'relayout'
-                                    }, {
-                                        args: ['xaxis.range', [new Date('31Dec1959 2359'), new Date('01Jan1970 0000')]],
-                                        label: '1960\'s',
-                                        method: 'relayout'
-                                    }, {
-                                        args: ['xaxis.range', [new Date('31Dec1969 2359'), new Date('01Jan1980 0000')]],
-                                        label: '1970\'s',
-                                        method: 'relayout'
-                                    }, {
-                                        args: ['xaxis.range', [new Date('31Dec1979 2359'), new Date('01Jan1990 0000')]],
-                                        label: '1980\'s',
-                                        method: 'relayout'
-                                    }, {
-                                        args: ['xaxis.range', [new Date('31Dec1989 2359'), new Date('01Jan2000 0000')]],
-                                        label: '1990\'s',
-                                        method: 'relayout'
-                                    }, {
-                                        args: ['xaxis.range', [new Date('31Dec1999 2359'), new Date('01Jan2010 0000')]],
-                                        label: '2000\'s',
-                                        method: 'relayout'
-                                    }, {
-                                        args: ['xaxis.range', [new Date('31Dec2009 2359'), new Date('01Jan2020 0000')]],
-                                        label: '2010\'s',
-                                        method: 'relayout'
-                                    }
-                                ],
-                                direction: 'left',
-                                pad: {'r': 10, 't': 10},
-                                showactive: true,
-                                type: 'buttons',
-                                x: 0.1,
-                                xanchor: 'left',
-                                y: 1.1,
-                                yanchor: 'top'
-                            }
-                        ];
                         layoutList[axis] = {
                             font: PLOTLY_FONT,
                             yaxis: {
@@ -182,7 +122,6 @@ function buildLayouts(datum, yaxis, title) {
                                 gridcolor: '#CCCCCC',
                                 rangemode: 'tozero'
                             },
-                            // updatemenus: updatemenus,
                             xaxis: {
                                 tickformat: '%b-%Y',
                                 hoverformat: '%b-%Y',
@@ -221,10 +160,14 @@ function buildLayouts(datum, yaxis, title) {
     return layoutList;
 }
 
-function plot(data) {
+function plot(data){
+    plotDiscrete(data);
+}
+
+function plotDiscrete(data) {
     FORMATTER = getD3Formatter(data['scenario_run_data'][0]['ts_list'][0]['monthly_filters'][0]['annual_filters'][0]['discrete_ts']);
     var datum = data['scenario_run_data'];
-    var layout = buildLayouts(datum, data['units'], data['gui_link_title']);
+    var layout = buildDiscreteLayouts(datum, data['units'], data['gui_link_title']);
     let plotlyMonthlySeries = getPlotlyMonthlySeries(datum, data['first_record'], data['last_record'], data['is_instantaneous']);
     plotData(layout, plotlyMonthlySeries);
 }

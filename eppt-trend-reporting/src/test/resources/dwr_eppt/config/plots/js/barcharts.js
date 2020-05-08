@@ -45,7 +45,11 @@ function buildTable(data, monthlyIndex, statIndex) {
                     annualValues = [];
                     values[annualIndex + 1] = annualValues;
                 }
-                annualValues.push(annual['computed_statistics'][statIndex]['statistic_aggregate']);
+                if(annual['computed_statistics'][statIndex]){
+                    annualValues.push(annual['computed_statistics'][statIndex]['statistic_aggregate']);
+                }else{
+                    annualValues.push(NaN);
+                }
             }
         }
     }
@@ -55,14 +59,15 @@ function buildTable(data, monthlyIndex, statIndex) {
             values: headers,
             align: "center",
             line: {width: 1, color: 'black'},
-            font: PLOTLY_FONT
+            font: {family: PLOTLY_FONT['family'], size:13}
         },
         cells: {
             format: ['', FORMATTER],
             values: values,
             line: {color: "black", width: 1},
             align: ["left", "center"],
-            font: {family: PLOTLY_FONT['family'], color: [colors]}
+            height:25,
+            font: {family: PLOTLY_FONT['family'], color: [colors], size:[14,16]}
         },
         domain: {x: [0, 1], y: [0, 0.3]}
     };
@@ -89,7 +94,6 @@ function buildLayouts(datum, yaxis, title) {
                             layoutList[axis] = {
                                 font: PLOTLY_FONT,
                                 barmode: 'grouped',
-                                showlegend: false,
                                 height:600,
                                 yaxis: {
                                     title: {
@@ -103,7 +107,8 @@ function buildLayouts(datum, yaxis, title) {
                                 xaxis: {
                                     gridcolor: '#CCCCCC'
                                 },
-                                showlegend: true,
+                                bargroupgap:0.05,
+                                showlegend: false,
                                 legend: {
                                     orientation: 'h',
                                     xanchor: 'center',
@@ -117,6 +122,12 @@ function buildLayouts(datum, yaxis, title) {
                                     font: {
                                         size: 20,
                                     }
+                                },
+                                margin: {
+                                    l: 60,
+                                    r: 40,
+                                    b: 0,
+                                    t: 120
                                 }
                             };
                             axis++;
@@ -134,7 +145,11 @@ function plot(data) {
     var datum = data['scenario_run_data'];
     var layout = buildLayouts(datum, data['units'], data['gui_link_title']);
     let plotlyAggregateSeries = getPeriodGroupedPlotlySeries(datum);
-    plotData(layout, plotlyAggregateSeries, data);
+    let numberOfRows = datum.length;
+    for(let i = 0; i < layout.length; i++){
+        layout[i]['height'] = 400 + numberOfRows * 65;
+    }
+    plotData(layout, plotlyAggregateSeries);
 }
 
 
@@ -214,7 +229,11 @@ function plotPeriodGroupedForMonthStat(datum, monthlyIndex, statIndex) {
                 let statistics = annualData['computed_statistics'];
                 let value = statistics[statIndex];
                 x.push(annualData['annual_period']);
-                y.push(value['statistic_aggregate']);
+                if(value){
+                    y.push(value['statistic_aggregate']);
+                }else{
+                    y.push(NaN);
+                }
             }
             series.push({
                 type: 'bar',
@@ -223,8 +242,7 @@ function plotPeriodGroupedForMonthStat(datum, monthlyIndex, statIndex) {
                 name: tsList[tsIndex]['ts_name'],
                 marker: {
                     color: datum[i]['scenario_color']
-                },
-                // domain: {x: [0, 1], y: [0.3, 1]}
+                }
             });
         }
     }
@@ -242,10 +260,12 @@ function getPeriodGroupedPlotlySeries(datum) {
     return seriesList;
 }
 
-function plotData(layout, dataList, data) {
+function plotData2(layout, dataList, data) {
     let main = document.getElementById("main");
+    let plots = [];
     for (let i = 0; i < dataList.length; i++) {
         let plot = document.createElement("div");
+        plots.push(plot);
         plot.id = 'plot' + i;
         main.appendChild(plot);
         Plotly.newPlot(plot.id, dataList[i], layout[i], {
@@ -259,11 +279,38 @@ function plotData(layout, dataList, data) {
                 openContextMenu('#' + plot.id, ev, plotlyCopyToClipboard, plotlyExportFunction(plot));
             }
         });
+        plot.on('plotly_relayout',
+            function (eventdata) {
+                if (eventdata['xaxis.range[0]']) {
+                    for (let i = 0; i < plots.length; i++) {
+                        if (plots[i].id != plot.id) {
+                            let curentRange = plots[i]['_fullLayout']['xaxis']['range'];
+                            if (curentRange[0] !== eventdata['xaxis.range[0]']
+                                && curentRange[1] !== eventdata['xaxis.range[1]']) {
+                                Plotly.relayout(plots[i].id, {
+                                    'xaxis.range': [eventdata['xaxis.range[0]'], eventdata['xaxis.range[1]']]
+                                });
+                            }
+                        }
+                    }
+                }else if(eventdata['xaxis.autorange']){
+                    for (let i = 0; i < plots.length; i++) {
+                        if (plots[i].id != plot.id) {
+                            let curentRange = plots[i]['_fullLayout']['xaxis']['range'];
+                            if (curentRange !== plot['_fullLayout']['xaxis']['range']) {
+                                Plotly.relayout(plots[i].id, {
+                                    'xaxis.range': plot['_fullLayout']['xaxis']['range']
+                                });
+                            }
+                        }
+                    }
+                }
+            });
     }
 }
 
 function plotlyCopyToClipboard(element) {
-    let plot = document.getElementById(element);
+    let plot = $(element)[0];
     let layout = plot.layout;
     let data1 = plot.data;
     var text = layout['title']['text'];
