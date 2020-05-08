@@ -41,7 +41,7 @@ import static java.util.stream.Collectors.toList;
  * @author <a href="mailto:adam@rmanet.com">Adam Korynta</a>
  * @since 01-02-2020
  */
-class AutoCompleteTextField<T> extends TextField
+public class AutoCompleteTextField<T> extends TextField
 {
 	private final SortedSet<T> _entries = new TreeSet<>(Comparator.comparing(Object::toString));
 	private final ContextMenu _entriesPopup = new ContextMenu();
@@ -49,18 +49,18 @@ class AutoCompleteTextField<T> extends TextField
 	private Consumer<T> _entryPicked;
 
 
-	AutoCompleteTextField()
+	public AutoCompleteTextField()
 	{
 		this((e, s) -> e.toString().toLowerCase().contains(s.toLowerCase()));
 	}
 
-	AutoCompleteTextField(BiPredicate<T, String> predicate)
+	public AutoCompleteTextField(BiPredicate<T, String> predicate)
 	{
 		_predicate = predicate;
 		initListeners();
 	}
 
-	void setEntryPicked(Consumer<T> entryPicked)
+	public void setEntryPicked(Consumer<T> entryPicked)
 	{
 		_entryPicked = entryPicked;
 	}

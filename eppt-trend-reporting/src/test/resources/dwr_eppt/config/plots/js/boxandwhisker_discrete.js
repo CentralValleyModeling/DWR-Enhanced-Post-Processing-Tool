@@ -49,7 +49,7 @@ function getPlotlyAggregateSeries(datum) {
     return seriesList;
 }
 
-function buildLayouts(datum, yaxis, title) {
+function buildDiscreteLayouts(datum, yaxis, title) {
     let layoutList = [];
     for (let i = 0; i < 1; i++) {
         let tsList = datum[i]['ts_list'];
@@ -79,6 +79,7 @@ function buildLayouts(datum, yaxis, title) {
                                 orientation: 'h',
                                 xanchor: 'center',
                                 x: 0.5,
+                                y: -0.2,
                                 font: {
                                     size: 10,
                                 }
@@ -89,7 +90,13 @@ function buildLayouts(datum, yaxis, title) {
                                     size: 20,
                                 }
                             },
-                            boxmode: 'group'
+                            boxmode: 'group',
+                            margin: {
+                                l: 60,
+                                r: 40,
+                                b: 90,
+                                t: 120
+                            }
                         };
                     }
                     axis++;
@@ -100,16 +107,20 @@ function buildLayouts(datum, yaxis, title) {
     return layoutList;
 }
 
-function plot(data) {
+function plot(data){
+    plotDiscrete(data);
+}
+
+function plotDiscrete(data) {
     FORMATTER = getD3Formatter(data['scenario_run_data'][0]['ts_list'][0]['monthly_filters'][0]['annual_filters'][0]['discrete_ts']);
     var datum = data['scenario_run_data'];
-    var layout = buildLayouts(datum, data['units'], data['gui_link_title']);
+    var layout = buildDiscreteLayouts(datum, data['units'], data['gui_link_title']);
     let plotlyAggregateSeries = getPlotlyAggregateSeries(datum);
     plotData(layout, plotlyAggregateSeries);
 }
 
-function plotlyCopyToClipboard() {
-    let plot = document.getElementById("tester");
+function plotlyCopyToClipboard(element) {
+    let plot = $(element)[0];
     let layout = plot.layout;
     let data1 = plot.data;
     let calcdata = plot.calcdata;

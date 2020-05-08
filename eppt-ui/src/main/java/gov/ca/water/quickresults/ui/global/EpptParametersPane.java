@@ -60,6 +60,7 @@ public class EpptParametersPane extends TitledPane
 	private final ListView<EpptParameter> _parameterListView = new ListView<>();
 	private final ListView<TrendType> _typeListView = new ListView<>();
 	private final Set<TrendType> _trendTypes = getTrendTypes();
+	private final Runnable _updateTrigger;
 	private FilteredList<EpptParameter> _filteredParameters;
 	private ObservableList<EpptParameter> _backingParameters;
 	private final AutoCompleteTextField<EpptParameter> _textField = new AutoCompleteTextField<>();
@@ -67,8 +68,9 @@ public class EpptParametersPane extends TitledPane
 	private Predicate<EpptParameter> _typePredicate = s -> true;
 	private Button _editButton;
 
-	public EpptParametersPane()
+	public EpptParametersPane(Runnable updateTrigger)
 	{
+		_updateTrigger = updateTrigger;
 		initComponents();
 		initListeners();
 	}
@@ -90,7 +92,8 @@ public class EpptParametersPane extends TitledPane
 		BorderPane.setMargin(parametersLabel, new Insets(5));
 		setGraphic(borderPane);
 		setPrefWidth(525);
-		setMaxHeight(200);
+		setMaxHeight(Double.MAX_VALUE);
+		setPrefHeight(200);
 		_trendTypes.removeIf(t -> _backingParameters.stream().noneMatch(n -> t.matchesGuiLink(n.getGuiLink())));
 		updateTrendTypes();
 		_typeListView.getSelectionModel().select(0);
@@ -142,6 +145,7 @@ public class EpptParametersPane extends TitledPane
 				}
 			}
 		});
+		_parameterListView.getSelectionModel().selectedItemProperty().addListener(e -> _updateTrigger.run());
 	}
 
 	private void textChanged()

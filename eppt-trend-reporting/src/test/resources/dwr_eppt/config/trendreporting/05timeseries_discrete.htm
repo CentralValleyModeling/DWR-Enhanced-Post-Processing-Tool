@@ -13,8 +13,9 @@
 <!DOCTYPE HTML>
 <html lang="en">
 <head>
-    <title>Timeseries Discrete</title>
+    <title>Timeseries</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta>
+    <meta name="supports-aggregate" content="true"></meta>
     <script src="../../lib/plotly/dist/plotly.min.js"></script>
     <script src="../../lib/plotly/eppt_plotly.js"></script>
     <script src="../../lib/ajax/googleapis/jquery_3.4.1.js"></script>
@@ -30,5 +31,16 @@
 
 <div id="main"></div>
 <script src="../plots/js/timeseries_discrete.js"></script>
+<script src="../plots/js/timeseries_aggregate.js"></script>
+<script>
+    function plot(data, aggregate){
+        if(aggregate){
+            plotAggregate(data);
+        }
+        else{
+            plotDiscrete(data);
+        }
+    }
+</script>
 </body>
 </html>

@@ -21,6 +21,7 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
 import org.w3c.dom.Document;
+import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
@@ -36,6 +37,7 @@ public class TrendReportTabConfig
 {
 	private final String _text;
 	private final Path _path;
+	private final boolean _aggregateSupported;
 
 	public TrendReportTabConfig(Path path) throws IOException, ParserConfigurationException, SAXException
 	{
@@ -51,7 +53,33 @@ public class TrendReportTabConfig
 			DocumentBuilder db = dbf.newDocumentBuilder();
 			Document parse = db.parse(new InputSource(reader));
 			_text = extractHtmlTitle(parse, path.getFileName().toString()).trim();
+			_aggregateSupported = extractAggregateSupported(parse);
 		}
+	}
+
+	private boolean extractAggregateSupported(Document parse)
+	{
+		boolean retval = false;
+		NodeList metaNodes = parse.getElementsByTagName("meta");
+		if(metaNodes != null)
+		{
+			for(int i = 0; i < metaNodes.getLength(); i++)
+			{
+				Node item = metaNodes.item(i);
+				Node namedItem = item.getAttributes().getNamedItem("name");
+				Node contentItem = item.getAttributes().getNamedItem("content");
+				if(contentItem != null && namedItem != null && "supports-aggregate".equals(namedItem.getNodeValue()))
+				{
+					retval = Boolean.parseBoolean(contentItem.getNodeValue());
+				}
+			}
+		}
+		return retval;
+	}
+
+	public boolean isAggregateSupported()
+	{
+		return _aggregateSupported;
 	}
 
 	public Path getPath()

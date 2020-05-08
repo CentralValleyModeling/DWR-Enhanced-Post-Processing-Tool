@@ -42,11 +42,14 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ProgressBar;
+import javafx.scene.control.RadioButton;
+import javafx.scene.control.ToggleGroup;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.FlowPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import org.json.JSONObject;
@@ -71,6 +74,8 @@ public class TrendReportPanel extends JFXPanel
 	private Label _progressTextLabel;
 	private Button _applyBtn;
 	private TrendReportPagesPane _trendReportPagesPane;
+	private RadioButton _discreteButton;
+	private RadioButton _aggregateButton;
 
 	public TrendReportPanel(EpptConfigurationController epptConfigurationController)
 	{
@@ -83,9 +88,19 @@ public class TrendReportPanel extends JFXPanel
 
 	private void init()
 	{
+		ToggleGroup discreteAggregateToggleGroup = new ToggleGroup();
+		_discreteButton = new RadioButton("All");
+		_discreteButton.setSelected(true);
+		_discreteButton.setToggleGroup(discreteAggregateToggleGroup);
+		_aggregateButton = new RadioButton("Aggregate");
+		_aggregateButton.setToggleGroup(discreteAggregateToggleGroup);
+		discreteAggregateToggleGroup.selectedToggleProperty().addListener(e->inputsChanged());
+
 		_javascriptPane = new TrendReportFlowPane();
-		_parametersPane = new EpptParametersPane();
+		_parametersPane = new EpptParametersPane(this::inputsChanged);
 		_trendReportPagesPane = new TrendReportPagesPane(this::inputsChanged);
+		_trendReportPagesPane.expandedProperty().bindBidirectional(_parametersPane.expandedProperty());
+		_trendReportPagesPane.setPrefHeight(_trendReportPagesPane.getPrefHeight());
 		_applyBtn = new Button("Refresh");
 
 		_applyBtn.setOnAction(e -> inputsChanged());
@@ -102,7 +117,7 @@ public class TrendReportPanel extends JFXPanel
 		BorderPane.setMargin(center, insets);
 		mainPane.setCenter(center);
 		Pane left = buildControls();
-		BorderPane flowPane = new BorderPane(null, null, _applyBtn, null, left);
+		BorderPane flowPane = new BorderPane(left, null, _applyBtn, null, null);
 		flowPane.setPrefHeight(40);
 		BorderPane.setMargin(left, insets);
 		BorderPane.setMargin(_applyBtn, insets);
@@ -131,13 +146,15 @@ public class TrendReportPanel extends JFXPanel
 
 	private Pane buildControls()
 	{
-		Insets insets = new Insets(0, 4, 0, 4);
-		BorderPane borderPane = new BorderPane();
-		FlowPane center = new FlowPane(Orientation.VERTICAL, 5.0, 0, _trendReportPagesPane);
-		borderPane.setLeft(_parametersPane);
-		borderPane.setCenter(center);
-		BorderPane.setMargin(center, insets);
-		return borderPane;
+		HBox flowPane = new HBox(10.0,
+				_parametersPane,
+				_trendReportPagesPane,
+				_discreteButton,
+				_aggregateButton);
+		HBox.setMargin(_discreteButton, new Insets(13.0, 0.0, 0.0, 10.0));
+		HBox.setMargin(_aggregateButton, new Insets(13.0, 0.0, 0.0, 0.0));
+		flowPane.setAlignment(Pos.TOP_LEFT);
+		return flowPane;
 	}
 
 	private BorderPane buildJavascriptPane()
@@ -153,6 +170,9 @@ public class TrendReportPanel extends JFXPanel
 		TrendReportTabConfig trendReportTabConfig = _trendReportPagesPane.getTrendReportTabConfig();
 		if(trendReportTabConfig != null)
 		{
+			boolean aggregateSupported = trendReportTabConfig.isAggregateSupported();
+			_aggregateButton.setDisable(!aggregateSupported);
+			_discreteButton.setDisable(!aggregateSupported);
 			_scenarioRuns.clear();
 			_epptConfigurationController.getEpptScenarioBase().ifPresent(_scenarioRuns::add);
 			_scenarioRuns.addAll(_epptConfigurationController.getEpptScenarioAlternatives());
@@ -165,9 +185,10 @@ public class TrendReportPanel extends JFXPanel
 			List<EpptParameter> guiLink = new ArrayList<>(_parametersPane.getSelectedItems());
 			List<EpptScenarioRun> scenarioRuns = _scenarioRuns.stream().filter(Objects::nonNull).collect(toList());
 			boolean difference = _epptConfigurationController.isDifference();
+			boolean aggregate = _aggregateButton.isSelected();
 			List<Map<EpptScenarioRun, WaterYearPeriodRangesFilter>> waterYearPeriodRanges = _epptConfigurationController.getWaterYearPeriodRanges();
 			TrendReportDataLoader trendReportDataLoader = new TrendReportDataLoader(scenarioRuns, guiLink, startYear, endYear, taf, difference,
-					waterYearDefinition, statistic, monthPeriod, waterYearPeriodRanges);
+					waterYearDefinition, statistic, monthPeriod, waterYearPeriodRanges, aggregate);
 			loadJavascript(trendReportTabConfig.getPath(),
 					trendReportDataLoader);
 		}
@@ -177,10 +198,11 @@ public class TrendReportPanel extends JFXPanel
 	{
 		CompletableFuture.runAsync(this::setUiLoading, Platform::runLater)
 						 .thenApplyAsync(e -> trendReportDataLoader.computeScenarios())
-						 .whenCompleteAsync((jsonObjects, t) -> handleWhenComplete(path, jsonObjects, t), Platform::runLater);
+						 .whenCompleteAsync((jsonObjects, t) -> handleWhenComplete(path, jsonObjects, trendReportDataLoader.isAggregate(), t),
+								 Platform::runLater);
 	}
 
-	private void handleWhenComplete(Path path, List<JSONObject> jsonObjects, Throwable t)
+	private void handleWhenComplete(Path path, List<JSONObject> jsonObjects, boolean aggregate, Throwable t)
 	{
 		if(t != null)
 		{
@@ -206,7 +228,7 @@ public class TrendReportPanel extends JFXPanel
 			{
 				for(JSONObject jsonObject : jsonObjects)
 				{
-					_javascriptPane.addDashboardPane(path, "plot(" + jsonObject.toString(0) + ");");
+					_javascriptPane.addDashboardPane(path, "plot(" + jsonObject.toString(0) + "," + aggregate + ");");
 					_progressTextLabel.setText("");
 				}
 			}

@@ -10,7 +10,7 @@
  * GNU General Public License
  */
 
-function getPlotlyAggregateSeries(datum) {
+function getPlotlyDiscreteSeries(datum) {
     let seriesList = [];
     for (let i = 0; i < datum.length; i++) {
         let tsList = datum[i]['ts_list'];
@@ -55,15 +55,19 @@ function getPlotlyAggregateSeries(datum) {
     return seriesList;
 }
 
-function plot(data) {
-    FORMATTER = getD3Formatter(data['scenario_run_data'][0]['ts_list'][0]['monthly_filters'][0]['annual_filters'][0]['discrete_ts']);
-    var datum = data['scenario_run_data'];
-    var layout = buildLayouts(datum, data['units'], data['gui_link_title']);
-    let plotlyAggregateSeries = getPlotlyAggregateSeries(datum);
-    plotData(layout, plotlyAggregateSeries);
+function plot(data){
+    plotDiscrete(data);
 }
 
-function buildLayouts(datum, yaxis, title) {
+function plotDiscrete(data) {
+    FORMATTER = getD3Formatter(data['scenario_run_data'][0]['ts_list'][0]['monthly_filters'][0]['annual_filters'][0]['discrete_ts']);
+    var datum = data['scenario_run_data'];
+    var layout = buildDiscreteLayouts(datum, data['units'], data['gui_link_title']);
+    let plotlyDiscreteSeries = getPlotlyDiscreteSeries(datum);
+    plotData(layout, plotlyDiscreteSeries);
+}
+
+function buildDiscreteLayouts(datum, yaxis, title) {
     let layoutList = [];
     for (let i = 0; i < datum.length; i++) {
         let tsList = datum[i]['ts_list'];
@@ -75,6 +79,17 @@ function buildLayouts(datum, yaxis, title) {
                 for (let m = 0; m < annualFilters.length; m++) {
                     let series = layoutList[axis];
                     if (!series) {
+                        let plotTitle = title;
+                        if (annualFilters[m]['annual_period']) {
+                            if (annualFilters[m]['annual_period'].indexOf('<br>') === annualFilters[m]['annual_period'].length - 4) {
+                                plotTitle += '<br>' + annualFilters[m]['annual_period'].replace("<br>", "");
+                            } else {
+                                plotTitle += '<br>' + annualFilters[m]['annual_period'].replace("<br>", " - ");
+                            }
+                        }
+                        if (annualFilters[m]['month_period']) {
+                            plotTitle += '<br>' + annualFilters[m]['month_period'];
+                        }
                         layoutList[axis] = {
                             font: PLOTLY_FONT,
                             yaxis: {
@@ -100,10 +115,16 @@ function buildLayouts(datum, yaxis, title) {
                                 }
                             },
                             title: {
-                                text: title + '<br>' + annualFilters[m]['annual_period'] + '<br>' + annualFilters[m]['month_period'],
+                                text: plotTitle,
                                 font: {
                                     size: 20,
                                 }
+                            },
+                            margin: {
+                                l: 60,
+                                r: 40,
+                                b: 90,
+                                t: 120
                             }
                         };
                     }
@@ -115,8 +136,8 @@ function buildLayouts(datum, yaxis, title) {
     return layoutList;
 }
 
-function plotlyCopyToClipboard() {
-    let plot = document.getElementById("container_aggregate_tester");
+function plotlyCopyToClipboard(element) {
+    let plot = $(element)[0];
     let layout = plot.layout;
     let data1 = plot.data;
     var text = layout['title']['text'] + '\n' + 'Percent\t' + layout['yaxis']['title']['text'] + '\n';
