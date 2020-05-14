@@ -56,6 +56,7 @@ public class DataAnalysisPanel extends EpptPanel
 			tfReportFILE3.setToolTipText(EpptPreferences.getReportsPath().resolve(tfReportFILE3.getText()).toString());
 			_baseRadioGroup = new ButtonGroup();
 			_altRadioGroup = new ButtonGroup();
+			updateScenarios(epptConfigurationController.getEpptScenarioBase().orElse(null), epptConfigurationController.getEpptScenarioAlternatives());
 			initRadioButtons();
 			initListeners();
 			epptConfigurationController.addScenarioChangedListener(this::updateScenarios);
