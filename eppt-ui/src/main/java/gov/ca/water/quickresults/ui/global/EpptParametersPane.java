@@ -198,10 +198,10 @@ public class EpptParametersPane extends TitledPane
 			GUILinksAllModelsBO guiLink = createGuiLink();
 			if(guiLink != null)
 			{
-				updateTrendTypes();
 				int size = _backingParameters.size();
 				EpptParameter epptParameter = EpptParameter.create(size, guiLink);
 				_backingParameters.add(epptParameter);
+				updateTrendTypes();
 				_typeListView.getSelectionModel().select(TrendType.USER_DEFINED_TREND_TYPE);
 				_parameterListView.getSelectionModel().select(epptParameter);
 			}
