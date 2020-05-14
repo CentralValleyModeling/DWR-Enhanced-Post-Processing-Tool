@@ -187,7 +187,7 @@ function plotlyCopyToClipboard(element) {
         if(Object.prototype.toString.call(xarr[j]) === '[object Date]'){
             let date = new Date(xarr[j]);
             date.setDate(date.getDate() - 1);
-            text += date.getMonth() + '/' + date.getFullYear();
+            text += (date.getMonth() + 1) + '/' + date.getFullYear();
         } else{
             text += xarr[j];
         }
@@ -199,24 +199,3 @@ function plotlyCopyToClipboard(element) {
     }
     copyTextToClipboard(text);
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
