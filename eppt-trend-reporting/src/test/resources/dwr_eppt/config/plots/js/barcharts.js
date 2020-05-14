@@ -33,7 +33,9 @@ function buildTable(data, monthlyIndex, statIndex) {
                 values[0] = scenarioArr;
             }
             colors.push(data[scenarioIndex]['scenario_color']);
-            scenarioArr.push(data[scenarioIndex]['ts_list'][tsIndex]['ts_name']);
+            if(data[scenarioIndex]['ts_list'][tsIndex]){
+                scenarioArr.push(data[scenarioIndex]['ts_list'][tsIndex]['ts_name']);
+            }
         }
     }
     for (let annualIndex = 0; annualIndex < data[0]['ts_list'][0]['monthly_filters'][monthlyIndex]['annual_filters'].length; annualIndex++) {
@@ -83,54 +85,56 @@ function buildLayouts(datum, yaxis, title) {
         let tsList = datum[i]['ts_list'];
         for (let j = 0; j < 1; j++) {
             let axis = 0;
-            let monthlyFilters = tsList[j]['monthly_filters'];
-            for (let k = 0; k < monthlyFilters.length; k++) {
-                let annualFilters = monthlyFilters[k]['annual_filters'];
-                for (let m = 0; m < 1; m++) {
-                    let series = layoutList[axis];
-                    if (!series) {
-                        let annualFilter = annualFilters[m];
-                        for (let statIndex = 0; statIndex < annualFilters[m]['computed_statistics'].length; statIndex++) {
-                            layoutList[axis] = {
-                                font: PLOTLY_FONT,
-                                barmode: 'grouped',
-                                height:600,
-                                yaxis: {
-                                    title: {
-                                        text: yaxis,
+            if (tsList[j]) {
+                let monthlyFilters = tsList[j]['monthly_filters'];
+                for (let k = 0; k < monthlyFilters.length; k++) {
+                    let annualFilters = monthlyFilters[k]['annual_filters'];
+                    for (let m = 0; m < 1; m++) {
+                        let series = layoutList[axis];
+                        if (!series) {
+                            let annualFilter = annualFilters[m];
+                            for (let statIndex = 0; statIndex < annualFilters[m]['computed_statistics'].length; statIndex++) {
+                                layoutList[axis] = {
+                                    font: PLOTLY_FONT,
+                                    barmode: 'grouped',
+                                    height: 600,
+                                    yaxis: {
+                                        title: {
+                                            text: yaxis,
+                                        },
+                                        tickformat: FORMATTER,
+                                        domain: [0.4, 1.0],
+                                        gridcolor: '#CCCCCC',
+                                        rangemode: 'tozero'
                                     },
-                                    tickformat: FORMATTER,
-                                    domain: [0.4, 1.0],
-                                    gridcolor: '#CCCCCC',
-                                    rangemode: 'tozero'
-                                },
-                                xaxis: {
-                                    gridcolor: '#CCCCCC'
-                                },
-                                bargroupgap:0.05,
-                                showlegend: false,
-                                legend: {
-                                    orientation: 'h',
-                                    xanchor: 'center',
-                                    x: 0.5,
-                                    font: {
-                                        size: 10,
+                                    xaxis: {
+                                        gridcolor: '#CCCCCC'
+                                    },
+                                    bargroupgap: 0.05,
+                                    showlegend: false,
+                                    legend: {
+                                        orientation: 'h',
+                                        xanchor: 'center',
+                                        x: 0.5,
+                                        font: {
+                                            size: 10,
+                                        }
+                                    },
+                                    title: {
+                                        text: title + '<br>' + annualFilters[m]['month_period'] + '<br>' + annualFilter['computed_statistics'][statIndex]['statistic'],
+                                        font: {
+                                            size: 20,
+                                        }
+                                    },
+                                    margin: {
+                                        l: 60,
+                                        r: 40,
+                                        b: 0,
+                                        t: 120
                                     }
-                                },
-                                title: {
-                                    text: title + '<br>' + annualFilters[m]['month_period'] + '<br>' + annualFilter['computed_statistics'][statIndex]['statistic'],
-                                    font: {
-                                        size: 20,
-                                    }
-                                },
-                                margin: {
-                                    l: 60,
-                                    r: 40,
-                                    b: 0,
-                                    t: 120
-                                }
-                            };
-                            axis++;
+                                };
+                                axis++;
+                            }
                         }
                     }
                 }
@@ -221,29 +225,31 @@ function plotPeriodGroupedForMonthStat(datum, monthlyIndex, statIndex) {
     for (let tsIndex = 0; tsIndex < datum[0]['ts_list'].length; tsIndex++) {
         for (let i = 0; i < datum.length; i++) {
             let tsList = datum[i]['ts_list'];
-            let annualFilters = tsList[tsIndex]['monthly_filters'][monthlyIndex]['annual_filters'];
-            let x = [];
-            let y = [];
-            for (let j = 0; j < annualFilters.length; j++) {
-                let annualData = annualFilters[j];
-                let statistics = annualData['computed_statistics'];
-                let value = statistics[statIndex];
-                x.push(annualData['annual_period']);
-                if(value){
-                    y.push(value['statistic_aggregate']);
-                }else{
-                    y.push(NaN);
+            if(tsList[tsIndex]) {
+                let annualFilters = tsList[tsIndex]['monthly_filters'][monthlyIndex]['annual_filters'];
+                let x = [];
+                let y = [];
+                for (let j = 0; j < annualFilters.length; j++) {
+                    let annualData = annualFilters[j];
+                    let statistics = annualData['computed_statistics'];
+                    let value = statistics[statIndex];
+                    x.push(annualData['annual_period']);
+                    if (value) {
+                        y.push(value['statistic_aggregate']);
+                    } else {
+                        y.push(NaN);
+                    }
                 }
+                series.push({
+                    type: 'bar',
+                    x: x,
+                    y: y,
+                    name: tsList[tsIndex]['ts_name'],
+                    marker: {
+                        color: datum[i]['scenario_color']
+                    }
+                });
             }
-            series.push({
-                type: 'bar',
-                x: x,
-                y: y,
-                name: tsList[tsIndex]['ts_name'],
-                marker: {
-                    color: datum[i]['scenario_color']
-                }
-            });
         }
     }
     series.push(buildTable(datum, monthlyIndex, statIndex));

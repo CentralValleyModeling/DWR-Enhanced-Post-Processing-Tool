@@ -200,6 +200,14 @@ class DisplayWRIMSFrames extends DisplayFrames
 		{
 			plotAggregateExceedance(scenarioRunData, name, tabbedPane);
 		}
+		if(getPlotConfigurationState().isDisplayMonthlyLine())
+		{
+			plotMonthlyLine(scenarioRunData, name, tabbedPane);
+		}
+		if(getPlotConfigurationState().isDisplayBarCharts())
+		{
+			plotBarCharts(scenarioRunData, name, tabbedPane);
+		}
 		if(getPlotConfigurationState().isDisplayBoxAndWhiskerAll())
 		{
 			plotBoxPlotDiscrete(scenarioRunData, name, tabbedPane);
