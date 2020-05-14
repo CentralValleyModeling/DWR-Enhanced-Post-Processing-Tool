@@ -99,6 +99,7 @@ class EpptMonthlyPeriodPane extends TitledPane
 		PeriodItem entirePeriodItem = new PeriodItem(_entirePeriod);
 		_seasonalPeriodListView.getItems().add(0, entirePeriodItem);
 		_seasonalPeriodListView.setFixedCellSize(20);
+		_seasonalPeriodListView.setPrefHeight(415);
 		BorderPane innerPane = new BorderPane();
 		innerPane.setCenter(_seasonalPeriodListView);
 		setContent(innerPane);
