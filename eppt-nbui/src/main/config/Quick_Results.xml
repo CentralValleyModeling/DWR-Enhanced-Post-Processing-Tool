@@ -48,8 +48,8 @@
 		</panel>
 		<panel id="controls" name="controls" layout="BorderLayout" constraints="BorderLayout.CENTER">
 			<panel id="ss2" resizeable="false" border="TitledBorder(Report List)" layout="BorderLayout"
-				   preferredsize="510,180"
-				   minimumsize="510,180" maximumsize="510,180" constraints="Borderlayout.NORTH">
+				   preferredsize="5,180"
+				   minimumsize="510,180" maximumsize="510,180" constraints="BorderLayout.NORTH">
 				<panel constraints="BorderLayout.NORTH" layout="FlowLayout(FlowLayout.LEFT)">
 					<button text="Add To List" ActionCommand="Rep_AddList"/>
 					<button text="Clear List" ActionCommand="Rep_ClearList"/>
@@ -64,10 +64,8 @@
 					</list>
 				</scrollpane>
 			</panel>
-			<panel constraints="Borderlayout.CENTER" id="reptabbedPane" minimumsize="550,505" preferredsize="550,505"
-				   layout="BorderLayout">
-			<tabbedpane id="variables" name="variables" minimumsize="510,502" preferredsize="510,502"
-						constraints="Borderlayout.CENTER">
+			<panel constraints="Borderlayout.CENTER" id="reptabbedPane" layout="BorderLayout">
+			<tabbedpane id="variables" name="variables" constraints="Borderlayout.CENTER">
 				<panel layout="FlowLayout(FlowLayout.LEFT)" name="Storage+Flows">
 					<panel id="presets" name="Storage+Flows" layout="GridBagLayout">
 						<panel layout="GridBagLayout">
