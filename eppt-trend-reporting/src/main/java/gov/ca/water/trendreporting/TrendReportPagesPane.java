@@ -141,5 +141,10 @@ class TrendReportPagesPane extends TitledPane
 			}
 			_trendReportTabConfigListView.getSelectionModel().select(selectedIndex);
 		});
+		_textField.setEntryPicked(obj ->
+		{
+			_trendReportTabConfigListView.getSelectionModel().select(obj);
+			_trendReportTabConfigListView.getSelectionModel().getSelectedItem();
+		});
 	}
 }
