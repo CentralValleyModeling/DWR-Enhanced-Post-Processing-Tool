@@ -127,6 +127,11 @@ public class JavascriptImageExporter
 	private void exportToFormat(Path jsonPath, Path outputPath, String format, Object width, Object height)
 			throws IOException, InterruptedException
 	{
+		if(height instanceof Number)
+		{
+			//adding buffer so that scrollbars don't appear
+			height = ((Number)height).doubleValue() + 200;
+		}
 		String orcaCommandline = "\"" + ORCA_EXE + "\" graph \"" + jsonPath + "\" --width " + width + " --height " + height +
 				" --format " + format + " \"" + outputPath + "\"" + " --verbose --plotly \"" +
 				Paths.get(Constant.CONFIG_DIR).getParent().resolve("lib").resolve("plotly").resolve("dist").resolve("plotly.min.js") + "\"";
