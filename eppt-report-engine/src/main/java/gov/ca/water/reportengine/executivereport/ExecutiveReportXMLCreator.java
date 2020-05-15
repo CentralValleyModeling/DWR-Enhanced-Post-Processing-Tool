@@ -320,14 +320,17 @@ public class ExecutiveReportXMLCreator
         for (SubModule sm : module.getSubModules())
         {
 
-            double maxValue = Const.UNDEFINED_DOUBLE;
-
+            String formattedText;
             if (subModToViolations.containsKey(sm))
             {
-                maxValue = subModToViolations.get(sm).get(0).getMaxValue();
+                double maxValue = subModToViolations.get(sm).get(0).getMaxValue();
+                String subModuleText = sm.getName();
+                formattedText = String.format(subModuleText, maxValue);
             }
-            String subModuleText = sm.getName();
-            String formattedText = String.format(subModuleText, maxValue);
+            else
+            {
+                formattedText = "NR";
+            }
             subModuleStrings.add(formattedText);
         }
 
