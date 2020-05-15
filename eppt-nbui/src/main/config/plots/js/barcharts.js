@@ -33,23 +33,23 @@ function buildTable(data, monthlyIndex, statIndex) {
                 values[0] = scenarioArr;
             }
             colors.push(data[scenarioIndex]['scenario_color']);
-            if(data[scenarioIndex]['ts_list'][tsIndex]){
+            if (data[scenarioIndex]['ts_list'][tsIndex]) {
                 scenarioArr.push(data[scenarioIndex]['ts_list'][tsIndex]['ts_name']);
             }
         }
     }
     for (let annualIndex = 0; annualIndex < data[0]['ts_list'][0]['monthly_filters'][monthlyIndex]['annual_filters'].length; annualIndex++) {
         for (let scenarioIndex = 0; scenarioIndex < data.length; scenarioIndex++) {
-            for(let tsIndex = 0; tsIndex < data[scenarioIndex]['ts_list'].length; tsIndex++) {
+            for (let tsIndex = 0; tsIndex < data[scenarioIndex]['ts_list'].length; tsIndex++) {
                 let annual = data[scenarioIndex]['ts_list'][tsIndex]['monthly_filters'][monthlyIndex]['annual_filters'][annualIndex];
                 let annualValues = values[annualIndex + 1];
                 if (!annualValues) {
                     annualValues = [];
                     values[annualIndex + 1] = annualValues;
                 }
-                if(annual['computed_statistics'][statIndex]){
+                if (annual['computed_statistics'][statIndex]) {
                     annualValues.push(annual['computed_statistics'][statIndex]['statistic_aggregate']);
-                }else{
+                } else {
                     annualValues.push(NaN);
                 }
             }
@@ -61,15 +61,15 @@ function buildTable(data, monthlyIndex, statIndex) {
             values: headers,
             align: "center",
             line: {width: 1, color: 'black'},
-            font: {family: PLOTLY_FONT['family'], size:13}
+            font: {family: PLOTLY_FONT['family'], size: 13}
         },
         cells: {
             format: ['', FORMATTER],
             values: values,
             line: {color: "black", width: 1},
             align: ["left", "center"],
-            height:25,
-            font: {family: PLOTLY_FONT['family'], color: [colors], size:[14,16]}
+            height: 25,
+            font: {family: PLOTLY_FONT['family'], color: [colors], size: [14, 16]}
         },
         domain: {x: [0, 1], y: [0, 0.3]}
     };
@@ -81,64 +81,50 @@ function getAcronym(text) {
 
 function buildLayouts(datum, yaxis, title) {
     let layoutList = [];
-    for (let i = 0; i < datum.length; i++) {
-        let tsList = datum[i]['ts_list'];
-        for (let j = 0; j < 1; j++) {
-            let axis = 0;
-            if (tsList[j]) {
-                let monthlyFilters = tsList[j]['monthly_filters'];
-                for (let k = 0; k < monthlyFilters.length; k++) {
-                    let annualFilters = monthlyFilters[k]['annual_filters'];
-                    for (let m = 0; m < 1; m++) {
-                        let series = layoutList[axis];
-                        if (!series) {
-                            let annualFilter = annualFilters[m];
-                            for (let statIndex = 0; statIndex < annualFilters[m]['computed_statistics'].length; statIndex++) {
-                                layoutList[axis] = {
-                                    font: PLOTLY_FONT,
-                                    barmode: 'grouped',
-                                    height: 600,
-                                    yaxis: {
-                                        title: {
-                                            text: yaxis,
-                                        },
-                                        tickformat: FORMATTER,
-                                        domain: [0.4, 1.0],
-                                        gridcolor: '#CCCCCC',
-                                        rangemode: 'tozero'
-                                    },
-                                    xaxis: {
-                                        gridcolor: '#CCCCCC'
-                                    },
-                                    bargroupgap: 0.05,
-                                    showlegend: false,
-                                    legend: {
-                                        orientation: 'h',
-                                        xanchor: 'center',
-                                        x: 0.5,
-                                        font: {
-                                            size: 10,
-                                        }
-                                    },
-                                    title: {
-                                        text: title + '<br>' + annualFilters[m]['month_period'] + '<br>' + annualFilter['computed_statistics'][statIndex]['statistic'],
-                                        font: {
-                                            size: 20,
-                                        }
-                                    },
-                                    margin: {
-                                        l: 60,
-                                        r: 40,
-                                        b: 0,
-                                        t: 120
-                                    }
-                                };
-                                axis++;
-                            }
-                        }
+
+    for (let statIndex = 0; statIndex < datum[0]['ts_list'][0]['monthly_filters'][0]['annual_filters'][0]['computed_statistics'].length; statIndex++) {
+        for (let monthlyIndex = 0; monthlyIndex < datum[0]['ts_list'][0]['monthly_filters'].length; monthlyIndex++) {
+            let monthPeriod = datum[0]['ts_list'][0]['monthly_filters'][0]['annual_filters'][0]['month_period'];
+            let statistic = datum[0]['ts_list'][0]['monthly_filters'][0]['annual_filters'][0]['computed_statistics'][statIndex]['statistic'];
+            layoutList.push({
+                font: PLOTLY_FONT,
+                barmode: 'grouped',
+                height: 600,
+                yaxis: {
+                    title: {
+                        text: yaxis,
+                    },
+                    tickformat: FORMATTER,
+                    domain: [0.4, 1.0],
+                    gridcolor: '#CCCCCC',
+                    rangemode: 'tozero'
+                },
+                xaxis: {
+                    gridcolor: '#CCCCCC'
+                },
+                bargroupgap: 0.05,
+                showlegend: false,
+                legend: {
+                    orientation: 'h',
+                    xanchor: 'center',
+                    x: 0.5,
+                    font: {
+                        size: 10,
                     }
+                },
+                title: {
+                    text: title + '<br>' + monthPeriod + '<br>' + statistic,
+                    font: {
+                        size: 20,
+                    }
+                },
+                margin: {
+                    l: 60,
+                    r: 40,
+                    b: 0,
+                    t: 120
                 }
-            }
+            });
         }
     }
     return layoutList;
@@ -150,7 +136,7 @@ function plot(data) {
     var layout = buildLayouts(datum, data['units'], data['gui_link_title']);
     let plotlyAggregateSeries = getPeriodGroupedPlotlySeries(datum);
     let numberOfRows = datum.length;
-    for(let i = 0; i < layout.length; i++){
+    for (let i = 0; i < layout.length; i++) {
         layout[i]['height'] = 400 + numberOfRows * 65;
     }
     plotData(layout, plotlyAggregateSeries);
@@ -176,10 +162,9 @@ function plotScenarioGroupedForMonthStat(datum, monthlyIndex, statIndex) {
                                 let annualData = annualFilters[annualIndex];
                                 let statistics = annualData['computed_statistics'];
                                 let value = statistics[statIndex];
-                                if(tsIndex === 0){
+                                if (tsIndex === 0) {
                                     opacity.push(1);
-                                }
-                                else{
+                                } else {
                                     opacity.push(.8);
                                 }
                                 color.push(datum[i]['scenario_color']);
@@ -198,8 +183,8 @@ function plotScenarioGroupedForMonthStat(datum, monthlyIndex, statIndex) {
                 marker: {
                     color: color,
                     opacity: opacity,
-                    line:{
-                        color:color,
+                    line: {
+                        color: color,
                         width: 2
                     }
                 }
@@ -225,7 +210,7 @@ function plotPeriodGroupedForMonthStat(datum, monthlyIndex, statIndex) {
     for (let tsIndex = 0; tsIndex < datum[0]['ts_list'].length; tsIndex++) {
         for (let i = 0; i < datum.length; i++) {
             let tsList = datum[i]['ts_list'];
-            if(tsList[tsIndex]) {
+            if (tsList[tsIndex]) {
                 let annualFilters = tsList[tsIndex]['monthly_filters'][monthlyIndex]['annual_filters'];
                 let x = [];
                 let y = [];
@@ -299,7 +284,7 @@ function plotData2(layout, dataList, data) {
                             }
                         }
                     }
-                }else if(eventdata['xaxis.autorange']){
+                } else if (eventdata['xaxis.autorange']) {
                     for (let i = 0; i < plots.length; i++) {
                         if (plots[i].id != plot.id) {
                             let curentRange = plots[i]['_fullLayout']['xaxis']['range'];
