@@ -249,7 +249,7 @@ class DisplayWRIMSFrames extends DisplayFrames
 		{
 			for(EpptScenarioRun epptScenarioRun : scenarios)
 			{
-				if(epptScenarioRun.isBaseSelected())
+				if(!epptScenarioRun.isBaseSelected())
 				{
 					DSSGrabber2SvcImpl dssGrabber = buildDssGrabber(epptScenarioRun);
 					dssGrabber.setLocation("@@" + dts.getName());
