@@ -60,7 +60,11 @@ class EpptTimeWindowPane extends TitledPane
 
 	private void initListeners()
 	{
-		_waterYearDefinitionComboBox.getSelectionModel().selectedItemProperty().addListener((e, o, n) -> _controller.setWaterYearDefinition(n));
+		_waterYearDefinitionComboBox.getSelectionModel().selectedItemProperty().addListener((e, o, n) ->
+		{
+			_controller.setWaterYearDefinition(n);
+			_controller.setModified();
+		});
 		_startYearSpinner.valueProperty().addListener(startYearChanged());
 		_endYearSpinner.valueProperty().addListener(endYearChanged());
 		_startYearSpinner.addEventFilter(KeyEvent.KEY_PRESSED, new MyKeyAdapter(_startYearSpinner));

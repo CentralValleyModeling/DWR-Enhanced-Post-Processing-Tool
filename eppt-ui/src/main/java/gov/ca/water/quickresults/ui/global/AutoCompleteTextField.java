@@ -148,7 +148,10 @@ public class AutoCompleteTextField<T> extends TextField
 	private void entryPicked(T entry)
 	{
 		_entriesPopup.hide();
-		_entryPicked.accept(entry);
+		if(_entryPicked != null)
+		{
+			_entryPicked.accept(entry);
+		}
 	}
 
 

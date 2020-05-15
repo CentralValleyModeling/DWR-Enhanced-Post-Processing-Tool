@@ -33,7 +33,9 @@ function getPlotlyMonthlySeries(datum, firstRecord, lastRecord, instantaneous) {
                     var startingDataIndex = 0;
                     while (startDate <= endDate) {
                         let date = new Date(startDate);
-                        date.setDate(date.getDate() - 1);
+                        if(!instantaneous){
+                            date.setMonth(date.getMonth() - 1);
+                        }
                         x.push(date);
                         if (timeSeries[startingDataIndex]) {
                             let dataDate = new Date(timeSeries[startingDataIndex][0]);
@@ -184,9 +186,13 @@ function plotlyCopyToClipboard(element) {
     let datum = data1[0];
     let xarr = datum['x'];
     for (var j = 0; j < xarr.length; j++) {
-        let date = new Date(xarr[j]);
-        date.setDate(date.getDate() - 1);
-        text += date.getMonth() + '/' + date.getFullYear();
+        if(Object.prototype.toString.call(xarr[j]) === '[object Date]'){
+            let date = new Date(xarr[j]);
+            date.setDate(date.getDate() - 1);
+            text += (date.getMonth() + 1) + '/' + date.getFullYear();
+        } else{
+            text += xarr[j];
+        }
         for (var k = 0; k < data1.length; k++) {
             let yarr = data1[k]['y'];
             text += '\t' + yarr[j];
@@ -195,23 +201,3 @@ function plotlyCopyToClipboard(element) {
     }
     copyTextToClipboard(text);
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

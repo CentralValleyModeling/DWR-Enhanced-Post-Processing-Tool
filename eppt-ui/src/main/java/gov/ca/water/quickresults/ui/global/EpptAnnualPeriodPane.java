@@ -231,6 +231,7 @@ class EpptAnnualPeriodPane extends TitledPane
 			retval.setFont(Font.font(11));
 			return retval;
 		});
+		_treeView.setPrefHeight(415);
 		buildWaterYearTypeRangeRows();
 	}
 

@@ -179,14 +179,14 @@ public class TrendReportPanel extends JFXPanel
 			int startYear = _epptConfigurationController.getStartYear();
 			int endYear = _epptConfigurationController.getEndYear();
 			boolean taf = _epptConfigurationController.isTaf();
-			List<EpptStatistic> statistic = _epptConfigurationController.getSelectedStatistics();
-			List<MonthPeriod> monthPeriod = _epptConfigurationController.getSelectedMonthlyPeriods();
+			List<EpptStatistic> statistic = new ArrayList<>(_epptConfigurationController.getSelectedStatistics());
+			List<MonthPeriod> monthPeriod = new ArrayList<>(_epptConfigurationController.getSelectedMonthlyPeriods());
 			WaterYearDefinition waterYearDefinition = _epptConfigurationController.getWaterYearDefinition();
 			List<EpptParameter> guiLink = new ArrayList<>(_parametersPane.getSelectedItems());
 			List<EpptScenarioRun> scenarioRuns = _scenarioRuns.stream().filter(Objects::nonNull).collect(toList());
 			boolean difference = _epptConfigurationController.isDifference();
 			boolean aggregate = _aggregateButton.isSelected();
-			List<Map<EpptScenarioRun, WaterYearPeriodRangesFilter>> waterYearPeriodRanges = _epptConfigurationController.getWaterYearPeriodRanges();
+			List<Map<EpptScenarioRun, WaterYearPeriodRangesFilter>> waterYearPeriodRanges = new ArrayList<>(_epptConfigurationController.getWaterYearPeriodRanges());
 			TrendReportDataLoader trendReportDataLoader = new TrendReportDataLoader(scenarioRuns, guiLink, startYear, endYear, taf, difference,
 					waterYearDefinition, statistic, monthPeriod, waterYearPeriodRanges, aggregate);
 			loadJavascript(trendReportTabConfig.getPath(),
