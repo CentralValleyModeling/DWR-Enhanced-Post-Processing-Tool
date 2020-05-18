@@ -33,13 +33,14 @@ function getPlotlyMonthlySeries(datum, firstRecord, lastRecord, instantaneous) {
                     var startingDataIndex = 0;
                     while (startDate <= endDate) {
                         let date = new Date(startDate);
-                        if(!instantaneous){
+                        if (!instantaneous) {
                             date.setMonth(date.getMonth() - 1);
                         }
-                        x.push(date);
                         if (timeSeries[startingDataIndex]) {
                             let dataDate = new Date(timeSeries[startingDataIndex][0]);
+                            dataDate.setMonth(dataDate.getMonth() - 1);
                             if (dataDate.getFullYear() === startDate.getFullYear() && dataDate.getMonth() === startDate.getMonth()) {
+                                x.push(date);
                                 y.push(timeSeries[startingDataIndex][1]);
                                 hoverInfo.push('all');
                                 markerSize.push(4);
@@ -51,6 +52,7 @@ function getPlotlyMonthlySeries(datum, firstRecord, lastRecord, instantaneous) {
                                 y[y.length - 2] = y[y.length - 1];
                             }
                             if (x.length > y.length) {
+                                x.push(date);
                                 y.push(null);
                                 hoverInfo.push('skip');
                                 markerSize.push(0);
@@ -64,7 +66,7 @@ function getPlotlyMonthlySeries(datum, firstRecord, lastRecord, instantaneous) {
                         seriesList.push(series);
                     }
                     let shape = 'vh';
-                    if(instantaneous){
+                    if (instantaneous) {
                         shape = 'linear';
                     }
                     series.push({
@@ -162,7 +164,7 @@ function buildDiscreteLayouts(datum, yaxis, title) {
     return layoutList;
 }
 
-function plot(data){
+function plot(data) {
     plotDiscrete(data);
 }
 
@@ -183,19 +185,47 @@ function plotlyCopyToClipboard(element) {
         text += '\t' + data1[i]['name']
     }
     text += '\n';
-    let datum = data1[0];
-    let xarr = datum['x'];
-    for (var j = 0; j < xarr.length; j++) {
-        if(Object.prototype.toString.call(xarr[j]) === '[object Date]'){
-            let date = new Date(xarr[j]);
-            date.setDate(date.getDate() - 1);
-            text += (date.getMonth() + 1) + '/' + date.getFullYear();
-        } else{
-            text += xarr[j];
+    let xyVals = [];
+    var foundDate = false;
+    for (let k = 0; k < data1.length; k++) {
+        let xarr = data1[k]['x'];
+        let yarr = data1[k]['y'];
+        for (let j = 0; j < xarr.length; j++) {
+            let x;
+            if (Object.prototype.toString.call(xarr[j]) === '[object Date]') {
+                foundDate = true;
+                let date = new Date(xarr[j]);
+                x = date.setMonth(date.getMonth());
+                x = date;
+            } else {
+                x = xarr[j];
+            }
+            if (!xyVals[x]) {
+                xyVals[x] = [];
+            }
+            xyVals[x].push(yarr[j]);
         }
-        for (var k = 0; k < data1.length; k++) {
-            let yarr = data1[k]['y'];
-            text += '\t' + yarr[j];
+    }
+    let keys = Object.keys(xyVals);
+    if(foundDate){
+        keys.sort((a,b)=> new Date(a).getTime() - new Date(b).getTime());
+    }
+    else{
+        keys.sort();
+    }
+    for (let i = 0; i < keys.length; i++) {
+        let key = keys[i];
+        if (foundDate) {
+            let date = new Date(key);
+            text += (date.getMonth() + 1) + '/' + date.getFullYear();
+        } else {
+            text += key;
+        }
+        for (let j = 0; j < xyVals[key].length; j++) {
+            text += '\t';
+            if (xyVals[key][j]) {
+                text += xyVals[key][j];
+            }
         }
         text += '\n';
     }

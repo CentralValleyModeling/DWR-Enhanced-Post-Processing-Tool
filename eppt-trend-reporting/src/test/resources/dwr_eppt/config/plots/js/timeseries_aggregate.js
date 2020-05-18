@@ -166,35 +166,49 @@ function plotlyCopyToClipboard(element) {
         text += '\t' + data1[i]['name']
     }
     text += '\n';
-    let datum = data1[0];
-    let xarr = datum['x'];
-    for (var j = 0; j < xarr.length; j++) {
-        var hasValues = false;
-        for (var k = 0; k < data1.length; k++) {
-            let yarr = data1[k]['y'];
-            if(yarr[j]){
-                hasValues = true;
-                break;
-            }
-        }
-        if(hasValues) {
+    let xyVals = [];
+    var foundDate = false;
+    for (let k = 0; k < data1.length; k++) {
+        let xarr = data1[k]['x'];
+        let yarr = data1[k]['y'];
+        for (let j = 0; j < xarr.length; j++) {
+            let x;
             if (Object.prototype.toString.call(xarr[j]) === '[object Date]') {
+                foundDate = true;
                 let date = new Date(xarr[j]);
-                date.setDate(date.getDate() - 1);
-                text += (date.getMonth() + 1) + '/' + date.getFullYear();
+                x = date.setMonth(date.getMonth());
+                x = date;
             } else {
-                text += xarr[j];
+                x = xarr[j];
             }
-            for (var k = 0; k < data1.length; k++) {
-                let yarr = data1[k]['y'];
-                if (yarr[j]) {
-                    text += '\t' + yarr[j];
-                } else {
-                    text += '\t';
-                }
+            if (!xyVals[x]) {
+                xyVals[x] = [];
             }
-            text += '\n';
+            xyVals[x].push(yarr[j]);
         }
+    }
+    let keys = Object.keys(xyVals);
+    if(foundDate){
+        keys.sort((a,b)=> new Date(a).getTime() - new Date(b).getTime());
+    }
+    else{
+        keys.sort();
+    }
+    for (let i = 0; i < keys.length; i++) {
+        let key = keys[i];
+        if (foundDate) {
+            let date = new Date(key);
+            text += (date.getMonth() + 1) + '/' + date.getFullYear();
+        } else {
+            text += key;
+        }
+        for (let j = 0; j < xyVals[key].length; j++) {
+            text += '\t';
+            if (xyVals[key][j]) {
+                text += xyVals[key][j];
+            }
+        }
+        text += '\n';
     }
     copyTextToClipboard(text);
 }
