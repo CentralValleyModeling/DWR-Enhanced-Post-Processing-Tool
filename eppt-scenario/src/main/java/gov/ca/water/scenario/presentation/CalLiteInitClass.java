@@ -46,7 +46,6 @@ import gov.ca.water.businessservice.impl.XMLParsingSvcImpl;
 import gov.ca.water.calgui.EpptInitializationException;
 import gov.ca.water.calgui.bo.CalLiteGUIException;
 import gov.ca.water.calgui.bo.DataTableModel;
-import gov.ca.water.calgui.bo.RBListItemBO;
 import gov.ca.water.calgui.bo.ResultUtilsBO;
 import gov.ca.water.calgui.busservice.impl.ModelRunSvcImpl;
 import gov.ca.water.calgui.constant.Constant;
@@ -57,7 +56,6 @@ import gov.ca.water.calgui.techservice.IErrorHandlingSvc;
 import gov.ca.water.calgui.techservice.impl.AuditSvcImpl;
 import gov.ca.water.calgui.techservice.impl.DialogSvcImpl;
 import gov.ca.water.calgui.techservice.impl.ErrorHandlingSvcImpl;
-import gov.ca.water.quickresults.ui.projectconfig.ScenarioChooserBO;
 import gov.ca.water.scenario.ui.JLinkedSlider;
 import org.apache.log4j.Logger;
 import org.jfree.util.Log;
@@ -138,22 +136,7 @@ public class CalLiteInitClass
 			// Setup for Reporting page
 			// Set up additional UI elements
 			JList<?> lstScenarios = (JList<?>) swingEngine.find("SelectedList");
-			ScenarioChooserBO fdDSSFiles = new ScenarioChooserBO(
-					(DefaultListModel<RBListItemBO>) lstScenarios.getModel(),
-
-					_swingEngine.find(Constant.MAIN_FRAME_NAME));
-			lstScenarios.setModel(fdDSSFiles.getLmScenNames());
 			lstScenarios.setBorder(new LineBorder(Color.gray, 1));
-
-
-			// Schematic views
-
-			new SchematicMain((JPanel) swingEngine.find("schematic_holder"),
-					"file:///" + System.getProperty("user.dir") + "/Config/callite_merged.svg", swingEngine, 1.19, 0.0,
-					0.0, 1.19, -8.0, 5.0);
-			new SchematicMain((JPanel) swingEngine.find("schematic_holder2"),
-					"file:///" + System.getProperty("user.dir") + "/Config/callite-massbalance_working.svg",
-					swingEngine, 1.2, 0, 0.0, 1.2, 21.0, 15.0);
 
 			// Recolor results tabs
 			JTabbedPane jTabbedPane = (JTabbedPane) swingEngine.find("tabbedPane1");
@@ -255,9 +238,6 @@ public class CalLiteInitClass
 	{
 		// Set up the global Listeners.
 		Component mainFrame = _swingEngine.find(Constant.MAIN_FRAME_NAME);
-		DisplayHelper displayHelper = new DisplayHelper(mainFrame);
-		_swingEngine.setActionListener(mainFrame, new GlobalActionListener(displayHelper));
-		//setCheckBoxorMouseListener(_swingEngine.find(Constant.MAIN_FRAME_NAME), new GlobalMouseListener());
 		setCheckBoxorRadioButtonItemListener(mainFrame, new GlobalItemListener());
 		setLinkedSliderChangeListener(mainFrame, new GlobalChangeListener());
 		ImageIcon icon = new ImageIcon(getClass().getResource("/images/CalLiteIcon.png"));

@@ -25,31 +25,18 @@
                 <constraints border-constraint="West"/>
                 <properties/>
                 <border type="none"/>
-                <children>
-                  <component id="cfdad" class="javax.swing.JButton" binding="_overwriteJRXMLButton" default-binding="true">
-                    <constraints/>
-                    <properties>
-                      <text value="Update Report Templates"/>
-                    </properties>
-                  </component>
-                </children>
+                <children/>
               </grid>
               <grid id="c823e" layout-manager="FlowLayout" hgap="5" vgap="5" flow-align="2">
                 <constraints border-constraint="Center"/>
                 <properties/>
                 <border type="none"/>
                 <children>
-                  <component id="74b35" class="javax.swing.JButton" binding="_generateReportButton" default-binding="true">
-                    <constraints/>
-                    <properties>
-                      <text value="Generate Report"/>
-                    </properties>
-                  </component>
                   <component id="aceab" class="javax.swing.JButton" binding="_cancelButton" default-binding="true">
                     <constraints/>
                     <properties>
                       <enabled value="false"/>
-                      <preferredSize width="115" height="24"/>
+                      <preferredSize width="147" height="30"/>
                       <text value="Cancel"/>
                     </properties>
                   </component>
@@ -72,415 +59,167 @@
           </grid>
         </children>
       </grid>
-      <grid id="bee11" layout-manager="BorderLayout" hgap="0" vgap="0">
-        <constraints border-constraint="North"/>
-        <properties>
-          <preferredSize width="850" height="510"/>
-        </properties>
+      <grid id="332b7" layout-manager="BorderLayout" hgap="0" vgap="0">
+        <constraints border-constraint="Center"/>
+        <properties/>
         <border type="none"/>
         <children>
-          <grid id="73f88" layout-manager="BorderLayout" hgap="0" vgap="0">
-            <constraints border-constraint="West"/>
-            <properties>
-              <preferredSize width="560" height="300"/>
-            </properties>
+          <tabbedpane id="4d4b5" binding="_tabbedPane1" default-binding="true">
+            <constraints border-constraint="Center"/>
+            <properties/>
             <border type="none"/>
             <children>
-              <grid id="57c46" layout-manager="GridBagLayout">
-                <constraints border-constraint="North"/>
+              <grid id="e62cc" layout-manager="BorderLayout" hgap="0" vgap="0">
+                <constraints>
+                  <tabbedpane title="QA/QC"/>
+                </constraints>
                 <properties/>
                 <border type="none"/>
                 <children>
-                  <component id="dc979" class="javax.swing.JLabel">
-                    <constraints>
-                      <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="1" fill="1" indent="0" use-parent-layout="false"/>
-                      <gridbag top="10" left="5" bottom="5" right="5" weightx="0.0" weighty="0.0"/>
-                    </constraints>
-                    <properties>
-                      <text value="Base Scenario Run:"/>
-                    </properties>
-                  </component>
-                  <grid id="a17eb" layout-manager="BorderLayout" hgap="5" vgap="5">
-                    <constraints>
-                      <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
-                      <gridbag top="5" left="5" bottom="5" right="5" weightx="0.0" weighty="0.0"/>
-                    </constraints>
-                    <properties>
-                      <maximumSize width="386" height="57"/>
-                      <minimumSize width="386" height="57"/>
-                    </properties>
+                  <grid id="e0941" layout-manager="GridBagLayout">
+                    <constraints border-constraint="South"/>
+                    <properties/>
                     <border type="none"/>
                     <children>
-                      <grid id="81eea" layout-manager="GridBagLayout">
-                        <constraints border-constraint="Center"/>
+                      <component id="f2a8c" class="javax.swing.JLabel">
+                        <constraints>
+                          <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                          <gridbag top="5" left="5" bottom="5" right="5" weightx="0.0" weighty="0.0"/>
+                        </constraints>
+                        <properties>
+                          <text value="Output File:"/>
+                        </properties>
+                      </component>
+                      <hspacer id="38ad4">
+                        <constraints>
+                          <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="1" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+                          <gridbag weightx="0.0" weighty="0.0"/>
+                        </constraints>
+                      </hspacer>
+                      <vspacer id="a525d">
+                        <constraints>
+                          <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="6" hsize-policy="1" anchor="0" fill="2" indent="0" use-parent-layout="false"/>
+                          <gridbag weightx="0.0" weighty="0.0"/>
+                        </constraints>
+                      </vspacer>
+                      <grid id="400fb" layout-manager="BorderLayout" hgap="0" vgap="0">
+                        <constraints>
+                          <grid row="0" column="2" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+                          <gridbag weightx="0.8" weighty="0.0"/>
+                        </constraints>
                         <properties/>
                         <border type="none"/>
                         <children>
-                          <component id="22222" class="javax.swing.JTextField" binding="_baseScenarioTextField">
-                            <constraints>
-                              <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
-                              <gridbag weightx="0.8" weighty="0.0"/>
-                            </constraints>
+                          <component id="c0a35" class="javax.swing.JButton" binding="_fileChooserBtn">
+                            <constraints border-constraint="East"/>
+                            <properties>
+                              <preferredSize width="30" height="26"/>
+                              <text value="..."/>
+                            </properties>
+                          </component>
+                          <component id="7efe" class="javax.swing.JTextField" binding="_pdfOutput">
+                            <constraints border-constraint="Center"/>
                             <properties>
                               <editable value="false"/>
-                              <opaque value="true"/>
-                              <preferredSize width="251" height="26"/>
-                              <text value="Base"/>
-                            </properties>
-                          </component>
-                          <component id="dfb8c" class="javax.swing.JButton" binding="_runBaseWreslButton">
-                            <constraints>
-                              <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="4" fill="0" indent="0" use-parent-layout="false"/>
-                              <gridbag weightx="0.0" weighty="0.0"/>
-                            </constraints>
-                            <properties>
-                              <enabled value="false"/>
-                              <maximumSize width="120" height="26"/>
-                              <minimumSize width="120" height="26"/>
-                              <preferredSize width="120" height="26"/>
-                              <text value="Run WRESL"/>
-                            </properties>
-                          </component>
-                          <component id="bad34" class="javax.swing.JLabel" binding="_baseWreslDiffWarningLabel">
-                            <constraints>
-                              <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
-                              <gridbag weightx="0.0" weighty="0.0"/>
-                            </constraints>
-                            <properties>
-                              <maximumSize width="251" height="16"/>
-                              <minimumSize width="251" height="16"/>
-                              <preferredSize width="251" height="16"/>
-                              <text value="*WRESL Script Directory differs from installation"/>
-                            </properties>
-                          </component>
-                          <component id="e2de8" class="javax.swing.JButton" binding="_overwriteScriptsButtonBase">
-                            <constraints>
-                              <grid row="1" column="1" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="4" fill="0" indent="0" use-parent-layout="false"/>
-                              <gridbag weightx="0.2" weighty="0.0"/>
-                            </constraints>
-                            <properties>
-                              <maximumSize width="120" height="26"/>
-                              <minimumSize width="120" height="26"/>
-                              <preferredSize width="120" height="26"/>
-                              <text value="Overwrite Scripts"/>
+                              <preferredSize width="200" height="26"/>
+                              <text value=""/>
                             </properties>
                           </component>
                         </children>
                       </grid>
+                      <component id="f4195" class="javax.swing.JButton" binding="_openReportButton">
+                        <constraints>
+                          <grid row="0" column="3" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+                          <gridbag weightx="0.0" weighty="0.0"/>
+                        </constraints>
+                        <properties>
+                          <maximumSize width="120" height="26"/>
+                          <minimumSize width="120" height="26"/>
+                          <preferredSize width="146" height="30"/>
+                          <text value="Open Report"/>
+                        </properties>
+                      </component>
+                      <component id="74b35" class="javax.swing.JButton" binding="_generateReportButton" default-binding="true">
+                        <constraints>
+                          <grid row="2" column="3" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+                          <gridbag weightx="0.0" weighty="0.0"/>
+                        </constraints>
+                        <properties>
+                          <preferredSize width="147" height="30"/>
+                          <text value="Generate Report"/>
+                        </properties>
+                      </component>
                     </children>
                   </grid>
-                  <component id="f2a8c" class="javax.swing.JLabel">
-                    <constraints>
-                      <grid row="5" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
-                      <gridbag top="5" left="5" bottom="5" right="5" weightx="0.0" weighty="0.0"/>
-                    </constraints>
+                  <scrollpane id="5dfa0">
+                    <constraints border-constraint="Center"/>
                     <properties>
-                      <text value="Output File:"/>
+                      <horizontalScrollBarPolicy value="30"/>
                     </properties>
-                  </component>
-                  <grid id="400fb" layout-manager="BorderLayout" hgap="2" vgap="0">
-                    <constraints>
-                      <grid row="5" column="1" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
-                      <gridbag top="5" left="5" bottom="5" right="5" weightx="0.0" weighty="0.0"/>
-                    </constraints>
-                    <properties/>
                     <border type="none"/>
                     <children>
-                      <component id="7efe" class="javax.swing.JTextField" binding="_pdfOutput">
-                        <constraints border-constraint="Center"/>
+                      <component id="4aa50" class="javax.swing.JTextPane" binding="_qaqcTextPane">
+                        <constraints/>
                         <properties>
                           <editable value="false"/>
-                          <preferredSize width="200" height="26"/>
-                          <text value=""/>
-                        </properties>
-                      </component>
-                      <component id="c0a35" class="javax.swing.JButton" binding="_fileChooserBtn">
-                        <constraints border-constraint="East"/>
-                        <properties>
-                          <preferredSize width="30" height="26"/>
-                          <text value="..."/>
+                          <preferredSize width="8" height="1382"/>
+                          <text value=" ============= Starting Report Processor: 2020-03-25T13:24:52.961 ============= Validating report inputs Reading Detailed Issues Configuration Reading Modules Configuration Reading Linked Variables Configuration Processing Assumption Changes Initial Conditions for: DCRBL_CS2 Assumption Changes in base path: C:\Users\adam\Documents\EPPT\Bulbasaur_IP6\Studies\CalSim2\ROConLTO_CurrentOps(revised)_CALSIM_093019_rev19\common\DSS\2020D09EINIT.DSS compared to: C:\Users\adam\Documents\EPPT\Bulbasaur_IP6\Studies\CalSim2\CS2_DCRBL_1028\common\DSS\2020D09EINIT.DSS DSS Compare tolderance is: 0.01 Comparing path: /*/S422_CC/STORAGE/*/*/*/ Comparing path: /*/S_NHGAN/STORAGE/*/*/*/ Comparing path: /*/NDO/FLOW-NDO/*/*/*/ Comparing path: /*/NET_DICU/DICU_FLOW/*/*/*/ Comparing path: /*/D_EXPTD/FLOW-DELIVERY/*/*/*/ Comparing path: /*/S17/STORAGE/*/*/*/ Comparing path: /*/S_MCLRE/STORAGE/*/*/*/ Comparing path: /*/ANN_CCWD_DEL_/ANNUAL-SUM/*/*/*/ Comparing path: /*/ANN_DS_DIV_/ANNUAL-DIVERSION/*/*/*/ Comparing path: /*/REMWQRELCAP/STORAGE/*/*/*/ Comparing path: /*/S_SLCVP/STORAGE/*/*/*/ Comparing path: /*/D408_CVP/FLOW-DELIVERY/*/*/*/ Comparing path: /*/UND_D18B_C1/UNDER-DELIVERY/*/*/*/ Comparing path: /*/DXC_DAYSOPEN/GATE-DAYS-OPEN/*/*/*/ Comparing path: /*/S_SHSTAE/STORAGE/*/*/*/ Comparing path: /*/I424/FLOW-INFLOW/*/*/*/ Comparing path: /*/S_WKYTN/STORAGE/*/*/*/ Comparing path: /*/AD_SJR/FLOW-ACCRDEPL/*/*/*/ Comparing path: /*/SAC_OTH/FLOW-INFLOW/*/*/*/ Comparing path: /*/SIO_FWUA/STORAGE/*/*/*/ Comparing path: /*/C_HOOD/FLOW-CHANNEL/*/*/*/ Comparing path: /*/C_MLRTNF/FLOW-FLOOD/*/*/*/ Comparing path: /*/D420/FLOW-DELIVERY/*/*/*/ Comparing path: /*/S422_P/STORAGE/*/*/*/ Comparing path: /*/S_HNSLY/STORAGE/*/*/*/ Comparing path: /*/S_ESTMN/STORAGE/*/*/*/ Comparing path: /*/DAYSMETFLOW60_/DAYS-MET/*/*/*/ Comparing path: /*/S76/STORAGE/*/*/*/ Comparing path: /*/S_SLSWP/STORAGE/*/*/*/ Comparing path: /*/A18/SURFACE-AREA/*/*/*/ Comparing path: /*/WQ422/SALINITY/*/*/*/ Comparing path: /*/ANN_CVP_DIV_/ANNUAL-DIVERSION/*/*/*/ Comparing path: /*/D_MDRCNL_16B/FLOW-DELIVERY/*/*/*/ Comparing path: /*/SIO_SWP/STORAGE/*/*/*/ Comparing path: /*/ANN_MOK_DIV_/ANNUAL-DIVERSION/*/*/*/ Comparing path: /*/D_FKCNL_215/FLOW-DELIVERY/*/*/*/ Comparing path: /*/S_TRNTY/STORAGE/*/*/*/ Comparing path: /*/C_DELTA/FLOW-CHANNEL/*/*/*/ Comparing path: /*/RIOVISTA_SWRCB_DV/DELTAFLOWCRITERIA/*/*/*/ Comparing path: /*/X2_PRV/X2-POSITION-PREV/*/*/*/ Comparing path: /*/DAYSINDV/DAYS/*/*/*/ Comparing path: /*/S_MELON/STORAGE/*/*/*/ Comparing path: /*/VERNWQFINAL/SALINITY-EC/*/*/*/ Comparing path: /*/D408_DS/FLOW-DELIVERY/*/*/*/ Comparing path: /*/NDO_SWRCB_DV/DELTAFLOWCRITERIA/*/*/*/ Comparing path: /*/SUM_MAD_C1_PCT/PERCENTAGE-DELIVERED/*/*/*/ Comparing path: /*/SIO_CVP/STORAGE/*/*/*/ Comparing path: /*/TOT_UND_D18B_C2/UNDER-DELIVERY/*/*/*/ Comparing path: /*/S_FOLSM/STORAGE/*/*/*/ Comparing path: /*/FR_SNOW_REL_VOL/FRIANT-FC/*/*/*/ Comparing path: /*/C_SACRV/FLOW-CHANNEL/*/*/*/ Comparing path: /*/RE_UND_D18B_C1/REALLOCATED/*/*/*/ Comparing path: /*/D_FKCNL_16B/FLOW-DELIVERY/*/*/*/ Comparing path: /*/RE_UND_D18B_C2/REALLOCATED/*/*/*/ Comparing path: /*/S_MLRTNF/FLOW-FLOOD/*/*/*/ Comparing path: /*/EXP_OTH/FLOW-EXPORTS/*/*/*/ Comparing path: /*/S_PEDRO/STORAGE/*/*/*/ Comparing path: /*/WQRELCAPDV/WQ-REL-CAP/*/*/*/ Comparing path: /*/DEL_SWP_CODV/DEL-TARGET/*/*/*/ Comparing path: /*/SIO/STORAGE/*/*/*/ Comparing path: /*/SUM_MAD_TOT_PCT/PERCENTAGE-DELIVERED/*/*/*/ Comparing path: /*/VAMP_DEBT/FLOW-RELEASE/*/*/*/ Comparing path: /*/S422/STORAGE/*/*/*/ Comparing path: /*/S75/STORAGE/*/*/*/ Comparing path: /*/TOT_UND_D18B_C1/UNDER-DELIVERY/*/*/*/ Comparing path: /*/C_HOOD_ANN/FLOW-ANN/*/*/*/ Comparing path: /*/D18F/FLOW-DELIVERY/*/*/*/ Comparing path: /*/UND_D18B_C2/UNDER-DELIVERY/*/*/*/ Comparing path: /*/SJR_ANN/FLOW-CHANNEL/*/*/*/ Comparing path: /*/D_MDRCNL_215/FLOW-DELIVERY/*/*/*/ Comparing path: /*/S78/STORAGE/*/*/*/ Comparing path: /*/S_OROVL/STORAGE/*/*/*/ Comparing path: /*/S_SHSTA/STORAGE/*/*/*/ Comparing path: /*/S79/STORAGE/*/*/*/ Comparing path: /*/SJR_SWRCB_DV/DELTAFLOWCRITERIA/*/*/*/ Comparing path: /*/S_MLRTN/STORAGE/*/*/*/ Processing Assumption State Variables for: DCRBL_CS2 Assumption Changes in base path: C:\Users\adam\Documents\EPPT\Bulbasaur_IP6\Studies\CalSim2\ROConLTO_CurrentOps(revised)_CALSIM_093019_rev19\common\DSS\2020D09ESV.dss compared to: C:\Users\adam\Documents\EPPT\Bulbasaur_IP6\Studies\CalSim2\CS2_DCRBL_1028\common\DSS\2020D09ESV.dss DSS Compare tolderance is: 0.01 Comparing path: /*/I_FOLSM/FLOW-INFLOW/*/*/*/ Comparing path: /*/FOL_APR_50/FLOW-IMPAIRED/*/*/*/ Comparing path: /*/S_FOLSMLEVEL2/STORAGE-LEVEL/*/*/*/ Comparing path: /*/FOL_APR_75/FLOW-UNIMPAIRED/*/*/*/ Comparing path: /*/FOL_MAR_50/FLOW-IMPAIRED/*/*/*/ Comparing path: /*/I_TERMINOUS/FLOW-INFLOW/*/*/*/ Comparing path: /*/PERDEM_70SMUD/DELIVERY-PATTERN/*/*/*/ Comparing path: /*/EVAP_S78/EVAPORATION-RATE/*/*/*/ Comparing path: /*/COSMA_AGDMD/COSMA-DEMAND/*/*/*/ Comparing path: /*/CON_114GCID/DEMAND/*/*/*/ Comparing path: /*/B2ACTION4ON/TRIGGER/*/*/*/ Comparing path: /*/FOL_APR_90/FLOW-IMPAIRED/*/*/*/ Comparing path: /*/S_SHSTALEVEL2/STORAGE-LEVEL/*/*/*/ Comparing path: /*/YUB_MAY_75/FLOW-IMPAIRED/*/*/*/ Comparing path: /*/EC_SWR628/EC-SWR/*/*/*/ Comparing path: /*/PERDEM_70ROSE/DELIVERY-PATTERN/*/*/*/ Comparing path: /*/C_SJRSACKBC/FLOW-CHANNEL/*/*/*/ Comparing path: /*/EC_GWR628/EC-GWR/*/*/*/ Comparing path: /*/DEM_D855_PAG/DEMAND-CVP-AG/*/*/*/ Comparing path: /*/DEM_D885_PIN_CFS/DEMAND-SWP-IN/*/*/*/ Comparing path: /*/GWR628/GWR-FLOW/*/*/*/ Comparing path: /*/D285/FLOW-DELIVERY/*/*/*/ Comparing path: /*/D637/FLOW-DELIVERY/*/*/*/ Comparing path: /*/I_MERCED2/FLOW-INFLOW/*/*/*/ Comparing path: /*/TULE_WET_INDX/FRIANT-INDX/*/*/*/ Comparing path: /*/DEMAND_D413/NETDICU_POS/*/*/*/ Comparing path: /*/NPR601/NPR-FLOW/*/*/*/ Comparing path: /*/NPR628/NPR-FLOW/*/*/*/ Comparing path: /*/WKY_APR_50/FLOW/*/*/*/ Comparing path: /*/ORO_FEB_75/FLOW-IMPAIRED/*/*/*/ Comparing path: /*/ORO_JAN_50/FLOW-IMPAIRED/*/*/*/ Comparing path: /*/EVAP_S75/EVAPORATION-RATE/*/*/*/ Comparing path: /*/BTWMAZENWMNRESLOAD/FLOWTIMESEC/*/*/*/ Comparing path: /*/EC2_R_SJRVER/EC-WSRETURN/*/*/*/ Comparing path: /*/DAY9/VOL-FRACTION/*/*/*/ Comparing path: /*/DEM_D856_PRF/DEMAND-CVP-RF/*/*/*/ Comparing path: /*/EC1_R_SJRMS/EC-WSRETURN/*/*/*/ Comparing path: /*/ACVPDEM_PMI_S/DEM-CVPS-MI-TOTAL/*/*/*/ Comparing path: /*/TRI_JUN_50/FLOW/*/*/*/ Comparing path: /*/SHA_JAN_90/FLOW/*/*/*/ Comparing path: /*/DAY29/VOL-FRACTION/*/*/*/ Comparing path: /*/YUB_JAN_50/FLOW-IMPAIRED/*/*/*/ Comparing path: /*/GWR635/GWR-FLOW/*/*/*/ Comparing path: /*/ORO_FEB_90/FLOW-UNIMPAIRED/*/*/*/ Comparing path: /*/DEMAND_PRJ_65/DEMAND-CVP-TOTAL/*/*/*/ Comparing path: /*/CUAW_584_PAG/SJR-DEMAND/*/*/*/ Comparing path: /*/DEM_D403B_PLS_CFS/DEMAND-SWP-LS/*/*/*/ Comparing path: /*/EC_SWR622/EC-SWR/*/*/*/ Comparing path: /*/EVAP_S4/EVAPORATION-RATE/*/*/*/ Comparing path: /*/C_STCR_TC/FLOW-CHANNEL/*/*/*/ Comparing path: /*/I512/FLOW-INFLOW/*/*/*/ Comparing path: /*/DEM_D162B_PSC/DEMAND-CVP-SC/*/*/*/ Comparing path: /*/FOL_MAY_50/FLOW-IMPAIRED/*/*/*/ Comparing path: /*/CON_D18201A_PRF/DEMAND-CVP-RF/*/*/*/ Comparing path: /*/S_PEDROLEVEL4/STORAGE-LEVEL/*/*/*/ Comparing path: /*/CON_D172_PAG/DEMAND/*/*/*/ Comparing path: /*/D630B/FLOW-DELIVERY/*/*/*/ Comparing path: /*/DEM_TOTCVPS_PEX/DEMAND-CVP-EX/*/*/*/ Comparing path: /*/EVAP_S_HNSLY/EVAPORATION-RATE/*/*/*/ Comparing path: /*/TS_ADJ_RB/FLOW/*/*/*/ Comparing path: /*/ACC1_FEB_50/FLOW/*/*/*/ Comparing path: /*/WQ408_VC/SALINITY/*/*/*/ Comparing path: /*/ORO_MAR_75/FLOW-UNIMPAIRED/*/*/*/ Comparing path: /*/EC_SWR631/EC-SWR/*/*/*/ Comparing path: /*/DEM_D7B_PAG/DEMAND-SWP-AG/*/*/*/ Comparing path: /*/EC_CI601DV/EC-CI/*/*/*/ Comparing path: /*/S_NHGANLEVEL4/STORAGE-LEVEL/*/*/*/ Comparing path: /*/ACC1_MAR_90/FLOW/*/*/*/ Comparing path: /*/EVAP_S_ESTMN/EVAPORATION-RATE/*/*/*/ Comparing path: /*/YUB_MAR_50/FLOW-IMPAIRED/*/*/*/ Comparing path: /*/NPD613/NPD-FLOW/*/*/*/ Comparing path: /*/CUAW_592_PAG/SJR-DEMAND/*/*/*/ Comparing path: /*/NPD601/NPD-FLOW/*/*/*/ Comparing path: /*/S6LEVEL5/STORAGE-LEVEL/*/*/*/ Comparing path: /*/EC_SWR642/EC-SWR/*/*/*/ Comparing path: /*/EC5_R_SJRVER/EC-WSRETURN/*/*/*/ Comparing path: /*/TARGET_D14501SC/DIV-REQUIREMENT/*/*/*/ Comparing path: /*/EC2_R_MDOTAWEST/EC-WSRETURN/*/*/*/ Comparing path: /*/ABVNWMNRESLOAD/FLOWTIMESEC/*/*/*/ Comparing path: /*/AD_SJR_VAMP_V/FLOW-CHANNEL/*/*/*/ Comparing path: /*/C_MDOTABC/FLOW-CHANNEL/*/*/*/ Comparing path: /*/EC5_R_SJRTUOL/EC-WSRETURN/*/*/*/ Comparing path: /*/FOL_MAY_75/FLOW-UNIMPAIRED/*/*/*/ Comparing path: /*/ACVPDEM_PLS_S/DEM-CVPS-LS-TOTAL/*/*/*/ Comparing path: /*/R_SJRMS_W/FLOW-RETURN/*/*/*/ Comparing path: /*/TARGET_D14501GCID/DIV-REQUIREMENT/*/*/*/ Comparing path: /*/TRI_JAN_50/FLOW/*/*/*/ Comparing path: /*/YUB_MAR_50/FLOW-UNIMPAIRED/*/*/*/ Comparing path: /*/MINFLOW_C_KSWCK/FLOW-MIN-REQUIRED/*/*/*/ Comparing path: /*/S_SHSTALEVEL5/STORAGE-LEVEL/*/*/*/ Comparing path: /*/AMER_UWU/FLOW-DEMAND/*/*/*/ Comparing path: /*/TRI_JAN_75/FLOW/*/*/*/ Comparing path: /*/S_ESTMNLEVEL2/STORAGE-LEVEL/*/*/*/ Comparing path: /*/YUB_FEB_75/FLOW-UNIMPAIRED/*/*/*/ Comparing path: /*/REST_REQ_NP_F/RELEASE-HYDROGRAPH/*/*/*/ Comparing path: /*/NPD649/NPD-FLOW/*/*/*/ Comparing path: /*/YUB_APR_90/FLOW-UNIMPAIRED/*/*/*/ Comparing path: /*/GWR612/GWR-FLOW/*/*/*/ Comparing path: /*/COSMA_AG_GW/COSMA-DEMAND/*/*/*/ Comparing path: /*/WKY_MAR_75/FLOW/*/*/*/ Comparing path: /*/R_SJRCALB/FLOW-RETURN/*/*/*/ Comparing path: /*/C854/FLOW-CHANNEL/*/*/*/ Comparing path: /*/EC_R_SJRSTAND/EC-NPR/*/*/*/ Comparing path: /*/CON_D14302_PRF/DEMAND-CVP-RF/*/*/*/ Comparing path: /*/EC_CI617DV/EC-CI/*/*/*/ Comparing path: /*/SRI/INDEX/*/*/*/ Comparing path: /*/PERDEM_70SAC/DELIVERY-PATTERN/*/*/*/ Comparing path: /*/MINFLOWFEAMOUTH/FLOW-MIN-REQUIRED/*/*/*/ Comparing path: /*/DEM_D838_PLS/DEMAND-CVP-LS/*/*/*/ Comparing path: /*/I_ESTMN/FLOW-INFLOW/*/*/*/ Comparing path: /*/DEM_D877_PIN_CFS/DEMAND-SWP-IN/*/*/*/ Comparing path: /*/YUB_MAY_50/FLOW-UNIMPAIRED/*/*/*/ Comparing path: /*/FOL_APR_50/FLOW-UNIMPAIRED/*/*/*/ Comparing path: /*/PERDEM_70NRWD/DELIVERY-PATTERN/*/*/*/ Comparing path: /*/DAY20/VOL-FRACTION/*/*/*/ Comparing path: /*/DAY17/VOL-FRACTION/*/*/*/ Comparing path: /*/DEM_C221_PRF/DEMAND-RF/*/*/*/ Comparing path: /*/EVAP_S_SLSWP/EVAPORATION-RATE/*/*/*/ Comparing path: /*/FOL_JAN_75/FLOW-IMPAIRED/*/*/*/ Comparing path: /*/PERDEM_70ELDORCO/DELIVERY-PATTERN/*/*/*/ ============= Report Processing Finished: 2020-03-25T13:25:12.560 ============= ============= Report Processing Took: 0min 19sec ============= Error: gov.ca.water.reportengine.QAQCReportException: Task interrupted"/>
                         </properties>
                       </component>
                     </children>
-                  </grid>
-                  <component id="3739d" class="javax.swing.JLabel">
-                    <constraints>
-                      <grid row="7" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
-                      <gridbag top="5" left="5" bottom="5" right="5" weightx="0.0" weighty="0.0"/>
-                    </constraints>
+                  </scrollpane>
+                </children>
+              </grid>
+              <scrollpane id="e0c2e">
+                <constraints>
+                  <tabbedpane title="Base"/>
+                </constraints>
+                <properties/>
+                <border type="none"/>
+                <children>
+                  <component id="6aed1" class="javax.swing.JTextPane" binding="_baseWreslTextPane">
+                    <constraints/>
                     <properties>
-                      <text value="DSS Compare Tolerance:"/>
-                    </properties>
-                  </component>
-                  <component id="ebf3d" class="javax.swing.JTextField" binding="_toleranceTextField" custom-create="true">
-                    <constraints>
-                      <grid row="7" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
-                        <preferred-size width="150" height="-1"/>
-                      </grid>
-                      <gridbag top="5" left="5" bottom="5" right="5" weightx="0.0" weighty="0.0"/>
-                    </constraints>
-                    <properties>
-                      <text value=""/>
-                    </properties>
-                  </component>
-                  <component id="911da" class="javax.swing.JLabel">
-                    <constraints>
-                      <grid row="2" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
-                      <gridbag top="5" left="5" bottom="5" right="5" weightx="0.1" weighty="0.0"/>
-                    </constraints>
-                    <properties>
-                      <text value="Author:"/>
-                    </properties>
-                  </component>
-                  <component id="5a65b" class="javax.swing.JTextField" binding="_authorTextField">
-                    <constraints>
-                      <grid row="2" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
-                        <preferred-size width="150" height="-1"/>
-                      </grid>
-                      <gridbag top="5" left="5" bottom="5" right="5" weightx="0.8" weighty="0.0"/>
-                    </constraints>
-                    <properties/>
-                  </component>
-                  <component id="8ae0e" class="javax.swing.JLabel">
-                    <constraints>
-                      <grid row="4" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
-                      <gridbag top="5" left="5" bottom="5" right="5" weightx="0.0" weighty="0.0"/>
-                    </constraints>
-                    <properties>
-                      <text value="QA/QC Report Subtitle:"/>
-                    </properties>
-                  </component>
-                  <component id="97dd1" class="javax.swing.JTextField" binding="_reportSubtitle">
-                    <constraints>
-                      <grid row="4" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
-                        <preferred-size width="150" height="-1"/>
-                      </grid>
-                      <gridbag top="5" left="5" bottom="5" right="5" weightx="1.0" weighty="0.0"/>
-                    </constraints>
-                    <properties>
-                      <text value=""/>
-                    </properties>
-                  </component>
-                  <component id="c1b2e" class="javax.swing.JLabel">
-                    <constraints>
-                      <grid row="8" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
-                      <gridbag top="5" left="5" bottom="5" right="5" weightx="0.0" weighty="0.0"/>
-                    </constraints>
-                    <properties>
-                      <text value="Percent Diff Format:"/>
-                    </properties>
-                  </component>
-                  <component id="590cf" class="javax.swing.JLabel">
-                    <constraints>
-                      <grid row="9" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
-                      <gridbag top="5" left="5" bottom="5" right="5" weightx="0.0" weighty="0.0"/>
-                    </constraints>
-                    <properties>
-                      <text value="Long Term Start Year:"/>
-                    </properties>
-                  </component>
-                  <component id="388a8" class="javax.swing.JLabel">
-                    <constraints>
-                      <grid row="10" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
-                      <gridbag top="5" left="5" bottom="5" right="5" weightx="0.0" weighty="0.0"/>
-                    </constraints>
-                    <properties>
-                      <text value="Long Term End Year:"/>
-                    </properties>
-                  </component>
-                  <component id="d8527" class="javax.swing.JComboBox" binding="_percentDiffStyle">
-                    <constraints>
-                      <grid row="8" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="2" anchor="8" fill="1" indent="0" use-parent-layout="false"/>
-                      <gridbag top="5" left="5" bottom="5" right="5" weightx="0.0" weighty="0.0"/>
-                    </constraints>
-                    <properties>
-                      <preferredSize width="91" height="26"/>
-                    </properties>
-                  </component>
-                  <component id="16b6a" class="rma.swing.RmaJIntegerField" binding="_longTermStartYear">
-                    <constraints>
-                      <grid row="9" column="1" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
-                      <gridbag top="5" left="5" bottom="5" right="5" weightx="0.0" weighty="0.0"/>
-                    </constraints>
-                    <properties>
-                      <preferredSize width="64" height="26"/>
-                    </properties>
-                  </component>
-                  <component id="59c38" class="rma.swing.RmaJIntegerField" binding="_longTermEndYear">
-                    <constraints>
-                      <grid row="10" column="1" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
-                      <gridbag top="5" left="5" bottom="5" right="5" weightx="0.0" weighty="0.0"/>
-                    </constraints>
-                    <properties>
-                      <preferredSize width="64" height="26"/>
-                    </properties>
-                  </component>
-                  <component id="b36d" class="javax.swing.JLabel">
-                    <constraints>
-                      <grid row="11" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
-                      <gridbag top="5" left="5" bottom="5" right="5" weightx="0.0" weighty="0.0"/>
-                    </constraints>
-                    <properties>
-                      <text value="Common Period:"/>
-                    </properties>
-                  </component>
-                  <grid id="70dd5" layout-manager="FlowLayout" hgap="0" vgap="5" flow-align="0">
-                    <constraints>
-                      <grid row="11" column="1" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
-                      <gridbag top="5" left="5" bottom="5" right="5" weightx="0.0" weighty="0.0"/>
-                    </constraints>
-                    <properties/>
-                    <border type="none"/>
-                    <children>
-                      <component id="d2201" class="rma.swing.RmaJDateTimeField" binding="_startDateChooser">
-                        <constraints/>
-                        <properties>
-                          <enabled value="true"/>
-                          <preferredSize width="120" height="26"/>
-                          <text value="01Nov1921 0000"/>
-                        </properties>
-                      </component>
-                      <component id="164a5" class="javax.swing.JLabel">
-                        <constraints/>
-                        <properties>
-                          <text value="  Start "/>
-                        </properties>
-                      </component>
-                      <component id="10c02" class="rma.swing.RmaJDateTimeField" binding="_endDateChooser">
-                        <constraints/>
-                        <properties>
-                          <preferredSize width="120" height="26"/>
-                          <text value="01Oct2003 0100"/>
-                        </properties>
-                      </component>
-                      <component id="18d08" class="javax.swing.JLabel">
-                        <constraints/>
-                        <properties>
-                          <text value=" End"/>
-                        </properties>
-                      </component>
-                    </children>
-                  </grid>
-                  <component id="f4195" class="javax.swing.JButton" binding="_openReportButton">
-                    <constraints>
-                      <grid row="6" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="4" fill="0" indent="0" use-parent-layout="false"/>
-                      <gridbag top="0" left="0" bottom="0" right="5" weightx="0.0" weighty="0.0"/>
-                    </constraints>
-                    <properties>
-                      <maximumSize width="120" height="26"/>
-                      <minimumSize width="120" height="26"/>
-                      <preferredSize width="120" height="26"/>
-                      <text value="Open Report"/>
-                    </properties>
-                  </component>
-                  <component id="16a19" class="javax.swing.JLabel">
-                    <constraints>
-                      <grid row="3" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
-                      <gridbag top="5" left="5" bottom="5" right="5" weightx="0.0" weighty="0.0"/>
-                    </constraints>
-                    <properties>
-                      <text value="QA/QC Report Title:"/>
-                    </properties>
-                  </component>
-                  <component id="70f56" class="javax.swing.JTextField" binding="_reportTitle">
-                    <constraints>
-                      <grid row="3" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
-                        <preferred-size width="150" height="-1"/>
-                      </grid>
-                      <gridbag top="5" left="5" bottom="5" right="5" weightx="1.0" weighty="0.0"/>
-                    </constraints>
-                    <properties>
-                      <text value="EPPT QA/QC Report"/>
-                    </properties>
-                  </component>
-                  <grid id="171ae" layout-manager="BorderLayout" hgap="5" vgap="5">
-                    <constraints>
-                      <grid row="1" column="1" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
-                      <gridbag top="5" left="5" bottom="5" right="5" weightx="0.0" weighty="0.0"/>
-                    </constraints>
-                    <properties/>
-                    <border type="none"/>
-                    <children>
-                      <grid id="39d2d" layout-manager="GridBagLayout">
-                        <constraints border-constraint="Center"/>
-                        <properties/>
-                        <border type="none"/>
-                        <children>
-                          <component id="b4bb4" class="javax.swing.JTextField" binding="_altScenarioTextField">
-                            <constraints>
-                              <grid row="0" column="0" row-span="1" col-span="2" vsize-policy="3" hsize-policy="0" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
-                              <gridbag weightx="0.8" weighty="0.0"/>
-                            </constraints>
-                            <properties>
-                              <editable value="false"/>
-                              <preferredSize width="251" height="26"/>
-                              <text value="Alternative"/>
-                            </properties>
-                          </component>
-                          <component id="457ec" class="javax.swing.JLabel" binding="_altWreslDiffWarningLabel">
-                            <constraints>
-                              <grid row="1" column="0" row-span="1" col-span="2" vsize-policy="3" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
-                              <gridbag weightx="0.8" weighty="0.0"/>
-                            </constraints>
-                            <properties>
-                              <maximumSize width="251" height="16"/>
-                              <minimumSize width="251" height="16"/>
-                              <preferredSize width="251" height="16"/>
-                              <text value="*WRESL Script Directory differs from installation"/>
-                              <visible value="true"/>
-                            </properties>
-                          </component>
-                          <component id="8d837" class="javax.swing.JButton" binding="_overwriteScriptsButtonAlt">
-                            <constraints>
-                              <grid row="1" column="2" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="4" fill="0" indent="0" use-parent-layout="false"/>
-                              <gridbag weightx="0.2" weighty="0.0"/>
-                            </constraints>
-                            <properties>
-                              <maximumSize width="120" height="26"/>
-                              <minimumSize width="120" height="26"/>
-                              <preferredSize width="120" height="26"/>
-                              <text value="Overwrite Scripts"/>
-                            </properties>
-                          </component>
-                          <component id="3c882" class="javax.swing.JButton" binding="_runAltWreslButton">
-                            <constraints>
-                              <grid row="0" column="2" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="4" fill="0" indent="0" use-parent-layout="false"/>
-                              <gridbag weightx="0.2" weighty="0.0"/>
-                            </constraints>
-                            <properties>
-                              <enabled value="false"/>
-                              <maximumSize width="120" height="26"/>
-                              <minimumSize width="120" height="26"/>
-                              <preferredSize width="120" height="26"/>
-                              <text value="Run WRESL"/>
-                            </properties>
-                          </component>
-                        </children>
-                      </grid>
-                    </children>
-                  </grid>
-                  <component id="9f6f9" class="javax.swing.JLabel">
-                    <constraints>
-                      <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="1" fill="1" indent="0" use-parent-layout="false"/>
-                      <gridbag top="10" left="5" bottom="5" right="5" weightx="0.0" weighty="0.0"/>
-                    </constraints>
-                    <properties>
-                      <text value="Alternative Scenario Run:"/>
+                      <editable value="false"/>
+                      <enabled value="true"/>
                     </properties>
                   </component>
                 </children>
-              </grid>
+              </scrollpane>
+              <scrollpane id="c6c77">
+                <constraints>
+                  <tabbedpane title="Alternative"/>
+                </constraints>
+                <properties/>
+                <border type="none"/>
+                <children>
+                  <component id="7565f" class="javax.swing.JTextPane" binding="_altWreslTextPane">
+                    <constraints/>
+                    <properties>
+                      <editable value="false"/>
+                      <enabled value="true"/>
+                    </properties>
+                  </component>
+                </children>
+              </scrollpane>
             </children>
-          </grid>
+          </tabbedpane>
+        </children>
+      </grid>
+      <grid id="88667" layout-manager="BorderLayout" hgap="0" vgap="0">
+        <constraints border-constraint="West"/>
+        <properties/>
+        <border type="none"/>
+        <children>
           <grid id="ee1ef" layout-manager="BorderLayout" hgap="0" vgap="0">
             <constraints border-constraint="Center"/>
             <properties>
               <preferredSize width="400" height="200"/>
             </properties>
-            <border type="etched" title="QA/QC Report Controls"/>
+            <border type="etched" title="QA/QC Report Sections"/>
             <children>
               <grid id="67e7f" layout-manager="BorderLayout" hgap="0" vgap="0">
-                <constraints border-constraint="West"/>
+                <constraints border-constraint="Center"/>
                 <properties>
                   <preferredSize width="300" height="270"/>
                 </properties>
@@ -562,130 +301,268 @@
                   </grid>
                 </children>
               </grid>
-              <grid id="cff3f" layout-manager="BorderLayout" hgap="0" vgap="0">
-                <constraints border-constraint="Center"/>
+              <grid id="d7e8a" layout-manager="FlowLayout" hgap="5" vgap="5" flow-align="2">
+                <constraints border-constraint="South"/>
                 <properties/>
                 <border type="none"/>
                 <children>
-                  <grid id="7fb4f" layout-manager="BorderLayout" hgap="0" vgap="0">
-                    <constraints border-constraint="West"/>
+                  <component id="cfdad" class="javax.swing.JButton" binding="_overwriteJRXMLButton" default-binding="true">
+                    <constraints/>
                     <properties>
-                      <preferredSize width="350" height="300"/>
+                      <text value="Update Report Templates"/>
                     </properties>
-                    <border type="none"/>
-                    <children>
-                      <grid id="3f5ca" layout-manager="GridBagLayout">
-                        <constraints border-constraint="North"/>
-                        <properties/>
-                        <border type="none"/>
-                        <children>
-                          <component id="dcc10" class="javax.swing.JLabel">
-                            <constraints>
-                              <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
-                              <gridbag top="5" left="5" bottom="5" right="5" weightx="0.0" weighty="0.0"/>
-                            </constraints>
-                            <properties>
-                              <text value="Water Year Definition:"/>
-                            </properties>
-                          </component>
-                          <component id="adf90" class="javax.swing.JLabel">
-                            <constraints>
-                              <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
-                              <gridbag top="5" left="5" bottom="5" right="5" weightx="0.0" weighty="0.0"/>
-                            </constraints>
-                            <properties>
-                              <text value="Water Year Index:"/>
-                            </properties>
-                          </component>
-                          <component id="4cb16" class="javax.swing.JComboBox" binding="_waterYearDefinitionCombo">
-                            <constraints>
-                              <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="2" anchor="8" fill="1" indent="0" use-parent-layout="false"/>
-                              <gridbag top="5" left="5" bottom="5" right="5" weightx="0.8" weighty="0.0"/>
-                            </constraints>
-                            <properties>
-                              <enabled value="true"/>
-                            </properties>
-                          </component>
-                          <component id="f38e7" class="javax.swing.JComboBox" binding="_waterYearIndexCombo">
-                            <constraints>
-                              <grid row="1" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="2" anchor="8" fill="1" indent="0" use-parent-layout="false"/>
-                              <gridbag top="5" left="5" bottom="5" right="5" weightx="0.8" weighty="0.0"/>
-                            </constraints>
-                            <properties>
-                              <enabled value="false"/>
-                            </properties>
-                          </component>
-                        </children>
+                  </component>
+                </children>
+              </grid>
+            </children>
+          </grid>
+          <grid id="a4df6" layout-manager="BorderLayout" hgap="0" vgap="0">
+            <constraints border-constraint="North"/>
+            <properties/>
+            <border type="none"/>
+            <children>
+              <grid id="57c46" layout-manager="GridBagLayout">
+                <constraints border-constraint="South"/>
+                <properties/>
+                <border type="none"/>
+                <children>
+                  <component id="19187" class="javax.swing.JLabel">
+                    <constraints>
+                      <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+                      <gridbag top="5" left="5" bottom="5" right="5" weightx="0.1" weighty="0.0"/>
+                    </constraints>
+                    <properties>
+                      <text value="Author:"/>
+                    </properties>
+                  </component>
+                  <component id="a8861" class="javax.swing.JTextField" binding="_authorTextField">
+                    <constraints>
+                      <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
+                        <preferred-size width="150" height="-1"/>
                       </grid>
-                      <component id="3762f" class="gov.ca.water.quickresults.ui.report.WaterYearPeriodsPanel" binding="_waterYearPeriodsPanel" custom-create="true">
-                        <constraints border-constraint="Center"/>
-                        <properties>
-                          <enabled value="true"/>
-                        </properties>
-                      </component>
-                    </children>
-                  </grid>
+                      <gridbag top="5" left="5" bottom="5" right="5" weightx="0.8" weighty="0.0"/>
+                    </constraints>
+                    <properties/>
+                  </component>
+                  <component id="8449d" class="javax.swing.JLabel">
+                    <constraints>
+                      <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+                      <gridbag top="5" left="5" bottom="5" right="5" weightx="0.0" weighty="0.0"/>
+                    </constraints>
+                    <properties>
+                      <text value="QA/QC Report Title:"/>
+                    </properties>
+                  </component>
+                  <component id="6f394" class="javax.swing.JTextField" binding="_reportTitle">
+                    <constraints>
+                      <grid row="1" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
+                        <preferred-size width="150" height="-1"/>
+                      </grid>
+                      <gridbag top="5" left="5" bottom="5" right="5" weightx="1.0" weighty="0.0"/>
+                    </constraints>
+                    <properties>
+                      <text value="EPPT QA/QC Report"/>
+                    </properties>
+                  </component>
+                  <component id="dea0c" class="javax.swing.JLabel">
+                    <constraints>
+                      <grid row="2" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+                      <gridbag top="5" left="5" bottom="5" right="5" weightx="0.0" weighty="0.0"/>
+                    </constraints>
+                    <properties>
+                      <text value="QA/QC Report Subtitle:"/>
+                    </properties>
+                  </component>
+                  <component id="a349d" class="javax.swing.JTextField" binding="_reportSubtitle">
+                    <constraints>
+                      <grid row="2" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
+                        <preferred-size width="150" height="-1"/>
+                      </grid>
+                      <gridbag top="5" left="5" bottom="5" right="5" weightx="1.0" weighty="0.0"/>
+                    </constraints>
+                    <properties>
+                      <text value=""/>
+                    </properties>
+                  </component>
+                  <component id="5f36d" class="javax.swing.JLabel">
+                    <constraints>
+                      <grid row="3" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+                      <gridbag top="5" left="5" bottom="5" right="5" weightx="0.0" weighty="0.0"/>
+                    </constraints>
+                    <properties>
+                      <text value="DSS Compare Tolerance:"/>
+                    </properties>
+                  </component>
+                  <component id="63074" class="javax.swing.JTextField" binding="_toleranceTextField" custom-create="true">
+                    <constraints>
+                      <grid row="3" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
+                        <preferred-size width="150" height="-1"/>
+                      </grid>
+                      <gridbag top="5" left="5" bottom="5" right="5" weightx="0.0" weighty="0.0"/>
+                    </constraints>
+                    <properties>
+                      <text value=""/>
+                    </properties>
+                  </component>
+                  <component id="d22cb" class="javax.swing.JLabel">
+                    <constraints>
+                      <grid row="4" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+                      <gridbag top="5" left="5" bottom="5" right="5" weightx="0.0" weighty="0.0"/>
+                    </constraints>
+                    <properties>
+                      <text value="Percent Diff Format:"/>
+                    </properties>
+                  </component>
+                  <component id="3b161" class="javax.swing.JComboBox" binding="_percentDiffStyle">
+                    <constraints>
+                      <grid row="4" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="2" anchor="8" fill="1" indent="0" use-parent-layout="false"/>
+                      <gridbag top="5" left="5" bottom="5" right="5" weightx="0.0" weighty="0.0"/>
+                    </constraints>
+                    <properties>
+                      <preferredSize width="91" height="26"/>
+                    </properties>
+                  </component>
+                </children>
+              </grid>
+              <grid id="f3c84" layout-manager="GridBagLayout">
+                <constraints border-constraint="Center"/>
+                <properties/>
+                <border type="none" title="Scenario Runs"/>
+                <children>
+                  <component id="beb3c" class="javax.swing.JLabel">
+                    <constraints>
+                      <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="1" fill="1" indent="0" use-parent-layout="false"/>
+                      <gridbag top="10" left="5" bottom="5" right="5" weightx="0.0" weighty="0.0"/>
+                    </constraints>
+                    <properties>
+                      <text value="Base:"/>
+                    </properties>
+                  </component>
+                  <hspacer id="a7d5d">
+                    <constraints>
+                      <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="1" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+                      <gridbag weightx="0.0" weighty="0.0"/>
+                    </constraints>
+                  </hspacer>
+                  <vspacer id="3f20">
+                    <constraints>
+                      <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="6" hsize-policy="1" anchor="0" fill="2" indent="0" use-parent-layout="false"/>
+                      <gridbag weightx="0.0" weighty="0.0"/>
+                    </constraints>
+                  </vspacer>
+                  <component id="22222" class="javax.swing.JTextField" binding="_baseScenarioTextField">
+                    <constraints>
+                      <grid row="0" column="2" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+                      <gridbag top="5" left="5" bottom="5" right="5" weightx="0.8" weighty="0.0"/>
+                    </constraints>
+                    <properties>
+                      <editable value="false"/>
+                      <opaque value="true"/>
+                      <preferredSize width="251" height="26"/>
+                      <text value="Base"/>
+                    </properties>
+                  </component>
+                  <component id="dfb8c" class="javax.swing.JButton" binding="_runBaseWreslButton">
+                    <constraints>
+                      <grid row="0" column="3" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="4" fill="0" indent="0" use-parent-layout="false"/>
+                      <gridbag top="2" left="2" bottom="2" right="2" weightx="0.0" weighty="0.0"/>
+                    </constraints>
+                    <properties>
+                      <enabled value="false"/>
+                      <maximumSize width="120" height="26"/>
+                      <minimumSize width="120" height="26"/>
+                      <preferredSize width="90" height="26"/>
+                      <text value="Run WRESL"/>
+                    </properties>
+                  </component>
+                  <component id="bad34" class="javax.swing.JLabel" binding="_baseWreslDiffWarningLabel">
+                    <constraints>
+                      <grid row="1" column="2" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+                      <gridbag top="5" left="5" bottom="5" right="5" weightx="0.8" weighty="0.0"/>
+                    </constraints>
+                    <properties>
+                      <maximumSize width="251" height="16"/>
+                      <minimumSize width="251" height="16"/>
+                      <preferredSize width="251" height="16"/>
+                      <text value="*WRESL Script Directory differs from installation"/>
+                    </properties>
+                  </component>
+                  <component id="9f6f9" class="javax.swing.JLabel">
+                    <constraints>
+                      <grid row="2" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="1" fill="1" indent="0" use-parent-layout="false"/>
+                      <gridbag top="10" left="5" bottom="5" right="5" weightx="0.0" weighty="0.0"/>
+                    </constraints>
+                    <properties>
+                      <text value="Alternative:"/>
+                    </properties>
+                  </component>
+                  <component id="e2de8" class="javax.swing.JButton" binding="_overwriteScriptsButtonBase">
+                    <constraints>
+                      <grid row="0" column="4" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="4" fill="0" indent="0" use-parent-layout="false"/>
+                      <gridbag top="2" left="2" bottom="2" right="2" weightx="0.2" weighty="0.0"/>
+                    </constraints>
+                    <properties>
+                      <maximumSize width="120" height="26"/>
+                      <minimumSize width="120" height="26"/>
+                      <preferredSize width="120" height="26"/>
+                      <text value="Overwrite Scripts"/>
+                    </properties>
+                  </component>
+                  <component id="3c882" class="javax.swing.JButton" binding="_runAltWreslButton">
+                    <constraints>
+                      <grid row="2" column="3" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="4" fill="0" indent="0" use-parent-layout="false"/>
+                      <gridbag top="2" left="2" bottom="2" right="2" weightx="0.2" weighty="0.0"/>
+                    </constraints>
+                    <properties>
+                      <enabled value="false"/>
+                      <maximumSize width="120" height="26"/>
+                      <minimumSize width="120" height="26"/>
+                      <preferredSize width="90" height="26"/>
+                      <text value="Run WRESL"/>
+                    </properties>
+                  </component>
+                  <component id="8d837" class="javax.swing.JButton" binding="_overwriteScriptsButtonAlt">
+                    <constraints>
+                      <grid row="2" column="4" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="4" fill="0" indent="0" use-parent-layout="false"/>
+                      <gridbag top="2" left="2" bottom="2" right="2" weightx="0.2" weighty="0.0"/>
+                    </constraints>
+                    <properties>
+                      <maximumSize width="120" height="26"/>
+                      <minimumSize width="120" height="26"/>
+                      <preferredSize width="120" height="26"/>
+                      <text value="Overwrite Scripts"/>
+                    </properties>
+                  </component>
+                  <component id="b4bb4" class="javax.swing.JTextField" binding="_altScenarioTextField">
+                    <constraints>
+                      <grid row="2" column="2" row-span="1" col-span="1" vsize-policy="3" hsize-policy="0" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+                      <gridbag top="5" left="5" bottom="5" right="5" weightx="0.8" weighty="0.0"/>
+                    </constraints>
+                    <properties>
+                      <editable value="false"/>
+                      <preferredSize width="251" height="26"/>
+                      <text value="Alternative"/>
+                    </properties>
+                  </component>
+                  <component id="457ec" class="javax.swing.JLabel" binding="_altWreslDiffWarningLabel">
+                    <constraints>
+                      <grid row="3" column="2" row-span="1" col-span="2" vsize-policy="3" hsize-policy="0" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+                      <gridbag top="5" left="5" bottom="5" right="5" weightx="0.8" weighty="0.0"/>
+                    </constraints>
+                    <properties>
+                      <maximumSize width="251" height="16"/>
+                      <minimumSize width="251" height="16"/>
+                      <preferredSize width="251" height="16"/>
+                      <text value="*WRESL Script Directory differs from installation"/>
+                      <visible value="true"/>
+                    </properties>
+                  </component>
                 </children>
               </grid>
             </children>
           </grid>
         </children>
       </grid>
-      <tabbedpane id="4d4b5" binding="_tabbedPane1" default-binding="true">
-        <constraints border-constraint="Center"/>
-        <properties/>
-        <border type="none"/>
-        <children>
-          <scrollpane id="9cfeb">
-            <constraints>
-              <tabbedpane title="QA/QC"/>
-            </constraints>
-            <properties/>
-            <border type="none"/>
-            <children>
-              <component id="4aa50" class="javax.swing.JTextPane" binding="_qaqcTextPane">
-                <constraints/>
-                <properties>
-                  <editable value="false"/>
-                  <preferredSize width="800" height="250"/>
-                </properties>
-              </component>
-            </children>
-          </scrollpane>
-          <scrollpane id="e0c2e">
-            <constraints>
-              <tabbedpane title="Base"/>
-            </constraints>
-            <properties/>
-            <border type="none"/>
-            <children>
-              <component id="6aed1" class="javax.swing.JTextPane" binding="_baseWreslTextPane">
-                <constraints/>
-                <properties>
-                  <editable value="false"/>
-                  <enabled value="true"/>
-                </properties>
-              </component>
-            </children>
-          </scrollpane>
-          <scrollpane id="c6c77">
-            <constraints>
-              <tabbedpane title="Alternative"/>
-            </constraints>
-            <properties/>
-            <border type="none"/>
-            <children>
-              <component id="7565f" class="javax.swing.JTextPane" binding="_altWreslTextPane">
-                <constraints/>
-                <properties>
-                  <editable value="false"/>
-                  <enabled value="true"/>
-                </properties>
-              </component>
-            </children>
-          </scrollpane>
-        </children>
-      </tabbedpane>
     </children>
   </grid>
 </form>

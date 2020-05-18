@@ -18,7 +18,6 @@ import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.CompletableFuture;
@@ -26,13 +25,13 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Stream;
-
 import javax.swing.*;
 
 import gov.ca.water.calgui.constant.EpptPreferences;
-import gov.ca.water.calgui.project.EpptProject;
 import gov.ca.water.calgui.project.EpptScenarioRun;
-import gov.ca.water.quickresults.ui.projectconfig.ProjectConfigurationPanel;
+import gov.ca.water.eppt.nbui.EpptControllerProvider;
+import gov.ca.water.eppt.nbui.projectconfig.ProjectConfigurationIO;
+import gov.ca.water.calgui.project.EpptConfigurationController;
 import org.openide.awt.ActionID;
 import org.openide.awt.ActionReference;
 import org.openide.awt.ActionReferences;
@@ -41,9 +40,6 @@ import org.openide.util.NbBundle.Messages;
 import org.openide.windows.WindowManager;
 
 import hec.heclib.dss.HecDSSFileAccess;
-import hec.heclib.dss.HecDSSFileData;
-import hec.heclib.dss.HecDSSFileDataManager;
-import hec.heclib.util.Heclib;
 
 import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
 import static java.util.stream.Collectors.toList;
@@ -80,12 +76,12 @@ public final class SaveAsProjectConfiguration implements ActionListener
 
 	private void saveAs() throws IOException
 	{
-		ProjectConfigurationPanel projectConfigurationPanel = ProjectConfigurationPanel.getProjectConfigurationPanel();
+		EpptConfigurationController epptConfigurationController = EpptControllerProvider.getEpptConfigurationController();
 		NewProjectDialog newProjectDialog = new NewProjectDialog();
-		String newProjectName = projectConfigurationPanel.getProjectName() + " (1)";
+		String newProjectName = epptConfigurationController.getProjectName() + " (1)";
 		newProjectDialog.setTitle("Clone Project");
 		newProjectDialog.setName(newProjectName);
-		newProjectDialog.setDescription(projectConfigurationPanel.getProjectDescription());
+		newProjectDialog.setDescription(epptConfigurationController.getProjectDescription());
 		newProjectDialog.setVisible(true);
 		if(!newProjectDialog.isCanceled())
 		{
@@ -103,11 +99,11 @@ public final class SaveAsProjectConfiguration implements ActionListener
 				jDialog.pack();
 				jDialog.setSize(790, 72);
 				jDialog.setLocationRelativeTo(mainWindow);
-				List<Path> blacklist = projectConfigurationPanel.getAllEpptScenarioRuns()
-																.stream()
-																.map(EpptScenarioRun::getPostProcessDss)
-																.filter(Objects::nonNull)
-																.collect(java.util.stream.Collectors.toList());
+				List<Path> blacklist = epptConfigurationController.getScenarioRuns()
+																  .stream()
+																  .map(EpptScenarioRun::getPostProcessDss)
+																  .filter(Objects::nonNull)
+																  .collect(java.util.stream.Collectors.toList());
 				Path reportsDir = lastConfigurationParentFolder.resolve("Reports");
 				if(reportsDir.toFile().exists())
 				{
@@ -133,8 +129,12 @@ public final class SaveAsProjectConfiguration implements ActionListener
 				});
 				jDialog.setVisible(true);
 			}
-			projectConfigurationPanel.saveAsConfigurationToPath(projectPath, newProjectDialog.getName(), newProjectDialog.getDescription());
-			projectConfigurationPanel.loadProjectConfiguration(EpptPreferences.getLastProjectConfiguration());
+			ProjectConfigurationIO projectConfigurationIO = new ProjectConfigurationIO();
+			Path projectFile = projectPath.resolve(newProjectDialog.getName() + ".eppt");
+			epptConfigurationController.setProjectName(newProjectDialog.getName());
+			epptConfigurationController.setProjectDescription(newProjectDialog.getDescription());
+			projectConfigurationIO.saveConfiguration(epptConfigurationController, projectFile);
+			EpptControllerProvider.setEpptController(projectFile);
 			SaveProjectConfiguration.clearSaveCookie();
 		}
 	}

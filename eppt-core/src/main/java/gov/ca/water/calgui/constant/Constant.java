@@ -147,6 +147,7 @@ public final class Constant
 	static final String MODEL_DIR = "Model_w2";
 	static final String MODEL_DSS_DIR = "DSS_Files";
 	static final String REPORTS_DIR = "Reports";
+	private static final double DWR_INVALID_VALUE = -3.402823466E38;
 
 
 	private Constant()
@@ -196,7 +197,7 @@ public final class Constant
 		boolean retval = true;
 		if(value != null)
 		{
-			retval = RMAConst.isValidValue(value) && value != -3.402823466E38;
+			retval = RMAConst.isValidValue(value) && value != DWR_INVALID_VALUE;
 		}
 		return retval;
 	}

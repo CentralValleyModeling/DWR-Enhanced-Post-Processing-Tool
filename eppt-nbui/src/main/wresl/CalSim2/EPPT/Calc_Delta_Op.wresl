@@ -60,7 +60,7 @@ define CALAVERAS_FLOW {value C514-C417A}
 /************************* DSS OUTPUT **************************/ 
 !Negative Carriage Water
 define CALAVERAS_FLOW_   {alias CALAVERAS_FLOW    kind 'DTS-DELTA-OP-VALUE' units 'TAF'}
-define NegativeCW_CHECK_ { alias NegativeCW_CHECK kind 'DTS-DELTA-OP-VALUE'  units 'NONE' }
+define NegativeCW_CHECK_ { alias NegativeCW_CHECK kind 'DTS-DELTA-OP-STATUS'  units 'NONE' }
 define JONES_EXP2_CHECK_ { alias JONES_EXP2_CHECK kind 'DTS-DELTA-OP-STATUS' units 'NONE' }
 define BANKS_EXP2_CHECK_ { alias BANKS_EXP2_CHECK kind 'DTS-DELTA-OP-STATUS' units 'NONE' }
 

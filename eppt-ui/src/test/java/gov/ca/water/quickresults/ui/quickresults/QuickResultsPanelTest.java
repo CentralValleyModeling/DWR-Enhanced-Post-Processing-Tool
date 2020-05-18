@@ -17,6 +17,9 @@ import java.nio.file.Paths;
 
 import gov.ca.water.calgui.EpptInitializationException;
 import gov.ca.water.calgui.busservice.impl.GuiLinksSeedDataSvcImpl;
+import gov.ca.water.calgui.busservice.impl.WaterYearDefinitionSvc;
+import gov.ca.water.calgui.busservice.impl.WaterYearIndexAliasReader;
+import gov.ca.water.calgui.project.EpptConfigurationController;
 import org.apache.log4j.Logger;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -41,12 +44,15 @@ public class QuickResultsPanelTest
 		Path target = Paths.get(System.getProperty("user.dir")).resolve("target").resolve("test-classes");
 		System.setProperty("user.dir", target.toString());
 		GuiLinksSeedDataSvcImpl.createSeedDataSvcImplInstance();
+		WaterYearDefinitionSvc.createSeedDataSvcImplInstance();
+		WaterYearIndexAliasReader.createInstance();
 	}
 
 	@Test
 	public void testQuickResultsPanelCreation()
 	{
-		QuickResultsPanel quickResultsPanel = new QuickResultsPanel();
+		EpptConfigurationController epptConfigurationController = new EpptConfigurationController();
+		QuickResultsPanel quickResultsPanel = new QuickResultsPanel(epptConfigurationController);
 		assertFalse(quickResultsPanel.getComponents().length == 0);
 		assertNotNull(quickResultsPanel.getReportsJList());
 		assertNotNull(quickResultsPanel.getSwingEngine());

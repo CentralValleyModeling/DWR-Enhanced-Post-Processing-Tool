@@ -37,7 +37,7 @@ public class WaterYearPeriod
 	@Override
 	public String toString()
 	{
-		return _period + " Periods";
+		return _period;
 	}
 
 	@Override

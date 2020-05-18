@@ -13,9 +13,13 @@ import java.nio.file.Paths;
 import javax.swing.*;
 
 import gov.ca.water.calgui.EpptInitializationException;
+import gov.ca.water.calgui.busservice.impl.EpptReportingMonths;
 import gov.ca.water.calgui.busservice.impl.GuiLinksSeedDataSvcImpl;
+import gov.ca.water.calgui.busservice.impl.ScriptedEpptStatistics;
 import gov.ca.water.calgui.busservice.impl.ThresholdLinksSeedDataSvc;
 import gov.ca.water.calgui.busservice.impl.WaterYearDefinitionSvc;
+import gov.ca.water.calgui.busservice.impl.WaterYearIndexAliasReader;
+import gov.ca.water.calgui.busservice.impl.WaterYearPeriodReader;
 import gov.ca.water.calgui.techservice.impl.DialogSvcImpl;
 
 import static org.junit.jupiter.api.Assertions.fail;
@@ -35,7 +39,7 @@ public abstract class EpptScaffold
 		System.setProperty("user.dir", userDir);
 	}
 
-	abstract protected EpptPanel buildEpptPanel();
+	abstract protected JComponent buildEpptPanel();
 
 	public final void initScaffold() throws EpptInitializationException
 	{
@@ -51,7 +55,12 @@ public abstract class EpptScaffold
 		GuiLinksSeedDataSvcImpl.createSeedDataSvcImplInstance();
 		WaterYearDefinitionSvc.createSeedDataSvcImplInstance();
 		ThresholdLinksSeedDataSvc.createSeedDataSvcImplInstance();
-		EpptPanel epptPanel = buildEpptPanel();
+		EpptReportingMonths.createTrendReportingMonthsInstance();
+		WaterYearDefinitionSvc.createSeedDataSvcImplInstance();
+		WaterYearPeriodReader.createInstance();
+		ScriptedEpptStatistics.createScriptedStatistics();
+		WaterYearIndexAliasReader.createInstance();
+		JComponent epptPanel = buildEpptPanel();
 		JFrame jFrame = new JFrame();
 		jFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		SwingUtilities.invokeLater(() ->
@@ -61,47 +70,9 @@ public abstract class EpptScaffold
 			JScrollPane scrollPane = new JScrollPane();
 			scrollPane.setViewportView(epptPanel);
 			jFrame.add(scrollPane, BorderLayout.CENTER);
-//			jFrame.add(buildUiManagerPanel(jFrame), BorderLayout.NORTH);
 			jFrame.pack();
 			jFrame.setVisible(true);
 		});
-	}
-
-	private JPanel buildUiManagerPanel(JFrame jFrame)
-	{
-		JPanel panel = new JPanel();
-		JComboBox<UIManager.LookAndFeelInfo> uiCombo = new JComboBox<>();
-		UIManager.installLookAndFeel("SeaGlassLookAndFeel", "com.seaglasslookandfeel.SeaGlassLookAndFeel");
-		UIManager.installLookAndFeel("SmartLookAndFeel", "com.jtattoo.plaf.smart.SmartLookAndFeel");
-		UIManager.installLookAndFeel("AcrylLookAndFeel", "com.jtattoo.plaf.acryl.AcrylLookAndFeel");
-
-
-		UIManager.LookAndFeelInfo[] installedLookAndFeels = UIManager.getInstalledLookAndFeels();
-		for(UIManager.LookAndFeelInfo laf : installedLookAndFeels)
-		{
-			uiCombo.addItem(laf);
-		}
-		uiCombo.setSelectedItem(UIManager.getSystemLookAndFeelClassName());
-		uiCombo.addActionListener(e ->
-		{
-			try
-			{
-				UIManager.LookAndFeelInfo selectedItem = (UIManager.LookAndFeelInfo) uiCombo.getSelectedItem();
-				if(selectedItem != null)
-				{
-					UIManager.setLookAndFeel(selectedItem.getClassName());
-					SwingUtilities.updateComponentTreeUI(jFrame);
-					jFrame.pack();
-				}
-			}
-			catch(ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException ex)
-			{
-				fail(ex);
-			}
-		});
-		panel.setLayout(new FlowLayout());
-		panel.add(uiCombo);
-		return panel;
 	}
 
 }

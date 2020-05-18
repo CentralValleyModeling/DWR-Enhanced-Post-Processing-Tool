@@ -33,6 +33,7 @@ import gov.ca.water.calgui.bo.ThresholdLinksBO;
 import gov.ca.water.calgui.bo.WaterYearDefinition;
 import gov.ca.water.calgui.constant.Constant;
 import gov.ca.water.calgui.techservice.IFileSystemSvc;
+import gov.ca.water.calgui.techservice.impl.FilePredicates;
 import gov.ca.water.calgui.techservice.impl.FileSystemSvcImpl;
 
 import static gov.ca.water.calgui.constant.Constant.CONFIG_DIR;
@@ -95,17 +96,6 @@ public class WaterYearDefinitionSvc
 		}
 	}
 
-	/**
-	 * This will tell whether the line is comment or not.
-	 *
-	 * @param line The line to be checked.
-	 * @return Will return true if the line id not comment.
-	 */
-	private static boolean isNotComments(String line)
-	{
-		return !line.startsWith(Constant.EXCLAMATION);
-	}
-
 	private void initWaterYearDefinitionSvc() throws EpptInitializationException
 	{
 		IFileSystemSvc fileSystemSvc = new FileSystemSvcImpl();
@@ -113,7 +103,7 @@ public class WaterYearDefinitionSvc
 		try
 		{
 			List<String> thresholdLinkStrings = fileSystemSvc.getFileData(Paths.get(WATER_YEAR_DEFINITION_FILENAME), true,
-					WaterYearDefinitionSvc::isNotComments);
+					FilePredicates.commentFilter());
 			for(String thresholdLinkString : thresholdLinkStrings)
 			{
 				errorStr = thresholdLinkString;

@@ -16,7 +16,7 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import javax.swing.*;
 
@@ -28,6 +28,7 @@ import gov.ca.water.calgui.busservice.impl.WaterYearDefinitionSvc;
 import gov.ca.water.calgui.project.EpptDssContainer;
 import gov.ca.water.calgui.project.EpptScenarioRun;
 import gov.ca.water.calgui.project.NamedDssPath;
+import gov.ca.water.calgui.project.EpptConfigurationController;
 import gov.ca.water.quickresults.ui.report.QAQCReportPanel;
 import org.junit.jupiter.api.Assertions;
 
@@ -71,8 +72,9 @@ public class QAQCScaffold
 				Paths.get("Test.pdf"), Paths.get("target\\test-classes\\dwr_eppt\\wresl\\"), Paths.get("target\\test-classes\\dwr_eppt\\wresl\\lookup\\"), dssContainer, javafx.scene.paint.Color.PINK);
 		EpptScenarioRun altRun = new EpptScenarioRun("Alt", "desc", GUILinksAllModelsBO.Model.findModel("CalSim2"),
 				Paths.get("Test.pdf"), Paths.get("target\\test-classes\\dwr_eppt\\wresl\\"), Paths.get("target\\test-classes\\dwr_eppt\\wresl\\lookup\\"), dssContainer, javafx.scene.paint.Color.PINK);
-		QAQCReportPanel epptPanel = QAQCReportPanel.getInstance();
-		epptPanel.fillScenarioRuns(baseRun, Collections.singletonList(altRun));
+		EpptConfigurationController epptConfigurationController = new EpptConfigurationController();
+		epptConfigurationController.setScenarioRuns(Arrays.asList(baseRun, altRun));
+		QAQCReportPanel epptPanel = new QAQCReportPanel(epptConfigurationController);
 		JFrame jFrame = new JFrame();
 		jFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		SwingUtilities.invokeLater(() ->

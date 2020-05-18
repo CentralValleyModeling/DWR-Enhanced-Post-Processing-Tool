@@ -17,7 +17,6 @@ import java.nio.file.Path;
 import gov.ca.water.calgui.project.NamedDssPath;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ObservableValue;
-import org.w3c.css.sac.ElementSelector;
 
 import com.rma.javafx.treetable.columns.specs.TreeTableColumnSpec;
 
@@ -33,7 +32,7 @@ import static gov.ca.water.quickresults.ui.projectconfig.scenariotable.ScenarioT
  * @author <a href="mailto:adam@rmanet.com">Adam Korynta</a>
  * @since 05-07-2019
  */
-class DssPathRow extends ParentRowModel
+class DssPathRow extends ScenarioTableRowModel
 {
 
 	private final SimpleObjectProperty<String> _nameProperty;
@@ -43,7 +42,7 @@ class DssPathRow extends ParentRowModel
 	private final SimpleObjectProperty<String> _aTypeProperty;
 	private final SimpleObjectProperty<String> _fTypeProperty;
 
-	DssPathRow(ParentRowModel parent, NamedDssPath namedDssPath, String type)
+	DssPathRow(ScenarioTableRowModel parent, NamedDssPath namedDssPath, String type)
 	{
 		super(parent);
 		_nameProperty = new SimpleObjectProperty<>(namedDssPath.getAliasName());

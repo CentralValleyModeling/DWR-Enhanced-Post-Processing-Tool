@@ -17,26 +17,25 @@ import java.awt.Container;
 import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.*;
 
 import gov.ca.water.calgui.bo.GUILinksAllModelsBO;
 import gov.ca.water.calgui.bo.ResultUtilsBO;
 import gov.ca.water.calgui.busservice.impl.GuiLinksSeedDataSvcImpl;
 import gov.ca.water.calgui.presentation.DisplayHelper;
+import gov.ca.water.calgui.presentation.plotly.EpptPlotException;
+import gov.ca.water.calgui.project.EpptConfigurationController;
 import gov.ca.water.calgui.project.EpptScenarioRun;
 import gov.ca.water.calgui.project.PlotConfigurationState;
 import gov.ca.water.calgui.techservice.IDialogSvc;
-import gov.ca.water.calgui.techservice.IErrorHandlingSvc;
 import gov.ca.water.calgui.techservice.impl.DialogSvcImpl;
-import gov.ca.water.calgui.techservice.impl.ErrorHandlingSvcImpl;
 import gov.ca.water.quickresults.ui.EpptPanel;
-import gov.ca.water.quickresults.ui.projectconfig.ProjectConfigurationPanel;
-import org.apache.log4j.Logger;
 
 import static java.util.stream.Collectors.toList;
 
@@ -51,10 +50,12 @@ public class QuickResultsListener implements ActionListener
 {
 	private static final Logger LOGGER = Logger.getLogger(QuickResultsListener.class.getName());
 	private final QuickResultsPanel _quickResultsPanel;
+	private final EpptConfigurationController _epptConfigurationController;
 
-	public QuickResultsListener(QuickResultsPanel quickResultsPanel)
+	public QuickResultsListener(QuickResultsPanel quickResultsPanel, EpptConfigurationController epptConfigurationController)
 	{
 		_quickResultsPanel = quickResultsPanel;
+		_epptConfigurationController = epptConfigurationController;
 	}
 
 	@Override
@@ -80,8 +81,6 @@ public class QuickResultsListener implements ActionListener
 			case "AC_Clear":
 				clearSelectedPanelCheckboxes();
 				break;
-			default:
-				LOGGER.debug("Testing action events " + e.getActionCommand());
 		}
 
 	}
@@ -120,10 +119,8 @@ public class QuickResultsListener implements ActionListener
 
 	private void displayReportList()
 	{
-		ProjectConfigurationPanel projectConfigurationPanel = ProjectConfigurationPanel.getProjectConfigurationPanel();
-		List<EpptScenarioRun> alternatives = projectConfigurationPanel.getEpptScenarioAlternatives();
-		EpptScenarioRun baseScenario = projectConfigurationPanel.getBaseScenario();
-		if(baseScenario == null)
+		Optional<EpptScenarioRun> baseScenario = _epptConfigurationController.getEpptScenarioBase();
+		if(!baseScenario.isPresent())
 		{
 			IDialogSvc dialogSvc = DialogSvcImpl.getDialogSvcInstance();
 			dialogSvc.getOK("Error - No Base Scenario defined", JOptionPane.ERROR_MESSAGE);
@@ -134,18 +131,16 @@ public class QuickResultsListener implements ActionListener
 			if(component instanceof JList)
 			{
 				JList<String> lstReports = (JList<String>) component;
-				LocalDate startMonth = projectConfigurationPanel.getStartMonth();
-				LocalDate endMonth = projectConfigurationPanel.getEndMonth();
 				for(int i = 0; i < lstReports.getModel().getSize(); i++)
 				{
 					String elementAt = lstReports.getModel().getElementAt(i);
-					PlotConfigurationState plotConfigurationState = PlotConfigurationState.fromString(elementAt);
+					PlotConfigurationState plotConfigurationState = PlotConfigurationStateBuilder.fromString(elementAt);
 					List<String> locations = parseLocations(elementAt);
 					DisplayHelper displayHelper = _quickResultsPanel.getDisplayHelper();
 					List<GUILinksAllModelsBO> guiLinks = locations.stream()
 																  .map(GuiLinksSeedDataSvcImpl.getSeedDataSvcImplInstance()::getGuiLink)
 																  .collect(toList());
-					displayHelper.showDisplayFramesGuiLink(plotConfigurationState, guiLinks, baseScenario, alternatives, startMonth, endMonth);
+					displayHelper.showDisplayFramesGuiLink(plotConfigurationState, guiLinks);
 				}
 			}
 		}
@@ -225,22 +220,20 @@ public class QuickResultsListener implements ActionListener
 				lstReports.setListData(lstArray1);
 			}
 		}
-		catch(RuntimeException e)
+		catch(RuntimeException | EpptPlotException e)
 		{
-			LOGGER.error(e.getMessage(), e);
-			String messageText = "Unable to display frame.";
-			IErrorHandlingSvc errorHandlingSvc = new ErrorHandlingSvcImpl();
-			errorHandlingSvc.businessErrorHandler(messageText, e);
+			LOGGER.log(Level.SEVERE, "Unable to plot report list.", e);
 		}
 	}
 
-	private String extractReportDescriptor()
+	private String extractReportDescriptor() throws EpptPlotException
 	{
 		StringBuilder cSTOR = new StringBuilder(";Locs-");
 		StringBuilder cSTORIdx = new StringBuilder(";Index-");
 		Component[] components = _quickResultsPanel.getVariables().getComponents();
 		extractCheckBoxes(cSTOR, cSTORIdx, components);
-		return ProjectConfigurationPanel.getProjectConfigurationPanel().quickStateString() + cSTOR + cSTORIdx;
+		return new PlotConfigurationStateBuilder(_quickResultsPanel.getSwingEngine())
+				.createQuickStateString() + cSTOR + cSTORIdx;
 	}
 
 	private void extractCheckBoxes(StringBuilder cSTOR, StringBuilder cSTORIdx, Component[] components)

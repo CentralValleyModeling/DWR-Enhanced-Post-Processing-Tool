@@ -13,7 +13,6 @@
 package gov.ca.water.quickresults.ui.projectconfig;
 
 import java.awt.BorderLayout;
-import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -22,6 +21,7 @@ import javax.swing.*;
 import gov.ca.water.calgui.EpptInitializationException;
 import gov.ca.water.calgui.busservice.impl.GuiLinksSeedDataSvcImpl;
 import gov.ca.water.calgui.project.EpptScenarioRun;
+import gov.ca.water.calgui.project.EpptConfigurationController;
 import gov.ca.water.quickresults.ui.projectconfig.scenarioconfig.ScenarioRunEditor;
 
 /**
@@ -36,9 +36,9 @@ public class ScenarioRunEditorScaffold
 
 	public static void main(String[] args) throws EpptInitializationException
 	{
-		Path target = Paths.get(System.getProperty("user.dir")).resolve("target").resolve(
-				"test-classes");
-		System.setProperty("user.dir", target.toString());
+		String userDir = Paths.get(System.getProperty("user.dir")).resolve(
+				"target/test-classes").toAbsolutePath().toString();
+		System.setProperty("user.dir", userDir);
 		try
 		{
 			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
@@ -57,7 +57,8 @@ public class ScenarioRunEditorScaffold
 			jFrame.setVisible(true);
 			SwingUtilities.invokeLater(() ->
 			{
-				ScenarioRunEditor scenarioRunEditor = new ScenarioRunEditor(jFrame);
+				EpptConfigurationController epptConfigurationController = new EpptConfigurationController();
+				ScenarioRunEditor scenarioRunEditor = new ScenarioRunEditor(jFrame, epptConfigurationController.getScenarioRuns());
 				scenarioRunEditor.setVisible(true);
 				EpptScenarioRun run = scenarioRunEditor.createRun();
 				if(run == null)

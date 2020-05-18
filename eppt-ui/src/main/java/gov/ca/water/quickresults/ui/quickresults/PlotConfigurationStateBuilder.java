@@ -12,26 +12,25 @@
 
 package gov.ca.water.quickresults.ui.quickresults;
 
-import java.awt.Component;
-import java.awt.Container;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import java.util.stream.Collectors;
 import javax.swing.*;
 
+import gov.ca.water.calgui.presentation.plotly.EpptPlotException;
 import gov.ca.water.calgui.project.PlotConfigurationState;
-import gov.ca.water.calgui.techservice.IErrorHandlingSvc;
-import gov.ca.water.calgui.techservice.impl.ErrorHandlingSvcImpl;
 import org.swixml.SwingEngine;
-
-import hec.io.S;
 
 public class PlotConfigurationStateBuilder
 {
-	private static final Logger LOGGER = Logger.getLogger(PlotConfigurationStateBuilder.class.getName());
-	private static IErrorHandlingSvc errorHandlingSvc = new ErrorHandlingSvcImpl();
+	private static final String TIME_SERIES_ALL = "TimeSeriesAll";
+	private static final String TIME_SERIES_AGG = "TimeSeriesAggregate";
+	private static final String EXCEEDANCE_ALL = "ExceedanceAll";
+	private static final String EXCEEDANCE_AGG = "ExceedanceAggregate";
+	private static final String BOX_ALL = "BoxAndWhiskerAll";
+	private static final String BOX_AGG = "BoxAndWhiskerAggregate";
+	private static final String MONTHLY_TABLE = "MonthlyTable";
+	private static final String SUMMARY_TABLE = "SummaryTable";
+	private static final String MONTHLY_LINE = "MonthlyLine";
+	private static final String BAR_GRAPH = "BarGraph";
+
 	private final SwingEngine _swingEngine;
 
 	public PlotConfigurationStateBuilder(SwingEngine swingEngine)
@@ -39,176 +38,106 @@ public class PlotConfigurationStateBuilder
 		_swingEngine = swingEngine;
 	}
 
-	public String createQuickStateString()
+	String createQuickStateString()
 	{
-		try
+		String retval = "";
+		boolean displayTimeSeriesAll = ((JCheckBox) _swingEngine.find(TIME_SERIES_ALL)).isSelected();
+		if(displayTimeSeriesAll)
 		{
-			String cAdd = "";
-			// Base, Comparison and Difference
-			JRadioButton rdb = (JRadioButton) _swingEngine.find("rdbp000");
-			if(rdb.isSelected())
-			{
-				cAdd = cAdd + "Base";
-			}
-
-			rdb = (JRadioButton) _swingEngine.find("rdbp001");
-			if(rdb.isSelected())
-			{
-				cAdd = cAdd + "Comp";
-			}
-
-			rdb = (JRadioButton) _swingEngine.find("rdbp002");
-			if(rdb.isSelected())
-			{
-				cAdd = cAdd + "Diff";
-			}
-			// Units
-			JCheckBox checkBox = (JCheckBox) _swingEngine.find("chkTAF");
-			if(!checkBox.isSelected())
-			{
-				cAdd = cAdd + ";CFS";
-			}
-			else
-			{
-				cAdd = cAdd + ";TAF";
-			}
-
-			// Date
-			JSpinner spnSM = (JSpinner) _swingEngine.find("spnStartMonth");
-			JSpinner spnEM = (JSpinner) _swingEngine.find("spnEndMonth");
-			JSpinner spnSY = (JSpinner) _swingEngine.find("spnStartYear");
-			JSpinner spnEY = (JSpinner) _swingEngine.find("spnEndYear");
-
-			String cDate = spnSM.getValue().toString() + spnSY.getValue().toString();
-			cDate = cDate + "-" + spnEM.getValue().toString() + spnEY.getValue().toString();
-			cAdd = cAdd + ";" + cDate;
-
-			// Time Series
-			JCheckBox ckb = (JCheckBox) _swingEngine.find("RepckbTimeSeriesPlot");
-			if(ckb.isSelected())
-			{
-				cAdd = cAdd + ";TS";
-			}
-
-			Component[] controls2 = ((JPanel) _swingEngine.find("controls2")).getComponents();
-			List<String> exceedanceMonths = new ArrayList<>();
-			addExceedancePlots(exceedanceMonths, controls2);
-			if(!exceedanceMonths.isEmpty())
-			{
-				cAdd = cAdd + ";EX-" + String.join(",", exceedanceMonths);
-			}
-
-			// Boxplot
-			if(((JCheckBox) _swingEngine.find("RepckbBAWPlot")).isSelected())
-			{
-				cAdd = cAdd + ";BP";
-			}
-			// Monthly Table
-			ckb = (JCheckBox) _swingEngine.find("RepckbMonthlyTable");
-			if(ckb.isSelected())
-			{
-				cAdd = cAdd + ";Monthly";
-			}
-
-			// Summary Table
-			JPanel controls3 = (JPanel) _swingEngine.find("controls3");
-			Component[] components = controls3.getComponents();
-			ckb = (JCheckBox) _swingEngine.find("RepckbSummaryTable");
-			if(ckb.isSelected())
-			{
-				StringBuilder cST = new StringBuilder(";ST-");
-				List<String> summaryTables = new ArrayList<>();
-				addSummaryTables(summaryTables, components);
-				cAdd = cAdd + ";ST-" + String.join(",", summaryTables);
-			}
-
-			return cAdd;
+			retval += TIME_SERIES_ALL + ",";
 		}
-		catch(RuntimeException e)
+		boolean displayTimeSeriesAggregate = ((JCheckBox) _swingEngine.find(TIME_SERIES_AGG)).isSelected();
+		if(displayTimeSeriesAggregate)
 		{
-			LOGGER.log(Level.SEVERE, "Error building plot configuration state", e);
-			String messageText = "Unable to display frame.";
-			errorHandlingSvc.businessErrorHandler(messageText, e);
-			return "";
+			retval += TIME_SERIES_AGG + ",";
 		}
+		boolean displayExceedanceAll = ((JCheckBox) _swingEngine.find(EXCEEDANCE_ALL)).isSelected();
+		if(displayExceedanceAll)
+		{
+			retval += EXCEEDANCE_ALL + ",";
+		}
+		boolean displayExceedanceAggregate = ((JCheckBox) _swingEngine.find(EXCEEDANCE_AGG)).isSelected();
+		if(displayExceedanceAggregate)
+		{
+			retval += EXCEEDANCE_AGG + ",";
+		}
+		boolean displayBoxAndWhiskerAll = ((JCheckBox) _swingEngine.find(BOX_ALL)).isSelected();
+		if(displayBoxAndWhiskerAll)
+		{
+			retval += BOX_ALL + ",";
+		}
+		boolean displayBoxAndWhiskerAggregate = ((JCheckBox) _swingEngine.find(BOX_AGG)).isSelected();
+		if(displayBoxAndWhiskerAggregate)
+		{
+			retval += BOX_AGG + ",";
+		}
+		boolean displayMonthlyTable = ((JCheckBox) _swingEngine.find(MONTHLY_TABLE)).isSelected();
+		if(displayMonthlyTable)
+		{
+			retval += MONTHLY_TABLE + ",";
+		}
+		boolean displaySummaryTable = ((JCheckBox) _swingEngine.find(SUMMARY_TABLE)).isSelected();
+		if(displaySummaryTable)
+		{
+			retval += SUMMARY_TABLE + ",";
+		}
+		boolean displayMonthlyLine = ((JCheckBox) _swingEngine.find(MONTHLY_LINE)).isSelected();
+		if(displayMonthlyLine)
+		{
+			retval += MONTHLY_LINE + ",";
+		}
+		boolean displayBarCharts = ((JCheckBox) _swingEngine.find(BAR_GRAPH)).isSelected();
+		if(displayBarCharts)
+		{
+			retval += BAR_GRAPH + ",";
+		}
+		if(!retval.isEmpty())
+		{
+			retval = retval.substring(0, retval.length() - 1);
+		}
+		return "Display-" + retval;
 	}
 
-	public PlotConfigurationState createPlotConfigurationState()
+	public PlotConfigurationState createPlotConfigurationState() throws EpptPlotException
 	{
 		try
 		{
 			// Base, Comparison and Difference
-			PlotConfigurationState.ComparisonType comparisonType = PlotConfigurationState.ComparisonType.BASE;
-			if(((JRadioButton) _swingEngine.find("rdbp001")).isSelected())
-			{
-				comparisonType = PlotConfigurationState.ComparisonType.COMPARISON;
-			}
-			if(((JRadioButton) _swingEngine.find("rdbp002")).isSelected())
-			{
-				comparisonType = PlotConfigurationState.ComparisonType.DIFF;
-			}
-			boolean displayTaf = !((JCheckBox) _swingEngine.find("chkTAF")).isSelected();
-			boolean displayTimeSeriesPlot = ((JCheckBox) _swingEngine.find("RepckbTimeSeriesPlot")).isSelected();
-			boolean displayBoxAndWhisker = ((JCheckBox) _swingEngine.find("RepckbBAWPlot")).isSelected();
-			boolean displayMonthlyTable = ((JCheckBox) _swingEngine.find("RepckbMonthlyTable")).isSelected();
-			boolean displaySummaryTable = ((JCheckBox) _swingEngine.find("RepckbSummaryTable")).isSelected();
-
-			Component[] controls2 = ((JPanel) _swingEngine.find("controls2")).getComponents();
-			List<String> exceedance = new ArrayList<>();
-			addExceedancePlots(exceedance, controls2);
-
-			List<String> summary = new ArrayList<>();
-			// Summary Table
-			if(displaySummaryTable)
-			{
-				Component[] components = ((JPanel) _swingEngine.find("controls3")).getComponents();
-				addSummaryTables(summary, components);
-			}
-			return new PlotConfigurationState(comparisonType, displayTaf, displayTimeSeriesPlot, displayBoxAndWhisker, exceedance,
-					displayMonthlyTable, displaySummaryTable, summary);
+			boolean displayTimeSeriesAll = ((JCheckBox) _swingEngine.find(TIME_SERIES_ALL)).isSelected();
+			boolean displayTimeSeriesAggregate = ((JCheckBox) _swingEngine.find(TIME_SERIES_AGG)).isSelected();
+			boolean displayExceedanceAll = ((JCheckBox) _swingEngine.find(EXCEEDANCE_ALL)).isSelected();
+			boolean displayExceedanceAggregate = ((JCheckBox) _swingEngine.find(EXCEEDANCE_AGG)).isSelected();
+			boolean displayBoxAndWhiskerAll = ((JCheckBox) _swingEngine.find(BOX_ALL)).isSelected();
+			boolean displayBoxAndWhiskerAggregate = ((JCheckBox) _swingEngine.find(BOX_AGG)).isSelected();
+			boolean displayMonthlyTable = ((JCheckBox) _swingEngine.find(MONTHLY_TABLE)).isSelected();
+			boolean displaySummaryTable = ((JCheckBox) _swingEngine.find(SUMMARY_TABLE)).isSelected();
+			boolean displayMonthlyLine = ((JCheckBox) _swingEngine.find(MONTHLY_LINE)).isSelected();
+			boolean displayBarCharts = ((JCheckBox) _swingEngine.find(BAR_GRAPH)).isSelected();
+			return new PlotConfigurationState(displayTimeSeriesAll, displayTimeSeriesAggregate, displayExceedanceAll,
+					displayExceedanceAggregate,
+					displayBoxAndWhiskerAll, displayBoxAndWhiskerAggregate, displayMonthlyTable, displaySummaryTable, displayMonthlyLine,
+					displayBarCharts);
 		}
 		catch(RuntimeException e)
 		{
-			LOGGER.log(Level.SEVERE, "Error building plot configuration state", e);
-			String messageText = "Unable to display frame.";
-			errorHandlingSvc.businessErrorHandler(messageText, e);
-			return null;
+			throw new EpptPlotException("Error building plot configuration state", e);
 		}
 	}
 
-
-	private void addExceedancePlots(List<String> exceedanceMonths, Component[] components)
+	public static PlotConfigurationState fromString(String displayGroup)
 	{
-		for(Component c : components)
-		{
-			if(c instanceof JCheckBox && ((JCheckBox) c).isSelected())
-			{
-				exceedanceMonths.add(((JCheckBox) c).getText());
-			}
-			else if(c instanceof Container)
-			{
-				addExceedancePlots(exceedanceMonths, ((Container) c).getComponents());
-			}
-		}
-	}
-
-	private void addSummaryTables(List<String> summaryTables, Component[] components)
-	{
-		for(final Component component : components)
-		{
-			if(component instanceof JCheckBox)
-			{
-				JCheckBox c = (JCheckBox) component;
-				if(c.isSelected())
-				{
-					String cName = c.getText();
-					summaryTables.add(cName);
-				}
-			}
-			else if(component instanceof Container)
-			{
-				addSummaryTables(summaryTables, ((Container) component).getComponents());
-			}
-		}
+		boolean displayTimeSeriesAll = displayGroup.contains(TIME_SERIES_ALL);
+		boolean displayTimeSeriesAggregate = displayGroup.contains(TIME_SERIES_AGG);
+		boolean displayExceedanceAll = displayGroup.contains(EXCEEDANCE_ALL);
+		boolean displayExceedanceAggregate = displayGroup.contains(EXCEEDANCE_AGG);
+		boolean displayBoxAndWhiskerAll = displayGroup.contains(BOX_ALL);
+		boolean displayBoxAndWhiskerAggregate = displayGroup.contains(BOX_AGG);
+		boolean displayMonthlyTable = displayGroup.contains(MONTHLY_TABLE);
+		boolean displaySummaryTable = displayGroup.contains(SUMMARY_TABLE);
+		boolean displayMonthlyLine = displayGroup.contains(MONTHLY_LINE);
+		boolean displayBarCharts = displayGroup.contains(BAR_GRAPH);
+		return new PlotConfigurationState(displayTimeSeriesAll, displayTimeSeriesAggregate, displayExceedanceAll,
+				displayExceedanceAggregate, displayBoxAndWhiskerAll, displayBoxAndWhiskerAggregate,
+				displayMonthlyTable, displaySummaryTable, displayMonthlyLine, displayBarCharts);
 	}
 }

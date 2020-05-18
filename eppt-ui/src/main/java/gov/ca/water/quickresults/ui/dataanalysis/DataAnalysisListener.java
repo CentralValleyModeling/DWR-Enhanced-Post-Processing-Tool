@@ -13,6 +13,7 @@
 package gov.ca.water.quickresults.ui.dataanalysis;
 
 import java.awt.Component;
+import java.awt.Desktop;
 import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -65,6 +66,16 @@ public class DataAnalysisListener implements ActionListener
 				{
 					case "btnGetTemplateFile":
 						selectTemplateFile(e);
+						break;
+					case "btnEditTemplateFile":
+						try
+						{
+							Desktop.getDesktop().open(new File(_dataAnalysisPanel.getReportTemplateTextField().getToolTipText()));
+						}
+						catch(IOException ex)
+						{
+							LOGGER.log(Level.SEVERE, "Error opening file " + _dataAnalysisPanel.getReportTemplateTextField().getToolTipText());
+						}
 						break;
 					case "btnGetReportFile1":
 						selectDssFile(e, _dataAnalysisPanel.getDssResultPathBaseField());

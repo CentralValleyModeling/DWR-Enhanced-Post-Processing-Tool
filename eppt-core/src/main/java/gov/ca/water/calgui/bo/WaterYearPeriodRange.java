@@ -35,6 +35,11 @@ public class WaterYearPeriodRange
 		_endYear = endYear;
 	}
 
+	public WaterYearPeriod getWaterYearPeriod()
+	{
+		return _waterYearPeriod;
+	}
+
 	public WaterYearType getStartYear()
 	{
 		return _startYear;
@@ -81,7 +86,16 @@ public class WaterYearPeriodRange
 
 	public String toString(WaterYearDefinition waterYearDefinition, DateTimeFormatter formatter)
 	{
-		return String.format("%s - %s", getStart(waterYearDefinition).format(formatter),
-				getEnd(waterYearDefinition).format(formatter));
+		if(waterYearDefinition != null)
+		{
+
+			return String.format("%s - %s", getStart(waterYearDefinition).format(formatter),
+					getEnd(waterYearDefinition).format(formatter));
+		}
+		else
+		{
+			return String.format("%s - %s", getStartYear().getYear(),
+					getEndYear().getYear());
+		}
 	}
 }

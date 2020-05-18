@@ -18,15 +18,15 @@ import java.io.IOException;
 import java.nio.file.FileSystems;
 import java.nio.file.Path;
 import java.nio.file.PathMatcher;
-import java.util.Collection;
 import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import gov.ca.water.calgui.constant.Constant;
-import gov.ca.water.calgui.constant.EpptPreferences;
+import gov.ca.water.eppt.nbui.EpptControllerProvider;
 import gov.ca.water.eppt.nbui.Installer;
-import gov.ca.water.quickresults.ui.projectconfig.ProjectConfigurationPanel;
+import gov.ca.water.calgui.project.EpptConfigurationController;
+import gov.ca.water.eppt.nbui.projectconfig.ProjectConfigurationIO;
 import org.netbeans.api.actions.Savable;
 import org.openide.awt.ActionID;
 import org.openide.awt.ActionReference;
@@ -92,10 +92,10 @@ public class NewProjectConfiguration implements ActionListener
 
 	void createNew() throws IOException
 	{
-		createNew(true);
+		createNew(new EpptConfigurationController());
 	}
 
-	void createNew(boolean resetConfigurationBeforeSave) throws IOException
+	void createNew(EpptConfigurationController epptConfigurationController) throws IOException
 	{
 		NewProjectDialog nameDialog = new NewProjectDialog();
 		String substring = String.valueOf(new Date().getTime()).substring(8);
@@ -107,25 +107,15 @@ public class NewProjectConfiguration implements ActionListener
 		if(!nameDialog.isCanceled())
 		{
 			Path projectPath = nameDialog.getProjectDirectory();
-			ProjectConfigurationPanel projectConfigurationPanel = ProjectConfigurationPanel.getProjectConfigurationPanel();
-			if(resetConfigurationBeforeSave)
-			{
-				try
-				{
-					projectConfigurationPanel.resetProjectConfiguration();
-				}
-				catch(Exception e)
-				{
-					throw new IOException("Unable to reset Project Configuration to default state", e);
-				}
-			}
 			Path projectFile = projectPath.resolve(nameDialog.getName() + "." + Constant.EPPT_EXT);
-			projectConfigurationPanel.saveConfigurationToPath(projectFile,
-					nameDialog.getName(), nameDialog.getDescription());
-			projectConfigurationPanel.loadProjectConfiguration(EpptPreferences.getLastProjectConfiguration());
+			epptConfigurationController.setProjectName(nameDialog.getName());
+			epptConfigurationController.setProjectDescription(nameDialog.getDescription());
+			ProjectConfigurationIO projectConfigurationIO = new ProjectConfigurationIO();
+			projectConfigurationIO.saveConfiguration(epptConfigurationController, projectFile);
+			EpptControllerProvider.setEpptController(projectFile);
 			WindowManager.getDefault().getMainWindow().setTitle(
-					Installer.MAIN_FRAME_NAME + " - " + projectConfigurationPanel.getProjectName());
-			projectConfigurationPanel.setModified(false);
+					Installer.MAIN_FRAME_NAME + " - " + EpptControllerProvider.getEpptConfigurationController().getProjectName());
+			EpptControllerProvider.getEpptConfigurationController().clearModified();
 			Savable.REGISTRY.lookupAll(ProjectConfigurationSavable.class)
 							.forEach(ProjectConfigurationSavable::removeFromLookup);
 		}

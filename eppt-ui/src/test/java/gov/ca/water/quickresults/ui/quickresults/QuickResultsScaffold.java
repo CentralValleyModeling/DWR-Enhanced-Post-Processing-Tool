@@ -7,23 +7,18 @@
 
 package gov.ca.water.quickresults.ui.quickresults;
 
-import java.awt.Component;
 import java.nio.file.Paths;
+import java.util.Arrays;
 import java.util.Collections;
-import java.util.List;
-import javax.swing.*;
 
 import gov.ca.water.calgui.EpptInitializationException;
 import gov.ca.water.calgui.bo.GUILinksAllModelsBO;
-import gov.ca.water.calgui.bo.RBListItemBO;
-import gov.ca.water.calgui.constant.EpptPreferences;
 import gov.ca.water.calgui.project.EpptDssContainer;
 import gov.ca.water.calgui.project.EpptScenarioRun;
 import gov.ca.water.calgui.project.NamedDssPath;
 import gov.ca.water.quickresults.ui.EpptPanel;
 import gov.ca.water.quickresults.ui.EpptScaffold;
-import gov.ca.water.quickresults.ui.projectconfig.ProjectConfigurationPanel;
-import gov.ca.water.quickresults.ui.report.QAQCReportPanel;
+import gov.ca.water.calgui.project.EpptConfigurationController;
 
 /**
  * Company: Resource Management Associates
@@ -40,9 +35,8 @@ public class QuickResultsScaffold extends EpptScaffold
 	}
 
 
-	private static void addScenarios()
+	private static EpptConfigurationController buildController()
 	{
-		ProjectConfigurationPanel projectConfigurationPanel = ProjectConfigurationPanel.getProjectConfigurationPanel();
 		NamedDssPath namedDssPath = new NamedDssPath(
 				Paths.get("J:\\DWR\\QA_QC\\SupportingDocs040219\\EPPTSupportingDoc040219\\SampleDSS_V1.01\\Inputs\\SampleDV_Base.dss"), "test",
 				"CALSIM", "1MON", "2020D09E");
@@ -55,16 +49,17 @@ public class QuickResultsScaffold extends EpptScaffold
 				Paths.get("Test.pdf"), Paths.get("mainWresl.wresl"), Paths.get("target\\test-classes\\dwr_eppt\\wresl\\lookup\\wytypes.table"), dssContainer, javafx.scene.paint.Color.PINK);
 		EpptScenarioRun altRun = new EpptScenarioRun("Alt", "desc", GUILinksAllModelsBO.Model.findModel("CalSim2"),
 				Paths.get("Test.pdf"), Paths.get("mainWresl.wresl"), Paths.get(""), dssContainer, javafx.scene.paint.Color.PINK);
-		projectConfigurationPanel.getScenarioTablePanel().addScenarioRun(baseRun);
-		projectConfigurationPanel.getScenarioTablePanel().addScenarioRun(altRun);
+		EpptConfigurationController epptConfigurationController = new EpptConfigurationController();
+		epptConfigurationController.setScenarioRuns(Arrays.asList(baseRun, altRun));
+		return epptConfigurationController;
 	}
 
 	@Override
 	protected EpptPanel buildEpptPanel()
 	{
-		addScenarios();
-		QuickResultsPanel quickResultsPanel = new QuickResultsPanel();
-		QuickResultsListener quickResultsListener = new QuickResultsListener(quickResultsPanel);
+		EpptConfigurationController epptConfigurationController = buildController();
+		QuickResultsPanel quickResultsPanel = new QuickResultsPanel(epptConfigurationController);
+		QuickResultsListener quickResultsListener = new QuickResultsListener(quickResultsPanel, epptConfigurationController);
 		quickResultsPanel.getSwingEngine().setActionListener(quickResultsPanel, quickResultsListener);
 		return quickResultsPanel;
 	}

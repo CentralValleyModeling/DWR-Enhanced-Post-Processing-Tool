@@ -122,7 +122,7 @@ public class AllButtonsDeleImp implements IAllButtonsDele
 		// overwriting DEFAULT.CLS - tad
 		// 20170202
 		int val = JFileChooser.APPROVE_OPTION;
-		while(newScrName.equals("DEFAULT") && val == JFileChooser.APPROVE_OPTION)
+		while("DEFAULT".equals(newScrName.toString()) && val == JFileChooser.APPROVE_OPTION)
 		{
 
 			val = fileChooser.showSaveDialog(_swingEngine.find(Constant.MAIN_FRAME_NAME));

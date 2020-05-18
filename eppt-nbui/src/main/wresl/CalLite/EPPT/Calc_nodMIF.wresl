@@ -1,0 +1,169 @@
+/********************** DESCRIPTION ****************************
+- post-processes study results to determine factors controlling upstream channel releases north of the Delta (Sacramento River Basin)
+- limited to major channels and reaches only, including
+	- Trinity River below Lewiston,
+	- Clear Creek Below Whiskeytown,
+	- Sacramento River (near Red Bluff, Hamilton City, Wilkins Slough, and Freeport),
+	- Thermolito low flow channel,
+	- Feather River (below Thermalito Complex and near Verona), and
+	- American River (below Nimbus and at H St)
+- controlling factors include minimum instream flow requirements
+
+********************* REVIEW HISTORY****************************
+Yuxian (Sean) Feng	| DWR	|	2/07/2019	|	Setup initial file
+Ahmed Ali    		| DWR	|	12/04/2019	|	Reformatted/ standardized logic statements
+Karandev Singh 		| DWR	|	12/16/2019	|	Revised and reformatted the entire script, as needed
+Ahmed Ali    		| DWR	|	01/10/2020	|	Revised by moving the mapped variables (from Dvar) to the input_csII.wresl file 
+
+
+****************************************************************/
+
+/****************************************************************
+*************************** CONTORLS ****************************
+****************************************************************/
+
+/***************** TRINITY RIVER BELOW LEWISTON ****************/ 
+!Evaluates whether the instream flow is controlled by minimum flow
+!Calculated by comparing channel flow to minimum flow requirement
+
+define TRINITY_LEWISTON_MIF_CHECK {
+	case atSTANDARD		{condition abs(TRINITY_FLOW - TRINITY_FLOW_MIN)	<= abs_threshold	value EQ}
+	case aboveSTANDARD	{condition (TRINITY_FLOW - TRINITY_FLOW_MIN)	> abs_threshold		value GT}
+	case belowSTANDARD	{condition (TRINITY_FLOW - TRINITY_FLOW_MIN)	< -1*abs_threshold	value LT}
+	case UNEXPECTED    	{condition always													value UE}
+}
+
+/**************** CLEAR CREEK BELOW WHISKEYTOWN ****************/ 
+!Evaluates whether the instream flow is controlled by minimum flow
+!Calculated by comparing channel flow to minimum flow requirement
+
+define CLR_CRK_MIF_CHECK {
+	case atSTANDARD		{condition abs(CLR_CRK_FLOW - CLR_CRK_FLOW_MIN)	<= abs_threshold	value EQ}
+	case aboveSTANDARD	{condition (CLR_CRK_FLOW - CLR_CRK_FLOW_MIN)	> abs_threshold		value GT}
+	case belowSTANDARD	{condition (CLR_CRK_FLOW - CLR_CRK_FLOW_MIN)	< -1*abs_threshold	value LT}
+	case UNEXPECTED    	{condition always													value UE}
+}	
+	
+/*************** SACRAMENTO RIVER BELOW KESWICK ****************/ 
+!Evaluates whether the instream flow is controlled by minimum flow
+!Calculated by comparing channel flow to minimum flow requirement
+
+define SAC_KESWICK_MIF_CHECK {
+	case atSTANDARD		{condition abs(SAC_KESWICK_FLOW - SAC_KESWICK_FLOW_MIN)	<= abs_threshold	value EQ}
+	case aboveSTANDARD	{condition (SAC_KESWICK_FLOW - SAC_KESWICK_FLOW_MIN)	> abs_threshold		value GT}
+	case belowSTANDARD	{condition (SAC_KESWICK_FLOW - SAC_KESWICK_FLOW_MIN)	< -1*abs_threshold	value LT}
+	case UNEXPECTED    	{condition always															value UE}
+}
+
+/*************** SACRAMENTO RIVER NEAR RED BLUFF ***************/ 
+!Evaluates whether the instream flow is controlled by minimum flow
+!Calculated by comparing channel flow to minimum flow requirement
+
+define SAC_REDBLUFF_MIF_CHECK {
+	case atSTANDARD		{condition abs(SAC_REDBLUFF_FLOW - SAC_REDBLUFF_FLOW_MIN)	<= abs_threshold	value EQ}
+	case aboveSTANDARD	{condition (SAC_REDBLUFF_FLOW - SAC_REDBLUFF_FLOW_MIN)		> abs_threshold		value GT}
+	case belowSTANDARD	{condition (SAC_REDBLUFF_FLOW - SAC_REDBLUFF_FLOW_MIN)		< -1*abs_threshold	value LT}
+	case UNEXPECTED    	{condition always																value UE}
+}
+
+/************* SACRAMENTO RIVER NEAR HAMILTON CITY *************/    
+/*!Evaluates whether the instream flow is controlled by minimum flow
+!Calculated by comparing channel flow to minimum flow requirement
+
+define SAC_HAMILTONCITY_MIF_CHECK {
+	case atSTANDARD		{condition abs(SAC_HAMILTONCITY_FLOW - SAC_HAMILTONCITY_FLOW_MIN)	<= abs_threshold	value EQ}	!AK SAC_HAMILTONCITY_FLOW is not there
+	case aboveSTANDARD	{condition (SAC_HAMILTONCITY_FLOW - SAC_HAMILTONCITY_FLOW_MIN)		> abs_threshold		value GT}
+	case belowSTANDARD	{condition (SAC_HAMILTONCITY_FLOW - SAC_HAMILTONCITY_FLOW_MIN)		< -1*abs_threshold	value LT}
+	case UNEXPECTED    	{condition always																		value UE}
+}*/
+
+/************ SACRAMENTO RIVER NEAR WILKINS SLOUGH *************/ 
+!Evaluates whether the instream flow is controlled by minimum flow
+!Calculated by comparing channel flow to minimum flow requirement
+
+define SAC_WILKINSSLOUGH_MIF_CHECK {
+	case atSTANDARD		{condition abs(SAC_WILKINSSLOUGH_FLOW - SAC_WILKINSSLOUGH_FLOW_MIN)	<= abs_threshold	value EQ}
+	case aboveSTANDARD	{condition (SAC_WILKINSSLOUGH_FLOW - SAC_WILKINSSLOUGH_FLOW_MIN)	> abs_threshold		value GT}
+	case belowSTANDARD	{condition (SAC_WILKINSSLOUGH_FLOW - SAC_WILKINSSLOUGH_FLOW_MIN)	< -1*abs_threshold	value LT}
+	case UNEXPECTED    	{condition always 			 															value UE}
+}
+
+/*************** SACRAMENTO RIVER NEAR FREEPORT ****************/ 
+!Evaluates whether the instream flow is controlled by minimum flow
+!Calculated by comparing channel flow to minimum flow requirement
+
+/*define SAC_FREEPORT_MIF_CHECK {
+	case atSTANDARD		{condition abs(SAC_FREEPORT_FLOW - SAC_FREEPORT_FLOW_MIN)	<= abs_threshold	value EQ}    !AK SAC_FREEPORT_FLOW_MIN is not there
+	case aboveSTANDARD	{condition (SAC_FREEPORT_FLOW - SAC_FREEPORT_FLOW_MIN)		> abs_threshold		value GT}
+	case belowSTANDARD	{condition (SAC_FREEPORT_FLOW - SAC_FREEPORT_FLOW_MIN)		< -1*abs_threshold	value LT}
+	case UNEXPECTED    	{condition always 			 													value UE}
+}*/
+
+/********** FEATHER RIVER THERMALITO LOW FLOW CHANNEL **********/ 
+!Evaluates whether the instream flow is controlled by minimum flow
+!Calculated by comparing channel flow to minimum flow requirement
+
+/*define FEATHER_LOWFLOW_THERMALITO_MIF_CHECK {
+	case atSTANDARD		{condition abs(FEATHER_LOWFLOW_THERMALITO_FLOW - FEATHER_LOWFLOW_THERMALITO_FLOW_MIN)	<= abs_threshold	value EQ}  !AK FEATHER_LOWFLOW_THERMALITO_FLOW is not there
+	case aboveSTANDARD	{condition (FEATHER_LOWFLOW_THERMALITO_FLOW - FEATHER_LOWFLOW_THERMALITO_FLOW_MIN)		> abs_threshold		value GT}
+	case belowSTANDARD	{condition (FEATHER_LOWFLOW_THERMALITO_FLOW - FEATHER_LOWFLOW_THERMALITO_FLOW_MIN)		< -1*abs_threshold	value LT}
+	case UNEXPECTED    	{condition always 			 																				value UE}
+}*/
+
+/*********** FEATHER RIVER BELOW THERMALITO COMPLEX ************/ 
+!Evaluates whether the instream flow is controlled by minimum flow
+!Calculated by comparing channel flow to minimum flow requirement
+
+define FEATHER_BLW_THERMALITO_MIF_CHECK {
+	case atSTANDARD		{condition abs(FEATHER_BLW_THERMALITO_FLOW - FEATHER_BLW_THERMALITO_FLOW_MIN)	<= abs_threshold	value EQ}
+	case aboveSTANDARD	{condition (FEATHER_BLW_THERMALITO_FLOW - FEATHER_BLW_THERMALITO_FLOW_MIN)		> abs_threshold		value GT}
+	case belowSTANDARD	{condition (FEATHER_BLW_THERMALITO_FLOW - FEATHER_BLW_THERMALITO_FLOW_MIN)		< -1*abs_threshold	value LT}
+	case UNEXPECTED    	{condition always 																					value UE}
+}
+
+/****************** FEATHER RIVER NEAR VERONA ******************/ 
+!Evaluates whether the instream flow is controlled by minimum flow
+!Calculated by comparing channel flow to minimum flow requirement
+
+define FEATHER_VERONA_MIF_CHECK {
+	case atSTANDARD		{condition abs(FEATHER_VERONA_FLOW - FEATHER_VERONA_FLOW_MIN)	<= abs_threshold	value EQ}
+	case aboveSTANDARD	{condition (FEATHER_VERONA_FLOW - FEATHER_VERONA_FLOW_MIN)		> abs_threshold		value GT}
+	case belowSTANDARD	{condition (FEATHER_VERONA_FLOW - FEATHER_VERONA_FLOW_MIN)		< -1*abs_threshold	value LT}
+	case UNEXPECTED    	{condition always 																	value UE}
+}
+
+/***************** AMERICAN RIVER BELOW NIMBUS *****************/ 
+!Evaluates whether the instream flow is controlled by minimum flow
+!Calculated by comparing channel flow to minimum flow requirement
+
+define AMERICAN_NIMBUS_MIF_CHECK {
+	case atSTANDARD		{condition abs(AMERICAN_NIMBUS_FLOW - AMERICAN_NIMBUS_FLOW_MIN)	<= abs_threshold	value EQ}
+	case aboveSTANDARD	{condition (AMERICAN_NIMBUS_FLOW - AMERICAN_NIMBUS_FLOW_MIN)	> abs_threshold		value GT}
+	case belowSTANDARD	{condition (AMERICAN_NIMBUS_FLOW - AMERICAN_NIMBUS_FLOW_MIN)	< -1*abs_threshold	value LT}
+	case UNEXPECTED    	{condition always 																	value UE}
+}
+
+/***************** AMERICAN RIVER AT H STREET ******************/ 
+!Evaluates whether the instream flow is controlled by minimum flow
+!Calculated by comparing channel flow to minimum flow requirement
+
+define AMERICAN_HSTREET_MIF_CHECK {
+	case atSTANDARD		{condition abs(AMERICAN_HSTREET_FLOW - AMERICAN_HSTREET_FLOW_MIN)	<= abs_threshold	value EQ}
+	case aboveSTANDARD	{condition (AMERICAN_HSTREET_FLOW - AMERICAN_HSTREET_FLOW_MIN)		> abs_threshold		value GT}
+	case belowSTANDARD	{condition (AMERICAN_HSTREET_FLOW - AMERICAN_HSTREET_FLOW_MIN)		< -1*abs_threshold	value LT}
+	case UNEXPECTED    	{condition always 																		value UE}
+}
+	
+/************************* DSS OUTPUT **************************/ 
+define TRINITY_LEWISTON_MIF_CHECK_ { alias  TRINITY_LEWISTON_MIF_CHECK  kind 'DTS-NODMIF-STATUS' units 'NONE' }
+define CLR_CRK_MIF_CHECK_ { alias  CLR_CRK_MIF_CHECK  kind 'DTS-NODMIF-STATUS' units 'NONE' }
+define SAC_KESWICK_MIF_CHECK_ { alias  SAC_KESWICK_MIF_CHECK  kind 'DTS-NODMIF-STATUS' units 'NONE' }
+define SAC_REDBLUFF_MIF_CHECK_ { alias  SAC_REDBLUFF_MIF_CHECK  kind 'DTS-NODMIF-STATUS' units 'NONE' }
+!define SAC_HAMILTONCITY_MIF_CHECK_ { alias  SAC_HAMILTONCITY_MIF_CHECK  kind 'DTS-NODMIF-STATUS' units 'NONE' }
+define SAC_WILKINSSLOUGH_MIF_CHECK_ { alias  SAC_WILKINSSLOUGH_MIF_CHECK  kind 'DTS-NODMIF-STATUS' units 'NONE' }
+!define SAC_FREEPORT_MIF_CHECK_ { alias  SAC_FREEPORT_MIF_CHECK  kind 'DTS-NODMIF-STATUS' units 'NONE' }	                        !AK
+!define FEATHER_LOWFLOW_THERMALITO_MIF_CHECK_ { alias  FEATHER_LOWFLOW_THERMALITO_MIF_CHECK  kind 'DTS-NODMIF-STATUS' units 'NONE' }    !AK
+define FEATHER_BLW_THERMALITO_MIF_CHECK_ { alias  FEATHER_BLW_THERMALITO_MIF_CHECK  kind 'DTS-NODMIF-STATUS' units 'NONE' }
+define FEATHER_VERONA_MIF_CHECK_ { alias  FEATHER_VERONA_MIF_CHECK  kind 'DTS-NODMIF-STATUS' units 'NONE' }
+define AMERICAN_NIMBUS_MIF_CHECK_ { alias  AMERICAN_NIMBUS_MIF_CHECK  kind 'DTS-NODMIF-STATUS' units 'NONE' }
+define AMERICAN_HSTREET_MIF_CHECK_ { alias  AMERICAN_HSTREET_MIF_CHECK  kind 'DTS-NODMIF-STATUS' units 'NONE' }

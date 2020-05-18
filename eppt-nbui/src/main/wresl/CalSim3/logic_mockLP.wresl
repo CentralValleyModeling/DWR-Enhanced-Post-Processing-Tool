@@ -1,0 +1,12 @@
+/********************** DESCRIPTION ****************************
+- set the test case to pass through the XA Solver
+
+********************* REVIEW HISTORY****************************
+Nur Taraky			| DWR	|	08/10/2017	|	Setup initial file
+Karandev Singh		| DWR	|	12/03/2019	|	Reformatted
+
+****************************************************************/
+define MockVar {std kind 'DTS-EPPT-DEF' units 'NONE'} 
+goal setMockLP {MockVar = 1}
+
+

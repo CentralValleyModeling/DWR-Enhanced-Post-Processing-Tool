@@ -16,12 +16,10 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
-import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.nio.file.Files;
@@ -32,26 +30,31 @@ import java.util.Objects;
 import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
+import gov.ca.water.calgui.EpptInitializationException;
+import gov.ca.water.calgui.busservice.impl.DssPatternUpdater;
 import gov.ca.water.calgui.constant.EpptPreferences;
+import gov.ca.water.calgui.techservice.impl.DialogSvcImpl;
+import gov.ca.water.calgui.techservice.impl.NonSymlinkFilter;
 
 import hec.client.FileChooserFld;
+import rma.swing.RmaJPanel;
 
 import static java.util.stream.Collectors.toList;
 
-final class EPPTOptionsPanel extends JPanel
+final class EPPTOptionsPanel extends RmaJPanel
 {
-	private final Logger LOGGER = Logger.getLogger(EPPTOptionsPanel.class.getName());
+	private static final Logger LOGGER = Logger.getLogger(EPPTOptionsPanel.class.getName());
 	private final EPPTOptionsOptionsPanelController _controller;
 	private final JComboBox<Object> _resultsOutputComboBox;
 	private final FileChooserFld _projectDirectoryFileChooserField;
 	private final JTextField _wrimsDirectoryField;
 	private final JLabel _wrimsVersionLabel = new JLabel();
+	private final JButton _updateDssPatternButton;
 	private boolean _resetPreferences;
 	private JCheckBox _usePlotlyCheckbox;
 
@@ -61,6 +64,7 @@ final class EPPTOptionsPanel extends JPanel
 		_resultsOutputComboBox = new JComboBox<>();
 		_projectDirectoryFileChooserField = new FileChooserFld();
 		_wrimsDirectoryField = new JTextField();
+		_updateDssPatternButton = new JButton("Refresh DSS Pattern Matcher");
 		initComponents();
 		initListeners();
 	}
@@ -72,48 +76,33 @@ final class EPPTOptionsPanel extends JPanel
 			_resetPreferences = false;
 			_controller.changed();
 		});
-		DocumentListener documentListener = new DocumentListener()
-		{
-			@Override
-			public void insertUpdate(DocumentEvent e)
-			{
-				_resetPreferences = false;
-				updateWrimsVersion();
-				_controller.changed();
-			}
-
-			@Override
-			public void removeUpdate(DocumentEvent e)
-			{
-				_resetPreferences = false;
-				updateWrimsVersion();
-				_controller.changed();
-			}
-
-			@Override
-			public void changedUpdate(DocumentEvent e)
-			{
-				_resetPreferences = false;
-				updateWrimsVersion();
-				_controller.changed();
-			}
-		};
+		DocumentListener documentListener = new MyDocumentListener();
 		_projectDirectoryFileChooserField.getDocument().addDocumentListener(documentListener);
 		_wrimsDirectoryField.getDocument().addDocumentListener(documentListener);
+		_updateDssPatternButton.addActionListener(e ->
+		{
+			try
+			{
+				DssPatternUpdater.initPatterns();
+			}
+			catch(EpptInitializationException ex)
+			{
+				DialogSvcImpl.getDialogSvcInstance()
+							 .getOK("Error updating DSS Pattern Matcher:\n" + ex.getMessage(), JOptionPane.WARNING_MESSAGE);
+				LOGGER.log(Level.WARNING, "Error updating DSS Pattern Matcher", ex);
+			}
+		});
 	}
 
 	private void initComponents()
 	{
 		JButton wrimsDirButton = new JButton("...");
-		Dimension buttonDimensions = new Dimension(60, wrimsDirButton.getPreferredSize().height);
-		wrimsDirButton.setPreferredSize(buttonDimensions);
 		wrimsDirButton.addActionListener(this::chooseWrimsDir);
 		JButton resetButton = new JButton("Default");
 		resetButton.addActionListener(this::resetPreferences);
-		resetButton.setPreferredSize(buttonDimensions);
 		_projectDirectoryFileChooserField.setOpenDirectory();
 		_projectDirectoryFileChooserField.setPreferredSize(
-				new Dimension(300, _projectDirectoryFileChooserField.getPreferredSize().height));
+				new Dimension(300, 30));
 		_resultsOutputComboBox.addItem("properties");
 		_resultsOutputComboBox.addItem("editor");
 		_resultsOutputComboBox.addItem("explorer");
@@ -123,7 +112,6 @@ final class EPPTOptionsPanel extends JPanel
 
 		JPanel panel = new JPanel();
 		panel.setLayout(new GridBagLayout());
-		panel.setPreferredSize(new Dimension(500, 120));
 		add(panel, new GridBagConstraints(1,
 				1, 1, 1, .1, .5,
 				GridBagConstraints.NORTHWEST, GridBagConstraints.NONE,
@@ -164,13 +152,13 @@ final class EPPTOptionsPanel extends JPanel
 				4, 2, 1, .1, .5,
 				GridBagConstraints.WEST, GridBagConstraints.BOTH,
 				new Insets(5, 5, 5, 5), 5, 5));
-//		panel.add(_usePlotlyCheckbox, new GridBagConstraints(3,
-//				5, 1, 1, .1, .5,
-//				GridBagConstraints.WEST, GridBagConstraints.HORIZONTAL,
-//				new Insets(5, 5, 5, 5), 5, 5));
-		panel.add(resetButton, new GridBagConstraints(3,
-				5, 1, 1, .1, .5,
-				GridBagConstraints.EAST, GridBagConstraints.HORIZONTAL,
+		panel.add(_updateDssPatternButton, new GridBagConstraints(1,
+				5, 3, 1, .1, .5,
+				GridBagConstraints.EAST, GridBagConstraints.NONE,
+				new Insets(5, 5, 5, 5), 5, 5));
+		panel.add(resetButton, new GridBagConstraints(1,
+				6, 1, 1, .1, .5,
+				GridBagConstraints.WEST, GridBagConstraints.NONE,
 				new Insets(5, 5, 5, 5), 5, 5));
 		revalidate();
 	}
@@ -186,12 +174,14 @@ final class EPPTOptionsPanel extends JPanel
 		EpptPreferences.removeWrimsPathPreference();
 		EpptPreferences.removeResultsOutputLocation();
 		_resetPreferences = true;
+		_updateDssPatternButton.getAction().actionPerformed(null);
 	}
 
 	private void chooseWrimsDir(ActionEvent e)
 	{
 		JFileChooser fileChooser = new JFileChooser(_wrimsDirectoryField.getText());
 		fileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+		fileChooser.setFileFilter(new NonSymlinkFilter());
 		fileChooser.showOpenDialog(this);
 		File selectedFile = fileChooser.getSelectedFile();
 		if(selectedFile != null)
@@ -220,9 +210,9 @@ final class EPPTOptionsPanel extends JPanel
 			try(Stream<Path> walk = Files.walk(wrimsLibDir, 1))
 			{
 				List<URL> urls = walk.filter(f -> f.toString().endsWith(".jar"))
-										.map(this::pathToUrl)
-										.filter(Objects::nonNull)
-										.collect(toList());
+									 .map(this::pathToUrl)
+									 .filter(Objects::nonNull)
+									 .collect(toList());
 				try(URLClassLoader urlClassLoader = new URLClassLoader(urls.toArray(new URL[0])))
 				{
 					URL resource = urlClassLoader.findResource("wrimsv2/version.props");
@@ -295,5 +285,28 @@ final class EPPTOptionsPanel extends JPanel
 			wrimsDirExists = javaExe.toFile().exists() && wrimsLib.toFile().exists() && wrimsSys.toFile().exists();
 		}
 		return projectDirExists && wrimsDirExists;
+	}
+
+	private final class MyDocumentListener implements DocumentListener
+	{
+		@Override
+		public void insertUpdate(DocumentEvent e)
+		{
+			_resetPreferences = false;
+			updateWrimsVersion();
+			_controller.changed();
+		}
+
+		@Override
+		public void removeUpdate(DocumentEvent e)
+		{
+			insertUpdate(e);
+		}
+
+		@Override
+		public void changedUpdate(DocumentEvent e)
+		{
+			insertUpdate(e);
+		}
 	}
 }
