@@ -84,8 +84,8 @@ function buildLayouts(datum, yaxis, title) {
 
     for (let statIndex = 0; statIndex < datum[0]['ts_list'][0]['monthly_filters'][0]['annual_filters'][0]['computed_statistics'].length; statIndex++) {
         for (let monthlyIndex = 0; monthlyIndex < datum[0]['ts_list'][0]['monthly_filters'].length; monthlyIndex++) {
-            let monthPeriod = datum[0]['ts_list'][0]['monthly_filters'][0]['annual_filters'][0]['month_period'];
-            let statistic = datum[0]['ts_list'][0]['monthly_filters'][0]['annual_filters'][0]['computed_statistics'][statIndex]['statistic'];
+            let monthPeriod = datum[0]['ts_list'][0]['monthly_filters'][monthlyIndex]['annual_filters'][0]['month_period'];
+            let statistic = datum[0]['ts_list'][0]['monthly_filters'][monthlyIndex]['annual_filters'][0]['computed_statistics'][statIndex]['statistic'];
             layoutList.push({
                 font: PLOTLY_FONT,
                 barmode: 'grouped',
