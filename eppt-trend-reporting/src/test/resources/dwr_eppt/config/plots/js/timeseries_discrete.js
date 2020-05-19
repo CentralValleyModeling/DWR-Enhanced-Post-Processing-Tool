@@ -10,7 +10,8 @@
  * GNU General Public License
  */
 
-function getPlotlyMonthlySeries(datum) {
+
+function getPlotlyMonthlySeries(datum, firstRecord, lastRecord, instantaneous) {
     let seriesList = [];
     for (let i = 0; i < datum.length; i++) {
         let tsList = datum[i]['ts_list'];
@@ -23,14 +24,50 @@ function getPlotlyMonthlySeries(datum) {
                     let timeSeries = annualFilters[m]['discrete_ts'];
                     let x = [];
                     let y = [];
-                    for (var ts = 0; ts < timeSeries.length; ts++) {
-                        x.push(new Date(timeSeries[ts][0]));
-                        y.push(timeSeries[ts][1]);
+                    let hoverInfo = [];
+                    let markerSize = [];
+                    let startDate = new Date(firstRecord);
+                    startDate.setMonth(startDate.getMonth() - 1);
+                    let endDate = new Date(lastRecord);
+
+                    var startingDataIndex = 0;
+                    while (startDate <= endDate) {
+                        let date = new Date(startDate);
+                        if (!instantaneous) {
+                            date.setMonth(date.getMonth() - 1);
+                        }
+                        if (timeSeries[startingDataIndex]) {
+                            let dataDate = new Date(timeSeries[startingDataIndex][0]);
+                            dataDate.setMonth(dataDate.getMonth() - 1);
+                            if (dataDate.getFullYear() === startDate.getFullYear() && dataDate.getMonth() === startDate.getMonth()) {
+                                x.push(date);
+                                y.push(timeSeries[startingDataIndex][1]);
+                                hoverInfo.push('all');
+                                markerSize.push(4);
+                                startingDataIndex++;
+                            }
+                        }
+                        if (!instantaneous) {
+                            if (!y[y.length - 2] && y[y.length - 1]) {
+                                y[y.length - 2] = y[y.length - 1];
+                            }
+                            if (x.length > y.length) {
+                                x.push(date);
+                                y.push(null);
+                                hoverInfo.push('skip');
+                                markerSize.push(0);
+                            }
+                        }
+                        startDate.setMonth(startDate.getMonth() + 1);
                     }
                     let series = seriesList[axis];
                     if (!series) {
                         series = [];
                         seriesList.push(series);
+                    }
+                    let shape = 'vh';
+                    if (instantaneous) {
+                        shape = 'linear';
                     }
                     series.push({
                         name: tsList[j]['ts_name'],
@@ -38,8 +75,15 @@ function getPlotlyMonthlySeries(datum) {
                         y: y,
                         line: {
                             color: datum[i]['scenario_color'],
-                            dash: PLOTLY_LINE_DASH_STYLES[j % PLOTLY_LINE_DASH_STYLES.length]
-                        }
+                            dash: PLOTLY_LINE_DASH_STYLES[j % PLOTLY_LINE_DASH_STYLES.length],
+                            shape: shape
+                        },
+                        mode: 'lines+markers',
+                        marker: {
+                            size: markerSize,
+                            color: darken(datum[i]['scenario_color'], 20)
+                        },
+                        hoverinfo: hoverInfo
                     });
                     axis++;
                 }
@@ -49,7 +93,7 @@ function getPlotlyMonthlySeries(datum) {
     return seriesList;
 }
 
-function buildLayouts(datum, yaxis, title) {
+function buildDiscreteLayouts(datum, yaxis, title) {
     let layoutList = [];
     for (let i = 0; i < datum.length; i++) {
         let tsList = datum[i]['ts_list'];
@@ -59,15 +103,19 @@ function buildLayouts(datum, yaxis, title) {
             for (let k = 0; k < monthlyFilters.length; k++) {
                 let annualFilters = monthlyFilters[k]['annual_filters'];
                 for (let m = 0; m < annualFilters.length; m++) {
-                    let timeSeries = annualFilters[m]['discrete_ts'];
-                    let x = [];
-                    let y = [];
-                    for (var ts = 0; ts < timeSeries.length; ts++) {
-                        x.push(new Date(timeSeries[ts][0]));
-                        y.push(timeSeries[ts][1]);
-                    }
                     let series = layoutList[axis];
                     if (!series) {
+                        let plotTitle = title;
+                        if (annualFilters[m]['annual_period']) {
+                            if (annualFilters[m]['annual_period'].indexOf('<br>') === annualFilters[m]['annual_period'].length - 4) {
+                                plotTitle += '<br>' + annualFilters[m]['annual_period'].replace("<br>", "");
+                            } else {
+                                plotTitle += '<br>' + annualFilters[m]['annual_period'].replace("<br>", " - ");
+                            }
+                        }
+                        if (annualFilters[m]['month_period']) {
+                            plotTitle += '<br>' + annualFilters[m]['month_period'];
+                        }
                         layoutList[axis] = {
                             font: PLOTLY_FONT,
                             yaxis: {
@@ -80,7 +128,7 @@ function buildLayouts(datum, yaxis, title) {
                             },
                             xaxis: {
                                 tickformat: '%b-%Y',
-                                hoverformat: '%b-%d-%Y',
+                                hoverformat: '%b-%Y',
                                 gridcolor: '#CCCCCC'
                             },
                             showlegend: true,
@@ -92,16 +140,24 @@ function buildLayouts(datum, yaxis, title) {
                                     size: 10,
                                 }
                             },
+                            height: 650,
                             title: {
-                                text: title + '<br>' + annualFilters[m]['annual_period'] + '<br>' + annualFilters[m]['month_period'],
+                                text: plotTitle,
                                 font: {
                                     size: 20,
                                 }
+                            },
+                            margin: {
+                                l: 60,
+                                r: 40,
+                                b: 100,
+                                t: 120
                             }
                         };
                     }
                     axis++;
                 }
+
             }
         }
     }
@@ -109,15 +165,19 @@ function buildLayouts(datum, yaxis, title) {
 }
 
 function plot(data) {
+    plotDiscrete(data);
+}
+
+function plotDiscrete(data) {
     FORMATTER = getD3Formatter(data['scenario_run_data'][0]['ts_list'][0]['monthly_filters'][0]['annual_filters'][0]['discrete_ts']);
     var datum = data['scenario_run_data'];
-    var layout = buildLayouts(datum, data['units'], data['gui_link_title']);
-    let plotlyMonthlySeries = getPlotlyMonthlySeries(datum);
+    var layout = buildDiscreteLayouts(datum, data['units'], data['gui_link_title']);
+    let plotlyMonthlySeries = getPlotlyMonthlySeries(datum, data['first_record'], data['last_record'], data['is_instantaneous']);
     plotData(layout, plotlyMonthlySeries);
 }
 
-function plotlyCopyToClipboard() {
-    let plot = document.getElementById("container_discrete_tester");
+function plotlyCopyToClipboard(element) {
+    let plot = $(element)[0];
     let layout = plot.layout;
     let data1 = plot.data;
     var text = layout['title']['text'] + '\n' + 'Date\t' + layout['yaxis']['title']['text'] + '\n';
@@ -125,13 +185,47 @@ function plotlyCopyToClipboard() {
         text += '\t' + data1[i]['name']
     }
     text += '\n';
-    let datum = data1[0];
-    let xarr = datum['x'];
-    for (var j = 0; j < xarr.length; j++) {
-        text += xarr[j];
-        for (var k = 0; k < data1.length; k++) {
-            let yarr = data1[k]['y'];
-            text += '\t' + yarr[j];
+    let xyVals = [];
+    var foundDate = false;
+    for (let k = 0; k < data1.length; k++) {
+        let xarr = data1[k]['x'];
+        let yarr = data1[k]['y'];
+        for (let j = 0; j < xarr.length; j++) {
+            let x;
+            if (Object.prototype.toString.call(xarr[j]) === '[object Date]') {
+                foundDate = true;
+                let date = new Date(xarr[j]);
+                x = date.setMonth(date.getMonth());
+                x = date;
+            } else {
+                x = xarr[j];
+            }
+            if (!xyVals[x]) {
+                xyVals[x] = [];
+            }
+            xyVals[x].push(yarr[j]);
+        }
+    }
+    let keys = Object.keys(xyVals);
+    if(foundDate){
+        keys.sort((a,b)=> new Date(a).getTime() - new Date(b).getTime());
+    }
+    else{
+        keys.sort();
+    }
+    for (let i = 0; i < keys.length; i++) {
+        let key = keys[i];
+        if (foundDate) {
+            let date = new Date(key);
+            text += (date.getMonth() + 1) + '/' + date.getFullYear();
+        } else {
+            text += key;
+        }
+        for (let j = 0; j < xyVals[key].length; j++) {
+            text += '\t';
+            if (xyVals[key][j]) {
+                text += xyVals[key][j];
+            }
         }
         text += '\n';
     }

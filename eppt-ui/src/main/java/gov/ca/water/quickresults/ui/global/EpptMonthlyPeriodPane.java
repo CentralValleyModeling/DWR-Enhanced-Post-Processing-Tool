@@ -15,13 +15,10 @@ package gov.ca.water.quickresults.ui.global;
 import java.awt.Frame;
 import java.lang.reflect.InvocationTargetException;
 import java.time.Month;
-import java.time.format.TextStyle;
 import java.util.List;
-import java.util.Locale;
 import java.util.Objects;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
 import javax.swing.*;
 
 import gov.ca.water.calgui.busservice.impl.EpptReportingMonths;
@@ -70,8 +67,7 @@ class EpptMonthlyPeriodPane extends TitledPane
 		@Override
 		public String toString()
 		{
-			return "Entire Period (" + getStart().getDisplayName(TextStyle.SHORT, Locale.getDefault()) + " - " +
-					getEnd().getDisplayName(TextStyle.SHORT, Locale.getDefault()) + ")";
+			return "All Months";
 		}
 	};
 	private final ListView<PeriodItem> _seasonalPeriodListView = new ListView<>();
@@ -103,6 +99,7 @@ class EpptMonthlyPeriodPane extends TitledPane
 		PeriodItem entirePeriodItem = new PeriodItem(_entirePeriod);
 		_seasonalPeriodListView.getItems().add(0, entirePeriodItem);
 		_seasonalPeriodListView.setFixedCellSize(20);
+		_seasonalPeriodListView.setPrefHeight(415);
 		BorderPane innerPane = new BorderPane();
 		innerPane.setCenter(_seasonalPeriodListView);
 		setContent(innerPane);

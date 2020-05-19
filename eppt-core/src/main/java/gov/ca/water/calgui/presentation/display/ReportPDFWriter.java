@@ -166,7 +166,7 @@ public class ReportPDFWriter implements Writer
 				tf1.setBorderColor(BaseColor.RED);
 				tf1.setBorderWidth(1);
 				tf1.setRotation(90);
-				tf1.setText("Alternative 1 DSS file: " + fileBase + "\n\n" + "Alternative 2 DSS file: " + fileAlt);
+				tf1.setText("Base DSS file: " + fileBase + "\n\n" + "Alternative DSS file: " + fileAlt);
 				tf1.setAlignment(Element.ALIGN_LEFT);
 				tf1.setOptions(TextField.REQUIRED | TextField.READ_ONLY | TextField.MULTILINE);
 				writer.addAnnotation(tf1.getTextField());

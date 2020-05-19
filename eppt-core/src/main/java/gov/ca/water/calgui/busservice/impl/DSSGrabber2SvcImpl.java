@@ -58,7 +58,6 @@ import hec.io.TimeSeriesContainer;
  */
 public class DSSGrabber2SvcImpl extends DSSGrabber1SvcImpl
 {
-
 	private static final Logger LOGGER = Logger.getLogger(DSSGrabber2SvcImpl.class.getName());
 	private final DerivedTimeSeries _dts;
 	private final MultipleTimeSeries _mts;
@@ -394,47 +393,5 @@ public class DSSGrabber2SvcImpl extends DSSGrabber1SvcImpl
 			LOGGER.log(Level.SEVERE, "Unable to get time series from.", ex);
 		}
 		return null;
-	}
-
-	/**
-	 * Variant of getDifferenceSeriesWithMultipleTimeSeries to work with MTS (multiple time series)
-	 *
-	 * @param timeSeriesResults array of arrays of HEC TimeSeriesContainer objects, each
-	 *                          representing a set of results for a scenario. Base is in
-	 *                          position [0].
-	 * @return array of arrays of HEC TimeSeriesContainer objects (size one less
-	 * than timeSeriesResult. Position [0] contains difference [1]-[0],
-	 * position [1] contains difference [2]-[0], ...
-	 */
-	public TimeSeriesContainer[][] getDifferenceSeriesWithMultipleTimeSeries(TimeSeriesContainer[][] timeSeriesResults)
-	{
-
-		try
-		{
-			TimeSeriesContainer[][] results = new TimeSeriesContainer[timeSeriesResults.length][_alternatives.size()];
-
-			for(int tsi = 0; tsi < timeSeriesResults.length; tsi++)
-			{
-
-				for(int i = 0; i < _alternatives.size(); i++)
-				{
-
-					if(timeSeriesResults[tsi][i] != null)
-					{
-						results[tsi][i] = (TimeSeriesContainer) timeSeriesResults[tsi][i + 1].clone();
-						for(int j = 0; j < results[tsi][i].numberValues; j++)
-						{
-							results[tsi][i].values[j] = results[tsi][i].values[j] - timeSeriesResults[tsi][0].values[j];
-						}
-					}
-				}
-			}
-			return results;
-		}
-		catch(RuntimeException ex)
-		{
-			LOGGER.log(Level.SEVERE, "Unable to get time-series.", ex);
-		}
-		return timeSeriesResults;
 	}
 }

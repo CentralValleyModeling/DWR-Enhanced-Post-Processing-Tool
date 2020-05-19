@@ -86,6 +86,7 @@ public class EpptConfigurationController
 
 	public void setModified()
 	{
+		_modifiedProperty.setValue(false);
 		_modifiedProperty.setValue(true);
 	}
 

@@ -14,6 +14,7 @@ package gov.ca.water.quickresults.ui.global;
 
 import java.util.Comparator;
 import java.util.List;
+import java.util.Objects;
 import java.util.SortedSet;
 import java.util.TreeSet;
 import java.util.function.BiPredicate;
@@ -23,7 +24,11 @@ import javafx.geometry.Side;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.CustomMenuItem;
 import javafx.scene.control.Label;
+import javafx.scene.control.Menu;
+import javafx.scene.control.MenuItem;
 import javafx.scene.control.TextField;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
@@ -36,29 +41,26 @@ import static java.util.stream.Collectors.toList;
  * @author <a href="mailto:adam@rmanet.com">Adam Korynta</a>
  * @since 01-02-2020
  */
-class AutoCompleteTextField<T> extends TextField
+public class AutoCompleteTextField<T> extends TextField
 {
-	//Local variables
-	//entries to autocomplete
 	private final SortedSet<T> _entries = new TreeSet<>(Comparator.comparing(Object::toString));
-	//popup GUI
 	private final ContextMenu _entriesPopup = new ContextMenu();
 	private final BiPredicate<T, String> _predicate;
 	private Consumer<T> _entryPicked;
 
 
-	AutoCompleteTextField()
+	public AutoCompleteTextField()
 	{
 		this((e, s) -> e.toString().toLowerCase().contains(s.toLowerCase()));
 	}
 
-	AutoCompleteTextField(BiPredicate<T, String> predicate)
+	public AutoCompleteTextField(BiPredicate<T, String> predicate)
 	{
 		_predicate = predicate;
 		initListeners();
 	}
 
-	void setEntryPicked(Consumer<T> entryPicked)
+	public void setEntryPicked(Consumer<T> entryPicked)
 	{
 		_entryPicked = entryPicked;
 	}
@@ -69,6 +71,18 @@ class AutoCompleteTextField<T> extends TextField
 		textProperty().addListener((observable, oldValue, newValue) -> textChanged());
 		//Hide always by focus-in (optional) and out
 		focusedProperty().addListener((observableValue, oldValue, newValue) -> _entriesPopup.hide());
+		setOnKeyReleased(event ->
+		{
+			if(event.getCode().equals(KeyCode.ENTER))
+			{
+				_entriesPopup.getItems()
+							 .stream()
+							 .filter(Objects::nonNull)
+							 .findFirst()
+							 .map(menuItem->(CustomMenuItem) menuItem)
+							 .ifPresent(menuItem->menuItem.getOnAction().handle(null));
+			}
+		});
 	}
 
 	private void textChanged()
@@ -88,7 +102,7 @@ class AutoCompleteTextField<T> extends TextField
 				populatePopup(filteredEntries, enteredText);
 				if(!_entriesPopup.isShowing())
 				{
-					_entriesPopup.show(AutoCompleteTextField.this, Side.BOTTOM, 0, 0); //position of popup
+					_entriesPopup.show(AutoCompleteTextField.this, Side.BOTTOM, 0, 0);
 				}
 				filteredEntries.stream()
 							   .filter(s -> s.toString().equalsIgnoreCase(enteredText))
@@ -102,12 +116,6 @@ class AutoCompleteTextField<T> extends TextField
 		}
 	}
 
-
-	/**
-	 * Populate the entry set with the given search results. Display is limited to 10 entries, for performance.
-	 *
-	 * @param searchResult The set of matching strings.
-	 */
 	private void populatePopup(List<T> searchResult, String enteredText)
 	{
 		//List of "suggestions"
@@ -140,7 +148,10 @@ class AutoCompleteTextField<T> extends TextField
 	private void entryPicked(T entry)
 	{
 		_entriesPopup.hide();
-		_entryPicked.accept(entry);
+		if(_entryPicked != null)
+		{
+			_entryPicked.accept(entry);
+		}
 	}
 
 

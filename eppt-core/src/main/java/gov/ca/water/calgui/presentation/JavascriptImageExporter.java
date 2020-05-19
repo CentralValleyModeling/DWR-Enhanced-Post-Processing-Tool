@@ -88,11 +88,15 @@ public class JavascriptImageExporter
 
 	private void exportImage(String format, Object dataJson, Object layoutJson, Object width, Object height, Path outputPath, Path jsonPath)
 	{
+		Frame frame = Frame.getFrames()[0];
 		try
 		{
-			JFrame frame = (JFrame) Frame.getFrames()[0];
-			Container contentPane = frame.getContentPane();
-			contentPane.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
+
+			if(frame instanceof JFrame)
+			{
+				Container contentPane = ((JFrame) frame).getContentPane();
+				contentPane.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
+			}
 			writeToJson(jsonPath, dataJson, layoutJson);
 			exportToFormat(jsonPath, outputPath, format, width, height);
 		}
@@ -112,15 +116,22 @@ public class JavascriptImageExporter
 		}
 		finally
 		{
-			JFrame frame = (JFrame) Frame.getFrames()[0];
-			Container contentPane = frame.getContentPane();
-			contentPane.setCursor(Cursor.getDefaultCursor());
+			if(frame instanceof JFrame)
+			{
+				Container contentPane = ((JFrame) frame).getContentPane();
+				contentPane.setCursor(Cursor.getDefaultCursor());
+			}
 		}
 	}
 
 	private void exportToFormat(Path jsonPath, Path outputPath, String format, Object width, Object height)
 			throws IOException, InterruptedException
 	{
+		if(height instanceof Number)
+		{
+			//adding buffer so that scrollbars don't appear
+			height = ((Number)height).doubleValue() + 200;
+		}
 		String orcaCommandline = "\"" + ORCA_EXE + "\" graph \"" + jsonPath + "\" --width " + width + " --height " + height +
 				" --format " + format + " \"" + outputPath + "\"" + " --verbose --plotly \"" +
 				Paths.get(Constant.CONFIG_DIR).getParent().resolve("lib").resolve("plotly").resolve("dist").resolve("plotly.min.js") + "\"";

@@ -36,6 +36,7 @@ public final class EpptPreferences
 	private static final String REPORT_OUTPUT_LOCATION = "report_output_location";
 	private static final String USERNAME = "eppt_username";
 	private static final String USE_PLOTLY_PREF = "use-plotly-pref";
+	private static final String AUTO_REFRESH_TREND_REPORT = "auto-refresh-trendreport";
 
 	private EpptPreferences()
 	{
@@ -158,5 +159,15 @@ public final class EpptPreferences
 	public static void setUsePlotly(boolean selected)
 	{
 		WRIMS_NODE.putBoolean(USE_PLOTLY_PREF, selected);
+	}
+
+	public static boolean getAutoRefreshTrendReport()
+	{
+		return EPPT_HOME.getBoolean(AUTO_REFRESH_TREND_REPORT, false);
+	}
+
+	public static void setAutoRefreshTrendReport(boolean autoRefresh)
+	{
+		EPPT_HOME.putBoolean(AUTO_REFRESH_TREND_REPORT, autoRefresh);
 	}
 }

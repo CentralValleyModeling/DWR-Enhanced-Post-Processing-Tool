@@ -200,6 +200,14 @@ class DisplayWRIMSFrames extends DisplayFrames
 		{
 			plotAggregateExceedance(scenarioRunData, name, tabbedPane);
 		}
+		if(getPlotConfigurationState().isDisplayMonthlyLine())
+		{
+			plotMonthlyLine(scenarioRunData, name, tabbedPane);
+		}
+		if(getPlotConfigurationState().isDisplayBarCharts())
+		{
+			plotBarCharts(scenarioRunData, name, tabbedPane);
+		}
 		if(getPlotConfigurationState().isDisplayBoxAndWhiskerAll())
 		{
 			plotBoxPlotDiscrete(scenarioRunData, name, tabbedPane);
@@ -220,7 +228,68 @@ class DisplayWRIMSFrames extends DisplayFrames
 
 	private void plotDts(List<EpptScenarioRun> scenarios, DerivedTimeSeries dts, JTabbedPane tabbedPane)
 	{
-		Map<EpptScenarioRun, List<TimeSeriesContainer>> scenarioRunData = new TreeMap<>(Comparator.comparing(scenarios::indexOf));
+		Map<EpptScenarioRun, List<TimeSeriesContainer>> scenarioRunData;
+		if(getEpptConfigurationController().isDifference())
+		{
+			scenarioRunData = getDiffDtsData(scenarios, dts);
+		}
+		else
+		{
+			scenarioRunData = getComparisonDtsData(scenarios, dts);
+		}
+		plot(tabbedPane, scenarioRunData, dts.getName());
+	}
+
+	private Map<EpptScenarioRun, List<TimeSeriesContainer>> getDiffDtsData(List<EpptScenarioRun> scenarios, DerivedTimeSeries dts)
+	{
+		final Map<EpptScenarioRun, List<TimeSeriesContainer>> scenarioRunData;
+		scenarioRunData  = new TreeMap<>(Comparator.comparing(scenarios::indexOf));
+		TimeSeriesContainer[] baseData = getBaseDtsData(scenarios, dts);
+		if(baseData != null)
+		{
+			for(EpptScenarioRun epptScenarioRun : scenarios)
+			{
+				if(!epptScenarioRun.isBaseSelected())
+				{
+					DSSGrabber2SvcImpl dssGrabber = buildDssGrabber(epptScenarioRun);
+					dssGrabber.setLocation("@@" + dts.getName());
+					TimeSeriesContainer[] result = dssGrabber.getPrimarySeries();
+					if(result[0] != null)
+					{
+						TimeSeriesContainer tsc = result[0];
+						tsc.setFullName(epptScenarioRun.getName() + " (" + epptScenarioRun.getModel() + ")");
+						tsc = DSSGrabber1SvcImpl.diffSeries(baseData[0], result[0]);
+						scenarioRunData.computeIfAbsent(epptScenarioRun, v -> new ArrayList<>()).add(tsc);
+					}
+				}
+			}
+		}
+		return scenarioRunData;
+	}
+
+	private TimeSeriesContainer[] getBaseDtsData(List<EpptScenarioRun> scenarios, DerivedTimeSeries dts)
+	{
+		TimeSeriesContainer[] baseData = null;
+		for(EpptScenarioRun epptScenarioRun : scenarios)
+		{
+			if(epptScenarioRun.isBaseSelected())
+			{
+				DSSGrabber2SvcImpl dssGrabber = buildDssGrabber(epptScenarioRun);
+				dssGrabber.setLocation("@@" + dts.getName());
+				TimeSeriesContainer[] result = dssGrabber.getPrimarySeries();
+				if(result[0] != null)
+				{
+					baseData = result;
+				}
+			}
+		}
+		return baseData;
+	}
+
+	private Map<EpptScenarioRun, List<TimeSeriesContainer>> getComparisonDtsData(List<EpptScenarioRun> scenarios, DerivedTimeSeries dts)
+	{
+		final Map<EpptScenarioRun, List<TimeSeriesContainer>> scenarioRunData;
+		scenarioRunData = new TreeMap<>(Comparator.comparing(scenarios::indexOf));
 		for(EpptScenarioRun epptScenarioRun : scenarios)
 		{
 			DSSGrabber2SvcImpl dssGrabber = buildDssGrabber(epptScenarioRun);
@@ -229,9 +298,10 @@ class DisplayWRIMSFrames extends DisplayFrames
 			if(result[0] != null)
 			{
 				TimeSeriesContainer tsc = result[0];
+				tsc.setFullName(epptScenarioRun.getName() + " (" + epptScenarioRun.getModel() + ")");
 				scenarioRunData.computeIfAbsent(epptScenarioRun, v -> new ArrayList<>()).add(tsc);
 			}
 		}
-		plot(tabbedPane, scenarioRunData, dts.getName());
+		return scenarioRunData;
 	}
 }

@@ -15,11 +15,15 @@ body {
     font-family: 'Lucida Grande", "Lucida Sans Unicode", "Verdana", "Arial", "Helvetica", "sans-serif';
 }
 
+.clicked path {
+    fill: black;
+}
+
 .sidenav {
     height: 100%;
     width: 0;
     position: fixed;
-    z-index: 1;
+    /*z-index: 1;*/
     top: 0;
     left: 0;
     background-color: rgb(204, 204, 204);
@@ -32,11 +36,10 @@ body {
     height: 100%;
     width: 0;
     position: fixed;
-    z-index: 1;
+    /*z-index: 1;*/
     top: 0;
     left: 250px;
     background-color: rgb(241, 241, 241);
-    overflow-x: hidden;
     transition: 0.5s;
     padding-top: 60px;
 }
@@ -107,6 +110,24 @@ body {
     font-size: 26px;
     margin-left: 120px;
     color: cornflowerblue;
+}
+
+.color-picker {
+    margin-left: 15px;
+    display:inline-block;
+    color:#444;
+    border:1px solid #333333;
+    background:#333333;
+    box-shadow: 0 0 5px -1px rgba(0,0,0,0.2);
+    cursor:pointer;
+    vertical-align:middle;
+    width: 70px;
+    padding: 5px;
+    text-align: center;
+}
+.color-picker:active {
+    color:red;
+    box-shadow: 0 0 5px -1px rgba(0,0,0,0.6);
 }
 
 #main {

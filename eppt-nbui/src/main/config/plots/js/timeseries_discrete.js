@@ -33,11 +33,14 @@ function getPlotlyMonthlySeries(datum, firstRecord, lastRecord, instantaneous) {
                     var startingDataIndex = 0;
                     while (startDate <= endDate) {
                         let date = new Date(startDate);
-                        date.setDate(date.getDate() - 1);
-                        x.push(date);
+                        if (!instantaneous) {
+                            date.setMonth(date.getMonth() - 1);
+                        }
                         if (timeSeries[startingDataIndex]) {
                             let dataDate = new Date(timeSeries[startingDataIndex][0]);
+                            dataDate.setMonth(dataDate.getMonth() - 1);
                             if (dataDate.getFullYear() === startDate.getFullYear() && dataDate.getMonth() === startDate.getMonth()) {
+                                x.push(date);
                                 y.push(timeSeries[startingDataIndex][1]);
                                 hoverInfo.push('all');
                                 markerSize.push(4);
@@ -49,6 +52,7 @@ function getPlotlyMonthlySeries(datum, firstRecord, lastRecord, instantaneous) {
                                 y[y.length - 2] = y[y.length - 1];
                             }
                             if (x.length > y.length) {
+                                x.push(date);
                                 y.push(null);
                                 hoverInfo.push('skip');
                                 markerSize.push(0);
@@ -62,7 +66,7 @@ function getPlotlyMonthlySeries(datum, firstRecord, lastRecord, instantaneous) {
                         seriesList.push(series);
                     }
                     let shape = 'vh';
-                    if(instantaneous){
+                    if (instantaneous) {
                         shape = 'linear';
                     }
                     series.push({
@@ -89,7 +93,7 @@ function getPlotlyMonthlySeries(datum, firstRecord, lastRecord, instantaneous) {
     return seriesList;
 }
 
-function buildLayouts(datum, yaxis, title) {
+function buildDiscreteLayouts(datum, yaxis, title) {
     let layoutList = [];
     for (let i = 0; i < datum.length; i++) {
         let tsList = datum[i]['ts_list'];
@@ -112,66 +116,6 @@ function buildLayouts(datum, yaxis, title) {
                         if (annualFilters[m]['month_period']) {
                             plotTitle += '<br>' + annualFilters[m]['month_period'];
                         }
-                        var updatemenus = [
-                            {
-                                buttons: [
-                                    {
-                                        args: ['xaxis.range', [new Date('31Dec1909 2359'), new Date('01Jan1920 0000')]],
-                                        label: '1910\'s',
-                                        method: 'relayout'
-                                    },
-                                    {
-                                        args: ['xaxis.range', [new Date('31Dec1919 2359'), new Date('01Jan1930 0000')]],
-                                        label: '1920\'s',
-                                        method: 'relayout'
-                                    }, {
-                                        args: ['xaxis.range', [new Date('31Dec1929 2359'), new Date('01Jan1940 0000')]],
-                                        label: '1930\'s',
-                                        method: 'relayout'
-                                    }, {
-                                        args: ['xaxis.range', [new Date('31Dec1939 2359'), new Date('01Jan1950 0000')]],
-                                        label: '1940\'s',
-                                        method: 'relayout'
-                                    }, {
-                                        args: ['xaxis.range', [new Date('31Dec1949 2359'), new Date('01Jan1960 0000')]],
-                                        label: '1950\'s',
-                                        method: 'relayout'
-                                    }, {
-                                        args: ['xaxis.range', [new Date('31Dec1959 2359'), new Date('01Jan1970 0000')]],
-                                        label: '1960\'s',
-                                        method: 'relayout'
-                                    }, {
-                                        args: ['xaxis.range', [new Date('31Dec1969 2359'), new Date('01Jan1980 0000')]],
-                                        label: '1970\'s',
-                                        method: 'relayout'
-                                    }, {
-                                        args: ['xaxis.range', [new Date('31Dec1979 2359'), new Date('01Jan1990 0000')]],
-                                        label: '1980\'s',
-                                        method: 'relayout'
-                                    }, {
-                                        args: ['xaxis.range', [new Date('31Dec1989 2359'), new Date('01Jan2000 0000')]],
-                                        label: '1990\'s',
-                                        method: 'relayout'
-                                    }, {
-                                        args: ['xaxis.range', [new Date('31Dec1999 2359'), new Date('01Jan2010 0000')]],
-                                        label: '2000\'s',
-                                        method: 'relayout'
-                                    }, {
-                                        args: ['xaxis.range', [new Date('31Dec2009 2359'), new Date('01Jan2020 0000')]],
-                                        label: '2010\'s',
-                                        method: 'relayout'
-                                    }
-                                ],
-                                direction: 'left',
-                                pad: {'r': 10, 't': 10},
-                                showactive: true,
-                                type: 'buttons',
-                                x: 0.1,
-                                xanchor: 'left',
-                                y: 1.1,
-                                yanchor: 'top'
-                            }
-                        ];
                         layoutList[axis] = {
                             font: PLOTLY_FONT,
                             yaxis: {
@@ -182,7 +126,6 @@ function buildLayouts(datum, yaxis, title) {
                                 gridcolor: '#CCCCCC',
                                 rangemode: 'tozero'
                             },
-                            // updatemenus: updatemenus,
                             xaxis: {
                                 tickformat: '%b-%Y',
                                 hoverformat: '%b-%Y',
@@ -222,9 +165,13 @@ function buildLayouts(datum, yaxis, title) {
 }
 
 function plot(data) {
+    plotDiscrete(data);
+}
+
+function plotDiscrete(data) {
     FORMATTER = getD3Formatter(data['scenario_run_data'][0]['ts_list'][0]['monthly_filters'][0]['annual_filters'][0]['discrete_ts']);
     var datum = data['scenario_run_data'];
-    var layout = buildLayouts(datum, data['units'], data['gui_link_title']);
+    var layout = buildDiscreteLayouts(datum, data['units'], data['gui_link_title']);
     let plotlyMonthlySeries = getPlotlyMonthlySeries(datum, data['first_record'], data['last_record'], data['is_instantaneous']);
     plotData(layout, plotlyMonthlySeries);
 }
@@ -238,37 +185,49 @@ function plotlyCopyToClipboard(element) {
         text += '\t' + data1[i]['name']
     }
     text += '\n';
-    let datum = data1[0];
-    let xarr = datum['x'];
-    for (var j = 0; j < xarr.length; j++) {
-        let date = new Date(xarr[j]);
-        date.setDate(date.getDate() - 1);
-        text += date.getMonth() + '/' + date.getFullYear();
-        for (var k = 0; k < data1.length; k++) {
-            let yarr = data1[k]['y'];
-            text += '\t' + yarr[j];
+    let xyVals = [];
+    var foundDate = false;
+    for (let k = 0; k < data1.length; k++) {
+        let xarr = data1[k]['x'];
+        let yarr = data1[k]['y'];
+        for (let j = 0; j < xarr.length; j++) {
+            let x;
+            if (Object.prototype.toString.call(xarr[j]) === '[object Date]') {
+                foundDate = true;
+                let date = new Date(xarr[j]);
+                x = date.setMonth(date.getMonth());
+                x = date;
+            } else {
+                x = xarr[j];
+            }
+            if (!xyVals[x]) {
+                xyVals[x] = [];
+            }
+            xyVals[x].push(yarr[j]);
+        }
+    }
+    let keys = Object.keys(xyVals);
+    if(foundDate){
+        keys.sort((a,b)=> new Date(a).getTime() - new Date(b).getTime());
+    }
+    else{
+        keys.sort();
+    }
+    for (let i = 0; i < keys.length; i++) {
+        let key = keys[i];
+        if (foundDate) {
+            let date = new Date(key);
+            text += (date.getMonth() + 1) + '/' + date.getFullYear();
+        } else {
+            text += key;
+        }
+        for (let j = 0; j < xyVals[key].length; j++) {
+            text += '\t';
+            if (xyVals[key][j]) {
+                text += xyVals[key][j];
+            }
         }
         text += '\n';
     }
     copyTextToClipboard(text);
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

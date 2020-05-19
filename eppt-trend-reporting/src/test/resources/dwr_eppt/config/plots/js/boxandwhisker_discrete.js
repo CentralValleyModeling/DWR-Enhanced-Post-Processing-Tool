@@ -10,38 +10,40 @@
  * GNU General Public License
  */
 
-function getPlotlyAggregateSeries(datum) {
+function getPlotlyDiscreteSeries(datum) {
     let seriesList = [];
     for (let monthlyIndex = 0; monthlyIndex < datum[0]['ts_list'][0]['monthly_filters'].length; monthlyIndex++) {
         let series = [];
         for (let tsIndex = 0; tsIndex < datum[0]['ts_list'].length; tsIndex++) {
             for (let i = 0; i < datum.length; i++) {
                 let tsList = datum[i]['ts_list'];
-                let annualFilters = tsList[tsIndex]['monthly_filters'][monthlyIndex]['annual_filters'];
-                let x = [];
-                let y = [];
-                for (let j = 0; j < annualFilters.length; j++) {
-                    let annualData = annualFilters[j];
-                    let timeSeries = annualData['discrete_ts'];
-                    for (var ts = 0; ts < timeSeries.length; ts++) {
-                        x.push(annualData['annual_period']);
-                        y.push(timeSeries[ts][1]);
+                if(tsList[tsIndex]) {
+                    let annualFilters = tsList[tsIndex]['monthly_filters'][monthlyIndex]['annual_filters'];
+                    let x = [];
+                    let y = [];
+                    for (let j = 0; j < annualFilters.length; j++) {
+                        let annualData = annualFilters[j];
+                        let timeSeries = annualData['discrete_ts'];
+                        for (var ts = 0; ts < timeSeries.length; ts++) {
+                            x.push(annualData['annual_period']);
+                            y.push(timeSeries[ts][1]);
+                        }
                     }
+                    series.push({
+                        y: y,
+                        x: x,
+                        type: 'box',
+                        name: tsList[tsIndex]['ts_name'],
+                        marker: {
+                            color: datum[i]['scenario_color']
+                        },
+                        line: {
+                            width: 3 - tsIndex
+                        },
+                        boxmean: true,
+                        boxpoints: false
+                    });
                 }
-                series.push({
-                    y: y,
-                    x: x,
-                    type: 'box',
-                    name: tsList[tsIndex]['ts_name'],
-                    marker: {
-                        color: datum[i]['scenario_color']
-                    },
-                    line: {
-                        width: 3 - tsIndex
-                    },
-                    boxmean: true,
-                    boxpoints: false
-                });
             }
         }
         seriesList.push(series);
@@ -49,7 +51,7 @@ function getPlotlyAggregateSeries(datum) {
     return seriesList;
 }
 
-function buildLayouts(datum, yaxis, title) {
+function buildDiscreteLayouts(datum, yaxis, title) {
     let layoutList = [];
     for (let i = 0; i < 1; i++) {
         let tsList = datum[i]['ts_list'];
@@ -79,6 +81,7 @@ function buildLayouts(datum, yaxis, title) {
                                 orientation: 'h',
                                 xanchor: 'center',
                                 x: 0.5,
+                                y: -0.2,
                                 font: {
                                     size: 10,
                                 }
@@ -89,7 +92,13 @@ function buildLayouts(datum, yaxis, title) {
                                     size: 20,
                                 }
                             },
-                            boxmode: 'group'
+                            boxmode: 'group',
+                            margin: {
+                                l: 60,
+                                r: 40,
+                                b: 90,
+                                t: 120
+                            }
                         };
                     }
                     axis++;
@@ -100,16 +109,20 @@ function buildLayouts(datum, yaxis, title) {
     return layoutList;
 }
 
-function plot(data) {
+function plot(data){
+    plotDiscrete(data);
+}
+
+function plotDiscrete(data) {
     FORMATTER = getD3Formatter(data['scenario_run_data'][0]['ts_list'][0]['monthly_filters'][0]['annual_filters'][0]['discrete_ts']);
     var datum = data['scenario_run_data'];
-    var layout = buildLayouts(datum, data['units'], data['gui_link_title']);
-    let plotlyAggregateSeries = getPlotlyAggregateSeries(datum);
+    var layout = buildDiscreteLayouts(datum, data['units'], data['gui_link_title']);
+    let plotlyAggregateSeries = getPlotlyDiscreteSeries(datum);
     plotData(layout, plotlyAggregateSeries);
 }
 
-function plotlyCopyToClipboard() {
-    let plot = document.getElementById("tester");
+function plotlyCopyToClipboard(element) {
+    let plot = $(element)[0];
     let layout = plot.layout;
     let data1 = plot.data;
     let calcdata = plot.calcdata;

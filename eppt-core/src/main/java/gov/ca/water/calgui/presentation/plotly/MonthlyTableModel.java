@@ -16,10 +16,13 @@ import java.time.LocalDateTime;
 import java.time.Month;
 import java.time.YearMonth;
 import java.time.format.TextStyle;
+import java.util.Collection;
+import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Set;
 import java.util.SortedMap;
 
 import gov.ca.water.calgui.bo.WaterYearDefinition;
@@ -33,6 +36,8 @@ import com.rma.javafx.treetable.RmaTreeTableModel;
 import com.rma.javafx.treetable.columns.specs.RmaTreeTableColumnSpec;
 import com.rma.javafx.treetable.columns.specs.TreeTableColumnSpec;
 
+import static java.util.stream.Collectors.toSet;
+
 /**
  * Company: Resource Management Associates
  *
@@ -44,7 +49,8 @@ class MonthlyTableModel extends RmaTreeTableModel<MonthlyPaneRow>
 	private final RmaTreeTableColumnSpec _waterYearColSpec;
 	private final RmaTreeTableColumnSpec _aggregateColumnSpec;
 
-	MonthlyTableModel(String plotTitle, WaterYearDefinition waterYearDefinition, EpptReportingComputedSet epptReportingComputedSet)
+	MonthlyTableModel(String plotTitle, WaterYearDefinition waterYearDefinition, EpptReportingComputedSet epptReportingComputedSet,
+					  List<MonthPeriod> selectedMonthlyPeriods)
 	{
 		_waterYearColSpec = new RmaTreeTableColumnSpec.Builder(plotTitle + " (" + epptReportingComputedSet.getUnits() + ")")
 				.withCanBeHidden(false)
@@ -58,13 +64,19 @@ class MonthlyTableModel extends RmaTreeTableModel<MonthlyPaneRow>
 														  .getEpptReportingComputed().get(0)
 														  .getMonthPeriod();
 		String columnTitle = monthPeriod.getName();
+		Set<Month> selectedMonths = selectedMonthlyPeriods.stream()
+														  .map(period -> period.getYearMonths(1955))
+														  .flatMap(Collection::stream)
+														  .map(YearMonth::getMonth)
+														  .collect(toSet());
 		_aggregateColumnSpec = new RmaTreeTableColumnSpec.Builder(columnTitle)
-				.withCanBeHidden(false)
+				.withCanBeHidden(true)
 				.withEditable(false)
 				.withSortable(false)
-				.withVisibleByDefault(true)
+				.withVisibleByDefault(selectedMonths.size() == 12)
 				.build();
-		Map<Month, TreeTableColumnSpec> monthTreeTableColumnSpecMap = processColumns(waterYearDefinition, _aggregateColumnSpec);
+		Map<Month, TreeTableColumnSpec> monthTreeTableColumnSpecMap = processColumns(waterYearDefinition, _aggregateColumnSpec,
+				selectedMonths);
 		for(EpptReportingComputedSet.EpptReportingScenarioComputed computed : epptReportingComputedSet.getEpptReportingComputed())
 		{
 			for(EpptReportingComputedSet.EpptReportingTs tsComputed : computed.getTsComputed())
@@ -94,14 +106,14 @@ class MonthlyTableModel extends RmaTreeTableModel<MonthlyPaneRow>
 			}
 			MonthlyPaneRow.MonthlyPaneRowScenario monthlyPaneRowScenario = new MonthlyPaneRow.MonthlyPaneRowScenario(title, _waterYearColSpec);
 			getRows().add(monthlyPaneRowScenario);
-			for(int year = series.firstKey().getYear(); year < series.lastKey().getYear(); year++)
+			for(int year : yearly.keySet())
 			{
 				List<YearMonth> yearMonths = monthPeriod.getYearMonths(year);
 				LocalDateTime startYearMonth = yearMonths.get(0).atEndOfMonth().minusDays(2).atTime(0, 0);
 				LocalDateTime endYearMonth = yearMonths.get(yearMonths.size() - 1).atEndOfMonth().plusDays(2).atTime(0, 0);
 				if(series.firstKey().isAfter(startYearMonth) || series.lastKey().isBefore(endYearMonth))
 				{
-					continue;
+//					continue;
 				}
 				SortedMap<LocalDateTime, Double> yearValues = series.subMap(startYearMonth, endYearMonth);
 				Map<TreeTableColumnSpec, Double> dataMap = new HashMap<>();
@@ -135,9 +147,10 @@ class MonthlyTableModel extends RmaTreeTableModel<MonthlyPaneRow>
 	}
 
 	private Map<Month, TreeTableColumnSpec> processColumns(WaterYearDefinition waterYearDefinition,
-														   RmaTreeTableColumnSpec aggregateColumnSpec)
+														   RmaTreeTableColumnSpec aggregateColumnSpec,
+														   Set<Month> selectedMonths)
 	{
-		Map<Month, TreeTableColumnSpec> retval = new HashMap<>();
+		Map<Month, TreeTableColumnSpec> retval = new EnumMap<>(Month.class);
 		getColumnSpecs().add(_waterYearColSpec);
 		Month startMonth = waterYearDefinition.getStartMonth();
 		do
@@ -146,7 +159,7 @@ class MonthlyTableModel extends RmaTreeTableModel<MonthlyPaneRow>
 					.withCanBeHidden(true)
 					.withEditable(false)
 					.withSortable(false)
-					.withVisibleByDefault(true)
+					.withVisibleByDefault(selectedMonths.contains(startMonth))
 					.build();
 			getColumnSpecs().add(spec);
 			retval.put(startMonth, spec);

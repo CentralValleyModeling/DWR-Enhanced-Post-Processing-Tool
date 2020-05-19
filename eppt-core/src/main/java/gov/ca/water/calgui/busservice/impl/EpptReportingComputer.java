@@ -214,12 +214,12 @@ public final class EpptReportingComputer
 		SortedMap<Month, NavigableMap<Integer, Double>> monthlyMap = new TreeMap<>();
 		if(!input.isEmpty())
 		{
-			for(int year = input.firstKey().getYear(); year < input.lastKey().getYear(); year++)
+			for(int year = input.firstKey().getYear(); year <= input.lastKey().getYear(); year++)
 			{
 				List<YearMonth> yearMonths = _monthPeriod.getYearMonths(year);
 				LocalDateTime startYearMonth = yearMonths.get(0).atEndOfMonth().minusDays(2).atTime(0, 0);
 				LocalDateTime endYearMonth = yearMonths.get(yearMonths.size() - 1).atEndOfMonth().plusDays(2).atTime(0, 0);
-				if(input.firstKey().isAfter(startYearMonth) || input.lastKey().isBefore(endYearMonth))
+				if(input.firstKey().isAfter(startYearMonth))
 				{
 					continue;
 				}
@@ -228,7 +228,7 @@ public final class EpptReportingComputer
 				{
 					LocalDateTime localDateTime = entry.getKey().minusMonths(1);
 					NavigableMap<Integer, Double> yearlyMap = monthlyMap.computeIfAbsent(localDateTime.getMonth(), v -> new TreeMap<>());
-					yearlyMap.put(localDateTime.getYear(), entry.getValue());
+					yearlyMap.put(year, entry.getValue());
 				}
 			}
 		}

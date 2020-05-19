@@ -20,8 +20,8 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
-import javafx.scene.control.ToggleButton;
 import org.w3c.dom.Document;
+import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
@@ -36,10 +36,8 @@ import org.xml.sax.SAXException;
 public class TrendReportTabConfig
 {
 	private final String _text;
-	private final boolean _statsDisabled;
-	private final boolean _seasonalPeriodDisabled;
 	private final Path _path;
-	private final boolean _waterYearIndexDisabled;
+	private final boolean _aggregateSupported;
 
 	public TrendReportTabConfig(Path path) throws IOException, ParserConfigurationException, SAXException
 	{
@@ -54,11 +52,34 @@ public class TrendReportTabConfig
 			dbf.setExpandEntityReferences(false);
 			DocumentBuilder db = dbf.newDocumentBuilder();
 			Document parse = db.parse(new InputSource(reader));
-			_text = getHtmlTitle(parse, path.getFileName().toString()).trim();
-			_statsDisabled = attributeDisabled(parse, "support-statistic");
-			_seasonalPeriodDisabled = attributeDisabled(parse, "support-seasonal-period");
-			_waterYearIndexDisabled = attributeDisabled(parse, "support-water-year-index");
+			_text = extractHtmlTitle(parse, path.getFileName().toString()).trim();
+			_aggregateSupported = extractAggregateSupported(parse);
 		}
+	}
+
+	private boolean extractAggregateSupported(Document parse)
+	{
+		boolean retval = false;
+		NodeList metaNodes = parse.getElementsByTagName("meta");
+		if(metaNodes != null)
+		{
+			for(int i = 0; i < metaNodes.getLength(); i++)
+			{
+				Node item = metaNodes.item(i);
+				Node namedItem = item.getAttributes().getNamedItem("name");
+				Node contentItem = item.getAttributes().getNamedItem("content");
+				if(contentItem != null && namedItem != null && "supports-aggregate".equals(namedItem.getNodeValue()))
+				{
+					retval = Boolean.parseBoolean(contentItem.getNodeValue());
+				}
+			}
+		}
+		return retval;
+	}
+
+	public boolean isAggregateSupported()
+	{
+		return _aggregateSupported;
 	}
 
 	public Path getPath()
@@ -66,27 +87,12 @@ public class TrendReportTabConfig
 		return _path;
 	}
 
-	public boolean isWaterYearIndexDisabled()
-	{
-		return _waterYearIndexDisabled;
-	}
-
-	public boolean isSeasonalPeriodDisabled()
-	{
-		return _seasonalPeriodDisabled;
-	}
-
-	public boolean isStatsDisabled()
-	{
-		return _statsDisabled;
-	}
-
 	public String getText()
 	{
 		return _text;
 	}
 
-	private String getHtmlTitle(Document parse, String filename)
+	private String extractHtmlTitle(Document parse, String filename)
 	{
 		String text;
 		NodeList head = parse.getElementsByTagName("title");
@@ -101,25 +107,9 @@ public class TrendReportTabConfig
 		return text;
 	}
 
-	private boolean attributeDisabled(Document parse, String attribute)
+	@Override
+	public String toString()
 	{
-		boolean attributeDisabled = true;
-		NodeList meta = parse.getElementsByTagName("meta");
-		for(int i = 0; i < meta.getLength(); i++)
-		{
-			org.w3c.dom.Node item = meta.item(i);
-			org.w3c.dom.Node name = item.getAttributes().getNamedItem("name");
-			if(name != null)
-			{
-				String metaName = name.getTextContent();
-				org.w3c.dom.Node content = item.getAttributes().getNamedItem("content");
-				if(content != null && attribute.equals(metaName))
-				{
-					attributeDisabled = !Boolean.parseBoolean(content.getTextContent());
-					break;
-				}
-			}
-		}
-		return attributeDisabled;
+		return getText();
 	}
 }

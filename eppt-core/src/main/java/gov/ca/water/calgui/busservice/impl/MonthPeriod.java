@@ -60,7 +60,7 @@ public class MonthPeriod
 	{
 		if(month != null)
 		{
-			return month.getDisplayName(TextStyle.FULL, Locale.US);
+			return month.getDisplayName(TextStyle.SHORT, Locale.US);
 		}
 		else
 		{
