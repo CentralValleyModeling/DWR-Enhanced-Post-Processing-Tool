@@ -73,4 +73,9 @@ public class PlotConfigurationPane extends BorderPane
 		_epptAnnualPeriodPane.reloadProject();
 		_epptStatisticsPane.reloadProject();
 	}
+
+	public void commitEdits()
+	{
+		_timeWindowPane.commitEdits();
+	}
 }

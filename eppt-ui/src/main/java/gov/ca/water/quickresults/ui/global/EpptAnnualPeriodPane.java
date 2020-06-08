@@ -523,11 +523,11 @@ class EpptAnnualPeriodPane extends TitledPane
 		{
 			Map<EpptScenarioRun, WaterYearPeriodRangesFilter> retval = new HashMap<>();
 			WaterYearPeriod waterYearPeriod = new WaterYearPeriod(_period.getPeriodName());
-			for(EpptScenarioRun scenarioRun : _controller.getScenarioRuns())
+			try
 			{
-				WaterYearTableReader waterYearTableReader = new WaterYearTableReader(scenarioRun.getLookupDirectory());
-				try
+				for(EpptScenarioRun scenarioRun : _controller.getScenarioRuns())
 				{
+					WaterYearTableReader waterYearTableReader = new WaterYearTableReader(scenarioRun.getLookupDirectory());
 					List<WaterYearIndex> read = waterYearTableReader.read();
 					Optional<WaterYearIndex> indexOpt = read.stream().filter(_alias::isAliasFor).findAny();
 					if(indexOpt.isPresent())
@@ -542,11 +542,17 @@ class EpptAnnualPeriodPane extends TitledPane
 								_alias.getAlias(), waterYearPeriodRanges, _controller.getWaterYearDefinition());
 						retval.put(scenarioRun, waterYearPeriodRangesFilter);
 					}
+					else
+					{
+						LOGGER.log(Level.SEVERE, "No alias found for Water Year Index: {0} for scenario: {1}", new Object[]{_alias, scenarioRun});
+						return new HashMap<>();
+					}
 				}
-				catch(EpptInitializationException e)
-				{
-					LOGGER.log(Level.SEVERE, "Error reading lookup directory, cannot add period: " + waterYearPeriod, e);
-				}
+			}
+			catch(EpptInitializationException e)
+			{
+				LOGGER.log(Level.SEVERE, "Error reading lookup directory, cannot add period: " + waterYearPeriod, e);
+				retval.clear();
 			}
 			return retval;
 		}

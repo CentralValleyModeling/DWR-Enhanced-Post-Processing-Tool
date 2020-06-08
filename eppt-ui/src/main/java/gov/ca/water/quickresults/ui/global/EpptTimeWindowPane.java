@@ -130,6 +130,12 @@ class EpptTimeWindowPane extends TitledPane
 		_waterYearDefinitionComboBox.setValue(_controller.getWaterYearDefinition());
 	}
 
+	public void commitEdits()
+	{
+		_startYearSpinner.increment(0);
+		_endYearSpinner.increment(0);
+	}
+
 	private static final class MyKeyAdapter implements EventHandler<KeyEvent>
 	{
 		private final Spinner<Integer> _component;

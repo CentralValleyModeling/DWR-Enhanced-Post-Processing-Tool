@@ -150,6 +150,7 @@ public final class EpptReportingComputer
 																	  .entrySet()
 																	  .stream()
 																	  .filter(Objects::nonNull)
+																	  .filter(e->!Double.isNaN(e.getValue()))
 																	  .filter(waterYearPeriodRangesFilter)
 																	  .collect(toMap(Map.Entry::getKey, Map.Entry::getValue,
 																			  (o1, o2) -> o1, TreeMap::new));

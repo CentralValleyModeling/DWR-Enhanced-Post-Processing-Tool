@@ -14,10 +14,12 @@ package gov.ca.water.trendreporting;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.TreeMap;
 import java.util.logging.Level;
@@ -198,6 +200,10 @@ class TrendReportDataLoader
 		else if(_waterYearPeriodRangesFilters.isEmpty())
 		{
 			retval = Optional.of("No Annual Filter defined");
+		}
+		else if(_waterYearPeriodRangesFilters.stream().anyMatch(filter->_scenarioRuns.stream().map(filter::get).anyMatch(Objects::isNull)))
+		{
+			retval = Optional.of("Undefined Annual Period due to invalid water year type definitions");
 		}
 		else if(_difference && _scenarioRuns.stream().noneMatch(EpptScenarioRun::isBaseSelected) )
 		{

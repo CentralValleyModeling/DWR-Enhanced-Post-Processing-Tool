@@ -138,12 +138,12 @@ public class WaterYearIndexAliasReader
 
 		public boolean isAliasFor(WaterYearIndex index)
 		{
-			return index.getName().equalsIgnoreCase(getAlias()) || getWaterYearIndexes().stream().anyMatch(c -> c.equalsIgnoreCase(index.getName()));
+			return index.getName().equalsIgnoreCase(getAlias()) || getWaterYearIndexes().stream().map(String::trim).anyMatch(c -> c.equalsIgnoreCase(index.getName()));
 		}
 
 		public boolean isAliasFor(String index)
 		{
-			return index.equalsIgnoreCase(getAlias()) || getWaterYearIndexes().stream().anyMatch(c -> c.equalsIgnoreCase(index));
+			return index.equalsIgnoreCase(getAlias()) || getWaterYearIndexes().stream().map(String::trim).anyMatch(c -> c.equalsIgnoreCase(index));
 		}
 
 		public List<WaterYearPeriod> getWaterYearPeriods()

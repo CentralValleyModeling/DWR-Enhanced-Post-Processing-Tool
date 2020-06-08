@@ -116,7 +116,7 @@ abstract class SummaryPaneRow extends RmaTreeTableRowModel<SummaryPaneRow>
 				SimpleStringProperty retval = new SimpleStringProperty();
 				if(e.getValue() != null && Constant.isValidValue(e.getValue()))
 				{
-					Double value = e.getValue();
+					double value = e.getValue();
 					if(value >= 1)
 					{
 						retval = new SimpleStringProperty(Long.toString(Math.round(value)));
