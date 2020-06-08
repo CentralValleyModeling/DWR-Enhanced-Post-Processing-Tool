@@ -143,7 +143,7 @@ function plotlyCopyToClipboard(element) {
     let plot = $(element)[0];
     let layout = plot.layout;
     let data1 = plot.data;
-    var text = layout['title']['text'] + '\n' + 'Date\t' + layout['yaxis']['title']['text'] + '\n';
+    var text = layout['title']['text'] + '\n' + 'Month\t' + layout['yaxis']['title']['text'] + '\n';
     for (var i = 0; i < data1.length; i++) {
         text += '\t' + data1[i]['name']
     }

@@ -113,7 +113,7 @@ class DisplayFrames
 		JFXPanel pane = new PlotlyPaneBuilder(PlotlyPaneBuilder.ChartType.BOX_ALL, plotTitle, scenarioRunData,
 				_epptConfigurationController)
 				.build();
-		tabbedPane.addTab("Box Plot All", pane);
+		tabbedPane.addTab("Box Plot (All)", pane);
 	}
 
 	void plotBoxPlotAggregate(Map<EpptScenarioRun, List<TimeSeriesContainer>> scenarioRunData,
@@ -124,7 +124,7 @@ class DisplayFrames
 		JFXPanel pane = new PlotlyPaneBuilder(PlotlyPaneBuilder.ChartType.BOX_AGGREGATE, plotTitle, scenarioRunData,
 				_epptConfigurationController)
 				.build();
-		tabbedPane.addTab("Box Plot Aggregate", pane);
+		tabbedPane.addTab("Box Plot (Aggregate)", pane);
 	}
 
 	void plotBarCharts(Map<EpptScenarioRun, List<TimeSeriesContainer>> scenarioRunData,
@@ -135,7 +135,7 @@ class DisplayFrames
 		JFXPanel pane = new PlotlyPaneBuilder(PlotlyPaneBuilder.ChartType.BAR_GRAPH, plotTitle, scenarioRunData,
 				_epptConfigurationController)
 				.build();
-		tabbedPane.addTab("Bar Charts Aggregate", pane);
+		tabbedPane.addTab("Bar Graph", pane);
 	}
 
 	void plotMonthlyLine(Map<EpptScenarioRun, List<TimeSeriesContainer>> scenarioRunData,
@@ -156,11 +156,11 @@ class DisplayFrames
 				.build();
 		if(_epptConfigurationController.isDifference())
 		{
-			tabbedPane.addTab("Difference All", pane);
+			tabbedPane.addTab("Time Series (All) - Difference", pane);
 		}
 		else
 		{
-			tabbedPane.addTab("Time Series All", pane);
+			tabbedPane.addTab("Time Series (All)", pane);
 		}
 	}
 
@@ -172,11 +172,11 @@ class DisplayFrames
 				.build();
 		if(_epptConfigurationController.isDifference())
 		{
-			tabbedPane.addTab("Difference Aggregate", pane);
+			tabbedPane.addTab("Time Series (Aggregate) - Difference", pane);
 		}
 		else
 		{
-			tabbedPane.addTab("Time Series Aggregate", pane);
+			tabbedPane.addTab("Time Series (Aggregate)", pane);
 		}
 	}
 
@@ -201,12 +201,12 @@ class DisplayFrames
 				.build();
 		if(_epptConfigurationController.isDifference())
 		{
-			tabbedPane.addTab("Summary - Difference", pane);
+			tabbedPane.addTab("Summary Table - Difference", pane);
 		}
 		else
 
 		{
-			tabbedPane.addTab("Summary", pane);
+			tabbedPane.addTab("Summary Table", pane);
 		}
 
 	}
@@ -219,11 +219,11 @@ class DisplayFrames
 				.build();
 		if(_epptConfigurationController.isDifference())
 		{
-			tabbedPane.addTab("Monthly - Difference", pane);
+			tabbedPane.addTab("Monthly Table - Difference", pane);
 		}
 		else
 		{
-			tabbedPane.addTab("Monthly", pane);
+			tabbedPane.addTab("Monthly Table", pane);
 		}
 	}
 
@@ -235,7 +235,7 @@ class DisplayFrames
 				.build();
 		if(_epptConfigurationController.isDifference())
 		{
-			tabbedPane.addTab("Exceedance (All - Difference)", pane);
+			tabbedPane.addTab("Exceedance (All) - Difference", pane);
 		}
 		else
 		{
@@ -251,7 +251,7 @@ class DisplayFrames
 				.build();
 		if(_epptConfigurationController.isDifference())
 		{
-			tabbedPane.addTab("Exceedance (Aggregate - Difference)", pane);
+			tabbedPane.addTab("Exceedance (Aggregate) - Difference", pane);
 		}
 		else
 		{

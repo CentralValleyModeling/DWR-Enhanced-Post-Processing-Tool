@@ -50,7 +50,7 @@ public class DTSTable extends MPanel
 					"Add Row",
 					"Insert Row",
 					"Quit",
-					"Retrieve"
+					"Display"
 
 			};
 	private static final char[] ITEM_CHARS =
@@ -167,7 +167,7 @@ public class DTSTable extends MPanel
 		JButton addrow = new JButton("Add");
 		JButton insertrow = new JButton("Insert");
 		JButton deleterow = new JButton("Delete");
-		_opencurrent = new JButton("Open");
+		_opencurrent = new JButton("Display");
 		addrow.addActionListener(new CursorChangeListener()
 		{
 			public void doWork()
