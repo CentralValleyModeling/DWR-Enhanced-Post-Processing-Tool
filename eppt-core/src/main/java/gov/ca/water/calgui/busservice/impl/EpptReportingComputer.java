@@ -76,34 +76,35 @@ public final class EpptReportingComputer
 			List<EpptReportingComputedSet.EpptReportingTs> tsComputes = new ArrayList<>();
 			for(TimeSeriesContainer ts : data.getValue())
 			{
-				if(ts != null && !isInstantaneous)
-				{
-					isInstantaneous = "INST-VAL".equalsIgnoreCase(ts.getType());
-				}
-				List<EpptReportingComputedSet.EpptReportingMonthComputed> monthComputes = new ArrayList<>();
-				for(MonthPeriod monthPeriod : monthPeriods)
-				{
-					List<EpptReportingComputed> annualComputes = new ArrayList<>();
-					for(Map<EpptScenarioRun, WaterYearPeriodRangesFilter> waterYearPeriodRangesFilter : waterYearPeriodRangesFilters)
-					{
-						EpptReportingComputer trendReportingComputer = new EpptReportingComputer(statistic, waterYearDefinition, monthPeriod,
-								waterYearPeriodRangesFilter);
-						EpptReportingComputed compute = trendReportingComputer.compute(data.getKey(), ts, taf);
-						firstRecord = getMin(firstRecord, trendReportingComputer._firstRecord);
-						lastRecord = getMax(lastRecord, trendReportingComputer._lastRecord);
-						units = trendReportingComputer._units;
-						annualComputes.add(compute);
-					}
-					monthComputes.add(new EpptReportingComputedSet.EpptReportingMonthComputed(annualComputes));
-				}
-				String name = "";
 				if(ts != null)
 				{
-					name = ts.getFullName();
+					if(!isInstantaneous)
+					{
+						isInstantaneous = "INST-VAL".equalsIgnoreCase(ts.getType());
+					}
+					List<EpptReportingComputedSet.EpptReportingMonthComputed> monthComputes = new ArrayList<>();
+					for(MonthPeriod monthPeriod : monthPeriods)
+					{
+						List<EpptReportingComputed> annualComputes = new ArrayList<>();
+						for(Map<EpptScenarioRun, WaterYearPeriodRangesFilter> waterYearPeriodRangesFilter : waterYearPeriodRangesFilters)
+						{
+							EpptReportingComputer trendReportingComputer = new EpptReportingComputer(statistic, waterYearDefinition, monthPeriod, waterYearPeriodRangesFilter);
+							EpptReportingComputed compute = trendReportingComputer.compute(data.getKey(), ts, taf);
+							firstRecord = getMin(firstRecord, trendReportingComputer._firstRecord);
+							lastRecord = getMax(lastRecord, trendReportingComputer._lastRecord);
+							units = trendReportingComputer._units;
+							annualComputes.add(compute);
+						}
+						monthComputes.add(new EpptReportingComputedSet.EpptReportingMonthComputed(annualComputes));
+					}
+					String name = ts.getFullName();
+					tsComputes.add(new EpptReportingComputedSet.EpptReportingTs(name, monthComputes));
 				}
-				tsComputes.add(new EpptReportingComputedSet.EpptReportingTs(name, monthComputes));
 			}
-			trendReportingComputed.add(new EpptReportingComputedSet.EpptReportingScenarioComputed(data.getKey(), tsComputes));
+			if(!tsComputes.isEmpty())
+			{
+				trendReportingComputed.add(new EpptReportingComputedSet.EpptReportingScenarioComputed(data.getKey(), tsComputes));
+			}
 		}
 		return new EpptReportingComputedSet(plotTitle, trendReportingComputed, units, firstRecord, lastRecord, isInstantaneous);
 	}
