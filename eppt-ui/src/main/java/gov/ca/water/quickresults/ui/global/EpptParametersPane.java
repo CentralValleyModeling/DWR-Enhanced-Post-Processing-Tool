@@ -259,14 +259,16 @@ public class EpptParametersPane extends TitledPane
 		EpptParameter selectedItem = _parameterListView.getSelectionModel().getSelectedItem();
 		if(selectedItem != null)
 		{
-			AddParameterDialog addParameterDialog = new AddParameterDialog(Frame.getFrames()[0], selectedItem);
-			SwingUtilities.invokeAndWait(() -> addParameterDialog.setVisible(true));
-			if(!addParameterDialog.isCanceled())
+			AddParameterDialog editParameterDialog = new AddParameterDialog(Frame.getFrames()[0], selectedItem);
+			SwingUtilities.invokeAndWait(() -> editParameterDialog.setVisible(true));
+			if(!editParameterDialog.isCanceled())
 			{
-				String type = addParameterDialog.getDataType();
-				String parameter = addParameterDialog.getParameter();
+				String type = editParameterDialog.getDataType();
+				String parameter = editParameterDialog.getParameter();
 				GUILinksAllModelsBO guiLink = new GUILinksAllModelsBO("", "", parameter, "", type);
+				Map<GUILinksAllModelsBO.Model, String> bAndCParts = editParameterDialog.getBAndCParts();
 				selectedItem.update(guiLink);
+				bAndCParts.forEach((key, value) -> guiLink.addModelMapping(key.toString(), value, ""));
 				_parameterListView.getSelectionModel().select(null);
 				_parameterListView.getSelectionModel().select(selectedItem);
 			}

@@ -28,6 +28,7 @@ import java.time.YearMonth;
 import java.util.Arrays;
 import java.util.Objects;
 import javax.swing.*;
+import javax.swing.border.TitledBorder;
 
 import gov.ca.water.calgui.bo.WaterYearPeriodRange;
 import gov.ca.water.calgui.techservice.impl.DialogSvcImpl;
@@ -47,7 +48,7 @@ class AddAnnualFilterDialog extends JDialog
 
 	AddAnnualFilterDialog(Frame frame)
 	{
-		super(frame, "New Parameter", true);
+		super(frame, "New Annual Filter", true);
 		$$$setupUI$$$();
 		setContentPane(_contentPane);
 		setModal(true);
@@ -66,23 +67,20 @@ class AddAnnualFilterDialog extends JDialog
 		});
 
 		// call onCancel() on ESCAPE
-		_contentPane.registerKeyboardAction(e -> onCancel(), KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0),
-				JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
+		_contentPane.registerKeyboardAction(e -> onCancel(), KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
 		pack();
 		setPreferredSize(new Dimension(550, 200));
 		setMinimumSize(new Dimension(550, 200));
 		setLocationRelativeTo(frame);
 		_startYearSpinner.setValue(1921);
 		_endYearSpinner.setValue(2003);
-		Arrays.asList(Month.values()).forEach(e ->
-		{
+		Arrays.asList(Month.values()).forEach(e -> {
 			_startMonthCombobox.addItem(e);
 			_endMonthCombobox.addItem(e);
 		});
 		_startMonthCombobox.setSelectedItem(Month.MAY);
 		_endMonthCombobox.setSelectedItem(Month.SEPTEMBER);
-		_overrideWaterYearDefinitionCheckBox.addActionListener(e ->
-		{
+		_overrideWaterYearDefinitionCheckBox.addActionListener(e -> {
 			_startMonthCombobox.setEnabled(_overrideWaterYearDefinitionCheckBox.isSelected());
 			_endMonthCombobox.setEnabled(_overrideWaterYearDefinitionCheckBox.isSelected());
 		});
@@ -187,7 +185,7 @@ class AddAnnualFilterDialog extends JDialog
 	{
 		_contentPane = new JPanel();
 		_contentPane.setLayout(new BorderLayout(5, 5));
-		_contentPane.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEmptyBorder(5, 5, 0, 5), null));
+		_contentPane.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEmptyBorder(5, 5, 0, 5), null, TitledBorder.DEFAULT_JUSTIFICATION, TitledBorder.DEFAULT_POSITION, null, null));
 		final JPanel panel1 = new JPanel();
 		panel1.setLayout(new BorderLayout(0, 0));
 		_contentPane.add(panel1, BorderLayout.SOUTH);

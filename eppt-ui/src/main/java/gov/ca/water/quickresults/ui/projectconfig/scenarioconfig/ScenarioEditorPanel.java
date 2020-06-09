@@ -33,6 +33,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
+import javax.swing.border.TitledBorder;
 import javax.swing.table.TableCellEditor;
 import javax.swing.table.TableCellRenderer;
 
@@ -106,10 +107,7 @@ public class ScenarioEditorPanel
 		_modelCombobox.addActionListener(e -> modelComboChanged());
 		_waterYearTable.setText(Paths.get(Constant.WRESL_DIR).resolve("CalLite").resolve(Constant.LOOKUP_DIRECTORY).toString());
 		_wreslTextField.setText(Paths.get(Constant.WRESL_DIR).resolve("CalLite").toString());
-		Color plotlyDefaultColor = Constant.getColorNotInList(scenarioRuns
-				.stream()
-				.map(EpptScenarioRun::getColor)
-				.collect(toList()));
+		Color plotlyDefaultColor = Constant.getColorNotInList(scenarioRuns.stream().map(EpptScenarioRun::getColor).collect(toList()));
 		String hex = Constant.colorToHex(plotlyDefaultColor);
 		_colorHexTextField.setText(hex);
 		java.awt.Color decode = java.awt.Color.decode(hex.substring(0, 7));
@@ -159,8 +157,7 @@ public class ScenarioEditorPanel
 				}
 				else
 				{
-					JOptionPane.showMessageDialog(window, "Selected directory must contain a file named: " + Constant.WY_TYPES_TABLE,
-							"Invalid Lookup Directory", JOptionPane.WARNING_MESSAGE);
+					JOptionPane.showMessageDialog(window, "Selected directory must contain a file named: " + Constant.WY_TYPES_TABLE, "Invalid Lookup Directory", JOptionPane.WARNING_MESSAGE);
 				}
 			}
 		}
@@ -211,7 +208,7 @@ public class ScenarioEditorPanel
 		final JPanel panel1 = new JPanel();
 		panel1.setLayout(new BorderLayout(0, 0));
 		_panel1.add(panel1, BorderLayout.CENTER);
-		panel1.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(), "Required Files"));
+		panel1.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(), "Required Files", TitledBorder.DEFAULT_JUSTIFICATION, TitledBorder.DEFAULT_POSITION, null, null));
 		final JPanel panel2 = new JPanel();
 		panel2.setLayout(new FlowLayout(FlowLayout.RIGHT, 5, 5));
 		panel1.add(panel2, BorderLayout.SOUTH);
@@ -229,7 +226,7 @@ public class ScenarioEditorPanel
 		final JPanel panel3 = new JPanel();
 		panel3.setLayout(new BorderLayout(0, 0));
 		_panel1.add(panel3, BorderLayout.NORTH);
-		panel3.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(), "General Description"));
+		panel3.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(), "General Description", TitledBorder.DEFAULT_JUSTIFICATION, TitledBorder.DEFAULT_POSITION, null, null));
 		final JPanel panel4 = new JPanel();
 		panel4.setLayout(new GridBagLayout());
 		panel3.add(panel4, BorderLayout.CENTER);
@@ -341,7 +338,7 @@ public class ScenarioEditorPanel
 		final JPanel panel5 = new JPanel();
 		panel5.setLayout(new BorderLayout(0, 0));
 		_panel1.add(panel5, BorderLayout.SOUTH);
-		panel5.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(), "QA/QC Report Resources"));
+		panel5.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(), "QA/QC Report Resources", TitledBorder.DEFAULT_JUSTIFICATION, TitledBorder.DEFAULT_POSITION, null, null));
 		final JPanel panel6 = new JPanel();
 		panel6.setLayout(new GridBagLayout());
 		panel5.add(panel6, BorderLayout.CENTER);
@@ -433,8 +430,7 @@ public class ScenarioEditorPanel
 				}
 				else
 				{
-					JOptionPane.showMessageDialog(window, "Selected directory must contain a file named: " + Constant.WRESL_MAIN,
-							"Invalid WRESL Directory", JOptionPane.WARNING_MESSAGE);
+					JOptionPane.showMessageDialog(window, "Selected directory must contain a file named: " + Constant.WRESL_MAIN, "Invalid WRESL Directory", JOptionPane.WARNING_MESSAGE);
 				}
 			}
 		}
@@ -504,8 +500,7 @@ public class ScenarioEditorPanel
 			LOGGER.log(Level.SEVERE, "Invalid hex color: " + text, ex);
 			web = Constant.getPlotlyDefaultColor(0);
 		}
-		return new EpptScenarioRun(name, description, model, outputPath, wreslMain, waterYearTablePath,
-				dssContainer, web);
+		return new EpptScenarioRun(name, description, model, outputPath, wreslMain, waterYearTablePath, dssContainer, web);
 	}
 
 	private Path relativizeToProject(String text)
@@ -617,9 +612,7 @@ public class ScenarioEditorPanel
 		}
 
 		@Override
-		public Component getTableCellRendererComponent(final JTable table,
-													   Object value, boolean isSelected, boolean hasFocus, int row,
-													   int column)
+		public Component getTableCellRendererComponent(final JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column)
 		{
 			if(value != null)
 			{

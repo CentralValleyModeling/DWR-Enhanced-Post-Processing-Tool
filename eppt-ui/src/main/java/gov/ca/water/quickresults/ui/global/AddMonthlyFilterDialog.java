@@ -26,6 +26,7 @@ import java.awt.event.WindowEvent;
 import java.time.Month;
 import java.util.Arrays;
 import javax.swing.*;
+import javax.swing.border.TitledBorder;
 
 import gov.ca.water.calgui.busservice.impl.MonthPeriod;
 
@@ -41,7 +42,7 @@ class AddMonthlyFilterDialog extends JDialog
 
 	AddMonthlyFilterDialog(Frame frame)
 	{
-		super(frame, "New Parameter", true);
+		super(frame, "New Monthly Filter", true);
 		$$$setupUI$$$();
 		setContentPane(_contentPane);
 		setModal(true);
@@ -61,8 +62,7 @@ class AddMonthlyFilterDialog extends JDialog
 		});
 
 		// call onCancel() on ESCAPE
-		_contentPane.registerKeyboardAction(e -> onCancel(), KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0),
-				JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
+		_contentPane.registerKeyboardAction(e -> onCancel(), KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
 		pack();
 		setPreferredSize(new Dimension(550, 300));
 		setMinimumSize(new Dimension(550, 300));
@@ -123,7 +123,7 @@ class AddMonthlyFilterDialog extends JDialog
 	{
 		_contentPane = new JPanel();
 		_contentPane.setLayout(new BorderLayout(5, 5));
-		_contentPane.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEmptyBorder(5, 5, 0, 5), null));
+		_contentPane.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEmptyBorder(5, 5, 0, 5), null, TitledBorder.DEFAULT_JUSTIFICATION, TitledBorder.DEFAULT_POSITION, null, null));
 		final JPanel panel1 = new JPanel();
 		panel1.setLayout(new BorderLayout(0, 0));
 		_contentPane.add(panel1, BorderLayout.SOUTH);
