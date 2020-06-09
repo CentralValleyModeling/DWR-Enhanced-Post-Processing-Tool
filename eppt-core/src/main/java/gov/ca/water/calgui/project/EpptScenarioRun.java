@@ -66,11 +66,11 @@ public class EpptScenarioRun
 	 * @param description     description meta data for
 	 * @param epptScenarioRun scenario run to copy
 	 */
-	public EpptScenarioRun(String name, String description, EpptScenarioRun epptScenarioRun)
+	public EpptScenarioRun(String name, String description, EpptScenarioRun epptScenarioRun, Color color)
 	{
 		this(name, description, epptScenarioRun.getModel(), epptScenarioRun.getOutputPath(),
 				epptScenarioRun.getWreslDirectory(), epptScenarioRun.getLookupDirectory(),
-				new EpptDssContainer(epptScenarioRun.getDssContainer()), epptScenarioRun.getColor());
+				new EpptDssContainer(epptScenarioRun.getDssContainer()), color);
 	}
 
 	/**

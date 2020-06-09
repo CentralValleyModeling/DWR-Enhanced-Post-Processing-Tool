@@ -22,6 +22,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.*;
 
+import gov.ca.water.calgui.constant.Constant;
 import gov.ca.water.calgui.project.EpptDssContainer;
 import gov.ca.water.calgui.project.EpptScenarioRun;
 import gov.ca.water.calgui.project.NamedDssPath;
@@ -43,6 +44,7 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.TilePane;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
 
 import hec.gui.NameDialog;
 import com.rma.javafx.iface.ColumnSpec;
@@ -361,7 +363,9 @@ public class ScenarioTablePane extends TitledPane
 			{
 				String name = nameDialog.getName();
 				String description = nameDialog.getDescription();
-				EpptScenarioRun newScenarioRun = new EpptScenarioRun(name, description, oldScenarioRun);
+
+				Color plotlyDefaultColor = Constant.getColorNotInList(_scenarioTableModel.getAllScenarioRuns().stream().map(EpptScenarioRun::getColor).collect(toList()));
+				EpptScenarioRun newScenarioRun = new EpptScenarioRun(name, description, oldScenarioRun, plotlyDefaultColor);
 				addScenarioRun(newScenarioRun);
 				setModified();
 			}
