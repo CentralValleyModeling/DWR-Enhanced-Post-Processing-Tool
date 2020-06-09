@@ -233,6 +233,8 @@ public class ScenarioTablePane extends TitledPane
 				{
 					rows.remove(i);
 					rows.add(i - 1, rowModel);
+					_treeTable.getSelectionModel().select(i - 1);
+					_controller.setModified();
 				}
 			}
 		}
@@ -251,6 +253,8 @@ public class ScenarioTablePane extends TitledPane
 				{
 					rows.remove(i);
 					rows.add(i + 1, rowModel);
+					_treeTable.getSelectionModel().select(i + 1);
+					_controller.setModified();
 				}
 			}
 		}

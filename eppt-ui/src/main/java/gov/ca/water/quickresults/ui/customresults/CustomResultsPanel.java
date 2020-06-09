@@ -87,7 +87,7 @@ public class CustomResultsPanel extends EpptPanel
 				filterBtn.removeActionListener(al);
 			}
 			filterBtn.addActionListener(arg0 -> filter());
-			Component openButtonComponent = findFirstButtonMatchingText(GuiUtils.getCLGPanel(), "Open");
+			Component openButtonComponent = findFirstButtonMatchingText(GuiUtils.getCLGPanel(), "Display");
 			if(openButtonComponent != null)
 			{
 				JButton openButton = (JButton) openButtonComponent;
@@ -139,43 +139,51 @@ public class CustomResultsPanel extends EpptPanel
 
 	private void filter()
 	{
+		List<EpptScenarioRun> epptScenarioAlternatives = _epptConfigurationController.getEpptScenarioAlternatives();
 		Optional<EpptScenarioRun> baseScenario = _epptConfigurationController.getEpptScenarioBase();
-		if(baseScenario.isPresent())
+		List<EpptScenarioRun> scenarioRuns = new ArrayList<>(epptScenarioAlternatives);
+		baseScenario.ifPresent(scenarioRuns::add);
+		if(!scenarioRuns.isEmpty())
 		{
-			List<Path> allDssFiles = baseScenario.get().getDssContainer().getAllDssFiles()
-												 .stream()
-												 .filter(Objects::nonNull)
-												 .map(NamedDssPath::getDssPath)
-												 .filter(Objects::nonNull)
-												 .collect(toList());
-			List<DataReference> allrefs = new ArrayList<>();
-			GeneralRetrievePanel retrievePanel = GuiUtils.getCLGPanel().getRetrievePanel();
-			TimeWindow timeWindow = AppUtils.getCurrentProject().getTimeWindow();
-			for(Path path : allDssFiles)
-			{
-				String[] stringParts = retrievePanel.getStringParts();
-				Group dssGroup = AppUtils.openDSSFile(path.toString());
-				if(dssGroup != null)
-				{
-					Group gc = Group.createGroup(dssGroup);
-					DataReference[] refs = AppUtils.createRefs(stringParts, timeWindow, gc);
-					if(refs != null)
-					{
-						allrefs.addAll(Arrays.asList(refs));
-					}
-				}
-			}
-			if(allrefs.isEmpty())
-			{
-				_dialogSvc.getOK("No records found using filter", JOptionPane.WARNING_MESSAGE);
-			}
-			retrievePanel.updateTable(allrefs.toArray(new DataReference[0]));
+			scenarioRuns.forEach(this::loadRecordsForScenario);
 		}
 		else
 		{
 			_dialogSvc.getOK("DSS not selected! The Base DSS files need to be selected", JOptionPane.WARNING_MESSAGE);
 		}
 
+	}
+
+	private void loadRecordsForScenario(EpptScenarioRun epptScenarioRun)
+	{
+		List<Path> allDssFiles = epptScenarioRun.getDssContainer().getAllDssFiles()
+												.stream()
+												.filter(Objects::nonNull)
+												.map(NamedDssPath::getDssPath)
+												.filter(Objects::nonNull)
+												.collect(toList());
+		List<DataReference> allrefs = new ArrayList<>();
+		GeneralRetrievePanel retrievePanel = GuiUtils.getCLGPanel().getRetrievePanel();
+		TimeWindow timeWindow = AppUtils.getCurrentProject().getTimeWindow();
+		for(Path path : allDssFiles)
+		{
+			String[] stringParts = retrievePanel.getStringParts();
+			Group dssGroup = AppUtils.openDSSFile(path.toString());
+			if(dssGroup != null)
+			{
+				Group gc = Group.createGroup(dssGroup);
+				DataReference[] refs = AppUtils.createRefs(stringParts, timeWindow, gc);
+				if(refs != null)
+				{
+					allrefs.addAll(Arrays.asList(refs));
+				}
+			}
+		}
+		if(allrefs.isEmpty())
+		{
+			_dialogSvc.getOK("No records found using filter", JOptionPane.WARNING_MESSAGE);
+		}
+		retrievePanel.updateTable(allrefs.toArray(new DataReference[0]));
 	}
 
 	@Override
