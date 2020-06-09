@@ -122,7 +122,11 @@ class TrendReportPagesPane extends TitledPane
 
 	private void initListeners()
 	{
-		_trendReportTabConfigListView.getSelectionModel().selectedItemProperty().addListener(e -> _updateTrigger.run());
+		_trendReportTabConfigListView.getSelectionModel().selectedItemProperty().addListener(e ->
+		{
+			_textField.setPromptText(Objects.toString(_trendReportTabConfigListView.getSelectionModel().getSelectedItem()));
+			_updateTrigger.run();
+		});
 		_rightButton.setOnAction(e ->
 		{
 			int selectedIndex = _trendReportTabConfigListView.getSelectionModel().getSelectedIndex() + 1;
