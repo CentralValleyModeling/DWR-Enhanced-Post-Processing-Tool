@@ -10,7 +10,7 @@
  * GNU General Public License
  */
 //DEBUG flag to render plot on page load
-const DEBUG = false;
+const DEBUG = true;
 var FORMATTER = '';
 const PLOTLY_FONT = {
     family: 'Lucida Grande", "Lucida Sans Unicode", "Verdana", "Arial", "Helvetica", "sans-serif',

@@ -91,7 +91,9 @@ function buildLayouts(datum, yaxis, title) {
                                 yaxis: {
                                     title: {
                                         text: yaxis,
+                                        standoff: 50
                                     },
+                                    automargin: true,
                                     tickformat: FORMATTER,
                                     gridcolor: '#CCCCCC',
                                     rangemode: 'tozero'
