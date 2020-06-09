@@ -22,6 +22,7 @@ import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import calsim.app.AppUtils;
 import calsim.app.DerivedTimeSeries;
 import calsim.app.MultipleTimeSeries;
 import gov.ca.water.calgui.bo.GUILinksAllModelsBO;
@@ -299,45 +300,62 @@ public class DSSGrabber2SvcImpl extends DSSGrabber1SvcImpl
 					}
 					else
 					{
+						result.location += ' ' + AppUtils.getOperationName(dts2.getOperationIdAt(i)) + " " + interimResult.location;
+						result.parameter += ' ' + AppUtils.getOperationName(dts2.getOperationIdAt(i)) + " "  + interimResult.parameter;
+						result.version += ' ' + AppUtils.getOperationName(dts2.getOperationIdAt(i)) + " "  + interimResult.version;
 						switch(dts2.getOperationIdAt(i))
 						{
-
 							case 0:
 
 								// Iff operation is "?", treat as a control
 
 								for(int j = 0; j < interimResult.numberValues; j++)
 								{
-									result.values[j] = ((result.values[j] > 0.1) && (interimResult.values[j] > 0.1))
-											? 9876.5 : 0;
+									if(result.values.length < j && interimResult.values.length < j)
+									{
+										result.values[j] = ((result.values[j] > 0.1) && (interimResult.values[j] > 0.1))
+												? 9876.5 : 0;
+									}
 								}
 								break;
 
 							case 1:
 								for(int j = 0; j < interimResult.numberValues; j++)
 								{
-									result.values[j] = result.values[j] + interimResult.values[j];
+									if(j < result.values.length  && j < interimResult.values.length)
+									{
+										result.values[j] = result.values[j] + interimResult.values[j];
+									}
 								}
 								break;
 
 							case 2:
 								for(int j = 0; j < interimResult.numberValues; j++)
 								{
-									result.values[j] = result.values[j] - interimResult.values[j];
+									if(j < result.values.length  && j < interimResult.values.length)
+									{
+										result.values[j] = result.values[j] - interimResult.values[j];
+									}
 								}
 								break;
 
 							case 3:
 								for(int j = 0; j < interimResult.numberValues; j++)
 								{
-									result.values[j] = result.values[j] * interimResult.values[j];
+									if(j < result.values.length  && j < interimResult.values.length)
+									{
+										result.values[j] = result.values[j] * interimResult.values[j];
+									}
 								}
 								break;
 
 							case 4:
 								for(int j = 0; j < interimResult.numberValues; j++)
 								{
-									result.values[j] = result.values[j] / interimResult.values[j];
+									if(j < result.values.length  && j < interimResult.values.length)
+									{
+										result.values[j] = result.values[j] / interimResult.values[j];
+									}
 								}
 								break;
 

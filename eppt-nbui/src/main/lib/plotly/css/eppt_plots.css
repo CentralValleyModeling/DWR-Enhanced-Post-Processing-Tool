@@ -216,7 +216,7 @@ input:checked + .slider:after
 /* The Modal (background) */
 .modal {
     display: none; /* Hidden by default */
-    position: fixed; /* Stay in place */
+    position: absolute; /* Stay in place */
     z-index: 1; /* Sit on top */
     left: 0;
     top: 0;
@@ -235,8 +235,9 @@ input:checked + .slider:after
 .modal-content {
     position: fixed;
     bottom: 0;
+    margin: auto;
     background-color: #fefefe;
-    width: 100%;
+    width: 85%;
     -webkit-animation-name: slideIn;
     -webkit-animation-duration: 0.4s;
     animation-name: slideIn;

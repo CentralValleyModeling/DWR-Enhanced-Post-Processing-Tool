@@ -10,7 +10,7 @@
  * GNU General Public License
  */
 //DEBUG flag to render plot on page load
-const DEBUG = true;
+const DEBUG = false;
 var FORMATTER = '';
 const PLOTLY_FONT = {
     family: 'Lucida Grande", "Lucida Sans Unicode", "Verdana", "Arial", "Helvetica", "sans-serif',
@@ -58,7 +58,13 @@ function buildModeBarButtons(graphDiv, tsDescriptor) {
             span.onclick = function () {
                 modal.style.display = "none";
             }
+            window.onclick = function(event){
+                if(event.target === modal){
+                    modal.style.display = "none";
+                }
+            };
             let modalBody = document.getElementById("modal-body");
+            modalBody.innerHTML = '';
             for(let i = 0; i < tsDescriptor.length; i++){
                 let description = tsDescriptor[i];
                 let outerDiv = document.createElement("div");
