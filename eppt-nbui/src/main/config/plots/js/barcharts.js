@@ -106,14 +106,6 @@ function buildLayouts(datum, yaxis, title) {
                 },
                 bargroupgap: 0.05,
                 showlegend: false,
-                legend: {
-                    orientation: 'h',
-                    xanchor: 'center',
-                    x: 0.5,
-                    font: {
-                        size: 10,
-                    }
-                },
                 title: {
                     text: title + '<br>' + monthPeriod + '<br>' + statistic,
                     font: {

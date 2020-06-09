@@ -39,7 +39,7 @@ function getPlotlyAggregateSeries(datum) {
                         seriesList.push(series);
                     }
                     series.push({
-                        name: tsList[j]['ts_name'],
+                        name: tsList[j]['ts_name'] + '     ',
                         x: x,
                         y: y,
                         line: {

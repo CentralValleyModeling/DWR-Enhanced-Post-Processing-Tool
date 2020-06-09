@@ -70,7 +70,7 @@ function getPlotlyMonthlySeries(datum, firstRecord, lastRecord, instantaneous) {
                         shape = 'linear';
                     }
                     series.push({
-                        name: tsList[j]['ts_name'],
+                        name: tsList[j]['ts_name'] + '     ',
                         x: x,
                         y: y,
                         line: {

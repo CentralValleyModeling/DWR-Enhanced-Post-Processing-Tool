@@ -33,7 +33,7 @@ function getPlotlyAggregateSeries(datum) {
                         y: y,
                         x: x,
                         type: 'box',
-                        name: tsList[tsIndex]['ts_name'],
+                        name: tsList[tsIndex]['ts_name'] + '     ',
                         marker: {
                             color: datum[i]['scenario_color']
                         },
