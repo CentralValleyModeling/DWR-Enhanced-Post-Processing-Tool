@@ -28,6 +28,7 @@ import gov.ca.water.calgui.busservice.impl.DetailedIssuesReader;
 import gov.ca.water.calgui.busservice.impl.DssPatternUpdater;
 import gov.ca.water.calgui.busservice.impl.EpptParameters;
 import gov.ca.water.calgui.busservice.impl.EpptReportingMonths;
+import gov.ca.water.calgui.busservice.impl.ErrorValueFlags;
 import gov.ca.water.calgui.busservice.impl.GuiLinksSeedDataSvcImpl;
 import gov.ca.water.calgui.busservice.impl.ScriptedEpptStatistics;
 import gov.ca.water.calgui.busservice.impl.ThresholdLinksSeedDataSvc;
@@ -136,6 +137,7 @@ public class Installer extends ModuleInstall
 			WaterYearIndexAliasReader.createInstance();
 			WaterYearPeriodReader.createInstance();
 			DssPatternUpdater.initPatterns();
+			ErrorValueFlags.initializeErrorFlags();
 			//This is done so that the JFXPanels created on startup have already loaded up the Platform thread.
 			Platform.setImplicitExit(false);
 			new JFXPanel();

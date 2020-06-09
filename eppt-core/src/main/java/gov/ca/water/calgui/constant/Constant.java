@@ -58,6 +58,7 @@ public final class Constant
 	public static final String LOOKUP_DIRECTORY = "lookup";
 	public static final String WY_TYPES_TABLE = "wytypes" + TABLE_EXT;
 	public static final String WY_TYPES_NAME_LOOKUP = CONFIG_DIR + "/WYTypesLookup" + CSV_EXT;
+	public static final String ERROR_VALUE_FLAGS = CONFIG_DIR + "/ErrorValueFlags" + CSV_EXT;
 	public static final String JASPER_DIR = System.getProperty("user.dir") + "\\dwr_eppt\\jasper\\";
 	public static final String MODEL_W2_DIR = System.getProperty("user.dir") + "//Model_w2//";
 	public static final String RUN_DETAILS_DIR = "Run_Details";

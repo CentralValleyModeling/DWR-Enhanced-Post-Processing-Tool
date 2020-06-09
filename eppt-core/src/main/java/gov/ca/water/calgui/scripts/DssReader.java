@@ -38,6 +38,7 @@ import gov.ca.water.calgui.bo.ThresholdLinksBO;
 import gov.ca.water.calgui.bo.WaterYearDefinition;
 import gov.ca.water.calgui.busservice.impl.DSSGrabber1SvcImpl;
 import gov.ca.water.calgui.busservice.impl.DetailedIssuesReader;
+import gov.ca.water.calgui.busservice.impl.ErrorValueFlags;
 import gov.ca.water.calgui.busservice.impl.GuiLinksSeedDataSvcImpl;
 import gov.ca.water.calgui.busservice.impl.MonthPeriod;
 import gov.ca.water.calgui.busservice.impl.ThresholdLinksSeedDataSvc;
@@ -219,7 +220,7 @@ public class DssReader
 		int offset = (int) TimeUnit.MILLISECONDS.toMinutes(TimeZone.getDefault().getRawOffset());
 		Date javaDate = hecTime.getJavaDate(offset);
 		LocalDateTime localDateTime = LocalDateTime.ofInstant(javaDate.toInstant(), ZoneId.systemDefault());
-		if(RMAConst.isValidValue(value) && value != -3.402823466E38)
+		if(RMAConst.isValidValue(value) && ErrorValueFlags.isErrorValue(value))
 		{
 			if(tsc.getParameterName().toLowerCase().contains("percent")
 					|| tsc.getUnits().toLowerCase().contains("percent")

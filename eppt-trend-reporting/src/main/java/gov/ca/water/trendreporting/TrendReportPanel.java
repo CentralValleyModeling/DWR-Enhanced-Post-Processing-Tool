@@ -166,7 +166,7 @@ public class TrendReportPanel extends JFXPanel
 	public void inputsChanged()
 	{
 		TrendReportTabConfig trendReportTabConfig = _trendReportPagesPane.getTrendReportTabConfig();
-		if(trendReportTabConfig != null)
+		if(trendReportTabConfig != null && _epptConfigurationController != null)
 		{
 			boolean aggregateSupported = trendReportTabConfig.isAggregateSupported();
 			_aggregateButton.setDisable(!aggregateSupported);
