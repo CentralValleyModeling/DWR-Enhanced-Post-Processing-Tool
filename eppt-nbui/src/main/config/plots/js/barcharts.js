@@ -61,7 +61,7 @@ function buildTable(data, monthlyIndex, statIndex) {
             values: headers,
             align: "center",
             line: {width: 1, color: 'black'},
-            font: {family: PLOTLY_FONT['family'], size: 13}
+            font: {family: PLOTLY_FONT['family'], size: [11, 8]}
         },
         cells: {
             format: ['', FORMATTER],
@@ -69,7 +69,7 @@ function buildTable(data, monthlyIndex, statIndex) {
             line: {color: "black", width: 1},
             align: ["left", "center"],
             height: 25,
-            font: {family: PLOTLY_FONT['family'], color: [colors], size: [14, 16]}
+            font: {family: PLOTLY_FONT['family'], color: [colors], size: [11, 14]}
         },
         domain: {x: [0, 1], y: [0, 0.3]}
     };
