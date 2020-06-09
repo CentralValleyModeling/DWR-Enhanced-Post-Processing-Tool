@@ -80,8 +80,6 @@ public class TrendReportPanel extends JFXPanel
 	public TrendReportPanel(EpptConfigurationController epptConfigurationController)
 	{
 		_epptConfigurationController = epptConfigurationController;
-		setMinimumSize(new Dimension(1300, 800));
-		setPreferredSize(new Dimension(1300, 800));
 		Platform.setImplicitExit(false);
 		Platform.runLater(this::init);
 	}
