@@ -221,7 +221,7 @@ public final class EpptReportingComputer
 				List<YearMonth> yearMonths = _monthPeriod.getYearMonths(year);
 				LocalDateTime startYearMonth = yearMonths.get(0).atEndOfMonth().minusDays(2).atTime(0, 0);
 				LocalDateTime endYearMonth = yearMonths.get(yearMonths.size() - 1).atEndOfMonth().plusDays(2).atTime(0, 0);
-				if(input.firstKey().isAfter(startYearMonth))
+				if(input.firstKey().minusDays(3).isAfter(startYearMonth))
 				{
 					continue;
 				}
