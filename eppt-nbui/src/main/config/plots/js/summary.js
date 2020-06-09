@@ -120,7 +120,7 @@ function plot(data) {
     var layout = buildLayouts(data['scenario_run_data'], data['units'], data['gui_link_title']);
     let plotlyAggregateSeries = getPlotlyData(data['scenario_run_data'], data['units']);
     let numberOfRows = plotlyAggregateSeries[0][0]['cells']['values'][0].length;
-    var rowHeight = 35;
+    var rowHeight = 40;
     if(data['scenario_run_data'][0]['ts_list'][0]['ts_name'].includes('<br>')){
         rowHeight *= 2;
     }
@@ -174,14 +174,14 @@ function plotPeriodGroupedForMonthStat(data, monthlyIndex, statIndex, units) {
         header: {
             values: header,
             align: "center",
-            font: {family: PLOTLY_FONT['family'], size: 18}
+            font: {family: PLOTLY_FONT['family'], size: [18, 18, 18, 11]}
         },
         cells: {
             format: format,
             values: values,
             align: ['left', 'left', 'center'],
             height: 25,
-            font: {family: PLOTLY_FONT['family'], color: ['', colors], size: [14, 14, 16]}
+            font: {family: PLOTLY_FONT['family'], color: ['', colors], size: [12, 11, 16]}
         }
     };
 }
