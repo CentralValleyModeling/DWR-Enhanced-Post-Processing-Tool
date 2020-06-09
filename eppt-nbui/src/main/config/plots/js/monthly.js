@@ -136,7 +136,7 @@ function plot(data) {
     var datum = data['scenario_run_data'];
     var layout = buildLayouts(datum, data['units'], data['gui_link_title']);
     let plotlyAggregateSeries = getPlotlyStatisticsSeries(datum);
-    plotData(layout, plotlyAggregateSeries);
+    plotData(layout, plotlyAggregateSeries, data['ts_descriptor']);
 }
 
 function plotlyCopyToClipboard(element) {

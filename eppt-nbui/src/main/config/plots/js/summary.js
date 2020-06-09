@@ -128,7 +128,7 @@ function plot(data) {
     for (let i = 0; i < layout.length; i++) {
         layout[i]['height'] = 165 + numberOfRows * rowHeight;
     }
-    plotData(layout, plotlyAggregateSeries);
+    plotData(layout, plotlyAggregateSeries, data['ts_descriptor']);
 }
 
 function getPlotlyData(datum, units) {

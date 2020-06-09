@@ -64,7 +64,7 @@ function plotAggregate(data) {
     var datum = data['scenario_run_data'];
     var layout = buildAggregateLayouts(datum, data['units'], data['gui_link_title']);
     let plotlyAggregateSeries = getPlotlyAggregateSeries(datum);
-    plotData(layout, plotlyAggregateSeries);
+    plotData(layout, plotlyAggregateSeries, data['ts_descriptor']);
 }
 
 function buildAggregateLayouts(datum, yaxis, title) {

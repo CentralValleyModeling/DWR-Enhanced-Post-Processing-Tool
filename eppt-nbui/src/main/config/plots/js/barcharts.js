@@ -139,7 +139,7 @@ function plot(data) {
     for (let i = 0; i < layout.length; i++) {
         layout[i]['height'] = 400 + numberOfRows * 65;
     }
-    plotData(layout, plotlyAggregateSeries);
+    plotData(layout, plotlyAggregateSeries, data['ts_descriptor']);
 }
 
 

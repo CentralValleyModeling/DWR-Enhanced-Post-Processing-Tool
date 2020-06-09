@@ -173,7 +173,7 @@ function plotDiscrete(data) {
     var datum = data['scenario_run_data'];
     var layout = buildDiscreteLayouts(datum, data['units'], data['gui_link_title']);
     let plotlyMonthlySeries = getPlotlyMonthlySeries(datum, data['first_record'], data['last_record'], data['is_instantaneous']);
-    plotData(layout, plotlyMonthlySeries);
+    plotData(layout, plotlyMonthlySeries, data['ts_descriptor']);
 }
 
 function plotlyCopyToClipboard(element) {

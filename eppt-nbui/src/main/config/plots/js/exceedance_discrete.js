@@ -64,7 +64,7 @@ function plotDiscrete(data) {
     var datum = data['scenario_run_data'];
     var layout = buildDiscreteLayouts(datum, data['units'], data['gui_link_title']);
     let plotlyDiscreteSeries = getPlotlyDiscreteSeries(datum);
-    plotData(layout, plotlyDiscreteSeries);
+    plotData(layout, plotlyDiscreteSeries, data['ts_descriptor']);
 }
 
 function buildDiscreteLayouts(datum, yaxis, title) {

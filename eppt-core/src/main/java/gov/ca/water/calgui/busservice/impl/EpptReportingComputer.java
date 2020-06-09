@@ -106,7 +106,7 @@ public final class EpptReportingComputer
 				trendReportingComputed.add(new EpptReportingComputedSet.EpptReportingScenarioComputed(data.getKey(), tsComputes));
 			}
 		}
-		return new EpptReportingComputedSet(plotTitle, trendReportingComputed, units, firstRecord, lastRecord, isInstantaneous);
+		return new EpptReportingComputedSet(plotTitle, trendReportingComputed, units, firstRecord, lastRecord, isInstantaneous, scenarioRunData);
 	}
 
 	private static LocalDateTime getMin(LocalDateTime firstRecord, LocalDateTime firstRecordNew)

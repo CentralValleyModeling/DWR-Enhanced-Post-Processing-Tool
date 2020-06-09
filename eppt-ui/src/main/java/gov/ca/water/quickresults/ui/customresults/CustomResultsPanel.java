@@ -19,6 +19,7 @@ import java.awt.event.ActionListener;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -87,7 +88,8 @@ public class CustomResultsPanel extends EpptPanel
 				filterBtn.removeActionListener(al);
 			}
 			filterBtn.addActionListener(arg0 -> filter());
-			Component openButtonComponent = findFirstButtonMatchingText(GuiUtils.getCLGPanel(), "Display");
+			Component secondTab = ((JTabbedPane) GuiUtils.getCLGPanel().getComponent(0)).getComponentAt(1);
+			Component openButtonComponent = findFirstButtonMatchingText(secondTab, "Display");
 			if(openButtonComponent != null)
 			{
 				JButton openButton = (JButton) openButtonComponent;
@@ -145,7 +147,16 @@ public class CustomResultsPanel extends EpptPanel
 		baseScenario.ifPresent(scenarioRuns::add);
 		if(!scenarioRuns.isEmpty())
 		{
-			scenarioRuns.forEach(this::loadRecordsForScenario);
+			List<DataReference> allrefs = scenarioRuns.stream().map(this::loadRecordsForScenario).flatMap(Collection::stream).collect(toList());
+			GeneralRetrievePanel retrievePanel = GuiUtils.getCLGPanel().getRetrievePanel();
+			if(allrefs.isEmpty())
+			{
+				_dialogSvc.getOK("No records found using filter", JOptionPane.WARNING_MESSAGE);
+			}
+			else
+			{
+				retrievePanel.updateTable(allrefs.toArray(new DataReference[0]));
+			}
 		}
 		else
 		{
@@ -154,7 +165,7 @@ public class CustomResultsPanel extends EpptPanel
 
 	}
 
-	private void loadRecordsForScenario(EpptScenarioRun epptScenarioRun)
+	private List<DataReference> loadRecordsForScenario(EpptScenarioRun epptScenarioRun)
 	{
 		List<Path> allDssFiles = epptScenarioRun.getDssContainer().getAllDssFiles()
 												.stream()
@@ -179,11 +190,7 @@ public class CustomResultsPanel extends EpptPanel
 				}
 			}
 		}
-		if(allrefs.isEmpty())
-		{
-			_dialogSvc.getOK("No records found using filter", JOptionPane.WARNING_MESSAGE);
-		}
-		retrievePanel.updateTable(allrefs.toArray(new DataReference[0]));
+		return allrefs;
 	}
 
 	@Override

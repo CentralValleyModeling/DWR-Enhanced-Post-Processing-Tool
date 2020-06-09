@@ -220,7 +220,7 @@ public class DssReader
 		int offset = (int) TimeUnit.MILLISECONDS.toMinutes(TimeZone.getDefault().getRawOffset());
 		Date javaDate = hecTime.getJavaDate(offset);
 		LocalDateTime localDateTime = LocalDateTime.ofInstant(javaDate.toInstant(), ZoneId.systemDefault());
-		if(RMAConst.isValidValue(value) && ErrorValueFlags.isErrorValue(value))
+		if(RMAConst.isValidValue(value) && !ErrorValueFlags.isErrorValue(value))
 		{
 			if(tsc.getParameterName().toLowerCase().contains("percent")
 					|| tsc.getUnits().toLowerCase().contains("percent")
