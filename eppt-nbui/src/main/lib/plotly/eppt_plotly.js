@@ -166,13 +166,22 @@ var javaObj;
 
 function plotlyExportFunction(plot) {
     return (format) => {
-        let width = plot.offsetWidth;
-        let height = plot.offsetHeight;
-        //javaObj instantiated from JavaFX
-        if (javaObj) {
-            javaObj.interruptFunction(format, JSON.stringify(plot.data), JSON.stringify(plot.layout), width, height);
+        try {
+            let width = plot.offsetWidth;
+            let height = plot.offsetHeight;
+            console.log("Downloading plot with width: " + width + " and height: " + height);
+            //javaObj instantiated from JavaFX
+            if (javaObj) {
+                console.log("Downloading through Java");
+                javaObj.interruptFunction(format, JSON.stringify(plot.data), JSON.stringify(plot.layout), width, height);
+            }else{
+                console.log("Downloading through Javascript");
+                Plotly.downloadImage(plot, {format: format, height: height, width: width});
+            }
+        } catch(err){
+            console.log(err);
+            console.error(err);
         }
-        Plotly.downloadImage(plot, {format: format, height: height, width: width});
     }
 }
 

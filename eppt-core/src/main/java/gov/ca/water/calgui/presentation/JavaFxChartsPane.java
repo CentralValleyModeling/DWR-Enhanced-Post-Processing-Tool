@@ -12,25 +12,10 @@
 
 package gov.ca.water.calgui.presentation;
 
-import java.awt.Container;
-import java.awt.Cursor;
-import java.awt.Desktop;
-import java.awt.Frame;
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.IOException;
-import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.concurrent.CompletableFuture;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.swing.*;
 
-import gov.ca.water.calgui.bo.SimpleFileFilter;
-import gov.ca.water.calgui.constant.Constant;
-import gov.ca.water.calgui.constant.EpptPreferences;
-import gov.ca.water.calgui.techservice.impl.DialogSvcImpl;
 import javafx.application.Platform;
 import javafx.beans.value.ObservableValue;
 import javafx.concurrent.Worker;
@@ -38,10 +23,6 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.web.WebView;
 import netscape.javascript.JSException;
 import netscape.javascript.JSObject;
-import org.json.JSONArray;
-import org.json.JSONObject;
-
-import static gov.ca.water.calgui.constant.Constant.ORCA_EXE;
 
 /**
  * Company: Resource Management Associates
@@ -68,14 +49,17 @@ public class JavaFxChartsPane extends BorderPane
 
 	private void callbackScript(ObservableValue<? extends Worker.State> observableValue, Worker.State state, Worker.State newValue)
 	{
-		JSObject document = (JSObject) _webView.getEngine().executeScript("window");
-		if(document != null)
-		{
-			document.setMember("javaObj", new JavascriptImageExporter());
-			Platform.runLater(()->executeScript("console.log = function(message) { javaObj.log(message); }"));
-		}
 		if(newValue == Worker.State.SUCCEEDED)
 		{
+			Object window = _webView.getEngine().executeScript("window");
+			if(window != null)
+			{
+				Platform.runLater(()->
+				{
+					((JSObject)window).setMember("javaObj", new JavascriptImageExporter());
+					executeScript("console.log = function(message) { javaObj.log(message); }");
+				});
+			}
 			Platform.runLater(()->executeScript(_callbackScript));
 		}
 	}
