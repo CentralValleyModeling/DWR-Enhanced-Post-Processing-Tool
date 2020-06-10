@@ -12,8 +12,6 @@
 
 package gov.ca.water.calgui.presentation.plotly;
 
-import java.math.BigDecimal;
-import java.math.MathContext;
 import java.util.Map;
 
 import gov.ca.water.calgui.busservice.impl.EpptStatistic;
@@ -84,30 +82,12 @@ abstract class MonthlyPaneRow extends RmaTreeTableRowModel<MonthlyPaneRow>
 		private final Map<TreeTableColumnSpec, SimpleStringProperty> _data;
 		private final TreeTableColumnSpec _treeTableColumnSpec;
 
-		MonthlyPaneRowData(MonthlyPaneRowScenario parent, int year, Map<TreeTableColumnSpec, Double> data, TreeTableColumnSpec treeTableColumnSpec)
+		MonthlyPaneRowData(MonthlyPaneRowScenario parent, int year, Map<TreeTableColumnSpec, Double> data,
+						   TreeTableColumnSpec treeTableColumnSpec)
 		{
 			super(parent);
 			_year = new SimpleStringProperty(Integer.toString(year));
-			_data = data.entrySet().stream().collect(toMap(Map.Entry::getKey, e ->
-			{
-				SimpleStringProperty retval = new SimpleStringProperty();
-				if(e.getValue() != null && Constant.isValidValue(e.getValue()))
-				{
-					Double value = e.getValue();
-					if(value >= 1)
-					{
-						retval = new SimpleStringProperty(Long.toString(Math.round(value)));
-					}
-					else
-					{
-						BigDecimal bigDecimal = BigDecimal.valueOf(value);
-						bigDecimal = bigDecimal.round(new MathContext(3));
-						value = bigDecimal.doubleValue();
-						retval = new SimpleStringProperty(Double.toString(value));
-					}
-				}
-				return retval;
-			}));
+			_data = data.entrySet().stream().collect(toMap(Map.Entry::getKey, e ->Constant.getStringForDouble(e.getValue())));
 			_treeTableColumnSpec = treeTableColumnSpec;
 		}
 
@@ -135,20 +115,7 @@ abstract class MonthlyPaneRow extends RmaTreeTableRowModel<MonthlyPaneRow>
 		{
 			super(parent);
 			_stat = new SimpleStringProperty(epptStatistic.getName());
-			_data = data.entrySet().stream().collect(toMap(Map.Entry::getKey,
-					e ->
-					{
-						if(!e.getValue().isNaN())
-						{
-							BigDecimal bigDecimal = BigDecimal.valueOf(e.getValue());
-							bigDecimal = bigDecimal.round(new MathContext(3));
-							return new SimpleStringProperty(Double.toString(bigDecimal.doubleValue()));
-						}
-						else
-						{
-							return new SimpleStringProperty("");
-						}
-					}));
+			_data = data.entrySet().stream().collect(toMap(Map.Entry::getKey,e -> Constant.getStringForDouble(e.getValue())));
 			_treeTableColumnSpec = treeTableColumnSpec;
 		}
 

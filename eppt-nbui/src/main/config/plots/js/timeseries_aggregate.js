@@ -107,7 +107,7 @@ function buildAggregateLayouts(datum, yaxis, title) {
                                     standoff: 50
                                 },
                                 automargin: true,
-                                tickformat: FORMATTER,
+                                tickformatstops: FORMATTER,
                                 gridcolor: '#CCCCCC',
                                 rangemode: 'tozero'
                             },
@@ -152,7 +152,6 @@ function plot(data){
 }
 
 function plotAggregate(data) {
-    FORMATTER = getD3Formatter(data['scenario_run_data'][0]['ts_list'][0]['monthly_filters'][0]['annual_filters'][0]['discrete_ts']);
     var datum = data['scenario_run_data'];
     var layout = buildAggregateLayouts(datum, data['units'], data['gui_link_title']);
     let plotlyAggregateSeries = getPlotlyAggregateSeries(datum, data['first_record'], data['last_record']);

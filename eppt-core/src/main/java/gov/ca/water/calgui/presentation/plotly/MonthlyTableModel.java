@@ -85,7 +85,8 @@ class MonthlyTableModel extends RmaTreeTableModel<MonthlyPaneRow>
 				{
 					for(EpptReportingComputed epptReportingComputed : monthComputed.getEpptReportingComputed())
 					{
-						processRows(monthTreeTableColumnSpecMap, monthPeriod, tsComputed.getTsName(), epptReportingComputed);
+						processRows(monthTreeTableColumnSpecMap, monthPeriod, tsComputed.getTsName(),
+								epptReportingComputed);
 					}
 				}
 			}
@@ -111,10 +112,6 @@ class MonthlyTableModel extends RmaTreeTableModel<MonthlyPaneRow>
 				List<YearMonth> yearMonths = monthPeriod.getYearMonths(year);
 				LocalDateTime startYearMonth = yearMonths.get(0).atEndOfMonth().minusDays(2).atTime(0, 0);
 				LocalDateTime endYearMonth = yearMonths.get(yearMonths.size() - 1).atEndOfMonth().plusDays(2).atTime(0, 0);
-				if(series.firstKey().isAfter(startYearMonth) || series.lastKey().isBefore(endYearMonth))
-				{
-//					continue;
-				}
 				SortedMap<LocalDateTime, Double> yearValues = series.subMap(startYearMonth, endYearMonth);
 				Map<TreeTableColumnSpec, Double> dataMap = new HashMap<>();
 				for(Map.Entry<LocalDateTime, Double> entry : yearValues.entrySet())

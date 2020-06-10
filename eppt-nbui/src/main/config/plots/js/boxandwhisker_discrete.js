@@ -71,7 +71,7 @@ function buildDiscreteLayouts(datum, yaxis, title) {
                                     standoff: 50
                                 },
                                 automargin: true,
-                                tickformat: FORMATTER,
+                                tickformatstops: FORMATTER,
                                 gridcolor: '#CCCCCC',
                                 rangemode: 'tozero'
                             },
@@ -116,7 +116,6 @@ function plot(data){
 }
 
 function plotDiscrete(data) {
-    FORMATTER = getD3Formatter(data['scenario_run_data'][0]['ts_list'][0]['monthly_filters'][0]['annual_filters'][0]['discrete_ts']);
     var datum = data['scenario_run_data'];
     var layout = buildDiscreteLayouts(datum, data['units'], data['gui_link_title']);
     let plotlyAggregateSeries = getPlotlyDiscreteSeries(datum);

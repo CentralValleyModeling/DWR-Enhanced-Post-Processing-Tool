@@ -85,8 +85,7 @@ class SummaryTableModel extends RmaTreeTableModel<SummaryPaneRow>
 				{
 					List<EpptReportingComputedStatistics> computedStatistics = monthComputed.getEpptReportingComputed().get(0)
 																							.getComputedStatistics();
-					int statisticsCount = computedStatistics.size();
-					for(int statIndex = 0; statIndex < statisticsCount; statIndex++)
+					for(int statIndex = 0; statIndex < computedStatistics.size(); statIndex++)
 					{
 						SummaryPaneRow.SummaryPaneRowStat statRow = new SummaryPaneRow.SummaryPaneRowStat(summaryPaneRowScenario,
 								computedStatistics.get(statIndex).getEpptStatistic(), _rootColSpec);

@@ -12,8 +12,6 @@
 
 package gov.ca.water.reportengine.standardsummary;
 
-import java.math.BigDecimal;
-import java.math.MathContext;
 import java.time.format.TextStyle;
 import java.util.ArrayList;
 import java.util.List;
@@ -25,14 +23,11 @@ import java.util.logging.Logger;
 
 import gov.ca.water.calgui.bo.AnnualPeriodFilter;
 import gov.ca.water.calgui.bo.PeriodFilter;
-import gov.ca.water.calgui.bo.WaterYearPeriod;
-import gov.ca.water.calgui.bo.WaterYearPeriodFilter;
 import gov.ca.water.calgui.bo.WaterYearPeriodRange;
 import gov.ca.water.calgui.bo.WaterYearPeriodRangeFilter;
 import gov.ca.water.calgui.bo.WaterYearPeriodRangesFilter;
-import gov.ca.water.calgui.bo.WaterYearType;
-import gov.ca.water.calgui.bo.YearlyWaterYearPeriodFilter;
 import gov.ca.water.calgui.bo.YearlyWaterYearPeriodRangeFilter;
+import gov.ca.water.calgui.constant.Constant;
 import gov.ca.water.calgui.project.EpptScenarioRun;
 import gov.ca.water.calgui.scripts.DssMissingRecordException;
 import gov.ca.water.reportengine.EpptReportException;
@@ -377,9 +372,8 @@ class BaseAltDiffTableBuilder extends TableBuilder
 			if(baseValue != 0)
 			{
 				double percent = ((altValue - baseValue) / baseValue) * 100;
-				BigDecimal bd = BigDecimal.valueOf(percent);
-				percent = bd.round(new MathContext(3)).doubleValue();
-				retval.setAttribute(VALUE_FULL_TEXT_ATTRIBUTE, percent + "%");
+				String textValue = Constant.getStringForDouble(percent).getValue();
+				retval.setAttribute(VALUE_FULL_TEXT_ATTRIBUTE, textValue + "%");
 			}
 			else if(altValue == 0)
 			{
@@ -395,9 +389,8 @@ class BaseAltDiffTableBuilder extends TableBuilder
 			if(baseValue != 0)
 			{
 				double percent = ((altValue - baseValue) / baseValue) * 100;
-				BigDecimal bd = BigDecimal.valueOf(percent);
-				percent = bd.round(new MathContext(3)).doubleValue();
-				retval.setAttribute(VALUE_FULL_TEXT_ATTRIBUTE, absoluteText + "\n(" + percent + "%)");
+				String textValue = Constant.getStringForDouble(percent).getValue();
+				retval.setAttribute(VALUE_FULL_TEXT_ATTRIBUTE, absoluteText + "\n(" + textValue + "%)");
 			}
 			else if(altValue == 0)
 			{
@@ -435,16 +428,7 @@ class BaseAltDiffTableBuilder extends TableBuilder
 				{
 					_units = units;
 				}
-				String textValue;
-				if("percent".equals(units))
-				{
-					BigDecimal bd = BigDecimal.valueOf(value);
-					textValue = bd.round(new MathContext(3)).toString();
-				}
-				else
-				{
-					textValue = String.valueOf(Math.round(value));
-				}
+				String textValue = Constant.getStringForDouble(value).getValue();
 				retval.setTextContent(textValue);
 			}
 		}

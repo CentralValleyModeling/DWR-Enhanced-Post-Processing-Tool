@@ -491,7 +491,7 @@ public class QAQCReportPanel extends EpptPanel
 			}
 			else
 			{
-				LOGGER.log(Level.SEVERE, "Unable to generate Report PDF", e);
+				LOGGER.log(Level.WARNING, "Unable to generate Report PDF", e);
 				appendErrorText("Error: " + e);
 			}
 		}

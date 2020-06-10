@@ -13,12 +13,16 @@
 package gov.ca.water.calgui.constant;
 
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.text.DecimalFormat;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import javafx.beans.property.SimpleStringProperty;
 import javafx.scene.paint.Color;
 
 import rma.util.RMAConst;
@@ -72,12 +76,9 @@ public final class Constant
 	// File Names.
 	public static final String GUI_XML_FILENAME = System.getProperty("user.dir") + "//Config//GUI.xml";
 
-	public static final String DYNAMIC_CONTROL_FOR_STARTUP_FILENAME = System.getProperty("user.dir")
-			+ "//Config//DynamicControlForStartUp" + CSV_EXT;
-	public static final String TRIGGER_ENABLE_DISABLE_FILENAME = System.getProperty("user.dir")
-			+ "//Config//TriggerForDynamicDisplay" + CSV_EXT;
-	public static final String TRIGGER_CHECK_UNCHECK_FILENAME = System.getProperty("user.dir")
-			+ "//Config//TriggerForDynamicSelection" + CSV_EXT;
+	public static final String DYNAMIC_CONTROL_FOR_STARTUP_FILENAME = System.getProperty("user.dir") + "//Config//DynamicControlForStartUp" + CSV_EXT;
+	public static final String TRIGGER_ENABLE_DISABLE_FILENAME = System.getProperty("user.dir") + "//Config//TriggerForDynamicDisplay" + CSV_EXT;
+	public static final String TRIGGER_CHECK_UNCHECK_FILENAME = System.getProperty("user.dir") + "//Config//TriggerForDynamicSelection" + CSV_EXT;
 	public static final String IMAGE_PATH = System.getProperty("user.dir") + "//images//CalLiteIcon.png";
 	public static final String SAVE_FILE = "save";
 	public static final String BATCH_RUN = "Batch Run";
@@ -161,11 +162,7 @@ public final class Constant
 
 	public static Color getColorNotInList(List<Color> colors)
 	{
-		return Arrays.stream(PLOTLY_COLORS)
-					 .map(Color::web)
-					 .filter(o -> !colors.contains(o))
-					 .findAny()
-					 .orElse(getPlotlyDefaultColor(colors.size()));
+		return Arrays.stream(PLOTLY_COLORS).map(Color::web).filter(o -> !colors.contains(o)).findAny().orElse(getPlotlyDefaultColor(colors.size()));
 	}
 
 	public static String getPlotlyThresholdLineDash(int index)
@@ -175,20 +172,12 @@ public final class Constant
 
 	public static String colorToHex(Color color)
 	{
-		return String.format("#%02X%02X%02X%02X",
-				(int) (color.getRed() * 255),
-				(int) (color.getGreen() * 255),
-				(int) (color.getBlue() * 255),
-				(int) (color.getOpacity() * 255));
+		return String.format("#%02X%02X%02X%02X", (int) (color.getRed() * 255), (int) (color.getGreen() * 255), (int) (color.getBlue() * 255), (int) (color.getOpacity() * 255));
 	}
 
 	public static String colorToHex(java.awt.Color color)
 	{
-		return String.format("#%02X%02X%02X%02X",
-				color.getRed(),
-				color.getGreen(),
-				color.getBlue(),
-				color.getAlpha());
+		return String.format("#%02X%02X%02X%02X", color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha());
 	}
 
 	public static boolean isValidValue(Double value)
@@ -216,8 +205,7 @@ public final class Constant
 		}
 		else if("TAF".equalsIgnoreCase(originalUnits))
 		{
-			if(parameterName.toUpperCase().contains("STORAGE")
-					&& !parameterName.toUpperCase().contains("STORAGE-CHANGE"))
+			if(parameterName.toUpperCase().contains("STORAGE") && !parameterName.toUpperCase().contains("STORAGE-CHANGE"))
 			{
 				aggregateYearly = false;
 			}
@@ -231,5 +219,37 @@ public final class Constant
 			aggregateYearly = false;
 		}
 		return aggregateYearly;
+	}
+
+	public static SimpleStringProperty getStringForDouble(Double value)
+	{
+		SimpleStringProperty retval = new SimpleStringProperty("");
+		if(value != null && Constant.isValidValue(value))
+		{
+			String format;
+			if(value >= 100)
+			{
+				format = "#,###";
+			}
+			else if(value >= 10)
+			{
+				format = "#,###.#";
+			}
+			else if(value >= 1)
+			{
+				format = "#,###.##";
+			}
+			else
+			{
+				format = "#,###.###";
+			}
+			String formattedValue = new DecimalFormat(format).format(value);
+			if("-0".equals(formattedValue))
+			{
+				formattedValue = "0";
+			}
+			retval = new SimpleStringProperty(formattedValue);
+		}
+		return retval;
 	}
 }

@@ -10,8 +10,50 @@
  * GNU General Public License
  */
 //DEBUG flag to render plot on page load
-const DEBUG = false;
-var FORMATTER = '';
+const DEBUG = true;
+var FORMATTER = [
+    {
+        enabled: true,
+        dtickrange: [100, null],
+        value: ",.0f"
+    },
+    {
+        enabled: true,
+        dtickrange: [10, 100],
+        value: ",.1f"
+    },
+    {
+        enabled: true,
+        dtickrange: [1, 10],
+        value: ",.2f"
+    },
+    {
+        enabled: true,
+        dtickrange: [null, 1],
+        value: ",.3f"
+    },
+];
+
+function format(value){
+    for(let i = 0; i < FORMATTER.length; i++){
+        let plotlyFormatterStop = FORMATTER[i];
+        let range = plotlyFormatterStop['dtickrange'];
+        let min = range[0];
+        let max = range[1];
+        if((!min || Math.abs(value) >= min) && (!max || Math.abs(value) < max)){
+            let retval = Plotly.d3.format(plotlyFormatterStop['value'])(value);
+            if(Number(retval) === 0){
+                retval = 0;
+            }
+            if(retval === '-0'){
+                retval = '0';
+            }
+            return retval;
+        }
+    }
+    return value;
+}
+
 const PLOTLY_FONT = {
     family: 'Lucida Grande", "Lucida Sans Unicode", "Verdana", "Arial", "Helvetica", "sans-serif',
     color: 'black',
@@ -1123,19 +1165,6 @@ function closeNav() {
     closeSecondNav();
     document.body.style.backgroundColor = "white";
 }
-
-function getD3Formatter(fullSeries) {
-    let values = [];
-    for (let i = 0; i < fullSeries.length; i++) {
-        values.push(fullSeries[i][1]);
-    }
-    if (Math.max.apply(null, values) > 1) {
-        return ',.0f';
-    } else {
-        return ',.3r';
-    }
-}
-
 
 function buildMarkerLines(series) {
     let shapes = [];
