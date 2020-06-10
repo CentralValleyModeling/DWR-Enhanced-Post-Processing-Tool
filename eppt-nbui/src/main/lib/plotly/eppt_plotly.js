@@ -11,6 +11,28 @@
  */
 //DEBUG flag to render plot on page load
 const DEBUG = false;
+var PERCENT_FORMATTER = [
+    {
+        enabled: true,
+        dtickrange: [.01, null],
+        value: ",.0%"
+    },
+    {
+        enabled: true,
+        dtickrange: [.001, .01],
+        value: ",.1%"
+    },
+    {
+        enabled: true,
+        dtickrange: [.0001, .001],
+        value: ",.2%"
+    },
+    {
+        enabled: true,
+        dtickrange: [null, .0001],
+        value: ",.3%"
+    },
+];
 var FORMATTER = [
     {
         enabled: true,

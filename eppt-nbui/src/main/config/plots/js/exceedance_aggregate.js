@@ -103,7 +103,7 @@ function buildAggregateLayouts(datum, yaxis, title) {
                             },
                             xaxis: {
                                 gridcolor: '#CCCCCC',
-                                tickformat: ',.0%',
+                                tickformatstops: PERCENT_FORMATTER,
                                 range: [1, 0],
                             },
                             showlegend: true,

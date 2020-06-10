@@ -73,10 +73,6 @@ function buildTable(data, monthlyIndex, statIndex) {
     };
 }
 
-function getAcronym(text) {
-    return text;
-}
-
 function buildLayouts(datum, yaxis, title) {
     let layoutList = [];
 
