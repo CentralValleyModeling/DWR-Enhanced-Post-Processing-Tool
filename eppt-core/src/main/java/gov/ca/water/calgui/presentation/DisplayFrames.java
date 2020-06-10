@@ -92,7 +92,7 @@ class DisplayFrames
 	{
 		int startYear = _epptConfigurationController.getStartYear();
 		WaterYearDefinition waterYearDefinition = _epptConfigurationController.getWaterYearDefinition();
-		return LocalDate.of(startYear, waterYearDefinition.getStartMonth(), 1).minusDays(2);
+		return LocalDate.of(startYear, waterYearDefinition.getStartMonth(), 1).plusMonths(1).minusDays(2);
 	}
 
 	Optional<EpptScenarioRun> getBaseRun()

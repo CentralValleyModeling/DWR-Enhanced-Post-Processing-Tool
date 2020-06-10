@@ -13,8 +13,8 @@
 package gov.ca.water.trendreporting;
 
 import java.time.LocalDate;
+import java.time.YearMonth;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
@@ -27,21 +27,20 @@ import java.util.logging.Logger;
 
 import gov.ca.water.calgui.bo.GUILinksAllModelsBO;
 import gov.ca.water.calgui.bo.WaterYearDefinition;
+import gov.ca.water.calgui.bo.WaterYearPeriod;
+import gov.ca.water.calgui.bo.WaterYearPeriodRange;
 import gov.ca.water.calgui.bo.WaterYearPeriodRangesFilter;
+import gov.ca.water.calgui.bo.WaterYearType;
 import gov.ca.water.calgui.busservice.impl.DSSGrabber1SvcImpl;
 import gov.ca.water.calgui.busservice.impl.EpptParameter;
 import gov.ca.water.calgui.busservice.impl.EpptReportingComputedSet;
 import gov.ca.water.calgui.busservice.impl.EpptReportingComputer;
 import gov.ca.water.calgui.busservice.impl.EpptStatistic;
 import gov.ca.water.calgui.busservice.impl.MonthPeriod;
-import gov.ca.water.calgui.constant.Constant;
 import gov.ca.water.calgui.project.EpptScenarioRun;
 import org.json.JSONObject;
 
-import hec.heclib.util.HecTime;
-import hec.heclib.util.HecTimeArray;
 import hec.io.TimeSeriesContainer;
-import rma.util.RMAConst;
 
 /**
  * Company: Resource Management Associates
@@ -105,12 +104,15 @@ class TrendReportDataLoader
 	private List<JSONObject> compute()
 	{
 		List<JSONObject> retval = new ArrayList<>();
+		WaterYearPeriod entireRange = new WaterYearPeriod("Entire Range");
+		WaterYearPeriodRange waterYearPeriodRange = new WaterYearPeriodRange(entireRange, new WaterYearType(_start, entireRange), new WaterYearType(_end, entireRange));
+		YearMonth startYearMonth = waterYearPeriodRange.getStart(_waterYearDefinition);
+		YearMonth endYearMonth = waterYearPeriodRange.getEnd(_waterYearDefinition);
+		LocalDate start = LocalDate.of(startYearMonth.getYear(), startYearMonth.getMonth().plus(1), 1).minusDays(2);
+		LocalDate end = LocalDate.of(endYearMonth.getYear(), endYearMonth.getMonth(), 3).plusMonths(1);
 		for(EpptParameter parameter : _guiLink)
 		{
 			GUILinksAllModelsBO guiLink = parameter.getGuiLink();
-
-			LocalDate start = LocalDate.of(_start, _waterYearDefinition.getStartMonth(), 1).minusDays(2);
-			LocalDate end = LocalDate.of(_end, _waterYearDefinition.getEndMonth(), 1).plusMonths(1).plusDays(2);
 			Map<EpptScenarioRun, List<TimeSeriesContainer>> scenarioRunData;
 			if(_difference)
 			{

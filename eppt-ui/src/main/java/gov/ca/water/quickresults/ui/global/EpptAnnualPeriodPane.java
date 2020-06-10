@@ -90,6 +90,7 @@ class EpptAnnualPeriodPane extends TitledPane
 		_treeView.getSelectionModel().selectedItemProperty().addListener(
 				(e, o, n) -> _editButton.setDisable(n == null || n.getValue() == null || !n.getValue().isEditable()));
 		_controller.addScenarioChangedListener((b, a) -> _controller.setWaterYearPeriodRangesFilters(getWaterYearPeriodRanges()));
+		_controller.modifiedProperty().addListener((a, b, c) -> _controller.setWaterYearPeriodRangesFilters(getWaterYearPeriodRanges()));
 	}
 
 	private void initComponents()
@@ -434,10 +435,6 @@ class EpptAnnualPeriodPane extends TitledPane
 		@Override
 		public String toString()
 		{
-			DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MMM yyyy");
-			WaterYearPeriod waterYearPeriod = new WaterYearPeriod("Long Term");
-			WaterYearPeriodRange range = new WaterYearPeriodRange(waterYearPeriod,
-					new WaterYearType(_controller.getStartYear(), waterYearPeriod), new WaterYearType(_controller.getEndYear(), waterYearPeriod));
 			return "Long Term";
 		}
 

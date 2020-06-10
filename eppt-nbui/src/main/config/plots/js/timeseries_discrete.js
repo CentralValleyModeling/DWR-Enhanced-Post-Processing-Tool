@@ -17,76 +17,73 @@ function getPlotlyMonthlySeries(datum, firstRecord, lastRecord, instantaneous) {
         let tsList = datum[i]['ts_list'];
         for (let j = 0; j < tsList.length; j++) {
             let axis = 0;
-            let monthlyFilters = tsList[j]['monthly_filters'];
-            for (let k = 0; k < monthlyFilters.length; k++) {
-                let annualFilters = monthlyFilters[k]['annual_filters'];
-                for (let m = 0; m < annualFilters.length; m++) {
-                    let timeSeries = annualFilters[m]['discrete_ts'];
-                    let x = [];
-                    let y = [];
-                    let hoverInfo = [];
-                    let markerSize = [];
-                    let startDate = new Date(firstRecord);
-                    startDate.setMonth(startDate.getMonth() - 1);
-                    let endDate = new Date(lastRecord);
+            let annualFilters = tsList[j]['monthly_filters'][0]['annual_filters'];
+            for (let m = 0; m < annualFilters.length; m++) {
+                let timeSeries = annualFilters[m]['discrete_ts'];
+                let x = [];
+                let y = [];
+                let hoverInfo = [];
+                let markerSize = [];
+                let startDate = new Date(firstRecord);
+                startDate.setMonth(startDate.getMonth() - 1);
+                let endDate = new Date(lastRecord);
 
-                    var startingDataIndex = 0;
-                    while (startDate <= endDate) {
-                        let date = new Date(startDate);
-                        if (!instantaneous) {
-                            date.setMonth(date.getMonth() - 1);
-                        }
-                        if (timeSeries[startingDataIndex]) {
-                            let dataDate = new Date(timeSeries[startingDataIndex][0]);
-                            dataDate.setMonth(dataDate.getMonth() - 1);
-                            if (dataDate.getFullYear() === startDate.getFullYear() && dataDate.getMonth() === startDate.getMonth()) {
-                                x.push(date);
-                                y.push(timeSeries[startingDataIndex][1]);
-                                hoverInfo.push('all');
-                                markerSize.push(4);
-                                startingDataIndex++;
-                            }
-                        }
-                        if (!instantaneous) {
-                            if (!y[y.length - 2] && y[y.length - 1]) {
-                                y[y.length - 2] = y[y.length - 1];
-                            }
-                            if (x.length > y.length) {
-                                x.push(date);
-                                y.push(null);
-                                hoverInfo.push('skip');
-                                markerSize.push(0);
-                            }
-                        }
-                        startDate.setMonth(startDate.getMonth() + 1);
+                var startingDataIndex = 0;
+                while (startDate <= endDate) {
+                    let date = new Date(startDate);
+                    if (!instantaneous) {
+                        date.setMonth(date.getMonth() - 1);
                     }
-                    let series = seriesList[axis];
-                    if (!series) {
-                        series = [];
-                        seriesList.push(series);
+                    if (timeSeries[startingDataIndex]) {
+                        let dataDate = new Date(timeSeries[startingDataIndex][0]);
+                        dataDate.setMonth(dataDate.getMonth() - 1);
+                        if (dataDate.getFullYear() === startDate.getFullYear() && dataDate.getMonth() === startDate.getMonth()) {
+                            x.push(date);
+                            y.push(timeSeries[startingDataIndex][1]);
+                            hoverInfo.push('all');
+                            markerSize.push(4);
+                            startingDataIndex++;
+                        }
                     }
-                    let shape = 'vh';
-                    if (instantaneous) {
-                        shape = 'linear';
+                    if (!instantaneous) {
+                        if (!y[y.length - 2] && y[y.length - 1]) {
+                            y[y.length - 2] = y[y.length - 1];
+                        }
+                        if (x.length > y.length) {
+                            x.push(date);
+                            y.push(null);
+                            hoverInfo.push('skip');
+                            markerSize.push(0);
+                        }
                     }
-                    series.push({
-                        name: tsList[j]['ts_name'] + '     ',
-                        x: x,
-                        y: y,
-                        line: {
-                            color: datum[i]['scenario_color'],
-                            dash: PLOTLY_LINE_DASH_STYLES[j % PLOTLY_LINE_DASH_STYLES.length],
-                            shape: shape
-                        },
-                        mode: 'lines+markers',
-                        marker: {
-                            size: markerSize,
-                            color: darken(datum[i]['scenario_color'], 20)
-                        },
-                        hoverinfo: hoverInfo
-                    });
-                    axis++;
+                    startDate.setMonth(startDate.getMonth() + 1);
                 }
+                let series = seriesList[axis];
+                if (!series) {
+                    series = [];
+                    seriesList.push(series);
+                }
+                let shape = 'vh';
+                if (instantaneous) {
+                    shape = 'linear';
+                }
+                series.push({
+                    name: tsList[j]['ts_name'] + '     ',
+                    x: x,
+                    y: y,
+                    line: {
+                        color: datum[i]['scenario_color'],
+                        dash: PLOTLY_LINE_DASH_STYLES[j % PLOTLY_LINE_DASH_STYLES.length],
+                        shape: shape
+                    },
+                    mode: 'lines+markers',
+                    marker: {
+                        size: markerSize,
+                        color: darken(datum[i]['scenario_color'], 20)
+                    },
+                    hoverinfo: hoverInfo
+                });
+                axis++;
             }
         }
     }
@@ -99,67 +96,60 @@ function buildDiscreteLayouts(datum, yaxis, title) {
         let tsList = datum[i]['ts_list'];
         for (let j = 0; j < tsList.length; j++) {
             let axis = 0;
-            let monthlyFilters = tsList[j]['monthly_filters'];
-            for (let k = 0; k < monthlyFilters.length; k++) {
-                let annualFilters = monthlyFilters[k]['annual_filters'];
-                for (let m = 0; m < annualFilters.length; m++) {
-                    let series = layoutList[axis];
-                    if (!series) {
-                        let plotTitle = title;
-                        if (annualFilters[m]['annual_period']) {
-                            if (annualFilters[m]['annual_period'].indexOf('<br>') === annualFilters[m]['annual_period'].length - 4) {
-                                plotTitle += '<br>' + annualFilters[m]['annual_period'].replace("<br>", "");
-                            } else {
-                                plotTitle += '<br>' + annualFilters[m]['annual_period'].replace("<br>", " - ");
-                            }
+            let annualFilters = tsList[j]['monthly_filters'][0]['annual_filters'];
+            for (let m = 0; m < annualFilters.length; m++) {
+                let series = layoutList[axis];
+                if (!series) {
+                    let plotTitle = title;
+                    if (annualFilters[m]['annual_period']) {
+                        if (annualFilters[m]['annual_period'].indexOf('<br>') === annualFilters[m]['annual_period'].length - 4) {
+                            plotTitle += '<br>' + annualFilters[m]['annual_period'].replace("<br>", "");
+                        } else {
+                            plotTitle += '<br>' + annualFilters[m]['annual_period'].replace("<br>", " - ");
                         }
-                        if (annualFilters[m]['month_period']) {
-                            plotTitle += '<br>' + annualFilters[m]['month_period'];
-                        }
-                        layoutList[axis] = {
-                            font: PLOTLY_FONT,
-                            yaxis: {
-                                title: {
-                                    text: yaxis,
-                                    standoff: 50
-                                },
-                                automargin: true,
-                                tickformat: FORMATTER,
-                                gridcolor: '#CCCCCC',
-                                rangemode: 'tozero'
-                            },
-                            xaxis: {
-                                tickformat: '%b-%Y',
-                                hoverformat: '%b-%Y',
-                                gridcolor: '#CCCCCC'
-                            },
-                            showlegend: true,
-                            legend: {
-                                orientation: 'h',
-                                xanchor: 'center',
-                                x: 0.5,
-                                font: {
-                                    size: 10,
-                                }
-                            },
-                            height: 650,
-                            title: {
-                                text: plotTitle,
-                                font: {
-                                    size: 20,
-                                }
-                            },
-                            margin: {
-                                l: 60,
-                                r: 40,
-                                b: 100,
-                                t: 120
-                            }
-                        };
                     }
-                    axis++;
+                    layoutList[axis] = {
+                        font: PLOTLY_FONT,
+                        yaxis: {
+                            title: {
+                                text: yaxis,
+                                standoff: 50
+                            },
+                            automargin: true,
+                            tickformat: FORMATTER,
+                            gridcolor: '#CCCCCC',
+                            rangemode: 'tozero'
+                        },
+                        xaxis: {
+                            tickformat: '%b-%Y',
+                            hoverformat: '%b-%Y',
+                            gridcolor: '#CCCCCC'
+                        },
+                        showlegend: true,
+                        legend: {
+                            orientation: 'h',
+                            xanchor: 'center',
+                            x: 0.5,
+                            font: {
+                                size: 10,
+                            }
+                        },
+                        height: 650,
+                        title: {
+                            text: plotTitle,
+                            font: {
+                                size: 20,
+                            }
+                        },
+                        margin: {
+                            l: 60,
+                            r: 40,
+                            b: 100,
+                            t: 120
+                        }
+                    };
                 }
-
+                axis++;
             }
         }
     }
@@ -209,10 +199,9 @@ function plotlyCopyToClipboard(element) {
         }
     }
     let keys = Object.keys(xyVals);
-    if(foundDate){
-        keys.sort((a,b)=> new Date(a).getTime() - new Date(b).getTime());
-    }
-    else{
+    if (foundDate) {
+        keys.sort((a, b) => new Date(a).getTime() - new Date(b).getTime());
+    } else {
         keys.sort();
     }
     for (let i = 0; i < keys.length; i++) {

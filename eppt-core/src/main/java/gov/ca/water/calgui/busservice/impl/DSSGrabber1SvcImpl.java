@@ -157,13 +157,15 @@ public class DSSGrabber1SvcImpl implements IDSSGrabber1Svc
 		{
 			HecTime ht = new HecTime();
 
-			int m = startMonth.getMonth().getValue();
-			int y = startMonth.getYear();
-			ht.setYearMonthDay(y, m, 1, 0);
+			int month = startMonth.getMonth().getValue();
+			int year = startMonth.getYear();
+			int dayOfMonth = startMonth.getDayOfMonth();
+			ht.setYearMonthDay(year, month, dayOfMonth, 0);
 			_startTime = new HecTime(ht);
-			m = endMonth.getMonth().getValue();
-			y = endMonth.getYear();
-			ht.setYearMonthDay(y, m, 1, 0);
+			month = endMonth.getMonth().getValue();
+			year = endMonth.getYear();
+			dayOfMonth = endMonth.getDayOfMonth();
+			ht.setYearMonthDay(year, month, dayOfMonth, 0);
 			_endTime = new HecTime(ht);
 		}
 		catch(RuntimeException ex)
