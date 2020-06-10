@@ -10,7 +10,7 @@
  * GNU General Public License
  */
 //DEBUG flag to render plot on page load
-const DEBUG = true;
+const DEBUG = false;
 var FORMATTER = [
     {
         enabled: true,
