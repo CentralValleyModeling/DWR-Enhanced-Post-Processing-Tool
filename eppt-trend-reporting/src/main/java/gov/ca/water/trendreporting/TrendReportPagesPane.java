@@ -81,8 +81,8 @@ class TrendReportPagesPane extends TitledPane
 		}
 		BorderPane borderPane = new BorderPane();
 		HBox hBox = new HBox();
-		_leftButton.setPrefHeight(32);
-		_rightButton.setPrefHeight(32);
+		_leftButton.setPrefHeight(25);
+		_rightButton.setPrefHeight(25);
 		_textField.setPromptText(backingParameters.get(0).toString());
 		_textField.getEntries().addAll(backingParameters);
 		borderPane.setCenter(_trendReportTabConfigListView);
@@ -99,7 +99,8 @@ class TrendReportPagesPane extends TitledPane
 		setMaxHeight(Double.MAX_VALUE);
 		borderPane.setPrefWidth(120);
 		borderPane.setPrefHeight(200);
-
+		setMaxHeight(Double.MAX_VALUE);
+		setPrefHeight(200);
 	}
 
 	private TrendReportTabConfig buildTrendReportTabConfig(Path path)
