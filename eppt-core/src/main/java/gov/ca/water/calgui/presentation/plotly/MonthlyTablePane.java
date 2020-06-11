@@ -24,6 +24,7 @@ import javafx.event.ActionEvent;
 import javafx.geometry.Orientation;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeTableView;
 import javafx.scene.layout.BorderPane;
@@ -44,8 +45,7 @@ class MonthlyTablePane extends JFXPanel
 	private final EpptReportingComputedSet _epptReportingComputedSet;
 	private final List<MonthPeriod> _selectedMonthlyPeriods;
 	private RmaTreeTableView<MonthlyTableTableModel, MonthlyPaneRow> _treeView;
-	private Button _toggleTableModelButton;
-	private boolean _showingSideBySide;
+	private CheckBox _comparisonModeCheckbox;
 
 	MonthlyTablePane(String plotTitle, WaterYearDefinition waterYearDefinition, EpptReportingComputedSet epptReportingComputedSet, List<MonthPeriod> selectedMonthlyPeriods)
 	{
@@ -65,37 +65,33 @@ class MonthlyTablePane extends JFXPanel
 		setSequentialTableModel();
 		borderPane.setCenter(_treeView);
 		Button copyDataButton = new Button("Copy Data");
-		_toggleTableModelButton = new Button("Show Side By Side");
-		_toggleTableModelButton.setOnAction(this::toggleTableModel);
+		_comparisonModeCheckbox = new CheckBox("Comparison Mode");
+		_comparisonModeCheckbox.setOnAction(this::toggleTableModel);
 		copyDataButton.setOnAction(evt -> TreeTableUtil.copyValuesToClipboard(_treeView));
 
-		FlowPane flowPane = new FlowPane(Orientation.HORIZONTAL, 5.0, 10.0, copyDataButton, _toggleTableModelButton);
+		FlowPane flowPane = new FlowPane(Orientation.HORIZONTAL, 5.0, 10.0, copyDataButton, _comparisonModeCheckbox);
 		borderPane.setBottom(flowPane);
 		setScene(new Scene(borderPane));
 	}
 
 	private void toggleTableModel(ActionEvent evt)
 	{
-		if(_showingSideBySide)
+		if(_comparisonModeCheckbox.isSelected())
 		{
-			setSequentialTableModel();
-			_toggleTableModelButton.setText("Show Data Side by Side");
-			_showingSideBySide = false;
+			setSideBySideTableModel();
 		}
 		else
 		{
-			setSideBySideTableModel();
-			_toggleTableModelButton.setText("Show Data Sequentially");
-			_showingSideBySide = true;
+			setSequentialTableModel();
 		}
 	}
 
 	private void setSequentialTableModel()
 	{
-		_treeView.setColumnResizePolicy(TreeTableView.UNCONSTRAINED_RESIZE_POLICY);
 		MonthlySequentialTableModel monthlySequentialTableModel = new MonthlySequentialTableModel(_plotTitle, _waterYearDefinition, _epptReportingComputedSet,
 				_selectedMonthlyPeriods);
 		_treeView.setModel(monthlySequentialTableModel);
+		_treeView.setColumnResizePolicy(TreeTableView.CONSTRAINED_RESIZE_POLICY);
 		ObservableList<TreeItem<MonthlyPaneRow>> treeItems = _treeView.getRoot().getChildren();
 		for(TreeItem<MonthlyPaneRow> treeItem : treeItems)
 		{
