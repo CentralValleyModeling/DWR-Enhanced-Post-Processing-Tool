@@ -565,7 +565,7 @@ public class DSSGrabber1SvcImpl implements IDSSGrabber1Svc
 		if(result != null)
 		{
 			//Only for secondary values - Monthly table depends on this name
-			if(_secondaryDSSName.get(model).equalsIgnoreCase(dssName))
+			if(dssName.equalsIgnoreCase(_secondaryDSSName.get(model)))
 			{
 				result.supplementalInfo = _legend;
 			}
