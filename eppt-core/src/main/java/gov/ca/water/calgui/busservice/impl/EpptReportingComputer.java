@@ -98,7 +98,8 @@ public final class EpptReportingComputer
 						monthComputes.add(new EpptReportingComputedSet.EpptReportingMonthComputed(annualComputes));
 					}
 					String name = ts.getFullName();
-					tsComputes.add(new EpptReportingComputedSet.EpptReportingTs(name, monthComputes));
+					String supplementalInfo = ts.supplementalInfo;
+					tsComputes.add(new EpptReportingComputedSet.EpptReportingTs(name, supplementalInfo, monthComputes));
 				}
 			}
 			if(!tsComputes.isEmpty())

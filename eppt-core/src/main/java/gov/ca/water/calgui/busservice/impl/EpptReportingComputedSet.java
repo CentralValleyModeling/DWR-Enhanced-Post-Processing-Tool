@@ -170,11 +170,13 @@ public final class EpptReportingComputedSet
 	public static class EpptReportingTs
 	{
 		private final String _tsName;
+		private final String _supplementalInfo;
 		private final List<EpptReportingMonthComputed> _monthComputed;
 
-		EpptReportingTs(String tsName, List<EpptReportingMonthComputed> monthComputed)
+		EpptReportingTs(String tsName, String supplementalInfo, List<EpptReportingMonthComputed> monthComputed)
 		{
 			_tsName = tsName;
+			_supplementalInfo = supplementalInfo;
 			_monthComputed = monthComputed;
 		}
 
@@ -197,6 +199,11 @@ public final class EpptReportingComputedSet
 			retval.put(MONTHLY_FILTERS, jsonArray);
 			retval.put(TS_NAME, _tsName);
 			return retval;
+		}
+
+		public String getSupplementalInfo()
+		{
+			return _supplementalInfo;
 		}
 	}
 

@@ -44,13 +44,13 @@ import static java.util.stream.Collectors.toSet;
  * @author <a href="mailto:adam@rmanet.com">Adam Korynta</a>
  * @since 01-27-2020
  */
-class MonthlyTableModel extends RmaTreeTableModel<MonthlyPaneRow>
+class MonthlySequentialTableModel extends MonthlyTableTableModel
 {
 	private final RmaTreeTableColumnSpec _waterYearColSpec;
 	private final RmaTreeTableColumnSpec _aggregateColumnSpec;
 
-	MonthlyTableModel(String plotTitle, WaterYearDefinition waterYearDefinition, EpptReportingComputedSet epptReportingComputedSet,
-					  List<MonthPeriod> selectedMonthlyPeriods)
+	MonthlySequentialTableModel(String plotTitle, WaterYearDefinition waterYearDefinition, EpptReportingComputedSet epptReportingComputedSet,
+								List<MonthPeriod> selectedMonthlyPeriods)
 	{
 		_waterYearColSpec = new RmaTreeTableColumnSpec.Builder(plotTitle + " (" + epptReportingComputedSet.getUnits() + ")")
 				.withCanBeHidden(false)
@@ -105,7 +105,7 @@ class MonthlyTableModel extends RmaTreeTableModel<MonthlyPaneRow>
 			{
 				title += " - " + primary.getWaterYearPeriodRangesFilter().getName();
 			}
-			MonthlyPaneRow.MonthlyPaneRowScenario monthlyPaneRowScenario = new MonthlyPaneRow.MonthlyPaneRowScenario(title, _waterYearColSpec);
+			MonthlyPaneRow.MonthlyPaneRowScenario monthlyPaneRowScenario = new MonthlyPaneRow.MonthlyPaneRowScenario(0, title, _waterYearColSpec);
 			getRows().add(monthlyPaneRowScenario);
 			for(int year : yearly.keySet())
 			{
@@ -123,8 +123,8 @@ class MonthlyTableModel extends RmaTreeTableModel<MonthlyPaneRow>
 				if(!Double.isNaN(orDefault))
 				{
 					dataMap.put(_aggregateColumnSpec, orDefault);
-					MonthlyPaneRow.MonthlyPaneRowData dataRow = new MonthlyPaneRow.MonthlyPaneRowData(monthlyPaneRowScenario, year, dataMap,
-							_waterYearColSpec);
+					MonthlyPaneRow.MonthlyPaneRowData dataRow = new MonthlyPaneRow.MonthlyPaneRowData(Integer.toString(year), _waterYearColSpec);
+					dataRow.addData(dataMap);
 					monthlyPaneRowScenario.getChildren().add(dataRow);
 				}
 			}
@@ -137,8 +137,9 @@ class MonthlyTableModel extends RmaTreeTableModel<MonthlyPaneRow>
 					dataMap.put(monthTreeTableColumnSpecMap.get(entry.getKey()), entry.getValue());
 				}
 				dataMap.put(_aggregateColumnSpec, computedStatistics.getAggregateStatistic());
-				monthlyPaneRowScenario.getChildren().add(new MonthlyPaneRow.MonthlyPaneRowStat(monthlyPaneRowScenario, epptStatistic, dataMap,
-						_waterYearColSpec));
+				MonthlyPaneRow.MonthlyPaneRowData monthlyPaneRowData = new MonthlyPaneRow.MonthlyPaneRowData(epptStatistic.getName(), _waterYearColSpec);
+				monthlyPaneRowScenario.getChildren().add(monthlyPaneRowData);
+				monthlyPaneRowData.addData(dataMap);
 			}
 		}
 	}

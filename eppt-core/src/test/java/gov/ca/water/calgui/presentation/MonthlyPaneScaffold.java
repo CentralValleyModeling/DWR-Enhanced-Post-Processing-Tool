@@ -30,6 +30,7 @@ import gov.ca.water.calgui.bo.WaterYearPeriodRange;
 import gov.ca.water.calgui.bo.WaterYearPeriodRangesFilter;
 import gov.ca.water.calgui.bo.WaterYearType;
 import gov.ca.water.calgui.busservice.impl.EpptStatistic;
+import gov.ca.water.calgui.busservice.impl.ErrorValueFlags;
 import gov.ca.water.calgui.busservice.impl.GuiLinksSeedDataSvcImpl;
 import gov.ca.water.calgui.busservice.impl.MonthPeriod;
 import gov.ca.water.calgui.busservice.impl.ScriptedEpptStatistics;
@@ -75,6 +76,7 @@ public class MonthlyPaneScaffold
 		GuiLinksSeedDataSvcImpl.createSeedDataSvcImplInstance();
 		WaterYearDefinitionSvc.createSeedDataSvcImplInstance();
 		ThresholdLinksSeedDataSvc.createSeedDataSvcImplInstance();
+		ErrorValueFlags.initializeErrorFlags();
 		WaterYearIndexAliasReader.createInstance();
 		NamedDssPath baseDss = new NamedDssPath(
 				Paths.get("J:\\DWR\\QA_QC\\SupportingDocs040219\\EPPTSupportingDoc040219\\SampleDSS_V1.01\\Inputs\\SampleDV_Base.dss"), "test base",
@@ -126,16 +128,16 @@ public class MonthlyPaneScaffold
 						"C:\\Git\\DWR\\EPPT\\DWR-Enhanced-Post-Processing-Tool\\eppt-trend-reporting\\src\\test\\resources\\dwr_eppt\\wresl\\lookup"),
 				altDssContainer, javafx.scene.paint.Color.BISQUE);
 		ScriptedEpptStatistics.createScriptedStatistics();
-		boolean displayTimeSeriesAll = true;
-		boolean displayTimeSeriesAggregate = true;
-		boolean displayExceedanceAll = true;
-		boolean displayExceedanceAggregate = true;
-		boolean displayBoxAndWhiskerAll = true;
-		boolean displayBoxAndWhiskerAggregate = true;
+		boolean displayTimeSeriesAll = false;
+		boolean displayTimeSeriesAggregate = false;
+		boolean displayExceedanceAll = false;
+		boolean displayExceedanceAggregate = false;
+		boolean displayBoxAndWhiskerAll = false;
+		boolean displayBoxAndWhiskerAggregate = false;
 		boolean displayMonthlyTable = true;
 		boolean displaySummaryTable = true;
-		boolean displayMonthlyLine = true;
-		boolean displayBarCharts = true;
+		boolean displayMonthlyLine = false;
+		boolean displayBarCharts = false;
 		PlotConfigurationState plotConfigurationState = new PlotConfigurationState(displayTimeSeriesAll, displayTimeSeriesAggregate,
 				displayExceedanceAll, displayExceedanceAggregate, displayBoxAndWhiskerAll, displayBoxAndWhiskerAggregate,
 				displayMonthlyTable, displaySummaryTable, displayMonthlyLine, displayBarCharts);
