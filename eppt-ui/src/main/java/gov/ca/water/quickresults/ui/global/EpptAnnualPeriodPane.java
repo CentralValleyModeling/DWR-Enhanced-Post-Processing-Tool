@@ -119,23 +119,55 @@ class EpptAnnualPeriodPane extends TitledPane
 		if(selectedItem != null)
 		{
 			WaterYearPeriodDefinitionsRow rowModel = selectedItem.getValue();
-			if(rowModel != null && rowModel.isEditable() && rowModel instanceof WaterYearDefinitionOverrideRow)
+			if(rowModel != null && rowModel.isEditable() && rowModel instanceof WaterYearPeriodRangeRow)
 			{
-				WaterYearDefinitionOverrideRow overrideRow = (WaterYearDefinitionOverrideRow) rowModel;
-				addAnnualPeriod(selectedItem, overrideRow);
+				WaterYearPeriodRangeRow rangeRowModel = (WaterYearPeriodRangeRow) rowModel;
+				Month start = _controller.getWaterYearDefinition().getStartMonth();
+				Month end = _controller.getWaterYearDefinition().getEndMonth();
+				boolean overrideWaterYearDefinition = false;
+				if(rangeRowModel instanceof WaterYearDefinitionOverrideRow)
+				{
+					overrideWaterYearDefinition = true;
+					start = ((WaterYearDefinitionOverrideRow) rangeRowModel).getStart();
+					end = ((WaterYearDefinitionOverrideRow) rangeRowModel).getEnd();
+				}
+
+				launchEditAnnualPeriodDialog(selectedItem, rangeRowModel, start, end, overrideWaterYearDefinition);
 			}
 		}
 	}
 
-	private void addAnnualPeriod(TreeItem<WaterYearPeriodDefinitionsRow> selectedItem, WaterYearDefinitionOverrideRow overrideRow)
+	private void launchEditAnnualPeriodDialog(TreeItem<WaterYearPeriodDefinitionsRow> selectedItem, WaterYearPeriodRangeRow rangeRowModel, Month start, Month end,
+											  boolean overrideWaterYearDefinition)
 	{
-		AddAnnualFilterDialog addAnnualFilterDialog = new AddAnnualFilterDialog(Frame.getFrames()[0], overrideRow._range, overrideRow._start, overrideRow._end, _controller.getWaterYearDefinition());
+		AddAnnualFilterDialog addAnnualFilterDialog = new AddAnnualFilterDialog(Frame.getFrames()[0], rangeRowModel.getRange(),
+				start, end, overrideWaterYearDefinition, _controller.getWaterYearDefinition());
 		try
 		{
 			SwingUtilities.invokeAndWait(() -> addAnnualFilterDialog.setVisible(true));
 			if(!addAnnualFilterDialog.isCanceled())
 			{
-				addNewAnnualPeriod(selectedItem, addAnnualFilterDialog);
+				int startYear = addAnnualFilterDialog.getStartYear();
+				int endYear = addAnnualFilterDialog.getEndYear();
+				WaterYearPeriod waterYearPeriod = new WaterYearPeriod("User Defined");
+				WaterYearPeriodRange waterYearPeriodRange = new WaterYearPeriodRange(waterYearPeriod, new WaterYearType(startYear, waterYearPeriod),
+						new WaterYearType(endYear, waterYearPeriod));
+				TreeItem<WaterYearPeriodDefinitionsRow> parent = selectedItem.getParent();
+				int selectedIndex = parent.getChildren().indexOf(selectedItem);
+				int selectedRowIndex = _treeView.getSelectionModel().getSelectedIndex();
+				parent.getChildren().remove(selectedItem);
+				if(addAnnualFilterDialog.overrideWaterYearDefinition())
+				{
+					WaterYearDefinitionOverrideRow waterYearPeriodRangeRow = new WaterYearDefinitionOverrideRow(waterYearPeriodRange, addAnnualFilterDialog.getStartMonth(),
+							addAnnualFilterDialog.getEndMonth());
+					parent.getChildren().add(selectedIndex, new MyCheckBoxTreeItem(waterYearPeriodRangeRow));
+				}
+				else
+				{
+					WaterYearPeriodRangeRow waterYearPeriodRangeRow = new WaterYearPeriodRangeRow(waterYearPeriodRange, true);
+					parent.getChildren().add(selectedIndex, new MyCheckBoxTreeItem(waterYearPeriodRangeRow));
+				}
+				_treeView.getSelectionModel().select(selectedRowIndex);
 			}
 		}
 		catch(InterruptedException e)
@@ -146,29 +178,6 @@ class EpptAnnualPeriodPane extends TitledPane
 		catch(InvocationTargetException e)
 		{
 			LOGGER.log(Level.SEVERE, "Error adding monthly period", e);
-		}
-	}
-
-	private void addNewAnnualPeriod(TreeItem<WaterYearPeriodDefinitionsRow> selectedItem, AddAnnualFilterDialog addAnnualFilterDialog)
-	{
-		int startYear = addAnnualFilterDialog.getStartYear();
-		int endYear = addAnnualFilterDialog.getEndYear();
-		WaterYearPeriod waterYearPeriod = new WaterYearPeriod("User Defined");
-		WaterYearPeriodRange waterYearPeriodRange = new WaterYearPeriodRange(waterYearPeriod, new WaterYearType(startYear, waterYearPeriod),
-				new WaterYearType(endYear, waterYearPeriod));
-		TreeItem<WaterYearPeriodDefinitionsRow> parent = selectedItem.getParent();
-		int selectedIndex = parent.getChildren().indexOf(selectedItem);
-		parent.getChildren().remove(selectedItem);
-		if(addAnnualFilterDialog.overrideWaterYearDefinition())
-		{
-			WaterYearDefinitionOverrideRow waterYearPeriodRangeRow = new WaterYearDefinitionOverrideRow(waterYearPeriodRange, addAnnualFilterDialog.getStartMonth(),
-					addAnnualFilterDialog.getEndMonth());
-			parent.getChildren().add(selectedIndex, new MyCheckBoxTreeItem(waterYearPeriodRangeRow));
-		}
-		else
-		{
-			WaterYearPeriodRangeRow waterYearPeriodRangeRow = new WaterYearPeriodRangeRow(waterYearPeriodRange, true);
-			parent.getChildren().add(selectedIndex, new MyCheckBoxTreeItem(waterYearPeriodRangeRow));
 		}
 	}
 
@@ -542,7 +551,7 @@ class EpptAnnualPeriodPane extends TitledPane
 		}
 	}
 
-	private final class WaterYearPeriodRangeRow implements WaterYearPeriodDefinitionsRow
+	private class WaterYearPeriodRangeRow implements WaterYearPeriodDefinitionsRow
 	{
 		private final WaterYearPeriodRange _range;
 		private final boolean _editable;
@@ -557,6 +566,11 @@ class EpptAnnualPeriodPane extends TitledPane
 		{
 			_range = range;
 			_editable = editable;
+		}
+
+		WaterYearPeriodRange getRange()
+		{
+			return _range;
 		}
 
 		@Override
@@ -586,7 +600,7 @@ class EpptAnnualPeriodPane extends TitledPane
 		}
 	}
 
-	private final class WaterYearDefinitionOverrideRow implements WaterYearPeriodDefinitionsRow
+	private final class WaterYearDefinitionOverrideRow extends WaterYearPeriodRangeRow
 	{
 		private final WaterYearPeriodRange _range;
 		private final Month _start;
@@ -594,9 +608,20 @@ class EpptAnnualPeriodPane extends TitledPane
 
 		private WaterYearDefinitionOverrideRow(WaterYearPeriodRange range, Month start, Month end)
 		{
+			super(range);
 			_range = range;
 			_start = start;
 			_end = end;
+		}
+
+		Month getStart()
+		{
+			return _start;
+		}
+
+		Month getEnd()
+		{
+			return _end;
 		}
 
 		@Override

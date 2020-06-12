@@ -76,19 +76,17 @@ class AddAnnualFilterDialog extends JDialog
 		// call onCancel() on ESCAPE
 		_contentPane.registerKeyboardAction(e -> onCancel(), KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
 		pack();
-//		setSize(new Dimension(300, 260));
 		setMinimumSize(new Dimension(300, 260));
 		setLocationRelativeTo(frame);
-		_startYearSpinner.setValue(1921);
-		_endYearSpinner.setValue(2003);
 		Arrays.asList(Month.values()).forEach(e -> {
 			_startMonthCombobox.addItem(e);
 			_endMonthCombobox.addItem(e);
 		});
 		_startMonthCombobox.setSelectedItem(_waterYearDefinition.getStartMonth());
 		_endMonthCombobox.setSelectedItem(_waterYearDefinition.getEndMonth());
-		_overrideWaterYearDefinitionCheckBox.addActionListener(e ->
-		{
+		_startYearSpinner.setValue(1921);
+		_endYearSpinner.setValue(2003);
+		_overrideWaterYearDefinitionCheckBox.addActionListener(e -> {
 			_startMonthCombobox.setEnabled(_overrideWaterYearDefinitionCheckBox.isSelected());
 			_endMonthCombobox.setEnabled(_overrideWaterYearDefinitionCheckBox.isSelected());
 			if(!_overrideWaterYearDefinitionCheckBox.isSelected())
@@ -109,16 +107,17 @@ class AddAnnualFilterDialog extends JDialog
 		updatePeriodOfRecord();
 	}
 
-	AddAnnualFilterDialog(Frame frame, WaterYearPeriodRange selectedItem, Month startMonth, Month endMonth, WaterYearDefinition waterYearDefinition)
+	AddAnnualFilterDialog(Frame frame, WaterYearPeriodRange selectedItem, Month startMonth, Month endMonth, boolean overrideWaterYearDefinition,
+						  WaterYearDefinition waterYearDefinition)
 	{
 		this(frame, waterYearDefinition);
 		_startYearSpinner.setValue(selectedItem.getStartYear().getYear());
 		_endYearSpinner.setValue(selectedItem.getEndYear().getYear());
 		_startMonthCombobox.setSelectedItem(startMonth);
 		_endMonthCombobox.setSelectedItem(endMonth);
-		_overrideWaterYearDefinitionCheckBox.setSelected(true);
-		_startMonthCombobox.setEnabled(true);
-		_endMonthCombobox.setEnabled(true);
+		_overrideWaterYearDefinitionCheckBox.setSelected(overrideWaterYearDefinition);
+		_startMonthCombobox.setEnabled(overrideWaterYearDefinition);
+		_endMonthCombobox.setEnabled(overrideWaterYearDefinition);
 	}
 
 	private void updatePeriodOfRecord()
