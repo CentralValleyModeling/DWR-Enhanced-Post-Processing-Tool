@@ -24,6 +24,7 @@ import gov.ca.water.calgui.project.EpptScenarioRun;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import hec.heclib.dss.DSSPathname;
 import hec.io.TimeSeriesContainer;
 
 import static java.util.stream.Collectors.toList;
@@ -46,10 +47,8 @@ public final class EpptReportingComputedSet
 	private static final String SCENARIO_COLOR = "scenario_color";
 	private static final String SCENARIO_MODEL = "scenario_model";
 	private static final String TIME_SERIES_METADATA = "time_series_metadata";
-	private static final String TIME_SERIES_B_PART = "b_part";
-	private static final String TIME_SERIES_C_PART = "c_part";
-	private static final String TIME_SERIES_F_PART = "f_part";
-	private static final String TIME_SERIES_FILENAME = "time_series_filename";
+	private static final String TIME_SERIES_DSS_PATH = "dss_path";
+	private static final String TIME_SERIES_FILE_ALIAS = "time_series_file_alias";
 	private static final String UNITS = "units";
 	private static final String TS_DESCRIPTOR = "ts_descriptor";
 	private static final String FIRST_RECORD = "first_record";
@@ -133,10 +132,13 @@ public final class EpptReportingComputedSet
 		tsContainers.stream().map(tsc->
 		{
 			JSONObject jsonObject = new JSONObject();
-			jsonObject.put(TIME_SERIES_FILENAME,tsc.fileName);
-			jsonObject.put(TIME_SERIES_B_PART,tsc.getLocationName());
-			jsonObject.put(TIME_SERIES_C_PART,tsc.getParameterName());
-			jsonObject.put(TIME_SERIES_F_PART,tsc.getVersionName());
+			jsonObject.put(TIME_SERIES_FILE_ALIAS,tsc.fileName);
+			DSSPathname dssPathname = new DSSPathname();
+			dssPathname.setAPart(tsc.watershed);
+			dssPathname.setBPart(tsc.getLocationName());
+			dssPathname.setCPart(tsc.getParameterName());
+			dssPathname.setFPart(tsc.getVersionName());
+			jsonObject.put(TIME_SERIES_DSS_PATH,dssPathname.getPathname());
 			return jsonObject;
 		}).forEach(retval::put);
 		return retval;
