@@ -46,10 +46,10 @@ final class TreeTableUtil
 	{
 		ObservableList<TreeTableColumnSpec> columnSpecs = treeTableView.getModel().getColumnSpecs();
 		List<Object[]> objectArray = new ArrayList<>();
-		objectArray.add(columnSpecs.stream().map(ColumnSpec::getColumnName).toArray());
+		objectArray.add(columnSpecs.stream().filter(spec -> treeTableView.getColumnFromSpec(spec).isVisible()).map(ColumnSpec::getColumnName).toArray());
 		TreeItem<R> root = treeTableView.getRoot();
 		ObservableList<TreeItem<R>> children = root.getChildren();
-		addRowData(columnSpecs, objectArray, children);
+		addRowData(treeTableView, columnSpecs, objectArray, children);
 		Object[][] array = new Object[objectArray.size()][];
 		for(int i = 0; i < array.length; i++)
 		{
@@ -58,18 +58,20 @@ final class TreeTableUtil
 		return JavaFxTreeTableViewUtils.convertToString(array, new String[0]);
 	}
 
-	private static <R extends TreeTableRowModel> void addRowData(ObservableList<TreeTableColumnSpec> columnSpecs, List<Object[]> objectArray,
-																 ObservableList<TreeItem<R>> children)
+	private static <R extends TreeTableRowModel> void addRowData(RmaTreeTableView<?, R> treeTableView, ObservableList<TreeTableColumnSpec> columnSpecs,
+																 List<Object[]> objectArray, ObservableList<TreeItem<R>> children)
 	{
 		for(TreeItem<R> item : children)
 		{
 			if(item != null && item.getValue() != null)
 			{
-				Object[] rowData = columnSpecs.stream().map(
-						(Function<TreeTableColumnSpec, ObservableValue>) item.getValue()::getObservableValue)
-											  .map(observableValue -> (observableValue == null)? "" : observableValue.getValue()).toArray();
+				Object[] rowData = columnSpecs.stream()
+											  .filter(spec -> treeTableView.getColumnFromSpec(spec).isVisible())
+											  .map((Function<TreeTableColumnSpec, ObservableValue>) item.getValue()::getObservableValue)
+											  .map(observableValue -> (observableValue == null) ? "" : observableValue.getValue())
+											  .toArray();
 				objectArray.add(rowData);
-				addRowData(columnSpecs, objectArray, item.getChildren());
+				addRowData(treeTableView, columnSpecs, objectArray, item.getChildren());
 			}
 		}
 	}
