@@ -153,6 +153,10 @@ public class ScenarioRunEditor extends JDialog implements LoadingDss
 									  .getParent()
 									  .resolve(epptScenarioRun.getName())
 									  .resolve(Paths.get(Constant.MODEL_WATER_YEAR_INDEX_FILE).getFileName());
+		if(!scenarioDirectoryFile.getParent().toFile().exists())
+		{
+			Files.createDirectories(scenarioDirectoryFile.getParent());
+		}
 		Files.write(scenarioDirectoryFile, Files.readAllBytes(path));
 		_scenarioEditorPanel.cleanUpTempFile();
 	}

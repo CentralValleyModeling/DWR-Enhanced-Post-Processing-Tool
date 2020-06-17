@@ -122,7 +122,11 @@ public class ScenarioEditorPanel
 
 	private void editWaterYearIndexModelFile()
 	{
-		Path modelWaterYearIndexFile = EpptPreferences.getLastProjectConfiguration().resolve(_nameField.getText()).resolve(Constant.MODEL_WATER_YEAR_INDEX_FILE);
+		Path modelWaterYearIndexFile = _tempWaterYearIndexModelPath;
+		if(modelWaterYearIndexFile == null)
+		{
+			modelWaterYearIndexFile = EpptPreferences.getLastProjectConfiguration().resolve(_nameField.getText()).resolve(Constant.MODEL_WATER_YEAR_INDEX_FILE);
+		}
 		Object selectedItem = _modelCombobox.getSelectedItem();
 		if(!modelWaterYearIndexFile.toFile().exists() && selectedItem != null)
 		{
