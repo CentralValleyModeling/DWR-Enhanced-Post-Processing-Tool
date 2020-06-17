@@ -61,7 +61,7 @@ function format(value) {
     if(value) {
         if (Math.abs(value) >= 1000) {
             format = ",.0f";
-        } else if (Math.abs(value) >= 100) {
+        } else if (Math.abs(value) >= 10) {
             format = ",.1f";
         } else if (Math.abs(value) >= 1) {
             format = ",.2f";

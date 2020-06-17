@@ -236,7 +236,7 @@ public final class Constant
 			{
 				format = "#,###";
 			}
-			else if(Math.abs(value) >= 100)
+			else if(Math.abs(value) >= 10)
 			{
 				format = "#,###.#";
 			}
