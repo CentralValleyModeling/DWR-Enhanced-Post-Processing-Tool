@@ -1,32 +1,18 @@
-!WYI indicates Water Year Index - do not rename
-!ID indicates UI sort order
-!Alias is the name displayed in the UI, alias must match WYTypesLookup.csv
-!Index Names includes all definitions in wytypes.table files delimited by a comma
-!Key,ID,Alias,Index Names
-WYI,1,Sacramento River Index,SACindex
-WYI,2,San Joaquin River Index,SJRindex
-WYI,3,Shasta Lake Index,SHASTAindex, Shastaindex
-WYI,4,Trinity Lake Index,Trinityindex
-WYI,5,Feather River Index,FEATHERindex
-!WYI,6,American River Index (40-30-30),AmerD893
-WYI,7,American River Index (D893),Amer403030
-!
-!WYP indicates Water Year Period - do not rename
 !ID indicates UI sort order
 !Name is the year grouped in the UI
 !StartYear indicates start year for selected Water Year Definition
 !EndYear indicates end year for selected Water Year Definition
-!Key,ID,Name,StartYear,EndYear
-WYP,1,Wet Periods,1978,1987
-WYP,1,Wet Periods,1978,1983
-WYP,1,Wet Periods,1980,1983
-WYP,1,Wet Periods,1982,1983
-WYP,1,Wet Periods,1983,1983
-WYP,1,Wet Periods,2011,2011
-WYP,1,Dry Periods,1929,1934
-WYP,1,Dry Periods,1931,1934
-WYP,1,Dry Periods,1976,1977
-WYP,1,Dry Periods,1977,1977
-WYP,1,Dry Periods,1987,1992
-WYP,1,Dry Periods,2014,2014
-WYP,1,Dry Periods,2014,2015
+!ID,Name,Start Year,End Year
+100,Wet Periods,1978,1987
+200,Wet Periods,1978,1983
+300,Wet Periods,1980,1983
+400,Wet Periods,1982,1983
+500,Wet Periods,1983,1983
+600,Wet Periods,2011,2011
+700,Dry Periods,1929,1934
+800,Dry Periods,1931,1934
+900,Dry Periods,1976,1977
+1000,Dry Periods,1977,1977
+1100,Dry Periods,1987,1992
+1200,Dry Periods,2014,2014
+1300,Dry Periods,2014,2015

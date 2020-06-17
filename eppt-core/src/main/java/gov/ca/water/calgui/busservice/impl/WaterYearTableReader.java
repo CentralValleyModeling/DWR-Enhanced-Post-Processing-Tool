@@ -15,6 +15,7 @@ package gov.ca.water.calgui.busservice.impl;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.time.LocalDate;
 import java.time.Month;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -34,7 +35,9 @@ import gov.ca.water.calgui.bo.WaterYearIndexModel;
 import gov.ca.water.calgui.bo.WaterYearPeriod;
 import gov.ca.water.calgui.bo.WaterYearType;
 import gov.ca.water.calgui.constant.Constant;
+import gov.ca.water.calgui.project.EpptDssContainer;
 import gov.ca.water.calgui.project.EpptScenarioRun;
+import gov.ca.water.calgui.project.NamedDssPath;
 import gov.ca.water.calgui.scripts.DssCache;
 import gov.ca.water.calgui.scripts.DssReader;
 import gov.ca.water.calgui.techservice.impl.FilePredicates;
@@ -82,7 +85,18 @@ public class WaterYearTableReader
 			Integer waterYearIndexId = entry.getKey();
 			DSSGrabber1SvcImpl dssGrabber1Svc = new DSSGrabber1SvcImpl();
 			dssGrabber1Svc.setDssPathname(value);
-			dssGrabber1Svc.setScenarioRuns(_epptScenarioRun, Collections.emptyList());
+			EpptDssContainer original = _epptScenarioRun.getDssContainer();
+			NamedDssPath copyDvFile = cloneWithNewAPart(original.getDvDssFile(), value.getAPart());
+			NamedDssPath copySvFile = cloneWithNewAPart(original.getSvDssFile(), value.getAPart());
+			NamedDssPath copyIvFile = cloneWithNewAPart(original.getIvDssFile(), value.getAPart());
+			NamedDssPath copyDtsFile = cloneWithNewAPart(original.getDtsDssFile(), value.getAPart());
+			List<NamedDssPath> copiedExtraDssFiles = original.getExtraDssFiles().stream().map(f -> cloneWithNewAPart(f, value.getAPart())).collect(toList());
+			EpptDssContainer dssContainer = new EpptDssContainer(copyDvFile, copySvFile, copyIvFile, copyDtsFile, copiedExtraDssFiles);
+			EpptScenarioRun copyEpptScenarioRun = new EpptScenarioRun(_epptScenarioRun.getName(), _epptScenarioRun.getDescription(), _epptScenarioRun.getModel(),
+					_epptScenarioRun.getOutputPath(), _epptScenarioRun.getWreslDirectory(), _epptScenarioRun.getLookupDirectory(), dssContainer, _epptScenarioRun.getColor());
+			dssGrabber1Svc.setScenarioRuns(copyEpptScenarioRun, Collections.emptyList());
+			dssGrabber1Svc.setDateRange(LocalDate.of(1850, java.time.Month.JANUARY, 1),
+					LocalDate.of(2150, Month.JANUARY, 1));
 			TimeSeriesContainer[] primarySeries = dssGrabber1Svc.getPrimarySeries();
 			if(primarySeries != null && primarySeries[0] != null)
 			{
@@ -92,12 +106,29 @@ public class WaterYearTableReader
 															  .entrySet()
 															  .stream()
 															  .filter(s -> s.getKey().getMonth() == month)
-															  .map(e -> new WaterYearType(e.getKey().minusMonths(1).getYear(), getWaterYearPeriod(waterYearIndexId, e.getValue().intValue())))
+															  .map(e -> new WaterYearType(e.getKey().minusMonths(1).getYear(),
+																	  getWaterYearPeriod(waterYearIndexId, e.getValue().intValue())))
 															  .collect(toList());
 				getWaterYearIndexName(waterYearIndexId).ifPresent(s -> retval.put(waterYearIndexId, new WaterYearIndexModel(waterYearIndexId, s, waterYearTypes)));
 			}
 		}
 		return retval;
+	}
+
+	private NamedDssPath cloneWithNewAPart(NamedDssPath dssFile, String aPart)
+	{
+		if(dssFile != null)
+		{
+			if(aPart == null || aPart.isEmpty())
+			{
+				aPart = dssFile.getAPart();
+			}
+			return new NamedDssPath(dssFile.getDssPath(), dssFile.getAliasName(), aPart, dssFile.getEPart(), dssFile.getFPart());
+		}
+		else
+		{
+			return null;
+		}
 	}
 
 	private List<WaterYearIndexModel> readTableFile() throws EpptInitializationException

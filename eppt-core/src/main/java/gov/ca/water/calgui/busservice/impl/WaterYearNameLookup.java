@@ -132,6 +132,7 @@ public class WaterYearNameLookup
 								  .filter(Objects::nonNull)
 								  .filter(s -> !s.isEmpty())
 								  .filter(s -> !"Undefined".equalsIgnoreCase(s))
+								  .distinct()
 								  .map(WaterYearPeriod::new)
 								  .collect(toList());
 

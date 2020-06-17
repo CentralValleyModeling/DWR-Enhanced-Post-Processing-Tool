@@ -768,7 +768,7 @@ public class DSSGrabber1SvcImpl implements IDSSGrabber1Svc
 	public void setDssPathname(DSSPathname value)
 	{
 		_primaryDSSName.clear();
-		GUILinksAllModelsBO.Model.values().forEach(m->_primaryDSSName.put(m, value.toString()));
+		GUILinksAllModelsBO.Model.values().forEach(m->_primaryDSSName.put(m, value.getBPart() + "/" + value.getCPart()));
 		_secondaryDSSName.clear();
 		_axisLabel = "";
 		_plotTitle = "";

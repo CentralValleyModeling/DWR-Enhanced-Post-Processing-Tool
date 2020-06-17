@@ -30,12 +30,10 @@ import gov.ca.water.calgui.techservice.impl.FileSystemSvcImpl;
 public class WaterYearPeriodReader
 {
 	private static final Logger LOGGER = Logger.getLogger(WaterYearPeriodReader.class.getName());
-	private static final String WYP_KEY = "WYP";
-	private static final int KEY_COLUMN = 0;
-	private static final int INDEX_COLUMN = 1;
-	private static final int ALIAS_COLUMN = 2;
-	private static final int START_YEAR_COLUMN = 3;
-	private static final int END_YEAR_COLUMN = 4;
+	private static final int INDEX_COLUMN = 0;
+	private static final int DISPLAY_NAME_COLUMN = 1;
+	private static final int START_YEAR_COLUMN = 2;
+	private static final int END_YEAR_COLUMN = 3;
 
 	private final List<WaterYearPeriodDefinition> _waterYearPeriodDefinitions = new ArrayList<>();
 	private static WaterYearPeriodReader instance;
@@ -67,11 +65,7 @@ public class WaterYearPeriodReader
 			for(String row : rows)
 			{
 				String[] list = row.split(Constant.DELIMITER);
-				if(!WYP_KEY.equals(list[KEY_COLUMN]))
-				{
-					continue;
-				}
-				_waterYearPeriodDefinitions.add(new WaterYearPeriodDefinition(Integer.parseInt(list[INDEX_COLUMN]), list[ALIAS_COLUMN],
+				_waterYearPeriodDefinitions.add(new WaterYearPeriodDefinition(Integer.parseInt(list[INDEX_COLUMN]), list[DISPLAY_NAME_COLUMN],
 						Integer.parseInt(list[START_YEAR_COLUMN]), Integer.parseInt(list[END_YEAR_COLUMN])));
 			}
 			_waterYearPeriodDefinitions.sort(Comparator.comparing(WaterYearPeriodDefinition::getIndex));
