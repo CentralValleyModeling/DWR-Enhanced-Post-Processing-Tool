@@ -140,8 +140,8 @@ class EpptAnnualPeriodPane extends TitledPane
 	private void launchEditAnnualPeriodDialog(TreeItem<WaterYearPeriodDefinitionsRow> selectedItem, WaterYearPeriodRangeRow rangeRowModel, Month start, Month end,
 											  boolean overrideWaterYearDefinition)
 	{
-		AddAnnualFilterDialog addAnnualFilterDialog = new AddAnnualFilterDialog(Frame.getFrames()[0], rangeRowModel.getRange(),
-				start, end, overrideWaterYearDefinition, _controller.getWaterYearDefinition());
+		AddAnnualFilterDialog addAnnualFilterDialog = new AddAnnualFilterDialog(Frame.getFrames()[0], rangeRowModel.getRange(), start, end, overrideWaterYearDefinition,
+				_controller.getWaterYearDefinition());
 		try
 		{
 			SwingUtilities.invokeAndWait(() -> addAnnualFilterDialog.setVisible(true));
@@ -537,8 +537,12 @@ class EpptAnnualPeriodPane extends TitledPane
 					}
 					else
 					{
-						LOGGER.log(Level.WARNING, "No alias found for Water Year Index: {0} for scenario: {1}", new Object[]{_alias, scenarioRun});
-						return new HashMap<>();
+						LOGGER.log(Level.WARNING, "No Water Year Index definition found for Water Year Index: {0} for scenario: {1}", new Object[]{_alias, scenarioRun});
+						WaterYearPeriodRange placeholderPeriod = new WaterYearPeriodRange(waterYearPeriod, new WaterYearType(0, waterYearPeriod),
+								new WaterYearType(0, waterYearPeriod));
+						WaterYearPeriodRangesFilter waterYearPeriodRangesFilter = new WaterYearPeriodRangesFilter(waterYearPeriod.getPeriodName(), _alias.getDisplayName(),
+								Collections.singletonList(placeholderPeriod), _controller.getWaterYearDefinition());
+						retval.put(scenarioRun, waterYearPeriodRangesFilter);
 					}
 				}
 			}

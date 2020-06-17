@@ -63,12 +63,9 @@ class TrendReportDataLoader
 	private final boolean _aggregate;
 	private final boolean _difference;
 
-	TrendReportDataLoader(List<EpptScenarioRun> scenarioRuns, List<EpptParameter> guiLink,
-						  int start, int end, boolean taf, boolean difference,
-						  WaterYearDefinition waterYearDefinition,
-						  List<EpptStatistic> statistics, List<MonthPeriod> monthPeriod,
-						  List<Map<EpptScenarioRun, WaterYearPeriodRangesFilter>> waterYearPeriodRangesFilters,
-						  boolean aggregate)
+	TrendReportDataLoader(List<EpptScenarioRun> scenarioRuns, List<EpptParameter> guiLink, int start, int end, boolean taf, boolean difference,
+						  WaterYearDefinition waterYearDefinition, List<EpptStatistic> statistics, List<MonthPeriod> monthPeriod,
+						  List<Map<EpptScenarioRun, WaterYearPeriodRangesFilter>> waterYearPeriodRangesFilters, boolean aggregate)
 	{
 		_scenarioRuns = scenarioRuns;
 		_guiLink = guiLink;
@@ -122,8 +119,7 @@ class TrendReportDataLoader
 			{
 				scenarioRunData = buildComparisonSeries(guiLink, start, end);
 			}
-			EpptReportingComputedSet epptReportingComputedSet = EpptReportingComputer.computeForMetrics(
-					scenarioRunData, guiLink.getPlotTitle(), _taf, _waterYearDefinition,
+			EpptReportingComputedSet epptReportingComputedSet = EpptReportingComputer.computeForMetrics(scenarioRunData, guiLink.getPlotTitle(), _taf, _waterYearDefinition,
 					_monthPeriod, _waterYearPeriodRangesFilters, _statistics);
 			JSONObject jsonObject = epptReportingComputedSet.toJson();
 			LOGGER.log(Level.FINE, "{0}", jsonObject);
@@ -168,8 +164,7 @@ class TrendReportDataLoader
 		return scenarioRunData;
 	}
 
-	private DSSGrabber1SvcImpl buildDssGrabber(EpptScenarioRun epptScenarioRun, GUILinksAllModelsBO guiLink, boolean isCFS, LocalDate start,
-											   LocalDate end)
+	private DSSGrabber1SvcImpl buildDssGrabber(EpptScenarioRun epptScenarioRun, GUILinksAllModelsBO guiLink, boolean isCFS, LocalDate start, LocalDate end)
 	{
 		DSSGrabber1SvcImpl dssGrabber = new DSSGrabber1SvcImpl();
 		dssGrabber.setIsCFS(isCFS);
@@ -203,11 +198,11 @@ class TrendReportDataLoader
 		{
 			retval = Optional.of("No Annual Filter defined");
 		}
-		else if(_waterYearPeriodRangesFilters.stream().anyMatch(filter->_scenarioRuns.stream().map(filter::get).anyMatch(Objects::isNull)))
+		else if(_waterYearPeriodRangesFilters.stream().anyMatch(filter -> _scenarioRuns.stream().map(filter::get).anyMatch(Objects::isNull)))
 		{
 			retval = Optional.of("Undefined Annual Period due to invalid water year type definitions");
 		}
-		else if(_difference && _scenarioRuns.stream().noneMatch(EpptScenarioRun::isBaseSelected) )
+		else if(_difference && _scenarioRuns.stream().noneMatch(EpptScenarioRun::isBaseSelected))
 		{
 			retval = Optional.of("No Base scenario selected for Difference calculation");
 		}
