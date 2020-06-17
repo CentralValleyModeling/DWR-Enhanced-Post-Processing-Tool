@@ -57,21 +57,25 @@ var FORMATTER = [
 ];
 
 function format(value) {
-    for (let i = 0; i < FORMATTER.length; i++) {
-        let plotlyFormatterStop = FORMATTER[i];
-        let range = plotlyFormatterStop['dtickrange'];
-        let min = range[0];
-        let max = range[1];
-        if ((!min || Math.abs(value) >= min) && (!max || Math.abs(value) < max)) {
-            let retval = Plotly.d3.format(plotlyFormatterStop['value'])(value);
-            if (Number(retval) === 0) {
-                retval = 0;
-            }
-            if (retval === '-0') {
-                retval = '0';
-            }
-            return retval;
+    let format;
+    if(value) {
+        if (Math.abs(value) >= 1000) {
+            format = ",.0f";
+        } else if (Math.abs(value) >= 100) {
+            format = ",.1f";
+        } else if (Math.abs(value) >= 1) {
+            format = ",.2f";
+        } else {
+            format = ",.3f";
         }
+        let retval = Plotly.d3.format(format)(value);
+        if (Number(retval) === 0) {
+            retval = 0;
+        }
+        if (retval === '-0') {
+            retval = '0';
+        }
+        return retval;
     }
     return value;
 }

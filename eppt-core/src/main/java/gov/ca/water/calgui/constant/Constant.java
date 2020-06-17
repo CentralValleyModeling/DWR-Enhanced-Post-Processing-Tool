@@ -232,15 +232,15 @@ public final class Constant
 		if(value != null && Constant.isValidValue(value))
 		{
 			String format;
-			if(value >= 100)
+			if(Math.abs(value) >= 1000)
 			{
 				format = "#,###";
 			}
-			else if(value >= 10)
+			else if(Math.abs(value) >= 100)
 			{
 				format = "#,###.#";
 			}
-			else if(value >= 1)
+			else if(Math.abs(value) >= 1)
 			{
 				format = "#,###.##";
 			}
