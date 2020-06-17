@@ -1,13 +1,13 @@
 /*
  * Enhanced Post Processing Tool (EPPT) Copyright (c) 2020.
  *
- * EPPT is copyrighted by the State of California, Department of Water Resources. It is licensed
- * under the GNU General Public License, version 2. This means it can be
- * copied, distributed, and modified freely, but you may not restrict others
- * in their ability to copy, distribute, and modify it. See the license below
- * for more details.
+ *  EPPT is copyrighted by the State of California, Department of Water Resources. It is licensed
+ *  under the GNU General Public License, version 2. This means it can be
+ *  copied, distributed, and modified freely, but you may not restrict others
+ *  in their ability to copy, distribute, and modify it. See the license below
+ *  for more details.
  *
- * GNU General Public License
+ *  GNU General Public License
  */
 
 package gov.ca.water.calgui.presentation;
@@ -29,15 +29,13 @@ import gov.ca.water.calgui.bo.WaterYearPeriod;
 import gov.ca.water.calgui.bo.WaterYearPeriodRange;
 import gov.ca.water.calgui.bo.WaterYearPeriodRangesFilter;
 import gov.ca.water.calgui.bo.WaterYearType;
-import gov.ca.water.calgui.busservice.impl.EpptStatistic;
 import gov.ca.water.calgui.busservice.impl.ErrorValueFlags;
 import gov.ca.water.calgui.busservice.impl.GuiLinksSeedDataSvcImpl;
 import gov.ca.water.calgui.busservice.impl.MonthPeriod;
 import gov.ca.water.calgui.busservice.impl.ScriptedEpptStatistics;
 import gov.ca.water.calgui.busservice.impl.ThresholdLinksSeedDataSvc;
 import gov.ca.water.calgui.busservice.impl.WaterYearDefinitionSvc;
-import gov.ca.water.calgui.busservice.impl.WaterYearIndexAliasReader;
-import gov.ca.water.calgui.busservice.impl.WaterYearTableReader;
+import gov.ca.water.calgui.busservice.impl.WaterYearIndexReader;
 import gov.ca.water.calgui.project.EpptConfigurationController;
 import gov.ca.water.calgui.project.EpptDssContainer;
 import gov.ca.water.calgui.project.EpptScenarioRun;
@@ -77,7 +75,7 @@ public class MonthlyPaneScaffold
 		WaterYearDefinitionSvc.createSeedDataSvcImplInstance();
 		ThresholdLinksSeedDataSvc.createSeedDataSvcImplInstance();
 		ErrorValueFlags.initializeErrorFlags();
-		WaterYearIndexAliasReader.createInstance();
+		WaterYearIndexReader.createInstance();
 		NamedDssPath baseDss = new NamedDssPath(
 				Paths.get("J:\\DWR\\QA_QC\\SupportingDocs040219\\EPPTSupportingDoc040219\\SampleDSS_V1.01\\Inputs\\SampleDV_Base.dss"), "test base",
 				"CALSIM", "1MON", "2020D09E");

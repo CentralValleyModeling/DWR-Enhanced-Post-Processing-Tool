@@ -1,0 +1,28 @@
+ID,Modules Text,Sub-module Executive Report Text,Sub Module additional text,Flag/Value
+1,Model Inputs,%d records modified in INIT DSS,,Value
+2,Model Inputs,%d records deleted in INIT DSS,,Value
+3,Model Inputs,%d records added in INIT DSS,,Value
+4,Model Inputs,%d records updated in SV,,Value
+5,NOD Reservoir Operation,%d incident(s) of below DP,%title% below %Threshold Label%,300
+6,NOD Reservoir Operation,%d incident(s) of above Flood,%title% above %Threshold Label% ,100
+7,NOD Reservoir Operation,%d incident(s) of Spill,%title% at %Threshold Label% ,100
+8,Upstream Minimum Flow Requirements,%d incident(s) of flows below standard,%title% %Threshold Label% incidents:,300
+9,NOD Weirs Operation,%d incident(s) of excessive user-defined spilling,%title% %Threshold Label% events:,100
+10,NOD Groundwater Pumping,%d incident(s) of below minimum pumping levels,%title% %Threshold Label% incidents:,300
+22,Delta Operations,%d incident(s) above allowed regulation levels,%title% %Threshold Label% incidents:,100
+11,Delta Operations,%d incident(s) below enforced regulation levels,%title% %Threshold Label% incidents:,300
+12,COA,%.2f%% different Between Actual and Agreed ratio,%title% %Threshold Label% difference:,Value
+13,Allocations and Deliveries,%d incident(s) of excessive user-defined shortage,%title% %Threshold Label% shortages:,200
+14,Mass Balance,%d incident(s) of below NOD balance,%title% %Threshold Label% off balance: ,300
+14,Mass Balance,%d incident(s) of over NOD balance,%title% %Threshold Label% off balance: ,100
+20,Mass Balance,%d incident(s) of below Delta balance,%title% %Threshold Label% off balance: ,300
+20,Mass Balance,%d incident(s) of over Delta balance,%title% %Threshold Label% off balance: ,100
+21,Mass Balance,%d incident(s) of below SOD balance,%title% %Threshold Label% off balance: ,300
+21,Mass Balance,%d incident(s) of over SOD balance,%title% %Threshold Label% off balance: ,100
+#adding more model input rows at end so that we didn't mess up the Details mappings,,,,
+#the model input rows can be moved around as long their ID stays the same,,,,
+15,Model Inputs,%d records deleted in SV DSS,,Value
+16,Model Inputs,%d records added in SV DSS,,Value
+17,Model Inputs,%d file(s) changed,,Value
+18,Model Inputs,%d file(s) added,,Value
+19,Model Inputs,%d file(s) deleted,,Value

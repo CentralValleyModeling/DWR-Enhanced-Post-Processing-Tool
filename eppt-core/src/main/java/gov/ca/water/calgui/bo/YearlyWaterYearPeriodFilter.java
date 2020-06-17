@@ -1,18 +1,17 @@
 /*
  * Enhanced Post Processing Tool (EPPT) Copyright (c) 2020.
  *
- * EPPT is copyrighted by the State of California, Department of Water Resources. It is licensed
- * under the GNU General Public License, version 2. This means it can be
- * copied, distributed, and modified freely, but you may not restrict others
- * in their ability to copy, distribute, and modify it. See the license below
- * for more details.
+ *  EPPT is copyrighted by the State of California, Department of Water Resources. It is licensed
+ *  under the GNU General Public License, version 2. This means it can be
+ *  copied, distributed, and modified freely, but you may not restrict others
+ *  in their ability to copy, distribute, and modify it. See the license below
+ *  for more details.
  *
- * GNU General Public License
+ *  GNU General Public License
  */
 
 package gov.ca.water.calgui.bo;
 
-import java.time.LocalDateTime;
 import java.util.Map;
 import java.util.Set;
 
@@ -27,26 +26,26 @@ import static java.util.stream.Collectors.toSet;
 public class YearlyWaterYearPeriodFilter implements AnnualPeriodFilter
 {
 	private final WaterYearPeriod _waterYearPeriod;
-	private final WaterYearIndex _waterYearIndex;
+	private final WaterYearIndexModel _waterYearIndexModel;
 
-	public YearlyWaterYearPeriodFilter(WaterYearPeriod waterYearPeriod, WaterYearIndex waterYearIndex)
+	public YearlyWaterYearPeriodFilter(WaterYearPeriod waterYearPeriod, WaterYearIndexModel waterYearIndexModel)
 	{
 		_waterYearPeriod = waterYearPeriod;
-		_waterYearIndex = waterYearIndex;
+		_waterYearIndexModel = waterYearIndexModel;
 	}
 	@Override
 	public boolean test(Map.Entry<Integer, Double> input)
 	{
-		Set<Integer> years = _waterYearIndex.getWaterYearTypes().stream()
-											.filter(f -> f.getWaterYearPeriod().equals(_waterYearPeriod))
-											.map(WaterYearType::getYear)
-											.collect(toSet());
+		Set<Integer> years = _waterYearIndexModel.getWaterYearTypes().stream()
+												 .filter(f -> f.getWaterYearPeriod().equals(_waterYearPeriod))
+												 .map(WaterYearType::getYear)
+												 .collect(toSet());
 		return years.contains(input.getKey());
 	}
 
-	public WaterYearIndex getWaterYearIndex()
+	public WaterYearIndexModel getWaterYearIndexModel()
 	{
-		return _waterYearIndex;
+		return _waterYearIndexModel;
 	}
 
 	public WaterYearPeriod getWaterYearPeriod()

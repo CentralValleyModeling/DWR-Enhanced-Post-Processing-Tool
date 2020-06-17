@@ -1,13 +1,13 @@
 /*
- * Enhanced Post Processing Tool (EPPT) Copyright (c) 2019.
+ * Enhanced Post Processing Tool (EPPT) Copyright (c) 2020.
  *
- * EPPT is copyrighted by the State of California, Department of Water Resources. It is licensed
- * under the GNU General Public License, version 2. This means it can be
- * copied, distributed, and modified freely, but you may not restrict others
- * in their ability to copy, distribute, and modify it. See the license below
- * for more details.
+ *  EPPT is copyrighted by the State of California, Department of Water Resources. It is licensed
+ *  under the GNU General Public License, version 2. This means it can be
+ *  copied, distributed, and modified freely, but you may not restrict others
+ *  in their ability to copy, distribute, and modify it. See the license below
+ *  for more details.
  *
- * GNU General Public License
+ *  GNU General Public License
  */
 
 package gov.ca.water.calgui.constant;
@@ -20,6 +20,7 @@ import java.nio.file.Paths;
 import java.text.DecimalFormat;
 import java.util.Arrays;
 import java.util.List;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 import javafx.beans.property.SimpleStringProperty;
@@ -141,7 +142,11 @@ public final class Constant
 	public static final String VAMP_SELECTED_TEXT = "If D1485 is selected, take VAMP D1641 hydrology with a D1485 run.";
 	public static final String VAMP_NOT_SELECTED_TEXT = "Access regulation table (where applicable) by selecting or right-clicking on a regulation name.";
 
+	public static final Pattern CSV_PATTERN_DELIMITER = Pattern.compile(DELIMITER);
+
 	public static final String SCENARIOS_DIR = "Scenarios";
+	public static final String MODEL_WATER_YEAR_INDEX_FILE = "ModelWaterYearIndexes" + CSV_EXT;
+	public static final String WATER_YEAR_INDEX_DEFINITIONS_FILE = "WaterYearIndexes" + CSV_EXT;
 	private static final String[] PLOTLY_COLORS = new String[]{"#4c7eee", "#03c98c", "#d62e82", "#62d2fa", "#a3f244", "#cf79dd", "#80f4e1"};
 	private static final String[] PLOTLY_THRESHOLD_LINE_DASH = new String[]{"dash", "dashdot", "dot"};
 	static final String MODEL_DIR = "Model_w2";

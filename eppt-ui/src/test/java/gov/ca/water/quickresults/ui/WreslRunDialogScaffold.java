@@ -1,13 +1,13 @@
 /*
  * Enhanced Post Processing Tool (EPPT) Copyright (c) 2020.
  *
- * EPPT is copyrighted by the State of California, Department of Water Resources. It is licensed
- * under the GNU General Public License, version 2. This means it can be
- * copied, distributed, and modified freely, but you may not restrict others
- * in their ability to copy, distribute, and modify it. See the license below
- * for more details.
+ *  EPPT is copyrighted by the State of California, Department of Water Resources. It is licensed
+ *  under the GNU General Public License, version 2. This means it can be
+ *  copied, distributed, and modified freely, but you may not restrict others
+ *  in their ability to copy, distribute, and modify it. See the license below
+ *  for more details.
  *
- * GNU General Public License
+ *  GNU General Public License
  */
 
 package gov.ca.water.quickresults.ui;
@@ -57,25 +57,23 @@ public class WreslRunDialogScaffold
 			Assertions.fail(e);
 		}
 		GuiLinksSeedDataSvcImpl.createSeedDataSvcImplInstance();
-		NamedDssPath namedDssPath = new NamedDssPath(
-				Paths.get("J:\\DWR\\QA_QC\\SupportingDocs040219\\EPPTSupportingDoc040219\\SampleDSS_V1.01\\Inputs\\SampleDV_Base.dss"), "test",
-				"CALSIM", "1MON", "2020D09E");
-		EpptDssContainer dssContainer = new EpptDssContainer(namedDssPath,
-				namedDssPath,
-				namedDssPath,
-				namedDssPath,
-				Collections.emptyList());
+		NamedDssPath namedDssPath = new NamedDssPath(Paths.get("J:\\DWR\\QA_QC\\SupportingDocs040219\\EPPTSupportingDoc040219\\SampleDSS_V1.01\\Inputs\\SampleDV_Base.dss"),
+				"test", "CALSIM", "1MON", "2020D09E");
+		EpptDssContainer dssContainer = new EpptDssContainer(namedDssPath, namedDssPath, namedDssPath, namedDssPath, Collections.emptyList());
 
-		EpptScenarioRun baseRun = new EpptScenarioRun("Base", "desc", GUILinksAllModelsBO.Model.findModel("CalSim2"),
-				Paths.get("Test.pdf"), Paths.get("C:\\Git\\DWR\\EPPT\\DWR-Enhanced-Post-Processing-Tool\\eppt-trend-reporting\\src\\test\\resources\\dwr_eppt\\wresl\\"), Paths.get("C:\\Git\\DWR\\EPPT\\DWR-Enhanced-Post-Processing-Tool\\eppt-trend-reporting\\src\\test\\resources\\dwr_eppt\\wresl\\lookup\\"), dssContainer, javafx.scene.paint.Color.BLUEVIOLET);
-		EpptScenarioRun altRun = new EpptScenarioRun("Alt", "desc", GUILinksAllModelsBO.Model.findModel("CalSim2"),
-				Paths.get("Test.pdf"), Paths.get("C:\\Git\\DWR\\EPPT\\DWR-Enhanced-Post-Processing-Tool\\eppt-trend-reporting\\src\\test\\resources\\dwr_eppt\\wresl\\"), Paths.get("C:\\Git\\DWR\\EPPT\\DWR-Enhanced-Post-Processing-Tool\\eppt-trend-reporting\\src\\test\\resources\\dwr_eppt\\wresl\\lookup\\"), dssContainer, javafx.scene.paint.Color.MEDIUMAQUAMARINE);
+		EpptScenarioRun baseRun = new EpptScenarioRun("Base", "desc", GUILinksAllModelsBO.Model.findModel("CalSim2"), Paths.get("Test.pdf"),
+				Paths.get("C:\\Git\\DWR\\EPPT\\DWR-Enhanced-Post-Processing-Tool\\eppt-trend-reporting\\src\\test\\resources\\dwr_eppt\\wresl\\"),
+				Paths.get("C:\\Git\\DWR\\EPPT\\DWR-Enhanced-Post-Processing-Tool\\eppt-trend-reporting\\src\\test\\resources\\dwr_eppt\\wresl\\lookup\\"), dssContainer,
+				javafx.scene.paint.Color.BLUEVIOLET);
+		EpptScenarioRun altRun = new EpptScenarioRun("Alt", "desc", GUILinksAllModelsBO.Model.findModel("CalSim2"), Paths.get("Test.pdf"),
+				Paths.get("C:\\Git\\DWR\\EPPT\\DWR-Enhanced-Post-Processing-Tool\\eppt-trend-reporting\\src\\test\\resources\\dwr_eppt\\wresl\\"),
+				Paths.get("C:\\Git\\DWR\\EPPT\\DWR-Enhanced-Post-Processing-Tool\\eppt-trend-reporting\\src\\test\\resources\\dwr_eppt\\wresl\\lookup\\"), dssContainer,
+				javafx.scene.paint.Color.MEDIUMAQUAMARINE);
 		List<EpptScenarioRun> scenarioRuns = Arrays.asList(baseRun, altRun);
 
 		JFrame frame = new JFrame();
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		SwingUtilities.invokeLater(()->
-		{
+		SwingUtilities.invokeLater(() -> {
 			EpptConfigurationController epptConfigurationController = new EpptConfigurationController();
 			WreslRunDialog wreslRunDialog = new WreslRunDialog(frame, epptConfigurationController);
 			wreslRunDialog.buildScenarioPanel(scenarioRuns);

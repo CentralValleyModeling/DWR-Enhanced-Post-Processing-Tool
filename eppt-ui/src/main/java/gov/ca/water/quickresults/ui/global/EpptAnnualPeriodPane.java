@@ -1,13 +1,13 @@
 /*
  * Enhanced Post Processing Tool (EPPT) Copyright (c) 2020.
  *
- * EPPT is copyrighted by the State of California, Department of Water Resources. It is licensed
- * under the GNU General Public License, version 2. This means it can be
- * copied, distributed, and modified freely, but you may not restrict others
- * in their ability to copy, distribute, and modify it. See the license below
- * for more details.
+ *  EPPT is copyrighted by the State of California, Department of Water Resources. It is licensed
+ *  under the GNU General Public License, version 2. This means it can be
+ *  copied, distributed, and modified freely, but you may not restrict others
+ *  in their ability to copy, distribute, and modify it. See the license below
+ *  for more details.
  *
- * GNU General Public License
+ *  GNU General Public License
  */
 
 package gov.ca.water.quickresults.ui.global;
@@ -31,12 +31,12 @@ import javax.swing.*;
 
 import gov.ca.water.calgui.EpptInitializationException;
 import gov.ca.water.calgui.bo.WaterYearDefinition;
-import gov.ca.water.calgui.bo.WaterYearIndex;
+import gov.ca.water.calgui.bo.WaterYearIndexModel;
 import gov.ca.water.calgui.bo.WaterYearPeriod;
 import gov.ca.water.calgui.bo.WaterYearPeriodRange;
 import gov.ca.water.calgui.bo.WaterYearPeriodRangesFilter;
 import gov.ca.water.calgui.bo.WaterYearType;
-import gov.ca.water.calgui.busservice.impl.WaterYearIndexAliasReader;
+import gov.ca.water.calgui.busservice.impl.WaterYearIndexReader;
 import gov.ca.water.calgui.busservice.impl.WaterYearPeriodReader;
 import gov.ca.water.calgui.busservice.impl.WaterYearTableReader;
 import gov.ca.water.calgui.project.EpptConfigurationController;
@@ -253,8 +253,8 @@ class EpptAnnualPeriodPane extends TitledPane
 
 	private void buildWaterYearIndexes(TreeItem<WaterYearPeriodDefinitionsRow> root)
 	{
-		List<WaterYearIndexAliasReader.WaterYearIndexAlias> aliases = WaterYearIndexAliasReader.getInstance().getAliases();
-		for(WaterYearIndexAliasReader.WaterYearIndexAlias alias : aliases)
+		List<WaterYearIndexReader.WaterYearIndexDefinition> aliases = WaterYearIndexReader.getInstance().getWaterYearIndexDefinitions();
+		for(WaterYearIndexReader.WaterYearIndexDefinition alias : aliases)
 		{
 			MyCheckBoxTreeItem parent = new MyCheckBoxTreeItem(new WaterYearIndexRow(alias));
 			parent.selectedProperty().addListener((e, o, n) -> parentCheckboxSelected(e, o, n, parent));
@@ -264,7 +264,7 @@ class EpptAnnualPeriodPane extends TitledPane
 		}
 	}
 
-	private MyCheckBoxTreeItem buildWaterYearIndexTypeRow(WaterYearIndexAliasReader.WaterYearIndexAlias alias, WaterYearPeriod period)
+	private MyCheckBoxTreeItem buildWaterYearIndexTypeRow(WaterYearIndexReader.WaterYearIndexDefinition alias, WaterYearPeriod period)
 	{
 		return new MyCheckBoxTreeItem(new WaterYearIndexTypeRow(alias, period));
 	}
@@ -474,9 +474,9 @@ class EpptAnnualPeriodPane extends TitledPane
 	private static final class WaterYearIndexRow implements WaterYearPeriodDefinitionsRow
 	{
 
-		private final WaterYearIndexAliasReader.WaterYearIndexAlias _alias;
+		private final WaterYearIndexReader.WaterYearIndexDefinition _alias;
 
-		private WaterYearIndexRow(WaterYearIndexAliasReader.WaterYearIndexAlias alias)
+		private WaterYearIndexRow(WaterYearIndexReader.WaterYearIndexDefinition alias)
 		{
 			_alias = alias;
 		}
@@ -484,7 +484,7 @@ class EpptAnnualPeriodPane extends TitledPane
 		@Override
 		public String toString()
 		{
-			return _alias.getAlias();
+			return _alias.getDisplayName();
 		}
 
 		@Override
@@ -496,10 +496,10 @@ class EpptAnnualPeriodPane extends TitledPane
 
 	private final class WaterYearIndexTypeRow implements WaterYearPeriodDefinitionsRow
 	{
-		private final WaterYearIndexAliasReader.WaterYearIndexAlias _alias;
+		private final WaterYearIndexReader.WaterYearIndexDefinition _alias;
 		private final WaterYearPeriod _period;
 
-		private WaterYearIndexTypeRow(WaterYearIndexAliasReader.WaterYearIndexAlias alias, WaterYearPeriod period)
+		private WaterYearIndexTypeRow(WaterYearIndexReader.WaterYearIndexDefinition alias, WaterYearPeriod period)
 		{
 			_alias = alias;
 			_period = period;
@@ -520,9 +520,9 @@ class EpptAnnualPeriodPane extends TitledPane
 			{
 				for(EpptScenarioRun scenarioRun : _controller.getScenarioRuns())
 				{
-					WaterYearTableReader waterYearTableReader = new WaterYearTableReader(scenarioRun.getLookupDirectory());
-					List<WaterYearIndex> read = waterYearTableReader.read();
-					Optional<WaterYearIndex> indexOpt = read.stream().filter(_alias::isAliasFor).findAny();
+					WaterYearTableReader waterYearTableReader = new WaterYearTableReader(scenarioRun);
+					List<WaterYearIndexModel> read = waterYearTableReader.read();
+					Optional<WaterYearIndexModel> indexOpt = read.stream().filter(_alias::matchesModel).findAny();
 					if(indexOpt.isPresent())
 					{
 						List<WaterYearPeriodRange> waterYearPeriodRanges = indexOpt.get()
@@ -531,13 +531,13 @@ class EpptAnnualPeriodPane extends TitledPane
 																				   .filter(s -> s.getWaterYearPeriod().equals(_period))
 																				   .map(type -> new WaterYearPeriodRange(type.getWaterYearPeriod(), type, type))
 																				   .collect(toList());
-						WaterYearPeriodRangesFilter waterYearPeriodRangesFilter = new WaterYearPeriodRangesFilter(waterYearPeriod.getPeriodName(), _alias.getAlias(),
+						WaterYearPeriodRangesFilter waterYearPeriodRangesFilter = new WaterYearPeriodRangesFilter(waterYearPeriod.getPeriodName(), _alias.getDisplayName(),
 								waterYearPeriodRanges, _controller.getWaterYearDefinition());
 						retval.put(scenarioRun, waterYearPeriodRangesFilter);
 					}
 					else
 					{
-						LOGGER.log(Level.SEVERE, "No alias found for Water Year Index: {0} for scenario: {1}", new Object[]{_alias, scenarioRun});
+						LOGGER.log(Level.WARNING, "No alias found for Water Year Index: {0} for scenario: {1}", new Object[]{_alias, scenarioRun});
 						return new HashMap<>();
 					}
 				}

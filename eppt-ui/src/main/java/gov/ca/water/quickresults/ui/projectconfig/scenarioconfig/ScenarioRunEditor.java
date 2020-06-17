@@ -1,13 +1,13 @@
 /*
- * Enhanced Post Processing Tool (EPPT) Copyright (c) 2019.
+ * Enhanced Post Processing Tool (EPPT) Copyright (c) 2020.
  *
- * EPPT is copyrighted by the State of California, Department of Water Resources. It is licensed
- * under the GNU General Public License, version 2. This means it can be
- * copied, distributed, and modified freely, but you may not restrict others
- * in their ability to copy, distribute, and modify it. See the license below
- * for more details.
+ *  EPPT is copyrighted by the State of California, Department of Water Resources. It is licensed
+ *  under the GNU General Public License, version 2. This means it can be
+ *  copied, distributed, and modified freely, but you may not restrict others
+ *  in their ability to copy, distribute, and modify it. See the license below
+ *  for more details.
  *
- * GNU General Public License
+ *  GNU General Public License
  */
 
 package gov.ca.water.quickresults.ui.projectconfig.scenarioconfig;
@@ -17,9 +17,17 @@ import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Frame;
 import java.awt.event.ActionEvent;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.*;
 
+import gov.ca.water.calgui.constant.Constant;
+import gov.ca.water.calgui.constant.EpptPreferences;
 import gov.ca.water.calgui.project.EpptScenarioRun;
 import gov.ca.water.calgui.project.EpptScenarioRunValidator;
 
@@ -31,6 +39,7 @@ import gov.ca.water.calgui.project.EpptScenarioRunValidator;
  */
 public class ScenarioRunEditor extends JDialog implements LoadingDss
 {
+	private static final Logger LOGGER = Logger.getLogger(ScenarioRunEditor.class.getName());
 	private final ScenarioEditorPanel _scenarioEditorPanel;
 	private final JProgressBar _progressBar = new JProgressBar();
 	private final List<EpptScenarioRun> _scenarioRuns;
@@ -117,8 +126,16 @@ public class ScenarioRunEditor extends JDialog implements LoadingDss
 			}
 			else
 			{
-				_canceled = false;
-				dispose();
+				try
+				{
+					copyWaterYearIndexModelCsv(run);
+					_canceled = false;
+					dispose();
+				}
+				catch(IOException ex)
+				{
+					LOGGER.log(Level.SEVERE, "Unable to copy water year index model file into project directory", ex);
+				}
 			}
 		}
 		else
@@ -129,8 +146,20 @@ public class ScenarioRunEditor extends JDialog implements LoadingDss
 		}
 	}
 
+	private void copyWaterYearIndexModelCsv(EpptScenarioRun epptScenarioRun) throws IOException
+	{
+		Path path = _scenarioEditorPanel.getWaterYearIndexModelCsv();
+		Path scenarioDirectoryFile = EpptPreferences.getLastProjectConfiguration()
+									  .getParent()
+									  .resolve(epptScenarioRun.getName())
+									  .resolve(Paths.get(Constant.MODEL_WATER_YEAR_INDEX_FILE).getFileName());
+		Files.write(scenarioDirectoryFile, Files.readAllBytes(path));
+		_scenarioEditorPanel.cleanUpTempFile();
+	}
+
 	private void cancelPerformed(ActionEvent e)
 	{
+		_scenarioEditorPanel.cleanUpTempFile();
 		dispose();
 	}
 

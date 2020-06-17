@@ -1,0 +1,67 @@
+# A template file to compare calsim with callite
+SCALAR
+NAME		VALUE
+FILE_BASE	test/_121510_DV.DSS #input file 1
+NAME_BASE	CalSim
+FILE_ALT	test/CL__BO_121510_DV.DSS # input file 2
+NAME_ALT	CalLite
+OUTFILE		test/Calsim_vs_Callite_021611.pdf
+NOTE		"Notes: Corroboration Study with BO; CalSim: BO version (12/15/2010) and CalLite: BO version*(12/17/2010); Future Condition"
+ASSUMPTIONS 	"Assumptions: Future Condition; Wheeling is On"
+MODELER 	"Nazrul Islam"
+END
+
+PATHNAME_MAPPING
+VARIABLE				VAR_CATEGORY	REPORT_TYPE 	PATH_BASE 						PATH_ALT						ROW_TYPE	PLOT		UNIT
+"Storage "	S	Average	IGNORE	IGNORE	B	N	DEFAULT
+"Trinity "	S	Exceedance	//S_TRNTY/STORAGE//1MON//	//S_TRNTY/STORAGE//1MON//	N	Y	DEFAULT
+"Shasta "	S	Exceedance	//S_SHSTA/STORAGE//1MON//	//S_SHSTA/STORAGE//1MON//	N	Y	DEFAULT
+"Oroville "	S	Exceedance	//S_OROVL/STORAGE//1MON//	//S_OROVL/STORAGE//1MON//	N	Y	DEFAULT
+"Folsom "	S	Exceedance	//S_FOLSM/STORAGE//1MON//	//S_FOLSM/STORAGE//1MON//	N	Y	DEFAULT
+"San Luis - CVP "	S	Exceedance	//S_SLUIS_CVP/STORAGE//1MON//	//S_SLUIS_CVP/STORAGE//1MON//	N	Y	DEFAULT
+"San Luis - SWP "	S	Exceedance	//S_SLUIS_SWP/STORAGE//1MON//	//S_SLUIS_SWP/STORAGE//1MON//	N	Y	DEFAULT
+"River Flows "	RF	Average	IGNORE	IGNORE	B	N	CFS2TAF
+"Trinity R blw Lewiston "	RF	Exceedance	//C_LWSTN/CHANNEL//1MON//	//C_LWSTN/CHANNEL//1MON//	N	Y	CFS2TAF
+"Trinity Export "	RF	Exceedance	//D_LWSTN_CCT011/DIVERSION//1MON//	//D_LWSTN_CCT011/DIVERSION//1MON//	N	Y	CFS2TAF
+"Clear Cr blw Whiskeytown "	RF	Exceedance	//C_CLR011/CHANNEL//1MON//	//C_CLR011/CHANNEL//1MON//	N	Y	CFS2TAF
+"Sacramento R @ Keswick "	RF	Exceedance	//C_KSWCK/CHANNEL//1MON//	//C_KSWCK/CHANNEL//1MON//	N	Y	CFS2TAF
+"Sacramento R @ Wilkins Slough "	RF	Exceedance	//C_SAC097/CHANNEL//1MON//	//C_SAC097/CHANNEL//1MON//	N	Y	CFS2TAF
+"Feather R blw Thermalito "	RF	Exceedance	//C_FTR059/CHANNEL//1MON//	//C_FTR059/CHANNEL//1MON//	N	Y	CFS2TAF
+"American R blw Nimbus "	RF	Exceedance	//C_NTOMA/CHANNEL//1MON//	//C_NTOMA/CHANNEL//1MON//	N	Y	CFS2TAF
+"Delta Inflow "	RF	Average_post	//C_SAC041+C_YBP020+C_MOK019+C_SJR056+C_CLV004/CHANNEL//1MON//	//C_SAC041+C_YBP020+C_MOK019+C_SJR056+C_CLV004/CHANNEL//1MON//	B	Y	CFS2TAF
+"Sacramento R @ Hood "	RF	Exceedance	//C_SAC041/CHANNEL//1MON//	//C_SAC041/CHANNEL//1MON//	N	Y	CFS2TAF
+"Yolo Bypass "	RF	Exceedance	//C_YBP020/CHANNEL//1MON//	//C_YBP020/CHANNEL//1MON//	N	N	CFS2TAF
+"Mokelumne R "	RF	Exceedance	//C_MOK019/CHANNEL//1MON//	//C_MOK019/CHANNEL//1MON//	N	N	CFS2TAF
+"Calaveras R "	RF	Exceedance	//C_CLV004/CHANNEL//1MON//	//C_CLV004/CHANNEL//1MON//	N	N	CFS2TAF
+"San Joaquin R d/s Vernalis "	RF	Exceedance	//C_SJR056/CHANNEL//1MON//	//C_SJR056/CHANNEL//1MON//	N	N	CFS2TAF
+"Napa and Solano via NBA"	RF	Avg_Excd_Post	/CALSIM/D_BKR004_NBA009/DIVERSION//1MON//	/CALSIM/D_BKR004_NBA009/DIVERSION//1MON//	B	N	CFS2TAF
+"Total Delta Outflow "	RF	Exceedance_post	//C_SAC000_ADD+C_SAC000_MIN/CHANNEL//1MON//	//C_SAC000_ADD+C_SAC000_MIN/CHANNEL//1MON//	B	Y	CFS2TAF
+"Surplus Outflow "	RF	Exceedance	//C_SAC000_ADD/CHANNEL//1MON//	//C_SAC000_ADD/CHANNEL//1MON//	N	Y	CFS2TAF
+"Delta Outflow for X2 and NDO "	RF	Exceedance	//C_SAC000_MIN/CHANNEL//1MON//	//C_SAC000_MIN/CHANNEL//1MON//	N	Y	CFS2TAF
+"Delta Exports "	RF	Avg_Excd_Post	//C_CAA003+C_DMC000/CHANNEL//1MON//	//C_CAA003+C_DMC000/CHANNEL//1MON//	B	N	CFS2TAF
+"Banks "	RF	Avg_Excd	//C_CAA003/CHANNEL//1MON//	//C_CAA003/CHANNEL//1MON//	N	N	CFS2TAF
+"      Banks SWP "	RF	Avg_Excd	//C_CAA003_swp/FLOW-DELIVERY//1MON//	//C_CAA003_swp/FLOW-DELIVERY//1MON//	N	Y	CFS2TAF
+"      Banks CVP "	RF	Avg_Excd	//C_CAA003_cvp/FLOW-DELIVERY//1MON//	//C_CAA003_cvp/FLOW-DELIVERY//1MON//	N	N	CFS2TAF
+"      Banks WTS "	RF	Avg_Excd	//C_CAA003_WTS/FLOW-DELIVERY//1MON//	//C_CAA003_WTS/FLOW-DELIVERY//1MON//	N	N	CFS2TAF
+"Jones "	RF	Avg_Excd	//C_DMC000/CHANNEL//1MON//	//C_DMC000/CHANNEL//1MON//	N	N	CFS2TAF
+"      Jones CVP "	RF	Avg_Excd	//C_DMC000_cvp/FLOW-DELIVERY//1MON//	//C_DMC000_cvp/FLOW-DELIVERY//1MON//	N	Y	CFS2TAF
+"      Jones WTS "	RF	Avg_Excd	//C_DMC000_WTS/FLOW-DELIVERY//1MON//	//C_DMC000_WTS/FLOW-DELIVERY//1MON//	N	N	CFS2TAF
+"SWP Annual Deliveries "	RF	Avg_Excd_post	//SWP_TA_TOTAL+SWP_IN_TOTAL+SWP_CO_TOTAL///1MON//	//SWP_TA_TOTAL+SWP_IN_TOTAL+SWP_CO_TOTAL///1MON//	B	Y	CFS2TAF
+"      Table A "	RF	Avg_Excd	//SWP_TA_TOTAL/SWP_DELIVERY//1MON//	//SWP_TA_TOTAL/SWP_DELIVERY//1MON//	N	N	CFS2TAF
+"      Article 21 "	RF	Avg_Excd	//SWP_IN_TOTAL/SWP_DELIVERY//1MON//	//SWP_IN_TOTAL/SWP_DELIVERY//1MON//	N	N	CFS2TAF
+"      Article 56 "	RF	Avg_Excd	//SWP_CO_TOTAL/SWP_DELIVERY//1MON//	//SWP_CO_TOTAL/SWP_DELIVERY//1MON//	N	N	CFS2TAF
+"CVP SOD Deliveries (w/ CVC)"		CVPSOD		Avg_Excd_post	//del_cvp_pag_s+D855+del_cvp_pex_s+del_cvp_pMI_s+del_cvp_prf_s///1MON//			//del_cvp_pag_s+D855+del_cvp_pex_s+del_cvp_pMI_s+del_cvp_prf_s///1MON//			B		Y		CFS2TAF
+"      Ag "	RF	Avg_Excd	//del_cvp_pag_s/DELIVERY-CVP//1MON//	//del_cvp_pag_s/DELIVERY-CVP//1MON//	N	N	CFS2TAF
+"      CVC "	RF	Avg_Excd	//D855/FLOW-DELIVERY//1MON//	//D855/FLOW-DELIVERY//1MON//	N	N	CFS2TAF
+"      Ex "	RF	Avg_Excd	//del_cvp_pex_s/DELIVERY-CVP//1MON//	//del_cvp_pex_s/DELIVERY-CVP//1MON//	N	N	CFS2TAF
+"      MI "	RF	Avg_Excd	//del_cvp_pMI_s/DELIVERY-CVP//1MON//	//del_cvp_pMI_s/DELIVERY-CVP//1MON//	N	N	CFS2TAF
+"      RF "	RF	Avg_Excd	//del_cvp_prf_s/DELIVERY-CVP//1MON//	//del_cvp_prf_s/DELIVERY-CVP//1MON//	N	N	CFS2TAF
+END
+
+
+TIME_PERIODS
+NAME			TIMEWINDOW
+"Long Term"	"31OCT1921 2400 - 30SEP2003 2400"
+"Dry Period 1"	"31OCT1928 2400 - 30SEP1934 2400"
+"Dry Period 2"	"31OCT1986 2400 - 30SEP1992 2400"
+END

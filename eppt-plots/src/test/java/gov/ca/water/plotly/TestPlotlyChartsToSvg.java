@@ -1,13 +1,13 @@
 /*
- * Enhanced Post Processing Tool (EPPT) Copyright (c) 2019.
+ * Enhanced Post Processing Tool (EPPT) Copyright (c) 2020.
  *
- * EPPT is copyrighted by the State of California, Department of Water Resources. It is licensed
- * under the GNU General Public License, version 2. This means it can be
- * copied, distributed, and modified freely, but you may not restrict others
- * in their ability to copy, distribute, and modify it. See the license below
- * for more details.
+ *  EPPT is copyrighted by the State of California, Department of Water Resources. It is licensed
+ *  under the GNU General Public License, version 2. This means it can be
+ *  copied, distributed, and modified freely, but you may not restrict others
+ *  in their ability to copy, distribute, and modify it. See the license below
+ *  for more details.
  *
- * GNU General Public License
+ *  GNU General Public License
  */
 
 package gov.ca.water.plotly;
@@ -32,7 +32,6 @@ import gov.ca.water.plotly.qaqc.PlotlyBubble;
 import gov.ca.water.plotly.qaqc.PlotlyExceedance;
 import gov.ca.water.plotly.qaqc.PlotlyExceedancePage;
 import gov.ca.water.plotly.qaqc.PlotlyMonthly;
-import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -58,7 +57,7 @@ public class TestPlotlyChartsToSvg
 		}
 	}
 
-//	@Test
+	//	@Test
 	public void testPlotlyBubbleToSvgFromTemplate() throws Exception
 	{
 		Path path = Paths.get("TestBubbleFromTemplate.svg");
@@ -67,16 +66,16 @@ public class TestPlotlyChartsToSvg
 		EpptScenarioRun alt = new EpptScenarioRun(null, null, null, null, null, null, null, Constant.getPlotlyDefaultColor(1));
 		Map<EpptScenarioRun, PlotlyBubble.BubbleData> alternativeData = new HashMap<>();
 		alternativeData.put(alt, buildBubbleData());
-		PlotlyBubble bubble = new PlotlyBubble("CVP San Luis vs CVP NOD EOS Carryover Storage", "CVP North of Delta", "CVP San Luis", base,
-				buildBubbleData(), alternativeData);
+		PlotlyBubble bubble = new PlotlyBubble("CVP San Luis vs CVP NOD EOS Carryover Storage", "CVP North of Delta", "CVP San Luis", base, buildBubbleData(),
+				alternativeData);
 		PlotlySvgPrinter.printJsonToPath(path, bubble);
 		PlotlySvgPrinter.printSvg(path.toAbsolutePath().getParent());
 		assertTrue(Files.exists(path));
 		Files.deleteIfExists(path);
-//		Files.deleteIfExists(Paths.get(path.toString().replace("svg", "json")));
+		//		Files.deleteIfExists(Paths.get(path.toString().replace("svg", "json")));
 	}
 
-//	@Test
+	//	@Test
 	public void testPlotlyExceedanceToSvgFromTemplate() throws Exception
 	{
 		Path path = Paths.get("TestExceedanceFromTemplate.svg");
@@ -85,16 +84,16 @@ public class TestPlotlyChartsToSvg
 		EpptScenarioRun alt = new EpptScenarioRun(null, null, null, null, null, null, null, Constant.getPlotlyDefaultColor(1));
 		Map<EpptScenarioRun, ExceedanceData> alternativeData = new HashMap<>();
 		alternativeData.put(alt, buildAltExceedanceData());
-		PlotlyExceedance bubble = new PlotlyExceedance("CVP San Luis vs CVP NOD EOS Carryover Storage", "CVP North of Delta", "CVP San Luis", base,
-				buildBaseExceedanceData(), alternativeData);
+		PlotlyExceedance bubble = new PlotlyExceedance("CVP San Luis vs CVP NOD EOS Carryover Storage", "CVP North of Delta", "CVP San Luis", base, buildBaseExceedanceData(),
+				alternativeData);
 		PlotlySvgPrinter.printJsonToPath(path, bubble);
 		PlotlySvgPrinter.printSvg(path.toAbsolutePath().getParent());
 		assertTrue(Files.exists(path));
 		Files.deleteIfExists(path);
-//		Files.deleteIfExists(Paths.get(path.toString().replace("svg", "json")));
+		//		Files.deleteIfExists(Paths.get(path.toString().replace("svg", "json")));
 	}
 
-//	@Test
+	//	@Test
 	public void testPlotlyMonthlyToSvgFromTemplate() throws Exception
 	{
 		Path path = Paths.get("TestMonthlyFromTemplate.svg");
@@ -103,13 +102,12 @@ public class TestPlotlyChartsToSvg
 		EpptScenarioRun alt = new EpptScenarioRun("alt", null, null, null, null, null, null, Constant.getPlotlyDefaultColor(1));
 		Map<EpptScenarioRun, List<PlotlyMonthly.MonthlyData>> primaryData = buildPrimaryMonthlyData(base, alt);
 		Map<EpptScenarioRun, Map<String, List<PlotlyMonthly.MonthlyData>>> thresholdData = buildThresholdMonthlyData(base, alt);
-		PlotlyMonthly bubble = new PlotlyMonthly("Trinity Imports", "", "Storage",
-				primaryData, thresholdData);
+		PlotlyMonthly bubble = new PlotlyMonthly("Trinity Imports", "", "Storage", primaryData, thresholdData);
 		PlotlySvgPrinter.printJsonToPath(path, bubble);
 		PlotlySvgPrinter.printSvg(path.toAbsolutePath().getParent());
 		assertTrue(Files.exists(path));
 		Files.deleteIfExists(path);
-//		Files.deleteIfExists(Paths.get(path.toString().replace("svg", "json")));
+		//		Files.deleteIfExists(Paths.get(path.toString().replace("svg", "json")));
 	}
 
 	private Map<EpptScenarioRun, List<PlotlyMonthly.MonthlyData>> buildPrimaryMonthlyData(EpptScenarioRun base, EpptScenarioRun alt)
@@ -117,10 +115,8 @@ public class TestPlotlyChartsToSvg
 		Map<EpptScenarioRun, List<PlotlyMonthly.MonthlyData>> retval = new HashMap<>();
 		for(Month month : Month.values())
 		{
-			retval.computeIfAbsent(base, (k) -> new ArrayList<>())
-				  .add(new PlotlyMonthly.MonthlyData(month, Math.random() * 100));
-			retval.computeIfAbsent(alt, (k) -> new ArrayList<>())
-				  .add(new PlotlyMonthly.MonthlyData(month, Math.random() * 100));
+			retval.computeIfAbsent(base, (k) -> new ArrayList<>()).add(new PlotlyMonthly.MonthlyData(month, Math.random() * 100));
+			retval.computeIfAbsent(alt, (k) -> new ArrayList<>()).add(new PlotlyMonthly.MonthlyData(month, Math.random() * 100));
 		}
 		return retval;
 	}
@@ -142,7 +138,7 @@ public class TestPlotlyChartsToSvg
 		return retval;
 	}
 
-//	@Test
+	//	@Test
 	public void testPlotlyExceedancePageToSvgFromTemplate() throws Exception
 	{
 		Path path = Paths.get("TestExceedancePageFromTemplate.svg");
@@ -153,13 +149,12 @@ public class TestPlotlyChartsToSvg
 		Map<EpptScenarioRun, PlotlyExceedancePage.ExceedanceMonthData> exceedanceData = new HashMap<>();
 		exceedanceData.put(base, buildBaseExceedanceMonthData());
 		exceedanceData.put(alt, buildAltExceedanceMonthData());
-		PlotlyExceedancePage exceedancePage = new PlotlyExceedancePage("CVP San Luis vs CVP NOD EOS Carryover Storage", "CVP North of Delta",
-				exceedanceData);
+		PlotlyExceedancePage exceedancePage = new PlotlyExceedancePage("CVP San Luis vs CVP NOD EOS Carryover Storage", "CVP North of Delta", exceedanceData);
 		PlotlySvgPrinter.printJsonToPath(path, exceedancePage);
 		PlotlySvgPrinter.printSvg(path.toAbsolutePath().getParent());
 		assertTrue(Files.exists(path));
-//		Files.deleteIfExists(path);
-//		Files.deleteIfExists(Paths.get(path.toString().replace("svg", "json")));
+		//		Files.deleteIfExists(path);
+		//		Files.deleteIfExists(Paths.get(path.toString().replace("svg", "json")));
 	}
 
 	private PlotlyExceedancePage.ExceedanceMonthData buildBaseExceedanceMonthData()

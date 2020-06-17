@@ -1,0 +1,8 @@
+!Water Year Index ID,DSS A-Part,DSS B-Part,DSS C-Part,Month,WRESL lookup (wytypes.table)
+100,,WYT_SAC_,WATERYEARTYPE,May,SACindex
+200,,WYT_SJR_,WATERYEARTYPE,May,SJRindex
+300,,,,,SHASTAindex
+400,,,,,Trinityindex
+500,,,,,FEATHERindex
+600,,,,,Amer403030
+700,,,,,AmerD893

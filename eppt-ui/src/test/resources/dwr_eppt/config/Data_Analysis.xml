@@ -1,0 +1,127 @@
+<!--
+  ~ Enhanced Post Processing Tool (EPPT) Copyright (c) 2020.
+  ~
+  ~  EPPT is copyrighted by the State of California, Department of Water Resources. It is licensed
+  ~  under the GNU General Public License, version 2. This means it can be
+  ~  copied, distributed, and modified freely, but you may not restrict others
+  ~  in their ability to copy, distribute, and modify it. See the license below
+  ~  for more details.
+  ~
+  ~  GNU General Public License
+  -->
+
+<panel id="dataAnalysis" font="Tahoma-Italic-12" layout="FlowLayout(FlowLayout.LEFT)">
+	<panel layout="BorderLayout">
+		<panel constraints="BorderLayout.NORTH" id="data_tabbedPane1" name="External PDF" font="Tahoma-Italic-12"
+			   layout="GridBagLayout">
+			<label text="Report Template File:">
+				<gridbagconstraints insets="5,5,5,5" anchor="GridBagConstraints.WEST" gridx="0" gridy="5"/>
+			</label>
+			<textfield text="callite_scenario_comparison.inp" tooltiptext="Config\\callite_scenario_comparison.inp"
+					   enabled="false"
+					   id="tfTemplateFILE" preferredsize="250,20" name="tfTemplateFILE">
+				<gridbagconstraints insets="5,5,5,5" anchor="GridBagConstraints.WEST" gridx="1" gridy="5"/>
+			</textfield>
+			<button text="Select File..." id="btnGetTemplateFile" name="btnGetTemplateFile">
+				<gridbagconstraints insets="5,5,5,5" anchor="GridBagConstraints.WEST" gridx="2" gridy="5"/>
+			</button>
+			<button text="Edit File..." id="btnEditTemplateFile" name="btnEditTemplateFile">
+				<gridbagconstraints insets="5,5,5,5" anchor="GridBagConstraints.WEST" gridx="3" gridy="5"/>
+			</button>
+			<label text="Base">
+				<gridbagconstraints insets="5,5,5,5" anchor="GridBagConstraints.WEST" gridx="0" gridy="10"/>
+			</label>
+			<label text="Alias:">
+				<gridbagconstraints insets="5,50,5,5" anchor="GridBagConstraints.WEST" gridx="0" gridy="11"/>
+			</label>
+			<textfield text="CalLite 1" id="tfReportNAME1" name="tfReportNAME1" preferredsize="250,20">
+				<gridbagconstraints insets="5,5,5,5" anchor="GridBagConstraints.WEST" gridx="1" gridy="11"/>
+			</textfield>
+			<radiobutton name="baseScenarioBtn" id="baseScenarioBtn" text="Scenario:" selected="true">
+				<gridbagconstraints insets="5,45,5,5" anchor="GridBagConstraints.WEST" gridx="0" gridy="12"/>
+			</radiobutton>
+			<combobox text="" enabled="true" id="baseScenarioCombo" preferredsize="250,20" name="baseScenarioCombo">
+				<gridbagconstraints insets="5,5,5,5" anchor="GridBagConstraints.WEST" gridx="1" gridy="12"/>
+			</combobox>
+			<radiobutton name="baseFileBtn" id="baseFileBtn" text="DSS File:" selected="false">
+				<gridbagconstraints insets="5,45,5,5" anchor="GridBagConstraints.WEST" gridx="0" gridy="13"/>
+			</radiobutton>
+			<textfield text="" enabled="false" id="tfReportFILE1" preferredsize="250,20" name="tfReportFILE1">
+				<gridbagconstraints insets="5,5,5,5" anchor="GridBagConstraints.WEST" gridx="1" gridy="13"/>
+			</textfield>
+			<button text="Select File ..." id="btnGetReportFile1" name="btnGetReportFile1">
+				<gridbagconstraints insets="5,5,5,5" anchor="GridBagConstraints.WEST" gridx="2" gridy="13"/>
+			</button>
+			<label text="Alt">
+				<gridbagconstraints insets="5,5,5,5" anchor="GridBagConstraints.WEST" gridx="0" gridy="30"/>
+			</label>
+			<label text="Alias:">
+				<gridbagconstraints insets="5,50,5,5" anchor="GridBagConstraints.WEST" gridx="0" gridy="31"/>
+			</label>
+			<textfield text="CalLite 2" id="tfReportNAME2" name="tfReportNAME2" preferredsize="250,20">
+				<gridbagconstraints insets="5,5,5,5" anchor="GridBagConstraints.WEST" gridx="1" gridy="31"/>
+			</textfield>
+			<radiobutton name="altScenarioBtn" id="altScenarioBtn" text="Scenario:" selected="true">
+				<gridbagconstraints insets="5,45,5,5" anchor="GridBagConstraints.WEST" gridx="0" gridy="32"/>
+			</radiobutton>
+			<combobox text="" enabled="true" id="altScenarioCombo" preferredsize="250,20" name="altScenarioCombo">
+				<gridbagconstraints insets="5,5,5,5" anchor="GridBagConstraints.WEST" gridx="1" gridy="32"/>
+			</combobox>
+			<radiobutton name="altFileBtn" id="altFileBtn" text="DSS File:" selected="false">
+				<gridbagconstraints insets="5,45,5,5" anchor="GridBagConstraints.WEST" gridx="0" gridy="33"/>
+			</radiobutton>
+			<textfield text="" enabled="false" id="tfReportFILE2" preferredsize="250,20" name="tfReportFILE2">
+				<gridbagconstraints insets="5,5,5,5" anchor="GridBagConstraints.WEST" gridx="1" gridy="33"/>
+			</textfield>
+			<button text="Select File ..." id="btnGetReportFile2" name="btnGetReportFile2">
+				<gridbagconstraints insets="5,5,5,5" anchor="GridBagConstraints.WEST" gridx="2" gridy="33"/>
+			</button>
+			<label text="Report Output File:">
+				<gridbagconstraints insets="5,5,5,5" anchor="GridBagConstraints.WEST" gridx="0" gridy="50"/>
+			</label>
+			<textfield text="report.pdf" tooltiptext=".//Scenarios//report.pdf" enabled="false" id="tfReportFILE3"
+					   preferredsize="250,20" name="tfReportFILE3">
+				<gridbagconstraints insets="5,5,5,5" anchor="GridBagConstraints.WEST" gridx="1" gridy="50"/>
+			</textfield>
+			<button text="Select File ..." id="btnGetReportFile3" name="btnGetReportFile3">
+				<gridbagconstraints insets="5,5,5,5" anchor="GridBagConstraints.WEST" gridx="2" gridy="50"/>
+			</button>
+
+			<label text="Notes:" minimumsize="120,20">
+				<gridbagconstraints insets="10,5,5,5" anchor="GridBagConstraints.NORTHWEST" gridx="0" gridy="60"
+									gridwidth="2"/>
+			</label>
+			<scrollpane preferredsize="400,50" minimumsize="400,50">
+				<gridbagconstraints insets="0,5,5,5" anchor="GridBagConstraints.NORTHWEST" gridx="0" gridy="65"
+									gridwidth="3" fill="GridBagConstraints.HORIZONTAL"/>
+				<textarea linewrap="true" wrapstyleword="true" text="" id="taReportNOTES"
+						  name="taReportNOTES"/>
+			</scrollpane>
+			<label text="Assumptions:" minimumsize="120,20" preferredsize="120,20">
+				<gridbagconstraints insets="10,5,5,5" anchor="GridBagConstraints.NORTHWEST" gridx="0" gridy="70"
+									gridwidth="3"/>
+			</label>
+			<scrollpane preferredsize="400,50" minimumsize="400,50">
+				<gridbagconstraints insets="0,5,5,5" anchor="GridBagConstraints.NORTHWEST" gridx="0" gridy="75"
+									gridwidth="3" fill="GridBagConstraints.HORIZONTAL"/>
+				<textarea text=" " id="taReportASSUMPTIONS" name="taReportASSUMPTIONS"/>
+			</scrollpane>
+			<label text="Modeler:">
+				<gridbagconstraints insets="10,5,5,0" anchor="GridBagConstraints.WEST" gridx="0" gridy="80"/>
+			</label>
+			<textfield text="" id="tfReportMODELER" name="tfReportMODELER">
+				<gridbagconstraints insets="10,5,5,5" anchor="GridBagConstraints.WEST" gridx="1" gridy="80" gridwidth="2"
+									fill="GridBagConstraints.HORIZONTAL"/>
+			</textfield>
+			<label text="Table Font Size (points):">
+				<gridbagconstraints insets="10,5,5,0" anchor="GridBagConstraints.WEST" gridx="0" gridy="85"/>
+			</label>
+			<textfield id="tfFontSize" name="tfFontSize" text="9" preferredsize="50,20">
+				<gridbagconstraints insets="10,5,5,0" anchor="GridBagConstraints.WEST" gridx="1" gridy="85"/>
+			</textfield>
+			<button name="btnReport" id="btnReport" text="Generate Report" ActionCommand="AC_GenReport">
+				<gridbagconstraints insets="5,5,5,5" anchor="GridBagConstraints.WEST" gridx="2" gridy="86"/>
+			</button>
+		</panel>
+	</panel>
+</panel>

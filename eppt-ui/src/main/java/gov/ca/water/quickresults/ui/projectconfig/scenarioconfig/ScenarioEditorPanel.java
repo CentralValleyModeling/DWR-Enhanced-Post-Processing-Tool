@@ -1,28 +1,23 @@
 /*
- * Enhanced Post Processing Tool (EPPT) Copyright (c) 2019.
+ * Enhanced Post Processing Tool (EPPT) Copyright (c) 2020.
  *
- * EPPT is copyrighted by the State of California, Department of Water Resources. It is licensed
- * under the GNU General Public License, version 2. This means it can be
- * copied, distributed, and modified freely, but you may not restrict others
- * in their ability to copy, distribute, and modify it. See the license below
- * for more details.
+ *  EPPT is copyrighted by the State of California, Department of Water Resources. It is licensed
+ *  under the GNU General Public License, version 2. This means it can be
+ *  copied, distributed, and modified freely, but you may not restrict others
+ *  in their ability to copy, distribute, and modify it. See the license below
+ *  for more details.
  *
- * GNU General Public License
+ *  GNU General Public License
  */
 
 package gov.ca.water.quickresults.ui.projectconfig.scenarioconfig;
 
-import java.awt.BorderLayout;
-import java.awt.Component;
-import java.awt.Dimension;
-import java.awt.FlowLayout;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
-import java.awt.Insets;
-import java.awt.Window;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.beans.PropertyChangeEvent;
 import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Date;
@@ -80,6 +75,9 @@ public class ScenarioEditorPanel
 	private JButton _wyTableBtn;
 	private JTextField _colorHexTextField;
 	private RmaJColorChooserButton _colorChooserButton;
+	private JTextField _waterYearIndexPathField;
+	private JButton _editWaterYearIndexButton;
+	private Path _tempWaterYearIndexModelPath;
 
 	ScenarioEditorPanel(LoadingDss loadingDss, List<EpptScenarioRun> scenarioRuns)
 	{
@@ -88,23 +86,17 @@ public class ScenarioEditorPanel
 		// DO NOT EDIT OR ADD ANY CODE HERE!
 		$$$setupUI$$$();
 		_scenarioDssTableModel = new ScenarioDssTableModel(loadingDss);
-		_dssTable.setModel(_scenarioDssTableModel);
-		initModelCombo();
-		_addButton.addActionListener(this::addExtraDss);
-		_removeButton.addActionListener(this::removeExtraDss);
-		_outputPathButton.addActionListener(this::selectOutputPath);
-		_wreslButton.addActionListener(this::selectWreslMain);
-		_dssTable.getColumnModel().getColumn(ScenarioDssTableModel.DSS_PATH_COLUMN).setCellEditor(new FileChooserEditor());
-		_dssTable.getColumnModel().getColumn(ScenarioDssTableModel.DSS_PATH_COLUMN).setCellRenderer(new FileChooserRenderer());
-		_dssTable.getColumnModel().getColumn(ScenarioDssTableModel.A_PART_COLUMN).setCellEditor(new ComboBoxCellEditor(new RmaJComboBox()));
-		_dssTable.getColumnModel().getColumn(ScenarioDssTableModel.F_PART_COLUMN).setCellEditor(new ComboBoxCellEditor(new RmaJComboBox()));
+		initComponents(scenarioRuns);
+		initModels();
+		initListeners();
 		_nameField.requestFocus();
+	}
+
+	private void initComponents(List<EpptScenarioRun> scenarioRuns)
+	{
 		String time = Long.toString(new Date().getTime()).substring(6);
 		_nameField.setText("NewScenarioRun " + time);
 		_nameField.selectAll();
-		_wyTableBtn.addActionListener(e -> chooseWaterYearTable());
-		_colorChooserButton.addSampleListener(this::chooseColor);
-		_modelCombobox.addActionListener(e -> modelComboChanged());
 		_waterYearTable.setText(Paths.get(Constant.WRESL_DIR).resolve("CalLite").resolve(Constant.LOOKUP_DIRECTORY).toString());
 		_wreslTextField.setText(Paths.get(Constant.WRESL_DIR).resolve("CalLite").toString());
 		Color plotlyDefaultColor = Constant.getColorNotInList(scenarioRuns.stream().map(EpptScenarioRun::getColor).collect(toList()));
@@ -113,6 +105,39 @@ public class ScenarioEditorPanel
 		java.awt.Color decode = java.awt.Color.decode(hex.substring(0, 7));
 		decode = new java.awt.Color(decode.getRed(), decode.getGreen(), decode.getBlue(), Integer.parseInt(hex.substring(7, 9), 16));
 		_colorChooserButton.setColor(decode);
+		_waterYearIndexPathField.setText(Constant.MODEL_WATER_YEAR_INDEX_FILE);
+	}
+
+	private void initListeners()
+	{
+		_addButton.addActionListener(this::addExtraDss);
+		_removeButton.addActionListener(this::removeExtraDss);
+		_outputPathButton.addActionListener(this::selectOutputPath);
+		_wreslButton.addActionListener(this::selectWreslMain);
+		_wyTableBtn.addActionListener(e -> chooseWaterYearTable());
+		_colorChooserButton.addSampleListener(this::chooseColor);
+		_modelCombobox.addActionListener(e -> modelComboChanged());
+		_editWaterYearIndexButton.addActionListener(e -> editWaterYearIndexModelFile());
+	}
+
+	private void editWaterYearIndexModelFile()
+	{
+		Path modelWaterYearIndexFile = EpptPreferences.getLastProjectConfiguration().resolve(_nameField.getText()).resolve(Constant.MODEL_WATER_YEAR_INDEX_FILE);
+		Object selectedItem = _modelCombobox.getSelectedItem();
+		if(!modelWaterYearIndexFile.toFile().exists() && selectedItem != null)
+		{
+			modelWaterYearIndexFile = Paths.get(Constant.CONFIG_DIR).resolve(selectedItem.toString()).resolve(Constant.MODEL_WATER_YEAR_INDEX_FILE);
+		}
+		try
+		{
+			_tempWaterYearIndexModelPath = Files.createTempFile("WaterYearIndexModel", Constant.CSV_EXT);
+			Files.write(_tempWaterYearIndexModelPath, Files.readAllBytes(modelWaterYearIndexFile));
+			Desktop.getDesktop().open(_tempWaterYearIndexModelPath.toFile());
+		}
+		catch(IOException e)
+		{
+			LOGGER.log(Level.SEVERE, "Unable to create temporary file for editing the: " + Constant.MODEL_WATER_YEAR_INDEX_FILE + " Will default to installation version", e);
+		}
 	}
 
 	private void modelComboChanged()
@@ -157,7 +182,8 @@ public class ScenarioEditorPanel
 				}
 				else
 				{
-					JOptionPane.showMessageDialog(window, "Selected directory must contain a file named: " + Constant.WY_TYPES_TABLE, "Invalid Lookup Directory", JOptionPane.WARNING_MESSAGE);
+					JOptionPane.showMessageDialog(window, "Selected directory must contain a file named: " + Constant.WY_TYPES_TABLE, "Invalid Lookup Directory",
+							JOptionPane.WARNING_MESSAGE);
 				}
 			}
 		}
@@ -183,13 +209,18 @@ public class ScenarioEditorPanel
 		return fileChooser;
 	}
 
-	private void initModelCombo()
+	private void initModels()
 	{
 		for(GUILinksAllModelsBO.Model model : GUILinksAllModelsBO.Model.values())
 		{
 			_modelCombobox.addItem(model);
 		}
 		_modelCombobox.setSelectedItem(GUILinksAllModelsBO.Model.values().get(0));
+		_dssTable.setModel(_scenarioDssTableModel);
+		_dssTable.getColumnModel().getColumn(ScenarioDssTableModel.DSS_PATH_COLUMN).setCellEditor(new FileChooserEditor());
+		_dssTable.getColumnModel().getColumn(ScenarioDssTableModel.DSS_PATH_COLUMN).setCellRenderer(new FileChooserRenderer());
+		_dssTable.getColumnModel().getColumn(ScenarioDssTableModel.A_PART_COLUMN).setCellEditor(new ComboBoxCellEditor(new RmaJComboBox()));
+		_dssTable.getColumnModel().getColumn(ScenarioDssTableModel.F_PART_COLUMN).setCellEditor(new ComboBoxCellEditor(new RmaJComboBox()));
 	}
 
 	/**
@@ -208,7 +239,9 @@ public class ScenarioEditorPanel
 		final JPanel panel1 = new JPanel();
 		panel1.setLayout(new BorderLayout(0, 0));
 		_panel1.add(panel1, BorderLayout.CENTER);
-		panel1.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(), "Required Files", TitledBorder.DEFAULT_JUSTIFICATION, TitledBorder.DEFAULT_POSITION, null, null));
+		panel1.setBorder(
+				BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(), "Required Files", TitledBorder.DEFAULT_JUSTIFICATION, TitledBorder.DEFAULT_POSITION, null,
+						null));
 		final JPanel panel2 = new JPanel();
 		panel2.setLayout(new FlowLayout(FlowLayout.RIGHT, 5, 5));
 		panel1.add(panel2, BorderLayout.SOUTH);
@@ -226,7 +259,9 @@ public class ScenarioEditorPanel
 		final JPanel panel3 = new JPanel();
 		panel3.setLayout(new BorderLayout(0, 0));
 		_panel1.add(panel3, BorderLayout.NORTH);
-		panel3.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(), "General Description", TitledBorder.DEFAULT_JUSTIFICATION, TitledBorder.DEFAULT_POSITION, null, null));
+		panel3.setBorder(
+				BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(), "General Description", TitledBorder.DEFAULT_JUSTIFICATION, TitledBorder.DEFAULT_POSITION,
+						null, null));
 		final JPanel panel4 = new JPanel();
 		panel4.setLayout(new GridBagLayout());
 		panel3.add(panel4, BorderLayout.CENTER);
@@ -315,14 +350,14 @@ public class ScenarioEditorPanel
 		label5.setText("Scenario Color");
 		gbc = new GridBagConstraints();
 		gbc.gridx = 0;
-		gbc.gridy = 4;
+		gbc.gridy = 5;
 		gbc.anchor = GridBagConstraints.WEST;
 		gbc.insets = new Insets(5, 5, 5, 5);
 		panel4.add(label5, gbc);
 		_colorHexTextField = new JTextField();
 		gbc = new GridBagConstraints();
 		gbc.gridx = 1;
-		gbc.gridy = 4;
+		gbc.gridy = 5;
 		gbc.weightx = 1.0;
 		gbc.anchor = GridBagConstraints.WEST;
 		gbc.fill = GridBagConstraints.HORIZONTAL;
@@ -332,13 +367,41 @@ public class ScenarioEditorPanel
 		_colorChooserButton.setPreferredSize(new Dimension(45, 24));
 		gbc = new GridBagConstraints();
 		gbc.gridx = 2;
-		gbc.gridy = 4;
+		gbc.gridy = 5;
 		gbc.insets = new Insets(5, 5, 5, 5);
 		panel4.add(_colorChooserButton, gbc);
+		final JLabel label6 = new JLabel();
+		label6.setText("Water Year Index File:");
+		gbc = new GridBagConstraints();
+		gbc.gridx = 0;
+		gbc.gridy = 4;
+		gbc.anchor = GridBagConstraints.WEST;
+		gbc.insets = new Insets(5, 5, 5, 5);
+		panel4.add(label6, gbc);
+		_waterYearIndexPathField = new JTextField();
+		_waterYearIndexPathField.setEditable(false);
+		gbc = new GridBagConstraints();
+		gbc.gridx = 1;
+		gbc.gridy = 4;
+		gbc.weightx = 1.0;
+		gbc.anchor = GridBagConstraints.WEST;
+		gbc.fill = GridBagConstraints.HORIZONTAL;
+		gbc.insets = new Insets(5, 5, 5, 5);
+		panel4.add(_waterYearIndexPathField, gbc);
+		_editWaterYearIndexButton = new JButton();
+		_editWaterYearIndexButton.setPreferredSize(new Dimension(45, 24));
+		_editWaterYearIndexButton.setText("Edit");
+		gbc = new GridBagConstraints();
+		gbc.gridx = 2;
+		gbc.gridy = 4;
+		gbc.fill = GridBagConstraints.HORIZONTAL;
+		gbc.insets = new Insets(5, 5, 5, 5);
+		panel4.add(_editWaterYearIndexButton, gbc);
 		final JPanel panel5 = new JPanel();
 		panel5.setLayout(new BorderLayout(0, 0));
 		_panel1.add(panel5, BorderLayout.SOUTH);
-		panel5.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(), "QA/QC Report Resources", TitledBorder.DEFAULT_JUSTIFICATION, TitledBorder.DEFAULT_POSITION, null, null));
+		panel5.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(), "QA/QC Report Resources", TitledBorder.DEFAULT_JUSTIFICATION,
+				TitledBorder.DEFAULT_POSITION, null, null));
 		final JPanel panel6 = new JPanel();
 		panel6.setLayout(new GridBagLayout());
 		panel5.add(panel6, BorderLayout.CENTER);
@@ -359,14 +422,14 @@ public class ScenarioEditorPanel
 		gbc.fill = GridBagConstraints.HORIZONTAL;
 		gbc.insets = new Insets(5, 5, 5, 5);
 		panel6.add(_wreslButton, gbc);
-		final JLabel label6 = new JLabel();
-		label6.setText("Lookup Directory:");
+		final JLabel label7 = new JLabel();
+		label7.setText("Lookup Directory:");
 		gbc = new GridBagConstraints();
 		gbc.gridx = 0;
 		gbc.gridy = 1;
 		gbc.anchor = GridBagConstraints.WEST;
 		gbc.insets = new Insets(5, 5, 5, 5);
-		panel6.add(label6, gbc);
+		panel6.add(label7, gbc);
 		_waterYearTable = new JTextField();
 		gbc = new GridBagConstraints();
 		gbc.gridx = 1;
@@ -385,14 +448,14 @@ public class ScenarioEditorPanel
 		gbc.fill = GridBagConstraints.HORIZONTAL;
 		gbc.insets = new Insets(5, 5, 5, 5);
 		panel6.add(_wyTableBtn, gbc);
-		final JLabel label7 = new JLabel();
-		label7.setText("EPPT WRESL Directory:");
+		final JLabel label8 = new JLabel();
+		label8.setText("EPPT WRESL Directory:");
 		gbc = new GridBagConstraints();
 		gbc.gridx = 0;
 		gbc.gridy = 0;
 		gbc.anchor = GridBagConstraints.WEST;
 		gbc.insets = new Insets(5, 5, 5, 5);
-		panel6.add(label7, gbc);
+		panel6.add(label8, gbc);
 	}
 
 	/**
@@ -430,7 +493,8 @@ public class ScenarioEditorPanel
 				}
 				else
 				{
-					JOptionPane.showMessageDialog(window, "Selected directory must contain a file named: " + Constant.WRESL_MAIN, "Invalid WRESL Directory", JOptionPane.WARNING_MESSAGE);
+					JOptionPane.showMessageDialog(window, "Selected directory must contain a file named: " + Constant.WRESL_MAIN, "Invalid WRESL Directory",
+							JOptionPane.WARNING_MESSAGE);
 				}
 			}
 		}
@@ -552,6 +616,37 @@ public class ScenarioEditorPanel
 	void shutdown()
 	{
 		_scenarioDssTableModel.shutdown();
+	}
+
+	public Path getWaterYearIndexModelCsv()
+	{
+
+		Path modelWaterYearIndexFile = _tempWaterYearIndexModelPath;
+		if(modelWaterYearIndexFile == null)
+		{
+			modelWaterYearIndexFile = EpptPreferences.getLastProjectConfiguration().resolve(_nameField.getText()).resolve(Constant.MODEL_WATER_YEAR_INDEX_FILE);
+		}
+		Object selectedItem = _modelCombobox.getSelectedItem();
+		if(!modelWaterYearIndexFile.toFile().exists() && selectedItem != null)
+		{
+			modelWaterYearIndexFile = Paths.get(Constant.CONFIG_DIR).resolve(selectedItem.toString()).resolve(Constant.MODEL_WATER_YEAR_INDEX_FILE);
+		}
+		return modelWaterYearIndexFile;
+	}
+
+	public void cleanUpTempFile()
+	{
+		if(_tempWaterYearIndexModelPath != null)
+		{
+			try
+			{
+				Files.deleteIfExists(_tempWaterYearIndexModelPath);
+			}
+			catch(IOException e)
+			{
+				LOGGER.log(Level.WARNING, "Unable to clean up temp file: " + _tempWaterYearIndexModelPath, e);
+			}
+		}
 	}
 
 	private final class FileChooserEditor extends RmaCellEditor

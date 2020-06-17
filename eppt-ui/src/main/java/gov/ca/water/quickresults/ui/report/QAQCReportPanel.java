@@ -1,13 +1,13 @@
 /*
- * Enhanced Post Processing Tool (EPPT) Copyright (c) 2019.
+ * Enhanced Post Processing Tool (EPPT) Copyright (c) 2020.
  *
- * EPPT is copyrighted by the State of California, Department of Water Resources. It is licensed
- * under the GNU General Public License, version 2. This means it can be
- * copied, distributed, and modified freely, but you may not restrict others
- * in their ability to copy, distribute, and modify it. See the license below
- * for more details.
+ *  EPPT is copyrighted by the State of California, Department of Water Resources. It is licensed
+ *  under the GNU General Public License, version 2. This means it can be
+ *  copied, distributed, and modified freely, but you may not restrict others
+ *  in their ability to copy, distribute, and modify it. See the license below
+ *  for more details.
  *
- * GNU General Public License
+ *  GNU General Public License
  */
 
 package gov.ca.water.quickresults.ui.report;
@@ -29,7 +29,6 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.Month;
 import java.time.YearMonth;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -55,17 +54,13 @@ import javax.swing.text.Style;
 import javax.swing.text.StyleConstants;
 import javax.swing.text.StyledDocument;
 
-import gov.ca.water.calgui.EpptInitializationException;
 import gov.ca.water.calgui.bo.CommonPeriodFilter;
 import gov.ca.water.calgui.bo.SimpleFileFilter;
 import gov.ca.water.calgui.bo.WaterYearDefinition;
-import gov.ca.water.calgui.bo.WaterYearIndex;
 import gov.ca.water.calgui.bo.WaterYearPeriod;
 import gov.ca.water.calgui.bo.WaterYearPeriodRange;
 import gov.ca.water.calgui.bo.WaterYearPeriodRangesFilter;
 import gov.ca.water.calgui.bo.WaterYearType;
-import gov.ca.water.calgui.busservice.impl.WaterYearIndexAliasReader;
-import gov.ca.water.calgui.busservice.impl.WaterYearTableReader;
 import gov.ca.water.calgui.constant.Constant;
 import gov.ca.water.calgui.constant.EpptPreferences;
 import gov.ca.water.calgui.project.EpptScenarioRun;
@@ -328,7 +323,8 @@ public class QAQCReportPanel extends EpptPanel
 				HecDSSFileAccess hecDSSFileAccess = new HecDSSFileAccess(postProcessDss.toString());
 				if(!hecDSSFileAccess.writeAccess())
 				{
-					JOptionPane.showMessageDialog(this, "DSS File inaccessible. Ensure it is not being written to in another process:\n" + postProcessDss, "DSS File Error", JOptionPane.WARNING_MESSAGE);
+					JOptionPane.showMessageDialog(this, "DSS File inaccessible. Ensure it is not being written to in another process:\n" + postProcessDss, "DSS File Error",
+							JOptionPane.WARNING_MESSAGE);
 				}
 				else
 				{
@@ -473,8 +469,11 @@ public class QAQCReportPanel extends EpptPanel
 			List<Map<EpptScenarioRun, WaterYearPeriodRangesFilter>> waterYearPeriodRanges = _epptConfigurationController.getWaterYearPeriodRanges();
 			PercentDiffStyle percentDiffStyle = (PercentDiffStyle) _percentDiffStyle.getSelectedItem();
 			List<String> disabledSummaryModules = getDisabledSummaryModules();
-			LocalDateTime start = LocalDateTime.of(_epptConfigurationController.getStartYear(), _epptConfigurationController.getWaterYearDefinition().getStartMonth(), 1, 0, 0).minusDays(2);
-			LocalDateTime end = LocalDateTime.of(_epptConfigurationController.getEndYear(), _epptConfigurationController.getWaterYearDefinition().getEndMonth(), 1, 0, 0).plusMonths(1).plusDays(2);
+			LocalDateTime start = LocalDateTime.of(_epptConfigurationController.getStartYear(), _epptConfigurationController.getWaterYearDefinition().getStartMonth(), 1, 0, 0)
+											   .minusDays(2);
+			LocalDateTime end = LocalDateTime.of(_epptConfigurationController.getEndYear(), _epptConfigurationController.getWaterYearDefinition().getEndMonth(), 1, 0, 0)
+											 .plusMonths(1)
+											 .plusDays(2);
 			CommonPeriodFilter commonPeriodFilter = new CommonPeriodFilter(start, end);
 			SummaryReportParameters summaryReportParameters = new SummaryReportParameters(_waterYearDefinition, waterYearPeriodRanges, percentDiffStyle, disabledSummaryModules, commonPeriodFilter, new DssCache());
 			List<String> disabledReportModules = getDisabledReportModules();
@@ -692,7 +691,8 @@ public class QAQCReportPanel extends EpptPanel
 		panel11.setLayout(new BorderLayout(0, 0));
 		panel11.setPreferredSize(new Dimension(400, 200));
 		panel10.add(panel11, BorderLayout.CENTER);
-		panel11.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(), "QA/QC Report Sections", TitledBorder.DEFAULT_JUSTIFICATION, TitledBorder.DEFAULT_POSITION, null, null));
+		panel11.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(), "QA/QC Report Sections", TitledBorder.DEFAULT_JUSTIFICATION,
+				TitledBorder.DEFAULT_POSITION, null, null));
 		final JPanel panel12 = new JPanel();
 		panel12.setLayout(new BorderLayout(0, 0));
 		panel12.setPreferredSize(new Dimension(300, 270));
@@ -1088,7 +1088,8 @@ public class QAQCReportPanel extends EpptPanel
 				{
 					installerLookupFiles = walk.collect(toList());
 				}
-				show = compareDirectories(scenarioLookupDirectory, scenarioLookupFiles, installerLookupDirectory, installerLookupFiles) || compareDirectories(scenarioWreslDirectory, scenarioWreslFiles, installerWreslDirectory, installerWreslFiles);
+				show = compareDirectories(scenarioLookupDirectory, scenarioLookupFiles, installerLookupDirectory, installerLookupFiles) || compareDirectories(
+						scenarioWreslDirectory, scenarioWreslFiles, installerWreslDirectory, installerWreslFiles);
 			}
 			catch(IOException e)
 			{
