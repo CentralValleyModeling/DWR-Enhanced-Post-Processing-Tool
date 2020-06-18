@@ -12,10 +12,7 @@
 
 package gov.ca.water.quickresults.ui.projectconfig.scenarioconfig;
 
-import java.awt.BorderLayout;
-import java.awt.Dimension;
-import java.awt.FlowLayout;
-import java.awt.Frame;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -30,6 +27,7 @@ import gov.ca.water.calgui.constant.Constant;
 import gov.ca.water.calgui.constant.EpptPreferences;
 import gov.ca.water.calgui.project.EpptScenarioRun;
 import gov.ca.water.calgui.project.EpptScenarioRunValidator;
+import javafx.scene.paint.Color;
 
 /**
  * Company: Resource Management Associates
@@ -45,6 +43,7 @@ public class ScenarioRunEditor extends JDialog implements LoadingDss
 	private final List<EpptScenarioRun> _scenarioRuns;
 	private boolean _canceled = true;
 	private EpptScenarioRun _originalScenarioRun;
+	private final JLabel _warningLabel = new JLabel("*Please double-check the information in the highlighted fields");
 
 	public ScenarioRunEditor(Frame frame, List<EpptScenarioRun> scenarioRuns)
 	{
@@ -64,6 +63,14 @@ public class ScenarioRunEditor extends JDialog implements LoadingDss
 		_originalScenarioRun = scenarioRun;
 		setTitle("Edit Scenario Run: " + scenarioRun.getName());
 		_scenarioEditorPanel.fillPanel(scenarioRun);
+	}
+
+	public void fillPanelForCopy(EpptScenarioRun scenarioRun, Color plotlyDefaultColor)
+	{
+		setTitle("Copy Scenario Run: " + scenarioRun.getName());
+		_scenarioEditorPanel.fillPanelForCopy(scenarioRun, plotlyDefaultColor);
+		_warningLabel.setVisible(true);
+		_warningLabel.setForeground(java.awt.Color.BLUE);
 	}
 
 	private void initComponents()
@@ -89,6 +96,10 @@ public class ScenarioRunEditor extends JDialog implements LoadingDss
 		buttonPanel.add(cancelButton);
 		jPanel.add(buttonPanel, BorderLayout.CENTER);
 		add(jPanel, BorderLayout.SOUTH);
+		JPanel warningPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+		jPanel.add(warningPanel, BorderLayout.WEST);
+		_warningLabel.setVisible(false);
+		warningPanel.add(_warningLabel);
 		okButton.addActionListener(this::okPerformed);
 		cancelButton.addActionListener(this::cancelPerformed);
 	}

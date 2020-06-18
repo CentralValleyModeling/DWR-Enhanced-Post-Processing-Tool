@@ -29,6 +29,7 @@ import java.util.logging.Logger;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.TitledBorder;
+import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableCellEditor;
 import javax.swing.table.TableCellRenderer;
 
@@ -47,6 +48,8 @@ import rma.swing.RmaJDescriptionField;
 import rma.swing.RmaJTable;
 import rma.swing.table.RmaCellEditor;
 
+import static gov.ca.water.quickresults.ui.projectconfig.scenarioconfig.ScenarioDssTableModel.ALIAS_COLUMN;
+import static gov.ca.water.quickresults.ui.projectconfig.scenarioconfig.ScenarioDssTableModel.A_PART_COLUMN;
 import static java.util.stream.Collectors.toList;
 
 /**
@@ -77,6 +80,7 @@ public class ScenarioEditorPanel
 	private RmaJColorChooserButton _colorChooserButton;
 	private JTextField _waterYearIndexPathField;
 	private JButton _editWaterYearIndexButton;
+	private JLabel _scenarioNameLabel;
 	private Path _tempWaterYearIndexModelPath;
 
 	ScenarioEditorPanel(LoadingDss loadingDss, List<EpptScenarioRun> scenarioRuns)
@@ -90,6 +94,7 @@ public class ScenarioEditorPanel
 		initModels();
 		initListeners();
 		_nameField.requestFocus();
+		_dssTable.getColumnModel().getColumn(1).setPreferredWidth(400);
 	}
 
 	private void initComponents(List<EpptScenarioRun> scenarioRuns)
@@ -122,6 +127,19 @@ public class ScenarioEditorPanel
 
 	private void editWaterYearIndexModelFile()
 	{
+		setupTempWaterIndexFile();
+		try
+		{
+			Desktop.getDesktop().open(_tempWaterYearIndexModelPath.toFile());
+		}
+		catch(IOException e)
+		{
+			LOGGER.log(Level.SEVERE, "Unable to open temporary file for editing the: " + _tempWaterYearIndexModelPath + " Will default to installation version", e);
+		}
+	}
+
+	private void setupTempWaterIndexFile()
+	{
 		Path modelWaterYearIndexFile = _tempWaterYearIndexModelPath;
 		if(modelWaterYearIndexFile == null)
 		{
@@ -136,7 +154,6 @@ public class ScenarioEditorPanel
 		{
 			_tempWaterYearIndexModelPath = Files.createTempFile("WaterYearIndexModel", Constant.CSV_EXT);
 			Files.write(_tempWaterYearIndexModelPath, Files.readAllBytes(modelWaterYearIndexFile));
-			Desktop.getDesktop().open(_tempWaterYearIndexModelPath.toFile());
 		}
 		catch(IOException e)
 		{
@@ -223,7 +240,7 @@ public class ScenarioEditorPanel
 		_dssTable.setModel(_scenarioDssTableModel);
 		_dssTable.getColumnModel().getColumn(ScenarioDssTableModel.DSS_PATH_COLUMN).setCellEditor(new FileChooserEditor());
 		_dssTable.getColumnModel().getColumn(ScenarioDssTableModel.DSS_PATH_COLUMN).setCellRenderer(new FileChooserRenderer());
-		_dssTable.getColumnModel().getColumn(ScenarioDssTableModel.A_PART_COLUMN).setCellEditor(new ComboBoxCellEditor(new RmaJComboBox()));
+		_dssTable.getColumnModel().getColumn(A_PART_COLUMN).setCellEditor(new ComboBoxCellEditor(new RmaJComboBox()));
 		_dssTable.getColumnModel().getColumn(ScenarioDssTableModel.F_PART_COLUMN).setCellEditor(new ComboBoxCellEditor(new RmaJComboBox()));
 	}
 
@@ -269,15 +286,15 @@ public class ScenarioEditorPanel
 		final JPanel panel4 = new JPanel();
 		panel4.setLayout(new GridBagLayout());
 		panel3.add(panel4, BorderLayout.CENTER);
-		final JLabel label1 = new JLabel();
-		label1.setText("Scenario Name:");
+		_scenarioNameLabel = new JLabel();
+		_scenarioNameLabel.setText("Scenario Name:");
 		GridBagConstraints gbc;
 		gbc = new GridBagConstraints();
 		gbc.gridx = 0;
 		gbc.gridy = 0;
 		gbc.anchor = GridBagConstraints.WEST;
 		gbc.insets = new Insets(5, 5, 5, 5);
-		panel4.add(label1, gbc);
+		panel4.add(_scenarioNameLabel, gbc);
 		_nameField = new JTextField();
 		gbc = new GridBagConstraints();
 		gbc.gridx = 1;
@@ -288,22 +305,22 @@ public class ScenarioEditorPanel
 		gbc.fill = GridBagConstraints.HORIZONTAL;
 		gbc.insets = new Insets(5, 5, 5, 5);
 		panel4.add(_nameField, gbc);
-		final JLabel label2 = new JLabel();
-		label2.setText("Description:");
+		final JLabel label1 = new JLabel();
+		label1.setText("Description:");
 		gbc = new GridBagConstraints();
 		gbc.gridx = 0;
 		gbc.gridy = 1;
 		gbc.anchor = GridBagConstraints.WEST;
 		gbc.insets = new Insets(5, 5, 5, 5);
-		panel4.add(label2, gbc);
-		final JLabel label3 = new JLabel();
-		label3.setText("Model:");
+		panel4.add(label1, gbc);
+		final JLabel label2 = new JLabel();
+		label2.setText("Model:");
 		gbc = new GridBagConstraints();
 		gbc.gridx = 0;
 		gbc.gridy = 2;
 		gbc.anchor = GridBagConstraints.WEST;
 		gbc.insets = new Insets(5, 5, 5, 5);
-		panel4.add(label3, gbc);
+		panel4.add(label2, gbc);
 		_descriptionField = new JTextField();
 		gbc = new GridBagConstraints();
 		gbc.gridx = 1;
@@ -314,14 +331,14 @@ public class ScenarioEditorPanel
 		gbc.fill = GridBagConstraints.HORIZONTAL;
 		gbc.insets = new Insets(5, 5, 5, 5);
 		panel4.add(_descriptionField, gbc);
-		final JLabel label4 = new JLabel();
-		label4.setText("Study Main Directory:");
+		final JLabel label3 = new JLabel();
+		label3.setText("Study Main Directory:");
 		gbc = new GridBagConstraints();
 		gbc.gridx = 0;
 		gbc.gridy = 3;
 		gbc.anchor = GridBagConstraints.WEST;
 		gbc.insets = new Insets(5, 5, 5, 5);
-		panel4.add(label4, gbc);
+		panel4.add(label3, gbc);
 		_outputTextField = new JTextField();
 		gbc = new GridBagConstraints();
 		gbc.gridx = 1;
@@ -350,14 +367,14 @@ public class ScenarioEditorPanel
 		gbc.fill = GridBagConstraints.HORIZONTAL;
 		gbc.insets = new Insets(5, 5, 5, 5);
 		panel4.add(_outputPathButton, gbc);
-		final JLabel label5 = new JLabel();
-		label5.setText("Scenario Color");
+		final JLabel label4 = new JLabel();
+		label4.setText("Scenario Color");
 		gbc = new GridBagConstraints();
 		gbc.gridx = 0;
 		gbc.gridy = 5;
 		gbc.anchor = GridBagConstraints.WEST;
 		gbc.insets = new Insets(5, 5, 5, 5);
-		panel4.add(label5, gbc);
+		panel4.add(label4, gbc);
 		_colorHexTextField = new JTextField();
 		gbc = new GridBagConstraints();
 		gbc.gridx = 1;
@@ -374,14 +391,14 @@ public class ScenarioEditorPanel
 		gbc.gridy = 5;
 		gbc.insets = new Insets(5, 5, 5, 5);
 		panel4.add(_colorChooserButton, gbc);
-		final JLabel label6 = new JLabel();
-		label6.setText("Water Year Index File:");
+		final JLabel label5 = new JLabel();
+		label5.setText("Water Year Index File:");
 		gbc = new GridBagConstraints();
 		gbc.gridx = 0;
 		gbc.gridy = 4;
 		gbc.anchor = GridBagConstraints.WEST;
 		gbc.insets = new Insets(5, 5, 5, 5);
-		panel4.add(label6, gbc);
+		panel4.add(label5, gbc);
 		_waterYearIndexPathField = new JTextField();
 		_waterYearIndexPathField.setEditable(false);
 		gbc = new GridBagConstraints();
@@ -426,14 +443,14 @@ public class ScenarioEditorPanel
 		gbc.fill = GridBagConstraints.HORIZONTAL;
 		gbc.insets = new Insets(5, 5, 5, 5);
 		panel6.add(_wreslButton, gbc);
-		final JLabel label7 = new JLabel();
-		label7.setText("Lookup Directory:");
+		final JLabel label6 = new JLabel();
+		label6.setText("Lookup Directory:");
 		gbc = new GridBagConstraints();
 		gbc.gridx = 0;
 		gbc.gridy = 1;
 		gbc.anchor = GridBagConstraints.WEST;
 		gbc.insets = new Insets(5, 5, 5, 5);
-		panel6.add(label7, gbc);
+		panel6.add(label6, gbc);
 		_waterYearTable = new JTextField();
 		gbc = new GridBagConstraints();
 		gbc.gridx = 1;
@@ -452,14 +469,14 @@ public class ScenarioEditorPanel
 		gbc.fill = GridBagConstraints.HORIZONTAL;
 		gbc.insets = new Insets(5, 5, 5, 5);
 		panel6.add(_wyTableBtn, gbc);
-		final JLabel label8 = new JLabel();
-		label8.setText("EPPT WRESL Directory:");
+		final JLabel label7 = new JLabel();
+		label7.setText("EPPT WRESL Directory:");
 		gbc = new GridBagConstraints();
 		gbc.gridx = 0;
 		gbc.gridy = 0;
 		gbc.anchor = GridBagConstraints.WEST;
 		gbc.insets = new Insets(5, 5, 5, 5);
-		panel6.add(label8, gbc);
+		panel6.add(label7, gbc);
 	}
 
 	/**
@@ -615,6 +632,31 @@ public class ScenarioEditorPanel
 		java.awt.Color decode = java.awt.Color.decode(hex.substring(0, 7));
 		decode = new java.awt.Color(decode.getRed(), decode.getGreen(), decode.getBlue(), Integer.parseInt(hex.substring(7, 9), 16));
 		_colorChooserButton.setColor(decode);
+		setupTempWaterIndexFile();
+	}
+
+	void fillPanelForCopy(EpptScenarioRun scenarioRun, Color plotlyDefaultColor)
+	{
+		fillPanel(scenarioRun);
+		_nameField.setText(scenarioRun.getName() + " (Copy)");
+		String hex = Constant.colorToHex(plotlyDefaultColor);
+		_colorHexTextField.setText(hex);
+		java.awt.Color decode = java.awt.Color.decode(hex.substring(0, 7));
+		decode = new java.awt.Color(decode.getRed(), decode.getGreen(), decode.getBlue(), Integer.parseInt(hex.substring(7, 9), 16));
+		_colorChooserButton.setColor(decode);
+		java.awt.Color highlightColor = java.awt.Color.BLUE;
+		_scenarioNameLabel.setForeground(highlightColor);
+		((RmaJTable) _dssTable).setModifiedForegroundColor(highlightColor);
+		_dssTable.getColumnModel().getColumn(ALIAS_COLUMN).setHeaderRenderer(new DefaultTableCellRenderer()
+		{
+			@Override
+			public Component getTableCellRendererComponent(JTable jTable, Object o, boolean b, boolean b1, int i, int i1)
+			{
+				Component retval = super.getTableCellRendererComponent(jTable, o, b, b1, i, i1);
+				setForeground(highlightColor);
+				return retval;
+			}
+		});
 	}
 
 	void shutdown()
@@ -768,7 +810,7 @@ public class ScenarioEditorPanel
 			{
 				Object selectedItem = _comboBox.getSelectedItem();
 				_comboBox.removeAllItems();
-				if(column == ScenarioDssTableModel.A_PART_COLUMN)
+				if(column == A_PART_COLUMN)
 				{
 					Set<String> aParts = _scenarioDssTableModel.getAPartsForRow(row);
 					aParts.forEach(_comboBox::addItem);
