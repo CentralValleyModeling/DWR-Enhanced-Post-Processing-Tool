@@ -94,7 +94,8 @@ public class ScenarioEditorPanel
 		initModels();
 		initListeners();
 		_nameField.requestFocus();
-		_dssTable.getColumnModel().getColumn(1).setPreferredWidth(400);
+		_dssTable.getColumnModel().getColumn(ScenarioDssTableModel.DSS_PATH_COLUMN).setPreferredWidth(420);
+		_dssTable.getColumnModel().getColumn(ScenarioDssTableModel.ROW_TYPE_COLUMN).setPreferredWidth(20);
 	}
 
 	private void initComponents(List<EpptScenarioRun> scenarioRuns)
@@ -831,7 +832,5 @@ public class ScenarioEditorPanel
 			_comboBox.setSelectedItem(value);
 			return _comboBox;
 		}
-
 	}
-
 }
