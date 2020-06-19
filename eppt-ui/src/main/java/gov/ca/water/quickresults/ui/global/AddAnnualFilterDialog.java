@@ -115,7 +115,7 @@ class AddAnnualFilterDialog extends JDialog
 		_startMonthCombobox.addItemListener(e -> updatePeriodOfRecord());
 		_endMonthCombobox.addItemListener(e -> updatePeriodOfRecord());
 		updatePeriodOfRecord();
-		setSize(new Dimension(1100, 540));
+		setSize(new Dimension(1100, 450));
 	}
 
 	AddAnnualFilterDialog(Frame frame, WaterYearPeriodRange selectedItem, Month startMonth, Month endMonth, boolean overrideWaterYearDefinition,
