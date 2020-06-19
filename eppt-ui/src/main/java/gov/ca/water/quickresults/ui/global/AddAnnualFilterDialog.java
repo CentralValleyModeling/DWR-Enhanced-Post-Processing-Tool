@@ -326,7 +326,7 @@ class AddAnnualFilterDialog extends JDialog
 		gbc.insets = new Insets(5, 5, 5, 5);
 		panel6.add(_startMonthCombobox, gbc);
 		final JLabel label4 = new JLabel();
-		label4.setText("Annual Period:");
+		label4.setText("Calendar Period:");
 		gbc = new GridBagConstraints();
 		gbc.gridx = 0;
 		gbc.gridy = 5;

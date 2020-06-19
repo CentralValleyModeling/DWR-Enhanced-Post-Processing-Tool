@@ -149,11 +149,11 @@ class EpptTimeWindowPane extends TitledPane
 		GridPane gridPane = new GridPane();
 		gridPane.add(waterDefinitionLabel, 0, 0);
 		gridPane.add(_waterYearDefinitionComboBox, 1, 0);
-		gridPane.add(new Label("Start Year: "), 0, 1);
+		gridPane.add(new Label("Start Water Year: "), 0, 1);
 		gridPane.add(_startYearSpinner, 1, 1);
-		gridPane.add(new Label("End Year: "), 0, 2);
+		gridPane.add(new Label("End Water Year: "), 0, 2);
 		gridPane.add(_endYearSpinner, 1, 2);
-		gridPane.add(new Label("Period of Record:"), 0, 3);
+		gridPane.add(new Label("Calendar Period:"), 0, 3);
 		gridPane.add(_timeWindowRangeLabel, 1, 3);
 		gridPane.setHgap(5.0);
 		gridPane.setVgap(5.0);

@@ -120,7 +120,7 @@
                       <gridbag top="5" left="5" bottom="5" right="5" weightx="1.0" weighty="1.0"/>
                     </constraints>
                     <properties>
-                      <text value="Annual Period:"/>
+                      <text value="Calendar Period:"/>
                     </properties>
                   </component>
                   <component id="1c53f" class="javax.swing.JLabel" binding="_periodOfRecordLabel">
