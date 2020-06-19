@@ -15,6 +15,7 @@ package gov.ca.water.calgui.bo;
 import java.time.Month;
 import java.time.format.TextStyle;
 import java.util.Locale;
+import java.util.Optional;
 
 /**
  * Company: Resource Management Associates
@@ -27,10 +28,10 @@ public class WaterYearDefinition
 	private final String _name;
 	private final Month _start;
 	private final Month _end;
-	private final int _startDefaultYear;
-	private final int _endDefaultYear;
+	private final Integer _startDefaultYear;
+	private final Integer _endDefaultYear;
 
-	public WaterYearDefinition(String name, Month start, Month end, int startDefaultYear, int endDefaultYear)
+	public WaterYearDefinition(String name, Month start, Month end, Integer startDefaultYear, Integer endDefaultYear)
 	{
 		_name = name;
 		_start = start;
@@ -61,13 +62,13 @@ public class WaterYearDefinition
 				_end.getDisplayName(TextStyle.SHORT, Locale.getDefault()));
 	}
 
-	public int getEndDefaultYear()
+	public Optional<Integer> getEndDefaultYear()
 	{
-		return _endDefaultYear;
+		return Optional.ofNullable(_endDefaultYear);
 	}
 
-	public int getStartDefaultYear()
+	public Optional<Integer> getStartDefaultYear()
 	{
-		return _startDefaultYear;
+		return Optional.ofNullable(_startDefaultYear);
 	}
 }

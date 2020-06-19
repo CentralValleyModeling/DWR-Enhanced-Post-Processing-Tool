@@ -28,12 +28,9 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
-import javafx.geometry.Orientation;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
-import javafx.scene.control.ListCell;
-import javafx.scene.control.ListView;
 import javafx.scene.control.Spinner;
 import javafx.scene.control.SpinnerValueFactory;
 import javafx.scene.control.TitledPane;
@@ -41,10 +38,7 @@ import javafx.scene.control.Tooltip;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.GridPane;
-import javafx.scene.layout.VBox;
-import javafx.util.Callback;
 
 /**
  * Company: Resource Management Associates
@@ -67,8 +61,8 @@ class EpptTimeWindowPane extends TitledPane
 		ObservableList<WaterYearDefinition> waterYearDefinitions = FXCollections.observableList(WaterYearDefinitionSvc.getWaterYearDefinitionSvc().getDefinitions());
 		_controller = controller;
 		_waterYearDefinitionComboBox = new ComboBox<>(waterYearDefinitions);
-		_startYearSpinner = new Spinner<>(0, Integer.MAX_VALUE, _controller.getWaterYearDefinition().getStartDefaultYear());
-		_endYearSpinner = new Spinner<>(0, Integer.MAX_VALUE, _controller.getWaterYearDefinition().getEndDefaultYear());
+		_startYearSpinner = new Spinner<>(0, Integer.MAX_VALUE, _controller.getWaterYearDefinition().getStartDefaultYear().orElse(1921));
+		_endYearSpinner = new Spinner<>(0, Integer.MAX_VALUE, _controller.getWaterYearDefinition().getEndDefaultYear().orElse(2003));
 		_timeWindowRangeLabel = new Label();
 		_rangeButton = new Button("...");
 		initComponents();
@@ -92,11 +86,12 @@ class EpptTimeWindowPane extends TitledPane
 
 	private void initListeners()
 	{
-		_waterYearDefinitionComboBox.getSelectionModel().selectedItemProperty().addListener((e, o, n) -> {
+		_waterYearDefinitionComboBox.getSelectionModel().selectedItemProperty().addListener((e, o, n) ->
+		{
 			_controller.setWaterYearDefinition(n);
 			_controller.setModified();
-			_startYearSpinner.getValueFactory().setValue(n.getStartDefaultYear());
-			_endYearSpinner.getValueFactory().setValue(n.getEndDefaultYear());
+			n.getStartDefaultYear().ifPresent(y -> _startYearSpinner.getValueFactory().setValue(y));
+			n.getEndDefaultYear().ifPresent(y -> _endYearSpinner.getValueFactory().setValue(y));
 			updateTimeWindowRangeLabel();
 		});
 		_startYearSpinner.valueProperty().addListener(startYearChanged());
@@ -105,14 +100,16 @@ class EpptTimeWindowPane extends TitledPane
 		_endYearSpinner.addEventFilter(KeyEvent.KEY_PRESSED, new MyKeyAdapter(_endYearSpinner));
 		_startYearSpinner.focusedProperty().addListener((obs, o, n) -> _startYearSpinner.increment(0));
 		_endYearSpinner.focusedProperty().addListener((obs, o, n) -> _endYearSpinner.increment(0));
-		_rangeButton.setOnAction(e -> {
+		_rangeButton.setOnAction(e ->
+		{
 
 		});
 	}
 
 	private ChangeListener<Integer> endYearChanged()
 	{
-		return (e, o, n) -> {
+		return (e, o, n) ->
+		{
 			_controller.setEndYear(n);
 			SpinnerValueFactory.IntegerSpinnerValueFactory valueFactory = (SpinnerValueFactory.IntegerSpinnerValueFactory) _startYearSpinner.getValueFactory();
 			valueFactory.setMax(n);
@@ -123,7 +120,8 @@ class EpptTimeWindowPane extends TitledPane
 
 	private ChangeListener<Integer> startYearChanged()
 	{
-		return (e, o, n) -> {
+		return (e, o, n) ->
+		{
 			_controller.setStartYear(n);
 			SpinnerValueFactory.IntegerSpinnerValueFactory valueFactory = (SpinnerValueFactory.IntegerSpinnerValueFactory) _endYearSpinner.getValueFactory();
 			valueFactory.setMin(n);

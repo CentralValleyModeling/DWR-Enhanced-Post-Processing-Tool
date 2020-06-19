@@ -110,13 +110,26 @@ public class WaterYearDefinitionSvc
 			{
 				errorStr = thresholdLinkString;
 				String[] list = thresholdLinkString.split(Constant.DELIMITER);
-				if(list.length > END_DEFAULT_YEAR)
+				if(list.length > END_MONTH)
 				{
 					String name = list[NAME];
 					Month start = Month.of(DateTimeFormatter.ofPattern("MMMM").parse(list[START_MONTH]).get(ChronoField.MONTH_OF_YEAR));
 					Month end = Month.of(DateTimeFormatter.ofPattern("MMMM").parse(list[END_MONTH]).get(ChronoField.MONTH_OF_YEAR));
-					int startDefaultYear = Integer.parseInt(list[START_DEFAULT_YEAR]);
-					int endDefaultYear = Integer.parseInt(list[END_DEFAULT_YEAR]);
+					Integer startDefaultYear = null;
+					Integer endDefaultYear = null;
+					if(list.length > END_DEFAULT_YEAR)
+					{
+						String startYearDefaultString = list[START_DEFAULT_YEAR];
+						if(!startYearDefaultString.trim().isEmpty())
+						{
+							startDefaultYear = Integer.parseInt(startYearDefaultString);
+						}
+						String endYearDefaultString = list[END_DEFAULT_YEAR];
+						if(!endYearDefaultString.trim().isEmpty())
+						{
+							endDefaultYear = Integer.parseInt(endYearDefaultString);
+						}
+					}
 					_definitions.add(new WaterYearDefinition(name, start, end, startDefaultYear, endDefaultYear));
 				}
 			}
