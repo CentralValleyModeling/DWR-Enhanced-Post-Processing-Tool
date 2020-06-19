@@ -291,7 +291,7 @@ class AddAnnualFilterDialog extends JDialog
 		panel6.setPreferredSize(new Dimension(250, 108));
 		panel5.add(panel6, BorderLayout.CENTER);
 		final JLabel label2 = new JLabel();
-		label2.setText("Start Water Year:");
+		label2.setText("Start (Water) Year:");
 		GridBagConstraints gbc;
 		gbc = new GridBagConstraints();
 		gbc.gridx = 0;
@@ -347,7 +347,7 @@ class AddAnnualFilterDialog extends JDialog
 		gbc.insets = new Insets(5, 5, 5, 5);
 		panel6.add(_periodOfRecordLabel, gbc);
 		final JLabel label5 = new JLabel();
-		label5.setText("End Water Year:");
+		label5.setText("End (Water) Year:");
 		gbc = new GridBagConstraints();
 		gbc.gridx = 0;
 		gbc.gridy = 1;

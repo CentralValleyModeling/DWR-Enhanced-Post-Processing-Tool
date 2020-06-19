@@ -60,6 +60,7 @@ public class EpptPeriodRangePane extends BorderPane
 		_tableView = new TableView<>();
 		setCenter(_tableView);
 		_waterYearColumn = new TableColumn<>("WY");
+		_waterYearColumn.setStyle( "-fx-alignment: CENTER;");
 		_waterYearColumn.setCellValueFactory(param -> getValueForColumn(param, _waterYearColumn));
 		_tableView.getColumns().add(_waterYearColumn);
 		for(int i = 0; i < 12; i++)
@@ -67,10 +68,12 @@ public class EpptPeriodRangePane extends BorderPane
 			Month month = _waterYearDefinition.getStartMonth().plus(i);
 			TableColumn<PeriodRangeRow, String> tableColumn = new TableColumn<>(month.getDisplayName(TextStyle.SHORT, Locale.getDefault()));
 			tableColumn.setCellValueFactory(param -> getValueForColumn(param, tableColumn));
+			tableColumn.setStyle( "-fx-alignment: CENTER;");
 			_monthColumns.put(tableColumn, month);
 			_tableView.getColumns().add(tableColumn);
 		}
 		_calendarYearColumn = new TableColumn<>("CY");
+		_calendarYearColumn.setStyle( "-fx-alignment: CENTER;");
 		_calendarYearColumn.setCellValueFactory(param -> getValueForColumn(param, _calendarYearColumn));
 		_tableView.getColumns().add(_calendarYearColumn);
 		_tableView.setPrefSize(850, 150);

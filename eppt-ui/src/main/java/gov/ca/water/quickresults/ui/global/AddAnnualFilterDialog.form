@@ -86,7 +86,7 @@
                       <gridbag top="5" left="5" bottom="5" right="5" weightx="0.0" weighty="0.0"/>
                     </constraints>
                     <properties>
-                      <text value="Start Water Year:"/>
+                      <text value="Start (Water) Year:"/>
                     </properties>
                   </component>
                   <component id="5f5f9" class="javax.swing.JSpinner" binding="_startYearSpinner">
@@ -139,7 +139,7 @@
                       <gridbag top="5" left="5" bottom="5" right="5" weightx="0.0" weighty="0.0"/>
                     </constraints>
                     <properties>
-                      <text value="End Water Year:"/>
+                      <text value="End (Water) Year:"/>
                     </properties>
                   </component>
                   <component id="df968" class="javax.swing.JSpinner" binding="_endYearSpinner">
