@@ -13,10 +13,12 @@
 package gov.ca.water.quickresults.ui.global;
 
 import java.time.format.DateTimeFormatter;
+import java.util.Collections;
 
 import gov.ca.water.calgui.bo.WaterYearDefinition;
 import gov.ca.water.calgui.bo.WaterYearPeriod;
 import gov.ca.water.calgui.bo.WaterYearPeriodRange;
+import gov.ca.water.calgui.bo.WaterYearPeriodRangesFilter;
 import gov.ca.water.calgui.bo.WaterYearType;
 import gov.ca.water.calgui.busservice.impl.WaterYearDefinitionSvc;
 import gov.ca.water.calgui.project.EpptConfigurationController;
@@ -27,6 +29,7 @@ import javafx.collections.ObservableList;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Orientation;
+import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
@@ -34,6 +37,7 @@ import javafx.scene.control.ListView;
 import javafx.scene.control.Spinner;
 import javafx.scene.control.SpinnerValueFactory;
 import javafx.scene.control.TitledPane;
+import javafx.scene.control.Tooltip;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.BorderPane;
@@ -55,15 +59,18 @@ class EpptTimeWindowPane extends TitledPane
 	private final Spinner<Integer> _startYearSpinner;
 	private final Spinner<Integer> _endYearSpinner;
 	private final Label _timeWindowRangeLabel;
+	private final Button _rangeButton;
+	private final Tooltip _periodRangePaneTooltip = new Tooltip();
 
 	EpptTimeWindowPane(EpptConfigurationController controller)
 	{
 		ObservableList<WaterYearDefinition> waterYearDefinitions = FXCollections.observableList(WaterYearDefinitionSvc.getWaterYearDefinitionSvc().getDefinitions());
 		_controller = controller;
 		_waterYearDefinitionComboBox = new ComboBox<>(waterYearDefinitions);
-		_startYearSpinner = new Spinner<>(0, Integer.MAX_VALUE, _controller.getStartYear());
-		_endYearSpinner = new Spinner<>(0, Integer.MAX_VALUE, _controller.getEndYear());
+		_startYearSpinner = new Spinner<>(0, Integer.MAX_VALUE, _controller.getWaterYearDefinition().getStartDefaultYear());
+		_endYearSpinner = new Spinner<>(0, Integer.MAX_VALUE, _controller.getWaterYearDefinition().getEndDefaultYear());
 		_timeWindowRangeLabel = new Label();
+		_rangeButton = new Button("...");
 		initComponents();
 		initListeners();
 		updateTimeWindowRangeLabel();
@@ -75,6 +82,12 @@ class EpptTimeWindowPane extends TitledPane
 		WaterYearPeriodRange waterYearPeriodRange = new WaterYearPeriodRange(waterYearPeriod, new WaterYearType(_startYearSpinner.getValue(), waterYearPeriod),
 				new WaterYearType(_endYearSpinner.getValue(), waterYearPeriod));
 		_timeWindowRangeLabel.setText("[" + waterYearPeriodRange.toString(_waterYearDefinitionComboBox.getValue(), DateTimeFormatter.ofPattern("MMM yyyy")) + "]");
+		EpptPeriodRangePane epptPeriodRangePane = new EpptPeriodRangePane(_controller.getWaterYearDefinition());
+		_periodRangePaneTooltip.setGraphic(epptPeriodRangePane);
+
+		WaterYearPeriodRangesFilter waterYearPeriodRangesFilter = new WaterYearPeriodRangesFilter("", "", Collections.singletonList(waterYearPeriodRange),
+				_waterYearDefinitionComboBox.getValue());
+		Platform.runLater(() -> epptPeriodRangePane.fill(waterYearPeriodRangesFilter));
 	}
 
 	private void initListeners()
@@ -82,6 +95,8 @@ class EpptTimeWindowPane extends TitledPane
 		_waterYearDefinitionComboBox.getSelectionModel().selectedItemProperty().addListener((e, o, n) -> {
 			_controller.setWaterYearDefinition(n);
 			_controller.setModified();
+			_startYearSpinner.getValueFactory().setValue(n.getStartDefaultYear());
+			_endYearSpinner.getValueFactory().setValue(n.getEndDefaultYear());
 			updateTimeWindowRangeLabel();
 		});
 		_startYearSpinner.valueProperty().addListener(startYearChanged());
@@ -90,6 +105,9 @@ class EpptTimeWindowPane extends TitledPane
 		_endYearSpinner.addEventFilter(KeyEvent.KEY_PRESSED, new MyKeyAdapter(_endYearSpinner));
 		_startYearSpinner.focusedProperty().addListener((obs, o, n) -> _startYearSpinner.increment(0));
 		_endYearSpinner.focusedProperty().addListener((obs, o, n) -> _endYearSpinner.increment(0));
+		_rangeButton.setOnAction(e -> {
+
+		});
 	}
 
 	private ChangeListener<Integer> endYearChanged()
@@ -127,43 +145,28 @@ class EpptTimeWindowPane extends TitledPane
 		_waterYearDefinitionComboBox.getSelectionModel().select(0);
 		_startYearSpinner.setPrefWidth(70);
 		_endYearSpinner.setPrefWidth(70);
-		_waterYearDefinitionComboBox.setButtonCell(new ListCell<WaterYearDefinition>()
-		{
-			@Override
-			protected void updateItem(WaterYearDefinition item, boolean empty)
-			{
-				super.updateItem(item, empty);
-				if(!empty && item != null)
-				{
-					setText(item.getName());
-				}
-				else
-				{
-					setText(null);
-				}
-			}
-		});
 		Label waterDefinitionLabel = new Label("Water Year Definition: ");
 		GridPane gridPane = new GridPane();
-		FlowPane flowPane = new FlowPane(Orientation.HORIZONTAL, 5, 5);
-		gridPane.add(new Label("Start Year: "), 0, 0);
-		gridPane.add(_startYearSpinner, 1, 0);
-		gridPane.add(new Label("End Year: "), 0, 1);
-		gridPane.add(_endYearSpinner, 1, 1);
-		gridPane.add(waterDefinitionLabel, 0, 2);
-		gridPane.add(_waterYearDefinitionComboBox, 1, 2);
+		gridPane.add(waterDefinitionLabel, 0, 0);
+		gridPane.add(_waterYearDefinitionComboBox, 1, 0);
+		gridPane.add(new Label("Start Year: "), 0, 1);
+		gridPane.add(_startYearSpinner, 1, 1);
+		gridPane.add(new Label("End Year: "), 0, 2);
+		gridPane.add(_endYearSpinner, 1, 2);
 		gridPane.add(new Label("Period of Record:"), 0, 3);
 		gridPane.add(_timeWindowRangeLabel, 1, 3);
 		gridPane.setHgap(5.0);
 		gridPane.setVgap(5.0);
 		setContent(gridPane);
+		_timeWindowRangeLabel.setTooltip(_periodRangePaneTooltip);
+		_periodRangePaneTooltip.setStyle("-fx-border-width: 1px;-fx-border-insets: 1px;-fx-background-color: white;-fx-font-size:10px");
 	}
 
 	void reloadProject()
 	{
+		_waterYearDefinitionComboBox.setValue(_controller.getWaterYearDefinition());
 		_startYearSpinner.getValueFactory().setValue(_controller.getStartYear());
 		_endYearSpinner.getValueFactory().setValue(_controller.getEndYear());
-		_waterYearDefinitionComboBox.setValue(_controller.getWaterYearDefinition());
 	}
 
 	public void commitEdits()

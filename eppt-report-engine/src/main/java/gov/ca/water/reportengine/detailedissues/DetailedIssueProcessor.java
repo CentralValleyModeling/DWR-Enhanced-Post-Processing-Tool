@@ -189,7 +189,7 @@ public class DetailedIssueProcessor
 		{
 			title = "Undefined";
 		}
-		DssReader dssReader = new DssReader(run, new WaterYearDefinition("", Month.OCTOBER, Month.SEPTEMBER), new DssCache());
+		DssReader dssReader = new DssReader(run, new WaterYearDefinition("", Month.OCTOBER, Month.SEPTEMBER, 1, 1), new DssCache());
 		NavigableMap<LocalDateTime, Double> guiLinkData = new TreeMap<>();
 		String valueUnits = "";
 		try

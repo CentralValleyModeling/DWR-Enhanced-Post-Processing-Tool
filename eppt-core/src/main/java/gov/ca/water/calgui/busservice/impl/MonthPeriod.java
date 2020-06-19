@@ -155,4 +155,18 @@ public class MonthPeriod
 	{
 		return Objects.hash(getStart(), getEnd(), getName());
 	}
+
+	public int getWaterYear(YearMonth yearMonth)
+	{
+		int retval = yearMonth.getYear();
+		if(!getYearMonths(retval).contains(yearMonth))
+		{
+			retval = retval - 1;
+			if(!getYearMonths(retval).contains(yearMonth))
+			{
+				retval = retval + 2;
+			}
+		}
+		return retval;
+	}
 }

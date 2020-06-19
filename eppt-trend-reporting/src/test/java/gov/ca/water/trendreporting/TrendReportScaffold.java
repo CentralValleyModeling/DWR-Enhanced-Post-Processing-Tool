@@ -127,7 +127,7 @@ public class TrendReportScaffold
 		ScriptedEpptStatistics.createScriptedStatistics();
 
 		EpptConfigurationController epptConfigurationController = new EpptConfigurationController();
-		WaterYearDefinition waterYearDefinition = new WaterYearDefinition("Test", Month.OCTOBER, Month.SEPTEMBER);
+		WaterYearDefinition waterYearDefinition = new WaterYearDefinition("Test", Month.OCTOBER, Month.SEPTEMBER, 1, 1);
 		epptConfigurationController.setWaterYearDefinition(waterYearDefinition);
 		epptConfigurationController.setStartYear(1901);
 		epptConfigurationController.setEndYear(2007);

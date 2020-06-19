@@ -101,7 +101,7 @@ public class WaterYearTableReader
 			if(primarySeries != null && primarySeries[0] != null)
 			{
 				Month month = _waterYearIndexModelReader.getMonth(waterYearIndexId);
-				DssReader dssReader = new DssReader(_epptScenarioRun, new WaterYearDefinition("", month, month), new DssCache());
+				DssReader dssReader = new DssReader(_epptScenarioRun, new WaterYearDefinition("", month, month, 1, 1), new DssCache());
 				List<WaterYearType> waterYearTypes = dssReader.timeSeriesContainerToMap(primarySeries, false)
 															  .entrySet()
 															  .stream()

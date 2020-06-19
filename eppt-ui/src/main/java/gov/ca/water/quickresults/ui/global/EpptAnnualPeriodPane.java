@@ -41,6 +41,7 @@ import gov.ca.water.calgui.busservice.impl.WaterYearPeriodReader;
 import gov.ca.water.calgui.busservice.impl.WaterYearTableReader;
 import gov.ca.water.calgui.project.EpptConfigurationController;
 import gov.ca.water.calgui.project.EpptScenarioRun;
+import javafx.application.Platform;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
@@ -184,45 +185,40 @@ class EpptAnnualPeriodPane extends TitledPane
 	private void addAnnualPeriod()
 	{
 		AddAnnualFilterDialog addAnnualFilterDialog = new AddAnnualFilterDialog(Frame.getFrames()[0], _controller.getWaterYearDefinition());
-		try
+		//Need to invoke later in order to not block the Platform thread on the Swing thread
+		SwingUtilities.invokeLater(() ->
 		{
-			SwingUtilities.invokeAndWait(() -> addAnnualFilterDialog.setVisible(true));
+			addAnnualFilterDialog.setVisible(true);
 			if(!addAnnualFilterDialog.isCanceled())
 			{
 				int startYear = addAnnualFilterDialog.getStartYear();
 				int endYear = addAnnualFilterDialog.getEndYear();
-				TreeItem<WaterYearPeriodDefinitionsRow> root = _treeView.getRoot();
-				TreeItem<WaterYearPeriodDefinitionsRow> parent = root.getChildren().get(root.getChildren().size() - 1);
-				if(!"User Defined".equals(parent.getValue().toString()))
+				Platform.runLater(() ->
 				{
-					parent = new MyCheckBoxTreeItem(new WaterYearPeriodRow(new WaterYearPeriod("User Defined")));
-					root.getChildren().add(parent);
-				}
-				WaterYearPeriod waterYearPeriod = new WaterYearPeriod("User Defined");
-				WaterYearPeriodRange waterYearPeriodRange = new WaterYearPeriodRange(waterYearPeriod, new WaterYearType(startYear, waterYearPeriod),
-						new WaterYearType(endYear, waterYearPeriod));
-				if(addAnnualFilterDialog.overrideWaterYearDefinition())
-				{
-					WaterYearDefinitionOverrideRow waterYearPeriodRangeRow = new WaterYearDefinitionOverrideRow(waterYearPeriodRange, addAnnualFilterDialog.getStartMonth(),
-							addAnnualFilterDialog.getEndMonth());
-					parent.getChildren().add(new MyCheckBoxTreeItem(waterYearPeriodRangeRow));
-				}
-				else
-				{
-					WaterYearPeriodRangeRow waterYearPeriodRangeRow = new WaterYearPeriodRangeRow(waterYearPeriodRange, true);
-					parent.getChildren().add(new MyCheckBoxTreeItem(waterYearPeriodRangeRow));
-				}
+					TreeItem<WaterYearPeriodDefinitionsRow> root = _treeView.getRoot();
+					TreeItem<WaterYearPeriodDefinitionsRow> parent = root.getChildren().get(root.getChildren().size() - 1);
+					if(!"User Defined".equals(parent.getValue().toString()))
+					{
+						parent = new MyCheckBoxTreeItem(new WaterYearPeriodRow(new WaterYearPeriod("User Defined")));
+						root.getChildren().add(parent);
+					}
+					WaterYearPeriod waterYearPeriod = new WaterYearPeriod("User Defined");
+					WaterYearPeriodRange waterYearPeriodRange = new WaterYearPeriodRange(waterYearPeriod, new WaterYearType(startYear, waterYearPeriod),
+							new WaterYearType(endYear, waterYearPeriod));
+					if(addAnnualFilterDialog.overrideWaterYearDefinition())
+					{
+						WaterYearDefinitionOverrideRow waterYearPeriodRangeRow = new WaterYearDefinitionOverrideRow(waterYearPeriodRange,
+								addAnnualFilterDialog.getStartMonth(), addAnnualFilterDialog.getEndMonth());
+						parent.getChildren().add(new MyCheckBoxTreeItem(waterYearPeriodRangeRow));
+					}
+					else
+					{
+						WaterYearPeriodRangeRow waterYearPeriodRangeRow = new WaterYearPeriodRangeRow(waterYearPeriodRange, true);
+						parent.getChildren().add(new MyCheckBoxTreeItem(waterYearPeriodRangeRow));
+					}
+				});
 			}
-		}
-		catch(InterruptedException e)
-		{
-			Thread.currentThread().interrupt();
-			LOGGER.log(Level.FINE, "Thread interrupted while adding monthly period", e);
-		}
-		catch(InvocationTargetException e)
-		{
-			LOGGER.log(Level.SEVERE, "Error adding monthly period", e);
-		}
+		});
 	}
 
 	private void initTree()
@@ -232,7 +228,8 @@ class EpptAnnualPeriodPane extends TitledPane
 		_treeView.setFixedCellSize(20);
 		MyCheckBoxTreeItem rootItem = new MyCheckBoxTreeItem(new WaterYearPeriodRow(new WaterYearPeriod("Root")));
 		_treeView.setRoot(rootItem);
-		_treeView.setCellFactory((TreeView<WaterYearPeriodDefinitionsRow> item) -> {
+		_treeView.setCellFactory((TreeView<WaterYearPeriodDefinitionsRow> item) ->
+		{
 			CheckBoxTreeCell<WaterYearPeriodDefinitionsRow> retval = new CheckBoxTreeCell<>();
 			retval.setPrefHeight(20);
 			retval.setFont(Font.font(11));
@@ -650,7 +647,7 @@ class EpptAnnualPeriodPane extends TitledPane
 			String periodName = _range.getWaterYearPeriod().getPeriodName();
 			String rangeName = _range.toString(null, DateTimeFormatter.ofPattern("MMM yyyy"));
 			WaterYearPeriodRangesFilter waterYearPeriodRangesFilter = new WaterYearPeriodRangesFilter(rangeName, periodName, waterYearPeriodRanges,
-					new WaterYearDefinition(_range.getWaterYearPeriod().getPeriodName(), _start, _end));
+					new WaterYearDefinition(_range.getWaterYearPeriod().getPeriodName(), _start, _end, 1, 1));
 			Map<EpptScenarioRun, WaterYearPeriodRangesFilter> retval = new HashMap<>();
 			_controller.getScenarioRuns().forEach(s -> retval.put(s, waterYearPeriodRangesFilter));
 			return retval;
@@ -662,7 +659,8 @@ class EpptAnnualPeriodPane extends TitledPane
 		private MyCheckBoxTreeItem(WaterYearPeriodDefinitionsRow row)
 		{
 			super(row);
-			selectedProperty().addListener((e, o, n) -> {
+			selectedProperty().addListener((e, o, n) ->
+			{
 				if(_modifiedListenerEnabled)
 				{
 					_controller.setWaterYearPeriodRangesFilters(getWaterYearPeriodRanges());

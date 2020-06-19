@@ -36,11 +36,17 @@ public class WaterYearPeriodRangeFilter implements PeriodFilter
 	@Override
 	public boolean test(Map.Entry<LocalDateTime, Double> input)
 	{
+		//Shifting the ranges because values are EOP
+		LocalDateTime key = input.getKey();
+		YearMonth inputYearMonth = YearMonth.of(key.getYear(), key.getMonth()).minusMonths(1);
+
+		return testYearMonth(inputYearMonth);
+	}
+
+	public boolean testYearMonth(YearMonth inputYearMonth)
+	{
 		YearMonth start = _waterYearPeriodRange.getStart(_waterYearDefinition);
 		YearMonth end = _waterYearPeriodRange.getEnd(_waterYearDefinition);
-		LocalDateTime key = input.getKey();
-		//Shifting the ranges because values are EOP
-		YearMonth inputYearMonth = YearMonth.of(key.getYear(), key.getMonth()).minusMonths(1);
 		return inputYearMonth.equals(start) || inputYearMonth.equals(end)
 				 || (start.isBefore(inputYearMonth) && end.isAfter(inputYearMonth));
 	}

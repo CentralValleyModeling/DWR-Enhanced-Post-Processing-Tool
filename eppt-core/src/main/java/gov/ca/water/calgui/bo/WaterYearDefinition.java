@@ -12,9 +12,7 @@
 
 package gov.ca.water.calgui.bo;
 
-import java.time.LocalDateTime;
 import java.time.Month;
-import java.time.YearMonth;
 import java.time.format.TextStyle;
 import java.util.Locale;
 
@@ -29,12 +27,16 @@ public class WaterYearDefinition
 	private final String _name;
 	private final Month _start;
 	private final Month _end;
+	private final int _startDefaultYear;
+	private final int _endDefaultYear;
 
-	public WaterYearDefinition(String name, Month start, Month end)
+	public WaterYearDefinition(String name, Month start, Month end, int startDefaultYear, int endDefaultYear)
 	{
 		_name = name;
 		_start = start;
 		_end = end;
+		_startDefaultYear = startDefaultYear;
+		_endDefaultYear = endDefaultYear;
 	}
 
 	public String getName()
@@ -57,5 +59,15 @@ public class WaterYearDefinition
 	{
 		return String.format("%s (%s - %s)", _name, _start.getDisplayName(TextStyle.SHORT, Locale.getDefault()),
 				_end.getDisplayName(TextStyle.SHORT, Locale.getDefault()));
+	}
+
+	public int getEndDefaultYear()
+	{
+		return _endDefaultYear;
+	}
+
+	public int getStartDefaultYear()
+	{
+		return _startDefaultYear;
 	}
 }

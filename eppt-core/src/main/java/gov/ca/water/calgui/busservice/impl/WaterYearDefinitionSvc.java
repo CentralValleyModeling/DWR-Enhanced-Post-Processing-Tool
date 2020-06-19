@@ -52,6 +52,8 @@ public class WaterYearDefinitionSvc
 	private static final int NAME = 0;
 	private static final int START_MONTH = 1;
 	private static final int END_MONTH = 2;
+	private static final int START_DEFAULT_YEAR = 3;
+	private static final int END_DEFAULT_YEAR = 4;
 	private static WaterYearDefinitionSvc seedDataSvc;
 	private final List<WaterYearDefinition> _definitions = new ArrayList<>();
 
@@ -108,12 +110,14 @@ public class WaterYearDefinitionSvc
 			{
 				errorStr = thresholdLinkString;
 				String[] list = thresholdLinkString.split(Constant.DELIMITER);
-				if(list.length > END_MONTH && list[START_MONTH] != null && list[END_MONTH] != null)
+				if(list.length > END_DEFAULT_YEAR)
 				{
 					String name = list[NAME];
 					Month start = Month.of(DateTimeFormatter.ofPattern("MMMM").parse(list[START_MONTH]).get(ChronoField.MONTH_OF_YEAR));
 					Month end = Month.of(DateTimeFormatter.ofPattern("MMMM").parse(list[END_MONTH]).get(ChronoField.MONTH_OF_YEAR));
-					_definitions.add(new WaterYearDefinition(name, start, end));
+					int startDefaultYear = Integer.parseInt(list[START_DEFAULT_YEAR]);
+					int endDefaultYear = Integer.parseInt(list[END_DEFAULT_YEAR]);
+					_definitions.add(new WaterYearDefinition(name, start, end, startDefaultYear, endDefaultYear));
 				}
 			}
 		}

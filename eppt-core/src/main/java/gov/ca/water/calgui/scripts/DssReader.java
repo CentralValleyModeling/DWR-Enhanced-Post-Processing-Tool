@@ -85,7 +85,7 @@ public class DssReader
 	@Scriptable
 	public NavigableMap<Integer, Double> getYearlyGuiLinkData(int guiID, Month month) throws DssMissingRecordException
 	{
-		WaterYearDefinition waterYearDefinition = new WaterYearDefinition("", month, month.minus(1));
+		WaterYearDefinition waterYearDefinition = new WaterYearDefinition("", month, month.minus(1), 1, 1);
 		return filterPeriodYearly(getGuiLinkData(guiID, true), waterYearDefinition);
 	}
 
@@ -111,7 +111,7 @@ public class DssReader
 	@Scriptable
 	public NavigableMap<Integer, Double> getYearlyDtsData(int dtsId, Month month) throws DssMissingRecordException
 	{
-		WaterYearDefinition waterYearDefinition = new WaterYearDefinition("", month, month.minus(1));
+		WaterYearDefinition waterYearDefinition = new WaterYearDefinition("", month, month.minus(1), 1, 1);
 		return filterPeriodYearly(getDtsData(dtsId, true), waterYearDefinition);
 	}
 
@@ -396,7 +396,7 @@ public class DssReader
 	public NavigableMap<Integer, Double> filterPeriodYearly(NavigableMap<LocalDateTime, Double> input,
 															Month startMonth)
 	{
-		return filterPeriodYearly(input, new WaterYearDefinition("Yearly", startMonth, startMonth.minus(1)));
+		return filterPeriodYearly(input, new WaterYearDefinition("Yearly", startMonth, startMonth.minus(1), 1, 1));
 	}
 
 	@Scriptable

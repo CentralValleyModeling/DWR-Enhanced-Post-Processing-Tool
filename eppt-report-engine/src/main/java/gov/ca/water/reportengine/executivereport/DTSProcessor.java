@@ -32,7 +32,6 @@ import gov.ca.water.calgui.scripts.DssMissingRecordException;
 import gov.ca.water.calgui.scripts.DssReader;
 import gov.ca.water.reportengine.EpptReportException;
 import gov.ca.water.reportengine.standardsummary.StandardSummaryErrors;
-import org.python.antlr.base.mod;
 
 import hec.io.TimeSeriesContainer;
 
@@ -106,7 +105,7 @@ public class DTSProcessor
 		List<FlagViolation> violations = new ArrayList<>();
 		List<DetailedIssue> linkedRecords = sm.getLinkedRecords();
 		SubModule.FlagType flagValue = sm.getFlagValue();
-		DssReader dssReader = new DssReader(epptScenarioRun, new WaterYearDefinition("", Month.OCTOBER, Month.SEPTEMBER), new DssCache());
+		DssReader dssReader = new DssReader(epptScenarioRun, new WaterYearDefinition("", Month.OCTOBER, Month.SEPTEMBER, 1, 1), new DssCache());
 		for(DetailedIssue detailedIssue : linkedRecords)
 		{
 			if(detailedIssue.isExecutiveReport())
