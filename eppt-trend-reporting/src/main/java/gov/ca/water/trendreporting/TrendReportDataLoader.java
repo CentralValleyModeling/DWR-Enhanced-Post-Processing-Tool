@@ -101,12 +101,17 @@ class TrendReportDataLoader
 	private List<JSONObject> compute()
 	{
 		List<JSONObject> retval = new ArrayList<>();
-		WaterYearPeriod entireRange = new WaterYearPeriod("Entire Range");
-		WaterYearPeriodRange waterYearPeriodRange = new WaterYearPeriodRange(entireRange, new WaterYearType(_start, entireRange), new WaterYearType(_end, entireRange));
+		WaterYearPeriod waterYearPeriod = new WaterYearPeriod("Entire Range");
+
+		WaterYearPeriodRange waterYearPeriodRange = new WaterYearPeriodRange(waterYearPeriod, new WaterYearType(_end, waterYearPeriod),
+				new WaterYearType(_end, waterYearPeriod));
+		YearMonth endYearMonth = waterYearPeriodRange.getStart(_waterYearDefinition);
+		LocalDate end = LocalDate.of(endYearMonth.getYear(), endYearMonth.getMonth(), 1).plusMonths(1).minusDays(2);
+
+		waterYearPeriodRange = new WaterYearPeriodRange(waterYearPeriod, new WaterYearType(_start, waterYearPeriod),
+				new WaterYearType(_start, waterYearPeriod));
 		YearMonth startYearMonth = waterYearPeriodRange.getStart(_waterYearDefinition);
-		YearMonth endYearMonth = waterYearPeriodRange.getEnd(_waterYearDefinition);
-		LocalDate start = LocalDate.of(startYearMonth.getYear(), startYearMonth.getMonth().plus(1), 1).minusDays(2);
-		LocalDate end = LocalDate.of(endYearMonth.getYear(), endYearMonth.getMonth(), 3).plusMonths(1);
+		LocalDate start = LocalDate.of(startYearMonth.getYear(), startYearMonth.getMonth(), 1).minusMonths(1).plusDays(2);
 		for(EpptParameter parameter : _guiLink)
 		{
 			GUILinksAllModelsBO guiLink = parameter.getGuiLink();
