@@ -156,11 +156,11 @@ class DisplayFrames
 				.build();
 		if(_epptConfigurationController.isDifference())
 		{
-			tabbedPane.addTab("Time Series (All) - Difference", pane);
+			tabbedPane.addTab("Timeseries (All) - Difference", pane);
 		}
 		else
 		{
-			tabbedPane.addTab("Time Series (All)", pane);
+			tabbedPane.addTab("Timeseries (All)", pane);
 		}
 	}
 
@@ -172,11 +172,11 @@ class DisplayFrames
 				.build();
 		if(_epptConfigurationController.isDifference())
 		{
-			tabbedPane.addTab("Time Series (Aggregate) - Difference", pane);
+			tabbedPane.addTab("Timeseries (Aggregate) - Difference", pane);
 		}
 		else
 		{
-			tabbedPane.addTab("Time Series (Aggregate)", pane);
+			tabbedPane.addTab("Timeseries (Aggregate)", pane);
 		}
 	}
 
