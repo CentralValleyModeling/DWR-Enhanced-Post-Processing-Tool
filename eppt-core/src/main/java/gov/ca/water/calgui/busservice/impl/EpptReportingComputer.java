@@ -59,9 +59,8 @@ public final class EpptReportingComputer
 		_waterYearDefinition = waterYearDefinition;
 	}
 
-	public static EpptReportingComputedSet computeForMetrics(Map<EpptScenarioRun, List<TimeSeriesContainer>> scenarioRunData,
-															 String plotTitle, boolean taf, WaterYearDefinition waterYearDefinition,
-															 List<MonthPeriod> monthPeriods,
+	public static EpptReportingComputedSet computeForMetrics(Map<EpptScenarioRun, List<TimeSeriesContainer>> scenarioRunData, String plotTitle, boolean taf,
+															 WaterYearDefinition waterYearDefinition, List<MonthPeriod> monthPeriods,
 															 List<Map<EpptScenarioRun, WaterYearPeriodRangesFilter>> waterYearPeriodRangesFilters,
 															 List<EpptStatistic> statistic)
 	{
@@ -152,10 +151,9 @@ public final class EpptReportingComputer
 																	  .entrySet()
 																	  .stream()
 																	  .filter(Objects::nonNull)
-																	  .filter(e->!Double.isNaN(e.getValue()))
+																	  .filter(e -> !Double.isNaN(e.getValue()))
 																	  .filter(waterYearPeriodRangesFilter)
-																	  .collect(toMap(Map.Entry::getKey, Map.Entry::getValue,
-																			  (o1, o2) -> o1, TreeMap::new));
+																	  .collect(toMap(Map.Entry::getKey, Map.Entry::getValue, (o1, o2) -> o1, TreeMap::new));
 		_units = dssReader.getUnits();
 		updateDateExtents(discreteSeries);
 		NavigableMap<Integer, Double> aggregateSeries = DssReader.filterPeriodYearly(discreteSeries, _monthPeriod, aggregateYearly);
@@ -186,18 +184,14 @@ public final class EpptReportingComputer
 		}
 	}
 
-	private List<EpptReportingComputedStatistics> computeStatistics(NavigableMap<LocalDateTime, Double> discreteSeries,
-																	NavigableMap<Integer, Double> aggregateSeries)
+	private List<EpptReportingComputedStatistics> computeStatistics(NavigableMap<LocalDateTime, Double> discreteSeries, NavigableMap<Integer, Double> aggregateSeries)
 	{
 		List<EpptReportingComputedStatistics> retval = new ArrayList<>();
-		if(!discreteSeries.isEmpty())
+		for(EpptStatistic epptStatistic : _statistics)
 		{
-			for(EpptStatistic epptStatistic : _statistics)
-			{
-				SortedMap<Month, Double> monthlySplit = filterPeriodMonthly(discreteSeries, epptStatistic);
-				Double aggregateStatistic = epptStatistic.calculateYearly(new ArrayList<>(aggregateSeries.values()));
-				retval.add(new EpptReportingComputedStatistics(epptStatistic, aggregateStatistic, monthlySplit));
-			}
+			SortedMap<Month, Double> monthlySplit = filterPeriodMonthly(discreteSeries, epptStatistic);
+			Double aggregateStatistic = epptStatistic.calculateYearly(new ArrayList<>(aggregateSeries.values()));
+			retval.add(new EpptReportingComputedStatistics(epptStatistic, aggregateStatistic, monthlySplit));
 		}
 		return retval;
 	}
@@ -235,8 +229,8 @@ public final class EpptReportingComputer
 				}
 			}
 		}
-		return monthlyMap.entrySet().stream()
-						 .collect(toMap(Map.Entry::getKey, e -> epptStatistic.calculateYearly(new ArrayList<>(e.getValue().values())),
-								 (o1, o2) -> o1, TreeMap::new));
+		return monthlyMap.entrySet()
+						 .stream()
+						 .collect(toMap(Map.Entry::getKey, e -> epptStatistic.calculateYearly(new ArrayList<>(e.getValue().values())), (o1, o2) -> o1, TreeMap::new));
 	}
 }
