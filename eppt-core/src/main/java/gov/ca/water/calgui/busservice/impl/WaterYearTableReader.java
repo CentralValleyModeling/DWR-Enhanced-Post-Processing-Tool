@@ -51,6 +51,7 @@ public class WaterYearTableReader
 {
 	private static final FluentLogger LOGGER = FluentLogger.forEnclosingClass();
 	private static final Pattern WYTPES_TABLE_SPLIT = Pattern.compile("\\s+");
+	private static final Map<EpptScenarioRun, List<WaterYearIndexModel>> MODELS = new HashMap<>();
 
 	private final Path _waterYearTypeTable;
 	private final EpptScenarioRun _epptScenarioRun;
@@ -66,13 +67,27 @@ public class WaterYearTableReader
 		_waterYearIndexModelReader = new WaterYearIndexModelReader(_epptScenarioRun);
 	}
 
+	public List<WaterYearIndexModel> forceRead() throws EpptInitializationException
+	{
+		MODELS.remove(_epptScenarioRun);
+		return read();
+	}
+
 	public List<WaterYearIndexModel> read() throws EpptInitializationException
 	{
-		LOGGER.at(Level.FINE).log("Reading Water Year Type Table: %s", _waterYearTypeTable);
-		Map<Integer, WaterYearIndexModel> dssWaterYearIndexModels = readDssFile();
-		List<WaterYearIndexModel> tableWaterYearIndexModels = readTableFile();
-		tableWaterYearIndexModels.forEach(m -> dssWaterYearIndexModels.merge(m.getWaterYearIndexId(), m, (o1, o2) -> o1));
-		return dssWaterYearIndexModels.values().stream().sorted(Comparator.comparing(WaterYearIndexModel::getWaterYearIndexId)).collect(toList());
+		if(MODELS.get(_epptScenarioRun) == null)
+		{
+			LOGGER.at(Level.FINE).log("Reading Water Year Type Table: %s", _waterYearTypeTable);
+			Map<Integer, WaterYearIndexModel> dssWaterYearIndexModels = readDssFile();
+			List<WaterYearIndexModel> tableWaterYearIndexModels = readTableFile();
+			tableWaterYearIndexModels.forEach(m -> dssWaterYearIndexModels.merge(m.getWaterYearIndexId(), m, (o1, o2) -> o1));
+			List<WaterYearIndexModel> models = dssWaterYearIndexModels.values()
+																			.stream()
+																			.sorted(Comparator.comparing(WaterYearIndexModel::getWaterYearIndexId))
+																			.collect(toList());
+			MODELS.put(_epptScenarioRun, models);
+		}
+		return MODELS.get(_epptScenarioRun);
 	}
 
 	private Map<Integer, WaterYearIndexModel> readDssFile()
