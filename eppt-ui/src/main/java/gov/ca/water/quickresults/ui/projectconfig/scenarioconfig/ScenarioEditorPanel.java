@@ -141,24 +141,24 @@ public class ScenarioEditorPanel
 
 	private void setupTempWaterIndexFile()
 	{
-		Path modelWaterYearIndexFile = _tempWaterYearIndexModelPath;
-		if(modelWaterYearIndexFile == null)
+		if(_tempWaterYearIndexModelPath == null)
 		{
-			modelWaterYearIndexFile = EpptPreferences.getLastProjectConfiguration().resolve(_nameField.getText()).resolve(Constant.MODEL_WATER_YEAR_INDEX_FILE);
-		}
-		Object selectedItem = _modelCombobox.getSelectedItem();
-		if(!modelWaterYearIndexFile.toFile().exists() && selectedItem != null)
-		{
-			modelWaterYearIndexFile = Paths.get(Constant.CONFIG_DIR).resolve(selectedItem.toString()).resolve(Constant.MODEL_WATER_YEAR_INDEX_FILE);
-		}
-		try
-		{
-			_tempWaterYearIndexModelPath = Files.createTempFile("WaterYearIndexModel", Constant.CSV_EXT);
-			Files.write(_tempWaterYearIndexModelPath, Files.readAllBytes(modelWaterYearIndexFile));
-		}
-		catch(IOException e)
-		{
-			LOGGER.log(Level.SEVERE, "Unable to create temporary file for editing the: " + Constant.MODEL_WATER_YEAR_INDEX_FILE + " Will default to installation version", e);
+			Path modelWaterYearIndexFile = EpptPreferences.getLastProjectConfiguration().getParent().resolve(_nameField.getText()).resolve(Constant.MODEL_WATER_YEAR_INDEX_FILE);
+			Object selectedItem = _modelCombobox.getSelectedItem();
+			if(!modelWaterYearIndexFile.toFile().exists() && selectedItem != null)
+			{
+				modelWaterYearIndexFile = Paths.get(Constant.CONFIG_DIR).resolve(selectedItem.toString()).resolve(Constant.MODEL_WATER_YEAR_INDEX_FILE);
+			}
+			try
+			{
+				_tempWaterYearIndexModelPath = Files.createTempFile("WaterYearIndexModel", Constant.CSV_EXT);
+				Files.write(_tempWaterYearIndexModelPath, Files.readAllBytes(modelWaterYearIndexFile));
+			}
+			catch(IOException e)
+			{
+				LOGGER.log(Level.SEVERE, "Unable to create temporary file for editing the: " + Constant.MODEL_WATER_YEAR_INDEX_FILE + " Will default to installation version",
+						e);
+			}
 		}
 	}
 
@@ -671,7 +671,7 @@ public class ScenarioEditorPanel
 		Path modelWaterYearIndexFile = _tempWaterYearIndexModelPath;
 		if(modelWaterYearIndexFile == null)
 		{
-			modelWaterYearIndexFile = EpptPreferences.getLastProjectConfiguration().resolve(_nameField.getText()).resolve(Constant.MODEL_WATER_YEAR_INDEX_FILE);
+			modelWaterYearIndexFile = EpptPreferences.getLastProjectConfiguration().getParent().resolve(_nameField.getText()).resolve(Constant.MODEL_WATER_YEAR_INDEX_FILE);
 		}
 		Object selectedItem = _modelCombobox.getSelectedItem();
 		if(!modelWaterYearIndexFile.toFile().exists() && selectedItem != null)
