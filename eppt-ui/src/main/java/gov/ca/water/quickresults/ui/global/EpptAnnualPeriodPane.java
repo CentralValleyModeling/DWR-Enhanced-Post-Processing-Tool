@@ -143,9 +143,9 @@ class EpptAnnualPeriodPane extends TitledPane
 	{
 		AddAnnualFilterDialog addAnnualFilterDialog = new AddAnnualFilterDialog(Frame.getFrames()[0], rangeRowModel.getRange(), start, end, overrideWaterYearDefinition,
 				_controller.getWaterYearDefinition());
-		try
+		SwingUtilities.invokeLater(() ->
 		{
-			SwingUtilities.invokeAndWait(() -> addAnnualFilterDialog.setVisible(true));
+			addAnnualFilterDialog.setVisible(true);
 			if(!addAnnualFilterDialog.isCanceled())
 			{
 				int startYear = addAnnualFilterDialog.getStartYear();
@@ -153,33 +153,27 @@ class EpptAnnualPeriodPane extends TitledPane
 				WaterYearPeriod waterYearPeriod = new WaterYearPeriod("User Defined");
 				WaterYearPeriodRange waterYearPeriodRange = new WaterYearPeriodRange(waterYearPeriod, new WaterYearType(startYear, waterYearPeriod),
 						new WaterYearType(endYear, waterYearPeriod));
-				TreeItem<WaterYearPeriodDefinitionsRow> parent = selectedItem.getParent();
-				int selectedIndex = parent.getChildren().indexOf(selectedItem);
-				int selectedRowIndex = _treeView.getSelectionModel().getSelectedIndex();
-				parent.getChildren().remove(selectedItem);
-				if(addAnnualFilterDialog.overrideWaterYearDefinition())
+				Platform.runLater(()->
 				{
-					WaterYearDefinitionOverrideRow waterYearPeriodRangeRow = new WaterYearDefinitionOverrideRow(waterYearPeriodRange, addAnnualFilterDialog.getStartMonth(),
-							addAnnualFilterDialog.getEndMonth());
-					parent.getChildren().add(selectedIndex, new MyCheckBoxTreeItem(waterYearPeriodRangeRow));
-				}
-				else
-				{
-					WaterYearPeriodRangeRow waterYearPeriodRangeRow = new WaterYearPeriodRangeRow(waterYearPeriodRange, true);
-					parent.getChildren().add(selectedIndex, new MyCheckBoxTreeItem(waterYearPeriodRangeRow));
-				}
-				_treeView.getSelectionModel().select(selectedRowIndex);
+					TreeItem<WaterYearPeriodDefinitionsRow> parent = selectedItem.getParent();
+					int selectedIndex = parent.getChildren().indexOf(selectedItem);
+					int selectedRowIndex = _treeView.getSelectionModel().getSelectedIndex();
+					parent.getChildren().remove(selectedItem);
+					if(addAnnualFilterDialog.overrideWaterYearDefinition())
+					{
+						WaterYearDefinitionOverrideRow waterYearPeriodRangeRow = new WaterYearDefinitionOverrideRow(waterYearPeriodRange, addAnnualFilterDialog.getStartMonth(),
+								addAnnualFilterDialog.getEndMonth());
+						parent.getChildren().add(selectedIndex, new MyCheckBoxTreeItem(waterYearPeriodRangeRow));
+					}
+					else
+					{
+						WaterYearPeriodRangeRow waterYearPeriodRangeRow = new WaterYearPeriodRangeRow(waterYearPeriodRange, true);
+						parent.getChildren().add(selectedIndex, new MyCheckBoxTreeItem(waterYearPeriodRangeRow));
+					}
+					_treeView.getSelectionModel().select(selectedRowIndex);
+				});
 			}
-		}
-		catch(InterruptedException e)
-		{
-			Thread.currentThread().interrupt();
-			LOGGER.log(Level.FINE, "Thread interrupted while adding monthly period", e);
-		}
-		catch(InvocationTargetException e)
-		{
-			LOGGER.log(Level.SEVERE, "Error adding monthly period", e);
-		}
+		});
 	}
 
 	private void addAnnualPeriod()
