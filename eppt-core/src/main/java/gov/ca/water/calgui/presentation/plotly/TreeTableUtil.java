@@ -15,10 +15,14 @@ package gov.ca.water.calgui.presentation.plotly;
 import java.awt.Toolkit;
 import java.awt.datatransfer.StringSelection;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 
 import javafx.beans.value.ObservableValue;
+import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.control.TreeItem;
 
@@ -27,6 +31,8 @@ import com.rma.javafx.treetable.RmaTreeTableView;
 import com.rma.javafx.treetable.columns.specs.TreeTableColumnSpec;
 import com.rma.javafx.treetable.rows.TreeTableRowModel;
 import com.rma.javafx.utils.JavaFxTreeTableViewUtils;
+
+import static java.util.stream.Collectors.toList;
 
 /**
  * Company: Resource Management Associates
@@ -46,10 +52,43 @@ final class TreeTableUtil
 	{
 		ObservableList<TreeTableColumnSpec> columnSpecs = treeTableView.getModel().getColumnSpecs();
 		List<Object[]> objectArray = new ArrayList<>();
-		objectArray.add(columnSpecs.stream().filter(spec -> treeTableView.getColumnFromSpec(spec).isVisible()).map(ColumnSpec::getColumnName).toArray());
+		List<String> headerRow = new ArrayList<>();
+		List<String> subHeaderRow = new ArrayList<>();
+		//This only handles a single row of child columns, this should be updated to use recursion in order to handle an infinite level of headers
+		for(TreeTableColumnSpec spec : columnSpecs)
+		{
+			ObservableList<TreeTableColumnSpec> children = spec.getChildren();
+			//Using do-while in order to ensure that if there are no children, the header column is printed
+			int i = 0;
+			do
+			{
+				headerRow.add(spec.getColumnName());
+				if(i < children.size())
+				{
+					subHeaderRow.add(children.get(i).getColumnName());
+				}
+				i++;
+			}
+			while(i < children.size());
+		}
+		objectArray.add(headerRow.toArray());
+		if(!subHeaderRow.isEmpty())
+		{
+			objectArray.add(subHeaderRow.toArray());
+		}
 		TreeItem<R> root = treeTableView.getRoot();
 		ObservableList<TreeItem<R>> children = root.getChildren();
-		addRowData(treeTableView, columnSpecs, objectArray, children);
+		//This only handles a single row of child columns, this should be updated to use recursion in order to handle an infinite level of sub columns
+		List<TreeTableColumnSpec> childSpecs = columnSpecs.stream().map(spec ->
+		{
+			ObservableList<TreeTableColumnSpec> childColumns = spec.getChildren();
+			if(childColumns.isEmpty())
+			{
+				childColumns = FXCollections.observableArrayList(spec);
+			}
+			return childColumns;
+		}).flatMap(Collection::stream).collect(toList());
+		addRowData(treeTableView, childSpecs, objectArray, children);
 		Object[][] array = new Object[objectArray.size()][];
 		for(int i = 0; i < array.length; i++)
 		{
@@ -58,7 +97,7 @@ final class TreeTableUtil
 		return JavaFxTreeTableViewUtils.convertToString(array, new String[0]);
 	}
 
-	private static <R extends TreeTableRowModel> void addRowData(RmaTreeTableView<?, R> treeTableView, ObservableList<TreeTableColumnSpec> columnSpecs,
+	private static <R extends TreeTableRowModel> void addRowData(RmaTreeTableView<?, R> treeTableView, List<TreeTableColumnSpec> columnSpecs,
 																 List<Object[]> objectArray, ObservableList<TreeItem<R>> children)
 	{
 		for(TreeItem<R> item : children)
@@ -80,6 +119,8 @@ final class TreeTableUtil
 	{
 		String text = copyValuesToString(treeTableView);
 		StringSelection selection = new StringSelection(text);
-		Toolkit.getDefaultToolkit().getSystemClipboard().setContents(selection, (clipboard, data) -> {});
+		Toolkit.getDefaultToolkit().getSystemClipboard().setContents(selection, (clipboard, data) ->
+		{
+		});
 	}
 }

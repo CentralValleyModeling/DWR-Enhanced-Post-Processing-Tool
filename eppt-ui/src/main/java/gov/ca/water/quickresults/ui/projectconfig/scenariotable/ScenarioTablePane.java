@@ -22,6 +22,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.*;
 
+import gov.ca.water.calgui.EpptInitializationException;
+import gov.ca.water.calgui.busservice.impl.WaterYearTableReader;
 import gov.ca.water.calgui.constant.Constant;
 import gov.ca.water.calgui.project.EpptDssContainer;
 import gov.ca.water.calgui.project.EpptScenarioRun;
@@ -175,6 +177,14 @@ public class ScenarioTablePane extends TitledPane
 	private void addScenarioRun(EpptScenarioRun scenarioRun)
 	{
 		_scenarioTableModel.getRows().add(new ScenarioRowModel(this::setModified, _scenarioTableModel, scenarioRun));
+		try
+		{
+			new WaterYearTableReader(scenarioRun).forceRead();
+		}
+		catch(EpptInitializationException e)
+		{
+			LOGGER.log(Level.SEVERE, "Error reading water year table files for scenario: " + scenarioRun, e);
+		}
 	}
 
 	private void setModified()
@@ -199,6 +209,14 @@ public class ScenarioTablePane extends TitledPane
 			newScenarioRun.setAltSelected(oldModel.isAlternative());
 			_scenarioTableModel.getRows().add(i, new ScenarioRowModel(this::setModified, _scenarioTableModel, newScenarioRun));
 			setModified();
+			try
+			{
+				new WaterYearTableReader(newScenarioRun).forceRead();
+			}
+			catch(EpptInitializationException e)
+			{
+				LOGGER.log(Level.SEVERE, "Error reading water year table files for scenario: " + newScenarioRun, e);
+			}
 		}
 	}
 

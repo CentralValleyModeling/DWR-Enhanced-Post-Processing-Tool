@@ -129,6 +129,7 @@ class AddAnnualFilterDialog extends JDialog
 		_overrideWaterYearDefinitionCheckBox.setSelected(overrideWaterYearDefinition);
 		_startMonthCombobox.setEnabled(overrideWaterYearDefinition);
 		_endMonthCombobox.setEnabled(overrideWaterYearDefinition);
+		updatePeriodOfRecord();
 	}
 
 	private void updatePeriodOfRecord()

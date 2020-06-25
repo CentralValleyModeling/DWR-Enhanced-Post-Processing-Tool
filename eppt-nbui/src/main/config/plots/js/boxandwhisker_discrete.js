@@ -17,7 +17,7 @@ function getPlotlyDiscreteSeries(datum) {
         for (let tsIndex = 0; tsIndex < datum[0]['ts_list'].length; tsIndex++) {
             for (let i = 0; i < datum.length; i++) {
                 let tsList = datum[i]['ts_list'];
-                if(tsList[tsIndex]) {
+                if (tsList[tsIndex]) {
                     let annualFilters = tsList[tsIndex]['monthly_filters'][monthlyIndex]['annual_filters'];
                     let x = [];
                     let y = [];
@@ -25,8 +25,16 @@ function getPlotlyDiscreteSeries(datum) {
                         let annualData = annualFilters[j];
                         let timeSeries = annualData['discrete_ts'];
                         for (var ts = 0; ts < timeSeries.length; ts++) {
-                            x.push(annualData['annual_period']);
-                            y.push(timeSeries[ts][1]);
+                            for (let periodIndex = 0; periodIndex < annualData['period_months'].length; periodIndex++) {
+                                let monthString = annualData['period_months'][periodIndex];
+                                let periodMonth = new Date(Date.parse('02 ' + monthString + ' 1970 05:00:00 GMT')).getMonth();
+                                var date = new Date(timeSeries[ts][0]);
+                                date.setMonth(date.getMonth() - 1);
+                                if (periodMonth == date.getMonth()) {
+                                    x.push(annualData['annual_period']);
+                                    y.push(timeSeries[ts][1]);
+                                }
+                            }
                         }
                     }
                     series.push({
@@ -111,7 +119,7 @@ function buildDiscreteLayouts(datum, yaxis, title) {
     return layoutList;
 }
 
-function plot(data){
+function plot(data) {
     plotDiscrete(data);
 }
 

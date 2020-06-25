@@ -460,7 +460,7 @@ public class DssReader
 			for(Map.Entry<LocalDateTime, Double> entry : input.entrySet())
 			{
 				LocalDateTime key = entry.getKey();
-				if(key.getMonth() == yearMonth.plusMonths(1).getMonth() && key.getYear() == yearMonth.plusMonths(1).getYear())
+				if(key.minusMonths(1).getMonth() == yearMonth.getMonth() && key.minusMonths(1).getYear() == yearMonth.getYear())
 				{
 					LOGGER.at(Level.FINE)
 						  .log("Value for %s: %s YearMonth: %s", year, entry.getValue(), YearMonth.of(key.getYear(), key.getMonth()));

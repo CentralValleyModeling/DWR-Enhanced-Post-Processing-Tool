@@ -36,7 +36,7 @@ function getPlotlyMonthlySeries(datum, firstRecord, lastRecord, instantaneous) {
                     }
                     if (timeSeries[startingDataIndex]) {
                         let dataDate = new Date(timeSeries[startingDataIndex][0]);
-                        dataDate.setMonth(dataDate.getMonth() - 1);
+                        // dataDate.setMonth(dataDate.getMonth() - 1);
                         if (dataDate.getFullYear() === startDate.getFullYear() && dataDate.getMonth() === startDate.getMonth()) {
                             x.push(date);
                             y.push(timeSeries[startingDataIndex][1]);

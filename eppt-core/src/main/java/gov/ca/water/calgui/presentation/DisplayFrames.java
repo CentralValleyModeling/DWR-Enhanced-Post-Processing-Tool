@@ -14,6 +14,7 @@ package gov.ca.water.calgui.presentation;
 
 import java.awt.BorderLayout;
 import java.time.LocalDate;
+import java.time.YearMonth;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -21,6 +22,9 @@ import javax.swing.*;
 
 import gov.ca.water.calgui.bo.GUILinksAllModelsBO;
 import gov.ca.water.calgui.bo.WaterYearDefinition;
+import gov.ca.water.calgui.bo.WaterYearPeriod;
+import gov.ca.water.calgui.bo.WaterYearPeriodRange;
+import gov.ca.water.calgui.bo.WaterYearType;
 import gov.ca.water.calgui.busservice.impl.MonthPeriod;
 import gov.ca.water.calgui.presentation.plotly.PlotlyPaneBuilder;
 import gov.ca.water.calgui.project.EpptConfigurationController;
@@ -85,14 +89,22 @@ class DisplayFrames
 	{
 		int endYear = _epptConfigurationController.getEndYear();
 		WaterYearDefinition waterYearDefinition = _epptConfigurationController.getWaterYearDefinition();
-		return LocalDate.of(endYear, waterYearDefinition.getEndMonth(), 1).plusMonths(1).plusDays(2);
+		WaterYearPeriod waterYearPeriod = new WaterYearPeriod("");
+		WaterYearPeriodRange waterYearPeriodRange = new WaterYearPeriodRange(waterYearPeriod, new WaterYearType(endYear, waterYearPeriod),
+				new WaterYearType(endYear, waterYearPeriod));
+		YearMonth end = waterYearPeriodRange.getStart(waterYearDefinition);
+		return LocalDate.of(end.getYear(), end.getMonth(), 1).plusMonths(1).minusDays(2);
 	}
 
 	LocalDate getStart()
 	{
 		int startYear = _epptConfigurationController.getStartYear();
 		WaterYearDefinition waterYearDefinition = _epptConfigurationController.getWaterYearDefinition();
-		return LocalDate.of(startYear, waterYearDefinition.getStartMonth(), 1).plusMonths(1).minusDays(2);
+		WaterYearPeriod waterYearPeriod = new WaterYearPeriod("");
+		WaterYearPeriodRange waterYearPeriodRange = new WaterYearPeriodRange(waterYearPeriod, new WaterYearType(startYear, waterYearPeriod),
+				new WaterYearType(startYear, waterYearPeriod));
+		YearMonth start = waterYearPeriodRange.getStart(waterYearDefinition);
+		return LocalDate.of(start.getYear(), start.getMonth(), 1).minusMonths(1).plusDays(2);
 	}
 
 	Optional<EpptScenarioRun> getBaseRun()
@@ -156,11 +168,11 @@ class DisplayFrames
 				.build();
 		if(_epptConfigurationController.isDifference())
 		{
-			tabbedPane.addTab("Time Series (All) - Difference", pane);
+			tabbedPane.addTab("Timeseries (All) - Difference", pane);
 		}
 		else
 		{
-			tabbedPane.addTab("Time Series (All)", pane);
+			tabbedPane.addTab("Timeseries (All)", pane);
 		}
 	}
 
@@ -172,11 +184,11 @@ class DisplayFrames
 				.build();
 		if(_epptConfigurationController.isDifference())
 		{
-			tabbedPane.addTab("Time Series (Aggregate) - Difference", pane);
+			tabbedPane.addTab("Timeseries (Aggregate) - Difference", pane);
 		}
 		else
 		{
-			tabbedPane.addTab("Time Series (Aggregate)", pane);
+			tabbedPane.addTab("Timeseries (Aggregate)", pane);
 		}
 	}
 

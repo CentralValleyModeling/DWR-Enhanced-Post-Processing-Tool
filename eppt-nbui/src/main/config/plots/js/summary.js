@@ -82,9 +82,12 @@ function buildScenarioValuesDiff(data, diffIndex, monthlyIndex, statIndex) {
                     let stat = data[scenarioIndex]['ts_list'][tsIndex]['monthly_filters'][monthlyIndex]['annual_filters'][annualIndex]['computed_statistics'][statIndex];
                     if (stat) {
                         let currentValue = stat['statistic_aggregate'];
-                        let diffValue = data[diffIndex]['ts_list'][tsIndex]['monthly_filters'][monthlyIndex]['annual_filters'][annualIndex]['computed_statistics'][statIndex]['statistic_aggregate'];
-                        retval.push(format(currentValue - diffValue));
-                    }else{
+                        let statistic = data[diffIndex]['ts_list'][tsIndex]['monthly_filters'][monthlyIndex]['annual_filters'][annualIndex]['computed_statistics'][statIndex];
+                        if (statistic) {
+                            let diffValue = statistic['statistic_aggregate'];
+                            retval.push(format(currentValue - diffValue));
+                        }
+                    } else {
                         retval.push(NaN);
                     }
                 } else {
@@ -99,13 +102,12 @@ function buildScenarioValuesDiff(data, diffIndex, monthlyIndex, statIndex) {
 function plot(data) {
     var layout = buildLayouts(data['scenario_run_data'], data['units'], data['gui_link_title']);
     let plotlyAggregateSeries = getPlotlyData(data['scenario_run_data'], data['units']);
-    let numberOfRows = plotlyAggregateSeries[0][0]['cells']['values'][0].length;
     var rowHeight = 40;
-    if(data['scenario_run_data'][0]['ts_list'][0]['ts_name'].includes('<br>')){
+    if (data['scenario_run_data'][0]['ts_list'][0]['ts_name'].includes('<br>')) {
         rowHeight *= 2;
     }
-
     for (let i = 0; i < layout.length; i++) {
+        let numberOfRows = plotlyAggregateSeries[0][0]['cells']['values'][0].length;
         layout[i]['height'] = 165 + numberOfRows * rowHeight;
     }
     plotData(layout, plotlyAggregateSeries, data['ts_descriptor']);
@@ -113,7 +115,11 @@ function plot(data) {
 
 function getPlotlyData(datum, units) {
     let seriesList = [];
-    for (let statIndex = 0; statIndex < datum[0]['ts_list'][0]['monthly_filters'][0]['annual_filters'][0]['computed_statistics'].length; statIndex++) {
+    let statisticCount = datum[0]['ts_list'][0]['monthly_filters'][0]['annual_filters'][0]['computed_statistics'].length;
+    if (statisticCount == 0) {
+        console.log("No statistics calculated for base scenario: " + datum[0]['scenario_name']);
+    }
+    for (let statIndex = 0; statIndex < statisticCount; statIndex++) {
         for (let monthlyIndex = 0; monthlyIndex < datum[0]['ts_list'][0]['monthly_filters'].length; monthlyIndex++) {
             seriesList.push([plotPeriodGroupedForMonthStat(datum, monthlyIndex, statIndex, units)]);
         }
