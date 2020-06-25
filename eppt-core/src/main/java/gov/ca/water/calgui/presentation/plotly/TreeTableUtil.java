@@ -60,16 +60,26 @@ final class TreeTableUtil
 			ObservableList<TreeTableColumnSpec> children = spec.getChildren();
 			//Using do-while in order to ensure that if there are no children, the header column is printed
 			int i = 0;
-			do
+			if(treeTableView.getColumnFromSpec(spec).isVisible())
 			{
-				headerRow.add(spec.getColumnName());
-				if(i < children.size())
+				do
 				{
-					subHeaderRow.add(children.get(i).getColumnName());
-				}
-				i++;
+					headerRow.add(spec.getColumnName());
+					if(i < children.size())
+					{
+						TreeTableColumnSpec childSpec = children.get(i);
+						if(treeTableView.getColumnFromSpec(childSpec).isVisible())
+						{
+							subHeaderRow.add(childSpec.getColumnName());
+						}
+						else
+						{
+							headerRow.remove(headerRow.size() - 1);
+						}
+					}
+					i++;
+				} while(i < children.size());
 			}
-			while(i < children.size());
 		}
 		objectArray.add(headerRow.toArray());
 		if(!subHeaderRow.isEmpty())
