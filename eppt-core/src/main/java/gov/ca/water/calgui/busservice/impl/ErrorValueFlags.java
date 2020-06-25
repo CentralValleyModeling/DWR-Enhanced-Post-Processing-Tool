@@ -8,6 +8,8 @@
 package gov.ca.water.calgui.busservice.impl;
 
 import java.io.IOException;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -50,7 +52,7 @@ public class ErrorValueFlags
 			return Files.readAllLines(_errorValueFlagPath)
 						.stream()
 						.filter(FilePredicates.commentFilter())
-						.flatMap(s-> Arrays.stream(s.split(",")))
+						.flatMap(s -> Arrays.stream(s.split(",")))
 						.map(Double::valueOf)
 						.collect(toSet());
 		}
@@ -67,6 +69,11 @@ public class ErrorValueFlags
 
 	public static boolean isErrorValue(Double value)
 	{
-		return instance._errorValueFlags.stream().anyMatch(d-> Objects.equals(d, value));
+		if(Constant.isValidValue(value))
+		{
+			value = BigDecimal.valueOf(value).setScale(6, RoundingMode.HALF_UP).doubleValue();
+		}
+		Double funcVal = value;
+		return instance._errorValueFlags.stream().anyMatch(d -> Objects.equals(d, funcVal));
 	}
 }

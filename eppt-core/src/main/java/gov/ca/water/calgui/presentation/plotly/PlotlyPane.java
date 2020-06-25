@@ -14,6 +14,8 @@ package gov.ca.water.calgui.presentation.plotly;
 
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import gov.ca.water.calgui.busservice.impl.EpptReportingComputedSet;
 import gov.ca.water.calgui.constant.Constant;
@@ -48,11 +50,18 @@ public abstract class PlotlyPane extends JFXPanel
 			_initialized = true;
 			Platform.runLater(() ->
 			{
-				BorderPane borderPane = new BorderPane();
-				_javaFxChartsPane = new JavaFxChartsPane(Paths.get(Constant.CONFIG_DIR).resolve("plots").resolve(getHtmlPath()),
-						"plot(" + _epptReportingComputedSet.toJson() + ");");
-				borderPane.setCenter(_javaFxChartsPane);
-				setScene(new Scene(borderPane));
+				try
+				{
+					BorderPane borderPane = new BorderPane();
+					_javaFxChartsPane = new JavaFxChartsPane(Paths.get(Constant.CONFIG_DIR).resolve("plots").resolve(getHtmlPath()),
+							"plot(" + _epptReportingComputedSet.toJson().toString(0) + ");");
+					borderPane.setCenter(_javaFxChartsPane);
+					setScene(new Scene(borderPane));
+				}
+				catch(RuntimeException e)
+				{
+					Logger.getLogger(PlotlyPane.class.getName()).log(Level.SEVERE, "Error generating plot: " + getHtmlPath(), e);
+				}
 			});
 		}
 	}

@@ -49,7 +49,7 @@ public class JavascriptImageExporter
 
 	public void log(String message)
 	{
-		LOGGER.log(Level.INFO, "Plotly Output: {0}", message);
+		LOGGER.log(Level.SEVERE, "Plotly Output: {0}", message);
 	}
 
 	public void interruptFunction(String format, Object dataJson, Object layoutJson, Object width, Object height)
