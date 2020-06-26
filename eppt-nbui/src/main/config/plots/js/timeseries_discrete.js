@@ -181,20 +181,24 @@ function plotlyCopyToClipboard(element) {
     for (let k = 0; k < data1.length; k++) {
         let xarr = data1[k]['x'];
         let yarr = data1[k]['y'];
+        let hoverinfo = data1[k]['hoverinfo'];
         for (let j = 0; j < xarr.length; j++) {
             let x;
-            if (Object.prototype.toString.call(xarr[j]) === '[object Date]') {
-                foundDate = true;
-                let date = new Date(xarr[j]);
-                x = date.setMonth(date.getMonth());
-                x = date;
-            } else {
-                x = xarr[j];
+            if (hoverinfo[j] !== 'skip') {
+
+                if (Object.prototype.toString.call(xarr[j]) === '[object Date]') {
+                    foundDate = true;
+                    let date = new Date(xarr[j]);
+                    x = date.setMonth(date.getMonth());
+                    x = date;
+                } else {
+                    x = xarr[j];
+                }
+                if (!xyVals[x]) {
+                    xyVals[x] = [];
+                }
+                xyVals[x].push(yarr[j]);
             }
-            if (!xyVals[x]) {
-                xyVals[x] = [];
-            }
-            xyVals[x].push(yarr[j]);
         }
     }
     let keys = Object.keys(xyVals);
