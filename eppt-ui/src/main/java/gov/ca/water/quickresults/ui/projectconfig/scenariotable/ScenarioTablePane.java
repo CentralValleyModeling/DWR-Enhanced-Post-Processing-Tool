@@ -101,7 +101,8 @@ public class ScenarioTablePane extends TitledPane
 		_clearAllButton.setOnAction(e -> clearScenarios());
 		_upButton.setOnAction(e -> moveSelectedScenarioUp());
 		_downButton.setOnAction(e -> moveSelectedScenarioDown());
-		_differenceCheckbox.selectedProperty().addListener((e, o, n) -> {
+		_differenceCheckbox.selectedProperty().addListener((e, o, n) ->
+		{
 			_controller.setDifference(n);
 			if(_modifiedListenerEnabled)
 			{
@@ -176,10 +177,10 @@ public class ScenarioTablePane extends TitledPane
 
 	private void addScenarioRun(EpptScenarioRun scenarioRun)
 	{
-		_scenarioTableModel.getRows().add(new ScenarioRowModel(this::setModified, _scenarioTableModel, scenarioRun));
 		try
 		{
 			new WaterYearTableReader(scenarioRun).forceRead();
+			_scenarioTableModel.getRows().add(new ScenarioRowModel(this::setModified, _scenarioTableModel, scenarioRun));
 		}
 		catch(EpptInitializationException e)
 		{
@@ -199,20 +200,20 @@ public class ScenarioTablePane extends TitledPane
 
 	private void updateScenario(EpptScenarioRun oldScenarioRun, EpptScenarioRun newScenarioRun)
 	{
-		Optional<ScenarioRowModel> rowForScenarioRun = _scenarioTableModel.getRowForScenarioRun(oldScenarioRun);
-		if(!Objects.equals(oldScenarioRun, newScenarioRun) && rowForScenarioRun.isPresent())
-		{
-			ScenarioRowModel oldModel = rowForScenarioRun.get();
-			int i = _scenarioTableModel.getRows().indexOf(oldModel);
-			_scenarioTableModel.getRows().remove(i);
-			newScenarioRun.setBaseSelected(oldModel.isBase());
-			newScenarioRun.setAltSelected(oldModel.isAlternative());
-			_scenarioTableModel.getRows().add(i, new ScenarioRowModel(this::setModified, _scenarioTableModel, newScenarioRun));
-			setModified();
-		}
 		try
 		{
-			new WaterYearTableReader(newScenarioRun).forceRead();
+			Optional<ScenarioRowModel> rowForScenarioRun = _scenarioTableModel.getRowForScenarioRun(oldScenarioRun);
+			if(rowForScenarioRun.isPresent())
+			{
+				new WaterYearTableReader(newScenarioRun).forceRead();
+				ScenarioRowModel oldModel = rowForScenarioRun.get();
+				int i = _scenarioTableModel.getRows().indexOf(oldModel);
+				_scenarioTableModel.getRows().remove(i);
+				newScenarioRun.setBaseSelected(oldModel.isBase());
+				newScenarioRun.setAltSelected(oldModel.isAlternative());
+				_scenarioTableModel.getRows().add(i, new ScenarioRowModel(this::setModified, _scenarioTableModel, newScenarioRun));
+				setModified();
+			}
 		}
 		catch(EpptInitializationException e)
 		{
@@ -345,7 +346,7 @@ public class ScenarioTablePane extends TitledPane
 				if(newScenarioRun != null && !scenarioRunEditor.isCanceled())
 				{
 					scenarioRunEditor.dispose();
-					Platform.runLater(()->
+					Platform.runLater(() ->
 					{
 						addScenarioRun(newScenarioRun);
 						setModified();
@@ -377,7 +378,7 @@ public class ScenarioTablePane extends TitledPane
 
 			if(newScenarioRun != null && !scenarioRunEditor.isCanceled())
 			{
-				Platform.runLater(()->updateScenario(oldScenarioRun, newScenarioRun));
+				Platform.runLater(() -> updateScenario(oldScenarioRun, newScenarioRun));
 			}
 		});
 	}
