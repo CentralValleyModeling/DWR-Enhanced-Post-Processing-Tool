@@ -77,12 +77,16 @@ final class TreeTableUtil
 							headerRow.remove(headerRow.size() - 1);
 						}
 					}
+					if(i ==0 && children.isEmpty())
+					{
+						subHeaderRow.add("");
+					}
 					i++;
 				} while(i < children.size());
 			}
 		}
 		objectArray.add(headerRow.toArray());
-		if(!subHeaderRow.isEmpty())
+		if(!subHeaderRow.isEmpty() && !subHeaderRow.stream().allMatch(String::isEmpty))
 		{
 			objectArray.add(subHeaderRow.toArray());
 		}
