@@ -105,7 +105,7 @@ class TrendReportDataLoader
 
 		WaterYearPeriodRange waterYearPeriodRange = new WaterYearPeriodRange(waterYearPeriod, new WaterYearType(_end, waterYearPeriod),
 				new WaterYearType(_end, waterYearPeriod));
-		YearMonth endYearMonth = waterYearPeriodRange.getStart(_waterYearDefinition);
+		YearMonth endYearMonth = waterYearPeriodRange.getEnd(_waterYearDefinition);
 		LocalDate end = LocalDate.of(endYearMonth.getYear(), endYearMonth.getMonth(), 1).plusMonths(1).minusDays(2);
 
 		waterYearPeriodRange = new WaterYearPeriodRange(waterYearPeriod, new WaterYearType(_start, waterYearPeriod),
