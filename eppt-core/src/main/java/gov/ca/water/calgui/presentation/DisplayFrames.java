@@ -92,7 +92,7 @@ class DisplayFrames
 		WaterYearPeriod waterYearPeriod = new WaterYearPeriod("");
 		WaterYearPeriodRange waterYearPeriodRange = new WaterYearPeriodRange(waterYearPeriod, new WaterYearType(endYear, waterYearPeriod),
 				new WaterYearType(endYear, waterYearPeriod));
-		YearMonth end = waterYearPeriodRange.getStart(waterYearDefinition);
+		YearMonth end = waterYearPeriodRange.getEnd(waterYearDefinition);
 		return LocalDate.of(end.getYear(), end.getMonth(), 1).plusMonths(1).minusDays(2);
 	}
 
