@@ -209,14 +209,14 @@ public class ScenarioTablePane extends TitledPane
 			newScenarioRun.setAltSelected(oldModel.isAlternative());
 			_scenarioTableModel.getRows().add(i, new ScenarioRowModel(this::setModified, _scenarioTableModel, newScenarioRun));
 			setModified();
-			try
-			{
-				new WaterYearTableReader(newScenarioRun).forceRead();
-			}
-			catch(EpptInitializationException e)
-			{
-				LOGGER.log(Level.SEVERE, "Error reading water year table files for scenario: " + newScenarioRun, e);
-			}
+		}
+		try
+		{
+			new WaterYearTableReader(newScenarioRun).forceRead();
+		}
+		catch(EpptInitializationException e)
+		{
+			LOGGER.log(Level.SEVERE, "Error reading water year table files for scenario: " + newScenarioRun, e);
 		}
 	}
 

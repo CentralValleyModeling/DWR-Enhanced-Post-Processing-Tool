@@ -54,7 +54,7 @@ public class WaterYearIndexModelReader
 
 	public WaterYearIndexModelReader(EpptScenarioRun epptScenarioRun) throws EpptInitializationException
 	{
-		Path modelWaterYearIndexFile = EpptPreferences.getLastProjectConfiguration().resolve(epptScenarioRun.getName()).resolve(Constant.MODEL_WATER_YEAR_INDEX_FILE);
+		Path modelWaterYearIndexFile = EpptPreferences.getLastProjectConfiguration().getParent().resolve(epptScenarioRun.getName()).resolve(Constant.MODEL_WATER_YEAR_INDEX_FILE);
 		if(!modelWaterYearIndexFile.toFile().exists())
 		{
 			modelWaterYearIndexFile = Paths.get(Constant.CONFIG_DIR).resolve(epptScenarioRun.getModel().toString()).resolve(Constant.MODEL_WATER_YEAR_INDEX_FILE);
