@@ -65,7 +65,7 @@ public class WaterYearNameLookup
 			else
 			{
 				//for all other rows other than column headers
-				for(int i = 1; i < colHeaders.size(); i++)
+				for(int i = 1; i <= colHeaders.size(); i++)
 				{
 					//add the value from each column into the dictionary
 					//basically taking a horizontal row and putting it into a dictionary that goes vertically
