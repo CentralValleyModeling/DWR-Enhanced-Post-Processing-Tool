@@ -17,6 +17,8 @@ import java.time.format.TextStyle;
 import java.util.Locale;
 import java.util.Optional;
 
+import hec.lang.annotation.Scriptable;
+
 /**
  * Company: Resource Management Associates
  *
@@ -30,6 +32,12 @@ public class WaterYearDefinition
 	private final Month _end;
 	private final Integer _startDefaultYear;
 	private final Integer _endDefaultYear;
+
+	@Scriptable
+	public WaterYearDefinition(String name, Month start, Month end)
+	{
+		this(name, start, end, null, null);
+	}
 
 	public WaterYearDefinition(String name, Month start, Month end, Integer startDefaultYear, Integer endDefaultYear)
 	{
