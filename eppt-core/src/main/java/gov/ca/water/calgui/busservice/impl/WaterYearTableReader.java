@@ -120,7 +120,7 @@ public class WaterYearTableReader
 				List<WaterYearType> waterYearTypes = dssReader.timeSeriesContainerToMap(primarySeries, false)
 															  .entrySet()
 															  .stream()
-															  .filter(s -> s.getKey().getMonth() == month)
+															  .filter(s -> s.getKey().minusMonths(1).getMonth() == month)
 															  .map(e -> new WaterYearType(e.getKey().minusMonths(1).getYear(),
 																	  getWaterYearPeriod(waterYearIndexId, e.getValue().intValue())))
 															  .collect(toList());
