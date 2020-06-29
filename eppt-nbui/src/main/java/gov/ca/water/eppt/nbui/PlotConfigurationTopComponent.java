@@ -51,6 +51,7 @@ import org.openide.windows.TopComponent;
 public final class PlotConfigurationTopComponent extends EpptTopComponent
 {
 	private static final String TOP_COMPONENT_NAME = "Global Controls";
+	private PlotConfigurationPane _epptConfigurationPane;
 
 	public PlotConfigurationTopComponent()
 	{
@@ -64,17 +65,27 @@ public final class PlotConfigurationTopComponent extends EpptTopComponent
 		return "3.1_ProjectConfiguration.htm";
 	}
 
+	@Override
+	protected void componentDeactivated()
+	{
+		super.componentDeactivated();
+		if(_epptConfigurationPane != null)
+		{
+			_epptConfigurationPane.commitEdits();
+		}
+	}
+
 	private void initComponents()
 	{
 		EpptConfigurationController epptConfigurationController = EpptControllerProvider.getEpptConfigurationController();
 		JFXPanel jfxPanel = new JFXPanel();
 		Platform.runLater(() ->
 		{
-			PlotConfigurationPane epptConfigurationPane = new PlotConfigurationPane(epptConfigurationController);
-			epptConfigurationPane.setPrefHeight(900);
-			EpptControllerProvider.addListener(()->Platform.runLater(epptConfigurationPane::reloadProject));
-			jfxPanel.setScene(new Scene(epptConfigurationPane));
-			epptConfigurationPane.reloadProject();
+			_epptConfigurationPane = new PlotConfigurationPane(epptConfigurationController);
+			_epptConfigurationPane.setPrefHeight(900);
+			EpptControllerProvider.addListener(()->Platform.runLater(_epptConfigurationPane::reloadProject));
+			jfxPanel.setScene(new Scene(_epptConfigurationPane));
+			_epptConfigurationPane.reloadProject();
 		});
 		JScrollPane scrollPane = new JScrollPane(jfxPanel);
 		setLayout(new BorderLayout());

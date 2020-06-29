@@ -1,13 +1,13 @@
 /*
  * Enhanced Post Processing Tool (EPPT) Copyright (c) 2020.
  *
- * EPPT is copyrighted by the State of California, Department of Water Resources. It is licensed
- * under the GNU General Public License, version 2. This means it can be
- * copied, distributed, and modified freely, but you may not restrict others
- * in their ability to copy, distribute, and modify it. See the license below
- * for more details.
+ *  EPPT is copyrighted by the State of California, Department of Water Resources. It is licensed
+ *  under the GNU General Public License, version 2. This means it can be
+ *  copied, distributed, and modified freely, but you may not restrict others
+ *  in their ability to copy, distribute, and modify it. See the license below
+ *  for more details.
  *
- * GNU General Public License
+ *  GNU General Public License
  */
 
 package gov.ca.water.eppt.nbui.projectconfig;
@@ -28,10 +28,10 @@ import org.json.JSONObject;
  */
 public class ProjectConfigurationIO
 {
+	private static final String VERSION_1_0 = "1.0";
 	static final String START_YEAR_PROPERTY = "Start_Year";
 	static final String END_YEAR_PROPERTY = "End_Year";
 	static final String VERSION_KEY = "version";
-	private static final String VERSION_1_0 = "1.0";
 	static final String VERSION_2_0 = "2.0";
 	static final String VERSION_3_0 = "3.0";
 	static final String VERSION_4_0 = "4.0";
@@ -71,6 +71,7 @@ public class ProjectConfigurationIO
 	static final String ANNUAL_PERIODS_GROUP = "annual_periods_group";
 	static final String COMPUTE_DIFFERENCE = "difference";
 	static final String COMPUTE_CFS_TO_TAF = "cfs_to_taf";
+	static final String WATER_YEAR_INDEX_MODEL_PATH = "water_year_index_model_path";
 	static final String STATISTICS = "statistics";
 	static final String FILE_KEY = "file";
 	static final String MODEL_KEY = "model";

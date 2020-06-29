@@ -1,0 +1,77 @@
+# A template file to compare calsimII with calsim3
+SCALAR
+NAME		VALUE
+FILE_BASE	test/2020D09E_121510_DV.DSS #input file 1
+NAME_BASE	CalSim2
+FILE_ALT	test/CL_2020D09E_BO_121510_DV.DSS # input file 2
+NAME_ALT	CalSim3
+OUTFILE		test/Calsim_vs_Callite_021611.pdf
+NOTE		"Notes: Corroboration Study with BO; CalSim: BO version (12/15/2010) and CalLite: BO version*(12/17/2010); Future Condition"
+ASSUMPTIONS 	"Assumptions: Future Condition; Wheeling is On"
+MODELER 	"Nazrul Islam"
+END
+
+PATHNAME_MAPPING
+VARIABLE				VAR_CATEGORY	REPORT_TYPE 	PATH_BASE 						PATH_ALT						ROW_TYPE	PLOT		UNIT
+"Storage"				S_SEPT		Average		IGNORE							IGNORE							B		N		DEFAULT
+"Total NOD Storage"			S_SEPT		Exceedance_post	//S1+S4+S8+S6/STORAGE//1MON//					//S_TRNTY+S_SHSTA+S_FOLSM+S_OROVL/STORAGE//1MON//					N		Y		DEFAULT
+"Trinity Storage"			S_SEPT		Exceedance	//S1/STORAGE//1MON//					//S_TRNTY/STORAGE//1MON//					N		Y		DEFAULT
+"Shasta Storage"			S_SEPT		Exceedance	//S4/STORAGE//1MON//					//S_SHSTA/STORAGE//1MON//					N		Y		DEFAULT
+"Folsom Storage"			S_SEPT		Exceedance	//S8/STORAGE//1MON//					//S_FOLSM/STORAGE//1MON//					N		Y		DEFAULT
+"NOD CVP Storage"				S_SEPT		Exceedance_Post	//S1+S4+S8/STORAGE//1MON//				//S_TRNTY+S_SHSTA+S_FOLSM/STORAGE//1MON//				N		Y		DEFAULT
+"Oroville Storage"			S_SEPT		Exceedance	//S6/STORAGE//1MON//					//S_OROVL/STORAGE//1MON//					N		Y		DEFAULT
+"Total San Luis Storage"			S_SEPT		Exceedance_post	//S11+S12/STORAGE//1MON//					//S_SLUIS_CVP+S_SLUIS_SWP/STORAGE//1MON//					N		Y		DEFAULT
+"CVP San Luis Storage"			S_SEPT		Exceedance	//S11/STORAGE//1MON//					//S_SLUIS_CVP/STORAGE//1MON//					N		Y		DEFAULT
+"SWP San Luis Storage"			S_SEPT		Exceedance	//S12/STORAGE//1MON//					//S_SLUIS_SWP/STORAGE//1MON//					N		Y		DEFAULT
+
+"River Flows"				RF		Average		IGNORE							IGNORE							B		N		DEFAULT
+"Trinity R blw Lewiston"		RF		Average		//C100/FLOW-CHANNEL//1MON//				//C_LWSTN/CHANNEL//1MON//				N		N		DEFAULT
+"Trinity Export"			RF		Average		//D100/FLOW-DELIVERY//1MON//				//D_LWSTN_CCT011/DIVERSION//1MON//				N		N		DEFAULT
+"Clear Cr blw Whiskeytown"		RF		Average		//C3/FLOW-CHANNEL//1MON//				//C_WKYTN/CHANNEL//1MON//				N		N		DEFAULT
+"Sacramento R @ Keswick"		RF		Average		//C5/FLOW-CHANNEL//1MON//				//C_KSWCK/CHANNEL//1MON//				N		Y		DEFAULT
+"Sacramento R @ Wilkins Slough"		RF		Average		//C129/FLOW-CHANNEL//1MON//				//C_SAC097/CHANNEL//1MON//				N		N		DEFAULT
+"Feather R blw Thermalito"		RF		Average		//C203/FLOW-CHANNEL//1MON//				//C_FTR059/CHANNEL//1MON//				N		N		DEFAULT
+"American R blw Nimbus"			RF		Average		//C9/FLOW-CHANNEL//1MON//				//C_NTOMA/CHANNEL//1MON//				N		N		DEFAULT
+
+"Delta Inflow"				DI		Average_post	//C400+C157+C504+C508+C644/FLOW-CHANNEL//1MON//		//C_SAC041+C_YBP020+C_MOK019+C_CLV004+C_SJR056/CHANNEL//1MON//		B		Y		DEFAULT
+"Sacramento R @ Hood"			DI		Average		//C400/FLOW-CHANNEL//1MON//				//C_SAC041/CHANNEL//1MON//				N		N		DEFAULT
+"Yolo Bypass"				DI		Average		//C157/FLOW-CHANNEL//1MON//				//C_YBP020/CHANNEL//1MON//				N		N		DEFAULT
+"Mokelumne R"				DI		Average		//C504/FLOW-CHANNEL//1MON//				//C_MOK019/CHANNEL//1MON//				N		N		DEFAULT
+"Calaveras R "	RF	Exceedance	//C508/FLOW-CHANNEL//1MON//	//C_CLV004/CHANNEL//1MON//	N	N	CFS2TAF
+"San Joaquin R d/s Vernalis"		DI		Average		//C644/FLOW-CHANNEL//1MON//				//C_SJR056/CHANNEL//1MON//				N		N		DEFAULT
+
+"Total Delta Outflow "	RF	Exceedance_post	//C406/FLOW-CHANNEL//1MON//	//C_SAC000_ADD+C_SAC000_MIN/CHANNEL//1MON//	B	Y	CFS2TAF
+"Surplus Outflow"				DO		Average		//C407/FLOW-CHANNEL//1MON//				//C_SAC000_ADD/CHANNEL//1MON//				N		N		CFS2TAF
+"Delta Outflow for X2 and NDO"				DO		Average		//D407/FLOW-DELIVERY//1MON//				//C_SAC000_MIN/CHANNEL//1MON//				N		N		CFS2TAF
+
+"Delta Exports"				DE		Average_post	//D418+D419/FLOW-DELIVERY//1MON//		//C_CAA003+C_DMC000/CHANNEL//1MON//		B		N		CFS2TAF	
+"Banks"				DE		Average		//D419/FLOW-DELIVERY//1MON//						//C_CAA003/CHANNEL//1MON//			N		Y		CFS2TAF
+"      Banks SWP "	RF	Avg_Excd	//D419_SWP/FLOW-DELIVERY//1MON//	//C_CAA003_swp/FLOW-DELIVERY//1MON//	N	Y	CFS2TAF
+"      Banks CVP "	RF	Avg_Excd	//D419_CVP/FLOW-DELIVERY//1MON//	//C_CAA003_cvp/FLOW-DELIVERY//1MON//	N	N	CFS2TAF
+"      Banks WTS "	RF	Avg_Excd	//D419_WTS/FLOW-DELIVERY//1MON//	//C_CAA003_WTS/FLOW-DELIVERY//1MON//	N	N	CFS2TAF
+
+"Jones"				DE		Average		//D418/FLOW-DELIVERY//1MON//						//C_DMC000/CHANNEL//1MON//			N		N		CFS2TAF
+"      Jones CVP "	RF	Avg_Excd	/CALSIM/D418_CVP/FLOW-DELIVERY//1MON//	/CALSIM/C_DMC000_cvp/FLOW-DELIVERY//1MON//	N	Y	CFS2TAF
+"      Jones WTS "	RF	Avg_Excd	/CALSIM/D418_WTS/FLOW-DELIVERY//1MON//	/CALSIM/C_DMC000_WTS/FLOW-DELIVERY//1MON//	N	N	CFS2TAF
+
+"SWP Annual Deliveries "	RF	Avg_POST	/CALSIM/SWP_TA_TOTAL+SWP_CO_TOTAL+SWP_IN_TOTAL/SWP_DELIVERY//1MON//	//SWP_TA_TOTAL+SWP_CO_TOTAL+SWP_IN_TOTAL/SWP_DELIVERY//1MON//	B	N	CFS2TAF
+"      Table A "	RF	Avg_Excd	/CALSIM/SWP_TA_TOTAL/SWP_DELIVERY//1MON//	//SWP_TA_TOTAL/SWP_DELIVERY//1MON//	N	N	CFS2TAF
+"      Article 21 "	RF	Avg_Excd	/CALSIM/SWP_IN_TOTAL/SWP_DELIVERY//1MON//	//SWP_IN_TOTAL/SWP_DELIVERY//1MON//	N	N	CFS2TAF
+"      Article 56 "	RF	Avg_Excd	/CALSIM/SWP_CO_TOTAL/SWP_DELIVERY//1MON//	//SWP_CO_TOTAL/SWP_DELIVERY//1MON//	N	N	CFS2TAF
+
+"CVP SOD Deliveries (w/ CVC)"		CVPSOD		Avg_Excd_post	//del_cvp_pag_s+D855+del_cvp_pex_s+del_cvp_pMI_s+del_cvp_prf_s///1MON//			//del_cvp_pag_s+D855+del_cvp_pex_s+del_cvp_pMI_s+del_cvp_prf_s///1MON//			B		Y		CFS2TAF
+"      Ag "	RF	Avg_Excd	//del_cvp_pag_s/DELIVERY-CVP//1MON//	//del_cvp_pag_s/DELIVERY-CVP//1MON//	N	N	CFS2TAF
+"      CVC "	RF	Avg_Excd	/CALSIM/D855/FLOW-DELIVERY//1MON//	/CALSIM/D855/FLOW-DELIVERY//1MON//	N	N	CFS2TAF
+"      Ex "	RF	Avg_Excd	/CALSIM/del_cvp_pex_s/DELIVERY-CVP//1MON//	/CALSIM/del_cvp_pex_s/DELIVERY-CVP//1MON//	N	N	CFS2TAF
+"      MI "	RF	Avg_Excd	/CALSIM/del_cvp_pMI_s/DELIVERY-CVP//1MON//	/CALSIM/del_cvp_pMI_s/DELIVERY-CVP//1MON//	N	N	CFS2TAF
+"      RF "	RF	Avg_Excd	/CALSIM/del_cvp_prf_s/DELIVERY-CVP//1MON//	/CALSIM/del_cvp_prf_s/DELIVERY-CVP//1MON//	N	N	CFS2TAF
+END
+
+
+TIME_PERIODS
+NAME			TIMEWINDOW
+"Long Term"	"31OCT1921 2400 - 30SEP2003 2400"
+"Dry Period 1"	"31OCT1928 2400 - 30SEP1934 2400"
+"Dry Period 2"	"31OCT1986 2400 - 30SEP1992 2400"
+
+END

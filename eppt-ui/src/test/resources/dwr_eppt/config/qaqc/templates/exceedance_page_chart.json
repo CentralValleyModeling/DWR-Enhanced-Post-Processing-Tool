@@ -1,0 +1,72 @@
+{
+  "data": [
+    {
+      "x": [
+        0.01,
+        0.2,
+        0.25,
+        0.29,
+        0.4,
+        0.9,
+        0.95
+      ],
+      "y": [
+        9999,
+        9999,
+        999,
+        99,
+        50,
+        9,
+        2
+      ],
+      "type": "scatter",
+      "xaxis": "x",
+      "yaxis": "y",
+      "marker": {
+        "color": "rgb(76,126,238)"
+      },
+      "name": "Base (Jan)",
+      "textfont": {
+        "color": "white"
+      }
+    }
+  ],
+  "layout": {
+    "font": {
+      "family": "Lucida Sans Unicode, Verdana, Arial, Helvetica, sans-serif",
+      "color": "black"
+    },
+    "width": 1600,
+    "height": 1200,
+    "xaxis": {
+      "tickformat": ",.0%",
+      "title": {
+        "text": "Exceedance Probability"
+      },
+      "reversed": true,
+      "range": [
+        1.01,
+        0.001
+      ]
+    },
+    "yaxis": {
+      "tickformat": ",.3r%",
+      "autorange": true,
+      "title": {
+        "text": ""
+      }
+    },
+    "grid": {
+      "rows": 4,
+      "columns": 3,
+      "pattern": "independent"
+    },
+    "showlegend": true,
+    "title": {
+      "text": "Exceedance",
+      "font": {
+        "size": 20
+      }
+    }
+  }
+}

@@ -76,7 +76,9 @@ public class EpptReportingComputedStatistics
 	{
 		JSONArray jsonArray = new JSONArray();
 		fullTimeSeries.entrySet()
-					  .stream().map(this::extractMonthArray)
+					  .stream()
+					  .filter(v->!Double.isNaN(v.getValue()))
+					  .map(this::extractMonthArray)
 					  .forEach(jsonArray::put);
 		return jsonArray;
 	}

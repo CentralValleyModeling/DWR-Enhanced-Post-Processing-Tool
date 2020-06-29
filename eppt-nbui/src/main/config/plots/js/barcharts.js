@@ -9,7 +9,6 @@
  *
  * GNU General Public License
  */
-var FORMATTER = '';
 
 function getHeaders(data) {
     let headers = [''];
@@ -48,7 +47,7 @@ function buildTable(data, monthlyIndex, statIndex) {
                     values[annualIndex + 1] = annualValues;
                 }
                 if (annual['computed_statistics'][statIndex]) {
-                    annualValues.push(annual['computed_statistics'][statIndex]['statistic_aggregate']);
+                    annualValues.push(format(annual['computed_statistics'][statIndex]['statistic_aggregate']));
                 } else {
                     annualValues.push(NaN);
                 }
@@ -61,22 +60,17 @@ function buildTable(data, monthlyIndex, statIndex) {
             values: headers,
             align: "center",
             line: {width: 1, color: 'black'},
-            font: {family: PLOTLY_FONT['family'], size: 13}
+            font: {family: PLOTLY_FONT['family'], size: [11, 8]}
         },
         cells: {
-            format: ['', FORMATTER],
             values: values,
             line: {color: "black", width: 1},
             align: ["left", "center"],
             height: 25,
-            font: {family: PLOTLY_FONT['family'], color: [colors], size: [14, 16]}
+            font: {family: PLOTLY_FONT['family'], color: [colors], size: [11, 14]}
         },
         domain: {x: [0, 1], y: [0, 0.3]}
     };
-}
-
-function getAcronym(text) {
-    return text;
 }
 
 function buildLayouts(datum, yaxis, title) {
@@ -93,8 +87,10 @@ function buildLayouts(datum, yaxis, title) {
                 yaxis: {
                     title: {
                         text: yaxis,
+                        standoff: 50
                     },
-                    tickformat: FORMATTER,
+                    automargin: true,
+                    tickformatstops: FORMATTER,
                     domain: [0.4, 1.0],
                     gridcolor: '#CCCCCC',
                     rangemode: 'tozero'
@@ -104,14 +100,6 @@ function buildLayouts(datum, yaxis, title) {
                 },
                 bargroupgap: 0.05,
                 showlegend: false,
-                legend: {
-                    orientation: 'h',
-                    xanchor: 'center',
-                    x: 0.5,
-                    font: {
-                        size: 10,
-                    }
-                },
                 title: {
                     text: title + '<br>' + monthPeriod + '<br>' + statistic,
                     font: {
@@ -131,7 +119,6 @@ function buildLayouts(datum, yaxis, title) {
 }
 
 function plot(data) {
-    FORMATTER = getD3Formatter(data['scenario_run_data'][0]['ts_list'][0]['monthly_filters'][0]['annual_filters'][0]['discrete_ts']);
     var datum = data['scenario_run_data'];
     var layout = buildLayouts(datum, data['units'], data['gui_link_title']);
     let plotlyAggregateSeries = getPeriodGroupedPlotlySeries(datum);
@@ -139,7 +126,7 @@ function plot(data) {
     for (let i = 0; i < layout.length; i++) {
         layout[i]['height'] = 400 + numberOfRows * 65;
     }
-    plotData(layout, plotlyAggregateSeries);
+    plotData(layout, plotlyAggregateSeries, data['ts_descriptor']);
 }
 
 

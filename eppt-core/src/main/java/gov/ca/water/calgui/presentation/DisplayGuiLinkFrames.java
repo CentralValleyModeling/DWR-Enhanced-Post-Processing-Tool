@@ -203,9 +203,7 @@ final class DisplayGuiLinkFrames extends DisplayFrames
 		Optional<EpptScenarioRun> base = getEpptConfigurationController().getEpptScenarioBase();
 		if(base.isPresent())
 		{
-			DSSGrabber1SvcImpl dssGrabber1Svc = buildDssGrabber(base.get(), guiLink, getEpptConfigurationController().isTaf(),
-					getStart(),
-					getEnd());
+			DSSGrabber1SvcImpl dssGrabber1Svc = buildDssGrabber(base.get(), guiLink, getEpptConfigurationController().isTaf());
 			TimeSeriesContainer basePrimarySeries = dssGrabber1Svc.getPrimarySeries()[0];
 			TimeSeriesContainer baseSecondarySeries = dssGrabber1Svc.getSecondarySeries()[0];
 
@@ -213,9 +211,7 @@ final class DisplayGuiLinkFrames extends DisplayFrames
 			{
 				if(!epptScenarioRun.isBaseSelected())
 				{
-					dssGrabber1Svc = buildDssGrabber(epptScenarioRun, guiLink, getEpptConfigurationController().isTaf(),
-							getStart(),
-							getEnd());
+					dssGrabber1Svc = buildDssGrabber(epptScenarioRun, guiLink, getEpptConfigurationController().isTaf());
 					TimeSeriesContainer primarySeries = DSSGrabber1SvcImpl.diffSeries(basePrimarySeries, dssGrabber1Svc.getPrimarySeries()[0]);
 					TimeSeriesContainer secondarySeries = DSSGrabber1SvcImpl.diffSeries(baseSecondarySeries, dssGrabber1Svc.getSecondarySeries()[0]);
 					List<TimeSeriesContainer> tscList = new ArrayList<>();
@@ -240,9 +236,7 @@ final class DisplayGuiLinkFrames extends DisplayFrames
 		Map<EpptScenarioRun, List<TimeSeriesContainer>> primaryScenarioRunData = new TreeMap<>(Comparator.comparing(scenarioRuns::indexOf));
 		for(EpptScenarioRun epptScenarioRun : scenarioRuns)
 		{
-			DSSGrabber1SvcImpl dssGrabber1Svc = buildDssGrabber(epptScenarioRun, guiLink, getEpptConfigurationController().isTaf(),
-					getStart(),
-					getEnd());
+			DSSGrabber1SvcImpl dssGrabber1Svc = buildDssGrabber(epptScenarioRun, guiLink, getEpptConfigurationController().isTaf());
 			TimeSeriesContainer primarySeries = dssGrabber1Svc.getPrimarySeries()[0];
 			TimeSeriesContainer secondarySeries = dssGrabber1Svc.getSecondarySeries()[0];
 			List<TimeSeriesContainer> tscList = new ArrayList<>();
@@ -260,14 +254,13 @@ final class DisplayGuiLinkFrames extends DisplayFrames
 		return primaryScenarioRunData;
 	}
 
-	private DSSGrabber1SvcImpl buildDssGrabber(EpptScenarioRun epptScenarioRun, GUILinksAllModelsBO guiLink, boolean isCFS, LocalDate start,
-											   LocalDate end)
+	private DSSGrabber1SvcImpl buildDssGrabber(EpptScenarioRun epptScenarioRun, GUILinksAllModelsBO guiLink, boolean isCFS)
 	{
 		DSSGrabber1SvcImpl dssGrabber = new DSSGrabber1SvcImpl();
 		dssGrabber.setIsCFS(isCFS);
 		dssGrabber.setScenarioRuns(epptScenarioRun, Collections.emptyList());
 		dssGrabber.setGuiLink(guiLink);
-		dssGrabber.setDateRange(start, end);
+		dssGrabber.setDateRange(getStart(), getEnd());
 		return dssGrabber;
 	}
 

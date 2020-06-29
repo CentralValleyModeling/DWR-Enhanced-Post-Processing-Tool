@@ -1,0 +1,43 @@
+{
+  "data": [
+    {
+      "x": [],
+      "y": [],
+      "type": "scatter",
+      "marker": {
+        "color": ""
+      },
+      "name": ""
+    }
+  ],
+  "layout": {
+    "font": {
+      "family": "Lucida Sans Unicode, Verdana, Arial, Helvetica, sans-serif",
+      "color": "black"
+    },
+    "xaxis": {
+      "showgrid": false,
+      "tickformat": ",.0%",
+      "title": {
+        "text": ""
+      },
+      "reversed": true,
+      "range": [
+        1.01,
+        0.001
+      ]
+    },
+    "yaxis": {
+      "tickformat": ",.3r%",
+      "title": {
+        "text": ""
+      }
+    },
+    "title": {
+      "text": "",
+      "font": {
+        "size": 20
+      }
+    }
+  }
+}

@@ -1,0 +1,66 @@
+<!--
+  ~ Enhanced Post Processing Tool (EPPT) Copyright (c) 2020.
+  ~
+  ~  EPPT is copyrighted by the State of California, Department of Water Resources. It is licensed
+  ~  under the GNU General Public License, version 2. This means it can be
+  ~  copied, distributed, and modified freely, but you may not restrict others
+  ~  in their ability to copy, distribute, and modify it. See the license below
+  ~  for more details.
+  ~
+  ~  GNU General Public License
+  -->
+
+<panel id="Custom" font="Tahoma-Italic-12" layout="borderlayout">
+
+	<panel layout="BorderLayout">
+		<panel layout="FlowLayout(FlowLayout.LEFT)" border="TitledBorder(Controls)" constraints="BorderLayout.NORTH">
+			<panel layout="GridBagLayout">
+				<checkbox name="TimeSeriesAll" id="TimeSeriesAll" text="Timeseries (All)" selected="true">
+					<gridbagconstraints insets="0,0,5,3" anchor="GridBagConstraints.WEST" gridx="1" gridy="1"/>
+				</checkbox>
+				<checkbox name="TimeSeriesAggregate" id="TimeSeriesAggregate" text="Timeseries (Aggregate)" selected="false">
+					<gridbagconstraints insets="0,0,5,3" anchor="GridBagConstraints.WEST" gridx="1" gridy="2"/>
+				</checkbox>
+				<checkbox name="ExceedanceAll" id="ExceedanceAll" text="Exceedance (All)" selected="false">
+					<gridbagconstraints insets="0,0,5,3" anchor="GridBagConstraints.WEST" gridx="2" gridy="1"/>
+				</checkbox>
+				<checkbox name="ExceedanceAggregate" id="ExceedanceAggregate" text="Exceedance (Aggregate)" selected="false">
+					<gridbagconstraints insets="0,0,5,3" anchor="GridBagConstraints.WEST" gridx="2" gridy="2"/>
+				</checkbox>
+				<checkbox name="MonthlyLine" id="MonthlyLine" text="Monthly Line Plot" selected="false">
+					<gridbagconstraints insets="0,0,5,3" anchor="GridBagConstraints.WEST" gridx="3" gridy="1"/>
+				</checkbox>
+				<checkbox name="BarGraph" id="BarGraph" text="Bar Graph" selected="false">
+					<gridbagconstraints insets="0,0,5,3" anchor="GridBagConstraints.WEST" gridx="3" gridy="2"/>
+				</checkbox>
+				<checkbox name="BoxAndWhiskerAll" id="BoxAndWhiskerAll" text="Box Plot (All)" selected="false">
+					<gridbagconstraints insets="0,0,5,3" anchor="GridBagConstraints.WEST" gridx="4" gridy="1"/>
+				</checkbox>
+				<checkbox name="BoxAndWhiskerAggregate" id="BoxAndWhiskerAggregate" text="Box Plot (Aggregate)" selected="false">
+					<gridbagconstraints insets="0,0,5,3" anchor="GridBagConstraints.WEST" gridx="4" gridy="2"/>
+				</checkbox>
+				<checkbox name="MonthlyTable" id="MonthlyTable" text="Monthly Table">
+					<gridbagconstraints insets="0,0,5,3" anchor="GridBagConstraints.WEST" gridx="5" gridy="1"/>
+				</checkbox>
+				<checkbox name="SummaryTable" id="SummaryTable" text="Summary Table" selected="false">
+					<gridbagconstraints insets="0,0,5,3" anchor="GridBagConstraints.WEST" gridx="5" gridy="2"/>
+				</checkbox>
+			</panel>
+		</panel>
+		<panel layout="BorderLayout" constraints="BorderLayout.CENTER">
+			<panel constraints="BorderLayout.NORTH" layout="FlowLayout(FlowLayout.LEFT)">
+				<button text="Load" ActionCommand="CR_LoadList"
+						enabled="true">
+				</button>
+				<button text="Save" ActionCommand="CR_SaveList"
+						enabled="true">
+				</button>
+				<button text="Clear" ActionCommand="CR_ClearTree" enabled="true">
+				</button>
+			</panel>
+			<panel constraints="BorderLayout.CENTER" name="WRIMS" id="WRIMS" layout="BorderLayout"
+				   preferredsize="900,600">
+			</panel>
+		</panel>
+	</panel>
+</panel>

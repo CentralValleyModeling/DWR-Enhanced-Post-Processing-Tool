@@ -1,20 +1,19 @@
 /*
- * Enhanced Post Processing Tool (EPPT) Copyright (c) 2019.
+ * Enhanced Post Processing Tool (EPPT) Copyright (c) 2020.
  *
- * EPPT is copyrighted by the State of California, Department of Water Resources. It is licensed
- * under the GNU General Public License, version 2. This means it can be
- * copied, distributed, and modified freely, but you may not restrict others
- * in their ability to copy, distribute, and modify it. See the license below
- * for more details.
+ *  EPPT is copyrighted by the State of California, Department of Water Resources. It is licensed
+ *  under the GNU General Public License, version 2. This means it can be
+ *  copied, distributed, and modified freely, but you may not restrict others
+ *  in their ability to copy, distribute, and modify it. See the license below
+ *  for more details.
  *
- * GNU General Public License
+ *  GNU General Public License
  */
 
 package gov.ca.water.trendreporting;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
-import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.Month;
 import java.util.Arrays;
@@ -32,23 +31,16 @@ import gov.ca.water.calgui.bo.WaterYearPeriodRange;
 import gov.ca.water.calgui.bo.WaterYearPeriodRangesFilter;
 import gov.ca.water.calgui.bo.WaterYearType;
 import gov.ca.water.calgui.busservice.impl.EpptParameters;
-import gov.ca.water.calgui.busservice.impl.EpptReportingMonths;
-import gov.ca.water.calgui.busservice.impl.EpptStatistic;
 import gov.ca.water.calgui.busservice.impl.GuiLinksSeedDataSvcImpl;
 import gov.ca.water.calgui.busservice.impl.MonthPeriod;
 import gov.ca.water.calgui.busservice.impl.ScriptedEpptStatistics;
 import gov.ca.water.calgui.busservice.impl.ThresholdLinksSeedDataSvc;
 import gov.ca.water.calgui.busservice.impl.WaterYearDefinitionSvc;
-import gov.ca.water.calgui.busservice.impl.WaterYearIndexAliasReader;
-import gov.ca.water.calgui.busservice.impl.WaterYearTableReader;
+import gov.ca.water.calgui.busservice.impl.WaterYearIndexReader;
 import gov.ca.water.calgui.project.EpptDssContainer;
 import gov.ca.water.calgui.project.EpptScenarioRun;
 import gov.ca.water.calgui.project.NamedDssPath;
 import gov.ca.water.calgui.project.EpptConfigurationController;
-import gov.ca.water.calgui.project.PlotConfigurationState;
-import org.junit.jupiter.api.Assertions;
-
-import hec.heclib.dss.HecDSSFileAccess;
 
 import static org.junit.jupiter.api.Assertions.fail;
 
@@ -81,7 +73,7 @@ public class TrendReportScaffold
 		GuiLinksSeedDataSvcImpl.createSeedDataSvcImplInstance();
 		WaterYearDefinitionSvc.createSeedDataSvcImplInstance();
 		ThresholdLinksSeedDataSvc.createSeedDataSvcImplInstance();
-		WaterYearIndexAliasReader.createInstance();
+		WaterYearIndexReader.createInstance();
 		EpptParameters.createTrendReportingParametersInstance();
 		NamedDssPath baseDss = new NamedDssPath(
 				Paths.get("J:\\DWR\\QA_QC\\SupportingDocs040219\\EPPTSupportingDoc040219\\SampleDSS_V1.01\\Inputs\\SampleDV_Base.dss"), "test base",
@@ -135,7 +127,7 @@ public class TrendReportScaffold
 		ScriptedEpptStatistics.createScriptedStatistics();
 
 		EpptConfigurationController epptConfigurationController = new EpptConfigurationController();
-		WaterYearDefinition waterYearDefinition = new WaterYearDefinition("Test", Month.OCTOBER, Month.SEPTEMBER);
+		WaterYearDefinition waterYearDefinition = new WaterYearDefinition("Test", Month.OCTOBER, Month.SEPTEMBER, 1, 1);
 		epptConfigurationController.setWaterYearDefinition(waterYearDefinition);
 		epptConfigurationController.setStartYear(1901);
 		epptConfigurationController.setEndYear(2007);

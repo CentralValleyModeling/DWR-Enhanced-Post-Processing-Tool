@@ -13,11 +13,13 @@
 package gov.ca.water.trendreporting;
 
 import java.time.LocalDate;
+import java.time.YearMonth;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.TreeMap;
 import java.util.logging.Level;
@@ -25,21 +27,20 @@ import java.util.logging.Logger;
 
 import gov.ca.water.calgui.bo.GUILinksAllModelsBO;
 import gov.ca.water.calgui.bo.WaterYearDefinition;
+import gov.ca.water.calgui.bo.WaterYearPeriod;
+import gov.ca.water.calgui.bo.WaterYearPeriodRange;
 import gov.ca.water.calgui.bo.WaterYearPeriodRangesFilter;
+import gov.ca.water.calgui.bo.WaterYearType;
 import gov.ca.water.calgui.busservice.impl.DSSGrabber1SvcImpl;
 import gov.ca.water.calgui.busservice.impl.EpptParameter;
 import gov.ca.water.calgui.busservice.impl.EpptReportingComputedSet;
 import gov.ca.water.calgui.busservice.impl.EpptReportingComputer;
 import gov.ca.water.calgui.busservice.impl.EpptStatistic;
 import gov.ca.water.calgui.busservice.impl.MonthPeriod;
-import gov.ca.water.calgui.constant.Constant;
 import gov.ca.water.calgui.project.EpptScenarioRun;
 import org.json.JSONObject;
 
-import hec.heclib.util.HecTime;
-import hec.heclib.util.HecTimeArray;
 import hec.io.TimeSeriesContainer;
-import rma.util.RMAConst;
 
 /**
  * Company: Resource Management Associates
@@ -62,12 +63,9 @@ class TrendReportDataLoader
 	private final boolean _aggregate;
 	private final boolean _difference;
 
-	TrendReportDataLoader(List<EpptScenarioRun> scenarioRuns, List<EpptParameter> guiLink,
-						  int start, int end, boolean taf, boolean difference,
-						  WaterYearDefinition waterYearDefinition,
-						  List<EpptStatistic> statistics, List<MonthPeriod> monthPeriod,
-						  List<Map<EpptScenarioRun, WaterYearPeriodRangesFilter>> waterYearPeriodRangesFilters,
-						  boolean aggregate)
+	TrendReportDataLoader(List<EpptScenarioRun> scenarioRuns, List<EpptParameter> guiLink, int start, int end, boolean taf, boolean difference,
+						  WaterYearDefinition waterYearDefinition, List<EpptStatistic> statistics, List<MonthPeriod> monthPeriod,
+						  List<Map<EpptScenarioRun, WaterYearPeriodRangesFilter>> waterYearPeriodRangesFilters, boolean aggregate)
 	{
 		_scenarioRuns = scenarioRuns;
 		_guiLink = guiLink;
@@ -103,12 +101,20 @@ class TrendReportDataLoader
 	private List<JSONObject> compute()
 	{
 		List<JSONObject> retval = new ArrayList<>();
+		WaterYearPeriod waterYearPeriod = new WaterYearPeriod("Entire Range");
+
+		WaterYearPeriodRange waterYearPeriodRange = new WaterYearPeriodRange(waterYearPeriod, new WaterYearType(_end, waterYearPeriod),
+				new WaterYearType(_end, waterYearPeriod));
+		YearMonth endYearMonth = waterYearPeriodRange.getEnd(_waterYearDefinition);
+		LocalDate end = LocalDate.of(endYearMonth.getYear(), endYearMonth.getMonth(), 1).plusMonths(1).minusDays(2);
+
+		waterYearPeriodRange = new WaterYearPeriodRange(waterYearPeriod, new WaterYearType(_start, waterYearPeriod),
+				new WaterYearType(_start, waterYearPeriod));
+		YearMonth startYearMonth = waterYearPeriodRange.getStart(_waterYearDefinition);
+		LocalDate start = LocalDate.of(startYearMonth.getYear(), startYearMonth.getMonth(), 1).minusMonths(1).plusDays(2);
 		for(EpptParameter parameter : _guiLink)
 		{
 			GUILinksAllModelsBO guiLink = parameter.getGuiLink();
-
-			LocalDate start = LocalDate.of(_start, _waterYearDefinition.getStartMonth(), 1).minusDays(2);
-			LocalDate end = LocalDate.of(_end, _waterYearDefinition.getEndMonth(), 1).plusMonths(1).plusDays(2);
 			Map<EpptScenarioRun, List<TimeSeriesContainer>> scenarioRunData;
 			if(_difference)
 			{
@@ -118,8 +124,7 @@ class TrendReportDataLoader
 			{
 				scenarioRunData = buildComparisonSeries(guiLink, start, end);
 			}
-			EpptReportingComputedSet epptReportingComputedSet = EpptReportingComputer.computeForMetrics(
-					scenarioRunData, guiLink.getPlotTitle(), _taf, _waterYearDefinition,
+			EpptReportingComputedSet epptReportingComputedSet = EpptReportingComputer.computeForMetrics(scenarioRunData, guiLink.getPlotTitle(), _taf, _waterYearDefinition,
 					_monthPeriod, _waterYearPeriodRangesFilters, _statistics);
 			JSONObject jsonObject = epptReportingComputedSet.toJson();
 			LOGGER.log(Level.FINE, "{0}", jsonObject);
@@ -164,8 +169,7 @@ class TrendReportDataLoader
 		return scenarioRunData;
 	}
 
-	private DSSGrabber1SvcImpl buildDssGrabber(EpptScenarioRun epptScenarioRun, GUILinksAllModelsBO guiLink, boolean isCFS, LocalDate start,
-											   LocalDate end)
+	private DSSGrabber1SvcImpl buildDssGrabber(EpptScenarioRun epptScenarioRun, GUILinksAllModelsBO guiLink, boolean isCFS, LocalDate start, LocalDate end)
 	{
 		DSSGrabber1SvcImpl dssGrabber = new DSSGrabber1SvcImpl();
 		dssGrabber.setIsCFS(isCFS);
@@ -199,7 +203,11 @@ class TrendReportDataLoader
 		{
 			retval = Optional.of("No Annual Filter defined");
 		}
-		else if(_difference && _scenarioRuns.stream().noneMatch(EpptScenarioRun::isBaseSelected) )
+		else if(_waterYearPeriodRangesFilters.stream().anyMatch(filter -> _scenarioRuns.stream().map(filter::get).anyMatch(Objects::isNull)))
+		{
+			retval = Optional.of("Undefined Annual Period due to invalid water year type definitions");
+		}
+		else if(_difference && _scenarioRuns.stream().noneMatch(EpptScenarioRun::isBaseSelected))
 		{
 			retval = Optional.of("No Base scenario selected for Difference calculation");
 		}

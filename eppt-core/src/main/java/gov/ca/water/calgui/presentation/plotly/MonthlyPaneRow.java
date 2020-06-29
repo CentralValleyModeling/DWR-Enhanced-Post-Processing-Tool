@@ -12,11 +12,10 @@
 
 package gov.ca.water.calgui.presentation.plotly;
 
-import java.math.BigDecimal;
-import java.math.MathContext;
+import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
-import gov.ca.water.calgui.busservice.impl.EpptStatistic;
 import gov.ca.water.calgui.constant.Constant;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.value.ObservableValue;
@@ -55,16 +54,27 @@ abstract class MonthlyPaneRow extends RmaTreeTableRowModel<MonthlyPaneRow>
 
 	static class MonthlyPaneRowScenario extends MonthlyPaneRow
 	{
+		private final int _index;
 		private final SimpleStringProperty _title;
 		private final TreeTableColumnSpec _treeTableColumnSpec;
 
-		MonthlyPaneRowScenario(String title, TreeTableColumnSpec treeTableColumnSpec)
+		MonthlyPaneRowScenario(int index, String title, TreeTableColumnSpec treeTableColumnSpec)
 		{
 			super(null);
+			_index = index;
 			_title = new SimpleStringProperty(title.replace("<br>", " "));
 			_treeTableColumnSpec = treeTableColumnSpec;
 		}
 
+		String getTitle()
+		{
+			return _title.get();
+		}
+
+		int getIndex()
+		{
+			return _index;
+		}
 
 		@Override
 		public ObservableValue<?> getObservableValue(TreeTableColumnSpec treeTableColumnSpec)
@@ -75,39 +85,40 @@ abstract class MonthlyPaneRow extends RmaTreeTableRowModel<MonthlyPaneRow>
 			}
 			return null;
 		}
+
+		@Override
+		public boolean equals(Object o)
+		{
+			if(this == o)
+			{
+				return true;
+			}
+			if(o == null || getClass() != o.getClass())
+			{
+				return false;
+			}
+			final MonthlyPaneRowScenario that = (MonthlyPaneRowScenario) o;
+			return _title.get().equals(that._title.get());
+		}
+
+		@Override
+		public int hashCode()
+		{
+			return Objects.hash(_title.get());
+		}
 	}
 
 	static class MonthlyPaneRowData extends MonthlyPaneRow
 	{
 
 		private final SimpleStringProperty _year;
-		private final Map<TreeTableColumnSpec, SimpleStringProperty> _data;
+		private final Map<TreeTableColumnSpec, SimpleStringProperty> _data = new HashMap<>();
 		private final TreeTableColumnSpec _treeTableColumnSpec;
 
-		MonthlyPaneRowData(MonthlyPaneRowScenario parent, int year, Map<TreeTableColumnSpec, Double> data, TreeTableColumnSpec treeTableColumnSpec)
+		MonthlyPaneRowData(String header, TreeTableColumnSpec treeTableColumnSpec)
 		{
-			super(parent);
-			_year = new SimpleStringProperty(Integer.toString(year));
-			_data = data.entrySet().stream().collect(toMap(Map.Entry::getKey, e ->
-			{
-				SimpleStringProperty retval = new SimpleStringProperty();
-				if(e.getValue() != null && Constant.isValidValue(e.getValue()))
-				{
-					Double value = e.getValue();
-					if(value >= 1)
-					{
-						retval = new SimpleStringProperty(Long.toString(Math.round(value)));
-					}
-					else
-					{
-						BigDecimal bigDecimal = BigDecimal.valueOf(value);
-						bigDecimal = bigDecimal.round(new MathContext(3));
-						value = bigDecimal.doubleValue();
-						retval = new SimpleStringProperty(Double.toString(value));
-					}
-				}
-				return retval;
-			}));
+			super(null);
+			_year = new SimpleStringProperty(header);
 			_treeTableColumnSpec = treeTableColumnSpec;
 		}
 
@@ -121,46 +132,10 @@ abstract class MonthlyPaneRow extends RmaTreeTableRowModel<MonthlyPaneRow>
 			}
 			return _data.get(treeTableColumnSpec);
 		}
-	}
 
-	static class MonthlyPaneRowStat extends MonthlyPaneRow
-	{
-
-		private final SimpleStringProperty _stat;
-		private final Map<TreeTableColumnSpec, SimpleStringProperty> _data;
-		private final TreeTableColumnSpec _treeTableColumnSpec;
-
-		MonthlyPaneRowStat(MonthlyPaneRowScenario parent, EpptStatistic epptStatistic, Map<TreeTableColumnSpec, Double> data,
-						   TreeTableColumnSpec treeTableColumnSpec)
+		void addData(Map<TreeTableColumnSpec, Double> dataMap)
 		{
-			super(parent);
-			_stat = new SimpleStringProperty(epptStatistic.getName());
-			_data = data.entrySet().stream().collect(toMap(Map.Entry::getKey,
-					e ->
-					{
-						if(!e.getValue().isNaN())
-						{
-							BigDecimal bigDecimal = BigDecimal.valueOf(e.getValue());
-							bigDecimal = bigDecimal.round(new MathContext(3));
-							return new SimpleStringProperty(Double.toString(bigDecimal.doubleValue()));
-						}
-						else
-						{
-							return new SimpleStringProperty("");
-						}
-					}));
-			_treeTableColumnSpec = treeTableColumnSpec;
-		}
-
-
-		@Override
-		public ObservableValue<?> getObservableValue(TreeTableColumnSpec treeTableColumnSpec)
-		{
-			if(treeTableColumnSpec == _treeTableColumnSpec)
-			{
-				return _stat;
-			}
-			return _data.get(treeTableColumnSpec);
+			_data.putAll(dataMap.entrySet().stream().collect(toMap(Map.Entry::getKey, e -> Constant.getStringForDouble(e.getValue()))));
 		}
 	}
 }

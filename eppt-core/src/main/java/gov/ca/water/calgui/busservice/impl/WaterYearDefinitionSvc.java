@@ -1,13 +1,13 @@
 /*
- * Enhanced Post Processing Tool (EPPT) Copyright (c) 2019.
+ * Enhanced Post Processing Tool (EPPT) Copyright (c) 2020.
  *
- * EPPT is copyrighted by the State of California, Department of Water Resources. It is licensed
- * under the GNU General Public License, version 2. This means it can be
- * copied, distributed, and modified freely, but you may not restrict others
- * in their ability to copy, distribute, and modify it. See the license below
- * for more details.
+ *  EPPT is copyrighted by the State of California, Department of Water Resources. It is licensed
+ *  under the GNU General Public License, version 2. This means it can be
+ *  copied, distributed, and modified freely, but you may not restrict others
+ *  in their ability to copy, distribute, and modify it. See the license below
+ *  for more details.
  *
- * GNU General Public License
+ *  GNU General Public License
  */
 
 package gov.ca.water.calgui.busservice.impl;
@@ -52,6 +52,8 @@ public class WaterYearDefinitionSvc
 	private static final int NAME = 0;
 	private static final int START_MONTH = 1;
 	private static final int END_MONTH = 2;
+	private static final int START_DEFAULT_YEAR = 3;
+	private static final int END_DEFAULT_YEAR = 4;
 	private static WaterYearDefinitionSvc seedDataSvc;
 	private final List<WaterYearDefinition> _definitions = new ArrayList<>();
 
@@ -75,7 +77,7 @@ public class WaterYearDefinitionSvc
 	{
 		if(seedDataSvc == null)
 		{
-			throw new IllegalArgumentException();
+			throw new IllegalArgumentException("Water Year Definition service is uninitialized");
 		}
 		else
 		{
@@ -108,12 +110,27 @@ public class WaterYearDefinitionSvc
 			{
 				errorStr = thresholdLinkString;
 				String[] list = thresholdLinkString.split(Constant.DELIMITER);
-				if(list.length > END_MONTH && list[START_MONTH] != null && list[END_MONTH] != null)
+				if(list.length > END_MONTH)
 				{
 					String name = list[NAME];
 					Month start = Month.of(DateTimeFormatter.ofPattern("MMMM").parse(list[START_MONTH]).get(ChronoField.MONTH_OF_YEAR));
 					Month end = Month.of(DateTimeFormatter.ofPattern("MMMM").parse(list[END_MONTH]).get(ChronoField.MONTH_OF_YEAR));
-					_definitions.add(new WaterYearDefinition(name, start, end));
+					Integer startDefaultYear = null;
+					Integer endDefaultYear = null;
+					if(list.length > END_DEFAULT_YEAR)
+					{
+						String startYearDefaultString = list[START_DEFAULT_YEAR];
+						if(!startYearDefaultString.trim().isEmpty())
+						{
+							startDefaultYear = Integer.parseInt(startYearDefaultString);
+						}
+						String endYearDefaultString = list[END_DEFAULT_YEAR];
+						if(!endYearDefaultString.trim().isEmpty())
+						{
+							endDefaultYear = Integer.parseInt(endYearDefaultString);
+						}
+					}
+					_definitions.add(new WaterYearDefinition(name, start, end, startDefaultYear, endDefaultYear));
 				}
 			}
 		}

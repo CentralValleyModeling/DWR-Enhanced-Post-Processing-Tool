@@ -14,10 +14,10 @@
 	<panel layout="BorderLayout">
 		<panel layout="FlowLayout(FlowLayout.LEFT)" border="TitledBorder(Controls)" constraints="BorderLayout.NORTH">
 			<panel layout="GridBagLayout">
-				<checkbox name="TimeSeriesAll" id="TimeSeriesAll" text="Time Series All" selected="true">
+				<checkbox name="TimeSeriesAll" id="TimeSeriesAll" text="Timeseries All" selected="true">
 					<gridbagconstraints insets="0,0,5,3" anchor="GridBagConstraints.WEST" gridx="1" gridy="1"/>
 				</checkbox>
-				<checkbox name="TimeSeriesAggregate" id="TimeSeriesAggregate" text="Time Series Aggregate" selected="false">
+				<checkbox name="TimeSeriesAggregate" id="TimeSeriesAggregate" text="Timeseries Aggregate" selected="false">
 					<gridbagconstraints insets="0,0,5,3" anchor="GridBagConstraints.WEST" gridx="1" gridy="2"/>
 				</checkbox>
 				<checkbox name="ExceedanceAll" id="ExceedanceAll" text="Exceedance All" selected="false">

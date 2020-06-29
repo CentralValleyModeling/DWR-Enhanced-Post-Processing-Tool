@@ -12,8 +12,6 @@
 
 package gov.ca.water.reportengine.standardsummary;
 
-import java.math.BigDecimal;
-import java.math.MathContext;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -22,6 +20,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Pattern;
 
+import gov.ca.water.calgui.constant.Constant;
 import gov.ca.water.calgui.project.EpptScenarioRun;
 import gov.ca.water.calgui.scripts.DssMissingRecordException;
 import gov.ca.water.reportengine.EpptReportException;
@@ -227,16 +226,7 @@ class CoaTableBuilder extends TableBuilder
 			{
 				double value = (double) baseValue + (double) altValue;
 				String textValue;
-				String units = baseJythonValueGenerator.getUnits();
-				if("percent".equals(units))
-				{
-					BigDecimal bd = BigDecimal.valueOf(value);
-					textValue = bd.round(new MathContext(3)).toString();
-				}
-				else
-				{
-					textValue = String.valueOf(Math.round(value));
-				}
+				textValue = Constant.getStringForDouble(value).getValue();
 				retval.setTextContent(textValue);
 			}
 		}
@@ -274,17 +264,8 @@ class CoaTableBuilder extends TableBuilder
 			{
 				if(value instanceof Double)
 				{
-					String units = jythonValueGenerator.getUnits();
 					String textValue;
-					if("percent".equals(units))
-					{
-						BigDecimal bd = BigDecimal.valueOf((Double) value);
-						textValue = bd.round(new MathContext(3)).toString();
-					}
-					else
-					{
-						textValue = String.valueOf(Math.round((Double) value));
-					}
+					textValue = Constant.getStringForDouble((Double) value).getValue();
 					retval.setTextContent(textValue);
 				}
 				else

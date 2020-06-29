@@ -1,13 +1,13 @@
 /*
- * Enhanced Post Processing Tool (EPPT) Copyright (c) 2019.
+ * Enhanced Post Processing Tool (EPPT) Copyright (c) 2020.
  *
- * EPPT is copyrighted by the State of California, Department of Water Resources. It is licensed
- * under the GNU General Public License, version 2. This means it can be
- * copied, distributed, and modified freely, but you may not restrict others
- * in their ability to copy, distribute, and modify it. See the license below
- * for more details.
+ *  EPPT is copyrighted by the State of California, Department of Water Resources. It is licensed
+ *  under the GNU General Public License, version 2. This means it can be
+ *  copied, distributed, and modified freely, but you may not restrict others
+ *  in their ability to copy, distribute, and modify it. See the license below
+ *  for more details.
  *
- * GNU General Public License
+ *  GNU General Public License
  */
 
 package gov.ca.water.calgui.busservice.impl;
@@ -40,6 +40,7 @@ import gov.ca.water.calgui.project.EpptDssContainer;
 import gov.ca.water.calgui.project.EpptScenarioRun;
 import gov.ca.water.calgui.project.NamedDssPath;
 
+import hec.heclib.dss.DSSPathname;
 import hec.heclib.dss.HecDataManager;
 import hec.heclib.dss.HecDss;
 import hec.heclib.util.HecTime;
@@ -157,13 +158,15 @@ public class DSSGrabber1SvcImpl implements IDSSGrabber1Svc
 		{
 			HecTime ht = new HecTime();
 
-			int m = startMonth.getMonth().getValue();
-			int y = startMonth.getYear();
-			ht.setYearMonthDay(y, m, 1, 0);
+			int month = startMonth.getMonth().getValue();
+			int year = startMonth.getYear();
+			int dayOfMonth = startMonth.getDayOfMonth();
+			ht.setYearMonthDay(year, month, dayOfMonth, 0);
 			_startTime = new HecTime(ht);
-			m = endMonth.getMonth().getValue();
-			y = endMonth.getYear();
-			ht.setYearMonthDay(y, m, 1, 0);
+			month = endMonth.getMonth().getValue();
+			year = endMonth.getYear();
+			dayOfMonth = endMonth.getDayOfMonth();
+			ht.setYearMonthDay(year, month, dayOfMonth, 0);
 			_endTime = new HecTime(ht);
 		}
 		catch(RuntimeException ex)
@@ -562,6 +565,11 @@ public class DSSGrabber1SvcImpl implements IDSSGrabber1Svc
 
 		if(result != null)
 		{
+			//Only for secondary values - Monthly table depends on this name
+			if(dssName.equalsIgnoreCase(_secondaryDSSName.get(model)))
+			{
+				result.supplementalInfo = _legend;
+			}
 			result.fileName = dssPath.getAliasName() + " (" + model + ")";
 			result.fullName = dssPath.getAliasName() + " (" + model + ")";
 		}
@@ -757,4 +765,13 @@ public class DSSGrabber1SvcImpl implements IDSSGrabber1Svc
 		return _primaryDSSName;
 	}
 
+	public void setDssPathname(DSSPathname value)
+	{
+		_primaryDSSName.clear();
+		GUILinksAllModelsBO.Model.values().forEach(m->_primaryDSSName.put(m, value.getBPart() + "/" + value.getCPart()));
+		_secondaryDSSName.clear();
+		_axisLabel = "";
+		_plotTitle = "";
+		_legend = "";
+	}
 }

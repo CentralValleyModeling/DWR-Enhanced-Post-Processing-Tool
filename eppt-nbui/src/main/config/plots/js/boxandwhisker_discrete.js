@@ -17,7 +17,7 @@ function getPlotlyDiscreteSeries(datum) {
         for (let tsIndex = 0; tsIndex < datum[0]['ts_list'].length; tsIndex++) {
             for (let i = 0; i < datum.length; i++) {
                 let tsList = datum[i]['ts_list'];
-                if(tsList[tsIndex]) {
+                if (tsList[tsIndex]) {
                     let annualFilters = tsList[tsIndex]['monthly_filters'][monthlyIndex]['annual_filters'];
                     let x = [];
                     let y = [];
@@ -25,15 +25,23 @@ function getPlotlyDiscreteSeries(datum) {
                         let annualData = annualFilters[j];
                         let timeSeries = annualData['discrete_ts'];
                         for (var ts = 0; ts < timeSeries.length; ts++) {
-                            x.push(annualData['annual_period']);
-                            y.push(timeSeries[ts][1]);
+                            for (let periodIndex = 0; periodIndex < annualData['period_months'].length; periodIndex++) {
+                                let monthString = annualData['period_months'][periodIndex];
+                                let periodMonth = new Date(Date.parse('02 ' + monthString + ' 1970 05:00:00 GMT')).getMonth();
+                                var date = new Date(timeSeries[ts][0]);
+                                date.setMonth(date.getMonth() - 1);
+                                if (periodMonth == date.getMonth()) {
+                                    x.push(annualData['annual_period']);
+                                    y.push(timeSeries[ts][1]);
+                                }
+                            }
                         }
                     }
                     series.push({
                         y: y,
                         x: x,
                         type: 'box',
-                        name: tsList[tsIndex]['ts_name'],
+                        name: tsList[tsIndex]['ts_name'] + '     ',
                         marker: {
                             color: datum[i]['scenario_color']
                         },
@@ -68,8 +76,10 @@ function buildDiscreteLayouts(datum, yaxis, title) {
                             yaxis: {
                                 title: {
                                     text: yaxis,
+                                    standoff: 50
                                 },
-                                tickformat: FORMATTER,
+                                automargin: true,
+                                tickformatstops: FORMATTER,
                                 gridcolor: '#CCCCCC',
                                 rangemode: 'tozero'
                             },
@@ -109,16 +119,15 @@ function buildDiscreteLayouts(datum, yaxis, title) {
     return layoutList;
 }
 
-function plot(data){
+function plot(data) {
     plotDiscrete(data);
 }
 
 function plotDiscrete(data) {
-    FORMATTER = getD3Formatter(data['scenario_run_data'][0]['ts_list'][0]['monthly_filters'][0]['annual_filters'][0]['discrete_ts']);
     var datum = data['scenario_run_data'];
     var layout = buildDiscreteLayouts(datum, data['units'], data['gui_link_title']);
     let plotlyAggregateSeries = getPlotlyDiscreteSeries(datum);
-    plotData(layout, plotlyAggregateSeries);
+    plotData(layout, plotlyAggregateSeries, data['ts_descriptor']);
 }
 
 function plotlyCopyToClipboard(element) {

@@ -1,13 +1,13 @@
 /*
- * Enhanced Post Processing Tool (EPPT) Copyright (c) 2019.
+ * Enhanced Post Processing Tool (EPPT) Copyright (c) 2020.
  *
- * EPPT is copyrighted by the State of California, Department of Water Resources. It is licensed
- * under the GNU General Public License, version 2. This means it can be
- * copied, distributed, and modified freely, but you may not restrict others
- * in their ability to copy, distribute, and modify it. See the license below
- * for more details.
+ *  EPPT is copyrighted by the State of California, Department of Water Resources. It is licensed
+ *  under the GNU General Public License, version 2. This means it can be
+ *  copied, distributed, and modified freely, but you may not restrict others
+ *  in their ability to copy, distribute, and modify it. See the license below
+ *  for more details.
  *
- * GNU General Public License
+ *  GNU General Public License
  */
 
 package gov.ca.water.reportengine.detailedissues;
@@ -29,7 +29,7 @@ import gov.ca.water.calgui.bo.DetailedIssue;
 import gov.ca.water.calgui.bo.GUILinksAllModelsBO;
 import gov.ca.water.calgui.bo.ThresholdLinksBO;
 import gov.ca.water.calgui.bo.WaterYearDefinition;
-import gov.ca.water.calgui.bo.WaterYearIndex;
+import gov.ca.water.calgui.bo.WaterYearIndexModel;
 import gov.ca.water.calgui.bo.WaterYearType;
 import gov.ca.water.calgui.busservice.impl.GuiLinksSeedDataSvcImpl;
 import gov.ca.water.calgui.busservice.impl.ThresholdLinksSeedDataSvc;
@@ -82,10 +82,10 @@ public class DetailedIssueProcessor
 				LOGGER.at(Level.INFO).log("Processing Detailed Issues for Scenario Run: %s", run.getName());
 				Map<Module, List<DetailedIssueViolation>> modToDIVs = new HashMap<>();
 				Map<SubModule, List<FlagViolation>> subModToViolations = _runsToViolations.get(run);
-				WaterYearTableReader wyTypeReader = new WaterYearTableReader(run.getLookupDirectory());
 				try
 				{
-					List<WaterYearIndex> waterYearTypes = wyTypeReader.read();
+					WaterYearTableReader wyTypeReader = new WaterYearTableReader(run);
+					List<WaterYearIndexModel> waterYearTypes = wyTypeReader.read();
 					for(Module mod : _modules)
 					{
 						if(!Objects.equals("Model Inputs", mod.getName()))
@@ -189,7 +189,7 @@ public class DetailedIssueProcessor
 		{
 			title = "Undefined";
 		}
-		DssReader dssReader = new DssReader(run, new WaterYearDefinition("", Month.OCTOBER, Month.SEPTEMBER), new DssCache());
+		DssReader dssReader = new DssReader(run, new WaterYearDefinition("", Month.OCTOBER, Month.SEPTEMBER, 1, 1), new DssCache());
 		NavigableMap<LocalDateTime, Double> guiLinkData = new TreeMap<>();
 		String valueUnits = "";
 		try

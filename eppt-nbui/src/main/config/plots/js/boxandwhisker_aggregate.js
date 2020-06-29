@@ -33,7 +33,7 @@ function getPlotlyAggregateSeries(datum) {
                         y: y,
                         x: x,
                         type: 'box',
-                        name: tsList[tsIndex]['ts_name'],
+                        name: tsList[tsIndex]['ts_name'] + '     ',
                         marker: {
                             color: datum[i]['scenario_color']
                         },
@@ -68,8 +68,10 @@ function buildAggregateLayouts(datum, yaxis, title) {
                             yaxis: {
                                 title: {
                                     text: yaxis,
+                                    standoff: 50
                                 },
-                                tickformat: FORMATTER,
+                                automargin: true,
+                                tickformatstops: FORMATTER,
                                 gridcolor: '#CCCCCC',
                                 rangemode: 'tozero'
                             },
@@ -114,11 +116,10 @@ function plot(data){
 }
 
 function plotAggregate(data) {
-    FORMATTER = getD3Formatter(data['scenario_run_data'][0]['ts_list'][0]['monthly_filters'][0]['annual_filters'][0]['discrete_ts']);
     var datum = data['scenario_run_data'];
     var layout = buildAggregateLayouts(datum, data['units'], data['gui_link_title']);
     let plotlyAggregateSeries = getPlotlyAggregateSeries(datum);
-    plotData(layout, plotlyAggregateSeries);
+    plotData(layout, plotlyAggregateSeries, data['ts_descriptor']);
 }
 
 function plotlyCopyToClipboard(element) {

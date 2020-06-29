@@ -1,0 +1,59 @@
+{
+  "layout": {
+    "title": "",
+    "grid": {
+      "columns": 1,
+      "rows": 1
+    },
+    "xaxis": {
+      "title": {
+        "text": ""
+      }
+    },
+    "yaxis": {
+      "tickformat": ",.3r%",
+      "title": {
+        "text": ""
+      }
+    },
+    "annotations": [
+      {
+        "x": 2,
+        "y": 5,
+        "xref": "x",
+        "yref": "y",
+        "text": "Year",
+        "showarrow": true,
+        "arrowhead": 3,
+        "ax": 0,
+        "ay": -40
+      }
+    ],
+    "font": {
+      "family": "'Lucida Grande', 'Lucida Sans Unicode', 'Verdana', 'Arial', 'Helvetica', 'sans-serif'",
+      "color": "black"
+    }
+  },
+  "data": [
+    {
+      "mode": "markers+text",
+      "marker": {
+        "size": 30,
+        "color": "rgba(255, 255, 255, 0.0)",
+        "line": {
+          "color": "#FFFFFF",
+          "width": "2"
+        },
+        "font": {
+          "color" : ""
+        }
+      },
+      "name": "Base",
+      "x": [],
+      "y": [],
+      "text": [],
+      "type": "scatter",
+      "xaxis": "x1"
+    }
+  ]
+}

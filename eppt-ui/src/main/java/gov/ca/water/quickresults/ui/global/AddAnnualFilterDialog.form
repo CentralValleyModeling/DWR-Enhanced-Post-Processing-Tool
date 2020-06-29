@@ -2,9 +2,11 @@
 <form xmlns="http://www.intellij.com/uidesigner/form/" version="1" bind-to-class="gov.ca.water.quickresults.ui.global.AddAnnualFilterDialog">
   <grid id="cbd77" binding="_contentPane" layout-manager="BorderLayout" hgap="5" vgap="5">
     <constraints>
-      <xy x="48" y="54" width="563" height="199"/>
+      <xy x="48" y="54" width="566" height="383"/>
     </constraints>
-    <properties/>
+    <properties>
+      <preferredSize width="480" height="500"/>
+    </properties>
     <border type="empty">
       <size top="5" left="5" bottom="0" right="5"/>
     </border>
@@ -15,7 +17,7 @@
         <border type="none"/>
         <children>
           <grid id="9538f" layout-manager="BorderLayout" hgap="0" vgap="0">
-            <constraints border-constraint="West"/>
+            <constraints border-constraint="Center"/>
             <properties/>
             <border type="none"/>
             <children>
@@ -55,105 +57,120 @@
           </grid>
         </children>
       </grid>
-      <grid id="b65ff" layout-manager="BorderLayout" hgap="10" vgap="10">
+      <component id="33208" class="javafx.embed.swing.JFXPanel" binding="_jfxPanel" custom-create="true">
         <constraints border-constraint="Center"/>
+        <properties/>
+      </component>
+      <grid id="e3cdc" layout-manager="FlowLayout" hgap="5" vgap="5" flow-align="0">
+        <constraints border-constraint="North"/>
         <properties/>
         <border type="none"/>
         <children>
-          <grid id="68070" layout-manager="GridBagLayout">
-            <constraints border-constraint="Center"/>
+          <grid id="b65ff" layout-manager="BorderLayout" hgap="10" vgap="10">
+            <constraints/>
             <properties>
-              <preferredSize width="250" height="108"/>
+              <preferredSize width="250" height="200"/>
             </properties>
             <border type="none"/>
             <children>
-              <grid id="c3872" layout-manager="GridBagLayout">
-                <constraints>
-                  <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="8" fill="2" indent="0" use-parent-layout="false"/>
-                  <gridbag top="5" left="5" bottom="5" right="5" weightx="1.0" weighty="0.0"/>
-                </constraints>
-                <properties/>
+              <grid id="68070" layout-manager="GridBagLayout">
+                <constraints border-constraint="Center"/>
+                <properties>
+                  <preferredSize width="250" height="108"/>
+                </properties>
                 <border type="none"/>
                 <children>
-                  <hspacer id="6995d">
+                  <component id="16796" class="javax.swing.JLabel">
                     <constraints>
-                      <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="1" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
-                      <gridbag weightx="0.0" weighty="0.0"/>
+                      <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                      <gridbag top="5" left="5" bottom="5" right="5" weightx="0.0" weighty="0.0"/>
                     </constraints>
-                  </hspacer>
-                  <vspacer id="98084">
-                    <constraints>
-                      <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="6" hsize-policy="1" anchor="0" fill="2" indent="0" use-parent-layout="false"/>
-                      <gridbag weightx="0.0" weighty="0.0"/>
-                    </constraints>
-                  </vspacer>
+                    <properties>
+                      <text value="Start (Water) Year:"/>
+                    </properties>
+                  </component>
                   <component id="5f5f9" class="javax.swing.JSpinner" binding="_startYearSpinner">
                     <constraints>
-                      <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false"/>
+                      <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false"/>
                       <gridbag weightx="0.0" weighty="0.0"/>
                     </constraints>
                     <properties/>
                   </component>
-                  <component id="df968" class="javax.swing.JSpinner" binding="_endYearSpinner">
+                  <component id="87539" class="javax.swing.JLabel">
                     <constraints>
-                      <grid row="0" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false"/>
-                      <gridbag weightx="0.0" weighty="0.0"/>
+                      <grid row="3" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                      <gridbag top="5" left="5" bottom="5" right="5" weightx="0.0" weighty="0.0"/>
                     </constraints>
-                    <properties/>
+                    <properties>
+                      <text value="Start Month:"/>
+                    </properties>
                   </component>
-                </children>
-              </grid>
-              <component id="16796" class="javax.swing.JLabel">
-                <constraints>
-                  <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
-                  <gridbag top="5" left="5" bottom="5" right="5" weightx="0.0" weighty="0.0"/>
-                </constraints>
-                <properties>
-                  <text value="Seasonal Period:"/>
-                </properties>
-              </component>
-              <component id="2f4d" class="javax.swing.JCheckBox" binding="_overrideWaterYearDefinitionCheckBox" default-binding="true">
-                <constraints>
-                  <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
-                  <gridbag weightx="0.0" weighty="0.0"/>
-                </constraints>
-                <properties>
-                  <text value="Override Water Year Definition Months"/>
-                </properties>
-              </component>
-              <grid id="ec116" layout-manager="GridBagLayout">
-                <constraints>
-                  <grid row="1" column="1" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="8" fill="2" indent="0" use-parent-layout="false"/>
-                  <gridbag top="5" left="5" bottom="5" right="5" weightx="0.0" weighty="0.0"/>
-                </constraints>
-                <properties/>
-                <border type="none"/>
-                <children>
-                  <hspacer id="4e351">
-                    <constraints>
-                      <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="1" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
-                      <gridbag weightx="0.0" weighty="0.0"/>
-                    </constraints>
-                  </hspacer>
-                  <vspacer id="79d27">
-                    <constraints>
-                      <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="6" hsize-policy="1" anchor="0" fill="2" indent="0" use-parent-layout="false"/>
-                      <gridbag weightx="0.0" weighty="0.0"/>
-                    </constraints>
-                  </vspacer>
                   <component id="a7db8" class="javax.swing.JComboBox" binding="_startMonthCombobox" default-binding="true">
                     <constraints>
-                      <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="2" anchor="8" fill="1" indent="0" use-parent-layout="false"/>
-                      <gridbag weightx="0.0" weighty="0.0"/>
+                      <grid row="3" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="2" anchor="8" fill="1" indent="0" use-parent-layout="false"/>
+                      <gridbag top="5" left="5" bottom="5" right="5" weightx="1.0" weighty="1.0"/>
                     </constraints>
                     <properties>
                       <enabled value="false"/>
                     </properties>
                   </component>
+                  <component id="d8efb" class="javax.swing.JLabel">
+                    <constraints>
+                      <grid row="5" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                      <gridbag top="5" left="5" bottom="5" right="5" weightx="1.0" weighty="1.0"/>
+                    </constraints>
+                    <properties>
+                      <text value="Calendar Period:"/>
+                    </properties>
+                  </component>
+                  <component id="1c53f" class="javax.swing.JLabel" binding="_periodOfRecordLabel">
+                    <constraints>
+                      <grid row="5" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                      <gridbag top="5" left="5" bottom="5" right="5" weightx="1.0" weighty="1.0"/>
+                    </constraints>
+                    <properties>
+                      <preferredSize width="200" height="38"/>
+                      <text value="Label"/>
+                    </properties>
+                  </component>
+                  <component id="a2e5c" class="javax.swing.JLabel">
+                    <constraints>
+                      <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                      <gridbag top="5" left="5" bottom="5" right="5" weightx="0.0" weighty="0.0"/>
+                    </constraints>
+                    <properties>
+                      <text value="End (Water) Year:"/>
+                    </properties>
+                  </component>
+                  <component id="df968" class="javax.swing.JSpinner" binding="_endYearSpinner">
+                    <constraints>
+                      <grid row="1" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false"/>
+                      <gridbag weightx="0.0" weighty="0.0"/>
+                    </constraints>
+                    <properties/>
+                  </component>
+                  <component id="2f4d" class="javax.swing.JCheckBox" binding="_overrideWaterYearDefinitionCheckBox" default-binding="true">
+                    <constraints>
+                      <grid row="2" column="0" row-span="1" col-span="2" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+                      <gridbag top="5" left="5" bottom="5" right="5" weightx="0.0" weighty="0.0"/>
+                    </constraints>
+                    <properties>
+                      <text value="Override Water Year Definition Months"/>
+                    </properties>
+                  </component>
+                  <component id="fcca4" class="javax.swing.JLabel">
+                    <constraints>
+                      <grid row="4" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                      <gridbag top="5" left="5" bottom="5" right="5" weightx="0.0" weighty="0.0"/>
+                    </constraints>
+                    <properties>
+                      <text value="End Month:"/>
+                    </properties>
+                  </component>
                   <component id="e3188" class="javax.swing.JComboBox" binding="_endMonthCombobox" default-binding="true">
                     <constraints>
-                      <grid row="0" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="2" anchor="8" fill="1" indent="0" use-parent-layout="false"/>
-                      <gridbag weightx="0.0" weighty="0.0"/>
+                      <grid row="4" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="2" anchor="8" fill="1" indent="0" use-parent-layout="false"/>
+                      <gridbag top="5" left="5" bottom="5" right="5" weightx="1.0" weighty="1.0"/>
                     </constraints>
                     <properties>
                       <enabled value="false"/>

@@ -11,7 +11,75 @@
  */
 //DEBUG flag to render plot on page load
 const DEBUG = false;
-var FORMATTER = '';
+var PERCENT_FORMATTER = [
+    {
+        enabled: true,
+        dtickrange: [.01, null],
+        value: ",.0%"
+    },
+    {
+        enabled: true,
+        dtickrange: [.001, .01],
+        value: ",.1%"
+    },
+    {
+        enabled: true,
+        dtickrange: [.0001, .001],
+        value: ",.2%"
+    },
+    {
+        enabled: true,
+        dtickrange: [null, .0001],
+        value: ",.3%"
+    },
+];
+var FORMATTER = [
+    {
+        enabled: true,
+        dtickrange: [10, null],
+        value: ",.0f"
+    },
+    {
+        enabled: true,
+        dtickrange: [1, 10],
+        value: ",.1f"
+    },
+    {
+        enabled: true,
+        dtickrange: [.1, 1],
+        value: ",.2f"
+    },
+    {
+        enabled: true,
+        dtickrange: [null, .1],
+        value: ",.3f"
+    },
+];
+
+function format(value) {
+    let format;
+    if(value) {
+        if (Math.abs(value) >= 1000) {
+            format = ",.0f";
+        } else if (Math.abs(value) >= 10) {
+            format = ",.1f";
+        } else if (Math.abs(value) >= 1) {
+            format = ",.2f";
+        } else {
+            format = ",.3f";
+        }
+        let retval = Plotly.d3.format(format)(value);
+        if (Number(retval) === 0) {
+            retval = 0;
+        }
+        if (retval === '-0') {
+            retval = '0';
+        }
+        return retval;
+    }
+    return value;
+}
+
 const PLOTLY_FONT = {
     family: 'Lucida Grande", "Lucida Sans Unicode", "Verdana", "Arial", "Helvetica", "sans-serif',
     color: 'black',
@@ -21,7 +89,7 @@ const PLOTLY_LINE_DASH_STYLES = ['solid', 'dashdot', 'dot'];
 
 let syncPlotsEnabled = false;
 
-function buildModeBarButtons(graphDiv) {
+function buildModeBarButtons(graphDiv, tsDescriptor) {
     let syncPlots = {
         name: 'Toggle Sync X-Axis',
         icon: {
@@ -31,7 +99,6 @@ function buildModeBarButtons(graphDiv) {
             'path': "M472.863,175.662L353.396,56.195c-6.666-6.664-17.472-6.662-24.136,0.004c-3.199,3.2-4.996,7.538-4.997,12.063v51.2 H204.796c-9.426,0-17.067,7.641-17.067,17.067c0,9.426,7.641,17.067,17.067,17.067H341.33c9.426,0,17.067-7.641,17.067-17.067 V109.46l78.268,78.268l-78.268,78.268v-27.068c0-9.426-7.641-17.067-17.067-17.067H153.596v-51.2 c-0.002-9.426-7.645-17.065-17.07-17.063c-4.524,0.001-8.863,1.798-12.063,4.997L4.997,278.062 c-6.663,6.665-6.663,17.468,0,24.132l119.467,119.467c3.2,3.201,7.54,5,12.066,5.001c2.243,0.007,4.466-0.434,6.536-1.297 c6.376-2.644,10.532-8.867,10.53-15.77v-51.2h119.467c9.426,0,17.067-7.641,17.067-17.067s-7.641-17.067-17.067-17.067H136.53 c-9.426,0-17.067,7.641-17.067,17.067v27.068l-78.268-78.268l78.268-78.268v27.068c0,9.426,7.641,17.067,17.067,17.067h187.733 v51.2c0.002,9.426,7.645,17.065,17.07,17.063c4.524-0.001,8.863-1.798,12.063-4.997l119.467-119.467 C479.525,193.129,479.525,182.326,472.863,175.662z",
         },
         click: () => {
-            alert('clicked custom button!');
             syncPlotsEnabled = !syncPlotsEnabled;
             let buttons = document.getElementsByClassName('modebar-btn');
             for (let i = 0; i < buttons.length; i++) {
@@ -45,9 +112,63 @@ function buildModeBarButtons(graphDiv) {
             }
         }
     };
+    let properties = {
+        name: 'Properties',
+        icon: {
+            'width': 24,
+            'height': 24,
+            'path': 'M12,8A4,4 0 0,1 16,12A4,4 0 0,1 12,16A4,4 0 0,1 8,12A4,4 0 0,1 12,8M12,10A2,2 0 0,0 10,12A2,2 0 0,0 12,14A2,2 0 0,0 14,12A2,2 0 0,0 12,10M10,22C9.75,22 9.54,21.82 9.5,21.58L9.13,18.93C8.5,18.68 7.96,18.34 7.44,17.94L4.95,18.95C4.73,19.03 4.46,18.95 4.34,18.73L2.34,15.27C2.21,15.05 2.27,14.78 2.46,14.63L4.57,12.97L4.5,12L4.57,11L2.46,9.37C2.27,9.22 2.21,8.95 2.34,8.73L4.34,5.27C4.46,5.05 4.73,4.96 4.95,5.05L7.44,6.05C7.96,5.66 8.5,5.32 9.13,5.07L9.5,2.42C9.54,2.18 9.75,2 10,2H14C14.25,2 14.46,2.18 14.5,2.42L14.87,5.07C15.5,5.32 16.04,5.66 16.56,6.05L19.05,5.05C19.27,4.96 19.54,5.05 19.66,5.27L21.66,8.73C21.79,8.95 21.73,9.22 21.54,9.37L19.43,11L19.5,12L19.43,13L21.54,14.63C21.73,14.78 21.79,15.05 21.66,15.27L19.66,18.73C19.54,18.95 19.27,19.04 19.05,18.95L16.56,17.95C16.04,18.34 15.5,18.68 14.87,18.93L14.5,21.58C14.46,21.82 14.25,22 14,22H10M11.25,4L10.88,6.61C9.68,6.86 8.62,7.5 7.85,8.39L5.44,7.35L4.69,8.65L6.8,10.2C6.4,11.37 6.4,12.64 6.8,13.8L4.68,15.36L5.43,16.66L7.86,15.62C8.63,16.5 9.68,17.14 10.87,17.38L11.24,20H12.76L13.13,17.39C14.32,17.14 15.37,16.5 16.14,15.62L18.57,16.66L19.32,15.36L17.2,13.81C17.6,12.64 17.6,11.37 17.2,10.2L19.31,8.65L18.56,7.35L16.15,8.39C15.38,7.5 14.32,6.86 13.12,6.62L12.75,4H11.25Z',
+        },
+        click: () => {
+            var modal = document.getElementById("tsDescriptor");
+            var span = document.getElementById("closeModal");
+            modal.style.display = "block";
+            span.onclick = function () {
+                modal.style.display = "none";
+            }
+            window.onclick = function (event) {
+                if (event.target === modal) {
+                    modal.style.display = "none";
+                }
+            };
+            let modalBody = document.getElementById("modal-body");
+            modalBody.innerHTML = '';
+            let table = document.createElement("table");
+            table.style.border = 'none';
+            modalBody.appendChild(table);
+            for (let i = 0; i < tsDescriptor.length; i++) {
+                let description = tsDescriptor[i];
+                let tableRow = document.createElement("tr");
+                tableRow.style.color = description['scenario_color'];
+                table.appendChild(tableRow);
+                tableRow.classList.add('scenarioHeader');
+                let scenarioTd = document.createElement("td");
+                scenarioTd.innerHTML += '<b>Scenario:</b> ' + description['scenario_name'] + " (" + description['scenario_model'] + ')';
+                tableRow.appendChild(scenarioTd);
+                scenarioTd.colspan = "3";
+                let timeSeriesMetadata = description['time_series_metadata'];
+                for (let j = 0; j < timeSeriesMetadata.length; j++) {
+                    let tsRow = document.createElement("tr");
+                    tsRow.style.color = description['scenario_color'];
+                    tsRow.classList.add('metadata');
+                    table.appendChild(tsRow);
+                    tsRow.appendChild(document.createElement("td"));
+                    let metadata = timeSeriesMetadata[j];
+                    let fileAliasTd = document.createElement("td");
+                    fileAliasTd.style.padding = "10px";
+                    tsRow.appendChild(fileAliasTd);
+                    fileAliasTd.innerHTML += '<b>File Alias:</b> ' + metadata['time_series_file_alias'];
+                    let dssPathTd = document.createElement("td");
+                    tsRow.appendChild(dssPathTd);
+                    dssPathTd.innerHTML += '<b>DSS Path:</b> '+ metadata['dss_path'];
+                }
+            }
+        }
+    };
     return [['zoom2d', 'pan2d', 'zoomIn2d', 'zoomOut2d', 'resetScale2d'],
-        ['toggleSpikelines', 'hoverClosestCartesian', 'hoverCompareCartesian'], [syncPlots]];
+        ['toggleSpikelines', 'hoverClosestCartesian', 'hoverCompareCartesian'], [properties, syncPlots]];
 }
+
 
 const subtractLight = function (color, amount) {
     let cc = parseInt(color, 16) - amount;
@@ -62,7 +183,7 @@ const darken = (color, amount) => {
     return color = `#${subtractLight(color.substring(0, 2), amount)}${subtractLight(color.substring(2, 4), amount)}${subtractLight(color.substring(4, 6), amount)}`;
 };
 
-function plotData(layout, dataList) {
+function plotData(layout, dataList, tsDescriptor) {
     let main = document.getElementById("main");
     let plots = [];
     for (let i = 0; i < dataList.length; i++) {
@@ -72,7 +193,7 @@ function plotData(layout, dataList) {
         main.appendChild(plot);
         Plotly.newPlot(plot.id, dataList[i], layout[i], {
             displaylogo: false,
-            modeBarButtons: buildModeBarButtons(plot.id),
+            modeBarButtons: buildModeBarButtons(plot.id, tsDescriptor),
             scrollZoom: true,
             responsive: true
         });
@@ -166,13 +287,22 @@ var javaObj;
 
 function plotlyExportFunction(plot) {
     return (format) => {
-        let width = plot.offsetWidth;
-        let height = plot.offsetHeight;
-        //javaObj instantiated from JavaFX
-        if (javaObj) {
-            javaObj.interruptFunction(format, JSON.stringify(plot.data), JSON.stringify(plot.layout), width, height);
+        try {
+            let width = plot.offsetWidth;
+            let height = plot.offsetHeight;
+            console.log("Downloading plot with width: " + width + " and height: " + height);
+            //javaObj instantiated from JavaFX
+            if (javaObj) {
+                console.log("Downloading through Java");
+                javaObj.interruptFunction(format, JSON.stringify(plot.data), JSON.stringify(plot.layout), width, height);
+            } else {
+                console.log("Downloading through Javascript");
+                Plotly.downloadImage(plot, {format: format, height: height, width: width});
+            }
+        } catch (err) {
+            console.log(err);
+            console.error(err);
         }
-        Plotly.downloadImage(plot, {format: format, height: height, width: width});
     }
 }
 
@@ -186,969 +316,182 @@ function copyTextToClipboard(text) {
     document.body.removeChild(textArea);
 }
 
-function openSecondNav(option, plot) {
-    var secondSidenav = document.getElementById("secondSidenav");
-    if (!secondSidenav) {
-        secondSidenav = document.createElement("div");
-        secondSidenav.id = "secondSidenav";
-        secondSidenav.className = "second-sidenav";
-        document.body.appendChild(secondSidenav);
-    }
-    while (secondSidenav.firstChild) {
-        secondSidenav.removeChild(secondSidenav.firstChild);
-    }
-    secondSidenav.style.width = "350px";
-    document.getElementById("main").style.marginLeft = "600px";
-    let plotTemplate = Plotly.makeTemplate(plot);
-
-    function addDomainAxesOptions() {
-        let domain = document.createElement("div");
-        domain.appendChild(document.createTextNode("Domain"));
-        domain.className = "secondary-nav-title";
-
-        let domainTextField = document.createElement("input");
-        domainTextField.type = "text";
-        let currentXAxisTitle = plotTemplate.layout.xaxis.title;
-        if (currentXAxisTitle) {
-            domainTextField.value = currentXAxisTitle.text;
-        }
-        domainTextField.addEventListener('input', (event) => {
-            Plotly.relayout(plot, {"xaxis.title.text": event.target.value});
-        });
-        let domainLabel = document.createElement("label");
-        domainLabel.appendChild(document.createTextNode("Label"));
-        domainLabel.className = "secondary-nav-label";
-
-
-        let domainLabelColor = document.createElement("input");
-        domainLabelColor.type = "color";
-        if (currentXAxisTitle) {
-            domainTextField.value = currentXAxisTitle.font.color;
-        }
-        domainLabelColor.addEventListener('input', (event) => {
-            Plotly.relayout(plot, {"xaxis.title.font.color": event.target.value});
-        });
-        let domainLabelColorLabel = document.createElement("label");
-        domainLabelColorLabel.appendChild(document.createTextNode("Label Color"));
-        domainLabelColorLabel.className = "secondary-nav-label";
-
-        let domainShowTicks = document.createElement("label");
-        domainShowTicks.className = 'switch';
-        let showTicksToggleCheckbox = document.createElement("input");
-        showTicksToggleCheckbox.type = "checkbox";
-        let checked = true;
-        if (plotTemplate.layout.xaxis.visible === false) {
-            checked = false;
-        }
-        showTicksToggleCheckbox.checked = checked;
-        domainShowTicks.appendChild(showTicksToggleCheckbox);
-        let showTicksToggle = document.createElement("div");
-        showTicksToggle.className = "slider round";
-        domainShowTicks.appendChild(showTicksToggle);
-        showTicksToggleCheckbox.addEventListener('change', (event) => {
-            Plotly.relayout(plot, {
-                "xaxis.visible": event.target.checked
-            });
-        });
-        let domainShowTicksLabel = document.createElement("label");
-        domainShowTicksLabel.for = 'margin-color';
-        domainShowTicksLabel.appendChild(document.createTextNode("Show Ticks"));
-        domainShowTicksLabel.className = "secondary-nav-label";
-
-        let domainShowTickLabels = document.createElement("label");
-        domainShowTickLabels.className = 'switch';
-        let showTickLabelsToggleCheckbox = document.createElement("input");
-        showTickLabelsToggleCheckbox.type = "checkbox";
-        checked = true;
-        if (plotTemplate.layout.xaxis.showticklabels === false) {
-            checked = false;
-        }
-        showTickLabelsToggleCheckbox.checked = checked;
-        domainShowTickLabels.appendChild(showTickLabelsToggleCheckbox);
-        let showTickLabelsToggle = document.createElement("div");
-        showTickLabelsToggle.className = "slider round";
-        domainShowTickLabels.appendChild(showTickLabelsToggle);
-        showTickLabelsToggleCheckbox.addEventListener('change', (event) => {
-            Plotly.relayout(plot, {
-                "xaxis.showticklabels": event.target.checked
-            });
-        });
-        let domainShowTicksLabelsLabel = document.createElement("label");
-        domainShowTicksLabelsLabel.for = 'margin-color';
-        domainShowTicksLabelsLabel.appendChild(document.createTextNode("Show Tick Labels"));
-        domainShowTicksLabelsLabel.className = "secondary-nav-label";
-
-        let domainAxisType = document.createElement("select");
-        domainAxisType.type = "dropdown";
-        let linear = document.createElement("option");
-        linear.value = "linear";
-        linear.appendChild(document.createTextNode("Linear"));
-        let log = document.createElement("option");
-        log.value = "log";
-        log.appendChild(document.createTextNode("Logarithmic"));
-        let date = document.createElement("option");
-        date.value = "date";
-        date.appendChild(document.createTextNode("Date"));
-        let category = document.createElement("option");
-        category.value = "category";
-        category.appendChild(document.createTextNode("Category"));
-        let multicategory = document.createElement("option");
-        multicategory.value = "multicategory";
-        multicategory.appendChild(document.createTextNode("Multicategory"));
-        domainAxisType.appendChild(linear);
-        domainAxisType.appendChild(log);
-        domainAxisType.appendChild(date);
-        domainAxisType.appendChild(category);
-        domainAxisType.appendChild(multicategory);
-        domainAxisType.addEventListener('change', (event) => {
-            Plotly.relayout(plot, {
-                "xaxis.type": event.target.value
-            });
-        });
-        let domainAxisTypeLabel = document.createElement("label");
-        domainAxisTypeLabel.appendChild(document.createTextNode("Axis Type"));
-
-        let domainMax = document.createElement("input");
-        let domainMin = document.createElement("input");
-        domainMin.addEventListener('input', () => {
-            Plotly.relayout(plot, {
-                "xaxis.autorange": false,
-                "xaxis.range": [domainMin.value, domainMax.value]
-            });
-        });
-        if (plotTemplate.layout.xaxis.type === 'linear'
-            || plotTemplate.layout.xaxis.type === 'log') {
-            domainMin.type = "number";
-        } else {
-            domainMin.type = "text";
-        }
-        domainMin.value = plotTemplate.layout.xaxis.range[0];
-        let domainMinLabel = document.createElement("label");
-        domainMinLabel.appendChild(document.createTextNode("Min"));
-        domainMinLabel.className = "secondary-nav-label";
-
-        if (plotTemplate.layout.xaxis.type === 'linear'
-            || plotTemplate.layout.xaxis.type === 'log') {
-            domainMax.type = "number";
-        } else {
-            domainMax.type = "text";
-        }
-        domainMax.value = plotTemplate.layout.xaxis.range[1];
-        domainMax.addEventListener('input', () => {
-            Plotly.relayout(plot, {
-                "xaxis.autorange": false,
-                "xaxis.range": [domainMin.value, domainMax.value]
-            });
-        });
-        let domainMaxLabel = document.createElement("label");
-        domainMaxLabel.appendChild(document.createTextNode("Max"));
-        domainMaxLabel.className = "secondary-nav-label";
-
-        secondSidenav.appendChild(domain);
-        secondSidenav.appendChild(document.createElement("br"));
-        secondSidenav.appendChild(domainLabel);
-        secondSidenav.appendChild(domainTextField);
-        secondSidenav.appendChild(document.createElement("br"));
-        secondSidenav.appendChild(domainLabelColorLabel);
-        secondSidenav.appendChild(domainLabelColor);
-        secondSidenav.appendChild(document.createElement("br"));
-        secondSidenav.appendChild(domainShowTicksLabel);
-        secondSidenav.appendChild(domainShowTicks);
-        secondSidenav.appendChild(document.createElement("br"));
-        secondSidenav.appendChild(domainShowTicksLabelsLabel);
-        secondSidenav.appendChild(domainShowTickLabels);
-        secondSidenav.appendChild(document.createElement("br"));
-        secondSidenav.appendChild(domainMinLabel);
-        secondSidenav.appendChild(domainMin);
-        secondSidenav.appendChild(document.createElement("br"));
-        secondSidenav.appendChild(domainMaxLabel);
-        secondSidenav.appendChild(domainMax);
-        secondSidenav.appendChild(document.createElement("br"));
-    }
-
-    function addRangeAxesOptions() {
-        let range = document.createElement("div");
-        range.appendChild(document.createTextNode("Range"));
-        range.className = "secondary-nav-title";
-
-        let rangeTextField = document.createElement("input");
-        rangeTextField.type = "text";
-        let currentYAxisTitle = plotTemplate.layout.yaxis.title;
-        if (currentYAxisTitle) {
-            rangeTextField.value = currentYAxisTitle.text;
-        }
-        rangeTextField.addEventListener('input', (event) => {
-            Plotly.relayout(plot, {"yaxis.title.text": event.target.value});
-        });
-        let rangeLabel = document.createElement("label");
-        rangeLabel.appendChild(document.createTextNode("Label"));
-        rangeLabel.className = "secondary-nav-label";
-
-
-        let rangeLabelColor = document.createElement("input");
-        rangeLabelColor.type = "color";
-        if (currentYAxisTitle && currentYAxisTitle.font) {
-            rangeTextField.value = currentYAxisTitle.font.color;
-        }
-        rangeLabelColor.addEventListener('input', (event) => {
-            Plotly.relayout(plot, {"yaxis.title.font.color": event.target.value});
-        });
-        let rangeLabelColorLabel = document.createElement("label");
-        rangeLabelColorLabel.appendChild(document.createTextNode("Label Color"));
-        rangeLabelColorLabel.className = "secondary-nav-label";
-
-        let rangeShowTicks = document.createElement("label");
-        rangeShowTicks.className = 'switch';
-        let showTicksToggleCheckbox = document.createElement("input");
-        showTicksToggleCheckbox.type = "checkbox";
-        let checked = true;
-        if (plotTemplate.layout.yaxis.visible === false) {
-            checked = false;
-        }
-        showTicksToggleCheckbox.checked = checked;
-        rangeShowTicks.appendChild(showTicksToggleCheckbox);
-        let showTicksToggle = document.createElement("div");
-        showTicksToggle.className = "slider round";
-        rangeShowTicks.appendChild(showTicksToggle);
-        showTicksToggleCheckbox.addEventListener('change', (event) => {
-            Plotly.relayout(plot, {
-                "yaxis.visible": event.target.checked
-            });
-        });
-        let rangeShowTicksLabel = document.createElement("label");
-        rangeShowTicksLabel.for = 'margin-color';
-        rangeShowTicksLabel.appendChild(document.createTextNode("Show Ticks"));
-        rangeShowTicksLabel.className = "secondary-nav-label";
-
-        let rangeShowTickLabels = document.createElement("label");
-        rangeShowTickLabels.className = 'switch';
-        let showTickLabelsToggleCheckbox = document.createElement("input");
-        showTickLabelsToggleCheckbox.type = "checkbox";
-        checked = true;
-        if (plotTemplate.layout.yaxis.showticklabels === false) {
-            checked = false;
-        }
-        showTickLabelsToggleCheckbox.checked = checked;
-        rangeShowTickLabels.appendChild(showTickLabelsToggleCheckbox);
-        let showTickLabelsToggle = document.createElement("div");
-        showTickLabelsToggle.className = "slider round";
-        rangeShowTickLabels.appendChild(showTickLabelsToggle);
-        showTickLabelsToggleCheckbox.addEventListener('change', (event) => {
-            Plotly.relayout(plot, {
-                "yaxis.showticklabels": event.target.checked
-            });
-        });
-        let domainShowTicksLabelsLabel = document.createElement("label");
-        domainShowTicksLabelsLabel.for = 'margin-color';
-        domainShowTicksLabelsLabel.appendChild(document.createTextNode("Show Tick Labels"));
-        domainShowTicksLabelsLabel.className = "secondary-nav-label";
-
-        let rangeAxisType = document.createElement("select");
-        rangeAxisType.type = "dropdown";
-        let linear = document.createElement("option");
-        linear.value = "linear";
-        linear.appendChild(document.createTextNode("Linear"));
-        let log = document.createElement("option");
-        log.value = "log";
-        log.appendChild(document.createTextNode("Logarithmic"));
-        let date = document.createElement("option");
-        date.value = "date";
-        date.appendChild(document.createTextNode("Date"));
-        let category = document.createElement("option");
-        category.value = "category";
-        category.appendChild(document.createTextNode("Category"));
-        let multicategory = document.createElement("option");
-        multicategory.value = "multicategory";
-        multicategory.appendChild(document.createTextNode("Multicategory"));
-        rangeAxisType.appendChild(linear);
-        rangeAxisType.appendChild(log);
-        rangeAxisType.appendChild(date);
-        rangeAxisType.appendChild(category);
-        rangeAxisType.appendChild(multicategory);
-        rangeAxisType.addEventListener('change', (event) => {
-            Plotly.relayout(plot, {
-                "yaxis.type": event.target.value
-            });
-        });
-        let rangeAxisTypeLabel = document.createElement("label");
-        rangeAxisTypeLabel.appendChild(document.createTextNode("Axis Type"));
-
-        let rangeMax = document.createElement("input");
-        let rangeMin = document.createElement("input");
-        rangeMin.addEventListener('input', () => {
-            Plotly.relayout(plot, {
-                "yaxis.autorange": false,
-                "yaxis.range": [rangeMin.value, rangeMax.value]
-            });
-        });
-        if (plotTemplate.layout.yaxis.type === 'linear'
-            || plotTemplate.layout.yaxis.type === 'log') {
-            rangeMin.type = "number";
-        } else {
-            rangeMin.type = "text";
-        }
-        rangeMin.value = plotTemplate.layout.yaxis.range[0];
-        let rangeMinLabel = document.createElement("label");
-        rangeMinLabel.appendChild(document.createTextNode("Min"));
-        rangeMinLabel.className = "secondary-nav-label";
-
-        if (plotTemplate.layout.yaxis.type === 'linear'
-            || plotTemplate.layout.yaxis.type === 'log') {
-            rangeMax.type = "number";
-        } else {
-            rangeMax.type = "text";
-        }
-        rangeMax.value = plotTemplate.layout.yaxis.range[1];
-        rangeMax.addEventListener('input', () => {
-            Plotly.relayout(plot, {
-                "yaxis.autorange": false,
-                "yaxis.range": [rangeMin.value, rangeMax.value]
-            });
-        });
-        let rangeMaxLabel = document.createElement("label");
-        rangeMaxLabel.appendChild(document.createTextNode("Max"));
-        rangeMaxLabel.className = "secondary-nav-label";
-
-        secondSidenav.appendChild(range);
-        secondSidenav.appendChild(document.createElement("br"));
-        secondSidenav.appendChild(rangeLabel);
-        secondSidenav.appendChild(rangeTextField);
-        secondSidenav.appendChild(document.createElement("br"));
-        secondSidenav.appendChild(rangeLabelColorLabel);
-        secondSidenav.appendChild(rangeLabelColor);
-        secondSidenav.appendChild(document.createElement("br"));
-        secondSidenav.appendChild(rangeShowTicksLabel);
-        secondSidenav.appendChild(rangeShowTicks);
-        secondSidenav.appendChild(document.createElement("br"));
-        secondSidenav.appendChild(domainShowTicksLabelsLabel);
-        secondSidenav.appendChild(rangeShowTickLabels);
-        secondSidenav.appendChild(document.createElement("br"));
-        secondSidenav.appendChild(rangeMinLabel);
-        secondSidenav.appendChild(rangeMin);
-        secondSidenav.appendChild(document.createElement("br"));
-        secondSidenav.appendChild(rangeMaxLabel);
-        secondSidenav.appendChild(rangeMax);
-        secondSidenav.appendChild(document.createElement("br"));
-    }
-
-    function addScatterOptions(scatter) {
-        for (let i = 0; i < scatter.length; i++) {
-            let line = scatter[i];
-            let traceHeader = document.createElement("div");
-            traceHeader.appendChild(document.createTextNode("Trace: " + line.name));
-            traceHeader.className = "secondary-nav-title";
-
-            let traceLabelTextField = document.createElement("input");
-            traceLabelTextField.type = "text";
-            traceLabelTextField.value = line.name;
-            traceLabelTextField.addEventListener('input', (event) => {
-                Plotly.restyle(plot, {name: event.target.value}, [i]);
-            });
-            let traceLabel = document.createElement("label");
-            traceLabel.appendChild(document.createTextNode("Label"));
-            traceLabel.className = "secondary-nav-label";
-
-
-            let traceColor = document.createElement("div");
-            traceColor.className = "color-picker";
-            new Picker({
-                parent: traceColor,
-                color: line.line.color,
-                editor: true,
-                alpha: true,
-                // layout: 'left',
-                onChange: function (color) {
-                    traceColor.style.background = color.rgbaString;
-                    Plotly.restyle(plot, {"line.color": color.hex}, [i]);
-                }
-            });
-            let traceColorLabel = document.createElement("label");
-            traceColorLabel.appendChild(document.createTextNode("Color"));
-            traceColorLabel.className = "secondary-nav-label";
-
-            let rangeShowTicks = document.createElement("label");
-            rangeShowTicks.className = 'switch';
-            let showTicksToggleCheckbox = document.createElement("input");
-            showTicksToggleCheckbox.type = "checkbox";
-            let checked = true;
-            if (plotTemplate.layout.yaxis.visible === false) {
-                checked = false;
-            }
-            showTicksToggleCheckbox.checked = checked;
-            rangeShowTicks.appendChild(showTicksToggleCheckbox);
-            let showTicksToggle = document.createElement("div");
-            showTicksToggle.className = "slider round";
-            rangeShowTicks.appendChild(showTicksToggle);
-            showTicksToggleCheckbox.addEventListener('change', (event) => {
-                Plotly.relayout(plot, {
-                    "yaxis.visible": event.target.checked
-                });
-            });
-            let rangeShowTicksLabel = document.createElement("label");
-            rangeShowTicksLabel.for = 'margin-color';
-            rangeShowTicksLabel.appendChild(document.createTextNode("Show Ticks"));
-            rangeShowTicksLabel.className = "secondary-nav-label";
-
-            let rangeShowTickLabels = document.createElement("label");
-            rangeShowTickLabels.className = 'switch';
-            let showTickLabelsToggleCheckbox = document.createElement("input");
-            showTickLabelsToggleCheckbox.type = "checkbox";
-            checked = true;
-            if (plotTemplate.layout.yaxis.showticklabels === false) {
-                checked = false;
-            }
-            showTickLabelsToggleCheckbox.checked = checked;
-            rangeShowTickLabels.appendChild(showTickLabelsToggleCheckbox);
-            let showTickLabelsToggle = document.createElement("div");
-            showTickLabelsToggle.className = "slider round";
-            rangeShowTickLabels.appendChild(showTickLabelsToggle);
-            showTickLabelsToggleCheckbox.addEventListener('change', (event) => {
-                Plotly.relayout(plot, {
-                    "yaxis.showticklabels": event.target.checked
-                });
-            });
-            let domainShowTicksLabelsLabel = document.createElement("label");
-            domainShowTicksLabelsLabel.for = 'margin-color';
-            domainShowTicksLabelsLabel.appendChild(document.createTextNode("Show Tick Labels"));
-            domainShowTicksLabelsLabel.className = "secondary-nav-label";
-
-            let rangeAxisType = document.createElement("select");
-            rangeAxisType.type = "dropdown";
-            let linear = document.createElement("option");
-            linear.value = "linear";
-            linear.appendChild(document.createTextNode("Linear"));
-            let log = document.createElement("option");
-            log.value = "log";
-            log.appendChild(document.createTextNode("Logarithmic"));
-            let date = document.createElement("option");
-            date.value = "date";
-            date.appendChild(document.createTextNode("Date"));
-            let category = document.createElement("option");
-            category.value = "category";
-            category.appendChild(document.createTextNode("Category"));
-            let multicategory = document.createElement("option");
-            multicategory.value = "multicategory";
-            multicategory.appendChild(document.createTextNode("Multicategory"));
-            rangeAxisType.appendChild(linear);
-            rangeAxisType.appendChild(log);
-            rangeAxisType.appendChild(date);
-            rangeAxisType.appendChild(category);
-            rangeAxisType.appendChild(multicategory);
-            rangeAxisType.addEventListener('change', (event) => {
-                Plotly.relayout(plot, {
-                    "yaxis.type": event.target.value
-                });
-            });
-            let rangeAxisTypeLabel = document.createElement("label");
-            rangeAxisTypeLabel.appendChild(document.createTextNode("Axis Type"));
-
-            let rangeMax = document.createElement("input");
-            let rangeMin = document.createElement("input");
-            rangeMin.addEventListener('input', () => {
-                Plotly.relayout(plot, {
-                    "yaxis.autorange": false,
-                    "yaxis.range": [rangeMin.value, rangeMax.value]
-                });
-            });
-            if (plotTemplate.layout.yaxis.type === 'linear'
-                || plotTemplate.layout.yaxis.type === 'log') {
-                rangeMin.type = "number";
-            } else {
-                rangeMin.type = "text";
-            }
-            rangeMin.value = plotTemplate.layout.yaxis.range[0];
-            let rangeMinLabel = document.createElement("label");
-            rangeMinLabel.appendChild(document.createTextNode("Min"));
-            rangeMinLabel.className = "secondary-nav-label";
-
-            if (plotTemplate.layout.yaxis.type === 'linear'
-                || plotTemplate.layout.yaxis.type === 'log') {
-                rangeMax.type = "number";
-            } else {
-                rangeMax.type = "text";
-            }
-            rangeMax.value = plotTemplate.layout.yaxis.range[1];
-            rangeMax.addEventListener('input', () => {
-                Plotly.relayout(plot, {
-                    "yaxis.autorange": false,
-                    "yaxis.range": [rangeMin.value, rangeMax.value]
-                });
-            });
-            let rangeMaxLabel = document.createElement("label");
-            rangeMaxLabel.appendChild(document.createTextNode("Max"));
-            rangeMaxLabel.className = "secondary-nav-label";
-
-            secondSidenav.appendChild(traceHeader);
-            secondSidenav.appendChild(document.createElement("br"));
-            secondSidenav.appendChild(traceLabel);
-            secondSidenav.appendChild(traceLabelTextField);
-            secondSidenav.appendChild(document.createElement("br"));
-            secondSidenav.appendChild(traceColorLabel);
-            secondSidenav.appendChild(traceColor);
-            secondSidenav.appendChild(document.createElement("br"));
-            secondSidenav.appendChild(rangeShowTicksLabel);
-            secondSidenav.appendChild(rangeShowTicks);
-            secondSidenav.appendChild(document.createElement("br"));
-            secondSidenav.appendChild(domainShowTicksLabelsLabel);
-            secondSidenav.appendChild(rangeShowTickLabels);
-            secondSidenav.appendChild(document.createElement("br"));
-            secondSidenav.appendChild(rangeMinLabel);
-            secondSidenav.appendChild(rangeMin);
-            secondSidenav.appendChild(document.createElement("br"));
-            secondSidenav.appendChild(rangeMaxLabel);
-            secondSidenav.appendChild(rangeMax);
-            secondSidenav.appendChild(document.createElement("br"));
-        }
-    }
-
-    function addBoxOptions(box) {
-        let range = document.createElement("div");
-        range.appendChild(document.createTextNode("Range"));
-        range.className = "secondary-nav-title";
-
-        let rangeTextField = document.createElement("input");
-        rangeTextField.type = "text";
-        let currentYAxisTitle = plotTemplate.layout.yaxis.title;
-        if (currentYAxisTitle) {
-            rangeTextField.value = currentYAxisTitle.text;
-        }
-        rangeTextField.addEventListener('input', (event) => {
-            Plotly.relayout(plot, {"yaxis.title.text": event.target.value});
-        });
-        let rangeLabel = document.createElement("label");
-        rangeLabel.appendChild(document.createTextNode("Label"));
-        rangeLabel.className = "secondary-nav-label";
-
-
-        let rangeLabelColor = document.createElement("input");
-        rangeLabelColor.type = "color";
-        if (currentYAxisTitle && currentYAxisTitle.font) {
-            rangeTextField.value = currentYAxisTitle.font.color;
-        }
-        rangeLabelColor.addEventListener('input', (event) => {
-            Plotly.relayout(plot, {"yaxis.title.font.color": event.target.value});
-        });
-        let rangeLabelColorLabel = document.createElement("label");
-        rangeLabelColorLabel.appendChild(document.createTextNode("Label Color"));
-        rangeLabelColorLabel.className = "secondary-nav-label";
-
-        let rangeShowTicks = document.createElement("label");
-        rangeShowTicks.className = 'switch';
-        let showTicksToggleCheckbox = document.createElement("input");
-        showTicksToggleCheckbox.type = "checkbox";
-        let checked = true;
-        if (plotTemplate.layout.yaxis.visible === false) {
-            checked = false;
-        }
-        showTicksToggleCheckbox.checked = checked;
-        rangeShowTicks.appendChild(showTicksToggleCheckbox);
-        let showTicksToggle = document.createElement("div");
-        showTicksToggle.className = "slider round";
-        rangeShowTicks.appendChild(showTicksToggle);
-        showTicksToggleCheckbox.addEventListener('change', (event) => {
-            Plotly.relayout(plot, {
-                "yaxis.visible": event.target.checked
-            });
-        });
-        let rangeShowTicksLabel = document.createElement("label");
-        rangeShowTicksLabel.for = 'margin-color';
-        rangeShowTicksLabel.appendChild(document.createTextNode("Show Ticks"));
-        rangeShowTicksLabel.className = "secondary-nav-label";
-
-        let rangeShowTickLabels = document.createElement("label");
-        rangeShowTickLabels.className = 'switch';
-        let showTickLabelsToggleCheckbox = document.createElement("input");
-        showTickLabelsToggleCheckbox.type = "checkbox";
-        checked = true;
-        if (plotTemplate.layout.yaxis.showticklabels === false) {
-            checked = false;
-        }
-        showTickLabelsToggleCheckbox.checked = checked;
-        rangeShowTickLabels.appendChild(showTickLabelsToggleCheckbox);
-        let showTickLabelsToggle = document.createElement("div");
-        showTickLabelsToggle.className = "slider round";
-        rangeShowTickLabels.appendChild(showTickLabelsToggle);
-        showTickLabelsToggleCheckbox.addEventListener('change', (event) => {
-            Plotly.relayout(plot, {
-                "yaxis.showticklabels": event.target.checked
-            });
-        });
-        let domainShowTicksLabelsLabel = document.createElement("label");
-        domainShowTicksLabelsLabel.for = 'margin-color';
-        domainShowTicksLabelsLabel.appendChild(document.createTextNode("Show Tick Labels"));
-        domainShowTicksLabelsLabel.className = "secondary-nav-label";
-
-        let rangeAxisType = document.createElement("select");
-        rangeAxisType.type = "dropdown";
-        let linear = document.createElement("option");
-        linear.value = "linear";
-        linear.appendChild(document.createTextNode("Linear"));
-        let log = document.createElement("option");
-        log.value = "log";
-        log.appendChild(document.createTextNode("Logarithmic"));
-        let date = document.createElement("option");
-        date.value = "date";
-        date.appendChild(document.createTextNode("Date"));
-        let category = document.createElement("option");
-        category.value = "category";
-        category.appendChild(document.createTextNode("Category"));
-        let multicategory = document.createElement("option");
-        multicategory.value = "multicategory";
-        multicategory.appendChild(document.createTextNode("Multicategory"));
-        rangeAxisType.appendChild(linear);
-        rangeAxisType.appendChild(log);
-        rangeAxisType.appendChild(date);
-        rangeAxisType.appendChild(category);
-        rangeAxisType.appendChild(multicategory);
-        rangeAxisType.addEventListener('change', (event) => {
-            Plotly.relayout(plot, {
-                "yaxis.type": event.target.value
-            });
-        });
-        let rangeAxisTypeLabel = document.createElement("label");
-        rangeAxisTypeLabel.appendChild(document.createTextNode("Axis Type"));
-
-        let rangeMax = document.createElement("input");
-        let rangeMin = document.createElement("input");
-        rangeMin.addEventListener('input', () => {
-            Plotly.relayout(plot, {
-                "yaxis.autorange": false,
-                "yaxis.range": [rangeMin.value, rangeMax.value]
-            });
-        });
-        if (plotTemplate.layout.yaxis.type === 'linear'
-            || plotTemplate.layout.yaxis.type === 'log') {
-            rangeMin.type = "number";
-        } else {
-            rangeMin.type = "text";
-        }
-        rangeMin.value = plotTemplate.layout.yaxis.range[0];
-        let rangeMinLabel = document.createElement("label");
-        rangeMinLabel.appendChild(document.createTextNode("Min"));
-        rangeMinLabel.className = "secondary-nav-label";
-
-        if (plotTemplate.layout.yaxis.type === 'linear'
-            || plotTemplate.layout.yaxis.type === 'log') {
-            rangeMax.type = "number";
-        } else {
-            rangeMax.type = "text";
-        }
-        rangeMax.value = plotTemplate.layout.yaxis.range[1];
-        rangeMax.addEventListener('input', () => {
-            Plotly.relayout(plot, {
-                "yaxis.autorange": false,
-                "yaxis.range": [rangeMin.value, rangeMax.value]
-            });
-        });
-        let rangeMaxLabel = document.createElement("label");
-        rangeMaxLabel.appendChild(document.createTextNode("Max"));
-        rangeMaxLabel.className = "secondary-nav-label";
-
-        secondSidenav.appendChild(range);
-        secondSidenav.appendChild(document.createElement("br"));
-        secondSidenav.appendChild(rangeLabel);
-        secondSidenav.appendChild(rangeTextField);
-        secondSidenav.appendChild(document.createElement("br"));
-        secondSidenav.appendChild(rangeLabelColorLabel);
-        secondSidenav.appendChild(rangeLabelColor);
-        secondSidenav.appendChild(document.createElement("br"));
-        secondSidenav.appendChild(rangeShowTicksLabel);
-        secondSidenav.appendChild(rangeShowTicks);
-        secondSidenav.appendChild(document.createElement("br"));
-        secondSidenav.appendChild(domainShowTicksLabelsLabel);
-        secondSidenav.appendChild(rangeShowTickLabels);
-        secondSidenav.appendChild(document.createElement("br"));
-        secondSidenav.appendChild(rangeMinLabel);
-        secondSidenav.appendChild(rangeMin);
-        secondSidenav.appendChild(document.createElement("br"));
-        secondSidenav.appendChild(rangeMaxLabel);
-        secondSidenav.appendChild(rangeMax);
-        secondSidenav.appendChild(document.createElement("br"));
-    }
-
-    function addGeneralOptions() {
-        let plotLabel = document.createElement("label");
-        plotLabel.appendChild(document.createTextNode("Plot"));
-        plotLabel.className = "secondary-nav-title";
-        let backgroundColorNode = document.createElement("input");
-        backgroundColorNode.type = 'color';
-        backgroundColorNode.id = 'general-background-color';
-        let paperBgcolor = plotTemplate.layout.paper_bgcolor;
-        if (!paperBgcolor) {
-            paperBgcolor = "#FFFFFF";
-        }
-        backgroundColorNode.value = paperBgcolor;
-        backgroundColorNode.addEventListener('change', (event) => {
-            Plotly.relayout(plot, {
-                paper_bgcolor: event.target.value
-            });
-        });
-        let backgroundColorLabel = document.createElement("label");
-        backgroundColorLabel.for = 'general-background-color';
-        backgroundColorLabel.appendChild(document.createTextNode("Background Color"));
-        backgroundColorLabel.className = "secondary-nav-label";
-
-        let marginColorNode = document.createElement("input");
-        marginColorNode.type = 'color';
-        marginColorNode.id = 'margin-color';
-        let marginBgcolor = plotTemplate.layout.plot_bgcolor;
-        if (!marginBgcolor) {
-            marginBgcolor = "#FFFFFF";
-        }
-        marginColorNode.value = marginBgcolor;
-        marginColorNode.addEventListener('change', (event) => {
-            Plotly.relayout(plot, {
-                plot_bgcolor: event.target.value
-            });
-        });
-        let marginColorLabel = document.createElement("label");
-        marginColorLabel.for = 'margin-color';
-        marginColorLabel.appendChild(document.createTextNode("Plot Color"));
-        marginColorLabel.className = "secondary-nav-label";
-
-        let onOffSwitchLabel = document.createElement("label");
-        onOffSwitchLabel.className = 'switch';
-        let showLegendToggleCheckbox = document.createElement("input");
-        showLegendToggleCheckbox.type = "checkbox";
-        showLegendToggleCheckbox.checked = plotTemplate.layout.showlegend;
-        onOffSwitchLabel.appendChild(showLegendToggleCheckbox);
-        let showLegendToggle = document.createElement("div");
-        showLegendToggle.className = "slider round";
-        onOffSwitchLabel.appendChild(showLegendToggle);
-        showLegendToggleCheckbox.addEventListener('change', (event) => {
-            Plotly.relayout(plot, {
-                showlegend: event.target.checked
-            });
-        });
-        let legendVisibleLabel = document.createElement("label");
-        legendVisibleLabel.for = 'margin-color';
-        legendVisibleLabel.className = "secondary-nav-label";
-        legendVisibleLabel.appendChild(document.createTextNode("Show Legend"));
-
-        let titleHeaderElement = document.createElement("label");
-        titleHeaderElement.appendChild(document.createTextNode("Title"));
-        titleHeaderElement.className = "secondary-nav-title";
-        let titleTextElement = document.createElement("input");
-        titleTextElement.type = "text";
-        titleTextElement.value = plotTemplate.layout.title.text;
-        titleTextElement.addEventListener('input', (event) => {
-            Plotly.relayout(plot, {"title.text": event.target.value});
-        });
-
-        let showTitleLabel = document.createElement("label");
-        showTitleLabel.className = "secondary-nav-label";
-        showTitleLabel.for = 'margin-color';
-        showTitleLabel.appendChild(document.createTextNode("Label"));
-        let titleColorNode = document.createElement("input");
-        titleColorNode.type = 'color';
-        titleColorNode.value = Plotly.makeTemplate(plot).layout.title.font.color;
-        titleColorNode.addEventListener('change', (event) => {
-            Plotly.relayout(plot, {"title.font.color": event.target.value});
-        });
-
-        let titleColorLabel = document.createElement("label");
-        titleColorLabel.className = "secondary-nav-label";
-        titleColorLabel.appendChild(document.createTextNode("Title Color"));
-
-        secondSidenav.appendChild(plotLabel);
-        secondSidenav.appendChild(document.createElement("br"));
-        secondSidenav.appendChild(backgroundColorLabel);
-        secondSidenav.appendChild(backgroundColorNode);
-        secondSidenav.appendChild(document.createElement("br"));
-        secondSidenav.appendChild(marginColorLabel);
-        secondSidenav.appendChild(marginColorNode);
-        secondSidenav.appendChild(document.createElement("br"));
-        secondSidenav.appendChild(legendVisibleLabel);
-        secondSidenav.appendChild(onOffSwitchLabel);
-        secondSidenav.appendChild(document.createElement("br"));
-        secondSidenav.appendChild(titleHeaderElement);
-        secondSidenav.appendChild(document.createElement("br"));
-        secondSidenav.appendChild(showTitleLabel);
-        secondSidenav.appendChild(titleTextElement);
-        secondSidenav.appendChild(document.createElement("br"));
-        secondSidenav.appendChild(titleColorLabel);
-        secondSidenav.appendChild(titleColorNode);
-    }
-
-    if (option === 'general') {
-        addGeneralOptions();
-    } else if (option === 'axes') {
-        addDomainAxesOptions();
-        addRangeAxesOptions();
-    } else if (option === "traces") {
-        let scatter = plotTemplate.data.scatter;
-        let box = plotTemplate.data.box;
-        if (scatter) {
-            addScatterOptions(scatter);
-        } else if (box) {
-            addBoxOptions(box);
-        }
-    } else if (option === "template") {
-        let templateArea = document.createElement("textarea");
-        templateArea.rows = 50;
-        templateArea.cols = 33;
-        templateArea.wrap = "soft";
-        let template = Plotly.makeTemplate(plot);
-        templateArea.appendChild(document.createTextNode(JSON.stringify(template.layout, null, 2)));
-        templateArea.oninput = (event) => {
-            let json = JSON.parse(event.target.value);
-            Plotly.relayout(plot, json);
-        };
-        secondSidenav.appendChild(templateArea);
-    }
-}
-
-function closeSecondNav() {
-    let secondSidenav = document.getElementById("secondSidenav");
-    if (secondSidenav) {
-        secondSidenav.style.width = "0px";
-        while (secondSidenav.firstChild) {
-            secondSidenav.removeChild(secondSidenav.firstChild);
-        }
-    }
-}
-
-function openNav(plot) {
-    let sideNav = document.getElementById("sidenav");
-    if (!sideNav) {
-        sideNav = document.createElement("div");
-        sideNav.id = "sidenav";
-        sideNav.className = "sidenav";
-
-        let closeButton = document.createElement("a");
-        closeButton.href = "javascript:void(0)";
-        closeButton.appendChild(document.createTextNode("\u2573"));
-        closeButton.className = "closebtn";
-        closeButton.onclick = () => closeNav();
-
-        let generalPlot = document.createElement("a");
-        generalPlot.href = "javascript:void(0)";
-        generalPlot.onclick = () => openSecondNav('general', plot);
-        generalPlot.appendChild(document.createTextNode("General Plot"));
-
-        let axes = document.createElement("a");
-        axes.href = "javascript:void(0)";
-        axes.onclick = () => openSecondNav('axes', plot);
-        axes.appendChild(document.createTextNode("Axes"));
-
-        let template = document.createElement("a");
-        template.href = "javascript:void(0)";
-        template.onclick = () => openSecondNav('template', plot);
-        template.appendChild(document.createTextNode("Template"));
-
-        let traces = document.createElement("a");
-        traces.href = "javascript:void(0)";
-        traces.onclick = () => openSecondNav('traces', plot);
-        traces.appendChild(document.createTextNode("Traces"));
-
-        sideNav.appendChild(closeButton);
-        sideNav.appendChild(generalPlot);
-        sideNav.appendChild(axes);
-        sideNav.appendChild(traces);
-        sideNav.appendChild(template);
-        document.body.append(sideNav);
-    }
-    sideNav.style.width = "250px";
-    document.getElementById("main").style.marginLeft = "250px";
-    document.body.style.backgroundColor = "rgba(0,0,0,0.4)";
-}
-
-// <!--    <label> Shape-->
-// <!--        <select>-->
-// <!--            <option value="linear">Linear</option>-->
-//     <!--            <option value="spline">Spline</option>-->
-//     <!--            <option value="hv">Beginning of Period</option>-->
-// <!--            <option value="vh">End of Period</option>-->
-// <!--            <option value="hvh">Middle of Period X</option>-->
-// <!--            <option value="hvh">Middle of Period Y</option>-->
-// <!--        </select>-->
-// <!--    </label>-->
-
-
-function closeNav() {
-    document.getElementById("sidenav").style.width = "0";
-    document.getElementById("main").style.marginLeft = "0px";
-    closeSecondNav();
-    document.body.style.backgroundColor = "white";
-}
-
-function getD3Formatter(fullSeries) {
-    let values = [];
-    for (let i = 0; i < fullSeries.length; i++) {
-        values.push(fullSeries[i][1]);
-    }
-    if (Math.max.apply(null, values) > 1) {
-        return ',.0f';
-    } else {
-        return ',.3r';
-    }
-}
-
-
-function buildMarkerLines(series) {
-    let shapes = [];
-    for (let i = 0; i < series.length; i++) {
-        let trace = series[i];
-        let minX = Math.min.apply(null, trace['x']);
-        let maxX = Math.max.apply(null, trace['x']);
-        let max = Math.max.apply(null, trace['y']);
-        let maxLine = {
-            type: 'line',
-            x0: minX,
-            y0: max,
-            x1: maxX,
-            y1: max,
-            line: {
-                color: trace['line']['color'],
-                width: 1,
-                dash: 'dashdot'
-            }
-        };
-        shapes.push(maxLine);
-        let min = Math.min.apply(null, trace['y']);
-        let minLine = {
-            type: 'line',
-            x0: minX,
-            y0: min,
-            x1: maxX,
-            y1: min,
-            line: {
-                color: trace['line']['color'],
-                width: 1,
-                dash: 'dashdot'
-            }
-        };
-        shapes.push(minLine);
-        let mean = trace['y'].reduce((previous, current) => current += previous) / trace['y'].length;
-        let meanLine = {
-            type: 'line',
-            x0: minX,
-            y0: mean,
-            x1: maxX,
-            y1: mean,
-            line: {
-                color: trace['line']['color'],
-                width: 1,
-                dash: 'dashdot'
-            }
-        };
-        shapes.push(meanLine);
-        let yCopy = trace['y'].slice();
-        yCopy.sort((a, b) => a - b);
-        let median = (yCopy[(yCopy.length - 1) >> 1] + yCopy[yCopy.length >> 1]) / 2;
-        let medianLine = {
-            type: 'line',
-            x0: minX,
-            y0: median,
-            x1: maxX,
-            y1: median,
-            line: {
-                color: trace['line']['color'],
-                width: 1,
-                dash: 'dashdot'
-            }
-        };
-        shapes.push(medianLine);
-    }
-    return shapes;
+if (DEBUG) {
+    window.onload = () => plot({
+        "ts_descriptor": [{
+            "scenario_name": "Default",
+            "time_series_metadata": [{
+                "time_series_file_alias": "Default_DV (CalLite)",
+                "dss_path": "/CALLITE/C_LWSTN/FLOW-CHANNEL///2020D09E/"
+            }, {
+                "time_series_file_alias": "Default_DV (CalLite)",
+                "dss_path": "/CALLITE/MIF_C_LEWISTONDV/FLOW-MIN-REQUIRED///2020D09E/"
+            }],
+            "scenario_color": "#4C7EEEFF",
+            "scenario_model": "CalLite"
+        }, {
+            "scenario_name": "ELTQ5",
+            "time_series_metadata": [{
+                "time_series_file_alias": "ELTQ5_DV__________ (CalLite)",
+                "dss_path": "/CALLITE/C_LWSTN/FLOW-CHANNEL///2020D09E/"
+            }, {
+                "time_series_file_alias": "ELTQ5_DV__________ (CalLite)",
+                "dss_path": "/CALLITE/MIF_C_LEWISTONDV/FLOW-MIN-REQUIRED///2020D09E/"
+            }],
+            "scenario_color": "#03C98CFF",
+            "scenario_model": "CalLite"
+        }], "last_record": 1064995200000, "scenario_run_data": [{
+            "ts_list": [{
+                "ts_name": "Default_DV (CalLite)", "monthly_filters": [{
+                    "annual_filters": [{
+                        "period_months": ["Oct", "Nov", "Dec", "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep"],
+                        "annual_period": "Long Term<br>",
+                        "computed_statistics": [{
+                            "statistic": "Averages",
+                            "statistically_computed_time_series_monthly": [["Jan", 40.46936254551483], ["Feb", 36.714559519930866], ["Mar", 33.04369969831339], ["Apr", 33.36769304813264], ["May", 232.38189009640243], ["Jun", 124.41152526804878], ["Jul", 56.73033422427947], ["Aug", 27.66942045], ["Sep", 26.7768585], ["Oct", 22.934875173000002], ["Nov", 21.451196255121616], ["Dec", 33.130079677380955]],
+                            "statistic_aggregate": 689.0814944561249
+                        }],
+                        "aggregate_ts": [[1922, 453.415520187], [1923, 453.415520187], [1924, 369.899490261], [1925, 702.216172014], [1926, 453.415520187], [1927, 702.216172014], [1928, 648.642620304], [1929, 369.304448961], [1930, 453.415520187], [1931, 369.304448961], [1932, 454.010561487], [1933, 453.415520187], [1934, 369.304448961], [1935, 453.415520187], [1936, 648.642620304], [1937, 453.415520187], [1938, 816.664432185], [1939, 369.304448961], [1940, 702.811213314], [1941, 1226.9039306893847], [1942, 1208.7129050253425], [1943, 700.2643220563424], [1944, 369.899490261], [1945, 648.047579004], [1946, 702.216172014], [1947, 453.415520187], [1948, 648.642620304], [1949, 648.047579004], [1950, 453.415520187], [1951, 782.569960759705], [1952, 702.811213314], [1953, 964.6162273059492], [1954, 815.8849325964806], [1955, 453.415520187], [1956, 893.8239585595161], [1957, 648.047579004], [1958, 1210.1108255268687], [1959, 648.047579004], [1960, 648.642620304], [1961, 648.047579004], [1962, 648.047579004], [1963, 733.6373615078937], [1964, 454.010561487], [1965, 790.5970414729657], [1966, 648.047579004], [1967, 702.216172014], [1968, 823.2341779622718], [1969, 816.664432185], [1970, 1105.3677594048008], [1971, 702.216172014], [1972, 664.6495202055502], [1973, 760.222769479082], [1974, 1888.7996608987587], [1975, 799.178982141859], [1976, 454.010561487], [1977, 369.304448961], [1978, 816.664432185], [1979, 453.415520187], [1980, 702.811213314], [1981, 453.415520187], [1982, 973.5625530088316], [1983, 1794.2184954703066], [1984, 987.0161648886523], [1985, 453.415520187], [1986, 730.797017171717], [1987, 453.415520187], [1988, 454.010561487], [1989, 648.047579004], [1990, 453.415520187], [1991, 369.304448961], [1992, 454.010561487], [1993, 702.216172014], [1994, 369.304448961], [1995, 816.664432185], [1996, 943.4940518193496], [1997, 1344.548292116446], [1998, 1122.7346861077144], [1999, 717.940462430038], [2000, 954.5619680884209], [2001, 453.415520187], [2002, 648.047579004], [2003, 702.216172014]],
+                        "month_period": "Oct - Sep",
+                        "discrete_ts": [[-1520006400000, 22.934875173000002], [-1517414400000, 17.851239], [-1514736000000, 18.4462803], [-1512057600000, 18.4462803], [-1509638400000, 16.6611564], [-1506960000000, 18.4462803], [-1504368000000, 32.1322302], [-1501689600000, 179.789745324], [-1499097600000, 46.59173379], [-1496419200000, 27.66942045], [-1493740800000, 27.66942045], [-1491148800000, 26.7768585], [-1488470400000, 22.934875173000002], [-1485878400000, 17.851239], [-1483200000000, 18.4462803], [-1480521600000, 18.4462803], [-1478102400000, 16.6611564], [-1475424000000, 18.4462803], [-1472832000000, 32.1322302], [-1470153600000, 179.789745324], [-1467561600000, 46.59173379], [-1464883200000, 27.66942045], [-1462204800000, 27.66942045], [-1459612800000, 26.7768585], [-1456934400000, 22.934875173000002], [-1454342400000, 17.851239], [-1451664000000, 18.4462803], [-1448985600000, 18.4462803], [-1446480000000, 17.2561977], [-1443801600000, 18.4462803], [-1441209600000, 35.702478], [-1438531200000, 92.108426298], [-1435939200000, 46.59173379], [-1433260800000, 27.66942045], [-1430582400000, 27.66942045], [-1427990400000, 26.7768585], [-1425312000000, 22.934875173000002], [-1422720000000, 17.851239], [-1420041600000, 18.4462803], [-1417363200000, 18.4462803], [-1414944000000, 16.6611564], [-1412265600000, 18.4462803], [-1409673600000, 27.3718998], [-1406995200000, 289.545113109], [-1404403200000, 150.30743238], [-1401724800000, 67.75933630200001], [-1399046400000, 27.66942045], [-1396454400000, 26.7768585], [-1393776000000, 22.934875173000002], [-1391184000000, 17.851239], [-1388505600000, 18.4462803], [-1385827200000, 18.4462803], [-1383408000000, 16.6611564], [-1380729600000, 18.4462803], [-1378137600000, 32.1322302], [-1375459200000, 179.789745324], [-1372867200000, 46.59173379], [-1370188800000, 27.66942045], [-1367510400000, 27.66942045], [-1364918400000, 26.7768585], [-1362240000000, 22.934875173000002], [-1359648000000, 17.851239], [-1356969600000, 18.4462803], [-1354291200000, 18.4462803], [-1351872000000, 16.6611564], [-1349193600000, 18.4462803], [-1346601600000, 27.3718998], [-1343923200000, 289.545113109], [-1341331200000, 150.30743238], [-1338652800000, 67.75933630200001], [-1335974400000, 27.66942045], [-1333382400000, 26.7768585], [-1330704000000, 22.934875173000002], [-1328112000000, 17.851239], [-1325433600000, 18.4462803], [-1322755200000, 18.4462803], [-1320249600000, 17.2561977], [-1317571200000, 18.4462803], [-1314979200000, 29.33553609], [-1312300800000, 257.571560589], [-1309708800000, 126.1487556], [-1307030400000, 67.75933630200001], [-1304352000000, 27.66942045], [-1301760000000, 26.7768585], [-1299081600000, 22.934875173000002], [-1296489600000, 17.851239], [-1293811200000, 18.4462803], [-1291132800000, 18.4462803], [-1288713600000, 16.6611564], [-1286035200000, 18.4462803], [-1283443200000, 35.702478], [-1280764800000, 92.108426298], [-1278172800000, 46.59173379], [-1275494400000, 27.66942045], [-1272816000000, 27.66942045], [-1270224000000, 26.7768585], [-1267545600000, 22.934875173000002], [-1264953600000, 17.851239], [-1262275200000, 18.4462803], [-1259596800000, 18.4462803], [-1257177600000, 16.6611564], [-1254499200000, 18.4462803], [-1251907200000, 32.1322302], [-1249228800000, 179.789745324], [-1246636800000, 46.59173379], [-1243958400000, 27.66942045], [-1241280000000, 27.66942045], [-1238688000000, 26.7768585], [-1236009600000, 22.934875173000002], [-1233417600000, 17.851239], [-1230739200000, 18.4462803], [-1228060800000, 18.4462803], [-1225641600000, 16.6611564], [-1222963200000, 18.4462803], [-1220371200000, 35.702478], [-1217692800000, 92.108426298], [-1215100800000, 46.59173379], [-1212422400000, 27.66942045], [-1209744000000, 27.66942045], [-1207152000000, 26.7768585], [-1204473600000, 22.934875173000002], [-1201881600000, 17.851239], [-1199203200000, 18.4462803], [-1196524800000, 18.4462803], [-1194019200000, 17.2561977], [-1191340800000, 18.4462803], [-1188748800000, 32.1322302], [-1186070400000, 179.789745324], [-1183478400000, 46.59173379], [-1180800000000, 27.66942045], [-1178121600000, 27.66942045], [-1175529600000, 26.7768585], [-1172851200000, 22.934875173000002], [-1170259200000, 17.851239], [-1167580800000, 18.4462803], [-1164902400000, 18.4462803], [-1162483200000, 16.6611564], [-1159804800000, 18.4462803], [-1157212800000, 32.1322302], [-1154534400000, 179.789745324], [-1151942400000, 46.59173379], [-1149264000000, 27.66942045], [-1146585600000, 27.66942045], [-1143993600000, 26.7768585], [-1141315200000, 22.934875173000002], [-1138723200000, 17.851239], [-1136044800000, 18.4462803], [-1133366400000, 18.4462803], [-1130947200000, 16.6611564], [-1128268800000, 18.4462803], [-1125676800000, 35.702478], [-1122998400000, 92.108426298], [-1120406400000, 46.59173379], [-1117728000000, 27.66942045], [-1115049600000, 27.66942045], [-1112457600000, 26.7768585], [-1109779200000, 22.934875173000002], [-1107187200000, 17.851239], [-1104508800000, 18.4462803], [-1101830400000, 18.4462803], [-1099411200000, 16.6611564], [-1096732800000, 18.4462803], [-1094140800000, 32.1322302], [-1091462400000, 179.789745324], [-1088870400000, 46.59173379], [-1086192000000, 27.66942045], [-1083513600000, 27.66942045], [-1080921600000, 26.7768585], [-1078243200000, 22.934875173000002], [-1075651200000, 17.851239], [-1072972800000, 18.4462803], [-1070294400000, 18.4462803], [-1067788800000, 17.2561977], [-1065110400000, 18.4462803], [-1062518400000, 29.33553609], [-1059840000000, 257.571560589], [-1057248000000, 126.1487556], [-1054569600000, 67.75933630200001], [-1051891200000, 27.66942045], [-1049299200000, 26.7768585], [-1046620800000, 22.934875173000002], [-1044028800000, 17.851239], [-1041350400000, 18.4462803], [-1038672000000, 18.4462803], [-1036252800000, 16.6611564], [-1033574400000, 18.4462803], [-1030982400000, 32.1322302], [-1028304000000, 179.789745324], [-1025712000000, 46.59173379], [-1023033600000, 27.66942045], [-1020355200000, 27.66942045], [-1017763200000, 26.7768585], [-1015084800000, 22.934875173000002], [-1012492800000, 17.851239], [-1009814400000, 18.4462803], [-1007136000000, 18.4462803], [-1004716800000, 16.6611564], [-1002038400000, 18.4462803], [-999446400000, 25.40826351], [-996768000000, 280.99833657], [-994176000000, 275.26610538], [-991497600000, 67.75933630200001], [-988819200000, 27.66942045], [-986227200000, 26.7768585], [-983548800000, 22.934875173000002], [-980956800000, 17.851239], [-978278400000, 18.4462803], [-975600000000, 18.4462803], [-973180800000, 16.6611564], [-970502400000, 18.4462803], [-967910400000, 35.702478], [-965232000000, 92.108426298], [-962640000000, 46.59173379], [-959961600000, 27.66942045], [-957283200000, 27.66942045], [-954691200000, 26.7768585], [-952012800000, 22.934875173000002], [-949420800000, 17.851239], [-946742400000, 18.4462803], [-944064000000, 18.4462803], [-941558400000, 17.2561977], [-938880000000, 18.4462803], [-936288000000, 27.3718998], [-933609600000, 289.545113109], [-931017600000, 150.30743238], [-928339200000, 67.75933630200001], [-925660800000, 27.66942045], [-923068800000, 26.7768585], [-920390400000, 22.934875173000002], [-917798400000, 17.851239], [-915120000000, 18.4462803], [-912441600000, 18.4462803], [-910022400000, 16.6611564], [-907344000000, 240.32650005316182], [-904752000000, 162.11060112889757], [-902073600000, 280.99833657], [-899481600000, 275.26610538], [-896803200000, 119.41627743432521], [-894124800000, 27.66942045], [-891532800000, 26.7768585], [-888854400000, 22.934875173000002], [-886262400000, 17.851239], [-883584000000, 262.20388893226124], [-880905600000, 164.14751456815375], [-878486400000, 133.69904651092756], [-875808000000, 18.4462803], [-873216000000, 27.3718998], [-870537600000, 289.545113109], [-867945600000, 150.30743238], [-865267200000, 67.75933630200001], [-862588800000, 27.66942045], [-859996800000, 26.7768585], [-857318400000, 22.934875173000002], [-854726400000, 17.851239], [-852048000000, 18.4462803], [-849369600000, 70.66302335234239], [-846950400000, 16.6611564], [-844272000000, 18.4462803], [-841680000000, 29.33553609], [-839001600000, 257.571560589], [-836409600000, 126.1487556], [-833731200000, 67.75933630200001], [-831052800000, 27.66942045], [-828460800000, 26.7768585], [-825782400000, 22.934875173000002], [-823190400000, 17.851239], [-820512000000, 18.4462803], [-817833600000, 18.4462803], [-815328000000, 17.2561977], [-812649600000, 18.4462803], [-810057600000, 35.702478], [-807379200000, 92.108426298], [-804787200000, 46.59173379], [-802108800000, 27.66942045], [-799430400000, 27.66942045], [-796838400000, 26.7768585], [-794160000000, 22.934875173000002], [-791568000000, 17.851239], [-788889600000, 18.4462803], [-786211200000, 18.4462803], [-783792000000, 16.6611564], [-781113600000, 18.4462803], [-778521600000, 29.33553609], [-775843200000, 257.571560589], [-773251200000, 126.1487556], [-770572800000, 67.75933630200001], [-767894400000, 27.66942045], [-765302400000, 26.7768585], [-762624000000, 22.934875173000002], [-760032000000, 17.851239], [-757353600000, 18.4462803], [-754675200000, 18.4462803], [-752256000000, 16.6611564], [-749577600000, 18.4462803], [-746985600000, 27.3718998], [-744307200000, 289.545113109], [-741715200000, 150.30743238], [-739036800000, 67.75933630200001], [-736358400000, 27.66942045], [-733766400000, 26.7768585], [-731088000000, 22.934875173000002], [-728496000000, 17.851239], [-725817600000, 18.4462803], [-723139200000, 18.4462803], [-720720000000, 16.6611564], [-718041600000, 18.4462803], [-715449600000, 32.1322302], [-712771200000, 179.789745324], [-710179200000, 46.59173379], [-707500800000, 27.66942045], [-704822400000, 27.66942045], [-702230400000, 26.7768585], [-699552000000, 22.934875173000002], [-696960000000, 17.851239], [-694281600000, 18.4462803], [-691603200000, 18.4462803], [-689097600000, 17.2561977], [-686419200000, 18.4462803], [-683827200000, 29.33553609], [-681148800000, 257.571560589], [-678556800000, 126.1487556], [-675878400000, 67.75933630200001], [-673200000000, 27.66942045], [-670608000000, 26.7768585], [-667929600000, 22.934875173000002], [-665337600000, 17.851239], [-662659200000, 18.4462803], [-659980800000, 18.4462803], [-657561600000, 16.6611564], [-654883200000, 18.4462803], [-652291200000, 29.33553609], [-649612800000, 257.571560589], [-647020800000, 126.1487556], [-644342400000, 67.75933630200001], [-641664000000, 27.66942045], [-639072000000, 26.7768585], [-636393600000, 22.934875173000002], [-633801600000, 17.851239], [-631123200000, 18.4462803], [-628444800000, 18.4462803], [-626025600000, 16.6611564], [-623347200000, 18.4462803], [-620755200000, 32.1322302], [-618076800000, 179.789745324], [-615484800000, 46.59173379], [-612806400000, 27.66942045], [-610128000000, 27.66942045], [-607536000000, 26.7768585], [-604857600000, 22.934875173000002], [-602265600000, 17.851239], [-599587200000, 18.4462803], [-596908800000, 18.4462803], [-594489600000, 97.01494514570497], [-591811200000, 18.4462803], [-589219200000, 27.3718998], [-586540800000, 289.545113109], [-583948800000, 150.30743238], [-581270400000, 67.75933630200001], [-578592000000, 27.66942045], [-576000000000, 26.7768585], [-573321600000, 22.934875173000002], [-570729600000, 17.851239], [-568051200000, 18.4462803], [-565372800000, 18.4462803], [-562867200000, 17.2561977], [-560188800000, 18.4462803], [-557596800000, 27.3718998], [-554918400000, 289.545113109], [-552326400000, 150.30743238], [-549648000000, 67.75933630200001], [-546969600000, 27.66942045], [-544377600000, 26.7768585], [-541699200000, 22.934875173000002], [-539107200000, 17.851239], [-536428800000, 18.4462803], [-533750400000, 280.8463355919492], [-531331200000, 16.6611564], [-528652800000, 18.4462803], [-526060800000, 27.3718998], [-523382400000, 289.545113109], [-520790400000, 150.30743238], [-518112000000, 67.75933630200001], [-515433600000, 27.66942045], [-512841600000, 26.7768585], [-510163200000, 22.934875173000002], [-507571200000, 17.851239], [-504892800000, 18.4462803], [-502214400000, 18.4462803], [-499795200000, 130.32991698248046], [-497116800000, 18.4462803], [-494524800000, 27.3718998], [-491846400000, 289.545113109], [-489254400000, 150.30743238], [-486576000000, 67.75933630200001], [-483897600000, 27.66942045], [-481305600000, 26.7768585], [-478627200000, 22.934875173000002], [-476035200000, 17.851239], [-473356800000, 18.4462803], [-470678400000, 18.4462803], [-468259200000, 16.6611564], [-465580800000, 18.4462803], [-462988800000, 32.1322302], [-460310400000, 179.789745324], [-457718400000, 46.59173379], [-455040000000, 27.66942045], [-452361600000, 27.66942045], [-449769600000, 26.7768585], [-447091200000, 22.934875173000002], [-444499200000, 17.851239], [-441820800000, 18.4462803], [-439142400000, 58.09317649291343], [-436636800000, 54.173786581602634], [-433958400000, 18.4462803], [-431366400000, 25.40826351], [-428688000000, 280.99833657], [-426096000000, 275.26610538], [-423417600000, 67.75933630200001], [-420739200000, 27.66942045], [-418147200000, 26.7768585], [-415468800000, 22.934875173000002], [-412876800000, 17.851239], [-410198400000, 18.4462803], [-407520000000, 18.4462803], [-405100800000, 16.6611564], [-402422400000, 18.4462803], [-399830400000, 29.33553609], [-397152000000, 257.571560589], [-394560000000, 126.1487556], [-391881600000, 67.75933630200001], [-389203200000, 27.66942045], [-386611200000, 26.7768585], [-383932800000, 22.934875173000002], [-381340800000, 17.851239], [-378662400000, 18.4462803], [-375984000000, 18.4462803], [-373564800000, 333.22312800000003], [-370886400000, 18.4462803], [-368294400000, 102.29268525186866], [-365616000000, 280.99833657], [-363024000000, 275.26610538], [-360345600000, 67.75933630200001], [-357667200000, 27.66942045], [-355075200000, 26.7768585], [-352396800000, 22.934875173000002], [-349804800000, 17.851239], [-347126400000, 18.4462803], [-344448000000, 18.4462803], [-342028800000, 16.6611564], [-339350400000, 18.4462803], [-336758400000, 29.33553609], [-334080000000, 257.571560589], [-331488000000, 126.1487556], [-328809600000, 67.75933630200001], [-326131200000, 27.66942045], [-323539200000, 26.7768585], [-320860800000, 22.934875173000002], [-318268800000, 17.851239], [-315590400000, 18.4462803], [-312912000000, 18.4462803], [-310406400000, 17.2561977], [-307728000000, 18.4462803], [-305136000000, 29.33553609], [-302457600000, 257.571560589], [-299865600000, 126.1487556], [-297187200000, 67.75933630200001], [-294508800000, 27.66942045], [-291916800000, 26.7768585], [-289238400000, 22.934875173000002], [-286646400000, 17.851239], [-283968000000, 18.4462803], [-281289600000, 18.4462803], [-278870400000, 16.6611564], [-276192000000, 18.4462803], [-273600000000, 29.33553609], [-270921600000, 257.571560589], [-268329600000, 126.1487556], [-265651200000, 67.75933630200001], [-262972800000, 27.66942045], [-260380800000, 26.7768585], [-257702400000, 22.934875173000002], [-255110400000, 17.851239], [-252432000000, 18.4462803], [-249753600000, 18.4462803], [-247334400000, 16.6611564], [-244656000000, 18.4462803], [-242064000000, 29.33553609], [-239385600000, 257.571560589], [-236793600000, 126.1487556], [-234115200000, 67.75933630200001], [-231436800000, 27.66942045], [-228844800000, 26.7768585], [-226166400000, 22.934875173000002], [-223574400000, 17.851239], [-220896000000, 18.4462803], [-218217600000, 18.4462803], [-215798400000, 16.6611564], [-213120000000, 18.4462803], [-210528000000, 58.79308929389364], [-207849600000, 289.545113109], [-205257600000, 150.30743238], [-202579200000, 67.75933630200001], [-199900800000, 27.66942045], [-197308800000, 26.7768585], [-194630400000, 22.934875173000002], [-192038400000, 17.851239], [-189360000000, 18.4462803], [-186681600000, 18.4462803], [-184176000000, 17.2561977], [-181497600000, 18.4462803], [-178905600000, 32.1322302], [-176227200000, 179.789745324], [-173635200000, 46.59173379], [-170956800000, 27.66942045], [-168278400000, 27.66942045], [-165686400000, 26.7768585], [-163008000000, 22.934875173000002], [-160416000000, 17.851239], [-157737600000, 18.4462803], [-155059200000, 106.82714975896567], [-152640000000, 16.6611564], [-149961600000, 18.4462803], [-147369600000, 27.3718998], [-144691200000, 289.545113109], [-142099200000, 150.30743238], [-139420800000, 67.75933630200001], [-136742400000, 27.66942045], [-134150400000, 26.7768585], [-131472000000, 22.934875173000002], [-128880000000, 17.851239], [-126201600000, 18.4462803], [-123523200000, 18.4462803], [-121104000000, 16.6611564], [-118425600000, 18.4462803], [-115833600000, 29.33553609], [-113155200000, 257.571560589], [-110563200000, 126.1487556], [-107884800000, 67.75933630200001], [-105206400000, 27.66942045], [-102614400000, 26.7768585], [-99936000000, 22.934875173000002], [-97344000000, 17.851239], [-94665600000, 18.4462803], [-91987200000, 18.4462803], [-89568000000, 16.6611564], [-86889600000, 18.4462803], [-84297600000, 27.3718998], [-81619200000, 289.545113109], [-79027200000, 150.30743238], [-76348800000, 67.75933630200001], [-73670400000, 27.66942045], [-71078400000, 26.7768585], [-68400000000, 22.934875173000002], [-65808000000, 17.851239], [-63129600000, 18.4462803], [-60451200000, 18.4462803], [-57945600000, 191.84775535827183], [-55267200000, 18.4462803], [-52675200000, 29.33553609], [-49996800000, 257.571560589], [-47404800000, 126.1487556], [-44726400000, 67.75933630200001], [-42048000000, 27.66942045], [-39456000000, 26.7768585], [-36777600000, 22.934875173000002], [-34185600000, 17.851239], [-31507200000, 18.4462803], [-28828800000, 18.4462803], [-26409600000, 16.6611564], [-23731200000, 18.4462803], [-21139200000, 25.40826351], [-18460800000, 280.99833657], [-15868800000, 275.26610538], [-13190400000, 67.75933630200001], [-10512000000, 27.66942045], [-7920000000, 26.7768585], [-5241600000, 22.934875173000002], [-2649600000, 17.851239], [28800000, 21.472197059056583], [2707200000, 368.925606], [5126400000, 66.30750133174413], [7804800000, 18.4462803], [10396800000, 27.3718998], [13075200000, 289.545113109], [15667200000, 150.30743238], [18345600000, 67.75933630200001], [21024000000, 27.66942045], [23616000000, 26.7768585], [26294400000, 22.934875173000002], [28886400000, 17.851239], [31564800000, 18.4462803], [34243200000, 18.4462803], [36662400000, 16.6611564], [39340800000, 18.4462803], [41932800000, 27.3718998], [44611200000, 289.545113109], [47203200000, 150.30743238], [49881600000, 67.75933630200001], [52560000000, 27.66942045], [55152000000, 26.7768585], [57830400000, 22.934875173000002], [60422400000, 17.851239], [63100800000, 18.4462803], [65779200000, 18.4462803], [68284800000, 17.2561977], [70963200000, 34.453180201550175], [73555200000, 29.33553609], [76233600000, 257.571560589], [78825600000, 126.1487556], [81504000000, 67.75933630200001], [84182400000, 27.66942045], [86774400000, 26.7768585], [89452800000, 22.934875173000002], [92044800000, 17.851239], [94723200000, 18.4462803], [97401600000, 29.889595230814574], [99820800000, 63.22443893426738], [102499200000, 18.4462803], [105091200000, 27.3718998], [107769600000, 289.545113109], [110361600000, 150.30743238], [113040000000, 67.75933630200001], [115718400000, 27.66942045], [118310400000, 26.7768585], [120988800000, 22.934875173000002], [123580800000, 313.0477339199725], [126259200000, 255.17434049832897], [128937600000, 368.925606], [131356800000, 16.661156400712326], [134035200000, 208.17762819474498], [136627200000, 25.40826351], [139305600000, 280.99833657], [141897600000, 275.26610538], [144576000000, 67.75933630200001], [147254400000, 27.66942045], [149846400000, 26.7768585], [152524800000, 22.934875173000002], [155116800000, 17.851239], [157795200000, 18.4462803], [160473600000, 18.4462803], [162892800000, 16.6611564], [165571200000, 115.40909042785893], [168163200000, 27.3718998], [170841600000, 289.545113109], [173433600000, 150.30743238], [176112000000, 67.75933630200001], [178790400000, 27.66942045], [181382400000, 26.7768585], [184060800000, 22.934875173000002], [186652800000, 17.851239], [189331200000, 18.4462803], [192009600000, 18.4462803], [194515200000, 17.2561977], [197193600000, 18.4462803], [199785600000, 32.1322302], [202464000000, 179.789745324], [205056000000, 46.59173379], [207734400000, 27.66942045], [210412800000, 27.66942045], [213004800000, 26.7768585], [215683200000, 22.934875173000002], [218275200000, 17.851239], [220953600000, 18.4462803], [223632000000, 18.4462803], [226051200000, 16.6611564], [228729600000, 18.4462803], [231321600000, 35.702478], [234000000000, 92.108426298], [236592000000, 46.59173379], [239270400000, 27.66942045], [241948800000, 27.66942045], [244540800000, 26.7768585], [247219200000, 22.934875173000002], [249811200000, 17.851239], [252489600000, 18.4462803], [255168000000, 18.4462803], [257587200000, 16.6611564], [260265600000, 18.4462803], [262857600000, 25.40826351], [265536000000, 280.99833657], [268128000000, 275.26610538], [270806400000, 67.75933630200001], [273484800000, 27.66942045], [276076800000, 26.7768585], [278755200000, 22.934875173000002], [281347200000, 17.851239], [284025600000, 18.4462803], [286704000000, 18.4462803], [289123200000, 16.6611564], [291801600000, 18.4462803], [294393600000, 32.1322302], [297072000000, 179.789745324], [299664000000, 46.59173379], [302342400000, 27.66942045], [305020800000, 27.66942045], [307612800000, 26.7768585], [310291200000, 22.934875173000002], [312883200000, 17.851239], [315561600000, 18.4462803], [318240000000, 18.4462803], [320745600000, 17.2561977], [323424000000, 18.4462803], [326016000000, 27.3718998], [328694400000, 289.545113109], [331286400000, 150.30743238], [333964800000, 67.75933630200001], [336643200000, 27.66942045], [339235200000, 26.7768585], [341913600000, 22.934875173000002], [344505600000, 17.851239], [347184000000, 18.4462803], [349862400000, 18.4462803], [352281600000, 16.6611564], [354960000000, 18.4462803], [357552000000, 32.1322302], [360230400000, 179.789745324], [362822400000, 46.59173379], [365500800000, 27.66942045], [368179200000, 27.66942045], [370771200000, 26.7768585], [373449600000, 22.934875173000002], [376041600000, 17.851239], [378720000000, 18.4462803], [381398400000, 18.4462803], [383817600000, 142.90331628048781], [386496000000, 18.4462803], [389088000000, 56.06422445334378], [391766400000, 280.99833657], [394358400000, 275.26610538], [397036800000, 67.75933630200001], [399715200000, 27.66942045], [402307200000, 26.7768585], [404985600000, 22.934875173000002], [407577600000, 17.851239], [410256000000, 157.234264750116], [412934400000, 178.82616706545355], [415353600000, 179.80612936323595], [418032000000, 368.925606], [420624000000, 56.63907640887229], [423302400000, 280.99833657], [425894400000, 275.26610538], [428572800000, 201.29041680962888], [431251200000, 27.66942045], [433843200000, 26.7768585], [436521600000, 22.934875173000002], [439113600000, 17.851239], [441792000000, 302.65123187465224], [444470400000, 18.4462803], [446976000000, 17.2561977], [449654400000, 18.4462803], [452246400000, 27.3718998], [454924800000, 289.545113109], [457516800000, 150.30743238], [460195200000, 67.75933630200001], [462873600000, 27.66942045], [465465600000, 26.7768585], [468144000000, 22.934875173000002], [470736000000, 17.851239], [473414400000, 18.4462803], [476092800000, 18.4462803], [478512000000, 16.6611564], [481190400000, 18.4462803], [483782400000, 32.1322302], [486460800000, 179.789745324], [489052800000, 46.59173379], [491731200000, 27.66942045], [494409600000, 27.66942045], [497001600000, 26.7768585], [499680000000, 22.934875173000002], [502272000000, 17.851239], [504950400000, 18.4462803], [507628800000, 18.4462803], [510048000000, 16.6611564], [512726400000, 47.02712545771698], [515318400000, 27.3718998], [517996800000, 289.545113109], [520588800000, 150.30743238], [523267200000, 67.75933630200001], [525945600000, 27.66942045], [528537600000, 26.7768585], [531216000000, 22.934875173000002], [533808000000, 17.851239], [536486400000, 18.4462803], [539164800000, 18.4462803], [541584000000, 16.6611564], [544262400000, 18.4462803], [546854400000, 32.1322302], [549532800000, 179.789745324], [552124800000, 46.59173379], [554803200000, 27.66942045], [557481600000, 27.66942045], [560073600000, 26.7768585], [562752000000, 22.934875173000002], [565344000000, 17.851239], [568022400000, 18.4462803], [570700800000, 18.4462803], [573206400000, 17.2561977], [575884800000, 18.4462803], [578476800000, 32.1322302], [581155200000, 179.789745324], [583747200000, 46.59173379], [586425600000, 27.66942045], [589104000000, 27.66942045], [591696000000, 26.7768585], [594374400000, 22.934875173000002], [596966400000, 17.851239], [599644800000, 18.4462803], [602323200000, 18.4462803], [604742400000, 16.6611564], [607420800000, 18.4462803], [610012800000, 29.33553609], [612691200000, 257.571560589], [615283200000, 126.1487556], [617961600000, 67.75933630200001], [620640000000, 27.66942045], [623232000000, 26.7768585], [625910400000, 22.934875173000002], [628502400000, 17.851239], [631180800000, 18.4462803], [633859200000, 18.4462803], [636278400000, 16.6611564], [638956800000, 18.4462803], [641548800000, 32.1322302], [644227200000, 179.789745324], [646819200000, 46.59173379], [649497600000, 27.66942045], [652176000000, 27.66942045], [654768000000, 26.7768585], [657446400000, 22.934875173000002], [660038400000, 17.851239], [662716800000, 18.4462803], [665395200000, 18.4462803], [667814400000, 16.6611564], [670492800000, 18.4462803], [673084800000, 35.702478], [675763200000, 92.108426298], [678355200000, 46.59173379], [681033600000, 27.66942045], [683712000000, 27.66942045], [686304000000, 26.7768585], [688982400000, 22.934875173000002], [691574400000, 17.851239], [694252800000, 18.4462803], [696931200000, 18.4462803], [699436800000, 17.2561977], [702115200000, 18.4462803], [704707200000, 32.1322302], [707385600000, 179.789745324], [709977600000, 46.59173379], [712656000000, 27.66942045], [715334400000, 27.66942045], [717926400000, 26.7768585], [720604800000, 22.934875173000002], [723196800000, 17.851239], [725875200000, 18.4462803], [728553600000, 18.4462803], [730972800000, 16.6611564], [733651200000, 18.4462803], [736243200000, 27.3718998], [738921600000, 289.545113109], [741513600000, 150.30743238], [744192000000, 67.75933630200001], [746870400000, 27.66942045], [749462400000, 26.7768585], [752140800000, 22.934875173000002], [754732800000, 17.851239], [757411200000, 18.4462803], [760089600000, 18.4462803], [762508800000, 16.6611564], [765187200000, 18.4462803], [767779200000, 35.702478], [770457600000, 92.108426298], [773049600000, 46.59173379], [775728000000, 27.66942045], [778406400000, 27.66942045], [780998400000, 26.7768585], [783676800000, 22.934875173000002], [786268800000, 17.851239], [788947200000, 18.4462803], [791625600000, 18.4462803], [794044800000, 16.6611564], [796723200000, 18.4462803], [799315200000, 25.40826351], [801993600000, 280.99833657], [804585600000, 275.26610538], [807264000000, 67.75933630200001], [809942400000, 27.66942045], [812534400000, 26.7768585], [815212800000, 22.934875173000002], [817804800000, 17.851239], [820483200000, 18.4462803], [823161600000, 18.4462803], [825667200000, 257.93903620534957], [828345600000, 18.4462803], [830937600000, 27.3718998], [833616000000, 289.545113109], [836208000000, 150.30743238], [838886400000, 67.75933630200001], [841564800000, 27.66942045], [844156800000, 26.7768585], [846835200000, 22.934875173000002], [849427200000, 17.851239], [852105600000, 316.0133076308232], [854784000000, 363.21137307162286], [857203200000, 16.6611564], [859881600000, 18.4462803], [862473600000, 27.3718998], [865152000000, 289.545113109], [867744000000, 150.30743238], [870422400000, 67.75933630200001], [873100800000, 27.66942045], [875692800000, 26.7768585], [878371200000, 22.934875173000002], [880963200000, 17.851239], [883641600000, 18.4462803], [886320000000, 18.4462803], [888739200000, 16.6611564], [891417600000, 211.38525067575313], [894009600000, 25.40826351], [896688000000, 280.99833657], [899280000000, 275.26610538], [901958400000, 180.8906198489613], [904636800000, 27.66942045], [907228800000, 26.7768585], [909907200000, 22.934875173000002], [912499200000, 17.851239], [915177600000, 18.4462803], [917856000000, 18.4462803], [920275200000, 32.385446816037934], [922953600000, 18.4462803], [925545600000, 27.3718998], [928224000000, 289.545113109], [930816000000, 150.30743238], [933494400000, 67.75933630200001], [936172800000, 27.66942045], [938764800000, 26.7768585], [941443200000, 22.934875173000002], [944035200000, 17.851239], [946713600000, 18.4462803], [949392000000, 18.4462803], [951897600000, 168.59898072350873], [954576000000, 118.85425205091214], [957168000000, 27.3718998], [959846400000, 289.545113109], [962438400000, 150.30743238], [965116800000, 67.75933630200001], [967795200000, 27.66942045], [970387200000, 26.7768585], [973065600000, 22.934875173000002], [975657600000, 17.851239], [978336000000, 18.4462803], [981014400000, 18.4462803], [983433600000, 16.6611564], [986112000000, 18.4462803], [988704000000, 32.1322302], [991382400000, 179.789745324], [993974400000, 46.59173379], [996652800000, 27.66942045], [999331200000, 27.66942045], [1001923200000, 26.7768585], [1004601600000, 22.934875173000002], [1007193600000, 17.851239], [1009872000000, 18.4462803], [1012550400000, 18.4462803], [1014969600000, 16.6611564], [1017648000000, 18.4462803], [1020240000000, 29.33553609], [1022918400000, 257.571560589], [1025510400000, 126.1487556], [1028188800000, 67.75933630200001], [1030867200000, 27.66942045], [1033459200000, 26.7768585], [1036137600000, 22.934875173000002], [1038729600000, 17.851239], [1041408000000, 18.4462803], [1044086400000, 18.4462803], [1046505600000, 16.6611564], [1049184000000, 18.4462803], [1051776000000, 27.3718998], [1054454400000, 289.545113109], [1057046400000, 150.30743238], [1059724800000, 67.75933630200001], [1062403200000, 27.66942045], [1064995200000, 26.7768585]]
+                    }, {
+                        "period_months": ["Oct", "Nov", "Dec", "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep"],
+                        "annual_period": "Wet Periods<br>1982 - 1983",
+                        "computed_statistics": [{
+                            "statistic": "Averages",
+                            "statistically_computed_time_series_monthly": [["Jan", 98.63622368272678], ["Feb", 161.35472282186188], ["Mar", 193.68594315], ["Apr", 56.35165043110804], ["May", 280.99833657], ["Jun", 275.26610538], ["Jul", 134.52487655581444], ["Aug", 27.66942045], ["Sep", 26.7768585], ["Oct", 22.934875173000002], ["Nov", 17.851239], ["Dec", 87.84027252505801]],
+                            "statistic_aggregate": 1383.890524239569
+                        }],
+                        "aggregate_ts": [[1982, 973.5625530088316], [1983, 1794.2184954703066]],
+                        "month_period": "Oct - Sep",
+                        "discrete_ts": [[373449600000, 22.934875173000002], [376041600000, 17.851239], [378720000000, 18.4462803], [381398400000, 18.4462803], [383817600000, 142.90331628048781], [386496000000, 18.4462803], [389088000000, 56.06422445334378], [391766400000, 280.99833657], [394358400000, 275.26610538], [397036800000, 67.75933630200001], [399715200000, 27.66942045], [402307200000, 26.7768585], [404985600000, 22.934875173000002], [407577600000, 17.851239], [410256000000, 157.234264750116], [412934400000, 178.82616706545355], [415353600000, 179.80612936323595], [418032000000, 368.925606], [420624000000, 56.63907640887229], [423302400000, 280.99833657], [425894400000, 275.26610538], [428572800000, 201.29041680962888], [431251200000, 27.66942045], [433843200000, 26.7768585]]
+                    }, {
+                        "period_months": ["Oct", "Nov", "Dec", "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep"],
+                        "annual_period": "Dry Periods<br>1987 - 1992",
+                        "computed_statistics": [{
+                            "statistic": "Averages",
+                            "statistically_computed_time_series_monthly": [["Jan", 18.4462803], ["Feb", 16.8595035], ["Mar", 18.4462803], ["Apr", 32.261155815], ["May", 178.13982803049998], ["Jun", 59.851237425], ["Jul", 34.351073092], ["Aug", 27.66942045], ["Sep", 26.7768585], ["Oct", 22.934875173000005], ["Nov", 17.851239], ["Dec", 18.4462803]],
+                            "statistic_aggregate": 472.03403188550004
+                        }],
+                        "aggregate_ts": [[1987, 453.415520187], [1988, 454.010561487], [1989, 648.047579004], [1990, 453.415520187], [1991, 369.304448961], [1992, 454.010561487]],
+                        "month_period": "Oct - Sep",
+                        "discrete_ts": [[531216000000, 22.934875173000002], [533808000000, 17.851239], [536486400000, 18.4462803], [539164800000, 18.4462803], [541584000000, 16.6611564], [544262400000, 18.4462803], [546854400000, 32.1322302], [549532800000, 179.789745324], [552124800000, 46.59173379], [554803200000, 27.66942045], [557481600000, 27.66942045], [560073600000, 26.7768585], [562752000000, 22.934875173000002], [565344000000, 17.851239], [568022400000, 18.4462803], [570700800000, 18.4462803], [573206400000, 17.2561977], [575884800000, 18.4462803], [578476800000, 32.1322302], [581155200000, 179.789745324], [583747200000, 46.59173379], [586425600000, 27.66942045], [589104000000, 27.66942045], [591696000000, 26.7768585], [594374400000, 22.934875173000002], [596966400000, 17.851239], [599644800000, 18.4462803], [602323200000, 18.4462803], [604742400000, 16.6611564], [607420800000, 18.4462803], [610012800000, 29.33553609], [612691200000, 257.571560589], [615283200000, 126.1487556], [617961600000, 67.75933630200001], [620640000000, 27.66942045], [623232000000, 26.7768585], [625910400000, 22.934875173000002], [628502400000, 17.851239], [631180800000, 18.4462803], [633859200000, 18.4462803], [636278400000, 16.6611564], [638956800000, 18.4462803], [641548800000, 32.1322302], [644227200000, 179.789745324], [646819200000, 46.59173379], [649497600000, 27.66942045], [652176000000, 27.66942045], [654768000000, 26.7768585], [657446400000, 22.934875173000002], [660038400000, 17.851239], [662716800000, 18.4462803], [665395200000, 18.4462803], [667814400000, 16.6611564], [670492800000, 18.4462803], [673084800000, 35.702478], [675763200000, 92.108426298], [678355200000, 46.59173379], [681033600000, 27.66942045], [683712000000, 27.66942045], [686304000000, 26.7768585], [688982400000, 22.934875173000002], [691574400000, 17.851239], [694252800000, 18.4462803], [696931200000, 18.4462803], [699436800000, 17.2561977], [702115200000, 18.4462803], [704707200000, 32.1322302], [707385600000, 179.789745324], [709977600000, 46.59173379], [712656000000, 27.66942045], [715334400000, 27.66942045], [717926400000, 26.7768585]]
+                    }]
+                }]
+            }, {
+                "ts_name": "Minimum Instream Flow", "monthly_filters": [{
+                    "annual_filters": [{
+                        "period_months": ["Oct", "Nov", "Dec", "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep"],
+                        "annual_period": "Long Term<br>",
+                        "computed_statistics": [{
+                            "statistic": "Averages",
+                            "statistically_computed_time_series_monthly": [["Jan", 18.4462803], ["Feb", 16.806288424390242], ["Mar", 18.4462803], ["Apr", 29.62507447865854], ["May", 232.38189009640243], ["Jun", 124.41152526804878], ["Jul", 53.09229391712196], ["Aug", 27.66942045], ["Sep", 26.7768585], ["Oct", 22.934875173000002], ["Nov", 17.851239], ["Dec", 18.4462803]],
+                            "statistic_aggregate": 606.888306207622
+                        }],
+                        "aggregate_ts": [[1922, 453.415520187], [1923, 453.415520187], [1924, 369.899490261], [1925, 702.216172014], [1926, 453.415520187], [1927, 702.216172014], [1928, 648.642620304], [1929, 369.304448961], [1930, 453.415520187], [1931, 369.304448961], [1932, 454.010561487], [1933, 453.415520187], [1934, 369.304448961], [1935, 453.415520187], [1936, 648.642620304], [1937, 453.415520187], [1938, 816.664432185], [1939, 369.304448961], [1940, 702.811213314], [1941, 816.664432185], [1942, 702.216172014], [1943, 648.047579004], [1944, 369.899490261], [1945, 648.047579004], [1946, 702.216172014], [1947, 453.415520187], [1948, 648.642620304], [1949, 648.047579004], [1950, 453.415520187], [1951, 702.216172014], [1952, 702.811213314], [1953, 702.216172014], [1954, 702.216172014], [1955, 453.415520187], [1956, 817.2594734850001], [1957, 648.047579004], [1958, 816.664432185], [1959, 648.047579004], [1960, 648.642620304], [1961, 648.047579004], [1962, 648.047579004], [1963, 702.216172014], [1964, 454.010561487], [1965, 702.216172014], [1966, 648.047579004], [1967, 702.216172014], [1968, 648.642620304], [1969, 816.664432185], [1970, 702.216172014], [1971, 702.216172014], [1972, 648.642620304], [1973, 702.216172014], [1974, 816.664432185], [1975, 702.216172014], [1976, 454.010561487], [1977, 369.304448961], [1978, 816.664432185], [1979, 453.415520187], [1980, 702.811213314], [1981, 453.415520187], [1982, 816.664432185], [1983, 816.664432185], [1984, 702.811213314], [1985, 453.415520187], [1986, 702.216172014], [1987, 453.415520187], [1988, 454.010561487], [1989, 648.047579004], [1990, 453.415520187], [1991, 369.304448961], [1992, 454.010561487], [1993, 702.216172014], [1994, 369.304448961], [1995, 816.664432185], [1996, 702.811213314], [1997, 702.216172014], [1998, 816.664432185], [1999, 702.216172014], [2000, 702.811213314], [2001, 453.415520187], [2002, 648.047579004], [2003, 702.216172014]],
+                        "month_period": "Oct - Sep",
+                        "discrete_ts": [[-1520006400000, 22.934875173000002], [-1517414400000, 17.851239], [-1514736000000, 18.4462803], [-1512057600000, 18.4462803], [-1509638400000, 16.6611564], [-1506960000000, 18.4462803], [-1504368000000, 32.1322302], [-1501689600000, 179.789745324], [-1499097600000, 46.59173379], [-1496419200000, 27.66942045], [-1493740800000, 27.66942045], [-1491148800000, 26.7768585], [-1488470400000, 22.934875173000002], [-1485878400000, 17.851239], [-1483200000000, 18.4462803], [-1480521600000, 18.4462803], [-1478102400000, 16.6611564], [-1475424000000, 18.4462803], [-1472832000000, 32.1322302], [-1470153600000, 179.789745324], [-1467561600000, 46.59173379], [-1464883200000, 27.66942045], [-1462204800000, 27.66942045], [-1459612800000, 26.7768585], [-1456934400000, 22.934875173000002], [-1454342400000, 17.851239], [-1451664000000, 18.4462803], [-1448985600000, 18.4462803], [-1446480000000, 17.2561977], [-1443801600000, 18.4462803], [-1441209600000, 35.702478], [-1438531200000, 92.108426298], [-1435939200000, 46.59173379], [-1433260800000, 27.66942045], [-1430582400000, 27.66942045], [-1427990400000, 26.7768585], [-1425312000000, 22.934875173000002], [-1422720000000, 17.851239], [-1420041600000, 18.4462803], [-1417363200000, 18.4462803], [-1414944000000, 16.6611564], [-1412265600000, 18.4462803], [-1409673600000, 27.3718998], [-1406995200000, 289.545113109], [-1404403200000, 150.30743238], [-1401724800000, 67.75933630200001], [-1399046400000, 27.66942045], [-1396454400000, 26.7768585], [-1393776000000, 22.934875173000002], [-1391184000000, 17.851239], [-1388505600000, 18.4462803], [-1385827200000, 18.4462803], [-1383408000000, 16.6611564], [-1380729600000, 18.4462803], [-1378137600000, 32.1322302], [-1375459200000, 179.789745324], [-1372867200000, 46.59173379], [-1370188800000, 27.66942045], [-1367510400000, 27.66942045], [-1364918400000, 26.7768585], [-1362240000000, 22.934875173000002], [-1359648000000, 17.851239], [-1356969600000, 18.4462803], [-1354291200000, 18.4462803], [-1351872000000, 16.6611564], [-1349193600000, 18.4462803], [-1346601600000, 27.3718998], [-1343923200000, 289.545113109], [-1341331200000, 150.30743238], [-1338652800000, 67.75933630200001], [-1335974400000, 27.66942045], [-1333382400000, 26.7768585], [-1330704000000, 22.934875173000002], [-1328112000000, 17.851239], [-1325433600000, 18.4462803], [-1322755200000, 18.4462803], [-1320249600000, 17.2561977], [-1317571200000, 18.4462803], [-1314979200000, 29.33553609], [-1312300800000, 257.571560589], [-1309708800000, 126.1487556], [-1307030400000, 67.75933630200001], [-1304352000000, 27.66942045], [-1301760000000, 26.7768585], [-1299081600000, 22.934875173000002], [-1296489600000, 17.851239], [-1293811200000, 18.4462803], [-1291132800000, 18.4462803], [-1288713600000, 16.6611564], [-1286035200000, 18.4462803], [-1283443200000, 35.702478], [-1280764800000, 92.108426298], [-1278172800000, 46.59173379], [-1275494400000, 27.66942045], [-1272816000000, 27.66942045], [-1270224000000, 26.7768585], [-1267545600000, 22.934875173000002], [-1264953600000, 17.851239], [-1262275200000, 18.4462803], [-1259596800000, 18.4462803], [-1257177600000, 16.6611564], [-1254499200000, 18.4462803], [-1251907200000, 32.1322302], [-1249228800000, 179.789745324], [-1246636800000, 46.59173379], [-1243958400000, 27.66942045], [-1241280000000, 27.66942045], [-1238688000000, 26.7768585], [-1236009600000, 22.934875173000002], [-1233417600000, 17.851239], [-1230739200000, 18.4462803], [-1228060800000, 18.4462803], [-1225641600000, 16.6611564], [-1222963200000, 18.4462803], [-1220371200000, 35.702478], [-1217692800000, 92.108426298], [-1215100800000, 46.59173379], [-1212422400000, 27.66942045], [-1209744000000, 27.66942045], [-1207152000000, 26.7768585], [-1204473600000, 22.934875173000002], [-1201881600000, 17.851239], [-1199203200000, 18.4462803], [-1196524800000, 18.4462803], [-1194019200000, 17.2561977], [-1191340800000, 18.4462803], [-1188748800000, 32.1322302], [-1186070400000, 179.789745324], [-1183478400000, 46.59173379], [-1180800000000, 27.66942045], [-1178121600000, 27.66942045], [-1175529600000, 26.7768585], [-1172851200000, 22.934875173000002], [-1170259200000, 17.851239], [-1167580800000, 18.4462803], [-1164902400000, 18.4462803], [-1162483200000, 16.6611564], [-1159804800000, 18.4462803], [-1157212800000, 32.1322302], [-1154534400000, 179.789745324], [-1151942400000, 46.59173379], [-1149264000000, 27.66942045], [-1146585600000, 27.66942045], [-1143993600000, 26.7768585], [-1141315200000, 22.934875173000002], [-1138723200000, 17.851239], [-1136044800000, 18.4462803], [-1133366400000, 18.4462803], [-1130947200000, 16.6611564], [-1128268800000, 18.4462803], [-1125676800000, 35.702478], [-1122998400000, 92.108426298], [-1120406400000, 46.59173379], [-1117728000000, 27.66942045], [-1115049600000, 27.66942045], [-1112457600000, 26.7768585], [-1109779200000, 22.934875173000002], [-1107187200000, 17.851239], [-1104508800000, 18.4462803], [-1101830400000, 18.4462803], [-1099411200000, 16.6611564], [-1096732800000, 18.4462803], [-1094140800000, 32.1322302], [-1091462400000, 179.789745324], [-1088870400000, 46.59173379], [-1086192000000, 27.66942045], [-1083513600000, 27.66942045], [-1080921600000, 26.7768585], [-1078243200000, 22.934875173000002], [-1075651200000, 17.851239], [-1072972800000, 18.4462803], [-1070294400000, 18.4462803], [-1067788800000, 17.2561977], [-1065110400000, 18.4462803], [-1062518400000, 29.33553609], [-1059840000000, 257.571560589], [-1057248000000, 126.1487556], [-1054569600000, 67.75933630200001], [-1051891200000, 27.66942045], [-1049299200000, 26.7768585], [-1046620800000, 22.934875173000002], [-1044028800000, 17.851239], [-1041350400000, 18.4462803], [-1038672000000, 18.4462803], [-1036252800000, 16.6611564], [-1033574400000, 18.4462803], [-1030982400000, 32.1322302], [-1028304000000, 179.789745324], [-1025712000000, 46.59173379], [-1023033600000, 27.66942045], [-1020355200000, 27.66942045], [-1017763200000, 26.7768585], [-1015084800000, 22.934875173000002], [-1012492800000, 17.851239], [-1009814400000, 18.4462803], [-1007136000000, 18.4462803], [-1004716800000, 16.6611564], [-1002038400000, 18.4462803], [-999446400000, 25.40826351], [-996768000000, 280.99833657], [-994176000000, 275.26610538], [-991497600000, 67.75933630200001], [-988819200000, 27.66942045], [-986227200000, 26.7768585], [-983548800000, 22.934875173000002], [-980956800000, 17.851239], [-978278400000, 18.4462803], [-975600000000, 18.4462803], [-973180800000, 16.6611564], [-970502400000, 18.4462803], [-967910400000, 35.702478], [-965232000000, 92.108426298], [-962640000000, 46.59173379], [-959961600000, 27.66942045], [-957283200000, 27.66942045], [-954691200000, 26.7768585], [-952012800000, 22.934875173000002], [-949420800000, 17.851239], [-946742400000, 18.4462803], [-944064000000, 18.4462803], [-941558400000, 17.2561977], [-938880000000, 18.4462803], [-936288000000, 27.3718998], [-933609600000, 289.545113109], [-931017600000, 150.30743238], [-928339200000, 67.75933630200001], [-925660800000, 27.66942045], [-923068800000, 26.7768585], [-920390400000, 22.934875173000002], [-917798400000, 17.851239], [-915120000000, 18.4462803], [-912441600000, 18.4462803], [-910022400000, 16.6611564], [-907344000000, 18.4462803], [-904752000000, 25.40826351], [-902073600000, 280.99833657], [-899481600000, 275.26610538], [-896803200000, 67.75933630200001], [-894124800000, 27.66942045], [-891532800000, 26.7768585], [-888854400000, 22.934875173000002], [-886262400000, 17.851239], [-883584000000, 18.4462803], [-880905600000, 18.4462803], [-878486400000, 16.6611564], [-875808000000, 18.4462803], [-873216000000, 27.3718998], [-870537600000, 289.545113109], [-867945600000, 150.30743238], [-865267200000, 67.75933630200001], [-862588800000, 27.66942045], [-859996800000, 26.7768585], [-857318400000, 22.934875173000002], [-854726400000, 17.851239], [-852048000000, 18.4462803], [-849369600000, 18.4462803], [-846950400000, 16.6611564], [-844272000000, 18.4462803], [-841680000000, 29.33553609], [-839001600000, 257.571560589], [-836409600000, 126.1487556], [-833731200000, 67.75933630200001], [-831052800000, 27.66942045], [-828460800000, 26.7768585], [-825782400000, 22.934875173000002], [-823190400000, 17.851239], [-820512000000, 18.4462803], [-817833600000, 18.4462803], [-815328000000, 17.2561977], [-812649600000, 18.4462803], [-810057600000, 35.702478], [-807379200000, 92.108426298], [-804787200000, 46.59173379], [-802108800000, 27.66942045], [-799430400000, 27.66942045], [-796838400000, 26.7768585], [-794160000000, 22.934875173000002], [-791568000000, 17.851239], [-788889600000, 18.4462803], [-786211200000, 18.4462803], [-783792000000, 16.6611564], [-781113600000, 18.4462803], [-778521600000, 29.33553609], [-775843200000, 257.571560589], [-773251200000, 126.1487556], [-770572800000, 67.75933630200001], [-767894400000, 27.66942045], [-765302400000, 26.7768585], [-762624000000, 22.934875173000002], [-760032000000, 17.851239], [-757353600000, 18.4462803], [-754675200000, 18.4462803], [-752256000000, 16.6611564], [-749577600000, 18.4462803], [-746985600000, 27.3718998], [-744307200000, 289.545113109], [-741715200000, 150.30743238], [-739036800000, 67.75933630200001], [-736358400000, 27.66942045], [-733766400000, 26.7768585], [-731088000000, 22.934875173000002], [-728496000000, 17.851239], [-725817600000, 18.4462803], [-723139200000, 18.4462803], [-720720000000, 16.6611564], [-718041600000, 18.4462803], [-715449600000, 32.1322302], [-712771200000, 179.789745324], [-710179200000, 46.59173379], [-707500800000, 27.66942045], [-704822400000, 27.66942045], [-702230400000, 26.7768585], [-699552000000, 22.934875173000002], [-696960000000, 17.851239], [-694281600000, 18.4462803], [-691603200000, 18.4462803], [-689097600000, 17.2561977], [-686419200000, 18.4462803], [-683827200000, 29.33553609], [-681148800000, 257.571560589], [-678556800000, 126.1487556], [-675878400000, 67.75933630200001], [-673200000000, 27.66942045], [-670608000000, 26.7768585], [-667929600000, 22.934875173000002], [-665337600000, 17.851239], [-662659200000, 18.4462803], [-659980800000, 18.4462803], [-657561600000, 16.6611564], [-654883200000, 18.4462803], [-652291200000, 29.33553609], [-649612800000, 257.571560589], [-647020800000, 126.1487556], [-644342400000, 67.75933630200001], [-641664000000, 27.66942045], [-639072000000, 26.7768585], [-636393600000, 22.934875173000002], [-633801600000, 17.851239], [-631123200000, 18.4462803], [-628444800000, 18.4462803], [-626025600000, 16.6611564], [-623347200000, 18.4462803], [-620755200000, 32.1322302], [-618076800000, 179.789745324], [-615484800000, 46.59173379], [-612806400000, 27.66942045], [-610128000000, 27.66942045], [-607536000000, 26.7768585], [-604857600000, 22.934875173000002], [-602265600000, 17.851239], [-599587200000, 18.4462803], [-596908800000, 18.4462803], [-594489600000, 16.6611564], [-591811200000, 18.4462803], [-589219200000, 27.3718998], [-586540800000, 289.545113109], [-583948800000, 150.30743238], [-581270400000, 67.75933630200001], [-578592000000, 27.66942045], [-576000000000, 26.7768585], [-573321600000, 22.934875173000002], [-570729600000, 17.851239], [-568051200000, 18.4462803], [-565372800000, 18.4462803], [-562867200000, 17.2561977], [-560188800000, 18.4462803], [-557596800000, 27.3718998], [-554918400000, 289.545113109], [-552326400000, 150.30743238], [-549648000000, 67.75933630200001], [-546969600000, 27.66942045], [-544377600000, 26.7768585], [-541699200000, 22.934875173000002], [-539107200000, 17.851239], [-536428800000, 18.4462803], [-533750400000, 18.4462803], [-531331200000, 16.6611564], [-528652800000, 18.4462803], [-526060800000, 27.3718998], [-523382400000, 289.545113109], [-520790400000, 150.30743238], [-518112000000, 67.75933630200001], [-515433600000, 27.66942045], [-512841600000, 26.7768585], [-510163200000, 22.934875173000002], [-507571200000, 17.851239], [-504892800000, 18.4462803], [-502214400000, 18.4462803], [-499795200000, 16.6611564], [-497116800000, 18.4462803], [-494524800000, 27.3718998], [-491846400000, 289.545113109], [-489254400000, 150.30743238], [-486576000000, 67.75933630200001], [-483897600000, 27.66942045], [-481305600000, 26.7768585], [-478627200000, 22.934875173000002], [-476035200000, 17.851239], [-473356800000, 18.4462803], [-470678400000, 18.4462803], [-468259200000, 16.6611564], [-465580800000, 18.4462803], [-462988800000, 32.1322302], [-460310400000, 179.789745324], [-457718400000, 46.59173379], [-455040000000, 27.66942045], [-452361600000, 27.66942045], [-449769600000, 26.7768585], [-447091200000, 22.934875173000002], [-444499200000, 17.851239], [-441820800000, 18.4462803], [-439142400000, 18.4462803], [-436636800000, 17.2561977], [-433958400000, 18.4462803], [-431366400000, 25.40826351], [-428688000000, 280.99833657], [-426096000000, 275.26610538], [-423417600000, 67.75933630200001], [-420739200000, 27.66942045], [-418147200000, 26.7768585], [-415468800000, 22.934875173000002], [-412876800000, 17.851239], [-410198400000, 18.4462803], [-407520000000, 18.4462803], [-405100800000, 16.6611564], [-402422400000, 18.4462803], [-399830400000, 29.33553609], [-397152000000, 257.571560589], [-394560000000, 126.1487556], [-391881600000, 67.75933630200001], [-389203200000, 27.66942045], [-386611200000, 26.7768585], [-383932800000, 22.934875173000002], [-381340800000, 17.851239], [-378662400000, 18.4462803], [-375984000000, 18.4462803], [-373564800000, 16.6611564], [-370886400000, 18.4462803], [-368294400000, 25.40826351], [-365616000000, 280.99833657], [-363024000000, 275.26610538], [-360345600000, 67.75933630200001], [-357667200000, 27.66942045], [-355075200000, 26.7768585], [-352396800000, 22.934875173000002], [-349804800000, 17.851239], [-347126400000, 18.4462803], [-344448000000, 18.4462803], [-342028800000, 16.6611564], [-339350400000, 18.4462803], [-336758400000, 29.33553609], [-334080000000, 257.571560589], [-331488000000, 126.1487556], [-328809600000, 67.75933630200001], [-326131200000, 27.66942045], [-323539200000, 26.7768585], [-320860800000, 22.934875173000002], [-318268800000, 17.851239], [-315590400000, 18.4462803], [-312912000000, 18.4462803], [-310406400000, 17.2561977], [-307728000000, 18.4462803], [-305136000000, 29.33553609], [-302457600000, 257.571560589], [-299865600000, 126.1487556], [-297187200000, 67.75933630200001], [-294508800000, 27.66942045], [-291916800000, 26.7768585], [-289238400000, 22.934875173000002], [-286646400000, 17.851239], [-283968000000, 18.4462803], [-281289600000, 18.4462803], [-278870400000, 16.6611564], [-276192000000, 18.4462803], [-273600000000, 29.33553609], [-270921600000, 257.571560589], [-268329600000, 126.1487556], [-265651200000, 67.75933630200001], [-262972800000, 27.66942045], [-260380800000, 26.7768585], [-257702400000, 22.934875173000002], [-255110400000, 17.851239], [-252432000000, 18.4462803], [-249753600000, 18.4462803], [-247334400000, 16.6611564], [-244656000000, 18.4462803], [-242064000000, 29.33553609], [-239385600000, 257.571560589], [-236793600000, 126.1487556], [-234115200000, 67.75933630200001], [-231436800000, 27.66942045], [-228844800000, 26.7768585], [-226166400000, 22.934875173000002], [-223574400000, 17.851239], [-220896000000, 18.4462803], [-218217600000, 18.4462803], [-215798400000, 16.6611564], [-213120000000, 18.4462803], [-210528000000, 27.3718998], [-207849600000, 289.545113109], [-205257600000, 150.30743238], [-202579200000, 67.75933630200001], [-199900800000, 27.66942045], [-197308800000, 26.7768585], [-194630400000, 22.934875173000002], [-192038400000, 17.851239], [-189360000000, 18.4462803], [-186681600000, 18.4462803], [-184176000000, 17.2561977], [-181497600000, 18.4462803], [-178905600000, 32.1322302], [-176227200000, 179.789745324], [-173635200000, 46.59173379], [-170956800000, 27.66942045], [-168278400000, 27.66942045], [-165686400000, 26.7768585], [-163008000000, 22.934875173000002], [-160416000000, 17.851239], [-157737600000, 18.4462803], [-155059200000, 18.4462803], [-152640000000, 16.6611564], [-149961600000, 18.4462803], [-147369600000, 27.3718998], [-144691200000, 289.545113109], [-142099200000, 150.30743238], [-139420800000, 67.75933630200001], [-136742400000, 27.66942045], [-134150400000, 26.7768585], [-131472000000, 22.934875173000002], [-128880000000, 17.851239], [-126201600000, 18.4462803], [-123523200000, 18.4462803], [-121104000000, 16.6611564], [-118425600000, 18.4462803], [-115833600000, 29.33553609], [-113155200000, 257.571560589], [-110563200000, 126.1487556], [-107884800000, 67.75933630200001], [-105206400000, 27.66942045], [-102614400000, 26.7768585], [-99936000000, 22.934875173000002], [-97344000000, 17.851239], [-94665600000, 18.4462803], [-91987200000, 18.4462803], [-89568000000, 16.6611564], [-86889600000, 18.4462803], [-84297600000, 27.3718998], [-81619200000, 289.545113109], [-79027200000, 150.30743238], [-76348800000, 67.75933630200001], [-73670400000, 27.66942045], [-71078400000, 26.7768585], [-68400000000, 22.934875173000002], [-65808000000, 17.851239], [-63129600000, 18.4462803], [-60451200000, 18.4462803], [-57945600000, 17.2561977], [-55267200000, 18.4462803], [-52675200000, 29.33553609], [-49996800000, 257.571560589], [-47404800000, 126.1487556], [-44726400000, 67.75933630200001], [-42048000000, 27.66942045], [-39456000000, 26.7768585], [-36777600000, 22.934875173000002], [-34185600000, 17.851239], [-31507200000, 18.4462803], [-28828800000, 18.4462803], [-26409600000, 16.6611564], [-23731200000, 18.4462803], [-21139200000, 25.40826351], [-18460800000, 280.99833657], [-15868800000, 275.26610538], [-13190400000, 67.75933630200001], [-10512000000, 27.66942045], [-7920000000, 26.7768585], [-5241600000, 22.934875173000002], [-2649600000, 17.851239], [28800000, 18.4462803], [2707200000, 18.4462803], [5126400000, 16.6611564], [7804800000, 18.4462803], [10396800000, 27.3718998], [13075200000, 289.545113109], [15667200000, 150.30743238], [18345600000, 67.75933630200001], [21024000000, 27.66942045], [23616000000, 26.7768585], [26294400000, 22.934875173000002], [28886400000, 17.851239], [31564800000, 18.4462803], [34243200000, 18.4462803], [36662400000, 16.6611564], [39340800000, 18.4462803], [41932800000, 27.3718998], [44611200000, 289.545113109], [47203200000, 150.30743238], [49881600000, 67.75933630200001], [52560000000, 27.66942045], [55152000000, 26.7768585], [57830400000, 22.934875173000002], [60422400000, 17.851239], [63100800000, 18.4462803], [65779200000, 18.4462803], [68284800000, 17.2561977], [70963200000, 18.4462803], [73555200000, 29.33553609], [76233600000, 257.571560589], [78825600000, 126.1487556], [81504000000, 67.75933630200001], [84182400000, 27.66942045], [86774400000, 26.7768585], [89452800000, 22.934875173000002], [92044800000, 17.851239], [94723200000, 18.4462803], [97401600000, 18.4462803], [99820800000, 16.6611564], [102499200000, 18.4462803], [105091200000, 27.3718998], [107769600000, 289.545113109], [110361600000, 150.30743238], [113040000000, 67.75933630200001], [115718400000, 27.66942045], [118310400000, 26.7768585], [120988800000, 22.934875173000002], [123580800000, 17.851239], [126259200000, 18.4462803], [128937600000, 18.4462803], [131356800000, 16.6611564], [134035200000, 18.4462803], [136627200000, 25.40826351], [139305600000, 280.99833657], [141897600000, 275.26610538], [144576000000, 67.75933630200001], [147254400000, 27.66942045], [149846400000, 26.7768585], [152524800000, 22.934875173000002], [155116800000, 17.851239], [157795200000, 18.4462803], [160473600000, 18.4462803], [162892800000, 16.6611564], [165571200000, 18.4462803], [168163200000, 27.3718998], [170841600000, 289.545113109], [173433600000, 150.30743238], [176112000000, 67.75933630200001], [178790400000, 27.66942045], [181382400000, 26.7768585], [184060800000, 22.934875173000002], [186652800000, 17.851239], [189331200000, 18.4462803], [192009600000, 18.4462803], [194515200000, 17.2561977], [197193600000, 18.4462803], [199785600000, 32.1322302], [202464000000, 179.789745324], [205056000000, 46.59173379], [207734400000, 27.66942045], [210412800000, 27.66942045], [213004800000, 26.7768585], [215683200000, 22.934875173000002], [218275200000, 17.851239], [220953600000, 18.4462803], [223632000000, 18.4462803], [226051200000, 16.6611564], [228729600000, 18.4462803], [231321600000, 35.702478], [234000000000, 92.108426298], [236592000000, 46.59173379], [239270400000, 27.66942045], [241948800000, 27.66942045], [244540800000, 26.7768585], [247219200000, 22.934875173000002], [249811200000, 17.851239], [252489600000, 18.4462803], [255168000000, 18.4462803], [257587200000, 16.6611564], [260265600000, 18.4462803], [262857600000, 25.40826351], [265536000000, 280.99833657], [268128000000, 275.26610538], [270806400000, 67.75933630200001], [273484800000, 27.66942045], [276076800000, 26.7768585], [278755200000, 22.934875173000002], [281347200000, 17.851239], [284025600000, 18.4462803], [286704000000, 18.4462803], [289123200000, 16.6611564], [291801600000, 18.4462803], [294393600000, 32.1322302], [297072000000, 179.789745324], [299664000000, 46.59173379], [302342400000, 27.66942045], [305020800000, 27.66942045], [307612800000, 26.7768585], [310291200000, 22.934875173000002], [312883200000, 17.851239], [315561600000, 18.4462803], [318240000000, 18.4462803], [320745600000, 17.2561977], [323424000000, 18.4462803], [326016000000, 27.3718998], [328694400000, 289.545113109], [331286400000, 150.30743238], [333964800000, 67.75933630200001], [336643200000, 27.66942045], [339235200000, 26.7768585], [341913600000, 22.934875173000002], [344505600000, 17.851239], [347184000000, 18.4462803], [349862400000, 18.4462803], [352281600000, 16.6611564], [354960000000, 18.4462803], [357552000000, 32.1322302], [360230400000, 179.789745324], [362822400000, 46.59173379], [365500800000, 27.66942045], [368179200000, 27.66942045], [370771200000, 26.7768585], [373449600000, 22.934875173000002], [376041600000, 17.851239], [378720000000, 18.4462803], [381398400000, 18.4462803], [383817600000, 16.6611564], [386496000000, 18.4462803], [389088000000, 25.40826351], [391766400000, 280.99833657], [394358400000, 275.26610538], [397036800000, 67.75933630200001], [399715200000, 27.66942045], [402307200000, 26.7768585], [404985600000, 22.934875173000002], [407577600000, 17.851239], [410256000000, 18.4462803], [412934400000, 18.4462803], [415353600000, 16.6611564], [418032000000, 18.4462803], [420624000000, 25.40826351], [423302400000, 280.99833657], [425894400000, 275.26610538], [428572800000, 67.75933630200001], [431251200000, 27.66942045], [433843200000, 26.7768585], [436521600000, 22.934875173000002], [439113600000, 17.851239], [441792000000, 18.4462803], [444470400000, 18.4462803], [446976000000, 17.2561977], [449654400000, 18.4462803], [452246400000, 27.3718998], [454924800000, 289.545113109], [457516800000, 150.30743238], [460195200000, 67.75933630200001], [462873600000, 27.66942045], [465465600000, 26.7768585], [468144000000, 22.934875173000002], [470736000000, 17.851239], [473414400000, 18.4462803], [476092800000, 18.4462803], [478512000000, 16.6611564], [481190400000, 18.4462803], [483782400000, 32.1322302], [486460800000, 179.789745324], [489052800000, 46.59173379], [491731200000, 27.66942045], [494409600000, 27.66942045], [497001600000, 26.7768585], [499680000000, 22.934875173000002], [502272000000, 17.851239], [504950400000, 18.4462803], [507628800000, 18.4462803], [510048000000, 16.6611564], [512726400000, 18.4462803], [515318400000, 27.3718998], [517996800000, 289.545113109], [520588800000, 150.30743238], [523267200000, 67.75933630200001], [525945600000, 27.66942045], [528537600000, 26.7768585], [531216000000, 22.934875173000002], [533808000000, 17.851239], [536486400000, 18.4462803], [539164800000, 18.4462803], [541584000000, 16.6611564], [544262400000, 18.4462803], [546854400000, 32.1322302], [549532800000, 179.789745324], [552124800000, 46.59173379], [554803200000, 27.66942045], [557481600000, 27.66942045], [560073600000, 26.7768585], [562752000000, 22.934875173000002], [565344000000, 17.851239], [568022400000, 18.4462803], [570700800000, 18.4462803], [573206400000, 17.2561977], [575884800000, 18.4462803], [578476800000, 32.1322302], [581155200000, 179.789745324], [583747200000, 46.59173379], [586425600000, 27.66942045], [589104000000, 27.66942045], [591696000000, 26.7768585], [594374400000, 22.934875173000002], [596966400000, 17.851239], [599644800000, 18.4462803], [602323200000, 18.4462803], [604742400000, 16.6611564], [607420800000, 18.4462803], [610012800000, 29.33553609], [612691200000, 257.571560589], [615283200000, 126.1487556], [617961600000, 67.75933630200001], [620640000000, 27.66942045], [623232000000, 26.7768585], [625910400000, 22.934875173000002], [628502400000, 17.851239], [631180800000, 18.4462803], [633859200000, 18.4462803], [636278400000, 16.6611564], [638956800000, 18.4462803], [641548800000, 32.1322302], [644227200000, 179.789745324], [646819200000, 46.59173379], [649497600000, 27.66942045], [652176000000, 27.66942045], [654768000000, 26.7768585], [657446400000, 22.934875173000002], [660038400000, 17.851239], [662716800000, 18.4462803], [665395200000, 18.4462803], [667814400000, 16.6611564], [670492800000, 18.4462803], [673084800000, 35.702478], [675763200000, 92.108426298], [678355200000, 46.59173379], [681033600000, 27.66942045], [683712000000, 27.66942045], [686304000000, 26.7768585], [688982400000, 22.934875173000002], [691574400000, 17.851239], [694252800000, 18.4462803], [696931200000, 18.4462803], [699436800000, 17.2561977], [702115200000, 18.4462803], [704707200000, 32.1322302], [707385600000, 179.789745324], [709977600000, 46.59173379], [712656000000, 27.66942045], [715334400000, 27.66942045], [717926400000, 26.7768585], [720604800000, 22.934875173000002], [723196800000, 17.851239], [725875200000, 18.4462803], [728553600000, 18.4462803], [730972800000, 16.6611564], [733651200000, 18.4462803], [736243200000, 27.3718998], [738921600000, 289.545113109], [741513600000, 150.30743238], [744192000000, 67.75933630200001], [746870400000, 27.66942045], [749462400000, 26.7768585], [752140800000, 22.934875173000002], [754732800000, 17.851239], [757411200000, 18.4462803], [760089600000, 18.4462803], [762508800000, 16.6611564], [765187200000, 18.4462803], [767779200000, 35.702478], [770457600000, 92.108426298], [773049600000, 46.59173379], [775728000000, 27.66942045], [778406400000, 27.66942045], [780998400000, 26.7768585], [783676800000, 22.934875173000002], [786268800000, 17.851239], [788947200000, 18.4462803], [791625600000, 18.4462803], [794044800000, 16.6611564], [796723200000, 18.4462803], [799315200000, 25.40826351], [801993600000, 280.99833657], [804585600000, 275.26610538], [807264000000, 67.75933630200001], [809942400000, 27.66942045], [812534400000, 26.7768585], [815212800000, 22.934875173000002], [817804800000, 17.851239], [820483200000, 18.4462803], [823161600000, 18.4462803], [825667200000, 17.2561977], [828345600000, 18.4462803], [830937600000, 27.3718998], [833616000000, 289.545113109], [836208000000, 150.30743238], [838886400000, 67.75933630200001], [841564800000, 27.66942045], [844156800000, 26.7768585], [846835200000, 22.934875173000002], [849427200000, 17.851239], [852105600000, 18.4462803], [854784000000, 18.4462803], [857203200000, 16.6611564], [859881600000, 18.4462803], [862473600000, 27.3718998], [865152000000, 289.545113109], [867744000000, 150.30743238], [870422400000, 67.75933630200001], [873100800000, 27.66942045], [875692800000, 26.7768585], [878371200000, 22.934875173000002], [880963200000, 17.851239], [883641600000, 18.4462803], [886320000000, 18.4462803], [888739200000, 16.6611564], [891417600000, 18.4462803], [894009600000, 25.40826351], [896688000000, 280.99833657], [899280000000, 275.26610538], [901958400000, 67.75933630200001], [904636800000, 27.66942045], [907228800000, 26.7768585], [909907200000, 22.934875173000002], [912499200000, 17.851239], [915177600000, 18.4462803], [917856000000, 18.4462803], [920275200000, 16.6611564], [922953600000, 18.4462803], [925545600000, 27.3718998], [928224000000, 289.545113109], [930816000000, 150.30743238], [933494400000, 67.75933630200001], [936172800000, 27.66942045], [938764800000, 26.7768585], [941443200000, 22.934875173000002], [944035200000, 17.851239], [946713600000, 18.4462803], [949392000000, 18.4462803], [951897600000, 17.2561977], [954576000000, 18.4462803], [957168000000, 27.3718998], [959846400000, 289.545113109], [962438400000, 150.30743238], [965116800000, 67.75933630200001], [967795200000, 27.66942045], [970387200000, 26.7768585], [973065600000, 22.934875173000002], [975657600000, 17.851239], [978336000000, 18.4462803], [981014400000, 18.4462803], [983433600000, 16.6611564], [986112000000, 18.4462803], [988704000000, 32.1322302], [991382400000, 179.789745324], [993974400000, 46.59173379], [996652800000, 27.66942045], [999331200000, 27.66942045], [1001923200000, 26.7768585], [1004601600000, 22.934875173000002], [1007193600000, 17.851239], [1009872000000, 18.4462803], [1012550400000, 18.4462803], [1014969600000, 16.6611564], [1017648000000, 18.4462803], [1020240000000, 29.33553609], [1022918400000, 257.571560589], [1025510400000, 126.1487556], [1028188800000, 67.75933630200001], [1030867200000, 27.66942045], [1033459200000, 26.7768585], [1036137600000, 22.934875173000002], [1038729600000, 17.851239], [1041408000000, 18.4462803], [1044086400000, 18.4462803], [1046505600000, 16.6611564], [1049184000000, 18.4462803], [1051776000000, 27.3718998], [1054454400000, 289.545113109], [1057046400000, 150.30743238], [1059724800000, 67.75933630200001], [1062403200000, 27.66942045], [1064995200000, 26.7768585]]
+                    }, {
+                        "period_months": ["Oct", "Nov", "Dec", "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep"],
+                        "annual_period": "Wet Periods<br>1982 - 1983",
+                        "computed_statistics": [{
+                            "statistic": "Averages",
+                            "statistically_computed_time_series_monthly": [["Jan", 18.4462803], ["Feb", 16.6611564], ["Mar", 18.4462803], ["Apr", 25.40826351], ["May", 280.99833657], ["Jun", 275.26610538], ["Jul", 67.75933630200001], ["Aug", 27.66942045], ["Sep", 26.7768585], ["Oct", 22.934875173000002], ["Nov", 17.851239], ["Dec", 18.4462803]],
+                            "statistic_aggregate": 816.664432185
+                        }],
+                        "aggregate_ts": [[1982, 816.664432185], [1983, 816.664432185]],
+                        "month_period": "Oct - Sep",
+                        "discrete_ts": [[373449600000, 22.934875173000002], [376041600000, 17.851239], [378720000000, 18.4462803], [381398400000, 18.4462803], [383817600000, 16.6611564], [386496000000, 18.4462803], [389088000000, 25.40826351], [391766400000, 280.99833657], [394358400000, 275.26610538], [397036800000, 67.75933630200001], [399715200000, 27.66942045], [402307200000, 26.7768585], [404985600000, 22.934875173000002], [407577600000, 17.851239], [410256000000, 18.4462803], [412934400000, 18.4462803], [415353600000, 16.6611564], [418032000000, 18.4462803], [420624000000, 25.40826351], [423302400000, 280.99833657], [425894400000, 275.26610538], [428572800000, 67.75933630200001], [431251200000, 27.66942045], [433843200000, 26.7768585]]
+                    }, {
+                        "period_months": ["Oct", "Nov", "Dec", "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep"],
+                        "annual_period": "Dry Periods<br>1987 - 1992",
+                        "computed_statistics": [{
+                            "statistic": "Averages",
+                            "statistically_computed_time_series_monthly": [["Jan", 18.4462803], ["Feb", 16.8595035], ["Mar", 18.4462803], ["Apr", 32.261155815], ["May", 178.13982803049998], ["Jun", 59.851237425], ["Jul", 34.351073092], ["Aug", 27.66942045], ["Sep", 26.7768585], ["Oct", 22.934875173000005], ["Nov", 17.851239], ["Dec", 18.4462803]],
+                            "statistic_aggregate": 472.03403188550004
+                        }],
+                        "aggregate_ts": [[1987, 453.415520187], [1988, 454.010561487], [1989, 648.047579004], [1990, 453.415520187], [1991, 369.304448961], [1992, 454.010561487]],
+                        "month_period": "Oct - Sep",
+                        "discrete_ts": [[531216000000, 22.934875173000002], [533808000000, 17.851239], [536486400000, 18.4462803], [539164800000, 18.4462803], [541584000000, 16.6611564], [544262400000, 18.4462803], [546854400000, 32.1322302], [549532800000, 179.789745324], [552124800000, 46.59173379], [554803200000, 27.66942045], [557481600000, 27.66942045], [560073600000, 26.7768585], [562752000000, 22.934875173000002], [565344000000, 17.851239], [568022400000, 18.4462803], [570700800000, 18.4462803], [573206400000, 17.2561977], [575884800000, 18.4462803], [578476800000, 32.1322302], [581155200000, 179.789745324], [583747200000, 46.59173379], [586425600000, 27.66942045], [589104000000, 27.66942045], [591696000000, 26.7768585], [594374400000, 22.934875173000002], [596966400000, 17.851239], [599644800000, 18.4462803], [602323200000, 18.4462803], [604742400000, 16.6611564], [607420800000, 18.4462803], [610012800000, 29.33553609], [612691200000, 257.571560589], [615283200000, 126.1487556], [617961600000, 67.75933630200001], [620640000000, 27.66942045], [623232000000, 26.7768585], [625910400000, 22.934875173000002], [628502400000, 17.851239], [631180800000, 18.4462803], [633859200000, 18.4462803], [636278400000, 16.6611564], [638956800000, 18.4462803], [641548800000, 32.1322302], [644227200000, 179.789745324], [646819200000, 46.59173379], [649497600000, 27.66942045], [652176000000, 27.66942045], [654768000000, 26.7768585], [657446400000, 22.934875173000002], [660038400000, 17.851239], [662716800000, 18.4462803], [665395200000, 18.4462803], [667814400000, 16.6611564], [670492800000, 18.4462803], [673084800000, 35.702478], [675763200000, 92.108426298], [678355200000, 46.59173379], [681033600000, 27.66942045], [683712000000, 27.66942045], [686304000000, 26.7768585], [688982400000, 22.934875173000002], [691574400000, 17.851239], [694252800000, 18.4462803], [696931200000, 18.4462803], [699436800000, 17.2561977], [702115200000, 18.4462803], [704707200000, 32.1322302], [707385600000, 179.789745324], [709977600000, 46.59173379], [712656000000, 27.66942045], [715334400000, 27.66942045], [717926400000, 26.7768585]]
+                    }]
+                }]
+            }], "scenario_name": "Default", "scenario_color": "#4C7EEEFF"
+        }, {
+            "ts_list": [{
+                "ts_name": "ELTQ5_DV (CalLite)", "monthly_filters": [{
+                    "annual_filters": [{
+                        "period_months": ["Oct", "Nov", "Dec", "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep"],
+                        "annual_period": "Long Term<br>",
+                        "computed_statistics": [{
+                            "statistic": "Averages",
+                            "statistically_computed_time_series_monthly": [["Jan", 45.037184490206336], ["Feb", 40.45019638540344], ["Mar", 36.97841155092642], ["Apr", 33.98636998778268], ["May", 230.77496413368291], ["Jun", 131.4772778754878], ["Jul", 54.7237265821758], ["Aug", 27.66942045], ["Sep", 26.47967705215506], ["Oct", 22.627336758129225], ["Nov", 21.578409483849015], ["Dec", 39.315718794448564]],
+                            "statistic_aggregate": 711.0986935442472
+                        }],
+                        "aggregate_ts": [[1922, 453.41552018699997], [1923, 369.304448961], [1924, 369.899490261], [1925, 702.216172014], [1926, 453.41552018699997], [1927, 816.664432185], [1928, 648.642620304], [1929, 369.304448961], [1930, 453.415520187], [1931, 369.304448961], [1932, 432.1127452885293], [1933, 453.41552018699997], [1934, 344.9355702377151], [1935, 442.2284553376381], [1936, 648.642620304], [1937, 648.047579004], [1938, 816.664432185], [1939, 369.304448961], [1940, 702.811213314], [1941, 1275.4753923547362], [1942, 1448.6053433506572], [1943, 648.047579004], [1944, 369.899490261], [1945, 648.047579004], [1946, 702.216172014], [1947, 453.415520187], [1948, 648.642620304], [1949, 648.047579004], [1950, 453.415520187], [1951, 706.8252755058696], [1952, 817.2594734850001], [1953, 1047.3277989718256], [1954, 828.7457508125453], [1955, 453.41552018699997], [1956, 947.6879222115631], [1957, 648.047579004], [1958, 1447.2208435178097], [1959, 683.4985083089977], [1960, 648.642620304], [1961, 648.047579004], [1962, 648.047579004], [1963, 741.8840548744835], [1964, 454.01056148699996], [1965, 896.7637725916422], [1966, 648.047579004], [1967, 702.216172014], [1968, 820.6357776852276], [1969, 816.664432185], [1970, 1461.922827029059], [1971, 702.216172014], [1972, 650.5568202562371], [1973, 702.216172014], [1974, 1952.720179658103], [1975, 813.6375495563708], [1976, 369.899490261], [1977, 369.304448961], [1978, 816.664432185], [1979, 453.41552018699997], [1980, 702.811213314], [1981, 453.415520187], [1982, 999.708872152884], [1983, 1938.0520959326916], [1984, 1053.290539014], [1985, 453.41552018699997], [1986, 702.216172014], [1987, 453.41552018699997], [1988, 454.01056148699996], [1989, 648.047579004], [1990, 453.41552018699997], [1991, 369.304448961], [1992, 454.01056148699996], [1993, 696.1578677532502], [1994, 369.304448961], [1995, 816.664432185], [1996, 984.8635950768747], [1997, 1322.9416742355052], [1998, 1102.3241774607343], [1999, 832.0098818629682], [2000, 1075.4847226253569], [2001, 453.415520187], [2002, 648.047579004], [2003, 816.664432185]],
+                        "month_period": "Oct - Sep",
+                        "discrete_ts": [[-1520006400000, 22.934875173000005], [-1517414400000, 17.851239], [-1514736000000, 18.4462803], [-1512057600000, 18.4462803], [-1509638400000, 16.661156399999996], [-1506960000000, 18.4462803], [-1504368000000, 32.1322302], [-1501689600000, 179.78974532399997], [-1499097600000, 46.591733790000006], [-1496419200000, 27.66942045], [-1493740800000, 27.66942045], [-1491148800000, 26.7768585], [-1488470400000, 22.934875172999995], [-1485878400000, 17.851239], [-1483200000000, 18.4462803], [-1480521600000, 18.4462803], [-1478102400000, 16.661156399999996], [-1475424000000, 18.4462803], [-1472832000000, 35.702478], [-1470153600000, 92.108426298], [-1467561600000, 46.59173379], [-1464883200000, 27.66942045], [-1462204800000, 27.66942045], [-1459612800000, 26.7768585], [-1456934400000, 22.934875173000005], [-1454342400000, 17.851238999999996], [-1451664000000, 18.4462803], [-1448985600000, 18.4462803], [-1446480000000, 17.2561977], [-1443801600000, 18.4462803], [-1441209600000, 35.702478], [-1438531200000, 92.108426298], [-1435939200000, 46.59173379], [-1433260800000, 27.66942045], [-1430582400000, 27.669420449999997], [-1427990400000, 26.7768585], [-1425312000000, 22.934875173000005], [-1422720000000, 17.851238999999996], [-1420041600000, 18.4462803], [-1417363200000, 18.4462803], [-1414944000000, 16.661156399999996], [-1412265600000, 18.4462803], [-1409673600000, 27.3718998], [-1406995200000, 289.545113109], [-1404403200000, 150.30743238], [-1401724800000, 67.75933630200001], [-1399046400000, 27.66942045], [-1396454400000, 26.7768585], [-1393776000000, 22.934875173000005], [-1391184000000, 17.851238999999996], [-1388505600000, 18.4462803], [-1385827200000, 18.4462803], [-1383408000000, 16.661156399999996], [-1380729600000, 18.4462803], [-1378137600000, 32.1322302], [-1375459200000, 179.78974532399997], [-1372867200000, 46.59173379], [-1370188800000, 27.66942045], [-1367510400000, 27.66942045], [-1364918400000, 26.7768585], [-1362240000000, 22.934875173000005], [-1359648000000, 17.851239], [-1356969600000, 18.4462803], [-1354291200000, 18.4462803], [-1351872000000, 16.661156399999996], [-1349193600000, 18.4462803], [-1346601600000, 25.40826351], [-1343923200000, 280.99833657], [-1341331200000, 275.26610538], [-1338652800000, 67.75933630200001], [-1335974400000, 27.66942045], [-1333382400000, 26.7768585], [-1330704000000, 22.934875173000002], [-1328112000000, 17.851239], [-1325433600000, 18.4462803], [-1322755200000, 18.4462803], [-1320249600000, 17.2561977], [-1317571200000, 18.4462803], [-1314979200000, 29.335536090000005], [-1312300800000, 257.571560589], [-1309708800000, 126.1487556], [-1307030400000, 67.75933630200001], [-1304352000000, 27.66942045], [-1301760000000, 26.7768585], [-1299081600000, 22.934875173000005], [-1296489600000, 17.851239], [-1293811200000, 18.4462803], [-1291132800000, 18.4462803], [-1288713600000, 16.661156399999996], [-1286035200000, 18.4462803], [-1283443200000, 35.702478], [-1280764800000, 92.108426298], [-1278172800000, 46.59173379], [-1275494400000, 27.66942045], [-1272816000000, 27.669420449999997], [-1270224000000, 26.7768585], [-1267545600000, 22.934875173000005], [-1264953600000, 17.851238999999996], [-1262275200000, 18.4462803], [-1259596800000, 18.4462803], [-1257177600000, 16.661156399999996], [-1254499200000, 18.4462803], [-1251907200000, 32.1322302], [-1249228800000, 179.789745324], [-1246636800000, 46.59173379], [-1243958400000, 27.66942045], [-1241280000000, 27.669420449999997], [-1238688000000, 26.7768585], [-1236009600000, 22.934875173000005], [-1233417600000, 17.851238999999996], [-1230739200000, 18.4462803], [-1228060800000, 18.4462803], [-1225641600000, 16.661156399999996], [-1222963200000, 18.4462803], [-1220371200000, 35.702478], [-1217692800000, 92.108426298], [-1215100800000, 46.59173379], [-1212422400000, 27.66942045], [-1209744000000, 27.669420449999997], [-1207152000000, 26.7768585], [-1204473600000, 8.90379000295808], [-1201881600000, 9.98450797157125], [-1199203200000, 18.4462803], [-1196524800000, 18.4462803], [-1194019200000, 17.2561977], [-1191340800000, 18.4462803], [-1188748800000, 32.1322302], [-1186070400000, 179.78974532399997], [-1183478400000, 46.59173379], [-1180800000000, 27.66942045], [-1178121600000, 27.66942045], [-1175529600000, 26.776858499999996], [-1172851200000, 22.934875173000002], [-1170259200000, 17.851239], [-1167580800000, 18.4462803], [-1164902400000, 18.4462803], [-1162483200000, 16.6611564], [-1159804800000, 18.4462803], [-1157212800000, 32.1322302], [-1154534400000, 179.78974532399997], [-1151942400000, 46.59173379], [-1149264000000, 27.66942045], [-1146585600000, 27.669420449999997], [-1143993600000, 26.7768585], [-1141315200000, 22.934875173000005], [-1138723200000, 17.851238999999996], [-1136044800000, 18.4462803], [-1133366400000, 18.4462803], [-1130947200000, 16.661156399999996], [-1128268800000, 18.4462803], [-1125676800000, 35.702478], [-1122998400000, 92.108426298], [-1120406400000, 46.59173379], [-1117728000000, 27.66942045], [-1115049600000, 27.669420449999993], [-1112457600000, 2.407979776715124], [-1109779200000, 11.747810323638102], [-1107187200000, 17.851238999999996], [-1104508800000, 18.446280299999998], [-1101830400000, 18.4462803], [-1099411200000, 16.661156399999996], [-1096732800000, 18.4462803], [-1094140800000, 32.1322302], [-1091462400000, 179.78974532399997], [-1088870400000, 46.59173379], [-1086192000000, 27.66942045], [-1083513600000, 27.66942045], [-1080921600000, 26.7768585], [-1078243200000, 22.934875173000005], [-1075651200000, 17.851239], [-1072972800000, 18.446280299999998], [-1070294400000, 18.4462803], [-1067788800000, 17.2561977], [-1065110400000, 18.4462803], [-1062518400000, 29.335536090000005], [-1059840000000, 257.571560589], [-1057248000000, 126.1487556], [-1054569600000, 67.75933630200001], [-1051891200000, 27.66942045], [-1049299200000, 26.7768585], [-1046620800000, 22.934875173000005], [-1044028800000, 17.851238999999996], [-1041350400000, 18.4462803], [-1038672000000, 18.4462803], [-1036252800000, 16.6611564], [-1033574400000, 18.4462803], [-1030982400000, 29.335536090000005], [-1028304000000, 257.571560589], [-1025712000000, 126.1487556], [-1023033600000, 67.75933630200001], [-1020355200000, 27.66942045], [-1017763200000, 26.7768585], [-1015084800000, 22.934875173000002], [-1012492800000, 17.851239], [-1009814400000, 18.4462803], [-1007136000000, 18.4462803], [-1004716800000, 16.661156399999996], [-1002038400000, 18.4462803], [-999446400000, 25.40826351], [-996768000000, 280.99833657], [-994176000000, 275.26610538], [-991497600000, 67.75933630200001], [-988819200000, 27.66942045], [-986227200000, 26.7768585], [-983548800000, 22.934875173000005], [-980956800000, 17.851238999999996], [-978278400000, 18.4462803], [-975600000000, 18.4462803], [-973180800000, 16.661156399999996], [-970502400000, 18.4462803], [-967910400000, 35.702478], [-965232000000, 92.108426298], [-962640000000, 46.59173379], [-959961600000, 27.66942045], [-957283200000, 27.66942045], [-954691200000, 26.7768585], [-952012800000, 22.934875173000005], [-949420800000, 17.851238999999996], [-946742400000, 18.4462803], [-944064000000, 18.4462803], [-941558400000, 17.2561977], [-938880000000, 18.4462803], [-936288000000, 27.3718998], [-933609600000, 289.545113109], [-931017600000, 150.30743238], [-928339200000, 67.75933630200001], [-925660800000, 27.66942045], [-923068800000, 26.7768585], [-920390400000, 22.934875172999995], [-917798400000, 17.851238999999996], [-915120000000, 18.4462803], [-912441600000, 18.4462803], [-910022400000, 21.71870491494785], [-907344000000, 322.8184421047371], [-904752000000, 174.78951336005142], [-902073600000, 280.99833657], [-899481600000, 275.26610538], [-896803200000, 67.75933630200001], [-894124800000, 27.66942045], [-891532800000, 26.7768585], [-888854400000, 22.934875173000002], [-886262400000, 17.851238999999996], [-883584000000, 327.04071608585275], [-880905600000, 190.35586892495604], [-878486400000, 168.0980431548485], [-875808000000, 18.4462803], [-873216000000, 25.40826351], [-870537600000, 280.99833657], [-867945600000, 275.26610538], [-865267200000, 67.75933630200001], [-862588800000, 27.66942045], [-859996800000, 26.776858500000003], [-857318400000, 22.934875173000002], [-854726400000, 17.851239], [-852048000000, 18.4462803], [-849369600000, 18.4462803], [-846950400000, 16.661156399999996], [-844272000000, 18.4462803], [-841680000000, 29.335536090000005], [-839001600000, 257.571560589], [-836409600000, 126.1487556], [-833731200000, 67.75933630200001], [-831052800000, 27.66942045], [-828460800000, 26.7768585], [-825782400000, 22.934875173000005], [-823190400000, 17.851238999999996], [-820512000000, 18.4462803], [-817833600000, 18.4462803], [-815328000000, 17.2561977], [-812649600000, 18.4462803], [-810057600000, 35.702478], [-807379200000, 92.108426298], [-804787200000, 46.59173379], [-802108800000, 27.66942045], [-799430400000, 27.669420449999997], [-796838400000, 26.7768585], [-794160000000, 22.934875173000005], [-791568000000, 17.851238999999996], [-788889600000, 18.4462803], [-786211200000, 18.4462803], [-783792000000, 16.661156399999996], [-781113600000, 18.4462803], [-778521600000, 29.335536090000005], [-775843200000, 257.571560589], [-773251200000, 126.1487556], [-770572800000, 67.75933630200001], [-767894400000, 27.66942045], [-765302400000, 26.776858499999996], [-762624000000, 22.934875173000005], [-760032000000, 17.851238999999996], [-757353600000, 18.4462803], [-754675200000, 18.4462803], [-752256000000, 16.661156399999996], [-749577600000, 18.4462803], [-746985600000, 27.3718998], [-744307200000, 289.545113109], [-741715200000, 150.30743238], [-739036800000, 67.75933630200001], [-736358400000, 27.66942045], [-733766400000, 26.7768585], [-731088000000, 22.934875173000002], [-728496000000, 17.851239], [-725817600000, 18.4462803], [-723139200000, 18.446280300000005], [-720720000000, 16.661156399999996], [-718041600000, 18.4462803], [-715449600000, 32.1322302], [-712771200000, 179.789745324], [-710179200000, 46.59173379], [-707500800000, 27.66942045], [-704822400000, 27.66942045], [-702230400000, 26.7768585], [-699552000000, 22.934875173000005], [-696960000000, 17.851238999999996], [-694281600000, 18.4462803], [-691603200000, 18.4462803], [-689097600000, 17.2561977], [-686419200000, 18.4462803], [-683827200000, 29.335536090000005], [-681148800000, 257.571560589], [-678556800000, 126.1487556], [-675878400000, 67.75933630200001], [-673200000000, 27.66942045], [-670608000000, 26.7768585], [-667929600000, 22.934875173000002], [-665337600000, 17.851238999999996], [-662659200000, 18.4462803], [-659980800000, 18.4462803], [-657561600000, 16.661156399999996], [-654883200000, 18.4462803], [-652291200000, 29.335536090000005], [-649612800000, 257.57156058899994], [-647020800000, 126.1487556], [-644342400000, 67.75933630200001], [-641664000000, 27.669420449999997], [-639072000000, 26.7768585], [-636393600000, 22.934875173000005], [-633801600000, 17.851238999999996], [-631123200000, 18.446280299999994], [-628444800000, 18.4462803], [-626025600000, 16.661156399999996], [-623347200000, 18.4462803], [-620755200000, 32.1322302], [-618076800000, 179.789745324], [-615484800000, 46.59173379], [-612806400000, 27.66942045], [-610128000000, 27.669420449999993], [-607536000000, 26.7768585], [-604857600000, 22.934875173000002], [-602265600000, 17.851239], [-599587200000, 18.4462803], [-596908800000, 18.4462803], [-594489600000, 21.270259891869575], [-591811200000, 18.4462803], [-589219200000, 27.3718998], [-586540800000, 289.545113109], [-583948800000, 150.30743238], [-581270400000, 67.75933630200001], [-578592000000, 27.66942045], [-576000000000, 26.7768585], [-573321600000, 22.934875173000002], [-570729600000, 17.851238999999996], [-568051200000, 18.4462803], [-565372800000, 18.4462803], [-562867200000, 17.2561977], [-560188800000, 18.4462803], [-557596800000, 25.40826351], [-554918400000, 280.99833657], [-552326400000, 275.26610538], [-549648000000, 67.75933630200001], [-546969600000, 27.66942045], [-544377600000, 26.7768585], [-541699200000, 22.934875173000002], [-539107200000, 17.851238999999996], [-536428800000, 18.4462803], [-533750400000, 363.55790725782555], [-531331200000, 16.661156399999996], [-528652800000, 18.4462803], [-526060800000, 27.3718998], [-523382400000, 289.545113109], [-520790400000, 150.30743238], [-518112000000, 67.75933630200001], [-515433600000, 27.66942045], [-512841600000, 26.7768585], [-510163200000, 22.934875173000002], [-507571200000, 17.851239], [-504892800000, 18.4462803], [-502214400000, 18.4462803], [-499795200000, 143.1907351985453], [-497116800000, 18.4462803], [-494524800000, 27.3718998], [-491846400000, 289.545113109], [-489254400000, 150.30743238], [-486576000000, 67.75933630200001], [-483897600000, 27.66942045], [-481305600000, 26.7768585], [-478627200000, 22.934875173000002], [-476035200000, 17.851239], [-473356800000, 18.4462803], [-470678400000, 18.4462803], [-468259200000, 16.661156400000003], [-465580800000, 18.4462803], [-462988800000, 32.1322302], [-460310400000, 179.78974532399997], [-457718400000, 46.59173379], [-455040000000, 27.66942045], [-452361600000, 27.669420449999997], [-449769600000, 26.7768585], [-447091200000, 22.934875173000005], [-444499200000, 17.851238999999996], [-441820800000, 18.4462803], [-439142400000, 94.94040589155846], [-436636800000, 71.19052083500462], [-433958400000, 18.4462803], [-431366400000, 25.40826351], [-428688000000, 280.99833657], [-426096000000, 275.26610538], [-423417600000, 67.75933630200001], [-420739200000, 27.66942045], [-418147200000, 26.7768585], [-415468800000, 22.934875172999995], [-412876800000, 17.851239], [-410198400000, 18.4462803], [-407520000000, 18.4462803], [-405100800000, 16.661156399999996], [-402422400000, 18.4462803], [-399830400000, 29.335536090000005], [-397152000000, 257.571560589], [-394560000000, 126.1487556], [-391881600000, 67.75933630200001], [-389203200000, 27.66942045], [-386611200000, 26.7768585], [-383932800000, 22.934875173000002], [-381340800000, 17.851239], [-378662400000, 18.4462803], [-375984000000, 158.1668118310936], [-373564800000, 333.22312800000003], [-370886400000, 114.45476539117922], [-368294400000, 103.67368662053697], [-365616000000, 280.99833657], [-363024000000, 275.26610538], [-360345600000, 67.75933630200001], [-357667200000, 27.66942045], [-355075200000, 26.7768585], [-352396800000, 22.934875173000002], [-349804800000, 17.851238999999996], [-347126400000, 18.4462803], [-344448000000, 18.4462803], [-342028800000, 52.1120857049976], [-339350400000, 18.4462803], [-336758400000, 29.335536090000005], [-334080000000, 257.571560589], [-331488000000, 126.1487556], [-328809600000, 67.75933630200001], [-326131200000, 27.66942045], [-323539200000, 26.7768585], [-320860800000, 22.934875173000005], [-318268800000, 17.851238999999996], [-315590400000, 18.4462803], [-312912000000, 18.4462803], [-310406400000, 17.2561977], [-307728000000, 18.4462803], [-305136000000, 29.335536090000005], [-302457600000, 257.571560589], [-299865600000, 126.1487556], [-297187200000, 67.75933630200001], [-294508800000, 27.66942045], [-291916800000, 26.7768585], [-289238400000, 22.934875173000002], [-286646400000, 17.851238999999996], [-283968000000, 18.4462803], [-281289600000, 18.4462803], [-278870400000, 16.661156399999996], [-276192000000, 18.4462803], [-273600000000, 29.335536090000005], [-270921600000, 257.571560589], [-268329600000, 126.1487556], [-265651200000, 67.75933630200001], [-262972800000, 27.669420449999997], [-260380800000, 26.7768585], [-257702400000, 22.934875173000002], [-255110400000, 17.851238999999996], [-252432000000, 18.4462803], [-249753600000, 18.4462803], [-247334400000, 16.661156399999996], [-244656000000, 18.4462803], [-242064000000, 29.335536090000005], [-239385600000, 257.571560589], [-236793600000, 126.1487556], [-234115200000, 67.75933630200001], [-231436800000, 27.66942045], [-228844800000, 26.7768585], [-226166400000, 22.934875173], [-223574400000, 17.851238999999996], [-220896000000, 18.4462803], [-218217600000, 18.4462803], [-215798400000, 16.661156399999996], [-213120000000, 18.4462803], [-210528000000, 67.03978266048344], [-207849600000, 289.545113109], [-205257600000, 150.30743238], [-202579200000, 67.75933630200001], [-199900800000, 27.66942045], [-197308800000, 26.7768585], [-194630400000, 22.934875173000005], [-192038400000, 17.851239], [-189360000000, 18.4462803], [-186681600000, 18.4462803], [-184176000000, 17.2561977], [-181497600000, 18.4462803], [-178905600000, 32.1322302], [-176227200000, 179.78974532399997], [-173635200000, 46.59173379], [-170956800000, 27.66942045], [-168278400000, 27.669420450000004], [-165686400000, 26.7768585], [-163008000000, 22.934875173000005], [-160416000000, 17.851238999999996], [-157737600000, 18.4462803], [-155059200000, 212.9938808776422], [-152640000000, 16.661156399999996], [-149961600000, 18.4462803], [-147369600000, 27.3718998], [-144691200000, 289.545113109], [-142099200000, 150.30743238], [-139420800000, 67.75933630200001], [-136742400000, 27.66942045], [-134150400000, 26.7768585], [-131472000000, 22.934875173000002], [-128880000000, 17.851239], [-126201600000, 18.4462803], [-123523200000, 18.4462803], [-121104000000, 16.661156399999996], [-118425600000, 18.4462803], [-115833600000, 29.335536090000005], [-113155200000, 257.571560589], [-110563200000, 126.1487556], [-107884800000, 67.75933630200001], [-105206400000, 27.66942045], [-102614400000, 26.7768585], [-99936000000, 22.934875173000005], [-97344000000, 17.851238999999996], [-94665600000, 18.4462803], [-91987200000, 18.4462803], [-89568000000, 16.661156399999996], [-86889600000, 18.4462803], [-84297600000, 27.3718998], [-81619200000, 289.545113109], [-79027200000, 150.30743237999997], [-76348800000, 67.75933630200001], [-73670400000, 27.66942045], [-71078400000, 26.7768585], [-68400000000, 22.934875172999995], [-65808000000, 17.851238999999996], [-63129600000, 18.4462803], [-60451200000, 18.4462803], [-57945600000, 189.24935508122758], [-55267200000, 18.4462803], [-52675200000, 29.335536090000005], [-49996800000, 257.571560589], [-47404800000, 126.1487556], [-44726400000, 67.759336302], [-42048000000, 27.66942045], [-39456000000, 26.7768585], [-36777600000, 22.934875173000005], [-34185600000, 17.851238999999996], [-31507200000, 18.4462803], [-28828800000, 18.4462803], [-26409600000, 16.661156399999996], [-23731200000, 18.4462803], [-21139200000, 25.40826351], [-18460800000, 280.99833657], [-15868800000, 275.26610538], [-13190400000, 67.75933630200001], [-10512000000, 27.66942045], [-7920000000, 26.776858499999996], [-5241600000, 22.934875173000002], [-2649600000, 17.851238999999996], [28800000, 322.4174534092991], [2707200000, 368.92560599999996], [5126400000, 121.91731260575986], [7804800000, 18.4462803], [10396800000, 27.3718998], [13075200000, 289.545113109], [15667200000, 150.30743238], [18345600000, 67.75933630200001], [21024000000, 27.66942045], [23616000000, 26.7768585], [26294400000, 22.934875173000002], [28886400000, 17.851239000000003], [31564800000, 18.4462803], [34243200000, 18.4462803], [36662400000, 16.661156399999996], [39340800000, 18.4462803], [41932800000, 27.3718998], [44611200000, 289.545113109], [47203200000, 150.30743238], [49881600000, 67.75933630200001], [52560000000, 27.66942045], [55152000000, 26.776858500000003], [57830400000, 22.934875173000002], [60422400000, 17.851239], [63100800000, 18.4462803], [65779200000, 18.4462803], [68284800000, 17.2561977], [70963200000, 20.360480252237004], [73555200000, 29.335536090000005], [76233600000, 257.571560589], [78825600000, 126.1487556], [81504000000, 67.75933630200001], [84182400000, 27.66942045], [86774400000, 26.7768585], [89452800000, 22.934875173000005], [92044800000, 17.851239], [94723200000, 18.4462803], [97401600000, 18.4462803], [99820800000, 16.661156399999996], [102499200000, 18.4462803], [105091200000, 27.3718998], [107769600000, 289.545113109], [110361600000, 150.30743238], [113040000000, 67.75933630200001], [115718400000, 27.66942045], [118310400000, 26.7768585], [120988800000, 22.934875173000002], [123580800000, 337.40425396479804], [126259200000, 299.6939456212], [128937600000, 368.925606], [131356800000, 16.661156399999996], [134035200000, 203.22202178710506], [136627200000, 25.40826351], [139305600000, 280.99833657], [141897600000, 275.26610538], [144576000000, 67.75933630200001], [147254400000, 27.66942045], [149846400000, 26.7768585], [152524800000, 22.934875173000002], [155116800000, 17.851239], [157795200000, 18.4462803], [160473600000, 18.4462803], [162892800000, 16.661156399999996], [165571200000, 129.8676578423708], [168163200000, 27.3718998], [170841600000, 289.545113109], [173433600000, 150.30743238], [176112000000, 67.75933630200001], [178790400000, 27.66942045], [181382400000, 26.776858500000007], [184060800000, 22.934875173000002], [186652800000, 17.851238999999996], [189331200000, 18.4462803], [192009600000, 18.4462803], [194515200000, 17.2561977], [197193600000, 18.4462803], [199785600000, 35.702478], [202464000000, 92.108426298], [205056000000, 46.59173379], [207734400000, 27.66942045], [210412800000, 27.66942045], [213004800000, 26.7768585], [215683200000, 22.934875173000002], [218275200000, 17.851238999999996], [220953600000, 18.4462803], [223632000000, 18.4462803], [226051200000, 16.661156399999996], [228729600000, 18.4462803], [231321600000, 35.702478], [234000000000, 92.108426298], [236592000000, 46.59173379], [239270400000, 27.66942045], [241948800000, 27.669420449999997], [244540800000, 26.7768585], [247219200000, 22.934875173], [249811200000, 17.851238999999996], [252489600000, 18.4462803], [255168000000, 18.4462803], [257587200000, 16.661156399999996], [260265600000, 18.4462803], [262857600000, 25.40826351], [265536000000, 280.99833657], [268128000000, 275.26610538], [270806400000, 67.75933630200001], [273484800000, 27.66942045], [276076800000, 26.7768585], [278755200000, 22.934875173000002], [281347200000, 17.851239000000003], [284025600000, 18.4462803], [286704000000, 18.4462803], [289123200000, 16.661156399999996], [291801600000, 18.4462803], [294393600000, 32.1322302], [297072000000, 179.78974532399997], [299664000000, 46.59173379], [302342400000, 27.66942045], [305020800000, 27.66942044999999], [307612800000, 26.7768585], [310291200000, 22.934875173000005], [312883200000, 17.851238999999996], [315561600000, 18.4462803], [318240000000, 18.4462803], [320745600000, 17.2561977], [323424000000, 18.4462803], [326016000000, 27.3718998], [328694400000, 289.545113109], [331286400000, 150.30743238], [333964800000, 67.75933630200001], [336643200000, 27.66942045], [339235200000, 26.7768585], [341913600000, 22.93487517300001], [344505600000, 17.851238999999996], [347184000000, 18.4462803], [349862400000, 18.4462803], [352281600000, 16.661156399999996], [354960000000, 18.4462803], [357552000000, 32.1322302], [360230400000, 179.789745324], [362822400000, 46.59173379], [365500800000, 27.66942045], [368179200000, 27.66942045], [370771200000, 26.7768585], [373449600000, 22.934875172999995], [376041600000, 17.851238999999996], [378720000000, 18.4462803], [381398400000, 18.4462803], [383817600000, 166.28902731525363], [386496000000, 18.4462803], [389088000000, 58.8248325626304], [391766400000, 280.99833657], [394358400000, 275.26610538], [397036800000, 67.75933630200001], [399715200000, 27.66942045], [402307200000, 26.7768585], [404985600000, 22.934875173000002], [407577600000, 17.851239], [410256000000, 215.20146040692495], [412934400000, 219.67897351384335], [415353600000, 267.6172030331312], [418032000000, 368.925606], [420624000000, 85.8141140544774], [423302400000, 280.9983365699999], [425894400000, 275.26610538], [428572800000, 129.31790385131484], [431251200000, 27.66942045], [433843200000, 26.7768585], [436521600000, 22.934875173], [439113600000, 17.851239], [441792000000, 368.925606], [444470400000, 18.4462803], [446976000000, 17.2561977], [449654400000, 18.4462803], [452246400000, 27.3718998], [454924800000, 289.545113109], [457516800000, 150.30743238], [460195200000, 67.75933630200001], [462873600000, 27.66942045], [465465600000, 26.7768585], [468144000000, 22.934875173000002], [470736000000, 17.851239], [473414400000, 18.4462803], [476092800000, 18.4462803], [478512000000, 16.661156399999996], [481190400000, 18.4462803], [483782400000, 32.1322302], [486460800000, 179.78974532399997], [489052800000, 46.59173379], [491731200000, 27.669420449999997], [494409600000, 27.66942045], [497001600000, 26.7768585], [499680000000, 22.934875173000005], [502272000000, 17.851239], [504950400000, 18.4462803], [507628800000, 18.4462803], [510048000000, 16.6611564], [512726400000, 18.4462803], [515318400000, 27.3718998], [517996800000, 289.545113109], [520588800000, 150.30743238], [523267200000, 67.75933630200001], [525945600000, 27.66942045], [528537600000, 26.7768585], [531216000000, 22.934875172999995], [533808000000, 17.851238999999996], [536486400000, 18.4462803], [539164800000, 18.4462803], [541584000000, 16.661156399999996], [544262400000, 18.4462803], [546854400000, 32.1322302], [549532800000, 179.789745324], [552124800000, 46.59173379], [554803200000, 27.66942045], [557481600000, 27.669420449999997], [560073600000, 26.7768585], [562752000000, 22.934875172999995], [565344000000, 17.851239], [568022400000, 18.4462803], [570700800000, 18.4462803], [573206400000, 17.2561977], [575884800000, 18.4462803], [578476800000, 32.1322302], [581155200000, 179.78974532399997], [583747200000, 46.59173379], [586425600000, 27.66942045], [589104000000, 27.66942045000001], [591696000000, 26.7768585], [594374400000, 22.934875173000005], [596966400000, 17.851238999999996], [599644800000, 18.4462803], [602323200000, 18.4462803], [604742400000, 16.661156399999996], [607420800000, 18.4462803], [610012800000, 29.335536090000005], [612691200000, 257.571560589], [615283200000, 126.1487556], [617961600000, 67.75933630200001], [620640000000, 27.66942044999999], [623232000000, 26.7768585], [625910400000, 22.934875173000002], [628502400000, 17.851238999999996], [631180800000, 18.446280300000005], [633859200000, 18.4462803], [636278400000, 16.661156399999996], [638956800000, 18.4462803], [641548800000, 32.1322302], [644227200000, 179.78974532399997], [646819200000, 46.59173379], [649497600000, 27.66942045], [652176000000, 27.669420449999997], [654768000000, 26.7768585], [657446400000, 22.934875173000002], [660038400000, 17.851238999999996], [662716800000, 18.4462803], [665395200000, 18.446280300000005], [667814400000, 16.661156399999996], [670492800000, 18.4462803], [673084800000, 35.702478], [675763200000, 92.108426298], [678355200000, 46.59173379], [681033600000, 27.66942045], [683712000000, 27.669420449999997], [686304000000, 26.7768585], [688982400000, 22.934875173000005], [691574400000, 17.851238999999996], [694252800000, 18.4462803], [696931200000, 18.4462803], [699436800000, 17.2561977], [702115200000, 18.4462803], [704707200000, 32.1322302], [707385600000, 179.78974532399997], [709977600000, 46.59173379], [712656000000, 27.66942045], [715334400000, 27.66942045], [717926400000, 26.7768585], [720604800000, 22.934875173000002], [723196800000, 11.792934739250157], [725875200000, 18.4462803], [728553600000, 18.4462803], [730972800000, 16.661156399999996], [733651200000, 18.4462803], [736243200000, 27.3718998], [738921600000, 289.545113109], [741513600000, 150.30743238], [744192000000, 67.75933630200001], [746870400000, 27.66942045], [749462400000, 26.7768585], [752140800000, 22.934875173000005], [754732800000, 17.851238999999996], [757411200000, 18.4462803], [760089600000, 18.4462803], [762508800000, 16.661156399999996], [765187200000, 18.446280299999998], [767779200000, 35.702478], [770457600000, 92.108426298], [773049600000, 46.59173379], [775728000000, 27.66942045], [778406400000, 27.669420449999997], [780998400000, 26.7768585], [783676800000, 22.934875173000002], [786268800000, 17.851238999999996], [788947200000, 18.446280299999994], [791625600000, 18.4462803], [794044800000, 16.661156399999996], [796723200000, 18.4462803], [799315200000, 25.40826351], [801993600000, 280.99833657000005], [804585600000, 275.26610538], [807264000000, 67.75933630200001], [809942400000, 27.66942045], [812534400000, 26.7768585], [815212800000, 22.934875172999995], [817804800000, 17.851238999999996], [820483200000, 18.4462803], [823161600000, 18.4462803], [825667200000, 299.3085794628747], [828345600000, 18.4462803], [830937600000, 27.3718998], [833616000000, 289.545113109], [836208000000, 150.30743238], [838886400000, 67.75933630200001], [841564800000, 27.66942045], [844156800000, 26.776858500000007], [846835200000, 22.934875173000002], [849427200000, 17.851239], [852105600000, 288.6924568215051], [854784000000, 368.925606], [857203200000, 16.6611564], [859881600000, 18.4462803], [862473600000, 27.3718998], [865152000000, 289.545113109], [867744000000, 150.30743238], [870422400000, 67.75933630200001], [873100800000, 27.669420449999997], [875692800000, 26.7768585], [878371200000, 22.934875172999995], [880963200000, 17.851239], [883641600000, 18.4462803], [886320000000, 18.4462803], [888739200000, 16.661156399999996], [891417600000, 271.97703044263346], [894009600000, 25.40826351], [896688000000, 280.99833657], [899280000000, 275.26610538], [901958400000, 99.88833143510077], [904636800000, 27.66942045], [907228800000, 26.7768585], [909907200000, 22.93487517300001], [912499200000, 17.851239], [915177600000, 18.4462803], [917856000000, 18.4462803], [920275200000, 58.512724374487064], [922953600000, 106.38842217448106], [925545600000, 27.3718998], [928224000000, 289.545113109], [930816000000, 150.30743238], [933494400000, 67.75933630200001], [936172800000, 27.66942045], [938764800000, 26.7768585], [941443200000, 22.934875173000002], [944035200000, 17.851239], [946713600000, 18.4462803], [949392000000, 18.4462803], [951897600000, 260.7391280301343], [954576000000, 147.6368592812225], [957168000000, 27.3718998], [959846400000, 289.545113109], [962438400000, 150.30743238], [965116800000, 67.75933630200001], [967795200000, 27.66942045], [970387200000, 26.7768585], [973065600000, 22.934875173000002], [975657600000, 17.851238999999996], [978336000000, 18.4462803], [981014400000, 18.4462803], [983433600000, 16.661156399999996], [986112000000, 18.4462803], [988704000000, 32.1322302], [991382400000, 179.789745324], [993974400000, 46.59173379], [996652800000, 27.66942045], [999331200000, 27.669420449999997], [1001923200000, 26.7768585], [1004601600000, 22.934875173000002], [1007193600000, 17.851238999999996], [1009872000000, 18.4462803], [1012550400000, 18.4462803], [1014969600000, 16.661156399999996], [1017648000000, 18.4462803], [1020240000000, 29.335536090000005], [1022918400000, 257.571560589], [1025510400000, 126.1487556], [1028188800000, 67.75933630200001], [1030867200000, 27.669420449999997], [1033459200000, 26.7768585], [1036137600000, 22.934875173000002], [1038729600000, 17.851239], [1041408000000, 18.4462803], [1044086400000, 18.4462803], [1046505600000, 16.661156399999996], [1049184000000, 18.4462803], [1051776000000, 25.40826351], [1054454400000, 280.99833657], [1057046400000, 275.26610538], [1059724800000, 67.75933630200001], [1062403200000, 27.66942045], [1064995200000, 26.7768585]]
+                    }, {
+                        "period_months": ["Oct", "Nov", "Dec", "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep"],
+                        "annual_period": "Wet Periods<br>1982 - 1983",
+                        "computed_statistics": [{
+                            "statistic": "Averages",
+                            "statistically_computed_time_series_monthly": [["Jan", 119.06262690692168], ["Feb", 216.95311517419242], ["Mar", 193.68594315], ["Apr", 72.31947330855388], ["May", 280.99833656999994], ["Jun", 275.26610538], ["Jul", 98.53862007665742], ["Aug", 27.66942045], ["Sep", 26.7768585], ["Oct", 22.934875173], ["Nov", 17.851239], ["Dec", 116.82387035346248]],
+                            "statistic_aggregate": 1468.8804840427879
+                        }],
+                        "aggregate_ts": [[1982, 999.708872152884], [1983, 1938.0520959326916]],
+                        "month_period": "Oct - Sep",
+                        "discrete_ts": [[373449600000, 22.934875172999995], [376041600000, 17.851238999999996], [378720000000, 18.4462803], [381398400000, 18.4462803], [383817600000, 166.28902731525363], [386496000000, 18.4462803], [389088000000, 58.8248325626304], [391766400000, 280.99833657], [394358400000, 275.26610538], [397036800000, 67.75933630200001], [399715200000, 27.66942045], [402307200000, 26.7768585], [404985600000, 22.934875173000002], [407577600000, 17.851239], [410256000000, 215.20146040692495], [412934400000, 219.67897351384335], [415353600000, 267.6172030331312], [418032000000, 368.925606], [420624000000, 85.8141140544774], [423302400000, 280.9983365699999], [425894400000, 275.26610538], [428572800000, 129.31790385131484], [431251200000, 27.66942045], [433843200000, 26.7768585]]
+                    }, {
+                        "period_months": ["Oct", "Nov", "Dec", "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep"],
+                        "annual_period": "Dry Periods<br>1987 - 1992",
+                        "computed_statistics": [{
+                            "statistic": "Averages",
+                            "statistically_computed_time_series_monthly": [["Jan", 18.4462803], ["Feb", 16.8595035], ["Mar", 18.4462803], ["Apr", 32.261155815], ["May", 178.13982803049998], ["Jun", 59.851237425], ["Jul", 34.351073092], ["Aug", 27.66942045], ["Sep", 26.7768585], ["Oct", 22.934875173], ["Nov", 17.851238999999996], ["Dec", 18.4462803]],
+                            "statistic_aggregate": 472.0340318854999
+                        }],
+                        "aggregate_ts": [[1987, 453.41552018699997], [1988, 454.01056148699996], [1989, 648.047579004], [1990, 453.41552018699997], [1991, 369.304448961], [1992, 454.01056148699996]],
+                        "month_period": "Oct - Sep",
+                        "discrete_ts": [[531216000000, 22.934875172999995], [533808000000, 17.851238999999996], [536486400000, 18.4462803], [539164800000, 18.4462803], [541584000000, 16.661156399999996], [544262400000, 18.4462803], [546854400000, 32.1322302], [549532800000, 179.789745324], [552124800000, 46.59173379], [554803200000, 27.66942045], [557481600000, 27.669420449999997], [560073600000, 26.7768585], [562752000000, 22.934875172999995], [565344000000, 17.851239], [568022400000, 18.4462803], [570700800000, 18.4462803], [573206400000, 17.2561977], [575884800000, 18.4462803], [578476800000, 32.1322302], [581155200000, 179.78974532399997], [583747200000, 46.59173379], [586425600000, 27.66942045], [589104000000, 27.66942045000001], [591696000000, 26.7768585], [594374400000, 22.934875173000005], [596966400000, 17.851238999999996], [599644800000, 18.4462803], [602323200000, 18.4462803], [604742400000, 16.661156399999996], [607420800000, 18.4462803], [610012800000, 29.335536090000005], [612691200000, 257.571560589], [615283200000, 126.1487556], [617961600000, 67.75933630200001], [620640000000, 27.66942044999999], [623232000000, 26.7768585], [625910400000, 22.934875173000002], [628502400000, 17.851238999999996], [631180800000, 18.446280300000005], [633859200000, 18.4462803], [636278400000, 16.661156399999996], [638956800000, 18.4462803], [641548800000, 32.1322302], [644227200000, 179.78974532399997], [646819200000, 46.59173379], [649497600000, 27.66942045], [652176000000, 27.669420449999997], [654768000000, 26.7768585], [657446400000, 22.934875173000002], [660038400000, 17.851238999999996], [662716800000, 18.4462803], [665395200000, 18.446280300000005], [667814400000, 16.661156399999996], [670492800000, 18.4462803], [673084800000, 35.702478], [675763200000, 92.108426298], [678355200000, 46.59173379], [681033600000, 27.66942045], [683712000000, 27.669420449999997], [686304000000, 26.7768585], [688982400000, 22.934875173000005], [691574400000, 17.851238999999996], [694252800000, 18.4462803], [696931200000, 18.4462803], [699436800000, 17.2561977], [702115200000, 18.4462803], [704707200000, 32.1322302], [707385600000, 179.78974532399997], [709977600000, 46.59173379], [712656000000, 27.66942045], [715334400000, 27.66942045], [717926400000, 26.7768585]]
+                    }]
+                }]
+            }, {
+                "ts_name": "Minimum Instream Flow", "monthly_filters": [{
+                    "annual_filters": [{
+                        "period_months": ["Oct", "Nov", "Dec", "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep"],
+                        "annual_period": "Long Term<br>",
+                        "computed_statistics": [{
+                            "statistic": "Averages",
+                            "statistically_computed_time_series_monthly": [["Jan", 18.4462803], ["Feb", 16.806288424390242], ["Mar", 18.4462803], ["Apr", 29.58226053146342], ["May", 230.77496413368294], ["Jun", 131.4772778754878], ["Jul", 53.58119532995122], ["Aug", 27.66942045], ["Sep", 26.7768585], ["Oct", 22.934875173000002], ["Nov", 17.851239], ["Dec", 18.4462803]],
+                            "statistic_aggregate": 612.7932203179756
+                        }],
+                        "aggregate_ts": [[1922, 453.415520187], [1923, 369.304448961], [1924, 369.899490261], [1925, 702.216172014], [1926, 453.415520187], [1927, 816.664432185], [1928, 648.642620304], [1929, 369.304448961], [1930, 453.415520187], [1931, 369.304448961], [1932, 454.010561487], [1933, 453.415520187], [1934, 369.304448961], [1935, 453.415520187], [1936, 648.642620304], [1937, 648.047579004], [1938, 816.664432185], [1939, 369.304448961], [1940, 702.811213314], [1941, 816.664432185], [1942, 816.664432185], [1943, 648.047579004], [1944, 369.899490261], [1945, 648.047579004], [1946, 702.216172014], [1947, 453.415520187], [1948, 648.642620304], [1949, 648.047579004], [1950, 453.415520187], [1951, 702.216172014], [1952, 817.2594734850001], [1953, 702.216172014], [1954, 702.216172014], [1955, 453.415520187], [1956, 817.2594734850001], [1957, 648.047579004], [1958, 816.664432185], [1959, 648.047579004], [1960, 648.642620304], [1961, 648.047579004], [1962, 648.047579004], [1963, 702.216172014], [1964, 454.010561487], [1965, 702.216172014], [1966, 648.047579004], [1967, 702.216172014], [1968, 648.642620304], [1969, 816.664432185], [1970, 702.216172014], [1971, 702.216172014], [1972, 648.642620304], [1973, 702.216172014], [1974, 816.664432185], [1975, 702.216172014], [1976, 369.899490261], [1977, 369.304448961], [1978, 816.664432185], [1979, 453.415520187], [1980, 702.811213314], [1981, 453.415520187], [1982, 816.664432185], [1983, 816.664432185], [1984, 702.811213314], [1985, 453.415520187], [1986, 702.216172014], [1987, 453.415520187], [1988, 454.010561487], [1989, 648.047579004], [1990, 453.415520187], [1991, 369.304448961], [1992, 454.010561487], [1993, 702.216172014], [1994, 369.304448961], [1995, 816.664432185], [1996, 702.811213314], [1997, 702.216172014], [1998, 816.664432185], [1999, 702.216172014], [2000, 702.811213314], [2001, 453.415520187], [2002, 648.047579004], [2003, 816.664432185]],
+                        "month_period": "Oct - Sep",
+                        "discrete_ts": [[-1520006400000, 22.934875173000002], [-1517414400000, 17.851239], [-1514736000000, 18.4462803], [-1512057600000, 18.4462803], [-1509638400000, 16.6611564], [-1506960000000, 18.4462803], [-1504368000000, 32.1322302], [-1501689600000, 179.789745324], [-1499097600000, 46.59173379], [-1496419200000, 27.66942045], [-1493740800000, 27.66942045], [-1491148800000, 26.7768585], [-1488470400000, 22.934875173000002], [-1485878400000, 17.851239], [-1483200000000, 18.4462803], [-1480521600000, 18.4462803], [-1478102400000, 16.6611564], [-1475424000000, 18.4462803], [-1472832000000, 35.702478], [-1470153600000, 92.108426298], [-1467561600000, 46.59173379], [-1464883200000, 27.66942045], [-1462204800000, 27.66942045], [-1459612800000, 26.7768585], [-1456934400000, 22.934875173000002], [-1454342400000, 17.851239], [-1451664000000, 18.4462803], [-1448985600000, 18.4462803], [-1446480000000, 17.2561977], [-1443801600000, 18.4462803], [-1441209600000, 35.702478], [-1438531200000, 92.108426298], [-1435939200000, 46.59173379], [-1433260800000, 27.66942045], [-1430582400000, 27.66942045], [-1427990400000, 26.7768585], [-1425312000000, 22.934875173000002], [-1422720000000, 17.851239], [-1420041600000, 18.4462803], [-1417363200000, 18.4462803], [-1414944000000, 16.6611564], [-1412265600000, 18.4462803], [-1409673600000, 27.3718998], [-1406995200000, 289.545113109], [-1404403200000, 150.30743238], [-1401724800000, 67.75933630200001], [-1399046400000, 27.66942045], [-1396454400000, 26.7768585], [-1393776000000, 22.934875173000002], [-1391184000000, 17.851239], [-1388505600000, 18.4462803], [-1385827200000, 18.4462803], [-1383408000000, 16.6611564], [-1380729600000, 18.4462803], [-1378137600000, 32.1322302], [-1375459200000, 179.789745324], [-1372867200000, 46.59173379], [-1370188800000, 27.66942045], [-1367510400000, 27.66942045], [-1364918400000, 26.7768585], [-1362240000000, 22.934875173000002], [-1359648000000, 17.851239], [-1356969600000, 18.4462803], [-1354291200000, 18.4462803], [-1351872000000, 16.6611564], [-1349193600000, 18.4462803], [-1346601600000, 25.40826351], [-1343923200000, 280.99833657], [-1341331200000, 275.26610538], [-1338652800000, 67.75933630200001], [-1335974400000, 27.66942045], [-1333382400000, 26.7768585], [-1330704000000, 22.934875173000002], [-1328112000000, 17.851239], [-1325433600000, 18.4462803], [-1322755200000, 18.4462803], [-1320249600000, 17.2561977], [-1317571200000, 18.4462803], [-1314979200000, 29.33553609], [-1312300800000, 257.571560589], [-1309708800000, 126.1487556], [-1307030400000, 67.75933630200001], [-1304352000000, 27.66942045], [-1301760000000, 26.7768585], [-1299081600000, 22.934875173000002], [-1296489600000, 17.851239], [-1293811200000, 18.4462803], [-1291132800000, 18.4462803], [-1288713600000, 16.6611564], [-1286035200000, 18.4462803], [-1283443200000, 35.702478], [-1280764800000, 92.108426298], [-1278172800000, 46.59173379], [-1275494400000, 27.66942045], [-1272816000000, 27.66942045], [-1270224000000, 26.7768585], [-1267545600000, 22.934875173000002], [-1264953600000, 17.851239], [-1262275200000, 18.4462803], [-1259596800000, 18.4462803], [-1257177600000, 16.6611564], [-1254499200000, 18.4462803], [-1251907200000, 32.1322302], [-1249228800000, 179.789745324], [-1246636800000, 46.59173379], [-1243958400000, 27.66942045], [-1241280000000, 27.66942045], [-1238688000000, 26.7768585], [-1236009600000, 22.934875173000002], [-1233417600000, 17.851239], [-1230739200000, 18.4462803], [-1228060800000, 18.4462803], [-1225641600000, 16.6611564], [-1222963200000, 18.4462803], [-1220371200000, 35.702478], [-1217692800000, 92.108426298], [-1215100800000, 46.59173379], [-1212422400000, 27.66942045], [-1209744000000, 27.66942045], [-1207152000000, 26.7768585], [-1204473600000, 22.934875173000002], [-1201881600000, 17.851239], [-1199203200000, 18.4462803], [-1196524800000, 18.4462803], [-1194019200000, 17.2561977], [-1191340800000, 18.4462803], [-1188748800000, 32.1322302], [-1186070400000, 179.789745324], [-1183478400000, 46.59173379], [-1180800000000, 27.66942045], [-1178121600000, 27.66942045], [-1175529600000, 26.7768585], [-1172851200000, 22.934875173000002], [-1170259200000, 17.851239], [-1167580800000, 18.4462803], [-1164902400000, 18.4462803], [-1162483200000, 16.6611564], [-1159804800000, 18.4462803], [-1157212800000, 32.1322302], [-1154534400000, 179.789745324], [-1151942400000, 46.59173379], [-1149264000000, 27.66942045], [-1146585600000, 27.66942045], [-1143993600000, 26.7768585], [-1141315200000, 22.934875173000002], [-1138723200000, 17.851239], [-1136044800000, 18.4462803], [-1133366400000, 18.4462803], [-1130947200000, 16.6611564], [-1128268800000, 18.4462803], [-1125676800000, 35.702478], [-1122998400000, 92.108426298], [-1120406400000, 46.59173379], [-1117728000000, 27.66942045], [-1115049600000, 27.66942045], [-1112457600000, 26.7768585], [-1109779200000, 22.934875173000002], [-1107187200000, 17.851239], [-1104508800000, 18.4462803], [-1101830400000, 18.4462803], [-1099411200000, 16.6611564], [-1096732800000, 18.4462803], [-1094140800000, 32.1322302], [-1091462400000, 179.789745324], [-1088870400000, 46.59173379], [-1086192000000, 27.66942045], [-1083513600000, 27.66942045], [-1080921600000, 26.7768585], [-1078243200000, 22.934875173000002], [-1075651200000, 17.851239], [-1072972800000, 18.4462803], [-1070294400000, 18.4462803], [-1067788800000, 17.2561977], [-1065110400000, 18.4462803], [-1062518400000, 29.33553609], [-1059840000000, 257.571560589], [-1057248000000, 126.1487556], [-1054569600000, 67.75933630200001], [-1051891200000, 27.66942045], [-1049299200000, 26.7768585], [-1046620800000, 22.934875173000002], [-1044028800000, 17.851239], [-1041350400000, 18.4462803], [-1038672000000, 18.4462803], [-1036252800000, 16.6611564], [-1033574400000, 18.4462803], [-1030982400000, 29.33553609], [-1028304000000, 257.571560589], [-1025712000000, 126.1487556], [-1023033600000, 67.75933630200001], [-1020355200000, 27.66942045], [-1017763200000, 26.7768585], [-1015084800000, 22.934875173000002], [-1012492800000, 17.851239], [-1009814400000, 18.4462803], [-1007136000000, 18.4462803], [-1004716800000, 16.6611564], [-1002038400000, 18.4462803], [-999446400000, 25.40826351], [-996768000000, 280.99833657], [-994176000000, 275.26610538], [-991497600000, 67.75933630200001], [-988819200000, 27.66942045], [-986227200000, 26.7768585], [-983548800000, 22.934875173000002], [-980956800000, 17.851239], [-978278400000, 18.4462803], [-975600000000, 18.4462803], [-973180800000, 16.6611564], [-970502400000, 18.4462803], [-967910400000, 35.702478], [-965232000000, 92.108426298], [-962640000000, 46.59173379], [-959961600000, 27.66942045], [-957283200000, 27.66942045], [-954691200000, 26.7768585], [-952012800000, 22.934875173000002], [-949420800000, 17.851239], [-946742400000, 18.4462803], [-944064000000, 18.4462803], [-941558400000, 17.2561977], [-938880000000, 18.4462803], [-936288000000, 27.3718998], [-933609600000, 289.545113109], [-931017600000, 150.30743238], [-928339200000, 67.75933630200001], [-925660800000, 27.66942045], [-923068800000, 26.7768585], [-920390400000, 22.934875173000002], [-917798400000, 17.851239], [-915120000000, 18.4462803], [-912441600000, 18.4462803], [-910022400000, 16.6611564], [-907344000000, 18.4462803], [-904752000000, 25.40826351], [-902073600000, 280.99833657], [-899481600000, 275.26610538], [-896803200000, 67.75933630200001], [-894124800000, 27.66942045], [-891532800000, 26.7768585], [-888854400000, 22.934875173000002], [-886262400000, 17.851239], [-883584000000, 18.4462803], [-880905600000, 18.4462803], [-878486400000, 16.6611564], [-875808000000, 18.4462803], [-873216000000, 25.40826351], [-870537600000, 280.99833657], [-867945600000, 275.26610538], [-865267200000, 67.75933630200001], [-862588800000, 27.66942045], [-859996800000, 26.7768585], [-857318400000, 22.934875173000002], [-854726400000, 17.851239], [-852048000000, 18.4462803], [-849369600000, 18.4462803], [-846950400000, 16.6611564], [-844272000000, 18.4462803], [-841680000000, 29.33553609], [-839001600000, 257.571560589], [-836409600000, 126.1487556], [-833731200000, 67.75933630200001], [-831052800000, 27.66942045], [-828460800000, 26.7768585], [-825782400000, 22.934875173000002], [-823190400000, 17.851239], [-820512000000, 18.4462803], [-817833600000, 18.4462803], [-815328000000, 17.2561977], [-812649600000, 18.4462803], [-810057600000, 35.702478], [-807379200000, 92.108426298], [-804787200000, 46.59173379], [-802108800000, 27.66942045], [-799430400000, 27.66942045], [-796838400000, 26.7768585], [-794160000000, 22.934875173000002], [-791568000000, 17.851239], [-788889600000, 18.4462803], [-786211200000, 18.4462803], [-783792000000, 16.6611564], [-781113600000, 18.4462803], [-778521600000, 29.33553609], [-775843200000, 257.571560589], [-773251200000, 126.1487556], [-770572800000, 67.75933630200001], [-767894400000, 27.66942045], [-765302400000, 26.7768585], [-762624000000, 22.934875173000002], [-760032000000, 17.851239], [-757353600000, 18.4462803], [-754675200000, 18.4462803], [-752256000000, 16.6611564], [-749577600000, 18.4462803], [-746985600000, 27.3718998], [-744307200000, 289.545113109], [-741715200000, 150.30743238], [-739036800000, 67.75933630200001], [-736358400000, 27.66942045], [-733766400000, 26.7768585], [-731088000000, 22.934875173000002], [-728496000000, 17.851239], [-725817600000, 18.4462803], [-723139200000, 18.4462803], [-720720000000, 16.6611564], [-718041600000, 18.4462803], [-715449600000, 32.1322302], [-712771200000, 179.789745324], [-710179200000, 46.59173379], [-707500800000, 27.66942045], [-704822400000, 27.66942045], [-702230400000, 26.7768585], [-699552000000, 22.934875173000002], [-696960000000, 17.851239], [-694281600000, 18.4462803], [-691603200000, 18.4462803], [-689097600000, 17.2561977], [-686419200000, 18.4462803], [-683827200000, 29.33553609], [-681148800000, 257.571560589], [-678556800000, 126.1487556], [-675878400000, 67.75933630200001], [-673200000000, 27.66942045], [-670608000000, 26.7768585], [-667929600000, 22.934875173000002], [-665337600000, 17.851239], [-662659200000, 18.4462803], [-659980800000, 18.4462803], [-657561600000, 16.6611564], [-654883200000, 18.4462803], [-652291200000, 29.33553609], [-649612800000, 257.571560589], [-647020800000, 126.1487556], [-644342400000, 67.75933630200001], [-641664000000, 27.66942045], [-639072000000, 26.7768585], [-636393600000, 22.934875173000002], [-633801600000, 17.851239], [-631123200000, 18.4462803], [-628444800000, 18.4462803], [-626025600000, 16.6611564], [-623347200000, 18.4462803], [-620755200000, 32.1322302], [-618076800000, 179.789745324], [-615484800000, 46.59173379], [-612806400000, 27.66942045], [-610128000000, 27.66942045], [-607536000000, 26.7768585], [-604857600000, 22.934875173000002], [-602265600000, 17.851239], [-599587200000, 18.4462803], [-596908800000, 18.4462803], [-594489600000, 16.6611564], [-591811200000, 18.4462803], [-589219200000, 27.3718998], [-586540800000, 289.545113109], [-583948800000, 150.30743238], [-581270400000, 67.75933630200001], [-578592000000, 27.66942045], [-576000000000, 26.7768585], [-573321600000, 22.934875173000002], [-570729600000, 17.851239], [-568051200000, 18.4462803], [-565372800000, 18.4462803], [-562867200000, 17.2561977], [-560188800000, 18.4462803], [-557596800000, 25.40826351], [-554918400000, 280.99833657], [-552326400000, 275.26610538], [-549648000000, 67.75933630200001], [-546969600000, 27.66942045], [-544377600000, 26.7768585], [-541699200000, 22.934875173000002], [-539107200000, 17.851239], [-536428800000, 18.4462803], [-533750400000, 18.4462803], [-531331200000, 16.6611564], [-528652800000, 18.4462803], [-526060800000, 27.3718998], [-523382400000, 289.545113109], [-520790400000, 150.30743238], [-518112000000, 67.75933630200001], [-515433600000, 27.66942045], [-512841600000, 26.7768585], [-510163200000, 22.934875173000002], [-507571200000, 17.851239], [-504892800000, 18.4462803], [-502214400000, 18.4462803], [-499795200000, 16.6611564], [-497116800000, 18.4462803], [-494524800000, 27.3718998], [-491846400000, 289.545113109], [-489254400000, 150.30743238], [-486576000000, 67.75933630200001], [-483897600000, 27.66942045], [-481305600000, 26.7768585], [-478627200000, 22.934875173000002], [-476035200000, 17.851239], [-473356800000, 18.4462803], [-470678400000, 18.4462803], [-468259200000, 16.6611564], [-465580800000, 18.4462803], [-462988800000, 32.1322302], [-460310400000, 179.789745324], [-457718400000, 46.59173379], [-455040000000, 27.66942045], [-452361600000, 27.66942045], [-449769600000, 26.7768585], [-447091200000, 22.934875173000002], [-444499200000, 17.851239], [-441820800000, 18.4462803], [-439142400000, 18.4462803], [-436636800000, 17.2561977], [-433958400000, 18.4462803], [-431366400000, 25.40826351], [-428688000000, 280.99833657], [-426096000000, 275.26610538], [-423417600000, 67.75933630200001], [-420739200000, 27.66942045], [-418147200000, 26.7768585], [-415468800000, 22.934875173000002], [-412876800000, 17.851239], [-410198400000, 18.4462803], [-407520000000, 18.4462803], [-405100800000, 16.6611564], [-402422400000, 18.4462803], [-399830400000, 29.33553609], [-397152000000, 257.571560589], [-394560000000, 126.1487556], [-391881600000, 67.75933630200001], [-389203200000, 27.66942045], [-386611200000, 26.7768585], [-383932800000, 22.934875173000002], [-381340800000, 17.851239], [-378662400000, 18.4462803], [-375984000000, 18.4462803], [-373564800000, 16.6611564], [-370886400000, 18.4462803], [-368294400000, 25.40826351], [-365616000000, 280.99833657], [-363024000000, 275.26610538], [-360345600000, 67.75933630200001], [-357667200000, 27.66942045], [-355075200000, 26.7768585], [-352396800000, 22.934875173000002], [-349804800000, 17.851239], [-347126400000, 18.4462803], [-344448000000, 18.4462803], [-342028800000, 16.6611564], [-339350400000, 18.4462803], [-336758400000, 29.33553609], [-334080000000, 257.571560589], [-331488000000, 126.1487556], [-328809600000, 67.75933630200001], [-326131200000, 27.66942045], [-323539200000, 26.7768585], [-320860800000, 22.934875173000002], [-318268800000, 17.851239], [-315590400000, 18.4462803], [-312912000000, 18.4462803], [-310406400000, 17.2561977], [-307728000000, 18.4462803], [-305136000000, 29.33553609], [-302457600000, 257.571560589], [-299865600000, 126.1487556], [-297187200000, 67.75933630200001], [-294508800000, 27.66942045], [-291916800000, 26.7768585], [-289238400000, 22.934875173000002], [-286646400000, 17.851239], [-283968000000, 18.4462803], [-281289600000, 18.4462803], [-278870400000, 16.6611564], [-276192000000, 18.4462803], [-273600000000, 29.33553609], [-270921600000, 257.571560589], [-268329600000, 126.1487556], [-265651200000, 67.75933630200001], [-262972800000, 27.66942045], [-260380800000, 26.7768585], [-257702400000, 22.934875173000002], [-255110400000, 17.851239], [-252432000000, 18.4462803], [-249753600000, 18.4462803], [-247334400000, 16.6611564], [-244656000000, 18.4462803], [-242064000000, 29.33553609], [-239385600000, 257.571560589], [-236793600000, 126.1487556], [-234115200000, 67.75933630200001], [-231436800000, 27.66942045], [-228844800000, 26.7768585], [-226166400000, 22.934875173000002], [-223574400000, 17.851239], [-220896000000, 18.4462803], [-218217600000, 18.4462803], [-215798400000, 16.6611564], [-213120000000, 18.4462803], [-210528000000, 27.3718998], [-207849600000, 289.545113109], [-205257600000, 150.30743238], [-202579200000, 67.75933630200001], [-199900800000, 27.66942045], [-197308800000, 26.7768585], [-194630400000, 22.934875173000002], [-192038400000, 17.851239], [-189360000000, 18.4462803], [-186681600000, 18.4462803], [-184176000000, 17.2561977], [-181497600000, 18.4462803], [-178905600000, 32.1322302], [-176227200000, 179.789745324], [-173635200000, 46.59173379], [-170956800000, 27.66942045], [-168278400000, 27.66942045], [-165686400000, 26.7768585], [-163008000000, 22.934875173000002], [-160416000000, 17.851239], [-157737600000, 18.4462803], [-155059200000, 18.4462803], [-152640000000, 16.6611564], [-149961600000, 18.4462803], [-147369600000, 27.3718998], [-144691200000, 289.545113109], [-142099200000, 150.30743238], [-139420800000, 67.75933630200001], [-136742400000, 27.66942045], [-134150400000, 26.7768585], [-131472000000, 22.934875173000002], [-128880000000, 17.851239], [-126201600000, 18.4462803], [-123523200000, 18.4462803], [-121104000000, 16.6611564], [-118425600000, 18.4462803], [-115833600000, 29.33553609], [-113155200000, 257.571560589], [-110563200000, 126.1487556], [-107884800000, 67.75933630200001], [-105206400000, 27.66942045], [-102614400000, 26.7768585], [-99936000000, 22.934875173000002], [-97344000000, 17.851239], [-94665600000, 18.4462803], [-91987200000, 18.4462803], [-89568000000, 16.6611564], [-86889600000, 18.4462803], [-84297600000, 27.3718998], [-81619200000, 289.545113109], [-79027200000, 150.30743238], [-76348800000, 67.75933630200001], [-73670400000, 27.66942045], [-71078400000, 26.7768585], [-68400000000, 22.934875173000002], [-65808000000, 17.851239], [-63129600000, 18.4462803], [-60451200000, 18.4462803], [-57945600000, 17.2561977], [-55267200000, 18.4462803], [-52675200000, 29.33553609], [-49996800000, 257.571560589], [-47404800000, 126.1487556], [-44726400000, 67.75933630200001], [-42048000000, 27.66942045], [-39456000000, 26.7768585], [-36777600000, 22.934875173000002], [-34185600000, 17.851239], [-31507200000, 18.4462803], [-28828800000, 18.4462803], [-26409600000, 16.6611564], [-23731200000, 18.4462803], [-21139200000, 25.40826351], [-18460800000, 280.99833657], [-15868800000, 275.26610538], [-13190400000, 67.75933630200001], [-10512000000, 27.66942045], [-7920000000, 26.7768585], [-5241600000, 22.934875173000002], [-2649600000, 17.851239], [28800000, 18.4462803], [2707200000, 18.4462803], [5126400000, 16.6611564], [7804800000, 18.4462803], [10396800000, 27.3718998], [13075200000, 289.545113109], [15667200000, 150.30743238], [18345600000, 67.75933630200001], [21024000000, 27.66942045], [23616000000, 26.7768585], [26294400000, 22.934875173000002], [28886400000, 17.851239], [31564800000, 18.4462803], [34243200000, 18.4462803], [36662400000, 16.6611564], [39340800000, 18.4462803], [41932800000, 27.3718998], [44611200000, 289.545113109], [47203200000, 150.30743238], [49881600000, 67.75933630200001], [52560000000, 27.66942045], [55152000000, 26.7768585], [57830400000, 22.934875173000002], [60422400000, 17.851239], [63100800000, 18.4462803], [65779200000, 18.4462803], [68284800000, 17.2561977], [70963200000, 18.4462803], [73555200000, 29.33553609], [76233600000, 257.571560589], [78825600000, 126.1487556], [81504000000, 67.75933630200001], [84182400000, 27.66942045], [86774400000, 26.7768585], [89452800000, 22.934875173000002], [92044800000, 17.851239], [94723200000, 18.4462803], [97401600000, 18.4462803], [99820800000, 16.6611564], [102499200000, 18.4462803], [105091200000, 27.3718998], [107769600000, 289.545113109], [110361600000, 150.30743238], [113040000000, 67.75933630200001], [115718400000, 27.66942045], [118310400000, 26.7768585], [120988800000, 22.934875173000002], [123580800000, 17.851239], [126259200000, 18.4462803], [128937600000, 18.4462803], [131356800000, 16.6611564], [134035200000, 18.4462803], [136627200000, 25.40826351], [139305600000, 280.99833657], [141897600000, 275.26610538], [144576000000, 67.75933630200001], [147254400000, 27.66942045], [149846400000, 26.7768585], [152524800000, 22.934875173000002], [155116800000, 17.851239], [157795200000, 18.4462803], [160473600000, 18.4462803], [162892800000, 16.6611564], [165571200000, 18.4462803], [168163200000, 27.3718998], [170841600000, 289.545113109], [173433600000, 150.30743238], [176112000000, 67.75933630200001], [178790400000, 27.66942045], [181382400000, 26.7768585], [184060800000, 22.934875173000002], [186652800000, 17.851239], [189331200000, 18.4462803], [192009600000, 18.4462803], [194515200000, 17.2561977], [197193600000, 18.4462803], [199785600000, 35.702478], [202464000000, 92.108426298], [205056000000, 46.59173379], [207734400000, 27.66942045], [210412800000, 27.66942045], [213004800000, 26.7768585], [215683200000, 22.934875173000002], [218275200000, 17.851239], [220953600000, 18.4462803], [223632000000, 18.4462803], [226051200000, 16.6611564], [228729600000, 18.4462803], [231321600000, 35.702478], [234000000000, 92.108426298], [236592000000, 46.59173379], [239270400000, 27.66942045], [241948800000, 27.66942045], [244540800000, 26.7768585], [247219200000, 22.934875173000002], [249811200000, 17.851239], [252489600000, 18.4462803], [255168000000, 18.4462803], [257587200000, 16.6611564], [260265600000, 18.4462803], [262857600000, 25.40826351], [265536000000, 280.99833657], [268128000000, 275.26610538], [270806400000, 67.75933630200001], [273484800000, 27.66942045], [276076800000, 26.7768585], [278755200000, 22.934875173000002], [281347200000, 17.851239], [284025600000, 18.4462803], [286704000000, 18.4462803], [289123200000, 16.6611564], [291801600000, 18.4462803], [294393600000, 32.1322302], [297072000000, 179.789745324], [299664000000, 46.59173379], [302342400000, 27.66942045], [305020800000, 27.66942045], [307612800000, 26.7768585], [310291200000, 22.934875173000002], [312883200000, 17.851239], [315561600000, 18.4462803], [318240000000, 18.4462803], [320745600000, 17.2561977], [323424000000, 18.4462803], [326016000000, 27.3718998], [328694400000, 289.545113109], [331286400000, 150.30743238], [333964800000, 67.75933630200001], [336643200000, 27.66942045], [339235200000, 26.7768585], [341913600000, 22.934875173000002], [344505600000, 17.851239], [347184000000, 18.4462803], [349862400000, 18.4462803], [352281600000, 16.6611564], [354960000000, 18.4462803], [357552000000, 32.1322302], [360230400000, 179.789745324], [362822400000, 46.59173379], [365500800000, 27.66942045], [368179200000, 27.66942045], [370771200000, 26.7768585], [373449600000, 22.934875173000002], [376041600000, 17.851239], [378720000000, 18.4462803], [381398400000, 18.4462803], [383817600000, 16.6611564], [386496000000, 18.4462803], [389088000000, 25.40826351], [391766400000, 280.99833657], [394358400000, 275.26610538], [397036800000, 67.75933630200001], [399715200000, 27.66942045], [402307200000, 26.7768585], [404985600000, 22.934875173000002], [407577600000, 17.851239], [410256000000, 18.4462803], [412934400000, 18.4462803], [415353600000, 16.6611564], [418032000000, 18.4462803], [420624000000, 25.40826351], [423302400000, 280.99833657], [425894400000, 275.26610538], [428572800000, 67.75933630200001], [431251200000, 27.66942045], [433843200000, 26.7768585], [436521600000, 22.934875173000002], [439113600000, 17.851239], [441792000000, 18.4462803], [444470400000, 18.4462803], [446976000000, 17.2561977], [449654400000, 18.4462803], [452246400000, 27.3718998], [454924800000, 289.545113109], [457516800000, 150.30743238], [460195200000, 67.75933630200001], [462873600000, 27.66942045], [465465600000, 26.7768585], [468144000000, 22.934875173000002], [470736000000, 17.851239], [473414400000, 18.4462803], [476092800000, 18.4462803], [478512000000, 16.6611564], [481190400000, 18.4462803], [483782400000, 32.1322302], [486460800000, 179.789745324], [489052800000, 46.59173379], [491731200000, 27.66942045], [494409600000, 27.66942045], [497001600000, 26.7768585], [499680000000, 22.934875173000002], [502272000000, 17.851239], [504950400000, 18.4462803], [507628800000, 18.4462803], [510048000000, 16.6611564], [512726400000, 18.4462803], [515318400000, 27.3718998], [517996800000, 289.545113109], [520588800000, 150.30743238], [523267200000, 67.75933630200001], [525945600000, 27.66942045], [528537600000, 26.7768585], [531216000000, 22.934875173000002], [533808000000, 17.851239], [536486400000, 18.4462803], [539164800000, 18.4462803], [541584000000, 16.6611564], [544262400000, 18.4462803], [546854400000, 32.1322302], [549532800000, 179.789745324], [552124800000, 46.59173379], [554803200000, 27.66942045], [557481600000, 27.66942045], [560073600000, 26.7768585], [562752000000, 22.934875173000002], [565344000000, 17.851239], [568022400000, 18.4462803], [570700800000, 18.4462803], [573206400000, 17.2561977], [575884800000, 18.4462803], [578476800000, 32.1322302], [581155200000, 179.789745324], [583747200000, 46.59173379], [586425600000, 27.66942045], [589104000000, 27.66942045], [591696000000, 26.7768585], [594374400000, 22.934875173000002], [596966400000, 17.851239], [599644800000, 18.4462803], [602323200000, 18.4462803], [604742400000, 16.6611564], [607420800000, 18.4462803], [610012800000, 29.33553609], [612691200000, 257.571560589], [615283200000, 126.1487556], [617961600000, 67.75933630200001], [620640000000, 27.66942045], [623232000000, 26.7768585], [625910400000, 22.934875173000002], [628502400000, 17.851239], [631180800000, 18.4462803], [633859200000, 18.4462803], [636278400000, 16.6611564], [638956800000, 18.4462803], [641548800000, 32.1322302], [644227200000, 179.789745324], [646819200000, 46.59173379], [649497600000, 27.66942045], [652176000000, 27.66942045], [654768000000, 26.7768585], [657446400000, 22.934875173000002], [660038400000, 17.851239], [662716800000, 18.4462803], [665395200000, 18.4462803], [667814400000, 16.6611564], [670492800000, 18.4462803], [673084800000, 35.702478], [675763200000, 92.108426298], [678355200000, 46.59173379], [681033600000, 27.66942045], [683712000000, 27.66942045], [686304000000, 26.7768585], [688982400000, 22.934875173000002], [691574400000, 17.851239], [694252800000, 18.4462803], [696931200000, 18.4462803], [699436800000, 17.2561977], [702115200000, 18.4462803], [704707200000, 32.1322302], [707385600000, 179.789745324], [709977600000, 46.59173379], [712656000000, 27.66942045], [715334400000, 27.66942045], [717926400000, 26.7768585], [720604800000, 22.934875173000002], [723196800000, 17.851239], [725875200000, 18.4462803], [728553600000, 18.4462803], [730972800000, 16.6611564], [733651200000, 18.4462803], [736243200000, 27.3718998], [738921600000, 289.545113109], [741513600000, 150.30743238], [744192000000, 67.75933630200001], [746870400000, 27.66942045], [749462400000, 26.7768585], [752140800000, 22.934875173000002], [754732800000, 17.851239], [757411200000, 18.4462803], [760089600000, 18.4462803], [762508800000, 16.6611564], [765187200000, 18.4462803], [767779200000, 35.702478], [770457600000, 92.108426298], [773049600000, 46.59173379], [775728000000, 27.66942045], [778406400000, 27.66942045], [780998400000, 26.7768585], [783676800000, 22.934875173000002], [786268800000, 17.851239], [788947200000, 18.4462803], [791625600000, 18.4462803], [794044800000, 16.6611564], [796723200000, 18.4462803], [799315200000, 25.40826351], [801993600000, 280.99833657], [804585600000, 275.26610538], [807264000000, 67.75933630200001], [809942400000, 27.66942045], [812534400000, 26.7768585], [815212800000, 22.934875173000002], [817804800000, 17.851239], [820483200000, 18.4462803], [823161600000, 18.4462803], [825667200000, 17.2561977], [828345600000, 18.4462803], [830937600000, 27.3718998], [833616000000, 289.545113109], [836208000000, 150.30743238], [838886400000, 67.75933630200001], [841564800000, 27.66942045], [844156800000, 26.7768585], [846835200000, 22.934875173000002], [849427200000, 17.851239], [852105600000, 18.4462803], [854784000000, 18.4462803], [857203200000, 16.6611564], [859881600000, 18.4462803], [862473600000, 27.3718998], [865152000000, 289.545113109], [867744000000, 150.30743238], [870422400000, 67.75933630200001], [873100800000, 27.66942045], [875692800000, 26.7768585], [878371200000, 22.934875173000002], [880963200000, 17.851239], [883641600000, 18.4462803], [886320000000, 18.4462803], [888739200000, 16.6611564], [891417600000, 18.4462803], [894009600000, 25.40826351], [896688000000, 280.99833657], [899280000000, 275.26610538], [901958400000, 67.75933630200001], [904636800000, 27.66942045], [907228800000, 26.7768585], [909907200000, 22.934875173000002], [912499200000, 17.851239], [915177600000, 18.4462803], [917856000000, 18.4462803], [920275200000, 16.6611564], [922953600000, 18.4462803], [925545600000, 27.3718998], [928224000000, 289.545113109], [930816000000, 150.30743238], [933494400000, 67.75933630200001], [936172800000, 27.66942045], [938764800000, 26.7768585], [941443200000, 22.934875173000002], [944035200000, 17.851239], [946713600000, 18.4462803], [949392000000, 18.4462803], [951897600000, 17.2561977], [954576000000, 18.4462803], [957168000000, 27.3718998], [959846400000, 289.545113109], [962438400000, 150.30743238], [965116800000, 67.75933630200001], [967795200000, 27.66942045], [970387200000, 26.7768585], [973065600000, 22.934875173000002], [975657600000, 17.851239], [978336000000, 18.4462803], [981014400000, 18.4462803], [983433600000, 16.6611564], [986112000000, 18.4462803], [988704000000, 32.1322302], [991382400000, 179.789745324], [993974400000, 46.59173379], [996652800000, 27.66942045], [999331200000, 27.66942045], [1001923200000, 26.7768585], [1004601600000, 22.934875173000002], [1007193600000, 17.851239], [1009872000000, 18.4462803], [1012550400000, 18.4462803], [1014969600000, 16.6611564], [1017648000000, 18.4462803], [1020240000000, 29.33553609], [1022918400000, 257.571560589], [1025510400000, 126.1487556], [1028188800000, 67.75933630200001], [1030867200000, 27.66942045], [1033459200000, 26.7768585], [1036137600000, 22.934875173000002], [1038729600000, 17.851239], [1041408000000, 18.4462803], [1044086400000, 18.4462803], [1046505600000, 16.6611564], [1049184000000, 18.4462803], [1051776000000, 25.40826351], [1054454400000, 280.99833657], [1057046400000, 275.26610538], [1059724800000, 67.75933630200001], [1062403200000, 27.66942045], [1064995200000, 26.7768585]]
+                    }, {
+                        "period_months": ["Oct", "Nov", "Dec", "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep"],
+                        "annual_period": "Wet Periods<br>1982 - 1983",
+                        "computed_statistics": [{
+                            "statistic": "Averages",
+                            "statistically_computed_time_series_monthly": [["Jan", 18.4462803], ["Feb", 16.6611564], ["Mar", 18.4462803], ["Apr", 25.40826351], ["May", 280.99833657], ["Jun", 275.26610538], ["Jul", 67.75933630200001], ["Aug", 27.66942045], ["Sep", 26.7768585], ["Oct", 22.934875173000002], ["Nov", 17.851239], ["Dec", 18.4462803]],
+                            "statistic_aggregate": 816.664432185
+                        }],
+                        "aggregate_ts": [[1982, 816.664432185], [1983, 816.664432185]],
+                        "month_period": "Oct - Sep",
+                        "discrete_ts": [[373449600000, 22.934875173000002], [376041600000, 17.851239], [378720000000, 18.4462803], [381398400000, 18.4462803], [383817600000, 16.6611564], [386496000000, 18.4462803], [389088000000, 25.40826351], [391766400000, 280.99833657], [394358400000, 275.26610538], [397036800000, 67.75933630200001], [399715200000, 27.66942045], [402307200000, 26.7768585], [404985600000, 22.934875173000002], [407577600000, 17.851239], [410256000000, 18.4462803], [412934400000, 18.4462803], [415353600000, 16.6611564], [418032000000, 18.4462803], [420624000000, 25.40826351], [423302400000, 280.99833657], [425894400000, 275.26610538], [428572800000, 67.75933630200001], [431251200000, 27.66942045], [433843200000, 26.7768585]]
+                    }, {
+                        "period_months": ["Oct", "Nov", "Dec", "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep"],
+                        "annual_period": "Dry Periods<br>1987 - 1992",
+                        "computed_statistics": [{
+                            "statistic": "Averages",
+                            "statistically_computed_time_series_monthly": [["Jan", 18.4462803], ["Feb", 16.8595035], ["Mar", 18.4462803], ["Apr", 32.261155815], ["May", 178.13982803049998], ["Jun", 59.851237425], ["Jul", 34.351073092], ["Aug", 27.66942045], ["Sep", 26.7768585], ["Oct", 22.934875173000005], ["Nov", 17.851239], ["Dec", 18.4462803]],
+                            "statistic_aggregate": 472.03403188550004
+                        }],
+                        "aggregate_ts": [[1987, 453.415520187], [1988, 454.010561487], [1989, 648.047579004], [1990, 453.415520187], [1991, 369.304448961], [1992, 454.010561487]],
+                        "month_period": "Oct - Sep",
+                        "discrete_ts": [[531216000000, 22.934875173000002], [533808000000, 17.851239], [536486400000, 18.4462803], [539164800000, 18.4462803], [541584000000, 16.6611564], [544262400000, 18.4462803], [546854400000, 32.1322302], [549532800000, 179.789745324], [552124800000, 46.59173379], [554803200000, 27.66942045], [557481600000, 27.66942045], [560073600000, 26.7768585], [562752000000, 22.934875173000002], [565344000000, 17.851239], [568022400000, 18.4462803], [570700800000, 18.4462803], [573206400000, 17.2561977], [575884800000, 18.4462803], [578476800000, 32.1322302], [581155200000, 179.789745324], [583747200000, 46.59173379], [586425600000, 27.66942045], [589104000000, 27.66942045], [591696000000, 26.7768585], [594374400000, 22.934875173000002], [596966400000, 17.851239], [599644800000, 18.4462803], [602323200000, 18.4462803], [604742400000, 16.6611564], [607420800000, 18.4462803], [610012800000, 29.33553609], [612691200000, 257.571560589], [615283200000, 126.1487556], [617961600000, 67.75933630200001], [620640000000, 27.66942045], [623232000000, 26.7768585], [625910400000, 22.934875173000002], [628502400000, 17.851239], [631180800000, 18.4462803], [633859200000, 18.4462803], [636278400000, 16.6611564], [638956800000, 18.4462803], [641548800000, 32.1322302], [644227200000, 179.789745324], [646819200000, 46.59173379], [649497600000, 27.66942045], [652176000000, 27.66942045], [654768000000, 26.7768585], [657446400000, 22.934875173000002], [660038400000, 17.851239], [662716800000, 18.4462803], [665395200000, 18.4462803], [667814400000, 16.6611564], [670492800000, 18.4462803], [673084800000, 35.702478], [675763200000, 92.108426298], [678355200000, 46.59173379], [681033600000, 27.66942045], [683712000000, 27.66942045], [686304000000, 26.7768585], [688982400000, 22.934875173000002], [691574400000, 17.851239], [694252800000, 18.4462803], [696931200000, 18.4462803], [699436800000, 17.2561977], [702115200000, 18.4462803], [704707200000, 32.1322302], [707385600000, 179.789745324], [709977600000, 46.59173379], [712656000000, 27.66942045], [715334400000, 27.66942045], [717926400000, 26.7768585]]
+                    }]
+                }]
+            }], "scenario_name": "ELTQ5", "scenario_color": "#03C98CFF"
+        }], "gui_link_title": "Trinity River", "first_record": -1520006400000, "units": "TAF", "is_instantaneous": false
+    });
 }

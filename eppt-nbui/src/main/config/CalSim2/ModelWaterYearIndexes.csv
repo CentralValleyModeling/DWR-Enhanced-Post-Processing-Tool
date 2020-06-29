@@ -1,0 +1,12 @@
+!Water Year Index ID must match the WaterYearIndexes.csv
+!DSS B-Part, DSS C-Part and Month are required in order to read water year codes from DSS
+!DSS A-Part is optional to override the Scenario Run's A-Part
+!WRESL lookup (wytypes.table) is required to read water year codes from the wytypes.table for the provided column
+!Water Year Index ID,DSS A-Part,DSS B-Part,DSS C-Part,Month,WRESL lookup (wytypes.table)
+100,,,,,SACindex
+200,,,,,SJRindex
+300,,,,,SHASTAindex
+400,,,,,Trinityindex
+500,,,,,FEATHERindex
+600,,,,,Amer403030
+700,,,,,AmerD893

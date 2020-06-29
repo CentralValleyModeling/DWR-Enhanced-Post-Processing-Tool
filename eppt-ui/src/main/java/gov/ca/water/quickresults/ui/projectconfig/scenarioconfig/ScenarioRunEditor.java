@@ -1,27 +1,33 @@
 /*
- * Enhanced Post Processing Tool (EPPT) Copyright (c) 2019.
+ * Enhanced Post Processing Tool (EPPT) Copyright (c) 2020.
  *
- * EPPT is copyrighted by the State of California, Department of Water Resources. It is licensed
- * under the GNU General Public License, version 2. This means it can be
- * copied, distributed, and modified freely, but you may not restrict others
- * in their ability to copy, distribute, and modify it. See the license below
- * for more details.
+ *  EPPT is copyrighted by the State of California, Department of Water Resources. It is licensed
+ *  under the GNU General Public License, version 2. This means it can be
+ *  copied, distributed, and modified freely, but you may not restrict others
+ *  in their ability to copy, distribute, and modify it. See the license below
+ *  for more details.
  *
- * GNU General Public License
+ *  GNU General Public License
  */
 
 package gov.ca.water.quickresults.ui.projectconfig.scenarioconfig;
 
-import java.awt.BorderLayout;
-import java.awt.Dimension;
-import java.awt.FlowLayout;
-import java.awt.Frame;
+import java.awt.*;
 import java.awt.event.ActionEvent;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.*;
 
+import gov.ca.water.calgui.constant.Constant;
+import gov.ca.water.calgui.constant.EpptPreferences;
 import gov.ca.water.calgui.project.EpptScenarioRun;
 import gov.ca.water.calgui.project.EpptScenarioRunValidator;
+import javafx.scene.paint.Color;
 
 /**
  * Company: Resource Management Associates
@@ -31,11 +37,13 @@ import gov.ca.water.calgui.project.EpptScenarioRunValidator;
  */
 public class ScenarioRunEditor extends JDialog implements LoadingDss
 {
+	private static final Logger LOGGER = Logger.getLogger(ScenarioRunEditor.class.getName());
 	private final ScenarioEditorPanel _scenarioEditorPanel;
 	private final JProgressBar _progressBar = new JProgressBar();
 	private final List<EpptScenarioRun> _scenarioRuns;
 	private boolean _canceled = true;
 	private EpptScenarioRun _originalScenarioRun;
+	private final JLabel _warningLabel = new JLabel("*Please double-check the information in the highlighted fields");
 
 	public ScenarioRunEditor(Frame frame, List<EpptScenarioRun> scenarioRuns)
 	{
@@ -55,6 +63,14 @@ public class ScenarioRunEditor extends JDialog implements LoadingDss
 		_originalScenarioRun = scenarioRun;
 		setTitle("Edit Scenario Run: " + scenarioRun.getName());
 		_scenarioEditorPanel.fillPanel(scenarioRun);
+	}
+
+	public void fillPanelForCopy(EpptScenarioRun scenarioRun, Color plotlyDefaultColor)
+	{
+		setTitle("Copy Scenario Run: " + scenarioRun.getName());
+		_scenarioEditorPanel.fillPanelForCopy(scenarioRun, plotlyDefaultColor);
+		_warningLabel.setVisible(true);
+		_warningLabel.setForeground(java.awt.Color.BLUE);
 	}
 
 	private void initComponents()
@@ -80,6 +96,10 @@ public class ScenarioRunEditor extends JDialog implements LoadingDss
 		buttonPanel.add(cancelButton);
 		jPanel.add(buttonPanel, BorderLayout.CENTER);
 		add(jPanel, BorderLayout.SOUTH);
+		JPanel warningPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+		jPanel.add(warningPanel, BorderLayout.WEST);
+		_warningLabel.setVisible(false);
+		warningPanel.add(_warningLabel);
 		okButton.addActionListener(this::okPerformed);
 		cancelButton.addActionListener(this::cancelPerformed);
 	}
@@ -117,8 +137,16 @@ public class ScenarioRunEditor extends JDialog implements LoadingDss
 			}
 			else
 			{
-				_canceled = false;
-				dispose();
+				try
+				{
+					copyWaterYearIndexModelCsv(run);
+					_canceled = false;
+					dispose();
+				}
+				catch(IOException ex)
+				{
+					LOGGER.log(Level.SEVERE, "Unable to copy water year index model file into project directory", ex);
+				}
 			}
 		}
 		else
@@ -129,8 +157,24 @@ public class ScenarioRunEditor extends JDialog implements LoadingDss
 		}
 	}
 
+	private void copyWaterYearIndexModelCsv(EpptScenarioRun epptScenarioRun) throws IOException
+	{
+		Path path = _scenarioEditorPanel.getWaterYearIndexModelCsv();
+		Path scenarioDirectoryFile = EpptPreferences.getLastProjectConfiguration()
+									  .getParent()
+									  .resolve(epptScenarioRun.getName())
+									  .resolve(Paths.get(Constant.MODEL_WATER_YEAR_INDEX_FILE).getFileName());
+		if(!scenarioDirectoryFile.getParent().toFile().exists())
+		{
+			Files.createDirectories(scenarioDirectoryFile.getParent());
+		}
+		Files.write(scenarioDirectoryFile, Files.readAllBytes(path));
+		_scenarioEditorPanel.cleanUpTempFile();
+	}
+
 	private void cancelPerformed(ActionEvent e)
 	{
+		_scenarioEditorPanel.cleanUpTempFile();
 		dispose();
 	}
 

@@ -38,7 +38,7 @@ function getPlotlyStatisticsSeries(datum) {
                             seriesList.push(series);
                         }
                         series.push({
-                            name: tsList[j]['ts_name'],
+                            name: tsList[j]['ts_name'] + '     ',
                             x: x,
                             y: y,
                             line: {
@@ -91,8 +91,10 @@ function buildLayouts(datum, yaxis, title) {
                                 yaxis: {
                                     title: {
                                         text: yaxis,
+                                        standoff: 50
                                     },
-                                    tickformat: FORMATTER,
+                                    automargin: true,
+                                    tickformatstops: FORMATTER,
                                     gridcolor: '#CCCCCC',
                                     rangemode: 'tozero'
                                 },
@@ -132,18 +134,17 @@ function buildLayouts(datum, yaxis, title) {
 }
 
 function plot(data) {
-    FORMATTER = getD3Formatter(data['scenario_run_data'][0]['ts_list'][0]['monthly_filters'][0]['annual_filters'][0]['discrete_ts']);
     var datum = data['scenario_run_data'];
     var layout = buildLayouts(datum, data['units'], data['gui_link_title']);
     let plotlyAggregateSeries = getPlotlyStatisticsSeries(datum);
-    plotData(layout, plotlyAggregateSeries);
+    plotData(layout, plotlyAggregateSeries, data['ts_descriptor']);
 }
 
 function plotlyCopyToClipboard(element) {
     let plot = $(element)[0];
     let layout = plot.layout;
     let data1 = plot.data;
-    var text = layout['title']['text'] + '\n' + 'Date\t' + layout['yaxis']['title']['text'] + '\n';
+    var text = layout['title']['text'] + '\n' + 'Month\t' + layout['yaxis']['title']['text'] + '\n';
     for (var i = 0; i < data1.length; i++) {
         text += '\t' + data1[i]['name']
     }

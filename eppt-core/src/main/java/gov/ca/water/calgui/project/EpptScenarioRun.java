@@ -1,13 +1,13 @@
 /*
- * Enhanced Post Processing Tool (EPPT) Copyright (c) 2019.
+ * Enhanced Post Processing Tool (EPPT) Copyright (c) 2020.
  *
- * EPPT is copyrighted by the State of California, Department of Water Resources. It is licensed
- * under the GNU General Public License, version 2. This means it can be
- * copied, distributed, and modified freely, but you may not restrict others
- * in their ability to copy, distribute, and modify it. See the license below
- * for more details.
+ *  EPPT is copyrighted by the State of California, Department of Water Resources. It is licensed
+ *  under the GNU General Public License, version 2. This means it can be
+ *  copied, distributed, and modified freely, but you may not restrict others
+ *  in their ability to copy, distribute, and modify it. See the license below
+ *  for more details.
  *
- * GNU General Public License
+ *  GNU General Public License
  */
 
 package gov.ca.water.calgui.project;
@@ -16,7 +16,6 @@ import java.nio.file.Path;
 import java.util.Objects;
 
 import gov.ca.water.calgui.bo.GUILinksAllModelsBO;
-import gov.ca.water.calgui.constant.Constant;
 import javafx.scene.paint.Color;
 
 /**
@@ -39,15 +38,15 @@ public class EpptScenarioRun
 	private boolean _altSelected;
 
 	/**
-	 * @param name         name descriptor meta data for scenario run
-	 * @param description  description meta data for
-	 * @param model        model used for scenario run
-	 * @param outputPath   output path for DSS files. Will be used for relative paths to the EpptDssContainer
-	 * @param wreslDirectory    main file for running WRESL Post Processing Script
+	 * @param name                    name descriptor meta data for scenario run
+	 * @param description             description meta data for
+	 * @param model                   model used for scenario run
+	 * @param outputPath              output path for DSS files. Will be used for relative paths to the EpptDssContainer
+	 * @param wreslDirectory          main file for running WRESL Post Processing Script
 	 * @param dssContainer
 	 */
-	public EpptScenarioRun(String name, String description, GUILinksAllModelsBO.Model model, Path outputPath,
-						   Path wreslDirectory, Path lookupDirectory, EpptDssContainer dssContainer, Color color)
+	public EpptScenarioRun(String name, String description, GUILinksAllModelsBO.Model model, Path outputPath, Path wreslDirectory, Path lookupDirectory,
+						   EpptDssContainer dssContainer, Color color)
 	{
 		_name = name;
 		_description = description;
@@ -66,11 +65,10 @@ public class EpptScenarioRun
 	 * @param description     description meta data for
 	 * @param epptScenarioRun scenario run to copy
 	 */
-	public EpptScenarioRun(String name, String description, EpptScenarioRun epptScenarioRun)
+	public EpptScenarioRun(String name, String description, EpptScenarioRun epptScenarioRun, Color color)
 	{
-		this(name, description, epptScenarioRun.getModel(), epptScenarioRun.getOutputPath(),
-				epptScenarioRun.getWreslDirectory(), epptScenarioRun.getLookupDirectory(),
-				new EpptDssContainer(epptScenarioRun.getDssContainer()), epptScenarioRun.getColor());
+		this(name, description, epptScenarioRun.getModel(), epptScenarioRun.getOutputPath(), epptScenarioRun.getWreslDirectory(), epptScenarioRun.getLookupDirectory(),
+				new EpptDssContainer(epptScenarioRun.getDssContainer()), color);
 	}
 
 	/**
@@ -162,21 +160,15 @@ public class EpptScenarioRun
 			return false;
 		}
 		final EpptScenarioRun that = (EpptScenarioRun) o;
-		return Objects.equals(getName(), that.getName()) &&
-				Objects.equals(getDescription(), that.getDescription()) &&
-				Objects.equals(getModel(), that.getModel()) &&
-				Objects.equals(getOutputPath(), that.getOutputPath()) &&
-				Objects.equals(getWreslDirectory(), that.getWreslDirectory()) &&
-				Objects.equals(getLookupDirectory(), that.getLookupDirectory()) &&
-				Objects.equals(getDssContainer(), that.getDssContainer()) &&
-				Objects.equals(getColor(), that.getColor());
+		return Objects.equals(getName(), that.getName()) && Objects.equals(getDescription(), that.getDescription()) && Objects.equals(getModel(),
+				that.getModel()) && Objects.equals(getOutputPath(), that.getOutputPath()) && Objects.equals(getWreslDirectory(), that.getWreslDirectory()) && Objects.equals(
+				getLookupDirectory(), that.getLookupDirectory()) && Objects.equals(getDssContainer(), that.getDssContainer()) && Objects.equals(getColor(), that.getColor());
 	}
 
 	@Override
 	public int hashCode()
 	{
-		return Objects.hash(getName(), getDescription(), getModel(), getOutputPath(), getWreslDirectory(), getLookupDirectory(), getDssContainer(),
-				getColor());
+		return Objects.hash(getName(), getDescription(), getModel(), getOutputPath(), getWreslDirectory(), getLookupDirectory(), getDssContainer(), getColor());
 	}
 
 	public void setBaseSelected(boolean baseSelected)

@@ -1,10 +1,11 @@
-!Index name must match Alias column in AnnualPeriodFilters.csv
-ID,Sacramento River Index,San Joaquin River Index,Shasta Lake Index,American River Index (D893),Feather River Index,Trinity Lake Index,American River Index (40-30-30)
-0,,,Other,,Other,,
-1,Wet,Wet,Other,Other,Critical,Wet,
-2,Above Normal,Above Normal,Other,Critical,,Above Normal,
-3,Below Normal,Below Normal,Other,,,Below Normal,
-4,Dry,Dry,Critical,,,Dry,
-5,Critical,Critical,,,,Critical,
-6,,,,,,,
-7,,,,,,,
+!Water Year Code matches value in DSS or wytypes.table files,,,,,,,
+!Other column headers reference the Water Year Index ID defined in WaterYearIndexes.csv,,,,,,,
+Water Year Code,100,200,300,700,500,400,600
+0,,,Other,,Other,,Other
+1,Wet,Wet,Other,Other,Critical,Wet,Wet
+2,Above Normal,Above Normal,Other,Critical,,Above Normal,Above Normal
+3,Below Normal,Below Normal,Other,,,Below Normal,Below Normal
+4,Dry,Dry,Critical,,,Dry,Dry
+5,Critical,Critical,,,,Critical,Critical
+6,,,,,,,Critical
+7,,,,,,,Critical

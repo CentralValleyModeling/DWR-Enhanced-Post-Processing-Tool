@@ -1,13 +1,13 @@
 /*
  * Enhanced Post Processing Tool (EPPT) Copyright (c) 2020.
  *
- * EPPT is copyrighted by the State of California, Department of Water Resources. It is licensed
- * under the GNU General Public License, version 2. This means it can be
- * copied, distributed, and modified freely, but you may not restrict others
- * in their ability to copy, distribute, and modify it. See the license below
- * for more details.
+ *  EPPT is copyrighted by the State of California, Department of Water Resources. It is licensed
+ *  under the GNU General Public License, version 2. This means it can be
+ *  copied, distributed, and modified freely, but you may not restrict others
+ *  in their ability to copy, distribute, and modify it. See the license below
+ *  for more details.
  *
- * GNU General Public License
+ *  GNU General Public License
  */
 
 package gov.ca.water.eppt.nbui.projectconfig;
@@ -205,8 +205,8 @@ class ProjectConfigurationIOVersion2
 
 			List<NamedDssPath> extraDssFiles = readExtraDss(jsonObject, modelOutputPath, projectPath);
 			EpptDssContainer dssContainer = new EpptDssContainer(dvDssFile, svDssFile, ivDssFile, dtsDssFile, extraDssFiles);
-			EpptScenarioRun epptScenarioRun = new EpptScenarioRun(name, description,
-					model, modelOutputPath, wreslMain, waterYearTable, dssContainer, color);
+
+			EpptScenarioRun epptScenarioRun = new EpptScenarioRun(name, description,model, modelOutputPath, wreslMain, waterYearTable, dssContainer, color);
 
 			boolean baseSelected = false;
 			if(scenarioJson.has(BASE_SELECTED_KEY))

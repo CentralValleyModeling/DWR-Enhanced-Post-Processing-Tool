@@ -119,7 +119,7 @@ public class GeneralRetrievePanel extends JPanel
 				BorderFactory.createLineBorder(Color.blue), "Filter"));
 		//
 		_filterBtn = new JButton("Filter");
-		_retrieveBtn = new JButton("Retrieve");
+		_retrieveBtn = new JButton("Display");
 		//
 		_filterBtn.addActionListener(new GuiTaskListener("Filtering...")
 		{

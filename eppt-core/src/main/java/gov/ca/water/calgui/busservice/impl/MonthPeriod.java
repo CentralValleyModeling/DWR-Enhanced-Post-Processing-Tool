@@ -134,4 +134,39 @@ public class MonthPeriod
 			return formatMonth(getStart()) + " - " + formatMonth(getEnd());
 		}
 	}
+
+	@Override
+	public boolean equals(Object o)
+	{
+		if(this == o)
+		{
+			return true;
+		}
+		if(o == null || getClass() != o.getClass())
+		{
+			return false;
+		}
+		final MonthPeriod that = (MonthPeriod) o;
+		return getStart() == that.getStart() && getEnd() == that.getEnd() && getName().equals(that.getName());
+	}
+
+	@Override
+	public int hashCode()
+	{
+		return Objects.hash(getStart(), getEnd(), getName());
+	}
+
+	public int getWaterYear(YearMonth yearMonth)
+	{
+		int retval = yearMonth.getYear();
+		if(!getYearMonths(retval).contains(yearMonth))
+		{
+			retval = retval - 1;
+			if(!getYearMonths(retval).contains(yearMonth))
+			{
+				retval = retval + 2;
+			}
+		}
+		return retval;
+	}
 }

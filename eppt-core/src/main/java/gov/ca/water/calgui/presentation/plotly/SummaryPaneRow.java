@@ -12,8 +12,6 @@
 
 package gov.ca.water.calgui.presentation.plotly;
 
-import java.math.BigDecimal;
-import java.math.MathContext;
 import java.util.Map;
 
 import gov.ca.water.calgui.busservice.impl.EpptStatistic;
@@ -111,26 +109,7 @@ abstract class SummaryPaneRow extends RmaTreeTableRowModel<SummaryPaneRow>
 		{
 			super(parent);
 			_rowTitle = new SimpleStringProperty(rowTitle);
-			_data = data.entrySet().stream().collect(toMap(Map.Entry::getKey, e ->
-			{
-				SimpleStringProperty retval = new SimpleStringProperty();
-				if(e.getValue() != null && Constant.isValidValue(e.getValue()))
-				{
-					Double value = e.getValue();
-					if(value >= 1)
-					{
-						retval = new SimpleStringProperty(Long.toString(Math.round(value)));
-					}
-					else
-					{
-						BigDecimal bigDecimal = BigDecimal.valueOf(value);
-						bigDecimal = bigDecimal.round(new MathContext(3));
-						value = bigDecimal.doubleValue();
-						retval = new SimpleStringProperty(Double.toString(value));
-					}
-				}
-				return retval;
-			}));
+			_data = data.entrySet().stream().collect(toMap(Map.Entry::getKey, e ->Constant.getStringForDouble(e.getValue())));
 			_rootSpec = rootSpec;
 		}
 

@@ -1,24 +1,29 @@
 /*
- * Enhanced Post Processing Tool (EPPT) Copyright (c) 2019.
+ * Enhanced Post Processing Tool (EPPT) Copyright (c) 2020.
  *
- * EPPT is copyrighted by the State of California, Department of Water Resources. It is licensed
- * under the GNU General Public License, version 2. This means it can be
- * copied, distributed, and modified freely, but you may not restrict others
- * in their ability to copy, distribute, and modify it. See the license below
- * for more details.
+ *  EPPT is copyrighted by the State of California, Department of Water Resources. It is licensed
+ *  under the GNU General Public License, version 2. This means it can be
+ *  copied, distributed, and modified freely, but you may not restrict others
+ *  in their ability to copy, distribute, and modify it. See the license below
+ *  for more details.
  *
- * GNU General Public License
+ *  GNU General Public License
  */
 
 package gov.ca.water.calgui.constant;
 
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.text.DecimalFormat;
 import java.util.Arrays;
 import java.util.List;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
+import javafx.beans.property.SimpleStringProperty;
 import javafx.scene.paint.Color;
 
 import rma.util.RMAConst;
@@ -58,6 +63,7 @@ public final class Constant
 	public static final String LOOKUP_DIRECTORY = "lookup";
 	public static final String WY_TYPES_TABLE = "wytypes" + TABLE_EXT;
 	public static final String WY_TYPES_NAME_LOOKUP = CONFIG_DIR + "/WYTypesLookup" + CSV_EXT;
+	public static final String ERROR_VALUE_FLAGS = CONFIG_DIR + "/ErrorValueFlags" + CSV_EXT;
 	public static final String JASPER_DIR = System.getProperty("user.dir") + "\\dwr_eppt\\jasper\\";
 	public static final String MODEL_W2_DIR = System.getProperty("user.dir") + "//Model_w2//";
 	public static final String RUN_DETAILS_DIR = "Run_Details";
@@ -71,12 +77,9 @@ public final class Constant
 	// File Names.
 	public static final String GUI_XML_FILENAME = System.getProperty("user.dir") + "//Config//GUI.xml";
 
-	public static final String DYNAMIC_CONTROL_FOR_STARTUP_FILENAME = System.getProperty("user.dir")
-			+ "//Config//DynamicControlForStartUp" + CSV_EXT;
-	public static final String TRIGGER_ENABLE_DISABLE_FILENAME = System.getProperty("user.dir")
-			+ "//Config//TriggerForDynamicDisplay" + CSV_EXT;
-	public static final String TRIGGER_CHECK_UNCHECK_FILENAME = System.getProperty("user.dir")
-			+ "//Config//TriggerForDynamicSelection" + CSV_EXT;
+	public static final String DYNAMIC_CONTROL_FOR_STARTUP_FILENAME = System.getProperty("user.dir") + "//Config//DynamicControlForStartUp" + CSV_EXT;
+	public static final String TRIGGER_ENABLE_DISABLE_FILENAME = System.getProperty("user.dir") + "//Config//TriggerForDynamicDisplay" + CSV_EXT;
+	public static final String TRIGGER_CHECK_UNCHECK_FILENAME = System.getProperty("user.dir") + "//Config//TriggerForDynamicSelection" + CSV_EXT;
 	public static final String IMAGE_PATH = System.getProperty("user.dir") + "//images//CalLiteIcon.png";
 	public static final String SAVE_FILE = "save";
 	public static final String BATCH_RUN = "Batch Run";
@@ -139,7 +142,11 @@ public final class Constant
 	public static final String VAMP_SELECTED_TEXT = "If D1485 is selected, take VAMP D1641 hydrology with a D1485 run.";
 	public static final String VAMP_NOT_SELECTED_TEXT = "Access regulation table (where applicable) by selecting or right-clicking on a regulation name.";
 
+	public static final Pattern CSV_PATTERN_DELIMITER = Pattern.compile(DELIMITER);
+
 	public static final String SCENARIOS_DIR = "Scenarios";
+	public static final String MODEL_WATER_YEAR_INDEX_FILE = "ModelWaterYearIndexes" + CSV_EXT;
+	public static final String WATER_YEAR_INDEX_DEFINITIONS_FILE = "WaterYearIndexes" + CSV_EXT;
 	private static final String[] PLOTLY_COLORS = new String[]{"#4c7eee", "#03c98c", "#d62e82", "#62d2fa", "#a3f244", "#cf79dd", "#80f4e1"};
 	private static final String[] PLOTLY_THRESHOLD_LINE_DASH = new String[]{"dash", "dashdot", "dot"};
 	static final String MODEL_DIR = "Model_w2";
@@ -160,11 +167,7 @@ public final class Constant
 
 	public static Color getColorNotInList(List<Color> colors)
 	{
-		return Arrays.stream(PLOTLY_COLORS)
-					 .map(Color::web)
-					 .filter(o -> !colors.contains(o))
-					 .findAny()
-					 .orElse(getPlotlyDefaultColor(colors.size()));
+		return Arrays.stream(PLOTLY_COLORS).map(Color::web).filter(o -> !colors.contains(o)).findAny().orElse(getPlotlyDefaultColor(colors.size()));
 	}
 
 	public static String getPlotlyThresholdLineDash(int index)
@@ -174,20 +177,12 @@ public final class Constant
 
 	public static String colorToHex(Color color)
 	{
-		return String.format("#%02X%02X%02X%02X",
-				(int) (color.getRed() * 255),
-				(int) (color.getGreen() * 255),
-				(int) (color.getBlue() * 255),
-				(int) (color.getOpacity() * 255));
+		return String.format("#%02X%02X%02X%02X", (int) (color.getRed() * 255), (int) (color.getGreen() * 255), (int) (color.getBlue() * 255), (int) (color.getOpacity() * 255));
 	}
 
 	public static String colorToHex(java.awt.Color color)
 	{
-		return String.format("#%02X%02X%02X%02X",
-				color.getRed(),
-				color.getGreen(),
-				color.getBlue(),
-				color.getAlpha());
+		return String.format("#%02X%02X%02X%02X", color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha());
 	}
 
 	public static boolean isValidValue(Double value)
@@ -215,8 +210,7 @@ public final class Constant
 		}
 		else if("TAF".equalsIgnoreCase(originalUnits))
 		{
-			if(parameterName.toUpperCase().contains("STORAGE")
-					&& !parameterName.toUpperCase().contains("STORAGE-CHANGE"))
+			if(parameterName.toUpperCase().contains("STORAGE") && !parameterName.toUpperCase().contains("STORAGE-CHANGE"))
 			{
 				aggregateYearly = false;
 			}
@@ -230,5 +224,37 @@ public final class Constant
 			aggregateYearly = false;
 		}
 		return aggregateYearly;
+	}
+
+	public static SimpleStringProperty getStringForDouble(Double value)
+	{
+		SimpleStringProperty retval = new SimpleStringProperty("");
+		if(value != null && Constant.isValidValue(value))
+		{
+			String format;
+			if(Math.abs(value) >= 1000)
+			{
+				format = "#,###";
+			}
+			else if(Math.abs(value) >= 10)
+			{
+				format = "#,###.#";
+			}
+			else if(Math.abs(value) >= 1)
+			{
+				format = "#,###.##";
+			}
+			else
+			{
+				format = "#,###.###";
+			}
+			String formattedValue = new DecimalFormat(format).format(value);
+			if("-0".equals(formattedValue))
+			{
+				formattedValue = "0";
+			}
+			retval = new SimpleStringProperty(formattedValue);
+		}
+		return retval;
 	}
 }

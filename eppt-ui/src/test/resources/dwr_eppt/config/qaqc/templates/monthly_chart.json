@@ -1,0 +1,37 @@
+{
+  "data": [
+    {
+      "x": [],
+      "y": [],
+      "type": "scatter",
+      "marker": {
+        "color": ""
+      },
+      "name": ""
+    }
+  ],
+  "layout": {
+    "font": {
+      "family": "Lucida Sans Unicode, Verdana, Arial, Helvetica, sans-serif",
+      "color": "black"
+    },
+    "xaxis": {
+      "showgrid": false,
+      "title": {
+        "text": ""
+      }
+    },
+    "yaxis": {
+      "tickformat": ",.3r%",
+      "title": {
+        "text": ""
+      }
+    },
+    "title": {
+      "text": "",
+      "font": {
+        "size": 20
+      }
+    }
+  }
+}

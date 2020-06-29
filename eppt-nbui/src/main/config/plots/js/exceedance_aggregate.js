@@ -39,7 +39,7 @@ function getPlotlyAggregateSeries(datum) {
                         seriesList.push(series);
                     }
                     series.push({
-                        name: tsList[j]['ts_name'],
+                        name: tsList[j]['ts_name'] + '     ',
                         x: x,
                         y: y,
                         line: {
@@ -60,11 +60,10 @@ function plot(data){
 }
 
 function plotAggregate(data) {
-    FORMATTER = getD3Formatter(data['scenario_run_data'][0]['ts_list'][0]['monthly_filters'][0]['annual_filters'][0]['discrete_ts']);
     var datum = data['scenario_run_data'];
     var layout = buildAggregateLayouts(datum, data['units'], data['gui_link_title']);
     let plotlyAggregateSeries = getPlotlyAggregateSeries(datum);
-    plotData(layout, plotlyAggregateSeries);
+    plotData(layout, plotlyAggregateSeries, data['ts_descriptor']);
 }
 
 function buildAggregateLayouts(datum, yaxis, title) {
@@ -95,14 +94,16 @@ function buildAggregateLayouts(datum, yaxis, title) {
                             yaxis: {
                                 title: {
                                     text: yaxis,
+                                    standoff: 50
                                 },
-                                tickformat: FORMATTER,
+                                automargin: true,
+                                tickformatstops: FORMATTER,
                                 gridcolor: '#CCCCCC',
                                 rangemode: 'tozero'
                             },
                             xaxis: {
                                 gridcolor: '#CCCCCC',
-                                tickformat: ',.0%',
+                                tickformatstops: PERCENT_FORMATTER,
                                 range: [1, 0],
                             },
                             showlegend: true,

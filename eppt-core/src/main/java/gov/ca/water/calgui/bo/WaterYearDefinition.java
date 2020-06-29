@@ -12,11 +12,12 @@
 
 package gov.ca.water.calgui.bo;
 
-import java.time.LocalDateTime;
 import java.time.Month;
-import java.time.YearMonth;
 import java.time.format.TextStyle;
 import java.util.Locale;
+import java.util.Optional;
+
+import hec.lang.annotation.Scriptable;
 
 /**
  * Company: Resource Management Associates
@@ -29,12 +30,22 @@ public class WaterYearDefinition
 	private final String _name;
 	private final Month _start;
 	private final Month _end;
+	private final Integer _startDefaultYear;
+	private final Integer _endDefaultYear;
 
+	@Scriptable
 	public WaterYearDefinition(String name, Month start, Month end)
+	{
+		this(name, start, end, null, null);
+	}
+
+	public WaterYearDefinition(String name, Month start, Month end, Integer startDefaultYear, Integer endDefaultYear)
 	{
 		_name = name;
 		_start = start;
 		_end = end;
+		_startDefaultYear = startDefaultYear;
+		_endDefaultYear = endDefaultYear;
 	}
 
 	public String getName()
@@ -57,5 +68,15 @@ public class WaterYearDefinition
 	{
 		return String.format("%s (%s - %s)", _name, _start.getDisplayName(TextStyle.SHORT, Locale.getDefault()),
 				_end.getDisplayName(TextStyle.SHORT, Locale.getDefault()));
+	}
+
+	public Optional<Integer> getEndDefaultYear()
+	{
+		return Optional.ofNullable(_endDefaultYear);
+	}
+
+	public Optional<Integer> getStartDefaultYear()
+	{
+		return Optional.ofNullable(_startDefaultYear);
 	}
 }

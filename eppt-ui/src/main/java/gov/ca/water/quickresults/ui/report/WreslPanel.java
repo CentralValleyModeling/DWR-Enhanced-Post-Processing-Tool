@@ -18,6 +18,7 @@ import java.awt.FlowLayout;
 import java.awt.GridLayout;
 import java.nio.file.Path;
 import java.time.LocalDate;
+import java.time.YearMonth;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
@@ -28,6 +29,9 @@ import javax.swing.*;
 import javax.swing.border.TitledBorder;
 
 import gov.ca.water.calgui.bo.WaterYearDefinition;
+import gov.ca.water.calgui.bo.WaterYearPeriod;
+import gov.ca.water.calgui.bo.WaterYearPeriodRange;
+import gov.ca.water.calgui.bo.WaterYearType;
 import gov.ca.water.calgui.project.EpptScenarioRun;
 import gov.ca.water.calgui.wresl.ProcessOutputConsumer;
 import gov.ca.water.calgui.wresl.WreslScriptException;
@@ -158,10 +162,13 @@ public class WreslPanel extends RmaJPanel implements ProcessOutputConsumer
 	{
 		int startYear = _epptConfigurationController.getStartYear();
 		int endYear = _epptConfigurationController.getEndYear();
-		WaterYearDefinition waterYearDefinition = _epptConfigurationController.getWaterYearDefinition();
-		LocalDate start = LocalDate.of(startYear, waterYearDefinition.getStartMonth(), 1);
+		WaterYearPeriod wreslPeriod = new WaterYearPeriod("WRESL Period");
+		WaterYearPeriodRange waterYearPeriodRange = new WaterYearPeriodRange(wreslPeriod, new WaterYearType(startYear, wreslPeriod), new WaterYearType(endYear, wreslPeriod));
+		YearMonth startYearMonth = waterYearPeriodRange.getStart(_epptConfigurationController.getWaterYearDefinition());
+		YearMonth endYearMonth = waterYearPeriodRange.getEnd(_epptConfigurationController.getWaterYearDefinition());
+		LocalDate start = LocalDate.of(startYearMonth.getYear(), startYearMonth.getMonth(), 1);
 		start = start.withDayOfMonth(start.lengthOfMonth());
-		LocalDate end = LocalDate.of(endYear, waterYearDefinition.getEndMonth(), 1).plusMonths(1);
+		LocalDate end = LocalDate.of(endYearMonth.getYear(), endYearMonth.getMonth(), 1);
 		end = end.withDayOfMonth(end.lengthOfMonth());
 		runWresl(epptScenarioRun, start, end);
 	}

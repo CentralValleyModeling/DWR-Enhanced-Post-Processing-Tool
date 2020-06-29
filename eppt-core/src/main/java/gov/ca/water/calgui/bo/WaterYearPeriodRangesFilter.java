@@ -39,6 +39,11 @@ public class WaterYearPeriodRangesFilter implements PeriodFilter
 		_waterYearDefinition = waterYearDefinition;
 	}
 
+	public List<WaterYearPeriodRange> getWaterYearPeriodRanges()
+	{
+		return _waterYearPeriodRanges;
+	}
+
 	public String getName()
 	{
 		return _name;
@@ -69,10 +74,15 @@ public class WaterYearPeriodRangesFilter implements PeriodFilter
 	@Override
 	public boolean test(Map.Entry<LocalDateTime, Double> input)
 	{
-		boolean retval = false;
 		//Shifting the ranges because values are EOP
 		LocalDateTime key = input.getKey();
 		YearMonth inputYearMonth = YearMonth.of(key.getYear(), key.getMonth()).minus(1, ChronoUnit.MONTHS);
+		return testYearMonth(inputYearMonth);
+	}
+
+	public boolean testYearMonth(YearMonth inputYearMonth)
+	{
+		boolean retval = false;
 		for(WaterYearPeriodRange range : _waterYearPeriodRanges)
 		{
 			YearMonth start = range.getStart(_waterYearDefinition);
@@ -87,4 +97,8 @@ public class WaterYearPeriodRangesFilter implements PeriodFilter
 		return retval;
 	}
 
+	public WaterYearDefinition getWaterYearDefinition()
+	{
+		return _waterYearDefinition;
+	}
 }

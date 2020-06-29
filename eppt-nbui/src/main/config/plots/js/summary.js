@@ -9,9 +9,6 @@
  *
  * GNU General Public License
  */
-
-var FORMATTER = '';
-
 function buildAnnualPeriodCells(data) {
     let retval = [];
     for (let annualIndex = 0; annualIndex < data[0]['ts_list'][0]['monthly_filters'][0]['annual_filters'].length; annualIndex++) {
@@ -66,7 +63,7 @@ function buildScenarioValues(data, monthlyIndex, statIndex) {
             for (let scenarioIndex = 0; scenarioIndex < data.length; scenarioIndex++) {
                 let stat = data[scenarioIndex]['ts_list'][tsIndex]['monthly_filters'][monthlyIndex]['annual_filters'][annualIndex]['computed_statistics'];
                 if (stat[statIndex]) {
-                    retval.push(stat[statIndex]['statistic_aggregate']);
+                    retval.push(format(stat[statIndex]['statistic_aggregate']));
                 } else {
                     retval.push(NaN);
                 }
@@ -85,9 +82,12 @@ function buildScenarioValuesDiff(data, diffIndex, monthlyIndex, statIndex) {
                     let stat = data[scenarioIndex]['ts_list'][tsIndex]['monthly_filters'][monthlyIndex]['annual_filters'][annualIndex]['computed_statistics'][statIndex];
                     if (stat) {
                         let currentValue = stat['statistic_aggregate'];
-                        let diffValue = data[diffIndex]['ts_list'][tsIndex]['monthly_filters'][monthlyIndex]['annual_filters'][annualIndex]['computed_statistics'][statIndex]['statistic_aggregate'];
-                        retval.push(currentValue - diffValue);
-                    }else{
+                        let statistic = data[diffIndex]['ts_list'][tsIndex]['monthly_filters'][monthlyIndex]['annual_filters'][annualIndex]['computed_statistics'][statIndex];
+                        if (statistic) {
+                            let diffValue = statistic['statistic_aggregate'];
+                            retval.push(format(currentValue - diffValue));
+                        }
+                    } else {
                         retval.push(NaN);
                     }
                 } else {
@@ -99,41 +99,27 @@ function buildScenarioValuesDiff(data, diffIndex, monthlyIndex, statIndex) {
     return retval;
 }
 
-function buildScenarioValuesDiffFormat(data, diffIndex, monthlyIndex, statIndex) {
-    let retval = [];
-    for (let annualIndex = 0; annualIndex < data[0]['ts_list'][0]['monthly_filters'][monthlyIndex]['annual_filters'].length; annualIndex++) {
-        for (let tsIndex = 0; tsIndex < data[0]['ts_list'].length; tsIndex++) {
-            for (let scenarioIndex = 0; scenarioIndex < data.length; scenarioIndex++) {
-                if (diffIndex < scenarioIndex) {
-                    retval.push(FORMATTER);
-                } else {
-                    retval.push('');
-                }
-            }
-        }
-    }
-    return retval;
-}
-
 function plot(data) {
-    FORMATTER = getD3Formatter(data['scenario_run_data'][0]['ts_list'][0]['monthly_filters'][0]['annual_filters'][0]['discrete_ts']);
     var layout = buildLayouts(data['scenario_run_data'], data['units'], data['gui_link_title']);
     let plotlyAggregateSeries = getPlotlyData(data['scenario_run_data'], data['units']);
-    let numberOfRows = plotlyAggregateSeries[0][0]['cells']['values'][0].length;
-    var rowHeight = 35;
-    if(data['scenario_run_data'][0]['ts_list'][0]['ts_name'].includes('<br>')){
+    var rowHeight = 40;
+    if (data['scenario_run_data'][0]['ts_list'][0]['ts_name'].includes('<br>')) {
         rowHeight *= 2;
     }
-
     for (let i = 0; i < layout.length; i++) {
+        let numberOfRows = plotlyAggregateSeries[0][0]['cells']['values'][0].length;
         layout[i]['height'] = 165 + numberOfRows * rowHeight;
     }
-    plotData(layout, plotlyAggregateSeries);
+    plotData(layout, plotlyAggregateSeries, data['ts_descriptor']);
 }
 
 function getPlotlyData(datum, units) {
     let seriesList = [];
-    for (let statIndex = 0; statIndex < datum[0]['ts_list'][0]['monthly_filters'][0]['annual_filters'][0]['computed_statistics'].length; statIndex++) {
+    let statisticCount = datum[0]['ts_list'][0]['monthly_filters'][0]['annual_filters'][0]['computed_statistics'].length;
+    if (statisticCount == 0) {
+        console.log("No statistics calculated for base scenario: " + datum[0]['scenario_name']);
+    }
+    for (let statIndex = 0; statIndex < statisticCount; statIndex++) {
         for (let monthlyIndex = 0; monthlyIndex < datum[0]['ts_list'][0]['monthly_filters'].length; monthlyIndex++) {
             seriesList.push([plotPeriodGroupedForMonthStat(datum, monthlyIndex, statIndex, units)]);
         }
@@ -142,7 +128,6 @@ function getPlotlyData(datum, units) {
 }
 
 function plotPeriodGroupedForMonthStat(data, monthlyIndex, statIndex, units) {
-    FORMATTER = getD3Formatter(data[0]['ts_list'][0]['monthly_filters'][0]['annual_filters'][0]['discrete_ts']);
     let header = [['<b>Period</b>'], ['<b>Scenario</b>'], ['<b>' + units] + '</b>'];
     let annualPeriods = buildAnnualPeriodCells(data);
     let scenarios = buildScenarioCells(data);
@@ -160,12 +145,10 @@ function plotPeriodGroupedForMonthStat(data, monthlyIndex, statIndex, units) {
         let scenarioData = data[i];
         periodNameFormat.push('');
         scenarioFormat.push('');
-        periodValuesFormat.push(FORMATTER);
         if (i !== data.length - 1) {
             header.push('<b>Diff From<br>' + scenarioData['scenario_name'] + '</b>');
             values.push(buildScenarioValuesDiff(data, i, monthlyIndex, statIndex));
         }
-        format.push(buildScenarioValuesDiffFormat(data, i, monthlyIndex, statIndex));
 
     }
 
@@ -174,14 +157,14 @@ function plotPeriodGroupedForMonthStat(data, monthlyIndex, statIndex, units) {
         header: {
             values: header,
             align: "center",
-            font: {family: PLOTLY_FONT['family'], size: 18}
+            font: {family: PLOTLY_FONT['family'], size: [18, 18, 18, 11]}
         },
         cells: {
             format: format,
             values: values,
             align: ['left', 'left', 'center'],
             height: 25,
-            font: {family: PLOTLY_FONT['family'], color: ['', colors], size: [14, 14, 16]}
+            font: {family: PLOTLY_FONT['family'], color: ['', colors], size: [12, 11, 16]}
         }
     };
 }

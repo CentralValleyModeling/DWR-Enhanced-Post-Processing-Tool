@@ -109,7 +109,9 @@ public class EpptReportingComputed
 	{
 		JSONArray jsonArray = new JSONArray();
 		fullTimeSeries.entrySet()
-					  .stream().map(this::extractDateArray)
+					  .stream()
+					  .filter(v->!Double.isNaN(v.getValue()))
+					  .map(this::extractDateArray)
 					  .forEach(jsonArray::put);
 		return jsonArray;
 	}

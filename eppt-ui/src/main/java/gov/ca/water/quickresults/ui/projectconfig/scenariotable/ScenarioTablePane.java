@@ -1,13 +1,13 @@
 /*
- * Enhanced Post Processing Tool (EPPT) Copyright (c) 2019.
+ * Enhanced Post Processing Tool (EPPT) Copyright (c) 2020.
  *
- * EPPT is copyrighted by the State of California, Department of Water Resources. It is licensed
- * under the GNU General Public License, version 2. This means it can be
- * copied, distributed, and modified freely, but you may not restrict others
- * in their ability to copy, distribute, and modify it. See the license below
- * for more details.
+ *  EPPT is copyrighted by the State of California, Department of Water Resources. It is licensed
+ *  under the GNU General Public License, version 2. This means it can be
+ *  copied, distributed, and modified freely, but you may not restrict others
+ *  in their ability to copy, distribute, and modify it. See the license below
+ *  for more details.
  *
- * GNU General Public License
+ *  GNU General Public License
  */
 
 package gov.ca.water.quickresults.ui.projectconfig.scenariotable;
@@ -22,6 +22,9 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.*;
 
+import gov.ca.water.calgui.EpptInitializationException;
+import gov.ca.water.calgui.busservice.impl.WaterYearTableReader;
+import gov.ca.water.calgui.constant.Constant;
 import gov.ca.water.calgui.project.EpptDssContainer;
 import gov.ca.water.calgui.project.EpptScenarioRun;
 import gov.ca.water.calgui.project.NamedDssPath;
@@ -42,7 +45,7 @@ import javafx.scene.control.TreeItem;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.TilePane;
-import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
 
 import hec.gui.NameDialog;
 import com.rma.javafx.iface.ColumnSpec;
@@ -149,8 +152,7 @@ public class ScenarioTablePane extends TitledPane
 	private void clearScenarios()
 	{
 		if(JOptionPane.YES_OPTION == JOptionPane.showConfirmDialog(Frame.getFrames()[0],
-				"Are you sure you want to delete all Scenario Runs?\nThis operation cannot be undone.",
-				"Clear All", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE))
+				"Are you sure you want to delete all Scenario Runs?\nThis operation cannot be undone.", "Clear All", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE))
 		{
 			_scenarioTableModel.getRows().clear();
 			setModified();
@@ -163,13 +165,11 @@ public class ScenarioTablePane extends TitledPane
 		if(selectedScenario != null)
 		{
 			int clear = JOptionPane.showConfirmDialog(Frame.getFrames()[0],
-					"Are you sure you want to delete Scenario Runs: " + selectedScenario
-							+ "?\nThis operation cannot be undone.",
-					"Clear", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
+					"Are you sure you want to delete Scenario Runs: " + selectedScenario + "?\nThis operation cannot be undone.", "Clear", JOptionPane.YES_NO_OPTION,
+					JOptionPane.WARNING_MESSAGE);
 			if(JOptionPane.YES_OPTION == clear)
 			{
-				TreeTableViewSelectionUtilities.getSelectedRowModels(_treeTable)
-											   .forEach(_scenarioTableModel.getRows()::remove);
+				TreeTableViewSelectionUtilities.getSelectedRowModels(_treeTable).forEach(_scenarioTableModel.getRows()::remove);
 				setModified();
 			}
 		}
@@ -177,7 +177,15 @@ public class ScenarioTablePane extends TitledPane
 
 	private void addScenarioRun(EpptScenarioRun scenarioRun)
 	{
-		_scenarioTableModel.getRows().add(new ScenarioRowModel(this::setModified, _scenarioTableModel, scenarioRun));
+		try
+		{
+			new WaterYearTableReader(scenarioRun).forceRead();
+			_scenarioTableModel.getRows().add(new ScenarioRowModel(this::setModified, _scenarioTableModel, scenarioRun));
+		}
+		catch(EpptInitializationException e)
+		{
+			LOGGER.log(Level.SEVERE, "Error reading water year table files for scenario: " + scenarioRun, e);
+		}
 	}
 
 	private void setModified()
@@ -192,16 +200,24 @@ public class ScenarioTablePane extends TitledPane
 
 	private void updateScenario(EpptScenarioRun oldScenarioRun, EpptScenarioRun newScenarioRun)
 	{
-		Optional<ScenarioRowModel> rowForScenarioRun = _scenarioTableModel.getRowForScenarioRun(oldScenarioRun);
-		if(!Objects.equals(oldScenarioRun, newScenarioRun) && rowForScenarioRun.isPresent())
+		try
 		{
-			ScenarioRowModel oldModel = rowForScenarioRun.get();
-			int i = _scenarioTableModel.getRows().indexOf(oldModel);
-			_scenarioTableModel.getRows().remove(i);
-			newScenarioRun.setBaseSelected(oldModel.isBase());
-			newScenarioRun.setAltSelected(oldModel.isAlternative());
-			_scenarioTableModel.getRows().add(i, new ScenarioRowModel(this::setModified, _scenarioTableModel, newScenarioRun));
-			setModified();
+			Optional<ScenarioRowModel> rowForScenarioRun = _scenarioTableModel.getRowForScenarioRun(oldScenarioRun);
+			if(rowForScenarioRun.isPresent())
+			{
+				new WaterYearTableReader(newScenarioRun).forceRead();
+				ScenarioRowModel oldModel = rowForScenarioRun.get();
+				int i = _scenarioTableModel.getRows().indexOf(oldModel);
+				_scenarioTableModel.getRows().remove(i);
+				newScenarioRun.setBaseSelected(oldModel.isBase());
+				newScenarioRun.setAltSelected(oldModel.isAlternative());
+				_scenarioTableModel.getRows().add(i, new ScenarioRowModel(this::setModified, _scenarioTableModel, newScenarioRun));
+				setModified();
+			}
+		}
+		catch(EpptInitializationException e)
+		{
+			LOGGER.log(Level.SEVERE, "Error reading water year table files for scenario: " + newScenarioRun, e);
 		}
 	}
 
@@ -233,6 +249,8 @@ public class ScenarioTablePane extends TitledPane
 				{
 					rows.remove(i);
 					rows.add(i - 1, rowModel);
+					_treeTable.getSelectionModel().select(i - 1);
+					_controller.setModified();
 				}
 			}
 		}
@@ -251,6 +269,8 @@ public class ScenarioTablePane extends TitledPane
 				{
 					rows.remove(i);
 					rows.add(i + 1, rowModel);
+					_treeTable.getSelectionModel().select(i + 1);
+					_controller.setModified();
 				}
 			}
 		}
@@ -269,36 +289,22 @@ public class ScenarioTablePane extends TitledPane
 	private EpptScenarioRun relativizeScenarioToNewProject(EpptScenarioRun scenarioRun, Path newProjectPath, Path oldProjectPath)
 	{
 		EpptDssContainer oldDssContainer = scenarioRun.getDssContainer();
-		List<NamedDssPath> extra = oldDssContainer.getExtraDssFiles()
-												  .stream()
-												  .map(e -> copyDssToNewProjectFolder(newProjectPath, oldProjectPath, e))
-												  .collect(toList());
+		List<NamedDssPath> extra = oldDssContainer.getExtraDssFiles().stream().map(e -> copyDssToNewProjectFolder(newProjectPath, oldProjectPath, e)).collect(toList());
 		NamedDssPath ivDssPath = copyDssToNewProjectFolder(newProjectPath, oldProjectPath, oldDssContainer.getIvDssFile());
 		NamedDssPath dvDssPath = copyDssToNewProjectFolder(newProjectPath, oldProjectPath, oldDssContainer.getDvDssFile());
 		NamedDssPath svDssPath = copyDssToNewProjectFolder(newProjectPath, oldProjectPath, oldDssContainer.getSvDssFile());
 		NamedDssPath dtsDssPath = copyDssToNewProjectFolder(newProjectPath, oldProjectPath, oldDssContainer.getDtsDssFile());
-		EpptDssContainer newDssContainer = new EpptDssContainer(dvDssPath,
-				svDssPath,
-				ivDssPath,
-				dtsDssPath,
-				extra);
-		return new EpptScenarioRun(scenarioRun.getName(),
-				scenarioRun.getDescription(),
-				scenarioRun.getModel(),
+		EpptDssContainer newDssContainer = new EpptDssContainer(dvDssPath, svDssPath, ivDssPath, dtsDssPath, extra);
+		return new EpptScenarioRun(scenarioRun.getName(), scenarioRun.getDescription(), scenarioRun.getModel(),
 				makeRelativeToNewProject(scenarioRun.getOutputPath(), newProjectPath, oldProjectPath),
 				makeRelativeToNewProject(scenarioRun.getWreslDirectory(), newProjectPath, oldProjectPath),
-				makeRelativeToNewProject(scenarioRun.getLookupDirectory(), newProjectPath, oldProjectPath),
-				newDssContainer,
-				scenarioRun.getColor());
+				makeRelativeToNewProject(scenarioRun.getLookupDirectory(), newProjectPath, oldProjectPath), newDssContainer, scenarioRun.getColor());
 	}
 
 	private NamedDssPath copyDssToNewProjectFolder(Path newProjectPath, Path oldProjectPath, NamedDssPath dvDssFile)
 	{
-		return new NamedDssPath(makeRelativeToNewProject(dvDssFile.getDssPath(), newProjectPath, oldProjectPath),
-				dvDssFile.getAliasName(),
-				dvDssFile.getAPart(),
-				dvDssFile.getEPart(),
-				dvDssFile.getFPart());
+		return new NamedDssPath(makeRelativeToNewProject(dvDssFile.getDssPath(), newProjectPath, oldProjectPath), dvDssFile.getAliasName(), dvDssFile.getAPart(),
+				dvDssFile.getEPart(), dvDssFile.getFPart());
 	}
 
 	private Path makeRelativeToNewProject(Path outputPath, Path newProjectPath, Path oldProjectPath)
@@ -326,42 +332,27 @@ public class ScenarioTablePane extends TitledPane
 
 	private void launchFileDialogToCopyScenario()
 	{
-		EpptScenarioRun oldScenarioRun = getSelectedScenario();
-		if(oldScenarioRun != null)
+		EpptScenarioRun selectedScenarioRun = getSelectedScenario();
+		if(selectedScenarioRun != null)
 		{
-			NameDialog nameDialog = new NameDialog(Frame.getFrames()[0]);
-			nameDialog.setModal(true);
-			nameDialog.setExistingNames(_scenarioTableModel.getAllScenarioRuns()
-														   .stream()
-														   .map(EpptScenarioRun::getName)
-														   .collect(toList()));
-			nameDialog.setTitle("Copy Scenario Run");
-			nameDialog.setName(oldScenarioRun.getName() + " (Copy)");
-			nameDialog.setDescription(oldScenarioRun.getDescription());
-			try
+			SwingUtilities.invokeLater(() ->
 			{
-				SwingUtilities.invokeAndWait(() -> nameDialog.setVisible(true));
-			}
-			catch(InterruptedException e)
-			{
-				Thread.currentThread().interrupt();
-				LOGGER.log(Level.FINE, "Thread interrupted, closing dialog", e);
-				nameDialog.setVisible(false);
-			}
-			catch(InvocationTargetException e)
-			{
-				LOGGER.log(Level.SEVERE, "Error waiting for dialog, closing", e);
-				nameDialog.setVisible(false);
-			}
-			if(!nameDialog.isCanceled())
-			{
-				String name = nameDialog.getName();
-				String description = nameDialog.getDescription();
-				EpptScenarioRun newScenarioRun = new EpptScenarioRun(name, description, oldScenarioRun);
-				addScenarioRun(newScenarioRun);
-				setModified();
-			}
-			nameDialog.dispose();
+				Color plotlyDefaultColor = Constant.getColorNotInList(_scenarioTableModel.getAllScenarioRuns().stream().map(EpptScenarioRun::getColor).collect(toList()));
+				ScenarioRunEditor scenarioRunEditor = new ScenarioRunEditor(Frame.getFrames()[0], _controller.getScenarioRuns());
+				scenarioRunEditor.fillPanelForCopy(selectedScenarioRun, plotlyDefaultColor);
+				scenarioRunEditor.setVisible(true);
+				EpptScenarioRun newScenarioRun = scenarioRunEditor.createRun();
+				scenarioRunEditor.setVisible(false);
+				if(newScenarioRun != null && !scenarioRunEditor.isCanceled())
+				{
+					scenarioRunEditor.dispose();
+					Platform.runLater(() ->
+					{
+						addScenarioRun(newScenarioRun);
+						setModified();
+					});
+				}
+			});
 		}
 	}
 
@@ -369,6 +360,14 @@ public class ScenarioTablePane extends TitledPane
 	{
 		EpptScenarioRun oldScenarioRun = getSelectedScenario();
 		if(oldScenarioRun != null)
+		{
+			editScenarioRun(oldScenarioRun);
+		}
+	}
+
+	private void editScenarioRun(EpptScenarioRun oldScenarioRun)
+	{
+		SwingUtilities.invokeLater(() ->
 		{
 			ScenarioRunEditor scenarioRunEditor = new ScenarioRunEditor(Frame.getFrames()[0], _controller.getScenarioRuns());
 			scenarioRunEditor.fillPanel(oldScenarioRun);
@@ -379,13 +378,12 @@ public class ScenarioTablePane extends TitledPane
 
 			if(newScenarioRun != null && !scenarioRunEditor.isCanceled())
 			{
-				updateScenario(oldScenarioRun, newScenarioRun);
+				Platform.runLater(() -> updateScenario(oldScenarioRun, newScenarioRun));
 			}
-		}
+		});
 	}
 
-	private void tableSelected(ObservableValue<? extends TreeItem<ScenarioTableRowModel>> e, TreeItem<ScenarioTableRowModel> o,
-							   TreeItem<ScenarioTableRowModel> n)
+	private void tableSelected(ObservableValue<? extends TreeItem<ScenarioTableRowModel>> e, TreeItem<ScenarioTableRowModel> o, TreeItem<ScenarioTableRowModel> n)
 	{
 		if(n != null && n.getValue() != null)
 		{

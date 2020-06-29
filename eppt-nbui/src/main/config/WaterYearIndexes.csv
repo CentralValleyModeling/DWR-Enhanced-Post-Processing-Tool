@@ -1,0 +1,10 @@
+!ID indicates UI sort order and is referenced in WYTypesLookup.csv and the ModelWaterYearIndexes.csv files
+!Display Name is the name displayed in the UI
+!Key,Display Name
+100,Sacramento River 40-30-30
+200,San Joaquin River 60-20-20
+300,Shasta Lake
+400,Trinity River
+500,Feather River
+600,American River 40-30-30
+700,American River D-893

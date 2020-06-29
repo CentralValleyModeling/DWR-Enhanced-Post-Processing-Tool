@@ -51,9 +51,9 @@ import static java.util.stream.Collectors.toList;
  */
 class ScenarioDssTableModel extends RmaTableModel
 {
-	private static final int ROW_TYPE_COLUMN = 0;
+	static final int ROW_TYPE_COLUMN = 0;
 	static final int DSS_PATH_COLUMN = 1;
-	private static final int ALIAS_COLUMN = 2;
+	static final int ALIAS_COLUMN = 2;
 	static final int A_PART_COLUMN = 3;
 	static final int F_PART_COLUMN = 4;
 	private static final Logger LOGGER = Logger.getLogger(ScenarioDssTableModel.class.getName());

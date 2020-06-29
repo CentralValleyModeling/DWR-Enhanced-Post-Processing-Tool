@@ -1,0 +1,467 @@
+<!--
+  ~ Enhanced Post Processing Tool (EPPT) Copyright (c) 2020.
+  ~
+  ~  EPPT is copyrighted by the State of California, Department of Water Resources. It is licensed
+  ~  under the GNU General Public License, version 2. This means it can be
+  ~  copied, distributed, and modified freely, but you may not restrict others
+  ~  in their ability to copy, distribute, and modify it. See the license below
+  ~  for more details.
+  ~
+  ~  GNU General Public License
+  -->
+
+<panel id="QuickResults" name="QuickResults" layout="BorderLayout">
+	<panel layout="BorderLayout">
+		<panel layout="FlowLayout(FlowLayout.LEFT)" border="TitledBorder(Controls)" constraints="BorderLayout.NORTH">
+			<panel layout="GridBagLayout">
+				<checkbox name="TimeSeriesAll" id="TimeSeriesAll" text="Timeseries (All)" selected="true">
+					<gridbagconstraints insets="0,0,5,3" anchor="GridBagConstraints.WEST" gridx="1" gridy="1"/>
+				</checkbox>
+				<checkbox name="TimeSeriesAggregate" id="TimeSeriesAggregate" text="Timeseries (Aggregate)" selected="false">
+					<gridbagconstraints insets="0,0,5,3" anchor="GridBagConstraints.WEST" gridx="1" gridy="2"/>
+				</checkbox>
+				<checkbox name="ExceedanceAll" id="ExceedanceAll" text="Exceedance (All)" selected="false">
+					<gridbagconstraints insets="0,0,5,3" anchor="GridBagConstraints.WEST" gridx="2" gridy="1"/>
+				</checkbox>
+				<checkbox name="ExceedanceAggregate" id="ExceedanceAggregate" text="Exceedance (Aggregate)" selected="false">
+					<gridbagconstraints insets="0,0,5,3" anchor="GridBagConstraints.WEST" gridx="2" gridy="2"/>
+				</checkbox>
+				<checkbox name="MonthlyLine" id="MonthlyLine" text="Monthly Line Plot" selected="false">
+					<gridbagconstraints insets="0,0,5,3" anchor="GridBagConstraints.WEST" gridx="3" gridy="1"/>
+				</checkbox>
+				<checkbox name="BarGraph" id="BarGraph" text="Bar Graph" selected="false">
+					<gridbagconstraints insets="0,0,5,3" anchor="GridBagConstraints.WEST" gridx="3" gridy="2"/>
+				</checkbox>
+				<checkbox name="BoxAndWhiskerAll" id="BoxAndWhiskerAll" text="Box Plot (All)" selected="false">
+					<gridbagconstraints insets="0,0,5,3" anchor="GridBagConstraints.WEST" gridx="4" gridy="1"/>
+				</checkbox>
+				<checkbox name="BoxAndWhiskerAggregate" id="BoxAndWhiskerAggregate" text="Box Plot (Aggregate)" selected="false">
+					<gridbagconstraints insets="0,0,5,3" anchor="GridBagConstraints.WEST" gridx="4" gridy="2"/>
+				</checkbox>
+				<checkbox name="MonthlyTable" id="MonthlyTable" text="Monthly Table">
+					<gridbagconstraints insets="0,0,5,3" anchor="GridBagConstraints.WEST" gridx="5" gridy="1"/>
+				</checkbox>
+				<checkbox name="SummaryTable" id="SummaryTable" text="Summary Table" selected="false">
+					<gridbagconstraints insets="0,0,5,3" anchor="GridBagConstraints.WEST" gridx="5" gridy="2"/>
+				</checkbox>
+			</panel>
+		</panel>
+		<panel id="controls" name="controls" layout="BorderLayout" constraints="BorderLayout.CENTER">
+			<panel id="ss2" resizeable="false" border="TitledBorder(Report List)" layout="BorderLayout"
+				   preferredsize="5,180"
+				   minimumsize="510,180" maximumsize="510,180" constraints="BorderLayout.NORTH">
+				<panel constraints="BorderLayout.NORTH" layout="FlowLayout(FlowLayout.LEFT)">
+					<button text="Add" ActionCommand="Rep_AddList"/>
+					<button text="Clear" ActionCommand="Rep_ClearList"/>
+					<glue minimumsize="10,1"/>
+					<button text="Display" ActionCommand="Rep_DispAll"/>
+					<glue minimumsize="10,1"/>
+					<button text="Save" ActionCommand="Rep_SaveList"/>
+					<button text="Load" ActionCommand="Rep_LoadList"/>
+				</panel>
+				<scrollpane minimumsize="480,90" preferredsize="500,90" constraints="BorderLayout.CENTER">
+					<list id="lstReports" visiblerowcount="5">
+					</list>
+				</scrollpane>
+			</panel>
+			<panel constraints="Borderlayout.CENTER" id="reptabbedPane" layout="BorderLayout">
+			<tabbedpane id="variables" name="variables" constraints="Borderlayout.CENTER">
+				<panel layout="FlowLayout(FlowLayout.LEFT)" name="Storage+Flows">
+					<panel id="presets" name="Storage+Flows" layout="GridBagLayout">
+						<panel layout="GridBagLayout">
+							<gridbagconstraints insets="0,0,0,0" anchor="GridBagConstraints.NORTHWEST" gridx="1" gridy="1"
+												gridheight="1"/>
+							<label text="Storage" font="Tahoma-BOLD-14" foreground="3366FF" preferredsize="150,20">
+								<gridbagconstraints insets="2,0,2,0" anchor="GridBagConstraints.WEST" gridx="1" gridy="1"/>
+							</label>
+							<checkbox name="ckbp102" id="ckbp102" text="Trinity ">
+								<gridbagconstraints anchor="GridBagConstraints.WEST" gridx="1" gridy="2"/>
+							</checkbox>
+							<checkbox name="ckbp103" id="ckbp103" text="Shasta ">
+								<gridbagconstraints anchor="GridBagConstraints.WEST" gridx="1" gridy="3"/>
+							</checkbox>
+							<checkbox name="ckbp104" id="ckbp104" text="Folsom ">
+								<gridbagconstraints anchor="GridBagConstraints.WEST" gridx="1" gridy="4"/>
+							</checkbox>
+							<checkbox name="ckbp105" id="ckbp105" text="CVP NOD ">
+								<gridbagconstraints weightx="0.5" anchor="GridBagConstraints.WEST" gridx="1" gridy="5"/>
+							</checkbox>
+							<checkbox name="ckbp106" id="ckbp106" text="CVP San Luis ">
+								<gridbagconstraints weightx="0.5" anchor="GridBagConstraints.WEST" gridx="1" gridy="6"/>
+							</checkbox>
+							<checkbox name="ckbp107" id="ckbp107" text="Oroville ">
+								<gridbagconstraints weightx="0.5" anchor="GridBagConstraints.WEST" gridx="1" gridy="7"/>
+							</checkbox>
+							<checkbox name="ckbp108" id="ckbp108" text="SWP San Luis ">
+								<gridbagconstraints weightx="0.5" anchor="GridBagConstraints.WEST" gridx="1" gridy="8"/>
+							</checkbox>
+							<checkbox name="ckbp600" id="ckbp600" text="New Melones">
+								<gridbagconstraints anchor="GridBagConstraints.WEST" gridx="1" gridy="9"/>
+							</checkbox>
+							<checkbox name="ckbp601" id="ckbp601" text="New Don Pedro">
+								<gridbagconstraints weightx="0.5" anchor="GridBagConstraints.WEST" gridx="1" gridy="10"/>
+							</checkbox>
+							<checkbox name="ckbp602" id="ckbp602" text="McLure">
+								<gridbagconstraints weightx="0.5" anchor="GridBagConstraints.WEST" gridx="1" gridy="11"/>
+							</checkbox>
+							<checkbox name="ckbp603" id="ckbp603" text="Millerton">
+								<gridbagconstraints weightx="0.5" anchor="GridBagConstraints.WEST" gridx="1" gridy="12"/>
+							</checkbox>
+						</panel>
+						<panel layout="GridBagLayout">
+							<gridbagconstraints insets="0,0,0,0" anchor="GridBagConstraints.NORTHWEST" gridx="1" gridy="2"
+												gridheight="1"/>
+							<label text="Storage Ops" font="Tahoma-BOLD-14" foreground="3366FF" preferredsize="150,20">
+								<gridbagconstraints insets="2,0,2,0" anchor="GridBagConstraints.WEST" gridx="1" gridy="1"/>
+							</label>
+							<checkbox name="ckbp111" id="ckbp111" text="Trinity ">
+								<gridbagconstraints weightx="0.5" anchor="GridBagConstraints.WEST" gridx="1" gridy="11"/>
+							</checkbox>
+							<checkbox name="ckbp112" id="ckbp112" text="Shasta ">
+								<gridbagconstraints weightx="0.5" anchor="GridBagConstraints.WEST" gridx="1" gridy="12"/>
+							</checkbox>
+							<checkbox name="ckbp113" id="ckbp113" text="Folsom ">
+								<gridbagconstraints weightx="0.5" anchor="GridBagConstraints.WEST" gridx="1" gridy="13"/>
+							</checkbox>
+							<checkbox name="ckbp114" id="ckbp114" text="CVP San Luis ">
+								<gridbagconstraints weightx="0.5" anchor="GridBagConstraints.WEST" gridx="1" gridy="14"/>
+							</checkbox>
+							<checkbox name="ckbp115" id="ckbp115" text="Oroville ">
+								<gridbagconstraints weightx="0.5" anchor="GridBagConstraints.WEST" gridx="1" gridy="15"/>
+							</checkbox>
+							<checkbox name="ckbp116" id="ckbp116" text="SWP San Luis ">
+								<gridbagconstraints weightx="0.5" anchor="GridBagConstraints.WEST" gridx="1" gridy="16"/>
+							</checkbox>
+						</panel>
+						<panel layout="GridBagLayout">
+							<gridbagconstraints insets="0,0,0,0" anchor="GridBagConstraints.NORTHWEST" gridx="2" gridy="1"
+												ipady="7" gridheight="2"/>
+							<label text="Flows" font="Tahoma-BOLD-14" foreground="3366FF" preferredsize="150,20">
+								<gridbagconstraints insets="2,0,2,0" anchor="GridBagConstraints.WEST" gridx="1" gridy="1"/>
+							</label>
+							<checkbox name="ckbp202" id="ckbp202" text="Trinity River ">
+								<gridbagconstraints weightx="0.5" anchor="GridBagConstraints.WEST" gridx="1" gridy="2"/>
+							</checkbox>
+							<checkbox name="ckbp203" id="ckbp203" text="Trinity Export ">
+								<gridbagconstraints weightx="0.5" anchor="GridBagConstraints.WEST" gridx="1" gridy="3"/>
+							</checkbox>
+							<checkbox name="ckbp204" id="ckbp204" text="Clear Creek ">
+								<gridbagconstraints weightx="0.5" anchor="GridBagConstraints.WEST" gridx="1" gridy="4"/>
+							</checkbox>
+							<checkbox name="ckbp205" id="ckbp205" text="Spring Ck Tunnel ">
+								<gridbagconstraints weightx="0.5" anchor="GridBagConstraints.WEST" gridx="1" gridy="5"/>
+							</checkbox>
+							<checkbox name="ckbp206" id="ckbp206" text="Keswick ">
+								<gridbagconstraints weightx="0.5" anchor="GridBagConstraints.WEST" gridx="1" gridy="6"/>
+							</checkbox>
+							<checkbox name="ckbp207" id="ckbp207" text="Red Bluff ">
+								<gridbagconstraints weightx="0.5" anchor="GridBagConstraints.WEST" gridx="1" gridy="7"/>
+							</checkbox>
+							<checkbox name="ckbp208" id="ckbp208" text="Wilkins Slough">
+								<gridbagconstraints weightx="0.5" anchor="GridBagConstraints.WEST" gridx="1" gridy="8"/>
+							</checkbox>
+							<checkbox name="ckbp209" id="ckbp209" text="Thermalito ">
+								<gridbagconstraints weightx="0.5" anchor="GridBagConstraints.WEST" gridx="1" gridy="9"/>
+							</checkbox>
+							<checkbox name="ckbp210" id="ckbp210" text="Feather River ">
+								<gridbagconstraints weightx="0.5" anchor="GridBagConstraints.WEST" gridx="1" gridy="10"/>
+							</checkbox>
+							<checkbox name="ckbp211" id="ckbp211" text="Nimbus ">
+								<gridbagconstraints weightx="0.5" anchor="GridBagConstraints.WEST" gridx="1" gridy="11"/>
+							</checkbox>
+							<checkbox name="ckbp212" id="ckbp212" text="Fremont Weir ">
+								<gridbagconstraints weightx="0.5" anchor="GridBagConstraints.WEST" gridx="1" gridy="12"/>
+							</checkbox>
+							<checkbox name="ckbp213" id="ckbp213" text="Sacramento Weir ">
+								<gridbagconstraints weightx="0.5" anchor="GridBagConstraints.WEST" gridx="1" gridy="13"/>
+							</checkbox>
+							<checkbox name="ckbp214" id="ckbp214" text="Hood ">
+								<gridbagconstraints weightx="0.5" anchor="GridBagConstraints.WEST" gridx="1" gridy="14"/>
+							</checkbox>
+							<checkbox name="ckbp215" id="ckbp215" text="Yolo Bypass ">
+								<gridbagconstraints weightx="0.5" anchor="GridBagConstraints.WEST" gridx="1" gridy="15"/>
+							</checkbox>
+							<checkbox name="ckbp216" id="ckbp216" text="Delta Cross Channel ">
+								<gridbagconstraints weightx="0.5" anchor="GridBagConstraints.WEST" gridx="1" gridy="16"/>
+							</checkbox>
+							<checkbox name="ckbp217" id="ckbp217" text="Rio Vista ">
+								<gridbagconstraints weightx="0.5" anchor="GridBagConstraints.WEST" gridx="1" gridy="17"/>
+							</checkbox>
+							<checkbox name="ckbp218" id="ckbp218" text="Old/Middle River ">
+								<gridbagconstraints weightx="0.5" anchor="GridBagConstraints.WEST" gridx="1" gridy="18"/>
+							</checkbox>
+							<checkbox name="ckbp219" id="ckbp219" text="Qwest ">
+								<gridbagconstraints weightx="0.5" anchor="GridBagConstraints.WEST" gridx="1" gridy="19"/>
+							</checkbox>
+							<checkbox name="ckbp604" id="ckbp604" text="Vernails">
+								<gridbagconstraints anchor="GridBagConstraints.WEST" gridx="1" gridy="20"/>
+							</checkbox>
+							<checkbox name="ckbp605" id="ckbp605" text="Stanislaus River">
+								<gridbagconstraints weightx="0.5" anchor="GridBagConstraints.WEST" gridx="1" gridy="21"/>
+							</checkbox>
+							<checkbox name="ckbp606" id="ckbp606" text="Tuolumne River">
+								<gridbagconstraints weightx="0.5" anchor="GridBagConstraints.WEST" gridx="1" gridy="22"/>
+							</checkbox>
+							<checkbox name="ckbp607" id="ckbp607" text="Merced river">
+								<gridbagconstraints weightx="0.5" anchor="GridBagConstraints.WEST" gridx="1" gridy="23"/>
+							</checkbox>
+							<checkbox name="ckbp608" id="ckbp608" text="SJR above Merced">
+								<gridbagconstraints weightx="0.5" anchor="GridBagConstraints.WEST" gridx="1" gridy="24"/>
+							</checkbox>
+							<checkbox name="ckbp609" id="ckbp609" text="Mendota Pool">
+								<gridbagconstraints weightx="0.5" anchor="GridBagConstraints.WEST" gridx="1" gridy="25"/>
+							</checkbox>
+						</panel>
+
+						<panel layout="GridBagLayout">
+							<gridbagconstraints insets="0,0,0,0" anchor="GridBagConstraints.NORTHWEST" gridx="3" gridy="1"
+												ipady="7" gridheight="1"/>
+							<label text="Delta" font="Tahoma-BOLD-14" foreground="3366FF" preferredsize="150,20">
+								<gridbagconstraints insets="2,0,2,0" anchor="GridBagConstraints.WEST" gridx="1" gridy="1"/>
+							</label>
+							<checkbox name="ckbp302" id="ckbp302" text="Inflow ">
+								<gridbagconstraints weightx="0.5" anchor="GridBagConstraints.WEST" gridx="1" gridy="2"/>
+							</checkbox>
+							<checkbox name="ckbp303" id="ckbp303" text="Outflow ">
+								<gridbagconstraints weightx="0.5" anchor="GridBagConstraints.WEST" gridx="1" gridy="3"/>
+							</checkbox>
+							<checkbox name="ckbp304" id="ckbp304" text="Req'd Outflow ">
+								<gridbagconstraints weightx="0.5" anchor="GridBagConstraints.WEST" gridx="1" gridy="4"/>
+							</checkbox>
+							<checkbox name="ckbp305" id="ckbp305" text="EI Ratio">
+								<gridbagconstraints weightx="0.5" anchor="GridBagConstraints.WEST" gridx="1" gridy="5"/>
+							</checkbox>
+							<checkbox name="ckbp306" id="ckbp306" text="X2 Position">
+								<gridbagconstraints weightx="0.5" anchor="GridBagConstraints.WEST" gridx="1" gridy="6"/>
+							</checkbox>
+							<checkbox name="ckbp307" id="ckbp307" text="Mass Balance " visible="false">
+								<gridbagconstraints weightx="0.5" anchor="GridBagConstraints.WEST" gridx="1" gridy="7"/>
+							</checkbox>
+						</panel>
+
+						<panel layout="GridBagLayout">
+							<gridbagconstraints insets="0,0,0,0" anchor="GridBagConstraints.NORTHWEST" gridx="3" gridy="2"
+												ipady="7" gridheight="1"/>
+							<label text="Exports" font="Tahoma-BOLD-14" foreground="3366FF" preferredsize="150,20">
+								<gridbagconstraints insets="2,0,2,0" anchor="GridBagConstraints.WEST" gridx="1" gridy="1"/>
+							</label>
+							<checkbox name="ckbp310" id="ckbp310" text="Jones ">
+								<gridbagconstraints weightx="0.5" anchor="GridBagConstraints.WEST" gridx="1" gridy="2"/>
+							</checkbox>
+							<checkbox name="ckbp311" id="ckbp311" text="Banks ">
+								<gridbagconstraints weightx="0.5" anchor="GridBagConstraints.WEST" gridx="1" gridy="3"/>
+							</checkbox>
+							<checkbox name="ckbp312" id="ckbp312" text="Total Export">
+								<gridbagconstraints weightx="0.5" anchor="GridBagConstraints.WEST" gridx="1" gridy="4"/>
+							</checkbox>
+							<checkbox name="ckbp313" id="ckbp313" text="NBA ">
+								<gridbagconstraints weightx="0.5" anchor="GridBagConstraints.WEST" gridx="1" gridy="5"/>
+							</checkbox>
+							<checkbox name="ckbp314" id="ckbp314" text="CCWD AIP ">
+								<gridbagconstraints weightx="0.5" anchor="GridBagConstraints.WEST" gridx="1" gridy="6"/>
+							</checkbox>
+							<checkbox name="ckbp315" id="ckbp315" text="CCWD RS ">
+								<gridbagconstraints weightx="0.5" anchor="GridBagConstraints.WEST" gridx="1" gridy="7"/>
+							</checkbox>
+							<checkbox name="ckbp316" id="ckbp316" text="CCWD Total ">
+								<gridbagconstraints weightx="0.5" anchor="GridBagConstraints.WEST" gridx="1" gridy="8"/>
+							</checkbox>
+							<checkbox name="ckbp514" id="ckbp514" text="CCWD Diversions - Old River ">
+								<gridbagconstraints weightx="0.5" anchor="GridBagConstraints.WEST" gridx="1" gridy="9"/>
+							</checkbox>
+							<checkbox name="ckbp515" id="ckbp515" text="CCWD Diversions - Victoria Canal ">
+								<gridbagconstraints weightx="0.5" anchor="GridBagConstraints.WEST" gridx="1" gridy="10"/>
+							</checkbox>
+							<checkbox name="ckbp516" id="ckbp516" text="CCWD Diversions - Rock Slough ">
+								<gridbagconstraints weightx="0.5" anchor="GridBagConstraints.WEST" gridx="1" gridy="11"/>
+							</checkbox>
+							<checkbox name="ckbp509" id="ckbp509" text="Diversion Salinity - Old River ">
+								<gridbagconstraints weightx="0.5" anchor="GridBagConstraints.WEST" gridx="1" gridy="12"/>
+							</checkbox>
+							<checkbox name="ckbp510" id="ckbp510" text="Diversion Salinity - Victoria Canal ">
+								<gridbagconstraints weightx="0.5" anchor="GridBagConstraints.WEST" gridx="1" gridy="13"/>
+							</checkbox>
+							<checkbox name="ckbp511" id="ckbp511" text="Diversion Salinity - Rock Slough ">
+								<gridbagconstraints weightx="0.5" anchor="GridBagConstraints.WEST" gridx="1" gridy="14"/>
+							</checkbox>
+						</panel>
+						<panel layout="GridBagLayout">
+							<gridbagconstraints insets="0,0,0,0" anchor="GridBagConstraints.NORTHWEST" gridx="4" gridy="1"
+												ipady="7" gridheight="1"/>
+							<label text="Deliveries" font="Tahoma-BOLD-14" foreground="3366FF" preferredsize="150,20">
+								<gridbagconstraints insets="2,0,2,0" anchor="GridBagConstraints.WEST" gridx="1" gridy="1"/>
+							</label>
+							<checkbox name="ckbp402" id="ckbp402" text="Total CVP NOD">
+								<gridbagconstraints weightx="0.5" anchor="GridBagConstraints.WEST" gridx="1" gridy="2"/>
+							</checkbox>
+							<checkbox name="ckbp403" id="ckbp403" text="Total CVP SOD">
+								<gridbagconstraints weightx="0.5" anchor="GridBagConstraints.WEST" gridx="1" gridy="3"/>
+							</checkbox>
+							<checkbox name="ckbp404" id="ckbp404" text="Total SWP NOD ">
+								<gridbagconstraints weightx="0.5" anchor="GridBagConstraints.WEST" gridx="1" gridy="4"/>
+							</checkbox>
+							<checkbox name="ckbp405" id="ckbp405" text="Total SWP ">
+								<gridbagconstraints weightx="0.5" anchor="GridBagConstraints.WEST" gridx="1" gridy="5"/>
+							</checkbox>
+							<checkbox name="ckbp406" id="ckbp406" text="Total SWP A21">
+								<gridbagconstraints weightx="0.5" anchor="GridBagConstraints.WEST" gridx="1" gridy="6"/>
+							</checkbox>
+							<checkbox name="ckbp610" id="ckbp610" text="Stanislaus">
+								<gridbagconstraints weightx="0.5" anchor="GridBagConstraints.WEST" gridx="1" gridy="7"/>
+							</checkbox>
+							<checkbox name="ckbp611" id="ckbp611" text="Tuolumne">
+								<gridbagconstraints weightx="0.5" anchor="GridBagConstraints.WEST" gridx="1" gridy="8"/>
+							</checkbox>
+							<checkbox name="ckbp612" id="ckbp612" text="Merced">
+								<gridbagconstraints weightx="0.5" anchor="GridBagConstraints.WEST" gridx="1" gridy="9"/>
+							</checkbox>
+							<checkbox name="ckbp613" id="ckbp613" text="Friant">
+								<gridbagconstraints weightx="0.5" anchor="GridBagConstraints.WEST" gridx="1" gridy="10"/>
+							</checkbox>
+							<checkbox name="ckbp513" id="ckbp513" text="CCWD Deliveries ">
+								<gridbagconstraints weightx="0.5" anchor="GridBagConstraints.WEST" gridx="1" gridy="11"/>
+							</checkbox>
+							<checkbox name="ckbp517" id="ckbp517" text="CCWD Delivery Salinity ">
+								<gridbagconstraints weightx="0.5" anchor="GridBagConstraints.WEST" gridx="1" gridy="12"/>
+							</checkbox>
+						</panel>
+
+						<panel layout="GridBagLayout">
+							<gridbagconstraints insets="0,0,0,0" anchor="GridBagConstraints.NORTHWEST" gridx="4" gridy="2"
+												ipady="7" gridheight="1"/>
+							<label text="Salinity" font="Tahoma-BOLD-14" foreground="3366FF" preferredsize="150,20">
+								<gridbagconstraints insets="2,0,2,0" anchor="GridBagConstraints.WEST" gridx="1" gridy="1"/>
+							</label>
+							<checkbox name="ckbp409" id="ckbp409" text="All Delta" visible="false">
+								<gridbagconstraints weightx="0.5" anchor="GridBagConstraints.WEST" gridx="1" gridy="2"/>
+							</checkbox>
+							<checkbox name="ckbp410" id="ckbp410" text="Jersey Point">
+								<gridbagconstraints weightx="0.5" anchor="GridBagConstraints.WEST" gridx="1" gridy="3"/>
+							</checkbox>
+							<checkbox name="ckbp411" id="ckbp411" text="Rock Slough ">
+								<gridbagconstraints weightx="0.5" anchor="GridBagConstraints.WEST" gridx="1" gridy="4"/>
+							</checkbox>
+							<checkbox name="ckbp412" id="ckbp412" text="Emmaton ">
+								<gridbagconstraints weightx="0.5" anchor="GridBagConstraints.WEST" gridx="1" gridy="5"/>
+							</checkbox>
+							<checkbox name="ckbp413" id="ckbp413" text="Collinsville " enabled="true">
+								<gridbagconstraints weightx="0.5" anchor="GridBagConstraints.WEST" gridx="1" gridy="6"/>
+							</checkbox>
+							<checkbox name="ckbp414" id="ckbp414" text="Antioch " enabled="true">
+								<gridbagconstraints weightx="0.5" anchor="GridBagConstraints.WEST" gridx="1" gridy="7"/>
+							</checkbox>
+							<checkbox name="ckbp415" id="ckbp415" text="Chipps " enabled="true">
+								<gridbagconstraints weightx="0.5" anchor="GridBagConstraints.WEST" gridx="1" gridy="8"/>
+							</checkbox>
+							<checkbox name="ckbp614" id="ckbp614" text="Vernalis">
+								<gridbagconstraints weightx="0.5" anchor="GridBagConstraints.WEST" gridx="1" gridy="9"/>
+							</checkbox>
+							<checkbox name="ckbp416" id="ckbp416" text="Victoria Intake  " visible="false">
+								<gridbagconstraints weightx="0.5" anchor="GridBagConstraints.WEST" gridx="1" gridy="10"/>
+							</checkbox>
+							<checkbox name="ckbp417" id="ckbp417" text="CVP Intake  " visible="false">
+								<gridbagconstraints weightx="0.5" anchor="GridBagConstraints.WEST" gridx="1" gridy="11"/>
+							</checkbox>
+							<checkbox name="ckbp418" id="ckbp418" text="CCFB Intake " visible="false">
+								<gridbagconstraints weightx="0.5" anchor="GridBagConstraints.WEST" gridx="1" gridy="12"/>
+							</checkbox>
+							<checkbox name="ckbp419" id="ckbp419" text="Banks EC " visible="false">
+								<gridbagconstraints weightx="0.5" anchor="GridBagConstraints.WEST" gridx="2" gridy="13"/>
+							</checkbox>
+							<checkbox name="ckbp420" id="ckbp420" text="Jones EC " visible="false">
+								<gridbagconstraints weightx="0.5" anchor="GridBagConstraints.WEST" gridx="1" gridy="14"/>
+							</checkbox>
+						</panel>
+
+						<button name="btnpClear" id="btnpClear" text="Clear All" ActionCommand="AC_Clear">
+							<gridbagconstraints insets="5,0,5,0" weightx="0.5" anchor="GridBagConstraints.WEST" gridx="1" gridy="3"/>
+						</button>
+						<label font="Tahoma-BOLD-13" foreground="CC3333" text="CTRL+Click item to display  ">
+							<gridbagconstraints weightx="0.5" anchor="GridBagConstraints.EAST" gridx="4" gridy="3"
+												gridwidth="3"/>
+						</label>
+					</panel>
+				</panel>
+				<panel layout="FlowLayout(FlowLayout.LEFT)" name="Delivery Shortages">
+					<panel id="DShort" name="Delivery Shortages" layout="GridBagLayout">
+						<panel layout="GridBagLayout">
+							<gridbagconstraints insets="0,0,0,0" anchor="GridBagConstraints.NORTHWEST" gridx="1" gridy="1"
+												gridheight="1"/>
+							<label text="SWP Delivery Shortages " font="Tahoma-BOLD-14" foreground="3366FF" preferredsize="200,20">
+								<gridbagconstraints insets="2,0,2,0" anchor="GridBagConstraints.WEST" gridx="1" gridy="1"/>
+							</label>
+							<checkbox name="ckbp851" id="ckbp851" text="Water Rights ">
+								<gridbagconstraints weightx="0.5" anchor="GridBagConstraints.WEST" gridx="1" gridy="2"/>
+							</checkbox>
+							<checkbox name="ckbp852" id="ckbp852" text="Ag NOD ">
+								<gridbagconstraints weightx="0.5" anchor="GridBagConstraints.WEST" gridx="1" gridy="3"/>
+							</checkbox>
+							<checkbox name="ckbp853" id="ckbp853" text="Ag SOD ">
+								<gridbagconstraints weightx="0.5" anchor="GridBagConstraints.WEST" gridx="1" gridy="4"/>
+							</checkbox>
+							<checkbox name="ckbp854" id="ckbp854" text="Ag Total ">
+								<gridbagconstraints weightx="0.5" anchor="GridBagConstraints.WEST" gridx="1" gridy="5"/>
+							</checkbox>
+							<checkbox name="ckbp855" id="ckbp855" text="M and I NOD ">
+								<gridbagconstraints weightx="0.5" anchor="GridBagConstraints.WEST" gridx="1" gridy="6"/>
+							</checkbox>
+							<checkbox name="ckbp856" id="ckbp856" text="M and I SOD ">
+								<gridbagconstraints weightx="0.5" anchor="GridBagConstraints.WEST" gridx="1" gridy="7"/>
+							</checkbox>
+							<checkbox name="ckbp857" id="ckbp857" text="M and I Total ">
+								<gridbagconstraints weightx="0.5" anchor="GridBagConstraints.WEST" gridx="1" gridy="8"/>
+							</checkbox>
+							<checkbox name="ckbp858" id="ckbp858" text="MWD ">
+								<gridbagconstraints weightx="0.5" anchor="GridBagConstraints.WEST" gridx="1" gridy="9"/>
+							</checkbox>
+							<checkbox name="ckbp859" id="ckbp859" text="Other ">
+								<gridbagconstraints weightx="0.5" anchor="GridBagConstraints.WEST" gridx="1" gridy="10"/>
+							</checkbox>
+							<checkbox name="ckbp860" id="ckbp860" text="Losses ">
+								<gridbagconstraints weightx="0.5" anchor="GridBagConstraints.WEST" gridx="1" gridy="11"/>
+							</checkbox>
+							<checkbox name="ckbp861" id="ckbp861" text="Total NOD ">
+								<gridbagconstraints weightx="0.5" anchor="GridBagConstraints.WEST" gridx="1" gridy="12"/>
+							</checkbox>
+							<checkbox name="ckbp862" id="ckbp862" text="Total SOD ">
+								<gridbagconstraints weightx="0.5" anchor="GridBagConstraints.WEST" gridx="1" gridy="13"/>
+							</checkbox>
+							<checkbox name="ckbp863" id="ckbp863" text="Total Shortage ">
+								<gridbagconstraints weightx="0.5" anchor="GridBagConstraints.WEST" gridx="1" gridy="14"/>
+							</checkbox>
+						</panel>
+						<panel layout="GridBagLayout">
+							<gridbagconstraints insets="0,0,0,0" anchor="GridBagConstraints.NORTHWEST" gridx="2" gridy="1"
+												gridheight="1"/>
+							<label text="CVP SOD Delivery Shortages" font="Tahoma-BOLD-14" foreground="3366FF" preferredsize="200,20">
+								<gridbagconstraints insets="2,0,2,0" anchor="GridBagConstraints.WEST" gridx="1" gridy="1"/>
+							</label>
+							<checkbox name="ckbp881" id="ckbp881" text="Ag SOD ">
+								<gridbagconstraints weightx="0.5" anchor="GridBagConstraints.WEST" gridx="1" gridy="2"/>
+							</checkbox>
+							<checkbox name="ckbp882" id="ckbp882" text="M and I SOD ">
+								<gridbagconstraints weightx="0.5" anchor="GridBagConstraints.WEST" gridx="1" gridy="3"/>
+							</checkbox>
+							<checkbox name="ckbp883" id="ckbp883" text="Exchange SOD ">
+								<gridbagconstraints weightx="0.5" anchor="GridBagConstraints.WEST" gridx="1" gridy="4"/>
+							</checkbox>
+							<checkbox name="ckbp884" id="ckbp884" text="Refuge SOD ">
+								<gridbagconstraints weightx="0.5" anchor="GridBagConstraints.WEST" gridx="1" gridy="5"/>
+							</checkbox>
+							<checkbox name="ckbp885" id="ckbp885" text="Losses SOD ">
+								<gridbagconstraints weightx="0.5" anchor="GridBagConstraints.WEST" gridx="1" gridy="6"/>
+							</checkbox>
+							<checkbox name="ckbp886" id="ckbp886" text="Total SOD Shortage ">
+								<gridbagconstraints weightx="0.5" anchor="GridBagConstraints.WEST" gridx="1" gridy="7"/>
+							</checkbox>
+						</panel>
+						<button name="btnpClear_DShort" id="btnpClear_DShort" text="Clear All" ActionCommand="AC_Clear">
+							<gridbagconstraints insets="5,0,5,0" weightx="0.5" anchor="GridBagConstraints.WEST" gridx="1" gridy="2"/>
+						</button>
+					</panel>
+				</panel>
+			</tabbedpane>
+			</panel>
+		</panel>
+	</panel>
+</panel>

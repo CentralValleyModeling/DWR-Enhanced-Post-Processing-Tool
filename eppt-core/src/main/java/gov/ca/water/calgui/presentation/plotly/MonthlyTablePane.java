@@ -20,9 +20,11 @@ import gov.ca.water.calgui.busservice.impl.MonthPeriod;
 import javafx.application.Platform;
 import javafx.collections.ObservableList;
 import javafx.embed.swing.JFXPanel;
+import javafx.event.ActionEvent;
 import javafx.geometry.Orientation;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeTableView;
 import javafx.scene.layout.BorderPane;
@@ -42,9 +44,10 @@ class MonthlyTablePane extends JFXPanel
 	private final WaterYearDefinition _waterYearDefinition;
 	private final EpptReportingComputedSet _epptReportingComputedSet;
 	private final List<MonthPeriod> _selectedMonthlyPeriods;
+	private RmaTreeTableView<MonthlyTableTableModel, MonthlyPaneRow> _treeView;
+	private CheckBox _comparisonModeCheckbox;
 
-	MonthlyTablePane(String plotTitle, WaterYearDefinition waterYearDefinition, EpptReportingComputedSet epptReportingComputedSet,
-					 List<MonthPeriod> selectedMonthlyPeriods)
+	MonthlyTablePane(String plotTitle, WaterYearDefinition waterYearDefinition, EpptReportingComputedSet epptReportingComputedSet, List<MonthPeriod> selectedMonthlyPeriods)
 	{
 		_plotTitle = plotTitle;
 		_waterYearDefinition = waterYearDefinition;
@@ -57,11 +60,39 @@ class MonthlyTablePane extends JFXPanel
 	private void init()
 	{
 		BorderPane borderPane = new BorderPane();
-		RmaTreeTableView<MonthlyTableModel, MonthlyPaneRow> treeView = new RmaTreeTableView<>();
-		MonthlyTableModel monthlyTableModel = new MonthlyTableModel(_plotTitle, _waterYearDefinition, _epptReportingComputedSet, _selectedMonthlyPeriods);
-		treeView.setModel(monthlyTableModel);
-		treeView.setCopyEnabled(true);
-		ObservableList<TreeItem<MonthlyPaneRow>> treeItems = treeView.getRoot().getChildren();
+		_treeView = new RmaTreeTableView<>();
+		_treeView.setCopyEnabled(true);
+		setSequentialTableModel();
+		borderPane.setCenter(_treeView);
+		Button copyDataButton = new Button("Copy Data");
+		_comparisonModeCheckbox = new CheckBox("Comparison Mode");
+		_comparisonModeCheckbox.setOnAction(this::toggleTableModel);
+		copyDataButton.setOnAction(evt -> TreeTableUtil.copyValuesToClipboard(_treeView));
+
+		FlowPane flowPane = new FlowPane(Orientation.HORIZONTAL, 5.0, 10.0, copyDataButton, _comparisonModeCheckbox);
+		borderPane.setBottom(flowPane);
+		setScene(new Scene(borderPane));
+	}
+
+	private void toggleTableModel(ActionEvent evt)
+	{
+		if(_comparisonModeCheckbox.isSelected())
+		{
+			setSideBySideTableModel();
+		}
+		else
+		{
+			setSequentialTableModel();
+		}
+	}
+
+	private void setSequentialTableModel()
+	{
+		MonthlySequentialTableModel monthlySequentialTableModel = new MonthlySequentialTableModel(_plotTitle, _waterYearDefinition, _epptReportingComputedSet,
+				_selectedMonthlyPeriods);
+		_treeView.setModel(monthlySequentialTableModel);
+		_treeView.setColumnResizePolicy(TreeTableView.CONSTRAINED_RESIZE_POLICY);
+		ObservableList<TreeItem<MonthlyPaneRow>> treeItems = _treeView.getRoot().getChildren();
 		for(TreeItem<MonthlyPaneRow> treeItem : treeItems)
 		{
 			if(treeItem != null)
@@ -69,14 +100,23 @@ class MonthlyTablePane extends JFXPanel
 				treeItem.setExpanded(true);
 			}
 		}
-		treeView.setColumnResizePolicy(TreeTableView.CONSTRAINED_RESIZE_POLICY);
-		treeView.getColumnFromSpec(monthlyTableModel.getColumnSpecs().get(0)).setMinWidth(250);
-		borderPane.setCenter(treeView);
-		FlowPane flowPane = new FlowPane(Orientation.HORIZONTAL);
-		Button copyDataButton = new Button("Copy Data");
-		copyDataButton.setOnAction(evt->TreeTableUtil.copyValuesToClipboard(treeView));
-		flowPane.getChildren().add(copyDataButton);
-		borderPane.setBottom(flowPane);
-		setScene(new Scene(borderPane));
+		_treeView.getColumnFromSpec(monthlySequentialTableModel.getColumnSpecs().get(0)).setPrefWidth(250);
+	}
+
+	private void setSideBySideTableModel()
+	{
+		_treeView.setColumnResizePolicy(TreeTableView.UNCONSTRAINED_RESIZE_POLICY);
+		MonthlySideBySideTableModel monthlySequentialTableModel = new MonthlySideBySideTableModel(_plotTitle, _waterYearDefinition, _epptReportingComputedSet,
+				_selectedMonthlyPeriods);
+		_treeView.setModel(monthlySequentialTableModel);
+		ObservableList<TreeItem<MonthlyPaneRow>> treeItems = _treeView.getRoot().getChildren();
+		for(TreeItem<MonthlyPaneRow> treeItem : treeItems)
+		{
+			if(treeItem != null)
+			{
+				treeItem.setExpanded(true);
+			}
+		}
+		_treeView.getColumnFromSpec(monthlySequentialTableModel.getColumnSpecs().get(0)).setPrefWidth(250);
 	}
 }

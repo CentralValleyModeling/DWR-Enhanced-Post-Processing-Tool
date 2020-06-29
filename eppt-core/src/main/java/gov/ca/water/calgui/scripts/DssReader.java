@@ -38,6 +38,7 @@ import gov.ca.water.calgui.bo.ThresholdLinksBO;
 import gov.ca.water.calgui.bo.WaterYearDefinition;
 import gov.ca.water.calgui.busservice.impl.DSSGrabber1SvcImpl;
 import gov.ca.water.calgui.busservice.impl.DetailedIssuesReader;
+import gov.ca.water.calgui.busservice.impl.ErrorValueFlags;
 import gov.ca.water.calgui.busservice.impl.GuiLinksSeedDataSvcImpl;
 import gov.ca.water.calgui.busservice.impl.MonthPeriod;
 import gov.ca.water.calgui.busservice.impl.ThresholdLinksSeedDataSvc;
@@ -84,7 +85,7 @@ public class DssReader
 	@Scriptable
 	public NavigableMap<Integer, Double> getYearlyGuiLinkData(int guiID, Month month) throws DssMissingRecordException
 	{
-		WaterYearDefinition waterYearDefinition = new WaterYearDefinition("", month, month.minus(1));
+		WaterYearDefinition waterYearDefinition = new WaterYearDefinition("", month, month.minus(1), 1, 1);
 		return filterPeriodYearly(getGuiLinkData(guiID, true), waterYearDefinition);
 	}
 
@@ -110,7 +111,7 @@ public class DssReader
 	@Scriptable
 	public NavigableMap<Integer, Double> getYearlyDtsData(int dtsId, Month month) throws DssMissingRecordException
 	{
-		WaterYearDefinition waterYearDefinition = new WaterYearDefinition("", month, month.minus(1));
+		WaterYearDefinition waterYearDefinition = new WaterYearDefinition("", month, month.minus(1), 1, 1);
 		return filterPeriodYearly(getDtsData(dtsId, true), waterYearDefinition);
 	}
 
@@ -219,7 +220,7 @@ public class DssReader
 		int offset = (int) TimeUnit.MILLISECONDS.toMinutes(TimeZone.getDefault().getRawOffset());
 		Date javaDate = hecTime.getJavaDate(offset);
 		LocalDateTime localDateTime = LocalDateTime.ofInstant(javaDate.toInstant(), ZoneId.systemDefault());
-		if(RMAConst.isValidValue(value) && value != -3.402823466E38)
+		if(RMAConst.isValidValue(value) && !ErrorValueFlags.isErrorValue(value))
 		{
 			if(tsc.getParameterName().toLowerCase().contains("percent")
 					|| tsc.getUnits().toLowerCase().contains("percent")
@@ -395,7 +396,7 @@ public class DssReader
 	public NavigableMap<Integer, Double> filterPeriodYearly(NavigableMap<LocalDateTime, Double> input,
 															Month startMonth)
 	{
-		return filterPeriodYearly(input, new WaterYearDefinition("Yearly", startMonth, startMonth.minus(1)));
+		return filterPeriodYearly(input, new WaterYearDefinition("Yearly", startMonth, startMonth.minus(1), 1, 1));
 	}
 
 	@Scriptable
@@ -459,7 +460,7 @@ public class DssReader
 			for(Map.Entry<LocalDateTime, Double> entry : input.entrySet())
 			{
 				LocalDateTime key = entry.getKey();
-				if(key.getMonth() == yearMonth.plusMonths(1).getMonth() && key.getYear() == yearMonth.plusMonths(1).getYear())
+				if(key.minusMonths(1).getMonth() == yearMonth.getMonth() && key.minusMonths(1).getYear() == yearMonth.getYear())
 				{
 					LOGGER.at(Level.FINE)
 						  .log("Value for %s: %s YearMonth: %s", year, entry.getValue(), YearMonth.of(key.getYear(), key.getMonth()));

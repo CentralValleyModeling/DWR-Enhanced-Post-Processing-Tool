@@ -95,7 +95,7 @@
 								<checkbox name="RepckbScenarioDiff" id="RepckbScenarioDiff" text="Display Scenario Difference" selected="false">
 									<gridbagconstraints insets="0,0,5,3" anchor="GridBagConstraints.WEST" gridx="1" gridy="0"/>
 								</checkbox>
-								<checkbox name="RepckbTimeSeriesPlot" id="RepckbTimeSeriesPlot" text="Display Time Series Plot" selected="true">
+								<checkbox name="RepckbTimeSeriesPlot" id="RepckbTimeSeriesPlot" text="Display Timeseries Plot" selected="true">
 									<gridbagconstraints insets="0,0,5,3" anchor="GridBagConstraints.WEST" gridx="1" gridy="1"/>
 								</checkbox>
 								<checkbox name="RepckbBAWPlot" id="RepckbBAWPlot" enabled="true" text="Display Box and Whiskers Plot">

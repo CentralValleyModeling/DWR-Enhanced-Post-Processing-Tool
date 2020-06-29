@@ -136,13 +136,13 @@ class ScenarioTableModel extends RmaTreeTableModel<ScenarioTableRowModel>
 		getColumnSpecs().add(F_PART_COL_SPEC);
 	}
 
-	synchronized Optional<ScenarioRowModel> getRowForScenarioRun(EpptScenarioRun oldScenarioRun)
+	synchronized Optional<ScenarioRowModel> getRowForScenarioRun(EpptScenarioRun scenarioRun)
 	{
 		return getRows()
 				.stream()
 				.filter(r -> r instanceof ScenarioRowModel)
 				.map(r -> (ScenarioRowModel) r)
-				.filter(r -> r.getScenarioRun().equals(oldScenarioRun))
+				.filter(r -> r.getScenarioRun().equals(scenarioRun))
 				.findAny();
 	}
 
