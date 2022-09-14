@@ -42,13 +42,13 @@
 			<scope>test</scope>
 		</dependency>
 		<dependency>
-			<groupId>rma.services.annotations</groupId>
+			<groupId>mil.army.usace.hec</groupId>
 			<artifactId>service-annotations</artifactId>
-			<version>1.2</version>
+			<version>1.2.1</version>
 			<scope>compile</scope>
 		</dependency>
 		<dependency>
-			<groupId>rma.util</groupId>
+			<groupId>mil.army.usace.hec</groupId>
 			<artifactId>lookup</artifactId>
 			<version>1.0</version>
 		</dependency>

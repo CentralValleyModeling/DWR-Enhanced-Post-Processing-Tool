@@ -26,9 +26,9 @@ import java.util.StringTokenizer;
 import java.util.Vector;
 import javax.swing.table.AbstractTableModel;
 
-import com.sun.xml.tree.TreeWalker;
-import com.sun.xml.tree.XmlDocument;
+import org.w3c.dom.Document;
 import org.w3c.dom.Element;
+import org.w3c.dom.NodeList;
 import vista.set.DataReference;
 import vista.set.DefaultReference;
 import vista.set.Pathname;
@@ -559,11 +559,11 @@ public class MultipleTimeSeries implements Serializable
 		{
 			_name = _name.toUpperCase() + ".MTS";
 		}
-		TreeWalker tw = new TreeWalker(de);
 		int rindex = 0;
-		while(true)
+		NodeList elements = de.getElementsByTagName("row");
+		for(int i = 0; i < elements.getLength(); i++)
 		{
-			Element re = tw.getNextElement("row");
+			Element re = (Element) elements.item(i);
 			if(re == null)
 			{
 				break;
@@ -584,7 +584,7 @@ public class MultipleTimeSeries implements Serializable
 	/**
 	 *
 	 */
-	public void toXml(XmlDocument doc, Element ae)
+	public void toXml(Document doc, Element ae)
 	{
 		Element de = doc.createElement("MTS");
 		de.setAttribute("name", _name);

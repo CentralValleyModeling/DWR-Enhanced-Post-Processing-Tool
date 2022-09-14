@@ -74,7 +74,7 @@ public class CustomResultsPanel extends EpptPanel
 			_displayHelper = new DisplayHelper(this, _epptConfigurationController);
 			super.setLayout(new BorderLayout());
 			Container swixmlCustomResultsPanel = renderSwixml(CUSTOM_RESULTS_XML_FILE);
-			super.add(swixmlCustomResultsPanel);
+//			super.add(swixmlCustomResultsPanel);
 			WRIMSGUILinks.buildWRIMSGUI((JPanel) getSwingEngine().find("WRIMS"));
 			JButton retrieveBtn = GuiUtils.getCLGPanel().getRetrievePanel().getRetrieveBtn();
 			for(ActionListener al : retrieveBtn.getActionListeners())

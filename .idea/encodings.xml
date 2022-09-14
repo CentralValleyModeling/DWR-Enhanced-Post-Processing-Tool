@@ -2,17 +2,43 @@
 <project version="4">
   <component name="Encoding">
     <file url="file://$PROJECT_DIR$/application" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/application/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/application/src/main/resources" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/branding" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/branding/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/branding/src/main/resources" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/eppt-calsim-gui" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/eppt-calsim-gui/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/eppt-calsim-gui/src/main/resources" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/eppt-core" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/eppt-core/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/eppt-core/src/main/resources" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/eppt-jasper-engine" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/eppt-jasper-engine/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/eppt-jasper-engine/src/main/resources" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/eppt-nbui" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/eppt-nbui/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/eppt-nbui/src/main/resources" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/eppt-parent" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/eppt-parent/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/eppt-parent/src/main/resources" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/eppt-plots" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/eppt-plots/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/eppt-plots/src/main/resources" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/eppt-report-engine" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/eppt-report-engine/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/eppt-report-engine/src/main/resources" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/eppt-scenario" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/eppt-scenario/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/eppt-scenario/src/main/resources" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/eppt-trend-reporting" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/eppt-trend-reporting/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/eppt-trend-reporting/src/main/resources" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/eppt-ui" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/eppt-ui/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/eppt-ui/src/main/resources" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/eppt-vista" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/eppt-vista/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/eppt-vista/src/main/resouces" charset="UTF-8" />
   </component>
 </project>

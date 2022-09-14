@@ -35,12 +35,12 @@ import static gov.ca.water.calgui.constant.Constant.CONFIG_DIR;
 public abstract class EpptPanel extends RmaJPanel
 {
 	private static final Logger LOGGER = Logger.getLogger(EpptPanel.class.getName());
-	private final SwingEngine _swingEngine;
+	private final SwingEngine<EpptPanel> _swingEngine;
 	private ActionListener _actionListener;
 
 	public EpptPanel()
 	{
-		_swingEngine = new SwingEngine();
+		_swingEngine = new SwingEngine<>(this);
 	}
 
 	public static void setCheckboxesSelectedRecusive(boolean b, Container container)

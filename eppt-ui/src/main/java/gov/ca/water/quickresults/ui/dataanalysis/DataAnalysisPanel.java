@@ -48,7 +48,7 @@ public class DataAnalysisPanel extends EpptPanel
 		{
 			super.setLayout(new BorderLayout());
 			Container swixmlQuickResultsPanel = renderSwixml(DATA_ANALYSIS_XML_FILE);
-			super.add(swixmlQuickResultsPanel);
+//			super.add(swixmlQuickResultsPanel);
 			JTextField tfTemplateFile = (JTextField) getSwingEngine().find("tfTemplateFILE");
 			Path defaultTemplateFile = Paths.get(Constant.CONFIG_DIR).resolve(tfTemplateFile.getText());
 			tfTemplateFile.setToolTipText(defaultTemplateFile.toString());

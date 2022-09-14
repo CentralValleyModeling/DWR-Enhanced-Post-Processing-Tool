@@ -37,11 +37,34 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
-import javax.swing.*;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import javax.swing.JButton;
+import javax.swing.JCheckBox;
+import javax.swing.JComboBox;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTabbedPane;
+import javax.swing.JTextArea;
+import javax.swing.JTextField;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
 
-import com.sun.xml.tree.TreeWalker;
-import com.sun.xml.tree.XmlDocument;
+import org.w3c.dom.Document;
 import org.w3c.dom.Element;
+import org.w3c.dom.NodeList;
 
 //import java.util.*;
 //import javax.swing.table.*;
@@ -535,7 +558,9 @@ public class MSRGui
 		_mainFile = filename;
 		try
 		{
-			XmlDocument doc = XmlDocument.createXmlDocument(new FileInputStream(_mainFile), false);
+			DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+			DocumentBuilder db = dbf.newDocumentBuilder();
+			Document doc = db.parse(new File(_mainFile));
 			fromXml(doc.getDocumentElement());
 		}
 		catch(Exception e)
@@ -559,15 +584,28 @@ public class MSRGui
 			}
 			_mainFile = filename;
 		}
-		XmlDocument mstydoc = new XmlDocument();
-		XmlDocument doc = new XmlDocument();
-		Element master = doc.createElement("MultiStudyFile");
-		doc.appendChild(master);
-		toXml(mstydoc);
-		PrintWriter pw = new PrintWriter(new FileOutputStream(_mainFile));
-		mstydoc.write(pw);
-		pw.close();
-		_changed = false;
+
+		try(PrintWriter pw = new PrintWriter(Files.newOutputStream(Paths.get(_mainFile)));)
+		{
+			DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
+			DocumentBuilder docBuilder = docFactory.newDocumentBuilder();
+			Document doc = docBuilder.newDocument();
+			Document mstydoc = docBuilder.newDocument();
+			Element master = doc.createElement("MultiStudyFile");
+			doc.appendChild(master);
+			toXml(mstydoc);
+			TransformerFactory transformerFactory = TransformerFactory.newInstance();
+			Transformer transformer = transformerFactory.newTransformer();
+			DOMSource source = new DOMSource(mstydoc);
+			StreamResult result = new StreamResult(pw);
+
+			transformer.transform(source, result);
+			_changed = false;
+		}
+		catch(ParserConfigurationException | TransformerException e)
+		{
+			throw new IOException(e);
+		}
 	}
 
 	/**
@@ -580,22 +618,34 @@ public class MSRGui
 		{
 			return;
 		}
-		XmlDocument mstydoc = new XmlDocument();
-		XmlDocument doc = new XmlDocument();
-		Element master = doc.createElement("MultiStudyFile");
-		doc.appendChild(master);
-		_mainFile = filename;
-		toXml(mstydoc);
-		PrintWriter pw = new PrintWriter(new FileOutputStream(filename));
-		mstydoc.write(pw);
-		pw.close();
-		_changed = false;
+
+		try(PrintWriter pw = new PrintWriter(Files.newOutputStream(Paths.get(filename)));)
+		{
+			DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
+			DocumentBuilder docBuilder = docFactory.newDocumentBuilder();
+			Document doc = docBuilder.newDocument();
+			Document mstydoc = docBuilder.newDocument();
+			Element master = doc.createElement("MultiStudyFile");
+			doc.appendChild(master);
+			toXml(mstydoc);
+			TransformerFactory transformerFactory = TransformerFactory.newInstance();
+			Transformer transformer = transformerFactory.newTransformer();
+			DOMSource source = new DOMSource(mstydoc);
+			StreamResult result = new StreamResult(pw);
+
+			transformer.transform(source, result);
+			_changed = false;
+		}
+		catch(ParserConfigurationException | TransformerException e)
+		{
+			throw new IOException(e);
+		}
 	}
 
 	/**
 	 * Returns a element of an xml document
 	 */
-	public void toXml(XmlDocument doc)
+	public void toXml(Document doc)
 	{
 		Element el = doc.createElement("MultiStudyFile");
 		el.appendChild(doc.createComment("MultiStudy xml format"));
@@ -627,11 +677,12 @@ public class MSRGui
 	 */
 	public void fromXml(Element pe) throws IOException
 	{
-		TreeWalker tw = new TreeWalker(pe);
 		// study items
+		NodeList studyElements = pe.getElementsByTagName("Study");
 		for(int i = 0; i < 4; i++)
 		{
-			Element se = tw.getNextElement("Study");
+
+			Element se = (Element) studyElements.item(i);
 			if(i == 0)
 			{
 				setD1485Sty(se.getAttribute("D1485"));
@@ -649,9 +700,10 @@ public class MSRGui
 				setEWASty(se.getAttribute("EWA"));
 			}
 		}
+		NodeList transferElements = pe.getElementsByTagName("Transfer");
 		for(int i = 0; i < 2; i++)
 		{
-			Element se = tw.getNextElement("Transfer");
+			Element se = (Element) transferElements.item(i);
 			if(i == 0)
 			{
 				setB2Transfer(se.getAttribute("B2"));

@@ -28,73 +28,42 @@
 	</properties>
 	<dependencies>
 		<dependency>
-			<groupId>hecjavadev-core</groupId>
-			<artifactId>hec-core</artifactId>
-			<version>6.0</version>
-			<classifier>DeltaERT-1-4-0-97-Obfuscated</classifier>
-			<exclusions>
-				<exclusion>
-					<groupId>*</groupId>
-					<artifactId>*</artifactId>
-				</exclusion>
-			</exclusions>
-		</dependency>
-		<dependency>
-			<groupId>hecjavadev-core</groupId>
-			<artifactId>rma</artifactId>
-			<version>6.0</version>
-			<classifier>DeltaERT-1-4-0-97-Obfuscated</classifier>
-			<exclusions>
-				<exclusion>
-					<groupId>*</groupId>
-					<artifactId>*</artifactId>
-				</exclusion>
-			</exclusions>
-		</dependency>
-		<dependency>
-			<groupId>hec.dssgui</groupId>
-			<artifactId>hec-dssvue</artifactId>
-			<version>3.0.1</version>
-			<classifier>DeltaERT-1-4-0-97-Obfuscated</classifier>
-			<exclusions>
-				<exclusion>
-					<groupId>*</groupId>
-					<artifactId>*</artifactId>
-				</exclusion>
-			</exclusions>
+			<groupId>mil.army.usace.hec</groupId>
+			<artifactId>hec-monolith</artifactId>
+			<version>3.0.0</version>
 		</dependency>
 		<dependency>
 			<groupId>org.junit.jupiter</groupId>
 			<artifactId>junit-jupiter-api</artifactId>
-			<version>5.4.0</version>
+			<version>5.8.1</version>
 			<scope>test</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.junit.jupiter</groupId>
 			<artifactId>junit-jupiter-engine</artifactId>
-			<version>5.4.0</version>
+			<version>5.8.1</version>
 			<scope>test</scope>
 		</dependency>
 		<dependency>
 			<groupId>com.google.flogger</groupId>
 			<artifactId>flogger</artifactId>
-			<version>0.3.1</version>
+			<version>0.5.1</version>
 		</dependency>
 		<dependency>
 			<groupId>com.google.flogger</groupId>
 			<artifactId>flogger-system-backend</artifactId>
-			<version>0.3.1</version>
+			<version>0.5.1</version>
 			<scope>compile</scope>
 		</dependency>
 		<dependency>
 			<groupId>com.google.errorprone</groupId>
 			<artifactId>error_prone_annotations</artifactId>
-			<version>2.3.2</version>
+			<version>2.3.4</version>
 		</dependency>
 		<dependency>
 			<groupId>com.google.code.findbugs</groupId>
 			<artifactId>jsr305</artifactId>
-			<version>3.0.1</version>
+			<version>3.0.2</version>
 		</dependency>
 		<dependency>
 			<groupId>org.ow2.asm</groupId>
@@ -131,18 +100,17 @@
 						<id>copy-dependencies</id>
 						<phase>validate</phase>
 						<goals>
-							<goal>copy</goal>
+							<goal>unpack</goal>
 						</goals>
 					</execution>
 				</executions>
 				<configuration>
 					<artifactItems>
 						<artifactItem>
-							<groupId>hec</groupId>
+							<groupId>mil.army.usace.hec</groupId>
 							<artifactId>javaHeclib</artifactId>
-							<version>7-GS</version>
-							<type>dll</type>
-							<destFileName>javaHeclib.dll</destFileName>
+							<version>7-IP-6-win-x86_64</version>
+							<type>zip</type>
 						</artifactItem>
 					</artifactItems>
 					<outputDirectory>${project.build.directory}/lib</outputDirectory>

@@ -17,15 +17,17 @@ import java.awt.Component;
 import java.awt.Frame;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
+import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.Serializable;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.swing.*;
+import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
+import javax.swing.JPopupMenu;
+import javax.swing.JTree;
 import javax.swing.event.TreeModelEvent;
 import javax.swing.event.TreeModelListener;
 import javax.swing.tree.DefaultMutableTreeNode;
@@ -33,10 +35,16 @@ import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.MutableTreeNode;
 import javax.swing.tree.TreeNode;
 import javax.swing.tree.TreePath;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
 
-import com.sun.xml.tree.TreeWalker;
-import com.sun.xml.tree.XmlDocument;
+import org.w3c.dom.Document;
 import org.w3c.dom.Element;
+import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
 //import javax.swing.JTree.*;
@@ -545,17 +553,22 @@ public class GeneralTreeModel extends DefaultTreeModel implements Serializable
 	 */
 	public void saveFile(String fname) throws IOException
 	{
-		XmlDocument doc = new XmlDocument();
-		try(FileOutputStream fos = new FileOutputStream(fname))
+
+		// root elements
+		try(FileOutputStream fos = new FileOutputStream(fname);
+			PrintWriter pw = new PrintWriter(fos);)
 		{
-			PrintWriter pw = new PrintWriter(fos);
+			DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
+			DocumentBuilder docBuilder = docFactory.newDocumentBuilder();
+			Document doc = docBuilder.newDocument();
 			saveData(doc);
-			doc.write(pw);
+			TransformerFactory transformerFactory = TransformerFactory.newInstance();
+			Transformer transformer = transformerFactory.newTransformer();
+			DOMSource source = new DOMSource(doc);
+			StreamResult result = new StreamResult(pw);
+			transformer.transform(source, result);
 		}
-		catch(FileNotFoundException fnfe)
-		{
-		}
-		catch(IOException ioe)
+		catch(Exception fnfe)
 		{
 		}
 	}
@@ -563,7 +576,7 @@ public class GeneralTreeModel extends DefaultTreeModel implements Serializable
 	/**
 	 * Saves the tree structure to Xml using the Xml Document class
 	 */
-	public void saveData(XmlDocument doc)
+	public void saveData(Document doc)
 	{
 		//    int children;
 		String rootname = (String) _root.getUserObject();
@@ -816,7 +829,7 @@ public class GeneralTreeModel extends DefaultTreeModel implements Serializable
 	}
 
 	/**
-	 * Reads in and constructs a tree from the XmlDocument at fname
+	 * Reads in and constructs a tree from the Document at fname
 	 */
 	public TreeNode readData(String fname) throws IOException, SAXException
 	{
@@ -828,17 +841,17 @@ public class GeneralTreeModel extends DefaultTreeModel implements Serializable
 		int prvlvl, curlvl;
 		String name;
 		DefaultMutableTreeNode[] nodes = new DefaultMutableTreeNode[100];
-		FileInputStream fis = new FileInputStream(fname);
 		try
 		{
-			XmlDocument doc = XmlDocument.createXmlDocument(fis, false);
+			DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+			DocumentBuilder db = dbf.newDocumentBuilder();
+			Document doc = db.parse(new File(fname));
 			Element top = doc.getDocumentElement();
-			TreeWalker xtt = new TreeWalker(top);
 			parentnode = new DefaultMutableTreeNode(top.getAttribute("name"));
 			_root = parentnode;
-			//      parentlvl = 0;
 			nodes[0] = _root;
-			curel = xtt.getNextElement("node");
+			NodeList nodeElements = top.getElementsByTagName("node");
+			curel = (Element) nodeElements.item(0);
 			name = curel.getAttribute("name");
 			curnode = new DefaultMutableTreeNode(name);
 			curnode.setAllowsChildren(getAllowChildren(name));
@@ -849,9 +862,9 @@ public class GeneralTreeModel extends DefaultTreeModel implements Serializable
 			prvnode = curnode;
 			//      prvel = curel;
 			prvlvl = curlvl;
-			while(true)
+			for(int i = 1; i < nodeElements.getLength(); i++)
 			{
-				curel = xtt.getNextElement("node");
+				curel = (Element) nodeElements.item(i);
 				if(curel == null)
 				{
 					break;
@@ -883,16 +896,15 @@ public class GeneralTreeModel extends DefaultTreeModel implements Serializable
 			}
 			setRoot(_root);
 		}
-		catch(IOException e)
-		{
-			e.printStackTrace(System.err);
-			throw new IOException("File Not Found");
-		}
 		catch(SAXException se)
 		{
 			throw new SAXException("Error trying to read Xml File");
 		}
-		fis.close();
+		catch(Exception e)
+		{
+			e.printStackTrace(System.err);
+			throw new IOException("File Not Found");
+		}
 		return _root;
 	}
 

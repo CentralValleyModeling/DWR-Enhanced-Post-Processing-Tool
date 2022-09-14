@@ -25,16 +25,9 @@
 	<name>EPPT Plots</name>
 	<dependencies>
 		<dependency>
-			<groupId>hecjavadev-core</groupId>
-			<artifactId>hec-core</artifactId>
-			<version>6.0</version>
-			<classifier>DeltaERT-1-4-0-97-Obfuscated</classifier>
-			<exclusions>
-				<exclusion>
-					<groupId>*</groupId>
-					<artifactId>*</artifactId>
-				</exclusion>
-			</exclusions>
+			<groupId>mil.army.usace.hec</groupId>
+			<artifactId>hec-monolith</artifactId>
+			<version>3.0.0</version>
 		</dependency>
 		<dependency>
 			<groupId>com.fasterxml.jackson.core</groupId>

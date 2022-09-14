@@ -35,21 +35,9 @@
 			<version>2.6</version>
 		</dependency>
 		<dependency>
-			<groupId>com.sun</groupId>
-			<artifactId>xml</artifactId>
-			<version>1.0</version>
-			<classifier>Wrims_Distribution</classifier>
-		</dependency>
-		<dependency>
 			<groupId>javax.help</groupId>
 			<artifactId>javahelp</artifactId>
 			<version>2.0.05</version>
-		</dependency>
-		<dependency>
-			<groupId>gov.ca.water</groupId>
-			<artifactId>wrims-schematic</artifactId>
-			<version>1.0</version>
-			<classifier>Wrims_Distribution</classifier>
 		</dependency>
 		<dependency>
 			<groupId>log4j</groupId>
@@ -57,10 +45,9 @@
 			<version>1.2.17</version>
 		</dependency>
 		<dependency>
-			<groupId>gov.ca.water</groupId>
+			<groupId>dsm2.vista</groupId>
 			<artifactId>dsm2-input-model</artifactId>
 			<version>1.0</version>
-			<classifier>Wrims_Distribution</classifier>
 		</dependency>
 		<dependency>
 			<groupId>junit</groupId>
@@ -69,20 +56,6 @@
 			<scope>test</scope>
 		</dependency>
 	</dependencies>
-	<repositories>
-		<repository>
-			<id>rma-maven-library-releases</id>
-			<url>http://artifactory.rmanet.com:2447/artifactory/rma-maven-library-releases</url>
-		</repository>
-		<repository>
-			<id>rma-maven-library-snapshots</id>
-			<url>http://artifactory.rmanet.com:2447/artifactory/rma-maven-library-snapshots</url>
-		</repository>
-		<repository>
-			<id>third-party-maven-library-releases</id>
-			<url>http://artifactory.rmanet.com:2447/artifactory/third-party-maven-library-releases</url>
-		</repository>
-	</repositories>
 	<build>
 		<resources>
 			<resource>

@@ -46,7 +46,7 @@ public class QuickResultsPanel extends EpptPanel
 			_displayHelper = new DisplayHelper(this, epptConfigurationController);
 			super.setLayout(new BorderLayout());
 			Container swixmlQuickResultsPanel = renderSwixml(QUICK_RESULTS_XML_FILE);
-			super.add(swixmlQuickResultsPanel);
+//			super.add(swixmlQuickResultsPanel);
 			Component reptabbedPane = getSwingEngine().find("reptabbedPane");
 			setCheckBoxorMouseListener(reptabbedPane, new QuickResultsMouseListener(this, _displayHelper, epptConfigurationController));
 			// Set up report list

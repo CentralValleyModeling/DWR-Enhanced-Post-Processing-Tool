@@ -45,7 +45,7 @@ import hec.heclib.dss.HecDataManager;
 import hec.heclib.dss.HecDss;
 import hec.heclib.util.HecTime;
 import hec.heclib.util.HecTimeArray;
-import hec.hecmath.computation.r;
+import hec.hecmath.computation.ValueContainer;
 import hec.hecmath.functions.TimeSeriesFunctions;
 import hec.io.TimeSeriesContainer;
 import rma.util.RMAConst;
@@ -533,7 +533,7 @@ public class DSSGrabber1SvcImpl implements IDSSGrabber1Svc
 						{
 							//combine result2 and result together and assign to result.
 							result = TimeSeriesFunctions.add(
-									Arrays.asList(new r(result), new r(result2)),
+									Arrays.asList(new ValueContainer(result), new ValueContainer(result2)),
 									(String) null);
 						}
 					}

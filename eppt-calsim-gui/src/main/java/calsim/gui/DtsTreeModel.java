@@ -17,27 +17,38 @@ import java.awt.FileDialog;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.LineNumberReader;
 import java.io.PrintWriter;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.Vector;
-import javax.swing.*;
+import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
+import javax.swing.JPopupMenu;
+import javax.swing.JTree;
 import javax.swing.event.TreeModelEvent;
 import javax.swing.event.TreeModelListener;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.TreeNode;
 import javax.swing.tree.TreePath;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
 
 import calsim.app.AppUtils;
 import calsim.app.DerivedTimeSeries;
 import calsim.app.MultipleTimeSeries;
-import com.sun.xml.tree.TreeWalker;
-import com.sun.xml.tree.XmlDocument;
+import org.w3c.dom.Document;
 import org.w3c.dom.Element;
+import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 import vista.gui.VistaUtils;
 
@@ -1021,17 +1032,23 @@ public class DtsTreeModel extends GeneralTreeModel
 					return;
 				}
 				DerivedTimeSeries dts;
-				try(InputStream is = new FileInputStream(filename);
+				try(InputStream is = Files.newInputStream(Paths.get(filename));
 					LineNumberReader reader = new LineNumberReader(new InputStreamReader(is)))
 				{
 
 					String check = reader.readLine();
 					if(!check.startsWith("name"))
 					{
-						XmlDocument doc = XmlDocument.createXmlDocument(new FileInputStream(filename), false);
+						DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+						DocumentBuilder db = dbf.newDocumentBuilder();
+						Document doc = db.parse(new File(filename));
 						Element top = doc.getDocumentElement();
-						TreeWalker tw = new TreeWalker(top);
-						Element de = tw.getNextElement("DTS");
+						NodeList elements = top.getElementsByTagName("DTS");
+						if(elements == null || elements.getLength() == 0)
+						{
+							return;
+						}
+						Element de = (Element) elements.item(0);
 						if(de == null)
 						{
 							return;
@@ -1100,10 +1117,16 @@ public class DtsTreeModel extends GeneralTreeModel
 					String check = reader.readLine();
 					if(!check.startsWith("name"))
 					{
-						XmlDocument doc = XmlDocument.createXmlDocument(new FileInputStream(filename), false);
+						DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+						DocumentBuilder db = dbf.newDocumentBuilder();
+						Document doc = db.parse(new File(filename));
 						Element top = doc.getDocumentElement();
-						TreeWalker tw = new TreeWalker(top);
-						Element de = tw.getNextElement("MTS");
+						NodeList elements = top.getElementsByTagName("MTS");
+						if(elements == null || elements.getLength() == 0)
+						{
+							return;
+						}
+						Element de = (Element) elements.item(0);
 						if(de == null)
 						{
 							return;
@@ -1141,52 +1164,61 @@ public class DtsTreeModel extends GeneralTreeModel
 	{
 		DefaultMutableTreeNode node = (DefaultMutableTreeNode) (path.getLastPathComponent());
 		String name = (String) node.getUserObject();
-		XmlDocument dtsdoc = new XmlDocument();
-		Element masterdts;
-		String dtsfile = "default.dts";
-		if(checkExtension(".dts", name))
-		{
-			dtsfile = VistaUtils.getFilenameFromDialog(MAIN_PANEL, FileDialog.SAVE,
-					"dts", "dts File");
-			masterdts = dtsdoc.createElement("DTS_File");
-			if(dtsfile == null)
-			{
-				return;
-			}
-			if(dtsfile.indexOf((int) '.') == -1)  //no extension
-			{
-				dtsfile += ".dts";  //set default extension
-			}
-			dtsdoc.appendChild(masterdts);
-			_dts.toXml(dtsdoc, masterdts);
-		}
-		else if(checkExtension(".mts", name))
-		{
-			dtsfile = VistaUtils.getFilenameFromDialog(MAIN_PANEL, FileDialog.SAVE,
-					"mts", "MTS File");
-			masterdts = dtsdoc.createElement("MTS_File");
-			if(dtsfile == null)
-			{
-				return;
-			}
-			if(dtsfile.indexOf((int) '.') == -1)  //no extension
-			{
-				dtsfile += ".mts";  //set default extension
-			}
-			dtsdoc.appendChild(masterdts);
-			_mts.toXml(dtsdoc, masterdts);
-		}
 		try
 		{
-			PrintWriter pw1 = new PrintWriter(new FileOutputStream(dtsfile));
-			dtsdoc.write(pw1);
-			pw1.close();
+			DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+			DocumentBuilder db = dbf.newDocumentBuilder();
+			Document dtsdoc = db.newDocument();
+			Element masterdts;
+			String dtsfile = "default.dts";
+			if(checkExtension(".dts", name))
+			{
+				dtsfile = VistaUtils.getFilenameFromDialog(MAIN_PANEL, FileDialog.SAVE,
+						"dts", "dts File");
+				masterdts = dtsdoc.createElement("DTS_File");
+				if(dtsfile == null)
+				{
+					return;
+				}
+				if(dtsfile.indexOf((int) '.') == -1)  //no extension
+				{
+					dtsfile += ".dts";  //set default extension
+				}
+				dtsdoc.appendChild(masterdts);
+				_dts.toXml(dtsdoc, masterdts);
+			}
+			else if(checkExtension(".mts", name))
+			{
+				dtsfile = VistaUtils.getFilenameFromDialog(MAIN_PANEL, FileDialog.SAVE,
+						"mts", "MTS File");
+				masterdts = dtsdoc.createElement("MTS_File");
+				if(dtsfile == null)
+				{
+					return;
+				}
+				if(dtsfile.indexOf((int) '.') == -1)  //no extension
+				{
+					dtsfile += ".mts";  //set default extension
+				}
+				dtsdoc.appendChild(masterdts);
+				_mts.toXml(dtsdoc, masterdts);
+			}
+			try(PrintWriter pw1 = new PrintWriter(Files.newOutputStream(Paths.get(dtsfile))))
+			{
+				TransformerFactory transformerFactory = TransformerFactory.newInstance();
+				Transformer transformer = transformerFactory.newTransformer();
+				DOMSource source = new DOMSource(dtsdoc);
+				StreamResult result = new StreamResult(pw1);
+
+				transformer.transform(source, result);
+			}
+			catch(IOException | TransformerException ioe)
+			{
+			}
 		}
-		catch(FileNotFoundException fnfe)
+		catch(ParserConfigurationException e)
 		{
-		}
-		catch(IOException ioe)
-		{
+			throw new IOException(e);
 		}
 	}
 
@@ -1225,27 +1257,34 @@ public class DtsTreeModel extends GeneralTreeModel
 	@Override
 	public void saveFile(String fname) throws IOException
 	{
-		XmlDocument dtsdoc = new XmlDocument();
-		Element masterdts = dtsdoc.createElement("dts_master");
-		dtsdoc.appendChild(masterdts);
-		saveData(dtsdoc, masterdts);
-		saveDts(dtsdoc, masterdts);
-		saveMts(dtsdoc, masterdts);
 		try
 		{
-			PrintWriter pw1 = new PrintWriter(new FileOutputStream(fname));
-			dtsdoc.write(pw1);
-			pw1.close();
+			DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
+			DocumentBuilder docBuilder = docFactory.newDocumentBuilder();
+
+			// root elements
+			Document dtsdoc = docBuilder.newDocument();
+			Element masterdts = dtsdoc.createElement("dts_master");
+			dtsdoc.appendChild(masterdts);
+			saveData(dtsdoc, masterdts);
+			saveDts(dtsdoc, masterdts);
+			saveMts(dtsdoc, masterdts);
+			try(PrintWriter pw1 = new PrintWriter(Files.newOutputStream(Paths.get(fname)));)
+			{
+				TransformerFactory transformerFactory = TransformerFactory.newInstance();
+				Transformer transformer = transformerFactory.newTransformer();
+				DOMSource source = new DOMSource(dtsdoc);
+				StreamResult result = new StreamResult(pw1);
+
+				transformer.transform(source, result);
+			}
 		}
-		catch(FileNotFoundException fnfe)
-		{
-		}
-		catch(IOException ioe)
+		catch(Exception ioe)
 		{
 		}
 	}
 
-	public void saveDts(XmlDocument doc, Element master)
+	public void saveDts(Document doc, Element master)
 	{
 		DerivedTimeSeries[] dtsList = AppUtils.getCurrentProject().getDTSList();
 		if(dtsList != null)
@@ -1257,7 +1296,7 @@ public class DtsTreeModel extends GeneralTreeModel
 		}
 	}
 
-	public void saveMts(XmlDocument doc, Element master)
+	public void saveMts(Document doc, Element master)
 	{
 		MultipleTimeSeries[] mtsList = AppUtils.getCurrentProject().getMTSList();
 		if(mtsList != null)
@@ -1269,7 +1308,7 @@ public class DtsTreeModel extends GeneralTreeModel
 		}
 	}
 
-	public void saveData(XmlDocument doc, Element master)
+	public void saveData(Document doc, Element master)
 	{
 		String rootname = (String) _root.getUserObject();
 		String name;
@@ -1477,25 +1516,27 @@ public class DtsTreeModel extends GeneralTreeModel
 	public TreeNode readData(String fname, String dirname) throws IOException, SAXException
 	{
 		DefaultMutableTreeNode parentnode, prvnode, curnode;
-		Element parentel, prvel, curel;
+		Element prvel, curel;
 		Integer lvl;
 		int prvlvl, curlvl;
 		String name;
 		DefaultMutableTreeNode[] nodes = new DefaultMutableTreeNode[100];
-		FileInputStream fis = new FileInputStream(fname);
 		try
 		{
-			XmlDocument doc = XmlDocument.createXmlDocument(fis, false);
+			DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+			// parse XML file
+			DocumentBuilder db = dbf.newDocumentBuilder();
+
+			Document doc = db.parse(new File(fname));
 			Element top = doc.getDocumentElement();
-			TreeWalker xtt = new TreeWalker(top);
-			parentel = xtt.getNextElement("node");
+			NodeList nodeElements = top.getElementsByTagName("node");
+			Element parentel = (Element) nodeElements.item(0);
 			parentnode = new DefaultMutableTreeNode(parentel.getAttribute("name"));
-			parentel = null;
 			if(!isMerge)
 			{
 				_root = parentnode;
 				nodes[0] = _root;
-				curel = xtt.getNextElement("node");
+				curel = (Element) nodeElements.item(1);
 				name = curel.getAttribute("name");
 				curnode = new DefaultMutableTreeNode(name);
 				curnode.setAllowsChildren(getAllowChildren(name));
@@ -1511,7 +1552,7 @@ public class DtsTreeModel extends GeneralTreeModel
 			{
 				_root = (DefaultMutableTreeNode) readData();
 				nodes[0] = _root;
-				curel = xtt.getNextElement("node");
+				curel = (Element) nodeElements.item(1);
 				name = curel.getAttribute("name");
 				curnode = new DefaultMutableTreeNode(name);
 				curnode.setAllowsChildren(getAllowChildren(name));
@@ -1524,9 +1565,9 @@ public class DtsTreeModel extends GeneralTreeModel
 				prvlvl = curlvl;
 			}
 			isMerge = false;
-			while(true)
+			for(int i = 2; i < nodeElements.getLength(); i++)
 			{
-				curel = xtt.getNextElement("node");
+				curel = (Element) nodeElements.item(i);
 				if(curel == null)
 				{
 					break;
@@ -1565,11 +1606,10 @@ public class DtsTreeModel extends GeneralTreeModel
 			}
 			reload();
 			setRoot(_root);
-			xtt.reset();
-			//   	  Project prj = AppUtils.getCurrentProject();
-			while(true)
+			NodeList dtsElements = top.getElementsByTagName("DTS");
+			for(int i = 0; i < dtsElements.getLength(); i++)
 			{
-				Element de = xtt.getNextElement("DTS");
+				Element de = (Element) dtsElements.item(i);
 				if(de == null)
 				{
 					break;
@@ -1578,10 +1618,10 @@ public class DtsTreeModel extends GeneralTreeModel
 				dts.fromXml(de);
 				prjdts.addElement(dts);
 			}
-			xtt.reset();
-			while(true)
+			NodeList mtsElements = top.getElementsByTagName("MTS");
+			for(int i = 0; i < mtsElements.getLength(); i++)
 			{
-				Element de = xtt.getNextElement("MTS");
+				Element de = (Element) mtsElements.item(i);
 				if(de == null)
 				{
 					break;
@@ -1591,16 +1631,15 @@ public class DtsTreeModel extends GeneralTreeModel
 				prjmts.addElement(mts);
 			}
 		}
-		catch(IOException e)
-		{
-			e.printStackTrace(System.err);
-			throw new IOException("File Not Found", e);
-		}
 		catch(SAXException se)
 		{
 			throw new SAXException("Error trying to read Xml File", se);
 		}
-		fis.close();
+		catch(Exception e)
+		{
+			e.printStackTrace(System.err);
+			throw new IOException("File Not Found", e);
+		}
 		return _root;
 	}
 

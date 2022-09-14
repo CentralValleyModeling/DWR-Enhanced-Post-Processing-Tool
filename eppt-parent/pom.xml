@@ -41,11 +41,10 @@
 		<developerConnection>scm:git:https://github.com/CalSimCalLite/DWR-Enhanced-Post-Processing-Tool.git</developerConnection>
 	</scm>
 	<properties>
-		<netbeans.version>RELEASE82</netbeans.version>
+		<netbeans.version>RELEASE150</netbeans.version>
 		<brandingToken>dwr_eppt</brandingToken>
 		<maven.build.timestamp.format>yyyy-MM-dd-HHmmss</maven.build.timestamp.format>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-
 	</properties>
 	<repositories>
 		<!--
@@ -54,45 +53,24 @@
 		To create your own repository, use: nbm:populate-repository
 		-->
 		<repository>
-			<id>netbeans</id>
-			<name>NetBeans</name>
-			<url>http://bits.netbeans.org/nexus/content/groups/netbeans/</url>
+			<id>hec-nexus-releases</id>
+			<url>https://www.hec.usace.army.mil/nexus/repository/maven-releases</url>
 		</repository>
 		<repository>
-			<id>rma-maven-library-releases</id>
-			<url>http://artifactory.rmanet.com:2447/artifactory/rma-maven-library-releases</url>
+			<id>github</id>
+			<url>https://maven.pkg.github.com/CalSimCalLite/DWR-Enhanced-Post-Processing-Tool/</url>
 		</repository>
 		<repository>
-			<id>rma-maven-library-snapshots</id>
-			<url>http://artifactory.rmanet.com:2447/artifactory/rma-maven-library-snapshots</url>
-		</repository>
-		<repository>
-			<id>third-party-maven-library-releases</id>
-			<url>http://artifactory.rmanet.com:2447/artifactory/third-party-maven-library-releases</url>
-		</repository>
-		<repository>
-			<id>usace-software-release</id>
-			<url>http://artifactory.rmanet.com:2447/artifactory/usace-software-release</url>
-		</repository>
-		<repository>
-			<id>eppt-third-party-dlls</id>
-			<url>http://artifactory.rmanet.com:2447/artifactory/eppt-third-party-dlls</url>
-		</repository>
-		<repository>
-			<id>dwr-application-releases</id>
-			<url>http://artifactory.rmanet.com:2447/artifactory/dwr-application-releases</url>
-		</repository>
-		<repository>
-			<id>java-releases</id>
-			<url>http://artifactory.rmanet.com:2447/artifactory/java-releases</url>
+			<id>brockmann</id>
+			<url>https://www.brockmann-consult.de/mvn/os/</url>
 		</repository>
 	</repositories>
 	<build>
 		<plugins>
 			<plugin>
-				<groupId>org.codehaus.mojo</groupId>
+				<groupId>org.apache.netbeans.utilities</groupId>
 				<artifactId>nbm-maven-plugin</artifactId>
-				<version>4.1</version>
+				<version>4.5</version>
 				<extensions>true</extensions>
 				<configuration>
 					<brandingToken>${brandingToken}</brandingToken>
@@ -103,7 +81,7 @@
 				<!-- NetBeans 6.9+ requires JDK 6, starting NetBeans 7.4 source 1.7 is required -->
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
-				<version>2.5.1</version>
+				<version>3.10.1</version>
 				<configuration>
 					<source>1.8</source>
 					<target>1.8</target>
@@ -112,21 +90,13 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-jar-plugin</artifactId>
-				<version>2.4</version>
+				<version>3.2.2</version>
 			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-surefire-plugin</artifactId>
-				<version>2.22.0</version>
+				<version>3.0.0-M7</version>
 			</plugin>
-<!--			<plugin>-->
-<!--				<groupId>org.apache.maven.plugins</groupId>-->
-<!--				<artifactId>maven-release-plugin</artifactId>-->
-<!--				<version>2.5.3</version>-->
-<!--				<configuration>-->
-<!--					<tagNameFormat>v@{project.version}</tagNameFormat>-->
-<!--				</configuration>-->
-<!--			</plugin>-->
 		</plugins>
 	</build>
 </project>

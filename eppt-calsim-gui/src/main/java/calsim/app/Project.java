@@ -13,22 +13,31 @@
 package calsim.app;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.Serializable;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.Vector;
-import javax.swing.*;
+import javax.swing.JOptionPane;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
 
 import calsim.gui.DtsTreeModel;
 import calsim.gui.DtsTreePanel;
 import calsim.gym.Network;
-import com.sun.xml.tree.TreeWalker;
-import com.sun.xml.tree.XmlDocument;
+import org.w3c.dom.Document;
 import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 import vista.set.Group;
 import vista.set.Pathname;
 import vista.time.TimeWindow;
@@ -50,7 +59,7 @@ import vista.time.TimeWindow;
  *
  * @author Nicky Sandhu
  * @version $Id: Project.java,v 1.1.4.25 2001/10/23 16:28:23 jfenolio Exp $
- * @see AppUtils.getCurrentProject, DerivedTimeSeries, MultipleTimeSeries
+ * @see AppUtils#getCurrentProject, DerivedTimeSeries, MultipleTimeSeries
  */
 public class Project implements Serializable
 {
@@ -808,7 +817,7 @@ public class Project implements Serializable
 	 * @param twstr is a time window string representation in
 	 *              the format MMMyyyy - MMMyyyy, e.g.
 	 *              JAN1990 - NOV1993
-	 * @see vista.timeTimeWindow
+	 * @see vista.time.TimeWindow
 	 */
 	public void setTimeWindow(String twstr)
 	{
@@ -980,22 +989,38 @@ public class Project implements Serializable
 	 */
 	public void save(String saveFile) throws IOException
 	{
-		XmlDocument prjdoc = new XmlDocument();
-		XmlDocument dtsdoc = new XmlDocument();
-		Element masterdts = dtsdoc.createElement("dts_master");
-		dtsdoc.appendChild(masterdts);
 		_filename = saveFile;
-		this.toXml(prjdoc);
-		DtsTreePanel.getCurrentModel().saveData(dtsdoc, masterdts);
-		DtsTreePanel.getCurrentModel().saveDts(dtsdoc, masterdts);
-		DtsTreePanel.getCurrentModel().saveMts(dtsdoc, masterdts);
-		PrintWriter pw = new PrintWriter(new FileOutputStream(saveFile));
-		prjdoc.write(pw);
-		pw.close();
-		PrintWriter pw1 = new PrintWriter(new FileOutputStream(_fname));
-		dtsdoc.write(pw1);
-		pw1.close();
-		_modified = false;
+		try(PrintWriter pw = new PrintWriter(Files.newOutputStream(Paths.get(saveFile)));
+			PrintWriter pw1 = new PrintWriter(Files.newOutputStream(Paths.get(_fname))))
+		{
+			DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
+			DocumentBuilder docBuilder = docFactory.newDocumentBuilder();
+			Document prjdoc = docBuilder.newDocument();
+			Document dtsdoc = docBuilder.newDocument();
+			Element masterdts = dtsdoc.createElement("dts_master");
+			dtsdoc.appendChild(masterdts);
+			this.toXml(prjdoc);
+			DtsTreePanel.getCurrentModel().saveData(dtsdoc, masterdts);
+			DtsTreePanel.getCurrentModel().saveDts(dtsdoc, masterdts);
+			DtsTreePanel.getCurrentModel().saveMts(dtsdoc, masterdts);
+
+			TransformerFactory transformerFactory = TransformerFactory.newInstance();
+			Transformer transformer = transformerFactory.newTransformer();
+			DOMSource source = new DOMSource(prjdoc);
+			StreamResult result = new StreamResult(pw);
+			transformer.transform(source, result);
+			pw.close();
+
+			source = new DOMSource(dtsdoc);
+			result = new StreamResult(pw1);
+			transformer.transform(source, result);
+			pw1.close();
+			_modified = false;
+		}
+		catch(ParserConfigurationException | TransformerException e)
+		{
+			throw new IOException(e);
+		}
 	}
 
 	/**
@@ -1013,7 +1038,9 @@ public class Project implements Serializable
 		_loadFile = loadFile;
 		try
 		{
-			XmlDocument doc = XmlDocument.createXmlDocument(new FileInputStream(loadFile), false);
+			DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+			DocumentBuilder db = dbf.newDocumentBuilder();
+			Document doc = db.parse(new File(loadFile));
 			prj.fromXml(doc.getDocumentElement());
 		}
 		catch(Exception e)
@@ -1039,15 +1066,15 @@ public class Project implements Serializable
 	 */
 	public void fromXml(Element pe) throws IOException
 	{
-		TreeWalker tw = new TreeWalker(pe);
 		_filename = pe.getAttribute("name");
 		//
-		_tw = AppUtils.createTimeWindowFromString(tw.getNextElement("tw").getFirstChild().getNodeValue());
+		Node tw = pe.getElementsByTagName("tw").item(0);
+		_tw = AppUtils.createTimeWindowFromString(tw.getFirstChild().getNodeValue());
 		// study items
-		tw.reset();
-		while(true)
+		NodeList studyList = pe.getElementsByTagName("study");
+		for(int i = 0; i < studyList.getLength(); i++)
 		{
-			Element se = tw.getNextElement("study");
+			Element se = (Element) studyList.item(i);
 			if(se == null)
 			{
 				break;
@@ -1074,11 +1101,11 @@ public class Project implements Serializable
 				setDV4File(se.getAttribute("dvf"));
 			}
 		}
-		tw.reset();
+		NodeList elements = pe.getElementsByTagName("dts_master");
 		//Dts Master File
-		Element me = tw.getNextElement("dts_master");
-		if(me != null)
+		if(elements.getLength() > 0)
 		{
+			Element me = (Element) elements.item(0);
 			String filepath = me.getAttribute("file");
 			File file = new File(filepath);
 			String filedir = file.getParent();
@@ -1121,10 +1148,10 @@ public class Project implements Serializable
 		}
 		else
 		{
-			tw.reset();
-			while(true)
+			NodeList dtsElements = pe.getElementsByTagName("DTS");
+			for(int i = 0; i < dtsElements.getLength(); i++)
 			{
-				Element de = tw.getNextElement("DTS");
+				Element de = (Element) dtsElements.item(i);
 				if(de == null)
 				{
 					break;
@@ -1138,10 +1165,10 @@ public class Project implements Serializable
 				}
 				add(dts);
 			}
-			tw.reset();
-			while(true)
+			NodeList mtsElements = pe.getElementsByTagName("DTS");
+			for(int i = 0; i < mtsElements.getLength(); i++)
 			{
-				Element de = tw.getNextElement("MTS");
+				Element de = (Element) mtsElements.item(i);
 				if(de == null)
 				{
 					break;
@@ -1166,7 +1193,7 @@ public class Project implements Serializable
 	/**
 	 * Returns a element of an xml document
 	 */
-	public void toXml(XmlDocument doc)
+	public void toXml(Document doc)
 	{
 		Element prjElement = doc.createElement("project");
 		prjElement.appendChild(doc.createComment("project xml format"));

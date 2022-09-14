@@ -60,19 +60,18 @@ public final class XMLParsingSvcImpl implements IXMLParsingSvc
 	private XMLParsingSvcImpl() throws EpptInitializationException
 	{
 		LOG.debug("Building XMLParsingSvcImpl Object.");
-		IFileSystemSvc _fileSystemSvc = new FileSystemSvcImpl();
 		this._compNameIdMap = new HashMap<>();
 		this._jTextFieldIds = new ArrayList<>();
 		this._jCheckBoxIDs = new ArrayList<>();
 		this._jTextFieldIdsForLinkedSliders = new ArrayList<>();
 
-		this._swingEngine = new SwingEngine();
+		this._swingEngine = new SwingEngine(null);
 		_swingEngine.getTaglib().registerTag("numtextfield", NumericTextField.class);
 		_swingEngine.getTaglib().registerTag("linkedslider", JLinkedSlider.class);
 
 		try
 		{
-			_swingEngine.render(_fileSystemSvc.getXMLDocument());
+			_swingEngine.render(Constant.GUI_XML_FILENAME);
 		}
 		catch(CalLiteGUIException ex)
 		{

@@ -101,9 +101,9 @@
 	<build>
 		<plugins>
 			<plugin>
-				<groupId>org.codehaus.mojo</groupId>
+				<groupId>org.apache.netbeans.utilities</groupId>
 				<artifactId>nbm-maven-plugin</artifactId>
-				<version>4.1</version>
+				<version>4.5</version>
 				<extensions>true</extensions>
 				<configuration>
 					<finalName>${zip-dist-name}</finalName>
@@ -159,8 +159,9 @@
 						</configuration>
 					</plugin>
 					<plugin>
-						<groupId>org.codehaus.mojo</groupId>
+						<groupId>org.apache.netbeans.utilities</groupId>
 						<artifactId>nbm-maven-plugin</artifactId>
+						<version>4.5</version>
 						<executions>
 							<execution>
 								<id>extra</id>

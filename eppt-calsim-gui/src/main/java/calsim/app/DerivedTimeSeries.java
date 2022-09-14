@@ -30,9 +30,9 @@ import javax.swing.table.AbstractTableModel;
 
 import calsim.gui.DtsTreeModel;
 import calsim.gui.DtsTreePanel;
-import com.sun.xml.tree.TreeWalker;
-import com.sun.xml.tree.XmlDocument;
+import org.w3c.dom.Document;
 import org.w3c.dom.Element;
+import org.w3c.dom.NodeList;
 import vista.set.DataReference;
 import vista.set.DataSet;
 import vista.set.Pathname;
@@ -1000,11 +1000,11 @@ public class DerivedTimeSeries extends DataReference implements Serializable
 		{
 			_name = _name.toUpperCase() + ".DTS";
 		}
-		TreeWalker tw = new TreeWalker(de);
 		int rindex = 0;
-		while(true)
+		NodeList elements = de.getElementsByTagName("row");
+		for(int i = 0; i < elements.getLength(); i++)
 		{
-			Element re = tw.getNextElement("row");
+			Element re = (Element) elements.item(i);
 			if(re == null)
 			{
 				break;
@@ -1022,7 +1022,7 @@ public class DerivedTimeSeries extends DataReference implements Serializable
 	/**
 	 *
 	 */
-	public void toXml(XmlDocument doc, Element ae)
+	public void toXml(Document doc, Element ae)
 	{
 		Element de = doc.createElement("DTS");
 		de.setAttribute("name", _name);

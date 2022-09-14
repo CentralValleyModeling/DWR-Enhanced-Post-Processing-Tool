@@ -33,21 +33,20 @@
 			<version>${project.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>com.rma.javafx</groupId>
-			<artifactId>rmaJavaFx</artifactId>
-			<version>v1.2.13</version>
-			<exclusions>
-				<exclusion>
-					<groupId>*</groupId>
-					<artifactId>*</artifactId>
-				</exclusion>
-			</exclusions>
+			<groupId>mil.army.usace.hec</groupId>
+			<artifactId>rma-javafx-core</artifactId>
+			<version>1.6.0</version>
 		</dependency>
 		<dependency>
 			<groupId>org.swixml</groupId>
 			<artifactId>swixml</artifactId>
-			<version>240</version>
-			<classifier>CalLiteGUI_P3</classifier>
+			<version>2.6.20130530</version>
+			<exclusions>
+				<exclusion>
+					<groupId>javax.jnlp</groupId>
+					<artifactId>jnlp</artifactId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 		<dependency>
 			<groupId>org.junit.jupiter</groupId>
@@ -56,19 +55,12 @@
 			<scope>test</scope>
 		</dependency>
 		<dependency>
-			<groupId>hecjavadev-core</groupId>
-			<artifactId>rma</artifactId>
-			<version>6.0</version>
-			<classifier>DeltaERT-1-4-0-97-Obfuscated</classifier>
-			<exclusions>
-				<exclusion>
-					<groupId>*</groupId>
-					<artifactId>*</artifactId>
-				</exclusion>
-			</exclusions>
+			<groupId>mil.army.usace.hec</groupId>
+			<artifactId>hec-monolith</artifactId>
+			<version>3.0.0</version>
 		</dependency>
 		<dependency>
-			<groupId>rma.util</groupId>
+			<groupId>mil.army.usace.hec</groupId>
 			<artifactId>lookup</artifactId>
 			<version>1.0</version>
 		</dependency>
@@ -77,13 +69,6 @@
 			<artifactId>junit-jupiter-engine</artifactId>
 			<version>5.3.1</version>
 			<scope>test</scope>
-		</dependency>
-		<dependency>
-			<groupId>hec</groupId>
-			<artifactId>javaHeclib</artifactId>
-			<version>7-GS</version>
-			<type>dll</type>
-			<scope>runtime</scope>
 		</dependency>
 		<dependency>
 			<groupId>com.seaglasslookandfeel</groupId>
@@ -108,15 +93,14 @@
 			<version>${project.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>usace.loading.gui</groupId>
+			<groupId>mil.army.usace.hec</groupId>
 			<artifactId>loading-gui-lib</artifactId>
-			<version>1.1-SNAPSHOT</version>
+			<version>1.2</version>
 		</dependency>
 		<dependency>
 			<groupId>gov.ca.water</groupId>
 			<artifactId>eppt-jasper-engine</artifactId>
 			<version>${project.version}</version>
-			<!--<scope>runtime</scope>-->
 		</dependency>
 		<dependency>
 			<groupId>gov.ca.water</groupId>

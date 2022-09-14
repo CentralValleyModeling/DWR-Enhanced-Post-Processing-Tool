@@ -17,10 +17,21 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.Date;
 import java.util.Vector;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.TransformerFactoryConfigurationError;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
 
-import com.sun.xml.tree.XmlDocument;
+import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 //import javax.swing.JOptionPane;
@@ -598,13 +609,29 @@ public class Study
 	 */
 	public void save(String saveFile) throws IOException
 	{
-		XmlDocument doc = new XmlDocument();
-		_filename = saveFile;
-		this.toXml(doc);
-		PrintWriter pw = new PrintWriter(new FileOutputStream(saveFile));
-		doc.write(pw);
-		pw.close();
-		_modified = false;
+		DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
+		try
+		{
+			DocumentBuilder docBuilder = docFactory.newDocumentBuilder();
+			// root elements
+			Document doc = docBuilder.newDocument();
+			_filename = saveFile;
+			this.toXml(doc);
+			try(PrintWriter pw = new PrintWriter(Files.newOutputStream(Paths.get(saveFile))))
+			{
+
+				TransformerFactory transformerFactory = TransformerFactory.newInstance();
+				Transformer transformer = transformerFactory.newTransformer();
+				DOMSource source = new DOMSource(doc);
+				StreamResult result = new StreamResult(pw);
+				transformer.transform(source, result);
+			}
+			_modified = false;
+		}
+		catch(ParserConfigurationException | TransformerException | TransformerFactoryConfigurationError e)
+		{
+			throw new IOException(e);
+		}
 	}
 
 	/**
@@ -615,7 +642,10 @@ public class Study
 		Study sty = this;
 		try
 		{
-			XmlDocument doc = XmlDocument.createXmlDocument(new FileInputStream(loadFile), false);
+			DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+			DocumentBuilder db = dbf.newDocumentBuilder();
+
+			Document doc = db.parse(new File(loadFile));
 			sty.fromXml(doc.getDocumentElement());
 		}
 		catch(Exception e)
@@ -684,7 +714,7 @@ public class Study
 	/**
 	 * Returns a element of an xml document
 	 */
-	public void toXml(XmlDocument doc)
+	public void toXml(Document doc)
 	{
 		Element styElement = doc.createElement("study");
 		styElement.appendChild(doc.createComment("study xml format"));
