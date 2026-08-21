@@ -12,6 +12,7 @@
 
 package gov.ca.hec;
 
+import java.util.List;
 import java.util.Vector;
 import java.util.regex.Pattern;
 
@@ -199,7 +200,7 @@ public class HecUtils
 	 */
 	public static String searchRegex(String regpath, HecDss dss)
 	{
-		Vector<CondensedReference> condensedCatalog = dss.getCondensedCatalog();
+		List<CondensedReference> condensedCatalog = dss.getCondensedCatalog();
 		Pattern p = Pattern.compile(regpath, Pattern.CASE_INSENSITIVE);
 		for(CondensedReference condensedReference : condensedCatalog)
 		{

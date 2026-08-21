@@ -13,6 +13,10 @@ package vista.db.dss;
 
 import java.net.InetAddress;
 import java.rmi.Naming;
+import java.rmi.RemoteException;
+import java.rmi.registry.LocateRegistry;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Binds a DSSRemoteClient object to the rmi registry at the current port number
@@ -22,6 +26,7 @@ import java.rmi.Naming;
  */
 public class DSSRemoteServer
 {
+	private static final Logger LOGGER = Logger.getLogger(DSSRemoteServer.class.getName());
 	/**
 	 *
 	 */
@@ -33,8 +38,12 @@ public class DSSRemoteServer
 		{
 			public void run()
 			{
-				sun.rmi.registry.RegistryImpl.main(new String[]{"1099"});
-			}
+                try {
+                    LocateRegistry.createRegistry(1099);
+                } catch (RemoteException e) {
+					LOGGER.log(Level.SEVERE, "Could not start RMI registry", e);
+                }
+            }
 		};
 		rmiThread.start();
 		System.out.println("....RMI Registry started");

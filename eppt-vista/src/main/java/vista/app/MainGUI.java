@@ -51,7 +51,6 @@ public class MainGUI extends DefaultFrame
 		try
 		{
 			VistaUtils.showStartUpIcon();
-			setDebugMode();
 			new MainGUI(args);
 		}
 		catch(Exception e)
@@ -67,17 +66,6 @@ public class MainGUI extends DefaultFrame
 	public static final SessionContext getContext()
 	{
 		return _sc;
-	}
-
-	/**
-	 *
-	 */
-	public static void setDebugMode()
-	{
-		if(MainProperties.getProperty("debug").equals("true"))
-		{
-			Runtime.getRuntime().traceMethodCalls(true);
-		}
 	}
 
 	/**
