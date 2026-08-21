@@ -29,7 +29,7 @@
 			<dependency>
 				<groupId>mil.army.usace.hec</groupId>
 				<artifactId>hec-monolith-bom</artifactId>
-				<version>6.4.3</version>
+				<version>${monolith.version}</version>
 				<type>pom</type>
 			</dependency>
 		</dependencies>
@@ -71,7 +71,12 @@
 		<dependency>
 			<groupId>mil.army.usace.hec</groupId>
 			<artifactId>hec-monolith</artifactId>
-			<version>5.3.5</version>
+			<version>${monolith.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>mil.army.usace.hec</groupId>
+			<artifactId>lookup-compat</artifactId>
+			<version>4.0.0</version>
 		</dependency>
 		<dependency>
 			<groupId>org.slf4j</groupId>

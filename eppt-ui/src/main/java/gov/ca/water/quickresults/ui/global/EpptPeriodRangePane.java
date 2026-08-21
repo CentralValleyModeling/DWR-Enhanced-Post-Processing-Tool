@@ -22,7 +22,6 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.stream.IntStream;
 
-import com.sun.javafx.scene.control.skin.TableViewSkin;
 import gov.ca.water.calgui.bo.WaterYearDefinition;
 import gov.ca.water.calgui.bo.WaterYearPeriod;
 import gov.ca.water.calgui.bo.WaterYearPeriodRange;

@@ -31,9 +31,8 @@ import javax.script.ScriptEngineManager;
 import javax.script.ScriptException;
 
 import gov.ca.water.calgui.constant.Constant;
+import org.openide.util.Lookup;
 import org.python.jsr223.PyScriptEngine;
-
-import rma.util.lookup.Lookup;
 
 import static java.util.stream.Collectors.toList;
 

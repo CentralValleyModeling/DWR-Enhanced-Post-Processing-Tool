@@ -20,9 +20,6 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.JAXBException;
-import javax.xml.bind.Unmarshaller;
 
 import gov.ca.water.calgui.bo.CommonPeriodFilter;
 import gov.ca.water.calgui.bo.WaterYearDefinition;
@@ -32,6 +29,9 @@ import gov.ca.water.calgui.project.EpptScenarioRun;
 import gov.ca.water.calgui.scripts.DssCache;
 import gov.ca.water.reportengine.EpptReportException;
 
+import jakarta.xml.bind.JAXBContext;
+import jakarta.xml.bind.JAXBException;
+import jakarta.xml.bind.Unmarshaller;
 import rma.util.TwoColorColorContour;
 
 import static java.util.stream.Collectors.toList;

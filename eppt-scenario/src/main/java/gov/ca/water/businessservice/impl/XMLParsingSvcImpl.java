@@ -66,7 +66,7 @@ public final class XMLParsingSvcImpl implements IXMLParsingSvc
 		this._jCheckBoxIDs = new ArrayList<>();
 		this._jTextFieldIdsForLinkedSliders = new ArrayList<>();
 
-		this._swingEngine = new SwingEngine();
+		this._swingEngine = new SwingEngine(new JPanel());
 		_swingEngine.getTaglib().registerTag("numtextfield", NumericTextField.class);
 		_swingEngine.getTaglib().registerTag("linkedslider", JLinkedSlider.class);
 

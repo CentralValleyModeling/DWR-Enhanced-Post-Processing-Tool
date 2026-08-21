@@ -213,7 +213,7 @@ class MonthlySideBySideTableModel extends MonthlyTableTableModel
 					public RmaTreeTableColumnSpec build()
 					{
 						return new RmaTreeTableColumnSpec(this.getColumnName(), this.isEditable(), this.isSortable(), this.isVisibleByDefault(), this.canBeHidden(),
-								this.getChildren())
+								this.getChildren(), "")
 						{
 							@Override
 							public String toString()

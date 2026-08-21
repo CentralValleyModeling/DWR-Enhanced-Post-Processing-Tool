@@ -108,7 +108,52 @@ final class TreeTableUtil
 		{
 			array[i] = objectArray.get(i);
 		}
-		return JavaFxTreeTableViewUtils.convertToString(array, new String[0]);
+		return convertToString(array, new String[0]);
+	}
+
+	//Please use Object[][], as this can be an obscenely large 2D array, and efficiency is very important.
+	public static String convertToString(Object[][] cellObjectData, String[] headerText)
+	{
+		StringBuilder sb = new StringBuilder();
+
+		if (headerText.length != 0)
+		{
+			updateStringBuilder(headerText, sb);
+		}
+
+		//This prints out rows (Y).
+		int row = 0;
+		for (Object[] objects : cellObjectData)
+		{
+			updateStringBuilder(objects, sb);
+
+			if (row != cellObjectData.length - 1)
+			{
+				sb.append(System.lineSeparator());
+			}
+			row++;
+		}
+
+		return sb.toString();
+	}
+
+	private static void updateStringBuilder(Object[] textList, StringBuilder sb)
+	{
+		boolean isFirst = true;
+		//start off with headers.
+		for (Object text : textList)
+		{
+			if(isFirst)
+			{
+				isFirst = false;
+			}
+			else
+			{
+				sb.append("\t");
+			}
+
+			sb.append(text);
+		}
 	}
 
 	private static <R extends TreeTableRowModel> void addRowData(RmaTreeTableView<?, R> treeTableView, List<TreeTableColumnSpec> columnSpecs,
