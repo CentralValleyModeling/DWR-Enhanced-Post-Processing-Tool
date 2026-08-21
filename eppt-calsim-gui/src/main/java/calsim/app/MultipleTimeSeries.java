@@ -26,9 +26,12 @@ import java.util.StringTokenizer;
 import java.util.Vector;
 import javax.swing.table.AbstractTableModel;
 
-import com.sun.xml.tree.TreeWalker;
-import com.sun.xml.tree.XmlDocument;
+import org.w3c.dom.Document;
 import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.traversal.DocumentTraversal;
+import org.w3c.dom.traversal.NodeFilter;
+import org.w3c.dom.traversal.TreeWalker;
 import vista.set.DataReference;
 import vista.set.DefaultReference;
 import vista.set.Pathname;
@@ -559,24 +562,23 @@ public class MultipleTimeSeries implements Serializable
 		{
 			_name = _name.toUpperCase() + ".MTS";
 		}
-		TreeWalker tw = new TreeWalker(de);
 		int rindex = 0;
 		while(true)
 		{
-			Element re = tw.getNextElement("row");
+			Node re = de.getElementsByTagName("row").item(rindex);
 			if(re == null)
 			{
 				break;
 			}
-			String dtsatt = re.getAttribute("dts");
+			String dtsatt = re.getAttributes().getNamedItem("dts").getNodeValue();
 			if(!dtsatt.equals("") && !dtsatt.endsWith(".DTS"))
 			{
 				dtsatt = dtsatt + ".DTS";
 			}
 			setDTSNameAt(rindex, dtsatt);
-			setVarTypeAt(rindex, re.getAttribute("vartype"));
-			setBPartAt(rindex, re.getAttribute("bpart"));
-			setCPartAt(rindex, re.getAttribute("cpart"));
+			setVarTypeAt(rindex, re.getAttributes().getNamedItem("vartype").getNodeValue());
+			setBPartAt(rindex, re.getAttributes().getNamedItem("bpart").getNodeValue());
+			setCPartAt(rindex, re.getAttributes().getNamedItem("cpart").getNodeValue());
 			rindex++;
 		}
 	}
@@ -584,7 +586,7 @@ public class MultipleTimeSeries implements Serializable
 	/**
 	 *
 	 */
-	public void toXml(XmlDocument doc, Element ae)
+	public void toXml(Document doc, Element ae)
 	{
 		Element de = doc.createElement("MTS");
 		de.setAttribute("name", _name);
