@@ -23,18 +23,28 @@
 	</parent>
 	<artifactId>eppt-plots</artifactId>
 	<name>EPPT Plots</name>
+
+	<dependencyManagement>
+		<dependencies>
+			<dependency>
+				<groupId>mil.army.usace.hec</groupId>
+				<artifactId>hec-monolith-bom</artifactId>
+				<version>${monolith.version}</version>
+				<type>pom</type>
+			</dependency>
+		</dependencies>
+	</dependencyManagement>
+
 	<dependencies>
 		<dependency>
-			<groupId>hecjavadev-core</groupId>
-			<artifactId>hec-core</artifactId>
-			<version>6.0</version>
-			<classifier>DeltaERT-1-4-0-97-Obfuscated</classifier>
-			<exclusions>
-				<exclusion>
-					<groupId>*</groupId>
-					<artifactId>*</artifactId>
-				</exclusion>
-			</exclusions>
+			<groupId>mil.army.usace.hec</groupId>
+			<artifactId>hec-monolith</artifactId>
+			<version>${monolith.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>mil.army.usace.hec</groupId>
+			<artifactId>lookup-compat</artifactId>
+			<version>4.0.0</version>
 		</dependency>
 		<dependency>
 			<groupId>com.fasterxml.jackson.core</groupId>

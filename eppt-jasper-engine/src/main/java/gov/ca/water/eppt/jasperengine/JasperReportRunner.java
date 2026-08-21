@@ -52,9 +52,8 @@ import net.sf.jasperreports.repo.FileRepositoryPersistenceServiceFactory;
 import net.sf.jasperreports.repo.FileRepositoryService;
 import net.sf.jasperreports.repo.PersistenceServiceFactory;
 import net.sf.jasperreports.repo.RepositoryService;
+import org.openide.util.lookup.ServiceProvider;
 import org.w3c.dom.Document;
-
-import rma.services.annotations.ServiceProvider;
 
 import static java.util.stream.Collectors.toList;
 

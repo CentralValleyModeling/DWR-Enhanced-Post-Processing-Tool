@@ -321,20 +321,14 @@ public abstract class GraphicElement implements Drawable, Bounded, Cloneable,
 			_gc.setClip(r.x, r.y, r.width, r.height);
 		}
 		// set orientation ( future graphics )
-		if(GraphUtils.isJDK2() && _attributes._orientation == GEAttr.VERTICAL
-				&& _doRotate)
+		if(_attributes._orientation == GEAttr.VERTICAL && _doRotate)
 		{
 			try
 			{
 				Rectangle r = getBounds();
-				String methodName = "rotateVertical";
-				Class[] params = {Class.forName("java.awt.Graphics"),
-						Integer.TYPE, Integer.TYPE};
-				Class r2dcl = Class.forName("vista.graph.Rotator2D");
-				Method m = r2dcl.getDeclaredMethod(methodName, params);
-				m.invoke(null, _gc,
-						new Integer(r.x + r.width / 2),
+				Rotator2D.rotateVertical(_gc, new Integer(r.x + r.width / 2),
 						new Integer(r.y + r.height / 2));
+
 			}
 			catch(Exception exc)
 			{
@@ -354,20 +348,13 @@ public abstract class GraphicElement implements Drawable, Bounded, Cloneable,
 	public void postDraw()
 	{
 		// unset orientation ( future graphics )
-		if(GraphUtils.isJDK2() && _attributes._orientation == GEAttr.VERTICAL
+		if(_attributes._orientation == GEAttr.VERTICAL
 				&& _doRotate)
 		{
 			try
 			{
 				Rectangle r = getBounds();
-				String methodName = "rotateHorizontal";
-				Class[] params = {Class.forName("java.awt.Graphics"),
-						Integer.TYPE, Integer.TYPE};
-				Class r2dcl = Class.forName("vista.graph.Rotator2D");
-				Method m = r2dcl.getDeclaredMethod(methodName, params);
-				m.invoke(null, _gc,
-						new Integer(r.x + r.width / 2),
-						new Integer(r.y + r.height / 2));
+				Rotator2D.rotateHorizontal(_gc, new Integer(r.x + r.width / 2), new Integer(r.y + r.height / 2));
 			}
 			catch(Exception exc)
 			{

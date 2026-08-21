@@ -24,30 +24,46 @@
 	<artifactId>eppt-ui</artifactId>
 	<name>EPPT UI</name>
 	<properties>
-		<argLine>-Djava.library.path=${project.build.directory}\lib -Xmx1024m -XX:MaxPermSize=256m</argLine>
+		<argLine>-Djava.library.path=${project.build.directory}\lib -Xmx1024m</argLine>
 	</properties>
+
+	<dependencyManagement>
+		<dependencies>
+			<dependency>
+				<groupId>mil.army.usace.hec</groupId>
+				<artifactId>hec-monolith-bom</artifactId>
+				<version>${monolith.version}</version>
+				<type>pom</type>
+			</dependency>
+		</dependencies>
+	</dependencyManagement>
+
 	<dependencies>
+		<dependency>
+			<groupId>mil.army.usace.hec</groupId>
+			<artifactId>hec-monolith</artifactId>
+			<version>${monolith.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>mil.army.usace.hec</groupId>
+			<artifactId>lookup-compat</artifactId>
+			<version>4.0.0</version>
+		</dependency>
 		<dependency>
 			<groupId>gov.ca.water</groupId>
 			<artifactId>eppt-core</artifactId>
 			<version>${project.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>com.rma.javafx</groupId>
-			<artifactId>rmaJavaFx</artifactId>
-			<version>v1.2.13</version>
-			<exclusions>
-				<exclusion>
-					<groupId>*</groupId>
-					<artifactId>*</artifactId>
-				</exclusion>
-			</exclusions>
+			<groupId>mil.army.usace.hec</groupId>
+			<artifactId>rma-javafx-core</artifactId>
+			<version>${rmajavafx.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.swixml</groupId>
-			<artifactId>swixml</artifactId>
-			<version>240</version>
-			<classifier>CalLiteGUI_P3</classifier>
+			<artifactId>swixml-two</artifactId>
+			<version>2.4.0.240</version>
+			<scope>compile</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.junit.jupiter</groupId>
@@ -56,34 +72,10 @@
 			<scope>test</scope>
 		</dependency>
 		<dependency>
-			<groupId>hecjavadev-core</groupId>
-			<artifactId>rma</artifactId>
-			<version>6.0</version>
-			<classifier>DeltaERT-1-4-0-97-Obfuscated</classifier>
-			<exclusions>
-				<exclusion>
-					<groupId>*</groupId>
-					<artifactId>*</artifactId>
-				</exclusion>
-			</exclusions>
-		</dependency>
-		<dependency>
-			<groupId>rma.util</groupId>
-			<artifactId>lookup</artifactId>
-			<version>1.0</version>
-		</dependency>
-		<dependency>
 			<groupId>org.junit.jupiter</groupId>
 			<artifactId>junit-jupiter-engine</artifactId>
 			<version>5.3.1</version>
 			<scope>test</scope>
-		</dependency>
-		<dependency>
-			<groupId>hec</groupId>
-			<artifactId>javaHeclib</artifactId>
-			<version>7-GS</version>
-			<type>dll</type>
-			<scope>runtime</scope>
 		</dependency>
 		<dependency>
 			<groupId>com.seaglasslookandfeel</groupId>
@@ -108,11 +100,6 @@
 			<version>${project.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>usace.loading.gui</groupId>
-			<artifactId>loading-gui-lib</artifactId>
-			<version>1.1-SNAPSHOT</version>
-		</dependency>
-		<dependency>
 			<groupId>gov.ca.water</groupId>
 			<artifactId>eppt-jasper-engine</artifactId>
 			<version>${project.version}</version>
@@ -123,18 +110,12 @@
 			<artifactId>eppt-plots</artifactId>
 			<version>${project.version}</version>
 		</dependency>
+
+		<!-- JavaFX -->
+		<dependency>
+			<groupId>org.openjfx</groupId>
+			<artifactId>javafx-controls</artifactId>
+			<version>${javafx.version}</version>
+		</dependency>
 	</dependencies>
-	<build>
-		<plugins>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-surefire-plugin</artifactId>
-				<version>2.22.1</version>
-				<configuration>
-					<forkCount>0</forkCount>
-					<additionalClasspathElements>${java.home}/lib/ext/jfxrt.jar</additionalClasspathElements>
-				</configuration>
-			</plugin>
-		</plugins>
-	</build>
 </project>

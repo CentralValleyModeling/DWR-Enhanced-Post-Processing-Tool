@@ -41,58 +41,39 @@
 		<developerConnection>scm:git:https://github.com/CalSimCalLite/DWR-Enhanced-Post-Processing-Tool.git</developerConnection>
 	</scm>
 	<properties>
-		<netbeans.version>RELEASE82</netbeans.version>
+		<netbeans.version>RELEASE300</netbeans.version>
+		<monolith.version>5.3.5</monolith.version>
+		<rmajavafx.version>3.0.1</rmajavafx.version>
+		<javafx.version>23</javafx.version>
+		<nbm.maven.plugin.version>14.3</nbm.maven.plugin.version>
+		<javaheclib.version>7-IA-win-x64</javaheclib.version>
+
+
 		<brandingToken>dwr_eppt</brandingToken>
 		<maven.build.timestamp.format>yyyy-MM-dd-HHmmss</maven.build.timestamp.format>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-
+		<maven.nbm.includeRuntimeModuleLibraries>true</maven.nbm.includeRuntimeModuleLibraries>
 	</properties>
 	<repositories>
-		<!--
-		Repository hosting NetBeans modules, especially APIs.
-		Versions are based on IDE releases, e.g.: RELEASE691
-		To create your own repository, use: nbm:populate-repository
-		-->
 		<repository>
-			<id>netbeans</id>
-			<name>NetBeans</name>
-			<url>http://bits.netbeans.org/nexus/content/groups/netbeans/</url>
+			<id>github</id>
+			<url>https://maven.pkg.github.com/CentralValleyModeling/DWR-Enhanced-Post-Processing-Tool/</url>
 		</repository>
 		<repository>
-			<id>rma-maven-library-releases</id>
-			<url>http://artifactory.rmanet.com:2447/artifactory/rma-maven-library-releases</url>
+			<id>github-wrimsdeps</id>
+			<url>https://maven.pkg.github.com/CentralValleyModeling/wrims-engine-dependencies/</url>
 		</repository>
 		<repository>
-			<id>rma-maven-library-snapshots</id>
-			<url>http://artifactory.rmanet.com:2447/artifactory/rma-maven-library-snapshots</url>
-		</repository>
-		<repository>
-			<id>third-party-maven-library-releases</id>
-			<url>http://artifactory.rmanet.com:2447/artifactory/third-party-maven-library-releases</url>
-		</repository>
-		<repository>
-			<id>usace-software-release</id>
-			<url>http://artifactory.rmanet.com:2447/artifactory/usace-software-release</url>
-		</repository>
-		<repository>
-			<id>eppt-third-party-dlls</id>
-			<url>http://artifactory.rmanet.com:2447/artifactory/eppt-third-party-dlls</url>
-		</repository>
-		<repository>
-			<id>dwr-application-releases</id>
-			<url>http://artifactory.rmanet.com:2447/artifactory/dwr-application-releases</url>
-		</repository>
-		<repository>
-			<id>java-releases</id>
-			<url>http://artifactory.rmanet.com:2447/artifactory/java-releases</url>
+			<id>hec-maven</id>
+			<url>https://www.hec.usace.army.mil/nexus/repository/maven-public/</url>
 		</repository>
 	</repositories>
 	<build>
 		<plugins>
 			<plugin>
-				<groupId>org.codehaus.mojo</groupId>
+				<groupId>org.apache.netbeans.utilities</groupId>
 				<artifactId>nbm-maven-plugin</artifactId>
-				<version>4.1</version>
+				<version>${nbm.maven.plugin.version}</version>
 				<extensions>true</extensions>
 				<configuration>
 					<brandingToken>${brandingToken}</brandingToken>
@@ -100,19 +81,35 @@
 				</configuration>
 			</plugin>
 			<plugin>
-				<!-- NetBeans 6.9+ requires JDK 6, starting NetBeans 7.4 source 1.7 is required -->
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
-				<version>2.5.1</version>
+				<version>3.15.0</version>
 				<configuration>
-					<source>1.8</source>
-					<target>1.8</target>
+					<source>21</source>
+					<target>21</target>
+					<annotationProcessorPaths>
+						<path>
+							<groupId>org.netbeans.api</groupId>
+							<artifactId>org-netbeans-api-annotations-common</artifactId>
+							<version>${netbeans.version}</version>
+						</path>
+						<path>
+							<groupId>org.netbeans.api</groupId>
+							<artifactId>org-openide-util-lookup</artifactId>
+							<version>${netbeans.version}</version>
+						</path>
+						<path>
+							<groupId>org.netbeans.api</groupId>
+							<artifactId>org-openide-windows</artifactId>
+							<version>${netbeans.version}</version>
+						</path>
+					</annotationProcessorPaths>
 				</configuration>
 			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-jar-plugin</artifactId>
-				<version>2.4</version>
+				<version>3.5.1</version>
 			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
@@ -129,4 +126,28 @@
 <!--			</plugin>-->
 		</plugins>
 	</build>
+
+	<dependencies>
+		<dependency>
+			<!-- Replaced with lookup-compat since og lookup isn't Java 21 compatible -->
+			<groupId>mil.army.usace.hec</groupId>
+			<artifactId>lookup</artifactId>
+			<version>2.0.1</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<!-- Compile with Netbeans Service Annotations -->
+			<groupId>mil.army.usace.hec</groupId>
+			<artifactId>service-annotations</artifactId>
+			<version>2.0.1</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<!-- Dependency gets duplicated and angers Netbeans -->
+			<groupId>javax.media</groupId>
+			<artifactId>jai_imageio</artifactId>
+			<version>1.1</version>
+			<scope>provided</scope>
+		</dependency>
+	</dependencies>
 </project>
