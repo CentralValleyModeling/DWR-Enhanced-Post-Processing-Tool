@@ -157,11 +157,15 @@ public class QAQCReportPanel extends EpptPanel
 		_style = _doc.addStyle("ConsoleStyle", null);
 		Logger.getLogger("").addHandler(new ReportHandler());
 		_epptConfigurationController.addScenarioChangedListener(this::fillScenarioRuns);
+
 		Path currentProject = EpptPreferences.getLastProjectConfiguration().getParent();
-		Path reportPath = currentProject.resolve("Reports").resolve(_epptConfigurationController.getProjectName() + ".pdf");
-		_pdfOutput.setText(reportPath.toString());
-		_openReportButton.setEnabled(reportPath.toFile().exists());
-		_tabbedPane1.setTitleAt(0, reportPath.getFileName().toString() + " QA/QC");
+		if(currentProject != null) {
+			Path reportPath = currentProject.resolve("Reports").resolve(_epptConfigurationController.getProjectName() + ".pdf");
+			_pdfOutput.setText(reportPath.toString());
+			_openReportButton.setEnabled(reportPath.toFile().exists());
+			_tabbedPane1.setTitleAt(0, reportPath.getFileName().toString() + " QA/QC");
+		}
+
 		Arrays.asList(PercentDiffStyle.values()).forEach(_percentDiffStyle::addItem);
 		_reportModules.put(_excutiveSummaryCheckBox, EPPTReport.EXECUTIVE_SUMMARY);
 		_reportModules.put(_assumptionChangesCheckBox, EPPTReport.ASSUMPTION_CHANGES);
