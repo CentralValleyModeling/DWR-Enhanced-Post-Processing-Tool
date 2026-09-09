@@ -16,7 +16,7 @@ import java.io.PrintWriter;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public class XMLHelpers {
+public final class XMLHelpers {
 
     private static final Logger LOGGER = Logger.getLogger(XMLHelpers.class.getName());
 
@@ -25,12 +25,12 @@ public class XMLHelpers {
     }
 
     public static void writeDocumentToXMLFile(Document document, String file) throws IOException, TransformerException {
-        try(PrintWriter pw1 = new PrintWriter(new FileOutputStream(file))) {
+        try(PrintWriter printWriter = new PrintWriter(new FileOutputStream(file))) {
             TransformerFactory transformerFactory = TransformerFactory.newInstance();
             Transformer transformer = transformerFactory.newTransformer();
             DOMSource domSource = new DOMSource(document);
 
-            StreamResult result = new StreamResult(pw1);
+            StreamResult result = new StreamResult(printWriter);
 
             transformer.transform(domSource, result);
         }
@@ -45,7 +45,7 @@ public class XMLHelpers {
             return DocumentBuilderFactory.newDefaultInstance().newDocumentBuilder().newDocument();
         } catch (ParserConfigurationException e) {
             LOGGER.log(Level.SEVERE, "Error creating XML document", e);
-            return null;
+            throw new IllegalStateException("Error creating XML document", e);
         }
     }
 
