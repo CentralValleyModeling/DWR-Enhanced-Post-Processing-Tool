@@ -21,14 +21,18 @@ import java.io.Serializable;
 import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.Vector;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.*;
 
 import calsim.gui.DtsTreeModel;
 import calsim.gui.DtsTreePanel;
 import calsim.gym.Network;
-import com.sun.xml.tree.TreeWalker;
-import com.sun.xml.tree.XmlDocument;
+import calsim.util.xml.XMLHelpers;
+import org.w3c.dom.Document;
 import org.w3c.dom.Element;
+import org.w3c.dom.NodeList;
+import org.w3c.dom.traversal.TreeWalker;
 import vista.set.Group;
 import vista.set.Pathname;
 import vista.time.TimeWindow;
@@ -980,8 +984,8 @@ public class Project implements Serializable
 	 */
 	public void save(String saveFile) throws IOException
 	{
-		XmlDocument prjdoc = new XmlDocument();
-		XmlDocument dtsdoc = new XmlDocument();
+		Document prjdoc = XMLHelpers.createXmlDocument();
+		Document dtsdoc = XMLHelpers.createXmlDocument();
 		Element masterdts = dtsdoc.createElement("dts_master");
 		dtsdoc.appendChild(masterdts);
 		_filename = saveFile;
@@ -989,12 +993,12 @@ public class Project implements Serializable
 		DtsTreePanel.getCurrentModel().saveData(dtsdoc, masterdts);
 		DtsTreePanel.getCurrentModel().saveDts(dtsdoc, masterdts);
 		DtsTreePanel.getCurrentModel().saveMts(dtsdoc, masterdts);
-		PrintWriter pw = new PrintWriter(new FileOutputStream(saveFile));
-		prjdoc.write(pw);
-		pw.close();
-		PrintWriter pw1 = new PrintWriter(new FileOutputStream(_fname));
-		dtsdoc.write(pw1);
-		pw1.close();
+		try {
+			XMLHelpers.writeDocumentToXMLFile(prjdoc, saveFile);
+			XMLHelpers.writeDocumentToXMLFile(dtsdoc, _fname);
+		} catch (Exception e) {
+			Logger.getLogger(Project.class.getName()).log(Level.SEVERE, null, e);
+		}
 		_modified = false;
 	}
 
@@ -1013,8 +1017,8 @@ public class Project implements Serializable
 		_loadFile = loadFile;
 		try
 		{
-			XmlDocument doc = XmlDocument.createXmlDocument(new FileInputStream(loadFile), false);
-			prj.fromXml(doc.getDocumentElement());
+			Document doc = XMLHelpers.readXmlDocumentFromFile(loadFile);
+			prj.fromXml(doc);
 		}
 		catch(Exception e)
 		{
@@ -1037,17 +1041,18 @@ public class Project implements Serializable
 	/**
 	 *
 	 */
-	public void fromXml(Element pe) throws IOException
+	public void fromXml(Document doc) throws IOException
 	{
-		TreeWalker tw = new TreeWalker(pe);
+		Element pe = doc.getDocumentElement();
 		_filename = pe.getAttribute("name");
 		//
-		_tw = AppUtils.createTimeWindowFromString(tw.getNextElement("tw").getFirstChild().getNodeValue());
+		_tw = AppUtils.createTimeWindowFromString(pe.getElementsByTagName("tw").item(0).getFirstChild().getNodeValue());
 		// study items
-		tw.reset();
+		NodeList studyLists = pe.getElementsByTagName("study");
+		int nodeIdx = 0;
 		while(true)
 		{
-			Element se = tw.getNextElement("study");
+			Element se = (Element)studyLists.item(nodeIdx++);
 			if(se == null)
 			{
 				break;
@@ -1074,9 +1079,8 @@ public class Project implements Serializable
 				setDV4File(se.getAttribute("dvf"));
 			}
 		}
-		tw.reset();
 		//Dts Master File
-		Element me = tw.getNextElement("dts_master");
+		Element me = (Element)doc.getElementsByTagName("dts_master").item(0);
 		if(me != null)
 		{
 			String filepath = me.getAttribute("file");
@@ -1121,10 +1125,11 @@ public class Project implements Serializable
 		}
 		else
 		{
-			tw.reset();
+			NodeList dtsLists = doc.getElementsByTagName("DTS");
+			nodeIdx = 0;
 			while(true)
 			{
-				Element de = tw.getNextElement("DTS");
+				Element de = (Element)dtsLists.item(nodeIdx++);
 				if(de == null)
 				{
 					break;
@@ -1138,10 +1143,11 @@ public class Project implements Serializable
 				}
 				add(dts);
 			}
-			tw.reset();
+			NodeList mtsLists = doc.getElementsByTagName("MTS");
+			nodeIdx = 0;
 			while(true)
 			{
-				Element de = tw.getNextElement("MTS");
+				Element de = (Element)mtsLists.item(nodeIdx++);
 				if(de == null)
 				{
 					break;
@@ -1166,7 +1172,7 @@ public class Project implements Serializable
 	/**
 	 * Returns a element of an xml document
 	 */
-	public void toXml(XmlDocument doc)
+	public void toXml(Document doc)
 	{
 		Element prjElement = doc.createElement("project");
 		prjElement.appendChild(doc.createComment("project xml format"));

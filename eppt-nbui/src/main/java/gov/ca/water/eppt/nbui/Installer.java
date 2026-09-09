@@ -14,10 +14,8 @@ package gov.ca.water.eppt.nbui;
 import java.awt.Dimension;
 import java.awt.Frame;
 import java.io.IOException;
-import java.lang.reflect.Field;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.Arrays;
 import java.util.logging.Handler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -150,36 +148,12 @@ public class Installer extends ModuleInstall
 
 	private void initHeclibDll()
 	{
-		String pathToAdd = "eppt/modules/lib";
-		try
-		{
-
-			final Field usrPathsField = ClassLoader.class.getDeclaredField("usr_paths");
-			usrPathsField.setAccessible(true);
-
-			//get array of paths
-			final String[] paths = (String[]) usrPathsField.get(null);
-
-			//check if the path to add is already present
-			for(String path : paths)
-			{
-				if(path.equals(pathToAdd))
-				{
-					return;
-				}
-			}
-
-			//add the new path
-			final String[] newPaths = Arrays.copyOf(paths, paths.length + 1);
-			newPaths[newPaths.length - 1] = pathToAdd;
-			usrPathsField.set(null, newPaths);
+		try {
 			System.loadLibrary("javaHeclib");
 			HecDSSFileAccess.setMessageLevel(HecDSSFileAccess.MESS_LEVEL_GENERAL);
 			Heclib.Hec_zset("ALLV", "", 6);
-		}
-		catch(NoSuchFieldException | IllegalAccessException ex)
-		{
-			LOGGER.log(Level.SEVERE, "Unable to initialize javaHeclib.dll", ex);
+		} catch (Throwable t) {
+			LOGGER.log(Level.SEVERE, "Failed to load heclib!", t);
 		}
 	}
 

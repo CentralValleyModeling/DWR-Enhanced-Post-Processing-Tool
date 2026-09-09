@@ -63,14 +63,6 @@
 			<artifactId>eppt-trend-reporting</artifactId>
 			<version>${project.version}</version>
 		</dependency>
-		<!-- NbModuleSuite functional in RELEASE70 or later: -->
-		<dependency>
-			<groupId>org.netbeans.api</groupId>
-			<artifactId>org-netbeans-modules-nbjunit</artifactId>
-			<version>${netbeans.version}</version>
-			<scope>test
-			</scope> <!-- beyond platform cluster, this often needs to be dropped down to compile/runtime, some other modules in IDE clusters depend on it -->
-		</dependency>
 		<!-- To use Jelly Tools in your functional tests, add or replace with:
 		<dependency>
 			<groupId>org.netbeans.api</groupId>
@@ -101,9 +93,9 @@
 	<build>
 		<plugins>
 			<plugin>
-				<groupId>org.codehaus.mojo</groupId>
+				<groupId>org.apache.netbeans.utilities</groupId>
 				<artifactId>nbm-maven-plugin</artifactId>
-				<version>4.1</version>
+				<version>${nbm.maven.plugin.version}</version>
 				<extensions>true</extensions>
 				<configuration>
 					<finalName>${zip-dist-name}</finalName>
@@ -111,6 +103,13 @@
 					<debugAdditionalArguments>
 						-J"-agentlib:jdwp=transport=dt_socket,server=y,suspend=y,address=5164" -J-Xmx2g
 					</debugAdditionalArguments>
+					<moduleDependencies>
+						<dependency>
+							<id>${project.groupId}:eppt-nbui</id>
+							<type>impl</type>
+						</dependency>
+					</moduleDependencies>
+					<etcConfFile>src/nbproject/dwr_eppt.conf</etcConfFile>
 				</configuration>
 			</plugin>
 			<!-- Permits NbModuleSuite to be run in integration-test phase: -->
@@ -135,28 +134,33 @@
 					<plugin>
 						<groupId>org.apache.maven.plugins</groupId>
 						<artifactId>maven-dependency-plugin</artifactId>
-						<version>3.1.1</version>
+						<version>3.1.2</version>
 						<executions>
 							<execution>
-								<id>copy-dependencies</id>
-								<phase>compile</phase>
+								<id>download-jre</id>
+								<phase>package</phase>
 								<goals>
-									<goal>copy</goal>
+									<goal>unpack</goal>
 								</goals>
+								<configuration>
+									<artifactItems>
+										<artifactItem>
+											<groupId>net.adoptium</groupId>
+											<artifactId>jdk</artifactId>
+											<version>21.0.12.1_1_win-x86_64</version>
+											<type>zip</type>
+											<outputDirectory>${project.build.directory}/dwr_eppt</outputDirectory>
+											<fileMappers>
+												<org.codehaus.plexus.components.io.filemappers.RegExpFileMapper>
+													<pattern>^\Qjdk-21.0.12.1+1/\E</pattern>
+													<replacement>jre/</replacement>
+												</org.codehaus.plexus.components.io.filemappers.RegExpFileMapper>
+											</fileMappers>
+										</artifactItem>
+									</artifactItems>
+								</configuration>
 							</execution>
 						</executions>
-						<configuration>
-							<outputDirectory>${project.build.directory}</outputDirectory>
-							<artifactItems>
-								<artifactItem>
-									<groupId>oracle</groupId>
-									<artifactId>jre</artifactId>
-									<version>1.8.0_202-b34</version>
-									<type>zip</type>
-									<destFileName>jre.zip</destFileName>
-								</artifactItem>
-							</artifactItems>
-						</configuration>
 					</plugin>
 					<plugin>
 						<groupId>org.codehaus.mojo</groupId>
@@ -193,7 +197,7 @@
 					<plugin>
 						<groupId>org.codehaus.mojo</groupId>
 						<artifactId>build-helper-maven-plugin</artifactId>
-						<version>1.8</version>
+						<version>3.6.1</version>
 						<executions>
 							<execution>
 								<id>parse-version</id>
@@ -206,7 +210,7 @@
 					<plugin>
 						<groupId>org.apache.maven.plugins</groupId>
 						<artifactId>maven-antrun-plugin</artifactId>
-						<version>1.8</version>
+						<version>3.2.0</version>
 						<executions>
 							<execution>
 								<id>copy-resource-one</id>
@@ -216,7 +220,6 @@
 								</goals>
 								<configuration>
 									<target>
-										<unzip src="${project.build.directory}\jre.zip" dest="${project.build.directory}\dwr_eppt\jre"/>
 										<copy file="${project.basedir}/src/EPPT.exe" todir="${project.build.directory}\dwr_eppt"/>
 										<copy file="${project.basedir}/src/EPPT.config" todir="${project.build.directory}\dwr_eppt"/>
 										<copy file="${project.basedir}/src/RunEppt.jar" todir="${project.build.directory}\dwr_eppt\bin"/>

@@ -241,15 +241,8 @@ public class Axis extends GEContainer implements FontResizable
 		if(position == AxisAttr.LEFT || position == AxisAttr.RIGHT)
 		{
 			TextLineAttr tla = (TextLineAttr) labelTextLine.getAttributes();
-			if(GraphUtils.isJDK2())
-			{
-				tla._orientation = GEAttr.VERTICAL;
-				tla._textArrangement = TextLineAttr.SIDE_BY_SIDE;
-			}
-			else
-			{
-				tla._textArrangement = TextLineAttr.TOP_ON_TOP;
-			}
+			tla._orientation = GEAttr.VERTICAL;
+			tla._textArrangement = TextLineAttr.SIDE_BY_SIDE;
 		}
 		labelTextLine.setText(s);
 	}

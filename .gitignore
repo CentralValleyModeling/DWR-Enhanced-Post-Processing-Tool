@@ -1,12 +1,6 @@
-.idea/sonarlint/*
-.idea/sonarlint.xml
-.idea/sonarlint-state.xml
-.idea/copyright/HEC.xml
-.idea/workspace.xml
-.idea/compiler.xml
-.idea/misc.xml
+.idea/*
+.idea/**
 /*/target/*
-.idea/uiDesigner.xml
 eppt-core/logs/callite-debug.log
 eppt-ui/logs/callite-debug.log
 eppt-trend-reporting/hs_err_pid36188.log

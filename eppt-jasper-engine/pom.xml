@@ -87,15 +87,15 @@
 <!--			<version>2.11.0</version>-->
 <!--		</dependency>-->
 		<dependency>
-			<groupId>rma.services.annotations</groupId>
-			<artifactId>service-annotations</artifactId>
-			<version>1.2</version>
+			<groupId>org.netbeans.api</groupId>
+			<artifactId>org-openide-util-lookup</artifactId>
+			<version>${netbeans.version}</version>
 		</dependency>
 	</dependencies>
 	<repositories>
 		<repository>
 			<id>jr-ce-releases</id>
-			<url>http://jaspersoft.artifactoryonline.com/jaspersoft/jr-ce-releases</url>
+			<url>https://jaspersoft.jfrog.io/artifactory/third-party-ce-artifacts/</url>
 		</repository>
 	</repositories>
 
