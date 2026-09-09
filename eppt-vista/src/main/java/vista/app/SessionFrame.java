@@ -278,13 +278,10 @@ public class SessionFrame extends JFrame implements DropTargetListener
 		JMenu openMenu = new JMenu("Open");
 		JMenuItem openSession = new JMenuItem("Session");
 		openSession.setMnemonic('o');
-		JMenuItem openConnection = new JMenuItem("Connection");
-		openConnection.setMnemonic('O');
 		JMenuItem openDSSFile = new JMenuItem("DSS File");
 		openDSSFile.setMnemonic('f');
 		JMenuItem openDSM2Tidefile = new JMenuItem("DSM2 TideFile");
 		openDSM2Tidefile.setMnemonic('t');
-		openMenu.add(openConnection);
 		openMenu.add(openDSSFile);
 		openMenu.add(openDSM2Tidefile);
 		openMenu.add(openSession);
@@ -310,13 +307,6 @@ public class SessionFrame extends JFrame implements DropTargetListener
 			public void actionPerformed(ActionEvent evt)
 			{
 				openSession(evt);
-			}
-		});
-		openConnection.addActionListener(new ActionListener()
-		{
-			public void actionPerformed(ActionEvent evt)
-			{
-				openConnection(evt);
 			}
 		});
 		openDSSFile.addActionListener(new ActionListener()
@@ -664,17 +654,6 @@ public class SessionFrame extends JFrame implements DropTargetListener
 		// !PENDING: ApplicationExitCommand
 		_statusBar.setText("Exiting application !");
 		System.exit(0);
-	}
-
-	/**
-	 * opens connection to server
-	 */
-	private void openConnection(ActionEvent evt)
-	{
-		Executor.execute(
-				new OpenConnectionSessionCommand(MainGUI.getContext()),
-				_sessionView);
-		_statusBar.setText("Opened connection");
 	}
 
 	/**

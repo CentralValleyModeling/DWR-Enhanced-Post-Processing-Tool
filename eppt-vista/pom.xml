@@ -143,11 +143,6 @@
 			<artifactId>miglayout-swing</artifactId>
 			<version>4.1</version>
 		</dependency>
-		<dependency>
-			<groupId>com.oracle.jdbc</groupId>
-			<artifactId>ojdbc8</artifactId>
-			<version>12.1.0.2</version>
-		</dependency>
 	</dependencies>
 	<repositories>
 		<repository>

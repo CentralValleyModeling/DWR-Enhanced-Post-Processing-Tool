@@ -11,13 +11,9 @@
  */
 package vista.app.commands;
 
-import vista.app.BDATConnectionDialog;
 import vista.app.SessionContext;
-import vista.db.jdbc.bdat.BDATConnection;
-import vista.db.jdbc.bdat.BDATGroup;
 import vista.gui.Command;
 import vista.gui.ExecutionException;
-import vista.set.Session;
 
 /**
  * Encapsulates commands implementing session related commands
@@ -43,10 +39,7 @@ public class OpenConnectionSessionCommand implements Command
 	 */
 	public void execute() throws ExecutionException
 	{
-		Session s = _app.getCurrentSession();
-		BDATConnectionDialog dialog = new BDATConnectionDialog();
-		BDATConnection connection = dialog.getConnection();
-		s.addGroup(new BDATGroup(connection));
+		throw new UnsupportedOperationException("BDAT Oracle connection no longer supported");
 	}
 
 	/**
