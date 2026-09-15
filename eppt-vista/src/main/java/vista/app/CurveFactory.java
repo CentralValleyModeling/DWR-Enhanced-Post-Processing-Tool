@@ -17,6 +17,7 @@ import vista.graph.Curve;
 import vista.graph.CurveAttr;
 import vista.graph.CurveDataModel;
 import vista.graph.FlaggedCurve;
+import vista.graph.FlaggedCurve2D;
 import vista.graph.GraphUtils;
 import vista.graph.ReferenceCurve;
 import vista.set.DataReference;
@@ -38,10 +39,6 @@ public class CurveFactory
 	public static int SHORT_DASHED = 1;
 	public static int LONG_DASHED = 1;
 	public static int SHORT_LONG_DASHED = 1;
-	/**
-	 *
-	 */
-	private static boolean _enhancedGraphics = false;
 
 	/**
 	 *
@@ -101,7 +98,6 @@ public class CurveFactory
 	public static Curve createCurve(DataReference ref, int xAxisPos,
 									int yAxisPos, String legend)
 	{
-		_enhancedGraphics = GraphUtils.isJDK2();
 		try
 		{
 			Curve curve = createFlaggedCurve(ref.getData(), xAxisPos, yAxisPos,
@@ -142,28 +138,15 @@ public class CurveFactory
 			cdm = new InstValFlaggedCurveModel(ds, AppUtils
 					.getCurrentCurveFilter(), xAxisPos, yAxisPos, legend);
 		}
-		if(_enhancedGraphics)
-		{
 			try
 			{
-				Class cl = Class.forName("vista.graph.FlaggedCurve2D");
-				Class[] params = {CurveAttr.class, CurveDataModel.class};
-				Constructor cst = cl.getDeclaredConstructor(params);
-				return (Curve) cst.newInstance(new Object[]{
-						AppUtils.getNextCurveAttr(ds), cdm});
+				return new FlaggedCurve2D(AppUtils.getNextCurveAttr(ds), cdm);
 			}
 			catch(Exception exc)
 			{
 				exc.printStackTrace(System.err);
 				throw new RuntimeException(exc.getMessage());
 			}
-			// return new FlaggedCurve2D(AppUtils.getNextCurveAttr(ds),cdm);
-			// return new FlaggedCurve(AppUtils.getNextCurveAttr(ds),cdm);
-		}
-		else
-		{
-			return new FlaggedCurve(AppUtils.getNextCurveAttr(ds), cdm);
-		}
 	}
 
 	/**

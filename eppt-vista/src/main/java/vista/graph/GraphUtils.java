@@ -209,14 +209,6 @@ public class GraphUtils
 	}
 
 	/**
-	 * returns true if JVM is jdk2 or more.
-	 */
-	public static boolean isJDK2()
-	{
-		return (System.getProperty("java.version").compareTo("1.1z") > 0);
-	}
-
-	/**
 	 * Simulates drawing of different thickness lines by using filled polygon.
 	 *
 	 * @param g  Graphics on which to draw

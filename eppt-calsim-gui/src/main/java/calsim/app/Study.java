@@ -20,8 +20,11 @@ import java.io.PrintWriter;
 import java.util.Date;
 import java.util.Vector;
 
-import com.sun.xml.tree.XmlDocument;
+import calsim.util.xml.XMLHelpers;
+import org.w3c.dom.Document;
 import org.w3c.dom.Element;
+
+import javax.xml.transform.TransformerException;
 
 //import javax.swing.JOptionPane;
 //import com.sun.xml.tree.TreeWalker;
@@ -598,13 +601,15 @@ public class Study
 	 */
 	public void save(String saveFile) throws IOException
 	{
-		XmlDocument doc = new XmlDocument();
+		Document doc = XMLHelpers.createXmlDocument();
 		_filename = saveFile;
 		this.toXml(doc);
-		PrintWriter pw = new PrintWriter(new FileOutputStream(saveFile));
-		doc.write(pw);
-		pw.close();
-		_modified = false;
+        try {
+            XMLHelpers.writeDocumentToXMLFile(doc, saveFile);
+        } catch (TransformerException e) {
+            throw new IOException(e);
+        }
+        _modified = false;
 	}
 
 	/**
@@ -615,7 +620,7 @@ public class Study
 		Study sty = this;
 		try
 		{
-			XmlDocument doc = XmlDocument.createXmlDocument(new FileInputStream(loadFile), false);
+			Document doc = XMLHelpers.readXmlDocumentFromFile(loadFile);
 			sty.fromXml(doc.getDocumentElement());
 		}
 		catch(Exception e)
@@ -684,7 +689,7 @@ public class Study
 	/**
 	 * Returns a element of an xml document
 	 */
-	public void toXml(XmlDocument doc)
+	public void toXml(Document doc)
 	{
 		Element styElement = doc.createElement("study");
 		styElement.appendChild(doc.createComment("study xml format"));

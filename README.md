@@ -9,3 +9,40 @@ The DWR Enhanced Post Processor Tool (EPPT) is a Windows desktop user interface 
 # Module Dependency Graph
 
 ![Dependency Graph](https://github.com/CalSimCalLite/DWR-Enhanced-Post-Processing-Tool/blob/master/DependencyGraph.png)
+
+## Required Maven Configuration
+EPPT requires a GitHub personal access token (PAT) with the read:packages scope in your Maven settings.xml. 
+This can typically be found at %USERPROFILE%\.m2\settings.xml on Windows or ~/.m2/settings.xml on macOS/Linux.
+
+Example settings.xml entries:
+```xml
+<settings>
+  <servers>
+    <server>
+      <id>github</id>
+      <username>YOUR_GITHUB_USERNAME</username>
+      <password>[github_pat]</password>
+    </server>
+    <server>
+      <id>github-wrimsdeps</id>
+      <username>YOUR_GITHUB_USERNAME</username>
+        <password>[github_pat]</password>
+    </server>
+  </servers>
+</settings>
+```
+## Updating to a new Bundled Java Version
+EPPT bundles an included OpenJDK release. Due to the use of JavaFX and Swing components, a JDK release must
+be used, as the JRE does not include the necessary components for JavaFX + Swing interoperability.
+
+The JDK that EPPT uses is stored on GitHub Packages to make it available as a Maven Dependency:
+https://github.com/CentralValleyModeling/DWR-Enhanced-Post-Processing-Tool/packages/3226725
+
+This is a direct re-upload of the Adoptium OpenJDK release with no modifications. To upload a new release, download the
+appropriate Adoptium JDK release in zip format from https://adoptium.net/temurin/releases?version=21&os=windows&arch=x64 
+and use the Maven deploy:deploy-file command to upload:
+```cmd
+mvn deploy:deploy-file -DrepositoryId=github -Durl=https://maven.pkg.github.com/CentralValleyModeling/DWR-Enhanced-Post-Processing-Tool/ -Dfile=OpenJDK21U-jdk_x64_windows_hotspot_[VERSIONHERE].zip -DgroupId=net.adoptium -DartifactId=jdk -Dversion=[VERSIONHERE]_win-x86_64 -Dpackaging=zip
+```
+Replace the file name and version as appropriate to match your updated JDK release. The updated JDK can be referenced in
+the application/pom.xml.

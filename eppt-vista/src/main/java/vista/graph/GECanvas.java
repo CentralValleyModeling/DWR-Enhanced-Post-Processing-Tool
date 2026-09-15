@@ -11,12 +11,9 @@
  */
 package vista.graph;
 
-import java.awt.Dimension;
-import java.awt.Graphics;
-import java.awt.Image;
-import java.awt.Rectangle;
-import java.lang.reflect.Constructor;
 import javax.swing.*;
+import java.awt.*;
+import java.awt.image.BufferedImage;
 
 /**
  * This class handles the passing of messages to and from the GraphicElement
@@ -27,7 +24,7 @@ import javax.swing.*;
  * @author Nicky Sandhu
  * @version $Id: GECanvas.java,v 1.1 2003/10/02 20:48:57 redwood Exp $
  */
-public class GECanvas extends JPanel implements ElementContext
+public class GECanvas extends JPanel implements ElementContext, AutoCloseable
 {
 	/**
 	 * for debuggin' purposes
@@ -100,6 +97,7 @@ public class GECanvas extends JPanel implements ElementContext
 	 * paint method is overrided and graph layout + draw is called. This method
 	 * handles double buffering as well.
 	 */
+	@Override
 	public void paint(Graphics g)
 	{
 		if(!isVisible())
@@ -194,19 +192,17 @@ public class GECanvas extends JPanel implements ElementContext
 	/**
 	 * flush the image resources
 	 */
-	public void finalize() throws java.lang.Throwable
+	public void close()
 	{
 		if(_geImage != null)
 		{
 			if(DEBUG)
 			{
-				System.out.println("finalize method => Killing image "
-						+ _geImage);
+				System.out.println("close method => Killing image " + _geImage);
 			}
 			_geImage.flush();
 			_geImage = null;
 		}
-		super.finalize();
 	}
 
 	/**
@@ -215,30 +211,17 @@ public class GECanvas extends JPanel implements ElementContext
 	public Image mkImage(int width, int height)
 	{
 		Image img = null;
-		if(GraphUtils.isJDK2())
-		{
-			// _geImage = new BufferedImage(int width, int height, int
-			// imageType);
-			// width = width, height = height, imageType =
-			// BufferedImage.TYPE_INT_RGB or 1
-			try
-			{
-				Class cl = Class.forName("java.awt.image.BufferedImage");
-				Class[] params = {Integer.TYPE, Integer.TYPE, Integer.TYPE};
-				Constructor cst = cl.getDeclaredConstructor(params);
-				img = (Image) cst
-						.newInstance(new Object[]{new Integer(width),
-								new Integer(height), new Integer(1)});
-			}
-			catch(Exception exc)
-			{
-				img = createImage(width, height);
-			}
+		// width = width, height = height, imageType =
+		// BufferedImage.TYPE_INT_RGB or 1
+		try
+        {
+			_geImage = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
 		}
-		else
+		catch (Exception exc)
 		{
 			img = createImage(width, height);
 		}
+
 		return img;
 	}
 
@@ -273,6 +256,7 @@ public class GECanvas extends JPanel implements ElementContext
 	 * The preferred size of this component is the preferrred size of the
 	 * contained GraphicElement
 	 */
+	@Override
 	public Dimension getPreferredSize()
 	{
 		Graphics g = this.getGraphics();
@@ -294,6 +278,7 @@ public class GECanvas extends JPanel implements ElementContext
 	/**
 	 * True if double buffering is being used
 	 */
+	@Override
 	public boolean isDoubleBuffered()
 	{
 		return doubleBuffer;
@@ -310,6 +295,7 @@ public class GECanvas extends JPanel implements ElementContext
 	/**
 	 * sets the double buffering flag
 	 */
+	@Override
 	public void setDoubleBuffered(boolean b)
 	{
 		super.setDoubleBuffered(false);

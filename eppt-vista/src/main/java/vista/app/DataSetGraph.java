@@ -40,6 +40,7 @@ import vista.graph.GraphUtils;
 import vista.graph.GraphicElement;
 import vista.graph.ImageSerializer;
 import vista.graph.Plot;
+import vista.graph.Print2D;
 import vista.graph.PrintPreviewer;
 import vista.graph.ZoomInteractor;
 import vista.gui.VistaUtils;
@@ -102,7 +103,7 @@ public class DataSetGraph extends JPanel
 			}
 			try
 			{
-				canvas.finalize();
+				canvas.close();
 				canvas = null;
 			}
 			catch(Throwable exc)
@@ -154,34 +155,14 @@ public class DataSetGraph extends JPanel
 		canvas.addComponentListener(_ri);
 	}
 
-	/**
-	 *
-	 */
 	public void doPrint()
 	{
-		if(GraphUtils.isJDK2())
-		{
-			try
-			{
-				String methodName = "print2d";
-				Class[] params = {Class.forName("java.lang.String"),
-						Boolean.TYPE, Class.forName("vista.graph.GECanvas")};
-				Class cl2d = Class.forName("vista.graph.Print2D");
-				Method m = cl2d.getDeclaredMethod(methodName, params);
-				m.invoke(null, PRINTER_NAME,
-						new Boolean(LANDSCAPE_PRINTING), canvas);
-			}
-			catch(Exception exc)
-			{
-				exc.printStackTrace(System.err);
-				throw new RuntimeException("Nested Exception: "
-						+ exc.getMessage());
-			}
-
-		}
-		else
-		{
-			doPrint(PRINTER_NAME, LANDSCAPE_PRINTING);
+		try {
+			Print2D.print2d(PRINTER_NAME, LANDSCAPE_PRINTING, canvas);
+		} catch (Exception exc) {
+			exc.printStackTrace(System.err);
+			throw new RuntimeException("Nested Exception: "
+					+ exc.getMessage());
 		}
 	}
 
