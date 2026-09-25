@@ -27,5 +27,7 @@ jobs:
 
       - name: Build with Maven
         shell: bash
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          ./eppt-parent/mvnw -f eppt-parent/pom.xml clean compile
+          ./eppt-parent/mvnw -f eppt-parent/pom.xml -Dgithub.login="dwr-eppt-build" -Dgithub.pwd="$GITHUB_TOKEN" clean compile
