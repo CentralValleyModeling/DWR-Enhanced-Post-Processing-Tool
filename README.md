@@ -23,11 +23,6 @@ Example settings.xml entries:
       <username>YOUR_GITHUB_USERNAME</username>
       <password>[github_pat]</password>
     </server>
-    <server>
-      <id>github-wrimsdeps</id>
-      <username>YOUR_GITHUB_USERNAME</username>
-        <password>[github_pat]</password>
-    </server>
   </servers>
 </settings>
 ```
@@ -46,3 +41,11 @@ mvn deploy:deploy-file -DrepositoryId=github -Durl=https://maven.pkg.github.com/
 ```
 Replace the file name and version as appropriate to match your updated JDK release. The updated JDK can be referenced in
 the application/pom.xml.
+
+## GitHub Actions Workflow Triggers
+
+- **Java CI** (`.github/workflows/build_java.yml`) runs a Maven `verify` when a pull request is opened, reopened, or
+  updated with new commits. It also runs on pushes to `main` and on all new tags that are pushed.
+- **Installer Publish** (`.github/workflows/build_installer.yml`) runs when a GitHub release is published.
+  It builds the installer, uploads the ZIP as a workflow artifact, and attaches it to the release. Important: A tag push
+  alone does not trigger this workflow.

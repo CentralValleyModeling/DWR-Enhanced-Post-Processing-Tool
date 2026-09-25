@@ -17,7 +17,7 @@
 
 	<groupId>gov.ca.water</groupId>
 	<artifactId>eppt-parent</artifactId>
-	<version>1.2.2-SNAPSHOT</version>
+	<version>${revision}</version>
 	<packaging>pom</packaging>
 
 	<name>EPPT Parent</name>
@@ -41,6 +41,9 @@
 		<developerConnection>scm:git:https://github.com/CalSimCalLite/DWR-Enhanced-Post-Processing-Tool.git</developerConnection>
 	</scm>
 	<properties>
+		<!--Default for local builds; CI overrides with -Drevision (see .teamcity/settings.kts)-->
+		<revision>99.local-SNAPSHOT</revision>
+
 		<netbeans.version>RELEASE300</netbeans.version>
 		<monolith.version>5.3.5</monolith.version>
 		<rmajavafx.version>3.0.1</rmajavafx.version>
@@ -60,16 +63,39 @@
 			<url>https://maven.pkg.github.com/CentralValleyModeling/DWR-Enhanced-Post-Processing-Tool/</url>
 		</repository>
 		<repository>
-			<id>github-wrimsdeps</id>
-			<url>https://maven.pkg.github.com/CentralValleyModeling/wrims-engine-dependencies/</url>
-		</repository>
-		<repository>
 			<id>hec-maven</id>
 			<url>https://www.hec.usace.army.mil/nexus/repository/maven-public/</url>
 		</repository>
 	</repositories>
 	<build>
 		<plugins>
+			<plugin>
+				<!--Resolves the revision property in installed/deployed POMs; output kept in target/ so nothing lands in source dirs-->
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>flatten-maven-plugin</artifactId>
+				<version>1.7.3</version>
+				<configuration>
+					<updatePomFile>true</updatePomFile>
+					<flattenMode>resolveCiFriendliesOnly</flattenMode>
+					<outputDirectory>${project.build.directory}</outputDirectory>
+				</configuration>
+				<executions>
+					<execution>
+						<id>flatten</id>
+						<phase>process-resources</phase>
+						<goals>
+							<goal>flatten</goal>
+						</goals>
+					</execution>
+					<execution>
+						<id>flatten-clean</id>
+						<phase>clean</phase>
+						<goals>
+							<goal>clean</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
 			<plugin>
 				<groupId>org.apache.netbeans.utilities</groupId>
 				<artifactId>nbm-maven-plugin</artifactId>
