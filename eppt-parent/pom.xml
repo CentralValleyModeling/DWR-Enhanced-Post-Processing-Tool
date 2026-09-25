@@ -60,10 +60,6 @@
 			<url>https://maven.pkg.github.com/CentralValleyModeling/DWR-Enhanced-Post-Processing-Tool/</url>
 		</repository>
 		<repository>
-			<id>github-wrimsdeps</id>
-			<url>https://maven.pkg.github.com/CentralValleyModeling/wrims-engine-dependencies/</url>
-		</repository>
-		<repository>
 			<id>hec-maven</id>
 			<url>https://www.hec.usace.army.mil/nexus/repository/maven-public/</url>
 		</repository>
