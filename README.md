@@ -23,11 +23,6 @@ Example settings.xml entries:
       <username>YOUR_GITHUB_USERNAME</username>
       <password>[github_pat]</password>
     </server>
-    <server>
-      <id>github-wrimsdeps</id>
-      <username>YOUR_GITHUB_USERNAME</username>
-        <password>[github_pat]</password>
-    </server>
   </servers>
 </settings>
 ```
