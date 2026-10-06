@@ -1,0 +1,39 @@
+name: Publish EPPT installer
+
+on:
+  release:
+    types: [ published ]
+
+jobs:
+  build:
+    permissions: write-all
+    runs-on: windows-2022
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Set up JDK 21
+        uses: actions/setup-java@v5
+        with:
+          java-version: '21'
+          distribution: 'temurin'
+          cache: 'maven'
+
+      - name: Build Installer with Gradle & zip
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          TAG_NAME: ${{ github.event.release.tag_name }}
+        run: |
+          ./eppt-parent/mvnw -f eppt-parent/pom.xml -s eppt-parent/ci-settings.xml -Drevision=$env:TAG_NAME clean install
+
+      - name: Upload Installer .zip artifact to Action Workflow
+        uses: actions/upload-artifact@v7.0.1
+        with:
+          name: eppt-app
+          path: |
+            ./application/target/DWR-EPPT.zip
+
+      - name: Attach WRIMS Installer zip to github deployment
+        run: |
+          gh release upload ${{ github.event.release.tag_name }} application/target/DWR-EPPT.zip --repo ${{ github.repository }}
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
