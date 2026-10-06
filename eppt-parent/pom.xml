@@ -44,7 +44,7 @@
 		<!--Default for local builds; CI overrides with -Drevision (see .teamcity/settings.kts)-->
 		<revision>99.local-SNAPSHOT</revision>
 
-		<netbeans.version>RELEASE300</netbeans.version>
+		<netbeans.version>RELEASE310</netbeans.version>
 		<monolith.version>5.3.5</monolith.version>
 		<rmajavafx.version>3.0.1</rmajavafx.version>
 		<javafx.version>23</javafx.version>
