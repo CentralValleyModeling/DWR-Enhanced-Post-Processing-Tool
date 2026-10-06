@@ -86,7 +86,7 @@
 		<dependency>
 			<groupId>com.jtattoo</groupId>
 			<artifactId>JTattoo</artifactId>
-			<version>1.6.11</version>
+			<version>1.6.13</version>
 			<scope>test</scope>
 		</dependency>
 		<dependency>
