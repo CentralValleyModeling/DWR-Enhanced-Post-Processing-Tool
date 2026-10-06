@@ -47,7 +47,7 @@
 		<netbeans.version>RELEASE300</netbeans.version>
 		<monolith.version>5.3.5</monolith.version>
 		<rmajavafx.version>3.0.1</rmajavafx.version>
-		<javafx.version>23</javafx.version>
+		<javafx.version>27</javafx.version>
 		<nbm.maven.plugin.version>14.3</nbm.maven.plugin.version>
 		<javaheclib.version>7-IA-win-x64</javaheclib.version>
 
