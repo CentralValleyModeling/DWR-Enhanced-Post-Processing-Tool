@@ -138,7 +138,7 @@
 						<executions>
 							<execution>
 								<id>download-jre</id>
-								<phase>package</phase>
+								<phase>prepare-package</phase>
 								<goals>
 									<goal>unpack</goal>
 								</goals>
