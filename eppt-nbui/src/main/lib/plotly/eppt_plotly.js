@@ -57,18 +57,21 @@ var FORMATTER = [
 ];
 
 function format(value) {
-    let format;
-    if(value) {
+    if (value) {
+        let digits;
         if (Math.abs(value) >= 1000) {
-            format = ",.0f";
+            digits = 0;
         } else if (Math.abs(value) >= 10) {
-            format = ",.1f";
+            digits = 1;
         } else if (Math.abs(value) >= 1) {
-            format = ",.2f";
+            digits = 2;
         } else {
-            format = ",.3f";
+            digits = 3;
         }
-        let retval = Plotly.d3.format(format)(value);
+        let retval = new Intl.NumberFormat('en-US', {
+            minimumFractionDigits: digits,
+            maximumFractionDigits: digits
+        }).format(value);
         if (Number(retval) === 0) {
             retval = 0;
         }
@@ -197,11 +200,7 @@ function plotData(layout, dataList, tsDescriptor) {
             scrollZoom: true,
             responsive: true
         });
-        $("#" + plot.id).mousedown((ev) => {
-            if (ev.which === 3) {
-                openContextMenu('#' + plot.id, ev, plotlyCopyToClipboard, plotlyExportFunction(plot));
-            }
-        });
+        attachContextMenu(plot);
         plot.on('plotly_relayout',
             function (eventdata) {
                 if (eventdata['xaxis.range[0]'] && syncPlotsEnabled) {
@@ -233,57 +232,85 @@ function plotData(layout, dataList, tsDescriptor) {
 }
 
 
-function openContextMenu(id, e, copyToClipboard, plotlyExportToFormat) {
-    // prevent the browsers default context menu form appearing.
-    e.preventDefault();
-    $.contextMenu({
-        selector: id,
-        build: function ($triggerElement, e) {
-            return {
-                items: {
-                    "export": {
-                        name: "Export",
-                        items: {
-                            "SVG": {
-                                name: "To SVG",
-                                callback: function (key, options) {
-                                    plotlyExportToFormat('svg');
-                                }
-                            },
-                            "PNG": {
-                                name: "To PNG",
-                                callback: function (key, options) {
-                                    plotlyExportToFormat('png');
-                                }
-                            },
-                            "JPEG": {
-                                name: "To JPEG",
-                                callback: function (key, options) {
-                                    plotlyExportToFormat('jpeg');
-                                }
-                            },
-                            "PDF": {
-                                name: "To PDF",
-                                callback: function (key, options) {
-                                    plotlyExportToFormat('pdf');
-                                }
-                            }
-                        }
-                    },
-                    "copy": {
-                        name: "Copy Data",
-                        callback: function (key, options) {
-                            copyToClipboard(options['selector']);
-                        }
-                    },
-                }
-            }
-        }
-    });
+let activeContextMenu = null;
 
+function closeContextMenu() {
+    if (activeContextMenu) {
+        activeContextMenu.remove();
+        activeContextMenu = null;
+    }
 }
 
+function buildMenuItem(label, onClick) {
+    let item = document.createElement('div');
+    item.className = 'ctx-item';
+    item.textContent = label;
+    if (onClick) {
+        item.addEventListener('click', () => {
+            closeContextMenu();
+            onClick();
+        });
+    }
+    return item;
+}
+
+function openContextMenu(plot, e) {
+    // prevent the browsers default context menu form appearing.
+    e.preventDefault();
+    closeContextMenu();
+    let exportTo = plotlyExportFunction(plot);
+    let menu = document.createElement('div');
+    menu.className = 'ctx-menu';
+    let exportItem = buildMenuItem('Export');
+    exportItem.classList.add('ctx-parent');
+    let submenu = document.createElement('div');
+    submenu.className = 'ctx-menu ctx-submenu';
+    [['To SVG', 'svg'], ['To PNG', 'png'], ['To JPEG', 'jpeg'], ['To PDF', 'pdf']].forEach(([label, format]) => {
+        submenu.appendChild(buildMenuItem(label, () => exportTo(format)));
+    });
+    exportItem.appendChild(submenu);
+    menu.appendChild(exportItem);
+    menu.appendChild(buildMenuItem('Copy Data', () => plotlyCopyToClipboard(plot)));
+    document.body.appendChild(menu);
+    // keep the menu inside the viewport
+    let left = Math.min(e.clientX, window.innerWidth - menu.offsetWidth);
+    let top = Math.min(e.clientY, window.innerHeight - menu.offsetHeight);
+    menu.style.left = Math.max(left, 0) + 'px';
+    menu.style.top = Math.max(top, 0) + 'px';
+    activeContextMenu = menu;
+}
+
+function attachContextMenu(plot) {
+    plot.addEventListener('contextmenu', (ev) => openContextMenu(plot, ev));
+}
+
+document.addEventListener('mousedown', (ev) => {
+    if (activeContextMenu && !activeContextMenu.contains(ev.target)) {
+        closeContextMenu();
+    }
+});
+document.addEventListener('keydown', (ev) => {
+    if (ev.key === 'Escape') {
+        closeContextMenu();
+    }
+});
+
 var javaObj;
+
+// Entry points for the JavaFX host (see JavaFxChartsPane)
+
+// Receives the host's bridge object and routes console output to the Java log, since the WebView has no dev tools
+function connectJava(bridge) {
+    javaObj = bridge;
+    ['log', 'warn', 'error'].forEach(level => {
+        console[level] = (...args) => bridge.log(level, args.join(' '));
+    });
+}
+
+// Plot data arrives as a JSON string; any extra arguments are passed through to the page's plot function
+function renderFromJava(json, ...args) {
+    plot(JSON.parse(json), ...args);
+}
 
 function plotlyExportFunction(plot) {
     return (format) => {

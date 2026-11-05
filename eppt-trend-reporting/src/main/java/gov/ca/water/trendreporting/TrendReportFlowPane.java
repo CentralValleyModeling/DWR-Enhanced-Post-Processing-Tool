@@ -45,9 +45,9 @@ class TrendReportFlowPane
 		return _flowPane;
 	}
 
-	void addDashboardPane(Path path, String callback)
+	void addDashboardPane(Path path, String plotJson, boolean aggregate)
 	{
-		JavaFxChartsPane javascriptPanel = new JavaFxChartsPane(path, callback);
+		JavaFxChartsPane javascriptPanel = new JavaFxChartsPane(path, plotJson, aggregate);
 		_flowPane.setCenter(javascriptPanel);
 	}
 

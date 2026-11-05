@@ -169,8 +169,7 @@ function plotDiscrete(data) {
     plotData(layout, plotlyMonthlySeries, data['ts_descriptor']);
 }
 
-function plotlyCopyToClipboard(element) {
-    let plot = $(element)[0];
+function plotlyCopyToClipboard(plot) {
     let layout = plot.layout;
     let data1 = plot.data;
     var text = layout['title']['text'] + '\n' + 'Date\t' + layout['yaxis']['title']['text'] + '\n';

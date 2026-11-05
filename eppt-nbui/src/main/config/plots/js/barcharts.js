@@ -252,11 +252,7 @@ function plotData2(layout, dataList, data) {
             scrollZoom: true,
             responsive: true
         });
-        $("#" + plot.id).mousedown((ev) => {
-            if (ev.which === 3) {
-                openContextMenu('#' + plot.id, ev, plotlyCopyToClipboard, plotlyExportFunction(plot));
-            }
-        });
+        attachContextMenu(plot);
         plot.on('plotly_relayout',
             function (eventdata) {
                 if (eventdata['xaxis.range[0]']) {
@@ -287,8 +283,7 @@ function plotData2(layout, dataList, data) {
     }
 }
 
-function plotlyCopyToClipboard(element) {
-    let plot = $(element)[0];
+function plotlyCopyToClipboard(plot) {
     let layout = plot.layout;
     let data1 = plot.data;
     var text = layout['title']['text'];

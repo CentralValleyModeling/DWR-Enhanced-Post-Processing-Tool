@@ -54,7 +54,7 @@ public abstract class PlotlyPane extends JFXPanel
 				{
 					BorderPane borderPane = new BorderPane();
 					_javaFxChartsPane = new JavaFxChartsPane(Paths.get(Constant.CONFIG_DIR).resolve("plots").resolve(getHtmlPath()),
-							"plot(" + _epptReportingComputedSet.toJson().toString(0) + ");");
+							_epptReportingComputedSet.toJson().toString(0));
 					borderPane.setCenter(_javaFxChartsPane);
 					setScene(new Scene(borderPane));
 				}

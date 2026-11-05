@@ -47,9 +47,13 @@ public class JavascriptImageExporter
 {
 	private static final Logger LOGGER = Logger.getLogger(JavascriptImageExporter.class.getName());
 
-	public void log(String message)
+	/**
+	 * Receives the page's console output, see {@code connectJava} in eppt_plotly.js.
+	 */
+	public void log(String level, String message)
 	{
-		LOGGER.log(Level.SEVERE, "Plotly Output: {0}", message);
+		Level logLevel = "error".equals(level) ? Level.SEVERE : "warn".equals(level) ? Level.WARNING : Level.FINE;
+		LOGGER.log(logLevel, "Plotly Output: {0}", message);
 	}
 
 	public void interruptFunction(String format, Object dataJson, Object layoutJson, Object width, Object height)
