@@ -122,8 +122,7 @@ function plotAggregate(data) {
     plotData(layout, plotlyAggregateSeries, data['ts_descriptor']);
 }
 
-function plotlyCopyToClipboard(element) {
-    let plot = $(element)[0];
+function plotlyCopyToClipboard(plot) {
     let layout = plot.layout;
     let data1 = plot.data;
     let calcdata = plot.calcdata;

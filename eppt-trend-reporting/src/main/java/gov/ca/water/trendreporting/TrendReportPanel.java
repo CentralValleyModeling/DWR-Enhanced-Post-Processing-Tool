@@ -226,7 +226,7 @@ public class TrendReportPanel extends JFXPanel
 			{
 				for(JSONObject jsonObject : jsonObjects)
 				{
-					_javascriptPane.addDashboardPane(path, "plot(" + jsonObject.toString(0) + "," + aggregate + ");");
+					_javascriptPane.addDashboardPane(path, jsonObject.toString(0), aggregate);
 					_progressTextLabel.setText("");
 				}
 			}

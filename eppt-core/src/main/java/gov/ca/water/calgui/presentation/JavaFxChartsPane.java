@@ -16,7 +16,6 @@ import java.nio.file.Path;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import javafx.application.Platform;
 import javafx.beans.value.ObservableValue;
 import javafx.concurrent.Worker;
 import javafx.scene.layout.BorderPane;
@@ -34,33 +33,35 @@ public class JavaFxChartsPane extends BorderPane
 {
 	private static final Logger LOGGER = Logger.getLogger(JavaFxChartsPane.class.getName());
 	private final WebView _webView;
-	private final String _callbackScript;
+	private final Object[] _renderArgs;
+	//the WebView only holds a weak reference to objects handed to javascript, so keep the bridge alive for the life of the pane
+	private final JavascriptImageExporter _javaBridge = new JavascriptImageExporter();
 
-	public JavaFxChartsPane(Path path, String callbackScript)
+	/**
+	 * @param path       html page to load
+	 * @param plotJson   plot data serialized as JSON; handed to the page's {@code renderFromJava} function, which parses it
+	 *                   and forwards it to the page's {@code plot} function
+	 * @param extraArgs  additional (primitive) arguments forwarded to the page's {@code plot} function
+	 */
+	public JavaFxChartsPane(Path path, String plotJson, Object... extraArgs)
 	{
-		_callbackScript = callbackScript;
+		_renderArgs = new Object[extraArgs.length + 1];
+		_renderArgs[0] = plotJson;
+		System.arraycopy(extraArgs, 0, _renderArgs, 1, extraArgs.length);
 		_webView = new WebView();
 		_webView.setContextMenuEnabled(true);
 		_webView.getEngine().getLoadWorker().exceptionProperty().addListener(this::handleException);
-		_webView.getEngine().getLoadWorker().stateProperty().addListener(this::callbackScript);
+		_webView.getEngine().getLoadWorker().stateProperty().addListener(this::pageLoaded);
 		setCenter(_webView);
 		load(path);
 	}
 
-	private void callbackScript(ObservableValue<? extends Worker.State> observableValue, Worker.State state, Worker.State newValue)
+	private void pageLoaded(ObservableValue<? extends Worker.State> observableValue, Worker.State state, Worker.State newValue)
 	{
 		if(newValue == Worker.State.SUCCEEDED)
 		{
-			Object window = _webView.getEngine().executeScript("window");
-			if(window != null)
-			{
-				Platform.runLater(()->
-				{
-					((JSObject)window).setMember("javaObj", new JavascriptImageExporter());
-					executeScript("console.log = function(message) { javaObj.log(message); }");
-				});
-			}
-			Platform.runLater(()->executeScript(_callbackScript));
+			callJavascript("connectJava", _javaBridge);
+			callJavascript("renderFromJava", _renderArgs);
 		}
 	}
 
@@ -84,19 +85,15 @@ public class JavaFxChartsPane extends BorderPane
 		}
 	}
 
-	private void executeScript(String script)
+	private void callJavascript(String function, Object... args)
 	{
-		if(script != null)
+		try
 		{
-			LOGGER.log(Level.FINE, "Executing script: {0}", script);
-			try
-			{
-				_webView.getEngine().executeScript(script);
-			}
-			catch(JSException ex)
-			{
-				LOGGER.log(Level.FINE, "Error in script", ex);
-			}
+			((JSObject) _webView.getEngine().executeScript("window")).call(function, args);
+		}
+		catch(JSException ex)
+		{
+			LOGGER.log(Level.WARNING, "Error calling javascript function: " + function, ex);
 		}
 	}
 }
