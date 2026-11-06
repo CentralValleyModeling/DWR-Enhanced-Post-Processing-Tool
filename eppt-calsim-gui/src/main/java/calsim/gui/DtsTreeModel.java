@@ -1499,7 +1499,7 @@ public class DtsTreeModel extends GeneralTreeModel
 				name = curel.getAttribute("name");
 				curnode = new DefaultMutableTreeNode(name);
 				curnode.setAllowsChildren(getAllowChildren(name));
-				lvl = new Integer(curel.getAttribute("level"));
+				lvl = Integer.valueOf(curel.getAttribute("level"));
 				curlvl = lvl;
 				nodes[curlvl] = curnode;
 				parentnode.add(curnode);
@@ -1515,7 +1515,7 @@ public class DtsTreeModel extends GeneralTreeModel
 				name = curel.getAttribute("name");
 				curnode = new DefaultMutableTreeNode(name);
 				curnode.setAllowsChildren(getAllowChildren(name));
-				lvl = new Integer(curel.getAttribute("level"));
+				lvl = Integer.valueOf(curel.getAttribute("level"));
 				curlvl = lvl.intValue();
 				nodes[curlvl] = curnode;
 				_root.add(curnode);
@@ -1541,7 +1541,7 @@ public class DtsTreeModel extends GeneralTreeModel
 				{
 					curnode.setAllowsChildren(true);
 				}
-				lvl = new Integer(curel.getAttribute("level"));
+				lvl = Integer.valueOf(curel.getAttribute("level"));
 				curlvl = lvl.intValue();
 				if(curlvl == prvlvl)
 				{

@@ -220,17 +220,17 @@ public class OptionsDialog extends JDialog implements Changeable
 		_props.put("gui.lookAndFeel", laf.getSelectedItem());
 		_props.put("gui.initialPosition", sip1.getSelectedItem() + "&"
 				+ sip2.getSelectedItem());
-		_props.put("gui.connect", new Boolean(connectChoice.isSelected())
-				.toString());
+		_props.put("gui.connect", Boolean
+				.toString(connectChoice.isSelected()));
 		// _props.put("","");
 		_props.put("default.server", ds.getText());
 		_props.put("default.dir", dd.getText());
 		_props.put("default.port", dp.getText());
 		_props
-				.put("dss.flags", new Boolean(flagChoice.isSelected())
-						.toString());
-		_props.put("dss.localAccess", new Boolean(localChoice.isSelected())
-				.toString());
+				.put("dss.flags", Boolean
+						.toString(flagChoice.isSelected()));
+		_props.put("dss.localAccess", Boolean
+				.toString(localChoice.isSelected()));
 		_props.put("graph.titleTemplate", tt.getText());
 		_props.put("graph.legendTemplate", lt.getText());
 

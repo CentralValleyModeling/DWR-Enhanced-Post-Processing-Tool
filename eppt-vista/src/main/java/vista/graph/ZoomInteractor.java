@@ -588,15 +588,15 @@ public class ZoomInteractor extends ElementInteractor
 			switch(axisDirection)
 			{
 				case AxisAttr.TOP:
-					return new Integer(KeyEvent.VK_UP);
+					return Integer.valueOf(KeyEvent.VK_UP);
 				case AxisAttr.BOTTOM:
-					return new Integer(KeyEvent.VK_DOWN);
+					return Integer.valueOf(KeyEvent.VK_DOWN);
 				case AxisAttr.LEFT:
-					return new Integer(KeyEvent.VK_LEFT);
+					return Integer.valueOf(KeyEvent.VK_LEFT);
 				case AxisAttr.RIGHT:
-					return new Integer(KeyEvent.VK_RIGHT);
+					return Integer.valueOf(KeyEvent.VK_RIGHT);
 				default:
-					return new Integer(KeyEvent.VK_HOME);
+					return Integer.valueOf(KeyEvent.VK_HOME);
 			}
 		}
 

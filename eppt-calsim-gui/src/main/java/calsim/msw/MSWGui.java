@@ -741,7 +741,7 @@ public class MSWGui extends JFrame implements ActionListener, ComponentListener
 		Integer[] delays = {0, 50, 100, 200, 300, 400, 500, 750, 1000};
 		JComboBox parseFileDelayBox = new JComboBox(delays);
 		parseFileDelayBox.setEditable(true);
-		parseFileDelayBox.setSelectedItem(new Integer(_userPrefs.getInt(PARSE_DELAY, 0)));
+		parseFileDelayBox.setSelectedItem(Integer.valueOf(_userPrefs.getInt(PARSE_DELAY, 0)));
 		parseFileDelayBox.addActionListener(new ActionListener()
 		{
 			public void actionPerformed(ActionEvent e)
@@ -1421,7 +1421,7 @@ public class MSWGui extends JFrame implements ActionListener, ComponentListener
 		for(int i = 0; i < _table.getRowCount(); i++)
 		{
 			String svalue = (String) _model.getValueAt(i, 2);
-			int ivalue = new Integer(svalue);
+			int ivalue = Integer.valueOf(svalue);
 			if(ivalue > np)
 			{
 				np = ivalue;
@@ -1486,7 +1486,7 @@ public class MSWGui extends JFrame implements ActionListener, ComponentListener
 		{
 			s = "0";
 		}
-		return new Integer(s);
+		return Integer.valueOf(s);
 	}
 
 	/**

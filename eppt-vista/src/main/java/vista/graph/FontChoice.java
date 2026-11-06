@@ -64,7 +64,7 @@ public class FontChoice extends JPanel
 		int minFontSize = 3, maxFontSize = 60;
 		for(int i = minFontSize; i < maxFontSize; i++)
 		{
-			sizeBox.addItem(new Integer(i).toString());
+			sizeBox.addItem(Integer.toString(i));
 		}
 		sizeBox.setSelectedIndex(font.getSize() - minFontSize);
 		Dimension pSize = sizeBox.getPreferredSize();
@@ -96,7 +96,7 @@ public class FontChoice extends JPanel
 		int bold = boldCheck.isSelected() ? Font.BOLD : 0;
 		int italic = italicCheck.isSelected() ? Font.ITALIC : 0;
 		int style = plain | bold | italic;
-		int size = new Integer((String) sizeBox.getSelectedItem()).intValue();
+		int size = Integer.valueOf((String) sizeBox.getSelectedItem()).intValue();
 		return new Font((String) fontBox.getSelectedItem(), style, size);
 	}
 }

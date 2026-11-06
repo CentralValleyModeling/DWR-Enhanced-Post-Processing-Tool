@@ -259,7 +259,7 @@ public class MultiStudyRunner
 			}
 			_wm.parse();
 			Integer numberCycles = _study.getNumberSequences();
-			Integer numberWreslCycles = new Integer(_wm.getNumberOfWreslCycles());
+			Integer numberWreslCycles = Integer.valueOf(_wm.getNumberOfWreslCycles());
 			if(numberCycles.intValue() != numberWreslCycles.intValue())
 			{
 				msg = "Number of sequences must be same as specified in Wresl!";
@@ -556,7 +556,7 @@ public class MultiStudyRunner
 					{
 						int dir = s[1].lastIndexOf("\\");
 						String dirname = s[1].substring(0, dir + 1);
-						fromFile = dirname + "POSITION" + new Integer(i + 1).toString() + "DV.DSS";
+						fromFile = dirname + "POSITION" + Integer.toString(i + 1) + "DV.DSS";
 					}
 					if(DEBUG)
 					{
@@ -567,7 +567,7 @@ public class MultiStudyRunner
 					{
 						int dir = s[2].lastIndexOf("\\");
 						String dirname = s[2].substring(0, dir + 1);
-						todvs[i] = dirname + "POSITION" + new Integer(i + 1).toString() + "DV.DSS";
+						todvs[i] = dirname + "POSITION" + Integer.toString(i + 1) + "DV.DSS";
 						if(DEBUG)
 						{
 							System.out.println("Alt. to DV: " + todvs[i]);
@@ -731,18 +731,18 @@ public class MultiStudyRunner
 		int incyr;
 		//		int stat;
 		Hashtable monthIndex = new Hashtable(12);
-		monthIndex.put("JAN", new Integer(1));
-		monthIndex.put("FEB", new Integer(2));
-		monthIndex.put("MAR", new Integer(3));
-		monthIndex.put("APR", new Integer(4));
-		monthIndex.put("MAY", new Integer(5));
-		monthIndex.put("JUN", new Integer(6));
-		monthIndex.put("JUL", new Integer(7));
-		monthIndex.put("AUG", new Integer(8));
-		monthIndex.put("SEP", new Integer(9));
-		monthIndex.put("OCT", new Integer(10));
-		monthIndex.put("NOV", new Integer(11));
-		monthIndex.put("DEC", new Integer(12));
+		monthIndex.put("JAN", Integer.valueOf(1));
+		monthIndex.put("FEB", Integer.valueOf(2));
+		monthIndex.put("MAR", Integer.valueOf(3));
+		monthIndex.put("APR", Integer.valueOf(4));
+		monthIndex.put("MAY", Integer.valueOf(5));
+		monthIndex.put("JUN", Integer.valueOf(6));
+		monthIndex.put("JUL", Integer.valueOf(7));
+		monthIndex.put("AUG", Integer.valueOf(8));
+		monthIndex.put("SEP", Integer.valueOf(9));
+		monthIndex.put("OCT", Integer.valueOf(10));
+		monthIndex.put("NOV", Integer.valueOf(11));
+		monthIndex.put("DEC", Integer.valueOf(12));
 
 		String[] mNames = {"D1485", "D1641", "B2", "EWA"};
 		String begmon = "OCT";
@@ -816,8 +816,7 @@ public class MultiStudyRunner
 				sty[i].setStartMonth(begmon);
 				sty[i].setStopMonth(endmon);
 				sty[i].setAddXaOptions(tol);
-				sty[i].setPosAnalysisOption(
-						new Boolean(true)); //I believe this simply avoids the NORMAL COMPLETION window.
+				sty[i].setPosAnalysisOption(Boolean.valueOf(true)); //I believe this simply avoids the NORMAL COMPLETION window.
 			}
 			catch(IOException ioe)
 			{
@@ -861,10 +860,10 @@ public class MultiStudyRunner
 						{
 							int dir = dvname.lastIndexOf("\\");
 							String dirname = dvname.substring(0, dir + 1);
-							dvfiles[s * numyears + y] = dirname + "POSITION" + new Integer(y + 1).toString() + "DV.DSS";
+							dvfiles[s * numyears + y] = dirname + "POSITION" + Integer.toString(y + 1) + "DV.DSS";
 							if(DEBUG)
 							{
-								System.out.println(dvfiles[s * numyears + y] + " " + new Integer(s * numyears + y));
+								System.out.println(dvfiles[s * numyears + y] + " " + Integer.valueOf(s * numyears + y));
 							}
 						}
 					}
@@ -876,8 +875,8 @@ public class MultiStudyRunner
 					for(int is = 0; is < sty.length; is++)
 					{
 						_study = sty[is];
-						_study.setStartYear(new Integer(syr));
-						_study.setStopYear(new Integer(syr + 1));
+						_study.setStartYear(Integer.valueOf(syr));
+						_study.setStopYear(Integer.valueOf(syr + 1));
 						if(yr == 0)
 						{
 							if(DEBUG)
@@ -886,7 +885,7 @@ public class MultiStudyRunner
 							}
 							_study.setInitFile(inits[is]);
 							_study.setInitFileFPart(fpart[is]);
-							_study.setPositionStartYear(new Boolean(true));
+							_study.setPositionStartYear(Boolean.valueOf(true));
 						}
 						else
 						{
@@ -896,7 +895,7 @@ public class MultiStudyRunner
 							}
 							_study.setInitFile(sty[nstudy - 1].getDvFile());
 							_study.setInitFileFPart(sty[nstudy - 1].getName());
-							_study.setPositionStartYear(new Boolean(false));
+							_study.setPositionStartYear(Boolean.valueOf(false));
 						}
 						System.out.println("Position Start Year: " + _study.getPositionStartYear());
 						if(numyears > 1)
@@ -983,8 +982,8 @@ public class MultiStudyRunner
 				for(int is = 0; is < sty.length; is++)
 				{
 					_study = sty[is];
-					_study.setStartYear(new Integer(i));
-					_study.setStopYear(new Integer(i + incyr));
+					_study.setStartYear(Integer.valueOf(i));
+					_study.setStopYear(Integer.valueOf(i + incyr));
 					if(i != byr || diffyear)
 					{
 						_study.setInitFile(sty[nstudy - 1].getDvFile());

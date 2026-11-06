@@ -55,7 +55,7 @@ public class StudyWrapper
 	public StudyWrapper(String studyFile, String iI, MSWGui gui, boolean debug)
 	{
 		setLibraryDirectory(); //CB added
-		initIndex = new Integer(iI).intValue();
+		initIndex = Integer.valueOf(iI).intValue();
 		_gui = gui;
 		sty = new Study();
 		try
@@ -77,8 +77,8 @@ public class StudyWrapper
 		{
 			System.out.println("Initial Init file: " + sty.getInitFile());
 		}
-		sty.setPosAnalysisOption(new Boolean(true));
-		sty.setDialogWindowOption(new Boolean(false));
+		sty.setPosAnalysisOption(Boolean.valueOf(true));
+		sty.setDialogWindowOption(Boolean.valueOf(false));
 
 		ts = sty.getTimeStep();
 		position = MSWUtil.position;
@@ -108,7 +108,7 @@ public class StudyWrapper
 				String dirname = dvname.substring(0, dir + 1);
 				for(int i = 0; i < ndv; i++)
 				{
-					dvnames[i] = dirname + "POSITION" + new Integer(i + 1).toString()
+					dvnames[i] = dirname + "POSITION" + Integer.toString(i + 1)
 							+ "DV.DSS";
 					if(_wrapperDebug)
 					{
@@ -250,12 +250,12 @@ public class StudyWrapper
 
 	public void setPositionInterface(int index, StudyInterface sI)
 	{
-		_positionInterfaces.put(new Integer(index), sI);
+		_positionInterfaces.put(Integer.valueOf(index), sI);
 	}
 
 	public StudyInterface getPositionInterface(int index)
 	{
-		return (StudyInterface) _positionInterfaces.get(new Integer(index));
+		return (StudyInterface) _positionInterfaces.get(Integer.valueOf(index));
 	}
 
 	MYDate setStopDate(MYDate d)
@@ -285,7 +285,7 @@ public class StudyWrapper
 	{
 		int month = d.getMonthIndex();
 		int year = d.getYearIndex();
-		return new Integer(getDaysInMonth(month, year)).toString();
+		return Integer.toString(getDaysInMonth(month, year));
 	}
 
 	protected int getDaysInMonth(int month, int year)
@@ -424,7 +424,7 @@ public class StudyWrapper
 			}
 			wm.parse();
 			Integer numberCycles = sty.getNumberSequences();
-			Integer numberWreslCycles = new Integer(wm.getNumberOfWreslCycles());
+			Integer numberWreslCycles = Integer.valueOf(wm.getNumberOfWreslCycles());
 			if(numberCycles.intValue() != numberWreslCycles.intValue())
 			{
 				String msg = "Number of sequences must be same as specified in Wresl!";

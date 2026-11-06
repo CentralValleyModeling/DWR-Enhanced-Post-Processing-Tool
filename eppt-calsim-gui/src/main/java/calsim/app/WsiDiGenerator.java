@@ -192,7 +192,7 @@ public class WsiDiGenerator
 	 */
 	public void setNumberOfSegments()
 	{
-		Double fseg = new Double(_wsiMax / STEP);
+		Double fseg = Double.valueOf(_wsiMax / STEP);
 		_nseg = fseg.intValue();
 	}
 

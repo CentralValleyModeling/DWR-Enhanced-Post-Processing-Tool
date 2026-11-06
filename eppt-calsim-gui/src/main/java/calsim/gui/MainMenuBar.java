@@ -862,7 +862,7 @@ public class MainMenuBar
 				{
 					return;
 				}
-				int fracDigits = new Integer(str).intValue();
+				int fracDigits = Integer.valueOf(str).intValue();
 				ReportUtils.setFormat(fracDigits, 1, fracDigits, false);
 			}
 		});
@@ -882,7 +882,7 @@ public class MainMenuBar
 				{
 					return;
 				}
-				int colwidth = new Integer(str).intValue();
+				int colwidth = Integer.valueOf(str).intValue();
 				ReportUtils.setSpaceCount(colwidth);
 			}
 		});

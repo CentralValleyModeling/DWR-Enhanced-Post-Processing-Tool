@@ -25,6 +25,6 @@ public class BoundaryNode extends Node
 	 */
 	public BoundaryNode(int id)
 	{
-		super(new Integer(id).toString());
+		super(Integer.toString(id));
 	}
 }

@@ -859,7 +859,7 @@ public class MSRGui
 
 		for(int i = 1921; i < 1995; i++)
 		{
-			String s = new Integer(i).toString();
+			String s = Integer.toString(i);
 			_syrselector.addItem(s);
 			_eyrselector.addItem(s);
 		}
@@ -917,7 +917,7 @@ public class MSRGui
 	 */
 	public void setStartYear(String year)
 	{
-		int syear = new Integer(year).intValue();
+		int syear = Integer.valueOf(year).intValue();
 		_years[0] = syear;
 	}
 
@@ -934,7 +934,7 @@ public class MSRGui
 	 */
 	public void setEndYear(String year)
 	{
-		int eyear = new Integer(year).intValue();
+		int eyear = Integer.valueOf(year).intValue();
 		_years[1] = eyear;
 	}
 
@@ -1171,7 +1171,7 @@ public class MSRGui
 		{
 			s = "0";
 		}
-		return new Integer(s).intValue();
+		return Integer.valueOf(s).intValue();
 	}
 }
 

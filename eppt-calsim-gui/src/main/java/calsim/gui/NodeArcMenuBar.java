@@ -317,7 +317,7 @@ public class NodeArcMenuBar
 				}
 				prj.setNetwork(netfile);
 			}
-			int nodeId = new Integer(nodenum);
+			int nodeId = Integer.valueOf(nodenum);
 			GuiUtils.displayMassBalanceData(_mainPanel, nodeId);
 		}
 		catch(Exception e)

@@ -96,7 +96,7 @@ public class SymbolDialogPanel extends GEDialogPanel
 		int size = 2;
 		try
 		{
-			size = new Integer(symbolSizeField.getText()).intValue();
+			size = Integer.valueOf(symbolSizeField.getText()).intValue();
 		}
 		catch(NumberFormatException e)
 		{

@@ -237,7 +237,7 @@ public class PolyLineElement extends GEContainer implements ScaledElement
 			p.put(localTag + "style", "LineElementAttr.DOTTED");
 		}
 
-		p.put(localTag + "thickness", new Integer(attr._thickness).toString());
+		p.put(localTag + "thickness", Integer.toString(attr._thickness));
 
 		super.toProperties(p, localTag);
 	}

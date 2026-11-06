@@ -208,50 +208,50 @@ public class DefaultTimeInterval implements TimeInterval, Serializable
 		int interval = 0;
 		if(token.indexOf(MIN_INTERVAL_STR) > 0)
 		{
-			interval = new Integer(token.substring(0, token
-					.indexOf(MIN_INTERVAL_STR))).intValue();
+			interval = Integer.valueOf(token.substring(0, token
+                                .indexOf(MIN_INTERVAL_STR))).intValue();
 			ti._numberOfIntervals[MIN_INTERVAL] += interval;
 		}
 		else if(token.indexOf(HOUR_INTERVAL_STR) > 0)
 		{
-			interval = new Integer(token.substring(0, token
-					.indexOf(HOUR_INTERVAL_STR))).intValue();
+			interval = Integer.valueOf(token.substring(0, token
+                                .indexOf(HOUR_INTERVAL_STR))).intValue();
 			ti._numberOfIntervals[HOUR_INTERVAL] += interval;
 		}
 		else if(token.indexOf(DAY_INTERVAL_STR) > 0)
 		{
-			interval = new Integer(token.substring(0, token
-					.indexOf(DAY_INTERVAL_STR))).intValue();
+			interval = Integer.valueOf(token.substring(0, token
+                                .indexOf(DAY_INTERVAL_STR))).intValue();
 			ti._numberOfIntervals[DAY_INTERVAL] += interval;
 		}
 		else if(token.indexOf(WEEK_INTERVAL_STR) > 0)
 		{
-			interval = new Integer(token.substring(0, token
-					.indexOf(WEEK_INTERVAL_STR))).intValue();
+			interval = Integer.valueOf(token.substring(0, token
+                                .indexOf(WEEK_INTERVAL_STR))).intValue();
 			ti._numberOfIntervals[WEEK_INTERVAL] += interval;
 		}
 		else if(token.indexOf(MONTH_INTERVAL_STR) > 0)
 		{
-			interval = new Integer(token.substring(0, token
-					.indexOf(MONTH_INTERVAL_STR))).intValue();
+			interval = Integer.valueOf(token.substring(0, token
+                                .indexOf(MONTH_INTERVAL_STR))).intValue();
 			ti._numberOfIntervals[MONTH_INTERVAL] += interval;
 		}
 		else if(token.indexOf(YEAR_INTERVAL_STR) > 0)
 		{
-			interval = new Integer(token.substring(0, token
-					.indexOf(YEAR_INTERVAL_STR))).intValue();
+			interval = Integer.valueOf(token.substring(0, token
+                                .indexOf(YEAR_INTERVAL_STR))).intValue();
 			ti._numberOfIntervals[YEAR_INTERVAL] += interval;
 		}
 		else if(token.indexOf(DECADE_INTERVAL_STR) > 0)
 		{
-			interval = new Integer(token.substring(0, token
-					.indexOf(DECADE_INTERVAL_STR))).intValue();
+			interval = Integer.valueOf(token.substring(0, token
+                                .indexOf(DECADE_INTERVAL_STR))).intValue();
 			ti._numberOfIntervals[DECADE_INTERVAL] += interval;
 		}
 		else if(token.indexOf(CENTURY_INTERVAL_STR) > 0)
 		{
-			interval = new Integer(token.substring(0, token
-					.indexOf(CENTURY_INTERVAL_STR))).intValue();
+			interval = Integer.valueOf(token.substring(0, token
+                                .indexOf(CENTURY_INTERVAL_STR))).intValue();
 			ti._numberOfIntervals[CENTURY_INTERVAL] += interval;
 		}
 	}

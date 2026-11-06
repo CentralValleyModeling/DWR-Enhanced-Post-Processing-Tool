@@ -302,7 +302,7 @@ public class DefaultTime implements Time, Serializable
 			return 0;
 		}
 		String nIntervals = string.substring(0, index);
-		return new Integer(nIntervals).intValue();
+		return Integer.valueOf(nIntervals).intValue();
 	}
 
 	/**

@@ -42,7 +42,7 @@ public class Penalizer
 	public Penalizer(float amt)
 	{
 		name = "penalty  ";   // must be nine chars
-		amount = new Float(amt).toString();
+		amount = Float.toString(amt);
 	}
 
 	/**

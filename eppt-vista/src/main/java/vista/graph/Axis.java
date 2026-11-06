@@ -469,10 +469,9 @@ public class Axis extends GEContainer implements FontResizable
 		}
 		AxisAttr attr = (AxisAttr) getAttributes();
 
-		p.put(localTag + "plotMajorTickLabels", new Boolean(
-				attr._plotMajorTickLabels).toString());
-		p.put(localTag + "plotAxisLabel", new Boolean(attr._plotAxisLabel)
-				.toString());
+		p.put(localTag + "plotMajorTickLabels", Boolean.toString(attr._plotMajorTickLabels));
+		p.put(localTag + "plotAxisLabel", Boolean
+				.toString(attr._plotAxisLabel));
 
 		super.toProperties(p, localTag);
 	}
@@ -497,12 +496,12 @@ public class Axis extends GEContainer implements FontResizable
 		String property = p.getProperty(localTag + "plotMajorTickLabels");
 		if(property != null)
 		{
-			attr._plotMajorTickLabels = new Boolean(property).booleanValue();
+			attr._plotMajorTickLabels = Boolean.valueOf(property).booleanValue();
 		}
 		property = p.getProperty(localTag + "plotAxisLabel");
 		if(property != null)
 		{
-			attr._plotAxisLabel = new Boolean(property).booleanValue();
+			attr._plotAxisLabel = Boolean.valueOf(property).booleanValue();
 		}
 		super.fromProperties(p, getPrefixTag(prefixTag));
 	}

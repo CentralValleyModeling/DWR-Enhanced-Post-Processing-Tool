@@ -1572,7 +1572,7 @@ public final class AppUtils
 		if(DEBUG)
 		{
 			System.out.println(
-					"SN is: " + new Integer(studyNumber).toString() + "Base is" + new Integer(basenum).toString());
+					"SN is: " + Integer.toString(studyNumber) + "Base is" + Integer.toString(basenum));
 		}
 		if(baseOn && studyNumber == basenum)
 		{
@@ -1822,7 +1822,7 @@ public final class AppUtils
 						if(ref[i] == null)
 						{
 							throw new RuntimeException("No matching data in study "
-									+ new Integer(i + 1).toString() + " found for " + cpart + " at " + bpart);
+									+ Integer.toString(i + 1) + " found for " + cpart + " at " + bpart);
 						}
 						if(ref[i] != null)
 						{
@@ -2083,7 +2083,7 @@ public final class AppUtils
 							"DSS Not Selected", JOptionPane.WARNING_MESSAGE);
 					return null;
 				}
-				System.out.println("DSS NUM: " + new Integer(dssnum).toString());
+				System.out.println("DSS NUM: " + Integer.toString(dssnum));
 				DataReference[] refs = null;
 				Vector refholder = new Vector(1, 1);
 				for(int j = 1; j < dssnum; j++)
@@ -2328,7 +2328,7 @@ public final class AppUtils
 				}
 				try
 				{
-					Integer year = new Integer(st.nextToken());
+					Integer year = Integer.valueOf(st.nextToken());
 					yearArray.add(year);
 				}
 				catch(Exception e)
@@ -2468,14 +2468,14 @@ public final class AppUtils
 	 */
 	public static void loadProps()
 	{
-		VIEW_GRAPH = new Boolean(AppProps.getProperty("AppUtils.viewGraph")).booleanValue();
-		VIEW_TABLE = new Boolean(AppProps.getProperty("AppUtils.viewTable")).booleanValue();
-		viewMonthlyTable = new Boolean(AppProps.getProperty("AppUtils.viewMonthlyTable")).booleanValue();
+		VIEW_GRAPH = Boolean.valueOf(AppProps.getProperty("AppUtils.viewGraph")).booleanValue();
+		VIEW_TABLE = Boolean.valueOf(AppProps.getProperty("AppUtils.viewTable")).booleanValue();
+		viewMonthlyTable = Boolean.valueOf(AppProps.getProperty("AppUtils.viewMonthlyTable")).booleanValue();
 		//useCFS = new Boolean(AppProps.getProperty("AppUtils.useCFS")).booleanValue();
 		//useStoredUnits = new Boolean(AppProps.getProperty("AppUtils.useStoredUnits")).booleanValue();
-		_isWaterYear = new Boolean(AppProps.getProperty("AppUtils.isWaterYear")).booleanValue();
-		_show60_20_20 = new Boolean(AppProps.getProperty("AppUtils.show60_20_20")).booleanValue();
-		_show40_30_30 = new Boolean(AppProps.getProperty("AppUtils.show40_30_30")).booleanValue();
+		_isWaterYear = Boolean.valueOf(AppProps.getProperty("AppUtils.isWaterYear")).booleanValue();
+		_show60_20_20 = Boolean.valueOf(AppProps.getProperty("AppUtils.show60_20_20")).booleanValue();
+		_show40_30_30 = Boolean.valueOf(AppProps.getProperty("AppUtils.show40_30_30")).booleanValue();
 		DEFAULT_PLOT_SIZE = GraphUtils.parseDimensionProperty
 				(AppProps.getProperty("AppUtils.DEFAULT_PLOT_SIZE"));
 		DEFAULT_TABLE_SIZE = GraphUtils.parseDimensionProperty
