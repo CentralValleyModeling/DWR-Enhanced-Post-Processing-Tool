@@ -142,7 +142,7 @@ public class DataSourceUI extends JPanel
 	{
 		try
 		{
-			Double db = new Double(_numField.getText());
+			Double db = Double.valueOf(_numField.getText());
 			double number = db.doubleValue();
 			_ds.setNumber(number);
 			if(DEBUG)

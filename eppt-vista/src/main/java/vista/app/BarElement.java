@@ -141,7 +141,7 @@ public class BarElement extends AnimateElement implements AnimationObserver
 		Graphics gc = getGraphics();
 		gc.drawLine(r.x, _s.scaleToUC(value), r.x + r.width, _s
 				.scaleToUC(value));
-		gc.drawString(new Integer((int) value).toString().trim(), r.x + 2, _s
+		gc.drawString(Integer.toString((int) value).trim(), r.x + 2, _s
 				.scaleToUC(value));
 	}
 

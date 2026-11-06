@@ -257,8 +257,8 @@ public class MathOperationsPanel extends JPanel
 		int fL = 0, bL = 0;
 		try
 		{
-			fL = new Integer(fstr.trim()).intValue();
-			bL = new Integer(bstr.trim()).intValue();
+			fL = Integer.valueOf(fstr.trim()).intValue();
+			bL = Integer.valueOf(bstr.trim()).intValue();
 		}
 		catch(NumberFormatException nfe)
 		{
@@ -307,8 +307,8 @@ public class MathOperationsPanel extends JPanel
 		int y = 0;
 		try
 		{
-			x = new Integer(t1.trim()).intValue();
-			y = new Integer(t2.trim()).intValue();
+			x = Integer.valueOf(t1.trim()).intValue();
+			y = Integer.valueOf(t2.trim()).intValue();
 		}
 		catch(NumberFormatException nfe)
 		{
@@ -362,8 +362,8 @@ public class MathOperationsPanel extends JPanel
 		int y = 0;
 		try
 		{
-			x = new Integer(t1.trim()).intValue();
-			y = new Integer(t2.trim()).intValue();
+			x = Integer.valueOf(t1.trim()).intValue();
+			y = Integer.valueOf(t2.trim()).intValue();
 		}
 		catch(NumberFormatException nfe)
 		{
@@ -418,8 +418,8 @@ public class MathOperationsPanel extends JPanel
 		int y = 0;
 		try
 		{
-			x = new Integer(t1.trim()).intValue();
-			y = new Integer(t2.trim()).intValue();
+			x = Integer.valueOf(t1.trim()).intValue();
+			y = Integer.valueOf(t2.trim()).intValue();
 		}
 		catch(NumberFormatException nfe)
 		{
@@ -842,7 +842,7 @@ public class MathOperationsPanel extends JPanel
 		// check for incorrect number specification
 		try
 		{
-			d = new Double(text);
+			d = Double.valueOf(text);
 		}
 		catch(NumberFormatException nfe)
 		{

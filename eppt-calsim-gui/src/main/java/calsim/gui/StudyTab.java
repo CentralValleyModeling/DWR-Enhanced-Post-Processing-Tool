@@ -161,7 +161,7 @@ public class StudyTab extends JTabbedPane
 		Integer[] delays = {0, 50, 100, 200, 300, 400, 500, 750, 1000};
 		JComboBox parseFileDelayBox = new JComboBox(delays);
 		parseFileDelayBox.setEditable(true); //allows user-defined entry
-		parseFileDelayBox.setSelectedItem(new Integer(_userPrefs.getInt(StudyTab.PARSE_DELAY, 0)));
+		parseFileDelayBox.setSelectedItem(Integer.valueOf(_userPrefs.getInt(StudyTab.PARSE_DELAY, 0)));
 		parseFileDelayBox.addActionListener(new ActionListener()
 		{
 			public void actionPerformed(ActionEvent e)
@@ -415,7 +415,7 @@ public class StudyTab extends JTabbedPane
 			}
 			_wm.parse();
 			Integer numberCycles = _study.getNumberSequences();
-			Integer numberWreslCycles = new Integer(_wm.getNumberOfWreslCycles());
+			Integer numberWreslCycles = Integer.valueOf(_wm.getNumberOfWreslCycles());
 			if(numberCycles.intValue() != numberWreslCycles.intValue())
 			{
 				msg = "Number of sequences must be same as specified in Wresl!";
@@ -625,7 +625,7 @@ public class StudyTab extends JTabbedPane
 		String name = "";
 		String wsivar = "";
 		String divar = "";
-		Double wsimax = new Double(0);
+		Double wsimax = Double.valueOf(0);
 		int maxrows = 10;
 		int rows = model.getRowCount();
 		if(rows == 0)
@@ -646,7 +646,7 @@ public class StudyTab extends JTabbedPane
 			name = (String) model.getValueAt(i, 0);
 			wsivar = (String) model.getValueAt(i, 1);
 			divar = (String) model.getValueAt(i, 2);
-			wsimax = new Double((String) model.getValueAt(i, 3));
+			wsimax = Double.valueOf((String) model.getValueAt(i, 3));
 			wd[i] = new WsiDiGenerator(name, wsivar, divar, wsimax.doubleValue());
 			wd[i].setRunDirectory(fname);
 		}
@@ -733,16 +733,16 @@ public class StudyTab extends JTabbedPane
 		int eyr = Integer.valueOf(OptionPanel._stop.getSelectedItem().toString()).intValue();
 		int dvnum = 1;
 		String fname = "";
-		_study.setPositionStartYear(new Boolean(true));
+		_study.setPositionStartYear(Boolean.valueOf(true));
 		for(int i = byr; i < eyr + 1; i++)
 		{
 			//System.out.println("Start Year: "+_study.getPositionStartYear());
-			_study.setStartYear(new Integer(i));
+			_study.setStartYear(Integer.valueOf(i));
 			//_study.setStopYear(new Integer(i+nyrs));
 			//System.out.println("Stop Year is: " + _study.getStopYear());
 			if(ndv > 1)
 			{
-				fname = dirname + "position" + new Integer(dvnum).toString() + "dv.dss";
+				fname = dirname + "position" + Integer.toString(dvnum) + "dv.dss";
 				_study.setDvFile(fname);
 				System.out.println("DV: " + fname);
 				if(dvnum == ndv)

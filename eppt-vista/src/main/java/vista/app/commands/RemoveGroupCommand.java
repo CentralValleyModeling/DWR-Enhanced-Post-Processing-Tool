@@ -55,7 +55,7 @@ public class RemoveGroupCommand implements Command
 		for(int i = 0; i < _gNumbers.length; i++)
 		{
 			int ng = _gNumbers[i];
-			_gRemoved.add(new Integer(ng));
+			_gRemoved.add(Integer.valueOf(ng));
 			_gRemoved.add(_session.getGroup(ng));
 		}
 		// then remove them

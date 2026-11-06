@@ -287,9 +287,9 @@ public class ReportUtils
 	 */
 	static void initProps()
 	{
-		DEFAULT_FONT_SIZE = new Integer(AppProps.getProperty("ReportUtils.DEFAULT_FONT_SIZE")).intValue();
-		DEFAULT_LEFT_MARGIN = new Integer(AppProps.getProperty("ReportUtils.DEFAULT_LEFT_MARGIN")).intValue();
-		DEFAULT_LINE_LENGTH = new Integer(AppProps.getProperty("ReportUtils.DEFAULT_LINE_LENGTH")).intValue();
+		DEFAULT_FONT_SIZE = Integer.valueOf(AppProps.getProperty("ReportUtils.DEFAULT_FONT_SIZE")).intValue();
+		DEFAULT_LEFT_MARGIN = Integer.valueOf(AppProps.getProperty("ReportUtils.DEFAULT_LEFT_MARGIN")).intValue();
+		DEFAULT_LINE_LENGTH = Integer.valueOf(AppProps.getProperty("ReportUtils.DEFAULT_LINE_LENGTH")).intValue();
 		HEADER_HIGH_LIGHT_COLOR = vista.graph.GraphUtils.parseColorProperty
 				(AppProps.getProperty("ReportUtils.HEADER_HIGH_LIGHT_COLOR"));
 		HEADER_COLOR = vista.graph.GraphUtils.parseColorProperty
@@ -301,13 +301,13 @@ public class ReportUtils
 		WATER_YEAR_COLOR = vista.graph.GraphUtils.parseColorProperty
 				(AppProps.getProperty("ReportUtils.WATER_YEAR_COLOR"));
 		// customize formatter for numbers
-		_numberFormat.setGroupingUsed(new Boolean(AppProps.getProperty("ReportUtils.groupingUsed")).booleanValue());
+		_numberFormat.setGroupingUsed(Boolean.valueOf(AppProps.getProperty("ReportUtils.groupingUsed")).booleanValue());
 		_numberFormat.setMinimumFractionDigits
-				(new Integer(AppProps.getProperty("ReportUtils.minimumFractionDigits")).intValue());
+				(Integer.valueOf(AppProps.getProperty("ReportUtils.minimumFractionDigits")).intValue());
 		_numberFormat.setMinimumIntegerDigits
-				(new Integer(AppProps.getProperty("ReportUtils.minimumIntegerDigits")).intValue());
+				(Integer.valueOf(AppProps.getProperty("ReportUtils.minimumIntegerDigits")).intValue());
 		_numberFormat.setMaximumFractionDigits
-				(new Integer(AppProps.getProperty("ReportUtils.maximumFractionDigits")).intValue());
+				(Integer.valueOf(AppProps.getProperty("ReportUtils.maximumFractionDigits")).intValue());
 	}
 
 	/**

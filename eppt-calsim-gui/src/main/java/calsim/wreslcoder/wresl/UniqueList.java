@@ -68,7 +68,7 @@ public class UniqueList extends Vector
 		if(super.indexOf(idUpper) < 0)
 		{
 			addElement(idUpper);
-			idCode.put(idUpper, new Integer(super.indexOf(idUpper) + 1));
+			idCode.put(idUpper, Integer.valueOf(super.indexOf(idUpper) + 1));
 			// +1 for Fortran array compatability
 			return true;
 		}

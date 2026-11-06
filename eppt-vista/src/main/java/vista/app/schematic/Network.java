@@ -81,9 +81,9 @@ public class Network
 			StringTokenizer chopper = new StringTokenizer(line);
 			if(chopper.countTokens() == 3)
 			{
-				int id = new Integer(chopper.nextToken()).intValue();
-				float x = new Float(chopper.nextToken()).floatValue();
-				float y = new Float(chopper.nextToken()).floatValue();
+				int id = Integer.valueOf(chopper.nextToken()).intValue();
+				float x = Float.valueOf(chopper.nextToken()).floatValue();
+				float y = Float.valueOf(chopper.nextToken()).floatValue();
 				net.add(new Node(id, x, y));
 			}
 		}
@@ -101,10 +101,10 @@ public class Network
 			StringTokenizer chopper = new StringTokenizer(line);
 			if(chopper.countTokens() == 4)
 			{
-				int id = new Integer(chopper.nextToken()).intValue();
-				int upNodeId = new Integer(chopper.nextToken()).intValue();
-				int downNodeId = new Integer(chopper.nextToken()).intValue();
-				float length = new Float(chopper.nextToken()).floatValue();
+				int id = Integer.valueOf(chopper.nextToken()).intValue();
+				int upNodeId = Integer.valueOf(chopper.nextToken()).intValue();
+				int downNodeId = Integer.valueOf(chopper.nextToken()).intValue();
+				float length = Float.valueOf(chopper.nextToken()).floatValue();
 				Node[] nodes = new Node[2];
 				nodes[0] = net.getNode(upNodeId);
 				nodes[1] = net.getNode(downNodeId);
@@ -125,13 +125,13 @@ public class Network
 			StringTokenizer chopper = new StringTokenizer(line);
 			if(chopper.countTokens() == 2)
 			{
-				int id = new Integer(chopper.nextToken()).intValue();
+				int id = Integer.valueOf(chopper.nextToken()).intValue();
 				StringTokenizer nodeChopper = new StringTokenizer(chopper
 						.nextToken(), ",");
 				Node[] nodes = new Node[nodeChopper.countTokens()];
 				for(int i = 0; i < nodes.length; i++)
 				{
-					int nodeId = new Integer(nodeChopper.nextToken())
+					int nodeId = Integer.valueOf(nodeChopper.nextToken())
 							.intValue();
 					nodes[i] = net.getNode(nodeId);
 				}

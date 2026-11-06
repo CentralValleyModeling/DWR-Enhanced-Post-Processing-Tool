@@ -1057,7 +1057,7 @@ public class Project implements Serializable
 			{
 				break;
 			}
-			int si = new Integer(se.getAttribute("number")).intValue();
+			int si = Integer.valueOf(se.getAttribute("number")).intValue();
 			if(si == 1)
 			{
 				setSVFile(se.getAttribute("svf"));

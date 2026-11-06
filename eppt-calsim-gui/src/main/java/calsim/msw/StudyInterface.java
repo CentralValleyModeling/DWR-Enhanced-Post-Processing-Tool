@@ -57,7 +57,7 @@ public class StudyInterface
 		Pathname[][] pn = new Pathname[ls][];
 		refOp = new ReferenceOperator[ls];
 
-		loc.addElement(new Integer(siDetails.size()));
+		loc.addElement(Integer.valueOf(siDetails.size()));
 
 		//Variables needed for the following loop.
 		Integer index0, index1;
@@ -87,7 +87,7 @@ public class StudyInterface
 				String dvname = op[1];
 				int dir = dvname.lastIndexOf("\\");
 				String dirname = dvname.substring(0, dir + 1);
-				toFile[i] = dirname + "POSITION" + new Integer(MSWUtil.dvnum + 1).toString() + "DV.DSS";
+				toFile[i] = dirname + "POSITION" + Integer.toString(MSWUtil.dvnum + 1) + "DV.DSS";
 			}
 			System.out.println("Interface to File: " + toFile[i]);
 			svTS = op[2];

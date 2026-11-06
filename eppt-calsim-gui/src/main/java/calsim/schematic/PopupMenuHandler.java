@@ -248,7 +248,7 @@ public class PopupMenuHandler implements RequestHandler
 			Component fr = VistaUtils.getFrameForComponent(comp);
 			if(cpart.equals("MASS-BALANCE"))
 			{
-				GuiUtils.displayMassBalanceData(fr, new Integer(bpart).intValue());
+				GuiUtils.displayMassBalanceData(fr, Integer.valueOf(bpart).intValue());
 			}
 			else
 			{

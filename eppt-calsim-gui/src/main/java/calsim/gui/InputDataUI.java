@@ -76,7 +76,7 @@ public class InputDataUI extends MPanel
 		{
 			return;
 		}
-		int ilevel = new Integer(slevel).intValue();
+		int ilevel = Integer.valueOf(slevel).intValue();
 		String header = _table.getColumnName(column);
 		String snum;
 		if(header.startsWith("Level"))
@@ -89,7 +89,7 @@ public class InputDataUI extends MPanel
 			{
 				snum = header.substring(5, 8).trim();
 			}
-			int inum = new Integer(snum).intValue();
+			int inum = Integer.valueOf(snum).intValue();
 			if(inum > ilevel)
 			{
 				JOptionPane.showMessageDialog(_table,
@@ -328,7 +328,7 @@ public class InputDataUI extends MPanel
 			for(; row < numrows; row++)
 			{
 				String slevel = (String) _model.getValueAt(row, 1);
-				int ilevel = new Integer(slevel).intValue();
+				int ilevel = Integer.valueOf(slevel).intValue();
 				for(int column = 2; column < 12; column++)
 				{
 					String value = (String) _model.getValueAt(row, column);

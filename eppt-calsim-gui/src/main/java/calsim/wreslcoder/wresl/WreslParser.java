@@ -731,7 +731,7 @@ public class WreslParser implements WreslParserConstants
 		Float f;
 		try
 		{
-			f = new Float(e.toString());
+			f = Float.valueOf(e.toString());
 		}
 		catch(NumberFormatException nn)
 		{
@@ -753,7 +753,7 @@ public class WreslParser implements WreslParserConstants
 	public void identify(File curFile)
 	{
 		parserInputPath = curFile;
-		fileList.put(new Long(curFile.lastModified()), curFile.getPath());
+		fileList.put(Long.valueOf(curFile.lastModified()), curFile.getPath());
 		if(!_hideProgressDetails)
 		{
 			for(int i = 0; i < includeLevel; i++)
@@ -772,7 +772,7 @@ public class WreslParser implements WreslParserConstants
 	 */
 	public Vector newerFiles(String comparisonFileName)
 	{
-		Long comparisonTime = new Long(new File(comparisonFileName).lastModified());
+		Long comparisonTime = Long.valueOf(new File(comparisonFileName).lastModified());
 		Vector newOnes = new Vector();
 		Enumeration listOfTimes = fileList.keys();
 		Long t;
@@ -822,8 +822,8 @@ public class WreslParser implements WreslParserConstants
 		int begMonth, endMonth;
 		String e = "";
 
-		begMonth = new Integer(beg).intValue();
-		endMonth = new Integer(end).intValue();
+		begMonth = Integer.valueOf(beg).intValue();
+		endMonth = Integer.valueOf(end).intValue();
 
 		if(Math.min(begMonth, endMonth) < 1 || Math.max(begMonth, endMonth) > 12)
 		{
@@ -849,8 +849,8 @@ public class WreslParser implements WreslParserConstants
 		int begDay, endDay;
 		String e = "";
 
-		begDay = new Integer(beg).intValue();
-		endDay = new Integer(end).intValue();
+		begDay = Integer.valueOf(beg).intValue();
+		endDay = Integer.valueOf(end).intValue();
 
 		if(Math.min(begDay, endDay) < 1 || Math.max(begDay, endDay) > 31)
 		{
@@ -886,11 +886,11 @@ public class WreslParser implements WreslParserConstants
 		int begDay, endDay, begMonth, endMonth;
 		StringBuffer e = new StringBuffer();
 
-		begDay = new Integer(beg.substring(0, 2)).intValue();
-		begMonth = new Integer(reservedList.fortranExpr(beg.substring(2, 5))).intValue();
+		begDay = Integer.valueOf(beg.substring(0, 2)).intValue();
+		begMonth = Integer.valueOf(reservedList.fortranExpr(beg.substring(2, 5))).intValue();
 
-		endDay = new Integer(end.substring(0, 2)).intValue();
-		endMonth = new Integer(reservedList.fortranExpr(end.substring(2, 5))).intValue();
+		endDay = Integer.valueOf(end.substring(0, 2)).intValue();
+		endMonth = Integer.valueOf(reservedList.fortranExpr(end.substring(2, 5))).intValue();
 
 		if(endMonth > begMonth)
 		{
@@ -930,11 +930,11 @@ public class WreslParser implements WreslParserConstants
 		int begYear, endYear, begMonth, endMonth;
 		StringBuffer e = new StringBuffer();
 
-		begMonth = new Integer(reservedList.fortranExpr(beg.substring(0, 3))).intValue();
-		begYear = changeToWaterYear(new Integer(beg.substring(3, 7)).intValue(), begMonth);
+		begMonth = Integer.valueOf(reservedList.fortranExpr(beg.substring(0, 3))).intValue();
+		begYear = changeToWaterYear(Integer.valueOf(beg.substring(3, 7)).intValue(), begMonth);
 
-		endMonth = new Integer(reservedList.fortranExpr(end.substring(0, 3))).intValue();
-		endYear = changeToWaterYear(new Integer(end.substring(3, 7)).intValue(), endMonth);
+		endMonth = Integer.valueOf(reservedList.fortranExpr(end.substring(0, 3))).intValue();
+		endYear = changeToWaterYear(Integer.valueOf(end.substring(3, 7)).intValue(), endMonth);
 
 		if(endYear > begYear)
 		{
@@ -970,13 +970,13 @@ public class WreslParser implements WreslParserConstants
 		int begDay, endDay, begMonth, endMonth, begYear, endYear;
 		StringBuffer e = new StringBuffer();
 
-		begDay = new Integer(beg.substring(0, 2)).intValue();
-		begMonth = new Integer(reservedList.fortranExpr(beg.substring(2, 5))).intValue();
-		begYear = changeToWaterYear(new Integer(beg.substring(5, 9)).intValue(), begMonth);
+		begDay = Integer.valueOf(beg.substring(0, 2)).intValue();
+		begMonth = Integer.valueOf(reservedList.fortranExpr(beg.substring(2, 5))).intValue();
+		begYear = changeToWaterYear(Integer.valueOf(beg.substring(5, 9)).intValue(), begMonth);
 
-		endDay = new Integer(end.substring(0, 2)).intValue();
-		endMonth = new Integer(reservedList.fortranExpr(end.substring(2, 5))).intValue();
-		endYear = changeToWaterYear(new Integer(end.substring(5, 9)).intValue(), endMonth);
+		endDay = Integer.valueOf(end.substring(0, 2)).intValue();
+		endMonth = Integer.valueOf(reservedList.fortranExpr(end.substring(2, 5))).intValue();
+		endYear = changeToWaterYear(Integer.valueOf(end.substring(5, 9)).intValue(), endMonth);
 
 		if(endYear > begYear)
 		{
@@ -1132,7 +1132,7 @@ public class WreslParser implements WreslParserConstants
 		{
 			logger.println("Sequence: " + tag.image + " Model: " + model.image + " Order: " + s);
 		}
-		Integer i = new Integer(order.image.toUpperCase());
+		Integer i = Integer.valueOf(order.image.toUpperCase());
 		if(_numberCycles <= i.intValue())
 		{
 			_numberCycles = i.intValue();
@@ -1177,7 +1177,7 @@ public class WreslParser implements WreslParserConstants
 				throw wreslError(model, "Model '" + model.image + "' not included in sequence!");
 			}
 		}
-		_currentOrder = new Integer(s);
+		_currentOrder = Integer.valueOf(s);
 		_currentOrderString = s;
 		if(!_hideProgressDetails)
 		{
@@ -1426,7 +1426,7 @@ public class WreslParser implements WreslParserConstants
 	final public void DefineStatement() throws ParseException
 	{
 		Token id;
-		Integer gp_level = new Integer(1);
+		Integer gp_level = Integer.valueOf(1);
 		Token scope = new Token();
 		scope.kind = GLOBAL;
 		jj_consume_token(DEFINE);
@@ -2517,7 +2517,7 @@ public class WreslParser implements WreslParserConstants
 	final public void GoalStatement() throws ParseException
 	{
 		LPExpression lhs;
-		Integer gp_level = new Integer(0);
+		Integer gp_level = Integer.valueOf(0);
 		Token tag;
 		Token scope = new Token();
 		scope.kind = GLOBAL;
@@ -2670,7 +2670,7 @@ public class WreslParser implements WreslParserConstants
 			{
 				if(true)
 				{
-					return new Integer(level);
+					return Integer.valueOf(level);
 				}
 			}
 			break;
@@ -2680,7 +2680,7 @@ public class WreslParser implements WreslParserConstants
 		{
 			if(true)
 			{
-				return new Integer(0);
+				return Integer.valueOf(0);
 			}
 		}
 		throw new Error("Missing return statement in function");
@@ -3917,7 +3917,7 @@ public class WreslParser implements WreslParserConstants
 		}
 		else
 		{
-			refint = new Integer(reforder);
+			refint = Integer.valueOf(reforder);
 			int iref = refint.intValue();
 			int icur = _currentOrder.intValue();
 			if(iref >= icur)

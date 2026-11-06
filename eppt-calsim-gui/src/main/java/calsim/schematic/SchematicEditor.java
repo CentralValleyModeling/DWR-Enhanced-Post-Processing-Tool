@@ -98,7 +98,7 @@ public class SchematicEditor
 				int number = -1;
 				try
 				{
-					number = new Integer(id).intValue();
+					number = Integer.valueOf(id).intValue();
 					if(number < 0)
 					{
 						return;
@@ -126,7 +126,7 @@ public class SchematicEditor
 				int number = -1;
 				try
 				{
-					number = new Integer(id).intValue();
+					number = Integer.valueOf(id).intValue();
 					if(number < 0)
 					{
 						return;
@@ -153,7 +153,7 @@ public class SchematicEditor
 				int number = -1;
 				try
 				{
-					number = new Integer(id).intValue();
+					number = Integer.valueOf(id).intValue();
 					if(number < 0)
 					{
 						return;
@@ -393,8 +393,8 @@ public class SchematicEditor
 					{
 						throw new RuntimeException("Please enter an x and y pair separated by whitespace");
 					}
-					int xs = new Integer(st.nextToken()).intValue();
-					int ys = new Integer(st.nextToken()).intValue();
+					int xs = Integer.valueOf(st.nextToken()).intValue();
+					int ys = Integer.valueOf(st.nextToken()).intValue();
 					_csc.getSchematic().setPreferredSize(xs, ys);
 					Frame fr = JOptionPane.getFrameForComponent(_csc);
 					fr.invalidate();
@@ -417,7 +417,7 @@ public class SchematicEditor
 					String id =
 							JOptionPane.showInputDialog("Please the pixel size for the grid resolution: ");
 					StringTokenizer st = new StringTokenizer(id);
-					int xs = new Integer(st.nextToken()).intValue();
+					int xs = Integer.valueOf(st.nextToken()).intValue();
 					_dragHandler.setDragXIncrement(xs);
 					_dragHandler.setDragYIncrement(xs);
 				}

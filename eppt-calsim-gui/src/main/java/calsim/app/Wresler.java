@@ -109,8 +109,8 @@ public class Wresler
 		}
 		try
 		{
-			new Float(mincap);
-			new Float(maxcap);
+			Float.valueOf(mincap);
+			Float.valueOf(maxcap);
 		}
 		catch(NumberFormatException e)
 		{
@@ -168,7 +168,7 @@ public class Wresler
 		{
 			try
 			{
-				if(new Float(mif) != null)
+				if(Float.valueOf(mif) != null)
 				{
 					s[1] = "define minflow_" + arc + " {";
 					s[1] = s[1] + "value " + mif;
@@ -277,7 +277,7 @@ public class Wresler
 		{
 			try
 			{
-				if(new Float(dem) != null)
+				if(Float.valueOf(dem) != null)
 				{
 					if(same(demUnits, "TAF"))
 					{
@@ -331,7 +331,7 @@ public class Wresler
 		{
 			try
 			{
-				if(new Float(fract) != null)
+				if(Float.valueOf(fract) != null)
 				{
 					s[1] = s[1] + "value " + fract + "}";
 				}
@@ -410,7 +410,7 @@ public class Wresler
 		{
 			try
 			{
-				if(new Float(inf) != null)
+				if(Float.valueOf(inf) != null)
 				{
 					s[0] = "define " + arc + "{value " + inf;
 					if(same(infUnits, "CFS"))
@@ -452,7 +452,7 @@ public class Wresler
 		s[0] = "";
 		try
 		{
-			if(new Float(wt) != null)
+			if(Float.valueOf(wt) != null)
 			{
 				s[0] = "[" + dvar + "," + wt;
 				if(same(wtUnits, "CFS"))
@@ -533,7 +533,7 @@ public class Wresler
 			{
 				try
 				{
-					if(new Float(l[i]) != null)
+					if(Float.valueOf(l[i]) != null)
 					{
 						s[ln] = "define S" + node + "level" + j + " {";
 						s[ln] = s[ln] + "value " + l[i] + "}";
@@ -580,7 +580,7 @@ public class Wresler
 			{
 				break;
 			}
-			s[ln] += "+" + sz + "_" + new Integer(i + 1).toString();
+			s[ln] += "+" + sz + "_" + Integer.toString(i + 1);
 		}
 		s[ln] += "}";
 		// new line

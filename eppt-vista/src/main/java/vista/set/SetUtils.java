@@ -583,12 +583,12 @@ public class SetUtils
 				{
 					try
 					{
-						yvals.addElement(new Double(line));
+						yvals.addElement(Double.valueOf(line));
 					}
 					catch(NumberFormatException nfe)
 					{
 						// add anyway as it'll get out of sync otherwise
-						yvals.addElement(new Double(Constants.MISSING_VALUE));
+						yvals.addElement(Double.valueOf(Constants.MISSING_VALUE));
 						if(line.indexOf("M") < 0)
 						{
 							System.out.println("Error reading line: " + line
@@ -605,13 +605,12 @@ public class SetUtils
 						Double d = null;
 						try
 						{
-							d = new Double(st.nextToken());
+							d = Double.valueOf(st.nextToken());
 						}
 						catch(NumberFormatException nfe)
 						{
 							yvals
-									.addElement(new Double(
-											Constants.MISSING_VALUE));
+									.addElement(Double.valueOf(Constants.MISSING_VALUE));
 							if(line.indexOf("M") < 0)
 							{
 								throw new RuntimeException(

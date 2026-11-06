@@ -86,11 +86,11 @@ public class MultiStudyWrapper extends Thread
 		_position = MSWUtil.position;
 		// Create MYDate objects for the start and end dates.
 		String startMonth = fields[1].substring(0, 3);
-		Integer startYear = new Integer(fields[1].substring(3, 7));
+		Integer startYear = Integer.valueOf(fields[1].substring(3, 7));
 		_runStartDate = new MYDate(startMonth, startYear);
 		MSWUtil.positionStart = _runStartDate;
 		String stopMonth = fields[2].substring(0, 3);
-		Integer stopYear = new Integer(fields[2].substring(3, 7));
+		Integer stopYear = Integer.valueOf(fields[2].substring(3, 7));
 		_runStopDate = new MYDate(stopMonth, stopYear);
 		if(MSWUtil.position)
 		{
@@ -168,32 +168,32 @@ public class MultiStudyWrapper extends Thread
 										int nperiods)
 	{
 		Hashtable monthIndex = new Hashtable(12);
-		monthIndex.put("JAN", new Integer(1));
-		monthIndex.put("FEB", new Integer(2));
-		monthIndex.put("MAR", new Integer(3));
-		monthIndex.put("APR", new Integer(4));
-		monthIndex.put("MAY", new Integer(5));
-		monthIndex.put("JUN", new Integer(6));
-		monthIndex.put("JUL", new Integer(7));
-		monthIndex.put("AUG", new Integer(8));
-		monthIndex.put("SEP", new Integer(9));
-		monthIndex.put("OCT", new Integer(10));
-		monthIndex.put("NOV", new Integer(11));
-		monthIndex.put("DEC", new Integer(12));
+		monthIndex.put("JAN", Integer.valueOf(1));
+		monthIndex.put("FEB", Integer.valueOf(2));
+		monthIndex.put("MAR", Integer.valueOf(3));
+		monthIndex.put("APR", Integer.valueOf(4));
+		monthIndex.put("MAY", Integer.valueOf(5));
+		monthIndex.put("JUN", Integer.valueOf(6));
+		monthIndex.put("JUL", Integer.valueOf(7));
+		monthIndex.put("AUG", Integer.valueOf(8));
+		monthIndex.put("SEP", Integer.valueOf(9));
+		monthIndex.put("OCT", Integer.valueOf(10));
+		monthIndex.put("NOV", Integer.valueOf(11));
+		monthIndex.put("DEC", Integer.valueOf(12));
 
 		Hashtable monthName = new Hashtable(12);
-		monthName.put(new Integer(1), "JAN");
-		monthName.put(new Integer(2), "FEB");
-		monthName.put(new Integer(3), "MAR");
-		monthName.put(new Integer(4), "APR");
-		monthName.put(new Integer(5), "MAY");
-		monthName.put(new Integer(6), "JUN");
-		monthName.put(new Integer(7), "JUL");
-		monthName.put(new Integer(8), "AUG");
-		monthName.put(new Integer(9), "SEP");
-		monthName.put(new Integer(10), "OCT");
-		monthName.put(new Integer(11), "NOV");
-		monthName.put(new Integer(12), "DEC");
+		monthName.put(Integer.valueOf(1), "JAN");
+		monthName.put(Integer.valueOf(2), "FEB");
+		monthName.put(Integer.valueOf(3), "MAR");
+		monthName.put(Integer.valueOf(4), "APR");
+		monthName.put(Integer.valueOf(5), "MAY");
+		monthName.put(Integer.valueOf(6), "JUN");
+		monthName.put(Integer.valueOf(7), "JUL");
+		monthName.put(Integer.valueOf(8), "AUG");
+		monthName.put(Integer.valueOf(9), "SEP");
+		monthName.put(Integer.valueOf(10), "OCT");
+		monthName.put(Integer.valueOf(11), "NOV");
+		monthName.put(Integer.valueOf(12), "DEC");
 
 		// Integer bm = (Integer)monthIndex.get(startMonth);
 		Integer em = (Integer) monthIndex.get(stopMonth);
@@ -216,8 +216,7 @@ public class MultiStudyWrapper extends Thread
 			{
 				System.out.println(cmon);
 			}
-			MSWUtil.positionContinueMonth = (String) monthName.get(new Integer(
-					cmon));
+			MSWUtil.positionContinueMonth = (String) monthName.get(Integer.valueOf(cmon));
 		}
 		if(_wrapperDebug)
 		{
@@ -377,7 +376,7 @@ public class MultiStudyWrapper extends Thread
 									System.out.println("Setting to Start");
 								}
 								termStartDate.setMonth(MSWUtil.positionStartMonth);
-								termStartDate.setYear(new Integer(MSWUtil.posStartYear));
+								termStartDate.setYear(Integer.valueOf(MSWUtil.posStartYear));
 								if(_wrapperDebug)
 								{
 									System.out.println("Term stop date = " + termStartDate.toString());
@@ -431,7 +430,7 @@ public class MultiStudyWrapper extends Thread
 						{
 							if(MSWUtil.posyr == 0)
 							{
-								sW[studyIndex].setIsStudyPositionStartYear(new Boolean(true));
+								sW[studyIndex].setIsStudyPositionStartYear(Boolean.valueOf(true));
 								sW[studyIndex].setStudyInitFile(sW[studyIndex].getInitFile());
 								String posStart = MSWUtil.positionStart.getMonth()
 										+ MSWUtil.positionStart.getYear();
@@ -444,7 +443,7 @@ public class MultiStudyWrapper extends Thread
 							}
 							else if(MSWUtil.posyr > 0)
 							{
-								setIsStudyPositionStartYear(studyIndex, new Boolean(false));
+								setIsStudyPositionStartYear(studyIndex, Boolean.valueOf(false));
 							}
 							if(_numDVFiles > 1)
 							{
@@ -536,9 +535,9 @@ public class MultiStudyWrapper extends Thread
 						}
 						if(_transferDebug)
 						{
-							System.out.println("It: " + new Boolean(_termNumber < _numDVFiles) + " Pos "
-									+ new Boolean(MSWUtil.posyr == 0) + " interface "
-									+ new Boolean(!getInterfaceInfo(studyIndex).equals("null")));
+							System.out.println("It: " + Boolean.valueOf(_termNumber < _numDVFiles) + " Pos "
+									+ Boolean.valueOf(MSWUtil.posyr == 0) + " interface "
+									+ Boolean.valueOf(!getInterfaceInfo(studyIndex).equals("null")));
 						}
 						if(_transferDebug)
 						{
@@ -860,7 +859,7 @@ public class MultiStudyWrapper extends Thread
 		int day1 = 1;
 		int mon1 = date1.getMonthIndex();
 		int year1 = date1.getYearIndex();
-		int day2 = new Integer(getDaysInMonth(date2)).intValue();
+		int day2 = Integer.valueOf(getDaysInMonth(date2)).intValue();
 		int mon2 = date2.getMonthIndex();
 		int year2 = date2.getYearIndex();
 		if(year1 > year2 || (year1 == year2 && mon1 > mon2))
@@ -919,7 +918,7 @@ public class MultiStudyWrapper extends Thread
 	{
 		int month = d.getMonthIndex();
 		int year = d.getYearIndex();
-		return new Integer(getDaysInMonth(month, year)).toString();
+		return Integer.toString(getDaysInMonth(month, year));
 	}
 
 	public int getDaysInMonth(int month, int year)
