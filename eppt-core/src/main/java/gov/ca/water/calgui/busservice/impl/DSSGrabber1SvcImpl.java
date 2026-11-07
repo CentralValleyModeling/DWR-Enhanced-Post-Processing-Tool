@@ -122,6 +122,22 @@ public class DSSGrabber1SvcImpl implements IDSSGrabber1Svc
 	}
 
 	/**
+	 * Adds a problem message to the list shown to the user for a model, skipping
+	 * exact duplicates.
+	 *
+	 * @param model       scenario model the problem belongs to
+	 * @param messageText description of the problem
+	 */
+	private void recordMissingDSSRecord(GUILinksAllModelsBO.Model model, String messageText)
+	{
+		List<String> messages = _missingDSSRecords.computeIfAbsent(model, m -> new ArrayList<>());
+		if(!messages.contains(messageText))
+		{
+			messages.add(messageText);
+		}
+	}
+
+	/**
 	 * Provide access to list of DSS records not found during processing
 	 *
 	 * @return list, or null if not tracked due to property setting
@@ -401,7 +417,6 @@ public class DSSGrabber1SvcImpl implements IDSSGrabber1Svc
 	 */
 	protected TimeSeriesContainer getOneSeries(NamedDssPath dssPath, String dssName, GUILinksAllModelsBO.Model model)
 	{
-
 		TimeSeriesContainer result = null;
 
 		HecDataManager hecDataManager = new HecDataManager();
@@ -411,7 +426,17 @@ public class DSSGrabber1SvcImpl implements IDSSGrabber1Svc
 			String file = dssPath.getDssPath().toString();
 			if(HecDataManager.doesDSSFileExist(file))
 			{
-				hecDss = HecDss.open(file);
+				try
+				{
+					hecDss = HecDss.open(file);
+				}
+				catch(Exception ex)
+				{
+					String messageText = "Unable to access HEC-DSS file " + file + " - " + ex.getMessage();
+					LOGGER.log(Level.SEVERE, messageText, ex);
+					recordMissingDSSRecord(model, messageText);
+					return null;
+				}
 				hecDataManager.setDSSFileName(file);
 
 
@@ -556,6 +581,13 @@ public class DSSGrabber1SvcImpl implements IDSSGrabber1Svc
 			{
 				messageText = "Unable to get time series." + ex.getMessage();
 				LOGGER.log(Level.SEVERE, messageText, ex);
+			}
+		}
+		finally
+		{
+			if(hecDss != null)
+			{
+				hecDss.close();
 			}
 		}
 
