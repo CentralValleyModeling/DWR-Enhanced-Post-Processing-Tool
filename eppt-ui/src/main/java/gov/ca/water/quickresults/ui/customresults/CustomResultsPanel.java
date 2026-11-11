@@ -147,8 +147,17 @@ public class CustomResultsPanel extends EpptPanel
 		baseScenario.ifPresent(scenarioRuns::add);
 		if(!scenarioRuns.isEmpty())
 		{
-			List<DataReference> allrefs = scenarioRuns.stream().map(this::loadRecordsForScenario).flatMap(Collection::stream).collect(toList());
+			List<String> failedDssFiles = new ArrayList<>();
+			List<DataReference> allrefs = scenarioRuns.stream()
+													  .map(run -> loadRecordsForScenario(run, failedDssFiles))
+													  .flatMap(Collection::stream)
+													  .collect(toList());
 			GeneralRetrievePanel retrievePanel = GuiUtils.getCLGPanel().getRetrievePanel();
+			if(!failedDssFiles.isEmpty())
+			{
+				String message = "Unable to open the following DSS file(s):\n" + String.join("\n", failedDssFiles);
+				_dialogSvc.getOK(message, JOptionPane.WARNING_MESSAGE);
+			}
 			if(allrefs.isEmpty())
 			{
 				_dialogSvc.getOK("No records found using filter", JOptionPane.WARNING_MESSAGE);
@@ -165,7 +174,7 @@ public class CustomResultsPanel extends EpptPanel
 
 	}
 
-	private List<DataReference> loadRecordsForScenario(EpptScenarioRun epptScenarioRun)
+	private List<DataReference> loadRecordsForScenario(EpptScenarioRun epptScenarioRun, List<String> failedDssFiles)
 	{
 		List<Path> allDssFiles = epptScenarioRun.getDssContainer().getAllDssFiles()
 												.stream()
@@ -188,6 +197,10 @@ public class CustomResultsPanel extends EpptPanel
 				{
 					allrefs.addAll(Arrays.asList(refs));
 				}
+			}
+			else if(!failedDssFiles.contains(path.toString()))
+			{
+				failedDssFiles.add(path.toString());
 			}
 		}
 		return allrefs;
