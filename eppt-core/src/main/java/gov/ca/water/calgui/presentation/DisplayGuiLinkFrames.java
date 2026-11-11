@@ -12,12 +12,11 @@
 
 package gov.ca.water.calgui.presentation;
 
-import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -27,7 +26,6 @@ import javax.swing.*;
 import gov.ca.water.calgui.bo.GUILinksAllModelsBO;
 import gov.ca.water.calgui.busservice.IDSSGrabber1Svc;
 import gov.ca.water.calgui.busservice.impl.DSSGrabber1SvcImpl;
-import gov.ca.water.calgui.busservice.impl.MonthPeriod;
 import gov.ca.water.calgui.project.EpptConfigurationController;
 import gov.ca.water.calgui.project.EpptScenarioRun;
 import gov.ca.water.calgui.project.PlotConfigurationState;
@@ -123,26 +121,26 @@ final class DisplayGuiLinkFrames extends DisplayFrames
 		else
 		{
 			dssGrabber.setDateRange(getStart(), getEnd());
-			JTabbedPane tabbedPane = displayFrameForData(dssGrabber, guiLink, baseRun);
+			JTabbedPane tabbedPane = displayFrameForData(guiLink, baseRun);
 			tabbedPanes.add(tabbedPane);
 		}
 	}
 
-	private JTabbedPane displayFrameForData(IDSSGrabber1Svc dssGrabber, GUILinksAllModelsBO guiLink, EpptScenarioRun baseRun)
+	private JTabbedPane displayFrameForData(GUILinksAllModelsBO guiLink, EpptScenarioRun baseRun)
 	{
 		JTabbedPane tabbedPane = new JTabbedPane();
-		Map<GUILinksAllModelsBO.Model, List<String>> missing = dssGrabber.getMissingList();
+		Map<GUILinksAllModelsBO.Model, List<String>> missing = new LinkedHashMap<>();
 		List<EpptScenarioRun> scenarioRuns = new ArrayList<>();
 		scenarioRuns.add(baseRun);
 		scenarioRuns.addAll(getAlternatives());
 		Map<EpptScenarioRun, List<TimeSeriesContainer>> primaryScenarioRunData;
 		if(getEpptConfigurationController().isDifference())
 		{
-			primaryScenarioRunData = getDiffData(guiLink, scenarioRuns);
+			primaryScenarioRunData = getDiffData(guiLink, scenarioRuns, missing);
 		}
 		else
 		{
-			primaryScenarioRunData = getComparisonData(guiLink, scenarioRuns);
+			primaryScenarioRunData = getComparisonData(guiLink, scenarioRuns, missing);
 		}
 		if(getPlotConfigurationState().isDisplayTimeSeriesAll())
 		{
@@ -197,7 +195,8 @@ final class DisplayGuiLinkFrames extends DisplayFrames
 		return tabbedPane;
 	}
 
-	private Map<EpptScenarioRun, List<TimeSeriesContainer>> getDiffData(GUILinksAllModelsBO guiLink, List<EpptScenarioRun> scenarioRuns)
+	private Map<EpptScenarioRun, List<TimeSeriesContainer>> getDiffData(GUILinksAllModelsBO guiLink, List<EpptScenarioRun> scenarioRuns,
+			Map<GUILinksAllModelsBO.Model, List<String>> missing)
 	{
 		Map<EpptScenarioRun, List<TimeSeriesContainer>> primaryScenarioRunData = new TreeMap<>(Comparator.comparing(scenarioRuns::indexOf));
 		Optional<EpptScenarioRun> base = getEpptConfigurationController().getEpptScenarioBase();
@@ -206,6 +205,7 @@ final class DisplayGuiLinkFrames extends DisplayFrames
 			DSSGrabber1SvcImpl dssGrabber1Svc = buildDssGrabber(base.get(), guiLink, getEpptConfigurationController().isTaf());
 			TimeSeriesContainer basePrimarySeries = dssGrabber1Svc.getPrimarySeries()[0];
 			TimeSeriesContainer baseSecondarySeries = dssGrabber1Svc.getSecondarySeries()[0];
+			mergeMissing(missing, dssGrabber1Svc.getMissingList());
 
 			for(EpptScenarioRun epptScenarioRun : scenarioRuns)
 			{
@@ -214,6 +214,7 @@ final class DisplayGuiLinkFrames extends DisplayFrames
 					dssGrabber1Svc = buildDssGrabber(epptScenarioRun, guiLink, getEpptConfigurationController().isTaf());
 					TimeSeriesContainer primarySeries = DSSGrabber1SvcImpl.diffSeries(basePrimarySeries, dssGrabber1Svc.getPrimarySeries()[0]);
 					TimeSeriesContainer secondarySeries = DSSGrabber1SvcImpl.diffSeries(baseSecondarySeries, dssGrabber1Svc.getSecondarySeries()[0]);
+					mergeMissing(missing, dssGrabber1Svc.getMissingList());
 					List<TimeSeriesContainer> tscList = new ArrayList<>();
 					if(primarySeries != null)
 					{
@@ -231,7 +232,8 @@ final class DisplayGuiLinkFrames extends DisplayFrames
 		return primaryScenarioRunData;
 	}
 
-	private Map<EpptScenarioRun, List<TimeSeriesContainer>> getComparisonData(GUILinksAllModelsBO guiLink, List<EpptScenarioRun> scenarioRuns)
+	private Map<EpptScenarioRun, List<TimeSeriesContainer>> getComparisonData(GUILinksAllModelsBO guiLink, List<EpptScenarioRun> scenarioRuns,
+			Map<GUILinksAllModelsBO.Model, List<String>> missing)
 	{
 		Map<EpptScenarioRun, List<TimeSeriesContainer>> primaryScenarioRunData = new TreeMap<>(Comparator.comparing(scenarioRuns::indexOf));
 		for(EpptScenarioRun epptScenarioRun : scenarioRuns)
@@ -239,6 +241,7 @@ final class DisplayGuiLinkFrames extends DisplayFrames
 			DSSGrabber1SvcImpl dssGrabber1Svc = buildDssGrabber(epptScenarioRun, guiLink, getEpptConfigurationController().isTaf());
 			TimeSeriesContainer primarySeries = dssGrabber1Svc.getPrimarySeries()[0];
 			TimeSeriesContainer secondarySeries = dssGrabber1Svc.getSecondarySeries()[0];
+			mergeMissing(missing, dssGrabber1Svc.getMissingList());
 			List<TimeSeriesContainer> tscList = new ArrayList<>();
 			if(primarySeries != null)
 			{
