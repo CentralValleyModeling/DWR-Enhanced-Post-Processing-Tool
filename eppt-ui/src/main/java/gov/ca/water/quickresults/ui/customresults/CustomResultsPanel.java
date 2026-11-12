@@ -15,6 +15,7 @@ package gov.ca.water.quickresults.ui.customresults;
 import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Container;
+import java.awt.Cursor;
 import java.awt.event.ActionListener;
 import java.nio.file.Path;
 import java.util.ArrayList;
@@ -23,13 +24,17 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 import java.util.stream.IntStream;
 import javax.swing.*;
 
 import calsim.app.AppUtils;
 import calsim.app.DerivedTimeSeries;
 import calsim.app.MultipleTimeSeries;
-import calsim.gui.GeneralRetrievePanel;
 import calsim.gui.GuiUtils;
 import gov.ca.water.calgui.bo.GUILinksAllModelsBO;
 import gov.ca.water.calgui.presentation.DisplayHelper;
@@ -43,10 +48,10 @@ import gov.ca.water.calgui.techservice.impl.DialogSvcImpl;
 import gov.ca.water.quickresults.ui.EpptPanel;
 import gov.ca.water.calgui.presentation.plotly.EpptPlotException;
 import gov.ca.water.quickresults.ui.quickresults.PlotConfigurationStateBuilder;
-import gov.ca.water.quickresults.ui.quickresults.QuickResultsPanel;
 import org.apache.log4j.Logger;
 import vista.set.DataReference;
 import vista.set.Group;
+import vista.set.GroupTableModel;
 import vista.set.Pathname;
 import vista.time.TimeWindow;
 
@@ -60,11 +65,14 @@ import static java.util.stream.Collectors.toList;
  */
 public class CustomResultsPanel extends EpptPanel
 {
-	private static final Logger LOGGER = Logger.getLogger(QuickResultsPanel.class.getName());
+	private static final Logger LOGGER = Logger.getLogger(CustomResultsPanel.class.getName());
 	private static final String CUSTOM_RESULTS_XML_FILE = "Custom_Results.xml";
+	private static final int MAX_PARALLEL_DSS_READS = 8;
 	private final IDialogSvc _dialogSvc = DialogSvcImpl.getDialogSvcInstance();
 	private final DisplayHelper _displayHelper;
 	private final EpptConfigurationController _epptConfigurationController;
+	private JButton _retrieveBtn;
+	private JButton _openButton;
 
 	public CustomResultsPanel(EpptConfigurationController epptConfigurationController)
 	{
@@ -76,12 +84,12 @@ public class CustomResultsPanel extends EpptPanel
 			Container swixmlCustomResultsPanel = renderSwixml(CUSTOM_RESULTS_XML_FILE);
 			super.add(swixmlCustomResultsPanel);
 			WRIMSGUILinks.buildWRIMSGUI((JPanel) getSwingEngine().find("WRIMS"));
-			JButton retrieveBtn = GuiUtils.getCLGPanel().getRetrievePanel().getRetrieveBtn();
-			for(ActionListener al : retrieveBtn.getActionListeners())
+			_retrieveBtn = GuiUtils.getCLGPanel().getRetrievePanel().getRetrieveBtn();
+			for(ActionListener al : _retrieveBtn.getActionListeners())
 			{
-				retrieveBtn.removeActionListener(al);
+				_retrieveBtn.removeActionListener(al);
 			}
-			retrieveBtn.addActionListener(arg0 -> retrieve());
+			_retrieveBtn.addActionListener(arg0 -> retrieve());
 			JButton filterBtn = GuiUtils.getCLGPanel().getRetrievePanel().getFilterBtn();
 			for(ActionListener al : filterBtn.getActionListeners())
 			{
@@ -92,12 +100,12 @@ public class CustomResultsPanel extends EpptPanel
 			Component openButtonComponent = findFirstButtonMatchingText(secondTab, "Display");
 			if(openButtonComponent != null)
 			{
-				JButton openButton = (JButton) openButtonComponent;
-				for(ActionListener al : openButton.getActionListeners())
+				_openButton = (JButton) openButtonComponent;
+				for(ActionListener al : _openButton.getActionListeners())
 				{
-					openButton.removeActionListener(al);
+					_openButton.removeActionListener(al);
 				}
-				openButton.addActionListener(arg0 -> retrieve2());
+				_openButton.addActionListener(arg0 -> retrieve2());
 			}
 		}
 		catch(Exception e)
@@ -147,25 +155,66 @@ public class CustomResultsPanel extends EpptPanel
 		baseScenario.ifPresent(scenarioRuns::add);
 		if(!scenarioRuns.isEmpty())
 		{
+			JButton filterBtn = GuiUtils.getCLGPanel().getRetrievePanel().getFilterBtn();
+			filterBtn.setEnabled(false);
+			setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
+			GuiUtils.setStatus("Filtering...");
+			String[] stringParts = GuiUtils.getCLGPanel().getRetrievePanel().getStringParts();
 			List<String> failedDssFiles = new ArrayList<>();
-			List<DataReference> allrefs = scenarioRuns.stream()
-													  .map(run -> loadRecordsForScenario(run, failedDssFiles))
-													  .flatMap(Collection::stream)
-													  .collect(toList());
-			GeneralRetrievePanel retrievePanel = GuiUtils.getCLGPanel().getRetrievePanel();
-			if(!failedDssFiles.isEmpty())
+			SwingWorker<FilterResult, Void> worker = new SwingWorker<>()
 			{
-				String message = "Unable to open the following DSS file(s):\n" + String.join("\n", failedDssFiles);
-				_dialogSvc.getOK(message, JOptionPane.WARNING_MESSAGE);
-			}
-			if(allrefs.isEmpty())
-			{
-				_dialogSvc.getOK("No records found using filter", JOptionPane.WARNING_MESSAGE);
-			}
-			else
-			{
-				retrievePanel.updateTable(allrefs.toArray(new DataReference[0]));
-			}
+				@Override
+				protected FilterResult doInBackground()
+				{
+					List<DataReference> allrefs = scenarioRuns.stream()
+															  .map(run -> loadRecordsForScenario(run, stringParts, failedDssFiles))
+															  .flatMap(Collection::stream)
+															  .collect(toList());
+					if(allrefs.isEmpty())
+					{
+						return new FilterResult(allrefs, null, null);
+					}
+					Group group = Group.createGroup("filtered", allrefs.toArray(new DataReference[0]));
+					return new FilterResult(allrefs, group, new GroupTableModel(group));
+				}
+
+				@Override
+				protected void done()
+				{
+					try
+					{
+						FilterResult result = get();
+						if(!failedDssFiles.isEmpty())
+						{
+							String message = "Unable to open the following DSS file(s):\n" + String.join("\n", failedDssFiles);
+							_dialogSvc.getOK(message, JOptionPane.WARNING_MESSAGE);
+						}
+						if(result.allrefs.isEmpty())
+						{
+							_dialogSvc.getOK("No records found using filter", JOptionPane.WARNING_MESSAGE);
+						}
+						else
+						{
+							GuiUtils.getCLGPanel().getRetrievePanel().updateTable(result.group, result.tableModel);
+						}
+					}
+					catch(InterruptedException e)
+					{
+						Thread.currentThread().interrupt();
+						LOGGER.error("Interrupted while filtering custom results", e);
+					}
+					catch(ExecutionException e)
+					{
+						LOGGER.error("Error filtering custom results", e);
+						_dialogSvc.getOK("An error occurred while filtering: " + e.getCause(), JOptionPane.ERROR_MESSAGE);
+					}
+
+					filterBtn.setEnabled(true);
+					setCursor(Cursor.getDefaultCursor());
+					GuiUtils.setStatus("Done.");
+				}
+			};
+			worker.execute();
 		}
 		else
 		{
@@ -174,7 +223,21 @@ public class CustomResultsPanel extends EpptPanel
 
 	}
 
-	private List<DataReference> loadRecordsForScenario(EpptScenarioRun epptScenarioRun, List<String> failedDssFiles)
+	private static final class FilterResult
+	{
+		private final List<DataReference> allrefs;
+		private final Group group;
+		private final GroupTableModel tableModel;
+
+		private FilterResult(List<DataReference> allrefs, Group group, GroupTableModel tableModel)
+		{
+			this.allrefs = allrefs;
+			this.group = group;
+			this.tableModel = tableModel;
+		}
+	}
+
+	private List<DataReference> loadRecordsForScenario(EpptScenarioRun epptScenarioRun, String[] stringParts, List<String> failedDssFiles)
 	{
 		List<Path> allDssFiles = epptScenarioRun.getDssContainer().getAllDssFiles()
 												.stream()
@@ -183,27 +246,43 @@ public class CustomResultsPanel extends EpptPanel
 												.filter(Objects::nonNull)
 												.collect(toList());
 		List<DataReference> allrefs = new ArrayList<>();
-		GeneralRetrievePanel retrievePanel = GuiUtils.getCLGPanel().getRetrievePanel();
-		TimeWindow timeWindow = AppUtils.getCurrentProject().getTimeWindow();
-		for(Path path : allDssFiles)
+		if(allDssFiles.isEmpty())
 		{
-			String[] stringParts = retrievePanel.getStringParts();
-			Group dssGroup = AppUtils.openDSSFile(path.toString());
-			if(dssGroup != null)
-			{
-				Group gc = Group.createGroup(dssGroup);
-				DataReference[] refs = AppUtils.createRefs(stringParts, timeWindow, gc);
-				if(refs != null)
-				{
-					allrefs.addAll(Arrays.asList(refs));
-				}
-			}
-			else if(!failedDssFiles.contains(path.toString()))
-			{
-				failedDssFiles.add(path.toString());
-			}
+			return allrefs;
 		}
-		return allrefs;
+		TimeWindow timeWindow = AppUtils.getCurrentProject().getTimeWindow();
+		List<Callable<Group>> tasks = allDssFiles.stream()
+												 .map(path -> (Callable<Group>) () -> AppUtils.openDSSFile(path.toString()))
+												 .collect(toList());
+        try (ExecutorService executorService = Executors.newFixedThreadPool(Math.min(allDssFiles.size(), MAX_PARALLEL_DSS_READS))) {
+            try {
+                List<Future<Group>> futures = executorService.invokeAll(tasks);
+                for (int i = 0; i < futures.size(); i++) {
+                    Path path = allDssFiles.get(i);
+                    Group dssGroup = null;
+                    try {
+                        dssGroup = futures.get(i).get();
+                    } catch (ExecutionException e) {
+                        LOGGER.error("Error opening DSS file: " + path, e.getCause());
+                    }
+                    if (dssGroup != null) {
+                        Group gc = Group.createGroup(dssGroup);
+                        DataReference[] refs = AppUtils.createRefs(stringParts, timeWindow, gc);
+                        if (refs != null) {
+                            allrefs.addAll(Arrays.asList(refs));
+                        }
+                    } else if (!failedDssFiles.contains(path.toString())) {
+                        failedDssFiles.add(path.toString());
+                    }
+                }
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+                LOGGER.error("Interrupted while opening DSS files for scenario: " + epptScenarioRun.getName(), e);
+            } finally {
+                executorService.shutdown();
+            }
+        }
+        return allrefs;
 	}
 
 	@Override
@@ -221,7 +300,7 @@ public class CustomResultsPanel extends EpptPanel
 		try
 		{
 			Optional<EpptScenarioRun> epptScenarioBase = _epptConfigurationController.getEpptScenarioBase();
-			if(!epptScenarioBase.isPresent())
+			if(epptScenarioBase.isEmpty())
 			{
 				_dialogSvc.getOK("DSS not selected! The Base DSS files need to be selected", JOptionPane.WARNING_MESSAGE);
 				return;
@@ -245,7 +324,9 @@ public class CustomResultsPanel extends EpptPanel
 														 .map(this::mapToGuiLink)
 														 .collect(toList());
 			PlotConfigurationState plotConfigurationState = new PlotConfigurationStateBuilder(getSwingEngine()).createPlotConfigurationState();
-			_displayHelper.showDisplayFramesGuiLink(plotConfigurationState, collect);
+			_retrieveBtn.setEnabled(false);
+			_displayHelper.showDisplayFramesGuiLink(plotConfigurationState, collect)
+						  .whenCompleteAsync((v, ex) -> _retrieveBtn.setEnabled(true), SwingUtilities::invokeLater);
 		}
 		catch(RuntimeException | EpptPlotException e)
 		{
@@ -301,7 +382,18 @@ public class CustomResultsPanel extends EpptPanel
 			if(baseScenario.isPresent())
 			{
 				PlotConfigurationState plotConfigurationState = new PlotConfigurationStateBuilder(getSwingEngine()).createPlotConfigurationState();
-				_displayHelper.showDisplayFramesWRIMS(plotConfigurationState, dts, mts);
+				if(_openButton != null)
+				{
+					_openButton.setEnabled(false);
+				}
+				_displayHelper.showDisplayFramesWRIMS(plotConfigurationState, dts, mts)
+							  .whenCompleteAsync((v, ex) ->
+							  {
+								  if(_openButton != null)
+								  {
+									  _openButton.setEnabled(true);
+								  }
+							  }, SwingUtilities::invokeLater);
 			}
 			else
 			{

@@ -55,6 +55,7 @@ class EpptTimeWindowPane extends TitledPane
 	private final Label _timeWindowRangeLabel;
 	private final Button _rangeButton;
 	private final Tooltip _periodRangePaneTooltip = new Tooltip();
+	private boolean _modifiedListenerEnabled = false;
 
 	EpptTimeWindowPane(EpptConfigurationController controller)
 	{
@@ -88,10 +89,13 @@ class EpptTimeWindowPane extends TitledPane
 	{
 		_waterYearDefinitionComboBox.getSelectionModel().selectedItemProperty().addListener((e, o, n) ->
 		{
-			_controller.setWaterYearDefinition(n);
-			_controller.setModified();
-			n.getStartDefaultYear().ifPresent(y -> _startYearSpinner.getValueFactory().setValue(y));
-			n.getEndDefaultYear().ifPresent(y -> _endYearSpinner.getValueFactory().setValue(y));
+			if(_modifiedListenerEnabled)
+			{
+				_controller.setWaterYearDefinition(n);
+				_controller.setModified();
+				n.getStartDefaultYear().ifPresent(y -> _startYearSpinner.getValueFactory().setValue(y));
+				n.getEndDefaultYear().ifPresent(y -> _endYearSpinner.getValueFactory().setValue(y));
+			}
 			updateTimeWindowRangeLabel();
 		});
 		_startYearSpinner.valueProperty().addListener(startYearChanged());
@@ -110,10 +114,13 @@ class EpptTimeWindowPane extends TitledPane
 	{
 		return (e, o, n) ->
 		{
-			_controller.setEndYear(n);
 			SpinnerValueFactory.IntegerSpinnerValueFactory valueFactory = (SpinnerValueFactory.IntegerSpinnerValueFactory) _startYearSpinner.getValueFactory();
 			valueFactory.setMax(n);
-			_controller.setModified();
+			if(_modifiedListenerEnabled)
+			{
+				_controller.setEndYear(n);
+				_controller.setModified();
+			}
 			updateTimeWindowRangeLabel();
 		};
 	}
@@ -122,10 +129,13 @@ class EpptTimeWindowPane extends TitledPane
 	{
 		return (e, o, n) ->
 		{
-			_controller.setStartYear(n);
 			SpinnerValueFactory.IntegerSpinnerValueFactory valueFactory = (SpinnerValueFactory.IntegerSpinnerValueFactory) _endYearSpinner.getValueFactory();
 			valueFactory.setMin(n);
-			_controller.setModified();
+			if(_modifiedListenerEnabled)
+			{
+				_controller.setStartYear(n);
+				_controller.setModified();
+			}
 			updateTimeWindowRangeLabel();
 		};
 	}
@@ -162,9 +172,18 @@ class EpptTimeWindowPane extends TitledPane
 
 	void reloadProject()
 	{
-		_waterYearDefinitionComboBox.setValue(_controller.getWaterYearDefinition());
-		_startYearSpinner.getValueFactory().setValue(_controller.getStartYear());
-		_endYearSpinner.getValueFactory().setValue(_controller.getEndYear());
+		try
+		{
+			_modifiedListenerEnabled = false;
+			_waterYearDefinitionComboBox.setValue(_controller.getWaterYearDefinition());
+			_startYearSpinner.getValueFactory().setValue(_controller.getStartYear());
+			_endYearSpinner.getValueFactory().setValue(_controller.getEndYear());
+		}
+		finally
+		{
+			_modifiedListenerEnabled = true;
+		}
+		updateTimeWindowRangeLabel();
 	}
 
 	public void commitEdits()
