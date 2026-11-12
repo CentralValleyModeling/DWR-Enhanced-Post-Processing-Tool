@@ -314,7 +314,7 @@ public class DSSGrabber2SvcImpl extends DSSGrabber1SvcImpl
 
 								for(int j = 0; j < interimResult.numberValues; j++)
 								{
-									if(result.values.length < j && interimResult.values.length < j)
+									if(j < result.values.length && j < interimResult.values.length)
 									{
 										result.values[j] = ((result.values[j] > 0.1) && (interimResult.values[j] > 0.1))
 												? 9876.5 : 0;
