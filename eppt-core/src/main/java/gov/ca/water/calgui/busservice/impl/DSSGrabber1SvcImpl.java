@@ -22,12 +22,15 @@ import java.time.Month;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Properties;
 import java.util.Scanner;
+import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -74,13 +77,26 @@ import rma.util.RMAConst;
  */
 public class DSSGrabber1SvcImpl implements IDSSGrabber1Svc
 {
+	private static Logger LOGGER = Logger.getLogger(DSSGrabber1SvcImpl.class.getName());
 
 	public static final double CFS_2_TAF_DAY = 0.001983471;
-	private static Logger LOGGER = Logger.getLogger(DSSGrabber1SvcImpl.class.getName());
+	private static final Set<String> DYNAMIC_SJR_DSS_NAMES = new HashSet<>(Arrays.asList(
+			"S_MELON/STORAGE", "S_PEDRO/STORAGE", "S_MCLRE/STORAGE", "S_MLRTN/STORAGE",
+			"C_STANRIPN/FLOW-CHANNEL", "C_TUOL/FLOW-CHANNEL", "C_MERCED2/FLOW-CHANNEL",
+			"C_SJRMS/FLOW-CHANNEL", "D_STANRIPN/FLOW-DELIVERY", "D_STANGDWN/FLOW-DELIVERY",
+			"D_TUOL/FLOW-DELIVERY", "D_TUOL1B/FLOW-DELIVERY", "D_TUOL2/FLOW-DELIVERY",
+			"D_MERCED1/FLOW-DELIVERY", "D_MERCED2/FLOW-DELIVERY", "D_MDRCNL/FLOW-DELIVERY",
+			"D_FKCNL/FLOW-DELIVERY"));
+	private static final Set<String> ANTIOCH_CHIPPS_DSS_NAMES = new HashSet<>(Arrays.asList(
+			"AN_EC_STD/SALINITY", "CH_EC_STD/SALINITY"));
+	private static final Set<String> LVE_DSS_NAMES = new HashSet<>(Arrays.asList(
+			"S422/STORAGE", "WQ408_OR_/SALINITY", "WQ408_VC_/SALINITY", "WQ408_RS_/SALINITY",
+			"C422_FILL_CC/FLOW-CHANNEL", "D420/FLOW-DELIVERY", "D408_OR/FLOW-DELIVERY",
+			"D408_VC/FLOW-DELIVERY", "D408_RS/FLOW-DELIVERY", "WQ420/SALINITY"));
 	final Map<GUILinksAllModelsBO.Model, String> _primaryDSSName = new HashMap<>();
 	final Map<GUILinksAllModelsBO.Model, String> _secondaryDSSName = new HashMap<>();
 	final List<EpptScenarioRun> _alternatives = new ArrayList<>();
-	private final Map<GUILinksAllModelsBO.Model, List<String>> _missingDSSRecords = new HashMap<>();
+	private final Map<GUILinksAllModelsBO.Model, List<String>> _missingDSSRecords = new LinkedHashMap<>();
 	// Chart title
 	String _plotTitle;
 	// Y-axis label
@@ -119,6 +135,22 @@ public class DSSGrabber1SvcImpl implements IDSSGrabber1Svc
 	public void clearMissingList()
 	{
 		_missingDSSRecords.clear();
+	}
+
+	/**
+	 * Adds a problem message to the list shown to the user for a model, skipping
+	 * exact duplicates.
+	 *
+	 * @param model       scenario model the problem belongs to
+	 * @param messageText description of the problem
+	 */
+	private void recordMissingDSSRecord(GUILinksAllModelsBO.Model model, String messageText)
+	{
+		List<String> messages = _missingDSSRecords.computeIfAbsent(model, m -> new ArrayList<>());
+		if(!messages.contains(messageText))
+		{
+			messages.add(messageText);
+		}
 	}
 
 	/**
@@ -401,7 +433,6 @@ public class DSSGrabber1SvcImpl implements IDSSGrabber1Svc
 	 */
 	protected TimeSeriesContainer getOneSeries(NamedDssPath dssPath, String dssName, GUILinksAllModelsBO.Model model)
 	{
-
 		TimeSeriesContainer result = null;
 
 		HecDataManager hecDataManager = new HecDataManager();
@@ -411,7 +442,17 @@ public class DSSGrabber1SvcImpl implements IDSSGrabber1Svc
 			String file = dssPath.getDssPath().toString();
 			if(HecDataManager.doesDSSFileExist(file))
 			{
-				hecDss = HecDss.open(file);
+				try
+				{
+					hecDss = HecDss.open(file);
+				}
+				catch(Exception ex)
+				{
+					String messageText = "Unable to access HEC-DSS file " + file + " - " + ex.getMessage();
+					LOGGER.log(Level.SEVERE, messageText, ex);
+					recordMissingDSSRecord(model, messageText);
+					return null;
+				}
 				hecDataManager.setDSSFileName(file);
 
 
@@ -461,46 +502,20 @@ public class DSSGrabber1SvcImpl implements IDSSGrabber1Svc
 
 					result = null;
 
-					if(!clsIsDynamicSJR(file) && (("S_MELON/STORAGE".equals(dssNames[0]))
-							|| ("S_PEDRO/STORAGE".equals(dssNames[0])) || ("S_MCLRE/STORAGE".equals(dssNames[0]))
-							|| ("S_MLRTN/STORAGE".equals(dssNames[0])) || ("C_STANRIPN/FLOW-CHANNEL".equals(
-							dssNames[0]))
-							|| ("C_TUOL/FLOW-CHANNEL".equals(dssNames[0])) || ("C_MERCED2/FLOW-CHANNEL".equals(
-							dssNames[0]))
-							|| ("C_SJRMS/FLOW-CHANNEL".equals(dssNames[0]))
-							|| ("D_STANRIPN/FLOW-DELIVERY".equals(dssNames[0]))
-							|| ("D_STANGDWN/FLOW-DELIVERY".equals(dssNames[0]))
-							|| ("D_TUOL/FLOW-DELIVERY".equals(dssNames[0]))
-							|| ("D_TUOL1B/FLOW-DELIVERY".equals(dssNames[0]))
-							|| ("D_TUOL2/FLOW-DELIVERY".equals(dssNames[0]))
-							|| ("D_MERCED1/FLOW-DELIVERY".equals(dssNames[0]))
-							|| ("D_MERCED2/FLOW-DELIVERY".equals(dssNames[0]))
-							|| ("D_MDRCNL/FLOW-DELIVERY".equals(dssNames[0]))
-							|| ("D_FKCNL/FLOW-DELIVERY".equals(dssNames[0]))))
+					if(!clsIsDynamicSJR(file) && DYNAMIC_SJR_DSS_NAMES.contains(dssNames[0]))
 					{
 
 						message = " Could not find " + dssNames[0] + " in " + dssPath.getDssPath()
 								+ ".\n The selected scenario was not run using dynamic SJR simulation;";
 
 					}
-
-					else if(!clsAntiochChipps(file)
-							&& (("AN_EC_STD/SALINITY".equals(dssNames[0])) || ("CH_EC_STD/SALINITY".equals(
-							dssNames[0]))))
+					else if(!clsAntiochChipps(file) && ANTIOCH_CHIPPS_DSS_NAMES.contains(dssNames[0]))
 					{
 
 						message = " Could not find " + dssNames[0] + " in " + dssPath.getDssPath()
 								+ ".\n The selected scenario was not run with D-1485 Fish and Wildlife (at Antioch and Chipps) regulations.";
 					}
-
-					else if(!clsLVE(file) && (("S422/STORAGE".equals(dssNames[0]))
-							|| ("WQ408_OR_/SALINITY".equals(dssNames[0])) || ("WQ408_VC_/SALINITY".equals(dssNames[0]))
-							|| ("WQ408_RS_/SALINITY".equals(dssNames[0]))
-							|| ("C422_FILL_CC/FLOW-CHANNEL".equals(dssNames[0]))
-							|| ("D420/FLOW-DELIVERY".equals(dssNames[0])) || ("D408_OR/FLOW-DELIVERY".equals(
-							dssNames[0]))
-							|| ("D408_VC/FLOW-DELIVERY".equals(dssNames[0]))
-							|| ("D408_RS/FLOW-DELIVERY".equals(dssNames[0])) || ("WQ420/SALINITY".equals(dssNames[0]))))
+					else if(!clsLVE(file) && LVE_DSS_NAMES.contains(dssNames[0]))
 					{
 
 						message = "Could not find " + dssNames[0] + " in " + dssPath.getDssPath()
@@ -556,6 +571,13 @@ public class DSSGrabber1SvcImpl implements IDSSGrabber1Svc
 			{
 				messageText = "Unable to get time series." + ex.getMessage();
 				LOGGER.log(Level.SEVERE, messageText, ex);
+			}
+		}
+		finally
+		{
+			if(hecDss != null)
+			{
+				hecDss.close();
 			}
 		}
 

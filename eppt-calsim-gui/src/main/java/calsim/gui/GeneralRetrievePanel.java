@@ -19,6 +19,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.util.Arrays;
 import javax.swing.*;
 import javax.swing.event.TableModelEvent;
 import javax.swing.table.TableColumnModel;
@@ -241,7 +242,7 @@ public class GeneralRetrievePanel extends JPanel
 		for(int i = 0; i < NUM_PATH_PARTS; i++)
 		{
 			String txt = _pathText[i].getText().trim().toUpperCase();
-			if(txt.length() > 0)
+			if(!txt.isEmpty())
 			{
 				parts[i] = txt;
 			}
@@ -262,11 +263,26 @@ public class GeneralRetrievePanel extends JPanel
 		{
 			return;
 		}
-		_group = Group.createGroup("filtered", refs);
-		_table.setModel(new GroupTableModel(_group));
+		updateTable(Group.createGroup("filtered", refs));
+	}
+
+	/**
+	 * Applies a group and its already-built table model directly, skipping the (potentially expensive,
+	 * for large reference counts) {@link GroupTableModel} construction. Callers with a large reference
+	 * count should build the {@link Group}/{@link GroupTableModel} off the EDT and apply them here.
+	 */
+	public void updateTable(Group group, GroupTableModel tableModel)
+	{
+		_group = group;
+		_table.setModel(tableModel);
 		_table.sizeColumnsToFit(-1);
 		_table.revalidate();
 		_table.repaint();
+	}
+
+	private void updateTable(Group group)
+	{
+		updateTable(group, new GroupTableModel(group));
 	}
 
 	/**
@@ -343,10 +359,7 @@ public class GeneralRetrievePanel extends JPanel
 
 		public TableHeaderMouseListener()
 		{
-			for(int i = 0; i < ascVals.length; i++)
-			{
-				ascVals[i] = true;
-			}
+            Arrays.fill(ascVals, true);
 		}
 
 		/**

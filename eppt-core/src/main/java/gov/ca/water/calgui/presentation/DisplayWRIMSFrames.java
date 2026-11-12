@@ -15,6 +15,7 @@ package gov.ca.water.calgui.presentation;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -73,18 +74,17 @@ class DisplayWRIMSFrames extends DisplayFrames
 				List<EpptScenarioRun> scenarioRuns = new ArrayList<>();
 				scenarioRuns.add(baseRun.get());
 				scenarioRuns.addAll(getAlternatives());
+				Map<GUILinksAllModelsBO.Model, List<String>> missing = new LinkedHashMap<>();
 				if(_mts != null)
 				{
 					tabbedPane.setName(_mts.getName());
-					plotMts(scenarioRuns, _mts, tabbedPane);
+					plotMts(scenarioRuns, _mts, tabbedPane, missing);
 				}
 				if(_dts != null)
 				{
 					tabbedPane.setName(_dts.getName());
-					plotDts(scenarioRuns, _dts, tabbedPane);
+					plotDts(scenarioRuns, _dts, tabbedPane, missing);
 				}
-				DSSGrabber2SvcImpl dssGrabber = buildDssGrabber(baseRun.get());
-				Map<GUILinksAllModelsBO.Model, List<String>> missing = dssGrabber.getMissingList();
 				if(!missing.isEmpty())
 				{
 					insertEmptyTab(tabbedPane, missing);
@@ -108,28 +108,30 @@ class DisplayWRIMSFrames extends DisplayFrames
 		return dssGrabber;
 	}
 
-	private void plotMts(List<EpptScenarioRun> scenarios, MultipleTimeSeries mts, JTabbedPane tabbedPane)
+	private void plotMts(List<EpptScenarioRun> scenarios, MultipleTimeSeries mts, JTabbedPane tabbedPane,
+			Map<GUILinksAllModelsBO.Model, List<String>> missing)
 	{
 
 		Map<EpptScenarioRun, List<TimeSeriesContainer>> scenarioRunData;
 		if(getEpptConfigurationController().isDifference())
 		{
-			scenarioRunData = getMtsDiffData(scenarios, mts);
+			scenarioRunData = getMtsDiffData(scenarios, mts, missing);
 		}
 		else
 		{
-			scenarioRunData = getMtsComparisonData(scenarios, mts);
+			scenarioRunData = getMtsComparisonData(scenarios, mts, missing);
 		}
 		plot(tabbedPane, scenarioRunData, mts.getName());
 	}
 
-	private Map<EpptScenarioRun, List<TimeSeriesContainer>> getMtsDiffData(List<EpptScenarioRun> scenarios, MultipleTimeSeries mts)
+	private Map<EpptScenarioRun, List<TimeSeriesContainer>> getMtsDiffData(List<EpptScenarioRun> scenarios, MultipleTimeSeries mts,
+			Map<GUILinksAllModelsBO.Model, List<String>> missing)
 	{
 		Map<EpptScenarioRun, List<TimeSeriesContainer>> scenarioRunData = new TreeMap<>(Comparator.comparing(scenarios::indexOf));
 		Optional<EpptScenarioRun> base = getEpptConfigurationController().getEpptScenarioBase();
 		if(base.isPresent())
 		{
-			TimeSeriesContainer[] baseContainers = getBaseMtsData(mts, base.get());
+			TimeSeriesContainer[] baseContainers = getBaseMtsData(mts, base.get(), missing);
 			for(EpptScenarioRun epptScenarioRun : scenarios)
 			{
 				if(!epptScenarioRun.isBaseSelected())
@@ -139,6 +141,7 @@ class DisplayWRIMSFrames extends DisplayFrames
 						DSSGrabber2SvcImpl dssGrabber = buildDssGrabber(epptScenarioRun);
 						dssGrabber.setLocation("@@" + mts.getName());
 						TimeSeriesContainer[] result = dssGrabber.getMultipleTimeSeries(i);
+						mergeMissing(missing, dssGrabber.getMissingList());
 						TimeSeriesContainer tsc = DSSGrabber1SvcImpl.diffSeries(baseContainers[i], result[0]);
 						scenarioRunData.computeIfAbsent(epptScenarioRun, v -> new ArrayList<>()).add(tsc);
 					}
@@ -148,7 +151,8 @@ class DisplayWRIMSFrames extends DisplayFrames
 		return scenarioRunData;
 	}
 
-	private TimeSeriesContainer[] getBaseMtsData(MultipleTimeSeries mts, EpptScenarioRun base)
+	private TimeSeriesContainer[] getBaseMtsData(MultipleTimeSeries mts, EpptScenarioRun base,
+			Map<GUILinksAllModelsBO.Model, List<String>> missing)
 	{
 		TimeSeriesContainer[] baseContainers = new TimeSeriesContainer[mts.getNumberOfDataReferences()];
 		for(int i = 0; i < mts.getNumberOfDataReferences(); i++)
@@ -156,13 +160,15 @@ class DisplayWRIMSFrames extends DisplayFrames
 			DSSGrabber2SvcImpl dssGrabber = buildDssGrabber(base);
 			dssGrabber.setLocation("@@" + mts.getName());
 			TimeSeriesContainer[] result = dssGrabber.getMultipleTimeSeries(i);
+			mergeMissing(missing, dssGrabber.getMissingList());
 			TimeSeriesContainer tsc = result[0];
 			baseContainers[i] = tsc;
 		}
 		return baseContainers;
 	}
 
-	private Map<EpptScenarioRun, List<TimeSeriesContainer>> getMtsComparisonData(List<EpptScenarioRun> scenarios, MultipleTimeSeries mts)
+	private Map<EpptScenarioRun, List<TimeSeriesContainer>> getMtsComparisonData(List<EpptScenarioRun> scenarios, MultipleTimeSeries mts,
+			Map<GUILinksAllModelsBO.Model, List<String>> missing)
 	{
 		Map<EpptScenarioRun, List<TimeSeriesContainer>> scenarioRunData = new TreeMap<>(Comparator.comparing(scenarios::indexOf));
 		for(EpptScenarioRun epptScenarioRun : scenarios)
@@ -172,6 +178,7 @@ class DisplayWRIMSFrames extends DisplayFrames
 				DSSGrabber2SvcImpl dssGrabber = buildDssGrabber(epptScenarioRun);
 				dssGrabber.setLocation("@@" + mts.getName());
 				TimeSeriesContainer[] result = dssGrabber.getMultipleTimeSeries(i);
+				mergeMissing(missing, dssGrabber.getMissingList());
 				TimeSeriesContainer tsc = result[0];
 				if(tsc != null)
 				{
@@ -226,25 +233,27 @@ class DisplayWRIMSFrames extends DisplayFrames
 		}
 	}
 
-	private void plotDts(List<EpptScenarioRun> scenarios, DerivedTimeSeries dts, JTabbedPane tabbedPane)
+	private void plotDts(List<EpptScenarioRun> scenarios, DerivedTimeSeries dts, JTabbedPane tabbedPane,
+			Map<GUILinksAllModelsBO.Model, List<String>> missing)
 	{
 		Map<EpptScenarioRun, List<TimeSeriesContainer>> scenarioRunData;
 		if(getEpptConfigurationController().isDifference())
 		{
-			scenarioRunData = getDiffDtsData(scenarios, dts);
+			scenarioRunData = getDiffDtsData(scenarios, dts, missing);
 		}
 		else
 		{
-			scenarioRunData = getComparisonDtsData(scenarios, dts);
+			scenarioRunData = getComparisonDtsData(scenarios, dts, missing);
 		}
 		plot(tabbedPane, scenarioRunData, dts.getName());
 	}
 
-	private Map<EpptScenarioRun, List<TimeSeriesContainer>> getDiffDtsData(List<EpptScenarioRun> scenarios, DerivedTimeSeries dts)
+	private Map<EpptScenarioRun, List<TimeSeriesContainer>> getDiffDtsData(List<EpptScenarioRun> scenarios, DerivedTimeSeries dts,
+			Map<GUILinksAllModelsBO.Model, List<String>> missing)
 	{
 		final Map<EpptScenarioRun, List<TimeSeriesContainer>> scenarioRunData;
 		scenarioRunData  = new TreeMap<>(Comparator.comparing(scenarios::indexOf));
-		TimeSeriesContainer[] baseData = getBaseDtsData(scenarios, dts);
+		TimeSeriesContainer[] baseData = getBaseDtsData(scenarios, dts, missing);
 		if(baseData != null)
 		{
 			for(EpptScenarioRun epptScenarioRun : scenarios)
@@ -254,6 +263,7 @@ class DisplayWRIMSFrames extends DisplayFrames
 					DSSGrabber2SvcImpl dssGrabber = buildDssGrabber(epptScenarioRun);
 					dssGrabber.setLocation("@@" + dts.getName());
 					TimeSeriesContainer[] result = dssGrabber.getPrimarySeries();
+					mergeMissing(missing, dssGrabber.getMissingList());
 					if(result[0] != null)
 					{
 						TimeSeriesContainer tsc = result[0];
@@ -267,7 +277,8 @@ class DisplayWRIMSFrames extends DisplayFrames
 		return scenarioRunData;
 	}
 
-	private TimeSeriesContainer[] getBaseDtsData(List<EpptScenarioRun> scenarios, DerivedTimeSeries dts)
+	private TimeSeriesContainer[] getBaseDtsData(List<EpptScenarioRun> scenarios, DerivedTimeSeries dts,
+			Map<GUILinksAllModelsBO.Model, List<String>> missing)
 	{
 		TimeSeriesContainer[] baseData = null;
 		for(EpptScenarioRun epptScenarioRun : scenarios)
@@ -277,6 +288,7 @@ class DisplayWRIMSFrames extends DisplayFrames
 				DSSGrabber2SvcImpl dssGrabber = buildDssGrabber(epptScenarioRun);
 				dssGrabber.setLocation("@@" + dts.getName());
 				TimeSeriesContainer[] result = dssGrabber.getPrimarySeries();
+				mergeMissing(missing, dssGrabber.getMissingList());
 				if(result[0] != null)
 				{
 					baseData = result;
@@ -286,7 +298,8 @@ class DisplayWRIMSFrames extends DisplayFrames
 		return baseData;
 	}
 
-	private Map<EpptScenarioRun, List<TimeSeriesContainer>> getComparisonDtsData(List<EpptScenarioRun> scenarios, DerivedTimeSeries dts)
+	private Map<EpptScenarioRun, List<TimeSeriesContainer>> getComparisonDtsData(List<EpptScenarioRun> scenarios, DerivedTimeSeries dts,
+			Map<GUILinksAllModelsBO.Model, List<String>> missing)
 	{
 		final Map<EpptScenarioRun, List<TimeSeriesContainer>> scenarioRunData;
 		scenarioRunData = new TreeMap<>(Comparator.comparing(scenarios::indexOf));
@@ -295,6 +308,7 @@ class DisplayWRIMSFrames extends DisplayFrames
 			DSSGrabber2SvcImpl dssGrabber = buildDssGrabber(epptScenarioRun);
 			dssGrabber.setLocation("@@" + dts.getName());
 			TimeSeriesContainer[] result = dssGrabber.getPrimarySeries();
+			mergeMissing(missing, dssGrabber.getMissingList());
 			if(result[0] != null)
 			{
 				TimeSeriesContainer tsc = result[0];
