@@ -249,7 +249,7 @@ public class DSSGrabber2SvcImpl extends DSSGrabber1SvcImpl
 							  .findFirst();
 	}
 
-	private TimeSeriesContainer getOneSeriesWRIMS(NamedDssPath dssPath, GUILinksAllModelsBO.Model model,
+	TimeSeriesContainer getOneSeriesWRIMS(NamedDssPath dssPath, GUILinksAllModelsBO.Model model,
 												  DerivedTimeSeries dts2)
 	{
 		if(dts2 == null)
@@ -389,7 +389,7 @@ public class DSSGrabber2SvcImpl extends DSSGrabber1SvcImpl
 
 	}
 
-	private TimeSeriesContainer getOneSeriesWRIMS(NamedDssPath dssPath, GUILinksAllModelsBO.Model model,
+	TimeSeriesContainer getOneSeriesWRIMS(NamedDssPath dssPath, GUILinksAllModelsBO.Model model,
 												  int i, MultipleTimeSeries mts2)
 	{
 
