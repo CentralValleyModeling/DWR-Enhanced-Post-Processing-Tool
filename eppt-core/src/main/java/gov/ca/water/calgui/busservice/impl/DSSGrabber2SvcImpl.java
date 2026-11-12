@@ -152,10 +152,7 @@ public class DSSGrabber2SvcImpl extends DSSGrabber1SvcImpl
 
 			// Base first
 			Optional<TimeSeriesContainer> dtsContainer = getDtsContainer(_baseScenarioRun);
-			if(dtsContainer.isPresent())
-			{
-				results[0] = dtsContainer.get();
-			}
+            dtsContainer.ifPresent(timeSeriesContainer -> results[0] = timeSeriesContainer);
 			if(results[0] != null)
 			{
 				_originalUnits = results[0].units;
@@ -194,10 +191,7 @@ public class DSSGrabber2SvcImpl extends DSSGrabber1SvcImpl
 			// Base first
 
 			Optional<TimeSeriesContainer> tsOpt = getMtsContainer(_baseScenarioRun, mtsI);
-			if(tsOpt.isPresent())
-			{
-				results[0] = tsOpt.get();
-			}
+            tsOpt.ifPresent(timeSeriesContainer -> results[0] = timeSeriesContainer);
 			if(results[0] != null)
 			{
 				_originalUnits = results[0].units;
