@@ -12,18 +12,21 @@
 
 package gov.ca.water.calgui.busservice.impl;
 
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.nio.file.Paths;
 
 import calsim.app.DerivedTimeSeries;
 import calsim.app.MultipleTimeSeries;
+import gov.ca.water.calgui.EpptInitializationException;
 import gov.ca.water.calgui.bo.GUILinksAllModelsBO;
 import gov.ca.water.calgui.bo.ResultUtilsBO;
 import gov.ca.water.calgui.project.NamedDssPath;
 
 import hec.io.TimeSeriesContainer;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
 /**
@@ -33,6 +36,54 @@ import static org.junit.jupiter.api.Assertions.assertNull;
  */
 class DSSGrabber2SvcImplTest
 {
+	static
+	{
+		if(!System.getProperty("user.dir").replace('\\', '/').endsWith("target/test-classes"))
+		{
+			String userDir = Paths.get(System.getProperty("user.dir")).resolve("target/test-classes")
+									.toAbsolutePath().toString();
+			System.setProperty("user.dir", userDir);
+		}
+	}
+
+	@BeforeAll
+	static void setup() throws EpptInitializationException
+	{
+		GuiLinksSeedDataSvcImpl.createSeedDataSvcImplInstance();
+	}
+
+	private static TimeSeriesContainer invokeGetOneSeriesWRIMS(DSSGrabber2SvcImpl grabber, DerivedTimeSeries dts2)
+			throws NoSuchMethodException, IllegalAccessException
+	{
+		Method method = DSSGrabber2SvcImpl.class.getDeclaredMethod("getOneSeriesWRIMS",
+				NamedDssPath.class, GUILinksAllModelsBO.Model.class, DerivedTimeSeries.class);
+		method.setAccessible(true);
+		return invoke(method, grabber, null, null, dts2);
+	}
+
+	private static TimeSeriesContainer invokeGetOneSeriesWRIMS(DSSGrabber2SvcImpl grabber, int i, MultipleTimeSeries mts2)
+			throws NoSuchMethodException, IllegalAccessException
+	{
+		Method method = DSSGrabber2SvcImpl.class.getDeclaredMethod("getOneSeriesWRIMS",
+				NamedDssPath.class, GUILinksAllModelsBO.Model.class, int.class, MultipleTimeSeries.class);
+		method.setAccessible(true);
+		return invoke(method, grabber, null, null, i, mts2);
+	}
+
+	private static TimeSeriesContainer invoke(Method method, DSSGrabber2SvcImpl grabber, Object... args)
+			throws IllegalAccessException
+	{
+		try
+		{
+			return (TimeSeriesContainer) method.invoke(grabber, args);
+		}
+		catch(InvocationTargetException ite)
+		{
+			Throwable cause = ite.getCause();
+			throw new AssertionError("getOneSeriesWRIMS threw: " + cause, cause);
+		}
+	}
+
 	@Test
 	void dtsOperandReferencingUnknownDtsIsSkippedInsteadOfThrowing() throws Exception
 	{
@@ -44,20 +95,7 @@ class DSSGrabber2SvcImplTest
 
 		DSSGrabber2SvcImpl grabber = new DSSGrabber2SvcImpl(parentDts, new MultipleTimeSeries());
 
-		Method getOneSeriesWRIMS = DSSGrabber2SvcImpl.class.getDeclaredMethod("getOneSeriesWRIMS",
-				NamedDssPath.class, GUILinksAllModelsBO.Model.class, DerivedTimeSeries.class);
-		getOneSeriesWRIMS.setAccessible(true);
-
-		TimeSeriesContainer result;
-		try
-		{
-			result = (TimeSeriesContainer) getOneSeriesWRIMS.invoke(grabber,
-					new Object[]{null, null, parentDts});
-		}
-		catch(java.lang.reflect.InvocationTargetException ite)
-		{
-			throw new AssertionError("Underlying method threw: " + ite.getCause(), ite.getCause());
-		}
+		TimeSeriesContainer result = invokeGetOneSeriesWRIMS(grabber, parentDts);
 
 		assertNull(result, "No operand resolved, so the overall result should be null");
 	}
@@ -73,13 +111,7 @@ class DSSGrabber2SvcImplTest
 
 		DSSGrabber2SvcImpl grabber = new DSSGrabber2SvcImpl(new DerivedTimeSeries("UNUSED_DTS_TEST"), mts);
 
-		Method getOneSeriesWRIMS = DSSGrabber2SvcImpl.class.getDeclaredMethod("getOneSeriesWRIMS",
-				NamedDssPath.class, GUILinksAllModelsBO.Model.class, int.class, MultipleTimeSeries.class);
-		getOneSeriesWRIMS.setAccessible(true);
-
-		TimeSeriesContainer result = (TimeSeriesContainer) assertDoesNotThrow(
-				() -> getOneSeriesWRIMS.invoke(grabber, null, null, 0, mts),
-				"Resolving an MTS with a dangling DTS reference must not throw");
+		TimeSeriesContainer result = invokeGetOneSeriesWRIMS(grabber, 0, mts);
 
 		assertNull(result, "The dangling reference should be skipped, yielding a null result");
 	}
