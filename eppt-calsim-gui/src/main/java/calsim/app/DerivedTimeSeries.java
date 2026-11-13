@@ -25,6 +25,7 @@ import java.io.PrintWriter;
 import java.io.Serializable;
 import java.util.Enumeration;
 import java.util.Hashtable;
+import java.util.Objects;
 import java.util.Random;
 import java.util.StringTokenizer;
 import java.util.Vector;
@@ -914,12 +915,18 @@ public class DerivedTimeSeries extends DataReference implements Serializable
 		if(obj instanceof DerivedTimeSeries)
 		{
 			DerivedTimeSeries dts = (DerivedTimeSeries) obj;
-			return _name.equals(dts.getName());
+			return Objects.equals(_name, dts.getName());
 		}
 		else
 		{
 			return false;
 		}
+	}
+
+	@Override
+	public int hashCode()
+	{
+		return Objects.hashCode(_name);
 	}
 
 	/**
