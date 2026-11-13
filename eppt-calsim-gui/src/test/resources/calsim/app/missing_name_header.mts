@@ -1,0 +1,2 @@
+Derived Time Series,Dvar/Svar,B part,C part,
+,DVAR,B1,C1,

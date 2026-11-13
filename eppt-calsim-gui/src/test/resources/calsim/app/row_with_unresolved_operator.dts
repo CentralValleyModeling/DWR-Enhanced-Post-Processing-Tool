@@ -1,0 +1,4 @@
+name, DROPPED_ROW_SAMPLE
+Operator,Derived Time Series,Dvar/Svar,B part,C part,
+?,,DVAR,B1,C1,
++,,DVAR,FLOW-CHANNEL,FLOW,
