@@ -12,8 +12,6 @@
 
 package calsim.app;
 
-import calsim.gui.DtsTreeModel;
-import calsim.gui.DtsTreePanel;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -866,7 +864,9 @@ public class DerivedTimeSeries extends DataReference implements Serializable
 	 */
 	private DataReference[] getDataReferences(int studyNumber)
 	{
-		System.out.println(_opIds.size());
+		if(DEBUG) {
+			System.out.println(_opIds.size());
+		}
 		if(_opIds.isEmpty())
 		{
 			return null;

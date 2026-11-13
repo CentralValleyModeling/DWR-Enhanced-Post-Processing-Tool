@@ -263,6 +263,55 @@ public class MultipleTimeSeriesTest
 	}
 
 	@Test
+	public void fromXmlDoesNotDoubleAppendDtsExtensionWhenLowercase()
+	{
+		Document doc = XMLHelpers.createXmlDocument();
+		Element mtsElement = doc.createElement("MTS");
+		mtsElement.setAttribute("name", "WITHLOWER.MTS");
+		Element row = doc.createElement("row");
+		row.setAttribute("dts", "other.dts");
+		mtsElement.appendChild(row);
+		doc.appendChild(mtsElement);
+
+		MultipleTimeSeries mts = new MultipleTimeSeries();
+		mts.fromXml(mtsElement);
+
+		assertEquals("OTHER.DTS", mts.getDTSNameAt(0));
+	}
+
+	@Test
+	public void fromXmlHandlesMissingAttributesWithoutThrowingNPE()
+	{
+		Document doc = XMLHelpers.createXmlDocument();
+		Element mtsElement = doc.createElement("MTS");
+		mtsElement.setAttribute("name", "PARTIAL_ATTRS.MTS");
+
+		Element row1 = doc.createElement("row");
+		row1.setAttribute("dts", "only_dts");
+		mtsElement.appendChild(row1);
+
+		Element row2 = doc.createElement("row");
+		row2.setAttribute("bpart", "only_bpart");
+		mtsElement.appendChild(row2);
+
+		doc.appendChild(mtsElement);
+
+		MultipleTimeSeries mts = new MultipleTimeSeries();
+		mts.fromXml(mtsElement);
+
+		assertEquals(2, mts.getNumberOfDataReferences());
+		assertEquals("ONLY_DTS.DTS", mts.getDTSNameAt(0));
+		assertEquals("", mts.getVarTypeAt(0));
+		assertEquals("", mts.getBPartAt(0));
+		assertEquals("", mts.getCPartAt(0));
+
+		assertEquals("", mts.getDTSNameAt(1));
+		assertEquals("", mts.getVarTypeAt(1));
+		assertEquals("ONLY_BPART", mts.getBPartAt(1));
+		assertEquals("", mts.getCPartAt(1));
+	}
+
+	@Test
 	public void fromXmlAppendsMtsExtensionOnlyWhenMissing()
 	{
 		Document doc = XMLHelpers.createXmlDocument();
@@ -274,6 +323,20 @@ public class MultipleTimeSeriesTest
 		mts.fromXml(mtsElement);
 
 		assertEquals("PLAINNAME.MTS", mts.getName());
+	}
+
+	@Test
+	public void fromXmlNormalizesLowercaseMtsExtensionWithoutDuplication()
+	{
+		Document doc = XMLHelpers.createXmlDocument();
+		Element mtsElement = doc.createElement("MTS");
+		mtsElement.setAttribute("name", "lowercase.mts");
+		doc.appendChild(mtsElement);
+
+		MultipleTimeSeries mts = new MultipleTimeSeries();
+		mts.fromXml(mtsElement);
+
+		assertEquals("LOWERCASE.MTS", mts.getName());
 	}
 
 
