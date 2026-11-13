@@ -26,7 +26,6 @@ import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
@@ -42,39 +41,66 @@ public class MultipleTimeSeriesTest
 	}
 
 	@Test
-	public void copyConstructorDoesNotActuallyPopulateTheNewInstance()
+	public void copyConstructorCopiesNameAndRows()
 	{
-		// MultipleTimeSeries(MultipleTimeSeries) builds a *local* MultipleTimeSeries, copies the
-		// source's fields into that local, and then throws it away - "this" is never touched, so
-		// its _name and all four row vectors are left at their Java default of null. Any call
-		// that touches a row vector (even getNumberOfDataReferences()) then throws an NPE. This
-		// pins down the existing (broken) behavior rather than asserting it is desirable.
-		MultipleTimeSeries original = new MultipleTimeSeries("ORIGINAL.MTS");
-		original.setBPartAt(0, "B1");
+		MultipleTimeSeries original = buildSampleMts("ORIGINAL.MTS");
 
 		MultipleTimeSeries copy = new MultipleTimeSeries(original);
 
-		assertNull(copy.getName());
-		try
+		assertEquals(original.getName(), copy.getName());
+		assertEquals(original.getNumberOfDataReferences(), copy.getNumberOfDataReferences());
+		for(int i = 0; i < original.getNumberOfDataReferences(); i++)
 		{
-			copy.getNumberOfDataReferences();
-			fail("Expected NullPointerException: the copy constructor never initializes 'this'");
-		}
-		catch(NullPointerException expected)
-		{
-			// documents the bug - see comment above
+			assertEquals("row " + i + " dts name", original.getDTSNameAt(i), copy.getDTSNameAt(i));
+			assertEquals("row " + i + " var type", original.getVarTypeAt(i), copy.getVarTypeAt(i));
+			assertEquals("row " + i + " b part", original.getBPartAt(i), copy.getBPartAt(i));
+			assertEquals("row " + i + " c part", original.getCPartAt(i), copy.getCPartAt(i));
 		}
 	}
 
 	@Test
-	public void renamingCopyConstructorAlsoDoesNotPopulateTheNewInstance()
+	public void copyConstructorRowVectorsAreIndependentOfTheOriginal()
+	{
+		MultipleTimeSeries original = new MultipleTimeSeries("ORIGINAL.MTS");
+		original.setBPartAt(0, "B1");
+
+		MultipleTimeSeries copy = new MultipleTimeSeries(original);
+		copy.setBPartAt(0, "CHANGED");
+
+		assertEquals("B1", original.getBPartAt(0));
+		assertEquals("CHANGED", copy.getBPartAt(0));
+	}
+
+	@Test
+	public void renamingCopyConstructorCopiesRowsAndAppliesTheNewName()
+	{
+		MultipleTimeSeries original = buildSampleMts("ORIGINAL.MTS");
+
+		MultipleTimeSeries copy = new MultipleTimeSeries(original, "RENAMED.MTS");
+
+		assertEquals("RENAMED.MTS", copy.getName());
+		assertEquals(original.getNumberOfDataReferences(), copy.getNumberOfDataReferences());
+		for(int i = 0; i < original.getNumberOfDataReferences(); i++)
+		{
+			assertEquals("row " + i + " dts name", original.getDTSNameAt(i), copy.getDTSNameAt(i));
+			assertEquals("row " + i + " var type", original.getVarTypeAt(i), copy.getVarTypeAt(i));
+			assertEquals("row " + i + " b part", original.getBPartAt(i), copy.getBPartAt(i));
+			assertEquals("row " + i + " c part", original.getCPartAt(i), copy.getCPartAt(i));
+		}
+	}
+
+	@Test
+	public void renamingCopyConstructorRowVectorsAreIndependentOfTheOriginal()
 	{
 		MultipleTimeSeries original = new MultipleTimeSeries("ORIGINAL.MTS");
 		original.setBPartAt(0, "B1");
 
 		MultipleTimeSeries copy = new MultipleTimeSeries(original, "RENAMED.MTS");
+		copy.setBPartAt(0, "CHANGED");
 
-		assertNull(copy.getName());
+		assertEquals("B1", original.getBPartAt(0));
+		assertEquals("CHANGED", copy.getBPartAt(0));
+		assertEquals("ORIGINAL.MTS", original.getName());
 	}
 
 	@Test
@@ -93,9 +119,6 @@ public class MultipleTimeSeriesTest
 	@Test
 	public void setDTSNameAtDoesNotAppendDtsExtensionUnlikeDerivedTimeSeries()
 	{
-		// Contrast with DerivedTimeSeries.setDTSNameAt, which appends ".DTS" automatically: the
-		// equivalent logic here is present but commented out in the source, so
-		// MultipleTimeSeries.setDTSNameAt only upper-cases/trims - it never qualifies the name.
 		MultipleTimeSeries mts = new MultipleTimeSeries("NAME.MTS");
 		mts.setDTSNameAt(0, " other ");
 		assertEquals("OTHER", mts.getDTSNameAt(0));
@@ -166,9 +189,7 @@ public class MultipleTimeSeriesTest
 	@Test
 	public void equalsIsNotOverriddenUnlikeDerivedTimeSeries()
 	{
-		// DerivedTimeSeries.equals() compares by name. MultipleTimeSeries has no equals()
-		// override at all, so two MTS objects with the same name are still distinct per
-		// Object's reference-identity default.
+
 		MultipleTimeSeries a = new MultipleTimeSeries("SAME.MTS");
 		MultipleTimeSeries b = new MultipleTimeSeries("SAME.MTS");
 		assertNotEquals(a, b);
@@ -189,7 +210,6 @@ public class MultipleTimeSeriesTest
         assertNull(mts.getDataReferences(0));
 	}
 
-	// --- toXml / fromXml -------------------------------------------------
 
 	@Test
 	public void toXmlThenFromXmlRoundTripsBPartCPartRowsAndDtsReferenceRows()
@@ -224,10 +244,7 @@ public class MultipleTimeSeriesTest
 	@Test
 	public void fromXmlAppendsDtsExtensionToDtsAttributeUnlikeSetDTSNameAt()
 	{
-		// Contrast with setDTSNameAtDoesNotAppendDtsExtensionUnlikeDerivedTimeSeries above:
-		// fromXml normalizes the "dts" attribute itself (appends ".DTS" when missing) before
-		// delegating to setDTSNameAt, so the net effect of loading via XML differs from calling
-		// setDTSNameAt directly with the same raw string.
+
 		Document doc = XMLHelpers.createXmlDocument();
 		Element mtsElement = doc.createElement("MTS");
 		mtsElement.setAttribute("name", "WITHREF.MTS");
@@ -259,7 +276,6 @@ public class MultipleTimeSeriesTest
 		assertEquals("PLAINNAME.MTS", mts.getName());
 	}
 
-	// --- save / load (text format) ----------------------------------------
 
 	@Test
 	public void saveThenLoadRoundTripsRowsAndDoesNotQualifyTheDtsReferenceName() throws IOException
@@ -366,12 +382,6 @@ public class MultipleTimeSeriesTest
 		}
 	}
 
-	// --- reading from saved MTS files (test resources) ----------------------
-	//
-	// These resources live under src/test/resources/calsim/app/ and were produced by actually
-	// calling MultipleTimeSeries.save() (see the DerivedTimeSeriesTest equivalent for the
-	// throwaway program used to capture the exact byte layout), so they reproduce what a real
-	// saved .mts file looks like rather than a hand-guessed approximation of the format.
 
 	@Test
 	public void loadReadsNameAndRowsFromRealSavedTextMtsFile() throws IOException, URISyntaxException

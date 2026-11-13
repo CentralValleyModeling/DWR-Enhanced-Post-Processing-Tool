@@ -47,6 +47,71 @@ public class DerivedTimeSeriesTest
 	}
 
 	@Test
+	public void copyConstructorCopiesNameAndRows()
+	{
+		DerivedTimeSeries original = buildSampleDts("ORIGINAL.DTS");
+
+		DerivedTimeSeries copy = new DerivedTimeSeries(original);
+
+		assertEquals(original.getName(), copy.getName());
+		assertEquals(original.getNumberOfDataReferences(), copy.getNumberOfDataReferences());
+		for(int i = 0; i < original.getNumberOfDataReferences(); i++)
+		{
+			assertEquals("row " + i + " operator", original.getOperationIdAt(i), copy.getOperationIdAt(i));
+			assertEquals("row " + i + " dts name", original.getDTSNameAt(i), copy.getDTSNameAt(i));
+			assertEquals("row " + i + " var type", original.getVarTypeAt(i), copy.getVarTypeAt(i));
+			assertEquals("row " + i + " b part", original.getBPartAt(i), copy.getBPartAt(i));
+			assertEquals("row " + i + " c part", original.getCPartAt(i), copy.getCPartAt(i));
+		}
+	}
+
+	@Test
+	public void copyConstructorRowVectorsAreIndependentOfTheOriginal()
+	{
+		DerivedTimeSeries original = new DerivedTimeSeries("ORIGINAL.DTS");
+		original.setBPartAt(0, "B1");
+
+		DerivedTimeSeries copy = new DerivedTimeSeries(original);
+		copy.setBPartAt(0, "CHANGED");
+
+		assertEquals("B1", original.getBPartAt(0));
+		assertEquals("CHANGED", copy.getBPartAt(0));
+	}
+
+	@Test
+	public void renamingCopyConstructorCopiesRowsAndAppliesTheNewName()
+	{
+		DerivedTimeSeries original = buildSampleDts("ORIGINAL.DTS");
+
+		DerivedTimeSeries copy = new DerivedTimeSeries(original, "RENAMED.DTS");
+
+		assertEquals("RENAMED.DTS", copy.getName());
+		assertEquals(original.getNumberOfDataReferences(), copy.getNumberOfDataReferences());
+		for(int i = 0; i < original.getNumberOfDataReferences(); i++)
+		{
+			assertEquals("row " + i + " operator", original.getOperationIdAt(i), copy.getOperationIdAt(i));
+			assertEquals("row " + i + " dts name", original.getDTSNameAt(i), copy.getDTSNameAt(i));
+			assertEquals("row " + i + " var type", original.getVarTypeAt(i), copy.getVarTypeAt(i));
+			assertEquals("row " + i + " b part", original.getBPartAt(i), copy.getBPartAt(i));
+			assertEquals("row " + i + " c part", original.getCPartAt(i), copy.getCPartAt(i));
+		}
+	}
+
+	@Test
+	public void renamingCopyConstructorRowVectorsAreIndependentOfTheOriginal()
+	{
+		DerivedTimeSeries original = new DerivedTimeSeries("ORIGINAL.DTS");
+		original.setBPartAt(0, "B1");
+
+		DerivedTimeSeries copy = new DerivedTimeSeries(original, "RENAMED.DTS");
+		copy.setBPartAt(0, "CHANGED");
+
+		assertEquals("B1", original.getBPartAt(0));
+		assertEquals("CHANGED", copy.getBPartAt(0));
+		assertEquals("ORIGINAL.DTS", original.getName());
+	}
+
+	@Test
 	public void settersExpandRowsAndNormalizeValues()
 	{
 		DerivedTimeSeries dts = new DerivedTimeSeries("NAME.DTS");
@@ -354,12 +419,6 @@ public class DerivedTimeSeriesTest
 		}
 	}
 
-	// --- reading from saved DTS files (test resources) ----------------------
-	//
-	// These resources live under src/test/resources/calsim/app/ and were produced by actually
-	// calling DerivedTimeSeries.save()/.toXml() (see git history for the throwaway program used
-	// to capture the exact byte layout), so they reproduce what a real saved .dts file looks
-	// like rather than a hand-guessed approximation of the format.
 
 	@Test
 	public void loadReadsNameAndRowsFromRealSavedTextDtsFile() throws IOException, URISyntaxException

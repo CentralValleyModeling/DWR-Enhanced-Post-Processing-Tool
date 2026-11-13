@@ -12,6 +12,8 @@
 
 package calsim.app;
 
+import calsim.gui.DtsTreeModel;
+import calsim.gui.DtsTreePanel;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -27,9 +29,6 @@ import java.util.Random;
 import java.util.StringTokenizer;
 import java.util.Vector;
 import javax.swing.table.AbstractTableModel;
-
-import calsim.gui.DtsTreeModel;
-import calsim.gui.DtsTreePanel;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
@@ -39,8 +38,7 @@ import vista.set.Pathname;
 import vista.set.RegularTimeSeries;
 import vista.set.TimeSeries;
 import vista.time.TimeWindow;
-//import java.text.*;
-//import javax.swing.tree.*;
+
 
 /**
  * A time series representing a time series
@@ -82,18 +80,21 @@ public class DerivedTimeSeries extends DataReference implements Serializable
 	public static String DEFAULT_C_PART = "";
 	boolean recalculate = true;
 	//Not private variable
-	DtsTreeModel _dtm = DtsTreePanel.getCurrentModel();
 	int[] dss = {0, 0, 0, 0};
 	private String _svf1, _svf2, _dvf1, _dvf2;
-	//  private boolean _oldMode;
+
 	private Project _oldProject;
 	private TimeWindow _oldTimeWindow;
 	/*
 	  private variables
 	*/
-	private Vector _opIds, _dtsNames, _varTypes, _bparts, _cparts;
+	private Vector<Integer> _opIds;
+    private Vector<String> _dtsNames;
+    private Vector<String> _varTypes;
+    private Vector<String> _bparts;
+    private Vector<String> _cparts;
 	private String _name;
-	//  private boolean _nameSetExplicitly;
+
 	private transient DataSet[] _dataSet;
 	private boolean _modified;
 
@@ -102,11 +103,11 @@ public class DerivedTimeSeries extends DataReference implements Serializable
 	 */
 	public DerivedTimeSeries()
 	{
-		_opIds = new Vector();
-		_dtsNames = new Vector();
-		_varTypes = new Vector();
-		_bparts = new Vector();
-		_cparts = new Vector();
+		_opIds = new Vector<>();
+		_dtsNames = new Vector<>();
+		_varTypes = new Vector<>();
+		_bparts = new Vector<>();
+		_cparts = new Vector<>();
 		setServername("local");
 		setFilename("calculated");
 		_name = "Untitled " + new Random().nextInt();
@@ -117,22 +118,21 @@ public class DerivedTimeSeries extends DataReference implements Serializable
 	 */
 	public DerivedTimeSeries(DerivedTimeSeries dts)
 	{
-		DerivedTimeSeries ndts = new DerivedTimeSeries();
-		ndts._name = dts.getName();
-		ndts._opIds = (Vector) dts._opIds.clone();
-		ndts._dtsNames = (Vector) dts._dtsNames.clone();
-		ndts._varTypes = (Vector) dts._varTypes.clone();
-		ndts._bparts = (Vector) dts._bparts.clone();
-		ndts._cparts = (Vector) dts._cparts.clone();
+		_name = dts.getName();
+		_opIds = new Vector<>( dts._opIds);
+		_dtsNames = new Vector<>( dts._dtsNames);
+		_varTypes = new Vector<>( dts._varTypes);
+		_bparts = new Vector<>( dts._bparts);
+		_cparts = new Vector<>( dts._cparts);
 	}
 
 	public DerivedTimeSeries(String name)
 	{
-		_opIds = new Vector();
-		_dtsNames = new Vector();
-		_varTypes = new Vector();
-		_bparts = new Vector();
-		_cparts = new Vector();
+		_opIds = new Vector<>();
+		_dtsNames = new Vector<>();
+		_varTypes = new Vector<>();
+		_bparts = new Vector<>();
+		_cparts = new Vector<>();
 		setServername("local");
 		setFilename("calculated");
 		_name = name;
@@ -140,13 +140,8 @@ public class DerivedTimeSeries extends DataReference implements Serializable
 
 	public DerivedTimeSeries(DerivedTimeSeries dts, String name)
 	{
-		DerivedTimeSeries ndts = new DerivedTimeSeries();
-		ndts._name = name;
-		ndts._opIds = (Vector) dts._opIds.clone();
-		ndts._dtsNames = (Vector) dts._dtsNames.clone();
-		ndts._varTypes = (Vector) dts._varTypes.clone();
-		ndts._bparts = (Vector) dts._bparts.clone();
-		ndts._cparts = (Vector) dts._cparts.clone();
+		this(dts);
+		_name = name;
 	}
 
 	/**
@@ -154,9 +149,11 @@ public class DerivedTimeSeries extends DataReference implements Serializable
 	 */
 	public static DerivedTimeSeries load(String file) throws IOException
 	{
-		InputStream is = new FileInputStream(file);
-		DerivedTimeSeries dts = load(is);
-		return dts;
+        DerivedTimeSeries dts;
+        try (InputStream is = new FileInputStream(file)) {
+            dts = load(is);
+        }
+        return dts;
 	}
 
 	/**
@@ -164,234 +161,173 @@ public class DerivedTimeSeries extends DataReference implements Serializable
 	 */
 	public static DerivedTimeSeries load(InputStream is) throws IOException
 	{
-		DerivedTimeSeries dts = null;
-		LineNumberReader reader = new LineNumberReader(new InputStreamReader(is));
-		String name = null;
-		int opId;
-		int count = 0; // counter for number of time series for defining this dts
-		String dtsname = "", varType = "", bpart = "", cpart = "";
-		String line = null;
-		while(true)
-		{
-			line = reader.readLine();
-			if(line == null)
-			{
-				break;
-			}
-			if(line.indexOf("name") >= 0)
-			{
-				StringTokenizer st = new StringTokenizer(line, ",");
-				st.nextToken();
-				name = st.nextToken().trim();
-				name = name + ".DTS";
-				break;
-			}
-		}
-		if(name == null)
-		{
-			throw new IOException("Invalid Derived Time Series Input: No name found");
-		}
-		dts = new DerivedTimeSeries();
-		dts._name = name.toUpperCase().trim();
-		if(line != null)
-		{
-			while(true)
-			{
-				line = reader.readLine();
-				if(line == null)
-				{
-					break;
-				}
-				line = line.toLowerCase();
-				if(line.indexOf("perator") >= 0 &&
-						line.indexOf("erived") >= 0 &&
-						line.indexOf("var") >= 0 &&
-						line.indexOf("art") >= 0)
-				{
-					break;
-				}
-			}
-		}
-		if(line == null)
-		{
-			throw new IOException("No definition's found for " +
-					" derived time series till line #: " + reader.getLineNumber());
-		}
-		while(true)
-		{
-			line = reader.readLine();
-			if(line == null)
-			{
-				break;
-			}
-			StringTokenizer st = new StringTokenizer(line, ",", true); // get separator tokens also
-			// get operator id, this has to exist
-			if(st.hasMoreTokens())
-			{
-				String token = st.nextToken();
-				if(token.equals(","))
-				{
-					if(DEBUG)
-					{
-						System.err.println(
-								"No operator id found in first column, ignoring line # " + reader.getLineNumber());
-					}
-					continue;
-				}
-				else
-				{
-					opId = AppUtils.getOperationId(token.trim());
-					if(opId == -1)
-					{
-						if(DEBUG)
-						{
-							System.err.println("Invalid operator id, ignoring line #: " + reader.getLineNumber());
-						}
-						continue;
-					}
-					else
-					{
-						if(st.hasMoreTokens())
-						{
-							st.nextToken(); // skip next separator
-						}
-					}
-				}
-			}
-			else
-			{
-				if(DEBUG)
-				{
-					System.err.println("Illegal format, ignoring line: " + line);
-				}
-				continue;
-			}
-			// get DTS if any mentioned. If this exists then other columns are read
-			// but will be ignored for calculation purposes
-			if(st.hasMoreTokens())
-			{
-				String token = st.nextToken().trim();
-				if(token.equals(","))
-				{
-					dtsname = "";
-				}
-				else
-				{
-					dtsname = token;
-					varType = "";
-					bpart = "";
-					cpart = "";
-					if(st.hasMoreTokens())
-					{
-						st.nextToken();
-					}
-				}
-			}
-			// get svar, b part and c part, these must exist if dtsname is ""
-			if(dtsname.equals(""))
-			{
-				if(st.hasMoreTokens())
-				{
-					varType = st.nextToken().trim();
-					if(varType.equals(","))
-					{
-						if(DEBUG)
-						{
-							System.err.println("Missing variable type on line # : " + reader.getLineNumber());
-						}
-						continue;
-					}
-					else
-					{
-						varType = varType.toUpperCase();
-						if(st.hasMoreTokens())
-						{
-							st.nextToken();
-						}
-						if(varType.equals(AppUtils.SVAR))
-						{
-						}
-						else if(varType.equals(AppUtils.DVAR))
-						{
-						}
-						else
-						{
-							if(DEBUG)
-							{
-								System.err.println(
-										"Invalid variable type: " + varType + " on line # : " + reader.getLineNumber());
-							}
-							continue;
-						}
-					}
-				}
-				else
-				{
-					if(DEBUG)
-					{
-						System.err.println("Missing variable type on line #: " + reader.getLineNumber());
-					}
-					continue;
-				}
-				// get b part
-				if(st.hasMoreTokens())
-				{
-					bpart = st.nextToken().trim();
-					if(bpart.equals(","))
-					{
-						if(DEBUG)
-						{
-							System.err.println("Missing bpart on line # : " + reader.getLineNumber());
-						}
-						continue;
-					}
-					else
-					{
-						if(st.hasMoreTokens())
-						{
-							st.nextToken();
-						}
-					}
-				}
-				else
-				{
-					if(DEBUG)
-					{
-						System.err.println("Missing b part on line # : " + reader.getLineNumber());
-					}
-				}
-				// get c part
-				if(st.hasMoreTokens())
-				{
-					cpart = st.nextToken().trim();
-					if(cpart.equals(","))
-					{
-						if(DEBUG)
-						{
-							System.err.println("Missing cpart on line: " + reader.getLineNumber());
-						}
-						continue;
-					}
-					else
-					{
-					}
-				}
-				else
-				{
-					if(DEBUG)
-					{
-						System.err.println("Missing c part on line : " + reader.getLineNumber());
-					}
-				}
-			} // if (dtsname.equals("")...
-			dts.setOperationIdAt(count, opId);
-			dts.setDTSNameAt(count, dtsname);
-			dts.setVarTypeAt(count, varType);
-			dts.setBPartAt(count, bpart);
-			dts.setCPartAt(count, cpart);
-			count++;
-		}
-		is.close();
+		DerivedTimeSeries dts;
+        try (LineNumberReader reader = new LineNumberReader(new InputStreamReader(is))) {
+            String name = null;
+            int opId;
+            int count = 0; // counter for number of time series for defining this dts
+            String dtsname = "", varType = "", bpart = "", cpart = "";
+            String line;
+            while (true) {
+                line = reader.readLine();
+                if (line == null) {
+                    break;
+                }
+                if (line.contains("name")) {
+                    StringTokenizer st = new StringTokenizer(line, ",");
+                    st.nextToken();
+                    name = st.nextToken().trim();
+                    name = name + ".DTS";
+                    break;
+                }
+            }
+            if (name == null) {
+                throw new IOException("Invalid Derived Time Series Input: No name found");
+            }
+            dts = new DerivedTimeSeries();
+            dts._name = name.toUpperCase().trim();
+            if (line != null) {
+                while (true) {
+                    line = reader.readLine();
+                    if (line == null) {
+                        break;
+                    }
+                    line = line.toLowerCase();
+                    if (line.contains("perator") &&
+                            line.contains("erived") &&
+                            line.contains("var") &&
+                            line.contains("art")) {
+                        break;
+                    }
+                }
+            }
+            if (line == null) {
+                throw new IOException("No definition's found for " +
+                        " derived time series till line #: " + reader.getLineNumber());
+            }
+            while (true) {
+                line = reader.readLine();
+                if (line == null) {
+                    break;
+                }
+                StringTokenizer st = new StringTokenizer(line, ",", true); // get separator tokens also
+// get operator id, this has to exist
+                if (st.hasMoreTokens()) {
+                    String token = st.nextToken();
+                    if (token.equals(",")) {
+                        if (DEBUG) {
+                            System.err.println(
+                                    "No operator id found in first column, ignoring line # " + reader.getLineNumber());
+                        }
+                        continue;
+                    } else {
+                        opId = AppUtils.getOperationId(token.trim());
+                        if (opId == -1) {
+                            if (DEBUG) {
+                                System.err.println("Invalid operator id, ignoring line #: " + reader.getLineNumber());
+                            }
+                            continue;
+                        } else {
+                            if (st.hasMoreTokens()) {
+                                st.nextToken(); // skip next separator
+                            }
+                        }
+                    }
+                } else {
+                    if (DEBUG) {
+                        System.err.println("Illegal format, ignoring line: " + line);
+                    }
+                    continue;
+                }
+// get DTS if any mentioned. If this exists then other columns are read
+// but will be ignored for calculation purposes
+                if (st.hasMoreTokens()) {
+                    String token = st.nextToken().trim();
+                    if (token.equals(",")) {
+                        dtsname = "";
+                    } else {
+                        dtsname = token;
+                        varType = "";
+                        bpart = "";
+                        cpart = "";
+                        if (st.hasMoreTokens()) {
+                            st.nextToken();
+                        }
+                    }
+                }
+// get svar, b part and c part, these must exist if dtsname is ""
+                if (dtsname.isEmpty()) {
+                    if (st.hasMoreTokens()) {
+                        varType = st.nextToken().trim();
+                        if (varType.equals(",")) {
+                            if (DEBUG) {
+                                System.err.println("Missing variable type on line # : " + reader.getLineNumber());
+                            }
+                            continue;
+                        } else {
+                            varType = varType.toUpperCase();
+                            if (st.hasMoreTokens()) {
+                                st.nextToken();
+                            }
+                            if (varType.equals(AppUtils.SVAR)) {
+                            } else if (varType.equals(AppUtils.DVAR)) {
+                            } else {
+                                if (DEBUG) {
+                                    System.err.println(
+                                            "Invalid variable type: " + varType + " on line # : " + reader.getLineNumber());
+                                }
+                                continue;
+                            }
+                        }
+                    } else {
+                        if (DEBUG) {
+                            System.err.println("Missing variable type on line #: " + reader.getLineNumber());
+                        }
+                        continue;
+                    }
+// get b part
+                    if (st.hasMoreTokens()) {
+                        bpart = st.nextToken().trim();
+                        if (bpart.equals(",")) {
+                            if (DEBUG) {
+                                System.err.println("Missing bpart on line # : " + reader.getLineNumber());
+                            }
+                            continue;
+                        } else {
+                            if (st.hasMoreTokens()) {
+                                st.nextToken();
+                            }
+                        }
+                    } else {
+                        if (DEBUG) {
+                            System.err.println("Missing b part on line # : " + reader.getLineNumber());
+                        }
+                    }
+// get c part
+                    if (st.hasMoreTokens()) {
+                        cpart = st.nextToken().trim();
+                        if (cpart.equals(",")) {
+                            if (DEBUG) {
+                                System.err.println("Missing cpart on line: " + reader.getLineNumber());
+                            }
+                            continue;
+                        } else {
+                        }
+                    } else {
+                        if (DEBUG) {
+                            System.err.println("Missing c part on line : " + reader.getLineNumber());
+                        }
+                    }
+                } // if (dtsname.equals("")...
+                dts.setOperationIdAt(count, opId);
+                dts.setDTSNameAt(count, dtsname);
+                dts.setVarTypeAt(count, varType);
+                dts.setBPartAt(count, bpart);
+                dts.setCPartAt(count, cpart);
+                count++;
+            }
+        }
+        is.close();
 		return dts;
 	}
 
@@ -401,25 +337,22 @@ public class DerivedTimeSeries extends DataReference implements Serializable
 	public void save(OutputStream os) throws IOException
 	{
 		AbstractTableModel model = new DTSTableModel(this);
-		PrintWriter writer = new PrintWriter(new OutputStreamWriter(os));
-		writer.println("name, " + getName());
-		for(int i = 0; i < model.getColumnCount(); i++)
-		{
-			writer.print(model.getColumnName(i));
-			writer.print(",");
-		}
-		writer.println();
-		for(int j = 0; j < model.getRowCount(); j++)
-		{
-			for(int i = 0; i < model.getColumnCount(); i++)
-			{
-				writer.print(model.getValueAt(j, i));
-				writer.print(",");
-			}
-			writer.println();
-		}
-		writer.close();
-	}
+        try (PrintWriter writer = new PrintWriter(new OutputStreamWriter(os))) {
+            writer.println("name, " + getName());
+            for (int i = 0; i < model.getColumnCount(); i++) {
+                writer.print(model.getColumnName(i));
+                writer.print(",");
+            }
+            writer.println();
+            for (int j = 0; j < model.getRowCount(); j++) {
+                for (int i = 0; i < model.getColumnCount(); i++) {
+                    writer.print(model.getValueAt(j, i));
+                    writer.print(",");
+                }
+                writer.println();
+            }
+        }
+    }
 
 	/**
 	 * remove the i'th data reference.
@@ -441,7 +374,7 @@ public class DerivedTimeSeries extends DataReference implements Serializable
 		_modified = true;
 		while(_dtsNames.size() - 1 < i)
 		{
-			_opIds.addElement(new Integer(0));
+			_opIds.addElement(0);
 			_dtsNames.addElement("");
 			_varTypes.addElement(AppUtils.DVAR);
 			_bparts.addElement(DEFAULT_B_PART);
@@ -462,7 +395,7 @@ public class DerivedTimeSeries extends DataReference implements Serializable
 		{
 			return;
 		}
-		_opIds.insertElementAt(new Integer(0), i);
+		_opIds.insertElementAt(0, i);
 		_dtsNames.insertElementAt("", i);
 		_varTypes.insertElementAt("", i);
 		_bparts.insertElementAt("", i);
@@ -495,7 +428,7 @@ public class DerivedTimeSeries extends DataReference implements Serializable
 	public String getDTSNameAt(int i)
 	{
 		checkAccessAt(i);
-		return (String) _dtsNames.elementAt(i);
+		return _dtsNames.elementAt(i);
 	}
 
 	/**
@@ -508,7 +441,7 @@ public class DerivedTimeSeries extends DataReference implements Serializable
 	{
 		expandTo(i);
 		String nm = dtsname.toUpperCase().trim();
-		if(!nm.equals("") && !nm.endsWith(".DTS"))
+		if(!nm.isEmpty() && !nm.endsWith(".DTS"))
 		{
 			nm = nm + ".DTS";
 		}
@@ -526,7 +459,7 @@ public class DerivedTimeSeries extends DataReference implements Serializable
 	public String getVarTypeAt(int i)
 	{
 		checkAccessAt(i);
-		return (String) _varTypes.elementAt(i);
+		return _varTypes.elementAt(i);
 	}
 
 	/**
@@ -544,7 +477,7 @@ public class DerivedTimeSeries extends DataReference implements Serializable
 	public String getBPartAt(int i)
 	{
 		checkAccessAt(i);
-		return (String) _bparts.elementAt(i);
+		return _bparts.elementAt(i);
 	}
 
 	/**
@@ -562,7 +495,7 @@ public class DerivedTimeSeries extends DataReference implements Serializable
 	public String getCPartAt(int i)
 	{
 		checkAccessAt(i);
-		return (String) _cparts.elementAt(i);
+		return _cparts.elementAt(i);
 	}
 
 	/**
@@ -585,7 +518,7 @@ public class DerivedTimeSeries extends DataReference implements Serializable
 	public int getOperationIdAt(int i)
 	{
 		checkAccessAt(i);
-		return ((Integer) _opIds.elementAt(i)).intValue();
+		return _opIds.elementAt(i);
 	}
 
 	/**
@@ -594,7 +527,7 @@ public class DerivedTimeSeries extends DataReference implements Serializable
 	public void setOperationIdAt(int i, int opId)
 	{
 		expandTo(i);
-		_opIds.setElementAt(new Integer(opId), i);
+		_opIds.setElementAt(opId, i);
 	}
 
 	/**
@@ -679,7 +612,7 @@ public class DerivedTimeSeries extends DataReference implements Serializable
 	}
 
 	/**
-	 * Retrieves data from the data base if data is null. If
+	 * Retrieves data from the database if data is null. If
 	 * retrieval fails it throws a RuntimeException. It
 	 * goes through the list of given references, gets the data
 	 * and does the math operations
@@ -690,7 +623,7 @@ public class DerivedTimeSeries extends DataReference implements Serializable
 	{
 		if(DEBUG)
 		{
-			System.out.println("Study Number: " + new Integer(studyNumber).toString());
+			System.out.println("Study Number: " + studyNumber);
 		}
 		// if calculations have been done then no need to repeat.
 		if(recalculationNeeded() || recalculate || updateDataSets())
@@ -788,6 +721,7 @@ public class DerivedTimeSeries extends DataReference implements Serializable
 	/**
 	 *
 	 */
+	@Override
 	public Pathname getPathname()
 	{
 		Pathname spath = super.getPathname();
@@ -808,9 +742,9 @@ public class DerivedTimeSeries extends DataReference implements Serializable
 			Hashtable cpt = new Hashtable();
 			for(int i = 0; i < nref; i++)
 			{
-				String cp = "";
+				String cp;
 				String dtsName = getDTSNameAt(i);
-				if(!dtsName.equals(""))
+				if(!dtsName.isEmpty())
 				{
 					DerivedTimeSeries dts = AppUtils.findDTS(dtsName);
 					if(dts == null)
@@ -823,7 +757,7 @@ public class DerivedTimeSeries extends DataReference implements Serializable
 				{
 					cp = getCPartAt(i);
 				}
-				if(!cp.equals(""))
+				if(!cp.isEmpty())
 				{
 					StringTokenizer st = new StringTokenizer(cp, ",");
 					while(st.hasMoreTokens())
@@ -838,7 +772,7 @@ public class DerivedTimeSeries extends DataReference implements Serializable
 			}
 			for(Enumeration e = cpt.elements(); e.hasMoreElements(); )
 			{
-				if(cpart.equals(""))
+				if(cpart.isEmpty())
 				{
 					cpart = (String) e.nextElement();
 				}
@@ -906,7 +840,7 @@ public class DerivedTimeSeries extends DataReference implements Serializable
 						dataSet = TSMath.createCopy((TimeSeries) dataSet);
 						copyMade = true;
 					}
-					DataSet ds2 = null;
+					DataSet ds2;
 					AppUtils.changeToCurrentUnits(ref);
 					if(ref instanceof DerivedTimeSeries)
 					{
@@ -921,9 +855,7 @@ public class DerivedTimeSeries extends DataReference implements Serializable
 							getOperationIdAt(i));
 				}
 			}
-			//			if ( ref.getData() == null){
-			//  			throw new RuntimeException("No valid data available for # " + (i+1));
-			//			}
+
 		}
 		return dataSet;
 	}
@@ -934,7 +866,7 @@ public class DerivedTimeSeries extends DataReference implements Serializable
 	private DataReference[] getDataReferences(int studyNumber)
 	{
 		System.out.println(_opIds.size());
-		if(_opIds.size() == 0)
+		if(_opIds.isEmpty())
 		{
 			return null;
 		}
@@ -942,7 +874,7 @@ public class DerivedTimeSeries extends DataReference implements Serializable
 		for(int i = 0; i < refs.length; i++)
 		{
 			String dtsname = getDTSNameAt(i);
-			if(dtsname.length() > 0)
+			if(!dtsname.isEmpty())
 			{
 				refs[i] = AppUtils.findDTS(dtsname);
 				if(refs[i] == null)
@@ -953,7 +885,6 @@ public class DerivedTimeSeries extends DataReference implements Serializable
 			}
 			else
 			{
-				//				String vt = getVarTypeAt(i);
 				String bpart = getBPartAt(i);
 				String cpart = getCPartAt(i);
 				refs[i] = AppUtils.getDataReference(studyNumber, bpart, cpart);
@@ -977,6 +908,7 @@ public class DerivedTimeSeries extends DataReference implements Serializable
 	/**
 	 *
 	 */
+	@Override
 	public boolean equals(Object obj)
 	{
 		if(obj instanceof DerivedTimeSeries)
@@ -1060,6 +992,7 @@ public class DerivedTimeSeries extends DataReference implements Serializable
 	/**
 	 * gets name of this data reference
 	 */
+	@Override
 	public String getName()
 	{
 		return _name;
@@ -1068,6 +1001,7 @@ public class DerivedTimeSeries extends DataReference implements Serializable
 	/**
 	 * sets name of this data reference
 	 */
+	@Override
 	public void setName(String name)
 	{
 		if(name == null)
@@ -1080,7 +1014,7 @@ public class DerivedTimeSeries extends DataReference implements Serializable
 		{
 			return;
 		}
-		if(name.length() > 0 && AppUtils.nameNotTaken(name))
+		if(!name.isEmpty() && AppUtils.nameNotTaken(name))
 		{
 			Project prj = AppUtils.getCurrentProject();
 			DerivedTimeSeries dts2 = null;
@@ -1092,7 +1026,7 @@ public class DerivedTimeSeries extends DataReference implements Serializable
 			{
 				prj.remove(dts2);
 			}
-			//      _nameSetExplicitly = true;
+
 			_name = name.toUpperCase().trim();
 			_modified = true;
 			if(dts2 != null)
@@ -1114,27 +1048,27 @@ public class DerivedTimeSeries extends DataReference implements Serializable
 		}
 	}
 
-	public Vector getBParts()
+	public Vector<String> getBParts()
 	{
 		return _bparts;
 	}
 
-	public Vector getCParts()
+	public Vector<String> getCParts()
 	{
 		return _cparts;
 	}
 
-	public Vector getOpIds()
+	public Vector<Integer> getOpIds()
 	{
 		return _opIds;
 	}
 
-	public Vector getVarTypes()
+	public Vector<String> getVarTypes()
 	{
 		return _varTypes;
 	}
 
-	public Vector getDtsNames()
+	public Vector<String> getDtsNames()
 	{
 		return _dtsNames;
 	}
