@@ -24,6 +24,7 @@ import java.io.Serializable;
 import java.util.Random;
 import java.util.StringTokenizer;
 import java.util.Vector;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.table.AbstractTableModel;
 
@@ -47,7 +48,7 @@ public class MultipleTimeSeries implements Serializable
 	private static final Logger LOGGER = Logger.getLogger(MultipleTimeSeries.class.getName());
 
 	public static boolean DEBUG = false;
-	private Vector<String> _dtsNames, _varTypes, _bparts, _cparts;
+	private final Vector<String> _dtsNames, _varTypes, _bparts, _cparts;
 	private String _name;
 
 	/**
@@ -151,9 +152,9 @@ public class MultipleTimeSeries implements Serializable
                         break;
                     }
                     line = line.toLowerCase();
-                    if (line.indexOf("erived") >= 0 &&
-                            line.indexOf("var") >= 0 &&
-                            line.indexOf("art") >= 0) {
+                    if (line.contains("erived") &&
+                            line.contains("var") &&
+                            line.contains("art")) {
                         break;
                     }
                 }
@@ -202,8 +203,8 @@ public class MultipleTimeSeries implements Serializable
                             } else if (varType.equals(AppUtils.DVAR)) {
                             } else {
                                 if (DEBUG) {
-                                    LOGGER.fine(
-                                            "Invalid variable type: " + varType + " on line # : " + reader.getLineNumber());
+                                    LOGGER.log(Level.FINE, "Invalid variable type: {0} on line # : {1}",
+                                            new Object[]{varType, reader.getLineNumber()});
                                 }
                                 continue;
                             }
@@ -219,7 +220,7 @@ public class MultipleTimeSeries implements Serializable
                         bpart = st.nextToken().trim();
                         if (bpart.equals(",")) {
                             if (DEBUG) {
-                                LOGGER.fine("Missing bpart on line # : " + reader.getLineNumber());
+                                LOGGER.log(Level.FINE, "Missing bpart on line # : {0}", reader.getLineNumber());
                             }
                             continue;
                         } else {
@@ -229,7 +230,7 @@ public class MultipleTimeSeries implements Serializable
                         }
                     } else {
                         if (DEBUG) {
-                            LOGGER.fine("Missing b part on line # : " + reader.getLineNumber());
+                            LOGGER.log(Level.FINE, "Missing b part on line # : {0}", reader.getLineNumber());
                         }
                     }
 // get c part
@@ -341,10 +342,10 @@ public class MultipleTimeSeries implements Serializable
 	 */
 	public void remove(int i)
 	{
-		_dtsNames.removeElementAt(i);
-		_varTypes.removeElementAt(i);
-		_bparts.removeElementAt(i);
-		_cparts.removeElementAt(i);
+		_dtsNames.remove(i);
+		_varTypes.remove(i);
+		_bparts.remove(i);
+		_cparts.remove(i);
 	}
 
 	/**
@@ -354,10 +355,10 @@ public class MultipleTimeSeries implements Serializable
 	{
 		while(_dtsNames.size() - 1 < i)
 		{
-			_dtsNames.addElement("");
-			_varTypes.addElement(AppUtils.DVAR);
-			_bparts.addElement("");
-			_cparts.addElement("");
+			_dtsNames.add("");
+			_varTypes.add(AppUtils.DVAR);
+			_bparts.add("");
+			_cparts.add("");
 		}
 	}
 
@@ -374,10 +375,10 @@ public class MultipleTimeSeries implements Serializable
 		{
 			return;
 		}
-		_dtsNames.insertElementAt("", i);
-		_varTypes.insertElementAt("", i);
-		_bparts.insertElementAt("", i);
-		_cparts.insertElementAt("", i);
+		_dtsNames.add(i, "");
+		_varTypes.add(i, "");
+		_bparts.add(i, "");
+		_cparts.add(i, "");
 	}
 
 	/**
@@ -398,7 +399,7 @@ public class MultipleTimeSeries implements Serializable
 	public String getDTSNameAt(int i)
 	{
 		checkAccessAt(i);
-		return _dtsNames.elementAt(i);
+		return _dtsNames.get(i);
 	}
 
 	/**
@@ -411,7 +412,7 @@ public class MultipleTimeSeries implements Serializable
 	{
 		expandTo(i);
 
-		_dtsNames.setElementAt(dtsname.toUpperCase().trim(), i);
+		_dtsNames.set(i, dtsname.toUpperCase().trim());
 	}
 
 	/**
@@ -421,7 +422,7 @@ public class MultipleTimeSeries implements Serializable
 	public String getVarTypeAt(int i)
 	{
 		checkAccessAt(i);
-		return _varTypes.elementAt(i);
+		return _varTypes.get(i);
 	}
 
 	/**
@@ -430,7 +431,7 @@ public class MultipleTimeSeries implements Serializable
 	public void setVarTypeAt(int i, String varType)
 	{
 		expandTo(i);
-		_varTypes.setElementAt(varType.toUpperCase().trim(), i);
+		_varTypes.set(i, varType.toUpperCase().trim());
 	}
 
 	/**
@@ -439,7 +440,7 @@ public class MultipleTimeSeries implements Serializable
 	public String getBPartAt(int i)
 	{
 		checkAccessAt(i);
-		return _bparts.elementAt(i);
+		return _bparts.get(i);
 	}
 
 	/**
@@ -448,7 +449,7 @@ public class MultipleTimeSeries implements Serializable
 	public void setBPartAt(int i, String bpart)
 	{
 		expandTo(i);
-		_bparts.setElementAt(bpart.toUpperCase().trim(), i);
+		_bparts.set(i, bpart.toUpperCase().trim());
 	}
 
 	/**
@@ -457,7 +458,7 @@ public class MultipleTimeSeries implements Serializable
 	public String getCPartAt(int i)
 	{
 		checkAccessAt(i);
-		return _cparts.elementAt(i);
+		return _cparts.get(i);
 	}
 
 	/**
@@ -468,7 +469,7 @@ public class MultipleTimeSeries implements Serializable
 		if(cpart != null)
 		{
 			expandTo(i);
-			_cparts.setElementAt(cpart.toUpperCase().trim(), i);
+			_cparts.set(i, cpart.toUpperCase().trim());
 		}
 	}
 
