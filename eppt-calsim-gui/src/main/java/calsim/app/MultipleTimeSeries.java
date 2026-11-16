@@ -251,7 +251,6 @@ public class MultipleTimeSeries implements Serializable
                                 LOGGER.fine("Missing cpart on line: " + reader.getLineNumber());
                             }
                             continue;
-                        } else {
                         }
                     } else {
                         if (DEBUG) {
@@ -277,7 +276,7 @@ public class MultipleTimeSeries implements Serializable
 	{
 		AbstractTableModel model = new MTSTableModel(this);
         try (PrintWriter writer = new PrintWriter(new OutputStreamWriter(os))) {
-            writer.println("name, " + getName());
+            writer.println(NAME_ATTR +	", " + getName());
             for (int i = 0; i < model.getColumnCount(); i++) {
                 writer.print(model.getColumnName(i));
                 writer.print(",");
