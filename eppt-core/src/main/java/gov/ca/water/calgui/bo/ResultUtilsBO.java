@@ -24,10 +24,8 @@ import java.io.OutputStream;
 import java.io.PrintStream;
 import java.time.Month;
 import java.time.YearMonth;
-import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeFormatterBuilder;
 import java.time.format.DateTimeParseException;
-import java.time.format.SignStyle;
 import java.time.format.TextStyle;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -51,9 +49,6 @@ import gov.ca.water.calgui.constant.Constant;
 import gov.ca.water.calgui.techservice.IDialogSvc;
 import gov.ca.water.calgui.techservice.impl.DialogSvcImpl;
 import org.apache.log4j.Logger;
-
-import static java.time.temporal.ChronoField.MONTH_OF_YEAR;
-import static java.time.temporal.ChronoField.YEAR;
 
 /**
  * Supporting utilities for display of results
@@ -97,7 +92,7 @@ public class ResultUtilsBO
 	/**
 	 * This method is for implementing the singleton.
 	 *
-	 * @return
+	 * @return ResultUtilsBO instance
 	 */
 	public static ResultUtilsBO getResultUtilsInstance()
 	{
@@ -198,6 +193,7 @@ public class ResultUtilsBO
 	 * Reads QuickResults output list, Custom Results Dts Tree
 	 * @deprecated Use readCGR(JFrame jFrame, Project p) instead to ensure that the current project is used for reading the DTS tree.
 	 */
+	@Deprecated
 	public Optional<List<String>> readCGR(JFrame jFrame) {
 		return readCGR(jFrame, AppUtils.getCurrentProject());
 	}
@@ -257,6 +253,7 @@ public class ResultUtilsBO
 	 * Writes Quick Results display list, Custom Result DTS tree
 	 * @deprecated Use writeCGR(JFrame jFrame, JList<?> lstReports, Project p) instead to ensure that the current project is used for saving the DTS tree.
 	 */
+	@Deprecated
 	public void writeCGR(JFrame jFrame, JList<?> lstReports) {
 		writeCGR(jFrame, lstReports, AppUtils.getCurrentProject());
 	}
@@ -383,9 +380,10 @@ public class ResultUtilsBO
 
 	/**
 	 * Getter access to WRIMS GUI project for Custom Results
-	 * @deprecated
+	 * @deprecated Use AppUtils.getCurrentProject()
 	 * @return
 	 */
+	@Deprecated
 	public Project getProject()
 	{
 		return AppUtils.getCurrentProject();
@@ -411,7 +409,7 @@ public class ResultUtilsBO
 			LOG.debug("Invalid Key at UnitsUtils.monthToInt");
 			return -1;
 		}
-		return monthCode.intValue();
+		return monthCode;
 	}
 
 	/**
