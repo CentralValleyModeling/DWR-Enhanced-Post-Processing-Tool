@@ -14,6 +14,7 @@ package gov.ca.water.calgui.busservice.impl;
 
 //! Variant on DSSGrabber1BO for MTS (multiple time series)
 
+import calsim.app.Project;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Vector;
@@ -264,11 +265,25 @@ public class DSSGrabber2SvcImpl extends DSSGrabber1SvcImpl
 				{
 					// Operand is reference to another DTS
 					String dtsName = (String) dtsNames.get(i);
-					DerivedTimeSeries adt = ResultUtilsBO.getResultUtilsInstance().getProject().getDTS(dtsName);
+
+					Project currentProject = AppUtils.getCurrentProject();
+					DerivedTimeSeries adt = currentProject.getDTS(dtsName);
 					if(adt == null)
 					{
+
+						DerivedTimeSeries[] availableDts = currentProject.getDTSList();
+						StringBuilder availableNames = new StringBuilder();
+						if(availableDts != null && availableDts.length > 0)
+						{
+							for(DerivedTimeSeries dts : availableDts)
+							{
+								availableNames.append("'").append(dts.getName()).append("' ");
+							}
+						}
 						LOGGER.log(Level.WARNING, () -> "Derived time series \"" + dts2.getName() + "\" references unknown DTS \""
-								+ dtsName + "\" - skipping this operand.");
+								+ dtsName + "\" - lookup key was: \"" + dtsName + "\" (case: " + (dtsName.equals(dtsName.toUpperCase()) ? "upper" : "mixed")
+								+ ") (available: " + (!availableNames.isEmpty() ? availableNames.toString().trim() : "none")
+								+ ") - skipping this operand.");
 					}
 					else
 					{
@@ -389,16 +404,30 @@ public class DSSGrabber2SvcImpl extends DSSGrabber1SvcImpl
 
 		try
 		{
-			TimeSeriesContainer result = null;
+			TimeSeriesContainer result;
 			if(!mts2.getDTSNameAt(i).isEmpty())
 			{
 				// Operand is reference to a DTS
 				String dtsName = mts2.getDTSNameAt(i);
-				DerivedTimeSeries adt = ResultUtilsBO.getResultUtilsInstance().getProject().getDTS(dtsName);
+
+				Project currentProject = AppUtils.getCurrentProject();
+				DerivedTimeSeries adt = currentProject.getDTS(dtsName);
 				if(adt == null)
 				{
+
+					DerivedTimeSeries[] availableDts = currentProject.getDTSList();
+					StringBuilder availableNames = new StringBuilder();
+					if(availableDts != null && availableDts.length > 0)
+					{
+						for(DerivedTimeSeries dts : availableDts)
+						{
+							availableNames.append("'").append(dts.getName()).append("' ");
+						}
+					}
 					LOGGER.log(Level.WARNING, () -> "Multiple time series \"" + mts2.getName() + "\" references unknown DTS \""
-							+ dtsName + "\" - skipping this operand.");
+							+ dtsName + "\" - lookup key was: \"" + dtsName + "\" (case: " + (dtsName.equals(dtsName.toUpperCase()) ? "upper" : "mixed")
+							+ ") (available: " + (!availableNames.isEmpty() ? availableNames.toString().trim() : "none")
+							+ ") - skipping this operand.");
 					return null;
 				}
 				result = getOneSeriesWRIMS(dssPath, model, adt);

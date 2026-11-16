@@ -12,6 +12,7 @@
 
 package gov.ca.water.quickresults.ui.customresults;
 
+import calsim.app.AppUtils;
 import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -64,18 +65,20 @@ public class CustomResultsListener implements ActionListener
 	private void loadList()
 	{
 		Window window = SwingUtilities.windowForComponent(_customResultsPanel);
-		ResultUtilsBO.getResultUtilsInstance().readCGR((JFrame) window);
+		Project p = AppUtils.getCurrentProject();
+		ResultUtilsBO.getResultUtilsInstance().readCGR((JFrame) window, p);
 	}
 
 	private void saveList()
 	{
 		Window window = SwingUtilities.windowForComponent(_customResultsPanel);
-		ResultUtilsBO.getResultUtilsInstance().writeCGR((JFrame) window, null);
+		Project p = AppUtils.getCurrentProject();
+		ResultUtilsBO.getResultUtilsInstance().writeCGR((JFrame) window, null, p);
 	}
 
 	private void clearTree()
 	{
-		Project p = ResultUtilsBO.getResultUtilsInstance().getProject();
+		Project p = AppUtils.getCurrentProject();
 		p.clearMTSList();
 		p.clearDTSList();
 		DtsTreeModel dtm = DtsTreePanel.getCurrentModel();

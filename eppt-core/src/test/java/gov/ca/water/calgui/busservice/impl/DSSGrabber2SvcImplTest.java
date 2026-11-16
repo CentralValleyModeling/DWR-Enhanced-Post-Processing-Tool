@@ -12,12 +12,12 @@
 
 package gov.ca.water.calgui.busservice.impl;
 
+import calsim.app.AppUtils;
 import java.nio.file.Paths;
 
 import calsim.app.DerivedTimeSeries;
 import calsim.app.MultipleTimeSeries;
 import gov.ca.water.calgui.EpptInitializationException;
-import gov.ca.water.calgui.bo.ResultUtilsBO;
 
 import hec.io.TimeSeriesContainer;
 import org.junit.jupiter.api.BeforeAll;
@@ -51,7 +51,8 @@ class DSSGrabber2SvcImplTest
 	@Test
 	void dtsOperandReferencingUnknownDtsIsSkippedInsteadOfThrowing()
 	{
-		assertNull(ResultUtilsBO.getResultUtilsInstance().getProject().getDTS("MISSING_DTS_TEST.DTS"),
+
+		assertNull(AppUtils.getCurrentProject().getDTS("MISSING_DTS_TEST.DTS"),
 				"Precondition: the referenced DTS must not exist in the project");
 
 		DerivedTimeSeries parentDts = new DerivedTimeSeries("PARENT_DTS_TEST");
@@ -67,7 +68,8 @@ class DSSGrabber2SvcImplTest
 	@Test
 	void mtsOperandReferencingUnknownDtsIsSkippedInsteadOfThrowing()
 	{
-		assertNull(ResultUtilsBO.getResultUtilsInstance().getProject().getDTS("MISSING_DTS_TEST_2.DTS"),
+
+		assertNull(AppUtils.getCurrentProject().getDTS("MISSING_DTS_TEST_2.DTS"),
 				"Precondition: the referenced DTS must not exist in the project");
 
 		MultipleTimeSeries mts = new MultipleTimeSeries("PARENT_MTS_TEST");

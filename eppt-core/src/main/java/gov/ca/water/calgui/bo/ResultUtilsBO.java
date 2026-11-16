@@ -66,7 +66,6 @@ public class ResultUtilsBO
 	private static ResultUtilsBO resultUtilsBO;
 	private IDialogSvc _dialogSvc = DialogSvcImpl.getDialogSvcInstance();
 	private HashMap<String, Integer> _monthMap;
-	private Project _project;
 
 	/**
 	 * Constructor stores SwiXml instance, builds month-to-integer map, and sets
@@ -91,10 +90,6 @@ public class ResultUtilsBO
 		_monthMap.put("nov", 11);
 		_monthMap.put("dec", 12);
 
-		// Create a WRIMS GUI project for WRIMS GUI to work off of
-
-		_project = new Project();
-		AppUtils.setCurrentProject(_project);
 		AppUtils.baseOn = false;
 	}
 
@@ -201,8 +196,13 @@ public class ResultUtilsBO
 
 	/**
 	 * Reads QuickResults output list, Custom Results Dts Tree
+	 * @deprecated Use readCGR(JFrame jFrame, Project p) instead to ensure that the current project is used for reading the DTS tree.
 	 */
-	public Optional<List<String>> readCGR(JFrame jFrame)
+	public Optional<List<String>> readCGR(JFrame jFrame) {
+		return readCGR(jFrame, AppUtils.getCurrentProject());
+	}
+
+	public Optional<List<String>> readCGR(JFrame jFrame, Project p)
 	{
 		String aLine;
 		List<String> data = null;
@@ -232,7 +232,7 @@ public class ResultUtilsBO
 					DtsTreePanel.getCurrentModel().readData(filename + ".tree.xml", "");
 					Vector<MultipleTimeSeries> mts = DtsTreeModel.getPrjMts();
 					Vector<DerivedTimeSeries> dts = DtsTreeModel.getPrjDts();
-					Project p = getProject();
+
 					p.clearMTSList();
 					for(MultipleTimeSeries mt : mts)
 					{
@@ -255,8 +255,13 @@ public class ResultUtilsBO
 
 	/**
 	 * Writes Quick Results display list, Custom Result DTS tree
+	 * @deprecated Use writeCGR(JFrame jFrame, JList<?> lstReports, Project p) instead to ensure that the current project is used for saving the DTS tree.
 	 */
-	public void writeCGR(JFrame jFrame, JList<?> lstReports)
+	public void writeCGR(JFrame jFrame, JList<?> lstReports) {
+		writeCGR(jFrame, lstReports, AppUtils.getCurrentProject());
+	}
+
+	public void writeCGR(JFrame jFrame, JList<?> lstReports, Project p)
 	{
 		JFileChooser fc = new JFileChooser();
 		fc.setFileFilter(new SimpleFileFilter("cgr", "CalLite Report File (*.cgr)"));
@@ -304,31 +309,9 @@ public class ResultUtilsBO
 					// Store contents of Project
 					List<String> pList = new ArrayList<>();
 					pList.add("===== Dts Tree =====");
-					Project p = getProject();
-					pList.add(String.valueOf(p.getNumberOfMTS()));
-					for(int i = 0; i < p.getNumberOfMTS(); i++)
-					{
-						MultipleTimeSeries mts = p.getMTSList()[i];
-						pList.add(mts.getName());
-						pList.add(String.valueOf(mts.getNumberOfDataReferences()));
-						for(int j = 0; j < mts.getNumberOfDataReferences(); j++)
-						{
-							pList.add(mts.getBPartAt(j) + ";" + mts.getCPartAt(j) + ";" + mts.getVarTypeAt(j) + ";"
-									+ mts.getDTSNameAt(i));
-						}
-					}
-					pList.add(String.valueOf(p.getNumberOfDTS()));
-					for(int i = 0; i < p.getNumberOfDTS(); i++)
-					{
-						DerivedTimeSeries dts = p.getDTSList()[i];
-						pList.add(dts.getName());
-						pList.add(String.valueOf(dts.getNumberOfDataReferences()));
-						for(int j = 0; j < dts.getNumberOfDataReferences(); j++)
-						{
-							pList.add(dts.getBPartAt(j) + ";" + dts.getCPartAt(j) + ";" + dts.getVarTypeAt(j) + ";"
-									+ dts.getOperationIdAt(j) + ";" + dts.getDTSNameAt(j));
-						}
-					}
+
+					addMTS(p, pList);
+					addDTS(p, pList);
 					writeTreeXml(filename, outputStream, n, lstArray, pList);
 				}
 				catch(IOException e2)
@@ -340,6 +323,36 @@ public class ResultUtilsBO
 					java.util.logging.Logger.getLogger(ResultUtilsBO.class.getName())
 											.log(Level.SEVERE, "Error saving", ex);
 				}
+			}
+		}
+	}
+
+	private static void addDTS(Project p, List<String> pList) {
+		pList.add(String.valueOf(p.getNumberOfDTS()));
+		for(int i = 0; i < p.getNumberOfDTS(); i++)
+		{
+			DerivedTimeSeries dts = p.getDTSList()[i];
+			pList.add(dts.getName());
+			pList.add(String.valueOf(dts.getNumberOfDataReferences()));
+			for(int j = 0; j < dts.getNumberOfDataReferences(); j++)
+			{
+				pList.add(dts.getBPartAt(j) + ";" + dts.getCPartAt(j) + ";" + dts.getVarTypeAt(j) + ";"
+						+ dts.getOperationIdAt(j) + ";" + dts.getDTSNameAt(j));
+			}
+		}
+	}
+
+	private static void addMTS(Project p, List<String> pList) {
+		pList.add(String.valueOf(p.getNumberOfMTS()));
+		for(int i = 0; i < p.getNumberOfMTS(); i++)
+		{
+			MultipleTimeSeries mts = p.getMTSList()[i];
+			pList.add(mts.getName());
+			pList.add(String.valueOf(mts.getNumberOfDataReferences()));
+			for(int j = 0; j < mts.getNumberOfDataReferences(); j++)
+			{
+				pList.add(mts.getBPartAt(j) + ";" + mts.getCPartAt(j) + ";" + mts.getVarTypeAt(j) + ";"
+						+ mts.getDTSNameAt(i));
 			}
 		}
 	}
@@ -370,12 +383,12 @@ public class ResultUtilsBO
 
 	/**
 	 * Getter access to WRIMS GUI project for Custom Results
-	 *
+	 * @deprecated
 	 * @return
 	 */
 	public Project getProject()
 	{
-		return _project;
+		return AppUtils.getCurrentProject();
 	}
 
 	/**
