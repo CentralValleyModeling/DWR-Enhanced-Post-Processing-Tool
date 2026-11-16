@@ -18,12 +18,10 @@ import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.LineNumberReader;
-import java.io.PrintWriter;
 import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -33,14 +31,8 @@ import javax.swing.event.TreeModelListener;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.TreeNode;
 import javax.swing.tree.TreePath;
-import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerException;
-import javax.xml.transform.TransformerFactory;
-import javax.xml.transform.dom.DOMSource;
-import javax.xml.transform.stream.StreamResult;
-
 import calsim.app.AppUtils;
 import calsim.app.DerivedTimeSeries;
 import calsim.app.MultipleTimeSeries;
@@ -48,9 +40,6 @@ import calsim.util.xml.XMLHelpers;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
-import org.w3c.dom.traversal.DocumentTraversal;
-import org.w3c.dom.traversal.NodeFilter;
-import org.w3c.dom.traversal.TreeWalker;
 import org.xml.sax.SAXException;
 import vista.gui.VistaUtils;
 
@@ -339,23 +328,6 @@ public class DtsTreeModel extends GeneralTreeModel
 		_nodepopup.addSeparator();
 	}
 
-	public boolean nameCheck(String newname)
-	{
-		if(checkExtension(".dts", newname) && checkExtension(".mts", oldname))
-		{
-			cannotChange(1);
-			return true;
-		}
-		else if(checkExtension(".dts", newname) && checkExtension(".mts", oldname))
-		{
-			cannotChange(2);
-			return true;
-		}
-		else
-		{
-			return false;
-		}
-	}
 
 	public void changeDTSName(String name)
 	{
@@ -637,17 +609,24 @@ public class DtsTreeModel extends GeneralTreeModel
 
 	private String getDTSLeafName()
 	{
-		Integer i = newfile;
-		String name = "NEW-FILE" + i.toString() + ".DTS";
-		newfile++;
-		return name;
+		return getUnusedLeafName(".DTS");
 	}
 
 	private String getMTSLeafName()
 	{
-		Integer i = newfile;
-		String name = "NEW-FILE" + i.toString() + ".MTS";
-		newfile++;
+		return getUnusedLeafName(".MTS");
+	}
+
+	private String getUnusedLeafName(String extension)
+	{
+		String name;
+		do
+		{
+			name = "NEW-FILE" + newfile + extension;
+			newfile++;
+		}
+		while(checkForDuplicates(name, (DefaultMutableTreeNode) getRoot()) > 0
+				|| AppUtils.getCurrentProject().isInLists(name));
 		return name;
 	}
 
@@ -1028,7 +1007,7 @@ public class DtsTreeModel extends GeneralTreeModel
 			}
 			if(parent.getAllowsChildren())
 			{
-				String filename = VistaUtils.getFilenameFromDialog(MAIN_PANEL, FileDialog.LOAD, "dts", "DTS Files");
+				String filename = VistaUtils.getFilenameFromDialog(MAIN_PANEL, FileDialog.LOAD, "dts", "DTS Files", "Import DTS");
 				if(filename == null)
 				{
 					return;
@@ -1100,7 +1079,7 @@ public class DtsTreeModel extends GeneralTreeModel
 			}
 			if(parent.getAllowsChildren())
 			{
-				String filename = VistaUtils.getFilenameFromDialog(MAIN_PANEL, FileDialog.LOAD, "mts", "MTS Files");
+				String filename = VistaUtils.getFilenameFromDialog(MAIN_PANEL, FileDialog.LOAD, "mts", "MTS Files", "Import MTS");
 				if(filename == null)
 				{
 					return;
@@ -1162,7 +1141,7 @@ public class DtsTreeModel extends GeneralTreeModel
 			{
 				return;
 			}
-			if(dtsfile.indexOf((int) '.') == -1)  //no extension
+			if(dtsfile.indexOf('.') == -1)  //no extension
 			{
 				dtsfile += ".dts";  //set default extension
 			}
@@ -1178,7 +1157,7 @@ public class DtsTreeModel extends GeneralTreeModel
 			{
 				return;
 			}
-			if(dtsfile.indexOf((int) '.') == -1)  //no extension
+			if(dtsfile.indexOf('.') == -1)  //no extension
 			{
 				dtsfile += ".mts";  //set default extension
 			}
@@ -1566,7 +1545,7 @@ public class DtsTreeModel extends GeneralTreeModel
 			reload();
 			setRoot(_root);
 			nodeIdx = 0;
-			//   	  Project prj = AppUtils.getCurrentProject();
+
 			while(true)
 			{
 				Element de = (Element)top.getElementsByTagName("DTS").item(0);
