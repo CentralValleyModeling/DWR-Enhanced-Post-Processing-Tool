@@ -199,22 +199,22 @@ public abstract class GraphicElement implements Drawable, Bounded, Cloneable,
 		{
 			System.out.println(colorComponent);
 		}
-		int red = new Integer(colorComponent.trim().substring(
-				colorComponent.indexOf("=") + 1)).intValue();
+		int red = Integer.valueOf(colorComponent.trim().substring(
+                        colorComponent.indexOf("=") + 1)).intValue();
 		colorComponent = chopper.nextToken().trim();
 		if(DEBUG)
 		{
 			System.out.println(colorComponent);
 		}
-		int green = new Integer(colorComponent.substring(colorComponent
-				.indexOf("=") + 1)).intValue();
+		int green = Integer.valueOf(colorComponent.substring(colorComponent
+                        .indexOf("=") + 1)).intValue();
 		colorComponent = chopper.nextToken().trim();
 		if(DEBUG)
 		{
 			System.out.println(colorComponent);
 		}
-		int blue = new Integer(colorComponent.substring(colorComponent
-				.indexOf("=") + 1)).intValue();
+		int blue = Integer.valueOf(colorComponent.substring(colorComponent
+                        .indexOf("=") + 1)).intValue();
 		if(DEBUG)
 		{
 			System.out.println("r = " + red + " g = " + green + " b = " + blue);
@@ -326,8 +326,7 @@ public abstract class GraphicElement implements Drawable, Bounded, Cloneable,
 			try
 			{
 				Rectangle r = getBounds();
-				Rotator2D.rotateVertical(_gc, new Integer(r.x + r.width / 2),
-						new Integer(r.y + r.height / 2));
+				Rotator2D.rotateVertical(_gc, Integer.valueOf(r.x + r.width / 2), Integer.valueOf(r.y + r.height / 2));
 
 			}
 			catch(Exception exc)
@@ -354,7 +353,7 @@ public abstract class GraphicElement implements Drawable, Bounded, Cloneable,
 			try
 			{
 				Rectangle r = getBounds();
-				Rotator2D.rotateHorizontal(_gc, new Integer(r.x + r.width / 2), new Integer(r.y + r.height / 2));
+				Rotator2D.rotateHorizontal(_gc, Integer.valueOf(r.x + r.width / 2), Integer.valueOf(r.y + r.height / 2));
 			}
 			catch(Exception exc)
 			{
@@ -660,11 +659,9 @@ public abstract class GraphicElement implements Drawable, Bounded, Cloneable,
 		{
 			p.put(prefixTag + "orientation", "GEAttr.VERTICAL");
 		}
-		p.put(prefixTag + "createGraphicsCopy", new Boolean(
-				attr._createGraphicsCopy).toString());
-		p.put(prefixTag + "isVisible", new Boolean(attr._isVisible).toString());
-		p.put(prefixTag + "clipWithinBounds", new Boolean(
-				attr._clipWithinBounds).toString());
+		p.put(prefixTag + "createGraphicsCopy", Boolean.toString(attr._createGraphicsCopy));
+		p.put(prefixTag + "isVisible", Boolean.toString(attr._isVisible));
+		p.put(prefixTag + "clipWithinBounds", Boolean.toString(attr._clipWithinBounds));
 
 	}
 
@@ -700,19 +697,19 @@ public abstract class GraphicElement implements Drawable, Bounded, Cloneable,
 		property = p.getProperty(prefixTag + "createGraphicsCopy");
 		if(property != null)
 		{
-			attr._createGraphicsCopy = new Boolean(property).booleanValue();
+			attr._createGraphicsCopy = Boolean.valueOf(property).booleanValue();
 		}
 
 		property = p.getProperty(prefixTag + "isVisible");
 		if(property != null)
 		{
-			attr._isVisible = new Boolean(property).booleanValue();
+			attr._isVisible = Boolean.valueOf(property).booleanValue();
 		}
 
 		property = p.getProperty(prefixTag + "clipWithinBounds");
 		if(property != null)
 		{
-			attr._clipWithinBounds = new Boolean(property).booleanValue();
+			attr._clipWithinBounds = Boolean.valueOf(property).booleanValue();
 		}
 
 	}

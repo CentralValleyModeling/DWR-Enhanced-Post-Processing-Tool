@@ -162,9 +162,9 @@ public class TickText extends GEContainer implements FontResizable
 		TickTextAttr attr = (TickTextAttr) getAttributes();
 
 		p.put(localTag + "centeredOnBounds",
-				new Boolean(attr._centeredOnBounds).toString());
+				Boolean.toString(attr._centeredOnBounds));
 		p.put(localTag + "boundariesMarked",
-				new Boolean(attr._boundariesMarked).toString());
+				Boolean.toString(attr._boundariesMarked));
 
 		super.toProperties(p, localTag);
 	}

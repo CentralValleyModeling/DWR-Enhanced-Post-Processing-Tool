@@ -373,7 +373,7 @@ public class DerivedTimeSeries extends DataReference implements Serializable
 		_modified = true;
 		while(_dtsNames.size() - 1 < i)
 		{
-			_opIds.addElement(0);
+			_opIds.addElement(Integer.valueOf(0));
 			_dtsNames.addElement("");
 			_varTypes.addElement(AppUtils.DVAR);
 			_bparts.addElement(DEFAULT_B_PART);

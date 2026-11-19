@@ -107,7 +107,7 @@ public class GroupTableModel extends AbstractTableModel
 	{
 		if(columnIndex == 0)
 		{
-			return new Integer(rowIndex + 1).toString();
+			return Integer.toString(rowIndex + 1);
 		}
 		columnIndex = columnIndex - 1;
 		if(rowIndex < _combinedTwReferences.size())

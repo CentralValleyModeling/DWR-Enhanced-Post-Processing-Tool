@@ -101,7 +101,7 @@ public class PTMDualAnimator implements AnimationObserver
 			System.err.println("Error initializing properties");
 		}
 		// initialize from properties
-		delay = new Integer(props.getProperty("animation.delay")).intValue();
+		delay = Integer.valueOf(props.getProperty("animation.delay")).intValue();
 		propsFile1 = props.getProperty("props.file1");
 		propsFile2 = props.getProperty("props.file2");
 		//
@@ -366,12 +366,12 @@ public class PTMDualAnimator implements AnimationObserver
 		String fluxInfoFile = props.getProperty("flux.file");
 		String labelInfoFile = props.getProperty("label.file");
 		String imageFile = props.getProperty("image.file");
-		boolean showFluxElements = new Boolean(props
-				.getProperty("flux.display")).booleanValue();
-		float zoomfactor = new Float(props.getProperty("zoom.factor"))
+		boolean showFluxElements = Boolean.valueOf(props
+                        .getProperty("flux.display")).booleanValue();
+		float zoomfactor = Float.valueOf(props.getProperty("zoom.factor"))
 				.floatValue();
-		int xpos = new Integer(props.getProperty("origin.xpos")).intValue();
-		int ypos = new Integer(props.getProperty("origin.ypos")).intValue();
+		int xpos = Integer.valueOf(props.getProperty("origin.xpos")).intValue();
+		int ypos = Integer.valueOf(props.getProperty("origin.ypos")).intValue();
 		System.out.println("zoom = " + zoomfactor + "," + xpos + "," + ypos);
 		//
 		Color particleColor = Color.yellow;

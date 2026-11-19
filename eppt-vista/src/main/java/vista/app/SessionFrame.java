@@ -166,9 +166,9 @@ public class SessionFrame extends JFrame implements DropTargetListener
 		// pack();
 
 		// set size to default
-		int width = new Integer(MainProperties.getProperty("gui.width"))
+		int width = Integer.valueOf(MainProperties.getProperty("gui.width"))
 				.intValue();
-		int height = new Integer(MainProperties.getProperty("gui.height"))
+		int height = Integer.valueOf(MainProperties.getProperty("gui.height"))
 				.intValue();
 		setSize(width, height);
 		setPosition(width, height);

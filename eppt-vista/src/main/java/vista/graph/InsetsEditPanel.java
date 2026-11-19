@@ -46,13 +46,13 @@ public class InsetsEditPanel extends JPanel
 		bottom = i.bottom;
 		right = i.right;
 		//
-		topField = new JTextField(new Integer(top).toString(), 6);
+		topField = new JTextField(Integer.toString(top), 6);
 		topField.setBorder(BorderFactory.createTitledBorder("Top"));
-		leftField = new JTextField(new Integer(left).toString(), 6);
+		leftField = new JTextField(Integer.toString(left), 6);
 		leftField.setBorder(BorderFactory.createTitledBorder("Left"));
-		bottomField = new JTextField(new Integer(bottom).toString(), 6);
+		bottomField = new JTextField(Integer.toString(bottom), 6);
 		bottomField.setBorder(BorderFactory.createTitledBorder("Bottom"));
-		rightField = new JTextField(new Integer(right).toString(), 6);
+		rightField = new JTextField(Integer.toString(right), 6);
 		rightField.setBorder(BorderFactory.createTitledBorder("Right"));
 		//
 		JPanel iPanel = new JPanel();
@@ -78,10 +78,10 @@ public class InsetsEditPanel extends JPanel
 	{
 		try
 		{
-			top = new Integer(topField.getText()).intValue();
-			left = new Integer(leftField.getText()).intValue();
-			bottom = new Integer(bottomField.getText()).intValue();
-			right = new Integer(rightField.getText()).intValue();
+			top = Integer.valueOf(topField.getText()).intValue();
+			left = Integer.valueOf(leftField.getText()).intValue();
+			bottom = Integer.valueOf(bottomField.getText()).intValue();
+			right = Integer.valueOf(rightField.getText()).intValue();
 		}
 		catch(NumberFormatException e)
 		{

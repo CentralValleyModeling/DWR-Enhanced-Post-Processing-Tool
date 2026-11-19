@@ -74,7 +74,7 @@ public class MSWUtil
 			}
 			if(fields[0].indexOf("*") == 0)
 			{
-				loc.addElement(new Integer(iL));
+				loc.addElement(Integer.valueOf(iL));
 			}
 			details.addElement(fields);
 			iL++;

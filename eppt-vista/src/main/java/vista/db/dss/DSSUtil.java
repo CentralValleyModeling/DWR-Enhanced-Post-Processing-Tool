@@ -119,7 +119,7 @@ public class DSSUtil
 		_userIdsInverse[0] = null;
 		for(int i = 0; i < USERS.length; i++)
 		{
-			_userIds.put(USERS[i], new Integer(i + 1));
+			_userIds.put(USERS[i], Integer.valueOf(i + 1));
 			_userIdsInverse[i + 1] = USERS[i];
 		}
 	}
@@ -827,7 +827,7 @@ public class DSSUtil
 		str = props.getProperty("default.port");
 		if(str != null)
 		{
-			_portNumber = new Integer(str).intValue();
+			_portNumber = Integer.valueOf(str).intValue();
 		}
 		str = props.getProperty("dss.flags");
 		if(str != null)

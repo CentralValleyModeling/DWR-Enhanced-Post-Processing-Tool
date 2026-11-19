@@ -77,6 +77,12 @@
 			<file name="Web_hidden"/>
 		</folder>
 	</folder>
+	<folder name="Shortcuts">
+		<file name="AS-Y.shadow_hidden"/>
+		<file name="D-I.shadow_hidden"/>
+		<file name="DOS-P.shadow_hidden"/>
+		<file name="DS-DELETE.shadow_hidden"/>
+	</folder>
 	<folder name="Toolbars">
 		<file name="Clipboard_hidden"/>
 		<file name="File_hidden"/>

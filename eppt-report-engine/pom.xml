@@ -24,7 +24,7 @@
 	<artifactId>eppt-report-engine</artifactId>
 	<name>EPPT Report Engine</name>
 	<properties>
-		<argLine>-Djava.library.path=${project.build.directory}\lib -Duser.dir=${project.build.directory}\test-classess</argLine>
+		<argLine>-Djava.library.path=${project.build.directory}\lib</argLine>
 	</properties>
 	<dependencyManagement>
 		<dependencies>
@@ -46,13 +46,13 @@
 		<dependency>
 			<groupId>org.junit.jupiter</groupId>
 			<artifactId>junit-jupiter-api</artifactId>
-			<version>5.4.0</version>
+			<version>${junit.version}</version>
 			<scope>test</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.junit.jupiter</groupId>
 			<artifactId>junit-jupiter-engine</artifactId>
-			<version>5.4.0</version>
+			<version>${junit.version}</version>
 			<scope>test</scope>
 		</dependency>
 		<dependency>

@@ -572,12 +572,11 @@ public class TextLine extends GraphicElement implements FontResizable
 
 		p.put(localTag + "font", attr._font.toString());
 		p.put(localTag + "originalFontSize",
-				new Integer(attr._originalFontSize).toString());
+				Integer.toString(attr._originalFontSize));
 
-		p.put(localTag + "resizeOnTheFly", new Boolean(attr._resizeOnTheFly)
-				.toString());
-		p.put(localTag + "resizeProportionally", new Boolean(
-				attr._resizeProportionally).toString());
+		p.put(localTag + "resizeOnTheFly", Boolean
+				.toString(attr._resizeOnTheFly));
+		p.put(localTag + "resizeProportionally", Boolean.toString(attr._resizeProportionally));
 
 		super.toProperties(p, localTag);
 	}
@@ -619,19 +618,19 @@ public class TextLine extends GraphicElement implements FontResizable
 		property = p.getProperty(localTag + "originalFontSize");
 		if(property != null)
 		{
-			attr._originalFontSize = new Integer(property).intValue();
+			attr._originalFontSize = Integer.valueOf(property).intValue();
 		}
 
 		property = p.getProperty(localTag + "resizeOnTheFly");
 		if(property != null)
 		{
-			attr._resizeOnTheFly = new Boolean(property).booleanValue();
+			attr._resizeOnTheFly = Boolean.valueOf(property).booleanValue();
 		}
 
 		property = p.getProperty(localTag + "resizeProportionally");
 		if(property != null)
 		{
-			attr._resizeProportionally = new Boolean(property).booleanValue();
+			attr._resizeProportionally = Boolean.valueOf(property).booleanValue();
 		}
 
 		super.fromProperties(p, localTag);
@@ -845,7 +844,7 @@ public class TextLine extends GraphicElement implements FontResizable
 		String sizeStr = chopper.nextToken();
 		sizeStr = sizeStr.substring(sizeStr.indexOf("=") + 1, sizeStr
 				.indexOf("]"));
-		int size = new Integer(sizeStr).intValue();
+		int size = Integer.valueOf(sizeStr).intValue();
 
 		return new Font(name, style, size);
 	}

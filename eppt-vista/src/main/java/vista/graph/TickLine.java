@@ -481,10 +481,8 @@ public class TickLine extends GraphicElement
 		}
 		TickLineAttr attr = (TickLineAttr) getAttributes();
 
-		p.put(localTag + "percentMajorTickLength", new Double(
-				attr._percentMajorTickLength).toString());
-		p.put(localTag + "percentMinorTickLength", new Double(
-				attr._percentMinorTickLength).toString());
+		p.put(localTag + "percentMajorTickLength", Double.toString(attr._percentMajorTickLength));
+		p.put(localTag + "percentMinorTickLength", Double.toString(attr._percentMinorTickLength));
 
 		// p.put(localTag + "thickness", new Integer(attr._thickness).toString()
 		// );
@@ -512,11 +510,11 @@ public class TickLine extends GraphicElement
 			p.put(localTag + "tickLocation", "TickLineAttr.BOTH");
 		}
 
-		p.put(localTag + "plotMajorTicks", new Boolean(attr._plotMajorTicks)
-				.toString());
-		p.put(localTag + "plotMinorTicks", new Boolean(attr._plotMinorTicks)
-				.toString());
-		p.put(localTag + "plotLine", new Boolean(attr._plotLine).toString());
+		p.put(localTag + "plotMajorTicks", Boolean
+				.toString(attr._plotMajorTicks));
+		p.put(localTag + "plotMinorTicks", Boolean
+				.toString(attr._plotMinorTicks));
+		p.put(localTag + "plotLine", Boolean.toString(attr._plotLine));
 
 		super.toProperties(p, localTag);
 	}
@@ -540,12 +538,12 @@ public class TickLine extends GraphicElement
 		String property = p.getProperty(localTag + "percentMajorTickLength");
 		if(property != null)
 		{
-			attr._percentMajorTickLength = new Double(property).doubleValue();
+			attr._percentMajorTickLength = Double.valueOf(property).doubleValue();
 		}
 		property = p.getProperty(localTag + "percentMinorTickLength");
 		if(property != null)
 		{
-			attr._percentMinorTickLength = new Double(property).doubleValue();
+			attr._percentMinorTickLength = Double.valueOf(property).doubleValue();
 		}
 
 		// property = p.getProperty(localTag + "thickness"); new
@@ -573,19 +571,19 @@ public class TickLine extends GraphicElement
 		property = p.getProperty(localTag + "plotMajorTicks");
 		if(property != null)
 		{
-			attr._plotMajorTicks = new Boolean(property).booleanValue();
+			attr._plotMajorTicks = Boolean.valueOf(property).booleanValue();
 		}
 
 		property = p.getProperty(localTag + "plotMinorTicks");
 		if(property != null)
 		{
-			attr._plotMinorTicks = new Boolean(property).booleanValue();
+			attr._plotMinorTicks = Boolean.valueOf(property).booleanValue();
 		}
 
 		property = p.getProperty(localTag + "plotLine");
 		if(property != null)
 		{
-			attr._plotLine = new Boolean(property).booleanValue();
+			attr._plotLine = Boolean.valueOf(property).booleanValue();
 		}
 
 		super.fromProperties(p, getPrefixTag(prefixTag));

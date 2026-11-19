@@ -55,21 +55,21 @@ public class DisplayHelper
 		return new Thread(r, "DisplayHelperThread");
 	}
 
-	public void showDisplayFramesGuiLink(PlotConfigurationState plotConfigurationState, List<GUILinksAllModelsBO> locations)
+	public CompletableFuture<Void> showDisplayFramesGuiLink(PlotConfigurationState plotConfigurationState, List<GUILinksAllModelsBO> locations)
 	{
-		displayFramesOnBackgroundGuiLink(plotConfigurationState, locations);
+		return displayFramesOnBackgroundGuiLink(plotConfigurationState, locations);
 	}
 
-	public void showDisplayFramesWRIMS(PlotConfigurationState plotConfigurationState, DerivedTimeSeries dts,
+	public CompletableFuture<Void> showDisplayFramesWRIMS(PlotConfigurationState plotConfigurationState, DerivedTimeSeries dts,
 									   MultipleTimeSeries mts)
 	{
-		displayFramesWRIMSOnBackground(plotConfigurationState, dts, mts);
+		return displayFramesWRIMSOnBackground(plotConfigurationState, dts, mts);
 	}
 
 
-	private void displayFramesOnBackgroundGuiLink(PlotConfigurationState plotConfigurationState, List<GUILinksAllModelsBO> locations)
+	private CompletableFuture<Void> displayFramesOnBackgroundGuiLink(PlotConfigurationState plotConfigurationState, List<GUILinksAllModelsBO> locations)
 	{
-		CompletableFuture.supplyAsync(() -> getTabbedPanesGuiLink(plotConfigurationState, locations),
+		return CompletableFuture.supplyAsync(() -> getTabbedPanesGuiLink(plotConfigurationState, locations),
 				_executorService)
 						 .thenAcceptAsync(tabbedPanes -> topComponentPlotHandler.openPlots(tabbedPanes), SwingUtilities::invokeLater);
 
@@ -103,10 +103,10 @@ public class DisplayHelper
 		SwingUtilities.invokeLater(() -> _component.setCursor(cursor));
 	}
 
-	private void displayFramesWRIMSOnBackground(PlotConfigurationState plotConfigurationState, DerivedTimeSeries dts,
+	private CompletableFuture<Void> displayFramesWRIMSOnBackground(PlotConfigurationState plotConfigurationState, DerivedTimeSeries dts,
 												MultipleTimeSeries mts)
 	{
-		CompletableFuture.supplyAsync(
+		return CompletableFuture.supplyAsync(
 				() -> getTabbedPanesWRIMS(plotConfigurationState, dts, mts), _executorService)
 						 .thenAcceptAsync(topComponentPlotHandler::openPlots, SwingUtilities::invokeLater);
 

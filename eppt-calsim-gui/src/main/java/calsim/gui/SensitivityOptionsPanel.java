@@ -205,7 +205,7 @@ public class SensitivityOptionsPanel extends JPanel
 	public void updateStudy(Study study)
 	{
 		String tmp = "";
-		study.setSolverReportOption(new Boolean(_check[0].isSelected()));
-		study.setSvReportOption(new Boolean(_check[1].isSelected()));
+		study.setSolverReportOption(Boolean.valueOf(_check[0].isSelected()));
+		study.setSvReportOption(Boolean.valueOf(_check[1].isSelected()));
 	}
 }

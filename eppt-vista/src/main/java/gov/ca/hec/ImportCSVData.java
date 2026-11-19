@@ -129,7 +129,7 @@ public class ImportCSVData
 			}
 			for(int i = 0; i < fields.length; i++)
 			{
-				values.get(i).add(new Double(fields[i]));
+				values.get(i).add(Double.valueOf(fields[i]));
 			}
 		}
 		TimeSeriesContainer[] atsc = new TimeSeriesContainer[values.size()];

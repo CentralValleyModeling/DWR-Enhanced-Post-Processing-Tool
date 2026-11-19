@@ -1,0 +1,37 @@
+<!--
+  ~ Enhanced Post Processing Tool (EPPT) Copyright (c) 2026.
+  ~
+  ~ EPPT is copyrighted by the State of California, Department of Water Resources. It is licensed
+  ~ under the GNU General Public License, version 2. This means it can be
+  ~ copied, distributed, and modified freely, but you may not restrict others
+  ~ in their ability to copy, distribute, and modify it. See the license below
+  ~ for more details.
+  ~
+  ~ GNU General Public License
+  -->
+
+<!DOCTYPE HTML>
+<html lang="en">
+<head>
+    <title>Monthly Box Plot</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <meta name="supports-aggregate" content="false">
+    <script src="../../lib/plotly/dist/plotly.min.js"></script>
+    <script src="../../lib/plotly/eppt_plotly.js"></script>
+    <link rel="stylesheet" href="../../lib/plotly/css/eppt_plots.css">
+</head>
+<body>
+
+<div id="tsDescriptor" class="modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <span id="closeModal" class="close">X</span>
+            <h3>Data Description</h3>
+        </div>
+        <div class="modal-body" id="modal-body"></div>
+    </div>
+</div>
+<div id="main"></div>
+<script src="../plots/js/boxandwhisker_monthly.js"></script>
+</body>
+</html>

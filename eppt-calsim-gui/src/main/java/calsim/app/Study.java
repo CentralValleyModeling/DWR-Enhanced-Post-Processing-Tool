@@ -102,30 +102,29 @@ public class Study
 		_startDay = "";
 		//****************************
 		_startMonth = "";
-		_startYear = new Integer(1921);
+		_startYear = Integer.valueOf(1921);
 		_stopDay = "";   //DJE*****
 		_stopMonth = "";
-		_stopYear = new Integer(1994);
+		_stopYear = Integer.valueOf(1994);
 		_simOption = "SLP";
-		_numberSequences = new Integer(1);
-		_solverReport = new Boolean(false);
+		_numberSequences = Integer.valueOf(1);
+		_solverReport = Boolean.valueOf(false);
 		_solverList = "NONE";
-		_slackReport = new Boolean(false);
-		_slackSave = new Boolean(false);
+		_slackReport = Boolean.valueOf(false);
+		_slackSave = Boolean.valueOf(false);
 		_addXaOptions = "";
-		_svReport = new Boolean(false);
-		_svSave = new Boolean(false);
-		_dssDebug = new Boolean(false);
-		_dssSave = new Boolean(false);
-		_genWsiDi = new Boolean(
-				false); //CB set to true for Jianzhong's version that runs many,many WSI-DI runs in a row w/o needing check selection or having popup windows
+		_svReport = Boolean.valueOf(false);
+		_svSave = Boolean.valueOf(false);
+		_dssDebug = Boolean.valueOf(false);
+		_dssSave = Boolean.valueOf(false);
+		_genWsiDi = Boolean.valueOf(false); //CB set to true for Jianzhong's version that runs many,many WSI-DI runs in a row w/o needing check selection or having popup windows
 		//    _pricingRHSSensitivity = false; //CB added
 		//	_activitySensitivity = false; //CB added
-		_posAnalysis = new Boolean(false);
-		_useRestart = new Boolean(false);
-		_genRestart = new Boolean(false);
-		_dialogWindow = new Boolean(true);
-		_posstartyear = new Boolean(false);
+		_posAnalysis = Boolean.valueOf(false);
+		_useRestart = Boolean.valueOf(false);
+		_genRestart = Boolean.valueOf(false);
+		_dialogWindow = Boolean.valueOf(true);
+		_posstartyear = Boolean.valueOf(false);
 	}
 
 	/**
@@ -678,11 +677,11 @@ public class Study
 		setStopDay(se.getAttribute("stopday"));
 		//****************************************************
 		setStartMonth(se.getAttribute("startmo"));
-		setStartYear(new Integer(se.getAttribute("startyr")));
+		setStartYear(Integer.valueOf(se.getAttribute("startyr")));
 		setStopMonth(se.getAttribute("stopmo"));
-		setStopYear(new Integer(se.getAttribute("stopyr")));
+		setStopYear(Integer.valueOf(se.getAttribute("stopyr")));
 		setSimOption(se.getAttribute("simopt"));
-		setNumberSequences(new Integer(se.getAttribute("numseq")));
+		setNumberSequences(Integer.valueOf(se.getAttribute("numseq")));
 		setCommonPath(se.getAttribute("common"));
 	}
 

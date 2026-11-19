@@ -147,22 +147,22 @@ public class ColorRGB
 		{
 			System.out.println(colorComponent);
 		}
-		int red = new Integer(colorComponent.trim().substring(
-				colorComponent.indexOf("=") + 1)).intValue();
+		int red = Integer.valueOf(colorComponent.trim().substring(
+                        colorComponent.indexOf("=") + 1)).intValue();
 		colorComponent = chopper.nextToken().trim();
 		if(DEBUG)
 		{
 			System.out.println(colorComponent);
 		}
-		int green = new Integer(colorComponent.substring(colorComponent
-				.indexOf("=") + 1)).intValue();
+		int green = Integer.valueOf(colorComponent.substring(colorComponent
+                        .indexOf("=") + 1)).intValue();
 		colorComponent = chopper.nextToken().trim();
 		if(DEBUG)
 		{
 			System.out.println(colorComponent);
 		}
-		int blue = new Integer(colorComponent.substring(colorComponent
-				.indexOf("=") + 1)).intValue();
+		int blue = Integer.valueOf(colorComponent.substring(colorComponent
+                        .indexOf("=") + 1)).intValue();
 		if(DEBUG)
 		{
 			System.out.println("r = " + red + " g = " + green + " b = " + blue);

@@ -196,7 +196,7 @@ public class WreslIncScanner implements WreslParserConstants
 		for(Enumeration e = getIncFileList().elements(); e.hasMoreElements(); )
 		{
 			File theFile = (File) e.nextElement();
-			hasher.put(theFile, new Long(theFile.lastModified()));
+			hasher.put(theFile, Long.valueOf(theFile.lastModified()));
 		}
 		return hasher;
 	}
