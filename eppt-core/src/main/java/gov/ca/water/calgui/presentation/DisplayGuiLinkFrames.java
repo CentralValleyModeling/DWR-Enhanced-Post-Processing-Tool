@@ -12,9 +12,7 @@
 
 package gov.ca.water.calgui.presentation;
 
-import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
@@ -27,7 +25,6 @@ import javax.swing.*;
 import gov.ca.water.calgui.bo.GUILinksAllModelsBO;
 import gov.ca.water.calgui.busservice.IDSSGrabber1Svc;
 import gov.ca.water.calgui.busservice.impl.DSSGrabber1SvcImpl;
-import gov.ca.water.calgui.busservice.impl.MonthPeriod;
 import gov.ca.water.calgui.project.EpptConfigurationController;
 import gov.ca.water.calgui.project.EpptScenarioRun;
 import gov.ca.water.calgui.project.PlotConfigurationState;
@@ -187,7 +184,7 @@ final class DisplayGuiLinkFrames extends DisplayFrames
 		List<String> collect = missing.values()
 									  .stream()
 									  .flatMap(Collection::stream)
-									  .collect(toList());
+									  .toList();
 		if(!collect.isEmpty())
 		{
 			insertEmptyTab(tabbedPane, missing);
@@ -261,6 +258,7 @@ final class DisplayGuiLinkFrames extends DisplayFrames
 		dssGrabber.setScenarioRuns(epptScenarioRun, Collections.emptyList());
 		dssGrabber.setGuiLink(guiLink);
 		dssGrabber.setDateRange(getStart(), getEnd());
+		dssGrabber.setRequiredCoverage(getRequiredCoverageStart(), getRequiredCoverageEnd());
 		return dssGrabber;
 	}
 

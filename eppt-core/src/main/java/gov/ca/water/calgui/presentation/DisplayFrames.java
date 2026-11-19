@@ -87,24 +87,51 @@ class DisplayFrames
 
 	LocalDate getEnd()
 	{
-		int endYear = _epptConfigurationController.getEndYear();
-		WaterYearDefinition waterYearDefinition = _epptConfigurationController.getWaterYearDefinition();
-		WaterYearPeriod waterYearPeriod = new WaterYearPeriod("");
-		WaterYearPeriodRange waterYearPeriodRange = new WaterYearPeriodRange(waterYearPeriod, new WaterYearType(endYear, waterYearPeriod),
-				new WaterYearType(endYear, waterYearPeriod));
-		YearMonth end = waterYearPeriodRange.getEnd(waterYearDefinition);
+		YearMonth end = getEndMonth();
 		return LocalDate.of(end.getYear(), end.getMonth(), 1).plusMonths(1).minusDays(2);
 	}
 
 	LocalDate getStart()
+	{
+		YearMonth start = getStartMonth();
+		return LocalDate.of(start.getYear(), start.getMonth(), 1).minusMonths(1).plusDays(2);
+	}
+
+	/**
+	 * First day of the selected period. Unlike {@link #getStart()}, which is padded for the DSS read, this is the
+	 * day a complete series must cover.
+	 */
+	LocalDate getRequiredCoverageStart()
+	{
+		return getStartMonth().atDay(1);
+	}
+
+	/**
+	 * Last day of the selected period that a complete series must cover.
+	 */
+	LocalDate getRequiredCoverageEnd()
+	{
+		return getEndMonth().atEndOfMonth();
+	}
+
+	private YearMonth getStartMonth()
 	{
 		int startYear = _epptConfigurationController.getStartYear();
 		WaterYearDefinition waterYearDefinition = _epptConfigurationController.getWaterYearDefinition();
 		WaterYearPeriod waterYearPeriod = new WaterYearPeriod("");
 		WaterYearPeriodRange waterYearPeriodRange = new WaterYearPeriodRange(waterYearPeriod, new WaterYearType(startYear, waterYearPeriod),
 				new WaterYearType(startYear, waterYearPeriod));
-		YearMonth start = waterYearPeriodRange.getStart(waterYearDefinition);
-		return LocalDate.of(start.getYear(), start.getMonth(), 1).minusMonths(1).plusDays(2);
+		return waterYearPeriodRange.getStart(waterYearDefinition);
+	}
+
+	private YearMonth getEndMonth()
+	{
+		int endYear = _epptConfigurationController.getEndYear();
+		WaterYearDefinition waterYearDefinition = _epptConfigurationController.getWaterYearDefinition();
+		WaterYearPeriod waterYearPeriod = new WaterYearPeriod("");
+		WaterYearPeriodRange waterYearPeriodRange = new WaterYearPeriodRange(waterYearPeriod, new WaterYearType(endYear, waterYearPeriod),
+				new WaterYearType(endYear, waterYearPeriod));
+		return waterYearPeriodRange.getEnd(waterYearDefinition);
 	}
 
 	Optional<EpptScenarioRun> getBaseRun()

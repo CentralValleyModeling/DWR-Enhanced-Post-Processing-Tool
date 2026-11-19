@@ -105,6 +105,7 @@ class DisplayWRIMSFrames extends DisplayFrames
 		dssGrabber.setIsCFS(!getEpptConfigurationController().isTaf());
 		dssGrabber.setScenarioRuns(run, Collections.emptyList());
 		dssGrabber.setDateRange(getStart(), getEnd());
+		dssGrabber.setRequiredCoverage(getRequiredCoverageStart(), getRequiredCoverageEnd());
 		return dssGrabber;
 	}
 

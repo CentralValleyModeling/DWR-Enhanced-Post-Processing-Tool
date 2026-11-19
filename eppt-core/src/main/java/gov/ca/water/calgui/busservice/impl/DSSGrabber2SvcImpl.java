@@ -14,8 +14,6 @@ package gov.ca.water.calgui.busservice.impl;
 
 //! Variant on DSSGrabber1BO for MTS (multiple time series)
 
-import java.util.Arrays;
-import java.util.Calendar;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Vector;
@@ -30,8 +28,6 @@ import gov.ca.water.calgui.bo.ResultUtilsBO;
 import gov.ca.water.calgui.busservice.IGuiLinksSeedDataSvc;
 import gov.ca.water.calgui.project.EpptScenarioRun;
 import gov.ca.water.calgui.project.NamedDssPath;
-
-import hec.heclib.util.HecTime;
 import hec.io.TimeSeriesContainer;
 
 /**
@@ -229,27 +225,32 @@ public class DSSGrabber2SvcImpl extends DSSGrabber1SvcImpl
 
 	private Optional<TimeSeriesContainer> getMtsContainer(EpptScenarioRun epptScenarioRun, int mtsI)
 	{
-		return epptScenarioRun.getDssContainer()
-							  .getAllDssFiles()
-							  .stream()
-							  .map(p -> getOneSeriesWRIMS(p,
-									  epptScenarioRun.getModel(),
-									  mtsI, _mts))
-							  .filter(Objects::nonNull)
-							  .findFirst();
+		Optional<TimeSeriesContainer> container = epptScenarioRun.getDssContainer()
+																 .getAllDssFiles()
+																 .stream()
+																 .map(p -> getOneSeriesWRIMS(p,
+																		 epptScenarioRun.getModel(),
+																		 mtsI, _mts))
+																 .filter(Objects::nonNull)
+																 .findFirst();
+		container.ifPresent(tsc -> checkTimeWindowCoverage(epptScenarioRun,
+				"MTS " + _mts.getName() + " [" + _mts.getBPartAt(mtsI) + "/" + _mts.getCPartAt(mtsI) + "]", tsc));
+		return container;
 	}
 
 
 	private Optional<TimeSeriesContainer> getDtsContainer(EpptScenarioRun epptScenarioRun)
 	{
-		return epptScenarioRun.getDssContainer()
-							  .getAllDssFiles()
-							  .stream()
-							  .map(p -> getOneSeriesWRIMS(p,
-									  epptScenarioRun.getModel(),
-									  _dts))
-							  .filter(Objects::nonNull)
-							  .findFirst();
+		Optional<TimeSeriesContainer> container = epptScenarioRun.getDssContainer()
+																 .getAllDssFiles()
+																 .stream()
+																 .map(p -> getOneSeriesWRIMS(p,
+																		 epptScenarioRun.getModel(),
+																		 _dts))
+																 .filter(Objects::nonNull)
+																 .findFirst();
+		container.ifPresent(tsc -> checkTimeWindowCoverage(epptScenarioRun, "DTS " + _dts.getName(), tsc));
+		return container;
 	}
 
 	private TimeSeriesContainer getOneSeriesWRIMS(NamedDssPath dssPath, GUILinksAllModelsBO.Model model,

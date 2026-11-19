@@ -48,7 +48,9 @@ import hec.heclib.util.HecTimeArray;
 import hec.hecmath.computation.ValueContainer;
 import hec.hecmath.functions.TimeSeriesFunctions;
 import hec.io.TimeSeriesContainer;
+import mil.army.usace.hec.metadata.constants.NumericalConstants;
 import rma.util.RMAConst;
+import vista.set.Constants;
 
 /**
  * Class to grab (load) DSS time series for a set of scenarios passed in a
@@ -76,7 +78,7 @@ public class DSSGrabber1SvcImpl implements IDSSGrabber1Svc
 {
 
 	public static final double CFS_2_TAF_DAY = 0.001983471;
-	private static Logger LOGGER = Logger.getLogger(DSSGrabber1SvcImpl.class.getName());
+	private static final Logger LOGGER = Logger.getLogger(DSSGrabber1SvcImpl.class.getName());
 	final Map<GUILinksAllModelsBO.Model, String> _primaryDSSName = new HashMap<>();
 	final Map<GUILinksAllModelsBO.Model, String> _secondaryDSSName = new HashMap<>();
 	final List<EpptScenarioRun> _alternatives = new ArrayList<>();
@@ -95,6 +97,9 @@ public class DSSGrabber1SvcImpl implements IDSSGrabber1Svc
 	// Start and end time of interest
 	private HecTime _startTime;
 	private HecTime _endTime;
+	// Period every retrieved series must fully cover; null disables the check
+	private LocalDate _requiredCoverageStart;
+	private LocalDate _requiredCoverageEnd;
 
 	public DSSGrabber1SvcImpl()
 	{
@@ -174,6 +179,96 @@ public class DSSGrabber1SvcImpl implements IDSSGrabber1Svc
 			LOGGER.log(Level.WARNING, ex.getMessage(), ex);
 		}
 
+	}
+
+	/**
+	 * Turns on the incomplete-data check. Any series retrieved afterwards that does not have valid values for
+	 * every interval from the start of {@code coverageStart} through the end of {@code coverageEnd} is logged
+	 * at SEVERE along with the scenario it came from. This is separate from {@link #setDateRange} because some
+	 * callers read with a deliberately padded or open-ended window. Pass nulls to turn the check off (the default).
+	 *
+	 * @param coverageStart first day that must be covered (inclusive)
+	 * @param coverageEnd   last day that must be covered (inclusive)
+	 */
+	public void setRequiredCoverage(LocalDate coverageStart, LocalDate coverageEnd)
+	{
+		_requiredCoverageStart = coverageStart;
+		_requiredCoverageEnd = coverageEnd;
+	}
+
+	/**
+	 * Logs a SEVERE message if the series does not cover the period set with {@link #setRequiredCoverage}.
+	 */
+	void checkTimeWindowCoverage(EpptScenarioRun scenarioRun, String seriesName, TimeSeriesContainer tsc)
+	{
+		if(_requiredCoverageStart == null || _requiredCoverageEnd == null || tsc == null)
+		{
+			return;
+		}
+		findCoverageGap(tsc, _requiredCoverageStart, _requiredCoverageEnd)
+				.ifPresent(gap -> LOGGER.log(Level.SEVERE, "Incomplete time series for scenario \"{0}\": {1} {2}",
+						new Object[]{scenarioRun, seriesName, gap}));
+	}
+
+	/**
+	 * Determines whether a regular-interval series has valid values for every interval in the required period.
+	 * DSS stamps regular data at the end of each interval (a monthly value for October is stamped
+	 * 31 October 24:00), so the first value covers the start of the period when the interval it closes began on or
+	 * before the period start, and the last value covers the end when it is stamped at or after 24:00 on the last day.
+	 * Missing-value flags at either end are not counted as coverage.
+	 *
+	 * @return a description of the shortfall, or empty if the series covers the period or is irregular
+	 */
+	static Optional<String> findCoverageGap(TimeSeriesContainer tsc, LocalDate requiredStart, LocalDate requiredEnd)
+	{
+		if(tsc.getTimeIntervalSeconds() <= 0 || tsc.times == null || tsc.values == null)
+		{
+			return Optional.empty();
+		}
+		int count = Math.min(tsc.numberValues, Math.min(tsc.times.length, tsc.values.length));
+		HecTime periodStart = new HecTime();
+		periodStart.setYearMonthDay(requiredStart.getYear(), requiredStart.getMonthValue(), requiredStart.getDayOfMonth(), 0);
+		HecTime periodEnd = new HecTime();
+		periodEnd.setYearMonthDay(requiredEnd.getYear(), requiredEnd.getMonthValue(), requiredEnd.getDayOfMonth(), 1440);
+		String required = "the selected period is " + requiredStart + " to " + requiredEnd;
+		int first = -1;
+		int last = -1;
+		for(int i = 0; i < count; i++)
+		{
+			if(isValidCoverageValue(tsc.values[i]))
+			{
+				if(first < 0)
+				{
+					first = i;
+				}
+				last = i;
+			}
+		}
+		if(first < 0)
+		{
+			return Optional.of("has no valid values, but " + required);
+		}
+		HecTime firstTime = timeAt(tsc, first);
+		HecTime firstIntervalStart = new HecTime(firstTime);
+		firstIntervalStart.increment(-1, tsc.getTimeIntervalSeconds());
+		HecTime lastTime = timeAt(tsc, last);
+		if(firstIntervalStart.greaterThan(periodStart) || lastTime.lessThan(periodEnd))
+		{
+			return Optional.of("has data from " + firstTime.dateAndTime() + " to " + lastTime.dateAndTime() + ", but " + required);
+		}
+		return Optional.empty();
+	}
+
+	private static boolean isValidCoverageValue(double value)
+	{
+		return NumericalConstants.isValidValue(value) && value != Constants.MISSING;
+	}
+
+	private static HecTime timeAt(TimeSeriesContainer tsc, int index)
+	{
+		HecTime time = new HecTime();
+		time.set(tsc.times[index], tsc.timeGranularitySeconds, tsc.julianBaseDate);
+		return time;
 	}
 
 	/*
@@ -661,6 +756,7 @@ public class DSSGrabber1SvcImpl implements IDSSGrabber1Svc
 		if(timeSeriesContainerOptional.isPresent())
 		{
 			oneSeries = timeSeriesContainerOptional.get();
+			checkTimeWindowCoverage(epptScenarioRun, dssPathName, oneSeries);
 		}
 		else
 		{
