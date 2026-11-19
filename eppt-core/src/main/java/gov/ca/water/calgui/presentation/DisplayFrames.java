@@ -15,6 +15,7 @@ package gov.ca.water.calgui.presentation;
 import java.awt.BorderLayout;
 import java.time.LocalDate;
 import java.time.YearMonth;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -190,6 +191,29 @@ class DisplayFrames
 		{
 			tabbedPane.addTab("Timeseries (Aggregate)", pane);
 		}
+	}
+
+	/**
+	 * Merges missing-DSS-record messages collected from a short-lived DSS grabber
+	 * instance into an aggregate map, skipping exact duplicates.
+	 *
+	 * @param target aggregate map accumulating messages across all grabbers used
+	 * @param source missing-record map from a single DSS grabber instance
+	 */
+	static void mergeMissing(Map<GUILinksAllModelsBO.Model, List<String>> target,
+							 Map<GUILinksAllModelsBO.Model, List<String>> source)
+	{
+		source.forEach((model, messages) ->
+		{
+			List<String> existing = target.computeIfAbsent(model, m -> new ArrayList<>());
+			messages.forEach(message ->
+			{
+				if(!existing.contains(message))
+				{
+					existing.add(message);
+				}
+			});
+		});
 	}
 
 	void insertEmptyTab(JTabbedPane tabbedPane, Map<GUILinksAllModelsBO.Model, List<String>> missing)
