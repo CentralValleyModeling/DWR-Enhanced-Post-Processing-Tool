@@ -191,13 +191,8 @@ public class ResultUtilsBO
 
 	/**
 	 * Reads QuickResults output list, Custom Results Dts Tree
-	 * @deprecated Use readCGR(JFrame jFrame, Project p) instead to ensure that the current project is used for reading the DTS tree.
+	 *
 	 */
-	@Deprecated
-	public Optional<List<String>> readCGR(JFrame jFrame) {
-		return readCGR(jFrame, AppUtils.getCurrentProject());
-	}
-
 	public Optional<List<String>> readCGR(JFrame jFrame, Project p)
 	{
 		String aLine;
@@ -251,13 +246,8 @@ public class ResultUtilsBO
 
 	/**
 	 * Writes Quick Results display list, Custom Result DTS tree
-	 * @deprecated Use writeCGR(JFrame jFrame, JList<?> lstReports, Project p) instead to ensure that the current project is used for saving the DTS tree.
+	 *
 	 */
-	@Deprecated
-	public void writeCGR(JFrame jFrame, JList<?> lstReports) {
-		writeCGR(jFrame, lstReports, AppUtils.getCurrentProject());
-	}
-
 	public void writeCGR(JFrame jFrame, JList<?> lstReports, Project p)
 	{
 		JFileChooser fc = new JFileChooser();
@@ -378,16 +368,6 @@ public class ResultUtilsBO
 		}
 	}
 
-	/**
-	 * Getter access to WRIMS GUI project for Custom Results
-	 * @deprecated Use AppUtils.getCurrentProject()
-	 * @return
-	 */
-	@Deprecated
-	public Project getProject()
-	{
-		return AppUtils.getCurrentProject();
-	}
 
 	/**
 	 * Convert three-letter month abbreviation to integer 1-12
