@@ -43,7 +43,7 @@ public class Node implements java.io.Serializable
 		_name = name;
 		try
 		{
-			_id = new Integer(_name).intValue();
+			_id = Integer.valueOf(_name).intValue();
 		}
 		catch(Exception e)
 		{

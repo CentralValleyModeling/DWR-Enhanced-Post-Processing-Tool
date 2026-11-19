@@ -207,8 +207,8 @@ public class AxisDialogPanel extends GEDialogPanel
 			}
 			else
 			{
-				minT = f.format(new Double(minV));
-				maxT = f.format(new Double(maxV));
+				minT = f.format(Double.valueOf(minV));
+				maxT = f.format(Double.valueOf(maxV));
 			}
 			_minField.setText(minT);
 			_maxField.setText(maxT);

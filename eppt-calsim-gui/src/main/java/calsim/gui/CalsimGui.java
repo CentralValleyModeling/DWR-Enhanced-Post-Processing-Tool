@@ -110,8 +110,8 @@ public class CalsimGui
 	 */
 	public static void loadProps()
 	{
-		FRAME_WIDTH = new Integer(AppProps.getProperty("CalsimGui.FRAME_WIDTH")).intValue();
-		FRAME_HEIGHT = new Integer(AppProps.getProperty("CalsimGui.FRAME_HEIGHT")).intValue();
+		FRAME_WIDTH = Integer.valueOf(AppProps.getProperty("CalsimGui.FRAME_WIDTH")).intValue();
+		FRAME_HEIGHT = Integer.valueOf(AppProps.getProperty("CalsimGui.FRAME_HEIGHT")).intValue();
 	}
 
 	/**
@@ -119,8 +119,8 @@ public class CalsimGui
 	 */
 	public static void saveProps()
 	{
-		AppProps.setProperty("CalsimGui.FRAME_WIDTH", new Integer(FRAME_WIDTH).toString());
-		AppProps.setProperty("CalsimGui.FRAME_HEIGHT", new Integer(FRAME_HEIGHT).toString());
+		AppProps.setProperty("CalsimGui.FRAME_WIDTH", Integer.toString(FRAME_WIDTH));
+		AppProps.setProperty("CalsimGui.FRAME_HEIGHT", Integer.toString(FRAME_HEIGHT));
 	}
 
 	/**

@@ -73,7 +73,7 @@ public class FluxInput
 			StringTokenizer st = new StringTokenizer(line);
 			st.nextToken();
 			st.nextToken();
-			value = new Float(st.nextToken()).floatValue();
+			value = Float.valueOf(st.nextToken()).floatValue();
 		}
 		catch(Exception nse)
 		{

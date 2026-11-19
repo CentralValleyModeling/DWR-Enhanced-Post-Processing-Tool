@@ -71,7 +71,7 @@ public class AsciiFileInput extends GenericFileInput
 		{
 			throw new IOException(" No more data ");
 		}
-		return new Short(val).shortValue();
+		return Short.valueOf(val).shortValue();
 	}
 
 	/**
@@ -84,7 +84,7 @@ public class AsciiFileInput extends GenericFileInput
 		{
 			throw new IOException(" No more data ");
 		}
-		return new Integer(val).intValue();
+		return Integer.valueOf(val).intValue();
 	}
 
 	/**
@@ -97,7 +97,7 @@ public class AsciiFileInput extends GenericFileInput
 		{
 			throw new IOException(" No more data ");
 		}
-		return new Float(val).floatValue();
+		return Float.valueOf(val).floatValue();
 	}
 
 	/**
@@ -110,7 +110,7 @@ public class AsciiFileInput extends GenericFileInput
 		{
 			throw new IOException(" No more data ");
 		}
-		return new Double(val).doubleValue();
+		return Double.valueOf(val).doubleValue();
 	}
 
 	/**

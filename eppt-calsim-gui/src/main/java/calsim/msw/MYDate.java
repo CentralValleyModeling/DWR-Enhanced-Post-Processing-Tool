@@ -42,7 +42,7 @@ public class MYDate
 			createMonthTables();
 		}
 		month = m.toUpperCase();
-		year = new Integer(y);
+		year = Integer.valueOf(y);
 	}
 
 	protected MYDate(String m, Integer y)
@@ -61,8 +61,8 @@ public class MYDate
 		{
 			createMonthTables();
 		}
-		month = monthName.get(new Integer(m)).toString();
-		year = new Integer(y);
+		month = monthName.get(Integer.valueOf(m)).toString();
+		year = Integer.valueOf(y);
 	}
 
 	protected MYDate(Integer m, Integer y)
@@ -78,32 +78,32 @@ public class MYDate
 	private void createMonthTables()
 	{
 		monthIndex = new Hashtable(12);
-		monthIndex.put("JAN", new Integer(1));
-		monthIndex.put("FEB", new Integer(2));
-		monthIndex.put("MAR", new Integer(3));
-		monthIndex.put("APR", new Integer(4));
-		monthIndex.put("MAY", new Integer(5));
-		monthIndex.put("JUN", new Integer(6));
-		monthIndex.put("JUL", new Integer(7));
-		monthIndex.put("AUG", new Integer(8));
-		monthIndex.put("SEP", new Integer(9));
-		monthIndex.put("OCT", new Integer(10));
-		monthIndex.put("NOV", new Integer(11));
-		monthIndex.put("DEC", new Integer(12));
+		monthIndex.put("JAN", Integer.valueOf(1));
+		monthIndex.put("FEB", Integer.valueOf(2));
+		monthIndex.put("MAR", Integer.valueOf(3));
+		monthIndex.put("APR", Integer.valueOf(4));
+		monthIndex.put("MAY", Integer.valueOf(5));
+		monthIndex.put("JUN", Integer.valueOf(6));
+		monthIndex.put("JUL", Integer.valueOf(7));
+		monthIndex.put("AUG", Integer.valueOf(8));
+		monthIndex.put("SEP", Integer.valueOf(9));
+		monthIndex.put("OCT", Integer.valueOf(10));
+		monthIndex.put("NOV", Integer.valueOf(11));
+		monthIndex.put("DEC", Integer.valueOf(12));
 
 		monthName = new Hashtable(12);
-		monthName.put(new Integer(1), "JAN");
-		monthName.put(new Integer(2), "FEB");
-		monthName.put(new Integer(3), "MAR");
-		monthName.put(new Integer(4), "APR");
-		monthName.put(new Integer(5), "MAY");
-		monthName.put(new Integer(6), "JUN");
-		monthName.put(new Integer(7), "JUL");
-		monthName.put(new Integer(8), "AUG");
-		monthName.put(new Integer(9), "SEP");
-		monthName.put(new Integer(10), "OCT");
-		monthName.put(new Integer(11), "NOV");
-		monthName.put(new Integer(12), "DEC");
+		monthName.put(Integer.valueOf(1), "JAN");
+		monthName.put(Integer.valueOf(2), "FEB");
+		monthName.put(Integer.valueOf(3), "MAR");
+		monthName.put(Integer.valueOf(4), "APR");
+		monthName.put(Integer.valueOf(5), "MAY");
+		monthName.put(Integer.valueOf(6), "JUN");
+		monthName.put(Integer.valueOf(7), "JUL");
+		monthName.put(Integer.valueOf(8), "AUG");
+		monthName.put(Integer.valueOf(9), "SEP");
+		monthName.put(Integer.valueOf(10), "OCT");
+		monthName.put(Integer.valueOf(11), "NOV");
+		monthName.put(Integer.valueOf(12), "DEC");
 	}
 
 	protected String getMonth()
@@ -118,7 +118,7 @@ public class MYDate
 
 	void setMonth(int m)
 	{
-		month = monthName.get(new Integer(m)).toString();
+		month = monthName.get(Integer.valueOf(m)).toString();
 	}
 
 	protected int getMonthIndex()
@@ -144,7 +144,7 @@ public class MYDate
 
 	void setYear(int y)
 	{
-		year = new Integer(y);
+		year = Integer.valueOf(y);
 	}
 
 	public String toString()

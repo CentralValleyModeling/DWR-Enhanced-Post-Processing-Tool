@@ -227,12 +227,12 @@ public abstract class Curve extends GraphicElement
 		}
 		CurveAttr attr = (CurveAttr) getAttributes();
 		prefixTag = getPrefixTag(prefixTag);
-		p.put(prefixTag + "drawSymbol", new Boolean(attr._drawSymbol)
-				.toString());
-		p.put(prefixTag + "drawLines", new Boolean(attr._drawLines).toString());
-		p.put(prefixTag + "thickness", new Float(attr._thickness).toString());
-		p.put(prefixTag + "dataPerSymbol", new Integer(attr._dataPerSymbol)
-				.toString());
+		p.put(prefixTag + "drawSymbol", Boolean
+				.toString(attr._drawSymbol));
+		p.put(prefixTag + "drawLines", Boolean.toString(attr._drawLines));
+		p.put(prefixTag + "thickness", Float.toString(attr._thickness));
+		p.put(prefixTag + "dataPerSymbol", Integer
+				.toString(attr._dataPerSymbol));
 		getSymbol().toProperties(p, prefixTag);
 		super.toProperties(p, prefixTag);
 	}
@@ -247,22 +247,22 @@ public abstract class Curve extends GraphicElement
 		String property = p.getProperty(localTag + "drawSymbol");
 		if(property != null)
 		{
-			attr._drawSymbol = new Boolean(property).booleanValue();
+			attr._drawSymbol = Boolean.valueOf(property).booleanValue();
 		}
 		property = p.getProperty(localTag + "drawLines");
 		if(property != null)
 		{
-			attr._drawLines = new Boolean(property).booleanValue();
+			attr._drawLines = Boolean.valueOf(property).booleanValue();
 		}
 		property = p.getProperty(localTag + "thickness");
 		if(property != null)
 		{
-			attr._thickness = new Float(property).floatValue();
+			attr._thickness = Float.valueOf(property).floatValue();
 		}
 		property = p.getProperty(localTag + "dataPerSymbol");
 		if(property != null)
 		{
-			attr._dataPerSymbol = new Integer(property).intValue();
+			attr._dataPerSymbol = Integer.valueOf(property).intValue();
 		}
 		getSymbol().fromProperties(p, localTag);
 		super.fromProperties(p, localTag);

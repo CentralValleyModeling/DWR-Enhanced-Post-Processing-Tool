@@ -31,12 +31,12 @@ class Reservoir
 
 	public void addNode(int nodeId)
 	{
-		nodes.add(new Integer(nodeId));
+		nodes.add(Integer.valueOf(nodeId));
 	}
 
 	public void addGateNode(int nodeId)
 	{
-		gateNodes.add(new Integer(nodeId));
+		gateNodes.add(Integer.valueOf(nodeId));
 	}
 
 	public int getNumberOfConnections()

@@ -342,7 +342,7 @@ public class DSSImporter
 				}
 				else
 				{
-					yvals[index] = new Double(ystr).doubleValue();
+					yvals[index] = Double.valueOf(ystr).doubleValue();
 				}
 				if(flag)
 				{

@@ -515,11 +515,11 @@ public class GeneralPanel extends JPanel
 		study.setStopDay(_day[1].getSelectedItem().toString());
 		//*******************************************************
 		study.setStartMonth(_month[0].getSelectedItem().toString());
-		study.setStartYear(new Integer(_year[0].getSelectedItem().toString()));
+		study.setStartYear(Integer.valueOf(_year[0].getSelectedItem().toString()));
 		study.setStopMonth(_month[1].getSelectedItem().toString());
-		study.setStopYear(new Integer(_year[1].getSelectedItem().toString()));
+		study.setStopYear(Integer.valueOf(_year[1].getSelectedItem().toString()));
 		study.setSimOption(_simOption.getSelectedItem().toString());
-		study.setNumberSequences(new Integer(_numSeq.getSelectedItem().toString()));
+		study.setNumberSequences(Integer.valueOf(_numSeq.getSelectedItem().toString()));
 		study.updateStudyObject();//DJE************************
 	}
 

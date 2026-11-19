@@ -510,52 +510,52 @@ public class CoordinateConversion
 
 		public Digraphs()
 		{
-			digraph1.put(new Integer(1), "A");
-			digraph1.put(new Integer(2), "B");
-			digraph1.put(new Integer(3), "C");
-			digraph1.put(new Integer(4), "D");
-			digraph1.put(new Integer(5), "E");
-			digraph1.put(new Integer(6), "F");
-			digraph1.put(new Integer(7), "G");
-			digraph1.put(new Integer(8), "H");
-			digraph1.put(new Integer(9), "J");
-			digraph1.put(new Integer(10), "K");
-			digraph1.put(new Integer(11), "L");
-			digraph1.put(new Integer(12), "M");
-			digraph1.put(new Integer(13), "N");
-			digraph1.put(new Integer(14), "P");
-			digraph1.put(new Integer(15), "Q");
-			digraph1.put(new Integer(16), "R");
-			digraph1.put(new Integer(17), "S");
-			digraph1.put(new Integer(18), "T");
-			digraph1.put(new Integer(19), "U");
-			digraph1.put(new Integer(20), "V");
-			digraph1.put(new Integer(21), "W");
-			digraph1.put(new Integer(22), "X");
-			digraph1.put(new Integer(23), "Y");
-			digraph1.put(new Integer(24), "Z");
+			digraph1.put(Integer.valueOf(1), "A");
+			digraph1.put(Integer.valueOf(2), "B");
+			digraph1.put(Integer.valueOf(3), "C");
+			digraph1.put(Integer.valueOf(4), "D");
+			digraph1.put(Integer.valueOf(5), "E");
+			digraph1.put(Integer.valueOf(6), "F");
+			digraph1.put(Integer.valueOf(7), "G");
+			digraph1.put(Integer.valueOf(8), "H");
+			digraph1.put(Integer.valueOf(9), "J");
+			digraph1.put(Integer.valueOf(10), "K");
+			digraph1.put(Integer.valueOf(11), "L");
+			digraph1.put(Integer.valueOf(12), "M");
+			digraph1.put(Integer.valueOf(13), "N");
+			digraph1.put(Integer.valueOf(14), "P");
+			digraph1.put(Integer.valueOf(15), "Q");
+			digraph1.put(Integer.valueOf(16), "R");
+			digraph1.put(Integer.valueOf(17), "S");
+			digraph1.put(Integer.valueOf(18), "T");
+			digraph1.put(Integer.valueOf(19), "U");
+			digraph1.put(Integer.valueOf(20), "V");
+			digraph1.put(Integer.valueOf(21), "W");
+			digraph1.put(Integer.valueOf(22), "X");
+			digraph1.put(Integer.valueOf(23), "Y");
+			digraph1.put(Integer.valueOf(24), "Z");
 
-			digraph2.put(new Integer(0), "V");
-			digraph2.put(new Integer(1), "A");
-			digraph2.put(new Integer(2), "B");
-			digraph2.put(new Integer(3), "C");
-			digraph2.put(new Integer(4), "D");
-			digraph2.put(new Integer(5), "E");
-			digraph2.put(new Integer(6), "F");
-			digraph2.put(new Integer(7), "G");
-			digraph2.put(new Integer(8), "H");
-			digraph2.put(new Integer(9), "J");
-			digraph2.put(new Integer(10), "K");
-			digraph2.put(new Integer(11), "L");
-			digraph2.put(new Integer(12), "M");
-			digraph2.put(new Integer(13), "N");
-			digraph2.put(new Integer(14), "P");
-			digraph2.put(new Integer(15), "Q");
-			digraph2.put(new Integer(16), "R");
-			digraph2.put(new Integer(17), "S");
-			digraph2.put(new Integer(18), "T");
-			digraph2.put(new Integer(19), "U");
-			digraph2.put(new Integer(20), "V");
+			digraph2.put(Integer.valueOf(0), "V");
+			digraph2.put(Integer.valueOf(1), "A");
+			digraph2.put(Integer.valueOf(2), "B");
+			digraph2.put(Integer.valueOf(3), "C");
+			digraph2.put(Integer.valueOf(4), "D");
+			digraph2.put(Integer.valueOf(5), "E");
+			digraph2.put(Integer.valueOf(6), "F");
+			digraph2.put(Integer.valueOf(7), "G");
+			digraph2.put(Integer.valueOf(8), "H");
+			digraph2.put(Integer.valueOf(9), "J");
+			digraph2.put(Integer.valueOf(10), "K");
+			digraph2.put(Integer.valueOf(11), "L");
+			digraph2.put(Integer.valueOf(12), "M");
+			digraph2.put(Integer.valueOf(13), "N");
+			digraph2.put(Integer.valueOf(14), "P");
+			digraph2.put(Integer.valueOf(15), "Q");
+			digraph2.put(Integer.valueOf(16), "R");
+			digraph2.put(Integer.valueOf(17), "S");
+			digraph2.put(Integer.valueOf(18), "T");
+			digraph2.put(Integer.valueOf(19), "U");
+			digraph2.put(Integer.valueOf(20), "V");
 
 		}
 
@@ -592,7 +592,7 @@ public class CoordinateConversion
 
 			double a3 = easting;
 			double a4 = a2 + ((int) (a3 / 100000)) - 1;
-			return (String) digraph1.get(new Integer((int) Math.floor(a4)));
+			return (String) digraph1.get(Integer.valueOf((int) Math.floor(a4)));
 		}
 
 		public String getDigraph2(int longZone, double northing)
@@ -607,7 +607,7 @@ public class CoordinateConversion
 			{
 				a4 = a4 + 19;
 			}
-			return (String) digraph2.get(new Integer((int) Math.floor(a4)));
+			return (String) digraph2.get(Integer.valueOf((int) Math.floor(a4)));
 
 		}
 
