@@ -13,9 +13,12 @@ package gov.ca.water.eppt.nbui;
 
 import java.awt.Dimension;
 import java.awt.Frame;
+import java.awt.event.ActionEvent;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Handler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -39,6 +42,7 @@ import gov.ca.water.calgui.techservice.impl.DialogSvcImpl;
 import gov.ca.water.eppt.nbui.actions.RunWreslScript;
 import javafx.application.Platform;
 import javafx.embed.swing.JFXPanel;
+import org.openide.awt.Actions;
 import org.openide.modules.ModuleInstall;
 import org.openide.windows.WindowManager;
 
@@ -51,10 +55,13 @@ public class Installer extends ModuleInstall
 {
 	public static final String MAIN_FRAME_NAME = "EPPT";
 	private static final Logger LOGGER = Logger.getLogger(Installer.class.getName());
+	//java.util.logging only weakly references loggers, so levels set on them are lost unless the instances are held
+	private static final List<Logger> QUIETED_LOGGERS = new ArrayList<>();
 
 	@Override
 	public void restored()
 	{
+		StdoutLogRedirect.install();
 		initEpptHome();
 		initEpptConfigs();
 		initHeclibDll();
@@ -157,8 +164,27 @@ public class Installer extends ModuleInstall
 		}
 	}
 
+	private void quietNetBeansLoggers()
+	{
+		silence("org.netbeans.core.startup.NbEvents", Level.WARNING);
+		silence("org.netbeans.core.network.proxy", Level.WARNING);
+		silence("org.netbeans.modules.options.keymap.LayersBridge", Level.SEVERE);
+		silence("org.openide.awt.Toolbar", Level.WARNING);
+		silence("org.netbeans.ui.metrics", Level.WARNING);
+		silence("org.netbeans.core.ui.warmup.DiagnosticTask", Level.WARNING);
+		silence("org.netbeans.modules.sampler.InternalSampler", Level.WARNING);
+	}
+
+	private static void silence(String loggerName, Level level)
+	{
+		Logger logger = Logger.getLogger(loggerName);
+		logger.setLevel(level);
+		QUIETED_LOGGERS.add(logger);
+	}
+
 	private void initLogger()
 	{
+		quietNetBeansLoggers();
 		//Root logger
 		Logger rootLogger = Logger.getLogger("");
 
@@ -167,7 +193,24 @@ public class Installer extends ModuleInstall
 		netbeansLogger.setParent(rootLogger);
 		netbeansLogger.setUseParentHandlers(true);
 
-		WindowManager.getDefault().invokeWhenUIReady(() -> setupLogHandlers(rootLogger));
+		WindowManager.getDefault().invokeWhenUIReady(() ->
+		{
+			setupLogHandlers(rootLogger);
+			openIdeLog();
+		});
+	}
+
+	private void openIdeLog()
+	{
+		Action logAction = Actions.forID("View", "org.netbeans.core.actions.LogAction");
+		if(logAction != null)
+		{
+			logAction.actionPerformed(new ActionEvent(this, ActionEvent.ACTION_PERFORMED, ""));
+		}
+		else
+		{
+			LOGGER.log(Level.WARNING, "IDE Log action not found");
+		}
 	}
 
 	private void setupLogHandlers(Logger rootLogger)
