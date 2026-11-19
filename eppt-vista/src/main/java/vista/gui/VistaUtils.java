@@ -23,6 +23,8 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
 import java.util.Properties;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.prefs.Preferences;
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
@@ -35,6 +37,9 @@ import javax.swing.filechooser.FileNameExtensionFilter;
  */
 public class VistaUtils
 {
+
+	public static final Logger LOGGER = Logger.getLogger(VistaUtils.class.getName());
+
 	/**
 	 *
 	 */
@@ -104,7 +109,7 @@ public class VistaUtils
 		}
 		catch(Exception e)
 		{
-			System.err.println("Could not determine user directory");
+			LOGGER.severe("Could not determine user directory");
 		}
 	}
 
@@ -121,8 +126,7 @@ public class VistaUtils
 		}
 		catch(Exception e)
 		{
-			System.err.println("Could not set gui l&f to vista metal theme");
-			System.err.println(e.getMessage());
+			LOGGER.log(Level.SEVERE, "Could not set gui l&f to vista metal theme", e);
 		}
 	}
 
@@ -140,6 +144,7 @@ public class VistaUtils
 		}
 		catch(Exception e)
 		{
+			LOGGER.log(Level.SEVERE, "Could not load version properties", e);
 		}
 		return version;
 	}
@@ -181,8 +186,7 @@ public class VistaUtils
 		}
 		catch(InstantiationException ie)
 		{
-			ie.printStackTrace(System.err);
-			System.err.println("Could not add " + key + ": method : " + method);
+			LOGGER.log(Level.SEVERE, "Could not add " + key + ": method : " + method, ie);
 		}
 	}
 
@@ -329,14 +333,30 @@ public class VistaUtils
 	public static String getFilenameFromDialog(Component comp, int type,
 											   String extension, String description)
 	{
-		return getDirOrFileFromDialog(comp, type, extension, description, false);
+		return getDirOrFileFromDialog(comp, type, extension, description, false, null);
+	}
+
+	/**
+	 * gets the filename to load from or save to, using the given dialog title
+	 */
+	public static String getFilenameFromDialog(Component comp, int type,
+											   String extension, String description, String dialogTitle)
+	{
+		return getDirOrFileFromDialog(comp, type, extension, description, false, dialogTitle);
+	}
+
+	public static String getDirOrFileFromDialog(Component comp, int type,
+												String extension, String description, boolean dirOnly)
+	{
+		return getDirOrFileFromDialog(comp, type, extension, description, dirOnly, null);
 	}
 
 	/**
 	 *
 	 */
 	public static String getDirOrFileFromDialog(Component comp, int type,
-												String extension, String description, boolean dirOnly)
+												String extension, String description, boolean dirOnly,
+												String dialogTitle)
 	{
 		if(comp == null)
 		{
@@ -348,16 +368,21 @@ public class VistaUtils
 		}
 		Frame frame = JOptionPane.getFrameForComponent(comp);
 		String filename = null;
-		String title = "Save File to...";
-		if(type == FileDialog.LOAD)
-		{
-			title = "Load File from...";
-		}
 		if(AWT_FILE_DIALOG)
 		{
 			JFileChooser fileChooser = new JFileChooser();
-
-			fileChooser.setSelectedFile(new File("*" + extension));
+			if(_lastDirectory != null)
+			{
+				fileChooser.setCurrentDirectory(new File(_lastDirectory));
+			}
+			if(dialogTitle != null)
+			{
+				fileChooser.setDialogTitle(dialogTitle);
+			}
+			if(type != FileDialog.LOAD)
+			{
+				fileChooser.setSelectedFile(new File("*" + extension));
+			}
 			if(dirOnly)
 			{
 				fileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
@@ -367,8 +392,9 @@ public class VistaUtils
 				fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
 			}
 			fileChooser.setFileFilter(new FileNameExtensionFilter(description, extension));
-			fileChooser.showSaveDialog(frame);
-			if(fileChooser.getSelectedFile() == null)
+			int result = type == FileDialog.LOAD
+					? fileChooser.showOpenDialog(frame) : fileChooser.showSaveDialog(frame);
+			if(result != JFileChooser.APPROVE_OPTION || fileChooser.getSelectedFile() == null)
 			{
 				return null;
 			}
@@ -389,6 +415,14 @@ public class VistaUtils
 				filename = fileChooser.getCurrentDirectory().toString();
 			}
 			_lastDirectory = fileChooser.getCurrentDirectory().toString();
+			try
+			{
+				Preferences.userRoot().put("last.dir", _lastDirectory);
+			}
+			catch(Exception e)
+			{
+				LOGGER.log(Level.WARNING, "Could not save last directory", e);
+			}
 		}
 		else
 		{

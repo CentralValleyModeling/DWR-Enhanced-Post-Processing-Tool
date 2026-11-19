@@ -24,14 +24,13 @@ import java.io.Serializable;
 import java.util.Random;
 import java.util.StringTokenizer;
 import java.util.Vector;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.table.AbstractTableModel;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
-import org.w3c.dom.Node;
-import org.w3c.dom.traversal.DocumentTraversal;
-import org.w3c.dom.traversal.NodeFilter;
-import org.w3c.dom.traversal.TreeWalker;
+import org.w3c.dom.NodeList;
 import vista.set.DataReference;
 import vista.set.DefaultReference;
 import vista.set.Pathname;
@@ -46,59 +45,62 @@ import vista.set.Pathname;
  */
 public class MultipleTimeSeries implements Serializable
 {
+	private static final Logger LOGGER = Logger.getLogger(MultipleTimeSeries.class.getName());
+	public static final String EXT = ".MTS";
+	public static final String DEF_FILE = "calc.dss";
+	public static final String DEF_SERVER = "local";
+	public static final String DTS_EXT = ".DTS";
+	public static final String DTS_ATTR = "dts";
+	public static final String VARTYPE_ATTR = "vartype";
+	public static final String BPART_ATTR = "bpart";
+	public static final String CPART_ATTR = "cpart";
+	public static final String ELEM = "MTS";
+	public static final String NAME_ATTR = "name";
+	public static final String REF_ELEM = "row";
+
 	public static boolean DEBUG = false;
-	private Vector _dtsNames, _varTypes, _bparts, _cparts;
+	private final Vector<String> _dtsNames, _varTypes, _bparts, _cparts;
 	private String _name;
-	//  private boolean _nameSetExplicitly;
 
 	/**
 	 * create an empty multiple time series
 	 */
 	public MultipleTimeSeries()
 	{
-		_dtsNames = new Vector();
-		_varTypes = new Vector();
-		_bparts = new Vector();
-		_cparts = new Vector();
+		_dtsNames = new Vector<>();
+		_varTypes = new Vector<>();
+		_bparts = new Vector<>();
+		_cparts = new Vector<>();
 		_name = "Untitled " + new Random().nextInt();
 	}
 
-	/**
-	 * creates a copy of the given MTS. A typical copy
-	 * constructor
-	 */
 	public MultipleTimeSeries(MultipleTimeSeries dts)
 	{
-		MultipleTimeSeries ndts = new MultipleTimeSeries();
-		ndts._name = dts.getName();
-		ndts._dtsNames = (Vector) dts._dtsNames.clone();
-		ndts._varTypes = (Vector) dts._varTypes.clone();
-		ndts._bparts = (Vector) dts._bparts.clone();
-		ndts._cparts = (Vector) dts._cparts.clone();
+		_name = dts.getName();
+		_dtsNames = new Vector<>( dts._dtsNames);
+		_varTypes = new Vector<>( dts._varTypes);
+		_bparts = new Vector<>( dts._bparts);
+		_cparts = new Vector<>( dts._cparts);
 	}
 
 	public MultipleTimeSeries(String name)
 	{
-		_dtsNames = new Vector();
-		_varTypes = new Vector();
-		_bparts = new Vector();
-		_cparts = new Vector();
+		_dtsNames = new Vector<>();
+		_varTypes = new Vector<>();
+		_bparts = new Vector<>();
+		_cparts = new Vector<>();
 		_name = name;
 	}
 
 	public MultipleTimeSeries(MultipleTimeSeries dts, String name)
 	{
-		MultipleTimeSeries ndts = new MultipleTimeSeries();
-		ndts._name = name;
-		ndts._dtsNames = (Vector) dts._dtsNames.clone();
-		ndts._varTypes = (Vector) dts._varTypes.clone();
-		ndts._bparts = (Vector) dts._bparts.clone();
-		ndts._cparts = (Vector) dts._cparts.clone();
+		this(dts);
+		_name = name;
 	}
 
 	/**
 	 * loads and creates a MTS from a csv file description
-	 * This file is a comma separted file similar to the one
+	 * This file is a comma separated file similar to the one
 	 * produced by Excel.
 	 * The name of the MTS is parsed from a line containing
 	 * "name, mts_name"
@@ -107,7 +109,7 @@ public class MultipleTimeSeries implements Serializable
 	 * Every line after this is interpreted to be a part of the
 	 * description of the MTS's contents. Every part of the following
 	 * lines are comma separated so that the part belongs to the
-	 * appropriate header. Furthermore empty parts are separated by
+	 * appropriate header. Furthermore, empty parts are separated by
 	 * commas. Any line that does not meet this format is discarded
 	 * and the reading process continues.
 	 * Only  this method adds this list to current projects list while
@@ -116,11 +118,10 @@ public class MultipleTimeSeries implements Serializable
 	 */
 	public static MultipleTimeSeries load(String file) throws IOException
 	{
-		InputStream is = new FileInputStream(file);
-		MultipleTimeSeries mts = load(is);
-		//    AppUtils.getCurrentProject().add(mts);// add this to the current project
-		return mts;
-	}
+        try (InputStream is = new FileInputStream(file)) {
+            return load(is);
+        }
+    }
 
 	/**
 	 * loads and creates an MTS from a csv file stream of the same
@@ -130,191 +131,141 @@ public class MultipleTimeSeries implements Serializable
 	 */
 	public static MultipleTimeSeries load(InputStream is) throws IOException
 	{
-		MultipleTimeSeries mts = null;
-		LineNumberReader reader = new LineNumberReader(new InputStreamReader(is));
-		String name = null;
-		//    int opId;
-		int count = 0; // counter for number of time series for defining this mts
-		String dtsname = "", varType = "", bpart = "", cpart = "";
-		String line = null;
-		while(true)
-		{
-			line = reader.readLine();
-			if(line == null)
-			{
-				break;
-			}
-			if(line.indexOf("name") >= 0)
-			{
-				StringTokenizer st = new StringTokenizer(line, ",");
-				st.nextToken();
-				name = st.nextToken().trim();
-				name = name + ".MTS";
-				break;
-			}
-		}
-		if(name == null)
-		{
-			throw new IOException("Invalid Multiple Time Series Input: No name found");
-		}
-		mts = new MultipleTimeSeries();
-		mts._name = name.toUpperCase();
-		if(line != null)
-		{
-			while(true)
-			{
-				line = reader.readLine();
-				if(line == null)
-				{
-					break;
-				}
-				line = line.toLowerCase();
-				if(line.indexOf("erived") >= 0 &&
-						line.indexOf("var") >= 0 &&
-						line.indexOf("art") >= 0)
-				{
-					break;
-				}
-			}
-		}
-		if(line == null)
-		{
-			throw new IOException("No definition's found for " +
-					" multiple time series till line #: " + reader.getLineNumber());
-		}
-		while(true)
-		{
-			line = reader.readLine();
-			if(line == null)
-			{
-				break;
-			}
-			StringTokenizer st = new StringTokenizer(line, ",", true); // get separator tokens also
-			// get MTS if any mentioned. If this exists then other columns are read
-			// but will be ignored for calculation purposes
-			if(st.hasMoreTokens())
-			{
-				String token = st.nextToken().trim();
-				if(token.equals(","))
-				{
-					dtsname = "";
-				}
-				else
-				{
-					dtsname = token;
-					varType = "";
-					bpart = "";
-					cpart = "";
-					if(st.hasMoreTokens())
-					{
-						st.nextToken();
-					}
-				}
-			}
-			// get svar, b part and c part, these must exist if dtsname is ""
-			if(dtsname.equals(""))
-			{
-				if(st.hasMoreTokens())
-				{
-					varType = st.nextToken().trim();
-					if(varType.equals(","))
-					{
-						if(DEBUG)
-						{
-							System.err.println("Missing variable type on line # : " + reader.getLineNumber());
+		MultipleTimeSeries mts;
+        try (LineNumberReader reader = new LineNumberReader(new InputStreamReader(is))) {
+            String name = null;
+
+            int count = 0; // counter for number of time series for defining this mts
+            String dtsname = "", varType = "", bpart = "", cpart = "";
+            String line;
+            while (true) {
+                line = reader.readLine();
+                if (line == null) {
+                    break;
+                }
+                if (line.contains(NAME_ATTR)) {
+                    StringTokenizer st = new StringTokenizer(line, ",");
+                    st.nextToken();
+                    name = st.nextToken().trim();
+                    name = name + EXT;
+                    break;
+                }
+            }
+            if (name == null) {
+                throw new IOException("Invalid Multiple Time Series Input: No name found");
+            }
+            mts = new MultipleTimeSeries();
+            mts._name = name.toUpperCase();
+            if (line != null) {
+                while (true) {
+                    line = reader.readLine();
+                    if (line == null) {
+                        break;
+                    }
+                    line = line.toLowerCase();
+                    if (line.contains("erived") &&
+                            line.contains("var") &&
+                            line.contains("art")) {
+                        break;
+                    }
+                }
+            }
+            if (line == null) {
+                throw new IOException("No definition's found for " +
+                        " multiple time series till line #: " + reader.getLineNumber());
+            }
+            while (true) {
+                line = reader.readLine();
+                if (line == null) {
+                    break;
+                }
+                StringTokenizer st = new StringTokenizer(line, ",", true); // get separator tokens also
+// get MTS if any mentioned. If this exists then other columns are read
+// but will be ignored for calculation purposes
+                if (st.hasMoreTokens()) {
+                    String token = st.nextToken().trim();
+                    if (token.equals(",")) {
+                        dtsname = "";
+                    } else {
+                        dtsname = token;
+                        varType = "";
+                        bpart = "";
+                        cpart = "";
+                        if (st.hasMoreTokens()) {
+                            st.nextToken();
+                        }
+                    }
+                }
+// get svar, b part and c part, these must exist if dtsname is ""
+                if (dtsname.isEmpty()) {
+                    if (st.hasMoreTokens()) {
+                        varType = st.nextToken().trim();
+                        if (varType.equals(",")) {
+                            if (DEBUG) {
+                                LOGGER.fine("Missing variable type on line # : " + reader.getLineNumber());
+                            }
+                            continue;
+                        } else {
+                            varType = varType.toUpperCase();
+                            if (st.hasMoreTokens()) {
+                                st.nextToken();
+                            }
+                            if (!varType.equals(AppUtils.SVAR) && !varType.equals(AppUtils.DVAR)) {
+                                    if (DEBUG) {
+                                        LOGGER.log(Level.FINE, "Invalid variable type: {0} on line # : {1}",
+                                                new Object[]{varType, reader.getLineNumber()});
+                                    }
+                                    continue;
+                                }
+
 						}
-						continue;
-					}
-					else
-					{
-						varType = varType.toUpperCase();
-						if(st.hasMoreTokens())
-						{
-							st.nextToken();
-						}
-						if(varType.equals(AppUtils.SVAR))
-						{
-						}
-						else if(varType.equals(AppUtils.DVAR))
-						{
-						}
-						else
-						{
-							if(DEBUG)
-							{
-								System.err.println(
-										"Invalid variable type: " + varType + " on line # : " + reader.getLineNumber());
-							}
-							continue;
-						}
-					}
-				}
-				else
-				{
-					if(DEBUG)
-					{
-						System.err.println("Missing variable type on line #: " + reader.getLineNumber());
-					}
-					continue;
-				}
-				// get b part
-				if(st.hasMoreTokens())
-				{
-					bpart = st.nextToken().trim();
-					if(bpart.equals(","))
-					{
-						if(DEBUG)
-						{
-							System.err.println("Missing bpart on line # : " + reader.getLineNumber());
-						}
-						continue;
-					}
-					else
-					{
-						if(st.hasMoreTokens())
-						{
-							st.nextToken();
-						}
-					}
-				}
-				else
-				{
-					if(DEBUG)
-					{
-						System.err.println("Missing b part on line # : " + reader.getLineNumber());
-					}
-				}
-				// get c part
-				if(st.hasMoreTokens())
-				{
-					cpart = st.nextToken().trim();
-					if(cpart.equals(","))
-					{
-						if(DEBUG)
-						{
-							System.err.println("Missing cpart on line: " + reader.getLineNumber());
-						}
-						continue;
-					}
-					else
-					{
-					}
-				}
-				else
-				{
-					if(DEBUG)
-					{
-						System.err.println("Missing c part on line : " + reader.getLineNumber());
-					}
-				}
-			} // if (dtsname.equals("")...
-			mts.setDTSNameAt(count, dtsname);
-			mts.setVarTypeAt(count, varType);
-			mts.setBPartAt(count, bpart);
-			mts.setCPartAt(count, cpart);
-			count++;
-		}
-		is.close();
+                    } else {
+                        if (DEBUG) {
+                            LOGGER.fine("Missing variable type on line #: " + reader.getLineNumber());
+                        }
+                        continue;
+                    }
+// get b part
+                    if (st.hasMoreTokens()) {
+                        bpart = st.nextToken().trim();
+                        if (bpart.equals(",")) {
+                            if (DEBUG) {
+                                LOGGER.log(Level.FINE, "Missing bpart on line # : {0}", reader.getLineNumber());
+                            }
+                            continue;
+                        } else {
+                            if (st.hasMoreTokens()) {
+                                st.nextToken();
+                            }
+                        }
+                    } else {
+                        if (DEBUG) {
+                            LOGGER.log(Level.FINE, "Missing b part on line # : {0}", reader.getLineNumber());
+                        }
+                    }
+// get c part
+                    if (st.hasMoreTokens()) {
+                        cpart = st.nextToken().trim();
+                        if (cpart.equals(",")) {
+                            if (DEBUG) {
+                                LOGGER.fine("Missing cpart on line: " + reader.getLineNumber());
+                            }
+                            continue;
+                        }
+                    } else {
+                        if (DEBUG) {
+                            LOGGER.fine("Missing c part on line : " + reader.getLineNumber());
+                        }
+                    }
+                }
+                mts.setDTSNameAt(count, dtsname);
+                mts.setVarTypeAt(count, varType);
+                mts.setBPartAt(count, bpart);
+                mts.setCPartAt(count, cpart);
+                count++;
+            }
+        }
+        is.close();
 		return mts;
 	}
 
@@ -324,25 +275,22 @@ public class MultipleTimeSeries implements Serializable
 	public void save(OutputStream os) throws IOException
 	{
 		AbstractTableModel model = new MTSTableModel(this);
-		PrintWriter writer = new PrintWriter(new OutputStreamWriter(os));
-		writer.println("name, " + getName());
-		for(int i = 0; i < model.getColumnCount(); i++)
-		{
-			writer.print(model.getColumnName(i));
-			writer.print(",");
-		}
-		writer.println();
-		for(int j = 0; j < model.getRowCount(); j++)
-		{
-			for(int i = 0; i < model.getColumnCount(); i++)
-			{
-				writer.print(model.getValueAt(j, i));
-				writer.print(",");
-			}
-			writer.println();
-		}
-		writer.close();
-	}
+        try (PrintWriter writer = new PrintWriter(new OutputStreamWriter(os))) {
+            writer.println(NAME_ATTR +	", " + getName());
+            for (int i = 0; i < model.getColumnCount(); i++) {
+                writer.print(model.getColumnName(i));
+                writer.print(",");
+            }
+            writer.println();
+            for (int j = 0; j < model.getRowCount(); j++) {
+                for (int i = 0; i < model.getColumnCount(); i++) {
+                    writer.print(model.getValueAt(j, i));
+                    writer.print(",");
+                }
+                writer.println();
+            }
+        }
+    }
 
 	/**
 	 * gets name of this data reference
@@ -366,7 +314,7 @@ public class MultipleTimeSeries implements Serializable
 		{
 			return;
 		}
-		if(name.length() > 0 && AppUtils.nameNotTaken(name))
+		if(!name.isEmpty() && AppUtils.nameNotTaken(name))
 		{
 			Project prj = AppUtils.getCurrentProject();
 			MultipleTimeSeries mts2 = null;
@@ -378,7 +326,7 @@ public class MultipleTimeSeries implements Serializable
 			{
 				prj.remove(mts2);
 			}
-			//      _nameSetExplicitly = true;
+
 			_name = name.toUpperCase().trim();
 			if(mts2 != null)
 			{
@@ -403,10 +351,10 @@ public class MultipleTimeSeries implements Serializable
 	 */
 	public void remove(int i)
 	{
-		_dtsNames.removeElementAt(i);
-		_varTypes.removeElementAt(i);
-		_bparts.removeElementAt(i);
-		_cparts.removeElementAt(i);
+		_dtsNames.remove(i);
+		_varTypes.remove(i);
+		_bparts.remove(i);
+		_cparts.remove(i);
 	}
 
 	/**
@@ -416,10 +364,10 @@ public class MultipleTimeSeries implements Serializable
 	{
 		while(_dtsNames.size() - 1 < i)
 		{
-			_dtsNames.addElement("");
-			_varTypes.addElement(AppUtils.DVAR);
-			_bparts.addElement("");
-			_cparts.addElement("");
+			_dtsNames.add("");
+			_varTypes.add(AppUtils.DVAR);
+			_bparts.add("");
+			_cparts.add("");
 		}
 	}
 
@@ -436,10 +384,10 @@ public class MultipleTimeSeries implements Serializable
 		{
 			return;
 		}
-		_dtsNames.insertElementAt("", i);
-		_varTypes.insertElementAt("", i);
-		_bparts.insertElementAt("", i);
-		_cparts.insertElementAt("", i);
+		_dtsNames.add(i, "");
+		_varTypes.add(i, "");
+		_bparts.add(i, "");
+		_cparts.add(i, "");
 	}
 
 	/**
@@ -460,7 +408,7 @@ public class MultipleTimeSeries implements Serializable
 	public String getDTSNameAt(int i)
 	{
 		checkAccessAt(i);
-		return (String) _dtsNames.elementAt(i);
+		return _dtsNames.get(i);
 	}
 
 	/**
@@ -472,9 +420,8 @@ public class MultipleTimeSeries implements Serializable
 	public void setDTSNameAt(int i, String dtsname)
 	{
 		expandTo(i);
-		//if ( !dtsname.equals("") && !dtsname.equals("        ") && !dtsname.endsWith(".DTS") && i != 0 ) dtsname = new String(dtsname.toUpperCase()+".DTS");
-		//if ( dtsname.equals(getName())) return;
-		_dtsNames.setElementAt(dtsname.toUpperCase().trim(), i);
+
+		_dtsNames.set(i, dtsname.toUpperCase().trim());
 	}
 
 	/**
@@ -484,7 +431,7 @@ public class MultipleTimeSeries implements Serializable
 	public String getVarTypeAt(int i)
 	{
 		checkAccessAt(i);
-		return (String) _varTypes.elementAt(i);
+		return _varTypes.get(i);
 	}
 
 	/**
@@ -493,7 +440,7 @@ public class MultipleTimeSeries implements Serializable
 	public void setVarTypeAt(int i, String varType)
 	{
 		expandTo(i);
-		_varTypes.setElementAt(varType.toUpperCase().trim(), i);
+		_varTypes.set(i, varType.toUpperCase().trim());
 	}
 
 	/**
@@ -502,7 +449,7 @@ public class MultipleTimeSeries implements Serializable
 	public String getBPartAt(int i)
 	{
 		checkAccessAt(i);
-		return (String) _bparts.elementAt(i);
+		return _bparts.get(i);
 	}
 
 	/**
@@ -511,7 +458,7 @@ public class MultipleTimeSeries implements Serializable
 	public void setBPartAt(int i, String bpart)
 	{
 		expandTo(i);
-		_bparts.setElementAt(bpart.toUpperCase().trim(), i);
+		_bparts.set(i, bpart.toUpperCase().trim());
 	}
 
 	/**
@@ -520,7 +467,7 @@ public class MultipleTimeSeries implements Serializable
 	public String getCPartAt(int i)
 	{
 		checkAccessAt(i);
-		return (String) _cparts.elementAt(i);
+		return _cparts.get(i);
 	}
 
 	/**
@@ -531,7 +478,7 @@ public class MultipleTimeSeries implements Serializable
 		if(cpart != null)
 		{
 			expandTo(i);
-			_cparts.setElementAt(cpart.toUpperCase().trim(), i);
+			_cparts.set(i, cpart.toUpperCase().trim());
 		}
 	}
 
@@ -557,29 +504,28 @@ public class MultipleTimeSeries implements Serializable
 	 */
 	public void fromXml(Element de)
 	{
-		_name = de.getAttribute("name");
-		if(!_name.toUpperCase().endsWith(".MTS"))
+		_name = de.getAttribute(NAME_ATTR);
+		if(_name != null)
 		{
-			_name = _name.toUpperCase() + ".MTS";
+			_name = _name.toUpperCase().trim();
+			if(!_name.endsWith(EXT))
+			{
+				_name = _name + EXT;
+			}
 		}
-		int rindex = 0;
-		while(true)
+		NodeList nodeList = de.getElementsByTagName(REF_ELEM);
+		for(int i = 0; i < nodeList.getLength(); i++)
 		{
-			Node re = de.getElementsByTagName("row").item(rindex);
-			if(re == null)
+			Element re = (Element) nodeList.item(i);
+			String dtsatt = re.getAttribute(DTS_ATTR);
+			if(!dtsatt.isEmpty() && !dtsatt.toUpperCase().endsWith(DTS_EXT))
 			{
-				break;
+				dtsatt = dtsatt + DTS_EXT;
 			}
-			String dtsatt = re.getAttributes().getNamedItem("dts").getNodeValue();
-			if(!dtsatt.equals("") && !dtsatt.endsWith(".DTS"))
-			{
-				dtsatt = dtsatt + ".DTS";
-			}
-			setDTSNameAt(rindex, dtsatt);
-			setVarTypeAt(rindex, re.getAttributes().getNamedItem("vartype").getNodeValue());
-			setBPartAt(rindex, re.getAttributes().getNamedItem("bpart").getNodeValue());
-			setCPartAt(rindex, re.getAttributes().getNamedItem("cpart").getNodeValue());
-			rindex++;
+			setDTSNameAt(i, dtsatt);
+			setVarTypeAt(i, re.getAttribute(VARTYPE_ATTR));
+			setBPartAt(i, re.getAttribute(BPART_ATTR));
+			setCPartAt(i, re.getAttribute(CPART_ATTR));
 		}
 	}
 
@@ -588,16 +534,16 @@ public class MultipleTimeSeries implements Serializable
 	 */
 	public void toXml(Document doc, Element ae)
 	{
-		Element de = doc.createElement("MTS");
-		de.setAttribute("name", _name);
+		Element de = doc.createElement(ELEM);
+		de.setAttribute(NAME_ATTR, _name);
 		int count = getNumberOfDataReferences();
 		for(int i = 0; i < count; i++)
 		{
-			Element le = doc.createElement("row");
-			le.setAttribute("dts", getDTSNameAt(i));
-			le.setAttribute("vartype", getVarTypeAt(i));
-			le.setAttribute("bpart", getBPartAt(i));
-			le.setAttribute("cpart", getCPartAt(i));
+			Element le = doc.createElement(REF_ELEM);
+			le.setAttribute(DTS_ATTR, getDTSNameAt(i));
+			le.setAttribute(VARTYPE_ATTR, getVarTypeAt(i));
+			le.setAttribute(BPART_ATTR, getBPartAt(i));
+			le.setAttribute(CPART_ATTR, getCPartAt(i));
 			de.appendChild(le);
 		}
 		if(ae != null)
@@ -615,7 +561,7 @@ public class MultipleTimeSeries implements Serializable
 	 */
 	public DataReference[] getDataReferences(int studyNumber)
 	{
-		if(_dtsNames.size() == 0)
+		if(_dtsNames.isEmpty())
 		{
 			return null;
 		}
@@ -623,7 +569,7 @@ public class MultipleTimeSeries implements Serializable
 		for(int i = 0; i < refs.length; i++)
 		{
 			String dtsname = getDTSNameAt(i);
-			if(dtsname.length() > 0)
+			if(!dtsname.isEmpty())
 			{
 				refs[i] = AppUtils.findDTS(dtsname);
 				if(refs[i] == null)
@@ -635,32 +581,31 @@ public class MultipleTimeSeries implements Serializable
 				if(studyNumber == 0)
 				{
 					path.setPart(Pathname.F_PART, AppUtils.getCurrentProject().getBaseName());
-					refs[i] = new DefaultReference("local", "calc.dss", path.toString(),
+					refs[i] = new DefaultReference(DEF_SERVER, DEF_FILE, path.toString(),
 							((DerivedTimeSeries) refs[i]).getData(0));
 				}
 				else if(studyNumber == 1)
 				{
 					path.setPart(Pathname.F_PART, AppUtils.getCurrentProject().getComp1Name());
-					refs[i] = new DefaultReference("local", "calc.dss", path.toString(),
+					refs[i] = new DefaultReference(DEF_SERVER, DEF_FILE, path.toString(),
 							((DerivedTimeSeries) refs[i]).getData(1));
 				}
 				else if(studyNumber == 2)
 				{
 					path.setPart(Pathname.F_PART, AppUtils.getCurrentProject().getComp2Name());
-					refs[i] = new DefaultReference("local", "calc.dss", path.toString(),
+					refs[i] = new DefaultReference(DEF_SERVER, DEF_FILE, path.toString(),
 							((DerivedTimeSeries) refs[i]).getData(2));
 				}
 				else if(studyNumber == 3)
 				{
 					path.setPart(Pathname.F_PART, AppUtils.getCurrentProject().getComp3Name());
-					refs[i] = new DefaultReference("local", "calc.dss", path.toString(),
+					refs[i] = new DefaultReference(DEF_SERVER, DEF_FILE, path.toString(),
 							((DerivedTimeSeries) refs[i]).getData(3));
 				}
 
 			}
 			else
 			{
-				//				String vt = getVarTypeAt(i);
 				String bpart = getBPartAt(i);
 				String cpart = getCPartAt(i);
 				refs[i] = AppUtils.getDataReference(studyNumber, bpart, cpart);

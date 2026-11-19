@@ -12,6 +12,7 @@
 
 package gov.ca.water.quickresults.ui.quickresults;
 
+import calsim.app.AppUtils;
 import java.awt.Component;
 import java.awt.Container;
 import java.awt.Window;
@@ -98,7 +99,7 @@ public class QuickResultsListener implements ActionListener
 	private void loadReportList()
 	{
 		Window window = SwingUtilities.windowForComponent(_quickResultsPanel);
-		Optional<List<String>> data = ResultUtilsBO.getResultUtilsInstance().readCGR((JFrame) window);
+		Optional<List<String>> data = ResultUtilsBO.getResultUtilsInstance().readCGR((JFrame) window, AppUtils.getCurrentProject());
 		if(data.isPresent())
 		{
 			Component component = _quickResultsPanel.getReportsJList();
@@ -114,7 +115,7 @@ public class QuickResultsListener implements ActionListener
 	{
 		Window window = SwingUtilities.windowForComponent(_quickResultsPanel);
 		JList<?> lstReports = (JList<?>) _quickResultsPanel.getSwingEngine().find("lstReports");
-		ResultUtilsBO.getResultUtilsInstance().writeCGR((JFrame) window, lstReports);
+		ResultUtilsBO.getResultUtilsInstance().writeCGR((JFrame) window, lstReports, AppUtils.getCurrentProject());
 	}
 
 	private void displayReportList()

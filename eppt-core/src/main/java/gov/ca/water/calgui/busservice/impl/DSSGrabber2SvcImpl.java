@@ -14,8 +14,7 @@ package gov.ca.water.calgui.busservice.impl;
 
 //! Variant on DSSGrabber1BO for MTS (multiple time series)
 
-import java.util.Arrays;
-import java.util.Calendar;
+import calsim.app.Project;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Vector;
@@ -31,7 +30,6 @@ import gov.ca.water.calgui.busservice.IGuiLinksSeedDataSvc;
 import gov.ca.water.calgui.project.EpptScenarioRun;
 import gov.ca.water.calgui.project.NamedDssPath;
 
-import hec.heclib.util.HecTime;
 import hec.io.TimeSeriesContainer;
 
 /**
@@ -63,8 +61,7 @@ public class DSSGrabber2SvcImpl extends DSSGrabber1SvcImpl
 	private final DerivedTimeSeries _dts;
 	private final MultipleTimeSeries _mts;
 	private final IGuiLinksSeedDataSvc _seedDataSvc = GuiLinksSeedDataSvcImpl.getSeedDataSvcImplInstance();
-	private double[][][] _annualTAFs;
-	private double[][][] _annualTAFsDiff;
+
 
 	public DSSGrabber2SvcImpl(DerivedTimeSeries dts, MultipleTimeSeries mts)
 	{
@@ -141,7 +138,8 @@ public class DSSGrabber2SvcImpl extends DSSGrabber1SvcImpl
 	 *
 	 * @return Array of HEC TimeSeriesContainer - one TSC for each scenario
 	 */
-	public TimeSeriesContainer[] getPrimarySeries()
+	@Override
+    public TimeSeriesContainer[] getPrimarySeries()
 	{
 
 		try
@@ -155,11 +153,8 @@ public class DSSGrabber2SvcImpl extends DSSGrabber1SvcImpl
 
 			// Base first
 			Optional<TimeSeriesContainer> dtsContainer = getDtsContainer(_baseScenarioRun);
-			if(dtsContainer.isPresent())
-			{
-				results[0] = dtsContainer.get();
-			}
-			if(results != null && results[0] != null)
+            dtsContainer.ifPresent(timeSeriesContainer -> results[0] = timeSeriesContainer);
+			if(results[0] != null)
 			{
 				_originalUnits = results[0].units;
 
@@ -197,10 +192,7 @@ public class DSSGrabber2SvcImpl extends DSSGrabber1SvcImpl
 			// Base first
 
 			Optional<TimeSeriesContainer> tsOpt = getMtsContainer(_baseScenarioRun, mtsI);
-			if(tsOpt.isPresent())
-			{
-				results[0] = tsOpt.get();
-			}
+            tsOpt.ifPresent(timeSeriesContainer -> results[0] = timeSeriesContainer);
 			if(results[0] != null)
 			{
 				_originalUnits = results[0].units;
@@ -252,10 +244,14 @@ public class DSSGrabber2SvcImpl extends DSSGrabber1SvcImpl
 							  .findFirst();
 	}
 
-	private TimeSeriesContainer getOneSeriesWRIMS(NamedDssPath dssPath, GUILinksAllModelsBO.Model model,
+	TimeSeriesContainer getOneSeriesWRIMS(NamedDssPath dssPath, GUILinksAllModelsBO.Model model,
 												  DerivedTimeSeries dts2)
 	{
-
+		if(dts2 == null)
+		{
+			LOGGER.log(Level.WARNING, "Unable to resolve derived time series - DTS was not found in project.");
+			return null;
+		}
 		try
 		{
 			Vector<?> dtsNames = dts2.getDtsNames();
@@ -268,9 +264,31 @@ public class DSSGrabber2SvcImpl extends DSSGrabber1SvcImpl
 				if(!((String) dtsNames.get(i)).isEmpty())
 				{
 					// Operand is reference to another DTS
-					DerivedTimeSeries adt = ResultUtilsBO.getResultUtilsInstance().getProject()
-														 .getDTS((String) dtsNames.get(i));
-					interimResult = getOneSeriesWRIMS(dssPath, model, adt);
+					String dtsName = (String) dtsNames.get(i);
+
+					Project currentProject = AppUtils.getCurrentProject();
+					DerivedTimeSeries adt = currentProject.getDTS(dtsName);
+					if(adt == null)
+					{
+
+						DerivedTimeSeries[] availableDts = currentProject.getDTSList();
+						StringBuilder availableNames = new StringBuilder();
+						if(availableDts != null && availableDts.length > 0)
+						{
+							for(DerivedTimeSeries dts : availableDts)
+							{
+								availableNames.append("'").append(dts.getName()).append("' ");
+							}
+						}
+						LOGGER.log(Level.WARNING, () -> "Derived time series \"" + dts2.getName() + "\" references unknown DTS \""
+								+ dtsName + "\" - lookup key was: \"" + dtsName + "\" (case: " + (dtsName.equals(dtsName.toUpperCase()) ? "upper" : "mixed")
+								+ ") (available: " + (!availableNames.isEmpty() ? availableNames.toString().trim() : "none")
+								+ ") - skipping this operand.");
+					}
+					else
+					{
+						interimResult = getOneSeriesWRIMS(dssPath, model, adt);
+					}
 				}
 				else
 				{
@@ -311,7 +329,7 @@ public class DSSGrabber2SvcImpl extends DSSGrabber1SvcImpl
 
 								for(int j = 0; j < interimResult.numberValues; j++)
 								{
-									if(result.values.length < j && interimResult.values.length < j)
+									if(j < result.values.length && j < interimResult.values.length)
 									{
 										result.values[j] = ((result.values[j] > 0.1) && (interimResult.values[j] > 0.1))
 												? 9876.5 : 0;
@@ -380,22 +398,41 @@ public class DSSGrabber2SvcImpl extends DSSGrabber1SvcImpl
 
 	}
 
-	private TimeSeriesContainer getOneSeriesWRIMS(NamedDssPath dssPath, GUILinksAllModelsBO.Model model,
+	TimeSeriesContainer getOneSeriesWRIMS(NamedDssPath dssPath, GUILinksAllModelsBO.Model model,
 												  int i, MultipleTimeSeries mts2)
 	{
 
 		try
 		{
-			TimeSeriesContainer result = null;
+			TimeSeriesContainer result;
 			if(!mts2.getDTSNameAt(i).isEmpty())
 			{
 				// Operand is reference to a DTS
-				DerivedTimeSeries adt = ResultUtilsBO.getResultUtilsInstance().getProject()
-													 .getDTS(_mts.getDTSNameAt(i));
+				String dtsName = mts2.getDTSNameAt(i);
+
+				Project currentProject = AppUtils.getCurrentProject();
+				DerivedTimeSeries adt = currentProject.getDTS(dtsName);
+				if(adt == null)
+				{
+
+					DerivedTimeSeries[] availableDts = currentProject.getDTSList();
+					StringBuilder availableNames = new StringBuilder();
+					if(availableDts != null && availableDts.length > 0)
+					{
+						for(DerivedTimeSeries dts : availableDts)
+						{
+							availableNames.append("'").append(dts.getName()).append("' ");
+						}
+					}
+					LOGGER.log(Level.WARNING, () -> "Multiple time series \"" + mts2.getName() + "\" references unknown DTS \""
+							+ dtsName + "\" - lookup key was: \"" + dtsName + "\" (case: " + (dtsName.equals(dtsName.toUpperCase()) ? "upper" : "mixed")
+							+ ") (available: " + (!availableNames.isEmpty() ? availableNames.toString().trim() : "none")
+							+ ") - skipping this operand.");
+					return null;
+				}
 				result = getOneSeriesWRIMS(dssPath, model, adt);
 				_primaryDSSName.clear();
-				_primaryDSSName.put(model, _mts.getDTSNameAt(i));
-
+				_primaryDSSName.put(model, dtsName);
 			}
 			else
 			{
