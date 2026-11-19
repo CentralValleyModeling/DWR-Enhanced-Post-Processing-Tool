@@ -24,7 +24,7 @@
 	<artifactId>eppt-report-engine</artifactId>
 	<name>EPPT Report Engine</name>
 	<properties>
-		<argLine>-Djava.library.path=${project.build.directory}\lib -Duser.dir=${project.build.directory}\test-classess</argLine>
+		<argLine>-Djava.library.path=${project.build.directory}\lib</argLine>
 	</properties>
 	<dependencyManagement>
 		<dependencies>
