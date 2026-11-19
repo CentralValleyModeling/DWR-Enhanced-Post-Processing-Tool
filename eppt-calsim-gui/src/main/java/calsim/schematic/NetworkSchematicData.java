@@ -206,8 +206,8 @@ public class NetworkSchematicData implements CalsimSchematicDataModel
 						{
 							if(min)
 							{
-								_xmin = new Double(minStr.substring(0, commaIndex));
-								_ymin = new Double(minStr.substring(commaIndex + 1));
+								_xmin = Double.valueOf(minStr.substring(0, commaIndex));
+								_ymin = Double.valueOf(minStr.substring(commaIndex + 1));
 								_minExplicitlySet = true;
 								if(DEBUG)
 								{
@@ -216,8 +216,8 @@ public class NetworkSchematicData implements CalsimSchematicDataModel
 							}
 							else
 							{
-								_xmax = new Double(minStr.substring(0, commaIndex));
-								_ymax = new Double(minStr.substring(commaIndex + 1));
+								_xmax = Double.valueOf(minStr.substring(0, commaIndex));
+								_ymax = Double.valueOf(minStr.substring(commaIndex + 1));
 								_maxExplicitlySet = true;
 								if(DEBUG)
 								{
@@ -237,8 +237,8 @@ public class NetworkSchematicData implements CalsimSchematicDataModel
 					{
 						throw new RuntimeException("Incorrectly defined schematic size");
 					}
-					width = new Float(line.substring(eqi + 1, commai)).floatValue();
-					height = new Float(line.substring(commai + 1)).floatValue();
+					width = Float.valueOf(line.substring(eqi + 1, commai)).floatValue();
+					height = Float.valueOf(line.substring(commai + 1)).floatValue();
 					continue;
 				}
 				st = new StringTokenizer(line);
@@ -250,7 +250,7 @@ public class NetworkSchematicData implements CalsimSchematicDataModel
 				//	String type = st.nextToken();
 				String x1 = st.nextToken();
 				String y1 = st.nextToken();
-				setNodeXY(nodeNum, new Float(x1).floatValue(), new Float(y1).floatValue());
+				setNodeXY(nodeNum, Float.valueOf(x1).floatValue(), Float.valueOf(y1).floatValue());
 			}
 		}
 		catch(Exception e)

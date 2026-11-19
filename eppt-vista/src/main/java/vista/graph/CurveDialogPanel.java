@@ -66,14 +66,14 @@ public class CurveDialogPanel extends GEDialogPanel
 		textField.setBorder(BorderFactory.createTitledBorder(BorderFactory
 				.createEtchedBorder(), "Curve Name"));
 		//
-		thicknessField = new JTextField(new Float(attr._thickness).toString(),
+		thicknessField = new JTextField(Float.toString(attr._thickness),
 				5);
 		thicknessField.setBorder(BorderFactory.createTitledBorder(BorderFactory
 				.createEtchedBorder(), "thickness"));
 		StringBuffer dashsb = new StringBuffer(10);
 		for(int i = 0; i < attr._dashArray.length; i++)
 		{
-			dashsb.append(new Float(attr._dashArray[i]).toString());
+			dashsb.append(Float.toString(attr._dashArray[i]));
 			dashsb.append(" ");
 		}
 		dashArrayField = new JTextField(dashsb.toString(), 15);
@@ -81,8 +81,8 @@ public class CurveDialogPanel extends GEDialogPanel
 				.createEtchedBorder(), "Dash Array"));
 		symbolCheck = new JCheckBox("Draw Symbol?", attr._drawSymbol);
 		lineCheck = new JCheckBox("Draw Line?", attr._drawLines);
-		dataPerSymbolField = new JTextField(new Integer(attr._dataPerSymbol)
-				.toString());
+		dataPerSymbolField = new JTextField(Integer
+				.toString(attr._dataPerSymbol));
 		dataPerSymbolField.setBorder(BorderFactory.createTitledBorder(
 				BorderFactory.createEtchedBorder(), "Data/Symbol"));
 		//
@@ -129,7 +129,7 @@ public class CurveDialogPanel extends GEDialogPanel
 		attr._curveName = textField.getText();
 		try
 		{
-			attr._thickness = new Float(thicknessField.getText()).floatValue();
+			attr._thickness = Float.valueOf(thicknessField.getText()).floatValue();
 		}
 		catch(NumberFormatException nfe)
 		{
@@ -147,7 +147,7 @@ public class CurveDialogPanel extends GEDialogPanel
 				int i = 0;
 				while(st.hasMoreTokens())
 				{
-					array[i] = new Float(st.nextToken()).floatValue();
+					array[i] = Float.valueOf(st.nextToken()).floatValue();
 					i++;
 				}
 				attr._dashArray = array;
@@ -161,7 +161,7 @@ public class CurveDialogPanel extends GEDialogPanel
 		int dps = attr._dataPerSymbol;
 		try
 		{
-			dps = new Integer(dataPerSymbolField.getText()).intValue();
+			dps = Integer.valueOf(dataPerSymbolField.getText()).intValue();
 		}
 		catch(NumberFormatException nfe)
 		{

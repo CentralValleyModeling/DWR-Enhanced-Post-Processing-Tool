@@ -670,7 +670,7 @@ public class DataTableFrame extends DefaultFrame
 			double value = 0.0;
 			try
 			{
-				value = new Double(field.getText()).doubleValue();
+				value = Double.valueOf(field.getText()).doubleValue();
 			}
 			catch(NumberFormatException nfe)
 			{

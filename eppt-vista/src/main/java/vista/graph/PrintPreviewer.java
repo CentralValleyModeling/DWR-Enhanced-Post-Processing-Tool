@@ -55,10 +55,10 @@ public class PrintPreviewer extends JFrame implements MouseListener,
 	{
 		String prop = MainProperties.getProperties().getProperty("pp.rect");
 		StringTokenizer st = new StringTokenizer(prop, ",");
-		_lastRectangle.x = new Integer(st.nextToken()).intValue();
-		_lastRectangle.y = new Integer(st.nextToken()).intValue();
-		_lastRectangle.width = new Integer(st.nextToken()).intValue();
-		_lastRectangle.height = new Integer(st.nextToken()).intValue();
+		_lastRectangle.x = Integer.valueOf(st.nextToken()).intValue();
+		_lastRectangle.y = Integer.valueOf(st.nextToken()).intValue();
+		_lastRectangle.width = Integer.valueOf(st.nextToken()).intValue();
+		_lastRectangle.height = Integer.valueOf(st.nextToken()).intValue();
 		prop = MainProperties.getProperties().getProperty("printer.names");
 		st = new StringTokenizer(prop, ",");
 		_printerNames = new String[st.countTokens()];

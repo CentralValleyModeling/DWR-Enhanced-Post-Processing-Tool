@@ -175,7 +175,7 @@ public class GifEncoder extends ImageEncoder
 			for(int col = 0; col < width; ++col)
 			{
 				int rgb = rgbPixels[row][col];
-				Integer pixel = new Integer(rgb);
+				Integer pixel = Integer.valueOf(rgb);
 				GifEncoderHashitem item = (GifEncoderHashitem) colorHash
 						.get(pixel);
 				if(item == null)
@@ -213,7 +213,7 @@ public class GifEncoder extends ImageEncoder
 
 	byte GetPixel(int x, int y) throws IOException
 	{
-		Integer pixel = new Integer(rgbPixels[y][x]);
+		Integer pixel = Integer.valueOf(rgbPixels[y][x]);
 		GifEncoderHashitem item = (GifEncoderHashitem) colorHash.get(pixel);
 		if(item == null)
 		{

@@ -142,7 +142,7 @@
 		<dependency>
 			<groupId>org.json</groupId>
 			<artifactId>json</artifactId>
-			<version>20171018</version>
+			<version>20260719</version>
 		</dependency>
 
 		<!-- JavaFX -->

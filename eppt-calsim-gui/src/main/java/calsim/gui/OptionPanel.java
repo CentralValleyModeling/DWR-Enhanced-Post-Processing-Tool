@@ -214,7 +214,7 @@ public class OptionPanel extends JPanel
 		GeneralPanel.getMonth()[0].setSelectedItem(_months.getSelectedItem());
 		GeneralPanel.getYear()[0].setSelectedItem(_start.getSelectedItem());
 		String s = _nper.getText();
-		int i = new Integer(s);
+		int i = Integer.valueOf(s);
 		System.out.println("nperiods = " + i);
 		AppUtils.nperiods = i;
 		int nyrs = i / 12;

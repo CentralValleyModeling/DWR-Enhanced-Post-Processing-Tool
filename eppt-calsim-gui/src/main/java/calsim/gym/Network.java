@@ -308,7 +308,7 @@ public class Network implements Serializable
 				Integer prN = null;
 				try
 				{
-					prN = new Integer(prStr);
+					prN = Integer.valueOf(prStr);
 					if(prN.intValue() <= 0)
 					{
 						throw new RuntimeException("Incorrect range");
@@ -559,7 +559,7 @@ public class Network implements Serializable
 	 */
 	public Node getNode(int i)
 	{
-		return (Node) _nodesDict.get(new Integer(i).toString());
+		return (Node) _nodesDict.get(Integer.toString(i));
 	}
 
 	/**

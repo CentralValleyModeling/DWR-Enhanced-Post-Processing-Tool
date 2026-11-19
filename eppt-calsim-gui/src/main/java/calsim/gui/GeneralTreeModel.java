@@ -428,7 +428,7 @@ public class GeneralTreeModel extends DefaultTreeModel implements Serializable
 					name1 = (String) child.getUserObject();
 					if(name.equals(child.getUserObject()))
 					{
-						Integer j = new Integer(paste);
+						Integer j = Integer.valueOf(paste);
 						name1 = "Copy of" + j.toString() + " " + name;
 						child = new DefaultMutableTreeNode(name1);
 						int children1 = node.getChildCount();
@@ -587,7 +587,7 @@ public class GeneralTreeModel extends DefaultTreeModel implements Serializable
 		parentnode = (DefaultMutableTreeNode) _root.getChildAt(0);
 		name = (String) parentnode.getUserObject();
 		parentel = doc.createElement("node");
-		level = new Integer(lvlcount);
+		level = Integer.valueOf(lvlcount);
 		parentel.setAttribute("level", level.toString());
 		parentel.setAttribute("name", name);
 		nodes[1] = parentnode;
@@ -606,7 +606,7 @@ public class GeneralTreeModel extends DefaultTreeModel implements Serializable
 					childnode = (DefaultMutableTreeNode) parentnode.getChildAt(i);
 					name = (String) childnode.getUserObject();
 					childel = doc.createElement("node");
-					level = new Integer(lvlcount);
+					level = Integer.valueOf(lvlcount);
 					childel.setAttribute("level", level.toString());
 					childel.setAttribute("name", name);
 					nodes[lvlcount] = childnode;
@@ -636,7 +636,7 @@ public class GeneralTreeModel extends DefaultTreeModel implements Serializable
 							childnode = (DefaultMutableTreeNode) parentnode.getChildAt(childindex[i1]);
 							name = (String) childnode.getUserObject();
 							childel = doc.createElement("node");
-							level = new Integer(lvlcount);
+							level = Integer.valueOf(lvlcount);
 							childel.setAttribute("level", level.toString());
 							childel.setAttribute("name", name);
 							nodes[lvlcount] = childnode;
@@ -841,7 +841,7 @@ public class GeneralTreeModel extends DefaultTreeModel implements Serializable
 			name = curel.getAttribute("name");
 			curnode = new DefaultMutableTreeNode(name);
 			curnode.setAllowsChildren(getAllowChildren(name));
-			lvl = new Integer(curel.getAttribute("level"));
+			lvl = Integer.valueOf(curel.getAttribute("level"));
 			curlvl = lvl.intValue();
 			nodes[curlvl] = curnode;
 			parentnode.add(curnode);
@@ -858,7 +858,7 @@ public class GeneralTreeModel extends DefaultTreeModel implements Serializable
 				name = curel.getAttribute("name");
 				curnode = new DefaultMutableTreeNode(name);
 				curnode.setAllowsChildren(getAllowChildren(name));
-				lvl = new Integer(curel.getAttribute("level"));
+				lvl = Integer.valueOf(curel.getAttribute("level"));
 				curlvl = lvl.intValue();
 				if(curlvl == prvlvl)
 				{

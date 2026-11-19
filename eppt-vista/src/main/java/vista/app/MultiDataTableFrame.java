@@ -484,7 +484,7 @@ public class MultiDataTableFrame extends DefaultFrame
 			int value = (int) Math.round((1.0 * evt.getValue() * _dataModel
 					.getRowCount())
 					/ _tableScrollPane.getVerticalScrollBar().getMaximum());
-			_lineNumberField.setText(new Integer(value).toString());
+			_lineNumberField.setText(Integer.toString(value));
 		}
 
 		public void keyTyped(KeyEvent evt)

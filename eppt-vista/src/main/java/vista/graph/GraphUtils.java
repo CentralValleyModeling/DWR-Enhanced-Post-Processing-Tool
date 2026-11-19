@@ -111,22 +111,22 @@ public class GraphUtils
 		{
 			System.out.println(colorComponent);
 		}
-		int red = new Integer(colorComponent.trim().substring(
-				colorComponent.indexOf("=") + 1)).intValue();
+		int red = Integer.valueOf(colorComponent.trim().substring(
+                        colorComponent.indexOf("=") + 1)).intValue();
 		colorComponent = chopper.nextToken().trim();
 		if(DEBUG)
 		{
 			System.out.println(colorComponent);
 		}
-		int green = new Integer(colorComponent.substring(colorComponent
-				.indexOf("=") + 1)).intValue();
+		int green = Integer.valueOf(colorComponent.substring(colorComponent
+                        .indexOf("=") + 1)).intValue();
 		colorComponent = chopper.nextToken().trim();
 		if(DEBUG)
 		{
 			System.out.println(colorComponent);
 		}
-		int blue = new Integer(colorComponent.substring(colorComponent
-				.indexOf("=") + 1)).intValue();
+		int blue = Integer.valueOf(colorComponent.substring(colorComponent
+                        .indexOf("=") + 1)).intValue();
 		if(DEBUG)
 		{
 			System.out.println("r = " + red + " g = " + green + " b = " + blue);
@@ -159,11 +159,11 @@ public class GraphUtils
 		}
 		chopper = new java.util.StringTokenizer(dstr, ",");
 		String dimensionComponent = chopper.nextToken().trim();
-		int width = new Integer(dimensionComponent.trim().substring(
-				dimensionComponent.indexOf("=") + 1)).intValue();
+		int width = Integer.valueOf(dimensionComponent.trim().substring(
+                        dimensionComponent.indexOf("=") + 1)).intValue();
 		dimensionComponent = chopper.nextToken().trim();
-		int height = new Integer(dimensionComponent
-				.substring(dimensionComponent.indexOf("=") + 1)).intValue();
+		int height = Integer.valueOf(dimensionComponent
+                        .substring(dimensionComponent.indexOf("=") + 1)).intValue();
 		if(DEBUG)
 		{
 			System.out.println("w = " + width + " h = " + height);

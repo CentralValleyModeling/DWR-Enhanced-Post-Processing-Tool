@@ -265,10 +265,10 @@ public class GraphTemplate
 			try
 			{
 				StringTokenizer tt = new StringTokenizer(value, ",");
-				int top = new Integer(tt.nextToken().trim()).intValue();
-				int left = new Integer(tt.nextToken().trim()).intValue();
-				int bottom = new Integer(tt.nextToken().trim()).intValue();
-				int right = new Integer(tt.nextToken().trim()).intValue();
+				int top = Integer.valueOf(tt.nextToken().trim()).intValue();
+				int left = Integer.valueOf(tt.nextToken().trim()).intValue();
+				int bottom = Integer.valueOf(tt.nextToken().trim()).intValue();
+				int right = Integer.valueOf(tt.nextToken().trim()).intValue();
 				graph.setInsets(new java.awt.Insets(top, left, bottom, right));
 				System.out.println("Graph Insets " + graph.getInsets());
 			}
