@@ -8,6 +8,11 @@ updates:
       time: "08:00"
       timezone: "America/Los_Angeles"
     target-branch: "main"
+    ignore:
+      # JasperReports is pinned to 6.x: the .jrxml templates and JasperReportRunner are 6.x format.
+      # Remove once the 7.x migration is done. See GH issue #267.
+      - dependency-name: "net.sf.jasperreports:*"
+        update-types: ["version-update:semver-major"]
   - package-ecosystem: "github-actions"
     directory: "/"
     schedule:
