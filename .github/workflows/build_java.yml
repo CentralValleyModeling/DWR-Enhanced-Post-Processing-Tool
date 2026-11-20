@@ -31,4 +31,4 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          ./eppt-parent/mvnw -f eppt-parent/pom.xml -s eppt-parent/ci-settings.xml clean verify
+          ./eppt-parent/mvnw -f eppt-parent/pom.xml -s eppt-parent/ci-settings.xml -DexcludedTestGroups=none clean verify

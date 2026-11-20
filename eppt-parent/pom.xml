@@ -51,6 +51,8 @@
 		<junit.version>6.1.3</junit.version>
 		<nbm.maven.plugin.version>14.3</nbm.maven.plugin.version>
 		<javaheclib.version>7-IA-win-x64</javaheclib.version>
+		<!--Pinned to 6.9.0: templates and JasperReportRunner are JasperReports 6 format. See GH issue #267 before upgrading to 7.x-->
+		<jasperreports.version>6.9.0</jasperreports.version>
 
 
 		<brandingToken>dwr_eppt</brandingToken>

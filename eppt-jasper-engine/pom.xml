@@ -23,26 +23,29 @@
 	</parent>
 	<artifactId>eppt-jasper-engine</artifactId>
 	<name>EPPT Jasper Report Engine</name>
+	<properties>
+		<excludedTestGroups>slow</excludedTestGroups>
+	</properties>
 	<dependencies>
 		<dependency>
 			<groupId>net.sf.jasperreports</groupId>
 			<artifactId>jasperreports</artifactId>
-			<version>6.9.0</version>
+			<version>${jasperreports.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>net.sf.jasperreports</groupId>
 			<artifactId>jasperreports-functions</artifactId>
-			<version>6.9.0</version>
+			<version>${jasperreports.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>net.sf.jasperreports</groupId>
 			<artifactId>jasperreports-fonts</artifactId>
-			<version>6.9.0</version>
+			<version>${jasperreports.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.codehaus.groovy</groupId>
 			<artifactId>groovy</artifactId>
-			<version>2.5.6</version>
+			<version>2.5.23</version>
 		</dependency>
 		<dependency>
 			<groupId>xalan</groupId>
@@ -92,6 +95,20 @@
 			<version>${netbeans.version}</version>
 		</dependency>
 	</dependencies>
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-surefire-plugin</artifactId>
+				<configuration>
+					<!--Groovy 2.5.x (used by the report templates) needs this on JDK 17+; matches the add-opens in application/src/nbproject/dwr_eppt.conf-->
+					<argLine>--add-opens=java.base/java.lang=ALL-UNNAMED --add-opens=java.base/java.net=ALL-UNNAMED</argLine>
+					<!--Tests tagged "slow" are skipped locally; CI (and anyone) runs them with -DexcludedTestGroups=none-->
+					<excludedGroups>${excludedTestGroups}</excludedGroups>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
 	<repositories>
 		<repository>
 			<id>jr-ce-releases</id>
