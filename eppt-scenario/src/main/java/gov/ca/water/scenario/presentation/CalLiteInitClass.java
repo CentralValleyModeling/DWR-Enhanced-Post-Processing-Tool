@@ -157,9 +157,9 @@ public class CalLiteInitClass
 					// Constrain run times to [10/1921,9/2003]
 					int syr = (Integer) ((JSpinner) _swingEngine.find("spnRunStartYear")).getValue();
 					int eyr = (Integer) ((JSpinner) _swingEngine.find("spnRunEndYear")).getValue();
-					int smo = ResultUtilsBO.getResultUtilsInstance().monthToInt(
+					int smo = resultUtilsBO.monthToInt(
 							((String) ((JSpinner) _swingEngine.find("spnRunStartMonth")).getValue()).trim());
-					int emo = ResultUtilsBO.getResultUtilsInstance().monthToInt(
+					int emo = resultUtilsBO.monthToInt(
 							((String) ((JSpinner) _swingEngine.find("spnRunEndMonth")).getValue()).trim());
 					if((syr == 1921) && (smo < 10))
 					{
@@ -172,9 +172,9 @@ public class CalLiteInitClass
 					// Constrain display times the same way [inefficient?]
 					syr = (Integer) ((JSpinner) _swingEngine.find("spnStartYear")).getValue();
 					eyr = (Integer) ((JSpinner) _swingEngine.find("spnEndYear")).getValue();
-					smo = ResultUtilsBO.getResultUtilsInstance().monthToInt(
+					smo = resultUtilsBO.monthToInt(
 							((String) ((JSpinner) _swingEngine.find("spnStartMonth")).getValue()).trim());
-					emo = ResultUtilsBO.getResultUtilsInstance().monthToInt(
+					emo = resultUtilsBO.monthToInt(
 							((String) ((JSpinner) _swingEngine.find("spnEndMonth")).getValue()).trim());
 					if((syr == 1921) && (smo < 10))
 					{

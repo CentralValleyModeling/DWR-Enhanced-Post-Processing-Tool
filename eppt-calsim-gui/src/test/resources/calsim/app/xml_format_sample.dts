@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<DTS_File>
+    <DTS name="XML_RESOURCE_SAMPLE.DTS">
+        <row operator="+" dts="" vartype="DVAR" bpart="FLOW-CHANNEL" cpart="FLOW"/>
+        <row operator="-" dts="" vartype="SVAR" bpart="STORAGE" cpart="STORAGE"/>
+        <row operator="*" dts="OTHER_DTS.DTS" vartype="" bpart="" cpart=""/>
+    </DTS>
+</DTS_File>

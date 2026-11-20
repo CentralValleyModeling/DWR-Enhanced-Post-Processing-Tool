@@ -79,7 +79,8 @@ public final class WRIMSGUILinks
 
 		try
 		{
-			Project project = ResultUtilsBO.getResultUtilsInstance().getProject();
+
+			Project project = AppUtils.getCurrentProject();
 			project.setDVFile("");
 			project.setDV2File("");
 			project.setDV3File("");

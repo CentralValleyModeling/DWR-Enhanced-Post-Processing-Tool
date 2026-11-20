@@ -1,0 +1,5 @@
+name, LEGACY_SAMPLE
+Derived Time Series,Dvar/Svar,B part,C part,
+,DVAR,FLOW-CHANNEL,FLOW,
+,SVAR,STORAGE,STORAGE,
+OTHER_DTS.DTS,,,,
