@@ -168,8 +168,9 @@ function buildModeBarButtons(graphDiv, tsDescriptor) {
             }
         }
     };
+    // barcharts.js adds buttons to the group at index 1, so new groups go at the end
     return [['zoom2d', 'pan2d', 'zoomIn2d', 'zoomOut2d', 'resetScale2d'],
-        ['toggleSpikelines', 'hoverClosestCartesian', 'hoverCompareCartesian'], [properties, syncPlots]];
+        ['toggleSpikelines', 'hoverClosestCartesian', 'hoverCompareCartesian'], [properties, syncPlots], ['toImage']];
 }
 
 
@@ -265,7 +266,7 @@ function openContextMenu(plot, e) {
     exportItem.classList.add('ctx-parent');
     let submenu = document.createElement('div');
     submenu.className = 'ctx-menu ctx-submenu';
-    [['To SVG', 'svg'], ['To PNG', 'png'], ['To JPEG', 'jpeg'], ['To PDF', 'pdf']].forEach(([label, format]) => {
+    [['To SVG', 'svg'], ['To PNG', 'png'], ['To JPEG', 'jpeg']].forEach(([label, format]) => {
         submenu.appendChild(buildMenuItem(label, () => exportTo(format)));
     });
     exportItem.appendChild(submenu);
@@ -307,6 +308,48 @@ function connectJava(bridge) {
     });
 }
 
+// Plotly.downloadImage (and the modebar camera button) saves files by clicking an <a download> link, which the JavaFX
+// WebView doesn't support. Its WebKit lacks the download property, so plotly rejects before clicking unless it is added.
+// Plotly revokes the blob URL right after click(), so blobs are remembered at creation and read from there.
+if (!('download' in HTMLAnchorElement.prototype)) {
+    Object.defineProperty(HTMLAnchorElement.prototype, 'download', {
+        get() {
+            return this.getAttribute('download') || '';
+        },
+        set(value) {
+            this.setAttribute('download', value);
+        },
+        configurable: true
+    });
+}
+const downloadBlobs = new Map();
+const originalCreateObjectURL = URL.createObjectURL;
+const originalRevokeObjectURL = URL.revokeObjectURL;
+URL.createObjectURL = function (obj) {
+    let url = originalCreateObjectURL.call(URL, obj);
+    if (obj instanceof Blob) {
+        downloadBlobs.set(url, obj);
+    }
+    return url;
+};
+URL.revokeObjectURL = function (url) {
+    downloadBlobs.delete(url);
+    originalRevokeObjectURL.call(URL, url);
+};
+const originalAnchorClick = HTMLAnchorElement.prototype.click;
+HTMLAnchorElement.prototype.click = function () {
+    let blob = downloadBlobs.get(this.href);
+    if (javaObj && this.hasAttribute('download') && blob) {
+        let filename = this.download;
+        let reader = new FileReader();
+        reader.onload = () => javaObj.saveDownload(filename, reader.result);
+        reader.onerror = () => console.error('Unable to read download ' + filename + ': ' + reader.error);
+        reader.readAsDataURL(blob);
+        return;
+    }
+    originalAnchorClick.call(this);
+};
+
 // Plot data arrives as a JSON string; any extra arguments are passed through to the page's plot function
 function renderFromJava(json, ...args) {
     plot(JSON.parse(json), ...args);
@@ -314,22 +357,8 @@ function renderFromJava(json, ...args) {
 
 function plotlyExportFunction(plot) {
     return (format) => {
-        try {
-            let width = plot.offsetWidth;
-            let height = plot.offsetHeight;
-            console.log("Downloading plot with width: " + width + " and height: " + height);
-            //javaObj instantiated from JavaFX
-            if (javaObj) {
-                console.log("Downloading through Java");
-                javaObj.interruptFunction(format, JSON.stringify(plot.data), JSON.stringify(plot.layout), width, height);
-            } else {
-                console.log("Downloading through Javascript");
-                Plotly.downloadImage(plot, {format: format, height: height, width: width});
-            }
-        } catch (err) {
-            console.log(err);
-            console.error(err);
-        }
+        Plotly.downloadImage(plot, {format: format, width: plot.offsetWidth, height: plot.offsetHeight})
+            .catch(err => console.error('Unable to export plot to ' + format + ': ' + (err && err.stack || err)));
     }
 }
 

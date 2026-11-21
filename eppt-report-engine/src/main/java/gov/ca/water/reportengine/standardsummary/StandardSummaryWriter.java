@@ -20,7 +20,6 @@ import java.util.logging.Level;
 import com.google.common.flogger.FluentLogger;
 import gov.ca.water.calgui.EpptInitializationException;
 import gov.ca.water.calgui.project.EpptScenarioRun;
-import gov.ca.water.reportengine.jython.JythonScriptRunner;
 import gov.ca.water.plotly.PlotlyPrintException;
 import gov.ca.water.plotly.PlotlySvgPrinter;
 import gov.ca.water.reportengine.EpptReportException;
@@ -93,6 +92,8 @@ public class StandardSummaryWriter
 										.map(EpptChart::getModule)
 										.distinct()
 										.collect(toList());
+
+		LOGGER.atInfo().log("Writing standard summary for %d modules", moduleList.size());
 		for(int i = 0; i < moduleList.size(); i++)
 		{
 			checkInterrupt();
@@ -113,9 +114,11 @@ public class StandardSummaryWriter
 	{
 		try
 		{
+			long printStart = System.currentTimeMillis();
 			LOGGER.at(Level.INFO).log("Generating Plotly images");
 			PlotlySvgPrinter.printSvg(_imageDirectory);
-			LOGGER.at(Level.INFO).log("Plotly images generated");
+			long printEnd = System.currentTimeMillis();
+			LOGGER.at(Level.INFO).log("Plotly images generated in %d ms", (printEnd - printStart));
 		}
 		catch(PlotlyPrintException e)
 		{
@@ -131,6 +134,8 @@ public class StandardSummaryWriter
 		List<String> sectionList = charts.stream()
 										 .filter(c -> c.getModule().equals(moduleName))
 										 .map(EpptChart::getSection).distinct().collect(toList());
+
+		LOGGER.atInfo().log("Writing standard summary for %d sections", sectionList.size());
 		for(int i = 0; i < sectionList.size(); i++)
 		{
 			checkInterrupt();
@@ -144,13 +149,14 @@ public class StandardSummaryWriter
 
 	private Element writeSection(String moduleName, String sectionName, List<EpptChart> charts) throws EpptReportException
 	{
-		LOGGER.at(Level.INFO).log("Standard Summary Statistics: Building XML for section: %s", sectionName);
 		Element retval = _document.createElement(SECTION_ELEMENT);
 		retval.setAttribute(SECTION_NAME_ELEMENT, sectionName);
 		List<String> subModuleList = charts.stream()
 										   .filter(c -> c.getModule().equals(moduleName))
 										   .filter(c -> c.getSection().equals(sectionName))
 										   .map(EpptChart::getSubModule).distinct().collect(toList());
+
+		LOGGER.at(Level.INFO).log("Standard Summary Statistics: Building XML for section: %s with %d submodules", sectionName, subModuleList.size());
 		for(int i = 0; i < subModuleList.size(); i++)
 		{
 			checkInterrupt();

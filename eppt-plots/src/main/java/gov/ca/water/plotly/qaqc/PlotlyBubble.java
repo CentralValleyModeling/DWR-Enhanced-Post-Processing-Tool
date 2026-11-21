@@ -64,7 +64,7 @@ public class PlotlyBubble extends PlotlyChart
 		JSONObject grid = template.getJSONObject("grid");
 		grid.put("rows", 1);
 		grid.put("columns", alternativeCount + 1);
-		template.put("title", _title);
+		template.put("title", new JSONObject().put("text", _title));
 		template.put("grid", grid);
 		JSONObject xAxis = template.getJSONObject("xaxis");
 		JSONObject yAxis = template.getJSONObject("yaxis");

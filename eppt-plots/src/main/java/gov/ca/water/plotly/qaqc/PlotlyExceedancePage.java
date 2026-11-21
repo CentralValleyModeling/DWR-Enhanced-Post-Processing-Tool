@@ -60,7 +60,8 @@ public class PlotlyExceedancePage extends PlotlyChart
 	@Override
 	protected JSONObject buildLayout(JSONObject template)
 	{
-		template.put("title", _title);
+		//replaces the template title, whose font size reports have never used
+		template.put("title", new JSONObject().put("text", _title));
 		JSONObject xAxis = template.getJSONObject("xaxis");
 		JSONObject yAxis = template.getJSONObject("yaxis");
 		JSONObject xAxisTitle = xAxis.getJSONObject("title");

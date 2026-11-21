@@ -13,15 +13,13 @@
 package gov.ca.water.calgui.constant;
 
 
-import java.math.BigDecimal;
-import java.math.RoundingMode;
+
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.text.DecimalFormat;
 import java.util.Arrays;
 import java.util.List;
 import java.util.regex.Pattern;
-import java.util.stream.Collectors;
 
 import javafx.beans.property.SimpleStringProperty;
 import javafx.scene.paint.Color;
@@ -45,7 +43,6 @@ public final class Constant
 	public static final String TXT_EXT = ".txt";
 	public static final String DV_NAME = "_DV";
 	public static final String CONFIG_DIR = System.getProperty("user.dir") + "\\dwr_eppt\\config\\";
-	public static final Path ORCA_EXE = Paths.get(CONFIG_DIR).resolve("qaqc").resolve("orca").resolve("orca.exe");
 	public static final Path QA_QC_PATH = Paths.get(System.getProperty("user.dir")).resolve("dwr_eppt").resolve("config").resolve("qaqc");
 	public static final Path FUNCTIONS_PATH = QA_QC_PATH.resolve("Functions" + CSV_EXT);
 	public static final Path QA_QC_TEMPLATE_PATH = QA_QC_PATH.resolve("templates");
@@ -147,8 +144,8 @@ public final class Constant
 	public static final String SCENARIOS_DIR = "Scenarios";
 	public static final String MODEL_WATER_YEAR_INDEX_FILE = "ModelWaterYearIndexes" + CSV_EXT;
 	public static final String WATER_YEAR_INDEX_DEFINITIONS_FILE = "WaterYearIndexes" + CSV_EXT;
-	private static final String[] PLOTLY_COLORS = new String[]{"#4c7eee", "#03c98c", "#d62e82", "#62d2fa", "#a3f244", "#cf79dd", "#80f4e1"};
-	private static final String[] PLOTLY_THRESHOLD_LINE_DASH = new String[]{"dash", "dashdot", "dot"};
+	private static final String[] PLOTLY_COLORS = {"#4c7eee", "#03c98c", "#d62e82", "#62d2fa", "#a3f244", "#cf79dd", "#80f4e1"};
+	private static final String[] PLOTLY_THRESHOLD_LINE_DASH = {"dash", "dashdot", "dot"};
 	static final String MODEL_DIR = "Model_w2";
 	static final String MODEL_DSS_DIR = "DSS_Files";
 	static final String REPORTS_DIR = "Reports";
