@@ -12,8 +12,13 @@ function renderFigure(json, callback) {
             imageDataOnly: true
         })
             .then(svg => callback.done(svg))
-            .catch(err => callback.failed(String(err && err.stack || err)));
+            .catch(err => callback.failed(describe(err)));
     } catch (err) {
-        callback.failed(String(err && err.stack || err));
+        callback.failed(describe(err));
     }
+}
+
+// WebKit's stack does not include the error message
+function describe(err) {
+    return String(err) + '\n' + (err && err.stack || '');
 }

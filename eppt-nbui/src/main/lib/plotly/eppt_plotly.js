@@ -358,7 +358,7 @@ function renderFromJava(json, ...args) {
 function plotlyExportFunction(plot) {
     return (format) => {
         Plotly.downloadImage(plot, {format: format, width: plot.offsetWidth, height: plot.offsetHeight})
-            .catch(err => console.error('Unable to export plot to ' + format + ': ' + (err && err.stack || err)));
+            .catch(err => console.error('Unable to export plot to ' + format + ': ' + err + '\n' + (err && err.stack || '')));
     }
 }
 
