@@ -17,18 +17,14 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.nio.file.StandardCopyOption;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import gov.ca.water.calgui.constant.Constant;
-import org.apache.commons.io.FileUtils;
 import org.json.JSONObject;
 
-import static gov.ca.water.calgui.constant.Constant.ORCA_EXE;
 import static java.util.stream.Collectors.toList;
 
 /**
@@ -58,7 +54,7 @@ public final class PlotlySvgPrinter
 		{
 			Path jsonPath = Paths.get(path.getFileName().toString().replace(".svg", ".json"));
 			Path jsonFilePath = path.toAbsolutePath().getParent()
-									.resolve(jsonPath);
+					.resolve(jsonPath);
 			Path parent = jsonFilePath.getParent();
 			if(!parent.toFile().exists())
 			{
@@ -80,57 +76,35 @@ public final class PlotlySvgPrinter
 		}
 	}
 
+	/**
+	 * Renders every plotly JSON file in the directory to a same-named SVG file.
+	 */
 	public static void printSvg(Path projectImageDir) throws PlotlyPrintException
 	{
-		try
+		printSvg(projectImageDir, Paths.get(Constant.CONFIG_DIR).getParent().resolve("lib").resolve("plotly").resolve("dist").resolve("plotly.min.js"));
+	}
+
+	static void printSvg(Path imageDir, Path plotlyJs) throws PlotlyPrintException
+	{
+		List<Path> jsonFiles;
+		try(Stream<Path> files = Files.walk(imageDir, 1))
 		{
-			//Need to do Plotly SVG generation in temp directory because of bug in Plotly generating inside OneDrive folder
-			Path tempImageDir = Files.createTempDirectory("DWR-EPPT-" + projectImageDir.getFileName());
-			try(Stream<Path> files = Files.walk(projectImageDir, 1))
-			{
-				List<Path> jsonFiles = files.filter(p -> p.toString().endsWith(".json"))
-											.collect(toList());
-				for(Path jsonPath : jsonFiles)
-				{
-					Files.copy(jsonPath, tempImageDir.resolve(jsonPath.getFileName()), StandardCopyOption.REPLACE_EXISTING);
-				}
-			}
-			try(Stream<Path> files = Files.walk(tempImageDir, 1))
-			{
-				String jsonFiles = files.filter(p -> p.toString().endsWith(".json"))
-										.map(tempImageDir.getParent()::relativize)
-										.map(Path::toString)
-										.map(s -> "\"" + s + "\"")
-										.collect(Collectors.joining(" "));
-				String orcaCommandline = "\"" + ORCA_EXE + "\" graph " + jsonFiles + " --format svg --output-dir \""
-						+ tempImageDir.getFileName() + "\"" + " --plotly \""
-						+ Paths.get(Constant.CONFIG_DIR).getParent().resolve("lib").resolve("plotly").resolve("dist").resolve("plotly.min.js") + "\"";
-				LOGGER.log(Level.FINE, "Plotly SVG generation command line: {0}", orcaCommandline);
-				Process exec = new ProcessBuilder()
-						.directory(tempImageDir.getParent().toFile())
-						.command(orcaCommandline)
-						.start();
-				exec.waitFor();
-				int exitCode = exec.exitValue();
-				if(exitCode != 0)
-				{
-					throw new PlotlyPrintException("Unable to create plots: " + tempImageDir + "\n Exit code: " + exitCode);
-				}
-			}
-			try(Stream<Path> files = Files.walk(tempImageDir, 1))
-			{
-				List<Path> svgFiles = files.filter(p -> p.toString().endsWith(".svg"))
-											.collect(toList());
-				for(Path jsonPath : svgFiles)
-				{
-					Files.copy(jsonPath, projectImageDir.resolve(jsonPath.getFileName()), StandardCopyOption.REPLACE_EXISTING);
-				}
-			}
-			FileUtils.deleteDirectory(tempImageDir.toFile());
+			jsonFiles = files.filter(p -> p.toString().endsWith(".json"))
+					.sorted()
+					.collect(toList());
 		}
 		catch(IOException e)
 		{
-			LOGGER.log(Level.SEVERE, "Error creating images directory", e);
+			throw new PlotlyPrintException("Unable to list plotly JSON files in: " + imageDir, e);
+		}
+		LOGGER.log(Level.INFO, "Plotly SVG generation: {0} images to render", jsonFiles.size());
+		if(jsonFiles.isEmpty())
+		{
+			return;
+		}
+		try
+		{
+			new WebViewSvgRenderer(plotlyJs).render(jsonFiles);
 		}
 		catch(InterruptedException e)
 		{
@@ -138,6 +112,4 @@ public final class PlotlySvgPrinter
 			throw new PlotlyPrintException("Plotly SVG generation process interrupted", e);
 		}
 	}
-
-
 }

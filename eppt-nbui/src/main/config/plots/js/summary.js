@@ -63,7 +63,9 @@ function buildScenarioValues(data, monthlyIndex, statIndex) {
             for (let scenarioIndex = 0; scenarioIndex < data.length; scenarioIndex++) {
                 let stat = data[scenarioIndex]['ts_list'][tsIndex]['monthly_filters'][monthlyIndex]['annual_filters'][annualIndex]['computed_statistics'];
                 if (stat[statIndex]) {
-                    retval.push(format(stat[statIndex]['statistic_aggregate']));
+                    let value = format(stat[statIndex]['statistic_aggregate']);
+                    // plotly's image export fails on an undefined cell followed by a value in the same column
+                    retval.push(value === undefined ? 'undefined' : value);
                 } else {
                     retval.push(NaN);
                 }

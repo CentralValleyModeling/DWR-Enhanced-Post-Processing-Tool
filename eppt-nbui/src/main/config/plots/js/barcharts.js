@@ -47,7 +47,9 @@ function buildTable(data, monthlyIndex, statIndex) {
                     values[annualIndex + 1] = annualValues;
                 }
                 if (annual['computed_statistics'][statIndex]) {
-                    annualValues.push(format(annual['computed_statistics'][statIndex]['statistic_aggregate']));
+                    let value = format(annual['computed_statistics'][statIndex]['statistic_aggregate']);
+                    // plotly's image export fails on an undefined cell followed by a value in the same column
+                    annualValues.push(value === undefined ? 'undefined' : value);
                 } else {
                     annualValues.push(NaN);
                 }
