@@ -51,14 +51,30 @@ public class JavascriptImageExporter
 	 */
 	public void saveDownload(String filename, String dataUrl)
 	{
-		int comma = dataUrl.indexOf(',');
-		if(!dataUrl.startsWith("data:") || comma < 0 || !dataUrl.substring(0, comma).endsWith(";base64"))
+		int comma = dataUrl == null ? -1 : dataUrl.indexOf(',');
+		if(comma < 0 || !dataUrl.startsWith("data:") || !dataUrl.substring(0, comma).endsWith(";base64"))
 		{
-			LOGGER.log(Level.SEVERE, "Unable to save download {0}, unexpected data url", filename);
+			reportDownloadError(filename, "unexpected data url", null);
 			return;
 		}
-		byte[] bytes = Base64.getDecoder().decode(dataUrl.substring(comma + 1));
+		byte[] bytes;
+		try
+		{
+			bytes = Base64.getDecoder().decode(dataUrl.substring(comma + 1));
+		}
+		catch(IllegalArgumentException e)
+		{
+			reportDownloadError(filename, "invalid base64 image data", e);
+			return;
+		}
 		SwingUtilities.invokeLater(() -> promptAndSave(filename, bytes));
+	}
+
+	private static void reportDownloadError(String filename, String reason, Throwable cause)
+	{
+		LOGGER.log(Level.WARNING, "Unable to save download " + filename + ": " + reason, cause);
+		SwingUtilities.invokeLater(() -> DialogSvcImpl.getDialogSvcInstance()
+				.getOK("Unable to export " + filename + ": " + reason, JOptionPane.WARNING_MESSAGE));
 	}
 
 	private void promptAndSave(String filename, byte[] bytes)
@@ -88,7 +104,7 @@ public class JavascriptImageExporter
 			}
 			catch(IOException | RuntimeException e)
 			{
-				LOGGER.log(Level.SEVERE, "Error saving: " + outputPath, e);
+				LOGGER.log(Level.WARNING, "Error saving: " + outputPath, e);
 				DialogSvcImpl.getDialogSvcInstance().getOK("Error saving: " + outputPath + "\n" + e.getMessage(),
 						JOptionPane.WARNING_MESSAGE);
 			}
