@@ -147,12 +147,12 @@
 										<artifactItem>
 											<groupId>net.adoptium</groupId>
 											<artifactId>jdk</artifactId>
-											<version>21.0.12.1_1_win-x86_64</version>
+											<version>21.0.13.1_2_win-x86_64</version>
 											<type>zip</type>
 											<outputDirectory>${project.build.directory}/dwr_eppt</outputDirectory>
 											<fileMappers>
 												<org.codehaus.plexus.components.io.filemappers.RegExpFileMapper>
-													<pattern>^\Qjdk-21.0.12.1+1/\E</pattern>
+													<pattern>^\Qjdk-21.0.13.1+2/\E</pattern>
 													<replacement>jre/</replacement>
 												</org.codehaus.plexus.components.io.filemappers.RegExpFileMapper>
 											</fileMappers>
