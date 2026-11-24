@@ -21,6 +21,7 @@ import java.awt.event.ActionListener;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
 import java.util.logging.Level;
@@ -137,14 +138,21 @@ public class VistaUtils
 	{
 		Properties props = new Properties();
 		String version = "1.0-v02/03/2015";
-		try
+		try(InputStream versionStream = VistaUtils.getResourceAsStream("/vista/version"))
 		{
-			props.load(VistaUtils.getResourceAsStream("/vista/version"));
-			version = props.getProperty("version");
+			if(versionStream == null)
+			{
+				LOGGER.log(Level.FINE, "No /vista/version resource found; using default version " + version);
+			}
+			else
+			{
+				props.load(versionStream);
+				version = props.getProperty("version", version);
+			}
 		}
-		catch(Exception e)
+		catch(IOException e)
 		{
-			LOGGER.log(Level.SEVERE, "Could not load version properties", e);
+			LOGGER.log(Level.WARNING, "Could not load version properties; using default version " + version, e);
 		}
 		return version;
 	}

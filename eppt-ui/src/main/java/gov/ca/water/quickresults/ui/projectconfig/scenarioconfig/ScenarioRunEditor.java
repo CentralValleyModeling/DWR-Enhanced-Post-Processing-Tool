@@ -143,9 +143,11 @@ public class ScenarioRunEditor extends JDialog implements LoadingDss
 					_canceled = false;
 					dispose();
 				}
-				catch(IOException ex)
+				catch(IOException | RuntimeException ex)
 				{
 					LOGGER.log(Level.SEVERE, "Unable to copy water year index model file into project directory", ex);
+					JOptionPane.showMessageDialog(this, "Unable to create scenario: " + ex.getMessage(),
+							"Error", JOptionPane.ERROR_MESSAGE);
 				}
 			}
 		}
@@ -160,8 +162,7 @@ public class ScenarioRunEditor extends JDialog implements LoadingDss
 	private void copyWaterYearIndexModelCsv(EpptScenarioRun epptScenarioRun) throws IOException
 	{
 		Path path = _scenarioEditorPanel.getWaterYearIndexModelCsv();
-		Path scenarioDirectoryFile = EpptPreferences.getLastProjectConfiguration()
-									  .getParent()
+		Path scenarioDirectoryFile = EpptPreferences.getLastProjectDirectory()
 									  .resolve(epptScenarioRun.getName())
 									  .resolve(Paths.get(Constant.MODEL_WATER_YEAR_INDEX_FILE).getFileName());
 		if(!scenarioDirectoryFile.getParent().toFile().exists())

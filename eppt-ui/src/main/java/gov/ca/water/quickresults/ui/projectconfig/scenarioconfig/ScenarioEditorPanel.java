@@ -143,7 +143,7 @@ public class ScenarioEditorPanel
 	{
 		if(_tempWaterYearIndexModelPath == null)
 		{
-			Path modelWaterYearIndexFile = EpptPreferences.getLastProjectConfiguration().getParent().resolve(_nameField.getText()).resolve(Constant.MODEL_WATER_YEAR_INDEX_FILE);
+			Path modelWaterYearIndexFile = EpptPreferences.getLastProjectDirectory().resolve(_nameField.getText()).resolve(Constant.MODEL_WATER_YEAR_INDEX_FILE);
 			Object selectedItem = _modelCombobox.getSelectedItem();
 			if(!modelWaterYearIndexFile.toFile().exists() && selectedItem != null)
 			{
@@ -225,7 +225,7 @@ public class ScenarioEditorPanel
 		if(fileChooser == null)
 		{
 			fileChooser = new JFileChooser();
-			fileChooser.setCurrentDirectory(EpptPreferences.getLastProjectConfiguration().getParent().toFile());
+			fileChooser.setCurrentDirectory(EpptPreferences.getLastProjectDirectory().toFile());
 		}
 		fileChooser.setDialogTitle(s);
 		return fileChooser;
@@ -594,7 +594,7 @@ public class ScenarioEditorPanel
 		Path retval = Paths.get(text);
 		if(!retval.isAbsolute())
 		{
-			retval = EpptPreferences.getLastProjectConfiguration().getParent().resolve(retval);
+			retval = EpptPreferences.getLastProjectDirectory().resolve(retval);
 		}
 		return retval;
 	}
@@ -671,7 +671,7 @@ public class ScenarioEditorPanel
 		Path modelWaterYearIndexFile = _tempWaterYearIndexModelPath;
 		if(modelWaterYearIndexFile == null)
 		{
-			modelWaterYearIndexFile = EpptPreferences.getLastProjectConfiguration().getParent().resolve(_nameField.getText()).resolve(Constant.MODEL_WATER_YEAR_INDEX_FILE);
+			modelWaterYearIndexFile = EpptPreferences.getLastProjectDirectory().resolve(_nameField.getText()).resolve(Constant.MODEL_WATER_YEAR_INDEX_FILE);
 		}
 		Object selectedItem = _modelCombobox.getSelectedItem();
 		if(!modelWaterYearIndexFile.toFile().exists() && selectedItem != null)
@@ -712,7 +712,7 @@ public class ScenarioEditorPanel
 		private FileChooserEditor()
 		{
 			super(new JTextField());
-			FileChooserEditor.this.setClickCountToStart(1);
+			this.setClickCountToStart(1);
 		}
 
 		@Override
@@ -750,7 +750,7 @@ public class ScenarioEditorPanel
 
 		private FileChooserRenderer()
 		{
-			FileChooserRenderer.this.setBorder(new EmptyBorder(1, 1, 1, 1));
+			this.setBorder(new EmptyBorder(1, 1, 1, 1));
 		}
 
 		@Override

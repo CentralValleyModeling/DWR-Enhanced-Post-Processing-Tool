@@ -58,13 +58,14 @@ public final class EpptControllerProvider
 				EpptControllerProvider.epptConfigurationController.setWaterYearPeriodRangesFilters(new ArrayList<>());
 				ProjectConfigurationIO projectConfigurationIO = new ProjectConfigurationIO();
 				EpptProject epptProject = projectConfigurationIO.loadConfiguration(path, epptConfigurationController);
+				//Listeners notified by setScenarioRuns read the last project configuration, so it must be updated first
+				EpptPreferences.setLastProjectConfiguration(path);
 				EpptControllerProvider.epptConfigurationController.setProjectName(epptProject.getName());
 				EpptControllerProvider.epptConfigurationController.setProjectDescription(epptProject.getDescription());
 				EpptControllerProvider.epptConfigurationController.setScenarioRuns(epptProject.getScenarioRuns());
 				EpptControllerProvider.epptConfigurationController.setStartYear(epptProject.getStartYear());
 				EpptControllerProvider.epptConfigurationController.setEndYear(epptProject.getEndYear());
 				ScenarioProjectUpdater.updateWithAllDssFiles(epptProject.getScenarioRuns());
-				EpptPreferences.setLastProjectConfiguration(path);
 			}
 		}
 		catch(IOException | RuntimeException ex)
