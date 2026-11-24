@@ -57,7 +57,7 @@ class ScenarioDssTableModel extends RmaTableModel
 	static final int A_PART_COLUMN = 3;
 	static final int F_PART_COLUMN = 4;
 	private static final Logger LOGGER = Logger.getLogger(ScenarioDssTableModel.class.getName());
-	private static final int[] COLUMNS = new int[]{ROW_TYPE_COLUMN, DSS_PATH_COLUMN, ALIAS_COLUMN, A_PART_COLUMN, F_PART_COLUMN};
+	private static final int[] COLUMNS = {ROW_TYPE_COLUMN, DSS_PATH_COLUMN, ALIAS_COLUMN, A_PART_COLUMN, F_PART_COLUMN};
 	private final List<Row> _rows = new ArrayList<>();
 	private final Map<Path, Set<String>> _fPaths = new ConcurrentHashMap<>();
 	private final Map<Path, Set<String>> _aPaths = new ConcurrentHashMap<>();
@@ -163,7 +163,7 @@ class ScenarioDssTableModel extends RmaTableModel
 				{
 					if(outputPath.toString().isEmpty())
 					{
-						outputPath = EpptPreferences.getLastProjectConfiguration().getParent();
+						outputPath = EpptPreferences.getLastProjectDirectory();
 					}
 					dssPath = outputPath.resolve(dssPath);
 				}

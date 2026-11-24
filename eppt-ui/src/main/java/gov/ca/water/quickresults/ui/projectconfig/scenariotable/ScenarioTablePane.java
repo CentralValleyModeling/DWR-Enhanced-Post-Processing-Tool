@@ -13,10 +13,8 @@
 package gov.ca.water.quickresults.ui.projectconfig.scenariotable;
 
 import java.awt.Frame;
-import java.lang.reflect.InvocationTargetException;
 import java.nio.file.Path;
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -25,6 +23,7 @@ import javax.swing.*;
 import gov.ca.water.calgui.EpptInitializationException;
 import gov.ca.water.calgui.busservice.impl.WaterYearTableReader;
 import gov.ca.water.calgui.constant.Constant;
+import gov.ca.water.calgui.constant.EpptPreferences;
 import gov.ca.water.calgui.project.EpptDssContainer;
 import gov.ca.water.calgui.project.EpptScenarioRun;
 import gov.ca.water.calgui.project.NamedDssPath;
@@ -47,7 +46,6 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.TilePane;
 import javafx.scene.paint.Color;
 
-import hec.gui.NameDialog;
 import com.rma.javafx.iface.ColumnSpec;
 import com.rma.javafx.iface.RowModel;
 import com.rma.javafx.treetable.RmaTreeTableView;
@@ -317,8 +315,30 @@ public class ScenarioTablePane extends TitledPane
 		return outputPath;
 	}
 
+	/**
+	 * Scenario files are stored in the project folder, so a project must exist before scenarios can be created or edited.
+	 *
+	 * @return true if a project exists, otherwise tells the user to create or open one and returns false.
+	 */
+	private boolean ensureProjectExists()
+	{
+		if(EpptPreferences.hasProjectConfiguration())
+		{
+			return true;
+		}
+		JOptionPane.showMessageDialog(Frame.getFrames()[0],
+				"A project is required before scenarios can be added or edited.\n"
+						+ "Create or open a project using File > New Project or File > Open Project.",
+				"No Project", JOptionPane.INFORMATION_MESSAGE);
+		return false;
+	}
+
 	private void launchFileDialogToAddScenario()
 	{
+		if(!ensureProjectExists())
+		{
+			return;
+		}
 		ScenarioRunEditor scenarioRunEditor = new ScenarioRunEditor(Frame.getFrames()[0], _controller.getScenarioRuns());
 		scenarioRunEditor.setVisible(true);
 		scenarioRunEditor.dispose();
@@ -333,7 +353,7 @@ public class ScenarioTablePane extends TitledPane
 	private void launchFileDialogToCopyScenario()
 	{
 		EpptScenarioRun selectedScenarioRun = getSelectedScenario();
-		if(selectedScenarioRun != null)
+		if(selectedScenarioRun != null && ensureProjectExists())
 		{
 			SwingUtilities.invokeLater(() ->
 			{
@@ -359,7 +379,7 @@ public class ScenarioTablePane extends TitledPane
 	private void launchFileDialogToEditScenario()
 	{
 		EpptScenarioRun oldScenarioRun = getSelectedScenario();
-		if(oldScenarioRun != null)
+		if(oldScenarioRun != null && ensureProjectExists())
 		{
 			editScenarioRun(oldScenarioRun);
 		}

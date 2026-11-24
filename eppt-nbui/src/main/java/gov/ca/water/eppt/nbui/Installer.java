@@ -39,6 +39,8 @@ import gov.ca.water.calgui.busservice.impl.WaterYearPeriodReader;
 import gov.ca.water.calgui.constant.EpptPreferences;
 import gov.ca.water.calgui.presentation.DisplayHelper;
 import gov.ca.water.calgui.techservice.impl.DialogSvcImpl;
+import gov.ca.water.eppt.nbui.actions.NewProjectConfiguration;
+import gov.ca.water.eppt.nbui.actions.OpenProjectConfiguration;
 import gov.ca.water.eppt.nbui.actions.RunWreslScript;
 import javafx.application.Platform;
 import javafx.embed.swing.JFXPanel;
@@ -91,6 +93,29 @@ public class Installer extends ModuleInstall
 		WindowManager wm = WindowManager.getDefault();
 		wm.invokeWhenUIReady(() -> wm.getMainWindow().setTitle(
 				MAIN_FRAME_NAME + " - " + EpptControllerProvider.getEpptConfigurationController().getProjectName()));
+		if(!EpptPreferences.hasProjectConfiguration())
+		{
+			wm.invokeWhenUIReady(this::promptForProject);
+		}
+	}
+
+	/**
+	 * Scenarios are stored in the project folder, so guide first time users to create or open a project.
+	 */
+	private void promptForProject()
+	{
+		String[] options = {"New Project", "Open Project", "Not Now"};
+		int choice = JOptionPane.showOptionDialog(WindowManager.getDefault().getMainWindow(),
+				"No project is open. A project is required to add scenarios.\nWould you like to create a new project or open an existing one?",
+				MAIN_FRAME_NAME, JOptionPane.DEFAULT_OPTION, JOptionPane.QUESTION_MESSAGE, null, options, options[0]);
+		if(choice == 0)
+		{
+			new NewProjectConfiguration().actionPerformed(null);
+		}
+		else if(choice == 1)
+		{
+			new OpenProjectConfiguration().actionPerformed(null);
+		}
 	}
 
 	private void initPlotHandler()

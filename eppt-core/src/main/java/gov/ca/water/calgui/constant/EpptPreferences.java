@@ -13,6 +13,7 @@
 package gov.ca.water.calgui.constant;
 
 import java.io.File;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.prefs.Preferences;
@@ -94,6 +95,28 @@ public final class EpptPreferences
 	{
 		String scenarioConfigurationFile = EPPT_HOME.get(LAST_SCENARIO_CONFIGURATION, "");
 		return Paths.get(scenarioConfigurationFile);
+	}
+
+	/**
+	 * @return true when the last project configuration points at an existing project file.
+	 */
+	public static boolean hasProjectConfiguration()
+	{
+		Path config = getLastProjectConfiguration();
+		return config.getParent() != null && Files.isRegularFile(config);
+	}
+
+	/**
+	 * @return the folder containing the last project configuration file.
+	 * @throws IllegalStateException if no project has been created or opened.
+	 */
+	public static Path getLastProjectDirectory()
+	{
+		if(!hasProjectConfiguration())
+		{
+			throw new IllegalStateException("No project is open. Create or open a project first (File > New Project / Open Project).");
+		}
+		return getLastProjectConfiguration().getParent();
 	}
 
 	public static void setLastProjectConfiguration(Path lastConfiguration)

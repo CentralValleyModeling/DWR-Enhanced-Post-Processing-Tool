@@ -1049,11 +1049,14 @@ public class QAQCReportPanel extends EpptPanel
 			_tabbedPane1.setTitleAt(1, baseRun.getName() + " WRESL");
 			_tabbedPane1.setEnabledAt(1, true);
 		}
-		Path currentProject = EpptPreferences.getLastProjectConfiguration().getParent();
-		Path reportPath = currentProject.resolve("Reports").resolve(_epptConfigurationController.getProjectName() + ".pdf");
-		_pdfOutput.setText(reportPath.toString());
-		_openReportButton.setEnabled(reportPath.toFile().exists());
-		_tabbedPane1.setTitleAt(0, reportPath.getFileName().toString() + " QA/QC");
+		if(EpptPreferences.hasProjectConfiguration())
+		{
+			Path currentProject = EpptPreferences.getLastProjectDirectory();
+			Path reportPath = currentProject.resolve("Reports").resolve(_epptConfigurationController.getProjectName() + ".pdf");
+			_pdfOutput.setText(reportPath.toString());
+			_openReportButton.setEnabled(reportPath.toFile().exists());
+			_tabbedPane1.setTitleAt(0, reportPath.getFileName().toString() + " QA/QC");
+		}
 		_tabbedPane1.setSelectedIndex(0);
 		updateCompareState();
 		updateEnabledState();
